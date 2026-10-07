@@ -143,6 +143,14 @@ def _extra_ingest(f: Path) -> bool:
         print("INGEST", f.relative_to(INBOX), "->", dest.relative_to(ROOT))
         return True
     mapping = {
+        "ui_heir_banner": UI / "heir_banner.png",
+        "ui_hourglass_banner": UI / "hourglass_banner.png",
+        "ui_lineage_rite_banner": UI / "lineage_rite_banner.png",
+        "ui_works_ambition_strip": UI / "ambition_strip.png",
+        "fx_crit_ring_sheet": FX / "crit_ring_sheet.png",
+        "fx_guard_break_sheet": FX / "guard_break_sheet.png",
+        "battle_grid_heal_wash": FX / "heal_wash.png",
+        "ui_zoc_legend_dense": UI / "zoc_leave_legend.png",
         "ui_forge_banner": UI / "forge_banner.png",
         "ui_inheritance_banner": UI / "inheritance_banner.png",
         "ui_rival_banner": UI / "rival_banner.png",
@@ -188,7 +196,7 @@ def main() -> int:
         stem = f.stem
         if stem.startswith("portrait_farm_") or stem in (
             "ui_forge_banner","ui_inheritance_banner","ui_rival_banner","ui_skill_banner",
-            "fx_miss_whoosh_sheet","fx_step_dust_sheet","battle_grid_move_wash","ui_month_chip_grain_v2",
+            "fx_miss_whoosh_sheet","fx_step_dust_sheet","battle_grid_move_wash","ui_month_chip_grain_v2","ui_heir_banner","ui_hourglass_banner","ui_lineage_rite_banner","ui_works_ambition_strip","fx_crit_ring_sheet","fx_guard_break_sheet","battle_grid_heal_wash","ui_zoc_legend_dense",
         ):
             if _extra_ingest(f):
                 n += 1

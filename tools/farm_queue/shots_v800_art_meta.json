@@ -1,0 +1,710 @@
+[
+  {
+    "label": "v8_atlas_world",
+    "kind": "atlas",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_atlas_world_political",
+    "kind": "atlas",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_atlas_landbridge_inset",
+    "kind": "atlas",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_atlas_nation_ashbanner",
+    "kind": "atlas",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_atlas_nation_shuoying",
+    "kind": "atlas",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_atlas_nation_qinghe",
+    "kind": "atlas",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_atlas_nation_lantern",
+    "kind": "atlas",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_atlas_nation_frostcrown",
+    "kind": "atlas",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_atlas_nation_emberold",
+    "kind": "atlas",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_atlas_nation_saltmarsh",
+    "kind": "atlas",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_atlas_nation_irongorge",
+    "kind": "atlas",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_atlas_nation_starriver",
+    "kind": "atlas",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_atlas_nation_southzephyr",
+    "kind": "atlas",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch0_pass",
+    "kind": "scene_map",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch1_hill",
+    "kind": "scene_map",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch1_ford",
+    "kind": "scene_map",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch1_fog",
+    "kind": "scene_map",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch2_night",
+    "kind": "scene_map",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch3_forge",
+    "kind": "scene_map",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch5_bridge",
+    "kind": "scene_map",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch8_harbor",
+    "kind": "scene_map",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch10_banner",
+    "kind": "scene_map",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch16_sea",
+    "kind": "scene_map",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch23_frost",
+    "kind": "scene_map",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch28_marsh",
+    "kind": "scene_map",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch31_gorge",
+    "kind": "scene_map",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch35_bell",
+    "kind": "scene_map",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch38_gate",
+    "kind": "scene_map",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_battle_biome_pass",
+    "kind": "battle_bg",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_hill",
+    "kind": "battle_bg",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_ford",
+    "kind": "battle_bg",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_fog",
+    "kind": "battle_bg",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_fort",
+    "kind": "battle_bg",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_forge",
+    "kind": "battle_bg",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_harbor",
+    "kind": "battle_bg",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_plain",
+    "kind": "battle_bg",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_snow",
+    "kind": "battle_bg",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_marsh",
+    "kind": "battle_bg",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_urban",
+    "kind": "battle_bg",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_shrine",
+    "kind": "battle_bg",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_archive",
+    "kind": "battle_bg",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_nightcamp",
+    "kind": "battle_bg",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_menu",
+    "kind": "hub",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_castle",
+    "kind": "hub",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_tavern",
+    "kind": "hub",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_roster",
+    "kind": "hub",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_lineage",
+    "kind": "hub",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_market",
+    "kind": "hub",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_forge",
+    "kind": "hub",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_estates",
+    "kind": "hub",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_deploy",
+    "kind": "hub",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_train",
+    "kind": "hub",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_shrine",
+    "kind": "hub",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_heir",
+    "kind": "hub",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_marriage",
+    "kind": "hub",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_works",
+    "kind": "hub",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_quests",
+    "kind": "hub",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_rival",
+    "kind": "hub",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_skill",
+    "kind": "hub",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_hourglass",
+    "kind": "hub",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_inheritance",
+    "kind": "hub",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_settings",
+    "kind": "hub",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hero_leader_m",
+    "kind": "hero",
+    "width": 768,
+    "height": 960
+  },
+  {
+    "label": "v8_hero_leader_f",
+    "kind": "hero",
+    "width": 768,
+    "height": 960
+  },
+  {
+    "label": "v8_hero_heir_m",
+    "kind": "hero",
+    "width": 768,
+    "height": 960
+  },
+  {
+    "label": "v8_hero_heir_f",
+    "kind": "hero",
+    "width": 768,
+    "height": 960
+  },
+  {
+    "label": "v8_hero_rival_m",
+    "kind": "hero",
+    "width": 768,
+    "height": 960
+  },
+  {
+    "label": "v8_hero_strategist_f",
+    "kind": "hero",
+    "width": 768,
+    "height": 960
+  },
+  {
+    "label": "v8_hero_veteran_m",
+    "kind": "hero",
+    "width": 768,
+    "height": 960
+  },
+  {
+    "label": "v8_hero_priest_f",
+    "kind": "hero",
+    "width": 768,
+    "height": 960
+  },
+  {
+    "label": "v8_bust_m_hunter",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_hunter",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_m_smith",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_smith",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_m_archer",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_archer",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_m_guard",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_guard",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_m_scout",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_scout",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_m_monk",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_monk",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_m_merchant",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_merchant",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_m_spear",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_spear",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_m_cavalry",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_cavalry",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_m_medic",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_medic",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_m_scholar",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_scholar",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_m_duelist",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_duelist",
+    "kind": "bust",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_token_infantry",
+    "kind": "token",
+    "width": 128,
+    "height": 128
+  },
+  {
+    "label": "v8_token_archer",
+    "kind": "token",
+    "width": 128,
+    "height": 128
+  },
+  {
+    "label": "v8_token_cavalry",
+    "kind": "token",
+    "width": 128,
+    "height": 128
+  },
+  {
+    "label": "v8_token_heavy",
+    "kind": "token",
+    "width": 128,
+    "height": 128
+  },
+  {
+    "label": "v8_token_enemy_inf",
+    "kind": "token",
+    "width": 128,
+    "height": 128
+  },
+  {
+    "label": "v8_token_enemy_cav",
+    "kind": "token",
+    "width": 128,
+    "height": 128
+  },
+  {
+    "label": "v8_token_leader",
+    "kind": "token",
+    "width": 128,
+    "height": 128
+  },
+  {
+    "label": "v8_token_npc",
+    "kind": "token",
+    "width": 128,
+    "height": 128
+  },
+  {
+    "label": "v8_ui_panel_frame",
+    "kind": "ui",
+    "width": 640,
+    "height": 400
+  },
+  {
+    "label": "v8_ui_nav_rail",
+    "kind": "ui",
+    "width": 220,
+    "height": 720
+  },
+  {
+    "label": "v8_ui_top_status",
+    "kind": "ui",
+    "width": 1920,
+    "height": 72
+  },
+  {
+    "label": "v8_ui_btn_primary",
+    "kind": "ui",
+    "width": 280,
+    "height": 64
+  },
+  {
+    "label": "v8_ui_btn_ghost",
+    "kind": "ui",
+    "width": 280,
+    "height": 64
+  },
+  {
+    "label": "v8_ui_btn_danger",
+    "kind": "ui",
+    "width": 280,
+    "height": 64
+  },
+  {
+    "label": "v8_ui_modal_frame",
+    "kind": "ui",
+    "width": 720,
+    "height": 420
+  },
+  {
+    "label": "v8_ui_hp_bar_kit",
+    "kind": "ui",
+    "width": 512,
+    "height": 64
+  },
+  {
+    "label": "v8_ui_crest_blank",
+    "kind": "ui",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "v8_ui_battle_hud_frame",
+    "kind": "ui",
+    "width": 1920,
+    "height": 200
+  },
+  {
+    "label": "v8_fx_hit_crystal_sheet",
+    "kind": "fx",
+    "width": 768,
+    "height": 128
+  },
+  {
+    "label": "v8_fx_slash_ink_sheet",
+    "kind": "fx",
+    "width": 768,
+    "height": 128
+  },
+  {
+    "label": "v8_fx_heal_mint_sheet",
+    "kind": "fx",
+    "width": 768,
+    "height": 128
+  },
+  {
+    "label": "v8_fx_crit_seal_sheet",
+    "kind": "fx",
+    "width": 768,
+    "height": 128
+  },
+  {
+    "label": "v8_fx_dust_ash_sheet",
+    "kind": "fx",
+    "width": 768,
+    "height": 128
+  },
+  {
+    "label": "v8_fx_guard_ring_sheet",
+    "kind": "fx",
+    "width": 768,
+    "height": 128
+  }
+]

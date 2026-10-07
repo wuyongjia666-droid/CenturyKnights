@@ -136,22 +136,62 @@ static func confirm_burst(node: Control) -> void:
 	flash_modulate(node, Color(1.25, 1.15, 0.95), 0.2)
 
 static func wire_button(btn: BaseButton) -> void:
-	## 前端式按压微交互挂到任意按钮
+	## 全态交互：hover / press / focus / disabled（每个控件必挂）
 	if btn == null: return
 	if btn.has_meta("uifx_wired"): return
 	btn.set_meta("uifx_wired", true)
-	btn.button_down.connect(func(): press_feedback(btn))
-	btn.mouse_entered.connect(func():
-		if not btn.disabled:
-			hover_lift(btn, 0.025)
+	btn.focus_mode = Control.FOCUS_ALL
+	btn.button_down.connect(func():
+		if btn.disabled:
+			soft_deny(btn)
+		else:
+			press_feedback(btn)
 	)
-	btn.mouse_exited.connect(func(): hover_settle(btn))
+	btn.mouse_entered.connect(func():
+		_sync_disabled_modulate(btn)
+		if not btn.disabled:
+			hover_lift(btn, 0.03)
+			flash_modulate(btn, Color(1.05, 1.12, 1.2), 0.12)
+	)
+	btn.mouse_exited.connect(func():
+		hover_settle(btn)
+		_sync_disabled_modulate(btn)
+	)
+	btn.focus_entered.connect(func():
+		if not btn.disabled:
+			focus_ring(btn, Color(0.85, 0.95, 1.15), 0.28)
+	)
+	btn.focus_exited.connect(func(): hover_settle(btn))
+	_sync_disabled_modulate(btn)
+
+static func _sync_disabled_modulate(btn: BaseButton) -> void:
+	if btn == null: return
+	if btn.disabled:
+		btn.modulate = Color(0.55, 0.52, 0.48, 0.72)
+		btn.scale = Vector2.ONE
+	elif btn.modulate.r < 0.9:
+		btn.modulate = Color(1, 1, 1, 1)
+
+static func wire_control(ctrl: Control) -> void:
+	## 非按钮可聚焦控件：hover + focus
+	if ctrl == null: return
+	if ctrl.has_meta("uifx_ctrl_wired"): return
+	ctrl.set_meta("uifx_ctrl_wired", true)
+	if ctrl.focus_mode == Control.FOCUS_NONE:
+		ctrl.focus_mode = Control.FOCUS_ALL
+	ctrl.mouse_entered.connect(func(): hover_lift(ctrl, 0.02))
+	ctrl.mouse_exited.connect(func(): hover_settle(ctrl))
+	ctrl.focus_entered.connect(func(): focus_ring(ctrl))
+	ctrl.focus_exited.connect(func(): hover_settle(ctrl))
 
 static func wire_tree(root: Node) -> void:
-	## 递归给子树所有 BaseButton 挂微交互
+	## 递归：BaseButton 全态 + LineEdit/Option/Slider/ItemList hover·focus
 	if root == null: return
 	if root is BaseButton:
 		wire_button(root)
+	elif root is LineEdit or root is TextEdit or root is OptionButton \
+			or root is Slider or root is SpinBox or root is ItemList:
+		wire_control(root)
 	for c in root.get_children():
 		wire_tree(c)
 
@@ -220,6 +260,10 @@ static func focus_ring(node: Control, col: Color = Color(1.15, 0.95, 0.55), dur:
 	if node == null: return
 	flash_modulate(node, col, dur)
 	hover_lift(node, 0.02)
+
+static func soft_flash(node: CanvasItem, col: Color = Color(1.18, 1.1, 0.92), dur: float = 0.2) -> void:
+	if node == null: return
+	flash_modulate(node, col, dur)
 
 static func list_ripple(parent: Node, delay: float = 0.035) -> void:
 	## 列表项依次 punch（选中后反馈波）

@@ -4,6 +4,7 @@ func _ready() -> void:
 	_build()
 	UIFX.fade_in(self, 0.4)
 	UIFX.page_enter(self)
+	UIFX.wire_tree(self)
 	Music.play_hub()
 	set_process(true)
 

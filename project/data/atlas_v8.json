@@ -1,0 +1,102 @@
+{
+  "version": "v8.0.0-art",
+  "vibe": "2026 cutting-edge global contemporary fantasy SRPG",
+  "world_plate": "v8_atlas_world",
+  "political_plate": "v8_atlas_world_political",
+  "landbridge_inset": "v8_atlas_landbridge_inset",
+  "nations": [
+    {
+      "id": "ashbanner",
+      "name": "灰烬邦",
+      "plate": "v8_atlas_nation_ashbanner",
+      "blurb": "Ash Banner realm — ash plains citadel network, cool grey-violet fields, luminous river veins"
+    },
+    {
+      "id": "shuoying",
+      "name": "朔影国",
+      "plate": "v8_atlas_nation_shuoying",
+      "blurb": "Shuoying shadow principality — northern frost ridges, deep indigo night courts, hostile elegance"
+    },
+    {
+      "id": "qinghe",
+      "name": "清河国",
+      "plate": "v8_atlas_nation_qinghe",
+      "blurb": "Qinghe riverhouse lands — jade river deltas, pale mist orchards, wary old wealth"
+    },
+    {
+      "id": "lantern",
+      "name": "灯市联",
+      "plate": "v8_atlas_nation_lantern",
+      "blurb": "Lantern League ports — coastal night markets, glass lantern archipelagos, mercantile glow"
+    },
+    {
+      "id": "frostcrown",
+      "name": "霜冕廷",
+      "plate": "v8_atlas_nation_frostcrown",
+      "blurb": "Frostcrown remnant court — high plateau iceglass halls, rare royal hush"
+    },
+    {
+      "id": "emberold",
+      "name": "余烬旧邦",
+      "plate": "v8_atlas_nation_emberold",
+      "blurb": "Ember Old Realm ruins — cracked magma-glass cities under cool dusk"
+    },
+    {
+      "id": "saltmarsh",
+      "name": "盐泽盟",
+      "plate": "v8_atlas_nation_saltmarsh",
+      "blurb": "Saltmarsh alliance — tidal flats, pale salt crystals, reed haze"
+    },
+    {
+      "id": "irongorge",
+      "name": "铁峡领",
+      "plate": "v8_atlas_nation_irongorge",
+      "blurb": "Iron Gorge dominion — vertical canyon forges, cold steel light"
+    },
+    {
+      "id": "starriver",
+      "name": "星津邦",
+      "plate": "v8_atlas_nation_starriver",
+      "blurb": "Starford polity — night river reflecting constellation bridges"
+    },
+    {
+      "id": "southzephyr",
+      "name": "南泽邦",
+      "plate": "v8_atlas_nation_southzephyr",
+      "blurb": "South Zephyr wetlands — luminous fog forests, ferry lights"
+    }
+  ],
+  "biome_battle_backdrops": [
+    "v8_battle_biome_pass",
+    "v8_battle_biome_hill",
+    "v8_battle_biome_ford",
+    "v8_battle_biome_fog",
+    "v8_battle_biome_fort",
+    "v8_battle_biome_forge",
+    "v8_battle_biome_harbor",
+    "v8_battle_biome_plain",
+    "v8_battle_biome_snow",
+    "v8_battle_biome_marsh",
+    "v8_battle_biome_urban",
+    "v8_battle_biome_shrine",
+    "v8_battle_biome_archive",
+    "v8_battle_biome_nightcamp"
+  ],
+  "scene_maps": [
+    "v8_scene_ch0_pass",
+    "v8_scene_ch1_hill",
+    "v8_scene_ch1_ford",
+    "v8_scene_ch1_fog",
+    "v8_scene_ch2_night",
+    "v8_scene_ch3_forge",
+    "v8_scene_ch5_bridge",
+    "v8_scene_ch8_harbor",
+    "v8_scene_ch10_banner",
+    "v8_scene_ch16_sea",
+    "v8_scene_ch23_frost",
+    "v8_scene_ch28_marsh",
+    "v8_scene_ch31_gorge",
+    "v8_scene_ch35_bell",
+    "v8_scene_ch38_gate"
+  ]
+}

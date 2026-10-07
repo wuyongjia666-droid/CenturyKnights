@@ -8,3 +8,5 @@ __pycache__/
 .DS_Store
 *.pck
 exports/*.zip
+project/assets/art/farm_inbox/*.zip
+project/assets/art/farm_inbox/qwen_v800_partial.zip

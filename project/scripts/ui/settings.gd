@@ -2,6 +2,7 @@ extends Control
 
 func _ready() -> void:
 	UIKit.make_themed_bg(self, "settings")
+	UIFX.wire_tree(self)
 
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(PRESET_FULL_RECT)

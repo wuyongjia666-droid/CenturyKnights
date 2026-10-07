@@ -765,10 +765,12 @@ func _escort_banter(kind: String) -> void:
 func _ready() -> void:
 	rng.randomize()
 	Music.play_battle()
-	# 战棋氛围底图（概念城堡暗化）
-	if ResourceLoader.exists("res://assets/art/ui/battle_backdrop.png"):
+	# v8 biome battle plate (fallback legacy backdrop)
+	var _AtlasArt = preload("res://scripts/art/atlas_art.gd")
+	var _bb_path: String = str(_AtlasArt.battle_backdrop_for_map(str(GameState.get_meta("battle_map", map_id))))
+	if _bb_path != "":
 		var bbg := TextureRect.new()
-		bbg.texture = load("res://assets/art/ui/battle_backdrop.png")
+		bbg.texture = load(_bb_path)
 		bbg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		bbg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		bbg.stretch_mode = TextureRect.STRETCH_SCALE

@@ -9,6 +9,7 @@ var _picker: PanelContainer
 func _ready() -> void:
 	UIKit.make_themed_bg(self, "estates")
 	UIFX.page_enter(self)
+	UIFX.wire_tree(self)
 	UIFX.fade_in(self, 0.28)
 	Music.play_castle()
 	# 顶栏美术条

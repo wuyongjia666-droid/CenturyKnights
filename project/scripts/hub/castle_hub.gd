@@ -94,6 +94,7 @@ func _build() -> void:
 		[Locale.t("btn_roster"), "名册与立绘", "res://scenes/hub/roster.tscn"],
 		[Locale.t("btn_tavern"), "招募新刃", "res://scenes/hub/tavern.tscn"],
 		[Locale.t("btn_quests"), "陆桥委托", "res://scenes/hub/quests.tscn"],
+		["舆图", "邦国与陆桥", "res://scenes/hub/atlas_view.tscn"],
 		[Locale.t("btn_train"), "六维与转职", "res://scenes/hub/train.tscn"],
 		[Locale.t("btn_forge"), "灰刃与铁火", "res://scenes/hub/forge.tscn"],
 		["工事", "厅堂校场市集", "res://scenes/hub/works.tscn"],
@@ -123,6 +124,7 @@ func _build() -> void:
 	UIFX.nav_slide(grid, -18.0, 0.30)
 	UIFX.list_ripple(grid, 0.04)
 	UIFX.page_enter(self)
+	UIFX.wire_tree(self)
 	var flavor = UIKit.make_panel()
 	flavor.position = Vector2(40, 520)
 	flavor.custom_minimum_size = Vector2(900, 70)

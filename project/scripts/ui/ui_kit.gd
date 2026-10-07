@@ -1,18 +1,25 @@
 class_name UIKit
 extends RefCounted
 
-const BG := Color(0.10, 0.12, 0.16)
-const BG_DEEP := Color(0.07, 0.08, 0.11)
-const PANEL := Color(0.16, 0.19, 0.26)
-const PANEL_LIT := Color(0.20, 0.24, 0.32)
-const ACCENT := Color(0.79, 0.64, 0.15)
-const ACCENT_DIM := Color(0.55, 0.44, 0.12)
-const TEXT := Color(0.93, 0.91, 0.86)
-const TEXT_DIM := Color(0.62, 0.60, 0.55)
-const DANGER := Color(0.78, 0.30, 0.28)
-const OK := Color(0.38, 0.68, 0.48)
-const PARCHMENT := Color(0.90, 0.84, 0.70)
-const STONE := Color(0.28, 0.30, 0.36)
+## v8.0.0-art locked vibe: Contemporary Fantasy SRPG — luminous ink, crystal-ember, matte dark UI
+## NO medieval cliché (no parchment scrolls, gothic stone, war-banner gold kitsch)
+const BG := Color(0.07, 0.08, 0.12)           # ink void
+const BG_DEEP := Color(0.04, 0.05, 0.08)
+const PANEL := Color(0.12, 0.14, 0.20)         # matte slate glass
+const PANEL_LIT := Color(0.18, 0.22, 0.30)
+const ACCENT := Color(0.55, 0.78, 0.92)        # crystal frost
+const ACCENT_DIM := Color(0.32, 0.48, 0.62)
+const TEXT := Color(0.92, 0.94, 0.97)          # cool ivory
+const TEXT_DIM := Color(0.55, 0.60, 0.68)
+const DANGER := Color(0.92, 0.38, 0.48)        # soft coral alert
+const OK := Color(0.42, 0.82, 0.68)            # mint signal
+const PARCHMENT := Color(0.78, 0.86, 0.94)     # cool wash (kept name for API compat)
+const STONE := Color(0.22, 0.26, 0.34)
+const FOCUS_RING := Color(0.72, 0.92, 1.0)
+const DISABLED_BG := Color(0.10, 0.11, 0.14, 0.55)
+const DISABLED_BORDER := Color(0.28, 0.32, 0.40, 0.45)
+const DISABLED_TEXT := Color(0.40, 0.44, 0.50)
+const EMBER := Color(0.98, 0.62, 0.38)         # secondary warm accent (sparks only)
 
 static func make_button(text: String, min_w: int = 160) -> Button:
 	var b := Button.new()
@@ -20,6 +27,7 @@ static func make_button(text: String, min_w: int = 160) -> Button:
 	b.custom_minimum_size = Vector2(min_w, 42)
 	_style_button(b)
 	b.pressed.connect(func(): Sfx.click())
+	UIFX.wire_button(b)
 	return b
 
 static func make_accent_button(text: String, min_w: int = 160) -> Button:
@@ -28,18 +36,26 @@ static func make_accent_button(text: String, min_w: int = 160) -> Button:
 	var n = _tex_style("res://assets/art/ui/btn_accent_chrome.png", _flat(ACCENT.darkened(0.25), ACCENT, 8), Vector2i(14, 8))
 	var h = _tex_style("res://assets/art/ui/btn_accent_chrome.png", _flat(ACCENT.darkened(0.10), ACCENT.lightened(0.15), 8), Vector2i(14, 8))
 	var p = _tex_style("res://assets/art/ui/btn_accent_chrome.png", _flat(ACCENT.darkened(0.35), ACCENT_DIM, 8), Vector2i(14, 8))
+	var f = _tex_style("res://assets/art/ui/btn_accent_chrome.png", _flat(ACCENT.darkened(0.15), FOCUS_RING, 8), Vector2i(14, 8))
+	var d = _flat(DISABLED_BG, DISABLED_BORDER, 8)
 	b.add_theme_stylebox_override("normal", n)
 	b.add_theme_stylebox_override("hover", h)
 	b.add_theme_stylebox_override("pressed", p)
+	b.add_theme_stylebox_override("focus", f)
+	b.add_theme_stylebox_override("disabled", d)
 	b.add_theme_color_override("font_color", Color(0.12, 0.10, 0.06))
 	b.add_theme_color_override("font_hover_color", Color(0.08, 0.06, 0.02))
 	b.add_theme_color_override("font_pressed_color", Color(0.05, 0.04, 0.02))
+	b.add_theme_color_override("font_focus_color", Color(0.10, 0.08, 0.04))
+	b.add_theme_color_override("font_disabled_color", DISABLED_TEXT)
+	b.focus_mode = Control.FOCUS_ALL
 	return b
 
 static func _style_button(b: Button) -> void:
+	## 全态：normal / hover / pressed / focus / disabled（厚涂战旗）
 	var flat_n := StyleBoxFlat.new()
-	flat_n.bg_color = Color(0.18, 0.20, 0.26, 0.95)
-	flat_n.border_color = Color(0.55, 0.52, 0.42, 0.75)
+	flat_n.bg_color = Color(0.14, 0.16, 0.22, 0.92)
+	flat_n.border_color = Color(0.45, 0.65, 0.82, 0.75)
 	flat_n.set_border_width_all(2)
 	flat_n.set_corner_radius_all(6)
 	flat_n.content_margin_left = 12
@@ -47,18 +63,33 @@ static func _style_button(b: Button) -> void:
 	flat_n.content_margin_top = 8
 	flat_n.content_margin_bottom = 8
 	var flat_h := flat_n.duplicate()
-	flat_h.bg_color = Color(0.26, 0.28, 0.36, 0.98)
-	flat_h.border_color = Color(0.78, 0.68, 0.40, 0.9)
+	flat_h.bg_color = Color(0.20, 0.26, 0.36, 0.96)
+	flat_h.border_color = Color(0.70, 0.90, 1.0, 0.95)
 	var flat_p := flat_n.duplicate()
-	flat_p.bg_color = Color(0.12, 0.14, 0.18, 0.98)
+	flat_p.bg_color = Color(0.09, 0.11, 0.16, 0.98)
+	flat_p.border_color = Color(0.40, 0.58, 0.75, 0.9)
+	var flat_f := flat_n.duplicate()
+	flat_f.bg_color = Color(0.16, 0.20, 0.28, 0.98)
+	flat_f.border_color = FOCUS_RING
+	flat_f.set_border_width_all(3)
+	var flat_d := flat_n.duplicate()
+	flat_d.bg_color = DISABLED_BG
+	flat_d.border_color = DISABLED_BORDER
 	var n = _tex_style("res://assets/art/ui/btn_chrome.png", flat_n, Vector2i(12, 8))
 	var hov = _tex_style("res://assets/art/ui/btn_chrome.png", flat_h, Vector2i(12, 8))
 	var pr = _tex_style("res://assets/art/ui/btn_chrome.png", flat_p, Vector2i(12, 8))
 	b.add_theme_stylebox_override("normal", n)
 	b.add_theme_stylebox_override("hover", hov)
 	b.add_theme_stylebox_override("pressed", pr)
-	b.add_theme_color_override("font_color", Color(0.92, 0.90, 0.84))
-	b.add_theme_color_override("font_hover_color", Color(1.0, 0.95, 0.75))
+	b.add_theme_stylebox_override("focus", flat_f)
+	b.add_theme_stylebox_override("disabled", flat_d)
+	b.add_theme_color_override("font_color", Color(0.92, 0.94, 0.97))
+	b.add_theme_color_override("font_hover_color", Color(0.85, 0.95, 1.0))
+	b.add_theme_color_override("font_pressed_color", Color(0.70, 0.85, 0.95))
+	b.add_theme_color_override("font_focus_color", Color(0.88, 0.96, 1.0))
+	b.add_theme_color_override("font_disabled_color", DISABLED_TEXT)
+	b.focus_mode = Control.FOCUS_ALL
+
 
 
 
@@ -284,27 +315,43 @@ static func make_hub_nav_button(text: String, subtitle: String, min_w: int = 210
 	b.custom_minimum_size = Vector2(min_w, 64)
 	b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	b.add_theme_font_size_override("font_size", 14)
+	b.focus_mode = Control.FOCUS_ALL
 	var flat := StyleBoxFlat.new()
-	flat.bg_color = Color(0.11, 0.13, 0.18, 0.94)
-	flat.border_color = Color(0.72, 0.58, 0.32, 0.9)
-	flat.border_width_left = 5
-	flat.border_width_top = 2
-	flat.border_width_right = 2
-	flat.border_width_bottom = 2
-	flat.set_corner_radius_all(8)
+	flat.bg_color = Color(0.12, 0.14, 0.20, 0.94)
+	flat.border_color = Color(0.45, 0.65, 0.82, 0.75)
+	flat.border_width_left = 4
+	flat.border_width_top = 1
+	flat.border_width_right = 1
+	flat.border_width_bottom = 1
+	flat.set_corner_radius_all(10)
 	flat.content_margin_left = 14
 	flat.content_margin_right = 10
 	flat.content_margin_top = 8
 	flat.content_margin_bottom = 8
 	var flat_h := flat.duplicate()
-	flat_h.bg_color = Color(0.18, 0.20, 0.28, 0.98)
-	flat_h.border_color = Color(0.90, 0.75, 0.40, 1.0)
+	flat_h.bg_color = Color(0.18, 0.24, 0.34, 0.98)
+	flat_h.border_color = FOCUS_RING
+	var flat_p := flat.duplicate()
+	flat_p.bg_color = Color(0.09, 0.11, 0.16, 0.98)
+	var flat_f := flat.duplicate()
+	flat_f.border_color = FOCUS_RING
+	flat_f.border_width_left = 5
+	var flat_d := flat.duplicate()
+	flat_d.bg_color = DISABLED_BG
+	flat_d.border_color = DISABLED_BORDER
 	var n = _tex_style("res://assets/art/ui/hub_nav_chrome.png", flat, Vector2i(14, 8))
 	var hov = _tex_style("res://assets/art/ui/hub_nav_chrome.png", flat_h, Vector2i(14, 8))
 	b.add_theme_stylebox_override("normal", n)
 	b.add_theme_stylebox_override("hover", hov)
-	b.add_theme_stylebox_override("pressed", hov)
-	b.add_theme_color_override("font_color", Color(0.93, 0.91, 0.85))
+	b.add_theme_stylebox_override("pressed", flat_p)
+	b.add_theme_stylebox_override("focus", flat_f)
+	b.add_theme_stylebox_override("disabled", flat_d)
+	b.add_theme_color_override("font_color", TEXT)
+	b.add_theme_color_override("font_hover_color", Color(0.88, 0.96, 1.0))
+	b.add_theme_color_override("font_pressed_color", Color(0.70, 0.85, 0.95))
+	b.add_theme_color_override("font_focus_color", Color(0.90, 0.97, 1.0))
+	b.add_theme_color_override("font_disabled_color", DISABLED_TEXT)
+	UIFX.wire_button(b)
 	return b
 
 # --- 轻量程序音效（AudioStreamGenerator 短脉冲，无外部授权问题）---

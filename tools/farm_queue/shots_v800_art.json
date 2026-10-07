@@ -1,0 +1,710 @@
+[
+  {
+    "label": "v8_atlas_world",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. full world atlas plate of fictional continent around a great land-bridge, clear country borders as soft luminous lines, distinct biomes per realm, ocean depth gradient, mountain spines, rivers, NO place-name lettering, editorial cartography meets AAA strategy map, 16:9",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_atlas_world_political",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. political borders overlay style atlas, same continent, colored realm fills semi-transparent, neutral dark sea, crisp frontier lines, capital glow dots only, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_atlas_landbridge_inset",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. inset strategic map of the Shuolan land-bridge corridor, passes and fords marked as light nodes, dense geography readable at HUD scale, NO text",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_atlas_nation_ashbanner",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. nation geography plate for 灰烬邦: Ash Banner realm — ash plains citadel network, cool grey-violet fields, luminous river veins, bordered territory clear, terrain readable, contemporary fantasy cartography, NO text glyphs",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_atlas_nation_shuoying",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. nation geography plate for 朔影国: Shuoying shadow principality — northern frost ridges, deep indigo night courts, hostile elegance, bordered territory clear, terrain readable, contemporary fantasy cartography, NO text glyphs",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_atlas_nation_qinghe",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. nation geography plate for 清河国: Qinghe riverhouse lands — jade river deltas, pale mist orchards, wary old wealth, bordered territory clear, terrain readable, contemporary fantasy cartography, NO text glyphs",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_atlas_nation_lantern",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. nation geography plate for 灯市联: Lantern League ports — coastal night markets, glass lantern archipelagos, mercantile glow, bordered territory clear, terrain readable, contemporary fantasy cartography, NO text glyphs",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_atlas_nation_frostcrown",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. nation geography plate for 霜冕廷: Frostcrown remnant court — high plateau iceglass halls, rare royal hush, bordered territory clear, terrain readable, contemporary fantasy cartography, NO text glyphs",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_atlas_nation_emberold",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. nation geography plate for 余烬旧邦: Ember Old Realm ruins — cracked magma-glass cities under cool dusk, bordered territory clear, terrain readable, contemporary fantasy cartography, NO text glyphs",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_atlas_nation_saltmarsh",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. nation geography plate for 盐泽盟: Saltmarsh alliance — tidal flats, pale salt crystals, reed haze, bordered territory clear, terrain readable, contemporary fantasy cartography, NO text glyphs",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_atlas_nation_irongorge",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. nation geography plate for 铁峡领: Iron Gorge dominion — vertical canyon forges, cold steel light, bordered territory clear, terrain readable, contemporary fantasy cartography, NO text glyphs",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_atlas_nation_starriver",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. nation geography plate for 星津邦: Starford polity — night river reflecting constellation bridges, bordered territory clear, terrain readable, contemporary fantasy cartography, NO text glyphs",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_atlas_nation_southzephyr",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. nation geography plate for 南泽邦: South Zephyr wetlands — luminous fog forests, ferry lights, bordered territory clear, terrain readable, contemporary fantasy cartography, NO text glyphs",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch0_pass",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. campaign scene map plate, top-down-ish readable stage for chapter select: night mountain pass gate, ash mist, luminous path nodes, path ribbons subtle, NO text, cinematic but UI-usable",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch1_hill",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. campaign scene map plate, top-down-ish readable stage for chapter select: stone hill slope with ridge silhouette, cool dusk, path ribbons subtle, NO text, cinematic but UI-usable",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch1_ford",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. campaign scene map plate, top-down-ish readable stage for chapter select: tidal ford shallow water luminous, deep channel side, path ribbons subtle, NO text, cinematic but UI-usable",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch1_fog",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. campaign scene map plate, top-down-ish readable stage for chapter select: fog valley night raid atmosphere, soft volume light, path ribbons subtle, NO text, cinematic but UI-usable",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch2_night",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. campaign scene map plate, top-down-ish readable stage for chapter select: fort exterior night assault, wall glow slits, path ribbons subtle, NO text, cinematic but UI-usable",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch3_forge",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. campaign scene map plate, top-down-ish readable stage for chapter select: forge canyon gate, cool steel ember sparks restrained, path ribbons subtle, NO text, cinematic but UI-usable",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch5_bridge",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. campaign scene map plate, top-down-ish readable stage for chapter select: broken bridge night watch, river glass below, path ribbons subtle, NO text, cinematic but UI-usable",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch8_harbor",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. campaign scene map plate, top-down-ish readable stage for chapter select: harbor night council, pier lights contemporary fantasy, path ribbons subtle, NO text, cinematic but UI-usable",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch10_banner",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. campaign scene map plate, top-down-ish readable stage for chapter select: vast banner plain under aurora-ink sky, path ribbons subtle, NO text, cinematic but UI-usable",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch16_sea",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. campaign scene map plate, top-down-ish readable stage for chapter select: sea wind watchpost cliff, horizon glass sea, path ribbons subtle, NO text, cinematic but UI-usable",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch23_frost",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. campaign scene map plate, top-down-ish readable stage for chapter select: frost bridge crossing, ice luminescence, path ribbons subtle, NO text, cinematic but UI-usable",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch28_marsh",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. campaign scene map plate, top-down-ish readable stage for chapter select: southern marsh scout path, reed biolume, path ribbons subtle, NO text, cinematic but UI-usable",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch31_gorge",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. campaign scene map plate, top-down-ish readable stage for chapter select: iron gorge vertical cliffs, cold forge breath, path ribbons subtle, NO text, cinematic but UI-usable",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch35_bell",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. campaign scene map plate, top-down-ish readable stage for chapter select: evening bell city walls, soft urban fantasy light, path ribbons subtle, NO text, cinematic but UI-usable",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_scene_ch38_gate",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. campaign scene map plate, top-down-ish readable stage for chapter select: final gate outer plaza, monumental contemporary fantasy, path ribbons subtle, NO text, cinematic but UI-usable",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "v8_battle_biome_pass",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen battle backdrop 16:9, flat mid-ground suitable for tactical grid overlay, mountain pass dusk, cliff walls, mist floor for grid overlay, keep lower 60% visually quiet, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_hill",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen battle backdrop 16:9, flat mid-ground suitable for tactical grid overlay, rolling hill battlefield, ridge line, cool grass luminescence, keep lower 60% visually quiet, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_ford",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen battle backdrop 16:9, flat mid-ground suitable for tactical grid overlay, river ford battle stage, shallow glow water, mud banks, keep lower 60% visually quiet, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_fog",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen battle backdrop 16:9, flat mid-ground suitable for tactical grid overlay, dense fog valley, silhouettes only in distance, keep lower 60% visually quiet, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_fort",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen battle backdrop 16:9, flat mid-ground suitable for tactical grid overlay, fort wall exterior yard, torch-crystal light, keep lower 60% visually quiet, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_forge",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen battle backdrop 16:9, flat mid-ground suitable for tactical grid overlay, industrial fantasy forge yard, restrained sparks, keep lower 60% visually quiet, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_harbor",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen battle backdrop 16:9, flat mid-ground suitable for tactical grid overlay, dockside battle apron, wet reflective stone, keep lower 60% visually quiet, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_plain",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen battle backdrop 16:9, flat mid-ground suitable for tactical grid overlay, open plain under ink aurora, keep lower 60% visually quiet, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_snow",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen battle backdrop 16:9, flat mid-ground suitable for tactical grid overlay, snow ridge battlefield, soft blue shadow, keep lower 60% visually quiet, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_marsh",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen battle backdrop 16:9, flat mid-ground suitable for tactical grid overlay, marsh boardwalk fight zone, pale fog, keep lower 60% visually quiet, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_urban",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen battle backdrop 16:9, flat mid-ground suitable for tactical grid overlay, city street corridor fight, neon-ink lanterns restrained, keep lower 60% visually quiet, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_shrine",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen battle backdrop 16:9, flat mid-ground suitable for tactical grid overlay, contemporary shrine courtyard, quiet luminous stones, keep lower 60% visually quiet, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_archive",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen battle backdrop 16:9, flat mid-ground suitable for tactical grid overlay, archive hall fight floor, cool shafts of light, keep lower 60% visually quiet, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_battle_biome_nightcamp",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen battle backdrop 16:9, flat mid-ground suitable for tactical grid overlay, night camp perimeter, ember crystals low, keep lower 60% visually quiet, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_menu",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen hub backdrop: title void: vast contemporary citadel silhouette, empty stage center for logo, leave readable dark zones for UI, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_castle",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen hub backdrop: castle hub grand interior: war table holographic-ink map, matte panels, depth, leave readable dark zones for UI, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_tavern",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen hub backdrop: frontier lounge interior: soft lantern glass, mercenary silhouettes, leave readable dark zones for UI, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_roster",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen hub backdrop: roster wall: floating name-card slots empty, cool light, leave readable dark zones for UI, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_lineage",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen hub backdrop: lineage sanctum: portrait silk panels contemporary, incense haze soft, leave readable dark zones for UI, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_market",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen hub backdrop: market street night: stalls, silk, caravan crates, clean perspective, leave readable dark zones for UI, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_forge",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen hub backdrop: clan workshop: anvil sparks restrained, matte steel, leave readable dark zones for UI, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_estates",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen hub backdrop: estate overlook: terraces, river ribbon, dusk, leave readable dark zones for UI, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_deploy",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen hub backdrop: deployment yard: banner poles abstract, torch line, leave readable dark zones for UI, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_train",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen hub backdrop: training yard dawn: dummies, dust motes, leave readable dark zones for UI, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_shrine",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen hub backdrop: mountain shrine exterior: steps, mist, sacred quiet contemporary, leave readable dark zones for UI, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_heir",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen hub backdrop: rival heirs chamber: twin seats half-lit, cracked crest abstract, leave readable dark zones for UI, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_marriage",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen hub backdrop: rite pavilion: cool silk and crystal light, night garden, leave readable dark zones for UI, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_works",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen hub backdrop: works plaza: scaffolds, grain carts, plan table, leave readable dark zones for UI, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_quests",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen hub backdrop: mission board alley: pinned blank cards, rain-wet stone, leave readable dark zones for UI, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_rival",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen hub backdrop: enemy court: colder blue-ink light, opposing abstract crests, leave readable dark zones for UI, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_skill",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen hub backdrop: dojo: weapon racks, chalk formations glowing faintly, leave readable dark zones for UI, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_hourglass",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen hub backdrop: calendar sanctum: monumental hourglass of luminous sand, leave readable dark zones for UI, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_inheritance",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen hub backdrop: succession archive: sealed scroll towers, dust light, leave readable dark zones for UI, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hub_settings",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. fullscreen hub backdrop: settings chamber: minimal dark glass panels, leave readable dark zones for UI, NO text",
+    "width": 1920,
+    "height": 1080
+  },
+  {
+    "label": "v8_hero_leader_m",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. hero key portrait bust, male clan leader 30s, contemporary fantasy coat-armor hybrid, determined, painterly contemporary fantasy character design, soft gradient void background, character reads clearly at large size",
+    "width": 768,
+    "height": 960
+  },
+  {
+    "label": "v8_hero_leader_f",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. hero key portrait bust, female clan leader 30s, ink-silk armor accents, sharp gaze, painterly contemporary fantasy character design, soft gradient void background, character reads clearly at large size",
+    "width": 768,
+    "height": 960
+  },
+  {
+    "label": "v8_hero_heir_m",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. hero key portrait bust, young male heir 18, unfinished armor, hopeful tension, painterly contemporary fantasy character design, soft gradient void background, character reads clearly at large size",
+    "width": 768,
+    "height": 960
+  },
+  {
+    "label": "v8_hero_heir_f",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. hero key portrait bust, young female heir 18, quiet ambition, painterly contemporary fantasy character design, soft gradient void background, character reads clearly at large size",
+    "width": 768,
+    "height": 960
+  },
+  {
+    "label": "v8_hero_rival_m",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. hero key portrait bust, rival lord, cold elegance, iron-blue cloak contemporary cut, painterly contemporary fantasy character design, soft gradient void background, character reads clearly at large size",
+    "width": 768,
+    "height": 960
+  },
+  {
+    "label": "v8_hero_strategist_f",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. hero key portrait bust, female strategist 40s, intelligent eyes, painterly contemporary fantasy character design, soft gradient void background, character reads clearly at large size",
+    "width": 768,
+    "height": 960
+  },
+  {
+    "label": "v8_hero_veteran_m",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. hero key portrait bust, scarred veteran general, grey temples, painterly contemporary fantasy character design, soft gradient void background, character reads clearly at large size",
+    "width": 768,
+    "height": 960
+  },
+  {
+    "label": "v8_hero_priest_f",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. hero key portrait bust, ash priestess contemporary ritual marks, serene severe, painterly contemporary fantasy character design, soft gradient void background, character reads clearly at large size",
+    "width": 768,
+    "height": 960
+  },
+  {
+    "label": "v8_bust_m_hunter",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust male hunter, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_hunter",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust female hunter, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_m_smith",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust male smith, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_smith",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust female smith, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_m_archer",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust male archer, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_archer",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust female archer, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_m_guard",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust male guard, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_guard",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust female guard, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_m_scout",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust male scout, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_scout",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust female scout, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_m_monk",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust male monk, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_monk",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust female monk, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_m_merchant",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust male merchant, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_merchant",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust female merchant, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_m_spear",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust male spear, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_spear",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust female spear, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_m_cavalry",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust male cavalry, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_cavalry",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust female cavalry, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_m_medic",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust male medic, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_medic",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust female medic, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_m_scholar",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust male scholar, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_scholar",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust female scholar, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_m_duelist",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust male duelist, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_bust_f_duelist",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. character bust female duelist, contemporary fantasy, plain cool gradient, game portrait",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v8_token_infantry",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. top-down readable unit token, infantry silhouette, iconic simple, dark ground, game icon",
+    "width": 128,
+    "height": 128
+  },
+  {
+    "label": "v8_token_archer",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. top-down readable unit token, archer silhouette, iconic simple, dark ground, game icon",
+    "width": 128,
+    "height": 128
+  },
+  {
+    "label": "v8_token_cavalry",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. top-down readable unit token, cavalry silhouette, iconic simple, dark ground, game icon",
+    "width": 128,
+    "height": 128
+  },
+  {
+    "label": "v8_token_heavy",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. top-down readable unit token, heavy shield silhouette, iconic simple, dark ground, game icon",
+    "width": 128,
+    "height": 128
+  },
+  {
+    "label": "v8_token_enemy_inf",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. top-down readable unit token, enemy infantry, coral rim language, iconic simple, dark ground, game icon",
+    "width": 128,
+    "height": 128
+  },
+  {
+    "label": "v8_token_enemy_cav",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. top-down readable unit token, enemy cavalry, coral rim, iconic simple, dark ground, game icon",
+    "width": 128,
+    "height": 128
+  },
+  {
+    "label": "v8_token_leader",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. top-down readable unit token, leader crest mark, crystal rim, iconic simple, dark ground, game icon",
+    "width": 128,
+    "height": 128
+  },
+  {
+    "label": "v8_token_npc",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. top-down readable unit token, neutral NPC, iron rim, iconic simple, dark ground, game icon",
+    "width": 128,
+    "height": 128
+  },
+  {
+    "label": "v8_ui_panel_frame",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. frosted matte panel sample, soft crystal border, empty center, corner micro-ticks only, NO text",
+    "width": 640,
+    "height": 400
+  },
+  {
+    "label": "v8_ui_nav_rail",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. left nav rail, matte void, luminous selected pill indicator, empty slots, NO text",
+    "width": 220,
+    "height": 720
+  },
+  {
+    "label": "v8_ui_top_status",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. top status bar strip, hairline crystal underline, crest circle empty left, NO text",
+    "width": 1920,
+    "height": 72
+  },
+  {
+    "label": "v8_ui_btn_primary",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. primary button plate, crystal frost fill, soft bevel, empty label, NO text",
+    "width": 280,
+    "height": 64
+  },
+  {
+    "label": "v8_ui_btn_ghost",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. ghost button, transparent dark, thin crystal border, empty, NO text",
+    "width": 280,
+    "height": 64
+  },
+  {
+    "label": "v8_ui_btn_danger",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. danger button, soft coral fill, empty label, NO text",
+    "width": 280,
+    "height": 64
+  },
+  {
+    "label": "v8_ui_modal_frame",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. modal dialog frame, frosted panel, empty header strip, NO text",
+    "width": 720,
+    "height": 420
+  },
+  {
+    "label": "v8_ui_hp_bar_kit",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. HUD HP bar kit, mint fill + coral enemy variant side by side, empty tracks, NO text",
+    "width": 512,
+    "height": 64
+  },
+  {
+    "label": "v8_ui_crest_blank",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. blank clan crest medallion, crystal-ink circular emblem frame, empty center, NO text",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "v8_ui_battle_hud_frame",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. bottom battle HUD frame strip, matte glass, unit card slot left empty, NO text",
+    "width": 1920,
+    "height": 200
+  },
+  {
+    "label": "v8_fx_hit_crystal_sheet",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. VFX sprite sheet 6 frames horizontal, crystal hit sparks, transparent bg, game VFX",
+    "width": 768,
+    "height": 128
+  },
+  {
+    "label": "v8_fx_slash_ink_sheet",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. VFX sprite sheet 6 frames horizontal, ink-gold slash arc restrained, transparent bg, game VFX",
+    "width": 768,
+    "height": 128
+  },
+  {
+    "label": "v8_fx_heal_mint_sheet",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. VFX sprite sheet 6 frames horizontal, soft mint heal motes, transparent bg, game VFX",
+    "width": 768,
+    "height": 128
+  },
+  {
+    "label": "v8_fx_crit_seal_sheet",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. VFX sprite sheet 6 frames horizontal, coral-crystal crit burst, transparent bg, game VFX",
+    "width": 768,
+    "height": 128
+  },
+  {
+    "label": "v8_fx_dust_ash_sheet",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. VFX sprite sheet 6 frames horizontal, cool ash step dust, transparent bg, game VFX",
+    "width": 768,
+    "height": 128
+  },
+  {
+    "label": "v8_fx_guard_ring_sheet",
+    "prompt": "2026 cutting-edge global fantasy SRPG art direction, contemporary editorial illustration, luminous ink void, frosted matte UI chrome, crystal-ember light, soft volumetric haze, high-end game concept quality, culturally fluent Chinese contemporary fantasy without pastiche, NO medieval cliché, NO parchment scroll kitsch, NO gothic stone thrift, NO war-banner gold frames, NO text, NO watermark, NO UI mockup chrome overlay. VFX sprite sheet 6 frames horizontal, iron-crystal guard impact ring, transparent bg, game VFX",
+    "width": 768,
+    "height": 128
+  }
+]
