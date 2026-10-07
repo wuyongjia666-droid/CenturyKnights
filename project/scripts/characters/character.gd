@@ -47,6 +47,7 @@ var temp_def_buff: int = 0
 var temp_hit_bonus: int = 0
 var temp_crit_bonus: int = 0
 var temp_ignore_zoc: bool = false
+var temp_leave_free: bool = false  # 本回合脱离不耗额外移力
 var temp_zoc_aura: int = 0  # 控带额外耗移
 var temp_exposed: int = 0  # 被破防，受击时防降低
 

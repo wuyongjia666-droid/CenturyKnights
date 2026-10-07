@@ -522,6 +522,14 @@ var quest_done: Dictionary = {}
 ## 退役顾问加成：{stat_key: bonus}
 var advisor_bonus: Dictionary = {}
 var ambition_done: Dictionary = {}  # 堡志中长期目标
+## 属地/庄园（单堡多属地经营感）
+var holdings: Dictionary = {}  # id -> {level}
+const HOLDING_DEFS := {
+	"reed_ford": {"name": "苇原渡", "desc": "护商旧道属地", "food": 3, "silver": 2, "quest": "q_escort"},
+	"stone_slope": {"name": "石垒坡", "desc": "清匪后的丘地佃庄", "food": 2, "silver": 4, "quest": "q_bandit"},
+	"fog_vale": {"name": "雾谷药田", "desc": "药草租佃", "food": 1, "silver": 2, "herb": 1, "quest": "q_herb"},
+	"tide_bridge": {"name": "断潮渡哨", "desc": "河卫守桥契约地", "food": 2, "silver": 3, "rep": 1, "quest": "q_bridge"},
+}
 var deploy_ids: Array = []
 var dirty: bool = false
 var dynasty_journal: String = ""
@@ -1118,6 +1126,7 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	quest_done = {}
 	advisor_bonus = {}
 	ambition_done = {}
+	holdings = {}
 	surname = leader_surname
 	crest_color = color
 	var leader = CharacterFactory.make_leader(leader_given, leader_surname, color)
@@ -1161,6 +1170,7 @@ func recruit(candidate: CKCharacter, cost: int = -1) -> Dictionary:
 	set_flag("recruited")
 	log_event("招募 %s（-%d 银）" % [candidate.name, cost])
 	mark_dirty()
+	check_ambitions()
 	return {"ok": true, "msg": "招募成功", "cost": cost}
 
 func refresh_marriage_candidates() -> void:
@@ -1234,6 +1244,8 @@ func market_buy_prices() -> Dictionary:
 	var cut = lv - 1
 	if bool(house_mods.get("trade_route", false)):
 		cut += 1
+	if bool(house_mods.get("market_edge", false)):
+		cut += 1
 	return {"food": maxi(1, 2 - cut), "iron": maxi(5, 8 - cut), "herb": maxi(4, 6 - cut)}
 
 func market_sell_prices() -> Dictionary:
@@ -1259,14 +1271,92 @@ func _enlisted_children_count() -> int:
 			n += 1
 	return n
 
+
+func holding_unlocked(hid: String) -> bool:
+	return holdings.has(hid)
+
+func holding_level(hid: String) -> int:
+	if not holdings.has(hid):
+		return 0
+	return int(holdings[hid].get("level", 1))
+
+func unlock_holding(hid: String) -> String:
+	if hid not in HOLDING_DEFS:
+		return ""
+	if holdings.has(hid):
+		return ""
+	holdings[hid] = {"level": 1}
+	var nm = str(HOLDING_DEFS[hid].get("name", hid))
+	add_lineage_event("属地开垦：%s" % nm)
+	mark_dirty()
+	return "属地解锁：%s（月结产出）" % nm
+
+func upgrade_holding(hid: String) -> Dictionary:
+	if not holdings.has(hid):
+		return {"ok": false, "msg": "尚未拥有此属地"}
+	var lv = holding_level(hid)
+	if lv >= 3:
+		return {"ok": false, "msg": "属地已满级"}
+	var cost_s = 40 * lv
+	var cost_f = 8 * lv
+	if silver < cost_s or food < cost_f:
+		return {"ok": false, "msg": "需 %d银/%d粮" % [cost_s, cost_f]}
+	silver -= cost_s
+	food -= cost_f
+	holdings[hid]["level"] = lv + 1
+	log_event("属地升级：%s → Lv%d" % [HOLDING_DEFS[hid].name, lv + 1])
+	var amb = check_ambitions()
+	mark_dirty()
+	return {"ok": true, "msg": "%s 升至 Lv%d%s" % [HOLDING_DEFS[hid].name, lv + 1, ("；" + " / ".join(amb)) if amb else ""]}
+
+func holdings_monthly_yield() -> String:
+	if holdings.is_empty():
+		return ""
+	var sf = 0
+	var ss = 0
+	var sh = 0
+	var sr = 0
+	var names: Array = []
+	for hid in holdings.keys():
+		var def = HOLDING_DEFS.get(hid, {})
+		var mul = holding_level(hid)
+		sf += int(def.get("food", 0)) * mul
+		ss += int(def.get("silver", 0)) * mul
+		sh += int(def.get("herb", 0)) * mul
+		sr += int(def.get("rep", 0)) * mul
+		names.append("%sLv%d" % [def.get("name", hid), mul])
+	food += sf
+	silver += ss
+	herb += sh
+	if sr > 0:
+		add_rep("ashland", sr)
+		add_rep("riverland", maxi(0, sr - 1))
+	return "属地收成：%s → 粮+%d 银+%d%s" % ["、".join(names), sf, ss, (" 药+%d" % sh) if sh else ""]
+
+func unlocked_holdings_count() -> int:
+	return holdings.size()
+
+func total_holding_levels() -> int:
+	var n = 0
+	for hid in holdings.keys():
+		n += holding_level(hid)
+	return n
+
 func ambition_list() -> Array:
 	## UI：列出堡志与完成状态
 	return [
 		{"id": "fort_tier3", "name": "灰旗威仪", "desc": "全部工事达到 Lv3", "done": bool(ambition_done.get("fort_tier3", false)), "reward": "战技点+2，丰收声望"},
-		{"id": "fort_tier5", "name": "百年旗堡", "desc": "全部工事达到 Lv5", "done": bool(ambition_done.get("fort_tier5", false)), "reward": "战技点+3，月结津贴+12，士气上限气质"},
+		{"id": "fort_tier5", "name": "百年旗堡", "desc": "全部工事达到 Lv5", "done": bool(ambition_done.get("fort_tier5", false)), "reward": "战技点+3，月结旗堡俸"},
 		{"id": "warlord", "name": "陆桥战勋", "desc": "战棋委任首通累计 5 次", "done": bool(ambition_done.get("warlord", false)), "reward": "战技点+1，开战银+10"},
+		{"id": "warlord_x", "name": "百战旗影", "desc": "战棋委任首通累计 10 次", "done": bool(ambition_done.get("warlord_x", false)), "reward": "战技点+2，开战银再+10"},
 		{"id": "heirs_two", "name": "双嗣承旗", "desc": "至少两名子嗣授旗入队", "done": bool(ambition_done.get("heirs_two", false)), "reward": "声望+8，战技点+1"},
 		{"id": "vow_house", "name": "家训既立", "desc": "完成联姻誓约并选定家训", "done": bool(ambition_done.get("vow_house", false)), "reward": "家训永久生效"},
+		{"id": "estate_two", "name": "两岸租佃", "desc": "解锁至少 2 处属地", "done": bool(ambition_done.get("estate_two", false)), "reward": "战技点+1，银+40"},
+		{"id": "estate_all", "name": "四野旗庄", "desc": "解锁全部 4 处属地", "done": bool(ambition_done.get("estate_all", false)), "reward": "战技点+2，属地月结+1成"},
+		{"id": "estate_deep", "name": "深耕三稔", "desc": "属地总等级合计 ≥ 8", "done": bool(ambition_done.get("estate_deep", false)), "reward": "战技点+1，粮+30"},
+		{"id": "silver_hoard", "name": "库银盈柜", "desc": "银币一度达到 300", "done": bool(ambition_done.get("silver_hoard", false)), "reward": "战技点+1，市集永久微利"},
+		{"id": "roster_six", "name": "六旗同升", "desc": "花名册满员达 6 人", "done": bool(ambition_done.get("roster_six", false)), "reward": "战技点+1，士气+10"},
+		{"id": "skill_adept", "name": "战技通识", "desc": "任意一人解锁 3 个二阶及以上战技", "done": bool(ambition_done.get("skill_adept", false)), "reward": "战技点+2"},
 	]
 
 func check_ambitions() -> Array:
@@ -1300,6 +1390,56 @@ func check_ambitions() -> Array:
 		ambition_done["vow_house"] = true
 		msgs.append("堡志「家训既立」达成")
 		add_lineage_event("堡志：家训既立·%s" % house_mods.get("doctrine", ""))
+	if not bool(ambition_done.get("warlord_x", false)) and int(house_mods.get("war_memory", 0)) >= 10:
+		ambition_done["warlord_x"] = true
+		house_mods["warlord_purse"] = true
+		house_mods["warlord_purse2"] = true
+		add_skill_point(2)
+		msgs.append("堡志「百战旗影」达成：战技点+2")
+		add_lineage_event("堡志：百战旗影")
+	if not bool(ambition_done.get("estate_two", false)) and unlocked_holdings_count() >= 2:
+		ambition_done["estate_two"] = true
+		add_skill_point(1)
+		silver += 40
+		msgs.append("堡志「两岸租佃」达成：银+40，战技点+1")
+		add_lineage_event("堡志：两岸租佃")
+	if not bool(ambition_done.get("estate_all", false)) and unlocked_holdings_count() >= 4:
+		ambition_done["estate_all"] = true
+		house_mods["estate_bonus"] = true
+		add_skill_point(2)
+		msgs.append("堡志「四野旗庄」达成：属地月结增强")
+		add_lineage_event("堡志：四野旗庄")
+	if not bool(ambition_done.get("estate_deep", false)) and total_holding_levels() >= 8:
+		ambition_done["estate_deep"] = true
+		add_skill_point(1)
+		food += 30
+		msgs.append("堡志「深耕三稔」达成：粮+30")
+		add_lineage_event("堡志：深耕三稔")
+	if not bool(ambition_done.get("silver_hoard", false)) and silver >= 300:
+		ambition_done["silver_hoard"] = true
+		house_mods["market_edge"] = true
+		add_skill_point(1)
+		msgs.append("堡志「库银盈柜」达成：市集微利")
+		add_lineage_event("堡志：库银盈柜")
+	if not bool(ambition_done.get("roster_six", false)) and roster().size() >= 6:
+		ambition_done["roster_six"] = true
+		add_skill_point(1)
+		morale = mini(100, morale + 10)
+		msgs.append("堡志「六旗同升」达成")
+		add_lineage_event("堡志：六旗同升")
+	if not bool(ambition_done.get("skill_adept", false)):
+		for c in roster():
+			var n2 = 0
+			for sid in c.unlocked_skills:
+				var sk = get_skill(sid)
+				if int(sk.get("tier", 1)) >= 2:
+					n2 += 1
+			if n2 >= 3:
+				ambition_done["skill_adept"] = true
+				add_skill_point(2)
+				msgs.append("堡志「战技通识」达成：%s" % c.name)
+				add_lineage_event("堡志：战技通识·%s" % c.name)
+				break
 	if msgs:
 		mark_dirty()
 	return msgs
@@ -1397,10 +1537,12 @@ func apply_quest_first_clear(qid: String) -> String:
 	match qid:
 		"q_escort":
 			house_mods["hall_discount"] = true
-			msg = "首通：议事厅升级费用 -25%"
+			var uh = unlock_holding("reed_ford")
+			msg = "首通：议事厅升级费用 -25%" + (("；" + uh) if uh else "")
 		"q_bridge":
 			house_mods["trade_route"] = true
-			msg = "首通：开通河卫商路（市集更划算，丰收+银）"
+			var uh2 = unlock_holding("tide_bridge")
+			msg = "首通：开通河卫商路（市集更划算，丰收+银）" + (("；" + uh2) if uh2 else "")
 		"q_drill":
 			house_mods["drill_discount"] = true
 			msg = "首通：校场演武再减价"
@@ -1410,8 +1552,14 @@ func apply_quest_first_clear(qid: String) -> String:
 			msg = "首通：春令耳目 +1 战技点"
 		"q_herb":
 			house_mods["herb_garden"] = true
-			msg = "首通：雾谷药圃（丰收+药）"
-		"q_bandit", "q_hill_war", "q_ford_war", "q_fog_war", "q_forge_war", "q_shrine_war":
+			var uh3 = unlock_holding("fog_vale")
+			msg = "首通：雾谷药圃（丰收+药）" + (("；" + uh3) if uh3 else "")
+		"q_bandit":
+			house_mods["war_memory"] = int(house_mods.get("war_memory", 0)) + 1
+			morale = mini(100, morale + 2)
+			var uh4 = unlock_holding("stone_slope")
+			msg = "首通战勋：士气+2" + (("；" + uh4) if uh4 else "")
+		"q_hill_war", "q_ford_war", "q_fog_war", "q_forge_war", "q_shrine_war":
 			house_mods["war_memory"] = int(house_mods.get("war_memory", 0)) + 1
 			morale = mini(100, morale + 2)
 			msg = "首通战勋：士气+2，战勋记 %d" % int(house_mods["war_memory"])
@@ -1653,6 +1801,7 @@ func reset_battle_skills(roster_chars: Array) -> void:
 		c.temp_hit_bonus = 0
 		c.temp_crit_bonus = 0
 		c.temp_ignore_zoc = false
+		c.temp_leave_free = false
 		c.temp_zoc_aura = 0
 		c.temp_exposed = 0
 		c.skill_uses.clear()
@@ -1708,8 +1857,10 @@ func unlock_skill(c: CKCharacter, sid: String) -> Dictionary:
 	if sid not in c.skills:
 		c.skills.append(sid)
 	log_event("%s 解锁战技「%s」" % [c.name, get_skill(sid).get("name", sid)])
+	var ams = check_ambitions()
 	mark_dirty()
-	return {"ok": true, "msg": "解锁成功：" + get_skill(sid).get("name", sid)}
+	var extra = ("；" + " / ".join(ams)) if ams else ""
+	return {"ok": true, "msg": "解锁成功：" + get_skill(sid).get("name", sid) + extra}
 
 
 func set_rival_stance(house_id: String, stance: String) -> void:
@@ -2216,6 +2367,7 @@ func save_game() -> bool:
 		"quest_done": quest_done.duplicate(true),
 		"advisor_bonus": advisor_bonus.duplicate(true),
 		"ambition_done": ambition_done.duplicate(true),
+		"holdings": holdings.duplicate(true),
 		"characters": {},
 		"tavern": [],
 		"marriage": [],
@@ -2508,6 +2660,7 @@ func load_game() -> bool:
 	quest_done = data.get("quest_done", {}).duplicate(true)
 	advisor_bonus = data.get("advisor_bonus", {}).duplicate(true)
 	ambition_done = data.get("ambition_done", {}).duplicate(true)
+	holdings = data.get("holdings", {}).duplicate(true)
 	quests = data.get("quests", quests)
 	characters.clear()
 	for id in data.get("characters", {}).keys():

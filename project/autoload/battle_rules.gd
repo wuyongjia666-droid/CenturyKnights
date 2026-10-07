@@ -203,9 +203,12 @@ func in_zoc(cell: Vector2i, zoc_sources: Array) -> bool:
 			return true
 	return false
 
-## 移动范围：地形耗 + 敌军阻挡 + 控制地带（进入后不可继续穿行）
-## blocked: 敌军格；zoc_sources: 敌军坐标；ignore_zoc: 冲锋无视；zoc_extra_cost: 入控额外耗
-func move_costs(map_terrain: Array, start: Vector2i, move_pts: int, blocked: Array = [], zoc_sources: Array = [], ignore_zoc: bool = false, zoc_extra_cost: int = 0) -> Dictionary:
+## 移动范围：地形耗 + 敌军阻挡 + 控制地带
+## - 进入控带后不可继续穿行（经典 ZoC）
+## - 从控带/交战格离开到非控带：额外 leave_zoc_cost（脱离代价）
+## - zoc_extra_cost：方阵等强化「入控」额外耗
+## leave_free：无视脱离代价（脱离战技）
+func move_costs(map_terrain: Array, start: Vector2i, move_pts: int, blocked: Array = [], zoc_sources: Array = [], ignore_zoc: bool = false, zoc_extra_cost: int = 0, leave_zoc_cost: int = 1, leave_free: bool = false) -> Dictionary:
 	var h = map_terrain.size()
 	var w = map_terrain[0].size() if h > 0 else 0
 	var block_set: Dictionary = {}
@@ -214,10 +217,12 @@ func move_costs(map_terrain: Array, start: Vector2i, move_pts: int, blocked: Arr
 	var best: Dictionary = {}
 	var q: Array = [[start, 0]]
 	best[start] = 0
+	var start_engaged = in_zoc(start, zoc_sources)
 	while not q.is_empty():
 		var cur = q.pop_front()
 		var pos: Vector2i = cur[0]
 		var cost: int = cur[1]
+		# 非起点且已在控带：不可继续扩展（被咬住）
 		if not ignore_zoc and pos != start and in_zoc(pos, zoc_sources):
 			continue
 		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
@@ -228,8 +233,15 @@ func move_costs(map_terrain: Array, start: Vector2i, move_pts: int, blocked: Arr
 				continue
 			var tid = map_terrain[np.y][np.x]
 			var step = int(terrain_info(tid).get("move_cost", 1))
-			if not ignore_zoc and zoc_extra_cost > 0 and in_zoc(np, zoc_sources):
-				step += zoc_extra_cost
+			if not ignore_zoc:
+				var from_z = in_zoc(pos, zoc_sources) or (pos == start and start_engaged)
+				var to_z = in_zoc(np, zoc_sources)
+				# 脱离：控带 → 非控带
+				if from_z and not to_z and not leave_free and leave_zoc_cost > 0:
+					step += leave_zoc_cost
+				# 入控额外（方阵锁喉等）
+				if to_z and zoc_extra_cost > 0:
+					step += zoc_extra_cost
 			var nc = cost + step
 			if nc > move_pts:
 				continue
@@ -238,6 +250,9 @@ func move_costs(map_terrain: Array, start: Vector2i, move_pts: int, blocked: Arr
 			best[np] = nc
 			q.append([np, nc])
 	return best
+
+func is_engaged(cell: Vector2i, zoc_sources: Array) -> bool:
+	return in_zoc(cell, zoc_sources)
 
 func zoc_cells(map_w: int, map_h: int, zoc_sources: Array) -> Dictionary:
 	var out: Dictionary = {}

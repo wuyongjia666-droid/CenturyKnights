@@ -1038,6 +1038,12 @@ func _cast_buff_skill(ui: int, sid: String) -> void:
 		u.char.temp_zoc_aura = int(sk.get("zoc_aura"))
 	if sk.get("ignore_zoc"):
 		u.char.temp_ignore_zoc = true
+	if sk.get("leave_free"):
+		u.char.temp_leave_free = true
+		# 立刻刷新移动：可支付脱离
+		if ui == selected:
+			move_cells = _compute_move_cells(ui)
+			attack_mode = false
 	if sk.get("party_def_buff"):
 		var add = int(sk.get("party_def_buff"))
 		for ou in units:
@@ -1507,14 +1513,18 @@ func _compute_move_cells(ui: int) -> Dictionary:
 	var u = units[ui]
 	var foes = _enemy_positions(u.team)
 	var ignore = bool(u.char.temp_ignore_zoc)
+	var leave_free = bool(u.char.temp_leave_free)
 	var zoc_extra = 0
-	# 敌方移动时吃我方方阵锁喉
+	# 敌方移动时吃我方方阵/钉地
 	if u.team == "enemy":
 		zoc_extra = _ally_zoc_extra("player")
-	var mv = BattleRules.move_costs(terrain, u.pos, u.char.derived_move(), foes, foes, ignore, zoc_extra)
+	elif u.team == "player":
+		zoc_extra = _ally_zoc_extra("enemy")  # 敌军若有强化控带（少见）
+	var leave_cost = 1
+	var mv = BattleRules.move_costs(terrain, u.pos, u.char.derived_move(), foes, foes, ignore, zoc_extra, leave_cost, leave_free)
 	for ou in units:
 		if ou.char.hp > 0 and ou.pos != u.pos:
-			mv.erase(ou.pos)  # 不可停在友/敌军格
+			mv.erase(ou.pos)
 	return mv
 
 func _spawn_dmg(cell: Vector2i, text: String, col: Color) -> void:
@@ -1714,6 +1724,7 @@ func _start_player_turn() -> void:
 			u.char.temp_exposed = 0
 			u.char.temp_zoc_aura = 0
 			u.char.temp_ignore_zoc = false
+			u.char.temp_leave_free = false
 			pcs.append(u.char)
 	GameState.tick_skill_cooldowns(pcs)
 	selected = -1
@@ -1846,6 +1857,8 @@ func _finish(win: bool) -> void:
 		GameState.set_flag("battle_done")
 		var purse = 35
 		if bool(GameState.house_mods.get("warlord_purse", false)):
+			purse += 10
+		if bool(GameState.house_mods.get("warlord_purse2", false)):
 			purse += 10
 		GameState.silver += purse
 		GameState.add_rep("ashland", 8)
@@ -2752,7 +2765,14 @@ func _refresh_info() -> void:
 		else:
 			mode = "[color=#6db0e0]【已选中】点击蓝格移动，或开攻击模式[/color]\n"
 	var role = BattleRules.role_label(BattleRules.job_role(c.job_id))
-	var txt = mode + "[b]%s[/b]（%s·%s） HP %d/%d\n攻 %d 防 %d 命中 %d 回避 %d 移动 %d\n地形：%s（回避+%d 防+%d）\n" % [
+	var foes = _enemy_positions(u.team)
+	var engaged = BattleRules.is_engaged(u.pos, foes)
+	var eng = "[color=#e07070]〔交战中·脱离+1移〕[/color]\n" if engaged else ""
+	if c.temp_leave_free:
+		eng = "[color=#8ecae6]〔抽身：脱离不耗〕[/color]\n"
+	elif c.temp_ignore_zoc:
+		eng = "[color=#c9a227]〔破控：无视地带〕[/color]\n"
+	var txt = mode + eng + "[b]%s[/b]（%s·%s） HP %d/%d\n攻 %d 防 %d 命中 %d 回避 %d 移动 %d\n地形：%s（回避+%d 防+%d）\n" % [
 		c.name, "我军" if u.team == "player" else "敌军", role,
 		c.hp, c.max_hp, c.derived_atk(), c.derived_def(), c.derived_hit(), c.derived_avo(), c.derived_move(),
 		tinfo["name"], tinfo["avo_bonus"], tinfo.get("def_bonus", 0),

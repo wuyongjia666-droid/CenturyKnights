@@ -372,6 +372,42 @@
       "def_buff": 5,
       "zoc_aura": 1,
       "tree": "melee"
+    },
+    {
+      "id": "disengage_step",
+      "name": "抽身一步",
+      "jobs": [
+        "light_inf",
+        "squire",
+        "light_cavalry",
+        "hunter",
+        "archer",
+        "warrior"
+      ],
+      "type": "buff",
+      "uses": 2,
+      "cooldown": 2,
+      "tier": 1,
+      "desc": "本回合脱离控制地带不耗额外移力。冷却2。",
+      "leave_free": true,
+      "tree": "melee"
+    },
+    {
+      "id": "anchor_guard",
+      "name": "钉地守阵",
+      "jobs": [
+        "heavy_inf",
+        "warrior"
+      ],
+      "type": "buff",
+      "uses": 1,
+      "cooldown": 3,
+      "tier": 2,
+      "req_skill": "guard_stance",
+      "desc": "防御+3；自身控带入控额外+1（叠方阵）。冷却3。",
+      "def_buff": 3,
+      "zoc_aura": 1,
+      "tree": "melee"
     }
   ],
   "trees": [

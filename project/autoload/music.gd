@@ -1,5 +1,5 @@
 extends Node
-## 程序生成 ambient / battle 床（WAV 循环，无第三方授权）
+## 程序生成 ambient / battle / castle 床（WAV 循环）
 
 var _player: AudioStreamPlayer
 var _current: String = ""
@@ -15,7 +15,10 @@ func play_hub() -> void:
 	_play("res://assets/sfx/music_hub.wav", -14.0)
 
 func play_battle() -> void:
-	_play("res://assets/sfx/music_battle.wav", -12.0)
+	_play("res://assets/sfx/music_battle.wav", -11.5)
+
+func play_castle() -> void:
+	_play("res://assets/sfx/music_castle.wav", -15.0)
 
 func stop() -> void:
 	if _player:

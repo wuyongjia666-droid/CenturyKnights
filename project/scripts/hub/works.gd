@@ -7,10 +7,11 @@ var _list: VBoxContainer
 func _ready() -> void:
 	UIKit.make_screen_bg(self)
 	UIFX.fade_in(self, 0.28)
+	Music.play_castle()
 	var t = UIKit.make_label("城堡工事", true)
 	t.position = Vector2(40, 16)
 	add_child(t)
-	var tip = UIKit.make_dim_label("工事可升至 Lv5。厅堂扩编队，校场/市集/工坊/祠堂各有高阶月结。下方「堡志」是中长期目标——全满级、战勋、双嗣、家训都有永久奖。")
+	var tip = UIKit.make_dim_label("工事至 Lv5；属地庄园在「属地」面板。堡志已扩：战勋十次、两岸/四野/深耕、库银、六旗、战技通识等。")
 	tip.position = Vector2(40, 56)
 	tip.custom_minimum_size = Vector2(1100, 40)
 	tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

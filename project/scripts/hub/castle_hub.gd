@@ -75,6 +75,7 @@ func _build() -> void:
 		[Locale.t("btn_train"), "六维与转职", "res://scenes/hub/train.tscn"],
 		[Locale.t("btn_forge"), "灰刃与铁火", "res://scenes/hub/forge.tscn"],
 		["工事", "厅堂校场市集", "res://scenes/hub/works.tscn"],
+		["属地", "四野租佃庄园", "res://scenes/hub/estates.tscn"],
 		[Locale.t("btn_shrine"), "祈愈与丰收", "res://scenes/hub/shrine.tscn"],
 		[Locale.t("btn_lineage"), "血胤与容貌", "res://scenes/hub/lineage_view.tscn"],
 		[Locale.t("btn_marriage"), "春令与期望", "res://scenes/hub/marriage.tscn"],

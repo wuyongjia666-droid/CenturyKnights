@@ -416,7 +416,7 @@ static func _fill_rect(img: Image, r: Rect2i, col: Color) -> void:
 
 static func _proc_portrait(c: CKCharacter, size: int) -> Texture2D:
 	var role = BattleRules.job_role(c.job_id)
-	var ck = "pp2|" + str(c.id) + "|" + role + "|" + str(c.gender) + "|" + str(size)
+	var ck = "pp3|" + str(c.id) + "|" + role + "|" + str(c.gender) + "|" + str(c.age) + "|" + c.rank + "|" + str(size)
 	if _cache.has(ck): return _cache[ck]
 	var img := Image.create(size, size, false, Image.FORMAT_RGBA8)
 	img.fill(Color(0, 0, 0, 0))
@@ -457,6 +457,26 @@ static func _proc_portrait(c: CKCharacter, size: int) -> Texture2D:
 	# 伤疤
 	if str(c.appearance.get("scar", "none")) != "none":
 		_fill_rect(img, Rect2i(int(s * 0.55), int(s * 0.36), int(s * 0.12), int(s * 0.025)), Color(0.55, 0.25, 0.22, 0.85))
+	# 年龄纹
+	if c.age >= 40:
+		_fill_rect(img, Rect2i(int(s * 0.34), int(s * 0.48), int(s * 0.10), int(s * 0.015)), Color(0.55, 0.4, 0.35, 0.55))
+		_fill_rect(img, Rect2i(int(s * 0.56), int(s * 0.48), int(s * 0.10), int(s * 0.015)), Color(0.55, 0.4, 0.35, 0.55))
+	if c.age >= 55:
+		_fill_ellipse(img, s * 0.5, s * 0.22, s * 0.12, s * 0.04, hair.lightened(0.35))
+	# 勋位边框
+	var ri = c.rank_index()
+	if ri >= 1:
+		var rc = [Color(0.55, 0.55, 0.6), Color(0.75, 0.65, 0.35), Color(0.85, 0.75, 0.4), Color(0.9, 0.55, 0.35)][clampi(ri, 0, 3)]
+		for x in size:
+			img.set_pixel(x, 0, rc)
+			img.set_pixel(x, 1, rc)
+			img.set_pixel(x, size - 1, rc)
+			img.set_pixel(x, size - 2, rc)
+		for y in size:
+			img.set_pixel(0, y, rc)
+			img.set_pixel(1, y, rc)
+			img.set_pixel(size - 1, y, rc)
+			img.set_pixel(size - 2, y, rc)
 	var tex := ImageTexture.create_from_image(img)
 	_cache[ck] = tex
 	return tex
