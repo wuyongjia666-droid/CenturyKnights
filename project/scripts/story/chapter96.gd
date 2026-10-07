@@ -61,6 +61,9 @@ func _refresh_actions() -> void:
 				GameState.silver += 440; GameState.add_skill_point(4)
 				GameState.add_rep("ashland", 22); GameState.add_rep("riverland", 14); GameState.save_game()
 				get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
+			_add("踏上第九十七章·煎药", func():
+				GameState.set_flag("chapter96_done"); GameState.set_flag("volume15_mid_done"); GameState.add_skill_point(2)
+				GameState.chapter97_beat = "97.0"; get_tree().change_scene_to_file("res://scenes/story/chapter97.tscn"))
 		_:
 			_add("继续", func(): _goto_next())
 
