@@ -533,10 +533,16 @@ static func _boss_portrait(key: String) -> String:
 	return "res://assets/art/portraits/%s_boss.png" % key
 
 static func _face_uid(c: CKCharacter) -> int:
-	var h = 0
-	for ch2 in str(c.id):
-		h = (h * 33 + ch2.unicode_at(0)) % 10007
-	return absi(h) % 256
+	## FNV-ish：id + 名 + 等位，降低王朝子嗣碰撞
+	var h := 2166136261
+	var key = "%s|%s|%s|%s|%s|%s|%s" % [
+		str(c.id), str(c.name), str(c.gender),
+		str(c.appearance.get("hair", "")), str(c.appearance.get("eyes", "")),
+		str(c.appearance.get("brow", "")), str(c.appearance.get("scar", "")),
+	]
+	for ch2 in key:
+		h = int((h ^ ch2.unicode_at(0)) * 16777619) & 0x7fffffff
+	return h % 512
 
 static func _fingerprint_portrait(tex: Texture2D, c: CKCharacter) -> Texture2D:
 	## 个人板为底；hireface 等位图作下半身/衣饰次级细节；轻染发瞳

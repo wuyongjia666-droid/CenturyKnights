@@ -1370,9 +1370,14 @@ func _draw_overlay() -> void:
 			else:
 				col = Color(0.25, 0.55, 0.95, 0.38)
 				edge = Color(0.4, 0.7, 1.0, 0.55)
+			var hovered = (pos == _hover_cell)
+			var pulse = 0.55 + 0.45 * sin(_sel_pulse * (7.0 if hovered else 4.0))
+			col.a = clampf(col.a * (1.15 if hovered else 1.0) * (0.85 + 0.25 * pulse), 0.2, 0.85)
+			edge.a = clampf((0.95 if hovered else edge.a) * (0.75 + 0.35 * pulse), 0.4, 1.0)
 			overlay.draw_rect(r, col)
-			overlay.draw_rect(r, edge, false, 2.0)
-			# 色觉友好：纹理叠加（不单靠颜色）
+			var ew = 3.5 if hovered else 2.0
+			overlay.draw_rect(r, edge, false, ew)
+			# 色觉友好：高对比 hatch + 悬停脉冲透明度
 			var hatch := ""
 			if locked_ov and leaving:
 				hatch = "res://assets/art/ui/zoc_hatch_lock3.png"
@@ -1383,7 +1388,9 @@ func _draw_overlay() -> void:
 			else:
 				hatch = "res://assets/art/ui/zoc_hatch_safe.png"
 			if hatch != "" and ResourceLoader.exists(hatch):
-				overlay.draw_texture_rect(load(hatch), r, false)
+				var ht: Texture2D = load(hatch)
+				var ha = (0.55 + 0.45 * pulse) if hovered else (0.75 + 0.25 * pulse)
+				overlay.draw_texture_rect(ht, r, false, Color(1, 1, 1, clampf(ha, 0.4, 1.0)))
 			if tag != "":
 				var chip_path = ""
 				if tag == "锁3":
@@ -1393,8 +1400,9 @@ func _draw_overlay() -> void:
 				elif tag == "控":
 					chip_path = "res://assets/art/ui/zoc_chip_zoc.png"
 				var tp = ORIGIN + Vector2(pos) * CELL + Vector2(CELL - 22, 2)
+				var csz = 20.0 if hovered else 18.0
 				if chip_path != "" and ResourceLoader.exists(chip_path):
-					overlay.draw_texture_rect(load(chip_path), Rect2(tp, Vector2(18, 18)), false)
+					overlay.draw_texture_rect(load(chip_path), Rect2(tp, Vector2(csz, csz)), false)
 				else:
 					overlay.draw_rect(Rect2(tp, Vector2(18, 14)), Color(0.05, 0.05, 0.08, 0.75))
 		# 图例：纯图标芯片（无长文字）
@@ -1463,6 +1471,8 @@ func _gui_input(event: InputEvent) -> void:
 		if cell != _hover_cell:
 			_hover_cell = cell
 			map_draw.queue_redraw()
+			if overlay:
+				overlay.queue_redraw()
 		return
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_RIGHT:
@@ -2304,7 +2314,9 @@ func _enemy_ai() -> void:
 							threat = true
 							break
 				if threat:
-					expect += 3.6
+					expect += 4.2
+					if BattleRules.is_engaged(pos, foes_player):
+						expect += 1.5  # 占控带压残血
 				# 攻击会刷新己方锁定——残血时略减
 				if locked_self and float(u.char.hp) / float(maxi(1, u.char.max_hp)) < 0.35:
 					expect -= 2.5
