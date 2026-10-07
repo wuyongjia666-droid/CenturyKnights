@@ -26,6 +26,9 @@ var data_chapter9: Dictionary = {}
 var data_chapter10: Dictionary = {}
 var data_chapter11: Dictionary = {}
 var data_chapter12: Dictionary = {}
+var data_chapter13: Dictionary = {}
+var data_rivals: Dictionary = {}
+var rival_stances: Dictionary = {}  # house_id -> stance override
 var data_skills: Dictionary = {}
 var chapter1_beat: String = "1.0"
 var chapter2_beat: String = "2.0"
@@ -38,6 +41,8 @@ var chapter8_beat: String = "8.0"
 var chapter9_beat: String = "9.0"
 var chapter10_beat: String = "10.0"
 var chapter11_beat: String = "11.0"
+var chapter12_beat: String = "12.0"
+var chapter13_beat: String = "13.0"
 var skill_points: int = 0
 
 # 游戏状态
@@ -104,6 +109,8 @@ func _load_data() -> void:
 	data_chapter10 = _read_json("res://data/chapter10.json")
 	data_chapter11 = _read_json("res://data/chapter11.json")
 	data_chapter12 = _read_json("res://data/chapter12.json")
+	data_chapter13 = _read_json("res://data/chapter13.json")
+	data_rivals = _read_json("res://data/rival_houses.json")
 	data_skills = _read_json("res://data/skills.json")
 
 func _read_json(path: String) -> Dictionary:
@@ -199,6 +206,9 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	chapter9_beat = "9.0"
 	chapter10_beat = "10.0"
 	chapter11_beat = "11.0"
+	chapter12_beat = "12.0"
+	chapter13_beat = "13.0"
+	rival_stances = {"shuoying": "hostile", "qinghe": "wary", "lantern": "neutral"}
 	skill_points = 1
 	chapter0_flags = {}
 	event_log.clear()
@@ -544,6 +554,59 @@ func unlock_skill(c: CKCharacter, sid: String) -> Dictionary:
 	mark_dirty()
 	return {"ok": true, "msg": "解锁成功：" + get_skill(sid).get("name", sid)}
 
+
+func set_rival_stance(house_id: String, stance: String) -> void:
+	rival_stances[house_id] = stance
+	add_lineage_event("敌宅立场：%s → %s" % [house_id, stance])
+	mark_dirty()
+
+func get_rival_stance(house_id: String) -> String:
+	if rival_stances.has(house_id):
+		return str(rival_stances[house_id])
+	for h in data_rivals.get("houses", []):
+		if str(h.get("id")) == house_id:
+			return str(h.get("stance", "neutral"))
+	return "neutral"
+
+## 授旗道路：自动授予相关一阶战技（并微调职业）
+func grant_path_skills(c: CKCharacter, path: String) -> Array:
+	var granted: Array = []
+	if c == null or path == "":
+		return granted
+	var prefer_jobs := {
+		"martial": ["warrior", "heavy_inf", "light_inf", "squire"],
+		"scholar": ["priest", "apprentice"],
+		"merchant": ["light_cavalry", "squire", "hunter"]
+	}
+	var prefer_trees := {
+		"martial": ["melee", "cavalry"],
+		"scholar": ["faith"],
+		"merchant": ["range", "cavalry"]
+	}
+	# soft job nudge if still default light_inf child
+	var jobs: Array = prefer_jobs.get(path, [])
+	if c.job_id == "light_inf" and jobs.size() > 0:
+		c.job_id = str(jobs[0])
+	grant_job_skills(c)
+	var trees: Array = prefer_trees.get(path, [])
+	for s in data_skills.get("skills", []):
+		if int(s.get("tier", 1)) > 1:
+			continue
+		if str(s.get("tree", "")) not in trees:
+			continue
+		# allow if job matches OR path strongly aligns
+		var sid = str(s.get("id"))
+		var sjobs: Array = s.get("jobs", [])
+		if c.job_id not in sjobs and path != "scholar":
+			# still grant 1-2 iconic skills for path even if job mismatch
+			if sid not in ["power_strike", "rush", "piercing_shot", "ward_chant", "lance_thrust", "smite"]:
+				continue
+		if sid not in c.skills:
+			c.skills.append(sid)
+			granted.append(sid)
+	mark_dirty()
+	return granted
+
 func add_lineage_event(text: String) -> void:
 	lineage_log.append({"t": Calendar.label() if Calendar else "", "text": text})
 	if lineage_log.size() > 40:
@@ -597,6 +660,9 @@ func save_game() -> bool:
 		"chapter9_beat": chapter9_beat,
 		"chapter10_beat": chapter10_beat,
 		"chapter11_beat": chapter11_beat,
+		"chapter12_beat": chapter12_beat,
+		"chapter13_beat": chapter13_beat,
+		"rival_stances": rival_stances.duplicate(true),
 		"skill_points": skill_points,
 		"chapter0_flags": chapter0_flags,
 		"reputation": reputation,
@@ -655,6 +721,9 @@ func load_game() -> bool:
 	chapter9_beat = str(data.get("chapter9_beat", "9.0"))
 	chapter10_beat = str(data.get("chapter10_beat", "10.0"))
 	chapter11_beat = str(data.get("chapter11_beat", "11.0"))
+	chapter12_beat = str(data.get("chapter12_beat", "12.0"))
+	chapter13_beat = str(data.get("chapter13_beat", "13.0"))
+	rival_stances = data.get("rival_stances", {"shuoying": "hostile", "qinghe": "wary", "lantern": "neutral"}).duplicate(true)
 	skill_points = int(data.get("skill_points", 0))
 	chapter0_flags = data.get("chapter0_flags", {})
 	reputation = data.get("reputation", {"ashland": 0, "riverland": 0})

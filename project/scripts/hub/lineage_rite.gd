@@ -134,11 +134,16 @@ func _do_enlist() -> void:
 	var r = Lineage.enlist_adult(_selected)
 	_msg.text = str(r.get("msg", ""))
 	if r.get("ok"):
-		# path bonuses
+		var granted = GameState.grant_path_skills(_selected, _path)
+		if granted.size() > 0:
+			var names: Array = []
+			for sid in granted:
+				names.append(str(GameState.get_skill(sid).get("name", sid)))
+			_msg.text += "　道路战技：" + "、".join(names)
 		match _path:
 			"martial":
 				GameState.add_skill_point(1)
-				_msg.text += "　偏武：额外战技点 +1"
+				_msg.text += "　偏武：战技点 +1"
 			"scholar":
 				GameState.add_rep("riverland", 3)
 				_msg.text += "　偏文：河卫声望 +3"

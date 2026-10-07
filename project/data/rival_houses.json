@@ -1,0 +1,25 @@
+{
+  "houses": [
+    {
+      "id": "shuoying",
+      "name": "朔影家",
+      "stance": "hostile",
+      "desc": "宴后余波的主谋。觊觎灰旗嗣位旁注。",
+      "rep_key": "shuoying"
+    },
+    {
+      "id": "qinghe",
+      "name": "清河宅",
+      "stance": "wary",
+      "desc": "陆桥旧族。可交涉换情报与银。",
+      "rep_key": "qinghe"
+    },
+    {
+      "id": "lantern",
+      "name": "灯市会",
+      "stance": "neutral",
+      "desc": "港市商团旁支。偏商子嗣更易谈拢。",
+      "rep_key": "lantern"
+    }
+  ]
+}

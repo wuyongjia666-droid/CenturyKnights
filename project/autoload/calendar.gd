@@ -121,4 +121,10 @@ func _apply_month() -> Array:
 		var h = GameState.apply_harvest()
 		evs.append({"type": "harvest", "text": h})
 		GameState.chapter0_flags["harvest_done"] = true
+	# rival house seasonal rumor
+	if month == 3 or month == 9:
+		var st = GameState.get_rival_stance("shuoying") if GameState.has_method("get_rival_stance") else "hostile"
+		var rum = "朔影家流言：立场仍为「%s」。可去敌宅交涉或推进余波战役。" % st
+		evs.append({"type": "rival_rumor", "text": rum})
+		GameState.add_lineage_event(rum)
 	return evs
