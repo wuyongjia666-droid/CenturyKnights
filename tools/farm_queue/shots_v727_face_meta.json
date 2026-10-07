@@ -1,0 +1,202 @@
+[
+  {
+    "label": "portrait_farm_m_00_youth",
+    "gender": "m",
+    "tag": "youth"
+  },
+  {
+    "label": "portrait_farm_m_01_squire",
+    "gender": "m",
+    "tag": "squire"
+  },
+  {
+    "label": "portrait_farm_m_02_hunter",
+    "gender": "m",
+    "tag": "hunter"
+  },
+  {
+    "label": "portrait_farm_m_03_guard",
+    "gender": "m",
+    "tag": "guard"
+  },
+  {
+    "label": "portrait_farm_m_04_spear",
+    "gender": "m",
+    "tag": "spear"
+  },
+  {
+    "label": "portrait_farm_m_05_archer",
+    "gender": "m",
+    "tag": "archer"
+  },
+  {
+    "label": "portrait_farm_m_06_monk",
+    "gender": "m",
+    "tag": "monk"
+  },
+  {
+    "label": "portrait_farm_m_07_merchant",
+    "gender": "m",
+    "tag": "merchant"
+  },
+  {
+    "label": "portrait_farm_m_08_scholar",
+    "gender": "m",
+    "tag": "scholar"
+  },
+  {
+    "label": "portrait_farm_m_09_elder",
+    "gender": "m",
+    "tag": "elder"
+  },
+  {
+    "label": "portrait_farm_m_10_cavalry",
+    "gender": "m",
+    "tag": "cavalry"
+  },
+  {
+    "label": "portrait_farm_m_11_heavy",
+    "gender": "m",
+    "tag": "heavy"
+  },
+  {
+    "label": "portrait_farm_m_12_skirm",
+    "gender": "m",
+    "tag": "skirm"
+  },
+  {
+    "label": "portrait_farm_m_13_captain",
+    "gender": "m",
+    "tag": "captain"
+  },
+  {
+    "label": "portrait_farm_m_14_child",
+    "gender": "m",
+    "tag": "child"
+  },
+  {
+    "label": "portrait_farm_m_15_mid",
+    "gender": "m",
+    "tag": "mid"
+  },
+  {
+    "label": "portrait_farm_m_16_medic",
+    "gender": "m",
+    "tag": "medic"
+  },
+  {
+    "label": "portrait_farm_m_17_smith",
+    "gender": "m",
+    "tag": "smith"
+  },
+  {
+    "label": "portrait_farm_m_18_scout",
+    "gender": "m",
+    "tag": "scout"
+  },
+  {
+    "label": "portrait_farm_m_19_banner",
+    "gender": "m",
+    "tag": "banner"
+  },
+  {
+    "label": "portrait_farm_f_00_youth",
+    "gender": "f",
+    "tag": "youth"
+  },
+  {
+    "label": "portrait_farm_f_01_squire",
+    "gender": "f",
+    "tag": "squire"
+  },
+  {
+    "label": "portrait_farm_f_02_hunter",
+    "gender": "f",
+    "tag": "hunter"
+  },
+  {
+    "label": "portrait_farm_f_03_guard",
+    "gender": "f",
+    "tag": "guard"
+  },
+  {
+    "label": "portrait_farm_f_04_spear",
+    "gender": "f",
+    "tag": "spear"
+  },
+  {
+    "label": "portrait_farm_f_05_archer",
+    "gender": "f",
+    "tag": "archer"
+  },
+  {
+    "label": "portrait_farm_f_06_monk",
+    "gender": "f",
+    "tag": "monk"
+  },
+  {
+    "label": "portrait_farm_f_07_merchant",
+    "gender": "f",
+    "tag": "merchant"
+  },
+  {
+    "label": "portrait_farm_f_08_scholar",
+    "gender": "f",
+    "tag": "scholar"
+  },
+  {
+    "label": "portrait_farm_f_09_elder",
+    "gender": "f",
+    "tag": "elder"
+  },
+  {
+    "label": "portrait_farm_f_10_cavalry",
+    "gender": "f",
+    "tag": "cavalry"
+  },
+  {
+    "label": "portrait_farm_f_11_heavy",
+    "gender": "f",
+    "tag": "heavy"
+  },
+  {
+    "label": "portrait_farm_f_12_skirm",
+    "gender": "f",
+    "tag": "skirm"
+  },
+  {
+    "label": "portrait_farm_f_13_captain",
+    "gender": "f",
+    "tag": "captain"
+  },
+  {
+    "label": "portrait_farm_f_14_child",
+    "gender": "f",
+    "tag": "child"
+  },
+  {
+    "label": "portrait_farm_f_15_mid",
+    "gender": "f",
+    "tag": "mid"
+  },
+  {
+    "label": "portrait_farm_f_16_medic",
+    "gender": "f",
+    "tag": "medic"
+  },
+  {
+    "label": "portrait_farm_f_17_smith",
+    "gender": "f",
+    "tag": "smith"
+  },
+  {
+    "label": "portrait_farm_f_18_scout",
+    "gender": "f",
+    "tag": "scout"
+  },
+  {
+    "label": "portrait_farm_f_19_banner",
+    "gender": "f",
+    "tag": "banner"
+  }
+]

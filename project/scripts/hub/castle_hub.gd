@@ -121,6 +121,7 @@ func _build() -> void:
 
 	UIFX.stagger_children(grid, 0.028, 0.26)
 	UIFX.nav_slide(grid, -18.0, 0.30)
+	UIFX.list_ripple(grid, 0.04)
 	UIFX.page_enter(self)
 	var flavor = UIKit.make_panel()
 	flavor.position = Vector2(40, 520)

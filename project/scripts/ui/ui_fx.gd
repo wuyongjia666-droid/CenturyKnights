@@ -221,6 +221,18 @@ static func focus_ring(node: Control, col: Color = Color(1.15, 0.95, 0.55), dur:
 	flash_modulate(node, col, dur)
 	hover_lift(node, 0.02)
 
+static func list_ripple(parent: Node, delay: float = 0.035) -> void:
+	## 列表项依次 punch（选中后反馈波）
+	if parent == null or reduced(): return
+	var i := 0
+	for c in parent.get_children():
+		if c is Control:
+			var ctrl: Control = c
+			var tw = ctrl.create_tween()
+			tw.tween_interval(delay * i)
+			tw.tween_callback(func(): punch(ctrl, 0.035))
+			i += 1
+
 static func nav_slide(node: Control, from_x: float = -24.0, dur: float = 0.28) -> void:
 	## 侧栏/导航滑入
 	if node == null: return

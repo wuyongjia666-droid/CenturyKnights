@@ -10,6 +10,16 @@ var _choice: String = ""
 
 func _ready() -> void:
 	UIKit.make_themed_bg(self, "inheritance")
+	if ResourceLoader.exists("res://assets/art/ui/inheritance_banner.png"):
+		var _bn := TextureRect.new()
+		_bn.texture = load("res://assets/art/ui/inheritance_banner.png")
+		_bn.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		_bn.stretch_mode = TextureRect.STRETCH_SCALE
+		_bn.position = Vector2(0, 0)
+		_bn.size = Vector2(1280, 52)
+		_bn.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(_bn)
+		UIFX.banner_shimmer(_bn, 3.8)
 	if ResourceLoader.exists("res://assets/art/ui/hub_banner_strip.png"):
 		var strip := TextureRect.new()
 		strip.texture = load("res://assets/art/ui/hub_banner_strip.png")

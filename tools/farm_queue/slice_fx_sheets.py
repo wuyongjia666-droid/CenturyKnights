@@ -25,6 +25,8 @@ SHEETS = [
     ("block_parry_sheet.png", "shield", 6),
     ("levelup_sheet.png", "unlock", 6),
     ("heal_aura_sheet.png", "heal", 6),
+    ("miss_whoosh_sheet.png", "spark", 6),
+    ("step_dust_sheet.png", "move_dust", 6),
 ]
 
 def key_plate(cell: Image.Image, black_thr: int = 32, white_thr: int = 235) -> Image.Image:

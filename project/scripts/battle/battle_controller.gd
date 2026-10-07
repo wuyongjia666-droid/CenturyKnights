@@ -1501,7 +1501,7 @@ func _draw_overlay() -> void:
 		overlay.draw_string(ThemeDB.fallback_font, Vector2(120, 332), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(UnitArt.crest_color(), a2))
 	# 地形悬停提示
 	if _in_bounds(_hover_cell):
-		var sw = "res://assets/art/fx/attack_wash.png" if attack_mode else "res://assets/art/fx/select_wash.png"
+		var sw = "res://assets/art/fx/attack_wash.png" if attack_mode else ("res://assets/art/fx/move_wash.png" if ResourceLoader.exists("res://assets/art/fx/move_wash.png") else "res://assets/art/fx/select_wash.png")
 		if ResourceLoader.exists(sw):
 			var hr = Rect2(ORIGIN + Vector2(_hover_cell) * CELL, Vector2(CELL - 2, CELL - 2))
 			overlay.draw_texture_rect(load(sw), hr.grow(2.0), false, Color(1, 1, 1, 0.55 + 0.25 * sin(_sel_pulse * 6.0)))

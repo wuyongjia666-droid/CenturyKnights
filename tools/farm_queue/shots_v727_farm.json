@@ -1,0 +1,290 @@
+[
+  {
+    "label": "portrait_farm_m_00_youth",
+    "prompt": "Chinese ink-fantasy young male ash-banner recruit, earnest eyes, soft jaw, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_m_01_squire",
+    "prompt": "Chinese ink-fantasy young male squire, keen gaze, light armor collar, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_m_02_hunter",
+    "prompt": "Chinese ink-fantasy male hunter scout, wind-burned cheeks, hood shadow, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_m_03_guard",
+    "prompt": "Chinese ink-fantasy male gate guard, stern jaw, iron nasal helm hint, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_m_04_spear",
+    "prompt": "Chinese ink-fantasy male spear veteran, scarred cheek, calm eyes, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_m_05_archer",
+    "prompt": "Chinese ink-fantasy male archer, quiet eyes, leather bracer collar, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_m_06_monk",
+    "prompt": "Chinese ink-fantasy male shrine monk, calm eyes, prayer beads, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_m_07_merchant",
+    "prompt": "Chinese ink-fantasy male merchant, shrewd smile, silk collar, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_m_08_scholar",
+    "prompt": "Chinese ink-fantasy male scholar tactician, ink-stained fingers, pale brow, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_m_09_elder",
+    "prompt": "Chinese ink-fantasy elder male advisor, white beard, ash robes, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_m_10_cavalry",
+    "prompt": "Chinese ink-fantasy male light cavalry, sun-tanned, confident smirk, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_m_11_heavy",
+    "prompt": "Chinese ink-fantasy male heavy infantry, broad nose, iron pauldrons hint, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_m_12_skirm",
+    "prompt": "Chinese ink-fantasy male skirmisher youth, quick smile, leather wrap, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_m_13_captain",
+    "prompt": "Chinese ink-fantasy male company captain, hard eyes, gold trim cloak, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_m_14_child",
+    "prompt": "Chinese ink-fantasy boy child heir, soft cheeks, toy ash banner, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_m_15_mid",
+    "prompt": "Chinese ink-fantasy middle-aged male farmer-soldier, weathered brow, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_m_16_medic",
+    "prompt": "Chinese ink-fantasy male field medic, tired kind eyes, cloth wrap, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_m_17_smith",
+    "prompt": "Chinese ink-fantasy male forge smith, soot brow, strong jaw, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_m_18_scout",
+    "prompt": "Chinese ink-fantasy male night scout, sharp cheekbones, dark hair, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_m_19_banner",
+    "prompt": "Chinese ink-fantasy male banner-bearer, proud eyes, crest clasp, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_f_00_youth",
+    "prompt": "Chinese ink-fantasy young female ash-banner recruit, bright eyes, reed wrap, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_f_01_squire",
+    "prompt": "Chinese ink-fantasy young female squire, keen gaze, light armor collar, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_f_02_hunter",
+    "prompt": "Chinese ink-fantasy female huntress, wind-tangled hair, keen eyes, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_f_03_guard",
+    "prompt": "Chinese ink-fantasy female gate warder, stern gaze, iron rim helm hint, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_f_04_spear",
+    "prompt": "Chinese ink-fantasy female spear veteran, thin scar, calm eyes, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_f_05_archer",
+    "prompt": "Chinese ink-fantasy female archer, quiet eyes, leather bracer, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_f_06_monk",
+    "prompt": "Chinese ink-fantasy female shrine attendant, calm eyes, prayer beads, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_f_07_merchant",
+    "prompt": "Chinese ink-fantasy female merchant, shrewd smile, silk collar, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_f_08_scholar",
+    "prompt": "Chinese ink-fantasy female scholar, ink sleeves, pale brow, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_f_09_elder",
+    "prompt": "Chinese ink-fantasy elder female matron, silver hair, ash robes, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_f_10_cavalry",
+    "prompt": "Chinese ink-fantasy female light cavalry, sun-tanned, confident smile, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_f_11_heavy",
+    "prompt": "Chinese ink-fantasy female heavy infantry, broad brow, iron pauldrons hint, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_f_12_skirm",
+    "prompt": "Chinese ink-fantasy female skirmisher, quick smile, leather wrap, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_f_13_captain",
+    "prompt": "Chinese ink-fantasy female company captain, hard eyes, gold trim cloak, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_f_14_child",
+    "prompt": "Chinese ink-fantasy girl child heir, bright eyes, reed flower, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_f_15_mid",
+    "prompt": "Chinese ink-fantasy middle-aged female farmer-soldier, weathered brow, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_f_16_medic",
+    "prompt": "Chinese ink-fantasy female field medic, tired kind eyes, cloth wrap, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_f_17_smith",
+    "prompt": "Chinese ink-fantasy female forge smith, soot brow, strong jaw, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_f_18_scout",
+    "prompt": "Chinese ink-fantasy female night scout, sharp cheekbones, dark hair, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_farm_f_19_banner",
+    "prompt": "Chinese ink-fantasy female banner-bearer, proud eyes, crest clasp, painterly bust portrait, no text glyphs, square game face plate, soft ash lighting",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "fx_miss_whoosh_sheet",
+    "prompt": "game VFX horizontal sprite sheet 6 frames 384x64, soft silver miss whoosh arc, transparent bg, no text",
+    "width": 384,
+    "height": 64
+  },
+  {
+    "label": "fx_step_dust_sheet",
+    "prompt": "game VFX horizontal sprite sheet 6 frames 384x64, ash footstep dust puff, transparent bg, no text",
+    "width": 384,
+    "height": 64
+  },
+  {
+    "label": "ui_forge_banner",
+    "prompt": "Chinese ink-fantasy forge UI banner 1280x56, sparks anvil glow gold trim, transparent ends, no text",
+    "width": 1280,
+    "height": 56
+  },
+  {
+    "label": "ui_inheritance_banner",
+    "prompt": "Chinese ink-fantasy inheritance UI banner 1280x56, seal scrolls gold dust, transparent ends, no text",
+    "width": 1280,
+    "height": 56
+  },
+  {
+    "label": "ui_rival_banner",
+    "prompt": "Chinese ink-fantasy rival houses UI banner 1280x56, crossed banners dusk, transparent ends, no text",
+    "width": 1280,
+    "height": 56
+  },
+  {
+    "label": "ui_skill_banner",
+    "prompt": "Chinese ink-fantasy skill tree UI banner 1280x56, glowing nodes gold veins, transparent ends, no text",
+    "width": 1280,
+    "height": 56
+  },
+  {
+    "label": "battle_grid_move_wash",
+    "prompt": "game battle tile move wash 64x64, soft cyan-gold path glow corners, transparent center, no text",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "ui_month_chip_grain_v2",
+    "prompt": "tiny game HUD chip 64x64, grain sack icon denser, warm gold rim, transparent bg, no text",
+    "width": 64,
+    "height": 64
+  }
+]

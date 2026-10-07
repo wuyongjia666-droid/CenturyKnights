@@ -133,6 +133,33 @@ def _prefer_rank(path: Path) -> int:
         return 2
     return 1
 
+
+def _extra_ingest(f: Path) -> bool:
+    stem = f.stem
+    if stem.startswith("portrait_farm_") or stem.startswith("portrait_hire_"):
+        dest = POR / f"{stem}.png"
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(f, dest)
+        print("INGEST", f.relative_to(INBOX), "->", dest.relative_to(ROOT))
+        return True
+    mapping = {
+        "ui_forge_banner": UI / "forge_banner.png",
+        "ui_inheritance_banner": UI / "inheritance_banner.png",
+        "ui_rival_banner": UI / "rival_banner.png",
+        "ui_skill_banner": UI / "skill_banner.png",
+        "fx_miss_whoosh_sheet": FX / "miss_whoosh_sheet.png",
+        "fx_step_dust_sheet": FX / "step_dust_sheet.png",
+        "battle_grid_move_wash": FX / "move_wash.png",
+        "ui_month_chip_grain_v2": UI / "month_chip_grain.png",
+    }
+    if stem in mapping:
+        dest = mapping[stem]
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(f, dest)
+        print("INGEST", f.relative_to(INBOX), "->", dest.relative_to(ROOT))
+        return True
+    return False
+
 def main() -> int:
     if not INBOX.exists():
         print("no inbox", INBOX); return 1
@@ -157,6 +184,14 @@ def main() -> int:
         n += 1
         if lab.endswith("_sheet"):
             print("  NOTE: sheet kept whole; slice frames in Godot or extend this script")
+    for f in files:
+        stem = f.stem
+        if stem.startswith("portrait_farm_") or stem in (
+            "ui_forge_banner","ui_inheritance_banner","ui_rival_banner","ui_skill_banner",
+            "fx_miss_whoosh_sheet","fx_step_dust_sheet","battle_grid_move_wash","ui_month_chip_grain_v2",
+        ):
+            if _extra_ingest(f):
+                n += 1
     print(f"done {n} files (prefer Qwen). Re-import / run CI.")
     return 0
 
