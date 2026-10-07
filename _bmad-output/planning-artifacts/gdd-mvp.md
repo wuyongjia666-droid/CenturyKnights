@@ -1,7 +1,7 @@
 # GDD · MVP 锁定稿 — 百年骑士·同型原创（CenturyKnights）
 
 > 版本：0.1-plan · 2026-10-07（Asia/Shanghai）  
-> 状态：**仅计划**（禁止编码/发包，直至用户批准实现）  
+> 状态：**MVP 垂直切片已实现**（2026-10-07）  
 > 配套：`game-brief.md` · `systems-catalog.md` · `epics.md` · `sprint-status.yaml`  
 > 对标：公开资料中的《诸神皇冠：百年骑士团》**玩法系统深度**（非资产/剧情/地图复刻）
 
