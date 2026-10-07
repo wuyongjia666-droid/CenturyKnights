@@ -1946,7 +1946,11 @@ func _run_lock_tutorial_sequence() -> void:
 
 
 func _is_lock_tutorial_map() -> bool:
-	return bool(BattleMaps.get_map(map_id).get("tutorial_militia", false)) or map_id.begins_with("ch0")
+	var md = BattleMaps.get_map(map_id)
+	if bool(md.get("tutorial_militia", false)) or map_id.begins_with("ch0"):
+		return true
+	# 中盘二次强制锁定演练（如 ch2_night）
+	return bool(md.get("lock_drill", false))
 
 func _lock_practice_pending() -> bool:
 	return _is_lock_tutorial_map() and not has_meta("lock_beat_fired")
@@ -1963,10 +1967,15 @@ func _show_lock_practice_banner() -> void:
 	add_child(panel)
 	var vb := VBoxContainer.new()
 	panel.add_child(vb)
-	var t = UIKit.make_label("【强制练习】交战锁定", true)
+	var title = "【强制练习】交战锁定"
+	var tip = "先选中单位 → 攻击模式 → 攻击一名敌人，触发锁定后才能结束回合。"
+	if bool(BattleMaps.get_map(map_id).get("lock_drill", false)) and not map_id.begins_with("ch0"):
+		title = "【中盘演练】交战锁定复习"
+		tip = "夜袭中再练一次锁定：攻击敌人触发红环锁定后，方可结束回合。"
+	var t = UIKit.make_label(title, true)
 	t.add_theme_color_override("font_color", Color(1.0, 0.45, 0.35))
 	vb.add_child(t)
-	vb.add_child(UIKit.make_dim_label("先选中单位 → 攻击模式 → 攻击一名敌人，触发锁定后才能结束回合。"))
+	vb.add_child(UIKit.make_dim_label(tip))
 
 func _clear_lock_practice_banner() -> void:
 	var p = get_node_or_null("LockPracticeBanner")
@@ -1994,7 +2003,7 @@ func _enemy_try_skills(ui: int) -> void:
 	var u = units[ui]
 	var c: CKCharacter = u.char
 	# 1) 残血被锁 → 抽身/拆锁
-	if int(c.temp_combat_lock) > 0 and float(c.hp) / float(maxi(1, c.max_hp)) < 0.55:
+	if int(c.temp_combat_lock) > 0 and float(c.hp) / float(maxi(1, c.max_hp)) < 0.72:
 		for sid in ["disengage_step", "lock_breaker"]:
 			if sid in _enemy_known_skills(c) and _enemy_skill_ready(c, sid):
 				_cast_buff_skill_for_team(ui, sid)
@@ -2112,7 +2121,7 @@ func _enemy_arm_offense(ai: int, di: int) -> void:
 		if sc > best_sc:
 			best_sc = sc
 			best_sid = sid
-	if best_sid != "" and rng.randf() < 0.55:
+	if best_sid != "" and rng.randf() < 0.72:
 		skill_mode = true
 		active_skill_id = best_sid
 		_log("%s 蓄力「%s」" % [u.char.name, GameState.get_skill(best_sid).get("name", best_sid)])
@@ -2177,8 +2186,8 @@ func _enemy_ai() -> void:
 					if not melee and d == 1:
 						approach -= 4.0
 					# 残血被锁：偏向高防撤退格
-					if locked_self and float(u.char.hp) / float(maxi(1, u.char.max_hp)) < 0.4:
-						approach = stand_bonus * 2.0 - float(d) * 0.5
+					if locked_self and float(u.char.hp) / float(maxi(1, u.char.max_hp)) < 0.5:
+						approach = stand_bonus * 2.6 - float(d) * 0.35
 					var sc2 = approach + stand_bonus
 					if sc2 > best_score and best_target < 0:
 						best_score = sc2
@@ -2200,7 +2209,16 @@ func _enemy_ai() -> void:
 					expect += 2.5
 				# 优先咬住已锁定的目标（延长交战）
 				if int(t.char.temp_combat_lock) > 0:
-					expect += 2.0
+					expect += 3.5
+				# 威胁残血友军的敌人优先压住
+				var threat = false
+				for ou in units:
+					if ou.team == "enemy" and ou.char.hp > 0 and float(ou.char.hp)/float(maxi(1,ou.char.max_hp)) < 0.45:
+						if _manhattan(t.pos, ou.pos) <= 2:
+							threat = true
+							break
+				if threat:
+					expect += 2.8
 				# 攻击会刷新己方锁定——残血时略减
 				if locked_self and float(u.char.hp) / float(maxi(1, u.char.max_hp)) < 0.35:
 					expect -= 2.5

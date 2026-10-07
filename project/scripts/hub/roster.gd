@@ -1,7 +1,7 @@
 extends Control
 
 func _ready() -> void:
-	UIKit.make_screen_bg(self, true)
+	UIKit.make_themed_bg(self, "roster")
 	var t = UIKit.make_label("花名册", true)
 	t.position = Vector2(40, 16)
 	add_child(t)

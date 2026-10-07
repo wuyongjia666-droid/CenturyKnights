@@ -23,7 +23,7 @@ func _ready() -> void:
 	_refresh()
 
 func _build() -> void:
-	UIKit.make_screen_bg(self, true)
+	UIKit.make_themed_bg(self, "marriage")
 	var _mb = TextureRect.new()
 	if ResourceLoader.exists("res://assets/art/ui/marriage_banner.png"):
 		_mb.texture = load("res://assets/art/ui/marriage_banner.png")

@@ -718,7 +718,8 @@
           "plain",
           "plain"
         ]
-      ]
+      ],
+      "lock_drill": true
     },
     "ch3_forge": {
       "name": "炉火关",

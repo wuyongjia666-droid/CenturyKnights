@@ -67,6 +67,24 @@ static func _try_load(path: String) -> Texture2D:
 	return null
 
 static func _portrait_key(c: CKCharacter) -> String:
+	# 具名角色优先 face_plate（美术升档）
+	var named_plate := ""
+	if c.is_leader:
+		named_plate = "leader_default_face_plate"
+	elif c.name.find("灯影") >= 0:
+		named_plate = "ally_dengying_face_plate"
+	elif c.name.find("民兵·甲") >= 0:
+		named_plate = "militia_a_face_plate"
+	elif c.name.find("民兵·乙") >= 0:
+		named_plate = "militia_b_face_plate"
+	elif c.name.find("河荇") >= 0:
+		named_plate = "ally_heye_face_plate"
+	elif c.name.find("苇心") >= 0:
+		named_plate = "ally_weixin_face_plate"
+	if named_plate != "":
+		var pp = "res://assets/art/portraits/%s.png" % named_plate
+		if ResourceLoader.exists(pp):
+			return pp
 	if c.is_leader:
 		var p = "res://assets/art/portraits/leader_default.png"
 		if ResourceLoader.exists(p):

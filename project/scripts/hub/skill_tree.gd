@@ -19,7 +19,7 @@ var _minimap: Control
 var _spark_frames: Array = []
 
 func _ready() -> void:
-	UIKit.make_screen_bg(self)
+	UIKit.make_themed_bg(self, "skill")
 	UIFX.fade_in(self, 0.3)
 	Music.play_hub()
 	for i in 4:

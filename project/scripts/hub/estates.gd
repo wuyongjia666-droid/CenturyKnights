@@ -7,7 +7,7 @@ var _picker_hid: String = ""
 var _picker: PanelContainer
 
 func _ready() -> void:
-	UIKit.make_screen_bg(self, true)
+	UIKit.make_themed_bg(self, "estates")
 	UIFX.fade_in(self, 0.28)
 	Music.play_castle()
 	# 顶栏美术条

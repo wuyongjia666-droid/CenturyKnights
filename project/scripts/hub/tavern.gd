@@ -12,7 +12,7 @@ func _ready() -> void:
 	_refresh()
 
 func _build() -> void:
-	UIKit.make_screen_bg(self, true)
+	UIKit.make_themed_bg(self, "tavern")
 	var t = UIKit.make_label("烽火酒馆", true)
 	t.position = Vector2(40, 16)
 	add_child(t)
