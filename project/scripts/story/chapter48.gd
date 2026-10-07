@@ -9,7 +9,7 @@ var _portrait: TextureRect
 var _banner: TextureRect
 func _ready() -> void:
 	_build(); UIFX.fade_in(self, 0.4); Music.play_hub()
-	_load_beat(GameState.chapter45_beat if GameState.chapter45_beat != "" else "45.0")
+	_load_beat(GameState.chapter48_beat if GameState.chapter48_beat != "" else "48.0")
 func _build() -> void:
 	UIKit.make_screen_bg(self)
 	_banner = UIKit.make_banner_rect(70, 100); _banner.position = Vector2(48, 24); add_child(_banner)
@@ -27,11 +27,11 @@ func _build() -> void:
 	hub.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")); add_child(hub)
 func _load_beat(beat_id: String) -> void:
 	_beat = {}
-	for b in GameState.data_chapter45.get("beats", []):
+	for b in GameState.data_chapter48.get("beats", []):
 		if b.get("id") == beat_id: _beat = b; break
 	if _beat.is_empty(): return
-	GameState.chapter45_beat = beat_id; GameState.mark_dirty(); _line_idx = 0
-	_title.text = "%s · %s" % [GameState.data_chapter45.get("title", ""), _beat.get("title", "")]
+	GameState.chapter48_beat = beat_id; GameState.mark_dirty(); _line_idx = 0
+	_title.text = "%s · %s" % [GameState.data_chapter48.get("title", ""), _beat.get("title", "")]
 	_banner.texture = UnitArt.banner(70, 100, true); _show_line(); _refresh_actions()
 func _show_line() -> void:
 	var lines: Array = _beat.get("lines", [])
@@ -48,23 +48,16 @@ func _refresh_actions() -> void:
 		var nxt = UIKit.make_accent_button("继续 ▶", 220)
 		nxt.pressed.connect(func(): _line_idx += 1; _show_line(); _refresh_actions()); _actions.add_child(nxt); return
 	match str(_beat.get("id", "")):
-		"45.0":
-			_add("前往六卷席终", func(): _goto_next())
-			_add("双嗣校场", func(): get_tree().change_scene_to_file("res://scenes/hub/heir_rivalry.tscn"))
-			_add("敌宅契约", func(): get_tree().change_scene_to_file("res://scenes/hub/rival_houses.tscn"))
-		"45.1":
-			if GameState.flag("ch45_finale_done"): _add("听六卷已执", func(): _goto_next())
-			else: _add("出战：六卷席终", func(): _battle("ch45_finale"))
-		"45.2":
-			_add("完成第六卷并回堡", func():
-				GameState.set_flag("chapter45_done"); GameState.set_flag("volume6_done")
-				GameState.silver += 450; GameState.add_skill_point(4)
-				GameState.add_rep("ashland", 30); GameState.add_rep("riverland", 18); GameState.save_game()
+		"48.0":
+			_add("前往七卷钤印", func(): _goto_next())
+		"48.1":
+			if GameState.flag("ch48_seal_done"): _add("听七卷中段", func(): _goto_next())
+			else: _add("出战：七卷钤印", func(): _battle("ch48_seal"))
+		"48.2":
+			_add("完成第四十八章并回堡", func():
+				GameState.set_flag("chapter48_done"); GameState.set_flag("volume7_mid_done")
+				GameState.silver += 340; GameState.add_skill_point(3); GameState.save_game()
 				get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
-			_add("踏上第七卷·余烬", func():
-				GameState.set_flag("chapter45_done"); GameState.set_flag("volume6_done")
-				GameState.add_skill_point(4); GameState.chapter46_beat = "46.0"
-				get_tree().change_scene_to_file("res://scenes/story/chapter46.tscn"))
 		_:
 			_add("继续", func(): _goto_next())
 func _add(text: String, cb: Callable) -> void:
@@ -74,6 +67,6 @@ func _goto_next() -> void:
 	if n == null: get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"); return
 	_load_beat(str(n))
 func _battle(map_id: String) -> void:
-	GameState.set_meta("battle_return", "res://scenes/story/chapter45.tscn")
+	GameState.set_meta("battle_return", "res://scenes/story/chapter48.tscn")
 	GameState.set_meta("battle_map", map_id)
 	get_tree().change_scene_to_file("res://scenes/battle/battle.tscn")

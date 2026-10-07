@@ -1,0 +1,55 @@
+{
+  "id": "chapter48",
+  "title": "第四十八章·钤印",
+  "beats": [
+    {
+      "id": "48.0",
+      "title": "钤印令",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "余烬与冠火之后，第七卷要在钤印写下中段。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第七卷中段。"
+        }
+      ],
+      "next": "48.1"
+    },
+    {
+      "id": "48.1",
+      "title": "七卷钤印",
+      "lines": [
+        {
+          "speaker": "系统",
+          "text": "出战「七卷钤印」。"
+        }
+      ],
+      "battle": "ch48_seal",
+      "unlock": [
+        "ch48_seal_done"
+      ],
+      "next": "48.2"
+    },
+    {
+      "id": "48.2",
+      "title": "七卷中段",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "旅馆写入『七卷中段』。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第四十八章完成（v2.0）。"
+        }
+      ],
+      "unlock": [
+        "chapter48_done",
+        "volume7_mid_done"
+      ],
+      "next": null
+    }
+  ]
+}
