@@ -1,0 +1,55 @@
+{
+  "id": "chapter36",
+  "title": "第三十六章·钤印",
+  "beats": [
+    {
+      "id": "36.0",
+      "title": "钤印令",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "破晓与晚钟之后，第五卷要在钤印写下中段。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第五卷中段。"
+        }
+      ],
+      "next": "36.1"
+    },
+    {
+      "id": "36.1",
+      "title": "五卷钤印",
+      "lines": [
+        {
+          "speaker": "系统",
+          "text": "出战「五卷钤印」。"
+        }
+      ],
+      "battle": "ch36_seal",
+      "unlock": [
+        "ch36_seal_done"
+      ],
+      "next": "36.2"
+    },
+    {
+      "id": "36.2",
+      "title": "五卷中段",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "旅馆写入『五卷中段』。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第三十六章完成（v1.6）。"
+        }
+      ],
+      "unlock": [
+        "chapter36_done",
+        "volume5_mid_done"
+      ],
+      "next": null
+    }
+  ]
+}

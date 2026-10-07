@@ -269,6 +269,7 @@ func _consume_skill(c: CKCharacter, sid: String) -> void:
 	_update_skill_hint()
 
 func _cast_support_skill(ui: int, sid: String) -> void:
+	Sfx.skill()
 	var sk = GameState.get_skill(sid)
 	var u = units[ui]
 	var healed = 0
@@ -753,6 +754,7 @@ func _do_attack(ai: int, di: int) -> void:
 			dmg = int(round(dmg * float(sk.get("dmg_mul", 1.0))))
 			if rng.randi_range(1, 100) <= atk.char.derived_crit():
 				crit = true
+				Sfx.crit()
 				dmg = int(dmg * 1.5)
 			# undo previous roll damage if any
 			if result.hit:
@@ -1106,6 +1108,16 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch32_tower_done")
 	elif map_id == "ch33_finale":
 		GameState.set_flag("ch33_finale_done")
+	elif map_id == "ch34_dawn":
+		GameState.set_flag("ch34_dawn_done")
+	elif map_id == "ch34_cross":
+		GameState.set_flag("ch34_cross_done")
+	elif map_id == "ch35_bell":
+		GameState.set_flag("ch35_bell_done")
+	elif map_id == "ch35_keep":
+		GameState.set_flag("ch35_keep_done")
+	elif map_id == "ch36_seal":
+		GameState.set_flag("ch36_seal_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")

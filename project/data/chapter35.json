@@ -1,0 +1,69 @@
+{
+  "id": "chapter35",
+  "title": "第三十五章·晚钟",
+  "beats": [
+    {
+      "id": "35.0",
+      "title": "晚钟令",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "破晓之后，晚钟城垣与内堡要落钟印。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第五卷前半。"
+        }
+      ],
+      "next": "35.1"
+    },
+    {
+      "id": "35.1",
+      "title": "晚钟城垣",
+      "lines": [
+        {
+          "speaker": "系统",
+          "text": "出战「晚钟城垣」。"
+        }
+      ],
+      "battle": "ch35_bell",
+      "unlock": [
+        "ch35_bell_done"
+      ],
+      "next": "35.2"
+    },
+    {
+      "id": "35.2",
+      "title": "晚钟内堡",
+      "lines": [
+        {
+          "speaker": "系统",
+          "text": "出战「晚钟内堡」。"
+        }
+      ],
+      "battle": "ch35_keep",
+      "unlock": [
+        "ch35_keep_done"
+      ],
+      "next": "35.3"
+    },
+    {
+      "id": "35.3",
+      "title": "钟印",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "晚钟两印落下。下一章是五卷钤印。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第三十五章完成。"
+        }
+      ],
+      "unlock": [
+        "chapter35_done"
+      ],
+      "next": null
+    }
+  ]
+}

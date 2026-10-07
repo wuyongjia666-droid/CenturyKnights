@@ -1,0 +1,74 @@
+{
+  "id": "chapter34",
+  "title": "第三十四章·破晓",
+  "beats": [
+    {
+      "id": "34.0",
+      "title": "破晓点名",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "四卷已执之后，破晓风开始点名——第五卷要验新旗。"
+        },
+        {
+          "speaker": "管事",
+          "text": "两场：五卷破晓、破晓渡。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第五卷开启。"
+        }
+      ],
+      "next": "34.1"
+    },
+    {
+      "id": "34.1",
+      "title": "五卷破晓",
+      "lines": [
+        {
+          "speaker": "系统",
+          "text": "出战「五卷破晓」。"
+        }
+      ],
+      "battle": "ch34_dawn",
+      "unlock": [
+        "ch34_dawn_done"
+      ],
+      "next": "34.2"
+    },
+    {
+      "id": "34.2",
+      "title": "破晓渡",
+      "lines": [
+        {
+          "speaker": "系统",
+          "text": "出战「破晓渡」。"
+        }
+      ],
+      "battle": "ch34_cross",
+      "unlock": [
+        "ch34_cross_done"
+      ],
+      "next": "34.3"
+    },
+    {
+      "id": "34.3",
+      "title": "五卷可入",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "旅馆写入『五卷可入』。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第三十四章完成。"
+        }
+      ],
+      "unlock": [
+        "chapter34_done",
+        "volume5_open"
+      ],
+      "next": null
+    }
+  ]
+}
