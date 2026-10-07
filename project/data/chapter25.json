@@ -1,0 +1,81 @@
+{
+  "id": "chapter25",
+  "title": "第二十五章·朔原",
+  "beats": [
+    {
+      "id": "25.0",
+      "title": "朔原点名",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "三卷中段之后，朔原烽火开始点名——脊线与平原要验的是后半的旗。"
+        },
+        {
+          "speaker": "管事",
+          "text": "两场：朔原烽、朔脊夜。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第三卷后半开启。"
+        }
+      ],
+      "next": "25.1"
+    },
+    {
+      "id": "25.1",
+      "title": "朔原烽",
+      "lines": [
+        {
+          "speaker": "斥候",
+          "text": "平原烽台被夺。先夺回朔原。"
+        },
+        {
+          "speaker": "系统",
+          "text": "出战「朔原烽」。"
+        }
+      ],
+      "battle": "ch25_plain",
+      "unlock": [
+        "ch25_plain_done"
+      ],
+      "next": "25.2"
+    },
+    {
+      "id": "25.2",
+      "title": "朔脊夜",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "烽既亮，脊线夜哨要人守。"
+        },
+        {
+          "speaker": "系统",
+          "text": "出战「朔脊夜」。"
+        }
+      ],
+      "battle": "ch25_ridge",
+      "unlock": [
+        "ch25_ridge_done"
+      ],
+      "next": "25.3"
+    },
+    {
+      "id": "25.3",
+      "title": "可朔原",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "朔原与朔脊之后，旅馆写入『可朔原』。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第二十五章完成。"
+        }
+      ],
+      "unlock": [
+        "chapter25_done"
+      ],
+      "next": null
+    }
+  ]
+}

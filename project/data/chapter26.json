@@ -1,0 +1,81 @@
+{
+  "id": "chapter26",
+  "title": "第二十六章·冠雪",
+  "beats": [
+    {
+      "id": "26.0",
+      "title": "冠雪令",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "可朔原之后，冠雪关与冠峰要落两印。"
+        },
+        {
+          "speaker": "管事",
+          "text": "两场：冠雪关、冠峰守。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第三卷后半。"
+        }
+      ],
+      "next": "26.1"
+    },
+    {
+      "id": "26.1",
+      "title": "冠雪关",
+      "lines": [
+        {
+          "speaker": "斥候",
+          "text": "关桥被占。夺回冠雪。"
+        },
+        {
+          "speaker": "系统",
+          "text": "出战「冠雪关」。"
+        }
+      ],
+      "battle": "ch26_snow",
+      "unlock": [
+        "ch26_snow_done"
+      ],
+      "next": "26.2"
+    },
+    {
+      "id": "26.2",
+      "title": "冠峰守",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "关既通，峰顶要守印。"
+        },
+        {
+          "speaker": "系统",
+          "text": "出战「冠峰守」。"
+        }
+      ],
+      "battle": "ch26_peak",
+      "unlock": [
+        "ch26_peak_done"
+      ],
+      "next": "26.3"
+    },
+    {
+      "id": "26.3",
+      "title": "冠雪两印",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "冠雪与冠峰两印落下。下一章是三卷席终。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第二十六章完成。"
+        }
+      ],
+      "unlock": [
+        "chapter26_done"
+      ],
+      "next": null
+    }
+  ]
+}

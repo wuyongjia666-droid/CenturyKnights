@@ -210,6 +210,18 @@ func _build() -> void:
 	ch24_b.disabled = not GameState.flag("chapter23_done")
 	ch24_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter24.tscn"))
 	row.add_child(ch24_b)
+	var ch25_b = UIKit.make_accent_button("第二十五章·朔原", 160)
+	ch25_b.disabled = not GameState.flag("chapter24_done")
+	ch25_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter25.tscn"))
+	row.add_child(ch25_b)
+	var ch26_b = UIKit.make_accent_button("第二十六章·冠雪", 160)
+	ch26_b.disabled = not GameState.flag("chapter25_done")
+	ch26_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter26.tscn"))
+	row.add_child(ch26_b)
+	var ch27_b = UIKit.make_accent_button("第二十七章·席终", 160)
+	ch27_b.disabled = not GameState.flag("chapter26_done")
+	ch27_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter27.tscn"))
+	row.add_child(ch27_b)
 	var menu_b = UIKit.make_button("主菜单", 100)
 	menu_b.pressed.connect(func():
 		GameState.save_game()
@@ -272,8 +284,16 @@ func _update_story_hint() -> void:
 		_story_hint.text = "可点「第二十三章·霜桥」落霜印。"
 	elif not GameState.flag("chapter24_done"):
 		_story_hint.text = "可点「第二十四章·钤印」完成三卷中段。"
+	elif not GameState.flag("chapter25_done"):
+		_story_hint.text = "第三卷后半：可点「第二十五章·朔原」。"
+	elif not GameState.flag("chapter26_done"):
+		_story_hint.text = "可点「第二十六章·冠雪」落两印。"
+	elif not GameState.flag("chapter27_done"):
+		_story_hint.text = "可点「第二十七章·席终」完成第三卷。"
+	elif GameState.flag("volume3_done"):
+		_story_hint.text = "三卷已执。自由经营、双嗣校场、敌宅契约皆可。"
 	elif GameState.flag("volume3_mid_done"):
-		_story_hint.text = "三卷中段已执。自由经营、双嗣校场、敌宅契约皆可。"
+		_story_hint.text = "三卷中段已执。可继续后半或经营。"
 	elif GameState.flag("volume2_done"):
 		_story_hint.text = "二卷已执。可继续第三卷或经营。"
 	elif GameState.flag("volume2_mid_done"):
