@@ -18,6 +18,9 @@ SHEETS = [
     ("unlock_sheet.png", "unlock", 6),
     ("shield_sheet.png", "shield", 6),
     ("spark_sheet.png", "spark", 6),
+    ("crit_bloom_sheet.png", "crit", 6),
+    ("move_dust_sheet.png", "move_dust", 6),
+    ("turn_flash_sheet.png", "turn_flash", 6),
 ]
 
 def key_plate(cell: Image.Image, black_thr: int = 32, white_thr: int = 235) -> Image.Image:

@@ -209,6 +209,18 @@ static func soft_deny(node: Control) -> void:
 	shake_control(node, 4.0, 0.18)
 	flash_modulate(node, Color(0.95, 0.75, 0.75), 0.16)
 
+static func resource_tick(node: Control) -> void:
+	## 资源数字跳动（月结/买卖后）
+	if node == null: return
+	punch(node, 0.04)
+	flash_modulate(node, Color(1.2, 1.15, 0.9), 0.14)
+
+static func focus_ring(node: Control, col: Color = Color(1.15, 0.95, 0.55), dur: float = 0.4) -> void:
+	## 焦点金环闪（族谱选人 / 大厅高亮）
+	if node == null: return
+	flash_modulate(node, col, dur)
+	hover_lift(node, 0.02)
+
 static func page_exit(root: Control, dur: float = 0.16) -> void:
 	## 页面离开：快于入场
 	if root == null: return

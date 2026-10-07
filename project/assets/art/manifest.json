@@ -1,5 +1,5 @@
 {
-  "art_pass": "v7.24.0-depth",
+  "art_pass": "v7.25.0-depth",
   "patrol_frames": 12,
   "heroes": [
     "leader_default",
@@ -10,7 +10,7 @@
     "mage_plate",
     "skirm_plate"
   ],
-  "farm_batch": "shots_v722 qwen24 + shots_v724 qwen23",
+  "farm_batch": "v722+v724+v725 qwen",
   "ingested": [
     "battle_backdrop_wash.png",
     "concept_hire_plate_f.png",
@@ -47,6 +47,8 @@
     "heal",
     "unlock",
     "shield",
-    "spark"
+    "spark",
+    "move_dust",
+    "turn_flash"
   ]
 }

@@ -38,6 +38,7 @@ var _btn_wait: Button
 var _btn_end: Button
 var _slash_fx: Array = []  # {pos, age, frame}
 var _lock_burst_fx: Array = []  # {pos, age}
+var _move_dust_fx: Array = []  # {pos, age}
 var _shake: float = 0.0
 var _trauma: float = 0.0  # game-feel trauma 0..1
 var _shake_t: float = 0.0
@@ -809,6 +810,12 @@ func _process(delta: float) -> void:
 		if lb.age < 0.55:
 			alive_lb.append(lb)
 	_lock_burst_fx = alive_lb
+	var alive_md: Array = []
+	for md in _move_dust_fx:
+		md.age += delta
+		if md.age < 0.4:
+			alive_md.append(md)
+	_move_dust_fx = alive_md
 	# Trauma shake（二次曲线，非每帧乱抖）
 	if _shake > 0.0:
 		_trauma = clampf(_trauma + _shake * 0.08, 0.0, 1.0)
@@ -1486,10 +1493,18 @@ func _draw_overlay() -> void:
 	if _turn_flash > 0.0:
 		var a2 = clampf(_turn_flash / 0.9, 0.0, 1.0)
 		var txt = "—— 玩家回合 ——" if turn_team == "player" else "—— 敌方回合 ——"
+		var tfi = mini(5, int((0.9 - _turn_flash) / 0.15))
+		var tfp = "res://assets/art/fx/turn_flash_%d.png" % tfi
+		if ResourceLoader.exists(tfp):
+			overlay.draw_texture(load(tfp), Vector2(40, 280), Color(1, 1, 1, a2 * 0.85))
 		overlay.draw_rect(Rect2(80, 300, 360, 50), Color(0.05, 0.06, 0.08, 0.75 * a2))
 		overlay.draw_string(ThemeDB.fallback_font, Vector2(120, 332), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(UnitArt.crest_color(), a2))
 	# 地形悬停提示
 	if _in_bounds(_hover_cell):
+		var sw = "res://assets/art/fx/select_wash.png"
+		if ResourceLoader.exists(sw) and not attack_mode:
+			var hr = Rect2(ORIGIN + Vector2(_hover_cell) * CELL, Vector2(CELL - 2, CELL - 2))
+			overlay.draw_texture_rect(load(sw), hr.grow(2.0), false, Color(1, 1, 1, 0.55 + 0.25 * sin(_sel_pulse * 6.0)))
 		var tid = terrain[_hover_cell.y][_hover_cell.x]
 		var ti = BattleRules.terrain_info(tid)
 		var tip = "%s　回避+%d　防+%d　移耗%d" % [ti.name, ti.avo_bonus, ti.get("def_bonus", 0), ti.move_cost]
@@ -1653,6 +1668,7 @@ func _click_cell(cell: Vector2i) -> void:
 				su.pos = cell
 				moved_this_select = true
 				move_cells.clear()
+				_spawn_move_dust(cell)
 				_refresh_info()
 				map_draw.queue_redraw()
 				overlay.queue_redraw()
@@ -1725,6 +1741,10 @@ func _spawn_dmg(cell: Vector2i, text: String, col: Color) -> void:
 	var center = ORIGIN + Vector2(cell) * CELL + Vector2(CELL / 2, CELL / 2)
 	_dmg_fx.append({"pos": center, "text": text, "age": 0.0, "col": col})
 
+
+func _spawn_move_dust(cell: Vector2i) -> void:
+	var center = ORIGIN + Vector2(cell) * CELL + Vector2(CELL / 2, CELL / 2)
+	_move_dust_fx.append({"pos": center, "age": 0.0})
 
 func _spawn_lock_burst(cell: Vector2i) -> void:
 	var center = ORIGIN + Vector2(cell) * CELL + Vector2(CELL / 2, CELL / 2)
@@ -2419,6 +2439,7 @@ func _enemy_ai() -> void:
 					best_target = j
 		if best_pos != u.pos:
 			u.pos = best_pos
+			_spawn_move_dust(best_pos)
 			_log("%s 机动至 (%d,%d)" % [u.char.name, best_pos.x, best_pos.y])
 			map_draw.queue_redraw()
 		if best_target >= 0:

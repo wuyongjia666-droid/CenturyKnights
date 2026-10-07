@@ -1,0 +1,146 @@
+[
+  {
+    "label": "ui_transition_rule",
+    "prompt": "thin gold ornamental rule line 1280x16 for page transition flash, ink-fantasy, transparent ends, no text glyphs",
+    "width": 1280,
+    "height": 16
+  },
+  {
+    "label": "ui_ambition_strip",
+    "prompt": "Chinese ink-fantasy gold dust ambition progress strip 1200x36, ash banner motif, transparent ends, no text, game HUD",
+    "width": 1200,
+    "height": 36
+  },
+  {
+    "label": "ui_lock_tip_banner",
+    "prompt": "Chinese ink-fantasy tutorial tip banner 960x120, lock-on motif gold trim, dark panel, transparent corners, no text glyphs",
+    "width": 960,
+    "height": 120
+  },
+  {
+    "label": "ui_lock_tip_step0",
+    "prompt": "tiny game tutorial step icon 96x96, numbered gold ring step one, lock motif, transparent bg, no text digits painted as ornament only",
+    "width": 96,
+    "height": 96
+  },
+  {
+    "label": "ui_lock_tip_step1",
+    "prompt": "tiny game tutorial step icon 96x96, numbered gold ring step two, sword clash motif, transparent bg, no text",
+    "width": 96,
+    "height": 96
+  },
+  {
+    "label": "ui_lock_tip_step2",
+    "prompt": "tiny game tutorial step icon 96x96, numbered gold ring step three, victory seal motif, transparent bg, no text",
+    "width": 96,
+    "height": 96
+  },
+  {
+    "label": "ui_patrol_icon",
+    "prompt": "game HUD patrol mark icon 64x64, ash lantern on map pin, gold rim, transparent bg, no text",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "ui_blood_bar_fill",
+    "prompt": "game HUD blood bar fill texture 256x24, deep crimson silk weave, gold edge, no text",
+    "width": 256,
+    "height": 24
+  },
+  {
+    "label": "fx_crit_bloom_sheet",
+    "prompt": "game VFX horizontal sprite sheet 6 equal frames 384x64, crimson-gold critical bloom expanding then fade, transparent bg, no text",
+    "width": 384,
+    "height": 64
+  },
+  {
+    "label": "fx_move_dust_sheet",
+    "prompt": "game VFX horizontal sprite sheet 6 frames 384x64, soft ash dust puff under footsteps, transparent bg, no text",
+    "width": 384,
+    "height": 64
+  },
+  {
+    "label": "fx_turn_flash_sheet",
+    "prompt": "game VFX horizontal sprite sheet 6 frames 384x64, gold turn-banner flash wash, transparent bg, no text",
+    "width": 384,
+    "height": 64
+  },
+  {
+    "label": "portrait_hire_youth_m",
+    "prompt": "Chinese ink-fantasy young male recruit portrait bust, earnest eyes, ash cloak, painterly, no text, square plate",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_hire_youth_f",
+    "prompt": "Chinese ink-fantasy young female recruit portrait bust, sharp gaze, reed wrap, painterly, no text, square plate",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_hire_veteran",
+    "prompt": "Chinese ink-fantasy veteran spearman portrait bust, scarred cheek, iron pauldrons, painterly, no text, square plate",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_hire_scholar",
+    "prompt": "Chinese ink-fantasy scholar tactician portrait bust, ink-stained fingers, calm eyes, painterly, no text, square plate",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "ui_month_chip_blood",
+    "prompt": "tiny game HUD chip 64x64, blood lineage drop icon, deep red gold rim, transparent bg, no text",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "ui_month_chip_marriage",
+    "prompt": "tiny game HUD chip 64x64, marriage vow ribbon icon, soft rose gold, transparent bg, no text",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "ui_month_chip_ambition",
+    "prompt": "tiny game HUD chip 64x64, ambition flame star icon, warm gold, transparent bg, no text",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "ui_trait_chip",
+    "prompt": "tiny game HUD trait chip base 96x32, dark wood gold trim empty center, transparent corners, no text",
+    "width": 96,
+    "height": 32
+  },
+  {
+    "label": "hub_panel_chrome_v2",
+    "prompt": "Chinese ink-fantasy hub panel edge chrome 512x512, ornate gold corner brackets dark wood, transparent center, no text",
+    "width": 512,
+    "height": 512
+  },
+  {
+    "label": "battle_grid_select_wash",
+    "prompt": "game battle tile select wash 64x64, soft gold corner glow ring, transparent center, no text",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "ui_caravan_escort_chip",
+    "prompt": "tiny game HUD chip 64x64, caravan escort shield-wagon, amber gold, transparent bg, no text",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "lineage_tree_node",
+    "prompt": "game UI lineage tree node gem 80x80, ash-jade faceted jewel, gold mounting, transparent bg, no text",
+    "width": 80,
+    "height": 80
+  },
+  {
+    "label": "castle_crest_plate",
+    "prompt": "Chinese ink-fantasy house crest plate 128x160, blank shield for dynasty color wash, ornate gold, transparent corners, no text glyphs",
+    "width": 128,
+    "height": 160
+  }
+]

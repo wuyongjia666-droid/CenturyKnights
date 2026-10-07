@@ -37,6 +37,8 @@ func _build() -> void:
 	var t = UIKit.make_label("族谱 · 血胤", true)
 	t.position = Vector2(40, 16)
 	add_child(t)
+	UIFX.breathe(t, 0.008, 3.4)
+	UIFX.stagger_children(self, 0.03, 0.22)
 	var tip = UIKit.make_dim_label("血胤混合条不是装饰——是两条河在旗下交汇。托孤之约后，族谱即同盟凭证；子嗣成年可授旗。联姻月结 / 血胤月泽计入岁月沙漏。")
 	tip.position = Vector2(40, 56)
 	add_child(tip)
@@ -125,7 +127,12 @@ func _refresh() -> void:
 			tag = "〔联姻〕"
 		var b = UIKit.make_button("%s%s %d岁" % [ch.name, tag, ch.age], 380)
 		var captured = ch
-		b.pressed.connect(func(): _show(captured))
+		b.pressed.connect(func():
+			UIFX.focus_ring(b)
+			UIFX.press_feedback(b)
+			_show(captured)
+			if _portrait: UIFX.focus_ring(_portrait)
+		)
 		_list.add_child(b)
 		if not shown:
 			_show(ch)

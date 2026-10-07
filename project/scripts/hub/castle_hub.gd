@@ -32,7 +32,17 @@ func _build() -> void:
 	add_child(_hub_strip)
 	UIFX.banner_shimmer(_hub_strip, 4.2)
 
-	var banner = UIKit.make_banner_rect(64, 92)
+	var banner: Control
+	if ResourceLoader.exists("res://assets/art/ui/castle_crest_plate.png"):
+		var cr := TextureRect.new()
+		cr.texture = load("res://assets/art/ui/castle_crest_plate.png")
+		cr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		cr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		cr.custom_minimum_size = Vector2(64, 92)
+		cr.size = Vector2(64, 92)
+		banner = cr
+	else:
+		banner = UIKit.make_banner_rect(64, 92)
 	banner.position = Vector2(36, 16)
 	add_child(banner)
 	UIFX.breathe(banner, 0.01, 3.2)
@@ -168,6 +178,7 @@ func _build() -> void:
 
 func _refresh() -> void:
 	UIKit.update_resources(_res_bar)
+	if _res_bar: UIFX.resource_tick(_res_bar)
 	_rebuild_volume_picker()
 	_rebuild_chapter_picker()
 	_update_story_hint()

@@ -142,6 +142,14 @@ func _ready() -> void:
 			_refresh_prices()
 )
 	add_child(escort)
+	if ResourceLoader.exists("res://assets/art/ui/caravan_escort_chip.png"):
+		var ec := TextureRect.new()
+		ec.texture = load("res://assets/art/ui/caravan_escort_chip.png")
+		ec.custom_minimum_size = Vector2(28, 28)
+		ec.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		ec.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		ec.position = escort.position + Vector2(-34, 6)
+		add_child(ec)
 	UIFX.wire_button(escort)
 
 	_msg = UIKit.make_label("")
