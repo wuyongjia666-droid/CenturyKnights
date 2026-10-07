@@ -200,3 +200,37 @@ func _summarize(evs: Array) -> String:
 	for e in evs:
 		parts.append(str(e.get("text", "")))
 	return "；".join(parts)
+
+## --- Headless e2e helpers (no change_scene) ---
+
+func current_beat_id() -> String:
+	return str(_beat.get("id", GameState.chapter0_beat))
+
+func action_labels() -> Array:
+	var out: Array = []
+	for c in _actions.get_children():
+		if c is BaseButton and is_instance_valid(c) and not c.is_queued_for_deletion():
+			out.append(str(c.text))
+	return out
+
+## Skip to last dialogue line and refresh system actions for the beat.
+func simulate_finish_dialogue() -> void:
+	# Free action buttons immediately so headless presses do not hit stale nodes.
+	for c in _actions.get_children():
+		c.free()
+	var lines: Array = _beat.get("lines", [])
+	_line_idx = maxi(0, lines.size() - 1)
+	_show_line()
+	_refresh_actions()
+
+## Press first enabled action whose label contains substr. Returns false if none.
+func simulate_press_action_containing(substr: String) -> bool:
+	for c in _actions.get_children():
+		if c is BaseButton and is_instance_valid(c) and not c.is_queued_for_deletion() and not c.disabled and str(c.text).find(substr) >= 0:
+			c.pressed.emit()
+			return true
+	return false
+
+## Load a beat in-place (avoids change_scene so the e2e runner survives).
+func simulate_goto_beat(beat_id: String) -> void:
+	_load_beat(beat_id)

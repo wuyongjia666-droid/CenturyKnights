@@ -99,3 +99,13 @@ func _update_story_hint() -> void:
 		_story_hint.text = "第零章进行中：节拍 %s —— 点「第零章节拍」继续剧情" % GameState.chapter0_beat
 	else:
 		_story_hint.text = "第零章已完成。可自由经营灰旗堡。"
+
+## Headless: labels of hub navigation buttons (grid children that are BaseButton).
+func panel_button_labels() -> Array:
+	var out: Array = []
+	for c in get_children():
+		if c is GridContainer:
+			for b in c.get_children():
+				if b is BaseButton:
+					out.append(str(b.text))
+	return out

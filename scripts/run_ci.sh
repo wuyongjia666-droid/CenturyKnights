@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# CI entry: smoke + layout + tactics e2e. Non-zero exit fails the pipeline.
+# CI entry: smoke + layout + tactics e2e + full-chain e2e. Non-zero exit fails the pipeline.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT/project"
@@ -12,6 +12,9 @@ godot --headless --path . --script res://tests/layout_check.gd
 
 echo "==> tactics_e2e"
 godot --headless --path . --scene res://tests/tactics_e2e.tscn
+
+echo "==> full_chain_e2e"
+godot --headless --path . --scene res://tests/full_chain_e2e.tscn
 
 echo "==> CI ALL PASS"
 
