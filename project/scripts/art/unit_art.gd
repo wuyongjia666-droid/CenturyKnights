@@ -20,7 +20,7 @@ static func terrain_tile(tid: String) -> Texture2D:
 	return tex
 
 static func draw_lock_ring(ci: CanvasItem, center: Vector2, radius: float = 22.0) -> void:
-	var frame = _banner_frame % 4
+	var frame = _banner_frame % 6
 	var path = "res://assets/art/fx/lock_%d.png" % frame
 	var tex = _try_load(path)
 	if tex != null:

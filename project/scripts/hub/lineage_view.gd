@@ -10,6 +10,15 @@ func _ready() -> void:
 
 func _build() -> void:
 	UIKit.make_screen_bg(self)
+	var strip = TextureRect.new()
+	if ResourceLoader.exists("res://assets/art/ui/lineage_banner.png"):
+		strip.texture = load("res://assets/art/ui/lineage_banner.png")
+		strip.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		strip.stretch_mode = TextureRect.STRETCH_SCALE
+		strip.position = Vector2(0, 0)
+		strip.size = Vector2(1280, 56)
+		strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(strip)
 	var t = UIKit.make_label("族谱 · 血胤", true)
 	t.position = Vector2(40, 16)
 	add_child(t)
@@ -110,6 +119,27 @@ func _show(c: CKCharacter) -> void:
 		lines.append("\n[color=#c9a227]可授旗入队[/color]")
 		var r = Lineage.enlist_adult(c)
 		lines.append(str(r.get("msg", "")))
+		lines.append("")
+	lines.append("[b]永久影响（族谱权重）[/b]")
+	var perm: Array = []
+	if c.is_leader:
+		perm.append("团长：月结与堡志以你为轴")
+	if c.spouse_id != "":
+		perm.append("联姻在世：每月士气/银微收益（血胤月泽）")
+	if c.is_child:
+		perm.append("子嗣：口粮计入月结；成年授旗可入花名册")
+	for tr in c.traits:
+		var td = GameState.get_trait(tr) if GameState.has_method("get_trait") else {}
+		var tn = str(td.get("name", tr)) if td else str(tr)
+		var pol = str(td.get("polarity", "")) if td else ""
+		var col = "#7dce7a" if pol == "pos" else ("#e07070" if pol == "neg" else "#c9a227")
+		perm.append("禀性 [color=%s]%s[/color] 影响成长与战场检定" % [col, tn])
+	if perm.is_empty():
+		perm.append("（尚无额外永久条目）")
+	for p in perm:
+		lines.append("· " + p)
+	lines.append("")
+	lines.append("[color=#8a8090]族谱不是装饰——血胤浓度驱动「血胤月泽」月结。[/color]")
 	_detail.text = "\n".join(lines)
 	_append_lineage_log_to(_detail)
 

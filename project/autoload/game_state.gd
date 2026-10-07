@@ -525,6 +525,7 @@ var ambition_done: Dictionary = {}  # 堡志中长期目标
 ## 属地/庄园（单堡多属地经营感）
 var holdings: Dictionary = {}  # id -> {level, steward_id}
 var doctrine_months: int = 0
+var estate_quiet_months: int = 0  # 连续无劫掠月数
 const HOLDING_DEFS := {
 	"reed_ford": {"name": "苇原渡", "desc": "护商旧道属地", "food": 3, "silver": 2, "quest": "q_escort"},
 	"stone_slope": {"name": "石垒坡", "desc": "清匪后的丘地佃庄", "food": 2, "silver": 4, "quest": "q_bandit"},
@@ -1129,6 +1130,7 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	ambition_done = {}
 	holdings = {}
 	doctrine_months = 0
+	estate_quiet_months = 0
 	surname = leader_surname
 	crest_color = color
 	var leader = CharacterFactory.make_leader(leader_given, leader_surname, color)
@@ -1344,16 +1346,29 @@ func holding_yield_preview(hid: String) -> Dictionary:
 	var def = HOLDING_DEFS.get(hid, {})
 	var lv = maxi(1, holding_level(hid))
 	var mul = lv
-	if steward_of(hid) != null:
+	var st = steward_of(hid)
+	var trait_bonus = 0
+	if st != null:
 		mul += 1  # 庄头加成一档产出
+		# 能干庄头：指挥/技术高或正面禀性再加产
+		if int(st.stats.get("ldr", 0)) >= 12 or int(st.stats.get("skl", 0)) >= 12:
+			trait_bonus += 1
+		for tr in st.traits:
+			if str(tr) in ["diligent", "iron_gut", "brave", "shrewd", "loyal"]:
+				trait_bonus += 1
+				break
+		mul += trait_bonus
 	if bool(house_mods.get("estate_bonus", false)):
 		mul += 1  # 四野旗庄：属地月结+1成
+	if bool(house_mods.get("estate_patrol", false)):
+		mul += 0  # 巡逻主要抗劫，产出在 monthly 另记
 	return {
 		"food": int(def.get("food", 0)) * mul,
 		"silver": int(def.get("silver", 0)) * mul,
 		"herb": int(def.get("herb", 0)) * mul,
 		"rep": int(def.get("rep", 0)) * mul,
-		"steward": steward_of(hid) != null,
+		"steward": st != null,
+		"trait_bonus": trait_bonus,
 	}
 
 func holdings_monthly_yield() -> String:
@@ -1370,12 +1385,21 @@ func holdings_monthly_yield() -> String:
 		var pv = holding_yield_preview(hid)
 		# 劫掠检定：无庄头且士气偏低时有风险
 		var st = steward_of(hid)
-		if st == null and morale < 55 and rng.randf() < 0.28:
+		var raid_chance = 0.0
+		if st == null:
+			raid_chance = 0.28 if morale < 55 else 0.08
+		else:
+			# 庄头抗劫：基础很低；忠勇/精干更低
+			raid_chance = 0.03
+			if int(st.stats.get("ldr", 0)) >= 12:
+				raid_chance *= 0.5
+			if "loyal" in st.traits or "brave" in st.traits:
+				raid_chance *= 0.5
+		if bool(house_mods.get("estate_patrol", false)):
+			raid_chance *= 0.35
+		if raid_chance > 0.0 and rng.randf() < raid_chance:
 			raids.append(str(def.get("name", hid)))
 			continue  # 本月无收成
-		elif st == null and rng.randf() < 0.08:
-			raids.append(str(def.get("name", hid)))
-			continue
 		sf += int(pv.food)
 		ss += int(pv.silver)
 		sh += int(pv.herb)
@@ -1393,6 +1417,11 @@ func holdings_monthly_yield() -> String:
 		msg += "；劫掠：%s（无庄头/士气不稳）" % "、".join(raids)
 		morale = maxi(0, morale - 3 * raids.size())
 		add_lineage_event("属地劫掠：" + "、".join(raids))
+		estate_quiet_months = 0
+	elif not holdings.is_empty():
+		estate_quiet_months += 1
+		if estate_quiet_months >= 3:
+			msg += "；四野安静（连续%d月无劫）" % estate_quiet_months
 	return msg
 
 func unlocked_holdings_count() -> int:
@@ -1420,6 +1449,7 @@ func ambition_list() -> Array:
 		{"id": "roster_six", "name": "六旗同升", "desc": "花名册满员达 6 人", "done": bool(ambition_done.get("roster_six", false)), "reward": "战技点+1，士气+10"},
 		{"id": "skill_adept", "name": "战技通识", "desc": "任意一人解锁 3 个二阶及以上战技", "done": bool(ambition_done.get("skill_adept", false)), "reward": "战技点+2"},
 		{"id": "estate_steward", "name": "庄头遍野", "desc": "至少 2 处属地派驻庄头", "done": bool(ambition_done.get("estate_steward", false)), "reward": "战技点+1，士气+5"},
+		{"id": "estate_patrol", "name": "四野巡防", "desc": "属地连续 3 月无劫掠（须已开垦）", "done": bool(ambition_done.get("estate_patrol", false)), "reward": "战技点+1，属地抗劫强化"},
 		{"id": "doctrine_year", "name": "家训周岁", "desc": "立家训后度过 12 个月", "done": bool(ambition_done.get("doctrine_year", false)), "reward": "家训月结翻倍一个月记"},
 		{"id": "forge_fine", "name": "精刃满匣", "desc": "花名册至少 3 人持精灰刃", "done": bool(ambition_done.get("forge_fine", false)), "reward": "战技点+1，铁+4"},
 	]
@@ -1516,6 +1546,13 @@ func check_ambitions() -> Array:
 			morale = mini(100, morale + 5)
 			msgs.append("堡志「庄头遍野」达成")
 			add_lineage_event("堡志：庄头遍野")
+	if not bool(ambition_done.get("estate_patrol", false)) and estate_quiet_months >= 3 and not holdings.is_empty():
+		ambition_done["estate_patrol"] = true
+		house_mods["estate_patrol"] = true
+		add_skill_point(1)
+		morale = mini(100, morale + 4)
+		msgs.append("堡志「四野巡防」达成：属地抗劫强化")
+		add_lineage_event("堡志：四野巡防")
 	if not bool(ambition_done.get("doctrine_year", false)) and doctrine_months >= 12:
 		ambition_done["doctrine_year"] = true
 		house_mods["doctrine_mature"] = true
@@ -1710,6 +1747,22 @@ func tick_doctrine_and_marriage_month() -> Array:
 			else:
 				msgs.append("联姻月结：%s 守堡 → 士气+1" % sp.name)
 			add_lineage_event(msgs[-1] if msgs else "联姻月结")
+	# 血胤月泽：子嗣/配偶血胤浓度带来永久感的微收益
+	var blood_bonus = 0
+	for c in characters.values():
+		if not c.alive:
+			continue
+		if c.is_child or c.spouse_id != "" or c.is_leader:
+			for bk in c.blood_mix.keys():
+				if float(c.blood_mix[bk]) >= 0.45:
+					blood_bonus += 1
+					break
+	if blood_bonus > 0:
+		var gain = mini(3, blood_bonus)
+		silver += gain
+		msgs.append("血胤月泽：族谱浓度 → 银+%d" % gain)
+		if blood_bonus >= 3:
+			morale = mini(100, morale + 1)
 	mark_dirty()
 	return msgs
 
@@ -1933,6 +1986,7 @@ func reset_battle_skills(roster_chars: Array) -> void:
 		c.temp_ignore_zoc = false
 		c.temp_leave_free = false
 		c.temp_combat_lock = 0
+		c.temp_terrain_ward = false
 		c.temp_zoc_aura = 0
 		c.temp_exposed = 0
 		c.skill_uses.clear()
@@ -2500,6 +2554,7 @@ func save_game() -> bool:
 		"ambition_done": ambition_done.duplicate(true),
 		"holdings": holdings.duplicate(true),
 		"doctrine_months": doctrine_months,
+		"estate_quiet_months": estate_quiet_months,
 		"characters": {},
 		"tavern": [],
 		"marriage": [],
@@ -2794,6 +2849,7 @@ func load_game() -> bool:
 	ambition_done = data.get("ambition_done", {}).duplicate(true)
 	holdings = data.get("holdings", {}).duplicate(true)
 	doctrine_months = int(data.get("doctrine_months", 0))
+	estate_quiet_months = int(data.get("estate_quiet_months", 0))
 	quests = data.get("quests", quests)
 	characters.clear()
 	for id in data.get("characters", {}).keys():

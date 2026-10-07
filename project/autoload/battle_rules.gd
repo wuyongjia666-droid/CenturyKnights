@@ -102,7 +102,8 @@ func can_counter(attacker: CKCharacter, defender: CKCharacter, atk_pos: Vector2i
 
 func calc_hit(attacker: CKCharacter, defender: CKCharacter, terrain_id: String, extras: Dictionary = {}) -> int:
 	var hit = attacker.derived_hit()
-	var avo = defender.derived_avo() + int(terrain_info(terrain_id).get("avo_bonus", 0))
+	var tmul = float(extras.get("terrain_mul", 1.0))
+	var avo = defender.derived_avo() + int(int(terrain_info(terrain_id).get("avo_bonus", 0)) * tmul)
 	if "brave" in attacker.traits and _is_melee(attacker):
 		hit += 5
 	if "keen_eye" in attacker.traits and not _is_melee(attacker):
@@ -119,7 +120,8 @@ func calc_hit(attacker: CKCharacter, defender: CKCharacter, terrain_id: String, 
 	return clampi(hit - avo, 5, 99)
 
 func calc_damage_range(attacker: CKCharacter, defender: CKCharacter, terrain_id: String = "plain", extras: Dictionary = {}) -> Vector2i:
-	var tdef = int(terrain_info(terrain_id).get("def_bonus", 0))
+	var tmul = float(extras.get("terrain_mul", 1.0))
+	var tdef = int(int(terrain_info(terrain_id).get("def_bonus", 0)) * tmul) + int(extras.get("flat_def", 0))
 	var rm = extras.get("role", role_mods(attacker, defender))
 	var def_eff = defender.derived_def() + tdef + int(rm.get("def_mod", 0))
 	var raw = maxi(1, attacker.derived_atk() - int(def_eff / 2.0))
@@ -165,9 +167,14 @@ func preview(attacker: CKCharacter, defender: CKCharacter, terrain_id: String, e
 		tags.append("夹击")
 	if str(rm.get("label", "")) != "":
 		tags.append(str(rm["label"]))
-	var tdef = int(terrain_info(terrain_id).get("def_bonus", 0))
+	var tmul = float(extras.get("terrain_mul", 1.0))
+	var tdef = int(int(terrain_info(terrain_id).get("def_bonus", 0)) * tmul) + int(extras.get("flat_def", 0))
 	if tdef > 0:
 		tags.append("地形防+%d" % tdef)
+	if tmul > 1.0:
+		tags.append("地利")
+	if int(extras.get("flat_def", 0)) > 0:
+		tags.append("锁垒")
 	if can_follow_up(attacker, defender):
 		tags.append("连击")
 	return {

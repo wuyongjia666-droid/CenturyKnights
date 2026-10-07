@@ -24,6 +24,15 @@ func _ready() -> void:
 
 func _build() -> void:
 	UIKit.make_screen_bg(self)
+	var _mb = TextureRect.new()
+	if ResourceLoader.exists("res://assets/art/ui/marriage_banner.png"):
+		_mb.texture = load("res://assets/art/ui/marriage_banner.png")
+		_mb.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		_mb.stretch_mode = TextureRect.STRETCH_SCALE
+		_mb.position = Vector2(0, 0)
+		_mb.size = Vector2(1280, 56)
+		_mb.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(_mb)
 	var t = UIKit.make_label("联姻廷 · 春令试婚", true)
 	t.position = Vector2(40, 12)
 	add_child(t)

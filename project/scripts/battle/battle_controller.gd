@@ -783,7 +783,7 @@ func _process(delta: float) -> void:
 	var alive_s: Array = []
 	for s in _slash_fx:
 		s.age += delta
-		if s.age < 0.35:
+		if s.age < 0.48:
 			alive_s.append(s)
 	_slash_fx = alive_s
 	if _shake > 0.0:
@@ -1040,7 +1040,16 @@ func _cast_buff_skill(ui: int, sid: String) -> void:
 		u.char.temp_ignore_zoc = true
 	if sk.get("leave_free"):
 		u.char.temp_leave_free = true
-		# 立刻刷新移动：可支付脱离
+	if sk.get("clear_combat_lock"):
+		u.char.temp_combat_lock = 0
+		_spawn_dmg(u.pos, "拆锁", Color(0.5, 0.85, 1.0))
+		_spawn_slash(u.pos, "spark")
+	if sk.get("terrain_ward"):
+		u.char.temp_terrain_ward = true
+		_spawn_dmg(u.pos, "地利", Color(0.55, 0.9, 0.55))
+		_spawn_slash(u.pos, "shield")
+	if sk.get("leave_free") or sk.get("clear_combat_lock") or sk.get("ignore_zoc"):
+		# 立刻刷新移动：可支付脱离 / 拆锁后重算
 		if ui == selected:
 			move_cells = _compute_move_cells(ui)
 			attack_mode = false
@@ -1329,7 +1338,7 @@ func _draw_overlay() -> void:
 						overlay.draw_rect(r2, Color(1.0, 0.4, 0.3, 0.8), false, 2.0)
 	# slash
 	for s in _slash_fx:
-		var fi = mini(3, int(s.age / 0.08))
+		var fi = mini(5, int(s.age / 0.08))
 		var kind = str(s.get("kind", "slash"))
 		var path = "res://assets/art/fx/%s_%d.png" % [kind, fi]
 		if not ResourceLoader.exists(path):
@@ -1449,6 +1458,10 @@ func _click_cell(cell: Vector2i) -> void:
 			if ui >= 0 and units[ui].team == "enemy" and units[ui].char.hp > 0:
 				if attack_mode:
 					if _can_attack_from(su, cell):
+						var extras = _combat_extras(selected, ui)
+						var pv = BattleRules.preview(su.char, units[ui].char, terrain[cell.y][cell.x], extras)
+						_spawn_dmg(cell, "命中%d%%" % int(pv.hit), Color(0.9, 0.92, 1.0))
+						_log("预判：命中 %d%%　伤 %d–%d%s" % [int(pv.hit), int(pv.dmg.x), int(pv.dmg.y), (" · " + "·".join(pv.tags)) if pv.tags else ""])
 						_do_attack(selected, ui)
 						return
 					_log("目标超出攻击范围")
@@ -1575,7 +1588,19 @@ func _combat_extras(ai: int, di: int) -> Dictionary:
 	var atk = units[ai]
 	var def = units[di]
 	var flank = BattleRules.has_flank(atk.pos, def.pos, units, atk.team, ai)
-	return {"flank": flank}
+	var extras = {"flank": flank}
+	# 占地利：防守方地形加成翻倍感（via def_bonus_mul）
+	if def.char.temp_terrain_ward:
+		extras["terrain_mul"] = 2.0
+		var tid = terrain[def.pos.y][def.pos.x]
+		if tid in ["fort", "forest"]:
+			extras["flat_def"] = 2
+	# 交战锁定中的防守：堡垒格额外硬抗
+	if int(def.char.temp_combat_lock) > 0:
+		var tid2 = terrain[def.pos.y][def.pos.x]
+		if tid2 == "fort":
+			extras["flat_def"] = int(extras.get("flat_def", 0)) + 1
+	return extras
 
 func _apply_combat_lock(ai: int, di: int) -> void:
 	# 双方进入交战锁定 1 回合（本方下回合开始衰减）
@@ -1585,7 +1610,7 @@ func _apply_combat_lock(ai: int, di: int) -> void:
 		var u = units[idx]
 		if u.char.hp <= 0:
 			continue
-		u.char.temp_combat_lock = maxi(u.char.temp_combat_lock, 1)
+		u.char.temp_combat_lock = maxi(u.char.temp_combat_lock, 2)  # 再交战刷新锁定
 		_spawn_dmg(u.pos, "锁定", Color(1.0, 0.4, 0.35))
 		_spawn_slash(u.pos, "lock")
 
@@ -1649,13 +1674,15 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool) -> void:
 	var msg = "%s → %s%s：" % [atk.char.name, def.char.name, tag_s]
 	if result.hit:
 		Sfx.hit()
-		_spawn_slash(def.pos)
+		_spawn_slash(def.pos, "crit" if result.crit else "slash")
+		if result.crit:
+			_spawn_slash(def.pos, "spark")
 		if _unit_panel:
 			UIFX.punch(_unit_panel, 0.04)
-		msg += "命中 %d%s" % [result.damage, "（暴击）" if result.crit else ""]
+		msg += "命中 %d%s（掷骰相对命中率 %d%%）" % [result.damage, "（暴击）" if result.crit else "", int(result.hit_chance)]
 		var col = Color(1.0, 0.85, 0.3) if result.crit else Color(1.0, 0.45, 0.35)
 		_spawn_dmg(def.pos, ("暴%d" % result.damage) if result.crit else ("-%d" % result.damage), col)
-		_shake = maxf(_shake, 0.18 if result.crit else 0.1)
+		_shake = maxf(_shake, 0.28 if result.crit else 0.12)
 		if result.killed:
 			msg += " · 击退！"
 			_spawn_dmg(def.pos, "击破", Color(1.0, 0.9, 0.5))
@@ -1747,6 +1774,7 @@ func _start_player_turn() -> void:
 			u.char.temp_zoc_aura = 0
 			u.char.temp_ignore_zoc = false
 			u.char.temp_leave_free = false
+			u.char.temp_terrain_ward = false
 			if u.char.temp_combat_lock > 0:
 				u.char.temp_combat_lock -= 1
 			pcs.append(u.char)
@@ -1789,6 +1817,8 @@ func _enemy_ai() -> void:
 		var u = units[i]
 		if u.team != "enemy" or u.char.hp <= 0:
 			continue
+		# 被锁且残血：优先抽身到高防格（不主动贴战）
+		var locked_self = int(u.char.temp_combat_lock) > 0
 		var mv = _compute_move_cells(i)
 		if not mv.has(u.pos):
 			mv[u.pos] = 0
@@ -1796,12 +1826,18 @@ func _enemy_ai() -> void:
 		var best_pos: Vector2i = u.pos
 		var best_target := -1
 		var melee = _is_melee(u.char)
+		var foes_player = _enemy_positions("enemy")  # player positions as ZoC sources for enemy
 		for pos in mv.keys():
-			# 站位地形分：优先占防/回避
 			var stand_tid = terrain[pos.y][pos.x]
 			var tinfo = BattleRules.terrain_info(stand_tid)
-			var stand_bonus = float(tinfo.get("def_bonus", 0)) * 1.5 + float(tinfo.get("avo_bonus", 0)) * 0.05
-			# 远程偏好保持距离 2
+			var stand_bonus = float(tinfo.get("def_bonus", 0)) * 1.8 + float(tinfo.get("avo_bonus", 0)) * 0.06
+			# 脱离锁定惩罚：离开交战格更贵，AI 更不愿无意义挪动
+			if locked_self and pos != u.pos:
+				var still_eng = BattleRules.is_engaged(pos, foes_player)
+				if not still_eng:
+					stand_bonus -= 3.5  # 拆锁挪位需高收益才值
+				elif stand_tid == "fort":
+					stand_bonus += 4.0  # 锁住时占垒
 			for j in units.size():
 				var t = units[j]
 				if t.team != "player" or t.char.hp <= 0:
@@ -1809,34 +1845,37 @@ func _enemy_ai() -> void:
 				var d = _manhattan(pos, t.pos)
 				var can_hit = (d == 1) if melee else (d >= 1 and d <= 2)
 				if not can_hit:
-					# 接近分：越近越好，但远程不要贴脸
 					var approach = -float(d) * 2.0
 					if not melee and d == 1:
 						approach -= 4.0
+					# 残血被锁：偏向高防撤退格
+					if locked_self and float(u.char.hp) / float(maxi(1, u.char.max_hp)) < 0.4:
+						approach = stand_bonus * 2.0 - float(d) * 0.5
 					var sc2 = approach + stand_bonus
 					if sc2 > best_score and best_target < 0:
 						best_score = sc2
 						best_pos = pos
 					continue
-				var extras = {"flank": BattleRules.has_flank(pos, t.pos, units, "enemy", i)}
-				# 临时把单位挪到候选格估夹击（has_flank 用当前 units 位置，攻击者位用 pos 参数）
 				var old = u.pos
 				u.pos = pos
-				extras["flank"] = BattleRules.has_flank(pos, t.pos, units, "enemy", i)
+				var extras = {"flank": BattleRules.has_flank(pos, t.pos, units, "enemy", i)}
 				u.pos = old
 				var tid = terrain[t.pos.y][t.pos.x]
 				var expect = BattleRules.expected_damage(u.char, t.char, tid, extras)
-				# 斩杀优先
 				if expect >= t.char.hp:
-					expect += 12.0
-				# 残血优先
+					expect += 14.0
 				var hp_frac = float(t.char.hp) / float(maxi(1, t.char.max_hp))
-				expect += (1.0 - hp_frac) * 4.0
+				expect += (1.0 - hp_frac) * 4.5
 				if extras.get("flank", false):
-					expect += 3.0
-				# 远程站位奖励
+					expect += 3.5
 				if not melee and d == 2:
 					expect += 2.5
+				# 优先咬住已锁定的目标（延长交战）
+				if int(t.char.temp_combat_lock) > 0:
+					expect += 2.0
+				# 攻击会刷新己方锁定——残血时略减
+				if locked_self and float(u.char.hp) / float(maxi(1, u.char.max_hp)) < 0.35:
+					expect -= 2.5
 				expect += stand_bonus
 				if expect > best_score:
 					best_score = expect
@@ -1850,6 +1889,10 @@ func _enemy_ai() -> void:
 			var d2 = _manhattan(u.pos, units[best_target].pos)
 			var ok = (d2 == 1) if melee else (d2 >= 1 and d2 <= 2)
 			if ok:
+				# 攻击前预告命中感
+				var tgt = units[best_target]
+				var pv = BattleRules.preview(u.char, tgt.char, terrain[tgt.pos.y][tgt.pos.x], _combat_extras(i, best_target))
+				_spawn_dmg(tgt.pos, "%d%%" % int(pv.hit), Color(0.85, 0.85, 0.95))
 				_do_attack(i, best_target)
 				await get_tree().create_timer(0.28).timeout
 				if battle_over:

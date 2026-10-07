@@ -4,7 +4,7 @@ extends Control
 var _msg: Label
 var _list: VBoxContainer
 var _picker_hid: String = ""
-var _picker: Panel
+var _picker: PanelContainer
 
 func _ready() -> void:
 	UIKit.make_screen_bg(self)
@@ -93,7 +93,7 @@ func _rebuild() -> void:
 		vb.custom_minimum_size = Vector2(720, 0)
 		hb.add_child(vb)
 		var title = UIKit.make_label("%s　%s" % [def.name, ("Lv%d / 3" % lv) if unlocked else "未开垦"])
-		title.add_theme_color_override("font_color", UIKit.ACCENT if unlocked else UIKit.DIM)
+		title.add_theme_color_override("font_color", UIKit.ACCENT if unlocked else UIKit.TEXT_DIM)
 		vb.add_child(title)
 		vb.add_child(UIKit.make_dim_label(str(def.desc)))
 
@@ -106,6 +106,8 @@ func _rebuild() -> void:
 				y += " 声望"
 			if bool(pv.get("steward", false)):
 				y += "　[庄头加产]"
+				if int(pv.get("trait_bonus", 0)) > 0:
+					y += "　[能干+%d]" % int(pv.trait_bonus)
 			else:
 				y += "　[无庄头·易遭劫掠]"
 			vb.add_child(UIKit.make_dim_label(y))

@@ -388,9 +388,10 @@
       "uses": 2,
       "cooldown": 2,
       "tier": 1,
-      "desc": "本回合脱离控制地带不耗额外移力。冷却2。",
+      "desc": "抽身一步：本回合脱离控带不耗额外移力，并解除交战锁定。冷却2。",
       "leave_free": true,
-      "tree": "melee"
+      "tree": "melee",
+      "clear_combat_lock": true
     },
     {
       "id": "anchor_guard",
@@ -404,10 +405,48 @@
       "cooldown": 3,
       "tier": 2,
       "req_skill": "guard_stance",
-      "desc": "防御+3；自身控带入控额外+1（叠方阵）。冷却3。",
+      "desc": "防御+3；自身控带入控额外+1（叠方阵）。冷却3。 命中后强制交战锁定。",
       "def_buff": 3,
       "zoc_aura": 1,
-      "tree": "melee"
+      "tree": "melee",
+      "lock_on_hit": true
+    },
+    {
+      "id": "lock_breaker",
+      "name": "拆锁突围",
+      "jobs": [
+        "light_inf",
+        "squire",
+        "light_cavalry",
+        "hunter"
+      ],
+      "type": "buff",
+      "uses": 2,
+      "cooldown": 2,
+      "tier": 2,
+      "desc": "解除自身交战锁定，本回合 ignore ZoC，并获得抽身（脱离不耗）。",
+      "clear_combat_lock": true,
+      "ignore_zoc": true,
+      "leave_free": true,
+      "tree": "skirm"
+    },
+    {
+      "id": "terrain_ward",
+      "name": "占地利",
+      "jobs": [
+        "heavy_inf",
+        "warrior",
+        "hunter",
+        "apprentice"
+      ],
+      "type": "buff",
+      "uses": 1,
+      "cooldown": 3,
+      "tier": 2,
+      "desc": "本回合地形防御与回避加成翻倍；若在堡垒/密林，额外防御+2。",
+      "terrain_ward": true,
+      "def_buff": 2,
+      "tree": "guard"
     }
   ],
   "trees": [

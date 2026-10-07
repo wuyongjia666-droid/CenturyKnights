@@ -49,6 +49,7 @@ var temp_crit_bonus: int = 0
 var temp_ignore_zoc: bool = false
 var temp_leave_free: bool = false  # 本回合脱离不耗额外移力
 var temp_combat_lock: int = 0  # 交战锁定剩余回合（攻/受击后）；脱离代价加重，反击优先
+var temp_terrain_ward: bool = false  # 占地利：地形加成翻倍
 var temp_zoc_aura: int = 0  # 控带额外耗移
 var temp_exposed: int = 0  # 被破防，受击时防降低
 
