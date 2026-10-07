@@ -107,6 +107,21 @@
     "tokens/hive_boss_enemy_f0.png",
     "tokens/hive_boss_enemy_f1.png",
     "tokens/hive_boss_enemy_f2.png",
-    "tokens/hive_boss_enemy_f3.png"
+    "tokens/hive_boss_enemy_f3.png",
+    "portraits/flute_thug.png",
+    "portraits/flute_archer.png",
+    "portraits/flute_boss.png",
+    "tokens/flute_thug_enemy_f0.png",
+    "tokens/flute_thug_enemy_f1.png",
+    "tokens/flute_thug_enemy_f2.png",
+    "tokens/flute_thug_enemy_f3.png",
+    "tokens/flute_archer_enemy_f0.png",
+    "tokens/flute_archer_enemy_f1.png",
+    "tokens/flute_archer_enemy_f2.png",
+    "tokens/flute_archer_enemy_f3.png",
+    "tokens/flute_boss_enemy_f0.png",
+    "tokens/flute_boss_enemy_f1.png",
+    "tokens/flute_boss_enemy_f2.png",
+    "tokens/flute_boss_enemy_f3.png"
   ]
 }
