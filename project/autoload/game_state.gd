@@ -80,6 +80,9 @@ var data_chapter63: Dictionary = {}
 var data_chapter64: Dictionary = {}
 var data_chapter65: Dictionary = {}
 var data_chapter66: Dictionary = {}
+var data_chapter67: Dictionary = {}
+var data_chapter68: Dictionary = {}
+var data_chapter69: Dictionary = {}
 var data_rivals: Dictionary = {}
 var rival_stances: Dictionary = {}  # house_id -> stance override
 var rival_deals: Dictionary = {}  # house_id -> {turns_left, kind, reward}
@@ -150,6 +153,9 @@ var chapter63_beat: String = "63.0"
 var chapter64_beat: String = "64.0"
 var chapter65_beat: String = "65.0"
 var chapter66_beat: String = "66.0"
+var chapter67_beat: String = "67.0"
+var chapter68_beat: String = "68.0"
+var chapter69_beat: String = "69.0"
 var last_deal_events: Array = []
 var skill_points: int = 0
 
@@ -271,6 +277,9 @@ func _load_data() -> void:
 	data_chapter64 = _read_json("res://data/chapter64.json")
 	data_chapter65 = _read_json("res://data/chapter65.json")
 	data_chapter66 = _read_json("res://data/chapter66.json")
+	data_chapter67 = _read_json("res://data/chapter67.json")
+	data_chapter68 = _read_json("res://data/chapter68.json")
+	data_chapter69 = _read_json("res://data/chapter69.json")
 	data_rivals = _read_json("res://data/rival_houses.json")
 	data_skills = _read_json("res://data/skills.json")
 
@@ -422,6 +431,9 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	chapter64_beat = "64.0"
 	chapter65_beat = "65.0"
 	chapter66_beat = "66.0"
+	chapter67_beat = "67.0"
+	chapter68_beat = "68.0"
+	chapter69_beat = "69.0"
 	rival_stances = {"shuoying": "hostile", "qinghe": "wary", "lantern": "neutral"}
 	rival_deals.clear()
 	skill_points = 1
@@ -1089,6 +1101,9 @@ func save_game() -> bool:
 		"chapter64_beat": chapter64_beat,
 		"chapter65_beat": chapter65_beat,
 		"chapter66_beat": chapter66_beat,
+		"chapter67_beat": chapter67_beat,
+		"chapter68_beat": chapter68_beat,
+		"chapter69_beat": chapter69_beat,
 		"rival_stances": rival_stances.duplicate(true),
 		"rival_deals": rival_deals.duplicate(true),
 		"skill_points": skill_points,
@@ -1204,6 +1219,9 @@ func load_game() -> bool:
 	chapter64_beat = str(data.get("chapter64_beat", "64.0"))
 	chapter65_beat = str(data.get("chapter65_beat", "65.0"))
 	chapter66_beat = str(data.get("chapter66_beat", "66.0"))
+	chapter67_beat = str(data.get("chapter67_beat", "67.0"))
+	chapter68_beat = str(data.get("chapter68_beat", "68.0"))
+	chapter69_beat = str(data.get("chapter69_beat", "69.0"))
 	rival_stances = data.get("rival_stances", {"shuoying": "hostile", "qinghe": "wary", "lantern": "neutral"}).duplicate(true)
 	rival_deals = data.get("rival_deals", {}).duplicate(true)
 	skill_points = int(data.get("skill_points", 0))

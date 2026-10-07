@@ -286,8 +286,16 @@ func _update_story_hint() -> void:
 		_story_hint.text = "可继续第六十五章·铜铃。"
 	elif not GameState.flag("chapter66_done"):
 		_story_hint.text = "可继续第六十六章·井印（十卷中段）。"
+	elif not GameState.flag("chapter67_done"):
+		_story_hint.text = "第十卷后半：点「继续主线」或卷十选第六十七章·盐船。"
+	elif not GameState.flag("chapter68_done"):
+		_story_hint.text = "可继续第六十八章·纸坊。"
+	elif not GameState.flag("chapter69_done"):
+		_story_hint.text = "可继续第六十九章·十卷席终。"
+	elif GameState.flag("volume10_done"):
+		_story_hint.text = "十卷已执。自由经营或等候第十一卷。"
 	elif GameState.flag("volume10_mid_done"):
-		_story_hint.text = "十卷中段已执。自由经营或等候后半。"
+		_story_hint.text = "十卷中段已执。可继续后半或经营。"
 	elif GameState.flag("volume9_done"):
 		_story_hint.text = "九卷已执。可继续第十卷或经营。"
 	elif GameState.flag("volume9_mid_done"):
@@ -394,6 +402,9 @@ func _chapter_catalog() -> Array:
 		["第六十四章·井市", "res://scenes/story/chapter64.tscn", "chapter63_done", 10],
 		["第六十五章·铜铃", "res://scenes/story/chapter65.tscn", "chapter64_done", 10],
 		["第六十六章·井印", "res://scenes/story/chapter66.tscn", "chapter65_done", 10],
+		["第六十七章·盐船", "res://scenes/story/chapter67.tscn", "chapter66_done", 10],
+		["第六十八章·纸坊", "res://scenes/story/chapter68.tscn", "chapter67_done", 10],
+		["第六十九章·席终", "res://scenes/story/chapter69.tscn", "chapter68_done", 10],
 	]
 
 func _volume_labels() -> Array:
