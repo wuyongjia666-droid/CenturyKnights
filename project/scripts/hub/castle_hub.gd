@@ -292,8 +292,22 @@ func _update_story_hint() -> void:
 		_story_hint.text = "可继续第六十八章·纸坊。"
 	elif not GameState.flag("chapter69_done"):
 		_story_hint.text = "可继续第六十九章·十卷席终。"
+	elif not GameState.flag("chapter70_done"):
+		_story_hint.text = "第十一卷·窑火：点「继续主线」或卷十一选第七十章·窑口。"
+	elif not GameState.flag("chapter71_done"):
+		_story_hint.text = "可继续第七十一章·釉河。"
+	elif not GameState.flag("chapter72_done"):
+		_story_hint.text = "可继续第七十二章·窑印（十一卷中段）。"
+	elif not GameState.flag("chapter73_done"):
+		_story_hint.text = "第十一卷后半：点「继续主线」或选第七十三章·烟囱。"
+	elif not GameState.flag("chapter74_done"):
+		_story_hint.text = "可继续第七十四章·火塘。"
+	elif not GameState.flag("chapter75_done"):
+		_story_hint.text = "可继续第七十五章·十一卷席终。"
+	elif GameState.flag("volume11_done"):
+		_story_hint.text = "十一卷已执。自由经营或等候第十二卷。"
 	elif GameState.flag("volume10_done"):
-		_story_hint.text = "十卷已执。自由经营或等候第十一卷。"
+		_story_hint.text = "十卷已执。可继续第十一卷或经营。"
 	elif GameState.flag("volume10_mid_done"):
 		_story_hint.text = "十卷中段已执。可继续后半或经营。"
 	elif GameState.flag("volume9_done"):
@@ -405,10 +419,16 @@ func _chapter_catalog() -> Array:
 		["第六十七章·盐船", "res://scenes/story/chapter67.tscn", "chapter66_done", 10],
 		["第六十八章·纸坊", "res://scenes/story/chapter68.tscn", "chapter67_done", 10],
 		["第六十九章·席终", "res://scenes/story/chapter69.tscn", "chapter68_done", 10],
+		["第七十章·窑口", "res://scenes/story/chapter70.tscn", "chapter69_done", 11],
+		["第七十一章·釉河", "res://scenes/story/chapter71.tscn", "chapter70_done", 11],
+		["第七十二章·窑印", "res://scenes/story/chapter72.tscn", "chapter71_done", 11],
+		["第七十三章·烟囱", "res://scenes/story/chapter73.tscn", "chapter72_done", 11],
+		["第七十四章·火塘", "res://scenes/story/chapter74.tscn", "chapter73_done", 11],
+		["第七十五章·席终", "res://scenes/story/chapter75.tscn", "chapter74_done", 11],
 	]
 
 func _volume_labels() -> Array:
-	return ["卷零", "卷一", "卷二", "卷三", "卷四", "卷五", "卷六", "卷七", "卷八", "卷九", "卷十"]
+	return ["卷零", "卷一", "卷二", "卷三", "卷四", "卷五", "卷六", "卷七", "卷八", "卷九", "卷十", "卷十一"]
 
 func _volume_unlocked(vol: int) -> bool:
 	# a volume is unlocked if any chapter in it is unlocked
