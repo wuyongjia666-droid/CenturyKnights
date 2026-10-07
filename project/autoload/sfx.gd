@@ -2,7 +2,9 @@ extends Node
 ## 原创程序 WAV 音效（无授权曲库）
 
 var _players: Dictionary = {}
+var _players2d: Dictionary = {}  # id -> AudioStreamPlayer2D
 var enabled: bool = true
+var _listener_origin: Vector2 = Vector2.ZERO
 
 func _ready() -> void:
 	for id in ["ui_click", "ui_confirm", "hit", "miss", "win", "lose", "move", "turn", "fanfare", "lineage_chime", "skill", "deal", "crit", "heal", "escort_whip", "cart_rattle", "escort_horn", "wave_splash", "paper_tear", "anvil_clang", "lamp_flicker", "grain_pour", "frost_crackle", "bamboo_creak", "post_horn", "bell_toll", "rain_patter", "ink_drip", "bee_buzz", "flute_tone", "shadow_whoosh", "salt_crunch", "dye_splash", "drum_thump", "incense_hiss", "tide_wash", "porcelain_chime", "zoc_pulse", "zoc_leave"]:
@@ -18,6 +20,47 @@ func _ready() -> void:
 
 func play(id: String) -> void:
 	play_vol(id, -6.0)
+
+
+func set_listener_origin(origin: Vector2) -> void:
+	_listener_origin = origin
+	ensure_listener2d()
+
+func ensure_listener2d() -> void:
+	if get_node_or_null("ZoCListener") != null:
+		var L: AudioListener2D = get_node("ZoCListener")
+		L.position = Vector2.ZERO
+		L.make_current()
+		return
+	var listener := AudioListener2D.new()
+	listener.name = "ZoCListener"
+	add_child(listener)
+	listener.make_current()
+
+func play_spatial(id: String, world_pos: Vector2, volume_db: float = -6.0, max_dist: float = 420.0) -> void:
+	## Active/web-feel: 距离衰减 + 左右 pan（AudioStreamPlayer2D）
+	if not enabled:
+		return
+	var p2: AudioStreamPlayer2D = _players2d.get(id)
+	if p2 == null:
+		# lazy create from 1D stream
+		var p1: AudioStreamPlayer = _players.get(id)
+		if p1 == null or p1.stream == null:
+			play_vol(id, volume_db)
+			return
+		p2 = AudioStreamPlayer2D.new()
+		p2.name = id + "_2d"
+		p2.stream = p1.stream
+		p2.bus = "Master"
+		p2.max_distance = max_dist
+		p2.attenuation = 1.2
+		add_child(p2)
+		_players2d[id] = p2
+	# 相对听者偏移 → 左右 pan（无 Camera2D 的 Control 战棋也成立）
+	p2.position = world_pos - _listener_origin
+	p2.volume_db = volume_db
+	p2.max_distance = max_dist
+	p2.play()
 
 func play_vol(id: String, volume_db: float = -6.0) -> void:
 	if not enabled:

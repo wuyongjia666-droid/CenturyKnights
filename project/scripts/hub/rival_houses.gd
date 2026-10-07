@@ -58,6 +58,7 @@ func _ready() -> void:
 	inh.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/inheritance.tscn"))
 	add_child(inh)
 	_refresh()
+	UIFX.stagger_children(_list, 0.05, 0.22)
 
 func _refresh() -> void:
 	for c in _list.get_children():

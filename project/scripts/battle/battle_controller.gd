@@ -1505,13 +1505,17 @@ func _zoc_hover_audio(cell: Vector2i) -> void:
 	if selected >= 0 and selected < units.size():
 		dist = float(_manhattan(units[selected].pos, cell))
 	var vol = clampf(-3.0 - dist * 2.2, -18.0, -2.0)
+	var world = ORIGIN + Vector2(cell) * CELL + Vector2(CELL * 0.5, CELL * 0.5)
+	if selected >= 0 and selected < units.size():
+		var lp = ORIGIN + Vector2(units[selected].pos) * CELL + Vector2(CELL * 0.5, CELL * 0.5)
+		Sfx.set_listener_origin(lp)
 	if kind == "lock3":
 		vol = clampf(vol + 2.0, -16.0, -1.0)  # 锁脱更响
-		Sfx.zoc_pulse(vol)
+		Sfx.play_spatial("zoc_pulse", world, vol)
 	elif kind == "leave2":
-		Sfx.zoc_leave(vol)
+		Sfx.play_spatial("zoc_leave", world, vol)
 	elif kind == "zoc":
-		Sfx.zoc_leave(vol - 1.5)
+		Sfx.play_spatial("zoc_leave", world, vol - 1.5)
 
 func _gui_input(event: InputEvent) -> void:
 	if battle_over:

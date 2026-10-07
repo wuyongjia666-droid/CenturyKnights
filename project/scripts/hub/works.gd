@@ -56,6 +56,7 @@ func _ready() -> void:
 	_list.add_theme_constant_override("separation", 10)
 	scroll.add_child(_list)
 	_rebuild()
+	UIFX.stagger_children(_list, 0.04, 0.24)
 
 	if ResourceLoader.exists("res://assets/art/ui/ambition_strip.png"):
 		var astr := TextureRect.new()

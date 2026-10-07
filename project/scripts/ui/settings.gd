@@ -58,7 +58,12 @@ func _ready() -> void:
 	sfxb.button_pressed = Sfx.enabled
 	sfxb.toggled.connect(func(on): Sfx.enabled = on)
 	box.add_child(sfxb)
-	box.add_child(UIKit.make_dim_label("音频均为程序生成 WAV，无第三方曲库版权风险。"))
+	var reduced = CheckButton.new()
+	reduced.text = "减动效（缩短入场/呼吸）"
+	reduced.button_pressed = bool(GameState.settings.get("reduced_motion", false))
+	reduced.toggled.connect(func(on): GameState.settings["reduced_motion"] = on)
+	box.add_child(reduced)
+	box.add_child(UIKit.make_dim_label("音频均为程序生成 WAV，无第三方曲库版权风险。动效遵循 Active Theory：短按压、错落入场、可关呼吸。"))
 
 	var back = UIKit.make_button(Locale.t("btn_back"), 200)
 	back.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
@@ -69,3 +74,4 @@ func _ready() -> void:
 			get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn")
 	)
 	box.add_child(back)
+	UIFX.stagger_children(box, 0.035, 0.22)

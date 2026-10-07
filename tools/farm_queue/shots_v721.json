@@ -1,0 +1,145 @@
+{
+  "book": "CenturyKnights",
+  "round": "v7.21.0-depth",
+  "prefer": "qwen",
+  "dual_submit": true,
+  "bases": {
+    "qwen": "http://192.168.9.244:8322",
+    "sn_local": "http://192.168.9.244:8329"
+  },
+  "refuse": [
+    "sn_api",
+    "sn_cloud",
+    "qwen_api_nodes",
+    "flux"
+  ],
+  "shots": [
+    {
+      "id": "ui_market_banner",
+      "w": 1280,
+      "h": 64,
+      "role": "UI banner",
+      "prompt": "Chinese ink-fantasy ash-banner market street UI banner strip, warm lanterns, ornate gold trim, no text glyphs, game HUD asset flat, transparent ends"
+    },
+    {
+      "id": "ui_caravan_banner",
+      "w": 1280,
+      "h": 52,
+      "role": "UI banner",
+      "prompt": "Fantasy wagon caravan silhouette on dusk river bridge, ash crest palette, game UI strip, no text, ink wash elegance"
+    },
+    {
+      "id": "ui_works_banner",
+      "w": 1280,
+      "h": 52,
+      "role": "UI banner",
+      "prompt": "Castle works and ambition ledger header banner, stone hall and forge glow, gold ink trim, Chinese dynasty tactics UI, no readable text"
+    },
+    {
+      "id": "ui_estates_banner",
+      "w": 1280,
+      "h": 52,
+      "role": "UI banner",
+      "prompt": "Four wild holdings estate banner, reed ford hill mist fields, ash flag, game UI strip no text"
+    },
+    {
+      "id": "ui_estate_focus_grain",
+      "w": 64,
+      "h": 64,
+      "role": "UI icon",
+      "prompt": "Game UI icon grain sheaf, ash-banner fantasy gold rim, transparent bg, square chip"
+    },
+    {
+      "id": "ui_estate_focus_cash",
+      "w": 64,
+      "h": 64,
+      "role": "UI icon",
+      "prompt": "Game UI icon silver coin purse, ash-banner fantasy gold rim, transparent bg"
+    },
+    {
+      "id": "ui_estate_focus_fortify",
+      "w": 64,
+      "h": 64,
+      "role": "UI icon",
+      "prompt": "Game UI icon stone fort battlement, ash-banner fantasy gold rim, transparent bg"
+    },
+    {
+      "id": "ui_alliance_duty",
+      "w": 64,
+      "h": 64,
+      "role": "UI icon",
+      "prompt": "Marriage alliance oath seal twin rings ash banner, rose gold, transparent bg game chip"
+    },
+    {
+      "id": "ui_convoy_grain",
+      "w": 64,
+      "h": 64,
+      "role": "UI icon",
+      "prompt": "Wagon convoy icon grain sacks, top-down-ish UI chip transparent bg fantasy ink"
+    },
+    {
+      "id": "ui_convoy_iron",
+      "w": 64,
+      "h": 64,
+      "role": "UI icon",
+      "prompt": "Wagon convoy icon iron bars, UI chip transparent bg fantasy ink"
+    },
+    {
+      "id": "ui_convoy_spice",
+      "w": 64,
+      "h": 64,
+      "role": "UI icon",
+      "prompt": "Wagon convoy icon spice jars, UI chip transparent bg fantasy ink"
+    },
+    {
+      "id": "fx_zoc_pulse_sheet",
+      "w": 384,
+      "h": 64,
+      "role": "FX sheet",
+      "prompt": "Six frame ZoC pulse rings magenta to amber in a row, transparent bg, pixel-clean tactics FX"
+    },
+    {
+      "id": "fx_lock_spark_sheet",
+      "w": 384,
+      "h": 64,
+      "role": "FX sheet",
+      "prompt": "Six frame combat lock spark rings violet gold, transparent bg, tactics VFX strip"
+    },
+    {
+      "id": "hub_monthly_settle",
+      "w": 640,
+      "h": 120,
+      "role": "UI panel",
+      "prompt": "Monthly settlement ledger header art ink and gold, Chinese dynasty castle UI, no readable glyphs"
+    },
+    {
+      "id": "hub_panel_chrome",
+      "w": 256,
+      "h": 256,
+      "role": "UI chrome",
+      "prompt": "Ornate ash-banner panel frame corners gold filigree dark parchment, seamless UI nine-slice friendly, no text"
+    },
+    {
+      "id": "concept_hire_plate_m",
+      "w": 220,
+      "h": 270,
+      "role": "portrait",
+      "prompt": "Hand-painted oil fantasy male ash-banner knight bust portrait plate, rim light brush texture, 220x270, no text"
+    },
+    {
+      "id": "concept_hire_plate_f",
+      "w": 220,
+      "h": 270,
+      "role": "portrait",
+      "prompt": "Hand-painted oil fantasy female ash-banner officer bust portrait plate, rim light brush texture, 220x270, no text"
+    },
+    {
+      "id": "battle_backdrop_wash",
+      "w": 1280,
+      "h": 720,
+      "role": "backdrop",
+      "prompt": "Tactics battle backdrop ash dusk hills soft fog ember sparks, paintery, no UI chrome, no text, subtle vignette"
+    }
+  ],
+  "note": "Submit via m173 relay (machineId ea57a68e...). Box cannot reach 192.168.9.244."
+}
