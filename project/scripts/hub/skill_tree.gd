@@ -3,10 +3,17 @@ extends Control
 var _msg: Label
 var _char_list: VBoxContainer
 var _graph: Control
+var _graph_panel: Control
 var _detail: RichTextLabel
 var _selected: CKCharacter
-var _node_btns: Dictionary = {}  # sid -> Button
+var _node_btns: Dictionary = {}
 var _pts_label: Label
+var _zoom: float = 1.0
+var _pan: Vector2 = Vector2.ZERO
+var _dragging: bool = false
+var _drag_last: Vector2 = Vector2.ZERO
+var _fx_pulses: Array = []  # {pos, age, life}
+var _zoom_label: Label
 
 func _ready() -> void:
 	UIKit.make_screen_bg(self)
@@ -19,51 +26,108 @@ func _ready() -> void:
 	_pts_label.position = Vector2(40, 48)
 	_pts_label.add_theme_color_override("font_color", UIKit.ACCENT)
 	add_child(_pts_label)
-	var tip = UIKit.make_dim_label("节点=战技。实线=前置依赖。金边=已学，灰=可点解锁，暗=未满足。")
+	var tip = UIKit.make_dim_label("拖拽平移 · 滚轮缩放 · 点亮节点解锁。金=已学，青=可解锁。")
 	tip.position = Vector2(40, 76)
 	add_child(tip)
+	_zoom_label = UIKit.make_dim_label("缩放 100%")
+	_zoom_label.position = Vector2(700, 76)
+	add_child(_zoom_label)
 
 	var left = UIKit.make_panel()
 	left.position = Vector2(24, 110)
-	left.custom_minimum_size = Vector2(220, 480)
+	left.custom_minimum_size = Vector2(200, 480)
 	add_child(left)
 	_char_list = VBoxContainer.new()
 	_char_list.add_theme_constant_override("separation", 6)
 	left.add_child(_char_list)
 
-	var graph_panel = UIKit.make_panel()
-	graph_panel.position = Vector2(260, 110)
-	graph_panel.custom_minimum_size = Vector2(720, 400)
-	add_child(graph_panel)
+	_graph_panel = UIKit.make_panel()
+	_graph_panel.position = Vector2(240, 110)
+	_graph_panel.custom_minimum_size = Vector2(740, 420)
+	_graph_panel.clip_contents = true
+	_graph_panel.mouse_filter = Control.MOUSE_FILTER_STOP
+	_graph_panel.gui_input.connect(_on_graph_input)
+	add_child(_graph_panel)
+
 	_graph = Control.new()
-	_graph.custom_minimum_size = Vector2(700, 380)
-	_graph.draw.connect(_draw_edges)
-	graph_panel.add_child(_graph)
+	_graph.custom_minimum_size = Vector2(1200, 800)
+	_graph.draw.connect(_draw_graph)
+	_graph_panel.add_child(_graph)
 
 	var right = UIKit.make_panel()
 	right.position = Vector2(1000, 110)
-	right.custom_minimum_size = Vector2(260, 400)
+	right.custom_minimum_size = Vector2(260, 420)
 	add_child(right)
 	_detail = RichTextLabel.new()
 	_detail.bbcode_enabled = true
-	_detail.custom_minimum_size = Vector2(240, 380)
+	_detail.custom_minimum_size = Vector2(240, 400)
 	_detail.add_theme_color_override("default_color", UIKit.TEXT)
 	right.add_child(_detail)
 
 	_msg = UIKit.make_label("")
-	_msg.position = Vector2(260, 530)
+	_msg.position = Vector2(240, 550)
 	add_child(_msg)
+	var row := HBoxContainer.new()
+	row.position = Vector2(40, 640)
+	row.add_theme_constant_override("separation", 8)
+	add_child(row)
 	var back = UIKit.make_button(Locale.t("btn_back"), 120)
-	back.position = Vector2(40, 640)
 	back.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
-	add_child(back)
+	row.add_child(back)
+	var reset = UIKit.make_button("复位视角", 120)
+	reset.pressed.connect(func():
+		_zoom = 1.0; _pan = Vector2.ZERO; _apply_view()
+	)
+	row.add_child(reset)
 	_refresh_chars()
+	set_process(true)
+
+func _process(delta: float) -> void:
+	var dirty := false
+	for i in range(_fx_pulses.size() - 1, -1, -1):
+		_fx_pulses[i].age += delta
+		if _fx_pulses[i].age >= _fx_pulses[i].life:
+			_fx_pulses.remove_at(i)
+		dirty = true
+	if dirty:
+		_graph.queue_redraw()
+
+func _apply_view() -> void:
+	_graph.scale = Vector2(_zoom, _zoom)
+	_graph.position = _pan
+	_zoom_label.text = "缩放 %d%%" % int(_zoom * 100)
+	_graph.queue_redraw()
+
+func _on_graph_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP and event.pressed:
+			_zoom = clampf(_zoom * 1.1, 0.55, 1.8)
+			_apply_view()
+			accept_event()
+		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN and event.pressed:
+			_zoom = clampf(_zoom / 1.1, 0.55, 1.8)
+			_apply_view()
+			accept_event()
+		elif event.button_index == MOUSE_BUTTON_MIDDLE or event.button_index == MOUSE_BUTTON_RIGHT:
+			_dragging = event.pressed
+			_drag_last = event.position
+			accept_event()
+		elif event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+			# allow drag with left if holding shift-less empty area — use middle/right primarily
+			pass
+	elif event is InputEventMouseMotion:
+		if _dragging:
+			var d = event.position - _drag_last
+			_drag_last = event.position
+			_pan += d
+			_apply_view()
+			accept_event()
 
 func _refresh_chars() -> void:
 	for c in _char_list.get_children():
 		c.queue_free()
 	for ch in GameState.roster():
-		var b = UIKit.make_button("%s" % ch.name, 190)
+		var b = UIKit.make_button("%s" % ch.name, 170)
 		var captured = ch
 		b.pressed.connect(func(): _show(captured))
 		_char_list.add_child(b)
@@ -71,8 +135,8 @@ func _refresh_chars() -> void:
 		_show(GameState.roster()[0])
 
 func _node_pos(tree_idx: int, tier: int, slot: int) -> Vector2:
-	var x = 40.0 + tree_idx * 175.0 + slot * 18.0
-	var y = 40.0 + (tier - 1) * 140.0
+	var x = 60.0 + tree_idx * 200.0 + slot * 20.0
+	var y = 60.0 + (tier - 1) * 150.0
 	return Vector2(x, y)
 
 func _show(c: CKCharacter) -> void:
@@ -81,9 +145,8 @@ func _show(c: CKCharacter) -> void:
 		if is_instance_valid(_node_btns[k]):
 			_node_btns[k].queue_free()
 	_node_btns.clear()
-	# clear titles
 	for child in _graph.get_children():
-		if str(child.name).begins_with("TreeTitle_"):
+		if str(child.name).begins_with("TreeTitle_") or str(child.name).begins_with("Node_"):
 			child.queue_free()
 	var trees: Array = GameState.data_skills.get("trees", [])
 	var by_tree: Dictionary = {}
@@ -99,13 +162,9 @@ func _show(c: CKCharacter) -> void:
 		var tid = str(tree.get("id"))
 		var label = Label.new()
 		label.text = str(tree.get("name", tid))
-		label.position = _node_pos(ti, 0, 0) + Vector2(0, -28)
+		label.position = _node_pos(ti, 0, 0) + Vector2(0, -30)
 		label.add_theme_color_override("font_color", UIKit.ACCENT)
 		label.name = "TreeTitle_%s" % tid
-		# remove old titles
-		var old = _graph.get_node_or_null(label.name)
-		if old:
-			old.queue_free()
 		_graph.add_child(label)
 		var skills: Array = by_tree.get(tid, [])
 		var tier_slots := {}
@@ -119,9 +178,9 @@ func _show(c: CKCharacter) -> void:
 			var owned = sid in c.skills or sid in c.unlocked_skills
 			var check = GameState.can_unlock_skill(c, sid)
 			var b = Button.new()
-			b.custom_minimum_size = Vector2(140, 52)
+			b.custom_minimum_size = Vector2(150, 56)
 			b.position = _node_pos(ti, tier, slot)
-			b.text = "%s\nT%d CD%d" % [sk.get("name"), tier, int(sk.get("cooldown", 1))]
+			b.text = "%s\nT%d · CD%d" % [sk.get("name"), tier, int(sk.get("cooldown", 1))]
 			b.name = "Node_%s" % sid
 			if owned:
 				b.modulate = Color(1.0, 0.92, 0.55)
@@ -129,18 +188,19 @@ func _show(c: CKCharacter) -> void:
 				b.modulate = Color(0.85, 0.95, 1.0)
 			else:
 				b.modulate = Color(0.55, 0.55, 0.58)
-				b.disabled = int(sk.get("tier", 1)) >= 2 and not owned
+				if int(sk.get("tier", 1)) >= 2 and not owned:
+					b.disabled = not check.get("ok")
 			var cap_sid = sid
 			var cap_sk = sk
 			b.pressed.connect(func(): _on_node(cap_sid, cap_sk))
 			_graph.add_child(b)
 			_node_btns[sid] = b
 	_graph.queue_redraw()
-	_detail.text = "[b]%s[/b]\n职业 %s\n已学 %d　解锁备用 %d\n\n点选节点查看详情与解锁。" % [
-		c.name, GameState.get_job(c.job_id).get("name", ""), c.skills.size(), c.unlocked_skills.size()
+	_detail.text = "[b]%s[/b]\n职业 %s\n已学 %d\n\n拖拽/滚轮浏览图谱。\n点青节点解锁。" % [
+		c.name, GameState.get_job(c.job_id).get("name", ""), c.skills.size()
 	]
 
-func _draw_edges() -> void:
+func _draw_graph() -> void:
 	if _selected == null:
 		return
 	for sk in GameState.data_skills.get("skills", []):
@@ -157,29 +217,45 @@ func _draw_edges() -> void:
 		var p0 = a.position + a.size * 0.5
 		var p1 = b.position + b.size * 0.5
 		var col = Color(0.78, 0.64, 0.22, 0.85)
-		_graph.draw_line(p0, p1, col, 2.0)
-		# arrow tip
+		_graph.draw_line(p0, p1, col, 2.5)
 		var dir = (p1 - p0).normalized()
-		var tip = p1 - dir * 12.0
-		_graph.draw_circle(tip, 3.0, col)
+		_graph.draw_circle(p1 - dir * 14.0, 3.5, col)
+	for fx in _fx_pulses:
+		var a2 = clampf(1.0 - fx.age / fx.life, 0.0, 1.0)
+		var r = 18.0 + fx.age * 40.0
+		_graph.draw_arc(fx.pos, r, 0, TAU, 40, Color(1.0, 0.85, 0.35, a2), 2.5)
+		_graph.draw_circle(fx.pos, 6.0 * a2, Color(1.0, 0.9, 0.5, a2 * 0.8))
+
+func _spawn_unlock_fx(sid: String) -> void:
+	if not _node_btns.has(sid):
+		return
+	var b: Button = _node_btns[sid]
+	if not is_instance_valid(b):
+		return
+	_fx_pulses.append({"pos": b.position + b.size * 0.5, "age": 0.0, "life": 0.7})
+	_graph.queue_redraw()
 
 func _on_node(sid: String, sk: Dictionary) -> void:
 	var owned = sid in _selected.skills or sid in _selected.unlocked_skills
 	var check = GameState.can_unlock_skill(_selected, sid)
 	var lines = [
 		"[b]%s[/b]" % sk.get("name"),
-		"途径：%s　阶：T%d　冷却：%d　次数：%d" % [sk.get("tree"), int(sk.get("tier",1)), int(sk.get("cooldown",1)), int(sk.get("uses",1))],
+		"途径：%s　T%d　冷却%d　次数%d" % [sk.get("tree"), int(sk.get("tier",1)), int(sk.get("cooldown",1)), int(sk.get("uses",1))],
 		str(sk.get("desc", "")),
 		""
 	]
 	if owned:
 		lines.append("[color=#c9a227]已掌握[/color]")
 	elif check.get("ok"):
-		lines.append("[color=#8ecae6]可花费 1 战技点解锁[/color]")
+		lines.append("[color=#8ecae6]解锁中…[/color]")
 		var r = GameState.unlock_skill(_selected, sid)
 		_msg.text = str(r.get("msg"))
 		_pts_label.text = "可用战技点：%d（非教程胜仗 +1）" % GameState.skill_points
 		Sfx.confirm()
+		Sfx.fanfare()
+		_spawn_unlock_fx(sid)
+		# brief delay then refresh so FX visible
+		await get_tree().create_timer(0.35).timeout
 		_show(_selected)
 		return
 	else:

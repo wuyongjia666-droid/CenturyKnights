@@ -22,6 +22,7 @@ var data_chapter5: Dictionary = {}
 var data_chapter6: Dictionary = {}
 var data_chapter7: Dictionary = {}
 var data_chapter8: Dictionary = {}
+var data_chapter9: Dictionary = {}
 var data_skills: Dictionary = {}
 var chapter1_beat: String = "1.0"
 var chapter2_beat: String = "2.0"
@@ -30,6 +31,8 @@ var chapter4_beat: String = "4.0"
 var chapter5_beat: String = "5.0"
 var chapter6_beat: String = "6.0"
 var chapter7_beat: String = "7.0"
+var chapter8_beat: String = "8.0"
+var chapter9_beat: String = "9.0"
 var skill_points: int = 0
 
 # 游戏状态
@@ -91,6 +94,7 @@ func _load_data() -> void:
 	data_chapter6 = _read_json("res://data/chapter6.json")
 	data_chapter7 = _read_json("res://data/chapter7.json")
 	data_chapter8 = _read_json("res://data/chapter8.json")
+	data_chapter9 = _read_json("res://data/chapter9.json")
 	data_skills = _read_json("res://data/skills.json")
 
 func _read_json(path: String) -> Dictionary:
@@ -182,6 +186,8 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	chapter5_beat = "5.0"
 	chapter6_beat = "6.0"
 	chapter7_beat = "7.0"
+	chapter8_beat = "8.0"
+	chapter9_beat = "9.0"
 	skill_points = 1
 	chapter0_flags = {}
 	event_log.clear()
@@ -575,6 +581,8 @@ func save_game() -> bool:
 		"chapter5_beat": chapter5_beat,
 		"chapter6_beat": chapter6_beat,
 		"chapter7_beat": chapter7_beat,
+		"chapter8_beat": chapter8_beat,
+		"chapter9_beat": chapter9_beat,
 		"skill_points": skill_points,
 		"chapter0_flags": chapter0_flags,
 		"reputation": reputation,
@@ -628,6 +636,8 @@ func load_game() -> bool:
 	chapter5_beat = str(data.get("chapter5_beat", "5.0"))
 	chapter6_beat = str(data.get("chapter6_beat", "6.0"))
 	chapter7_beat = str(data.get("chapter7_beat", "7.0"))
+	chapter8_beat = str(data.get("chapter8_beat", "8.0"))
+	chapter9_beat = str(data.get("chapter9_beat", "9.0"))
 	skill_points = int(data.get("skill_points", 0))
 	chapter0_flags = data.get("chapter0_flags", {})
 	reputation = data.get("reputation", {"ashland": 0, "riverland": 0})

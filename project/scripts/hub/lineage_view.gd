@@ -52,6 +52,10 @@ func _build() -> void:
 			get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
 	)
 	add_child(back)
+	var rite = UIKit.make_accent_button("授旗礼", 120)
+	rite.position = Vector2(180, 640)
+	rite.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/lineage_rite.tscn"))
+	add_child(rite)
 
 func _refresh() -> void:
 	for c in _list.get_children():

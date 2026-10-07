@@ -6,6 +6,10 @@ var _expect: RichTextLabel
 var _selected: CKCharacter
 var _msg: Label
 var _portrait: TextureRect
+var _vow_step: int = 0
+var _vow_panel: Control
+var _vow_body: RichTextLabel
+var _vow_actions: HBoxContainer
 
 func _ready() -> void:
 	UIFX.fade_in(self, 0.3)
@@ -77,9 +81,12 @@ func _build() -> void:
 	row.position = Vector2(40, 590)
 	row.add_theme_constant_override("separation", 10)
 	add_child(row)
-	var marry = UIKit.make_accent_button("定聘礼并成婚（40银）", 240)
-	marry.pressed.connect(_do_marry)
+	var marry = UIKit.make_accent_button("进入誓约仪式（40银）", 240)
+	marry.pressed.connect(_start_vow)
 	row.add_child(marry)
+	var rite = UIKit.make_button("族谱授旗礼", 140)
+	rite.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/lineage_rite.tscn"))
+	row.add_child(rite)
 	var refresh = UIKit.make_button("刷新候选", 120)
 	refresh.pressed.connect(func():
 		GameState.refresh_marriage_candidates()
@@ -89,6 +96,22 @@ func _build() -> void:
 	var back = UIKit.make_button(Locale.t("btn_back"), 100)
 	back.pressed.connect(_back)
 	row.add_child(back)
+
+	_vow_panel = UIKit.make_panel()
+	_vow_panel.position = Vector2(200, 160)
+	_vow_panel.custom_minimum_size = Vector2(880, 360)
+	_vow_panel.visible = false
+	add_child(_vow_panel)
+	_vow_body = RichTextLabel.new()
+	_vow_body.bbcode_enabled = true
+	_vow_body.custom_minimum_size = Vector2(840, 260)
+	_vow_body.position = Vector2(20, 16)
+	_vow_body.add_theme_color_override("default_color", UIKit.TEXT)
+	_vow_panel.add_child(_vow_body)
+	_vow_actions = HBoxContainer.new()
+	_vow_actions.position = Vector2(20, 290)
+	_vow_actions.add_theme_constant_override("separation", 12)
+	_vow_panel.add_child(_vow_actions)
 
 func _refresh() -> void:
 	for c in _list.get_children():
@@ -129,18 +152,56 @@ func _select(c: CKCharacter) -> void:
 	lines.append("预估子代勋位：%s" % CKCharacter.RANK_NAMES.get(exp.rank_hint, exp.rank_hint))
 	_expect.text = "\n".join(lines)
 
-func _do_marry() -> void:
+func _start_vow() -> void:
+	if _selected == null:
+		return
+	var check = Lineage.can_propose(GameState.get_leader(), _selected)
+	if not check.get("ok"):
+		_msg.text = str(check.get("msg", "不可定聘"))
+		return
+	_vow_step = 0
+	_vow_panel.visible = true
+	_show_vow()
+
+func _show_vow() -> void:
+	for c in _vow_actions.get_children():
+		c.queue_free()
+	var leader = GameState.get_leader()
+	var a = leader.name if leader else "团长"
+	var b = _selected.name
+	match _vow_step:
+		0:
+			_vow_body.text = "[b]誓约·第一步 · 宣读子嗣期望[/b]\n\n厅上众人静听。\n%s 与 %s 将共旗同席。\n请确认右侧子嗣期望无误，再向前一步。" % [a, b]
+			_vow_btn("确认期望，继续", func(): _vow_step = 1; _show_vow())
+			_vow_btn("取消", func(): _vow_panel.visible = false)
+		1:
+			_vow_body.text = "[b]誓约·第二步 · 双姓共席[/b]\n\n「灰旗不弃印，联姻不弃家。」\n%s 握旗，%s 按印。厅外旗色比较声渐渐小了。" % [a, b]
+			_vow_btn("交换誓词", func(): _vow_step = 2; _show_vow())
+			_vow_btn("取消", func(): _vow_panel.visible = false)
+		2:
+			_vow_body.text = "[b]誓约·第三步 · 定聘落成[/b]\n\n聘礼 40 银将入库。妊娠将在岁月中推进。\n族谱将添新页；陆桥会传『灰旗有家，可托孤』。"
+			_vow_btn("落成婚约", func(): _finish_marry())
+			_vow_btn("取消", func(): _vow_panel.visible = false)
+
+func _vow_btn(text: String, cb: Callable) -> void:
+	var b = UIKit.make_accent_button(text, 200)
+	b.pressed.connect(cb)
+	_vow_actions.add_child(b)
+
+func _finish_marry() -> void:
 	if _selected == null:
 		return
 	var r = Lineage.marry(GameState.get_leader(), _selected, 40)
 	_msg.text = str(r.get("msg", ""))
+	_vow_panel.visible = false
 	if r.get("ok"):
 		GameState.save_game()
-		_msg.text += "　妊娠将在岁月推进后分娩。双姓共席，旗又升高一寸。\n族谱新页将写上双方血胤；陆桥会传『灰旗有家，可托孤』。"
-		GameState.add_lineage_event("婚宴：%s 与 %s 成礼，子嗣期望已立。" % [GameState.get_leader().name if GameState.get_leader() else "团长", _selected.name])
-		GameState.add_rep("ashland", 2)
+		_msg.text += "　誓约完成。双姓共席，旗又升高一寸。"
+		GameState.add_lineage_event("誓约婚宴：%s 与 %s 三步成礼。" % [GameState.get_leader().name if GameState.get_leader() else "团长", _selected.name])
+		GameState.add_rep("ashland", 3)
 		Sfx.confirm()
 		Sfx.lineage_chime()
+		_refresh()
 
 func _back() -> void:
 	if str(GameState.chapter0_beat) in ["0.4", "0.45", "0.5"] and not GameState.flag("chapter0_done"):

@@ -77,6 +77,7 @@ func _build() -> void:
 		[Locale.t("btn_market"), "粮铁药材", "res://scenes/hub/market.tscn"],
 		[Locale.t("btn_deploy"), "最多四人", "res://scenes/hub/deploy.tscn"],
 		["战技树", "冷却与二阶", "res://scenes/hub/skill_tree.tscn"],
+		["授旗礼", "子嗣三步入队", "res://scenes/hub/lineage_rite.tscn"],
 		["设置", "规则与速度", "res://scenes/ui/settings.tscn"],
 	]
 	for item in buttons:
@@ -141,6 +142,14 @@ func _build() -> void:
 	ch7_b.disabled = not GameState.flag("chapter6_done")
 	ch7_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter7.tscn"))
 	row.add_child(ch7_b)
+	var ch8_b = UIKit.make_accent_button("第八章·港灯", 160)
+	ch8_b.disabled = not GameState.flag("chapter7_done")
+	ch8_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter8.tscn"))
+	row.add_child(ch8_b)
+	var ch9_b = UIKit.make_accent_button("第九章·商路", 160)
+	ch9_b.disabled = not GameState.flag("chapter8_done")
+	ch9_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter9.tscn"))
+	row.add_child(ch9_b)
 	var menu_b = UIKit.make_button("主菜单", 100)
 	menu_b.pressed.connect(func():
 		GameState.save_game()
@@ -169,6 +178,10 @@ func _update_story_hint() -> void:
 		_story_hint.text = "可点「第六章·托孤」签署托孤之约。"
 	elif not GameState.flag("chapter7_done"):
 		_story_hint.text = "可点「第七章·子嗣」打响正名战。"
+	elif not GameState.flag("chapter8_done"):
+		_story_hint.text = "可点「第八章·港灯」签署海商盟约。"
+	elif not GameState.flag("chapter9_done"):
+		_story_hint.text = "可点「第九章·商路」夺回辎重。"
 	else:
 		_story_hint.text = "主线暂缓。自由经营、战技树、联姻传代皆可。"
 
