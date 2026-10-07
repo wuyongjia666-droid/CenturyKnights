@@ -1338,12 +1338,48 @@ func clear_steward(hid: String) -> void:
 		holdings[hid]["steward_id"] = ""
 		mark_dirty()
 
+func holding_patrol_boost(hid: String) -> int:
+	if not holdings.has(hid):
+		return 0
+	return int(holdings[hid].get("patrol_boost", 0))
+
+func holding_patrol_cd(hid: String) -> int:
+	if not holdings.has(hid):
+		return 0
+	return int(holdings[hid].get("patrol_cd", 0))
+
+func patrol_holding(hid: String) -> Dictionary:
+	## 单属地巡防路线：花费较少，仅强化该地抗劫，并返回 vignette 标记
+	if not holdings.has(hid):
+		return {"ok": false, "msg": "属地未开垦"}
+	var def = HOLDING_DEFS.get(hid, {})
+	var nm = str(def.get("name", hid))
+	if holding_patrol_cd(hid) > 0:
+		return {"ok": false, "msg": "%s 巡防冷却中（%d 月）" % [nm, holding_patrol_cd(hid)]}
+	var cost_s = 18 + holding_level(hid) * 6
+	var cost_f = 3 + holding_level(hid)
+	if silver < cost_s or food < cost_f:
+		return {"ok": false, "msg": "需 %d 银 / %d 粮" % [cost_s, cost_f]}
+	silver -= cost_s
+	food -= cost_f
+	holdings[hid]["patrol_boost"] = maxi(holding_patrol_boost(hid), 2)
+	holdings[hid]["patrol_cd"] = 2
+	holdings[hid]["last_patrol"] = Calendar.label() if Calendar else ""
+	estate_quiet_months += 1
+	morale = mini(100, morale + 1)
+	log_event("巡防路线·%s：-%d银/-%d粮，抗劫 2 月" % [nm, cost_s, cost_f])
+	add_lineage_event("巡防路线抵达%s——田埂灯火一夜未熄" % nm)
+	var amb = check_ambitions()
+	mark_dirty()
+	var extra = ("；" + " / ".join(amb)) if amb else ""
+	return {"ok": true, "msg": "%s 巡防完成%s" % [nm, extra], "hid": hid, "vignette": true}
+
 func patrol_holdings() -> Dictionary:
-	## 主动巡防：花费银粮，本月+随后数月显著抗劫，推进安静月
+	## 全堡巡防：所有已开垦属地各走一圈（贵），全局抗劫
 	if holdings.is_empty():
 		return {"ok": false, "msg": "尚无开垦属地"}
 	if patrol_cooldown > 0:
-		return {"ok": false, "msg": "巡防休息中（尚余 %d 月）" % patrol_cooldown}
+		return {"ok": false, "msg": "全堡巡防休息中（尚余 %d 月）" % patrol_cooldown}
 	var cost_s = 25 + unlocked_holdings_count() * 8
 	var cost_f = 4 + unlocked_holdings_count()
 	if silver < cost_s or food < cost_f:
@@ -1352,20 +1388,30 @@ func patrol_holdings() -> Dictionary:
 	food -= cost_f
 	patrol_boost_months = maxi(patrol_boost_months, 2)
 	patrol_cooldown = 2
-	estate_quiet_months += 1  # 巡防本身计一档安静进展
+	for hid in holdings.keys():
+		holdings[hid]["patrol_boost"] = maxi(holding_patrol_boost(hid), 2)
+		holdings[hid]["last_patrol"] = Calendar.label() if Calendar else ""
+	estate_quiet_months += 1
 	morale = mini(100, morale + 2)
-	log_event("四野巡防：花费 %d银/%d粮，抗劫强化 2 月" % [cost_s, cost_f])
+	log_event("四野巡防：花费 %d银/%d粮，各属地抗劫强化 2 月" % [cost_s, cost_f])
 	add_lineage_event("主动巡防：旗丁走田埂，劫影暂避")
 	var amb = check_ambitions()
 	mark_dirty()
 	var extra = ("；" + " / ".join(amb)) if amb else ""
-	return {"ok": true, "msg": "巡防完成：抗劫 2 月，安静+%d%s" % [estate_quiet_months, extra]}
+	return {"ok": true, "msg": "全堡巡防完成：抗劫 2 月，安静%d%s" % [estate_quiet_months, extra], "vignette": true, "hid": ""}
 
 func tick_patrol_month() -> void:
 	if patrol_cooldown > 0:
 		patrol_cooldown -= 1
 	if patrol_boost_months > 0:
 		patrol_boost_months -= 1
+	for hid in holdings.keys():
+		var b = int(holdings[hid].get("patrol_boost", 0))
+		if b > 0:
+			holdings[hid]["patrol_boost"] = b - 1
+		var cd = int(holdings[hid].get("patrol_cd", 0))
+		if cd > 0:
+			holdings[hid]["patrol_cd"] = cd - 1
 
 
 func steward_of(hid: String) -> CKCharacter:
@@ -1432,7 +1478,9 @@ func holdings_monthly_yield() -> String:
 		if bool(house_mods.get("estate_patrol", false)):
 			raid_chance *= 0.35
 		if patrol_boost_months > 0:
-			raid_chance *= 0.25  # 主动巡防期
+			raid_chance *= 0.25  # 全堡巡防期
+		if holding_patrol_boost(hid) > 0:
+			raid_chance *= 0.3  # 本属地巡防路线
 		if raid_chance > 0.0 and rng.randf() < raid_chance:
 			raids.append(str(def.get("name", hid)))
 			continue  # 本月无收成
@@ -2001,6 +2049,38 @@ func skills_for_job(job_id: String) -> Array:
 		if job_id in jobs:
 			out.append(s)
 	return out
+
+
+func grant_battle_enemy_skills(c: CKCharacter, elite: bool = false) -> void:
+	## 敌军战技：一阶全给；精锐/头目再启发式塞二阶（不走战技树花费）
+	grant_job_skills(c)
+	var pool: Array = []
+	for s in skills_for_job(c.job_id):
+		var tier = int(s.get("tier", 1))
+		if tier == 2:
+			pool.append(str(s.get("id")))
+		elif elite and tier == 3:
+			pool.append(str(s.get("id")))
+	# 无 job 限制的通用二阶
+	for sid in ["lock_breaker", "terrain_ward", "anchor_guard"]:
+		var sk = get_skill(sid)
+		if sk.is_empty():
+			continue
+		var jobs = sk.get("jobs", [])
+		if jobs.is_empty() or c.job_id in jobs:
+			if sid not in pool and int(sk.get("tier", 1)) >= 2:
+				pool.append(sid)
+	var n = 2 if elite else 1
+	for _i in n:
+		if pool.is_empty():
+			break
+		var pick = rng.randi() % pool.size()
+		var sid = str(pool[pick])
+		pool.remove_at(pick)
+		if sid not in c.skills:
+			c.skills.append(sid)
+		if sid not in c.unlocked_skills:
+			c.unlocked_skills.append(sid)
 
 func grant_job_skills(c: CKCharacter) -> void:
 	if c == null:

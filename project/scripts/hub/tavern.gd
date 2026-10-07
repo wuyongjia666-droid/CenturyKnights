@@ -5,13 +5,14 @@ var _detail: RichTextLabel
 var _selected: CKCharacter
 var _msg: Label
 var _portrait: TextureRect
+var _trait_row: HBoxContainer
 
 func _ready() -> void:
 	_build()
 	_refresh()
 
 func _build() -> void:
-	UIKit.make_screen_bg(self)
+	UIKit.make_screen_bg(self, true)
 	var t = UIKit.make_label("烽火酒馆", true)
 	t.position = Vector2(40, 16)
 	add_child(t)
@@ -34,11 +35,17 @@ func _build() -> void:
 	var hb := HBoxContainer.new()
 	hb.add_theme_constant_override("separation", 12)
 	detail_panel.add_child(hb)
+	var left := VBoxContainer.new()
+	left.add_theme_constant_override("separation", 6)
+	hb.add_child(left)
 	_portrait = TextureRect.new()
 	_portrait.custom_minimum_size = Vector2(128, 128)
 	_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	hb.add_child(_portrait)
+	left.add_child(_portrait)
+	_trait_row = HBoxContainer.new()
+	_trait_row.add_theme_constant_override("separation", 4)
+	left.add_child(_trait_row)
 	_detail = RichTextLabel.new()
 	_detail.custom_minimum_size = Vector2(540, 360)
 	_detail.bbcode_enabled = true
@@ -83,6 +90,14 @@ func _refresh() -> void:
 func _select(c: CKCharacter) -> void:
 	_selected = c
 	_portrait.texture = UnitArt.portrait(c, 128)
+	if _trait_row:
+		for ch in _trait_row.get_children():
+			ch.queue_free()
+		for tr in c.traits:
+			var ic = UIKit.trait_icon_rect(str(tr), 30.0)
+			var td = GameState.get_trait(str(tr))
+			ic.tooltip_text = str(td.get("name", tr)) + "：" + str(td.get("desc", ""))
+			_trait_row.add_child(ic)
 	_detail.text = UIKit.char_card_text(c) + "\n\n招募费约 %d 银\n\n[i]掌柜低声：看脸，也看数。旗面亮的团，人肯跟。[/i]" % (25 + c.rank_index() * 15)
 
 func _hire() -> void:

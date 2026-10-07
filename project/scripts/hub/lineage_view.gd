@@ -4,6 +4,7 @@ var _list: VBoxContainer
 var _detail: RichTextLabel
 var _portrait: TextureRect
 var _trait_row: HBoxContainer
+var _perm_box: VBoxContainer
 
 func _ready() -> void:
 	_build()
@@ -55,6 +56,13 @@ func _build() -> void:
 	left_col.add_child(_trait_row)
 	var tip_t = UIKit.make_dim_label("禀性图标")
 	left_col.add_child(tip_t)
+	var perm_title = UIKit.make_label("永久权重", true)
+	perm_title.add_theme_font_size_override("font_size", 14)
+	left_col.add_child(perm_title)
+	_perm_box = VBoxContainer.new()
+	_perm_box.add_theme_constant_override("separation", 4)
+	_perm_box.custom_minimum_size = Vector2(140, 0)
+	left_col.add_child(_perm_box)
 	_detail = RichTextLabel.new()
 	_detail.custom_minimum_size = Vector2(580, 460)
 	_detail.bbcode_enabled = true
@@ -109,6 +117,29 @@ func _show(c: CKCharacter) -> void:
 			var td = GameState.get_trait(str(tr))
 			icon.tooltip_text = str(td.get("name", tr)) + " — " + str(td.get("desc", td.get("name", tr)))
 			_trait_row.add_child(icon)
+	if _perm_box:
+		for ch in _perm_box.get_children():
+			ch.queue_free()
+		var weights: Array = []
+		if c.is_leader:
+			weights.append(["heir_mark", "团长轴心"])
+		if c.spouse_id != "":
+			weights.append(["loyal", "联姻月结"])
+		if c.is_child:
+			weights.append(["diligent", "子嗣口粮"])
+		for bk in c.blood_mix.keys():
+			if float(c.blood_mix[bk]) >= 0.45:
+				weights.append(["lucky", "血胤月泽"])
+				break
+		if weights.is_empty():
+			_perm_box.add_child(UIKit.make_dim_label("（暂无）"))
+		else:
+			for w in weights:
+				var row := HBoxContainer.new()
+				row.add_theme_constant_override("separation", 4)
+				row.add_child(UIKit.trait_icon_rect(str(w[0]), 24.0))
+				row.add_child(UIKit.make_dim_label(str(w[1])))
+				_perm_box.add_child(row)
 	var lines: Array = [UIKit.char_card_text(c), ""]
 	lines.append("[b]血胤混合条[/b]")
 	for k in c.blood_mix.keys():

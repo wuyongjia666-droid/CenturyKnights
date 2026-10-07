@@ -759,6 +759,18 @@ func _escort_banter(kind: String) -> void:
 func _ready() -> void:
 	rng.randomize()
 	Music.play_battle()
+	# 战棋氛围底图（概念城堡暗化）
+	if ResourceLoader.exists("res://assets/art/ui/battle_backdrop.png"):
+		var bbg := TextureRect.new()
+		bbg.texture = load("res://assets/art/ui/battle_backdrop.png")
+		bbg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		bbg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		bbg.stretch_mode = TextureRect.STRETCH_SCALE
+		bbg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		bbg.z_index = -8
+		bbg.modulate = Color(1, 1, 1, 0.55)
+		add_child(bbg)
+		move_child(bbg, 0)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_build_ui()
 	_init_map()
@@ -1219,7 +1231,11 @@ func _deploy() -> void:
 		Sfx.wave_splash()
 	var chars: Array = []
 	for u in units:
-		GameState.grant_job_skills(u.char)
+		if u.team == "enemy":
+			var elite = u.char.is_leader or str(u.char.name).find("首") >= 0 or str(u.char.name).find("头目") >= 0 or str(u.char.name).find("匪首") >= 0 or u.char.level >= 4
+			GameState.grant_battle_enemy_skills(u.char, elite)
+		else:
+			GameState.grant_job_skills(u.char)
 		chars.append(u.char)
 	GameState.reset_battle_skills(chars)
 	_show_lock_tip_once()
@@ -1888,7 +1904,7 @@ func _enemy_try_skills(ui: int) -> void:
 			await get_tree().create_timer(0.18).timeout
 			return
 	# 3) 铁壁 / 锁定猎物
-	for sid in ["guard_stance", "mark_prey", "hold_phalanx", "anchor_guard"]:
+	for sid in ["guard_stance", "mark_prey", "hold_phalanx", "anchor_guard", "iron_wall", "ember_seal", "mark_death", "terrain_ward"]:
 		if sid in _enemy_known_skills(c) and _enemy_skill_ready(c, sid):
 			# 仅当附近有玩家时浪费增益不值
 			var near = false

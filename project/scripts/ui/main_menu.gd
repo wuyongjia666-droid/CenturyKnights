@@ -26,11 +26,26 @@ func _build() -> void:
 	for c in get_children():
 		c.queue_free()
 
-	var bg := ColorRect.new()
-	bg.color = UIKit.BG
-	bg.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
-	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(bg)
+	# 概念板级菜单底图
+	if ResourceLoader.exists("res://assets/art/ui/menu_backdrop.png"):
+		var mbg := TextureRect.new()
+		mbg.texture = load("res://assets/art/ui/menu_backdrop.png")
+		mbg.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+		mbg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		mbg.stretch_mode = TextureRect.STRETCH_SCALE
+		mbg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(mbg)
+		var veil := ColorRect.new()
+		veil.color = Color(0.05, 0.06, 0.09, 0.48)
+		veil.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+		veil.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(veil)
+	else:
+		var bg := ColorRect.new()
+		bg.color = UIKit.BG
+		bg.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+		bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(bg)
 
 	# 氛围底纹：深色石砖感色块
 	var left := ColorRect.new()

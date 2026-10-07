@@ -1,7 +1,7 @@
 extends Control
 
 func _ready() -> void:
-	UIKit.make_screen_bg(self)
+	UIKit.make_screen_bg(self, true)
 	var t = UIKit.make_label("花名册", true)
 	t.position = Vector2(40, 16)
 	add_child(t)
@@ -43,6 +43,16 @@ func _ready() -> void:
 			c.stats["str"], c.stats["vit"], c.stats["skl"], c.stats["agi"], c.stats["per"], c.stats["wil"],
 			c.bloodline_display()
 		]))
+		var chips := HBoxContainer.new()
+		chips.add_theme_constant_override("separation", 4)
+		for tr in c.traits:
+			var ic = UIKit.trait_icon_rect(str(tr), 28.0)
+			var td = GameState.get_trait(str(tr))
+			ic.tooltip_text = str(td.get("name", tr))
+			chips.add_child(ic)
+		if c.traits.is_empty():
+			chips.add_child(UIKit.make_dim_label("（无禀性）"))
+		lv.add_child(chips)
 		# mini token
 		var token := TextureRect.new()
 		token.custom_minimum_size = Vector2(56, 56)

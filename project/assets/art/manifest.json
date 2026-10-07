@@ -1,15 +1,5 @@
 {
-  "art_pass": "v7.5.0-depth",
-  "ui": [
-    "castle_backdrop",
-    "hub_backdrop",
-    "lineage_banner",
-    "marriage_banner",
-    "hub_banner_strip",
-    "trait_icons",
-    "patrol_icon",
-    "lock_tip_banner"
-  ],
+  "art_pass": "v7.6.0-depth",
   "traits": [
     "brave",
     "keen_eye",
@@ -26,6 +16,5 @@
     "diligent",
     "shrewd",
     "loyal"
-  ],
-  "notes": "v7.5 illustrated castle/hub backdrop; trait TextureRect icons; denser tiles; m173 unreachable"
+  ]
 }

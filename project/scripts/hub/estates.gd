@@ -56,7 +56,7 @@ func _ready() -> void:
 	works.position = Vector2(180, 660)
 	works.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/works.tscn"))
 	add_child(works)
-	var patrol = UIKit.make_accent_button("巡防四野", 140)
+	var patrol = UIKit.make_accent_button("全堡巡防", 140)
 	patrol.position = Vector2(340, 660)
 	patrol.pressed.connect(_do_patrol)
 	add_child(patrol)
@@ -130,6 +130,8 @@ func _rebuild() -> void:
 					y += "　[能干+%d]" % int(pv.trait_bonus)
 			else:
 				y += "　[无庄头·易遭劫掠]"
+			if GameState.holding_patrol_boost(hid) > 0:
+				y += "　[路线巡防%d月]" % GameState.holding_patrol_boost(hid)
 			vb.add_child(UIKit.make_dim_label(y))
 			var st = GameState.steward_of(hid)
 			if st != null:
@@ -165,6 +167,14 @@ func _rebuild() -> void:
 				var bc = UIKit.make_button("撤庄头", 100)
 				bc.pressed.connect(func(): _clear_steward(bid))
 				btn_col.add_child(bc)
+			var pb = UIKit.make_accent_button("巡此路线", 140)
+			if GameState.holding_patrol_cd(bid) > 0:
+				pb.text = "冷却%d月" % GameState.holding_patrol_cd(bid)
+				pb.disabled = true
+			elif GameState.holding_patrol_boost(bid) > 0:
+				pb.text = "巡防中%d" % GameState.holding_patrol_boost(bid)
+			pb.pressed.connect(func(): _do_patrol_one(bid))
+			btn_col.add_child(pb)
 
 func _upgrade(hid: String) -> void:
 	var r = GameState.upgrade_holding(hid)
@@ -258,5 +268,61 @@ func _do_patrol() -> void:
 		GameState.save_game()
 		get_node("Sum").text = _sum_text()
 		_rebuild()
+		_show_patrol_vignette("")
 	else:
 		Sfx.miss()
+
+func _do_patrol_one(hid: String) -> void:
+	var r = GameState.patrol_holding(hid)
+	_msg.text = str(r.get("msg", ""))
+	if r.get("ok"):
+		Sfx.confirm()
+		GameState.save_game()
+		get_node("Sum").text = _sum_text()
+		_rebuild()
+		_show_patrol_vignette(hid)
+	else:
+		Sfx.miss()
+
+func _show_patrol_vignette(hid: String) -> void:
+	var overlay = ColorRect.new()
+	overlay.color = Color(0, 0, 0, 0.55)
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.z_index = 30
+	add_child(overlay)
+	var panel = UIKit.make_panel()
+	panel.position = Vector2(320, 140)
+	panel.custom_minimum_size = Vector2(640, 400)
+	overlay.add_child(panel)
+	var title = UIKit.make_label("巡防沙盘" + ((" · " + str(GameState.HOLDING_DEFS.get(hid, {}).get("name", ""))) if hid != "" else " · 四野全线"), true)
+	title.position = Vector2(16, 12)
+	panel.add_child(title)
+	var map = TextureRect.new()
+	if ResourceLoader.exists("res://assets/art/ui/patrol_vignette.png"):
+		map.texture = load("res://assets/art/ui/patrol_vignette.png")
+	map.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	map.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	map.position = Vector2(16, 48)
+	map.custom_minimum_size = Vector2(600, 280)
+	panel.add_child(map)
+	if hid != "" and ResourceLoader.exists("res://assets/art/ui/patrol_mark_%s.png" % hid):
+		var mark = TextureRect.new()
+		mark.texture = load("res://assets/art/ui/patrol_mark_%s.png" % hid)
+		mark.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		mark.custom_minimum_size = Vector2(48, 48)
+		# approximate mark positions matching art
+		var pos_map = {"reed_ford": Vector2(120, 200), "stone_slope": Vector2(320, 100), "fog_vale": Vector2(480, 180), "tide_bridge": Vector2(280, 260)}
+		var mp: Vector2 = pos_map.get(hid, Vector2(300, 180))
+		mark.position = Vector2(16, 48) + mp - Vector2(24, 24)
+		panel.add_child(mark)
+	var tip = UIKit.make_dim_label("旗丁已走完路线。本属地劫掠风险大降。")
+	tip.position = Vector2(16, 340)
+	panel.add_child(tip)
+	var close = UIKit.make_accent_button("收起沙盘", 140)
+	close.position = Vector2(480, 350)
+	close.pressed.connect(func(): overlay.queue_free())
+	panel.add_child(close)
+	get_tree().create_timer(6.0).timeout.connect(func():
+		if is_instance_valid(overlay):
+			overlay.queue_free()
+	)
