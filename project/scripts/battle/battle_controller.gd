@@ -1373,18 +1373,25 @@ func _draw_overlay() -> void:
 			overlay.draw_rect(r, col)
 			overlay.draw_rect(r, edge, false, 2.0)
 			if tag != "":
-				var tp = ORIGIN + Vector2(pos) * CELL + Vector2(6, 18)
-				overlay.draw_rect(Rect2(tp + Vector2(-2, -12), Vector2(28, 14)), Color(0.05, 0.05, 0.08, 0.75))
-				overlay.draw_string(ThemeDB.fallback_font, tp, tag, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(1.0, 0.92, 0.75))
-		# 图例（有移动格且处于交战/锁定时）
-		if start_eng and not move_cells.is_empty():
+				var chip_path = ""
+				if tag == "锁3":
+					chip_path = "res://assets/art/ui/zoc_chip_lock3.png"
+				elif tag == "脱2":
+					chip_path = "res://assets/art/ui/zoc_chip_leave2.png"
+				elif tag == "控":
+					chip_path = "res://assets/art/ui/zoc_chip_zoc.png"
+				var tp = ORIGIN + Vector2(pos) * CELL + Vector2(CELL - 22, 2)
+				if chip_path != "" and ResourceLoader.exists(chip_path):
+					overlay.draw_texture_rect(load(chip_path), Rect2(tp, Vector2(18, 18)), false)
+				else:
+					overlay.draw_rect(Rect2(tp, Vector2(18, 14)), Color(0.05, 0.05, 0.08, 0.75))
+		# 图例：纯图标芯片（无长文字）
+		if not move_cells.is_empty():
 			var lx = 40.0
-			var ly = ORIGIN.y + MAP_H * CELL + 8.0
+			var ly = ORIGIN.y + MAP_H * CELL + 6.0
 			if ResourceLoader.exists("res://assets/art/ui/zoc_leave_legend.png"):
 				var ltex = load("res://assets/art/ui/zoc_leave_legend.png")
 				overlay.draw_texture(ltex, Vector2(lx, ly))
-			var legend = "蓝=安全　橙控=控带　脱2=脱离+2　锁3=锁定脱离+3"
-			overlay.draw_string(ThemeDB.fallback_font, Vector2(lx + 4, ly + 58), legend, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.9, 0.86, 0.72))
 	if selected >= 0 and selected < units.size():
 		var u = units[selected]
 		if u.team == "player" and not u.done:
@@ -2261,7 +2268,9 @@ func _enemy_ai() -> void:
 				var tid = terrain[t.pos.y][t.pos.x]
 				var expect = BattleRules.expected_damage(u.char, t.char, tid, extras)
 				if expect >= t.char.hp:
-					expect += 18.0
+					expect += 20.0
+					if locked_self and pos == u.pos:
+						expect += 3.0  # 锁定中原地击杀更优
 				var hp_frac = float(t.char.hp) / float(maxi(1, t.char.max_hp))
 				expect += (1.0 - hp_frac) * 4.5
 				if extras.get("flank", false):

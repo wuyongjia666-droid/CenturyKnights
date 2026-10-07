@@ -217,7 +217,9 @@ static func _portrait_key(c: CKCharacter) -> String:
 		return "res://assets/art/portraits/paper_archer.png"
 	if str(c.name).find("纸坊毛贼") >= 0:
 		return "res://assets/art/portraits/paper_thief.png"
-	if str(c.name).find("劫镖") >= 0 or str(c.name).find("劫道") >= 0 or str(c.name).find("关口伏弓") >= 0:
+	if str(c.name).find("关口伏弓") >= 0:
+		return "res://assets/art/portraits/escort_archer.png"
+	if str(c.name).find("劫镖") >= 0 or str(c.name).find("劫道") >= 0:
 		return "res://assets/art/portraits/escort_raider.png"
 	if c.faction == "enemy" or str(c.name).find("匪") >= 0:
 		return "res://assets/art/portraits/bandit.png"
@@ -240,7 +242,13 @@ static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
 	if tex2 != null:
 		_cache[ck] = tex2
 		return tex2
-	# 雇佣个体脸：hair/eyes/gender/scar/brow；同型再用 id 指纹去重
+	# 个人脸优先：hireuniq 为手绘感唯一底，再轻染等位色
+	var uid = _face_uid(c)
+	var uniq_p = "res://assets/art/portraits/hireuniq_%02d.png" % uid
+	var utex = _try_load(uniq_p)
+	if utex != null:
+		return _fingerprint_portrait(utex, c)
+	# 回退：等位组合板
 	var g = "f" if str(c.gender) == "f" else "m"
 	var hair = str(c.appearance.get("hair", "ash_brown"))
 	var eyes = str(c.appearance.get("eyes", "slate"))
@@ -254,12 +262,6 @@ static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
 	var ft = _try_load(face_p)
 	if ft != null:
 		return _fingerprint_portrait(ft, c)
-	# 角色 id 专属板（同型等位双胞胎 → 更满的个人脸）
-	var uid = _face_uid(c)
-	var uniq_p = "res://assets/art/portraits/hireuniq_%02d.png" % uid
-	var utex = _try_load(uniq_p)
-	if utex != null:
-		return _fingerprint_portrait(utex, c)
 	# 雇佣/花名册：角色×性别板（回退）
 	var role = BattleRules.job_role(c.job_id) if Engine.get_main_loop() else "skirmisher"
 	var hire_p = "res://assets/art/portraits/hire_%s_%s_plate.png" % [role, g]
@@ -416,7 +418,9 @@ static func _token_key(c: CKCharacter, team: String, frame: int) -> String:
 		return "res://assets/art/tokens/paper_archer_enemy_f%d.png" % frame
 	if str(c.name).find("纸坊毛贼") >= 0:
 		return "res://assets/art/tokens/paper_thief_enemy_f%d.png" % frame
-	if str(c.name).find("劫镖") >= 0 or str(c.name).find("劫道") >= 0 or str(c.name).find("关口伏弓") >= 0:
+	if str(c.name).find("关口伏弓") >= 0:
+		return "res://assets/art/tokens/escort_archer_enemy_f%d.png" % frame
+	if str(c.name).find("劫镖") >= 0 or str(c.name).find("劫道") >= 0:
 		return "res://assets/art/tokens/escort_raider_enemy_f%d.png" % frame
 	# 敌军：加密度 hire/role token，再回退 bandit
 	if team == "enemy" or c.faction == "enemy":
@@ -535,8 +539,8 @@ static func _face_uid(c: CKCharacter) -> int:
 	return absi(h) % 128
 
 static func _fingerprint_portrait(tex: Texture2D, c: CKCharacter) -> Texture2D:
-	## 将等位脸与 id 专属 hireuniq 混合，并加痣/色偏，避免双胞胎
-	var ck = "fp2|" + str(c.id) + "|" + str(c.appearance.get("hair","")) + "|" + str(c.appearance.get("brow",""))
+	## 以个人板为底：只做等位轻染 + 痣点（不再与另一张脸重混）
+	var ck = "fp3|" + str(c.id) + "|" + str(c.appearance.get("hair","")) + "|" + str(c.appearance.get("eyes","")) + "|" + str(c.appearance.get("brow",""))
 	if _cache.has(ck):
 		return _cache[ck]
 	var img: Image = tex.get_image()
@@ -547,40 +551,30 @@ static func _fingerprint_portrait(tex: Texture2D, c: CKCharacter) -> Texture2D:
 	var w = img.get_width()
 	var h = img.get_height()
 	var uid = _face_uid(c)
-	var uniq_p = "res://assets/art/portraits/hireuniq_%02d.png" % uid
-	var mix = _try_load(uniq_p)
-	if mix != null:
-		var mimg: Image = mix.get_image()
-		if mimg != null:
-			if mimg.get_width() != w or mimg.get_height() != h:
-				mimg = mimg.duplicate()
-				mimg.resize(w, h, Image.INTERPOLATE_LANCZOS)
-			var blend = 0.38 + float(uid % 5) * 0.05  # 0.38–0.58 更偏个人脸
-			for y in range(h):
-				for x in range(w):
-					var a = img.get_pixel(x, y)
-					var b = mimg.get_pixel(x, y)
-					if a.a < 0.05:
-						continue
-					# 上半脸（五官）多混一点个人特征
-					var local = blend + (0.12 if y < int(h * 0.55) else 0.0)
-					img.set_pixel(x, y, a.lerp(b, clampf(local, 0.0, 0.68)))
-	# 色偏 + 双痣
-	var shift = Color(1.0 + (uid % 5) * 0.012, 1.0 + ((uid / 3) % 4) * 0.01, 1.0 - (uid % 3) * 0.012, 1.0)
+	var hc = hair_color(c.appearance)
+	var ec = eye_color(c.appearance)
+	# 上半部轻染发色倾向；中部轻染虹膜倾向（整体偏色，保留个人构图）
 	for y in range(h):
 		for x in range(w):
 			var p = img.get_pixel(x, y)
 			if p.a < 0.05:
 				continue
-			img.set_pixel(x, y, Color(clampf(p.r * shift.r, 0, 1), clampf(p.g * shift.g, 0, 1), clampf(p.b * shift.b, 0, 1), p.a))
+			var outc = p
+			if y < int(h * 0.38):
+				outc = p.lerp(Color(hc.r, hc.g, hc.b, p.a), 0.10)
+			elif y < int(h * 0.52) and x > int(w * 0.28) and x < int(w * 0.72):
+				outc = p.lerp(Color(ec.r, ec.g, ec.b, p.a), 0.08)
+			# id 微色偏
+			var shift = Color(1.0 + (uid % 5) * 0.008, 1.0 + ((uid / 3) % 4) * 0.006, 1.0 - (uid % 3) * 0.008, 1.0)
+			img.set_pixel(x, y, Color(clampf(outc.r * shift.r, 0, 1), clampf(outc.g * shift.g, 0, 1), clampf(outc.b * shift.b, 0, 1), p.a))
 	var marks = [
 		Vector2i(int(w * (0.58 + (uid % 6) * 0.015)), int(h * (0.40 + ((uid / 4) % 5) * 0.015))),
-		Vector2i(int(w * (0.38 + ((uid / 2) % 5) * 0.012)), int(h * (0.48 + (uid % 4) * 0.012))),
+		Vector2i(int(w * (0.36 + ((uid / 2) % 5) * 0.012)), int(h * (0.48 + (uid % 4) * 0.012))),
 	]
 	for mpos in marks:
 		if mpos.x > 1 and mpos.y > 1 and mpos.x < w - 2 and mpos.y < h - 2:
-			img.set_pixel(mpos.x, mpos.y, Color(0.32, 0.20, 0.16, 0.9))
-			img.set_pixel(mpos.x + 1, mpos.y, Color(0.32, 0.20, 0.16, 0.55))
+			img.set_pixel(mpos.x, mpos.y, Color(0.30, 0.18, 0.14, 0.92))
+			img.set_pixel(mpos.x + 1, mpos.y, Color(0.30, 0.18, 0.14, 0.5))
 	var out := ImageTexture.create_from_image(img)
 	_cache[ck] = out
 	return out
