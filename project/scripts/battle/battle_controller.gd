@@ -545,6 +545,10 @@ const TIDE_BANTER_TURN := [
 	"【潮汐】老旗手：夜潮双岸，中岸是活路。",
 	"【潮汐】春令使者：水格交错，落脚先想第二步。",
 	"【潮汐】斥候：礁脉软壳——外格清完还要进心垒。",
+	"【潮汐】斥候：潮市棚廊——三列要择口。",
+	"【潮汐】管事：潮架竖廊，别砸架纽。",
+	"【潮汐】老旗手：独潮水镜，桥心是活路。",
+	"【潮汐】春令使者：夜退林环，心台要护迹。",
 ]
 const TIDE_BANTER_KILL := [
 	"【潮汐】潮滩悍匪：……壳……不该碎……",
@@ -559,6 +563,31 @@ const TIDE_BANTER_START := [
 	"【潮汐】系统：潮汐已升。护迹优先于斩杀。",
 	"【潮汐】管事：迹未成，先别浪战。",
 	"【潮汐】老旗手：潮下不利横队——择桥纵列。",
+]
+const PORCELAIN_BANTER_TURN := [
+	"【瓷市】管事：护釉！别让他们砸架。",
+	"【瓷市】老旗手：窑廊还在，旗就不能倒。",
+	"【瓷市】斥候：瓷市有贼气味——压低身子。",
+	"【瓷市】苇原·灯影：釉一裂，就是劫瓷开手。",
+	"【瓷市】管事：禁乱砸。一锤碎坯，满市尽裂。",
+	"【瓷市】斥候：窑廊中隔——择桥绕进，别硬撞。",
+	"【瓷市】老旗手：瓷架棋格，中架是活路。",
+	"【瓷市】春令使者：釉池交错，落脚先想第二步。",
+	"【瓷市】斥候：釉池软坯——外格清完还要进心垒。",
+]
+const PORCELAIN_BANTER_KILL := [
+	"【瓷市】瓷市悍匪：……坯……不该碎……",
+	"【瓷市】窑廊伏弓：市口……不在你们手里……",
+	"【瓷市】老旗手：一匪倒，釉路清一寸。",
+	"【瓷市】管事：别追太深——瓷还在架上。",
+	"【瓷市】瓷市匪首：空釉……烧不清真姓……",
+	"【瓷市】斥候：砸架的倒了，瓷可护。",
+]
+const PORCELAIN_BANTER_START := [
+	"【瓷市】春令使者：这一仗验的是姓，不是瓷。",
+	"【瓷市】系统：瓷市已升。护釉优先于斩杀。",
+	"【瓷市】管事：釉未成，先别浪战。",
+	"【瓷市】老旗手：窑下不利横队——择桥纵列。",
 ]
 const ESCORT_BANTER_START := [
 	"【镖行】春令使者：这一仗验的是姓，不是刀。",
@@ -576,7 +605,7 @@ func _is_harbor_map() -> bool:
 
 func _theme_banter(kind: String) -> void:
 	var theme = _map_theme()
-	if theme != "escort" and theme != "harbor" and theme != "paper" and theme != "copper" and theme != "lantern" and theme != "grain" and theme != "snow" and theme != "bamboo" and theme != "relay" and theme != "bell" and theme != "rain" and theme != "ink" and theme != "hive" and theme != "flute" and theme != "shadow" and theme != "salt" and theme != "dye" and theme != "drum" and theme != "incense" and theme != "tide":
+	if theme != "escort" and theme != "harbor" and theme != "paper" and theme != "copper" and theme != "lantern" and theme != "grain" and theme != "snow" and theme != "bamboo" and theme != "relay" and theme != "bell" and theme != "rain" and theme != "ink" and theme != "hive" and theme != "flute" and theme != "shadow" and theme != "salt" and theme != "dye" and theme != "drum" and theme != "incense" and theme != "tide" and theme != "porcelain":
 		return
 	var key = theme + kind + str(_banter_idx if kind == "turn" else _banter_kill)
 	if _banter_played.has(key):
@@ -622,6 +651,8 @@ func _theme_banter(kind: String) -> void:
 		pool = INCENSE_BANTER_TURN if kind == "turn" else (INCENSE_BANTER_KILL if kind == "kill" else INCENSE_BANTER_START)
 	elif theme == "tide":
 		pool = TIDE_BANTER_TURN if kind == "turn" else (TIDE_BANTER_KILL if kind == "kill" else TIDE_BANTER_START)
+	elif theme == "porcelain":
+		pool = PORCELAIN_BANTER_TURN if kind == "turn" else (PORCELAIN_BANTER_KILL if kind == "kill" else PORCELAIN_BANTER_START)
 	else:
 		pool = []
 	if pool.is_empty():
@@ -673,6 +704,8 @@ func _theme_banter(kind: String) -> void:
 			Sfx.incense_hiss()
 		elif theme == "tide":
 			Sfx.tide_wash()
+		elif theme == "porcelain":
+			Sfx.porcelain_chime()
 	else:
 		line = str(pool[0] if _banter_idx == 0 else pool[mini(1, pool.size()-1)])
 		if theme == "escort":
@@ -715,6 +748,8 @@ func _theme_banter(kind: String) -> void:
 			Sfx.incense_hiss()
 		elif theme == "tide":
 			Sfx.tide_wash()
+		elif theme == "porcelain":
+			Sfx.porcelain_chime()
 	_banter_played[key] = true
 	_log(line)
 
@@ -2453,6 +2488,26 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch227_night_done")
 	elif map_id == "ch228_seal":
 		GameState.set_flag("ch228_seal_done")
+	elif map_id == "ch229_fair":
+		GameState.set_flag("ch229_fair_done")
+	elif map_id == "ch229_rack":
+		GameState.set_flag("ch229_rack_done")
+	elif map_id == "ch230_solo":
+		GameState.set_flag("ch230_solo_done")
+	elif map_id == "ch230_night":
+		GameState.set_flag("ch230_night_done")
+	elif map_id == "ch231_finale":
+		GameState.set_flag("ch231_finale_done")
+	elif map_id == "ch232_yard":
+		GameState.set_flag("ch232_yard_done")
+	elif map_id == "ch232_kiln":
+		GameState.set_flag("ch232_kiln_done")
+	elif map_id == "ch233_glaze":
+		GameState.set_flag("ch233_glaze_done")
+	elif map_id == "ch233_shelf":
+		GameState.set_flag("ch233_shelf_done")
+	elif map_id == "ch234_seal":
+		GameState.set_flag("ch234_seal_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")

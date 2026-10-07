@@ -1,6 +1,6 @@
 {
-  "portraits": 279,
-  "tokens": 1116,
+  "portraits": 282,
+  "tokens": 1128,
   "banners": 20,
   "snow": [
     "portraits/snow_thug.png",
@@ -163,5 +163,10 @@
     "portraits/tide_thug.png",
     "portraits/tide_archer.png",
     "portraits/tide_boss.png"
+  ],
+  "porcelain": [
+    "portraits/porcelain_thug.png",
+    "portraits/porcelain_archer.png",
+    "portraits/porcelain_boss.png"
   ]
 }
