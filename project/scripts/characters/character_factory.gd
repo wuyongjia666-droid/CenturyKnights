@@ -98,12 +98,36 @@ static func make_marriage_candidate(rng: RandomNumberGenerator, prefer_rank: Str
 	c.name = sur_list[rng.randi() % sur_list.size()] + "·" + given_list[rng.randi() % given_list.size()]
 	return c
 
+static func make_tutorial_militia(slot: int) -> CKCharacter:
+	## 第零章教学临时候补：不上花名册、不占编队栏，仅本场出战。
+	var c := CKCharacter.new()
+	c.id = next_id("militia")
+	c.name = "灰旗民兵·甲" if slot == 0 else "灰旗民兵·乙"
+	c.gender = "m"
+	c.age = 20
+	c.job_id = "light_inf"
+	c.rank = "knight"
+	c.faction = "player"
+	c.in_roster = false
+	c.blood_mix = {"common_ash": 1.0}
+	c.traits = ["brave"]
+	c.stats = {"str": 8, "vit": 8, "skl": 6, "agi": 7, "per": 5, "wil": 6}
+	c.level = 1
+	c.salary = 0
+	c.recalc_hp()
+	c.hp = c.max_hp
+	return c
+
 static func make_enemy(template: String, rng: RandomNumberGenerator) -> CKCharacter:
 	var c := CKCharacter.new()
 	c.id = next_id("enemy")
 	c.faction = "enemy"
 	c.in_roster = false
 	match template:
+		"bandit_weak":
+			c.name = "隘口流匪"
+			c.job_id = "light_inf"
+			c.stats = {"str": 5, "vit": 5, "skl": 4, "agi": 5, "per": 3, "wil": 3}
 		"bandit":
 			c.name = "隘口匪徒"
 			c.job_id = "light_inf"

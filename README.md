@@ -22,7 +22,7 @@ godot --headless --path . --scene res://tests/tactics_e2e.tscn
 
 ## Windows 试玩包
 
-见 GitHub Releases：`CenturyKnights-windows-mvp.zip`（内含嵌入 PCK 的 exe）。
+见 GitHub Releases 最新：`CenturyKnights-windows-tutorial-fix.zip`（v0.1.3，教学战 4 vs 2；内含嵌入 PCK 的 exe）。
 
 ## 20 分钟怎么玩
 

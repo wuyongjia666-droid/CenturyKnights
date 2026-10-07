@@ -125,6 +125,7 @@ func _init_map() -> void:
 
 func _deploy() -> void:
 	units.clear()
+	var map_id := str(GameState.get_meta("battle_map", "ch0_pass"))
 	var ids: Array = GameState.deploy_ids.duplicate()
 	if ids.is_empty():
 		for c in GameState.roster():
@@ -142,7 +143,28 @@ func _deploy() -> void:
 		# 战斗用副本 HP
 		units.append({"char": c, "pos": spots[i], "team": "player", "done": false})
 		i += 1
-	# 敌人
+	# 第零章教学：开局花名册只有团长+灯影（2人）。补临时候补到 4，避免「两人打一群」。
+	if map_id == "ch0_pass":
+		var militia_slot := 0
+		while i < 4:
+			units.append({
+				"char": CharacterFactory.make_tutorial_militia(militia_slot),
+				"pos": spots[i],
+				"team": "player",
+				"done": false,
+			})
+			militia_slot += 1
+			i += 1
+		# 教学敌：2 名弱匪，无弓无匪首（玩家优势约 4 vs 2）
+		var enemies = [
+			[CharacterFactory.make_enemy("bandit_weak", rng), Vector2i(6, 1)],
+			[CharacterFactory.make_enemy("bandit_weak", rng), Vector2i(5, 2)],
+		]
+		for e in enemies:
+			units.append({"char": e[0], "pos": e[1], "team": "enemy", "done": false})
+		_log("教学编成：我军 %d · 敌军 %d（灰旗民兵助阵）" % [i, enemies.size()])
+		return
+	# 非教程默认：最多 4 敌（保留原强度供后续关卡）
 	var enemies = [
 		[CharacterFactory.make_enemy("bandit", rng), Vector2i(6, 1)],
 		[CharacterFactory.make_enemy("bandit_archer", rng), Vector2i(7, 2)],

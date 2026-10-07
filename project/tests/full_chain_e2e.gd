@@ -130,6 +130,23 @@ func _step_battle() -> void:
 		battle.queue_free()
 		return
 
+	# Tutorial balance gate: must not be 2-vs-many (player-favored ~3–4 vs ≤3)
+	var pc0 := 0
+	var ec0 := 0
+	for u0 in battle.units:
+		if u0.team == "player" and u0.char.hp > 0:
+			pc0 += 1
+		elif u0.team == "enemy" and u0.char.hp > 0:
+			ec0 += 1
+	if pc0 < 3:
+		_err("battle balance: player units=%s want>=3 (no 2-vs-swarm)" % pc0)
+	if ec0 > 3:
+		_err("battle balance: enemy units=%s want<=3" % ec0)
+	if pc0 < ec0:
+		_err("battle balance: player-favored expected got %s vs %s" % [pc0, ec0])
+	else:
+		print("OK battle deploy balance ", pc0, " vs ", ec0)
+
 	# Deterministic board: one player at (2,2), one enemy at (4,2); park/rest others
 	var player_i := -1
 	var enemy_i := -1
@@ -215,9 +232,39 @@ func _step_battle() -> void:
 	battle.queue_free()
 	await get_tree().process_frame
 
-	# Story gate: after battle, chapter can advance past 0.1
-	GameState.set_beat("0.2")
-	print("OK story beat set to 0.2 after battle")
+	# Real UI path: reload story at 0.1 with battle_done — must offer tavern advance (not soft-lock)
+	GameState.set_beat("0.1")
+	var story_packed: PackedScene = load("res://scenes/story/chapter0.tscn")
+	var story2 = story_packed.instantiate()
+	add_child(story2)
+	story2.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	story2.size = Vector2(1280, 720)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	story2.simulate_finish_dialogue()
+	await get_tree().process_frame
+	var post_labels: Array = story2.action_labels()
+	var has_tavern := false
+	for lb in post_labels:
+		if str(lb).find("酒馆") >= 0 or str(lb).find("前往") >= 0:
+			has_tavern = true
+	if not has_tavern:
+		_err("story 0.1 after win: expected continue-to-tavern action, got %s" % str(post_labels))
+	elif not story2.simulate_press_action_containing("酒馆"):
+		# label may be 前往烽火酒馆
+		if not story2.simulate_press_action_containing("前往"):
+			_err("story 0.1 after win: could not press continue action labels=%s" % str(post_labels))
+		else:
+			print("OK story post-battle pressed 前往")
+	else:
+		print("OK story post-battle pressed 酒馆")
+	await get_tree().process_frame
+	if story2.current_beat_id() != "0.2":
+		_err("story: after post-battle continue beat=%s want 0.2" % story2.current_beat_id())
+	else:
+		print("OK story advanced to 0.2 via UI after battle")
+	story2.queue_free()
+	await get_tree().process_frame
 
 func _step_recruit() -> void:
 	_step("recruit (roster API; tavern UI asserted if present)")
