@@ -1305,6 +1305,16 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch89_roast_done")
 	elif map_id == "ch90_teaseal":
 		GameState.set_flag("ch90_teaseal_done")
+	elif map_id == "ch91_wither":
+		GameState.set_flag("ch91_wither_done")
+	elif map_id == "ch91_scent":
+		GameState.set_flag("ch91_scent_done")
+	elif map_id == "ch92_permit":
+		GameState.set_flag("ch92_permit_done")
+	elif map_id == "ch92_post":
+		GameState.set_flag("ch92_post_done")
+	elif map_id == "ch93_finale":
+		GameState.set_flag("ch93_finale_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")

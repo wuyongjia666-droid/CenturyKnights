@@ -334,8 +334,16 @@ func _update_story_hint() -> void:
 		_story_hint.text = "可继续第八十九章·蒸青。"
 	elif not GameState.flag("chapter90_done"):
 		_story_hint.text = "可继续第九十章·茶印（十四卷中段）。"
+	elif not GameState.flag("chapter91_done"):
+		_story_hint.text = "第十四卷后半：点「继续主线」或卷十四选第九十一章·晾青。"
+	elif not GameState.flag("chapter92_done"):
+		_story_hint.text = "可继续第九十二章·茶引。"
+	elif not GameState.flag("chapter93_done"):
+		_story_hint.text = "可继续第九十三章·十四卷席终。"
+	elif GameState.flag("volume14_done"):
+		_story_hint.text = "十四卷已执。自由经营或等候第十五卷。"
 	elif GameState.flag("volume14_mid_done"):
-		_story_hint.text = "十四卷中段已执。自由经营或等候后半。"
+		_story_hint.text = "十四卷中段已执。可继续后半或经营。"
 	elif GameState.flag("volume13_done"):
 		_story_hint.text = "十三卷已执。可继续第十四卷或经营。"
 	elif GameState.flag("volume13_mid_done"):
@@ -480,6 +488,9 @@ func _chapter_catalog() -> Array:
 		["第八十八章·茶梯", "res://scenes/story/chapter88.tscn", "chapter87_done", 14],
 		["第八十九章·蒸青", "res://scenes/story/chapter89.tscn", "chapter88_done", 14],
 		["第九十章·茶印", "res://scenes/story/chapter90.tscn", "chapter89_done", 14],
+		["第九十一章·晾青", "res://scenes/story/chapter91.tscn", "chapter90_done", 14],
+		["第九十二章·茶引", "res://scenes/story/chapter92.tscn", "chapter91_done", 14],
+		["第九十三章·席终", "res://scenes/story/chapter93.tscn", "chapter92_done", 14],
 	]
 
 func _volume_labels() -> Array:
