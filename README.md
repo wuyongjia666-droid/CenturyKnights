@@ -22,7 +22,7 @@ godot --headless --path . --scene res://tests/tactics_e2e.tscn
 
 ## Windows 试玩包
 
-见 GitHub Releases 最新：`CenturyKnights-windows-v3.1.0.zip`（v3.1.0：第十三卷蚕桑中段 Ch82–84；教学战仍约 4 vs 2）。
+见 GitHub Releases 最新：`CenturyKnights-windows-v3.2.0.zip`（v3.2.0：第十三卷蚕桑席终 Ch85–87 + 战前对白分化；教学战仍约 4 vs 2）。
 
 ## 20 分钟怎么玩
 
