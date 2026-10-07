@@ -194,6 +194,9 @@ const BAMBOO_BANTER_TURN := [
 	"【竹海】斥候：篁径有贼气味——压低身子。",
 	"【竹海】苇原·灯影：火一亮，就是劫径开手。",
 	"【竹海】管事：禁火推进。一星火，满海尽盲。",
+	"【竹海】斥候：筏渡桥位错开——别按旧图硬冲。",
+	"【竹海】老旗手：曲尺祠两臂都要顾，丢一臂等于丢半海。",
+	"【竹海】春令使者：望楼夹丘不利浪冲，先清索再登。",
 ]
 const BAMBOO_BANTER_KILL := [
 	"【竹海】竹海悍匪：……径……不该烧……",
@@ -201,11 +204,38 @@ const BAMBOO_BANTER_KILL := [
 	"【竹海】老旗手：一匪倒，径清一寸。",
 	"【竹海】管事：别追太深——笋还在中间。",
 	"【竹海】竹海匪首：空票……养不活真姓……",
+	"【竹海】斥候：筏工倒了，渡口清一桥。",
+	"【竹海】苇原·灯影：祠匪既除，篁笺可验。",
 ]
 const BAMBOO_BANTER_START := [
 	"【竹海】春令使者：这一仗验的是姓，不是笋。",
 	"【竹海】系统：竹海已升。护径优先于斩杀。",
 	"【竹海】管事：民未出林，先别浪战。",
+	"【竹海】老旗手：菱心垒要留治疗位——席终不收半旗。",
+]
+const RELAY_BANTER_TURN := [
+	"【驿道】管事：护符！别让他们撕牌。",
+	"【驿道】老旗手：符牌还在，旗就不能倒。",
+	"【驿道】斥候：换马槽有贼气味——压低身子。",
+	"【驿道】苇原·灯影：火一亮，就是劫符开手。",
+	"【驿道】管事：禁火推进。一星火，满道尽盲。",
+	"【驿道】斥候：斜丘不利硬冲——沿脊迂回。",
+	"【驿道】老旗手：水环六桥，择一桥再夺牌，别全压。",
+	"【驿道】春令使者：十字印台在心，先清臂再夺纽。",
+]
+const RELAY_BANTER_KILL := [
+	"【驿道】驿道悍匪：……符……不该撕……",
+	"【驿道】递路伏弓：站门……不在你们手里……",
+	"【驿道】老旗手：一匪倒，递路清一寸。",
+	"【驿道】管事：别追太深——马还在槽里。",
+	"【驿道】驿道匪首：空牌……递不出真姓……",
+	"【驿道】斥候：截递的倒了，符匣可护。",
+]
+const RELAY_BANTER_START := [
+	"【驿道】春令使者：这一仗验的是姓，不是马。",
+	"【驿道】系统：驿道已升。护符优先于斩杀。",
+	"【驿道】管事：信未出站，先别浪战。",
+	"【驿道】老旗手：双院先近后远——远院空着也别急。",
 ]
 const ESCORT_BANTER_START := [
 	"【镖行】春令使者：这一仗验的是姓，不是刀。",
@@ -223,7 +253,7 @@ func _is_harbor_map() -> bool:
 
 func _theme_banter(kind: String) -> void:
 	var theme = _map_theme()
-	if theme != "escort" and theme != "harbor" and theme != "paper" and theme != "copper" and theme != "lantern" and theme != "grain" and theme != "snow" and theme != "bamboo":
+	if theme != "escort" and theme != "harbor" and theme != "paper" and theme != "copper" and theme != "lantern" and theme != "grain" and theme != "snow" and theme != "bamboo" and theme != "relay":
 		return
 	var key = theme + kind + str(_banter_idx if kind == "turn" else _banter_kill)
 	if _banter_played.has(key):
@@ -243,8 +273,10 @@ func _theme_banter(kind: String) -> void:
 		pool = GRAIN_BANTER_TURN if kind == "turn" else (GRAIN_BANTER_KILL if kind == "kill" else GRAIN_BANTER_START)
 	elif theme == "snow":
 		pool = SNOW_BANTER_TURN if kind == "turn" else (SNOW_BANTER_KILL if kind == "kill" else SNOW_BANTER_START)
-	else:
+	elif theme == "bamboo":
 		pool = BAMBOO_BANTER_TURN if kind == "turn" else (BAMBOO_BANTER_KILL if kind == "kill" else BAMBOO_BANTER_START)
+	else:
+		pool = RELAY_BANTER_TURN if kind == "turn" else (RELAY_BANTER_KILL if kind == "kill" else RELAY_BANTER_START)
 	if pool.is_empty():
 		return
 	var line = ""
@@ -268,8 +300,10 @@ func _theme_banter(kind: String) -> void:
 			Sfx.grain_pour()
 		elif theme == "snow":
 			Sfx.frost_crackle()
-		else:
+		elif theme == "bamboo":
 			Sfx.bamboo_creak()
+		else:
+			Sfx.post_horn()
 	else:
 		line = str(pool[0] if _banter_idx == 0 else pool[mini(1, pool.size()-1)])
 		if theme == "escort":
@@ -286,8 +320,10 @@ func _theme_banter(kind: String) -> void:
 			Sfx.grain_pour()
 		elif theme == "snow":
 			Sfx.frost_crackle()
-		else:
+		elif theme == "bamboo":
 			Sfx.bamboo_creak()
+		else:
+			Sfx.post_horn()
 	_banter_played[key] = true
 	_log(line)
 
@@ -1786,6 +1822,26 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch155_tower_done")
 	elif map_id == "ch156_seal":
 		GameState.set_flag("ch156_seal_done")
+	elif map_id == "ch157_grove":
+		GameState.set_flag("ch157_grove_done")
+	elif map_id == "ch157_raft":
+		GameState.set_flag("ch157_raft_done")
+	elif map_id == "ch158_altar":
+		GameState.set_flag("ch158_altar_done")
+	elif map_id == "ch158_watch":
+		GameState.set_flag("ch158_watch_done")
+	elif map_id == "ch159_finale":
+		GameState.set_flag("ch159_finale_done")
+	elif map_id == "ch160_post":
+		GameState.set_flag("ch160_post_done")
+	elif map_id == "ch160_swap":
+		GameState.set_flag("ch160_swap_done")
+	elif map_id == "ch161_express":
+		GameState.set_flag("ch161_express_done")
+	elif map_id == "ch161_token":
+		GameState.set_flag("ch161_token_done")
+	elif map_id == "ch162_seal":
+		GameState.set_flag("ch162_seal_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")
