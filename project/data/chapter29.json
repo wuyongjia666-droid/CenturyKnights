@@ -1,0 +1,81 @@
+{
+  "id": "chapter29",
+  "title": "第二十九章·金陌",
+  "beats": [
+    {
+      "id": "29.0",
+      "title": "金陌令",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "四卷可入之后，金陌麦浪与仓廪要落粮印。"
+        },
+        {
+          "speaker": "管事",
+          "text": "两场：金陌麦浪、金陌仓廪。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第四卷前半。"
+        }
+      ],
+      "next": "29.1"
+    },
+    {
+      "id": "29.1",
+      "title": "金陌麦浪",
+      "lines": [
+        {
+          "speaker": "斥候",
+          "text": "麦田被占。夺回金陌。"
+        },
+        {
+          "speaker": "系统",
+          "text": "出战「金陌麦浪」。"
+        }
+      ],
+      "battle": "ch29_field",
+      "unlock": [
+        "ch29_field_done"
+      ],
+      "next": "29.2"
+    },
+    {
+      "id": "29.2",
+      "title": "金陌仓廪",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "麦浪既清，仓廪要守粮。"
+        },
+        {
+          "speaker": "系统",
+          "text": "出战「金陌仓廪」。"
+        }
+      ],
+      "battle": "ch29_barn",
+      "unlock": [
+        "ch29_barn_done"
+      ],
+      "next": "29.3"
+    },
+    {
+      "id": "29.3",
+      "title": "粮印",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "金陌两印落下。下一章是四卷钤印。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第二十九章完成。"
+        }
+      ],
+      "unlock": [
+        "chapter29_done"
+      ],
+      "next": null
+    }
+  ]
+}

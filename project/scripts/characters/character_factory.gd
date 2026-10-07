@@ -120,6 +120,37 @@ static func make_tutorial_militia(slot: int) -> CKCharacter:
 	c.hp = c.max_hp
 	return c
 
+
+static func make_house_support(house_id: String, as_ally: bool, rng: RandomNumberGenerator) -> CKCharacter:
+	var c := CKCharacter.new()
+	c.id = next_id("house")
+	c.faction = "player" if as_ally else "enemy"
+	c.in_roster = false
+	var title = "援手" if as_ally else "膀臂"
+	match house_id:
+		"shuoying":
+			c.name = "朔影·%s" % title
+			c.job_id = "heavy_inf" if not as_ally else "light_inf"
+			c.stats = {"str": 9, "vit": 8, "skl": 6, "agi": 5, "per": 5, "wil": 6}
+		"qinghe":
+			c.name = "清河·%s" % title
+			c.job_id = "hunter" if as_ally else "light_inf"
+			c.stats = {"str": 6, "vit": 6, "skl": 8, "agi": 7, "per": 7, "wil": 5}
+		"lantern":
+			c.name = "灯市·%s" % title
+			c.job_id = "squire" if as_ally else "light_inf"
+			c.stats = {"str": 7, "vit": 6, "skl": 6, "agi": 7, "per": 6, "wil": 5}
+		_:
+			c.name = "宅邸·%s" % title
+			c.job_id = "light_inf"
+			c.stats = {"str": 6, "vit": 6, "skl": 6, "agi": 6, "per": 5, "wil": 5}
+	c.blood_mix = {"common_ash": 0.6, "river_guard": 0.4}
+	c.level = 2 if as_ally else 2
+	c.appearance = {"hair": "ink_black", "eyes": "dusk", "brow": "thick", "scar": ""}
+	c.recalc_hp()
+	c.hp = c.max_hp
+	return c
+
 static func make_enemy(template: String, rng: RandomNumberGenerator) -> CKCharacter:
 	var c := CKCharacter.new()
 	c.id = next_id("enemy")

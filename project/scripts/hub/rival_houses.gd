@@ -121,6 +121,7 @@ func _breach(hid: String) -> void:
 		Sfx.confirm(); GameState.save_game(); _refresh()
 
 func _deal(hid: String, kind: String, turns: int = 3, price: int = 25) -> void:
+	Sfx.deal()
 	var r = GameState.start_rival_deal(hid, kind, turns, price)
 	_msg.text = str(r.get("msg"))
 	if r.get("ok"):

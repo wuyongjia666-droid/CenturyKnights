@@ -69,6 +69,10 @@ func _refresh_actions() -> void:
 				GameState.add_rep("ashland", 24); GameState.add_rep("riverland", 14)
 				GameState.save_game()
 				get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
+			_add("踏上第四卷·南泽", func():
+				GameState.set_flag("chapter27_done"); GameState.set_flag("volume3_done")
+				GameState.add_skill_point(4); GameState.chapter28_beat = "28.0"
+				get_tree().change_scene_to_file("res://scenes/story/chapter28.tscn"))
 		_:
 			_add("继续", func(): _goto_next())
 

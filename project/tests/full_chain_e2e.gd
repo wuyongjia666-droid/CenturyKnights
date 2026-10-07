@@ -16,6 +16,7 @@ func _ready() -> void:
 	await _step_marriage()
 	await _step_birth()
 	await _step_aging()
+	await _step_beyond_ch0()
 
 	if errors.is_empty():
 		print("=== FULL_CHAIN E2E PASS ===")
@@ -575,3 +576,76 @@ func _step_aging() -> void:
 		_err("aging: chapter0_done not set after journal")
 	else:
 		print("OK dynasty journal + chapter0_done")
+
+
+func _step_beyond_ch0() -> void:
+	_step("beyond Ch0: chapter1 + deals + hub picker")
+	# Mark Ch0 done already from journal; open chapter1 story scene
+	GameState.set_flag("chapter0_done")
+	var packed: PackedScene = load("res://scenes/story/chapter1.tscn")
+	if packed == null:
+		_err("ch1: failed to load chapter1.tscn")
+	else:
+		var story = packed.instantiate()
+		add_child(story)
+		story.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		story.size = Vector2(1280, 720)
+		await get_tree().process_frame
+		await get_tree().process_frame
+		if story.get_child_count() < 1:
+			_err("ch1: scene empty")
+		else:
+			print("OK chapter1 scene loaded children=", story.get_child_count())
+		story.queue_free()
+		await get_tree().process_frame
+
+	# Deeper mid-contract deal tick
+	GameState.rival_deals["qinghe"] = {"kind": "trade", "turns_left": 4, "mid_ticks": 0}
+	GameState.rival_deals["lantern"] = {"kind": "intel", "turns_left": 5, "mid_ticks": 1}
+	GameState.rival_deals["shuoying"] = {"kind": "truce", "turns_left": 3, "mid_ticks": 2}
+	var before_silver = GameState.silver
+	var evs: Array = []
+	for _i in 6:
+		evs.append_array(GameState.tick_rival_deals())
+	var mid_hits := 0
+	for e in evs:
+		if str(e).find("契约中期") >= 0 or str(e).find("契约兑现") >= 0:
+			mid_hits += 1
+	if mid_hits < 1:
+		_err("deals: expected mid/fulfill events, got %s" % str(evs))
+	else:
+		print("OK deal mid/fulfill events=", mid_hits, " sample=", evs.slice(0, mini(3, evs.size())), " silver ", before_silver, "->", GameState.silver)
+
+	# Hub chapter picker present
+	var hub_packed: PackedScene = load("res://scenes/hub/castle_hub.tscn")
+	if hub_packed == null:
+		_err("hub2: load fail")
+		return
+	var hub = hub_packed.instantiate()
+	add_child(hub)
+	hub.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	hub.size = Vector2(1280, 720)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var has_pick := false
+	var has_continue := false
+	for c in hub.get_children():
+		if c is OptionButton:
+			has_pick = true
+			if c.item_count < 1:
+				_err("hub2: chapter picker empty")
+			else:
+				print("OK hub chapter picker items=", c.item_count)
+		if c is HBoxContainer:
+			for b in c.get_children():
+				if b is BaseButton and str(b.text).find("继续主线") >= 0:
+					has_continue = true
+				if b is OptionButton:
+					has_pick = true
+					print("OK hub chapter picker items=", b.item_count)
+	if not has_pick:
+		_err("hub2: OptionButton chapter picker missing")
+	if not has_continue:
+		_err("hub2: 继续主线 button missing")
+	hub.queue_free()
+	await get_tree().process_frame

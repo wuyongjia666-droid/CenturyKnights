@@ -387,6 +387,19 @@ func _deploy() -> void:
 			c.hp = c.max_hp
 		units.append({"char": c, "pos": spots[i], "team": "player", "done": false})
 		i += 1
+	# 双嗣校场：并席/中立敌宅可派援手填我方空位
+	if is_heir_clash and i < spots.size():
+		var ally_houses: Array = []
+		for hid2 in ["qinghe", "lantern", "shuoying"]:
+			var st2 = GameState.get_rival_stance(hid2)
+			if st2 in ["cordial", "neutral"]:
+				ally_houses.append(hid2)
+		var ai = 0
+		while i < spots.size() and ai < ally_houses.size():
+			var ally = CharacterFactory.make_house_support(str(ally_houses[ai]), true, rng)
+			units.append({"char": ally, "pos": spots[i], "team": "player", "done": false})
+			i += 1
+			ai += 1
 	# tutorial militia pad to 4 for ch0_pass only
 	if bool(m.get("tutorial_militia", false)):
 		var militia_slot := 0
@@ -410,11 +423,21 @@ func _deploy() -> void:
 			hb.hp = hb.max_hp
 			units.append({"char": hb, "pos": enemy_spots[ei], "team": "enemy", "done": false})
 			ei += 1
-		# 敌方支援：2名精锐+1弱敌，填满敌点
-		var support_tmpls = ["bandit", "bandit_archer", "bandit_weak"]
+		# 敌方支援：敌意/戒备敌宅膀臂优先，否则匪军
+		var hostile_houses: Array = []
+		for hid in ["shuoying", "qinghe", "lantern"]:
+			var st = GameState.get_rival_stance(hid)
+			if st in ["hostile", "wary"]:
+				hostile_houses.append(hid)
 		var si = 0
-		while ei < enemy_spots.size() and si < support_tmpls.size():
-			var e2 = CharacterFactory.make_enemy(str(support_tmpls[si]), rng)
+		var support_tmpls = ["bandit", "bandit_archer", "bandit_weak"]
+		while ei < enemy_spots.size():
+			var e2: CKCharacter
+			if si < hostile_houses.size():
+				e2 = CharacterFactory.make_house_support(str(hostile_houses[si]), false, rng)
+			else:
+				var ti = (si - hostile_houses.size()) % support_tmpls.size()
+				e2 = CharacterFactory.make_enemy(str(support_tmpls[ti]), rng)
 			units.append({"char": e2, "pos": enemy_spots[ei], "team": "enemy", "done": false})
 			ei += 1
 			si += 1
@@ -1063,6 +1086,26 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch26_peak_done")
 	elif map_id == "ch27_finale":
 		GameState.set_flag("ch27_finale_done")
+	elif map_id == "ch28_marsh":
+		GameState.set_flag("ch28_marsh_done")
+	elif map_id == "ch28_ferry":
+		GameState.set_flag("ch28_ferry_done")
+	elif map_id == "ch29_field":
+		GameState.set_flag("ch29_field_done")
+	elif map_id == "ch29_barn":
+		GameState.set_flag("ch29_barn_done")
+	elif map_id == "ch30_seal":
+		GameState.set_flag("ch30_seal_done")
+	elif map_id == "ch31_gorge":
+		GameState.set_flag("ch31_gorge_done")
+	elif map_id == "ch31_forge":
+		GameState.set_flag("ch31_forge_done")
+	elif map_id == "ch32_star":
+		GameState.set_flag("ch32_star_done")
+	elif map_id == "ch32_tower":
+		GameState.set_flag("ch32_tower_done")
+	elif map_id == "ch33_finale":
+		GameState.set_flag("ch33_finale_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")

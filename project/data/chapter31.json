@@ -1,0 +1,81 @@
+{
+  "id": "chapter31",
+  "title": "第三十一章·铁峡",
+  "beats": [
+    {
+      "id": "31.0",
+      "title": "铁峡令",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "四卷中段之后，铁峡关与炉心要验铁与火。"
+        },
+        {
+          "speaker": "管事",
+          "text": "两场：铁峡关、铁峡炉心。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第四卷后半。"
+        }
+      ],
+      "next": "31.1"
+    },
+    {
+      "id": "31.1",
+      "title": "铁峡关",
+      "lines": [
+        {
+          "speaker": "斥候",
+          "text": "关口被夺。先夺回铁峡。"
+        },
+        {
+          "speaker": "系统",
+          "text": "出战「铁峡关」。"
+        }
+      ],
+      "battle": "ch31_gorge",
+      "unlock": [
+        "ch31_gorge_done"
+      ],
+      "next": "31.2"
+    },
+    {
+      "id": "31.2",
+      "title": "铁峡炉心",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "关既通，炉心要守火。"
+        },
+        {
+          "speaker": "系统",
+          "text": "出战「铁峡炉心」。"
+        }
+      ],
+      "battle": "ch31_forge",
+      "unlock": [
+        "ch31_forge_done"
+      ],
+      "next": "31.3"
+    },
+    {
+      "id": "31.3",
+      "title": "铁印",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "铁峡两印落下。下一章是星津。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第三十一章完成。"
+        }
+      ],
+      "unlock": [
+        "chapter31_done"
+      ],
+      "next": null
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "id": "chapter28",
+  "title": "第二十八章·南泽",
+  "beats": [
+    {
+      "id": "28.0",
+      "title": "南泽点名",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "三卷已执之后，南泽水汽开始点名灰旗——斥候与渡口要验的是第四卷的旗。"
+        },
+        {
+          "speaker": "管事",
+          "text": "两场：南泽斥候、南渡口。打完，旅馆写『四卷可入』。"
+        },
+        {
+          "speaker": "苇原·灯影",
+          "text": "双嗣校场现在能召并席敌宅的援手。契约月中也可能生出更深的变。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第四卷开启。"
+        }
+      ],
+      "next": "28.1"
+    },
+    {
+      "id": "28.1",
+      "title": "南泽斥候",
+      "lines": [
+        {
+          "speaker": "斥候",
+          "text": "泽地烽烟被夺。先夺回南泽。"
+        },
+        {
+          "speaker": "系统",
+          "text": "出战「南泽斥候」。"
+        }
+      ],
+      "battle": "ch28_marsh",
+      "unlock": [
+        "ch28_marsh_done"
+      ],
+      "next": "28.2"
+    },
+    {
+      "id": "28.2",
+      "title": "南渡口",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "斥候既归，渡口却要人开路。"
+        },
+        {
+          "speaker": "系统",
+          "text": "出战「南渡口」。"
+        }
+      ],
+      "battle": "ch28_ferry",
+      "unlock": [
+        "ch28_ferry_done"
+      ],
+      "next": "28.3"
+    },
+    {
+      "id": "28.3",
+      "title": "四卷可入",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "南泽与渡口之后，陆桥旅馆写入『四卷可入』。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第二十八章完成。"
+        }
+      ],
+      "unlock": [
+        "chapter28_done",
+        "volume4_open"
+      ],
+      "next": null
+    }
+  ]
+}

@@ -1,4 +1,6 @@
 extends Control
+var _chapter_pick: OptionButton
+var _chapter_paths: Array = []
 
 var _res_bar: HBoxContainer
 var _hint: Label
@@ -111,117 +113,22 @@ func _build() -> void:
 		_hint.text = Locale.t("save_ok")
 	)
 	row.add_child(save_b)
-	var ch_b = UIKit.make_accent_button("第零章节拍", 160)
-	ch_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter0.tscn"))
-	row.add_child(ch_b)
-	var ch1_b = UIKit.make_accent_button("第一章·陆桥", 160)
-	ch1_b.disabled = not GameState.flag("chapter0_done")
-	ch1_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter1.tscn"))
-	row.add_child(ch1_b)
-	var ch2_b = UIKit.make_accent_button("第二章·姓氏", 160)
-	ch2_b.disabled = not GameState.flag("chapter1_done")
-	ch2_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter2.tscn"))
-	row.add_child(ch2_b)
-	var ch3_b = UIKit.make_accent_button("第三章·铁祷", 160)
-	ch3_b.disabled = not GameState.flag("chapter2_done")
-	ch3_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter3.tscn"))
-	row.add_child(ch3_b)
-	var ch4_b = UIKit.make_accent_button("第四章·百年", 160)
-	ch4_b.disabled = not GameState.flag("chapter3_done")
-	ch4_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter4.tscn"))
-	row.add_child(ch4_b)
-	var ch5_b = UIKit.make_accent_button("第五章·烽烟", 160)
-	ch5_b.disabled = not GameState.flag("chapter4_done")
-	ch5_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter5.tscn"))
-	row.add_child(ch5_b)
-	var ch6_b = UIKit.make_accent_button("第六章·托孤", 160)
-	ch6_b.disabled = not GameState.flag("chapter5_done")
-	ch6_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter6.tscn"))
-	row.add_child(ch6_b)
-	var ch7_b = UIKit.make_accent_button("第七章·子嗣", 160)
-	ch7_b.disabled = not GameState.flag("chapter6_done")
-	ch7_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter7.tscn"))
-	row.add_child(ch7_b)
-	var ch8_b = UIKit.make_accent_button("第八章·港灯", 160)
-	ch8_b.disabled = not GameState.flag("chapter7_done")
-	ch8_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter8.tscn"))
-	row.add_child(ch8_b)
-	var ch9_b = UIKit.make_accent_button("第九章·商路", 160)
-	ch9_b.disabled = not GameState.flag("chapter8_done")
-	ch9_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter9.tscn"))
-	row.add_child(ch9_b)
-	var ch10_b = UIKit.make_accent_button("第十章·回响", 160)
-	ch10_b.disabled = not GameState.flag("chapter9_done")
-	ch10_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter10.tscn"))
-	row.add_child(ch10_b)
-	var ch11_b = UIKit.make_accent_button("第十一章·门阙", 160)
-	ch11_b.disabled = not GameState.flag("chapter10_done")
-	ch11_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter11.tscn"))
-	row.add_child(ch11_b)
-	var ch12_b = UIKit.make_accent_button("第十二章·余波", 160)
-	ch12_b.disabled = not GameState.flag("chapter11_done")
-	ch12_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter12.tscn"))
-	row.add_child(ch12_b)
-	var ch13_b = UIKit.make_accent_button("第十三章·嗣位", 160)
-	ch13_b.disabled = not GameState.flag("chapter12_done")
-	ch13_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter13.tscn"))
-	row.add_child(ch13_b)
-	var ch14_b = UIKit.make_accent_button("第十四章·并席", 160)
-	ch14_b.disabled = not GameState.flag("chapter13_done")
-	ch14_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter14.tscn"))
-	row.add_child(ch14_b)
-	var ch15_b = UIKit.make_accent_button("第十五章·席散", 160)
-	ch15_b.disabled = not GameState.flag("chapter14_done")
-	ch15_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter15.tscn"))
-	row.add_child(ch15_b)
-	var ch16_b = UIKit.make_accent_button("第十六章·海草", 160)
-	ch16_b.disabled = not GameState.flag("chapter15_done")
-	ch16_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter16.tscn"))
-	row.add_child(ch16_b)
-	var ch17_b = UIKit.make_accent_button("第十七章·盐河", 160)
-	ch17_b.disabled = not GameState.flag("chapter16_done")
-	ch17_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter17.tscn"))
-	row.add_child(ch17_b)
-	var ch18_b = UIKit.make_accent_button("第十八章·门阙", 160)
-	ch18_b.disabled = not GameState.flag("chapter17_done")
-	ch18_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter18.tscn"))
-	row.add_child(ch18_b)
-	var ch19_b = UIKit.make_accent_button("第十九章·远岸", 160)
-	ch19_b.disabled = not GameState.flag("chapter18_done")
-	ch19_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter19.tscn"))
-	row.add_child(ch19_b)
-	var ch20_b = UIKit.make_accent_button("第二十章·潮墙", 160)
-	ch20_b.disabled = not GameState.flag("chapter19_done")
-	ch20_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter20.tscn"))
-	row.add_child(ch20_b)
-	var ch21_b = UIKit.make_accent_button("第二十一章·席终", 160)
-	ch21_b.disabled = not GameState.flag("chapter20_done")
-	ch21_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter21.tscn"))
-	row.add_child(ch21_b)
-	var ch22_b = UIKit.make_accent_button("第二十二章·北风", 160)
-	ch22_b.disabled = not GameState.flag("chapter21_done")
-	ch22_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter22.tscn"))
-	row.add_child(ch22_b)
-	var ch23_b = UIKit.make_accent_button("第二十三章·霜桥", 160)
-	ch23_b.disabled = not GameState.flag("chapter22_done")
-	ch23_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter23.tscn"))
-	row.add_child(ch23_b)
-	var ch24_b = UIKit.make_accent_button("第二十四章·钤印", 160)
-	ch24_b.disabled = not GameState.flag("chapter23_done")
-	ch24_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter24.tscn"))
-	row.add_child(ch24_b)
-	var ch25_b = UIKit.make_accent_button("第二十五章·朔原", 160)
-	ch25_b.disabled = not GameState.flag("chapter24_done")
-	ch25_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter25.tscn"))
-	row.add_child(ch25_b)
-	var ch26_b = UIKit.make_accent_button("第二十六章·冠雪", 160)
-	ch26_b.disabled = not GameState.flag("chapter25_done")
-	ch26_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter26.tscn"))
-	row.add_child(ch26_b)
-	var ch27_b = UIKit.make_accent_button("第二十七章·席终", 160)
-	ch27_b.disabled = not GameState.flag("chapter26_done")
-	ch27_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter27.tscn"))
-	row.add_child(ch27_b)
+	var cont_b = UIKit.make_accent_button("继续主线", 140)
+	cont_b.pressed.connect(_continue_mainline)
+	row.add_child(cont_b)
+	_chapter_pick = OptionButton.new()
+	_chapter_pick.custom_minimum_size = Vector2(280, 36)
+	_chapter_pick.add_theme_font_size_override("font_size", 16)
+	row.add_child(_chapter_pick)
+	_rebuild_chapter_picker()
+	_chapter_pick.item_selected.connect(_on_chapter_picked)
+	var go_b = UIKit.make_accent_button("前往选中章", 140)
+	go_b.pressed.connect(func():
+		var i = _chapter_pick.selected
+		if i >= 0 and i < _chapter_paths.size():
+			get_tree().change_scene_to_file(str(_chapter_paths[i]))
+	)
+	row.add_child(go_b)
 	var menu_b = UIKit.make_button("主菜单", 100)
 	menu_b.pressed.connect(func():
 		GameState.save_game()
@@ -229,8 +136,10 @@ func _build() -> void:
 	)
 	row.add_child(menu_b)
 
+
 func _refresh() -> void:
 	UIKit.update_resources(_res_bar)
+	_rebuild_chapter_picker()
 	_update_story_hint()
 
 func _update_story_hint() -> void:
@@ -290,8 +199,22 @@ func _update_story_hint() -> void:
 		_story_hint.text = "可点「第二十六章·冠雪」落两印。"
 	elif not GameState.flag("chapter27_done"):
 		_story_hint.text = "可点「第二十七章·席终」完成第三卷。"
+	elif not GameState.flag("chapter28_done"):
+		_story_hint.text = "第四卷开启：点「继续主线」或章节下拉选第二十八章·南泽。"
+	elif not GameState.flag("chapter29_done"):
+		_story_hint.text = "可继续第二十九章·金陌（章节下拉）。"
+	elif not GameState.flag("chapter30_done"):
+		_story_hint.text = "可继续第三十章·钤印（四卷中段）。"
+	elif not GameState.flag("chapter31_done"):
+		_story_hint.text = "第四卷后半：第三十一章·铁峡。"
+	elif not GameState.flag("chapter32_done"):
+		_story_hint.text = "可继续第三十二章·星津。"
+	elif not GameState.flag("chapter33_done"):
+		_story_hint.text = "可点继续主线赴第三十三章·四卷席终。"
+	elif GameState.flag("volume4_done"):
+		_story_hint.text = "四卷已执。自由经营、双嗣校场、敌宅契约皆可。"
 	elif GameState.flag("volume3_done"):
-		_story_hint.text = "三卷已执。自由经营、双嗣校场、敌宅契约皆可。"
+		_story_hint.text = "三卷已执。可继续第四卷或经营。"
 	elif GameState.flag("volume3_mid_done"):
 		_story_hint.text = "三卷中段已执。可继续后半或经营。"
 	elif GameState.flag("volume2_done"):
@@ -302,6 +225,91 @@ func _update_story_hint() -> void:
 		_story_hint.text = "第一卷·已执百年。可继续第二卷或经营。"
 	else:
 		_story_hint.text = "主线暂缓。敌宅交涉、授旗分支、战技与传代皆可。"
+
+
+func _chapter_catalog() -> Array:
+	# [label, scene, unlock_flag or "" for always]
+	return [
+		["第零章", "res://scenes/story/chapter0.tscn", ""],
+		["第一章·陆桥", "res://scenes/story/chapter1.tscn", "chapter0_done"],
+		["第二章·姓氏", "res://scenes/story/chapter2.tscn", "chapter1_done"],
+		["第三章·铁祷", "res://scenes/story/chapter3.tscn", "chapter2_done"],
+		["第四章·百年", "res://scenes/story/chapter4.tscn", "chapter3_done"],
+		["第五章·烽烟", "res://scenes/story/chapter5.tscn", "chapter4_done"],
+		["第六章·托孤", "res://scenes/story/chapter6.tscn", "chapter5_done"],
+		["第七章·子嗣", "res://scenes/story/chapter7.tscn", "chapter6_done"],
+		["第八章·港灯", "res://scenes/story/chapter8.tscn", "chapter7_done"],
+		["第九章·商路", "res://scenes/story/chapter9.tscn", "chapter8_done"],
+		["第十章·回响", "res://scenes/story/chapter10.tscn", "chapter9_done"],
+		["第十一章·门阙", "res://scenes/story/chapter11.tscn", "chapter10_done"],
+		["第十二章·余波", "res://scenes/story/chapter12.tscn", "chapter11_done"],
+		["第十三章·嗣位", "res://scenes/story/chapter13.tscn", "chapter12_done"],
+		["第十四章·并席", "res://scenes/story/chapter14.tscn", "chapter13_done"],
+		["第十五章·席散", "res://scenes/story/chapter15.tscn", "chapter14_done"],
+		["第十六章·海草", "res://scenes/story/chapter16.tscn", "chapter15_done"],
+		["第十七章·盐河", "res://scenes/story/chapter17.tscn", "chapter16_done"],
+		["第十八章·门阙", "res://scenes/story/chapter18.tscn", "chapter17_done"],
+		["第十九章·远岸", "res://scenes/story/chapter19.tscn", "chapter18_done"],
+		["第二十章·潮墙", "res://scenes/story/chapter20.tscn", "chapter19_done"],
+		["第二十一章·席终", "res://scenes/story/chapter21.tscn", "chapter20_done"],
+		["第二十二章·北风", "res://scenes/story/chapter22.tscn", "chapter21_done"],
+		["第二十三章·霜桥", "res://scenes/story/chapter23.tscn", "chapter22_done"],
+		["第二十四章·钤印", "res://scenes/story/chapter24.tscn", "chapter23_done"],
+		["第二十五章·朔原", "res://scenes/story/chapter25.tscn", "chapter24_done"],
+		["第二十六章·冠雪", "res://scenes/story/chapter26.tscn", "chapter25_done"],
+		["第二十七章·席终", "res://scenes/story/chapter27.tscn", "chapter26_done"],
+		["第二十八章·南泽", "res://scenes/story/chapter28.tscn", "chapter27_done"],
+		["第二十九章·金陌", "res://scenes/story/chapter29.tscn", "chapter28_done"],
+		["第三十章·钤印", "res://scenes/story/chapter30.tscn", "chapter29_done"],
+		["第三十一章·铁峡", "res://scenes/story/chapter31.tscn", "chapter30_done"],
+		["第三十二章·星津", "res://scenes/story/chapter32.tscn", "chapter31_done"],
+		["第三十三章·席终", "res://scenes/story/chapter33.tscn", "chapter32_done"],
+	]
+
+func _rebuild_chapter_picker() -> void:
+	if _chapter_pick == null:
+		return
+	_chapter_pick.clear()
+	_chapter_paths.clear()
+	var select_idx := 0
+	for entry in _chapter_catalog():
+		var label = str(entry[0])
+		var path = str(entry[1])
+		var need = str(entry[2])
+		var unlocked = need == "" or GameState.flag(need)
+		if not unlocked:
+			continue
+		_chapter_pick.add_item(label)
+		_chapter_paths.append(path)
+		# prefer first incomplete chapter as default selection
+		var done_flag = ""
+		if "chapter0.tscn" in path:
+			done_flag = "chapter0_done"
+		else:
+			var bn = path.get_file().replace(".tscn", "").replace("chapter", "")
+			done_flag = "chapter%s_done" % bn
+		if done_flag != "" and not GameState.flag(done_flag):
+			select_idx = _chapter_paths.size() - 1
+	if _chapter_paths.size() > 0:
+		_chapter_pick.select(select_idx)
+
+func _on_chapter_picked(_idx: int) -> void:
+	pass
+
+func _continue_mainline() -> void:
+	_rebuild_chapter_picker()
+	if _chapter_paths.is_empty():
+		return
+	# jump to first incomplete among unlocked
+	for i in _chapter_paths.size():
+		var path = str(_chapter_paths[i])
+		var bn = path.get_file().replace(".tscn", "").replace("chapter", "")
+		var done_flag = "chapter%s_done" % bn
+		if not GameState.flag(done_flag):
+			get_tree().change_scene_to_file(path)
+			return
+	get_tree().change_scene_to_file(str(_chapter_paths[_chapter_paths.size() - 1]))
+
 
 func panel_button_labels() -> Array:
 	var out: Array = []
