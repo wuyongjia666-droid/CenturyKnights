@@ -12,6 +12,16 @@ func _ready() -> void:
 
 func _build() -> void:
 	UIKit.make_themed_bg(self, "lineage")
+	if ResourceLoader.exists("res://assets/art/ui/hub_banner_strip.png"):
+		var strip := TextureRect.new()
+		strip.texture = load("res://assets/art/ui/hub_banner_strip.png")
+		strip.position = Vector2(0, 0)
+		strip.custom_minimum_size = Vector2(1280, 48)
+		strip.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		strip.stretch_mode = TextureRect.STRETCH_SCALE
+		strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(strip)
+
 	var strip = TextureRect.new()
 	if ResourceLoader.exists("res://assets/art/ui/lineage_banner.png"):
 		strip.texture = load("res://assets/art/ui/lineage_banner.png")

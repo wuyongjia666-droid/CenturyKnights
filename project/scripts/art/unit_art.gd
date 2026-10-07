@@ -555,7 +555,7 @@ static func _fingerprint_portrait(tex: Texture2D, c: CKCharacter) -> Texture2D:
 			if mimg.get_width() != w or mimg.get_height() != h:
 				mimg = mimg.duplicate()
 				mimg.resize(w, h, Image.INTERPOLATE_LANCZOS)
-			var blend = 0.28 + float(uid % 5) * 0.04  # 0.28–0.44
+			var blend = 0.38 + float(uid % 5) * 0.05  # 0.38–0.58 更偏个人脸
 			for y in range(h):
 				for x in range(w):
 					var a = img.get_pixel(x, y)
@@ -564,7 +564,7 @@ static func _fingerprint_portrait(tex: Texture2D, c: CKCharacter) -> Texture2D:
 						continue
 					# 上半脸（五官）多混一点个人特征
 					var local = blend + (0.12 if y < int(h * 0.55) else 0.0)
-					img.set_pixel(x, y, a.lerp(b, clampf(local, 0.0, 0.55)))
+					img.set_pixel(x, y, a.lerp(b, clampf(local, 0.0, 0.68)))
 	# 色偏 + 双痣
 	var shift = Color(1.0 + (uid % 5) * 0.012, 1.0 + ((uid / 3) % 4) * 0.01, 1.0 - (uid % 3) * 0.012, 1.0)
 	for y in range(h):

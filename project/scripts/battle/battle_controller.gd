@@ -1340,13 +1340,51 @@ func _draw_overlay() -> void:
 			var rz = Rect2(ORIGIN + Vector2(pos) * CELL, Vector2(CELL - 2, CELL - 2))
 			overlay.draw_rect(rz, Color(0.85, 0.25, 0.2, 0.16))
 	if not attack_mode:
+		var foes_ov = _enemy_positions("player")
+		var locked_ov = false
+		var start_eng = false
+		if selected >= 0 and selected < units.size():
+			var su = units[selected]
+			if su.team == "player":
+				locked_ov = int(su.char.temp_combat_lock) > 0
+				start_eng = locked_ov or BattleRules.is_engaged(su.pos, foes_ov)
 		for pos in move_cells.keys():
 			var r = Rect2(ORIGIN + Vector2(pos) * CELL, Vector2(CELL - 2, CELL - 2))
-			var in_z = BattleRules.in_zoc(pos, _enemy_positions("player"))
-			var col = Color(0.95, 0.55, 0.25, 0.40) if in_z else Color(0.25, 0.55, 0.95, 0.38)
-			var edge = Color(1.0, 0.7, 0.3, 0.7) if in_z else Color(0.4, 0.7, 1.0, 0.55)
+			var in_z = BattleRules.in_zoc(pos, foes_ov)
+			var leaving = start_eng and (not in_z) and selected >= 0 and pos != units[selected].pos
+			var col: Color
+			var edge: Color
+			var tag := ""
+			if locked_ov and leaving:
+				col = Color(0.85, 0.25, 0.75, 0.48)   # 锁定脱离 cost3
+				edge = Color(1.0, 0.55, 0.95, 0.95)
+				tag = "锁3"
+			elif leaving:
+				col = Color(0.95, 0.65, 0.20, 0.48)   # 控带脱离 cost2
+				edge = Color(1.0, 0.85, 0.35, 0.95)
+				tag = "脱2"
+			elif in_z:
+				col = Color(0.95, 0.45, 0.25, 0.42)
+				edge = Color(1.0, 0.65, 0.30, 0.75)
+				tag = "控"
+			else:
+				col = Color(0.25, 0.55, 0.95, 0.38)
+				edge = Color(0.4, 0.7, 1.0, 0.55)
 			overlay.draw_rect(r, col)
 			overlay.draw_rect(r, edge, false, 2.0)
+			if tag != "":
+				var tp = ORIGIN + Vector2(pos) * CELL + Vector2(6, 18)
+				overlay.draw_rect(Rect2(tp + Vector2(-2, -12), Vector2(28, 14)), Color(0.05, 0.05, 0.08, 0.75))
+				overlay.draw_string(ThemeDB.fallback_font, tp, tag, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(1.0, 0.92, 0.75))
+		# 图例（有移动格且处于交战/锁定时）
+		if start_eng and not move_cells.is_empty():
+			var lx = 40.0
+			var ly = ORIGIN.y + MAP_H * CELL + 8.0
+			if ResourceLoader.exists("res://assets/art/ui/zoc_leave_legend.png"):
+				var ltex = load("res://assets/art/ui/zoc_leave_legend.png")
+				overlay.draw_texture(ltex, Vector2(lx, ly))
+			var legend = "蓝=安全　橙控=控带　脱2=脱离+2　锁3=锁定脱离+3"
+			overlay.draw_string(ThemeDB.fallback_font, Vector2(lx + 4, ly + 58), legend, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.9, 0.86, 0.72))
 	if selected >= 0 and selected < units.size():
 		var u = units[selected]
 		if u.team == "player" and not u.done:
@@ -2190,11 +2228,14 @@ func _enemy_ai() -> void:
 			if locked_self and pos != u.pos:
 				var still_eng = BattleRules.is_engaged(pos, foes_player)
 				if not still_eng:
-					stand_bonus -= 3.5  # 拆锁挪位需高收益才值
+					stand_bonus -= 5.0  # 拆锁挪位更贵（对齐 leave_cost=3）
 				elif stand_tid == "fort":
 					stand_bonus += 5.5  # 锁住时占垒
 				elif stand_tid in ["forest", "hill"]:
 					stand_bonus += 2.2
+			elif (not locked_self) and BattleRules.is_engaged(u.pos, foes_player) and pos != u.pos:
+				if not BattleRules.is_engaged(pos, foes_player):
+					stand_bonus -= 2.0  # 控带脱离 leave_cost=2 对齐
 			for j in units.size():
 				var t = units[j]
 				if t.team != "player" or t.char.hp <= 0:
