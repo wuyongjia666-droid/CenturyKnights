@@ -1312,6 +1312,14 @@ func _draw_overlay() -> void:
 		var txt = "—— 玩家回合 ——" if turn_team == "player" else "—— 敌方回合 ——"
 		overlay.draw_rect(Rect2(80, 300, 360, 50), Color(0.05, 0.06, 0.08, 0.75 * a2))
 		overlay.draw_string(ThemeDB.fallback_font, Vector2(120, 332), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(UnitArt.crest_color(), a2))
+	# 地形悬停提示
+	if _in_bounds(_hover_cell):
+		var tid = terrain[_hover_cell.y][_hover_cell.x]
+		var ti = BattleRules.terrain_info(tid)
+		var tip = "%s　回避+%d　防+%d　移耗%d" % [ti.name, ti.avo_bonus, ti.get("def_bonus", 0), ti.move_cost]
+		var tip_pos = ORIGIN + Vector2(_hover_cell.x * CELL, _hover_cell.y * CELL) + Vector2(4, -18)
+		overlay.draw_rect(Rect2(tip_pos + Vector2(-4, -14), Vector2(210, 18)), Color(0.05, 0.06, 0.08, 0.82))
+		overlay.draw_string(ThemeDB.fallback_font, tip_pos, tip, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.92, 0.88, 0.75))
 
 func _gui_input(event: InputEvent) -> void:
 	if battle_over:
@@ -1456,23 +1464,61 @@ func _spawn_slash(cell: Vector2i, kind: String = "slash") -> void:
 	_shake = 3.5
 
 func _do_attack(ai: int, di: int) -> void:
+	_resolve_strike(ai, di, true)
 	var atk = units[ai]
 	var def = units[di]
+	# 连击：敏差足够且目标仍存活
+	if def.char.hp > 0 and BattleRules.can_follow_up(atk.char, def.char):
+		_log("连击！敏差触发第二击")
+		_spawn_dmg(def.pos, "连击", Color(0.95, 0.75, 0.35))
+		_resolve_strike(ai, di, false)
+	# 反击：存活且射程覆盖
+	if def.char.hp > 0 and BattleRules.can_counter(atk.char, def.char, atk.pos, def.pos):
+		_log("%s 反击！" % def.char.name)
+		_spawn_dmg(atk.pos, "反击", Color(0.85, 0.55, 0.95))
+		_resolve_strike(di, ai, false)
+	atk.done = true
+	selected = -1
+	move_cells.clear()
+	attack_mode = false
+	skill_mode = false
+	active_skill_id = ""
+	moved_this_select = false
+	_refresh_info()
+	map_draw.queue_redraw()
+	overlay.queue_redraw()
+	_check_end()
+
+func _combat_extras(ai: int, di: int) -> Dictionary:
+	var atk = units[ai]
+	var def = units[di]
+	var flank = BattleRules.has_flank(atk.pos, def.pos, units, atk.team, ai)
+	return {"flank": flank}
+
+func _resolve_strike(ai: int, di: int, allow_skill: bool) -> void:
+	var atk = units[ai]
+	var def = units[di]
+	if atk.char.hp <= 0 or def.char.hp <= 0:
+		return
 	var tid = terrain[def.pos.y][def.pos.x]
+	var extras = _combat_extras(ai, di)
 	var skill_id = ""
 	var sk = {}
-	if atk.team == "player" and skill_mode and active_skill_id != "":
+	if allow_skill and atk.team == "player" and skill_mode and active_skill_id != "":
 		skill_id = active_skill_id
 		sk = GameState.get_skill(skill_id)
 		if sk.get("ignore_terrain_avo"):
 			tid = "plain"
-	var result = BattleRules.roll_attack(atk.char, def.char, tid, rng)
+		extras["hit_mod"] = int(sk.get("hit_mod", 0))
+	var result = BattleRules.roll_attack(atk.char, def.char, tid, rng, extras)
 	if skill_id != "" and sk.get("type") == "offense":
-		# adjust hit/damage post-roll presentation; re-roll with mods if needed
-		var hit_chance = BattleRules.calc_hit(atk.char, def.char, tid) + int(sk.get("hit_mod", 0))
+		# 战技：撤销普通掷骰伤害后，按技能倍率重掷
+		if result.hit:
+			def.char.hp = mini(def.char.max_hp, def.char.hp + int(result.damage))
+		var hit_chance = BattleRules.calc_hit(atk.char, def.char, tid, extras) + int(sk.get("hit_mod", 0))
 		hit_chance = clampi(hit_chance, 5, 99)
 		var hit = rng.randi_range(1, 100) <= hit_chance
-		var dmg_range = BattleRules.calc_damage_range(atk.char, def.char)
+		var dmg_range = BattleRules.calc_damage_range(atk.char, def.char, tid, extras)
 		var dmg = 0
 		var crit = false
 		if hit:
@@ -1483,25 +1529,33 @@ func _do_attack(ai: int, di: int) -> void:
 				Sfx.crit()
 				_spawn_slash(def.pos, "crit")
 				dmg = int(dmg * 1.5)
-			# undo previous roll damage if any
-			if result.hit:
-				def.char.hp = mini(def.char.max_hp, def.char.hp + int(result.damage))
 			def.char.hp = maxi(0, def.char.hp - dmg)
-		elif result.hit:
-			def.char.hp = mini(def.char.max_hp, def.char.hp + int(result.damage))
-		result = {"hit": hit, "crit": crit, "damage": dmg, "hit_chance": hit_chance, "dmg_range": dmg_range, "killed": def.char.hp <= 0}
+		result = {"hit": hit, "crit": crit, "damage": dmg, "hit_chance": hit_chance, "dmg_range": dmg_range, "killed": def.char.hp <= 0, "flank": extras.get("flank", false), "role_label": str(BattleRules.role_mods(atk.char, def.char).get("label", "")), "terrain_def": int(BattleRules.terrain_info(tid).get("def_bonus", 0))}
 		_consume_skill(atk.char, skill_id)
 		_log("战技「%s」！" % sk.get("name", skill_id))
-	# clear one-shot hit bonus after any attack
+		if int(sk.get("self_def_penalty", 0)) > 0:
+			atk.char.temp_def_buff = -int(sk.get("self_def_penalty", 0))
 	if atk.char.temp_hit_bonus != 0:
 		atk.char.temp_hit_bonus = 0
-	var msg = "%s → %s：" % [atk.char.name, def.char.name]
+	var tags: Array = []
+	if result.get("flank", false):
+		tags.append("夹击")
+		_spawn_dmg(def.pos, "夹击", Color(1.0, 0.55, 0.2))
+	if str(result.get("role_label", "")) != "":
+		tags.append(str(result.role_label))
+	if int(result.get("terrain_def", 0)) > 0:
+		tags.append("垒防" if tid == "fort" else "地形防")
+	var tag_s = ("〔" + "·".join(tags) + "〕") if tags else ""
+	var msg = "%s → %s%s：" % [atk.char.name, def.char.name, tag_s]
 	if result.hit:
 		Sfx.hit()
 		_spawn_slash(def.pos)
+		if _unit_panel:
+			UIFX.punch(_unit_panel, 0.04)
 		msg += "命中 %d%s" % [result.damage, "（暴击）" if result.crit else ""]
 		var col = Color(1.0, 0.85, 0.3) if result.crit else Color(1.0, 0.45, 0.35)
 		_spawn_dmg(def.pos, ("暴%d" % result.damage) if result.crit else ("-%d" % result.damage), col)
+		_shake = maxf(_shake, 0.18 if result.crit else 0.1)
 		if result.killed:
 			msg += " · 击退！"
 			_spawn_dmg(def.pos, "击破", Color(1.0, 0.9, 0.5))
@@ -1514,15 +1568,6 @@ func _do_attack(ai: int, di: int) -> void:
 		msg += "未命中（命中率 %d%%）" % result.hit_chance
 		_spawn_dmg(def.pos, "未中", Color(0.7, 0.75, 0.85))
 	_log(msg)
-	atk.done = true
-	selected = -1
-	move_cells.clear()
-	attack_mode = false
-	moved_this_select = false
-	_refresh_info()
-	map_draw.queue_redraw()
-	overlay.queue_redraw()
-	_check_end()
 
 func _wait_selected() -> void:
 	if selected < 0:
@@ -1587,44 +1632,77 @@ func _enemy_ai() -> void:
 		var u = units[i]
 		if u.team != "enemy" or u.char.hp <= 0:
 			continue
-		var best := -1
-		var best_d := 999
-		for j in units.size():
-			var t = units[j]
-			if t.team == "player" and t.char.hp > 0:
-				var d = _manhattan(u.pos, t.pos)
-				if d < best_d:
-					best_d = d
-					best = j
-		if best < 0:
-			continue
-		var target = units[best]
-		var range_ok = best_d == 1 or (not _is_melee(u.char) and best_d <= 2)
-		if range_ok:
-			_do_attack(i, best)
-			await get_tree().create_timer(0.25).timeout
-			if battle_over:
-				return
-			continue
 		var mv = BattleRules.move_costs(terrain, u.pos, u.char.derived_move())
 		for ou in units:
 			if ou.char.hp > 0 and ou.pos != u.pos:
 				mv.erase(ou.pos)
-		var best_pos = u.pos
-		var best_score = best_d
+		if not mv.has(u.pos):
+			mv[u.pos] = 0
+		var best_score := -9999.0
+		var best_pos: Vector2i = u.pos
+		var best_target := -1
+		var melee = _is_melee(u.char)
 		for pos in mv.keys():
-			var d = _manhattan(pos, target.pos)
-			if d < best_score:
-				best_score = d
-				best_pos = pos
-		u.pos = best_pos
-		_log("%s 推进至 (%d,%d)" % [u.char.name, best_pos.x, best_pos.y])
-		best_d = _manhattan(u.pos, target.pos)
-		range_ok = best_d == 1 or (not _is_melee(u.char) and best_d <= 2)
-		if range_ok:
-			_do_attack(i, best)
+			# 站位地形分：优先占防/回避
+			var stand_tid = terrain[pos.y][pos.x]
+			var tinfo = BattleRules.terrain_info(stand_tid)
+			var stand_bonus = float(tinfo.get("def_bonus", 0)) * 1.5 + float(tinfo.get("avo_bonus", 0)) * 0.05
+			# 远程偏好保持距离 2
+			for j in units.size():
+				var t = units[j]
+				if t.team != "player" or t.char.hp <= 0:
+					continue
+				var d = _manhattan(pos, t.pos)
+				var can_hit = (d == 1) if melee else (d >= 1 and d <= 2)
+				if not can_hit:
+					# 接近分：越近越好，但远程不要贴脸
+					var approach = -float(d) * 2.0
+					if not melee and d == 1:
+						approach -= 4.0
+					var sc2 = approach + stand_bonus
+					if sc2 > best_score and best_target < 0:
+						best_score = sc2
+						best_pos = pos
+					continue
+				var extras = {"flank": BattleRules.has_flank(pos, t.pos, units, "enemy", i)}
+				# 临时把单位挪到候选格估夹击（has_flank 用当前 units 位置，攻击者位用 pos 参数）
+				var old = u.pos
+				u.pos = pos
+				extras["flank"] = BattleRules.has_flank(pos, t.pos, units, "enemy", i)
+				u.pos = old
+				var tid = terrain[t.pos.y][t.pos.x]
+				var expect = BattleRules.expected_damage(u.char, t.char, tid, extras)
+				# 斩杀优先
+				if expect >= t.char.hp:
+					expect += 12.0
+				# 残血优先
+				var hp_frac = float(t.char.hp) / float(maxi(1, t.char.max_hp))
+				expect += (1.0 - hp_frac) * 4.0
+				if extras.get("flank", false):
+					expect += 3.0
+				# 远程站位奖励
+				if not melee and d == 2:
+					expect += 2.5
+				expect += stand_bonus
+				if expect > best_score:
+					best_score = expect
+					best_pos = pos
+					best_target = j
+		if best_pos != u.pos:
+			u.pos = best_pos
+			_log("%s 机动至 (%d,%d)" % [u.char.name, best_pos.x, best_pos.y])
+			map_draw.queue_redraw()
+		if best_target >= 0:
+			var d2 = _manhattan(u.pos, units[best_target].pos)
+			var ok = (d2 == 1) if melee else (d2 >= 1 and d2 <= 2)
+			if ok:
+				_do_attack(i, best_target)
+				await get_tree().create_timer(0.28).timeout
+				if battle_over:
+					return
+				continue
 		map_draw.queue_redraw()
-		await get_tree().create_timer(0.2).timeout
+		await get_tree().create_timer(0.18).timeout
 		if battle_over:
 			return
 
@@ -1662,9 +1740,13 @@ func _finish(win: bool) -> void:
 			Sfx.fanfare()
 		_log("【胜利】%s肃清。+35 银。" % map_name)
 		_mark_map_victory()
+		GameState.on_battle_quest_victory()
 		if not bool(BattleMaps.get_map(map_id).get("tutorial_militia", false)):
 			GameState.add_skill_point(1)
 			_log("获得战技点 +1（当前 %d）" % GameState.skill_points)
+		# 战勋旁注微奖
+		if int(GameState.house_mods.get("war_memory", 0)) > 0:
+			GameState.silver += mini(10, int(GameState.house_mods.war_memory) * 2)
 		phase_label.text = "★ " + Locale.t("battle_win") + " ★"
 		phase_label.add_theme_color_override("font_color", UIKit.ACCENT)
 	else:
@@ -2521,10 +2603,11 @@ func _refresh_info_for(ui: int) -> void:
 	_portrait.texture = UnitArt.portrait(c, 96)
 	var tid = terrain[u.pos.y][u.pos.x]
 	var tinfo = BattleRules.terrain_info(tid)
-	info_label.text = "[b]%s[/b]（%s） HP %d/%d\n攻 %d 防 %d\n地形：%s\n（仍选中我军，可继续移动/攻击）" % [
-		c.name, "我军" if u.team == "player" else "敌军",
+	var role2 = BattleRules.role_label(BattleRules.job_role(c.job_id))
+	info_label.text = "[b]%s[/b]（%s·%s） HP %d/%d\n攻 %d 防 %d\n地形：%s（回避+%d 防+%d）\n（仍选中我军，可继续移动/攻击）" % [
+		c.name, "我军" if u.team == "player" else "敌军", role2,
 		c.hp, c.max_hp, c.derived_atk(), c.derived_def(),
-		tinfo["name"],
+		tinfo["name"], tinfo.get("avo_bonus", 0), tinfo.get("def_bonus", 0),
 	]
 
 func _refresh_info() -> void:
@@ -2548,18 +2631,22 @@ func _refresh_info() -> void:
 			mode = "[color=#c9a227]【已移动】可攻击 / 待命[/color]\n"
 		else:
 			mode = "[color=#6db0e0]【已选中】点击蓝格移动，或开攻击模式[/color]\n"
-	var txt = mode + "[b]%s[/b]（%s） HP %d/%d\n攻 %d 防 %d 命中 %d 回避 %d 移动 %d\n地形：%s（回避+%d）\n" % [
-		c.name, "我军" if u.team == "player" else "敌军",
+	var role = BattleRules.role_label(BattleRules.job_role(c.job_id))
+	var txt = mode + "[b]%s[/b]（%s·%s） HP %d/%d\n攻 %d 防 %d 命中 %d 回避 %d 移动 %d\n地形：%s（回避+%d 防+%d）\n" % [
+		c.name, "我军" if u.team == "player" else "敌军", role,
 		c.hp, c.max_hp, c.derived_atk(), c.derived_def(), c.derived_hit(), c.derived_avo(), c.derived_move(),
-		tinfo["name"], tinfo["avo_bonus"],
+		tinfo["name"], tinfo["avo_bonus"], tinfo.get("def_bonus", 0),
 	]
 	if BattleRules.preview_enabled and u.team == "player":
 		for j in units.size():
 			var e = units[j]
 			if e.team == "enemy" and e.char.hp > 0 and _manhattan(u.pos, e.pos) <= 2:
-				var pv = BattleRules.preview(c, e.char, terrain[e.pos.y][e.pos.x])
-				txt += "透视→%s：命中 %d%% 伤害 %d–%d 暴击 %d%%\n" % [
-					e.char.name, pv.hit, pv.dmg.x, pv.dmg.y, pv.crit
+				var ex = {"flank": BattleRules.has_flank(u.pos, e.pos, units, "player", selected)}
+				var pv = BattleRules.preview(c, e.char, terrain[e.pos.y][e.pos.x], ex)
+				var tagjoin = "·".join(pv.tags) if pv.tags else ""
+				txt += "透视→%s：命中 %d%% 伤害 %d–%d 暴%d%%%s\n" % [
+					e.char.name, pv.hit, pv.dmg.x, pv.dmg.y, pv.crit,
+					(" 〔" + tagjoin + "〕") if tagjoin else "",
 				]
 	info_label.text = txt
 
@@ -2577,5 +2664,5 @@ func _restore_heir_clash_hp() -> void:
 			c.hp = c.max_hp
 			c.alive = true
 	GameState.add_lineage_event("双嗣校场终了：双方回堡养伤，名册旁注已更新。")
-	GameState.clear_meta("heir_clash_a")
-	GameState.clear_meta("heir_clash_b")
+	GameState.remove_meta("heir_clash_a")
+	GameState.remove_meta("heir_clash_b")

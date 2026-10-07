@@ -513,6 +513,14 @@ var settings: Dictionary = {
 # 诸邦声望 0-100；档位由数值映射
 var reputation: Dictionary = {"ashland": 0, "riverland": 0}
 var shrine_level: int = 1
+## 城堡工事等级（厅堂/校场/市集/工坊/祠堂）——经营深度核心
+var buildings: Dictionary = {"hall": 1, "barracks": 1, "market": 1, "forge": 1, "shrine": 1}
+## 联姻/岁月留下的家族修正（持久机械后果）
+var house_mods: Dictionary = {}
+## 已完成委任（首通奖励只发一次）
+var quest_done: Dictionary = {}
+## 退役顾问加成：{stat_key: bonus}
+var advisor_bonus: Dictionary = {}
 var deploy_ids: Array = []
 var dirty: bool = false
 var dynasty_journal: String = ""
@@ -1103,6 +1111,11 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	lineage_log.clear()
 	lineage_path.clear()
 	reputation = {"ashland": 0, "riverland": 0}
+	buildings = {"hall": 1, "barracks": 1, "market": 1, "forge": 1, "shrine": 1}
+	shrine_level = 1
+	house_mods = {}
+	quest_done = {}
+	advisor_bonus = {}
 	surname = leader_surname
 	crest_color = color
 	var leader = CharacterFactory.make_leader(leader_given, leader_surname, color)
@@ -1179,6 +1192,96 @@ func _init_quests() -> void:
 			"desc": "第三章：祠堂外廊。适合铁壁与灰焰祷言。"},
 	]
 
+
+const BUILDING_NAMES := {
+	"hall": "议事厅",
+	"barracks": "校场",
+	"market": "市集",
+	"forge": "工坊",
+	"shrine": "祠堂",
+}
+const BUILDING_MAX := 3
+const BUILDING_COST := {
+	# level -> cost to upgrade TO that level
+	2: {"silver": 80, "iron": 3, "food": 10},
+	3: {"silver": 160, "iron": 6, "food": 20},
+}
+
+func building_level(id: String) -> int:
+	return int(buildings.get(id, 1))
+
+func max_deploy() -> int:
+	# 厅堂：1→4人，2→5人，3→6人
+	return 3 + building_level("hall")
+
+func train_cost() -> int:
+	var base = 15
+	var disc = (building_level("barracks") - 1) * 3
+	if bool(house_mods.get("drill_discount", false)):
+		disc += 2
+	return maxi(8, base - disc)
+
+func forge_craft_cost() -> Dictionary:
+	var lv = building_level("forge")
+	return {"iron": maxi(1, 3 - lv), "silver": maxi(10, 24 - lv * 4)}
+
+func market_buy_prices() -> Dictionary:
+	var lv = building_level("market")
+	var cut = lv - 1
+	if bool(house_mods.get("trade_route", false)):
+		cut += 1
+	return {"food": maxi(1, 2 - cut), "iron": maxi(5, 8 - cut), "herb": maxi(4, 6 - cut)}
+
+func market_sell_prices() -> Dictionary:
+	var lv = building_level("market")
+	var bump = lv - 1
+	if bool(house_mods.get("trade_route", false)):
+		bump += 1
+	return {"food": 1 + bump, "iron": 5 + bump, "herb": 4 + bump}
+
+func upgrade_building(id: String) -> Dictionary:
+	if id not in BUILDING_NAMES:
+		return {"ok": false, "msg": "无此工事"}
+	var lv = building_level(id)
+	if lv >= BUILDING_MAX:
+		return {"ok": false, "msg": "%s 已至满级" % BUILDING_NAMES[id]}
+	var next_lv = lv + 1
+	var cost: Dictionary = BUILDING_COST.get(next_lv, {})
+	var need_s = int(cost.get("silver", 0))
+	var need_i = int(cost.get("iron", 0))
+	var need_f = int(cost.get("food", 0))
+	if bool(house_mods.get("hall_discount", false)) and id == "hall":
+		need_s = int(need_s * 0.75)
+	if silver < need_s or iron < need_i or food < need_f:
+		return {"ok": false, "msg": "不足：需 %d银/%d铁/%d粮" % [need_s, need_i, need_f]}
+	silver -= need_s
+	iron -= need_i
+	food -= need_f
+	buildings[id] = next_lv
+	if id == "shrine":
+		shrine_level = next_lv
+	var fx = ""
+	match id:
+		"hall":
+			fx = "出战编队上限 → %d" % max_deploy()
+		"barracks":
+			fx = "演武花费 → %d 银；月结士气微升" % train_cost()
+		"market":
+			fx = "市集买卖价改善"
+		"forge":
+			fx = "打造更省料，灰刃更利"
+		"shrine":
+			fx = "丰收产出与祈愈增强"
+	log_event("工事升级：%s → Lv%d（%s）" % [BUILDING_NAMES[id], next_lv, fx])
+	mark_dirty()
+	return {"ok": true, "msg": "%s 升至 Lv%d。%s" % [BUILDING_NAMES[id], next_lv, fx]}
+
+func building_summary() -> String:
+	var parts: Array = []
+	for id in ["hall", "barracks", "market", "forge", "shrine"]:
+		parts.append("%s Lv%d" % [BUILDING_NAMES[id], building_level(id)])
+	return " · ".join(parts)
+
 func accept_quest(qid: String) -> Dictionary:
 	var q = null
 	for item in quests:
@@ -1190,6 +1293,7 @@ func accept_quest(qid: String) -> Dictionary:
 	if q.get("battle", false):
 		if q.get("map"):
 			set_meta("battle_map", str(q.get("map")))
+		set_meta("active_quest_id", qid)
 		return {"ok": true, "battle": true, "quest": q}
 	# 自动任务
 	var evs = Calendar.advance(int(q.get("months", 1)))
@@ -1198,14 +1302,56 @@ func accept_quest(qid: String) -> Dictionary:
 	if str(q.get("id", "")) == "q_herb":
 		herb += 2
 	if str(q.get("id", "")) == "q_drill":
-		morale = mini(100, morale + 3)
+		morale = mini(100, morale + 3 + building_level("barracks"))
 	if str(q.get("id", "")) == "q_bridge":
 		add_rep("riverland", 4)
 	for c in roster():
 		c.exp += 8 * int(q["stars"])
-	log_event("完成任务「%s」+ %d 银" % [q["name"], q["silver"]])
+	var first = apply_quest_first_clear(qid)
+	log_event("完成任务「%s」+ %d 银%s" % [q["name"], q["silver"], ("；" + first) if first else ""])
 	mark_dirty()
-	return {"ok": true, "battle": false, "quest": q, "events": evs}
+	return {"ok": true, "battle": false, "quest": q, "events": evs, "first_clear": first}
+
+func apply_quest_first_clear(qid: String) -> String:
+	if bool(quest_done.get(qid, false)):
+		return ""
+	quest_done[qid] = true
+	var msg := ""
+	match qid:
+		"q_escort":
+			house_mods["hall_discount"] = true
+			msg = "首通：议事厅升级费用 -25%"
+		"q_bridge":
+			house_mods["trade_route"] = true
+			msg = "首通：开通河卫商路（市集更划算，丰收+银）"
+		"q_drill":
+			house_mods["drill_discount"] = true
+			msg = "首通：校场演武再减价"
+		"q_rumor":
+			house_mods["spring_insight"] = true
+			add_skill_point(1)
+			msg = "首通：春令耳目 +1 战技点"
+		"q_herb":
+			house_mods["herb_garden"] = true
+			msg = "首通：雾谷药圃（丰收+药）"
+		"q_bandit", "q_hill_war", "q_ford_war", "q_fog_war", "q_forge_war", "q_shrine_war":
+			house_mods["war_memory"] = int(house_mods.get("war_memory", 0)) + 1
+			morale = mini(100, morale + 2)
+			msg = "首通战勋：士气+2，战勋记 %d" % int(house_mods["war_memory"])
+		_:
+			msg = "首通记入陆桥簿"
+	if msg != "":
+		add_lineage_event("委任首通：「%s」——%s" % [qid, msg])
+	return msg
+
+func on_battle_quest_victory() -> void:
+	var qid = str(get_meta("active_quest_id", ""))
+	if qid == "":
+		return
+	var first = apply_quest_first_clear(qid)
+	if first:
+		log_event(first)
+	remove_meta("active_quest_id")
 
 func apply_monthly_upkeep() -> String:
 	var wage = 0
@@ -1238,15 +1384,39 @@ func apply_monthly_upkeep() -> String:
 					log_event("%s 因缺粮获得「营养不良」" % c.name)
 	elif food >= 10 and morale < 90:
 		morale = mini(100, morale + 2)
+	# 校场常训
+	if building_level("barracks") >= 2:
+		morale = mini(100, morale + building_level("barracks") - 1)
+		msg += "；校场鼓点士气+%d" % (building_level("barracks") - 1)
+	# 退役顾问暗助
+	for k in advisor_bonus.keys():
+		var leader = get_leader()
+		if leader and k in CKCharacter.STAT_KEYS and rng.randf() < 0.15:
+			leader.stats[k] = mini(int(leader.apt_max.get(k, 20)), int(leader.stats[k]) + 1)
+			msg += "；顾问指点 %s+1" % Locale.t("stat_" + k)
+			leader.recalc_hp()
+			break
 	return msg
 
 func apply_harvest() -> String:
-	var prod = 25 + shrine_level * 8
+	shrine_level = building_level("shrine")
+	var prod = 25 + shrine_level * 8 + building_level("hall") * 3
 	food += prod
-	silver += 15
-	var msg = "丰收结算：+%d 粮，+15 银（祠堂 Lv%d）" % [prod, shrine_level]
+	var sil = 15 + building_level("market") * 5
+	if bool(house_mods.get("trade_route", false)):
+		sil += 10
+	if bool(house_mods.get("vow_trade", false)):
+		sil += 8
+	silver += sil
+	var extra := ""
+	if bool(house_mods.get("herb_garden", false)):
+		herb += 1
+		extra += "，药+1"
+	if bool(house_mods.get("vow_banner", false)):
+		add_rep("ashland", 2)
+		extra += "，旗饰声望+2"
+	var msg = "丰收结算：+%d 粮，+%d 银（祠堂 Lv%d / 厅 Lv%d）%s" % [prod, sil, shrine_level, building_level("hall"), extra]
 	log_event(msg)
-	# 祠堂治愈临时伤
 	for c in roster():
 		if c.injured:
 			c.injured = false
@@ -1268,12 +1438,19 @@ func train(cid: String) -> Dictionary:
 	var c: CKCharacter = characters.get(cid)
 	if c == null:
 		return {"ok": false, "msg": "无此人"}
-	if silver < 15:
+	var cost = train_cost()
+	if silver < cost:
 		return {"ok": false, "msg": Locale.t("not_enough_silver")}
-	silver -= 15
+	silver -= cost
 	Calendar.advance(1)
 	var key = CKCharacter.STAT_KEYS[rng.randi() % CKCharacter.STAT_KEYS.size()]
-	c.stats[key] = mini(int(c.apt_max.get(key, 20)), int(c.stats[key]) + 1)
+	# 顾问偏向
+	if not advisor_bonus.is_empty() and rng.randf() < 0.35:
+		key = str(advisor_bonus.keys()[0])
+	var gain = 1
+	if building_level("barracks") >= 3 and rng.randf() < 0.35:
+		gain = 2
+	c.stats[key] = mini(int(c.apt_max.get(key, 20)), int(c.stats[key]) + gain)
 	if rng.randf() < 0.25:
 		var all_t = data_traits.get("traits", [])
 		var t = all_t[rng.randi() % all_t.size()]
@@ -1282,17 +1459,18 @@ func train(cid: String) -> Dictionary:
 			log_event("%s 训练领悟禀性「%s」" % [c.name, t["name"]])
 	c.recalc_hp()
 	mark_dirty()
-	return {"ok": true, "msg": "%s 的%s +1" % [c.name, Locale.t("stat_" + key)]}
+	return {"ok": true, "msg": "%s 的%s +%d（花费 %d 银）" % [c.name, Locale.t("stat_" + key), gain, cost]}
 
 func craft_weapon(cid: String) -> Dictionary:
-	if iron < 2 or silver < 20:
-		return {"ok": false, "msg": "需要 2 铁与 20 银"}
+	var cost = forge_craft_cost()
+	if iron < int(cost.iron) or silver < int(cost.silver):
+		return {"ok": false, "msg": "需要 %d 铁与 %d 银" % [cost.iron, cost.silver]}
 	var c: CKCharacter = characters.get(cid)
 	if c == null:
 		return {"ok": false, "msg": "选择角色"}
-	iron -= 2
-	silver -= 20
-	c.weapon_id = "ash_blade"
+	iron -= int(cost.iron)
+	silver -= int(cost.silver)
+	c.weapon_id = "ash_blade_fine" if building_level("forge") >= 3 else "ash_blade"
 	# 负重检查（简化）
 	var burden = 4
 	var cap = 5 + int(c.stats.get("vit", 8) / 2)
@@ -1304,7 +1482,7 @@ func craft_weapon(cid: String) -> Dictionary:
 	return {"ok": true, "msg": "打造完成：灰刃 +2 攻" + warn}
 
 func market_buy(item: String, qty: int = 1) -> Dictionary:
-	var prices = {"food": 2, "iron": 8, "herb": 6}
+	var prices = market_buy_prices()
 	if item not in prices:
 		return {"ok": false, "msg": "无此物资"}
 	var cost = prices[item] * qty
@@ -1316,7 +1494,7 @@ func market_buy(item: String, qty: int = 1) -> Dictionary:
 	return {"ok": true, "msg": "购入 %s x%d" % [Locale.t(item), qty]}
 
 func market_sell(item: String, qty: int = 1) -> Dictionary:
-	var prices = {"food": 1, "iron": 5, "herb": 4}
+	var prices = market_sell_prices()
 	if int(get(item)) < qty:
 		return {"ok": false, "msg": "库存不足"}
 	set(item, int(get(item)) - qty)
@@ -1941,6 +2119,10 @@ func save_game() -> bool:
 		"lineage_path": lineage_path.duplicate(true),
 		"event_log": event_log,
 		"shrine_level": shrine_level,
+		"buildings": buildings.duplicate(true),
+		"house_mods": house_mods.duplicate(true),
+		"quest_done": quest_done.duplicate(true),
+		"advisor_bonus": advisor_bonus.duplicate(true),
 		"characters": {},
 		"tavern": [],
 		"marriage": [],
@@ -2224,6 +2406,14 @@ func load_game() -> bool:
 	lineage_path = data.get("lineage_path", {}).duplicate(true)
 	event_log = data.get("event_log", [])
 	shrine_level = int(data.get("shrine_level", 1))
+	buildings = data.get("buildings", {"hall": 1, "barracks": 1, "market": 1, "forge": 1, "shrine": shrine_level}).duplicate(true)
+	if not buildings.has("shrine"):
+		buildings["shrine"] = shrine_level
+	else:
+		shrine_level = int(buildings.get("shrine", shrine_level))
+	house_mods = data.get("house_mods", {}).duplicate(true)
+	quest_done = data.get("quest_done", {}).duplicate(true)
+	advisor_bonus = data.get("advisor_bonus", {}).duplicate(true)
 	quests = data.get("quests", quests)
 	characters.clear()
 	for id in data.get("characters", {}).keys():

@@ -1,7 +1,8 @@
 extends Control
 func _ready() -> void:
 	UIKit.make_screen_bg(self)
-	var t = UIKit.make_label("出战编队（最多4人）", true); t.position = Vector2(40, 16); add_child(t)
+	var cap = GameState.max_deploy()
+	var t = UIKit.make_label("出战编队（最多%d人 · 厅堂 Lv%d）" % [cap, GameState.building_level("hall")], true); t.position = Vector2(40, 16); add_child(t)
 	var tip = UIKit.make_dim_label("勾选出战者。棋盘上会以立绘棋子示人——不是色块。")
 	tip.position = Vector2(40, 56); add_child(tip)
 	var vb := VBoxContainer.new(); vb.position = Vector2(40, 100); vb.add_theme_constant_override("separation", 8); add_child(vb)
@@ -13,7 +14,7 @@ func _ready() -> void:
 		var cid = c.id
 		b.toggled.connect(func(pressed):
 			if pressed:
-				if GameState.deploy_ids.size() >= 4 and cid not in GameState.deploy_ids:
+				if GameState.deploy_ids.size() >= GameState.max_deploy() and cid not in GameState.deploy_ids:
 					b.button_pressed = false
 					return
 				if cid not in GameState.deploy_ids:

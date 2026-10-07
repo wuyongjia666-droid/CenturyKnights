@@ -3,7 +3,12 @@ var _msg: Label
 func _ready() -> void:
 	UIKit.make_screen_bg(self)
 	var t = UIKit.make_label("陆桥商路（堡内市）", true); t.position = Vector2(40, 16); add_child(t)
-	var prices = UIKit.make_dim_label("买价：粮2 / 铁8 / 药6　　卖价：粮1 / 铁5 / 药4　·　市声里有人认旗。")
+	var bp = GameState.market_buy_prices()
+	var sp = GameState.market_sell_prices()
+	var prices = UIKit.make_dim_label("买：粮%d / 铁%d / 药%d　　卖：粮%d / 铁%d / 药%d　·　市集 Lv%d%s" % [
+		bp.food, bp.iron, bp.herb, sp.food, sp.iron, sp.herb, GameState.building_level("market"),
+		"（商路）" if bool(GameState.house_mods.get("trade_route", false)) else ""
+	])
 	prices.position = Vector2(40, 56); add_child(prices)
 	var grid := GridContainer.new(); grid.columns = 2; grid.position = Vector2(40, 110)
 	grid.add_theme_constant_override("h_separation", 12); grid.add_theme_constant_override("v_separation", 10); add_child(grid)
@@ -22,5 +27,7 @@ func _ready() -> void:
 		)
 		grid.add_child(sell)
 	_msg = UIKit.make_label(""); _msg.position = Vector2(40, 300); add_child(_msg)
-	var back = UIKit.make_button(Locale.t("btn_back")); back.position = Vector2(40, 380)
+	var tip = UIKit.make_dim_label("工事升市集、委任守桥首通、联姻商契都会改价。")
+	tip.position = Vector2(40, 340); add_child(tip)
+	var back = UIKit.make_button(Locale.t("btn_back")); back.position = Vector2(40, 400)
 	back.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")); add_child(back)

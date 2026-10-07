@@ -100,6 +100,17 @@ func birth_child(mother: CKCharacter) -> CKCharacter:
 	for k in CKCharacter.STAT_KEYS:
 		var mid = int((child.apt_min[k] + child.apt_max[k]) / 2)
 		var mut = rng.randi_range(-2, 2)
+		if bool(GameState.house_mods.get("vow_prayer", false)) and k == "wil":
+			mut += 1
+			child.apt_max[k] = mini(20, int(child.apt_max[k]) + 1)
+		# 早教路径偏向（未授旗前可选）
+		var path = str(GameState.lineage_path.get(child.id, ""))
+		if path == "martial" and k in ["str", "vit"]:
+			mut += 1
+		elif path == "scholar" and k in ["wil", "per"]:
+			mut += 1
+		elif path == "merchant" and k in ["agi", "skl"]:
+			mut += 1
 		child.stats[k] = clampi(mid + mut, child.apt_min[k], child.apt_max[k])
 	child.traits = _inherit_traits(father, mother, rng)
 	# 粮饷不足负面

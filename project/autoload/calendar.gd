@@ -80,11 +80,29 @@ func _apply_month() -> Array:
 				GameState.chapter0_flags["child_born"] = true
 		if c.birthday_month == month:
 			c.age += 1
-			evs.append({"type": "birthday", "text": "%s 现年 %d 岁" % [c.name, c.age], "cid": c.id})
+			var btxt = "%s 现年 %d 岁" % [c.name, c.age]
+			if c.is_child and c.alive:
+				var path = str(GameState.lineage_path.get(c.id, ""))
+				if path != "":
+					var keys = {"martial": ["str", "vit"], "scholar": ["wil", "per"], "merchant": ["agi", "skl"]}.get(path, [])
+					if keys:
+						var k2 = keys[GameState.rng.randi() % keys.size()]
+						c.stats[k2] = mini(int(c.apt_max.get(k2, 20)), int(c.stats.get(k2, 8)) + 1)
+						btxt += "（早教·%s +1）" % Locale.t("stat_" + k2)
+			evs.append({"type": "birthday", "text": btxt, "cid": c.id})
 			if c.age >= RETIRE_AGE and not c.retired and c.in_roster:
 				c.retired = true
 				c.in_roster = false
-				evs.append({"type": "retire", "text": "%s 退役，可任顾问" % c.name, "cid": c.id})
+				# 顾问：取其最高六维写入家族顾问加成
+				var best_k = "wil"
+				var best_v = -1
+				for k in CKCharacter.STAT_KEYS:
+					if int(c.stats.get(k, 0)) > best_v:
+						best_v = int(c.stats.get(k, 0))
+						best_k = k
+				GameState.advisor_bonus[best_k] = maxi(int(GameState.advisor_bonus.get(best_k, 0)), 1)
+				GameState.add_lineage_event("%s 退役任顾问：偏向 %s" % [c.name, Locale.t("stat_" + best_k)])
+				evs.append({"type": "retire", "text": "%s 退役任顾问（%s 偏向）" % [c.name, Locale.t("stat_" + best_k)], "cid": c.id})
 			if c.age >= DEATH_AGE:
 				c.alive = false
 				c.in_roster = false

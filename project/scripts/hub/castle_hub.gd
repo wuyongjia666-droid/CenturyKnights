@@ -74,6 +74,7 @@ func _build() -> void:
 		[Locale.t("btn_quests"), "陆桥委托", "res://scenes/hub/quests.tscn"],
 		[Locale.t("btn_train"), "六维与转职", "res://scenes/hub/train.tscn"],
 		[Locale.t("btn_forge"), "灰刃与铁火", "res://scenes/hub/forge.tscn"],
+		["工事", "厅堂校场市集", "res://scenes/hub/works.tscn"],
 		[Locale.t("btn_shrine"), "祈愈与丰收", "res://scenes/hub/shrine.tscn"],
 		[Locale.t("btn_lineage"), "血胤与容貌", "res://scenes/hub/lineage_view.tscn"],
 		[Locale.t("btn_marriage"), "春令与期望", "res://scenes/hub/marriage.tscn"],
@@ -94,7 +95,7 @@ func _build() -> void:
 	flavor.position = Vector2(40, 520)
 	flavor.custom_minimum_size = Vector2(900, 70)
 	add_child(flavor)
-	var fl = UIKit.make_dim_label("大厅风里有铁锈与灯油味。传家宝槽仍封着——完整版才会醒。眼下，旗下每一扇门都是命。")
+	var fl = UIKit.make_dim_label("大厅风里有铁锈与灯油味。工事可升厅堂/校场/市集/工坊/祠堂；委任首通与联姻誓约会写入永久家族旁注。")
 	fl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	fl.custom_minimum_size = Vector2(860, 50)
 	flavor.add_child(fl)

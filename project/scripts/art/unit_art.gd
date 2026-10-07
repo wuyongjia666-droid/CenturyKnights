@@ -429,16 +429,37 @@ static func _proc_portrait(c: CKCharacter, size: int) -> Texture2D:
 	_cache[ck] = tex
 	return tex
 
+static func role_color(job_id: String) -> Color:
+	var role = BattleRules.job_role(job_id) if Engine.get_main_loop() else "skirmisher"
+	return {
+		"tank": Color(0.55, 0.58, 0.72),
+		"cavalry": Color(0.75, 0.55, 0.25),
+		"ranger": Color(0.35, 0.65, 0.40),
+		"mage": Color(0.55, 0.40, 0.75),
+		"skirmisher": Color(0.70, 0.45, 0.35),
+	}.get(role, Color(0.6, 0.6, 0.6))
+
 static func _proc_token(c: CKCharacter, team: String, size: int, done: bool) -> Texture2D:
-	var ck = "pt|" + str(c.id) + "|" + team + "|" + str(size) + "|" + str(done)
+	var role = BattleRules.job_role(c.job_id)
+	var ck = "pt|" + str(c.id) + "|" + team + "|" + role + "|" + str(size) + "|" + str(done)
 	if _cache.has(ck): return _cache[ck]
 	var img := Image.create(size, size, false, Image.FORMAT_RGBA8)
 	img.fill(Color(0, 0, 0, 0))
 	var s = float(size)
 	var col = crest_color() if team == "player" else Color(0.7, 0.25, 0.22)
 	if done: col = col.darkened(0.35)
-	_fill_ellipse(img, s * 0.5, s * 0.5, s * 0.4, s * 0.4, col)
+	# 兵种色外环，减弱「人人一色」的程序感
+	var ring = role_color(c.job_id)
+	_fill_ellipse(img, s * 0.5, s * 0.5, s * 0.46, s * 0.46, ring)
+	_fill_ellipse(img, s * 0.5, s * 0.5, s * 0.38, s * 0.38, col)
 	_fill_ellipse(img, s * 0.5, s * 0.38, s * 0.16, s * 0.18, Color(0.85, 0.72, 0.6))
+	# 角色小徽：坦克方、远程三角感用色块区分
+	if role == "tank":
+		_fill_rect(img, Rect2i(int(s * 0.35), int(s * 0.62), int(s * 0.3), int(s * 0.12)), ring.lightened(0.15))
+	elif role == "ranger":
+		_fill_rect(img, Rect2i(int(s * 0.46), int(s * 0.18), int(s * 0.08), int(s * 0.22)), ring.lightened(0.2))
+	elif role == "mage":
+		_fill_ellipse(img, s * 0.5, s * 0.72, s * 0.08, s * 0.08, ring.lightened(0.25))
 	var tex := ImageTexture.create_from_image(img)
 	_cache[ck] = tex
 	return tex

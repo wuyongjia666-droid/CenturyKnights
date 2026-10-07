@@ -176,7 +176,7 @@ func _show_vow() -> void:
 			_vow_btn("确认期望，继续", func(): _vow_step = 1; _show_vow())
 			_vow_btn("取消", func(): _vow_panel.visible = false)
 		1:
-			_vow_body.text = "[b]誓约·第二步 · 双姓共席 · 嫁妆偏向[/b]\n\n「灰旗不弃印，联姻不弃家。」\n请选择嫁妆旁注：旗饰（声望）/ 祷文（战技点）/ 商契（银）"
+			_vow_body.text = "[b]誓约·第二步 · 双姓共席 · 嫁妆偏向[/b]\n\n「灰旗不弃印，联姻不弃家。」\n请选择嫁妆旁注（永久家族修正）：\n旗饰＝丰收永续声望　祷文＝嗣子意志资质　商契＝丰收永续加银"
 			_vow_btn("旗饰", func(): _vow_gift = "banner"; _vow_step = 2; _show_vow())
 			_vow_btn("祷文", func(): _vow_gift = "prayer"; _vow_step = 2; _show_vow())
 			_vow_btn("商契", func(): _vow_gift = "trade"; _vow_step = 2; _show_vow())
@@ -204,13 +204,16 @@ func _finish_marry() -> void:
 		match _vow_gift:
 			"banner":
 				GameState.add_rep("ashland", 4)
-				GameState.add_lineage_event("嫁妆旁注：旗饰")
+				GameState.house_mods["vow_banner"] = true
+				GameState.add_lineage_event("嫁妆旁注：旗饰——丰收月永续声望")
 			"prayer":
 				GameState.add_skill_point(1)
-				GameState.add_lineage_event("嫁妆旁注：祷文")
+				GameState.house_mods["vow_prayer"] = true
+				GameState.add_lineage_event("嫁妆旁注：祷文——嗣子意志资质+1")
 			"trade":
 				GameState.silver += 30
-				GameState.add_lineage_event("嫁妆旁注：商契")
+				GameState.house_mods["vow_trade"] = true
+				GameState.add_lineage_event("嫁妆旁注：商契——丰收永续加银")
 		GameState.add_rep("ashland", 2)
 		Sfx.confirm()
 		Sfx.lineage_chime()

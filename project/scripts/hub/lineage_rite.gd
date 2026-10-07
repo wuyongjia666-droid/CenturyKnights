@@ -16,7 +16,7 @@ func _ready() -> void:
 	var t = UIKit.make_label("族谱 · 授旗礼（分支）", true)
 	t.position = Vector2(40, 16)
 	add_child(t)
-	var tip = UIKit.make_dim_label("先择道路（偏武/偏文/偏商），再走宣名→按印→入册。选择写入族谱纪事与回响旁注。")
+	var tip = UIKit.make_dim_label("未成年可早教择路（生日加维）；成年授旗：择路→宣名→按印→入册。选择有真实机械后果。")
 	tip.position = Vector2(40, 56)
 	add_child(tip)
 
@@ -69,26 +69,55 @@ func _refresh_list() -> void:
 		var ready = ch.age >= Calendar.ADULT_AGE and not ch.in_roster
 		var path = str(GameState.lineage_path.get(ch.id, ""))
 		var path_tag = {"martial": "武", "scholar": "文", "merchant": "商"}.get(path, "")
-		var tag = "可授旗" if ready else ("已入队" if ch.in_roster else "%d岁" % ch.age)
+		var tag = "可授旗" if ready else ("已入队" if ch.in_roster else "%d岁·可早教" % ch.age)
 		if path_tag != "":
 			tag += "·" + path_tag
 		var b = UIKit.make_button("%s　%s" % [ch.name, tag], 320)
-		b.disabled = not ready
+		b.disabled = ch.in_roster
 		var captured = ch
 		b.pressed.connect(func(): _select(captured))
 		_list.add_child(b)
 		any = true
 	if not any:
 		_list.add_child(UIKit.empty_state("尚无子嗣。联姻后岁月推进可诞育。"))
-	_body.text = "点选成年未入队子嗣。\n授旗前须选择偏武 / 偏文 / 偏商——影响初始战技倾向与回响旁注。"
+	_body.text = "点选子嗣：未成年可「早教择路」（生日加属性）；成年未入队可完成授旗三步。"
 	for c in _actions.get_children():
 		c.queue_free()
 
 func _select(c: CKCharacter) -> void:
 	_selected = c
 	_path = str(GameState.lineage_path.get(c.id, ""))
+	if c.age < Calendar.ADULT_AGE:
+		_step = 0
+		_show_early_tutor()
+		return
 	_step = 0 if _path == "" else 1
 	_show_step()
+
+func _show_early_tutor() -> void:
+	for c in _actions.get_children():
+		c.queue_free()
+	if _selected == null:
+		return
+	var cur = {"martial": "偏武", "scholar": "偏文", "merchant": "偏商"}.get(_path, "未定")
+	_body.text = "[b]早教·择路[/b]\n\n%s 尚年幼（%d岁）。\n今日择路将写入族谱：之后每个生日按道路倾向加维。\n当前：【%s】\n\n[color=#c9a227]偏武[/color] 力/体　[color=#8ecae6]偏文[/color] 意/感　[color=#e9c46a]偏商[/color] 敏/技" % [_selected.name, _selected.age, cur]
+	_add("早教·偏武", func(): _set_early("martial"))
+	_add("早教·偏文", func(): _set_early("scholar"))
+	_add("早教·偏商", func(): _set_early("merchant"))
+
+func _set_early(path: String) -> void:
+	_path = path
+	GameState.lineage_path[_selected.id] = path
+	var pn = {"martial": "偏武", "scholar": "偏文", "merchant": "偏商"}[path]
+	GameState.add_lineage_event("早教：%s → %s（生日加维）" % [_selected.name, pn])
+	# 立刻小幅加维，让选择有即时反馈
+	var keys = {"martial": ["str", "vit"], "scholar": ["wil", "per"], "merchant": ["agi", "skl"]}[path]
+	var k = keys[GameState.rng.randi() % keys.size()]
+	_selected.stats[k] = mini(int(_selected.apt_max.get(k, 20)), int(_selected.stats.get(k, 8)) + 1)
+	_msg.text = "早教已定：%s。%s 立刻 +1，此后生日持续偏向。" % [pn, Locale.t("stat_" + k)]
+	Sfx.lineage_chime()
+	GameState.save_game()
+	_refresh_list()
 
 func _show_step() -> void:
 	for c in _actions.get_children():

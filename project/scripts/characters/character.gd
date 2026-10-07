@@ -54,7 +54,12 @@ const RANK_NAMES := {"knight": "骑士", "baron": "男爵", "count": "伯爵", "
 func derived_atk() -> int:
 	var job = _job()
 	var base = int(job.get("base_atk", 5))
-	return base + int(stats.get("str", 8) / 2) + (2 if weapon_id != "" else 0)
+	var wbonus = 0
+	if weapon_id == "ash_blade_fine":
+		wbonus = 3
+	elif weapon_id != "":
+		wbonus = 2
+	return base + int(stats.get("str", 8) / 2) + wbonus
 
 func derived_def() -> int:
 	var job = _job()

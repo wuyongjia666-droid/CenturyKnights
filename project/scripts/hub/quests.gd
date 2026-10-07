@@ -28,7 +28,8 @@ func _ready() -> void:
 		card.add_child(cv)
 		var stars = "★".repeat(int(q.stars))
 		var battle_tag = "〔战棋〕" if q.get("battle") else "〔自动〕"
-		var title = UIKit.make_label("%s　%s　%s" % [q.name, stars, battle_tag])
+		var first_tag = "〔已首通〕" if bool(GameState.quest_done.get(q.id, false)) else "〔首通有奖〕"
+		var title = UIKit.make_label("%s　%s　%s　%s" % [q.name, stars, battle_tag, first_tag])
 		title.add_theme_color_override("font_color", UIKit.ACCENT if q.get("battle") else UIKit.TEXT)
 		cv.add_child(title)
 		cv.add_child(UIKit.make_dim_label(str(q.desc)))
@@ -54,5 +55,6 @@ func _accept(qid: String) -> void:
 		GameState.set_meta("battle_map", mid)
 		get_tree().change_scene_to_file("res://scenes/battle/battle.tscn")
 	else:
-		_msg.text = "完成：%s —— %s" % [r.quest.name, str(r.quest.get("desc", ""))]
+		var extra = str(r.get("first_clear", ""))
+		_msg.text = "完成：%s —— %s%s" % [r.quest.name, str(r.quest.get("desc", "")), ("\n" + extra) if extra else ""]
 		GameState.save_game()
