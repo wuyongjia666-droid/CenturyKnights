@@ -359,10 +359,19 @@ func _deploy() -> void:
 	var is_heir_clash = bool(m.get("heir_clash", false)) or map_id == "ch_heir_clash"
 	if is_heir_clash and heir_a_id != "":
 		ids = [heir_a_id]
-		# 可带一名团长或花名册支援
+		# 团长 + 花名册支援（最多凑满 player_spots）
 		var leader = GameState.get_leader()
-		if leader and leader.id != heir_a_id:
+		if leader and leader.id != heir_a_id and leader.id != heir_b_id:
 			ids.append(leader.id)
+		for c in GameState.roster():
+			if c.id == heir_a_id or c.id == heir_b_id:
+				continue
+			if leader and c.id == leader.id:
+				continue
+			if c.id not in ids:
+				ids.append(c.id)
+			if ids.size() >= 4:
+				break
 	var spots: Array = []
 	for s in m.get("player_spots", [[1,4],[2,5],[0,5],[3,4]]):
 		spots.append(Vector2i(int(s[0]), int(s[1])))
@@ -401,11 +410,14 @@ func _deploy() -> void:
 			hb.hp = hb.max_hp
 			units.append({"char": hb, "pos": enemy_spots[ei], "team": "enemy", "done": false})
 			ei += 1
-			# 一名弱敌支援对阵
-			if ei < enemy_spots.size():
-				var e2 = CharacterFactory.make_enemy("bandit_weak", rng)
-				units.append({"char": e2, "pos": enemy_spots[ei], "team": "enemy", "done": false})
-				ei += 1
+		# 敌方支援：2名精锐+1弱敌，填满敌点
+		var support_tmpls = ["bandit", "bandit_archer", "bandit_weak"]
+		var si = 0
+		while ei < enemy_spots.size() and si < support_tmpls.size():
+			var e2 = CharacterFactory.make_enemy(str(support_tmpls[si]), rng)
+			units.append({"char": e2, "pos": enemy_spots[ei], "team": "enemy", "done": false})
+			ei += 1
+			si += 1
 	else:
 		for ti in templates.size():
 			if ei >= enemy_spots.size():
@@ -1019,6 +1031,18 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch17_keep_done")
 	elif map_id == "ch18_gate":
 		GameState.set_flag("ch18_gate_done")
+	elif map_id == "ch19_shore":
+		GameState.set_flag("ch19_shore_done")
+	elif map_id == "ch19_reef":
+		GameState.set_flag("ch19_reef_done")
+	elif map_id == "ch19_isle":
+		GameState.set_flag("ch19_isle_done")
+	elif map_id == "ch20_wall":
+		GameState.set_flag("ch20_wall_done")
+	elif map_id == "ch20_spire":
+		GameState.set_flag("ch20_spire_done")
+	elif map_id == "ch21_finale":
+		GameState.set_flag("ch21_finale_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")

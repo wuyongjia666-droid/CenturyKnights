@@ -33,6 +33,8 @@ var data_chapter16: Dictionary = {}
 var data_chapter17: Dictionary = {}
 var data_chapter18: Dictionary = {}
 var data_chapter19: Dictionary = {}
+var data_chapter20: Dictionary = {}
+var data_chapter21: Dictionary = {}
 var data_rivals: Dictionary = {}
 var rival_stances: Dictionary = {}  # house_id -> stance override
 var rival_deals: Dictionary = {}  # house_id -> {turns_left, kind, reward}
@@ -55,6 +57,9 @@ var chapter15_beat: String = "15.0"
 var chapter16_beat: String = "16.0"
 var chapter17_beat: String = "17.0"
 var chapter18_beat: String = "18.0"
+var chapter19_beat: String = "19.0"
+var chapter20_beat: String = "20.0"
+var chapter21_beat: String = "21.0"
 var skill_points: int = 0
 
 # 游戏状态
@@ -128,6 +133,8 @@ func _load_data() -> void:
 	data_chapter17 = _read_json("res://data/chapter17.json")
 	data_chapter18 = _read_json("res://data/chapter18.json")
 	data_chapter19 = _read_json("res://data/chapter19.json")
+	data_chapter20 = _read_json("res://data/chapter20.json")
+	data_chapter21 = _read_json("res://data/chapter21.json")
 	data_rivals = _read_json("res://data/rival_houses.json")
 	data_skills = _read_json("res://data/skills.json")
 
@@ -231,6 +238,9 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	chapter16_beat = "16.0"
 	chapter17_beat = "17.0"
 	chapter18_beat = "18.0"
+	chapter19_beat = "19.0"
+	chapter20_beat = "20.0"
+	chapter21_beat = "21.0"
 	rival_stances = {"shuoying": "hostile", "qinghe": "wary", "lantern": "neutral"}
 	rival_deals.clear()
 	skill_points = 1
@@ -703,6 +713,30 @@ func tick_rival_deals() -> Array:
 		var d: Dictionary = rival_deals[hid]
 		var left = int(d.get("turns_left", 0)) - 1
 		d["turns_left"] = left
+		# mid-contract events while still running
+		if left > 0:
+			var kind = str(d.get("kind", ""))
+			var roll = int(Calendar.month) + hid.length() + left
+			if roll % 3 == 0:
+				match kind:
+					"trade":
+						silver += 8
+						evs.append("契约中期·商路红利：银+8（%s）" % hid)
+					"intel":
+						add_rep("ashland", 1)
+						evs.append("契约中期·情报碎片：声望微升（%s）" % hid)
+					"truce":
+						evs.append("契约中期·停战巡哨：边境暂安（%s）" % hid)
+				add_lineage_event(evs[-1])
+			elif roll % 5 == 0:
+				# friction event — optional small cost or stance warn
+				if kind == "trade" and silver >= 5:
+					silver -= 5
+					evs.append("契约中期·商路摩擦：银-5（%s，可改约/毁约）" % hid)
+					add_lineage_event(evs[-1])
+				elif kind == "truce":
+					evs.append("契约中期·停战生隙：建议审视改约（%s）" % hid)
+					add_lineage_event(evs[-1])
 		if left <= 0:
 			var kind = str(d.get("kind", ""))
 			match kind:
@@ -786,6 +820,9 @@ func save_game() -> bool:
 		"chapter16_beat": chapter16_beat,
 		"chapter17_beat": chapter17_beat,
 		"chapter18_beat": chapter18_beat,
+		"chapter19_beat": chapter19_beat,
+		"chapter20_beat": chapter20_beat,
+		"chapter21_beat": chapter21_beat,
 		"rival_stances": rival_stances.duplicate(true),
 		"rival_deals": rival_deals.duplicate(true),
 		"skill_points": skill_points,
@@ -853,6 +890,9 @@ func load_game() -> bool:
 	chapter16_beat = str(data.get("chapter16_beat", "16.0"))
 	chapter17_beat = str(data.get("chapter17_beat", "17.0"))
 	chapter18_beat = str(data.get("chapter18_beat", "18.0"))
+	chapter19_beat = str(data.get("chapter19_beat", "19.0"))
+	chapter20_beat = str(data.get("chapter20_beat", "20.0"))
+	chapter21_beat = str(data.get("chapter21_beat", "21.0"))
 	rival_stances = data.get("rival_stances", {"shuoying": "hostile", "qinghe": "wary", "lantern": "neutral"}).duplicate(true)
 	rival_deals = data.get("rival_deals", {}).duplicate(true)
 	skill_points = int(data.get("skill_points", 0))
