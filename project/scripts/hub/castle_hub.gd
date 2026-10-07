@@ -115,6 +115,7 @@ func _build() -> void:
 		UIFX.wire_button(b)
 		b.pressed.connect(func():
 			UIFX.press_feedback(b)
+			UIFX.select_pulse(b)
 			Sfx.click()
 			get_tree().change_scene_to_file(path)
 		)

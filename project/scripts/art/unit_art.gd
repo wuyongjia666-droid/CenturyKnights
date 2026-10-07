@@ -476,14 +476,30 @@ static func _token_key(c: CKCharacter, team: String, frame: int) -> String:
 		return "res://assets/art/tokens/escort_archer_enemy_f%d.png" % frame
 	if str(c.name).find("劫镖") >= 0 or str(c.name).find("劫道") >= 0:
 		return "res://assets/art/tokens/escort_raider_enemy_f%d.png" % frame
-	# v8.1 contemporary role tokens after named bosses
+	# v8.2 per-job tokens → role tokens (contemporary fantasy)
+	var _job = str(c.job_id)
+	var _side = "enemy" if (team == "enemy" or c.faction == "enemy") else "ally"
+	if c.is_leader and _side == "ally":
+		var _lead = "res://assets/art/tokens/v8_job_squire_ally.png"
+		if ResourceLoader.exists("res://assets/art/tokens/v8_job_leader_ally.png"):
+			_lead = "res://assets/art/tokens/v8_job_leader_ally.png"
+		elif ResourceLoader.exists("res://assets/art/tokens/v8_role_leader.png"):
+			_lead = "res://assets/art/tokens/v8_role_leader.png"
+		if ResourceLoader.exists(_lead):
+			return _lead
+	var _jp = "res://assets/art/tokens/v8_job_%s_%s.png" % [_job, _side]
+	if ResourceLoader.exists(_jp):
+		return _jp
 	var _v8role = BattleRules.job_role(c.job_id) if Engine.get_main_loop() else "skirmisher"
 	if c.is_leader:
 		_v8role = "leader"
-	if team == "enemy" or c.faction == "enemy":
+	if _side == "enemy":
 		var _ep = "res://assets/art/tokens/hire_%s_enemy_f%d.png" % [_v8role, frame % 4]
 		if ResourceLoader.exists(_ep):
 			return _ep
+		var _eb = "res://assets/art/tokens/v82_enemy_boss.png"
+		if ResourceLoader.exists(_eb) and (str(c.name).find("匪首") >= 0 or str(c.name).find("头目") >= 0):
+			return _eb
 	else:
 		var _v8p = "res://assets/art/tokens/v8_role_%s.png" % _v8role
 		if ResourceLoader.exists(_v8p):

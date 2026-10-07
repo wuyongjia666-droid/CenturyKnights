@@ -1,0 +1,152 @@
+[
+  {
+    "label": "v82_job_squire_ally",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. top-down-readable unit token, ally faction, junior cavalry scout on light mount suggestion, agile stance, mint-crystal ally rim",
+    "width": 160,
+    "height": 160
+  },
+  {
+    "label": "v82_job_squire_enemy",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. top-down-readable unit token, enemy faction coral-rose rim, hostile tint, junior cavalry scout on light mount suggestion, agile stance, coral-crystal ally rim",
+    "width": 160,
+    "height": 160
+  },
+  {
+    "label": "v82_job_light_inf_ally",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. top-down-readable unit token, ally faction, light skirmisher with short blade, lean silhouette, mint rim",
+    "width": 160,
+    "height": 160
+  },
+  {
+    "label": "v82_job_light_inf_enemy",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. top-down-readable unit token, enemy faction coral-rose rim, hostile tint, light skirmisher with short blade, lean silhouette, coral rim",
+    "width": 160,
+    "height": 160
+  },
+  {
+    "label": "v82_job_heavy_inf_ally",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. top-down-readable unit token, ally faction, heavy infantry with tower shield bulk, solid stance, mint rim",
+    "width": 160,
+    "height": 160
+  },
+  {
+    "label": "v82_job_heavy_inf_enemy",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. top-down-readable unit token, enemy faction coral-rose rim, hostile tint, heavy infantry with tower shield bulk, solid stance, coral rim",
+    "width": 160,
+    "height": 160
+  },
+  {
+    "label": "v82_job_hunter_ally",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. top-down-readable unit token, ally faction, hunter with longbow drawn silhouette, keen posture, mint rim",
+    "width": 160,
+    "height": 160
+  },
+  {
+    "label": "v82_job_hunter_enemy",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. top-down-readable unit token, enemy faction coral-rose rim, hostile tint, hunter with longbow drawn silhouette, keen posture, coral rim",
+    "width": 160,
+    "height": 160
+  },
+  {
+    "label": "v82_job_apprentice_ally",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. top-down-readable unit token, ally faction, apprentice mage with short staff and soft arcane mote, frost rim",
+    "width": 160,
+    "height": 160
+  },
+  {
+    "label": "v82_job_apprentice_enemy",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. top-down-readable unit token, enemy faction coral-rose rim, hostile tint, apprentice mage with short staff and soft arcane mote, coral rim",
+    "width": 160,
+    "height": 160
+  },
+  {
+    "label": "v82_job_light_cavalry_ally",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. top-down-readable unit token, ally faction, light cavalry charge silhouette, horse+rider clear, mint rim",
+    "width": 160,
+    "height": 160
+  },
+  {
+    "label": "v82_job_light_cavalry_enemy",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. top-down-readable unit token, enemy faction coral-rose rim, hostile tint, light cavalry charge silhouette, horse+rider clear, coral rim",
+    "width": 160,
+    "height": 160
+  },
+  {
+    "label": "v82_job_warrior_ally",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. top-down-readable unit token, ally faction, elite warrior greatblade, powerful stance, mint-ember rim",
+    "width": 160,
+    "height": 160
+  },
+  {
+    "label": "v82_job_warrior_enemy",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. top-down-readable unit token, enemy faction coral-rose rim, hostile tint, elite warrior greatblade, powerful stance, coral-ember rim",
+    "width": 160,
+    "height": 160
+  },
+  {
+    "label": "v82_job_archer_ally",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. top-down-readable unit token, ally faction, master archer with longbow, sharp profile, mint rim",
+    "width": 160,
+    "height": 160
+  },
+  {
+    "label": "v82_job_archer_enemy",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. top-down-readable unit token, enemy faction coral-rose rim, hostile tint, master archer with longbow, sharp profile, coral rim",
+    "width": 160,
+    "height": 160
+  },
+  {
+    "label": "v82_job_priest_ally",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. top-down-readable unit token, ally faction, priest with ceremonial staff and mint heal aura mote, frost-mint rim",
+    "width": 160,
+    "height": 160
+  },
+  {
+    "label": "v82_job_priest_enemy",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. top-down-readable unit token, enemy faction coral-rose rim, hostile tint, priest with ceremonial staff and coral heal aura mote, frost-coral rim",
+    "width": 160,
+    "height": 160
+  },
+  {
+    "label": "v82_enemy_boss",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. top-down enemy unit token, elite boss commander crest mark, larger presence, coral-gold rim",
+    "width": 160,
+    "height": 160
+  },
+  {
+    "label": "v82_enemy_raider",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. top-down enemy unit token, bandit raider irregular silhouette, coral rim",
+    "width": 160,
+    "height": 160
+  },
+  {
+    "label": "v82_enemy_mage_foe",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. top-down enemy unit token, enemy dark mage, coral-violet rim",
+    "width": 160,
+    "height": 160
+  },
+  {
+    "label": "v82_ui_focus_ring",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. UI focus ring asset 128x128, soft crystal frost ring only, transparent center, no text",
+    "width": 128,
+    "height": 128
+  },
+  {
+    "label": "v82_ui_nav_selected",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. UI nav selected pill 220x56, frosted matte with crystal left bar, empty, no text",
+    "width": 220,
+    "height": 56
+  },
+  {
+    "label": "v82_fx_select_pulse_sheet",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. VFX sprite sheet 6 frames 768x128, soft crystal select pulse ring, transparent bg",
+    "width": 768,
+    "height": 128
+  },
+  {
+    "label": "v82_fx_heal_priest_sheet",
+    "prompt": "2026 cutting-edge global contemporary fantasy SRPG, AAA tactical unit icon, luminous ink void background, crystal-frost language, ultra readable silhouette at 64px, soft volumetric rim light, NO text, NO watermark, NO medieval parchment/gothic cliché, NO photo. VFX sprite sheet 6 frames 768x128, mint priest heal bloom, transparent bg",
+    "width": 768,
+    "height": 128
+  }
+]

@@ -261,6 +261,17 @@ static func focus_ring(node: Control, col: Color = Color(1.15, 0.95, 0.55), dur:
 	flash_modulate(node, col, dur)
 	hover_lift(node, 0.02)
 
+static func select_pulse(node: Control, dur: float = 0.55) -> void:
+	## 选中脉动（战棋选人 / 列表焦点）
+	if node == null or reduced(): return
+	dur = _dur(dur)
+	var base := node.scale
+	node.pivot_offset = node.size * 0.5
+	var tw := node.create_tween()
+	tw.tween_property(node, "scale", base * 1.04, dur * 0.45).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tw.tween_property(node, "scale", base, dur * 0.55).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	flash_modulate(node, Color(1.08, 1.14, 1.22), dur * 0.5)
+
 static func soft_flash(node: CanvasItem, col: Color = Color(1.18, 1.1, 0.92), dur: float = 0.2) -> void:
 	if node == null: return
 	flash_modulate(node, col, dur)
