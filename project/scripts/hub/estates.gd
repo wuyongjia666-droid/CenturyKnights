@@ -1,23 +1,35 @@
 extends Control
-## 属地庄园：单堡多属地经营（委任首通解锁，可升级加深月结）
+## 属地庄园：单堡多属地 · 庄头委任 · 产出预览 · 劫掠提示（美术升档图标）
 
 var _msg: Label
 var _list: VBoxContainer
+var _picker_hid: String = ""
+var _picker: Panel
 
 func _ready() -> void:
 	UIKit.make_screen_bg(self)
 	UIFX.fade_in(self, 0.28)
 	Music.play_castle()
+	# 顶栏美术条
+	var strip = TextureRect.new()
+	strip.texture = load("res://assets/art/ui/hub_banner_strip.png")
+	strip.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	strip.stretch_mode = TextureRect.STRETCH_SCALE
+	strip.position = Vector2(0, 0)
+	strip.size = Vector2(1280, 48)
+	strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(strip)
+
 	var t = UIKit.make_label("属地庄园", true)
 	t.position = Vector2(40, 16)
 	add_child(t)
-	var tip = UIKit.make_dim_label("陆桥四野：苇原渡、石垒坡、雾谷药田、断潮渡哨。完成对应委任首通即开垦；升级加深月结粮银。堡志「两岸/四野/深耕」与此挂钩。")
+	var tip = UIKit.make_dim_label("陆桥四野：苇原渡、石垒坡、雾谷药田、断潮渡哨。委任庄头加深月结并抗劫掠；升级加深产出。堡志「庄头遍野」与此挂钩。")
 	tip.position = Vector2(40, 56)
 	tip.custom_minimum_size = Vector2(1180, 40)
 	tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(tip)
 
-	var sum = UIKit.make_label("已开垦 %d / 4　总等级 %d" % [GameState.unlocked_holdings_count(), GameState.total_holding_levels()])
+	var sum = UIKit.make_label(_sum_text())
 	sum.position = Vector2(40, 100)
 	sum.add_theme_color_override("font_color", UIKit.ACCENT)
 	sum.name = "Sum"
@@ -28,12 +40,13 @@ func _ready() -> void:
 	scroll.custom_minimum_size = Vector2(1200, 460)
 	add_child(scroll)
 	_list = VBoxContainer.new()
-	_list.add_theme_constant_override("separation", 10)
+	_list.add_theme_constant_override("separation", 12)
 	scroll.add_child(_list)
 	_rebuild()
 
 	_msg = UIKit.make_label("")
 	_msg.position = Vector2(40, 620)
+	_msg.custom_minimum_size = Vector2(1000, 30)
 	add_child(_msg)
 	var back = UIKit.make_button(Locale.t("btn_back"), 120)
 	back.position = Vector2(40, 660)
@@ -43,6 +56,14 @@ func _ready() -> void:
 	works.position = Vector2(180, 660)
 	works.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/works.tscn"))
 	add_child(works)
+
+func _sum_text() -> String:
+	var stewards = 0
+	for hid in GameState.holdings.keys():
+		if str(GameState.holdings[hid].get("steward_id", "")) != "":
+			stewards += 1
+	return "已开垦 %d / 4　总等级 %d　庄头 %d" % [
+		GameState.unlocked_holdings_count(), GameState.total_holding_levels(), stewards]
 
 func _rebuild() -> void:
 	for c in _list.get_children():
@@ -57,36 +78,71 @@ func _rebuild() -> void:
 		var hb := HBoxContainer.new()
 		hb.add_theme_constant_override("separation", 14)
 		card.add_child(hb)
+
+		# 属地图标
+		var icon = TextureRect.new()
+		icon.custom_minimum_size = Vector2(72, 72)
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		var ip = "res://assets/art/estates/%s.png" % hid
+		if ResourceLoader.exists(ip):
+			icon.texture = load(ip)
+		hb.add_child(icon)
+
 		var vb := VBoxContainer.new()
-		vb.custom_minimum_size = Vector2(880, 0)
+		vb.custom_minimum_size = Vector2(720, 0)
 		hb.add_child(vb)
 		var title = UIKit.make_label("%s　%s" % [def.name, ("Lv%d / 3" % lv) if unlocked else "未开垦"])
 		title.add_theme_color_override("font_color", UIKit.ACCENT if unlocked else UIKit.DIM)
 		vb.add_child(title)
 		vb.add_child(UIKit.make_dim_label(str(def.desc)))
-		var y = "月结：粮+%d 银+%d" % [int(def.get("food", 0)) * maxi(lv, 1), int(def.get("silver", 0)) * maxi(lv, 1)]
-		if def.get("herb"):
-			y += " 药+%d" % (int(def.herb) * maxi(lv, 1))
-		if def.get("rep"):
-			y += " 声望"
-		if not unlocked:
-			y = "完成委任「%s」首通后开垦" % str(def.get("quest", ""))
-		vb.add_child(UIKit.make_dim_label(y))
-		if unlocked and lv < 3:
-			vb.add_child(UIKit.make_dim_label("升级需：%d银 / %d粮" % [40 * lv, 8 * lv]))
+
+		if unlocked:
+			var pv = GameState.holding_yield_preview(hid)
+			var y = "预览月结：粮+%d 银+%d" % [int(pv.food), int(pv.silver)]
+			if int(pv.get("herb", 0)) > 0:
+				y += " 药+%d" % int(pv.herb)
+			if int(pv.get("rep", 0)) > 0:
+				y += " 声望"
+			if bool(pv.get("steward", false)):
+				y += "　[庄头加产]"
+			else:
+				y += "　[无庄头·易遭劫掠]"
+			vb.add_child(UIKit.make_dim_label(y))
+			var st = GameState.steward_of(hid)
+			if st != null:
+				vb.add_child(UIKit.make_label("庄头：%s（%s）" % [st.name, st.job_id]))
+			else:
+				vb.add_child(UIKit.make_dim_label("庄头：空缺 — 委任后月结+1档并抗劫"))
+			if lv < 3:
+				vb.add_child(UIKit.make_dim_label("升级需：%d银 / %d粮" % [40 * lv, 8 * lv]))
+		else:
+			vb.add_child(UIKit.make_dim_label("完成委任「%s」首通后开垦" % str(def.get("quest", ""))))
+
 		var bid = hid
+		var btn_col := VBoxContainer.new()
+		btn_col.add_theme_constant_override("separation", 6)
+		hb.add_child(btn_col)
 		if unlocked and lv < 3:
 			var b = UIKit.make_accent_button("升级属地", 140)
 			b.pressed.connect(func(): _upgrade(bid))
-			hb.add_child(b)
+			btn_col.add_child(b)
 		elif unlocked:
 			var b2 = UIKit.make_button("满级", 100)
 			b2.disabled = true
-			hb.add_child(b2)
+			btn_col.add_child(b2)
 		else:
 			var b3 = UIKit.make_button("未开垦", 100)
 			b3.disabled = true
-			hb.add_child(b3)
+			btn_col.add_child(b3)
+		if unlocked:
+			var bs = UIKit.make_button("委任庄头", 140)
+			bs.pressed.connect(func(): _open_picker(bid))
+			btn_col.add_child(bs)
+			if GameState.steward_of(bid) != null:
+				var bc = UIKit.make_button("撤庄头", 100)
+				bc.pressed.connect(func(): _clear_steward(bid))
+				btn_col.add_child(bc)
 
 func _upgrade(hid: String) -> void:
 	var r = GameState.upgrade_holding(hid)
@@ -94,7 +150,80 @@ func _upgrade(hid: String) -> void:
 	if r.get("ok"):
 		Sfx.confirm()
 		GameState.save_game()
-		get_node("Sum").text = "已开垦 %d / 4　总等级 %d" % [GameState.unlocked_holdings_count(), GameState.total_holding_levels()]
+		get_node("Sum").text = _sum_text()
+		_rebuild()
+	else:
+		Sfx.miss()
+
+func _clear_steward(hid: String) -> void:
+	GameState.clear_steward(hid)
+	GameState.save_game()
+	_msg.text = "已撤下庄头"
+	Sfx.confirm()
+	get_node("Sum").text = _sum_text()
+	_rebuild()
+
+func _open_picker(hid: String) -> void:
+	_picker_hid = hid
+	if _picker != null and is_instance_valid(_picker):
+		_picker.queue_free()
+	_picker = UIKit.make_panel()
+	_picker.position = Vector2(320, 120)
+	_picker.custom_minimum_size = Vector2(640, 480)
+	add_child(_picker)
+	var title = UIKit.make_label("选择庄头 — %s" % GameState.HOLDING_DEFS[hid].name, true)
+	title.position = Vector2(16, 12)
+	_picker.add_child(title)
+	var tip = UIKit.make_dim_label("花名册存活成员；一人仅可管一处属地。")
+	tip.position = Vector2(16, 48)
+	_picker.add_child(tip)
+	var sc := ScrollContainer.new()
+	sc.position = Vector2(16, 80)
+	sc.custom_minimum_size = Vector2(600, 340)
+	_picker.add_child(sc)
+	var vb := VBoxContainer.new()
+	vb.add_theme_constant_override("separation", 6)
+	sc.add_child(vb)
+	for c in GameState.roster():
+		if c == null or not c.alive:
+			continue
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 10)
+		vb.add_child(row)
+		var tex = UnitArt.portrait(c, 48)
+		var tr = TextureRect.new()
+		tr.custom_minimum_size = Vector2(48, 48)
+		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		if tex != null:
+			tr.texture = tex
+		row.add_child(tr)
+		var lab = UIKit.make_label("%s　%s　Lv%d" % [c.name, c.job_id, c.level])
+		lab.custom_minimum_size = Vector2(320, 0)
+		row.add_child(lab)
+		var cid = c.id
+		var bb = UIKit.make_accent_button("委任", 80)
+		bb.pressed.connect(func(): _do_assign(cid))
+		row.add_child(bb)
+	var close = UIKit.make_button("关闭", 100)
+	close.position = Vector2(16, 430)
+	close.pressed.connect(func():
+		if _picker != null and is_instance_valid(_picker):
+			_picker.queue_free()
+			_picker = null
+	)
+	_picker.add_child(close)
+
+func _do_assign(cid: String) -> void:
+	var r = GameState.assign_steward(_picker_hid, cid)
+	_msg.text = str(r.get("msg", ""))
+	if r.get("ok"):
+		Sfx.confirm()
+		GameState.save_game()
+		get_node("Sum").text = _sum_text()
+		if _picker != null and is_instance_valid(_picker):
+			_picker.queue_free()
+			_picker = null
 		_rebuild()
 	else:
 		Sfx.miss()

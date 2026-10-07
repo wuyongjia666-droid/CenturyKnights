@@ -9,6 +9,26 @@ static var _token_phase: float = 0.0
 static func clear_cache() -> void:
 	_cache.clear()
 
+static func terrain_tile(tid: String) -> Texture2D:
+	var path = "res://assets/art/tiles/%s.png" % tid
+	var ck = "tile|" + tid
+	if _cache.has(ck):
+		return _cache[ck]
+	var tex = _try_load(path)
+	if tex != null:
+		_cache[ck] = tex
+	return tex
+
+static func draw_lock_ring(ci: CanvasItem, center: Vector2, radius: float = 22.0) -> void:
+	var frame = _banner_frame % 4
+	var path = "res://assets/art/fx/lock_%d.png" % frame
+	var tex = _try_load(path)
+	if tex != null:
+		var sz = Vector2(radius * 2.4, radius * 2.4)
+		ci.draw_texture_rect(tex, Rect2(center - sz * 0.5, sz), false)
+	else:
+		ci.draw_arc(center, radius, 0, TAU, 28, Color(1.0, 0.35, 0.28, 0.85), 2.0)
+
 static func tick(delta: float) -> void:
 	_token_phase += delta
 	if _token_phase >= 0.48:
@@ -202,6 +222,22 @@ static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
 	if tex2 != null:
 		_cache[ck] = tex2
 		return tex2
+	# 兵种板绘（美术升档）
+	var plate = {
+		"heavy_inf": "tank_plate", "warrior": "tank_plate",
+		"hunter": "ranger_plate", "archer": "ranger_plate",
+		"apprentice": "mage_plate", "priest": "mage_plate",
+		"squire": "leader_plate", "light_cavalry": "leader_plate",
+		"light_inf": "skirm_plate",
+	}.get(c.job_id, "")
+	if c.is_leader:
+		plate = "leader_plate"
+	if plate != "":
+		var pp = "res://assets/art/portraits/%s.png" % plate
+		var pt = _try_load(pp)
+		if pt != null:
+			_cache["plate|" + plate + "|" + str(size)] = pt
+			return pt
 	return _proc_portrait(c, size)
 
 static func _token_key(c: CKCharacter, team: String, frame: int) -> String:
@@ -358,6 +394,22 @@ static func token(c: CKCharacter, team: String, size: int = 48, done: bool = fal
 	if tex2 != null:
 		_cache[ck] = tex2
 		return tex2
+	# 兵种板绘棋子（美术升档）
+	var plate = {
+		"heavy_inf": "tank_plate", "warrior": "tank_plate",
+		"hunter": "ranger_plate", "archer": "ranger_plate",
+		"apprentice": "mage_plate", "priest": "mage_plate",
+		"squire": "leader_plate", "light_cavalry": "leader_plate",
+		"light_inf": "skirm_plate",
+	}.get(c.job_id, "")
+	if c.is_leader:
+		plate = "leader_plate"
+	if plate != "":
+		var pp = "res://assets/art/tokens/%s_%s_f%d.png" % [plate, team, frame]
+		var pt = _try_load(pp)
+		if pt != null:
+			_cache["tplate|" + plate + "|" + team + "|" + str(frame)] = pt
+			return pt
 	return _proc_token(c, team, size, done)
 
 static func banner(w: int = 160, h: int = 220, with_name: bool = true) -> Texture2D:

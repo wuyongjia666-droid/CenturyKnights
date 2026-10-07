@@ -20,6 +20,16 @@ func _build() -> void:
 	for c in get_children():
 		c.queue_free()
 	UIKit.make_screen_bg(self)
+	# 美术：堡顶横幅条
+	var _hub_strip = TextureRect.new()
+	_hub_strip.texture = load("res://assets/art/ui/hub_banner_strip.png")
+	_hub_strip.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_hub_strip.stretch_mode = TextureRect.STRETCH_SCALE
+	_hub_strip.position = Vector2(0, 0)
+	_hub_strip.size = Vector2(1280, 40)
+	_hub_strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_hub_strip.z_index = -1
+	add_child(_hub_strip)
 
 	var banner = UIKit.make_banner_rect(64, 92)
 	banner.position = Vector2(36, 16)

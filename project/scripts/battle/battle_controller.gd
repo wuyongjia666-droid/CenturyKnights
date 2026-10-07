@@ -1224,20 +1224,14 @@ func _draw_map() -> void:
 			var tid = terrain[y][x]
 			var info = BattleRules.terrain_info(tid)
 			var r = Rect2(ORIGIN + Vector2(x, y) * CELL, Vector2(CELL - 2, CELL - 2))
-			var col: Color = info["color"]
-			# 棋盘格轻微交错
-			if (x + y) % 2 == 0:
-				col = col.lightened(0.04)
-			map_draw.draw_rect(r, col)
-			if tid == "forest":
-				map_draw.draw_circle(r.get_center() + Vector2(-6, 4), 5, Color(0.15, 0.32, 0.18))
-				map_draw.draw_circle(r.get_center() + Vector2(6, -2), 4, Color(0.18, 0.36, 0.20))
-				map_draw.draw_circle(r.get_center() + Vector2(0, -6), 5, Color(0.12, 0.28, 0.16))
-			elif tid == "hill":
-				map_draw.draw_colored_polygon(
-					PackedVector2Array([r.get_center() + Vector2(0, -12), r.get_center() + Vector2(12, 8), r.get_center() + Vector2(-12, 8)]),
-					Color(0.42, 0.36, 0.26)
-				)
+			var tile_tex = UnitArt.terrain_tile(str(tid))
+			if tile_tex != null:
+				map_draw.draw_texture_rect(tile_tex, r, false)
+			else:
+				var col: Color = info["color"]
+				if (x + y) % 2 == 0:
+					col = col.lightened(0.04)
+				map_draw.draw_rect(r, col)
 			# 格线
 			map_draw.draw_rect(r, Color(0.08, 0.09, 0.11, 0.85), false, 1.0)
 			# 悬停高亮
@@ -1252,6 +1246,8 @@ func _draw_map() -> void:
 		var p: Vector2i = u.pos
 		var center = ORIGIN + Vector2(p) * CELL + Vector2(CELL / 2, CELL / 2)
 		UnitArt.draw_token_on(map_draw, center, u.char, u.team, 20.0, u.done)
+		if int(u.char.temp_combat_lock) > 0:
+			UnitArt.draw_lock_ring(map_draw, center, 22.0)
 		# HP 条
 		var hp_ratio = float(u.char.hp) / float(maxi(1, u.char.max_hp))
 		var bar_w = 36.0
@@ -1521,6 +1517,8 @@ func _compute_move_cells(ui: int) -> Dictionary:
 	elif u.team == "player":
 		zoc_extra = _ally_zoc_extra("enemy")  # 敌军若有强化控带（少见）
 	var leave_cost = 1
+	if int(u.char.temp_combat_lock) > 0:
+		leave_cost = 2  # 交战锁定：脱离更贵
 	var mv = BattleRules.move_costs(terrain, u.pos, u.char.derived_move(), foes, foes, ignore, zoc_extra, leave_cost, leave_free)
 	for ou in units:
 		if ou.char.hp > 0 and ou.pos != u.pos:
@@ -1540,16 +1538,27 @@ func _do_attack(ai: int, di: int) -> void:
 	_resolve_strike(ai, di, true)
 	var atk = units[ai]
 	var def = units[di]
+	# 交战锁定：攻/受击双方咬住（脱离代价加重，反击优先）
+	_apply_combat_lock(ai, di)
 	# 连击：敏差足够且目标仍存活
 	if def.char.hp > 0 and BattleRules.can_follow_up(atk.char, def.char):
 		_log("连击！敏差触发第二击")
 		_spawn_dmg(def.pos, "连击", Color(0.95, 0.75, 0.35))
 		_resolve_strike(ai, di, false)
-	# 反击：存活且射程覆盖
+	# 反击：存活且射程覆盖——锁定单位反击命中+10
 	if def.char.hp > 0 and BattleRules.can_counter(atk.char, def.char, atk.pos, def.pos):
-		_log("%s 反击！" % def.char.name)
-		_spawn_dmg(atk.pos, "反击", Color(0.85, 0.55, 0.95))
+		var bonus = 0
+		if int(def.char.temp_combat_lock) > 0:
+			def.char.temp_hit_bonus += 10
+			bonus = 10
+			_log("%s 交战锁定反击！" % def.char.name)
+			_spawn_dmg(atk.pos, "锁反", Color(1.0, 0.45, 0.35))
+		else:
+			_log("%s 反击！" % def.char.name)
+			_spawn_dmg(atk.pos, "反击", Color(0.85, 0.55, 0.95))
 		_resolve_strike(di, ai, false)
+		if bonus > 0:
+			def.char.temp_hit_bonus = maxi(0, def.char.temp_hit_bonus - bonus)
 	atk.done = true
 	selected = -1
 	move_cells.clear()
@@ -1568,7 +1577,20 @@ func _combat_extras(ai: int, di: int) -> Dictionary:
 	var flank = BattleRules.has_flank(atk.pos, def.pos, units, atk.team, ai)
 	return {"flank": flank}
 
+func _apply_combat_lock(ai: int, di: int) -> void:
+	# 双方进入交战锁定 1 回合（本方下回合开始衰减）
+	for idx in [ai, di]:
+		if idx < 0 or idx >= units.size():
+			continue
+		var u = units[idx]
+		if u.char.hp <= 0:
+			continue
+		u.char.temp_combat_lock = maxi(u.char.temp_combat_lock, 1)
+		_spawn_dmg(u.pos, "锁定", Color(1.0, 0.4, 0.35))
+		_spawn_slash(u.pos, "lock")
+
 func _resolve_strike(ai: int, di: int, allow_skill: bool) -> void:
+
 	var atk = units[ai]
 	var def = units[di]
 	if atk.char.hp <= 0 or def.char.hp <= 0:
@@ -1725,6 +1747,8 @@ func _start_player_turn() -> void:
 			u.char.temp_zoc_aura = 0
 			u.char.temp_ignore_zoc = false
 			u.char.temp_leave_free = false
+			if u.char.temp_combat_lock > 0:
+				u.char.temp_combat_lock -= 1
 			pcs.append(u.char)
 	GameState.tick_skill_cooldowns(pcs)
 	selected = -1
@@ -1748,6 +1772,8 @@ func _end_player_turn() -> void:
 	for u in units:
 		if u.team == "enemy":
 			u.char.temp_exposed = 0
+			if u.char.temp_combat_lock > 0:
+				u.char.temp_combat_lock -= 1
 	selected = -1
 	move_cells.clear()
 	attack_mode = false
@@ -2767,11 +2793,16 @@ func _refresh_info() -> void:
 	var role = BattleRules.role_label(BattleRules.job_role(c.job_id))
 	var foes = _enemy_positions(u.team)
 	var engaged = BattleRules.is_engaged(u.pos, foes)
-	var eng = "[color=#e07070]〔交战中·脱离+1移〕[/color]\n" if engaged else ""
+	var locked = int(c.temp_combat_lock) > 0
+	var eng = ""
+	if locked:
+		eng = "[color=#ff6b4a]〔交战锁定·脱离+2移·反击优先〕[/color]\n"
+	elif engaged:
+		eng = "[color=#e07070]〔交战中·脱离+1移〕[/color]\n"
 	if c.temp_leave_free:
-		eng = "[color=#8ecae6]〔抽身：脱离不耗〕[/color]\n"
+		eng += "[color=#8ecae6]〔抽身：脱离不耗〕[/color]\n"
 	elif c.temp_ignore_zoc:
-		eng = "[color=#c9a227]〔破控：无视地带〕[/color]\n"
+		eng += "[color=#c9a227]〔破控：无视地带〕[/color]\n"
 	var txt = mode + eng + "[b]%s[/b]（%s·%s） HP %d/%d\n攻 %d 防 %d 命中 %d 回避 %d 移动 %d\n地形：%s（回避+%d 防+%d）\n" % [
 		c.name, "我军" if u.team == "player" else "敌军", role,
 		c.hp, c.max_hp, c.derived_atk(), c.derived_def(), c.derived_hit(), c.derived_avo(), c.derived_move(),

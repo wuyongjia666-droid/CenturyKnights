@@ -11,7 +11,7 @@ func _ready() -> void:
 	var t = UIKit.make_label("城堡工事", true)
 	t.position = Vector2(40, 16)
 	add_child(t)
-	var tip = UIKit.make_dim_label("工事至 Lv5；属地庄园在「属地」面板。堡志已扩：战勋十次、两岸/四野/深耕、库银、六旗、战技通识等。")
+	var tip = UIKit.make_dim_label("工事至 Lv5；属地庄园可委任庄头抗劫掠。堡志：战勋十次、两岸/四野/深耕、庄头遍野、家训周岁、精锻、库银、六旗等。")
 	tip.position = Vector2(40, 56)
 	tip.custom_minimum_size = Vector2(1100, 40)
 	tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

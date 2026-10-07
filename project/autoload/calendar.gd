@@ -115,6 +115,15 @@ func _apply_month() -> Array:
 	# 月结粮饷
 	var pay = GameState.apply_monthly_upkeep()
 	evs.append({"type": "payroll", "text": pay})
+	# 属地收成 / 劫掠
+	var hy = GameState.holdings_monthly_yield()
+	if hy != "":
+		evs.append({"type": "holdings", "text": hy})
+		GameState.log_event(hy)
+	# 家训月份累计 + 联姻月结
+	var dm = GameState.tick_doctrine_and_marriage_month()
+	for m in dm:
+		evs.append({"type": "doctrine", "text": m})
 	if month == SPRING_MONTH:
 		festival.emit("春令节")
 		evs.append({"type": "festival", "text": "春令节到来"})

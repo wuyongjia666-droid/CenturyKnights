@@ -168,5 +168,39 @@
     "portraits/porcelain_thug.png",
     "portraits/porcelain_archer.png",
     "portraits/porcelain_boss.png"
+  ],
+  "tiles": [
+    "plain",
+    "forest",
+    "hill",
+    "water",
+    "bridge",
+    "fort"
+  ],
+  "art_pass": "v7.3.0-depth",
+  "plates": [
+    "leader_plate",
+    "tank_plate",
+    "ranger_plate",
+    "mage_plate",
+    "skirm_plate"
+  ],
+  "notes": "v7.3.0-depth art: terrain tiles, lock VFX, estate icons, hub strips, role plates+tokens, thicker BGM",
+  "fx": [
+    "slash",
+    "crit",
+    "heal",
+    "lock",
+    "unlock"
+  ],
+  "estates": [
+    "reed_ford",
+    "stone_slope",
+    "fog_vale",
+    "tide_bridge"
+  ],
+  "ui": [
+    "hub_banner_strip",
+    "hub_panel_edge"
   ]
 }
