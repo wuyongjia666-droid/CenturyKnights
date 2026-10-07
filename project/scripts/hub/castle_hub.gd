@@ -454,6 +454,22 @@ func _update_story_hint() -> void:
 		_story_hint.text = "可继续第一百四十九章·冰窖。"
 	elif not GameState.flag("chapter150_done"):
 		_story_hint.text = "可继续第一百五十章·雪印（二十四卷中段）。"
+	elif not GameState.flag("chapter151_done"):
+		_story_hint.text = "第二十四卷后半：点「继续主线」或卷二十四选第一百五十一章·雪市。"
+	elif not GameState.flag("chapter152_done"):
+		_story_hint.text = "可继续第一百五十二章·暖驿。"
+	elif not GameState.flag("chapter153_done"):
+		_story_hint.text = "可继续第一百五十三章·二十四卷席终。"
+	elif not GameState.flag("chapter154_done"):
+		_story_hint.text = "第二十五卷·竹海：点「继续主线」或卷二十五选第一百五十四章·竹海。"
+	elif not GameState.flag("chapter155_done"):
+		_story_hint.text = "可继续第一百五十五章·笋市。"
+	elif not GameState.flag("chapter156_done"):
+		_story_hint.text = "可继续第一百五十六章·竹印（二十五卷中段）。"
+	elif GameState.flag("volume25_mid_done"):
+		_story_hint.text = "二十五卷中段已执。可继续后半或经营。"
+	elif GameState.flag("volume24_done"):
+		_story_hint.text = "二十四卷已执。可继续第二十五卷或经营。"
 	elif GameState.flag("volume24_mid_done"):
 		_story_hint.text = "二十四卷中段已执。可继续后半或经营。"
 	elif GameState.flag("volume23_done"):
@@ -700,10 +716,16 @@ func _chapter_catalog() -> Array:
 		["第一百四十八章·雪栈", "res://scenes/story/chapter148.tscn", "chapter147_done", 24],
 		["第一百四十九章·冰窖", "res://scenes/story/chapter149.tscn", "chapter148_done", 24],
 		["第一百五十章·雪印", "res://scenes/story/chapter150.tscn", "chapter149_done", 24],
+		["第一百五十一章·雪市", "res://scenes/story/chapter151.tscn", "chapter150_done", 24],
+		["第一百五十二章·暖驿", "res://scenes/story/chapter152.tscn", "chapter151_done", 24],
+		["第一百五十三章·席终", "res://scenes/story/chapter153.tscn", "chapter152_done", 24],
+		["第一百五十四章·竹海", "res://scenes/story/chapter154.tscn", "chapter153_done", 25],
+		["第一百五十五章·笋市", "res://scenes/story/chapter155.tscn", "chapter154_done", 25],
+		["第一百五十六章·竹印", "res://scenes/story/chapter156.tscn", "chapter155_done", 25],
 	]
 
 func _volume_labels() -> Array:
-	return ["卷零", "卷一", "卷二", "卷三", "卷四", "卷五", "卷六", "卷七", "卷八", "卷九", "卷十", "卷十一", "卷十二", "卷十三", "卷十四", "卷十五", "卷十六", "卷十七", "卷十八", "卷十九", "卷二十", "卷二十一", "卷二十二", "卷二十三", "卷二十四"]
+	return ["卷零", "卷一", "卷二", "卷三", "卷四", "卷五", "卷六", "卷七", "卷八", "卷九", "卷十", "卷十一", "卷十二", "卷十三", "卷十四", "卷十五", "卷十六", "卷十七", "卷十八", "卷十九", "卷二十", "卷二十一", "卷二十二", "卷二十三", "卷二十四", "卷二十五"]
 
 func _volume_unlocked(vol: int) -> bool:
 	# a volume is unlocked if any chapter in it is unlocked

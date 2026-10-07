@@ -17,6 +17,21 @@
     "tokens/snow_boss_enemy_f0.png",
     "tokens/snow_boss_enemy_f1.png",
     "tokens/snow_boss_enemy_f2.png",
-    "tokens/snow_boss_enemy_f3.png"
+    "tokens/snow_boss_enemy_f3.png",
+    "portraits/bamboo_thug.png",
+    "portraits/bamboo_archer.png",
+    "portraits/bamboo_boss.png",
+    "tokens/bamboo_thug_enemy_f0.png",
+    "tokens/bamboo_thug_enemy_f1.png",
+    "tokens/bamboo_thug_enemy_f2.png",
+    "tokens/bamboo_thug_enemy_f3.png",
+    "tokens/bamboo_archer_enemy_f0.png",
+    "tokens/bamboo_archer_enemy_f1.png",
+    "tokens/bamboo_archer_enemy_f2.png",
+    "tokens/bamboo_archer_enemy_f3.png",
+    "tokens/bamboo_boss_enemy_f0.png",
+    "tokens/bamboo_boss_enemy_f1.png",
+    "tokens/bamboo_boss_enemy_f2.png",
+    "tokens/bamboo_boss_enemy_f3.png"
   ]
 }
