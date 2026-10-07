@@ -50,6 +50,9 @@ var data_chapter33: Dictionary = {}
 var data_chapter34: Dictionary = {}
 var data_chapter35: Dictionary = {}
 var data_chapter36: Dictionary = {}
+var data_chapter37: Dictionary = {}
+var data_chapter38: Dictionary = {}
+var data_chapter39: Dictionary = {}
 var data_rivals: Dictionary = {}
 var rival_stances: Dictionary = {}  # house_id -> stance override
 var rival_deals: Dictionary = {}  # house_id -> {turns_left, kind, reward}
@@ -90,6 +93,10 @@ var chapter33_beat: String = "33.0"
 var chapter34_beat: String = "34.0"
 var chapter35_beat: String = "35.0"
 var chapter36_beat: String = "36.0"
+var chapter37_beat: String = "37.0"
+var chapter38_beat: String = "38.0"
+var chapter39_beat: String = "39.0"
+var last_deal_events: Array = []
 var skill_points: int = 0
 
 # 游戏状态
@@ -180,6 +187,9 @@ func _load_data() -> void:
 	data_chapter34 = _read_json("res://data/chapter34.json")
 	data_chapter35 = _read_json("res://data/chapter35.json")
 	data_chapter36 = _read_json("res://data/chapter36.json")
+	data_chapter37 = _read_json("res://data/chapter37.json")
+	data_chapter38 = _read_json("res://data/chapter38.json")
+	data_chapter39 = _read_json("res://data/chapter39.json")
 	data_rivals = _read_json("res://data/rival_houses.json")
 	data_skills = _read_json("res://data/skills.json")
 
@@ -301,6 +311,9 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	chapter34_beat = "34.0"
 	chapter35_beat = "35.0"
 	chapter36_beat = "36.0"
+	chapter37_beat = "37.0"
+	chapter38_beat = "38.0"
+	chapter39_beat = "39.0"
 	rival_stances = {"shuoying": "hostile", "qinghe": "wary", "lantern": "neutral"}
 	rival_deals.clear()
 	skill_points = 1
@@ -769,6 +782,7 @@ func breach_rival_deal(house_id: String) -> Dictionary:
 func tick_rival_deals() -> Array:
 	var evs: Array = []
 	var done: Array = []
+	last_deal_events = []
 	for hid in rival_deals.keys():
 		var d: Dictionary = rival_deals[hid]
 		var left = int(d.get("turns_left", 0)) - 1
@@ -847,6 +861,15 @@ func tick_rival_deals() -> Array:
 	for hid2 in done:
 		rival_deals.erase(hid2)
 		add_lineage_event(evs[-1] if evs.size() > 0 else "契约结束")
+	last_deal_events = evs.duplicate()
+	# stamp last_event onto still-active deals
+	for hid3 in rival_deals.keys():
+		var dd: Dictionary = rival_deals[hid3]
+		for msg in evs:
+			if str(msg).find(str(hid3)) >= 0:
+				dd["last_event"] = str(msg)
+				rival_deals[hid3] = dd
+				break
 	mark_dirty()
 	return evs
 
@@ -928,6 +951,9 @@ func save_game() -> bool:
 		"chapter34_beat": chapter34_beat,
 		"chapter35_beat": chapter35_beat,
 		"chapter36_beat": chapter36_beat,
+		"chapter37_beat": chapter37_beat,
+		"chapter38_beat": chapter38_beat,
+		"chapter39_beat": chapter39_beat,
 		"rival_stances": rival_stances.duplicate(true),
 		"rival_deals": rival_deals.duplicate(true),
 		"skill_points": skill_points,
@@ -1013,6 +1039,9 @@ func load_game() -> bool:
 	chapter34_beat = str(data.get("chapter34_beat", "34.0"))
 	chapter35_beat = str(data.get("chapter35_beat", "35.0"))
 	chapter36_beat = str(data.get("chapter36_beat", "36.0"))
+	chapter37_beat = str(data.get("chapter37_beat", "37.0"))
+	chapter38_beat = str(data.get("chapter38_beat", "38.0"))
+	chapter39_beat = str(data.get("chapter39_beat", "39.0"))
 	rival_stances = data.get("rival_stances", {"shuoying": "hostile", "qinghe": "wary", "lantern": "neutral"}).duplicate(true)
 	rival_deals = data.get("rival_deals", {}).duplicate(true)
 	skill_points = int(data.get("skill_points", 0))

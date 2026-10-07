@@ -58,6 +58,10 @@ func _refresh_actions() -> void:
 				GameState.set_flag("chapter36_done"); GameState.set_flag("volume5_mid_done")
 				GameState.silver += 320; GameState.add_skill_point(3); GameState.save_game()
 				get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
+			_add("踏上第三十七章·长川", func():
+				GameState.set_flag("chapter36_done"); GameState.set_flag("volume5_mid_done")
+				GameState.add_skill_point(3); GameState.chapter37_beat = "37.0"
+				get_tree().change_scene_to_file("res://scenes/story/chapter37.tscn"))
 		_:
 			_add("继续", func(): _goto_next())
 func _add(text: String, cb: Callable) -> void:

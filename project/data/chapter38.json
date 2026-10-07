@@ -1,0 +1,73 @@
+{
+  "id": "chapter38",
+  "title": "第三十八章·终阙",
+  "beats": [
+    {
+      "id": "38.0",
+      "title": "终阙令",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "可长川之后，终阙外门与正殿要落两印。"
+        },
+        {
+          "speaker": "管事",
+          "text": "两场：终阙外门、终阙正殿。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第五卷后半。"
+        }
+      ],
+      "next": "38.1"
+    },
+    {
+      "id": "38.1",
+      "title": "终阙外门",
+      "lines": [
+        {
+          "speaker": "系统",
+          "text": "出战「终阙外门」。"
+        }
+      ],
+      "battle": "ch38_gate",
+      "unlock": [
+        "ch38_gate_done"
+      ],
+      "next": "38.2"
+    },
+    {
+      "id": "38.2",
+      "title": "终阙正殿",
+      "lines": [
+        {
+          "speaker": "系统",
+          "text": "出战「终阙正殿」。"
+        }
+      ],
+      "battle": "ch38_hall",
+      "unlock": [
+        "ch38_hall_done"
+      ],
+      "next": "38.3"
+    },
+    {
+      "id": "38.3",
+      "title": "阙印",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "终阙两印落下。下一章是五卷席终。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第三十八章完成。"
+        }
+      ],
+      "unlock": [
+        "chapter38_done"
+      ],
+      "next": null
+    }
+  ]
+}

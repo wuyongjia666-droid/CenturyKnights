@@ -87,7 +87,11 @@ func _advance(months: int) -> void:
 	var evs = Calendar.advance(months)
 	var lines: Array = ["[b]%s[/b] 推进结果：" % Calendar.label()]
 	for e in evs:
-		lines.append("· " + str(e.get("text", "")))
+		var tx = str(e.get("text", ""))
+		if str(e.get("type", "")) == "rival_deal" or tx.find("契约") >= 0:
+			lines.append("· [color=#c9a227]%s[/color]" % tx)
+		else:
+			lines.append("· " + tx)
 	_log.text = "\n".join(lines)
 	get_node("CalLabel").text = Calendar.label()
 	_show_forecast(1)

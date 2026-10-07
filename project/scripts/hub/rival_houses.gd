@@ -74,7 +74,14 @@ func _select(h: Dictionary) -> void:
 	_body.text = "[b]%s[/b]\n立场：%s\n%s\n\n交涉会写入族谱纪事，并可能改变立场。" % [h.get("name"), _stance_cn(stance), h.get("desc", "")]
 	var deal = GameState.rival_deals.get(hid, {})
 	if int(deal.get("turns_left", 0)) > 0:
-		_body.text += "\n\n[color=#c9a227]进行中契约：%s（余%d月）[/color]" % [deal.get("kind"), deal.get("turns_left")]
+		var mid = str(deal.get("last_event", ""))
+		var mid_n = int(deal.get("mid_ticks", 0))
+		_body.text += "\n\n[color=#c9a227]进行中契约：%s（余%d月 · 已过%d月中检）[/color]" % [deal.get("kind"), deal.get("turns_left"), mid_n]
+		if mid != "":
+			_body.text += "\n[color=#e8d5a3]最近月中：%s[/color]" % mid
+		elif GameState.last_deal_events.size() > 0:
+			_body.text += "\n[color=#e8d5a3]最近月中纪事：%s[/color]" % str(GameState.last_deal_events[0])
+		_add("推进一月（看契约中期）", func(): _tick_month(hid))
 		_add("改约→商路（+15银）", func(): _renego(hid, "trade"))
 		_add("改约→情报（+15银）", func(): _renego(hid, "intel"))
 		_add("改约→停战（+15银）", func(): _renego(hid, "truce"))
@@ -142,3 +149,25 @@ func _pressure(hid: String) -> void:
 	GameState.add_lineage_event("敌宅示威：%s" % hid)
 	Sfx.confirm()
 	_select(_selected)
+
+func _tick_month(hid: String) -> void:
+	var evs = Calendar.advance(1)
+	var deal_lines: Array = []
+	for e in evs:
+		var tx = str(e.get("text", ""))
+		if tx.find("契约") >= 0 or tx.find(hid) >= 0:
+			deal_lines.append(tx)
+	if deal_lines.is_empty() and GameState.last_deal_events.size() > 0:
+		deal_lines = GameState.last_deal_events.duplicate()
+	if deal_lines.is_empty():
+		_msg.text = "推进一月。本月无契约中期事件（或契约已到期）。"
+	else:
+		_msg.text = "月中：\n" + "\n".join(deal_lines)
+		Sfx.deal()
+	GameState.save_game()
+	_refresh()
+	# reselect house
+	for h in GameState.data_rivals.get("houses", []):
+		if str(h.get("id")) == hid:
+			_select(h)
+			break

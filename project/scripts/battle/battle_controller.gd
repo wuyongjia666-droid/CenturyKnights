@@ -569,7 +569,10 @@ func _draw_overlay() -> void:
 	# slash
 	for s in _slash_fx:
 		var fi = mini(3, int(s.age / 0.08))
-		var path = "res://assets/art/fx/slash_%d.png" % fi
+		var kind = str(s.get("kind", "slash"))
+		var path = "res://assets/art/fx/%s_%d.png" % [kind, fi]
+		if not ResourceLoader.exists(path):
+			path = "res://assets/art/fx/slash_%d.png" % fi
 		if ResourceLoader.exists(path):
 			var tex = load(path)
 			overlay.draw_texture(tex, s.pos - Vector2(32, 32))
@@ -724,9 +727,9 @@ func _spawn_dmg(cell: Vector2i, text: String, col: Color) -> void:
 	var center = ORIGIN + Vector2(cell) * CELL + Vector2(CELL / 2, CELL / 2)
 	_dmg_fx.append({"pos": center, "text": text, "age": 0.0, "col": col})
 
-func _spawn_slash(cell: Vector2i) -> void:
+func _spawn_slash(cell: Vector2i, kind: String = "slash") -> void:
 	var center = ORIGIN + Vector2(cell) * CELL + Vector2(CELL / 2, CELL / 2)
-	_slash_fx.append({"pos": center, "age": 0.0})
+	_slash_fx.append({"pos": center, "age": 0.0, "kind": kind})
 	_shake = 3.5
 
 func _do_attack(ai: int, di: int) -> void:
@@ -755,6 +758,7 @@ func _do_attack(ai: int, di: int) -> void:
 			if rng.randi_range(1, 100) <= atk.char.derived_crit():
 				crit = true
 				Sfx.crit()
+				_spawn_slash(def.pos, "crit")
 				dmg = int(dmg * 1.5)
 			# undo previous roll damage if any
 			if result.hit:
@@ -1118,6 +1122,16 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch35_keep_done")
 	elif map_id == "ch36_seal":
 		GameState.set_flag("ch36_seal_done")
+	elif map_id == "ch37_plain":
+		GameState.set_flag("ch37_plain_done")
+	elif map_id == "ch37_ridge":
+		GameState.set_flag("ch37_ridge_done")
+	elif map_id == "ch38_gate":
+		GameState.set_flag("ch38_gate_done")
+	elif map_id == "ch38_hall":
+		GameState.set_flag("ch38_hall_done")
+	elif map_id == "ch39_finale":
+		GameState.set_flag("ch39_finale_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")

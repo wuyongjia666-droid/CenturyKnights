@@ -1,0 +1,73 @@
+{
+  "id": "chapter37",
+  "title": "第三十七章·长川",
+  "beats": [
+    {
+      "id": "37.0",
+      "title": "长川令",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "五卷中段之后，长川平野与脊垒要验后半的旗。"
+        },
+        {
+          "speaker": "管事",
+          "text": "两场：长川平野、长川脊垒。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第五卷后半开启。"
+        }
+      ],
+      "next": "37.1"
+    },
+    {
+      "id": "37.1",
+      "title": "长川平野",
+      "lines": [
+        {
+          "speaker": "系统",
+          "text": "出战「长川平野」。"
+        }
+      ],
+      "battle": "ch37_plain",
+      "unlock": [
+        "ch37_plain_done"
+      ],
+      "next": "37.2"
+    },
+    {
+      "id": "37.2",
+      "title": "长川脊垒",
+      "lines": [
+        {
+          "speaker": "系统",
+          "text": "出战「长川脊垒」。"
+        }
+      ],
+      "battle": "ch37_ridge",
+      "unlock": [
+        "ch37_ridge_done"
+      ],
+      "next": "37.3"
+    },
+    {
+      "id": "37.3",
+      "title": "可长川",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "长川两印落下。旅馆写入『可长川』。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第三十七章完成。"
+        }
+      ],
+      "unlock": [
+        "chapter37_done"
+      ],
+      "next": null
+    }
+  ]
+}
