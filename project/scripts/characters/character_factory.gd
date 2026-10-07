@@ -185,6 +185,18 @@ static func make_enemy(template: String, rng: RandomNumberGenerator) -> CKCharac
 			c.name = "关口伏弓"
 			c.job_id = "hunter"
 			c.stats = {"str": 5, "vit": 5, "skl": 9, "agi": 7, "per": 8, "wil": 4}
+		"fisher_thug":
+			c.name = "渔港水匪"
+			c.job_id = "light_inf"
+			c.stats = {"str": 6, "vit": 6, "skl": 5, "agi": 7, "per": 4, "wil": 3}
+		"fisher_archer":
+			c.name = "礁口伏弓"
+			c.job_id = "hunter"
+			c.stats = {"str": 5, "vit": 5, "skl": 9, "agi": 7, "per": 8, "wil": 4}
+		"fisher_boss":
+			c.name = "港匪头目"
+			c.job_id = "heavy_inf"
+			c.stats = {"str": 11, "vit": 10, "skl": 6, "agi": 5, "per": 5, "wil": 7}
 		"escort_boss":
 			c.name = "镖路匪首"
 			c.job_id = "heavy_inf"

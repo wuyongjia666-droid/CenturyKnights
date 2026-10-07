@@ -58,22 +58,48 @@ const ESCORT_BANTER_KILL := [
 	"【镖行】老旗手：一匪倒，镖路清一寸。",
 	"【镖行】管事：别追太深——车还在中间。",
 ]
+const HARBOR_BANTER_TURN := [
+	"【渔港】管事：护缆！别让他们摸到桩木。",
+	"【渔港】老旗手：潮笺还在，旗就不能倒。",
+	"【渔港】斥候：礁后有伏弓气味——压低身子。",
+	"【渔港】苇原·灯影：浪声一乱，就是水匪开手。",
+]
+const HARBOR_BANTER_KILL := [
+	"【渔港】渔港水匪：……缆……不该割……",
+	"【渔港】礁口伏弓：灯桩……不在你们手里……",
+	"【渔港】老旗手：一匪倒，港路清一寸。",
+	"【渔港】管事：别追太深——船还在桥间。",
+]
+const HARBOR_BANTER_START := [
+	"【渔港】春令使者：这一仗验的是姓，不是潮。",
+	"【渔港】系统：港灯已升。护船优先于斩杀。",
+]
 const ESCORT_BANTER_START := [
 	"【镖行】春令使者：这一仗验的是姓，不是刀。",
 	"【镖行】系统：镖旗已升。护货优先于斩杀。",
 ]
 
-func _is_escort_map() -> bool:
-	var m: Dictionary = BattleMaps.get_map(map_id)
-	return str(m.get("theme", "")) == "escort" or map_id.begins_with("ch112") or map_id.begins_with("ch113") or map_id.begins_with("ch114") or map_id.begins_with("ch115") or map_id.begins_with("ch116") or map_id.begins_with("ch117")
+func _map_theme() -> String:
+	return str(BattleMaps.get_map(map_id).get("theme", ""))
 
-func _escort_banter(kind: String) -> void:
-	if not _is_escort_map():
+func _is_escort_map() -> bool:
+	return _map_theme() == "escort"
+
+func _is_harbor_map() -> bool:
+	return _map_theme() == "harbor"
+
+func _theme_banter(kind: String) -> void:
+	var theme = _map_theme()
+	if theme != "escort" and theme != "harbor":
 		return
-	var key = kind + str(_banter_idx if kind == "turn" else _banter_kill)
+	var key = theme + kind + str(_banter_idx if kind == "turn" else _banter_kill)
 	if _banter_played.has(key):
 		return
-	var pool: Array = ESCORT_BANTER_TURN if kind == "turn" else (ESCORT_BANTER_KILL if kind == "kill" else ESCORT_BANTER_START)
+	var pool: Array = []
+	if theme == "escort":
+		pool = ESCORT_BANTER_TURN if kind == "turn" else (ESCORT_BANTER_KILL if kind == "kill" else ESCORT_BANTER_START)
+	else:
+		pool = HARBOR_BANTER_TURN if kind == "turn" else (HARBOR_BANTER_KILL if kind == "kill" else HARBOR_BANTER_START)
 	if pool.is_empty():
 		return
 	var line = ""
@@ -83,12 +109,21 @@ func _escort_banter(kind: String) -> void:
 	elif kind == "kill":
 		line = str(pool[_banter_kill % pool.size()])
 		_banter_kill += 1
-		Sfx.escort_whip()
+		if theme == "escort":
+			Sfx.escort_whip()
+		else:
+			Sfx.wave_splash()
 	else:
 		line = str(pool[0] if _banter_idx == 0 else pool[mini(1, pool.size()-1)])
-		Sfx.escort_horn()
+		if theme == "escort":
+			Sfx.escort_horn()
+		else:
+			Sfx.wave_splash()
 	_banter_played[key] = true
 	_log(line)
+
+func _escort_banter(kind: String) -> void:
+	_theme_banter(kind)
 
 func _ready() -> void:
 	rng.randomize()
@@ -504,9 +539,11 @@ func _deploy() -> void:
 			units.append({"char": e, "pos": enemy_spots[ei], "team": "enemy", "done": false})
 			ei += 1
 	_log("%s：我军 %d · 敌军 %d" % [map_name, i, ei])
-	_escort_banter("start")
+	_theme_banter("start")
 	if _is_escort_map():
 		Sfx.cart_rattle()
+	elif _is_harbor_map():
+		Sfx.wave_splash()
 	var chars: Array = []
 	for u in units:
 		if u.team == "player":
@@ -838,7 +875,7 @@ func _do_attack(ai: int, di: int) -> void:
 			msg += " · 击退！"
 			_spawn_dmg(def.pos, "击破", Color(1.0, 0.9, 0.5))
 			if def.team == "enemy":
-				_escort_banter("kill")
+				_theme_banter("kill")
 			if def.team == "player":
 				def.char.injured = true
 	else:
@@ -892,7 +929,7 @@ func _start_player_turn() -> void:
 	skill_mode = false
 	active_skill_id = ""
 	moved_this_select = false
-	_escort_banter("turn")
+	_theme_banter("turn")
 	map_draw.queue_redraw()
 	overlay.queue_redraw()
 	_update_skill_hint()
@@ -1450,6 +1487,16 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch116_escort_done")
 	elif map_id == "ch117_finale":
 		GameState.set_flag("ch117_finale_done")
+	elif map_id == "ch118_pier":
+		GameState.set_flag("ch118_pier_done")
+	elif map_id == "ch118_net":
+		GameState.set_flag("ch118_net_done")
+	elif map_id == "ch119_tide":
+		GameState.set_flag("ch119_tide_done")
+	elif map_id == "ch119_reef":
+		GameState.set_flag("ch119_reef_done")
+	elif map_id == "ch120_seal":
+		GameState.set_flag("ch120_seal_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")
