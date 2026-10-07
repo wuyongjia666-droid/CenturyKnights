@@ -36,6 +36,9 @@ func _ready() -> void:
 	back.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
 	add_child(back)
 	_pick()
+	if GameState.flag("ch_heir_clash_done"):
+		_msg.text = "校场战已结束。双方子嗣已回堡（血量恢复）。"
+		GameState.set_flag("ch_heir_clash_done", false)
 	_show()
 
 func _path_cn(c: CKCharacter) -> String:
@@ -119,7 +122,14 @@ func _support(win: CKCharacter, lose: CKCharacter) -> void:
 	_show()
 
 func _battle() -> void:
-	GameState.add_lineage_event("双嗣校场开战：%s vs %s" % [_a.name, _b.name])
+	GameState.add_lineage_event("双嗣校场开战：%s vs %s（真人入阵）" % [_a.name, _b.name])
 	GameState.set_meta("battle_return", "res://scenes/hub/heir_rivalry.tscn")
 	GameState.set_meta("battle_map", "ch_heir_clash")
+	GameState.set_meta("heir_clash_a", _a.id)
+	GameState.set_meta("heir_clash_b", _b.id)
+	# 确保至少临时可出战
+	_a.hp = _a.max_hp
+	_b.hp = _b.max_hp
+	_a.alive = true
+	_b.alive = true
 	get_tree().change_scene_to_file("res://scenes/battle/battle.tscn")

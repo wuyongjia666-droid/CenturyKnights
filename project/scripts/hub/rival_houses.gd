@@ -75,11 +75,16 @@ func _select(h: Dictionary) -> void:
 	var deal = GameState.rival_deals.get(hid, {})
 	if int(deal.get("turns_left", 0)) > 0:
 		_body.text += "\n\n[color=#c9a227]进行中契约：%s（余%d月）[/color]" % [deal.get("kind"), deal.get("turns_left")]
+		_add("改约→商路（+15银）", func(): _renego(hid, "trade"))
+		_add("改约→情报（+15银）", func(): _renego(hid, "intel"))
+		_add("改约→停战（+15银）", func(): _renego(hid, "truce"))
+		_add("毁约（收回部分银，恶化立场）", func(): _breach(hid))
+	else:
+		_add("立约·商路（25银/3月→银+50）", func(): _deal(hid, "trade"))
+		_add("立约·情报（25银/3月→战技点）", func(): _deal(hid, "intel"))
+		_add("立约·停战（40银/2月→并席）", func(): _deal(hid, "truce", 2, 40))
 	_add("送礼交涉（30银）", func(): _gift(hid))
 	_add("示威施压", func(): _pressure(hid))
-	_add("立约·商路（25银/3月→银+50）", func(): _deal(hid, "trade"))
-	_add("立约·情报（25银/3月→战技点）", func(): _deal(hid, "intel"))
-	_add("立约·停战（40银/2月→并席）", func(): _deal(hid, "truce", 2, 40))
 	if hid == "shuoying" and stance in ["hostile", "wary"]:
 		_add("开启嗣位冲突场景", func(): get_tree().change_scene_to_file("res://scenes/hub/inheritance.tscn"))
 	_add("双嗣校场", func(): get_tree().change_scene_to_file("res://scenes/hub/heir_rivalry.tscn"))
@@ -102,6 +107,18 @@ func _gift(hid: String) -> void:
 	Sfx.confirm()
 	GameState.save_game()
 	_refresh()
+
+func _renego(hid: String, kind: String) -> void:
+	var r = GameState.renegotiate_rival_deal(hid, kind, 15)
+	_msg.text = str(r.get("msg"))
+	if r.get("ok"):
+		Sfx.confirm(); GameState.save_game(); _refresh()
+
+func _breach(hid: String) -> void:
+	var r = GameState.breach_rival_deal(hid)
+	_msg.text = str(r.get("msg"))
+	if r.get("ok"):
+		Sfx.confirm(); GameState.save_game(); _refresh()
 
 func _deal(hid: String, kind: String, turns: int = 3, price: int = 25) -> void:
 	var r = GameState.start_rival_deal(hid, kind, turns, price)

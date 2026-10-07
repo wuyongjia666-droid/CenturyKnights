@@ -174,6 +174,18 @@ func _build() -> void:
 	ch15_b.disabled = not GameState.flag("chapter14_done")
 	ch15_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter15.tscn"))
 	row.add_child(ch15_b)
+	var ch16_b = UIKit.make_accent_button("第十六章·海草", 160)
+	ch16_b.disabled = not GameState.flag("chapter15_done")
+	ch16_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter16.tscn"))
+	row.add_child(ch16_b)
+	var ch17_b = UIKit.make_accent_button("第十七章·盐河", 160)
+	ch17_b.disabled = not GameState.flag("chapter16_done")
+	ch17_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter17.tscn"))
+	row.add_child(ch17_b)
+	var ch18_b = UIKit.make_accent_button("第十八章·门阙", 160)
+	ch18_b.disabled = not GameState.flag("chapter17_done")
+	ch18_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter18.tscn"))
+	row.add_child(ch18_b)
 	var menu_b = UIKit.make_button("主菜单", 100)
 	menu_b.pressed.connect(func():
 		GameState.save_game()
@@ -218,8 +230,16 @@ func _update_story_hint() -> void:
 		_story_hint.text = "可点「第十四章·并席」共持火把。"
 	elif not GameState.flag("chapter15_done"):
 		_story_hint.text = "可点「第十五章·席散」完成第一卷终章。"
+	elif not GameState.flag("chapter16_done"):
+		_story_hint.text = "第二卷开启：可点「第十六章·海草」。"
+	elif not GameState.flag("chapter17_done"):
+		_story_hint.text = "可点「第十七章·盐河」重开盐路。"
+	elif not GameState.flag("chapter18_done"):
+		_story_hint.text = "可点「第十八章·门阙」写入二卷可入。"
+	elif GameState.flag("volume2_mid_done"):
+		_story_hint.text = "第二卷前半完成。自由经营、真人双嗣校场、敌宅改约/毁约皆可。"
 	elif GameState.flag("volume1_done"):
-		_story_hint.text = "第一卷·已执百年。自由经营、敌宅契约、双嗣校场与战技皆可。"
+		_story_hint.text = "第一卷·已执百年。可继续第二卷或经营。"
 	else:
 		_story_hint.text = "主线暂缓。敌宅交涉、授旗分支、战技与传代皆可。"
 

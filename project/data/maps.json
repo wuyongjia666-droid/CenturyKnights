@@ -4443,31 +4443,147 @@
         [
           3,
           6
-        ],
-        [
-          2,
-          6
         ]
       ],
       "enemy_spots": [
         [
-          6,
+          7,
           1
         ],
         [
-          7,
-          2
+          6,
+          1
         ],
         [
           5,
-          1
+          2
+        ]
+      ],
+      "enemy_templates": [
+        "bandit_weak"
+      ],
+      "heir_clash": true,
+      "terrain": [
+        [
+          "forest",
+          "plain",
+          "forest",
+          "plain",
+          "forest",
+          "plain",
+          "forest",
+          "plain",
+          "forest"
         ],
+        [
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "plain",
+          "plain",
+          "hill",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "hill",
+          "plain"
+        ],
+        [
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "plain",
+          "plain",
+          "hill",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "hill",
+          "plain"
+        ],
+        [
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "forest",
+          "plain",
+          "forest",
+          "plain",
+          "forest",
+          "plain",
+          "forest",
+          "plain",
+          "forest"
+        ]
+      ]
+    },
+    "ch16_sea": {
+      "name": "海风哨口",
+      "w": 10,
+      "h": 7,
+      "player_spots": [
+        [
+          1,
+          4
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          2,
+          4
+        ]
+      ],
+      "enemy_spots": [
         [
           7,
           1
         ],
         [
+          8,
+          2
+        ],
+        [
           6,
+          1
+        ],
+        [
+          8,
+          1
+        ],
+        [
+          7,
           2
         ]
       ],
@@ -4482,77 +4598,828 @@
         [
           "forest",
           "forest",
+          "plain",
+          "plain",
+          "hill",
           "hill",
           "plain",
           "plain",
           "plain",
+          "plain"
+        ],
+        [
+          "forest",
+          "forest",
+          "plain",
+          "plain",
           "hill",
+          "hill",
+          "plain",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "forest",
+          "forest",
+          "plain",
+          "plain",
+          "hill",
+          "hill",
+          "plain",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "forest",
+          "forest",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "forest",
+          "forest",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "water",
+          "plain",
+          "water",
+          "plain",
+          "water",
+          "plain",
+          "water",
+          "plain",
+          "water",
+          "plain"
+        ],
+        [
+          "water",
+          "plain",
+          "water",
+          "plain",
+          "water",
+          "plain",
+          "water",
+          "plain",
+          "water",
+          "plain"
+        ]
+      ]
+    },
+    "ch16_grass": {
+      "name": "草原驿路",
+      "w": 11,
+      "h": 7,
+      "player_spots": [
+        [
+          1,
+          4
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          4
+        ],
+        [
+          2,
+          4
+        ]
+      ],
+      "enemy_spots": [
+        [
+          8,
+          1
+        ],
+        [
+          9,
+          2
+        ],
+        [
+          7,
+          1
+        ],
+        [
+          9,
+          1
+        ],
+        [
+          8,
+          2
+        ],
+        [
+          6,
+          1
+        ]
+      ],
+      "enemy_templates": [
+        "bandit",
+        "bandit_archer",
+        "bandit",
+        "bandit_archer",
+        "bandit",
+        "bandit_weak"
+      ],
+      "terrain": [
+        [
+          "forest",
+          "forest",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
           "forest",
           "forest"
         ],
         [
           "forest",
           "forest",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "forest",
+          "forest"
+        ],
+        [
+          "hill",
+          "forest",
+          "plain",
           "hill",
           "plain",
           "plain",
+          "hill",
+          "plain",
           "plain",
           "hill",
+          "forest"
+        ],
+        [
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "hill",
+          "forest",
+          "plain",
+          "hill",
+          "plain",
+          "plain",
+          "hill",
+          "plain",
+          "plain",
+          "hill",
+          "forest"
+        ],
+        [
+          "forest",
+          "forest",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
           "forest",
           "forest"
         ],
         [
           "forest",
           "forest",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "forest",
+          "forest"
+        ]
+      ]
+    },
+    "ch16_beacon": {
+      "name": "双烽台",
+      "w": 10,
+      "h": 7,
+      "player_spots": [
+        [
+          1,
+          5
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          6
+        ],
+        [
+          2,
+          6
+        ]
+      ],
+      "enemy_spots": [
+        [
+          7,
+          1
+        ],
+        [
+          8,
+          2
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          8,
+          1
+        ],
+        [
+          7,
+          2
+        ]
+      ],
+      "enemy_templates": [
+        "bandit",
+        "bandit_archer",
+        "bandit",
+        "bandit_archer",
+        "bandit"
+      ],
+      "terrain": [
+        [
+          "forest",
+          "plain",
+          "forest",
+          "plain",
+          "forest",
+          "plain",
+          "forest",
+          "plain",
+          "forest",
+          "plain"
+        ],
+        [
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "plain",
+          "plain",
           "hill",
           "plain",
           "plain",
           "plain",
+          "plain",
           "hill",
+          "plain",
+          "plain"
+        ],
+        [
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "plain",
+          "plain",
+          "hill",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "hill",
+          "plain",
+          "plain"
+        ],
+        [
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "forest",
+          "plain",
+          "forest",
+          "plain",
+          "forest",
+          "plain",
+          "forest",
+          "plain",
+          "forest",
+          "plain"
+        ]
+      ]
+    },
+    "ch17_ford": {
+      "name": "盐河浅渡",
+      "w": 10,
+      "h": 7,
+      "player_spots": [
+        [
+          1,
+          5
+        ],
+        [
+          2,
+          5
+        ],
+        [
+          3,
+          5
+        ],
+        [
+          2,
+          6
+        ]
+      ],
+      "enemy_spots": [
+        [
+          7,
+          1
+        ],
+        [
+          8,
+          2
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          8,
+          1
+        ],
+        [
+          7,
+          2
+        ]
+      ],
+      "enemy_templates": [
+        "bandit",
+        "bandit_archer",
+        "bandit",
+        "bandit_archer",
+        "bandit"
+      ],
+      "terrain": [
+        [
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "hill",
+          "hill",
+          "hill",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "hill",
+          "hill",
+          "hill",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "hill",
+          "hill",
+          "hill",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "water",
+          "water",
+          "water",
+          "plain",
+          "plain",
+          "plain",
+          "water",
+          "water",
+          "water",
+          "water"
+        ],
+        [
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain"
+        ]
+      ]
+    },
+    "ch17_keep": {
+      "name": "风暴堡垒",
+      "w": 11,
+      "h": 8,
+      "player_spots": [
+        [
+          1,
+          6
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          3,
+          7
+        ],
+        [
+          2,
+          7
+        ]
+      ],
+      "enemy_spots": [
+        [
+          8,
+          1
+        ],
+        [
+          9,
+          2
+        ],
+        [
+          7,
+          1
+        ],
+        [
+          9,
+          1
+        ],
+        [
+          8,
+          3
+        ],
+        [
+          6,
+          2
+        ]
+      ],
+      "enemy_templates": [
+        "bandit",
+        "bandit_archer",
+        "bandit",
+        "bandit",
+        "bandit_archer",
+        "bandit_weak"
+      ],
+      "terrain": [
+        [
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "hill",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "hill",
+          "hill",
+          "hill",
+          "plain",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "plain",
+          "plain",
+          "plain",
+          "hill",
+          "hill",
+          "hill",
+          "hill",
+          "hill",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "hill",
+          "hill",
+          "hill",
+          "plain",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "hill",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "forest",
+          "forest",
+          "forest",
+          "forest",
+          "forest",
+          "forest",
+          "forest",
+          "forest",
+          "forest",
           "forest",
           "forest"
         ],
         [
           "forest",
           "forest",
+          "forest",
+          "forest",
+          "forest",
+          "forest",
+          "forest",
+          "forest",
+          "forest",
+          "forest",
+          "forest"
+        ]
+      ]
+    },
+    "ch18_gate": {
+      "name": "第二卷门阙",
+      "w": 10,
+      "h": 8,
+      "player_spots": [
+        [
+          1,
+          6
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          3,
+          7
+        ],
+        [
+          2,
+          7
+        ]
+      ],
+      "enemy_spots": [
+        [
+          7,
+          1
+        ],
+        [
+          8,
+          2
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          8,
+          1
+        ],
+        [
+          7,
+          3
+        ],
+        [
+          5,
+          2
+        ]
+      ],
+      "enemy_templates": [
+        "bandit",
+        "bandit_archer",
+        "bandit",
+        "bandit",
+        "bandit_archer",
+        "bandit"
+      ],
+      "terrain": [
+        [
+          "forest",
+          "forest",
+          "plain",
+          "plain",
+          "hill",
           "hill",
           "plain",
           "plain",
-          "plain",
-          "hill",
           "forest",
           "forest"
         ],
         [
           "forest",
           "forest",
-          "hill",
-          "plain",
           "plain",
           "plain",
           "hill",
+          "hill",
+          "plain",
+          "plain",
           "forest",
           "forest"
         ],
         [
           "forest",
           "forest",
-          "hill",
-          "plain",
           "plain",
           "plain",
           "hill",
+          "hill",
+          "plain",
+          "plain",
           "forest",
           "forest"
         ],
         [
           "forest",
           "forest",
-          "hill",
           "plain",
           "plain",
           "plain",
-          "hill",
+          "plain",
+          "plain",
+          "plain",
+          "forest",
+          "forest"
+        ],
+        [
+          "forest",
+          "forest",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "forest",
+          "forest"
+        ],
+        [
+          "forest",
+          "forest",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "forest",
+          "forest"
+        ],
+        [
+          "forest",
+          "forest",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "forest",
+          "forest"
+        ],
+        [
+          "forest",
+          "forest",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
           "forest",
           "forest"
         ]

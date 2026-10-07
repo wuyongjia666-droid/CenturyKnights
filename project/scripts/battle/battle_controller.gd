@@ -353,6 +353,16 @@ func _deploy() -> void:
 			ids.append(c.id)
 			if ids.size() >= 4:
 				break
+	# 双嗣校场：真人子嗣分列双方
+	var heir_a_id = str(GameState.get_meta("heir_clash_a", ""))
+	var heir_b_id = str(GameState.get_meta("heir_clash_b", ""))
+	var is_heir_clash = bool(m.get("heir_clash", false)) or map_id == "ch_heir_clash"
+	if is_heir_clash and heir_a_id != "":
+		ids = [heir_a_id]
+		# 可带一名团长或花名册支援
+		var leader = GameState.get_leader()
+		if leader and leader.id != heir_a_id:
+			ids.append(leader.id)
 	var spots: Array = []
 	for s in m.get("player_spots", [[1,4],[2,5],[0,5],[3,4]]):
 		spots.append(Vector2i(int(s[0]), int(s[1])))
@@ -363,6 +373,9 @@ func _deploy() -> void:
 		var c: CKCharacter = GameState.characters.get(cid)
 		if c == null or not c.alive:
 			continue
+		# 校场临时满血
+		if is_heir_clash:
+			c.hp = c.max_hp
 		units.append({"char": c, "pos": spots[i], "team": "player", "done": false})
 		i += 1
 	# tutorial militia pad to 4 for ch0_pass only
@@ -382,14 +395,26 @@ func _deploy() -> void:
 		enemy_spots.append(Vector2i(int(s[0]), int(s[1])))
 	var templates: Array = m.get("enemy_templates", ["bandit_weak","bandit_weak"])
 	var ei = 0
-	for ti in templates.size():
-		if ei >= enemy_spots.size():
-			break
-		var e = CharacterFactory.make_enemy(str(templates[ti]), rng)
-		if e.appearance.get("hair","") == "" or e.faction == "enemy":
-			e.appearance = {"hair": "ink_black", "eyes": "dusk", "brow": "thick", "scar": "cheek"}
-		units.append({"char": e, "pos": enemy_spots[ei], "team": "enemy", "done": false})
-		ei += 1
+	if is_heir_clash and heir_b_id != "":
+		var hb: CKCharacter = GameState.characters.get(heir_b_id)
+		if hb and hb.alive and ei < enemy_spots.size():
+			hb.hp = hb.max_hp
+			units.append({"char": hb, "pos": enemy_spots[ei], "team": "enemy", "done": false})
+			ei += 1
+			# 一名弱敌支援对阵
+			if ei < enemy_spots.size():
+				var e2 = CharacterFactory.make_enemy("bandit_weak", rng)
+				units.append({"char": e2, "pos": enemy_spots[ei], "team": "enemy", "done": false})
+				ei += 1
+	else:
+		for ti in templates.size():
+			if ei >= enemy_spots.size():
+				break
+			var e = CharacterFactory.make_enemy(str(templates[ti]), rng)
+			if e.appearance.get("hair","") == "" or e.faction == "enemy":
+				e.appearance = {"hair": "ink_black", "eyes": "dusk", "brow": "thick", "scar": "cheek"}
+			units.append({"char": e, "pos": enemy_spots[ei], "team": "enemy", "done": false})
+			ei += 1
 	_log("%s：我军 %d · 敌军 %d" % [map_name, i, ei])
 	var chars: Array = []
 	for u in units:
@@ -981,6 +1006,19 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch15_finale_done")
 	elif map_id == "ch_heir_clash":
 		GameState.set_flag("ch_heir_clash_done")
+		_restore_heir_clash_hp()  # heir_clash_restore
+	elif map_id == "ch16_sea":
+		GameState.set_flag("ch16_sea_done")
+	elif map_id == "ch16_grass":
+		GameState.set_flag("ch16_grass_done")
+	elif map_id == "ch16_beacon":
+		GameState.set_flag("ch16_beacon_done")
+	elif map_id == "ch17_ford":
+		GameState.set_flag("ch17_ford_done")
+	elif map_id == "ch17_keep":
+		GameState.set_flag("ch17_keep_done")
+	elif map_id == "ch18_gate":
+		GameState.set_flag("ch18_gate_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")
@@ -1038,3 +1076,17 @@ func _refresh_info() -> void:
 
 func _log(t: String) -> void:
 	log_label.text = t + "\n" + log_label.text
+
+
+func _restore_heir_clash_hp() -> void:
+	for key in ["heir_clash_a", "heir_clash_b"]:
+		var cid = str(GameState.get_meta(key, ""))
+		if cid == "":
+			continue
+		var c: CKCharacter = GameState.characters.get(cid)
+		if c:
+			c.hp = c.max_hp
+			c.alive = true
+	GameState.add_lineage_event("双嗣校场终了：双方回堡养伤，名册旁注已更新。")
+	GameState.clear_meta("heir_clash_a")
+	GameState.clear_meta("heir_clash_b")

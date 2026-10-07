@@ -30,6 +30,8 @@ var data_chapter13: Dictionary = {}
 var data_chapter14: Dictionary = {}
 var data_chapter15: Dictionary = {}
 var data_chapter16: Dictionary = {}
+var data_chapter17: Dictionary = {}
+var data_chapter18: Dictionary = {}
 var data_rivals: Dictionary = {}
 var rival_stances: Dictionary = {}  # house_id -> stance override
 var rival_deals: Dictionary = {}  # house_id -> {turns_left, kind, reward}
@@ -49,6 +51,9 @@ var chapter12_beat: String = "12.0"
 var chapter13_beat: String = "13.0"
 var chapter14_beat: String = "14.0"
 var chapter15_beat: String = "15.0"
+var chapter16_beat: String = "16.0"
+var chapter17_beat: String = "17.0"
+var chapter18_beat: String = "18.0"
 var skill_points: int = 0
 
 # 游戏状态
@@ -119,6 +124,8 @@ func _load_data() -> void:
 	data_chapter14 = _read_json("res://data/chapter14.json")
 	data_chapter15 = _read_json("res://data/chapter15.json")
 	data_chapter16 = _read_json("res://data/chapter16.json")
+	data_chapter17 = _read_json("res://data/chapter17.json")
+	data_chapter18 = _read_json("res://data/chapter18.json")
 	data_rivals = _read_json("res://data/rival_houses.json")
 	data_skills = _read_json("res://data/skills.json")
 
@@ -219,6 +226,9 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	chapter13_beat = "13.0"
 	chapter14_beat = "14.0"
 	chapter15_beat = "15.0"
+	chapter16_beat = "16.0"
+	chapter17_beat = "17.0"
+	chapter18_beat = "18.0"
 	rival_stances = {"shuoying": "hostile", "qinghe": "wary", "lantern": "neutral"}
 	rival_deals.clear()
 	skill_points = 1
@@ -654,6 +664,36 @@ func start_rival_deal(house_id: String, kind: String, turns: int = 3, price: int
 	mark_dirty()
 	return {"ok": true, "msg": "契约已立：%s，余 %d 月" % [kind, turns]}
 
+
+func renegotiate_rival_deal(house_id: String, new_kind: String, extra_cost: int = 15) -> Dictionary:
+	if not rival_deals.has(house_id) or int(rival_deals[house_id].get("turns_left", 0)) <= 0:
+		return {"ok": false, "msg": "无进行中契约可改"}
+	if silver < extra_cost:
+		return {"ok": false, "msg": "改约需要额外银两"}
+	silver -= extra_cost
+	var d: Dictionary = rival_deals[house_id]
+	var oldk = str(d.get("kind"))
+	d["kind"] = new_kind
+	d["turns_left"] = maxi(2, int(d.get("turns_left", 2)))
+	rival_deals[house_id] = d
+	add_lineage_event("敌宅改约：%s %s→%s" % [house_id, oldk, new_kind])
+	mark_dirty()
+	return {"ok": true, "msg": "已改约为「%s」，余 %d 月" % [new_kind, d["turns_left"]]}
+
+func breach_rival_deal(house_id: String) -> Dictionary:
+	if not rival_deals.has(house_id) or int(rival_deals[house_id].get("turns_left", 0)) <= 0:
+		return {"ok": false, "msg": "无契约可毁"}
+	var kind = str(rival_deals[house_id].get("kind"))
+	rival_deals.erase(house_id)
+	# stance penalty
+	var st = get_rival_stance(house_id)
+	var nxt = {"cordial": "neutral", "neutral": "wary", "wary": "hostile", "hostile": "hostile"}.get(st, "hostile")
+	set_rival_stance(house_id, nxt)
+	silver += 10  # reclaim partial
+	add_lineage_event("敌宅毁约：%s（原%s）→立场%s" % [house_id, kind, nxt])
+	mark_dirty()
+	return {"ok": true, "msg": "已毁约。收回部分银两，立场变为敌意一侧。"}
+
 func tick_rival_deals() -> Array:
 	var evs: Array = []
 	var done: Array = []
@@ -741,6 +781,9 @@ func save_game() -> bool:
 		"chapter13_beat": chapter13_beat,
 		"chapter14_beat": chapter14_beat,
 		"chapter15_beat": chapter15_beat,
+		"chapter16_beat": chapter16_beat,
+		"chapter17_beat": chapter17_beat,
+		"chapter18_beat": chapter18_beat,
 		"rival_stances": rival_stances.duplicate(true),
 		"rival_deals": rival_deals.duplicate(true),
 		"skill_points": skill_points,
@@ -805,6 +848,9 @@ func load_game() -> bool:
 	chapter13_beat = str(data.get("chapter13_beat", "13.0"))
 	chapter14_beat = str(data.get("chapter14_beat", "14.0"))
 	chapter15_beat = str(data.get("chapter15_beat", "15.0"))
+	chapter16_beat = str(data.get("chapter16_beat", "16.0"))
+	chapter17_beat = str(data.get("chapter17_beat", "17.0"))
+	chapter18_beat = str(data.get("chapter18_beat", "18.0"))
 	rival_stances = data.get("rival_stances", {"shuoying": "hostile", "qinghe": "wary", "lantern": "neutral"}).duplicate(true)
 	rival_deals = data.get("rival_deals", {}).duplicate(true)
 	skill_points = int(data.get("skill_points", 0))
