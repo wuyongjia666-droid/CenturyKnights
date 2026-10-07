@@ -13,13 +13,17 @@ func _ready() -> void:
 	Music.play_castle()
 	# 顶栏美术条
 	var strip = TextureRect.new()
-	strip.texture = load("res://assets/art/ui/hub_banner_strip.png")
+	if ResourceLoader.exists("res://assets/art/ui/estates_banner.png"):
+		strip.texture = load("res://assets/art/ui/estates_banner.png")
+	else:
+		strip.texture = load("res://assets/art/ui/hub_banner_strip.png")
 	strip.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	strip.stretch_mode = TextureRect.STRETCH_SCALE
 	strip.position = Vector2(0, 0)
 	strip.size = Vector2(1280, 48)
 	strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(strip)
+	UIFX.banner_shimmer(strip, 4.0)
 
 	var t = UIKit.make_label("属地庄园", true)
 	t.position = Vector2(40, 16)

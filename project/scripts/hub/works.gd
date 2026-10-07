@@ -6,6 +6,7 @@ var _list: VBoxContainer
 
 func _ready() -> void:
 	UIKit.make_themed_bg(self, "works")
+	UIFX.page_enter(self)
 	UIFX.fade_in(self, 0.28)
 	Music.play_castle()
 	if ResourceLoader.exists("res://assets/art/ui/works_banner.png"):
@@ -17,6 +18,7 @@ func _ready() -> void:
 		wb.size = Vector2(1280, 52)
 		wb.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(wb)
+		UIFX.banner_shimmer(wb, 3.8)
 	elif ResourceLoader.exists("res://assets/art/ui/hub_banner_strip.png"):
 		var strip := TextureRect.new()
 		strip.texture = load("res://assets/art/ui/hub_banner_strip.png")
@@ -57,6 +59,7 @@ func _ready() -> void:
 	scroll.add_child(_list)
 	_rebuild()
 	UIFX.stagger_children(_list, 0.04, 0.24)
+	UIFX.wire_tree(self)
 
 	if ResourceLoader.exists("res://assets/art/ui/ambition_strip.png"):
 		var astr := TextureRect.new()

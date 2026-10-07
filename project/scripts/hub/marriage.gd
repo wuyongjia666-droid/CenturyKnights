@@ -26,6 +26,7 @@ func _ready() -> void:
 func _build() -> void:
 	UIKit.make_themed_bg(self, "marriage")
 	UIFX.page_enter(self)
+	UIFX.wire_tree(self)
 	if ResourceLoader.exists("res://assets/art/ui/hub_banner_strip.png"):
 		var strip := TextureRect.new()
 		strip.texture = load("res://assets/art/ui/hub_banner_strip.png")
@@ -45,6 +46,7 @@ func _build() -> void:
 		_mb.size = Vector2(1280, 56)
 		_mb.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(_mb)
+		UIFX.banner_shimmer(_mb, 3.6)
 	var t = UIKit.make_label("联姻廷 · 春令试婚", true)
 	t.position = Vector2(40, 12)
 	add_child(t)

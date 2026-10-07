@@ -13,6 +13,7 @@ func _ready() -> void:
 func _build() -> void:
 	UIKit.make_themed_bg(self, "lineage")
 	UIFX.page_enter(self)
+	UIFX.wire_tree(self)
 	if ResourceLoader.exists("res://assets/art/ui/hub_banner_strip.png"):
 		var strip := TextureRect.new()
 		strip.texture = load("res://assets/art/ui/hub_banner_strip.png")
@@ -32,6 +33,7 @@ func _build() -> void:
 		strip.size = Vector2(1280, 56)
 		strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(strip)
+		UIFX.banner_shimmer(strip, 3.8)
 	var t = UIKit.make_label("族谱 · 血胤", true)
 	t.position = Vector2(40, 16)
 	add_child(t)

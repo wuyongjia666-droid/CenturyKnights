@@ -20,8 +20,10 @@ var _spark_frames: Array = []
 
 func _ready() -> void:
 	UIKit.make_themed_bg(self, "skill")
+	UIFX.page_enter(self)
 	UIFX.fade_in(self, 0.3)
 	Music.play_hub()
+	UIFX.wire_tree(self)
 	for i in 4:
 		var sp = "res://assets/art/fx/unlock_%d.png" % i
 		if ResourceLoader.exists(sp):

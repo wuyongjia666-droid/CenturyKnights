@@ -6,6 +6,7 @@ var _prices: Label
 
 func _ready() -> void:
 	UIKit.make_themed_bg(self, "market")
+	UIFX.page_enter(self)
 	UIFX.fade_in(self, 0.30)
 	Music.play_castle()
 	if ResourceLoader.exists("res://assets/art/ui/caravan_banner.png"):
@@ -17,6 +18,7 @@ func _ready() -> void:
 		strip.stretch_mode = TextureRect.STRETCH_SCALE
 		strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(strip)
+		UIFX.banner_shimmer(strip, 3.8)
 	elif ResourceLoader.exists("res://assets/art/ui/market_banner.png"):
 		var strip2 := TextureRect.new()
 		strip2.texture = load("res://assets/art/ui/market_banner.png")
@@ -59,6 +61,8 @@ func _ready() -> void:
 			_msg.text = str(r.get("msg"))
 			if r.get("ok", true):
 				UIFX.confirm_burst(buy)
+			else:
+				UIFX.soft_deny(buy)
 				Sfx.deal()
 			_refresh_prices()
 		)
@@ -68,6 +72,10 @@ func _ready() -> void:
 			UIFX.press_feedback(sell)
 			var r = GameState.market_sell(it)
 			_msg.text = str(r.get("msg"))
+			if r.get("ok", true):
+				UIFX.confirm_burst(sell)
+			else:
+				UIFX.soft_deny(sell)
 			_refresh_prices()
 		)
 		grid.add_child(sell)
@@ -114,6 +122,7 @@ func _ready() -> void:
 		hb.add_child(b)
 		row.add_child(hb)
 	UIFX.stagger_children(row, 0.05, 0.26)
+	UIFX.wire_tree(self)
 
 	var status = UIKit.make_dim_label(_caravan_status())
 	status.position = Vector2(40, 460)

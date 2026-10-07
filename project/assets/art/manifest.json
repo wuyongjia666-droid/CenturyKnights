@@ -1,5 +1,5 @@
 {
-  "art_pass": "v7.9.0-depth",
+  "art_pass": "v7.23.0-depth",
   "patrol_frames": 12,
   "heroes": [
     "leader_default",
@@ -9,5 +9,32 @@
     "ranger_plate",
     "mage_plate",
     "skirm_plate"
+  ],
+  "farm_batch": "shots_v722_farm qwen 24",
+  "ingested": [
+    "battle_backdrop_wash.png",
+    "concept_hire_plate_f.png",
+    "concept_hire_plate_m.png",
+    "fx_dmg_pop_sheet.png",
+    "fx_hit_spark_sheet.png",
+    "fx_lock_spark_sheet.png",
+    "fx_zoc_pulse_sheet.png",
+    "hub_monthly_settle.png",
+    "hub_panel_chrome.png",
+    "ui_alliance_duty.png",
+    "ui_caravan_banner.png",
+    "ui_convoy_grain.png",
+    "ui_convoy_iron.png",
+    "ui_convoy_spice.png",
+    "ui_estate_focus_cash.png",
+    "ui_estate_focus_fortify.png",
+    "ui_estate_focus_grain.png",
+    "ui_estate_focus_triptych.png",
+    "ui_estates_banner.png",
+    "ui_hub_banner_strip.png",
+    "ui_lineage_banner.png",
+    "ui_market_banner.png",
+    "ui_marriage_banner.png",
+    "ui_works_banner.png"
   ]
 }

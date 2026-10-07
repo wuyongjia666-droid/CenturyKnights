@@ -18,6 +18,7 @@ func _ready() -> void:
 		strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(strip)
 
+	UIFX.page_enter(self)
 	UIFX.fade_in(self, 0.3)
 	Music.play_hub()
 	var t = UIKit.make_label("敌宅交涉", true)
@@ -59,6 +60,7 @@ func _ready() -> void:
 	add_child(inh)
 	_refresh()
 	UIFX.stagger_children(_list, 0.05, 0.22)
+	UIFX.wire_tree(self)
 
 func _refresh() -> void:
 	for c in _list.get_children():

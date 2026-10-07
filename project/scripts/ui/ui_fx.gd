@@ -175,6 +175,40 @@ static func page_enter(root: Control, from: Vector2 = Vector2(0, 28)) -> void:
 		tw.tween_property(rule, "modulate:a", 0.0, _dur(0.28))
 		tw.tween_callback(rule.queue_free)
 
+
+static func chip_pulse(node: Control, col: Color = Color(1.35, 1.2, 0.85)) -> void:
+	## 资源/徽标轻脉冲（月结、商队到港）
+	if node == null: return
+	flash_modulate(node, col, 0.22)
+	punch(node, 0.05)
+
+static func banner_shimmer(node: CanvasItem, period: float = 3.6) -> void:
+	## 顶栏横幅慢速明暗（AT: living chrome）
+	if node == null or reduced(): return
+	var base := node.modulate
+	var hi := Color(minf(1.0, base.r * 1.08), minf(1.0, base.g * 1.05), minf(1.0, base.b * 1.02), base.a)
+	var tw := node.create_tween().set_loops()
+	tw.tween_property(node, "modulate", hi, period * 0.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tw.tween_property(node, "modulate", base, period * 0.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+static func panel_rise(node: Control, dist: float = 18.0, dur: float = 0.30) -> void:
+	## 面板从下方升起（对话框 / 确认层）
+	if node == null: return
+	dur = _dur(dur)
+	var target := node.position
+	node.position = target + Vector2(0, dist)
+	node.modulate.a = 0.0
+	var tw := node.create_tween()
+	tw.set_parallel(true)
+	tw.tween_property(node, "position", target, dur).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+	tw.tween_property(node, "modulate:a", 1.0, dur * 0.85)
+
+static func soft_deny(node: Control) -> void:
+	## 拒绝反馈：轻抖 + 冷色闪（比 confirm 弱）
+	if node == null: return
+	shake_control(node, 4.0, 0.18)
+	flash_modulate(node, Color(0.95, 0.75, 0.75), 0.16)
+
 static func nav_press_then(btn: Control, cb: Callable) -> void:
 	## 导航：先微交互再跳转，避免「死点」
 	if btn != null:

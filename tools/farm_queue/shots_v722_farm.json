@@ -1,0 +1,146 @@
+[
+  {
+    "label": "ui_market_banner",
+    "prompt": "Chinese ink-fantasy ash-banner market street UI banner strip, warm lanterns, ornate gold trim, no text glyphs, game HUD asset flat, transparent ends",
+    "width": 1280,
+    "height": 64
+  },
+  {
+    "label": "ui_caravan_banner",
+    "prompt": "Fantasy wagon caravan silhouette on dusk river bridge, ash crest palette, game UI strip, no text, ink wash elegance",
+    "width": 1280,
+    "height": 64
+  },
+  {
+    "label": "ui_estate_focus_triptych",
+    "prompt": "Three square game icons in a row: grain sheaf, silver coin purse, stone fort battlement, unified ash-banner fantasy UI style, gold rim, transparent background, 192x64",
+    "width": 192,
+    "height": 64
+  },
+  {
+    "label": "ui_alliance_duty",
+    "prompt": "Marriage alliance oath seal twin rings ash banner, rose gold, transparent bg game chip",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "fx_zoc_pulse_sheet",
+    "prompt": "Six frame ZoC pulse rings magenta to amber in a row, transparent bg, pixel-clean tactics FX",
+    "width": 384,
+    "height": 64
+  },
+  {
+    "label": "concept_hire_plate_m",
+    "prompt": "Hand-painted oil fantasy male ash-banner knight bust portrait plate, rim light brush texture, 220x270, no text",
+    "width": 208,
+    "height": 256
+  },
+  {
+    "label": "concept_hire_plate_f",
+    "prompt": "Hand-painted oil fantasy female ash-banner officer bust portrait plate, rim light brush texture, 220x270, no text",
+    "width": 208,
+    "height": 256
+  },
+  {
+    "label": "hub_monthly_settle",
+    "prompt": "Monthly settlement ledger header art ink and gold, Chinese dynasty castle UI, no readable glyphs",
+    "width": 640,
+    "height": 112
+  },
+  {
+    "label": "ui_works_banner",
+    "prompt": "Castle works and ambition ledger header banner, stone hall and forge glow, gold ink trim, Chinese dynasty tactics UI, no readable text",
+    "width": 1280,
+    "height": 64
+  },
+  {
+    "label": "ui_estates_banner",
+    "prompt": "Four wild holdings estate banner, reed ford hill mist fields, ash flag, game UI strip no text",
+    "width": 1280,
+    "height": 64
+  },
+  {
+    "label": "ui_estate_focus_grain",
+    "prompt": "Game UI icon grain sheaf, ash-banner fantasy gold rim, transparent bg, square chip",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "ui_estate_focus_cash",
+    "prompt": "Game UI icon silver coin purse, ash-banner fantasy gold rim, transparent bg",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "ui_estate_focus_fortify",
+    "prompt": "Game UI icon stone fort battlement, ash-banner fantasy gold rim, transparent bg",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "ui_convoy_grain",
+    "prompt": "Wagon convoy icon grain sacks, top-down-ish UI chip transparent bg fantasy ink",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "ui_convoy_iron",
+    "prompt": "Wagon convoy icon iron bars, UI chip transparent bg fantasy ink",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "ui_convoy_spice",
+    "prompt": "Wagon convoy icon spice jars, UI chip transparent bg fantasy ink",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "fx_lock_spark_sheet",
+    "prompt": "Six frame combat lock spark rings violet gold, transparent bg, tactics VFX strip",
+    "width": 384,
+    "height": 64
+  },
+  {
+    "label": "hub_panel_chrome",
+    "prompt": "Ornate ash-banner panel frame corners gold filigree dark parchment, seamless UI nine-slice friendly, no text",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "battle_backdrop_wash",
+    "prompt": "Tactics battle backdrop ash dusk hills soft fog ember sparks, paintery, no UI chrome, no text, subtle vignette",
+    "width": 1280,
+    "height": 720
+  },
+  {
+    "label": "ui_hub_banner_strip",
+    "width": 1280,
+    "height": 64,
+    "prompt": "Chinese ash-banner dynasty castle hub top UI strip, ink gold trim warm lantern, no text glyphs, game HUD banner 1280x64"
+  },
+  {
+    "label": "ui_lineage_banner",
+    "width": 1280,
+    "height": 64,
+    "prompt": "Bloodline lineage scroll banner UI strip rose and ash gold, Chinese fantasy tactics, no readable text"
+  },
+  {
+    "label": "ui_marriage_banner",
+    "width": 1280,
+    "height": 64,
+    "prompt": "Spring marriage court banner UI strip twin rings ash crest, soft rose gold ink wash, no text"
+  },
+  {
+    "label": "fx_hit_spark_sheet",
+    "width": 384,
+    "height": 64,
+    "prompt": "Six frame hit spark burst gold white in a row transparent bg tactics VFX strip"
+  },
+  {
+    "label": "fx_dmg_pop_sheet",
+    "width": 288,
+    "height": 48,
+    "prompt": "Six frame damage number badge pop amber dark slate in a row transparent bg UI FX"
+  }
+]

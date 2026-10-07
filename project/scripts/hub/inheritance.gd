@@ -20,8 +20,10 @@ func _ready() -> void:
 		strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(strip)
 
+	UIFX.page_enter(self)
 	UIFX.fade_in(self, 0.3)
 	Music.play_hub()
+	UIFX.wire_tree(self)
 	var t = UIKit.make_label("嗣位冲突 · 继承权旁注", true)
 	t.position = Vector2(40, 16)
 	add_child(t)

@@ -30,6 +30,7 @@ func _build() -> void:
 	_hub_strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_hub_strip.z_index = -1
 	add_child(_hub_strip)
+	UIFX.banner_shimmer(_hub_strip, 4.2)
 
 	var banner = UIKit.make_banner_rect(64, 92)
 	banner.position = Vector2(36, 16)
