@@ -1219,10 +1219,10 @@ func _deploy() -> void:
 		Sfx.wave_splash()
 	var chars: Array = []
 	for u in units:
-		if u.team == "player":
-			GameState.grant_job_skills(u.char)
-			chars.append(u.char)
+		GameState.grant_job_skills(u.char)
+		chars.append(u.char)
 	GameState.reset_battle_skills(chars)
+	_show_lock_tip_once()
 	_refresh_info()
 
 func _draw_map() -> void:
@@ -1624,7 +1624,7 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool) -> void:
 	var extras = _combat_extras(ai, di)
 	var skill_id = ""
 	var sk = {}
-	if allow_skill and atk.team == "player" and skill_mode and active_skill_id != "":
+	if allow_skill and skill_mode and active_skill_id != "" and (atk.team == "player" or atk.team == "enemy"):
 		skill_id = active_skill_id
 		sk = GameState.get_skill(skill_id)
 		if sk.get("ignore_terrain_avo"):
@@ -1812,11 +1812,217 @@ func _end_player_turn() -> void:
 	if not battle_over:
 		_start_player_turn()
 
+
+func _show_lock_tip_once() -> void:
+	# 交战锁定 UX：每场战斗首次提示（session 内用 meta 去重）
+	if has_meta("lock_tip_shown"):
+		return
+	set_meta("lock_tip_shown", true)
+	var panel = UIKit.make_panel()
+	panel.position = Vector2(280, 72)
+	panel.custom_minimum_size = Vector2(720, 88)
+	panel.z_index = 20
+	add_child(panel)
+	if ResourceLoader.exists("res://assets/art/ui/lock_tip_banner.png"):
+		var bg = TextureRect.new()
+		bg.texture = load("res://assets/art/ui/lock_tip_banner.png")
+		bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		bg.stretch_mode = TextureRect.STRETCH_SCALE
+		bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		panel.add_child(bg)
+	var vb := VBoxContainer.new()
+	vb.add_theme_constant_override("separation", 4)
+	panel.add_child(vb)
+	var t = UIKit.make_label("交战锁定", true)
+	t.add_theme_color_override("font_color", Color(1.0, 0.45, 0.35))
+	vb.add_child(t)
+	var d = UIKit.make_dim_label("攻/受击后双方进入锁定：脱离代价+2移，锁定中反击命中+10，堡垒格更硬。可用「抽身一步/拆锁突围」解除。")
+	d.custom_minimum_size = Vector2(680, 40)
+	d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	vb.add_child(d)
+	var dismiss = UIKit.make_button("知道了", 100)
+	dismiss.pressed.connect(func(): panel.queue_free())
+	vb.add_child(dismiss)
+	# 自动淡出
+	get_tree().create_timer(8.0).timeout.connect(func():
+		if is_instance_valid(panel):
+			panel.queue_free()
+	)
+
+
+func _enemy_known_skills(c: CKCharacter) -> Array:
+	var out: Array = []
+	for sid in c.skills:
+		if sid not in out:
+			out.append(sid)
+	for sid in c.unlocked_skills:
+		if sid not in out:
+			out.append(sid)
+	return out
+
+func _enemy_skill_ready(c: CKCharacter, sid: String) -> bool:
+	if int(c.skill_uses.get(sid, 0)) <= 0:
+		return false
+	if int(c.skill_cd.get(sid, 0)) > 0:
+		return false
+	return true
+
+func _enemy_try_skills(ui: int) -> void:
+	var u = units[ui]
+	var c: CKCharacter = u.char
+	# 1) 残血被锁 → 抽身/拆锁
+	if int(c.temp_combat_lock) > 0 and float(c.hp) / float(maxi(1, c.max_hp)) < 0.55:
+		for sid in ["disengage_step", "lock_breaker"]:
+			if sid in _enemy_known_skills(c) and _enemy_skill_ready(c, sid):
+				_cast_buff_skill_for_team(ui, sid)
+				_log("%s 敌技「%s」" % [c.name, GameState.get_skill(sid).get("name", sid)])
+				await get_tree().create_timer(0.2).timeout
+				return
+	# 2) 站在林/垒 → 占地利
+	var tid = terrain[u.pos.y][u.pos.x]
+	if tid in ["fort", "forest", "hill"]:
+		if "terrain_ward" in _enemy_known_skills(c) and _enemy_skill_ready(c, "terrain_ward"):
+			_cast_buff_skill_for_team(ui, "terrain_ward")
+			_log("%s 敌技「占地利」" % c.name)
+			await get_tree().create_timer(0.18).timeout
+			return
+	# 3) 铁壁 / 锁定猎物
+	for sid in ["guard_stance", "mark_prey", "hold_phalanx", "anchor_guard"]:
+		if sid in _enemy_known_skills(c) and _enemy_skill_ready(c, sid):
+			# 仅当附近有玩家时浪费增益不值
+			var near = false
+			for ou in units:
+				if ou.team == "player" and ou.char.hp > 0 and _manhattan(u.pos, ou.pos) <= 3:
+					near = true
+					break
+			if near:
+				_cast_buff_skill_for_team(ui, sid)
+				_log("%s 敌技「%s」" % [c.name, GameState.get_skill(sid).get("name", sid)])
+				await get_tree().create_timer(0.18).timeout
+				return
+	# 4) 治疗类：友军残血
+	for sid in _enemy_known_skills(c):
+		var sk = GameState.get_skill(sid)
+		if str(sk.get("type", "")) != "support":
+			continue
+		if not _enemy_skill_ready(c, sid):
+			continue
+		var need = false
+		for ou in units:
+			if ou.team == "enemy" and ou.char.hp > 0 and ou.char.hp < ou.char.max_hp * 0.6:
+				if _manhattan(u.pos, ou.pos) <= 1:
+					need = true
+					break
+		if need:
+			_cast_support_skill_for_team(ui, sid, "enemy")
+			await get_tree().create_timer(0.22).timeout
+			return
+
+func _cast_buff_skill_for_team(ui: int, sid: String) -> void:
+	# 复用玩家增益逻辑（不依赖 selected）
+	var sk = GameState.get_skill(sid)
+	var u = units[ui]
+	if sk.get("def_buff"):
+		u.char.temp_def_buff = int(sk.get("def_buff"))
+	if sk.get("next_hit_bonus"):
+		u.char.temp_hit_bonus = int(sk.get("next_hit_bonus"))
+	if sk.get("next_crit_bonus"):
+		u.char.temp_crit_bonus = int(sk.get("next_crit_bonus"))
+	if sk.get("zoc_aura"):
+		u.char.temp_zoc_aura = int(sk.get("zoc_aura"))
+	if sk.get("ignore_zoc"):
+		u.char.temp_ignore_zoc = true
+	if sk.get("leave_free"):
+		u.char.temp_leave_free = true
+	if sk.get("clear_combat_lock"):
+		u.char.temp_combat_lock = 0
+		_spawn_dmg(u.pos, "拆锁", Color(0.5, 0.85, 1.0))
+		_spawn_slash(u.pos, "spark")
+	if sk.get("terrain_ward"):
+		u.char.temp_terrain_ward = true
+		_spawn_dmg(u.pos, "地利", Color(0.55, 0.9, 0.55))
+		_spawn_slash(u.pos, "shield")
+	if sk.get("party_def_buff"):
+		var add = int(sk.get("party_def_buff"))
+		var team = u.team
+		for ou in units:
+			if ou.team == team and ou.char.hp > 0:
+				ou.char.temp_def_buff = maxi(ou.char.temp_def_buff, add)
+	_consume_skill(u.char, sid)
+	_spawn_slash(u.pos, "shield")
+	Sfx.skill()
+	map_draw.queue_redraw()
+
+func _cast_support_skill_for_team(ui: int, sid: String, team: String) -> void:
+	var sk = GameState.get_skill(sid)
+	var u = units[ui]
+	var healed = 0
+	for j in units.size():
+		var o = units[j]
+		if o.team != team or o.char.hp <= 0:
+			continue
+		if _manhattan(u.pos, o.pos) <= 1:
+			var amt = rng.randi_range(int(sk.get("heal_min", 8)), int(sk.get("heal_max", 12)))
+			o.char.hp = mini(o.char.max_hp, o.char.hp + amt)
+			healed += 1
+			_spawn_dmg(o.pos, "+%d" % amt, Color(0.4, 0.9, 0.5))
+			_spawn_slash(o.pos, "heal")
+	_consume_skill(u.char, sid)
+	_log("%s 敌疗「%s」×%d" % [u.char.name, sk.get("name", ""), healed])
+	Sfx.skill()
+	map_draw.queue_redraw()
+
+
+func _enemy_arm_offense(ai: int, di: int) -> void:
+	var u = units[ai]
+	var best_sid = ""
+	var best_sc = -1.0
+	for sid in _enemy_known_skills(u.char):
+		if not _enemy_skill_ready(u.char, sid):
+			continue
+		var sk = GameState.get_skill(sid)
+		if str(sk.get("type", "")) != "offense":
+			continue
+		var sc = 1.0 + float(sk.get("dmg_mul", 1.0)) + float(sk.get("hit_mod", 0)) * 0.02
+		if units[di].char.hp <= u.char.derived_atk():
+			sc += 2.0  # 斩杀感
+		if sc > best_sc:
+			best_sc = sc
+			best_sid = sid
+	if best_sid != "" and rng.randf() < 0.55:
+		skill_mode = true
+		active_skill_id = best_sid
+		_log("%s 蓄力「%s」" % [u.char.name, GameState.get_skill(best_sid).get("name", best_sid)])
+		_spawn_dmg(u.pos, "技", Color(0.95, 0.7, 0.4))
+
+
+func _tick_skill_cds(team: String) -> void:
+	for u in units:
+		if u.team != team or u.char.hp <= 0:
+			continue
+		for sid in u.char.skill_cd.keys():
+			var v = int(u.char.skill_cd[sid])
+			if v > 0:
+				u.char.skill_cd[sid] = v - 1
+
 func _enemy_ai() -> void:
+	var ecs: Array = []
+	for u in units:
+		if u.team == "enemy" and u.char.hp > 0:
+			ecs.append(u.char)
+	GameState.tick_skill_cooldowns(ecs)
 	for i in units.size():
 		var u = units[i]
 		if u.team != "enemy" or u.char.hp <= 0:
 			continue
+		# 敌方自动释放战技（增益优先，再进攻）
+		await _enemy_try_skills(i)
+		if battle_over:
+			return
+		if units[i].char.hp <= 0:
+			continue
+		u = units[i]
 		# 被锁且残血：优先抽身到高防格（不主动贴战）
 		var locked_self = int(u.char.temp_combat_lock) > 0
 		var mv = _compute_move_cells(i)
@@ -1889,11 +2095,14 @@ func _enemy_ai() -> void:
 			var d2 = _manhattan(u.pos, units[best_target].pos)
 			var ok = (d2 == 1) if melee else (d2 >= 1 and d2 <= 2)
 			if ok:
-				# 攻击前预告命中感
 				var tgt = units[best_target]
+				# 敌方进攻战技
+				_enemy_arm_offense(i, best_target)
 				var pv = BattleRules.preview(u.char, tgt.char, terrain[tgt.pos.y][tgt.pos.x], _combat_extras(i, best_target))
 				_spawn_dmg(tgt.pos, "%d%%" % int(pv.hit), Color(0.85, 0.85, 0.95))
 				_do_attack(i, best_target)
+				skill_mode = false
+				active_skill_id = ""
 				await get_tree().create_timer(0.28).timeout
 				if battle_over:
 					return

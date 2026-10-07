@@ -1,43 +1,31 @@
 {
-  "art_pass": "v7.4.0-depth",
-  "tiles": [
-    "plain",
-    "forest",
-    "hill",
-    "water",
-    "bridge",
-    "fort"
-  ],
-  "fx": [
-    "slash",
-    "crit",
-    "heal",
-    "lock",
-    "spark",
-    "shield",
-    "unlock"
-  ],
-  "fx_frames": 6,
-  "plates": [
-    "leader_plate",
-    "tank_plate",
-    "ranger_plate",
-    "mage_plate",
-    "skirm_plate"
-  ],
-  "estates": [
-    "reed_ford",
-    "stone_slope",
-    "fog_vale",
-    "tide_bridge"
-  ],
+  "art_pass": "v7.5.0-depth",
   "ui": [
-    "hub_banner_strip",
+    "castle_backdrop",
+    "hub_backdrop",
     "lineage_banner",
     "marriage_banner",
-    "hub_panel_edge",
-    "blood_bar_fill",
-    "trait_chip"
+    "hub_banner_strip",
+    "trait_icons",
+    "patrol_icon",
+    "lock_tip_banner"
   ],
-  "notes": "v7.4 denser hand-tuned tiles/FX/plates/UI; m173 farm unreachable"
+  "traits": [
+    "brave",
+    "keen_eye",
+    "iron_gut",
+    "scholar",
+    "charmer",
+    "sturdy",
+    "malnourished",
+    "temper",
+    "scarred",
+    "lucky",
+    "night_owl",
+    "heir_mark",
+    "diligent",
+    "shrewd",
+    "loyal"
+  ],
+  "notes": "v7.5 illustrated castle/hub backdrop; trait TextureRect icons; denser tiles; m173 unreachable"
 }

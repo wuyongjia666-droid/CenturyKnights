@@ -526,6 +526,8 @@ var ambition_done: Dictionary = {}  # 堡志中长期目标
 var holdings: Dictionary = {}  # id -> {level, steward_id}
 var doctrine_months: int = 0
 var estate_quiet_months: int = 0  # 连续无劫掠月数
+var patrol_cooldown: int = 0  # 全堡巡防冷却（月）
+var patrol_boost_months: int = 0  # 主动巡防抗劫剩余月
 const HOLDING_DEFS := {
 	"reed_ford": {"name": "苇原渡", "desc": "护商旧道属地", "food": 3, "silver": 2, "quest": "q_escort"},
 	"stone_slope": {"name": "石垒坡", "desc": "清匪后的丘地佃庄", "food": 2, "silver": 4, "quest": "q_bandit"},
@@ -1131,6 +1133,8 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	holdings = {}
 	doctrine_months = 0
 	estate_quiet_months = 0
+	patrol_cooldown = 0
+	patrol_boost_months = 0
 	surname = leader_surname
 	crest_color = color
 	var leader = CharacterFactory.make_leader(leader_given, leader_surname, color)
@@ -1334,6 +1338,36 @@ func clear_steward(hid: String) -> void:
 		holdings[hid]["steward_id"] = ""
 		mark_dirty()
 
+func patrol_holdings() -> Dictionary:
+	## 主动巡防：花费银粮，本月+随后数月显著抗劫，推进安静月
+	if holdings.is_empty():
+		return {"ok": false, "msg": "尚无开垦属地"}
+	if patrol_cooldown > 0:
+		return {"ok": false, "msg": "巡防休息中（尚余 %d 月）" % patrol_cooldown}
+	var cost_s = 25 + unlocked_holdings_count() * 8
+	var cost_f = 4 + unlocked_holdings_count()
+	if silver < cost_s or food < cost_f:
+		return {"ok": false, "msg": "需 %d 银 / %d 粮" % [cost_s, cost_f]}
+	silver -= cost_s
+	food -= cost_f
+	patrol_boost_months = maxi(patrol_boost_months, 2)
+	patrol_cooldown = 2
+	estate_quiet_months += 1  # 巡防本身计一档安静进展
+	morale = mini(100, morale + 2)
+	log_event("四野巡防：花费 %d银/%d粮，抗劫强化 2 月" % [cost_s, cost_f])
+	add_lineage_event("主动巡防：旗丁走田埂，劫影暂避")
+	var amb = check_ambitions()
+	mark_dirty()
+	var extra = ("；" + " / ".join(amb)) if amb else ""
+	return {"ok": true, "msg": "巡防完成：抗劫 2 月，安静+%d%s" % [estate_quiet_months, extra]}
+
+func tick_patrol_month() -> void:
+	if patrol_cooldown > 0:
+		patrol_cooldown -= 1
+	if patrol_boost_months > 0:
+		patrol_boost_months -= 1
+
+
 func steward_of(hid: String) -> CKCharacter:
 	if not holdings.has(hid):
 		return null
@@ -1397,6 +1431,8 @@ func holdings_monthly_yield() -> String:
 				raid_chance *= 0.5
 		if bool(house_mods.get("estate_patrol", false)):
 			raid_chance *= 0.35
+		if patrol_boost_months > 0:
+			raid_chance *= 0.25  # 主动巡防期
 		if raid_chance > 0.0 and rng.randf() < raid_chance:
 			raids.append(str(def.get("name", hid)))
 			continue  # 本月无收成
@@ -1715,6 +1751,9 @@ func on_battle_quest_victory() -> void:
 
 func tick_doctrine_and_marriage_month() -> Array:
 	var msgs: Array = []
+	tick_patrol_month()
+	if patrol_boost_months > 0:
+		msgs.append("巡防仍在：抗劫剩余 %d 月" % patrol_boost_months)
 	var doctrine = str(house_mods.get("doctrine", ""))
 	if doctrine != "":
 		doctrine_months += 1
@@ -2555,6 +2594,8 @@ func save_game() -> bool:
 		"holdings": holdings.duplicate(true),
 		"doctrine_months": doctrine_months,
 		"estate_quiet_months": estate_quiet_months,
+		"patrol_cooldown": patrol_cooldown,
+		"patrol_boost_months": patrol_boost_months,
 		"characters": {},
 		"tavern": [],
 		"marriage": [],
@@ -2850,6 +2891,8 @@ func load_game() -> bool:
 	holdings = data.get("holdings", {}).duplicate(true)
 	doctrine_months = int(data.get("doctrine_months", 0))
 	estate_quiet_months = int(data.get("estate_quiet_months", 0))
+	patrol_cooldown = int(data.get("patrol_cooldown", 0))
+	patrol_boost_months = int(data.get("patrol_boost_months", 0))
 	quests = data.get("quests", quests)
 	characters.clear()
 	for id in data.get("characters", {}).keys():

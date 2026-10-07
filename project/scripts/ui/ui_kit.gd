@@ -115,12 +115,32 @@ static func stone_style() -> StyleBoxFlat:
 	sb.content_margin_bottom = 10
 	return sb
 
-static func make_screen_bg(parent: Control) -> ColorRect:
+static func make_screen_bg(parent: Control, illustrated: bool = false) -> ColorRect:
 	var bg := ColorRect.new()
 	bg.color = BG
 	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	parent.add_child(bg)
+	# 插画城堡底图（城堡枢纽等）
+	if illustrated:
+		var path = "res://assets/art/ui/castle_backdrop.png"
+		if not ResourceLoader.exists(path):
+			path = "res://assets/art/ui/hub_backdrop.png"
+		if ResourceLoader.exists(path):
+			var tr := TextureRect.new()
+			tr.texture = load(path)
+			tr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			tr.stretch_mode = TextureRect.STRETCH_SCALE
+			tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			tr.modulate = Color(1, 1, 1, 0.92)
+			parent.add_child(tr)
+			# 半透明遮罩保证文字可读
+			var veil := ColorRect.new()
+			veil.color = Color(0.06, 0.07, 0.1, 0.42)
+			veil.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			veil.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			parent.add_child(veil)
 	# 顶部纹章色细线
 	var top := ColorRect.new()
 	top.color = Color(str(GameState.crest_color)) if GameState.started else ACCENT
@@ -137,6 +157,19 @@ static func make_screen_bg(parent: Control) -> ColorRect:
 	bottom.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	parent.add_child(bottom)
 	return bg
+
+static func trait_icon_rect(trait_id: String, size: float = 28.0) -> TextureRect:
+	var tr := TextureRect.new()
+	var path = "res://assets/art/ui/trait_%s.png" % trait_id
+	if not ResourceLoader.exists(path):
+		path = "res://assets/art/ui/trait_chip.png"
+	if ResourceLoader.exists(path):
+		tr.texture = load(path)
+	tr.custom_minimum_size = Vector2(size, size)
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	tr.tooltip_text = trait_id
+	return tr
 
 static func resource_bar() -> HBoxContainer:
 	var h := HBoxContainer.new()

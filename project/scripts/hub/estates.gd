@@ -7,7 +7,7 @@ var _picker_hid: String = ""
 var _picker: PanelContainer
 
 func _ready() -> void:
-	UIKit.make_screen_bg(self)
+	UIKit.make_screen_bg(self, true)
 	UIFX.fade_in(self, 0.28)
 	Music.play_castle()
 	# 顶栏美术条
@@ -56,14 +56,34 @@ func _ready() -> void:
 	works.position = Vector2(180, 660)
 	works.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/works.tscn"))
 	add_child(works)
+	var patrol = UIKit.make_accent_button("巡防四野", 140)
+	patrol.position = Vector2(340, 660)
+	patrol.pressed.connect(_do_patrol)
+	add_child(patrol)
+	var picon = TextureRect.new()
+	if ResourceLoader.exists("res://assets/art/ui/patrol_icon.png"):
+		picon.texture = load("res://assets/art/ui/patrol_icon.png")
+		picon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		picon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		picon.custom_minimum_size = Vector2(36, 36)
+		picon.position = Vector2(490, 662)
+		picon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(picon)
 
 func _sum_text() -> String:
 	var stewards = 0
 	for hid in GameState.holdings.keys():
 		if str(GameState.holdings[hid].get("steward_id", "")) != "":
 			stewards += 1
-	return "已开垦 %d / 4　总等级 %d　庄头 %d" % [
-		GameState.unlocked_holdings_count(), GameState.total_holding_levels(), stewards]
+	var extra = ""
+	if int(GameState.patrol_boost_months) > 0:
+		extra += "　巡防中(%d月)" % int(GameState.patrol_boost_months)
+	elif int(GameState.patrol_cooldown) > 0:
+		extra += "　巡防冷却(%d)" % int(GameState.patrol_cooldown)
+	if int(GameState.estate_quiet_months) > 0:
+		extra += "　安静%d月" % int(GameState.estate_quiet_months)
+	return "已开垦 %d / 4　总等级 %d　庄头 %d%s" % [
+		GameState.unlocked_holdings_count(), GameState.total_holding_levels(), stewards, extra]
 
 func _rebuild() -> void:
 	for c in _list.get_children():
@@ -226,6 +246,17 @@ func _do_assign(cid: String) -> void:
 		if _picker != null and is_instance_valid(_picker):
 			_picker.queue_free()
 			_picker = null
+		_rebuild()
+	else:
+		Sfx.miss()
+
+func _do_patrol() -> void:
+	var r = GameState.patrol_holdings()
+	_msg.text = str(r.get("msg", ""))
+	if r.get("ok"):
+		Sfx.confirm()
+		GameState.save_game()
+		get_node("Sum").text = _sum_text()
 		_rebuild()
 	else:
 		Sfx.miss()

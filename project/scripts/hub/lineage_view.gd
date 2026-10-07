@@ -3,13 +3,14 @@ extends Control
 var _list: VBoxContainer
 var _detail: RichTextLabel
 var _portrait: TextureRect
+var _trait_row: HBoxContainer
 
 func _ready() -> void:
 	_build()
 	_refresh()
 
 func _build() -> void:
-	UIKit.make_screen_bg(self)
+	UIKit.make_screen_bg(self, true)
 	var strip = TextureRect.new()
 	if ResourceLoader.exists("res://assets/art/ui/lineage_banner.png"):
 		strip.texture = load("res://assets/art/ui/lineage_banner.png")
@@ -41,11 +42,19 @@ func _build() -> void:
 	var hb := HBoxContainer.new()
 	hb.add_theme_constant_override("separation", 12)
 	detail_panel.add_child(hb)
+	var left_col := VBoxContainer.new()
+	left_col.add_theme_constant_override("separation", 8)
+	hb.add_child(left_col)
 	_portrait = TextureRect.new()
 	_portrait.custom_minimum_size = Vector2(128, 128)
 	_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	hb.add_child(_portrait)
+	left_col.add_child(_portrait)
+	_trait_row = HBoxContainer.new()
+	_trait_row.add_theme_constant_override("separation", 4)
+	left_col.add_child(_trait_row)
+	var tip_t = UIKit.make_dim_label("禀性图标")
+	left_col.add_child(tip_t)
 	_detail = RichTextLabel.new()
 	_detail.custom_minimum_size = Vector2(580, 460)
 	_detail.bbcode_enabled = true
@@ -92,6 +101,14 @@ func _refresh() -> void:
 
 func _show(c: CKCharacter) -> void:
 	_portrait.texture = UnitArt.portrait(c, 128)
+	if _trait_row:
+		for ch in _trait_row.get_children():
+			ch.queue_free()
+		for tr in c.traits:
+			var icon = UIKit.trait_icon_rect(str(tr), 32.0)
+			var td = GameState.get_trait(str(tr))
+			icon.tooltip_text = str(td.get("name", tr)) + " — " + str(td.get("desc", td.get("name", tr)))
+			_trait_row.add_child(icon)
 	var lines: Array = [UIKit.char_card_text(c), ""]
 	lines.append("[b]血胤混合条[/b]")
 	for k in c.blood_mix.keys():
