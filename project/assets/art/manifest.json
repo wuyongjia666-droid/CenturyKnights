@@ -1,5 +1,5 @@
 {
-  "art_pass": "v7.25.0-depth",
+  "art_pass": "v7.26.0-depth",
   "patrol_frames": 12,
   "heroes": [
     "leader_default",
@@ -10,7 +10,7 @@
     "mage_plate",
     "skirm_plate"
   ],
-  "farm_batch": "v722+v724+v725 qwen",
+  "farm_batch": "v722..v726 qwen",
   "ingested": [
     "battle_backdrop_wash.png",
     "concept_hire_plate_f.png",
@@ -50,5 +50,20 @@
     "spark",
     "move_dust",
     "turn_flash"
+  ],
+  "farm_faces_slotted": [
+    750,
+    751,
+    752,
+    753,
+    754,
+    755,
+    760,
+    761,
+    762,
+    763,
+    764,
+    765,
+    766
   ]
 }

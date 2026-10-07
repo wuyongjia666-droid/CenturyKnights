@@ -1,0 +1,146 @@
+[
+  {
+    "label": "fx_blood_splash_sheet",
+    "prompt": "game VFX horizontal sprite sheet 6 frames 384x64, crimson blood mist splash then fade, transparent bg, no text, ink-fantasy HUD particles",
+    "width": 384,
+    "height": 64
+  },
+  {
+    "label": "fx_block_parry_sheet",
+    "prompt": "game VFX horizontal sprite sheet 6 frames 384x64, steel-gold parry spark ring, transparent bg, no text",
+    "width": 384,
+    "height": 64
+  },
+  {
+    "label": "fx_levelup_sheet",
+    "prompt": "game VFX horizontal sprite sheet 6 frames 384x64, golden level-up pillar flare, transparent bg, no text",
+    "width": 384,
+    "height": 64
+  },
+  {
+    "label": "ui_deploy_banner",
+    "prompt": "Chinese ink-fantasy deploy roster UI banner strip 1280x56, war camp tents gold trim, transparent ends, no text glyphs",
+    "width": 1280,
+    "height": 56
+  },
+  {
+    "label": "ui_roster_banner",
+    "prompt": "Chinese ink-fantasy roster scroll UI banner 1280x56, name plaques gold dust, transparent ends, no text",
+    "width": 1280,
+    "height": 56
+  },
+  {
+    "label": "ui_train_banner",
+    "prompt": "Chinese ink-fantasy training yard UI banner 1280x56, spears racks ash dust, transparent ends, no text",
+    "width": 1280,
+    "height": 56
+  },
+  {
+    "label": "ui_tavern_banner",
+    "prompt": "Chinese ink-fantasy tavern UI banner 1280x56, warm lanterns wine jars, transparent ends, no text",
+    "width": 1280,
+    "height": 56
+  },
+  {
+    "label": "ui_shrine_banner",
+    "prompt": "Chinese ink-fantasy shrine UI banner 1280x56, incense jade glow, transparent ends, no text",
+    "width": 1280,
+    "height": 56
+  },
+  {
+    "label": "ui_quests_banner",
+    "prompt": "Chinese ink-fantasy quest board UI banner 1280x56, sealed letters gold pins, transparent ends, no text",
+    "width": 1280,
+    "height": 56
+  },
+  {
+    "label": "portrait_hire_merchant",
+    "prompt": "Chinese ink-fantasy merchant advisor portrait bust, shrewd smile, silk collar, painterly, no text, square plate",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_hire_guard",
+    "prompt": "Chinese ink-fantasy gate guard portrait bust, stern jaw, iron nasal helm, painterly, no text, square plate",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_hire_huntress",
+    "prompt": "Chinese ink-fantasy huntress portrait bust, wind-tangled hair, keen eyes, painterly, no text, square plate",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_hire_monk",
+    "prompt": "Chinese ink-fantasy ash shrine monk portrait bust, calm eyes, prayer beads, painterly, no text, square plate",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "ui_hourglass_chip",
+    "prompt": "tiny game HUD chip 64x64, ornate hourglass sand gold, transparent bg, no text",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "ui_save_chip",
+    "prompt": "tiny game HUD chip 64x64, sealed scroll save icon, ash wax, transparent bg, no text",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "ui_settings_gear",
+    "prompt": "tiny game HUD chip 64x64, ornate bronze gear, transparent bg, no text",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "fx_heal_aura_sheet",
+    "prompt": "game VFX horizontal sprite sheet 6 frames 384x64, soft jade heal aura ring pulse, transparent bg, no text",
+    "width": 384,
+    "height": 64
+  },
+  {
+    "label": "battle_grid_attack_wash",
+    "prompt": "game battle tile attack wash 64x64, soft crimson corner threat glow, transparent center, no text",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "ui_skill_node_lit",
+    "prompt": "game skill tree node lit 80x80, gold-fire gem active, transparent bg, no text",
+    "width": 80,
+    "height": 80
+  },
+  {
+    "label": "ui_skill_node_dim",
+    "prompt": "game skill tree node dim 80x80, cold iron gem locked, transparent bg, no text",
+    "width": 80,
+    "height": 80
+  },
+  {
+    "label": "ui_marriage_vow_seal",
+    "prompt": "game UI vow seal stamp 96x96, twin ribbon wax seal, rose-gold, transparent bg, no text",
+    "width": 96,
+    "height": 96
+  },
+  {
+    "label": "ui_estate_raid_warn",
+    "prompt": "tiny game HUD warn chip 64x64, estate raid torch icon, amber-red, transparent bg, no text",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "portrait_hire_child_m",
+    "prompt": "Chinese ink-fantasy boy child heir portrait bust, soft cheeks, ash banner toy, painterly, no text, square plate",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_hire_child_f",
+    "prompt": "Chinese ink-fantasy girl child heir portrait bust, bright eyes, reed flower, painterly, no text, square plate",
+    "width": 256,
+    "height": 256
+  }
+]

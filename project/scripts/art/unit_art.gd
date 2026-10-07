@@ -8,6 +8,10 @@ static var _token_phase: float = 0.0
 static var _face_owner: Dictionary = {}  # slot -> character id
 static var _face_assign: Dictionary = {}  # character id -> slot
 const FACE_SLOTS := 768
+## 农场板已 stamp 进开放寻址表；性别/角色优先尝试这些槽
+const FARM_FACE_SLOTS_M := [760, 762, 764, 765, 766, 750, 751, 753, 754, 160, 162, 164, 165, 166, 150, 151, 153, 154, 360, 362, 364, 365, 366, 350, 351, 353, 354, 560, 562, 564, 565, 566, 550, 551, 553, 554]
+const FARM_FACE_SLOTS_F := [761, 763, 752, 755, 161, 163, 152, 155, 361, 363, 352, 355, 561, 563, 552, 555]
+
 
 static func clear_cache() -> void:
 	_cache.clear()
@@ -538,6 +542,7 @@ static func _boss_portrait(key: String) -> String:
 
 static func _face_uid(c: CKCharacter) -> int:
 	## FNV 起点 + 开放寻址：超长王朝不共脸（同 id 稳定）
+	## 农场板槽：按性别/年龄/职事优先占坑，再回落到全表探测
 	var cid = str(c.id)
 	if _face_assign.has(cid):
 		return int(_face_assign[cid])
@@ -549,15 +554,43 @@ static func _face_uid(c: CKCharacter) -> int:
 	]
 	for ch2 in key:
 		h = int((h ^ ch2.unicode_at(0)) * 16777619) & 0x7fffffff
+	var prefer: Array = []
+	if str(c.gender) == "f":
+		prefer.assign(FARM_FACE_SLOTS_F)
+		if int(c.age) <= 14:
+			prefer = [755, 155, 355, 555] + prefer
+		elif int(c.age) <= 22:
+			prefer = [763, 752, 161, 361, 561] + prefer
+	else:
+		prefer.assign(FARM_FACE_SLOTS_M)
+		if int(c.age) >= 50:
+			prefer = [765, 764, 766] + prefer
+		elif int(c.age) <= 14:
+			prefer = [754, 154, 354, 554] + prefer
+		elif int(c.age) <= 22:
+			prefer = [762, 160, 360, 560] + prefer
+		elif str(c.job_id) in ["apprentice", "priest"]:
+			prefer = [766, 166, 366, 566] + prefer
+	# 1) 优先农场槽（空或已属自己）；hash 旋转避免总抢同一张
+	var npref = prefer.size()
+	if npref > 0:
+		var rot = h % npref
+		for i in range(npref):
+			var slot = int(prefer[(rot + i) % npref])
+			var owner = str(_face_owner.get(slot, ""))
+			if owner == "" or owner == cid:
+				_face_owner[slot] = cid
+				_face_assign[cid] = slot
+				return slot
+	# 2) 全表开放寻址
 	var start = h % FACE_SLOTS
 	for i in range(FACE_SLOTS):
-		var slot = (start + i) % FACE_SLOTS
-		var owner = str(_face_owner.get(slot, ""))
-		if owner == "" or owner == cid:
-			_face_owner[slot] = cid
-			_face_assign[cid] = slot
-			return slot
-	# 满表：退回起点（极端）
+		var slot2 = (start + i) % FACE_SLOTS
+		var owner2 = str(_face_owner.get(slot2, ""))
+		if owner2 == "" or owner2 == cid:
+			_face_owner[slot2] = cid
+			_face_assign[cid] = slot2
+			return slot2
 	_face_assign[cid] = start
 	return start
 

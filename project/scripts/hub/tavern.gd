@@ -16,6 +16,16 @@ func _ready() -> void:
 
 func _build() -> void:
 	UIKit.make_themed_bg(self, "tavern")
+	if ResourceLoader.exists("res://assets/art/ui/tavern_banner.png"):
+		var _bn := TextureRect.new()
+		_bn.texture = load("res://assets/art/ui/tavern_banner.png")
+		_bn.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		_bn.stretch_mode = TextureRect.STRETCH_SCALE
+		_bn.position = Vector2(0, 0)
+		_bn.size = Vector2(1280, 52)
+		_bn.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(_bn)
+		UIFX.banner_shimmer(_bn, 3.8)
 	var t = UIKit.make_label("烽火酒馆", true)
 	t.position = Vector2(40, 16)
 	add_child(t)

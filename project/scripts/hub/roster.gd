@@ -2,6 +2,16 @@ extends Control
 
 func _ready() -> void:
 	UIKit.make_themed_bg(self, "roster")
+	if ResourceLoader.exists("res://assets/art/ui/roster_banner.png"):
+		var _bn := TextureRect.new()
+		_bn.texture = load("res://assets/art/ui/roster_banner.png")
+		_bn.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		_bn.stretch_mode = TextureRect.STRETCH_SCALE
+		_bn.position = Vector2(0, 0)
+		_bn.size = Vector2(1280, 52)
+		_bn.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(_bn)
+		UIFX.banner_shimmer(_bn, 3.8)
 	UIFX.page_enter(self)
 	var t = UIKit.make_label("花名册", true)
 	t.position = Vector2(40, 16)

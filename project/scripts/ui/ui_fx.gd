@@ -221,6 +221,11 @@ static func focus_ring(node: Control, col: Color = Color(1.15, 0.95, 0.55), dur:
 	flash_modulate(node, col, dur)
 	hover_lift(node, 0.02)
 
+static func nav_slide(node: Control, from_x: float = -24.0, dur: float = 0.28) -> void:
+	## 侧栏/导航滑入
+	if node == null: return
+	slide_from(node, Vector2(from_x, 0), absf(from_x), dur)
+
 static func page_exit(root: Control, dur: float = 0.16) -> void:
 	## 页面离开：快于入场
 	if root == null: return
