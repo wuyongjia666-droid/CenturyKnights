@@ -61,10 +61,18 @@ func _refresh_list() -> void:
 
 func _show(c: CKCharacter) -> void:
 	_selected = c
-	var lines: Array = ["[b]%s[/b]　职业 %s" % [c.name, GameState.get_job(c.job_id).get("name","")], "已学战技："]
-	for sid in c.skills:
-		var sk = GameState.get_skill(sid)
-		lines.append("· %s（T%d，冷却%d，次数%d）— %s" % [sk.get("name"), int(sk.get("tier",1)), int(sk.get("cooldown",1)), int(sk.get("uses",1)), sk.get("desc","")])
+	var lines: Array = ["[b]%s[/b]　职业 %s" % [c.name, GameState.get_job(c.job_id).get("name","")], ""]
+	for tree in GameState.data_skills.get("trees", []):
+		lines.append("[color=#c9a227]%s[/color] — %s" % [tree.get("name"), tree.get("desc","")])
+		for sk in GameState.data_skills.get("skills", []):
+			if sk.get("tree") != tree.get("id"):
+				continue
+			if c.job_id not in sk.get("jobs", []):
+				continue
+			var sid = str(sk.get("id"))
+			var owned = sid in c.skills or sid in c.unlocked_skills
+			var mark = "✓" if owned else ("T%d" % int(sk.get("tier",1)))
+			lines.append("　[%s] %s　冷却%d　%s" % [mark, sk.get("name"), int(sk.get("cooldown",1)), sk.get("desc","")])
 	lines.append("")
 	lines.append("[color=#c9a227]可解锁二阶：[/color]")
 	var any := false
