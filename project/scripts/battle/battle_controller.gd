@@ -487,6 +487,10 @@ const DRUM_BANTER_TURN := [
 	"【鼓楼】老旗手：夜鼓棋格，中格是活路。",
 	"【鼓楼】春令使者：丘环交错，落脚先想第二步。",
 	"【鼓楼】斥候：擂台软面——外丘清完还要进心垒。",
+	"【鼓楼】斥候：鼓市棚廊——三列要择口。",
+	"【鼓楼】管事：鼓架竖廊，别砸架纽。",
+	"【鼓楼】老旗手：独擂水镜，桥心是活路。",
+	"【鼓楼】春令使者：夜擂林环，心台要护拍。",
 ]
 const DRUM_BANTER_KILL := [
 	"【鼓楼】鼓楼悍匪：……面……不该破……",
@@ -501,6 +505,31 @@ const DRUM_BANTER_START := [
 	"【鼓楼】系统：鼓楼已升。护拍优先于斩杀。",
 	"【鼓楼】管事：拍未成，先别浪战。",
 	"【鼓楼】老旗手：廊下不利横队——择口纵列。",
+]
+const INCENSE_BANTER_TURN := [
+	"【香市】管事：护烟！别让他们翻炉。",
+	"【香市】老旗手：香堂还在，旗就不能倒。",
+	"【香市】斥候：香市有贼气味——压低身子。",
+	"【香市】苇原·灯影：烟一乱，就是劫香开手。",
+	"【香市】管事：禁乱翻。一炉倾灰，满市尽散。",
+	"【香市】斥候：香堂中隔——择桥绕进，别硬蹚。",
+	"【香市】老旗手：灰台炉格，中台是活路。",
+	"【香市】春令使者：丘格交错，落脚先想第二步。",
+	"【香市】斥候：烟径软灰——外丘清完还要进心垒。",
+]
+const INCENSE_BANTER_KILL := [
+	"【香市】香市悍匪：……炉……不该翻……",
+	"【香市】香堂伏弓：市口……不在你们手里……",
+	"【香市】老旗手：一匪倒，烟路清一寸。",
+	"【香市】管事：别追太深——香还在架上。",
+	"【香市】香市匪首：空烟……闻不清真姓……",
+	"【香市】斥候：翻炉的倒了，香可护。",
+]
+const INCENSE_BANTER_START := [
+	"【香市】春令使者：这一仗验的是姓，不是香。",
+	"【香市】系统：香市已升。护烟优先于斩杀。",
+	"【香市】管事：烟未成，先别浪战。",
+	"【香市】老旗手：炉下不利横队——择桥纵列。",
 ]
 const ESCORT_BANTER_START := [
 	"【镖行】春令使者：这一仗验的是姓，不是刀。",
@@ -518,7 +547,7 @@ func _is_harbor_map() -> bool:
 
 func _theme_banter(kind: String) -> void:
 	var theme = _map_theme()
-	if theme != "escort" and theme != "harbor" and theme != "paper" and theme != "copper" and theme != "lantern" and theme != "grain" and theme != "snow" and theme != "bamboo" and theme != "relay" and theme != "bell" and theme != "rain" and theme != "ink" and theme != "hive" and theme != "flute" and theme != "shadow" and theme != "salt" and theme != "dye" and theme != "drum":
+	if theme != "escort" and theme != "harbor" and theme != "paper" and theme != "copper" and theme != "lantern" and theme != "grain" and theme != "snow" and theme != "bamboo" and theme != "relay" and theme != "bell" and theme != "rain" and theme != "ink" and theme != "hive" and theme != "flute" and theme != "shadow" and theme != "salt" and theme != "dye" and theme != "drum" and theme != "incense":
 		return
 	var key = theme + kind + str(_banter_idx if kind == "turn" else _banter_kill)
 	if _banter_played.has(key):
@@ -560,6 +589,8 @@ func _theme_banter(kind: String) -> void:
 		pool = DYE_BANTER_TURN if kind == "turn" else (DYE_BANTER_KILL if kind == "kill" else DYE_BANTER_START)
 	elif theme == "drum":
 		pool = DRUM_BANTER_TURN if kind == "turn" else (DRUM_BANTER_KILL if kind == "kill" else DRUM_BANTER_START)
+	elif theme == "incense":
+		pool = INCENSE_BANTER_TURN if kind == "turn" else (INCENSE_BANTER_KILL if kind == "kill" else INCENSE_BANTER_START)
 	else:
 		pool = []
 	if pool.is_empty():
@@ -607,6 +638,8 @@ func _theme_banter(kind: String) -> void:
 			Sfx.dye_splash()
 		elif theme == "drum":
 			Sfx.drum_thump()
+		elif theme == "incense":
+			Sfx.incense_hiss()
 	else:
 		line = str(pool[0] if _banter_idx == 0 else pool[mini(1, pool.size()-1)])
 		if theme == "escort":
@@ -645,6 +678,8 @@ func _theme_banter(kind: String) -> void:
 			Sfx.dye_splash()
 		elif theme == "drum":
 			Sfx.drum_thump()
+		elif theme == "incense":
+			Sfx.incense_hiss()
 	_banter_played[key] = true
 	_log(line)
 
@@ -2343,6 +2378,26 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch215_night_done")
 	elif map_id == "ch216_seal":
 		GameState.set_flag("ch216_seal_done")
+	elif map_id == "ch217_fair":
+		GameState.set_flag("ch217_fair_done")
+	elif map_id == "ch217_rack":
+		GameState.set_flag("ch217_rack_done")
+	elif map_id == "ch218_solo":
+		GameState.set_flag("ch218_solo_done")
+	elif map_id == "ch218_night":
+		GameState.set_flag("ch218_night_done")
+	elif map_id == "ch219_finale":
+		GameState.set_flag("ch219_finale_done")
+	elif map_id == "ch220_market":
+		GameState.set_flag("ch220_market_done")
+	elif map_id == "ch220_hall":
+		GameState.set_flag("ch220_hall_done")
+	elif map_id == "ch221_smoke":
+		GameState.set_flag("ch221_smoke_done")
+	elif map_id == "ch221_ash":
+		GameState.set_flag("ch221_ash_done")
+	elif map_id == "ch222_seal":
+		GameState.set_flag("ch222_seal_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")
