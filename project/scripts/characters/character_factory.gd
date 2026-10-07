@@ -111,6 +111,7 @@ static func make_tutorial_militia(slot: int) -> CKCharacter:
 	c.in_roster = false
 	c.blood_mix = {"common_ash": 1.0}
 	c.traits = ["brave"]
+	c.appearance = {"hair": "ash_brown" if slot == 0 else "ink_black", "eyes": "slate", "brow": "straight", "scar": "none"}
 	c.stats = {"str": 8, "vit": 8, "skl": 6, "agi": 7, "per": 5, "wil": 6}
 	c.level = 1
 	c.salary = 0

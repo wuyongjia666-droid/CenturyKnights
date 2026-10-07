@@ -5,7 +5,7 @@
 - 引擎：Godot 4.3
 - 工作标题（中）：百年骑士·同型原创
 - 工程 ID（英）：CenturyKnights
-- MVP：约 20–30 分钟「第零章·灰旗初升」闭环（战棋→招募→城堡→联姻遗传→岁月）
+- 垂直切片：约 30–45 分钟「第零章·灰旗初升」加长闭环（程序立绘/战旗 → 战棋 → 招募 → 城堡 → 联姻遗传 → 岁月）
 
 ## 快速运行
 
@@ -22,7 +22,7 @@ godot --headless --path . --scene res://tests/tactics_e2e.tscn
 
 ## Windows 试玩包
 
-见 GitHub Releases 最新：`CenturyKnights-windows-tutorial-fix.zip`（v0.1.3，教学战 4 vs 2；内含嵌入 PCK 的 exe）。
+见 GitHub Releases 最新：`CenturyKnights-windows-v0.2.0-polish.zip`（立绘/战旗/加长第零章/精品 UI；教学战仍约 4 vs 2）。
 
 ## 20 分钟怎么玩
 

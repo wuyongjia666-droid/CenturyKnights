@@ -1,18 +1,14 @@
 extends Control
 
 func _ready() -> void:
-	var bg := ColorRect.new()
-	bg.color = UIKit.BG
-	bg.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
-	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(bg)
+	UIKit.make_screen_bg(self)
 
 	var center := CenterContainer.new()
 	center.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 	add_child(center)
 
 	var box := VBoxContainer.new()
-	box.custom_minimum_size = Vector2(420, 0)
+	box.custom_minimum_size = Vector2(460, 0)
 	box.add_theme_constant_override("separation", 12)
 	box.alignment = BoxContainer.ALIGNMENT_CENTER
 	center.add_child(box)
@@ -47,6 +43,8 @@ func _ready() -> void:
 	speed.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	speed.value_changed.connect(func(v): GameState.settings["text_speed"] = v)
 	box.add_child(speed)
+
+	box.add_child(UIKit.make_dim_label("音频：程序短音效占位（无第三方曲库版权风险）。"))
 
 	var back = UIKit.make_button(Locale.t("btn_back"), 200)
 	back.size_flags_horizontal = Control.SIZE_SHRINK_CENTER

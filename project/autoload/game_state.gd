@@ -200,9 +200,18 @@ func refresh_marriage_candidates() -> void:
 
 func _init_quests() -> void:
 	quests = [
-		{"id": "q_escort", "name": "护商·苇原道", "stars": 1, "months": 1, "silver": 30, "rep": 6, "battle": false, "desc": "护送商队至苇原，自动演习结算。"},
-		{"id": "q_bandit", "name": "清匪·石垒坡", "stars": 2, "months": 1, "silver": 45, "rep": 10, "battle": true, "desc": "真实战棋清剿匪帮。"},
-		{"id": "q_drill", "name": "演习·灰场", "stars": 1, "months": 1, "silver": 20, "rep": 4, "battle": false, "desc": "堡内演习，耗时换银与经验。"},
+		{"id": "q_escort", "name": "护商·苇原道", "stars": 1, "months": 1, "silver": 30, "rep": 6, "battle": false,
+			"desc": "商队要走苇原旧道。旗帜一亮，劫匪多半让路——自动结算，换银与灰烬邦声望。"},
+		{"id": "q_bandit", "name": "清匪·石垒坡", "stars": 2, "months": 1, "silver": 45, "rep": 10, "battle": true,
+			"desc": "石垒坡有人收「过路银」。真实战棋清剿：编队出战，打赢才算。"},
+		{"id": "q_drill", "name": "演习·灰场", "stars": 1, "months": 1, "silver": 20, "rep": 4, "battle": false,
+			"desc": "堡内灰场拉练。耗时一月，全员小额经验，士气微升。"},
+		{"id": "q_herb", "name": "采药·雾谷", "stars": 1, "months": 1, "silver": 15, "rep": 3, "battle": false,
+			"desc": "雾谷药草正旺。归来药材+2（自动），并得薄银。"},
+		{"id": "q_bridge", "name": "守桥·断潮渡", "stars": 2, "months": 1, "silver": 40, "rep": 8, "battle": false,
+			"desc": "河卫邦请人值夜守桥。不必开战，换声望与银——陆桥耳目会记住灰旗。"},
+		{"id": "q_rumor", "name": "探听·烽火夜话", "stars": 1, "months": 1, "silver": 10, "rep": 5, "battle": false,
+			"desc": "酒馆夜话里有春令与匪线的碎片。耗时换声望，偶得铁料线索（银少）。"},
 	]
 
 func accept_quest(qid: String) -> Dictionary:
@@ -219,6 +228,12 @@ func accept_quest(qid: String) -> Dictionary:
 	var evs = Calendar.advance(int(q.get("months", 1)))
 	silver += int(q["silver"])
 	add_rep("ashland", int(q["rep"]))
+	if str(q.get("id", "")) == "q_herb":
+		herb += 2
+	if str(q.get("id", "")) == "q_drill":
+		morale = mini(100, morale + 3)
+	if str(q.get("id", "")) == "q_bridge":
+		add_rep("riverland", 4)
 	for c in roster():
 		c.exp += 8 * int(q["stars"])
 	log_event("完成任务「%s」+ %d 银" % [q["name"], q["silver"]])

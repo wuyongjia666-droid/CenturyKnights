@@ -8,35 +8,54 @@ func _ready() -> void:
 	_show_forecast(1)
 
 func _build() -> void:
-	var bg := ColorRect.new()
-	bg.color = UIKit.BG
-	bg.set_anchors_preset(PRESET_FULL_RECT)
-	add_child(bg)
+	UIKit.make_screen_bg(self)
 	var t = UIKit.make_label("岁月沙漏", true)
-	t.position = Vector2(40, 20)
+	t.position = Vector2(40, 16)
 	add_child(t)
 	var cal = UIKit.make_label(Calendar.label())
-	cal.position = Vector2(40, 60)
+	cal.position = Vector2(40, 56)
 	cal.name = "CalLabel"
+	cal.add_theme_color_override("font_color", UIKit.ACCENT)
 	add_child(cal)
-	var fl = UIKit.make_label("推进预告（X5）")
-	fl.position = Vector2(40, 100)
-	fl.add_theme_color_override("font_color", UIKit.ACCENT)
+	var fl = UIKit.make_dim_label("先看预告，再倾沙漏。人会老，旗还在——儿童口粮也计入月结。")
+	fl.position = Vector2(200, 56)
 	add_child(fl)
+
+	var fp = UIKit.make_panel()
+	fp.position = Vector2(40, 100)
+	fp.custom_minimum_size = Vector2(600, 320)
+	add_child(fp)
+	var ftitle = UIKit.make_label("推进预告")
+	ftitle.add_theme_color_override("font_color", UIKit.ACCENT)
+	fp.add_child(VBoxContainer.new())
+	var fv = fp.get_child(0) as VBoxContainer
+	fv.add_child(ftitle)
 	_forecast = RichTextLabel.new()
-	_forecast.position = Vector2(40, 130)
-	_forecast.custom_minimum_size = Vector2(600, 280)
+	_forecast.custom_minimum_size = Vector2(560, 260)
 	_forecast.bbcode_enabled = true
-	add_child(_forecast)
+	_forecast.add_theme_color_override("default_color", UIKit.TEXT)
+	fv.add_child(_forecast)
+
+	var lp = UIKit.make_panel()
+	lp.position = Vector2(680, 100)
+	lp.custom_minimum_size = Vector2(560, 320)
+	add_child(lp)
+	var lv := VBoxContainer.new()
+	lp.add_child(lv)
+	var ltitle = UIKit.make_label("推进结果")
+	ltitle.add_theme_color_override("font_color", UIKit.ACCENT)
+	lv.add_child(ltitle)
 	_log = RichTextLabel.new()
-	_log.position = Vector2(680, 130)
-	_log.custom_minimum_size = Vector2(540, 400)
+	_log.custom_minimum_size = Vector2(520, 260)
 	_log.bbcode_enabled = true
-	add_child(_log)
+	_log.add_theme_color_override("default_color", UIKit.TEXT)
+	lv.add_child(_log)
+
 	var row := HBoxContainer.new()
-	row.position = Vector2(40, 450)
+	row.position = Vector2(40, 460)
+	row.add_theme_constant_override("separation", 10)
 	add_child(row)
-	var m1 = UIKit.make_button(Locale.t("advance_month"), 140)
+	var m1 = UIKit.make_accent_button(Locale.t("advance_month"), 140)
 	m1.pressed.connect(func(): _advance(1))
 	row.add_child(m1)
 	var m3 = UIKit.make_button(Locale.t("advance_season"), 140)
@@ -56,9 +75,9 @@ func _build() -> void:
 
 func _show_forecast(months: int) -> void:
 	var evs = Calendar.forecast(months)
-	var lines: Array = ["将推进 %d 月，预计发生：" % months]
+	var lines: Array = ["将推进 [b]%d[/b] 月，预计发生：" % months]
 	if evs.is_empty():
-		lines.append("（无特殊事件，仍有军饷结算）")
+		lines.append("（无特殊事件，仍有军饷与口粮结算）")
 	for e in evs:
 		lines.append("· " + str(e.get("text", "")))
 	_forecast.text = "\n".join(lines)
@@ -66,7 +85,7 @@ func _show_forecast(months: int) -> void:
 func _advance(months: int) -> void:
 	_show_forecast(months)
 	var evs = Calendar.advance(months)
-	var lines: Array = ["[%s] 推进结果：" % Calendar.label()]
+	var lines: Array = ["[b]%s[/b] 推进结果：" % Calendar.label()]
 	for e in evs:
 		lines.append("· " + str(e.get("text", "")))
 	_log.text = "\n".join(lines)
@@ -79,6 +98,6 @@ func _to_harvest() -> void:
 	while not GameState.flag("harvest_done") and guard < 24:
 		Calendar.advance(1)
 		guard += 1
-	_log.text = "已抵达丰收结算。当前 %s" % Calendar.label()
+	_log.text = "已抵达丰收结算。当前 [b]%s[/b]。沙漏旁的人，又老了一点。" % Calendar.label()
 	get_node("CalLabel").text = Calendar.label()
 	GameState.save_game()

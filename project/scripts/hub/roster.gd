@@ -1,27 +1,56 @@
 extends Control
 
 func _ready() -> void:
-	var bg := ColorRect.new()
-	bg.color = UIKit.BG
-	bg.set_anchors_preset(PRESET_FULL_RECT)
-	add_child(bg)
+	UIKit.make_screen_bg(self)
 	var t = UIKit.make_label("花名册", true)
-	t.position = Vector2(40, 20)
+	t.position = Vector2(40, 16)
 	add_child(t)
+	var tip = UIKit.make_dim_label("每一位都有立绘。伤者标红，子嗣与联姻在族谱另页。")
+	tip.position = Vector2(40, 56)
+	add_child(tip)
+
 	var scroll := ScrollContainer.new()
-	scroll.position = Vector2(40, 80)
+	scroll.position = Vector2(40, 90)
 	scroll.custom_minimum_size = Vector2(1200, 520)
 	add_child(scroll)
 	var vb := VBoxContainer.new()
+	vb.add_theme_constant_override("separation", 10)
 	scroll.add_child(vb)
-	for c in GameState.roster():
+
+	var roster = GameState.roster()
+	if roster.is_empty():
+		vb.add_child(UIKit.empty_state("花名册空空如也。去烽火酒馆看看。"))
+	for c in roster:
+		var card = UIKit.make_panel()
+		card.custom_minimum_size = Vector2(1160, 100)
+		vb.add_child(card)
+		var hb := HBoxContainer.new()
+		hb.add_theme_constant_override("separation", 14)
+		card.add_child(hb)
+		hb.add_child(UIKit.make_portrait_rect(c, 80))
+		var lv := VBoxContainer.new()
+		lv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		hb.add_child(lv)
 		var job = GameState.get_job(c.job_id)
 		var injury = "〔伤〕" if c.injured else ""
-		var l = UIKit.make_label("%s | %s | Lv%d | 月薪%d | HP%d/%d %s\n%s" % [
-			c.name, job.get("name", ""), c.level, c.salary, c.hp, c.max_hp, injury,
-			"力%d体%d技%d敏%d感%d意%d" % [c.stats["str"], c.stats["vit"], c.stats["skl"], c.stats["agi"], c.stats["per"], c.stats["wil"]]
+		var title = UIKit.make_label("%s | %s | Lv%d | 月薪%d | HP%d/%d %s" % [
+			c.name, job.get("name", ""), c.level, c.salary, c.hp, c.max_hp, injury
 		])
-		vb.add_child(l)
+		if c.injured:
+			title.add_theme_color_override("font_color", UIKit.DANGER)
+		lv.add_child(title)
+		lv.add_child(UIKit.make_dim_label("力%d 体%d 技%d 敏%d 感%d 意%d　·　%s" % [
+			c.stats["str"], c.stats["vit"], c.stats["skl"], c.stats["agi"], c.stats["per"], c.stats["wil"],
+			c.bloodline_display()
+		]))
+		# mini token
+		var token := TextureRect.new()
+		token.custom_minimum_size = Vector2(56, 56)
+		token.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		token.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		token.texture = UnitArt.token(c, "player", 56, false)
+		hb.add_child(token)
+
 	var back = UIKit.make_button(Locale.t("btn_back"))
 	back.position = Vector2(40, 640)
 	back.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))

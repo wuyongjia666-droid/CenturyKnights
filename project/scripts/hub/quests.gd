@@ -3,31 +3,46 @@ extends Control
 var _msg: Label
 
 func _ready() -> void:
-	var bg := ColorRect.new()
-	bg.color = UIKit.BG
-	bg.set_anchors_preset(PRESET_FULL_RECT)
-	add_child(bg)
+	UIKit.make_screen_bg(self)
 	var t = UIKit.make_label("委任榜", true)
-	t.position = Vector2(40, 20)
+	t.position = Vector2(40, 16)
 	add_child(t)
+	var tip = UIKit.make_dim_label("陆桥的委托写在木板上：有的要刀，有的只要旗在风里亮一夜。")
+	tip.position = Vector2(40, 56)
+	add_child(tip)
+
+	var scroll := ScrollContainer.new()
+	scroll.position = Vector2(40, 90)
+	scroll.custom_minimum_size = Vector2(1200, 480)
+	add_child(scroll)
 	var vb := VBoxContainer.new()
-	vb.position = Vector2(40, 80)
-	vb.add_theme_constant_override("separation", 10)
-	add_child(vb)
+	vb.add_theme_constant_override("separation", 12)
+	scroll.add_child(vb)
+
 	for q in GameState.quests:
+		var card = UIKit.make_panel()
+		card.custom_minimum_size = Vector2(1160, 0)
+		vb.add_child(card)
+		var cv := VBoxContainer.new()
+		cv.add_theme_constant_override("separation", 6)
+		card.add_child(cv)
 		var stars = "★".repeat(int(q.stars))
 		var battle_tag = "〔战棋〕" if q.get("battle") else "〔自动〕"
-		var b = UIKit.make_button("%s %s %s  奖%d银 / 声望+%d / 耗%d月" % [q.name, stars, battle_tag, q.silver, q.rep, q.months], 900)
+		var title = UIKit.make_label("%s　%s　%s" % [q.name, stars, battle_tag])
+		title.add_theme_color_override("font_color", UIKit.ACCENT if q.get("battle") else UIKit.TEXT)
+		cv.add_child(title)
+		cv.add_child(UIKit.make_dim_label(str(q.desc)))
+		cv.add_child(UIKit.make_dim_label("奖励 %d 银 · 声望 +%d · 耗时 %d 月" % [q.silver, q.rep, q.months]))
+		var b = UIKit.make_accent_button("接受委任", 160)
 		var qid = q.id
 		b.pressed.connect(func(): _accept(qid))
-		vb.add_child(b)
-		var d = UIKit.make_label(str(q.desc))
-		vb.add_child(d)
+		cv.add_child(b)
+
 	_msg = UIKit.make_label("")
-	_msg.position = Vector2(40, 520)
+	_msg.position = Vector2(40, 590)
 	add_child(_msg)
 	var back = UIKit.make_button(Locale.t("btn_back"))
-	back.position = Vector2(40, 600)
+	back.position = Vector2(40, 640)
 	back.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
 	add_child(back)
 
@@ -36,8 +51,7 @@ func _accept(qid: String) -> void:
 	if r.get("battle"):
 		GameState.set_meta("battle_return", "res://scenes/hub/quests.tscn")
 		GameState.set_meta("battle_map", "quest_bandit")
-		# reward on win handled simply: set flag via battle - for quest battle reuse ch0 map
 		get_tree().change_scene_to_file("res://scenes/battle/battle.tscn")
 	else:
-		_msg.text = "完成：%s" % r.quest.name
+		_msg.text = "完成：%s —— %s" % [r.quest.name, str(r.quest.get("desc", ""))]
 		GameState.save_game()

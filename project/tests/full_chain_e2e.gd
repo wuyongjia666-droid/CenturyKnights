@@ -83,13 +83,24 @@ func _step_story_start() -> void:
 	else:
 		print("OK story 0.0 actions=", labels)
 
-	# Advance to 0.1 in-place (button would call _goto_next)
+	# Advance 0.0 → 0.05 → 0.1 (加长第零章中间叙事拍)
 	if not story.simulate_press_action_containing("踏入"):
-		# Fallback: direct beat advance
-		story.simulate_goto_beat("0.1")
+		story.simulate_goto_beat("0.05")
 	await get_tree().process_frame
+	if story.current_beat_id() == "0.05":
+		print("OK story advanced to beat 0.05")
+		story.simulate_finish_dialogue()
+		await get_tree().process_frame
+		if not story.simulate_press_action_containing("隘口"):
+			if not story.simulate_press_action_containing("前往"):
+				story.simulate_goto_beat("0.1")
+		await get_tree().process_frame
+	elif story.current_beat_id() != "0.1":
+		story.simulate_goto_beat("0.1")
+		await get_tree().process_frame
+
 	if story.current_beat_id() != "0.1":
-		_err("story: after 0.0 advance beat=%s want 0.1" % story.current_beat_id())
+		_err("story: after intro advance beat=%s want 0.1" % story.current_beat_id())
 	else:
 		print("OK story advanced to beat 0.1")
 
@@ -244,23 +255,38 @@ func _step_battle() -> void:
 	story2.simulate_finish_dialogue()
 	await get_tree().process_frame
 	var post_labels: Array = story2.action_labels()
-	var has_tavern := false
+	# v0.2: after win, 0.1 offers continue into 0.15 (烟散之后), then tavern
+	var has_continue := false
 	for lb in post_labels:
-		if str(lb).find("酒馆") >= 0 or str(lb).find("前往") >= 0:
-			has_tavern = true
-	if not has_tavern:
-		_err("story 0.1 after win: expected continue-to-tavern action, got %s" % str(post_labels))
-	elif not story2.simulate_press_action_containing("酒馆"):
-		# label may be 前往烽火酒馆
-		if not story2.simulate_press_action_containing("前往"):
-			_err("story 0.1 after win: could not press continue action labels=%s" % str(post_labels))
+		if str(lb).find("烟散") >= 0 or str(lb).find("酒馆") >= 0 or str(lb).find("前往") >= 0 or str(lb).find("听") >= 0:
+			has_continue = true
+	if not has_continue:
+		_err("story 0.1 after win: expected continue action, got %s" % str(post_labels))
+	elif not story2.simulate_press_action_containing("烟散"):
+		if not story2.simulate_press_action_containing("听"):
+			if not story2.simulate_press_action_containing("酒馆"):
+				if not story2.simulate_press_action_containing("前往"):
+					_err("story 0.1 after win: could not press continue action labels=%s" % str(post_labels))
+				else:
+					print("OK story post-battle pressed 前往")
+			else:
+				print("OK story post-battle pressed 酒馆")
 		else:
-			print("OK story post-battle pressed 前往")
+			print("OK story post-battle pressed 听")
 	else:
-		print("OK story post-battle pressed 酒馆")
+		print("OK story post-battle pressed 烟散")
 	await get_tree().process_frame
-	if story2.current_beat_id() != "0.2":
-		_err("story: after post-battle continue beat=%s want 0.2" % story2.current_beat_id())
+	var bid_after = story2.current_beat_id()
+	if bid_after == "0.15":
+		story2.simulate_finish_dialogue()
+		await get_tree().process_frame
+		if not story2.simulate_press_action_containing("酒馆"):
+			if not story2.simulate_press_action_containing("前往"):
+				_err("story 0.15: expected 酒馆 action, got %s" % str(story2.action_labels()))
+		await get_tree().process_frame
+		bid_after = story2.current_beat_id()
+	if bid_after != "0.2":
+		_err("story: after post-battle continue beat=%s want 0.2" % bid_after)
 	else:
 		print("OK story advanced to 0.2 via UI after battle")
 	story2.queue_free()

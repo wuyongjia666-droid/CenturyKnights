@@ -7,8 +7,8 @@ const ORIGIN := Vector2(40, 80)
 const MAP_W := 8
 const MAP_H := 6
 
-var terrain: Array = []  # [y][x]
-var units: Array = []  # {char, pos: Vector2i, team, done}
+var terrain: Array = []
+var units: Array = []
 var turn_team: String = "player"
 var selected: int = -1
 var move_cells: Dictionary = {}
@@ -22,6 +22,16 @@ var map_draw: Node2D
 var rng := RandomNumberGenerator.new()
 var battle_over: bool = false
 var _bg: ColorRect
+var _hover_cell: Vector2i = Vector2i(-1, -1)
+var _banner_tex: TextureRect
+var _unit_panel: PanelContainer
+var _portrait: TextureRect
+var _dmg_fx: Array = []  # {pos, text, age, col}
+var _turn_flash: float = 0.0
+var _sel_pulse: float = 0.0
+var _btn_atk: Button
+var _btn_wait: Button
+var _btn_end: Button
 
 func _ready() -> void:
 	rng.randomize()
@@ -31,23 +41,60 @@ func _ready() -> void:
 	_deploy()
 	_start_player_turn()
 	queue_redraw()
+	set_process(true)
+
+func _process(delta: float) -> void:
+	_sel_pulse += delta
+	if _turn_flash > 0.0:
+		_turn_flash = maxf(0.0, _turn_flash - delta)
+	var alive_fx: Array = []
+	for fx in _dmg_fx:
+		fx.age += delta
+		if fx.age < 1.1:
+			alive_fx.append(fx)
+	_dmg_fx = alive_fx
+	if overlay:
+		overlay.queue_redraw()
+	if map_draw and _sel_pulse:
+		map_draw.queue_redraw()
 
 func _build_ui() -> void:
 	_bg = ColorRect.new()
 	_bg.color = UIKit.BG
 	_bg.set_anchors_preset(PRESET_FULL_RECT)
-	# CRITICAL: must IGNORE so board clicks reach this Control._gui_input
 	_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_bg)
 
+	# 顶栏
+	var topbar := ColorRect.new()
+	topbar.color = UIKit.BG_DEEP
+	topbar.position = Vector2(0, 0)
+	topbar.size = Vector2(1280, 64)
+	topbar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(topbar)
+	var accent := ColorRect.new()
+	accent.color = UnitArt.crest_color()
+	accent.position = Vector2(0, 0)
+	accent.size = Vector2(1280, 3)
+	accent.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(accent)
+
+	_banner_tex = TextureRect.new()
+	_banner_tex.texture = UnitArt.banner(56, 80, false)
+	_banner_tex.position = Vector2(16, 8)
+	_banner_tex.custom_minimum_size = Vector2(40, 56)
+	_banner_tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_banner_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_banner_tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_banner_tex)
+
 	phase_label = UIKit.make_label("玩家回合", true)
-	phase_label.position = Vector2(40, 16)
+	phase_label.position = Vector2(70, 12)
 	phase_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(phase_label)
 
-	var tip = UIKit.make_label("左键选中/移动 · 攻击模式后点敌军 · 右键取消 · 地形：绿林/褐丘/灰平")
-	tip.position = Vector2(280, 24)
-	tip.add_theme_font_size_override("font_size", 13)
+	var tip = UIKit.make_dim_label("左键选中/移动 · 攻击模式后点敌军 · 右键取消 · 绿林/褐丘/灰平")
+	tip.position = Vector2(280, 22)
 	tip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(tip)
 
@@ -59,34 +106,50 @@ func _build_ui() -> void:
 	overlay.draw.connect(_draw_overlay)
 	add_child(overlay)
 
+	# 右侧信息卡
+	_unit_panel = UIKit.make_panel()
+	_unit_panel.position = Vector2(520, 80)
+	_unit_panel.custom_minimum_size = Vector2(720, 210)
+	add_child(_unit_panel)
+	var phb := HBoxContainer.new()
+	phb.add_theme_constant_override("separation", 12)
+	_unit_panel.add_child(phb)
+	_portrait = TextureRect.new()
+	_portrait.custom_minimum_size = Vector2(96, 96)
+	_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	phb.add_child(_portrait)
 	info_label = RichTextLabel.new()
-	info_label.position = Vector2(520, 80)
-	info_label.custom_minimum_size = Vector2(720, 200)
+	info_label.custom_minimum_size = Vector2(580, 180)
 	info_label.bbcode_enabled = true
 	info_label.fit_content = true
 	info_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(info_label)
+	info_label.add_theme_color_override("default_color", UIKit.TEXT)
+	phb.add_child(info_label)
 
+	var log_panel = UIKit.make_panel()
+	log_panel.position = Vector2(520, 310)
+	log_panel.custom_minimum_size = Vector2(720, 180)
+	add_child(log_panel)
 	log_label = UIKit.make_label("")
-	log_label.position = Vector2(520, 300)
-	log_label.custom_minimum_size = Vector2(700, 200)
+	log_label.custom_minimum_size = Vector2(690, 160)
 	log_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	log_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(log_label)
+	log_label.add_theme_font_size_override("font_size", 13)
+	log_panel.add_child(log_label)
 
 	var row := HBoxContainer.new()
 	row.position = Vector2(520, 520)
-	row.add_theme_constant_override("separation", 8)
+	row.add_theme_constant_override("separation", 10)
 	add_child(row)
-	var b_atk = UIKit.make_button("攻击模式", 120)
-	b_atk.pressed.connect(_enter_attack_mode)
-	row.add_child(b_atk)
-	var b_wait = UIKit.make_button(Locale.t("wait"), 100)
-	b_wait.pressed.connect(_wait_selected)
-	row.add_child(b_wait)
-	var b_end = UIKit.make_button(Locale.t("end_turn"), 120)
-	b_end.pressed.connect(_end_player_turn)
-	row.add_child(b_end)
+	_btn_atk = UIKit.make_accent_button("攻击模式", 130)
+	_btn_atk.pressed.connect(_enter_attack_mode)
+	row.add_child(_btn_atk)
+	_btn_wait = UIKit.make_button(Locale.t("wait"), 100)
+	_btn_wait.pressed.connect(_wait_selected)
+	row.add_child(_btn_wait)
+	_btn_end = UIKit.make_button(Locale.t("end_turn"), 120)
+	_btn_end.pressed.connect(_end_player_turn)
+	row.add_child(_btn_end)
 	var b_prev = CheckButton.new()
 	b_prev.text = Locale.t("rules_preview")
 	b_prev.button_pressed = BattleRules.preview_enabled
@@ -108,7 +171,6 @@ func _enter_attack_mode() -> void:
 	_log("攻击模式：点击射程内敌人")
 
 func _init_map() -> void:
-	# 8x6：平地为主，左林右丘
 	terrain.clear()
 	for y in MAP_H:
 		var row: Array = []
@@ -140,10 +202,8 @@ func _deploy() -> void:
 		var c: CKCharacter = GameState.characters.get(cid)
 		if c == null or not c.alive:
 			continue
-		# 战斗用副本 HP
 		units.append({"char": c, "pos": spots[i], "team": "player", "done": false})
 		i += 1
-	# 第零章教学：开局花名册只有团长+灯影（2人）。补临时候补到 4，避免「两人打一群」。
 	if map_id == "ch0_pass":
 		var militia_slot := 0
 		while i < 4:
@@ -155,16 +215,17 @@ func _deploy() -> void:
 			})
 			militia_slot += 1
 			i += 1
-		# 教学敌：2 名弱匪，无弓无匪首（玩家优势约 4 vs 2）
 		var enemies = [
 			[CharacterFactory.make_enemy("bandit_weak", rng), Vector2i(6, 1)],
 			[CharacterFactory.make_enemy("bandit_weak", rng), Vector2i(5, 2)],
 		]
 		for e in enemies:
+			# 给敌军一点外观，避免空白脸
+			e[0].appearance = {"hair": "ink_black", "eyes": "dusk", "brow": "thick", "scar": "cheek"}
 			units.append({"char": e[0], "pos": e[1], "team": "enemy", "done": false})
 		_log("教学编成：我军 %d · 敌军 %d（灰旗民兵助阵）" % [i, enemies.size()])
+		_refresh_info()
 		return
-	# 非教程默认：最多 4 敌（保留原强度供后续关卡）
 	var enemies = [
 		[CharacterFactory.make_enemy("bandit", rng), Vector2i(6, 1)],
 		[CharacterFactory.make_enemy("bandit_archer", rng), Vector2i(7, 2)],
@@ -172,44 +233,69 @@ func _deploy() -> void:
 		[CharacterFactory.make_enemy("bandit_chief", rng), Vector2i(7, 0)],
 	]
 	for e in enemies:
+		e[0].appearance = CharacterFactory._random_appearance(rng) if GameState.data_appearance else {"hair": "ink_black", "eyes": "slate", "brow": "straight", "scar": "cheek"}
 		units.append({"char": e[0], "pos": e[1], "team": "enemy", "done": false})
-
-func _draw() -> void:
-	pass
+	_refresh_info()
 
 func _draw_map() -> void:
+	# 棋盘阴影底板
+	map_draw.draw_rect(Rect2(ORIGIN - Vector2(6, 6), Vector2(MAP_W * CELL + 10, MAP_H * CELL + 10)), Color(0.05, 0.06, 0.08, 0.8))
 	for y in MAP_H:
 		for x in MAP_W:
 			var tid = terrain[y][x]
 			var info = BattleRules.terrain_info(tid)
 			var r = Rect2(ORIGIN + Vector2(x, y) * CELL, Vector2(CELL - 2, CELL - 2))
-			map_draw.draw_rect(r, info["color"])
-			# 纹样区分（色弱友好）
+			var col: Color = info["color"]
+			# 棋盘格轻微交错
+			if (x + y) % 2 == 0:
+				col = col.lightened(0.04)
+			map_draw.draw_rect(r, col)
 			if tid == "forest":
-				map_draw.draw_circle(r.get_center(), 6, Color(0.15, 0.3, 0.18))
+				map_draw.draw_circle(r.get_center() + Vector2(-6, 4), 5, Color(0.15, 0.32, 0.18))
+				map_draw.draw_circle(r.get_center() + Vector2(6, -2), 4, Color(0.18, 0.36, 0.20))
+				map_draw.draw_circle(r.get_center() + Vector2(0, -6), 5, Color(0.12, 0.28, 0.16))
 			elif tid == "hill":
 				map_draw.draw_colored_polygon(
-					PackedVector2Array([r.get_center() + Vector2(0, -10), r.get_center() + Vector2(10, 8), r.get_center() + Vector2(-10, 8)]),
-					Color(0.4, 0.35, 0.25)
+					PackedVector2Array([r.get_center() + Vector2(0, -12), r.get_center() + Vector2(12, 8), r.get_center() + Vector2(-12, 8)]),
+					Color(0.42, 0.36, 0.26)
 				)
-			map_draw.draw_rect(r, Color(0.1, 0.1, 0.12), false, 1.0)
+			# 格线
+			map_draw.draw_rect(r, Color(0.08, 0.09, 0.11, 0.85), false, 1.0)
+			# 悬停高亮
+			if _hover_cell == Vector2i(x, y):
+				map_draw.draw_rect(r, Color(1, 1, 1, 0.10))
+
 	# units
-	for u in units:
+	for i in units.size():
+		var u = units[i]
 		if u.char.hp <= 0:
 			continue
 		var p: Vector2i = u.pos
 		var center = ORIGIN + Vector2(p) * CELL + Vector2(CELL / 2, CELL / 2)
-		var col = Color(0.3, 0.55, 0.85) if u.team == "player" else Color(0.75, 0.3, 0.3)
-		if u.done:
-			col = col.darkened(0.35)
-		map_draw.draw_circle(center, 18, col)
-		map_draw.draw_string(ThemeDB.fallback_font, center + Vector2(-10, 4), str(u.char.hp), HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color.WHITE)
+		UnitArt.draw_token_on(map_draw, center, u.char, u.team, 20.0, u.done)
+		# HP 条
+		var hp_ratio = float(u.char.hp) / float(maxi(1, u.char.max_hp))
+		var bar_w = 36.0
+		var bar_pos = center + Vector2(-bar_w * 0.5, 18)
+		map_draw.draw_rect(Rect2(bar_pos, Vector2(bar_w, 5)), Color(0.1, 0.1, 0.12, 0.85))
+		var hp_col = Color(0.35, 0.75, 0.45) if u.team == "player" else Color(0.85, 0.35, 0.30)
+		map_draw.draw_rect(Rect2(bar_pos, Vector2(bar_w * hp_ratio, 5)), hp_col)
+		# 名称短签
+		var nm = str(u.char.name)
+		if nm.length() > 4:
+			nm = nm.substr(0, 4)
+		map_draw.draw_string(ThemeDB.fallback_font, center + Vector2(-16, -26), nm, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.95, 0.93, 0.88))
+		# 选中脉冲环
+		if i == selected:
+			var pulse = 0.5 + 0.5 * sin(_sel_pulse * 6.0)
+			map_draw.draw_arc(center, 24.0 + pulse * 2.0, 0, TAU, 32, UnitArt.crest_color(), 2.0)
 
 func _draw_overlay() -> void:
 	if not attack_mode:
 		for pos in move_cells.keys():
 			var r = Rect2(ORIGIN + Vector2(pos) * CELL, Vector2(CELL - 2, CELL - 2))
-			overlay.draw_rect(r, Color(0.2, 0.5, 0.9, 0.35))
+			overlay.draw_rect(r, Color(0.25, 0.55, 0.95, 0.38))
+			overlay.draw_rect(r, Color(0.4, 0.7, 1.0, 0.55), false, 2.0)
 	if selected >= 0 and selected < units.size():
 		var u = units[selected]
 		if u.team == "player" and not u.done:
@@ -226,10 +312,31 @@ func _draw_overlay() -> void:
 					var ou = units[ui]
 					if ou.team != "player" and ou.char.hp > 0:
 						var r2 = Rect2(ORIGIN + Vector2(ap) * CELL, Vector2(CELL - 2, CELL - 2))
-						overlay.draw_rect(r2, Color(0.9, 0.2, 0.2, 0.4))
+						var a = 0.45 if attack_mode else 0.25
+						overlay.draw_rect(r2, Color(0.95, 0.2, 0.2, a))
+						overlay.draw_rect(r2, Color(1.0, 0.4, 0.3, 0.8), false, 2.0)
+	# 伤害飘字
+	for fx in _dmg_fx:
+		var a = clampf(1.0 - fx.age / 1.1, 0.0, 1.0)
+		var yoff = -fx.age * 36.0
+		var col: Color = fx.col
+		col.a = a
+		overlay.draw_string(ThemeDB.fallback_font, fx.pos + Vector2(-10, yoff), fx.text, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, col)
+	# 回合横幅
+	if _turn_flash > 0.0:
+		var a2 = clampf(_turn_flash / 0.9, 0.0, 1.0)
+		var txt = "—— 玩家回合 ——" if turn_team == "player" else "—— 敌方回合 ——"
+		overlay.draw_rect(Rect2(80, 300, 360, 50), Color(0.05, 0.06, 0.08, 0.75 * a2))
+		overlay.draw_string(ThemeDB.fallback_font, Vector2(120, 332), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(UnitArt.crest_color(), a2))
 
 func _gui_input(event: InputEvent) -> void:
 	if battle_over:
+		return
+	if event is InputEventMouseMotion:
+		var cell = _mouse_to_cell(event.position)
+		if cell != _hover_cell:
+			_hover_cell = cell
+			map_draw.queue_redraw()
 		return
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_RIGHT:
@@ -239,12 +346,11 @@ func _gui_input(event: InputEvent) -> void:
 			return
 		if turn_team != "player":
 			return
-		var cell = _mouse_to_cell(event.position)
-		if cell.x < 0:
+		var cell2 = _mouse_to_cell(event.position)
+		if cell2.x < 0:
 			return
-		_click_cell(cell)
+		_click_cell(cell2)
 
-## E2E / 调试：模拟棋盘格左键点击（本地坐标走 _gui_input）
 func simulate_board_click(cell: Vector2i) -> void:
 	var ev := InputEventMouseButton.new()
 	ev.button_index = MOUSE_BUTTON_LEFT
@@ -262,6 +368,7 @@ func _cancel_selection() -> void:
 	moved_this_select = false
 	_refresh_info()
 	overlay.queue_redraw()
+	map_draw.queue_redraw()
 
 func _mouse_to_cell(pos: Vector2) -> Vector2i:
 	var local = pos - ORIGIN
@@ -287,12 +394,12 @@ func _select_player(ui: int) -> void:
 	moved_this_select = false
 	var mv = units[ui].char.derived_move()
 	move_cells = BattleRules.move_costs(terrain, units[ui].pos, mv)
-	# remove occupied (keep own tile)
 	for u in units:
 		if u.char.hp > 0 and u.pos != units[ui].pos:
 			move_cells.erase(u.pos)
 	_refresh_info()
 	overlay.queue_redraw()
+	map_draw.queue_redraw()
 
 func _can_attack_from(su: Dictionary, cell: Vector2i) -> bool:
 	var d = _manhattan(su.pos, cell)
@@ -304,12 +411,9 @@ func _can_attack_from(su: Dictionary, cell: Vector2i) -> bool:
 
 func _click_cell(cell: Vector2i) -> void:
 	var ui = _unit_at(cell)
-
-	# --- acting with a selected player unit ---
 	if selected >= 0 and selected < units.size():
 		var su = units[selected]
 		if su.team == "player" and not su.done:
-			# Attack: enemy tile (require 攻击模式 so left-click alone does not auto-fire)
 			if ui >= 0 and units[ui].team == "enemy" and units[ui].char.hp > 0:
 				if attack_mode:
 					if _can_attack_from(su, cell):
@@ -317,11 +421,8 @@ func _click_cell(cell: Vector2i) -> void:
 						return
 					_log("目标超出攻击范围")
 					return
-				# Not attack mode: show enemy info; keep player selection
 				_refresh_info_for(ui)
 				return
-
-			# Move: empty reachable tile (blocked while attack_mode or after move)
 			if ui < 0 and not attack_mode and not moved_this_select and move_cells.has(cell):
 				su.pos = cell
 				moved_this_select = true
@@ -331,34 +432,32 @@ func _click_cell(cell: Vector2i) -> void:
 				overlay.queue_redraw()
 				_log("%s 移动至 (%d,%d)" % [su.char.name, cell.x, cell.y])
 				return
-
-			# Switch to another ready player unit
 			if ui >= 0 and units[ui].team == "player" and not units[ui].done and ui != selected:
 				_select_player(ui)
 				return
-
-			# Same unit / empty non-move / blocked — stay in state
 			if attack_mode and ui < 0:
 				_log("攻击模式中：请点击敌人或右键取消")
 			return
-
-	# --- fresh select / inspect ---
 	if ui >= 0 and units[ui].team == "player" and not units[ui].done:
 		_select_player(ui)
 	elif ui >= 0:
-		# Inspect only (enemy or spent ally) — do not treat as acting selection
 		selected = ui
 		move_cells.clear()
 		attack_mode = false
 		moved_this_select = false
 		_refresh_info()
 		overlay.queue_redraw()
+		map_draw.queue_redraw()
 
 func _is_melee(c: CKCharacter) -> bool:
 	return str(GameState.get_job(c.job_id).get("atk_type", "melee")) == "melee"
 
 func _manhattan(a: Vector2i, b: Vector2i) -> int:
 	return absi(a.x - b.x) + absi(a.y - b.y)
+
+func _spawn_dmg(cell: Vector2i, text: String, col: Color) -> void:
+	var center = ORIGIN + Vector2(cell) * CELL + Vector2(CELL / 2, CELL / 2)
+	_dmg_fx.append({"pos": center, "text": text, "age": 0.0, "col": col})
 
 func _do_attack(ai: int, di: int) -> void:
 	var atk = units[ai]
@@ -368,12 +467,16 @@ func _do_attack(ai: int, di: int) -> void:
 	var msg = "%s → %s：" % [atk.char.name, def.char.name]
 	if result.hit:
 		msg += "命中 %d%s" % [result.damage, "（暴击）" if result.crit else ""]
+		var col = Color(1.0, 0.85, 0.3) if result.crit else Color(1.0, 0.45, 0.35)
+		_spawn_dmg(def.pos, ("暴%d" % result.damage) if result.crit else ("-%d" % result.damage), col)
 		if result.killed:
 			msg += " · 击退！"
+			_spawn_dmg(def.pos, "击破", Color(1.0, 0.9, 0.5))
 			if def.team == "player":
 				def.char.injured = true
 	else:
 		msg += "未命中（命中率 %d%%）" % result.hit_chance
+		_spawn_dmg(def.pos, "未中", Color(0.7, 0.75, 0.85))
 	_log(msg)
 	atk.done = true
 	selected = -1
@@ -404,6 +507,8 @@ func _wait_selected() -> void:
 func _start_player_turn() -> void:
 	turn_team = "player"
 	phase_label.text = "玩家回合"
+	phase_label.add_theme_color_override("font_color", UnitArt.crest_color())
+	_turn_flash = 0.9
 	for u in units:
 		if u.team == "player":
 			u.done = false
@@ -419,6 +524,8 @@ func _end_player_turn() -> void:
 		return
 	turn_team = "enemy"
 	phase_label.text = "敌方回合"
+	phase_label.add_theme_color_override("font_color", UIKit.DANGER)
+	_turn_flash = 0.9
 	selected = -1
 	move_cells.clear()
 	attack_mode = false
@@ -434,7 +541,6 @@ func _enemy_ai() -> void:
 		var u = units[i]
 		if u.team != "enemy" or u.char.hp <= 0:
 			continue
-		# find nearest player
 		var best := -1
 		var best_d := 999
 		for j in units.size():
@@ -447,7 +553,6 @@ func _enemy_ai() -> void:
 		if best < 0:
 			continue
 		var target = units[best]
-		# if in range, attack
 		var range_ok = best_d == 1 or (not _is_melee(u.char) and best_d <= 2)
 		if range_ok:
 			_do_attack(i, best)
@@ -455,7 +560,6 @@ func _enemy_ai() -> void:
 			if battle_over:
 				return
 			continue
-		# move closer
 		var mv = BattleRules.move_costs(terrain, u.pos, u.char.derived_move())
 		for ou in units:
 			if ou.char.hp > 0 and ou.pos != u.pos:
@@ -469,7 +573,6 @@ func _enemy_ai() -> void:
 				best_pos = pos
 		u.pos = best_pos
 		_log("%s 推进至 (%d,%d)" % [u.char.name, best_pos.x, best_pos.y])
-		# try attack after move
 		best_d = _manhattan(u.pos, target.pos)
 		range_ok = best_d == 1 or (not _is_melee(u.char) and best_d <= 2)
 		if range_ok:
@@ -505,32 +608,43 @@ func _finish(win: bool) -> void:
 		for u in units:
 			if u.team == "player" and u.char.hp > 0:
 				u.char.exp += 15
-				# sync hp back
-				pass
 			elif u.team == "player":
 				u.char.hp = maxi(1, int(u.char.max_hp * 0.3))
 				u.char.injured = true
 		_log("【胜利】隘口肃清。+35 银。可返回章节。")
-		phase_label.text = Locale.t("battle_win")
+		phase_label.text = "★ " + Locale.t("battle_win") + " ★"
+		phase_label.add_theme_color_override("font_color", UIKit.ACCENT)
 	else:
 		_log("【败北】可重试，第零章进度旗标保留。")
 		phase_label.text = Locale.t("battle_lose")
+		phase_label.add_theme_color_override("font_color", UIKit.DANGER)
 		for u in units:
 			if u.team == "player":
 				u.char.hp = u.char.max_hp
 	GameState.save_game()
+	# 胜负大面板
+	var end_panel = UIKit.make_panel()
+	end_panel.position = Vector2(520, 560)
+	end_panel.custom_minimum_size = Vector2(720, 100)
+	add_child(end_panel)
+	var vb := VBoxContainer.new()
+	end_panel.add_child(vb)
+	var result_l = UIKit.make_label("胜利 — 灰旗仍在风里。" if win else "败北 — 旗可再举。", true)
+	result_l.add_theme_font_size_override("font_size", 22)
+	result_l.add_theme_color_override("font_color", UIKit.ACCENT if win else UIKit.DANGER)
+	vb.add_child(result_l)
 	var row := HBoxContainer.new()
-	row.position = Vector2(520, 580)
-	add_child(row)
+	row.add_theme_constant_override("separation", 10)
+	vb.add_child(row)
 	if win:
-		var b = UIKit.make_button("返回章节", 160)
+		var b = UIKit.make_accent_button("返回章节", 160)
 		b.pressed.connect(func():
 			var path = str(GameState.get_meta("battle_return", "res://scenes/story/chapter0.tscn"))
 			get_tree().change_scene_to_file(path)
 		)
 		row.add_child(b)
 	else:
-		var r = UIKit.make_button("重新挑战", 160)
+		var r = UIKit.make_accent_button("重新挑战", 160)
 		r.pressed.connect(func(): get_tree().reload_current_scene())
 		row.add_child(r)
 		var b = UIKit.make_button("返回章节", 160)
@@ -545,6 +659,7 @@ func _refresh_info_for(ui: int) -> void:
 		return
 	var u = units[ui]
 	var c: CKCharacter = u.char
+	_portrait.texture = UnitArt.portrait(c, 96)
 	var tid = terrain[u.pos.y][u.pos.x]
 	var tinfo = BattleRules.terrain_info(tid)
 	info_label.text = "[b]%s[/b]（%s） HP %d/%d\n攻 %d 防 %d\n地形：%s\n（仍选中我军，可继续移动/攻击）" % [
@@ -555,20 +670,25 @@ func _refresh_info_for(ui: int) -> void:
 
 func _refresh_info() -> void:
 	if selected < 0 or selected >= units.size():
-		info_label.text = "选择己方单位开始行动。\n目标：歼灭全部敌人。"
+		info_label.text = "[b]选择己方单位开始行动[/b]\n目标：歼灭全部敌人。\n蓝格可移动 · 红格为可攻目标 · 攻击模式后点敌。"
+		if GameState.get_leader():
+			_portrait.texture = UnitArt.portrait(GameState.get_leader(), 96)
+		else:
+			_portrait.texture = UnitArt.banner(96, 96, false)
 		return
 	var u = units[selected]
 	var c: CKCharacter = u.char
+	_portrait.texture = UnitArt.portrait(c, 96)
 	var tid = terrain[u.pos.y][u.pos.x]
 	var tinfo = BattleRules.terrain_info(tid)
 	var mode = ""
 	if u.team == "player" and not u.done:
 		if attack_mode:
-			mode = "【攻击模式】点击红格敌人\n"
+			mode = "[color=#e07070]【攻击模式】点击红格敌人[/color]\n"
 		elif moved_this_select:
-			mode = "【已移动】可攻击 / 待命 / 攻击模式\n"
+			mode = "[color=#c9a227]【已移动】可攻击 / 待命[/color]\n"
 		else:
-			mode = "【已选中】点击蓝格移动，或开攻击模式\n"
+			mode = "[color=#6db0e0]【已选中】点击蓝格移动，或开攻击模式[/color]\n"
 	var txt = mode + "[b]%s[/b]（%s） HP %d/%d\n攻 %d 防 %d 命中 %d 回避 %d 移动 %d\n地形：%s（回避+%d）\n" % [
 		c.name, "我军" if u.team == "player" else "敌军",
 		c.hp, c.max_hp, c.derived_atk(), c.derived_def(), c.derived_hit(), c.derived_avo(), c.derived_move(),
