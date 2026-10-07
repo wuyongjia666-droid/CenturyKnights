@@ -1,6 +1,6 @@
 {
-  "portraits": 270,
-  "tokens": 1080,
+  "portraits": 273,
+  "tokens": 1092,
   "banners": 20,
   "snow": [
     "portraits/snow_thug.png",
@@ -148,5 +148,10 @@
     "portraits/dye_thug.png",
     "portraits/dye_archer.png",
     "portraits/dye_boss.png"
+  ],
+  "drum": [
+    "portraits/drum_thug.png",
+    "portraits/drum_archer.png",
+    "portraits/drum_boss.png"
   ]
 }

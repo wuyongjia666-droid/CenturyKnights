@@ -458,6 +458,10 @@ const DYE_BANTER_TURN := [
 	"【染坊】老旗手：榨色棋格，中盘是活路。",
 	"【染坊】春令使者：水格交错，落脚先想第二步。",
 	"【染坊】斥候：晾竿湿布——外格清完还要进心垒。",
+	"【染坊】斥候：色市棚廊——三列要择口。",
+	"【染坊】管事：织架竖廊，别砸架纽。",
+	"【染坊】老旗手：独染水镜，桥心是活路。",
+	"【染坊】春令使者：夜色林环，心台要护色。",
 ]
 const DYE_BANTER_KILL := [
 	"【染坊】染坊悍匪：……缸……不该翻……",
@@ -472,6 +476,31 @@ const DYE_BANTER_START := [
 	"【染坊】系统：染坊已升。护色优先于斩杀。",
 	"【染坊】管事：色未成，先别浪战。",
 	"【染坊】老旗手：缸下不利横队——择桥纵列。",
+]
+const DRUM_BANTER_TURN := [
+	"【鼓楼】管事：护拍！别让他们砸面。",
+	"【鼓楼】老旗手：鼓廊还在，旗就不能倒。",
+	"【鼓楼】斥候：鼓楼有贼气味——压低身子。",
+	"【鼓楼】苇原·灯影：拍一乱，就是劫鼓开手。",
+	"【鼓楼】管事：禁乱砸。一锤破面，满楼尽哑。",
+	"【鼓楼】斥候：鼓廊横贯——择口绕进，别硬撞。",
+	"【鼓楼】老旗手：夜鼓棋格，中格是活路。",
+	"【鼓楼】春令使者：丘环交错，落脚先想第二步。",
+	"【鼓楼】斥候：擂台软面——外丘清完还要进心垒。",
+]
+const DRUM_BANTER_KILL := [
+	"【鼓楼】鼓楼悍匪：……面……不该破……",
+	"【鼓楼】鼓廊伏弓：楼口……不在你们手里……",
+	"【鼓楼】老旗手：一匪倒，拍路清一寸。",
+	"【鼓楼】管事：别追太深——鼓还在架上。",
+	"【鼓楼】鼓楼匪首：空鼓……擂不清真姓……",
+	"【鼓楼】斥候：砸面的倒了，鼓可护。",
+]
+const DRUM_BANTER_START := [
+	"【鼓楼】春令使者：这一仗验的是姓，不是鼓。",
+	"【鼓楼】系统：鼓楼已升。护拍优先于斩杀。",
+	"【鼓楼】管事：拍未成，先别浪战。",
+	"【鼓楼】老旗手：廊下不利横队——择口纵列。",
 ]
 const ESCORT_BANTER_START := [
 	"【镖行】春令使者：这一仗验的是姓，不是刀。",
@@ -489,7 +518,7 @@ func _is_harbor_map() -> bool:
 
 func _theme_banter(kind: String) -> void:
 	var theme = _map_theme()
-	if theme != "escort" and theme != "harbor" and theme != "paper" and theme != "copper" and theme != "lantern" and theme != "grain" and theme != "snow" and theme != "bamboo" and theme != "relay" and theme != "bell" and theme != "rain" and theme != "ink" and theme != "hive" and theme != "flute" and theme != "shadow" and theme != "salt" and theme != "dye":
+	if theme != "escort" and theme != "harbor" and theme != "paper" and theme != "copper" and theme != "lantern" and theme != "grain" and theme != "snow" and theme != "bamboo" and theme != "relay" and theme != "bell" and theme != "rain" and theme != "ink" and theme != "hive" and theme != "flute" and theme != "shadow" and theme != "salt" and theme != "dye" and theme != "drum":
 		return
 	var key = theme + kind + str(_banter_idx if kind == "turn" else _banter_kill)
 	if _banter_played.has(key):
@@ -529,6 +558,8 @@ func _theme_banter(kind: String) -> void:
 		pool = SALT_BANTER_TURN if kind == "turn" else (SALT_BANTER_KILL if kind == "kill" else SALT_BANTER_START)
 	elif theme == "dye":
 		pool = DYE_BANTER_TURN if kind == "turn" else (DYE_BANTER_KILL if kind == "kill" else DYE_BANTER_START)
+	elif theme == "drum":
+		pool = DRUM_BANTER_TURN if kind == "turn" else (DRUM_BANTER_KILL if kind == "kill" else DRUM_BANTER_START)
 	else:
 		pool = []
 	if pool.is_empty():
@@ -574,6 +605,8 @@ func _theme_banter(kind: String) -> void:
 			Sfx.salt_crunch()
 		elif theme == "dye":
 			Sfx.dye_splash()
+		elif theme == "drum":
+			Sfx.drum_thump()
 	else:
 		line = str(pool[0] if _banter_idx == 0 else pool[mini(1, pool.size()-1)])
 		if theme == "escort":
@@ -610,6 +643,8 @@ func _theme_banter(kind: String) -> void:
 			Sfx.salt_crunch()
 		elif theme == "dye":
 			Sfx.dye_splash()
+		elif theme == "drum":
+			Sfx.drum_thump()
 	_banter_played[key] = true
 	_log(line)
 
@@ -2288,6 +2323,26 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch209_press_done")
 	elif map_id == "ch210_seal":
 		GameState.set_flag("ch210_seal_done")
+	elif map_id == "ch211_fair":
+		GameState.set_flag("ch211_fair_done")
+	elif map_id == "ch211_loom":
+		GameState.set_flag("ch211_loom_done")
+	elif map_id == "ch212_solo":
+		GameState.set_flag("ch212_solo_done")
+	elif map_id == "ch212_night":
+		GameState.set_flag("ch212_night_done")
+	elif map_id == "ch213_finale":
+		GameState.set_flag("ch213_finale_done")
+	elif map_id == "ch214_tower":
+		GameState.set_flag("ch214_tower_done")
+	elif map_id == "ch214_gallery":
+		GameState.set_flag("ch214_gallery_done")
+	elif map_id == "ch215_beat":
+		GameState.set_flag("ch215_beat_done")
+	elif map_id == "ch215_night":
+		GameState.set_flag("ch215_night_done")
+	elif map_id == "ch216_seal":
+		GameState.set_flag("ch216_seal_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")
