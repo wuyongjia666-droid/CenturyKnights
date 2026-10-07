@@ -127,4 +127,7 @@ func _apply_month() -> Array:
 		var rum = "朔影家流言：立场仍为「%s」。可去敌宅交涉或推进余波战役。" % st
 		evs.append({"type": "rival_rumor", "text": rum})
 		GameState.add_lineage_event(rum)
+	if GameState.has_method("tick_rival_deals"):
+		for msg in GameState.tick_rival_deals():
+			evs.append({"type": "rival_deal", "text": msg})
 	return evs

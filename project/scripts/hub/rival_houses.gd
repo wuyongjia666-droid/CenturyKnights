@@ -72,10 +72,17 @@ func _select(h: Dictionary) -> void:
 	var hid = str(h.get("id"))
 	var stance = GameState.get_rival_stance(hid)
 	_body.text = "[b]%s[/b]\n立场：%s\n%s\n\n交涉会写入族谱纪事，并可能改变立场。" % [h.get("name"), _stance_cn(stance), h.get("desc", "")]
+	var deal = GameState.rival_deals.get(hid, {})
+	if int(deal.get("turns_left", 0)) > 0:
+		_body.text += "\n\n[color=#c9a227]进行中契约：%s（余%d月）[/color]" % [deal.get("kind"), deal.get("turns_left")]
 	_add("送礼交涉（30银）", func(): _gift(hid))
 	_add("示威施压", func(): _pressure(hid))
+	_add("立约·商路（25银/3月→银+50）", func(): _deal(hid, "trade"))
+	_add("立约·情报（25银/3月→战技点）", func(): _deal(hid, "intel"))
+	_add("立约·停战（40银/2月→并席）", func(): _deal(hid, "truce", 2, 40))
 	if hid == "shuoying" and stance in ["hostile", "wary"]:
 		_add("开启嗣位冲突场景", func(): get_tree().change_scene_to_file("res://scenes/hub/inheritance.tscn"))
+	_add("双嗣校场", func(): get_tree().change_scene_to_file("res://scenes/hub/heir_rivalry.tscn"))
 
 func _add(text: String, cb: Callable) -> void:
 	var b = UIKit.make_accent_button(text, 360)
@@ -95,6 +102,14 @@ func _gift(hid: String) -> void:
 	Sfx.confirm()
 	GameState.save_game()
 	_refresh()
+
+func _deal(hid: String, kind: String, turns: int = 3, price: int = 25) -> void:
+	var r = GameState.start_rival_deal(hid, kind, turns, price)
+	_msg.text = str(r.get("msg"))
+	if r.get("ok"):
+		Sfx.confirm()
+		GameState.save_game()
+		_refresh()
 
 func _pressure(hid: String) -> void:
 	GameState.add_rep("ashland", 1)

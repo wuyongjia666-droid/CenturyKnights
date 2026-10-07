@@ -139,7 +139,7 @@ func _do_enlist() -> void:
 			var names: Array = []
 			for sid in granted:
 				names.append(str(GameState.get_skill(sid).get("name", sid)))
-			_msg.text += "　道路战技：" + "、".join(names)
+			_msg.text += "　道路战技（含可能的二阶）：" + "、".join(names)
 		match _path:
 			"martial":
 				GameState.add_skill_point(1)

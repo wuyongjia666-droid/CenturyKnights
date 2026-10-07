@@ -28,8 +28,10 @@ var data_chapter11: Dictionary = {}
 var data_chapter12: Dictionary = {}
 var data_chapter13: Dictionary = {}
 var data_chapter14: Dictionary = {}
+var data_chapter15: Dictionary = {}
 var data_rivals: Dictionary = {}
 var rival_stances: Dictionary = {}  # house_id -> stance override
+var rival_deals: Dictionary = {}  # house_id -> {turns_left, kind, reward}
 var data_skills: Dictionary = {}
 var chapter1_beat: String = "1.0"
 var chapter2_beat: String = "2.0"
@@ -44,6 +46,8 @@ var chapter10_beat: String = "10.0"
 var chapter11_beat: String = "11.0"
 var chapter12_beat: String = "12.0"
 var chapter13_beat: String = "13.0"
+var chapter14_beat: String = "14.0"
+var chapter15_beat: String = "15.0"
 var skill_points: int = 0
 
 # 游戏状态
@@ -112,6 +116,7 @@ func _load_data() -> void:
 	data_chapter12 = _read_json("res://data/chapter12.json")
 	data_chapter13 = _read_json("res://data/chapter13.json")
 	data_chapter14 = _read_json("res://data/chapter14.json")
+	data_chapter15 = _read_json("res://data/chapter15.json")
 	data_rivals = _read_json("res://data/rival_houses.json")
 	data_skills = _read_json("res://data/skills.json")
 
@@ -210,7 +215,10 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	chapter11_beat = "11.0"
 	chapter12_beat = "12.0"
 	chapter13_beat = "13.0"
+	chapter14_beat = "14.0"
+	chapter15_beat = "15.0"
 	rival_stances = {"shuoying": "hostile", "qinghe": "wary", "lantern": "neutral"}
+	rival_deals.clear()
 	skill_points = 1
 	chapter0_flags = {}
 	event_log.clear()
@@ -606,8 +614,73 @@ func grant_path_skills(c: CKCharacter, path: String) -> Array:
 		if sid not in c.skills:
 			c.skills.append(sid)
 			granted.append(sid)
+	# Path T2: unlock one matching tier-2 if req met and points allow (free path unlock once)
+	var t2_key = "path_t2_" + c.id + "_" + path
+	if not flag(t2_key):
+		for s2 in data_skills.get("skills", []):
+			if int(s2.get("tier", 1)) < 2:
+				continue
+			if str(s2.get("tree", "")) not in trees:
+				continue
+			var sid2 = str(s2.get("id"))
+			if sid2 in c.skills or sid2 in c.unlocked_skills:
+				continue
+			var req = str(s2.get("req_skill", ""))
+			if req != "" and req not in c.skills and req not in c.unlocked_skills:
+				continue
+			var jobs2: Array = s2.get("jobs", [])
+			if c.job_id not in jobs2:
+				continue
+			c.unlocked_skills.append(sid2)
+			if sid2 not in c.skills:
+				c.skills.append(sid2)
+			granted.append(sid2)
+			set_flag(t2_key)
+			log_event("%s 道路解锁二阶「%s」" % [c.name, s2.get("name", sid2)])
+			break
 	mark_dirty()
 	return granted
+
+func start_rival_deal(house_id: String, kind: String, turns: int = 3, price: int = 25) -> Dictionary:
+	if silver < price:
+		return {"ok": false, "msg": "银两不足"}
+	if rival_deals.has(house_id) and int(rival_deals[house_id].get("turns_left", 0)) > 0:
+		return {"ok": false, "msg": "该宅已有进行中的契约"}
+	silver -= price
+	rival_deals[house_id] = {"kind": kind, "turns_left": turns, "price": price}
+	add_lineage_event("敌宅契约开始：%s · %s（%d月）" % [house_id, kind, turns])
+	mark_dirty()
+	return {"ok": true, "msg": "契约已立：%s，余 %d 月" % [kind, turns]}
+
+func tick_rival_deals() -> Array:
+	var evs: Array = []
+	var done: Array = []
+	for hid in rival_deals.keys():
+		var d: Dictionary = rival_deals[hid]
+		var left = int(d.get("turns_left", 0)) - 1
+		d["turns_left"] = left
+		if left <= 0:
+			var kind = str(d.get("kind", ""))
+			match kind:
+				"trade":
+					silver += 50
+					evs.append("契约兑现·商路：银+50（%s）" % hid)
+				"intel":
+					add_skill_point(1)
+					evs.append("契约兑现·情报：战技点+1（%s）" % hid)
+				"truce":
+					set_rival_stance(hid, "cordial")
+					evs.append("契约兑现·停战：立场并席（%s）" % hid)
+				_:
+					evs.append("契约到期（%s）" % hid)
+			done.append(hid)
+		else:
+			rival_deals[hid] = d
+	for hid2 in done:
+		rival_deals.erase(hid2)
+		add_lineage_event(evs[-1] if evs.size() > 0 else "契约结束")
+	mark_dirty()
+	return evs
 
 func add_lineage_event(text: String) -> void:
 	lineage_log.append({"t": Calendar.label() if Calendar else "", "text": text})
@@ -664,7 +737,10 @@ func save_game() -> bool:
 		"chapter11_beat": chapter11_beat,
 		"chapter12_beat": chapter12_beat,
 		"chapter13_beat": chapter13_beat,
+		"chapter14_beat": chapter14_beat,
+		"chapter15_beat": chapter15_beat,
 		"rival_stances": rival_stances.duplicate(true),
+		"rival_deals": rival_deals.duplicate(true),
 		"skill_points": skill_points,
 		"chapter0_flags": chapter0_flags,
 		"reputation": reputation,
@@ -725,7 +801,10 @@ func load_game() -> bool:
 	chapter11_beat = str(data.get("chapter11_beat", "11.0"))
 	chapter12_beat = str(data.get("chapter12_beat", "12.0"))
 	chapter13_beat = str(data.get("chapter13_beat", "13.0"))
+	chapter14_beat = str(data.get("chapter14_beat", "14.0"))
+	chapter15_beat = str(data.get("chapter15_beat", "15.0"))
 	rival_stances = data.get("rival_stances", {"shuoying": "hostile", "qinghe": "wary", "lantern": "neutral"}).duplicate(true)
+	rival_deals = data.get("rival_deals", {}).duplicate(true)
 	skill_points = int(data.get("skill_points", 0))
 	chapter0_flags = data.get("chapter0_flags", {})
 	reputation = data.get("reputation", {"ashland": 0, "riverland": 0})
