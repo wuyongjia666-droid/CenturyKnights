@@ -122,6 +122,21 @@
     "tokens/flute_boss_enemy_f0.png",
     "tokens/flute_boss_enemy_f1.png",
     "tokens/flute_boss_enemy_f2.png",
-    "tokens/flute_boss_enemy_f3.png"
+    "tokens/flute_boss_enemy_f3.png",
+    "portraits/shadow_thug.png",
+    "portraits/shadow_archer.png",
+    "portraits/shadow_boss.png",
+    "tokens/shadow_thug_enemy_f0.png",
+    "tokens/shadow_thug_enemy_f1.png",
+    "tokens/shadow_thug_enemy_f2.png",
+    "tokens/shadow_thug_enemy_f3.png",
+    "tokens/shadow_archer_enemy_f0.png",
+    "tokens/shadow_archer_enemy_f1.png",
+    "tokens/shadow_archer_enemy_f2.png",
+    "tokens/shadow_archer_enemy_f3.png",
+    "tokens/shadow_boss_enemy_f0.png",
+    "tokens/shadow_boss_enemy_f1.png",
+    "tokens/shadow_boss_enemy_f2.png",
+    "tokens/shadow_boss_enemy_f3.png"
   ]
 }
