@@ -57,6 +57,7 @@ var strings: Dictionary = {
 	"advance_season": "度过一季",
 	"forecast": "将发生",
 	"heirloom_preview": "传家宝槽（完整版开放）",
+	"chapter1_title": "第一章·陆桥烽火",
 }
 
 func t(key: String, args: Array = []) -> String:

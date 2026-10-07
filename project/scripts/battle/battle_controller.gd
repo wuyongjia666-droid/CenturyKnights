@@ -4,8 +4,10 @@ extends Control
 
 const CELL := 56
 const ORIGIN := Vector2(40, 80)
-const MAP_W := 8
-const MAP_H := 6
+var MAP_W: int = 8
+var MAP_H: int = 6
+var map_id: String = "ch0_pass"
+var map_name: String = "隘口之夜"
 
 var terrain: Array = []
 var units: Array = []
@@ -44,7 +46,10 @@ func _ready() -> void:
 	set_process(true)
 
 func _process(delta: float) -> void:
+	UnitArt.tick(delta)
 	_sel_pulse += delta
+	if int(_sel_pulse * 10) % 5 == 0 and _banner_tex:
+		_banner_tex.texture = UnitArt.banner(56, 80, false)
 	if _turn_flash > 0.0:
 		_turn_flash = maxf(0.0, _turn_flash - delta)
 	var alive_fx: Array = []
@@ -171,42 +176,50 @@ func _enter_attack_mode() -> void:
 	_log("攻击模式：点击射程内敌人")
 
 func _init_map() -> void:
+	map_id = str(GameState.get_meta("battle_map", "ch0_pass"))
+	var m: Dictionary = BattleMaps.get_map(map_id)
+	map_name = str(m.get("name", map_id))
+	MAP_W = int(m.get("w", 8))
+	MAP_H = int(m.get("h", 6))
 	terrain.clear()
-	for y in MAP_H:
-		var row: Array = []
-		for x in MAP_W:
-			var t = "plain"
-			if x <= 1 and y >= 2 and y <= 4:
-				t = "forest"
-			elif x >= 5 and y <= 2:
-				t = "hill"
-			elif x == 3 and y == 3:
-				t = "forest"
-			row.append(t)
-		terrain.append(row)
+	var grid: Array = m.get("terrain", [])
+	if grid.is_empty():
+		for y in MAP_H:
+			var row: Array = []
+			for x in MAP_W:
+				row.append("plain")
+			terrain.append(row)
+	else:
+		for y in grid.size():
+			terrain.append(grid[y].duplicate())
+	if phase_label:
+		phase_label.text = "%s · 玩家回合" % map_name
 
 func _deploy() -> void:
 	units.clear()
-	var map_id := str(GameState.get_meta("battle_map", "ch0_pass"))
+	var m: Dictionary = BattleMaps.get_map(map_id)
 	var ids: Array = GameState.deploy_ids.duplicate()
 	if ids.is_empty():
 		for c in GameState.roster():
 			ids.append(c.id)
 			if ids.size() >= 4:
 				break
-	var spots = [Vector2i(1, 4), Vector2i(2, 5), Vector2i(0, 5), Vector2i(3, 4)]
+	var spots: Array = []
+	for s in m.get("player_spots", [[1,4],[2,5],[0,5],[3,4]]):
+		spots.append(Vector2i(int(s[0]), int(s[1])))
 	var i = 0
 	for cid in ids:
-		if i >= 4:
+		if i >= spots.size():
 			break
 		var c: CKCharacter = GameState.characters.get(cid)
 		if c == null or not c.alive:
 			continue
 		units.append({"char": c, "pos": spots[i], "team": "player", "done": false})
 		i += 1
-	if map_id == "ch0_pass":
+	# tutorial militia pad to 4 for ch0_pass only
+	if bool(m.get("tutorial_militia", false)):
 		var militia_slot := 0
-		while i < 4:
+		while i < mini(4, spots.size()):
 			units.append({
 				"char": CharacterFactory.make_tutorial_militia(militia_slot),
 				"pos": spots[i],
@@ -215,26 +228,20 @@ func _deploy() -> void:
 			})
 			militia_slot += 1
 			i += 1
-		var enemies = [
-			[CharacterFactory.make_enemy("bandit_weak", rng), Vector2i(6, 1)],
-			[CharacterFactory.make_enemy("bandit_weak", rng), Vector2i(5, 2)],
-		]
-		for e in enemies:
-			# 给敌军一点外观，避免空白脸
-			e[0].appearance = {"hair": "ink_black", "eyes": "dusk", "brow": "thick", "scar": "cheek"}
-			units.append({"char": e[0], "pos": e[1], "team": "enemy", "done": false})
-		_log("教学编成：我军 %d · 敌军 %d（灰旗民兵助阵）" % [i, enemies.size()])
-		_refresh_info()
-		return
-	var enemies = [
-		[CharacterFactory.make_enemy("bandit", rng), Vector2i(6, 1)],
-		[CharacterFactory.make_enemy("bandit_archer", rng), Vector2i(7, 2)],
-		[CharacterFactory.make_enemy("bandit", rng), Vector2i(5, 0)],
-		[CharacterFactory.make_enemy("bandit_chief", rng), Vector2i(7, 0)],
-	]
-	for e in enemies:
-		e[0].appearance = CharacterFactory._random_appearance(rng) if GameState.data_appearance else {"hair": "ink_black", "eyes": "slate", "brow": "straight", "scar": "cheek"}
-		units.append({"char": e[0], "pos": e[1], "team": "enemy", "done": false})
+	var enemy_spots: Array = []
+	for s in m.get("enemy_spots", [[6,1],[5,2]]):
+		enemy_spots.append(Vector2i(int(s[0]), int(s[1])))
+	var templates: Array = m.get("enemy_templates", ["bandit_weak","bandit_weak"])
+	var ei = 0
+	for ti in templates.size():
+		if ei >= enemy_spots.size():
+			break
+		var e = CharacterFactory.make_enemy(str(templates[ti]), rng)
+		if e.appearance.get("hair","") == "" or e.faction == "enemy":
+			e.appearance = {"hair": "ink_black", "eyes": "dusk", "brow": "thick", "scar": "cheek"}
+		units.append({"char": e, "pos": enemy_spots[ei], "team": "enemy", "done": false})
+		ei += 1
+	_log("%s：我军 %d · 敌军 %d" % [map_name, i, ei])
 	_refresh_info()
 
 func _draw_map() -> void:
@@ -430,6 +437,7 @@ func _click_cell(cell: Vector2i) -> void:
 				_refresh_info()
 				map_draw.queue_redraw()
 				overlay.queue_redraw()
+				Sfx.move()
 				_log("%s 移动至 (%d,%d)" % [su.char.name, cell.x, cell.y])
 				return
 			if ui >= 0 and units[ui].team == "player" and not units[ui].done and ui != selected:
@@ -466,6 +474,7 @@ func _do_attack(ai: int, di: int) -> void:
 	var result = BattleRules.roll_attack(atk.char, def.char, tid, rng)
 	var msg = "%s → %s：" % [atk.char.name, def.char.name]
 	if result.hit:
+		Sfx.hit()
 		msg += "命中 %d%s" % [result.damage, "（暴击）" if result.crit else ""]
 		var col = Color(1.0, 0.85, 0.3) if result.crit else Color(1.0, 0.45, 0.35)
 		_spawn_dmg(def.pos, ("暴%d" % result.damage) if result.crit else ("-%d" % result.damage), col)
@@ -475,6 +484,7 @@ func _do_attack(ai: int, di: int) -> void:
 			if def.team == "player":
 				def.char.injured = true
 	else:
+		Sfx.miss()
 		msg += "未命中（命中率 %d%%）" % result.hit_chance
 		_spawn_dmg(def.pos, "未中", Color(0.7, 0.75, 0.85))
 	_log(msg)
@@ -509,6 +519,7 @@ func _start_player_turn() -> void:
 	phase_label.text = "玩家回合"
 	phase_label.add_theme_color_override("font_color", UnitArt.crest_color())
 	_turn_flash = 0.9
+	Sfx.turn()
 	for u in units:
 		if u.team == "player":
 			u.done = false
@@ -611,11 +622,14 @@ func _finish(win: bool) -> void:
 			elif u.team == "player":
 				u.char.hp = maxi(1, int(u.char.max_hp * 0.3))
 				u.char.injured = true
-		_log("【胜利】隘口肃清。+35 银。可返回章节。")
+		Sfx.win()
+		_log("【胜利】%s肃清。+35 银。" % map_name)
+		_mark_map_victory()
 		phase_label.text = "★ " + Locale.t("battle_win") + " ★"
 		phase_label.add_theme_color_override("font_color", UIKit.ACCENT)
 	else:
-		_log("【败北】可重试，第零章进度旗标保留。")
+		Sfx.lose()
+		_log("【败北】可重试，进度旗标保留。")
 		phase_label.text = Locale.t("battle_lose")
 		phase_label.add_theme_color_override("font_color", UIKit.DANGER)
 		for u in units:
@@ -652,6 +666,20 @@ func _finish(win: bool) -> void:
 			get_tree().change_scene_to_file("res://scenes/story/chapter0.tscn")
 		)
 		row.add_child(b)
+
+
+func _mark_map_victory() -> void:
+	if map_id == "ch0_pass":
+		GameState.set_flag("battle_done")
+	elif map_id == "ch1_hill":
+		GameState.set_flag("ch1_hill_done")
+	elif map_id == "ch1_ford":
+		GameState.set_flag("ch1_ford_done")
+	elif map_id == "ch1_fog":
+		GameState.set_flag("ch1_fog_done")
+	# quest maps also count as battle_done for generic chains
+	if map_id.begins_with("quest"):
+		GameState.set_flag("battle_done")
 
 func _refresh_info_for(ui: int) -> void:
 	if ui < 0 or ui >= units.size():

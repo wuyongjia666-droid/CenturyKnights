@@ -8,6 +8,7 @@ func _ready() -> void:
 	if not GameState.flag("hub_open"):
 		GameState.set_flag("hub_open")
 	_build()
+	UIFX.fade_in(self, 0.35)
 	GameState.state_changed.connect(_refresh)
 
 func _build() -> void:
@@ -110,6 +111,10 @@ func _build() -> void:
 	var ch_b = UIKit.make_accent_button("第零章节拍", 160)
 	ch_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter0.tscn"))
 	row.add_child(ch_b)
+	var ch1_b = UIKit.make_accent_button("第一章·陆桥", 160)
+	ch1_b.disabled = not GameState.flag("chapter0_done")
+	ch1_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter1.tscn"))
+	row.add_child(ch1_b)
 	var menu_b = UIKit.make_button("主菜单", 100)
 	menu_b.pressed.connect(func():
 		GameState.save_game()
@@ -124,8 +129,10 @@ func _refresh() -> void:
 func _update_story_hint() -> void:
 	if not GameState.flag("chapter0_done"):
 		_story_hint.text = "第零章进行中：节拍 %s —— 点「第零章节拍」继续剧情" % GameState.chapter0_beat
+	elif not GameState.flag("chapter1_done"):
+		_story_hint.text = "第零章已完成。可点「第一章·陆桥」推进新地图战役；亦可自由经营。"
 	else:
-		_story_hint.text = "第零章已完成。可自由经营灰旗堡——委任、联姻、岁月皆可。 "
+		_story_hint.text = "陆桥烽火暂息。自由经营、联姻传代、岁月推进皆可。"
 
 func panel_button_labels() -> Array:
 	var out: Array = []

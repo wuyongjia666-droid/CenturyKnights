@@ -2,6 +2,24 @@ extends Control
 
 func _ready() -> void:
 	_build()
+	UIFX.fade_in(self, 0.45)
+	set_process(true)
+
+var _banner_node: TextureRect
+var _anim_acc: float = 0.0
+func _process(delta: float) -> void:
+	UnitArt.tick(delta)
+	_anim_acc += delta
+	if _anim_acc < 0.2:
+		return
+	_anim_acc = 0.0
+	if _banner_node == null:
+		for c in get_children():
+			if c is TextureRect:
+				_banner_node = c
+				break
+	if _banner_node:
+		_banner_node.texture = UnitArt.banner(180, 260, true)
 
 func _build() -> void:
 	for c in get_children():

@@ -232,6 +232,11 @@ func _refresh_actions() -> void:
 					GameState.set_flag("chapter0_done")
 					get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
 				)
+				_add_action("踏上第一章·陆桥烽火", func():
+					GameState.set_flag("chapter0_done")
+					GameState.chapter1_beat = "1.0"
+					get_tree().change_scene_to_file("res://scenes/story/chapter1.tscn")
+				)
 			else:
 				_add_action("岁月沙漏：跳至丰收月并结算", func():
 					_fast_to_harvest()

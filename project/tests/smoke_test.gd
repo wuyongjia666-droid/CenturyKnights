@@ -57,7 +57,8 @@ func _run() -> void:
 			errors.append("recruit flag")
 
 	GameState.set_flag("hub_open")
-	GameState.reputation["ashland"] = 40
+	GameState.reputation["ashland"] = 85
+	GameState.reputation["riverland"] = 60
 	GameState.refresh_marriage_candidates()
 	var cand = GameState.marriage_candidates[0]
 	var expect = Lineage.heir_expectation(leader, cand)

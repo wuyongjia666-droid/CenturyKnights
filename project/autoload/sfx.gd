@@ -1,0 +1,48 @@
+extends Node
+## 原创程序 WAV 音效（无授权曲库）
+
+var _players: Dictionary = {}
+var enabled: bool = true
+
+func _ready() -> void:
+	for id in ["ui_click", "ui_confirm", "hit", "miss", "win", "lose", "move", "turn"]:
+		var p := AudioStreamPlayer.new()
+		p.name = id
+		var path = "res://assets/sfx/%s.wav" % id
+		if ResourceLoader.exists(path):
+			p.stream = load(path)
+		p.bus = "Master"
+		p.volume_db = -6.0
+		add_child(p)
+		_players[id] = p
+
+func play(id: String) -> void:
+	if not enabled:
+		return
+	var p: AudioStreamPlayer = _players.get(id)
+	if p and p.stream:
+		p.play()
+
+func click() -> void:
+	play("ui_click")
+
+func confirm() -> void:
+	play("ui_confirm")
+
+func hit() -> void:
+	play("hit")
+
+func miss() -> void:
+	play("miss")
+
+func win() -> void:
+	play("win")
+
+func lose() -> void:
+	play("lose")
+
+func move() -> void:
+	play("move")
+
+func turn() -> void:
+	play("turn")

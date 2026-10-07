@@ -50,7 +50,8 @@ func _accept(qid: String) -> void:
 	var r = GameState.accept_quest(qid)
 	if r.get("battle"):
 		GameState.set_meta("battle_return", "res://scenes/hub/quests.tscn")
-		GameState.set_meta("battle_map", "quest_bandit")
+		var mid = str(r.quest.get("map", GameState.get_meta("battle_map", "quest_bandit")))
+		GameState.set_meta("battle_map", mid)
 		get_tree().change_scene_to_file("res://scenes/battle/battle.tscn")
 	else:
 		_msg.text = "完成：%s —— %s" % [r.quest.name, str(r.quest.get("desc", ""))]

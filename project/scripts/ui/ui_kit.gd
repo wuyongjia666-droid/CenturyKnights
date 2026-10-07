@@ -19,12 +19,12 @@ static func make_button(text: String, min_w: int = 160) -> Button:
 	b.text = text
 	b.custom_minimum_size = Vector2(min_w, 42)
 	_style_button(b)
-	b.mouse_entered.connect(func(): _sfx_hover())
-	b.pressed.connect(func(): _sfx_click())
+	b.pressed.connect(func(): Sfx.click())
 	return b
 
 static func make_accent_button(text: String, min_w: int = 160) -> Button:
 	var b := make_button(text, min_w)
+	b.pressed.connect(func(): Sfx.confirm())
 	var n = _flat(ACCENT.darkened(0.25), ACCENT, 8)
 	var h = _flat(ACCENT.darkened(0.10), ACCENT.lightened(0.15), 8)
 	var p = _flat(ACCENT.darkened(0.35), ACCENT_DIM, 8)
@@ -211,11 +211,6 @@ static func _ensure_sfx() -> void:
 	_sfx_ready = true
 	# 延迟到有 SceneTree 时再挂；点击时若无树则静默
 
-static func _sfx_click() -> void:
-	pass  # 预留：部分平台 headless 无音频设备
-
-static func _sfx_hover() -> void:
-	pass
 
 static func empty_state(text: String) -> Label:
 	var l := make_dim_label(text)

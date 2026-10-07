@@ -8,6 +8,7 @@ var _msg: Label
 var _portrait: TextureRect
 
 func _ready() -> void:
+	UIFX.fade_in(self, 0.3)
 	if int(GameState.reputation.get("ashland", 0)) < 30:
 		GameState.reputation["ashland"] = maxi(int(GameState.reputation.get("ashland", 0)), 35)
 	if GameState.marriage_candidates.is_empty():
@@ -135,7 +136,8 @@ func _do_marry() -> void:
 	_msg.text = str(r.get("msg", ""))
 	if r.get("ok"):
 		GameState.save_game()
-		_msg.text += "　妊娠将在岁月推进后分娩。双姓共席，旗又升高一寸。"
+		_msg.text += "　妊娠将在岁月推进后分娩。双姓共席，旗又升高一寸。\n族谱将添新页；陆桥旅馆会开始传『灰旗有家』的闲话。"
+		Sfx.confirm()
 
 func _back() -> void:
 	if str(GameState.chapter0_beat) in ["0.4", "0.45", "0.5"] and not GameState.flag("chapter0_done"):

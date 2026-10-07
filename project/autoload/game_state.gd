@@ -13,6 +13,9 @@ var data_jobs: Dictionary = {}
 var data_chapter0: Dictionary = {}
 var data_names: Dictionary = {}
 var data_appearance: Dictionary = {}
+var data_maps: Dictionary = {}
+var data_chapter1: Dictionary = {}
+var chapter1_beat: String = "1.0"
 
 # 游戏状态
 var started: bool = false
@@ -63,6 +66,8 @@ func _load_data() -> void:
 	data_chapter0 = _read_json("res://data/chapter0.json")
 	data_names = _read_json("res://data/names.json")
 	data_appearance = _read_json("res://data/appearance.json")
+	data_maps = _read_json("res://data/maps.json")
+	data_chapter1 = _read_json("res://data/chapter1.json")
 
 func _read_json(path: String) -> Dictionary:
 	var f = FileAccess.open(path, FileAccess.READ)
@@ -146,6 +151,7 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	morale = 70
 	characters.clear()
 	chapter0_beat = "0.0"
+	chapter1_beat = "1.0"
 	chapter0_flags = {}
 	event_log.clear()
 	dynasty_journal = ""
@@ -202,7 +208,7 @@ func _init_quests() -> void:
 	quests = [
 		{"id": "q_escort", "name": "护商·苇原道", "stars": 1, "months": 1, "silver": 30, "rep": 6, "battle": false,
 			"desc": "商队要走苇原旧道。旗帜一亮，劫匪多半让路——自动结算，换银与灰烬邦声望。"},
-		{"id": "q_bandit", "name": "清匪·石垒坡", "stars": 2, "months": 1, "silver": 45, "rep": 10, "battle": true,
+		{"id": "q_bandit", "name": "清匪·石垒坡", "stars": 2, "months": 1, "silver": 45, "rep": 10, "battle": true, "map": "quest_bandit",
 			"desc": "石垒坡有人收「过路银」。真实战棋清剿：编队出战，打赢才算。"},
 		{"id": "q_drill", "name": "演习·灰场", "stars": 1, "months": 1, "silver": 20, "rep": 4, "battle": false,
 			"desc": "堡内灰场拉练。耗时一月，全员小额经验，士气微升。"},
@@ -212,6 +218,12 @@ func _init_quests() -> void:
 			"desc": "河卫邦请人值夜守桥。不必开战，换声望与银——陆桥耳目会记住灰旗。"},
 		{"id": "q_rumor", "name": "探听·烽火夜话", "stars": 1, "months": 1, "silver": 10, "rep": 5, "battle": false,
 			"desc": "酒馆夜话里有春令与匪线的碎片。耗时换声望，偶得铁料线索（银少）。"},
+		{"id": "q_hill_war", "name": "主线支援·石垒坡", "stars": 3, "months": 1, "silver": 60, "rep": 12, "battle": true, "map": "ch1_hill",
+			"desc": "第一章：丘林交错的石垒坡清剿。打赢记入陆桥烽火。"},
+		{"id": "q_ford_war", "name": "主线支援·断潮渡", "stars": 3, "months": 1, "silver": 55, "rep": 12, "battle": true, "map": "ch1_ford",
+			"desc": "第一章：宽滩断潮渡值夜战。河卫邦会记住灰旗。"},
+		{"id": "q_fog_war", "name": "主线支援·雾谷", "stars": 3, "months": 1, "silver": 58, "rep": 12, "battle": true, "map": "ch1_fog",
+			"desc": "第一章：密林雾谷夜袭。弓手危险，阵型勿散。"},
 	]
 
 func accept_quest(qid: String) -> Dictionary:
@@ -223,6 +235,8 @@ func accept_quest(qid: String) -> Dictionary:
 	if q == null:
 		return {"ok": false, "msg": "任务不存在"}
 	if q.get("battle", false):
+		if q.get("map"):
+			set_meta("battle_map", str(q.get("map")))
 		return {"ok": true, "battle": true, "quest": q}
 	# 自动任务
 	var evs = Calendar.advance(int(q.get("months", 1)))
@@ -415,6 +429,7 @@ func save_game() -> bool:
 		"silver": silver, "food": food, "iron": iron, "herb": herb, "morale": morale,
 		"year": Calendar.year, "month": Calendar.month,
 		"chapter0_beat": chapter0_beat,
+		"chapter1_beat": chapter1_beat,
 		"chapter0_flags": chapter0_flags,
 		"reputation": reputation,
 		"settings": settings,
@@ -459,6 +474,7 @@ func load_game() -> bool:
 	Calendar.year = int(data.get("year", 1))
 	Calendar.month = int(data.get("month", 1))
 	chapter0_beat = str(data.get("chapter0_beat", "0.0"))
+	chapter1_beat = str(data.get("chapter1_beat", "1.0"))
 	chapter0_flags = data.get("chapter0_flags", {})
 	reputation = data.get("reputation", {"ashland": 0, "riverland": 0})
 	settings = data.get("settings", settings)
