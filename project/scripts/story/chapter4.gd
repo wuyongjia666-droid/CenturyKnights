@@ -12,7 +12,7 @@ var _banner: TextureRect
 func _ready() -> void:
 	_build()
 	UIFX.fade_in(self, 0.4)
-	_load_beat(GameState.chapter3_beat if GameState.chapter3_beat != "" else "3.0")
+	_load_beat(GameState.chapter4_beat if GameState.chapter4_beat != "" else "4.0")
 
 func _build() -> void:
 	UIKit.make_screen_bg(self)
@@ -54,23 +54,19 @@ func _build() -> void:
 	hub.position = Vector2(1000, 36)
 	hub.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
 	add_child(hub)
-	var train = UIKit.make_button("演武场转职", 140)
-	train.position = Vector2(850, 36)
-	train.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/train.tscn"))
-	add_child(train)
 
 func _load_beat(beat_id: String) -> void:
 	_beat = {}
-	for b in GameState.data_chapter3.get("beats", []):
+	for b in GameState.data_chapter4.get("beats", []):
 		if b.get("id") == beat_id:
 			_beat = b
 			break
 	if _beat.is_empty():
 		return
-	GameState.chapter3_beat = beat_id
+	GameState.chapter4_beat = beat_id
 	GameState.mark_dirty()
 	_line_idx = 0
-	_title.text = "%s · %s" % [GameState.data_chapter3.get("title", ""), _beat.get("title", "")]
+	_title.text = "%s · %s" % [GameState.data_chapter4.get("title", ""), _beat.get("title", "")]
 	_banner.texture = UnitArt.banner(70, 100, true)
 	_show_line()
 	_refresh_actions()
@@ -103,33 +99,20 @@ func _refresh_actions() -> void:
 		return
 	var bid = str(_beat.get("id", ""))
 	match bid:
-		"3.0":
-			_add("前往炉火关试锋", func(): _goto_next())
-			_add("先去演武场转职", func(): get_tree().change_scene_to_file("res://scenes/hub/train.tscn"))
-		"3.1":
-			if GameState.flag("ch3_forge_done"):
-				_add("前往祠堂夜", func(): _goto_next())
+		"4.0":
+			_add("前往断字关", func(): _goto_next())
+		"4.1":
+			if GameState.flag("ch4_gate_done"):
+				_add("听写完那两个字", func(): _goto_next())
 			else:
-				_add("出战：炉火关", func(): _battle("ch3_forge"))
-		"3.2":
-			if GameState.flag("ch3_shrine_done"):
-				_add("听铁与祷言", func(): _goto_next())
-			else:
-				_add("出战：祠堂外廊", func(): _battle("ch3_shrine"))
-		"3.3":
-			_add("完成第三章并回堡", func():
-				GameState.set_flag("chapter3_done")
-				GameState.silver += 120
-				GameState.iron += 3
-				GameState.herb += 2
-				GameState.add_rep("ashland", 12)
+				_add("出战：断字关", func(): _battle("ch4_gate"))
+		"4.2":
+			_add("完成第四章并回堡", func():
+				GameState.set_flag("chapter4_done")
+				GameState.silver += 150
+				GameState.add_rep("ashland", 15)
 				GameState.save_game()
 				get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
-			)
-			_add("踏上第四章·百年的第一声", func():
-				GameState.set_flag("chapter3_done")
-				GameState.chapter4_beat = "4.0"
-				get_tree().change_scene_to_file("res://scenes/story/chapter4.tscn")
 			)
 		_:
 			_add("继续", func(): _goto_next())
@@ -147,6 +130,6 @@ func _goto_next() -> void:
 	_load_beat(str(n))
 
 func _battle(map_id: String) -> void:
-	GameState.set_meta("battle_return", "res://scenes/story/chapter3.tscn")
+	GameState.set_meta("battle_return", "res://scenes/story/chapter4.tscn")
 	GameState.set_meta("battle_map", map_id)
 	get_tree().change_scene_to_file("res://scenes/battle/battle.tscn")

@@ -983,6 +983,138 @@
           "forest"
         ]
       ]
+    },
+    "ch4_gate": {
+      "name": "断字关",
+      "w": 9,
+      "h": 7,
+      "player_spots": [
+        [
+          1,
+          5
+        ],
+        [
+          2,
+          6
+        ],
+        [
+          0,
+          6
+        ],
+        [
+          3,
+          5
+        ]
+      ],
+      "enemy_spots": [
+        [
+          7,
+          1
+        ],
+        [
+          6,
+          2
+        ],
+        [
+          8,
+          2
+        ],
+        [
+          7,
+          0
+        ],
+        [
+          5,
+          1
+        ]
+      ],
+      "enemy_templates": [
+        "bandit",
+        "bandit_archer",
+        "bandit",
+        "bandit_weak",
+        "bandit_archer"
+      ],
+      "tutorial_militia": false,
+      "terrain": [
+        [
+          "hill",
+          "hill",
+          "plain",
+          "plain",
+          "plain",
+          "hill",
+          "hill",
+          "hill",
+          "hill"
+        ],
+        [
+          "hill",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "hill",
+          "hill",
+          "plain"
+        ],
+        [
+          "forest",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "hill",
+          "plain"
+        ],
+        [
+          "forest",
+          "forest",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "forest",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain"
+        ]
+      ]
     }
   }
 }

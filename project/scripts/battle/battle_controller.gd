@@ -881,6 +881,8 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch3_forge_done")
 	elif map_id == "ch3_shrine":
 		GameState.set_flag("ch3_shrine_done")
+	elif map_id == "ch4_gate":
+		GameState.set_flag("ch4_gate_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")

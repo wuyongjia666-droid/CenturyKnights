@@ -27,6 +27,12 @@ func _run() -> void:
 
 	GameState.new_game("烬行", "灰旗", "#c9a227")
 	var leader = GameState.get_leader()
+	GameState.grant_job_skills(leader)
+	if leader.skills.is_empty():
+		ok = false
+		errors.append("leader skills empty after grant")
+	else:
+		print("leader skills: ", leader.skills)
 	if leader == null or leader.name != "灰旗烬行":
 		ok = false
 		errors.append("leader naming failed")

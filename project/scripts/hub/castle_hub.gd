@@ -124,6 +124,10 @@ func _build() -> void:
 	ch3_b.disabled = not GameState.flag("chapter2_done")
 	ch3_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter3.tscn"))
 	row.add_child(ch3_b)
+	var ch4_b = UIKit.make_accent_button("第四章·百年", 160)
+	ch4_b.disabled = not GameState.flag("chapter3_done")
+	ch4_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter4.tscn"))
+	row.add_child(ch4_b)
 	var menu_b = UIKit.make_button("主菜单", 100)
 	menu_b.pressed.connect(func():
 		GameState.save_game()
@@ -144,8 +148,10 @@ func _update_story_hint() -> void:
 		_story_hint.text = "第一章已完成。可点「第二章·姓氏」继续主线。"
 	elif not GameState.flag("chapter3_done"):
 		_story_hint.text = "可点「第三章·铁祷」学习战技与转职深造。"
+	elif not GameState.flag("chapter4_done"):
+		_story_hint.text = "可点「第四章·百年」挑战断字关。"
 	else:
-		_story_hint.text = "主线暂告一段。自由经营、战技、联姻传代皆可。"
+		_story_hint.text = "垂直切片主线暂收束。自由经营、战技、联姻传代皆可。"
 
 func panel_button_labels() -> Array:
 	var out: Array = []
