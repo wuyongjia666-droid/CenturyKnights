@@ -1,0 +1,74 @@
+{
+  "id": "chapter40",
+  "title": "第四十章·雾原",
+  "beats": [
+    {
+      "id": "40.0",
+      "title": "雾原点名",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "五卷已执之后，雾原开始点名——第六卷要验新旗。"
+        },
+        {
+          "speaker": "管事",
+          "text": "两场：雾原初旗、雾原浅滩。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第六卷开启。"
+        }
+      ],
+      "next": "40.1"
+    },
+    {
+      "id": "40.1",
+      "title": "雾原初旗",
+      "lines": [
+        {
+          "speaker": "系统",
+          "text": "出战「雾原初旗」。"
+        }
+      ],
+      "battle": "ch40_mist",
+      "unlock": [
+        "ch40_mist_done"
+      ],
+      "next": "40.2"
+    },
+    {
+      "id": "40.2",
+      "title": "雾原浅滩",
+      "lines": [
+        {
+          "speaker": "系统",
+          "text": "出战「雾原浅滩」。"
+        }
+      ],
+      "battle": "ch40_ford",
+      "unlock": [
+        "ch40_ford_done"
+      ],
+      "next": "40.3"
+    },
+    {
+      "id": "40.3",
+      "title": "六卷可入",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "旅馆写入『六卷可入』。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第四十章完成。"
+        }
+      ],
+      "unlock": [
+        "chapter40_done",
+        "volume6_open"
+      ],
+      "next": null
+    }
+  ]
+}

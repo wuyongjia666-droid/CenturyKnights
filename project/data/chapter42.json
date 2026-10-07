@@ -1,0 +1,55 @@
+{
+  "id": "chapter42",
+  "title": "第四十二章·钤印",
+  "beats": [
+    {
+      "id": "42.0",
+      "title": "钤印令",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "雾原与石冢之后，第六卷要在钤印写下中段。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第六卷中段。"
+        }
+      ],
+      "next": "42.1"
+    },
+    {
+      "id": "42.1",
+      "title": "六卷钤印",
+      "lines": [
+        {
+          "speaker": "系统",
+          "text": "出战「六卷钤印」。"
+        }
+      ],
+      "battle": "ch42_seal",
+      "unlock": [
+        "ch42_seal_done"
+      ],
+      "next": "42.2"
+    },
+    {
+      "id": "42.2",
+      "title": "六卷中段",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "旅馆写入『六卷中段』。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第四十二章完成（v1.8）。"
+        }
+      ],
+      "unlock": [
+        "chapter42_done",
+        "volume6_mid_done"
+      ],
+      "next": null
+    }
+  ]
+}

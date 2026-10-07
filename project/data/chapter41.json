@@ -1,0 +1,69 @@
+{
+  "id": "chapter41",
+  "title": "第四十一章·石冢",
+  "beats": [
+    {
+      "id": "41.0",
+      "title": "石冢令",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "六卷可入之后，石冢守望与地库要落石印。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第六卷前半。"
+        }
+      ],
+      "next": "41.1"
+    },
+    {
+      "id": "41.1",
+      "title": "石冢守望",
+      "lines": [
+        {
+          "speaker": "系统",
+          "text": "出战「石冢守望」。"
+        }
+      ],
+      "battle": "ch41_cairn",
+      "unlock": [
+        "ch41_cairn_done"
+      ],
+      "next": "41.2"
+    },
+    {
+      "id": "41.2",
+      "title": "石冢地库",
+      "lines": [
+        {
+          "speaker": "系统",
+          "text": "出战「石冢地库」。"
+        }
+      ],
+      "battle": "ch41_vault",
+      "unlock": [
+        "ch41_vault_done"
+      ],
+      "next": "41.3"
+    },
+    {
+      "id": "41.3",
+      "title": "石印",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "石冢两印落下。下一章是六卷钤印。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第四十一章完成。"
+        }
+      ],
+      "unlock": [
+        "chapter41_done"
+      ],
+      "next": null
+    }
+  ]
+}

@@ -223,8 +223,16 @@ func _update_story_hint() -> void:
 		_story_hint.text = "可继续第三十八章·终阙。"
 	elif not GameState.flag("chapter39_done"):
 		_story_hint.text = "可继续第三十九章·五卷席终。"
+	elif not GameState.flag("chapter40_done"):
+		_story_hint.text = "第六卷开启：点「继续主线」选第四十章·雾原。"
+	elif not GameState.flag("chapter41_done"):
+		_story_hint.text = "可继续第四十一章·石冢。"
+	elif not GameState.flag("chapter42_done"):
+		_story_hint.text = "可继续第四十二章·钤印（六卷中段）。"
+	elif GameState.flag("volume6_mid_done"):
+		_story_hint.text = "六卷中段已执。自由经营或等候后半。"
 	elif GameState.flag("volume5_done"):
-		_story_hint.text = "五卷已执。自由经营、双嗣校场、敌宅契约皆可。"
+		_story_hint.text = "五卷已执。可继续第六卷或经营。"
 	elif GameState.flag("volume5_mid_done"):
 		_story_hint.text = "五卷中段已执。可继续后半或经营。"
 	elif GameState.flag("volume4_done"):
@@ -286,6 +294,9 @@ func _chapter_catalog() -> Array:
 		["第三十七章·长川", "res://scenes/story/chapter37.tscn", "chapter36_done"],
 		["第三十八章·终阙", "res://scenes/story/chapter38.tscn", "chapter37_done"],
 		["第三十九章·席终", "res://scenes/story/chapter39.tscn", "chapter38_done"],
+		["第四十章·雾原", "res://scenes/story/chapter40.tscn", "chapter39_done"],
+		["第四十一章·石冢", "res://scenes/story/chapter41.tscn", "chapter40_done"],
+		["第四十二章·钤印", "res://scenes/story/chapter42.tscn", "chapter41_done"],
 	]
 
 func _rebuild_chapter_picker() -> void:
