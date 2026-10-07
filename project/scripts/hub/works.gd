@@ -5,7 +5,7 @@ var _msg: Label
 var _list: VBoxContainer
 
 func _ready() -> void:
-	UIKit.make_screen_bg(self)
+	UIKit.make_themed_bg(self, "works")
 	UIFX.fade_in(self, 0.28)
 	Music.play_castle()
 	var t = UIKit.make_label("城堡工事", true)

@@ -1,7 +1,7 @@
 extends Control
 var _msg: Label
 func _ready() -> void:
-	UIKit.make_screen_bg(self)
+	UIKit.make_themed_bg(self, "forge")
 	var t = UIKit.make_label("炉火工坊", true); t.position = Vector2(40, 16); add_child(t)
 	var tip = UIKit.make_dim_label("打造灰刃：需 2 铁 + 20 银，装备后攻击 +2。炉火映着旗色。")
 	tip.position = Vector2(40, 56); add_child(tip)

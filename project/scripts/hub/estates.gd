@@ -298,13 +298,29 @@ func _show_patrol_vignette(hid: String) -> void:
 	title.position = Vector2(16, 12)
 	panel.add_child(title)
 	var map = TextureRect.new()
-	if ResourceLoader.exists("res://assets/art/ui/patrol_vignette.png"):
-		map.texture = load("res://assets/art/ui/patrol_vignette.png")
 	map.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	map.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	map.position = Vector2(16, 48)
 	map.custom_minimum_size = Vector2(600, 280)
 	panel.add_child(map)
+	var frames: Array = []
+	for fi in range(4):
+		var fp = "res://assets/art/ui/patrol_vignette_f%d.png" % fi
+		if ResourceLoader.exists(fp):
+			frames.append(load(fp))
+	if frames.is_empty() and ResourceLoader.exists("res://assets/art/ui/patrol_vignette.png"):
+		frames.append(load("res://assets/art/ui/patrol_vignette.png"))
+	if not frames.is_empty():
+		map.texture = frames[0]
+		var anim_i := [0]
+		var tw = get_tree().create_timer(0.35)
+		# 顺序播帧
+		for step in range(1, frames.size()):
+			var capture_step = step
+			get_tree().create_timer(0.35 * capture_step).timeout.connect(func():
+				if is_instance_valid(map) and capture_step < frames.size():
+					map.texture = frames[capture_step]
+			)
 	if hid != "" and ResourceLoader.exists("res://assets/art/ui/patrol_mark_%s.png" % hid):
 		var mark = TextureRect.new()
 		mark.texture = load("res://assets/art/ui/patrol_mark_%s.png" % hid)

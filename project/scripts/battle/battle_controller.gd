@@ -28,6 +28,7 @@ var _hover_cell: Vector2i = Vector2i(-1, -1)
 var _banner_tex: TextureRect
 var _unit_panel: PanelContainer
 var _portrait: TextureRect
+var _info_traits: HBoxContainer
 var _dmg_fx: Array = []  # {pos, text, age, col}
 var _turn_flash: float = 0.0
 var _sel_pulse: float = 0.0
@@ -864,11 +865,17 @@ func _build_ui() -> void:
 	var phb := HBoxContainer.new()
 	phb.add_theme_constant_override("separation", 12)
 	_unit_panel.add_child(phb)
+	var left_info := VBoxContainer.new()
+	left_info.add_theme_constant_override("separation", 4)
+	phb.add_child(left_info)
 	_portrait = TextureRect.new()
 	_portrait.custom_minimum_size = Vector2(96, 96)
 	_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	phb.add_child(_portrait)
+	left_info.add_child(_portrait)
+	_info_traits = HBoxContainer.new()
+	_info_traits.add_theme_constant_override("separation", 3)
+	left_info.add_child(_info_traits)
 	info_label = RichTextLabel.new()
 	info_label.custom_minimum_size = Vector2(580, 180)
 	info_label.bbcode_enabled = true
@@ -1233,12 +1240,15 @@ func _deploy() -> void:
 	for u in units:
 		if u.team == "enemy":
 			var elite = u.char.is_leader or str(u.char.name).find("首") >= 0 or str(u.char.name).find("头目") >= 0 or str(u.char.name).find("匪首") >= 0 or u.char.level >= 4
-			GameState.grant_battle_enemy_skills(u.char, elite)
+			var diff = GameState.battle_difficulty_from_map(map_id)
+			GameState.grant_battle_enemy_skills(u.char, elite, diff)
 		else:
 			GameState.grant_job_skills(u.char)
 		chars.append(u.char)
 	GameState.reset_battle_skills(chars)
 	_show_lock_tip_once()
+	var _diff = GameState.battle_difficulty_from_map(map_id)
+	_log("敌军战技档：%d（地图 %s）" % [_diff, map_id])
 	_refresh_info()
 
 func _draw_map() -> void:
@@ -3037,17 +3047,34 @@ func _refresh_info_for(ui: int) -> void:
 		tinfo["name"], tinfo.get("avo_bonus", 0), tinfo.get("def_bonus", 0),
 	]
 
+
+func _fill_info_traits(c: CKCharacter) -> void:
+	if _info_traits == null:
+		return
+	for ch in _info_traits.get_children():
+		ch.queue_free()
+	if c == null:
+		return
+	for tr in c.traits:
+		var ic = UIKit.trait_icon_rect(str(tr), 26.0)
+		var td = GameState.get_trait(str(tr))
+		ic.tooltip_text = str(td.get("name", tr))
+		_info_traits.add_child(ic)
+
 func _refresh_info() -> void:
 	if selected < 0 or selected >= units.size():
 		info_label.text = "[b]选择己方单位开始行动[/b]\n目标：歼灭全部敌人。\n蓝格可移动 · 红格为可攻目标 · 攻击模式后点敌。"
 		if GameState.get_leader():
 			_portrait.texture = UnitArt.portrait(GameState.get_leader(), 96)
+			_fill_info_traits(GameState.get_leader())
 		else:
 			_portrait.texture = UnitArt.banner(96, 96, false)
+			_fill_info_traits(null)
 		return
 	var u = units[selected]
 	var c: CKCharacter = u.char
 	_portrait.texture = UnitArt.portrait(c, 96)
+	_fill_info_traits(c)
 	var tid = terrain[u.pos.y][u.pos.x]
 	var tinfo = BattleRules.terrain_info(tid)
 	var mode = ""

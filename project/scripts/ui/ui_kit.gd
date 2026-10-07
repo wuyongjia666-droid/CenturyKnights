@@ -115,6 +115,29 @@ static func stone_style() -> StyleBoxFlat:
 	sb.content_margin_bottom = 10
 	return sb
 
+
+static func make_themed_bg(parent: Control, theme: String = "castle") -> ColorRect:
+	var bg = make_screen_bg(parent, false)
+	var path = "res://assets/art/ui/%s_backdrop.png" % theme
+	if not ResourceLoader.exists(path):
+		path = "res://assets/art/ui/castle_backdrop.png"
+	if ResourceLoader.exists(path):
+		var tr := TextureRect.new()
+		tr.texture = load(path)
+		tr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tr.stretch_mode = TextureRect.STRETCH_SCALE
+		tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		tr.modulate = Color(1, 1, 1, 0.95)
+		parent.add_child(tr)
+		# move just above solid bg: re-add veil
+		var veil := ColorRect.new()
+		veil.color = Color(0.05, 0.06, 0.09, 0.38)
+		veil.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		veil.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		parent.add_child(veil)
+	return bg
+
 static func make_screen_bg(parent: Control, illustrated: bool = false) -> ColorRect:
 	var bg := ColorRect.new()
 	bg.color = BG

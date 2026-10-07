@@ -1,6 +1,6 @@
 extends Control
 func _ready() -> void:
-	UIKit.make_screen_bg(self)
+	UIKit.make_themed_bg(self, "deploy")
 	var cap = GameState.max_deploy()
 	var t = UIKit.make_label("出战编队（最多%d人 · 厅堂 Lv%d）" % [cap, GameState.building_level("hall")], true); t.position = Vector2(40, 16); add_child(t)
 	var tip = UIKit.make_dim_label("勾选出战者。棋盘上会以立绘棋子示人——不是色块。")

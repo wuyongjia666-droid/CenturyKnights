@@ -2051,36 +2051,96 @@ func skills_for_job(job_id: String) -> Array:
 	return out
 
 
-func grant_battle_enemy_skills(c: CKCharacter, elite: bool = false) -> void:
-	## 敌军战技：一阶全给；精锐/头目再启发式塞二阶（不走战技树花费）
+func battle_difficulty_from_map(map_id: String) -> int:
+	## 0=教学 1=前中期 2=中期 3=后期 4=终局/精锐图
+	var mid = map_id.to_lower()
+	if mid.begins_with("ch0") or mid.find("tutorial") >= 0:
+		return 0
+	var ch := 0
+	# ch12_foo / ch_heir → parse leading digits after ch
+	var i = 0
+	if mid.begins_with("ch"):
+		var num = ""
+		for j in range(2, mini(mid.length(), 5)):
+			var chs = mid.substr(j, 1)
+			if chs.is_valid_int():
+				num += chs
+			else:
+				break
+		if num != "":
+			ch = int(num)
+	if mid.find("heir") >= 0 or mid.find("boss") >= 0 or mid.find("bloodseal") >= 0:
+		return maxi(ch / 3, 3)
+	if ch <= 0:
+		return 1
+	if ch <= 2:
+		return 1
+	if ch <= 4:
+		return 2
+	if ch <= 6:
+		return 3
+	return 4
+
+func grant_battle_enemy_skills(c: CKCharacter, elite: bool = false, difficulty: int = 1) -> void:
+	## 敌军战技曲线：按地图难度递进，非纯随机池
+	## diff0: 仅一阶 | diff1: 精锐1个二阶 | diff2: 全员1二阶、精锐可三阶
+	## diff3: 全员2二阶、精锐+1三阶 | diff4: 全员2二阶+通用控技、精锐2三阶
 	grant_job_skills(c)
-	var pool: Array = []
+	if difficulty <= 0 and not elite:
+		return
+	var t2: Array = []
+	var t3: Array = []
 	for s in skills_for_job(c.job_id):
 		var tier = int(s.get("tier", 1))
+		var sid = str(s.get("id"))
 		if tier == 2:
-			pool.append(str(s.get("id")))
-		elif elite and tier == 3:
-			pool.append(str(s.get("id")))
-	# 无 job 限制的通用二阶
-	for sid in ["lock_breaker", "terrain_ward", "anchor_guard"]:
+			t2.append(sid)
+		elif tier >= 3:
+			t3.append(sid)
+	# 通用控场二阶（按职业过滤）
+	for sid in ["lock_breaker", "terrain_ward", "anchor_guard", "disengage_step"]:
 		var sk = get_skill(sid)
 		if sk.is_empty():
 			continue
 		var jobs = sk.get("jobs", [])
-		if jobs.is_empty() or c.job_id in jobs:
-			if sid not in pool and int(sk.get("tier", 1)) >= 2:
-				pool.append(sid)
-	var n = 2 if elite else 1
-	for _i in n:
-		if pool.is_empty():
-			break
-		var pick = rng.randi() % pool.size()
-		var sid = str(pool[pick])
-		pool.remove_at(pick)
-		if sid not in c.skills:
-			c.skills.append(sid)
-		if sid not in c.unlocked_skills:
-			c.unlocked_skills.append(sid)
+		if (jobs.is_empty() or c.job_id in jobs) and sid not in t2 and int(sk.get("tier", 1)) == 2:
+			t2.append(sid)
+	var need_t2 := 0
+	var need_t3 := 0
+	match difficulty:
+		0:
+			need_t2 = 1 if elite else 0
+		1:
+			need_t2 = 1 if elite else 0
+		2:
+			need_t2 = 1
+			need_t3 = 1 if elite else 0
+		3:
+			need_t2 = 2
+			need_t3 = 1 if elite else 0
+		_:
+			need_t2 = 2
+			need_t3 = 2 if elite else 1
+	# 稳定选取：按 skill id 排序后取前 N（同职同难度可复现），再按角色 id 微扰
+	t2.sort()
+	t3.sort()
+	var salt = abs(hash(c.id)) % 7
+	if t2.size() > 0:
+		var start = salt % t2.size()
+		for k in need_t2:
+			var sid = str(t2[(start + k) % t2.size()])
+			if sid not in c.skills:
+				c.skills.append(sid)
+			if sid not in c.unlocked_skills:
+				c.unlocked_skills.append(sid)
+	if t3.size() > 0 and need_t3 > 0:
+		var start3 = salt % t3.size()
+		for k in need_t3:
+			var sid = str(t3[(start3 + k) % t3.size()])
+			if sid not in c.skills:
+				c.skills.append(sid)
+			if sid not in c.unlocked_skills:
+				c.unlocked_skills.append(sid)
 
 func grant_job_skills(c: CKCharacter) -> void:
 	if c == null:
