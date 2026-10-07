@@ -3365,6 +3365,10 @@ func _refresh_info_for(ui: int) -> void:
 	var u = units[ui]
 	var c: CKCharacter = u.char
 	_portrait.texture = UnitArt.portrait(c, 96)
+	var _nm := str(c.name)
+	if (u.team == "enemy" or c.faction == "enemy") and (_nm.find("匪首") >= 0 or _nm.find("头目") >= 0 or _nm.find("Boss") >= 0):
+		if _portrait:
+			UIFX.boss_threat(_portrait)
 	var tid = terrain[u.pos.y][u.pos.x]
 	var tinfo = BattleRules.terrain_info(tid)
 	var role2 = BattleRules.role_label(BattleRules.job_role(c.job_id))

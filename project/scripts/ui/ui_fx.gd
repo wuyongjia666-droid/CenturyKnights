@@ -261,6 +261,13 @@ static func focus_ring(node: Control, col: Color = Color(1.15, 0.95, 0.55), dur:
 	flash_modulate(node, col, dur)
 	hover_lift(node, 0.02)
 
+static func boss_threat(node: Control) -> void:
+	## 精英登场压迫感：冷珊瑚闪 + 轻抖
+	if node == null: return
+	shake_control(node, 5.0, 0.28)
+	flash_modulate(node, Color(1.2, 0.55, 0.65), 0.32)
+	punch(node, 0.06)
+
 static func select_pulse(node: Control, dur: float = 0.55) -> void:
 	## 选中脉动（战棋选人 / 列表焦点）
 	if node == null or reduced(): return

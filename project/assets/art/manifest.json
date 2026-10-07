@@ -1,5 +1,5 @@
 {
-  "art_pass": "v8.2.0-art",
+  "art_pass": "v8.3.0-art",
   "patrol_frames": 12,
   "heroes": [
     "leader_default",
@@ -10,7 +10,7 @@
     "mage_plate",
     "skirm_plate"
   ],
-  "farm_batch": "qwen_v820",
+  "farm_batch": "qwen_v830",
   "ingested": [
     "battle_backdrop_wash.png",
     "concept_hire_plate_f.png",
@@ -70,5 +70,6 @@
   },
   "stitch": "watch empty",
   "polish": "hub_lift+token_rims+v810+shimmer",
-  "job_tokens": "9x2+3elite"
+  "job_tokens": "9x2+3elite",
+  "elite_themes": 21
 }
