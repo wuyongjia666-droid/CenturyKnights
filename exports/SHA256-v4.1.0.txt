@@ -1,0 +1,2 @@
+64fad7c7e7dadf9c06d936a107054eff76771cc9bc81d3c4290b39837bb8f056  CenturyKnights-windows-v4.1.0.zip
+8576ce9ae441909bc9ffb64de0722e67e038e046d14af3c0901c5a0f5c74f38e  CenturyKnights.exe

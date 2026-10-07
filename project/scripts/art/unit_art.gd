@@ -57,6 +57,10 @@ static func _portrait_key(c: CKCharacter) -> String:
 		return "res://assets/art/portraits/militia_a.png"
 	if c.name.find("民兵·乙") >= 0:
 		return "res://assets/art/portraits/militia_b.png"
+	if str(c.name).find("镖路匪首") >= 0:
+		return "res://assets/art/portraits/escort_boss.png"
+	if str(c.name).find("劫镖") >= 0 or str(c.name).find("劫道") >= 0 or str(c.name).find("关口伏弓") >= 0:
+		return "res://assets/art/portraits/escort_raider.png"
 	if c.faction == "enemy" or str(c.name).find("匪") >= 0:
 		return "res://assets/art/portraits/bandit.png"
 	var hair = str(c.appearance.get("hair", "ash_brown"))
@@ -89,6 +93,10 @@ static func _token_key(c: CKCharacter, team: String, frame: int) -> String:
 		return "res://assets/art/tokens/militia_a_%s_f%d.png" % [team, frame]
 	if c.name.find("民兵·乙") >= 0:
 		return "res://assets/art/tokens/militia_b_%s_f%d.png" % [team, frame]
+	if str(c.name).find("镖路匪首") >= 0:
+		return "res://assets/art/tokens/escort_boss_enemy_f%d.png" % frame
+	if str(c.name).find("劫镖") >= 0 or str(c.name).find("劫道") >= 0 or str(c.name).find("关口伏弓") >= 0:
+		return "res://assets/art/tokens/escort_raider_enemy_f%d.png" % frame
 	if team == "enemy" or c.faction == "enemy":
 		return "res://assets/art/tokens/bandit_enemy_f%d.png" % frame
 	var hair = str(c.appearance.get("hair", "ash_brown"))

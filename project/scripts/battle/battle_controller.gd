@@ -38,8 +38,57 @@ var _slash_fx: Array = []  # {pos, age, frame}
 var _shake: float = 0.0
 var skill_mode: bool = false
 var active_skill_id: String = ""
+var _banter_idx: int = 0
+var _banter_kill: int = 0
+var _banter_played: Dictionary = {}
 var _btn_skill: Button
 var _skill_hint: Label
+
+
+const ESCORT_BANTER_TURN := [
+	"【镖行】管事：护车！别让他们摸到辕木。",
+	"【镖行】老旗手：路引还在，旗就不能倒。",
+	"【镖行】斥候：左翼有伏弓气味——压低身子。",
+	"【镖行】苇原·灯影：车轮声一乱，就是劫道开手。",
+]
+const ESCORT_BANTER_KILL := [
+	"【镖行】劫镖毛贼：……路引……不该撕……",
+	"【镖行】劫道悍匪：灰旗……也护货？",
+	"【镖行】关口伏弓：关印……不在你们手里……",
+	"【镖行】老旗手：一匪倒，镖路清一寸。",
+	"【镖行】管事：别追太深——车还在中间。",
+]
+const ESCORT_BANTER_START := [
+	"【镖行】春令使者：这一仗验的是姓，不是刀。",
+	"【镖行】系统：镖旗已升。护货优先于斩杀。",
+]
+
+func _is_escort_map() -> bool:
+	var m: Dictionary = BattleMaps.get_map(map_id)
+	return str(m.get("theme", "")) == "escort" or map_id.begins_with("ch112") or map_id.begins_with("ch113") or map_id.begins_with("ch114") or map_id.begins_with("ch115") or map_id.begins_with("ch116") or map_id.begins_with("ch117")
+
+func _escort_banter(kind: String) -> void:
+	if not _is_escort_map():
+		return
+	var key = kind + str(_banter_idx if kind == "turn" else _banter_kill)
+	if _banter_played.has(key):
+		return
+	var pool: Array = ESCORT_BANTER_TURN if kind == "turn" else (ESCORT_BANTER_KILL if kind == "kill" else ESCORT_BANTER_START)
+	if pool.is_empty():
+		return
+	var line = ""
+	if kind == "turn":
+		line = str(pool[_banter_idx % pool.size()])
+		_banter_idx += 1
+	elif kind == "kill":
+		line = str(pool[_banter_kill % pool.size()])
+		_banter_kill += 1
+		Sfx.escort_whip()
+	else:
+		line = str(pool[0] if _banter_idx == 0 else pool[mini(1, pool.size()-1)])
+		Sfx.escort_horn()
+	_banter_played[key] = true
+	_log(line)
 
 func _ready() -> void:
 	rng.randomize()
@@ -455,6 +504,9 @@ func _deploy() -> void:
 			units.append({"char": e, "pos": enemy_spots[ei], "team": "enemy", "done": false})
 			ei += 1
 	_log("%s：我军 %d · 敌军 %d" % [map_name, i, ei])
+	_escort_banter("start")
+	if _is_escort_map():
+		Sfx.cart_rattle()
 	var chars: Array = []
 	for u in units:
 		if u.team == "player":
@@ -785,6 +837,8 @@ func _do_attack(ai: int, di: int) -> void:
 		if result.killed:
 			msg += " · 击退！"
 			_spawn_dmg(def.pos, "击破", Color(1.0, 0.9, 0.5))
+			if def.team == "enemy":
+				_escort_banter("kill")
 			if def.team == "player":
 				def.char.injured = true
 	else:
@@ -838,6 +892,7 @@ func _start_player_turn() -> void:
 	skill_mode = false
 	active_skill_id = ""
 	moved_this_select = false
+	_escort_banter("turn")
 	map_draw.queue_redraw()
 	overlay.queue_redraw()
 	_update_skill_hint()
@@ -1375,6 +1430,26 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch110_toast_done")
 	elif map_id == "ch111_finale":
 		GameState.set_flag("ch111_finale_done")
+	elif map_id == "ch112_yard":
+		GameState.set_flag("ch112_yard_done")
+	elif map_id == "ch112_road":
+		GameState.set_flag("ch112_road_done")
+	elif map_id == "ch113_camp":
+		GameState.set_flag("ch113_camp_done")
+	elif map_id == "ch113_pass":
+		GameState.set_flag("ch113_pass_done")
+	elif map_id == "ch114_seal":
+		GameState.set_flag("ch114_seal_done")
+	elif map_id == "ch115_convoy":
+		GameState.set_flag("ch115_convoy_done")
+	elif map_id == "ch115_ambush":
+		GameState.set_flag("ch115_ambush_done")
+	elif map_id == "ch116_way":
+		GameState.set_flag("ch116_way_done")
+	elif map_id == "ch116_escort":
+		GameState.set_flag("ch116_escort_done")
+	elif map_id == "ch117_finale":
+		GameState.set_flag("ch117_finale_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")
