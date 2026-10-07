@@ -150,6 +150,14 @@ func _build() -> void:
 	ch9_b.disabled = not GameState.flag("chapter8_done")
 	ch9_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter9.tscn"))
 	row.add_child(ch9_b)
+	var ch10_b = UIKit.make_accent_button("第十章·回响", 160)
+	ch10_b.disabled = not GameState.flag("chapter9_done")
+	ch10_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter10.tscn"))
+	row.add_child(ch10_b)
+	var ch11_b = UIKit.make_accent_button("第十一章·门阙", 160)
+	ch11_b.disabled = not GameState.flag("chapter10_done")
+	ch11_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter11.tscn"))
+	row.add_child(ch11_b)
 	var menu_b = UIKit.make_button("主菜单", 100)
 	menu_b.pressed.connect(func():
 		GameState.save_game()
@@ -182,8 +190,12 @@ func _update_story_hint() -> void:
 		_story_hint.text = "可点「第八章·港灯」签署海商盟约。"
 	elif not GameState.flag("chapter9_done"):
 		_story_hint.text = "可点「第九章·商路」夺回辎重。"
+	elif not GameState.flag("chapter10_done"):
+		_story_hint.text = "可点「第十章·回响」赴盟主宴。"
+	elif not GameState.flag("chapter11_done"):
+		_story_hint.text = "可点「第十一章·门阙」验旗。"
 	else:
-		_story_hint.text = "主线暂缓。自由经营、战技树、联姻传代皆可。"
+		_story_hint.text = "主线暂缓。自由经营、战技树、联姻分支与传代皆可。"
 
 func panel_button_labels() -> Array:
 	var out: Array = []

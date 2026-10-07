@@ -10,7 +10,7 @@ var _banner: TextureRect
 
 func _ready() -> void:
 	_build(); UIFX.fade_in(self, 0.4); Music.play_hub()
-	_load_beat(GameState.chapter9_beat if GameState.chapter9_beat != "" else "9.0")
+	_load_beat(GameState.chapter11_beat if GameState.chapter11_beat != "" else "11.0")
 
 func _build() -> void:
 	UIKit.make_screen_bg(self)
@@ -32,11 +32,11 @@ func _build() -> void:
 
 func _load_beat(beat_id: String) -> void:
 	_beat = {}
-	for b in GameState.data_chapter9.get("beats", []):
+	for b in GameState.data_chapter11.get("beats", []):
 		if b.get("id") == beat_id: _beat = b; break
 	if _beat.is_empty(): return
-	GameState.chapter9_beat = beat_id; GameState.mark_dirty(); _line_idx = 0
-	_title.text = "%s · %s" % [GameState.data_chapter9.get("title", ""), _beat.get("title", "")]
+	GameState.chapter11_beat = beat_id; GameState.mark_dirty(); _line_idx = 0
+	_title.text = "%s · %s" % [GameState.data_chapter11.get("title", ""), _beat.get("title", "")]
 	_banner.texture = UnitArt.banner(70, 100, true); _show_line(); _refresh_actions()
 
 func _show_line() -> void:
@@ -55,21 +55,17 @@ func _refresh_actions() -> void:
 		var nxt = UIKit.make_accent_button("继续 ▶", 220)
 		nxt.pressed.connect(func(): _line_idx += 1; _show_line(); _refresh_actions()); _actions.add_child(nxt); return
 	match str(_beat.get("id", "")):
-		"9.0":
-			_add("前往商路劫营", func(): _goto_next())
+		"11.0":
+			_add("前往王朝门阙", func(): _goto_next())
 			_add("先打开战技树", func(): get_tree().change_scene_to_file("res://scenes/hub/skill_tree.tscn"))
-		"9.1":
-			if GameState.flag("ch9_caravan_done"): _add("听可托运", func(): _goto_next())
-			else: _add("出战：商路劫营", func(): _battle("ch9_caravan"))
-		"9.2":
-			_add("完成第九章并回堡", func():
-				GameState.set_flag("chapter9_done"); GameState.silver += 180; GameState.add_skill_point(2)
-				GameState.add_rep("ashland", 14); GameState.save_game()
+		"11.1":
+			if GameState.flag("ch11_gate_done"): _add("听可执宴", func(): _goto_next())
+			else: _add("出战：王朝门阙", func(): _battle("ch11_gate"))
+		"11.2":
+			_add("完成第十一章并回堡", func():
+				GameState.set_flag("chapter11_done"); GameState.silver += 200; GameState.add_skill_point(2)
+				GameState.add_rep("ashland", 18); GameState.save_game()
 				get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
-			_add("踏上第十章·王朝回响", func():
-				GameState.set_flag("chapter9_done"); GameState.add_skill_point(2)
-				GameState.chapter10_beat = "10.0"
-				get_tree().change_scene_to_file("res://scenes/story/chapter10.tscn"))
 		_:
 			_add("继续", func(): _goto_next())
 
@@ -82,6 +78,6 @@ func _goto_next() -> void:
 	if n == null: get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"); return
 	_load_beat(str(n))
 func _battle(map_id: String) -> void:
-	GameState.set_meta("battle_return", "res://scenes/story/chapter9.tscn")
+	GameState.set_meta("battle_return", "res://scenes/story/chapter11.tscn")
 	GameState.set_meta("battle_map", map_id)
 	get_tree().change_scene_to_file("res://scenes/battle/battle.tscn")

@@ -10,6 +10,7 @@ var _vow_step: int = 0
 var _vow_panel: Control
 var _vow_body: RichTextLabel
 var _vow_actions: HBoxContainer
+var _vow_gift: String = "banner"
 
 func _ready() -> void:
 	UIFX.fade_in(self, 0.3)
@@ -175,8 +176,10 @@ func _show_vow() -> void:
 			_vow_btn("确认期望，继续", func(): _vow_step = 1; _show_vow())
 			_vow_btn("取消", func(): _vow_panel.visible = false)
 		1:
-			_vow_body.text = "[b]誓约·第二步 · 双姓共席[/b]\n\n「灰旗不弃印，联姻不弃家。」\n%s 握旗，%s 按印。厅外旗色比较声渐渐小了。" % [a, b]
-			_vow_btn("交换誓词", func(): _vow_step = 2; _show_vow())
+			_vow_body.text = "[b]誓约·第二步 · 双姓共席 · 嫁妆偏向[/b]\n\n「灰旗不弃印，联姻不弃家。」\n请选择嫁妆旁注：旗饰（声望）/ 祷文（战技点）/ 商契（银）"
+			_vow_btn("旗饰", func(): _vow_gift = "banner"; _vow_step = 2; _show_vow())
+			_vow_btn("祷文", func(): _vow_gift = "prayer"; _vow_step = 2; _show_vow())
+			_vow_btn("商契", func(): _vow_gift = "trade"; _vow_step = 2; _show_vow())
 			_vow_btn("取消", func(): _vow_panel.visible = false)
 		2:
 			_vow_body.text = "[b]誓约·第三步 · 定聘落成[/b]\n\n聘礼 40 银将入库。妊娠将在岁月中推进。\n族谱将添新页；陆桥会传『灰旗有家，可托孤』。"
@@ -198,7 +201,17 @@ func _finish_marry() -> void:
 		GameState.save_game()
 		_msg.text += "　誓约完成。双姓共席，旗又升高一寸。"
 		GameState.add_lineage_event("誓约婚宴：%s 与 %s 三步成礼。" % [GameState.get_leader().name if GameState.get_leader() else "团长", _selected.name])
-		GameState.add_rep("ashland", 3)
+		match _vow_gift:
+			"banner":
+				GameState.add_rep("ashland", 4)
+				GameState.add_lineage_event("嫁妆旁注：旗饰")
+			"prayer":
+				GameState.add_skill_point(1)
+				GameState.add_lineage_event("嫁妆旁注：祷文")
+			"trade":
+				GameState.silver += 30
+				GameState.add_lineage_event("嫁妆旁注：商契")
+		GameState.add_rep("ashland", 2)
 		Sfx.confirm()
 		Sfx.lineage_chime()
 		_refresh()
