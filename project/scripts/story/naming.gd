@@ -16,11 +16,15 @@ func _build() -> void:
 	bg.set_anchors_preset(PRESET_FULL_RECT)
 	add_child(bg)
 
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+	add_child(center)
+
 	var box := VBoxContainer.new()
-	box.position = Vector2(360, 120)
-	box.custom_minimum_size = Vector2(560, 480)
+	box.custom_minimum_size = Vector2(560, 0)
 	box.add_theme_constant_override("separation", 12)
-	add_child(box)
+	box.alignment = BoxContainer.ALIGNMENT_CENTER
+	center.add_child(box)
 
 	box.add_child(UIKit.make_label("破旗 · 立姓", true))
 	box.add_child(UIKit.make_label("朔澜陆桥边境，灰烬旗需要一个姓氏与纹章色。"))

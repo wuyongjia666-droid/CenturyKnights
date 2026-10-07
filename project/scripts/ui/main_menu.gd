@@ -6,48 +6,59 @@ func _ready() -> void:
 func _build() -> void:
 	for c in get_children():
 		c.queue_free()
+
 	var bg := ColorRect.new()
 	bg.color = UIKit.BG
-	bg.set_anchors_preset(PRESET_FULL_RECT)
+	bg.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(bg)
 
-	var center := VBoxContainer.new()
-	center.set_anchors_preset(PRESET_CENTER)
-	center.position = Vector2(440, 160)
-	center.custom_minimum_size = Vector2(400, 400)
-	center.add_theme_constant_override("separation", 14)
+	# Full-rect CenterContainer: stays centered on any window/stretch size
+	# (fixes PRESET_CENTER + hard-coded position "跑偏" on Windows export).
+	var center := CenterContainer.new()
+	center.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+	center.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	center.grow_vertical = Control.GROW_DIRECTION_BOTH
 	add_child(center)
+
+	var box := VBoxContainer.new()
+	box.custom_minimum_size = Vector2(400, 0)
+	box.add_theme_constant_override("separation", 14)
+	box.alignment = BoxContainer.ALIGNMENT_CENTER
+	center.add_child(box)
 
 	var title := UIKit.make_label(Locale.t("game_title"), true)
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	center.add_child(title)
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	box.add_child(title)
+
 	var sub := UIKit.make_label(Locale.t("subtitle"))
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	sub.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	sub.add_theme_color_override("font_color", UIKit.ACCENT)
-	center.add_child(sub)
-	center.add_child(Control.new())
+	box.add_child(sub)
 
-	var b_new = UIKit.make_button(Locale.t("menu_new"), 280)
-	b_new.pressed.connect(_on_new)
-	center.add_child(b_new)
+	var spacer := Control.new()
+	spacer.custom_minimum_size = Vector2(0, 12)
+	box.add_child(spacer)
 
-	var b_cont = UIKit.make_button(Locale.t("menu_continue"), 280)
-	b_cont.disabled = not GameState.has_save()
-	b_cont.pressed.connect(_on_continue)
-	center.add_child(b_cont)
-
-	var b_set = UIKit.make_button(Locale.t("menu_settings"), 280)
-	b_set.pressed.connect(_on_settings)
-	center.add_child(b_set)
-
-	var b_quit = UIKit.make_button(Locale.t("menu_quit"), 280)
-	b_quit.pressed.connect(func(): get_tree().quit())
-	center.add_child(b_quit)
+	for item in [
+		[Locale.t("menu_new"), Callable(self, "_on_new"), false],
+		[Locale.t("menu_continue"), Callable(self, "_on_continue"), not GameState.has_save()],
+		[Locale.t("menu_settings"), Callable(self, "_on_settings"), false],
+		[Locale.t("menu_quit"), func(): get_tree().quit(), false],
+	]:
+		var b: Button = UIKit.make_button(item[0], 280)
+		b.disabled = item[2]
+		b.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		b.pressed.connect(item[1])
+		box.add_child(b)
 
 	var tip := UIKit.make_label("原创 IP · 第零章必玩 · Godot 4.3")
 	tip.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	tip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	tip.add_theme_font_size_override("font_size", 12)
-	center.add_child(tip)
+	box.add_child(tip)
 
 func _on_new() -> void:
 	get_tree().change_scene_to_file("res://scenes/story/naming.tscn")
