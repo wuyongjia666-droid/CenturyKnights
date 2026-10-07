@@ -129,6 +129,8 @@ const LANTERN_BANTER_TURN := [
 	"【灯市】斥候：油库有贼气味——压低身子。",
 	"【灯市】苇原·灯影：灯一灭，就是盗油开手。",
 	"【灯市】管事：顺灯推进。逆风燎己。",
+	"【灯市】斥候：灯塔东垒有影——别把背对着火。",
+	"【灯市】老旗手：油道一断，塔就喘不上气。",
 ]
 const LANTERN_BANTER_KILL := [
 	"【灯市】灯市毛贼：……灯……不该灭……",
@@ -136,11 +138,32 @@ const LANTERN_BANTER_KILL := [
 	"【灯市】老旗手：一贼倒，灯路清一寸。",
 	"【灯市】管事：别追太深——灯还在街上。",
 	"【灯市】灯市匪首：空笼……照不出真姓……",
+	"【灯市】春令使者：灭的是贼，不是夜。",
 ]
 const LANTERN_BANTER_START := [
 	"【灯市】春令使者：这一仗验的是姓，不是火。",
 	"【灯市】系统：灯笼已升。护火优先于斩杀。",
 	"【灯市】管事：夜未明，先别浪战。",
+	"【灯市】老旗手：塔灯未立，夜也不算明。",
+]
+const GRAIN_BANTER_TURN := [
+	"【粮仓】管事：护囤！别让他们纵火。",
+	"【粮仓】老旗手：仓票还在，旗就不能倒。",
+	"【粮仓】斥候：碾坊有贼气味——压低身子。",
+	"【粮仓】苇原·灯影：火一亮，就是盗粮开手。",
+	"【粮仓】管事：禁火推进。一星火，满仓尽废。",
+]
+const GRAIN_BANTER_KILL := [
+	"【粮仓】粮仓悍匪：……囤……不该烧……",
+	"【粮仓】碾坊伏弓：仓门……不在你们手里……",
+	"【粮仓】老旗手：一匪倒，粮路清一寸。",
+	"【粮仓】管事：别追太深——粮还在中间。",
+	"【粮仓】粮仓匪首：空票……养不活真姓……",
+]
+const GRAIN_BANTER_START := [
+	"【粮仓】春令使者：这一仗验的是姓，不是斗。",
+	"【粮仓】系统：粮囤已升。护粮优先于斩杀。",
+	"【粮仓】管事：民未饱，先别浪战。",
 ]
 const ESCORT_BANTER_START := [
 	"【镖行】春令使者：这一仗验的是姓，不是刀。",
@@ -158,7 +181,7 @@ func _is_harbor_map() -> bool:
 
 func _theme_banter(kind: String) -> void:
 	var theme = _map_theme()
-	if theme != "escort" and theme != "harbor" and theme != "paper" and theme != "copper" and theme != "lantern":
+	if theme != "escort" and theme != "harbor" and theme != "paper" and theme != "copper" and theme != "lantern" and theme != "grain":
 		return
 	var key = theme + kind + str(_banter_idx if kind == "turn" else _banter_kill)
 	if _banter_played.has(key):
@@ -172,8 +195,10 @@ func _theme_banter(kind: String) -> void:
 		pool = PAPER_BANTER_TURN if kind == "turn" else (PAPER_BANTER_KILL if kind == "kill" else PAPER_BANTER_START)
 	elif theme == "copper":
 		pool = COPPER_BANTER_TURN if kind == "turn" else (COPPER_BANTER_KILL if kind == "kill" else COPPER_BANTER_START)
-	else:
+	elif theme == "lantern":
 		pool = LANTERN_BANTER_TURN if kind == "turn" else (LANTERN_BANTER_KILL if kind == "kill" else LANTERN_BANTER_START)
+	else:
+		pool = GRAIN_BANTER_TURN if kind == "turn" else (GRAIN_BANTER_KILL if kind == "kill" else GRAIN_BANTER_START)
 	if pool.is_empty():
 		return
 	var line = ""
@@ -191,8 +216,10 @@ func _theme_banter(kind: String) -> void:
 			Sfx.paper_tear()
 		elif theme == "copper":
 			Sfx.anvil_clang()
-		else:
+		elif theme == "lantern":
 			Sfx.lamp_flicker()
+		else:
+			Sfx.grain_pour()
 	else:
 		line = str(pool[0] if _banter_idx == 0 else pool[mini(1, pool.size()-1)])
 		if theme == "escort":
@@ -203,8 +230,10 @@ func _theme_banter(kind: String) -> void:
 			Sfx.paper_tear()
 		elif theme == "copper":
 			Sfx.anvil_clang()
-		else:
+		elif theme == "lantern":
 			Sfx.lamp_flicker()
+		else:
+			Sfx.grain_pour()
 	_banter_played[key] = true
 	_log(line)
 
@@ -1643,6 +1672,26 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch137_oil_done")
 	elif map_id == "ch138_seal":
 		GameState.set_flag("ch138_seal_done")
+	elif map_id == "ch139_fair":
+		GameState.set_flag("ch139_fair_done")
+	elif map_id == "ch139_oilroad":
+		GameState.set_flag("ch139_oilroad_done")
+	elif map_id == "ch140_tower":
+		GameState.set_flag("ch140_tower_done")
+	elif map_id == "ch140_vigil":
+		GameState.set_flag("ch140_vigil_done")
+	elif map_id == "ch141_finale":
+		GameState.set_flag("ch141_finale_done")
+	elif map_id == "ch142_silo":
+		GameState.set_flag("ch142_silo_done")
+	elif map_id == "ch142_mill":
+		GameState.set_flag("ch142_mill_done")
+	elif map_id == "ch143_barn":
+		GameState.set_flag("ch143_barn_done")
+	elif map_id == "ch143_scale":
+		GameState.set_flag("ch143_scale_done")
+	elif map_id == "ch144_seal":
+		GameState.set_flag("ch144_seal_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")
