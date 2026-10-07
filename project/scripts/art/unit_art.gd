@@ -60,9 +60,17 @@ static func _portrait_key(c: CKCharacter) -> String:
 	if str(c.name).find("镖路匪首") >= 0:
 		return "res://assets/art/portraits/escort_boss.png"
 	if str(c.name).find("港匪头目") >= 0:
-		return "res://assets/art/portraits/escort_boss.png"
-	if str(c.name).find("渔港水匪") >= 0 or str(c.name).find("礁口伏弓") >= 0:
-		return "res://assets/art/portraits/escort_raider.png"
+		return "res://assets/art/portraits/harbor_boss.png"
+	if str(c.name).find("礁口伏弓") >= 0:
+		return "res://assets/art/portraits/harbor_archer.png"
+	if str(c.name).find("渔港水匪") >= 0:
+		return "res://assets/art/portraits/harbor_thug.png"
+	if str(c.name).find("纸坊匪首") >= 0:
+		return "res://assets/art/portraits/paper_boss.png"
+	if str(c.name).find("浆槽伏弓") >= 0:
+		return "res://assets/art/portraits/paper_archer.png"
+	if str(c.name).find("纸坊毛贼") >= 0:
+		return "res://assets/art/portraits/paper_thief.png"
 	if str(c.name).find("劫镖") >= 0 or str(c.name).find("劫道") >= 0 or str(c.name).find("关口伏弓") >= 0:
 		return "res://assets/art/portraits/escort_raider.png"
 	if c.faction == "enemy" or str(c.name).find("匪") >= 0:
@@ -100,12 +108,18 @@ static func _token_key(c: CKCharacter, team: String, frame: int) -> String:
 	if str(c.name).find("镖路匪首") >= 0:
 		return "res://assets/art/tokens/escort_boss_enemy_f%d.png" % frame
 	if str(c.name).find("港匪头目") >= 0:
-		return "res://assets/art/portraits/escort_boss.png"
-	if str(c.name).find("渔港水匪") >= 0 or str(c.name).find("礁口伏弓") >= 0:
-		return "res://assets/art/portraits/escort_raider.png"
-	if str(c.name).find("港匪头目") >= 0:
-		return "res://assets/art/tokens/escort_boss_enemy_f%d.png" % frame
-	if str(c.name).find("渔港水匪") >= 0 or str(c.name).find("礁口伏弓") >= 0 or str(c.name).find("劫镖") >= 0 or str(c.name).find("劫道") >= 0 or str(c.name).find("关口伏弓") >= 0:
+		return "res://assets/art/tokens/harbor_boss_enemy_f%d.png" % frame
+	if str(c.name).find("礁口伏弓") >= 0:
+		return "res://assets/art/tokens/harbor_archer_enemy_f%d.png" % frame
+	if str(c.name).find("渔港水匪") >= 0:
+		return "res://assets/art/tokens/harbor_thug_enemy_f%d.png" % frame
+	if str(c.name).find("纸坊匪首") >= 0:
+		return "res://assets/art/tokens/paper_boss_enemy_f%d.png" % frame
+	if str(c.name).find("浆槽伏弓") >= 0:
+		return "res://assets/art/tokens/paper_archer_enemy_f%d.png" % frame
+	if str(c.name).find("纸坊毛贼") >= 0:
+		return "res://assets/art/tokens/paper_thief_enemy_f%d.png" % frame
+	if str(c.name).find("劫镖") >= 0 or str(c.name).find("劫道") >= 0 or str(c.name).find("关口伏弓") >= 0:
 		return "res://assets/art/tokens/escort_raider_enemy_f%d.png" % frame
 	if team == "enemy" or c.faction == "enemy":
 		return "res://assets/art/tokens/bandit_enemy_f%d.png" % frame

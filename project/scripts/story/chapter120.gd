@@ -59,6 +59,10 @@ func _refresh_actions() -> void:
 				GameState.silver += 520; GameState.add_skill_point(3)
 				GameState.add_rep("ashland", 28); GameState.add_rep("riverland", 12); GameState.save_game()
 				get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
+			_add("踏上第十九卷后半·渔市", func():
+				GameState.set_flag("chapter120_done"); GameState.set_flag("volume19_mid_done")
+				GameState.chapter121_beat = "121.0"
+				get_tree().change_scene_to_file("res://scenes/story/chapter121.tscn"))
 		_:
 			_add("继续", func(): _goto_next())
 
