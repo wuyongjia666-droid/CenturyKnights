@@ -9,7 +9,7 @@ var _heir: CKCharacter
 var _choice: String = ""
 
 func _ready() -> void:
-	UIKit.make_screen_bg(self)
+	UIKit.make_themed_bg(self, "inheritance")
 	UIFX.fade_in(self, 0.3)
 	Music.play_hub()
 	var t = UIKit.make_label("嗣位冲突 · 继承权旁注", true)

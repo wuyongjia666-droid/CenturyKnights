@@ -10,7 +10,7 @@ var _path: String = ""  # martial | scholar | merchant
 var _msg: Label
 
 func _ready() -> void:
-	UIKit.make_screen_bg(self)
+	UIKit.make_themed_bg(self, "rite")
 	UIFX.fade_in(self, 0.3)
 	Music.play_hub()
 	var t = UIKit.make_label("族谱 · 授旗礼（分支）", true)

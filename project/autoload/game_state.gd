@@ -2103,24 +2103,51 @@ func _apply_skill_list(c: CKCharacter, sids: Array) -> void:
 		if id not in c.unlocked_skills:
 			c.unlocked_skills.append(id)
 
+func _skills_from_table_entry(entry) -> Array:
+	# by_template 值可以是 Array 或 {skills, elite_skills}
+	if typeof(entry) == TYPE_ARRAY:
+		return entry
+	if typeof(entry) == TYPE_DICTIONARY:
+		return entry.get("skills", [])
+	return []
+
+func _elite_from_table_entry(entry) -> Array:
+	if typeof(entry) == TYPE_DICTIONARY:
+		return entry.get("elite_skills", [])
+	return []
+
 func grant_battle_enemy_skills(c: CKCharacter, elite: bool = false, difficulty: int = 1, map_id: String = "", template_id: String = "") -> void:
-	## 优先设计师 per-map 表；否则回退难度曲线
+	## 优先 per-map 表 / 全局 _by_template；再回退难度曲线
 	grant_job_skills(c)
+	var root = data_enemy_skills.get("maps", data_enemy_skills)
 	var table = enemy_skill_table_for(map_id) if map_id != "" else {}
+	var granted: Array = []
+	var used_table := false
 	if not table.is_empty():
-		var granted: Array = []
-		# by_template 最优先
+		used_table = true
 		var by_t: Dictionary = table.get("by_template", {})
 		if template_id != "" and by_t.has(template_id):
-			granted.append_array(by_t[template_id])
+			var entry = by_t[template_id]
+			granted.append_array(_skills_from_table_entry(entry))
+			if elite:
+				granted.append_array(_elite_from_table_entry(entry))
 		else:
 			granted.append_array(table.get("default", []))
 		if elite:
 			granted.append_array(table.get("elite", []))
+	# 全局模板表补全（地图未写到的模板）
+	if template_id != "" and granted.is_empty():
+		var glob: Dictionary = root.get("_by_template", {})
+		if glob.has(template_id):
+			used_table = true
+			var gentry = glob[template_id]
+			granted.append_array(_skills_from_table_entry(gentry))
+			if elite:
+				granted.append_array(_elite_from_table_entry(gentry))
+	if used_table:
 		_apply_skill_list(c, granted)
 		return
 	# 回退：_defaults by diff
-	var root = data_enemy_skills.get("maps", {})
 	var defaults = root.get("_defaults", {})
 	var key = "diff_%d" % clampi(difficulty, 0, 4)
 	var dtab: Dictionary = defaults.get(key, {})

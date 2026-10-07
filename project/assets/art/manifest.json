@@ -1,5 +1,13 @@
 {
-  "art_pass": "v7.8.0-depth",
-  "portraits_grid": 300,
-  "patrol_frames": 8
+  "art_pass": "v7.9.0-depth",
+  "patrol_frames": 12,
+  "heroes": [
+    "leader_default",
+    "leader_plate",
+    "ally_dengying",
+    "tank_plate",
+    "ranger_plate",
+    "mage_plate",
+    "skirm_plate"
+  ]
 }

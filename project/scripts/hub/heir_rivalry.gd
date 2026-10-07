@@ -9,7 +9,7 @@ var _b: CKCharacter
 var _step: int = 0
 
 func _ready() -> void:
-	UIKit.make_screen_bg(self)
+	UIKit.make_themed_bg(self, "heir")
 	UIFX.fade_in(self, 0.3)
 	Music.play_hub()
 	var t = UIKit.make_label("双嗣校场 · 多嗣rivalry", true)

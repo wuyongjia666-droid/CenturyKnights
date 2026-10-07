@@ -7,7 +7,7 @@ var _msg: Label
 var _selected: Dictionary = {}
 
 func _ready() -> void:
-	UIKit.make_screen_bg(self)
+	UIKit.make_themed_bg(self, "rival")
 	UIFX.fade_in(self, 0.3)
 	Music.play_hub()
 	var t = UIKit.make_label("敌宅交涉", true)

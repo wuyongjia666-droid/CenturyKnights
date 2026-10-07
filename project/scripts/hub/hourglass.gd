@@ -8,7 +8,7 @@ func _ready() -> void:
 	_show_forecast(1)
 
 func _build() -> void:
-	UIKit.make_screen_bg(self)
+	UIKit.make_themed_bg(self, "hourglass")
 	var t = UIKit.make_label("岁月沙漏", true)
 	t.position = Vector2(40, 16)
 	add_child(t)

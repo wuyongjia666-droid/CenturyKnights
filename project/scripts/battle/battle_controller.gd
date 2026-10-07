@@ -1249,6 +1249,8 @@ func _deploy() -> void:
 		chars.append(u.char)
 	GameState.reset_battle_skills(chars)
 	_show_lock_tip_once()
+	if _lock_practice_pending():
+		_show_lock_practice_banner()
 	var _diff = GameState.battle_difficulty_from_map(map_id)
 	_log("敌军战技档：%d（地图 %s）" % [_diff, map_id])
 	_refresh_info()
@@ -1641,10 +1643,12 @@ func _apply_combat_lock(ai: int, di: int) -> void:
 		u.char.temp_combat_lock = maxi(u.char.temp_combat_lock, 2)  # 再交战刷新锁定
 		_spawn_dmg(u.pos, "锁定", Color(1.0, 0.4, 0.35))
 		_spawn_slash(u.pos, "lock")
-	if not has_meta("lock_beat_fired") and (bool(BattleMaps.get_map(map_id).get("tutorial_militia", false)) or map_id.begins_with("ch0")):
+	if not has_meta("lock_beat_fired") and _is_lock_tutorial_map():
 		set_meta("lock_beat_fired", true)
-		_log("〔教学拍〕锁定已触发——看棋子外圈红环；脱离将更贵，反击更准。")
+		_log("〔教学拍〕锁定已触发——看棋子外圈红环；脱离将更贵，反击更准。练习完成，可以结束回合。")
 		_spawn_dmg(units[ai].pos if ai >= 0 else units[di].pos, "教学·锁定", Color(1.0, 0.7, 0.4))
+		_clear_lock_practice_banner()
+		_show_lock_tip_panel("练习完成", "交战锁定已体验。之后正式对局也会出现此效果。", 2, 4.0)
 
 func _resolve_strike(ai: int, di: int, allow_skill: bool) -> void:
 
@@ -1825,6 +1829,11 @@ func _start_player_turn() -> void:
 func _end_player_turn() -> void:
 	if battle_over:
 		return
+	if _lock_practice_pending():
+		_log("〔强制练习〕请先攻击一名敌人，体验交战锁定——尚未可结束回合。")
+		_show_lock_practice_banner()
+		Sfx.miss()
+		return
 	turn_team = "enemy"
 	phase_label.text = "敌方回合"
 	phase_label.add_theme_color_override("font_color", UIKit.DANGER)
@@ -1934,6 +1943,35 @@ func _run_lock_tutorial_sequence() -> void:
 	)
 	_log("教学：交战锁定三拍提示已展开")
 
+
+
+func _is_lock_tutorial_map() -> bool:
+	return bool(BattleMaps.get_map(map_id).get("tutorial_militia", false)) or map_id.begins_with("ch0")
+
+func _lock_practice_pending() -> bool:
+	return _is_lock_tutorial_map() and not has_meta("lock_beat_fired")
+
+func _show_lock_practice_banner() -> void:
+	if has_meta("lock_practice_banner"):
+		return
+	set_meta("lock_practice_banner", true)
+	var panel = UIKit.make_panel()
+	panel.position = Vector2(40, 520)
+	panel.custom_minimum_size = Vector2(450, 70)
+	panel.z_index = 18
+	panel.name = "LockPracticeBanner"
+	add_child(panel)
+	var vb := VBoxContainer.new()
+	panel.add_child(vb)
+	var t = UIKit.make_label("【强制练习】交战锁定", true)
+	t.add_theme_color_override("font_color", Color(1.0, 0.45, 0.35))
+	vb.add_child(t)
+	vb.add_child(UIKit.make_dim_label("先选中单位 → 攻击模式 → 攻击一名敌人，触发锁定后才能结束回合。"))
+
+func _clear_lock_practice_banner() -> void:
+	var p = get_node_or_null("LockPracticeBanner")
+	if p:
+		p.queue_free()
 
 func _enemy_known_skills(c: CKCharacter) -> Array:
 	var out: Array = []
