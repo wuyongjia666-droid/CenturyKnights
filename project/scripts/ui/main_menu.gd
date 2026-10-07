@@ -2,7 +2,8 @@ extends Control
 
 func _ready() -> void:
 	_build()
-	UIFX.fade_in(self, 0.45)
+	UIFX.fade_in(self, 0.4)
+	UIFX.page_enter(self)
 	Music.play_hub()
 	set_process(true)
 

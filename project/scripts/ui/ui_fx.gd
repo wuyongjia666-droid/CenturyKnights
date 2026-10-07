@@ -134,3 +134,50 @@ static func confirm_burst(node: Control) -> void:
 	if node == null: return
 	punch(node, 0.08)
 	flash_modulate(node, Color(1.25, 1.15, 0.95), 0.2)
+
+static func wire_button(btn: BaseButton) -> void:
+	## 前端式按压微交互挂到任意按钮
+	if btn == null: return
+	if btn.has_meta("uifx_wired"): return
+	btn.set_meta("uifx_wired", true)
+	btn.button_down.connect(func(): press_feedback(btn))
+	btn.mouse_entered.connect(func():
+		if not btn.disabled:
+			hover_lift(btn, 0.025)
+	)
+	btn.mouse_exited.connect(func(): hover_settle(btn))
+
+static func wire_tree(root: Node) -> void:
+	## 递归给子树所有 BaseButton 挂微交互
+	if root == null: return
+	if root is BaseButton:
+		wire_button(root)
+	for c in root.get_children():
+		wire_tree(c)
+
+static func page_enter(root: Control, from: Vector2 = Vector2(0, 28)) -> void:
+	## 页面级入场：淡入 + 微位移（AT / 前端 page transition）
+	if root == null: return
+	fade_in(root, 0.34)
+	if reduced():
+		return
+	# 顶栏金线闪一下（若有 transition_rule）
+	if ResourceLoader.exists("res://assets/art/ui/transition_rule.png"):
+		var rule := TextureRect.new()
+		rule.texture = load("res://assets/art/ui/transition_rule.png")
+		rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		rule.position = Vector2(0, 44)
+		rule.size = Vector2(1280, 8)
+		rule.modulate.a = 0.0
+		root.add_child(rule)
+		var tw = rule.create_tween()
+		tw.tween_property(rule, "modulate:a", 1.0, _dur(0.12))
+		tw.tween_property(rule, "modulate:a", 0.0, _dur(0.28))
+		tw.tween_callback(rule.queue_free)
+
+static func nav_press_then(btn: Control, cb: Callable) -> void:
+	## 导航：先微交互再跳转，避免「死点」
+	if btn != null:
+		press_feedback(btn)
+		confirm_burst(btn)
+	cb.call()

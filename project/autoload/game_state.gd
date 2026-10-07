@@ -1476,6 +1476,21 @@ func start_caravan(kind: String) -> Dictionary:
 	mark_dirty()
 	return {"ok": true, "msg": "商队「%s」上路，约 3 月交割（途中有劫险）" % cn}
 
+
+func escort_caravan() -> Dictionary:
+	## 商队护运：花银买平安——中长环真决策
+	if int(caravan.get("turns_left", 0)) <= 0:
+		return {"ok": false, "msg": "无在途商队"}
+	if bool(caravan.get("escorted", false)):
+		return {"ok": false, "msg": "已雇护运"}
+	if silver < 12:
+		return {"ok": false, "msg": "护运需 12 银"}
+	silver -= 12
+	caravan["escorted"] = true
+	add_lineage_event("商队护运：花 12 银买路平安")
+	mark_dirty()
+	return {"ok": true, "msg": "护运已雇：途中遇劫大降"}
+
 func tick_caravan_month() -> Array:
 	var msgs: Array = []
 	# focus cd tick
@@ -1496,6 +1511,8 @@ func tick_caravan_month() -> Array:
 		raid *= 0.75
 	if alliance_duty_months > 0:
 		raid *= 0.7  # 义役护路
+	if bool(caravan.get("escorted", false)):
+		raid *= 0.25
 	if rng.randf() < raid:
 		var loss = int(invested * 0.45)
 		silver = maxi(0, silver - loss)
@@ -1658,6 +1675,15 @@ func holdings_monthly_yield() -> String:
 		estate_quiet_months += 1
 		if estate_quiet_months >= 3:
 			msg += "；四野安静（连续%d月无劫）" % estate_quiet_months
+			# 戍卫偏向属地：安静期微加银（中长经营反馈）
+			var fort_n = 0
+			for hid2 in holdings.keys():
+				if holding_focus(hid2) == "fortify":
+					fort_n += 1
+			if fort_n > 0 and estate_quiet_months % 3 == 0:
+				var bonus = fort_n
+				silver += bonus
+				msg += "；戍卫安境银+%d" % bonus
 	return msg
 
 func unlocked_holdings_count() -> int:

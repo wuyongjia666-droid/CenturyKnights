@@ -38,6 +38,8 @@ var _btn_wait: Button
 var _btn_end: Button
 var _slash_fx: Array = []  # {pos, age, frame}
 var _shake: float = 0.0
+var _trauma: float = 0.0  # game-feel trauma 0..1
+var _shake_t: float = 0.0
 var skill_mode: bool = false
 var active_skill_id: String = ""
 var _banter_idx: int = 0
@@ -800,9 +802,15 @@ func _process(delta: float) -> void:
 		if s.age < 0.48:
 			alive_s.append(s)
 	_slash_fx = alive_s
+	# Trauma shake（二次曲线，非每帧乱抖）
 	if _shake > 0.0:
-		_shake = maxf(0.0, _shake - delta * 8.0)
-		position = Vector2(randf_range(-_shake, _shake), randf_range(-_shake, _shake))
+		_trauma = clampf(_trauma + _shake * 0.08, 0.0, 1.0)
+		_shake = 0.0
+	if _trauma > 0.0:
+		_trauma = maxf(0.0, _trauma - delta * 1.35)
+		var shake = _trauma * _trauma
+		_shake_t += delta * 30.0
+		position = Vector2(10.0 * shake * sin(_shake_t * 1.7), 7.0 * shake * sin(_shake_t * 2.3))
 	else:
 		position = Vector2.ZERO
 	if overlay:
@@ -1436,7 +1444,7 @@ func _draw_overlay() -> void:
 						var a = 0.45 if attack_mode else 0.25
 						overlay.draw_rect(r2, Color(0.95, 0.2, 0.2, a))
 						overlay.draw_rect(r2, Color(1.0, 0.4, 0.3, 0.8), false, 2.0)
-	# slash
+	# slash + hit_spark 分层（game-feel）
 	for s in _slash_fx:
 		var fi = mini(5, int(s.age / 0.08))
 		var kind = str(s.get("kind", "slash"))
@@ -1446,12 +1454,19 @@ func _draw_overlay() -> void:
 		if ResourceLoader.exists(path):
 			var tex = load(path)
 			overlay.draw_texture(tex, s.pos - Vector2(32, 32))
-	# 伤害飘字
+		var spark = "res://assets/art/fx/hit_spark_%d.png" % fi
+		if ResourceLoader.exists(spark):
+			overlay.draw_texture(load(spark), s.pos - Vector2(32, 32), Color(1, 1, 1, 0.85))
+	# 伤害飘字 + dmg_pop 底板
 	for fx in _dmg_fx:
 		var a = clampf(1.0 - fx.age / 1.1, 0.0, 1.0)
 		var yoff = -fx.age * 36.0
 		var col: Color = fx.col
 		col.a = a
+		var fi2 = mini(5, int(fx.age / 0.12))
+		var pop = "res://assets/art/fx/dmg_pop_%d.png" % fi2
+		if ResourceLoader.exists(pop):
+			overlay.draw_texture(load(pop), fx.pos + Vector2(-24, yoff - 18), Color(1, 1, 1, a * 0.9))
 		overlay.draw_string(ThemeDB.fallback_font, fx.pos + Vector2(-10, yoff), fx.text, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, col)
 	# 回合横幅
 	if _turn_flash > 0.0:

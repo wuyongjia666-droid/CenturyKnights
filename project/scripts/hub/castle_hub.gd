@@ -12,7 +12,7 @@ func _ready() -> void:
 	if not GameState.flag("hub_open"):
 		GameState.set_flag("hub_open")
 	_build()
-	UIFX.fade_in(self, 0.35)
+	UIFX.fade_in(self, 0.32)
 	Music.play_hub()
 	GameState.state_changed.connect(_refresh)
 
@@ -99,9 +99,16 @@ func _build() -> void:
 	for item in buttons:
 		var b = UIKit.make_hub_nav_button(item[0], item[1], 210)
 		var path = item[2]
-		b.pressed.connect(func(): get_tree().change_scene_to_file(path))
+		UIFX.wire_button(b)
+		b.pressed.connect(func():
+			UIFX.press_feedback(b)
+			Sfx.click()
+			get_tree().change_scene_to_file(path)
+		)
 		grid.add_child(b)
 
+	UIFX.stagger_children(grid, 0.028, 0.26)
+	UIFX.page_enter(self)
 	var flavor = UIKit.make_panel()
 	flavor.position = Vector2(40, 520)
 	flavor.custom_minimum_size = Vector2(900, 70)

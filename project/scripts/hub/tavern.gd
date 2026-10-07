@@ -10,6 +10,9 @@ var _trait_row: HBoxContainer
 func _ready() -> void:
 	_build()
 	_refresh()
+	UIFX.page_enter(self)
+	UIFX.wire_tree(self)
+	if _list: UIFX.stagger_children(_list, 0.04, 0.24)
 
 func _build() -> void:
 	UIKit.make_themed_bg(self, "tavern")

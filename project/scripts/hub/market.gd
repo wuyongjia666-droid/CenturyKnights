@@ -119,9 +119,23 @@ func _ready() -> void:
 	status.position = Vector2(40, 460)
 	status.name = "CaravanStatus"
 	add_child(status)
+	var escort = UIKit.make_button("雇护运（12银）", 160)
+	escort.position = Vector2(40, 490)
+	escort.pressed.connect(func():
+		UIFX.press_feedback(escort)
+		var r = GameState.escort_caravan()
+		_msg.text = str(r.get("msg"))
+		if r.get("ok"):
+			UIFX.confirm_burst(escort)
+			Sfx.confirm()
+			GameState.save_game()
+			_refresh_prices()
+)
+	add_child(escort)
+	UIFX.wire_button(escort)
 
 	_msg = UIKit.make_label("")
-	_msg.position = Vector2(40, 500)
+	_msg.position = Vector2(40, 530)
 	_msg.custom_minimum_size = Vector2(1000, 40)
 	add_child(_msg)
 	var tip = UIKit.make_dim_label("工事升市集、委任守桥首通、联姻商契都会改价。商队是市集之上的中长环。")

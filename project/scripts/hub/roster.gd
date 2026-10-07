@@ -2,6 +2,7 @@ extends Control
 
 func _ready() -> void:
 	UIKit.make_themed_bg(self, "roster")
+	UIFX.page_enter(self)
 	var t = UIKit.make_label("花名册", true)
 	t.position = Vector2(40, 16)
 	add_child(t)
@@ -65,3 +66,5 @@ func _ready() -> void:
 	back.position = Vector2(40, 640)
 	back.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
 	add_child(back)
+	UIFX.stagger_children(vb, 0.04, 0.24)
+	UIFX.wire_tree(self)
