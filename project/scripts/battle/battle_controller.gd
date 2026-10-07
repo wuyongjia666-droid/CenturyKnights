@@ -310,6 +310,10 @@ const INK_BANTER_TURN := [
 	"【砚市】老旗手：墨池六桥，择桥登岛，别涉墨。",
 	"【砚市】春令使者：双案合桥，心案才拿得稳。",
 	"【砚市】斥候：印房丘套——破外丘再夺心。",
+	"【砚市】斥候：棋摊环心——先清外摊再夺心块。",
+	"【砚市】老旗手：研墨丘环，桥通岛石，错桥绕远。",
+	"【砚市】管事：双柱捺印，合桥再夺心垒。",
+	"【砚市】春令使者：墨溅辐射席终——桥桥要核，别涉墨。",
 ]
 const INK_BANTER_KILL := [
 	"【砚市】砚坑悍匪：……砚……不该砸……",
@@ -324,6 +328,32 @@ const INK_BANTER_START := [
 	"【砚市】系统：砚市已升。护墨优先于斩杀。",
 	"【砚市】管事：字未清，先别浪战。",
 	"【砚市】老旗手：丘环不利横队——择口纵列。",
+]
+
+const HIVE_BANTER_TURN := [
+	"【蜂场】管事：护脾！别让他们撕票。",
+	"【蜂场】老旗手：蜜票还在，旗就不能倒。",
+	"【蜂场】斥候：蜂巢有贼气味——压低身子。",
+	"【蜂场】苇原·灯影：火一亮，就是劫蜜开手。",
+	"【蜂场】管事：禁火推进。一星火，满陌尽蛰。",
+	"【蜂场】斥候：簇房四组——先近后远，别分兵。",
+	"【蜂场】老旗手：花陌曲径，别抄近路踏花。",
+	"【蜂场】春令使者：烟熏双障，择桥再进心垒。",
+	"【蜂场】斥候：蜜房格垒疏密交错，落脚先想第二步。",
+]
+const HIVE_BANTER_KILL := [
+	"【蜂场】蜂场悍匪：……脾……不该烧……",
+	"【蜂场】花陌伏弓：巢口……不在你们手里……",
+	"【蜂场】老旗手：一匪倒，蜜路清一寸。",
+	"【蜂场】管事：别追太深——脾还在房里。",
+	"【蜂场】蜂场匪首：空票……甜不住真姓……",
+	"【蜂场】斥候：撕票的倒了，脾可护。",
+]
+const HIVE_BANTER_START := [
+	"【蜂场】春令使者：这一仗验的是姓，不是刺。",
+	"【蜂场】系统：蜂场已升。护蜜优先于斩杀。",
+	"【蜂场】管事：人未甜，先别浪战。",
+	"【蜂场】老旗手：簇房不利横队——择簇纵列。",
 ]
 const ESCORT_BANTER_START := [
 	"【镖行】春令使者：这一仗验的是姓，不是刀。",
@@ -341,7 +371,7 @@ func _is_harbor_map() -> bool:
 
 func _theme_banter(kind: String) -> void:
 	var theme = _map_theme()
-	if theme != "escort" and theme != "harbor" and theme != "paper" and theme != "copper" and theme != "lantern" and theme != "grain" and theme != "snow" and theme != "bamboo" and theme != "relay" and theme != "bell" and theme != "rain" and theme != "ink":
+	if theme != "escort" and theme != "harbor" and theme != "paper" and theme != "copper" and theme != "lantern" and theme != "grain" and theme != "snow" and theme != "bamboo" and theme != "relay" and theme != "bell" and theme != "rain" and theme != "ink" and theme != "hive":
 		return
 	var key = theme + kind + str(_banter_idx if kind == "turn" else _banter_kill)
 	if _banter_played.has(key):
@@ -369,8 +399,10 @@ func _theme_banter(kind: String) -> void:
 		pool = BELL_BANTER_TURN if kind == "turn" else (BELL_BANTER_KILL if kind == "kill" else BELL_BANTER_START)
 	elif theme == "rain":
 		pool = RAIN_BANTER_TURN if kind == "turn" else (RAIN_BANTER_KILL if kind == "kill" else RAIN_BANTER_START)
-	else:
+	elif theme == "ink":
 		pool = INK_BANTER_TURN if kind == "turn" else (INK_BANTER_KILL if kind == "kill" else INK_BANTER_START)
+	else:
+		pool = HIVE_BANTER_TURN if kind == "turn" else (HIVE_BANTER_KILL if kind == "kill" else HIVE_BANTER_START)
 	if pool.is_empty():
 		return
 	var line = ""
@@ -402,8 +434,10 @@ func _theme_banter(kind: String) -> void:
 			Sfx.bell_toll()
 		elif theme == "rain":
 			Sfx.rain_patter()
-		else:
+		elif theme == "ink":
 			Sfx.ink_drip()
+		else:
+			Sfx.bee_buzz()
 	else:
 		line = str(pool[0] if _banter_idx == 0 else pool[mini(1, pool.size()-1)])
 		if theme == "escort":
@@ -428,8 +462,10 @@ func _theme_banter(kind: String) -> void:
 			Sfx.bell_toll()
 		elif theme == "rain":
 			Sfx.rain_patter()
-		else:
+		elif theme == "ink":
 			Sfx.ink_drip()
+		else:
+			Sfx.bee_buzz()
 	_banter_played[key] = true
 	_log(line)
 
@@ -2008,6 +2044,26 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch179_sealroom_done")
 	elif map_id == "ch180_seal":
 		GameState.set_flag("ch180_seal_done")
+	elif map_id == "ch181_market":
+		GameState.set_flag("ch181_market_done")
+	elif map_id == "ch181_grind":
+		GameState.set_flag("ch181_grind_done")
+	elif map_id == "ch182_press":
+		GameState.set_flag("ch182_press_done")
+	elif map_id == "ch182_vault":
+		GameState.set_flag("ch182_vault_done")
+	elif map_id == "ch183_finale":
+		GameState.set_flag("ch183_finale_done")
+	elif map_id == "ch184_hive":
+		GameState.set_flag("ch184_hive_done")
+	elif map_id == "ch184_meadow":
+		GameState.set_flag("ch184_meadow_done")
+	elif map_id == "ch185_smoker":
+		GameState.set_flag("ch185_smoker_done")
+	elif map_id == "ch185_comb":
+		GameState.set_flag("ch185_comb_done")
+	elif map_id == "ch186_seal":
+		GameState.set_flag("ch186_seal_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")

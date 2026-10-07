@@ -92,6 +92,21 @@
     "tokens/ink_boss_enemy_f0.png",
     "tokens/ink_boss_enemy_f1.png",
     "tokens/ink_boss_enemy_f2.png",
-    "tokens/ink_boss_enemy_f3.png"
+    "tokens/ink_boss_enemy_f3.png",
+    "portraits/hive_thug.png",
+    "portraits/hive_archer.png",
+    "portraits/hive_boss.png",
+    "tokens/hive_thug_enemy_f0.png",
+    "tokens/hive_thug_enemy_f1.png",
+    "tokens/hive_thug_enemy_f2.png",
+    "tokens/hive_thug_enemy_f3.png",
+    "tokens/hive_archer_enemy_f0.png",
+    "tokens/hive_archer_enemy_f1.png",
+    "tokens/hive_archer_enemy_f2.png",
+    "tokens/hive_archer_enemy_f3.png",
+    "tokens/hive_boss_enemy_f0.png",
+    "tokens/hive_boss_enemy_f1.png",
+    "tokens/hive_boss_enemy_f2.png",
+    "tokens/hive_boss_enemy_f3.png"
   ]
 }
