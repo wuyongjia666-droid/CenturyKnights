@@ -8,6 +8,24 @@ func _ready() -> void:
 	UIKit.make_themed_bg(self, "works")
 	UIFX.fade_in(self, 0.28)
 	Music.play_castle()
+	if ResourceLoader.exists("res://assets/art/ui/works_banner.png"):
+		var wb := TextureRect.new()
+		wb.texture = load("res://assets/art/ui/works_banner.png")
+		wb.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		wb.stretch_mode = TextureRect.STRETCH_SCALE
+		wb.position = Vector2(0, 0)
+		wb.size = Vector2(1280, 52)
+		wb.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(wb)
+	elif ResourceLoader.exists("res://assets/art/ui/hub_banner_strip.png"):
+		var strip := TextureRect.new()
+		strip.texture = load("res://assets/art/ui/hub_banner_strip.png")
+		strip.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		strip.stretch_mode = TextureRect.STRETCH_SCALE
+		strip.position = Vector2(0, 0)
+		strip.size = Vector2(1280, 48)
+		strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(strip)
 	var t = UIKit.make_label("城堡工事", true)
 	t.position = Vector2(40, 16)
 	add_child(t)
@@ -39,8 +57,26 @@ func _ready() -> void:
 	scroll.add_child(_list)
 	_rebuild()
 
+	if ResourceLoader.exists("res://assets/art/ui/ambition_strip.png"):
+		var astr := TextureRect.new()
+		astr.texture = load("res://assets/art/ui/ambition_strip.png")
+		astr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		astr.stretch_mode = TextureRect.STRETCH_SCALE
+		astr.position = Vector2(40, 520)
+		astr.size = Vector2(1200, 36)
+		astr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(astr)
+	if ResourceLoader.exists("res://assets/art/ui/month_chip_ambition.png"):
+		var achip := TextureRect.new()
+		achip.texture = load("res://assets/art/ui/month_chip_ambition.png")
+		achip.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		achip.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		achip.position = Vector2(40, 556)
+		achip.size = Vector2(28, 28)
+		achip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(achip)
 	var amb_title = UIKit.make_label("堡志（中长期）")
-	amb_title.position = Vector2(40, 560)
+	amb_title.position = Vector2(76, 560)
 	amb_title.add_theme_color_override("font_color", UIKit.ACCENT)
 	add_child(amb_title)
 	var amb_lines: Array = []

@@ -19,9 +19,24 @@ func _build() -> void:
 		strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(strip)
 
+	if ResourceLoader.exists("res://assets/art/ui/monthly_banner.png"):
+		var mb := TextureRect.new()
+		mb.texture = load("res://assets/art/ui/monthly_banner.png")
+		mb.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		mb.stretch_mode = TextureRect.STRETCH_SCALE
+		mb.position = Vector2(320, 8)
+		mb.size = Vector2(640, 48)
+		mb.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(mb)
 	var t = UIKit.make_label("岁月沙漏", true)
 	t.position = Vector2(40, 16)
 	add_child(t)
+	# 月结图腾条
+	var chip_row := HBoxContainer.new()
+	chip_row.name = "MonthChips"
+	chip_row.position = Vector2(40, 430)
+	chip_row.add_theme_constant_override("separation", 8)
+	add_child(chip_row)
 	var cal = UIKit.make_label(Calendar.label())
 	cal.position = Vector2(40, 56)
 	cal.name = "CalLabel"
@@ -103,6 +118,7 @@ func _advance(months: int) -> void:
 		else:
 			lines.append("· " + tx)
 	_log.text = "\n".join(lines)
+	_refresh_month_chips("\n".join(lines))
 	get_node("CalLabel").text = Calendar.label()
 	_show_forecast(1)
 	GameState.save_game()
@@ -115,3 +131,36 @@ func _to_harvest() -> void:
 	_log.text = "已抵达丰收结算。当前 [b]%s[/b]。沙漏旁的人，又老了一点。" % Calendar.label()
 	get_node("CalLabel").text = Calendar.label()
 	GameState.save_game()
+
+func _refresh_month_chips(log_text: String) -> void:
+	var row = get_node_or_null("MonthChips")
+	if row == null:
+		return
+	for c in row.get_children():
+		c.queue_free()
+	var keys: Array = []
+	if log_text.find("粮") >= 0 or log_text.find("属地") >= 0:
+		keys.append("grain")
+	if log_text.find("银") >= 0:
+		keys.append("silver")
+	if log_text.find("士气") >= 0:
+		keys.append("morale")
+	if log_text.find("联姻") >= 0:
+		keys.append("marriage")
+	if log_text.find("血胤") >= 0 or log_text.find("月泽") >= 0:
+		keys.append("blood")
+	if log_text.find("堡志") >= 0:
+		keys.append("ambition")
+	if keys.is_empty():
+		keys = ["grain", "silver"]
+	for k in keys:
+		var path = "res://assets/art/ui/month_chip_%s.png" % k
+		if ResourceLoader.exists(path):
+			var tr := TextureRect.new()
+			tr.texture = load(path)
+			tr.custom_minimum_size = Vector2(40, 40)
+			tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			row.add_child(tr)
+	var tip = UIKit.make_dim_label("月结图腾：粮 / 银 / 士气 / 联姻 / 血胤 / 堡志")
+	row.add_child(tip)

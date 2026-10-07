@@ -34,9 +34,22 @@ func _build() -> void:
 	var t = UIKit.make_label("族谱 · 血胤", true)
 	t.position = Vector2(40, 16)
 	add_child(t)
-	var tip = UIKit.make_dim_label("血胤混合条不是装饰——是两条河在旗下交汇。托孤之约后，族谱即同盟凭证；子嗣成年可授旗。下方为族谱纪事。")
+	var tip = UIKit.make_dim_label("血胤混合条不是装饰——是两条河在旗下交汇。托孤之约后，族谱即同盟凭证；子嗣成年可授旗。联姻月结 / 血胤月泽计入岁月沙漏。")
 	tip.position = Vector2(40, 56)
 	add_child(tip)
+	var mrow := HBoxContainer.new()
+	mrow.position = Vector2(900, 50)
+	mrow.add_theme_constant_override("separation", 6)
+	add_child(mrow)
+	for ck in ["marriage", "blood", "morale"]:
+		var cp = "res://assets/art/ui/month_chip_%s.png" % ck
+		if ResourceLoader.exists(cp):
+			var tr := TextureRect.new()
+			tr.texture = load(cp)
+			tr.custom_minimum_size = Vector2(32, 32)
+			tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			mrow.add_child(tr)
 
 	var list_panel = UIKit.make_panel()
 	list_panel.position = Vector2(40, 90)

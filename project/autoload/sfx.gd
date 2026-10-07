@@ -5,7 +5,7 @@ var _players: Dictionary = {}
 var enabled: bool = true
 
 func _ready() -> void:
-	for id in ["ui_click", "ui_confirm", "hit", "miss", "win", "lose", "move", "turn", "fanfare", "lineage_chime", "skill", "deal", "crit", "heal", "escort_whip", "cart_rattle", "escort_horn", "wave_splash", "paper_tear", "anvil_clang", "lamp_flicker", "grain_pour", "frost_crackle", "bamboo_creak", "post_horn", "bell_toll", "rain_patter", "ink_drip", "bee_buzz", "flute_tone", "shadow_whoosh", "salt_crunch", "dye_splash", "drum_thump", "incense_hiss", "tide_wash", "porcelain_chime"]:
+	for id in ["ui_click", "ui_confirm", "hit", "miss", "win", "lose", "move", "turn", "fanfare", "lineage_chime", "skill", "deal", "crit", "heal", "escort_whip", "cart_rattle", "escort_horn", "wave_splash", "paper_tear", "anvil_clang", "lamp_flicker", "grain_pour", "frost_crackle", "bamboo_creak", "post_horn", "bell_toll", "rain_patter", "ink_drip", "bee_buzz", "flute_tone", "shadow_whoosh", "salt_crunch", "dye_splash", "drum_thump", "incense_hiss", "tide_wash", "porcelain_chime", "zoc_pulse", "zoc_leave"]:
 		var p := AudioStreamPlayer.new()
 		p.name = id
 		var path = "res://assets/sfx/%s.wav" % id
@@ -133,3 +133,9 @@ func tide_wash() -> void:
 
 func porcelain_chime() -> void:
 	play("porcelain_chime")
+
+func zoc_pulse() -> void:
+	play("zoc_pulse")
+
+func zoc_leave() -> void:
+	play("zoc_leave")

@@ -533,7 +533,7 @@ static func _boss_portrait(key: String) -> String:
 	return "res://assets/art/portraits/%s_boss.png" % key
 
 static func _face_uid(c: CKCharacter) -> int:
-	## FNV-ish：id + 名 + 等位，降低王朝子嗣碰撞
+	## FNV-ish：id + 名 + 等位，768 槽；降低王朝子嗣碰撞
 	var h := 2166136261
 	var key = "%s|%s|%s|%s|%s|%s|%s" % [
 		str(c.id), str(c.name), str(c.gender),
@@ -542,7 +542,7 @@ static func _face_uid(c: CKCharacter) -> int:
 	]
 	for ch2 in key:
 		h = int((h ^ ch2.unicode_at(0)) * 16777619) & 0x7fffffff
-	return h % 512
+	return h % 768
 
 static func _fingerprint_portrait(tex: Texture2D, c: CKCharacter) -> Texture2D:
 	## 个人板为底；hireface 等位图作下半身/衣饰次级细节；轻染发瞳
@@ -584,9 +584,9 @@ static func _fingerprint_portrait(tex: Texture2D, c: CKCharacter) -> Texture2D:
 					# 下半身/衣领区多用等位细节；上半脸保留个人构图
 					var amt = 0.0
 					if y > int(h * 0.58):
-						amt = 0.42
+						amt = 0.48
 					elif y > int(h * 0.48):
-						amt = 0.22
+						amt = 0.28
 					if amt > 0.0:
 						img.set_pixel(x, y, p.lerp(q, amt))
 	var hc = hair_color(c.appearance)
@@ -598,9 +598,9 @@ static func _fingerprint_portrait(tex: Texture2D, c: CKCharacter) -> Texture2D:
 				continue
 			var outc = p
 			if y < int(h * 0.36):
-				outc = p.lerp(Color(hc.r, hc.g, hc.b, p.a), 0.09)
+				outc = p.lerp(Color(hc.r, hc.g, hc.b, p.a), 0.12)
 			elif y < int(h * 0.50) and x > int(w * 0.28) and x < int(w * 0.72):
-				outc = p.lerp(Color(ec.r, ec.g, ec.b, p.a), 0.07)
+				outc = p.lerp(Color(ec.r, ec.g, ec.b, p.a), 0.10)
 			var shift = Color(1.0 + (uid % 5) * 0.006, 1.0 + ((uid / 3) % 4) * 0.005, 1.0 - (uid % 3) * 0.006, 1.0)
 			img.set_pixel(x, y, Color(clampf(outc.r * shift.r, 0, 1), clampf(outc.g * shift.g, 0, 1), clampf(outc.b * shift.b, 0, 1), p.a))
 	var marks = [

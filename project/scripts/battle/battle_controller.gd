@@ -25,6 +25,7 @@ var rng := RandomNumberGenerator.new()
 var battle_over: bool = false
 var _bg: ColorRect
 var _hover_cell: Vector2i = Vector2i(-1, -1)
+var _zoc_hover_kind: String = ""  # "", "lock3", "leave2", "zoc"
 var _banner_tex: TextureRect
 var _unit_panel: PanelContainer
 var _portrait: TextureRect
@@ -1463,6 +1464,43 @@ func _draw_overlay() -> void:
 		overlay.draw_rect(Rect2(tip_pos + Vector2(-4, -14), Vector2(210, 18)), Color(0.05, 0.06, 0.08, 0.82))
 		overlay.draw_string(ThemeDB.fallback_font, tip_pos, tip, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.92, 0.88, 0.75))
 
+
+func _zoc_cell_kind(pos: Vector2i) -> String:
+	## 悬停格的控带代价类型（用于音效电报）
+	if attack_mode or move_cells.is_empty():
+		return ""
+	if not move_cells.has(pos):
+		return ""
+	var foes_ov = _enemy_positions("player")
+	var locked_ov = false
+	var start_eng = false
+	if selected >= 0 and selected < units.size():
+		var su = units[selected]
+		if su.team == "player":
+			locked_ov = int(su.char.temp_combat_lock) > 0
+			start_eng = locked_ov or BattleRules.is_engaged(su.pos, foes_ov)
+	var in_z = BattleRules.in_zoc(pos, foes_ov)
+	var leaving = start_eng and (not in_z) and selected >= 0 and pos != units[selected].pos
+	if locked_ov and leaving:
+		return "lock3"
+	if leaving:
+		return "leave2"
+	if in_z:
+		return "zoc"
+	return ""
+
+func _zoc_hover_audio(cell: Vector2i) -> void:
+	var kind = _zoc_cell_kind(cell)
+	if kind == _zoc_hover_kind:
+		return
+	_zoc_hover_kind = kind
+	if kind == "lock3":
+		Sfx.zoc_pulse()
+	elif kind == "leave2":
+		Sfx.zoc_leave()
+	elif kind == "zoc":
+		Sfx.zoc_leave()
+
 func _gui_input(event: InputEvent) -> void:
 	if battle_over:
 		return
@@ -1470,6 +1508,7 @@ func _gui_input(event: InputEvent) -> void:
 		var cell = _mouse_to_cell(event.position)
 		if cell != _hover_cell:
 			_hover_cell = cell
+			_zoc_hover_audio(cell)
 			map_draw.queue_redraw()
 			if overlay:
 				overlay.queue_redraw()
@@ -2265,7 +2304,7 @@ func _enemy_ai() -> void:
 					stand_bonus += 2.2
 			elif (not locked_self) and BattleRules.is_engaged(u.pos, foes_player) and pos != u.pos:
 				if not BattleRules.is_engaged(pos, foes_player):
-					stand_bonus -= 2.0  # 控带脱离 leave_cost=2 对齐
+					stand_bonus -= 2.4  # 控带脱离 leave_cost=2 对齐
 			for j in units.size():
 				var t = units[j]
 				if t.team != "player" or t.char.hp <= 0:
@@ -2316,7 +2355,7 @@ func _enemy_ai() -> void:
 				if threat:
 					expect += 4.2
 					if BattleRules.is_engaged(pos, foes_player):
-						expect += 1.5  # 占控带压残血
+						expect += 2.0  # 占控带压残血
 				# 攻击会刷新己方锁定——残血时略减
 				if locked_self and float(u.char.hp) / float(maxi(1, u.char.max_hp)) < 0.35:
 					expect -= 2.5

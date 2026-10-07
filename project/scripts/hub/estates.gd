@@ -132,7 +132,19 @@ func _rebuild() -> void:
 				y += "　[无庄头·易遭劫掠]"
 			if GameState.holding_patrol_boost(hid) > 0:
 				y += "　[路线巡防%d月]" % GameState.holding_patrol_boost(hid)
-			vb.add_child(UIKit.make_dim_label(y))
+			var yrow := HBoxContainer.new()
+			yrow.add_theme_constant_override("separation", 6)
+			vb.add_child(yrow)
+			for chip_k in ["grain", "silver"]:
+				var cp = "res://assets/art/ui/month_chip_%s.png" % chip_k
+				if ResourceLoader.exists(cp):
+					var ctr := TextureRect.new()
+					ctr.texture = load(cp)
+					ctr.custom_minimum_size = Vector2(28, 28)
+					ctr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+					ctr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+					yrow.add_child(ctr)
+			yrow.add_child(UIKit.make_dim_label(y))
 			var st = GameState.steward_of(hid)
 			if st != null:
 				vb.add_child(UIKit.make_label("庄头：%s（%s）" % [st.name, st.job_id]))
