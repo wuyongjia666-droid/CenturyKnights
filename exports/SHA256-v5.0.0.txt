@@ -1,0 +1,2 @@
+6f8ac45944b9f84144a1ef29899246e18f18ace571d9146d916c23c74e4ab740  CenturyKnights-windows-v5.0.0.zip
+0b819f09ab95dea33af251bff1fa90e60e4ccd6e7d0a03a9972a18d686d6dcf1  CenturyKnights.exe
