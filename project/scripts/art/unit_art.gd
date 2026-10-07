@@ -244,7 +244,7 @@ static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
 		return tex2
 	# 个人脸优先：hireuniq 为手绘感唯一底，再轻染等位色
 	var uid = _face_uid(c)
-	var uniq_p = "res://assets/art/portraits/hireuniq_%02d.png" % uid
+	var uniq_p = "res://assets/art/portraits/hireuniq_%03d.png" % uid
 	var utex = _try_load(uniq_p)
 	if utex != null:
 		return _fingerprint_portrait(utex, c)
@@ -536,11 +536,20 @@ static func _face_uid(c: CKCharacter) -> int:
 	var h = 0
 	for ch2 in str(c.id):
 		h = (h * 33 + ch2.unicode_at(0)) % 10007
-	return absi(h) % 128
+	return absi(h) % 256
 
 static func _fingerprint_portrait(tex: Texture2D, c: CKCharacter) -> Texture2D:
-	## 以个人板为底：只做等位轻染 + 痣点（不再与另一张脸重混）
-	var ck = "fp3|" + str(c.id) + "|" + str(c.appearance.get("hair","")) + "|" + str(c.appearance.get("eyes","")) + "|" + str(c.appearance.get("brow",""))
+	## 个人板为底；hireface 等位图作下半身/衣饰次级细节；轻染发瞳
+	var g = "f" if str(c.gender) == "f" else "m"
+	var hair = str(c.appearance.get("hair", "ash_brown"))
+	var eyes = str(c.appearance.get("eyes", "slate"))
+	var scar = str(c.appearance.get("scar", "none"))
+	var brow = str(c.appearance.get("brow", "straight"))
+	if scar == "":
+		scar = "none"
+	if brow == "":
+		brow = "straight"
+	var ck = "fp4|" + str(c.id) + "|" + hair + "|" + eyes + "|" + brow + "|" + scar
 	if _cache.has(ck):
 		return _cache[ck]
 	var img: Image = tex.get_image()
@@ -551,21 +560,42 @@ static func _fingerprint_portrait(tex: Texture2D, c: CKCharacter) -> Texture2D:
 	var w = img.get_width()
 	var h = img.get_height()
 	var uid = _face_uid(c)
+	# 次级：等位 hireface 衣饰/下半融合
+	var face_p = "res://assets/art/portraits/hireface_%s_%s_%s_%s_%s.png" % [hair, eyes, g, scar, brow]
+	var allele = _try_load(face_p)
+	if allele != null:
+		var aimg: Image = allele.get_image()
+		if aimg != null:
+			if aimg.get_width() != w or aimg.get_height() != h:
+				aimg = aimg.duplicate()
+				aimg.resize(w, h, Image.INTERPOLATE_LANCZOS)
+			for y in range(h):
+				for x in range(w):
+					var p = img.get_pixel(x, y)
+					var q = aimg.get_pixel(x, y)
+					if p.a < 0.05 or q.a < 0.05:
+						continue
+					# 下半身/衣领区多用等位细节；上半脸保留个人构图
+					var amt = 0.0
+					if y > int(h * 0.58):
+						amt = 0.42
+					elif y > int(h * 0.48):
+						amt = 0.22
+					if amt > 0.0:
+						img.set_pixel(x, y, p.lerp(q, amt))
 	var hc = hair_color(c.appearance)
 	var ec = eye_color(c.appearance)
-	# 上半部轻染发色倾向；中部轻染虹膜倾向（整体偏色，保留个人构图）
 	for y in range(h):
 		for x in range(w):
 			var p = img.get_pixel(x, y)
 			if p.a < 0.05:
 				continue
 			var outc = p
-			if y < int(h * 0.38):
-				outc = p.lerp(Color(hc.r, hc.g, hc.b, p.a), 0.10)
-			elif y < int(h * 0.52) and x > int(w * 0.28) and x < int(w * 0.72):
-				outc = p.lerp(Color(ec.r, ec.g, ec.b, p.a), 0.08)
-			# id 微色偏
-			var shift = Color(1.0 + (uid % 5) * 0.008, 1.0 + ((uid / 3) % 4) * 0.006, 1.0 - (uid % 3) * 0.008, 1.0)
+			if y < int(h * 0.36):
+				outc = p.lerp(Color(hc.r, hc.g, hc.b, p.a), 0.09)
+			elif y < int(h * 0.50) and x > int(w * 0.28) and x < int(w * 0.72):
+				outc = p.lerp(Color(ec.r, ec.g, ec.b, p.a), 0.07)
+			var shift = Color(1.0 + (uid % 5) * 0.006, 1.0 + ((uid / 3) % 4) * 0.005, 1.0 - (uid % 3) * 0.006, 1.0)
 			img.set_pixel(x, y, Color(clampf(outc.r * shift.r, 0, 1), clampf(outc.g * shift.g, 0, 1), clampf(outc.b * shift.b, 0, 1), p.a))
 	var marks = [
 		Vector2i(int(w * (0.58 + (uid % 6) * 0.015)), int(h * (0.40 + ((uid / 4) % 5) * 0.015))),
@@ -573,8 +603,7 @@ static func _fingerprint_portrait(tex: Texture2D, c: CKCharacter) -> Texture2D:
 	]
 	for mpos in marks:
 		if mpos.x > 1 and mpos.y > 1 and mpos.x < w - 2 and mpos.y < h - 2:
-			img.set_pixel(mpos.x, mpos.y, Color(0.30, 0.18, 0.14, 0.92))
-			img.set_pixel(mpos.x + 1, mpos.y, Color(0.30, 0.18, 0.14, 0.5))
+			img.set_pixel(mpos.x, mpos.y, Color(0.28, 0.16, 0.12, 0.9))
 	var out := ImageTexture.create_from_image(img)
 	_cache[ck] = out
 	return out

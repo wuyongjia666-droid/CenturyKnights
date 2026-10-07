@@ -1,6 +1,16 @@
 extends Control
 func _ready() -> void:
 	UIKit.make_themed_bg(self, "shrine")
+	if ResourceLoader.exists("res://assets/art/ui/hub_banner_strip.png"):
+		var strip := TextureRect.new()
+		strip.texture = load("res://assets/art/ui/hub_banner_strip.png")
+		strip.position = Vector2(0, 0)
+		strip.custom_minimum_size = Vector2(1280, 48)
+		strip.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		strip.stretch_mode = TextureRect.STRETCH_SCALE
+		strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(strip)
+
 	var lv = GameState.building_level("shrine")
 	var t = UIKit.make_label("祠堂", true); t.position = Vector2(40, 16); add_child(t)
 	var tip = UIKit.make_dim_label("祠堂等级来自「工事」。丰收产出与祈愈随等级增强；香灰里有旧旗的味。")

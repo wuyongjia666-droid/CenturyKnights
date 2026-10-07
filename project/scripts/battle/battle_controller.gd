@@ -1372,6 +1372,18 @@ func _draw_overlay() -> void:
 				edge = Color(0.4, 0.7, 1.0, 0.55)
 			overlay.draw_rect(r, col)
 			overlay.draw_rect(r, edge, false, 2.0)
+			# 色觉友好：纹理叠加（不单靠颜色）
+			var hatch := ""
+			if locked_ov and leaving:
+				hatch = "res://assets/art/ui/zoc_hatch_lock3.png"
+			elif leaving:
+				hatch = "res://assets/art/ui/zoc_hatch_leave2.png"
+			elif in_z:
+				hatch = "res://assets/art/ui/zoc_hatch_zoc.png"
+			else:
+				hatch = "res://assets/art/ui/zoc_hatch_safe.png"
+			if hatch != "" and ResourceLoader.exists(hatch):
+				overlay.draw_texture_rect(load(hatch), r, false)
 			if tag != "":
 				var chip_path = ""
 				if tag == "锁3":
@@ -2235,7 +2247,8 @@ func _enemy_ai() -> void:
 			if locked_self and pos != u.pos:
 				var still_eng = BattleRules.is_engaged(pos, foes_player)
 				if not still_eng:
-					stand_bonus -= 5.0  # 拆锁挪位更贵（对齐 leave_cost=3）
+					var hp_ok = float(u.char.hp) / float(maxi(1, u.char.max_hp))
+					stand_bonus -= 5.0 if hp_ok < 0.5 else 6.5  # 血厚时更不愿浪费锁脱
 				elif stand_tid == "fort":
 					stand_bonus += 5.5  # 锁住时占垒
 				elif stand_tid in ["forest", "hill"]:
