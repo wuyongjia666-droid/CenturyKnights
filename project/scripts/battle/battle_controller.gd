@@ -1970,7 +1970,10 @@ func _show_lock_practice_banner() -> void:
 	var title = "【强制练习】交战锁定"
 	var tip = "先选中单位 → 攻击模式 → 攻击一名敌人，触发锁定后才能结束回合。"
 	if bool(BattleMaps.get_map(map_id).get("lock_drill", false)) and not map_id.begins_with("ch0"):
-		if map_id.begins_with("ch5") or map_id.begins_with("ch6") or map_id.begins_with("ch4"):
+		if map_id.begins_with("ch6"):
+			title = "【终局演练】交战锁定决战复习"
+			tip = "托孤堡垒：终局再练锁定。攻击敌人触发红环后，才能结束回合——此后全靠判断。"
+		elif map_id.begins_with("ch5") or map_id.begins_with("ch4"):
 			title = "【后期演练】交战锁定总复习"
 			tip = "断桥守夜：再次强制练习锁定。攻击敌人触发红环后，才能结束回合。"
 		else:
@@ -2180,7 +2183,9 @@ func _enemy_ai() -> void:
 				if not still_eng:
 					stand_bonus -= 3.5  # 拆锁挪位需高收益才值
 				elif stand_tid == "fort":
-					stand_bonus += 4.0  # 锁住时占垒
+					stand_bonus += 5.5  # 锁住时占垒
+				elif stand_tid in ["forest", "hill"]:
+					stand_bonus += 2.2
 			for j in units.size():
 				var t = units[j]
 				if t.team != "player" or t.char.hp <= 0:
@@ -2206,11 +2211,11 @@ func _enemy_ai() -> void:
 				var tid = terrain[t.pos.y][t.pos.x]
 				var expect = BattleRules.expected_damage(u.char, t.char, tid, extras)
 				if expect >= t.char.hp:
-					expect += 14.0
+					expect += 18.0
 				var hp_frac = float(t.char.hp) / float(maxi(1, t.char.max_hp))
 				expect += (1.0 - hp_frac) * 4.5
 				if extras.get("flank", false):
-					expect += 3.5
+					expect += 4.8
 				if not melee and d == 2:
 					expect += 2.5
 				# 优先咬住已锁定的目标（延长交战）

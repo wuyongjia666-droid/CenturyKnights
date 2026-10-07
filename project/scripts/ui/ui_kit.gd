@@ -25,9 +25,9 @@ static func make_button(text: String, min_w: int = 160) -> Button:
 static func make_accent_button(text: String, min_w: int = 160) -> Button:
 	var b := make_button(text, min_w)
 	b.pressed.connect(func(): Sfx.confirm())
-	var n = _flat(ACCENT.darkened(0.25), ACCENT, 8)
-	var h = _flat(ACCENT.darkened(0.10), ACCENT.lightened(0.15), 8)
-	var p = _flat(ACCENT.darkened(0.35), ACCENT_DIM, 8)
+	var n = _tex_style("res://assets/art/ui/btn_accent_chrome.png", _flat(ACCENT.darkened(0.25), ACCENT, 8), Vector2i(14, 8))
+	var h = _tex_style("res://assets/art/ui/btn_accent_chrome.png", _flat(ACCENT.darkened(0.10), ACCENT.lightened(0.15), 8), Vector2i(14, 8))
+	var p = _tex_style("res://assets/art/ui/btn_accent_chrome.png", _flat(ACCENT.darkened(0.35), ACCENT_DIM, 8), Vector2i(14, 8))
 	b.add_theme_stylebox_override("normal", n)
 	b.add_theme_stylebox_override("hover", h)
 	b.add_theme_stylebox_override("pressed", p)
@@ -37,26 +37,45 @@ static func make_accent_button(text: String, min_w: int = 160) -> Button:
 	return b
 
 static func _style_button(b: Button) -> void:
-	var n := StyleBoxFlat.new()
-	n.bg_color = Color(0.18, 0.20, 0.26, 0.95)
-	n.border_color = Color(0.55, 0.52, 0.42, 0.75)
-	n.set_border_width_all(2)
-	n.set_corner_radius_all(6)
-	n.content_margin_left = 12
-	n.content_margin_right = 12
-	n.content_margin_top = 8
-	n.content_margin_bottom = 8
-	var hov := n.duplicate()
-	hov.bg_color = Color(0.26, 0.28, 0.36, 0.98)
-	hov.border_color = Color(0.78, 0.68, 0.40, 0.9)
-	var pr := n.duplicate()
-	pr.bg_color = Color(0.12, 0.14, 0.18, 0.98)
+	var flat_n := StyleBoxFlat.new()
+	flat_n.bg_color = Color(0.18, 0.20, 0.26, 0.95)
+	flat_n.border_color = Color(0.55, 0.52, 0.42, 0.75)
+	flat_n.set_border_width_all(2)
+	flat_n.set_corner_radius_all(6)
+	flat_n.content_margin_left = 12
+	flat_n.content_margin_right = 12
+	flat_n.content_margin_top = 8
+	flat_n.content_margin_bottom = 8
+	var flat_h := flat_n.duplicate()
+	flat_h.bg_color = Color(0.26, 0.28, 0.36, 0.98)
+	flat_h.border_color = Color(0.78, 0.68, 0.40, 0.9)
+	var flat_p := flat_n.duplicate()
+	flat_p.bg_color = Color(0.12, 0.14, 0.18, 0.98)
+	var n = _tex_style("res://assets/art/ui/btn_chrome.png", flat_n, Vector2i(12, 8))
+	var hov = _tex_style("res://assets/art/ui/btn_chrome.png", flat_h, Vector2i(12, 8))
+	var pr = _tex_style("res://assets/art/ui/btn_chrome.png", flat_p, Vector2i(12, 8))
 	b.add_theme_stylebox_override("normal", n)
 	b.add_theme_stylebox_override("hover", hov)
 	b.add_theme_stylebox_override("pressed", pr)
 	b.add_theme_color_override("font_color", Color(0.92, 0.90, 0.84))
 	b.add_theme_color_override("font_hover_color", Color(1.0, 0.95, 0.75))
 
+
+
+static func _tex_style(tex_path: String, fallback: StyleBoxFlat, margins: Vector2i = Vector2i(12, 10)) -> StyleBox:
+	if ResourceLoader.exists(tex_path):
+		var sb := StyleBoxTexture.new()
+		sb.texture = load(tex_path)
+		sb.texture_margin_left = 12
+		sb.texture_margin_right = 12
+		sb.texture_margin_top = 12
+		sb.texture_margin_bottom = 12
+		sb.content_margin_left = margins.x
+		sb.content_margin_right = margins.x
+		sb.content_margin_top = margins.y
+		sb.content_margin_bottom = margins.y
+		return sb
+	return fallback
 
 static func _flat(bg: Color, border: Color, radius: int) -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
@@ -92,7 +111,8 @@ static func make_dim_label(text: String) -> Label:
 
 static func make_panel() -> PanelContainer:
 	var p := PanelContainer.new()
-	p.add_theme_stylebox_override("panel", parchment_style())
+	var flat = parchment_style()
+	p.add_theme_stylebox_override("panel", _tex_style("res://assets/art/ui/panel_chrome.png", flat))
 	return p
 
 static func parchment_style() -> StyleBoxFlat:
@@ -264,21 +284,23 @@ static func make_hub_nav_button(text: String, subtitle: String, min_w: int = 210
 	b.custom_minimum_size = Vector2(min_w, 64)
 	b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	b.add_theme_font_size_override("font_size", 14)
-	var n := StyleBoxFlat.new()
-	n.bg_color = Color(0.11, 0.13, 0.18, 0.94)
-	n.border_color = Color(0.72, 0.58, 0.32, 0.9)
-	n.border_width_left = 5
-	n.border_width_top = 2
-	n.border_width_right = 2
-	n.border_width_bottom = 2
-	n.set_corner_radius_all(8)
-	n.content_margin_left = 14
-	n.content_margin_right = 10
-	n.content_margin_top = 8
-	n.content_margin_bottom = 8
-	var hov := n.duplicate()
-	hov.bg_color = Color(0.18, 0.20, 0.28, 0.98)
-	hov.border_color = Color(0.90, 0.75, 0.40, 1.0)
+	var flat := StyleBoxFlat.new()
+	flat.bg_color = Color(0.11, 0.13, 0.18, 0.94)
+	flat.border_color = Color(0.72, 0.58, 0.32, 0.9)
+	flat.border_width_left = 5
+	flat.border_width_top = 2
+	flat.border_width_right = 2
+	flat.border_width_bottom = 2
+	flat.set_corner_radius_all(8)
+	flat.content_margin_left = 14
+	flat.content_margin_right = 10
+	flat.content_margin_top = 8
+	flat.content_margin_bottom = 8
+	var flat_h := flat.duplicate()
+	flat_h.bg_color = Color(0.18, 0.20, 0.28, 0.98)
+	flat_h.border_color = Color(0.90, 0.75, 0.40, 1.0)
+	var n = _tex_style("res://assets/art/ui/hub_nav_chrome.png", flat, Vector2i(14, 8))
+	var hov = _tex_style("res://assets/art/ui/hub_nav_chrome.png", flat_h, Vector2i(14, 8))
 	b.add_theme_stylebox_override("normal", n)
 	b.add_theme_stylebox_override("hover", hov)
 	b.add_theme_stylebox_override("pressed", hov)

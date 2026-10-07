@@ -1829,7 +1829,8 @@
           "forest",
           "plain"
         ]
-      ]
+      ],
+      "lock_drill": true
     },
     "ch6_bloodseal": {
       "name": "血印祭坛",

@@ -240,9 +240,20 @@ static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
 	if tex2 != null:
 		_cache[ck] = tex2
 		return tex2
-	# 雇佣/花名册：角色×性别专属板（非仅兵种板）
-	var role = BattleRules.job_role(c.job_id) if Engine.get_main_loop() else "skirmisher"
+	# 雇佣个体脸：外观等位组合（每名候选更独特）
 	var g = "f" if str(c.gender) == "f" else "m"
+	var hair = str(c.appearance.get("hair", "ash_brown"))
+	var eyes = str(c.appearance.get("eyes", "slate"))
+	var scar = str(c.appearance.get("scar", "none"))
+	if scar == "":
+		scar = "none"
+	var face_p = "res://assets/art/portraits/hireface_%s_%s_%s_%s.png" % [hair, eyes, g, scar]
+	var ft = _try_load(face_p)
+	if ft != null:
+		_cache["hireface|" + hair + "|" + eyes + "|" + g + "|" + scar] = ft
+		return ft
+	# 雇佣/花名册：角色×性别板（回退）
+	var role = BattleRules.job_role(c.job_id) if Engine.get_main_loop() else "skirmisher"
 	var hire_p = "res://assets/art/portraits/hire_%s_%s_plate.png" % [role, g]
 	var ht = _try_load(hire_p)
 	if ht != null:
@@ -267,7 +278,14 @@ static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
 	return _proc_portrait(c, size)
 
 static func _token_key(c: CKCharacter, team: String, frame: int) -> String:
+	# 雇佣棋子：角色专属 token
+	if not c.is_leader and c.faction != "enemy" and str(c.name).find("匪") < 0:
+		var role2 = BattleRules.job_role(c.job_id) if Engine.get_main_loop() else "skirmisher"
+		var hp = "res://assets/art/tokens/hire_%s_%s_f%d.png" % [role2, team, frame % 4]
+		if ResourceLoader.exists(hp):
+			return hp
 	if c.is_leader:
+
 		return "res://assets/art/tokens/leader_default_%s_f%d.png" % [team, frame]
 	if c.name.find("灯影") >= 0:
 		return "res://assets/art/tokens/ally_dengying_%s_f%d.png" % [team, frame]
@@ -401,6 +419,11 @@ static func _token_key(c: CKCharacter, team: String, frame: int) -> String:
 		return "res://assets/art/tokens/escort_raider_enemy_f%d.png" % frame
 	if team == "enemy" or c.faction == "enemy":
 		return "res://assets/art/tokens/bandit_enemy_f%d.png" % frame
+	# 雇佣棋子（具名检查之后）
+	var role2 = BattleRules.job_role(c.job_id) if Engine.get_main_loop() else "skirmisher"
+	var hp = "res://assets/art/tokens/hire_%s_%s_f%d.png" % [role2, team, frame % 4]
+	if ResourceLoader.exists(hp):
+		return hp
 	var hair = str(c.appearance.get("hair", "ash_brown"))
 	var eyes = str(c.appearance.get("eyes", "slate"))
 	var g = str(c.gender)
