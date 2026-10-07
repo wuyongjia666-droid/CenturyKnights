@@ -1561,7 +1561,9 @@ func _compute_move_cells(ui: int) -> Dictionary:
 		zoc_extra = _ally_zoc_extra("enemy")  # 敌军若有强化控带（少见）
 	var leave_cost = 1
 	if int(u.char.temp_combat_lock) > 0:
-		leave_cost = 2  # 交战锁定：脱离更贵
+		leave_cost = 3  # 交战锁定：脱离更贵
+	elif BattleRules.is_engaged(u.pos, foes):
+		leave_cost = 2  # 控带内脱离也更沉
 	var mv = BattleRules.move_costs(terrain, u.pos, u.char.derived_move(), foes, foes, ignore, zoc_extra, leave_cost, leave_free)
 	for ou in units:
 		if ou.char.hp > 0 and ou.pos != u.pos:
@@ -1640,7 +1642,7 @@ func _apply_combat_lock(ai: int, di: int) -> void:
 		var u = units[idx]
 		if u.char.hp <= 0:
 			continue
-		u.char.temp_combat_lock = maxi(u.char.temp_combat_lock, 2)  # 再交战刷新锁定
+		u.char.temp_combat_lock = maxi(u.char.temp_combat_lock, 3)  # 再交战刷新锁定（三回合感）
 		_spawn_dmg(u.pos, "锁定", Color(1.0, 0.4, 0.35))
 		_spawn_slash(u.pos, "lock")
 	if not has_meta("lock_beat_fired") and _is_lock_tutorial_map():
@@ -2128,7 +2130,7 @@ func _enemy_arm_offense(ai: int, di: int) -> void:
 		if sc > best_sc:
 			best_sc = sc
 			best_sid = sid
-	if best_sid != "" and rng.randf() < 0.72:
+	if best_sid != "" and rng.randf() < 0.80:
 		skill_mode = true
 		active_skill_id = best_sid
 		_log("%s 蓄力「%s」" % [u.char.name, GameState.get_skill(best_sid).get("name", best_sid)])
@@ -2220,7 +2222,10 @@ func _enemy_ai() -> void:
 					expect += 2.5
 				# 优先咬住已锁定的目标（延长交战）
 				if int(t.char.temp_combat_lock) > 0:
-					expect += 3.5
+					expect += 4.2
+				# 已与自己交战相邻：续咬
+				if locked_self and _manhattan(u.pos, t.pos) == 1:
+					expect += 2.0
 				# 威胁残血友军的敌人优先压住
 				var threat = false
 				for ou in units:

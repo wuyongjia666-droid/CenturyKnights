@@ -240,18 +240,31 @@ static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
 	if tex2 != null:
 		_cache[ck] = tex2
 		return tex2
-	# 雇佣个体脸：外观等位组合（每名候选更独特）
+	# 雇佣个体脸：hair/eyes/gender/scar/brow；同型再用 id 指纹去重
 	var g = "f" if str(c.gender) == "f" else "m"
 	var hair = str(c.appearance.get("hair", "ash_brown"))
 	var eyes = str(c.appearance.get("eyes", "slate"))
 	var scar = str(c.appearance.get("scar", "none"))
+	var brow = str(c.appearance.get("brow", "straight"))
 	if scar == "":
 		scar = "none"
-	var face_p = "res://assets/art/portraits/hireface_%s_%s_%s_%s.png" % [hair, eyes, g, scar]
+	if brow == "":
+		brow = "straight"
+	var face_p = "res://assets/art/portraits/hireface_%s_%s_%s_%s_%s.png" % [hair, eyes, g, scar, brow]
 	var ft = _try_load(face_p)
 	if ft != null:
-		_cache["hireface|" + hair + "|" + eyes + "|" + g + "|" + scar] = ft
-		return ft
+		return _fingerprint_portrait(ft, c)
+	# 回退旧四段键
+	var face_old = "res://assets/art/portraits/hireface_%s_%s_%s_%s.png" % [hair, eyes, g, scar]
+	ft = _try_load(face_old)
+	if ft != null:
+		return _fingerprint_portrait(ft, c)
+	# 角色 id 专属板（同型等位双胞胎）
+	var uid = _face_uid(c)
+	var uniq_p = "res://assets/art/portraits/hireuniq_%02d.png" % uid
+	var utex = _try_load(uniq_p)
+	if utex != null:
+		return _fingerprint_portrait(utex, c)
 	# 雇佣/花名册：角色×性别板（回退）
 	var role = BattleRules.job_role(c.job_id) if Engine.get_main_loop() else "skirmisher"
 	var hire_p = "res://assets/art/portraits/hire_%s_%s_plate.png" % [role, g]
@@ -278,14 +291,7 @@ static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
 	return _proc_portrait(c, size)
 
 static func _token_key(c: CKCharacter, team: String, frame: int) -> String:
-	# 雇佣棋子：角色专属 token
-	if not c.is_leader and c.faction != "enemy" and str(c.name).find("匪") < 0:
-		var role2 = BattleRules.job_role(c.job_id) if Engine.get_main_loop() else "skirmisher"
-		var hp = "res://assets/art/tokens/hire_%s_%s_f%d.png" % [role2, team, frame % 4]
-		if ResourceLoader.exists(hp):
-			return hp
 	if c.is_leader:
-
 		return "res://assets/art/tokens/leader_default_%s_f%d.png" % [team, frame]
 	if c.name.find("灯影") >= 0:
 		return "res://assets/art/tokens/ally_dengying_%s_f%d.png" % [team, frame]
@@ -417,8 +423,13 @@ static func _token_key(c: CKCharacter, team: String, frame: int) -> String:
 		return "res://assets/art/tokens/paper_thief_enemy_f%d.png" % frame
 	if str(c.name).find("劫镖") >= 0 or str(c.name).find("劫道") >= 0 or str(c.name).find("关口伏弓") >= 0:
 		return "res://assets/art/tokens/escort_raider_enemy_f%d.png" % frame
+	# 敌军：加密度 hire/role token，再回退 bandit
 	if team == "enemy" or c.faction == "enemy":
-		return "res://assets/art/tokens/bandit_enemy_f%d.png" % frame
+		var erole = BattleRules.job_role(c.job_id) if Engine.get_main_loop() else "skirmisher"
+		var ep = "res://assets/art/tokens/hire_%s_enemy_f%d.png" % [erole, frame % 4]
+		if ResourceLoader.exists(ep):
+			return ep
+		return "res://assets/art/tokens/bandit_enemy_f%d.png" % (frame % 4)
 	# 雇佣棋子（具名检查之后）
 	var role2 = BattleRules.job_role(c.job_id) if Engine.get_main_loop() else "skirmisher"
 	var hp = "res://assets/art/tokens/hire_%s_%s_f%d.png" % [role2, team, frame % 4]
@@ -514,6 +525,44 @@ static func _fill_rect(img: Image, r: Rect2i, col: Color) -> void:
 	for y in range(clampi(r.position.y, 0, h - 1), clampi(r.position.y + r.size.y, 0, h)):
 		for x in range(clampi(r.position.x, 0, w - 1), clampi(r.position.x + r.size.x, 0, w)):
 			img.set_pixel(x, y, col)
+
+
+static func _face_uid(c: CKCharacter) -> int:
+	var h = 0
+	for ch2 in str(c.id):
+		h = (h * 33 + ch2.unicode_at(0)) % 10007
+	return absi(h) % 64
+
+static func _fingerprint_portrait(tex: Texture2D, c: CKCharacter) -> Texture2D:
+	## 同型等位下按 id 做微差，避免双胞胎完全一致
+	var ck = "fp|" + str(c.id) + "|" + str(c.appearance.get("hair","")) + "|" + str(c.appearance.get("brow",""))
+	if _cache.has(ck):
+		return _cache[ck]
+	var img: Image = tex.get_image()
+	if img == null:
+		_cache[ck] = tex
+		return tex
+	img = img.duplicate()
+	var w = img.get_width()
+	var h = img.get_height()
+	var seed = _face_uid(c)
+	# 微色偏
+	var shift = Color(1.0 + (seed % 5) * 0.01, 1.0 + ((seed / 3) % 4) * 0.008, 1.0 - (seed % 3) * 0.01, 1.0)
+	for y in range(h):
+		for x in range(w):
+			var p = img.get_pixel(x, y)
+			if p.a < 0.05:
+				continue
+			img.set_pixel(x, y, Color(clampf(p.r * shift.r, 0, 1), clampf(p.g * shift.g, 0, 1), clampf(p.b * shift.b, 0, 1), p.a))
+	# 痣 / 高光点
+	var mx = int(w * (0.55 + (seed % 7) * 0.02))
+	var my = int(h * (0.42 + ((seed / 5) % 5) * 0.02))
+	if mx > 1 and my > 1 and mx < w - 1 and my < h - 1:
+		img.set_pixel(mx, my, Color(0.35, 0.22, 0.18, 0.85))
+		img.set_pixel(mx + 1, my, Color(0.35, 0.22, 0.18, 0.55))
+	var out := ImageTexture.create_from_image(img)
+	_cache[ck] = out
+	return out
 
 static func _proc_portrait(c: CKCharacter, size: int) -> Texture2D:
 	var role = BattleRules.job_role(c.job_id)

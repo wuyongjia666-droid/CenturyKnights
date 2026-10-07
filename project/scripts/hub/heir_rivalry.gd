@@ -10,6 +10,16 @@ var _step: int = 0
 
 func _ready() -> void:
 	UIKit.make_themed_bg(self, "heir")
+	if ResourceLoader.exists("res://assets/art/ui/hub_banner_strip.png"):
+		var strip := TextureRect.new()
+		strip.texture = load("res://assets/art/ui/hub_banner_strip.png")
+		strip.position = Vector2(0, 0)
+		strip.custom_minimum_size = Vector2(1280, 48)
+		strip.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		strip.stretch_mode = TextureRect.STRETCH_SCALE
+		strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(strip)
+
 	UIFX.fade_in(self, 0.3)
 	Music.play_hub()
 	var t = UIKit.make_label("双嗣校场 · 多嗣rivalry", true)
