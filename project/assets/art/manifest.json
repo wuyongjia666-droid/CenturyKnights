@@ -1,4 +1,5 @@
 {
-  "art_pass": "v7.7.0-depth",
-  "notes": "denser plates/tokens; deploy/works/forge backdrops; patrol anim; m173 down"
+  "art_pass": "v7.8.0-depth",
+  "portraits_grid": 300,
+  "patrol_frames": 8
 }

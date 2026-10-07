@@ -1,7 +1,7 @@
 extends Control
 var _msg: Label
 func _ready() -> void:
-	UIKit.make_screen_bg(self)
+	UIKit.make_themed_bg(self, "train")
 	var t = UIKit.make_label("演武场", true); t.position = Vector2(40, 16); add_child(t)
 	var tip = UIKit.make_dim_label("耗 15 银 + 1 月：随机六维 +1，小概率领悟禀性。转职不锁前职，看属性与物资。")
 	tip.position = Vector2(40, 56); add_child(tip)

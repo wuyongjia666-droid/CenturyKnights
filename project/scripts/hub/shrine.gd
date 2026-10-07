@@ -1,6 +1,6 @@
 extends Control
 func _ready() -> void:
-	UIKit.make_screen_bg(self)
+	UIKit.make_themed_bg(self, "shrine")
 	var lv = GameState.building_level("shrine")
 	var t = UIKit.make_label("祠堂", true); t.position = Vector2(40, 16); add_child(t)
 	var tip = UIKit.make_dim_label("祠堂等级来自「工事」。丰收产出与祈愈随等级增强；香灰里有旧旗的味。")

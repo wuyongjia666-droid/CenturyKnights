@@ -11,7 +11,7 @@ func _ready() -> void:
 	_refresh()
 
 func _build() -> void:
-	UIKit.make_screen_bg(self, true)
+	UIKit.make_themed_bg(self, "lineage")
 	var strip = TextureRect.new()
 	if ResourceLoader.exists("res://assets/art/ui/lineage_banner.png"):
 		strip.texture = load("res://assets/art/ui/lineage_banner.png")

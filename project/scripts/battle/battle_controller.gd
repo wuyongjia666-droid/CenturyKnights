@@ -1225,10 +1225,11 @@ func _deploy() -> void:
 		for ti in templates.size():
 			if ei >= enemy_spots.size():
 				break
-			var e = CharacterFactory.make_enemy(str(templates[ti]), rng)
+			var tmpl = str(templates[ti])
+			var e = CharacterFactory.make_enemy(tmpl, rng)
 			if e.appearance.get("hair","") == "" or e.faction == "enemy":
 				e.appearance = {"hair": "ink_black", "eyes": "dusk", "brow": "thick", "scar": "cheek"}
-			units.append({"char": e, "pos": enemy_spots[ei], "team": "enemy", "done": false})
+			units.append({"char": e, "pos": enemy_spots[ei], "team": "enemy", "done": false, "template": tmpl})
 			ei += 1
 	_log("%s：我军 %d · 敌军 %d" % [map_name, i, ei])
 	_theme_banter("start")
@@ -1241,7 +1242,8 @@ func _deploy() -> void:
 		if u.team == "enemy":
 			var elite = u.char.is_leader or str(u.char.name).find("首") >= 0 or str(u.char.name).find("头目") >= 0 or str(u.char.name).find("匪首") >= 0 or u.char.level >= 4
 			var diff = GameState.battle_difficulty_from_map(map_id)
-			GameState.grant_battle_enemy_skills(u.char, elite, diff)
+			var tmpl = str(u.get("template", ""))
+			GameState.grant_battle_enemy_skills(u.char, elite, diff, map_id, tmpl)
 		else:
 			GameState.grant_job_skills(u.char)
 		chars.append(u.char)
@@ -1629,7 +1631,7 @@ func _combat_extras(ai: int, di: int) -> Dictionary:
 	return extras
 
 func _apply_combat_lock(ai: int, di: int) -> void:
-	# 双方进入交战锁定 1 回合（本方下回合开始衰减）
+	# 双方进入交战锁定（再交战刷新至 2）
 	for idx in [ai, di]:
 		if idx < 0 or idx >= units.size():
 			continue
@@ -1639,6 +1641,10 @@ func _apply_combat_lock(ai: int, di: int) -> void:
 		u.char.temp_combat_lock = maxi(u.char.temp_combat_lock, 2)  # 再交战刷新锁定
 		_spawn_dmg(u.pos, "锁定", Color(1.0, 0.4, 0.35))
 		_spawn_slash(u.pos, "lock")
+	if not has_meta("lock_beat_fired") and (bool(BattleMaps.get_map(map_id).get("tutorial_militia", false)) or map_id.begins_with("ch0")):
+		set_meta("lock_beat_fired", true)
+		_log("〔教学拍〕锁定已触发——看棋子外圈红环；脱离将更贵，反击更准。")
+		_spawn_dmg(units[ai].pos if ai >= 0 else units[di].pos, "教学·锁定", Color(1.0, 0.7, 0.4))
 
 func _resolve_strike(ai: int, di: int, allow_skill: bool) -> void:
 
@@ -1840,41 +1846,93 @@ func _end_player_turn() -> void:
 
 
 func _show_lock_tip_once() -> void:
-	# 交战锁定 UX：每场战斗首次提示（session 内用 meta 去重）
 	if has_meta("lock_tip_shown"):
 		return
 	set_meta("lock_tip_shown", true)
+	var tutorial = bool(BattleMaps.get_map(map_id).get("tutorial_militia", false)) or map_id.begins_with("ch0")
+	if tutorial:
+		_run_lock_tutorial_sequence()
+	else:
+		_show_lock_tip_panel(
+			"交战锁定",
+			"攻/受击后双方进入锁定：脱离+2移，锁定反击命中+10。抽身/拆锁可解。",
+			0,
+			8.0
+		)
+
+func _show_lock_tip_panel(title: String, body: String, step: int, auto_sec: float) -> Control:
 	var panel = UIKit.make_panel()
 	panel.position = Vector2(280, 72)
-	panel.custom_minimum_size = Vector2(720, 88)
+	panel.custom_minimum_size = Vector2(720, 100)
 	panel.z_index = 20
+	panel.name = "LockTipPanel"
 	add_child(panel)
-	if ResourceLoader.exists("res://assets/art/ui/lock_tip_banner.png"):
+	var step_path = "res://assets/art/ui/lock_tip_step%d.png" % clampi(step, 0, 2)
+	if ResourceLoader.exists(step_path):
 		var bg = TextureRect.new()
-		bg.texture = load("res://assets/art/ui/lock_tip_banner.png")
+		bg.texture = load(step_path)
 		bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		bg.stretch_mode = TextureRect.STRETCH_SCALE
 		bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		panel.add_child(bg)
+	elif ResourceLoader.exists("res://assets/art/ui/lock_tip_banner.png"):
+		var bg2 = TextureRect.new()
+		bg2.texture = load("res://assets/art/ui/lock_tip_banner.png")
+		bg2.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		bg2.stretch_mode = TextureRect.STRETCH_SCALE
+		bg2.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		bg2.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		panel.add_child(bg2)
 	var vb := VBoxContainer.new()
 	vb.add_theme_constant_override("separation", 4)
 	panel.add_child(vb)
-	var t = UIKit.make_label("交战锁定", true)
+	var t = UIKit.make_label(title, true)
 	t.add_theme_color_override("font_color", Color(1.0, 0.45, 0.35))
 	vb.add_child(t)
-	var d = UIKit.make_dim_label("攻/受击后双方进入锁定：脱离代价+2移，锁定中反击命中+10，堡垒格更硬。可用「抽身一步/拆锁突围」解除。")
+	var d = UIKit.make_dim_label(body)
 	d.custom_minimum_size = Vector2(680, 40)
 	d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	vb.add_child(d)
-	var dismiss = UIKit.make_button("知道了", 100)
-	dismiss.pressed.connect(func(): panel.queue_free())
-	vb.add_child(dismiss)
-	# 自动淡出
-	get_tree().create_timer(8.0).timeout.connect(func():
-		if is_instance_valid(panel):
-			panel.queue_free()
+	if auto_sec > 0.0:
+		get_tree().create_timer(auto_sec).timeout.connect(func():
+			if is_instance_valid(panel):
+				panel.queue_free()
+		)
+	return panel
+
+func _run_lock_tutorial_sequence() -> void:
+	## 教学三拍：咬住 → 脱离代价 → 拆锁/反击
+	var steps: Array = [
+		{"t": "① 交战锁定·咬住", "b": "攻或受击后，双方棋子外圈出现锁定环——这就是「咬住」。"},
+		{"t": "② 脱离更贵", "b": "锁定中离开交战格额外消耗 +2 移力（高于普通交战 +1）。想走，先算步数。"},
+		{"t": "③ 锁反与拆锁", "b": "锁定单位反击命中+10。用战技「抽身一步 / 拆锁突围」可解除锁定。"},
+	]
+	_show_lock_tip_panel(str(steps[0].t), str(steps[0].b), 0, 0.0)
+	get_tree().create_timer(3.2).timeout.connect(func():
+		var old = get_node_or_null("LockTipPanel")
+		if old: old.queue_free()
+		_show_lock_tip_panel(str(steps[1].t), str(steps[1].b), 1, 0.0)
 	)
+	get_tree().create_timer(6.4).timeout.connect(func():
+		var old2 = get_node_or_null("LockTipPanel")
+		if old2: old2.queue_free()
+		var p = _show_lock_tip_panel(str(steps[2].t), str(steps[2].b), 2, 0.0)
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 8)
+		p.add_child(row)
+		var dismiss = UIKit.make_accent_button("开始隘口教学", 160)
+		dismiss.pressed.connect(func():
+			if is_instance_valid(p):
+				p.queue_free()
+		)
+		row.add_child(dismiss)
+		get_tree().create_timer(10.0).timeout.connect(func():
+			if is_instance_valid(p):
+				p.queue_free()
+		)
+	)
+	_log("教学：交战锁定三拍提示已展开")
 
 
 func _enemy_known_skills(c: CKCharacter) -> Array:

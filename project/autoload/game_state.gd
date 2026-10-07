@@ -14,6 +14,7 @@ var data_chapter0: Dictionary = {}
 var data_names: Dictionary = {}
 var data_appearance: Dictionary = {}
 var data_maps: Dictionary = {}
+var data_enemy_skills: Dictionary = {}
 var data_chapter1: Dictionary = {}
 var data_chapter2: Dictionary = {}
 var data_chapter3: Dictionary = {}
@@ -562,6 +563,7 @@ func _load_data() -> void:
 	data_names = _read_json("res://data/names.json")
 	data_appearance = _read_json("res://data/appearance.json")
 	data_maps = _read_json("res://data/maps.json")
+	data_enemy_skills = _read_json("res://data/enemy_skill_tables.json")
 	data_chapter1 = _read_json("res://data/chapter1.json")
 	data_chapter2 = _read_json("res://data/chapter2.json")
 	data_chapter3 = _read_json("res://data/chapter3.json")
@@ -2081,11 +2083,55 @@ func battle_difficulty_from_map(map_id: String) -> int:
 		return 3
 	return 4
 
-func grant_battle_enemy_skills(c: CKCharacter, elite: bool = false, difficulty: int = 1) -> void:
-	## 敌军战技曲线：按地图难度递进，非纯随机池
-	## diff0: 仅一阶 | diff1: 精锐1个二阶 | diff2: 全员1二阶、精锐可三阶
-	## diff3: 全员2二阶、精锐+1三阶 | diff4: 全员2二阶+通用控技、精锐2三阶
+func enemy_skill_table_for(map_id: String) -> Dictionary:
+	var root = data_enemy_skills.get("maps", data_enemy_skills)
+	if root.has(map_id):
+		return root[map_id]
+	# chapter wildcard: ch5_* → try nothing; fall to diff defaults
+	return {}
+
+func _apply_skill_list(c: CKCharacter, sids: Array) -> void:
+	for sid in sids:
+		var id = str(sid)
+		if id == "":
+			continue
+		var sk = get_skill(id)
+		if sk.is_empty():
+			continue
+		if id not in c.skills:
+			c.skills.append(id)
+		if id not in c.unlocked_skills:
+			c.unlocked_skills.append(id)
+
+func grant_battle_enemy_skills(c: CKCharacter, elite: bool = false, difficulty: int = 1, map_id: String = "", template_id: String = "") -> void:
+	## 优先设计师 per-map 表；否则回退难度曲线
 	grant_job_skills(c)
+	var table = enemy_skill_table_for(map_id) if map_id != "" else {}
+	if not table.is_empty():
+		var granted: Array = []
+		# by_template 最优先
+		var by_t: Dictionary = table.get("by_template", {})
+		if template_id != "" and by_t.has(template_id):
+			granted.append_array(by_t[template_id])
+		else:
+			granted.append_array(table.get("default", []))
+		if elite:
+			granted.append_array(table.get("elite", []))
+		_apply_skill_list(c, granted)
+		return
+	# 回退：_defaults by diff
+	var root = data_enemy_skills.get("maps", {})
+	var defaults = root.get("_defaults", {})
+	var key = "diff_%d" % clampi(difficulty, 0, 4)
+	var dtab: Dictionary = defaults.get(key, {})
+	if not dtab.is_empty():
+		var granted2: Array = []
+		granted2.append_array(dtab.get("default", []))
+		if elite:
+			granted2.append_array(dtab.get("elite", []))
+		_apply_skill_list(c, granted2)
+		return
+	# 最终回退：旧曲线（稳定选取）
 	if difficulty <= 0 and not elite:
 		return
 	var t2: Array = []
@@ -2097,7 +2143,6 @@ func grant_battle_enemy_skills(c: CKCharacter, elite: bool = false, difficulty: 
 			t2.append(sid)
 		elif tier >= 3:
 			t3.append(sid)
-	# 通用控场二阶（按职业过滤）
 	for sid in ["lock_breaker", "terrain_ward", "anchor_guard", "disengage_step"]:
 		var sk = get_skill(sid)
 		if sk.is_empty():
@@ -2121,26 +2166,19 @@ func grant_battle_enemy_skills(c: CKCharacter, elite: bool = false, difficulty: 
 		_:
 			need_t2 = 2
 			need_t3 = 2 if elite else 1
-	# 稳定选取：按 skill id 排序后取前 N（同职同难度可复现），再按角色 id 微扰
 	t2.sort()
 	t3.sort()
 	var salt = abs(hash(c.id)) % 7
 	if t2.size() > 0:
 		var start = salt % t2.size()
 		for k in need_t2:
-			var sid = str(t2[(start + k) % t2.size()])
-			if sid not in c.skills:
-				c.skills.append(sid)
-			if sid not in c.unlocked_skills:
-				c.unlocked_skills.append(sid)
+			var sid2 = str(t2[(start + k) % t2.size()])
+			_apply_skill_list(c, [sid2])
 	if t3.size() > 0 and need_t3 > 0:
 		var start3 = salt % t3.size()
 		for k in need_t3:
-			var sid = str(t3[(start3 + k) % t3.size()])
-			if sid not in c.skills:
-				c.skills.append(sid)
-			if sid not in c.unlocked_skills:
-				c.unlocked_skills.append(sid)
+			var sid3 = str(t3[(start3 + k) % t3.size()])
+			_apply_skill_list(c, [sid3])
 
 func grant_job_skills(c: CKCharacter) -> void:
 	if c == null:

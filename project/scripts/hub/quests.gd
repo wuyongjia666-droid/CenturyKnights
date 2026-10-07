@@ -3,7 +3,7 @@ extends Control
 var _msg: Label
 
 func _ready() -> void:
-	UIKit.make_screen_bg(self)
+	UIKit.make_themed_bg(self, "quests")
 	var t = UIKit.make_label("委任榜", true)
 	t.position = Vector2(40, 16)
 	add_child(t)

@@ -1,0 +1,227 @@
+{
+  "version": 1,
+  "maps": {
+    "_defaults": {
+      "diff_0": {
+        "default": [],
+        "elite": []
+      },
+      "diff_1": {
+        "default": [],
+        "elite": [
+          "guard_stance"
+        ]
+      },
+      "diff_2": {
+        "default": [
+          "guard_stance"
+        ],
+        "elite": [
+          "iron_wall",
+          "terrain_ward"
+        ]
+      },
+      "diff_3": {
+        "default": [
+          "guard_stance",
+          "terrain_ward"
+        ],
+        "elite": [
+          "iron_wall",
+          "hold_phalanx"
+        ]
+      },
+      "diff_4": {
+        "default": [
+          "guard_stance",
+          "terrain_ward",
+          "lock_breaker"
+        ],
+        "elite": [
+          "iron_wall",
+          "hold_phalanx",
+          "cleave_arc"
+        ]
+      }
+    },
+    "ch0_pass": {
+      "default": [],
+      "elite": [],
+      "by_template": {
+        "bandit_weak": []
+      },
+      "note": "教学：仅职业一阶，不塞高阶"
+    },
+    "ch1_hill": {
+      "default": [
+        "guard_stance"
+      ],
+      "elite": [
+        "terrain_ward"
+      ],
+      "by_template": {
+        "bandit_archer": [
+          "piercing_shot",
+          "mark_prey"
+        ],
+        "bandit": [
+          "power_strike"
+        ],
+        "bandit_weak": []
+      }
+    },
+    "ch1_ford": {
+      "default": [
+        "disengage_step"
+      ],
+      "elite": [
+        "lock_breaker"
+      ],
+      "by_template": {
+        "bandit_archer": [
+          "piercing_shot"
+        ]
+      }
+    },
+    "ch1_fog": {
+      "default": [
+        "mark_prey"
+      ],
+      "elite": [
+        "terrain_ward"
+      ],
+      "by_template": {
+        "bandit_archer": [
+          "piercing_shot",
+          "mark_prey"
+        ]
+      }
+    },
+    "ch2_night": {
+      "default": [
+        "guard_stance",
+        "disengage_step"
+      ],
+      "elite": [
+        "iron_wall",
+        "terrain_ward"
+      ]
+    },
+    "ch3_forge": {
+      "default": [
+        "power_strike",
+        "guard_stance"
+      ],
+      "elite": [
+        "iron_wall",
+        "banner_crash"
+      ],
+      "by_template": {
+        "bandit": [
+          "power_strike"
+        ],
+        "bandit_archer": [
+          "piercing_shot"
+        ]
+      }
+    },
+    "ch3_shrine": {
+      "default": [
+        "guard_stance"
+      ],
+      "elite": [
+        "ember_seal",
+        "terrain_ward"
+      ]
+    },
+    "ch4_gate": {
+      "default": [
+        "guard_stance",
+        "terrain_ward"
+      ],
+      "elite": [
+        "iron_wall",
+        "hold_phalanx",
+        "anchor_guard"
+      ]
+    },
+    "ch5_river": {
+      "default": [
+        "disengage_step",
+        "terrain_ward"
+      ],
+      "elite": [
+        "lock_breaker",
+        "iron_wall"
+      ]
+    },
+    "ch5_feast": {
+      "default": [
+        "guard_stance",
+        "power_strike"
+      ],
+      "elite": [
+        "banner_crash",
+        "cleave_arc"
+      ]
+    },
+    "ch5_bridge": {
+      "default": [
+        "guard_stance",
+        "terrain_ward"
+      ],
+      "elite": [
+        "iron_wall",
+        "hold_phalanx"
+      ],
+      "by_template": {
+        "bandit_archer": [
+          "piercing_shot",
+          "rain_volleys"
+        ]
+      }
+    },
+    "ch6_archive": {
+      "default": [
+        "mark_prey",
+        "terrain_ward"
+      ],
+      "elite": [
+        "mark_death",
+        "iron_wall"
+      ]
+    },
+    "ch6_redoubt": {
+      "default": [
+        "guard_stance",
+        "anchor_guard"
+      ],
+      "elite": [
+        "iron_wall",
+        "hold_phalanx",
+        "shatter_line"
+      ]
+    },
+    "ch6_bloodseal": {
+      "default": [
+        "power_strike",
+        "guard_stance",
+        "terrain_ward"
+      ],
+      "elite": [
+        "cleave_arc",
+        "iron_wall",
+        "hold_phalanx"
+      ]
+    },
+    "quest_bandit": {
+      "default": [
+        "power_strike"
+      ],
+      "elite": [
+        "guard_stance",
+        "terrain_ward"
+      ]
+    }
+  }
+}

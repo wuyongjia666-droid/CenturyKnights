@@ -304,7 +304,7 @@ func _show_patrol_vignette(hid: String) -> void:
 	map.custom_minimum_size = Vector2(600, 280)
 	panel.add_child(map)
 	var frames: Array = []
-	for fi in range(4):
+	for fi in range(8):
 		var fp = "res://assets/art/ui/patrol_vignette_f%d.png" % fi
 		if ResourceLoader.exists(fp):
 			frames.append(load(fp))
@@ -313,11 +313,11 @@ func _show_patrol_vignette(hid: String) -> void:
 	if not frames.is_empty():
 		map.texture = frames[0]
 		var anim_i := [0]
-		var tw = get_tree().create_timer(0.35)
+		var tw = get_tree().create_timer(0.22)
 		# 顺序播帧
 		for step in range(1, frames.size()):
 			var capture_step = step
-			get_tree().create_timer(0.35 * capture_step).timeout.connect(func():
+			get_tree().create_timer(0.22 * capture_step).timeout.connect(func():
 				if is_instance_valid(map) and capture_step < frames.size():
 					map.texture = frames[capture_step]
 			)

@@ -1,7 +1,7 @@
 extends Control
 var _msg: Label
 func _ready() -> void:
-	UIKit.make_screen_bg(self)
+	UIKit.make_themed_bg(self, "market")
 	var t = UIKit.make_label("陆桥商路（堡内市）", true); t.position = Vector2(40, 16); add_child(t)
 	var bp = GameState.market_buy_prices()
 	var sp = GameState.market_sell_prices()
