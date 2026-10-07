@@ -1,6 +1,8 @@
 extends Control
 var _chapter_pick: OptionButton
+var _vol_pick: OptionButton
 var _chapter_paths: Array = []
+var _selected_vol: int = 0
 
 var _res_bar: HBoxContainer
 var _hint: Label
@@ -116,11 +118,17 @@ func _build() -> void:
 	var cont_b = UIKit.make_accent_button("继续主线", 140)
 	cont_b.pressed.connect(_continue_mainline)
 	row.add_child(cont_b)
+	_vol_pick = OptionButton.new()
+	_vol_pick.custom_minimum_size = Vector2(120, 36)
+	_vol_pick.add_theme_font_size_override("font_size", 15)
+	row.add_child(_vol_pick)
 	_chapter_pick = OptionButton.new()
-	_chapter_pick.custom_minimum_size = Vector2(280, 36)
-	_chapter_pick.add_theme_font_size_override("font_size", 16)
+	_chapter_pick.custom_minimum_size = Vector2(240, 36)
+	_chapter_pick.add_theme_font_size_override("font_size", 15)
 	row.add_child(_chapter_pick)
+	_rebuild_volume_picker()
 	_rebuild_chapter_picker()
+	_vol_pick.item_selected.connect(_on_volume_picked)
 	_chapter_pick.item_selected.connect(_on_chapter_picked)
 	var go_b = UIKit.make_accent_button("前往选中章", 140)
 	go_b.pressed.connect(func():
@@ -139,6 +147,7 @@ func _build() -> void:
 
 func _refresh() -> void:
 	UIKit.update_resources(_res_bar)
+	_rebuild_volume_picker()
 	_rebuild_chapter_picker()
 	_update_story_hint()
 
@@ -229,8 +238,16 @@ func _update_story_hint() -> void:
 		_story_hint.text = "可继续第四十一章·石冢。"
 	elif not GameState.flag("chapter42_done"):
 		_story_hint.text = "可继续第四十二章·钤印（六卷中段）。"
+	elif not GameState.flag("chapter43_done"):
+		_story_hint.text = "第六卷后半：点「继续主线」或卷六选第四十三章·黑潮。"
+	elif not GameState.flag("chapter44_done"):
+		_story_hint.text = "可继续第四十四章·曜塔。"
+	elif not GameState.flag("chapter45_done"):
+		_story_hint.text = "可继续第四十五章·六卷席终。"
+	elif GameState.flag("volume6_done"):
+		_story_hint.text = "六卷已执。自由经营、双嗣校场、敌宅契约皆可。"
 	elif GameState.flag("volume6_mid_done"):
-		_story_hint.text = "六卷中段已执。自由经营或等候后半。"
+		_story_hint.text = "六卷中段已执。可继续后半或经营。"
 	elif GameState.flag("volume5_done"):
 		_story_hint.text = "五卷已执。可继续第六卷或经营。"
 	elif GameState.flag("volume5_mid_done"):
@@ -252,52 +269,102 @@ func _update_story_hint() -> void:
 
 
 func _chapter_catalog() -> Array:
-	# [label, scene, unlock_flag or "" for always]
+	# [label, scene, unlock_flag, volume_index]
 	return [
-		["第零章", "res://scenes/story/chapter0.tscn", ""],
-		["第一章·陆桥", "res://scenes/story/chapter1.tscn", "chapter0_done"],
-		["第二章·姓氏", "res://scenes/story/chapter2.tscn", "chapter1_done"],
-		["第三章·铁祷", "res://scenes/story/chapter3.tscn", "chapter2_done"],
-		["第四章·百年", "res://scenes/story/chapter4.tscn", "chapter3_done"],
-		["第五章·烽烟", "res://scenes/story/chapter5.tscn", "chapter4_done"],
-		["第六章·托孤", "res://scenes/story/chapter6.tscn", "chapter5_done"],
-		["第七章·子嗣", "res://scenes/story/chapter7.tscn", "chapter6_done"],
-		["第八章·港灯", "res://scenes/story/chapter8.tscn", "chapter7_done"],
-		["第九章·商路", "res://scenes/story/chapter9.tscn", "chapter8_done"],
-		["第十章·回响", "res://scenes/story/chapter10.tscn", "chapter9_done"],
-		["第十一章·门阙", "res://scenes/story/chapter11.tscn", "chapter10_done"],
-		["第十二章·余波", "res://scenes/story/chapter12.tscn", "chapter11_done"],
-		["第十三章·嗣位", "res://scenes/story/chapter13.tscn", "chapter12_done"],
-		["第十四章·并席", "res://scenes/story/chapter14.tscn", "chapter13_done"],
-		["第十五章·席散", "res://scenes/story/chapter15.tscn", "chapter14_done"],
-		["第十六章·海草", "res://scenes/story/chapter16.tscn", "chapter15_done"],
-		["第十七章·盐河", "res://scenes/story/chapter17.tscn", "chapter16_done"],
-		["第十八章·门阙", "res://scenes/story/chapter18.tscn", "chapter17_done"],
-		["第十九章·远岸", "res://scenes/story/chapter19.tscn", "chapter18_done"],
-		["第二十章·潮墙", "res://scenes/story/chapter20.tscn", "chapter19_done"],
-		["第二十一章·席终", "res://scenes/story/chapter21.tscn", "chapter20_done"],
-		["第二十二章·北风", "res://scenes/story/chapter22.tscn", "chapter21_done"],
-		["第二十三章·霜桥", "res://scenes/story/chapter23.tscn", "chapter22_done"],
-		["第二十四章·钤印", "res://scenes/story/chapter24.tscn", "chapter23_done"],
-		["第二十五章·朔原", "res://scenes/story/chapter25.tscn", "chapter24_done"],
-		["第二十六章·冠雪", "res://scenes/story/chapter26.tscn", "chapter25_done"],
-		["第二十七章·席终", "res://scenes/story/chapter27.tscn", "chapter26_done"],
-		["第二十八章·南泽", "res://scenes/story/chapter28.tscn", "chapter27_done"],
-		["第二十九章·金陌", "res://scenes/story/chapter29.tscn", "chapter28_done"],
-		["第三十章·钤印", "res://scenes/story/chapter30.tscn", "chapter29_done"],
-		["第三十一章·铁峡", "res://scenes/story/chapter31.tscn", "chapter30_done"],
-		["第三十二章·星津", "res://scenes/story/chapter32.tscn", "chapter31_done"],
-		["第三十三章·席终", "res://scenes/story/chapter33.tscn", "chapter32_done"],
-		["第三十四章·破晓", "res://scenes/story/chapter34.tscn", "chapter33_done"],
-		["第三十五章·晚钟", "res://scenes/story/chapter35.tscn", "chapter34_done"],
-		["第三十六章·钤印", "res://scenes/story/chapter36.tscn", "chapter35_done"],
-		["第三十七章·长川", "res://scenes/story/chapter37.tscn", "chapter36_done"],
-		["第三十八章·终阙", "res://scenes/story/chapter38.tscn", "chapter37_done"],
-		["第三十九章·席终", "res://scenes/story/chapter39.tscn", "chapter38_done"],
-		["第四十章·雾原", "res://scenes/story/chapter40.tscn", "chapter39_done"],
-		["第四十一章·石冢", "res://scenes/story/chapter41.tscn", "chapter40_done"],
-		["第四十二章·钤印", "res://scenes/story/chapter42.tscn", "chapter41_done"],
+		["第零章", "res://scenes/story/chapter0.tscn", "", 0],
+		["第一章·陆桥", "res://scenes/story/chapter1.tscn", "chapter0_done", 1],
+		["第二章·姓氏", "res://scenes/story/chapter2.tscn", "chapter1_done", 1],
+		["第三章·铁祷", "res://scenes/story/chapter3.tscn", "chapter2_done", 1],
+		["第四章·百年", "res://scenes/story/chapter4.tscn", "chapter3_done", 1],
+		["第五章·烽烟", "res://scenes/story/chapter5.tscn", "chapter4_done", 1],
+		["第六章·托孤", "res://scenes/story/chapter6.tscn", "chapter5_done", 1],
+		["第七章·子嗣", "res://scenes/story/chapter7.tscn", "chapter6_done", 1],
+		["第八章·港灯", "res://scenes/story/chapter8.tscn", "chapter7_done", 1],
+		["第九章·商路", "res://scenes/story/chapter9.tscn", "chapter8_done", 1],
+		["第十章·回响", "res://scenes/story/chapter10.tscn", "chapter9_done", 1],
+		["第十一章·门阙", "res://scenes/story/chapter11.tscn", "chapter10_done", 1],
+		["第十二章·余波", "res://scenes/story/chapter12.tscn", "chapter11_done", 1],
+		["第十三章·嗣位", "res://scenes/story/chapter13.tscn", "chapter12_done", 1],
+		["第十四章·并席", "res://scenes/story/chapter14.tscn", "chapter13_done", 1],
+		["第十五章·席散", "res://scenes/story/chapter15.tscn", "chapter14_done", 1],
+		["第十六章·海草", "res://scenes/story/chapter16.tscn", "chapter15_done", 2],
+		["第十七章·盐河", "res://scenes/story/chapter17.tscn", "chapter16_done", 2],
+		["第十八章·门阙", "res://scenes/story/chapter18.tscn", "chapter17_done", 2],
+		["第十九章·远岸", "res://scenes/story/chapter19.tscn", "chapter18_done", 2],
+		["第二十章·潮墙", "res://scenes/story/chapter20.tscn", "chapter19_done", 2],
+		["第二十一章·席终", "res://scenes/story/chapter21.tscn", "chapter20_done", 2],
+		["第二十二章·北风", "res://scenes/story/chapter22.tscn", "chapter21_done", 3],
+		["第二十三章·霜桥", "res://scenes/story/chapter23.tscn", "chapter22_done", 3],
+		["第二十四章·钤印", "res://scenes/story/chapter24.tscn", "chapter23_done", 3],
+		["第二十五章·朔原", "res://scenes/story/chapter25.tscn", "chapter24_done", 3],
+		["第二十六章·冠雪", "res://scenes/story/chapter26.tscn", "chapter25_done", 3],
+		["第二十七章·席终", "res://scenes/story/chapter27.tscn", "chapter26_done", 3],
+		["第二十八章·南泽", "res://scenes/story/chapter28.tscn", "chapter27_done", 4],
+		["第二十九章·金陌", "res://scenes/story/chapter29.tscn", "chapter28_done", 4],
+		["第三十章·钤印", "res://scenes/story/chapter30.tscn", "chapter29_done", 4],
+		["第三十一章·铁峡", "res://scenes/story/chapter31.tscn", "chapter30_done", 4],
+		["第三十二章·星津", "res://scenes/story/chapter32.tscn", "chapter31_done", 4],
+		["第三十三章·席终", "res://scenes/story/chapter33.tscn", "chapter32_done", 4],
+		["第三十四章·破晓", "res://scenes/story/chapter34.tscn", "chapter33_done", 5],
+		["第三十五章·晚钟", "res://scenes/story/chapter35.tscn", "chapter34_done", 5],
+		["第三十六章·钤印", "res://scenes/story/chapter36.tscn", "chapter35_done", 5],
+		["第三十七章·长川", "res://scenes/story/chapter37.tscn", "chapter36_done", 5],
+		["第三十八章·终阙", "res://scenes/story/chapter38.tscn", "chapter37_done", 5],
+		["第三十九章·席终", "res://scenes/story/chapter39.tscn", "chapter38_done", 5],
+		["第四十章·雾原", "res://scenes/story/chapter40.tscn", "chapter39_done", 6],
+		["第四十一章·石冢", "res://scenes/story/chapter41.tscn", "chapter40_done", 6],
+		["第四十二章·钤印", "res://scenes/story/chapter42.tscn", "chapter41_done", 6],
+		["第四十三章·黑潮", "res://scenes/story/chapter43.tscn", "chapter42_done", 6],
+		["第四十四章·曜塔", "res://scenes/story/chapter44.tscn", "chapter43_done", 6],
+		["第四十五章·席终", "res://scenes/story/chapter45.tscn", "chapter44_done", 6],
 	]
+
+func _volume_labels() -> Array:
+	return ["卷零", "卷一", "卷二", "卷三", "卷四", "卷五", "卷六"]
+
+func _volume_unlocked(vol: int) -> bool:
+	# a volume is unlocked if any chapter in it is unlocked
+	for entry in _chapter_catalog():
+		if int(entry[3]) != vol:
+			continue
+		var need = str(entry[2])
+		if need == "" or GameState.flag(need):
+			return true
+	return false
+
+func _rebuild_volume_picker() -> void:
+	if _vol_pick == null:
+		return
+	_vol_pick.clear()
+	var prefer := 0
+	for v in range(7):
+		if not _volume_unlocked(v):
+			continue
+		_vol_pick.add_item(str(_volume_labels()[v]), v)
+		# prefer highest unlocked volume that still has incomplete chapters
+		var incomplete := false
+		for entry in _chapter_catalog():
+			if int(entry[3]) != v:
+				continue
+			var path = str(entry[1])
+			var bn = path.get_file().replace(".tscn", "").replace("chapter", "")
+			var done_flag = "chapter%s_done" % bn
+			var need = str(entry[2])
+			var unlocked = need == "" or GameState.flag(need)
+			if unlocked and not GameState.flag(done_flag):
+				incomplete = true
+				break
+		if incomplete:
+			prefer = _vol_pick.item_count - 1
+	if _vol_pick.item_count > 0:
+		_vol_pick.select(prefer)
+		_selected_vol = int(_vol_pick.get_item_id(prefer))
+
+func _on_volume_picked(idx: int) -> void:
+	if _vol_pick == null or idx < 0:
+		return
+	_selected_vol = int(_vol_pick.get_item_id(idx))
+	_rebuild_chapter_picker()
 
 func _rebuild_chapter_picker() -> void:
 	if _chapter_pick == null:
@@ -305,7 +372,13 @@ func _rebuild_chapter_picker() -> void:
 	_chapter_pick.clear()
 	_chapter_paths.clear()
 	var select_idx := 0
+	var vol = _selected_vol
+	if _vol_pick != null and _vol_pick.selected >= 0:
+		vol = int(_vol_pick.get_item_id(_vol_pick.selected))
+		_selected_vol = vol
 	for entry in _chapter_catalog():
+		if int(entry[3]) != vol:
+			continue
 		var label = str(entry[0])
 		var path = str(entry[1])
 		var need = str(entry[2])
@@ -314,14 +387,9 @@ func _rebuild_chapter_picker() -> void:
 			continue
 		_chapter_pick.add_item(label)
 		_chapter_paths.append(path)
-		# prefer first incomplete chapter as default selection
-		var done_flag = ""
-		if "chapter0.tscn" in path:
-			done_flag = "chapter0_done"
-		else:
-			var bn = path.get_file().replace(".tscn", "").replace("chapter", "")
-			done_flag = "chapter%s_done" % bn
-		if done_flag != "" and not GameState.flag(done_flag):
+		var bn = path.get_file().replace(".tscn", "").replace("chapter", "")
+		var done_flag = "chapter%s_done" % bn
+		if not GameState.flag(done_flag):
 			select_idx = _chapter_paths.size() - 1
 	if _chapter_paths.size() > 0:
 		_chapter_pick.select(select_idx)
@@ -330,18 +398,22 @@ func _on_chapter_picked(_idx: int) -> void:
 	pass
 
 func _continue_mainline() -> void:
-	_rebuild_chapter_picker()
-	if _chapter_paths.is_empty():
-		return
-	# jump to first incomplete among unlocked
-	for i in _chapter_paths.size():
-		var path = str(_chapter_paths[i])
+	# search all volumes for first incomplete unlocked chapter
+	var last_path := ""
+	for entry in _chapter_catalog():
+		var path = str(entry[1])
+		var need = str(entry[2])
+		var unlocked = need == "" or GameState.flag(need)
+		if not unlocked:
+			continue
+		last_path = path
 		var bn = path.get_file().replace(".tscn", "").replace("chapter", "")
 		var done_flag = "chapter%s_done" % bn
 		if not GameState.flag(done_flag):
 			get_tree().change_scene_to_file(path)
 			return
-	get_tree().change_scene_to_file(str(_chapter_paths[_chapter_paths.size() - 1]))
+	if last_path != "":
+		get_tree().change_scene_to_file(last_path)
 
 
 func panel_button_labels() -> Array:

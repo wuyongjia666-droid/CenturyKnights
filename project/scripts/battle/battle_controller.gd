@@ -270,6 +270,8 @@ func _consume_skill(c: CKCharacter, sid: String) -> void:
 
 func _cast_support_skill(ui: int, sid: String) -> void:
 	Sfx.skill()
+	if Sfx.has_method("heal"):
+		Sfx.heal()
 	var sk = GameState.get_skill(sid)
 	var u = units[ui]
 	var healed = 0
@@ -282,6 +284,7 @@ func _cast_support_skill(ui: int, sid: String) -> void:
 			o.char.hp = mini(o.char.max_hp, o.char.hp + amt)
 			healed += 1
 			_spawn_dmg(o.pos, "+%d" % amt, Color(0.4, 0.9, 0.5))
+			_spawn_slash(o.pos, "heal")
 	_consume_skill(u.char, sid)
 	u.done = true
 	selected = -1
@@ -1142,6 +1145,16 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch41_vault_done")
 	elif map_id == "ch42_seal":
 		GameState.set_flag("ch42_seal_done")
+	elif map_id == "ch43_tide":
+		GameState.set_flag("ch43_tide_done")
+	elif map_id == "ch43_reef":
+		GameState.set_flag("ch43_reef_done")
+	elif map_id == "ch44_tower":
+		GameState.set_flag("ch44_tower_done")
+	elif map_id == "ch44_spire":
+		GameState.set_flag("ch44_spire_done")
+	elif map_id == "ch45_finale":
+		GameState.set_flag("ch45_finale_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")

@@ -1,0 +1,73 @@
+{
+  "id": "chapter43",
+  "title": "第四十三章·黑潮",
+  "beats": [
+    {
+      "id": "43.0",
+      "title": "黑潮令",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "六卷中段之后，黑潮口与暗礁要验后半的旗。"
+        },
+        {
+          "speaker": "管事",
+          "text": "两场：黑潮口、黑潮暗礁。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第六卷后半开启。"
+        }
+      ],
+      "next": "43.1"
+    },
+    {
+      "id": "43.1",
+      "title": "黑潮口",
+      "lines": [
+        {
+          "speaker": "系统",
+          "text": "出战「黑潮口」。"
+        }
+      ],
+      "battle": "ch43_tide",
+      "unlock": [
+        "ch43_tide_done"
+      ],
+      "next": "43.2"
+    },
+    {
+      "id": "43.2",
+      "title": "黑潮暗礁",
+      "lines": [
+        {
+          "speaker": "系统",
+          "text": "出战「黑潮暗礁」。"
+        }
+      ],
+      "battle": "ch43_reef",
+      "unlock": [
+        "ch43_reef_done"
+      ],
+      "next": "43.3"
+    },
+    {
+      "id": "43.3",
+      "title": "可黑潮",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "黑潮两印落下。旅馆写入『可黑潮』。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第四十三章完成。"
+        }
+      ],
+      "unlock": [
+        "chapter43_done"
+      ],
+      "next": null
+    }
+  ]
+}

@@ -5,7 +5,7 @@ var _players: Dictionary = {}
 var enabled: bool = true
 
 func _ready() -> void:
-	for id in ["ui_click", "ui_confirm", "hit", "miss", "win", "lose", "move", "turn", "fanfare", "lineage_chime", "skill", "deal", "crit"]:
+	for id in ["ui_click", "ui_confirm", "hit", "miss", "win", "lose", "move", "turn", "fanfare", "lineage_chime", "skill", "deal", "crit", "heal"]:
 		var p := AudioStreamPlayer.new()
 		p.name = id
 		var path = "res://assets/sfx/%s.wav" % id
@@ -61,3 +61,6 @@ func deal() -> void:
 
 func crit() -> void:
 	play("crit")
+
+func heal() -> void:
+	play("heal")
