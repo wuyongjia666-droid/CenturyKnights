@@ -209,6 +209,11 @@ static func soft_deny(node: Control) -> void:
 	shake_control(node, 4.0, 0.18)
 	flash_modulate(node, Color(0.95, 0.75, 0.75), 0.16)
 
+static func page_exit(root: Control, dur: float = 0.16) -> void:
+	## 页面离开：快于入场
+	if root == null: return
+	exit_fade(root, dur)
+
 static func nav_press_then(btn: Control, cb: Callable) -> void:
 	## 导航：先微交互再跳转，避免「死点」
 	if btn != null:

@@ -35,6 +35,7 @@ func _build() -> void:
 	var banner = UIKit.make_banner_rect(64, 92)
 	banner.position = Vector2(36, 16)
 	add_child(banner)
+	UIFX.breathe(banner, 0.01, 3.2)
 
 	var title = UIKit.make_label(Locale.t("hub_title"), true)
 	title.position = Vector2(120, 18)

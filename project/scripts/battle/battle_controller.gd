@@ -37,6 +37,7 @@ var _btn_atk: Button
 var _btn_wait: Button
 var _btn_end: Button
 var _slash_fx: Array = []  # {pos, age, frame}
+var _lock_burst_fx: Array = []  # {pos, age}
 var _shake: float = 0.0
 var _trauma: float = 0.0  # game-feel trauma 0..1
 var _shake_t: float = 0.0
@@ -802,6 +803,12 @@ func _process(delta: float) -> void:
 		if s.age < 0.48:
 			alive_s.append(s)
 	_slash_fx = alive_s
+	var alive_lb: Array = []
+	for lb in _lock_burst_fx:
+		lb.age += delta
+		if lb.age < 0.55:
+			alive_lb.append(lb)
+	_lock_burst_fx = alive_lb
 	# Trauma shake（二次曲线，非每帧乱抖）
 	if _shake > 0.0:
 		_trauma = clampf(_trauma + _shake * 0.08, 0.0, 1.0)
@@ -1457,6 +1464,13 @@ func _draw_overlay() -> void:
 		var spark = "res://assets/art/fx/hit_spark_%d.png" % fi
 		if ResourceLoader.exists(spark):
 			overlay.draw_texture(load(spark), s.pos - Vector2(32, 32), Color(1, 1, 1, 0.85))
+	# 交战锁定爆发环
+	for lb in _lock_burst_fx:
+		var fi3 = mini(5, int(lb.age / 0.09))
+		var lp = "res://assets/art/fx/lock_%d.png" % fi3
+		if ResourceLoader.exists(lp):
+			var a3 = clampf(1.0 - lb.age / 0.55, 0.0, 1.0)
+			overlay.draw_texture(load(lp), lb.pos - Vector2(36, 36), Color(1, 1, 1, a3))
 	# 伤害飘字 + dmg_pop 底板
 	for fx in _dmg_fx:
 		var a = clampf(1.0 - fx.age / 1.1, 0.0, 1.0)
@@ -1711,6 +1725,12 @@ func _spawn_dmg(cell: Vector2i, text: String, col: Color) -> void:
 	var center = ORIGIN + Vector2(cell) * CELL + Vector2(CELL / 2, CELL / 2)
 	_dmg_fx.append({"pos": center, "text": text, "age": 0.0, "col": col})
 
+
+func _spawn_lock_burst(cell: Vector2i) -> void:
+	var center = ORIGIN + Vector2(cell) * CELL + Vector2(CELL / 2, CELL / 2)
+	_lock_burst_fx.append({"pos": center, "age": 0.0})
+	_shake = maxf(_shake, 2.2)
+
 func _spawn_slash(cell: Vector2i, kind: String = "slash") -> void:
 	var center = ORIGIN + Vector2(cell) * CELL + Vector2(CELL / 2, CELL / 2)
 	_slash_fx.append({"pos": center, "age": 0.0, "kind": kind})
@@ -1722,6 +1742,8 @@ func _do_attack(ai: int, di: int) -> void:
 	var def = units[di]
 	# 交战锁定：攻/受击双方咬住（脱离代价加重，反击优先）
 	_apply_combat_lock(ai, di)
+	_spawn_lock_burst(atk.pos)
+	_spawn_lock_burst(def.pos)
 	# 连击：敏差足够且目标仍存活
 	if def.char.hp > 0 and BattleRules.can_follow_up(atk.char, def.char):
 		_log("连击！敏差触发第二击")

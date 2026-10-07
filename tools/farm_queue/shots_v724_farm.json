@@ -1,0 +1,146 @@
+[
+  {
+    "label": "fx_slash_sheet",
+    "prompt": "game VFX horizontal sprite sheet 6 equal frames left to right, ink-fantasy golden sword slash arc, transparent background checkerless, no text, flat HUD particles, each frame 64x64 in a 384x64 strip",
+    "width": 384,
+    "height": 64
+  },
+  {
+    "label": "fx_crit_sheet",
+    "prompt": "game VFX horizontal sprite sheet 6 frames, crimson-gold critical hit burst bloom then fade, transparent bg, no text, 384x64 strip equal cells",
+    "width": 384,
+    "height": 64
+  },
+  {
+    "label": "fx_heal_sheet",
+    "prompt": "game VFX horizontal sprite sheet 6 frames, soft jade-green heal sparkles rising, transparent bg, no text, 384x64 strip",
+    "width": 384,
+    "height": 64
+  },
+  {
+    "label": "fx_unlock_sheet",
+    "prompt": "game VFX horizontal sprite sheet 6 frames, golden skill unlock flare ring expanding, transparent bg, no text, 384x64 strip",
+    "width": 384,
+    "height": 64
+  },
+  {
+    "label": "fx_shield_sheet",
+    "prompt": "game VFX horizontal sprite sheet 6 frames, ash-steel shield bash spark, transparent bg, no text, 384x64 strip",
+    "width": 384,
+    "height": 64
+  },
+  {
+    "label": "fx_spark_sheet",
+    "prompt": "game VFX horizontal sprite sheet 6 frames, white-gold micro sparks scatter, transparent bg, no text, 384x64 strip",
+    "width": 384,
+    "height": 64
+  },
+  {
+    "label": "portrait_leader_plate",
+    "prompt": "Chinese ink-fantasy male ash-banner war leader portrait bust, stern eyes, dark armor, gold trim, painterly, no text, square game portrait plate",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_ally_dengying",
+    "prompt": "Chinese ink-fantasy young woman lantern scout portrait bust, keen eyes, reed cloak, painterly, no text, square game portrait",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_tank_plate",
+    "prompt": "Chinese ink-fantasy heavy shield captain portrait bust, scarred, iron helm, painterly, no text, square game portrait",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_ranger_plate",
+    "prompt": "Chinese ink-fantasy archer ranger portrait bust, quiet eyes, ash cloak, painterly, no text, square game portrait",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_mage_plate",
+    "prompt": "Chinese ink-fantasy ritual mage portrait bust, pale ink tattoos, lantern glow, painterly, no text, square game portrait",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "portrait_skirm_plate",
+    "prompt": "Chinese ink-fantasy skirmisher youth portrait bust, quick smile, leather wrap, painterly, no text, square game portrait",
+    "width": 256,
+    "height": 256
+  },
+  {
+    "label": "ui_zoc_chip_lock3",
+    "prompt": "tiny game HUD chip icon 64x64, crimson lock-3 ZoC marker, ornate gold rim, transparent bg, no text glyphs",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "ui_zoc_chip_leave2",
+    "prompt": "tiny game HUD chip icon 64x64, amber leave-cost-2 ZoC marker, gold rim, transparent bg, no text",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "ui_zoc_chip_zoc",
+    "prompt": "tiny game HUD chip icon 64x64, violet control ZoC marker, gold rim, transparent bg, no text",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "ui_zoc_chip_safe",
+    "prompt": "tiny game HUD chip icon 64x64, soft green safe-tile marker, gold rim, transparent bg, no text",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "ui_month_chip_grain",
+    "prompt": "tiny game HUD resource chip 64x64, grain sack icon, warm gold, transparent bg, no text",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "ui_month_chip_silver",
+    "prompt": "tiny game HUD resource chip 64x64, silver coin stack, cool metal, transparent bg, no text",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "ui_month_chip_morale",
+    "prompt": "tiny game HUD resource chip 64x64, banner morale flame, ash-red, transparent bg, no text",
+    "width": 64,
+    "height": 64
+  },
+  {
+    "label": "ui_btn_chrome",
+    "prompt": "Chinese ink-fantasy UI button chrome 256x64, dark wood gold trim, empty label area, transparent corners, no text glyphs",
+    "width": 256,
+    "height": 64
+  },
+  {
+    "label": "ui_btn_accent",
+    "prompt": "Chinese ink-fantasy accent button chrome 256x64, warm lantern gold fill, ornate trim, transparent corners, no text",
+    "width": 256,
+    "height": 64
+  },
+  {
+    "label": "ui_transition_rule",
+    "prompt": "thin gold ornamental rule line 1280x16 for page transition flash, ink-fantasy, transparent ends, no text",
+    "width": 1280,
+    "height": 16
+  },
+  {
+    "label": "hub_nav_hover",
+    "prompt": "hub nav tile hover wash 320x96, soft gold dust edge glow, transparent, no text, game HUD",
+    "width": 320,
+    "height": 96
+  },
+  {
+    "label": "concept_hire_elder",
+    "prompt": "Chinese ink-fantasy elder advisor portrait bust, white beard, ash robes, painterly, no text, square plate",
+    "width": 256,
+    "height": 256
+  }
+]

@@ -10,6 +10,7 @@ func _ready() -> void:
 func _build() -> void:
 	UIKit.make_themed_bg(self, "hourglass")
 	UIFX.page_enter(self)
+	UIFX.wire_tree(self)
 	if ResourceLoader.exists("res://assets/art/ui/hub_banner_strip.png"):
 		var strip := TextureRect.new()
 		strip.texture = load("res://assets/art/ui/hub_banner_strip.png")

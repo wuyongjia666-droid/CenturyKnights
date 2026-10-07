@@ -136,6 +136,7 @@ func _ready() -> void:
 		_msg.text = str(r.get("msg"))
 		if r.get("ok"):
 			UIFX.confirm_burst(escort)
+				UIFX.chip_pulse(escort)
 			Sfx.confirm()
 			GameState.save_game()
 			_refresh_prices()
