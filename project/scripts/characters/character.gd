@@ -41,6 +41,8 @@ var weapon_id: String = ""
 var faction: String = "player"  # player/enemy/ally
 var skills: Array = []  # skill ids unlocked
 var skill_uses: Dictionary = {}  # id -> remaining this battle
+var skill_cd: Dictionary = {}  # id -> turns remaining before reusable
+var unlocked_skills: Array = []  # tier2+ manually unlocked via skill tree
 var temp_def_buff: int = 0
 var temp_hit_bonus: int = 0
 
@@ -121,7 +123,7 @@ func to_dict() -> Dictionary:
 		"injured": injured, "salary": salary, "spouse_id": spouse_id,
 		"parent_ids": parent_ids.duplicate(), "children_ids": children_ids.duplicate(),
 		"pregnant_months": pregnant_months, "birthday_month": birthday_month,
-		"weapon_id": weapon_id, "faction": faction, "skills": skills.duplicate(),
+		"weapon_id": weapon_id, "faction": faction, "skills": skills.duplicate(), "unlocked_skills": unlocked_skills.duplicate(),
 	}
 
 static func from_dict(d: Dictionary) -> CKCharacter:
@@ -157,4 +159,5 @@ static func from_dict(d: Dictionary) -> CKCharacter:
 	c.weapon_id = str(d.get("weapon_id", ""))
 	c.faction = str(d.get("faction", "player"))
 	c.skills = d.get("skills", []).duplicate()
+	c.unlocked_skills = d.get("unlocked_skills", []).duplicate()
 	return c

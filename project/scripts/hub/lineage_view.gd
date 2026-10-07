@@ -13,7 +13,7 @@ func _build() -> void:
 	var t = UIKit.make_label("族谱 · 血胤", true)
 	t.position = Vector2(40, 16)
 	add_child(t)
-	var tip = UIKit.make_dim_label("血胤混合条不是装饰——是两条河在旗下交汇。子嗣成年后可授旗入队。")
+	var tip = UIKit.make_dim_label("血胤混合条不是装饰——是两条河在旗下交汇。王朝烽烟中，族谱即同盟凭证；子嗣成年后可授旗入队。")
 	tip.position = Vector2(40, 56)
 	add_child(tip)
 

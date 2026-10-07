@@ -69,7 +69,7 @@ func _build() -> void:
 	_msg.position = Vector2(40, 500)
 	_msg.custom_minimum_size = Vector2(800, 40)
 	add_child(_msg)
-	var flavor = UIKit.make_dim_label("厅外有人比较旗色。能被看见，就比漂泊强。订婚前请仔细读子嗣期望。")
+	var flavor = UIKit.make_dim_label("厅外有人比较旗色与族谱。王朝烽烟里，联姻是同盟，子嗣期望是承诺——订婚前务必读完。")
 	flavor.position = Vector2(40, 540)
 	add_child(flavor)
 
@@ -136,7 +136,7 @@ func _do_marry() -> void:
 	_msg.text = str(r.get("msg", ""))
 	if r.get("ok"):
 		GameState.save_game()
-		_msg.text += "　妊娠将在岁月推进后分娩。双姓共席，旗又升高一寸。\n族谱将添新页；陆桥旅馆会开始传『灰旗有家』的闲话。"
+		_msg.text += "　妊娠将在岁月推进后分娩。双姓共席，旗又升高一寸。\n族谱新页将写上双方血胤；陆桥会传『灰旗有家，可托孤』。"
 		Sfx.confirm()
 
 func _back() -> void:

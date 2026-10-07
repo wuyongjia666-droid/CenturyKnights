@@ -194,7 +194,8 @@ func _player_skills(ui: int) -> Array:
 	var out: Array = []
 	for sid in c.skills:
 		var left = int(c.skill_uses.get(sid, 0))
-		if left > 0:
+		var cd = int(c.skill_cd.get(sid, 0))
+		if left > 0 and cd <= 0:
 			out.append(sid)
 	return out
 
@@ -246,7 +247,11 @@ func _update_skill_hint() -> void:
 		for sid in units[selected].char.skills:
 			var sk = GameState.get_skill(sid)
 			var left = int(units[selected].char.skill_uses.get(sid, 0))
-			parts.append("%s×%d" % [sk.get("name", sid), left])
+			var cd = int(units[selected].char.skill_cd.get(sid, 0))
+			if cd > 0:
+				parts.append("%sCD%d" % [sk.get("name", sid), cd])
+			else:
+				parts.append("%s×%d" % [sk.get("name", sid), left])
 		var armed = ""
 		if active_skill_id != "":
 			armed = "　【将释放：%s】" % GameState.get_skill(active_skill_id).get("name", active_skill_id)
@@ -257,6 +262,8 @@ func _update_skill_hint() -> void:
 func _consume_skill(c: CKCharacter, sid: String) -> void:
 	var left = int(c.skill_uses.get(sid, 0))
 	c.skill_uses[sid] = maxi(0, left - 1)
+	var sk = GameState.get_skill(sid)
+	c.skill_cd[sid] = int(sk.get("cooldown", 1))
 	skill_mode = false
 	active_skill_id = ""
 	_update_skill_hint()
@@ -290,6 +297,13 @@ func _cast_buff_skill(ui: int, sid: String) -> void:
 		u.char.temp_def_buff = int(sk.get("def_buff"))
 	if sk.get("next_hit_bonus"):
 		u.char.temp_hit_bonus = int(sk.get("next_hit_bonus"))
+	if sk.get("party_def_buff"):
+		var add = int(sk.get("party_def_buff"))
+		for ou in units:
+			if ou.team == "player" and ou.char.hp > 0:
+				ou.char.temp_def_buff = maxi(ou.char.temp_def_buff, add)
+	if sk.get("self_def_penalty"):
+		u.char.temp_def_buff = maxi(-99, u.char.temp_def_buff - int(sk.get("self_def_penalty")))
 	_consume_skill(u.char, sid)
 	_log("%s 释放「%s」" % [u.char.name, sk.get("name", "")])
 	Sfx.confirm()
@@ -713,11 +727,14 @@ func _start_player_turn() -> void:
 	phase_label.add_theme_color_override("font_color", UnitArt.crest_color())
 	_turn_flash = 0.9
 	Sfx.turn()
+	var pcs: Array = []
 	for u in units:
 		if u.team == "player":
 			u.done = false
 			# 铁壁姿态持续到己方下回合开始时清除
 			u.char.temp_def_buff = 0
+			pcs.append(u.char)
+	GameState.tick_skill_cooldowns(pcs)
 	selected = -1
 	move_cells.clear()
 	attack_mode = false
@@ -821,8 +838,13 @@ func _finish(win: bool) -> void:
 				u.char.hp = maxi(1, int(u.char.max_hp * 0.3))
 				u.char.injured = true
 		Sfx.win()
+		if not bool(BattleMaps.get_map(map_id).get("tutorial_militia", false)):
+			Sfx.fanfare()
 		_log("【胜利】%s肃清。+35 银。" % map_name)
 		_mark_map_victory()
+		if not bool(BattleMaps.get_map(map_id).get("tutorial_militia", false)):
+			GameState.add_skill_point(1)
+			_log("获得战技点 +1（当前 %d）" % GameState.skill_points)
 		phase_label.text = "★ " + Locale.t("battle_win") + " ★"
 		phase_label.add_theme_color_override("font_color", UIKit.ACCENT)
 	else:
@@ -883,6 +905,12 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch3_shrine_done")
 	elif map_id == "ch4_gate":
 		GameState.set_flag("ch4_gate_done")
+	elif map_id == "ch5_river":
+		GameState.set_flag("ch5_river_done")
+	elif map_id == "ch5_feast":
+		GameState.set_flag("ch5_feast_done")
+	elif map_id == "ch5_bridge":
+		GameState.set_flag("ch5_bridge_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")

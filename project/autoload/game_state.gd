@@ -18,11 +18,14 @@ var data_chapter1: Dictionary = {}
 var data_chapter2: Dictionary = {}
 var data_chapter3: Dictionary = {}
 var data_chapter4: Dictionary = {}
+var data_chapter5: Dictionary = {}
 var data_skills: Dictionary = {}
 var chapter1_beat: String = "1.0"
 var chapter2_beat: String = "2.0"
 var chapter3_beat: String = "3.0"
 var chapter4_beat: String = "4.0"
+var chapter5_beat: String = "5.0"
+var skill_points: int = 0
 
 # 游戏状态
 var started: bool = false
@@ -78,6 +81,7 @@ func _load_data() -> void:
 	data_chapter2 = _read_json("res://data/chapter2.json")
 	data_chapter3 = _read_json("res://data/chapter3.json")
 	data_chapter4 = _read_json("res://data/chapter4.json")
+	data_chapter5 = _read_json("res://data/chapter5.json")
 	data_skills = _read_json("res://data/skills.json")
 
 func _read_json(path: String) -> Dictionary:
@@ -166,6 +170,8 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	chapter2_beat = "2.0"
 	chapter3_beat = "3.0"
 	chapter4_beat = "4.0"
+	chapter5_beat = "5.0"
+	skill_points = 1
 	chapter0_flags = {}
 	event_log.clear()
 	dynasty_journal = ""
@@ -438,6 +444,11 @@ func grant_job_skills(c: CKCharacter) -> void:
 		return
 	for s in skills_for_job(c.job_id):
 		var sid = str(s.get("id"))
+		if int(s.get("tier", 1)) > 1:
+			continue  # 二阶需战技树解锁
+		if sid not in c.skills:
+			c.skills.append(sid)
+	for sid in c.unlocked_skills:
 		if sid not in c.skills:
 			c.skills.append(sid)
 
@@ -448,9 +459,64 @@ func reset_battle_skills(roster_chars: Array) -> void:
 		c.temp_def_buff = 0
 		c.temp_hit_bonus = 0
 		c.skill_uses.clear()
-		for sid in c.skills:
+		c.skill_cd.clear()
+		for sid in _all_known_skills(c):
 			var sk = get_skill(sid)
 			c.skill_uses[sid] = int(sk.get("uses", 1))
+			c.skill_cd[sid] = 0
+
+func _all_known_skills(c: CKCharacter) -> Array:
+	var out: Array = []
+	for sid in c.skills:
+		if sid not in out:
+			out.append(sid)
+	for sid in c.unlocked_skills:
+		if sid not in out:
+			out.append(sid)
+	return out
+
+func tick_skill_cooldowns(roster_chars: Array) -> void:
+	for c in roster_chars:
+		if c == null:
+			continue
+		for sid in c.skill_cd.keys():
+			var v = int(c.skill_cd[sid])
+			if v > 0:
+				c.skill_cd[sid] = v - 1
+
+func can_unlock_skill(c: CKCharacter, sid: String) -> Dictionary:
+	var sk = get_skill(sid)
+	if sk.is_empty() or not sk.has("name"):
+		return {"ok": false, "msg": "无此战技"}
+	if int(sk.get("tier", 1)) <= 1:
+		return {"ok": false, "msg": "一阶战技随职业自动学会"}
+	if sid in c.unlocked_skills or sid in c.skills:
+		return {"ok": false, "msg": "已学会"}
+	var jobs: Array = sk.get("jobs", [])
+	if c.job_id not in jobs:
+		return {"ok": false, "msg": "职业不符"}
+	var req = str(sk.get("req_skill", ""))
+	if req != "" and req not in c.skills and req not in c.unlocked_skills:
+		return {"ok": false, "msg": "需先掌握：" + get_skill(req).get("name", req)}
+	if skill_points < 1:
+		return {"ok": false, "msg": "战技点不足（胜仗与章节可获得）"}
+	return {"ok": true, "msg": "可解锁"}
+
+func unlock_skill(c: CKCharacter, sid: String) -> Dictionary:
+	var check = can_unlock_skill(c, sid)
+	if not check.get("ok"):
+		return check
+	skill_points -= 1
+	c.unlocked_skills.append(sid)
+	if sid not in c.skills:
+		c.skills.append(sid)
+	log_event("%s 解锁战技「%s」" % [c.name, get_skill(sid).get("name", sid)])
+	mark_dirty()
+	return {"ok": true, "msg": "解锁成功：" + get_skill(sid).get("name", sid)}
+
+func add_skill_point(n: int = 1) -> void:
+	skill_points += n
+	mark_dirty()
 
 func build_dynasty_journal() -> String:
 	var leader = get_leader()
@@ -488,6 +554,8 @@ func save_game() -> bool:
 		"chapter2_beat": chapter2_beat,
 		"chapter3_beat": chapter3_beat,
 		"chapter4_beat": chapter4_beat,
+		"chapter5_beat": chapter5_beat,
+		"skill_points": skill_points,
 		"chapter0_flags": chapter0_flags,
 		"reputation": reputation,
 		"settings": settings,
@@ -536,6 +604,8 @@ func load_game() -> bool:
 	chapter2_beat = str(data.get("chapter2_beat", "2.0"))
 	chapter3_beat = str(data.get("chapter3_beat", "3.0"))
 	chapter4_beat = str(data.get("chapter4_beat", "4.0"))
+	chapter5_beat = str(data.get("chapter5_beat", "5.0"))
+	skill_points = int(data.get("skill_points", 0))
 	chapter0_flags = data.get("chapter0_flags", {})
 	reputation = data.get("reputation", {"ashland": 0, "riverland": 0})
 	settings = data.get("settings", settings)

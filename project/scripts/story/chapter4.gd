@@ -110,9 +110,16 @@ func _refresh_actions() -> void:
 			_add("完成第四章并回堡", func():
 				GameState.set_flag("chapter4_done")
 				GameState.silver += 150
+				GameState.add_skill_point(1)
 				GameState.add_rep("ashland", 15)
 				GameState.save_game()
 				get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
+			)
+			_add("踏上第五章·王朝烽烟", func():
+				GameState.set_flag("chapter4_done")
+				GameState.add_skill_point(1)
+				GameState.chapter5_beat = "5.0"
+				get_tree().change_scene_to_file("res://scenes/story/chapter5.tscn")
 			)
 		_:
 			_add("继续", func(): _goto_next())
