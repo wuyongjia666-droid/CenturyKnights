@@ -249,6 +249,10 @@ const BELL_BANTER_TURN := [
 	"【钟鼓】斥候：夹丘不利浪冲——沿廊上钟楼。",
 	"【钟鼓】老旗手：水环八桥，择桥再登，别全压。",
 	"【钟鼓】春令使者：角丘有伏射，先清角再夺场心。",
+	"【钟鼓】斥候：回廊凹字——外廊清完还要进内庭。",
+	"【钟鼓】老旗手：竖井撞钟先清厢，硬冲北室必挨射。",
+	"【钟鼓】管事：棋丘格交错，落脚先想第二步。",
+	"【钟鼓】春令使者：套心席终——水桥、丘环、心垒三层都要过。",
 ]
 const BELL_BANTER_KILL := [
 	"【钟鼓】钟楼悍匪：……钟……不该哑……",
@@ -263,6 +267,33 @@ const BELL_BANTER_START := [
 	"【钟鼓】系统：钟鼓已升。护声优先于斩杀。",
 	"【钟鼓】管事：城未警，先别浪战。",
 	"【钟鼓】老旗手：双廊先合桥——断一廊等于半城哑。",
+]
+
+const RAIN_BANTER_TURN := [
+	"【雨巷】管事：护伞！别让他们撕票。",
+	"【雨巷】老旗手：檐票还在，旗就不能倒。",
+	"【雨巷】斥候：窄廊有贼气味——压低身子。",
+	"【雨巷】苇原·灯影：火一亮，就是劫伞开手。",
+	"【雨巷】管事：禁火推进。一星火，满街尽湿。",
+	"【雨巷】斥候：三廊择一——别分兵浪冲。",
+	"【雨巷】老旗手：积水洼多，踩洼等于送死。",
+	"【雨巷】春令使者：环棚先外后心，伞心在干处。",
+	"【雨巷】斥候：三槽水道桥稀——错桥要绕远。",
+	"【雨巷】管事：半水半街，印台那边别被水截断。",
+]
+const RAIN_BANTER_KILL := [
+	"【雨巷】雨巷悍匪：……伞……不该撕……",
+	"【雨巷】檐廊伏弓：巷口……不在你们手里……",
+	"【雨巷】老旗手：一匪倒，檐路清一寸。",
+	"【雨巷】管事：别追太深——伞还在架上。",
+	"【雨巷】雨巷匪首：空票……遮不住真姓……",
+	"【雨巷】斥候：撕票的倒了，伞可护。",
+]
+const RAIN_BANTER_START := [
+	"【雨巷】春令使者：这一仗验的是姓，不是伞。",
+	"【雨巷】系统：雨巷已升。护伞优先于斩杀。",
+	"【雨巷】管事：人未干，先别浪战。",
+	"【雨巷】老旗手：窄廊不利横队——纵列推进。",
 ]
 const ESCORT_BANTER_START := [
 	"【镖行】春令使者：这一仗验的是姓，不是刀。",
@@ -280,7 +311,7 @@ func _is_harbor_map() -> bool:
 
 func _theme_banter(kind: String) -> void:
 	var theme = _map_theme()
-	if theme != "escort" and theme != "harbor" and theme != "paper" and theme != "copper" and theme != "lantern" and theme != "grain" and theme != "snow" and theme != "bamboo" and theme != "relay" and theme != "bell":
+	if theme != "escort" and theme != "harbor" and theme != "paper" and theme != "copper" and theme != "lantern" and theme != "grain" and theme != "snow" and theme != "bamboo" and theme != "relay" and theme != "bell" and theme != "rain":
 		return
 	var key = theme + kind + str(_banter_idx if kind == "turn" else _banter_kill)
 	if _banter_played.has(key):
@@ -304,8 +335,10 @@ func _theme_banter(kind: String) -> void:
 		pool = BAMBOO_BANTER_TURN if kind == "turn" else (BAMBOO_BANTER_KILL if kind == "kill" else BAMBOO_BANTER_START)
 	elif theme == "relay":
 		pool = RELAY_BANTER_TURN if kind == "turn" else (RELAY_BANTER_KILL if kind == "kill" else RELAY_BANTER_START)
-	else:
+	elif theme == "bell":
 		pool = BELL_BANTER_TURN if kind == "turn" else (BELL_BANTER_KILL if kind == "kill" else BELL_BANTER_START)
+	else:
+		pool = RAIN_BANTER_TURN if kind == "turn" else (RAIN_BANTER_KILL if kind == "kill" else RAIN_BANTER_START)
 	if pool.is_empty():
 		return
 	var line = ""
@@ -333,8 +366,10 @@ func _theme_banter(kind: String) -> void:
 			Sfx.bamboo_creak()
 		elif theme == "relay":
 			Sfx.post_horn()
-		else:
+		elif theme == "bell":
 			Sfx.bell_toll()
+		else:
+			Sfx.rain_patter()
 	else:
 		line = str(pool[0] if _banter_idx == 0 else pool[mini(1, pool.size()-1)])
 		if theme == "escort":
@@ -355,8 +390,10 @@ func _theme_banter(kind: String) -> void:
 			Sfx.bamboo_creak()
 		elif theme == "relay":
 			Sfx.post_horn()
-		else:
+		elif theme == "bell":
 			Sfx.bell_toll()
+		else:
+			Sfx.rain_patter()
 	_banter_played[key] = true
 	_log(line)
 
@@ -1895,6 +1932,26 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch167_square_done")
 	elif map_id == "ch168_seal":
 		GameState.set_flag("ch168_seal_done")
+	elif map_id == "ch169_fair":
+		GameState.set_flag("ch169_fair_done")
+	elif map_id == "ch169_echo":
+		GameState.set_flag("ch169_echo_done")
+	elif map_id == "ch170_strike":
+		GameState.set_flag("ch170_strike_done")
+	elif map_id == "ch170_nightwatch":
+		GameState.set_flag("ch170_nightwatch_done")
+	elif map_id == "ch171_finale":
+		GameState.set_flag("ch171_finale_done")
+	elif map_id == "ch172_alley":
+		GameState.set_flag("ch172_alley_done")
+	elif map_id == "ch172_eaves":
+		GameState.set_flag("ch172_eaves_done")
+	elif map_id == "ch173_umbrella":
+		GameState.set_flag("ch173_umbrella_done")
+	elif map_id == "ch173_drain":
+		GameState.set_flag("ch173_drain_done")
+	elif map_id == "ch174_seal":
+		GameState.set_flag("ch174_seal_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")

@@ -62,6 +62,21 @@
     "tokens/bell_boss_enemy_f0.png",
     "tokens/bell_boss_enemy_f1.png",
     "tokens/bell_boss_enemy_f2.png",
-    "tokens/bell_boss_enemy_f3.png"
+    "tokens/bell_boss_enemy_f3.png",
+    "portraits/rain_thug.png",
+    "portraits/rain_archer.png",
+    "portraits/rain_boss.png",
+    "tokens/rain_thug_enemy_f0.png",
+    "tokens/rain_thug_enemy_f1.png",
+    "tokens/rain_thug_enemy_f2.png",
+    "tokens/rain_thug_enemy_f3.png",
+    "tokens/rain_archer_enemy_f0.png",
+    "tokens/rain_archer_enemy_f1.png",
+    "tokens/rain_archer_enemy_f2.png",
+    "tokens/rain_archer_enemy_f3.png",
+    "tokens/rain_boss_enemy_f0.png",
+    "tokens/rain_boss_enemy_f1.png",
+    "tokens/rain_boss_enemy_f2.png",
+    "tokens/rain_boss_enemy_f3.png"
   ]
 }
