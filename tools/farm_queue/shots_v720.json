@@ -1,0 +1,18 @@
+{
+  "book": "CenturyKnights",
+  "round": "v7.20.0-depth",
+  "prefer": "qwen",
+  "dual_submit": true,
+  "bases": {"qwen": "http://192.168.9.244:8322", "sn_local": "http://192.168.9.244:8329"},
+  "refuse": ["sn_api", "sn_cloud", "qwen_api_nodes", "flux"],
+  "shots": [
+    {"id": "ui_market_banner", "role": "UI banner 1280x52", "prompt": "Chinese ink-fantasy market street banner strip, ash-grey banners, warm lantern light, ornate gold trim, no text, flat UI game asset, transparent ends, 1280x64"},
+    {"id": "ui_caravan_banner", "role": "UI banner", "prompt": "Fantasy wagon caravan silhouette banner, dusk river bridge, ash crest colors, game UI strip 1280x52, no text, elegant ink wash"},
+    {"id": "ui_estate_focus_triptych", "role": "UI icons", "prompt": "Three square game icons in a row: grain sheaf, silver coin purse, stone fort battlement, unified ash-banner fantasy UI style, gold rim, transparent background, 192x64"},
+    {"id": "ui_alliance_duty", "role": "UI icon 64", "prompt": "Marriage alliance oath seal icon, twin rings over ash banner, soft rose and gold, game UI chip, transparent bg"},
+    {"id": "fx_zoc_pulse_sheet", "role": "FX 6 frames", "prompt": "Top-down tactics zone-of-control pulse rings, magenta to amber, 6 animation frames in a row on transparent bg, pixel-clean game FX, 384x64"},
+    {"id": "concept_hire_plate_m", "role": "portrait concept", "prompt": "Hand-painted fantasy character portrait plate male ash-banner knight, oil painting lighting, rim light, brush texture, 220x270 bust, no text"},
+    {"id": "concept_hire_plate_f", "role": "portrait concept", "prompt": "Hand-painted fantasy character portrait plate female ash-banner officer, oil painting lighting, rim light, brush texture, 220x270 bust, no text"},
+    {"id": "hub_monthly_settle", "role": "UI panel art", "prompt": "Castle monthly settlement ledger panel header art, ink and gold, grain silver morale icons integrated, Chinese dynasty tactics UI, 640x120, no readable glyphs"}
+  ]
+}

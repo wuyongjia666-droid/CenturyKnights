@@ -43,6 +43,7 @@ func _ready() -> void:
 	_list.add_theme_constant_override("separation", 12)
 	scroll.add_child(_list)
 	_rebuild()
+	UIFX.stagger_children(_list, 0.05, 0.26)
 
 	_msg = UIKit.make_label("")
 	_msg.position = Vector2(40, 620)
@@ -152,6 +153,42 @@ func _rebuild() -> void:
 				vb.add_child(UIKit.make_dim_label("庄头：空缺 — 委任后月结+1档并抗劫"))
 			if lv < 3:
 				vb.add_child(UIKit.make_dim_label("升级需：%d银 / %d粮" % [40 * lv, 8 * lv]))
+			var foc = GameState.holding_focus(hid)
+			var foc_cn = {"grain": "粮作", "cash": "钱作", "fortify": "戍卫"}.get(foc, foc)
+			var foc_row := HBoxContainer.new()
+			foc_row.add_theme_constant_override("separation", 8)
+			vb.add_child(foc_row)
+			var ficon = TextureRect.new()
+			var icon_path = "res://assets/art/ui/estate_focus_%s.png" % foc
+			if ResourceLoader.exists(icon_path):
+				ficon.texture = load(icon_path)
+				ficon.custom_minimum_size = Vector2(28, 28)
+				ficon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+				ficon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+				foc_row.add_child(ficon)
+			foc_row.add_child(UIKit.make_dim_label("经营偏向：%s（改作10银/冷却2月）" % foc_cn))
+			var fbtns := HBoxContainer.new()
+			fbtns.add_theme_constant_override("separation", 6)
+			vb.add_child(fbtns)
+			for fk in ["grain", "cash", "fortify"]:
+				var flab = {"grain": "粮作", "cash": "钱作", "fortify": "戍卫"}[fk]
+				var fb = UIKit.make_button(flab, 72)
+				fb.disabled = (fk == foc)
+				var capt_h = hid
+				var capt_f = fk
+				fb.pressed.connect(func():
+					UIFX.press_feedback(fb)
+					var rr = GameState.set_holding_focus(capt_h, capt_f)
+					_msg.text = str(rr.get("msg"))
+					if rr.get("ok"):
+						UIFX.confirm_burst(fb)
+						Sfx.confirm()
+						GameState.save_game()
+						_rebuild()
+						var sum2 = get_node_or_null("Sum")
+						if sum2: sum2.text = _sum_text()
+				)
+				fbtns.add_child(fb)
 		else:
 			vb.add_child(UIKit.make_dim_label("完成委任「%s」首通后开垦" % str(def.get("quest", ""))))
 

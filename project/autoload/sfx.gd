@@ -17,10 +17,14 @@ func _ready() -> void:
 		_players[id] = p
 
 func play(id: String) -> void:
+	play_vol(id, -6.0)
+
+func play_vol(id: String, volume_db: float = -6.0) -> void:
 	if not enabled:
 		return
 	var p: AudioStreamPlayer = _players.get(id)
 	if p and p.stream:
+		p.volume_db = volume_db
 		p.play()
 
 func click() -> void:
@@ -134,8 +138,8 @@ func tide_wash() -> void:
 func porcelain_chime() -> void:
 	play("porcelain_chime")
 
-func zoc_pulse() -> void:
-	play("zoc_pulse")
+func zoc_pulse(volume_db: float = -4.0) -> void:
+	play_vol("zoc_pulse", volume_db)
 
-func zoc_leave() -> void:
-	play("zoc_leave")
+func zoc_leave(volume_db: float = -6.0) -> void:
+	play_vol("zoc_leave", volume_db)

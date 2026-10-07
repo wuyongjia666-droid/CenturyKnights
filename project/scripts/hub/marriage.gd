@@ -21,6 +21,7 @@ func _ready() -> void:
 		GameState.refresh_marriage_candidates()
 	_build()
 	_refresh()
+	UIFX.slide_from_bottom(self, 24.0, 0.32)
 
 func _build() -> void:
 	UIKit.make_themed_bg(self, "marriage")
@@ -97,6 +98,30 @@ func _build() -> void:
 	var flavor = UIKit.make_dim_label("厅外有人比较旗色与族谱。王朝烽烟里，联姻是同盟，子嗣期望是承诺——订婚前务必读完。")
 	flavor.position = Vector2(40, 540)
 	add_child(flavor)
+	var duty_tip = UIKit.make_dim_label("联姻后可起「义役」：六月护路共济——真月结代价，换声望与商路安稳。")
+	duty_tip.position = Vector2(40, 570)
+	add_child(duty_tip)
+	var duty_btn = UIKit.make_accent_button("起誓·联姻义役", 160)
+	duty_btn.position = Vector2(900, 560)
+	if ResourceLoader.exists("res://assets/art/ui/alliance_duty_chip.png"):
+		var dc := TextureRect.new()
+		dc.texture = load("res://assets/art/ui/alliance_duty_chip.png")
+		dc.position = Vector2(860, 558)
+		dc.custom_minimum_size = Vector2(32, 32)
+		dc.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		dc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		dc.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(dc)
+	duty_btn.pressed.connect(func():
+		UIFX.press_feedback(duty_btn)
+		var r = GameState.start_alliance_duty()
+		_msg.text = str(r.get("msg"))
+		if r.get("ok"):
+			UIFX.confirm_burst(duty_btn)
+			Sfx.lineage_chime()
+			GameState.save_game()
+)
+	add_child(duty_btn)
 
 	var row := HBoxContainer.new()
 	row.position = Vector2(40, 590)

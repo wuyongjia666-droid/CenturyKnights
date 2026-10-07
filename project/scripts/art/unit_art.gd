@@ -5,9 +5,13 @@ extends RefCounted
 static var _cache: Dictionary = {}
 static var _banner_frame: int = 0
 static var _token_phase: float = 0.0
+static var _face_owner: Dictionary = {}  # slot -> character id
+static var _face_assign: Dictionary = {}  # character id -> slot
+const FACE_SLOTS := 768
 
 static func clear_cache() -> void:
 	_cache.clear()
+	# 保留脸槽指派，避免同局内跳脸；新开档可另清
 
 static func terrain_tile(tid: String) -> Texture2D:
 	var path = "res://assets/art/tiles/%s.png" % tid
@@ -533,16 +537,29 @@ static func _boss_portrait(key: String) -> String:
 	return "res://assets/art/portraits/%s_boss.png" % key
 
 static func _face_uid(c: CKCharacter) -> int:
-	## FNV-ish：id + 名 + 等位，768 槽；降低王朝子嗣碰撞
+	## FNV 起点 + 开放寻址：超长王朝不共脸（同 id 稳定）
+	var cid = str(c.id)
+	if _face_assign.has(cid):
+		return int(_face_assign[cid])
 	var h := 2166136261
 	var key = "%s|%s|%s|%s|%s|%s|%s" % [
-		str(c.id), str(c.name), str(c.gender),
+		cid, str(c.name), str(c.gender),
 		str(c.appearance.get("hair", "")), str(c.appearance.get("eyes", "")),
 		str(c.appearance.get("brow", "")), str(c.appearance.get("scar", "")),
 	]
 	for ch2 in key:
 		h = int((h ^ ch2.unicode_at(0)) * 16777619) & 0x7fffffff
-	return h % 768
+	var start = h % FACE_SLOTS
+	for i in range(FACE_SLOTS):
+		var slot = (start + i) % FACE_SLOTS
+		var owner = str(_face_owner.get(slot, ""))
+		if owner == "" or owner == cid:
+			_face_owner[slot] = cid
+			_face_assign[cid] = slot
+			return slot
+	# 满表：退回起点（极端）
+	_face_assign[cid] = start
+	return start
 
 static func _fingerprint_portrait(tex: Texture2D, c: CKCharacter) -> Texture2D:
 	## 个人板为底；hireface 等位图作下半身/衣饰次级细节；轻染发瞳

@@ -510,6 +510,7 @@ var settings: Dictionary = {
 	"rules_preview": true,
 	"text_speed": 1.0,
 	"tutorial_highlight": true,
+	"reduced_motion": false,
 }
 # 诸邦声望 0-100；档位由数值映射
 var reputation: Dictionary = {"ashland": 0, "riverland": 0}
@@ -524,7 +525,9 @@ var quest_done: Dictionary = {}
 var advisor_bonus: Dictionary = {}
 var ambition_done: Dictionary = {}  # 堡志中长期目标
 ## 属地/庄园（单堡多属地经营感）
-var holdings: Dictionary = {}  # id -> {level, steward_id}
+var holdings: Dictionary = {}  # id -> {level, steward_id, focus, focus_cd}
+var caravan: Dictionary = {}  # {kind, turns_left, invested} 陆桥商队
+var alliance_duty_months: int = 0  # 联姻义役剩余月
 var doctrine_months: int = 0
 var estate_quiet_months: int = 0  # 连续无劫掠月数
 var patrol_cooldown: int = 0  # 全堡巡防冷却（月）
@@ -1133,6 +1136,8 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	advisor_bonus = {}
 	ambition_done = {}
 	holdings = {}
+	caravan = {}
+	alliance_duty_months = 0
 	doctrine_months = 0
 	estate_quiet_months = 0
 	patrol_cooldown = 0
@@ -1424,6 +1429,134 @@ func steward_of(hid: String) -> CKCharacter:
 		return null
 	return characters.get(cid)
 
+
+func holding_focus(hid: String) -> String:
+	if not holdings.has(hid):
+		return "grain"
+	var f = str(holdings[hid].get("focus", "grain"))
+	if f == "":
+		return "grain"
+	return f
+
+func set_holding_focus(hid: String, focus: String) -> Dictionary:
+	## 属地经营偏向：粮作 / 钱作 / 戍卫 — 真代价决策
+	if not holdings.has(hid):
+		return {"ok": false, "msg": "属地未开垦"}
+	if focus not in ["grain", "cash", "fortify"]:
+		return {"ok": false, "msg": "未知偏向"}
+	var cd = int(holdings[hid].get("focus_cd", 0))
+	if cd > 0:
+		return {"ok": false, "msg": "改作冷却中（余%d月）" % cd}
+	if silver < 10:
+		return {"ok": false, "msg": "改作需 10 银"}
+	silver -= 10
+	holdings[hid]["focus"] = focus
+	holdings[hid]["focus_cd"] = 2
+	var cn = {"grain": "粮作", "cash": "钱作", "fortify": "戍卫"}.get(focus, focus)
+	log_event("%s 改作 → %s" % [HOLDING_DEFS[hid].name, cn])
+	add_lineage_event("属地改作：%s→%s" % [HOLDING_DEFS[hid].name, cn])
+	mark_dirty()
+	return {"ok": true, "msg": "%s 改为「%s」（月结结构变化；冷却2月）" % [HOLDING_DEFS[hid].name, cn]}
+
+func start_caravan(kind: String) -> Dictionary:
+	## 陆桥商队：投资上路，月结检定，到期交割
+	if int(caravan.get("turns_left", 0)) > 0:
+		return {"ok": false, "msg": "已有商队在途"}
+	if kind not in ["grain", "iron", "spice"]:
+		return {"ok": false, "msg": "航线：grain/iron/spice"}
+	var cost = {"grain": 35, "iron": 45, "spice": 55}.get(kind, 40)
+	if silver < cost:
+		return {"ok": false, "msg": "需 %d 银上路" % cost}
+	silver -= cost
+	caravan = {"kind": kind, "turns_left": 3, "invested": cost}
+	house_mods["caravan_active"] = true
+	var cn = {"grain": "粮运", "iron": "铁运", "spice": "香料险运"}.get(kind, kind)
+	log_event("商队出发：%s（投资%d）" % [cn, cost])
+	add_lineage_event("陆桥商队：%s 上路" % cn)
+	mark_dirty()
+	return {"ok": true, "msg": "商队「%s」上路，约 3 月交割（途中有劫险）" % cn}
+
+func tick_caravan_month() -> Array:
+	var msgs: Array = []
+	# focus cd tick
+	for hid in holdings.keys():
+		var cd = int(holdings[hid].get("focus_cd", 0))
+		if cd > 0:
+			holdings[hid]["focus_cd"] = cd - 1
+	if int(caravan.get("turns_left", 0)) <= 0:
+		return msgs
+	caravan["turns_left"] = int(caravan["turns_left"]) - 1
+	var kind = str(caravan.get("kind", "grain"))
+	var invested = int(caravan.get("invested", 40))
+	# mid risk
+	var raid = 0.12
+	if bool(house_mods.get("trade_route", false)):
+		raid *= 0.6
+	if bool(house_mods.get("market_edge", false)):
+		raid *= 0.75
+	if alliance_duty_months > 0:
+		raid *= 0.7  # 义役护路
+	if rng.randf() < raid:
+		var loss = int(invested * 0.45)
+		silver = maxi(0, silver - loss)
+		msgs.append("商队遇劫：损银 %d（航线仍在）" % loss)
+		add_lineage_event(msgs[-1])
+		morale = maxi(0, morale - 2)
+	else:
+		msgs.append("商队平安过月：余 %d 月" % int(caravan["turns_left"]))
+	if int(caravan["turns_left"]) <= 0:
+		var payout = int(invested * {"grain": 1.7, "iron": 1.9, "spice": 2.3}.get(kind, 1.8))
+		silver += payout
+		if kind == "grain":
+			food += 8
+		elif kind == "iron":
+			iron += 4
+		elif kind == "spice":
+			herb += 3
+			add_rep("riverland", 1)
+		msgs.append("商队交割：收回约 %d 银并卸货" % payout)
+		add_lineage_event(msgs[-1])
+		caravan = {}
+		house_mods.erase("caravan_active")
+	mark_dirty()
+	return msgs
+
+func start_alliance_duty() -> Dictionary:
+	## 联姻义役：6 月每月付 5 银，换护路+声望+士气
+	if alliance_duty_months > 0:
+		return {"ok": false, "msg": "义役进行中（余%d月）" % alliance_duty_months}
+	var leader = get_leader()
+	if leader == null or leader.spouse_id == "":
+		return {"ok": false, "msg": "需先联姻"}
+	alliance_duty_months = 6
+	house_mods["alliance_duty"] = true
+	add_lineage_event("联姻义役：六个月护路共济")
+	mark_dirty()
+	return {"ok": true, "msg": "义役起誓：每月 5 银，护商路、升声望（共 6 月）"}
+
+func tick_alliance_duty_month() -> Array:
+	var msgs: Array = []
+	if alliance_duty_months <= 0:
+		return msgs
+	if silver >= 5:
+		silver -= 5
+		morale = mini(100, morale + 1)
+		add_rep("ashland", 1)
+		msgs.append("联姻义役：付 5 银 → 士气+1 声望+（余%d月）" % (alliance_duty_months - 1))
+	else:
+		morale = maxi(0, morale - 3)
+		msgs.append("联姻义役欠缴：士气-3（余%d月）" % (alliance_duty_months - 1))
+		add_lineage_event("义役欠缴")
+	alliance_duty_months -= 1
+	if alliance_duty_months <= 0:
+		house_mods.erase("alliance_duty")
+		house_mods["alliance_duty_done"] = true
+		add_rep("riverland", 2)
+		msgs.append("义役圆满：河卫声望+2，商路更稳")
+		add_lineage_event(msgs[-1])
+	mark_dirty()
+	return msgs
+
 func holding_yield_preview(hid: String) -> Dictionary:
 	var def = HOLDING_DEFS.get(hid, {})
 	var lv = maxi(1, holding_level(hid))
@@ -1444,13 +1577,28 @@ func holding_yield_preview(hid: String) -> Dictionary:
 		mul += 1  # 四野旗庄：属地月结+1成
 	if bool(house_mods.get("estate_patrol", false)):
 		mul += 0  # 巡逻主要抗劫，产出在 monthly 另记
+	var food_v = int(def.get("food", 0)) * mul
+	var sil_v = int(def.get("silver", 0)) * mul
+	var herb_v = int(def.get("herb", 0)) * mul
+	var focus = holding_focus(hid)
+	if focus == "grain":
+		food_v = int(food_v * 1.5)
+		sil_v = int(sil_v * 0.75)
+	elif focus == "cash":
+		sil_v = int(sil_v * 1.5)
+		food_v = int(food_v * 0.75)
+	elif focus == "fortify":
+		food_v = int(food_v * 0.8)
+		sil_v = int(sil_v * 0.8)
+		herb_v = int(herb_v * 0.8)
 	return {
-		"food": int(def.get("food", 0)) * mul,
-		"silver": int(def.get("silver", 0)) * mul,
-		"herb": int(def.get("herb", 0)) * mul,
+		"food": food_v,
+		"silver": sil_v,
+		"herb": herb_v,
 		"rep": int(def.get("rep", 0)) * mul,
 		"steward": st != null,
 		"trait_bonus": trait_bonus,
+		"focus": focus,
 	}
 
 func holdings_monthly_yield() -> String:
@@ -1479,6 +1627,8 @@ func holdings_monthly_yield() -> String:
 				raid_chance *= 0.5
 		if bool(house_mods.get("estate_patrol", false)):
 			raid_chance *= 0.35
+		if holding_focus(hid) == "fortify":
+			raid_chance *= 0.4
 		if patrol_boost_months > 0:
 			raid_chance *= 0.25  # 全堡巡防期
 		if holding_patrol_boost(hid) > 0:
@@ -1816,7 +1966,7 @@ func tick_doctrine_and_marriage_month() -> Array:
 				food += 1 * mul
 				morale = mini(100, morale + 1 * mul)
 				msgs.append("家训·仁恤：粮+%d 士气+%d（第 %d 月）" % [1 * mul, 1 * mul, doctrine_months])
-			"trade":
+			"trade", "commerce":
 				silver += 2 * mul
 				msgs.append("家训·商本：银+%d（第 %d 月）" % [2 * mul, doctrine_months])
 			_:
@@ -1852,6 +2002,10 @@ func tick_doctrine_and_marriage_month() -> Array:
 		msgs.append("血胤月泽：族谱浓度 → 银+%d" % gain)
 		if blood_bonus >= 3:
 			morale = mini(100, morale + 1)
+	for m in tick_caravan_month():
+		msgs.append(m)
+	for m2 in tick_alliance_duty_month():
+		msgs.append(m2)
 	mark_dirty()
 	return msgs
 
@@ -2797,6 +2951,8 @@ func save_game() -> bool:
 		"advisor_bonus": advisor_bonus.duplicate(true),
 		"ambition_done": ambition_done.duplicate(true),
 		"holdings": holdings.duplicate(true),
+		"caravan": caravan.duplicate(true),
+		"alliance_duty_months": alliance_duty_months,
 		"doctrine_months": doctrine_months,
 		"estate_quiet_months": estate_quiet_months,
 		"patrol_cooldown": patrol_cooldown,
@@ -3094,6 +3250,9 @@ func load_game() -> bool:
 	advisor_bonus = data.get("advisor_bonus", {}).duplicate(true)
 	ambition_done = data.get("ambition_done", {}).duplicate(true)
 	holdings = data.get("holdings", {}).duplicate(true)
+	var _cv = data.get("caravan", {})
+	caravan = _cv.duplicate(true) if typeof(_cv) == TYPE_DICTIONARY else {}
+	alliance_duty_months = int(data.get("alliance_duty_months", 0))
 	doctrine_months = int(data.get("doctrine_months", 0))
 	estate_quiet_months = int(data.get("estate_quiet_months", 0))
 	patrol_cooldown = int(data.get("patrol_cooldown", 0))

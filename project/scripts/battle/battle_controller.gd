@@ -1392,6 +1392,10 @@ func _draw_overlay() -> void:
 				var ht: Texture2D = load(hatch)
 				var ha = (0.55 + 0.45 * pulse) if hovered else (0.75 + 0.25 * pulse)
 				overlay.draw_texture_rect(ht, r, false, Color(1, 1, 1, clampf(ha, 0.4, 1.0)))
+				if hovered and tag != "":
+					var pf = "res://assets/art/fx/zoc_pulse_%d.png" % (int(_sel_pulse * 10.0) % 6)
+					if ResourceLoader.exists(pf):
+						overlay.draw_texture_rect(load(pf), r.grow(4.0), false, Color(1, 1, 1, 0.55 + 0.35 * pulse))
 			if tag != "":
 				var chip_path = ""
 				if tag == "锁3":
@@ -1494,12 +1498,20 @@ func _zoc_hover_audio(cell: Vector2i) -> void:
 	if kind == _zoc_hover_kind:
 		return
 	_zoc_hover_kind = kind
+	if kind == "":
+		return
+	# 空间感：距选中单位越远音量越低（前端式距离衰减，非短 tick 一律）
+	var dist := 1.0
+	if selected >= 0 and selected < units.size():
+		dist = float(_manhattan(units[selected].pos, cell))
+	var vol = clampf(-3.0 - dist * 2.2, -18.0, -2.0)
 	if kind == "lock3":
-		Sfx.zoc_pulse()
+		vol = clampf(vol + 2.0, -16.0, -1.0)  # 锁脱更响
+		Sfx.zoc_pulse(vol)
 	elif kind == "leave2":
-		Sfx.zoc_leave()
+		Sfx.zoc_leave(vol)
 	elif kind == "zoc":
-		Sfx.zoc_leave()
+		Sfx.zoc_leave(vol - 1.5)
 
 func _gui_input(event: InputEvent) -> void:
 	if battle_over:
