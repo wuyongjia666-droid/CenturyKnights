@@ -13,7 +13,7 @@ func _build() -> void:
 	var t = UIKit.make_label("族谱 · 血胤", true)
 	t.position = Vector2(40, 16)
 	add_child(t)
-	var tip = UIKit.make_dim_label("血胤混合条不是装饰——是两条河在旗下交汇。王朝烽烟中，族谱即同盟凭证；子嗣成年后可授旗入队。")
+	var tip = UIKit.make_dim_label("血胤混合条不是装饰——是两条河在旗下交汇。托孤之约后，族谱即同盟凭证；子嗣成年可授旗。下方为族谱纪事。")
 	tip.position = Vector2(40, 56)
 	add_child(tip)
 
@@ -107,3 +107,17 @@ func _show(c: CKCharacter) -> void:
 		var r = Lineage.enlist_adult(c)
 		lines.append(str(r.get("msg", "")))
 	_detail.text = "\n".join(lines)
+	_append_lineage_log_to(_detail)
+
+
+func _append_lineage_log_to(rtl: RichTextLabel) -> void:
+	if rtl == null:
+		return
+	rtl.text += "\n\n[color=#c9a227]族谱纪事[/color]\n"
+	var logs = GameState.lineage_log
+	if logs.is_empty():
+		rtl.text += "（尚无纪事——联姻、春令廷议、授旗礼会写入此处）\n"
+		return
+	for i in range(maxi(0, logs.size() - 12), logs.size()):
+		var e = logs[i]
+		rtl.text += "· [%s] %s\n" % [e.get("t", ""), e.get("text", "")]

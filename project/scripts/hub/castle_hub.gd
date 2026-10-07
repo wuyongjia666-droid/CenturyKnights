@@ -133,6 +133,14 @@ func _build() -> void:
 	ch5_b.disabled = not GameState.flag("chapter4_done")
 	ch5_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter5.tscn"))
 	row.add_child(ch5_b)
+	var ch6_b = UIKit.make_accent_button("第六章·托孤", 160)
+	ch6_b.disabled = not GameState.flag("chapter5_done")
+	ch6_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter6.tscn"))
+	row.add_child(ch6_b)
+	var ch7_b = UIKit.make_accent_button("第七章·子嗣", 160)
+	ch7_b.disabled = not GameState.flag("chapter6_done")
+	ch7_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/story/chapter7.tscn"))
+	row.add_child(ch7_b)
 	var menu_b = UIKit.make_button("主菜单", 100)
 	menu_b.pressed.connect(func():
 		GameState.save_game()
@@ -157,8 +165,12 @@ func _update_story_hint() -> void:
 		_story_hint.text = "可点「第四章·百年」挑战断字关。"
 	elif not GameState.flag("chapter5_done"):
 		_story_hint.text = "可点「第五章·烽烟」开启王朝级战役；先升战技树二阶。"
+	elif not GameState.flag("chapter6_done"):
+		_story_hint.text = "可点「第六章·托孤」签署托孤之约。"
+	elif not GameState.flag("chapter7_done"):
+		_story_hint.text = "可点「第七章·子嗣」打响正名战。"
 	else:
-		_story_hint.text = "王朝烽烟暂缓。自由经营、战技树、联姻传代皆可。"
+		_story_hint.text = "主线暂缓。自由经营、战技树、联姻传代皆可。"
 
 func panel_button_labels() -> Array:
 	var out: Array = []

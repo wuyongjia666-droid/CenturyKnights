@@ -10,7 +10,7 @@ var _banner: TextureRect
 
 func _ready() -> void:
 	_build(); UIFX.fade_in(self, 0.4); Music.play_hub()
-	_load_beat(GameState.chapter5_beat if GameState.chapter5_beat != "" else "5.0")
+	_load_beat(GameState.chapter7_beat if GameState.chapter7_beat != "" else "7.0")
 
 func _build() -> void:
 	UIKit.make_screen_bg(self)
@@ -32,11 +32,11 @@ func _build() -> void:
 
 func _load_beat(beat_id: String) -> void:
 	_beat = {}
-	for b in GameState.data_chapter5.get("beats", []):
+	for b in GameState.data_chapter7.get("beats", []):
 		if b.get("id") == beat_id: _beat = b; break
 	if _beat.is_empty(): return
-	GameState.chapter5_beat = beat_id; GameState.mark_dirty(); _line_idx = 0
-	_title.text = "%s · %s" % [GameState.data_chapter5.get("title", ""), _beat.get("title", "")]
+	GameState.chapter7_beat = beat_id; GameState.mark_dirty(); _line_idx = 0
+	_title.text = "%s · %s" % [GameState.data_chapter7.get("title", ""), _beat.get("title", "")]
 	_banner.texture = UnitArt.banner(70, 100, true); _show_line(); _refresh_actions()
 
 func _show_line() -> void:
@@ -55,29 +55,20 @@ func _refresh_actions() -> void:
 		var nxt = UIKit.make_accent_button("继续 ▶", 220)
 		nxt.pressed.connect(func(): _line_idx += 1; _show_line(); _refresh_actions()); _actions.add_child(nxt); return
 	match str(_beat.get("id", "")):
-		"5.0":
-			_add("前往河湾集结", func(): _goto_next())
+		"7.0":
+			_add("前往正名旷野", func(): _goto_next())
 			_add("先打开战技树", func(): get_tree().change_scene_to_file("res://scenes/hub/skill_tree.tscn"))
-		"5.1":
-			if GameState.flag("ch5_river_done"): _add("听夜宴杀机", func(): _goto_next())
-			else: _add("出战：河湾集结", func(): _battle("ch5_river"))
-		"5.2":
-			if GameState.flag("ch5_feast_done"): _add("听断桥守夜", func(): _goto_next())
-			else: _add("出战：夜宴伏林", func(): _battle("ch5_feast"))
-		"5.25":
-			if GameState.flag("ch5_bridge_done"): _add("听烽烟未尽", func(): _goto_next())
-			else: _add("出战：断桥守夜", func(): _battle("ch5_bridge"))
-		"5.3":
-			_add("完成第五章并回堡", func():
-				GameState.set_flag("chapter5_done"); GameState.silver += 180; GameState.add_skill_point(2)
-				GameState.add_rep("ashland", 18); GameState.add_rep("riverland", 12); GameState.save_game()
+		"7.1":
+			if GameState.flag("ch7_field_done"): _add("听暂缓", func(): _goto_next())
+			else: _add("出战：正名旷野", func(): _battle("ch7_field"))
+		"7.2":
+			_add("完成第七章并回堡", func():
+				GameState.set_flag("chapter7_done"); GameState.silver += 160; GameState.add_skill_point(2)
+				GameState.add_rep("ashland", 16); GameState.save_game()
 				get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
-			_add("踏上第六章·托孤之约", func():
-				GameState.set_flag("chapter5_done"); GameState.add_skill_point(2)
-				GameState.chapter6_beat = "6.0"
-				get_tree().change_scene_to_file("res://scenes/story/chapter6.tscn"))
 		_:
 			_add("继续", func(): _goto_next())
+
 
 func _add(text: String, cb: Callable) -> void:
 	var b = UIKit.make_accent_button(text, 460); b.pressed.connect(cb); _actions.add_child(b)
@@ -86,6 +77,6 @@ func _goto_next() -> void:
 	if n == null: get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"); return
 	_load_beat(str(n))
 func _battle(map_id: String) -> void:
-	GameState.set_meta("battle_return", "res://scenes/story/chapter5.tscn")
+	GameState.set_meta("battle_return", "res://scenes/story/chapter7.tscn")
 	GameState.set_meta("battle_map", map_id)
 	get_tree().change_scene_to_file("res://scenes/battle/battle.tscn")

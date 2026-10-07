@@ -442,6 +442,22 @@ func _draw_map() -> void:
 		map_draw.draw_rect(Rect2(bar_pos, Vector2(bar_w, 5)), Color(0.1, 0.1, 0.12, 0.85))
 		var hp_col = Color(0.35, 0.75, 0.45) if u.team == "player" else Color(0.85, 0.35, 0.30)
 		map_draw.draw_rect(Rect2(bar_pos, Vector2(bar_w * hp_ratio, 5)), hp_col)
+		# CD meters (player skills on cooldown)
+		if u.team == "player" and u.char.skill_cd:
+			var cds = []
+			for sid in u.char.skills:
+				var cdv = int(u.char.skill_cd.get(sid, 0))
+				if cdv > 0:
+					cds.append(cdv)
+			if cds:
+				var cd_y = bar_pos.y + 6
+				var slot = bar_w / float(maxi(1, cds.size()))
+				for ci in cds.size():
+					var max_cd = 3.0
+					var ratio = clampf(float(cds[ci]) / max_cd, 0.15, 1.0)
+					var sx = bar_pos.x + ci * slot
+					map_draw.draw_rect(Rect2(Vector2(sx, cd_y), Vector2(slot - 1, 3)), Color(0.12, 0.12, 0.16, 0.9))
+					map_draw.draw_rect(Rect2(Vector2(sx, cd_y), Vector2((slot - 1) * ratio, 3)), Color(0.55, 0.75, 0.95, 0.95))
 		# 名称短签
 		var nm = str(u.char.name)
 		if nm.length() > 4:
@@ -911,6 +927,14 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch5_feast_done")
 	elif map_id == "ch5_bridge":
 		GameState.set_flag("ch5_bridge_done")
+	elif map_id == "ch6_archive":
+		GameState.set_flag("ch6_archive_done")
+	elif map_id == "ch6_redoubt":
+		GameState.set_flag("ch6_redoubt_done")
+	elif map_id == "ch6_bloodseal":
+		GameState.set_flag("ch6_bloodseal_done")
+	elif map_id == "ch7_field":
+		GameState.set_flag("ch7_field_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")

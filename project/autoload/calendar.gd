@@ -90,7 +90,10 @@ func _apply_month() -> Array:
 				c.in_roster = false
 				evs.append({"type": "death", "text": "%s 辞世，入族谱碑" % c.name, "cid": c.id})
 			if c.is_child and c.age >= ADULT_AGE:
-				evs.append({"type": "adult", "text": "%s 已达授旗年龄" % c.name, "cid": c.id})
+				var am = "%s 已达授旗年龄——可入花名册授旗；陆桥传『灰旗有嗣』。" % c.name
+				evs.append({"type": "adult", "text": am, "cid": c.id})
+				GameState.add_lineage_event(am)
+				GameState.add_skill_point(1)
 	# 月结粮饷
 	var pay = GameState.apply_monthly_upkeep()
 	evs.append({"type": "payroll", "text": pay})
@@ -98,6 +101,21 @@ func _apply_month() -> Array:
 		festival.emit("春令节")
 		evs.append({"type": "festival", "text": "春令节到来"})
 		GameState.refresh_marriage_candidates()
+		# deeper lineage: spring matchmaking gossip + spouse affinity
+		var leader = GameState.get_leader()
+		if leader and leader.spouse_id != "":
+			var sp = GameState.characters.get(leader.spouse_id)
+			if sp:
+				GameState.add_rep("ashland", 1)
+				var msg = "春令联姻廷议：%s 与 %s 的双姓席被记入『可托孤』旁注。" % [leader.name, sp.name]
+				evs.append({"type": "lineage_banquet", "text": msg})
+				GameState.add_lineage_event(msg)
+		for c in GameState.characters.values():
+			if c.is_child and c.alive and c.age >= 5 and c.age < ADULT_AGE and c.age % 5 == 0:
+				var m2 = "族谱评议：%s（%d岁）血胤条被旅馆抄手临摹——护印压力上升。" % [c.name, c.age]
+				evs.append({"type": "lineage_scrutiny", "text": m2, "cid": c.id})
+				GameState.add_lineage_event(m2)
+				GameState.add_rep("riverland", 1)
 	if month == HARVEST_MONTH:
 		festival.emit("丰收")
 		var h = GameState.apply_harvest()

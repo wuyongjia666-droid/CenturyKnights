@@ -137,7 +137,10 @@ func _do_marry() -> void:
 	if r.get("ok"):
 		GameState.save_game()
 		_msg.text += "　妊娠将在岁月推进后分娩。双姓共席，旗又升高一寸。\n族谱新页将写上双方血胤；陆桥会传『灰旗有家，可托孤』。"
+		GameState.add_lineage_event("婚宴：%s 与 %s 成礼，子嗣期望已立。" % [GameState.get_leader().name if GameState.get_leader() else "团长", _selected.name])
+		GameState.add_rep("ashland", 2)
 		Sfx.confirm()
+		Sfx.lineage_chime()
 
 func _back() -> void:
 	if str(GameState.chapter0_beat) in ["0.4", "0.45", "0.5"] and not GameState.flag("chapter0_done"):

@@ -20,12 +20,15 @@ var data_chapter3: Dictionary = {}
 var data_chapter4: Dictionary = {}
 var data_chapter5: Dictionary = {}
 var data_chapter6: Dictionary = {}
+var data_chapter7: Dictionary = {}
 var data_skills: Dictionary = {}
 var chapter1_beat: String = "1.0"
 var chapter2_beat: String = "2.0"
 var chapter3_beat: String = "3.0"
 var chapter4_beat: String = "4.0"
 var chapter5_beat: String = "5.0"
+var chapter6_beat: String = "6.0"
+var chapter7_beat: String = "7.0"
 var skill_points: int = 0
 
 # 游戏状态
@@ -55,6 +58,7 @@ var shrine_level: int = 1
 var deploy_ids: Array = []
 var dirty: bool = false
 var dynasty_journal: String = ""
+var lineage_log: Array = []  # deeper marriage/lineage event strings
 
 const SAVE_PATH := "user://century_knights_save.json"
 const REP_TIERS := [
@@ -84,6 +88,7 @@ func _load_data() -> void:
 	data_chapter4 = _read_json("res://data/chapter4.json")
 	data_chapter5 = _read_json("res://data/chapter5.json")
 	data_chapter6 = _read_json("res://data/chapter6.json")
+	data_chapter7 = _read_json("res://data/chapter7.json")
 	data_skills = _read_json("res://data/skills.json")
 
 func _read_json(path: String) -> Dictionary:
@@ -173,10 +178,13 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	chapter3_beat = "3.0"
 	chapter4_beat = "4.0"
 	chapter5_beat = "5.0"
+	chapter6_beat = "6.0"
+	chapter7_beat = "7.0"
 	skill_points = 1
 	chapter0_flags = {}
 	event_log.clear()
 	dynasty_journal = ""
+	lineage_log.clear()
 	reputation = {"ashland": 0, "riverland": 0}
 	surname = leader_surname
 	crest_color = color
@@ -516,6 +524,12 @@ func unlock_skill(c: CKCharacter, sid: String) -> Dictionary:
 	mark_dirty()
 	return {"ok": true, "msg": "解锁成功：" + get_skill(sid).get("name", sid)}
 
+func add_lineage_event(text: String) -> void:
+	lineage_log.append({"t": Calendar.label() if Calendar else "", "text": text})
+	if lineage_log.size() > 40:
+		lineage_log.pop_front()
+	log_event(text)
+
 func add_skill_point(n: int = 1) -> void:
 	skill_points += n
 	mark_dirty()
@@ -557,12 +571,15 @@ func save_game() -> bool:
 		"chapter3_beat": chapter3_beat,
 		"chapter4_beat": chapter4_beat,
 		"chapter5_beat": chapter5_beat,
+		"chapter6_beat": chapter6_beat,
+		"chapter7_beat": chapter7_beat,
 		"skill_points": skill_points,
 		"chapter0_flags": chapter0_flags,
 		"reputation": reputation,
 		"settings": settings,
 		"deploy_ids": deploy_ids,
 		"dynasty_journal": dynasty_journal,
+		"lineage_log": lineage_log.duplicate(true),
 		"event_log": event_log,
 		"shrine_level": shrine_level,
 		"characters": {},
@@ -607,12 +624,15 @@ func load_game() -> bool:
 	chapter3_beat = str(data.get("chapter3_beat", "3.0"))
 	chapter4_beat = str(data.get("chapter4_beat", "4.0"))
 	chapter5_beat = str(data.get("chapter5_beat", "5.0"))
+	chapter6_beat = str(data.get("chapter6_beat", "6.0"))
+	chapter7_beat = str(data.get("chapter7_beat", "7.0"))
 	skill_points = int(data.get("skill_points", 0))
 	chapter0_flags = data.get("chapter0_flags", {})
 	reputation = data.get("reputation", {"ashland": 0, "riverland": 0})
 	settings = data.get("settings", settings)
 	deploy_ids = data.get("deploy_ids", [])
 	dynasty_journal = str(data.get("dynasty_journal", ""))
+	lineage_log = data.get("lineage_log", []).duplicate(true)
 	event_log = data.get("event_log", [])
 	shrine_level = int(data.get("shrine_level", 1))
 	quests = data.get("quests", quests)
