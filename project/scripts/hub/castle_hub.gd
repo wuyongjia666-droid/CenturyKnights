@@ -364,8 +364,16 @@ func _update_story_hint() -> void:
 		_story_hint.text = "可继续第一百零四章·鞍房。"
 	elif not GameState.flag("chapter105_done"):
 		_story_hint.text = "可继续第一百零五章·十六卷席终。"
+	elif not GameState.flag("chapter106_done"):
+		_story_hint.text = "第十七卷·酒坊：点「继续主线」或卷十七选第一百零六章·曲房。"
+	elif not GameState.flag("chapter107_done"):
+		_story_hint.text = "可继续第一百零七章·糟坊。"
+	elif not GameState.flag("chapter108_done"):
+		_story_hint.text = "可继续第一百零八章·酒印（十七卷中段）。"
+	elif GameState.flag("volume17_mid_done"):
+		_story_hint.text = "十七卷中段已执。可继续后半或经营。"
 	elif GameState.flag("volume16_done"):
-		_story_hint.text = "十六卷已执。自由经营或等候第十七卷。"
+		_story_hint.text = "十六卷已执。可继续第十七卷或经营。"
 	elif GameState.flag("volume16_mid_done"):
 		_story_hint.text = "十六卷中段已执。可继续后半或经营。"
 	elif GameState.flag("volume15_done"):
@@ -535,10 +543,13 @@ func _chapter_catalog() -> Array:
 		["第一百零三章·马市", "res://scenes/story/chapter103.tscn", "chapter102_done", 16],
 		["第一百零四章·鞍房", "res://scenes/story/chapter104.tscn", "chapter103_done", 16],
 		["第一百零五章·席终", "res://scenes/story/chapter105.tscn", "chapter104_done", 16],
+		["第一百零六章·曲房", "res://scenes/story/chapter106.tscn", "chapter105_done", 17],
+		["第一百零七章·糟坊", "res://scenes/story/chapter107.tscn", "chapter106_done", 17],
+		["第一百零八章·酒印", "res://scenes/story/chapter108.tscn", "chapter107_done", 17],
 	]
 
 func _volume_labels() -> Array:
-	return ["卷零", "卷一", "卷二", "卷三", "卷四", "卷五", "卷六", "卷七", "卷八", "卷九", "卷十", "卷十一", "卷十二", "卷十三", "卷十四", "卷十五", "卷十六"]
+	return ["卷零", "卷一", "卷二", "卷三", "卷四", "卷五", "卷六", "卷七", "卷八", "卷九", "卷十", "卷十一", "卷十二", "卷十三", "卷十四", "卷十五", "卷十六", "卷十七"]
 
 func _volume_unlocked(vol: int) -> bool:
 	# a volume is unlocked if any chapter in it is unlocked
