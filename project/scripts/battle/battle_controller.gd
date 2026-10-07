@@ -98,6 +98,26 @@ const PAPER_BANTER_START := [
 	"【纸坊】春令使者：这一仗验的是姓，不是墨。",
 	"【纸坊】系统：纸帘已升。护纸优先于斩杀。",
 	"【纸坊】管事：禁火。一星火，满坊尽废。",
+	"【纸坊】老旗手：诏板未立，旗也不算立。",
+]
+const COPPER_BANTER_TURN := [
+	"【铜市】管事：护炉！别让他们泼灭火。",
+	"【铜市】老旗手：炉票还在，旗就不能倒。",
+	"【铜市】斥候：矿道有伏弓气味——压低身子。",
+	"【铜市】苇原·灯影：火星一乱，就是盗铜开手。",
+	"【铜市】管事：顺火推进。逆火灼己。",
+]
+const COPPER_BANTER_KILL := [
+	"【铜市】铜市悍匪：……炉……不该熄……",
+	"【铜市】矿道伏弓：烙铁……不在你们手里……",
+	"【铜市】老旗手：一匪倒，铜路清一寸。",
+	"【铜市】管事：别追太深——炉还在中间。",
+	"【铜市】铜市匪首：假锭……铸不出真甲……",
+]
+const COPPER_BANTER_START := [
+	"【铜市】春令使者：这一仗验的是姓，不是火。",
+	"【铜市】系统：铜炉已升。护火优先于斩杀。",
+	"【铜市】管事：护甲未成，先别浪战。",
 ]
 const ESCORT_BANTER_START := [
 	"【镖行】春令使者：这一仗验的是姓，不是刀。",
@@ -115,7 +135,7 @@ func _is_harbor_map() -> bool:
 
 func _theme_banter(kind: String) -> void:
 	var theme = _map_theme()
-	if theme != "escort" and theme != "harbor" and theme != "paper":
+	if theme != "escort" and theme != "harbor" and theme != "paper" and theme != "copper":
 		return
 	var key = theme + kind + str(_banter_idx if kind == "turn" else _banter_kill)
 	if _banter_played.has(key):
@@ -125,8 +145,10 @@ func _theme_banter(kind: String) -> void:
 		pool = ESCORT_BANTER_TURN if kind == "turn" else (ESCORT_BANTER_KILL if kind == "kill" else ESCORT_BANTER_START)
 	elif theme == "harbor":
 		pool = HARBOR_BANTER_TURN if kind == "turn" else (HARBOR_BANTER_KILL if kind == "kill" else HARBOR_BANTER_START)
-	else:
+	elif theme == "paper":
 		pool = PAPER_BANTER_TURN if kind == "turn" else (PAPER_BANTER_KILL if kind == "kill" else PAPER_BANTER_START)
+	else:
+		pool = COPPER_BANTER_TURN if kind == "turn" else (COPPER_BANTER_KILL if kind == "kill" else COPPER_BANTER_START)
 	if pool.is_empty():
 		return
 	var line = ""
@@ -140,16 +162,20 @@ func _theme_banter(kind: String) -> void:
 			Sfx.escort_whip()
 		elif theme == "harbor":
 			Sfx.wave_splash()
-		else:
+		elif theme == "paper":
 			Sfx.paper_tear()
+		else:
+			Sfx.anvil_clang()
 	else:
 		line = str(pool[0] if _banter_idx == 0 else pool[mini(1, pool.size()-1)])
 		if theme == "escort":
 			Sfx.escort_horn()
 		elif theme == "harbor":
 			Sfx.wave_splash()
-		else:
+		elif theme == "paper":
 			Sfx.paper_tear()
+		else:
+			Sfx.anvil_clang()
 	_banter_played[key] = true
 	_log(line)
 
@@ -1548,6 +1574,26 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch125_dry_done")
 	elif map_id == "ch126_seal":
 		GameState.set_flag("ch126_seal_done")
+	elif map_id == "ch127_press":
+		GameState.set_flag("ch127_press_done")
+	elif map_id == "ch127_ink":
+		GameState.set_flag("ch127_ink_done")
+	elif map_id == "ch128_archive":
+		GameState.set_flag("ch128_archive_done")
+	elif map_id == "ch128_edict":
+		GameState.set_flag("ch128_edict_done")
+	elif map_id == "ch129_finale":
+		GameState.set_flag("ch129_finale_done")
+	elif map_id == "ch130_forge":
+		GameState.set_flag("ch130_forge_done")
+	elif map_id == "ch130_ore":
+		GameState.set_flag("ch130_ore_done")
+	elif map_id == "ch131_anvil":
+		GameState.set_flag("ch131_anvil_done")
+	elif map_id == "ch131_mold":
+		GameState.set_flag("ch131_mold_done")
+	elif map_id == "ch132_seal":
+		GameState.set_flag("ch132_seal_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")
