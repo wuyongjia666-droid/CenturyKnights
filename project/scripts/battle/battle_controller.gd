@@ -34,6 +34,8 @@ var _sel_pulse: float = 0.0
 var _btn_atk: Button
 var _btn_wait: Button
 var _btn_end: Button
+var _slash_fx: Array = []  # {pos, age, frame}
+var _shake: float = 0.0
 
 func _ready() -> void:
 	rng.randomize()
@@ -58,6 +60,17 @@ func _process(delta: float) -> void:
 		if fx.age < 1.1:
 			alive_fx.append(fx)
 	_dmg_fx = alive_fx
+	var alive_s: Array = []
+	for s in _slash_fx:
+		s.age += delta
+		if s.age < 0.35:
+			alive_s.append(s)
+	_slash_fx = alive_s
+	if _shake > 0.0:
+		_shake = maxf(0.0, _shake - delta * 8.0)
+		position = Vector2(randf_range(-_shake, _shake), randf_range(-_shake, _shake))
+	else:
+		position = Vector2.ZERO
 	if overlay:
 		overlay.queue_redraw()
 	if map_draw and _sel_pulse:
@@ -322,6 +335,13 @@ func _draw_overlay() -> void:
 						var a = 0.45 if attack_mode else 0.25
 						overlay.draw_rect(r2, Color(0.95, 0.2, 0.2, a))
 						overlay.draw_rect(r2, Color(1.0, 0.4, 0.3, 0.8), false, 2.0)
+	# slash
+	for s in _slash_fx:
+		var fi = mini(3, int(s.age / 0.08))
+		var path = "res://assets/art/fx/slash_%d.png" % fi
+		if ResourceLoader.exists(path):
+			var tex = load(path)
+			overlay.draw_texture(tex, s.pos - Vector2(32, 32))
 	# 伤害飘字
 	for fx in _dmg_fx:
 		var a = clampf(1.0 - fx.age / 1.1, 0.0, 1.0)
@@ -467,6 +487,11 @@ func _spawn_dmg(cell: Vector2i, text: String, col: Color) -> void:
 	var center = ORIGIN + Vector2(cell) * CELL + Vector2(CELL / 2, CELL / 2)
 	_dmg_fx.append({"pos": center, "text": text, "age": 0.0, "col": col})
 
+func _spawn_slash(cell: Vector2i) -> void:
+	var center = ORIGIN + Vector2(cell) * CELL + Vector2(CELL / 2, CELL / 2)
+	_slash_fx.append({"pos": center, "age": 0.0})
+	_shake = 3.5
+
 func _do_attack(ai: int, di: int) -> void:
 	var atk = units[ai]
 	var def = units[di]
@@ -475,6 +500,7 @@ func _do_attack(ai: int, di: int) -> void:
 	var msg = "%s → %s：" % [atk.char.name, def.char.name]
 	if result.hit:
 		Sfx.hit()
+		_spawn_slash(def.pos)
 		msg += "命中 %d%s" % [result.damage, "（暴击）" if result.crit else ""]
 		var col = Color(1.0, 0.85, 0.3) if result.crit else Color(1.0, 0.45, 0.35)
 		_spawn_dmg(def.pos, ("暴%d" % result.damage) if result.crit else ("-%d" % result.damage), col)
@@ -677,6 +703,8 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch1_ford_done")
 	elif map_id == "ch1_fog":
 		GameState.set_flag("ch1_fog_done")
+	elif map_id == "ch2_night":
+		GameState.set_flag("ch2_night_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")

@@ -15,7 +15,9 @@ var data_names: Dictionary = {}
 var data_appearance: Dictionary = {}
 var data_maps: Dictionary = {}
 var data_chapter1: Dictionary = {}
+var data_chapter2: Dictionary = {}
 var chapter1_beat: String = "1.0"
+var chapter2_beat: String = "2.0"
 
 # 游戏状态
 var started: bool = false
@@ -68,6 +70,7 @@ func _load_data() -> void:
 	data_appearance = _read_json("res://data/appearance.json")
 	data_maps = _read_json("res://data/maps.json")
 	data_chapter1 = _read_json("res://data/chapter1.json")
+	data_chapter2 = _read_json("res://data/chapter2.json")
 
 func _read_json(path: String) -> Dictionary:
 	var f = FileAccess.open(path, FileAccess.READ)
@@ -152,6 +155,7 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	characters.clear()
 	chapter0_beat = "0.0"
 	chapter1_beat = "1.0"
+	chapter2_beat = "2.0"
 	chapter0_flags = {}
 	event_log.clear()
 	dynasty_journal = ""
@@ -430,6 +434,7 @@ func save_game() -> bool:
 		"year": Calendar.year, "month": Calendar.month,
 		"chapter0_beat": chapter0_beat,
 		"chapter1_beat": chapter1_beat,
+		"chapter2_beat": chapter2_beat,
 		"chapter0_flags": chapter0_flags,
 		"reputation": reputation,
 		"settings": settings,
@@ -475,6 +480,7 @@ func load_game() -> bool:
 	Calendar.month = int(data.get("month", 1))
 	chapter0_beat = str(data.get("chapter0_beat", "0.0"))
 	chapter1_beat = str(data.get("chapter1_beat", "1.0"))
+	chapter2_beat = str(data.get("chapter2_beat", "2.0"))
 	chapter0_flags = data.get("chapter0_flags", {})
 	reputation = data.get("reputation", {"ashland": 0, "riverland": 0})
 	settings = data.get("settings", settings)

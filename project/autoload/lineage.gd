@@ -116,6 +116,7 @@ func birth_child(mother: CKCharacter) -> CKCharacter:
 	if father:
 		father.children_ids.append(child.id)
 	GameState.chapter0_flags["child_born"] = true
+	GameState.log_event("初啼入谱：%s。血胤 %s。族谱新页已开，旅馆闲话会传『灰旗有后』。" % [child.name, child.bloodline_display()])
 	GameState.mark_dirty()
 	return child
 

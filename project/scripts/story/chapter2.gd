@@ -6,14 +6,13 @@ var _speaker: Label
 var _body: RichTextLabel
 var _actions: VBoxContainer
 var _title: Label
-var _hint: Label
 var _portrait: TextureRect
 var _banner: TextureRect
 
 func _ready() -> void:
 	_build()
 	UIFX.fade_in(self, 0.4)
-	_load_beat(GameState.chapter1_beat if GameState.chapter1_beat != "" else "1.0")
+	_load_beat(GameState.chapter2_beat if GameState.chapter2_beat != "" else "2.0")
 
 func _build() -> void:
 	UIKit.make_screen_bg(self)
@@ -51,9 +50,6 @@ func _build() -> void:
 	_actions.position = Vector2(48, 440)
 	_actions.add_theme_constant_override("separation", 10)
 	add_child(_actions)
-	_hint = UIKit.make_dim_label("")
-	_hint.position = Vector2(48, 660)
-	add_child(_hint)
 	var hub = UIKit.make_button("返回灰旗堡", 140)
 	hub.position = Vector2(1000, 36)
 	hub.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
@@ -61,17 +57,16 @@ func _build() -> void:
 
 func _load_beat(beat_id: String) -> void:
 	_beat = {}
-	for b in GameState.data_chapter1.get("beats", []):
+	for b in GameState.data_chapter2.get("beats", []):
 		if b.get("id") == beat_id:
 			_beat = b
 			break
 	if _beat.is_empty():
-		_hint.text = "第一章结束"
 		return
-	GameState.chapter1_beat = beat_id
+	GameState.chapter2_beat = beat_id
 	GameState.mark_dirty()
 	_line_idx = 0
-	_title.text = "%s · %s" % [GameState.data_chapter1.get("title", ""), _beat.get("title", "")]
+	_title.text = "%s · %s" % [GameState.data_chapter2.get("title", ""), _beat.get("title", "")]
 	_banner.texture = UnitArt.banner(70, 100, true)
 	_show_line()
 	_refresh_actions()
@@ -80,7 +75,7 @@ func _show_line() -> void:
 	var lines: Array = _beat.get("lines", [])
 	if _line_idx >= lines.size():
 		_speaker.text = ""
-		_body.text = "（本节对白结束——请选择下方行动）"
+		_body.text = "（本节对白结束）"
 		return
 	var line = lines[_line_idx]
 	_speaker.text = str(line.get("speaker", ""))
@@ -104,40 +99,26 @@ func _refresh_actions() -> void:
 		return
 	var bid = str(_beat.get("id", ""))
 	match bid:
-		"1.0":
-			_add("进入石垒坡来信", func(): _goto_next())
-		"1.1":
-			if GameState.flag("ch1_hill_done"):
-				_add("前往断潮渡", func(): _goto_next())
+		"2.0":
+			_add("前往夜袭警报", func(): _goto_next())
+			_add("先打开联姻廷核对子嗣期望", func(): get_tree().change_scene_to_file("res://scenes/hub/marriage.tscn"))
+		"2.1":
+			if GameState.flag("ch2_night_done"):
+				_add("听姓氏的重量", func(): _goto_next())
 			else:
-				_add("出战：石垒坡", func(): _battle("ch1_hill"))
-				_add("稍后从委任榜出战", func(): get_tree().change_scene_to_file("res://scenes/hub/quests.tscn"))
-		"1.2":
-			if GameState.flag("ch1_ford_done"):
-				_add("前往雾谷", func(): _goto_next())
-			else:
-				_add("出战：断潮渡", func(): _battle("ch1_ford"))
-		"1.3":
-			if GameState.flag("ch1_fog_done"):
-				_add("生成陆桥简报", func(): _goto_next())
-			else:
-				_add("出战：雾谷夜袭", func(): _battle("ch1_fog"))
-		"1.4":
-			_add("标记第一章完成并回堡", func():
-				GameState.set_flag("chapter1_done")
-				GameState.silver += 80
-				GameState.add_rep("ashland", 15)
-				GameState.add_rep("riverland", 10)
-				GameState.log_event("陆桥简报：三处烽火暂熄")
+				_add("出战：堡外夜袭", func():
+					GameState.set_meta("battle_return", "res://scenes/story/chapter2.tscn")
+					GameState.set_meta("battle_map", "ch2_night")
+					get_tree().change_scene_to_file("res://scenes/battle/battle.tscn")
+				)
+		"2.2":
+			_add("完成第二章并回堡", func():
+				GameState.set_flag("chapter2_done")
+				GameState.silver += 100
+				GameState.add_rep("ashland", 10)
 				GameState.save_game()
 				get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
 			)
-			_add("踏上第二章·姓氏的重量", func():
-				GameState.set_flag("chapter1_done")
-				GameState.chapter2_beat = "2.0"
-				get_tree().change_scene_to_file("res://scenes/story/chapter2.tscn")
-			)
-			_add("打开联姻廷（叙事）", func(): get_tree().change_scene_to_file("res://scenes/hub/marriage.tscn"))
 		_:
 			_add("继续", func(): _goto_next())
 
@@ -152,8 +133,3 @@ func _goto_next() -> void:
 		get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
 		return
 	_load_beat(str(n))
-
-func _battle(map_id: String) -> void:
-	GameState.set_meta("battle_return", "res://scenes/story/chapter1.tscn")
-	GameState.set_meta("battle_map", map_id)
-	get_tree().change_scene_to_file("res://scenes/battle/battle.tscn")
