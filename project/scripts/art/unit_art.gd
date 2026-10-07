@@ -65,6 +65,12 @@ static func _portrait_key(c: CKCharacter) -> String:
 		return "res://assets/art/portraits/harbor_archer.png"
 	if str(c.name).find("渔港水匪") >= 0:
 		return "res://assets/art/portraits/harbor_thug.png"
+	if str(c.name).find("染坊匪首") >= 0:
+		return "res://assets/art/portraits/dye_boss.png"
+	if str(c.name).find("染缸伏弓") >= 0:
+		return "res://assets/art/portraits/dye_archer.png"
+	if str(c.name).find("染坊悍匪") >= 0:
+		return "res://assets/art/portraits/dye_thug.png"
 	if str(c.name).find("盐滩匪首") >= 0:
 		return "res://assets/art/portraits/salt_boss.png"
 	if str(c.name).find("卤渠伏弓") >= 0:
@@ -191,6 +197,12 @@ static func _token_key(c: CKCharacter, team: String, frame: int) -> String:
 		return "res://assets/art/tokens/harbor_archer_enemy_f%d.png" % frame
 	if str(c.name).find("渔港水匪") >= 0:
 		return "res://assets/art/tokens/harbor_thug_enemy_f%d.png" % frame
+	if str(c.name).find("染坊匪首") >= 0:
+		return "res://assets/art/tokens/dye_boss_enemy_f%d.png" % frame
+	if str(c.name).find("染缸伏弓") >= 0:
+		return "res://assets/art/tokens/dye_archer_enemy_f%d.png" % frame
+	if str(c.name).find("染坊悍匪") >= 0:
+		return "res://assets/art/tokens/dye_thug_enemy_f%d.png" % frame
 	if str(c.name).find("盐滩匪首") >= 0:
 		return "res://assets/art/tokens/salt_boss_enemy_f%d.png" % frame
 	if str(c.name).find("卤渠伏弓") >= 0:
