@@ -96,123 +96,123 @@ static func _portrait_key(c: CKCharacter) -> String:
 	if c.name.find("民兵·乙") >= 0:
 		return "res://assets/art/portraits/militia_b.png"
 	if str(c.name).find("镖路匪首") >= 0:
-		return "res://assets/art/portraits/escort_boss.png"
+		return _boss_portrait("escort")
 	if str(c.name).find("港匪头目") >= 0:
-		return "res://assets/art/portraits/harbor_boss.png"
+		return _boss_portrait("harbor")
 	if str(c.name).find("礁口伏弓") >= 0:
 		return "res://assets/art/portraits/harbor_archer.png"
 	if str(c.name).find("渔港水匪") >= 0:
 		return "res://assets/art/portraits/harbor_thug.png"
 	if str(c.name).find("瓷市匪首") >= 0:
-		return "res://assets/art/portraits/porcelain_boss.png"
+		return _boss_portrait("porcelain")
 	if str(c.name).find("窑廊伏弓") >= 0:
 		return "res://assets/art/portraits/porcelain_archer.png"
 	if str(c.name).find("瓷市悍匪") >= 0:
 		return "res://assets/art/portraits/porcelain_thug.png"
 	if str(c.name).find("潮滩匪首") >= 0:
-		return "res://assets/art/portraits/tide_boss.png"
+		return _boss_portrait("tide")
 	if str(c.name).find("潮渠伏弓") >= 0:
 		return "res://assets/art/portraits/tide_archer.png"
 	if str(c.name).find("潮滩悍匪") >= 0:
 		return "res://assets/art/portraits/tide_thug.png"
 	if str(c.name).find("香市匪首") >= 0:
-		return "res://assets/art/portraits/incense_boss.png"
+		return _boss_portrait("incense")
 	if str(c.name).find("香堂伏弓") >= 0:
 		return "res://assets/art/portraits/incense_archer.png"
 	if str(c.name).find("香市悍匪") >= 0:
 		return "res://assets/art/portraits/incense_thug.png"
 	if str(c.name).find("鼓楼匪首") >= 0:
-		return "res://assets/art/portraits/drum_boss.png"
+		return _boss_portrait("drum")
 	if str(c.name).find("鼓廊伏弓") >= 0:
 		return "res://assets/art/portraits/drum_archer.png"
 	if str(c.name).find("鼓楼悍匪") >= 0:
 		return "res://assets/art/portraits/drum_thug.png"
 	if str(c.name).find("染坊匪首") >= 0:
-		return "res://assets/art/portraits/dye_boss.png"
+		return _boss_portrait("dye")
 	if str(c.name).find("染缸伏弓") >= 0:
 		return "res://assets/art/portraits/dye_archer.png"
 	if str(c.name).find("染坊悍匪") >= 0:
 		return "res://assets/art/portraits/dye_thug.png"
 	if str(c.name).find("盐滩匪首") >= 0:
-		return "res://assets/art/portraits/salt_boss.png"
+		return _boss_portrait("salt")
 	if str(c.name).find("卤渠伏弓") >= 0:
 		return "res://assets/art/portraits/salt_archer.png"
 	if str(c.name).find("盐滩悍匪") >= 0:
 		return "res://assets/art/portraits/salt_thug.png"
 	if str(c.name).find("影戏匪首") >= 0:
-		return "res://assets/art/portraits/shadow_boss.png"
+		return _boss_portrait("shadow")
 	if str(c.name).find("幕廊伏弓") >= 0:
 		return "res://assets/art/portraits/shadow_archer.png"
 	if str(c.name).find("影戏悍匪") >= 0:
 		return "res://assets/art/portraits/shadow_thug.png"
 	if str(c.name).find("笛楼匪首") >= 0:
-		return "res://assets/art/portraits/flute_boss.png"
+		return _boss_portrait("flute")
 	if str(c.name).find("音廊伏弓") >= 0:
 		return "res://assets/art/portraits/flute_archer.png"
 	if str(c.name).find("笛楼悍匪") >= 0:
 		return "res://assets/art/portraits/flute_thug.png"
 	if str(c.name).find("蜂场匪首") >= 0:
-		return "res://assets/art/portraits/hive_boss.png"
+		return _boss_portrait("hive")
 	if str(c.name).find("花陌伏弓") >= 0:
 		return "res://assets/art/portraits/hive_archer.png"
 	if str(c.name).find("蜂场悍匪") >= 0:
 		return "res://assets/art/portraits/hive_thug.png"
 	if str(c.name).find("砚坑匪首") >= 0:
-		return "res://assets/art/portraits/ink_boss.png"
+		return _boss_portrait("ink")
 	if str(c.name).find("墨池伏弓") >= 0:
 		return "res://assets/art/portraits/ink_archer.png"
 	if str(c.name).find("砚坑悍匪") >= 0:
 		return "res://assets/art/portraits/ink_thug.png"
 	if str(c.name).find("雨巷匪首") >= 0:
-		return "res://assets/art/portraits/rain_boss.png"
+		return _boss_portrait("rain")
 	if str(c.name).find("檐廊伏弓") >= 0:
 		return "res://assets/art/portraits/rain_archer.png"
 	if str(c.name).find("雨巷悍匪") >= 0:
 		return "res://assets/art/portraits/rain_thug.png"
 	if str(c.name).find("钟楼匪首") >= 0:
-		return "res://assets/art/portraits/bell_boss.png"
+		return _boss_portrait("bell")
 	if str(c.name).find("鼓廊伏弓") >= 0:
 		return "res://assets/art/portraits/bell_archer.png"
 	if str(c.name).find("钟楼悍匪") >= 0:
 		return "res://assets/art/portraits/bell_thug.png"
 	if str(c.name).find("驿道匪首") >= 0:
-		return "res://assets/art/portraits/relay_boss.png"
+		return _boss_portrait("relay")
 	if str(c.name).find("递路伏弓") >= 0:
 		return "res://assets/art/portraits/relay_archer.png"
 	if str(c.name).find("驿道悍匪") >= 0:
 		return "res://assets/art/portraits/relay_thug.png"
 	if str(c.name).find("竹海匪首") >= 0:
-		return "res://assets/art/portraits/bamboo_boss.png"
+		return _boss_portrait("bamboo")
 	if str(c.name).find("篁廊伏弓") >= 0:
 		return "res://assets/art/portraits/bamboo_archer.png"
 	if str(c.name).find("竹海悍匪") >= 0:
 		return "res://assets/art/portraits/bamboo_thug.png"
 	if str(c.name).find("雪栈匪首") >= 0:
-		return "res://assets/art/portraits/snow_boss.png"
+		return _boss_portrait("snow")
 	if str(c.name).find("冰廊伏弓") >= 0:
 		return "res://assets/art/portraits/snow_archer.png"
 	if str(c.name).find("雪栈悍匪") >= 0:
 		return "res://assets/art/portraits/snow_thug.png"
 	if str(c.name).find("粮仓匪首") >= 0:
-		return "res://assets/art/portraits/grain_boss.png"
+		return _boss_portrait("grain")
 	if str(c.name).find("碾坊伏弓") >= 0:
 		return "res://assets/art/portraits/grain_archer.png"
 	if str(c.name).find("粮仓悍匪") >= 0:
 		return "res://assets/art/portraits/grain_thug.png"
 	if str(c.name).find("灯市匪首") >= 0:
-		return "res://assets/art/portraits/lamp_boss.png"
+		return _boss_portrait("lamp")
 	if str(c.name).find("油库伏弓") >= 0:
 		return "res://assets/art/portraits/lamp_archer.png"
 	if str(c.name).find("灯市毛贼") >= 0:
 		return "res://assets/art/portraits/lamp_thug.png"
 	if str(c.name).find("铜市匪首") >= 0:
-		return "res://assets/art/portraits/copper_boss.png"
+		return _boss_portrait("copper")
 	if str(c.name).find("矿道伏弓") >= 0:
 		return "res://assets/art/portraits/copper_archer.png"
 	if str(c.name).find("铜市悍匪") >= 0:
 		return "res://assets/art/portraits/copper_thug.png"
 	if str(c.name).find("纸坊匪首") >= 0:
-		return "res://assets/art/portraits/paper_boss.png"
+		return _boss_portrait("paper")
 	if str(c.name).find("浆槽伏弓") >= 0:
 		return "res://assets/art/portraits/paper_archer.png"
 	if str(c.name).find("纸坊毛贼") >= 0:
@@ -254,12 +254,7 @@ static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
 	var ft = _try_load(face_p)
 	if ft != null:
 		return _fingerprint_portrait(ft, c)
-	# 回退旧四段键
-	var face_old = "res://assets/art/portraits/hireface_%s_%s_%s_%s.png" % [hair, eyes, g, scar]
-	ft = _try_load(face_old)
-	if ft != null:
-		return _fingerprint_portrait(ft, c)
-	# 角色 id 专属板（同型等位双胞胎）
+	# 角色 id 专属板（同型等位双胞胎 → 更满的个人脸）
 	var uid = _face_uid(c)
 	var uniq_p = "res://assets/art/portraits/hireuniq_%02d.png" % uid
 	var utex = _try_load(uniq_p)
@@ -527,15 +522,21 @@ static func _fill_rect(img: Image, r: Rect2i, col: Color) -> void:
 			img.set_pixel(x, y, col)
 
 
+static func _boss_portrait(key: String) -> String:
+	var fp = "res://assets/art/portraits/%s_boss_face_plate.png" % key
+	if ResourceLoader.exists(fp):
+		return fp
+	return "res://assets/art/portraits/%s_boss.png" % key
+
 static func _face_uid(c: CKCharacter) -> int:
 	var h = 0
 	for ch2 in str(c.id):
 		h = (h * 33 + ch2.unicode_at(0)) % 10007
-	return absi(h) % 64
+	return absi(h) % 128
 
 static func _fingerprint_portrait(tex: Texture2D, c: CKCharacter) -> Texture2D:
-	## 同型等位下按 id 做微差，避免双胞胎完全一致
-	var ck = "fp|" + str(c.id) + "|" + str(c.appearance.get("hair","")) + "|" + str(c.appearance.get("brow",""))
+	## 将等位脸与 id 专属 hireuniq 混合，并加痣/色偏，避免双胞胎
+	var ck = "fp2|" + str(c.id) + "|" + str(c.appearance.get("hair","")) + "|" + str(c.appearance.get("brow",""))
 	if _cache.has(ck):
 		return _cache[ck]
 	var img: Image = tex.get_image()
@@ -545,21 +546,41 @@ static func _fingerprint_portrait(tex: Texture2D, c: CKCharacter) -> Texture2D:
 	img = img.duplicate()
 	var w = img.get_width()
 	var h = img.get_height()
-	var seed = _face_uid(c)
-	# 微色偏
-	var shift = Color(1.0 + (seed % 5) * 0.01, 1.0 + ((seed / 3) % 4) * 0.008, 1.0 - (seed % 3) * 0.01, 1.0)
+	var uid = _face_uid(c)
+	var uniq_p = "res://assets/art/portraits/hireuniq_%02d.png" % uid
+	var mix = _try_load(uniq_p)
+	if mix != null:
+		var mimg: Image = mix.get_image()
+		if mimg != null:
+			if mimg.get_width() != w or mimg.get_height() != h:
+				mimg = mimg.duplicate()
+				mimg.resize(w, h, Image.INTERPOLATE_LANCZOS)
+			var blend = 0.28 + float(uid % 5) * 0.04  # 0.28–0.44
+			for y in range(h):
+				for x in range(w):
+					var a = img.get_pixel(x, y)
+					var b = mimg.get_pixel(x, y)
+					if a.a < 0.05:
+						continue
+					# 上半脸（五官）多混一点个人特征
+					var local = blend + (0.12 if y < int(h * 0.55) else 0.0)
+					img.set_pixel(x, y, a.lerp(b, clampf(local, 0.0, 0.55)))
+	# 色偏 + 双痣
+	var shift = Color(1.0 + (uid % 5) * 0.012, 1.0 + ((uid / 3) % 4) * 0.01, 1.0 - (uid % 3) * 0.012, 1.0)
 	for y in range(h):
 		for x in range(w):
 			var p = img.get_pixel(x, y)
 			if p.a < 0.05:
 				continue
 			img.set_pixel(x, y, Color(clampf(p.r * shift.r, 0, 1), clampf(p.g * shift.g, 0, 1), clampf(p.b * shift.b, 0, 1), p.a))
-	# 痣 / 高光点
-	var mx = int(w * (0.55 + (seed % 7) * 0.02))
-	var my = int(h * (0.42 + ((seed / 5) % 5) * 0.02))
-	if mx > 1 and my > 1 and mx < w - 1 and my < h - 1:
-		img.set_pixel(mx, my, Color(0.35, 0.22, 0.18, 0.85))
-		img.set_pixel(mx + 1, my, Color(0.35, 0.22, 0.18, 0.55))
+	var marks = [
+		Vector2i(int(w * (0.58 + (uid % 6) * 0.015)), int(h * (0.40 + ((uid / 4) % 5) * 0.015))),
+		Vector2i(int(w * (0.38 + ((uid / 2) % 5) * 0.012)), int(h * (0.48 + (uid % 4) * 0.012))),
+	]
+	for mpos in marks:
+		if mpos.x > 1 and mpos.y > 1 and mpos.x < w - 2 and mpos.y < h - 2:
+			img.set_pixel(mpos.x, mpos.y, Color(0.32, 0.20, 0.16, 0.9))
+			img.set_pixel(mpos.x + 1, mpos.y, Color(0.32, 0.20, 0.16, 0.55))
 	var out := ImageTexture.create_from_image(img)
 	_cache[ck] = out
 	return out

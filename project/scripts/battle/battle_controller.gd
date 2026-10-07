@@ -2176,9 +2176,16 @@ func _enemy_ai() -> void:
 		for pos in mv.keys():
 			var stand_tid = terrain[pos.y][pos.x]
 			var tinfo = BattleRules.terrain_info(stand_tid)
-			var stand_bonus = float(tinfo.get("def_bonus", 0)) * 2.4 + float(tinfo.get("avo_bonus", 0)) * 0.10
+			var stand_bonus = float(tinfo.get("def_bonus", 0)) * 2.6 + float(tinfo.get("avo_bonus", 0)) * 0.12
 			if stand_tid in ["fort", "forest", "hill"]:
-				stand_bonus += 1.6
+				stand_bonus += 2.0
+			# 占位卡住敌方 Cont：邻格有残血玩家则加分
+			for j2 in units.size():
+				var tj = units[j2]
+				if tj.team == "player" and tj.char.hp > 0 and _manhattan(pos, tj.pos) == 1:
+					if float(tj.char.hp) / float(maxi(1, tj.char.max_hp)) < 0.55:
+						stand_bonus += 2.4
+					break
 			# 脱离锁定惩罚：离开交战格更贵，AI 更不愿无意义挪动
 			if locked_self and pos != u.pos:
 				var still_eng = BattleRules.is_engaged(pos, foes_player)
