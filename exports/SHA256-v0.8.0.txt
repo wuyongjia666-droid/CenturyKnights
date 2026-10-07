@@ -1,0 +1,2 @@
+CenturyKnights.exe  807b86504a4fabcd43aafb81e89c8b112fb38e41f21a05500bad396a79a9fb0d
+CenturyKnights-windows-v0.8.0.zip  83d609142b64aa5d4b9b8cad56c5f2cafaaea457f8fbf17c0f191c2df158e501
