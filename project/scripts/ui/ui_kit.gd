@@ -37,19 +37,26 @@ static func make_accent_button(text: String, min_w: int = 160) -> Button:
 	return b
 
 static func _style_button(b: Button) -> void:
-	var n = _flat(PANEL, ACCENT_DIM, 8)
-	var h = _flat(PANEL_LIT, ACCENT, 8)
-	var p = _flat(PANEL.darkened(0.15), ACCENT.darkened(0.2), 8)
-	var d = _flat(PANEL.darkened(0.25), STONE, 8)
+	var n := StyleBoxFlat.new()
+	n.bg_color = Color(0.18, 0.20, 0.26, 0.95)
+	n.border_color = Color(0.55, 0.52, 0.42, 0.75)
+	n.set_border_width_all(2)
+	n.set_corner_radius_all(6)
+	n.content_margin_left = 12
+	n.content_margin_right = 12
+	n.content_margin_top = 8
+	n.content_margin_bottom = 8
+	var hov := n.duplicate()
+	hov.bg_color = Color(0.26, 0.28, 0.36, 0.98)
+	hov.border_color = Color(0.78, 0.68, 0.40, 0.9)
+	var pr := n.duplicate()
+	pr.bg_color = Color(0.12, 0.14, 0.18, 0.98)
 	b.add_theme_stylebox_override("normal", n)
-	b.add_theme_stylebox_override("hover", h)
-	b.add_theme_stylebox_override("pressed", p)
-	b.add_theme_stylebox_override("disabled", d)
-	b.add_theme_color_override("font_color", TEXT)
-	b.add_theme_color_override("font_hover_color", PARCHMENT)
-	b.add_theme_color_override("font_pressed_color", ACCENT)
-	b.add_theme_color_override("font_disabled_color", TEXT_DIM)
-	b.add_theme_font_size_override("font_size", 15)
+	b.add_theme_stylebox_override("hover", hov)
+	b.add_theme_stylebox_override("pressed", pr)
+	b.add_theme_color_override("font_color", Color(0.92, 0.90, 0.84))
+	b.add_theme_color_override("font_hover_color", Color(1.0, 0.95, 0.75))
+
 
 static func _flat(bg: Color, border: Color, radius: int) -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
@@ -89,19 +96,19 @@ static func make_panel() -> PanelContainer:
 	return p
 
 static func parchment_style() -> StyleBoxFlat:
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.17, 0.19, 0.26, 0.96)
-	sb.set_corner_radius_all(10)
-	sb.border_color = ACCENT_DIM
-	sb.set_border_width_all(2)
-	sb.content_margin_left = 16
-	sb.content_margin_right = 16
-	sb.content_margin_top = 14
-	sb.content_margin_bottom = 14
-	sb.shadow_color = Color(0, 0, 0, 0.4)
-	sb.shadow_size = 6
-	sb.shadow_offset = Vector2(2, 3)
-	return sb
+	var s := StyleBoxFlat.new()
+	s.bg_color = Color(0.14, 0.13, 0.11, 0.94)
+	s.border_color = Color(0.72, 0.58, 0.32, 0.85)
+	s.set_border_width_all(2)
+	s.set_corner_radius_all(8)
+	s.content_margin_left = 12
+	s.content_margin_right = 12
+	s.content_margin_top = 10
+	s.content_margin_bottom = 10
+	s.shadow_color = Color(0, 0, 0, 0.35)
+	s.shadow_size = 4
+	return s
+
 
 static func stone_style() -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
@@ -252,9 +259,30 @@ static func make_banner_rect(w: int = 72, h: int = 100) -> TextureRect:
 	return tr
 
 static func make_hub_nav_button(text: String, subtitle: String, min_w: int = 210) -> Button:
-	var b := make_button(text + "\n" + subtitle, min_w)
+	var b := Button.new()
+	b.text = text if subtitle == "" else "%s\n%s" % [text, subtitle]
 	b.custom_minimum_size = Vector2(min_w, 64)
+	b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	b.add_theme_font_size_override("font_size", 14)
+	var n := StyleBoxFlat.new()
+	n.bg_color = Color(0.11, 0.13, 0.18, 0.94)
+	n.border_color = Color(0.72, 0.58, 0.32, 0.9)
+	n.border_width_left = 5
+	n.border_width_top = 2
+	n.border_width_right = 2
+	n.border_width_bottom = 2
+	n.set_corner_radius_all(8)
+	n.content_margin_left = 14
+	n.content_margin_right = 10
+	n.content_margin_top = 8
+	n.content_margin_bottom = 8
+	var hov := n.duplicate()
+	hov.bg_color = Color(0.18, 0.20, 0.28, 0.98)
+	hov.border_color = Color(0.90, 0.75, 0.40, 1.0)
+	b.add_theme_stylebox_override("normal", n)
+	b.add_theme_stylebox_override("hover", hov)
+	b.add_theme_stylebox_override("pressed", hov)
+	b.add_theme_color_override("font_color", Color(0.93, 0.91, 0.85))
 	return b
 
 # --- 轻量程序音效（AudioStreamGenerator 短脉冲，无外部授权问题）---

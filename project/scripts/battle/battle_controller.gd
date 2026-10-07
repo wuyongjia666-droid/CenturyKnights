@@ -1970,8 +1970,12 @@ func _show_lock_practice_banner() -> void:
 	var title = "【强制练习】交战锁定"
 	var tip = "先选中单位 → 攻击模式 → 攻击一名敌人，触发锁定后才能结束回合。"
 	if bool(BattleMaps.get_map(map_id).get("lock_drill", false)) and not map_id.begins_with("ch0"):
-		title = "【中盘演练】交战锁定复习"
-		tip = "夜袭中再练一次锁定：攻击敌人触发红环锁定后，方可结束回合。"
+		if map_id.begins_with("ch5") or map_id.begins_with("ch6") or map_id.begins_with("ch4"):
+			title = "【后期演练】交战锁定总复习"
+			tip = "断桥守夜：再次强制练习锁定。攻击敌人触发红环后，才能结束回合。"
+		else:
+			title = "【中盘演练】交战锁定复习"
+			tip = "夜袭中再练一次锁定：攻击敌人触发红环锁定后，方可结束回合。"
 	var t = UIKit.make_label(title, true)
 	t.add_theme_color_override("font_color", Color(1.0, 0.45, 0.35))
 	vb.add_child(t)
@@ -2003,7 +2007,7 @@ func _enemy_try_skills(ui: int) -> void:
 	var u = units[ui]
 	var c: CKCharacter = u.char
 	# 1) 残血被锁 → 抽身/拆锁
-	if int(c.temp_combat_lock) > 0 and float(c.hp) / float(maxi(1, c.max_hp)) < 0.72:
+	if int(c.temp_combat_lock) > 0 and float(c.hp) / float(maxi(1, c.max_hp)) < 0.85:
 		for sid in ["disengage_step", "lock_breaker"]:
 			if sid in _enemy_known_skills(c) and _enemy_skill_ready(c, sid):
 				_cast_buff_skill_for_team(ui, sid)
@@ -2167,7 +2171,9 @@ func _enemy_ai() -> void:
 		for pos in mv.keys():
 			var stand_tid = terrain[pos.y][pos.x]
 			var tinfo = BattleRules.terrain_info(stand_tid)
-			var stand_bonus = float(tinfo.get("def_bonus", 0)) * 1.8 + float(tinfo.get("avo_bonus", 0)) * 0.06
+			var stand_bonus = float(tinfo.get("def_bonus", 0)) * 2.4 + float(tinfo.get("avo_bonus", 0)) * 0.10
+			if stand_tid in ["fort", "forest", "hill"]:
+				stand_bonus += 1.6
 			# 脱离锁定惩罚：离开交战格更贵，AI 更不愿无意义挪动
 			if locked_self and pos != u.pos:
 				var still_eng = BattleRules.is_engaged(pos, foes_player)
@@ -2186,8 +2192,8 @@ func _enemy_ai() -> void:
 					if not melee and d == 1:
 						approach -= 4.0
 					# 残血被锁：偏向高防撤退格
-					if locked_self and float(u.char.hp) / float(maxi(1, u.char.max_hp)) < 0.5:
-						approach = stand_bonus * 2.6 - float(d) * 0.35
+					if locked_self and float(u.char.hp) / float(maxi(1, u.char.max_hp)) < 0.55:
+						approach = stand_bonus * 3.0 - float(d) * 0.25
 					var sc2 = approach + stand_bonus
 					if sc2 > best_score and best_target < 0:
 						best_score = sc2
@@ -2213,12 +2219,12 @@ func _enemy_ai() -> void:
 				# 威胁残血友军的敌人优先压住
 				var threat = false
 				for ou in units:
-					if ou.team == "enemy" and ou.char.hp > 0 and float(ou.char.hp)/float(maxi(1,ou.char.max_hp)) < 0.45:
-						if _manhattan(t.pos, ou.pos) <= 2:
+					if ou.team == "enemy" and ou.char.hp > 0 and float(ou.char.hp)/float(maxi(1,ou.char.max_hp)) < 0.50:
+						if _manhattan(t.pos, ou.pos) <= 3:
 							threat = true
 							break
 				if threat:
-					expect += 2.8
+					expect += 3.6
 				# 攻击会刷新己方锁定——残血时略减
 				if locked_self and float(u.char.hp) / float(maxi(1, u.char.max_hp)) < 0.35:
 					expect -= 2.5

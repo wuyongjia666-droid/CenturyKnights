@@ -240,7 +240,15 @@ static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
 	if tex2 != null:
 		_cache[ck] = tex2
 		return tex2
-	# 兵种板绘（美术升档）
+	# 雇佣/花名册：角色×性别专属板（非仅兵种板）
+	var role = BattleRules.job_role(c.job_id) if Engine.get_main_loop() else "skirmisher"
+	var g = "f" if str(c.gender) == "f" else "m"
+	var hire_p = "res://assets/art/portraits/hire_%s_%s_plate.png" % [role, g]
+	var ht = _try_load(hire_p)
+	if ht != null:
+		_cache["hire|" + role + "|" + g + "|" + str(size)] = ht
+		return ht
+	# 兵种板绘（回退）
 	var plate = {
 		"heavy_inf": "tank_plate", "warrior": "tank_plate",
 		"hunter": "ranger_plate", "archer": "ranger_plate",

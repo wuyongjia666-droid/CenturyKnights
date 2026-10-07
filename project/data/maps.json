@@ -1542,7 +1542,8 @@
           "water",
           "water"
         ]
-      ]
+      ],
+      "lock_drill": true
     },
     "ch6_archive": {
       "name": "族谱密室",

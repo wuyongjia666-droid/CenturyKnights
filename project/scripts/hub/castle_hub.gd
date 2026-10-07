@@ -19,7 +19,7 @@ func _ready() -> void:
 func _build() -> void:
 	for c in get_children():
 		c.queue_free()
-	UIKit.make_screen_bg(self, true)
+	UIKit.make_themed_bg(self, "castle")
 	# 美术：堡顶横幅条
 	var _hub_strip = TextureRect.new()
 	_hub_strip.texture = load("res://assets/art/ui/hub_banner_strip.png")
