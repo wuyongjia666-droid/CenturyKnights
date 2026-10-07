@@ -21,6 +21,7 @@ var data_chapter4: Dictionary = {}
 var data_chapter5: Dictionary = {}
 var data_chapter6: Dictionary = {}
 var data_chapter7: Dictionary = {}
+var data_chapter8: Dictionary = {}
 var data_skills: Dictionary = {}
 var chapter1_beat: String = "1.0"
 var chapter2_beat: String = "2.0"
@@ -89,6 +90,7 @@ func _load_data() -> void:
 	data_chapter5 = _read_json("res://data/chapter5.json")
 	data_chapter6 = _read_json("res://data/chapter6.json")
 	data_chapter7 = _read_json("res://data/chapter7.json")
+	data_chapter8 = _read_json("res://data/chapter8.json")
 	data_skills = _read_json("res://data/skills.json")
 
 func _read_json(path: String) -> Dictionary:

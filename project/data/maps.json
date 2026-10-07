@@ -2116,6 +2116,144 @@
           "plain"
         ]
       ]
+    },
+    "ch8_harbor": {
+      "name": "港灯夜议",
+      "w": 10,
+      "h": 7,
+      "player_spots": [
+        [
+          2,
+          4
+        ],
+        [
+          3,
+          5
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "enemy_spots": [
+        [
+          7,
+          1
+        ],
+        [
+          8,
+          2
+        ],
+        [
+          6,
+          1
+        ],
+        [
+          8,
+          1
+        ],
+        [
+          7,
+          2
+        ]
+      ],
+      "enemy_templates": [
+        "bandit",
+        "bandit_archer",
+        "bandit",
+        "bandit_archer",
+        "bandit_weak"
+      ],
+      "terrain": [
+        [
+          "forest",
+          "plain",
+          "plain",
+          "plain",
+          "hill",
+          "hill",
+          "plain",
+          "plain",
+          "forest",
+          "plain"
+        ],
+        [
+          "plain",
+          "plain",
+          "plain",
+          "forest",
+          "hill",
+          "hill",
+          "plain",
+          "forest",
+          "plain",
+          "plain"
+        ],
+        [
+          "plain",
+          "plain",
+          "forest",
+          "plain",
+          "hill",
+          "hill",
+          "forest",
+          "plain",
+          "plain",
+          "plain"
+        ],
+        [
+          "plain",
+          "forest",
+          "plain",
+          "plain",
+          "plain",
+          "forest",
+          "plain",
+          "plain",
+          "plain",
+          "forest"
+        ],
+        [
+          "forest",
+          "plain",
+          "plain",
+          "plain",
+          "forest",
+          "plain",
+          "plain",
+          "plain",
+          "forest",
+          "plain"
+        ],
+        [
+          "water",
+          "water",
+          "plain",
+          "forest",
+          "plain",
+          "plain",
+          "plain",
+          "forest",
+          "water",
+          "water"
+        ],
+        [
+          "water",
+          "water",
+          "forest",
+          "plain",
+          "plain",
+          "plain",
+          "forest",
+          "plain",
+          "water",
+          "water"
+        ]
+      ]
     }
   }
 }
