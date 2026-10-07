@@ -32,6 +32,7 @@ var data_chapter15: Dictionary = {}
 var data_chapter16: Dictionary = {}
 var data_chapter17: Dictionary = {}
 var data_chapter18: Dictionary = {}
+var data_chapter19: Dictionary = {}
 var data_rivals: Dictionary = {}
 var rival_stances: Dictionary = {}  # house_id -> stance override
 var rival_deals: Dictionary = {}  # house_id -> {turns_left, kind, reward}
@@ -126,6 +127,7 @@ func _load_data() -> void:
 	data_chapter16 = _read_json("res://data/chapter16.json")
 	data_chapter17 = _read_json("res://data/chapter17.json")
 	data_chapter18 = _read_json("res://data/chapter18.json")
+	data_chapter19 = _read_json("res://data/chapter19.json")
 	data_rivals = _read_json("res://data/rival_houses.json")
 	data_skills = _read_json("res://data/skills.json")
 
