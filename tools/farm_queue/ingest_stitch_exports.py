@@ -6,6 +6,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 SRC = ROOT / "project/assets/art/stitch_exports"
+# Also accept inbox from m173 copy: /workspace/uploads/stitch or farm_inbox/stitch
 OUT = ROOT / "docs/art/stitch_skeletons_v8"
 MANIFEST = ROOT / "tools/farm_queue/stitch_export_manifest.json"
 

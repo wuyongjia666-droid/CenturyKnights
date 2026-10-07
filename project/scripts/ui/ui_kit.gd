@@ -186,7 +186,8 @@ static func make_themed_bg(parent: Control, theme: String = "castle") -> ColorRe
 		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		tr.stretch_mode = TextureRect.STRETCH_SCALE
 		tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		tr.modulate = Color(1, 1, 1, 0.95)
+		tr.modulate = Color(1, 1, 1, 0.92)
+		UIFX.banner_shimmer(tr, 4.2)
 		parent.add_child(tr)
 		# move just above solid bg: re-add veil
 		var veil := ColorRect.new()

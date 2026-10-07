@@ -1,5 +1,5 @@
 {
-  "art_pass": "v8.0.0-art",
+  "art_pass": "v8.1.0-art",
   "patrol_frames": 12,
   "heroes": [
     "leader_default",
@@ -68,5 +68,6 @@
     "ui": 10,
     "fx": 6
   },
-  "stitch": "local_skeletons_ready; live_exports_pending"
+  "stitch": "watch D:/CenturyKnights_farm/stitch empty",
+  "polish": "hub_lift+token_rims+v810+shimmer"
 }

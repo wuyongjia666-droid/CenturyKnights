@@ -476,6 +476,21 @@ static func _token_key(c: CKCharacter, team: String, frame: int) -> String:
 		return "res://assets/art/tokens/escort_archer_enemy_f%d.png" % frame
 	if str(c.name).find("劫镖") >= 0 or str(c.name).find("劫道") >= 0:
 		return "res://assets/art/tokens/escort_raider_enemy_f%d.png" % frame
+	# v8.1 contemporary role tokens after named bosses
+	var _v8role = BattleRules.job_role(c.job_id) if Engine.get_main_loop() else "skirmisher"
+	if c.is_leader:
+		_v8role = "leader"
+	if team == "enemy" or c.faction == "enemy":
+		var _ep = "res://assets/art/tokens/hire_%s_enemy_f%d.png" % [_v8role, frame % 4]
+		if ResourceLoader.exists(_ep):
+			return _ep
+	else:
+		var _v8p = "res://assets/art/tokens/v8_role_%s.png" % _v8role
+		if ResourceLoader.exists(_v8p):
+			return _v8p
+		var _hp = "res://assets/art/tokens/hire_%s_%s_f%d.png" % [_v8role, team, frame % 4]
+		if ResourceLoader.exists(_hp):
+			return _hp
 	# 敌军：加密度 hire/role token，再回退 bandit
 	if team == "enemy" or c.faction == "enemy":
 		var erole = BattleRules.job_role(c.job_id) if Engine.get_main_loop() else "skirmisher"

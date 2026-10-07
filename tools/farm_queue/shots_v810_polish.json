@@ -1,0 +1,38 @@
+[
+  {
+    "label": "v81_token_mage",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG icon, luminous ink void, crystal frost rim, high contrast readable silhouette, NO text, NO watermark, NO medieval cliché. top-down mage unit token 128, staff silhouette, mint-crystal rim, dark ground",
+    "width": 128,
+    "height": 128
+  },
+  {
+    "label": "v81_token_tank",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG icon, luminous ink void, crystal frost rim, high contrast readable silhouette, NO text, NO watermark, NO medieval cliché. top-down heavy tank token 128, shield bulk, mint rim, max readability",
+    "width": 128,
+    "height": 128
+  },
+  {
+    "label": "v81_token_skirm",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG icon, luminous ink void, crystal frost rim, high contrast readable silhouette, NO text, NO watermark, NO medieval cliché. top-down skirmisher token 128, blade silhouette, mint rim",
+    "width": 128,
+    "height": 128
+  },
+  {
+    "label": "v81_token_enemy_tank",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG icon, luminous ink void, crystal frost rim, high contrast readable silhouette, NO text, NO watermark, NO medieval cliché. enemy tank token 128, coral rim, same language",
+    "width": 128,
+    "height": 128
+  },
+  {
+    "label": "v81_ui_panel_frost",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG icon, luminous ink void, crystal frost rim, high contrast readable silhouette, NO text, NO watermark, NO medieval cliché. frosted matte UI panel 640x400, soft crystal border, empty center",
+    "width": 640,
+    "height": 400
+  },
+  {
+    "label": "v81_ui_btn_primary",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG icon, luminous ink void, crystal frost rim, high contrast readable silhouette, NO text, NO watermark, NO medieval cliché. primary button 280x64, crystal frost fill, empty label",
+    "width": 280,
+    "height": 64
+  }
+]
