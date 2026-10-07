@@ -1,0 +1,10 @@
+{
+  "skills": [
+    {"id": "power_strike", "name": "破旗斩", "jobs": ["squire","light_inf","heavy_inf","warrior","light_cavalry"], "type": "offense", "uses": 1, "desc": "本击伤害 +40%，命中 -5。", "dmg_mul": 1.4, "hit_mod": -5},
+    {"id": "piercing_shot", "name": "穿林箭", "jobs": ["hunter","archer"], "type": "offense", "uses": 1, "desc": "无视地形回避，伤害 +20%。", "dmg_mul": 1.2, "ignore_terrain_avo": true},
+    {"id": "ward_chant", "name": "灰焰祷言", "jobs": ["apprentice","priest"], "type": "support", "uses": 1, "desc": "治疗相邻友军 8–12 点生命。", "heal_min": 8, "heal_max": 12},
+    {"id": "guard_stance", "name": "铁壁姿态", "jobs": ["heavy_inf","warrior"], "type": "buff", "uses": 1, "desc": "本回合结束后防御 +4（至下回合）。", "def_buff": 4},
+    {"id": "rush", "name": "突击", "jobs": ["squire","light_cavalry","light_inf"], "type": "offense", "uses": 1, "desc": "伤害 +15%，并获得一次额外移动格提示。", "dmg_mul": 1.15, "hit_mod": 5},
+    {"id": "mark_prey", "name": "锁定猎物", "jobs": ["hunter","archer"], "type": "buff", "uses": 1, "desc": "下次攻击命中 +15。", "next_hit_bonus": 15}
+  ]
+}

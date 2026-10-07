@@ -39,6 +39,11 @@ var pregnant_months: int = -1  # -1 = not; 0+ = months remaining until birth
 var birthday_month: int = 1
 var weapon_id: String = ""
 var faction: String = "player"  # player/enemy/ally
+var skills: Array = []  # skill ids unlocked
+var skill_uses: Dictionary = {}  # id -> remaining this battle
+var temp_def_buff: int = 0
+var temp_hit_bonus: int = 0
+
 
 const STAT_KEYS := ["str", "vit", "skl", "agi", "per", "wil"]
 const RANK_ORDER := ["knight", "baron", "count", "duke"]
@@ -52,10 +57,10 @@ func derived_atk() -> int:
 func derived_def() -> int:
 	var job = _job()
 	var base = int(job.get("base_def", 3))
-	return base + int(stats.get("vit", 8) / 3)
+	return base + int(stats.get("vit", 8) / 3) + temp_def_buff
 
 func derived_hit() -> int:
-	return 70 + int(stats.get("skl", 8)) + int(stats.get("agi", 8) / 2)
+	return 70 + int(stats.get("skl", 8)) + int(stats.get("agi", 8) / 2) + temp_hit_bonus
 
 func derived_avo() -> int:
 	return int(stats.get("agi", 8)) + int(stats.get("per", 8) / 2)
@@ -116,7 +121,7 @@ func to_dict() -> Dictionary:
 		"injured": injured, "salary": salary, "spouse_id": spouse_id,
 		"parent_ids": parent_ids.duplicate(), "children_ids": children_ids.duplicate(),
 		"pregnant_months": pregnant_months, "birthday_month": birthday_month,
-		"weapon_id": weapon_id, "faction": faction,
+		"weapon_id": weapon_id, "faction": faction, "skills": skills.duplicate(),
 	}
 
 static func from_dict(d: Dictionary) -> CKCharacter:
@@ -151,4 +156,5 @@ static func from_dict(d: Dictionary) -> CKCharacter:
 	c.birthday_month = int(d.get("birthday_month", 1))
 	c.weapon_id = str(d.get("weapon_id", ""))
 	c.faction = str(d.get("faction", "player"))
+	c.skills = d.get("skills", []).duplicate()
 	return c

@@ -44,7 +44,21 @@ func _ready() -> void:
 	speed.value_changed.connect(func(v): GameState.settings["text_speed"] = v)
 	box.add_child(speed)
 
-	box.add_child(UIKit.make_dim_label("音频：程序短音效占位（无第三方曲库版权风险）。"))
+	var mus = CheckButton.new()
+	mus.text = "背景音乐（程序氛围床）"
+	mus.button_pressed = Music.enabled if Music else true
+	mus.toggled.connect(func(on):
+		Music.enabled = on
+		if on: Music.play_hub()
+		else: Music.stop()
+	)
+	box.add_child(mus)
+	var sfxb = CheckButton.new()
+	sfxb.text = "音效"
+	sfxb.button_pressed = Sfx.enabled
+	sfxb.toggled.connect(func(on): Sfx.enabled = on)
+	box.add_child(sfxb)
+	box.add_child(UIKit.make_dim_label("音频均为程序生成 WAV，无第三方曲库版权风险。"))
 
 	var back = UIKit.make_button(Locale.t("btn_back"), 200)
 	back.size_flags_horizontal = Control.SIZE_SHRINK_CENTER

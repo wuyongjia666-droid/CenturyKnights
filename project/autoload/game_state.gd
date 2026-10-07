@@ -16,8 +16,11 @@ var data_appearance: Dictionary = {}
 var data_maps: Dictionary = {}
 var data_chapter1: Dictionary = {}
 var data_chapter2: Dictionary = {}
+var data_chapter3: Dictionary = {}
+var data_skills: Dictionary = {}
 var chapter1_beat: String = "1.0"
 var chapter2_beat: String = "2.0"
+var chapter3_beat: String = "3.0"
 
 # 游戏状态
 var started: bool = false
@@ -71,6 +74,8 @@ func _load_data() -> void:
 	data_maps = _read_json("res://data/maps.json")
 	data_chapter1 = _read_json("res://data/chapter1.json")
 	data_chapter2 = _read_json("res://data/chapter2.json")
+	data_chapter3 = _read_json("res://data/chapter3.json")
+	data_skills = _read_json("res://data/skills.json")
 
 func _read_json(path: String) -> Dictionary:
 	var f = FileAccess.open(path, FileAccess.READ)
@@ -156,6 +161,7 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	chapter0_beat = "0.0"
 	chapter1_beat = "1.0"
 	chapter2_beat = "2.0"
+	chapter3_beat = "3.0"
 	chapter0_flags = {}
 	event_log.clear()
 	dynasty_journal = ""
@@ -167,6 +173,8 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	var ally = CharacterFactory.make_ally_tutor()
 	characters[ally.id] = ally
 	deploy_ids = [leader.id, ally.id]
+	grant_job_skills(leader)
+	grant_job_skills(ally)
 	refresh_tavern()
 	refresh_marriage_candidates()
 	_init_quests()
@@ -228,6 +236,10 @@ func _init_quests() -> void:
 			"desc": "第一章：宽滩断潮渡值夜战。河卫邦会记住灰旗。"},
 		{"id": "q_fog_war", "name": "主线支援·雾谷", "stars": 3, "months": 1, "silver": 58, "rep": 12, "battle": true, "map": "ch1_fog",
 			"desc": "第一章：密林雾谷夜袭。弓手危险，阵型勿散。"},
+		{"id": "q_forge_war", "name": "主线支援·炉火关", "stars": 3, "months": 1, "silver": 65, "rep": 12, "battle": true, "map": "ch3_forge",
+			"desc": "第三章：炉火关试锋。可用战技破旗斩/穿林箭。"},
+		{"id": "q_shrine_war", "name": "主线支援·祠堂外廊", "stars": 3, "months": 1, "silver": 65, "rep": 12, "battle": true, "map": "ch3_shrine",
+			"desc": "第三章：祠堂外廊。适合铁壁与灰焰祷言。"},
 	]
 
 func accept_quest(qid: String) -> Dictionary:
@@ -397,9 +409,44 @@ func try_promote(cid: String, job_id: String) -> Dictionary:
 		herb -= int(req["herb"])
 	c.job_id = job_id
 	c.recalc_hp()
-	log_event("%s 转职为 %s" % [c.name, job.get("name", job_id)])
+	grant_job_skills(c)
+	log_event("%s 转职为 %s，战技已更新" % [c.name, job.get("name", job_id)])
 	mark_dirty()
 	return {"ok": true, "msg": "转职成功：" + job.get("name", job_id)}
+
+
+func get_skill(sid: String) -> Dictionary:
+	for s in data_skills.get("skills", []):
+		if s.get("id") == sid:
+			return s
+	return {"id": sid, "name": sid}
+
+func skills_for_job(job_id: String) -> Array:
+	var out: Array = []
+	for s in data_skills.get("skills", []):
+		var jobs: Array = s.get("jobs", [])
+		if job_id in jobs:
+			out.append(s)
+	return out
+
+func grant_job_skills(c: CKCharacter) -> void:
+	if c == null:
+		return
+	for s in skills_for_job(c.job_id):
+		var sid = str(s.get("id"))
+		if sid not in c.skills:
+			c.skills.append(sid)
+
+func reset_battle_skills(roster_chars: Array) -> void:
+	for c in roster_chars:
+		if c == null:
+			continue
+		c.temp_def_buff = 0
+		c.temp_hit_bonus = 0
+		c.skill_uses.clear()
+		for sid in c.skills:
+			var sk = get_skill(sid)
+			c.skill_uses[sid] = int(sk.get("uses", 1))
 
 func build_dynasty_journal() -> String:
 	var leader = get_leader()
@@ -435,6 +482,7 @@ func save_game() -> bool:
 		"chapter0_beat": chapter0_beat,
 		"chapter1_beat": chapter1_beat,
 		"chapter2_beat": chapter2_beat,
+		"chapter3_beat": chapter3_beat,
 		"chapter0_flags": chapter0_flags,
 		"reputation": reputation,
 		"settings": settings,
@@ -481,6 +529,7 @@ func load_game() -> bool:
 	chapter0_beat = str(data.get("chapter0_beat", "0.0"))
 	chapter1_beat = str(data.get("chapter1_beat", "1.0"))
 	chapter2_beat = str(data.get("chapter2_beat", "2.0"))
+	chapter3_beat = str(data.get("chapter3_beat", "3.0"))
 	chapter0_flags = data.get("chapter0_flags", {})
 	reputation = data.get("reputation", {"ashland": 0, "riverland": 0})
 	settings = data.get("settings", settings)

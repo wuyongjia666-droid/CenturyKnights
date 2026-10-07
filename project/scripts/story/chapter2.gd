@@ -119,6 +119,11 @@ func _refresh_actions() -> void:
 				GameState.save_game()
 				get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
 			)
+			_add("踏上第三章·铁与祷言", func():
+				GameState.set_flag("chapter2_done")
+				GameState.chapter3_beat = "3.0"
+				get_tree().change_scene_to_file("res://scenes/story/chapter3.tscn")
+			)
 		_:
 			_add("继续", func(): _goto_next())
 

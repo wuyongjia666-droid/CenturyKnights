@@ -36,9 +36,14 @@ var _btn_wait: Button
 var _btn_end: Button
 var _slash_fx: Array = []  # {pos, age, frame}
 var _shake: float = 0.0
+var skill_mode: bool = false
+var active_skill_id: String = ""
+var _btn_skill: Button
+var _skill_hint: Label
 
 func _ready() -> void:
 	rng.randomize()
+	Music.play_battle()
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_build_ui()
 	_init_map()
@@ -162,6 +167,13 @@ func _build_ui() -> void:
 	_btn_atk = UIKit.make_accent_button("攻击模式", 130)
 	_btn_atk.pressed.connect(_enter_attack_mode)
 	row.add_child(_btn_atk)
+	_btn_skill = UIKit.make_accent_button("战技", 100)
+	_btn_skill.pressed.connect(_cycle_skill)
+	row.add_child(_btn_skill)
+	_skill_hint = UIKit.make_dim_label("")
+	_skill_hint.position = Vector2(520, 500)
+	_skill_hint.custom_minimum_size = Vector2(700, 20)
+	add_child(_skill_hint)
 	_btn_wait = UIKit.make_button(Locale.t("wait"), 100)
 	_btn_wait.pressed.connect(_wait_selected)
 	row.add_child(_btn_wait)
@@ -173,6 +185,116 @@ func _build_ui() -> void:
 	b_prev.button_pressed = BattleRules.preview_enabled
 	b_prev.toggled.connect(func(on): BattleRules.preview_enabled = on)
 	row.add_child(b_prev)
+
+
+func _player_skills(ui: int) -> Array:
+	if ui < 0 or ui >= units.size():
+		return []
+	var c: CKCharacter = units[ui].char
+	var out: Array = []
+	for sid in c.skills:
+		var left = int(c.skill_uses.get(sid, 0))
+		if left > 0:
+			out.append(sid)
+	return out
+
+func _cycle_skill() -> void:
+	if selected < 0 or selected >= units.size():
+		_log("请先选中己方单位再选战技")
+		return
+	var su = units[selected]
+	if su.team != "player" or su.done:
+		_log("当前单位无法使用战技")
+		return
+	var avail = _player_skills(selected)
+	if avail.is_empty():
+		_log("本场战技已用尽或未学会——去演武场转职可解锁")
+		skill_mode = false
+		active_skill_id = ""
+		_update_skill_hint()
+		return
+	# cycle
+	if active_skill_id == "" or active_skill_id not in avail:
+		active_skill_id = avail[0]
+	else:
+		var idx = avail.find(active_skill_id)
+		idx = (idx + 1) % avail.size()
+		active_skill_id = avail[idx]
+	var sk = GameState.get_skill(active_skill_id)
+	var typ = str(sk.get("type", "offense"))
+	if typ == "support":
+		# instant heal adjacent
+		_cast_support_skill(selected, active_skill_id)
+		return
+	if typ == "buff":
+		_cast_buff_skill(selected, active_skill_id)
+		return
+	# offense: arm for next attack
+	skill_mode = true
+	attack_mode = true
+	move_cells.clear()
+	_log("战技已就绪：%s — %s" % [sk.get("name", ""), sk.get("desc", "")])
+	_update_skill_hint()
+	overlay.queue_redraw()
+	_refresh_info()
+
+func _update_skill_hint() -> void:
+	if _skill_hint == null:
+		return
+	if selected >= 0 and selected < units.size() and units[selected].team == "player":
+		var parts: Array = []
+		for sid in units[selected].char.skills:
+			var sk = GameState.get_skill(sid)
+			var left = int(units[selected].char.skill_uses.get(sid, 0))
+			parts.append("%s×%d" % [sk.get("name", sid), left])
+		var armed = ""
+		if active_skill_id != "":
+			armed = "　【将释放：%s】" % GameState.get_skill(active_skill_id).get("name", active_skill_id)
+		_skill_hint.text = ("战技：" + " · ".join(parts) if parts else "战技：无") + armed
+	else:
+		_skill_hint.text = "选中单位后点「战技」循环选择；进攻技在攻击时消耗。"
+
+func _consume_skill(c: CKCharacter, sid: String) -> void:
+	var left = int(c.skill_uses.get(sid, 0))
+	c.skill_uses[sid] = maxi(0, left - 1)
+	skill_mode = false
+	active_skill_id = ""
+	_update_skill_hint()
+
+func _cast_support_skill(ui: int, sid: String) -> void:
+	var sk = GameState.get_skill(sid)
+	var u = units[ui]
+	var healed = 0
+	for j in units.size():
+		var o = units[j]
+		if o.team != "player" or o.char.hp <= 0:
+			continue
+		if _manhattan(u.pos, o.pos) <= 1:
+			var amt = rng.randi_range(int(sk.get("heal_min", 8)), int(sk.get("heal_max", 12)))
+			o.char.hp = mini(o.char.max_hp, o.char.hp + amt)
+			healed += 1
+			_spawn_dmg(o.pos, "+%d" % amt, Color(0.4, 0.9, 0.5))
+	_consume_skill(u.char, sid)
+	u.done = true
+	selected = -1
+	Sfx.confirm()
+	_log("%s 释放「%s」，治疗 %d 人" % [u.char.name, sk.get("name", ""), healed])
+	map_draw.queue_redraw()
+	_refresh_info()
+	_check_end()
+
+func _cast_buff_skill(ui: int, sid: String) -> void:
+	var sk = GameState.get_skill(sid)
+	var u = units[ui]
+	if sk.get("def_buff"):
+		u.char.temp_def_buff = int(sk.get("def_buff"))
+	if sk.get("next_hit_bonus"):
+		u.char.temp_hit_bonus = int(sk.get("next_hit_bonus"))
+	_consume_skill(u.char, sid)
+	_log("%s 释放「%s」" % [u.char.name, sk.get("name", "")])
+	Sfx.confirm()
+	_refresh_info()
+	map_draw.queue_redraw()
 
 func _enter_attack_mode() -> void:
 	if selected < 0 or selected >= units.size():
@@ -255,6 +377,12 @@ func _deploy() -> void:
 		units.append({"char": e, "pos": enemy_spots[ei], "team": "enemy", "done": false})
 		ei += 1
 	_log("%s：我军 %d · 敌军 %d" % [map_name, i, ei])
+	var chars: Array = []
+	for u in units:
+		if u.team == "player":
+			GameState.grant_job_skills(u.char)
+			chars.append(u.char)
+	GameState.reset_battle_skills(chars)
 	_refresh_info()
 
 func _draw_map() -> void:
@@ -392,8 +520,11 @@ func _cancel_selection() -> void:
 	selected = -1
 	move_cells.clear()
 	attack_mode = false
+	skill_mode = false
+	active_skill_id = ""
 	moved_this_select = false
 	_refresh_info()
+	_update_skill_hint()
 	overlay.queue_redraw()
 	map_draw.queue_redraw()
 
@@ -418,6 +549,8 @@ func _unit_at(pos: Vector2i) -> int:
 func _select_player(ui: int) -> void:
 	selected = ui
 	attack_mode = false
+	skill_mode = false
+	active_skill_id = ""
 	moved_this_select = false
 	var mv = units[ui].char.derived_move()
 	move_cells = BattleRules.move_costs(terrain, units[ui].pos, mv)
@@ -425,6 +558,7 @@ func _select_player(ui: int) -> void:
 		if u.char.hp > 0 and u.pos != units[ui].pos:
 			move_cells.erase(u.pos)
 	_refresh_info()
+	_update_skill_hint()
 	overlay.queue_redraw()
 	map_draw.queue_redraw()
 
@@ -496,7 +630,40 @@ func _do_attack(ai: int, di: int) -> void:
 	var atk = units[ai]
 	var def = units[di]
 	var tid = terrain[def.pos.y][def.pos.x]
+	var skill_id = ""
+	var sk = {}
+	if atk.team == "player" and skill_mode and active_skill_id != "":
+		skill_id = active_skill_id
+		sk = GameState.get_skill(skill_id)
+		if sk.get("ignore_terrain_avo"):
+			tid = "plain"
 	var result = BattleRules.roll_attack(atk.char, def.char, tid, rng)
+	if skill_id != "" and sk.get("type") == "offense":
+		# adjust hit/damage post-roll presentation; re-roll with mods if needed
+		var hit_chance = BattleRules.calc_hit(atk.char, def.char, tid) + int(sk.get("hit_mod", 0))
+		hit_chance = clampi(hit_chance, 5, 99)
+		var hit = rng.randi_range(1, 100) <= hit_chance
+		var dmg_range = BattleRules.calc_damage_range(atk.char, def.char)
+		var dmg = 0
+		var crit = false
+		if hit:
+			dmg = rng.randi_range(dmg_range.x, dmg_range.y)
+			dmg = int(round(dmg * float(sk.get("dmg_mul", 1.0))))
+			if rng.randi_range(1, 100) <= atk.char.derived_crit():
+				crit = true
+				dmg = int(dmg * 1.5)
+			# undo previous roll damage if any
+			if result.hit:
+				def.char.hp = mini(def.char.max_hp, def.char.hp + int(result.damage))
+			def.char.hp = maxi(0, def.char.hp - dmg)
+		elif result.hit:
+			def.char.hp = mini(def.char.max_hp, def.char.hp + int(result.damage))
+		result = {"hit": hit, "crit": crit, "damage": dmg, "hit_chance": hit_chance, "dmg_range": dmg_range, "killed": def.char.hp <= 0}
+		_consume_skill(atk.char, skill_id)
+		_log("战技「%s」！" % sk.get("name", skill_id))
+	# clear one-shot hit bonus after any attack
+	if atk.char.temp_hit_bonus != 0:
+		atk.char.temp_hit_bonus = 0
 	var msg = "%s → %s：" % [atk.char.name, def.char.name]
 	if result.hit:
 		Sfx.hit()
@@ -549,12 +716,17 @@ func _start_player_turn() -> void:
 	for u in units:
 		if u.team == "player":
 			u.done = false
+			# 铁壁姿态持续到己方下回合开始时清除
+			u.char.temp_def_buff = 0
 	selected = -1
 	move_cells.clear()
 	attack_mode = false
+	skill_mode = false
+	active_skill_id = ""
 	moved_this_select = false
 	map_draw.queue_redraw()
 	overlay.queue_redraw()
+	_update_skill_hint()
 
 func _end_player_turn() -> void:
 	if battle_over:
@@ -705,6 +877,10 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch1_fog_done")
 	elif map_id == "ch2_night":
 		GameState.set_flag("ch2_night_done")
+	elif map_id == "ch3_forge":
+		GameState.set_flag("ch3_forge_done")
+	elif map_id == "ch3_shrine":
+		GameState.set_flag("ch3_shrine_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")

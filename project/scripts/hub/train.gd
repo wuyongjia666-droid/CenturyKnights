@@ -26,9 +26,18 @@ func _ready() -> void:
 			var leader = GameState.get_leader()
 			if leader:
 				var r = GameState.try_promote(leader.id, jid)
-				_msg.text = str(r.get("msg"))
+				var extra = ""
+				if r.get("ok") and leader:
+					var names: Array = []
+					for sid in leader.skills:
+						names.append(GameState.get_skill(sid).get("name", sid))
+					extra = "　战技：" + ("、".join(names) if names else "无")
+				_msg.text = str(r.get("msg")) + extra
+				Sfx.confirm()
 		)
 		pv.add_child(b)
-	_msg = UIKit.make_label(""); _msg.position = Vector2(40, 520); add_child(_msg)
+	_msg = UIKit.make_label(""); _msg.position = Vector2(40, 480); add_child(_msg)
+	var skl = UIKit.make_dim_label("转职成功后自动学会对应战技（破旗斩/穿林箭/灰焰祷言等），战场「战技」按钮释放，每场限次。")
+	skl.position = Vector2(40, 530); skl.custom_minimum_size = Vector2(1100, 40); skl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; add_child(skl)
 	var back = UIKit.make_button(Locale.t("btn_back")); back.position = Vector2(40, 600)
 	back.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")); add_child(back)

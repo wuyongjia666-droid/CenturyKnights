@@ -3,6 +3,7 @@ extends Control
 func _ready() -> void:
 	_build()
 	UIFX.fade_in(self, 0.45)
+	Music.play_hub()
 	set_process(true)
 
 var _banner_node: TextureRect

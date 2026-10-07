@@ -23,6 +23,7 @@ static func make_leader(given: String, surname: String, crest_color: String) -> 
 	_roll_stats_from_blood(c)
 	c.salary = 0
 	c.recalc_hp()
+	# skills granted by GameState.grant_job_skills after insert
 	GameState.crest_color = crest_color
 	GameState.surname = surname
 	return c

@@ -18,6 +18,7 @@ Locale="*res://autoload/locale.gd"
 Lineage="*res://autoload/lineage.gd"
 BattleRules="*res://autoload/battle_rules.gd"
 Sfx="*res://autoload/sfx.gd"
+Music="*res://autoload/music.gd"
 
 [display]
 

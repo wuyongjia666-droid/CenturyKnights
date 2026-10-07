@@ -11,9 +11,9 @@ static func clear_cache() -> void:
 
 static func tick(delta: float) -> void:
 	_token_phase += delta
-	if _token_phase >= 0.45:
+	if _token_phase >= 0.48:
 		_token_phase = 0.0
-		_banner_frame = (_banner_frame + 1) % 4
+		_banner_frame = (_banner_frame + 1) % 6
 
 static func crest_color() -> Color:
 	return Color(str(GameState.crest_color))
@@ -101,7 +101,7 @@ static func _token_key(c: CKCharacter, team: String, frame: int) -> String:
 	return "res://assets/art/tokens/%s_%s_%s_%s_%s_f%d.png" % [hair, eyes, g, job, team, frame]
 
 static func token(c: CKCharacter, team: String, size: int = 48, done: bool = false) -> Texture2D:
-	var frame = 0 if done else (1 if _token_phase > 0.22 else 0)
+	var frame = 0 if done else int((_token_phase / 0.12)) % 4
 	var path = _token_key(c, team, frame)
 	var ck = "t|" + path + "|" + str(done)
 	if _cache.has(ck):
