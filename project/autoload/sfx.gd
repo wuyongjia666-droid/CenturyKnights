@@ -5,7 +5,7 @@ var _players: Dictionary = {}
 var enabled: bool = true
 
 func _ready() -> void:
-	for id in ["ui_click", "ui_confirm", "hit", "miss", "win", "lose", "move", "turn", "fanfare", "lineage_chime", "skill", "deal", "crit", "heal", "escort_whip", "cart_rattle", "escort_horn", "wave_splash", "paper_tear", "anvil_clang", "lamp_flicker", "grain_pour", "frost_crackle", "bamboo_creak", "post_horn", "bell_toll", "rain_patter", "ink_drip", "bee_buzz", "flute_tone", "shadow_whoosh"]:
+	for id in ["ui_click", "ui_confirm", "hit", "miss", "win", "lose", "move", "turn", "fanfare", "lineage_chime", "skill", "deal", "crit", "heal", "escort_whip", "cart_rattle", "escort_horn", "wave_splash", "paper_tear", "anvil_clang", "lamp_flicker", "grain_pour", "frost_crackle", "bamboo_creak", "post_horn", "bell_toll", "rain_patter", "ink_drip", "bee_buzz", "flute_tone", "shadow_whoosh", "salt_crunch"]:
 		var p := AudioStreamPlayer.new()
 		p.name = id
 		var path = "res://assets/sfx/%s.wav" % id
@@ -115,3 +115,6 @@ func flute_tone() -> void:
 
 func shadow_whoosh() -> void:
 	play("shadow_whoosh")
+
+func salt_crunch() -> void:
+	play("salt_crunch")

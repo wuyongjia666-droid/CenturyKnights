@@ -400,6 +400,10 @@ const SHADOW_BANTER_TURN := [
 	"【影戏】老旗手：四厢夹廊，中廊是活路。",
 	"【影戏】春令使者：棋灯格交错，落脚先想第二步。",
 	"【影戏】斥候：后台曲尺——外廊清完还要进内室。",
+	"【影戏】斥候：影市棚廊——三列要择口。",
+	"【影戏】管事：匣架竖廊，别砸匣纽。",
+	"【影戏】老旗手：独影水镜，桥心是活路。",
+	"【影戏】春令使者：夜幕林环，心台要护灯。",
 ]
 const SHADOW_BANTER_KILL := [
 	"【影戏】影戏悍匪：……灯……不该灭……",
@@ -414,6 +418,31 @@ const SHADOW_BANTER_START := [
 	"【影戏】系统：影戏已升。护灯优先于斩杀。",
 	"【影戏】管事：影未成，先别浪战。",
 	"【影戏】老旗手：幕下不利横队——择口纵列。",
+]
+const SALT_BANTER_TURN := [
+	"【盐滩】管事：护壳！别让他们踏碎盐皮。",
+	"【盐滩】老旗手：卤渠还在，旗就不能倒。",
+	"【盐滩】斥候：盐滩有贼气味——压低身子。",
+	"【盐滩】苇原·灯影：卤一浑，就是劫盐开手。",
+	"【盐滩】管事：禁乱踏。一脚碎壳，满滩尽白。",
+	"【盐滩】斥候：卤渠中隔——择桥绕进，别硬蹚。",
+	"【盐滩】老旗手：晒盘棋格，中盘是活路。",
+	"【盐滩】春令使者：丘格交错，落脚先想第二步。",
+	"【盐滩】斥候：盐堆软壳——外丘清完还要进心垒。",
+]
+const SALT_BANTER_KILL := [
+	"【盐滩】盐滩悍匪：……壳……不该碎……",
+	"【盐滩】卤渠伏弓：滩口……不在你们手里……",
+	"【盐滩】老旗手：一匪倒，卤路清一寸。",
+	"【盐滩】管事：别追太深——盐还在盘上。",
+	"【盐滩】盐滩匪首：空壳……晒不清真姓……",
+	"【盐滩】斥候：碎壳的倒了，盐可护。",
+]
+const SALT_BANTER_START := [
+	"【盐滩】春令使者：这一仗验的是姓，不是盐。",
+	"【盐滩】系统：盐滩已升。护壳优先于斩杀。",
+	"【盐滩】管事：盐未成，先别浪战。",
+	"【盐滩】老旗手：卤下不利横队——择桥纵列。",
 ]
 const ESCORT_BANTER_START := [
 	"【镖行】春令使者：这一仗验的是姓，不是刀。",
@@ -431,7 +460,7 @@ func _is_harbor_map() -> bool:
 
 func _theme_banter(kind: String) -> void:
 	var theme = _map_theme()
-	if theme != "escort" and theme != "harbor" and theme != "paper" and theme != "copper" and theme != "lantern" and theme != "grain" and theme != "snow" and theme != "bamboo" and theme != "relay" and theme != "bell" and theme != "rain" and theme != "ink" and theme != "hive" and theme != "flute" and theme != "shadow":
+	if theme != "escort" and theme != "harbor" and theme != "paper" and theme != "copper" and theme != "lantern" and theme != "grain" and theme != "snow" and theme != "bamboo" and theme != "relay" and theme != "bell" and theme != "rain" and theme != "ink" and theme != "hive" and theme != "flute" and theme != "shadow" and theme != "salt":
 		return
 	var key = theme + kind + str(_banter_idx if kind == "turn" else _banter_kill)
 	if _banter_played.has(key):
@@ -465,8 +494,12 @@ func _theme_banter(kind: String) -> void:
 		pool = HIVE_BANTER_TURN if kind == "turn" else (HIVE_BANTER_KILL if kind == "kill" else HIVE_BANTER_START)
 	elif theme == "flute":
 		pool = FLUTE_BANTER_TURN if kind == "turn" else (FLUTE_BANTER_KILL if kind == "kill" else FLUTE_BANTER_START)
-	else:
+	elif theme == "shadow":
 		pool = SHADOW_BANTER_TURN if kind == "turn" else (SHADOW_BANTER_KILL if kind == "kill" else SHADOW_BANTER_START)
+	elif theme == "salt":
+		pool = SALT_BANTER_TURN if kind == "turn" else (SALT_BANTER_KILL if kind == "kill" else SALT_BANTER_START)
+	else:
+		pool = []
 	if pool.is_empty():
 		return
 	var line = ""
@@ -504,8 +537,10 @@ func _theme_banter(kind: String) -> void:
 			Sfx.bee_buzz()
 		elif theme == "flute":
 			Sfx.flute_tone()
-		else:
+		elif theme == "shadow":
 			Sfx.shadow_whoosh()
+		elif theme == "salt":
+			Sfx.salt_crunch()
 	else:
 		line = str(pool[0] if _banter_idx == 0 else pool[mini(1, pool.size()-1)])
 		if theme == "escort":
@@ -536,8 +571,10 @@ func _theme_banter(kind: String) -> void:
 			Sfx.bee_buzz()
 		elif theme == "flute":
 			Sfx.flute_tone()
-		else:
+		elif theme == "shadow":
 			Sfx.shadow_whoosh()
+		elif theme == "salt":
+			Sfx.salt_crunch()
 	_banter_played[key] = true
 	_log(line)
 
@@ -2176,6 +2213,26 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch197_backstage_done")
 	elif map_id == "ch198_seal":
 		GameState.set_flag("ch198_seal_done")
+	elif map_id == "ch199_fair":
+		GameState.set_flag("ch199_fair_done")
+	elif map_id == "ch199_box":
+		GameState.set_flag("ch199_box_done")
+	elif map_id == "ch200_solo":
+		GameState.set_flag("ch200_solo_done")
+	elif map_id == "ch200_night":
+		GameState.set_flag("ch200_night_done")
+	elif map_id == "ch201_finale":
+		GameState.set_flag("ch201_finale_done")
+	elif map_id == "ch202_flat":
+		GameState.set_flag("ch202_flat_done")
+	elif map_id == "ch202_canal":
+		GameState.set_flag("ch202_canal_done")
+	elif map_id == "ch203_pile":
+		GameState.set_flag("ch203_pile_done")
+	elif map_id == "ch203_pan":
+		GameState.set_flag("ch203_pan_done")
+	elif map_id == "ch204_seal":
+		GameState.set_flag("ch204_seal_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")

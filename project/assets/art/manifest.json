@@ -1,6 +1,6 @@
 {
-  "portraits": 264,
-  "tokens": 1056,
+  "portraits": 267,
+  "tokens": 1068,
   "banners": 20,
   "snow": [
     "portraits/snow_thug.png",
@@ -138,5 +138,10 @@
     "tokens/shadow_boss_enemy_f1.png",
     "tokens/shadow_boss_enemy_f2.png",
     "tokens/shadow_boss_enemy_f3.png"
+  ],
+  "salt": [
+    "portraits/salt_thug.png",
+    "portraits/salt_archer.png",
+    "portraits/salt_boss.png"
   ]
 }
