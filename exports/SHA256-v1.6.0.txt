@@ -1,0 +1,2 @@
+02e5424a90d4fd8b0fc69508a2003bef2d23c626c08a8aa6e984f26cae3aa66c  CenturyKnights-windows-v1.6.0.zip
+dffbf26fe255240af933ca513331bbba1b88d4fc8a5e06d4b60c8b7d04166f58  CenturyKnights.exe
