@@ -10,7 +10,7 @@ func _ready() -> void:
 	var t = UIKit.make_label("城堡工事", true)
 	t.position = Vector2(40, 16)
 	add_child(t)
-	var tip = UIKit.make_dim_label("银与铁换石阶。厅堂扩编队，校场减演武费，市集改价，工坊省料，祠堂加丰收。委任首通会留下永久旁注。")
+	var tip = UIKit.make_dim_label("工事可升至 Lv5。厅堂扩编队，校场/市集/工坊/祠堂各有高阶月结。下方「堡志」是中长期目标——全满级、战勋、双嗣、家训都有永久奖。")
 	tip.position = Vector2(40, 56)
 	tip.custom_minimum_size = Vector2(1100, 40)
 	tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -31,18 +31,33 @@ func _ready() -> void:
 
 	var scroll := ScrollContainer.new()
 	scroll.position = Vector2(40, 180)
-	scroll.custom_minimum_size = Vector2(1200, 380)
+	scroll.custom_minimum_size = Vector2(1200, 320)
 	add_child(scroll)
 	_list = VBoxContainer.new()
 	_list.add_theme_constant_override("separation", 10)
 	scroll.add_child(_list)
 	_rebuild()
 
+	var amb_title = UIKit.make_label("堡志（中长期）")
+	amb_title.position = Vector2(40, 560)
+	amb_title.add_theme_color_override("font_color", UIKit.ACCENT)
+	add_child(amb_title)
+	var amb_lines: Array = []
+	for a in GameState.ambition_list():
+		var mark = "✓" if a.get("done") else "·"
+		amb_lines.append("%s %s — %s（奖：%s）" % [mark, a.name, a.desc, a.reward])
+	var amb_lbl = UIKit.make_dim_label("\n".join(amb_lines))
+	amb_lbl.position = Vector2(40, 588)
+	amb_lbl.custom_minimum_size = Vector2(1200, 90)
+	amb_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	amb_lbl.name = "Ambitions"
+	add_child(amb_lbl)
+
 	_msg = UIKit.make_label("")
-	_msg.position = Vector2(40, 580)
+	_msg.position = Vector2(40, 680)
 	add_child(_msg)
 	var back = UIKit.make_button(Locale.t("btn_back"), 120)
-	back.position = Vector2(40, 640)
+	back.position = Vector2(40, 700)
 	back.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
 	add_child(back)
 
@@ -111,6 +126,12 @@ func _upgrade(id: String) -> void:
 		GameState.save_game()
 		get_node("Summary").text = GameState.building_summary()
 		get_node("Mods").text = _house_mod_text()
+		var al: Array = []
+		for a in GameState.ambition_list():
+			var mark = "✓" if a.get("done") else "·"
+			al.append("%s %s — %s（奖：%s）" % [mark, a.name, a.desc, a.reward])
+		if has_node("Ambitions"):
+			get_node("Ambitions").text = "\n".join(al)
 		_rebuild()
 	else:
 		Sfx.miss()

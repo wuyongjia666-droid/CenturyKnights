@@ -31,3 +31,19 @@ static func slide_from_bottom(node: Control, dist: float = 40.0, dur: float = 0.
 	tw.set_parallel(true)
 	tw.tween_property(node, "position", target, dur).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	tw.tween_property(node, "modulate:a", 1.0, dur)
+
+static func flash_modulate(node: CanvasItem, col: Color = Color(1.2, 1.1, 0.9), dur: float = 0.18) -> void:
+	if node == null: return
+	var orig = node.modulate
+	node.modulate = col
+	var tw = node.create_tween()
+	tw.tween_property(node, "modulate", orig, dur)
+
+static func shake_control(node: Control, amp: float = 6.0, dur: float = 0.22) -> void:
+	if node == null: return
+	var origin = node.position
+	var tw = node.create_tween()
+	tw.tween_property(node, "position", origin + Vector2(amp, -amp * 0.4), dur * 0.25)
+	tw.tween_property(node, "position", origin + Vector2(-amp, amp * 0.3), dur * 0.25)
+	tw.tween_property(node, "position", origin + Vector2(amp * 0.4, amp * 0.2), dur * 0.25)
+	tw.tween_property(node, "position", origin, dur * 0.25)

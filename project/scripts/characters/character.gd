@@ -45,6 +45,10 @@ var skill_cd: Dictionary = {}  # id -> turns remaining before reusable
 var unlocked_skills: Array = []  # tier2+ manually unlocked via skill tree
 var temp_def_buff: int = 0
 var temp_hit_bonus: int = 0
+var temp_crit_bonus: int = 0
+var temp_ignore_zoc: bool = false
+var temp_zoc_aura: int = 0  # 控带额外耗移
+var temp_exposed: int = 0  # 被破防，受击时防降低
 
 
 const STAT_KEYS := ["str", "vit", "skl", "agi", "per", "wil"]
@@ -64,7 +68,7 @@ func derived_atk() -> int:
 func derived_def() -> int:
 	var job = _job()
 	var base = int(job.get("base_def", 3))
-	return base + int(stats.get("vit", 8) / 3) + temp_def_buff
+	return base + int(stats.get("vit", 8) / 3) + temp_def_buff - temp_exposed
 
 func derived_hit() -> int:
 	return 70 + int(stats.get("skl", 8)) + int(stats.get("agi", 8) / 2) + temp_hit_bonus
@@ -76,7 +80,7 @@ func derived_crit() -> int:
 	var c = 5 + int(stats.get("skl", 8) / 3)
 	if "lucky" in traits:
 		c += 3
-	return c
+	return c + temp_crit_bonus
 
 func derived_move() -> int:
 	return int(_job().get("move", 4))

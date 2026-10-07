@@ -195,10 +195,22 @@ func _is_melee(c: CKCharacter) -> bool:
 	var job = GameState.get_job(c.job_id)
 	return str(job.get("atk_type", "melee")) == "melee"
 
-## 曼哈顿距离移动范围（含地形耗）
-func move_costs(map_terrain: Array, start: Vector2i, move_pts: int) -> Dictionary:
+## 是否与任一控制源相邻（控制地带 ZoC）
+func in_zoc(cell: Vector2i, zoc_sources: Array) -> bool:
+	for src in zoc_sources:
+		var s: Vector2i = src
+		if absi(s.x - cell.x) + absi(s.y - cell.y) == 1:
+			return true
+	return false
+
+## 移动范围：地形耗 + 敌军阻挡 + 控制地带（进入后不可继续穿行）
+## blocked: 敌军格；zoc_sources: 敌军坐标；ignore_zoc: 冲锋无视；zoc_extra_cost: 入控额外耗
+func move_costs(map_terrain: Array, start: Vector2i, move_pts: int, blocked: Array = [], zoc_sources: Array = [], ignore_zoc: bool = false, zoc_extra_cost: int = 0) -> Dictionary:
 	var h = map_terrain.size()
 	var w = map_terrain[0].size() if h > 0 else 0
+	var block_set: Dictionary = {}
+	for b in blocked:
+		block_set[b] = true
 	var best: Dictionary = {}
 	var q: Array = [[start, 0]]
 	best[start] = 0
@@ -206,12 +218,18 @@ func move_costs(map_terrain: Array, start: Vector2i, move_pts: int) -> Dictionar
 		var cur = q.pop_front()
 		var pos: Vector2i = cur[0]
 		var cost: int = cur[1]
+		if not ignore_zoc and pos != start and in_zoc(pos, zoc_sources):
+			continue
 		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
 			var np = pos + d
 			if np.x < 0 or np.y < 0 or np.x >= w or np.y >= h:
 				continue
+			if block_set.has(np):
+				continue
 			var tid = map_terrain[np.y][np.x]
 			var step = int(terrain_info(tid).get("move_cost", 1))
+			if not ignore_zoc and zoc_extra_cost > 0 and in_zoc(np, zoc_sources):
+				step += zoc_extra_cost
 			var nc = cost + step
 			if nc > move_pts:
 				continue
@@ -220,3 +238,14 @@ func move_costs(map_terrain: Array, start: Vector2i, move_pts: int) -> Dictionar
 			best[np] = nc
 			q.append([np, nc])
 	return best
+
+func zoc_cells(map_w: int, map_h: int, zoc_sources: Array) -> Dictionary:
+	var out: Dictionary = {}
+	for src in zoc_sources:
+		var s: Vector2i = src
+		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			var np = s + d
+			if np.x < 0 or np.y < 0 or np.x >= map_w or np.y >= map_h:
+				continue
+			out[np] = true
+	return out

@@ -112,6 +112,8 @@ func _set_early(path: String) -> void:
 	GameState.add_lineage_event("早教：%s → %s（生日加维）" % [_selected.name, pn])
 	# 立刻小幅加维，让选择有即时反馈
 	var keys = {"martial": ["str", "vit"], "scholar": ["wil", "per"], "merchant": ["agi", "skl"]}[path]
+	if str(GameState.house_mods.get("doctrine", "")) == "strict" and path == "martial":
+		keys = ["str", "vit", "str"]
 	var k = keys[GameState.rng.randi() % keys.size()]
 	_selected.stats[k] = mini(int(_selected.apt_max.get(k, 20)), int(_selected.stats.get(k, 8)) + 1)
 	_msg.text = "早教已定：%s。%s 立刻 +1，此后生日持续偏向。" % [pn, Locale.t("stat_" + k)]
@@ -184,5 +186,7 @@ func _do_enlist() -> void:
 		GameState.add_rep("ashland", 2)
 		Sfx.lineage_chime()
 		Sfx.fanfare()
+		for am in GameState.check_ambitions():
+			_msg.text += "　" + am
 		GameState.save_game()
 	_refresh_list()

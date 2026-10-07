@@ -948,8 +948,18 @@ func _cycle_skill() -> void:
 	# offense: arm for next attack
 	skill_mode = true
 	attack_mode = true
-	move_cells.clear()
-	_log("战技已就绪：%s — %s" % [sk.get("name", ""), sk.get("desc", "")])
+	if sk.get("ignore_zoc"):
+		su.char.temp_ignore_zoc = true
+		if not moved_this_select:
+			move_cells = _compute_move_cells(selected)
+			attack_mode = false
+			_log("破控冲锋就绪：可无视控制地带移动后再攻击 — %s" % sk.get("desc", ""))
+		else:
+			move_cells.clear()
+			_log("战技已就绪：%s — %s" % [sk.get("name", ""), sk.get("desc", "")])
+	else:
+		move_cells.clear()
+		_log("战技已就绪：%s — %s" % [sk.get("name", ""), sk.get("desc", "")])
 	_update_skill_hint()
 	overlay.queue_redraw()
 	_refresh_info()
@@ -1000,6 +1010,12 @@ func _cast_support_skill(ui: int, sid: String) -> void:
 			healed += 1
 			_spawn_dmg(o.pos, "+%d" % amt, Color(0.4, 0.9, 0.5))
 			_spawn_slash(o.pos, "heal")
+	if sk.get("party_def_buff"):
+		var add = int(sk.get("party_def_buff"))
+		for ou in units:
+			if ou.team == "player" and ou.char.hp > 0:
+				ou.char.temp_def_buff = maxi(ou.char.temp_def_buff, add)
+		_spawn_dmg(u.pos, "圣域", Color(0.7, 0.85, 1.0))
 	_consume_skill(u.char, sid)
 	u.done = true
 	selected = -1
@@ -1016,6 +1032,12 @@ func _cast_buff_skill(ui: int, sid: String) -> void:
 		u.char.temp_def_buff = int(sk.get("def_buff"))
 	if sk.get("next_hit_bonus"):
 		u.char.temp_hit_bonus = int(sk.get("next_hit_bonus"))
+	if sk.get("next_crit_bonus"):
+		u.char.temp_crit_bonus = int(sk.get("next_crit_bonus"))
+	if sk.get("zoc_aura"):
+		u.char.temp_zoc_aura = int(sk.get("zoc_aura"))
+	if sk.get("ignore_zoc"):
+		u.char.temp_ignore_zoc = true
 	if sk.get("party_def_buff"):
 		var add = int(sk.get("party_def_buff"))
 		for ou in units:
@@ -1024,10 +1046,15 @@ func _cast_buff_skill(ui: int, sid: String) -> void:
 	if sk.get("self_def_penalty"):
 		u.char.temp_def_buff = maxi(-99, u.char.temp_def_buff - int(sk.get("self_def_penalty")))
 	_consume_skill(u.char, sid)
-	_log("%s 释放「%s」" % [u.char.name, sk.get("name", "")])
+	var note = ""
+	if sk.get("zoc_aura"):
+		note = "（控带强化）"
+	_log("%s 释放「%s」%s" % [u.char.name, sk.get("name", ""), note])
 	Sfx.confirm()
+	Sfx.skill()
 	_refresh_info()
 	map_draw.queue_redraw()
+	overlay.queue_redraw()
 
 func _enter_attack_mode() -> void:
 	if selected < 0 or selected >= units.size():
@@ -1265,11 +1292,20 @@ func _draw_map() -> void:
 			map_draw.draw_arc(center, 24.0 + pulse * 2.0, 0, TAU, 32, UnitArt.crest_color(), 2.0)
 
 func _draw_overlay() -> void:
+	# 敌军控制地带（ZoC）浅红提示
+	if turn_team == "player":
+		var zcells = BattleRules.zoc_cells(MAP_W, MAP_H, _enemy_positions("player"))
+		for pos in zcells.keys():
+			var rz = Rect2(ORIGIN + Vector2(pos) * CELL, Vector2(CELL - 2, CELL - 2))
+			overlay.draw_rect(rz, Color(0.85, 0.25, 0.2, 0.16))
 	if not attack_mode:
 		for pos in move_cells.keys():
 			var r = Rect2(ORIGIN + Vector2(pos) * CELL, Vector2(CELL - 2, CELL - 2))
-			overlay.draw_rect(r, Color(0.25, 0.55, 0.95, 0.38))
-			overlay.draw_rect(r, Color(0.4, 0.7, 1.0, 0.55), false, 2.0)
+			var in_z = BattleRules.in_zoc(pos, _enemy_positions("player"))
+			var col = Color(0.95, 0.55, 0.25, 0.40) if in_z else Color(0.25, 0.55, 0.95, 0.38)
+			var edge = Color(1.0, 0.7, 0.3, 0.7) if in_z else Color(0.4, 0.7, 1.0, 0.55)
+			overlay.draw_rect(r, col)
+			overlay.draw_rect(r, edge, false, 2.0)
 	if selected >= 0 and selected < units.size():
 		var u = units[selected]
 		if u.team == "player" and not u.done:
@@ -1389,11 +1425,7 @@ func _select_player(ui: int) -> void:
 	skill_mode = false
 	active_skill_id = ""
 	moved_this_select = false
-	var mv = units[ui].char.derived_move()
-	move_cells = BattleRules.move_costs(terrain, units[ui].pos, mv)
-	for u in units:
-		if u.char.hp > 0 and u.pos != units[ui].pos:
-			move_cells.erase(u.pos)
+	move_cells = _compute_move_cells(ui)
 	_refresh_info()
 	_update_skill_hint()
 	overlay.queue_redraw()
@@ -1453,6 +1485,37 @@ func _is_melee(c: CKCharacter) -> bool:
 
 func _manhattan(a: Vector2i, b: Vector2i) -> int:
 	return absi(a.x - b.x) + absi(a.y - b.y)
+
+func _enemy_positions(for_team: String) -> Array:
+	var out: Array = []
+	for u in units:
+		if u.char.hp <= 0:
+			continue
+		if u.team != for_team:
+			out.append(u.pos)
+	return out
+
+func _ally_zoc_extra(for_team: String) -> int:
+	# 方阵锁喉：己方单位提供的控带额外耗
+	var extra = 0
+	for u in units:
+		if u.team == for_team and u.char.hp > 0:
+			extra = maxi(extra, int(u.char.temp_zoc_aura))
+	return extra
+
+func _compute_move_cells(ui: int) -> Dictionary:
+	var u = units[ui]
+	var foes = _enemy_positions(u.team)
+	var ignore = bool(u.char.temp_ignore_zoc)
+	var zoc_extra = 0
+	# 敌方移动时吃我方方阵锁喉
+	if u.team == "enemy":
+		zoc_extra = _ally_zoc_extra("player")
+	var mv = BattleRules.move_costs(terrain, u.pos, u.char.derived_move(), foes, foes, ignore, zoc_extra)
+	for ou in units:
+		if ou.char.hp > 0 and ou.pos != u.pos:
+			mv.erase(ou.pos)  # 不可停在友/敌军格
+	return mv
 
 func _spawn_dmg(cell: Vector2i, text: String, col: Color) -> void:
 	var center = ORIGIN + Vector2(cell) * CELL + Vector2(CELL / 2, CELL / 2)
@@ -1524,10 +1587,15 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool) -> void:
 		if hit:
 			dmg = rng.randi_range(dmg_range.x, dmg_range.y)
 			dmg = int(round(dmg * float(sk.get("dmg_mul", 1.0))))
+			if int(sk.get("vs_tank_bonus", 0)) > 0 and BattleRules.job_role(def.char.job_id) == "tank":
+				dmg += int(sk.get("vs_tank_bonus", 0))
 			if rng.randi_range(1, 100) <= atk.char.derived_crit():
 				crit = true
 				Sfx.crit()
 				_spawn_slash(def.pos, "crit")
+				if _unit_panel:
+					UIFX.flash_modulate(_unit_panel, Color(1.35, 1.15, 0.7), 0.2)
+					UIFX.shake_control(_unit_panel, 5.0, 0.2)
 				dmg = int(dmg * 1.5)
 			def.char.hp = maxi(0, def.char.hp - dmg)
 		result = {"hit": hit, "crit": crit, "damage": dmg, "hit_chance": hit_chance, "dmg_range": dmg_range, "killed": def.char.hp <= 0, "flank": extras.get("flank", false), "role_label": str(BattleRules.role_mods(atk.char, def.char).get("label", "")), "terrain_def": int(BattleRules.terrain_info(tid).get("def_bonus", 0))}
@@ -1567,7 +1635,53 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool) -> void:
 		Sfx.miss()
 		msg += "未命中（命中率 %d%%）" % result.hit_chance
 		_spawn_dmg(def.pos, "未中", Color(0.7, 0.75, 0.85))
+	if result.hit and skill_id != "" and sk.get("type") == "offense":
+		if float(sk.get("drain_pct", 0)) > 0:
+			var heal = maxi(1, int(result.damage * float(sk.get("drain_pct", 0))))
+			atk.char.hp = mini(atk.char.max_hp, atk.char.hp + heal)
+			_spawn_dmg(atk.pos, "+%d" % heal, Color(0.9, 0.4, 0.55))
+			msg += " · 吸血%d" % heal
+		if int(sk.get("expose", 0)) > 0:
+			def.char.temp_exposed = maxi(def.char.temp_exposed, int(sk.get("expose", 0)))
+			_spawn_dmg(def.pos, "破防", Color(0.9, 0.6, 0.3))
+			msg += " · 破防"
+		if int(sk.get("push", 0)) > 0:
+			if _try_push(ai, di):
+				msg += " · 击退"
+				_spawn_dmg(def.pos, "击退", Color(0.7, 0.8, 1.0))
+		if float(sk.get("cleave_pct", 0)) > 0:
+			var cleave_dmg = maxi(1, int(result.damage * float(sk.get("cleave_pct", 0))))
+			for j in units.size():
+				if j == di:
+					continue
+				var o = units[j]
+				if o.team == def.team and o.char.hp > 0 and _manhattan(def.pos, o.pos) == 1:
+					o.char.hp = maxi(0, o.char.hp - cleave_dmg)
+					_spawn_dmg(o.pos, "溅-%d" % cleave_dmg, Color(1.0, 0.5, 0.25))
+					_spawn_slash(o.pos)
+					msg += " · 溅射%s" % o.char.name
+					if o.char.hp <= 0 and o.team == "player":
+						o.char.injured = true
+					break
+	if atk.char.temp_crit_bonus != 0 and allow_skill:
+		atk.char.temp_crit_bonus = 0
 	_log(msg)
+
+func _try_push(ai: int, di: int) -> bool:
+	var atk = units[ai]
+	var def = units[di]
+	var dx = signi(def.pos.x - atk.pos.x)
+	var dy = signi(def.pos.y - atk.pos.y)
+	if dx == 0 and dy == 0:
+		return false
+	var np = def.pos + Vector2i(dx, dy)
+	if not _in_bounds(np):
+		return false
+	if _unit_at(np) >= 0:
+		return false
+	def.pos = np
+	map_draw.queue_redraw()
+	return true
 
 func _wait_selected() -> void:
 	if selected < 0:
@@ -1597,6 +1711,9 @@ func _start_player_turn() -> void:
 			u.done = false
 			# 铁壁姿态持续到己方下回合开始时清除
 			u.char.temp_def_buff = 0
+			u.char.temp_exposed = 0
+			u.char.temp_zoc_aura = 0
+			u.char.temp_ignore_zoc = false
 			pcs.append(u.char)
 	GameState.tick_skill_cooldowns(pcs)
 	selected = -1
@@ -1617,6 +1734,9 @@ func _end_player_turn() -> void:
 	phase_label.text = "敌方回合"
 	phase_label.add_theme_color_override("font_color", UIKit.DANGER)
 	_turn_flash = 0.9
+	for u in units:
+		if u.team == "enemy":
+			u.char.temp_exposed = 0
 	selected = -1
 	move_cells.clear()
 	attack_mode = false
@@ -1632,10 +1752,7 @@ func _enemy_ai() -> void:
 		var u = units[i]
 		if u.team != "enemy" or u.char.hp <= 0:
 			continue
-		var mv = BattleRules.move_costs(terrain, u.pos, u.char.derived_move())
-		for ou in units:
-			if ou.char.hp > 0 and ou.pos != u.pos:
-				mv.erase(ou.pos)
+		var mv = _compute_move_cells(i)
 		if not mv.has(u.pos):
 			mv[u.pos] = 0
 		var best_score := -9999.0
@@ -1727,7 +1844,10 @@ func _finish(win: bool) -> void:
 	battle_over = true
 	if win:
 		GameState.set_flag("battle_done")
-		GameState.silver += 35
+		var purse = 35
+		if bool(GameState.house_mods.get("warlord_purse", false)):
+			purse += 10
+		GameState.silver += purse
 		GameState.add_rep("ashland", 8)
 		for u in units:
 			if u.team == "player" and u.char.hp > 0:
@@ -1738,7 +1858,7 @@ func _finish(win: bool) -> void:
 		Sfx.win()
 		if not bool(BattleMaps.get_map(map_id).get("tutorial_militia", false)):
 			Sfx.fanfare()
-		_log("【胜利】%s肃清。+35 银。" % map_name)
+		_log("【胜利】%s肃清。+%d 银。" % [map_name, purse])
 		_mark_map_victory()
 		GameState.on_battle_quest_victory()
 		if not bool(BattleMaps.get_map(map_id).get("tutorial_militia", false)):

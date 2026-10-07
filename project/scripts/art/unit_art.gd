@@ -415,16 +415,48 @@ static func _fill_rect(img: Image, r: Rect2i, col: Color) -> void:
 			img.set_pixel(x, y, col)
 
 static func _proc_portrait(c: CKCharacter, size: int) -> Texture2D:
-	var ck = "pp|" + str(c.id) + "|" + str(size)
+	var role = BattleRules.job_role(c.job_id)
+	var ck = "pp2|" + str(c.id) + "|" + role + "|" + str(c.gender) + "|" + str(size)
 	if _cache.has(ck): return _cache[ck]
 	var img := Image.create(size, size, false, Image.FORMAT_RGBA8)
 	img.fill(Color(0, 0, 0, 0))
 	var s = float(size)
 	var crest = crest_color()
-	_fill_ellipse(img, s * 0.5, s * 0.5, s * 0.46, s * 0.46, Color(0.18, 0.2, 0.26))
-	_fill_ellipse(img, s * 0.5, s * 0.42, s * 0.22, s * 0.26, Color(0.82, 0.68, 0.55))
-	_fill_ellipse(img, s * 0.5, s * 0.28, s * 0.23, s * 0.12, hair_color(c.appearance))
-	_fill_rect(img, Rect2i(int(s * 0.25), int(s * 0.62), int(s * 0.5), int(s * 0.28)), crest.darkened(0.2))
+	var ring = role_color(c.job_id)
+	# 背景环按兵种
+	_fill_ellipse(img, s * 0.5, s * 0.5, s * 0.48, s * 0.48, ring.darkened(0.35))
+	_fill_ellipse(img, s * 0.5, s * 0.5, s * 0.44, s * 0.44, Color(0.14, 0.16, 0.22))
+	# 肤色微差（id 哈希）
+	var h = 0
+	for ch2 in str(c.id):
+		h = (h * 31 + ch2.unicode_at(0)) % 97
+	var skin = Color(0.78 + (h % 7) * 0.015, 0.62 + (h % 5) * 0.012, 0.50 + (h % 4) * 0.01)
+	_fill_ellipse(img, s * 0.5, s * 0.42, s * 0.22, s * 0.26, skin)
+	# 发型：男短女长
+	var hair = hair_color(c.appearance)
+	if c.gender == "f":
+		_fill_ellipse(img, s * 0.5, s * 0.30, s * 0.26, s * 0.16, hair)
+		_fill_rect(img, Rect2i(int(s * 0.18), int(s * 0.34), int(s * 0.14), int(s * 0.28)), hair)
+		_fill_rect(img, Rect2i(int(s * 0.68), int(s * 0.34), int(s * 0.14), int(s * 0.28)), hair)
+	else:
+		_fill_ellipse(img, s * 0.5, s * 0.28, s * 0.23, s * 0.12, hair)
+	# 眼睛
+	var eye = eye_color(c.appearance)
+	_fill_ellipse(img, s * 0.42, s * 0.42, s * 0.035, s * 0.04, eye)
+	_fill_ellipse(img, s * 0.58, s * 0.42, s * 0.035, s * 0.04, eye)
+	# 衣领按兵种
+	_fill_rect(img, Rect2i(int(s * 0.22), int(s * 0.62), int(s * 0.56), int(s * 0.30)), crest.darkened(0.15).lerp(ring, 0.35))
+	if role == "tank":
+		_fill_rect(img, Rect2i(int(s * 0.30), int(s * 0.58), int(s * 0.40), int(s * 0.08)), ring.lightened(0.1))
+	elif role == "ranger":
+		_fill_rect(img, Rect2i(int(s * 0.72), int(s * 0.48), int(s * 0.08), int(s * 0.22)), Color(0.35, 0.25, 0.15))
+	elif role == "mage":
+		_fill_ellipse(img, s * 0.5, s * 0.72, s * 0.06, s * 0.06, ring.lightened(0.3))
+	elif role == "cavalry":
+		_fill_rect(img, Rect2i(int(s * 0.45), int(s * 0.55), int(s * 0.1), int(s * 0.2)), Color(0.55, 0.4, 0.2))
+	# 伤疤
+	if str(c.appearance.get("scar", "none")) != "none":
+		_fill_rect(img, Rect2i(int(s * 0.55), int(s * 0.36), int(s * 0.12), int(s * 0.025)), Color(0.55, 0.25, 0.22, 0.85))
 	var tex := ImageTexture.create_from_image(img)
 	_cache[ck] = tex
 	return tex
@@ -441,25 +473,36 @@ static func role_color(job_id: String) -> Color:
 
 static func _proc_token(c: CKCharacter, team: String, size: int, done: bool) -> Texture2D:
 	var role = BattleRules.job_role(c.job_id)
-	var ck = "pt|" + str(c.id) + "|" + team + "|" + role + "|" + str(size) + "|" + str(done)
+	var ck = "pt2|" + str(c.id) + "|" + team + "|" + role + "|" + str(c.gender) + "|" + str(size) + "|" + str(done)
 	if _cache.has(ck): return _cache[ck]
 	var img := Image.create(size, size, false, Image.FORMAT_RGBA8)
 	img.fill(Color(0, 0, 0, 0))
 	var s = float(size)
 	var col = crest_color() if team == "player" else Color(0.7, 0.25, 0.22)
 	if done: col = col.darkened(0.35)
-	# 兵种色外环，减弱「人人一色」的程序感
 	var ring = role_color(c.job_id)
-	_fill_ellipse(img, s * 0.5, s * 0.5, s * 0.46, s * 0.46, ring)
-	_fill_ellipse(img, s * 0.5, s * 0.5, s * 0.38, s * 0.38, col)
-	_fill_ellipse(img, s * 0.5, s * 0.38, s * 0.16, s * 0.18, Color(0.85, 0.72, 0.6))
-	# 角色小徽：坦克方、远程三角感用色块区分
+	# 外环 + 内盘
+	_fill_ellipse(img, s * 0.5, s * 0.5, s * 0.48, s * 0.48, ring)
+	_fill_ellipse(img, s * 0.5, s * 0.5, s * 0.40, s * 0.40, col)
+	# 发型色点
+	var hair = hair_color(c.appearance)
+	_fill_ellipse(img, s * 0.5, s * 0.34, s * 0.18, s * 0.10, hair)
+	_fill_ellipse(img, s * 0.5, s * 0.42, s * 0.15, s * 0.16, Color(0.86, 0.72, 0.58))
+	# 兵种武器剪影
 	if role == "tank":
-		_fill_rect(img, Rect2i(int(s * 0.35), int(s * 0.62), int(s * 0.3), int(s * 0.12)), ring.lightened(0.15))
+		_fill_rect(img, Rect2i(int(s * 0.28), int(s * 0.60), int(s * 0.44), int(s * 0.14)), ring.lightened(0.12))
 	elif role == "ranger":
-		_fill_rect(img, Rect2i(int(s * 0.46), int(s * 0.18), int(s * 0.08), int(s * 0.22)), ring.lightened(0.2))
+		_fill_rect(img, Rect2i(int(s * 0.72), int(s * 0.28), int(s * 0.08), int(s * 0.36)), Color(0.4, 0.28, 0.15))
+		_fill_rect(img, Rect2i(int(s * 0.68), int(s * 0.26), int(s * 0.16), int(s * 0.06)), Color(0.55, 0.4, 0.2))
 	elif role == "mage":
-		_fill_ellipse(img, s * 0.5, s * 0.72, s * 0.08, s * 0.08, ring.lightened(0.25))
+		_fill_ellipse(img, s * 0.5, s * 0.70, s * 0.09, s * 0.09, ring.lightened(0.3))
+		_fill_rect(img, Rect2i(int(s * 0.47), int(s * 0.55), int(s * 0.06), int(s * 0.16)), ring)
+	elif role == "cavalry":
+		_fill_rect(img, Rect2i(int(s * 0.18), int(s * 0.48), int(s * 0.64), int(s * 0.08)), Color(0.55, 0.4, 0.22))
+	else:
+		_fill_rect(img, Rect2i(int(s * 0.70), int(s * 0.40), int(s * 0.06), int(s * 0.28)), Color(0.7, 0.7, 0.75))
+	if c.is_leader:
+		_fill_ellipse(img, s * 0.5, s * 0.12, s * 0.08, s * 0.05, crest_color())
 	var tex := ImageTexture.create_from_image(img)
 	_cache[ck] = tex
 	return tex

@@ -11,6 +11,7 @@ var _vow_panel: Control
 var _vow_body: RichTextLabel
 var _vow_actions: HBoxContainer
 var _vow_gift: String = "banner"
+var _vow_doctrine: String = "strict"
 
 func _ready() -> void:
 	UIFX.fade_in(self, 0.3)
@@ -182,7 +183,13 @@ func _show_vow() -> void:
 			_vow_btn("商契", func(): _vow_gift = "trade"; _vow_step = 2; _show_vow())
 			_vow_btn("取消", func(): _vow_panel.visible = false)
 		2:
-			_vow_body.text = "[b]誓约·第三步 · 定聘落成[/b]\n\n聘礼 40 银将入库。妊娠将在岁月中推进。\n族谱将添新页；陆桥会传『灰旗有家，可托孤』。"
+			_vow_body.text = "[b]誓约·第三步 · 家训[/b]\n\n立家训，百年不改。择一：\n[color=#e07070]严教[/color]：月结士气微升，子嗣早教偏武更易\n[color=#6db0e0]仁恤[/color]：月结+粮与士气\n[color=#e9c46a]商本[/color]：月结+银"
+			_vow_btn("严教", func(): _vow_doctrine = "strict"; _vow_step = 3; _show_vow())
+			_vow_btn("仁恤", func(): _vow_doctrine = "mercy"; _vow_step = 3; _show_vow())
+			_vow_btn("商本", func(): _vow_doctrine = "commerce"; _vow_step = 3; _show_vow())
+			_vow_btn("取消", func(): _vow_panel.visible = false)
+		3:
+			_vow_body.text = "[b]誓约·第四步 · 定聘落成[/b]\n\n聘礼 40 银将入库。家训与嫁妆写入族谱旁注。\n妊娠将在岁月中推进；陆桥会传『灰旗有家，可托孤』。"
 			_vow_btn("落成婚约", func(): _finish_marry())
 			_vow_btn("取消", func(): _vow_panel.visible = false)
 
@@ -200,7 +207,7 @@ func _finish_marry() -> void:
 	if r.get("ok"):
 		GameState.save_game()
 		_msg.text += "　誓约完成。双姓共席，旗又升高一寸。"
-		GameState.add_lineage_event("誓约婚宴：%s 与 %s 三步成礼。" % [GameState.get_leader().name if GameState.get_leader() else "团长", _selected.name])
+		GameState.add_lineage_event("誓约婚宴：%s 与 %s 四步成礼（含家训）。" % [GameState.get_leader().name if GameState.get_leader() else "团长", _selected.name])
 		match _vow_gift:
 			"banner":
 				GameState.add_rep("ashland", 4)
@@ -214,6 +221,11 @@ func _finish_marry() -> void:
 				GameState.silver += 30
 				GameState.house_mods["vow_trade"] = true
 				GameState.add_lineage_event("嫁妆旁注：商契——丰收永续加银")
+		GameState.house_mods["doctrine"] = _vow_doctrine
+		var dn = {"strict": "严教", "mercy": "仁恤", "commerce": "商本"}.get(_vow_doctrine, _vow_doctrine)
+		GameState.add_lineage_event("家训既立：%s" % dn)
+		for am in GameState.check_ambitions():
+			_msg.text += "　" + am
 		GameState.add_rep("ashland", 2)
 		Sfx.confirm()
 		Sfx.lineage_chime()

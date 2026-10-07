@@ -229,6 +229,149 @@
       "dmg_mul": 1.25,
       "hit_mod": 8,
       "tree": "range"
+    },
+    {
+      "id": "cleave_arc",
+      "name": "弧刃横扫",
+      "jobs": [
+        "warrior",
+        "heavy_inf",
+        "light_inf"
+      ],
+      "type": "offense",
+      "uses": 1,
+      "cooldown": 3,
+      "tier": 3,
+      "req_skill": "banner_crash",
+      "desc": "伤害+45%；击中后对另一相邻敌军溅射50%。冷却3。",
+      "dmg_mul": 1.45,
+      "hit_mod": -5,
+      "cleave_pct": 0.5,
+      "tree": "melee"
+    },
+    {
+      "id": "shatter_line",
+      "name": "碎阵一击",
+      "jobs": [
+        "warrior",
+        "heavy_inf"
+      ],
+      "type": "offense",
+      "uses": 1,
+      "cooldown": 3,
+      "tier": 3,
+      "req_skill": "iron_wall",
+      "desc": "伤害+40%；命中后目标防御-3至其下回合，并击退1格。冷却3。",
+      "dmg_mul": 1.4,
+      "hit_mod": 0,
+      "expose": 3,
+      "push": 1,
+      "tree": "melee"
+    },
+    {
+      "id": "sky_piercer",
+      "name": "穿云连矢",
+      "jobs": [
+        "archer"
+      ],
+      "type": "offense",
+      "uses": 1,
+      "cooldown": 3,
+      "tier": 3,
+      "req_skill": "rain_volleys",
+      "desc": "无视地形回避；伤害+50%；命中吸血30%。冷却3。",
+      "dmg_mul": 1.5,
+      "ignore_terrain_avo": true,
+      "drain_pct": 0.3,
+      "tree": "range"
+    },
+    {
+      "id": "mark_death",
+      "name": "死印锁定",
+      "jobs": [
+        "hunter",
+        "archer"
+      ],
+      "type": "buff",
+      "uses": 1,
+      "cooldown": 3,
+      "tier": 3,
+      "req_skill": "mark_prey",
+      "desc": "下次攻击命中+25，暴击+15。冷却3。",
+      "next_hit_bonus": 25,
+      "next_crit_bonus": 15,
+      "tree": "range"
+    },
+    {
+      "id": "sanctuary",
+      "name": "灰焰圣域",
+      "jobs": [
+        "priest"
+      ],
+      "type": "support",
+      "uses": 1,
+      "cooldown": 4,
+      "tier": 3,
+      "req_skill": "ember_seal",
+      "desc": "治疗相邻友军14–18，并全体防御+3至下回合。冷却4。",
+      "heal_min": 14,
+      "heal_max": 18,
+      "party_def_buff": 3,
+      "tree": "faith"
+    },
+    {
+      "id": "judgment",
+      "name": "审判焰",
+      "jobs": [
+        "priest",
+        "apprentice"
+      ],
+      "type": "offense",
+      "uses": 1,
+      "cooldown": 3,
+      "tier": 3,
+      "req_skill": "smite",
+      "desc": "秘术伤害+80%；对重装额外有效。冷却3。",
+      "dmg_mul": 1.8,
+      "hit_mod": 5,
+      "vs_tank_bonus": 4,
+      "tree": "faith"
+    },
+    {
+      "id": "charge_break",
+      "name": "破控冲锋",
+      "jobs": [
+        "light_cavalry",
+        "squire"
+      ],
+      "type": "offense",
+      "uses": 1,
+      "cooldown": 3,
+      "tier": 3,
+      "req_skill": "wheel_cut",
+      "desc": "伤害+60%；击退1格；本次无视控制地带。冷却3。",
+      "dmg_mul": 1.6,
+      "hit_mod": 5,
+      "push": 1,
+      "ignore_zoc": true,
+      "tree": "cavalry"
+    },
+    {
+      "id": "hold_phalanx",
+      "name": "方阵锁喉",
+      "jobs": [
+        "heavy_inf",
+        "warrior"
+      ],
+      "type": "buff",
+      "uses": 1,
+      "cooldown": 3,
+      "tier": 3,
+      "req_skill": "iron_wall",
+      "desc": "自身防御+5，并强化周围控制地带一回合（敌入控耗+1）。冷却3。",
+      "def_buff": 5,
+      "zoc_aura": 1,
+      "tree": "melee"
     }
   ],
   "trees": [

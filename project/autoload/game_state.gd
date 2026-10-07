@@ -521,6 +521,7 @@ var house_mods: Dictionary = {}
 var quest_done: Dictionary = {}
 ## 退役顾问加成：{stat_key: bonus}
 var advisor_bonus: Dictionary = {}
+var ambition_done: Dictionary = {}  # 堡志中长期目标
 var deploy_ids: Array = []
 var dirty: bool = false
 var dynasty_journal: String = ""
@@ -1116,6 +1117,7 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	house_mods = {}
 	quest_done = {}
 	advisor_bonus = {}
+	ambition_done = {}
 	surname = leader_surname
 	crest_color = color
 	var leader = CharacterFactory.make_leader(leader_given, leader_surname, color)
@@ -1200,18 +1202,20 @@ const BUILDING_NAMES := {
 	"forge": "工坊",
 	"shrine": "祠堂",
 }
-const BUILDING_MAX := 3
+const BUILDING_MAX := 5
 const BUILDING_COST := {
 	# level -> cost to upgrade TO that level
 	2: {"silver": 80, "iron": 3, "food": 10},
 	3: {"silver": 160, "iron": 6, "food": 20},
+	4: {"silver": 280, "iron": 10, "food": 35},
+	5: {"silver": 450, "iron": 16, "food": 55},
 }
 
 func building_level(id: String) -> int:
 	return int(buildings.get(id, 1))
 
 func max_deploy() -> int:
-	# 厅堂：1→4人，2→5人，3→6人
+	# 厅堂 Lv1–5 → 4–8 人
 	return 3 + building_level("hall")
 
 func train_cost() -> int:
@@ -1223,7 +1227,7 @@ func train_cost() -> int:
 
 func forge_craft_cost() -> Dictionary:
 	var lv = building_level("forge")
-	return {"iron": maxi(1, 3 - lv), "silver": maxi(10, 24 - lv * 4)}
+	return {"iron": maxi(1, 3 - mini(lv, 3)), "silver": maxi(8, 24 - lv * 4)}
 
 func market_buy_prices() -> Dictionary:
 	var lv = building_level("market")
@@ -1238,6 +1242,67 @@ func market_sell_prices() -> Dictionary:
 	if bool(house_mods.get("trade_route", false)):
 		bump += 1
 	return {"food": 1 + bump, "iron": 5 + bump, "herb": 4 + bump}
+
+
+func _all_buildings_at_least(lv: int) -> bool:
+	for id in BUILDING_NAMES.keys():
+		if building_level(id) < lv:
+			return false
+	return true
+
+func _enlisted_children_count() -> int:
+	var n = 0
+	for c in characters.values():
+		if not c.alive or not c.in_roster:
+			continue
+		if c.parent_ids.size() > 0 or str(c.id).begins_with("child"):
+			n += 1
+	return n
+
+func ambition_list() -> Array:
+	## UI：列出堡志与完成状态
+	return [
+		{"id": "fort_tier3", "name": "灰旗威仪", "desc": "全部工事达到 Lv3", "done": bool(ambition_done.get("fort_tier3", false)), "reward": "战技点+2，丰收声望"},
+		{"id": "fort_tier5", "name": "百年旗堡", "desc": "全部工事达到 Lv5", "done": bool(ambition_done.get("fort_tier5", false)), "reward": "战技点+3，月结津贴+12，士气上限气质"},
+		{"id": "warlord", "name": "陆桥战勋", "desc": "战棋委任首通累计 5 次", "done": bool(ambition_done.get("warlord", false)), "reward": "战技点+1，开战银+10"},
+		{"id": "heirs_two", "name": "双嗣承旗", "desc": "至少两名子嗣授旗入队", "done": bool(ambition_done.get("heirs_two", false)), "reward": "声望+8，战技点+1"},
+		{"id": "vow_house", "name": "家训既立", "desc": "完成联姻誓约并选定家训", "done": bool(ambition_done.get("vow_house", false)), "reward": "家训永久生效"},
+	]
+
+func check_ambitions() -> Array:
+	var msgs: Array = []
+	if not bool(ambition_done.get("fort_tier3", false)) and _all_buildings_at_least(3):
+		ambition_done["fort_tier3"] = true
+		house_mods["ash_prestige"] = true
+		add_skill_point(2)
+		msgs.append("堡志「灰旗威仪」达成：战技点+2")
+		add_lineage_event("堡志：灰旗威仪")
+	if not bool(ambition_done.get("fort_tier5", false)) and _all_buildings_at_least(5):
+		ambition_done["fort_tier5"] = true
+		house_mods["century_fort"] = true
+		add_skill_point(3)
+		silver += 80
+		msgs.append("堡志「百年旗堡」达成：战技点+3，银+80")
+		add_lineage_event("堡志：百年旗堡")
+	if not bool(ambition_done.get("warlord", false)) and int(house_mods.get("war_memory", 0)) >= 5:
+		ambition_done["warlord"] = true
+		house_mods["warlord_purse"] = true
+		add_skill_point(1)
+		msgs.append("堡志「陆桥战勋」达成：战技点+1")
+		add_lineage_event("堡志：陆桥战勋")
+	if not bool(ambition_done.get("heirs_two", false)) and _enlisted_children_count() >= 2:
+		ambition_done["heirs_two"] = true
+		add_rep("ashland", 8)
+		add_skill_point(1)
+		msgs.append("堡志「双嗣承旗」达成：声望与战技点")
+		add_lineage_event("堡志：双嗣承旗")
+	if not bool(ambition_done.get("vow_house", false)) and str(house_mods.get("doctrine", "")) != "":
+		ambition_done["vow_house"] = true
+		msgs.append("堡志「家训既立」达成")
+		add_lineage_event("堡志：家训既立·%s" % house_mods.get("doctrine", ""))
+	if msgs:
+		mark_dirty()
+	return msgs
 
 func upgrade_building(id: String) -> Dictionary:
 	if id not in BUILDING_NAMES:
@@ -1264,17 +1329,29 @@ func upgrade_building(id: String) -> Dictionary:
 	match id:
 		"hall":
 			fx = "出战编队上限 → %d" % max_deploy()
+			if next_lv >= 4:
+				fx += "；月结厅堂津贴"
 		"barracks":
-			fx = "演武花费 → %d 银；月结士气微升" % train_cost()
+			fx = "演武花费 → %d 银；月结士气" % train_cost()
+			if next_lv >= 4:
+				fx += "；演武双加更易"
 		"market":
 			fx = "市集买卖价改善"
+			if next_lv >= 4:
+				fx += "；月结商税"
 		"forge":
-			fx = "打造更省料，灰刃更利"
+			fx = "打造更省料"
+			if next_lv >= 4:
+				fx += "；精灰刃"
 		"shrine":
-			fx = "丰收产出与祈愈增强"
+			fx = "丰收与祈愈增强"
+			if next_lv >= 4:
+				fx += "；月结微愈"
 	log_event("工事升级：%s → Lv%d（%s）" % [BUILDING_NAMES[id], next_lv, fx])
+	var amb = check_ambitions()
+	var amb_s = ("；" + " / ".join(amb)) if amb else ""
 	mark_dirty()
-	return {"ok": true, "msg": "%s 升至 Lv%d。%s" % [BUILDING_NAMES[id], next_lv, fx]}
+	return {"ok": true, "msg": "%s 升至 Lv%d。%s%s" % [BUILDING_NAMES[id], next_lv, fx, amb_s]}
 
 func building_summary() -> String:
 	var parts: Array = []
@@ -1342,6 +1419,11 @@ func apply_quest_first_clear(qid: String) -> String:
 			msg = "首通记入陆桥簿"
 	if msg != "":
 		add_lineage_event("委任首通：「%s」——%s" % [qid, msg])
+	for am in check_ambitions():
+		if msg:
+			msg += "；" + am
+		else:
+			msg = am
 	return msg
 
 func on_battle_quest_victory() -> void:
@@ -1415,6 +1497,12 @@ func apply_harvest() -> String:
 	if bool(house_mods.get("vow_banner", false)):
 		add_rep("ashland", 2)
 		extra += "，旗饰声望+2"
+	if bool(house_mods.get("ash_prestige", false)):
+		add_rep("ashland", 2)
+		extra += "，威仪声望+2"
+	if bool(house_mods.get("century_fort", false)):
+		silver += 12
+		extra += "，旗堡+12银"
 	var msg = "丰收结算：+%d 粮，+%d 银（祠堂 Lv%d / 厅 Lv%d）%s" % [prod, sil, shrine_level, building_level("hall"), extra]
 	log_event(msg)
 	for c in roster():
@@ -1448,7 +1536,7 @@ func train(cid: String) -> Dictionary:
 	if not advisor_bonus.is_empty() and rng.randf() < 0.35:
 		key = str(advisor_bonus.keys()[0])
 	var gain = 1
-	if building_level("barracks") >= 3 and rng.randf() < 0.35:
+	if building_level("barracks") >= 3 and rng.randf() < (0.5 if building_level("barracks") >= 4 else 0.35):
 		gain = 2
 	c.stats[key] = mini(int(c.apt_max.get(key, 20)), int(c.stats[key]) + gain)
 	if rng.randf() < 0.25:
@@ -1470,7 +1558,7 @@ func craft_weapon(cid: String) -> Dictionary:
 		return {"ok": false, "msg": "选择角色"}
 	iron -= int(cost.iron)
 	silver -= int(cost.silver)
-	c.weapon_id = "ash_blade_fine" if building_level("forge") >= 3 else "ash_blade"
+	c.weapon_id = "ash_blade_fine" if building_level("forge") >= 4 else "ash_blade"
 	# 负重检查（简化）
 	var burden = 4
 	var cap = 5 + int(c.stats.get("vit", 8) / 2)
@@ -1563,6 +1651,10 @@ func reset_battle_skills(roster_chars: Array) -> void:
 			continue
 		c.temp_def_buff = 0
 		c.temp_hit_bonus = 0
+		c.temp_crit_bonus = 0
+		c.temp_ignore_zoc = false
+		c.temp_zoc_aura = 0
+		c.temp_exposed = 0
 		c.skill_uses.clear()
 		c.skill_cd.clear()
 		for sid in _all_known_skills(c):
@@ -2123,6 +2215,7 @@ func save_game() -> bool:
 		"house_mods": house_mods.duplicate(true),
 		"quest_done": quest_done.duplicate(true),
 		"advisor_bonus": advisor_bonus.duplicate(true),
+		"ambition_done": ambition_done.duplicate(true),
 		"characters": {},
 		"tavern": [],
 		"marriage": [],
@@ -2414,6 +2507,7 @@ func load_game() -> bool:
 	house_mods = data.get("house_mods", {}).duplicate(true)
 	quest_done = data.get("quest_done", {}).duplicate(true)
 	advisor_bonus = data.get("advisor_bonus", {}).duplicate(true)
+	ambition_done = data.get("ambition_done", {}).duplicate(true)
 	quests = data.get("quests", quests)
 	characters.clear()
 	for id in data.get("characters", {}).keys():
