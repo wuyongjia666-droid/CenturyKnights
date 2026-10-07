@@ -1043,6 +1043,16 @@ func _mark_map_victory() -> void:
 		GameState.set_flag("ch20_spire_done")
 	elif map_id == "ch21_finale":
 		GameState.set_flag("ch21_finale_done")
+	elif map_id == "ch22_pass":
+		GameState.set_flag("ch22_pass_done")
+	elif map_id == "ch22_camp":
+		GameState.set_flag("ch22_camp_done")
+	elif map_id == "ch23_frost":
+		GameState.set_flag("ch23_frost_done")
+	elif map_id == "ch23_watch":
+		GameState.set_flag("ch23_watch_done")
+	elif map_id == "ch24_seal":
+		GameState.set_flag("ch24_seal_done")
 	# quest maps also count as battle_done for generic chains
 	if map_id.begins_with("quest"):
 		GameState.set_flag("battle_done")

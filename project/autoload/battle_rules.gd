@@ -5,6 +5,9 @@ const TERRAIN := {
 	"plain": {"name": "平地", "move_cost": 1, "avo_bonus": 0, "color": Color(0.45, 0.55, 0.38)},
 	"forest": {"name": "林", "move_cost": 2, "avo_bonus": 15, "color": Color(0.22, 0.42, 0.28)},
 	"hill": {"name": "丘", "move_cost": 2, "avo_bonus": 10, "color": Color(0.55, 0.48, 0.35)},
+	"water": {"name": "水", "move_cost": 3, "avo_bonus": 5, "color": Color(0.28, 0.45, 0.62)},
+	"bridge": {"name": "桥", "move_cost": 1, "avo_bonus": 0, "color": Color(0.58, 0.48, 0.36)},
+	"fort": {"name": "垒", "move_cost": 2, "avo_bonus": 20, "color": Color(0.50, 0.42, 0.40)},
 }
 
 var preview_enabled: bool = true

@@ -1,0 +1,85 @@
+{
+  "id": "chapter23",
+  "title": "第二十三章·霜桥",
+  "beats": [
+    {
+      "id": "23.0",
+      "title": "霜桥令",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "三卷可入之后，霜桥要验渡河的旗——水冷、桥窄、望台高。"
+        },
+        {
+          "speaker": "管事",
+          "text": "两场：霜桥渡、霜望台。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第三卷中段。"
+        }
+      ],
+      "next": "23.1"
+    },
+    {
+      "id": "23.1",
+      "title": "霜桥渡",
+      "lines": [
+        {
+          "speaker": "斥候",
+          "text": "桥心被占。夺回霜桥。"
+        },
+        {
+          "speaker": "系统",
+          "text": "出战「霜桥渡」。"
+        }
+      ],
+      "battle": "ch23_frost",
+      "unlock": [
+        "ch23_frost_done"
+      ],
+      "next": "23.2"
+    },
+    {
+      "id": "23.2",
+      "title": "霜望台",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "桥既通，望台要落印。"
+        },
+        {
+          "speaker": "系统",
+          "text": "出战「霜望台」。"
+        }
+      ],
+      "battle": "ch23_watch",
+      "unlock": [
+        "ch23_watch_done"
+      ],
+      "next": "23.3"
+    },
+    {
+      "id": "23.3",
+      "title": "霜印",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "霜桥与望台之后，北风卷里落下第一枚霜印。"
+        },
+        {
+          "speaker": "苇原·灯影",
+          "text": "下一章是三卷钤印——中段收束。"
+        },
+        {
+          "speaker": "系统",
+          "text": "第二十三章完成。"
+        }
+      ],
+      "unlock": [
+        "chapter23_done"
+      ],
+      "next": null
+    }
+  ]
+}
