@@ -1,0 +1,2 @@
+6103449a35811db4a7b60aa6fd596ddc2750ac68fedcb8a0b5f12262774993ed  CenturyKnights-windows-v1.9.0.zip
+65ab48abcf2a37ede25f97e5f226108eea563f311637172446065e0e18c237ed  CenturyKnights.exe
