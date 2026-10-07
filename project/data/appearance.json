@@ -1,0 +1,29 @@
+{
+  "alleles": {
+    "hair": [
+      {"id": "ink_black", "name": "墨黑", "color": "#1a1a1a"},
+      {"id": "ash_brown", "name": "灰褐", "color": "#5c4033"},
+      {"id": "wheat", "name": "麦金", "color": "#c9a86a"},
+      {"id": "frost_silver", "name": "霜银", "color": "#c0c8d0"},
+      {"id": "ember_red", "name": "烬红", "color": "#8b3a3a"}
+    ],
+    "eyes": [
+      {"id": "slate", "name": "石板灰", "color": "#5a6570"},
+      {"id": "river_blue", "name": "河蓝", "color": "#3a6ea5"},
+      {"id": "pine", "name": "松绿", "color": "#3d6b4f"},
+      {"id": "amber", "name": "琥珀", "color": "#b8860b"},
+      {"id": "dusk", "name": "暮紫", "color": "#6b4c7a"}
+    ],
+    "brow": [
+      {"id": "straight", "name": "一字眉"},
+      {"id": "arch", "name": "拱眉"},
+      {"id": "thick", "name": "浓眉"},
+      {"id": "soft", "name": "淡眉"}
+    ],
+    "scar": [
+      {"id": "none", "name": "无疤"},
+      {"id": "cheek", "name": "颊疤"},
+      {"id": "brow", "name": "眉疤"}
+    ]
+  }
+}

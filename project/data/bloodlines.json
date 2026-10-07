@@ -1,0 +1,36 @@
+{
+  "bloodlines": [
+    {
+      "id": "common_ash",
+      "name": "灰烬民胤",
+      "tier": "common",
+      "desc": "陆桥边民血脉，坚韧务实。",
+      "stat_min": {"str": 4, "vit": 5, "skl": 4, "agi": 4, "per": 4, "wil": 4},
+      "stat_max": {"str": 14, "vit": 15, "skl": 13, "agi": 13, "per": 12, "wil": 13}
+    },
+    {
+      "id": "river_ward",
+      "name": "河卫血胤",
+      "tier": "gentry",
+      "desc": "朔澜河岸守望者后裔，敏于行。",
+      "stat_min": {"str": 5, "vit": 5, "skl": 6, "agi": 7, "per": 6, "wil": 5},
+      "stat_max": {"str": 15, "vit": 14, "skl": 16, "agi": 17, "per": 15, "wil": 14}
+    },
+    {
+      "id": "ember_noble",
+      "name": "余烬贵胤",
+      "tier": "noble",
+      "desc": "旧邦余烬贵族，力与意偏高。",
+      "stat_min": {"str": 7, "vit": 6, "skl": 5, "agi": 5, "per": 5, "wil": 7},
+      "stat_max": {"str": 18, "vit": 16, "skl": 15, "agi": 14, "per": 14, "wil": 18}
+    },
+    {
+      "id": "frost_crown",
+      "name": "霜冕王胤",
+      "tier": "royal",
+      "desc": "稀有王系残脉，六维上限极高。",
+      "stat_min": {"str": 8, "vit": 8, "skl": 8, "agi": 8, "per": 8, "wil": 9},
+      "stat_max": {"str": 20, "vit": 20, "skl": 20, "agi": 20, "per": 20, "wil": 20}
+    }
+  ]
+}

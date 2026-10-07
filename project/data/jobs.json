@@ -1,0 +1,13 @@
+{
+  "jobs": [
+    {"id": "squire", "name": "见习骑手", "tier": 1, "atk_type": "melee", "base_atk": 6, "base_def": 4, "move": 5, "req": {}, "promote_to": ["light_cavalry"]},
+    {"id": "light_inf", "name": "轻步", "tier": 1, "atk_type": "melee", "base_atk": 5, "base_def": 3, "move": 4, "req": {}, "promote_to": ["warrior"]},
+    {"id": "heavy_inf", "name": "重步", "tier": 1, "atk_type": "melee", "base_atk": 6, "base_def": 6, "move": 3, "req": {}, "promote_to": ["warrior"]},
+    {"id": "hunter", "name": "猎手", "tier": 1, "atk_type": "ranged", "base_atk": 5, "base_def": 2, "move": 4, "req": {}, "promote_to": ["archer"]},
+    {"id": "apprentice", "name": "学徒秘术", "tier": 1, "atk_type": "magic", "base_atk": 4, "base_def": 2, "move": 3, "req": {}, "promote_to": ["priest"]},
+    {"id": "light_cavalry", "name": "轻骑", "tier": 2, "atk_type": "melee", "base_atk": 8, "base_def": 5, "move": 6, "req": {"str": 10, "agi": 10, "iron": 2}, "promote_to": []},
+    {"id": "warrior", "name": "勇士", "tier": 2, "atk_type": "melee", "base_atk": 9, "base_def": 7, "move": 4, "req": {"str": 12, "vit": 10, "iron": 3}, "promote_to": []},
+    {"id": "archer", "name": "弓手", "tier": 2, "atk_type": "ranged", "base_atk": 8, "base_def": 3, "move": 4, "req": {"skl": 11, "per": 10, "iron": 2}, "promote_to": []},
+    {"id": "priest", "name": "祭司", "tier": 2, "atk_type": "magic", "base_atk": 6, "base_def": 4, "move": 3, "req": {"wil": 12, "per": 9, "herb": 2}, "promote_to": []}
+  ]
+}

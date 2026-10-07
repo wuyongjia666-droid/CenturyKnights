@@ -1,0 +1,76 @@
+# CenturyKnights MVP Sprint Status
+# 时区：Asia/Shanghai · 更新：2026-10-07
+# 状态枚举：backlog | ready | in_progress | blocked | done | deferred
+
+project:
+  id: CenturyKnights
+  title_zh: 百年骑士·同型原创
+  phase: implementing
+  engine_intent: Godot_4.3
+  mvp_playtime_min: 20
+  mvp_playtime_max: 30
+
+artifacts:
+  game_brief: _bmad-output/planning-artifacts/game-brief.md
+  gdd_mvp: _bmad-output/planning-artifacts/gdd-mvp.md
+  systems_catalog: _bmad-output/planning-artifacts/systems-catalog.md
+  epics: _bmad-output/planning-artifacts/epics.md
+  sprint_status: _bmad-output/planning-artifacts/sprint-status.yaml
+
+parity_bar:
+  match: "诸神皇冠-class public systems depth"
+  exceed_mvp:
+    - X1_heir_expectation_panel
+    - X2_bloodline_mix_bar
+    - X3_battle_rules_preview
+    - X4_dynasty_journal
+    - X5_time_advance_forecast
+  newbie_story_required: true
+  chapter0_id: "第零章·灰旗初升"
+
+sprints:
+  - id: S0
+    name: 计划锁定
+    status: done
+    tasks:
+      - {id: S0-T1, title: game-brief.md, status: done}
+      - {id: S0-T2, title: gdd-mvp.md, status: done}
+      - {id: S0-T3, title: systems-catalog.md, status: done}
+      - {id: S0-T4, title: epics.md with AC, status: done}
+      - {id: S0-T5, title: sprint-status.yaml, status: done}
+      - {id: S0-T6, title: 用户批准后再开编码, status: done}
+
+  - id: S1
+    name: 骨架 + 第零章 + 战棋
+    status: done
+    epics: [E0, E1, E2]
+    exit_criteria:
+      - 主菜单中文可进第零章
+      - 一局战棋可胜负
+      - 章节旗标可解锁 Hub 入口
+
+  - id: S2
+    name: 佣兵堡 + 联姻遗传
+    status: done
+    epics: [E3, E4, E5]
+    exit_criteria:
+      - 招募与任务给赏
+      - 单堡月结粮饷
+      - 结婚生子遗传可见（含 X1 X2）
+
+  - id: S3
+    name: 岁月 + 职阶 + 冒烟验收
+    status: done
+    epics: [E6, E7]
+    exit_criteria:
+      - 岁月推进预告 X5
+      - 老化可见
+      - headless smoke exit 0
+      - 第零章手记 X4
+
+deferred_epics: [E8, E9, E10, E11, E12, E13, E14]
+
+rules:
+  - 不反编译、不搬运对标资产与原文
+  - 不用 GeneRanch 残留
+  - 新手剧情不可降为可选

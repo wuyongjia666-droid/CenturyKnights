@@ -1,0 +1,16 @@
+{
+  "traits": [
+    {"id": "brave", "name": "骁勇", "polarity": "pos", "weight": 1.0, "desc": "近战命中+5%", "effect": {"hit_melee": 0.05}},
+    {"id": "keen_eye", "name": "锐目", "polarity": "pos", "weight": 1.0, "desc": "远距命中+5%", "effect": {"hit_ranged": 0.05}},
+    {"id": "iron_gut", "name": "铁胃", "polarity": "pos", "weight": 0.8, "desc": "粮耗略减", "effect": {"food_mod": -0.1}},
+    {"id": "scholar", "name": "好学", "polarity": "pos", "weight": 0.9, "desc": "经验+10%", "effect": {"exp_mod": 0.1}},
+    {"id": "charmer", "name": "善辞", "polarity": "pos", "weight": 0.7, "desc": "联姻声望门槛视作高一档半档", "effect": {"rep_soft": 1}},
+    {"id": "sturdy", "name": "敦实", "polarity": "pos", "weight": 1.0, "desc": "最大生命+8%", "effect": {"hp_mod": 0.08}},
+    {"id": "malnourished", "name": "营养不良", "polarity": "neg", "weight": 0.6, "desc": "体力上限-1（粮饷不足时易获）", "effect": {"vit_flat": -1}},
+    {"id": "temper", "name": "暴脾气", "polarity": "neg", "weight": 0.5, "desc": "士气波动更大", "effect": {"morale_vol": 0.15}},
+    {"id": "scarred", "name": "旧疤", "polarity": "neg", "weight": 0.4, "desc": "容貌疤痕槽占位", "effect": {"scar": 1}},
+    {"id": "lucky", "name": "福星", "polarity": "pos", "weight": 0.5, "desc": "暴击+3%", "effect": {"crit": 0.03}},
+    {"id": "night_owl", "name": "夜行", "polarity": "pos", "weight": 0.6, "desc": "林地形回避额外+5", "effect": {"forest_avo": 5}},
+    {"id": "heir_mark", "name": "旗嗣印", "polarity": "pos", "weight": 0.3, "desc": "团长血脉标记，可遗传", "effect": {"leader_soft": 1}}
+  ]
+}

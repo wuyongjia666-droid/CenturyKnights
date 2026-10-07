@@ -1,0 +1,10 @@
+.godot/
+*.translation
+export_presets.cfg
+project/export_presets.cfg
+exports/*.exe
+exports/*.console.exe
+__pycache__/
+.DS_Store
+*.pck
+exports/*.zip
