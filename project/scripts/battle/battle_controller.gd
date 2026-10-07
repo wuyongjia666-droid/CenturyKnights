@@ -1,5 +1,6 @@
 extends Control
 ## 灰旗战棋：8x6 教程图，移动/攻击/待命，敌 AI，规则透视
+## 输入 FSM：IDLE → SELECTED → (MOVE) → ATTACK_AIM → 单位 done
 
 const CELL := 56
 const ORIGIN := Vector2(40, 80)
@@ -12,6 +13,7 @@ var turn_team: String = "player"
 var selected: int = -1
 var move_cells: Dictionary = {}
 var attack_mode: bool = false
+var moved_this_select: bool = false
 var log_label: Label
 var info_label: RichTextLabel
 var phase_label: Label
@@ -19,9 +21,11 @@ var overlay: Node2D
 var map_draw: Node2D
 var rng := RandomNumberGenerator.new()
 var battle_over: bool = false
+var _bg: ColorRect
 
 func _ready() -> void:
 	rng.randomize()
+	mouse_filter = Control.MOUSE_FILTER_STOP
 	_build_ui()
 	_init_map()
 	_deploy()
@@ -29,18 +33,22 @@ func _ready() -> void:
 	queue_redraw()
 
 func _build_ui() -> void:
-	var bg := ColorRect.new()
-	bg.color = UIKit.BG
-	bg.set_anchors_preset(PRESET_FULL_RECT)
-	add_child(bg)
+	_bg = ColorRect.new()
+	_bg.color = UIKit.BG
+	_bg.set_anchors_preset(PRESET_FULL_RECT)
+	# CRITICAL: must IGNORE so board clicks reach this Control._gui_input
+	_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_bg)
 
 	phase_label = UIKit.make_label("玩家回合", true)
 	phase_label.position = Vector2(40, 16)
+	phase_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(phase_label)
 
-	var tip = UIKit.make_label("左键选中/移动/攻击 · 右键取消 · 地形：绿林/褐丘/灰平")
+	var tip = UIKit.make_label("左键选中/移动 · 攻击模式后点敌军 · 右键取消 · 地形：绿林/褐丘/灰平")
 	tip.position = Vector2(280, 24)
 	tip.add_theme_font_size_override("font_size", 13)
+	tip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(tip)
 
 	map_draw = Node2D.new()
@@ -56,12 +64,14 @@ func _build_ui() -> void:
 	info_label.custom_minimum_size = Vector2(720, 200)
 	info_label.bbcode_enabled = true
 	info_label.fit_content = true
+	info_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(info_label)
 
 	log_label = UIKit.make_label("")
 	log_label.position = Vector2(520, 300)
 	log_label.custom_minimum_size = Vector2(700, 200)
 	log_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	log_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(log_label)
 
 	var row := HBoxContainer.new()
@@ -69,10 +79,7 @@ func _build_ui() -> void:
 	row.add_theme_constant_override("separation", 8)
 	add_child(row)
 	var b_atk = UIKit.make_button("攻击模式", 120)
-	b_atk.pressed.connect(func():
-		attack_mode = true
-		_refresh_info()
-	)
+	b_atk.pressed.connect(_enter_attack_mode)
 	row.add_child(b_atk)
 	var b_wait = UIKit.make_button(Locale.t("wait"), 100)
 	b_wait.pressed.connect(_wait_selected)
@@ -85,6 +92,20 @@ func _build_ui() -> void:
 	b_prev.button_pressed = BattleRules.preview_enabled
 	b_prev.toggled.connect(func(on): BattleRules.preview_enabled = on)
 	row.add_child(b_prev)
+
+func _enter_attack_mode() -> void:
+	if selected < 0 or selected >= units.size():
+		_log("请先选中己方单位再进入攻击模式")
+		return
+	var su = units[selected]
+	if su.team != "player" or su.done:
+		_log("当前选中单位无法攻击")
+		return
+	attack_mode = true
+	move_cells.clear()
+	overlay.queue_redraw()
+	_refresh_info()
+	_log("攻击模式：点击射程内敌人")
 
 func _init_map() -> void:
 	# 8x6：平地为主，左林右丘
@@ -163,30 +184,34 @@ func _draw_map() -> void:
 		map_draw.draw_string(ThemeDB.fallback_font, center + Vector2(-10, 4), str(u.char.hp), HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color.WHITE)
 
 func _draw_overlay() -> void:
-	for pos in move_cells.keys():
-		var r = Rect2(ORIGIN + Vector2(pos) * CELL, Vector2(CELL - 2, CELL - 2))
-		overlay.draw_rect(r, Color(0.2, 0.5, 0.9, 0.35))
+	if not attack_mode:
+		for pos in move_cells.keys():
+			var r = Rect2(ORIGIN + Vector2(pos) * CELL, Vector2(CELL - 2, CELL - 2))
+			overlay.draw_rect(r, Color(0.2, 0.5, 0.9, 0.35))
 	if selected >= 0 and selected < units.size():
 		var u = units[selected]
 		if u.team == "player" and not u.done:
-			for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
-				var ap = u.pos + d
-				if _in_bounds(ap) and _unit_at(ap) >= 0:
-					var ou = units[_unit_at(ap)]
+			var max_r = 1 if _is_melee(u.char) else 2
+			for y in MAP_H:
+				for x in MAP_W:
+					var ap = Vector2i(x, y)
+					var d = _manhattan(u.pos, ap)
+					if d < 1 or d > max_r:
+						continue
+					var ui = _unit_at(ap)
+					if ui < 0:
+						continue
+					var ou = units[ui]
 					if ou.team != "player" and ou.char.hp > 0:
-						var r = Rect2(ORIGIN + Vector2(ap) * CELL, Vector2(CELL - 2, CELL - 2))
-						overlay.draw_rect(r, Color(0.9, 0.2, 0.2, 0.4))
+						var r2 = Rect2(ORIGIN + Vector2(ap) * CELL, Vector2(CELL - 2, CELL - 2))
+						overlay.draw_rect(r2, Color(0.9, 0.2, 0.2, 0.4))
 
 func _gui_input(event: InputEvent) -> void:
 	if battle_over:
 		return
 	if event is InputEventMouseButton and event.pressed:
 		if event.button_index == MOUSE_BUTTON_RIGHT:
-			selected = -1
-			move_cells.clear()
-			attack_mode = false
-			_refresh_info()
-			overlay.queue_redraw()
+			_cancel_selection()
 			return
 		if event.button_index != MOUSE_BUTTON_LEFT:
 			return
@@ -196,6 +221,25 @@ func _gui_input(event: InputEvent) -> void:
 		if cell.x < 0:
 			return
 		_click_cell(cell)
+
+## E2E / 调试：模拟棋盘格左键点击（本地坐标走 _gui_input）
+func simulate_board_click(cell: Vector2i) -> void:
+	var ev := InputEventMouseButton.new()
+	ev.button_index = MOUSE_BUTTON_LEFT
+	ev.pressed = true
+	ev.position = cell_to_local(cell)
+	_gui_input(ev)
+
+func cell_to_local(cell: Vector2i) -> Vector2:
+	return ORIGIN + Vector2(cell) * CELL + Vector2(CELL * 0.5, CELL * 0.5)
+
+func _cancel_selection() -> void:
+	selected = -1
+	move_cells.clear()
+	attack_mode = false
+	moved_this_select = false
+	_refresh_info()
+	overlay.queue_redraw()
 
 func _mouse_to_cell(pos: Vector2) -> Vector2i:
 	var local = pos - ORIGIN
@@ -215,40 +259,76 @@ func _unit_at(pos: Vector2i) -> int:
 			return i
 	return -1
 
+func _select_player(ui: int) -> void:
+	selected = ui
+	attack_mode = false
+	moved_this_select = false
+	var mv = units[ui].char.derived_move()
+	move_cells = BattleRules.move_costs(terrain, units[ui].pos, mv)
+	# remove occupied (keep own tile)
+	for u in units:
+		if u.char.hp > 0 and u.pos != units[ui].pos:
+			move_cells.erase(u.pos)
+	_refresh_info()
+	overlay.queue_redraw()
+
+func _can_attack_from(su: Dictionary, cell: Vector2i) -> bool:
+	var d = _manhattan(su.pos, cell)
+	if d < 1:
+		return false
+	if _is_melee(su.char):
+		return d == 1
+	return d <= 2
+
 func _click_cell(cell: Vector2i) -> void:
 	var ui = _unit_at(cell)
-	if selected >= 0:
+
+	# --- acting with a selected player unit ---
+	if selected >= 0 and selected < units.size():
 		var su = units[selected]
 		if su.team == "player" and not su.done:
-			# attack adjacent enemy
-			if ui >= 0 and units[ui].team == "enemy":
-				if _manhattan(su.pos, cell) == 1 or (not _is_melee(su.char) and _manhattan(su.pos, cell) <= 2):
-					_do_attack(selected, ui)
+			# Attack: enemy tile (require 攻击模式 so left-click alone does not auto-fire)
+			if ui >= 0 and units[ui].team == "enemy" and units[ui].char.hp > 0:
+				if attack_mode:
+					if _can_attack_from(su, cell):
+						_do_attack(selected, ui)
+						return
+					_log("目标超出攻击范围")
 					return
-			# move
-			if ui < 0 and move_cells.has(cell):
+				# Not attack mode: show enemy info; keep player selection
+				_refresh_info_for(ui)
+				return
+
+			# Move: empty reachable tile (blocked while attack_mode or after move)
+			if ui < 0 and not attack_mode and not moved_this_select and move_cells.has(cell):
 				su.pos = cell
+				moved_this_select = true
 				move_cells.clear()
-				# after move, auto enter attack consideration
 				_refresh_info()
 				map_draw.queue_redraw()
 				overlay.queue_redraw()
 				_log("%s 移动至 (%d,%d)" % [su.char.name, cell.x, cell.y])
 				return
-	# select
+
+			# Switch to another ready player unit
+			if ui >= 0 and units[ui].team == "player" and not units[ui].done and ui != selected:
+				_select_player(ui)
+				return
+
+			# Same unit / empty non-move / blocked — stay in state
+			if attack_mode and ui < 0:
+				_log("攻击模式中：请点击敌人或右键取消")
+			return
+
+	# --- fresh select / inspect ---
 	if ui >= 0 and units[ui].team == "player" and not units[ui].done:
-		selected = ui
-		var mv = units[ui].char.derived_move()
-		move_cells = BattleRules.move_costs(terrain, units[ui].pos, mv)
-		# remove occupied
-		for u in units:
-			if u.char.hp > 0 and u.pos != units[ui].pos:
-				move_cells.erase(u.pos)
-		_refresh_info()
-		overlay.queue_redraw()
+		_select_player(ui)
 	elif ui >= 0:
+		# Inspect only (enemy or spent ally) — do not treat as acting selection
 		selected = ui
 		move_cells.clear()
+		attack_mode = false
+		moved_this_select = false
 		_refresh_info()
 		overlay.queue_redraw()
 
@@ -277,6 +357,7 @@ func _do_attack(ai: int, di: int) -> void:
 	selected = -1
 	move_cells.clear()
 	attack_mode = false
+	moved_this_select = false
 	_refresh_info()
 	map_draw.queue_redraw()
 	overlay.queue_redraw()
@@ -291,6 +372,8 @@ func _wait_selected() -> void:
 	u.done = true
 	selected = -1
 	move_cells.clear()
+	attack_mode = false
+	moved_this_select = false
 	_log("%s 待命" % u.char.name)
 	map_draw.queue_redraw()
 	overlay.queue_redraw()
@@ -304,6 +387,8 @@ func _start_player_turn() -> void:
 			u.done = false
 	selected = -1
 	move_cells.clear()
+	attack_mode = false
+	moved_this_select = false
 	map_draw.queue_redraw()
 	overlay.queue_redraw()
 
@@ -314,6 +399,8 @@ func _end_player_turn() -> void:
 	phase_label.text = "敌方回合"
 	selected = -1
 	move_cells.clear()
+	attack_mode = false
+	moved_this_select = false
 	overlay.queue_redraw()
 	await get_tree().create_timer(0.35).timeout
 	_enemy_ai()
@@ -430,6 +517,20 @@ func _finish(win: bool) -> void:
 		)
 		row.add_child(b)
 
+func _refresh_info_for(ui: int) -> void:
+	if ui < 0 or ui >= units.size():
+		_refresh_info()
+		return
+	var u = units[ui]
+	var c: CKCharacter = u.char
+	var tid = terrain[u.pos.y][u.pos.x]
+	var tinfo = BattleRules.terrain_info(tid)
+	info_label.text = "[b]%s[/b]（%s） HP %d/%d\n攻 %d 防 %d\n地形：%s\n（仍选中我军，可继续移动/攻击）" % [
+		c.name, "我军" if u.team == "player" else "敌军",
+		c.hp, c.max_hp, c.derived_atk(), c.derived_def(),
+		tinfo["name"],
+	]
+
 func _refresh_info() -> void:
 	if selected < 0 or selected >= units.size():
 		info_label.text = "选择己方单位开始行动。\n目标：歼灭全部敌人。"
@@ -438,7 +539,15 @@ func _refresh_info() -> void:
 	var c: CKCharacter = u.char
 	var tid = terrain[u.pos.y][u.pos.x]
 	var tinfo = BattleRules.terrain_info(tid)
-	var txt = "[b]%s[/b]（%s） HP %d/%d\n攻 %d 防 %d 命中 %d 回避 %d 移动 %d\n地形：%s（回避+%d）\n" % [
+	var mode = ""
+	if u.team == "player" and not u.done:
+		if attack_mode:
+			mode = "【攻击模式】点击红格敌人\n"
+		elif moved_this_select:
+			mode = "【已移动】可攻击 / 待命 / 攻击模式\n"
+		else:
+			mode = "【已选中】点击蓝格移动，或开攻击模式\n"
+	var txt = mode + "[b]%s[/b]（%s） HP %d/%d\n攻 %d 防 %d 命中 %d 回避 %d 移动 %d\n地形：%s（回避+%d）\n" % [
 		c.name, "我军" if u.team == "player" else "敌军",
 		c.hp, c.max_hp, c.derived_atk(), c.derived_def(), c.derived_hit(), c.derived_avo(), c.derived_move(),
 		tinfo["name"], tinfo["avo_bonus"],

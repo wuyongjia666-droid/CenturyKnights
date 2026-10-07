@@ -14,8 +14,10 @@ cd project
 godot --path .
 # 冒烟
 godot --headless --path . --scene res://tests/smoke_runner.tscn
-# 或
-../scripts/run_smoke.sh
+# 战棋 e2e（模拟点击选→移→攻）
+godot --headless --path . --scene res://tests/tactics_e2e.tscn
+# CI 全套（失败非 0）
+../scripts/run_ci.sh
 ```
 
 ## Windows 试玩包
