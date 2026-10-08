@@ -151,6 +151,13 @@ func _restart(map_id: String) -> void:
 		_battle.remove_meta("reinf_done")
 	if _battle.has_meta("battle_verdict"):
 		_battle.remove_meta("battle_verdict")
+	# Standard defeat benches the wounded. This harness fights the next map
+	# with the same roster, so put them back on their feet first.
+	for c in GameState.roster():
+		c.injured = false
+		c.hp = c.max_hp
+		if c.has_meta("classic_down"):
+			c.remove_meta("classic_down")
 	GameState.set_meta("battle_map", map_id)
 	_battle._init_map()
 	_battle._deploy()
