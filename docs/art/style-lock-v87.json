@@ -1,0 +1,52 @@
+{
+  "version": "v8.7-style-lock-1",
+  "tokens_source": "project/assets/art/stitch_exports/tokens.json",
+  "palette": {
+    "void": "#07080C", "voidGlow": "#10141C", "panel": "#161B24", "panelElevated": "#1C2330",
+    "text": "#F4F7FB", "textMuted": "#9AA6B8",
+    "primary_frost": "#6ED4FF", "frost_hover": "#9BE4FF", "frost_pressed": "#3AADDF",
+    "ally_mint": "#5EE0B5", "enemy_coral": "#FF7A70", "ember_sparks_only": "#FF8A3D",
+    "material_ink_navy": "#1C2330", "material_slate": "#2A3442", "material_frost_silver": "#C9D3DE",
+    "material_frost_white": "#F4F7FB", "lineart": "#0A0E14", "plate_bg": "#D9DEE3"
+  },
+  "lighting": {
+    "key": "cool white key light from upper-left front (azimuth 45deg camera-left, elevation 40deg)",
+    "rim": "thin crystal-frost #6ED4FF rim light from back-right",
+    "fill": "soft cool ambient fill, no warm bounce",
+    "forbidden": "warm/golden key light, candlelight, sunset grading, ember-coloured fills",
+    "vector_godot": [-0.55, 0.65, 0.52]
+  },
+  "lineart": "thin clean dark-slate #0A0E14 contour on the silhouette (~1.5px at 1024px), lighter interior lines, no heavy black ink, no sketchy hatching",
+  "finish": "refined semi-realistic contemporary-fantasy illustration: soft airbrushed painterly shading, crisp clean edges, matte technical fabrics, frosted brushed-chrome metal with small sharp speculars, 1px glowing frost hairline trims",
+  "cameras": {
+    "portrait_part": "front view, eye level, 85mm portrait lens, head-and-shoulders, head top at 10% from top, chin at 52%, shoulders fill width",
+    "bust_hero": "three-quarter view facing camera-left, chest-up, eye level",
+    "fullbody_sheet": "orthographic turnaround, FRONT left half / BACK right half, A-pose arms 35deg, chest-height camera",
+    "weapon_icon": "isolated object, 30deg three-quarter top-down, blade/shaft diagonal bottom-left to top-right",
+    "city_plate": "three-quarter aerial, 35deg elevation, key light upper-left, atmospheric depth toward top",
+    "cutscene_3d": "Godot camera 28-34deg FOV, eye height 1.35m, toon shader per section 3d"
+  },
+  "qwen": {
+    "prefix": "CenturyKnights style lock v8.7: 2026 contemporary fantasy SRPG art, refined semi-realistic illustration with soft airbrushed painterly shading and crisp clean edges, thin dark-slate contour lines, cool white key light from the upper left, thin crystal-frost cyan (#6ED4FF) rim light from the back right, palette of ink-navy (#1C2330), slate (#2A3442), frosted silver (#C9D3DE) and frost white (#F4F7FB) with small crystal-frost accents, matte technical woven fabrics and frosted brushed-chrome metal with 1px glowing frost hairline trims, clean modern silhouettes, AAA editorial quality.",
+    "negative": "medieval, gothic, parchment, aged paper, sepia, gold, gilded, golden filigree, brass, ornate baroque, warm golden lighting, sunset, candlelight, heavy black ink outlines, sketch, hatching, chibi, 3d render, photo, text, letters, watermark, logo, signature, frame, border, blurry, lowres, jpeg artifacts, extra fingers, extra limbs, deformed",
+    "ally_accent": "small mint (#5EE0B5) accent details",
+    "enemy_accent": "small coral-red (#FF7A70) accent details, darker charcoal fabrics",
+    "steps": 28, "cfg": 1.0, "sampler": "euler", "scheduler": "simple"
+  },
+  "toon_3d": {
+    "ramp": "2 bands + 0.08 soft edge, shadow tint #2A3442 at 0.55",
+    "rim": "#6ED4FF, power 3.0, strength 0.55 (enemy units: #FF7A70)",
+    "outline": "inverted hull 0.006m (1px at 720p), colour #0A0E14",
+    "specular": "single sharp highlight, size 0.18, metal only",
+    "emissive_trim": "#6ED4FF x2.2 (ally) / #FF7A70 x2.0 (enemy); ember only on VFX"
+  },
+  "check": {
+    "max_gold_ratio": 0.04,
+    "max_parchment_ratio": 0.10,
+    "max_warm_ratio": 0.22,
+    "max_mean_saturation": 0.42,
+    "min_cool_bias": -0.02,
+    "max_lab_hist_distance": 0.62,
+    "reference_set": ["v8_hero_leader_m.png", "v8_bust_f_hunter.png", "v8_bust_m_spear.png", "v8_bust_m_guard.png", "v8_hero_heir_f.png", "v8_bust_f_medic.png"]
+  }
+}
