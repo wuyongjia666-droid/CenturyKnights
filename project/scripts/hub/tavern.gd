@@ -39,6 +39,13 @@ func _build() -> void:
 	fl.autowrap_mode = TextServer.AUTOWRAP_OFF
 	fl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	hh.add_child(fl)
+	var rumor := CKCourt.latest_rumor()
+	if rumor != "":
+		var rl := UIKit.body_label("闲话：%s" % rumor, UIKit.ACCENT, 11)
+		rl.name = "CourtRumor"
+		rl.autowrap_mode = TextServer.AUTOWRAP_OFF
+		rl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		hh.add_child(rl)
 	_msg = UIKit.body_label("", UIKit.OK, 12)
 	_msg.autowrap_mode = TextServer.AUTOWRAP_OFF
 	_msg.position = Vector2(838, 80)

@@ -172,7 +172,7 @@ static func phenotype(c: Object) -> Dictionary:
 		"face": g.get("face", {}), "body": g.get("body", {}),
 		"bloodline": str(bls[0]) if bls.size() > 0 else "common_ash",
 		"bloodline2": second, "bloodline2_w": float(c.blood_mix.get(second, 0.0)) if second != "" else 0.0,
-		"age_stage": "young" if c.age < 18 else ("elder" if c.age >= 45 else "adult"),
+		"age_stage": CKGenomePortrait.stage_for_age(int(c.age)),
 		"scars": c.scars, "honors": c.honors, "gender": c.gender,
 	}
 

@@ -67,6 +67,7 @@ var pending_event: Dictionary = {}
 var encounter: Dictionary = {}
 var travel_log: Array = []
 var month_reports: Array = []
+var royal_courts: Dictionary = {}  # v9.0 NPC royal houses (CKCourt)
 var _qseq: int = 0
 var _enc_seq: int = 0
 var _in_travel_month := false
@@ -154,6 +155,7 @@ func reset() -> void:
 	encounter = {}
 	travel_log = []
 	month_reports = []
+	royal_courts = {}
 	_qseq = 0
 	_enc_seq = 0
 	world_changed.emit()
@@ -167,6 +169,7 @@ func to_save() -> Dictionary:
 		"cargo": cargo, "market": market, "fairs": fairs, "intel": intel, "tips": tips, "boards": boards, "active": active,
 		"done_sig": done_sig, "quest_log": quest_log, "stats_done": stats_done, "armory": armory, "gear": gear, "recruits": rc,
 		"travel": travel, "pending_event": pending_event, "encounter": encounter, "travel_log": travel_log, "qseq": _qseq, "enc_seq": _enc_seq,
+		"royal_courts": royal_courts,
 	}
 
 func from_save(d: Dictionary) -> void:
@@ -204,6 +207,7 @@ func from_save(d: Dictionary) -> void:
 	pending_event = d.get("pending_event", {})
 	encounter = d.get("encounter", {})
 	travel_log = d.get("travel_log", [])
+	royal_courts = d.get("royal_courts", {}) if typeof(d.get("royal_courts", {})) == TYPE_DICTIONARY else {}
 	_qseq = int(d.get("qseq", 0))
 	_enc_seq = int(d.get("enc_seq", 0))
 	world_changed.emit()

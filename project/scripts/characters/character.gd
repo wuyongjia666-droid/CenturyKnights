@@ -64,8 +64,8 @@ var temp_exposed: int = 0  # 被破防，受击时防降低
 
 
 const STAT_KEYS := ["str", "vit", "skl", "agi", "per", "wil"]
-const RANK_ORDER := ["knight", "baron", "count", "duke"]
-const RANK_NAMES := {"knight": "骑士", "baron": "男爵", "count": "伯爵", "duke": "公爵"}
+const RANK_ORDER := ["knight", "baron", "viscount", "count", "duke"]
+const RANK_NAMES := {"knight": "勋士", "baron": "男爵", "viscount": "子爵", "count": "伯爵", "duke": "侯爵"}
 
 func derived_atk() -> int:
 	var job = _job()

@@ -59,8 +59,11 @@ func _run() -> String:
 		return "missing hair/eye tokens %s" % str(tokens)
 	if tokens.find("face.width:narrow") < 0:
 		return "face polygenic band missing %s" % str(tokens)
-	if tokens.find("scar:cheek_l") < 0 or tokens.find("age:adult") < 0:
+	if tokens.find("scar:cheek_l") < 0 or tokens.find("age:young_adult") < 0:
 		return "scar/age tokens missing %s" % str(tokens)
+	var stage_err := _stages(a)
+	if stage_err != "":
+		return stage_err
 	var pos := CKGenomePortrait.positive_prompt(a)
 	if not pos.begins_with(prefix):
 		return "positive does not start with style-lock prefix"
@@ -76,24 +79,36 @@ func _run() -> String:
 	if CKGenomePortrait.positive_prompt(a).contains("BLOODLINE_HOOK_CLAUSE"):
 		return "bloodline hook leaked"
 	var rows: Array = CKGenomePortrait.build_manifest([a, changed])
-	if rows.size() != 2:
-		return "manifest row count"
+	if rows.size() != 6:
+		return "manifest row count %d" % rows.size()
 	for key in ["unit_id", "seed", "positive", "negative", "out_path"]:
 		if not (rows[0] as Dictionary).has(key):
 			return "manifest missing " + key
 	if str(rows[0]["unit_id"]) != "manifest_a":
 		return "unit_id"
-	if int(rows[0]["seed"]) != CKGenomePortrait.seed_for(a):
+	var current_seed := -1
+	for row in rows:
+		if str(row.get("unit_id")) == "manifest_a" and str(row.get("stage")) == "young_adult":
+			current_seed = int(row.get("seed"))
+			break
+	if current_seed != CKGenomePortrait.seed_for(a):
 		return "manifest seed"
-	if str(rows[0]["out_path"]) != "project/assets/art/portraits/genome/manifest_a.png":
+	if str(rows[0]["out_path"]) != "project/assets/art/portraits/genome/manifest_a_infant.png":
 		return "out_path %s" % str(rows[0]["out_path"])
+	var current_path := ""
+	for row in rows:
+		if str(row.get("unit_id")) == "manifest_a" and str(row.get("stage")) == "young_adult":
+			current_path = str(row.get("out_path"))
+			break
+	if current_path != "project/assets/art/portraits/genome/manifest_a_young_adult.png":
+		return "current out_path %s" % current_path
 	if str(rows[0]["negative"]) != negative:
 		return "manifest negative"
 	var mp := "/tmp/ck_portrait_manifest.json"
-	if CKGenomePortrait.export_manifest([a], mp) != 1:
+	if CKGenomePortrait.export_manifest([a], mp) != 3:
 		return "export_manifest"
 	var parsed = JSON.parse_string(FileAccess.get_file_as_string(mp))
-	if typeof(parsed) != TYPE_ARRAY or (parsed as Array).size() != 1:
+	if typeof(parsed) != TYPE_ARRAY or (parsed as Array).size() != 3:
 		return "exported json"
 	CKGenomePortrait.dir_override = ""
 	CKGenomePortrait.clear_mem()
@@ -111,14 +126,24 @@ func _run() -> String:
 	var dest := "/tmp/ck_genome_plates"
 	DirAccess.make_dir_recursive_absolute(src)
 	DirAccess.make_dir_recursive_absolute(dest)
+	var src_da := DirAccess.open(src)
+	if src_da:
+		for fn in src_da.get_files():
+			src_da.remove(str(fn))
+	var dest_da := DirAccess.open(dest)
+	if dest_da:
+		for fn2 in dest_da.get_files():
+			dest_da.remove(str(fn2))
 	var img := Image.create(8, 8, false, Image.FORMAT_RGBA8)
 	img.fill(Color(0.43, 0.83, 1.0))
-	if img.save_png(src.path_join("manifest_a.png")) != OK:
+	if img.save_png(src.path_join("manifest_a_young_adult.png")) != OK:
 		return "save farm png"
+	if img.save_png(src.path_join("manifest_a_youth.png")) != OK:
+		return "save youth png"
 	CKGenomePortrait.dir_override = dest
 	CKGenomePortrait.clear_mem()
 	var ing: Dictionary = CKGenomePortrait.ingest_dir(src)
-	if int(ing.get("count", 0)) != 1 or not (ing["mapped"] as Dictionary).has("manifest_a"):
+	if int(ing.get("count", 0)) != 2 or not (ing["mapped"] as Dictionary).has("manifest_a_young_adult"):
 		return "ingest_dir %s" % str(ing)
 	CKGenomePortrait.clear_mem()
 	UnitArt.clear_cache()
@@ -128,7 +153,18 @@ func _run() -> String:
 		return "portrait_kind after ingest"
 	if UnitArt.portrait(a, 96) == null:
 		return "portrait null after ingest"
-	DirAccess.remove_absolute(dest.path_join("manifest_a.png"))
+	DirAccess.remove_absolute(dest.path_join("manifest_a_young_adult.png"))
+	CKGenomePortrait.clear_mem()
+	UnitArt.clear_cache()
+	if UnitArt.portrait_kind(a) != "genome":
+		return "nearest stage should still supply a plate"
+	a.age = 8
+	CKGenomePortrait.clear_mem()
+	if CKGenomePortrait.texture(a) == null:
+		return "youth plate missed"
+	a.age = 24
+	CKGenomePortrait.clear_mem()
+	DirAccess.remove_absolute(dest.path_join("manifest_a_youth.png"))
 	CKGenomePortrait.clear_mem()
 	UnitArt.clear_cache()
 	if UnitArt.portrait_kind(a) == "genome":
@@ -137,10 +173,11 @@ func _run() -> String:
 		return "fallback broke after delete"
 	var rendered := "/tmp/ck_farm_rendered"
 	DirAccess.make_dir_recursive_absolute(rendered)
-	if img.save_png(rendered.path_join("manifest_a.png")) != OK:
-		return "save rendered"
+	for stage_name in ["infant", "youth", "young_adult"]:
+		if img.save_png(rendered.path_join("manifest_a_%s.png" % stage_name)) != OK:
+			return "save rendered " + stage_name
 	var ing2: Dictionary = CKGenomePortrait.ingest_manifest(mp, rendered)
-	if int(ing2.get("count", 0)) != 1 or not (ing2.get("mapped", {}) as Dictionary).has("manifest_a"):
+	if int(ing2.get("count", 0)) != 3 or not (ing2.get("mapped", {}) as Dictionary).has("manifest_a_young_adult"):
 		return "ingest_manifest %s" % str(ing2)
 	CKGenomePortrait.clear_mem()
 	if CKGenomePortrait.texture(a) == null:
@@ -148,4 +185,72 @@ func _run() -> String:
 	CKGenomePortrait.dir_override = ""
 	CKGenomePortrait.clear_mem()
 	print("PORTRAIT PASS seed=%d kind=%s" % [CKGenomePortrait.seed_for(a), kind_before])
+	return ""
+
+func _stages(a: CKCharacter) -> String:
+	var saved := a.age
+	var want := {0: "infant", 2: "infant", 3: "youth", 14: "youth", 15: "young_adult", 34: "young_adult", 35: "middle", 54: "middle", 55: "elder", 80: "elder"}
+	for age_i in want.keys():
+		a.age = int(age_i)
+		if CKGenomePortrait.age_stage_of(a) != str(want[age_i]):
+			a.age = saved
+			return "stage map age %s -> %s" % [age_i, CKGenomePortrait.age_stage_of(a)]
+	a.age = 24
+	var base := CKGenomePortrait.identity_seed(a)
+	var seed_young := CKGenomePortrait.seed_for(a)
+	for age_i in [1, 8, 24, 40, 62]:
+		a.age = age_i
+		if CKGenomePortrait.identity_seed(a) != base:
+			a.age = saved
+			return "identity seed drifted at %d" % age_i
+	a.age = 62
+	if CKGenomePortrait.seed_for(a) == seed_young:
+		a.age = saved
+		return "stage offset did not move the render seed"
+	a.age = 1
+	var infant: Dictionary = CKGenomePortrait.describe(a)
+	a.age = 62
+	var elder: Dictionary = CKGenomePortrait.describe(a)
+	var ib := {}
+	for t in elder.get("identity", []):
+		ib[str(t)] = true
+	var hit := 0
+	var idn: Array = infant.get("identity", [])
+	for t in idn:
+		if ib.has(str(t)):
+			hit += 1
+	var frac := 1.0 if idn.is_empty() else float(hit) / float(idn.size())
+	if frac < CKGenomePortrait.IDENTITY_OVERLAP_MIN:
+		a.age = saved
+		return "identity overlap %.3f below threshold" % frac
+	var infant_prose := " ".join(infant["prose"])
+	var elder_prose := " ".join(elder["prose"])
+	if infant_prose.find("swaddle") < 0 or infant_prose.find("carried") < 0:
+		a.age = saved
+		return "infant outfit missing"
+	if elder_prose.find("elder robes") < 0 or elder_prose.find("thinning") < 0:
+		a.age = saved
+		return "elder hair/robes missing"
+	if infant_prose == elder_prose:
+		a.age = saved
+		return "stage prose did not change"
+	var roy := CKCharacter.new()
+	roy.id = "age_ash"
+	roy.gender = "m"
+	roy.age = 10
+	roy.rank = "count"
+	roy.blood_mix = {"ash_chart": 1.0}
+	roy.ensure_genome()
+	CKBloodline.force_tier(roy.genome, "ashbanner", "royal", "m")
+	CKBloodline.stamp_traits(roy.genome, "ashbanner", "full", "m", false)
+	var hidden := CKBloodline.portrait_clause(roy)
+	if hidden.find("cool grey cast along the jaw") >= 0:
+		a.age = saved
+		return "age-awakened jaw cast showed before 28"
+	roy.age = 30
+	var shown := CKBloodline.portrait_clause(roy)
+	if shown.find("cool grey cast along the jaw") < 0:
+		a.age = saved
+		return "age-awakened jaw cast missing at 30"
+	a.age = saved
 	return ""

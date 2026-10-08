@@ -410,7 +410,9 @@ func _show_vow() -> void:
 	var b = _selected.name
 	match _vow_step:
 		0:
-			_vow_body.text = "[b]誓约·第一步 · 宣读子嗣期望[/b]\n\n厅上众人静听。\n%s 与 %s 将共旗同席。\n请确认右侧子嗣期望无误，再向前一步。" % [a, b]
+			var rite := CKCourt.explain_zh(leader, _selected) if leader != null and _selected != null else ""
+			var rite_block := ("\n\n[b]婚约前置[/b]\n" + rite) if rite != "" else ""
+			_vow_body.text = "[b]誓约·第一步 · 宣读子嗣期望[/b]\n\n厅上众人静听。\n%s 与 %s 将共旗同席。\n请确认右侧子嗣期望无误，再向前一步。%s" % [a, b, rite_block]
 			_vow_btn("确认期望，继续", func(): _vow_step = 1; _show_vow())
 			_vow_btn("取消", func(): _vow_panel.visible = false)
 		1:
@@ -426,7 +428,16 @@ func _show_vow() -> void:
 			_vow_btn("商本", func(): _vow_doctrine = "commerce"; _vow_step = 3; _show_vow())
 			_vow_btn("取消", func(): _vow_panel.visible = false)
 		3:
-			_vow_body.text = "[b]誓约·第四步 · 定聘落成[/b]\n\n聘礼 40 银将入库。家训与嫁妆写入族谱旁注。\n妊娠将在岁月中推进；陆桥会传『灰旗有家，可托孤』。"
+			var rite_line := ""
+			if leader != null and _selected != null:
+				var bits: Array = []
+				var cost := 0
+				for r in CKCourt.required_rites(leader, _selected):
+					bits.append(str(r.get("name", "")))
+					cost += int(r.get("cost", 0))
+				if not bits.is_empty():
+					rite_line = "\n已确认：%s。礼银 %d，与聘礼一并入库。子女按这些誓约入谱。" % ["、".join(bits), cost]
+			_vow_body.text = "[b]誓约·第四步 · 定聘落成[/b]\n\n聘礼 40 银将入库。家训与嫁妆写入族谱旁注。\n妊娠将在岁月中推进；陆桥会传『灰旗有家，可托孤』。%s" % rite_line
 			_vow_btn("落成婚约", func(): _finish_marry())
 			_vow_btn("取消", func(): _vow_panel.visible = false)
 
@@ -440,7 +451,11 @@ func _vow_btn(text: String, cb: Callable) -> void:
 func _finish_marry() -> void:
 	if _selected == null:
 		return
-	var r = Lineage.marry(GameState.get_leader(), _selected, 40)
+	var leader = GameState.get_leader()
+	var ids: Array = []
+	for rite in CKCourt.required_rites(leader, _selected):
+		ids.append(str(rite.get("id", "")))
+	var r = Lineage.marry(leader, _selected, 40, ids)
 	_msg.text = str(r.get("msg", ""))
 	_vow_panel.visible = false
 	if r.get("ok"):
