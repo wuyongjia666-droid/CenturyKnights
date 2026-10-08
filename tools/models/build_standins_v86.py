@@ -6,8 +6,8 @@ this SAME armature (see rig_hunyuan_v86.py) and reuse these actions."""
 import bpy, bmesh, math, sys, os
 from mathutils import Vector, Matrix, Euler
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
-OUT = argv[0] if argv else "/tmp/standins"
-WANT = argv[1:]
+OUT = argv[0] if (argv and __name__ == "__main__") else "/tmp/standins"
+WANT = argv[1:] if __name__ == "__main__" else []
 os.makedirs(OUT, exist_ok=True)
 R = math.radians
 
@@ -112,6 +112,35 @@ def build_armature():
     bpy.ops.object.mode_set(mode="OBJECT")
     return ob
 
+def build_weapon(weapon, hr=(-0.315, -0.025, 0.85), hl=(0.315, -0.025, 0.85), shield=False, quiver=True):
+    """weapon kit around fist positions hr (right) / hl (left); reused by rig_mesh_v87.py on farmed bodies"""
+    hx, hy, hz = hr
+    lx, ly, lz = hl
+    if weapon == "sword":
+        add(taper_box("grip", 0.03, 0.03, 0.03, 0.03, 0.16, hz - 0.08, x=hx, y=hy, bevel=0.0), "hand.R", "leather")
+        add(taper_box("guard", 0.20, 0.04, 0.20, 0.04, 0.03, hz + 0.08, x=hx, y=hy, bevel=0.005), "hand.R", "trim")
+        add(taper_box("blade", 0.055, 0.012, 0.012, 0.004, 0.82, hz + 0.11, x=hx, y=hy, bevel=0.002), "hand.R", "weapon")
+    elif weapon == "axe":
+        add(taper_box("haft", 0.035, 0.035, 0.03, 0.03, 0.75, hz - 0.20, x=hx, y=hy, bevel=0.0), "hand.R", "leather")
+        add(taper_box("axehead", 0.04, 0.24, 0.012, 0.30, 0.20, hz + 0.40, x=hx, y=hy - 0.10, bevel=0.004), "hand.R", "weapon")
+    elif weapon == "spear":
+        add(cyl("shaft", 0.018, 0.016, (hx, hy, hz - 0.55), (hx, hy, hz + 1.05)), "hand.R", "leather")
+        add(taper_box("spearhead", 0.06, 0.012, 0.004, 0.004, 0.26, hz + 1.05, x=hx, y=hy, bevel=0.002), "hand.R", "weapon")
+        add(cyl("spear_ring", 0.026, 0.026, (hx, hy, hz + 1.0), (hx, hy, hz + 1.05)), "hand.R", "trim")
+    elif weapon == "bow":
+        bpy.ops.mesh.primitive_torus_add(major_radius=0.55, minor_radius=0.014, location=(lx + 0.5, ly - 0.0, lz))
+        bw = bpy.context.active_object; bw.name = "bow"; bw.rotation_euler = (R(90), 0, 0)
+        bpy.ops.object.mode_set(mode="EDIT"); bm = bmesh.from_edit_mesh(bw.data)
+        cut = [v for v in bm.verts if (bw.matrix_world @ v.co).x > lx + 0.12]
+        bmesh.ops.delete(bm, geom=cut, context="VERTS"); bmesh.update_edit_mesh(bw.data); bpy.ops.object.mode_set(mode="OBJECT")
+        add(bw, "hand.L", "weapon")
+        add(cyl("bowstring", 0.003, 0.003, (lx + 0.13, ly, lz + 0.50), (lx + 0.13, ly, lz - 0.50), 6), "hand.L", "trim")
+        if quiver:
+            add(cyl("quiver", 0.05, 0.05, (0.08, 0.16, 1.05), (0.16, 0.18, 1.48)), "chest", "leather")
+    if shield:
+        add(taper_box("shield", 0.36, 0.05, 0.30, 0.05, 0.48, lz - 0.05, x=lx + 0.045, y=ly - 0.035, bevel=0.03), "forearm.L", "armor")
+        add(taper_box("shield_mark", 0.05, 0.06, 0.05, 0.06, 0.32, lz + 0.03, x=lx + 0.045, y=ly - 0.045, bevel=0.0), "forearm.L", "trim")
+
 def build_body(arch):
     weapon, ex = ARCH[arch]
     light = ex.get("light", False)
@@ -170,32 +199,7 @@ def build_body(arch):
         cp = bpy.data.objects.new("cape", me); bpy.context.collection.objects.link(cp)
         md = cp.modifiers.new("sol", "SOLIDIFY"); md.thickness = 0.01
         add(cp, "chest", "cloth")
-    # weapons (right hand, blade points forward/up from fist at ~(-0.315,-0.025,0.85))
-    hx, hy, hz = -0.315, -0.025, 0.85
-    if weapon == "sword":
-        add(taper_box("grip", 0.03, 0.03, 0.03, 0.03, 0.16, hz - 0.08, x=hx, y=hy, bevel=0.0), "hand.R", "leather")
-        add(taper_box("guard", 0.20, 0.04, 0.20, 0.04, 0.03, hz + 0.08, x=hx, y=hy, bevel=0.005), "hand.R", "trim")
-        add(taper_box("blade", 0.055, 0.012, 0.012, 0.004, 0.82, hz + 0.11, x=hx, y=hy, bevel=0.002), "hand.R", "weapon")
-    elif weapon == "axe":
-        add(taper_box("haft", 0.035, 0.035, 0.03, 0.03, 0.75, hz - 0.20, x=hx, y=hy, bevel=0.0), "hand.R", "leather")
-        add(taper_box("axehead", 0.04, 0.24, 0.012, 0.30, 0.20, hz + 0.40, x=hx, y=hy - 0.10, bevel=0.004), "hand.R", "weapon")
-    elif weapon == "spear":
-        add(cyl("shaft", 0.018, 0.016, (hx, hy, hz - 0.55), (hx, hy, hz + 1.05)), "hand.R", "leather")
-        add(taper_box("spearhead", 0.06, 0.012, 0.004, 0.004, 0.26, hz + 1.05, x=hx, y=hy, bevel=0.002), "hand.R", "weapon")
-        add(cyl("spear_ring", 0.026, 0.026, (hx, hy, hz + 1.0), (hx, hy, hz + 1.05)), "hand.R", "trim")
-    elif weapon == "bow":
-        lx, ly, lz = 0.315, -0.025, 0.85
-        bpy.ops.mesh.primitive_torus_add(major_radius=0.55, minor_radius=0.014, location=(lx + 0.5, ly - 0.0, lz))
-        bw = bpy.context.active_object; bw.name = "bow"; bw.rotation_euler = (R(90), 0, 0)
-        bpy.ops.object.mode_set(mode="EDIT"); bm = bmesh.from_edit_mesh(bw.data)
-        cut = [v for v in bm.verts if (bw.matrix_world @ v.co).x > lx + 0.12]
-        bmesh.ops.delete(bm, geom=cut, context="VERTS"); bmesh.update_edit_mesh(bw.data); bpy.ops.object.mode_set(mode="OBJECT")
-        add(bw, "hand.L", "weapon")
-        add(cyl("bowstring", 0.003, 0.003, (lx + 0.13, ly, lz + 0.50), (lx + 0.13, ly, lz - 0.50), 6), "hand.L", "trim")
-        add(cyl("quiver", 0.05, 0.05, (0.08, 0.16, 1.05), (0.16, 0.18, 1.48)), "chest", "leather")
-    if ex.get("shield"):
-        add(taper_box("shield", 0.36, 0.05, 0.30, 0.05, 0.48, 0.80, x=0.36, y=-0.06, bevel=0.03), "forearm.L", "armor")
-        add(taper_box("shield_mark", 0.05, 0.06, 0.05, 0.06, 0.32, 0.88, x=0.36, y=-0.07, bevel=0.0), "forearm.L", "trim")
+    build_weapon(weapon, shield=bool(ex.get("shield")))
 
 def bind(rig):
     for ob, bone in PARTS:
@@ -313,5 +317,6 @@ def build(arch):
     print("GLB", out, os.path.getsize(out))
     return rig
 
-for a in (WANT or list(ARCH.keys())):
-    build(a)
+if __name__ == "__main__":
+    for a in (WANT or list(ARCH.keys())):
+        build(a)
