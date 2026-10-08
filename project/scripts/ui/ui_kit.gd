@@ -1241,3 +1241,26 @@ static func stitch_dialogue(scene: Control) -> void:
 			compact(cb, 32)
 			cb.position = Vector2(1238 - maxf(cb.size.x, cb.custom_minimum_size.x), 10)
 	footer_bar(scene, [["A", "继续 / 选择"]], "STORY // TRANSCRIPT v8.6")
+
+const _FactionMark := preload("res://scripts/ui/widgets/faction_mark.gd")
+
+static func faction_color(team: String) -> Color:
+	var enemy := team == "enemy"
+	if Frost:
+		return Frost.swatch("enemy" if enemy else "ally")
+	return DANGER if enemy else OK
+
+static func faction_mark(team: String) -> Control:
+	var mark = _FactionMark.new()
+	mark.team = "enemy" if team == "enemy" else "player"
+	return mark
+
+static func shake_gain() -> float:
+	if Frost:
+		return Frost.shake_gain()
+	return clampf(float(GameState.settings.get("screen_shake", 100.0)), 0.0, 100.0) / 100.0
+
+static func haptics_enabled() -> bool:
+	if Frost:
+		return Frost.haptics_enabled()
+	return bool(GameState.settings.get("haptics", true))

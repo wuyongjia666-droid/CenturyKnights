@@ -9707,5 +9707,32 @@
    "folk_sz_bone"
   ]
  },
+ "tactics": [
+  {"locus": "tr_ash_wire", "nation": "ashbanner", "zh": "高地视距", "effect": "高地射程 +1", "key": "range_high", "amount": 1},
+  {"locus": "tr_ash_spoke", "nation": "ashbanner", "zh": "辐条守步", "effect": "反击伤害 +3", "key": "counter", "amount": 3},
+  {"locus": "tr_sy_geom", "nation": "shuoying", "zh": "夜弧瞄准", "effect": "夜战命中 +8", "key": "night_hit", "amount": 8},
+  {"locus": "tr_sy_sclera", "nation": "shuoying", "zh": "白环守望", "effect": "先手命中 +5", "key": "first_hit", "amount": 5},
+  {"locus": "tr_qh_smooth", "nation": "qinghe", "zh": "顺流步幅", "effect": "密林回避 +6", "key": "forest_avo", "amount": 6},
+  {"locus": "tr_qh_limbal", "nation": "qinghe", "zh": "缘环辨位", "effect": "高地射程 +1", "key": "range_high", "amount": 1},
+  {"locus": "tr_lt_asym", "nation": "lantern", "zh": "偏港闪步", "effect": "控带免疫一次", "key": "zoc_ignore", "amount": 1},
+  {"locus": "tr_lt_quartz", "nation": "lantern", "zh": "石英折光", "effect": "夜战命中 +8", "key": "night_hit", "amount": 8},
+  {"locus": "tr_fc_temple", "nation": "frostcrown", "zh": "鬓霜稳阵", "effect": "堡垒防御 +2", "key": "fort_def", "amount": 2},
+  {"locus": "tr_fc_storm", "nation": "frostcrown", "zh": "风暴睫感", "effect": "反击伤害 +3", "key": "counter", "amount": 3},
+  {"locus": "tr_eo_sweep", "nation": "emberold", "zh": "扫窑冲步", "effect": "击退 +1", "key": "push", "amount": 1},
+  {"locus": "tr_eo_stroma", "nation": "emberold", "zh": "釉层硬皮", "effect": "堡垒防御 +2", "key": "fort_def", "amount": 2},
+  {"locus": "tr_sm_coil", "nation": "saltmarsh", "zh": "卷潮站位", "effect": "密林回避 +6", "key": "forest_avo", "amount": 6},
+  {"locus": "tr_sm_iris", "nation": "saltmarsh", "zh": "潮瞳测距", "effect": "高地射程 +1", "key": "range_high", "amount": 1},
+  {"locus": "tr_ig_part", "nation": "irongorge", "zh": "分缝突进", "effect": "先手命中 +5", "key": "first_hit", "amount": 5},
+  {"locus": "tr_ig_catch", "nation": "irongorge", "zh": "夹钢一次", "effect": "控带免疫一次", "key": "zoc_ignore", "amount": 1},
+  {"locus": "tr_sr_shave", "nation": "starriver", "zh": "削发定位", "effect": "夜战命中 +8", "key": "night_hit", "amount": 8},
+  {"locus": "tr_sr_fleck", "nation": "starriver", "zh": "星屑余光", "effect": "回合治疗 +2", "key": "heal_pulse", "amount": 2},
+  {"locus": "tr_sz_wave", "nation": "southzephyr", "zh": "波纹让路", "effect": "击退 +1", "key": "push", "amount": 1},
+  {"locus": "tr_sz_squint", "nation": "southzephyr", "zh": "雾中细看", "effect": "密林回避 +6", "key": "forest_avo", "amount": 6}
+ ],
+ "royal_skill_tiers": [
+  {"tier": 1, "id": "echo", "zh": "残响", "scale": 0.6},
+  {"tier": 2, "id": "shown", "zh": "正冕", "scale": 1.0},
+  {"tier": 3, "id": "full", "zh": "满冕", "scale": 1.35}
+ ],
  "rng_note": "Original ten signature loci stay first in CKBloodline.LOCUS_ORDER and are drawn before trait_order. founder_sig/cross_sig use one forked RNG. Appending trait_order does not change draws for the original ten, nor the v8.7 loci (those run on the caller RNG before the fork). Reordering trait_order re-rolls trait genotypes only."
 }

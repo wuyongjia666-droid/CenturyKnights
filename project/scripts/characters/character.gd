@@ -97,6 +97,19 @@ func derived_crit() -> int:
 func derived_move() -> int:
 	return int(_job().get("move", 4)) + World.gear_bonus(self, "move")
 
+## Blood combat payoff. Amounts only — battle_rules.gd owns the formulas.
+func tactical_mods() -> Dictionary:
+	return CKBloodPayoff.tactical_mods(self)
+
+func tactical_amount(key: String) -> float:
+	return CKBloodPayoff.tactical_amount(self, key)
+
+func royal_skill_tier(nation_id: String = "") -> int:
+	return CKBloodPayoff.royal_skill_tier(self, nation_id)
+
+func royal_skill_scale(nation_id: String = "") -> float:
+	return CKBloodPayoff.royal_skill_scale(self, nation_id)
+
 func recalc_hp() -> void:
 	var mod = 1.0
 	if "sturdy" in traits:
