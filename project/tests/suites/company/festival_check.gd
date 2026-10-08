@@ -38,9 +38,20 @@ func _run() -> String:
 	if int(GameState.reputation.get("ashland", 0)) != before + 2:
 		return "tourney rep"
 	GameState.house_mods["wound_months"] = 2
+	var gone := CKCharacter.new()
+	gone.id = "stele_probe"
+	gone.alive = false
+	gone.age = 70
+	GameState.characters[gone.id] = gone
 	var memorial: Dictionary = CKFestivals.play(GameState, "memorial")
 	if int(memorial.get("wound_months", -1)) != 1:
 		return "memorial"
+	if int(memorial.get("life_prayer_years", 0)) < 1:
+		return "prayer"
+	var stele: Array = GameState.house_mods.get("stele", [])
+	if gone.id not in stele:
+		return "stele"
+	GameState.characters.erase(gone.id)
 	return ""
 
 func _names() -> PackedStringArray:

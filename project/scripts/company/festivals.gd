@@ -77,7 +77,28 @@ static func play(host, id: String) -> Dictionary:
 			var left := int(host.house_mods.get("wound_months", 0))
 			if left > 0:
 				host.house_mods["wound_months"] = left - 1
+			var elder = null
+			var stele: Array = host.house_mods.get("stele", [])
+			if typeof(stele) != TYPE_ARRAY:
+				stele = []
+			for c in host.characters.values():
+				if c == null:
+					continue
+				if not c.alive and c.id not in stele:
+					stele.append(c.id)
+				elif c.alive and (elder == null or int(c.age) > int(elder.age)):
+					elder = c
+			host.house_mods["stele"] = stele
+			if elder != null:
+				host.house_mods["life_prayer_id"] = elder.id
+				host.house_mods["life_prayer_years"] = int(host.house_mods.get("life_prayer_years", 0)) + 1
 			host.log_event(Locale.t("festival_memorial_done"))
-			return {"ok": true, "wound_months": int(host.house_mods.get("wound_months", 0))}
+			host.add_lineage_event(Locale.t("festival_memorial_stele"))
+			return {
+				"ok": true,
+				"wound_months": int(host.house_mods.get("wound_months", 0)),
+				"stele": stele.size(),
+				"life_prayer_years": int(host.house_mods.get("life_prayer_years", 0)),
+			}
 		_:
 			return {"ok": true, "id": id}
