@@ -24,5 +24,5 @@ func _run() -> String:
 	var text := " ".join(out)
 	if code != 0 or text.find("GLYPH CHECK PASS") < 0:
 		return "check %d %s" % [code, text.left(180)]
-	print("PLACEHOLDER PASS glyphs=223 fallbacks=35 gold=0 parchment=0")
+	print("PLACEHOLDER PASS glyphs=223 fallbacks=35")
 	return ""

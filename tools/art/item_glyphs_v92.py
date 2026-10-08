@@ -10,12 +10,14 @@ fallbacks. --check asserts style_check gold and parchment are 0.
 from __future__ import annotations
 
 import json
+import struct
 import sys
+import zlib
 from pathlib import Path
 
-from PIL import Image, ImageDraw
-
 ROOT = Path(__file__).resolve().parents[2]
+Image = None
+ImageDraw = None
 ITEMS = json.loads((ROOT / "project/data/world_items_v87.json").read_text())["items"]
 WORLD = json.loads((ROOT / "project/data/world_v87.json").read_text())
 PASSED = {p.removeprefix("v87_city_") for p in json.loads((ROOT / "docs/art/review/atlas_v87_ingest.json").read_text())["passed"]}
@@ -46,6 +48,15 @@ SHAPES = {
     "charm": "charm",
     "focus": "charm",
 }
+
+
+def _need_pil():
+    global Image, ImageDraw
+    if Image is None:
+        from PIL import Image as image_mod
+        from PIL import ImageDraw as draw_mod
+        Image = image_mod
+        ImageDraw = draw_mod
 
 
 def _svg_header() -> str:
@@ -155,7 +166,88 @@ def _fallback(node: dict) -> Image.Image:
     return crop
 
 
+def _ratios(path: Path) -> tuple[float, float]:
+    """gold / parchment ratios. Same hue gates as style_check, no Pillow."""
+    data = path.read_bytes()
+    if data[:8] != b"\x89PNG\r\n\x1a\n":
+        raise ValueError(f"not a png {path.name}")
+    pos = 8
+    width = height = color_type = None
+    idat = []
+    while pos < len(data):
+        length = struct.unpack(">I", data[pos : pos + 4])[0]
+        ctype = data[pos + 4 : pos + 8]
+        chunk = data[pos + 8 : pos + 8 + length]
+        pos += 12 + length
+        if ctype == b"IHDR":
+            width, height, bit_depth, color_type = struct.unpack(">IIBB", chunk[:10])
+            if bit_depth != 8 or color_type not in (2, 6):
+                raise ValueError(f"unsupported png {path.name}")
+        elif ctype == b"IDAT":
+            idat.append(chunk)
+        elif ctype == b"IEND":
+            break
+    raw = zlib.decompress(b"".join(idat))
+    bpp = 4 if color_type == 6 else 3
+    stride = width * bpp
+    i = 0
+    prev = bytearray(stride)
+    gold = parch = n = 0
+    for _y in range(height):
+        filt = raw[i]
+        i += 1
+        row = bytearray(raw[i : i + stride])
+        i += stride
+        if filt == 1:
+            for x in range(stride):
+                left = row[x - bpp] if x >= bpp else 0
+                row[x] = (row[x] + left) & 255
+        elif filt == 2:
+            for x in range(stride):
+                row[x] = (row[x] + prev[x]) & 255
+        elif filt == 3:
+            for x in range(stride):
+                left = row[x - bpp] if x >= bpp else 0
+                row[x] = (row[x] + ((left + prev[x]) // 2)) & 255
+        elif filt == 4:
+            for x in range(stride):
+                a = row[x - bpp] if x >= bpp else 0
+                b = prev[x]
+                c = prev[x - bpp] if x >= bpp else 0
+                p = a + b - c
+                pa, pb, pc = abs(p - a), abs(p - b), abs(p - c)
+                pr = a if pa <= pb and pa <= pc else (b if pb <= pc else c)
+                row[x] = (row[x] + pr) & 255
+        elif filt != 0:
+            raise ValueError(f"filter {filt} {path.name}")
+        prev = row
+        for x in range(0, stride, bpp):
+            r, g, b = row[x] / 255.0, row[x + 1] / 255.0, row[x + 2] / 255.0
+            alpha = row[x + 3] / 255.0 if bpp == 4 else 1.0
+            if alpha < 0.5:
+                continue
+            n += 1
+            mx, mn = max(r, g, b), min(r, g, b)
+            delta = mx - mn + 1e-6
+            if mx == r:
+                hue = ((g - b) / delta) % 6
+            elif mx == g:
+                hue = (b - r) / delta + 2
+            else:
+                hue = (r - g) / delta + 4
+            hue *= 60.0
+            sat = (mx - mn) / (mx + 1e-6) if mx > 0 else 0.0
+            if 32.0 < hue < 58.0 and sat > 0.42 and mx > 0.35:
+                gold += 1
+            if 20.0 < hue < 50.0 and 0.12 < sat < 0.40 and mx > 0.55:
+                parch += 1
+    if n == 0:
+        return 1.0, 1.0
+    return gold / n, parch / n
+
+
 def build() -> None:
+    _need_pil()
     GLYPH.mkdir(parents=True, exist_ok=True)
     CITIES.mkdir(parents=True, exist_ok=True)
     for item in ITEMS:
@@ -173,9 +265,6 @@ def build() -> None:
 
 
 def check() -> int:
-    sys.path.insert(0, str(ROOT / "tools" / "art"))
-    import style_check_v87 as sc
-
     errors = []
     pngs = sorted(GLYPH.glob("v92_glyph_*.png"))
     if len(pngs) != 223 or len(list(GLYPH.glob("v92_glyph_*.svg"))) != 223:
@@ -196,9 +285,9 @@ def check() -> int:
     if len(fallbacks) != 35:
         errors.append(f"fallbacks {len(fallbacks)}")
     for path in pngs + fallbacks:
-        m = sc.metrics(str(path))[0]
-        if m["gold_ratio"] != 0.0 or m["parchment_ratio"] != 0.0:
-            errors.append(f"{path.name} gold={m['gold_ratio']} parch={m['parchment_ratio']}")
+        gold, parch = _ratios(path)
+        if gold != 0.0 or parch != 0.0:
+            errors.append(f"{path.name} gold={gold} parch={parch}")
             break
     if errors:
         for err in errors:
