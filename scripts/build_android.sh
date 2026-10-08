@@ -129,11 +129,36 @@ PY
 
 mkdir -p "$(dirname "$OUT")"
 if [[ -z "${GODOT_ANDROID_KEYSTORE_DEBUG_PATH:-}" ]]; then
-	echo "未设置 GODOT_ANDROID_KEYSTORE_DEBUG_PATH。将使用编辑器已生成的 debug keystore；若导出提示未配置密钥，请先在编辑器打开一次 Android 导出，或填写 project/android/signing.local.env。"
+	KS_DIR="${RUNNER_TEMP:-${TMPDIR:-/tmp}}/ck-android-keystore"
+	mkdir -p "$KS_DIR"
+	KS_PATH="$KS_DIR/debug.keystore"
+	KS_PASS="$(python3 -c 'import secrets; print(secrets.token_hex(16))')"
+	"${JAVA_HOME}/bin/keytool" -genkeypair \
+		-keystore "$KS_PATH" \
+		-storepass "$KS_PASS" \
+		-keypass "$KS_PASS" \
+		-alias androiddebugkey \
+		-keyalg RSA -keysize 2048 -validity 10000 \
+		-dname "CN=CenturyKnights Debug, OU=CI, O=AshBanner, C=US" >/dev/null 2>&1
+	export GODOT_ANDROID_KEYSTORE_DEBUG_PATH="$KS_PATH"
+	export GODOT_ANDROID_KEYSTORE_DEBUG_USER="androiddebugkey"
+	export GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD="$KS_PASS"
+	unset KS_PASS
+	echo "已在临时目录生成 debug keystore，不会写入仓库。"
 fi
 echo "导出 Android 调试 APK → $OUT"
 echo "SDK=$SDK"
 echo "JAVA_HOME=$JAVA_HOME"
-# shellcheck disable=SC2086
-"$GODOT_BIN" --headless --path "$PROJECT" --export-debug "Android" "$OUT"
+EXPORT_ARGS=(--headless --path "$PROJECT")
+if [[ "${CK_INSTALL_ANDROID_TEMPLATE:-}" == "1" ]]; then
+	EXPORT_ARGS+=(--install-android-build-template)
+fi
+"$GODOT_BIN" "${EXPORT_ARGS[@]}" --export-debug "Android" "$OUT"
+BYTES="$(stat -c%s "$OUT")"
+echo "APK bytes=$BYTES"
+LIMIT=$((300 * 1024 * 1024))
+if (( BYTES > LIMIT )); then
+	echo "APK exceeds 300MB ($BYTES > $LIMIT)" >&2
+	exit 1
+fi
 echo "完成: $OUT"

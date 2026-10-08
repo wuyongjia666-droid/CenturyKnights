@@ -1,0 +1,4 @@
+# Godot writes the Gradle template here on export. Do not commit it.
+*
+!.gitignore
+!signing.example.env
