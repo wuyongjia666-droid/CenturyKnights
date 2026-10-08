@@ -1,0 +1,4478 @@
+{
+ "version": "v8.7-atlas-1",
+ "home": "hq",
+ "nations": {
+  "ashbanner": {
+   "name": "灰烬邦",
+   "en": "ASH BANNER",
+   "cont": "west",
+   "mat": "ashsteel",
+   "foes": [
+    "bandit",
+    "escort"
+   ],
+   "blood": [
+    "common_ash",
+    "common_ash",
+    "river_ward"
+   ],
+   "jobs": [
+    "light_inf",
+    "squire",
+    "heavy_inf"
+   ],
+   "culture": "陆桥西岸的烬灰平原。城堡群沿发光河脉排开，佣兵与商队是这里的血液。灰旗出身于此。",
+   "smith": "白垣军械署",
+   "prefix": "烬纹",
+   "stance": "home",
+   "toll": 0,
+   "wpos": [
+    0.27,
+    0.46
+   ],
+   "plate": "v8_atlas_nation_ashbanner",
+   "capital": "ash_capital"
+  },
+  "shuoying": {
+   "name": "朔影国",
+   "en": "SHUOYING",
+   "cont": "west",
+   "mat": "obsidian",
+   "foes": [
+    "shadow",
+    "snow"
+   ],
+   "blood": [
+    "common_ash",
+    "ember_noble"
+   ],
+   "jobs": [
+    "hunter",
+    "light_inf"
+   ],
+   "culture": "北境霜脊上的夜之公国。宫廷优雅而多疑，朔影家与灰旗世仇未解，关卡盘查最严。",
+   "smith": "夜阙影工坊",
+   "prefix": "影曜",
+   "stance": "hostile",
+   "toll": 18,
+   "wpos": [
+    0.36,
+    0.22
+   ],
+   "plate": "v8_atlas_nation_shuoying",
+   "capital": "sy_capital"
+  },
+  "qinghe": {
+   "name": "清河国",
+   "en": "QINGHE",
+   "cont": "west",
+   "mat": "jade",
+   "foes": [
+    "dye",
+    "ink",
+    "paper"
+   ],
+   "blood": [
+    "river_ward",
+    "river_ward",
+    "common_ash"
+   ],
+   "jobs": [
+    "hunter",
+    "apprentice",
+    "light_inf"
+   ],
+   "culture": "玉色三角洲与雾中果林。河卫世家掌渡口，旧钱谨慎，书院与染坊并立。",
+   "smith": "玉澜河工坊",
+   "prefix": "澜玉",
+   "stance": "wary",
+   "toll": 8,
+   "wpos": [
+    0.24,
+    0.66
+   ],
+   "plate": "v8_atlas_nation_qinghe",
+   "capital": "qh_capital"
+  },
+  "lantern": {
+   "name": "灯市联",
+   "en": "LANTERN LEAGUE",
+   "cont": "east",
+   "mat": "lampglass",
+   "foes": [
+    "lamp",
+    "fisher",
+    "tide"
+   ],
+   "blood": [
+    "common_ash",
+    "river_ward"
+   ],
+   "jobs": [
+    "squire",
+    "hunter",
+    "light_inf"
+   ],
+   "culture": "海岸夜市与琉璃灯群岛结成的商联。价格一夜三变，契约比刀快。",
+   "smith": "琉光灯铸行",
+   "prefix": "琉灯",
+   "stance": "wary",
+   "toll": 10,
+   "wpos": [
+    0.88,
+    0.42
+   ],
+   "plate": "v8_atlas_nation_lantern",
+   "capital": "lt_capital"
+  },
+  "frostcrown": {
+   "name": "霜冕廷",
+   "en": "FROSTCROWN",
+   "cont": "west",
+   "mat": "frostcrystal",
+   "foes": [
+    "snow",
+    "bell"
+   ],
+   "blood": [
+    "common_ash",
+    "frost_crown"
+   ],
+   "jobs": [
+    "heavy_inf",
+    "apprentice"
+   ],
+   "culture": "高原冰晶殿堂中的残存王廷。王胤稀薄而尊贵，廷议寂静，冰钟报时。",
+   "smith": "霜阙冰铸司",
+   "prefix": "霜冕",
+   "stance": "neutral",
+   "toll": 12,
+   "wpos": [
+    0.19,
+    0.18
+   ],
+   "plate": "v8_atlas_nation_frostcrown",
+   "capital": "fc_capital"
+  },
+  "emberold": {
+   "name": "余烬旧邦",
+   "en": "EMBER OLD REALM",
+   "cont": "east",
+   "mat": "magmaglass",
+   "foes": [
+    "copper",
+    "porcelain",
+    "incense"
+   ],
+   "blood": [
+    "ember_noble",
+    "ember_noble",
+    "common_ash"
+   ],
+   "jobs": [
+    "heavy_inf",
+    "apprentice",
+    "warrior"
+   ],
+   "culture": "冷暮下龟裂的熔玻璃古城。余烬贵胤守着旧典与窑火，废墟里埋着最好的料。",
+   "smith": "焚阙窑铸坊",
+   "prefix": "熔曜",
+   "stance": "neutral",
+   "toll": 10,
+   "wpos": [
+    0.78,
+    0.7
+   ],
+   "plate": "v8_atlas_nation_emberold",
+   "capital": "eo_capital"
+  },
+  "saltmarsh": {
+   "name": "盐泽盟",
+   "en": "SALTMARSH",
+   "cont": "west",
+   "mat": "saltcrystal",
+   "foes": [
+    "salt",
+    "rain"
+   ],
+   "blood": [
+    "common_ash",
+    "river_ward"
+   ],
+   "jobs": [
+    "hunter",
+    "light_inf"
+   ],
+   "culture": "潮滩、盐晶与芦苇薄雾组成的城盟。盐引即货币，潮汐即法度。",
+   "smith": "晶垣盐铸会",
+   "prefix": "盐晶",
+   "stance": "neutral",
+   "toll": 6,
+   "wpos": [
+    0.17,
+    0.82
+   ],
+   "plate": "v8_atlas_nation_saltmarsh",
+   "capital": "sm_capital"
+  },
+  "irongorge": {
+   "name": "铁峡领",
+   "en": "IRON GORGE",
+   "cont": "east",
+   "mat": "gorgesteel",
+   "foes": [
+    "copper",
+    "drum",
+    "relay"
+   ],
+   "blood": [
+    "common_ash",
+    "ember_noble"
+   ],
+   "jobs": [
+    "heavy_inf",
+    "warrior",
+    "light_inf"
+   ],
+   "culture": "垂直峡谷里的锻炉领。冷钢之光昼夜不熄，峡谷吊桥连通三层城区。",
+   "smith": "铁阙峡钢厂",
+   "prefix": "峡钢",
+   "stance": "neutral",
+   "toll": 12,
+   "wpos": [
+    0.8,
+    0.16
+   ],
+   "plate": "v8_atlas_nation_irongorge",
+   "capital": "ig_capital"
+  },
+  "starriver": {
+   "name": "星津邦",
+   "en": "STARFORD",
+   "cont": "east",
+   "mat": "stardust",
+   "foes": [
+    "flute",
+    "relay",
+    "bell"
+   ],
+   "blood": [
+    "river_ward",
+    "common_ash"
+   ],
+   "jobs": [
+    "apprentice",
+    "hunter",
+    "squire"
+   ],
+   "culture": "夜河映出星座之桥的学术邦国。观象台与双虹桥是陆桥东岸的门户。",
+   "smith": "双虹星工院",
+   "prefix": "星津",
+   "stance": "friendly",
+   "toll": 6,
+   "wpos": [
+    0.64,
+    0.25
+   ],
+   "plate": "v8_atlas_nation_starriver",
+   "capital": "sr_capital"
+  },
+  "southzephyr": {
+   "name": "南泽邦",
+   "en": "SOUTH ZEPHYR",
+   "cont": "east",
+   "mat": "hardwood",
+   "foes": [
+    "bamboo",
+    "hive",
+    "grain"
+   ],
+   "blood": [
+    "common_ash",
+    "river_ward"
+   ],
+   "jobs": [
+    "light_inf",
+    "hunter"
+   ],
+   "culture": "萤雾森林与渡口灯火的湿地邦国。硬木、蜂蜡与南椒顺水而下。",
+   "smith": "雾林木铸社",
+   "prefix": "泽木",
+   "stance": "neutral",
+   "toll": 8,
+   "wpos": [
+    0.62,
+    0.76
+   ],
+   "plate": "v8_atlas_nation_southzephyr",
+   "capital": "sz_capital"
+  },
+  "landbridge": {
+   "name": "朔澜陆桥",
+   "en": "LANDBRIDGE",
+   "cont": "bridge",
+   "mat": "iron",
+   "foes": [
+    "escort",
+    "bandit"
+   ],
+   "blood": [
+    "common_ash",
+    "river_ward"
+   ],
+   "jobs": [
+    "light_inf",
+    "squire",
+    "hunter"
+   ],
+   "culture": "连接东西两陆的天险石桥与其驿城群。谁守住陆桥，谁就握住十国商路。",
+   "smith": "陆桥驿铁坊",
+   "prefix": "桥锋",
+   "stance": "neutral",
+   "toll": 4,
+   "wpos": [
+    0.51,
+    0.37
+   ],
+   "plate": "v8_atlas_landbridge_inset",
+   "capital": "lb_west"
+  }
+ },
+ "nodes": [
+  {
+   "id": "hq",
+   "name": "灰旗堡",
+   "nation": "ashbanner",
+   "kind": "castle",
+   "size": 3,
+   "pos": [
+    0.29,
+    0.76
+   ],
+   "biome": "fort",
+   "specialty": "家族城堡 · 经营中枢",
+   "lore": "灰旗佣兵团的本堡。议事厅、校场、市集、工坊与祠堂都在这里——跑图归来，先回家。",
+   "produce": [
+    "grain"
+   ],
+   "demand": [
+    "herb"
+   ],
+   "smith_tier": 0,
+   "tavern_slots": 0,
+   "sig_items": []
+  },
+  {
+   "id": "ash_capital",
+   "name": "烬都·白垣",
+   "nation": "ashbanner",
+   "kind": "capital",
+   "size": 5,
+   "pos": [
+    0.62,
+    0.38
+   ],
+   "biome": "urban",
+   "specialty": "烬灰钢军械 · 陆桥议会",
+   "lore": "白垣城墙由烬灰与冷钢浇筑，陆桥议会在此决定商路关税。军械署的烬灰钢是西陆制式兵器的标准。",
+   "produce": [
+    "ashsteel",
+    "iron"
+   ],
+   "demand": [
+    "silk",
+    "spice",
+    "frostcrystal"
+   ],
+   "smith_tier": 3,
+   "tavern_slots": 3,
+   "sig_items": [
+    "ash_capital_sig1",
+    "ash_capital_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_ash_capital",
+    "title": "议会密令·清剿关税贼",
+    "kind": "clear",
+    "brief": "有人冒充议会收取陆桥关税。查清他们的营地，清剿干净，别让议会丢脸。"
+   }
+  },
+  {
+   "id": "reed_ford",
+   "name": "苇原渡",
+   "nation": "ashbanner",
+   "kind": "village",
+   "size": 2,
+   "pos": [
+    0.37,
+    0.19
+   ],
+   "biome": "ford",
+   "specialty": "护商旧道 · 渡口粮仓",
+   "lore": "苇海里的老渡口，商队出发前都在这里囤粮。渡口老人说，灰旗的旗子一亮，劫匪就让路。",
+   "produce": [
+    "grain",
+    "herb"
+   ],
+   "demand": [
+    "iron",
+    "ashsteel"
+   ],
+   "smith_tier": 1,
+   "tavern_slots": 1,
+   "sig_items": [
+    "reed_ford_sig1",
+    "reed_ford_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_reed_ford",
+    "title": "苇原夜渡·护送粮船",
+    "kind": "escort",
+    "brief": "汛期粮船必须连夜过渡。护送船队到白垣，一袋粮都不能少。"
+   }
+  },
+  {
+   "id": "stone_slope",
+   "name": "石垒坡",
+   "nation": "ashbanner",
+   "kind": "village",
+   "size": 2,
+   "pos": [
+    0.76,
+    0.76
+   ],
+   "biome": "hill",
+   "specialty": "丘地佃庄 · 采石场",
+   "lore": "丘地上层层石垒，佃农靠采石与种麦为生。过去有人在这里收「过路银」，直到灰旗来了。",
+   "produce": [
+    "iron",
+    "grain"
+   ],
+   "demand": [
+    "herb",
+    "tea"
+   ],
+   "smith_tier": 1,
+   "tavern_slots": 1,
+   "sig_items": [
+    "stone_slope_sig1",
+    "stone_slope_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_stone_slope",
+    "title": "石垒坡余孽",
+    "kind": "hunt",
+    "brief": "过路银匪帮的残党躲进了采石洞。追上去，结束这件事。"
+   }
+  },
+  {
+   "id": "fog_vale",
+   "name": "雾谷",
+   "nation": "ashbanner",
+   "kind": "village",
+   "size": 1,
+   "pos": [
+    0.16,
+    0.2
+   ],
+   "biome": "fog",
+   "specialty": "药田 · 雾中猎场",
+   "lore": "终年雾锁的谷地，药草长得最好。猎户熟悉每一条雾路，也熟悉雾里的危险。",
+   "produce": [
+    "herb"
+   ],
+   "demand": [
+    "grain",
+    "ashsteel"
+   ],
+   "smith_tier": 1,
+   "tavern_slots": 1,
+   "sig_items": [
+    "fog_vale_sig1",
+    "fog_vale_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_fog_vale",
+    "title": "雾中的药童",
+    "kind": "escort",
+    "brief": "药童要把一批珍稀药草送到灰旗堡的祠堂。雾路上有人盯着这批货。"
+   }
+  },
+  {
+   "id": "tide_bridge",
+   "name": "断潮渡哨",
+   "nation": "ashbanner",
+   "kind": "fortress",
+   "size": 3,
+   "pos": [
+    0.88,
+    0.3
+   ],
+   "biome": "fort",
+   "specialty": "陆桥西门户 · 河卫哨所",
+   "lore": "守在断潮河口的石哨，是通往陆桥的最后一道关。河卫邦派人在此值夜。",
+   "produce": [
+    "ashsteel"
+   ],
+   "demand": [
+    "grain",
+    "herb",
+    "fur"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 1,
+   "sig_items": [
+    "tide_bridge_sig1",
+    "tide_bridge_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_tide_bridge",
+    "title": "守桥夜战",
+    "kind": "defend",
+    "brief": "探子说今晚会有人夺桥。守住断潮渡哨，直到天亮。"
+   }
+  },
+  {
+   "id": "ash_market",
+   "name": "灰市",
+   "nation": "ashbanner",
+   "kind": "town",
+   "size": 3,
+   "pos": [
+    0.92,
+    0.84
+   ],
+   "biome": "urban",
+   "specialty": "西陆最大的佣兵市集",
+   "lore": "灰市什么都卖：消息、刀剑、人手。陆桥商队在这里结算，赏金榜一天换三次。",
+   "produce": [
+    "ashsteel",
+    "spice"
+   ],
+   "demand": [
+    "lampglass",
+    "stardust"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 2,
+   "sig_items": [
+    "ash_market_sig1",
+    "ash_market_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_ash_market",
+    "title": "灰市赏金·假币工坊",
+    "kind": "clear",
+    "brief": "有人在灰市流通假银。找到工坊，砸掉它。"
+   }
+  },
+  {
+   "id": "sy_capital",
+   "name": "朔都·夜阙",
+   "nation": "shuoying",
+   "kind": "capital",
+   "size": 5,
+   "pos": [
+    0.68,
+    0.43
+   ],
+   "biome": "nightcamp",
+   "specialty": "影曜石宫廷 · 夜之议席",
+   "lore": "夜阙宫殿只在入夜后点灯。朔影家的议席在此，外人入城须交出兵器名录。",
+   "produce": [
+    "obsidian",
+    "fur"
+   ],
+   "demand": [
+    "grain",
+    "tea",
+    "spice"
+   ],
+   "smith_tier": 3,
+   "tavern_slots": 3,
+   "sig_items": [
+    "sy_capital_sig1",
+    "sy_capital_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sy_capital",
+    "title": "夜阙密使",
+    "kind": "escort",
+    "brief": "一位愿与灰旗和谈的朔影使者需要安全离开夜阙。别让宫廷影卫发现。"
+   }
+  },
+  {
+   "id": "sy_frostfort",
+   "name": "寒垒",
+   "nation": "shuoying",
+   "kind": "fortress",
+   "size": 4,
+   "pos": [
+    0.17,
+    0.2
+   ],
+   "biome": "snow",
+   "specialty": "北境军垒 · 雪原斥候",
+   "lore": "建在冰崖上的军垒，朔影的斥候从这里出发。城墙上挂满了冻硬的旗。",
+   "produce": [
+    "fur",
+    "obsidian"
+   ],
+   "demand": [
+    "grain",
+    "herb"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 1,
+   "sig_items": [
+    "sy_frostfort_sig1",
+    "sy_frostfort_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sy_frostfort",
+    "title": "寒垒雪狼",
+    "kind": "hunt",
+    "brief": "雪狼群袭击了补给线。猎杀狼王，寒垒会记住这份人情。"
+   }
+  },
+  {
+   "id": "sy_spire",
+   "name": "影针塔",
+   "nation": "shuoying",
+   "kind": "town",
+   "size": 3,
+   "pos": [
+    0.4,
+    0.43
+   ],
+   "biome": "pass",
+   "specialty": "观测塔 · 影曜石矿",
+   "lore": "一根黑色石针刺入夜空，塔下是影曜石矿脉。矿工说，塔会在暴风雪前低鸣。",
+   "produce": [
+    "obsidian"
+   ],
+   "demand": [
+    "iron",
+    "grain"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 2,
+   "sig_items": [
+    "sy_spire_sig1",
+    "sy_spire_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sy_spire",
+    "title": "矿脉塌方",
+    "kind": "deliver",
+    "brief": "矿道塌方，困住了十二名矿工。把救援物资送到千阶城换回绞盘。"
+   }
+  },
+  {
+   "id": "sy_banner",
+   "name": "墨旗关",
+   "nation": "shuoying",
+   "kind": "fortress",
+   "size": 3,
+   "pos": [
+    0.88,
+    0.3
+   ],
+   "biome": "fort",
+   "specialty": "西北关隘 · 通往霜冕廷",
+   "lore": "墨色旗帜在关楼上翻卷。朔影与霜冕廷的使者都要在这里换文书。",
+   "produce": [
+    "fur"
+   ],
+   "demand": [
+    "ashsteel",
+    "jade"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 1,
+   "sig_items": [
+    "sy_banner_sig1",
+    "sy_banner_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sy_banner",
+    "title": "墨旗关夜袭",
+    "kind": "defend",
+    "brief": "霜原上的马贼盯上了墨旗关的粮仓。帮关卒守过这一夜。"
+   }
+  },
+  {
+   "id": "sy_stair",
+   "name": "千阶城",
+   "nation": "shuoying",
+   "kind": "city",
+   "size": 4,
+   "pos": [
+    0.55,
+    0.67
+   ],
+   "biome": "urban",
+   "specialty": "千阶石梯 · 工匠城",
+   "lore": "整座城建在一道千级石阶上。下层是铁匠与皮匠，上层是朔影贵族。",
+   "produce": [
+    "fur",
+    "obsidian"
+   ],
+   "demand": [
+    "silk",
+    "jade"
+   ],
+   "smith_tier": 3,
+   "tavern_slots": 3,
+   "sig_items": [
+    "sy_stair_sig1",
+    "sy_stair_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sy_stair",
+    "title": "千阶决斗",
+    "kind": "hunt",
+    "brief": "一名朔影贵族向灰旗下了决斗书。去千阶顶上，让他闭嘴。"
+   }
+  },
+  {
+   "id": "sy_coast",
+   "name": "冷湾",
+   "nation": "shuoying",
+   "kind": "port",
+   "size": 3,
+   "pos": [
+    0.49,
+    0.91
+   ],
+   "biome": "harbor",
+   "specialty": "北海冰港 · 南泽海路",
+   "lore": "冰层里凿出的港口，海路通往遥远的南泽。渔民用影曜石做鱼钩。",
+   "produce": [
+    "fur",
+    "obsidian"
+   ],
+   "demand": [
+    "spice",
+    "hardwood",
+    "tea"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 2,
+   "sig_items": [
+    "sy_coast_sig1",
+    "sy_coast_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sy_coast",
+    "title": "冷湾走私船",
+    "kind": "clear",
+    "brief": "走私船在冷湾外抢劫渔民。登船清剿。"
+   }
+  },
+  {
+   "id": "sy_ridge",
+   "name": "狼脊村",
+   "nation": "shuoying",
+   "kind": "village",
+   "size": 1,
+   "pos": [
+    0.18,
+    0.82
+   ],
+   "biome": "snow",
+   "specialty": "边境猎村 · 灰烬邦门户",
+   "lore": "朔影与灰烬邦边界上的猎村。村民两边都不信，只信猎物。",
+   "produce": [
+    "fur"
+   ],
+   "demand": [
+    "grain",
+    "ashsteel"
+   ],
+   "smith_tier": 1,
+   "tavern_slots": 1,
+   "sig_items": [
+    "sy_ridge_sig1",
+    "sy_ridge_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sy_ridge",
+    "title": "狼脊村的猎人",
+    "kind": "scout",
+    "brief": "村里的老猎人在边境失踪了。去影针塔打听消息再回来。"
+   }
+  },
+  {
+   "id": "qh_capital",
+   "name": "清都·玉澜",
+   "nation": "qinghe",
+   "kind": "capital",
+   "size": 5,
+   "pos": [
+    0.73,
+    0.37
+   ],
+   "biome": "urban",
+   "specialty": "河卫世家 · 玉器与书院",
+   "lore": "玉澜城依河而建，河卫世家掌管所有渡口。城里的书院藏着十国最全的河道图。",
+   "produce": [
+    "jade",
+    "silk"
+   ],
+   "demand": [
+    "iron",
+    "fur",
+    "ashsteel"
+   ],
+   "smith_tier": 3,
+   "tavern_slots": 3,
+   "sig_items": [
+    "qh_capital_sig1",
+    "qh_capital_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_qh_capital",
+    "title": "玉澜书院失窃",
+    "kind": "hunt",
+    "brief": "书院的河道总图被盗。追回它，别让盗贼把图卖给朔影。"
+   }
+  },
+  {
+   "id": "qh_mist",
+   "name": "雾果村",
+   "nation": "qinghe",
+   "kind": "village",
+   "size": 2,
+   "pos": [
+    0.18,
+    0.18
+   ],
+   "biome": "fog",
+   "specialty": "雾中果林 · 灰烬邦边境",
+   "lore": "雾里的果林一年两熟。灰烬邦的商队常来收果，也常在雾里迷路。",
+   "produce": [
+    "tea",
+    "grain"
+   ],
+   "demand": [
+    "iron",
+    "ashsteel"
+   ],
+   "smith_tier": 1,
+   "tavern_slots": 1,
+   "sig_items": [
+    "qh_mist_sig1",
+    "qh_mist_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_qh_mist",
+    "title": "雾果收成",
+    "kind": "gather",
+    "brief": "果农需要铁器修整果园。带 4 份铁料回来，换一季好茶。"
+   }
+  },
+  {
+   "id": "qh_isle",
+   "name": "浮洲",
+   "nation": "qinghe",
+   "kind": "town",
+   "size": 3,
+   "pos": [
+    0.51,
+    0.69
+   ],
+   "biome": "ford",
+   "specialty": "河心岛 · 染坊",
+   "lore": "河心的浮岛，染坊的布匹在水面上晾成彩带。染工的手终年是蓝色的。",
+   "produce": [
+    "silk",
+    "jade"
+   ],
+   "demand": [
+    "saltcrystal",
+    "grain"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 2,
+   "sig_items": [
+    "qh_isle_sig1",
+    "qh_isle_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_qh_isle",
+    "title": "染坊的毒",
+    "kind": "clear",
+    "brief": "有人在上游投毒，染缸一夜全黑。顺着河找到投毒者的营地。"
+   }
+  },
+  {
+   "id": "qh_orchard",
+   "name": "粉霞坞",
+   "nation": "qinghe",
+   "kind": "village",
+   "size": 2,
+   "pos": [
+    0.16,
+    0.65
+   ],
+   "biome": "plain",
+   "specialty": "花坞 · 蜂蜜与花茶",
+   "lore": "春天整片河岸都是粉色的。坞里的女人们会用花瓣酿酒。",
+   "produce": [
+    "tea",
+    "herb"
+   ],
+   "demand": [
+    "iron",
+    "fur"
+   ],
+   "smith_tier": 1,
+   "tavern_slots": 1,
+   "sig_items": [
+    "qh_orchard_sig1",
+    "qh_orchard_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_qh_orchard",
+    "title": "花期护坞",
+    "kind": "defend",
+    "brief": "花期时总有流寇来抢酒。守住粉霞坞。"
+   }
+  },
+  {
+   "id": "qh_ford",
+   "name": "三汊渡",
+   "nation": "qinghe",
+   "kind": "town",
+   "size": 3,
+   "pos": [
+    0.42,
+    0.89
+   ],
+   "biome": "ford",
+   "specialty": "三河交汇 · 盐泽商路",
+   "lore": "三条河在此汇合，渡口税是清河国最大的财源之一。盐泽的盐船在此卸货。",
+   "produce": [
+    "silk",
+    "tea"
+   ],
+   "demand": [
+    "saltcrystal",
+    "iron"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 2,
+   "sig_items": [
+    "qh_ford_sig1",
+    "qh_ford_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_qh_ford",
+    "title": "三汊盐船",
+    "kind": "escort",
+    "brief": "一艘盐船要去盐泽盟的白幡镇。河上水匪很多。"
+   }
+  },
+  {
+   "id": "qh_south",
+   "name": "碧潭城",
+   "nation": "qinghe",
+   "kind": "city",
+   "size": 4,
+   "pos": [
+    0.76,
+    0.72
+   ],
+   "biome": "ford",
+   "specialty": "碧潭 · 玉矿与工匠",
+   "lore": "城中央是一汪深不见底的碧潭，潭底有玉矿。匠人们在潭边雕玉。",
+   "produce": [
+    "jade"
+   ],
+   "demand": [
+    "fur",
+    "obsidian",
+    "grain"
+   ],
+   "smith_tier": 3,
+   "tavern_slots": 3,
+   "sig_items": [
+    "qh_south_sig1",
+    "qh_south_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_qh_south",
+    "title": "潭底的东西",
+    "kind": "hunt",
+    "brief": "潭底有东西在吃采玉人。下去，把它解决掉。"
+   }
+  },
+  {
+   "id": "qh_upper",
+   "name": "上河书院",
+   "nation": "qinghe",
+   "kind": "town",
+   "size": 3,
+   "pos": [
+    0.37,
+    0.2
+   ],
+   "biome": "archive",
+   "specialty": "书院 · 河道图与秘术",
+   "lore": "清河国最古老的书院，学子们研究河道、星象与秘术。院长和霜冕廷有通信。",
+   "produce": [
+    "silk"
+   ],
+   "demand": [
+    "stardust",
+    "frostcrystal"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 2,
+   "sig_items": [
+    "qh_upper_sig1",
+    "qh_upper_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_qh_upper",
+    "title": "借书不还",
+    "kind": "deliver",
+    "brief": "书院要把一套河道志送到星津邦的观象台交换星图。"
+   }
+  },
+  {
+   "id": "lt_capital",
+   "name": "灯都·琉光",
+   "nation": "lantern",
+   "kind": "capital",
+   "size": 5,
+   "pos": [
+    0.76,
+    0.24
+   ],
+   "biome": "urban",
+   "specialty": "琉璃灯塔 · 夜市联议",
+   "lore": "整座城由琉璃灯塔组成，夜里亮得像白昼。灯市联的议员都是商人。",
+   "produce": [
+    "lampglass",
+    "spice"
+   ],
+   "demand": [
+    "iron",
+    "grain",
+    "fur"
+   ],
+   "smith_tier": 3,
+   "tavern_slots": 3,
+   "sig_items": [
+    "lt_capital_sig1",
+    "lt_capital_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_lt_capital",
+    "title": "灯都夜市抢劫案",
+    "kind": "hunt",
+    "brief": "一伙人连抢了三家灯铺。在他们出海前抓住他们。"
+   }
+  },
+  {
+   "id": "lt_harbor",
+   "name": "西港",
+   "nation": "lantern",
+   "kind": "port",
+   "size": 4,
+   "pos": [
+    0.15,
+    0.39
+   ],
+   "biome": "harbor",
+   "specialty": "东陆西港 · 星津门户",
+   "lore": "西港面向星津邦，货船昼夜进出。码头工会比市政厅更有权。",
+   "produce": [
+    "spice",
+    "lampglass"
+   ],
+   "demand": [
+    "stardust",
+    "silk"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 2,
+   "sig_items": [
+    "lt_harbor_sig1",
+    "lt_harbor_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_lt_harbor",
+    "title": "码头罢工",
+    "kind": "deliver",
+    "brief": "工会需要一批南椒安抚码头工人。送到中灯屿。"
+   }
+  },
+  {
+   "id": "lt_isle",
+   "name": "中灯屿",
+   "nation": "lantern",
+   "kind": "city",
+   "size": 4,
+   "pos": [
+    0.51,
+    0.5
+   ],
+   "biome": "harbor",
+   "specialty": "灯群岛中心 · 琉璃工坊",
+   "lore": "群岛中央最大的灯屿，琉璃匠在这里吹制灯罩。火光映着海面。",
+   "produce": [
+    "lampglass"
+   ],
+   "demand": [
+    "saltcrystal",
+    "hardwood"
+   ],
+   "smith_tier": 3,
+   "tavern_slots": 3,
+   "sig_items": [
+    "lt_isle_sig1",
+    "lt_isle_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_lt_isle",
+    "title": "琉璃窑熄火",
+    "kind": "gather",
+    "brief": "窑火需要硬木续燃。带 3 份南泽硬木回来。"
+   }
+  },
+  {
+   "id": "lt_south",
+   "name": "南灯坊",
+   "nation": "lantern",
+   "kind": "town",
+   "size": 3,
+   "pos": [
+    0.78,
+    0.67
+   ],
+   "biome": "urban",
+   "specialty": "灯坊街 · 刺客行会传闻",
+   "lore": "狭窄的灯坊街，灯笼一盏挨一盏。传闻刺客行会就藏在某盏灯后面。",
+   "produce": [
+    "lampglass",
+    "spice"
+   ],
+   "demand": [
+    "obsidian",
+    "jade"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 2,
+   "sig_items": [
+    "lt_south_sig1",
+    "lt_south_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_lt_south",
+    "title": "灯后之人",
+    "kind": "clear",
+    "brief": "灯坊街的保护费越收越高。找到幕后的人。"
+   }
+  },
+  {
+   "id": "lt_hill",
+   "name": "望灯台",
+   "nation": "lantern",
+   "kind": "fortress",
+   "size": 3,
+   "pos": [
+    0.35,
+    0.18
+   ],
+   "biome": "fort",
+   "specialty": "山顶烽台 · 铁峡商道",
+   "lore": "山顶的烽台能看见整个灯市联。铁峡领的钢锭从这里下山。",
+   "produce": [
+    "lampglass"
+   ],
+   "demand": [
+    "gorgesteel",
+    "grain"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 1,
+   "sig_items": [
+    "lt_hill_sig1",
+    "lt_hill_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_lt_hill",
+    "title": "烽台失守",
+    "kind": "defend",
+    "brief": "山贼盯上了望灯台的军械库。守住它。"
+   }
+  },
+  {
+   "id": "lt_docks",
+   "name": "渔火埠",
+   "nation": "lantern",
+   "kind": "village",
+   "size": 2,
+   "pos": [
+    0.07,
+    0.82
+   ],
+   "biome": "harbor",
+   "specialty": "渔村 · 盐泽海路",
+   "lore": "渔火点点的小村，往盐泽盟的海船在这里补给。",
+   "produce": [
+    "spice",
+    "grain"
+   ],
+   "demand": [
+    "saltcrystal",
+    "iron"
+   ],
+   "smith_tier": 1,
+   "tavern_slots": 1,
+   "sig_items": [
+    "lt_docks_sig1",
+    "lt_docks_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_lt_docks",
+    "title": "渔火夜盗",
+    "kind": "hunt",
+    "brief": "夜里有人偷渔网，还伤了人。抓住他们。"
+   }
+  },
+  {
+   "id": "lt_lane",
+   "name": "夜航渡",
+   "nation": "lantern",
+   "kind": "port",
+   "size": 3,
+   "pos": [
+    0.57,
+    0.85
+   ],
+   "biome": "harbor",
+   "specialty": "夜航港 · 余烬旧邦商路",
+   "lore": "只在夜里开船的港口。往余烬旧邦的商船避开白天的海盗。",
+   "produce": [
+    "lampglass",
+    "spice"
+   ],
+   "demand": [
+    "magmaglass",
+    "fur"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 2,
+   "sig_items": [
+    "lt_lane_sig1",
+    "lt_lane_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_lt_lane",
+    "title": "夜航护卫",
+    "kind": "escort",
+    "brief": "商船要去余烬旧邦的焰旗要塞。陆路护送货主。"
+   }
+  },
+  {
+   "id": "fc_capital",
+   "name": "冕都·霜阙",
+   "nation": "frostcrown",
+   "kind": "capital",
+   "size": 5,
+   "pos": [
+    0.61,
+    0.37
+   ],
+   "biome": "snow",
+   "specialty": "冰晶王廷 · 霜冕王胤",
+   "lore": "冰晶宫阙矗立在高原上，王廷寂静如雪。霜冕王胤在此等待复兴。",
+   "produce": [
+    "frostcrystal"
+   ],
+   "demand": [
+    "grain",
+    "spice",
+    "tea"
+   ],
+   "smith_tier": 3,
+   "tavern_slots": 3,
+   "sig_items": [
+    "fc_capital_sig1",
+    "fc_capital_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_fc_capital",
+    "title": "王胤的护卫",
+    "kind": "escort",
+    "brief": "一位霜冕王胤要秘密前往冰钟城。护送她，不许外人知道。"
+   }
+  },
+  {
+   "id": "fc_banner",
+   "name": "雪幡哨",
+   "nation": "frostcrown",
+   "kind": "fortress",
+   "size": 3,
+   "pos": [
+    0.2,
+    0.24
+   ],
+   "biome": "snow",
+   "specialty": "西境哨所 · 雪原巡逻",
+   "lore": "雪原上的白幡哨所，巡逻队骑着雪驼出发。",
+   "produce": [
+    "fur"
+   ],
+   "demand": [
+    "grain",
+    "herb"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 1,
+   "sig_items": [
+    "fc_banner_sig1",
+    "fc_banner_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_fc_banner",
+    "title": "雪原失踪",
+    "kind": "scout",
+    "brief": "一支巡逻队失踪了。去镜湖关打听，再回来报告。"
+   }
+  },
+  {
+   "id": "fc_spire",
+   "name": "孤针镇",
+   "nation": "frostcrown",
+   "kind": "town",
+   "size": 3,
+   "pos": [
+    0.47,
+    0.22
+   ],
+   "biome": "snow",
+   "specialty": "冰针塔 · 霜晶矿",
+   "lore": "一根冰针刺向天空，镇民在塔下开采霜晶。",
+   "produce": [
+    "frostcrystal"
+   ],
+   "demand": [
+    "iron",
+    "hardwood"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 2,
+   "sig_items": [
+    "fc_spire_sig1",
+    "fc_spire_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_fc_spire",
+    "title": "矿下的寒兽",
+    "kind": "hunt",
+    "brief": "霜晶矿下醒来了一只寒兽。处理掉它。"
+   }
+  },
+  {
+   "id": "fc_tower",
+   "name": "冰钟城",
+   "nation": "frostcrown",
+   "kind": "city",
+   "size": 4,
+   "pos": [
+    0.88,
+    0.3
+   ],
+   "biome": "snow",
+   "specialty": "冰钟 · 王廷报时与秘术",
+   "lore": "巨大的冰钟每天鸣响十二次。秘术师们说钟声能驱散邪祟。",
+   "produce": [
+    "frostcrystal",
+    "fur"
+   ],
+   "demand": [
+    "silk",
+    "stardust"
+   ],
+   "smith_tier": 3,
+   "tavern_slots": 3,
+   "sig_items": [
+    "fc_tower_sig1",
+    "fc_tower_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_fc_tower",
+    "title": "冰钟裂痕",
+    "kind": "gather",
+    "brief": "冰钟出现了裂痕。带 3 份霜晶来修补。"
+   }
+  },
+  {
+   "id": "fc_lake",
+   "name": "镜湖关",
+   "nation": "frostcrown",
+   "kind": "fortress",
+   "size": 4,
+   "pos": [
+    0.55,
+    0.69
+   ],
+   "biome": "snow",
+   "specialty": "冰湖关隘 · 王廷南门",
+   "lore": "关隘建在冰封的镜湖上，湖面映出整座关城。",
+   "produce": [
+    "frostcrystal"
+   ],
+   "demand": [
+    "ashsteel",
+    "grain"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 1,
+   "sig_items": [
+    "fc_lake_sig1",
+    "fc_lake_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_fc_lake",
+    "title": "镜湖破冰",
+    "kind": "defend",
+    "brief": "有人想在冰面最薄时偷袭镜湖关。守住它。"
+   }
+  },
+  {
+   "id": "fc_peak",
+   "name": "鹰岩村",
+   "nation": "frostcrown",
+   "kind": "village",
+   "size": 2,
+   "pos": [
+    0.9,
+    0.69
+   ],
+   "biome": "pass",
+   "specialty": "鹰岩 · 雪鹰与猎手",
+   "lore": "建在鹰岩上的小村，村民驯养雪鹰。",
+   "produce": [
+    "fur"
+   ],
+   "demand": [
+    "grain",
+    "iron"
+   ],
+   "smith_tier": 1,
+   "tavern_slots": 1,
+   "sig_items": [
+    "fc_peak_sig1",
+    "fc_peak_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_fc_peak",
+    "title": "雪鹰被盗",
+    "kind": "hunt",
+    "brief": "有人偷走了村里的雪鹰幼雏。追回来。"
+   }
+  },
+  {
+   "id": "fc_plateau",
+   "name": "冻原村",
+   "nation": "frostcrown",
+   "kind": "village",
+   "size": 1,
+   "pos": [
+    0.18,
+    0.85
+   ],
+   "biome": "snow",
+   "specialty": "冻原 · 朔影边境",
+   "lore": "冻原上的游牧村落，朔影的商人会在这里交易皮毛。",
+   "produce": [
+    "fur"
+   ],
+   "demand": [
+    "grain",
+    "tea"
+   ],
+   "smith_tier": 1,
+   "tavern_slots": 1,
+   "sig_items": [
+    "fc_plateau_sig1",
+    "fc_plateau_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_fc_plateau",
+    "title": "冻原迁徙",
+    "kind": "escort",
+    "brief": "牧民要迁往雪幡哨避寒。路上有狼也有人。"
+   }
+  },
+  {
+   "id": "eo_capital",
+   "name": "旧都·焚阙",
+   "nation": "emberold",
+   "kind": "capital",
+   "size": 5,
+   "pos": [
+    0.59,
+    0.5
+   ],
+   "biome": "forge",
+   "specialty": "熔玻古城 · 余烬贵胤",
+   "lore": "龟裂的熔玻璃城墙下仍有余温。余烬贵胤守着祖先的窑火，等一个复兴的机会。",
+   "produce": [
+    "magmaglass"
+   ],
+   "demand": [
+    "grain",
+    "tea",
+    "frostcrystal"
+   ],
+   "smith_tier": 3,
+   "tavern_slots": 3,
+   "sig_items": [
+    "eo_capital_sig1",
+    "eo_capital_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_eo_capital",
+    "title": "古城地宫",
+    "kind": "hunt",
+    "brief": "焚阙地宫里有盗墓贼在挖祖陵。清理干净。"
+   }
+  },
+  {
+   "id": "eo_kiln",
+   "name": "窑火镇",
+   "nation": "emberold",
+   "kind": "town",
+   "size": 3,
+   "pos": [
+    0.13,
+    0.22
+   ],
+   "biome": "forge",
+   "specialty": "千年窑 · 冰瓷",
+   "lore": "镇上的千年窑从未熄过火。烧出的冰瓷薄如蝉翼。",
+   "produce": [
+    "magmaglass"
+   ],
+   "demand": [
+    "hardwood",
+    "iron"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 2,
+   "sig_items": [
+    "eo_kiln_sig1",
+    "eo_kiln_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_eo_kiln",
+    "title": "窑火续薪",
+    "kind": "gather",
+    "brief": "千年窑需要硬木续火。带 4 份南泽硬木回来。"
+   }
+  },
+  {
+   "id": "eo_archive",
+   "name": "灰典城",
+   "nation": "emberold",
+   "kind": "city",
+   "size": 4,
+   "pos": [
+    0.37,
+    0.2
+   ],
+   "biome": "archive",
+   "specialty": "旧典 · 秘术学府",
+   "lore": "城中的灰典阁收藏着旧邦所有的典籍，秘术师在此研究余烬之术。",
+   "produce": [
+    "magmaglass",
+    "silk"
+   ],
+   "demand": [
+    "stardust",
+    "jade"
+   ],
+   "smith_tier": 3,
+   "tavern_slots": 3,
+   "sig_items": [
+    "eo_archive_sig1",
+    "eo_archive_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_eo_archive",
+    "title": "禁典外流",
+    "kind": "deliver",
+    "brief": "一页禁典落到了外人手里，已被赎回。送去旧都封存。"
+   }
+  },
+  {
+   "id": "eo_shrine",
+   "name": "余火祠",
+   "nation": "emberold",
+   "kind": "village",
+   "size": 2,
+   "pos": [
+    0.16,
+    0.35
+   ],
+   "biome": "shrine",
+   "specialty": "祠堂 · 余火祭司",
+   "lore": "供奉旧邦先祖的祠堂，祭司守着一盏不灭的余火。",
+   "produce": [
+    "herb",
+    "magmaglass"
+   ],
+   "demand": [
+    "grain",
+    "tea"
+   ],
+   "smith_tier": 1,
+   "tavern_slots": 1,
+   "sig_items": [
+    "eo_shrine_sig1",
+    "eo_shrine_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_eo_shrine",
+    "title": "祠火将熄",
+    "kind": "defend",
+    "brief": "有人想熄灭祠堂的余火。守护祭司过完祭典。"
+   }
+  },
+  {
+   "id": "eo_crack",
+   "name": "裂谷村",
+   "nation": "emberold",
+   "kind": "village",
+   "size": 1,
+   "pos": [
+    0.29,
+    0.74
+   ],
+   "biome": "pass",
+   "specialty": "裂谷 · 南泽边境",
+   "lore": "大地裂开的谷底有一座小村，熔玻璃矿脉暴露在外。",
+   "produce": [
+    "magmaglass"
+   ],
+   "demand": [
+    "grain",
+    "hardwood"
+   ],
+   "smith_tier": 1,
+   "tavern_slots": 1,
+   "sig_items": [
+    "eo_crack_sig1",
+    "eo_crack_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_eo_crack",
+    "title": "裂谷塌陷",
+    "kind": "scout",
+    "brief": "裂谷又裂开了一道口子。去古樟祠请祭司来看看，再回来。"
+   }
+  },
+  {
+   "id": "eo_banner",
+   "name": "焰旗要塞",
+   "nation": "emberold",
+   "kind": "fortress",
+   "size": 4,
+   "pos": [
+    0.88,
+    0.3
+   ],
+   "biome": "fort",
+   "specialty": "东北要塞 · 灯市商路",
+   "lore": "焰色旗帜飘扬的要塞，守着通往灯市联的商路。",
+   "produce": [
+    "magmaglass"
+   ],
+   "demand": [
+    "lampglass",
+    "grain"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 1,
+   "sig_items": [
+    "eo_banner_sig1",
+    "eo_banner_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_eo_banner",
+    "title": "要塞围城",
+    "kind": "defend",
+    "brief": "灯市的雇佣兵要来夺要塞。帮守将守住。"
+   }
+  },
+  {
+   "id": "eo_glass",
+   "name": "熔镜镇",
+   "nation": "emberold",
+   "kind": "town",
+   "size": 3,
+   "pos": [
+    0.73,
+    0.65
+   ],
+   "biome": "forge",
+   "specialty": "熔镜 · 琉璃与铠甲",
+   "lore": "镇上的匠人把熔玻璃打磨成镜面铠甲。",
+   "produce": [
+    "magmaglass"
+   ],
+   "demand": [
+    "iron",
+    "fur"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 2,
+   "sig_items": [
+    "eo_glass_sig1",
+    "eo_glass_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_eo_glass",
+    "title": "镜甲试炼",
+    "kind": "hunt",
+    "brief": "大师要用一头熔岩兽的甲壳做铠。猎杀它。"
+   }
+  },
+  {
+   "id": "sm_capital",
+   "name": "盐都·晶垣",
+   "nation": "saltmarsh",
+   "kind": "capital",
+   "size": 5,
+   "pos": [
+    0.49,
+    0.52
+   ],
+   "biome": "marsh",
+   "specialty": "盐晶城 · 盐引交易所",
+   "lore": "巨大的盐晶从潮滩中长出，城就建在晶体之间。盐引交易所决定西陆的盐价。",
+   "produce": [
+    "saltcrystal"
+   ],
+   "demand": [
+    "iron",
+    "hardwood",
+    "fur"
+   ],
+   "smith_tier": 3,
+   "tavern_slots": 3,
+   "sig_items": [
+    "sm_capital_sig1",
+    "sm_capital_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sm_capital",
+    "title": "盐引伪造",
+    "kind": "hunt",
+    "brief": "有人伪造盐引扰乱市场。抓住伪造者。"
+   }
+  },
+  {
+   "id": "sm_west",
+   "name": "苇幡村",
+   "nation": "saltmarsh",
+   "kind": "village",
+   "size": 1,
+   "pos": [
+    0.2,
+    0.26
+   ],
+   "biome": "marsh",
+   "specialty": "芦苇村 · 灰烬邦边境",
+   "lore": "芦苇丛中挂满白幡的小村。村民说幡是给潮神看的。",
+   "produce": [
+    "saltcrystal",
+    "grain"
+   ],
+   "demand": [
+    "iron",
+    "ashsteel"
+   ],
+   "smith_tier": 1,
+   "tavern_slots": 1,
+   "sig_items": [
+    "sm_west_sig1",
+    "sm_west_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sm_west",
+    "title": "潮神祭",
+    "kind": "defend",
+    "brief": "潮神祭当晚总有人来抢祭品。守住村子。"
+   }
+  },
+  {
+   "id": "sm_banner",
+   "name": "白幡镇",
+   "nation": "saltmarsh",
+   "kind": "town",
+   "size": 3,
+   "pos": [
+    0.74,
+    0.24
+   ],
+   "biome": "marsh",
+   "specialty": "白幡 · 清河商路",
+   "lore": "镇口一排白幡，清河的商船在此靠岸。",
+   "produce": [
+    "saltcrystal"
+   ],
+   "demand": [
+    "silk",
+    "tea"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 2,
+   "sig_items": [
+    "sm_banner_sig1",
+    "sm_banner_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sm_banner",
+    "title": "白幡失窃",
+    "kind": "clear",
+    "brief": "镇上的盐仓被盗。盗贼的营地就在芦苇深处。"
+   }
+  },
+  {
+   "id": "sm_far",
+   "name": "潮哨",
+   "nation": "saltmarsh",
+   "kind": "fortress",
+   "size": 3,
+   "pos": [
+    0.88,
+    0.3
+   ],
+   "biome": "fort",
+   "specialty": "潮汐哨塔 · 海防",
+   "lore": "潮汐最高时哨塔会被海水包围，成为孤岛。",
+   "produce": [
+    "saltcrystal"
+   ],
+   "demand": [
+    "grain",
+    "ashsteel"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 1,
+   "sig_items": [
+    "sm_far_sig1",
+    "sm_far_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sm_far",
+    "title": "潮哨夜袭",
+    "kind": "defend",
+    "brief": "海盗要趁大潮夺哨。守住。"
+   }
+  },
+  {
+   "id": "sm_mid",
+   "name": "晒盐场",
+   "nation": "saltmarsh",
+   "kind": "village",
+   "size": 2,
+   "pos": [
+    0.63,
+    0.25
+   ],
+   "biome": "plain",
+   "specialty": "盐田 · 盐工",
+   "lore": "一望无际的盐田，盐工们在烈日下劳作。",
+   "produce": [
+    "saltcrystal",
+    "grain"
+   ],
+   "demand": [
+    "herb",
+    "tea"
+   ],
+   "smith_tier": 1,
+   "tavern_slots": 1,
+   "sig_items": [
+    "sm_mid_sig1",
+    "sm_mid_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sm_mid",
+    "title": "盐工病了",
+    "kind": "gather",
+    "brief": "盐工们染了湿热病。带 3 份药草回来。"
+   }
+  },
+  {
+   "id": "sm_south",
+   "name": "晶滩港",
+   "nation": "saltmarsh",
+   "kind": "port",
+   "size": 4,
+   "pos": [
+    0.5,
+    0.87
+   ],
+   "biome": "harbor",
+   "specialty": "南港 · 灯市海路",
+   "lore": "盐泽盟最大的港口，海船往返于灯市联。",
+   "produce": [
+    "saltcrystal",
+    "spice"
+   ],
+   "demand": [
+    "lampglass",
+    "hardwood"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 2,
+   "sig_items": [
+    "sm_south_sig1",
+    "sm_south_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sm_south",
+    "title": "晶滩海盗",
+    "kind": "clear",
+    "brief": "海盗在港外劫船。清剿他们的登陆营地。"
+   }
+  },
+  {
+   "id": "sm_shoal",
+   "name": "芦浦城",
+   "nation": "saltmarsh",
+   "kind": "city",
+   "size": 4,
+   "pos": [
+    0.29,
+    0.77
+   ],
+   "biome": "marsh",
+   "specialty": "芦浦 · 水上城",
+   "lore": "建在芦苇浅滩上的水城，房屋都架在木桩上。",
+   "produce": [
+    "saltcrystal",
+    "herb"
+   ],
+   "demand": [
+    "iron",
+    "fur"
+   ],
+   "smith_tier": 3,
+   "tavern_slots": 3,
+   "sig_items": [
+    "sm_shoal_sig1",
+    "sm_shoal_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sm_shoal",
+    "title": "浅滩巨鳄",
+    "kind": "hunt",
+    "brief": "浅滩里有一头巨鳄吃人。猎杀它。"
+   }
+  },
+  {
+   "id": "ig_capital",
+   "name": "峡都·铁阙",
+   "nation": "irongorge",
+   "kind": "capital",
+   "size": 5,
+   "pos": [
+    0.73,
+    0.33
+   ],
+   "biome": "fort",
+   "specialty": "峡钢锻炉 · 铁峡领主",
+   "lore": "铁阙城沿峡谷崖壁层层而建，锻炉的冷光昼夜不熄。",
+   "produce": [
+    "gorgesteel",
+    "iron"
+   ],
+   "demand": [
+    "grain",
+    "tea",
+    "herb"
+   ],
+   "smith_tier": 3,
+   "tavern_slots": 3,
+   "sig_items": [
+    "ig_capital_sig1",
+    "ig_capital_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_ig_capital",
+    "title": "峡都叛工",
+    "kind": "clear",
+    "brief": "一伙叛工占据了废弃锻炉。清剿他们。"
+   }
+  },
+  {
+   "id": "ig_plateau",
+   "name": "高台镇",
+   "nation": "irongorge",
+   "kind": "town",
+   "size": 3,
+   "pos": [
+    0.22,
+    0.2
+   ],
+   "biome": "pass",
+   "specialty": "崖顶高台 · 鹰旗商道",
+   "lore": "崖顶的平台小镇，吊篮把货物从谷底拉上来。",
+   "produce": [
+    "gorgesteel"
+   ],
+   "demand": [
+    "grain",
+    "spice"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 2,
+   "sig_items": [
+    "ig_plateau_sig1",
+    "ig_plateau_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_ig_plateau",
+    "title": "吊篮断了",
+    "kind": "deliver",
+    "brief": "吊篮绳索断了，镇上急需一批新索。从谷底市运上来。"
+   }
+  },
+  {
+   "id": "ig_mine",
+   "name": "深镐村",
+   "nation": "irongorge",
+   "kind": "village",
+   "size": 2,
+   "pos": [
+    0.15,
+    0.65
+   ],
+   "biome": "pass",
+   "specialty": "深矿 · 矿工村",
+   "lore": "矿道深入山腹的小村，矿工们一辈子不见阳光。",
+   "produce": [
+    "iron",
+    "gorgesteel"
+   ],
+   "demand": [
+    "grain",
+    "herb"
+   ],
+   "smith_tier": 1,
+   "tavern_slots": 1,
+   "sig_items": [
+    "ig_mine_sig1",
+    "ig_mine_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_ig_mine",
+    "title": "矿道怪声",
+    "kind": "hunt",
+    "brief": "矿道深处有怪声，已经有人失踪。下去查。"
+   }
+  },
+  {
+   "id": "ig_banner",
+   "name": "鹰旗关",
+   "nation": "irongorge",
+   "kind": "fortress",
+   "size": 4,
+   "pos": [
+    0.88,
+    0.3
+   ],
+   "biome": "fort",
+   "specialty": "东境关隘 · 灯市商道",
+   "lore": "鹰旗飘扬的关隘，守着通往灯市联的山道。",
+   "produce": [
+    "gorgesteel"
+   ],
+   "demand": [
+    "lampglass",
+    "grain"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 1,
+   "sig_items": [
+    "ig_banner_sig1",
+    "ig_banner_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_ig_banner",
+    "title": "鹰旗关告急",
+    "kind": "defend",
+    "brief": "山贼集结要攻关。帮守军守住。"
+   }
+  },
+  {
+   "id": "ig_tower",
+   "name": "悬桥城",
+   "nation": "irongorge",
+   "kind": "city",
+   "size": 4,
+   "pos": [
+    0.49,
+    0.47
+   ],
+   "biome": "pass",
+   "specialty": "峡谷吊桥 · 三层城区",
+   "lore": "三层吊桥连接峡谷两岸，城区悬在半空。",
+   "produce": [
+    "gorgesteel"
+   ],
+   "demand": [
+    "silk",
+    "tea"
+   ],
+   "smith_tier": 3,
+   "tavern_slots": 3,
+   "sig_items": [
+    "ig_tower_sig1",
+    "ig_tower_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_ig_tower",
+    "title": "吊桥破坏者",
+    "kind": "hunt",
+    "brief": "有人在夜里锯吊桥的绳索。抓住他。"
+   }
+  },
+  {
+   "id": "ig_bottom",
+   "name": "谷底市",
+   "nation": "irongorge",
+   "kind": "town",
+   "size": 3,
+   "pos": [
+    0.55,
+    0.89
+   ],
+   "biome": "forge",
+   "specialty": "谷底市集 · 锻炉街",
+   "lore": "峡谷最底层的市集，锻炉街的火光映着溪流。",
+   "produce": [
+    "gorgesteel",
+    "iron"
+   ],
+   "demand": [
+    "grain",
+    "spice"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 2,
+   "sig_items": [
+    "ig_bottom_sig1",
+    "ig_bottom_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_ig_bottom",
+    "title": "锻炉街火灾",
+    "kind": "gather",
+    "brief": "锻炉街失火，需要粮食安置灾民。带 10 份粮回来。"
+   }
+  },
+  {
+   "id": "ig_lower",
+   "name": "炉烟村",
+   "nation": "irongorge",
+   "kind": "village",
+   "size": 2,
+   "pos": [
+    0.79,
+    0.72
+   ],
+   "biome": "forge",
+   "specialty": "炉烟 · 星津边境",
+   "lore": "炉烟缭绕的小村，星津的学者常来这里买峡钢。",
+   "produce": [
+    "gorgesteel"
+   ],
+   "demand": [
+    "stardust",
+    "grain"
+   ],
+   "smith_tier": 1,
+   "tavern_slots": 1,
+   "sig_items": [
+    "ig_lower_sig1",
+    "ig_lower_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_ig_lower",
+    "title": "炉烟路劫",
+    "kind": "escort",
+    "brief": "星津学者买了一批峡钢要运回观象台。护送他。"
+   }
+  },
+  {
+   "id": "sr_capital",
+   "name": "星都·双虹",
+   "nation": "starriver",
+   "kind": "capital",
+   "size": 5,
+   "pos": [
+    0.5,
+    0.5
+   ],
+   "biome": "ford",
+   "specialty": "双虹桥 · 星象学院",
+   "lore": "两道虹桥横跨夜河，桥上的星灯与河中的倒影连成星座。",
+   "produce": [
+    "stardust",
+    "silk"
+   ],
+   "demand": [
+    "iron",
+    "grain",
+    "fur"
+   ],
+   "smith_tier": 3,
+   "tavern_slots": 3,
+   "sig_items": [
+    "sr_capital_sig1",
+    "sr_capital_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sr_capital",
+    "title": "双虹桥失窃",
+    "kind": "hunt",
+    "brief": "桥上的星灯被盗了三盏。追回来。"
+   }
+  },
+  {
+   "id": "sr_nw",
+   "name": "观象台",
+   "nation": "starriver",
+   "kind": "town",
+   "size": 3,
+   "pos": [
+    0.2,
+    0.21
+   ],
+   "biome": "shrine",
+   "specialty": "观象台 · 星图",
+   "lore": "观象台的学者每夜记录星象，星图卖到十国。",
+   "produce": [
+    "stardust"
+   ],
+   "demand": [
+    "gorgesteel",
+    "silk"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 2,
+   "sig_items": [
+    "sr_nw_sig1",
+    "sr_nw_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sr_nw",
+    "title": "星图被盗",
+    "kind": "scout",
+    "brief": "一份星图被盗，据说流到了炉烟村。去打听再回来。"
+   }
+  },
+  {
+   "id": "sr_west",
+   "name": "西津村",
+   "nation": "starriver",
+   "kind": "village",
+   "size": 2,
+   "pos": [
+    0.15,
+    0.38
+   ],
+   "biome": "ford",
+   "specialty": "西渡口 · 陆桥东门户",
+   "lore": "陆桥东端的渡口小村，西来的旅人在此第一次看见星河。",
+   "produce": [
+    "grain",
+    "stardust"
+   ],
+   "demand": [
+    "ashsteel",
+    "iron"
+   ],
+   "smith_tier": 1,
+   "tavern_slots": 1,
+   "sig_items": [
+    "sr_west_sig1",
+    "sr_west_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sr_west",
+    "title": "陆桥来客",
+    "kind": "escort",
+    "brief": "一位西陆商人要去星都。护送他。"
+   }
+  },
+  {
+   "id": "sr_pagoda",
+   "name": "塔影城",
+   "nation": "starriver",
+   "kind": "city",
+   "size": 4,
+   "pos": [
+    0.78,
+    0.3
+   ],
+   "biome": "urban",
+   "specialty": "七层塔 · 星砂工坊",
+   "lore": "七层宝塔的影子落在河上，星砂工坊在塔下研磨星砂。",
+   "produce": [
+    "stardust"
+   ],
+   "demand": [
+    "jade",
+    "silk"
+   ],
+   "smith_tier": 3,
+   "tavern_slots": 3,
+   "sig_items": [
+    "sr_pagoda_sig1",
+    "sr_pagoda_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sr_pagoda",
+    "title": "塔下的贼",
+    "kind": "clear",
+    "brief": "有人在塔下挖地道偷星砂。清剿。"
+   }
+  },
+  {
+   "id": "sr_east",
+   "name": "东津港",
+   "nation": "starriver",
+   "kind": "port",
+   "size": 4,
+   "pos": [
+    0.9,
+    0.46
+   ],
+   "biome": "harbor",
+   "specialty": "东港 · 灯市海路",
+   "lore": "星津邦的东港，与灯市联的西港隔海相望。",
+   "produce": [
+    "stardust",
+    "spice"
+   ],
+   "demand": [
+    "lampglass",
+    "hardwood"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 2,
+   "sig_items": [
+    "sr_east_sig1",
+    "sr_east_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sr_east",
+    "title": "东津走私",
+    "kind": "clear",
+    "brief": "走私犯在港外的小岛上设了营地。清剿。"
+   }
+  },
+  {
+   "id": "sr_sw",
+   "name": "落星村",
+   "nation": "starriver",
+   "kind": "village",
+   "size": 1,
+   "pos": [
+    0.29,
+    0.75
+   ],
+   "biome": "plain",
+   "specialty": "陨星田 · 星砂矿",
+   "lore": "传说星星落在这里，村民在田里挖出星砂。",
+   "produce": [
+    "stardust",
+    "grain"
+   ],
+   "demand": [
+    "iron",
+    "tea"
+   ],
+   "smith_tier": 1,
+   "tavern_slots": 1,
+   "sig_items": [
+    "sr_sw_sig1",
+    "sr_sw_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sr_sw",
+    "title": "陨星争夺",
+    "kind": "defend",
+    "brief": "又有星星落下了。盗贼要来抢。守住村子。"
+   }
+  },
+  {
+   "id": "sr_south",
+   "name": "渡星关",
+   "nation": "starriver",
+   "kind": "fortress",
+   "size": 4,
+   "pos": [
+    0.73,
+    0.76
+   ],
+   "biome": "fort",
+   "specialty": "南关 · 南泽商路",
+   "lore": "守着通往南泽邦的关隘，关楼上有一座小观象台。",
+   "produce": [
+    "stardust"
+   ],
+   "demand": [
+    "hardwood",
+    "grain"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 1,
+   "sig_items": [
+    "sr_south_sig1",
+    "sr_south_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sr_south",
+    "title": "南关告急",
+    "kind": "defend",
+    "brief": "南泽的走私团伙要冲关。守住。"
+   }
+  },
+  {
+   "id": "sz_capital",
+   "name": "泽都·雾林",
+   "nation": "southzephyr",
+   "kind": "capital",
+   "size": 5,
+   "pos": [
+    0.51,
+    0.43
+   ],
+   "biome": "fog",
+   "specialty": "雾林城 · 萤火议会",
+   "lore": "建在巨树上的城市，萤火虫是这里的灯。萤火议会由各部族长老组成。",
+   "produce": [
+    "hardwood",
+    "spice"
+   ],
+   "demand": [
+    "iron",
+    "fur",
+    "saltcrystal"
+   ],
+   "smith_tier": 3,
+   "tavern_slots": 3,
+   "sig_items": [
+    "sz_capital_sig1",
+    "sz_capital_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sz_capital",
+    "title": "萤火议会的危机",
+    "kind": "hunt",
+    "brief": "一个部族叛乱了。找到叛军首领。"
+   }
+  },
+  {
+   "id": "sz_temple",
+   "name": "古樟祠",
+   "nation": "southzephyr",
+   "kind": "village",
+   "size": 2,
+   "pos": [
+    0.37,
+    0.2
+   ],
+   "biome": "shrine",
+   "specialty": "古樟树祠 · 余烬边境",
+   "lore": "一棵千年古樟下的祠堂，祭司能听懂树语。",
+   "produce": [
+    "herb",
+    "hardwood"
+   ],
+   "demand": [
+    "magmaglass",
+    "grain"
+   ],
+   "smith_tier": 1,
+   "tavern_slots": 1,
+   "sig_items": [
+    "sz_temple_sig1",
+    "sz_temple_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sz_temple",
+    "title": "古樟病了",
+    "kind": "gather",
+    "brief": "古樟树病了，祭司需要药草。带 4 份药草回来。"
+   }
+  },
+  {
+   "id": "sz_vine",
+   "name": "藤桥村",
+   "nation": "southzephyr",
+   "kind": "village",
+   "size": 1,
+   "pos": [
+    0.16,
+    0.65
+   ],
+   "biome": "fog",
+   "specialty": "藤桥 · 雨林部族",
+   "lore": "藤蔓编成的吊桥连接着树屋。",
+   "produce": [
+    "hardwood",
+    "herb"
+   ],
+   "demand": [
+    "iron",
+    "saltcrystal"
+   ],
+   "smith_tier": 1,
+   "tavern_slots": 1,
+   "sig_items": [
+    "sz_vine_sig1",
+    "sz_vine_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sz_vine",
+    "title": "藤桥断了",
+    "kind": "deliver",
+    "brief": "藤桥断了，需要一批绳索。从雾港运来。"
+   }
+  },
+  {
+   "id": "sz_harbor",
+   "name": "雾港",
+   "nation": "southzephyr",
+   "kind": "port",
+   "size": 4,
+   "pos": [
+    0.91,
+    0.44
+   ],
+   "biome": "harbor",
+   "specialty": "雾港 · 星津海路",
+   "lore": "雾中的港口，船只靠萤火灯塔导航。",
+   "produce": [
+    "spice",
+    "hardwood"
+   ],
+   "demand": [
+    "stardust",
+    "iron"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 2,
+   "sig_items": [
+    "sz_harbor_sig1",
+    "sz_harbor_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sz_harbor",
+    "title": "雾港迷航",
+    "kind": "escort",
+    "brief": "一艘船在雾中迷航后靠岸了，船主要去渡星关。护送他。"
+   }
+  },
+  {
+   "id": "sz_south",
+   "name": "南湾城",
+   "nation": "southzephyr",
+   "kind": "city",
+   "size": 4,
+   "pos": [
+    0.88,
+    0.84
+   ],
+   "biome": "harbor",
+   "specialty": "南湾 · 冷湾海路",
+   "lore": "南泽邦最大的城市，海船往返于遥远的北海冷湾。",
+   "produce": [
+    "spice",
+    "hardwood"
+   ],
+   "demand": [
+    "fur",
+    "obsidian"
+   ],
+   "smith_tier": 3,
+   "tavern_slots": 3,
+   "sig_items": [
+    "sz_south_sig1",
+    "sz_south_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sz_south",
+    "title": "南湾海盗",
+    "kind": "clear",
+    "brief": "海盗在南湾外设了营地。清剿。"
+   }
+  },
+  {
+   "id": "sz_isle",
+   "name": "萤洲",
+   "nation": "southzephyr",
+   "kind": "town",
+   "size": 3,
+   "pos": [
+    0.5,
+    0.69
+   ],
+   "biome": "marsh",
+   "specialty": "萤火洲 · 蜂蜡",
+   "lore": "萤火虫聚集的沙洲，蜂农在此采蜡。",
+   "produce": [
+    "spice",
+    "herb"
+   ],
+   "demand": [
+    "iron",
+    "grain"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 2,
+   "sig_items": [
+    "sz_isle_sig1",
+    "sz_isle_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sz_isle",
+    "title": "萤洲蜂灾",
+    "kind": "hunt",
+    "brief": "毒蜂群袭击了萤洲。找到蜂巢。"
+   }
+  },
+  {
+   "id": "sz_bamboo",
+   "name": "竹篁寨",
+   "nation": "southzephyr",
+   "kind": "fortress",
+   "size": 3,
+   "pos": [
+    0.27,
+    0.32
+   ],
+   "biome": "fog",
+   "specialty": "竹林要塞 · 部族战士",
+   "lore": "竹林深处的要塞，部族战士在此训练。",
+   "produce": [
+    "hardwood"
+   ],
+   "demand": [
+    "iron",
+    "gorgesteel"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 1,
+   "sig_items": [
+    "sz_bamboo_sig1",
+    "sz_bamboo_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_sz_bamboo",
+    "title": "竹篁试炼",
+    "kind": "hunt",
+    "brief": "寨主要你证明实力。击败竹林里的挑战者。"
+   }
+  },
+  {
+   "id": "lb_west",
+   "name": "西桥头堡",
+   "nation": "landbridge",
+   "kind": "fortress",
+   "size": 4,
+   "pos": [
+    0.18,
+    0.2
+   ],
+   "biome": "fort",
+   "specialty": "陆桥西端 · 灰烬邦门户",
+   "lore": "陆桥西端的桥头堡，灰烬邦与陆桥议会共同驻守。",
+   "produce": [
+    "iron",
+    "ashsteel"
+   ],
+   "demand": [
+    "grain",
+    "herb"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 1,
+   "sig_items": [
+    "lb_west_sig1",
+    "lb_west_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_lb_west",
+    "title": "桥头堡告急",
+    "kind": "defend",
+    "brief": "有人要夺西桥头堡。守住。"
+   }
+  },
+  {
+   "id": "lb_mid",
+   "name": "陆桥驿",
+   "nation": "landbridge",
+   "kind": "town",
+   "size": 3,
+   "pos": [
+    0.54,
+    0.41
+   ],
+   "biome": "pass",
+   "specialty": "陆桥中段 · 驿站与商队",
+   "lore": "陆桥正中的驿城，十国商队都在这里歇脚。",
+   "produce": [
+    "grain",
+    "iron"
+   ],
+   "demand": [
+    "spice",
+    "silk",
+    "lampglass"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 2,
+   "sig_items": [
+    "lb_mid_sig1",
+    "lb_mid_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_lb_mid",
+    "title": "驿站的信",
+    "kind": "deliver",
+    "brief": "一封急信要送到东桥头堡。"
+   }
+  },
+  {
+   "id": "lb_east",
+   "name": "东桥头堡",
+   "nation": "landbridge",
+   "kind": "fortress",
+   "size": 4,
+   "pos": [
+    0.89,
+    0.45
+   ],
+   "biome": "fort",
+   "specialty": "陆桥东端 · 星津门户",
+   "lore": "陆桥东端的桥头堡，星津邦驻守。",
+   "produce": [
+    "iron",
+    "stardust"
+   ],
+   "demand": [
+    "grain",
+    "ashsteel"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 1,
+   "sig_items": [
+    "lb_east_sig1",
+    "lb_east_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_lb_east",
+    "title": "东桥夜袭",
+    "kind": "defend",
+    "brief": "盗匪要趁夜冲桥。守住。"
+   }
+  },
+  {
+   "id": "lb_south",
+   "name": "桥市",
+   "nation": "landbridge",
+   "kind": "town",
+   "size": 3,
+   "pos": [
+    0.29,
+    0.75
+   ],
+   "biome": "urban",
+   "specialty": "桥下市集 · 十国货物",
+   "lore": "陆桥下的市集，十国的货物都能在这里买到。",
+   "produce": [
+    "spice",
+    "silk"
+   ],
+   "demand": [
+    "frostcrystal",
+    "magmaglass"
+   ],
+   "smith_tier": 2,
+   "tavern_slots": 2,
+   "sig_items": [
+    "lb_south_sig1",
+    "lb_south_sig2"
+   ],
+   "sig_quest": {
+    "id": "sq_lb_south",
+    "title": "桥市假货",
+    "kind": "clear",
+    "brief": "有人在桥市卖假货。找到他们的仓库。"
+   }
+  }
+ ],
+ "roads": [
+  {
+   "a": "hq",
+   "b": "stone_slope",
+   "days": 2,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "hq",
+   "b": "fog_vale",
+   "days": 3,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "hq",
+   "b": "ash_capital",
+   "days": 3,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "fog_vale",
+   "b": "reed_ford",
+   "days": 1,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "reed_ford",
+   "b": "ash_capital",
+   "days": 2,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "ash_capital",
+   "b": "tide_bridge",
+   "days": 1,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "ash_capital",
+   "b": "stone_slope",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "stone_slope",
+   "b": "ash_market",
+   "days": 1,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "ash_market",
+   "b": "tide_bridge",
+   "days": 3,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "sy_frostfort",
+   "b": "sy_spire",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "sy_spire",
+   "b": "sy_capital",
+   "days": 1,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "sy_capital",
+   "b": "sy_banner",
+   "days": 1,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "sy_capital",
+   "b": "sy_stair",
+   "days": 1,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "sy_stair",
+   "b": "sy_coast",
+   "days": 1,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "sy_spire",
+   "b": "sy_ridge",
+   "days": 2,
+   "danger": 3,
+   "kind": "road"
+  },
+  {
+   "a": "sy_ridge",
+   "b": "sy_coast",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "sy_stair",
+   "b": "sy_spire",
+   "days": 1,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "qh_mist",
+   "b": "qh_upper",
+   "days": 1,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "qh_upper",
+   "b": "qh_capital",
+   "days": 2,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "qh_capital",
+   "b": "qh_south",
+   "days": 2,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "qh_south",
+   "b": "qh_isle",
+   "days": 1,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "qh_isle",
+   "b": "qh_ford",
+   "days": 1,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "qh_isle",
+   "b": "qh_orchard",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "qh_orchard",
+   "b": "qh_mist",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "qh_upper",
+   "b": "qh_isle",
+   "days": 3,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "qh_ford",
+   "b": "qh_orchard",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "lt_hill",
+   "b": "lt_capital",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "lt_hill",
+   "b": "lt_harbor",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "lt_harbor",
+   "b": "lt_isle",
+   "days": 2,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "lt_isle",
+   "b": "lt_capital",
+   "days": 2,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "lt_isle",
+   "b": "lt_south",
+   "days": 2,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "lt_south",
+   "b": "lt_lane",
+   "days": 1,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "lt_harbor",
+   "b": "lt_docks",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "lt_docks",
+   "b": "lt_lane",
+   "days": 3,
+   "danger": 3,
+   "kind": "road"
+  },
+  {
+   "a": "lt_capital",
+   "b": "lt_south",
+   "days": 2,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "fc_banner",
+   "b": "fc_spire",
+   "days": 1,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "fc_spire",
+   "b": "fc_capital",
+   "days": 1,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "fc_capital",
+   "b": "fc_tower",
+   "days": 1,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "fc_capital",
+   "b": "fc_lake",
+   "days": 2,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "fc_lake",
+   "b": "fc_peak",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "fc_tower",
+   "b": "fc_peak",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "fc_banner",
+   "b": "fc_plateau",
+   "days": 3,
+   "danger": 3,
+   "kind": "road"
+  },
+  {
+   "a": "fc_plateau",
+   "b": "fc_lake",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "eo_kiln",
+   "b": "eo_shrine",
+   "days": 1,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "eo_kiln",
+   "b": "eo_archive",
+   "days": 1,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "eo_archive",
+   "b": "eo_capital",
+   "days": 2,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "eo_shrine",
+   "b": "eo_capital",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "eo_shrine",
+   "b": "eo_crack",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "eo_crack",
+   "b": "eo_capital",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "eo_capital",
+   "b": "eo_glass",
+   "days": 1,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "eo_capital",
+   "b": "eo_banner",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "eo_banner",
+   "b": "eo_glass",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "sm_west",
+   "b": "sm_capital",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "sm_west",
+   "b": "sm_shoal",
+   "days": 3,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "sm_capital",
+   "b": "sm_mid",
+   "days": 2,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "sm_mid",
+   "b": "sm_banner",
+   "days": 1,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "sm_banner",
+   "b": "sm_far",
+   "days": 1,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "sm_capital",
+   "b": "sm_south",
+   "days": 2,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "sm_shoal",
+   "b": "sm_south",
+   "days": 1,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "sm_capital",
+   "b": "sm_shoal",
+   "days": 2,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "ig_plateau",
+   "b": "ig_tower",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "ig_plateau",
+   "b": "ig_mine",
+   "days": 2,
+   "danger": 3,
+   "kind": "road"
+  },
+  {
+   "a": "ig_mine",
+   "b": "ig_bottom",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "ig_tower",
+   "b": "ig_capital",
+   "days": 1,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "ig_capital",
+   "b": "ig_banner",
+   "days": 1,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "ig_tower",
+   "b": "ig_bottom",
+   "days": 2,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "ig_bottom",
+   "b": "ig_lower",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "ig_capital",
+   "b": "ig_lower",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "sr_nw",
+   "b": "sr_west",
+   "days": 1,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "sr_west",
+   "b": "sr_capital",
+   "days": 2,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "sr_nw",
+   "b": "sr_capital",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "sr_capital",
+   "b": "sr_pagoda",
+   "days": 2,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "sr_pagoda",
+   "b": "sr_east",
+   "days": 1,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "sr_capital",
+   "b": "sr_sw",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "sr_capital",
+   "b": "sr_south",
+   "days": 2,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "sr_south",
+   "b": "sr_east",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "sr_sw",
+   "b": "sr_south",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "sz_temple",
+   "b": "sz_bamboo",
+   "days": 1,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "sz_bamboo",
+   "b": "sz_capital",
+   "days": 1,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "sz_temple",
+   "b": "sz_capital",
+   "days": 1,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "sz_capital",
+   "b": "sz_harbor",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "sz_capital",
+   "b": "sz_isle",
+   "days": 1,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "sz_isle",
+   "b": "sz_vine",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "sz_vine",
+   "b": "sz_bamboo",
+   "days": 2,
+   "danger": 3,
+   "kind": "road"
+  },
+  {
+   "a": "sz_isle",
+   "b": "sz_south",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "sz_harbor",
+   "b": "sz_south",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "lb_west",
+   "b": "lb_mid",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "lb_mid",
+   "b": "lb_east",
+   "days": 2,
+   "danger": 2,
+   "kind": "road"
+  },
+  {
+   "a": "lb_mid",
+   "b": "lb_south",
+   "days": 2,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "lb_south",
+   "b": "lb_west",
+   "days": 3,
+   "danger": 1,
+   "kind": "road"
+  },
+  {
+   "a": "tide_bridge",
+   "b": "lb_west",
+   "days": 2,
+   "danger": 1,
+   "kind": "border"
+  },
+  {
+   "a": "lb_east",
+   "b": "sr_west",
+   "days": 2,
+   "danger": 1,
+   "kind": "border"
+  },
+  {
+   "a": "fog_vale",
+   "b": "sy_ridge",
+   "days": 3,
+   "danger": 3,
+   "kind": "border"
+  },
+  {
+   "a": "reed_ford",
+   "b": "qh_mist",
+   "days": 3,
+   "danger": 1,
+   "kind": "border"
+  },
+  {
+   "a": "hq",
+   "b": "sm_west",
+   "days": 3,
+   "danger": 2,
+   "kind": "border"
+  },
+  {
+   "a": "sy_banner",
+   "b": "fc_plateau",
+   "days": 3,
+   "danger": 2,
+   "kind": "border"
+  },
+  {
+   "a": "qh_ford",
+   "b": "sm_banner",
+   "days": 3,
+   "danger": 1,
+   "kind": "border"
+  },
+  {
+   "a": "sy_frostfort",
+   "b": "fc_banner",
+   "days": 4,
+   "danger": 3,
+   "kind": "border"
+  },
+  {
+   "a": "sr_nw",
+   "b": "ig_lower",
+   "days": 3,
+   "danger": 2,
+   "kind": "border"
+  },
+  {
+   "a": "sr_east",
+   "b": "lt_harbor",
+   "days": 2,
+   "danger": 1,
+   "kind": "border"
+  },
+  {
+   "a": "ig_banner",
+   "b": "lt_hill",
+   "days": 3,
+   "danger": 2,
+   "kind": "border"
+  },
+  {
+   "a": "lt_lane",
+   "b": "eo_banner",
+   "days": 3,
+   "danger": 2,
+   "kind": "border"
+  },
+  {
+   "a": "eo_crack",
+   "b": "sz_temple",
+   "days": 3,
+   "danger": 2,
+   "kind": "border"
+  },
+  {
+   "a": "sz_harbor",
+   "b": "sr_south",
+   "days": 3,
+   "danger": 1,
+   "kind": "border"
+  },
+  {
+   "a": "sm_south",
+   "b": "lt_docks",
+   "days": 6,
+   "danger": 0,
+   "kind": "sea",
+   "fare": 30
+  },
+  {
+   "a": "sy_coast",
+   "b": "sz_south",
+   "days": 8,
+   "danger": 0,
+   "kind": "sea",
+   "fare": 45
+  }
+ ],
+ "goods": {
+  "grain": {
+   "name": "粮",
+   "base": 2,
+   "store": "food",
+   "material": false,
+   "desc": "军粮与口粮。跑图每日消耗，也入城堡粮仓。"
+  },
+  "iron": {
+   "name": "铁料",
+   "base": 8,
+   "store": "iron",
+   "material": true,
+   "desc": "通用锻料，所有铁匠铺都收。"
+  },
+  "herb": {
+   "name": "药材",
+   "base": 6,
+   "store": "herb",
+   "material": false,
+   "desc": "疗伤与神殿祭仪用药。"
+  },
+  "ashsteel": {
+   "name": "烬灰钢",
+   "base": 18,
+   "store": "",
+   "material": true,
+   "desc": "灰烬邦白垣军械署的夹芯钢，西陆制式兵器标准料。"
+  },
+  "obsidian": {
+   "name": "影曜石",
+   "base": 22,
+   "store": "",
+   "material": true,
+   "desc": "朔影国矿脉产出的吸光黑石，刀刃夜里几乎不可见。"
+  },
+  "jade": {
+   "name": "河玉",
+   "base": 26,
+   "store": "",
+   "material": true,
+   "desc": "清河碧潭潭底的青玉，护符与剑格的上料。"
+  },
+  "lampglass": {
+   "name": "灯琉璃",
+   "base": 20,
+   "store": "",
+   "material": true,
+   "desc": "灯市联琉璃匠吹制的发光琉璃，包钢后会微微发亮。"
+  },
+  "frostcrystal": {
+   "name": "霜晶",
+   "base": 30,
+   "store": "",
+   "material": true,
+   "desc": "霜冕廷高原的永冻晶体，极寒而锋利。"
+  },
+  "magmaglass": {
+   "name": "熔曜玻",
+   "base": 28,
+   "store": "",
+   "material": true,
+   "desc": "余烬旧邦古城的熔玻璃，仍有余温。"
+  },
+  "saltcrystal": {
+   "name": "盐晶",
+   "base": 12,
+   "store": "",
+   "material": true,
+   "desc": "盐泽潮滩长出的透明盐晶，也是盐引的实物。"
+  },
+  "gorgesteel": {
+   "name": "峡钢锭",
+   "base": 24,
+   "store": "",
+   "material": true,
+   "desc": "铁峡领冷光锻炉的高碳钢锭，十国最硬。"
+  },
+  "stardust": {
+   "name": "星砂",
+   "base": 34,
+   "store": "",
+   "material": true,
+   "desc": "星津陨星田的星砂，秘术与弓弦的增幅料。"
+  },
+  "hardwood": {
+   "name": "南泽硬木",
+   "base": 14,
+   "store": "",
+   "material": true,
+   "desc": "南泽雾林的硬木，弓臂与窑薪首选。"
+  },
+  "silk": {
+   "name": "雾丝",
+   "base": 16,
+   "store": "",
+   "material": false,
+   "desc": "清河与星津的雾丝绸，贵族与学者的衣料。"
+  },
+  "tea": {
+   "name": "云茶",
+   "base": 10,
+   "store": "",
+   "material": false,
+   "desc": "雾果林与南泽山茶，北地极受欢迎。"
+  },
+  "fur": {
+   "name": "霜貂皮",
+   "base": 15,
+   "store": "",
+   "material": true,
+   "desc": "北境霜貂皮，轻甲衬里与御寒必需。"
+  },
+  "spice": {
+   "name": "南椒",
+   "base": 12,
+   "store": "",
+   "material": false,
+   "desc": "南泽与灯市的香料，跑海路的硬通货。"
+  }
+ },
+ "events": [
+  {
+   "id": "ambush",
+   "title": "伏击",
+   "text": "道旁林影一动——{foe}早已埋伏在此。",
+   "weight": 10,
+   "min_danger": 1,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "列阵迎战",
+     "fx": {
+      "battle": "ambush"
+     }
+    },
+    {
+     "label": "丢下部分货物脱身",
+     "fx": {
+      "lose_cargo": 0.3,
+      "morale": -2
+     }
+    }
+   ]
+  },
+  {
+   "id": "toll",
+   "title": "拦路收银",
+   "text": "一伙人横在路中：「过路银，{toll} 两。」",
+   "weight": 8,
+   "min_danger": 1,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "付银了事",
+     "fx": {
+      "silver": "-toll"
+     }
+    },
+    {
+     "label": "拔刀",
+     "fx": {
+      "battle": "toll"
+     }
+    }
+   ]
+  },
+  {
+   "id": "merchant",
+   "title": "行商",
+   "text": "一位行商赶着驮兽同路，愿意低价出手一批{good}。",
+   "weight": 9,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border",
+    "sea"
+   ],
+   "options": [
+    {
+     "label": "买下（7 折）",
+     "fx": {
+      "buy_deal": 0.7
+     }
+    },
+    {
+     "label": "道别",
+     "fx": {}
+    }
+   ]
+  },
+  {
+   "id": "refugees",
+   "title": "难民",
+   "text": "一队难民向你们讨粮，孩子们看着军旗。",
+   "weight": 6,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "分出 6 份粮",
+     "fx": {
+      "food": -6,
+      "rep_nation": 4,
+      "morale": 1
+     }
+    },
+    {
+     "label": "继续赶路",
+     "fx": {
+      "morale": -1
+     }
+    }
+   ]
+  },
+  {
+   "id": "shrine",
+   "title": "路边小祠",
+   "text": "古祠里还有人添灯。歇一歇脚？",
+   "weight": 6,
+   "min_danger": 0,
+   "kinds": [
+    "road"
+   ],
+   "options": [
+    {
+     "label": "歇息疗伤（+1 日）",
+     "fx": {
+      "heal": 0.35,
+      "days": 1
+     }
+    },
+    {
+     "label": "上香祈愿",
+     "fx": {
+      "morale": 2
+     }
+    }
+   ]
+  },
+  {
+   "id": "storm",
+   "title": "恶劣天气",
+   "text": "{weather}压了下来，前路难辨。",
+   "weight": 7,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "就地扎营（+1 日）",
+     "fx": {
+      "days": 1
+     }
+    },
+    {
+     "label": "花 12 银借宿农家",
+     "fx": {
+      "silver": -12
+     }
+    }
+   ]
+  },
+  {
+   "id": "crate",
+   "title": "遗落货箱",
+   "text": "翻倒的货车旁散着几箱{good}，主人不知去向。",
+   "weight": 5,
+   "min_danger": 0,
+   "kinds": [
+    "road"
+   ],
+   "options": [
+    {
+     "label": "收下",
+     "fx": {
+      "gain_good": 3,
+      "rep_nation": -1
+     }
+    },
+    {
+     "label": "交给下一座城的巡卫",
+     "fx": {
+      "rep_dest": 3
+     }
+    }
+   ]
+  },
+  {
+   "id": "patrol",
+   "title": "巡逻队盘查",
+   "text": "{nation}巡逻队拦下了你们，要查文书。",
+   "weight": 6,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "出示佣兵契",
+     "fx": {
+      "patrol": true
+     }
+    },
+    {
+     "label": "塞 15 银",
+     "fx": {
+      "silver": -15,
+      "rep_nation": 1
+     }
+    }
+   ]
+  },
+  {
+   "id": "merc",
+   "title": "落单佣兵",
+   "text": "一名落单的佣兵坐在路边磨刀，打量着你们的旗。",
+   "weight": 4,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "邀其入团（{hire} 银）",
+     "fx": {
+      "recruit": true
+     }
+    },
+    {
+     "label": "点头而过",
+     "fx": {}
+    }
+   ]
+  },
+  {
+   "id": "rumor",
+   "title": "茶摊传闻",
+   "text": "茶摊老板压低声音：{tip}",
+   "weight": 6,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border",
+    "sea"
+   ],
+   "options": [
+    {
+     "label": "记下",
+     "fx": {
+      "tip": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "herbs",
+   "title": "野生药草",
+   "text": "路旁坡地长满了药草。",
+   "weight": 4,
+   "min_danger": 0,
+   "kinds": [
+    "road"
+   ],
+   "biomes": [
+    "fog",
+    "plain",
+    "hill",
+    "shrine",
+    "marsh",
+    "ford"
+   ],
+   "options": [
+    {
+     "label": "采集（+1 日，+3 药材）",
+     "fx": {
+      "herb": 3,
+      "days": 1
+     }
+    },
+    {
+     "label": "不耽搁",
+     "fx": {}
+    }
+   ]
+  },
+  {
+   "id": "bridge",
+   "title": "断桥",
+   "text": "桥被冲垮了一半。",
+   "weight": 4,
+   "min_danger": 0,
+   "kinds": [
+    "road"
+   ],
+   "biomes": [
+    "ford",
+    "marsh",
+    "pass",
+    "harbor"
+   ],
+   "options": [
+    {
+     "label": "绕路（+1 日）",
+     "fx": {
+      "days": 1
+     }
+    },
+    {
+     "label": "出 15 银雇人修桥",
+     "fx": {
+      "silver": -15,
+      "rep_nation": 3
+     }
+    }
+   ]
+  },
+  {
+   "id": "caravan",
+   "title": "同路商队",
+   "text": "一支商队请求同行，愿付护送费。",
+   "weight": 5,
+   "min_danger": 1,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "同行护送（+20 银，伏击风险）",
+     "fx": {
+      "silver": 20,
+      "risk": 0.35
+     }
+    },
+    {
+     "label": "婉拒",
+     "fx": {}
+    }
+   ]
+  },
+  {
+   "id": "deserters",
+   "title": "逃兵",
+   "text": "一群逃兵占了路边的驿亭，正在抢劫旅人。",
+   "weight": 5,
+   "min_danger": 2,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "驱逐他们",
+     "fx": {
+      "battle": "deserters",
+      "rep_nation_win": 5
+     }
+    },
+    {
+     "label": "避开",
+     "fx": {
+      "days": 1
+     }
+    }
+   ]
+  },
+  {
+   "id": "omen",
+   "title": "异兆",
+   "text": "夜空里{omen}。老兵说这是好兆头。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "sea"
+   ],
+   "options": [
+    {
+     "label": "全军振奋",
+     "fx": {
+      "morale": 3
+     }
+    }
+   ]
+  },
+  {
+   "id": "rival_scouts",
+   "title": "朔影探子",
+   "text": "几个朔影探子尾随你们多时。",
+   "weight": 6,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "nations": [
+    "shuoying",
+    "ashbanner",
+    "frostcrown"
+   ],
+   "options": [
+    {
+     "label": "反包围",
+     "fx": {
+      "battle": "scouts"
+     }
+    },
+    {
+     "label": "放出假消息（-10 银）",
+     "fx": {
+      "silver": -10,
+      "rep_nation": 1
+     }
+    }
+   ]
+  },
+  {
+   "id": "sea_storm",
+   "title": "海上风暴",
+   "text": "风暴把船推离了航线。",
+   "weight": 10,
+   "min_danger": 0,
+   "kinds": [
+    "sea"
+   ],
+   "options": [
+    {
+     "label": "硬扛（+2 日）",
+     "fx": {
+      "days": 2
+     }
+    },
+    {
+     "label": "抛货减重",
+     "fx": {
+      "lose_cargo": 0.25
+     }
+    }
+   ]
+  },
+  {
+   "id": "fair",
+   "title": "集会消息",
+   "text": "前方{dest}正逢集会，商人们说货价会涨。",
+   "weight": 4,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border",
+    "sea"
+   ],
+   "options": [
+    {
+     "label": "加快脚步",
+     "fx": {
+      "fair": true
+     }
+    }
+   ]
+  }
+ ],
+ "commissions": [
+  {
+   "kind": "deliver",
+   "titles": [
+    "急件：{parcel}送{target}",
+    "{parcel}托运·{target}",
+    "代送{parcel}"
+   ],
+   "turn_in": "target",
+   "parcels": [
+    "药箱",
+    "账册",
+    "盐引",
+    "家书",
+    "星图副本",
+    "军械清单",
+    "婚书",
+    "种子",
+    "铁匠图样",
+    "议会公文"
+   ],
+   "silver": 28,
+   "rep": 5,
+   "battle": false
+  },
+  {
+   "kind": "escort",
+   "titles": [
+    "护送{client}前往{target}",
+    "{client}的远行·{target}",
+    "随行护卫：{client}"
+   ],
+   "turn_in": "target",
+   "clients": [
+    "盐商",
+    "学者",
+    "信使",
+    "药师",
+    "朝圣者",
+    "工匠",
+    "老兵遗孀",
+    "画师",
+    "退役骑士",
+    "说书人"
+   ],
+   "silver": 40,
+   "rep": 7,
+   "battle": false,
+   "risk": 0.25
+  },
+  {
+   "kind": "hunt",
+   "titles": [
+    "追缉：{foe_name}",
+    "悬赏·{foe_name}",
+    "{target}外的{foe_name}"
+   ],
+   "turn_in": "issuer",
+   "foe_names": [
+    "劫道悍匪",
+    "逃狱死囚",
+    "剪径大盗",
+    "黑市刀客",
+    "叛逃斥候",
+    "盗墓头子",
+    "人贩团伙"
+   ],
+   "silver": 55,
+   "rep": 9,
+   "battle": true
+  },
+  {
+   "kind": "clear",
+   "titles": [
+    "清剿{road}匪营",
+    "{road}肃清令",
+    "打通{road}"
+   ],
+   "turn_in": "issuer",
+   "silver": 60,
+   "rep": 10,
+   "battle": true
+  },
+  {
+   "kind": "defend",
+   "titles": [
+    "{target}告急",
+    "守卫{target}",
+    "{target}求援"
+   ],
+   "turn_in": "target",
+   "silver": 65,
+   "rep": 11,
+   "battle": true
+  },
+  {
+   "kind": "gather",
+   "titles": [
+    "收购{good}",
+    "{good}告罄",
+    "紧缺：{good}"
+   ],
+   "turn_in": "issuer",
+   "silver": 18,
+   "rep": 5,
+   "battle": false
+  },
+  {
+   "kind": "scout",
+   "titles": [
+    "探听{target}虚实",
+    "{target}的消息",
+    "走一趟{target}"
+   ],
+   "turn_in": "issuer",
+   "silver": 22,
+   "rep": 5,
+   "battle": false
+  }
+ ],
+ "volume_nation": [
+  "ashbanner",
+  "ashbanner",
+  "saltmarsh",
+  "frostcrown",
+  "starriver",
+  "irongorge",
+  "emberold",
+  "shuoying",
+  "qinghe",
+  "lantern",
+  "southzephyr",
+  "landbridge"
+ ],
+ "rules": {
+  "food_per_member_day": 0.5,
+  "starve_morale_per_day": 4,
+  "days_per_month": 30,
+  "cargo_base": 30,
+  "cargo_per_member": 6,
+  "board_size": {
+   "village": 2,
+   "town": 3,
+   "port": 3,
+   "fortress": 3,
+   "city": 4,
+   "capital": 5,
+   "castle": 0
+  },
+  "board_refresh_days": 30,
+  "active_limit": 5,
+  "rep_tiers": [
+   0,
+   10,
+   30,
+   55,
+   80
+  ],
+  "smith_rep_bonus": [
+   30,
+   55
+  ],
+  "event_base_chance": 0.22,
+  "event_danger_chance": 0.12,
+  "price_spread": 0.08,
+  "rep_price_cut": 0.1,
+  "weather": {
+   "snow": "暴雪",
+   "marsh": "潮雾",
+   "fog": "浓雾",
+   "harbor": "海风",
+   "pass": "山崩落石",
+   "forge": "灰烬雨",
+   "nightcamp": "冰雾"
+  }
+ },
+ "foe_templates": {
+  "bamboo": [
+   "bamboo_thug",
+   "bamboo_thug",
+   "bamboo_archer",
+   "bamboo_boss"
+  ],
+  "bandit": [
+   "bandit_weak",
+   "bandit",
+   "bandit_archer",
+   "bandit_chief"
+  ],
+  "bell": [
+   "bell_thug",
+   "bell_thug",
+   "bell_archer",
+   "bell_boss"
+  ],
+  "copper": [
+   "copper_thug",
+   "copper_thug",
+   "copper_archer",
+   "copper_boss"
+  ],
+  "drum": [
+   "drum_thug",
+   "drum_thug",
+   "drum_archer",
+   "drum_boss"
+  ],
+  "dye": [
+   "dye_thug",
+   "dye_thug",
+   "dye_archer",
+   "dye_boss"
+  ],
+  "escort": [
+   "escort_thief",
+   "escort_raider",
+   "escort_sniper",
+   "escort_boss"
+  ],
+  "fisher": [
+   "fisher_thug",
+   "fisher_thug",
+   "fisher_archer",
+   "fisher_boss"
+  ],
+  "flute": [
+   "flute_thug",
+   "flute_thug",
+   "flute_archer",
+   "flute_boss"
+  ],
+  "grain": [
+   "grain_thug",
+   "grain_thug",
+   "grain_archer",
+   "grain_boss"
+  ],
+  "hive": [
+   "hive_thug",
+   "hive_thug",
+   "hive_archer",
+   "hive_boss"
+  ],
+  "incense": [
+   "incense_thug",
+   "incense_thug",
+   "incense_archer",
+   "incense_boss"
+  ],
+  "ink": [
+   "ink_thug",
+   "ink_thug",
+   "ink_archer",
+   "ink_boss"
+  ],
+  "lamp": [
+   "lamp_thug",
+   "lamp_thug",
+   "lamp_archer",
+   "lamp_boss"
+  ],
+  "paper": [
+   "paper_thief",
+   "paper_thief",
+   "paper_archer",
+   "paper_boss"
+  ],
+  "porcelain": [
+   "porcelain_thug",
+   "porcelain_thug",
+   "porcelain_archer",
+   "porcelain_boss"
+  ],
+  "rain": [
+   "rain_thug",
+   "rain_thug",
+   "rain_archer",
+   "rain_boss"
+  ],
+  "relay": [
+   "relay_thug",
+   "relay_thug",
+   "relay_archer",
+   "relay_boss"
+  ],
+  "salt": [
+   "salt_thug",
+   "salt_thug",
+   "salt_archer",
+   "salt_boss"
+  ],
+  "shadow": [
+   "shadow_thug",
+   "shadow_thug",
+   "shadow_archer",
+   "shadow_boss"
+  ],
+  "snow": [
+   "snow_thug",
+   "snow_thug",
+   "snow_archer",
+   "snow_boss"
+  ],
+  "tide": [
+   "tide_thug",
+   "tide_thug",
+   "tide_archer",
+   "tide_boss"
+  ]
+ },
+ "biome_keyword": {
+  "fort": "keep",
+  "urban": "street",
+  "ford": "ford",
+  "hill": "hill",
+  "fog": "fog",
+  "snow": "snow",
+  "pass": "pass",
+  "nightcamp": "night",
+  "harbor": "harbor",
+  "archive": "archive",
+  "plain": "plain",
+  "marsh": "marsh",
+  "forge": "forge",
+  "shrine": "shrine"
+ }
+}

@@ -1,0 +1,6638 @@
+{
+ "version": "v8.7-atlas-1",
+ "items": [
+  {
+   "id": "ashbanner_sword_1",
+   "name": "烬纹长剑",
+   "nation": "ashbanner",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 1,
+   "stats": {
+    "atk": 2,
+    "hit": 5,
+    "crit": 2
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 45,
+   "mats": {
+    "iron": 2
+   },
+   "forge_silver": 17,
+   "lore": "灰烬邦铁匠铺的制式货。"
+  },
+  {
+   "id": "ashbanner_spear_1",
+   "name": "烬纹长枪",
+   "nation": "ashbanner",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 1,
+   "stats": {
+    "atk": 1,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 45,
+   "mats": {
+    "iron": 2
+   },
+   "forge_silver": 17,
+   "lore": "灰烬邦铁匠铺的制式货。"
+  },
+  {
+   "id": "ashbanner_shield_2",
+   "name": "烬纹精制塔盾",
+   "nation": "ashbanner",
+   "type": "shield",
+   "type_name": "塔盾",
+   "slot": "armor",
+   "tier": 2,
+   "stats": {
+    "def": 3,
+    "avo": 2,
+    "hp": 6
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 3,
+    "ashsteel": 1
+   },
+   "forge_silver": 38,
+   "lore": "灰烬邦铁匠铺的制式货。灰烬邦白垣军械署的夹芯钢，西陆制式兵器标准料。"
+  },
+  {
+   "id": "ashbanner_blade_2",
+   "name": "烬纹精制战刀",
+   "nation": "ashbanner",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 2,
+   "stats": {
+    "atk": 3,
+    "crit": 6
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 3,
+    "ashsteel": 1
+   },
+   "forge_silver": 38,
+   "lore": "灰烬邦铁匠铺的制式货。灰烬邦白垣军械署的夹芯钢，西陆制式兵器标准料。"
+  },
+  {
+   "id": "ashbanner_bow_2",
+   "name": "烬纹精制长弓",
+   "nation": "ashbanner",
+   "type": "bow",
+   "type_name": "长弓",
+   "slot": "weapon",
+   "tier": 2,
+   "stats": {
+    "atk": 4,
+    "hit": 5
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 3,
+    "ashsteel": 1,
+    "hardwood": 1
+   },
+   "forge_silver": 38,
+   "lore": "灰烬邦铁匠铺的制式货。灰烬邦白垣军械署的夹芯钢，西陆制式兵器标准料。"
+  },
+  {
+   "id": "ashbanner_armor_3",
+   "name": "烬纹重铠",
+   "nation": "ashbanner",
+   "type": "armor",
+   "type_name": "轻甲",
+   "slot": "armor",
+   "tier": 3,
+   "stats": {
+    "def": 6,
+    "avo": -3,
+    "hp": 6
+   },
+   "jobs": [
+    "squire",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "light_inf"
+   ],
+   "price": 210,
+   "mats": {
+    "iron": 4,
+    "ashsteel": 2,
+    "fur": 1
+   },
+   "forge_silver": 79,
+   "lore": "灰烬邦铁匠铺的制式货。灰烬邦白垣军械署的夹芯钢，西陆制式兵器标准料。"
+  },
+  {
+   "id": "ashbanner_sword_3",
+   "name": "烬纹名匠长剑",
+   "nation": "ashbanner",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "hit": 5,
+    "crit": 2
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 210,
+   "mats": {
+    "iron": 4,
+    "ashsteel": 2
+   },
+   "forge_silver": 79,
+   "lore": "灰烬邦铁匠铺的制式货。灰烬邦白垣军械署的夹芯钢，西陆制式兵器标准料。"
+  },
+  {
+   "id": "shuoying_blade_1",
+   "name": "影曜战刀",
+   "nation": "shuoying",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 1,
+   "stats": {
+    "atk": 1,
+    "crit": 3
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 45,
+   "mats": {
+    "iron": 2
+   },
+   "forge_silver": 17,
+   "lore": "朔影国铁匠铺的制式货。"
+  },
+  {
+   "id": "shuoying_crossbow_1",
+   "name": "影曜劲弩",
+   "nation": "shuoying",
+   "type": "crossbow",
+   "type_name": "劲弩",
+   "slot": "weapon",
+   "tier": 1,
+   "stats": {
+    "atk": 3,
+    "hit": 10,
+    "avo": -3
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 45,
+   "mats": {
+    "iron": 2,
+    "hardwood": 1
+   },
+   "forge_silver": 17,
+   "lore": "朔影国铁匠铺的制式货。"
+  },
+  {
+   "id": "shuoying_blade_2",
+   "name": "影曜精制战刀",
+   "nation": "shuoying",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 2,
+   "stats": {
+    "atk": 3,
+    "crit": 6
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 3,
+    "obsidian": 1
+   },
+   "forge_silver": 38,
+   "lore": "朔影国铁匠铺的制式货。朔影国矿脉产出的吸光黑石，刀刃夜里几乎不可见。"
+  },
+  {
+   "id": "shuoying_charm_2",
+   "name": "影曜精制护符",
+   "nation": "shuoying",
+   "type": "charm",
+   "type_name": "护符",
+   "slot": "charm",
+   "tier": 2,
+   "stats": {
+    "hit": 6,
+    "avo": 4,
+    "hp": 2
+   },
+   "jobs": [],
+   "price": 100,
+   "mats": {
+    "iron": 1,
+    "obsidian": 1,
+    "stardust": 1
+   },
+   "forge_silver": 38,
+   "lore": "朔影国铁匠铺的制式货。朔影国矿脉产出的吸光黑石，刀刃夜里几乎不可见。"
+  },
+  {
+   "id": "shuoying_bow_2",
+   "name": "影曜精制长弓",
+   "nation": "shuoying",
+   "type": "bow",
+   "type_name": "长弓",
+   "slot": "weapon",
+   "tier": 2,
+   "stats": {
+    "atk": 4,
+    "hit": 5
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 3,
+    "obsidian": 1,
+    "hardwood": 1
+   },
+   "forge_silver": 38,
+   "lore": "朔影国铁匠铺的制式货。朔影国矿脉产出的吸光黑石，刀刃夜里几乎不可见。"
+  },
+  {
+   "id": "shuoying_armor_3",
+   "name": "影曜重铠",
+   "nation": "shuoying",
+   "type": "armor",
+   "type_name": "轻甲",
+   "slot": "armor",
+   "tier": 3,
+   "stats": {
+    "def": 6,
+    "avo": -3,
+    "hp": 6
+   },
+   "jobs": [
+    "squire",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "light_inf"
+   ],
+   "price": 210,
+   "mats": {
+    "iron": 4,
+    "obsidian": 2,
+    "fur": 1
+   },
+   "forge_silver": 79,
+   "lore": "朔影国铁匠铺的制式货。朔影国矿脉产出的吸光黑石，刀刃夜里几乎不可见。"
+  },
+  {
+   "id": "shuoying_crossbow_3",
+   "name": "影曜名匠劲弩",
+   "nation": "shuoying",
+   "type": "crossbow",
+   "type_name": "劲弩",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 7,
+    "hit": 10,
+    "avo": -3
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 210,
+   "mats": {
+    "iron": 4,
+    "obsidian": 2,
+    "hardwood": 2
+   },
+   "forge_silver": 79,
+   "lore": "朔影国铁匠铺的制式货。朔影国矿脉产出的吸光黑石，刀刃夜里几乎不可见。"
+  },
+  {
+   "id": "qinghe_sword_1",
+   "name": "澜玉长剑",
+   "nation": "qinghe",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 1,
+   "stats": {
+    "atk": 2,
+    "hit": 5,
+    "crit": 2
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 45,
+   "mats": {
+    "iron": 2
+   },
+   "forge_silver": 17,
+   "lore": "清河国铁匠铺的制式货。"
+  },
+  {
+   "id": "qinghe_bow_1",
+   "name": "澜玉长弓",
+   "nation": "qinghe",
+   "type": "bow",
+   "type_name": "长弓",
+   "slot": "weapon",
+   "tier": 1,
+   "stats": {
+    "atk": 2,
+    "hit": 5
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 45,
+   "mats": {
+    "iron": 2,
+    "hardwood": 1
+   },
+   "forge_silver": 17,
+   "lore": "清河国铁匠铺的制式货。"
+  },
+  {
+   "id": "qinghe_staff_2",
+   "name": "澜玉精制法杖",
+   "nation": "qinghe",
+   "type": "staff",
+   "type_name": "法杖",
+   "slot": "weapon",
+   "tier": 2,
+   "stats": {
+    "atk": 3,
+    "def": 1,
+    "hp": 4
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 1,
+    "jade": 1,
+    "hardwood": 1
+   },
+   "forge_silver": 38,
+   "lore": "清河国铁匠铺的制式货。清河碧潭潭底的青玉，护符与剑格的上料。"
+  },
+  {
+   "id": "qinghe_focus_2",
+   "name": "澜玉精制法器",
+   "nation": "qinghe",
+   "type": "focus",
+   "type_name": "法器",
+   "slot": "weapon",
+   "tier": 2,
+   "stats": {
+    "atk": 5,
+    "crit": 3
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 1,
+    "jade": 1,
+    "stardust": 1
+   },
+   "forge_silver": 38,
+   "lore": "清河国铁匠铺的制式货。清河碧潭潭底的青玉，护符与剑格的上料。"
+  },
+  {
+   "id": "qinghe_charm_2",
+   "name": "澜玉精制护符",
+   "nation": "qinghe",
+   "type": "charm",
+   "type_name": "护符",
+   "slot": "charm",
+   "tier": 2,
+   "stats": {
+    "hit": 6,
+    "avo": 4,
+    "hp": 2
+   },
+   "jobs": [],
+   "price": 100,
+   "mats": {
+    "iron": 1,
+    "jade": 1,
+    "stardust": 1
+   },
+   "forge_silver": 38,
+   "lore": "清河国铁匠铺的制式货。清河碧潭潭底的青玉，护符与剑格的上料。"
+  },
+  {
+   "id": "qinghe_bow_3",
+   "name": "澜玉名匠长弓",
+   "nation": "qinghe",
+   "type": "bow",
+   "type_name": "长弓",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "hit": 5
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 210,
+   "mats": {
+    "iron": 4,
+    "jade": 2,
+    "hardwood": 2
+   },
+   "forge_silver": 79,
+   "lore": "清河国铁匠铺的制式货。清河碧潭潭底的青玉，护符与剑格的上料。"
+  },
+  {
+   "id": "qinghe_sword_3",
+   "name": "澜玉名匠长剑",
+   "nation": "qinghe",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "hit": 5,
+    "crit": 2
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 210,
+   "mats": {
+    "iron": 4,
+    "jade": 2
+   },
+   "forge_silver": 79,
+   "lore": "清河国铁匠铺的制式货。清河碧潭潭底的青玉，护符与剑格的上料。"
+  },
+  {
+   "id": "lantern_blade_1",
+   "name": "琉灯战刀",
+   "nation": "lantern",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 1,
+   "stats": {
+    "atk": 1,
+    "crit": 3
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 45,
+   "mats": {
+    "iron": 2
+   },
+   "forge_silver": 17,
+   "lore": "灯市联铁匠铺的制式货。"
+  },
+  {
+   "id": "lantern_spear_1",
+   "name": "琉灯长枪",
+   "nation": "lantern",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 1,
+   "stats": {
+    "atk": 1,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 45,
+   "mats": {
+    "iron": 2
+   },
+   "forge_silver": 17,
+   "lore": "灯市联铁匠铺的制式货。"
+  },
+  {
+   "id": "lantern_crossbow_2",
+   "name": "琉灯精制劲弩",
+   "nation": "lantern",
+   "type": "crossbow",
+   "type_name": "劲弩",
+   "slot": "weapon",
+   "tier": 2,
+   "stats": {
+    "atk": 5,
+    "hit": 10,
+    "avo": -3
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 3,
+    "lampglass": 1,
+    "hardwood": 1
+   },
+   "forge_silver": 38,
+   "lore": "灯市联铁匠铺的制式货。灯市联琉璃匠吹制的发光琉璃，包钢后会微微发亮。"
+  },
+  {
+   "id": "lantern_sword_2",
+   "name": "琉灯精制长剑",
+   "nation": "lantern",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 2,
+   "stats": {
+    "atk": 4,
+    "hit": 5,
+    "crit": 2
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 3,
+    "lampglass": 1
+   },
+   "forge_silver": 38,
+   "lore": "灯市联铁匠铺的制式货。灯市联琉璃匠吹制的发光琉璃，包钢后会微微发亮。"
+  },
+  {
+   "id": "lantern_staff_2",
+   "name": "琉灯精制法杖",
+   "nation": "lantern",
+   "type": "staff",
+   "type_name": "法杖",
+   "slot": "weapon",
+   "tier": 2,
+   "stats": {
+    "atk": 3,
+    "def": 1,
+    "hp": 4
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 1,
+    "lampglass": 1,
+    "hardwood": 1
+   },
+   "forge_silver": 38,
+   "lore": "灯市联铁匠铺的制式货。灯市联琉璃匠吹制的发光琉璃，包钢后会微微发亮。"
+  },
+  {
+   "id": "lantern_charm_3",
+   "name": "琉灯名匠护符",
+   "nation": "lantern",
+   "type": "charm",
+   "type_name": "护符",
+   "slot": "charm",
+   "tier": 3,
+   "stats": {
+    "hit": 9,
+    "avo": 6,
+    "hp": 3
+   },
+   "jobs": [],
+   "price": 210,
+   "mats": {
+    "iron": 2,
+    "lampglass": 2,
+    "stardust": 1
+   },
+   "forge_silver": 79,
+   "lore": "灯市联铁匠铺的制式货。灯市联琉璃匠吹制的发光琉璃，包钢后会微微发亮。"
+  },
+  {
+   "id": "lantern_blade_3",
+   "name": "琉灯名匠战刀",
+   "nation": "lantern",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 5,
+    "crit": 9
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 210,
+   "mats": {
+    "iron": 4,
+    "lampglass": 2
+   },
+   "forge_silver": 79,
+   "lore": "灯市联铁匠铺的制式货。灯市联琉璃匠吹制的发光琉璃，包钢后会微微发亮。"
+  },
+  {
+   "id": "frostcrown_spear_1",
+   "name": "霜冕长枪",
+   "nation": "frostcrown",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 1,
+   "stats": {
+    "atk": 1,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 45,
+   "mats": {
+    "iron": 2
+   },
+   "forge_silver": 17,
+   "lore": "霜冕廷铁匠铺的制式货。"
+  },
+  {
+   "id": "frostcrown_staff_1",
+   "name": "霜冕法杖",
+   "nation": "frostcrown",
+   "type": "staff",
+   "type_name": "法杖",
+   "slot": "weapon",
+   "tier": 1,
+   "stats": {
+    "atk": 1,
+    "def": 1,
+    "hp": 2
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 45,
+   "mats": {
+    "hardwood": 1
+   },
+   "forge_silver": 17,
+   "lore": "霜冕廷铁匠铺的制式货。"
+  },
+  {
+   "id": "frostcrown_shield_2",
+   "name": "霜冕精制塔盾",
+   "nation": "frostcrown",
+   "type": "shield",
+   "type_name": "塔盾",
+   "slot": "armor",
+   "tier": 2,
+   "stats": {
+    "def": 3,
+    "avo": 2,
+    "hp": 6
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 3,
+    "frostcrystal": 1
+   },
+   "forge_silver": 38,
+   "lore": "霜冕廷铁匠铺的制式货。霜冕廷高原的永冻晶体，极寒而锋利。"
+  },
+  {
+   "id": "frostcrown_lance_2",
+   "name": "霜冕精制骑枪",
+   "nation": "frostcrown",
+   "type": "lance",
+   "type_name": "骑枪",
+   "slot": "weapon",
+   "tier": 2,
+   "stats": {
+    "atk": 5,
+    "hit": -5,
+    "crit": 2
+   },
+   "jobs": [
+    "squire",
+    "light_cavalry"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 3,
+    "frostcrystal": 1
+   },
+   "forge_silver": 38,
+   "lore": "霜冕廷铁匠铺的制式货。霜冕廷高原的永冻晶体，极寒而锋利。"
+  },
+  {
+   "id": "frostcrown_sword_2",
+   "name": "霜冕精制长剑",
+   "nation": "frostcrown",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 2,
+   "stats": {
+    "atk": 4,
+    "hit": 5,
+    "crit": 2
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 3,
+    "frostcrystal": 1
+   },
+   "forge_silver": 38,
+   "lore": "霜冕廷铁匠铺的制式货。霜冕廷高原的永冻晶体，极寒而锋利。"
+  },
+  {
+   "id": "frostcrown_armor_3",
+   "name": "霜冕重铠",
+   "nation": "frostcrown",
+   "type": "armor",
+   "type_name": "轻甲",
+   "slot": "armor",
+   "tier": 3,
+   "stats": {
+    "def": 6,
+    "avo": -3,
+    "hp": 6
+   },
+   "jobs": [
+    "squire",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "light_inf"
+   ],
+   "price": 210,
+   "mats": {
+    "iron": 4,
+    "frostcrystal": 2,
+    "fur": 1
+   },
+   "forge_silver": 79,
+   "lore": "霜冕廷铁匠铺的制式货。霜冕廷高原的永冻晶体，极寒而锋利。"
+  },
+  {
+   "id": "frostcrown_spear_3",
+   "name": "霜冕名匠长枪",
+   "nation": "frostcrown",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 5,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 210,
+   "mats": {
+    "iron": 4,
+    "frostcrystal": 2
+   },
+   "forge_silver": 79,
+   "lore": "霜冕廷铁匠铺的制式货。霜冕廷高原的永冻晶体，极寒而锋利。"
+  },
+  {
+   "id": "emberold_axe_1",
+   "name": "熔曜战斧",
+   "nation": "emberold",
+   "type": "axe",
+   "type_name": "战斧",
+   "slot": "weapon",
+   "tier": 1,
+   "stats": {
+    "atk": 4,
+    "hit": -10
+   },
+   "jobs": [
+    "light_inf",
+    "heavy_inf",
+    "warrior"
+   ],
+   "price": 45,
+   "mats": {
+    "iron": 2
+   },
+   "forge_silver": 17,
+   "lore": "余烬旧邦铁匠铺的制式货。"
+  },
+  {
+   "id": "emberold_focus_1",
+   "name": "熔曜法器",
+   "nation": "emberold",
+   "type": "focus",
+   "type_name": "法器",
+   "slot": "weapon",
+   "tier": 1,
+   "stats": {
+    "atk": 3,
+    "crit": 3
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 45,
+   "mats": {},
+   "forge_silver": 17,
+   "lore": "余烬旧邦铁匠铺的制式货。"
+  },
+  {
+   "id": "emberold_sword_2",
+   "name": "熔曜精制长剑",
+   "nation": "emberold",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 2,
+   "stats": {
+    "atk": 4,
+    "hit": 5,
+    "crit": 2
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 3,
+    "magmaglass": 1
+   },
+   "forge_silver": 38,
+   "lore": "余烬旧邦铁匠铺的制式货。余烬旧邦古城的熔玻璃，仍有余温。"
+  },
+  {
+   "id": "emberold_armor_2",
+   "name": "熔曜精制轻甲",
+   "nation": "emberold",
+   "type": "armor",
+   "type_name": "轻甲",
+   "slot": "armor",
+   "tier": 2,
+   "stats": {
+    "def": 3,
+    "avo": -1
+   },
+   "jobs": [],
+   "price": 100,
+   "mats": {
+    "iron": 3,
+    "magmaglass": 1,
+    "fur": 1
+   },
+   "forge_silver": 38,
+   "lore": "余烬旧邦铁匠铺的制式货。余烬旧邦古城的熔玻璃，仍有余温。"
+  },
+  {
+   "id": "emberold_staff_2",
+   "name": "熔曜精制法杖",
+   "nation": "emberold",
+   "type": "staff",
+   "type_name": "法杖",
+   "slot": "weapon",
+   "tier": 2,
+   "stats": {
+    "atk": 3,
+    "def": 1,
+    "hp": 4
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 1,
+    "magmaglass": 1,
+    "hardwood": 1
+   },
+   "forge_silver": 38,
+   "lore": "余烬旧邦铁匠铺的制式货。余烬旧邦古城的熔玻璃，仍有余温。"
+  },
+  {
+   "id": "emberold_axe_3",
+   "name": "熔曜名匠战斧",
+   "nation": "emberold",
+   "type": "axe",
+   "type_name": "战斧",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 8,
+    "hit": -10
+   },
+   "jobs": [
+    "light_inf",
+    "heavy_inf",
+    "warrior"
+   ],
+   "price": 210,
+   "mats": {
+    "iron": 4,
+    "magmaglass": 2
+   },
+   "forge_silver": 79,
+   "lore": "余烬旧邦铁匠铺的制式货。余烬旧邦古城的熔玻璃，仍有余温。"
+  },
+  {
+   "id": "emberold_focus_3",
+   "name": "熔曜名匠法器",
+   "nation": "emberold",
+   "type": "focus",
+   "type_name": "法器",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 7,
+    "crit": 3
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 210,
+   "mats": {
+    "iron": 2,
+    "magmaglass": 2,
+    "stardust": 1
+   },
+   "forge_silver": 79,
+   "lore": "余烬旧邦铁匠铺的制式货。余烬旧邦古城的熔玻璃，仍有余温。"
+  },
+  {
+   "id": "saltmarsh_spear_1",
+   "name": "盐晶长枪",
+   "nation": "saltmarsh",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 1,
+   "stats": {
+    "atk": 1,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 45,
+   "mats": {
+    "iron": 2
+   },
+   "forge_silver": 17,
+   "lore": "盐泽盟铁匠铺的制式货。"
+  },
+  {
+   "id": "saltmarsh_blade_1",
+   "name": "盐晶战刀",
+   "nation": "saltmarsh",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 1,
+   "stats": {
+    "atk": 1,
+    "crit": 3
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 45,
+   "mats": {
+    "iron": 2
+   },
+   "forge_silver": 17,
+   "lore": "盐泽盟铁匠铺的制式货。"
+  },
+  {
+   "id": "saltmarsh_crossbow_2",
+   "name": "盐晶精制劲弩",
+   "nation": "saltmarsh",
+   "type": "crossbow",
+   "type_name": "劲弩",
+   "slot": "weapon",
+   "tier": 2,
+   "stats": {
+    "atk": 5,
+    "hit": 10,
+    "avo": -3
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 3,
+    "saltcrystal": 1,
+    "hardwood": 1
+   },
+   "forge_silver": 38,
+   "lore": "盐泽盟铁匠铺的制式货。盐泽潮滩长出的透明盐晶，也是盐引的实物。"
+  },
+  {
+   "id": "saltmarsh_armor_2",
+   "name": "盐晶精制轻甲",
+   "nation": "saltmarsh",
+   "type": "armor",
+   "type_name": "轻甲",
+   "slot": "armor",
+   "tier": 2,
+   "stats": {
+    "def": 3,
+    "avo": -1
+   },
+   "jobs": [],
+   "price": 100,
+   "mats": {
+    "iron": 3,
+    "saltcrystal": 1,
+    "fur": 1
+   },
+   "forge_silver": 38,
+   "lore": "盐泽盟铁匠铺的制式货。盐泽潮滩长出的透明盐晶，也是盐引的实物。"
+  },
+  {
+   "id": "saltmarsh_charm_2",
+   "name": "盐晶精制护符",
+   "nation": "saltmarsh",
+   "type": "charm",
+   "type_name": "护符",
+   "slot": "charm",
+   "tier": 2,
+   "stats": {
+    "hit": 6,
+    "avo": 4,
+    "hp": 2
+   },
+   "jobs": [],
+   "price": 100,
+   "mats": {
+    "iron": 1,
+    "saltcrystal": 1,
+    "stardust": 1
+   },
+   "forge_silver": 38,
+   "lore": "盐泽盟铁匠铺的制式货。盐泽潮滩长出的透明盐晶，也是盐引的实物。"
+  },
+  {
+   "id": "saltmarsh_sword_3",
+   "name": "盐晶名匠长剑",
+   "nation": "saltmarsh",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "hit": 5,
+    "crit": 2
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 210,
+   "mats": {
+    "iron": 4,
+    "saltcrystal": 2
+   },
+   "forge_silver": 79,
+   "lore": "盐泽盟铁匠铺的制式货。盐泽潮滩长出的透明盐晶，也是盐引的实物。"
+  },
+  {
+   "id": "saltmarsh_spear_3",
+   "name": "盐晶名匠长枪",
+   "nation": "saltmarsh",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 5,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 210,
+   "mats": {
+    "iron": 4,
+    "saltcrystal": 2
+   },
+   "forge_silver": 79,
+   "lore": "盐泽盟铁匠铺的制式货。盐泽潮滩长出的透明盐晶，也是盐引的实物。"
+  },
+  {
+   "id": "irongorge_axe_1",
+   "name": "峡钢战斧",
+   "nation": "irongorge",
+   "type": "axe",
+   "type_name": "战斧",
+   "slot": "weapon",
+   "tier": 1,
+   "stats": {
+    "atk": 4,
+    "hit": -10
+   },
+   "jobs": [
+    "light_inf",
+    "heavy_inf",
+    "warrior"
+   ],
+   "price": 45,
+   "mats": {
+    "iron": 2
+   },
+   "forge_silver": 17,
+   "lore": "铁峡领铁匠铺的制式货。"
+  },
+  {
+   "id": "irongorge_sword_1",
+   "name": "峡钢长剑",
+   "nation": "irongorge",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 1,
+   "stats": {
+    "atk": 2,
+    "hit": 5,
+    "crit": 2
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 45,
+   "mats": {
+    "iron": 2
+   },
+   "forge_silver": 17,
+   "lore": "铁峡领铁匠铺的制式货。"
+  },
+  {
+   "id": "irongorge_shield_2",
+   "name": "峡钢精制塔盾",
+   "nation": "irongorge",
+   "type": "shield",
+   "type_name": "塔盾",
+   "slot": "armor",
+   "tier": 2,
+   "stats": {
+    "def": 3,
+    "avo": 2,
+    "hp": 6
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 3,
+    "gorgesteel": 1
+   },
+   "forge_silver": 38,
+   "lore": "铁峡领铁匠铺的制式货。铁峡领冷光锻炉的高碳钢锭，十国最硬。"
+  },
+  {
+   "id": "irongorge_spear_2",
+   "name": "峡钢精制长枪",
+   "nation": "irongorge",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 2,
+   "stats": {
+    "atk": 3,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 3,
+    "gorgesteel": 1
+   },
+   "forge_silver": 38,
+   "lore": "铁峡领铁匠铺的制式货。铁峡领冷光锻炉的高碳钢锭，十国最硬。"
+  },
+  {
+   "id": "irongorge_crossbow_2",
+   "name": "峡钢精制劲弩",
+   "nation": "irongorge",
+   "type": "crossbow",
+   "type_name": "劲弩",
+   "slot": "weapon",
+   "tier": 2,
+   "stats": {
+    "atk": 5,
+    "hit": 10,
+    "avo": -3
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 3,
+    "gorgesteel": 1,
+    "hardwood": 1
+   },
+   "forge_silver": 38,
+   "lore": "铁峡领铁匠铺的制式货。铁峡领冷光锻炉的高碳钢锭，十国最硬。"
+  },
+  {
+   "id": "irongorge_armor_3",
+   "name": "峡钢重铠",
+   "nation": "irongorge",
+   "type": "armor",
+   "type_name": "轻甲",
+   "slot": "armor",
+   "tier": 3,
+   "stats": {
+    "def": 6,
+    "avo": -3,
+    "hp": 6
+   },
+   "jobs": [
+    "squire",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "light_inf"
+   ],
+   "price": 210,
+   "mats": {
+    "iron": 4,
+    "gorgesteel": 2,
+    "fur": 1
+   },
+   "forge_silver": 79,
+   "lore": "铁峡领铁匠铺的制式货。铁峡领冷光锻炉的高碳钢锭，十国最硬。"
+  },
+  {
+   "id": "irongorge_axe_3",
+   "name": "峡钢名匠战斧",
+   "nation": "irongorge",
+   "type": "axe",
+   "type_name": "战斧",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 8,
+    "hit": -10
+   },
+   "jobs": [
+    "light_inf",
+    "heavy_inf",
+    "warrior"
+   ],
+   "price": 210,
+   "mats": {
+    "iron": 4,
+    "gorgesteel": 2
+   },
+   "forge_silver": 79,
+   "lore": "铁峡领铁匠铺的制式货。铁峡领冷光锻炉的高碳钢锭，十国最硬。"
+  },
+  {
+   "id": "starriver_staff_1",
+   "name": "星津法杖",
+   "nation": "starriver",
+   "type": "staff",
+   "type_name": "法杖",
+   "slot": "weapon",
+   "tier": 1,
+   "stats": {
+    "atk": 1,
+    "def": 1,
+    "hp": 2
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 45,
+   "mats": {
+    "hardwood": 1
+   },
+   "forge_silver": 17,
+   "lore": "星津邦铁匠铺的制式货。"
+  },
+  {
+   "id": "starriver_bow_1",
+   "name": "星津长弓",
+   "nation": "starriver",
+   "type": "bow",
+   "type_name": "长弓",
+   "slot": "weapon",
+   "tier": 1,
+   "stats": {
+    "atk": 2,
+    "hit": 5
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 45,
+   "mats": {
+    "iron": 2,
+    "hardwood": 1
+   },
+   "forge_silver": 17,
+   "lore": "星津邦铁匠铺的制式货。"
+  },
+  {
+   "id": "starriver_focus_2",
+   "name": "星津精制法器",
+   "nation": "starriver",
+   "type": "focus",
+   "type_name": "法器",
+   "slot": "weapon",
+   "tier": 2,
+   "stats": {
+    "atk": 5,
+    "crit": 3
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 1,
+    "stardust": 1,
+    "jade": 1
+   },
+   "forge_silver": 38,
+   "lore": "星津邦铁匠铺的制式货。星津陨星田的星砂，秘术与弓弦的增幅料。"
+  },
+  {
+   "id": "starriver_spear_2",
+   "name": "星津精制长枪",
+   "nation": "starriver",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 2,
+   "stats": {
+    "atk": 3,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 3,
+    "stardust": 1
+   },
+   "forge_silver": 38,
+   "lore": "星津邦铁匠铺的制式货。星津陨星田的星砂，秘术与弓弦的增幅料。"
+  },
+  {
+   "id": "starriver_charm_2",
+   "name": "星津精制护符",
+   "nation": "starriver",
+   "type": "charm",
+   "type_name": "护符",
+   "slot": "charm",
+   "tier": 2,
+   "stats": {
+    "hit": 6,
+    "avo": 4,
+    "hp": 2
+   },
+   "jobs": [],
+   "price": 100,
+   "mats": {
+    "iron": 1,
+    "stardust": 1,
+    "jade": 1
+   },
+   "forge_silver": 38,
+   "lore": "星津邦铁匠铺的制式货。星津陨星田的星砂，秘术与弓弦的增幅料。"
+  },
+  {
+   "id": "starriver_staff_3",
+   "name": "星津名匠法杖",
+   "nation": "starriver",
+   "type": "staff",
+   "type_name": "法杖",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 5,
+    "def": 1,
+    "hp": 6
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 210,
+   "mats": {
+    "iron": 2,
+    "stardust": 2,
+    "hardwood": 2
+   },
+   "forge_silver": 79,
+   "lore": "星津邦铁匠铺的制式货。星津陨星田的星砂，秘术与弓弦的增幅料。"
+  },
+  {
+   "id": "starriver_bow_3",
+   "name": "星津名匠长弓",
+   "nation": "starriver",
+   "type": "bow",
+   "type_name": "长弓",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "hit": 5
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 210,
+   "mats": {
+    "iron": 4,
+    "stardust": 2,
+    "hardwood": 2
+   },
+   "forge_silver": 79,
+   "lore": "星津邦铁匠铺的制式货。星津陨星田的星砂，秘术与弓弦的增幅料。"
+  },
+  {
+   "id": "southzephyr_bow_1",
+   "name": "泽木长弓",
+   "nation": "southzephyr",
+   "type": "bow",
+   "type_name": "长弓",
+   "slot": "weapon",
+   "tier": 1,
+   "stats": {
+    "atk": 2,
+    "hit": 5
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 45,
+   "mats": {
+    "iron": 2
+   },
+   "forge_silver": 17,
+   "lore": "南泽邦铁匠铺的制式货。"
+  },
+  {
+   "id": "southzephyr_spear_1",
+   "name": "泽木长枪",
+   "nation": "southzephyr",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 1,
+   "stats": {
+    "atk": 1,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 45,
+   "mats": {
+    "iron": 2
+   },
+   "forge_silver": 17,
+   "lore": "南泽邦铁匠铺的制式货。"
+  },
+  {
+   "id": "southzephyr_blade_2",
+   "name": "泽木精制战刀",
+   "nation": "southzephyr",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 2,
+   "stats": {
+    "atk": 3,
+    "crit": 6
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 3,
+    "hardwood": 1
+   },
+   "forge_silver": 38,
+   "lore": "南泽邦铁匠铺的制式货。南泽雾林的硬木，弓臂与窑薪首选。"
+  },
+  {
+   "id": "southzephyr_armor_2",
+   "name": "泽木精制轻甲",
+   "nation": "southzephyr",
+   "type": "armor",
+   "type_name": "轻甲",
+   "slot": "armor",
+   "tier": 2,
+   "stats": {
+    "def": 3,
+    "avo": -1
+   },
+   "jobs": [],
+   "price": 100,
+   "mats": {
+    "iron": 3,
+    "hardwood": 1,
+    "fur": 1
+   },
+   "forge_silver": 38,
+   "lore": "南泽邦铁匠铺的制式货。南泽雾林的硬木，弓臂与窑薪首选。"
+  },
+  {
+   "id": "southzephyr_staff_2",
+   "name": "泽木精制法杖",
+   "nation": "southzephyr",
+   "type": "staff",
+   "type_name": "法杖",
+   "slot": "weapon",
+   "tier": 2,
+   "stats": {
+    "atk": 3,
+    "def": 1,
+    "hp": 4
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 1,
+    "hardwood": 1
+   },
+   "forge_silver": 38,
+   "lore": "南泽邦铁匠铺的制式货。南泽雾林的硬木，弓臂与窑薪首选。"
+  },
+  {
+   "id": "southzephyr_bow_3",
+   "name": "泽木名匠长弓",
+   "nation": "southzephyr",
+   "type": "bow",
+   "type_name": "长弓",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "hit": 5
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 210,
+   "mats": {
+    "iron": 4,
+    "hardwood": 2
+   },
+   "forge_silver": 79,
+   "lore": "南泽邦铁匠铺的制式货。南泽雾林的硬木，弓臂与窑薪首选。"
+  },
+  {
+   "id": "southzephyr_charm_3",
+   "name": "泽木名匠护符",
+   "nation": "southzephyr",
+   "type": "charm",
+   "type_name": "护符",
+   "slot": "charm",
+   "tier": 3,
+   "stats": {
+    "hit": 9,
+    "avo": 6,
+    "hp": 3
+   },
+   "jobs": [],
+   "price": 210,
+   "mats": {
+    "iron": 2,
+    "hardwood": 2,
+    "stardust": 1
+   },
+   "forge_silver": 79,
+   "lore": "南泽邦铁匠铺的制式货。南泽雾林的硬木，弓臂与窑薪首选。"
+  },
+  {
+   "id": "landbridge_blade_1",
+   "name": "桥锋战刀",
+   "nation": "landbridge",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 1,
+   "stats": {
+    "atk": 1,
+    "crit": 3
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 45,
+   "mats": {
+    "iron": 2
+   },
+   "forge_silver": 17,
+   "lore": "朔澜陆桥铁匠铺的制式货。"
+  },
+  {
+   "id": "landbridge_lance_1",
+   "name": "桥锋骑枪",
+   "nation": "landbridge",
+   "type": "lance",
+   "type_name": "骑枪",
+   "slot": "weapon",
+   "tier": 1,
+   "stats": {
+    "atk": 3,
+    "hit": -5,
+    "crit": 1
+   },
+   "jobs": [
+    "squire",
+    "light_cavalry"
+   ],
+   "price": 45,
+   "mats": {
+    "iron": 2
+   },
+   "forge_silver": 17,
+   "lore": "朔澜陆桥铁匠铺的制式货。"
+  },
+  {
+   "id": "landbridge_spear_2",
+   "name": "桥锋精制长枪",
+   "nation": "landbridge",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 2,
+   "stats": {
+    "atk": 3,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 5
+   },
+   "forge_silver": 38,
+   "lore": "朔澜陆桥铁匠铺的制式货。通用锻料，所有铁匠铺都收。"
+  },
+  {
+   "id": "landbridge_shield_2",
+   "name": "桥锋精制塔盾",
+   "nation": "landbridge",
+   "type": "shield",
+   "type_name": "塔盾",
+   "slot": "armor",
+   "tier": 2,
+   "stats": {
+    "def": 3,
+    "avo": 2,
+    "hp": 6
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 5
+   },
+   "forge_silver": 38,
+   "lore": "朔澜陆桥铁匠铺的制式货。通用锻料，所有铁匠铺都收。"
+  },
+  {
+   "id": "landbridge_sword_2",
+   "name": "桥锋精制长剑",
+   "nation": "landbridge",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 2,
+   "stats": {
+    "atk": 4,
+    "hit": 5,
+    "crit": 2
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 100,
+   "mats": {
+    "iron": 5
+   },
+   "forge_silver": 38,
+   "lore": "朔澜陆桥铁匠铺的制式货。通用锻料，所有铁匠铺都收。"
+  },
+  {
+   "id": "landbridge_lance_3",
+   "name": "桥锋名匠骑枪",
+   "nation": "landbridge",
+   "type": "lance",
+   "type_name": "骑枪",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 7,
+    "hit": -5,
+    "crit": 3
+   },
+   "jobs": [
+    "squire",
+    "light_cavalry"
+   ],
+   "price": 210,
+   "mats": {
+    "iron": 7
+   },
+   "forge_silver": 79,
+   "lore": "朔澜陆桥铁匠铺的制式货。通用锻料，所有铁匠铺都收。"
+  },
+  {
+   "id": "landbridge_armor_3",
+   "name": "桥锋重铠",
+   "nation": "landbridge",
+   "type": "armor",
+   "type_name": "轻甲",
+   "slot": "armor",
+   "tier": 3,
+   "stats": {
+    "def": 6,
+    "avo": -3,
+    "hp": 6
+   },
+   "jobs": [
+    "squire",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "light_inf"
+   ],
+   "price": 210,
+   "mats": {
+    "iron": 7,
+    "fur": 1
+   },
+   "forge_silver": 79,
+   "lore": "朔澜陆桥铁匠铺的制式货。通用锻料，所有铁匠铺都收。"
+  },
+  {
+   "id": "ash_capital_sig1",
+   "name": "白垣制式长剑",
+   "nation": "ashbanner",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 7,
+    "hit": 5,
+    "crit": 2
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "ashsteel": 3
+   },
+   "forge_silver": 115,
+   "lore": "议会卫队的制式剑，烬灰钢夹芯，挥砍稳定。",
+   "city": "ash_capital",
+   "signature": 1,
+   "skill": "banner_crash",
+   "rep_req": 10
+  },
+  {
+   "id": "ash_capital_sig2",
+   "name": "议会之誓·烬冠剑",
+   "nation": "ashbanner",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 11,
+    "hit": 5,
+    "crit": 2,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "ashsteel": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "只授予为议会立下大功的佣兵团长。剑脊有一道永不熄灭的灰焰纹。",
+   "city": "ash_capital",
+   "signature": 2,
+   "skill": "cleave_arc",
+   "rep_req": 55
+  },
+  {
+   "id": "reed_ford_sig1",
+   "name": "苇原分水枪",
+   "nation": "ashbanner",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "ashsteel": 3
+   },
+   "forge_silver": 115,
+   "lore": "渡口民兵的长枪，枪缨染成苇色，便于在芦苇中伏击。",
+   "city": "reed_ford",
+   "signature": 1,
+   "skill": "lance_thrust",
+   "rep_req": 10
+  },
+  {
+   "id": "reed_ford_sig2",
+   "name": "渡魂·千苇枪",
+   "nation": "ashbanner",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 10,
+    "hit": 5,
+    "def": 2
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "ashsteel": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "传说用渡口第一株苇根做柄，能感知水下的脚步声。",
+   "city": "reed_ford",
+   "signature": 2,
+   "skill": "shatter_line",
+   "rep_req": 55
+  },
+  {
+   "id": "stone_slope_sig1",
+   "name": "石垒破甲锤",
+   "nation": "ashbanner",
+   "type": "axe",
+   "type_name": "战斧",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 9,
+    "hit": -10
+   },
+   "jobs": [
+    "light_inf",
+    "heavy_inf",
+    "warrior"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "ashsteel": 3
+   },
+   "forge_silver": 115,
+   "lore": "采石匠改制的重锤，对重甲有奇效。",
+   "city": "stone_slope",
+   "signature": 1,
+   "skill": "power_strike",
+   "rep_req": 10
+  },
+  {
+   "id": "stone_slope_sig2",
+   "name": "坡脊·裂岩巨斧",
+   "nation": "ashbanner",
+   "type": "axe",
+   "type_name": "战斧",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 13,
+    "hit": -10,
+    "def": 1
+   },
+   "jobs": [
+    "light_inf",
+    "heavy_inf",
+    "warrior"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "ashsteel": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "一斧劈开过整面石垒的传说之斧，斧刃嵌着烬灰钢。",
+   "city": "stone_slope",
+   "signature": 2,
+   "skill": "shatter_line",
+   "rep_req": 55
+  },
+  {
+   "id": "fog_vale_sig1",
+   "name": "雾谷猎弓",
+   "nation": "ashbanner",
+   "type": "bow",
+   "type_name": "长弓",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 7,
+    "hit": 5
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "ashsteel": 3,
+    "hardwood": 2
+   },
+   "forge_silver": 115,
+   "lore": "猎户的反曲弓，弓臂缠药藤，潮湿天气也不变形。",
+   "city": "fog_vale",
+   "signature": 1,
+   "skill": "rain_volleys",
+   "rep_req": 10
+  },
+  {
+   "id": "fog_vale_sig2",
+   "name": "无踪·雾隐长弓",
+   "nation": "ashbanner",
+   "type": "bow",
+   "type_name": "长弓",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 11,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "ashsteel": 5,
+    "hardwood": 2,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "雾谷猎王的遗弓。拉满时，弓弦声会被雾吞没。",
+   "city": "fog_vale",
+   "signature": 2,
+   "skill": "sky_piercer",
+   "rep_req": 55
+  },
+  {
+   "id": "tide_bridge_sig1",
+   "name": "断潮守桥盾",
+   "nation": "ashbanner",
+   "type": "shield",
+   "type_name": "塔盾",
+   "slot": "armor",
+   "tier": 3,
+   "stats": {
+    "def": 5,
+    "avo": 2,
+    "hp": 9
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "ashsteel": 3
+   },
+   "forge_silver": 115,
+   "lore": "哨所值夜人的大盾，盾面有防滑的潮纹。",
+   "city": "tide_bridge",
+   "signature": 1,
+   "skill": "iron_wall",
+   "rep_req": 10
+  },
+  {
+   "id": "tide_bridge_sig2",
+   "name": "不退·断潮城盾",
+   "nation": "ashbanner",
+   "type": "shield",
+   "type_name": "塔盾",
+   "slot": "armor",
+   "tier": 4,
+   "stats": {
+    "def": 8,
+    "avo": 2,
+    "hp": 12,
+    "atk": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "ashsteel": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "据说这面盾挡住过一整夜的洪水与箭雨。",
+   "city": "tide_bridge",
+   "signature": 2,
+   "skill": "hold_phalanx",
+   "rep_req": 55
+  },
+  {
+   "id": "ash_market_sig1",
+   "name": "灰市双刃短刀",
+   "nation": "ashbanner",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "crit": 9
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "ashsteel": 3
+   },
+   "forge_silver": 115,
+   "lore": "市集掮客最爱的防身短刀，好藏、好拔、好出手。",
+   "city": "ash_market",
+   "signature": 1,
+   "skill": "rush",
+   "rep_req": 10
+  },
+  {
+   "id": "ash_market_sig2",
+   "name": "黑账·灰市鬼刃",
+   "nation": "ashbanner",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 10,
+    "crit": 12,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "ashsteel": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "灰市地下账房的镇店之刃，据说刀身上刻着三百笔血债。",
+   "city": "ash_market",
+   "signature": 2,
+   "skill": "wheel_cut",
+   "rep_req": 55
+  },
+  {
+   "id": "sy_capital_sig1",
+   "name": "夜阙影刃",
+   "nation": "shuoying",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "crit": 9
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "obsidian": 3
+   },
+   "forge_silver": 115,
+   "lore": "宫廷影卫的佩刀，影曜石刀刃吸光，夜里几乎看不见。",
+   "city": "sy_capital",
+   "signature": 1,
+   "skill": "rush",
+   "rep_req": 10
+  },
+  {
+   "id": "sy_capital_sig2",
+   "name": "朔夜·无月之刃",
+   "nation": "shuoying",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "crit": 12,
+    "avo": 6
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "obsidian": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "朔影家主的家传刀，只在新月之夜出鞘。",
+   "city": "sy_capital",
+   "signature": 2,
+   "skill": "wheel_cut",
+   "rep_req": 55
+  },
+  {
+   "id": "sy_frostfort_sig1",
+   "name": "寒垒斥候弩",
+   "nation": "shuoying",
+   "type": "crossbow",
+   "type_name": "劲弩",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 8,
+    "hit": 10,
+    "avo": -3
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "obsidian": 3,
+    "hardwood": 2
+   },
+   "forge_silver": 115,
+   "lore": "斥候的轻弩，弩臂裹貂皮，零下也能击发。",
+   "city": "sy_frostfort",
+   "signature": 1,
+   "skill": "mark_death",
+   "rep_req": 10
+  },
+  {
+   "id": "sy_frostfort_sig2",
+   "name": "霜脊·穿云重弩",
+   "nation": "shuoying",
+   "type": "crossbow",
+   "type_name": "劲弩",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 11,
+    "hit": 10,
+    "avo": 3
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "obsidian": 5,
+    "hardwood": 2,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "寒垒镇守的重弩，据说能射穿冰崖对面的旗杆。",
+   "city": "sy_frostfort",
+   "signature": 2,
+   "skill": "sky_piercer",
+   "rep_req": 55
+  },
+  {
+   "id": "sy_spire_sig1",
+   "name": "影针刺枪",
+   "nation": "shuoying",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "obsidian": 3
+   },
+   "forge_silver": 115,
+   "lore": "矿工改制的细长刺枪，枪头是一整块影曜石。",
+   "city": "sy_spire",
+   "signature": 1,
+   "skill": "lance_thrust",
+   "rep_req": 10
+  },
+  {
+   "id": "sy_spire_sig2",
+   "name": "夜针·天穹之枪",
+   "nation": "shuoying",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "hit": 5,
+    "def": 1,
+    "avo": 6
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "obsidian": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "影针塔顶取下的一截石针，据说指向北极星。",
+   "city": "sy_spire",
+   "signature": 2,
+   "skill": "shatter_line",
+   "rep_req": 55
+  },
+  {
+   "id": "sy_banner_sig1",
+   "name": "墨旗关刀",
+   "nation": "shuoying",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "crit": 9
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "obsidian": 3
+   },
+   "forge_silver": 115,
+   "lore": "关卒的制式长刀，刀柄缠黑绸。",
+   "city": "sy_banner",
+   "signature": 1,
+   "skill": "rush",
+   "rep_req": 10
+  },
+  {
+   "id": "sy_banner_sig2",
+   "name": "墨雪·关山大刀",
+   "nation": "shuoying",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "crit": 12,
+    "avo": 6
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "obsidian": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "关楼上供奉的古刀，刀身雪亮，刀镡墨黑。",
+   "city": "sy_banner",
+   "signature": 2,
+   "skill": "wheel_cut",
+   "rep_req": 55
+  },
+  {
+   "id": "sy_stair_sig1",
+   "name": "千阶贵族细剑",
+   "nation": "shuoying",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 7,
+    "hit": 5,
+    "crit": 2
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "obsidian": 3
+   },
+   "forge_silver": 115,
+   "lore": "上层贵族的决斗细剑，护手是影曜石雕花。",
+   "city": "sy_stair",
+   "signature": 1,
+   "skill": "banner_crash",
+   "rep_req": 10
+  },
+  {
+   "id": "sy_stair_sig2",
+   "name": "登阶·千夜细剑",
+   "nation": "shuoying",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 10,
+    "hit": 5,
+    "crit": 2,
+    "avo": 6
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "obsidian": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "传说中在千阶决斗中从未落败的剑。",
+   "city": "sy_stair",
+   "signature": 2,
+   "skill": "cleave_arc",
+   "rep_req": 55
+  },
+  {
+   "id": "sy_coast_sig1",
+   "name": "冷湾破冰叉",
+   "nation": "shuoying",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "obsidian": 3
+   },
+   "forge_silver": 115,
+   "lore": "破冰渔叉改制的武器，三齿，带倒钩。",
+   "city": "sy_coast",
+   "signature": 1,
+   "skill": "lance_thrust",
+   "rep_req": 10
+  },
+  {
+   "id": "sy_coast_sig2",
+   "name": "鲸歌·冰海之叉",
+   "nation": "shuoying",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "hit": 5,
+    "def": 1,
+    "avo": 6
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "obsidian": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "据说曾刺中过北海冰鲸的古叉。",
+   "city": "sy_coast",
+   "signature": 2,
+   "skill": "shatter_line",
+   "rep_req": 55
+  },
+  {
+   "id": "sy_ridge_sig1",
+   "name": "狼脊猎刀",
+   "nation": "shuoying",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "crit": 9
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "obsidian": 3
+   },
+   "forge_silver": 115,
+   "lore": "猎村的剥皮刀，刀背有狼牙锯齿。",
+   "city": "sy_ridge",
+   "signature": 1,
+   "skill": "rush",
+   "rep_req": 10
+  },
+  {
+   "id": "sy_ridge_sig2",
+   "name": "头狼·脊骨弯刀",
+   "nation": "shuoying",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "crit": 12,
+    "avo": 6
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "obsidian": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "狼脊村代代相传的弯刀，刀柄是头狼的脊骨。",
+   "city": "sy_ridge",
+   "signature": 2,
+   "skill": "wheel_cut",
+   "rep_req": 55
+  },
+  {
+   "id": "qh_capital_sig1",
+   "name": "玉澜河卫剑",
+   "nation": "qinghe",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 7,
+    "hit": 5,
+    "crit": 2
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "jade": 3
+   },
+   "forge_silver": 115,
+   "lore": "河卫世家子弟的佩剑，剑格嵌青玉。",
+   "city": "qh_capital",
+   "signature": 1,
+   "skill": "banner_crash",
+   "rep_req": 10
+  },
+  {
+   "id": "qh_capital_sig2",
+   "name": "清澜·玉魄剑",
+   "nation": "qinghe",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 10,
+    "hit": 13,
+    "crit": 2
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "jade": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "河卫家主的传承之剑，剑身内封着一缕河魂。",
+   "city": "qh_capital",
+   "signature": 2,
+   "skill": "cleave_arc",
+   "rep_req": 55
+  },
+  {
+   "id": "qh_mist_sig1",
+   "name": "雾果短弓",
+   "nation": "qinghe",
+   "type": "bow",
+   "type_name": "长弓",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 7,
+    "hit": 5
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "jade": 3,
+    "hardwood": 2
+   },
+   "forge_silver": 115,
+   "lore": "果农驱鸟用的短弓，轻巧精准。",
+   "city": "qh_mist",
+   "signature": 1,
+   "skill": "rain_volleys",
+   "rep_req": 10
+  },
+  {
+   "id": "qh_mist_sig2",
+   "name": "霞雾·千果长弓",
+   "nation": "qinghe",
+   "type": "bow",
+   "type_name": "长弓",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 10,
+    "hit": 13
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "jade": 5,
+    "hardwood": 2,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "用千年果树枝做的长弓，弓身仍会开花。",
+   "city": "qh_mist",
+   "signature": 2,
+   "skill": "sky_piercer",
+   "rep_req": 55
+  },
+  {
+   "id": "qh_isle_sig1",
+   "name": "浮洲染刃",
+   "nation": "qinghe",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "crit": 9
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "jade": 3
+   },
+   "forge_silver": 115,
+   "lore": "染坊护卫的刀，刀身染过靛青，不反光。",
+   "city": "qh_isle",
+   "signature": 1,
+   "skill": "rush",
+   "rep_req": 10
+  },
+  {
+   "id": "qh_isle_sig2",
+   "name": "青澜·千染之刃",
+   "nation": "qinghe",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "crit": 12,
+    "hit": 8
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "jade": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "在千缸染料中淬火的刀，刀纹如流水。",
+   "city": "qh_isle",
+   "signature": 2,
+   "skill": "wheel_cut",
+   "rep_req": 55
+  },
+  {
+   "id": "qh_orchard_sig1",
+   "name": "粉霞细杖",
+   "nation": "qinghe",
+   "type": "staff",
+   "type_name": "法杖",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "def": 1,
+    "hp": 6
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 2,
+    "jade": 3,
+    "hardwood": 2
+   },
+   "forge_silver": 115,
+   "lore": "花坞祭花用的细杖，杖头雕成花苞。",
+   "city": "qh_orchard",
+   "signature": 1,
+   "skill": "ember_seal",
+   "rep_req": 10
+  },
+  {
+   "id": "qh_orchard_sig2",
+   "name": "春醒·霞落之杖",
+   "nation": "qinghe",
+   "type": "staff",
+   "type_name": "法杖",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "def": 1,
+    "hp": 8,
+    "hit": 8
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 3,
+    "jade": 5,
+    "hardwood": 2,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "据说挥动时会落下花瓣，伤者闻之止血。",
+   "city": "qh_orchard",
+   "signature": 2,
+   "skill": "sanctuary",
+   "rep_req": 55
+  },
+  {
+   "id": "qh_ford_sig1",
+   "name": "三汊分水刺",
+   "nation": "qinghe",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "jade": 3
+   },
+   "forge_silver": 115,
+   "lore": "渡口卫的三叉短刺，适合在船上作战。",
+   "city": "qh_ford",
+   "signature": 1,
+   "skill": "lance_thrust",
+   "rep_req": 10
+  },
+  {
+   "id": "qh_ford_sig2",
+   "name": "汇流·三河之叉",
+   "nation": "qinghe",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "hit": 13,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "jade": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "三汊渡的镇河之宝，传说能分开河水。",
+   "city": "qh_ford",
+   "signature": 2,
+   "skill": "shatter_line",
+   "rep_req": 55
+  },
+  {
+   "id": "qh_south_sig1",
+   "name": "碧潭玉护符",
+   "nation": "qinghe",
+   "type": "charm",
+   "type_name": "护符",
+   "slot": "charm",
+   "tier": 3,
+   "stats": {
+    "hit": 9,
+    "avo": 7,
+    "hp": 3
+   },
+   "jobs": [],
+   "price": 304,
+   "mats": {
+    "iron": 2,
+    "jade": 3,
+    "stardust": 1
+   },
+   "forge_silver": 115,
+   "lore": "潭底青玉雕成的护符，佩戴者心神清明。",
+   "city": "qh_south",
+   "signature": 1,
+   "skill": "disengage_step",
+   "rep_req": 10
+  },
+  {
+   "id": "qh_south_sig2",
+   "name": "潭心·碧落玉玺",
+   "nation": "qinghe",
+   "type": "charm",
+   "type_name": "护符",
+   "slot": "charm",
+   "tier": 4,
+   "stats": {
+    "hit": 20,
+    "avo": 10,
+    "hp": 4
+   },
+   "jobs": [],
+   "price": 882,
+   "mats": {
+    "iron": 3,
+    "jade": 5,
+    "stardust": 1,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "从潭心最深处采出的玉，据说能映出敌人的杀意。",
+   "city": "qh_south",
+   "signature": 2,
+   "skill": "lock_breaker",
+   "rep_req": 55
+  },
+  {
+   "id": "qh_upper_sig1",
+   "name": "书院镇纸法器",
+   "nation": "qinghe",
+   "type": "focus",
+   "type_name": "法器",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 8,
+    "crit": 3
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 2,
+    "jade": 3,
+    "stardust": 1
+   },
+   "forge_silver": 115,
+   "lore": "院长赐给优秀学子的镇纸，可以引导秘术。",
+   "city": "qh_upper",
+   "signature": 1,
+   "skill": "smite",
+   "rep_req": 10
+  },
+  {
+   "id": "qh_upper_sig2",
+   "name": "河图·上善之卷",
+   "nation": "qinghe",
+   "type": "focus",
+   "type_name": "法器",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 11,
+    "crit": 3,
+    "hit": 8
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 3,
+    "jade": 5,
+    "stardust": 1,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "书院秘藏的河图原卷，展开时水纹流动。",
+   "city": "qh_upper",
+   "signature": 2,
+   "skill": "judgment",
+   "rep_req": 55
+  },
+  {
+   "id": "lt_capital_sig1",
+   "name": "琉光灯刃",
+   "nation": "lantern",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 7,
+    "hit": 5,
+    "crit": 2
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "lampglass": 3
+   },
+   "forge_silver": 115,
+   "lore": "灯塔守卫的剑，剑身是琉璃包钢，会发微光。",
+   "city": "lt_capital",
+   "signature": 1,
+   "skill": "banner_crash",
+   "rep_req": 10
+  },
+  {
+   "id": "lt_capital_sig2",
+   "name": "不夜·琉光圣剑",
+   "nation": "lantern",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 10,
+    "hit": 11,
+    "crit": 5
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "lampglass": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "灯市联镇城之剑，传说它亮着，灯都就不会陷落。",
+   "city": "lt_capital",
+   "signature": 2,
+   "skill": "cleave_arc",
+   "rep_req": 55
+  },
+  {
+   "id": "lt_harbor_sig1",
+   "name": "西港船钩枪",
+   "nation": "lantern",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "lampglass": 3
+   },
+   "forge_silver": 115,
+   "lore": "码头工会的船钩长枪，能钩能刺。",
+   "city": "lt_harbor",
+   "signature": 1,
+   "skill": "lance_thrust",
+   "rep_req": 10
+  },
+  {
+   "id": "lt_harbor_sig2",
+   "name": "潮主·西港巨钩",
+   "nation": "lantern",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "hit": 11,
+    "def": 1,
+    "crit": 3
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "lampglass": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "码头工会会长的权杖兼武器，据说钩沉过海盗船。",
+   "city": "lt_harbor",
+   "signature": 2,
+   "skill": "shatter_line",
+   "rep_req": 55
+  },
+  {
+   "id": "lt_isle_sig1",
+   "name": "中灯琉璃杖",
+   "nation": "lantern",
+   "type": "staff",
+   "type_name": "法杖",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "def": 1,
+    "hp": 6
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 2,
+    "lampglass": 3,
+    "hardwood": 2
+   },
+   "forge_silver": 115,
+   "lore": "琉璃匠的吹管杖，杖头是一盏小灯。",
+   "city": "lt_isle",
+   "signature": 1,
+   "skill": "ember_seal",
+   "rep_req": 10
+  },
+  {
+   "id": "lt_isle_sig2",
+   "name": "海灯·千火之杖",
+   "nation": "lantern",
+   "type": "staff",
+   "type_name": "法杖",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "def": 1,
+    "hp": 8,
+    "hit": 6,
+    "crit": 3
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 3,
+    "lampglass": 5,
+    "hardwood": 2,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "用千盏灯的灯芯炼成的杖，能照亮海底。",
+   "city": "lt_isle",
+   "signature": 2,
+   "skill": "sanctuary",
+   "rep_req": 55
+  },
+  {
+   "id": "lt_south_sig1",
+   "name": "南灯袖箭",
+   "nation": "lantern",
+   "type": "crossbow",
+   "type_name": "劲弩",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 8,
+    "hit": 10,
+    "avo": -3
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "lampglass": 3,
+    "hardwood": 2
+   },
+   "forge_silver": 115,
+   "lore": "灯坊工匠做的袖里小弩，装在灯笼骨里也能用。",
+   "city": "lt_south",
+   "signature": 1,
+   "skill": "mark_death",
+   "rep_req": 10
+  },
+  {
+   "id": "lt_south_sig2",
+   "name": "灯影·无声手弩",
+   "nation": "lantern",
+   "type": "crossbow",
+   "type_name": "劲弩",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 11,
+    "hit": 16,
+    "avo": -3,
+    "crit": 3
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "lampglass": 5,
+    "hardwood": 2,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "刺客行会的传说之弩，发射时没有任何声音。",
+   "city": "lt_south",
+   "signature": 2,
+   "skill": "sky_piercer",
+   "rep_req": 55
+  },
+  {
+   "id": "lt_hill_sig1",
+   "name": "望灯烽火弓",
+   "nation": "lantern",
+   "type": "bow",
+   "type_name": "长弓",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 7,
+    "hit": 5
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "lampglass": 3,
+    "hardwood": 2
+   },
+   "forge_silver": 115,
+   "lore": "烽台守卫的长弓，箭矢可以点火作信号。",
+   "city": "lt_hill",
+   "signature": 1,
+   "skill": "rain_volleys",
+   "rep_req": 10
+  },
+  {
+   "id": "lt_hill_sig2",
+   "name": "烽燧·望海长弓",
+   "nation": "lantern",
+   "type": "bow",
+   "type_name": "长弓",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 10,
+    "hit": 11,
+    "crit": 3
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "lampglass": 5,
+    "hardwood": 2,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "据说一箭能把火信送到十里外的海上。",
+   "city": "lt_hill",
+   "signature": 2,
+   "skill": "sky_piercer",
+   "rep_req": 55
+  },
+  {
+   "id": "lt_docks_sig1",
+   "name": "渔火鱼叉",
+   "nation": "lantern",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "lampglass": 3
+   },
+   "forge_silver": 115,
+   "lore": "渔民的鱼叉，结实耐用。",
+   "city": "lt_docks",
+   "signature": 1,
+   "skill": "lance_thrust",
+   "rep_req": 10
+  },
+  {
+   "id": "lt_docks_sig2",
+   "name": "夜潮·渔火神叉",
+   "nation": "lantern",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "hit": 11,
+    "def": 1,
+    "crit": 3
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "lampglass": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "渔村祭海用的神叉，据说能唤来鱼群。",
+   "city": "lt_docks",
+   "signature": 2,
+   "skill": "shatter_line",
+   "rep_req": 55
+  },
+  {
+   "id": "lt_lane_sig1",
+   "name": "夜航弯刀",
+   "nation": "lantern",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "crit": 9
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "lampglass": 3
+   },
+   "forge_silver": 115,
+   "lore": "夜航水手的弯刀，刀身涂黑。",
+   "city": "lt_lane",
+   "signature": 1,
+   "skill": "rush",
+   "rep_req": 10
+  },
+  {
+   "id": "lt_lane_sig2",
+   "name": "暗流·夜航长刀",
+   "nation": "lantern",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "crit": 15,
+    "hit": 6
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "lampglass": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "夜航渡第一船长的刀，从未在夜里输过。",
+   "city": "lt_lane",
+   "signature": 2,
+   "skill": "wheel_cut",
+   "rep_req": 55
+  },
+  {
+   "id": "fc_capital_sig1",
+   "name": "霜阙近卫枪",
+   "nation": "frostcrown",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "frostcrystal": 3
+   },
+   "forge_silver": 115,
+   "lore": "王廷近卫的长枪，枪头是一整块霜晶。",
+   "city": "fc_capital",
+   "signature": 1,
+   "skill": "lance_thrust",
+   "rep_req": 10
+  },
+  {
+   "id": "fc_capital_sig2",
+   "name": "冕光·霜王之枪",
+   "nation": "frostcrown",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "hit": 5,
+    "def": 4
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "frostcrystal": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "霜冕先王的佩枪。王胤持之，霜晶会发出钟鸣。",
+   "city": "fc_capital",
+   "signature": 2,
+   "skill": "shatter_line",
+   "rep_req": 55
+  },
+  {
+   "id": "fc_banner_sig1",
+   "name": "雪幡骑枪",
+   "nation": "frostcrown",
+   "type": "lance",
+   "type_name": "骑枪",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 8,
+    "hit": -5,
+    "crit": 3
+   },
+   "jobs": [
+    "squire",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "frostcrystal": 3
+   },
+   "forge_silver": 115,
+   "lore": "雪原骑手的骑枪，枪尾缀白幡。",
+   "city": "fc_banner",
+   "signature": 1,
+   "skill": "charge_break",
+   "rep_req": 10
+  },
+  {
+   "id": "fc_banner_sig2",
+   "name": "白幡·雪崩骑枪",
+   "nation": "frostcrown",
+   "type": "lance",
+   "type_name": "骑枪",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 11,
+    "hit": -5,
+    "crit": 4,
+    "def": 3
+   },
+   "jobs": [
+    "squire",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "frostcrystal": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "据说冲锋时能引发雪崩的骑枪。",
+   "city": "fc_banner",
+   "signature": 2,
+   "skill": "wheel_cut",
+   "rep_req": 55
+  },
+  {
+   "id": "fc_spire_sig1",
+   "name": "孤针冰刺",
+   "nation": "frostcrown",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 7,
+    "hit": 5,
+    "crit": 2
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "frostcrystal": 3
+   },
+   "forge_silver": 115,
+   "lore": "矿工用霜晶磨成的细剑，极寒锋利。",
+   "city": "fc_spire",
+   "signature": 1,
+   "skill": "banner_crash",
+   "rep_req": 10
+  },
+  {
+   "id": "fc_spire_sig2",
+   "name": "孤高·冰针圣剑",
+   "nation": "frostcrown",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 10,
+    "hit": 5,
+    "crit": 2,
+    "def": 3
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "frostcrystal": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "从冰针塔顶折下的一截，永远不会融化。",
+   "city": "fc_spire",
+   "signature": 2,
+   "skill": "cleave_arc",
+   "rep_req": 55
+  },
+  {
+   "id": "fc_tower_sig1",
+   "name": "冰钟秘杖",
+   "nation": "frostcrown",
+   "type": "staff",
+   "type_name": "法杖",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "def": 1,
+    "hp": 6
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 2,
+    "frostcrystal": 3,
+    "hardwood": 2
+   },
+   "forge_silver": 115,
+   "lore": "钟楼秘术师的杖，杖头悬一枚小冰钟。",
+   "city": "fc_tower",
+   "signature": 1,
+   "skill": "ember_seal",
+   "rep_req": 10
+  },
+  {
+   "id": "fc_tower_sig2",
+   "name": "钟鸣·万籁之杖",
+   "nation": "frostcrown",
+   "type": "staff",
+   "type_name": "法杖",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "def": 4,
+    "hp": 8
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 3,
+    "frostcrystal": 5,
+    "hardwood": 2,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "敲响时万籁俱寂，敌人的咒语也会被打断。",
+   "city": "fc_tower",
+   "signature": 2,
+   "skill": "sanctuary",
+   "rep_req": 55
+  },
+  {
+   "id": "fc_lake_sig1",
+   "name": "镜湖冰盾",
+   "nation": "frostcrown",
+   "type": "shield",
+   "type_name": "塔盾",
+   "slot": "armor",
+   "tier": 3,
+   "stats": {
+    "def": 5,
+    "avo": 2,
+    "hp": 9
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "frostcrystal": 3
+   },
+   "forge_silver": 115,
+   "lore": "关卒的盾，盾面打磨如镜，能晃敌人的眼。",
+   "city": "fc_lake",
+   "signature": 1,
+   "skill": "iron_wall",
+   "rep_req": 10
+  },
+  {
+   "id": "fc_lake_sig2",
+   "name": "镜渊·无瑕之盾",
+   "nation": "frostcrown",
+   "type": "shield",
+   "type_name": "塔盾",
+   "slot": "armor",
+   "tier": 4,
+   "stats": {
+    "def": 10,
+    "avo": 2,
+    "hp": 12
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "frostcrystal": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "据说从未被打出过一道划痕的盾。",
+   "city": "fc_lake",
+   "signature": 2,
+   "skill": "hold_phalanx",
+   "rep_req": 55
+  },
+  {
+   "id": "fc_peak_sig1",
+   "name": "鹰岩猎弓",
+   "nation": "frostcrown",
+   "type": "bow",
+   "type_name": "长弓",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 7,
+    "hit": 5
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "frostcrystal": 3,
+    "hardwood": 2
+   },
+   "forge_silver": 115,
+   "lore": "驯鹰人的猎弓，弓梢雕鹰首。",
+   "city": "fc_peak",
+   "signature": 1,
+   "skill": "rain_volleys",
+   "rep_req": 10
+  },
+  {
+   "id": "fc_peak_sig2",
+   "name": "鹰王·穿岩之弓",
+   "nation": "frostcrown",
+   "type": "bow",
+   "type_name": "长弓",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 10,
+    "hit": 5,
+    "def": 3
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "frostcrystal": 5,
+    "hardwood": 2,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "据说一箭射穿过鹰岩的弓。",
+   "city": "fc_peak",
+   "signature": 2,
+   "skill": "sky_piercer",
+   "rep_req": 55
+  },
+  {
+   "id": "fc_plateau_sig1",
+   "name": "冻原手斧",
+   "nation": "frostcrown",
+   "type": "axe",
+   "type_name": "战斧",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 9,
+    "hit": -10
+   },
+   "jobs": [
+    "light_inf",
+    "heavy_inf",
+    "warrior"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "frostcrystal": 3
+   },
+   "forge_silver": 115,
+   "lore": "牧民的手斧，能砍冰也能砍人。",
+   "city": "fc_plateau",
+   "signature": 1,
+   "skill": "power_strike",
+   "rep_req": 10
+  },
+  {
+   "id": "fc_plateau_sig2",
+   "name": "永冻·冰原战斧",
+   "nation": "frostcrown",
+   "type": "axe",
+   "type_name": "战斧",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 12,
+    "hit": -10,
+    "def": 3
+   },
+   "jobs": [
+    "light_inf",
+    "heavy_inf",
+    "warrior"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "frostcrystal": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "冻原部族的传承战斧，斧刃上的冰从未融化。",
+   "city": "fc_plateau",
+   "signature": 2,
+   "skill": "shatter_line",
+   "rep_req": 55
+  },
+  {
+   "id": "eo_capital_sig1",
+   "name": "焚阙熔刃",
+   "nation": "emberold",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 7,
+    "hit": 5,
+    "crit": 2
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "magmaglass": 3
+   },
+   "forge_silver": 115,
+   "lore": "余烬贵胤的佩剑，剑身是熔玻璃包钢，暗红纹路如岩浆。",
+   "city": "eo_capital",
+   "signature": 1,
+   "skill": "banner_crash",
+   "rep_req": 10
+  },
+  {
+   "id": "eo_capital_sig2",
+   "name": "余烬·焚天之剑",
+   "nation": "emberold",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 13,
+    "hit": 5,
+    "crit": 2
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "magmaglass": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "旧邦末代君王的剑，据说握住它的人能听见古城的心跳。",
+   "city": "eo_capital",
+   "signature": 2,
+   "skill": "cleave_arc",
+   "rep_req": 55
+  },
+  {
+   "id": "eo_kiln_sig1",
+   "name": "窑火锻锤",
+   "nation": "emberold",
+   "type": "axe",
+   "type_name": "战斧",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 9,
+    "hit": -10
+   },
+   "jobs": [
+    "light_inf",
+    "heavy_inf",
+    "warrior"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "magmaglass": 3
+   },
+   "forge_silver": 115,
+   "lore": "窑工的重锤，锤头是熔玻璃。",
+   "city": "eo_kiln",
+   "signature": 1,
+   "skill": "power_strike",
+   "rep_req": 10
+  },
+  {
+   "id": "eo_kiln_sig2",
+   "name": "千窑·不熄之锤",
+   "nation": "emberold",
+   "type": "axe",
+   "type_name": "战斧",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 15,
+    "hit": -10
+   },
+   "jobs": [
+    "light_inf",
+    "heavy_inf",
+    "warrior"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "magmaglass": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "千年窑的镇窑锤，据说锤下的火永不熄灭。",
+   "city": "eo_kiln",
+   "signature": 2,
+   "skill": "shatter_line",
+   "rep_req": 55
+  },
+  {
+   "id": "eo_archive_sig1",
+   "name": "灰典法器",
+   "nation": "emberold",
+   "type": "focus",
+   "type_name": "法器",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 8,
+    "crit": 3
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 2,
+    "magmaglass": 3,
+    "stardust": 1
+   },
+   "forge_silver": 115,
+   "lore": "学府颁发的法器，内封一页灰典。",
+   "city": "eo_archive",
+   "signature": 1,
+   "skill": "smite",
+   "rep_req": 10
+  },
+  {
+   "id": "eo_archive_sig2",
+   "name": "典焰·焚书之典",
+   "nation": "emberold",
+   "type": "focus",
+   "type_name": "法器",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 14,
+    "crit": 3
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 3,
+    "magmaglass": 5,
+    "stardust": 1,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "传说中焚毁了半个旧邦的禁典，仍在燃烧。",
+   "city": "eo_archive",
+   "signature": 2,
+   "skill": "judgment",
+   "rep_req": 55
+  },
+  {
+   "id": "eo_shrine_sig1",
+   "name": "余火祭杖",
+   "nation": "emberold",
+   "type": "staff",
+   "type_name": "法杖",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "def": 1,
+    "hp": 6
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 2,
+    "magmaglass": 3,
+    "hardwood": 2
+   },
+   "forge_silver": 115,
+   "lore": "祭司的杖，杖头燃着微弱的余火。",
+   "city": "eo_shrine",
+   "signature": 1,
+   "skill": "ember_seal",
+   "rep_req": 10
+  },
+  {
+   "id": "eo_shrine_sig2",
+   "name": "长明·余火圣杖",
+   "nation": "emberold",
+   "type": "staff",
+   "type_name": "法杖",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 12,
+    "def": 1,
+    "hp": 8
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 3,
+    "magmaglass": 5,
+    "hardwood": 2,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "祠堂中那盏长明余火的灯台，据说能照亮亡者的路。",
+   "city": "eo_shrine",
+   "signature": 2,
+   "skill": "sanctuary",
+   "rep_req": 55
+  },
+  {
+   "id": "eo_crack_sig1",
+   "name": "裂谷矿镐斧",
+   "nation": "emberold",
+   "type": "axe",
+   "type_name": "战斧",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 9,
+    "hit": -10
+   },
+   "jobs": [
+    "light_inf",
+    "heavy_inf",
+    "warrior"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "magmaglass": 3
+   },
+   "forge_silver": 115,
+   "lore": "矿工的镐斧，一头尖一头宽。",
+   "city": "eo_crack",
+   "signature": 1,
+   "skill": "power_strike",
+   "rep_req": 10
+  },
+  {
+   "id": "eo_crack_sig2",
+   "name": "地裂·熔心之斧",
+   "nation": "emberold",
+   "type": "axe",
+   "type_name": "战斧",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 15,
+    "hit": -10
+   },
+   "jobs": [
+    "light_inf",
+    "heavy_inf",
+    "warrior"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "magmaglass": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "从裂谷最深处挖出的古斧，斧心仍在发烫。",
+   "city": "eo_crack",
+   "signature": 2,
+   "skill": "shatter_line",
+   "rep_req": 55
+  },
+  {
+   "id": "eo_banner_sig1",
+   "name": "焰旗战刀",
+   "nation": "emberold",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "crit": 9
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "magmaglass": 3
+   },
+   "forge_silver": 115,
+   "lore": "要塞卫的长刀，刀镡是熔玻璃。",
+   "city": "eo_banner",
+   "signature": 1,
+   "skill": "rush",
+   "rep_req": 10
+  },
+  {
+   "id": "eo_banner_sig2",
+   "name": "焚旗·烈阵战刀",
+   "nation": "emberold",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 12,
+    "crit": 12
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "magmaglass": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "要塞历代守将的刀，砍断过三面敌旗。",
+   "city": "eo_banner",
+   "signature": 2,
+   "skill": "wheel_cut",
+   "rep_req": 55
+  },
+  {
+   "id": "eo_glass_sig1",
+   "name": "熔镜轻甲",
+   "nation": "emberold",
+   "type": "armor",
+   "type_name": "轻甲",
+   "slot": "armor",
+   "tier": 3,
+   "stats": {
+    "def": 7,
+    "avo": -3,
+    "hp": 6
+   },
+   "jobs": [
+    "squire",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "light_inf"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "magmaglass": 3,
+    "fur": 1
+   },
+   "forge_silver": 115,
+   "lore": "镜面熔玻璃轻甲，能偏转箭矢。",
+   "city": "eo_glass",
+   "signature": 1,
+   "skill": "terrain_ward",
+   "rep_req": 10
+  },
+  {
+   "id": "eo_glass_sig2",
+   "name": "镜焰·熔光重铠",
+   "nation": "emberold",
+   "type": "armor",
+   "type_name": "轻甲",
+   "slot": "armor",
+   "tier": 4,
+   "stats": {
+    "def": 10,
+    "avo": -3,
+    "hp": 8,
+    "atk": 3
+   },
+   "jobs": [
+    "squire",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "light_inf"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "magmaglass": 5,
+    "fur": 1,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "熔镜镇大师的毕生之作，铠面映出的火光会灼伤敌人的眼。",
+   "city": "eo_glass",
+   "signature": 2,
+   "skill": "anchor_guard",
+   "rep_req": 55
+  },
+  {
+   "id": "sm_capital_sig1",
+   "name": "晶垣盐晶剑",
+   "nation": "saltmarsh",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 7,
+    "hit": 5,
+    "crit": 2
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "saltcrystal": 3
+   },
+   "forge_silver": 115,
+   "lore": "盐晶包钢的剑，剑身透明如冰。",
+   "city": "sm_capital",
+   "signature": 1,
+   "skill": "banner_crash",
+   "rep_req": 10
+  },
+  {
+   "id": "sm_capital_sig2",
+   "name": "潮王·晶垣圣剑",
+   "nation": "saltmarsh",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 10,
+    "hit": 5,
+    "crit": 2,
+    "hp": 6
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "saltcrystal": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "盐泽盟盟主的剑，据说是从第一块盐晶中取出的。",
+   "city": "sm_capital",
+   "signature": 2,
+   "skill": "cleave_arc",
+   "rep_req": 55
+  },
+  {
+   "id": "sm_west_sig1",
+   "name": "苇幡竹枪",
+   "nation": "saltmarsh",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "saltcrystal": 3
+   },
+   "forge_silver": 115,
+   "lore": "芦苇村民的竹枪，轻便。",
+   "city": "sm_west",
+   "signature": 1,
+   "skill": "lance_thrust",
+   "rep_req": 10
+  },
+  {
+   "id": "sm_west_sig2",
+   "name": "潮神·苇幡神枪",
+   "nation": "saltmarsh",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "hit": 5,
+    "def": 1,
+    "hp": 6
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "saltcrystal": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "祭潮神用的神枪，枪缨是千年芦苇。",
+   "city": "sm_west",
+   "signature": 2,
+   "skill": "shatter_line",
+   "rep_req": 55
+  },
+  {
+   "id": "sm_banner_sig1",
+   "name": "白幡短弩",
+   "nation": "saltmarsh",
+   "type": "crossbow",
+   "type_name": "劲弩",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 8,
+    "hit": 10,
+    "avo": -3
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "saltcrystal": 3,
+    "hardwood": 2
+   },
+   "forge_silver": 115,
+   "lore": "镇卫的短弩，弩身漆白。",
+   "city": "sm_banner",
+   "signature": 1,
+   "skill": "mark_death",
+   "rep_req": 10
+  },
+  {
+   "id": "sm_banner_sig2",
+   "name": "白潮·连珠之弩",
+   "nation": "saltmarsh",
+   "type": "crossbow",
+   "type_name": "劲弩",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 11,
+    "hit": 10,
+    "avo": -3,
+    "hp": 6
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "saltcrystal": 5,
+    "hardwood": 2,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "能连发五矢的传说之弩。",
+   "city": "sm_banner",
+   "signature": 2,
+   "skill": "sky_piercer",
+   "rep_req": 55
+  },
+  {
+   "id": "sm_far_sig1",
+   "name": "潮哨长戟",
+   "nation": "saltmarsh",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "saltcrystal": 3
+   },
+   "forge_silver": 115,
+   "lore": "哨塔守卫的长戟，戟刃是盐晶。",
+   "city": "sm_far",
+   "signature": 1,
+   "skill": "lance_thrust",
+   "rep_req": 10
+  },
+  {
+   "id": "sm_far_sig2",
+   "name": "怒潮·孤哨之戟",
+   "nation": "saltmarsh",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "hit": 5,
+    "def": 1,
+    "hp": 6
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "saltcrystal": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "据说孤身守住潮哨一夜的守卫留下的戟。",
+   "city": "sm_far",
+   "signature": 2,
+   "skill": "shatter_line",
+   "rep_req": 55
+  },
+  {
+   "id": "sm_mid_sig1",
+   "name": "盐工耙斧",
+   "nation": "saltmarsh",
+   "type": "axe",
+   "type_name": "战斧",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 9,
+    "hit": -10
+   },
+   "jobs": [
+    "light_inf",
+    "heavy_inf",
+    "warrior"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "saltcrystal": 3
+   },
+   "forge_silver": 115,
+   "lore": "盐工的耙斧，结实。",
+   "city": "sm_mid",
+   "signature": 1,
+   "skill": "power_strike",
+   "rep_req": 10
+  },
+  {
+   "id": "sm_mid_sig2",
+   "name": "盐田·白浪巨斧",
+   "nation": "saltmarsh",
+   "type": "axe",
+   "type_name": "战斧",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 12,
+    "hit": -10,
+    "hp": 6
+   },
+   "jobs": [
+    "light_inf",
+    "heavy_inf",
+    "warrior"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "saltcrystal": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "盐工领袖的巨斧，挥动时盐晶飞溅如浪。",
+   "city": "sm_mid",
+   "signature": 2,
+   "skill": "shatter_line",
+   "rep_req": 55
+  },
+  {
+   "id": "sm_south_sig1",
+   "name": "晶滩水手刀",
+   "nation": "saltmarsh",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "crit": 9
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "saltcrystal": 3
+   },
+   "forge_silver": 115,
+   "lore": "水手的弯刀，刀身抗盐蚀。",
+   "city": "sm_south",
+   "signature": 1,
+   "skill": "rush",
+   "rep_req": 10
+  },
+  {
+   "id": "sm_south_sig2",
+   "name": "海晶·破浪长刀",
+   "nation": "saltmarsh",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "crit": 12,
+    "hp": 6
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "saltcrystal": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "晶滩港老船王的刀，劈开过风暴。",
+   "city": "sm_south",
+   "signature": 2,
+   "skill": "wheel_cut",
+   "rep_req": 55
+  },
+  {
+   "id": "sm_shoal_sig1",
+   "name": "芦浦轻甲",
+   "nation": "saltmarsh",
+   "type": "armor",
+   "type_name": "轻甲",
+   "slot": "armor",
+   "tier": 3,
+   "stats": {
+    "def": 7,
+    "avo": -3,
+    "hp": 6
+   },
+   "jobs": [
+    "squire",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "light_inf"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "saltcrystal": 3,
+    "fur": 1
+   },
+   "forge_silver": 115,
+   "lore": "浸过盐水的皮甲，轻便耐用。",
+   "city": "sm_shoal",
+   "signature": 1,
+   "skill": "terrain_ward",
+   "rep_req": 10
+  },
+  {
+   "id": "sm_shoal_sig2",
+   "name": "浦魂·盐晶鳞甲",
+   "nation": "saltmarsh",
+   "type": "armor",
+   "type_name": "轻甲",
+   "slot": "armor",
+   "tier": 4,
+   "stats": {
+    "def": 10,
+    "avo": -3,
+    "hp": 14
+   },
+   "jobs": [
+    "squire",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "light_inf"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "saltcrystal": 5,
+    "fur": 1,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "镶满盐晶鳞片的铠甲，据说在水中更坚固。",
+   "city": "sm_shoal",
+   "signature": 2,
+   "skill": "anchor_guard",
+   "rep_req": 55
+  },
+  {
+   "id": "ig_capital_sig1",
+   "name": "铁阙峡钢剑",
+   "nation": "irongorge",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 7,
+    "hit": 5,
+    "crit": 2
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "gorgesteel": 3
+   },
+   "forge_silver": 115,
+   "lore": "峡钢锻造的剑，坚韧无比。",
+   "city": "ig_capital",
+   "signature": 1,
+   "skill": "banner_crash",
+   "rep_req": 10
+  },
+  {
+   "id": "ig_capital_sig2",
+   "name": "铁峡·万锻之剑",
+   "nation": "irongorge",
+   "type": "sword",
+   "type_name": "长剑",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 11,
+    "hit": 5,
+    "crit": 2,
+    "def": 2
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "gorgesteel": 5,
+    "frostcrystal": 6
+   },
+   "forge_silver": 335,
+   "lore": "据说经过一万次锻打的剑，铁峡领主的佩剑。",
+   "city": "ig_capital",
+   "signature": 2,
+   "skill": "cleave_arc",
+   "rep_req": 55
+  },
+  {
+   "id": "ig_plateau_sig1",
+   "name": "高台吊索枪",
+   "nation": "irongorge",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "gorgesteel": 3
+   },
+   "forge_silver": 115,
+   "lore": "吊篮工人的长枪，枪尾有钩索。",
+   "city": "ig_plateau",
+   "signature": 1,
+   "skill": "lance_thrust",
+   "rep_req": 10
+  },
+  {
+   "id": "ig_plateau_sig2",
+   "name": "凌崖·天台之枪",
+   "nation": "irongorge",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 10,
+    "hit": 5,
+    "def": 3
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "gorgesteel": 5,
+    "frostcrystal": 6
+   },
+   "forge_silver": 335,
+   "lore": "据说从崖顶掷下能钉穿谷底巨石的枪。",
+   "city": "ig_plateau",
+   "signature": 2,
+   "skill": "shatter_line",
+   "rep_req": 55
+  },
+  {
+   "id": "ig_mine_sig1",
+   "name": "深镐矿斧",
+   "nation": "irongorge",
+   "type": "axe",
+   "type_name": "战斧",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 9,
+    "hit": -10
+   },
+   "jobs": [
+    "light_inf",
+    "heavy_inf",
+    "warrior"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "gorgesteel": 3
+   },
+   "forge_silver": 115,
+   "lore": "矿工的镐斧。",
+   "city": "ig_mine",
+   "signature": 1,
+   "skill": "power_strike",
+   "rep_req": 10
+  },
+  {
+   "id": "ig_mine_sig2",
+   "name": "地心·深镐巨斧",
+   "nation": "irongorge",
+   "type": "axe",
+   "type_name": "战斧",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 13,
+    "hit": -10,
+    "def": 2
+   },
+   "jobs": [
+    "light_inf",
+    "heavy_inf",
+    "warrior"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "gorgesteel": 5,
+    "frostcrystal": 6
+   },
+   "forge_silver": 335,
+   "lore": "从最深矿道挖出的古斧。",
+   "city": "ig_mine",
+   "signature": 2,
+   "skill": "shatter_line",
+   "rep_req": 55
+  },
+  {
+   "id": "ig_banner_sig1",
+   "name": "鹰旗重盾",
+   "nation": "irongorge",
+   "type": "shield",
+   "type_name": "塔盾",
+   "slot": "armor",
+   "tier": 3,
+   "stats": {
+    "def": 5,
+    "avo": 2,
+    "hp": 9
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "gorgesteel": 3
+   },
+   "forge_silver": 115,
+   "lore": "关卒的峡钢重盾。",
+   "city": "ig_banner",
+   "signature": 1,
+   "skill": "iron_wall",
+   "rep_req": 10
+  },
+  {
+   "id": "ig_banner_sig2",
+   "name": "鹰扬·铁壁之盾",
+   "nation": "irongorge",
+   "type": "shield",
+   "type_name": "塔盾",
+   "slot": "armor",
+   "tier": 4,
+   "stats": {
+    "def": 9,
+    "avo": 2,
+    "hp": 12,
+    "atk": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "gorgesteel": 5,
+    "frostcrystal": 6
+   },
+   "forge_silver": 335,
+   "lore": "据说挡住过一整支骑兵冲锋的盾。",
+   "city": "ig_banner",
+   "signature": 2,
+   "skill": "hold_phalanx",
+   "rep_req": 55
+  },
+  {
+   "id": "ig_tower_sig1",
+   "name": "悬桥重弩",
+   "nation": "irongorge",
+   "type": "crossbow",
+   "type_name": "劲弩",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 8,
+    "hit": 10,
+    "avo": -3
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "gorgesteel": 3,
+    "hardwood": 2
+   },
+   "forge_silver": 115,
+   "lore": "吊桥守卫的重弩，峡钢弩臂。",
+   "city": "ig_tower",
+   "signature": 1,
+   "skill": "mark_death",
+   "rep_req": 10
+  },
+  {
+   "id": "ig_tower_sig2",
+   "name": "悬空·贯峡之弩",
+   "nation": "irongorge",
+   "type": "crossbow",
+   "type_name": "劲弩",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 12,
+    "hit": 10,
+    "avo": -3,
+    "def": 2
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "gorgesteel": 5,
+    "hardwood": 2,
+    "frostcrystal": 6
+   },
+   "forge_silver": 335,
+   "lore": "能一箭射穿峡谷的传说重弩。",
+   "city": "ig_tower",
+   "signature": 2,
+   "skill": "sky_piercer",
+   "rep_req": 55
+  },
+  {
+   "id": "ig_bottom_sig1",
+   "name": "谷底锻甲",
+   "nation": "irongorge",
+   "type": "armor",
+   "type_name": "轻甲",
+   "slot": "armor",
+   "tier": 3,
+   "stats": {
+    "def": 7,
+    "avo": -3,
+    "hp": 6
+   },
+   "jobs": [
+    "squire",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "light_inf"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "gorgesteel": 3,
+    "fur": 1
+   },
+   "forge_silver": 115,
+   "lore": "锻炉街的峡钢板甲。",
+   "city": "ig_bottom",
+   "signature": 1,
+   "skill": "terrain_ward",
+   "rep_req": 10
+  },
+  {
+   "id": "ig_bottom_sig2",
+   "name": "炉心·峡钢重铠",
+   "nation": "irongorge",
+   "type": "armor",
+   "type_name": "轻甲",
+   "slot": "armor",
+   "tier": 4,
+   "stats": {
+    "def": 12,
+    "avo": -3,
+    "hp": 8,
+    "atk": 1
+   },
+   "jobs": [
+    "squire",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "light_inf"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "gorgesteel": 5,
+    "fur": 1,
+    "frostcrystal": 6
+   },
+   "forge_silver": 335,
+   "lore": "锻炉街大师的毕生之作，重而不滞。",
+   "city": "ig_bottom",
+   "signature": 2,
+   "skill": "anchor_guard",
+   "rep_req": 55
+  },
+  {
+   "id": "ig_lower_sig1",
+   "name": "炉烟铁锤",
+   "nation": "irongorge",
+   "type": "axe",
+   "type_name": "战斧",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 9,
+    "hit": -10
+   },
+   "jobs": [
+    "light_inf",
+    "heavy_inf",
+    "warrior"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "gorgesteel": 3
+   },
+   "forge_silver": 115,
+   "lore": "铁匠的锻锤。",
+   "city": "ig_lower",
+   "signature": 1,
+   "skill": "power_strike",
+   "rep_req": 10
+  },
+  {
+   "id": "ig_lower_sig2",
+   "name": "炉神·烟火之锤",
+   "nation": "irongorge",
+   "type": "axe",
+   "type_name": "战斧",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 13,
+    "hit": -10,
+    "def": 2
+   },
+   "jobs": [
+    "light_inf",
+    "heavy_inf",
+    "warrior"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "gorgesteel": 5,
+    "frostcrystal": 6
+   },
+   "forge_silver": 335,
+   "lore": "据说炉神亲手打造的锤。",
+   "city": "ig_lower",
+   "signature": 2,
+   "skill": "shatter_line",
+   "rep_req": 55
+  },
+  {
+   "id": "sr_capital_sig1",
+   "name": "双虹星杖",
+   "nation": "starriver",
+   "type": "staff",
+   "type_name": "法杖",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "def": 1,
+    "hp": 6
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 2,
+    "stardust": 3,
+    "hardwood": 2
+   },
+   "forge_silver": 115,
+   "lore": "星象学院的法杖，杖头镶星砂。",
+   "city": "sr_capital",
+   "signature": 1,
+   "skill": "ember_seal",
+   "rep_req": 10
+  },
+  {
+   "id": "sr_capital_sig2",
+   "name": "虹桥·双星之杖",
+   "nation": "starriver",
+   "type": "staff",
+   "type_name": "法杖",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "def": 1,
+    "hp": 8,
+    "crit": 6
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 3,
+    "stardust": 5,
+    "hardwood": 2,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "双虹桥建成时铸造的法杖，能召唤星光。",
+   "city": "sr_capital",
+   "signature": 2,
+   "skill": "sanctuary",
+   "rep_req": 55
+  },
+  {
+   "id": "sr_nw_sig1",
+   "name": "观象星盘",
+   "nation": "starriver",
+   "type": "focus",
+   "type_name": "法器",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 8,
+    "crit": 3
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 2,
+    "stardust": 3,
+    "jade": 1
+   },
+   "forge_silver": 115,
+   "lore": "学者的星盘，可引导星光。",
+   "city": "sr_nw",
+   "signature": 1,
+   "skill": "smite",
+   "rep_req": 10
+  },
+  {
+   "id": "sr_nw_sig2",
+   "name": "天枢·观象星盘",
+   "nation": "starriver",
+   "type": "focus",
+   "type_name": "法器",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 11,
+    "crit": 9
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 3,
+    "stardust": 5,
+    "jade": 1,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "观象台镇台之宝，能预知敌人的动向。",
+   "city": "sr_nw",
+   "signature": 2,
+   "skill": "judgment",
+   "rep_req": 55
+  },
+  {
+   "id": "sr_west_sig1",
+   "name": "西津渡刀",
+   "nation": "starriver",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "crit": 9
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "stardust": 3
+   },
+   "forge_silver": 115,
+   "lore": "渡口卫的短刀。",
+   "city": "sr_west",
+   "signature": 1,
+   "skill": "rush",
+   "rep_req": 10
+  },
+  {
+   "id": "sr_west_sig2",
+   "name": "星渡·西津长刀",
+   "nation": "starriver",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "crit": 18
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "stardust": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "据说斩过星河中的倒影的刀。",
+   "city": "sr_west",
+   "signature": 2,
+   "skill": "wheel_cut",
+   "rep_req": 55
+  },
+  {
+   "id": "sr_pagoda_sig1",
+   "name": "塔影星弓",
+   "nation": "starriver",
+   "type": "bow",
+   "type_name": "长弓",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 7,
+    "hit": 5
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "stardust": 3,
+    "hardwood": 2
+   },
+   "forge_silver": 115,
+   "lore": "星砂镶嵌的长弓，箭矢带星光。",
+   "city": "sr_pagoda",
+   "signature": 1,
+   "skill": "rain_volleys",
+   "rep_req": 10
+  },
+  {
+   "id": "sr_pagoda_sig2",
+   "name": "七曜·塔影神弓",
+   "nation": "starriver",
+   "type": "bow",
+   "type_name": "长弓",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 10,
+    "hit": 5,
+    "crit": 6
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "stardust": 5,
+    "hardwood": 2,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "七层塔顶供奉的神弓。",
+   "city": "sr_pagoda",
+   "signature": 2,
+   "skill": "sky_piercer",
+   "rep_req": 55
+  },
+  {
+   "id": "sr_east_sig1",
+   "name": "东津船弩",
+   "nation": "starriver",
+   "type": "crossbow",
+   "type_name": "劲弩",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 8,
+    "hit": 10,
+    "avo": -3
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "stardust": 3,
+    "hardwood": 2
+   },
+   "forge_silver": 115,
+   "lore": "港口卫的船弩。",
+   "city": "sr_east",
+   "signature": 1,
+   "skill": "mark_death",
+   "rep_req": 10
+  },
+  {
+   "id": "sr_east_sig2",
+   "name": "星潮·东津重弩",
+   "nation": "starriver",
+   "type": "crossbow",
+   "type_name": "劲弩",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 11,
+    "hit": 10,
+    "avo": -3,
+    "crit": 6
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "stardust": 5,
+    "hardwood": 2,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "东津港镇港重弩。",
+   "city": "sr_east",
+   "signature": 2,
+   "skill": "sky_piercer",
+   "rep_req": 55
+  },
+  {
+   "id": "sr_sw_sig1",
+   "name": "落星镰",
+   "nation": "starriver",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "crit": 9
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "stardust": 3
+   },
+   "forge_silver": 115,
+   "lore": "农夫的镰刀，刃口镶星砂。",
+   "city": "sr_sw",
+   "signature": 1,
+   "skill": "rush",
+   "rep_req": 10
+  },
+  {
+   "id": "sr_sw_sig2",
+   "name": "陨星·坠天之镰",
+   "nation": "starriver",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "crit": 18
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "stardust": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "用陨星铁打造的镰刀。",
+   "city": "sr_sw",
+   "signature": 2,
+   "skill": "wheel_cut",
+   "rep_req": 55
+  },
+  {
+   "id": "sr_south_sig1",
+   "name": "渡星关枪",
+   "nation": "starriver",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "stardust": 3
+   },
+   "forge_silver": 115,
+   "lore": "关卒的长枪。",
+   "city": "sr_south",
+   "signature": 1,
+   "skill": "lance_thrust",
+   "rep_req": 10
+  },
+  {
+   "id": "sr_south_sig2",
+   "name": "南斗·渡星之枪",
+   "nation": "starriver",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "hit": 5,
+    "def": 1,
+    "crit": 6
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "stardust": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "关楼供奉的古枪，据说指向南斗。",
+   "city": "sr_south",
+   "signature": 2,
+   "skill": "shatter_line",
+   "rep_req": 55
+  },
+  {
+   "id": "sz_capital_sig1",
+   "name": "雾林硬木弓",
+   "nation": "southzephyr",
+   "type": "bow",
+   "type_name": "长弓",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 7,
+    "hit": 5
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "hardwood": 3
+   },
+   "forge_silver": 115,
+   "lore": "南泽硬木的长弓，弹性极佳。",
+   "city": "sz_capital",
+   "signature": 1,
+   "skill": "rain_volleys",
+   "rep_req": 10
+  },
+  {
+   "id": "sz_capital_sig2",
+   "name": "萤王·雾林神弓",
+   "nation": "southzephyr",
+   "type": "bow",
+   "type_name": "长弓",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 10,
+    "hit": 5,
+    "move": 1
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "hardwood": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "萤火议会议长的神弓，箭矢带萤光。",
+   "city": "sz_capital",
+   "signature": 2,
+   "skill": "sky_piercer",
+   "rep_req": 55
+  },
+  {
+   "id": "sz_temple_sig1",
+   "name": "古樟祭杖",
+   "nation": "southzephyr",
+   "type": "staff",
+   "type_name": "法杖",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "def": 1,
+    "hp": 6
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 2,
+    "hardwood": 3
+   },
+   "forge_silver": 115,
+   "lore": "古樟枝做的祭杖。",
+   "city": "sz_temple",
+   "signature": 1,
+   "skill": "ember_seal",
+   "rep_req": 10
+  },
+  {
+   "id": "sz_temple_sig2",
+   "name": "千年·古樟神杖",
+   "nation": "southzephyr",
+   "type": "staff",
+   "type_name": "法杖",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "def": 1,
+    "hp": 8,
+    "move": 1
+   },
+   "jobs": [
+    "apprentice",
+    "priest"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 3,
+    "hardwood": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "据说是古樟树主动折下的一枝。",
+   "city": "sz_temple",
+   "signature": 2,
+   "skill": "sanctuary",
+   "rep_req": 55
+  },
+  {
+   "id": "sz_vine_sig1",
+   "name": "藤桥吹箭",
+   "nation": "southzephyr",
+   "type": "bow",
+   "type_name": "长弓",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 7,
+    "hit": 5
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "hardwood": 3
+   },
+   "forge_silver": 115,
+   "lore": "部族的吹箭筒。",
+   "city": "sz_vine",
+   "signature": 1,
+   "skill": "rain_volleys",
+   "rep_req": 10
+  },
+  {
+   "id": "sz_vine_sig2",
+   "name": "林魂·藤蔓长弓",
+   "nation": "southzephyr",
+   "type": "bow",
+   "type_name": "长弓",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 10,
+    "hit": 5,
+    "move": 1
+   },
+   "jobs": [
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "hardwood": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "藤蔓自己长成的长弓。",
+   "city": "sz_vine",
+   "signature": 2,
+   "skill": "sky_piercer",
+   "rep_req": 55
+  },
+  {
+   "id": "sz_harbor_sig1",
+   "name": "雾港船刀",
+   "nation": "southzephyr",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "crit": 9
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "hardwood": 3
+   },
+   "forge_silver": 115,
+   "lore": "水手的弯刀。",
+   "city": "sz_harbor",
+   "signature": 1,
+   "skill": "rush",
+   "rep_req": 10
+  },
+  {
+   "id": "sz_harbor_sig2",
+   "name": "雾海·萤港长刀",
+   "nation": "southzephyr",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "crit": 12,
+    "move": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "hardwood": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "雾港港主的刀。",
+   "city": "sz_harbor",
+   "signature": 2,
+   "skill": "wheel_cut",
+   "rep_req": 55
+  },
+  {
+   "id": "sz_south_sig1",
+   "name": "南湾轻甲",
+   "nation": "southzephyr",
+   "type": "armor",
+   "type_name": "轻甲",
+   "slot": "armor",
+   "tier": 3,
+   "stats": {
+    "def": 7,
+    "avo": -3,
+    "hp": 6
+   },
+   "jobs": [
+    "squire",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "light_inf"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "hardwood": 3,
+    "fur": 1
+   },
+   "forge_silver": 115,
+   "lore": "硬木片与藤编的轻甲。",
+   "city": "sz_south",
+   "signature": 1,
+   "skill": "terrain_ward",
+   "rep_req": 10
+  },
+  {
+   "id": "sz_south_sig2",
+   "name": "湾主·木鳞重铠",
+   "nation": "southzephyr",
+   "type": "armor",
+   "type_name": "轻甲",
+   "slot": "armor",
+   "tier": 4,
+   "stats": {
+    "def": 10,
+    "avo": -3,
+    "hp": 8,
+    "move": 1
+   },
+   "jobs": [
+    "squire",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "light_inf"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "hardwood": 5,
+    "fur": 1,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "硬木鳞片编成的重铠。",
+   "city": "sz_south",
+   "signature": 2,
+   "skill": "anchor_guard",
+   "rep_req": 55
+  },
+  {
+   "id": "sz_isle_sig1",
+   "name": "萤洲护符",
+   "nation": "southzephyr",
+   "type": "charm",
+   "type_name": "护符",
+   "slot": "charm",
+   "tier": 3,
+   "stats": {
+    "hit": 9,
+    "avo": 7,
+    "hp": 3
+   },
+   "jobs": [],
+   "price": 304,
+   "mats": {
+    "iron": 2,
+    "hardwood": 3,
+    "stardust": 1
+   },
+   "forge_silver": 115,
+   "lore": "蜂蜡封着萤火的护符。",
+   "city": "sz_isle",
+   "signature": 1,
+   "skill": "disengage_step",
+   "rep_req": 10
+  },
+  {
+   "id": "sz_isle_sig2",
+   "name": "萤心·不灭护符",
+   "nation": "southzephyr",
+   "type": "charm",
+   "type_name": "护符",
+   "slot": "charm",
+   "tier": 4,
+   "stats": {
+    "hit": 12,
+    "avo": 10,
+    "hp": 4,
+    "move": 1
+   },
+   "jobs": [],
+   "price": 882,
+   "mats": {
+    "iron": 3,
+    "hardwood": 5,
+    "stardust": 1,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "据说里面封着萤火之王。",
+   "city": "sz_isle",
+   "signature": 2,
+   "skill": "lock_breaker",
+   "rep_req": 55
+  },
+  {
+   "id": "sz_bamboo_sig1",
+   "name": "竹篁长枪",
+   "nation": "southzephyr",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 4,
+    "hardwood": 3
+   },
+   "forge_silver": 115,
+   "lore": "竹枪，枪头是硬木。",
+   "city": "sz_bamboo",
+   "signature": 1,
+   "skill": "lance_thrust",
+   "rep_req": 10
+  },
+  {
+   "id": "sz_bamboo_sig2",
+   "name": "篁影·万竹之枪",
+   "nation": "southzephyr",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "hit": 5,
+    "def": 1,
+    "move": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 5,
+    "hardwood": 5,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "竹篁寨镇寨之枪。",
+   "city": "sz_bamboo",
+   "signature": 2,
+   "skill": "shatter_line",
+   "rep_req": 55
+  },
+  {
+   "id": "lb_west_sig1",
+   "name": "桥头斩马刀",
+   "nation": "landbridge",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "crit": 9
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 7
+   },
+   "forge_silver": 115,
+   "lore": "桥头堡守卫的斩马刀。",
+   "city": "lb_west",
+   "signature": 1,
+   "skill": "rush",
+   "rep_req": 10
+  },
+  {
+   "id": "lb_west_sig2",
+   "name": "天堑·桥头大刀",
+   "nation": "landbridge",
+   "type": "blade",
+   "type_name": "战刀",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "crit": 12,
+    "hit": 4,
+    "avo": 3
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry",
+    "hunter",
+    "archer"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 9,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "据说守住陆桥百年的刀。",
+   "city": "lb_west",
+   "signature": 2,
+   "skill": "wheel_cut",
+   "rep_req": 55
+  },
+  {
+   "id": "lb_mid_sig1",
+   "name": "陆桥驿骑枪",
+   "nation": "landbridge",
+   "type": "lance",
+   "type_name": "骑枪",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 8,
+    "hit": -5,
+    "crit": 3
+   },
+   "jobs": [
+    "squire",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 7
+   },
+   "forge_silver": 115,
+   "lore": "驿骑的骑枪。",
+   "city": "lb_mid",
+   "signature": 1,
+   "skill": "charge_break",
+   "rep_req": 10
+  },
+  {
+   "id": "lb_mid_sig2",
+   "name": "通衢·十国骑枪",
+   "nation": "landbridge",
+   "type": "lance",
+   "type_name": "骑枪",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 11,
+    "hit": -1,
+    "crit": 4,
+    "avo": 3
+   },
+   "jobs": [
+    "squire",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 9,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "据说跑遍十国的驿骑留下的枪。",
+   "city": "lb_mid",
+   "signature": 2,
+   "skill": "wheel_cut",
+   "rep_req": 55
+  },
+  {
+   "id": "lb_east_sig1",
+   "name": "东桥长戟",
+   "nation": "landbridge",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 3,
+   "stats": {
+    "atk": 6,
+    "hit": 5,
+    "def": 1
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 304,
+   "mats": {
+    "iron": 7
+   },
+   "forge_silver": 115,
+   "lore": "东桥守卫的长戟。",
+   "city": "lb_east",
+   "signature": 1,
+   "skill": "lance_thrust",
+   "rep_req": 10
+  },
+  {
+   "id": "lb_east_sig2",
+   "name": "东望·星桥之戟",
+   "nation": "landbridge",
+   "type": "spear",
+   "type_name": "长枪",
+   "slot": "weapon",
+   "tier": 4,
+   "stats": {
+    "atk": 9,
+    "hit": 9,
+    "def": 1,
+    "avo": 3
+   },
+   "jobs": [
+    "squire",
+    "light_inf",
+    "heavy_inf",
+    "warrior",
+    "light_cavalry"
+   ],
+   "price": 882,
+   "mats": {
+    "iron": 9,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "东桥头堡镇堡之戟。",
+   "city": "lb_east",
+   "signature": 2,
+   "skill": "shatter_line",
+   "rep_req": 55
+  },
+  {
+   "id": "lb_south_sig1",
+   "name": "桥市护身符",
+   "nation": "landbridge",
+   "type": "charm",
+   "type_name": "护符",
+   "slot": "charm",
+   "tier": 3,
+   "stats": {
+    "hit": 9,
+    "avo": 7,
+    "hp": 3
+   },
+   "jobs": [],
+   "price": 304,
+   "mats": {
+    "iron": 5,
+    "stardust": 1
+   },
+   "forge_silver": 115,
+   "lore": "桥市商人的护身符。",
+   "city": "lb_south",
+   "signature": 1,
+   "skill": "disengage_step",
+   "rep_req": 10
+  },
+  {
+   "id": "lb_south_sig2",
+   "name": "万商·桥市金符",
+   "nation": "landbridge",
+   "type": "charm",
+   "type_name": "护符",
+   "slot": "charm",
+   "tier": 4,
+   "stats": {
+    "hit": 16,
+    "avo": 13,
+    "hp": 4
+   },
+   "jobs": [],
+   "price": 882,
+   "mats": {
+    "iron": 7,
+    "stardust": 1,
+    "gorgesteel": 1
+   },
+   "forge_silver": 335,
+   "lore": "桥市商会会长的护符，据说能让人逢凶化吉。",
+   "city": "lb_south",
+   "signature": 2,
+   "skill": "lock_breaker",
+   "rep_req": 55
+  }
+ ]
+}
