@@ -238,8 +238,11 @@ def landmarks(ob):
         else:  # arms fused to the coat/body: canonical stand-in direction
             log("arm", s, "not separable -> canonical direction")
             tip = sh + Vector((sx * 0.062 * H, -0.017 * H, -0.35 * H))
+        # reject coat-fused tips (too inboard or still above the elbow height) and fall back to canonical A-pose
+        if abs(tip.x) < 0.30 or tip.z > sh.z - 0.18:
+            log("arm", s, "tip rejected", tuple(round(c, 3) for c in tip), "-> canonical")
+            tip = sh + Vector((sx * 0.062 * H, -0.017 * H, -0.35 * H))
         log("arm", s, "tip", tuple(round(c, 3) for c in tip), "pts", len(cand))
-        # pull the tip inside the hand volume a little
         J["shoulder." + s] = sh
         J["elbow." + s] = sh.lerp(tip, 0.42); J["wrist." + s] = sh.lerp(tip, 0.80); J["handtip." + s] = sh.lerp(tip, 0.95)
     # A-pose bodies are symmetric: a trace that wandered onto the coat (tip far inboard of the other side) is mirrored
