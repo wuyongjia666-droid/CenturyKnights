@@ -802,16 +802,33 @@ static func slim_bar(value: float, max_v: float, col: Color = ACCENT, w: float =
 	b.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return b
 
+static func compact(b: Button, h: int) -> void:
+	## shrink vertical content margins so a button can sit at h px (<40) without overflowing its row
+	if h >= 40:
+		return
+	var m := maxi(1, int((h - 18) / 2.0))
+	for st in ["normal", "hover", "pressed", "focus", "disabled", "hover_pressed"]:
+		if b.has_theme_stylebox_override(st) or b.has_theme_stylebox(st):
+			var sb: StyleBox = b.get_theme_stylebox(st)
+			if sb == null:
+				continue
+			var d: StyleBox = sb.duplicate()
+			d.content_margin_top = m
+			d.content_margin_bottom = m
+			b.add_theme_stylebox_override(st, d)
+
 static func cta_button(text: String, key: String = "A", w: int = 200, h: int = 44) -> Button:
 	var b := make_accent_button("%s   [%s]" % [text, key] if key != "" else text, w)
 	b.custom_minimum_size = Vector2(w, h)
-	b.add_theme_font_size_override("font_size", 15)
+	b.add_theme_font_size_override("font_size", 15 if h >= 40 else 13)
+	compact(b, h)
 	return b
 
 static func ghost_button(text: String, w: int = 120, h: int = 36) -> Button:
 	var b := make_button(text, w)
 	b.custom_minimum_size = Vector2(w, h)
-	b.add_theme_font_size_override("font_size", 13)
+	b.add_theme_font_size_override("font_size", 13 if h >= 30 else 12)
+	compact(b, h)
 	return b
 
 static func link_button(text: String, col: Color = ACCENT) -> Button:
