@@ -524,25 +524,32 @@ func _prepared_record() -> Dictionary:
 
 func _run() -> void:
 	var tl := CutsceneTimeline.for_record(_prepared_record(), _mode)
+	var index := int(rec.get("camera_index", 0))
 	for built in tl.get("strikes", []):
 		if _skip:
 			break
-		await _play_built(built)
+		await _play_built(built, index)
+		index += 1
 	_finish()
 
-func _play_built(built: Dictionary) -> void:
+func _play_built(built: Dictionary, index: int) -> void:
 	var strike: Dictionary = built.get("strike", {})
 	var a := str(strike.get("from", "left"))
 	var d := "right" if a == "left" else "left"
 	var action := str(built.get("action", "attack"))
 	var ranged := bool(built.get("ranged", false))
 	var dir := 1.0 if a == "left" else -1.0
+	var template := CutsceneCameras.select(strike, index)
+	var total := maxf(0.001, float(built.get("total", 1.0)))
+	var elapsed := 0.0
 	for seg in built.get("segments", []):
 		if _skip:
 			return
 		var sid := str(seg.get("id", ""))
 		var dur := float(seg.get("dur", 0.0))
+		_aim_template(template, elapsed / total, dur, dir)
 		_begin_segment(sid, dur, a, d, dir, action, ranged, strike)
+		elapsed += dur
 		if sid == "hitstop":
 			Engine.time_scale = 0.4
 			await _wait(dur)
@@ -550,15 +557,16 @@ func _play_built(built: Dictionary) -> void:
 		else:
 			await _wait(dur)
 
+func _aim_template(template: String, t: float, dur: float, dir: float) -> void:
+	var pose := CutsceneCameras.sample(template, t, {"dir": dir})
+	_cam_to(pose.get("pos", Vector3(0, CutsceneCameras.EYE_Y, 4.8)), pose.get("look", Vector3(0, CutsceneCameras.EYE_Y, 0)), float(pose.get("fov", 32.0)), dur)
+
 func _begin_segment(sid: String, dur: float, a: String, d: String, dir: float, action: String, ranged: bool, strike: Dictionary) -> void:
 	_sync_anim_speed()
 	var an := _node(a)
 	var dn := _node(d)
 	match sid:
-		"intro":
-			_cam_to(Vector3(0, 1.35, 5.2), Vector3(0, 1.15, 0), 32.0, dur)
 		"outro":
-			_cam_to(Vector3(0, 1.35, 5.2), Vector3(0, 1.15, 0), 32.0, dur)
 			if an and not ranged and not bool(strike.get("killed", false)):
 				_play(a, "advance")
 				_tw().tween_property(an, "position:x", float(_units[a].home.x), dur)
@@ -567,10 +575,7 @@ func _begin_segment(sid: String, dur: float, a: String, d: String, dir: float, a
 			if not bool(strike.get("killed", false)):
 				_play(d, "idle", 0.12)
 		"approach", "aim":
-			if ranged:
-				_cam_to(Vector3(-dir * 0.4, 1.35, 4.8), Vector3(dir * 0.2, 1.15, 0), 33.0, dur)
-			else:
-				_cam_to(Vector3(-dir * 1.55, 1.35, 3.5), Vector3(dir * 0.35, 1.15, 0), 31.0, dur)
+			if not ranged:
 				_play(a, "advance")
 				if an and dn:
 					_tw().tween_property(an, "position:x", dn.position.x - dir * 1.05, dur).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN_OUT)
@@ -581,15 +586,8 @@ func _begin_segment(sid: String, dur: float, a: String, d: String, dir: float, a
 			_play(a, action, 0.05)
 			if ranged:
 				_arrow(a, d, dur)
-			elif bool(strike.get("crit", false)):
-				if dn:
-					_cam_to(Vector3(dn.position.x - dir * 1.15, 1.35, 2.9), Vector3(dn.position.x, 1.15, 0), 29.0, dur)
 		"hitstop", "react":
-			if sid == "react" or sid == "hitstop":
-				_apply_hit(a, d, dir, strike, sid == "hitstop")
-		"hold", "signature":
-			if dn:
-				_cam_to(Vector3(dn.position.x * 0.35, 1.35, 3.3), dn.position + Vector3(0, 1.05, 0), 30.0, dur)
+			_apply_hit(a, d, dir, strike, sid == "hitstop")
 		"whiff":
 			_play(d, "dodge", 0.05)
 			if dn:
@@ -600,8 +598,6 @@ func _begin_segment(sid: String, dur: float, a: String, d: String, dir: float, a
 		"death":
 			_play(d, "death", 0.05)
 			_popup(d, CutsceneTimeline.line("cutscene.break"), UIKit.DANGER, false)
-			if dn:
-				_cam_to(Vector3(dn.position.x * 0.45, 1.28, 3.4), dn.position + Vector3(0, 0.9, 0), 30.0, dur)
 		"recover":
 			if not bool(strike.get("killed", false)):
 				_play(d, "idle", 0.12)
