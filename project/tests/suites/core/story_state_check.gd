@@ -11,6 +11,7 @@ func _ready() -> void:
 	if fails.is_empty():
 		print("STORY STATE PASS load_count=%d" % CKStoryState.load_count)
 		get_tree().quit(0)
+		return
 	for f in fails:
 		print("FAIL story: ", f)
 	get_tree().quit(1)
