@@ -5,8 +5,8 @@ extends RefCounted
 ##   1. cast_<cast_key>.glb           — named heroes: bespoke Hunyuan3D body from the bust-referenced turnaround
 ##   2. enemy themes (res://data/enemy_themes.json) — reuse an existing GLB per faction role,
 ##      then recolor palette / outfit / weapon. Dedicated enemy_<template>.glb still wins when it exists.
-##   3. outfit_<job>_t1_<g>.glb       — MODULAR: shared-skeleton outfit body + genome head modules (hair/ears/marks/
-##                                      honours) + genome height/build; one outfit serves every recruit of that job
+##   3. outfit_<job>_t1_<g>.glb       — MODULAR: shared-skeleton outfit body + hair, honour circlet,
+##                                      trait-set regalia and an ember-sigil light. Crest ears and the frost-crown glow are retired.
 ##   4. look_<job>_<hair>_<g>.glb / archetype stand-in (tools/models/build_standins_v86.py)
 ## All GLBs share the build_standins_v86 armature + NLA actions (rig_mesh_v87 re-poses farmed meshes onto it).
 ## Every GLB uses the shared armature + actions: idle advance attack skill hit dodge crit death.
@@ -250,8 +250,41 @@ static func recolor(n: Node, c, team: String, tmpl: String = "", spec: Dictionar
 const MOD_DIR := "res://assets/models/modules/"
 const HEAD_LEN := 0.249  # canonical head bone length (rig_mesh_v87 rest)
 
-## genome-driven modular dressing for outfit bodies: hair (style by id, colour by genome incl. ageing), crest ear tips,
-## honour circlet, bloodline mark glow; height/build from the polygenic body genes.
+## What attach_modules will hang on an outfit body. No crest ears, no frost-crown glow.
+## Regalia ids and palette come from the trait set; only the kiln ember sigil still lights.
+static func module_plan(c) -> Dictionary:
+	var mods: Array = []
+	var lights: Array = []
+	var palette := {}
+	if c == null or not c.has_method("ensure_genome"):
+		return {"modules": mods, "lights": lights, "palette": palette}
+	c.ensure_genome()
+	var ph: Dictionary = CKGenome.phenotype(c)
+	mods.append({"id": "hair_%s" % CKPortraitDoll._style(c), "tint": ph.get("hair_color", Color.WHITE)})
+	var honors: Array = c.get("honors") if typeof(c.get("honors")) == TYPE_ARRAY else []
+	if "rime_circlet" in honors:
+		mods.append({"id": "honor_rime_circlet", "tint": Color(0, 0, 0, 0)})
+	var hints: Dictionary = CKBloodline.unit_model_hints(c)
+	if typeof(hints.get("palette")) == TYPE_DICTIONARY:
+		palette = hints["palette"]
+	var tint := Color(0, 0, 0, 0)
+	if palette.has("trim"):
+		tint = Color(str(palette["trim"]))
+	for mid in hints.get("regalia_modules", []):
+		var id := str(mid)
+		if id == "ears_crest" or id.find("crown_rime") >= 0:
+			continue
+		mods.append({"id": id, "tint": tint})
+	var mk := str(ph.get("loci", {}).get("mark", {}).get("id", ""))
+	if mk == "ember_sigil":
+		lights.append({
+			"id": "ember_sigil",
+			"color": "#FF8A3D",
+			"energy": 0.6 * float(ph.get("loci", {}).get("mark", {}).get("strength", 1.0)),
+		})
+	return {"modules": mods, "lights": lights, "palette": palette}
+
+## Hair, honour circlet, and trait-set regalia. Height and build still come from the polygenic body.
 static func attach_modules(n: Node3D, c, team: String) -> void:
 	if not c.has_method("ensure_genome"):
 		return
@@ -270,31 +303,30 @@ static func attach_modules(n: Node3D, c, team: String) -> void:
 	var att := BoneAttachment3D.new()
 	att.bone_name = "head"
 	sk.add_child(att)
-	# farmed hair caps are authored for the canonical head; 0.92 shrink + tiny lift keeps volume off the collar/scalp
 	var s := 0.90
-	var style := CKPortraitDoll._style(c)
-	var mods: Array = [["hair_%s" % style, ph["hair_color"]]]
-	if ph["loci"]["ears"]["id"] == "crest":
-		mods.append(["ears_crest", ph["skin_color"]])
-	if "rime_circlet" in c.honors:
-		mods.append(["honor_rime_circlet", Color(0, 0, 0, 0)])
-	for m in mods:
-		var path: String = MOD_DIR + str(m[0]) + ".glb"
+	var plan := module_plan(c)
+	for m in plan.get("modules", []):
+		var id := str(m.get("id", ""))
+		if id == "" or id == "ears_crest" or id.find("crown_rime") >= 0:
+			continue
+		var path: String = MOD_DIR + id + ".glb"
 		if not ResourceLoader.exists(path):
 			continue
 		var ps: PackedScene = load(path)
 		var inst: Node3D = ps.instantiate()
 		inst.scale = Vector3.ONE * s
-		inst.position = Vector3(0, 0.018, 0)  # lift off the bald scalp / high collar (v8.8 clip polish)
+		inst.position = Vector3(0, 0.018, 0)
 		att.add_child(inst)
-		var col: Color = m[1]
+		var col: Color = m.get("tint", Color(0, 0, 0, 0))
 		if col.a > 0.0:
 			_tint_all(inst, col)
-	var mk := str(ph["loci"]["mark"]["id"])
-	if mk != "none":
+	for lt in plan.get("lights", []):
+		if str(lt.get("id", "")) != "ember_sigil":
+			continue
 		var glow := OmniLight3D.new()
-		glow.light_color = Color("#6ED4FF") if mk == "crown_rime" else Color("#FF8A3D")
-		glow.light_energy = 0.6 * float(ph["loci"]["mark"]["strength"])
+		glow.name = "EmberSigilLight"
+		glow.light_color = Color(str(lt.get("color", "#FF8A3D")))
+		glow.light_energy = float(lt.get("energy", 0.6))
 		glow.omni_range = 0.18
 		glow.position = Vector3(0.07, 0.12, -0.08)
 		att.add_child(glow)

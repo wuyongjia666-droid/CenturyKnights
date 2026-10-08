@@ -4,6 +4,7 @@ extends Node
 const REP_RANK_NEED := {
 	"knight": "known",
 	"baron": "friendly",
+	"viscount": "trusted",
 	"count": "trusted",
 	"duke": "respected",
 }
@@ -37,13 +38,22 @@ func can_propose(suitor: CKCharacter, target: CKCharacter, realm: String = "ashl
 		return {"ok": false, "need": need, "have": have, "msg": bar}
 	return {"ok": true, "need": need, "have": have, "msg": "可表白"}
 
-func marry(suitor: CKCharacter, target: CKCharacter, bride_price: int = 40) -> Dictionary:
+## accepted_rites == null keeps the old vow (smoke / full-chain). An explicit list gates 入牒礼 / 从母居 / 萤约 / 携霜契.
+func marry(suitor: CKCharacter, target: CKCharacter, bride_price: int = 40, accepted_rites = null) -> Dictionary:
 	var check = can_propose(suitor, target)
 	if not check.get("ok", false):
 		return check
-	if GameState.silver < bride_price:
+	var rite_cost := 0
+	if accepted_rites is Array:
+		var block := CKCourt.rite_block(suitor, target, accepted_rites)
+		if block != "":
+			return {"ok": false, "msg": block}
+		for r in CKCourt.required_rites(suitor, target):
+			if str(r.get("id", "")) in accepted_rites:
+				rite_cost += int(r.get("cost", 0))
+	if GameState.silver < bride_price + rite_cost:
 		return {"ok": false, "msg": Locale.t("not_enough_silver")}
-	GameState.silver -= bride_price
+	GameState.silver -= bride_price + rite_cost
 	suitor.spouse_id = target.id
 	target.spouse_id = suitor.id
 	# 婚宴声望
@@ -62,6 +72,10 @@ func marry(suitor: CKCharacter, target: CKCharacter, bride_price: int = 40) -> D
 	if int(fx.dowry) > 0:
 		GameState.silver += int(fx.dowry)
 		dip.append("嫁妆 %d 银" % int(fx.dowry))
+	if accepted_rites is Array:
+		CKCourt.apply_rites(suitor, target, accepted_rites)
+		if rite_cost > 0:
+			dip.append("婚仪 %d 银" % rite_cost)
 	# 妊娠：教程 1 月后出生（岁月压缩）
 	var mother = target if target.gender == "f" else suitor
 	mother.pregnant_months = 1
@@ -142,6 +156,9 @@ func birth_child(mother: CKCharacter) -> CKCharacter:
 	child.genome = CKGenome.cross(father.genome if father else mother.genome, mother.genome, child.blood_mix, rng, child.gender)
 	CKGenome.sync_appearance(child)
 	for note in CKBloodline.on_birth(child, father, mother):
+		GameState.lineage_log.append(note)
+		GameState.log_event(note)
+	for note in CKCourt.stamp_child(child, father, mother):
 		GameState.lineage_log.append(note)
 		GameState.log_event(note)
 	child.rank = _child_rank(father if father else mother, mother)

@@ -157,4 +157,8 @@ func _apply_month() -> Array:
 	if GameState.has_method("tick_rival_deals"):
 		for msg in GameState.tick_rival_deals():
 			evs.append({"type": "rival_deal", "text": msg})
+	# NPC royal houses age once each January after the opening year, so the first month of a new game stays quiet.
+	if month == 1 and year > 1:
+		for line in CKCourt.tick_live(year):
+			evs.append({"type": "court", "text": line})
 	return evs

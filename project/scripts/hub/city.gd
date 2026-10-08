@@ -6,7 +6,7 @@ extends Control
 
 const _Atlas = preload("res://scripts/art/atlas_art.gd")
 const ATLAS := "res://scenes/hub/atlas_view.tscn"
-const TABS := [["overview", "概览"], ["smith", "铁匠铺"], ["market", "市集"], ["board", "委托榜"], ["tavern", "酒馆"], ["armory", "军械库"]]
+const TABS := [["overview", "概览"], ["smith", "铁匠铺"], ["market", "市集"], ["board", "委托榜"], ["tavern", "酒馆"], ["armory", "军械库"], ["lamp", "灯籍"]]
 const TYPE_GLYPH := {"sword": "剑", "blade": "刀", "spear": "枪", "lance": "骑", "axe": "斧", "bow": "弓", "crossbow": "弩", "staff": "杖", "focus": "器", "armor": "甲", "shield": "盾", "charm": "符"}
 const TIER_COL := [Color("#9AA6B8"), Color("#9AA6B8"), Color("#5EE0B5"), Color("#6ED4FF"), Color("#C9B8FF")]
 const CONTENT := Rect2(416, 108, 848, 576)
@@ -43,7 +43,7 @@ func _ready() -> void:
 	_tabbar.add_theme_constant_override("separation", 6)
 	add_child(_tabbar)
 	for t in TABS:
-		var b := UIKit.ghost_button(str(t[1]), 128, 34)
+		var b := UIKit.ghost_button(str(t[1]), 108, 34)
 		b.name = "Tab_" + str(t[0])
 		var tid := str(t[0])
 		b.pressed.connect(func(): _set_tab(tid))
@@ -238,8 +238,10 @@ func _render_tab() -> void:
 	var n: Dictionary = World.node(city)
 	(_tab_btn["smith"] as Button).disabled = World.smith_tier(city) <= 0
 	(_tab_btn["tavern"] as Button).disabled = int(n.get("tavern_slots", 0)) <= 0
+	(_tab_btn["lamp"] as Button).disabled = World.nation_of(city) != "lantern"
 	(_tab_btn["smith"] as Button).tooltip_text = "此地没有铁匠铺" if World.smith_tier(city) <= 0 else ""
 	(_tab_btn["tavern"] as Button).tooltip_text = "此地没有酒馆" if int(n.get("tavern_slots", 0)) <= 0 else ""
+	(_tab_btn["lamp"] as Button).tooltip_text = "灯籍只在灯市联开拍" if World.nation_of(city) != "lantern" else ""
 	for c in _body.get_children():
 		_body.remove_child(c)
 		c.queue_free()
@@ -250,6 +252,7 @@ func _render_tab() -> void:
 		"board": _tab_board()
 		"tavern": _tab_tavern()
 		"armory": _tab_armory()
+		"lamp": _tab_lamp()
 	UIFX.wire_tree(_body)
 	UIFX.fade_in(_body, 0.18)
 
@@ -812,7 +815,11 @@ func _tab_tavern() -> void:
 	var nat: Dictionary = World.nations.get(World.nation_of(city), {})
 	var p := _panel(Rect2(0, 0, 848, 576))
 	_head(p, Vector2(18, 14), "酒馆", "TAVERN · %s 血脉" % str(nat.get("en", "")))
-	var note := UIKit.body_label("此地出身多为：%s。每 %d 日换一批人。" % [_blood_pool_text(nat), int(World.rules.get("board_refresh_days", 30))], UIKit.TEXT_DIM, 12)
+	var note_txt := "此地出身多为：%s。每 %d 日换一批人。" % [_blood_pool_text(nat), int(World.rules.get("board_refresh_days", 30))]
+	var rumor := CKCourt.latest_rumor()
+	if rumor != "":
+		note_txt += "  闲话：%s" % rumor
+	var note := UIKit.body_label(note_txt, UIKit.TEXT_DIM, 12)
 	note.autowrap_mode = TextServer.AUTOWRAP_OFF
 	note.position = Vector2(300, 22)
 	p.add_child(note)
@@ -872,6 +879,20 @@ func _tab_tavern() -> void:
 		var idx := i
 		hb.pressed.connect(func(): _do(World.hire(city, idx)))
 		card.add_child(hb)
+
+func _tab_lamp() -> void:
+	var leader = GameState.get_leader()
+	var board := CKCourt.lamp_board(leader, World.nation_rep("lantern"), Calendar.year)
+	CKCourt.build_lamp_ui(_body, board, Callable(self, "_on_lamp_bid"))
+
+func _on_lamp_bid(amount: int) -> void:
+	var leader = GameState.get_leader()
+	if leader == null:
+		_toast_msg("没有家主", UIKit.DANGER)
+		return
+	var r := CKCourt.place_bid(leader, amount, World.nation_rep("lantern"), Calendar.year)
+	_toast_msg(str(r.get("msg", "")), UIKit.OK if bool(r.get("ok", false)) else UIKit.DANGER)
+	_refresh_all()
 
 func _blood_pool_text(nat: Dictionary) -> String:
 	var seen := {}

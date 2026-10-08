@@ -798,6 +798,8 @@ static func roll_recruit(nid: String, kind: String, rng: RandomNumberGenerator, 
 		w["noble"] = float(pool.get("noble", {}).get(kind, 1.0))
 		if royal_id != "" and kind in rp.get("kinds", []) and crep >= int(rp.get("city_rep_min", 30)) and nrep >= int(rp.get("nation_rep_min", 55)):
 			w["royal"] = float(rp.get("weight", 0.8))
+			if w.has("royal"):
+				w["royal"] = float(w["royal"]) + CKCourt.recruit_bias(nid)
 	var tier := _pick_weighted(w, rng)
 	var lid := ""
 	match tier:

@@ -265,18 +265,58 @@ func _build() -> void:
 			bx.custom_minimum_size = Vector2(96, 0)
 			sg.add_child(bx)
 		var fl := UIKit.body_label("%s旗家主，率 %d 名骑士守着这座堡。工事、委任与联姻誓约都会写入家族旁注。" % [GameState.surname, roster_n], UIKit.TEXT_FAINT, 11)
-		fl.position = Vector2(16, 494)
-		fl.size = Vector2(200, 60)
+		fl.position = Vector2(16, 468)
+		fl.size = Vector2(200, 48)
 		fl.custom_minimum_size = Vector2(200, 0)
 		rp.add_child(fl)
-		var vb := UIKit.ghost_button("检视骑士完整档案", 200, 36)
-		vb.position = Vector2(16, 560)
+		var vb := UIKit.ghost_button("检视骑士完整档案", 200, 32)
+		vb.position = Vector2(16, 522)
 		vb.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/roster.tscn"))
 		rp.add_child(vb)
+		var pb := UIKit.ghost_button("请爵", 200, 32)
+		pb.name = "PromoteOpen"
+		pb.position = Vector2(16, 560)
+		pb.pressed.connect(_open_promote)
+		rp.add_child(pb)
 
 	UIKit.footer_bar(self, [["A", "确认"], ["B", "返回"], ["LB/RB", "切换分区"], ["ESC", "主菜单"]], "CENTURYKNIGHTS · FROST_TACTICAL v8.6")
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
+
+func _open_promote() -> void:
+	var old := get_node_or_null("PromoteModal")
+	if old:
+		old.queue_free()
+	var leader = GameState.get_leader()
+	if leader == null:
+		return
+	var modal := Control.new()
+	modal.name = "PromoteModal"
+	modal.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	modal.z_index = 30
+	add_child(modal)
+	var dim := ColorRect.new()
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.color = Color(0.02, 0.03, 0.05, 0.72)
+	dim.gui_input.connect(func(e: InputEvent):
+		if e is InputEventMouseButton and e.pressed:
+			modal.queue_free())
+	modal.add_child(dim)
+	var host := Control.new()
+	host.position = Vector2(460, 220)
+	modal.add_child(host)
+	CKCourt.build_promote_ui(host, leader, {}, Callable(self, "_do_promote"))
+
+func _do_promote() -> void:
+	var leader = GameState.get_leader()
+	if leader == null:
+		return
+	var r := CKCourt.promote(leader)
+	if _hint:
+		_hint.text = str(r.get("msg", ""))
+	var modal := get_node_or_null("PromoteModal")
+	if modal:
+		modal.queue_free()
 
 func _unlocked_count() -> int:
 	var k := 0
