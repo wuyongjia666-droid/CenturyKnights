@@ -32,6 +32,9 @@ func can_propose(suitor: CKCharacter, target: CKCharacter, realm: String = "ashl
 		return {"ok": false, "msg": "已有配偶（MVP 不可重婚）"}
 	if not suitor.alive or not target.alive:
 		return {"ok": false, "msg": "当事人不在"}
+	var bar := CKBloodline.marriage_barrier(suitor, target, GameState.characters)
+	if bar != "":
+		return {"ok": false, "need": need, "have": have, "msg": bar}
 	return {"ok": true, "need": need, "have": have, "msg": "可表白"}
 
 func marry(suitor: CKCharacter, target: CKCharacter, bride_price: int = 40) -> Dictionary:
@@ -50,12 +53,22 @@ func marry(suitor: CKCharacter, target: CKCharacter, bride_price: int = 40) -> D
 	if not GameState.characters.has(target.id):
 		target.in_roster = false
 		GameState.characters[target.id] = target
+	# v8.9 联姻外交：配偶血胤所属之国的邦交，灯市嫁妆
+	var fx := CKBloodline.marriage_effects(suitor, target)
+	var dip: Array = []
+	for nid in fx.rep.keys():
+		World.add_nation_rep(str(nid), int(fx.rep[nid]))
+		dip.append("%s%+d" % [World.nations.get(str(nid), {}).get("name", nid), int(fx.rep[nid])])
+	if int(fx.dowry) > 0:
+		GameState.silver += int(fx.dowry)
+		dip.append("嫁妆 %d 银" % int(fx.dowry))
 	# 妊娠：教程 1 月后出生（岁月压缩）
 	var mother = target if target.gender == "f" else suitor
 	mother.pregnant_months = 1
 	GameState.chapter0_flags["married"] = true
 	GameState.mark_dirty()
-	return {"ok": true, "msg": "婚宴已成，声望小增。%s 有喜。" % mother.name}
+	var dip_s := ("邦交 " + "、".join(dip) + "。") if not dip.is_empty() else ""
+	return {"ok": true, "msg": "婚宴已成，声望小增。%s%s 有喜。" % [dip_s, mother.name]}
 
 ## 子嗣期望面板（X1）
 func heir_expectation(a: CKCharacter, b: CKCharacter) -> Dictionary:
@@ -63,6 +76,8 @@ func heir_expectation(a: CKCharacter, b: CKCharacter) -> Dictionary:
 	var apt = _expected_apt(mix)
 	var trait_probs = _trait_probs(a, b)
 	var look_probs = _appearance_probs(a, b)
+	var father: CKCharacter = b if a.gender == "f" and b.gender == "m" else a
+	var mother: CKCharacter = a if father == b else b
 	return {
 		"blood_mix": mix,
 		"apt_min": apt["min"],
@@ -70,6 +85,8 @@ func heir_expectation(a: CKCharacter, b: CKCharacter) -> Dictionary:
 		"trait_probs": trait_probs,
 		"appearance_probs": look_probs,
 		"rank_hint": _child_rank(a, b),
+		"sig_probs": CKBloodline.forecast(father, mother),
+		"sig_zh": CKBloodline.forecast_zh(father, mother),
 	}
 
 func birth_child(mother: CKCharacter) -> CKCharacter:
@@ -122,8 +139,11 @@ func birth_child(mother: CKCharacter) -> CKCharacter:
 	mother.ensure_genome()
 	if father:
 		father.ensure_genome()
-	child.genome = CKGenome.cross(father.genome if father else mother.genome, mother.genome, child.blood_mix, rng)
+	child.genome = CKGenome.cross(father.genome if father else mother.genome, mother.genome, child.blood_mix, rng, child.gender)
 	CKGenome.sync_appearance(child)
+	for note in CKBloodline.on_birth(child, father, mother):
+		GameState.lineage_log.append(note)
+		GameState.log_event(note)
 	child.rank = _child_rank(father if father else mother, mother)
 	child.job_id = "light_inf"
 	child.recalc_hp()

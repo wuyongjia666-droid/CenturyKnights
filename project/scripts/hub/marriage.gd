@@ -340,9 +340,10 @@ func _harmony_card(rect: Rect2, a: CKCharacter, b: CKCharacter) -> void:
 	var hair: Array = []
 	for ap in ex.appearance_probs.get("hair", []).slice(0, 2):
 		hair.append("%s %.0f%%" % [ap.name, ap.prob * 100])
-	var bl := UIKit.body_label("血胤  %s\n发色  %s" % [" · ".join(parts), " · ".join(hair)], UIKit.TEXT_FAINT, 11)
-	bl.position = Vector2(22, 296)
-	bl.size = Vector2(rect.size.x - 44, 34)
+	var sig := str(ex.get("sig_zh", "")).trim_prefix("冕征预期：")
+	var bl := UIKit.body_label("血胤  %s\n发色  %s\n冕征  %s" % [" · ".join(parts), " · ".join(hair), sig], UIKit.TEXT_FAINT, 11)
+	bl.position = Vector2(22, 290)
+	bl.size = Vector2(rect.size.x - 44, 52)
 	bl.custom_minimum_size = Vector2(rect.size.x - 44, 0)
 	p.add_child(bl)
 

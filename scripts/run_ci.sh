@@ -14,6 +14,13 @@ echo "==> genome_check (v8.7 inheritance laws)"
 godot --headless --path . --script res://tests/genome_check.gd 2>&1 | tee /tmp/ck_genome.log
 grep -q "GENOME PASS" /tmp/ck_genome.log || { echo "genome_check FAILED"; exit 1; }
 
+echo "==> bloodlines_v89 data (fields, world wiring, anti-trope, fixtures)"
+python3 "$ROOT/tools/check_bloodlines_v89.py"
+
+echo "==> bloodline_v89 (ten blood laws, pools, verify, succession, portrait clauses)"
+godot --headless --path . --scene res://tests/bloodline_v89_check.tscn 2>&1 | tee /tmp/ck_bloodline.log
+grep -q "BLOODLINE V89 PASS" /tmp/ck_bloodline.log || { echo "bloodline_v89 FAILED"; exit 1; }
+
 echo "==> portrait_manifest (v8.9 plan A genome plates)"
 godot --headless --path . --scene res://tests/portrait_manifest_check.tscn 2>&1 | tee /tmp/ck_portrait.log
 grep -q "PORTRAIT PASS" /tmp/ck_portrait.log || { echo "portrait_manifest FAILED"; exit 1; }

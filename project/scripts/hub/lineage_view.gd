@@ -362,8 +362,13 @@ func _render_dossier() -> void:
 	bn.add_theme_font_override("font", UIKit.font("bold"))
 	bn.position = Vector2(66, 12)
 	bc.add_child(bn)
-	var bsub := UIKit.body_label("主血胤 · 纯度 %d%%" % int(round(float(c.blood_mix.get(pb, 1.0)) * 100)), UIKit.TEXT_DIM, 11)
+	var edge: Array = CKBloodline.edge_blood(c)
+	var edge_s := (" · 「%s」" % str(edge[0].name)) if not edge.is_empty() and str(edge[0].name) != "—" else ""
+	var bsub := UIKit.body_label("主血胤 · 纯度 %d%% · %s%s" % [int(round(float(c.blood_mix.get(pb, 1.0)) * 100)), CKBloodline.summary_zh(c), edge_s], UIKit.TEXT_DIM, 11)
 	bsub.autowrap_mode = TextServer.AUTOWRAP_OFF
+	bsub.clip_text = true
+	bsub.size = Vector2(266, 16)
+	bsub.tooltip_text = bsub.text
 	bsub.position = Vector2(66, 36)
 	bc.add_child(bsub)
 	var bdesc := UIKit.body_label(str(bld.get("desc", "血胤浓度驱动「血胤月泽」月结；联姻改写下一代的混合。")), UIKit.TEXT, 12)

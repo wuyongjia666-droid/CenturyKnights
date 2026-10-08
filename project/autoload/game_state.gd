@@ -557,9 +557,25 @@ func _ready() -> void:
 	rng.randomize()
 	_load_data()
 	BattleRules.preview_enabled = settings.get("rules_preview", true)
+	CKGenomePortrait.set_bloodline_clause_hook(Callable(CKBloodline, "portrait_clause"))
+
+func _exit_tree() -> void:
+	# static hooks must not outlive the engine's script teardown
+	CKGenomePortrait.set_bloodline_clause_hook(Callable())
+	CKBloodline.people.clear()
 
 func _load_data() -> void:
+	# v8.9: the 31 nation lines are canonical; the v8.7 file only fills ids the v89 data lacks
 	data_bloodlines = _read_json("res://data/bloodlines.json")
+	var v89: Array = _read_json("res://data/bloodlines_v89.json").get("lines", [])
+	if not v89.is_empty():
+		var have := {}
+		for b in v89:
+			have[str(b.get("id", ""))] = true
+		for b in data_bloodlines.get("bloodlines", []):
+			if not have.has(str(b.get("id", ""))):
+				v89.append(b)
+		data_bloodlines = {"bloodlines": v89}
 	data_traits = _read_json("res://data/traits.json")
 	data_jobs = _read_json("res://data/jobs.json")
 	data_chapter0 = _read_json("res://data/chapter0.json")
@@ -2123,6 +2139,37 @@ func heal_at_shrine() -> String:
 	mark_dirty()
 	return "已清临时伤并回满生命（%d 人）" % n
 
+## v8.9 祠堂验血：family and roster members not yet verified. Reveals carriers, unmasks pretenders.
+func verify_bloodlines_at_shrine() -> Dictionary:
+	var todo: Array = []
+	for c in characters.values():
+		if c.alive and (c.in_roster or c.is_leader or c.spouse_id != "" or c.is_child) and not bool(c.blood_meta.get("verified", false)):
+			todo.append(c)
+	var cost := CKBloodline.verify_cost(building_level("shrine"))
+	if todo.is_empty():
+		return {"ok": false, "msg": "族中人人都已验过血"}
+	var n := mini(todo.size(), silver / maxi(1, cost))
+	if n <= 0:
+		return {"ok": false, "msg": "银币不足（验血每人 %d 银）" % cost}
+	var lines: Array = []
+	var tally := {}
+	for i in n:
+		var c: CKCharacter = todo[i]
+		var r := CKBloodline.verify_and_record(c, characters)
+		lines.append(str(r.get("line_zh", "")))
+		lineage_log.append(str(r.get("line_zh", "")))
+		var vz := str(r.get("verdict_zh", ""))
+		tally[vz] = int(tally.get(vz, 0)) + 1
+		grant_job_skills(c)
+	silver -= n * cost
+	log_event("祠堂验血 %d 人（-%d 银）" % [n, n * cost])
+	mark_dirty()
+	var bits: Array = []
+	for k in tally.keys():
+		bits.append("%s %d" % [k, int(tally[k])])
+	return {"ok": true, "count": n, "cost": n * cost, "lines": lines, "tally": tally,
+		"msg": "验血 %d 人：%s（-%d 银，详见族谱纪事）" % [n, " · ".join(bits), n * cost]}
+
 func train(cid: String) -> Dictionary:
 	var c: CKCharacter = characters.get(cid)
 	if c == null:
@@ -2402,6 +2449,7 @@ func grant_job_skills(c: CKCharacter) -> void:
 	for sid in c.unlocked_skills:
 		if sid not in c.skills:
 			c.skills.append(sid)
+	CKBloodline.sync_signature_skills(c)
 
 func reset_battle_skills(roster_chars: Array) -> void:
 	for c in roster_chars:

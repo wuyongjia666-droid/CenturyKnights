@@ -27,7 +27,8 @@ const EYE_PROSE := {
 const BROW_PROSE := {
 	"thick": "thick brows", "straight": "straight brows", "arch": "arched brows", "soft": "soft brows",
 }
-const EAR_PROSE := {"round": "rounded ears", "crest": "fine pointed ear tips"}
+## v8.9 originality lock: the legacy crest allele is visually retired (no pointed ears); it stays a heritable token.
+const EAR_PROSE := {"round": "rounded ears", "crest": "neat close-set ears"}
 const FACE_WORD := {
 	"width": ["narrow", "balanced", "broad"],
 	"jaw": ["soft", "defined", "square"],
@@ -75,6 +76,9 @@ static func style_lock_path() -> String:
 	var proj := ProjectSettings.globalize_path("res://")
 	if proj.ends_with("/"):
 		proj = proj.substr(0, proj.length() - 1)
+	var v89 := proj.get_base_dir().path_join("docs/art/style-lock-v89.json")
+	if FileAccess.file_exists(v89):
+		return v89
 	return proj.get_base_dir().path_join("docs/art/style-lock-v87.json")
 
 static func style_lock() -> Dictionary:
@@ -229,9 +233,10 @@ static func describe(c: Object) -> Dictionary:
 		heritable.append(stok)
 		prose.append("a faint ember vein under the eye" if faint else "an ember vein under the eye")
 	elif mk == "crown_rime":
+		# v8.9: no glowing temple birthmark; the Frostcrown sign (rime lashes) comes from the bloodline clause
 		tokens.append("mark_strength:full")
 		heritable.append("mark_strength:full")
-		prose.append("a frost-crystal birthmark at the left temple")
+		prose.append("no birthmark")
 	else:
 		prose.append(mk)
 	var scars: Array = []

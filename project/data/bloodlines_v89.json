@@ -1,0 +1,4032 @@
+{
+ "version": "v8.9-bloodlines-1",
+ "doc": "docs/design/bloodlines-v89.md",
+ "motto": "血是所携，冕是所显",
+ "tiers": {
+  "royal": {
+   "name": "王胤",
+   "rarity": "传说",
+   "salary": 6
+  },
+  "noble": {
+   "name": "贵胤",
+   "rarity": "少见",
+   "salary": 2
+  },
+  "folk": {
+   "name": "民胤",
+   "rarity": "常见",
+   "salary": 0
+  }
+ },
+ "visibility": {
+  "overt": {
+   "name": "明征",
+   "desc": "谁都看得见；酒馆老板会把它算进价钱。"
+  },
+  "subtle": {
+   "name": "隐征",
+   "desc": "需近看：队中有感知 14 以上者或祠堂 2 级才认得出。老板常常看漏。"
+  },
+  "latent": {
+   "name": "潜征",
+   "desc": "携因而不显：只有祠堂验血能看见。"
+  }
+ },
+ "pricing": {
+  "royal_proof": {
+   "overt": 1.0,
+   "subtle": 0.75,
+   "none": 0.5
+  },
+  "noble_proof": {
+   "shown": 1.0,
+   "none": 0.8
+  },
+  "folk_bonus": {
+   "royal_overt": 40,
+   "noble_overt": 8
+  },
+  "edge_discount": 8,
+  "verify_cost": {
+   "base": 14,
+   "per_shrine_level": -2,
+   "min": 6
+  },
+  "inspect": {
+   "per_min": 14,
+   "shrine_level": 2
+  }
+ },
+ "marriage": {
+  "tier_p": {
+   "royal": 0.12,
+   "noble": 0.33,
+   "folk": 0.55
+  },
+  "rep_by_tier": {
+   "folk": 2,
+   "noble": 5,
+   "royal": 10
+  },
+  "home_weight": 1.5,
+  "hostile_weight": 0.4,
+  "rep_weight_per": 20,
+  "kin_block_degree": 3
+ },
+ "laws": {
+  "awakened": {
+   "name": "觉醒律",
+   "name_en": "Awakened dominant",
+   "short": "显性携因，立功方显",
+   "desc": "河图之因呈显性，但要立下功勋才会在颈侧显纹：伯爵及以上，或受「旗誓」「冠线」荣衔者，携因即显。子嗣继承的是因，不是功——每一代都要重新打出来。",
+   "punnett": "携因(R/-) × 无因：子代 50% 携因；觉醒与否看本人勋位。R/R × 任意：子代 100% 携因。"
+  },
+  "dose": {
+   "name": "剂量律",
+   "name_en": "Incomplete dominance (dose)",
+   "short": "一份为弦，两份为全",
+   "desc": "朔因不完全显性：一份显弦朔瞳（瞳缘一弯银弦），两份显全朔瞳（瞳孔外整圈银环）。强弱直接写在眼睛里。",
+   "punnett": "弦 × 弦：全朔 25% · 弦 50% · 无 25%。全 × 无：100% 弦。"
+  },
+  "threshold": {
+   "name": "阈值律",
+   "name_en": "Polygenic threshold",
+   "short": "玉值过槛方显",
+   "desc": "玉缕由多基因「玉值」决定：子代 = 父母均值 + 随机(σ0.06) + 15% 向本人血统均值回归。玉值 ≥0.72 显玉缕，≥0.48 显玉泽，≥0.40 为潜。牒外通婚把玉值拉回平均。",
+   "punnett": "非孟德尔：用正态近似。玉牒 × 玉牒均值约 0.80（≈91% 显玉缕）；玉牒 × 汀洲约 0.50（几乎只剩玉泽）。"
+  },
+  "dominant": {
+   "name": "显性律",
+   "name_en": "Dominant",
+   "short": "一份即显",
+   "desc": "灯丝因完全显性，一份即显；琉光为次一级等位，被灯丝遮盖。显性让灯丝在港口泛滥，于是灯座只能拍卖。",
+   "punnett": "灯丝/无 × 无/无：50% 灯丝。灯丝/灯丝 × 任意：100%。"
+  },
+  "recessive": {
+   "name": "隐性律",
+   "name_en": "Recessive (allelic series)",
+   "short": "双份方显，携者无形",
+   "desc": "等位序列 霜梢眉 > 无 > 霜睫：霜睫须两份才显；霜梢眉为贵胤小征，显性。携者外表无异，只有祠堂验血能看见。",
+   "punnett": "携 × 携：霜睫 25% · 携者 50% · 无 25%。霜睫 × 携：50% 霜睫。"
+  },
+  "y_linked": {
+   "name": "父传子律",
+   "name_en": "Y-linked",
+   "short": "父传子，女不承",
+   "desc": "冰裂纹随父系 Y 而行：冰裂之父的每个儿子都显冰裂，女儿永不承。一代无子，窑火即冷，无法从女儿那里复燃。",
+   "punnett": "冰裂父：儿子 100% · 女儿 0%。母亲不影响结果。冰裂之子若其父无冰裂，必是「冒窑」。"
+  },
+  "x_dominant": {
+   "name": "父传女律",
+   "name_en": "X-linked dominant",
+   "short": "父传全女，母传一半",
+   "desc": "潮痕随 X 而行且为显性：潮痕男子传给全部女儿、不传儿子；一份潮痕的母亲传给一半子女。盐线为次一级等位。",
+   "punnett": "潮痕父 × 无母：女 100% · 男 0%。潮痕母(杂合) × 无父：子女各 50%。"
+  },
+  "penetrance": {
+   "name": "外显律",
+   "name_en": "Dominant, 60% penetrance",
+   "short": "显性但六成外显",
+   "desc": "峡眉因显性，但只有六成携者真的眉被劈开；其余四成眉形完整，称「藏钢」，照样把因传给子嗣。是否外显在出生时定下，终身不变。",
+   "punnett": "峡眉/无 × 无：50% 携因 → 约 30% 显峡眉、20% 藏钢。"
+  },
+  "complement": {
+   "name": "互补律",
+   "name_en": "Complementation",
+   "short": "三台合四辅，方成七星",
+   "desc": "三台与四辅是两种各自显性的小征；同一人兼得二者，才合成北斗七星痣。东虹只有三台、西虹只有四辅——两家必须世代联姻。",
+   "punnett": "三台/三台 × 四辅/四辅：100% 七星。七星 × 七星：七星 50% · 三台 25% · 四辅 25%。"
+  },
+  "maternal": {
+   "name": "母传律",
+   "name_en": "Maternal (mitochondrial)",
+   "short": "母传全部，父传为零",
+   "desc": "萤光只经母系：母亲的萤值传给每个孩子，每代随机漂移(σ0.07)；父亲一分不传。萤值 ≥0.66 显萤斑，≥0.36 显萤痕。萤子发光，却注定无后可传。",
+   "punnett": "萤母 × 任意父：子女萤值 ≈ 母值。萤子 × 任意母：子女萤值 = 母值，与他无关。"
+  }
+ },
+ "loci": {
+  "sig_ashbanner": {
+   "nation": "ashbanner",
+   "law": "awakened",
+   "kind": "diploid",
+   "alleles": [
+    "river_chart",
+    "chart_trunk",
+    "none"
+   ],
+   "royal": "river_chart",
+   "noble": "chart_trunk",
+   "states": {
+    "royal": "river_chart",
+    "noble": "chart_trunk"
+   },
+   "deed": {
+    "rank_min": "count",
+    "honors_any": [
+     "banner_oath",
+     "crown_line"
+    ]
+   },
+   "mutation_loss": 0.004
+  },
+  "sig_shuoying": {
+   "nation": "shuoying",
+   "law": "dose",
+   "kind": "diploid",
+   "alleles": [
+    "eclipse",
+    "none"
+   ],
+   "royal": "eclipse",
+   "states": {
+    "royal": "eclipse_full",
+    "noble": "eclipse_crescent"
+   },
+   "partial": 0.45,
+   "mutation_loss": 0.004
+  },
+  "jade": {
+   "nation": "qinghe",
+   "law": "threshold",
+   "kind": "value",
+   "states": {
+    "royal": "jade_lock",
+    "noble": "jade_sheen"
+   },
+   "royal_min": 0.72,
+   "noble_min": 0.48,
+   "latent_min": 0.4,
+   "noise": 0.06,
+   "regress": 0.15
+  },
+  "sig_lantern": {
+   "nation": "lantern",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "filament",
+    "glass_sheen",
+    "none"
+   ],
+   "royal": "filament",
+   "noble": "glass_sheen",
+   "states": {
+    "royal": "filament",
+    "noble": "glass_sheen"
+   },
+   "mutation_loss": 0.004
+  },
+  "sig_frostcrown": {
+   "nation": "frostcrown",
+   "law": "recessive",
+   "kind": "diploid",
+   "alleles": [
+    "rime_tip",
+    "none",
+    "rime_lash"
+   ],
+   "royal": "rime_lash",
+   "noble": "rime_tip",
+   "states": {
+    "royal": "rime_lash",
+    "noble": "rime_tip"
+   },
+   "legacy_mark": "crown_rime",
+   "mutation_loss": 0.004
+  },
+  "sig_emberold": {
+   "nation": "emberold",
+   "law": "y_linked",
+   "kind": "y",
+   "alleles": [
+    "kiln_crackle",
+    "none"
+   ],
+   "royal": "kiln_crackle",
+   "states": {
+    "royal": "kiln_crackle",
+    "noble": "ember_sigil"
+   },
+   "noble_from_mark": "ember_sigil",
+   "mutation_loss": 0.004
+  },
+  "sig_saltmarsh": {
+   "nation": "saltmarsh",
+   "law": "x_dominant",
+   "kind": "x",
+   "alleles": [
+    "tide_ring",
+    "salt_band",
+    "none"
+   ],
+   "royal": "tide_ring",
+   "noble": "salt_band",
+   "states": {
+    "royal": "tide_ring",
+    "noble": "salt_band"
+   },
+   "mutation_loss": 0.004
+  },
+  "sig_irongorge": {
+   "nation": "irongorge",
+   "law": "penetrance",
+   "kind": "diploid",
+   "alleles": [
+    "gorge_split",
+    "brow_notch",
+    "none"
+   ],
+   "royal": "gorge_split",
+   "noble": "brow_notch",
+   "states": {
+    "royal": "gorge_split",
+    "noble": "brow_notch"
+   },
+   "penetrance": 0.6,
+   "mutation_loss": 0.004
+  },
+  "sig_starriver": {
+   "nation": "starriver",
+   "law": "complement",
+   "kind": "diploid",
+   "alleles": [
+    "san_tai",
+    "si_fu",
+    "none"
+   ],
+   "pair": [
+    "san_tai",
+    "si_fu"
+   ],
+   "states": {
+    "royal": "qi_xing",
+    "noble_a": "san_tai",
+    "noble_b": "si_fu"
+   },
+   "mutation_loss": 0.004
+  },
+  "glow": {
+   "nation": "southzephyr",
+   "law": "maternal",
+   "kind": "value",
+   "states": {
+    "royal": "firefly",
+    "noble": "firefly_trace"
+   },
+   "royal_min": 0.66,
+   "noble_min": 0.36,
+   "latent_min": 0.25,
+   "drift": 0.07
+  }
+ },
+ "signatures": {
+  "river_chart": {
+   "zh": "河图纹",
+   "name_en": "river-chart neck tracery",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "ashbanner",
+   "desc": "左颈下方银紫色的细密分支纹，像平原的河网图。携因者须立功方显。",
+   "prompt": "a fine silver-violet branching line pattern on the left side of the neck below the jaw, like a river-delta map drawn in hairline ink, a natural skin pattern rather than a tattoo, the collar open on the left so the neck shows"
+  },
+  "chart_trunk": {
+   "zh": "旗痕",
+   "name_en": "banner trace on the neck",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "ashbanner",
+   "desc": "左颈一道淡银紫的细线，是河图的主干、没有支流。",
+   "prompt": "a single faint silver-violet hairline running down the left side of the neck"
+  },
+  "eclipse_full": {
+   "zh": "全朔瞳",
+   "name_en": "full eclipse irises",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "shuoying",
+   "desc": "极深的虹膜，瞳孔外整圈细银环，如日全食；暗处微亮。",
+   "prompt": "very dark irises with a thin luminous pale-silver ring hugging each pupil, like a total eclipse, a cool low light that makes the eyes read clearly"
+  },
+  "eclipse_crescent": {
+   "zh": "弦朔瞳",
+   "name_en": "crescent eclipse irises",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "shuoying",
+   "desc": "瞳缘上方一弯细银弦，只在近看或暗处可见。",
+   "prompt": "dark irises with a thin pale-silver crescent along the upper rim of each pupil"
+  },
+  "jade_lock": {
+   "zh": "玉缕",
+   "name_en": "jade lock",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "qinghe",
+   "desc": "左鬓垂下一缕通透的玉色发，像打磨过的软玉由内透光。",
+   "prompt": "a single lock of translucent jade-green hair falling from the left temple, softly lit from within like polished nephrite"
+  },
+  "jade_sheen": {
+   "zh": "玉泽",
+   "name_en": "jade sheen",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "qinghe",
+   "desc": "发间迎光处一层淡淡玉色光泽。",
+   "prompt": "a faint jade-green sheen in the hair where the light catches it"
+  },
+  "filament": {
+   "zh": "灯丝发",
+   "name_en": "lamp-filament hair ends",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "lantern",
+   "desc": "发梢化作琉璃纤丝，末端泛冷白微光。",
+   "prompt": "hair ends that turn translucent like spun glass fibre, glowing a soft cool white at the very tips, hair loose enough to show the ends"
+  },
+  "glass_sheen": {
+   "zh": "琉光",
+   "name_en": "glass-sheen hair ends",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "lantern",
+   "desc": "发梢一抹虹彩般的琉璃光泽。",
+   "prompt": "a faint iridescent glassy sheen along the hair ends"
+  },
+  "rime_lash": {
+   "zh": "霜睫",
+   "name_en": "rime-white lashes",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "frostcrown",
+   "desc": "睫毛与眉梢天生霜白，与发色无关，像落了一层霜。",
+   "prompt": "rime-white eyelashes and white outer brow tips regardless of hair colour, as if dusted with frost, eyes framed close"
+  },
+  "rime_tip": {
+   "zh": "霜梢眉",
+   "name_en": "frost-tipped brows",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "frostcrown",
+   "desc": "眉尾天生一点霜白。",
+   "prompt": "the outer tips of the eyebrows naturally frost-white"
+  },
+  "kiln_crackle": {
+   "zh": "冰裂纹",
+   "name_en": "kiln-crackle temple",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "emberold",
+   "desc": "左鬓到颧骨一片细密开片，像青瓷冰裂釉，皮肤微有瓷光。",
+   "prompt": "a fine network of crackle lines like crazed pale celadon glaze across the left temple and cheekbone, the skin there faintly glossy like fired porcelain, hair swept back from the left temple"
+  },
+  "ember_sigil": {
+   "zh": "烬纹",
+   "name_en": "ember vein",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "emberold",
+   "desc": "眼下一线烬纹（不完全显性，一份为淡）。描述由 CKGenomePortrait 的 mark 位点负责。",
+   "prompt": "",
+   "described_by": "CKGenomePortrait.mark"
+  },
+  "tide_ring": {
+   "zh": "潮痕发",
+   "name_en": "tide-ringed hair",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "saltmarsh",
+   "desc": "发丝上等距的盐白细环，像潮水在盐滩留下的圈痕。",
+   "prompt": "hair with fine alternating salt-white bands at regular intervals, like tide rings left on a salt shore, long hair worn loose to show the bands"
+  },
+  "salt_band": {
+   "zh": "盐线发",
+   "name_en": "salt-banded hair",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "saltmarsh",
+   "desc": "发间一道淡淡的盐白横线。",
+   "prompt": "a single faint salt-white band running through the hair"
+  },
+  "gorge_split": {
+   "zh": "峡眉",
+   "name_en": "gorge-split brows",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "irongorge",
+   "desc": "双眉各被一道天生的窄隙劈开，像俯瞰的峡谷。",
+   "prompt": "each eyebrow cleanly split by a narrow natural gap, like a canyon seen from above, hair kept clear of the brows"
+  },
+  "brow_notch": {
+   "zh": "眉刻",
+   "name_en": "notched brow",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "irongorge",
+   "desc": "一侧眉尾天生一道小缺口。",
+   "prompt": "a small natural notch in the outer third of one eyebrow"
+  },
+  "qi_xing": {
+   "zh": "七星痣",
+   "name_en": "seven-star moles",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "starriver",
+   "desc": "左颧到左鬓七颗小痣，排成北斗。",
+   "prompt": "seven small dark moles arranged in the shape of the Big Dipper across the left cheekbone and temple, left cheek turned toward the light"
+  },
+  "san_tai": {
+   "zh": "三台痣",
+   "name_en": "three-terrace moles",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "starriver",
+   "desc": "左眼下三颗斜列的小痣（东虹）。",
+   "prompt": "three small dark moles in a slanted line under the left eye"
+  },
+  "si_fu": {
+   "zh": "四辅痣",
+   "name_en": "four-arc moles",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "starriver",
+   "desc": "左鬓四颗弧列的小痣（西虹）。",
+   "prompt": "four small dark moles in a small arc at the left temple"
+  },
+  "firefly": {
+   "zh": "萤斑",
+   "name_en": "firefly freckles",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "southzephyr",
+   "desc": "鼻梁与上颊薄荷绿的微光雀斑，雾里与暗处更亮，像萤火。",
+   "prompt": "soft mint-green luminous freckles across the nose bridge and upper cheeks, glowing faintly like fireflies in fog, soft low light so the freckles read"
+  },
+  "firefly_trace": {
+   "zh": "萤痕",
+   "name_en": "faint firefly freckles",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "southzephyr",
+   "desc": "鼻梁上几点淡淡的薄荷微光。",
+   "prompt": "a few faint mint-green luminous freckles on the nose bridge"
+  }
+ },
+ "nations": {
+  "ashbanner": {
+   "id": "ashbanner",
+   "name": "灰烬邦",
+   "name_en": "Ash Banner",
+   "royal": "ash_chart",
+   "noble": [
+    "banner_marshal"
+   ],
+   "folk": "common_ash",
+   "locus": "sig_ashbanner",
+   "law": "awakened",
+   "motto": "每一代都要重新打出来",
+   "succession": {
+    "name": "擎旗公推",
+    "desc": "陆桥议会在已觉醒的河图者中公推：勋位、荣衔、等级依次比较。未觉醒的携因者没有席位。",
+    "score": "rank*10+honors*3+level"
+   },
+   "crisis": {
+    "contested": "议会分旗",
+    "contested_desc": "两位以上觉醒者分数相近，城堡群各拥其主。",
+    "foreign": "外血争座",
+    "foreign_desc": "觉醒者另有三成以上外邦王血，邻国借题干预。"
+   },
+   "edge": {
+    "name": "灰边",
+    "stigma": 0,
+    "desc": "灰烬邦不问出身：有王血而无河图，只是普通人，没有污名。"
+   },
+   "verify": {
+    "name": "燃香验图",
+    "desc": "祠堂以烬香熏颈：真河图在香烟下泛出淡紫，颜料只会糊开。验血同时报告「潜图」携因。"
+   },
+   "forgery": {
+    "name": "伪图",
+    "rate": 1.0,
+    "prompt": "a painted violet line pattern on the left side of the neck that looks slightly smudged, like cosmetic ink",
+    "tell": "颈侧纹路有晕开的墨边"
+   },
+   "decline": "烬图王死于陆桥，灰座空悬百年；王族的因散入民间，只剩「潜图」。",
+   "revival": "任何携因者立下大功（伯爵或旗誓）即可觉醒，获议会公推——灰旗家传的旗嗣印，就是半张河图。",
+   "marriage": {
+    "desc": "与觉醒者或旗帅联姻：灰烬邦与陆桥邦交上升；议会把联姻视作站队。",
+    "rep": {
+     "ashbanner": 2,
+     "landbridge": 1
+    }
+   },
+   "regalia": "a slim grey-violet banner pin of the Ash Seat at the collar",
+   "exile": [
+    "chart_wanderers"
+   ]
+  },
+  "shuoying": {
+   "id": "shuoying",
+   "name": "朔影国",
+   "name_en": "Shuoying",
+   "royal": "sy_eclipse",
+   "noble": [
+    "sy_night"
+   ],
+   "folk": "sy_ridge",
+   "locus": "sig_shuoying",
+   "law": "dose",
+   "motto": "眼睛不说谎",
+   "succession": {
+    "name": "全朔为尊",
+    "desc": "全朔者先于一切弦朔者，与长幼无关；同阶以年长者先。",
+    "score": "full*100+age"
+   },
+   "crisis": {
+    "younger_full": "弦朔之乱",
+    "younger_full_desc": "年幼的全朔者越过年长的弦朔者，长兄长姐不服。",
+    "contested": "夜阙分烛",
+    "contested_desc": "两位全朔者年岁相仿，夜阙廷臣各自掌灯。"
+   },
+   "edge": {
+    "name": "弦外",
+    "stigma": 2,
+    "desc": "有朔血而眼无银弦者，夜阙不认，只能做侍从；求娶朔氏须多一档邦交。"
+   },
+   "verify": {
+    "name": "暗室验瞳",
+    "desc": "祠堂熄灯验瞳：真朔环在全暗中微亮，琉璃镜片不亮。"
+   },
+   "forgery": {
+    "name": "画瞳",
+    "rate": 1.0,
+    "prompt": "eyes with a faint glassy contact-lens rim catching the light",
+    "tell": "瞳外缘有镜片反光"
+   },
+   "decline": "夜禁婚令只许夜阙内通婚，全朔一代比一代少；外血反成解药。",
+   "revival": "两位弦朔者成婚，四子之中就可能生出一位全朔——灰旗若与朔氏结亲，宿仇可解。",
+   "marriage": {
+    "desc": "与朔氏或夜阙卿联姻能缓和世仇（朔影邦交大涨），但陆桥议会会不安。",
+    "rep": {
+     "shuoying": 8,
+     "ashbanner": -2
+    }
+   },
+   "regalia": "a black-glass crescent collar pin of the Night Palace",
+   "exile": [
+    "shadow_exiles"
+   ]
+  },
+  "qinghe": {
+   "id": "qinghe",
+   "name": "清河国",
+   "name_en": "Qinghe",
+   "royal": "qh_jade",
+   "noble": [
+    "river_ward"
+   ],
+   "folk": "qh_delta",
+   "locus": "jade",
+   "law": "threshold",
+   "motto": "牒上无名，玉亦无光",
+   "succession": {
+    "name": "牒序",
+    "desc": "书院按玉值排序：玉值最高的澜氏承牒；玉泽者可入牒但无座。",
+    "score": "jade*100"
+   },
+   "crisis": {
+    "contested": "牒议",
+    "contested_desc": "两位承牒人玉值相差不到 0.03，书院开牒议，各派抄手连夜改谱。",
+    "forged": "改牒",
+    "forged_desc": "有人在玉牒上做了手脚：玉缕与血谱对不上。"
+   },
+   "edge": {
+    "name": "牒外",
+    "stigma": 2,
+    "desc": "有澜氏血而无玉泽者被称牒外，不得任官；求娶玉牒中人须多一档邦交。"
+   },
+   "verify": {
+    "name": "牒验",
+    "desc": "书院对谱、祠堂看根：真玉缕从发根就通透，染出来的发根发黑。"
+   },
+   "forgery": {
+    "name": "染缕",
+    "rate": 1.2,
+    "prompt": "a dyed green lock of hair with darker dye-stained roots",
+    "tell": "玉色发缕的发根发黑"
+   },
+   "decline": "牒外通婚把玉值拉回平均，王族日渐只剩玉泽。",
+   "revival": "偶尔会出现「玉缕返照」：低牒家庭生出玉缕——须过书院牒议才算数。",
+   "marriage": {
+    "desc": "清河看重谱牒：与河卫或澜氏联姻抬升清河邦交；入牒须付入牒礼（规划中）。",
+    "rep": {
+     "qinghe": 2
+    }
+   },
+   "regalia": "a slim jade register tablet pendant",
+   "exile": [
+    "lan_branch"
+   ]
+  },
+  "lantern": {
+   "id": "lantern",
+   "name": "灯市联",
+   "name_en": "Lantern League",
+   "royal": "lt_filament",
+   "noble": [
+    "lt_glass"
+   ],
+   "folk": "lt_tide",
+   "locus": "sig_lantern",
+   "law": "dominant",
+   "motto": "人人有血统，只好比谁更有钱",
+   "succession": {
+    "name": "灯会竞座",
+    "desc": "每七年，所有灯丝者竞价灯座；以身家（爵位×10＋等级）为代理排序。",
+    "score": "rank*10+level"
+   },
+   "crisis": {
+    "crowded": "满港竞价",
+    "crowded_desc": "三位以上灯丝者同时出价，商行站队，港口罢市。",
+    "bankrupt": "熄灯",
+    "bankrupt_desc": "座主破产，灯座无主，熄灯裔趁乱回港。"
+   },
+   "edge": {
+    "name": "—",
+    "stigma": 0,
+    "desc": "灯市只认钱：有王血而无灯丝，照样做生意，没有污名。"
+   },
+   "verify": {
+    "name": "灯验",
+    "desc": "在祠堂霜灯下看发梢：真灯丝折出光谱，琉璃纤维接发只有一道白光，还能看到接缝。"
+   },
+   "forgery": {
+    "name": "假灯丝",
+    "rate": 1.5,
+    "prompt": "glass-fibre hair extensions clipped onto the hair ends, a visible clip seam",
+    "tell": "发梢接缝处有夹扣"
+   },
+   "decline": "显性让灯丝泛滥，灯座越来越不值钱。",
+   "revival": "琉氏推「纯灯婚」：只娶双份灯丝者，让子嗣百分百显灯丝。",
+   "marriage": {
+    "desc": "娶灯丝者或琉商：灯市邦交上升，并附嫁妆（嫁妆比血重）。",
+    "rep": {
+     "lantern": 2
+    },
+    "dowry": {
+     "noble": 40,
+     "royal": 120
+    }
+   },
+   "regalia": "a clear lamp-glass collar chain of the Lamp Seat",
+   "exile": [
+    "lamp_out"
+   ],
+   "pool": {
+    "royal": {
+     "weight": 0.5,
+     "kinds": [
+      "capital",
+      "port",
+      "city"
+     ],
+     "city_rep_min": 0,
+     "nation_rep_min": 0,
+     "slot0_nation_rep": 80
+    }
+   },
+   "paper": {
+    "name": "纸冕",
+    "patent": "灯籍",
+    "cost": {
+     "baron": 160,
+     "count": 420
+    },
+    "nation_rep_min": 30,
+    "honor": "paper_patent",
+    "refused_by": [
+     "frostcrown",
+     "qinghe",
+     "shuoying"
+    ],
+    "desc": "灯市出售「灯籍」：花银即得男爵或伯爵名分，戴灯籍徽，但没有灯丝。霜冕、清河、朔影的贵胤拒绝与纸冕者联姻。",
+    "prompt": "a newly minted clear lamp-glass patent pin, almost too pristine"
+   }
+  },
+  "frostcrown": {
+   "id": "frostcrown",
+   "name": "霜冕廷",
+   "name_en": "Frostcrown",
+   "royal": "frost_crown",
+   "noble": [
+    "fc_hall"
+   ],
+   "folk": "fc_plateau",
+   "locus": "sig_frostcrown",
+   "law": "recessive",
+   "motto": "冰钟等得起",
+   "succession": {
+    "name": "冰钟默选",
+    "desc": "廷议在霜睫者中静默推举：意志最坚者先，同等以年长者先。",
+    "score": "wil*5+age"
+   },
+   "crisis": {
+    "vacant": "候冕之年",
+    "vacant_desc": "无一人显霜睫：摄霜理政，廷议等待隐性复现。",
+    "contested": "钟裂",
+    "contested_desc": "两位霜睫者意志相当，冰钟两边同时敲响。"
+   },
+   "edge": {
+    "name": "薄霜",
+    "stigma": 2,
+    "desc": "有霜冕血而睫上无霜者称薄霜，不得入霜阙；求娶霜冕须多一档邦交。"
+   },
+   "verify": {
+    "name": "呵气验睫",
+    "desc": "祠堂以暖气呵睫：敷霜的妆粉会化，天生霜睫不变；验血同时开出「携霜」契。"
+   },
+   "forgery": {
+    "name": "敷霜",
+    "rate": 0.6,
+    "prompt": "white cosmetic powder clumped on the eyelashes",
+    "tell": "睫毛上结着白粉"
+   },
+   "decline": "隐性加上小朝廷：霜睫只会越来越少。",
+   "revival": "在流亡支和外邦里寻找携因者，以祠堂「携霜」契为聘；两位携者联姻，四子中可能复现一位。",
+   "marriage": {
+    "desc": "霜冕只与携因者谈婚（规划：须携霜契）；结亲提升霜冕邦交。",
+    "rep": {
+     "frostcrown": 2
+    }
+   },
+   "regalia": "an ice-glass bell clasp at the throat",
+   "exile": [
+    "snow_exiles"
+   ]
+  },
+  "emberold": {
+   "id": "emberold",
+   "name": "余烬旧邦",
+   "name_en": "Ember Old Realm",
+   "royal": "eo_kiln",
+   "noble": [
+    "ember_noble"
+   ],
+   "folk": "eo_ashland",
+   "locus": "sig_emberold",
+   "law": "y_linked",
+   "motto": "窑火不可借",
+   "succession": {
+    "name": "旧典承窑",
+    "desc": "冰裂之子按长幼承窑，女儿不承。新典派主张窑女亦可承座。",
+    "score": "age"
+   },
+   "crisis": {
+    "cold": "冷窑",
+    "cold_desc": "没有一个冰裂之子：窑冕断绝，烬议摄政。",
+    "canon": "典争",
+    "canon_desc": "冰裂之子缺席，窑女在场：旧典派与新典派对峙。",
+    "false_father": "冒窑",
+    "false_father_desc": "冰裂之子的父亲没有冰裂——血统与婚约必有一假。"
+   },
+   "edge": {
+    "name": "冷灰",
+    "stigma": 1,
+    "desc": "窑女所出之子有窑冕血而无冰裂，旧典派讥为冷灰，新典派视为同胞。"
+   },
+   "verify": {
+    "name": "温瓷验纹",
+    "desc": "以温热的瓷片贴颊：真冰裂遇热透出瓷光，描上去的釉线不亮；验血同时核对父系。"
+   },
+   "forgery": {
+    "name": "描釉",
+    "rate": 1.0,
+    "prompt": "thin painted crackle lines on the temple, slightly too regular to be natural",
+    "tell": "冰裂纹过于规整"
+   },
+   "decline": "末代窑王只有女儿，窑冕被视作断绝。",
+   "revival": "流亡在外的冰裂之子是唯一火种：若灰旗之中有冰裂男子生子，窑冕便归于灰旗。",
+   "marriage": {
+    "desc": "与烬议贵胤联姻提升旧邦邦交；冰裂男子入赘会让旧典派震动。",
+    "rep": {
+     "emberold": 2
+    }
+   },
+   "regalia": "a celadon porcelain seal toggle",
+   "exile": [
+    "kiln_exiles"
+   ]
+  },
+  "saltmarsh": {
+   "id": "saltmarsh",
+   "name": "盐泽盟",
+   "name_en": "Saltmarsh",
+   "royal": "sm_tide",
+   "noble": [
+    "sm_ledger"
+   ],
+   "folk": "sm_reed",
+   "locus": "sig_saltmarsh",
+   "law": "x_dominant",
+   "motto": "潮汐即法度",
+   "succession": {
+    "name": "潮法传女",
+    "desc": "潮痕之女按长幼承座；潮痕男子称潮伯，只掌兵、不承座。",
+    "score": "female*100+age"
+   },
+   "crisis": {
+    "many_daughters": "众女潮",
+    "many_daughters_desc": "同一位潮伯的几个潮痕女儿出自不同母亲，盐引诸家各押一位。",
+    "vacant": "退潮之年",
+    "vacant_desc": "没有潮痕之女：盐引世家共治，等待潮回。"
+   },
+   "edge": {
+    "name": "退潮",
+    "stigma": 1,
+    "desc": "潮痕男子的儿子承不到 X 上的潮痕，称退潮子；能做潮伯幕僚，难入盐后之门。"
+   },
+   "verify": {
+    "name": "卤水验发",
+    "desc": "以卤水浸发：真潮痕不褪，漂白的盐线会走色；验血同时核对父母——无潮痕父母生不出潮痕女儿。"
+   },
+   "forgery": {
+    "name": "盐染",
+    "rate": 0.8,
+    "prompt": "bleached pale bands in the hair with uneven chemical edges",
+    "tell": "发环边缘有漂染的毛边"
+   },
+   "decline": "女王只生儿子时，潮痕看似中断。",
+   "revival": "潮回：潮痕之子虽不能承座，却把潮痕全部传给他的女儿——王座隔一代跳回来。",
+   "marriage": {
+    "desc": "盐泽婚俗从母居，以盐引为聘（规划中）；联姻提升盐泽邦交。",
+    "rep": {
+     "saltmarsh": 2
+    }
+   },
+   "regalia": "a salt-crystal chain of office",
+   "exile": [
+    "tide_lords",
+    "tide_exiles"
+   ]
+  },
+  "irongorge": {
+   "id": "irongorge",
+   "name": "铁峡领",
+   "name_en": "Iron Gorge",
+   "royal": "ig_gorge",
+   "noble": [
+    "ig_warden"
+   ],
+   "folk": "ig_forge",
+   "locus": "sig_irongorge",
+   "law": "penetrance",
+   "motto": "钢藏在血里",
+   "succession": {
+    "name": "锻选",
+    "desc": "所有经祠堂验明的携因者——显峡眉或藏钢——皆可入锻场；力＋体＋等级最高者胜。",
+    "score": "str+vit+level"
+   },
+   "crisis": {
+    "hidden_top": "藏钢之争",
+    "hidden_top_desc": "锻选头名是一位眉形完整的藏钢，显峡眉的旧族不服。",
+    "contested": "三层分锻",
+    "contested_desc": "三层城区的人选旗鼓相当，吊桥封锁。"
+   },
+   "edge": {
+    "name": "无刻",
+    "stigma": 0,
+    "desc": "铁峡只看锻场：有峡钢血而无峡眉，验明携因照样能比。"
+   },
+   "verify": {
+    "name": "斋月验眉",
+    "desc": "祠堂留人三十日：剃出来的眉隙会长回，天生峡眉不会；验血可直接看出藏钢。"
+   },
+   "forgery": {
+    "name": "剃眉",
+    "rate": 1.0,
+    "prompt": "freshly shaved gaps in the eyebrows with faint regrowing stubble",
+    "tell": "眉隙里有新长的胡茬状短毛"
+   },
+   "decline": "峡座从不衰落，只是能争的人太多，锻选越来越频繁。",
+   "revival": "藏钢之家一旦被祠堂验明，就能把一个铁匠的儿子送进锻场。",
+   "marriage": {
+    "desc": "与峡卫或锻氏联姻提升铁峡邦交，常以铁料为嫁妆（规划中）。",
+    "rep": {
+     "irongorge": 2
+    }
+   },
+   "regalia": "a cold-steel collar ring of the forge seat",
+   "exile": [
+    "broken_bridge"
+   ]
+  },
+  "starriver": {
+   "id": "starriver",
+   "name": "星津邦",
+   "name_en": "Starford",
+   "royal": "sr_dipper",
+   "noble": [
+    "sr_east_arc",
+    "sr_west_arc"
+   ],
+   "folk": "sr_ford",
+   "locus": "sig_starriver",
+   "law": "complement",
+   "motto": "桥需要对岸",
+   "succession": {
+    "name": "双虹合璧",
+    "desc": "唯七星者可登星枢；观象台以感知与意志排序。",
+    "score": "per+wil"
+   },
+   "crisis": {
+    "vacant": "孤虹",
+    "vacant_desc": "无一位七星：两虹之一凋零或断交，观象台摄政。",
+    "contested": "星位相冲",
+    "contested_desc": "两位七星者感知与意志相当，观象台夜夜重算星位。"
+   },
+   "edge": {
+    "name": "残星",
+    "stigma": 1,
+    "desc": "有七星血而痣不成形者称残星，可入观象台为吏，不登星枢。"
+   },
+   "verify": {
+    "name": "星验",
+    "desc": "观象台以标准星图比对痣位：点出来的痣间距总有偏差；验血同时报告三台/四辅携因。"
+   },
+   "forgery": {
+    "name": "点痣",
+    "rate": 1.2,
+    "prompt": "small inked dots on the cheek arranged slightly off-pattern",
+    "tell": "痣距与星图不合"
+   },
+   "decline": "两虹任一凋零，七星便无从出生。",
+   "revival": "撮合三台与四辅之家：两人各携一种，孩子就能合成七星。",
+   "marriage": {
+    "desc": "星津亲善：与东虹或西虹联姻提升星津邦交，撮合两虹婚约会被观象台记功。",
+    "rep": {
+     "starriver": 3
+    }
+   },
+   "regalia": "a small crystal astrolabe pendant",
+   "exile": [
+    "fallen_star"
+   ]
+  },
+  "southzephyr": {
+   "id": "southzephyr",
+   "name": "南泽邦",
+   "name_en": "South Zephyr",
+   "royal": "sz_firefly",
+   "noble": [
+    "sz_ferry"
+   ],
+   "folk": "sz_fogwood",
+   "locus": "glow",
+   "law": "maternal",
+   "motto": "光只从母亲那里来",
+   "succession": {
+    "name": "萤母议",
+    "desc": "萤光最亮的萤之女承母议；萤子（男）不承。",
+    "score": "female*100+glow*100"
+   },
+   "crisis": {
+    "vacant": "萤衰",
+    "vacant_desc": "萤母一脉的女儿萤值全部跌破门槛：这一支永远失去席位。",
+    "contested": "双萤",
+    "contested_desc": "两位萤之女同样明亮，雾林分成两岸。"
+   },
+   "edge": {
+    "name": "熄萤",
+    "stigma": 1,
+    "desc": "萤子之子有萤母血而无萤光：血统写着王族，脸上一片黑暗。"
+   },
+   "verify": {
+    "name": "雨验",
+    "desc": "祠堂以雨水洗面、熄灯观光：磷粉一洗就花，真萤斑在暗处更亮；验血同时核对母系。"
+   },
+   "forgery": {
+    "name": "磷粉",
+    "rate": 1.0,
+    "prompt": "specks of glowing powder dusted on the nose that smear at the edges",
+    "tell": "鼻梁上的光点边缘晕开"
+   },
+   "decline": "萤值随母系漂移，一旦跌破门槛就不再回升。",
+   "revival": "萤燃：漂移偶尔向上，一位渡灯家的女儿也可能越过门槛，被萤母议接纳。",
+   "marriage": {
+    "desc": "萤母难得外嫁（规划：须萤约，一位孙女归林）；娶萤母之女，子女皆承萤光。",
+    "rep": {
+     "southzephyr": 2
+    }
+   },
+   "regalia": "a carved hardwood mother-bead necklace",
+   "exile": [
+    "firefly_sons"
+   ]
+  }
+ },
+ "regions": {
+  "landbridge": {
+   "id": "landbridge",
+   "name": "朔澜陆桥",
+   "name_en": "Landbridge",
+   "royal": "",
+   "noble": [
+    "banner_marshal",
+    "river_ward"
+   ],
+   "folk": "common_ash",
+   "folk_mix": [
+    "common_ash",
+    "qh_delta",
+    "sr_ford",
+    "lt_tide"
+   ],
+   "desc": "陆桥是十国商路的十字口：酒馆里东西两陆的民胤混坐，流裔最多，没有王座。",
+   "pool": {
+    "foreign": {
+     "capital": 0.35,
+     "city": 0.35,
+     "town": 0.35,
+     "port": 0.4,
+     "fortress": 0.3,
+     "village": 0.2,
+     "castle": 0.3
+    }
+   }
+  }
+ },
+ "pool_default": {
+  "folk": {
+   "capital": 5,
+   "city": 6,
+   "town": 6,
+   "port": 5,
+   "fortress": 5,
+   "village": 8,
+   "castle": 6,
+   "road": 8
+  },
+  "noble": {
+   "capital": 3,
+   "city": 2,
+   "town": 1.5,
+   "port": 1.5,
+   "fortress": 2,
+   "village": 0.4,
+   "castle": 1.5,
+   "road": 0
+  },
+  "royal": {
+   "weight": 0.8,
+   "kinds": [
+    "capital"
+   ],
+   "city_rep_min": 30,
+   "nation_rep_min": 55,
+   "slot0_nation_rep": 80
+  },
+  "foreign": {
+   "capital": 0.12,
+   "city": 0.1,
+   "town": 0.08,
+   "port": 0.25,
+   "fortress": 0.06,
+   "village": 0.04,
+   "castle": 0.25,
+   "road": 0
+  },
+  "noble_mix": 0.3,
+  "pretend": {
+   "noble": 0.1,
+   "royal": 0.25
+  }
+ },
+ "diaspora": [
+  {
+   "id": "firefly_sons",
+   "line": "sz_firefly",
+   "sex": "m",
+   "mix": 0.5,
+   "nations": [
+    "southzephyr",
+    "saltmarsh",
+    "lantern",
+    "starriver",
+    "landbridge",
+    "ashbanner"
+   ],
+   "weight": 1.0,
+   "name": "萤子",
+   "desc": "萤母之子：生而带萤斑，却注定无法传下。他们离林渡水，成了四方最常见的王血佣兵。"
+  },
+  {
+   "id": "kiln_exiles",
+   "line": "eo_kiln",
+   "sex": "m",
+   "mix": 0.25,
+   "nations": [
+    "irongorge",
+    "lantern",
+    "landbridge",
+    "emberold",
+    "ashbanner"
+   ],
+   "weight": 0.35,
+   "name": "窑冕流裔",
+   "desc": "三代前被逐出焚阙的幼子一支。血统只剩两成五，脸上的冰裂却一分不少——Y 不会被稀释。"
+  },
+  {
+   "id": "tide_lords",
+   "line": "sm_tide",
+   "sex": "m",
+   "mix": 0.5,
+   "nations": [
+    "saltmarsh",
+    "southzephyr",
+    "qinghe",
+    "lantern",
+    "ashbanner"
+   ],
+   "weight": 0.6,
+   "name": "潮伯",
+   "desc": "潮痕男子不能承座，便出海、从军、做佣兵。他们的女儿才是盐后真正的候选。"
+  },
+  {
+   "id": "tide_exiles",
+   "line": "sm_tide",
+   "sex": "f",
+   "mix": 0.5,
+   "nations": [
+    "southzephyr"
+   ],
+   "weight": 0.1,
+   "name": "离潮支",
+   "desc": "盐战中落败的一支盐后后裔，在南泽渡口隐居。"
+  },
+  {
+   "id": "chart_wanderers",
+   "line": "ash_chart",
+   "sex": "",
+   "mix": 0.4,
+   "nations": [
+    "landbridge",
+    "ashbanner",
+    "starriver"
+   ],
+   "weight": 0.5,
+   "name": "烬图流裔",
+   "desc": "灰座空悬后散入驿城的烬图旁支：多半携着潜图，自己却不知道。"
+  },
+  {
+   "id": "shadow_exiles",
+   "line": "sy_night",
+   "sex": "",
+   "mix": 0.5,
+   "nations": [
+    "lantern",
+    "irongorge",
+    "landbridge",
+    "ashbanner"
+   ],
+   "weight": 0.4,
+   "name": "影裔",
+   "desc": "夜阙清洗中逃出的弦朔者，在港口做斥候和刺客。"
+  },
+  {
+   "id": "snow_exiles",
+   "line": "fc_hall",
+   "sex": "",
+   "mix": 0.5,
+   "nations": [
+    "shuoying",
+    "irongorge",
+    "ashbanner"
+   ],
+   "weight": 0.3,
+   "name": "雪逐支",
+   "desc": "被逐出霜阙的廷卿后人，替朔影带路、替铁峡守矿，暗中携着霜睫之因。"
+  },
+  {
+   "id": "lan_branch",
+   "line": "qh_jade",
+   "sex": "",
+   "mix": 0.5,
+   "nations": [
+    "saltmarsh",
+    "starriver"
+   ],
+   "weight": 0.2,
+   "name": "澜氏旁支",
+   "desc": "因改牒丑闻被除名的澜氏一支，在盐泽做盐引公证人；牒外三代，只剩玉泽。"
+  },
+  {
+   "id": "fallen_star",
+   "line": "sr_dipper",
+   "sex": "",
+   "mix": 0.5,
+   "nations": [
+    "qinghe",
+    "landbridge"
+   ],
+   "weight": 0.15,
+   "name": "坠星支",
+   "desc": "政变后流亡的七星王子后裔，在清河书院做学者佣兵。"
+  },
+  {
+   "id": "lamp_out",
+   "line": "lt_filament",
+   "sex": "",
+   "mix": 0.5,
+   "nations": [
+    "lantern",
+    "saltmarsh",
+    "southzephyr",
+    "landbridge",
+    "ashbanner"
+   ],
+   "weight": 0.5,
+   "name": "熄灯裔",
+   "desc": "破产灯主的后人：发梢仍是灯丝，钱袋却空了，在外岛做船匪或护航。"
+  },
+  {
+   "id": "broken_bridge",
+   "line": "ig_gorge",
+   "sex": "",
+   "mix": 0.5,
+   "nations": [
+    "irongorge",
+    "emberold",
+    "landbridge",
+    "ashbanner"
+   ],
+   "weight": 0.3,
+   "name": "断桥裔",
+   "desc": "历次锻选的败者被逐下底层城区，许多人带着藏钢四处卖刀。"
+  }
+ ],
+ "royal_skills": [
+  "chart_rally",
+  "eclipse_gaze",
+  "jade_clarity",
+  "lamp_feint",
+  "bell_hush",
+  "kiln_reforge",
+  "tide_edict",
+  "gorge_breaker",
+  "dipper_fix",
+  "firefly_ferry"
+ ],
+ "lines": [
+  {
+   "id": "ash_chart",
+   "name": "烬图王胤",
+   "name_en": "Ember-Chart royal blood",
+   "nation": "ashbanner",
+   "tier": "royal",
+   "house": "烬图氏",
+   "desc": "灰座旧王之血。河图之因显性，却要立下功勋才在颈侧显纹。",
+   "lore": "百年前最后一位烬图王死在陆桥。灰座空了一百年，河图之因散进了平原的血里，等某个立下大功的人重新把它烧亮。",
+   "stat_min": {
+    "str": 8,
+    "vit": 8,
+    "skl": 7,
+    "agi": 7,
+    "per": 6,
+    "wil": 8
+   },
+   "stat_max": {
+    "str": 19,
+    "vit": 19,
+    "skl": 17,
+    "agi": 16,
+    "per": 15,
+    "wil": 19
+   },
+   "jobs": [
+    "squire",
+    "heavy_inf",
+    "light_inf"
+   ],
+   "skill_bias": {
+    "trees": [
+     "melee"
+    ],
+    "stats": [
+     "str",
+     "wil"
+    ],
+    "royal_skill": "chart_rally"
+   },
+   "signature": "river_chart",
+   "genome": {
+    "hair": {
+     "ink_black": 4.0,
+     "ash_brown": 3.0
+    },
+    "eyes": {
+     "slate": 3.0,
+     "dusk": 2.5
+    },
+    "brow": {
+     "straight": 3.0,
+     "thick": 2.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": 0.1,
+     "jaw": 0.45,
+     "cheek": 0.25,
+     "eye_size": 0.1
+    },
+    "body": {
+     "height": 0.3,
+     "build": 0.3
+    },
+    "skin": "#C8977A"
+   },
+   "sig": [
+    {
+     "locus": "sig_ashbanner",
+     "genotypes": {
+      "river_chart|river_chart": 0.35,
+      "river_chart|chart_trunk": 0.25,
+      "river_chart|none": 0.35,
+      "chart_trunk|none": 0.05
+     }
+    }
+   ],
+   "look": "Ashbanner styling: ash-grey long coat with a high open collar",
+   "tavern": {
+    "premium": 90,
+    "rarity": "罕见"
+   }
+  },
+  {
+   "id": "banner_marshal",
+   "name": "旗帅贵胤",
+   "name_en": "Banner-Marshal nobility",
+   "nation": "ashbanner",
+   "tier": "noble",
+   "house": "白垣旗帅诸家",
+   "desc": "城堡群的旗帅世家，烬图王的将门之后。颈侧常有一道淡淡的旗痕。",
+   "lore": "旗帅们在灰座空悬的百年里替议会守城。他们的旗痕只是河图的主干，没有支流——这是将门，不是王门。",
+   "stat_min": {
+    "str": 7,
+    "vit": 7,
+    "skl": 5,
+    "agi": 5,
+    "per": 5,
+    "wil": 6
+   },
+   "stat_max": {
+    "str": 17,
+    "vit": 17,
+    "skl": 15,
+    "agi": 14,
+    "per": 13,
+    "wil": 16
+   },
+   "jobs": [
+    "heavy_inf",
+    "squire",
+    "warrior"
+   ],
+   "skill_bias": {
+    "trees": [
+     "melee"
+    ],
+    "stats": [
+     "str",
+     "vit"
+    ]
+   },
+   "genome": {
+    "hair": {
+     "ash_brown": 3.0,
+     "ink_black": 4.0
+    },
+    "eyes": {
+     "slate": 4.0,
+     "dusk": 1.5,
+     "pine": 1.0
+    },
+    "brow": {
+     "thick": 3.0,
+     "straight": 2.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": 0.3,
+     "jaw": 0.55,
+     "cheek": 0.1,
+     "brow_height": -0.2
+    },
+    "body": {
+     "height": 0.25,
+     "build": 0.45
+    },
+    "skin": "#C49478"
+   },
+   "sig": [
+    {
+     "locus": "sig_ashbanner",
+     "genotypes": {
+      "chart_trunk|none": 0.55,
+      "chart_trunk|chart_trunk": 0.15,
+      "river_chart|chart_trunk": 0.12,
+      "river_chart|none": 0.08,
+      "none|none": 0.1
+     }
+    }
+   ],
+   "look": "Ashbanner marshal styling: structured ash-grey officer coat with a tall collar and a slim grey-violet sash",
+   "tavern": {
+    "premium": 22,
+    "rarity": "少见"
+   }
+  },
+  {
+   "id": "common_ash",
+   "name": "灰烬民胤",
+   "name_en": "Ashland borderfolk",
+   "nation": "ashbanner",
+   "tier": "folk",
+   "house": "陆桥边民",
+   "desc": "陆桥边民血脉，坚韧务实。少数人身上睡着半张河图。",
+   "lore": "佣兵与商队是灰烬邦的血液。平原上的老人说，烬图王的血早就流进了每一条田埂。",
+   "legacy": true,
+   "stat_min": {
+    "str": 4,
+    "vit": 5,
+    "skl": 4,
+    "agi": 4,
+    "per": 4,
+    "wil": 4
+   },
+   "stat_max": {
+    "str": 14,
+    "vit": 15,
+    "skl": 13,
+    "agi": 13,
+    "per": 12,
+    "wil": 13
+   },
+   "jobs": [
+    "light_inf",
+    "squire",
+    "heavy_inf"
+   ],
+   "skill_bias": {
+    "trees": [
+     "melee"
+    ],
+    "stats": [
+     "vit"
+    ]
+   },
+   "genome": {
+    "hair": {
+     "ash_brown": 4.0,
+     "ink_black": 3.0,
+     "wheat": 1.0
+    },
+    "eyes": {
+     "slate": 4.0,
+     "pine": 2.0,
+     "amber": 1.0
+    },
+    "brow": {
+     "thick": 2.0,
+     "straight": 3.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": 0.45,
+     "jaw": 0.4,
+     "cheek": -0.1,
+     "nose": 0.2
+    },
+    "body": {
+     "height": -0.1,
+     "build": 0.4
+    },
+    "skin": "#C99A7E"
+   },
+   "sig": [
+    {
+     "locus": "sig_ashbanner",
+     "genotypes": {
+      "none|none": 0.9,
+      "river_chart|none": 0.08,
+      "chart_trunk|none": 0.02
+     }
+    }
+   ],
+   "look": "Ashbanner borderfolk styling: practical ash-grey layered technical jacket with a slim grey-violet scarf",
+   "tavern": {
+    "premium": 0,
+    "rarity": "常见"
+   }
+  },
+  {
+   "id": "sy_eclipse",
+   "name": "朔望王胤",
+   "name_en": "Eclipse-born of Shuo",
+   "nation": "shuoying",
+   "tier": "royal",
+   "house": "朔氏",
+   "desc": "夜阙王族。两份朔因显全朔瞳：瞳孔外一圈细银环，像日全食。",
+   "lore": "朔氏只在入夜后开廷，因为全朔瞳在暗处会微微发亮。眼睛不会说谎，所以这座宫廷什么都不信，只信眼睛。",
+   "stat_min": {
+    "str": 6,
+    "vit": 6,
+    "skl": 8,
+    "agi": 9,
+    "per": 9,
+    "wil": 8
+   },
+   "stat_max": {
+    "str": 16,
+    "vit": 16,
+    "skl": 18,
+    "agi": 19,
+    "per": 20,
+    "wil": 18
+   },
+   "jobs": [
+    "hunter",
+    "light_inf",
+    "archer"
+   ],
+   "skill_bias": {
+    "trees": [
+     "range"
+    ],
+    "stats": [
+     "per",
+     "agi"
+    ],
+    "royal_skill": "eclipse_gaze"
+   },
+   "signature": "eclipse_full",
+   "genome": {
+    "hair": {
+     "ink_black": 7.0
+    },
+    "eyes": {
+     "dusk": 6.0,
+     "slate": 0.5
+    },
+    "brow": {
+     "arch": 3.0,
+     "soft": 1.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": -0.5,
+     "cheek": 0.5,
+     "eye_tilt": 0.4,
+     "nose": -0.1
+    },
+    "body": {
+     "height": 0.4,
+     "build": -0.35
+    },
+    "skin": "#EEDCD3"
+   },
+   "sig": [
+    {
+     "locus": "sig_shuoying",
+     "genotypes": {
+      "eclipse|eclipse": 0.75,
+      "eclipse|none": 0.25
+     }
+    }
+   ],
+   "look": "Shuoying night-court styling: midnight-indigo high collar with fine silver piping",
+   "tavern": {
+    "premium": 130,
+    "rarity": "传说"
+   }
+  },
+  {
+   "id": "sy_night",
+   "name": "夜阙贵胤",
+   "name_en": "Night-Court peers",
+   "nation": "shuoying",
+   "tier": "noble",
+   "house": "夜阙诸卿",
+   "desc": "夜阙廷臣，多是一份朔因的弦朔瞳——瞳缘上一弯银弦。",
+   "lore": "每一位夜阙卿都是王座的远亲：两位弦朔者成婚，四个孩子里就可能有一个全朔。朔影的多疑，就是从这里来的。",
+   "stat_min": {
+    "str": 5,
+    "vit": 5,
+    "skl": 6,
+    "agi": 7,
+    "per": 7,
+    "wil": 6
+   },
+   "stat_max": {
+    "str": 14,
+    "vit": 14,
+    "skl": 16,
+    "agi": 17,
+    "per": 18,
+    "wil": 16
+   },
+   "jobs": [
+    "hunter",
+    "light_inf"
+   ],
+   "skill_bias": {
+    "trees": [
+     "range",
+     "skirm"
+    ],
+    "stats": [
+     "per"
+    ]
+   },
+   "genome": {
+    "hair": {
+     "ink_black": 6.0,
+     "ash_brown": 1.0
+    },
+    "eyes": {
+     "dusk": 5.0,
+     "slate": 1.0
+    },
+    "brow": {
+     "arch": 3.0,
+     "straight": 2.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": -0.45,
+     "cheek": 0.45,
+     "eye_tilt": 0.35,
+     "eye_size": -0.05
+    },
+    "body": {
+     "height": 0.35,
+     "build": -0.3
+    },
+    "skin": "#EBD8CE"
+   },
+   "sig": [
+    {
+     "locus": "sig_shuoying",
+     "genotypes": {
+      "eclipse|none": 0.7,
+      "eclipse|eclipse": 0.08,
+      "none|none": 0.22
+     }
+    }
+   ],
+   "look": "Shuoying night-court styling: high indigo collar with a small black-glass crescent pin",
+   "tavern": {
+    "premium": 28,
+    "rarity": "少见"
+   }
+  },
+  {
+   "id": "sy_ridge",
+   "name": "霜脊民胤",
+   "name_en": "Frost-ridge highlanders",
+   "nation": "shuoying",
+   "tier": "folk",
+   "house": "霜脊山民",
+   "desc": "北境霜脊的山民，瘦高、肤冷、目深。",
+   "lore": "霜脊人替夜阙守关，也替夜阙保守秘密。偶尔有山民的孩子眼里出现一弯银弦，那家人便会被请进宫里，再也不回来。",
+   "stat_min": {
+    "str": 4,
+    "vit": 4,
+    "skl": 5,
+    "agi": 6,
+    "per": 5,
+    "wil": 4
+   },
+   "stat_max": {
+    "str": 13,
+    "vit": 13,
+    "skl": 14,
+    "agi": 15,
+    "per": 15,
+    "wil": 13
+   },
+   "jobs": [
+    "hunter",
+    "light_inf"
+   ],
+   "skill_bias": {
+    "trees": [
+     "range"
+    ],
+    "stats": [
+     "agi"
+    ]
+   },
+   "genome": {
+    "hair": {
+     "ink_black": 5.0,
+     "ash_brown": 2.0
+    },
+    "eyes": {
+     "dusk": 3.0,
+     "slate": 3.0
+    },
+    "brow": {
+     "straight": 2.0,
+     "arch": 2.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": -0.4,
+     "jaw": 0.1,
+     "cheek": 0.3,
+     "eye_tilt": 0.25
+    },
+    "body": {
+     "height": 0.3,
+     "build": -0.2
+    },
+    "skin": "#E6D2C6"
+   },
+   "sig": [
+    {
+     "locus": "sig_shuoying",
+     "genotypes": {
+      "none|none": 0.92,
+      "eclipse|none": 0.08
+     }
+    }
+   ],
+   "look": "Shuoying ridge styling: deep indigo hooded technical coat with frost-dusted shoulders",
+   "tavern": {
+    "premium": 0,
+    "rarity": "常见"
+   }
+  },
+  {
+   "id": "qh_jade",
+   "name": "玉牒王胤",
+   "name_en": "Jade-Register royal blood",
+   "nation": "qinghe",
+   "tier": "royal",
+   "house": "澜氏",
+   "desc": "玉牒在册的澜氏。玉值越过门槛，左鬓便生一缕通透的玉色发。",
+   "lore": "澜氏的玉缕不是单一的因，而是许多细小血脉叠起来的「玉值」。书院替王族记谱、算婚，牒外的一次通婚就能让下一代失去玉缕。",
+   "stat_min": {
+    "str": 6,
+    "vit": 6,
+    "skl": 9,
+    "agi": 8,
+    "per": 8,
+    "wil": 9
+   },
+   "stat_max": {
+    "str": 15,
+    "vit": 16,
+    "skl": 19,
+    "agi": 18,
+    "per": 18,
+    "wil": 20
+   },
+   "jobs": [
+    "apprentice",
+    "hunter",
+    "priest"
+   ],
+   "skill_bias": {
+    "trees": [
+     "faith",
+     "range"
+    ],
+    "stats": [
+     "wil",
+     "skl"
+    ],
+    "royal_skill": "jade_clarity"
+   },
+   "signature": "jade_lock",
+   "genome": {
+    "hair": {
+     "ink_black": 6.0,
+     "ash_brown": 1.0
+    },
+    "eyes": {
+     "pine": 3.0,
+     "river_blue": 2.0,
+     "slate": 1.0
+    },
+    "brow": {
+     "soft": 3.0,
+     "arch": 2.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": -0.4,
+     "jaw": -0.25,
+     "eye_tilt": 0.3,
+     "nose": -0.2
+    },
+    "body": {
+     "height": 0.15,
+     "build": -0.3
+    },
+    "skin": "#E6C9B5"
+   },
+   "sig": [
+    {
+     "locus": "jade",
+     "value": [
+      0.8,
+      0.06
+     ]
+    }
+   ],
+   "look": "Qinghe register styling: layered jade-grey and mist-white silk with a high mandarin collar",
+   "tavern": {
+    "premium": 120,
+    "rarity": "传说"
+   }
+  },
+  {
+   "id": "river_ward",
+   "name": "河卫血胤",
+   "name_en": "River-Ward gentry",
+   "nation": "qinghe",
+   "tier": "noble",
+   "house": "河卫世家",
+   "desc": "朔澜河岸守望者后裔，掌渡口，敏于行。玉值高者发间有玉泽。",
+   "lore": "河卫世家握着清河所有的渡口。王座是玉做的，渡口却是铁做的——真正的权力在船上。",
+   "legacy": true,
+   "stat_min": {
+    "str": 5,
+    "vit": 5,
+    "skl": 6,
+    "agi": 7,
+    "per": 6,
+    "wil": 5
+   },
+   "stat_max": {
+    "str": 15,
+    "vit": 14,
+    "skl": 16,
+    "agi": 17,
+    "per": 15,
+    "wil": 14
+   },
+   "jobs": [
+    "hunter",
+    "light_inf",
+    "apprentice"
+   ],
+   "skill_bias": {
+    "trees": [
+     "range"
+    ],
+    "stats": [
+     "agi",
+     "skl"
+    ]
+   },
+   "genome": {
+    "hair": {
+     "ink_black": 2.0,
+     "wheat": 3.0,
+     "ash_brown": 1.0,
+     "frost_silver": 0.4
+    },
+    "eyes": {
+     "river_blue": 4.0,
+     "pine": 2.0,
+     "slate": 1.0
+    },
+    "brow": {
+     "arch": 3.0,
+     "straight": 1.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": -0.35,
+     "eye_tilt": 0.35,
+     "eye_size": -0.1
+    },
+    "body": {
+     "height": 0.2,
+     "build": -0.3
+    },
+    "skin": "#E2C1AC"
+   },
+   "sig": [
+    {
+     "locus": "jade",
+     "value": [
+      0.46,
+      0.08
+     ]
+    }
+   ],
+   "look": "Qinghe ferry-ward styling: jade-grey high-collared coat with a slim ferry-token pendant",
+   "tavern": {
+    "premium": 12,
+    "rarity": "少见"
+   }
+  },
+  {
+   "id": "qh_delta",
+   "name": "汀洲民胤",
+   "name_en": "Delta-isle folk",
+   "nation": "qinghe",
+   "tier": "folk",
+   "house": "汀洲渔樵",
+   "desc": "三角洲与雾中果林的人家，面容柔和，手上常带染坊的靛色。",
+   "lore": "汀洲人替书院抄谱，替染坊调色。染坊也是清河最大的伪造作坊——一缕染出来的玉色发，足够骗过半个酒馆。",
+   "stat_min": {
+    "str": 4,
+    "vit": 4,
+    "skl": 5,
+    "agi": 5,
+    "per": 5,
+    "wil": 5
+   },
+   "stat_max": {
+    "str": 12,
+    "vit": 13,
+    "skl": 14,
+    "agi": 14,
+    "per": 14,
+    "wil": 14
+   },
+   "jobs": [
+    "apprentice",
+    "hunter",
+    "light_inf"
+   ],
+   "skill_bias": {
+    "trees": [
+     "faith"
+    ],
+    "stats": [
+     "skl"
+    ]
+   },
+   "genome": {
+    "hair": {
+     "ink_black": 4.0,
+     "ash_brown": 3.0,
+     "wheat": 0.5
+    },
+    "eyes": {
+     "river_blue": 3.0,
+     "pine": 3.0,
+     "slate": 1.0
+    },
+    "brow": {
+     "arch": 2.0,
+     "soft": 2.0,
+     "straight": 1.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": -0.15,
+     "jaw": -0.2,
+     "eye_size": 0.1,
+     "nose": -0.1
+    },
+    "body": {
+     "height": 0.0,
+     "build": -0.1
+    },
+    "skin": "#E0BFA8"
+   },
+   "sig": [
+    {
+     "locus": "jade",
+     "value": [
+      0.12,
+      0.08
+     ]
+    }
+   ],
+   "look": "Qinghe delta styling: mist-grey technical silk with indigo dye-stained cuffs",
+   "tavern": {
+    "premium": 0,
+    "rarity": "常见"
+   }
+  },
+  {
+   "id": "lt_filament",
+   "name": "灯冕王胤",
+   "name_en": "Lamp-Filament sovereigns",
+   "nation": "lantern",
+   "tier": "royal",
+   "house": "琉氏",
+   "desc": "灯座之血。一份灯丝因即显：发梢化作琉璃纤丝，末端微亮。",
+   "lore": "灯丝因太容易传下去了，港口里满是有灯丝的人。于是灯座每七年拍卖一次——人人有血统，只好比谁更有钱。",
+   "stat_min": {
+    "str": 6,
+    "vit": 6,
+    "skl": 9,
+    "agi": 9,
+    "per": 7,
+    "wil": 7
+   },
+   "stat_max": {
+    "str": 16,
+    "vit": 16,
+    "skl": 19,
+    "agi": 19,
+    "per": 17,
+    "wil": 16
+   },
+   "jobs": [
+    "squire",
+    "hunter",
+    "light_inf"
+   ],
+   "skill_bias": {
+    "trees": [
+     "skirm",
+     "cavalry"
+    ],
+    "stats": [
+     "agi",
+     "skl"
+    ],
+    "royal_skill": "lamp_feint"
+   },
+   "signature": "filament",
+   "genome": {
+    "hair": {
+     "ink_black": 5.0,
+     "ash_brown": 1.0
+    },
+    "eyes": {
+     "pine": 3.0,
+     "river_blue": 1.0
+    },
+    "brow": {
+     "arch": 2.0,
+     "straight": 2.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": -0.1,
+     "cheek": 0.5,
+     "eye_size": 0.15
+    },
+    "body": {
+     "height": 0.15,
+     "build": -0.1
+    },
+    "skin": "#AE7A57"
+   },
+   "sig": [
+    {
+     "locus": "sig_lantern",
+     "genotypes": {
+      "filament|filament": 0.3,
+      "filament|glass_sheen": 0.3,
+      "filament|none": 0.35,
+      "glass_sheen|none": 0.05
+     }
+    }
+   ],
+   "look": "Lantern League styling: tailored night-market coat with a clear glass collar bar",
+   "tavern": {
+    "premium": 80,
+    "rarity": "罕见"
+   }
+  },
+  {
+   "id": "lt_glass",
+   "name": "琉商贵胤",
+   "name_en": "Glass-merchant houses",
+   "nation": "lantern",
+   "tier": "noble",
+   "house": "琉商诸行",
+   "desc": "琉璃商行世家。发梢一抹琉光，是与灯座通婚留下的小征。",
+   "lore": "琉商们发明了「灯籍」：花钱就能买一个贵胄名分。所以在灯市，最不值钱的就是头衔。",
+   "stat_min": {
+    "str": 5,
+    "vit": 5,
+    "skl": 7,
+    "agi": 7,
+    "per": 6,
+    "wil": 5
+   },
+   "stat_max": {
+    "str": 14,
+    "vit": 14,
+    "skl": 17,
+    "agi": 17,
+    "per": 15,
+    "wil": 14
+   },
+   "jobs": [
+    "squire",
+    "hunter"
+   ],
+   "skill_bias": {
+    "trees": [
+     "skirm"
+    ],
+    "stats": [
+     "skl"
+    ]
+   },
+   "genome": {
+    "hair": {
+     "ink_black": 4.0,
+     "ash_brown": 2.0
+    },
+    "eyes": {
+     "amber": 2.0,
+     "pine": 3.0,
+     "river_blue": 1.0
+    },
+    "brow": {
+     "straight": 2.0,
+     "arch": 2.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": -0.05,
+     "cheek": 0.45,
+     "nose": 0.1
+    },
+    "body": {
+     "height": 0.1,
+     "build": 0.0
+    },
+    "skin": "#B07D5A"
+   },
+   "sig": [
+    {
+     "locus": "sig_lantern",
+     "genotypes": {
+      "glass_sheen|none": 0.55,
+      "glass_sheen|glass_sheen": 0.15,
+      "filament|none": 0.08,
+      "filament|glass_sheen": 0.05,
+      "none|none": 0.17
+     }
+    }
+   ],
+   "look": "Lantern merchant styling: fitted slate coat with a row of clear lamp-glass buttons",
+   "tavern": {
+    "premium": 18,
+    "rarity": "少见"
+   }
+  },
+  {
+   "id": "lt_tide",
+   "name": "潮灯民胤",
+   "name_en": "Tide-lamp islanders",
+   "nation": "lantern",
+   "tier": "folk",
+   "house": "琉灯群岛",
+   "desc": "群岛水手与夜市人家，肤色铜亮，颧骨清晰。",
+   "lore": "夜市的价一夜三变。潮灯人什么都卖，包括别人的血统——假灯丝在这里是一门手艺。",
+   "stat_min": {
+    "str": 4,
+    "vit": 5,
+    "skl": 5,
+    "agi": 6,
+    "per": 4,
+    "wil": 4
+   },
+   "stat_max": {
+    "str": 13,
+    "vit": 14,
+    "skl": 14,
+    "agi": 15,
+    "per": 13,
+    "wil": 12
+   },
+   "jobs": [
+    "squire",
+    "hunter",
+    "light_inf"
+   ],
+   "skill_bias": {
+    "trees": [
+     "skirm"
+    ],
+    "stats": [
+     "agi"
+    ]
+   },
+   "genome": {
+    "hair": {
+     "ink_black": 4.0,
+     "ash_brown": 3.0,
+     "ember_red": 0.5
+    },
+    "eyes": {
+     "amber": 3.0,
+     "pine": 2.0,
+     "slate": 2.0
+    },
+    "brow": {
+     "straight": 3.0,
+     "thick": 1.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": 0.1,
+     "cheek": 0.4,
+     "jaw": 0.15,
+     "eye_tilt": 0.1
+    },
+    "body": {
+     "height": 0.0,
+     "build": 0.1
+    },
+    "skin": "#A8724F"
+   },
+   "sig": [
+    {
+     "locus": "sig_lantern",
+     "genotypes": {
+      "none|none": 0.9,
+      "glass_sheen|none": 0.07,
+      "filament|none": 0.03
+     }
+    }
+   ],
+   "look": "Lantern League harbor styling: waterproof slate harbor coat with small lamp-glass beads at the collar",
+   "tavern": {
+    "premium": 0,
+    "rarity": "常见"
+   }
+  },
+  {
+   "id": "frost_crown",
+   "name": "霜冕王胤",
+   "name_en": "Rime-Crown royal blood",
+   "nation": "frostcrown",
+   "tier": "royal",
+   "house": "霜冕氏",
+   "desc": "稀有王系残脉，六维上限极高。双份霜睫因方显：睫毛与眉梢天生霜白。",
+   "lore": "霜冕廷只在携因者之间联姻，王胤一代比一代稀薄。冰钟每响一次，廷议就多等一年：等一个睫上带霜的孩子出生。",
+   "legacy": true,
+   "stat_min": {
+    "str": 8,
+    "vit": 8,
+    "skl": 8,
+    "agi": 8,
+    "per": 8,
+    "wil": 9
+   },
+   "stat_max": {
+    "str": 20,
+    "vit": 20,
+    "skl": 20,
+    "agi": 20,
+    "per": 20,
+    "wil": 20
+   },
+   "jobs": [
+    "heavy_inf",
+    "apprentice",
+    "priest"
+   ],
+   "skill_bias": {
+    "trees": [
+     "faith",
+     "melee"
+    ],
+    "stats": [
+     "wil",
+     "vit"
+    ],
+    "royal_skill": "bell_hush"
+   },
+   "signature": "rime_lash",
+   "genome": {
+    "hair": {
+     "frost_silver": 4.0,
+     "ink_black": 2.0,
+     "ash_brown": 1.0
+    },
+    "eyes": {
+     "rime": 3.0,
+     "river_blue": 2.0,
+     "dusk": 1.0
+    },
+    "brow": {
+     "soft": 3.0,
+     "arch": 2.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": -0.5,
+     "nose": -0.3,
+     "eye_size": 0.25
+    },
+    "body": {
+     "height": 0.45,
+     "build": -0.2
+    },
+    "skin": "#F1DCD0"
+   },
+   "sig": [
+    {
+     "locus": "sig_frostcrown",
+     "genotypes": {
+      "rime_lash|rime_lash": 0.72,
+      "rime_tip|rime_lash": 0.13,
+      "rime_lash|none": 0.15
+     }
+    }
+   ],
+   "look": "Frostcrown court styling: frost-white and pale slate layered robe-coat",
+   "tavern": {
+    "premium": 110,
+    "rarity": "传说"
+   }
+  },
+  {
+   "id": "fc_hall",
+   "name": "霜阙贵胤",
+   "name_en": "Rime-Hall peers",
+   "nation": "frostcrown",
+   "tier": "noble",
+   "house": "霜阙廷卿",
+   "desc": "霜阙廷卿。眉梢一点天生的霜白；许多人暗中携着霜睫之因。",
+   "lore": "廷卿们彼此通婚，只为把隐性的霜睫留在宫里。祠堂开出的「携霜」验契，是霜冕廷最硬的聘礼。",
+   "stat_min": {
+    "str": 6,
+    "vit": 7,
+    "skl": 5,
+    "agi": 5,
+    "per": 6,
+    "wil": 7
+   },
+   "stat_max": {
+    "str": 15,
+    "vit": 17,
+    "skl": 14,
+    "agi": 14,
+    "per": 15,
+    "wil": 18
+   },
+   "jobs": [
+    "heavy_inf",
+    "apprentice"
+   ],
+   "skill_bias": {
+    "trees": [
+     "faith",
+     "guard"
+    ],
+    "stats": [
+     "wil"
+    ]
+   },
+   "genome": {
+    "hair": {
+     "frost_silver": 2.5,
+     "ink_black": 3.0,
+     "ash_brown": 1.0
+    },
+    "eyes": {
+     "rime": 1.5,
+     "river_blue": 2.0,
+     "slate": 2.0
+    },
+    "brow": {
+     "soft": 3.0,
+     "arch": 2.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": -0.35,
+     "nose": -0.2,
+     "eye_size": 0.15
+    },
+    "body": {
+     "height": 0.35,
+     "build": -0.15
+    },
+    "skin": "#F0D9CC"
+   },
+   "sig": [
+    {
+     "locus": "sig_frostcrown",
+     "genotypes": {
+      "rime_tip|none": 0.35,
+      "rime_tip|rime_lash": 0.3,
+      "rime_lash|none": 0.25,
+      "rime_lash|rime_lash": 0.05,
+      "none|none": 0.05
+     }
+    }
+   ],
+   "look": "Frostcrown hall styling: frost-white high coat with an ice-glass clasp",
+   "tavern": {
+    "premium": 30,
+    "rarity": "少见"
+   }
+  },
+  {
+   "id": "fc_plateau",
+   "name": "高原民胤",
+   "name_en": "Plateau herders",
+   "nation": "frostcrown",
+   "tier": "folk",
+   "house": "冰原牧户",
+   "desc": "高原牧户与冰匠，双颊被风吹红，身量高直。",
+   "lore": "高原人不谈王族，但每个村子都记得哪家祖上出过「睫上霜」的孩子。",
+   "stat_min": {
+    "str": 5,
+    "vit": 5,
+    "skl": 4,
+    "agi": 4,
+    "per": 4,
+    "wil": 5
+   },
+   "stat_max": {
+    "str": 14,
+    "vit": 15,
+    "skl": 12,
+    "agi": 12,
+    "per": 13,
+    "wil": 14
+   },
+   "jobs": [
+    "heavy_inf",
+    "apprentice"
+   ],
+   "skill_bias": {
+    "trees": [
+     "guard"
+    ],
+    "stats": [
+     "vit"
+    ]
+   },
+   "genome": {
+    "hair": {
+     "frost_silver": 1.5,
+     "ash_brown": 3.0,
+     "ink_black": 3.0
+    },
+    "eyes": {
+     "slate": 3.0,
+     "river_blue": 2.0,
+     "rime": 0.6
+    },
+    "brow": {
+     "straight": 2.0,
+     "soft": 2.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": -0.1,
+     "cheek": 0.35,
+     "nose": 0.1
+    },
+    "body": {
+     "height": 0.2,
+     "build": 0.2
+    },
+    "skin": "#EBCDBE"
+   },
+   "sig": [
+    {
+     "locus": "sig_frostcrown",
+     "genotypes": {
+      "none|none": 0.86,
+      "rime_lash|none": 0.1,
+      "rime_tip|none": 0.04
+     }
+    }
+   ],
+   "look": "Frostcrown plateau styling: layered frost-white felt with ice-glass toggles",
+   "tavern": {
+    "premium": 0,
+    "rarity": "常见"
+   }
+  },
+  {
+   "id": "eo_kiln",
+   "name": "窑冕王胤",
+   "name_en": "Kiln-Crown dynasty",
+   "nation": "emberold",
+   "tier": "royal",
+   "house": "焚氏",
+   "desc": "旧邦窑王之血。冰裂纹只随父系传给儿子，女儿永不承。",
+   "lore": "末代窑王只有女儿，窑火就此冷了。旧典派说窑冕已绝；可三代前被逐出焚阙的那支幼子后裔，还有人脸上带着冰裂。",
+   "stat_min": {
+    "str": 9,
+    "vit": 7,
+    "skl": 6,
+    "agi": 5,
+    "per": 5,
+    "wil": 9
+   },
+   "stat_max": {
+    "str": 20,
+    "vit": 18,
+    "skl": 16,
+    "agi": 15,
+    "per": 15,
+    "wil": 20
+   },
+   "jobs": [
+    "warrior",
+    "heavy_inf",
+    "apprentice"
+   ],
+   "skill_bias": {
+    "trees": [
+     "melee"
+    ],
+    "stats": [
+     "str",
+     "wil"
+    ],
+    "royal_skill": "kiln_reforge"
+   },
+   "signature": "kiln_crackle",
+   "genome": {
+    "hair": {
+     "ink_black": 4.0,
+     "ember_red": 3.0
+    },
+    "eyes": {
+     "dusk": 3.0,
+     "slate": 2.0
+    },
+    "brow": {
+     "straight": 3.0,
+     "thick": 2.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 3.0,
+     "ember_sigil": 1.5
+    },
+    "face": {
+     "cheek": 0.55,
+     "jaw": 0.35,
+     "brow_height": -0.25,
+     "nose": 0.15
+    },
+    "body": {
+     "height": 0.25,
+     "build": 0.3
+    },
+    "skin": "#C49670"
+   },
+   "sig": [
+    {
+     "locus": "sig_emberold",
+     "f": {},
+     "m": {
+      "kiln_crackle": 0.96,
+      "none": 0.04
+     }
+    }
+   ],
+   "look": "Emberold old-canon styling: charcoal high coat with celadon porcelain toggles",
+   "tavern": {
+    "premium": 125,
+    "rarity": "传说"
+   }
+  },
+  {
+   "id": "ember_noble",
+   "name": "余烬贵胤",
+   "name_en": "Ember Council nobility",
+   "nation": "emberold",
+   "tier": "noble",
+   "house": "烬议诸家",
+   "desc": "旧邦余烬贵族，力与意偏高。烬纹不完全显性，一份便淡淡可见。",
+   "lore": "窑王绝嗣后，烬议诸家接管了旧邦。他们最怕的不是外敌，而是某个脸上带冰裂的流亡者回来。",
+   "legacy": true,
+   "stat_min": {
+    "str": 7,
+    "vit": 6,
+    "skl": 5,
+    "agi": 5,
+    "per": 5,
+    "wil": 7
+   },
+   "stat_max": {
+    "str": 18,
+    "vit": 16,
+    "skl": 15,
+    "agi": 14,
+    "per": 14,
+    "wil": 18
+   },
+   "jobs": [
+    "heavy_inf",
+    "warrior",
+    "apprentice"
+   ],
+   "skill_bias": {
+    "trees": [
+     "melee",
+     "faith"
+    ],
+    "stats": [
+     "str",
+     "wil"
+    ]
+   },
+   "genome": {
+    "hair": {
+     "ember_red": 3.0,
+     "ink_black": 3.0,
+     "ash_brown": 1.0
+    },
+    "eyes": {
+     "amber": 4.0,
+     "dusk": 2.0
+    },
+    "brow": {
+     "straight": 3.0,
+     "thick": 2.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 4.0,
+     "ember_sigil": 1.5
+    },
+    "face": {
+     "cheek": 0.5,
+     "brow_height": -0.3,
+     "jaw": 0.2
+    },
+    "body": {
+     "height": 0.1,
+     "build": 0.2
+    },
+    "skin": "#C69C78"
+   },
+   "sig": [
+    {
+     "locus": "sig_emberold",
+     "f": {},
+     "m": {
+      "none": 0.9,
+      "kiln_crackle": 0.1
+     }
+    }
+   ],
+   "look": "Emberold council styling: charcoal coat with porcelain-white piping",
+   "tavern": {
+    "premium": 25,
+    "rarity": "少见"
+   }
+  },
+  {
+   "id": "eo_ashland",
+   "name": "窑原民胤",
+   "name_en": "Kiln-plain folk",
+   "nation": "emberold",
+   "tier": "folk",
+   "house": "窑原人家",
+   "desc": "窑镇与废墟掘客，橄榄肤色，颧高眉重。",
+   "lore": "窑原人在废墟里挖最好的料，也挖旧王的秘密。他们说：冰裂会骗人，描上去的釉线遇热不亮。",
+   "stat_min": {
+    "str": 5,
+    "vit": 5,
+    "skl": 4,
+    "agi": 4,
+    "per": 4,
+    "wil": 5
+   },
+   "stat_max": {
+    "str": 15,
+    "vit": 14,
+    "skl": 12,
+    "agi": 12,
+    "per": 12,
+    "wil": 14
+   },
+   "jobs": [
+    "heavy_inf",
+    "warrior",
+    "apprentice"
+   ],
+   "skill_bias": {
+    "trees": [
+     "melee"
+    ],
+    "stats": [
+     "str"
+    ]
+   },
+   "genome": {
+    "hair": {
+     "ink_black": 4.0,
+     "ember_red": 2.0,
+     "ash_brown": 2.0
+    },
+    "eyes": {
+     "amber": 3.0,
+     "dusk": 2.0,
+     "slate": 1.0
+    },
+    "brow": {
+     "thick": 3.0,
+     "straight": 2.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 6.0,
+     "ember_sigil": 0.4
+    },
+    "face": {
+     "cheek": 0.4,
+     "jaw": 0.3,
+     "brow_height": -0.2
+    },
+    "body": {
+     "height": 0.0,
+     "build": 0.35
+    },
+    "skin": "#BF916E"
+   },
+   "sig": [
+    {
+     "locus": "sig_emberold",
+     "f": {},
+     "m": {
+      "none": 0.97,
+      "kiln_crackle": 0.03
+     }
+    }
+   ],
+   "look": "Emberold kiln-town styling: heat-proof ceramic-fibre apron over a charcoal work coat with porcelain toggles",
+   "tavern": {
+    "premium": 0,
+    "rarity": "常见"
+   }
+  },
+  {
+   "id": "sm_tide",
+   "name": "潮后王胤",
+   "name_en": "Tide-Queen line",
+   "nation": "saltmarsh",
+   "tier": "royal",
+   "house": "汐氏",
+   "desc": "盐后之血。潮痕发随 X 显性而行：潮痕之父传全部女儿，不传儿子。",
+   "lore": "盐泽由女王治理。潮痕男子只能做「潮伯」掌兵，他们的潮痕会全部落到女儿身上——所以每位潮伯的女儿，都是潜在的女王。",
+   "stat_min": {
+    "str": 6,
+    "vit": 8,
+    "skl": 7,
+    "agi": 7,
+    "per": 9,
+    "wil": 8
+   },
+   "stat_max": {
+    "str": 16,
+    "vit": 19,
+    "skl": 17,
+    "agi": 17,
+    "per": 19,
+    "wil": 18
+   },
+   "jobs": [
+    "hunter",
+    "light_inf",
+    "priest"
+   ],
+   "skill_bias": {
+    "trees": [
+     "guard",
+     "range"
+    ],
+    "stats": [
+     "vit",
+     "per"
+    ],
+    "royal_skill": "tide_edict"
+   },
+   "signature": "tide_ring",
+   "genome": {
+    "hair": {
+     "ink_black": 3.0,
+     "ash_brown": 3.0
+    },
+    "eyes": {
+     "river_blue": 3.0,
+     "slate": 2.0
+    },
+    "brow": {
+     "arch": 2.0,
+     "straight": 2.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": 0.0,
+     "cheek": 0.3,
+     "eye_tilt": 0.15,
+     "eye_size": 0.15
+    },
+    "body": {
+     "height": 0.2,
+     "build": 0.05
+    },
+    "skin": "#B88563"
+   },
+   "sig": [
+    {
+     "locus": "sig_saltmarsh",
+     "f": {
+      "tide_ring|tide_ring": 0.4,
+      "tide_ring|salt_band": 0.3,
+      "tide_ring|none": 0.3
+     },
+     "m": {
+      "tide_ring": 0.85,
+      "salt_band": 0.1,
+      "none": 0.05
+     }
+    }
+   ],
+   "look": "Saltmarsh tide-court styling: pale slate and salt-white layered coat",
+   "tavern": {
+    "premium": 115,
+    "rarity": "传说"
+   }
+  },
+  {
+   "id": "sm_ledger",
+   "name": "盐引贵胤",
+   "name_en": "Salt-Ledger houses",
+   "nation": "saltmarsh",
+   "tier": "noble",
+   "house": "盐引诸家",
+   "desc": "握盐引的世家。发间一道淡淡的盐线，同样随 X 而行。",
+   "lore": "盐引就是盐泽的货币，盐引世家就是盐泽的银行。她们嫁女儿时不收聘礼，只收盐引。",
+   "stat_min": {
+    "str": 5,
+    "vit": 6,
+    "skl": 6,
+    "agi": 6,
+    "per": 7,
+    "wil": 6
+   },
+   "stat_max": {
+    "str": 14,
+    "vit": 16,
+    "skl": 15,
+    "agi": 15,
+    "per": 17,
+    "wil": 15
+   },
+   "jobs": [
+    "hunter",
+    "light_inf"
+   ],
+   "skill_bias": {
+    "trees": [
+     "guard"
+    ],
+    "stats": [
+     "per"
+    ]
+   },
+   "genome": {
+    "hair": {
+     "ash_brown": 3.0,
+     "ink_black": 3.0,
+     "wheat": 1.0
+    },
+    "eyes": {
+     "river_blue": 3.0,
+     "slate": 2.0,
+     "pine": 1.0
+    },
+    "brow": {
+     "straight": 2.0,
+     "arch": 2.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": 0.1,
+     "cheek": 0.25,
+     "eye_size": 0.1
+    },
+    "body": {
+     "height": 0.05,
+     "build": 0.1
+    },
+    "skin": "#BD8A68"
+   },
+   "sig": [
+    {
+     "locus": "sig_saltmarsh",
+     "f": {
+      "salt_band|none": 0.55,
+      "salt_band|salt_band": 0.2,
+      "tide_ring|salt_band": 0.08,
+      "none|none": 0.17
+     },
+     "m": {
+      "salt_band": 0.65,
+      "tide_ring": 0.05,
+      "none": 0.3
+     }
+    }
+   ],
+   "look": "Saltmarsh ledger-house styling: pale slate coat with a thin salt-crystal chain",
+   "tavern": {
+    "premium": 20,
+    "rarity": "少见"
+   }
+  },
+  {
+   "id": "sm_reed",
+   "name": "芦滩民胤",
+   "name_en": "Reed-flat salters",
+   "nation": "saltmarsh",
+   "tier": "folk",
+   "house": "芦滩盐户",
+   "desc": "潮滩盐工，肤色晒成铜色，身板结实。",
+   "lore": "潮汐即法度。芦滩人按潮水作息，也按潮水分家：家产随女儿走，儿子随船走。",
+   "stat_min": {
+    "str": 4,
+    "vit": 6,
+    "skl": 4,
+    "agi": 5,
+    "per": 5,
+    "wil": 4
+   },
+   "stat_max": {
+    "str": 13,
+    "vit": 15,
+    "skl": 13,
+    "agi": 14,
+    "per": 14,
+    "wil": 12
+   },
+   "jobs": [
+    "hunter",
+    "light_inf"
+   ],
+   "skill_bias": {
+    "trees": [
+     "guard"
+    ],
+    "stats": [
+     "vit"
+    ]
+   },
+   "genome": {
+    "hair": {
+     "ash_brown": 3.0,
+     "wheat": 2.0,
+     "ink_black": 2.0
+    },
+    "eyes": {
+     "slate": 3.0,
+     "river_blue": 2.0,
+     "pine": 1.0
+    },
+    "brow": {
+     "straight": 3.0,
+     "thick": 1.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": 0.35,
+     "jaw": 0.2,
+     "cheek": 0.1
+    },
+    "body": {
+     "height": -0.05,
+     "build": 0.35
+    },
+    "skin": "#B98463"
+   },
+   "sig": [
+    {
+     "locus": "sig_saltmarsh",
+     "f": {
+      "none|none": 0.9,
+      "salt_band|none": 0.08,
+      "tide_ring|none": 0.02
+     },
+     "m": {
+      "none": 0.92,
+      "salt_band": 0.06,
+      "tide_ring": 0.02
+     }
+    }
+   ],
+   "look": "Saltmarsh reed styling: reed-weave cape over a waterproof jacket with salt-crystal toggles",
+   "tavern": {
+    "premium": 0,
+    "rarity": "常见"
+   }
+  },
+  {
+   "id": "ig_gorge",
+   "name": "峡钢王胤",
+   "name_en": "Gorge-Steel forge lords",
+   "nation": "irongorge",
+   "tier": "royal",
+   "house": "锻氏",
+   "desc": "峡座之血。峡眉因显性，却只有六成携者眉被劈开；其余是「藏钢」。",
+   "lore": "峡座从不世袭，只靠锻选：凡祠堂验明的携因者——显也好、藏也好——都能进锻场。所以铁峡从不缺王，只缺安宁。",
+   "stat_min": {
+    "str": 9,
+    "vit": 9,
+    "skl": 6,
+    "agi": 5,
+    "per": 6,
+    "wil": 7
+   },
+   "stat_max": {
+    "str": 20,
+    "vit": 20,
+    "skl": 16,
+    "agi": 15,
+    "per": 15,
+    "wil": 17
+   },
+   "jobs": [
+    "heavy_inf",
+    "warrior"
+   ],
+   "skill_bias": {
+    "trees": [
+     "melee",
+     "guard"
+    ],
+    "stats": [
+     "str",
+     "vit"
+    ],
+    "royal_skill": "gorge_breaker"
+   },
+   "signature": "gorge_split",
+   "genome": {
+    "hair": {
+     "ink_black": 5.0,
+     "ash_brown": 1.0
+    },
+    "eyes": {
+     "slate": 3.0,
+     "dusk": 3.0
+    },
+    "brow": {
+     "thick": 5.0,
+     "straight": 1.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": 0.3,
+     "jaw": 0.65,
+     "cheek": 0.2,
+     "brow_height": -0.3
+    },
+    "body": {
+     "height": 0.3,
+     "build": 0.55
+    },
+    "skin": "#9A684B"
+   },
+   "sig": [
+    {
+     "locus": "sig_irongorge",
+     "genotypes": {
+      "gorge_split|gorge_split": 0.4,
+      "gorge_split|brow_notch": 0.3,
+      "gorge_split|none": 0.3
+     }
+    }
+   ],
+   "look": "Iron Gorge forge-lord styling: dark steel-grey coat with a cold-steel collar ring",
+   "tavern": {
+    "premium": 100,
+    "rarity": "传说"
+   }
+  },
+  {
+   "id": "ig_warden",
+   "name": "峡卫贵胤",
+   "name_en": "Bridge-Warden houses",
+   "nation": "irongorge",
+   "tier": "noble",
+   "house": "吊桥峡卫",
+   "desc": "守三层吊桥的峡卫世家。眉尾常有一道天生的眉刻。",
+   "lore": "峡卫替锻场的胜者守桥，也替败者收尸。每次锻选之后，总有一家峡卫换了主人。",
+   "stat_min": {
+    "str": 7,
+    "vit": 7,
+    "skl": 5,
+    "agi": 4,
+    "per": 5,
+    "wil": 6
+   },
+   "stat_max": {
+    "str": 17,
+    "vit": 17,
+    "skl": 14,
+    "agi": 13,
+    "per": 14,
+    "wil": 15
+   },
+   "jobs": [
+    "heavy_inf",
+    "warrior"
+   ],
+   "skill_bias": {
+    "trees": [
+     "guard"
+    ],
+    "stats": [
+     "vit"
+    ]
+   },
+   "genome": {
+    "hair": {
+     "ink_black": 4.0,
+     "ash_brown": 2.0
+    },
+    "eyes": {
+     "slate": 3.0,
+     "dusk": 2.0
+    },
+    "brow": {
+     "thick": 4.0,
+     "straight": 2.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": 0.35,
+     "jaw": 0.55,
+     "cheek": 0.15
+    },
+    "body": {
+     "height": 0.2,
+     "build": 0.5
+    },
+    "skin": "#A06E50"
+   },
+   "sig": [
+    {
+     "locus": "sig_irongorge",
+     "genotypes": {
+      "brow_notch|none": 0.5,
+      "brow_notch|brow_notch": 0.15,
+      "gorge_split|brow_notch": 0.12,
+      "gorge_split|none": 0.08,
+      "none|none": 0.15
+     }
+    }
+   ],
+   "look": "Iron Gorge bridge-warden styling: dark steel-grey coat with a riveted gorget",
+   "tavern": {
+    "premium": 22,
+    "rarity": "少见"
+   }
+  },
+  {
+   "id": "ig_forge",
+   "name": "炉峡民胤",
+   "name_en": "Canyon forge folk",
+   "nation": "irongorge",
+   "tier": "folk",
+   "house": "炉峡匠户",
+   "desc": "峡谷锻炉的匠户，肤色深，方颌宽肩。",
+   "lore": "炉峡人说，钢藏在血里不一定露在脸上。他们的孩子里偶尔会冒出一个「藏钢」，被祠堂一验，便能进锻场。",
+   "stat_min": {
+    "str": 6,
+    "vit": 6,
+    "skl": 4,
+    "agi": 3,
+    "per": 4,
+    "wil": 4
+   },
+   "stat_max": {
+    "str": 15,
+    "vit": 15,
+    "skl": 12,
+    "agi": 11,
+    "per": 12,
+    "wil": 13
+   },
+   "jobs": [
+    "heavy_inf",
+    "warrior",
+    "light_inf"
+   ],
+   "skill_bias": {
+    "trees": [
+     "melee"
+    ],
+    "stats": [
+     "str"
+    ]
+   },
+   "genome": {
+    "hair": {
+     "ink_black": 4.0,
+     "ash_brown": 3.0
+    },
+    "eyes": {
+     "slate": 4.0,
+     "dusk": 1.0,
+     "amber": 1.0
+    },
+    "brow": {
+     "thick": 4.0,
+     "straight": 2.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": 0.5,
+     "jaw": 0.6,
+     "brow_height": -0.25,
+     "nose": 0.25
+    },
+    "body": {
+     "height": 0.05,
+     "build": 0.6
+    },
+    "skin": "#9E6B4E"
+   },
+   "sig": [
+    {
+     "locus": "sig_irongorge",
+     "genotypes": {
+      "none|none": 0.88,
+      "brow_notch|none": 0.08,
+      "gorge_split|none": 0.04
+     }
+    }
+   ],
+   "look": "Iron Gorge forge styling: heat-shield leather vest with cold-steel rivets, canyon-dust goggles pushed up on the forehead",
+   "tavern": {
+    "premium": 0,
+    "rarity": "常见"
+   }
+  },
+  {
+   "id": "sr_dipper",
+   "name": "七星王胤",
+   "name_en": "Dipper-Star throne",
+   "nation": "starriver",
+   "tier": "royal",
+   "house": "星枢氏",
+   "desc": "星枢之血。三台与四辅两种小痣在一人身上合成北斗七星痣。",
+   "lore": "七星只能由东虹与西虹的结合生出。两座虹桥两家人，世代必须联姻；观象台替星枢验星、记谱，也替它挑婚。",
+   "stat_min": {
+    "str": 6,
+    "vit": 6,
+    "skl": 8,
+    "agi": 7,
+    "per": 9,
+    "wil": 9
+   },
+   "stat_max": {
+    "str": 16,
+    "vit": 16,
+    "skl": 19,
+    "agi": 17,
+    "per": 20,
+    "wil": 19
+   },
+   "jobs": [
+    "apprentice",
+    "hunter",
+    "squire"
+   ],
+   "skill_bias": {
+    "trees": [
+     "range",
+     "faith"
+    ],
+    "stats": [
+     "per",
+     "wil"
+    ],
+    "royal_skill": "dipper_fix"
+   },
+   "signature": "qi_xing",
+   "genome": {
+    "hair": {
+     "ink_black": 5.0,
+     "ash_brown": 2.0
+    },
+    "eyes": {
+     "dusk": 3.0,
+     "river_blue": 3.0
+    },
+    "brow": {
+     "arch": 3.0,
+     "soft": 1.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": -0.25,
+     "cheek": 0.25,
+     "eye_size": 0.25,
+     "eye_tilt": 0.15
+    },
+    "body": {
+     "height": 0.1,
+     "build": -0.2
+    },
+    "skin": "#DBB59B"
+   },
+   "sig": [
+    {
+     "locus": "sig_starriver",
+     "genotypes": {
+      "san_tai|si_fu": 0.85,
+      "san_tai|san_tai": 0.075,
+      "si_fu|si_fu": 0.075
+     }
+    }
+   ],
+   "look": "Starriver observatory styling: frosted navy high collar",
+   "tavern": {
+    "premium": 135,
+    "rarity": "传说"
+   }
+  },
+  {
+   "id": "sr_east_arc",
+   "name": "东虹贵胤",
+   "name_en": "East-Rainbow house",
+   "nation": "starriver",
+   "tier": "noble",
+   "house": "东虹家",
+   "desc": "东虹桥世家，携三台：左眼下三颗斜列的小痣。",
+   "lore": "东虹家只有三台，永远生不出七星；它需要西虹，就像桥需要对岸。",
+   "stat_min": {
+    "str": 5,
+    "vit": 5,
+    "skl": 7,
+    "agi": 6,
+    "per": 7,
+    "wil": 6
+   },
+   "stat_max": {
+    "str": 14,
+    "vit": 14,
+    "skl": 17,
+    "agi": 15,
+    "per": 17,
+    "wil": 16
+   },
+   "jobs": [
+    "apprentice",
+    "hunter"
+   ],
+   "skill_bias": {
+    "trees": [
+     "range"
+    ],
+    "stats": [
+     "per",
+     "skl"
+    ]
+   },
+   "genome": {
+    "hair": {
+     "ink_black": 5.0,
+     "ash_brown": 1.0
+    },
+    "eyes": {
+     "dusk": 3.0,
+     "river_blue": 2.0
+    },
+    "brow": {
+     "arch": 3.0,
+     "straight": 1.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": -0.25,
+     "eye_size": 0.2,
+     "eye_tilt": 0.2
+    },
+    "body": {
+     "height": 0.05,
+     "build": -0.2
+    },
+    "skin": "#DDB89E"
+   },
+   "sig": [
+    {
+     "locus": "sig_starriver",
+     "genotypes": {
+      "san_tai|san_tai": 0.4,
+      "san_tai|none": 0.45,
+      "san_tai|si_fu": 0.05,
+      "none|none": 0.1
+     }
+    }
+   ],
+   "look": "Starriver East Rainbow styling: frosted navy coat with a thin pale arc embroidered across the chest",
+   "tavern": {
+    "premium": 24,
+    "rarity": "少见"
+   }
+  },
+  {
+   "id": "sr_west_arc",
+   "name": "西虹贵胤",
+   "name_en": "West-Rainbow house",
+   "nation": "starriver",
+   "tier": "noble",
+   "house": "西虹家",
+   "desc": "西虹桥世家，携四辅：左鬓四颗弧列的小痣。",
+   "lore": "西虹家记得每一次与东虹的婚约，也记得每一次毁约。孤虹之年，就是两家断交的那些年。",
+   "stat_min": {
+    "str": 5,
+    "vit": 5,
+    "skl": 6,
+    "agi": 6,
+    "per": 7,
+    "wil": 7
+   },
+   "stat_max": {
+    "str": 14,
+    "vit": 14,
+    "skl": 15,
+    "agi": 15,
+    "per": 17,
+    "wil": 17
+   },
+   "jobs": [
+    "apprentice",
+    "squire"
+   ],
+   "skill_bias": {
+    "trees": [
+     "faith"
+    ],
+    "stats": [
+     "per",
+     "wil"
+    ]
+   },
+   "genome": {
+    "hair": {
+     "ash_brown": 3.0,
+     "ink_black": 3.0
+    },
+    "eyes": {
+     "river_blue": 3.0,
+     "dusk": 2.0
+    },
+    "brow": {
+     "soft": 2.0,
+     "arch": 2.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": -0.15,
+     "cheek": 0.2,
+     "eye_size": 0.25
+    },
+    "body": {
+     "height": 0.0,
+     "build": -0.15
+    },
+    "skin": "#D6B095"
+   },
+   "sig": [
+    {
+     "locus": "sig_starriver",
+     "genotypes": {
+      "si_fu|si_fu": 0.4,
+      "si_fu|none": 0.45,
+      "san_tai|si_fu": 0.05,
+      "none|none": 0.1
+     }
+    }
+   ],
+   "look": "Starriver West Rainbow styling: frosted navy coat with a thin pale arc embroidered on the left shoulder",
+   "tavern": {
+    "premium": 24,
+    "rarity": "少见"
+   }
+  },
+  {
+   "id": "sr_ford",
+   "name": "津桥民胤",
+   "name_en": "Ferry-bridge folk",
+   "nation": "starriver",
+   "tier": "folk",
+   "house": "津桥人家",
+   "desc": "渡口与观象台小镇的人家，眉目清秀。",
+   "lore": "津桥人最会点痣：观象台门口的画痣摊，一天能卖出半条街的「三台」。",
+   "stat_min": {
+    "str": 4,
+    "vit": 4,
+    "skl": 5,
+    "agi": 5,
+    "per": 6,
+    "wil": 5
+   },
+   "stat_max": {
+    "str": 12,
+    "vit": 12,
+    "skl": 14,
+    "agi": 14,
+    "per": 15,
+    "wil": 14
+   },
+   "jobs": [
+    "apprentice",
+    "hunter",
+    "squire"
+   ],
+   "skill_bias": {
+    "trees": [
+     "range"
+    ],
+    "stats": [
+     "per"
+    ]
+   },
+   "genome": {
+    "hair": {
+     "ink_black": 4.0,
+     "ash_brown": 3.0
+    },
+    "eyes": {
+     "dusk": 3.0,
+     "river_blue": 2.0,
+     "slate": 1.0
+    },
+    "brow": {
+     "arch": 2.0,
+     "soft": 2.0,
+     "straight": 1.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": -0.2,
+     "jaw": -0.2,
+     "eye_size": 0.2,
+     "nose": -0.1
+    },
+    "body": {
+     "height": -0.05,
+     "build": -0.2
+    },
+    "skin": "#D9B49A"
+   },
+   "sig": [
+    {
+     "locus": "sig_starriver",
+     "genotypes": {
+      "none|none": 0.88,
+      "san_tai|none": 0.06,
+      "si_fu|none": 0.06
+     }
+    }
+   ],
+   "look": "Starriver ferry styling: frosted navy high collar embroidered with tiny star-chart dots",
+   "tavern": {
+    "premium": 0,
+    "rarity": "常见"
+   }
+  },
+  {
+   "id": "sz_firefly",
+   "name": "萤母王胤",
+   "name_en": "Firefly-Mother line",
+   "nation": "southzephyr",
+   "tier": "royal",
+   "house": "萤母诸氏",
+   "desc": "萤母之血。萤值只经母系：母亲把萤光传给每个孩子，父亲一分不传。",
+   "lore": "南泽由萤母议治理。萤母的儿子也会发光，却永远传不下去——这些「萤子」离林渡水，成了四方最常见的王血佣兵。",
+   "stat_min": {
+    "str": 6,
+    "vit": 7,
+    "skl": 6,
+    "agi": 9,
+    "per": 9,
+    "wil": 7
+   },
+   "stat_max": {
+    "str": 16,
+    "vit": 17,
+    "skl": 16,
+    "agi": 19,
+    "per": 19,
+    "wil": 17
+   },
+   "jobs": [
+    "hunter",
+    "light_inf",
+    "priest"
+   ],
+   "skill_bias": {
+    "trees": [
+     "range",
+     "skirm"
+    ],
+    "stats": [
+     "agi",
+     "per"
+    ],
+    "royal_skill": "firefly_ferry"
+   },
+   "signature": "firefly",
+   "genome": {
+    "hair": {
+     "ink_black": 7.0
+    },
+    "eyes": {
+     "pine": 4.0,
+     "dusk": 2.0
+    },
+    "brow": {
+     "arch": 2.0,
+     "straight": 2.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": 0.05,
+     "cheek": 0.35,
+     "eye_size": 0.2,
+     "eye_tilt": 0.1
+    },
+    "body": {
+     "height": 0.05,
+     "build": 0.0
+    },
+    "skin": "#7A4C36"
+   },
+   "sig": [
+    {
+     "locus": "glow",
+     "value": [
+      0.8,
+      0.07
+     ]
+    }
+   ],
+   "look": "South Zephyr matriarch styling: layered rain-cape of beeswaxed cloth with carved hardwood beads",
+   "tavern": {
+    "premium": 95,
+    "rarity": "罕见"
+   }
+  },
+  {
+   "id": "sz_ferry",
+   "name": "渡灯贵胤",
+   "name_en": "Ferry-Lamp clans",
+   "nation": "southzephyr",
+   "tier": "noble",
+   "house": "渡灯诸家",
+   "desc": "掌渡口灯火的氏族。萤值中等，鼻梁上几点淡萤。",
+   "lore": "渡灯家的女儿若嫁给萤母之子，孩子只会承她自己的那点微光。南泽人都懂：要光，得娶萤母的女儿。",
+   "stat_min": {
+    "str": 5,
+    "vit": 6,
+    "skl": 5,
+    "agi": 7,
+    "per": 7,
+    "wil": 5
+   },
+   "stat_max": {
+    "str": 15,
+    "vit": 16,
+    "skl": 14,
+    "agi": 17,
+    "per": 16,
+    "wil": 14
+   },
+   "jobs": [
+    "hunter",
+    "light_inf"
+   ],
+   "skill_bias": {
+    "trees": [
+     "skirm"
+    ],
+    "stats": [
+     "agi"
+    ]
+   },
+   "genome": {
+    "hair": {
+     "ink_black": 6.0,
+     "ash_brown": 1.0
+    },
+    "eyes": {
+     "pine": 3.0,
+     "dusk": 2.0,
+     "amber": 1.0
+    },
+    "brow": {
+     "straight": 2.0,
+     "arch": 2.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": 0.15,
+     "cheek": 0.3,
+     "eye_size": 0.15
+    },
+    "body": {
+     "height": 0.0,
+     "build": 0.15
+    },
+    "skin": "#845640"
+   },
+   "sig": [
+    {
+     "locus": "glow",
+     "value": [
+      0.48,
+      0.08
+     ]
+    }
+   ],
+   "look": "South Zephyr ferry styling: oiled rain jacket with a small ferry-lamp pendant",
+   "tavern": {
+    "premium": 18,
+    "rarity": "少见"
+   }
+  },
+  {
+   "id": "sz_fogwood",
+   "name": "雾林民胤",
+   "name_en": "Fog-forest folk",
+   "nation": "southzephyr",
+   "tier": "folk",
+   "house": "雾林蜂户",
+   "desc": "萤雾森林的养蜂人与伐木人，肤色深暖，发卷而密。",
+   "lore": "雾林人养蜂、伐硬木、种南椒。他们也卖磷粉——抹在鼻梁上，夜里看着就像萤斑，下一场雨就花了。",
+   "stat_min": {
+    "str": 5,
+    "vit": 5,
+    "skl": 4,
+    "agi": 6,
+    "per": 5,
+    "wil": 4
+   },
+   "stat_max": {
+    "str": 14,
+    "vit": 14,
+    "skl": 12,
+    "agi": 15,
+    "per": 14,
+    "wil": 12
+   },
+   "jobs": [
+    "light_inf",
+    "hunter"
+   ],
+   "skill_bias": {
+    "trees": [
+     "skirm"
+    ],
+    "stats": [
+     "agi",
+     "vit"
+    ]
+   },
+   "genome": {
+    "hair": {
+     "ink_black": 7.0
+    },
+    "eyes": {
+     "pine": 3.0,
+     "amber": 2.0,
+     "dusk": 2.0
+    },
+    "brow": {
+     "thick": 2.0,
+     "straight": 2.0
+    },
+    "ears": {
+     "round": 1.0
+    },
+    "mark": {
+     "none": 1.0
+    },
+    "face": {
+     "width": 0.3,
+     "jaw": 0.0,
+     "cheek": 0.2,
+     "nose": 0.2,
+     "eye_size": 0.1
+    },
+    "body": {
+     "height": -0.1,
+     "build": 0.3
+    },
+    "skin": "#7E5039"
+   },
+   "sig": [
+    {
+     "locus": "glow",
+     "value": [
+      0.1,
+      0.08
+     ]
+    }
+   ],
+   "look": "South Zephyr fog-forest styling: beeswax-coated rain cape and carved hardwood beads, tight dark curls",
+   "tavern": {
+    "premium": 0,
+    "rarity": "常见"
+   }
+  }
+ ]
+}
