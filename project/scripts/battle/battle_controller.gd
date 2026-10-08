@@ -138,6 +138,7 @@ func _escort_banter(kind: String) -> void:
 	_theme_banter(kind)
 
 func _ready() -> void:
+	CKAutosave.before_battle()
 	rng.randomize()
 	Music.play_battle()
 	# v8 biome battle plate (fallback legacy backdrop)
@@ -1224,7 +1225,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 func _gui_input(event: InputEvent) -> void:
 	if battle_over:
 		return
-	for g in _board_router.push(event, Time.get_ticks_msec()):
+	for g in CKPauseMenu.board_events(_board_router, event, Time.get_ticks_msec()):
 		_apply_board_gesture(g)
 
 func apply_mobile_layout() -> void:
@@ -2515,6 +2516,7 @@ func _finish(win: bool) -> void:
 		if not wr.is_empty():
 			_log(str(wr.get("msg", "")))
 	GameState.save_game()
+	CKAutosave.after_battle()
 	var finished := {
 		"win": win,
 		"map_id": map_id,
