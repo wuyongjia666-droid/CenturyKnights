@@ -86,7 +86,7 @@ func _build() -> void:
 
 	_rite_board = UIKit.panel_at(self, Rect2(42, 516, 600, 112), 10)
 	_rite_board.name = "RiteBoard"
-	_punnett = UIKit.panel_at(self, Rect2(654, 516, 584, 112), 10)
+	_punnett = UIKit.panel_at(self, Rect2(654, 508, 584, 148), 10)
 	_punnett.name = "PunnettBoard"
 	_msg = UIKit.body_label("选定婚仪后，这里写明子女会怎样入谱。", UIKit.TEXT_DIM, 12)
 	_msg.autowrap_mode = TextServer.AUTOWRAP_OFF
@@ -95,7 +95,8 @@ func _build() -> void:
 	_msg.size = Vector2(576, 22)
 	_rite_board.add_child(_msg)
 	var row := HBoxContainer.new()
-	row.position = Vector2(602, 636)
+	row.name = "MarriageActions"
+	row.position = Vector2(602, 660)
 	row.size = Vector2(636, 44)
 	row.alignment = BoxContainer.ALIGNMENT_END
 	row.add_theme_constant_override("separation", 10)
@@ -356,9 +357,9 @@ func _render_cards() -> void:
 		_cards.remove_child(c)
 		c.queue_free()
 	var leader = GameState.get_leader()
-	_house_card(Rect2(42, 244, 386, 264), leader, "宗主一方", "CLAN PRINCIPAL", UIKit.ACCENT, "SERIES: VII-01")
+	_house_card(Rect2(42, 244, 386, 252), leader, "宗主一方", "CLAN PRINCIPAL", UIKit.ACCENT, "SERIES: VII-01")
 	_harmony_card(Rect2(448, 244, 384, 264), leader, _selected)
-	_house_card(Rect2(852, 244, 386, 264), _selected, "应帖一方", "ALLIED SPOUSE", UIKit.OK, "SERIES: IV-02")
+	_house_card(Rect2(852, 244, 386, 252), _selected, "应帖一方", "ALLIED SPOUSE", UIKit.OK, "SERIES: IV-02")
 	_fill_forecast(leader, _selected)
 
 func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
@@ -402,11 +403,33 @@ func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 	ph.size = Vector2(240, 16)
 	_punnett.add_child(ph)
 	var holder := VBoxContainer.new()
-	holder.position = Vector2(12, 24)
-	holder.size = Vector2(560, 76)
+	holder.position = Vector2(12, 22)
+	holder.size = Vector2(560, 70)
+	holder.clip_contents = true
 	_punnett.add_child(holder)
 	CKCourtChrome.fill_punnett(holder, a, b, 2)
+	var cast := UIKit.body_label(CKBloodPayoff.combat_forecast_zh(a, b, 1), UIKit.ACCENT, 12)
+	cast.name = "CombatForecast"
+	cast.autowrap_mode = TextServer.AUTOWRAP_OFF
+	cast.clip_text = true
+	cast.position = Vector2(12, 108)
+	cast.size = Vector2(560, 28)
+	_punnett.add_child(cast)
 	UIFX.wire_tree(_rite_board)
+
+func apply_mobile_layout() -> void:
+	MobileLayout.pin_footer(get_node_or_null("StitchFooter"))
+	if _punnett == null:
+		return
+	var w := get_viewport_rect().size.x
+	if w >= 1000.0:
+		return
+	_punnett.position = Vector2(8, 500)
+	_punnett.size = Vector2(maxf(280.0, w - 16.0), 150)
+	var actions := get_node_or_null("MarriageActions")
+	if actions:
+		actions.position = Vector2(8, 660)
+		actions.size = Vector2(maxf(280.0, w - 16.0), 44)
 
 func _sync_rite_flags(a: CKCharacter, b: CKCharacter) -> void:
 	var nxt := {}

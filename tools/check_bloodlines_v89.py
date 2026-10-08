@@ -413,6 +413,39 @@ def main():
     if seen_nations != set(nations):
         err(f"rival houses {sorted(seen_nations)} != nations {sorted(nations)}")
 
+    # DYN-01 tactics: read-only combat labels. They must not invent a trope or a missing locus.
+    tactics = d.get("tactics", [])
+    if len(tactics) < 20:
+        err(f"tactics: expected >= 20, got {len(tactics)}")
+    seen_loci = set()
+    per_nation = {}
+    for t in tactics:
+        loc = str(t.get("locus", ""))
+        nid = str(t.get("nation", ""))
+        blob = " ".join(str(t.get(k, "")) for k in ("zh", "effect"))
+        if loc not in d.get("loci", {}) or nid not in nations:
+            err(f"tactic {loc}: unknown locus or nation {nid}")
+        if d.get("loci", {}).get(loc, {}).get("nation") not in (None, nid) and str(d["loci"][loc].get("nation", "")) not in ("", nid):
+            err(f"tactic {loc}: nation {nid} != locus nation")
+        if not t.get("zh") or not t.get("effect") or not t.get("key"):
+            err(f"tactic {loc}: needs zh, effect, key")
+        if loc in seen_loci:
+            err(f"tactic {loc}: duplicate")
+        seen_loci.add(loc)
+        per_nation[nid] = per_nation.get(nid, 0) + 1
+        bad = forbidden(blob, forbid)
+        if bad:
+            err(f"tactic {loc}: forbidden trope '{bad}'")
+        for w in zh_forbid:
+            if w in blob:
+                err(f"tactic {loc}: forbidden trope '{w}'")
+    if set(per_nation) != set(nations):
+        err(f"tactics cover {sorted(per_nation)} != nations")
+    tiers = d.get("royal_skill_tiers", [])
+    scales = {int(r.get("tier", 0)): float(r.get("scale", 0)) for r in tiers}
+    if scales.get(1) != 0.6 or scales.get(2) != 1.0 or scales.get(3) != 1.35:
+        err(f"royal_skill_tiers scales drifted: {scales}")
+
     if errors:
         for e in errors:
             print("FAIL bloodlines_v89:", e)

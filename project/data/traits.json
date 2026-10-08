@@ -1,4 +1,5 @@
 {
+  "payoff_note": "人格特质的 effect 与 weight 不随血统战斗回报改动。战术禀性写在 bloodlines_v89.json 的 tactics，由 CKBloodPayoff 只读。",
   "traits": [
     {"id": "brave", "name": "骁勇", "polarity": "pos", "weight": 1.0, "desc": "近战命中+5%", "effect": {"hit_melee": 0.05}},
     {"id": "keen_eye", "name": "锐目", "polarity": "pos", "weight": 1.0, "desc": "远距命中+5%", "effect": {"hit_ranged": 0.05}},
