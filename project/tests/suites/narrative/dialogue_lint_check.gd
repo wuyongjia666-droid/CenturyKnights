@@ -49,7 +49,7 @@ func _run() -> String:
 			print("CHAPTER HIT %s %s" % [str(hit.get("rule", "")), str(hit.get("file", ""))])
 		return "chapters violations=%d" % good.size()
 	print("DIALOGUE LINT chapters violations=0")
-	# 现役模板章还没搬进 archive。抽一章证明同一套规则打得中真文本。
+	# 模板 JSON 仍在 data/chapterN.json（CORE-01 懒加载路径）。抽一章证明规则打得中真文本。
 	var live := "res://data/chapter156.json"
 	if FileAccess.file_exists(live):
 		var sample: Dictionary = lint.scan_file(live)

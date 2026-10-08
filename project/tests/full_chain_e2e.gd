@@ -602,23 +602,30 @@ func _step_aging() -> void:
 
 
 func _step_beyond_ch0() -> void:
-	_step("beyond Ch0: chapter1 + deals + hub picker")
-	# Mark Ch0 done already from journal; open chapter1 story scene
+	_step("beyond Ch0: player still up, old volume sealed, deals + hub picker")
 	GameState.set_flag("chapter0_done")
-	var packed: PackedScene = load("res://scenes/story/chapter1.tscn")
+	if ResourceLoader.exists("res://scenes/story/chapter1.tscn"):
+		_err("ch1: template scene should stay archived")
+	else:
+		print("OK chapter1 template scene archived")
+	var packed: PackedScene = load("res://scenes/story/chapter_player.tscn")
 	if packed == null:
-		_err("ch1: failed to load chapter1.tscn")
+		_err("player: failed to load chapter_player.tscn")
 	else:
 		var story = packed.instantiate()
+		story.chapter_path = "res://data/story/chapters/ch0.json"
+		story.lock_path = true
 		add_child(story)
 		story.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		story.size = Vector2(1280, 720)
 		await get_tree().process_frame
 		await get_tree().process_frame
-		if story.get_child_count() < 1:
-			_err("ch1: scene empty")
+		if not story.has_method("current_beat_id"):
+			_err("player: missing current_beat_id")
+		elif story.get_child_count() < 1:
+			_err("player: scene empty")
 		else:
-			print("OK chapter1 scene loaded children=", story.get_child_count())
+			print("OK chapter player loaded beat=", story.current_beat_id(), " children=", story.get_child_count())
 		story.queue_free()
 		await get_tree().process_frame
 

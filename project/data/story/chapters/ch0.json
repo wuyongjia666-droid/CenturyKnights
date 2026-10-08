@@ -1,0 +1,753 @@
+{
+  "id": "ch0",
+  "title": "第零章·灰旗初升",
+  "legacy_index": 0,
+  "return_scene": "res://scenes/story/chapter0.tscn",
+  "beats": [
+    {
+      "id": "0.0",
+      "title": "破旗",
+      "lines": [
+        {
+          "id": "ch0_0_0_l0",
+          "speaker": "旁白",
+          "text": "朔澜陆桥的边境，风比刀硬。一面撕破的灰旗仍钉在折断的旗杆上，布边被烟熏成近黑——像有人用尽最后一口气，也要把「还在」两个字留在天际。"
+        },
+        {
+          "id": "ch0_0_0_l1",
+          "speaker": "旁白",
+          "text": "你把它拾起。不是为了王庭的册封，不是为了哪一座城门的钥匙。只是因为旗下还有人：伤的、饿的、不肯散的。"
+        },
+        {
+          "id": "ch0_0_0_l2",
+          "speaker": "老旗手",
+          "text": "团长……不，你还没被叫过团长。可今夜之后，总得有人扛这名字。给我们一个姓，一种颜色。灰烬旗从今夜起算第一夜。"
+        },
+        {
+          "id": "ch0_0_0_l3",
+          "speaker": "苇原·灯影",
+          "text": "我跟着你不是为了姓。是为了隘口那条路还能走人。不过——姓也重要。没姓的旗，风一吹就散。"
+        },
+        {
+          "id": "ch0_0_0_l4",
+          "speaker": "老旗手",
+          "text": "姓我听见了。色也在旗心里。破布认人，就从这一夜算。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "enter_banner",
+          "label": "踏入旗面初成",
+          "do": [
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
+      ],
+      "next": "0.05"
+    },
+    {
+      "id": "0.05",
+      "title": "旗面初成",
+      "lines": [
+        {
+          "id": "ch0_0_05_l0",
+          "speaker": "旁白",
+          "text": "布被洗净、缝补、重新上色。纹章色落入旗心时，老旗手的手在抖——不是怕，是太久没见过「完整」的东西。"
+        },
+        {
+          "id": "ch0_0_05_l1",
+          "speaker": "老旗手",
+          "text": "好。有色了。有姓了。接下来……得有胜仗。不然旗再漂亮，也只是坟前的布。"
+        },
+        {
+          "id": "ch0_0_05_l2",
+          "speaker": "斥候",
+          "text": "北隘有烟。不是炊烟——是抢粮的火。流匪卡在窄路上，商队不敢过，堡里余粮只够撑几天。"
+        },
+        {
+          "id": "ch0_0_05_l3",
+          "speaker": "苇原·灯影",
+          "text": "格子上的人，一步一命。你听过战棋吗？没听过也得听：移动、站住、出手。我会在侧翼照看。"
+        },
+        {
+          "id": "ch0_0_05_l4",
+          "speaker": "苇原·灯影",
+          "text": "进隘口前，看一眼花名册和编队。人站稳了再踏进去。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "to_pass",
+          "label": "前往隘口之夜",
+          "do": [
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
+      ],
+      "next": "0.1"
+    },
+    {
+      "id": "0.1",
+      "title": "隘口之夜",
+      "lines": [
+        {
+          "id": "ch0_0_1_l0",
+          "speaker": "老旗手",
+          "text": "隘口之夜。四对二教学：先站住，再砍。"
+        },
+        {
+          "id": "ch0_0_1_l1",
+          "speaker": "斥候",
+          "text": "窄路别挤成靶。"
+        },
+        {
+          "id": "ch0_0_1_l2",
+          "speaker": "老旗手",
+          "text": "出战。隘口之夜，窄路不等人。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "after_smoke",
+          "label": "听烟散之后",
+          "do": [
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ],
+          "when": {
+            "flag": "battle_done"
+          }
+        },
+        {
+          "id": "start_battle",
+          "label": "开始战斗教学",
+          "do": [
+            {
+              "op": "battle",
+              "map": "ch0_pass",
+              "objective": "rout",
+              "return": "res://scenes/story/chapter0.tscn"
+            }
+          ],
+          "when": {
+            "not_flag": "battle_done"
+          }
+        },
+        {
+          "id": "retry_note",
+          "label": "（战败可重试，不毁进度）",
+          "do": [],
+          "when": {
+            "not_flag": "battle_done"
+          },
+          "disabled": true
+        }
+      ],
+      "next": "0.15"
+    },
+    {
+      "id": "0.15",
+      "title": "烟散之后",
+      "lines": [
+        {
+          "id": "ch0_0_15_l0",
+          "speaker": "旁白",
+          "text": "匪徒倒下时，有人还想爬。灯影的箭钉在他面前三寸的石头上——不是仁慈，是警告。"
+        },
+        {
+          "id": "ch0_0_15_l1",
+          "speaker": "苇原·灯影",
+          "text": "活口说：他们背后有人收「过路银」，不是普通流匪。灰旗要在陆桥立足，迟早会再撞上这号买卖。"
+        },
+        {
+          "id": "ch0_0_15_l2",
+          "speaker": "老旗手",
+          "text": "银也有了，胆子也有了。可人数不够。堡里空房间会咬人——得去烽火酒馆看看柜上挂着谁。"
+        },
+        {
+          "id": "ch0_0_15_l3",
+          "speaker": "老旗手",
+          "text": "活口的话先记下。人数还是不够，酒馆柜上有人。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "to_tavern_beat",
+          "label": "前往烽火酒馆",
+          "do": [
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
+      ],
+      "next": "0.2"
+    },
+    {
+      "id": "0.2",
+      "title": "酒馆赊账",
+      "lines": [
+        {
+          "id": "ch0_0_2_l0",
+          "speaker": "旁白",
+          "text": "烽火酒馆的门轴会叫。叫的不是鬼，是每张想把自己卖个好价钱的嘴。"
+        },
+        {
+          "id": "ch0_0_2_l1",
+          "speaker": "掌柜",
+          "text": "烽火酒馆不赊命，只赊银。今天柜上有三个人——六维、血胤、禀性写在板上。你看脸，也看数。看错了，月饷会教你做人。"
+        },
+        {
+          "id": "ch0_0_2_l2",
+          "speaker": "掌柜",
+          "text": "另说一句：陆桥上的佣兵最怕两件事。一是团长说话不算；二是旗面丑到不敢认。你们旗倒是有颜色了——好兆头。"
+        },
+        {
+          "id": "ch0_0_2_l3",
+          "speaker": "掌柜",
+          "text": "至少带走一个人。看立绘，也看血胤和禀性合不合群。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "sheathe",
+          "label": "新刃入鞘",
+          "do": [
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ],
+          "when": {
+            "flag": "recruited"
+          }
+        },
+        {
+          "id": "open_tavern",
+          "label": "打开烽火酒馆（须招募 1 人）",
+          "do": [
+            {
+              "op": "scene",
+              "path": "res://scenes/hub/tavern.tscn"
+            }
+          ],
+          "when": {
+            "not_flag": "recruited"
+          }
+        }
+      ],
+      "next": "0.25"
+    },
+    {
+      "id": "0.25",
+      "title": "新刃入鞘",
+      "lines": [
+        {
+          "id": "ch0_0_25_l0",
+          "speaker": "旁白",
+          "text": "新人站进队列时，总会下意识看旗。旗稳，人就稳；旗歪，刀也会歪。"
+        },
+        {
+          "id": "ch0_0_25_l1",
+          "speaker": "苇原·灯影",
+          "text": "别急着让新人上隘口。先让他们看见堡——大厅、委任榜、演武场。人要知道自己为谁守夜。"
+        },
+        {
+          "id": "ch0_0_25_l2",
+          "speaker": "老旗手",
+          "text": "灰旗堡的灯，该亮了。破屋顶漏风，可漏风也比露宿强。走吧，团长。"
+        },
+        {
+          "id": "ch0_0_25_l3",
+          "speaker": "管事",
+          "text": "灯可以亮了。大厅、委任、演武，每扇门后都是人。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "enter_keep",
+          "label": "入驻灰旗堡",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "hub_open",
+              "value": true
+            },
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
+      ],
+      "next": "0.3"
+    },
+    {
+      "id": "0.3",
+      "title": "灰旗堡灯火",
+      "lines": [
+        {
+          "id": "ch0_0_3_l0",
+          "speaker": "旁白",
+          "text": "破堡亮起第一盏灯。光很小，却把大厅柱上的刀痕照得很清楚——前人在此守过，也败过。"
+        },
+        {
+          "id": "ch0_0_3_l1",
+          "speaker": "管事",
+          "text": "花名册、酒馆、委任、演武、炉火、祠堂、族谱、联姻、岁月、商路、编队……名字又长又土，但每扇门后都是命。"
+        },
+        {
+          "id": "ch0_0_3_l2",
+          "speaker": "管事",
+          "text": "传家宝槽还空着。完整版才会醒。眼下你要做的是：让旗下有粮、有银、有能打的人，还有——能把姓传下去的人。"
+        },
+        {
+          "id": "ch0_0_3_l3",
+          "speaker": "管事",
+          "text": "先看花名册，再看委任榜。看完了，灯还在这里等你。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "open_hub",
+          "label": "进入灰旗堡枢纽",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "hub_open",
+              "value": true
+            },
+            {
+              "op": "set_beat",
+              "chapter": 0,
+              "beat": "0.35"
+            },
+            {
+              "op": "scene",
+              "path": "res://scenes/hub/castle_hub.tscn"
+            }
+          ]
+        },
+        {
+          "id": "hear_bridge",
+          "label": "先听陆桥耳语",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "hub_open",
+              "value": true
+            },
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
+      ],
+      "next": "0.35"
+    },
+    {
+      "id": "0.35",
+      "title": "陆桥耳语",
+      "lines": [
+        {
+          "id": "ch0_0_35_l0",
+          "speaker": "旁白",
+          "text": "夜里有商队远处敲锣。锣声里夹着一句闲话：灰烬旗？听说隘口打赢了。听说旗是新的。听说团长还没成亲。"
+        },
+        {
+          "id": "ch0_0_35_l1",
+          "speaker": "春令使者",
+          "text": "（未到，却已有信）春令将近。陆桥诸邦看旗，也看家。无家之旗，难入高门；无胤之姓，难称百年。"
+        },
+        {
+          "id": "ch0_0_35_l2",
+          "speaker": "苇原·灯影",
+          "text": "别被「百年」吓到。先过完这一年。联姻是棋，不是买卖——可棋盘上，声望就是格子。"
+        },
+        {
+          "id": "ch0_0_35_l3",
+          "speaker": "苇原·灯影",
+          "text": "春令的帖会来。声望不够，门都不开。这一档我帮你看过。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "to_spring",
+          "label": "进入春令试婚",
+          "do": [
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        },
+        {
+          "id": "back_hub",
+          "label": "先回灰旗堡准备",
+          "do": [
+            {
+              "op": "scene",
+              "path": "res://scenes/hub/castle_hub.tscn"
+            }
+          ]
+        }
+      ],
+      "next": "0.4"
+    },
+    {
+      "id": "0.4",
+      "title": "春令试婚",
+      "lines": [
+        {
+          "id": "ch0_0_4_l0",
+          "speaker": "春令使者",
+          "text": "春令节到了。联姻看勋位与诸邦声望——声望不够，连门都不让进。灰烬邦若认你「友善」，你才有资格递帖。"
+        },
+        {
+          "id": "ch0_0_4_l1",
+          "speaker": "春令使者",
+          "text": "订婚前务必打开「子嗣期望」：血胤如何混合、六维资质落在哪一段、禀性与容貌的概率——这不是迷信，是族谱的算术。"
+        },
+        {
+          "id": "ch0_0_4_l2",
+          "speaker": "旁白",
+          "text": "厅外有人悄悄比较旗色。有人笑新旗太亮，有人沉默。亮也好，沉默也好——能被看见，就比漂泊强。"
+        },
+        {
+          "id": "ch0_0_4_l3",
+          "speaker": "春令使者",
+          "text": "帖子递进去，人要在席上说完。孩子不在今夜来，在月份里来。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "to_feast",
+          "label": "赴双姓共席",
+          "do": [
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ],
+          "when": {
+            "flag": "married"
+          }
+        },
+        {
+          "id": "open_marriage",
+          "label": "前往联姻廷",
+          "do": [
+            {
+              "op": "scene",
+              "path": "res://scenes/hub/marriage.tscn"
+            }
+          ],
+          "when": {
+            "not_flag": "married"
+          }
+        }
+      ],
+      "next": "0.45",
+      "prepare": [
+        {
+          "op": "ensure_reputation",
+          "when": {
+            "not_flag": "married"
+          },
+          "realm": "ashland",
+          "below": 30,
+          "set": 35,
+          "also_if_tier": "none",
+          "log": "春令使者代请：灰烬邦声望升至友善"
+        }
+      ]
+    },
+    {
+      "id": "0.45",
+      "title": "双姓共席",
+      "lines": [
+        {
+          "id": "ch0_0_45_l0",
+          "speaker": "旁白",
+          "text": "酒是薄的，誓却是重的。两姓共席时，老旗手把旗又升高了一寸——好像怕风看不见。"
+        },
+        {
+          "id": "ch0_0_45_l1",
+          "speaker": "盟友亲属",
+          "text": "我们把人托付给灰旗，不是托付给一夜的酒。请让孩子将来敢承认这面旗。"
+        },
+        {
+          "id": "ch0_0_45_l2",
+          "speaker": "苇原·灯影",
+          "text": "你现在有家了。下一步不是立刻上战场炫耀，是把「初啼」等来。族谱那一页，还空着。"
+        },
+        {
+          "id": "ch0_0_45_l3",
+          "speaker": "苇原·灯影",
+          "text": "家有了。初啼还没到。你可以回堡，也可以在这里等。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "wait_birth",
+          "label": "等待初啼",
+          "do": [
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
+      ],
+      "next": "0.5"
+    },
+    {
+      "id": "0.5",
+      "title": "初啼",
+      "lines": [
+        {
+          "id": "ch0_0_5_l0",
+          "speaker": "稳婆",
+          "text": "旗下添丁。哭声不算好听，但是好声音——说明肺是自己的，命也是自己的。"
+        },
+        {
+          "id": "ch0_0_5_l1",
+          "speaker": "稳婆",
+          "text": "容貌、禀性、资质上下限——都写在血里，也写在族谱上。你若只看银与刀，会漏掉真正能过百年的东西。"
+        },
+        {
+          "id": "ch0_0_5_l2",
+          "speaker": "旁白",
+          "text": "你看见血胤混合条第一次亮起。那不是装饰，是两条河在旗下交汇。"
+        },
+        {
+          "id": "ch0_0_5_l3",
+          "speaker": "稳婆",
+          "text": "去看那张人物卡。血胤混合条不是装饰，是两条河。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "open_page",
+          "label": "翻开族谱新页",
+          "do": [
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ],
+          "when": {
+            "flag": "child_born"
+          }
+        },
+        {
+          "id": "advance_birth",
+          "label": "推进一月迎来初啼",
+          "do": [
+            {
+              "op": "advance",
+              "months": 1
+            }
+          ],
+          "when": {
+            "not_flag": "child_born"
+          }
+        },
+        {
+          "id": "open_lineage",
+          "label": "打开族谱/遗传面板",
+          "do": [
+            {
+              "op": "scene",
+              "path": "res://scenes/hub/lineage_view.tscn"
+            }
+          ],
+          "when": {
+            "not_flag": "child_born"
+          }
+        }
+      ],
+      "next": "0.55"
+    },
+    {
+      "id": "0.55",
+      "title": "族谱新页",
+      "lines": [
+        {
+          "id": "ch0_0_55_l0",
+          "speaker": "管事",
+          "text": "族谱上新写了一行。墨干得很快——边境的风一向不客气。"
+        },
+        {
+          "id": "ch0_0_55_l1",
+          "speaker": "老旗手",
+          "text": "孩子还小，上不了阵。可你要记住：有一天「授旗入队」四个字，会比任何胜仗都沉。"
+        },
+        {
+          "id": "ch0_0_55_l2",
+          "speaker": "苇原·灯影",
+          "text": "丰收月快到了。粮饷簿不认眼泪。你得学会看岁月沙漏：提前预告，再推进，再承担。"
+        },
+        {
+          "id": "ch0_0_55_l3",
+          "speaker": "管事",
+          "text": "族谱上那一行墨还湿。看完再去翻秋收簿。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "to_harvest",
+          "label": "进入秋收簿",
+          "do": [
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        },
+        {
+          "id": "see_lineage",
+          "label": "再看一眼族谱",
+          "do": [
+            {
+              "op": "scene",
+              "path": "res://scenes/hub/lineage_view.tscn"
+            }
+          ]
+        }
+      ],
+      "next": "0.6"
+    },
+    {
+      "id": "0.6",
+      "title": "秋收簿",
+      "lines": [
+        {
+          "id": "ch0_0_6_l0",
+          "speaker": "管事",
+          "text": "丰收月到了。粮饷簿清算：工资、口粮、士气——儿童也会跟着吃紧。祠堂若养得好，产出会高一点。"
+        },
+        {
+          "id": "ch0_0_6_l1",
+          "speaker": "旁白",
+          "text": "岁月沙漏一倾，人会老，旗还在。你看见镜子里多了一道风霜，也看见旗面上的色仍未褪尽。"
+        },
+        {
+          "id": "ch0_0_6_l2",
+          "speaker": "旁白",
+          "text": "这一年不是结局。它只证明灰烬旗立住了：有战、有人、有家、有簿。"
+        },
+        {
+          "id": "ch0_0_6_l3",
+          "speaker": "管事",
+          "text": "把沙漏倾到丰收月。人会老一岁，簿上要有一笔。手记可以现在写。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "write_journal",
+          "label": "生成王朝手记",
+          "do": [
+            {
+              "op": "journal"
+            }
+          ],
+          "when": {
+            "any_flag": [
+              "harvest_done",
+              "chapter0_done"
+            ]
+          }
+        },
+        {
+          "id": "free_play",
+          "label": "返回灰旗堡（自由游玩）",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "chapter0_done",
+              "value": true
+            },
+            {
+              "op": "scene",
+              "path": "res://scenes/hub/castle_hub.tscn"
+            }
+          ],
+          "when": {
+            "any_flag": [
+              "harvest_done",
+              "chapter0_done"
+            ]
+          }
+        },
+        {
+          "id": "old_volume",
+          "label": "踏上第一章·陆桥烽火",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "chapter0_done",
+              "value": true
+            },
+            {
+              "op": "set_beat",
+              "chapter": 1,
+              "beat": "1.0"
+            },
+            {
+              "op": "archive_notice"
+            }
+          ],
+          "when": {
+            "any_flag": [
+              "harvest_done",
+              "chapter0_done"
+            ]
+          }
+        },
+        {
+          "id": "fast_harvest",
+          "label": "岁月沙漏：跳至丰收月并结算",
+          "do": [
+            {
+              "op": "fast_harvest"
+            }
+          ],
+          "when": {
+            "not_any_flag": [
+              "harvest_done",
+              "chapter0_done"
+            ]
+          }
+        },
+        {
+          "id": "open_hourglass",
+          "label": "打开岁月沙漏",
+          "do": [
+            {
+              "op": "scene",
+              "path": "res://scenes/hub/hourglass.tscn"
+            }
+          ],
+          "when": {
+            "not_any_flag": [
+              "harvest_done",
+              "chapter0_done"
+            ]
+          }
+        }
+      ],
+      "next": null
+    }
+  ]
+}

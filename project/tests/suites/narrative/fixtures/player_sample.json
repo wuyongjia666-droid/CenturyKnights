@@ -1,0 +1,66 @@
+{
+  "id": "sample",
+  "title": "播放器样例",
+  "legacy_index": 4,
+  "beats": [
+    {
+      "id": "s0",
+      "title": "选择",
+      "lines": [
+        {"id": "sample_l0", "speaker": "旁白", "text": "灯还在桌上。"},
+        {"id": "sample_l1", "speaker": "旁白", "text": "选一条。"}
+      ],
+      "next": "s1",
+      "actions": [
+        {
+          "id": "keep",
+          "label": "把灯留下",
+          "do": [
+            {"op": "set_flag", "flag": "sample_kept", "value": true},
+            {"op": "goto", "beat": "s1"}
+          ]
+        },
+        {
+          "id": "blow",
+          "label": "把灯吹灭",
+          "when": {"not_flag": "sample_kept"},
+          "do": [
+            {"op": "set_flag", "flag": "sample_blown", "value": true},
+            {"op": "goto", "beat": "s2"}
+          ]
+        },
+        {
+          "id": "with_ally",
+          "label": "只有同伴在场",
+          "when": {"companion": "dengying"},
+          "do": [{"op": "set_flag", "flag": "sample_companion", "value": true}]
+        },
+        {
+          "id": "with_blood",
+          "label": "血里有灰",
+          "when": {"bloodline": "common_ash"},
+          "do": [{"op": "set_flag", "flag": "sample_blood", "value": true}]
+        },
+        {
+          "id": "fight",
+          "label": "出去打仗",
+          "do": [
+            {"op": "battle", "map": "sample_map", "objective": "seize", "return": "res://scenes/story/chapter_player.tscn"}
+          ]
+        }
+      ]
+    },
+    {
+      "id": "s1",
+      "title": "留下",
+      "lines": [{"id": "sample_s1", "speaker": "旁白", "text": "灯还在。"}],
+      "actions": []
+    },
+    {
+      "id": "s2",
+      "title": "吹灭",
+      "lines": [{"id": "sample_s2", "speaker": "旁白", "text": "灯灭了。"}],
+      "actions": []
+    }
+  ]
+}
