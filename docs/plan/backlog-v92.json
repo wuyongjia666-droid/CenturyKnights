@@ -1,0 +1,2617 @@
+{
+  "version": "v9.2-backlog-1",
+  "baseline": "main@e755b71c",
+  "generated": "2026-10-08",
+  "audit": "docs/plan/audit-v92.md",
+  "style_lock": "docs/art/style-lock-v89.json",
+  "schema": {
+    "card": [
+      "id",
+      "title",
+      "priority",
+      "why",
+      "scope",
+      "files",
+      "acceptance",
+      "dependencies",
+      "needs_farm",
+      "size",
+      "parallel_group"
+    ],
+    "optional": [
+      "needs_external_audio",
+      "notes"
+    ],
+    "priority": [
+      "P0",
+      "P1",
+      "P2"
+    ],
+    "size": [
+      "S",
+      "M",
+      "L"
+    ]
+  },
+  "global_rules": [
+    "一个文件只归一条流所有（audit-v92.md §4.1）；改别人的文件要在 PR 里写「交接」",
+    "不新增 autoload；project.godot 只归 S01-infra",
+    "不改 scripts/run_ci.sh（S01-infra 除外）；新测试放 project/tests/suites/<流>/，打印 <NAME> PASS，失败 quit(1)",
+    "新字符串写入 project/data/locale/<流>.csv",
+    "锁定数字不动：GENOME PASS silver=0.237 midparent_width=0.064；KINSHIP PASS mean=0.839 silver_skip=0.156；种子 91 百年目标带（docs/design/balance-v91.md），卡片明确要求调参的除外",
+    "风格锁：只用 UIKit/Frost token；禁止 #c9a227、parchment、金色、暖光、中世纪",
+    "原创 IP：不搬运对标作品的资产、文本、名字、数值",
+    "不改版本号，不写 docs/release-*.md；一卡一个 PR；PR 正文用中文",
+    "例外：CORE-02（第 0 波）会新建 scripts/company/economy_state.gd、scripts/battle/enemy_loadout.gd、scripts/characters/family_state.gd；合并后分别移交 S05/S03/S06，在此之前这三条流不得创建同名文件"
+  ],
+  "waves": {
+    "wave0_merge_first": [
+      "INF-01",
+      "CORE-01",
+      "CORE-02"
+    ],
+    "farm_wave_when_resumed": [
+      "FARM-01",
+      "FARM-02",
+      "FARM-03",
+      "FARM-04",
+      "FARM-05",
+      "FARM-06",
+      "FARM-07"
+    ]
+  },
+  "top10_p0": [
+    "INF-01",
+    "CORE-01",
+    "CORE-03",
+    "NAR-02",
+    "NAR-01",
+    "BTL-02",
+    "BTL-03",
+    "ART-01",
+    "CMP-01",
+    "INF-02"
+  ],
+  "streams": [
+    {
+      "id": "S01-infra",
+      "name": "基础设施：CI、包体、性能、门禁",
+      "cloud_agent": true,
+      "owns": [
+        ".github/**",
+        "scripts/**",
+        "tools/ci/**",
+        "tools/audit_v840_usage.py",
+        "project/project.godot",
+        "project/export_presets.cfg",
+        "project/android/**",
+        ".gitignore",
+        ".gitattributes",
+        "project/tests/smoke_*",
+        "project/tests/scene_load_check.gd",
+        "project/tests/suites/infra/**",
+        "README.md"
+      ],
+      "order": [
+        "INF-01",
+        "INF-07",
+        "INF-08",
+        "INF-02",
+        "INF-03",
+        "INF-05",
+        "INF-04",
+        "INF-06"
+      ]
+    },
+    {
+      "id": "S02-core",
+      "name": "核心状态与存档",
+      "cloud_agent": true,
+      "owns": [
+        "project/autoload/game_state.gd",
+        "project/autoload/calendar.gd",
+        "project/scripts/core/**",
+        "project/scripts/ui/main_menu.gd",
+        "project/scenes/ui/main_menu.tscn",
+        "project/scenes/ui/pause_menu.tscn",
+        "project/scenes/ui/save_slots.tscn",
+        "project/tests/save_roundtrip_check.*",
+        "project/tests/suites/core/**"
+      ],
+      "order": [
+        "CORE-01",
+        "CORE-02",
+        "CORE-03",
+        "CORE-04",
+        "CORE-05",
+        "CORE-06",
+        "CORE-07",
+        "CORE-08"
+      ]
+    },
+    {
+      "id": "S03-battle",
+      "name": "战术深度与可读性",
+      "cloud_agent": true,
+      "owns": [
+        "project/scripts/battle/battle_controller.gd",
+        "project/scripts/battle/battle_maps.gd",
+        "project/scripts/battle/tactics_ai.gd",
+        "project/scripts/battle/ui/**",
+        "project/scripts/battle/enemy_loadout.gd",
+        "project/autoload/battle_rules.gd",
+        "project/data/maps.json",
+        "project/data/maps/** (story_*.json 除外)",
+        "project/data/jobs.json",
+        "project/data/skills.json",
+        "project/data/enemy_skill_tables.json",
+        "project/data/battle_banter.json",
+        "project/scenes/battle/battle.tscn",
+        "project/scripts/hub/deploy.gd",
+        "project/scripts/hub/skill_tree.gd",
+        "project/scripts/hub/train.gd",
+        "project/scenes/hub/deploy.tscn",
+        "project/scenes/hub/skill_tree.tscn",
+        "project/scenes/hub/train.tscn",
+        "project/tests/tactics_e2e.*",
+        "project/tests/suites/battle/**"
+      ],
+      "order": [
+        "BTL-01",
+        "BTL-10",
+        "BTL-02",
+        "BTL-03",
+        "BTL-04",
+        "BTL-12",
+        "BTL-05",
+        "BTL-08",
+        "BTL-07",
+        "BTL-06",
+        "BTL-09",
+        "BTL-11",
+        "BTL-13"
+      ]
+    },
+    {
+      "id": "S04-cutscene",
+      "name": "3D 战斗过场",
+      "cloud_agent": true,
+      "owns": [
+        "project/scripts/battle/combat_cutscene.gd",
+        "project/scripts/art/unit_model.gd",
+        "project/shaders/**",
+        "project/assets/models/**",
+        "tools/models/**",
+        "project/data/enemy_themes.json",
+        "project/tests/enemy_theme_check.*",
+        "project/tests/suites/cutscene/**"
+      ],
+      "order": [
+        "CUT-01",
+        "CUT-03",
+        "CUT-05",
+        "CUT-04",
+        "CUT-07",
+        "CUT-02",
+        "CUT-06"
+      ]
+    },
+    {
+      "id": "S05-company",
+      "name": "佣兵团、经济、城堡、舆图",
+      "cloud_agent": true,
+      "owns": [
+        "project/autoload/world.gd",
+        "project/data/world_v87.json",
+        "project/data/world_items_v87.json",
+        "tools/world/**",
+        "project/scripts/company/**",
+        "project/scripts/hub/roster.gd",
+        "project/scripts/hub/tavern.gd",
+        "project/scripts/hub/forge.gd",
+        "project/scripts/hub/market.gd",
+        "project/scripts/hub/shrine.gd",
+        "project/scripts/hub/quests.gd",
+        "project/scripts/hub/works.gd",
+        "project/scripts/hub/estates.gd",
+        "project/scripts/hub/city.gd",
+        "project/scripts/hub/atlas_view.gd",
+        "project/scripts/hub/hourglass.gd",
+        "project/scripts/hub/castle_view.gd",
+        "project/scenes/hub/{roster,tavern,forge,market,shrine,quests,works,estates,city,atlas_view,hourglass,castle_view}.tscn",
+        "project/scripts/sim/campaign_sim.gd",
+        "project/tests/atlas_e2e.*",
+        "project/tests/campaign_century_check.*",
+        "docs/design/balance-*.md",
+        "project/tests/suites/company/**"
+      ],
+      "order": [
+        "CMP-09",
+        "CMP-04",
+        "CMP-01",
+        "CMP-07",
+        "CMP-02",
+        "CMP-05",
+        "CMP-03",
+        "CMP-08",
+        "CMP-06"
+      ]
+    },
+    {
+      "id": "S06-dynasty",
+      "name": "血统回报、王朝、朝堂",
+      "cloud_agent": true,
+      "owns": [
+        "project/autoload/lineage.gd",
+        "project/scripts/characters/**",
+        "project/data/bloodlines.json",
+        "project/data/bloodlines_v89.json",
+        "project/data/rival_houses.json",
+        "project/data/names.json",
+        "project/data/appearance.json",
+        "project/data/traits.json",
+        "project/scripts/hub/{marriage,lineage_view,lineage_rite,inheritance,heir_rivalry,rival_houses,court_news,bloodline_codex,blood_test,unit_dossier,title_promote}.gd",
+        "project/scenes/hub/{marriage,lineage_view,lineage_rite,inheritance,heir_rivalry,rival_houses,court_news,bloodline_codex,blood_test,unit_dossier,title_promote}.tscn",
+        "project/scripts/hub/ancestors.gd + project/scenes/hub/ancestors.tscn (新建)",
+        "project/scripts/ui/court_chrome.gd",
+        "tools/check_bloodlines_v89.py",
+        "tools/gen_trait_sets_v89.py",
+        "project/tests/genome_check.gd",
+        "project/tests/bloodline_v89_check.*",
+        "project/tests/court_v90_check.*",
+        "project/tests/court_ui_check.*",
+        "project/tests/trio_*",
+        "project/tests/suites/dynasty/**"
+      ],
+      "order": [
+        "DYN-08",
+        "DYN-01",
+        "DYN-06",
+        "DYN-02",
+        "DYN-03",
+        "DYN-04",
+        "DYN-05",
+        "DYN-07"
+      ]
+    },
+    {
+      "id": "S07-narrative",
+      "name": "故事圣经、章节播放器、主线重写、支援、引导内容",
+      "cloud_agent": true,
+      "owns": [
+        "project/scripts/story/**",
+        "project/scenes/story/**",
+        "project/data/chapter*.json",
+        "project/data/story/**",
+        "project/data/cast/**",
+        "project/scripts/narrative/**",
+        "project/data/maps/story_*.json",
+        "project/tests/full_chain_e2e.*",
+        "project/tests/suites/narrative/**",
+        "docs/design/story-*.md"
+      ],
+      "order": [
+        "NAR-01",
+        "NAR-08",
+        "NAR-02",
+        "NAR-03",
+        "NAR-05",
+        "NAR-04",
+        "NAR-06",
+        "NAR-07",
+        "NAR-09"
+      ]
+    },
+    {
+      "id": "S08-ux",
+      "name": "引导、无障碍、本地化、一致性、移动端、城堡入口",
+      "cloud_agent": true,
+      "owns": [
+        "project/autoload/frost.gd",
+        "project/autoload/locale.gd",
+        "project/autoload/mobile_chrome.gd",
+        "project/scripts/ui/ui_kit.gd",
+        "project/scripts/ui/ui_fx.gd",
+        "project/scripts/ui/unit_card.gd",
+        "project/scripts/ui/settings.gd",
+        "project/scripts/ui/credits.gd",
+        "project/scripts/ui/widgets/**",
+        "project/scripts/platform/**",
+        "project/scripts/hub/castle_hub.gd",
+        "project/scenes/hub/castle_hub.tscn",
+        "project/scenes/ui/settings.tscn",
+        "project/scenes/ui/credits.tscn",
+        "project/assets/ui/**",
+        "project/assets/fonts/**",
+        "tools/fonts/**",
+        "project/data/locale/strings.csv",
+        "docs/style-bible.md",
+        "docs/art/design-system-v8.md",
+        "project/tests/layout_check.gd",
+        "project/tests/touch_router_check.gd",
+        "project/tests/suites/ux/**",
+        "docs/licenses.md"
+      ],
+      "order": [
+        "UX-01",
+        "UX-02",
+        "UX-04",
+        "UX-05",
+        "UX-06",
+        "UX-03",
+        "UX-08",
+        "UX-09",
+        "UX-07"
+      ]
+    },
+    {
+      "id": "S09-audio",
+      "name": "音乐导演与音效",
+      "cloud_agent": true,
+      "owns": [
+        "project/autoload/music.gd",
+        "project/autoload/sfx.gd",
+        "project/assets/sfx/**",
+        "project/assets/music/**",
+        "tools/audio/**",
+        "project/default_bus_layout.tres",
+        "project/tests/suites/audio/**",
+        "project/assets/music/LICENSES.md"
+      ],
+      "order": [
+        "AUD-01",
+        "AUD-03",
+        "AUD-02",
+        "AUD-04"
+      ]
+    },
+    {
+      "id": "S10-art",
+      "name": "立绘架构、资产清理、农场队列、无农场占位",
+      "cloud_agent": true,
+      "owns": [
+        "project/scripts/art/unit_art.gd",
+        "project/scripts/art/genome_portrait.gd",
+        "project/scripts/art/portrait_doll.gd",
+        "project/scripts/art/atlas_art.gd",
+        "project/assets/art/** (genome/ 正式出图除外)",
+        "tools/art/**",
+        "tools/farm_queue/**",
+        "tools/farm_v87/**",
+        "tools/fx/**",
+        "docs/art/** (design-system-v8.md 与 review/ 除外)",
+        "project/tests/portrait_manifest_check.*",
+        "project/tests/kinship_portrait_check.*",
+        "project/tests/suites/art/**"
+      ],
+      "order": [
+        "ART-01",
+        "ART-02",
+        "ART-03",
+        "ART-05",
+        "ART-04",
+        "ART-06"
+      ]
+    },
+    {
+      "id": "S11-farm",
+      "name": "本地农场出图（暂停中）",
+      "cloud_agent": false,
+      "farm_paused": true,
+      "owns": [
+        "project/assets/art/portraits/genome/**",
+        "project/assets/art/atlas/cities/**",
+        "project/assets/art/atlas/smith/**",
+        "project/assets/art/items/**",
+        "project/assets/art/scenes/**",
+        "project/assets/art/estates/**",
+        "project/assets/art/castle/**",
+        "project/assets/art/portraits/expressions/**",
+        "project/assets/models/** (新增 GLB)",
+        "docs/art/review/**"
+      ],
+      "order": [
+        "FARM-01",
+        "FARM-02",
+        "FARM-03",
+        "FARM-05",
+        "FARM-04",
+        "FARM-06",
+        "FARM-07"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "id": "INF-01",
+      "title": "上线真 CI：GitHub Actions + Godot 4.3 headless + 测试自动发现",
+      "priority": "P0",
+      "why": "仓库没有 .github，环境里没有 godot，所以至今所有「CI 全绿」都无法复核。并行开 10 条流时，没有门禁就一定会互相踩坏。",
+      "scope": "新增 scripts/install_godot.sh（下载 4.3-stable linux x86_64，校验 SHA256，可重复执行，支持 GODOT_BIN 覆盖）；.github/workflows/ci.yml（pull_request + push main，缓存 godot 二进制与 project/.godot/imported，先 import 再执行 run_ci.sh，失败时上传 /tmp/ck_*.log 作为 artifact）；run_ci.sh 自动发现 project/tests/suites/*/ 下的 *_check.tscn 与 *_check.gd 并逐个执行、grep PASS；新增 tools/ci/json_lint.py（解析全部 project/data/**/*.json 和 docs/plan/backlog-v92.json，校验卡片 schema）。token 缺 workflow 权限时，把文件放到 docs/ci/ci.yml.template，由负责人手动复制。",
+      "files": [
+        ".github/workflows/ci.yml",
+        "scripts/install_godot.sh",
+        "scripts/run_ci.sh",
+        "tools/ci/json_lint.py",
+        "project/tests/suites/infra/.gitkeep",
+        "README.md"
+      ],
+      "acceptance": [
+        "空白 Ubuntu 上执行 scripts/install_godot.sh && ./scripts/run_ci.sh，最后一行为 CI ALL PASS",
+        "故意放一个打印 FAIL 并 quit(1) 的 project/tests/suites/infra/fail_probe_check.gd，run_ci.sh 返回非 0（测试完后删除）",
+        "run_ci.sh 输出 'suites discovered: N'，N 等于 suites 目录下 *_check.* 的数量",
+        "json_lint.py 对全部 data JSON 和 backlog-v92.json 返回 0；把任意一个文件改坏后返回非 0",
+        "GitHub 上 PR 页面出现 ci 检查且为绿色（或在 PR 中说明需要负责人复制模板）"
+      ],
+      "dependencies": [],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S01-infra"
+    },
+    {
+      "id": "INF-02",
+      "title": "导出包体瘦身与 Android 纹理压缩",
+      "priority": "P0",
+      "why": "export_filter=all_resources 会把 259MB 的 farm_inbox、75MB 已退役的纸娃娃和上千张退役立绘一起打进 APK/PCK，手机安装和内存都会失控。Android 预设也没开 ETC2/ASTC。",
+      "scope": "export_presets.cfg 两个预设都加上 exclude_filter（farm_inbox/*、doll/* 中无运行时引用的部分、stitch_exports/*、_src_*/*，以及 ART-02 输出的退役清单）；Android 开启 ETC2/ASTC；新增 tools/ci/export_size_report.py，按导出过滤规则统计预计体积并接入 CI 预算（初始 ≤400MB，ART-02 合并后收紧到 ≤250MB）。",
+      "files": [
+        "project/export_presets.cfg",
+        "tools/ci/export_size_report.py",
+        "tools/ci/ratchet.json",
+        "scripts/run_ci.sh"
+      ],
+      "acceptance": [
+        "export_size_report.py 打印各目录的预计导出字节数，总和低于预算；把预算临时调低 1MB 时 CI 失败",
+        "Android 预设里 texture_format/etc2 与 astc 为 true",
+        "scene_load_check、smoke、atlas_e2e 通过（证明被排除的资产在运行时没有引用）",
+        "PR 正文给出改动前后的预计导出体积"
+      ],
+      "dependencies": [
+        "INF-01",
+        "ART-02 (收紧预算时)",
+        "PR #9 已合并或关闭"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S01-infra"
+    },
+    {
+      "id": "INF-03",
+      "title": "性能基线与门禁（启动、场景加载、内存）",
+      "priority": "P1",
+      "why": "现在没有任何性能数据。启动时会解析 235 个章节 JSON，有 77 张超过 3MB 的 PNG，手机上很可能出现长时间黑屏和 OOM，但没有测试能发现。",
+      "scope": "project/tests/suites/infra/perf_boot_check.gd：测量 autoload 就绪时间、main_menu / castle_hub / battle / atlas_view 的加载耗时、静态内存（Performance.MEMORY_STATIC）、纹理显存估算；输出 JSON 到 /tmp/ck_perf.json，CI 上传为 artifact；预算写进 tools/ci/perf_budget.json（headless 环境下宽松，主要用于发现回归，允许 +20%）。",
+      "files": [
+        "project/tests/suites/infra/perf_boot_check.gd",
+        "project/tests/suites/infra/perf_boot_check.tscn",
+        "tools/ci/perf_budget.json"
+      ],
+      "acceptance": [
+        "CI 打印 PERF PASS 和四个场景的加载毫秒数",
+        "在任意 autoload 里人为加 500ms 延迟时，测试失败",
+        "CORE-01 合并后，启动阶段 JSON 解析次数 ≤ 10，并在报告中列出"
+      ],
+      "dependencies": [
+        "INF-01"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S01-infra"
+    },
+    {
+      "id": "INF-04",
+      "title": "视觉回归截图 job（xvfb + opengl3）",
+      "priority": "P1",
+      "why": "风格锁是本作卖点，但 UI 回归没有自动截图，只能靠人眼。多条流并行时，样式漂移最容易悄悄进入主干。",
+      "scope": "新增 CI job：xvfb-run 加 --rendering-driver opengl3，运行 tests/capture_v86 一类的截图脚本，截 12 个关键画面（主菜单、城堡、名册、酒馆、联姻、族谱、舆图、城市、战斗、过场一帧、设置、图鉴）× 两种比例（1280×720 和 1080×2400），上传为 artifact；可选与 baseline 做像素差，容差 2%。",
+      "files": [
+        ".github/workflows/ci.yml",
+        "scripts/capture_screens.sh",
+        "project/tests/suites/infra/capture_check.gd",
+        "project/tests/suites/infra/capture_check.tscn"
+      ],
+      "acceptance": [
+        "CI artifact 里有 24 张 PNG，文件名为 <screen>_<ratio>.png",
+        "每张截图的平均亮度和主色经 style_check 计算后不超出 style-lock 的 warm 与 gold 阈值，超出则 job 失败"
+      ],
+      "dependencies": [
+        "INF-01"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S01-infra"
+    },
+    {
+      "id": "INF-05",
+      "title": "Android 调试包构建 job 与包体报告",
+      "priority": "P1",
+      "why": "project/android 只有签名示例，Gradle 模板不在仓库，build_android.sh 在 CI 上一定以 2 退出。没有可装的包，就无法真机验证。",
+      "scope": "workflow_dispatch 触发的 android job：安装 JDK17、Android SDK cmdline-tools 和 4.3 导出模板，执行 godot --headless --install-android-build-template；用临时 debug keystore（运行时生成，不入库）构建 APK，上传 artifact，并报告 APK 大小与 PCK 构成。",
+      "files": [
+        ".github/workflows/android.yml",
+        "scripts/build_android.sh",
+        "project/android/.gitignore"
+      ],
+      "acceptance": [
+        "手动触发后产出 CenturyKnights-debug.apk artifact",
+        "job 日志打印 APK 字节数；超过 300MB 时 job 失败",
+        "仓库里没有任何 keystore 或密码"
+      ],
+      "dependencies": [
+        "INF-01",
+        "INF-02"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S01-infra"
+    },
+    {
+      "id": "INF-06",
+      "title": "GDScript 静态检查（gdtoolkit，只管新文件）",
+      "priority": "P2",
+      "why": "多个代理并行写 GDScript，风格和明显错误需要机器先挡一道。",
+      "scope": "CI 安装 gdtoolkit 4.x，对本 PR 改动的 .gd 运行 gdlint（配置写在 .gdlintrc，放宽行长），存量文件不强制。",
+      "files": [
+        ".gdlintrc",
+        ".github/workflows/ci.yml",
+        "scripts/run_ci.sh"
+      ],
+      "acceptance": [
+        "改动的 .gd 有 gdlint 错误时 CI 失败；不改 .gd 的 PR 不受影响"
+      ],
+      "dependencies": [
+        "INF-01"
+      ],
+      "needs_farm": false,
+      "size": "S",
+      "parallel_group": "S01-infra"
+    },
+    {
+      "id": "INF-07",
+      "title": "风格 ratchet 门禁（金色、羊皮纸、硬编码色值只许降）",
+      "priority": "P1",
+      "why": "存量有 25 处 #c9a227 和大量 bbcode 硬编码色值，与 Frost 锁冲突。没有门禁的话，新代码还会继续复制旧写法。",
+      "scope": "tools/ci/style_lint.py：统计 project/**/*.gd 中的 #c9a227、parchment（排除 UIKit 的兼容别名）以及 ui_kit.gd/frost.gd 之外的 #RRGGBB 字面量，按文件计数，与 tools/ci/ratchet.json 比较，任一文件计数上升就失败；同时检查新增文件计数必须为 0。",
+      "files": [
+        "tools/ci/style_lint.py",
+        "tools/ci/ratchet.json",
+        "scripts/run_ci.sh"
+      ],
+      "acceptance": [
+        "当前 main 上运行通过，并写出基线",
+        "在任一 .gd 里新增 '[color=#c9a227]' 时 CI 失败",
+        "各流减少计数后，可以用 --update 收紧基线"
+      ],
+      "dependencies": [
+        "INF-01"
+      ],
+      "needs_farm": false,
+      "size": "S",
+      "parallel_group": "S01-infra"
+    },
+    {
+      "id": "INF-08",
+      "title": "i18n ratchet 门禁（硬编码中文字面量只许降）",
+      "priority": "P1",
+      "why": "约 6,000 个中文字面量散落在 .gd 里，本地化无从开始。先止血，再逐步迁移。",
+      "scope": "tools/ci/i18n_ratchet.py：统计 project/scripts 与 project/autoload 下 .gd 文件中不在 Locale.t(...) 或 tr(...) 里的 CJK 字符串字面量，按文件写入 ratchet.json，只许降；tests/ 和 data/ 不计。",
+      "files": [
+        "tools/ci/i18n_ratchet.py",
+        "tools/ci/ratchet.json",
+        "scripts/run_ci.sh"
+      ],
+      "acceptance": [
+        "main 上通过并写出基线",
+        "新增一个带中文字面量的 Label 文本时 CI 失败"
+      ],
+      "dependencies": [
+        "INF-01"
+      ],
+      "needs_farm": false,
+      "size": "S",
+      "parallel_group": "S01-infra"
+    },
+    {
+      "id": "CORE-01",
+      "title": "GameState 章节状态表化与章节懒加载",
+      "priority": "P0",
+      "why": "game_state.gd 有 235 个 data_chapterN 和 235 个 chapterN_beat 字段，save_game 把它们逐个列出，每次启动都解析全部章节 JSON。这是剧情重写、存档重构和启动性能三件事共同的拦路虎。",
+      "scope": "新增 project/scripts/core/story_state.gd（class_name CKStoryState，提供 beats 字典、current_chapter()、chapter_data(id) 懒加载并缓存、unlocked_count()）。GameState 删除 470 个字段，用 _get/_set 兼容垫片保持 GameState.chapterN_beat 和 data_chapterN 的读写不变（不改 235 个章节脚本）。save/load 改为写 story.beats，并能读入旧 v9.1 的逐字段存档。",
+      "files": [
+        "project/autoload/game_state.gd",
+        "project/scripts/core/story_state.gd",
+        "project/tests/save_roundtrip_check.gd",
+        "project/tests/suites/core/story_state_check.gd",
+        "project/tests/suites/core/story_state_check.tscn",
+        "project/tests/suites/core/fixtures/save_v91.json"
+      ],
+      "acceptance": [
+        "grep -cE '^var (data_chapter|chapter)[0-9]+' project/autoload/game_state.gd 结果为 0",
+        "game_state.gd 行数下降至少 900",
+        "启动到主菜单期间章节 JSON 解析次数 ≤ 1（测试里统计 CKStoryState 的加载计数）",
+        "v9.1 fixture 存档读入后，每个 chapterN_beat 与原值相等；再存再读无损",
+        "full_chain_e2e、atlas_e2e、campaign_century 全部通过，种子 91 数字不变"
+      ],
+      "dependencies": [],
+      "needs_farm": false,
+      "size": "L",
+      "parallel_group": "S02-core"
+    },
+    {
+      "id": "CORE-02",
+      "title": "GameState 领域拆分（经济 / 敌方配置 / 家庭），保持行为完全一致",
+      "priority": "P0",
+      "why": "3,468 行的 GameState 同时管经济、难度、敌方技能、婚姻和章节，company、battle、dynasty 三条流都要改它，不拆开就没法并行。",
+      "scope": "把 HOLDING_DEFS、月结发饷粮耗、丰收、城堡任务、招募价、建筑升级移到 project/scripts/company/economy_state.gd；把 battle_difficulty_from_map、grant_battle_enemy_skills、grant_job_skills 移到 project/scripts/battle/enemy_loadout.gd；把婚姻、子嗣辅助移到 project/scripts/characters/family_state.gd。GameState 保留同名转发函数，外部调用不变。合并后这三个新文件分别归 company、battle、dynasty 流所有。",
+      "files": [
+        "project/autoload/game_state.gd",
+        "project/scripts/company/economy_state.gd",
+        "project/scripts/battle/enemy_loadout.gd",
+        "project/scripts/characters/family_state.gd",
+        "project/tests/suites/core/facade_check.gd",
+        "project/tests/suites/core/facade_check.tscn"
+      ],
+      "acceptance": [
+        "game_state.gd ≤ 1500 行",
+        "campaign_century 种子 91 的全部数字与 main 逐项相同（银 5774、粮 280、5 代、4 次传旗、15 次出生、委托 100 单 / 6083 银）",
+        "facade_check：对 30 个旧 API 名称逐一调用转发函数，结果与直接调用新模块一致",
+        "CI ALL PASS"
+      ],
+      "dependencies": [
+        "CORE-01"
+      ],
+      "needs_farm": false,
+      "size": "L",
+      "parallel_group": "S02-core"
+    },
+    {
+      "id": "CORE-03",
+      "title": "存档 2.0：多槽、原子写、备份轮换、损坏回退、迁移链",
+      "priority": "P0",
+      "why": "一个百年战役只靠一个没有备份的 JSON 单槽，一次断电或闪退就可能毁掉几十小时进度。这是事故级风险。",
+      "scope": "project/scripts/core/save_service.gd：3 个手动槽、1 个自动槽、1 个快速存档；写入时先写 .tmp，fsync 后 rename；每槽保留 .bak1–.bak3 轮换；记录 SHA256 和长度；读档时解析失败自动回退到最近一份可用的 .bak 并提示；schema 升到 v9.2，迁移链做成表（v8.7 → v8.8 → v9.1 → v9.2）；槽元数据包括团长名、年月、章节、游戏时长和版本。",
+      "files": [
+        "project/scripts/core/save_service.gd",
+        "project/autoload/game_state.gd",
+        "project/tests/save_roundtrip_check.gd",
+        "project/tests/suites/core/save_corruption_check.gd",
+        "project/tests/suites/core/save_corruption_check.tscn",
+        "project/tests/suites/core/fixtures/*"
+      ],
+      "acceptance": [
+        "截断一半、全是乱码、空文件、v8.7、v8.8、v9.1 六种 fixture 都能读入或回退到 .bak，不崩溃，并给出正确提示",
+        "写档过程中模拟中断（.tmp 已写、未 rename），下次读档仍得到上一个完整版本",
+        "3 个槽互不覆盖；元数据能在不完整解析存档的情况下读出",
+        "SAVE ROUNDTRIP PASS 和 SAVE CORRUPTION PASS"
+      ],
+      "dependencies": [
+        "CORE-01"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S02-core"
+    },
+    {
+      "id": "CORE-04",
+      "title": "自动存档时机、暂停菜单、Android 后台保存与返回键",
+      "priority": "P0",
+      "why": "Android 会在后台随时杀进程，目前却只有手动存档和战后存档；也没有暂停菜单，手机返回键行为未定义。",
+      "scope": "自动存档触发点：月结（节流，至少间隔 1 个游戏月）、开战前、战后、NOTIFICATION_APPLICATION_PAUSED / WM_CLOSE_REQUEST。暂停菜单 scenes/ui/pause_menu.tscn：继续、存档、读档、设置、回到标题；桌面用 Esc 唤出，Android 用返回键（ui_cancel 加 NOTIFICATION_WM_GO_BACK_REQUEST）唤出。战斗中暂停时冻结输入路由。",
+      "files": [
+        "project/scripts/core/autosave.gd",
+        "project/scripts/core/pause_menu.gd",
+        "project/scenes/ui/pause_menu.tscn",
+        "project/autoload/game_state.gd",
+        "project/tests/suites/core/autosave_check.gd",
+        "project/tests/suites/core/autosave_check.tscn"
+      ],
+      "acceptance": [
+        "测试中发送 NOTIFICATION_APPLICATION_PAUSED 后，自动槽文件的时间戳更新",
+        "连续推进 12 个月，自动存档写入次数 ≤ 12，且至少 1 次",
+        "暂停菜单的 5 个按钮最小点击尺寸 ≥ 44dp（复用 device_profile 的换算）",
+        "战斗中唤出暂停菜单时 input_router 不再处理棋盘点击"
+      ],
+      "dependencies": [
+        "CORE-03"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S02-core"
+    },
+    {
+      "id": "CORE-05",
+      "title": "月结事件总线（有序阶段，各领域自行订阅）",
+      "priority": "P1",
+      "why": "calendar.gd 直接调用经济、衰老、妊娠、流言、王室等逻辑，节庆、伤病恢复、王朝志向都要往里加，不改成总线就会互相冲突。",
+      "scope": "Calendar 发出 month_ticked(ctx)，ctx 内阶段固定为 pre、economy、family、court、world、post；各模块用 Calendar.register(phase, callable, order) 注册；保留现有调用顺序，结果完全一致。",
+      "files": [
+        "project/autoload/calendar.gd",
+        "project/scripts/core/month_bus.gd",
+        "project/tests/suites/core/month_bus_check.gd",
+        "project/tests/suites/core/month_bus_check.tscn"
+      ],
+      "acceptance": [
+        "种子 91 百年模拟数字不变",
+        "测试打印注册表，阶段内顺序稳定",
+        "新增一个 dummy 订阅不影响其他结果"
+      ],
+      "dependencies": [
+        "CORE-02"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S02-core"
+    },
+    {
+      "id": "CORE-06",
+      "title": "主菜单重做：继续显示最新存档、读档界面、制作人员入口、单一版本源",
+      "priority": "P1",
+      "why": "主菜单只有新游戏、继续、设置、退出，看不到存档信息，也没有读档和制作人员入口。",
+      "scope": "main_menu 的「继续」显示最近槽的团长名、年月和章节；新增读档按钮进入 save_slots.tscn；新增制作人员按钮，指向 UX-07 的 credits.tscn；版本号从 ProjectSettings application/config/version 读取（由 infra 设置）。",
+      "files": [
+        "project/scripts/ui/main_menu.gd",
+        "project/scenes/ui/main_menu.tscn",
+        "project/scenes/ui/save_slots.tscn",
+        "project/scripts/core/save_slots.gd"
+      ],
+      "acceptance": [
+        "layout_check 通过",
+        "没有存档时「继续」不可点，并有说明",
+        "截图：桌面和手机比例各一张"
+      ],
+      "dependencies": [
+        "CORE-03",
+        "UX-07 (credits 场景，可先放占位)"
+      ],
+      "needs_farm": false,
+      "size": "S",
+      "parallel_group": "S02-core"
+    },
+    {
+      "id": "CORE-07",
+      "title": "存档差量化：不再嵌入整份 world_v87 静态数据",
+      "priority": "P2",
+      "why": "存档里嵌入全部静态世界数据，体积大，而且 schema 一漂移就容易坏。",
+      "scope": "只保存动态部分：价格、库存、声望、委托、旅行状态、已知情报。静态数据从 data/world_v87.json 读取；迁移旧存档时丢弃静态部分。",
+      "files": [
+        "project/scripts/core/save_service.gd",
+        "project/autoload/game_state.gd",
+        "project/tests/suites/core/save_size_check.gd",
+        "project/tests/suites/core/save_size_check.tscn"
+      ],
+      "acceptance": [
+        "新游戏推进 3 年后的存档体积比 main 至少减少 60%",
+        "atlas_e2e 的存读档步骤通过",
+        "旧存档迁移后世界状态等价"
+      ],
+      "dependencies": [
+        "CORE-03"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S02-core"
+    },
+    {
+      "id": "CORE-08",
+      "title": "本地游玩统计（时长、战斗数、月数），用于节奏校准",
+      "priority": "P2",
+      "why": "30–50 小时的体量目标需要真实数据来校准，目前完全没有。",
+      "scope": "本地记录总时长、各 hub 停留时间、战斗次数与平均回合、跳月次数；只写 user://，设置里可以导出 JSON，不联网。",
+      "files": [
+        "project/scripts/core/playstats.gd",
+        "project/tests/suites/core/playstats_check.gd",
+        "project/tests/suites/core/playstats_check.tscn"
+      ],
+      "acceptance": [
+        "模拟一场战斗加推进一个月后，统计 JSON 字段正确",
+        "不存在任何网络调用"
+      ],
+      "dependencies": [
+        "CORE-03"
+      ],
+      "needs_farm": false,
+      "size": "S",
+      "parallel_group": "S02-core"
+    },
+    {
+      "id": "BTL-01",
+      "title": "battle_controller 拆分阶段 1：插科打诨与胜利旗标数据化、战斗信号、多地图文件",
+      "priority": "P0",
+      "why": "4,215 行的控制器里，约 549 行是插科打诨常量，约 800 行是 400 个分支的 elif map_id 旗标梯子。不先拆开，胜利条件、撤销、伤病都没法安全地加。",
+      "scope": "先用旧代码为 400 张图各导出一份 victory 结果快照（flags、silver、unlock）作为 fixture。然后：banter 常量移到 data/battle_banter.json；_mark_map_victory 改成读取 maps 数据里的 on_victory 字段；新增信号 unit_downed(char, info) 和 battle_finished(result)；battle_maps.gd 支持合并加载 data/maps.json 与 data/maps/*.json（供故事图使用）；HUD 与面板逻辑拆进 scripts/battle/ui/。",
+      "files": [
+        "project/scripts/battle/battle_controller.gd",
+        "project/scripts/battle/battle_maps.gd",
+        "project/scripts/battle/ui/*.gd",
+        "project/data/battle_banter.json",
+        "project/data/maps.json",
+        "project/tests/suites/battle/victory_golden_check.gd",
+        "project/tests/suites/battle/victory_golden_check.tscn",
+        "project/tests/suites/battle/fixtures/victory_golden.json"
+      ],
+      "acceptance": [
+        "battle_controller.gd ≤ 3000 行",
+        "grep -c 'map_id == \"' battle_controller.gd ≤ 10",
+        "victory_golden_check：400 张图的胜利旗标、赏银、解锁结果与重构前快照完全一致",
+        "在 data/maps/ 放一个测试图，battle_maps 能加载并开战",
+        "tactics_e2e、full_chain_e2e、atlas_e2e、touch_router 通过"
+      ],
+      "dependencies": [],
+      "needs_farm": false,
+      "size": "L",
+      "parallel_group": "S03-battle"
+    },
+    {
+      "id": "BTL-02",
+      "title": "胜利/失败条件系统 + 目标 HUD + 增援触发",
+      "priority": "P0",
+      "why": "400 张图全是歼灭战，系统目录 B09（歼灭/到达/防守）标为 MVP，实际没实现。没有目标多样性，战斗就是同一道题做 400 遍。",
+      "scope": "maps 里新增 objective 字段：rout、seize(tile)、defend(tiles, turns)、survive(turns)、escort(npc, exit_tile)、boss(unit_tag)、escape(n, exit_tiles)、protect(unit_tag)；失败条件：leader_down、vip_down、turn_limit。增援 reinforcements 按 turn 或 trigger_tile 触发。目标 HUD 显示当前目标、回合数和剩余量（手机上收进顶栏）。规则写进 docs/design/combat-objectives-v92.md。",
+      "files": [
+        "project/scripts/battle/battle_controller.gd",
+        "project/scripts/battle/objectives.gd",
+        "project/scripts/battle/ui/objective_hud.gd",
+        "project/data/maps.json",
+        "project/data/maps/test_objectives.json",
+        "project/tests/suites/battle/objectives_check.gd",
+        "project/tests/suites/battle/objectives_check.tscn",
+        "docs/design/combat-objectives-v92.md"
+      ],
+      "acceptance": [
+        "每种胜利条件各有一张测试图，headless 脚本走到胜利和失败两种结局",
+        "增援在指定回合出现，并且不出生在被占的格子上",
+        "目标 HUD 在 1080×2400 下不被安全区遮挡（截图）",
+        "没有 objective 字段的旧图仍按 rout 处理，victory_golden 仍然通过"
+      ],
+      "dependencies": [
+        "BTL-01"
+      ],
+      "needs_farm": false,
+      "size": "L",
+      "parallel_group": "S03-battle"
+    },
+    {
+      "id": "BTL-03",
+      "title": "战术可读性：全图危险区、双栏战斗预测、路径与 ZoC 代价预览",
+      "priority": "P0",
+      "why": "现在只能看到所选单位的射程，敌方威胁全靠心算；预测只有文字和飘字。这是 FE 和三角战略的基线功能，缺了会直接劝退战棋老玩家。",
+      "scope": "危险区开关：显示所有敌人的移动 + 攻击可达格并集，可单独点选某个敌人只看它；用珊瑚半透明，色盲模式下叠加斜纹。双栏预测面板：双方 HP 变化、命中、暴击、是否追击、是否反击、技能效果，数值必须直接来自 BattleRules.preview。路径预览显示每步消耗和 ZoC 停步点。手机端：长按敌人切换它的危险区。",
+      "files": [
+        "project/scripts/battle/battle_controller.gd",
+        "project/scripts/battle/ui/danger_zone.gd",
+        "project/scripts/battle/ui/forecast_panel.gd",
+        "project/autoload/battle_rules.gd",
+        "project/tests/suites/battle/danger_zone_check.gd",
+        "project/tests/suites/battle/danger_zone_check.tscn"
+      ],
+      "acceptance": [
+        "fixture 地图上计算出的危险格集合与手写期望完全相同（包括被 ZoC 截断的格子）",
+        "预测面板的每个数字都等于 BattleRules.preview 的输出（对 50 组随机对位断言）",
+        "touch_router_check 通过；长按不会触发移动",
+        "截图：危险区开启和预测面板，桌面与手机各一张"
+      ],
+      "dependencies": [
+        "BTL-01"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S03-battle"
+    },
+    {
+      "id": "BTL-04",
+      "title": "回合内撤销与限次回溯（原创命名）",
+      "priority": "P0",
+      "why": "一次误触就毁掉一场 20 分钟的仗，在手机上尤其严重。现代 SRPG 都有撤销或回溯。",
+      "scope": "回合内撤销：攻击或技能确认前，移动可以无限撤销。限次回溯：按难度给次数，回到本回合开始或上一个行动前；起一个和本作「灯」意象结合的原创名字。战斗状态做成可序列化快照（单位、HP、位置、增益、RNG 状态），回溯后 RNG 也要还原，防止刷骰。",
+      "files": [
+        "project/scripts/battle/battle_controller.gd",
+        "project/scripts/battle/battle_snapshot.gd",
+        "project/scripts/battle/ui/rewind_bar.gd",
+        "project/tests/suites/battle/rewind_check.gd",
+        "project/tests/suites/battle/rewind_check.tscn"
+      ],
+      "acceptance": [
+        "撤销后的状态哈希与移动前完全相同",
+        "回溯后重放同样的行动，结果完全一致（RNG 已还原）",
+        "回溯次数用完后按钮禁用；新回合不会补充次数，除非难度规则允许",
+        "tactics_e2e 通过"
+      ],
+      "dependencies": [
+        "BTL-01"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S03-battle"
+    },
+    {
+      "id": "BTL-05",
+      "title": "难度模式：休闲 / 标准 / 经典（与伤病、永久死亡、回溯次数联动）",
+      "priority": "P1",
+      "why": "现在难度由地图 id 隐式决定，玩家没有选择权。战败还会无代价全员回满，经营没有风险。",
+      "scope": "开新游戏时选择难度，之后只能往低调。三档各自规定：敌方属性缩放、AI 档位（配合 BTL-08）、回溯次数、战败代价（休闲：撤退回堡；标准：伤病；经典：永久死亡，见 CMP-01）。enemy_loadout.gd 读取难度。",
+      "files": [
+        "project/scripts/battle/enemy_loadout.gd",
+        "project/scripts/battle/battle_controller.gd",
+        "project/data/difficulty.json",
+        "project/tests/suites/battle/difficulty_check.gd",
+        "project/tests/suites/battle/difficulty_check.tscn"
+      ],
+      "acceptance": [
+        "三档在同一张图、同一个种子下，期望伤害模拟结果严格单调",
+        "标准难度下种子 91 百年模拟不变",
+        "存档里记录难度，读档后保持"
+      ],
+      "dependencies": [
+        "CORE-02",
+        "BTL-04",
+        "CMP-01 (经典模式死亡钩子)"
+      ],
+      "needs_farm": false,
+      "size": "L",
+      "parallel_group": "S03-battle"
+    },
+    {
+      "id": "BTL-06",
+      "title": "职业树扩到约 20 职 3 阶，每职一个独特机制，职业精通",
+      "priority": "P1",
+      "why": "9 个职业、2 阶、二阶没有后续，系统目录 C07 期望约 20 职 3 阶。职业是 SRPG 长线成长最主要的乐趣来源。",
+      "scope": "jobs.json 扩到约 20 职 3 阶，例如骑兵攻击后还能再动、重步防守相邻友军、射手不能近射但射程更远、医者治疗溢出转护盾、秘术破甲等，各自做出原创机制。新增职业精通（C09）：用某职业作战累计精通，解锁专属技能。skills.json 扩到约 90 个。用期望伤害模拟做平衡表，写进 docs/design/classes-v92.md。新职业的立绘、棋子和模型列进 FARM-06/07。",
+      "files": [
+        "project/data/jobs.json",
+        "project/data/skills.json",
+        "project/autoload/battle_rules.gd",
+        "project/scripts/hub/train.gd",
+        "project/scripts/hub/skill_tree.gd",
+        "docs/design/classes-v92.md",
+        "project/tests/suites/battle/classes_check.gd",
+        "project/tests/suites/battle/classes_check.tscn"
+      ],
+      "acceptance": [
+        "jobs.json 至少 20 个职业，每个三阶职业都有 promote_from 和独特机制字段",
+        "每个独特机制都有一个 headless 测试场景证明它确实生效",
+        "平衡模拟：任意两职业 1v1 期望胜率在 25%–75% 之间（克制关系除外，克制关系另列）",
+        "训练与转职界面能显示三阶路径（截图）"
+      ],
+      "dependencies": [
+        "BTL-01",
+        "BTL-10"
+      ],
+      "needs_farm": false,
+      "size": "L",
+      "parallel_group": "S03-battle"
+    },
+    {
+      "id": "BTL-07",
+      "title": "地形深化：高低差、可互动格、天气、侦察图战争迷雾（保持 2D）",
+      "priority": "P1",
+      "why": "6 种平面地形只有数值差异，ch1_fog 的「雾」只是给地面调色。三角战略级别的地形玩法完全缺席。",
+      "scope": "maps 增加 height 层（0–3），高处命中和射程有加成、低处有惩罚，棋盘用阴影和描边表现。可互动格：门、吊桥、火源、栅栏，可以被破坏或开关。天气：雨（弓手命中降低）、雪（移动消耗增加）、雾（视野受限）。战争迷雾只在指定的侦察图启用，要能读懂。全部数据驱动。",
+      "files": [
+        "project/autoload/battle_rules.gd",
+        "project/scripts/battle/battle_controller.gd",
+        "project/scripts/battle/terrain_fx.gd",
+        "project/data/maps/test_terrain.json",
+        "project/tests/suites/battle/terrain_check.gd",
+        "project/tests/suites/battle/terrain_check.tscn"
+      ],
+      "acceptance": [
+        "高低差、天气、互动格三类各有公式测试和场景测试",
+        "战争迷雾下，敌方行动不会泄露不可见单位的位置（测试断言日志）",
+        "低端机棋盘帧时间不超过开启前的 1.2 倍（perf 报告）"
+      ],
+      "dependencies": [
+        "BTL-02",
+        "BTL-10"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S03-battle"
+    },
+    {
+      "id": "BTL-08",
+      "title": "AI 2.0：威胁图、集火协同、目标感知、首领脚本、AI 回归测试",
+      "priority": "P1",
+      "why": "现在的 AI 是单步贪心打分，没有协同，也不理解胜利目标。多目标战场上它会显得很蠢。",
+      "scope": "每回合先算威胁图和可击杀表，按优先级分配目标，实现集火；AI 理解 seize/defend/escort 目标（例如抢点、守点、截杀护送对象）；首领可以挂脚本（阶段转换、召唤增援）；按 BTL-05 分三档。建立 AI 回归 fixture：20 个局面，各有期望动作集合。",
+      "files": [
+        "project/scripts/battle/tactics_ai.gd",
+        "project/scripts/battle/ai_planner.gd",
+        "project/scripts/battle/battle_controller.gd",
+        "project/tests/suites/battle/ai_regression_check.gd",
+        "project/tests/suites/battle/ai_regression_check.tscn",
+        "project/tests/suites/battle/fixtures/ai_cases.json"
+      ],
+      "acceptance": [
+        "20 个回归局面全部落在期望动作集合内",
+        "集火测试：两个敌人能击杀同一目标时会协同",
+        "AI 单回合计算 ≤ 50ms（12×9 图、12 个敌人，headless）",
+        "campaign_century 不变（模拟里的遭遇战用的是期望伤害）"
+      ],
+      "dependencies": [
+        "BTL-02"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S03-battle"
+    },
+    {
+      "id": "BTL-09",
+      "title": "原创连携系统：相邻援护 / 追击，与羁绊和血统挂钩",
+      "priority": "P1",
+      "why": "现在只有夹击加值，没有角色之间的化学反应；支援对话（NAR-04）和血统（DYN-01）的成果也没有地方在战场上体现。",
+      "scope": "做一个原创的「旗阵」：攻击时，相邻且羁绊达到一定等级的友军按概率追加援护攻击或格挡；同一王胤的血亲之间额外有共鸣效果。预测面板要显示连携。",
+      "files": [
+        "project/autoload/battle_rules.gd",
+        "project/scripts/battle/battle_controller.gd",
+        "project/scripts/battle/ui/forecast_panel.gd",
+        "project/tests/suites/battle/link_check.gd",
+        "project/tests/suites/battle/link_check.tscn"
+      ],
+      "acceptance": [
+        "羁绊等级与连携概率的关系有表格和测试",
+        "预测面板显示连携参与者",
+        "过场数据里带上连携段（交接给 cutscene 流做演出）"
+      ],
+      "dependencies": [
+        "BTL-03",
+        "NAR-04 (羁绊数据接口)",
+        "DYN-01 (血亲判定接口)"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S03-battle"
+    },
+    {
+      "id": "BTL-10",
+      "title": "战斗公式单测矩阵 + 规则单一来源文档 + UI 文案从规则生成",
+      "priority": "P1",
+      "why": "战斗公式没有单测（smoke 只测命中 ≥1），信息面板里的「脱离+1移」之类文案是手写的，规则一改就会和代码不一致。",
+      "scope": "地形 × 夹击 × 克制 × 暴击 × 追击 × 反击 × ZoC 脱离消耗的矩阵测试（≥200 组，期望值手算后放进 fixture）；docs/design/combat-rules-v92.md 作为单一来源；信息面板里的数值文案改为从 BattleRules 常量生成。",
+      "files": [
+        "project/autoload/battle_rules.gd",
+        "project/scripts/battle/battle_controller.gd",
+        "docs/design/combat-rules-v92.md",
+        "project/tests/suites/battle/formula_matrix_check.gd",
+        "project/tests/suites/battle/formula_matrix_check.tscn",
+        "project/tests/suites/battle/fixtures/formula_matrix.json"
+      ],
+      "acceptance": [
+        "≥200 组断言全部通过",
+        "修改 leave_cost 常量后，面板文案自动随之变化（测试断言）",
+        "文档里每条规则都标出对应的代码位置"
+      ],
+      "dependencies": [
+        "BTL-01"
+      ],
+      "needs_farm": false,
+      "size": "S",
+      "parallel_group": "S03-battle"
+    },
+    {
+      "id": "BTL-11",
+      "title": "要塞多阶段战与竞技场规则战",
+      "priority": "P2",
+      "why": "系统目录的 B18 和 B19 都还没做，纪元高潮需要大型战场。",
+      "scope": "多阶段战：同一场战斗换图或开新区域，阶段之间保留 HP 和状态。竞技场：伤势不带出，规则可以变化（例如禁用技能）。",
+      "files": [
+        "project/scripts/battle/battle_controller.gd",
+        "project/scripts/battle/objectives.gd",
+        "project/data/maps/test_multistage.json",
+        "project/tests/suites/battle/multistage_check.gd",
+        "project/tests/suites/battle/multistage_check.tscn"
+      ],
+      "acceptance": [
+        "两阶段测试图能完整跑完，阶段之间状态正确保留",
+        "竞技场战后伤势不写入名册"
+      ],
+      "dependencies": [
+        "BTL-02"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S03-battle"
+    },
+    {
+      "id": "BTL-12",
+      "title": "部署界面：地图预览、推荐站位、换位、出战人数说明",
+      "priority": "P1",
+      "why": "出战人数是 3 + 议事厅等级，UI 却写着「最多四人」；部署前也看不到地图和敌情。",
+      "scope": "deploy 显示地图缩略图、敌方构成、胜利目标、推荐职业；开战前可以在起始格之间换位；人数上限的文案从 max_deploy() 生成。带伤单位按 CMP-01 的规则显示或禁用。",
+      "files": [
+        "project/scripts/hub/deploy.gd",
+        "project/scenes/hub/deploy.tscn",
+        "project/scripts/battle/battle_controller.gd",
+        "project/tests/suites/battle/deploy_check.gd",
+        "project/tests/suites/battle/deploy_check.tscn"
+      ],
+      "acceptance": [
+        "人数上限文案与 max_deploy() 一致",
+        "换位后开战，单位确实在新的起始格",
+        "截图：桌面与手机"
+      ],
+      "dependencies": [
+        "BTL-02"
+      ],
+      "needs_farm": false,
+      "size": "S",
+      "parallel_group": "S03-battle"
+    },
+    {
+      "id": "BTL-13",
+      "title": "战斗 bbcode 色值改为 UIKit token",
+      "priority": "P2",
+      "why": "战斗面板里有 #ff6b4a、#e07070、#8ecae6、#c9a227 等硬编码色值，色盲模式无法统一替换。",
+      "scope": "battle_controller 和 battle/ui 里的富文本颜色统一改用 UIKit.hex(token)；style ratchet 计数降为 0。",
+      "files": [
+        "project/scripts/battle/battle_controller.gd",
+        "project/scripts/battle/ui/*.gd",
+        "tools/ci/ratchet.json (交接给 infra 收紧)"
+      ],
+      "acceptance": [
+        "style_lint 统计到的 battle/ 文件硬编码色值为 0",
+        "切换色盲模式（UX-02）时，战斗日志颜色跟着变化"
+      ],
+      "dependencies": [
+        "UX-02",
+        "INF-07"
+      ],
+      "needs_farm": false,
+      "size": "S",
+      "parallel_group": "S03-battle"
+    },
+    {
+      "id": "CUT-01",
+      "title": "过场节奏预算与播放模式（全开 / 仅关键 / 关闭，按住快进）",
+      "priority": "P1",
+      "why": "一次交锋要好几秒，30–50 小时里会累积成数小时的等待；现在只有开关和 2× 两档。",
+      "scope": "时间线数据化。普通攻击 ≤2.2 秒，暴击、技能、击杀 ≤3.0 秒，首次技能可以 ≤4.0 秒。新增模式：全开、仅关键（暴击、击杀、王技、首领）、关闭。按住任意键或长按屏幕可以 3× 快进。设置接口交接给 UX 流。",
+      "files": [
+        "project/scripts/battle/combat_cutscene.gd",
+        "project/scripts/battle/cutscene_timeline.gd",
+        "project/tests/suites/cutscene/timeline_budget_check.gd",
+        "project/tests/suites/cutscene/timeline_budget_check.tscn"
+      ],
+      "acceptance": [
+        "测试读取各类时间线的总时长，全部在预算内",
+        "仅关键模式下，普通攻击不实例化过场",
+        "touch_router_check 里的过场预算表通过"
+      ],
+      "dependencies": [],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S04-cutscene"
+    },
+    {
+      "id": "CUT-02",
+      "title": "职业动作原型库（≥6 原型 × 8 动作）",
+      "priority": "P1",
+      "why": "32 个模型共用 8 个动作，剑、枪、弓、杖、盾的动作完全一样，过场缺少辨识度。",
+      "scope": "按武器原型（单手剑、长枪、弓、法杖、盾、重武器）用程序化关键帧（tools/models 的脚本）各做一套 8 个动作，写进 AnimationLibrary；unit_model 按职业选择原型。不需要新网格。",
+      "files": [
+        "tools/models/anim_archetypes_v92.py",
+        "project/assets/models/anim/*.res",
+        "project/scripts/art/unit_model.gd",
+        "project/tests/suites/cutscene/anim_archetype_check.gd",
+        "project/tests/suites/cutscene/anim_archetype_check.tscn"
+      ],
+      "acceptance": [
+        "每个原型都包含 8 个标准动作名",
+        "每个职业都能映射到一个原型",
+        "attack 动作的命中帧标记与 cutscene_timeline 的 impact 时间一致"
+      ],
+      "dependencies": [
+        "CUT-01"
+      ],
+      "needs_farm": false,
+      "size": "L",
+      "parallel_group": "S04-cutscene"
+    },
+    {
+      "id": "CUT-03",
+      "title": "镜头语言模板（6 种）与按情境选择",
+      "priority": "P1",
+      "why": "现在镜头只做 FOV 补间，每场过场看起来都一样。",
+      "scope": "做 6 种镜头模板：过肩、侧向跟拍、低角英雄、暴击推近、远程跟随投射物、技能环绕。按攻击类型、暴击、击杀、王技选择，同类之间轮换。FOV 限定在 28–34，眼高 1.35 米（style-lock cameras）。",
+      "files": [
+        "project/scripts/battle/combat_cutscene.gd",
+        "project/scripts/battle/cutscene_cameras.gd",
+        "project/tests/suites/cutscene/camera_template_check.gd",
+        "project/tests/suites/cutscene/camera_template_check.tscn"
+      ],
+      "acceptance": [
+        "选择函数对固定输入返回确定的模板",
+        "所有模板的 FOV 都在 28–34 范围内",
+        "附录屏：6 种模板各一段"
+      ],
+      "dependencies": [
+        "CUT-01"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S04-cutscene"
+    },
+    {
+      "id": "CUT-04",
+      "title": "投射物与王技特效（霜色调，ember 只用于火花）",
+      "priority": "P1",
+      "why": "箭矢是一根有光照的圆柱体，10 个王技也没有专属演出，招牌的血统回报在画面上看不出来。",
+      "scope": "箭和法弹换成程序化网格加拖尾；10 个王技各做一个视觉签名（形状和颜色语言对应十国冕征，霜色调）；GPU 粒子在低端机降级为 CPU 粒子或不播。",
+      "files": [
+        "project/scripts/battle/combat_cutscene.gd",
+        "project/scripts/battle/cutscene_vfx.gd",
+        "project/shaders/*.gdshader",
+        "project/tests/suites/cutscene/vfx_check.gd",
+        "project/tests/suites/cutscene/vfx_check.tscn"
+      ],
+      "acceptance": [
+        "10 个王技 id 都能映射到 VFX 配置，没有遗漏",
+        "low tier 下没有 GPUParticles3D 实例",
+        "截图中主色不违反 style-lock 的 warm 阈值"
+      ],
+      "dependencies": [
+        "CUT-01"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S04-cutscene"
+    },
+    {
+      "id": "CUT-05",
+      "title": "受击反馈：按武器重量的 hit-stop、镜头冲击、3D 伤害数字、霜裂消散",
+      "priority": "P1",
+      "why": "现在只有暴击才有 hit-stop，打击感单一。",
+      "scope": "hit-stop 时长按武器重量分 3 档；加镜头冲击；3D 伤害数字使用 Frost 字体；击杀时角色化为霜晶碎片消散（不出现血腥）；全部尊重 reduced_motion 设置。",
+      "files": [
+        "project/scripts/battle/combat_cutscene.gd",
+        "project/scripts/battle/cutscene_vfx.gd",
+        "project/shaders/frost_dissolve.gdshader",
+        "project/tests/suites/cutscene/impact_check.gd",
+        "project/tests/suites/cutscene/impact_check.tscn"
+      ],
+      "acceptance": [
+        "三档 hit-stop 的时长可以测出，且 Engine.time_scale 最终一定恢复为 1.0",
+        "reduced_motion 开启时镜头冲击为 0"
+      ],
+      "dependencies": [
+        "CUT-01"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S04-cutscene"
+    },
+    {
+      "id": "CUT-06",
+      "title": "骑兵坐骑与新职业模型接入",
+      "priority": "P2",
+      "why": "light_cavalry 没有马，新职业也没有模型。",
+      "scope": "把 FARM-06 产出的坐骑和新职业 GLB 接入 unit_model，统一骨架，配上骑乘动作原型。",
+      "files": [
+        "project/scripts/art/unit_model.gd",
+        "project/assets/models/units/*.glb",
+        "project/data/enemy_themes.json",
+        "project/tests/enemy_theme_check.gd"
+      ],
+      "acceptance": [
+        "enemy_theme_check 通过",
+        "骑兵过场里角色在马上，idle 和 attack 动作都能播放"
+      ],
+      "dependencies": [
+        "FARM-06",
+        "CUT-02"
+      ],
+      "needs_farm": true,
+      "size": "L",
+      "parallel_group": "S04-cutscene"
+    },
+    {
+      "id": "CUT-07",
+      "title": "过场舞台：14 种地形群系的程序化道具层",
+      "priority": "P1",
+      "why": "过场背景是一张贴图四边形，没有纵深。",
+      "scope": "按 14 种战斗群系，用程序化网格和现有套件拼出前景、中景、远景三层道具，加上视差和雾；低端机只保留一层。",
+      "files": [
+        "project/scripts/battle/combat_cutscene.gd",
+        "project/scripts/battle/cutscene_stage.gd",
+        "project/tests/suites/cutscene/stage_check.gd",
+        "project/tests/suites/cutscene/stage_check.tscn"
+      ],
+      "acceptance": [
+        "14 种群系都有舞台配置",
+        "low tier 下道具节点数 ≤ 30",
+        "截图：每种群系各一张拼图"
+      ],
+      "dependencies": [
+        "CUT-01"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S04-cutscene"
+    },
+    {
+      "id": "CMP-01",
+      "title": "伤病表与永久死亡（经典 / 休闲模式）",
+      "priority": "P0",
+      "why": "佣兵团没有任何代价：击倒只是一个能洗掉的旗标，战败全员回满。Battle Brothers 的核心和系统目录的 B12/B13 都要求有伤病和死亡。",
+      "scope": "data/injuries.json：轻伤（1–2 个月）、重伤（3–6 个月，禁止出战）、永久伤（例如断指技能 -2、跛足移动 -1，可以用传家宝或医所缓解）。被击倒时按难度和溢出伤害掷骰。经典模式下，被击倒且掷到死亡就阵亡，有遗言事件，并写进族谱和先祖碑的数据接口；休闲模式只撤退。订阅 BTL-01 的 unit_downed 和 battle_finished 信号；医所和祠堂负责治疗；部署界面的限制交接给 battle 流。",
+      "files": [
+        "project/scripts/company/injury.gd",
+        "project/data/injuries.json",
+        "project/scripts/company/economy_state.gd",
+        "project/scripts/hub/roster.gd",
+        "project/scripts/hub/shrine.gd",
+        "project/tests/suites/company/injury_check.gd",
+        "project/tests/suites/company/injury_check.tscn",
+        "docs/design/injury-v92.md"
+      ],
+      "acceptance": [
+        "经典模式下固定种子会出现阵亡，阵亡者从名册移除，并写入 Lineage 的已故记录",
+        "休闲模式下 1,000 次击倒没有任何一次死亡",
+        "重伤单位 deploy 不可选（由 battle 流接入，测试读取接口返回的不可出战原因）",
+        "种子 91 百年模拟在标准模式下仍落在目标带内；如有漂移，写进 balance-v92.md"
+      ],
+      "dependencies": [
+        "CORE-02",
+        "BTL-01"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S05-company"
+    },
+    {
+      "id": "CMP-02",
+      "title": "按纪元的经济压力曲线与门禁",
+      "priority": "P1",
+      "why": "种子 91 百年里 0 个见底年，银峰值 6,851，中后期没有压力；现在的门禁只看年末这一个时间点。",
+      "scope": "目标：第 1–10 年紧（至少 1 年的银低于 3 个月军饷），第 11–40 年有中期消耗（城堡分层、嫁妆、传家宝），第 41–100 年有声望消耗（灯籍、爵位、使馆）。campaign_century 的门禁改成在第 10、30、60、100 年分段检查。docs/design/balance-v92.md 记录新目标带和理由。",
+      "files": [
+        "project/scripts/company/economy_state.gd",
+        "project/data/world_v87.json",
+        "project/scripts/sim/campaign_sim.gd",
+        "project/tests/campaign_century_check.gd",
+        "docs/design/balance-v92.md"
+      ],
+      "acceptance": [
+        "四个检查点全部落在新的目标带内",
+        "前 10 年至少 1 个紧年，100 年里见底年 ≤ 6",
+        "GENOME / KINSHIP 锁定数字不变"
+      ],
+      "dependencies": [
+        "CORE-02",
+        "CMP-01"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S05-company"
+    },
+    {
+      "id": "CMP-03",
+      "title": "城堡可视成长 + 4 栋新功能建筑（医所、书院、宝库、使馆）",
+      "priority": "P1",
+      "why": "城堡升级只是数字变化，画面不变；伤病、教育、传家宝、外交在城堡里也没有落点。",
+      "scope": "新场景 castle_view：按 5 栋旧建筑 + 4 栋新建筑 × 3 阶分层合成城堡图，先用程序化霜色剪影做占位，正式图在 FARM-05。新建筑：医所（加快伤病恢复，配合 CMP-01）、书院（子嗣教育，配合 DYN-04）、宝库（传家宝，配合 CMP-08）、使馆（邦交与敌对家族，配合 DYN-03）。castle_hub 里的嵌入工作交接给 UX 流。",
+      "files": [
+        "project/scripts/hub/castle_view.gd",
+        "project/scenes/hub/castle_view.tscn",
+        "project/scripts/company/economy_state.gd",
+        "project/scripts/hub/works.gd",
+        "project/assets/art/castle/placeholder/*",
+        "project/tests/suites/company/castle_view_check.gd",
+        "project/tests/suites/company/castle_view_check.tscn"
+      ],
+      "acceptance": [
+        "每栋建筑升阶后，castle_view 的图层确实变化（测试断言图层可见性）",
+        "4 栋新建筑都有效果，并且有测试",
+        "占位剪影只用 Frost 色板（截图）"
+      ],
+      "dependencies": [
+        "CORE-02",
+        "FARM-05 (正式图，可后置)"
+      ],
+      "needs_farm": false,
+      "size": "L",
+      "parallel_group": "S05-company"
+    },
+    {
+      "id": "CMP-04",
+      "title": "委托多样性、委托链、舆图上的对手佣兵团",
+      "priority": "P1",
+      "why": "城堡只有 11 条硬编码任务，舆图 7 类委托；没有竞争者，跑图缺少 Battle Brothers 那种「被抢单、被截胡」的张力。",
+      "scope": "新增 5 类委托：攻城协防、赏金决斗、营救、商队护航战、情报争夺，并接入 BTL-02 的胜利条件；委托链（3–5 步，每国一条，有原创叙事文本）；3–5 个对手佣兵团在舆图上移动，会抢委托、抬价，也会发生遭遇战。",
+      "files": [
+        "project/autoload/world.gd",
+        "project/data/world_v87.json",
+        "tools/world/world_content_v87.py",
+        "project/scripts/hub/city.gd",
+        "project/scripts/hub/atlas_view.gd",
+        "project/tests/atlas_e2e.gd",
+        "project/tests/suites/company/rival_company_check.gd",
+        "project/tests/suites/company/rival_company_check.tscn"
+      ],
+      "acceptance": [
+        "12 类委托都能被 atlas_e2e 的扩展步骤接取、完成、交付",
+        "对手佣兵团在 1 年模拟里至少抢走 1 单委托",
+        "委托链能完整走完一条"
+      ],
+      "dependencies": [
+        "BTL-02 (目标类委托)"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S05-company"
+    },
+    {
+      "id": "CMP-05",
+      "title": "节庆系统：从 2 种扩到 5 种（原创命名）",
+      "priority": "P1",
+      "why": "现在只有春令和丰收。节庆是诸神皇冠式长线节奏最重要的锚点，可以给每一年一个形状。",
+      "scope": "按十国文化原创命名并设计 3 个新节庆：易货启航（3 月，跨国易货）、比武（10 月，竞技场规则战，依赖 BTL-11）、追思（11 月，治疗、延寿祈祷、先祖碑）。不使用对标作品的节日名。订阅 CORE-05 的月结总线。",
+      "files": [
+        "project/scripts/company/festivals.gd",
+        "project/data/festivals.json",
+        "project/tests/suites/company/festival_check.gd",
+        "project/tests/suites/company/festival_check.tscn"
+      ],
+      "acceptance": [
+        "一年模拟里 5 个节庆各触发 1 次",
+        "节庆名字和文案通过 NAR-08 的对白 lint",
+        "种子 91 模拟落在目标带内"
+      ],
+      "dependencies": [
+        "CORE-05",
+        "BTL-11 (比武)"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S05-company"
+    },
+    {
+      "id": "CMP-06",
+      "title": "第二据点 / 城堡占领",
+      "priority": "P2",
+      "why": "系统目录 F05 还没做；后期需要扩张目标。",
+      "scope": "通过委托链或攻城可以获得第二座据点，有独立的驻军、产出和维护费；舆图上可以在两座据点之间调兵。",
+      "files": [
+        "project/autoload/world.gd",
+        "project/scripts/company/holdings.gd",
+        "project/scripts/hub/castle_view.gd",
+        "project/tests/suites/company/second_hold_check.gd",
+        "project/tests/suites/company/second_hold_check.tscn"
+      ],
+      "acceptance": [
+        "能获得据点，并且有月产出和维护费",
+        "存档往返无损"
+      ],
+      "dependencies": [
+        "CMP-03",
+        "CORE-03"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S05-company"
+    },
+    {
+      "id": "CMP-07",
+      "title": "士气接入战斗、欠饷逃兵",
+      "priority": "P1",
+      "why": "GameState.morale 只在 hub 里变化，对战斗没有任何影响，欠饷也只是扣士气。",
+      "scope": "开战时按士气给全队增益或减益（数值很小，但要能读出来）；连续 2 个月欠饷，士气最低的成员可能离队（有事件提示，可以挽留）。战斗侧的读取交接给 battle 流。",
+      "files": [
+        "project/scripts/company/morale.gd",
+        "project/scripts/company/economy_state.gd",
+        "project/tests/suites/company/morale_check.gd",
+        "project/tests/suites/company/morale_check.tscn"
+      ],
+      "acceptance": [
+        "士气分档对应的增益表有测试",
+        "欠饷 2 个月且不挽留时，确实有人离队",
+        "种子 91 模拟落在目标带内（脚本团不会欠饷）"
+      ],
+      "dependencies": [
+        "CORE-02",
+        "BTL-01"
+      ],
+      "needs_farm": false,
+      "size": "S",
+      "parallel_group": "S05-company"
+    },
+    {
+      "id": "CMP-08",
+      "title": "装备改造与传家宝培养",
+      "priority": "P2",
+      "why": "系统目录的 G07 和 G10 都没做，「家族绑定的兵器」也是一个很好的血统回报载体。",
+      "scope": "铁匠铺可以改造装备（+1 到 +3，消耗材料）；传家宝随继承传递，按持有者的代数和战功成长，存放在宝库（CMP-03）。",
+      "files": [
+        "project/scripts/hub/forge.gd",
+        "project/scripts/company/heirloom.gd",
+        "project/data/world_items_v87.json",
+        "project/tests/suites/company/heirloom_check.gd",
+        "project/tests/suites/company/heirloom_check.tscn"
+      ],
+      "acceptance": [
+        "传家宝传到第 3 代后属性有增长",
+        "改造失败或成功的概率表有测试"
+      ],
+      "dependencies": [
+        "CMP-03"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S05-company"
+    },
+    {
+      "id": "CMP-09",
+      "title": "路遇事件扩写：18 → 48（十国风味、选择有后果）",
+      "priority": "P1",
+      "why": "跑图是本作最强的系统，但 18 种路遇很快就会重复。",
+      "scope": "每国至少 3 个专属路遇，外加陆桥和海路事件；每个事件 2–3 个选项，后果涉及资源、声望、人员、旗标；文本原创，并通过对白 lint。",
+      "files": [
+        "project/data/world_v87.json",
+        "tools/world/world_content_v87.py",
+        "project/autoload/world.gd",
+        "project/tests/suites/company/travel_events_check.gd",
+        "project/tests/suites/company/travel_events_check.tscn"
+      ],
+      "acceptance": [
+        "事件数 ≥ 48，每国 ≥ 3",
+        "每个选项至少有 1 个可观测的后果（测试逐一触发并断言）",
+        "check_bloodlines_v89 里的 anti-trope 词表同样适用于事件文本"
+      ],
+      "dependencies": [],
+      "needs_farm": false,
+      "size": "S",
+      "parallel_group": "S05-company"
+    },
+    {
+      "id": "DYN-01",
+      "title": "血统战斗回报：可遗传战术禀性、王技分阶、子嗣战斗投影",
+      "priority": "P0",
+      "why": "121 个位点里绝大多数只影响立绘，玩家感受不到「为了血统去配婚」的战斗回报。这是本作核心支柱里最大的落差。",
+      "scope": "从 111 个禀性位点里选约 20 个，赋予战术效果，例如高地射程 +1、夜战命中 +、ZoC 免疫一次、反击伤害 + 等；数值通过 character.gd 的派生接口暴露，公式归 battle 流。王技按纯度和合子型分 3 阶。子嗣期望面板显示战斗投影：资质区间、可能的战术禀性及概率、王技阶的概率。只读取基因，不改抽签。",
+      "files": [
+        "project/scripts/characters/character.gd",
+        "project/scripts/characters/bloodline_v89.gd",
+        "project/data/traits.json",
+        "project/data/bloodlines_v89.json",
+        "project/scripts/hub/marriage.gd",
+        "project/scripts/hub/bloodline_codex.gd",
+        "project/tests/suites/dynasty/blood_payoff_check.gd",
+        "project/tests/suites/dynasty/blood_payoff_check.tscn",
+        "docs/design/blood-payoff-v92.md"
+      ],
+      "acceptance": [
+        "GENOME PASS silver=0.237 midparent_width=0.064 与 KINSHIP PASS mean=0.839 silver_skip=0.156 逐字不变",
+        "两个携带者配婚，子代获得某战术禀性的实测频率与 forecast 的偏差 ≤ 3%（10,000 次抽样）",
+        "期望伤害模拟：经过 3 代定向配婚的队伍，对随机配婚队伍的胜率 ≥ 60%",
+        "图鉴里每个战术禀性都显示效果（截图）",
+        "check_bloodlines_v89.py 通过"
+      ],
+      "dependencies": [
+        "DYN-08",
+        "CORE-02 (family_state)"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S06-dynasty"
+    },
+    {
+      "id": "DYN-02",
+      "title": "王朝志向：每代一个目标，给百年加上弧线",
+      "priority": "P1",
+      "why": "百年 1,200 个月没有阶段性目标，玩家会迷失。CK3 的志向和诸神皇冠的家族目标都在解决这个问题。",
+      "scope": "团长接旗时从 3 个志向里选 1 个，例如纯化某王胤、拿下灯籍、与三国联姻、建成书院 3 阶、带出 3 个三阶职业等；完成后获得王朝荣誉（永久小加成，以及先祖碑上的称号）。数据驱动，≥ 15 个志向。",
+      "files": [
+        "project/scripts/characters/ambitions.gd",
+        "project/data/ambitions.json",
+        "project/autoload/lineage.gd",
+        "project/scripts/hub/inheritance.gd",
+        "project/tests/suites/dynasty/ambition_check.gd",
+        "project/tests/suites/dynasty/ambition_check.tscn"
+      ],
+      "acceptance": [
+        "≥ 15 个志向，每个都有可判定的完成条件和测试",
+        "种子 91 模拟中，每代至少完成 1 个志向（交接给 company 流，在 sim 里加探针）",
+        "继承界面显示志向选择（截图）"
+      ],
+      "dependencies": [
+        "DYN-01",
+        "CORE-05"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S06-dynasty"
+    },
+    {
+      "id": "DYN-03",
+      "title": "敌对家族从 3 扩到 10（每国一家），带图谋与关系",
+      "priority": "P1",
+      "why": "rival_houses.json 只有 3 家，而十国王室是有模拟的，深度不对称；朝堂显得像布景。",
+      "scope": "每国一个敌对家族，与 court_v90 的王室联动；图谋包括提亲、刺探伪胤、争座、挖角、构陷；关系值有档位；使馆（CMP-03）可以反制。",
+      "files": [
+        "project/data/rival_houses.json",
+        "project/scripts/hub/rival_houses.gd",
+        "project/scripts/characters/court_v90.gd",
+        "project/scripts/characters/schemes.gd",
+        "project/tests/suites/dynasty/rival_scheme_check.gd",
+        "project/tests/suites/dynasty/rival_scheme_check.tscn"
+      ],
+      "acceptance": [
+        "10 家都有原创名字和家风，并通过 anti-trope 检查",
+        "40 年模拟里每家至少发起 1 次图谋",
+        "court_v90_check 通过"
+      ],
+      "dependencies": [
+        "DYN-08"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S06-dynasty"
+    },
+    {
+      "id": "DYN-04",
+      "title": "人生事件卡（60 张）：出生、童年、教育、成年、婚变、临终、嗣争",
+      "priority": "P1",
+      "why": "血统和家族只有数值，没有故事；这些人物不会让玩家记住。",
+      "scope": "60 张事件卡，按年龄段和禀性触发，有选择和后果（禀性、资质、关系、旗标）；与 heir_rivalry 和书院（CMP-03）联动；文本原创，并通过 NAR-08 的 lint。",
+      "files": [
+        "project/data/life_events.json",
+        "project/scripts/characters/life_events.gd",
+        "project/scripts/hub/heir_rivalry.gd",
+        "project/tests/suites/dynasty/life_events_check.gd",
+        "project/tests/suites/dynasty/life_events_check.tscn"
+      ],
+      "acceptance": [
+        "≥ 60 张，每个年龄段 ≥ 8 张",
+        "每个选项都有可观测的后果",
+        "20 年模拟里同一张卡对同一个人不会重复触发"
+      ],
+      "dependencies": [
+        "CORE-05",
+        "NAR-08"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S06-dynasty"
+    },
+    {
+      "id": "DYN-05",
+      "title": "生育节奏：妊娠从固定 1 个月改为可调，并加入年龄生育力",
+      "priority": "P1",
+      "why": "妊娠固定 1 个月（lineage.gd:79–81），出生显得机械，也没有「错过最佳年龄」的取舍。",
+      "scope": "妊娠改为 3 个月（作为百年压缩的折中），生育力随年龄变化，设置里可选「快速家族」模式。先写理由和新目标带，再请 company 流调整 sim 门禁（交接）。",
+      "files": [
+        "project/autoload/lineage.gd",
+        "project/scripts/characters/family_state.gd",
+        "docs/design/fertility-v92.md",
+        "project/tests/suites/dynasty/fertility_check.gd",
+        "project/tests/suites/dynasty/fertility_check.tscn"
+      ],
+      "acceptance": [
+        "种子 91 模拟的出生数仍 ≥ 4、代数仍 ≥ 4（交接后 company 流更新门禁）",
+        "GENOME / KINSHIP 锁定数字不变"
+      ],
+      "dependencies": [
+        "CORE-02"
+      ],
+      "needs_farm": false,
+      "size": "S",
+      "parallel_group": "S06-dynasty"
+    },
+    {
+      "id": "DYN-06",
+      "title": "先祖碑与家族荣誉",
+      "priority": "P1",
+      "why": "系统目录 D17 还没做；阵亡（CMP-01）和老死的人没有归宿，传承缺少情感重量。",
+      "scope": "先祖碑界面列出已故者：生卒年、功绩、死因、遗言、王朝志向称号；家族荣誉累计成小加成。数据来自 CMP-01 的已故接口和 Calendar 的死亡事件。",
+      "files": [
+        "project/scripts/hub/ancestors.gd",
+        "project/scenes/hub/ancestors.tscn",
+        "project/autoload/lineage.gd",
+        "project/tests/suites/dynasty/ancestors_check.gd",
+        "project/tests/suites/dynasty/ancestors_check.tscn"
+      ],
+      "acceptance": [
+        "老死和阵亡的人都能出现在碑上，字段完整",
+        "Frost 界面截图：桌面与手机",
+        "入口交接给 UX 流放进 castle_hub"
+      ],
+      "dependencies": [
+        "CMP-01"
+      ],
+      "needs_farm": false,
+      "size": "S",
+      "parallel_group": "S06-dynasty"
+    },
+    {
+      "id": "DYN-07",
+      "title": "高阶血胤融合与先天限制",
+      "priority": "P2",
+      "why": "系统目录的 D19 和 D20 都没做，后期血统玩法缺少高潮。",
+      "scope": "两条王胤在特定比例和合子型下觉醒融合禀性（原创，并通过 anti-trope 检查）；先天限制（例如不育、体弱）作为负面遗传。",
+      "files": [
+        "project/scripts/characters/bloodline_v89.gd",
+        "project/data/bloodlines_v89.json",
+        "project/tests/suites/dynasty/fusion_check.gd",
+        "project/tests/suites/dynasty/fusion_check.tscn"
+      ],
+      "acceptance": [
+        "融合有测试，并且不改抽签顺序",
+        "锁定数字不变"
+      ],
+      "dependencies": [
+        "DYN-01"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S06-dynasty"
+    },
+    {
+      "id": "DYN-08",
+      "title": "退役双基因组遗留：bloodlines.json 与 CKGenome.BLOOD 回退表",
+      "priority": "P1",
+      "why": "v8.7 的 4 行血胤表和回退表与 v8.9 的 31 条血胤并存，所有血统改动都要同时考虑两套。",
+      "scope": "确认 bloodlines.json 和 CKGenome.BLOOD 在运行时只剩回退用途，改成统一走 CKBloodline 门面；旧存档迁移时映射到 v8.9 的血胤 id。",
+      "files": [
+        "project/data/bloodlines.json",
+        "project/scripts/characters/genome.gd",
+        "project/scripts/characters/bloodline_v89.gd",
+        "project/tests/genome_check.gd",
+        "project/tests/suites/dynasty/legacy_blood_check.gd",
+        "project/tests/suites/dynasty/legacy_blood_check.tscn"
+      ],
+      "acceptance": [
+        "GENOME PASS 与 KINSHIP PASS 数字逐字不变",
+        "v8.7 存档 fixture 读入后血胤映射正确",
+        "grep 结果：除迁移代码外，没有任何地方引用 bloodlines.json"
+      ],
+      "dependencies": [],
+      "needs_farm": false,
+      "size": "S",
+      "parallel_group": "S06-dynasty"
+    },
+    {
+      "id": "NAR-01",
+      "title": "故事圣经与五纪元战役脊柱（约 40 章 + 12 名具名同伴）",
+      "priority": "P0",
+      "why": "现在只有 1 个具名角色、10 个说话者、0 个选项，后期对白里写的是卷号和版本号。不先定故事圣经，后续所有内容都会继续灌水。",
+      "scope": "docs/design/story-bible-v92.md：主题（百年传承中「旗」与「灯」的意义），5 个纪元（每代约 20 年，各有纪元反派、核心冲突和高潮战），12 名原创同伴（背景、动机、3 个弧线节点、与十国血统的关系），十国剧情钩子，约 40 章主线加 20 条支线的列表，对白风格守则（禁止系统口吻）。data/story/campaign_v92.json 是机器可读的章节表，包含 id、era、title、objective_type、companions、unlocks。",
+      "files": [
+        "docs/design/story-bible-v92.md",
+        "project/data/story/campaign_v92.json",
+        "project/data/cast/companions_v92.json",
+        "project/tests/suites/narrative/campaign_schema_check.gd",
+        "project/tests/suites/narrative/campaign_schema_check.tscn"
+      ],
+      "acceptance": [
+        "campaign_v92.json 有 38–45 章，每章的 era 是 1–5，objective_type 来自 BTL-02 的枚举，并且整份脊柱里至少用到 6 种目标",
+        "companions_v92.json 有 12 人，每人有 3 个 arc_beats，所在章节都能在 campaign 表里找到",
+        "所有人名和地名通过 anti-trope 词表，并且不与对标作品已知名字重名（PR 里附自查说明）",
+        "schema 测试打印 CAMPAIGN SCHEMA PASS"
+      ],
+      "dependencies": [],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S07-narrative"
+    },
+    {
+      "id": "NAR-02",
+      "title": "数据驱动章节播放器：一个场景取代 235 套 gd/tscn，模板章归档",
+      "priority": "P0",
+      "why": "235 个 chapterN.gd 去掉数字后几乎一模一样，维护、本地化、改剧情都只能靠复制粘贴。",
+      "scope": "scenes/story/chapter_player.tscn + scripts/story/chapter_player.gd 读取 data/story/chapters/*.json。功能：beat、带立绘的说话者、选项、条件（旗标、血统、同伴是否在场）、旗标写入、战斗引用（地图 id + 目标）、hub 解锁。先迁移第 0 章，保持 full_chain_e2e 通过；旧 1–234 章归档到 data/story/archive_v6/，是否保留「旧卷档案」重玩入口由本卡决定并写进文档。castle_hub 的章节梯子交接给 UX-06。",
+      "files": [
+        "project/scenes/story/chapter_player.tscn",
+        "project/scripts/story/chapter_player.gd",
+        "project/scripts/narrative/story_conditions.gd",
+        "project/data/story/chapters/ch0.json",
+        "project/data/story/archive_v6/*",
+        "project/scripts/story/chapter*.gd (删除)",
+        "project/scenes/story/chapter*.tscn (删除)",
+        "project/tests/full_chain_e2e.gd",
+        "project/tests/suites/narrative/chapter_player_check.gd",
+        "project/tests/suites/narrative/chapter_player_check.tscn"
+      ],
+      "acceptance": [
+        "project/scripts/story/ 下 .gd 数量 ≤ 6（播放器、命名、辅助）",
+        "full_chain_e2e 通过，第 0 章体验不变（对比截图）",
+        "chapter_player_check：选项、条件、旗标、战斗引用四类都有测试",
+        "章节 JSON 有 schema 校验（接入 json_lint）"
+      ],
+      "dependencies": [
+        "CORE-01"
+      ],
+      "needs_farm": false,
+      "size": "L",
+      "parallel_group": "S07-narrative"
+    },
+    {
+      "id": "NAR-03",
+      "title": "第一纪元（8 章）作者稿：同伴登场、有后果的选择、多种胜利条件",
+      "priority": "P0",
+      "why": "开头几小时决定玩家是否留下。第一纪元要证明本作有作者，不是模板。",
+      "scope": "按故事圣经写第一纪元 8 章（约 2.5 小时）：每章 80–150 行对白，至少 1 个选择，选择的旗标在后续章节被读取；6 名同伴在本纪元登场；8 场战斗至少用到 5 种胜利条件，地图写进 data/maps/story_era1.json，尺寸 10×8 到 14×10。",
+      "files": [
+        "project/data/story/chapters/era1_*.json",
+        "project/data/maps/story_era1.json",
+        "project/data/cast/companions_v92.json",
+        "project/tests/suites/narrative/era1_check.gd",
+        "project/tests/suites/narrative/era1_check.tscn"
+      ],
+      "acceptance": [
+        "8 章都能被 headless 自动走完（选项随机，跑 3 个种子）",
+        "对白 lint 0 违规；具名说话者 ≥ 6",
+        "每个选择旗标至少被后续 1 处条件读取（静态扫描）",
+        "8 场战斗的 objective_type 至少有 5 种"
+      ],
+      "dependencies": [
+        "NAR-01",
+        "NAR-02",
+        "NAR-08",
+        "BTL-02"
+      ],
+      "needs_farm": false,
+      "size": "L",
+      "parallel_group": "S07-narrative"
+    },
+    {
+      "id": "NAR-04",
+      "title": "羁绊与支援对话系统（首批 40 段）",
+      "priority": "P1",
+      "why": "支援对话是 FE 系列让人记住角色的核心手段，本作目前是 0。",
+      "scope": "同伴两两之间的羁绊值，靠并肩作战（相邻）和事件积累，分 C、B、A 三阶；支援对话在城堡里观看；首批 40 段，覆盖 12 名同伴里的主要组合；向 BTL-09 提供羁绊等级接口。",
+      "files": [
+        "project/scripts/narrative/bonds.gd",
+        "project/data/story/supports/*.json",
+        "project/scripts/narrative/support_viewer.gd",
+        "project/scenes/story/support_viewer.tscn",
+        "project/tests/suites/narrative/bonds_check.gd",
+        "project/tests/suites/narrative/bonds_check.tscn"
+      ],
+      "acceptance": [
+        "40 段对话都有 C/B/A 标签，并通过 lint",
+        "相邻作战 N 次后羁绊升阶（测试）",
+        "接口 Bonds.rank(a, b) 有文档"
+      ],
+      "dependencies": [
+        "NAR-02",
+        "NAR-01"
+      ],
+      "needs_farm": false,
+      "size": "L",
+      "parallel_group": "S07-narrative"
+    },
+    {
+      "id": "NAR-05",
+      "title": "新手引导内容与渐进解锁（使用 UX-01 引擎）",
+      "priority": "P1",
+      "why": "17 个城堡入口第一天全开，设置里的「新手高亮」从来没有被读取。",
+      "scope": "为 15 个系统写首次接触引导脚本（coach mark 序列）；城堡入口按章节和纪元渐进解锁：第一年 ≤ 6 个入口，其余入口在剧情里引出；系统百科条目。",
+      "files": [
+        "project/data/story/tutorials.json",
+        "project/scripts/narrative/unlock_schedule.gd",
+        "project/tests/suites/narrative/onboarding_check.gd",
+        "project/tests/suites/narrative/onboarding_check.tscn"
+      ],
+      "acceptance": [
+        "新游戏第 1 年城堡可见入口 ≤ 6（测试读取 UX 提供的接口）",
+        "15 个系统都有教程 id 和百科条目",
+        "tutorial_highlight 关闭后不显示任何 coach mark"
+      ],
+      "dependencies": [
+        "UX-01",
+        "NAR-02"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S07-narrative"
+    },
+    {
+      "id": "NAR-06",
+      "title": "第二、三纪元作者稿（约 16 章）",
+      "priority": "P1",
+      "why": "让中期有剧情推动，而不是只靠经营。",
+      "scope": "按故事圣经写第二、三纪元，标准同 NAR-03；同伴弧线推进到第 2 个节点；第一次传旗要成为剧情事件。",
+      "files": [
+        "project/data/story/chapters/era2_*.json",
+        "project/data/story/chapters/era3_*.json",
+        "project/data/maps/story_era2.json",
+        "project/data/maps/story_era3.json",
+        "project/tests/suites/narrative/era23_check.gd",
+        "project/tests/suites/narrative/era23_check.tscn"
+      ],
+      "acceptance": [
+        "同 NAR-03 的四条，应用到这 16 章",
+        "传旗事件读取了真实的继承人数据"
+      ],
+      "dependencies": [
+        "NAR-03"
+      ],
+      "needs_farm": false,
+      "size": "L",
+      "parallel_group": "S07-narrative"
+    },
+    {
+      "id": "NAR-07",
+      "title": "第四、五纪元作者稿（约 16 章）与终章",
+      "priority": "P1",
+      "why": "百年的收束。",
+      "scope": "按故事圣经写第四、五纪元和终章，标准同 NAR-03；同伴弧线完结（有人可能已经死去，由 CMP-01 和 DYN-06 的数据驱动）。",
+      "files": [
+        "project/data/story/chapters/era4_*.json",
+        "project/data/story/chapters/era5_*.json",
+        "project/data/maps/story_era4.json",
+        "project/data/maps/story_era5.json",
+        "project/tests/suites/narrative/era45_check.gd",
+        "project/tests/suites/narrative/era45_check.tscn"
+      ],
+      "acceptance": [
+        "同 NAR-03 的四条",
+        "同伴已阵亡时有替代台词分支（测试）"
+      ],
+      "dependencies": [
+        "NAR-06"
+      ],
+      "needs_farm": false,
+      "size": "L",
+      "parallel_group": "S07-narrative"
+    },
+    {
+      "id": "NAR-08",
+      "title": "对白 lint：禁止系统口吻、检查说话者登记、行长",
+      "priority": "P1",
+      "why": "「第#卷中段完成（v4.7）」之类的系统口吻直接写进了对白，需要机器来拦。",
+      "scope": "tools/ci/dialogue_lint.py（交接给 infra 接入；在那之前作为 narrative suite 的测试运行）。规则：禁止卷号、版本号、「第#章完成」模板；说话者必须在 data/cast 里登记；手机端单行 ≤ 60 个汉字；anti-trope 词表扫描。归档章节不检查。",
+      "files": [
+        "project/tests/suites/narrative/dialogue_lint_check.gd",
+        "project/tests/suites/narrative/dialogue_lint_check.tscn",
+        "project/data/story/lint_rules.json"
+      ],
+      "acceptance": [
+        "对 archive_v6 运行时能报出违规（证明规则有效），对 data/story/chapters 运行时 0 违规",
+        "DIALOGUE LINT PASS"
+      ],
+      "dependencies": [],
+      "needs_farm": false,
+      "size": "S",
+      "parallel_group": "S07-narrative"
+    },
+    {
+      "id": "NAR-09",
+      "title": "多结局（按王朝状态）",
+      "priority": "P2",
+      "why": "百年的终点应该反映玩家这一百年的选择。",
+      "scope": "按王朝志向完成数、爵位、王胤显征、同伴存活和关键选择，组合出 4–6 种结局。",
+      "files": [
+        "project/data/story/endings.json",
+        "project/scripts/narrative/endings.gd",
+        "project/tests/suites/narrative/endings_check.gd",
+        "project/tests/suites/narrative/endings_check.tscn"
+      ],
+      "acceptance": [
+        "每种结局都有一个能触发它的测试状态"
+      ],
+      "dependencies": [
+        "NAR-07",
+        "DYN-02"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S07-narrative"
+    },
+    {
+      "id": "UX-01",
+      "title": "引导引擎：coach mark 遮罩、首次提示注册表、系统百科",
+      "priority": "P0",
+      "why": "系统极多而引导为零，tutorial_highlight 是个死设置。这是第一小时流失的首要原因。",
+      "scope": "scripts/ui/widgets/coach.gd：高亮指定 Control 的矩形区域，其余变暗，点击继续，支持多步序列，自动避开安全区；Tips 注册表（首次进入某个场景时触发，只触发一次，状态写进存档）；系统百科面板。读取 settings.tutorial_highlight；对外提供 API 给 narrative 流写内容。",
+      "files": [
+        "project/scripts/ui/widgets/coach.gd",
+        "project/scripts/ui/widgets/tips_registry.gd",
+        "project/scripts/ui/widgets/help_codex.gd",
+        "project/scripts/ui/settings.gd",
+        "project/tests/suites/ux/coach_check.gd",
+        "project/tests/suites/ux/coach_check.tscn"
+      ],
+      "acceptance": [
+        "coach 高亮框与目标节点的 get_global_rect 误差 ≤ 2px，并且在 1080×2400 的安全区之内",
+        "tutorial_highlight=false 时注册表不触发任何提示",
+        "同一个提示在存档往返后不会再次触发",
+        "截图：桌面与手机"
+      ],
+      "dependencies": [],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S08-ux"
+    },
+    {
+      "id": "UX-02",
+      "title": "设置与无障碍：字号/UI 缩放、色盲模式（含形状编码）、高对比度、震屏强度、触感开关",
+      "priority": "P1",
+      "why": "薄荷对珊瑚是本作的敌我主编码，但对红绿色弱玩家几乎不可区分；也没有字号缩放。",
+      "scope": "UI 缩放 90%–140%；色盲模式提供 deuteranopia、protanopia、tritanopia 三套替代色板（Frost.palette 可切换）；友军和敌军棋子加形状标记（例如角标），不只靠颜色；高对比度；震屏 0–100%；触感开关。",
+      "files": [
+        "project/autoload/frost.gd",
+        "project/scripts/ui/ui_kit.gd",
+        "project/scripts/ui/settings.gd",
+        "project/scenes/ui/settings.tscn",
+        "project/tests/suites/ux/a11y_check.gd",
+        "project/tests/suites/ux/a11y_check.tscn"
+      ],
+      "acceptance": [
+        "三套色板经色盲模拟矩阵变换后，友军和敌军主色的 ΔE2000 ≥ 20",
+        "全部文本与背景的对比度 ≥ 4.5:1（按色板计算）",
+        "140% 缩放下 layout_check 通过，主要界面没有文字溢出（扫描 Label 是否被裁切）",
+        "截图：3 种色盲模式下的战斗画面"
+      ],
+      "dependencies": [
+        "UX-01"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S08-ux"
+    },
+    {
+      "id": "UX-03",
+      "title": "本地化管线（CSV，按流分文件）+ UI 外壳英文",
+      "priority": "P1",
+      "why": "locale.gd 只有约 56 个 key，约 6,000 个中文字面量是硬编码的，所以英文版和后续任何语言都没法开始。",
+      "scope": "Godot CSV 翻译：data/locale/strings.csv 加各流的 <流>.csv，由 locale.gd 统一注册；提取工具 tools/fonts/extract_strings.py 扫描中文字面量并生成候选 key；先迁移 UI 外壳（主菜单、设置、城堡导航、战斗 HUD、暂停菜单，约 800 条）并补上英文；剧情 JSON 每行带 id，翻译以后再做。",
+      "files": [
+        "project/autoload/locale.gd",
+        "project/data/locale/strings.csv",
+        "tools/fonts/extract_strings.py",
+        "project/scripts/ui/{ui_kit,settings,unit_card}.gd",
+        "project/scripts/hub/castle_hub.gd",
+        "project/tests/suites/ux/l10n_check.gd",
+        "project/tests/suites/ux/l10n_check.tscn"
+      ],
+      "acceptance": [
+        "切到 en 时，主菜单、设置、城堡、战斗 HUD 的所有 Label 文本都不含 CJK（测试扫描）",
+        "i18n ratchet 计数下降 ≥ 800",
+        "缺失 key 会回退到 zh_CN，不会显示 key 名"
+      ],
+      "dependencies": [
+        "INF-08"
+      ],
+      "needs_farm": false,
+      "size": "L",
+      "parallel_group": "S08-ux"
+    },
+    {
+      "id": "UX-04",
+      "title": "字体覆盖门禁：新文本出现子集外字形时 CI 失败",
+      "priority": "P1",
+      "why": "字体是 GB2312 子集加项目扫描，新写的人名、地名生僻字会显示成豆腐块。",
+      "scope": "测试读取 NotoSansSC-*-ck.otf 的字符集，扫描 data/**/*.json、data/locale/*.csv 和 .gd 字面量里的全部字符，缺字就失败，并给出 subset_fonts_v86.py 的重建命令。",
+      "files": [
+        "tools/fonts/subset_fonts_v86.py",
+        "project/tests/suites/ux/glyph_coverage_check.gd",
+        "project/tests/suites/ux/glyph_coverage_check.tscn"
+      ],
+      "acceptance": [
+        "main 上通过",
+        "在任一 JSON 里加入一个子集外的汉字时失败，并打印缺失字符"
+      ],
+      "dependencies": [],
+      "needs_farm": false,
+      "size": "S",
+      "parallel_group": "S08-ux"
+    },
+    {
+      "id": "UX-05",
+      "title": "UI 一致性：组件清单、style-bible 重写、存量色值清理",
+      "priority": "P1",
+      "why": "docs/style-bible.md 还在写灰金、旗红和羊皮纸，与锁定风格直接矛盾；UIKit.PARCHMENT 命名残留；还有一批硬编码色值。",
+      "scope": "按 style-lock-v89 和 tokens.json 重写 docs/style-bible.md；UIKit 组件清单（Button、Chip、Card、Panel、Tab、ListRow、Dialog）配截图；PARCHMENT 等遗留名改名并保留兼容别名；UX 拥有的文件里硬编码色值清零。",
+      "files": [
+        "docs/style-bible.md",
+        "docs/art/design-system-v8.md",
+        "project/scripts/ui/ui_kit.gd",
+        "project/autoload/frost.gd",
+        "project/scripts/ui/unit_card.gd"
+      ],
+      "acceptance": [
+        "style-bible 里没有 #c9a227、parchment 或金色描述",
+        "UX 拥有文件的 style_lint 计数为 0",
+        "court_ui_check、layout_check 通过"
+      ],
+      "dependencies": [
+        "INF-07"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S08-ux"
+    },
+    {
+      "id": "UX-06",
+      "title": "城堡信息架构：入口分组、本月待办、渐进解锁接口、去掉 469 处章节梯子",
+      "priority": "P1",
+      "why": "castle_hub 平铺 17 个入口，里面有 469 处 chapterN_done 判断；玩家不知道这个月该做什么。",
+      "scope": "入口分成 5 组：军务、内政、家族、朝堂、舆图，带角标；「本月待办」汇总（可升级的建筑、可交付的委托、可议的婚事、伤病、节庆等，各领域通过注册接口提供）；提供 is_unlocked(entry) 接口给 NAR-05；章节梯子改为调用 CKStoryState；嵌入 castle_view（CMP-03）。",
+      "files": [
+        "project/scripts/hub/castle_hub.gd",
+        "project/scenes/hub/castle_hub.tscn",
+        "project/scripts/ui/widgets/todo_center.gd",
+        "project/tests/suites/ux/hub_ia_check.gd",
+        "project/tests/suites/ux/hub_ia_check.tscn"
+      ],
+      "acceptance": [
+        "grep -c 'chapter[0-9]*_done' castle_hub.gd ≤ 2",
+        "待办中心至少汇总 6 类事项，并有测试",
+        "full_chain_e2e 通过",
+        "截图：桌面与手机"
+      ],
+      "dependencies": [
+        "CORE-01",
+        "UX-01",
+        "CMP-03 (嵌入 castle_view，可后置)"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S08-ux"
+    },
+    {
+      "id": "UX-07",
+      "title": "制作人员、原创声明与第三方许可页",
+      "priority": "P2",
+      "why": "发行必备；字体的 OFL 许可也需要声明。",
+      "scope": "scenes/ui/credits.tscn：制作人员、原创声明（系统级致敬，不含对标作品素材）、字体许可；docs/licenses.md。",
+      "files": [
+        "project/scenes/ui/credits.tscn",
+        "project/scripts/ui/credits.gd",
+        "docs/licenses.md"
+      ],
+      "acceptance": [
+        "从主菜单可以进入（由 core 流的 CORE-06 接线）",
+        "列出全部字体文件及其许可"
+      ],
+      "dependencies": [],
+      "needs_farm": false,
+      "size": "S",
+      "parallel_group": "S08-ux"
+    },
+    {
+      "id": "UX-08",
+      "title": "移动端：最小点击尺寸自动扫描、竖屏版式、返回键一致性",
+      "priority": "P1",
+      "why": "44dp 只靠人工检查；sensor 方向下竖屏的版式没有覆盖测试。",
+      "scope": "测试遍历全部 hub 和 ui 场景，实例化后扫描可点击控件的最小尺寸（按 device_profile 换算 44dp）；竖屏 1080×1920 下的版式修正（名册、图鉴、族谱这类长列表）；返回键统一走 CORE-04 的暂停逻辑。",
+      "files": [
+        "project/scripts/platform/mobile_layout.gd",
+        "project/autoload/mobile_chrome.gd",
+        "project/tests/suites/ux/touch_target_check.gd",
+        "project/tests/suites/ux/touch_target_check.tscn"
+      ],
+      "acceptance": [
+        "全部场景的可点击控件 ≥ 44dp，违规为 0（允许的例外写进白名单并说明理由）",
+        "竖屏截图 6 张"
+      ],
+      "dependencies": [
+        "CORE-04"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S08-ux"
+    },
+    {
+      "id": "UX-09",
+      "title": "UI 手感：统一转场、按压反馈、移动端触感",
+      "priority": "P1",
+      "why": "城堡的界面切换和按钮反馈不统一，手机上也没有触感。",
+      "scope": "UIFX 统一转场（≤ 0.25 秒，遵守 reduced_motion）；按钮按下有缩放和亮度反馈；移动端关键操作调用 Input.vibrate_handheld（受 UX-02 开关控制）。",
+      "files": [
+        "project/scripts/ui/ui_fx.gd",
+        "project/scripts/ui/ui_kit.gd",
+        "project/tests/suites/ux/ui_fx_check.gd",
+        "project/tests/suites/ux/ui_fx_check.tscn"
+      ],
+      "acceptance": [
+        "reduced_motion 开启时转场 ≤ 0.08 秒",
+        "触感开关关闭时不调用 vibrate（测试打桩）"
+      ],
+      "dependencies": [
+        "UX-02"
+      ],
+      "needs_farm": false,
+      "size": "S",
+      "parallel_group": "S08-ux"
+    },
+    {
+      "id": "AUD-01",
+      "title": "音乐导演系统 + 曲库（≥12 首，双声道 44.1kHz OGG）",
+      "priority": "P0",
+      "why": "现在只有 3 段 9–14 秒、单声道 22kHz 的程序化循环。30–50 小时里战斗音乐每 9 秒重复一次，会严重伤害打磨感。",
+      "scope": "Music 导演：状态包括主菜单、城堡（按季节）、舆图（按国度）、城市、玩家回合、敌方回合、首领、胜利、失败、王朝时刻（出生、继承、葬礼）；交叉淡入 ≤ 1.5 秒；同一状态内分层（紧张度）；对白时 ducking；建立总线布局。曲库：tools/audio/ 下可复现的程序化合成脚本，生成 ≥ 12 首、每首 ≥ 60 秒、有段落的占位曲（冷色、晶霜、玻璃质感），并预留外部作曲替换位。",
+      "files": [
+        "project/autoload/music.gd",
+        "project/default_bus_layout.tres",
+        "project/assets/music/*.ogg",
+        "tools/audio/compose_v92.py",
+        "project/assets/music/LICENSES.md",
+        "project/tests/suites/audio/music_director_check.gd",
+        "project/tests/suites/audio/music_director_check.tscn"
+      ],
+      "acceptance": [
+        "≥ 12 首，全部为双声道、44.1kHz、≥ 60 秒的 OGG（测试读取元数据）",
+        "状态切换时交叉淡入时长 ≤ 1.5 秒，并且没有两首曲子同时以满音量播放（测试采样音量）",
+        "tools/audio/compose_v92.py 用固定种子重跑，输出与仓库里的文件逐字节一致",
+        "Music.play_hub 等旧 API 保持兼容"
+      ],
+      "dependencies": [],
+      "needs_farm": false,
+      "needs_external_audio": true,
+      "notes": "正式曲目建议外包作曲或由负责人提供，接口保持不变。",
+      "size": "M",
+      "parallel_group": "S09-audio"
+    },
+    {
+      "id": "AUD-02",
+      "title": "音效 2.0：武器受击组、地形脚步、群系环境、响度规范",
+      "priority": "P1",
+      "why": "39 个短音效每次播放都一样，听感很机械。",
+      "scope": "每种武器 3 个受击变体并随机音高；每种地形有脚步声；14 种群系各有环境底噪；UI 音效套组；tools/audio/loudness_check.py 检查响度（-16 LUFS ±2，或 RMS 近似）。",
+      "files": [
+        "project/autoload/sfx.gd",
+        "project/assets/sfx/*",
+        "tools/audio/sfx_v92.py",
+        "tools/audio/loudness_check.py",
+        "project/tests/suites/audio/sfx_check.gd",
+        "project/tests/suites/audio/sfx_check.tscn"
+      ],
+      "acceptance": [
+        "每种武器 ≥ 3 个变体，连续两次播放不会选到同一个",
+        "全部文件通过响度检查",
+        "旧 Sfx API 保持兼容"
+      ],
+      "dependencies": [
+        "AUD-01"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S09-audio"
+    },
+    {
+      "id": "AUD-03",
+      "title": "音量 API：主音量、音乐、音效、环境、UI 五路滑条接口",
+      "priority": "P1",
+      "why": "设置里只有开关。",
+      "scope": "Music.set_bus_volume(bus, linear) 并写入存档；设置页的滑条交接给 UX 流。",
+      "files": [
+        "project/autoload/music.gd",
+        "project/autoload/sfx.gd",
+        "project/tests/suites/audio/volume_check.gd",
+        "project/tests/suites/audio/volume_check.tscn"
+      ],
+      "acceptance": [
+        "设置为 0 时对应总线静音；存档往返后保持"
+      ],
+      "dependencies": [
+        "AUD-01"
+      ],
+      "needs_farm": false,
+      "size": "S",
+      "parallel_group": "S09-audio"
+    },
+    {
+      "id": "AUD-04",
+      "title": "角色呼喊（非语言或短句）",
+      "priority": "P2",
+      "why": "过场和选中单位时没有人声，角色缺少存在感。",
+      "scope": "接入非语言呼喊（气声、喝声）的接口和按性别、年龄段的选择规则；素材需要外部配音或合成。",
+      "files": [
+        "project/autoload/sfx.gd",
+        "project/assets/sfx/barks/*",
+        "project/tests/suites/audio/barks_check.gd",
+        "project/tests/suites/audio/barks_check.tscn"
+      ],
+      "acceptance": [
+        "选择规则有测试；缺少素材时静默回退"
+      ],
+      "dependencies": [
+        "AUD-02"
+      ],
+      "needs_farm": false,
+      "needs_external_audio": true,
+      "size": "M",
+      "parallel_group": "S09-audio"
+    },
+    {
+      "id": "ART-01",
+      "title": "Plan A 发货覆盖架构：基因立绘分桶库 + 最近邻解析",
+      "priority": "P0",
+      "why": "CKGenomePortrait.texture() 只按 unit_id 取图。玩家存档里运行时出生的子嗣，在发行版里永远不会有离线农场的 Qwen 图，所以 Plan A 这个招牌功能实际上发不出货；现在仓库里也是 0 张。",
+      "scope": "先写 docs/art/plan-a-coverage-v92.md，比较三种方案：A 分桶库 + 最近邻；B 只覆盖预制角色；C 分桶库 + 运行时贴花（伤疤、冠饰角标），推荐一种。实现：把描述子空间量化为桶键（血胤线 × 性别 × 年龄阶段 × 发色 × 瞳色 × 面型簇 × 显征集合），桶数上限 6,000；解析顺序为 unit_id 专属图 → 最近桶（用 identity_overlap 打分）→ 现有回退链；导出农场清单。",
+      "files": [
+        "docs/art/plan-a-coverage-v92.md",
+        "project/scripts/art/genome_portrait.gd",
+        "project/scripts/art/portrait_bank.gd",
+        "tools/farm_queue/genome_bank_v92.json",
+        "project/tests/portrait_manifest_check.gd",
+        "project/tests/suites/art/portrait_bank_check.gd",
+        "project/tests/suites/art/portrait_bank_check.tscn"
+      ],
+      "acceptance": [
+        "用 20 个 campaign_sim 种子收集所有出生者，桶命中率 ≥ 95%，命中桶的 identity_overlap 均值 ≥ 0.80",
+        "桶数 ≤ 6000，清单里的每一项都带 style-lock-v89 的前缀、负面词和种子",
+        "KINSHIP PASS mean=0.839 silver_skip=0.156 不变；PORTRAIT PASS",
+        "桶目录为空时回退链行为与 main 完全相同"
+      ],
+      "dependencies": [],
+      "needs_farm": false,
+      "size": "L",
+      "parallel_group": "S10-art"
+    },
+    {
+      "id": "ART-02",
+      "title": "资产清理：farm_inbox、退役纸娃娃、hireface、等位组合图、卡通遗留移出工程",
+      "priority": "P0",
+      "why": "project/assets 有 794MB，其中 farm_inbox 259MB、doll 75MB，还有上千张代码已经跳过的立绘。它们拖慢导入，撑大包体，也会误导后来的代理。",
+      "scope": "工具 tools/art/ref_scan.py 扫描 .gd、.tscn、.tres、.json 里的全部引用，生成零引用清单；零引用资产移到工程外（tools/archive/ 或 Release 附件），或者加 .gdignore；仍被测试使用的纸娃娃资产（trio_doll_v88 等）保留；更新 audit_v840_usage 的规则数据；向 INF-02 交付退役清单。不改写 git 历史。",
+      "files": [
+        "tools/art/ref_scan.py",
+        "project/assets/art/farm_inbox/** (移出)",
+        "project/assets/art/doll/** (部分移出)",
+        "project/assets/art/portraits/hireface_* (移出)",
+        "project/assets/art/portraits/<allele_combo>* (移出)",
+        "docs/art/retired-assets-v92.json"
+      ],
+      "acceptance": [
+        "project/assets 总体积 ≤ 450MB（du 报告写进 PR）",
+        "scene_load_check、portrait_manifest、kinship、trio、smoke、full_chain、atlas_e2e 全部通过",
+        "ref_scan 报告：移出的资产在仓库内引用为 0",
+        "退役清单 JSON 交付给 infra"
+      ],
+      "dependencies": [],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S10-art"
+    },
+    {
+      "id": "ART-03",
+      "title": "农场队列预备：所有 FARM 卡的出图清单与干跑校验",
+      "priority": "P1",
+      "why": "农场恢复后要能立即满载开工，不能临时写提示词。",
+      "scope": "生成以下队列 JSON：缺失的 35 张城市图 + 8 张重绘、11 个铁匠铺、223 个物品图标、约 50 张剧情场景、同伴表情差分、庄园与城堡分层、基因立绘桶（来自 ART-01）。每项包含 prompt（style-lock-v89 的 prefix + 内容子句）、negative、seed、尺寸、门禁阈值、目标路径。干跑校验：anti-trope 词边界扫描、路径不冲突、尺寸合规。",
+      "files": [
+        "tools/farm_queue/v92_*.json",
+        "tools/farm_queue/validate_queue_v92.py",
+        "project/tests/suites/art/farm_queue_check.gd",
+        "project/tests/suites/art/farm_queue_check.tscn"
+      ],
+      "acceptance": [
+        "validate_queue_v92.py 对全部队列返回 0",
+        "城市队列覆盖 world_v87 里全部 74 个节点，减去已通过门禁的 39 个",
+        "物品队列覆盖 world_items_v87 的全部 223 个 id"
+      ],
+      "dependencies": [
+        "ART-01"
+      ],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S10-art"
+    },
+    {
+      "id": "ART-04",
+      "title": "无农场高质量占位：223 个物品霜色字形图标 + 城市回退加节点类型徽记",
+      "priority": "P1",
+      "why": "物品 0/223、城市 35 个缺图，占位图的质量直接决定农场恢复前的观感。",
+      "scope": "tools/art/item_glyphs_v92.py 用 SVG 程序化生成 223 个物品图标（按武器类型的轮廓 + 品阶的霜环，只用 Frost 色板）；城市回退在国度板块裁切图上叠加节点类型徽记（都城、港口、要塞……）。",
+      "files": [
+        "tools/art/item_glyphs_v92.py",
+        "project/assets/art/items/glyph/*",
+        "project/scripts/art/atlas_art.gd",
+        "project/tests/suites/art/placeholder_check.gd",
+        "project/tests/suites/art/placeholder_check.tscn"
+      ],
+      "acceptance": [
+        "223 个 id 都有图标，脚本可以复现",
+        "style_check 的 gold 与 parchment 指标为 0",
+        "铁匠铺截图对比（改动前后）"
+      ],
+      "dependencies": [],
+      "needs_farm": false,
+      "size": "M",
+      "parallel_group": "S10-art"
+    },
+    {
+      "id": "ART-05",
+      "title": "风格漂移修复：金色纹章色与 #c9a227 旗帜组",
+      "priority": "P1",
+      "why": "默认纹章色和 42 张旗帜按 #c9a227 键入，违反风格锁。",
+      "scope": "提出 Frost 纹章色板（7 色）；用程序化重着色工具生成新的旗帜组，替换 c9a227 组；修改 game_state.gd 和 naming.gd 里的默认值交接给 core 和 narrative 流；旧存档里的 #c9a227 迁移映射到最接近的新色。",
+      "files": [
+        "tools/art/recolor_banners_v92.py",
+        "project/assets/art/banners/*",
+        "project/scripts/art/unit_art.gd",
+        "docs/art/crest-palette-v92.md"
+      ],
+      "acceptance": [
+        "assets/art/banners 里不再有 c9a227 文件名",
+        "新色板全部通过 style_check（gold ≤ 0.04）",
+        "迁移映射有测试"
+      ],
+      "dependencies": [],
+      "needs_farm": false,
+      "size": "S",
+      "parallel_group": "S10-art"
+    },
+    {
+      "id": "ART-06",
+      "title": "对话表情差分规范与清单",
+      "priority": "P2",
+      "why": "NAR 的对白需要表情（平静、喜、怒、悲、惊），现在没有任何规范。",
+      "scope": "docs/art/expressions-v92.md：5 种表情的提示词子句、如何保持身份一致（同种子 + 局部重绘）、文件命名；12 名同伴的队列。",
+      "files": [
+        "docs/art/expressions-v92.md",
+        "tools/farm_queue/v92_expressions.json"
+      ],
+      "acceptance": [
+        "队列通过 validate_queue_v92.py"
+      ],
+      "dependencies": [
+        "ART-03",
+        "NAR-01"
+      ],
+      "needs_farm": false,
+      "size": "S",
+      "parallel_group": "S10-art"
+    },
+    {
+      "id": "FARM-01",
+      "title": "基因立绘分桶库出图（≤6000 张，5 个年龄阶段）",
+      "priority": "P0",
+      "why": "让 Plan A 招牌功能真正出现在玩家面前。",
+      "scope": "按 tools/farm_queue/genome_bank_v92.json 用 Qwen 出图，过 style_check_v87 门禁，被拒的写进 review；按桶键命名后入库到 portraits/genome/bank/；分批 PR（每批 ≤ 800 张）。",
+      "files": [
+        "project/assets/art/portraits/genome/bank/**",
+        "docs/art/review/genome_bank_v92_*.json"
+      ],
+      "acceptance": [
+        "每批门禁通过率 ≥ 80%，被拒的补出",
+        "portrait_bank_check 的覆盖率在真实图片上 ≥ 95%",
+        "KINSHIP PASS 不变",
+        "抽样拼图附在 PR 里"
+      ],
+      "dependencies": [
+        "ART-01",
+        "ART-03",
+        "INF-02"
+      ],
+      "needs_farm": true,
+      "size": "L",
+      "parallel_group": "S11-farm"
+    },
+    {
+      "id": "FARM-02",
+      "title": "补齐 35 张城市图，重绘 8 张被拒图",
+      "priority": "P1",
+      "why": "74 个节点中只有 39 个有图。",
+      "scope": "按 v92 城市队列出图，过门禁后用 ingest_atlas_v87.py 入库。",
+      "files": [
+        "project/assets/art/atlas/cities/*",
+        "docs/art/review/atlas_v92_ingest.json"
+      ],
+      "acceptance": [
+        "74/74 都有图",
+        "全部通过 style_check"
+      ],
+      "dependencies": [
+        "ART-03"
+      ],
+      "needs_farm": true,
+      "size": "M",
+      "parallel_group": "S11-farm"
+    },
+    {
+      "id": "FARM-03",
+      "title": "11 个铁匠铺内景 + 223 个物品图标（替换字形占位）",
+      "priority": "P1",
+      "why": "铁匠铺是跑图经济的核心界面，现在全是占位。",
+      "scope": "按队列出图；物品图标统一 30° 俯视三分之四视角（style-lock cameras.weapon_icon）。",
+      "files": [
+        "project/assets/art/atlas/smith/*",
+        "project/assets/art/items/*",
+        "docs/art/review/items_v92.json"
+      ],
+      "acceptance": [
+        "11/11 和 223/223",
+        "全部通过 style_check"
+      ],
+      "dependencies": [
+        "ART-03",
+        "ART-04"
+      ],
+      "needs_farm": true,
+      "size": "M",
+      "parallel_group": "S11-farm"
+    },
+    {
+      "id": "FARM-04",
+      "title": "剧情场景底图（约 50 张）与同伴表情差分（12 × 5）",
+      "priority": "P1",
+      "why": "作者稿剧情需要场景和表情的支撑。",
+      "scope": "按 NAR 的章节表和 ART-06 的规范出图。",
+      "files": [
+        "project/assets/art/scenes/*",
+        "project/assets/art/portraits/expressions/*",
+        "docs/art/review/scenes_v92.json"
+      ],
+      "acceptance": [
+        "campaign_v92 的每一章都有场景图引用",
+        "表情差分的身份一致性 identity_overlap ≥ 0.85"
+      ],
+      "dependencies": [
+        "ART-03",
+        "ART-06",
+        "NAR-01"
+      ],
+      "needs_farm": true,
+      "size": "L",
+      "parallel_group": "S11-farm"
+    },
+    {
+      "id": "FARM-05",
+      "title": "城堡分层图（9 栋 × 3 阶 + 底图）与庄园分级图",
+      "priority": "P1",
+      "why": "让城堡看得见成长。",
+      "scope": "按 CMP-03 的图层规范出图，保证图层对齐（同一相机、同一底图）。",
+      "files": [
+        "project/assets/art/castle/*",
+        "project/assets/art/estates/*"
+      ],
+      "acceptance": [
+        "castle_view_check 使用真实图层通过",
+        "全部通过 style_check"
+      ],
+      "dependencies": [
+        "CMP-03",
+        "ART-03"
+      ],
+      "needs_farm": true,
+      "size": "M",
+      "parallel_group": "S11-farm"
+    },
+    {
+      "id": "FARM-06",
+      "title": "Hunyuan3D：十国敌军派系轮廓、新职业装甲、骑兵坐骑",
+      "priority": "P1",
+      "why": "敌人大多是换色；新职业没有模型；骑兵没有马。",
+      "scope": "每国至少 2 种敌军轮廓，约 11 个新职业装甲，1 套坐骑；统一骨架和 8 个基础动作名，toon 参数遵守 style-lock。",
+      "files": [
+        "project/assets/models/units/*.glb",
+        "project/assets/models/mounts/*.glb",
+        "project/data/enemy_themes.json (交接给 cutscene)"
+      ],
+      "acceptance": [
+        "enemy_theme_check 通过",
+        "每个 GLB 的三角面数 ≤ 15k（低端机预算）"
+      ],
+      "dependencies": [
+        "BTL-06",
+        "CUT-02"
+      ],
+      "needs_farm": true,
+      "size": "L",
+      "parallel_group": "S11-farm"
+    },
+    {
+      "id": "FARM-07",
+      "title": "新职业棋子与 v8 职业胸像",
+      "priority": "P2",
+      "why": "棋盘需要新职业的棋子。",
+      "scope": "按 token_readability_v85 的规则出图。",
+      "files": [
+        "project/assets/art/tokens/v8_*",
+        "project/assets/art/portraits/v8_*"
+      ],
+      "acceptance": [
+        "每个新职业都有棋子和胸像，并通过可读性检查"
+      ],
+      "dependencies": [
+        "BTL-06"
+      ],
+      "needs_farm": true,
+      "size": "M",
+      "parallel_group": "S11-farm"
+    }
+  ]
+}
