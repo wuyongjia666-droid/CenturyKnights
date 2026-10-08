@@ -17,6 +17,7 @@ var _flash: ColorRect
 var _skip := false
 var _bars: Array = []
 var _shake := 0.0
+var _punch := 0.0
 var _spd_btn: Button
 var _budget: Dictionary = {}
 var _pop_stack: Dictionary = {}
@@ -74,10 +75,11 @@ func _process(delta: float) -> void:
 	var ptr_hold := _pointer_down and now - _pointer_down_msec >= CutsceneTimeline.HOLD_MSEC
 	if (key_hold or ptr_hold) and not _holding_ff and not _skip:
 		_set_hold(true)
-	if _cam and _shake > 0.0:
+	if _cam and (_shake > 0.0 or _punch > 0.0):
 		_shake = maxf(0.0, _shake - delta * 3.2)
+		_punch = maxf(0.0, _punch - delta * 2.4)
 		var s := _shake * _shake
-		_cam.h_offset = sin(Time.get_ticks_msec() * 0.07) * 0.06 * s
+		_cam.h_offset = sin(Time.get_ticks_msec() * 0.07) * 0.06 * s + _punch
 		_cam.v_offset = cos(Time.get_ticks_msec() * 0.09) * 0.04 * s
 	elif _cam:
 		_cam.h_offset = 0.0
@@ -462,9 +464,11 @@ func _sparks(side: String, col: Color, amount: int) -> void:
 	p.position = n.position + Vector3(0, 1.2, 0)
 	n.get_parent().add_child(p)
 	p.emitting = true
+	var holder: WeakRef = weakref(p)
 	get_tree().create_timer(0.8).timeout.connect(func():
-		if is_instance_valid(p):
-			p.queue_free())
+		var alive: Object = holder.get_ref()
+		if alive != null:
+			alive.call("queue_free"))
 
 func _arrow(from_side: String, to_side: String, dur: float) -> void:
 	if not _units.has(from_side) or not _units.has(to_side):
@@ -514,10 +518,14 @@ func _prepared_record() -> Dictionary:
 		if typeof(s) != TYPE_DICTIONARY:
 			continue
 		var one: Dictionary = s.duplicate(false)
-		if not bool(one.get("ranged", false)):
-			var side := str(one.get("from", "left"))
-			if _units.has(side):
-				one["ranged"] = bool(_units[side].get("ranged", false))
+		var side := str(one.get("from", "left"))
+		if not bool(one.get("ranged", false)) and _units.has(side):
+			one["ranged"] = bool(_units[side].get("ranged", false))
+		if str(one.get("weight", "")) == "" and _units.has(side):
+			var ch = _units[side].get("char", null)
+			if ch != null:
+				one["job_id"] = str(ch.job_id)
+				one["weight"] = CutsceneVfx.weight_of_job(str(ch.job_id))
 		strikes.append(one)
 	copy["strikes"] = strikes
 	return copy
@@ -551,9 +559,7 @@ func _play_built(built: Dictionary, index: int) -> void:
 		_begin_segment(sid, dur, a, d, dir, action, ranged, strike)
 		elapsed += dur
 		if sid == "hitstop":
-			Engine.time_scale = 0.4
-			await _wait(dur)
-			Engine.time_scale = 1.0
+			await CutsceneVfx.play_hit_stop(get_tree(), str(strike.get("weight", "mid")), func(): return _skip)
 		else:
 			await _wait(dur)
 
@@ -598,6 +604,7 @@ func _begin_segment(sid: String, dur: float, a: String, d: String, dir: float, a
 		"death":
 			_play(d, "death", 0.05)
 			_popup(d, CutsceneTimeline.line("cutscene.break"), UIKit.DANGER, false)
+			_frost_break(d, dur)
 		"recover":
 			if not bool(strike.get("killed", false)):
 				_play(d, "idle", 0.12)
@@ -609,8 +616,10 @@ func _apply_hit(a: String, d: String, dir: float, strike: Dictionary, from_stop:
 		return
 	_play(d, "hit", 0.04)
 	var crit := bool(strike.get("crit", false))
-	var reduced := bool(GameState.settings.get("reduced_motion", false)) if GameState != null else false
+	var reduced := _reduced_motion()
+	var weight := str(strike.get("weight", "mid"))
 	_shake = 0.0 if reduced else (0.85 if crit else 0.4)
+	_punch = CutsceneVfx.punch_strength(reduced, weight)
 	var spark := UIKit.EMBER if crit else Color(0.85, 0.95, 1.0)
 	_sparks(d, spark, 36 if crit else 16)
 	if _flash:
@@ -619,13 +628,35 @@ func _apply_hit(a: String, d: String, dir: float, strike: Dictionary, from_stop:
 	if crit:
 		_popup(d, CutsceneTimeline.line("cutscene.crit"), UIKit.ACCENT, false)
 	var ally_hurt := str(_units[d].team) != "enemy" if _units.has(d) else false
-	_popup(d, "-%d" % int(strike.get("dmg", 0)), UIKit.DANGER if ally_hurt else Color(0.96, 0.98, 1.0), crit)
+	var num_col: Color = UIKit.DANGER if ally_hurt else CutsceneVfx.FROST
+	var dn_num := _node(d)
+	if dn_num:
+		var label := CutsceneVfx.spawn_damage(dn_num, Vector3.ZERO, "-%d" % int(strike.get("dmg", 0)), num_col, UIKit.font("bold"))
+		var rise := _tw()
+		rise.tween_property(label, "position:y", label.position.y + 0.35, 0.45)
+		rise.parallel().tween_property(label, "modulate:a", 0.0, 0.45).set_delay(0.18)
 	var dn := _node(d)
 	if dn:
 		var push := _tw()
 		push.tween_property(dn, "position:x", dn.position.x + dir * 0.14, 0.06)
 		push.tween_property(dn, "position:x", dn.position.x, 0.16)
 	_set_hp(d, int(strike.get("hp_after", 0)))
+
+func _reduced_motion() -> bool:
+	return GameState != null and bool(GameState.settings.get("reduced_motion", false))
+
+func _frost_break(side: String, dur: float) -> void:
+	var n := _node(side)
+	if n == null:
+		return
+	var reduced := _reduced_motion()
+	var mat := CutsceneVfx.begin_frost_break(n, reduced, float(_budget.get("particles", 1.0)))
+	if reduced or mat == null:
+		return
+	var tw := _tw()
+	tw.tween_method(func(v: float):
+		if is_instance_valid(mat):
+			mat.set_shader_parameter("dissolve", v), 0.0, 1.0, maxf(0.2, dur))
 
 func _segment_has_hitstop(strike: Dictionary) -> bool:
 	return CutsceneTimeline.hit_stop_duration(strike) > 0.0

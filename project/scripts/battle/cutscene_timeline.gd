@@ -159,9 +159,10 @@ static func kind_of(strike: Dictionary, ctx: Dictionary) -> String:
 static func hit_stop_duration(strike: Dictionary) -> float:
 	if not bool(strike.get("hit", false)):
 		return 0.0
-	if bool(strike.get("crit", false)):
-		return 0.09
-	return 0.045
+	var weight := str(strike.get("weight", ""))
+	if weight == "":
+		weight = CutsceneVfx.weight_of_job(str(strike.get("job_id", "")))
+	return CutsceneVfx.hit_stop_seconds(weight)
 
 static func segments_for(kind: String, strike: Dictionary, ranged: bool) -> Array:
 	var action := action_for_strike(strike)
