@@ -16,6 +16,8 @@ func _ready() -> void:
 	GameState.new_game("烬行", "灰旗", "#c9a227")
 	if only == "" or only == "battle":
 		await _battle()
+	if only == "result_win" or only == "result_lose":
+		await _result(only == "result_win")
 	if only == "" or only == "lineage":
 		await _scene("res://scenes/hub/lineage_view.tscn", "lineage", 1.2)
 	if only == "" or only == "estates":
@@ -39,6 +41,18 @@ func _snap(name: String) -> void:
 
 func _wait(sec: float) -> void:
 	await get_tree().create_timer(sec).timeout
+
+func _result(win: bool) -> void:
+	var battle = load("res://scenes/battle/battle.tscn").instantiate()
+	add_child(battle)
+	battle.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	battle.size = Vector2(1280, 720)
+	await _wait(1.0)
+	battle._round_no = 4
+	battle._finish(win)
+	await _wait(1.0)
+	await _snap("result_win" if win else "result_lose")
+	battle.queue_free()
 
 func _battle() -> void:
 	var battle = load("res://scenes/battle/battle.tscn").instantiate()
