@@ -32,7 +32,13 @@
   "v87_city_qh_ford",
   "v87_city_qh_isle",
   "v87_city_qh_mist",
-  "v87_city_qh_orchard"
+  "v87_city_qh_orchard",
+  "v87_city_qh_south",
+  "v87_city_qh_upper",
+  "v87_city_reed_ford",
+  "v87_city_sm_banner",
+  "v87_city_sm_capital",
+  "v87_city_sm_far"
  ],
  "rejected": {
   "v87_city_eo_archive": [
@@ -62,8 +68,8 @@
  },
  "counts": {
   "v87_city": {
-   "seen": 41,
-   "passed": 33
+   "seen": 47,
+   "passed": 39
   },
   "v87_smith": {
    "seen": 0,
