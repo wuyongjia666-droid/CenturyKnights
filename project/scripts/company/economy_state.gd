@@ -58,6 +58,9 @@ static func _init_quests(host) -> void:
 static func building_level(host, id: String) -> int:
 	return int(host.buildings.get(id, 1))
 
+static func upgrade_annex(host, id: String) -> Dictionary:
+	return CKCastleServices.upgrade_annex(host, id)
+
 static func max_deploy(host) -> int:
 	# 厅堂 Lv1–5 → 4–8 人
 	return 3 + CKEconomyState.building_level(host, "hall")
