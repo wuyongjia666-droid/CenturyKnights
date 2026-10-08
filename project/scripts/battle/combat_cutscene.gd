@@ -21,6 +21,7 @@ var _spd_btn: Button
 var _budget: Dictionary = {}
 var _pop_stack: Dictionary = {}
 var _mode := CutsceneTimeline.MODE_FULL
+var _stage: Node3D
 var _holding_ff := false
 var _keys_down := 0
 var _key_down_msec := 0
@@ -82,6 +83,8 @@ func _process(delta: float) -> void:
 	elif _cam:
 		_cam.h_offset = 0.0
 		_cam.v_offset = 0.0
+	if _stage != null and is_instance_valid(_stage) and _cam != null:
+		CutsceneStage.parallax(_stage, _cam.position.x)
 
 func _unhandled_input(e: InputEvent) -> void:
 	if not (e is InputEventKey):
@@ -152,9 +155,11 @@ func _build_stage() -> void:
 	env.ambient_light_energy = 0.55
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	env.tonemap_white = 6.0
+	var biome := CutsceneStage.biome_from_record(rec)
+	var fog_cfg := CutsceneStage.fog_for(biome)
 	env.fog_enabled = bool(_budget.get("fog", true))
-	env.fog_light_color = Color(0.10, 0.13, 0.19)
-	env.fog_density = 0.035
+	env.fog_light_color = fog_cfg.get("color", Color(0.10, 0.13, 0.19))
+	env.fog_density = float(fog_cfg.get("density", 0.035))
 	env.glow_enabled = bool(_budget.get("glow", true))
 	env.glow_intensity = 0.55
 	env.glow_bloom = 0.06
@@ -187,6 +192,8 @@ func _build_stage() -> void:
 	gm.albedo_color = rec.get("grade", Color(0.86, 0.90, 0.94))
 	g.material_override = gm
 	w.add_child(g)
+	var low_tier := float(_budget.get("particles", 1.0)) <= 0.01
+	_stage = CutsceneStage.build(w, biome, low_tier)
 	var key := DirectionalLight3D.new()
 	key.rotation_degrees = Vector3(-42, -28, 0)
 	key.light_color = Color(0.88, 0.94, 1.0)
