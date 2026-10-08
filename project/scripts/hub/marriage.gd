@@ -31,7 +31,7 @@ func _build() -> void:
 	UIKit.make_themed_bg(self, "marriage")
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
-	if ResourceLoader.exists("res://assets/art/ui/hub_banner_strip.png"):
+	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/hub_banner_strip.png"):
 		var strip := TextureRect.new()
 		strip.texture = load("res://assets/art/ui/hub_banner_strip.png")
 		strip.position = Vector2(0, 0)
@@ -42,7 +42,7 @@ func _build() -> void:
 		add_child(strip)
 
 	var _mb = TextureRect.new()
-	if ResourceLoader.exists("res://assets/art/ui/marriage_banner.png"):
+	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/marriage_banner.png"):
 		_mb.texture = load("res://assets/art/ui/marriage_banner.png")
 		_mb.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		_mb.stretch_mode = TextureRect.STRETCH_SCALE

@@ -20,7 +20,7 @@ var _spark_frames: Array = []
 
 func _ready() -> void:
 	UIKit.make_themed_bg(self, "skill")
-	if ResourceLoader.exists("res://assets/art/ui/skill_banner.png"):
+	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/skill_banner.png"):
 		var _bn := TextureRect.new()
 		_bn.texture = load("res://assets/art/ui/skill_banner.png")
 		_bn.expand_mode = TextureRect.EXPAND_IGNORE_SIZE

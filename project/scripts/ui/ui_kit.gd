@@ -1,129 +1,293 @@
 class_name UIKit
 extends RefCounted
 
-## v8.0.0-art locked vibe: Contemporary Fantasy SRPG — luminous ink, crystal-ember, matte dark UI
-## NO medieval cliché (no parchment scrolls, gothic stone, war-banner gold kitsch)
-const BG := Color(0.07, 0.08, 0.12)           # ink void
-const BG_DEEP := Color(0.04, 0.05, 0.08)
-const PANEL := Color(0.12, 0.14, 0.20)         # matte slate glass
-const PANEL_LIT := Color(0.18, 0.22, 0.30)
-const ACCENT := Color(0.55, 0.78, 0.92)        # crystal frost
-const ACCENT_DIM := Color(0.32, 0.48, 0.62)
-const TEXT := Color(0.92, 0.94, 0.97)          # cool ivory
-const TEXT_DIM := Color(0.55, 0.60, 0.68)
-const DANGER := Color(0.92, 0.38, 0.48)        # soft coral alert
-const OK := Color(0.42, 0.82, 0.68)            # mint signal
-const PARCHMENT := Color(0.78, 0.86, 0.94)     # cool wash (kept name for API compat)
-const STONE := Color(0.22, 0.26, 0.34)
-const FOCUS_RING := Color(0.72, 0.92, 1.0)
-const DISABLED_BG := Color(0.10, 0.11, 0.14, 0.55)
-const DISABLED_BORDER := Color(0.28, 0.32, 0.40, 0.45)
-const DISABLED_TEXT := Color(0.40, 0.44, 0.50)
-const EMBER := Color(0.98, 0.62, 0.38)         # secondary warm accent (sparks only)
+## v8.6.0-art "CenturyKnights Frost" — tokens from the live Google Stitch design system (tokens.json).
+## Dark luminous ink void · frosted glass panels · 1px highlight stroke · generous whitespace · thin type.
+## Crystal frost = primary/focus only · mint = ally/heal · coral = enemy/deny · ember = sparks only.
+## NO medieval cliché, NO ice-crystal frame plates on chrome (retired v8.6), NO parchment/gold.
+const BG := Color("#07080C")
+const BG_DEEP := Color("#040507")
+const BG_GLOW := Color("#10141C")
+const PANEL := Color("#161B24")
+const PANEL_LIT := Color("#1C2330")
+const ACCENT := Color("#6ED4FF")
+const ACCENT_HOVER := Color("#9BE4FF")
+const ACCENT_PRESSED := Color("#3AADDF")
+const ON_ACCENT := Color("#041018")
+const ACCENT_DIM := Color("#2A4554")
+const TEXT := Color("#F4F7FB")
+const TEXT_DIM := Color("#9AA6B8")
+const TEXT_FAINT := Color("#6B7585")
+const DANGER := Color("#FF7A70")
+const OK := Color("#5EE0B5")
+const PARCHMENT := Color("#F4F7FB")     # legacy name -> headline text
+const STONE := Color("#2A3240")
+const FOCUS_RING := Color("#6ED4FF")
+const STROKE := Color(1, 1, 1, 0.14)
+const STROKE_HI := Color(1, 1, 1, 0.22)
+const DISABLED_BG := Color(1, 1, 1, 0.025)
+const DISABLED_BORDER := Color(1, 1, 1, 0.07)
+const DISABLED_TEXT := Color("#4E5664")
+const EMBER := Color("#FF8A3D")
+const RETIRE_CHROME := true   # v8.6: ice-crystal frame plates + banner strips retired from chrome
+const SZ_DISPLAY := 40
+const SZ_TITLE := 28
+const SZ_HEADLINE := 19
+const SZ_BODY := 15
+const SZ_LABEL := 12
+
+static var _fonts: Dictionary = {}
+static var _theme: Theme
+
+static func font(kind: String = "regular") -> Font:
+	if _fonts.has(kind):
+		return _fonts[kind]
+	var path: String = {"regular": "res://assets/fonts/NotoSansSC-Regular-ck.otf", "bold": "res://assets/fonts/NotoSansSC-Bold-ck.otf", "mono": "res://assets/fonts/JetBrainsMono-Variable.ttf"}.get(kind, "")
+	var f: Font = null
+	if path != "" and ResourceLoader.exists(path):
+		f = load(path)
+		if kind == "mono" and f is FontFile:
+			var fv := FontVariation.new()
+			fv.base_font = f
+			fv.variation_opentype = {"wght": 500}
+			var cjk := font("regular")
+			if cjk:
+				fv.fallbacks = [cjk]
+			f = fv
+	if f == null:
+		f = ThemeDB.fallback_font
+	_fonts[kind] = f
+	return f
+
+static func glass(radius: int = 12, alpha: float = 0.78, elevated: bool = false) -> StyleBoxFlat:
+	## frosted glass: translucent slate, 1px highlight stroke, soft long shadow
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(PANEL_LIT if elevated else PANEL, alpha)
+	sb.border_color = STROKE_HI if elevated else STROKE
+	sb.set_border_width_all(1)
+	sb.set_corner_radius_all(radius)
+	sb.shadow_color = Color(0, 0, 0, 0.42)
+	sb.shadow_size = 22
+	sb.shadow_offset = Vector2(0, 10)
+	sb.anti_aliasing = true
+	sb.content_margin_left = 22
+	sb.content_margin_right = 22
+	sb.content_margin_top = 18
+	sb.content_margin_bottom = 18
+	return sb
+
+static func hairline(color: Color = STROKE, w: float = 1.0) -> ColorRect:
+	var r := ColorRect.new()
+	r.color = color
+	r.custom_minimum_size = Vector2(0, w)
+	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return r
+
+static func _btn_box(bg: Color, border: Color, bw: int = 1, radius: int = 8) -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = bg
+	sb.border_color = border
+	sb.set_border_width_all(bw)
+	sb.set_corner_radius_all(radius)
+	sb.anti_aliasing = true
+	sb.content_margin_left = 18
+	sb.content_margin_right = 18
+	sb.content_margin_top = 9
+	sb.content_margin_bottom = 9
+	return sb
+
+static func _focus_ring(col: Color = FOCUS_RING, radius: int = 10) -> StyleBoxFlat:
+	var f := StyleBoxFlat.new()
+	f.draw_center = false
+	f.border_color = col
+	f.set_border_width_all(2)
+	f.set_corner_radius_all(radius)
+	f.expand_margin_left = 3
+	f.expand_margin_right = 3
+	f.expand_margin_top = 3
+	f.expand_margin_bottom = 3
+	f.anti_aliasing = true
+	return f
+
+static func _secondary_states() -> Dictionary:
+	return {
+		"normal": _btn_box(Color(1, 1, 1, 0.045), STROKE),
+		"hover": _btn_box(Color(1, 1, 1, 0.09), STROKE_HI),
+		"pressed": _btn_box(Color(0, 0, 0, 0.28), Color(ACCENT, 0.45)),
+		"focus": _focus_ring(),
+		"disabled": _btn_box(DISABLED_BG, DISABLED_BORDER),
+	}
+
+static func _primary_states() -> Dictionary:
+	return {
+		"normal": _btn_box(ACCENT, Color(ACCENT_HOVER, 0.9)),
+		"hover": _btn_box(ACCENT_HOVER, Color(1, 1, 1, 0.9)),
+		"pressed": _btn_box(ACCENT_PRESSED, ACCENT_PRESSED),
+		"focus": _focus_ring(Color(1, 1, 1, 0.92)),
+		"disabled": _btn_box(ACCENT_DIM, Color(ACCENT_DIM, 0.6)),
+	}
+
+static func _apply_states(b: Control, st: Dictionary) -> void:
+	for k in st.keys():
+		b.add_theme_stylebox_override(k, st[k])
+	b.add_theme_stylebox_override("hover_pressed", st["pressed"])
+
+static func frost_theme() -> Theme:
+	## project-wide Theme: every Control gets token chrome even when a screen builds raw nodes
+	if _theme:
+		return _theme
+	var t := Theme.new()
+	t.default_font = font("regular")
+	t.default_font_size = SZ_BODY
+	var sec := _secondary_states()
+	for typ in ["Button", "OptionButton", "MenuButton", "CheckButton", "CheckBox", "LinkButton"]:
+		for k in sec.keys():
+			if typ in ["CheckButton", "CheckBox"] and k != "focus":
+				var e := StyleBoxEmpty.new()
+				e.content_margin_left = 6
+				e.content_margin_right = 6
+				t.set_stylebox(k, typ, e)
+				continue
+			t.set_stylebox(k, typ, sec[k])
+		t.set_stylebox("hover_pressed", typ, sec["pressed"] if not typ in ["CheckButton", "CheckBox"] else StyleBoxEmpty.new())
+		t.set_color("font_color", typ, TEXT)
+		t.set_color("font_hover_color", typ, Color.WHITE)
+		t.set_color("font_pressed_color", typ, ACCENT)
+		t.set_color("font_hover_pressed_color", typ, ACCENT_HOVER)
+		t.set_color("font_focus_color", typ, Color.WHITE)
+		t.set_color("font_disabled_color", typ, DISABLED_TEXT)
+		t.set_constant("h_separation", typ, 8)
+	for typ in ["PanelContainer", "Panel"]:
+		t.set_stylebox("panel", typ, glass())
+	var pop := glass(10, 0.96, true)
+	pop.content_margin_left = 8
+	pop.content_margin_right = 8
+	pop.content_margin_top = 8
+	pop.content_margin_bottom = 8
+	t.set_stylebox("panel", "PopupMenu", pop)
+	t.set_stylebox("panel", "PopupPanel", pop)
+	var hov := _btn_box(Color(ACCENT, 0.14), Color(0, 0, 0, 0), 0, 6)
+	t.set_stylebox("hover", "PopupMenu", hov)
+	t.set_color("font_color", "PopupMenu", TEXT)
+	t.set_color("font_hover_color", "PopupMenu", Color.WHITE)
+	var tip := glass(8, 0.96, true)
+	tip.shadow_size = 10
+	tip.content_margin_left = 12
+	tip.content_margin_right = 12
+	tip.content_margin_top = 8
+	tip.content_margin_bottom = 8
+	t.set_stylebox("panel", "TooltipPanel", tip)
+	t.set_color("font_color", "TooltipLabel", TEXT)
+	t.set_font_size("font_size", "TooltipLabel", 13)
+	var le := _btn_box(Color(0, 0, 0, 0.32), STROKE, 1, 8)
+	t.set_stylebox("normal", "LineEdit", le)
+	t.set_stylebox("focus", "LineEdit", _focus_ring())
+	t.set_stylebox("read_only", "LineEdit", _btn_box(DISABLED_BG, DISABLED_BORDER))
+	t.set_color("font_color", "LineEdit", TEXT)
+	t.set_color("caret_color", "LineEdit", ACCENT)
+	t.set_color("font_placeholder_color", "LineEdit", TEXT_FAINT)
+	t.set_color("selection_color", "LineEdit", Color(ACCENT, 0.3))
+	t.set_color("font_color", "Label", TEXT)
+	t.set_color("default_color", "RichTextLabel", TEXT)
+	t.set_font("bold_font", "RichTextLabel", font("bold"))
+	t.set_font("mono_font", "RichTextLabel", font("mono"))
+	var pb_bg := _btn_box(Color(1, 1, 1, 0.06), Color(0, 0, 0, 0), 0, 3)
+	pb_bg.content_margin_top = 0
+	pb_bg.content_margin_bottom = 0
+	var pb_fg := _btn_box(ACCENT, Color(0, 0, 0, 0), 0, 3)
+	pb_fg.content_margin_top = 0
+	pb_fg.content_margin_bottom = 0
+	t.set_stylebox("background", "ProgressBar", pb_bg)
+	t.set_stylebox("fill", "ProgressBar", pb_fg)
+	t.set_color("font_color", "ProgressBar", TEXT)
+	t.set_font_size("font_size", "ProgressBar", 11)
+	for sbt in ["VScrollBar", "HScrollBar"]:
+		var tr := StyleBoxFlat.new()
+		tr.bg_color = Color(1, 1, 1, 0.03)
+		tr.set_corner_radius_all(3)
+		tr.content_margin_left = 3
+		tr.content_margin_right = 3
+		tr.content_margin_top = 3
+		tr.content_margin_bottom = 3
+		var gr := StyleBoxFlat.new()
+		gr.bg_color = Color(1, 1, 1, 0.16)
+		gr.set_corner_radius_all(3)
+		var grh := gr.duplicate()
+		grh.bg_color = Color(ACCENT, 0.6)
+		t.set_stylebox("scroll", sbt, tr)
+		t.set_stylebox("grabber", sbt, gr)
+		t.set_stylebox("grabber_highlight", sbt, grh)
+		t.set_stylebox("grabber_pressed", sbt, grh)
+	var slider := _btn_box(Color(1, 1, 1, 0.10), Color(0, 0, 0, 0), 0, 2)
+	slider.content_margin_top = 2
+	slider.content_margin_bottom = 2
+	t.set_stylebox("slider", "HSlider", slider)
+	var area := _btn_box(Color(ACCENT, 0.8), Color(0, 0, 0, 0), 0, 2)
+	area.content_margin_top = 2
+	area.content_margin_bottom = 2
+	t.set_stylebox("grabber_area", "HSlider", area)
+	t.set_stylebox("grabber_area_highlight", "HSlider", area)
+	var tab_sel := _btn_box(Color(1, 1, 1, 0.08), STROKE_HI, 1, 8)
+	var tab_un := _btn_box(Color(0, 0, 0, 0), Color(0, 0, 0, 0), 0, 8)
+	t.set_stylebox("tab_selected", "TabContainer", tab_sel)
+	t.set_stylebox("tab_unselected", "TabContainer", tab_un)
+	t.set_stylebox("tab_hovered", "TabContainer", sec["hover"])
+	t.set_stylebox("panel", "TabContainer", glass())
+	t.set_stylebox("panel", "ItemList", glass(10, 0.6))
+	t.set_stylebox("selected", "ItemList", _btn_box(Color(ACCENT, 0.16), Color(ACCENT, 0.5)))
+	t.set_stylebox("focus", "ItemList", _focus_ring())
+	t.set_color("font_color", "ItemList", TEXT)
+	_theme = t
+	return t
 
 static func make_button(text: String, min_w: int = 160) -> Button:
 	var b := Button.new()
 	b.text = text
-	b.custom_minimum_size = Vector2(min_w, 42)
+	b.custom_minimum_size = Vector2(min_w, 40)
 	_style_button(b)
 	b.pressed.connect(func(): Sfx.click())
 	UIFX.wire_button(b)
 	return b
 
 static func make_accent_button(text: String, min_w: int = 160) -> Button:
+	## primary: crystal-frost fill, ink text — reserved for the main action on a screen
 	var b := make_button(text, min_w)
 	b.pressed.connect(func(): Sfx.confirm())
-	var n = _tex_style("res://assets/art/ui/btn_accent_chrome.png", _flat(ACCENT.darkened(0.25), ACCENT, 8), Vector2i(14, 8))
-	var h = _tex_style("res://assets/art/ui/btn_accent_chrome.png", _flat(ACCENT.darkened(0.10), ACCENT.lightened(0.15), 8), Vector2i(14, 8))
-	var p = _tex_style("res://assets/art/ui/btn_accent_chrome.png", _flat(ACCENT.darkened(0.35), ACCENT_DIM, 8), Vector2i(14, 8))
-	var f = _tex_style("res://assets/art/ui/btn_accent_chrome.png", _flat(ACCENT.darkened(0.15), FOCUS_RING, 8), Vector2i(14, 8))
-	var d = _flat(DISABLED_BG, DISABLED_BORDER, 8)
-	b.add_theme_stylebox_override("normal", n)
-	b.add_theme_stylebox_override("hover", h)
-	b.add_theme_stylebox_override("pressed", p)
-	b.add_theme_stylebox_override("focus", f)
-	b.add_theme_stylebox_override("disabled", d)
-	# v8.5: accent chrome plate is dark glass -> frost-light text (old gold-era brown text was unreadable)
-	b.add_theme_color_override("font_color", Color(0.84, 0.94, 1.0))
-	b.add_theme_color_override("font_hover_color", Color(1, 1, 1))
-	b.add_theme_color_override("font_pressed_color", ACCENT)
-	b.add_theme_color_override("font_focus_color", Color(1, 1, 1))
-	b.add_theme_color_override("font_disabled_color", DISABLED_TEXT)
-	b.add_theme_color_override("font_outline_color", Color(0.03, 0.05, 0.09, 0.9))
-	b.add_theme_constant_override("outline_size", 4)
+	_apply_states(b, _primary_states())
+	b.add_theme_color_override("font_color", ON_ACCENT)
+	b.add_theme_color_override("font_hover_color", ON_ACCENT)
+	b.add_theme_color_override("font_pressed_color", ON_ACCENT)
+	b.add_theme_color_override("font_hover_pressed_color", ON_ACCENT)
+	b.add_theme_color_override("font_focus_color", ON_ACCENT)
+	b.add_theme_color_override("font_disabled_color", TEXT_FAINT)
+	b.add_theme_font_override("font", font("bold"))
 	b.focus_mode = Control.FOCUS_ALL
 	return b
 
 static func _style_button(b: Button) -> void:
-	## 全态：normal / hover / pressed / focus / disabled（厚涂战旗）
-	var flat_n := StyleBoxFlat.new()
-	flat_n.bg_color = Color(0.14, 0.16, 0.22, 0.92)
-	flat_n.border_color = Color(0.45, 0.65, 0.82, 0.75)
-	flat_n.set_border_width_all(2)
-	flat_n.set_corner_radius_all(6)
-	flat_n.content_margin_left = 12
-	flat_n.content_margin_right = 12
-	flat_n.content_margin_top = 8
-	flat_n.content_margin_bottom = 8
-	var flat_h := flat_n.duplicate()
-	flat_h.bg_color = Color(0.20, 0.26, 0.36, 0.96)
-	flat_h.border_color = Color(0.70, 0.90, 1.0, 0.95)
-	var flat_p := flat_n.duplicate()
-	flat_p.bg_color = Color(0.09, 0.11, 0.16, 0.98)
-	flat_p.border_color = Color(0.40, 0.58, 0.75, 0.9)
-	var flat_f := flat_n.duplicate()
-	flat_f.bg_color = Color(0.16, 0.20, 0.28, 0.98)
-	flat_f.border_color = FOCUS_RING
-	flat_f.set_border_width_all(3)
-	var flat_d := flat_n.duplicate()
-	flat_d.bg_color = DISABLED_BG
-	flat_d.border_color = DISABLED_BORDER
-	var n = _tex_style("res://assets/art/ui/btn_chrome.png", flat_n, Vector2i(12, 8))
-	var hov = _tex_style("res://assets/art/ui/btn_chrome.png", flat_h, Vector2i(12, 8))
-	var pr = _tex_style("res://assets/art/ui/btn_chrome.png", flat_p, Vector2i(12, 8))
-	b.add_theme_stylebox_override("normal", n)
-	b.add_theme_stylebox_override("hover", hov)
-	b.add_theme_stylebox_override("pressed", pr)
-	b.add_theme_stylebox_override("focus", flat_f)
-	b.add_theme_stylebox_override("disabled", flat_d)
-	b.add_theme_color_override("font_color", Color(0.92, 0.94, 0.97))
-	b.add_theme_color_override("font_hover_color", Color(0.85, 0.95, 1.0))
-	b.add_theme_color_override("font_pressed_color", Color(0.70, 0.85, 0.95))
-	b.add_theme_color_override("font_focus_color", Color(0.88, 0.96, 1.0))
+	## 全态：normal / hover / pressed / focus / disabled — frosted secondary
+	_apply_states(b, _secondary_states())
+	b.add_theme_color_override("font_color", TEXT)
+	b.add_theme_color_override("font_hover_color", Color.WHITE)
+	b.add_theme_color_override("font_pressed_color", ACCENT)
+	b.add_theme_color_override("font_focus_color", Color.WHITE)
 	b.add_theme_color_override("font_disabled_color", DISABLED_TEXT)
 	b.focus_mode = Control.FOCUS_ALL
 
-
-
-
 static func _tex_style(tex_path: String, fallback: StyleBoxFlat, margins: Vector2i = Vector2i(12, 10)) -> StyleBox:
-	if ResourceLoader.exists(tex_path):
-		var sb := StyleBoxTexture.new()
-		sb.texture = load(tex_path)
-		sb.texture_margin_left = 12
-		sb.texture_margin_right = 12
-		sb.texture_margin_top = 12
-		sb.texture_margin_bottom = 12
-		sb.content_margin_left = margins.x
-		sb.content_margin_right = margins.x
-		sb.content_margin_top = margins.y
-		sb.content_margin_bottom = margins.y
-		return sb
+	## v8.6: chrome plates retired — always token flat style
+	fallback.content_margin_left = margins.x
+	fallback.content_margin_right = margins.x
+	fallback.content_margin_top = margins.y
+	fallback.content_margin_bottom = margins.y
 	return fallback
 
 static func _flat(bg: Color, border: Color, radius: int) -> StyleBoxFlat:
-	var sb := StyleBoxFlat.new()
-	sb.bg_color = bg
-	sb.set_corner_radius_all(radius)
-	sb.border_color = border
-	sb.set_border_width_all(2)
+	var sb := _btn_box(bg, border, 1, radius)
 	sb.content_margin_left = 14
 	sb.content_margin_right = 14
 	sb.content_margin_top = 8
 	sb.content_margin_bottom = 8
-	sb.shadow_color = Color(0, 0, 0, 0.35)
-	sb.shadow_size = 3
-	sb.shadow_offset = Vector2(1, 2)
 	return sb
 
 static func make_label(text: String, large: bool = false) -> Label:
@@ -131,10 +295,10 @@ static func make_label(text: String, large: bool = false) -> Label:
 	l.text = text
 	l.add_theme_color_override("font_color", TEXT)
 	if large:
-		l.add_theme_font_size_override("font_size", 30)
-		l.add_theme_color_override("font_color", PARCHMENT)
+		l.add_theme_font_size_override("font_size", SZ_TITLE)
+		l.add_theme_color_override("font_color", TEXT)
 	else:
-		l.add_theme_font_size_override("font_size", 15)
+		l.add_theme_font_size_override("font_size", SZ_BODY)
 	return l
 
 static func make_dim_label(text: String) -> Label:
@@ -144,33 +308,49 @@ static func make_dim_label(text: String) -> Label:
 	return l
 
 static func make_panel() -> PanelContainer:
+	## v8.6: frosted glass (1px stroke). Ice-crystal panel_chrome plates retired.
 	var p := PanelContainer.new()
-	var flat = parchment_style()
-	# v8.5: panel_chrome has a thick ice border -> content margins clear it (renders showed overlap)
-	# v8.5: half-scale chrome + 9-slice margins that contain the whole ice border (24/20) -> border
-	# thickness is constant on every panel size (12px margins let the spikes stretch into content)
-	var hp := "res://assets/art/ui/v85/panel_chrome_half.png"
-	if ResourceLoader.exists(hp):
-		var sb := StyleBoxTexture.new()
-		sb.texture = load(hp)
-		sb.texture_margin_left = 25
-		sb.texture_margin_right = 25
-		sb.texture_margin_top = 21
-		sb.texture_margin_bottom = 21
-		sb.content_margin_left = 26
-		sb.content_margin_right = 26
-		sb.content_margin_top = 22
-		sb.content_margin_bottom = 22
-		p.add_theme_stylebox_override("panel", sb)
-	else:
-		p.add_theme_stylebox_override("panel", _tex_style("res://assets/art/ui/panel_chrome.png", flat, Vector2i(24, 22)))
+	p.add_theme_stylebox_override("panel", glass())
 	return p
+
+static func make_glass(radius: int = 12, alpha: float = 0.78) -> PanelContainer:
+	var p := PanelContainer.new()
+	p.add_theme_stylebox_override("panel", glass(radius, alpha))
+	return p
+
+static func eyebrow(text: String, col: Color = ACCENT) -> Label:
+	## small tracked caps label above titles (label token)
+	var l := Label.new()
+	var spaced := ""
+	for ch in text:
+		spaced += ch + ("\u2009" if ch.unicode_at(0) < 128 else "")
+	l.text = spaced
+	l.add_theme_font_size_override("font_size", SZ_LABEL)
+	l.add_theme_color_override("font_color", col)
+	l.add_theme_font_override("font", font("bold"))
+	return l
+
+static func page_header(parent: Control, title: String, eyebrow_text: String = "", x: float = 48.0, y: float = 28.0) -> VBoxContainer:
+	## clean editorial header: eyebrow + thin large title + hairline — replaces banner strips
+	var v := VBoxContainer.new()
+	v.position = Vector2(x, y)
+	v.add_theme_constant_override("separation", 2)
+	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if eyebrow_text != "":
+		v.add_child(eyebrow(eyebrow_text))
+	var t := Label.new()
+	t.text = title
+	t.add_theme_font_size_override("font_size", SZ_TITLE)
+	t.add_theme_color_override("font_color", TEXT)
+	v.add_child(t)
+	parent.add_child(v)
+	return v
 
 static func parchment_style() -> StyleBoxFlat:
 	var s := StyleBoxFlat.new()
-	s.bg_color = Color(0.14, 0.13, 0.11, 0.94)
-	s.border_color = Color(0.72, 0.58, 0.32, 0.85)
-	s.set_border_width_all(2)
+	s.bg_color = Color(PANEL, 0.82)
+	s.border_color = STROKE
+	s.set_border_width_all(1)
 	s.set_corner_radius_all(8)
 	s.content_margin_left = 12
 	s.content_margin_right = 12
@@ -183,10 +363,10 @@ static func parchment_style() -> StyleBoxFlat:
 
 static func stone_style() -> StyleBoxFlat:
 	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(0.14, 0.15, 0.20, 0.95)
-	sb.set_corner_radius_all(6)
-	sb.border_color = STONE
-	sb.set_border_width_all(2)
+	sb.bg_color = Color(PANEL_LIT, 0.82)
+	sb.set_corner_radius_all(8)
+	sb.border_color = STROKE
+	sb.set_border_width_all(1)
 	sb.content_margin_left = 12
 	sb.content_margin_right = 12
 	sb.content_margin_top = 10
@@ -200,22 +380,45 @@ static func make_themed_bg(parent: Control, theme: String = "castle") -> ColorRe
 	if not ResourceLoader.exists(path):
 		path = "res://assets/art/ui/castle_backdrop.png"
 	if ResourceLoader.exists(path):
-		var tr := TextureRect.new()
-		tr.texture = load(path)
-		tr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		tr.stretch_mode = TextureRect.STRETCH_SCALE
-		tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		tr.modulate = Color(1, 1, 1, 0.92)
-		UIFX.banner_shimmer(tr, 4.2)
-		parent.add_child(tr)
-		# move just above solid bg: re-add veil
-		var veil := ColorRect.new()
-		veil.color = Color(0.05, 0.06, 0.09, 0.38)
-		veil.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		veil.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		parent.add_child(veil)
+		_add_backdrop(parent, load(path), 0.62)
 	return bg
+
+static func _add_backdrop(parent: Control, tex: Texture2D, veil_a: float = 0.62) -> void:
+	## v8.6: painting sits deep behind an ink veil + vignette (luminous ink void, text always readable)
+	var tr := TextureRect.new()
+	tr.texture = tex
+	tr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(tr)
+	var veil := ColorRect.new()
+	veil.color = Color(BG, veil_a)
+	veil.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	veil.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(veil)
+	parent.add_child(_vignette())
+
+static func _vignette() -> TextureRect:
+	var g := Gradient.new()
+	g.set_color(0, Color(BG, 0.0))
+	g.set_color(1, Color(BG, 0.78))
+	g.set_offset(0, 0.35)
+	g.set_offset(1, 1.0)
+	var gt := GradientTexture2D.new()
+	gt.gradient = g
+	gt.fill = GradientTexture2D.FILL_RADIAL
+	gt.fill_from = Vector2(0.5, 0.42)
+	gt.fill_to = Vector2(1.05, 1.05)
+	gt.width = 256
+	gt.height = 144
+	var v := TextureRect.new()
+	v.texture = gt
+	v.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	v.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	v.stretch_mode = TextureRect.STRETCH_SCALE
+	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return v
 
 static func make_screen_bg(parent: Control, illustrated: bool = false) -> ColorRect:
 	var bg := ColorRect.new()
@@ -223,41 +426,12 @@ static func make_screen_bg(parent: Control, illustrated: bool = false) -> ColorR
 	bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	parent.add_child(bg)
-	# 插画城堡底图（城堡枢纽等）
 	if illustrated:
 		var path = "res://assets/art/ui/castle_backdrop.png"
 		if not ResourceLoader.exists(path):
 			path = "res://assets/art/ui/hub_backdrop.png"
 		if ResourceLoader.exists(path):
-			var tr := TextureRect.new()
-			tr.texture = load(path)
-			tr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-			tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-			tr.stretch_mode = TextureRect.STRETCH_SCALE
-			tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			tr.modulate = Color(1, 1, 1, 0.92)
-			parent.add_child(tr)
-			# 半透明遮罩保证文字可读
-			var veil := ColorRect.new()
-			veil.color = Color(0.06, 0.07, 0.1, 0.42)
-			veil.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-			veil.mouse_filter = Control.MOUSE_FILTER_IGNORE
-			parent.add_child(veil)
-	# 顶部纹章色细线
-	var top := ColorRect.new()
-	top.color = Color(str(GameState.crest_color)) if GameState.started else ACCENT
-	top.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
-	top.custom_minimum_size = Vector2(0, 4)
-	top.offset_bottom = 4
-	top.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	parent.add_child(top)
-	# 底部暗角
-	var bottom := ColorRect.new()
-	bottom.color = BG_DEEP
-	bottom.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
-	bottom.offset_top = -48
-	bottom.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	parent.add_child(bottom)
+			_add_backdrop(parent, load(path), 0.58)
 	return bg
 
 static func trait_icon_rect(trait_id: String, size: float = 28.0) -> TextureRect:
@@ -275,10 +449,11 @@ static func trait_icon_rect(trait_id: String, size: float = 28.0) -> TextureRect
 
 static func resource_bar() -> HBoxContainer:
 	var h := HBoxContainer.new()
-	h.add_theme_constant_override("separation", 18)
+	h.add_theme_constant_override("separation", 22)
 	return h
 
 static func update_resources(bar: HBoxContainer) -> void:
+	## label (faint, small) + value (mono numerals) chips — no plates
 	for c in bar.get_children():
 		c.queue_free()
 	var items = [
@@ -287,17 +462,28 @@ static func update_resources(bar: HBoxContainer) -> void:
 		["铁", GameState.iron, TEXT],
 		["药", GameState.herb, TEXT],
 		["士气", GameState.morale, OK if GameState.morale >= 50 else DANGER],
-		[Calendar.label(), "", TEXT_DIM],
 	]
 	for it in items:
-		var l := Label.new()
-		if str(it[1]) == "":
-			l.text = str(it[0])
-		else:
-			l.text = "%s %s" % [it[0], str(it[1])]
-		l.add_theme_color_override("font_color", it[2])
-		l.add_theme_font_size_override("font_size", 14)
-		bar.add_child(l)
+		var hb := HBoxContainer.new()
+		hb.add_theme_constant_override("separation", 6)
+		var k := Label.new()
+		k.text = str(it[0])
+		k.add_theme_font_size_override("font_size", SZ_LABEL)
+		k.add_theme_color_override("font_color", TEXT_FAINT)
+		k.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		hb.add_child(k)
+		var v := Label.new()
+		v.text = str(it[1])
+		v.add_theme_font_override("font", font("mono"))
+		v.add_theme_font_size_override("font_size", 15)
+		v.add_theme_color_override("font_color", it[2])
+		hb.add_child(v)
+		bar.add_child(hb)
+	var cal := Label.new()
+	cal.text = Calendar.label()
+	cal.add_theme_font_size_override("font_size", 13)
+	cal.add_theme_color_override("font_color", TEXT_DIM)
+	bar.add_child(cal)
 
 static func char_card_text(c: CKCharacter) -> String:
 	var job = GameState.get_job(c.job_id)
@@ -331,46 +517,27 @@ static func make_banner_rect(w: int = 72, h: int = 100) -> TextureRect:
 	return tr
 
 static func make_hub_nav_button(text: String, subtitle: String, min_w: int = 210) -> Button:
+	## v8.6: glass list item — title on line 1, muted subtitle line 2; frost focus ring
 	var b := Button.new()
 	b.text = text if subtitle == "" else "%s\n%s" % [text, subtitle]
-	b.custom_minimum_size = Vector2(min_w, 64)
+	b.custom_minimum_size = Vector2(min_w, 58)
 	b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	b.add_theme_font_size_override("font_size", 14)
 	b.focus_mode = Control.FOCUS_ALL
-	var flat := StyleBoxFlat.new()
-	flat.bg_color = Color(0.12, 0.14, 0.20, 0.94)
-	flat.border_color = Color(0.45, 0.65, 0.82, 0.75)
-	flat.border_width_left = 4
-	flat.border_width_top = 1
-	flat.border_width_right = 1
-	flat.border_width_bottom = 1
-	flat.set_corner_radius_all(10)
-	flat.content_margin_left = 14
-	flat.content_margin_right = 10
-	flat.content_margin_top = 8
-	flat.content_margin_bottom = 8
-	var flat_h := flat.duplicate()
-	flat_h.bg_color = Color(0.18, 0.24, 0.34, 0.98)
-	flat_h.border_color = FOCUS_RING
-	var flat_p := flat.duplicate()
-	flat_p.bg_color = Color(0.09, 0.11, 0.16, 0.98)
-	var flat_f := flat.duplicate()
-	flat_f.border_color = FOCUS_RING
-	flat_f.border_width_left = 5
-	var flat_d := flat.duplicate()
-	flat_d.bg_color = DISABLED_BG
-	flat_d.border_color = DISABLED_BORDER
-	var n = _tex_style("res://assets/art/ui/hub_nav_chrome.png", flat, Vector2i(14, 8))
-	var hov = _tex_style("res://assets/art/ui/hub_nav_chrome.png", flat_h, Vector2i(14, 8))
-	b.add_theme_stylebox_override("normal", n)
-	b.add_theme_stylebox_override("hover", hov)
-	b.add_theme_stylebox_override("pressed", flat_p)
-	b.add_theme_stylebox_override("focus", flat_f)
-	b.add_theme_stylebox_override("disabled", flat_d)
+	var n := _btn_box(Color(1, 1, 1, 0.035), STROKE, 1, 10)
+	n.content_margin_left = 16
+	var h := _btn_box(Color(ACCENT, 0.09), Color(ACCENT, 0.55), 1, 10)
+	h.content_margin_left = 16
+	var pr := _btn_box(Color(0, 0, 0, 0.3), Color(ACCENT, 0.4), 1, 10)
+	pr.content_margin_left = 16
+	var d := _btn_box(DISABLED_BG, DISABLED_BORDER, 1, 10)
+	d.content_margin_left = 16
+	_apply_states(b, {"normal": n, "hover": h, "pressed": pr, "focus": _focus_ring(FOCUS_RING, 12), "disabled": d})
 	b.add_theme_color_override("font_color", TEXT)
-	b.add_theme_color_override("font_hover_color", Color(0.88, 0.96, 1.0))
-	b.add_theme_color_override("font_pressed_color", Color(0.70, 0.85, 0.95))
-	b.add_theme_color_override("font_focus_color", Color(0.90, 0.97, 1.0))
+	b.add_theme_color_override("font_hover_color", Color.WHITE)
+	b.add_theme_color_override("font_pressed_color", ACCENT)
+	b.add_theme_color_override("font_focus_color", Color.WHITE)
 	b.add_theme_color_override("font_disabled_color", DISABLED_TEXT)
 	UIFX.wire_button(b)
 	return b

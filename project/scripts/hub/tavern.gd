@@ -16,7 +16,7 @@ func _ready() -> void:
 
 func _build() -> void:
 	UIKit.make_themed_bg(self, "tavern")
-	if ResourceLoader.exists("res://assets/art/ui/tavern_banner.png"):
+	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/tavern_banner.png"):
 		var _bn := TextureRect.new()
 		_bn.texture = load("res://assets/art/ui/tavern_banner.png")
 		_bn.expand_mode = TextureRect.EXPAND_IGNORE_SIZE

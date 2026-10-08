@@ -14,7 +14,7 @@ func _ready() -> void:
 	Music.play_castle()
 	# 顶栏美术条
 	var strip = TextureRect.new()
-	if ResourceLoader.exists("res://assets/art/ui/estates_banner.png"):
+	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/estates_banner.png"):
 		strip.texture = load("res://assets/art/ui/estates_banner.png")
 	else:
 		strip.texture = load("res://assets/art/ui/hub_banner_strip.png")

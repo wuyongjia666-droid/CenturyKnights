@@ -22,7 +22,7 @@ func _build() -> void:
 	UIKit.make_themed_bg(self, "lineage")
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
-	if ResourceLoader.exists("res://assets/art/ui/hub_banner_strip.png"):
+	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/hub_banner_strip.png"):
 		var strip := TextureRect.new()
 		strip.texture = load("res://assets/art/ui/hub_banner_strip.png")
 		strip.position = Vector2(0, 0)
@@ -33,7 +33,7 @@ func _build() -> void:
 		add_child(strip)
 
 	var strip = TextureRect.new()
-	if ResourceLoader.exists("res://assets/art/ui/lineage_banner.png"):
+	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/lineage_banner.png"):
 		strip.texture = load("res://assets/art/ui/lineage_banner.png")
 		strip.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		strip.stretch_mode = TextureRect.STRETCH_SCALE

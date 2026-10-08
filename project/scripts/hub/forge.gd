@@ -2,7 +2,7 @@ extends Control
 var _msg: Label
 func _ready() -> void:
 	UIKit.make_themed_bg(self, "forge")
-	if ResourceLoader.exists("res://assets/art/ui/forge_banner.png"):
+	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/forge_banner.png"):
 		var _bn := TextureRect.new()
 		_bn.texture = load("res://assets/art/ui/forge_banner.png")
 		_bn.expand_mode = TextureRect.EXPAND_IGNORE_SIZE

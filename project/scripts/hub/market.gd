@@ -9,7 +9,7 @@ func _ready() -> void:
 	UIFX.page_enter(self)
 	UIFX.fade_in(self, 0.30)
 	Music.play_castle()
-	if ResourceLoader.exists("res://assets/art/ui/caravan_banner.png"):
+	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/caravan_banner.png"):
 		var strip := TextureRect.new()
 		strip.texture = load("res://assets/art/ui/caravan_banner.png")
 		strip.position = Vector2(0, 0)
@@ -19,7 +19,7 @@ func _ready() -> void:
 		strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(strip)
 		UIFX.banner_shimmer(strip, 3.8)
-	elif ResourceLoader.exists("res://assets/art/ui/market_banner.png"):
+	elif not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/market_banner.png"):
 		var strip2 := TextureRect.new()
 		strip2.texture = load("res://assets/art/ui/market_banner.png")
 		strip2.position = Vector2(0, 0)

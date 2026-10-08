@@ -4,7 +4,7 @@ var _msg: Label
 
 func _ready() -> void:
 	UIKit.make_themed_bg(self, "quests")
-	if ResourceLoader.exists("res://assets/art/ui/quests_banner.png"):
+	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/quests_banner.png"):
 		var _bn := TextureRect.new()
 		_bn.texture = load("res://assets/art/ui/quests_banner.png")
 		_bn.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -16,7 +16,7 @@ func _ready() -> void:
 		UIFX.banner_shimmer(_bn, 3.8)
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
-	if ResourceLoader.exists("res://assets/art/ui/hub_banner_strip.png"):
+	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/hub_banner_strip.png"):
 		var strip := TextureRect.new()
 		strip.texture = load("res://assets/art/ui/hub_banner_strip.png")
 		strip.position = Vector2(0, 0)

@@ -878,7 +878,7 @@ func _build_ui() -> void:
 	topbar.size = Vector2(1280, 64)
 	topbar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(topbar)
-	if ResourceLoader.exists("res://assets/art/ui/turn_banner.png"):
+	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/turn_banner.png"):
 		var _tb := TextureRect.new()
 		_tb.texture = load("res://assets/art/ui/turn_banner.png")
 		_tb.position = Vector2(160, 4)
@@ -889,7 +889,7 @@ func _build_ui() -> void:
 		_tb.modulate = Color(1, 1, 1, 0.85)
 		add_child(_tb)
 		UIFX.banner_shimmer(_tb, 3.6)
-	if ResourceLoader.exists("res://assets/art/ui/battle_hud_frame.png"):
+	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/battle_hud_frame.png"):
 		var _hf := TextureRect.new()
 		_hf.texture = load("res://assets/art/ui/battle_hud_frame.png")
 		_hf.position = Vector2(0, 500)

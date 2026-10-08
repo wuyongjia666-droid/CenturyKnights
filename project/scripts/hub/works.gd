@@ -9,7 +9,7 @@ func _ready() -> void:
 	UIFX.page_enter(self)
 	UIFX.fade_in(self, 0.28)
 	Music.play_castle()
-	if ResourceLoader.exists("res://assets/art/ui/works_banner.png"):
+	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/works_banner.png"):
 		var wb := TextureRect.new()
 		wb.texture = load("res://assets/art/ui/works_banner.png")
 		wb.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -19,7 +19,7 @@ func _ready() -> void:
 		wb.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(wb)
 		UIFX.banner_shimmer(wb, 3.8)
-	elif ResourceLoader.exists("res://assets/art/ui/hub_banner_strip.png"):
+	elif not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/hub_banner_strip.png"):
 		var strip := TextureRect.new()
 		strip.texture = load("res://assets/art/ui/hub_banner_strip.png")
 		strip.expand_mode = TextureRect.EXPAND_IGNORE_SIZE

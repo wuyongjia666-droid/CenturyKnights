@@ -2,7 +2,7 @@ extends Control
 
 func _ready() -> void:
 	UIKit.make_themed_bg(self, "roster")
-	if ResourceLoader.exists("res://assets/art/ui/roster_banner.png"):
+	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/roster_banner.png"):
 		var _bn := TextureRect.new()
 		_bn.texture = load("res://assets/art/ui/roster_banner.png")
 		_bn.expand_mode = TextureRect.EXPAND_IGNORE_SIZE

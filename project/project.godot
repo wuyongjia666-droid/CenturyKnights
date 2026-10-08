@@ -12,6 +12,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+Frost="*res://autoload/frost.gd"
 GameState="*res://autoload/game_state.gd"
 Calendar="*res://autoload/calendar.gd"
 Locale="*res://autoload/locale.gd"
