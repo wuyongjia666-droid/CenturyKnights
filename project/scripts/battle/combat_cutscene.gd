@@ -20,6 +20,8 @@ var _cam_base: Transform3D
 var _shake := 0.0
 var _spd_btn: Button
 
+var _pop_stack: Dictionary = {}
+
 func setup(record: Dictionary) -> void:
 	rec = record
 
@@ -284,28 +286,46 @@ func _cam_to(pos: Vector3, look: Vector3, fov: float, dur: float) -> void:
 	t.tween_property(_cam, "fov", fov, dur).set_trans(Tween.TRANS_CUBIC)
 
 func _popup(side: String, text: String, col: Color, big: bool) -> void:
+	## v8.7: popups live inside the letterbox safe area (y 64..500) and stack per side, so 暴击 / -25 / 击破
+	## never clip under the bars or overlap each other.
 	var n: Node3D = _units[side].node
 	var sp := _cam.unproject_position(n.global_position + Vector3(0, 1.95, 0))
+	var k: int = int(_pop_stack.get(side, 0))
+	_pop_stack[side] = k + 1
+	var fs := 54 if big else 40
+	if not (text.is_valid_int() or text.begins_with("-")):
+		fs = 30 if not big else 40
 	var l := Label.new()
 	l.text = text
 	l.add_theme_font_override("font", UIKit.font("mono") if text.is_valid_int() or text.begins_with("-") else UIKit.font("bold"))
-	l.add_theme_font_size_override("font_size", 54 if big else 40)
+	l.add_theme_font_size_override("font_size", fs)
 	l.add_theme_color_override("font_color", col)
 	l.add_theme_color_override("font_outline_color", Color(0.02, 0.03, 0.05, 0.95))
 	l.add_theme_constant_override("outline_size", 10)
-	l.position = sp - Vector2(60, 40)
-	l.size = Vector2(120, 60)
+	var w := 360.0
+	var h := float(fs) + 16.0
+	var top := 64.0 + 52.0  # letterbox (48) + rise travel headroom
+	var y := sp.y - h - k * (h + 4.0)
+	if sp.y - h < top + float(k) * (h + 4.0) + 0.5:
+		y = top + float(k) * (h + 4.0)  # anchored at the ceiling: grow the stack downward instead
+	y = clampf(y, top, 500.0 - h)
+	var x := clampf(sp.x - w * 0.5, 40.0, 1240.0 - w)
+	l.position = Vector2(x, y)
+	l.size = Vector2(w, h)
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	l.pivot_offset = Vector2(60, 30)
+	l.pivot_offset = Vector2(w * 0.5, h * 0.5)
 	l.scale = Vector2(0.4, 0.4)
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	l.set_meta("popup", true)
 	_root.add_child(l)
 	var t := _tw()
 	t.tween_property(l, "scale", Vector2(1.15, 1.15), 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	t.tween_property(l, "scale", Vector2.ONE, 0.08)
-	t.tween_property(l, "position:y", l.position.y - 46, 0.7)
+	t.tween_property(l, "position:y", l.position.y - 40, 0.7)
 	t.parallel().tween_property(l, "modulate:a", 0.0, 0.7).set_delay(0.35)
-	t.tween_callback(l.queue_free)
+	t.tween_callback(func():
+		_pop_stack[side] = maxi(0, int(_pop_stack.get(side, 1)) - 1)
+		l.queue_free())
 
 func _sparks(side: String, col: Color, amount: int) -> void:
 	var n: Node3D = _units[side].node
