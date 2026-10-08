@@ -163,6 +163,7 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_build_ui()
 	_init_map()
+	Sfx.play_ambience(AtlasArt.biome_for_map(map_id))
 	_deploy()
 	_start_player_turn()
 	queue_redraw()
@@ -1478,12 +1479,12 @@ func _click_cell(cell: Vector2i) -> void:
 				su.pos = cell
 				_spend_zoc(su, origin_cell, cell)
 				moved_this_select = true
+				Sfx.play_footstep(str(terrain[cell.y][cell.x]))
 				move_cells.clear()
 				_spawn_move_dust(cell)
 				_refresh_info()
 				map_draw.queue_redraw()
 				overlay.queue_redraw()
-				Sfx.move()
 				_log("%s 移动至 (%d,%d)" % [su.char.name, cell.x, cell.y])
 				_sync_objectives()
 				return
@@ -1729,6 +1730,58 @@ func _apply_combat_lock(ai: int, di: int) -> void:
 		_clear_lock_practice_banner()
 		_show_lock_tip_panel("练习完成", "交战锁定已体验。之后正式对局也会出现此效果。", 2, 4.0)
 
+func _weapon_for(c: CKCharacter) -> String:
+	var at := str(GameState.get_job(c.job_id).get("atk_type", "melee"))
+	if at == "ranged":
+		return "bow"
+	if at == "magic":
+		return "spell"
+	var role := BattleRules.job_role(c.job_id)
+	if role == "cavalry":
+		return "lance"
+	if role == "tank":
+		return "axe"
+	return "sword"
+
+
+func _bark(c: CKCharacter, kind: String) -> void:
+	if c == null:
+		return
+	Sfx.play_bark(str(c.gender), int(c.age), kind)
+
+
+func _is_boss_map() -> bool:
+	if map_id.to_lower().find("boss") >= 0:
+		return true
+	var obj = BattleMaps.get_map(map_id).get("objective", {})
+	return typeof(obj) == TYPE_DICTIONARY and str(obj.get("type", "")) == "boss"
+
+
+func _tension_value() -> float:
+	var hp := 0
+	var mx := 0
+	for u in units:
+		if str(u.team) != "player":
+			continue
+		hp += maxi(0, int(u.char.hp))
+		mx += maxi(1, int(u.char.max_hp))
+	if mx <= 0:
+		return 0.0
+	return clampf(1.0 - float(hp) / float(mx), 0.0, 1.0)
+
+
+func _sync_battle_music() -> void:
+	if battle_over:
+		return
+	if _is_boss_map():
+		Music.play_boss()
+	elif turn_team == "enemy":
+		Music.play_enemy_turn()
+	else:
+		Music.play_player_turn(Music.era_from_year(int(Calendar.year)))
+	Music.set_tension(_tension_value())
+
+
 func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = false) -> void:
 
 	var atk = units[ai]
@@ -1792,7 +1845,8 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 	var tag_s = ("〔" + "·".join(tags) + "〕") if tags else ""
 	var msg = "%s → %s%s：" % [atk.char.name, def.char.name, tag_s]
 	if result.hit:
-		Sfx.hit()
+		Sfx.play_weapon(_weapon_for(atk.char))
+		_bark(atk.char, "shout")
 		_spawn_slash(def.pos, "crit" if result.crit else "slash")
 		if result.crit:
 			_spawn_slash(def.pos, "spark")
@@ -1809,7 +1863,10 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 				_theme_banter("kill")
 			if def.team == "player":
 				def.char.injured = true
+			_bark(def.char, "shout")
 			_note_unit_downed(def, atk.char)
+		elif int(def.char.hp) < _hp_before:
+			_bark(def.char, "breath")
 	else:
 		Sfx.miss()
 		msg += "未命中（命中率 %d%%）" % result.hit_chance
@@ -1839,9 +1896,12 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 					_spawn_slash(o.pos)
 					msg += " · 溅射%s" % o.char.name
 					if o.char.hp <= 0:
+						_bark(o.char, "shout")
 						_note_unit_downed(o, atk.char)
 						if o.team == "player":
 							o.char.injured = true
+					else:
+						_bark(o.char, "breath")
 					break
 	if atk.char.temp_crit_bonus != 0 and allow_skill:
 		atk.char.temp_crit_bonus = 0
@@ -1857,6 +1917,7 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 			msg += " · 击退"
 			_spawn_dmg(def.pos, "击退", Color(0.7, 0.8, 1.0))
 	units[ai]["has_struck"] = true
+	_sync_battle_music()
 	_log(msg)
 
 func _try_push(ai: int, di: int) -> bool:
@@ -1904,6 +1965,7 @@ func _start_player_turn() -> void:
 	phase_label.add_theme_color_override("font_color", UIKit.TEXT)
 	_turn_flash = 0.9
 	Sfx.turn()
+	_sync_battle_music()
 	var pcs: Array = []
 	for u in units:
 		if u.team == "player":
@@ -1948,6 +2010,7 @@ func _end_player_turn() -> void:
 	phase_label.add_theme_color_override("font_color", UIKit.DANGER)
 	_turn_flash = 0.9
 	_pulse_heal("enemy")
+	_sync_battle_music()
 	for u in units:
 		if u.team == "enemy":
 			u.char.temp_exposed = 0
@@ -2500,6 +2563,7 @@ func _enemy_ai() -> void:
 			var origin_ai: Vector2i = u.pos
 			u.pos = best_pos
 			_spend_zoc(u, origin_ai, best_pos)
+			Sfx.play_footstep(str(terrain[best_pos.y][best_pos.x]))
 			_spawn_move_dust(best_pos)
 			_log("%s 机动至 (%d,%d)" % [u.char.name, best_pos.x, best_pos.y])
 			map_draw.queue_redraw()
@@ -2581,9 +2645,11 @@ func _finish(win: bool) -> void:
 		for u in units:
 			if u.team == "player" and u.char.hp > 0:
 				u.char.exp += 15
+				_bark(u.char, "shout")
 			elif u.team == "player":
 				u.char.hp = maxi(1, int(u.char.max_hp * 0.3))
 				u.char.injured = true
+		Music.play_victory()
 		Sfx.win()
 		if not bool(BattleMaps.get_map(map_id).get("tutorial_militia", false)):
 			Sfx.fanfare()
@@ -2601,6 +2667,7 @@ func _finish(win: bool) -> void:
 		phase_label.text = "★ " + Locale.t("battle_win") + " ★"
 		phase_label.add_theme_color_override("font_color", UIKit.ACCENT)
 	else:
+		Music.play_defeat()
 		Sfx.lose()
 		_log("【败北】可重试，进度旗标保留。")
 		var why := BattleObjectives.defeat_line(str(get_meta("battle_verdict", {}).get("reason", "")))
