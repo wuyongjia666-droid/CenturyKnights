@@ -1233,20 +1233,31 @@ static func expressed_traits(c: Object, include_latent: bool = false) -> Array:
 	return out
 
 static func _age_word(age: int) -> String:
-	if age < 18:
-		return "youth"
-	if age >= 45:
-		return "elder"
-	return "prime"
+	return CKGenomePortrait.stage_for_age(age)
 
+## Young copy before the trait is grown, the prime line in youth and middle age, the elder line last.
+## Age-awakened traits never reach this function before their age_min, because they stay latent.
 static func trait_prompt(state: String, age: int) -> String:
 	var sd := signature_def(state)
 	var stage := _age_word(age)
-	if stage == "youth" and str(sd.get("prompt_young", "")) != "":
-		return str(sd["prompt_young"])
-	if stage == "elder" and str(sd.get("prompt_elder", "")) != "":
-		return str(sd["prompt_elder"])
-	return str(sd.get("prompt", ""))
+	var young := str(sd.get("prompt_young", ""))
+	if young == "":
+		young = str(sd.get("prompt", ""))
+	var prime := str(sd.get("prompt", ""))
+	var elder := str(sd.get("prompt_elder", ""))
+	if elder == "":
+		elder = prime
+	match stage:
+		"infant":
+			return ("only a faint infant hint of " + young) if young != "" else ""
+		"youth":
+			return young
+		"middle":
+			return (prime + ", a little deeper in middle age") if prime != "" else ""
+		"elder":
+			return elder
+		_:
+			return prime
 
 ## Canonical genotypes for tests and full-line portraits. mode: full / carrier / clear / noble.
 ## Pure-line expression stays off unless include_pure, because it is rare.

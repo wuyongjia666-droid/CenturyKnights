@@ -55,6 +55,52 @@ const SCAR_PROSE := {
 	"chin": "a scar on the chin",
 	"neck": "a scar on the neck",
 }
+## Five life stages. Cuts follow the calendar: 授旗 at 15, retirement at 55.
+const STAGES := ["infant", "youth", "young_adult", "middle", "elder"]
+const STAGE_ZH := {
+	"infant": "婴儿", "youth": "少年", "young_adult": "青年", "middle": "中年", "elder": "老年",
+}
+const STAGE_OFFSET := {"infant": 17, "youth": 41, "young_adult": 73, "middle": 109, "elder": 151}
+const STAGE_APEX := {"infant": 2, "youth": 14, "young_adult": 34, "middle": 54, "elder": 70}
+const IDENTITY_OVERLAP_MIN := 0.85
+const STAGE_WHO := {
+	"infant": "infant", "youth": "youth", "young_adult": "young adult", "middle": "middle-aged", "elder": "elder",
+}
+const STAGE_FACE := {
+	"infant": "infant face proportions with large eyes, a short soft jaw and round cheeks",
+	"youth": "youthful face proportions, jaw still soft and cheeks still full",
+	"young_adult": "young-adult face proportions at the genome's own bands",
+	"middle": "middle-aged face proportions, the jaw a little heavier and fine lines at the eyes",
+	"elder": "elder face proportions, thinner cheeks and deeper folds on the same bone structure",
+}
+const STAGE_HAIR := {
+	"infant": "fine short infant hair, no grey",
+	"youth": "full youthful hair, no grey",
+	"young_adult": "thick young-adult hair, no grey yet",
+	"middle": "a few frost-silver threads, the hair still thick",
+	"elder": "greying toward frost silver and thinning at the temples",
+}
+const STAGE_SKIN := {
+	"infant": "smooth infant skin",
+	"youth": "clear youthful skin",
+	"young_adult": "even young-adult skin",
+	"middle": "middle-aged skin with fine lines",
+	"elder": "thinner creased elder skin",
+}
+const STAGE_POSTURE := {
+	"infant": "an infant carried against an adult's chest, head supported",
+	"youth": "a loose youthful stance",
+	"young_adult": "an upright young-adult stance",
+	"middle": "a settled middle-aged stance",
+	"elder": "a slightly stooped elder stance",
+}
+const STAGE_OUTFIT := {
+	"infant": "wrapped in a plain swaddle and carried",
+	"youth": "a simpler shorter outfit",
+	"young_adult": "a fitted contemporary outfit",
+	"middle": "the same cut worn a little heavier",
+	"elder": "elder robes in the same cloth and trim",
+}
 
 static var _mem: Dictionary = {}
 static var _miss: Dictionary = {}
@@ -105,13 +151,36 @@ static func file_stem(unit_id: String) -> String:
 		s += char(ch) if ok else "_"
 	return s if s != "" else "unit"
 
+static func stage_for_age(age_i: int) -> String:
+	if age_i < 3:
+		return "infant"
+	if age_i < 15:
+		return "youth"
+	if age_i < 35:
+		return "young_adult"
+	if age_i < 55:
+		return "middle"
+	return "elder"
+
 static func age_stage_of(c: Object) -> String:
-	var age_i := int(c.get("age"))
-	if age_i < 18:
-		return "young"
-	if age_i >= 45:
-		return "elder"
-	return "adult"
+	return stage_for_age(int(c.get("age")))
+
+static func stage_zh(stage: String) -> String:
+	return str(STAGE_ZH.get(stage, stage))
+
+static func stage_index(stage: String) -> int:
+	var i := STAGES.find(stage)
+	return i if i >= 0 else 2
+
+static func reached_stages(c: Object) -> Array:
+	var last := stage_index(age_stage_of(c))
+	var out: Array = []
+	for i in last + 1:
+		out.append(str(STAGES[i]))
+	return out
+
+static func stage_apex(stage: String) -> int:
+	return int(STAGE_APEX.get(stage, 24))
 
 static func _band(v: float) -> int:
 	if v <= -0.34:
@@ -124,8 +193,8 @@ static func _ensure(c: Object) -> void:
 	if c.has_method("ensure_genome"):
 		c.call("ensure_genome")
 
-## Canonical genome string. Same genes, scars, age stage and sex => same seed, regardless of unit_id.
-static func seed_payload(c: Object) -> String:
+## Genome, scars and sex. Age is not in here, so one person keeps one identity seed for life.
+static func identity_payload(c: Object) -> String:
 	_ensure(c)
 	var g: Dictionary = c.get("genome") if typeof(c.get("genome")) == TYPE_DICTIONARY else {}
 	var parts: PackedStringArray = []
@@ -152,12 +221,19 @@ static func seed_payload(c: Object) -> String:
 			scar_s += ","
 		scar_s += str(scars[i])
 	parts.append("scars:" + scar_s)
-	parts.append("age:" + age_stage_of(c))
 	parts.append("sex:" + ("f" if str(c.get("gender")) == "f" else "m"))
 	return "|".join(parts)
 
+static func seed_payload(c: Object) -> String:
+	return identity_payload(c) + "|age:" + age_stage_of(c)
+
+static func identity_seed(c: Object) -> int:
+	return maxi(1, hash(identity_payload(c)) & 0x7fffffff)
+
+## Same lineage seed for every stage, plus a fixed stage offset so the plate can still change.
 static func seed_for(c: Object) -> int:
-	return maxi(1, hash(seed_payload(c)) & 0x7fffffff)
+	var off := int(STAGE_OFFSET.get(age_stage_of(c), 0))
+	return maxi(1, (identity_seed(c) + off) & 0x7fffffff)
 
 static func genome_seed(c: Object) -> int:
 	return seed_for(c)
@@ -168,10 +244,13 @@ static func describe(c: Object) -> Dictionary:
 	var tokens: Array = []
 	var heritable: Array = []
 	var prose: Array = []
-	var stage := str(ph.get("age_stage", age_stage_of(c)))
+	var stage := age_stage_of(c)
 	var sex := "f" if str(c.get("gender")) == "f" else "m"
-	var who: String = str({"young": "youthful", "elder": "elder", "adult": "adult"}.get(stage, "adult"))
-	prose.append("%s %s" % [who, "woman" if sex == "f" else "man"])
+	var who := str(STAGE_WHO.get(stage, "adult"))
+	var noun := "woman" if sex == "f" else "man"
+	if stage == "infant" or stage == "youth":
+		noun = "girl" if sex == "f" else "boy"
+	prose.append("%s %s" % [who, noun])
 	tokens.append("gender:%s" % sex)
 	tokens.append("age:%s" % stage)
 	var hair_e: Dictionary = ph["loci"]["hair"]
@@ -184,8 +263,9 @@ static func describe(c: Object) -> Dictionary:
 		tokens.append("hair_blend:%s" % hb)
 		heritable.append("hair_blend:%s" % hb)
 		hair_bit += " with a %s undertone" % str(HAIR_PROSE.get(hb, hb)).trim_suffix(" hair")
-	if stage == "elder":
-		hair_bit += ", greying toward frost silver"
+	var hair_note := str(STAGE_HAIR.get(stage, ""))
+	if hair_note != "":
+		hair_bit += ", " + hair_note
 	var hair_col: Color = ph["hair_color"]
 	hair_bit += " (%s)" % hair_col.to_html(false)
 	prose.append(hair_bit)
@@ -219,6 +299,7 @@ static func describe(c: Object) -> Dictionary:
 		tokens.append(tok)
 		heritable.append(tok)
 		prose.append(str(phrase[bi]))
+	prose.append(str(STAGE_FACE.get(stage, "")))
 	var mk_e: Dictionary = ph["loci"]["mark"]
 	var mk := str(mk_e.get("id", "none"))
 	var mk_s := float(mk_e.get("strength", 1.0))
@@ -253,14 +334,33 @@ static func describe(c: Object) -> Dictionary:
 			prose.append(str(SCAR_PROSE.get(str(s), "a scar")))
 	var skin: Color = ph["skin_color"]
 	prose.append("skin tone %s" % skin.to_html(false))
+	prose.append(str(STAGE_SKIN.get(stage, "")))
+	prose.append(str(STAGE_POSTURE.get(stage, "")))
+	prose.append(str(STAGE_OUTFIT.get(stage, "")))
 	tokens.append("bloodline:%s" % str(ph.get("bloodline", "")))
+	var identity: Array = heritable.duplicate()
+	identity.append("gender:%s" % sex)
 	return {
 		"tokens": tokens,
 		"heritable": heritable,
+		"identity": identity,
 		"prose": prose,
 		"age_stage": stage,
 		"seed_payload": seed_payload(c),
 	}
+
+static func identity_overlap(a: Object, b: Object) -> float:
+	var ia: Array = describe(a).get("identity", [])
+	var ib := {}
+	for t in describe(b).get("identity", []):
+		ib[str(t)] = true
+	if ia.is_empty():
+		return 1.0
+	var hit := 0
+	for t in ia:
+		if ib.has(str(t)):
+			hit += 1
+	return float(hit) / float(ia.size())
 
 static func descriptors(c: Object) -> Dictionary:
 	return describe(c)
@@ -288,23 +388,37 @@ static func positive_prompt(c: Object) -> String:
 static func negative_prompt(_c: Object = null) -> String:
 	return str(style_lock().get("qwen", {}).get("negative", ""))
 
-static func out_rel(unit_id: String) -> String:
-	return "project/assets/art/portraits/genome/%s.png" % file_stem(unit_id)
+static func out_rel(unit_id: String, stage: String = "") -> String:
+	var use := stage if stage != "" else "young_adult"
+	return "project/assets/art/portraits/genome/%s_%s.png" % [file_stem(unit_id), use]
 
-static func manifest_entry(c: Object) -> Dictionary:
+static func _entry_for_stage(c: Object, stage: String, rewind: bool) -> Dictionary:
+	var saved := int(c.get("age"))
+	if rewind:
+		c.set("age", stage_apex(stage))
 	var uid := str(c.get("id"))
-	return {
+	var row := {
 		"unit_id": uid,
+		"stage": stage,
+		"stage_zh": stage_zh(stage),
 		"seed": seed_for(c),
+		"identity_seed": identity_seed(c),
 		"positive": positive_prompt(c),
 		"negative": negative_prompt(c),
-		"out_path": out_rel(uid),
+		"out_path": out_rel(uid, stage),
 	}
+	c.set("age", saved)
+	return row
+
+static func manifest_entry(c: Object) -> Dictionary:
+	return _entry_for_stage(c, age_stage_of(c), false)
 
 static func build_manifest(units: Array) -> Array:
 	var rows: Array = []
 	for u in units:
-		rows.append(manifest_entry(u))
+		var cur := age_stage_of(u)
+		for stage in reached_stages(u):
+			rows.append(_entry_for_stage(u, str(stage), str(stage) != cur))
 	return rows
 
 static func export_manifest(units: Array, path: String) -> int:
@@ -330,39 +444,56 @@ static func _load_png(path: String) -> Texture2D:
 		return null
 	return ImageTexture.create_from_image(img)
 
-static func texture(c: Object) -> Texture2D:
-	var stem := file_stem(str(c.get("id")))
-	if _mem.has(stem) and _mem[stem] is Texture2D:
-		return _mem[stem]
-	if _miss.has(stem):
-		return null
+static func _stage_names(stage: String) -> Array:
+	var names: Array = []
+	var idx := stage_index(stage)
+	names.append(str(STAGES[idx]))
+	for dist in range(1, STAGES.size()):
+		for sign in [-1, 1]:
+			var j: int = idx + sign * dist
+			if j >= 0 and j < STAGES.size():
+				names.append(str(STAGES[j]))
+	return names
+
+static func _load_named(stem: String) -> Texture2D:
 	var abs_png := portrait_dir_abs().path_join(stem + ".png")
 	var hit := _load_png(abs_png)
 	if hit != null:
-		_mem[stem] = hit
 		return hit
-	if dir_override == "":
-		var res_path := RES_DIR + stem + ".png"
-		if ResourceLoader.exists(res_path):
-			var tex: Texture2D = load(res_path)
-			if tex != null:
-				_mem[stem] = tex
-				return tex
-		var user_hit := _load_png(USER_DIR + stem + ".png")
-		if user_hit != null:
-			_mem[stem] = user_hit
-			return user_hit
-		var legacy := cache_key(c)
-		if ResourceLoader.exists(RES_DIR + legacy + ".png"):
-			var tex2: Texture2D = load(RES_DIR + legacy + ".png")
-			if tex2 != null:
-				_mem[stem] = tex2
-				return tex2
-		var user_legacy := _load_png(USER_DIR + legacy + ".png")
-		if user_legacy != null:
-			_mem[stem] = user_legacy
-			return user_legacy
-	_miss[stem] = true
+	if dir_override != "":
+		return null
+	var res_path := RES_DIR + stem + ".png"
+	if ResourceLoader.exists(res_path):
+		var tex: Texture2D = load(res_path)
+		if tex != null:
+			return tex
+	return _load_png(USER_DIR + stem + ".png")
+
+## Current stage plate, else the nearest stage that has been rendered, else the unsuffixed legacy file.
+static func texture(c: Object) -> Texture2D:
+	var stem := file_stem(str(c.get("id")))
+	var stage := age_stage_of(c)
+	var key := "%s|%s" % [stem, stage]
+	if _mem.has(key) and _mem[key] is Texture2D:
+		return _mem[key]
+	if _miss.has(key):
+		return null
+	for name in _stage_names(stage):
+		var hit := _load_named("%s_%s" % [stem, name])
+		if hit != null:
+			_mem[key] = hit
+			return hit
+	var legacy := _load_named(stem)
+	if legacy == null and dir_override == "":
+		var old := cache_key(c)
+		if ResourceLoader.exists(RES_DIR + old + ".png"):
+			legacy = load(RES_DIR + old + ".png")
+		if legacy == null:
+			legacy = _load_png(USER_DIR + old + ".png")
+	if legacy != null:
+		_mem[key] = legacy
+		return legacy
+	_miss[key] = true
 	return null
 
 static func clear_mem() -> void:
@@ -443,8 +574,11 @@ static func ingest_manifest(manifest_path: String, rendered_root: String = "") -
 		var uid := file_stem(str(row.get("unit_id", "")))
 		if uid == "":
 			continue
+		var stage := str(row.get("stage", ""))
+		var plate := uid if stage == "" else "%s_%s" % [uid, stage]
 		var cands: Array = []
 		if rendered_root != "":
+			cands.append(rendered_root.path_join(plate + ".png"))
 			cands.append(rendered_root.path_join(uid + ".png"))
 			cands.append(rendered_root.path_join(str(row.get("unit_id", "")) + ".png"))
 		var op := str(row.get("out_path", ""))
@@ -456,12 +590,12 @@ static func ingest_manifest(manifest_path: String, rendered_root: String = "") -
 			if FileAccess.file_exists(str(cand)):
 				src = str(cand)
 				break
-		if src == "" or not _copy_png(src, dest.path_join(uid + ".png")):
-			missing.append(uid)
+		if src == "" or not _copy_png(src, dest.path_join(plate + ".png")):
+			missing.append(plate)
 			continue
-		mapped[uid] = dest.path_join(uid + ".png")
-		_mem.erase(uid)
-		_miss.erase(uid)
+		mapped[plate] = dest.path_join(plate + ".png")
+		_mem.clear()
+		_miss.clear()
 	return {"ok": missing.is_empty(), "mapped": mapped, "missing": missing, "count": mapped.size()}
 
 static func kinship_report(parent_a: Object, parent_b: Object, child: Object) -> Dictionary:

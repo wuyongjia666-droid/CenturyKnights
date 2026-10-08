@@ -618,14 +618,20 @@ func _traits() -> void:
 	var prime_p := str(CKBloodline.signature_def("ash_wire").get("prompt", ""))
 	var elder_p := str(CKBloodline.signature_def("ash_wire").get("prompt_elder", ""))
 	var jaw := str(CKBloodline.signature_def("ash_jawcast").get("prompt", ""))
-	aged.age = 16
+	aged.age = 10
 	var yclause := CKBloodline.portrait_clause(aged)
-	aged.age = 34
+	aged.age = 30
 	var pclause := CKBloodline.portrait_clause(aged)
+	aged.age = 40
+	var mclause := CKBloodline.portrait_clause(aged)
 	aged.age = 62
 	var eclause := CKBloodline.portrait_clause(aged)
+	_ok(CKGenomePortrait.age_stage_of(aged) == "elder", "age 62 is elder")
+	aged.age = 10
+	_ok(CKGenomePortrait.age_stage_of(aged) == "youth", "age 10 is youth")
 	_ok(yclause.contains(young_p) and not yclause.contains(elder_p) and not yclause.contains(jaw), "youth wording, jaw cast still asleep")
-	_ok(pclause.contains(prime_p) and pclause.contains(jaw) and not pclause.contains(young_p), "prime wording includes the awakened jaw cast")
+	_ok(pclause.contains(prime_p) and pclause.contains(jaw) and not pclause.contains(young_p), "young-adult wording includes the awakened jaw cast")
+	_ok(mclause.contains(jaw) and mclause.contains("middle age"), "middle age keeps the jaw cast and deepens the line")
 	_ok(eclause.contains(elder_p) and not eclause.contains(young_p), "elder wording")
 	# 3D hints are ids and palette only
 	var hints := CKBloodline.unit_model_hints(aged)

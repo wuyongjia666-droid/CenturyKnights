@@ -559,6 +559,29 @@ func _step_aging() -> void:
 	else:
 		print("OK leader age ", age_before, " -> ", leader.age)
 
+	# Portrait stage follows the birthday. Age 14 is 少年; the next birthday is 青年.
+	leader.age = 14
+	leader.birthday_month = Calendar.month % 12 + 1
+	var stage_before := CKGenomePortrait.age_stage_of(leader)
+	if stage_before != "youth":
+		_err("aging: age 14 stage %s want youth" % stage_before)
+	var prose_before := " ".join(CKGenomePortrait.describe(leader).get("prose", []))
+	if prose_before.find("simpler shorter outfit") < 0:
+		_err("aging: youth portrait missing the simpler outfit")
+	if UnitArt.portrait(leader, 96) == null:
+		_err("aging: portrait null before the stage switch")
+	Calendar.advance(1)
+	var stage_after := CKGenomePortrait.age_stage_of(leader)
+	if leader.age != 15 or stage_after != "young_adult":
+		_err("aging: birthday stage %s age %s want young_adult at 15" % [stage_after, leader.age])
+	else:
+		print("OK portrait stage ", stage_before, " -> ", stage_after)
+	var prose_after := " ".join(CKGenomePortrait.describe(leader).get("prose", []))
+	if prose_after.find("young adult") < 0 or prose_after.find("fitted contemporary outfit") < 0:
+		_err("aging: young-adult portrait did not switch copy")
+	if UnitArt.portrait(leader, 96) == null:
+		_err("aging: portrait null after the stage switch")
+
 	# Also reach harvest at least once in chapter flow if not already
 	var guard := 0
 	while not GameState.flag("harvest_done") and guard < 24:
