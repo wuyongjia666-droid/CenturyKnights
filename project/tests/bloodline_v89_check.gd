@@ -671,6 +671,11 @@ func _traits() -> void:
 		_ok(fn >= 2, "%s folk shows regional traits (%d)" % [nid2, fn])
 		for nb in nat2.noble:
 			var noble := _mk("trait_nb_" + str(nb), "m", {str(nb): 1.0}, "", "", 32, "baron")
+			# Pin polygenic echoes to the designed mean. Founder noise (σ 0.05) can
+			# drop a 0.56 noble bone under the 0.48 bar on a single draw.
+			for e in CKBloodline.line(str(nb)).get("sig", []):
+				if typeof(e) == TYPE_DICTIONARY and e.has("value") and str(e.get("locus", "")).begins_with("tr_"):
+					noble.genome["sig"][str(e["locus"])] = float(e["value"][0])
 			var want: Array = CKBloodline.line(str(nb)).get("trait_set", [])
 			var got := 0
 			for t2 in CKBloodline.expressed_traits(noble, false):
