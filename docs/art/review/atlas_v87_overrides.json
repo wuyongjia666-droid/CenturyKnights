@@ -1,0 +1,5 @@
+{
+ "_doc": "Human review of docs/art/review/atlas_v87_*_sheet.jpg. crop = y (0..1) where a model-drawn caption/UI bar starts (slanted bars the detector misses); reject = off-style, never ingest.",
+ "crop": {"v87_city_fc_spire": 0.82},
+ "reject": {}
+}

@@ -249,15 +249,15 @@ def main():
         n = NATIONS[c["nation"]]
         shots.append({"label": "v87_city_%s" % c["id"], "kind": "city", "w": 1280, "h": 720,
                       "subject": "city vignette plate of a %s-sized %s in the %s region: %s. %s. three-quarter aerial view at 35 degrees elevation, "
-                                 "atmospheric depth toward the top, settlement centred with clear silhouette, dark UI-safe lower third, no people close-up"
+                                 "atmospheric depth toward the top, settlement centred with clear silhouette, the lower third falls into soft shadowed terrain that continues to the image edge, full-bleed painting, no people close-up"
                                  % ("large" if c["size"] >= 4 else ("modest" if c["size"] >= 3 else "small"), c["kind"], n["en"], ENG_BIOME.get(c["biome"], c["biome"]), ENG_NATION[c["nation"]])})
     for nid, n in NATIONS.items():
         shots.append({"label": "v87_smith_%s" % nid, "kind": "city", "w": 1280, "h": 720,
-                      "subject": "interior of a contemporary-fantasy smithy of the %s region, %s; weapon racks of %s arms, cool forge glow (no warm fire light, cyan-white forge plasma), workbench in front, UI-safe dark left third"
+                      "subject": "interior of a contemporary-fantasy smithy of the %s region, %s; weapon racks of %s arms, cool forge glow (no warm fire light, cyan-white forge plasma), workbench in front, the left third falls into soft shadow, full-bleed painting"
                                  % (n["en"], ENG_NATION[nid], ENG_MAT[n["mat"]])})
     for it in items:
         shots.append({"label": "v87_item_%s" % it["id"], "kind": "icon", "w": 768, "h": 768,
-                      "subject": "single %s game item icon (%s): one %s made of %s, %s, isolated on plain light grey #D9DEE3 background, 30 degree three-quarter top-down view, diagonal from bottom-left to top-right, centred, whole object visible, no hands"
+                      "subject": "isolated object study of a single %s (%s): one %s made of %s, %s, isolated on plain light grey #D9DEE3 background, 30 degree three-quarter top-down view, diagonal from bottom-left to top-right, centred, whole object visible, no hands"
                                  % (ENG_TYPE[it["type"]], "legendary" if it.get("signature") == 2 else ("signature" if it.get("signature") else "standard issue"),
                                     ENG_TYPE[it["type"]], ENG_MAT[NATIONS[it["nation"]]["mat"]], ENG_MOTIF[it["nation"]])})
     json.dump(shots, open(os.path.join(os.path.dirname(__file__), "shots_v87_atlas.json"), "w"), ensure_ascii=False, indent=1)

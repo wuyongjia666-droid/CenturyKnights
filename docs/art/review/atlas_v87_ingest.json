@@ -1,0 +1,69 @@
+{
+ "passed": [
+  "v87_city_ash_capital",
+  "v87_city_ash_market",
+  "v87_city_eo_kiln",
+  "v87_city_eo_shrine",
+  "v87_city_fc_banner",
+  "v87_city_fc_capital",
+  "v87_city_fc_lake",
+  "v87_city_fc_peak",
+  "v87_city_fc_plateau",
+  "v87_city_fc_spire",
+  "v87_city_fc_tower",
+  "v87_city_fog_vale",
+  "v87_city_hq",
+  "v87_city_ig_banner",
+  "v87_city_ig_bottom",
+  "v87_city_ig_capital",
+  "v87_city_ig_lower",
+  "v87_city_ig_mine",
+  "v87_city_ig_plateau",
+  "v87_city_ig_tower",
+  "v87_city_lb_east",
+  "v87_city_lb_mid",
+  "v87_city_lb_south"
+ ],
+ "rejected": {
+  "v87_city_eo_archive": [
+   "saturation"
+  ],
+  "v87_city_eo_banner": [
+   "saturation"
+  ],
+  "v87_city_eo_capital": [
+   "saturation"
+  ],
+  "v87_city_eo_crack": [
+   "saturation"
+  ],
+  "v87_city_eo_glass": [
+   "saturation"
+  ]
+ },
+ "counts": {
+  "v87_city": {
+   "seen": 28,
+   "passed": 23
+  },
+  "v87_smith": {
+   "seen": 0,
+   "passed": 0
+  },
+  "v87_item": {
+   "seen": 0,
+   "passed": 0
+  }
+ },
+ "cropped": [
+  "v87_city_ash_market",
+  "v87_city_eo_kiln",
+  "v87_city_eo_shrine",
+  "v87_city_fc_spire",
+  "v87_city_fog_vale",
+  "v87_city_ig_bottom",
+  "v87_city_ig_plateau",
+  "v87_city_ig_tower",
+  "v87_city_lb_south"
+ ]
+}
