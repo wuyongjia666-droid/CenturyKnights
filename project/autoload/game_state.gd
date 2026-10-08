@@ -2159,6 +2159,8 @@ func craft_weapon(cid: String) -> Dictionary:
 		return {"ok": false, "msg": "选择角色"}
 	iron -= int(cost.iron)
 	silver -= int(cost.silver)
+	if World.is_world_item(c.weapon_id):  # v8.7: a world weapon goes back to the armory, not the scrap heap
+		World.armory[c.weapon_id] = int(World.armory.get(c.weapon_id, 0)) + 1
 	c.weapon_id = "ash_blade_fine" if building_level("forge") >= 4 else "ash_blade"
 	# 负重检查（简化）
 	var burden = 4

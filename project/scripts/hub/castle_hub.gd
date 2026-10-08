@@ -58,7 +58,7 @@ func _build() -> void:
 		["属地", "四野租佃庄园", "res://scenes/hub/estates.tscn", ""],
 		[Locale.t("btn_marriage"), "春令与期望", "res://scenes/hub/marriage.tscn", ""],
 		[Locale.t("btn_lineage"), "血胤与容貌", "res://scenes/hub/lineage_view.tscn", ""],
-		["舆图", "邦国与陆桥", "res://scenes/hub/atlas_view.tscn", ""],
+		["舆图", "跑图 · 城镇 · 委托", "res://scenes/hub/atlas_view.tscn", ""],
 		["—", "", "", ""],
 		[Locale.t("btn_quests"), "陆桥委托", "res://scenes/hub/quests.tscn", ""],
 		[Locale.t("btn_train"), "六维与转职", "res://scenes/hub/train.tscn", ""],

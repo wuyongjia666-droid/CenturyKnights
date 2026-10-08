@@ -49,6 +49,8 @@ func _render_all() -> void:
 	_render_right()
 
 func _weapon_name(wid: String) -> String:
+	if World.is_world_item(wid):
+		return str(World.item(wid).get("name", wid))
 	match wid:
 		"ash_blade_fine":
 			return "灰刃·精"
@@ -58,6 +60,8 @@ func _weapon_name(wid: String) -> String:
 			return "灰刃"
 
 func _wbonus(wid: String) -> int:
+	if World.is_world_item(wid):
+		return int(World.item(wid).get("stats", {}).get("atk", 0))
 	return 3 if wid == "ash_blade_fine" else (0 if wid == "" else 2)
 
 func _next_wid() -> String:

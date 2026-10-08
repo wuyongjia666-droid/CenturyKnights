@@ -28,6 +28,10 @@ godot --headless --path . --scene res://tests/tactics_e2e.tscn
 echo "==> full_chain_e2e"
 godot --headless --path . --scene res://tests/full_chain_e2e.tscn
 
+echo "==> atlas_e2e (v8.7 overworld: travel → city → smith → commission → battle → turn-in → save/load)"
+godot --headless --path . --scene res://tests/atlas_e2e.tscn 2>&1 | tee /tmp/ck_atlas_e2e.log
+grep -q "=== ATLAS E2E PASS ===" /tmp/ck_atlas_e2e.log || { echo "atlas_e2e FAILED"; exit 1; }
+
 echo "==> CI ALL PASS"
 
 # GitHub Actions: add .github/workflows/ci.yml that runs this script when the
