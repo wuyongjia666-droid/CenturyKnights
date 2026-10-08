@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "people": [
+    {
+      "id": "lengwan_zhexian",
+      "name": "冷湾·折弦",
+      "surname": "冷湾",
+      "given": "折弦",
+      "cast_key": "zhexian",
+      "nation": "shuoying",
+      "line": "sy_night",
+      "law": "dose",
+      "role": "第一纪元反派",
+      "motive": "他是被更年轻的全朔比下去的弦朔。他收过路银，是为了让半张脸继续没有资格被晋升。"
+    },
+    {
+      "id": "bitan_lanzhi",
+      "name": "碧潭·澜芷",
+      "surname": "碧潭",
+      "given": "澜芷",
+      "cast_key": "lanzhi",
+      "nation": "qinghe",
+      "line": "qh_delta",
+      "law": "threshold",
+      "role": "第二纪元反派",
+      "motive": "她是染缕。她给继承人一页干净的玉缕，因为不能涂改的牒会暴露她，也因为她真的怕阈值崩掉。"
+    },
+    {
+      "id": "baiyuan_jixun",
+      "name": "白垣·计勋",
+      "surname": "白垣",
+      "given": "计勋",
+      "cast_key": "jixun",
+      "nation": "ashbanner",
+      "line": "banner_marshal",
+      "law": "awakened",
+      "role": "第三纪元反派",
+      "motive": "折杆的旧同事。他要分数仍然有效。授旗若传给没有点亮的孩子，他会抢走分数更高的那个。"
+    },
+    {
+      "id": "nandeng_qianzhan",
+      "name": "南灯·欠盏",
+      "surname": "南灯",
+      "given": "欠盏",
+      "cast_key": "qianzhan",
+      "nation": "lantern",
+      "line": "lt_filament",
+      "pool": "lamp_out",
+      "law": "dominant",
+      "role": "第四纪元反派",
+      "motive": "真灯丝，空钱袋。她要把香盏收成特许验具，让照不见的人改由收据说明。她不伪造自己的脸。"
+    },
+    {
+      "id": "guanxiang_guheng",
+      "name": "观象·孤衡",
+      "surname": "观象",
+      "given": "孤衡",
+      "cast_key": "guheng",
+      "nation": "starriver",
+      "line": "sr_ford",
+      "law": "complement",
+      "role": "第五纪元反派",
+      "motive": "星津没有七星，她就摄政。她可以承认灰旗的继承人，条件是桥外与测距不要有孩子。"
+    }
+  ]
+}
