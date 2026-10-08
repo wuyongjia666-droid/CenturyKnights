@@ -82,13 +82,16 @@ func marry(suitor: CKCharacter, target: CKCharacter, bride_price: int = 40, acce
 		CKCourt.apply_rites(suitor, target, accepted_rites)
 		if rite_cost > 0:
 			dip.append("婚仪 %d 银" % rite_cost)
-	# 妊娠：教程 1 月后出生（岁月压缩）
+	# 妊娠：默认 3 个月结后分娩。快速家族回到 1 个月结。年轻满生育力不额外抽数。
 	var mother = target if target.gender == "f" else suitor
-	mother.pregnant_months = 1
+	var conceived := CKFamilyState.begin_pregnancy(GameState, mother)
 	GameState.chapter0_flags["married"] = true
 	GameState.mark_dirty()
 	var dip_s := ("邦交 " + "、".join(dip) + "。") if not dip.is_empty() else ""
-	return {"ok": true, "msg": "婚宴已成，声望小增。%s%s 有喜。" % [dip_s, mother.name]}
+	var joy := "%s 此龄未有孕。" % mother.name
+	if conceived:
+		joy = "%s 有喜，约 %d 个月后分娩。" % [mother.name, CKFamilyState.term_months(GameState)]
+	return {"ok": true, "msg": "婚宴已成，声望小增。%s%s" % [dip_s, joy]}
 
 ## 子嗣期望面板（X1）
 func heir_expectation(a: CKCharacter, b: CKCharacter) -> Dictionary:

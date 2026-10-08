@@ -109,6 +109,11 @@ static func _tier_zh(tier: int) -> String:
 		return _zh("tier_hidden")
 	return _zh("tier_%d" % tier)
 
+## Player-facing gestation, in month ticks. The stored counter is one less,
+## because Calendar births on the tick that steps below zero.
+const TERM_MONTHS := 3
+const FAST_TERM_MONTHS := 1
+
 
 ## Unborn child: aptitude band, tactical-trait odds, royal-skill tier odds.
 ## Reads the two parents' genomes. Does not draw.
@@ -207,6 +212,59 @@ static func _tactics_zh(rows: Array, limit: int) -> String:
 	for t in rows.slice(0, limit):
 		bits.append("%s %d%%（%s）" % [str(t.get("zh", "")), int(round(float(t.get("p", 0.0)) * 100.0)), str(t.get("effect", ""))])
 	return _zh("archive_tactic_list", ["、".join(bits)])
+
+
+static func fast_family(host) -> bool:
+	if host == null:
+		return false
+	var mods = host.house_mods if host.get("house_mods") is Dictionary else {}
+	return bool(mods.get("fast_family", false))
+
+
+static func set_fast_family(host, on: bool) -> void:
+	if host == null:
+		return
+	host.house_mods["fast_family"] = on
+	if host.has_method("mark_dirty"):
+		host.mark_dirty()
+
+
+static func term_months(host) -> int:
+	return FAST_TERM_MONTHS if fast_family(host) else TERM_MONTHS
+
+
+## 16–32 peak, then a decline, none before 16 or after 48.
+## A rate of 1 does not roll, so a young wedding spends no extra RNG.
+static func fertility_of(age: int) -> float:
+	if age < 16 or age > 48:
+		return 0.0
+	if age <= 32:
+		return 1.0
+	if age <= 40:
+		return 0.55
+	return 0.20
+
+
+static func conception_rate(person) -> float:
+	if person == null:
+		return 0.0
+	return fertility_of(int(person.age))
+
+
+static func begin_pregnancy(host, mother) -> bool:
+	if mother == null:
+		return false
+	var rate := conception_rate(mother)
+	if rate <= 0.0:
+		mother.pregnant_months = -1
+		return false
+	if rate < 1.0:
+		var rng = host.rng if host != null else null
+		if rng != null and rng.randf() >= rate:
+			mother.pregnant_months = -1
+			return false
+	mother.pregnant_months = maxi(0, term_months(host) - 1)
+	return true
 
 
 static func _mods_zh(mods: Dictionary) -> String:
