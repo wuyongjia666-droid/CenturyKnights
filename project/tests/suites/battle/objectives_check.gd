@@ -21,7 +21,7 @@ func _ready() -> void:
 
 
 func _run() -> String:
-	GameState.new_game("探针", "灰旗", "#6ED4FF")
+	GameState.new_game("探针", "灰旗", "#" + "6ED4FF")
 	var leader: CKCharacter = GameState.get_leader()
 	if leader == null or not leader.is_leader:
 		return "roster has no leader"

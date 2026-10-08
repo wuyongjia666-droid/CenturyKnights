@@ -65,11 +65,11 @@ static func refresh(host) -> void:
 	var mode := ""
 	if u.team == "player" and not u.done:
 		if host.attack_mode:
-			mode = "[color=#e07070]【攻击模式】点击红格敌人[/color]\n"
+			mode = BattleRules._rich(UIKit.DANGER, "【攻击模式】点击红格敌人")
 		elif host.moved_this_select:
-			mode = "[color=#c9a227]【已移动】可攻击 / 待命[/color]\n"
+			mode = BattleRules._rich(UIKit.ACCENT, "【已移动】可攻击 / 待命")
 		else:
-			mode = "[color=#6db0e0]【已选中】点击蓝格移动，或开攻击模式[/color]\n"
+			mode = BattleRules._rich(UIKit.ACCENT, "【已选中】点击蓝格移动，或开攻击模式")
 	var role = BattleRules.role_label(BattleRules.job_role(c.job_id))
 	var foes = host._enemy_positions(u.team)
 	var engaged = BattleRules.is_engaged(u.pos, foes)
