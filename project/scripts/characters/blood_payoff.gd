@@ -7,6 +7,10 @@ extends RefCounted
 const SHOWN := ["royal", "noble"]
 
 
+static func _zh(key: String, args: Array = []) -> String:
+	return CKBloodPayoff.new().tr(Locale.t(key, args))
+
+
 static func rows() -> Array:
 	var raw = CKBloodline.data().get("tactics", [])
 	return raw if typeof(raw) == TYPE_ARRAY else []
@@ -189,8 +193,7 @@ static func royal_tier_forecast(father: Object, mother: Object) -> Array:
 static func royal_tier_forecast_zh(father: Object, mother: Object, limit: int = 1) -> String:
 	var rows := royal_tier_forecast(father, mother)
 	if rows.is_empty():
-		return "王技阶：这对父母没有可预期的显冕。"
-	var names := {1: "残响", 2: "正冕", 3: "满冕"}
+		return _zh("royal_forecast_none")
 	var bits: Array = []
 	for row in rows.slice(0, limit):
 		var best := 1
@@ -200,8 +203,8 @@ static func royal_tier_forecast_zh(father: Object, mother: Object, limit: int = 
 			if p > bp:
 				bp = p
 				best = tier
-		bits.append("%s · %s %d%%" % [str(row.get("zh", "")), names[best], int(round(bp * 100.0))])
-	return "王技阶 " + "；".join(bits)
+		bits.append("%s · %s %d%%" % [str(row.get("zh", "")), _zh("tier_%d" % best), int(round(bp * 100.0))])
+	return _zh("royal_forecast_prefix", ["；".join(bits)])
 
 
 static func _mix_blood(a: Object, b: Object) -> Dictionary:

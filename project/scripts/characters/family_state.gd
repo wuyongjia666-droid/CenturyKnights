@@ -100,8 +100,14 @@ static func build_dynasty_journal(host) -> String:
 	return host.dynasty_journal
 
 
-const STAT_ZH := {"str": "力", "vit": "体", "skl": "技", "agi": "敏", "per": "感", "wil": "志"}
-const TIER_ZH := {1: "残响", 2: "正冕", 3: "满冕"}
+static func _zh(key: String, args: Array = []) -> String:
+	return CKFamilyState.new().tr(Locale.t(key, args))
+
+
+static func _tier_zh(tier: int) -> String:
+	if tier <= 0:
+		return _zh("tier_hidden")
+	return _zh("tier_%d" % tier)
 
 
 ## Unborn child: aptitude band, tactical-trait odds, royal-skill tier odds.
@@ -110,10 +116,10 @@ static func combat_expectation(a: Object, b: Object) -> Dictionary:
 	if a == null or b == null:
 		return {
 			"apt_min": {}, "apt_max": {},
-			"apt_zh": "资质区间：选定双方后显示。",
-			"tactics": [], "tactics_zh": "战术禀性：选定双方后显示。",
-			"royal_tiers": [], "royal_zh": "王技阶：选定双方后显示。",
-			"line": "战斗投影：选定双方后显示子嗣的资质、战术禀性与王技阶。",
+			"apt_zh": _zh("expect_apt_empty"),
+			"tactics": [], "tactics_zh": _zh("expect_tactic_empty"),
+			"royal_tiers": [], "royal_zh": _zh("expect_royal_empty"),
+			"line": _zh("expect_line_empty"),
 		}
 	var father: Object = b if str(a.get("gender")) == "f" and str(b.get("gender")) == "m" else a
 	var mother: Object = a if father == b else b
@@ -134,7 +140,7 @@ static func combat_expectation(a: Object, b: Object) -> Dictionary:
 		"tactics_zh": tactics_zh,
 		"royal_tiers": tiers,
 		"royal_zh": royal_zh,
-		"line": "战斗投影：%s。%s。%s。" % [apt_zh, tactics_zh, royal_zh],
+		"line": _zh("expect_line", [apt_zh, tactics_zh, royal_zh]),
 	}
 
 
@@ -142,13 +148,13 @@ static func combat_expectation(a: Object, b: Object) -> Dictionary:
 static func child_archive(host, child: Object) -> Dictionary:
 	var blank := {
 		"parents": [],
-		"apt_zh": "资质区间：谱上还没有这个人。",
+		"apt_zh": _zh("archive_apt_missing"),
 		"tactics_now": {},
-		"tactics_zh": "战术禀性：—",
+		"tactics_zh": _zh("archive_tactic_dash"),
 		"royal_tier": 0,
-		"royal_zh": "王技阶：—",
+		"royal_zh": _zh("archive_royal_dash"),
 		"forecast": {},
-		"line": "子嗣档案：谱上还没有这个人。",
+		"line": _zh("archive_line_missing"),
 	}
 	if host == null or child == null:
 		return blank
@@ -159,12 +165,12 @@ static func child_archive(host, child: Object) -> Dictionary:
 			parents.append(chars[str(pid)])
 	var apt_zh := _apt_band_zh(child.apt_min, child.apt_max)
 	if apt_zh == "":
-		apt_zh = "资质区间：已成年，区间写在出生页。"
+		apt_zh = _zh("archive_apt_grown")
 	var mods: Dictionary = CKBloodPayoff.tactical_mods(child)
 	var tier := CKBloodPayoff.royal_skill_tier(child)
 	var forecast := {}
 	var tactics_zh := _mods_zh(mods)
-	var royal_zh := "王技阶 现为 %s" % (TIER_ZH.get(tier, "未显") if tier > 0 else "未显")
+	var royal_zh := _zh("archive_royal_now", [_tier_zh(tier)])
 	if parents.size() >= 2:
 		forecast = combat_expectation(parents[0], parents[1])
 		tactics_zh = str(forecast.get("tactics_zh", tactics_zh))
@@ -177,7 +183,7 @@ static func child_archive(host, child: Object) -> Dictionary:
 		"royal_tier": tier,
 		"royal_zh": royal_zh,
 		"forecast": forecast,
-		"line": "子嗣档案：%s。%s。%s。" % [apt_zh, tactics_zh, royal_zh],
+		"line": _zh("archive_line", [apt_zh, tactics_zh, royal_zh]),
 	}
 
 
@@ -188,26 +194,26 @@ static func _apt_band_zh(amin, amax) -> String:
 	for k in CKCharacter.STAT_KEYS:
 		if not amin.has(k):
 			continue
-		bits.append("%s%d-%d" % [STAT_ZH.get(k, k), int(amin[k]), int(amax.get(k, amin[k]))])
+		bits.append("%s%d-%d" % [_zh("apt_stat_" + str(k)), int(amin[k]), int(amax.get(k, amin[k]))])
 	if bits.is_empty():
 		return ""
-	return "资质区间 " + " ".join(bits)
+	return _zh("archive_apt_band", [" ".join(bits)])
 
 
 static func _tactics_zh(rows: Array, limit: int) -> String:
 	if rows.is_empty():
-		return "战术禀性：没有可预期的条目"
+		return _zh("archive_tactic_none")
 	var bits: Array = []
 	for t in rows.slice(0, limit):
 		bits.append("%s %d%%（%s）" % [str(t.get("zh", "")), int(round(float(t.get("p", 0.0)) * 100.0)), str(t.get("effect", ""))])
-	return "战术禀性 " + "、".join(bits)
+	return _zh("archive_tactic_list", ["、".join(bits)])
 
 
 static func _mods_zh(mods: Dictionary) -> String:
 	if mods.is_empty():
-		return "战术禀性：尚未显出"
+		return _zh("archive_tactic_unshown")
 	var bits: Array = []
 	for k in mods.keys():
 		bits.append("%s +%s" % [str(k), str(mods[k])])
-	return "战术禀性 " + "、".join(bits)
+	return _zh("archive_tactic_list", ["、".join(bits)])
 

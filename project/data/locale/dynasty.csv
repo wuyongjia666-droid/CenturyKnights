@@ -13,3 +13,31 @@ archive_title,子嗣档案,
 archive_apt,资质区间,
 archive_tactic,战术禀性,
 archive_royal,王技阶,
+tier_1,残响,Thin crown
+tier_2,正冕,True crown
+tier_3,满冕,Full crown
+tier_hidden,未显,Unshown
+royal_forecast_none,王技阶：这对父母没有可预期的显冕。,No crown is expected from these parents.
+royal_forecast_prefix,王技阶 %s,Crown tier %s
+apt_stat_str,力,Str
+apt_stat_vit,体,Vit
+apt_stat_skl,技,Skl
+apt_stat_agi,敏,Agi
+apt_stat_per,感,Per
+apt_stat_wil,志,Wil
+expect_apt_empty,资质区间：选定双方后显示。,Aptitude appears after both parents are chosen.
+expect_tactic_empty,战术禀性：选定双方后显示。,Tactics appear after both parents are chosen.
+expect_royal_empty,王技阶：选定双方后显示。,Crown tier appears after both parents are chosen.
+expect_line_empty,战斗投影：选定双方后显示子嗣的资质、战术禀性与王技阶。,The forecast appears after both parents are chosen.
+expect_line,战斗投影：%s。%s。%s。,Forecast: %s. %s. %s.
+archive_apt_missing,资质区间：谱上还没有这个人。,This person is not on the roster.
+archive_tactic_dash,战术禀性：—,Tactics: —
+archive_royal_dash,王技阶：—,Crown tier: —
+archive_line_missing,子嗣档案：谱上还没有这个人。,No archive for this person.
+archive_apt_grown,资质区间：已成年，区间写在出生页。,Grown. The band is on the birth page.
+archive_royal_now,王技阶 现为 %s,Crown tier is now %s
+archive_line,子嗣档案：%s。%s。%s。,Archive: %s. %s. %s.
+archive_apt_band,资质区间 %s,Aptitude %s
+archive_tactic_none,战术禀性：没有可预期的条目,No tactical trait is expected
+archive_tactic_list,战术禀性 %s,Tactics %s
+archive_tactic_unshown,战术禀性：尚未显出,No tactical trait is shown yet
