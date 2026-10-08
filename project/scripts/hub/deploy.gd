@@ -7,14 +7,16 @@ var _cards: Control
 var _metrics: Control
 var _focus: CKCharacter
 var _count: Label
+var _head: Control
+var _matrix: Control
 
 func _ready() -> void:
 	UIKit.void_bg(self)
 	UIKit.top_bar(self, "出战编成 · DEPLOYMENT", [["编制上限", "%d 人" % GameState.max_deploy(), UIKit.ACCENT], ["厅堂", "LV %d" % GameState.building_level("hall"), UIKit.TEXT], ["历", Calendar.label(), UIKit.TEXT_DIM]], "返回城堡", _back)
-	UIKit.page_head(self, 42, 70, "TACTICAL DEPLOYMENT // PROT.07", "出战编成", "CENTURY KNIGHTS : THE FROST MARCH", "点选卡片切换出战；棋盘上以立绘棋子示人。")
-	var sh := UIKit.mono("BATTLE VANGUARD MATRIX", 9, UIKit.ACCENT, false)
-	sh.position = Vector2(42, 168)
-	add_child(sh)
+	_head = UIKit.page_head(self, 42, 70, "TACTICAL DEPLOYMENT // PROT.07", "出战编成", "CENTURY KNIGHTS : THE FROST MARCH", "点选卡片切换出战；棋盘上以立绘棋子示人。")
+	_matrix = UIKit.mono("BATTLE VANGUARD MATRIX", 9, UIKit.ACCENT, false)
+	_matrix.position = Vector2(42, 168)
+	add_child(_matrix)
 	_count = UIKit.body_label("", UIKit.TEXT_DIM, 11)
 	_count.autowrap_mode = TextServer.AUTOWRAP_OFF
 	_count.position = Vector2(220, 165)
@@ -32,10 +34,89 @@ func _ready() -> void:
 			break
 	if _focus == null and not roster.is_empty():
 		_focus = roster[0]
-	_render()
 	UIKit.footer_bar(self, [["A", "切换出战"], ["←→", "移动选位"], ["ENTER", "出战"], ["ESC", "返回城堡"]], "DEPLOYMENT // MAX %d · v8.6" % GameState.max_deploy())
+	resized.connect(_on_resized)
+	_fit_chrome()
+	_render()
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
+
+
+func _on_resized() -> void:
+	_fit_chrome()
+	_render()
+
+
+## Phone chrome calls this after the safe-area fit. Use the tall viewport instead of a scaled 1280x720 page.
+func apply_mobile_layout() -> void:
+	var vp := get_viewport().get_visible_rect().size
+	set_anchors_preset(Control.PRESET_TOP_LEFT)
+	anchor_right = 0.0
+	anchor_bottom = 0.0
+	scale = Vector2.ONE
+	position = Vector2.ZERO
+	size = vp
+	_fit_chrome()
+	_render()
+
+
+func _view() -> Vector2:
+	if size.x >= 64.0 and size.y >= 64.0:
+		return size
+	if is_inside_tree():
+		return get_viewport().get_visible_rect().size
+	return Vector2(1280, 720)
+
+
+func _insets() -> Dictionary:
+	var raw = get_meta("mobile_insets", {})
+	if typeof(raw) != TYPE_DICTIONARY:
+		return {"left": 0.0, "top": 0.0, "right": 0.0, "bottom": 0.0}
+	return raw
+
+
+func _portrait() -> bool:
+	var v := _view()
+	if v.x < 64.0:
+		return false
+	return v.x < 1240.0 or v.y > v.x * 1.2
+
+
+func _fit_chrome() -> void:
+	var v := _view()
+	var ins := _insets()
+	var bar := get_node_or_null("StitchTopBar") as Control
+	var foot := get_node_or_null("StitchFooter") as Control
+	if not _portrait():
+		return
+	var left := maxf(16.0, float(ins.get("left", 0.0)))
+	var right := maxf(12.0, float(ins.get("right", 0.0)))
+	if bar:
+		bar.size.x = v.x
+		for ch in bar.get_children():
+			if ch is Control and float(ch.size.x) >= 1200.0:
+				ch.size.x = v.x
+		var row := bar.get_child(bar.get_child_count() - 1) as Control
+		if row:
+			row.position.x = minf(400.0, maxf(220.0, v.x * 0.28))
+			row.size.x = maxf(120.0, v.x - row.position.x - right)
+	if _head:
+		_head.position.x = left
+		_head.size.x = maxf(120.0, v.x - left - right)
+		_head.clip_contents = true
+	if _matrix:
+		_matrix.position.x = left
+	if _count:
+		_count.position = Vector2(left + 200.0, 148.0)
+	if foot:
+		var bottom := maxf(0.0, float(ins.get("bottom", 0.0)))
+		foot.position = Vector2(0, v.y - bottom - foot.size.y)
+		foot.size.x = v.x
+		for ch in foot.get_children():
+			if ch is Control and float(ch.size.x) >= 1200.0:
+				ch.size.x = v.x
+			elif ch is Label and ch.position.x > 800.0:
+				ch.position.x = v.x - right - ch.get_minimum_size().x
 
 func _back() -> void:
 	get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
@@ -100,10 +181,25 @@ func _render() -> void:
 	var slots := maxi(roster.size(), GameState.max_deploy())
 	slots = mini(slots, 6)
 	var gap := 12.0
-	var cw := minf(196.0, floorf((818.0 - gap * float(slots - 1)) / float(slots)))
+	var origin := Vector2(42, 192)
+	var row_w := 818.0
+	var ch := 470.0
+	var cols := slots
+	if _portrait():
+		var v := _view()
+		var ins := _insets()
+		var left := maxf(16.0, float(ins.get("left", 0.0)))
+		var right := maxf(12.0, float(ins.get("right", 0.0)))
+		origin = Vector2(left, maxf(188.0, float(ins.get("top", 0.0)) + 92.0))
+		row_w = maxf(160.0, v.x - left - right)
+		cols = 2 if row_w < 640.0 else mini(3, slots)
+		ch = 248.0
+	var cw := minf(196.0, floorf((row_w - gap * float(maxi(cols - 1, 0))) / float(maxi(cols, 1))))
 	var focus_btn: Button = null
 	for i in range(slots):
-		var r := Rect2(42 + i * (cw + gap), 192, cw, 470)
+		var col := i % cols
+		var row := int(i / cols)
+		var r := Rect2(origin.x + col * (cw + gap), origin.y + row * (ch + gap), cw, ch)
 		if i < roster.size():
 			var b := _card(roster[i], i, r)
 			if roster[i] == _focus:
@@ -157,9 +253,10 @@ func _card(c: CKCharacter, i: int, r: Rect2) -> Button:
 	var st := UIKit.tag_chip(chip, chip_col, on and hurt == "")
 	st.position = Vector2(r.size.x - 10 - st.get_minimum_size().x, 8)
 	b.add_child(st)
+	var compact := r.size.y < 320.0
 	var plate := Panel.new()
 	plate.position = Vector2(14, 44)
-	plate.size = Vector2(r.size.x - 28, 160)
+	plate.size = Vector2(r.size.x - 28, 88.0 if compact else 160.0)
 	plate.clip_contents = true
 	plate.add_theme_stylebox_override("panel", UIKit.flat_box(Color(0, 0, 0, 0.25), Color(1, 1, 1, 0.12), 6))
 	plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -173,16 +270,19 @@ func _card(c: CKCharacter, i: int, r: Rect2) -> Button:
 	if not on:
 		pr.modulate = Color(0.7, 0.74, 0.82)
 	plate.add_child(pr)
+	var name_y := plate.position.y + plate.size.y + 8.0
 	var nm := UIKit.title_label(c.name, 15, UIKit.TEXT)
-	nm.position = Vector2((r.size.x - nm.get_minimum_size().x) * 0.5, 218)
+	nm.position = Vector2((r.size.x - nm.get_minimum_size().x) * 0.5, name_y)
 	b.add_child(nm)
 	var jb := UIKit.body_label(str(GameState.get_job(c.job_id).get("name", "")), UIKit.ACCENT if on else UIKit.TEXT_DIM, 12)
 	jb.autowrap_mode = TextServer.AUTOWRAP_OFF
-	jb.position = Vector2((r.size.x - jb.get_minimum_size().x) * 0.5, 244)
+	jb.position = Vector2((r.size.x - jb.get_minimum_size().x) * 0.5, name_y + 26.0)
 	b.add_child(jb)
 	var lv := UIKit.mono("LV.%02d · %d 岁" % [c.level, c.age], 8, UIKit.TEXT_FAINT, false)
-	lv.position = Vector2((r.size.x - lv.get_minimum_size().x) * 0.5, 268)
+	lv.position = Vector2((r.size.x - lv.get_minimum_size().x) * 0.5, name_y + 48.0)
 	b.add_child(lv)
+	if compact:
+		return b
 	var hl := UIKit.hairline(Color(1, 1, 1, 0.08))
 	hl.position = Vector2(12, r.size.y - 126)
 	hl.size = Vector2(r.size.x - 24, 1)
@@ -228,6 +328,25 @@ func _vacant(i: int, r: Rect2) -> void:
 
 func _render_metrics() -> void:
 	var R := Rect2(880, 112, 376, 568)
+	if _portrait():
+		var v := _view()
+		var ins := _insets()
+		var left := maxf(16.0, float(ins.get("left", 0.0)))
+		var right := maxf(12.0, float(ins.get("right", 0.0)))
+		var bottom := maxf(8.0, float(ins.get("bottom", 0.0)))
+		var foot := get_node_or_null("StitchFooter") as Control
+		var foot_top := v.y - bottom - 28.0
+		if foot:
+			foot_top = foot.position.y
+		var top := 188.0
+		if _cards.get_child_count() > 0:
+			var lowest := 0.0
+			for ch in _cards.get_children():
+				if ch is Control:
+					lowest = maxf(lowest, ch.position.y + ch.size.y)
+			top = lowest + 16.0
+		var height := maxf(240.0, foot_top - 12.0 - top)
+		R = Rect2(left, top, maxf(160.0, v.x - left - right), height)
 	UIKit.panel_at(_metrics, R, 10, true)
 	if _focus == null:
 		return
@@ -281,6 +400,7 @@ func _render_metrics() -> void:
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_metrics.add_child(note)
 	var go := UIKit.cta_button("出战 · 练习战（清匪）", "ENTER", int(w), 52)
+	go.name = "Fight"
 	go.position = Vector2(x, R.end.y - 76)
 	go.disabled = GameState.deploy_ids.is_empty()
 	go.tooltip_text = "至少选择一名出战者" if go.disabled else "START CRUSADE"

@@ -70,6 +70,45 @@ func _run() -> String:
 	_deploy._nudge_slot(1)
 	if GameState.deploy_ids[0] != before[1] or GameState.deploy_ids[1] != before[0]:
 		return "nudge %s" % GameState.deploy_ids
+	return await _narrow()
+
+
+func _narrow() -> String:
+	var vp := SubViewport.new()
+	vp.size = Vector2i(1080, 2400)
+	vp.disable_3d = true
+	add_child(vp)
+	var phone := load("res://scenes/hub/deploy.tscn").instantiate() as Control
+	phone.set_meta("mobile_insets", {"left": 0.0, "top": 96.0, "right": 0.0, "bottom": 72.0})
+	vp.add_child(phone)
+	await get_tree().process_frame
+	phone.apply_mobile_layout()
+	await get_tree().process_frame
+	var view := Vector2(vp.size)
+	var map: Control = null
+	var fight: Control = null
+	for n in phone._metrics.get_children():
+		if n is DeployMinimap:
+			map = n
+		elif n is Button and str(n.name) == "Fight":
+			fight = n
+	if map == null or fight == null:
+		return "narrow widgets"
+	if map.position.x < 0.0 or map.position.x + map.size.x > view.x - 8.0:
+		return "map x %s" % map.position
+	if fight.position.x < 0.0 or fight.position.x + fight.size.x > view.x - 8.0:
+		return "fight x %s size %s" % [fight.position, fight.size]
+	if fight.position.y + fight.size.y > view.y - 72.0:
+		return "fight in safe bottom %s" % fight.position
+	var bar := phone.get_node_or_null("StitchTopBar") as Control
+	if bar == null or bar.size.x > view.x:
+		return "top bar %s" % (bar.size if bar else Vector2.ZERO)
+	var foot := phone.get_node_or_null("StitchFooter") as Control
+	if foot == null or foot.position.y + foot.size.y > view.y - 72.0 + 0.5:
+		return "footer %s" % (foot.position if foot else Vector2.ZERO)
+	for ch in phone._cards.get_children():
+		if ch is Control and ch.position.x + ch.size.x > view.x - 8.0:
+			return "card clip %s" % ch.position
 	return ""
 
 
