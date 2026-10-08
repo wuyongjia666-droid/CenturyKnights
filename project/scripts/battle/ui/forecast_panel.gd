@@ -8,7 +8,12 @@ static func sides(attacker: CKCharacter, defender: CKCharacter, terrain_id: Stri
 	var back_tid: String = counter_terrain if counter_terrain != "" else terrain_id
 	var theirs := {}
 	if counter and defender.hp > 0:
-		theirs = BattleRules.preview(defender, attacker, back_tid, {})
+		var back_ex := {
+			"counter": true,
+			"night": bool(extras.get("night", false)),
+			"opening": bool(extras.get("foe_opening", false)),
+		}
+		theirs = BattleRules.preview(defender, attacker, back_tid, back_ex)
 	return {
 		"hit": int(ours.hit),
 		"dmg_lo": int(ours.dmg.x),

@@ -105,6 +105,24 @@
 
 面板与锁定教学文案走 `engagement_note` 和这两个常量。以前面板写的是「锁定 +2、交战 +1」，和实际传给 `move_costs` 的 3 / 2 不一致。现在文案直接显示常量。
 
+## 血统战术
+
+`tac` 读 `CKCharacter.tactical_amount`。基因组为空时返回 0，避免公式夹具在第一次查询时抽开国者。键和效果：
+
+| 键 | 效果 | 代码 |
+|---|---|---|
+| range_high | 站在丘上时攻击距离 +数量 | `attack_reach` |
+| counter | `extras.counter` 时伤害 +数量 | `calc_damage_range` |
+| night_hit | `extras.night` 时命中 +数量 | `calc_hit` |
+| first_hit | `extras.opening` 时命中 +数量 | `calc_hit` |
+| forest_avo | 守在林中时回避 +数量 | `calc_hit` |
+| zoc_ignore | 可忽略控带的次数 | `zoc_charges` |
+| fort_def | 守在垒上时防御 +数量 | `calc_damage_range` |
+| push | 命中后击退格数，再加技能的 push | `push_tiles` |
+| heal_pulse | 己方回合开始时治疗 | `heal_pulse` |
+
+王技伤害走 `royal_damage`：读 `royal_skill_scale(nation)`。倍率 ≤ 0 时不改原伤害。正冕 1.0 保持原值，残响 0.6，满冕 1.35。
+
 ## 手算抽查
 
 全属性 8、1 级、无特质、无武器。轻步对轻步、平地、无夹击：

@@ -1048,7 +1048,8 @@ func _draw_overlay() -> void:
 	if selected >= 0 and selected < units.size():
 		var u = units[selected]
 		if u.team == "player" and not u.done:
-			var max_r = 1 if _is_melee(u.char) else 2
+			var stand_tid := str(terrain[u.pos.y][u.pos.x]) if _in_bounds(u.pos) else "plain"
+			var max_r = BattleRules.attack_reach(u.char, stand_tid)
 			for y in MAP_H:
 				for x in MAP_W:
 					var ap = Vector2i(x, y)
@@ -1443,9 +1444,10 @@ func _can_attack_from(su: Dictionary, cell: Vector2i) -> bool:
 	var d = _manhattan(su.pos, cell)
 	if d < 1:
 		return false
-	if _is_melee(su.char):
-		return d == 1
-	return d <= 2
+	var tid := "plain"
+	if _in_bounds(su.pos):
+		tid = str(terrain[su.pos.y][su.pos.x])
+	return d <= BattleRules.attack_reach(su.char, tid)
 
 func _click_cell(cell: Vector2i) -> void:
 	var ui = _unit_at(cell)
@@ -1466,7 +1468,9 @@ func _click_cell(cell: Vector2i) -> void:
 				_refresh_info_for(ui)
 				return
 			if ui < 0 and not attack_mode and not moved_this_select and move_cells.has(cell):
+				var origin_cell: Vector2i = su.pos
 				su.pos = cell
+				_spend_zoc(su, origin_cell, cell)
 				moved_this_select = true
 				move_cells.clear()
 				_spawn_move_dust(cell)
@@ -1527,7 +1531,7 @@ func _ally_zoc_extra(for_team: String) -> int:
 func _compute_move_cells(ui: int) -> Dictionary:
 	var u = units[ui]
 	var foes = _enemy_positions(u.team)
-	var ignore = bool(u.char.temp_ignore_zoc)
+	var ignore = bool(u.char.temp_ignore_zoc) or int(u.get("zoc_used", 0)) < BattleRules.zoc_charges(u.char)
 	var leave_free = bool(u.char.temp_leave_free)
 	var zoc_extra = 0
 	# 敌方移动时吃我方方阵/钉地
@@ -1588,7 +1592,7 @@ func _do_attack(ai: int, di: int) -> void:
 		else:
 			_log("%s 反击！" % def.char.name)
 			_spawn_dmg(atk.pos, "反击", Color(0.85, 0.55, 0.95))
-		_resolve_strike(di, ai, false)
+		_resolve_strike(di, ai, false, true)
 		if bonus > 0:
 			def.char.temp_hit_bonus = maxi(0, def.char.temp_hit_bonus - bonus)
 	atk.done = true
@@ -1672,7 +1676,34 @@ func _combat_extras(ai: int, di: int) -> Dictionary:
 		var tid2 = terrain[def.pos.y][def.pos.x]
 		if tid2 == "fort":
 			extras["flat_def"] = int(extras.get("flat_def", 0)) + 1
+	extras["night"] = _battle_night()
+	extras["opening"] = not bool(atk.get("has_struck", false))
+	extras["foe_opening"] = not bool(def.get("has_struck", false))
 	return extras
+
+
+func _battle_night() -> bool:
+	if map_id.to_lower().find("night") >= 0:
+		return true
+	return AtlasArt.biome_for_map(map_id) == "nightcamp"
+
+
+func _spend_zoc(u, origin: Vector2i, dest: Vector2i) -> void:
+	if int(u.get("zoc_used", 0)) >= BattleRules.zoc_charges(u.char):
+		return
+	var foes := _enemy_positions(str(u.team))
+	if BattleRules.in_zoc(origin, foes) or BattleRules.in_zoc(dest, foes):
+		u["zoc_used"] = int(u.get("zoc_used", 0)) + 1
+
+
+func _pulse_heal(team: String) -> void:
+	for u in units:
+		if str(u.team) != team or u.char.hp <= 0:
+			continue
+		var amt := BattleRules.heal_pulse(u.char)
+		if amt <= 0:
+			continue
+		u.char.hp = mini(u.char.max_hp, u.char.hp + amt)
 
 func _apply_combat_lock(ai: int, di: int) -> void:
 	# 双方进入交战锁定（再交战刷新至 2）
@@ -1692,7 +1723,7 @@ func _apply_combat_lock(ai: int, di: int) -> void:
 		_clear_lock_practice_banner()
 		_show_lock_tip_panel("练习完成", "交战锁定已体验。之后正式对局也会出现此效果。", 2, 4.0)
 
-func _resolve_strike(ai: int, di: int, allow_skill: bool) -> void:
+func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = false) -> void:
 
 	var atk = units[ai]
 	var def = units[di]
@@ -1701,6 +1732,8 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool) -> void:
 	var _hp_before: int = int(def.char.hp)
 	var tid = terrain[def.pos.y][def.pos.x]
 	var extras = _combat_extras(ai, di)
+	if is_counter:
+		extras["counter"] = true
 	var skill_id = ""
 	var sk = {}
 	if allow_skill and skill_mode and active_skill_id != "" and (atk.team == "player" or atk.team == "enemy"):
@@ -1725,6 +1758,7 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool) -> void:
 			dmg = int(round(dmg * float(sk.get("dmg_mul", 1.0))))
 			if int(sk.get("vs_tank_bonus", 0)) > 0 and BattleRules.job_role(def.char.job_id) == "tank":
 				dmg += int(sk.get("vs_tank_bonus", 0))
+			dmg = BattleRules.royal_damage(atk.char, str(sk.get("blood_sig", "")), dmg)
 			if rng.randi_range(1, 100) <= atk.char.derived_crit():
 				crit = true
 				Sfx.crit()
@@ -1787,10 +1821,6 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool) -> void:
 			def.char.temp_exposed = maxi(def.char.temp_exposed, int(sk.get("expose", 0)))
 			_spawn_dmg(def.pos, "破防", Color(0.9, 0.6, 0.3))
 			msg += " · 破防"
-		if int(sk.get("push", 0)) > 0:
-			if _try_push(ai, di):
-				msg += " · 击退"
-				_spawn_dmg(def.pos, "击退", Color(0.7, 0.8, 1.0))
 		if float(sk.get("cleave_pct", 0)) > 0:
 			var cleave_dmg = maxi(1, int(result.damage * float(sk.get("cleave_pct", 0))))
 			for j in units.size():
@@ -1809,6 +1839,18 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool) -> void:
 					break
 	if atk.char.temp_crit_bonus != 0 and allow_skill:
 		atk.char.temp_crit_bonus = 0
+	var skill_push := int(sk.get("push", 0)) if skill_id != "" and str(sk.get("type", "")) == "offense" else 0
+	var push_n := BattleRules.push_tiles(atk.char, skill_push) if result.hit else 0
+	if push_n > 0:
+		var pushed := 0
+		for _step in push_n:
+			if not _try_push(ai, di):
+				break
+			pushed += 1
+		if pushed > 0:
+			msg += " · 击退"
+			_spawn_dmg(def.pos, "击退", Color(0.7, 0.8, 1.0))
+	units[ai]["has_struck"] = true
 	_log(msg)
 
 func _try_push(ai: int, di: int) -> bool:
@@ -1869,6 +1911,7 @@ func _start_player_turn() -> void:
 			if u.char.temp_combat_lock > 0:
 				u.char.temp_combat_lock -= 1
 			pcs.append(u.char)
+	_pulse_heal("player")
 	GameState.tick_skill_cooldowns(pcs)
 	selected = -1
 	move_cells.clear()
@@ -1897,6 +1940,7 @@ func _end_player_turn() -> void:
 		_phase_chip.add_theme_color_override("font_color", UIKit.DANGER)
 	phase_label.add_theme_color_override("font_color", UIKit.DANGER)
 	_turn_flash = 0.9
+	_pulse_heal("enemy")
 	for u in units:
 		if u.team == "enemy":
 			u.char.temp_exposed = 0
@@ -2345,7 +2389,8 @@ func _enemy_ai() -> void:
 				if not _same_side("player", str(t.team)) or t.char.hp <= 0:
 					continue
 				var d = _manhattan(pos, t.pos)
-				var can_hit = (d == 1) if melee else (d >= 1 and d <= 2)
+				var reach := BattleRules.attack_reach(u.char, str(stand_tid))
+				var can_hit = d >= 1 and d <= reach
 				if not can_hit:
 					var approach = -float(d) * 2.0
 					if not melee and d == 1:
@@ -2403,13 +2448,16 @@ func _enemy_ai() -> void:
 					best_pos = pos
 					best_target = j
 		if best_pos != u.pos:
+			var origin_ai: Vector2i = u.pos
 			u.pos = best_pos
+			_spend_zoc(u, origin_ai, best_pos)
 			_spawn_move_dust(best_pos)
 			_log("%s 机动至 (%d,%d)" % [u.char.name, best_pos.x, best_pos.y])
 			map_draw.queue_redraw()
 		if best_target >= 0:
 			var d2 = _manhattan(u.pos, units[best_target].pos)
-			var ok = (d2 == 1) if melee else (d2 >= 1 and d2 <= 2)
+			var reach2 := BattleRules.attack_reach(u.char, str(terrain[u.pos.y][u.pos.x]))
+			var ok = d2 >= 1 and d2 <= reach2
 			if ok:
 				var tgt = units[best_target]
 				# 敌方进攻战技
