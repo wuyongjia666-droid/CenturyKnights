@@ -271,15 +271,15 @@ ENG_BIOME = {"fort": "fortified walls and gate towers", "urban": "dense contempo
              "shrine": "shrine courtyard and ancient tree"}
 ENG_NATION = {"ashbanner": "ash-grey plains citadels with luminous river veins", "shuoying": "deep indigo northern frost ridges, black obsidian spires",
               "qinghe": "jade river delta, pale mist orchards", "lantern": "glass lantern towers over a night sea, coastal market glow",
-              "frostcrown": "iceglass crystal halls on a high plateau", "emberold": "cracked magma-glass ruins under cool dusk",
+              "frostcrown": "iceglass crystal halls on a high plateau", "emberold": "desaturated slate-and-obsidian glass ruins under cool overcast cyan-white daylight, faint cyan plasma veins in cracked glass walls, muted cool greys only, no lava no orange fire no warm amber sunset",
               "saltmarsh": "tidal flats with pale salt crystal formations and reed haze", "irongorge": "vertical canyon forges in cold steel light",
               "starriver": "night river reflecting constellation bridges", "southzephyr": "luminous fog forest wetlands with ferry lights",
               "landbridge": "a colossal stone landbridge between two continents with relay forts"}
 ENG_MAT = {"ashsteel": "ash-grey layered steel", "obsidian": "light-absorbing black obsidian", "jade": "pale jade", "lampglass": "glowing lamp glass over steel",
-           "frostcrystal": "translucent frost crystal", "magmaglass": "dark magma glass with faint inner glow", "saltcrystal": "clear salt crystal",
+           "frostcrystal": "translucent frost crystal", "magmaglass": "desaturated dark glass with faint cool cyan inner glow, no orange magma", "saltcrystal": "clear salt crystal",
            "gorgesteel": "cold blue high-carbon steel", "stardust": "star-dust inlaid silver", "hardwood": "dense dark hardwood", "iron": "frosted brushed steel"}
 ENG_MOTIF = {"ashbanner": "faint luminous river-vein etching", "shuoying": "indigo wrap and night-court engraving", "qinghe": "jade inlay and flowing water engraving",
-             "lantern": "small glowing lamp-glass inset", "frostcrown": "crystal frost facets", "emberold": "cracked dark glass seams with faint inner glow",
+             "lantern": "small glowing lamp-glass inset", "frostcrown": "crystal frost facets", "emberold": "cracked desaturated glass seams with faint cyan plasma glow",
              "saltmarsh": "clear crystal shards and reed-wrapped grip", "irongorge": "cold blue forge-hammered facets", "starriver": "tiny star-dust constellation inlay",
              "southzephyr": "dark hardwood with woven vine wrap", "landbridge": "relay-courier frost trims"}
 ENG_TYPE = {"sword": "longsword", "blade": "single-edged sabre", "spear": "spear", "lance": "cavalry lance", "axe": "battle axe", "bow": "recurve longbow",
