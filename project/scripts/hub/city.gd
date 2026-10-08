@@ -706,13 +706,13 @@ func _tab_board() -> void:
 		_sel_quest = str(shown[0].id)
 	for q in shown:
 		var why := World.quest_locked_reason(q)
-		var lab := "%s【%s】%s%s" % ["★" if bool(q.get("sig", false)) else "", World.QUEST_KIND_ZH.get(str(q.kind), ""), q.title, "  ⛓" if bool(q.get("chain", false)) else ""]
+		var lab := "%s【%s】%s%s" % ["★" if bool(q.get("sig", false)) else "", World.quest_kind_label(str(q.kind)), q.title, "  ⛓" if bool(q.get("chain", false)) else ""]
 		var sub := "%d 银 · 声望 +%d · 期限 %d 日 · 险 %s" % [int(q.reward_silver), int(q.reward_rep), int(q.days_budget), "▮".repeat(int(q.danger))]
 		if why != "":
 			sub = "🔒 " + why
 		var b := _row_button(lab, sub, 388, str(q.id) == _sel_quest, why != "")
 		b.name = "Offer_" + str(q.id)
-		var badge := UIKit.title_label(str(World.QUEST_KIND_ZH.get(str(q.kind), "?")).substr(0, 1), 18, UIKit.EMBER if bool(q.get("sig", false)) else (Color("#C9B8FF") if bool(q.get("chain", false)) else UIKit.ACCENT))
+		var badge := UIKit.title_label(World.quest_kind_label(str(q.kind)).substr(0, 1), 18, UIKit.EMBER if bool(q.get("sig", false)) else (Color("#C9B8FF") if bool(q.get("chain", false)) else UIKit.ACCENT))
 		var tier_l := UIKit.mono("T%d" % int(q.tier), 8, UIKit.TEXT_FAINT, false)
 		tier_l.position = Vector2(14, 32)
 		tier_l.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -737,7 +737,7 @@ func _tab_board() -> void:
 		var st := "可交付" if here else ("待交付 @%s" % World.node(World.turn_in_city(q)).get("name", "") if str(q.state) == "ready" else "进行中 · 剩 %d 日" % maxi(0, int(q.get("deadline", 0)) - World.days_total))
 		var b2 := _row_button(str(q.title), st, 388, str(q.id) == _sel_quest, false)
 		b2.name = "Active_" + str(q.id)
-		var badge2 := UIKit.title_label("✓" if str(q.state) == "ready" else str(World.QUEST_KIND_ZH.get(str(q.kind), "?")).substr(0, 1), 18, UIKit.OK if str(q.state) == "ready" else UIKit.TEXT_DIM)
+		var badge2 := UIKit.title_label("✓" if str(q.state) == "ready" else World.quest_kind_label(str(q.kind)).substr(0, 1), 18, UIKit.OK if str(q.state) == "ready" else UIKit.TEXT_DIM)
 		badge2.position = Vector2(14, 10)
 		badge2.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		b2.add_child(badge2)

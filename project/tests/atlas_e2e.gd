@@ -15,6 +15,7 @@ func _ready() -> void:
 	_step_market()
 	await _step_quest_battle()
 	_step_deliver()
+	_step_twelve_commissions()
 	_step_events()
 	_step_tavern()
 	_step_depth()
@@ -211,6 +212,153 @@ func _step_deliver() -> void:
 		World.travel_to(dest)
 	var t: Dictionary = World.turn_in(str(q.id))
 	_ok(bool(t.ok), "turn in %s: %s" % [q.kind, t.msg])
+
+func _step_twelve_commissions() -> void:
+	print("--- STEP: twelve commissions ---")
+	var kinds := ["deliver", "escort", "hunt", "clear", "defend", "gather", "scout", "siege_aid", "bounty", "rescue", "convoy", "intel_race"]
+	var cargo_snap: Dictionary = World.cargo.duplicate()
+	var pos_snap := World.pos
+	var rivals := World.rivals_enabled
+	World.rivals_enabled = false
+	var city := "ash_capital"
+	World.rep_city[city] = 80
+	World.rep_nation[World.nation_of(city)] = 40
+	var r := RandomNumberGenerator.new()
+	r.seed = 91
+	for kind in kinds:
+		if _walk_commission(city, str(kind), r):
+			print("OK commission ", kind)
+		if not World.encounter.is_empty():
+			World.on_battle_end(true)
+		World.active.clear()
+		World.cargo = cargo_snap.duplicate()
+	World.cargo = cargo_snap
+	World.pos = pos_snap
+	World.rivals_enabled = rivals
+
+func _walk_commission(city: String, kind: String, r: RandomNumberGenerator) -> bool:
+	GameState.food = 800
+	GameState.silver = 8000
+	World.pos = city
+	World.cargo.clear()
+	World.active.clear()
+	if not World.encounter.is_empty():
+		World.encounter = {}
+	var q: Dictionary = World._make_quest(city, kind, 1, r)
+	if q.is_empty():
+		_err("%s quest was empty" % kind)
+		return false
+	if not World.boards.has(city):
+		World.board(city)
+	World.boards[city].offers.append(q)
+	if kind == "gather":
+		_stock_good(str(q.get("good", "")), int(q.get("qty", 1)))
+	var acc: Dictionary = World.accept_quest(city, str(q.id))
+	if not bool(acc.get("ok", false)):
+		_err("%s accept: %s" % [kind, str(acc.get("msg", ""))])
+		return false
+	if not _reach_objective(q):
+		return false
+	if _is_battle_kind(kind):
+		if not _prove_battle_objective(q):
+			return false
+	var live: Dictionary = World.quest_by_id(str(q.id))
+	if str(live.get("state", "")) != "ready":
+		_err("%s not ready (%s)" % [kind, str(live.get("state", ""))])
+		return false
+	var where := World.turn_in_city(live)
+	if World.pos != where:
+		World.travel_to(where)
+	if World.pos != where:
+		_err("%s could not reach turn-in %s" % [kind, where])
+		return false
+	var turned: Dictionary = World.turn_in(str(q.id))
+	if not bool(turned.get("ok", false)):
+		_err("%s turn-in: %s" % [kind, str(turned.get("msg", ""))])
+		return false
+	return true
+
+func _is_battle_kind(kind: String) -> bool:
+	return kind in ["hunt", "clear", "defend"] or World.OBJECTIVE_KINDS.has(kind)
+
+func _reach_objective(q: Dictionary) -> bool:
+	var kind := str(q.kind)
+	if kind == "gather":
+		World._check_gather_ready()
+		return true
+	if kind == "clear":
+		var edge: Array = q.edge
+		var start := str(edge[0]) if World.pos != str(edge[0]) else str(edge[1])
+		var other := str(edge[1]) if start == str(edge[0]) else str(edge[0])
+		if World.pos != start:
+			World.travel_to(start)
+		World.travel_to(other)
+		return true
+	World.travel_to(str(q.target))
+	return true
+
+func _prove_battle_objective(q: Dictionary) -> bool:
+	var kind := str(q.kind)
+	if World.encounter.is_empty():
+		_err("%s did not start an encounter" % kind)
+		return false
+	var mp: Dictionary = World.encounter.get("map", {})
+	var spec := BattleObjectives.spec(mp)
+	var want := str(World.OBJECTIVE_VICTORY.get(kind, "rout"))
+	if str(spec.get("type", "")) != want:
+		_err("%s objective %s wanted %s" % [kind, str(spec.get("type", "")), want])
+		return false
+	var rnd := 3 if want == "defend" else 1
+	var outcome := BattleObjectives.outcome(mp, _units_for_win(mp, spec), rnd)
+	if str(outcome.get("result", "")) != "win":
+		_err("%s BattleObjectives %s" % [kind, str(outcome)])
+		return false
+	if kind == "bounty":
+		var still: Array = _units_for_win(mp, spec)
+		still.append(_fake_unit("enemy", "", Vector2i(0, 0), 8))
+		var boss := BattleObjectives.outcome(mp, still, 1)
+		if str(boss.get("result", "")) != "win":
+			_err("bounty should win while other enemies live")
+			return false
+	World.on_battle_end(true)
+	return true
+
+func _units_for_win(mp: Dictionary, spec: Dictionary) -> Array:
+	var kind := str(spec.get("type", "rout"))
+	match kind:
+		"defend":
+			var units: Array = []
+			for tile in spec.get("tiles", []):
+				units.append(_fake_unit("player", "", _cell(tile), 8))
+			return units
+		"seize":
+			return [_fake_unit("player", "", _cell(spec.get("tile", [0, 0])), 8)]
+		"boss":
+			return [_fake_unit("enemy", str(spec.get("unit_tag", "")), Vector2i(1, 1), 0)]
+		"protect":
+			return [_fake_unit("ally", str(spec.get("unit_tag", "")), Vector2i.ZERO, 8)]
+		"escort":
+			return [_fake_unit("player", str(spec.get("npc", "")), _cell(spec.get("exit_tile", [0, 0])), 8)]
+		_:
+			return []
+
+func _fake_unit(team: String, tag: String, pos: Vector2i, hp: int) -> Dictionary:
+	var who := CKCharacter.new()
+	who.hp = hp
+	who.max_hp = 10
+	return {"char": who, "team": team, "pos": pos, "tag": tag}
+
+func _cell(value) -> Vector2i:
+	if typeof(value) == TYPE_ARRAY and value.size() >= 2:
+		return Vector2i(int(value[0]), int(value[1]))
+	return Vector2i.ZERO
+
+func _stock_good(good: String, qty: int) -> void:
+	var store := str(World.goods.get(good, {}).get("store", ""))
+	if store != "":
+		GameState.set(store, qty + 5)
+	else:
+		World.cargo[good] = qty
 
 func _step_events() -> void:
 	print("--- STEP: road events ---")

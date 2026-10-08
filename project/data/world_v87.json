@@ -5393,6 +5393,101 @@
    "silver": 34,
    "rep": 5,
    "battle": false
+  },
+  {
+   "kind": "siege_aid",
+   "titles": [
+    "{target}城门协防",
+    "守住{target}",
+    "{target}求协防"
+   ],
+   "brief": "{target}城门告急。赶到后守住城门三个回合，再在{target}领赏。",
+   "turn_in": "target",
+   "clients": [
+    "守门人",
+    "城吏",
+    "哨长"
+   ],
+   "silver": 90,
+   "rep": 11,
+   "battle": true
+  },
+  {
+   "kind": "bounty",
+   "titles": [
+    "点名：{foe_name}",
+    "{foe_name}的赏格",
+    "决斗{foe_name}"
+   ],
+   "brief": "{foe_name}在{target}一带。打倒此人即可，其余不用管。得胜后回{issuer}领赏。",
+   "turn_in": "issuer",
+   "foe_names": [
+    "江岸刀客",
+    "逃营哨长",
+    "盐道刺客",
+    "桥头刀客",
+    "夜市刀手"
+   ],
+   "silver": 80,
+   "rep": 9,
+   "battle": true
+  },
+  {
+   "kind": "rescue",
+   "titles": [
+    "救出{client}",
+    "{target}有人被困",
+    "带回{client}"
+   ],
+   "brief": "{client}被困在{target}。清场并让此人活着。得胜后回{issuer}复命。",
+   "turn_in": "issuer",
+   "clients": [
+    "信使",
+    "药师",
+    "账房",
+    "船工",
+    "学徒"
+   ],
+   "silver": 76,
+   "rep": 8,
+   "battle": true
+  },
+  {
+   "kind": "convoy",
+   "titles": [
+    "护送货队过{target}",
+    "{client}的货队要过{target}",
+    "护住去{target}的货队"
+   ],
+   "brief": "把{client}的货队带到{target}的出口。货队倒下则这单失败。到达后在{target}交付。",
+   "turn_in": "target",
+   "clients": [
+    "盐商",
+    "货主",
+    "船主",
+    "药商"
+   ],
+   "silver": 70,
+   "rep": 8,
+   "battle": true
+  },
+  {
+   "kind": "intel_race",
+   "titles": [
+    "抢下{target}的密录",
+    "{target}的情报点",
+    "先到{target}的档案"
+   ],
+   "brief": "{target}有一处档案还没被人拿走。站上那一格，再回{issuer}复命。",
+   "turn_in": "issuer",
+   "clients": [
+    "探子",
+    "书记",
+    "账房"
+   ],
+   "silver": 64,
+   "rep": 6,
+   "battle": true
   }
  ],
  "volume_nation": [

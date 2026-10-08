@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """CMP-04 world-internal content: one scripted contract chain per nation, and rival companies.
 
-Objective-typed commissions (siege relief, duel, rescue, escort battle, intel race) stay out
-until BTL-02 lands victory conditions. These chains use the existing deliver / escort / scout
-turn-in rules so they can be walked inside world.gd.
+Scripted chains still use deliver turn-ins. The five objective contracts (siege relief,
+bounty duel, rescue, caravan battle, intel race) live in world_v87.json and are stamped
+onto encounter maps with BTL-02 victory fields inside world.gd.
 
 Do not full-regenerate world_v87.json from gen_world_v87.py: commission base silver in that
 generator is still the pre-v9.1 table.

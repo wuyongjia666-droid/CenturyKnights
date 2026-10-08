@@ -11,6 +11,16 @@ const ITEMS_PATH := "res://data/world_items_v87.json"
 const ATLAS_SCENE := "res://scenes/hub/atlas_view.tscn"
 const KIND_ZH := {"capital": "都城", "city": "城", "town": "镇", "port": "港", "fortress": "要塞", "village": "村", "castle": "本堡"}
 const QUEST_KIND_ZH := {"deliver": "递送", "escort": "护送", "hunt": "追缉", "clear": "清剿", "defend": "防守", "gather": "收购", "scout": "探查"}
+## CMP-04 remainder: battle contracts whose maps carry a BTL-02 objective.
+## Kept off the board RNG so the original seven kinds, and seed 91, stay put.
+const OBJECTIVE_KINDS := ["siege_aid", "bounty", "rescue", "convoy", "intel_race"]
+const OBJECTIVE_VICTORY := {
+	"siege_aid": "defend",
+	"bounty": "boss",
+	"rescue": "protect",
+	"convoy": "escort",
+	"intel_race": "seize",
+}
 const STAT_ZH := {"atk": "攻", "def": "防", "hit": "命中", "avo": "回避", "crit": "暴击", "move": "移动", "hp": "生命"}
 const SLOT_ZH := {"weapon": "武器", "armor": "护具", "charm": "饰品"}
 const REP_TIER_ZH := ["陌生", "认识", "友善", "信赖", "盟誓"]
@@ -562,7 +572,7 @@ func arrive(id: String) -> Dictionary:
 			q.state = "ready"
 			q["scouted"] = true
 			_tlog("委托「%s」已探明，回 %s 复命" % [q.title, node(str(q.issuer)).get("name", "")])
-		elif k in ["hunt", "defend"] and str(q.target) == id and encounter.is_empty():
+		elif _arrives_in_battle(k) and str(q.target) == id and encounter.is_empty():
 			out["encounter"] = start_encounter("quest", {"quest": str(q.id), "node": id, "from": _last_from if _last_from != "" else id})
 			break
 	_check_gather_ready()
@@ -1028,7 +1038,42 @@ func _ensure_board(city: String) -> void:
 	for q3 in b.get("offers", []):
 		if bool(q3.get("chain", false)):
 			offers.push_front(q3)
+	# Separate seed. The loop above is the v9.1 board draw and must stay byte-for-byte.
+	_append_objective_offer(city, offers)
 	boards[city] = {"epoch": _epoch(), "offers": offers}
+
+func quest_kind_label(kind: String) -> String:
+	if QUEST_KIND_ZH.has(kind):
+		return str(QUEST_KIND_ZH[kind])
+	var key := ""
+	match kind:
+		"siege_aid":
+			key = "quest_siege_aid"
+		"bounty":
+			key = "quest_bounty"
+		"rescue":
+			key = "quest_rescue"
+		"convoy":
+			key = "quest_convoy"
+		"intel_race":
+			key = "quest_intel_race"
+	if key == "":
+		return kind
+	return Locale.t(key)
+
+func _arrives_in_battle(kind: String) -> bool:
+	return kind == "hunt" or kind == "defend" or OBJECTIVE_KINDS.has(kind)
+
+func _append_objective_offer(city: String, offers: Array) -> void:
+	var r := RandomNumberGenerator.new()
+	r.seed = hash("objboard:%s#%d" % [city, _epoch()])
+	var kind := str(OBJECTIVE_KINDS[r.randi() % OBJECTIVE_KINDS.size()])
+	var tier := 1 + int(r.randi() % 2)
+	var q := _make_quest(city, kind, tier, r)
+	if q.is_empty():
+		return
+	q.id = "wq_obj_%s_%d_%d" % [city, _epoch(), r.randi() % 100000]
+	offers.append(q)
 
 func _is_active(qid: String) -> bool:
 	for q in active:
@@ -1079,7 +1124,7 @@ func _make_quest(city: String, kind: String, tier: int, r: RandomNumberGenerator
 			if target == "":
 				return {}
 			q.target = target
-		"hunt", "defend":
+		"hunt", "defend", "siege_aid", "bounty", "rescue", "convoy", "intel_race":
 			target = _near(city, 1, 2, r)
 			if target == "":
 				target = _near(city, 1, 3, r, false)
@@ -1126,6 +1171,7 @@ func _make_quest(city: String, kind: String, tier: int, r: RandomNumberGenerator
 		road_name = "%s—%s道" % [node(q.edge[0]).get("name", ""), node(q.edge[1]).get("name", "")]
 	title = title.replace("{target}", tname).replace("{parcel}", q.parcel).replace("{client}", q.client).replace("{foe_name}", q.foe_name)
 	title = title.replace("{road}", road_name).replace("{good}", good_name(str(q.get("good", ""))))
+	title = title.replace("{issuer}", str(n.get("name", "")))
 	var desc := ""
 	match kind:
 		"deliver": desc = "把%s从%s送到%s。占用 2 格货舱，交付地点：%s。" % [q.parcel, n.name, tname, tname]
@@ -1135,14 +1181,18 @@ func _make_quest(city: String, kind: String, tier: int, r: RandomNumberGenerator
 		"defend": desc = "%s告急！在期限内赶到即开战，守住后在%s领赏。" % [tname, tname]
 		"gather": desc = "%s急需%s ×%d。备齐货物后回%s交付（交付即消耗）。" % [n.name, good_name(q.good), int(q.qty), n.name]
 		"scout": desc = "走一趟%s，探明当地虚实，回%s复命。抵达时同步当地市价情报。" % [tname, n.name]
+	if OBJECTIVE_KINDS.has(kind):
+		desc = _quest_brief(tpl, q, str(n.get("name", "")), tname, road_name)
+		q.victory = str(OBJECTIVE_VICTORY.get(kind, ""))
 	var base_silver := int(tpl.get("silver", 30))
 	var mult := 1.0 + 0.3 * (hops - 1) + 0.45 * (tier - 1) + 0.15 * (world_tier() - 1)
 	q.reward_silver = int(round(base_silver * mult / 5.0)) * 5
 	q.reward_rep = int(tpl.get("rep", 5)) + (tier - 1) * 3
 	q.req_rep = [0, 0, 10, 30][tier]
 	q.battle = bool(tpl.get("battle", false))
-	q.danger = clampi(tier + (1 if kind in ["defend", "clear"] else 0), 1, 4)
-	var budget := int(q.route_days) * 2 + 8 if kind != "defend" else int(q.route_days) + 4
+	q.danger = clampi(tier + (1 if kind in ["defend", "clear", "siege_aid", "bounty"] else 0), 1, 4)
+	var rushed := kind == "defend" or kind == "siege_aid"
+	var budget := int(q.route_days) + 4 if rushed else int(q.route_days) * 2 + 8
 	if kind == "gather":
 		budget = 40
 	q.days_budget = budget
@@ -1163,6 +1213,14 @@ func _make_quest(city: String, kind: String, tier: int, r: RandomNumberGenerator
 	else:
 		q.id = "wq_%s_%d_%d" % [city, _epoch(), r.randi() % 100000]
 	return q
+
+func _quest_brief(tpl: Dictionary, q: Dictionary, issuer_name: String, target_name: String, road_name: String) -> String:
+	var desc := str(tpl.get("brief", ""))
+	desc = desc.replace("{target}", target_name).replace("{issuer}", issuer_name)
+	desc = desc.replace("{parcel}", str(q.get("parcel", ""))).replace("{client}", str(q.get("client", "")))
+	desc = desc.replace("{foe_name}", str(q.get("foe_name", ""))).replace("{road}", road_name)
+	desc = desc.replace("{good}", good_name(str(q.get("good", ""))))
+	return desc
 
 func quest_req_nation(q: Dictionary) -> int:
 	var st := nation_stance(nation_of(str(q.issuer)))
@@ -1531,7 +1589,7 @@ func _expire_quests() -> void:
 ## Fight an objective at the party's current location (hunt / defend target reached earlier, or retry after a defeat)
 func quest_engage(qid: String) -> Dictionary:
 	var q := quest_by_id(qid)
-	if q.is_empty() or str(q.state) != "active" or not (str(q.kind) in ["hunt", "defend"]) or str(q.target) != pos:
+	if q.is_empty() or str(q.state) != "active" or not _arrives_in_battle(str(q.kind)) or str(q.target) != pos:
 		return {}
 	return start_encounter("quest", {"quest": qid, "node": pos, "from": pos})
 
@@ -1802,6 +1860,8 @@ func start_encounter(kind: String, ctx: Dictionary) -> Dictionary:
 			tmpl.append(row[1])
 	base.enemy_templates = tmpl
 	base.enemy_spots = spots.slice(0, count)
+	if not q.is_empty():
+		_stamp_objective(base, q, spots)
 	var label := ""
 	if not q.is_empty():
 		label = str(q.title)
@@ -1818,6 +1878,121 @@ func start_encounter(kind: String, ctx: Dictionary) -> Dictionary:
 	_tlog("遭遇战：%s" % label)
 	world_changed.emit()
 	return encounter
+
+func _stamp_objective(base: Dictionary, q: Dictionary, full_spots: Array) -> void:
+	var kind := str(q.get("kind", ""))
+	if not OBJECTIVE_VICTORY.has(kind):
+		return
+	var players: Array = base.get("player_spots", [])
+	var enemies: Array = base.get("enemy_spots", [])
+	if players.is_empty():
+		return
+	var home: Array = players[0]
+	var width := int(base.get("w", 10))
+	var height := int(base.get("h", 8))
+	var far: Array = [mini(int(home[0]) + 4, width - 1), int(home[1])]
+	if not enemies.is_empty():
+		far = enemies[0]
+	var blocked: Array = []
+	for s in players:
+		blocked.append(s)
+	for s in enemies:
+		blocked.append(s)
+	match kind:
+		"siege_aid":
+			base.objective = {"type": "defend", "tiles": [[int(home[0]), int(home[1])]], "turns": 3}
+			base.failure = {"turn_limit": 6}
+			var wave: Array = far
+			if full_spots.size() > enemies.size():
+				wave = full_spots[enemies.size()]
+			var wave_tmpl := "bandit"
+			var templates: Array = base.get("enemy_templates", [])
+			if not templates.is_empty():
+				wave_tmpl = str(templates[0])
+			base.reinforcements = [{
+				"id": "siege_wave",
+				"turn": 2,
+				"team": "enemy",
+				"spots": [[int(wave[0]), int(wave[1])]],
+				"templates": [wave_tmpl],
+				"tags": [""],
+			}]
+		"bounty":
+			base.objective = {"type": "boss", "unit_tag": "mark"}
+			var tags: Array = []
+			for i in base.get("enemy_templates", []).size():
+				tags.append("mark" if i == 0 else "")
+			base.enemy_tags = tags
+		"rescue":
+			var spot := _open_spot(home, far, blocked, width, height)
+			base.npcs = [{"name": str(q.get("client", "")), "tag": "captive", "spot": spot, "team": "ally"}]
+			base.objective = {"type": "protect", "unit_tag": "captive"}
+			base.failure = {"turn_limit": 12}
+		"convoy":
+			var spot2 := _open_spot(home, far, blocked, width, height)
+			var exit_tile: Array = spot2
+			if not enemies.is_empty():
+				exit_tile = [int(enemies[enemies.size() - 1][0]), int(enemies[enemies.size() - 1][1])]
+			if int(exit_tile[0]) == int(spot2[0]) and int(exit_tile[1]) == int(spot2[1]):
+				exit_tile = [int(far[0]), int(far[1])]
+			base.npcs = [{"name": str(q.get("client", "")), "tag": "wagon", "spot": spot2, "team": "player"}]
+			base.objective = {"type": "escort", "npc": "wagon", "exit_tile": exit_tile}
+			base.failure = {"turn_limit": 12}
+		"intel_race":
+			var tile := _mid_tile(home, far, players, enemies, width, height)
+			base.objective = {"type": "seize", "tile": tile}
+			base.failure = {"turn_limit": 10}
+
+func _spot_taken(spots: Array, x: int, y: int) -> bool:
+	for s in spots:
+		if typeof(s) != TYPE_ARRAY or s.size() < 2:
+			continue
+		if int(s[0]) == x and int(s[1]) == y:
+			return true
+	return false
+
+func _open_spot(origin: Array, toward: Array, blocked: Array, width: int, height: int) -> Array:
+	var ox := int(origin[0])
+	var oy := int(origin[1])
+	var sx := signi(int(toward[0]) - ox)
+	var sy := signi(int(toward[1]) - oy)
+	var cands: Array = []
+	if sx != 0:
+		cands.append([ox + sx, oy])
+	if sy != 0:
+		cands.append([ox, oy + sy])
+	cands.append([ox + sx, oy + sy])
+	cands.append([ox + 1, oy])
+	cands.append([ox - 1, oy])
+	cands.append([ox, oy + 1])
+	cands.append([ox, oy - 1])
+	for c in cands:
+		var x := int(c[0])
+		var y := int(c[1])
+		if x < 0 or y < 0 or x >= width or y >= height:
+			continue
+		if _spot_taken(blocked, x, y):
+			continue
+		return [x, y]
+	return [clampi(ox, 0, width - 1), clampi(oy, 0, height - 1)]
+
+func _mid_tile(home: Array, far: Array, players: Array, enemies: Array, width: int, height: int) -> Array:
+	var x := clampi((int(home[0]) + int(far[0])) / 2, 0, width - 1)
+	var y := clampi((int(home[1]) + int(far[1])) / 2, 0, height - 1)
+	var sx := signi(int(far[0]) - int(home[0]))
+	var sy := signi(int(far[1]) - int(home[1]))
+	if sx == 0 and sy == 0:
+		sx = 1
+	for _i in 8:
+		if not _spot_taken(players, x, y) and not _spot_taken(enemies, x, y):
+			return [x, y]
+		var nx := clampi(x + sx, 0, width - 1)
+		var ny := clampi(y + sy, 0, height - 1)
+		if nx == x and ny == y:
+			break
+		x = nx
+		y = ny
+	return [x, y]
 
 func ensure_encounter_map() -> void:
 	## after a load, the generated map must be re-registered before the battle scene reads it
@@ -1875,10 +2050,13 @@ func on_battle_end(win: bool) -> Dictionary:
 			if int(cargo[g]) <= 0:
 				cargo.erase(g)
 		msg = "败退至%s：士气 -5，货物折损四分之一" % node(pos).get("name", "")
-		if not q.is_empty() and str(q.kind) == "escort":
+		if not q.is_empty() and (str(q.kind) == "escort" or str(q.kind) == "rescue" or str(q.kind) == "convoy"):
 			active.erase(q)
 			add_city_rep(str(q.issuer), -6)
-			msg += "；护送委托失败"
+			if str(q.kind) == "escort":
+				msg += "；护送委托失败"
+			else:
+				msg += Locale.t("quest_objective_failed")
 	_tlog(msg)
 	GameState.mark_dirty()
 	world_changed.emit()
