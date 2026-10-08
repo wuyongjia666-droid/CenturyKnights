@@ -89,6 +89,9 @@ var _lamp_charges := 0
 var _lamp_max := 0
 var _lamp_refill := false
 var _lamps_armed := false
+var _lamp_stack: Array = []
+var _turn_snap: Dictionary = {}
+var _move_undo: Dictionary = {}
 
 
 func _map_theme() -> String:
@@ -450,6 +453,7 @@ func _build_ui() -> void:
 	_apply_board_xform()
 	ObjectiveHud.attach(self)
 	ForecastPanel.attach(self)
+	RewindBar.attach(self)
 
 func _command_bar_px() -> float:
 	if not DeviceProfile.is_mobile():
@@ -640,6 +644,7 @@ func _consume_skill(c: CKCharacter, sid: String) -> void:
 	_update_skill_hint()
 
 func _cast_support_skill(ui: int, sid: String) -> void:
+	_push_lamp()
 	Sfx.skill()
 	if Sfx.has_method("heal"):
 		Sfx.heal()
@@ -672,6 +677,7 @@ func _cast_support_skill(ui: int, sid: String) -> void:
 	_check_end()
 
 func _cast_buff_skill(ui: int, sid: String) -> void:
+	_push_lamp()
 	var sk = GameState.get_skill(sid)
 	var u = units[ui]
 	if sk.get("def_buff"):
@@ -1605,6 +1611,7 @@ func _click_cell(cell: Vector2i) -> void:
 			if ui < 0 and not attack_mode and _try_interact(su, cell):
 				return
 			if ui < 0 and not attack_mode and not moved_this_select and move_cells.has(cell):
+				_move_undo = BattleSnapshot.capture(self)
 				var origin_cell: Vector2i = su.pos
 				su.pos = cell
 				_spend_zoc(su, origin_cell, cell)
@@ -1617,6 +1624,7 @@ func _click_cell(cell: Vector2i) -> void:
 				overlay.queue_redraw()
 				_log("%s 移动至 (%d,%d)" % [su.char.name, cell.x, cell.y])
 				_sync_objectives()
+				RewindBar.refresh(self)
 				return
 			if ui >= 0 and units[ui].team == "player" and not units[ui].done and ui != selected:
 				_select_player(ui)
@@ -1708,6 +1716,8 @@ func _spawn_slash(cell: Vector2i, kind: String = "slash") -> void:
 	_shake = 3.5
 
 func _do_attack(ai: int, di: int) -> void:
+	if str(units[ai].team) == "player":
+		_push_lamp()
 	_combat_rec = []
 	var _hp0a: int = int(units[ai].char.hp)
 	var _hp0d: int = int(units[di].char.hp)
@@ -2106,6 +2116,7 @@ func _wait_selected() -> void:
 	var u = units[selected]
 	if u.team != "player" or u.done:
 		return
+	_push_lamp()
 	u.done = true
 	selected = -1
 	move_cells.clear()
@@ -2157,6 +2168,7 @@ func _start_player_turn() -> void:
 	overlay.queue_redraw()
 	_update_skill_hint()
 	_sync_objectives()
+	_seal_turn()
 
 func _end_player_turn() -> void:
 	if battle_over:
@@ -2907,6 +2919,72 @@ func _arm_lamps() -> void:
 	_lamp_charges = _lamp_max
 	_lamp_refill = bool(rule.get("refill", false))
 	set_meta("ai_tier", int(rule.get("ai_tier", 1)))
+
+
+func _seal_turn() -> void:
+	_arm_lamps()
+	_move_undo = {}
+	_lamp_stack.clear()
+	if _lamp_refill:
+		_lamp_charges = _lamp_max
+	_turn_snap = BattleSnapshot.capture(self)
+	RewindBar.refresh(self)
+
+
+func _push_lamp() -> void:
+	if battle_over or turn_team != "player":
+		return
+	_lamp_stack.append({
+		"snap": BattleSnapshot.capture(self),
+		"undo": _move_undo.duplicate(true),
+	})
+	_move_undo = {}
+	RewindBar.refresh(self)
+
+
+func _undo_move() -> void:
+	if _move_undo.is_empty() or battle_over:
+		return
+	BattleSnapshot.apply(self, _move_undo)
+	_move_undo = {}
+	_after_restore()
+
+
+func _rewind_lamp() -> void:
+	if _lamp_charges <= 0 or battle_over or turn_team != "player":
+		return
+	var snap: Dictionary = {}
+	var undo: Dictionary = {}
+	if not _lamp_stack.is_empty():
+		var top: Dictionary = _lamp_stack.pop_back()
+		snap = top.get("snap", {})
+		undo = top.get("undo", {})
+	else:
+		snap = _turn_snap
+		if snap.is_empty():
+			return
+		if BattleSnapshot.hash_of(snap) == BattleSnapshot.hash_of(BattleSnapshot.capture(self)):
+			return
+	_lamp_charges -= 1
+	BattleSnapshot.apply(self, snap)
+	_move_undo = undo
+	_after_restore()
+
+
+func _after_restore() -> void:
+	if selected >= 0 and selected < units.size() and not units[selected].done and not moved_this_select and str(units[selected].team) == "player":
+		move_cells = _compute_move_cells(selected)
+	else:
+		move_cells.clear()
+	_refresh_info()
+	_update_skill_hint()
+	ObjectiveHud.refresh(self)
+	ForecastPanel.refresh(self)
+	RewindBar.refresh(self)
+	if map_draw:
+		map_draw.queue_redraw()
+	if overlay:
+		overlay.queue_redraw()
 
 
 func _log(t: String) -> void:
