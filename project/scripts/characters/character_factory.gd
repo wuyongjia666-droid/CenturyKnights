@@ -20,6 +20,7 @@ static func make_leader(given: String, surname: String, crest_color: String) -> 
 	c.blood_mix = {"common_ash": 0.6, "river_ward": 0.4}
 	c.traits = ["brave", "heir_mark"]
 	c.appearance = {"hair": "ash_brown", "eyes": "river_blue", "brow": "thick", "scar": "none"}
+	CKBloodline.seed_house_carrier(c)
 	c.birthday_month = 3
 	_roll_stats_from_blood(c)
 	c.salary = 0
@@ -48,31 +49,34 @@ static func make_ally_tutor() -> CKCharacter:
 	c.salary = 6
 	return c
 
-static func make_tavern_candidate(rng: RandomNumberGenerator) -> CKCharacter:
+## v8.9: blood comes from a CKBloodline pool roll (home castle tavern = 灰烬邦 folk/nobles + wanderers).
+## City taverns pass their own roll; the genome is rolled from the TRUE blood (pretenders keep a folk genome).
+static func make_tavern_candidate(rng: RandomNumberGenerator, roll: Dictionary = {}) -> CKCharacter:
 	var names = GameState.data_names
 	var c := CKCharacter.new()
 	c.id = next_id("hire")
 	var g = "m" if rng.randf() < 0.55 else "f"
 	c.gender = g
-	var given_list = names.get("given_m" if g == "m" else "given_f", ["无名"])
+	if roll.is_empty():
+		roll = CKBloodline.roll_recruit("ashbanner", "castle", rng)
+	if str(roll.get("sex", "")) != "":
+		c.gender = str(roll.sex)
+	var given_list = names.get("given_m" if c.gender == "m" else "given_f", ["无名"])
 	var sur_list = names.get("surnames", ["客"])
 	c.name = sur_list[rng.randi() % sur_list.size()] + "·" + given_list[rng.randi() % given_list.size()]
 	c.age = rng.randi_range(18, 32)
-	var jobs = ["light_inf", "heavy_inf", "hunter", "squire", "apprentice"]
-	c.job_id = jobs[rng.randi() % jobs.size()]
-	var bl_pool = ["common_ash", "common_ash", "river_ward", "ember_noble"]
-	var bl = bl_pool[rng.randi() % bl_pool.size()]
-	c.blood_mix = {bl: 1.0}
-	# 勋位加权：贵胤更容易男爵
-	if bl == "ember_noble":
-		c.rank = "baron" if rng.randf() < 0.5 else "knight"
-	else:
-		c.rank = "knight"
+	var jobs: Array = CKBloodline.line(str(roll.get("line", ""))).get("jobs", [])
+	if jobs.is_empty() or rng.randf() < 0.4:
+		jobs = ["light_inf", "heavy_inf", "hunter", "squire", "apprentice"]
+	c.job_id = str(jobs[rng.randi() % jobs.size()])
+	if rng.randf() < 0.13:
+		c.scars = [["cheek_l", "brow_r"][rng.randi() % 2]]
+	CKBloodline.apply_recruit(c, roll, rng)
+	c.rank = CKBloodline.rank_for(roll, rng)
 	c.traits = _pick_traits(rng, 2, 3)
-	c.appearance = _random_appearance(rng)
 	c.birthday_month = rng.randi_range(1, 12)
 	_roll_stats_from_blood(c)
-	c.salary = 6 + c.rank_index() * 3 + c.level
+	c.salary = 6 + c.rank_index() * 3 + c.level + CKBloodline.salary_premium(c)
 	c.recalc_hp()
 	return c
 
@@ -81,17 +85,17 @@ static func make_marriage_candidate(rng: RandomNumberGenerator, prefer_rank: Str
 	c.gender = "f" if GameState.get_leader() and GameState.get_leader().gender == "m" else "m"
 	c.in_roster = false
 	c.salary = 0
-	# 提高血胤档
-	var roll = rng.randf()
-	if roll < 0.15:
-		c.blood_mix = {"frost_crown": 0.4, "ember_noble": 0.6}
-		c.rank = "count"
-	elif roll < 0.45:
-		c.blood_mix = {"ember_noble": 0.7, "river_ward": 0.3}
-		c.rank = prefer_rank if prefer_rank in CKCharacter.RANK_ORDER else "baron"
-	else:
-		c.blood_mix = {"river_ward": 0.6, "common_ash": 0.4}
-		c.rank = "baron" if rng.randf() < 0.5 else "knight"
+	# v8.9：联姻对象按邦交挑国家，再按王 / 贵 / 民胤分档（CKBloodline.roll_marriage）
+	var ctx := {}
+	var world = Engine.get_main_loop().root.get_node_or_null("World") if Engine.get_main_loop() else null
+	if world != null:
+		var stance := {}
+		for nid in world.nation_ids():
+			stance[nid] = world.nation_stance(nid)
+		ctx = {"rep": world.rep_nation, "stance": stance}
+	var mr := CKBloodline.roll_marriage(rng, prefer_rank, ctx)
+	CKBloodline.apply_recruit(c, {"blood_mix": mr.blood_mix, "tier": mr.tier, "line": mr.line}, rng)
+	c.rank = str(mr.rank)
 	_roll_stats_from_blood(c)
 	c.recalc_hp()
 	var names = GameState.data_names
@@ -147,7 +151,8 @@ static func make_house_support(house_id: String, as_ally: bool, rng: RandomNumbe
 			c.name = "宅邸·%s" % title
 			c.job_id = "light_inf"
 			c.stats = {"str": 6, "vit": 6, "skl": 6, "agi": 6, "per": 5, "wil": 5}
-	c.blood_mix = {"common_ash": 0.6, "river_guard": 0.4}
+	c.blood_mix = {"shuoying": {"sy_night": 0.5, "sy_ridge": 0.5}, "qinghe": {"river_ward": 0.6, "qh_delta": 0.4},
+		"lantern": {"lt_glass": 0.5, "lt_tide": 0.5}}.get(house_id, {"common_ash": 0.6, "banner_marshal": 0.4})
 	c.level = 2 if as_ally else 2
 	c.appearance = {"hair": "ink_black", "eyes": "dusk", "brow": "thick", "scar": ""}
 	c.recalc_hp()
@@ -461,6 +466,14 @@ static func _roll_stats_from_blood(c: CKCharacter) -> void:
 			amax[k] += float(smax.get(k, 14)) * w
 	if total_w <= 0:
 		total_w = 1.0
+	# a pretender's real aptitude is that of the blood they were born with, not the one they claim
+	var pretend: Dictionary = c.blood_meta.get("pretend", {})
+	if not pretend.is_empty() and not bool(pretend.get("exposed", false)) and c.blood_mix.has(str(pretend.get("claimed", ""))):
+		var tb = GameState.get_bloodline(str(pretend.get("true", "common_ash")))
+		for k in CKCharacter.STAT_KEYS:
+			amin[k] = float(tb.get("stat_min", {}).get(k, 4))
+			amax[k] = float(tb.get("stat_max", {}).get(k, 14))
+		total_w = 1.0
 	c.apt_min = {}
 	c.apt_max = {}
 	c.stats = {}
@@ -481,13 +494,3 @@ static func _pick_traits(rng: RandomNumberGenerator, mn: int, mx: int) -> Array:
 	pool.shuffle()
 	var n = rng.randi_range(mn, mx)
 	return pool.slice(0, mini(n, pool.size()))
-
-static func _random_appearance(rng: RandomNumberGenerator) -> Dictionary:
-	var app = GameState.data_appearance.get("alleles", {})
-	var r := {}
-	for key in ["hair", "eyes", "brow", "scar"]:
-		var arr: Array = app.get(key, [{"id": "none"}])
-		r[key] = arr[rng.randi() % arr.size()]["id"]
-	if rng.randf() > 0.2:
-		r["scar"] = "none"
-	return r

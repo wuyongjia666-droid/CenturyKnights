@@ -49,7 +49,14 @@ func _ready() -> void:
 	_msg.autowrap_mode = TextServer.AUTOWRAP_OFF
 	_msg.position = Vector2(62, 643)
 	add_child(_msg)
-	UIKit.footer_bar(self, [["A", "祈愈"], ["W", "前往工事"], ["ESC", "返回城堡"]], "SANCTUARY // LV %d · v8.6" % lv)
+	# v8.9 祠堂验血：携因、伪胤、潜征都在这里见分晓
+	var vb := UIKit.ghost_button("祠堂验血 · 每人 %d 银  [V]" % CKBloodline.verify_cost(lv), 210, 36)
+	vb.name = "VerifyBlood"
+	vb.position = Vector2(1016, 634)
+	vb.tooltip_text = "为家族与编制中尚未验血者验明血谱：揭出潜征携因、拆穿伪胤，验过者可凭血契议婚、入锻场。"
+	vb.pressed.connect(_verify)
+	add_child(vb)
+	UIKit.footer_bar(self, [["A", "祈愈"], ["V", "验血"], ["W", "前往工事"], ["ESC", "返回城堡"]], "SANCTUARY // LV %d · v8.9" % lv)
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 
@@ -61,6 +68,13 @@ func _unhandled_input(e: InputEvent) -> void:
 		_back()
 	elif e is InputEventKey and e.pressed and not e.echo and (e as InputEventKey).keycode == KEY_W:
 		get_tree().change_scene_to_file("res://scenes/hub/works.tscn")
+	elif e is InputEventKey and e.pressed and not e.echo and (e as InputEventKey).keycode == KEY_V:
+		_verify()
+
+func _verify() -> void:
+	var r: Dictionary = GameState.verify_bloodlines_at_shrine()
+	_msg.text = ("✓ " if r.get("ok", false) else "ⓘ ") + str(r.get("msg", ""))
+	_msg.add_theme_color_override("font_color", UIKit.OK if r.get("ok", false) else UIKit.TEXT_DIM)
 
 func _heal() -> void:
 	_msg.text = "✓ " + GameState.heal_at_shrine() + "　· 祠堂 LV%d" % GameState.building_level("shrine")

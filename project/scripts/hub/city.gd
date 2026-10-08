@@ -822,6 +822,7 @@ func _tab_tavern() -> void:
 	p.add_child(h)
 	if lst.is_empty():
 		h.add_child(_para("酒馆里只剩醉汉——下月再来。", UIKit.TEXT_FAINT, 13, 400))
+	var inspect := CKBloodline.inspect_level()
 	for i in lst.size():
 		var c: CKCharacter = lst[i]
 		var card := Panel.new()
@@ -853,6 +854,11 @@ func _tab_tavern() -> void:
 		var tl := _para("特质：%s" % ("、".join(tr) if not tr.is_empty() else "—"), UIKit.TEXT_DIM, 11, 228)
 		tl.position = Vector2(16, 360)
 		card.add_child(tl)
+		var shown_sigs := CKBloodline.visible_signatures(c, inspect)
+		var sg := _para(CKBloodline.summary_zh(c, inspect), UIKit.ACCENT if not shown_sigs.is_empty() else UIKit.TEXT_FAINT, 11, 228)
+		sg.name = "Sig%d" % i
+		sg.position = Vector2(16, 404)
+		card.add_child(sg)
 		var cost := World.hire_cost(c)
 		var hb := UIKit.cta_button("雇佣 · %d 银" % cost, "", 228, 40)
 		hb.name = "Hire%d" % i

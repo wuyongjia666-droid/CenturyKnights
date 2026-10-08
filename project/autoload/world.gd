@@ -335,6 +335,9 @@ func add_nation_rep(nid: String, amt: int) -> void:
 		milestones.append({"kind": "nation", "id": nid, "tier": t1, "text": txt})
 		_tlog(txt)
 		rep_milestone.emit("nation", nid, t1)
+		var oath := CKBloodline.on_nation_milestone(nid, t1)
+		if oath != "":
+			_tlog(oath)
 	# mirror into the legacy realm reputation (castle / story systems read these)
 	if nid == "ashbanner":
 		GameState.add_rep("ashland", int(round(amt * 0.5)))
@@ -932,26 +935,15 @@ func city_recruits(city: String) -> Array:
 		var r := RandomNumberGenerator.new()
 		r.seed = hash("%s#%d" % [city, _epoch()])
 		for i in slots:
-			var c := CharacterFactory.make_tavern_candidate(r)
-			var bl: Array = nat.get("blood", ["common_ash"])
-			var b := str(bl[r.randi() % bl.size()])
-			if b == "frost_crown" and not (str(n.kind) == "capital" and rep_of(city) >= 30):
-				b = "common_ash"
-			var top_blood := str(bl[0])
-			for cand in bl:
-				if str(cand) in ["frost_crown", "ember_noble"]:
-					top_blood = str(cand)
-			if str(n.kind) == "capital" and rep_tier_index(nation_rep(str(n.nation))) >= 4 and i == 0:
-				b = top_blood
-			c.blood_mix = {b: 1.0}
-			var jb: Array = nat.get("jobs", ["light_inf"])
-			c.job_id = str(jb[r.randi() % jb.size()])
-			if b == "ember_noble" and r.randf() < 0.4:
-				c.rank = "baron"
+			# v8.9 nation pools (CKBloodline): folk / noble / gated royal, wanderers, pretenders; 盟誓 seats the royal line
+			var roll := CKBloodline.roll_recruit(str(n.nation), str(n.kind), r, {"city_rep": rep_of(city), "nation_rep": nation_rep(str(n.nation)), "slot": i})
+			var c := CharacterFactory.make_tavern_candidate(r, roll)
+			if r.randf() < 0.5:
+				var jb: Array = nat.get("jobs", ["light_inf"])
+				c.job_id = str(jb[r.randi() % jb.size()])
 			if noble and i == slots - 1:
 				c.rank = "baron"  # 盟誓：城中贵胄投效
-			CharacterFactory._roll_stats_from_blood(c)
-			c.salary = 6 + c.rank_index() * 3 + c.level + (6 if b == "frost_crown" else 0)
+			c.salary = 6 + c.rank_index() * 3 + c.level + CKBloodline.salary_premium(c)
 			c.recalc_hp()
 			lst.append(c.to_dict())
 		rec = {"epoch": _epoch(), "list": lst, "slots": slots}
@@ -962,9 +954,7 @@ func city_recruits(city: String) -> Array:
 	return out
 
 func hire_cost(c: CKCharacter) -> int:
-	var b := c.primary_bloodline()
-	var prem = {"frost_crown": 110, "ember_noble": 25, "river_ward": 12}.get(b, 0)
-	return 28 + c.rank_index() * 15 + int(prem)
+	return 28 + c.rank_index() * 15 + CKBloodline.hire_premium(c, nation_of(pos))
 
 func hire(city: String, idx: int) -> Dictionary:
 	if city != pos:
@@ -1500,11 +1490,8 @@ func choose_event(idx: int) -> Dictionary:
 			"recruit":
 				var cost := int(ctx.hire)
 				if GameState.silver >= cost:
-					var c2 := CharacterFactory.make_tavern_candidate(rng)
-					var bl: Array = nations.get(nation_of(str(ev.b)), {}).get("blood", ["common_ash"])
-					c2.blood_mix = {str(bl[0]) if str(bl[0]) != "frost_crown" else "common_ash": 1.0}
-					CharacterFactory._roll_stats_from_blood(c2)
-					c2.recalc_hp()
+					var road_roll := CKBloodline.roll_recruit(nation_of(str(ev.b)), "road", rng, {"folk_only": true})
+					var c2 := CharacterFactory.make_tavern_candidate(rng, road_roll)
 					var rr := GameState.recruit(c2, cost)
 					lines.append("%s 加入灰旗（-%d 银）" % [c2.name, cost] if rr.ok else str(rr.msg))
 				else:
