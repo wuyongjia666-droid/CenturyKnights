@@ -74,15 +74,7 @@ static func refresh(host) -> void:
 	var foes = host._enemy_positions(u.team)
 	var engaged = BattleRules.is_engaged(u.pos, foes)
 	var locked = int(c.temp_combat_lock) > 0
-	var eng := ""
-	if locked:
-		eng = "[color=#ff6b4a]〔交战锁定·脱离+2移·反击优先〕[/color]\n"
-	elif engaged:
-		eng = "[color=#e07070]〔交战中·脱离+1移〕[/color]\n"
-	if c.temp_leave_free:
-		eng += "[color=#8ecae6]〔抽身：脱离不耗〕[/color]\n"
-	elif c.temp_ignore_zoc:
-		eng += "[color=#c9a227]〔破控：无视地带〕[/color]\n"
+	var eng := BattleRules.engagement_note(locked, engaged, c.temp_leave_free, c.temp_ignore_zoc)
 	var txt = mode + eng + "[b]%s[/b]（%s·%s） HP %d/%d\n攻 %d 防 %d 命中 %d 回避 %d 移动 %d\n地形：%s（回避+%d 防+%d）\n" % [
 		c.name, "我军" if u.team == "player" else "敌军", role,
 		c.hp, c.max_hp, c.derived_atk(), c.derived_def(), c.derived_hit(), c.derived_avo(), c.derived_move(),
