@@ -1,0 +1,3776 @@
+{
+  "note": "Independent of BattleRules. Stats are all 8s, level pair as given, no weapon.",
+  "count": 208,
+  "cases": [
+    {
+      "atk_job": "light_inf",
+      "def_job": "light_inf",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "light_inf",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 85,
+      "dmg": [
+        7,
+        9
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "light_inf",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 55,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "light_inf",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 60,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "light_inf",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "light_inf",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "light_inf",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 50,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "light_inf",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "heavy_inf",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        3,
+        5
+      ],
+      "label": "铁壁承"
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "heavy_inf",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 85,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": "铁壁承"
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "heavy_inf",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 55,
+      "dmg": [
+        3,
+        5
+      ],
+      "label": "铁壁承"
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "heavy_inf",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 60,
+      "dmg": [
+        2,
+        4
+      ],
+      "label": "铁壁承"
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "heavy_inf",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        3,
+        5
+      ],
+      "label": "铁壁承"
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "heavy_inf",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        3,
+        5
+      ],
+      "label": "铁壁承"
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "heavy_inf",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 50,
+      "dmg": [
+        2,
+        4
+      ],
+      "label": "铁壁承"
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "heavy_inf",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        3,
+        5
+      ],
+      "label": "铁壁承"
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "hunter",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        8,
+        10
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "hunter",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 85,
+      "dmg": [
+        9,
+        11
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "hunter",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 55,
+      "dmg": [
+        8,
+        10
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "hunter",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 60,
+      "dmg": [
+        7,
+        9
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "hunter",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        8,
+        10
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "hunter",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        8,
+        10
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "hunter",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 50,
+      "dmg": [
+        7,
+        9
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "hunter",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        8,
+        10
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "apprentice",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "apprentice",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 85,
+      "dmg": [
+        7,
+        9
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "apprentice",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 55,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "apprentice",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 60,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "apprentice",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "apprentice",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "apprentice",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 50,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "apprentice",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "light_cavalry",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "light_cavalry",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 85,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "light_cavalry",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 55,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "light_cavalry",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 60,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "light_cavalry",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "light_cavalry",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "light_cavalry",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 50,
+      "dmg": [
+        3,
+        5
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "light_cavalry",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "light_inf",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        7,
+        9
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "light_inf",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 85,
+      "dmg": [
+        8,
+        10
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "light_inf",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 55,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "light_inf",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 60,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "light_inf",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        7,
+        9
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "light_inf",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        7,
+        9
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "light_inf",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 50,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "light_inf",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "heavy_inf",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "heavy_inf",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 85,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "heavy_inf",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 55,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "heavy_inf",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 60,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "heavy_inf",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "heavy_inf",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "heavy_inf",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 50,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "heavy_inf",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "hunter",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        9,
+        11
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "hunter",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 85,
+      "dmg": [
+        10,
+        12
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "hunter",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 55,
+      "dmg": [
+        9,
+        11
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "hunter",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 60,
+      "dmg": [
+        8,
+        10
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "hunter",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        9,
+        11
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "hunter",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        9,
+        11
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "hunter",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 50,
+      "dmg": [
+        8,
+        10
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "hunter",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        9,
+        11
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "apprentice",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        7,
+        9
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "apprentice",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 85,
+      "dmg": [
+        8,
+        10
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "apprentice",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 55,
+      "dmg": [
+        7,
+        9
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "apprentice",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 60,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "apprentice",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        7,
+        9
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "apprentice",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        7,
+        9
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "apprentice",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 50,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "apprentice",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        7,
+        9
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "light_cavalry",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "light_cavalry",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 85,
+      "dmg": [
+        7,
+        9
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "light_cavalry",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 55,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "light_cavalry",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 60,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "light_cavalry",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "light_cavalry",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "light_cavalry",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 50,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "light_cavalry",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "light_inf",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 78,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": "远射克"
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "light_inf",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 93,
+      "dmg": [
+        7,
+        9
+      ],
+      "label": "远射克"
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "light_inf",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 63,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": "远射克"
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "light_inf",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 68,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": "远射克"
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "light_inf",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 73,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": "远射克"
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "light_inf",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 78,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": "远射克"
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "light_inf",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 58,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": "远射克"
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "light_inf",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 73,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": "远射克"
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "heavy_inf",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "heavy_inf",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 85,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "heavy_inf",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 55,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "heavy_inf",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 60,
+      "dmg": [
+        3,
+        5
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "heavy_inf",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "heavy_inf",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "heavy_inf",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 50,
+      "dmg": [
+        3,
+        5
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "heavy_inf",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "hunter",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "hunter",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 85,
+      "dmg": [
+        7,
+        9
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "hunter",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 55,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "hunter",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 60,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "hunter",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "hunter",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "hunter",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 50,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "hunter",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "apprentice",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "apprentice",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 85,
+      "dmg": [
+        7,
+        9
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "apprentice",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 55,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "apprentice",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 60,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "apprentice",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "apprentice",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "apprentice",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 50,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "apprentice",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "light_cavalry",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 78,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": "远射克"
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "light_cavalry",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 93,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": "远射克"
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "light_cavalry",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 63,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": "远射克"
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "light_cavalry",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 68,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": "远射克"
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "light_cavalry",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 73,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": "远射克"
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "light_cavalry",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 78,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": "远射克"
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "light_cavalry",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 58,
+      "dmg": [
+        3,
+        5
+      ],
+      "label": "远射克"
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "light_cavalry",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 73,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": "远射克"
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "light_inf",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "light_inf",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 85,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "light_inf",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 55,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "light_inf",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 60,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "light_inf",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "light_inf",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "light_inf",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 50,
+      "dmg": [
+        3,
+        5
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "light_inf",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "heavy_inf",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": "秘破甲"
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "heavy_inf",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 85,
+      "dmg": [
+        7,
+        9
+      ],
+      "label": "秘破甲"
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "heavy_inf",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 55,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": "秘破甲"
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "heavy_inf",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 60,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": "秘破甲"
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "heavy_inf",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": "秘破甲"
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "heavy_inf",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": "秘破甲"
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "heavy_inf",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 50,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": "秘破甲"
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "heavy_inf",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": "秘破甲"
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "hunter",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "hunter",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 85,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "hunter",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 55,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "hunter",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 60,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "hunter",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "hunter",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "hunter",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 50,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "hunter",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "apprentice",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "apprentice",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 85,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "apprentice",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 55,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "apprentice",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 60,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "apprentice",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "apprentice",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "apprentice",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 50,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "apprentice",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "light_cavalry",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "light_cavalry",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 85,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "light_cavalry",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 55,
+      "dmg": [
+        3,
+        5
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "light_cavalry",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 60,
+      "dmg": [
+        3,
+        5
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "light_cavalry",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "light_cavalry",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "light_cavalry",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 50,
+      "dmg": [
+        2,
+        4
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "light_cavalry",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        3,
+        5
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "light_inf",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 75,
+      "dmg": [
+        11,
+        13
+      ],
+      "label": "骑突"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "light_inf",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 90,
+      "dmg": [
+        12,
+        14
+      ],
+      "label": "骑突"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "light_inf",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 60,
+      "dmg": [
+        10,
+        12
+      ],
+      "label": "骑突"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "light_inf",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        10,
+        12
+      ],
+      "label": "骑突"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "light_inf",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        11,
+        13
+      ],
+      "label": "骑突"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "light_inf",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 75,
+      "dmg": [
+        11,
+        13
+      ],
+      "label": "骑突"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "light_inf",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 55,
+      "dmg": [
+        9,
+        11
+      ],
+      "label": "骑突"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "light_inf",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        10,
+        12
+      ],
+      "label": "骑突"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "heavy_inf",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": "铁壁承"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "heavy_inf",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 85,
+      "dmg": [
+        7,
+        9
+      ],
+      "label": "铁壁承"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "heavy_inf",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 55,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": "铁壁承"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "heavy_inf",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 60,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": "铁壁承"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "heavy_inf",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": "铁壁承"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "heavy_inf",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": "铁壁承"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "heavy_inf",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 50,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": "铁壁承"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "heavy_inf",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": "铁壁承"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "hunter",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        11,
+        13
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "hunter",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 85,
+      "dmg": [
+        12,
+        14
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "hunter",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 55,
+      "dmg": [
+        11,
+        13
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "hunter",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 60,
+      "dmg": [
+        10,
+        12
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "hunter",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        11,
+        13
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "hunter",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        11,
+        13
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "hunter",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 50,
+      "dmg": [
+        10,
+        12
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "hunter",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        11,
+        13
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "apprentice",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 75,
+      "dmg": [
+        11,
+        13
+      ],
+      "label": "骑突"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "apprentice",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 90,
+      "dmg": [
+        12,
+        14
+      ],
+      "label": "骑突"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "apprentice",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 60,
+      "dmg": [
+        11,
+        13
+      ],
+      "label": "骑突"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "apprentice",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        10,
+        12
+      ],
+      "label": "骑突"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "apprentice",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        11,
+        13
+      ],
+      "label": "骑突"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "apprentice",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 75,
+      "dmg": [
+        11,
+        13
+      ],
+      "label": "骑突"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "apprentice",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 55,
+      "dmg": [
+        10,
+        12
+      ],
+      "label": "骑突"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "apprentice",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        11,
+        13
+      ],
+      "label": "骑突"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "light_cavalry",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        8,
+        10
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "light_cavalry",
+      "terrain": "plain",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 85,
+      "dmg": [
+        9,
+        11
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "light_cavalry",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 55,
+      "dmg": [
+        7,
+        9
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "light_cavalry",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 60,
+      "dmg": [
+        7,
+        9
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "light_cavalry",
+      "terrain": "water",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        8,
+        10
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "light_cavalry",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 70,
+      "dmg": [
+        8,
+        10
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "light_cavalry",
+      "terrain": "fort",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 50,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "light_cavalry",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "hit": 65,
+      "dmg": [
+        7,
+        9
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "hunter",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [
+        "brave"
+      ],
+      "traits_def": [],
+      "terrain_mul": 1.0,
+      "flat_def": 0,
+      "hit": 75,
+      "dmg": [
+        8,
+        10
+      ],
+      "label": "近压远"
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "light_inf",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [
+        "keen_eye"
+      ],
+      "traits_def": [],
+      "terrain_mul": 1.0,
+      "flat_def": 0,
+      "hit": 83,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": "远射克"
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "light_inf",
+      "terrain": "forest",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [
+        "night_owl"
+      ],
+      "terrain_mul": 1.0,
+      "flat_def": 0,
+      "hit": 50,
+      "dmg": [
+        5,
+        7
+      ],
+      "label": ""
+    },
+    {
+      "atk_job": "light_inf",
+      "def_job": "heavy_inf",
+      "terrain": "plain",
+      "flank": false,
+      "level": [
+        4,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "terrain_mul": 1.0,
+      "flat_def": 0,
+      "hit": 76,
+      "dmg": [
+        3,
+        5
+      ],
+      "label": "铁壁承"
+    },
+    {
+      "atk_job": "apprentice",
+      "def_job": "heavy_inf",
+      "terrain": "fort",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "terrain_mul": 2.0,
+      "flat_def": 1,
+      "hit": 45,
+      "dmg": [
+        4,
+        6
+      ],
+      "label": "秘破甲"
+    },
+    {
+      "atk_job": "light_cavalry",
+      "def_job": "apprentice",
+      "terrain": "hill",
+      "flank": false,
+      "level": [
+        2,
+        3
+      ],
+      "traits_atk": [],
+      "traits_def": [],
+      "terrain_mul": 1.0,
+      "flat_def": 0,
+      "hit": 63,
+      "dmg": [
+        10,
+        12
+      ],
+      "label": "骑突"
+    },
+    {
+      "atk_job": "hunter",
+      "def_job": "light_cavalry",
+      "terrain": "water",
+      "flank": true,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [
+        "keen_eye"
+      ],
+      "traits_def": [],
+      "terrain_mul": 1.0,
+      "flat_def": 0,
+      "hit": 93,
+      "dmg": [
+        6,
+        8
+      ],
+      "label": "远射克"
+    },
+    {
+      "atk_job": "heavy_inf",
+      "def_job": "hunter",
+      "terrain": "bridge",
+      "flank": false,
+      "level": [
+        1,
+        1
+      ],
+      "traits_atk": [
+        "brave"
+      ],
+      "traits_def": [],
+      "terrain_mul": 1.0,
+      "flat_def": 0,
+      "hit": 75,
+      "dmg": [
+        9,
+        11
+      ],
+      "label": "近压远"
+    }
+  ]
+}

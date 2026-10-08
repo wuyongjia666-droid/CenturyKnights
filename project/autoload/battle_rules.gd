@@ -10,6 +10,17 @@ const TERRAIN := {
 	"fort": {"name": "垒", "move_cost": 2, "avo_bonus": 20, "def_bonus": 3, "color": Color(0.50, 0.42, 0.40)},
 }
 
+## Single source for numbers the battle HUD prints. Changing these changes the panel copy.
+const LEAVE_COST_DEFAULT := 1
+const LEAVE_COST_ENGAGED := 2
+const LEAVE_COST_LOCK := 3
+const FOLLOW_UP_AGI := 4
+const FLANK_HIT := 15
+const FLANK_DMG := 1
+const HIT_MIN := 5
+const HIT_MAX := 99
+const CRIT_MULT := 1.5
+
 var preview_enabled: bool = true
 
 func terrain_info(tid: String) -> Dictionary:
@@ -86,7 +97,7 @@ func _manhattan(a: Vector2i, b: Vector2i) -> int:
 	return absi(a.x - b.x) + absi(a.y - b.y)
 
 func can_follow_up(attacker: CKCharacter, defender: CKCharacter) -> bool:
-	return int(attacker.stats.get("agi", 8)) >= int(defender.stats.get("agi", 8)) + 4
+	return int(attacker.stats.get("agi", 8)) >= int(defender.stats.get("agi", 8)) + FOLLOW_UP_AGI
 
 func can_counter(attacker: CKCharacter, defender: CKCharacter, atk_pos: Vector2i, def_pos: Vector2i) -> bool:
 	if defender.hp <= 0:
@@ -113,11 +124,11 @@ func calc_hit(attacker: CKCharacter, defender: CKCharacter, terrain_id: String, 
 	var level_diff = attacker.level - defender.level
 	hit += level_diff * 2
 	if extras.get("flank", false):
-		hit += 15
+		hit += FLANK_HIT
 	var rm = extras.get("role", role_mods(attacker, defender))
 	hit += int(rm.get("hit_mod", 0))
 	hit += int(extras.get("hit_mod", 0))
-	return clampi(hit - avo, 5, 99)
+	return clampi(hit - avo, HIT_MIN, HIT_MAX)
 
 func calc_damage_range(attacker: CKCharacter, defender: CKCharacter, terrain_id: String = "plain", extras: Dictionary = {}) -> Vector2i:
 	var tmul = float(extras.get("terrain_mul", 1.0))
@@ -127,7 +138,7 @@ func calc_damage_range(attacker: CKCharacter, defender: CKCharacter, terrain_id:
 	var raw = maxi(1, attacker.derived_atk() - int(def_eff / 2.0))
 	raw += int(rm.get("dmg_mod", 0))
 	if extras.get("flank", false):
-		raw += 1
+		raw += FLANK_DMG
 	raw += int(extras.get("dmg_mod", 0))
 	return Vector2i(maxi(1, raw - 1), maxi(1, raw + 1))
 
@@ -144,7 +155,7 @@ func roll_attack(attacker: CKCharacter, defender: CKCharacter, terrain_id: Strin
 		dmg = rng.randi_range(dmg_range.x, dmg_range.y)
 		if rng.randi_range(1, 100) <= attacker.derived_crit():
 			crit = true
-			dmg = int(dmg * 1.5)
+			dmg = int(dmg * CRIT_MULT)
 		defender.hp = maxi(0, defender.hp - dmg)
 	return {
 		"hit": hit,
@@ -257,6 +268,26 @@ func move_costs(map_terrain: Array, start: Vector2i, move_pts: int, blocked: Arr
 			best[np] = nc
 			q.append([np, nc])
 	return best
+
+## HUD copy. Numbers come from the leave-cost constants so the panel cannot drift.
+func engagement_note(locked: bool, engaged: bool, leave_free: bool, ignore_zoc: bool) -> String:
+	var eng := ""
+	if locked:
+		eng = "[color=#ff6b4a]〔交战锁定·脱离+%d移·反击优先〕[/color]\n" % LEAVE_COST_LOCK
+	elif engaged:
+		eng = "[color=#e07070]〔交战中·脱离+%d移〕[/color]\n" % LEAVE_COST_ENGAGED
+	if leave_free:
+		eng += "[color=#8ecae6]〔抽身：脱离不耗〕[/color]\n"
+	elif ignore_zoc:
+		eng += "[color=#c9a227]〔破控：无视地带〕[/color]\n"
+	return eng
+
+func leave_cost_for(locked: bool, engaged: bool) -> int:
+	if locked:
+		return LEAVE_COST_LOCK
+	if engaged:
+		return LEAVE_COST_ENGAGED
+	return LEAVE_COST_DEFAULT
 
 func is_engaged(cell: Vector2i, zoc_sources: Array) -> bool:
 	return in_zoc(cell, zoc_sources)

@@ -1451,11 +1451,7 @@ func _compute_move_cells(ui: int) -> Dictionary:
 		zoc_extra = _ally_zoc_extra("player")
 	elif u.team == "player":
 		zoc_extra = _ally_zoc_extra("enemy")  # 敌军若有强化控带（少见）
-	var leave_cost = 1
-	if int(u.char.temp_combat_lock) > 0:
-		leave_cost = 3  # 交战锁定：脱离更贵
-	elif BattleRules.is_engaged(u.pos, foes):
-		leave_cost = 2  # 控带内脱离也更沉
+	var leave_cost := BattleRules.leave_cost_for(int(u.char.temp_combat_lock) > 0, BattleRules.is_engaged(u.pos, foes))
 	var mv = BattleRules.move_costs(terrain, u.pos, u.char.derived_move(), foes, foes, ignore, zoc_extra, leave_cost, leave_free)
 	for ou in units:
 		if ou.char.hp > 0 and ou.pos != u.pos:
@@ -1842,7 +1838,7 @@ func _show_lock_tip_once() -> void:
 	else:
 		_show_lock_tip_panel(
 			"交战锁定",
-			"攻/受击后双方进入锁定：脱离+2移，锁定反击命中+10。抽身/拆锁可解。",
+			"攻/受击后双方进入锁定：脱离+%d移，锁定反击命中+10。抽身/拆锁可解。" % BattleRules.LEAVE_COST_LOCK,
 			0,
 			8.0
 		)
@@ -1900,7 +1896,7 @@ func _run_lock_tutorial_sequence() -> void:
 	## 教学三拍：咬住 → 脱离代价 → 拆锁/反击
 	var steps: Array = [
 		{"t": "① 交战锁定·咬住", "b": "攻或受击后，双方棋子外圈出现锁定环——这就是「咬住」。"},
-		{"t": "② 脱离更贵", "b": "锁定中离开交战格额外消耗 +2 移力（高于普通交战 +1）。想走，先算步数。"},
+		{"t": "② 脱离更贵", "b": "锁定中离开交战格额外消耗 +%d 移力（高于普通交战 +%d）。想走，先算步数。" % [BattleRules.LEAVE_COST_LOCK, BattleRules.LEAVE_COST_ENGAGED]},
 		{"t": "③ 锁反与拆锁", "b": "锁定单位反击命中+10。用战技「抽身一步 / 拆锁突围」可解除锁定。"},
 	]
 	_show_lock_tip_panel(str(steps[0].t), str(steps[0].b), 0, 0.0)
