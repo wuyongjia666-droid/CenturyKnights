@@ -1,0 +1,25 @@
+{
+  "version": "v9.2-injury",
+  "default_mode": "casual",
+  "death_base": [0.05, 0.10, 0.18, 0.28, 0.40],
+  "overflow_step": 0.04,
+  "overflow_cap": 0.45,
+  "death_cap": 0.85,
+  "grave_base": 0.12,
+  "grave_per_diff": 0.06,
+  "lasting_base": 0.10,
+  "lasting_per_diff": 0.04,
+  "light_months": [1, 2],
+  "grave_months": [3, 6],
+  "lasting": [
+    {"id": "lost_finger", "name": "断指", "skl": -2, "move": 0},
+    {"id": "limp", "name": "跛足", "skl": 0, "move": -1}
+  ],
+  "words": [
+    "旗还在。银两交给下一班。",
+    "雾没散。别在渡口停太久。",
+    "刀留下。人不必留下。",
+    "粮仓的钥匙在祠堂第三块砖下。",
+    "下一班别走夜路。灯还亮着就行。"
+  ]
+}

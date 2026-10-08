@@ -106,8 +106,9 @@ func _row(c: CKCharacter, idx: int) -> Button:
 	nh.add_child(nm)
 	if c.is_leader:
 		nh.add_child(UIKit.tag_chip("队长待命", UIKit.ACCENT))
-	elif c.injured:
-		nh.add_child(UIKit.tag_chip("负伤", UIKit.DANGER))
+	elif c.injured or CKInjury.label(c) != "":
+		var chip := CKInjury.label(c)
+		nh.add_child(UIKit.tag_chip(chip if chip != "" else "负伤", UIKit.DANGER))
 	elif not c.traits.is_empty():
 		nh.add_child(UIKit.tag_chip(str(GameState.get_trait(str(c.traits[0])).get("name", c.traits[0])), UIKit.OK))
 	var sub := UIKit.body_label("%s · 年龄 %d 岁 · LV %d" % [GameState.get_job(c.job_id).get("name", ""), c.age, c.level], UIKit.TEXT_FAINT, 11)
@@ -149,7 +150,14 @@ func _render() -> void:
 	var idl := UIKit.mono("IDENTIFIER: %s // CENTURY KNIGHTS REGISTER" % str(c.id).to_upper(), 9, UIKit.TEXT_FAINT, false)
 	idl.position = Vector2(140, 22)
 	p.add_child(idl)
-	var st := UIKit.body_label("● 驻地战备良好" if not c.injured else "● 伤病休整中", UIKit.OK if not c.injured else UIKit.DANGER, 11)
+	var hurt := c.injured or CKInjury.label(c) != ""
+	var block := CKInjury.deploy_block_reason(c)
+	var status := "● 驻地战备良好"
+	if block != "":
+		status = "● " + block
+	elif hurt:
+		status = "● 伤病休整中"
+	var st := UIKit.body_label(status, UIKit.OK if not hurt else UIKit.DANGER, 11)
 	st.autowrap_mode = TextServer.AUTOWRAP_OFF
 	st.position = Vector2(600, 20)
 	st.size = Vector2(180, 16)
@@ -249,7 +257,8 @@ func _render() -> void:
 	dr.position = Vector2(x0, 436)
 	dr.add_theme_constant_override("separation", 22)
 	p.add_child(dr)
-	for it in [["生命值", "%d/%d" % [c.hp, c.max_hp], UIKit.OK if not c.injured else UIKit.DANGER], ["攻击", str(c.derived_atk()), UIKit.TEXT], ["防御", str(c.derived_def()), UIKit.TEXT], ["命中", str(c.derived_hit()), UIKit.TEXT], ["回避", str(c.derived_avo()), UIKit.TEXT], ["移动", str(c.derived_move()), UIKit.ACCENT]]:
+	var move_now := c.derived_move() + CKInjury.move_mod(c)
+	for it in [["生命值", "%d/%d" % [c.hp, c.max_hp], UIKit.OK if not c.injured else UIKit.DANGER], ["攻击", str(c.derived_atk()), UIKit.TEXT], ["防御", str(c.derived_def()), UIKit.TEXT], ["命中", str(c.derived_hit()), UIKit.TEXT], ["回避", str(c.derived_avo()), UIKit.TEXT], ["移动", str(move_now), UIKit.ACCENT]]:
 		var v := VBoxContainer.new()
 		v.add_theme_constant_override("separation", 0)
 		var k := UIKit.body_label(str(it[0]), UIKit.TEXT_FAINT, 11)
