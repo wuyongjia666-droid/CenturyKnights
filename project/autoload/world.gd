@@ -90,6 +90,7 @@ func _ready() -> void:
 
 func _bind_battle_casualty(n: Node) -> void:
 	CKInjury.attach(n)
+	CKMorale.stamp(n)
 
 func _read(path: String) -> Dictionary:
 	if not FileAccess.file_exists(path):
