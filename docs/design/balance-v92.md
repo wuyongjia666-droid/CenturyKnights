@@ -61,3 +61,5 @@ v9.1 测完的正月库银：第 1 年 200，第 10 年 1790，第 30 年 3199�
 第 40 年正月库银 188，是因为灯籍在同一月落槌（出价 266，男爵）。这不是四个检查点之一。灯籍仍然买成了。
 
 种子 91 的出生数仍是 15，婚约没有错过。`GENOME PASS silver=0.237 midparent_width=0.064`，`KINSHIP PASS mean=0.839 silver_skip=0.156`。
+
+覆盖种子 1101–1120 的库银变了，有的婚期跟着动。立绘桶从 1595 变成 1605。`tools/farm_queue/genome_bank_v92.json` 已按这次模拟重写，`PORTRAIT BANK PASS births=322 hit_rate=1.000 buckets=1605`。请美术流按新清单出图，不要沿用旧桶。
