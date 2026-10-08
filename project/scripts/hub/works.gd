@@ -37,6 +37,10 @@ func _render() -> void:
 		_body.remove_child(n)
 		n.queue_free()
 	UIKit.page_head(_body, 42, 70, "FORTIFICATION // CASTLE WORKS", "城堡工事", "FORTIFICATION MATRIX", "工事至 Lv%d；升级扩编、降价、增产。全部工事 Lv3 / Lv5 达成堡志。" % GameState.BUILDING_MAX)
+	var view_b := UIKit.ghost_button(Locale.t("castle_view_open"), 160, 36)
+	view_b.position = Vector2(480, 118)
+	view_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/castle_view.tscn"))
+	_body.add_child(view_b)
 	var total := 0
 	for id in ["hall", "barracks", "market", "forge", "shrine"]:
 		total += GameState.building_level(id)
