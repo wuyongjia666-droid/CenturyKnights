@@ -1,6 +1,12 @@
 {
   "maps": {
     "ch0_pass": {
+      "on_victory": {
+        "flags": [
+          "battle_done"
+        ],
+        "actions": []
+      },
       "name": "隘口之夜",
       "w": 8,
       "h": 6,
@@ -101,6 +107,12 @@
       ]
     },
     "ch1_hill": {
+      "on_victory": {
+        "flags": [
+          "ch1_hill_done"
+        ],
+        "actions": []
+      },
       "name": "石垒坡",
       "w": 10,
       "h": 7,
@@ -235,6 +247,12 @@
       ]
     },
     "ch1_ford": {
+      "on_victory": {
+        "flags": [
+          "ch1_ford_done"
+        ],
+        "actions": []
+      },
       "name": "断潮渡",
       "w": 10,
       "h": 6,
@@ -357,6 +375,12 @@
       ]
     },
     "ch1_fog": {
+      "on_victory": {
+        "flags": [
+          "ch1_fog_done"
+        ],
+        "actions": []
+      },
       "name": "雾谷夜袭",
       "w": 9,
       "h": 7,
@@ -484,6 +508,10 @@
       ]
     },
     "quest_bandit": {
+      "on_victory": {
+        "flags": [],
+        "actions": []
+      },
       "name": "清匪·石垒坡",
       "w": 8,
       "h": 6,
@@ -589,6 +617,12 @@
       ]
     },
     "ch2_night": {
+      "on_victory": {
+        "flags": [
+          "ch2_night_done"
+        ],
+        "actions": []
+      },
       "name": "堡外夜袭",
       "w": 9,
       "h": 7,
@@ -722,6 +756,12 @@
       "lock_drill": true
     },
     "ch3_forge": {
+      "on_victory": {
+        "flags": [
+          "ch3_forge_done"
+        ],
+        "actions": []
+      },
       "name": "炉火关",
       "w": 10,
       "h": 7,
@@ -856,6 +896,12 @@
       ]
     },
     "ch3_shrine": {
+      "on_victory": {
+        "flags": [
+          "ch3_shrine_done"
+        ],
+        "actions": []
+      },
       "name": "祠堂外廊",
       "w": 8,
       "h": 8,
@@ -986,6 +1032,12 @@
       ]
     },
     "ch4_gate": {
+      "on_victory": {
+        "flags": [
+          "ch4_gate_done"
+        ],
+        "actions": []
+      },
       "name": "断字关",
       "w": 9,
       "h": 7,
@@ -1118,6 +1170,12 @@
       ]
     },
     "ch5_river": {
+      "on_victory": {
+        "flags": [
+          "ch5_river_done"
+        ],
+        "actions": []
+      },
       "name": "河湾集结",
       "w": 11,
       "h": 7,
@@ -1264,6 +1322,12 @@
       ]
     },
     "ch5_feast": {
+      "on_victory": {
+        "flags": [
+          "ch5_feast_done"
+        ],
+        "actions": []
+      },
       "name": "夜宴伏林",
       "w": 9,
       "h": 8,
@@ -1407,6 +1471,12 @@
       ]
     },
     "ch5_bridge": {
+      "on_victory": {
+        "flags": [
+          "ch5_bridge_done"
+        ],
+        "actions": []
+      },
       "name": "断桥守夜",
       "w": 10,
       "h": 7,
@@ -1546,6 +1616,12 @@
       "lock_drill": true
     },
     "ch6_archive": {
+      "on_victory": {
+        "flags": [
+          "ch6_archive_done"
+        ],
+        "actions": []
+      },
       "name": "族谱密室",
       "w": 9,
       "h": 7,
@@ -1677,6 +1753,12 @@
       ]
     },
     "ch6_redoubt": {
+      "on_victory": {
+        "flags": [
+          "ch6_redoubt_done"
+        ],
+        "actions": []
+      },
       "name": "托孤堡垒",
       "w": 10,
       "h": 8,
@@ -1833,6 +1915,12 @@
       "lock_drill": true
     },
     "ch6_bloodseal": {
+      "on_victory": {
+        "flags": [
+          "ch6_bloodseal_done"
+        ],
+        "actions": []
+      },
       "name": "血印祭坛",
       "w": 10,
       "h": 7,
@@ -1971,6 +2059,12 @@
       ]
     },
     "ch7_field": {
+      "on_victory": {
+        "flags": [
+          "ch7_field_done"
+        ],
+        "actions": []
+      },
       "name": "正名旷野",
       "w": 11,
       "h": 7,
@@ -2121,6 +2215,12 @@
       ]
     },
     "ch8_harbor": {
+      "on_victory": {
+        "flags": [
+          "ch8_harbor_done"
+        ],
+        "actions": []
+      },
       "name": "港灯夜议",
       "w": 10,
       "h": 7,
@@ -2259,6 +2359,12 @@
       ]
     },
     "ch8_quay": {
+      "on_victory": {
+        "flags": [
+          "ch8_quay_done"
+        ],
+        "actions": []
+      },
       "name": "潮汐码头",
       "w": 11,
       "h": 7,
@@ -2409,6 +2515,12 @@
       ]
     },
     "ch8_treaty": {
+      "on_victory": {
+        "flags": [
+          "ch8_treaty_done"
+        ],
+        "actions": []
+      },
       "name": "盟约厅卫",
       "w": 9,
       "h": 7,
@@ -2540,6 +2652,12 @@
       ]
     },
     "ch9_caravan": {
+      "on_victory": {
+        "flags": [
+          "ch9_caravan_done"
+        ],
+        "actions": []
+      },
       "name": "商路劫营",
       "w": 12,
       "h": 6,
@@ -2683,6 +2801,12 @@
       ]
     },
     "ch10_echo": {
+      "on_victory": {
+        "flags": [
+          "ch10_echo_done"
+        ],
+        "actions": []
+      },
       "name": "回响宴厅",
       "w": 10,
       "h": 7,
@@ -2821,6 +2945,12 @@
       ]
     },
     "ch10_banner": {
+      "on_victory": {
+        "flags": [
+          "ch10_banner_done"
+        ],
+        "actions": []
+      },
       "name": "百年旗原",
       "w": 11,
       "h": 7,
@@ -2971,6 +3101,12 @@
       ]
     },
     "ch10_seal": {
+      "on_victory": {
+        "flags": [
+          "ch10_seal_done"
+        ],
+        "actions": []
+      },
       "name": "回响印廷",
       "w": 9,
       "h": 7,
@@ -3102,6 +3238,12 @@
       ]
     },
     "ch11_gate": {
+      "on_victory": {
+        "flags": [
+          "ch11_gate_done"
+        ],
+        "actions": []
+      },
       "name": "王朝门阙",
       "w": 10,
       "h": 8,
@@ -3257,6 +3399,12 @@
       ]
     },
     "ch12_granary": {
+      "on_victory": {
+        "flags": [
+          "ch12_granary_done"
+        ],
+        "actions": []
+      },
       "name": "侧翼仓廪",
       "w": 10,
       "h": 7,
@@ -3395,6 +3543,12 @@
       ]
     },
     "ch12_ambush": {
+      "on_victory": {
+        "flags": [
+          "ch12_ambush_done"
+        ],
+        "actions": []
+      },
       "name": "宴后夜袭",
       "w": 11,
       "h": 7,
@@ -3545,6 +3699,12 @@
       ]
     },
     "ch12_rival": {
+      "on_victory": {
+        "flags": [
+          "ch12_rival_done"
+        ],
+        "actions": []
+      },
       "name": "敌宅营垒",
       "w": 10,
       "h": 8,
@@ -3700,6 +3860,12 @@
       ]
     },
     "ch13_heir": {
+      "on_victory": {
+        "flags": [
+          "ch13_heir_done"
+        ],
+        "actions": []
+      },
       "name": "嗣位对决",
       "w": 9,
       "h": 7,
@@ -3831,6 +3997,12 @@
       ]
     },
     "ch14_torch": {
+      "on_victory": {
+        "flags": [
+          "ch14_torch_done"
+        ],
+        "actions": []
+      },
       "name": "共持火把",
       "w": 10,
       "h": 7,
@@ -3969,6 +4141,12 @@
       ]
     },
     "ch14_margin": {
+      "on_victory": {
+        "flags": [
+          "ch14_margin_done"
+        ],
+        "actions": []
+      },
       "name": "旁注之争",
       "w": 11,
       "h": 7,
@@ -4119,6 +4297,12 @@
       ]
     },
     "ch14_cohold": {
+      "on_victory": {
+        "flags": [
+          "ch14_cohold_done"
+        ],
+        "actions": []
+      },
       "name": "并席守夜",
       "w": 10,
       "h": 8,
@@ -4274,6 +4458,12 @@
       ]
     },
     "ch15_finale": {
+      "on_victory": {
+        "flags": [
+          "ch15_finale_done"
+        ],
+        "actions": []
+      },
       "name": "百年席散",
       "w": 12,
       "h": 7,
@@ -4431,6 +4621,14 @@
       ]
     },
     "ch_heir_clash": {
+      "on_victory": {
+        "flags": [
+          "ch_heir_clash_done"
+        ],
+        "actions": [
+          "heir_clash_restore"
+        ]
+      },
       "name": "双嗣校场",
       "w": 10,
       "h": 7,
@@ -4563,6 +4761,12 @@
       ]
     },
     "ch16_sea": {
+      "on_victory": {
+        "flags": [
+          "ch16_sea_done"
+        ],
+        "actions": []
+      },
       "name": "海风哨口",
       "w": 10,
       "h": 7,
@@ -4701,6 +4905,12 @@
       ]
     },
     "ch16_grass": {
+      "on_victory": {
+        "flags": [
+          "ch16_grass_done"
+        ],
+        "actions": []
+      },
       "name": "草原驿路",
       "w": 11,
       "h": 7,
@@ -4851,6 +5061,12 @@
       ]
     },
     "ch16_beacon": {
+      "on_victory": {
+        "flags": [
+          "ch16_beacon_done"
+        ],
+        "actions": []
+      },
       "name": "双烽台",
       "w": 10,
       "h": 7,
@@ -4989,6 +5205,12 @@
       ]
     },
     "ch17_ford": {
+      "on_victory": {
+        "flags": [
+          "ch17_ford_done"
+        ],
+        "actions": []
+      },
       "name": "盐河浅渡",
       "w": 10,
       "h": 7,
@@ -5127,6 +5349,12 @@
       ]
     },
     "ch17_keep": {
+      "on_victory": {
+        "flags": [
+          "ch17_keep_done"
+        ],
+        "actions": []
+      },
       "name": "风暴堡垒",
       "w": 11,
       "h": 8,
@@ -5290,6 +5518,12 @@
       ]
     },
     "ch18_gate": {
+      "on_victory": {
+        "flags": [
+          "ch18_gate_done"
+        ],
+        "actions": []
+      },
       "name": "第二卷门阙",
       "w": 10,
       "h": 8,
@@ -5445,6 +5679,12 @@
       ]
     },
     "ch19_shore": {
+      "on_victory": {
+        "flags": [
+          "ch19_shore_done"
+        ],
+        "actions": []
+      },
       "name": "远岸灯火",
       "w": 10,
       "h": 7,
@@ -5583,6 +5823,12 @@
       ]
     },
     "ch19_reef": {
+      "on_victory": {
+        "flags": [
+          "ch19_reef_done"
+        ],
+        "actions": []
+      },
       "name": "雾礁航道",
       "w": 11,
       "h": 7,
@@ -5733,6 +5979,12 @@
       ]
     },
     "ch19_isle": {
+      "on_victory": {
+        "flags": [
+          "ch19_isle_done"
+        ],
+        "actions": []
+      },
       "name": "灯屿夜宴",
       "w": 10,
       "h": 7,
@@ -5871,6 +6123,12 @@
       ]
     },
     "ch20_wall": {
+      "on_victory": {
+        "flags": [
+          "ch20_wall_done"
+        ],
+        "actions": []
+      },
       "name": "潮墙守夜",
       "w": 11,
       "h": 7,
@@ -6021,6 +6279,12 @@
       ]
     },
     "ch20_spire": {
+      "on_victory": {
+        "flags": [
+          "ch20_spire_done"
+        ],
+        "actions": []
+      },
       "name": "冠塔试旗",
       "w": 10,
       "h": 8,
@@ -6176,6 +6440,12 @@
       ]
     },
     "ch21_finale": {
+      "on_victory": {
+        "flags": [
+          "ch21_finale_done"
+        ],
+        "actions": []
+      },
       "name": "二卷席终",
       "w": 12,
       "h": 8,
@@ -6352,6 +6622,12 @@
       ]
     },
     "ch22_pass": {
+      "on_victory": {
+        "flags": [
+          "ch22_pass_done"
+        ],
+        "actions": []
+      },
       "name": "北风隘口",
       "w": 10,
       "h": 7,
@@ -6490,6 +6766,12 @@
       ]
     },
     "ch22_camp": {
+      "on_victory": {
+        "flags": [
+          "ch22_camp_done"
+        ],
+        "actions": []
+      },
       "name": "北营夜哨",
       "w": 10,
       "h": 7,
@@ -6633,6 +6915,12 @@
       ]
     },
     "ch23_frost": {
+      "on_victory": {
+        "flags": [
+          "ch23_frost_done"
+        ],
+        "actions": []
+      },
       "name": "霜桥渡",
       "w": 11,
       "h": 7,
@@ -6783,6 +7071,12 @@
       ]
     },
     "ch23_watch": {
+      "on_victory": {
+        "flags": [
+          "ch23_watch_done"
+        ],
+        "actions": []
+      },
       "name": "霜望台",
       "w": 10,
       "h": 7,
@@ -6921,6 +7215,12 @@
       ]
     },
     "ch24_seal": {
+      "on_victory": {
+        "flags": [
+          "ch24_seal_done"
+        ],
+        "actions": []
+      },
       "name": "三卷钤印",
       "w": 12,
       "h": 8,
@@ -7097,6 +7397,12 @@
       ]
     },
     "ch25_plain": {
+      "on_victory": {
+        "flags": [
+          "ch25_plain_done"
+        ],
+        "actions": []
+      },
       "name": "朔原烽",
       "w": 11,
       "h": 7,
@@ -7247,6 +7553,12 @@
       ]
     },
     "ch25_ridge": {
+      "on_victory": {
+        "flags": [
+          "ch25_ridge_done"
+        ],
+        "actions": []
+      },
       "name": "朔脊夜",
       "w": 10,
       "h": 7,
@@ -7385,6 +7697,12 @@
       ]
     },
     "ch26_snow": {
+      "on_victory": {
+        "flags": [
+          "ch26_snow_done"
+        ],
+        "actions": []
+      },
       "name": "冠雪关",
       "w": 11,
       "h": 8,
@@ -7548,6 +7866,12 @@
       ]
     },
     "ch26_peak": {
+      "on_victory": {
+        "flags": [
+          "ch26_peak_done"
+        ],
+        "actions": []
+      },
       "name": "冠峰守",
       "w": 10,
       "h": 7,
@@ -7691,6 +8015,12 @@
       ]
     },
     "ch27_finale": {
+      "on_victory": {
+        "flags": [
+          "ch27_finale_done"
+        ],
+        "actions": []
+      },
       "name": "三卷席终",
       "w": 12,
       "h": 8,
@@ -7872,6 +8202,12 @@
       ]
     },
     "ch28_marsh": {
+      "on_victory": {
+        "flags": [
+          "ch28_marsh_done"
+        ],
+        "actions": []
+      },
       "name": "南泽斥候",
       "w": 10,
       "h": 7,
@@ -8010,6 +8346,12 @@
       ]
     },
     "ch28_ferry": {
+      "on_victory": {
+        "flags": [
+          "ch28_ferry_done"
+        ],
+        "actions": []
+      },
       "name": "南渡口",
       "w": 11,
       "h": 7,
@@ -8160,6 +8502,12 @@
       ]
     },
     "ch29_field": {
+      "on_victory": {
+        "flags": [
+          "ch29_field_done"
+        ],
+        "actions": []
+      },
       "name": "金陌麦浪",
       "w": 10,
       "h": 7,
@@ -8298,6 +8646,12 @@
       ]
     },
     "ch29_barn": {
+      "on_victory": {
+        "flags": [
+          "ch29_barn_done"
+        ],
+        "actions": []
+      },
       "name": "金陌仓廪",
       "w": 10,
       "h": 7,
@@ -8441,6 +8795,12 @@
       ]
     },
     "ch30_seal": {
+      "on_victory": {
+        "flags": [
+          "ch30_seal_done"
+        ],
+        "actions": []
+      },
       "name": "四卷钤印",
       "w": 12,
       "h": 8,
@@ -8617,6 +8977,12 @@
       ]
     },
     "ch31_gorge": {
+      "on_victory": {
+        "flags": [
+          "ch31_gorge_done"
+        ],
+        "actions": []
+      },
       "name": "铁峡关",
       "w": 11,
       "h": 7,
@@ -8767,6 +9133,12 @@
       ]
     },
     "ch31_forge": {
+      "on_victory": {
+        "flags": [
+          "ch31_forge_done"
+        ],
+        "actions": []
+      },
       "name": "铁峡炉心",
       "w": 10,
       "h": 7,
@@ -8905,6 +9277,12 @@
       ]
     },
     "ch32_star": {
+      "on_victory": {
+        "flags": [
+          "ch32_star_done"
+        ],
+        "actions": []
+      },
       "name": "星津渡",
       "w": 11,
       "h": 8,
@@ -9068,6 +9446,12 @@
       ]
     },
     "ch32_tower": {
+      "on_victory": {
+        "flags": [
+          "ch32_tower_done"
+        ],
+        "actions": []
+      },
       "name": "星津望楼",
       "w": 10,
       "h": 7,
@@ -9211,6 +9595,12 @@
       ]
     },
     "ch33_finale": {
+      "on_victory": {
+        "flags": [
+          "ch33_finale_done"
+        ],
+        "actions": []
+      },
       "name": "四卷席终",
       "w": 12,
       "h": 8,
@@ -9392,6 +9782,12 @@
       ]
     },
     "ch34_dawn": {
+      "on_victory": {
+        "flags": [
+          "ch34_dawn_done"
+        ],
+        "actions": []
+      },
       "name": "五卷破晓",
       "w": 10,
       "h": 7,
@@ -9530,6 +9926,12 @@
       ]
     },
     "ch34_cross": {
+      "on_victory": {
+        "flags": [
+          "ch34_cross_done"
+        ],
+        "actions": []
+      },
       "name": "破晓渡",
       "w": 11,
       "h": 7,
@@ -9680,6 +10082,12 @@
       ]
     },
     "ch35_bell": {
+      "on_victory": {
+        "flags": [
+          "ch35_bell_done"
+        ],
+        "actions": []
+      },
       "name": "晚钟城垣",
       "w": 10,
       "h": 7,
@@ -9818,6 +10226,12 @@
       ]
     },
     "ch35_keep": {
+      "on_victory": {
+        "flags": [
+          "ch35_keep_done"
+        ],
+        "actions": []
+      },
       "name": "晚钟内堡",
       "w": 10,
       "h": 7,
@@ -9961,6 +10375,12 @@
       ]
     },
     "ch36_seal": {
+      "on_victory": {
+        "flags": [
+          "ch36_seal_done"
+        ],
+        "actions": []
+      },
       "name": "五卷钤印",
       "w": 12,
       "h": 8,
@@ -10137,6 +10557,12 @@
       ]
     },
     "ch37_plain": {
+      "on_victory": {
+        "flags": [
+          "ch37_plain_done"
+        ],
+        "actions": []
+      },
       "name": "长川平野",
       "w": 11,
       "h": 7,
@@ -10287,6 +10713,12 @@
       ]
     },
     "ch37_ridge": {
+      "on_victory": {
+        "flags": [
+          "ch37_ridge_done"
+        ],
+        "actions": []
+      },
       "name": "长川脊垒",
       "w": 10,
       "h": 7,
@@ -10425,6 +10857,12 @@
       ]
     },
     "ch38_gate": {
+      "on_victory": {
+        "flags": [
+          "ch38_gate_done"
+        ],
+        "actions": []
+      },
       "name": "终阙外门",
       "w": 11,
       "h": 8,
@@ -10588,6 +11026,12 @@
       ]
     },
     "ch38_hall": {
+      "on_victory": {
+        "flags": [
+          "ch38_hall_done"
+        ],
+        "actions": []
+      },
       "name": "终阙正殿",
       "w": 10,
       "h": 7,
@@ -10731,6 +11175,12 @@
       ]
     },
     "ch39_finale": {
+      "on_victory": {
+        "flags": [
+          "ch39_finale_done"
+        ],
+        "actions": []
+      },
       "name": "五卷席终",
       "w": 12,
       "h": 8,
@@ -10912,6 +11362,12 @@
       ]
     },
     "ch40_mist": {
+      "on_victory": {
+        "flags": [
+          "ch40_mist_done"
+        ],
+        "actions": []
+      },
       "name": "雾原初旗",
       "w": 10,
       "h": 7,
@@ -11050,6 +11506,12 @@
       ]
     },
     "ch40_ford": {
+      "on_victory": {
+        "flags": [
+          "ch40_ford_done"
+        ],
+        "actions": []
+      },
       "name": "雾原浅滩",
       "w": 11,
       "h": 7,
@@ -11200,6 +11662,12 @@
       ]
     },
     "ch41_cairn": {
+      "on_victory": {
+        "flags": [
+          "ch41_cairn_done"
+        ],
+        "actions": []
+      },
       "name": "石冢守望",
       "w": 10,
       "h": 7,
@@ -11338,6 +11806,12 @@
       ]
     },
     "ch41_vault": {
+      "on_victory": {
+        "flags": [
+          "ch41_vault_done"
+        ],
+        "actions": []
+      },
       "name": "石冢地库",
       "w": 10,
       "h": 7,
@@ -11481,6 +11955,12 @@
       ]
     },
     "ch42_seal": {
+      "on_victory": {
+        "flags": [
+          "ch42_seal_done"
+        ],
+        "actions": []
+      },
       "name": "六卷钤印",
       "w": 12,
       "h": 8,
@@ -11657,6 +12137,12 @@
       ]
     },
     "ch43_tide": {
+      "on_victory": {
+        "flags": [
+          "ch43_tide_done"
+        ],
+        "actions": []
+      },
       "name": "黑潮口",
       "w": 11,
       "h": 7,
@@ -11807,6 +12293,12 @@
       ]
     },
     "ch43_reef": {
+      "on_victory": {
+        "flags": [
+          "ch43_reef_done"
+        ],
+        "actions": []
+      },
       "name": "黑潮暗礁",
       "w": 10,
       "h": 7,
@@ -11945,6 +12437,12 @@
       ]
     },
     "ch44_tower": {
+      "on_victory": {
+        "flags": [
+          "ch44_tower_done"
+        ],
+        "actions": []
+      },
       "name": "曜塔下层",
       "w": 11,
       "h": 8,
@@ -12108,6 +12606,12 @@
       ]
     },
     "ch44_spire": {
+      "on_victory": {
+        "flags": [
+          "ch44_spire_done"
+        ],
+        "actions": []
+      },
       "name": "曜塔尖顶",
       "w": 10,
       "h": 7,
@@ -12251,6 +12755,12 @@
       ]
     },
     "ch45_finale": {
+      "on_victory": {
+        "flags": [
+          "ch45_finale_done"
+        ],
+        "actions": []
+      },
       "name": "六卷席终",
       "w": 12,
       "h": 8,
@@ -12432,6 +12942,12 @@
       ]
     },
     "ch46_ember": {
+      "on_victory": {
+        "flags": [
+          "ch46_ember_done"
+        ],
+        "actions": []
+      },
       "name": "余烬关",
       "w": 10,
       "h": 7,
@@ -12570,6 +13086,12 @@
       ]
     },
     "ch46_ash": {
+      "on_victory": {
+        "flags": [
+          "ch46_ash_done"
+        ],
+        "actions": []
+      },
       "name": "余烬渡",
       "w": 11,
       "h": 7,
@@ -12720,6 +13242,12 @@
       ]
     },
     "ch47_crown": {
+      "on_victory": {
+        "flags": [
+          "ch47_crown_done"
+        ],
+        "actions": []
+      },
       "name": "冠火城垣",
       "w": 10,
       "h": 7,
@@ -12858,6 +13386,12 @@
       ]
     },
     "ch47_hearth": {
+      "on_victory": {
+        "flags": [
+          "ch47_hearth_done"
+        ],
+        "actions": []
+      },
       "name": "冠火炉心",
       "w": 10,
       "h": 7,
@@ -13001,6 +13535,12 @@
       ]
     },
     "ch48_seal": {
+      "on_victory": {
+        "flags": [
+          "ch48_seal_done"
+        ],
+        "actions": []
+      },
       "name": "七卷钤印",
       "w": 12,
       "h": 8,
@@ -13177,6 +13717,12 @@
       ]
     },
     "ch49_cinder": {
+      "on_victory": {
+        "flags": [
+          "ch49_cinder_done"
+        ],
+        "actions": []
+      },
       "name": "烬原旷野",
       "w": 11,
       "h": 7,
@@ -13327,6 +13873,12 @@
       ]
     },
     "ch49_kiln": {
+      "on_victory": {
+        "flags": [
+          "ch49_kiln_done"
+        ],
+        "actions": []
+      },
       "name": "烬原窑火",
       "w": 10,
       "h": 7,
@@ -13465,6 +14017,12 @@
       ]
     },
     "ch50_gate": {
+      "on_victory": {
+        "flags": [
+          "ch50_gate_done"
+        ],
+        "actions": []
+      },
       "name": "百旗外门",
       "w": 11,
       "h": 8,
@@ -13628,6 +14186,12 @@
       ]
     },
     "ch50_hall": {
+      "on_victory": {
+        "flags": [
+          "ch50_hall_done"
+        ],
+        "actions": []
+      },
       "name": "百旗正殿",
       "w": 10,
       "h": 7,
@@ -13771,6 +14335,12 @@
       ]
     },
     "ch51_finale": {
+      "on_victory": {
+        "flags": [
+          "ch51_finale_done"
+        ],
+        "actions": []
+      },
       "name": "七卷席终",
       "w": 12,
       "h": 8,
@@ -13952,6 +14522,12 @@
       ]
     },
     "ch52_dawn": {
+      "on_victory": {
+        "flags": [
+          "ch52_dawn_done"
+        ],
+        "actions": []
+      },
       "name": "八卷破晓",
       "w": 10,
       "h": 7,
@@ -14090,6 +14666,12 @@
       ]
     },
     "ch52_bridge": {
+      "on_victory": {
+        "flags": [
+          "ch52_bridge_done"
+        ],
+        "actions": []
+      },
       "name": "破晓长桥",
       "w": 11,
       "h": 7,
@@ -14240,6 +14822,12 @@
       ]
     },
     "ch53_mirror": {
+      "on_victory": {
+        "flags": [
+          "ch53_mirror_done"
+        ],
+        "actions": []
+      },
       "name": "镜湖堤",
       "w": 10,
       "h": 7,
@@ -14378,6 +14966,12 @@
       ]
     },
     "ch53_isle": {
+      "on_victory": {
+        "flags": [
+          "ch53_isle_done"
+        ],
+        "actions": []
+      },
       "name": "镜湖心屿",
       "w": 10,
       "h": 7,
@@ -14521,6 +15115,12 @@
       ]
     },
     "ch54_seal": {
+      "on_victory": {
+        "flags": [
+          "ch54_seal_done"
+        ],
+        "actions": []
+      },
       "name": "八卷钤印",
       "w": 12,
       "h": 8,
@@ -14697,6 +15297,12 @@
       ]
     },
     "ch55_gale": {
+      "on_victory": {
+        "flags": [
+          "ch55_gale_done"
+        ],
+        "actions": []
+      },
       "name": "朔风关",
       "w": 11,
       "h": 7,
@@ -14847,6 +15453,12 @@
       ]
     },
     "ch55_pass": {
+      "on_victory": {
+        "flags": [
+          "ch55_pass_done"
+        ],
+        "actions": []
+      },
       "name": "朔风隘",
       "w": 10,
       "h": 7,
@@ -14985,6 +15597,12 @@
       ]
     },
     "ch56_court": {
+      "on_victory": {
+        "flags": [
+          "ch56_court_done"
+        ],
+        "actions": []
+      },
       "name": "曜廷外阶",
       "w": 11,
       "h": 8,
@@ -15148,6 +15766,12 @@
       ]
     },
     "ch56_throne": {
+      "on_victory": {
+        "flags": [
+          "ch56_throne_done"
+        ],
+        "actions": []
+      },
       "name": "曜廷御座",
       "w": 10,
       "h": 7,
@@ -15291,6 +15915,12 @@
       ]
     },
     "ch57_finale": {
+      "on_victory": {
+        "flags": [
+          "ch57_finale_done"
+        ],
+        "actions": []
+      },
       "name": "八卷席终",
       "w": 12,
       "h": 8,
@@ -15472,6 +16102,12 @@
       ]
     },
     "ch58_ember": {
+      "on_victory": {
+        "flags": [
+          "ch58_ember_done"
+        ],
+        "actions": []
+      },
       "name": "余烬港",
       "w": 11,
       "h": 7,
@@ -15622,6 +16258,12 @@
       ]
     },
     "ch58_tide": {
+      "on_victory": {
+        "flags": [
+          "ch58_tide_done"
+        ],
+        "actions": []
+      },
       "name": "潮门",
       "w": 10,
       "h": 7,
@@ -15760,6 +16402,12 @@
       ]
     },
     "ch59_frost": {
+      "on_victory": {
+        "flags": [
+          "ch59_frost_done"
+        ],
+        "actions": []
+      },
       "name": "霜驿",
       "w": 11,
       "h": 8,
@@ -15923,6 +16571,12 @@
       ]
     },
     "ch59_night": {
+      "on_victory": {
+        "flags": [
+          "ch59_night_done"
+        ],
+        "actions": []
+      },
       "name": "夜驿",
       "w": 10,
       "h": 7,
@@ -16061,6 +16715,12 @@
       ]
     },
     "ch60_seal": {
+      "on_victory": {
+        "flags": [
+          "ch60_seal_done"
+        ],
+        "actions": []
+      },
       "name": "九卷钤印",
       "w": 11,
       "h": 7,
@@ -16211,6 +16871,12 @@
       ]
     },
     "ch61_ash": {
+      "on_victory": {
+        "flags": [
+          "ch61_ash_done"
+        ],
+        "actions": []
+      },
       "name": "烬原",
       "w": 11,
       "h": 7,
@@ -16361,6 +17027,12 @@
       ]
     },
     "ch61_banner": {
+      "on_victory": {
+        "flags": [
+          "ch61_banner_done"
+        ],
+        "actions": []
+      },
       "name": "百旗坡",
       "w": 10,
       "h": 7,
@@ -16499,6 +17171,12 @@
       ]
     },
     "ch62_court": {
+      "on_victory": {
+        "flags": [
+          "ch62_court_done"
+        ],
+        "actions": []
+      },
       "name": "曜阙外",
       "w": 11,
       "h": 8,
@@ -16662,6 +17340,12 @@
       ]
     },
     "ch62_throne": {
+      "on_victory": {
+        "flags": [
+          "ch62_throne_done"
+        ],
+        "actions": []
+      },
       "name": "曜阙心",
       "w": 10,
       "h": 7,
@@ -16805,6 +17489,12 @@
       ]
     },
     "ch63_finale": {
+      "on_victory": {
+        "flags": [
+          "ch63_finale_done"
+        ],
+        "actions": []
+      },
       "name": "九卷席终",
       "w": 12,
       "h": 8,
@@ -16986,6 +17676,12 @@
       ]
     },
     "ch64_canal": {
+      "on_victory": {
+        "flags": [
+          "ch64_canal_done"
+        ],
+        "actions": []
+      },
       "name": "暗渠",
       "w": 12,
       "h": 8,
@@ -17157,6 +17853,12 @@
       ]
     },
     "ch64_bazaar": {
+      "on_victory": {
+        "flags": [
+          "ch64_bazaar_done"
+        ],
+        "actions": []
+      },
       "name": "市声",
       "w": 11,
       "h": 7,
@@ -17302,6 +18004,12 @@
       ]
     },
     "ch65_bell": {
+      "on_victory": {
+        "flags": [
+          "ch65_bell_done"
+        ],
+        "actions": []
+      },
       "name": "铃巷",
       "w": 10,
       "h": 8,
@@ -17457,6 +18165,12 @@
       ]
     },
     "ch65_mute": {
+      "on_victory": {
+        "flags": [
+          "ch65_mute_done"
+        ],
+        "actions": []
+      },
       "name": "哑钟",
       "w": 11,
       "h": 7,
@@ -17602,6 +18316,12 @@
       ]
     },
     "ch66_wellseal": {
+      "on_victory": {
+        "flags": [
+          "ch66_wellseal_done"
+        ],
+        "actions": []
+      },
       "name": "井印",
       "w": 11,
       "h": 7,
@@ -17752,6 +18472,12 @@
       ]
     },
     "ch67_salt": {
+      "on_victory": {
+        "flags": [
+          "ch67_salt_done"
+        ],
+        "actions": []
+      },
       "name": "盐船",
       "w": 11,
       "h": 8,
@@ -17915,6 +18641,12 @@
       ]
     },
     "ch67_wharf": {
+      "on_victory": {
+        "flags": [
+          "ch67_wharf_done"
+        ],
+        "actions": []
+      },
       "name": "盐埠",
       "w": 10,
       "h": 7,
@@ -18053,6 +18785,12 @@
       ]
     },
     "ch68_paper": {
+      "on_victory": {
+        "flags": [
+          "ch68_paper_done"
+        ],
+        "actions": []
+      },
       "name": "纸坊",
       "w": 11,
       "h": 7,
@@ -18203,6 +18941,12 @@
       ]
     },
     "ch68_ink": {
+      "on_victory": {
+        "flags": [
+          "ch68_ink_done"
+        ],
+        "actions": []
+      },
       "name": "墨渠",
       "w": 10,
       "h": 8,
@@ -18353,6 +19097,12 @@
       ]
     },
     "ch69_finale": {
+      "on_victory": {
+        "flags": [
+          "ch69_finale_done"
+        ],
+        "actions": []
+      },
       "name": "十卷席终",
       "w": 12,
       "h": 8,
@@ -18534,6 +19284,12 @@
       ]
     },
     "ch70_kiln": {
+      "on_victory": {
+        "flags": [
+          "ch70_kiln_done"
+        ],
+        "actions": []
+      },
       "name": "窑口",
       "w": 11,
       "h": 7,
@@ -18684,6 +19440,12 @@
       ]
     },
     "ch70_sagger": {
+      "on_victory": {
+        "flags": [
+          "ch70_sagger_done"
+        ],
+        "actions": []
+      },
       "name": "匣钵",
       "w": 10,
       "h": 8,
@@ -18834,6 +19596,12 @@
       ]
     },
     "ch71_glaze": {
+      "on_victory": {
+        "flags": [
+          "ch71_glaze_done"
+        ],
+        "actions": []
+      },
       "name": "釉河",
       "w": 12,
       "h": 7,
@@ -18991,6 +19759,12 @@
       ]
     },
     "ch71_bisque": {
+      "on_victory": {
+        "flags": [
+          "ch71_bisque_done"
+        ],
+        "actions": []
+      },
       "name": "素坯",
       "w": 11,
       "h": 7,
@@ -19136,6 +19910,12 @@
       ]
     },
     "ch72_kilnseal": {
+      "on_victory": {
+        "flags": [
+          "ch72_kilnseal_done"
+        ],
+        "actions": []
+      },
       "name": "窑印",
       "w": 11,
       "h": 7,
@@ -19286,6 +20066,12 @@
       ]
     },
     "ch73_chimney": {
+      "on_victory": {
+        "flags": [
+          "ch73_chimney_done"
+        ],
+        "actions": []
+      },
       "name": "烟囱",
       "w": 10,
       "h": 8,
@@ -19441,6 +20227,12 @@
       ]
     },
     "ch73_kilngod": {
+      "on_victory": {
+        "flags": [
+          "ch73_kilngod_done"
+        ],
+        "actions": []
+      },
       "name": "窑神龛",
       "w": 10,
       "h": 7,
@@ -19579,6 +20371,12 @@
       ]
     },
     "ch74_hearth": {
+      "on_victory": {
+        "flags": [
+          "ch74_hearth_done"
+        ],
+        "actions": []
+      },
       "name": "火塘",
       "w": 11,
       "h": 8,
@@ -19742,6 +20540,12 @@
       ]
     },
     "ch74_cool": {
+      "on_victory": {
+        "flags": [
+          "ch74_cool_done"
+        ],
+        "actions": []
+      },
       "name": "冷却道",
       "w": 11,
       "h": 7,
@@ -19887,6 +20691,12 @@
       ]
     },
     "ch75_finale": {
+      "on_victory": {
+        "flags": [
+          "ch75_finale_done"
+        ],
+        "actions": []
+      },
       "name": "十一卷席终",
       "w": 12,
       "h": 8,
@@ -20068,6 +20878,12 @@
       ]
     },
     "ch76_stage": {
+      "on_victory": {
+        "flags": [
+          "ch76_stage_done"
+        ],
+        "actions": []
+      },
       "name": "台口",
       "w": 11,
       "h": 8,
@@ -20231,6 +21047,12 @@
       ]
     },
     "ch76_gallery": {
+      "on_victory": {
+        "flags": [
+          "ch76_gallery_done"
+        ],
+        "actions": []
+      },
       "name": "厢廊",
       "w": 10,
       "h": 7,
@@ -20369,6 +21191,12 @@
       ]
     },
     "ch77_check": {
+      "on_victory": {
+        "flags": [
+          "ch77_check_done"
+        ],
+        "actions": []
+      },
       "name": "检场",
       "w": 11,
       "h": 7,
@@ -20514,6 +21342,12 @@
       ]
     },
     "ch77_drum": {
+      "on_victory": {
+        "flags": [
+          "ch77_drum_done"
+        ],
+        "actions": []
+      },
       "name": "锣鼓",
       "w": 10,
       "h": 8,
@@ -20664,6 +21498,12 @@
       ]
     },
     "ch78_playseal": {
+      "on_victory": {
+        "flags": [
+          "ch78_playseal_done"
+        ],
+        "actions": []
+      },
       "name": "戏印",
       "w": 11,
       "h": 7,
@@ -20814,6 +21654,12 @@
       ]
     },
     "ch79_backstage": {
+      "on_victory": {
+        "flags": [
+          "ch79_backstage_done"
+        ],
+        "actions": []
+      },
       "name": "后台",
       "w": 11,
       "h": 8,
@@ -20977,6 +21823,12 @@
       ]
     },
     "ch79_mirror": {
+      "on_victory": {
+        "flags": [
+          "ch79_mirror_done"
+        ],
+        "actions": []
+      },
       "name": "妆镜",
       "w": 10,
       "h": 7,
@@ -21115,6 +21967,12 @@
       ]
     },
     "ch80_lamps": {
+      "on_victory": {
+        "flags": [
+          "ch80_lamps_done"
+        ],
+        "actions": []
+      },
       "name": "灯架",
       "w": 12,
       "h": 8,
@@ -21286,6 +22144,12 @@
       ]
     },
     "ch80_curtain": {
+      "on_victory": {
+        "flags": [
+          "ch80_curtain_done"
+        ],
+        "actions": []
+      },
       "name": "帘幕",
       "w": 11,
       "h": 7,
@@ -21431,6 +22295,12 @@
       ]
     },
     "ch81_finale": {
+      "on_victory": {
+        "flags": [
+          "ch81_finale_done"
+        ],
+        "actions": []
+      },
       "name": "十二卷席终",
       "w": 12,
       "h": 8,
@@ -21612,6 +22482,12 @@
       ]
     },
     "ch82_mulberry": {
+      "on_victory": {
+        "flags": [
+          "ch82_mulberry_done"
+        ],
+        "actions": []
+      },
       "name": "桑陌",
       "w": 11,
       "h": 7,
@@ -21762,6 +22638,12 @@
       ]
     },
     "ch82_cocoon": {
+      "on_victory": {
+        "flags": [
+          "ch82_cocoon_done"
+        ],
+        "actions": []
+      },
       "name": "茧房",
       "w": 10,
       "h": 8,
@@ -21912,6 +22794,12 @@
       ]
     },
     "ch83_reel": {
+      "on_victory": {
+        "flags": [
+          "ch83_reel_done"
+        ],
+        "actions": []
+      },
       "name": "缫丝",
       "w": 11,
       "h": 7,
@@ -22057,6 +22945,12 @@
       ]
     },
     "ch83_loom": {
+      "on_victory": {
+        "flags": [
+          "ch83_loom_done"
+        ],
+        "actions": []
+      },
       "name": "织机",
       "w": 10,
       "h": 7,
@@ -22195,6 +23089,12 @@
       ]
     },
     "ch84_silkseal": {
+      "on_victory": {
+        "flags": [
+          "ch84_silkseal_done"
+        ],
+        "actions": []
+      },
       "name": "丝印",
       "w": 11,
       "h": 7,
@@ -22345,6 +23245,12 @@
       ]
     },
     "ch85_bake": {
+      "on_victory": {
+        "flags": [
+          "ch85_bake_done"
+        ],
+        "actions": []
+      },
       "name": "烘茧",
       "w": 11,
       "h": 8,
@@ -22508,6 +23414,12 @@
       ]
     },
     "ch85_dye": {
+      "on_victory": {
+        "flags": [
+          "ch85_dye_done"
+        ],
+        "actions": []
+      },
       "name": "练染",
       "w": 10,
       "h": 7,
@@ -22646,6 +23558,12 @@
       ]
     },
     "ch86_warp": {
+      "on_victory": {
+        "flags": [
+          "ch86_warp_done"
+        ],
+        "actions": []
+      },
       "name": "经轴",
       "w": 11,
       "h": 7,
@@ -22791,6 +23709,12 @@
       ]
     },
     "ch86_bolt": {
+      "on_victory": {
+        "flags": [
+          "ch86_bolt_done"
+        ],
+        "actions": []
+      },
       "name": "成绢",
       "w": 12,
       "h": 8,
@@ -22962,6 +23886,12 @@
       ]
     },
     "ch87_finale": {
+      "on_victory": {
+        "flags": [
+          "ch87_finale_done"
+        ],
+        "actions": []
+      },
       "name": "十三卷席终",
       "w": 12,
       "h": 8,
@@ -23143,6 +24073,12 @@
       ]
     },
     "ch88_terrace": {
+      "on_victory": {
+        "flags": [
+          "ch88_terrace_done"
+        ],
+        "actions": []
+      },
       "name": "茶梯",
       "w": 11,
       "h": 8,
@@ -23306,6 +24242,12 @@
       ]
     },
     "ch88_heap": {
+      "on_victory": {
+        "flags": [
+          "ch88_heap_done"
+        ],
+        "actions": []
+      },
       "name": "茶垛",
       "w": 10,
       "h": 7,
@@ -23444,6 +24386,12 @@
       ]
     },
     "ch89_steam": {
+      "on_victory": {
+        "flags": [
+          "ch89_steam_done"
+        ],
+        "actions": []
+      },
       "name": "蒸青",
       "w": 11,
       "h": 7,
@@ -23589,6 +24537,12 @@
       ]
     },
     "ch89_roast": {
+      "on_victory": {
+        "flags": [
+          "ch89_roast_done"
+        ],
+        "actions": []
+      },
       "name": "炒青",
       "w": 10,
       "h": 8,
@@ -23739,6 +24693,12 @@
       ]
     },
     "ch90_teaseal": {
+      "on_victory": {
+        "flags": [
+          "ch90_teaseal_done"
+        ],
+        "actions": []
+      },
       "name": "茶印",
       "w": 11,
       "h": 7,
@@ -23889,6 +24849,12 @@
       ]
     },
     "ch91_wither": {
+      "on_victory": {
+        "flags": [
+          "ch91_wither_done"
+        ],
+        "actions": []
+      },
       "name": "晾青",
       "w": 11,
       "h": 8,
@@ -24052,6 +25018,12 @@
       ]
     },
     "ch91_scent": {
+      "on_victory": {
+        "flags": [
+          "ch91_scent_done"
+        ],
+        "actions": []
+      },
       "name": "窨花",
       "w": 10,
       "h": 7,
@@ -24190,6 +25162,12 @@
       ]
     },
     "ch92_permit": {
+      "on_victory": {
+        "flags": [
+          "ch92_permit_done"
+        ],
+        "actions": []
+      },
       "name": "茶引",
       "w": 12,
       "h": 7,
@@ -24347,6 +25325,12 @@
       ]
     },
     "ch92_post": {
+      "on_victory": {
+        "flags": [
+          "ch92_post_done"
+        ],
+        "actions": []
+      },
       "name": "茶驿",
       "w": 11,
       "h": 8,
@@ -24505,6 +25489,12 @@
       ]
     },
     "ch93_finale": {
+      "on_victory": {
+        "flags": [
+          "ch93_finale_done"
+        ],
+        "actions": []
+      },
       "name": "十四卷席终",
       "w": 12,
       "h": 8,
@@ -24686,6 +25676,12 @@
       ]
     },
     "ch94_herb": {
+      "on_victory": {
+        "flags": [
+          "ch94_herb_done"
+        ],
+        "actions": []
+      },
       "name": "药圃",
       "w": 11,
       "h": 7,
@@ -24836,6 +25832,12 @@
       ]
     },
     "ch94_mortar": {
+      "on_victory": {
+        "flags": [
+          "ch94_mortar_done"
+        ],
+        "actions": []
+      },
       "name": "药碾",
       "w": 10,
       "h": 8,
@@ -24986,6 +25988,12 @@
       ]
     },
     "ch95_clinic": {
+      "on_victory": {
+        "flags": [
+          "ch95_clinic_done"
+        ],
+        "actions": []
+      },
       "name": "医馆",
       "w": 11,
       "h": 7,
@@ -25131,6 +26139,12 @@
       ]
     },
     "ch95_store": {
+      "on_victory": {
+        "flags": [
+          "ch95_store_done"
+        ],
+        "actions": []
+      },
       "name": "药柜",
       "w": 10,
       "h": 7,
@@ -25269,6 +26283,12 @@
       ]
     },
     "ch96_dose": {
+      "on_victory": {
+        "flags": [
+          "ch96_dose_done"
+        ],
+        "actions": []
+      },
       "name": "方印",
       "w": 11,
       "h": 7,
@@ -25419,6 +26439,12 @@
       ]
     },
     "ch97_decoct": {
+      "on_victory": {
+        "flags": [
+          "ch97_decoct_done"
+        ],
+        "actions": []
+      },
       "name": "煎药",
       "w": 11,
       "h": 8,
@@ -25582,6 +26608,12 @@
       ]
     },
     "ch97_point": {
+      "on_victory": {
+        "flags": [
+          "ch97_point_done"
+        ],
+        "actions": []
+      },
       "name": "穴位",
       "w": 10,
       "h": 7,
@@ -25720,6 +26752,12 @@
       ]
     },
     "ch98_canon": {
+      "on_victory": {
+        "flags": [
+          "ch98_canon_done"
+        ],
+        "actions": []
+      },
       "name": "医籍",
       "w": 11,
       "h": 7,
@@ -25865,6 +26903,12 @@
       ]
     },
     "ch98_gourd": {
+      "on_victory": {
+        "flags": [
+          "ch98_gourd_done"
+        ],
+        "actions": []
+      },
       "name": "悬壶",
       "w": 10,
       "h": 8,
@@ -26015,6 +27059,12 @@
       ]
     },
     "ch99_finale": {
+      "on_victory": {
+        "flags": [
+          "ch99_finale_done"
+        ],
+        "actions": []
+      },
       "name": "十五卷席终",
       "w": 12,
       "h": 8,
@@ -26196,6 +27246,12 @@
       ]
     },
     "ch100_stable": {
+      "on_victory": {
+        "flags": [
+          "ch100_stable_done"
+        ],
+        "actions": []
+      },
       "name": "马厩",
       "w": 11,
       "h": 7,
@@ -26346,6 +27402,12 @@
       ]
     },
     "ch100_hoof": {
+      "on_victory": {
+        "flags": [
+          "ch100_hoof_done"
+        ],
+        "actions": []
+      },
       "name": "蹄印",
       "w": 10,
       "h": 8,
@@ -26496,6 +27558,12 @@
       ]
     },
     "ch101_ring": {
+      "on_victory": {
+        "flags": [
+          "ch101_ring_done"
+        ],
+        "actions": []
+      },
       "name": "驯场",
       "w": 11,
       "h": 7,
@@ -26641,6 +27709,12 @@
       ]
     },
     "ch101_bit": {
+      "on_victory": {
+        "flags": [
+          "ch101_bit_done"
+        ],
+        "actions": []
+      },
       "name": "辔头",
       "w": 10,
       "h": 7,
@@ -26779,6 +27853,12 @@
       ]
     },
     "ch102_brand": {
+      "on_victory": {
+        "flags": [
+          "ch102_brand_done"
+        ],
+        "actions": []
+      },
       "name": "马印",
       "w": 11,
       "h": 7,
@@ -26929,6 +28009,12 @@
       ]
     },
     "ch103_market": {
+      "on_victory": {
+        "flags": [
+          "ch103_market_done"
+        ],
+        "actions": []
+      },
       "name": "马市",
       "w": 11,
       "h": 7,
@@ -27079,6 +28165,12 @@
       ]
     },
     "ch103_rein": {
+      "on_victory": {
+        "flags": [
+          "ch103_rein_done"
+        ],
+        "actions": []
+      },
       "name": "缰绳",
       "w": 10,
       "h": 8,
@@ -27229,6 +28321,12 @@
       ]
     },
     "ch104_saddle": {
+      "on_victory": {
+        "flags": [
+          "ch104_saddle_done"
+        ],
+        "actions": []
+      },
       "name": "鞍房",
       "w": 11,
       "h": 7,
@@ -27374,6 +28472,12 @@
       ]
     },
     "ch104_gallop": {
+      "on_victory": {
+        "flags": [
+          "ch104_gallop_done"
+        ],
+        "actions": []
+      },
       "name": "试骑",
       "w": 10,
       "h": 7,
@@ -27512,6 +28616,12 @@
       ]
     },
     "ch105_finale": {
+      "on_victory": {
+        "flags": [
+          "ch105_finale_done"
+        ],
+        "actions": []
+      },
       "name": "十六卷席终",
       "w": 12,
       "h": 8,
@@ -27693,6 +28803,12 @@
       ]
     },
     "ch106_qu": {
+      "on_victory": {
+        "flags": [
+          "ch106_qu_done"
+        ],
+        "actions": []
+      },
       "name": "曲房",
       "w": 11,
       "h": 7,
@@ -27843,6 +28959,12 @@
       ]
     },
     "ch106_cellar": {
+      "on_victory": {
+        "flags": [
+          "ch106_cellar_done"
+        ],
+        "actions": []
+      },
       "name": "酒窖",
       "w": 10,
       "h": 8,
@@ -27993,6 +29115,12 @@
       ]
     },
     "ch107_mash": {
+      "on_victory": {
+        "flags": [
+          "ch107_mash_done"
+        ],
+        "actions": []
+      },
       "name": "糟坊",
       "w": 11,
       "h": 7,
@@ -28138,6 +29266,12 @@
       ]
     },
     "ch107_banner": {
+      "on_victory": {
+        "flags": [
+          "ch107_banner_done"
+        ],
+        "actions": []
+      },
       "name": "酒旗",
       "w": 10,
       "h": 7,
@@ -28276,6 +29410,12 @@
       ]
     },
     "ch108_seal": {
+      "on_victory": {
+        "flags": [
+          "ch108_seal_done"
+        ],
+        "actions": []
+      },
       "name": "酒印",
       "w": 11,
       "h": 7,
@@ -28426,6 +29566,12 @@
       ]
     },
     "ch109_brew": {
+      "on_victory": {
+        "flags": [
+          "ch109_brew_done"
+        ],
+        "actions": []
+      },
       "name": "开酿",
       "w": 11,
       "h": 7,
@@ -28576,6 +29722,12 @@
       ]
     },
     "ch109_vat": {
+      "on_victory": {
+        "flags": [
+          "ch109_vat_done"
+        ],
+        "actions": []
+      },
       "name": "酒缸",
       "w": 10,
       "h": 8,
@@ -28726,6 +29878,12 @@
       ]
     },
     "ch110_tap": {
+      "on_victory": {
+        "flags": [
+          "ch110_tap_done"
+        ],
+        "actions": []
+      },
       "name": "排档",
       "w": 11,
       "h": 7,
@@ -28871,6 +30029,12 @@
       ]
     },
     "ch110_toast": {
+      "on_victory": {
+        "flags": [
+          "ch110_toast_done"
+        ],
+        "actions": []
+      },
       "name": "祝爵",
       "w": 10,
       "h": 7,
@@ -29009,6 +30173,12 @@
       ]
     },
     "ch111_finale": {
+      "on_victory": {
+        "flags": [
+          "ch111_finale_done"
+        ],
+        "actions": []
+      },
       "name": "十七卷席终",
       "w": 12,
       "h": 8,
@@ -29190,6 +30360,12 @@
       ]
     },
     "ch112_yard": {
+      "on_victory": {
+        "flags": [
+          "ch112_yard_done"
+        ],
+        "actions": []
+      },
       "name": "镖局",
       "w": 11,
       "h": 7,
@@ -29341,6 +30517,12 @@
       "theme": "escort"
     },
     "ch112_road": {
+      "on_victory": {
+        "flags": [
+          "ch112_road_done"
+        ],
+        "actions": []
+      },
       "name": "官道",
       "w": 10,
       "h": 8,
@@ -29492,6 +30674,12 @@
       "theme": "escort"
     },
     "ch113_camp": {
+      "on_victory": {
+        "flags": [
+          "ch113_camp_done"
+        ],
+        "actions": []
+      },
       "name": "夜营",
       "w": 11,
       "h": 7,
@@ -29638,6 +30826,12 @@
       "theme": "escort"
     },
     "ch113_pass": {
+      "on_victory": {
+        "flags": [
+          "ch113_pass_done"
+        ],
+        "actions": []
+      },
       "name": "关卡",
       "w": 10,
       "h": 7,
@@ -29777,6 +30971,12 @@
       "theme": "escort"
     },
     "ch114_seal": {
+      "on_victory": {
+        "flags": [
+          "ch114_seal_done"
+        ],
+        "actions": []
+      },
       "name": "镖印",
       "w": 11,
       "h": 7,
@@ -29928,6 +31128,12 @@
       "theme": "escort"
     },
     "ch115_convoy": {
+      "on_victory": {
+        "flags": [
+          "ch115_convoy_done"
+        ],
+        "actions": []
+      },
       "name": "镖市",
       "w": 11,
       "h": 7,
@@ -30079,6 +31285,12 @@
       "theme": "escort"
     },
     "ch115_ambush": {
+      "on_victory": {
+        "flags": [
+          "ch115_ambush_done"
+        ],
+        "actions": []
+      },
       "name": "劫道",
       "w": 10,
       "h": 8,
@@ -30230,6 +31442,12 @@
       "theme": "escort"
     },
     "ch116_way": {
+      "on_victory": {
+        "flags": [
+          "ch116_way_done"
+        ],
+        "actions": []
+      },
       "name": "驿站",
       "w": 11,
       "h": 7,
@@ -30376,6 +31594,12 @@
       "theme": "escort"
     },
     "ch116_escort": {
+      "on_victory": {
+        "flags": [
+          "ch116_escort_done"
+        ],
+        "actions": []
+      },
       "name": "护镖",
       "w": 10,
       "h": 7,
@@ -30515,6 +31739,12 @@
       "theme": "escort"
     },
     "ch117_finale": {
+      "on_victory": {
+        "flags": [
+          "ch117_finale_done"
+        ],
+        "actions": []
+      },
       "name": "十八卷席终",
       "w": 12,
       "h": 8,
@@ -30697,6 +31927,12 @@
       "theme": "escort"
     },
     "ch118_pier": {
+      "on_victory": {
+        "flags": [
+          "ch118_pier_done"
+        ],
+        "actions": []
+      },
       "name": "码头",
       "w": 11,
       "h": 7,
@@ -30848,6 +32084,12 @@
       "theme": "harbor"
     },
     "ch118_net": {
+      "on_victory": {
+        "flags": [
+          "ch118_net_done"
+        ],
+        "actions": []
+      },
       "name": "网场",
       "w": 10,
       "h": 8,
@@ -30999,6 +32241,12 @@
       "theme": "harbor"
     },
     "ch119_tide": {
+      "on_victory": {
+        "flags": [
+          "ch119_tide_done"
+        ],
+        "actions": []
+      },
       "name": "潮汐",
       "w": 11,
       "h": 7,
@@ -31145,6 +32393,12 @@
       "theme": "harbor"
     },
     "ch119_reef": {
+      "on_victory": {
+        "flags": [
+          "ch119_reef_done"
+        ],
+        "actions": []
+      },
       "name": "礁口",
       "w": 10,
       "h": 7,
@@ -31284,6 +32538,12 @@
       "theme": "harbor"
     },
     "ch120_seal": {
+      "on_victory": {
+        "flags": [
+          "ch120_seal_done"
+        ],
+        "actions": []
+      },
       "name": "港印",
       "w": 11,
       "h": 7,
@@ -31435,6 +32695,12 @@
       "theme": "harbor"
     },
     "ch121_fishmarket": {
+      "on_victory": {
+        "flags": [
+          "ch121_fishmarket_done"
+        ],
+        "actions": []
+      },
       "name": "渔市",
       "w": 11,
       "h": 7,
@@ -31586,6 +32852,12 @@
       "theme": "harbor"
     },
     "ch121_cable": {
+      "on_victory": {
+        "flags": [
+          "ch121_cable_done"
+        ],
+        "actions": []
+      },
       "name": "缆绳",
       "w": 10,
       "h": 8,
@@ -31737,6 +33009,12 @@
       "theme": "harbor"
     },
     "ch122_wharf": {
+      "on_victory": {
+        "flags": [
+          "ch122_wharf_done"
+        ],
+        "actions": []
+      },
       "name": "货栈",
       "w": 11,
       "h": 7,
@@ -31883,6 +33161,12 @@
       "theme": "harbor"
     },
     "ch122_beacon": {
+      "on_victory": {
+        "flags": [
+          "ch122_beacon_done"
+        ],
+        "actions": []
+      },
       "name": "港灯",
       "w": 10,
       "h": 7,
@@ -32022,6 +33306,12 @@
       "theme": "harbor"
     },
     "ch123_finale": {
+      "on_victory": {
+        "flags": [
+          "ch123_finale_done"
+        ],
+        "actions": []
+      },
       "name": "十九卷席终",
       "w": 12,
       "h": 8,
@@ -32204,6 +33494,12 @@
       "theme": "harbor"
     },
     "ch124_mill": {
+      "on_victory": {
+        "flags": [
+          "ch124_mill_done"
+        ],
+        "actions": []
+      },
       "name": "纸坊",
       "w": 11,
       "h": 7,
@@ -32355,6 +33651,12 @@
       "theme": "paper"
     },
     "ch124_pulp": {
+      "on_victory": {
+        "flags": [
+          "ch124_pulp_done"
+        ],
+        "actions": []
+      },
       "name": "纸浆",
       "w": 10,
       "h": 8,
@@ -32506,6 +33808,12 @@
       "theme": "paper"
     },
     "ch125_screen": {
+      "on_victory": {
+        "flags": [
+          "ch125_screen_done"
+        ],
+        "actions": []
+      },
       "name": "抄帘",
       "w": 11,
       "h": 7,
@@ -32652,6 +33960,12 @@
       "theme": "paper"
     },
     "ch125_dry": {
+      "on_victory": {
+        "flags": [
+          "ch125_dry_done"
+        ],
+        "actions": []
+      },
       "name": "晾纸",
       "w": 10,
       "h": 7,
@@ -32791,6 +34105,12 @@
       "theme": "paper"
     },
     "ch126_seal": {
+      "on_victory": {
+        "flags": [
+          "ch126_seal_done"
+        ],
+        "actions": []
+      },
       "name": "纸印",
       "w": 11,
       "h": 7,
@@ -32942,6 +34262,12 @@
       "theme": "paper"
     },
     "ch127_press": {
+      "on_victory": {
+        "flags": [
+          "ch127_press_done"
+        ],
+        "actions": []
+      },
       "name": "压榨",
       "w": 11,
       "h": 7,
@@ -33093,6 +34419,12 @@
       "theme": "paper"
     },
     "ch127_ink": {
+      "on_victory": {
+        "flags": [
+          "ch127_ink_done"
+        ],
+        "actions": []
+      },
       "name": "墨池",
       "w": 10,
       "h": 8,
@@ -33244,6 +34576,12 @@
       "theme": "paper"
     },
     "ch128_archive": {
+      "on_victory": {
+        "flags": [
+          "ch128_archive_done"
+        ],
+        "actions": []
+      },
       "name": "案库",
       "w": 11,
       "h": 7,
@@ -33390,6 +34728,12 @@
       "theme": "paper"
     },
     "ch128_edict": {
+      "on_victory": {
+        "flags": [
+          "ch128_edict_done"
+        ],
+        "actions": []
+      },
       "name": "诏板",
       "w": 10,
       "h": 7,
@@ -33529,6 +34873,12 @@
       "theme": "paper"
     },
     "ch129_finale": {
+      "on_victory": {
+        "flags": [
+          "ch129_finale_done"
+        ],
+        "actions": []
+      },
       "name": "二十卷席终",
       "w": 12,
       "h": 8,
@@ -33711,6 +35061,12 @@
       "theme": "paper"
     },
     "ch130_forge": {
+      "on_victory": {
+        "flags": [
+          "ch130_forge_done"
+        ],
+        "actions": []
+      },
       "name": "铜炉",
       "w": 11,
       "h": 7,
@@ -33862,6 +35218,12 @@
       "theme": "copper"
     },
     "ch130_ore": {
+      "on_victory": {
+        "flags": [
+          "ch130_ore_done"
+        ],
+        "actions": []
+      },
       "name": "矿道",
       "w": 10,
       "h": 8,
@@ -34013,6 +35375,12 @@
       "theme": "copper"
     },
     "ch131_anvil": {
+      "on_victory": {
+        "flags": [
+          "ch131_anvil_done"
+        ],
+        "actions": []
+      },
       "name": "砧台",
       "w": 11,
       "h": 7,
@@ -34159,6 +35527,12 @@
       "theme": "copper"
     },
     "ch131_mold": {
+      "on_victory": {
+        "flags": [
+          "ch131_mold_done"
+        ],
+        "actions": []
+      },
       "name": "铸模",
       "w": 10,
       "h": 7,
@@ -34298,6 +35672,12 @@
       "theme": "copper"
     },
     "ch132_seal": {
+      "on_victory": {
+        "flags": [
+          "ch132_seal_done"
+        ],
+        "actions": []
+      },
       "name": "铜印",
       "w": 11,
       "h": 7,
@@ -34449,6 +35829,12 @@
       "theme": "copper"
     },
     "ch133_copmarket": {
+      "on_victory": {
+        "flags": [
+          "ch133_copmarket_done"
+        ],
+        "actions": []
+      },
       "name": "铜市",
       "w": 11,
       "h": 7,
@@ -34600,6 +35986,12 @@
       "theme": "copper"
     },
     "ch133_slag": {
+      "on_victory": {
+        "flags": [
+          "ch133_slag_done"
+        ],
+        "actions": []
+      },
       "name": "渣道",
       "w": 10,
       "h": 8,
@@ -34751,6 +36143,12 @@
       "theme": "copper"
     },
     "ch134_armory": {
+      "on_victory": {
+        "flags": [
+          "ch134_armory_done"
+        ],
+        "actions": []
+      },
       "name": "甲库",
       "w": 11,
       "h": 7,
@@ -34897,6 +36295,12 @@
       "theme": "copper"
     },
     "ch134_plate": {
+      "on_victory": {
+        "flags": [
+          "ch134_plate_done"
+        ],
+        "actions": []
+      },
       "name": "试甲",
       "w": 10,
       "h": 7,
@@ -35036,6 +36440,12 @@
       "theme": "copper"
     },
     "ch135_finale": {
+      "on_victory": {
+        "flags": [
+          "ch135_finale_done"
+        ],
+        "actions": []
+      },
       "name": "二十一卷席终",
       "w": 12,
       "h": 8,
@@ -35218,6 +36628,12 @@
       "theme": "copper"
     },
     "ch136_street": {
+      "on_victory": {
+        "flags": [
+          "ch136_street_done"
+        ],
+        "actions": []
+      },
       "name": "灯街",
       "w": 11,
       "h": 7,
@@ -35369,6 +36785,12 @@
       "theme": "lantern"
     },
     "ch136_wick": {
+      "on_victory": {
+        "flags": [
+          "ch136_wick_done"
+        ],
+        "actions": []
+      },
       "name": "灯芯",
       "w": 10,
       "h": 8,
@@ -35520,6 +36942,12 @@
       "theme": "lantern"
     },
     "ch137_booth": {
+      "on_victory": {
+        "flags": [
+          "ch137_booth_done"
+        ],
+        "actions": []
+      },
       "name": "灯棚",
       "w": 11,
       "h": 7,
@@ -35666,6 +37094,12 @@
       "theme": "lantern"
     },
     "ch137_oil": {
+      "on_victory": {
+        "flags": [
+          "ch137_oil_done"
+        ],
+        "actions": []
+      },
       "name": "油库",
       "w": 10,
       "h": 7,
@@ -35805,6 +37239,12 @@
       "theme": "lantern"
     },
     "ch138_seal": {
+      "on_victory": {
+        "flags": [
+          "ch138_seal_done"
+        ],
+        "actions": []
+      },
       "name": "灯印",
       "w": 11,
       "h": 7,
@@ -35956,6 +37396,12 @@
       "theme": "lantern"
     },
     "ch139_fair": {
+      "on_victory": {
+        "flags": [
+          "ch139_fair_done"
+        ],
+        "actions": []
+      },
       "name": "灯会",
       "w": 11,
       "h": 7,
@@ -36107,6 +37553,12 @@
       "theme": "lantern"
     },
     "ch139_oilroad": {
+      "on_victory": {
+        "flags": [
+          "ch139_oilroad_done"
+        ],
+        "actions": []
+      },
       "name": "油道",
       "w": 10,
       "h": 8,
@@ -36258,6 +37710,12 @@
       "theme": "lantern"
     },
     "ch140_tower": {
+      "on_victory": {
+        "flags": [
+          "ch140_tower_done"
+        ],
+        "actions": []
+      },
       "name": "灯塔",
       "w": 11,
       "h": 7,
@@ -36404,6 +37862,12 @@
       "theme": "lantern"
     },
     "ch140_vigil": {
+      "on_victory": {
+        "flags": [
+          "ch140_vigil_done"
+        ],
+        "actions": []
+      },
       "name": "守夜",
       "w": 10,
       "h": 7,
@@ -36543,6 +38007,12 @@
       "theme": "lantern"
     },
     "ch141_finale": {
+      "on_victory": {
+        "flags": [
+          "ch141_finale_done"
+        ],
+        "actions": []
+      },
       "name": "二十二卷席终",
       "w": 12,
       "h": 8,
@@ -36725,6 +38195,12 @@
       "theme": "lantern"
     },
     "ch142_silo": {
+      "on_victory": {
+        "flags": [
+          "ch142_silo_done"
+        ],
+        "actions": []
+      },
       "name": "粮囤",
       "w": 11,
       "h": 7,
@@ -36876,6 +38352,12 @@
       "theme": "grain"
     },
     "ch142_mill": {
+      "on_victory": {
+        "flags": [
+          "ch142_mill_done"
+        ],
+        "actions": []
+      },
       "name": "碾坊",
       "w": 10,
       "h": 8,
@@ -37027,6 +38509,12 @@
       "theme": "grain"
     },
     "ch143_barn": {
+      "on_victory": {
+        "flags": [
+          "ch143_barn_done"
+        ],
+        "actions": []
+      },
       "name": "仓房",
       "w": 11,
       "h": 7,
@@ -37173,6 +38661,12 @@
       "theme": "grain"
     },
     "ch143_scale": {
+      "on_victory": {
+        "flags": [
+          "ch143_scale_done"
+        ],
+        "actions": []
+      },
       "name": "斗秤",
       "w": 10,
       "h": 7,
@@ -37312,6 +38806,12 @@
       "theme": "grain"
     },
     "ch144_seal": {
+      "on_victory": {
+        "flags": [
+          "ch144_seal_done"
+        ],
+        "actions": []
+      },
       "name": "粮印",
       "w": 11,
       "h": 7,
@@ -37463,6 +38963,12 @@
       "theme": "grain"
     },
     "ch145_open": {
+      "on_victory": {
+        "flags": [
+          "ch145_open_done"
+        ],
+        "actions": []
+      },
       "name": "开仓",
       "w": 11,
       "h": 7,
@@ -37614,6 +39120,12 @@
       "theme": "grain"
     },
     "ch145_canal": {
+      "on_victory": {
+        "flags": [
+          "ch145_canal_done"
+        ],
+        "actions": []
+      },
       "name": "漕路",
       "w": 10,
       "h": 8,
@@ -37765,6 +39277,12 @@
       "theme": "grain"
     },
     "ch146_charity": {
+      "on_victory": {
+        "flags": [
+          "ch146_charity_done"
+        ],
+        "actions": []
+      },
       "name": "义仓",
       "w": 11,
       "h": 7,
@@ -37916,6 +39434,12 @@
       "theme": "grain"
     },
     "ch146_guard": {
+      "on_victory": {
+        "flags": [
+          "ch146_guard_done"
+        ],
+        "actions": []
+      },
       "name": "守囤",
       "w": 10,
       "h": 7,
@@ -38055,6 +39579,12 @@
       "theme": "grain"
     },
     "ch147_finale": {
+      "on_victory": {
+        "flags": [
+          "ch147_finale_done"
+        ],
+        "actions": []
+      },
       "name": "二十三卷席终",
       "w": 12,
       "h": 8,
@@ -38237,6 +39767,12 @@
       "theme": "grain"
     },
     "ch148_lodge": {
+      "on_victory": {
+        "flags": [
+          "ch148_lodge_done"
+        ],
+        "actions": []
+      },
       "name": "雪栈",
       "w": 11,
       "h": 7,
@@ -38383,6 +39919,12 @@
       "theme": "snow"
     },
     "ch148_trail": {
+      "on_victory": {
+        "flags": [
+          "ch148_trail_done"
+        ],
+        "actions": []
+      },
       "name": "栈道",
       "w": 10,
       "h": 8,
@@ -38534,6 +40076,12 @@
       "theme": "snow"
     },
     "ch149_icehouse": {
+      "on_victory": {
+        "flags": [
+          "ch149_icehouse_done"
+        ],
+        "actions": []
+      },
       "name": "冰窖",
       "w": 11,
       "h": 7,
@@ -38680,6 +40228,12 @@
       "theme": "snow"
     },
     "ch149_warm": {
+      "on_victory": {
+        "flags": [
+          "ch149_warm_done"
+        ],
+        "actions": []
+      },
       "name": "暖棚",
       "w": 10,
       "h": 7,
@@ -38819,6 +40373,12 @@
       "theme": "snow"
     },
     "ch150_seal": {
+      "on_victory": {
+        "flags": [
+          "ch150_seal_done"
+        ],
+        "actions": []
+      },
       "name": "雪印",
       "w": 11,
       "h": 7,
@@ -38970,6 +40530,12 @@
       "theme": "snow"
     },
     "ch151_snowfair": {
+      "on_victory": {
+        "flags": [
+          "ch151_snowfair_done"
+        ],
+        "actions": []
+      },
       "name": "雪市",
       "w": 11,
       "h": 7,
@@ -39121,6 +40687,12 @@
       "theme": "snow"
     },
     "ch151_charcoal": {
+      "on_victory": {
+        "flags": [
+          "ch151_charcoal_done"
+        ],
+        "actions": []
+      },
       "name": "炭道",
       "w": 10,
       "h": 8,
@@ -39272,6 +40844,12 @@
       "theme": "snow"
     },
     "ch152_inn": {
+      "on_victory": {
+        "flags": [
+          "ch152_inn_done"
+        ],
+        "actions": []
+      },
       "name": "暖驿",
       "w": 11,
       "h": 7,
@@ -39423,6 +41001,12 @@
       "theme": "snow"
     },
     "ch152_hold": {
+      "on_victory": {
+        "flags": [
+          "ch152_hold_done"
+        ],
+        "actions": []
+      },
       "name": "守栈",
       "w": 10,
       "h": 7,
@@ -39562,6 +41146,12 @@
       "theme": "snow"
     },
     "ch153_finale": {
+      "on_victory": {
+        "flags": [
+          "ch153_finale_done"
+        ],
+        "actions": []
+      },
       "name": "二十四卷席终",
       "w": 12,
       "h": 8,
@@ -39744,6 +41334,12 @@
       "theme": "snow"
     },
     "ch154_sea": {
+      "on_victory": {
+        "flags": [
+          "ch154_sea_done"
+        ],
+        "actions": []
+      },
       "name": "竹海",
       "w": 11,
       "h": 7,
@@ -39890,6 +41486,12 @@
       "theme": "bamboo"
     },
     "ch154_path": {
+      "on_victory": {
+        "flags": [
+          "ch154_path_done"
+        ],
+        "actions": []
+      },
       "name": "篁径",
       "w": 10,
       "h": 8,
@@ -40041,6 +41643,12 @@
       "theme": "bamboo"
     },
     "ch155_market": {
+      "on_victory": {
+        "flags": [
+          "ch155_market_done"
+        ],
+        "actions": []
+      },
       "name": "笋市",
       "w": 11,
       "h": 7,
@@ -40187,6 +41795,12 @@
       "theme": "bamboo"
     },
     "ch155_tower": {
+      "on_victory": {
+        "flags": [
+          "ch155_tower_done"
+        ],
+        "actions": []
+      },
       "name": "竹楼",
       "w": 10,
       "h": 7,
@@ -40326,6 +41940,12 @@
       "theme": "bamboo"
     },
     "ch156_seal": {
+      "on_victory": {
+        "flags": [
+          "ch156_seal_done"
+        ],
+        "actions": []
+      },
       "name": "竹印",
       "w": 11,
       "h": 7,
@@ -40477,6 +42097,12 @@
       "theme": "bamboo"
     },
     "ch157_grove": {
+      "on_victory": {
+        "flags": [
+          "ch157_grove_done"
+        ],
+        "actions": []
+      },
       "name": "竹市",
       "w": 12,
       "h": 8,
@@ -40654,6 +42280,12 @@
       "theme": "bamboo"
     },
     "ch157_raft": {
+      "on_victory": {
+        "flags": [
+          "ch157_raft_done"
+        ],
+        "actions": []
+      },
       "name": "筏渡",
       "w": 11,
       "h": 8,
@@ -40818,6 +42450,12 @@
       "theme": "bamboo"
     },
     "ch158_altar": {
+      "on_victory": {
+        "flags": [
+          "ch158_altar_done"
+        ],
+        "actions": []
+      },
       "name": "篁祠",
       "w": 11,
       "h": 8,
@@ -40982,6 +42620,12 @@
       "theme": "bamboo"
     },
     "ch158_watch": {
+      "on_victory": {
+        "flags": [
+          "ch158_watch_done"
+        ],
+        "actions": []
+      },
       "name": "望楼",
       "w": 10,
       "h": 8,
@@ -41138,6 +42782,12 @@
       "theme": "bamboo"
     },
     "ch159_finale": {
+      "on_victory": {
+        "flags": [
+          "ch159_finale_done"
+        ],
+        "actions": []
+      },
       "name": "二十五卷席终",
       "w": 12,
       "h": 9,
@@ -41339,6 +42989,12 @@
       "theme": "bamboo"
     },
     "ch160_post": {
+      "on_victory": {
+        "flags": [
+          "ch160_post_done"
+        ],
+        "actions": []
+      },
       "name": "驿站",
       "w": 12,
       "h": 8,
@@ -41511,6 +43167,12 @@
       "theme": "relay"
     },
     "ch160_swap": {
+      "on_victory": {
+        "flags": [
+          "ch160_swap_done"
+        ],
+        "actions": []
+      },
       "name": "换马",
       "w": 11,
       "h": 8,
@@ -41675,6 +43337,12 @@
       "theme": "relay"
     },
     "ch161_express": {
+      "on_victory": {
+        "flags": [
+          "ch161_express_done"
+        ],
+        "actions": []
+      },
       "name": "急递",
       "w": 11,
       "h": 8,
@@ -41839,6 +43507,12 @@
       "theme": "relay"
     },
     "ch161_token": {
+      "on_victory": {
+        "flags": [
+          "ch161_token_done"
+        ],
+        "actions": []
+      },
       "name": "符牌",
       "w": 11,
       "h": 8,
@@ -42003,6 +43677,12 @@
       "theme": "relay"
     },
     "ch162_seal": {
+      "on_victory": {
+        "flags": [
+          "ch162_seal_done"
+        ],
+        "actions": []
+      },
       "name": "驿印",
       "w": 11,
       "h": 7,
@@ -42154,6 +43834,12 @@
       "theme": "relay"
     },
     "ch163_market": {
+      "on_victory": {
+        "flags": [
+          "ch163_market_done"
+        ],
+        "actions": []
+      },
       "name": "驿市",
       "w": 12,
       "h": 8,
@@ -42331,6 +44017,12 @@
       "theme": "relay"
     },
     "ch163_relayroad": {
+      "on_victory": {
+        "flags": [
+          "ch163_relayroad_done"
+        ],
+        "actions": []
+      },
       "name": "递路",
       "w": 11,
       "h": 9,
@@ -42508,6 +44200,12 @@
       "theme": "relay"
     },
     "ch164_nightpost": {
+      "on_victory": {
+        "flags": [
+          "ch164_nightpost_done"
+        ],
+        "actions": []
+      },
       "name": "夜驿",
       "w": 11,
       "h": 8,
@@ -42672,6 +44370,12 @@
       "theme": "relay"
     },
     "ch164_guardpost": {
+      "on_victory": {
+        "flags": [
+          "ch164_guardpost_done"
+        ],
+        "actions": []
+      },
       "name": "守驿",
       "w": 10,
       "h": 8,
@@ -42828,6 +44532,12 @@
       "theme": "relay"
     },
     "ch165_finale": {
+      "on_victory": {
+        "flags": [
+          "ch165_finale_done"
+        ],
+        "actions": []
+      },
       "name": "二十六卷席终",
       "w": 12,
       "h": 9,
@@ -43029,6 +44739,12 @@
       "theme": "relay"
     },
     "ch166_belltower": {
+      "on_victory": {
+        "flags": [
+          "ch166_belltower_done"
+        ],
+        "actions": []
+      },
       "name": "钟楼",
       "w": 10,
       "h": 9,
@@ -43197,6 +44913,12 @@
       "theme": "bell"
     },
     "ch166_drum": {
+      "on_victory": {
+        "flags": [
+          "ch166_drum_done"
+        ],
+        "actions": []
+      },
       "name": "鼓廊",
       "w": 12,
       "h": 7,
@@ -43355,6 +45077,12 @@
       "theme": "bell"
     },
     "ch167_watchbell": {
+      "on_victory": {
+        "flags": [
+          "ch167_watchbell_done"
+        ],
+        "actions": []
+      },
       "name": "守钟",
       "w": 11,
       "h": 8,
@@ -43519,6 +45247,12 @@
       "theme": "bell"
     },
     "ch167_square": {
+      "on_victory": {
+        "flags": [
+          "ch167_square_done"
+        ],
+        "actions": []
+      },
       "name": "鼓场",
       "w": 11,
       "h": 8,
@@ -43683,6 +45417,12 @@
       "theme": "bell"
     },
     "ch168_seal": {
+      "on_victory": {
+        "flags": [
+          "ch168_seal_done"
+        ],
+        "actions": []
+      },
       "name": "钟印",
       "w": 11,
       "h": 7,
@@ -43834,6 +45574,12 @@
       "theme": "bell"
     },
     "ch169_fair": {
+      "on_victory": {
+        "flags": [
+          "ch169_fair_done"
+        ],
+        "actions": []
+      },
       "name": "钟市",
       "w": 12,
       "h": 8,
@@ -44011,6 +45757,12 @@
       "theme": "bell"
     },
     "ch169_echo": {
+      "on_victory": {
+        "flags": [
+          "ch169_echo_done"
+        ],
+        "actions": []
+      },
       "name": "回廊",
       "w": 11,
       "h": 8,
@@ -44175,6 +45927,12 @@
       "theme": "bell"
     },
     "ch170_strike": {
+      "on_victory": {
+        "flags": [
+          "ch170_strike_done"
+        ],
+        "actions": []
+      },
       "name": "撞钟",
       "w": 10,
       "h": 9,
@@ -44343,6 +46101,12 @@
       "theme": "bell"
     },
     "ch170_nightwatch": {
+      "on_victory": {
+        "flags": [
+          "ch170_nightwatch_done"
+        ],
+        "actions": []
+      },
       "name": "守夜鼓",
       "w": 11,
       "h": 8,
@@ -44507,6 +46271,12 @@
       "theme": "bell"
     },
     "ch171_finale": {
+      "on_victory": {
+        "flags": [
+          "ch171_finale_done"
+        ],
+        "actions": []
+      },
       "name": "二十七卷席终",
       "w": 12,
       "h": 9,
@@ -44708,6 +46478,12 @@
       "theme": "bell"
     },
     "ch172_alley": {
+      "on_victory": {
+        "flags": [
+          "ch172_alley_done"
+        ],
+        "actions": []
+      },
       "name": "雨巷",
       "w": 11,
       "h": 9,
@@ -44885,6 +46661,12 @@
       "theme": "rain"
     },
     "ch172_eaves": {
+      "on_victory": {
+        "flags": [
+          "ch172_eaves_done"
+        ],
+        "actions": []
+      },
       "name": "檐市",
       "w": 12,
       "h": 8,
@@ -45057,6 +46839,12 @@
       "theme": "rain"
     },
     "ch173_umbrella": {
+      "on_victory": {
+        "flags": [
+          "ch173_umbrella_done"
+        ],
+        "actions": []
+      },
       "name": "伞棚",
       "w": 11,
       "h": 8,
@@ -45221,6 +47009,12 @@
       "theme": "rain"
     },
     "ch173_drain": {
+      "on_victory": {
+        "flags": [
+          "ch173_drain_done"
+        ],
+        "actions": []
+      },
       "name": "水道",
       "w": 11,
       "h": 8,
@@ -45385,6 +47179,12 @@
       "theme": "rain"
     },
     "ch174_seal": {
+      "on_victory": {
+        "flags": [
+          "ch174_seal_done"
+        ],
+        "actions": []
+      },
       "name": "雨印",
       "w": 11,
       "h": 7,
@@ -45536,6 +47336,12 @@
       "theme": "rain"
     },
     "ch175_market": {
+      "on_victory": {
+        "flags": [
+          "ch175_market_done"
+        ],
+        "actions": []
+      },
       "name": "雨市",
       "w": 12,
       "h": 8,
@@ -45713,6 +47519,12 @@
       "theme": "rain"
     },
     "ch175_gutter": {
+      "on_victory": {
+        "flags": [
+          "ch175_gutter_done"
+        ],
+        "actions": []
+      },
       "name": "檐沟",
       "w": 11,
       "h": 9,
@@ -45890,6 +47702,12 @@
       "theme": "rain"
     },
     "ch176_shelter": {
+      "on_victory": {
+        "flags": [
+          "ch176_shelter_done"
+        ],
+        "actions": []
+      },
       "name": "避雨",
       "w": 11,
       "h": 8,
@@ -46054,6 +47872,12 @@
       "theme": "rain"
     },
     "ch176_hold": {
+      "on_victory": {
+        "flags": [
+          "ch176_hold_done"
+        ],
+        "actions": []
+      },
       "name": "守巷",
       "w": 10,
       "h": 8,
@@ -46210,6 +48034,12 @@
       "theme": "rain"
     },
     "ch177_finale": {
+      "on_victory": {
+        "flags": [
+          "ch177_finale_done"
+        ],
+        "actions": []
+      },
       "name": "二十八卷席终",
       "w": 12,
       "h": 9,
@@ -46411,6 +48241,12 @@
       "theme": "rain"
     },
     "ch178_quarry": {
+      "on_victory": {
+        "flags": [
+          "ch178_quarry_done"
+        ],
+        "actions": []
+      },
       "name": "砚坑",
       "w": 11,
       "h": 8,
@@ -46575,6 +48411,12 @@
       "theme": "ink"
     },
     "ch178_inkwell": {
+      "on_victory": {
+        "flags": [
+          "ch178_inkwell_done"
+        ],
+        "actions": []
+      },
       "name": "墨池",
       "w": 11,
       "h": 8,
@@ -46739,6 +48581,12 @@
       "theme": "ink"
     },
     "ch179_desk": {
+      "on_victory": {
+        "flags": [
+          "ch179_desk_done"
+        ],
+        "actions": []
+      },
       "name": "案台",
       "w": 12,
       "h": 7,
@@ -46897,6 +48745,12 @@
       "theme": "ink"
     },
     "ch179_sealroom": {
+      "on_victory": {
+        "flags": [
+          "ch179_sealroom_done"
+        ],
+        "actions": []
+      },
       "name": "印房",
       "w": 10,
       "h": 8,
@@ -47053,6 +48907,12 @@
       "theme": "ink"
     },
     "ch180_seal": {
+      "on_victory": {
+        "flags": [
+          "ch180_seal_done"
+        ],
+        "actions": []
+      },
       "name": "砚印",
       "w": 11,
       "h": 7,
@@ -47204,6 +49064,12 @@
       "theme": "ink"
     },
     "ch181_market": {
+      "on_victory": {
+        "flags": [
+          "ch181_market_done"
+        ],
+        "actions": []
+      },
       "name": "砚市",
       "w": 12,
       "h": 8,
@@ -47381,6 +49247,12 @@
       "theme": "ink"
     },
     "ch181_grind": {
+      "on_victory": {
+        "flags": [
+          "ch181_grind_done"
+        ],
+        "actions": []
+      },
       "name": "研墨",
       "w": 11,
       "h": 9,
@@ -47558,6 +49430,12 @@
       "theme": "ink"
     },
     "ch182_press": {
+      "on_victory": {
+        "flags": [
+          "ch182_press_done"
+        ],
+        "actions": []
+      },
       "name": "捺印",
       "w": 10,
       "h": 8,
@@ -47714,6 +49592,12 @@
       "theme": "ink"
     },
     "ch182_vault": {
+      "on_victory": {
+        "flags": [
+          "ch182_vault_done"
+        ],
+        "actions": []
+      },
       "name": "墨库",
       "w": 11,
       "h": 8,
@@ -47878,6 +49762,12 @@
       "theme": "ink"
     },
     "ch183_finale": {
+      "on_victory": {
+        "flags": [
+          "ch183_finale_done"
+        ],
+        "actions": []
+      },
       "name": "二十九卷席终",
       "w": 12,
       "h": 9,
@@ -48079,6 +49969,12 @@
       "theme": "ink"
     },
     "ch184_hive": {
+      "on_victory": {
+        "flags": [
+          "ch184_hive_done"
+        ],
+        "actions": []
+      },
       "name": "蜂巢",
       "w": 12,
       "h": 8,
@@ -48251,6 +50147,12 @@
       "theme": "hive"
     },
     "ch184_meadow": {
+      "on_victory": {
+        "flags": [
+          "ch184_meadow_done"
+        ],
+        "actions": []
+      },
       "name": "花陌",
       "w": 11,
       "h": 9,
@@ -48428,6 +50330,12 @@
       "theme": "hive"
     },
     "ch185_smoker": {
+      "on_victory": {
+        "flags": [
+          "ch185_smoker_done"
+        ],
+        "actions": []
+      },
       "name": "烟熏",
       "w": 11,
       "h": 8,
@@ -48592,6 +50500,12 @@
       "theme": "hive"
     },
     "ch185_comb": {
+      "on_victory": {
+        "flags": [
+          "ch185_comb_done"
+        ],
+        "actions": []
+      },
       "name": "蜜房",
       "w": 10,
       "h": 8,
@@ -48748,6 +50662,12 @@
       "theme": "hive"
     },
     "ch186_seal": {
+      "on_victory": {
+        "flags": [
+          "ch186_seal_done"
+        ],
+        "actions": []
+      },
       "name": "蜂印",
       "w": 11,
       "h": 7,
@@ -48899,6 +50819,12 @@
       "theme": "hive"
     },
     "ch187_fair": {
+      "on_victory": {
+        "flags": [
+          "ch187_fair_done"
+        ],
+        "actions": []
+      },
       "name": "蜜市",
       "w": 12,
       "h": 8,
@@ -49076,6 +51002,12 @@
       "theme": "hive"
     },
     "ch187_swarm": {
+      "on_victory": {
+        "flags": [
+          "ch187_swarm_done"
+        ],
+        "actions": []
+      },
       "name": "蜂涌",
       "w": 11,
       "h": 9,
@@ -49253,6 +51185,12 @@
       "theme": "hive"
     },
     "ch188_queen": {
+      "on_victory": {
+        "flags": [
+          "ch188_queen_done"
+        ],
+        "actions": []
+      },
       "name": "蜂后",
       "w": 11,
       "h": 9,
@@ -49430,6 +51368,12 @@
       "theme": "hive"
     },
     "ch188_guard": {
+      "on_victory": {
+        "flags": [
+          "ch188_guard_done"
+        ],
+        "actions": []
+      },
       "name": "守场",
       "w": 10,
       "h": 8,
@@ -49586,6 +51530,12 @@
       "theme": "hive"
     },
     "ch189_finale": {
+      "on_victory": {
+        "flags": [
+          "ch189_finale_done"
+        ],
+        "actions": []
+      },
       "name": "三十卷席终",
       "w": 12,
       "h": 9,
@@ -49787,6 +51737,12 @@
       "theme": "hive"
     },
     "ch190_tower": {
+      "on_victory": {
+        "flags": [
+          "ch190_tower_done"
+        ],
+        "actions": []
+      },
       "name": "笛楼",
       "w": 10,
       "h": 9,
@@ -49955,6 +51911,12 @@
       "theme": "flute"
     },
     "ch190_gallery": {
+      "on_victory": {
+        "flags": [
+          "ch190_gallery_done"
+        ],
+        "actions": []
+      },
       "name": "音廊",
       "w": 12,
       "h": 7,
@@ -50113,6 +52075,12 @@
       "theme": "flute"
     },
     "ch191_echo": {
+      "on_victory": {
+        "flags": [
+          "ch191_echo_done"
+        ],
+        "actions": []
+      },
       "name": "回音",
       "w": 11,
       "h": 8,
@@ -50277,6 +52245,12 @@
       "theme": "flute"
     },
     "ch191_stage": {
+      "on_victory": {
+        "flags": [
+          "ch191_stage_done"
+        ],
+        "actions": []
+      },
       "name": "台口",
       "w": 11,
       "h": 8,
@@ -50441,6 +52415,12 @@
       "theme": "flute"
     },
     "ch192_seal": {
+      "on_victory": {
+        "flags": [
+          "ch192_seal_done"
+        ],
+        "actions": []
+      },
       "name": "笛印",
       "w": 11,
       "h": 7,
@@ -50592,6 +52572,12 @@
       "theme": "flute"
     },
     "ch193_fair": {
+      "on_victory": {
+        "flags": [
+          "ch193_fair_done"
+        ],
+        "actions": []
+      },
       "name": "笛市",
       "w": 12,
       "h": 8,
@@ -50769,6 +52755,12 @@
       "theme": "flute"
     },
     "ch193_score": {
+      "on_victory": {
+        "flags": [
+          "ch193_score_done"
+        ],
+        "actions": []
+      },
       "name": "谱架",
       "w": 11,
       "h": 8,
@@ -50933,6 +52925,12 @@
       "theme": "flute"
     },
     "ch194_solo": {
+      "on_victory": {
+        "flags": [
+          "ch194_solo_done"
+        ],
+        "actions": []
+      },
       "name": "独奏",
       "w": 11,
       "h": 8,
@@ -51097,6 +53095,12 @@
       "theme": "flute"
     },
     "ch194_night": {
+      "on_victory": {
+        "flags": [
+          "ch194_night_done"
+        ],
+        "actions": []
+      },
       "name": "夜曲",
       "w": 11,
       "h": 8,
@@ -51261,6 +53265,12 @@
       "theme": "flute"
     },
     "ch195_finale": {
+      "on_victory": {
+        "flags": [
+          "ch195_finale_done"
+        ],
+        "actions": []
+      },
       "name": "三十一卷席终",
       "w": 12,
       "h": 9,
@@ -51462,6 +53472,12 @@
       "theme": "flute"
     },
     "ch196_screen": {
+      "on_victory": {
+        "flags": [
+          "ch196_screen_done"
+        ],
+        "actions": []
+      },
       "name": "影幕",
       "w": 12,
       "h": 7,
@@ -51620,6 +53636,12 @@
       "theme": "shadow"
     },
     "ch196_booth": {
+      "on_victory": {
+        "flags": [
+          "ch196_booth_done"
+        ],
+        "actions": []
+      },
       "name": "棚口",
       "w": 11,
       "h": 8,
@@ -51784,6 +53806,12 @@
       "theme": "shadow"
     },
     "ch197_lamp": {
+      "on_victory": {
+        "flags": [
+          "ch197_lamp_done"
+        ],
+        "actions": []
+      },
       "name": "灯影",
       "w": 11,
       "h": 8,
@@ -51948,6 +53976,12 @@
       "theme": "shadow"
     },
     "ch197_backstage": {
+      "on_victory": {
+        "flags": [
+          "ch197_backstage_done"
+        ],
+        "actions": []
+      },
       "name": "后台",
       "w": 11,
       "h": 8,
@@ -52112,6 +54146,12 @@
       "theme": "shadow"
     },
     "ch198_seal": {
+      "on_victory": {
+        "flags": [
+          "ch198_seal_done"
+        ],
+        "actions": []
+      },
       "name": "影印",
       "w": 11,
       "h": 7,
@@ -52263,6 +54303,12 @@
       "theme": "shadow"
     },
     "ch199_fair": {
+      "on_victory": {
+        "flags": [
+          "ch199_fair_done"
+        ],
+        "actions": []
+      },
       "name": "影市",
       "w": 12,
       "h": 8,
@@ -52440,6 +54486,12 @@
       "theme": "shadow"
     },
     "ch199_box": {
+      "on_victory": {
+        "flags": [
+          "ch199_box_done"
+        ],
+        "actions": []
+      },
       "name": "匣架",
       "w": 11,
       "h": 8,
@@ -52604,6 +54656,12 @@
       "theme": "shadow"
     },
     "ch200_solo": {
+      "on_victory": {
+        "flags": [
+          "ch200_solo_done"
+        ],
+        "actions": []
+      },
       "name": "独影",
       "w": 11,
       "h": 8,
@@ -52768,6 +54826,12 @@
       "theme": "shadow"
     },
     "ch200_night": {
+      "on_victory": {
+        "flags": [
+          "ch200_night_done"
+        ],
+        "actions": []
+      },
       "name": "夜幕",
       "w": 12,
       "h": 8,
@@ -52945,6 +55009,12 @@
       "theme": "shadow"
     },
     "ch201_finale": {
+      "on_victory": {
+        "flags": [
+          "ch201_finale_done"
+        ],
+        "actions": []
+      },
       "name": "三十二卷席终",
       "w": 12,
       "h": 9,
@@ -53146,6 +55216,12 @@
       "theme": "shadow"
     },
     "ch202_flat": {
+      "on_victory": {
+        "flags": [
+          "ch202_flat_done"
+        ],
+        "actions": []
+      },
       "name": "盐滩",
       "w": 12,
       "h": 7,
@@ -53304,6 +55380,12 @@
       "theme": "salt"
     },
     "ch202_canal": {
+      "on_victory": {
+        "flags": [
+          "ch202_canal_done"
+        ],
+        "actions": []
+      },
       "name": "卤渠",
       "w": 11,
       "h": 8,
@@ -53468,6 +55550,12 @@
       "theme": "salt"
     },
     "ch203_pile": {
+      "on_victory": {
+        "flags": [
+          "ch203_pile_done"
+        ],
+        "actions": []
+      },
       "name": "盐堆",
       "w": 11,
       "h": 8,
@@ -53632,6 +55720,12 @@
       "theme": "salt"
     },
     "ch203_pan": {
+      "on_victory": {
+        "flags": [
+          "ch203_pan_done"
+        ],
+        "actions": []
+      },
       "name": "晒盘",
       "w": 12,
       "h": 8,
@@ -53809,6 +55903,12 @@
       "theme": "salt"
     },
     "ch204_seal": {
+      "on_victory": {
+        "flags": [
+          "ch204_seal_done"
+        ],
+        "actions": []
+      },
       "name": "盐印",
       "w": 11,
       "h": 7,
@@ -53960,6 +56060,12 @@
       "theme": "salt"
     },
     "ch205_fair": {
+      "on_victory": {
+        "flags": [
+          "ch205_fair_done"
+        ],
+        "actions": []
+      },
       "name": "盐市",
       "w": 12,
       "h": 8,
@@ -54137,6 +56243,12 @@
       "theme": "salt"
     },
     "ch205_rack": {
+      "on_victory": {
+        "flags": [
+          "ch205_rack_done"
+        ],
+        "actions": []
+      },
       "name": "盐架",
       "w": 11,
       "h": 8,
@@ -54301,6 +56413,12 @@
       "theme": "salt"
     },
     "ch206_solo": {
+      "on_victory": {
+        "flags": [
+          "ch206_solo_done"
+        ],
+        "actions": []
+      },
       "name": "独晒",
       "w": 11,
       "h": 8,
@@ -54465,6 +56583,12 @@
       "theme": "salt"
     },
     "ch206_night": {
+      "on_victory": {
+        "flags": [
+          "ch206_night_done"
+        ],
+        "actions": []
+      },
       "name": "夜卤",
       "w": 12,
       "h": 8,
@@ -54642,6 +56766,12 @@
       "theme": "salt"
     },
     "ch207_finale": {
+      "on_victory": {
+        "flags": [
+          "ch207_finale_done"
+        ],
+        "actions": []
+      },
       "name": "三十三卷席终",
       "w": 12,
       "h": 9,
@@ -54843,6 +56973,12 @@
       "theme": "salt"
     },
     "ch208_yard": {
+      "on_victory": {
+        "flags": [
+          "ch208_yard_done"
+        ],
+        "actions": []
+      },
       "name": "染坊",
       "w": 12,
       "h": 7,
@@ -55001,6 +57137,12 @@
       "theme": "dye"
     },
     "ch208_vat": {
+      "on_victory": {
+        "flags": [
+          "ch208_vat_done"
+        ],
+        "actions": []
+      },
       "name": "染缸",
       "w": 11,
       "h": 8,
@@ -55165,6 +57307,12 @@
       "theme": "dye"
     },
     "ch209_rack": {
+      "on_victory": {
+        "flags": [
+          "ch209_rack_done"
+        ],
+        "actions": []
+      },
       "name": "晾竿",
       "w": 11,
       "h": 8,
@@ -55329,6 +57477,12 @@
       "theme": "dye"
     },
     "ch209_press": {
+      "on_victory": {
+        "flags": [
+          "ch209_press_done"
+        ],
+        "actions": []
+      },
       "name": "榨色",
       "w": 12,
       "h": 8,
@@ -55506,6 +57660,12 @@
       "theme": "dye"
     },
     "ch210_seal": {
+      "on_victory": {
+        "flags": [
+          "ch210_seal_done"
+        ],
+        "actions": []
+      },
       "name": "染印",
       "w": 11,
       "h": 7,
@@ -55657,6 +57817,12 @@
       "theme": "dye"
     },
     "ch211_fair": {
+      "on_victory": {
+        "flags": [
+          "ch211_fair_done"
+        ],
+        "actions": []
+      },
       "name": "色市",
       "w": 12,
       "h": 8,
@@ -55834,6 +58000,12 @@
       "theme": "dye"
     },
     "ch211_loom": {
+      "on_victory": {
+        "flags": [
+          "ch211_loom_done"
+        ],
+        "actions": []
+      },
       "name": "织架",
       "w": 11,
       "h": 8,
@@ -55998,6 +58170,12 @@
       "theme": "dye"
     },
     "ch212_solo": {
+      "on_victory": {
+        "flags": [
+          "ch212_solo_done"
+        ],
+        "actions": []
+      },
       "name": "独染",
       "w": 11,
       "h": 8,
@@ -56162,6 +58340,12 @@
       "theme": "dye"
     },
     "ch212_night": {
+      "on_victory": {
+        "flags": [
+          "ch212_night_done"
+        ],
+        "actions": []
+      },
       "name": "夜色",
       "w": 12,
       "h": 8,
@@ -56339,6 +58523,12 @@
       "theme": "dye"
     },
     "ch213_finale": {
+      "on_victory": {
+        "flags": [
+          "ch213_finale_done"
+        ],
+        "actions": []
+      },
       "name": "三十四卷席终",
       "w": 12,
       "h": 9,
@@ -56540,6 +58730,12 @@
       "theme": "dye"
     },
     "ch214_tower": {
+      "on_victory": {
+        "flags": [
+          "ch214_tower_done"
+        ],
+        "actions": []
+      },
       "name": "鼓楼",
       "w": 12,
       "h": 7,
@@ -56698,6 +58894,12 @@
       "theme": "drum"
     },
     "ch214_gallery": {
+      "on_victory": {
+        "flags": [
+          "ch214_gallery_done"
+        ],
+        "actions": []
+      },
       "name": "鼓廊",
       "w": 11,
       "h": 8,
@@ -56862,6 +59064,12 @@
       "theme": "drum"
     },
     "ch215_beat": {
+      "on_victory": {
+        "flags": [
+          "ch215_beat_done"
+        ],
+        "actions": []
+      },
       "name": "擂台",
       "w": 11,
       "h": 8,
@@ -57026,6 +59234,12 @@
       "theme": "drum"
     },
     "ch215_night": {
+      "on_victory": {
+        "flags": [
+          "ch215_night_done"
+        ],
+        "actions": []
+      },
       "name": "夜鼓",
       "w": 12,
       "h": 8,
@@ -57203,6 +59417,12 @@
       "theme": "drum"
     },
     "ch216_seal": {
+      "on_victory": {
+        "flags": [
+          "ch216_seal_done"
+        ],
+        "actions": []
+      },
       "name": "鼓印",
       "w": 11,
       "h": 7,
@@ -57354,6 +59574,12 @@
       "theme": "drum"
     },
     "ch217_fair": {
+      "on_victory": {
+        "flags": [
+          "ch217_fair_done"
+        ],
+        "actions": []
+      },
       "name": "鼓市",
       "w": 12,
       "h": 8,
@@ -57531,6 +59757,12 @@
       "theme": "drum"
     },
     "ch217_rack": {
+      "on_victory": {
+        "flags": [
+          "ch217_rack_done"
+        ],
+        "actions": []
+      },
       "name": "鼓架",
       "w": 11,
       "h": 8,
@@ -57695,6 +59927,12 @@
       "theme": "drum"
     },
     "ch218_solo": {
+      "on_victory": {
+        "flags": [
+          "ch218_solo_done"
+        ],
+        "actions": []
+      },
       "name": "独擂",
       "w": 11,
       "h": 8,
@@ -57859,6 +60097,12 @@
       "theme": "drum"
     },
     "ch218_night": {
+      "on_victory": {
+        "flags": [
+          "ch218_night_done"
+        ],
+        "actions": []
+      },
       "name": "夜擂",
       "w": 12,
       "h": 8,
@@ -58036,6 +60280,12 @@
       "theme": "drum"
     },
     "ch219_finale": {
+      "on_victory": {
+        "flags": [
+          "ch219_finale_done"
+        ],
+        "actions": []
+      },
       "name": "三十五卷席终",
       "w": 12,
       "h": 9,
@@ -58237,6 +60487,12 @@
       "theme": "drum"
     },
     "ch220_market": {
+      "on_victory": {
+        "flags": [
+          "ch220_market_done"
+        ],
+        "actions": []
+      },
       "name": "香市",
       "w": 12,
       "h": 7,
@@ -58395,6 +60651,12 @@
       "theme": "incense"
     },
     "ch220_hall": {
+      "on_victory": {
+        "flags": [
+          "ch220_hall_done"
+        ],
+        "actions": []
+      },
       "name": "香堂",
       "w": 11,
       "h": 8,
@@ -58559,6 +60821,12 @@
       "theme": "incense"
     },
     "ch221_smoke": {
+      "on_victory": {
+        "flags": [
+          "ch221_smoke_done"
+        ],
+        "actions": []
+      },
       "name": "烟径",
       "w": 11,
       "h": 8,
@@ -58723,6 +60991,12 @@
       "theme": "incense"
     },
     "ch221_ash": {
+      "on_victory": {
+        "flags": [
+          "ch221_ash_done"
+        ],
+        "actions": []
+      },
       "name": "灰台",
       "w": 12,
       "h": 8,
@@ -58900,6 +61174,12 @@
       "theme": "incense"
     },
     "ch222_seal": {
+      "on_victory": {
+        "flags": [
+          "ch222_seal_done"
+        ],
+        "actions": []
+      },
       "name": "香印",
       "w": 11,
       "h": 7,
@@ -59051,6 +61331,12 @@
       "theme": "incense"
     },
     "ch223_fair": {
+      "on_victory": {
+        "flags": [
+          "ch223_fair_done"
+        ],
+        "actions": []
+      },
       "name": "香摊",
       "w": 12,
       "h": 8,
@@ -59228,6 +61514,12 @@
       "theme": "incense"
     },
     "ch223_rack": {
+      "on_victory": {
+        "flags": [
+          "ch223_rack_done"
+        ],
+        "actions": []
+      },
       "name": "香架",
       "w": 11,
       "h": 8,
@@ -59392,6 +61684,12 @@
       "theme": "incense"
     },
     "ch224_solo": {
+      "on_victory": {
+        "flags": [
+          "ch224_solo_done"
+        ],
+        "actions": []
+      },
       "name": "独香",
       "w": 11,
       "h": 8,
@@ -59556,6 +61854,12 @@
       "theme": "incense"
     },
     "ch224_night": {
+      "on_victory": {
+        "flags": [
+          "ch224_night_done"
+        ],
+        "actions": []
+      },
       "name": "夜香",
       "w": 12,
       "h": 8,
@@ -59733,6 +62037,12 @@
       "theme": "incense"
     },
     "ch225_finale": {
+      "on_victory": {
+        "flags": [
+          "ch225_finale_done"
+        ],
+        "actions": []
+      },
       "name": "三十六卷席终",
       "w": 12,
       "h": 9,
@@ -59934,6 +62244,12 @@
       "theme": "incense"
     },
     "ch226_flat": {
+      "on_victory": {
+        "flags": [
+          "ch226_flat_done"
+        ],
+        "actions": []
+      },
       "name": "潮滩",
       "w": 12,
       "h": 7,
@@ -60092,6 +62408,12 @@
       "theme": "tide"
     },
     "ch226_channel": {
+      "on_victory": {
+        "flags": [
+          "ch226_channel_done"
+        ],
+        "actions": []
+      },
       "name": "潮渠",
       "w": 11,
       "h": 8,
@@ -60256,6 +62578,12 @@
       "theme": "tide"
     },
     "ch227_reef": {
+      "on_victory": {
+        "flags": [
+          "ch227_reef_done"
+        ],
+        "actions": []
+      },
       "name": "礁脉",
       "w": 11,
       "h": 8,
@@ -60420,6 +62748,12 @@
       "theme": "tide"
     },
     "ch227_night": {
+      "on_victory": {
+        "flags": [
+          "ch227_night_done"
+        ],
+        "actions": []
+      },
       "name": "夜潮",
       "w": 12,
       "h": 8,
@@ -60597,6 +62931,12 @@
       "theme": "tide"
     },
     "ch228_seal": {
+      "on_victory": {
+        "flags": [
+          "ch228_seal_done"
+        ],
+        "actions": []
+      },
       "name": "潮印",
       "w": 11,
       "h": 7,
@@ -60748,6 +63088,12 @@
       "theme": "tide"
     },
     "ch229_fair": {
+      "on_victory": {
+        "flags": [
+          "ch229_fair_done"
+        ],
+        "actions": []
+      },
       "name": "潮市",
       "w": 12,
       "h": 8,
@@ -60925,6 +63271,12 @@
       "theme": "tide"
     },
     "ch229_rack": {
+      "on_victory": {
+        "flags": [
+          "ch229_rack_done"
+        ],
+        "actions": []
+      },
       "name": "潮架",
       "w": 11,
       "h": 8,
@@ -61089,6 +63441,12 @@
       "theme": "tide"
     },
     "ch230_solo": {
+      "on_victory": {
+        "flags": [
+          "ch230_solo_done"
+        ],
+        "actions": []
+      },
       "name": "独潮",
       "w": 11,
       "h": 8,
@@ -61253,6 +63611,12 @@
       "theme": "tide"
     },
     "ch230_night": {
+      "on_victory": {
+        "flags": [
+          "ch230_night_done"
+        ],
+        "actions": []
+      },
       "name": "夜退",
       "w": 12,
       "h": 8,
@@ -61430,6 +63794,12 @@
       "theme": "tide"
     },
     "ch231_finale": {
+      "on_victory": {
+        "flags": [
+          "ch231_finale_done"
+        ],
+        "actions": []
+      },
       "name": "三十七卷席终",
       "w": 12,
       "h": 9,
@@ -61631,6 +64001,12 @@
       "theme": "tide"
     },
     "ch232_yard": {
+      "on_victory": {
+        "flags": [
+          "ch232_yard_done"
+        ],
+        "actions": []
+      },
       "name": "瓷市",
       "w": 12,
       "h": 7,
@@ -61789,6 +64165,12 @@
       "theme": "porcelain"
     },
     "ch232_kiln": {
+      "on_victory": {
+        "flags": [
+          "ch232_kiln_done"
+        ],
+        "actions": []
+      },
       "name": "窑廊",
       "w": 11,
       "h": 8,
@@ -61953,6 +64335,12 @@
       "theme": "porcelain"
     },
     "ch233_glaze": {
+      "on_victory": {
+        "flags": [
+          "ch233_glaze_done"
+        ],
+        "actions": []
+      },
       "name": "釉池",
       "w": 11,
       "h": 8,
@@ -62117,6 +64505,12 @@
       "theme": "porcelain"
     },
     "ch233_shelf": {
+      "on_victory": {
+        "flags": [
+          "ch233_shelf_done"
+        ],
+        "actions": []
+      },
       "name": "瓷架",
       "w": 12,
       "h": 8,
@@ -62294,6 +64688,12 @@
       "theme": "porcelain"
     },
     "ch234_seal": {
+      "on_victory": {
+        "flags": [
+          "ch234_seal_done"
+        ],
+        "actions": []
+      },
       "name": "瓷印",
       "w": 11,
       "h": 7,
