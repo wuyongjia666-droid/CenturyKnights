@@ -64,3 +64,54 @@ jobs:
           name: ck-logs
           path: /tmp/ck_*.log
           if-no-files-found: ignore
+
+  shots:
+    name: shots
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Cache Godot 4.3
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/godot
+          key: godot-4.3-stable-linux-x86_64-${{ hashFiles('scripts/install_godot.sh') }}
+
+      - name: Cache imported assets
+        uses: actions/cache@v4
+        with:
+          path: project/.godot/imported
+          key: godot-imported-${{ hashFiles('project/project.godot') }}
+          restore-keys: |
+            godot-imported-
+
+      - name: System packages
+        run: sudo apt-get update && sudo apt-get install -y xvfb libgl1-mesa-dri
+
+      - name: Python image metrics
+        run: python3 -m pip install --quiet numpy pillow
+
+      - name: Install Godot
+        run: bash scripts/install_godot.sh
+
+      - name: Import project
+        run: |
+          export PATH="${HOME}/.local/bin:${PATH}"
+          cd project
+          godot --headless --import || godot --headless --editor --quit
+
+      - name: Capture screens
+        run: |
+          export PATH="${HOME}/.local/bin:${PATH}"
+          bash scripts/capture_screens.sh /tmp/ck_shots
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ck-shots
+          path: /tmp/ck_shots/*.png
+          if-no-files-found: error
