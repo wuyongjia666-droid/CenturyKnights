@@ -1,0 +1,145 @@
+{
+  "version": "v8.9",
+  "note": "Faction kits reuse shipped GLBs. Palette stays inside style-lock v8.7 (ink, slate, frost, mint, coral; ember is trim-only).",
+  "roles": {
+    "thug": "melee",
+    "thief": "melee",
+    "raider": "melee",
+    "archer": "ranged",
+    "sniper": "ranged",
+    "boss": "elite",
+    "chief": "elite",
+    "weak": "light"
+  },
+  "library": {
+    "bandit_axe": "res://assets/models/units/bandit_axe.glb",
+    "bandit_bow": "res://assets/models/units/bandit_bow.glb",
+    "bandit": "res://assets/models/units/enemy_bandit.glb",
+    "bandit_archer": "res://assets/models/units/enemy_bandit_archer.glb",
+    "bandit_chief": "res://assets/models/units/enemy_bandit_chief.glb",
+    "bandit_weak": "res://assets/models/units/enemy_bandit_weak.glb",
+    "spear": "res://assets/models/units/militia_spear.glb",
+    "sword": "res://assets/models/units/knight_sword.glb",
+    "shield": "res://assets/models/units/militia_shield.glb",
+    "outfit_light_m": "res://assets/models/units/outfit_light_inf_t1_m.glb",
+    "outfit_hunter_m": "res://assets/models/units/outfit_hunter_t1_m.glb",
+    "outfit_heavy_m": "res://assets/models/units/outfit_heavy_inf_t1_m.glb",
+    "outfit_archer_m": "res://assets/models/units/outfit_archer_t1_m.glb",
+    "outfit_priest_m": "res://assets/models/units/outfit_priest_t1_m.glb",
+    "outfit_apprentice_m": "res://assets/models/units/outfit_apprentice_t1_m.glb",
+    "outfit_squire_m": "res://assets/models/units/outfit_squire_t1_m.glb",
+    "outfit_warrior_m": "res://assets/models/units/outfit_warrior_t1_m.glb"
+  },
+  "themes": {
+    "bandit": {
+      "outfit": "bandit",
+      "slots": {"melee": "bandit", "ranged": "bandit_archer", "elite": "bandit_chief", "light": "bandit_weak"},
+      "palette": {"armor": "#3A4048", "cloth": "#1C2330", "leather": "#2A3442", "weapon": "#C9D3DE", "trim": "#FF7A70", "skin": "#C99A7E", "body_tint": "#FFFFFF"}
+    },
+    "escort": {
+      "outfit": "bandit_axe",
+      "slots": {"melee": "bandit_axe", "ranged": "bandit_bow", "elite": "sword", "light": "bandit_weak"},
+      "palette": {"armor": "#2A3442", "cloth": "#1C2330", "leather": "#2A3442", "weapon": "#C9D3DE", "trim": "#FF7A70", "skin": "#C99A7E", "body_tint": "#F4E4E2"}
+    },
+    "fisher": {
+      "outfit": "spear",
+      "slots": {"melee": "spear", "ranged": "bandit_bow", "elite": "shield", "light": "outfit_light_m"},
+      "palette": {"armor": "#2A3442", "cloth": "#1C2330", "leather": "#243830", "weapon": "#C9D3DE", "trim": "#5EE0B5", "skin": "#C99A7E", "body_tint": "#E5F6F0"}
+    },
+    "paper": {
+      "outfit": "outfit_light",
+      "slots": {"melee": "outfit_light_m", "ranged": "outfit_archer_m", "elite": "outfit_squire_m", "light": "bandit_axe"},
+      "palette": {"armor": "#C9D3DE", "cloth": "#1C2330", "leather": "#2A3442", "weapon": "#F4F7FB", "trim": "#C9D3DE", "skin": "#E2C1AC", "body_tint": "#F4F7FB"}
+    },
+    "copper": {
+      "outfit": "bandit_axe",
+      "slots": {"melee": "bandit_axe", "ranged": "outfit_hunter_m", "elite": "sword", "light": "bandit_weak"},
+      "palette": {"armor": "#2A3442", "cloth": "#1C2330", "leather": "#2A3442", "weapon": "#C9D3DE", "trim": "#FF8A3D", "skin": "#C69C78", "body_tint": "#F6E6DC"}
+    },
+    "lamp": {
+      "outfit": "outfit_priest",
+      "slots": {"melee": "outfit_priest_m", "ranged": "bandit_bow", "elite": "outfit_apprentice_m", "light": "outfit_light_m"},
+      "palette": {"armor": "#2A3442", "cloth": "#161B24", "leather": "#2A3442", "weapon": "#F4F7FB", "trim": "#6ED4FF", "skin": "#E2C1AC", "body_tint": "#E7F4FB"}
+    },
+    "grain": {
+      "outfit": "spear",
+      "slots": {"melee": "spear", "ranged": "outfit_hunter_m", "elite": "outfit_heavy_m", "light": "outfit_light_m"},
+      "palette": {"armor": "#C9D3DE", "cloth": "#1C2330", "leather": "#2A3442", "weapon": "#F4F7FB", "trim": "#9BE4FF", "skin": "#C99A7E", "body_tint": "#F4F7FB"}
+    },
+    "snow": {
+      "outfit": "spear",
+      "slots": {"melee": "spear", "ranged": "bandit_bow", "elite": "sword", "light": "outfit_light_m"},
+      "palette": {"armor": "#C9D3DE", "cloth": "#1C2330", "leather": "#2A3442", "weapon": "#F4F7FB", "trim": "#6ED4FF", "skin": "#F1DCD0", "body_tint": "#D7E7F2"}
+    },
+    "bamboo": {
+      "outfit": "shield",
+      "slots": {"melee": "shield", "ranged": "outfit_archer_m", "elite": "spear", "light": "outfit_light_m"},
+      "palette": {"armor": "#2A3442", "cloth": "#1C2330", "leather": "#243830", "weapon": "#C9D3DE", "trim": "#5EE0B5", "skin": "#C99A7E", "body_tint": "#E7F3EC"}
+    },
+    "relay": {
+      "outfit": "bandit_axe",
+      "slots": {"melee": "bandit_axe", "ranged": "outfit_archer_m", "elite": "spear", "light": "outfit_light_m"},
+      "palette": {"armor": "#2A3442", "cloth": "#161B24", "leather": "#2A3442", "weapon": "#F4F7FB", "trim": "#F4F7FB", "skin": "#C99A7E", "body_tint": "#EEF2F6"}
+    },
+    "bell": {
+      "outfit": "sword",
+      "slots": {"melee": "sword", "ranged": "outfit_archer_m", "elite": "outfit_warrior_m", "light": "bandit_weak"},
+      "palette": {"armor": "#C9D3DE", "cloth": "#1C2330", "leather": "#2A3442", "weapon": "#F4F7FB", "trim": "#9BE4FF", "skin": "#E2C1AC", "body_tint": "#E4EAF0"}
+    },
+    "rain": {
+      "outfit": "outfit_light",
+      "slots": {"melee": "outfit_light_m", "ranged": "bandit_bow", "elite": "shield", "light": "bandit_axe"},
+      "palette": {"armor": "#2A3442", "cloth": "#161B24", "leather": "#2A3442", "weapon": "#C9D3DE", "trim": "#3AADDF", "skin": "#C99A7E", "body_tint": "#D5E4EE"}
+    },
+    "ink": {
+      "outfit": "outfit_apprentice",
+      "slots": {"melee": "outfit_apprentice_m", "ranged": "outfit_hunter_m", "elite": "outfit_priest_m", "light": "outfit_light_m"},
+      "palette": {"armor": "#2A3442", "cloth": "#161B24", "leather": "#1C2330", "weapon": "#C9D3DE", "trim": "#9AA6B8", "skin": "#C99A7E", "body_tint": "#D8DCE8"}
+    },
+    "hive": {
+      "outfit": "outfit_hunter",
+      "slots": {"melee": "outfit_hunter_m", "ranged": "outfit_archer_m", "elite": "spear", "light": "outfit_light_m"},
+      "palette": {"armor": "#2A3442", "cloth": "#1C2330", "leather": "#243830", "weapon": "#C9D3DE", "trim": "#5EE0B5", "skin": "#C69C78", "body_tint": "#E7F6C8"}
+    },
+    "flute": {
+      "outfit": "outfit_squire",
+      "slots": {"melee": "outfit_squire_m", "ranged": "bandit_bow", "elite": "outfit_light_m", "light": "bandit_axe"},
+      "palette": {"armor": "#C9D3DE", "cloth": "#1C2330", "leather": "#2A3442", "weapon": "#F4F7FB", "trim": "#9BE4FF", "skin": "#E2C1AC", "body_tint": "#E7F6FF"}
+    },
+    "shadow": {
+      "outfit": "sword",
+      "slots": {"melee": "sword", "ranged": "bandit_bow", "elite": "outfit_warrior_m", "light": "bandit_weak"},
+      "palette": {"armor": "#2A3442", "cloth": "#10141C", "leather": "#161B24", "weapon": "#C9D3DE", "trim": "#6ED4FF", "skin": "#C99A7E", "body_tint": "#C9D0D8"}
+    },
+    "salt": {
+      "outfit": "outfit_heavy",
+      "slots": {"melee": "outfit_heavy_m", "ranged": "outfit_hunter_m", "elite": "shield", "light": "bandit_axe"},
+      "palette": {"armor": "#C9D3DE", "cloth": "#1C2330", "leather": "#2A3442", "weapon": "#F4F7FB", "trim": "#FF8A3D", "skin": "#E2C1AC", "body_tint": "#F7F4EF"}
+    },
+    "dye": {
+      "outfit": "outfit_warrior",
+      "slots": {"melee": "outfit_warrior_m", "ranged": "outfit_archer_m", "elite": "outfit_heavy_m", "light": "bandit_axe"},
+      "palette": {"armor": "#2A3442", "cloth": "#1C2330", "leather": "#2A3442", "weapon": "#C9D3DE", "trim": "#FF7A70", "skin": "#C99A7E", "body_tint": "#F0D4D2"}
+    },
+    "drum": {
+      "outfit": "shield",
+      "slots": {"melee": "shield", "ranged": "bandit_bow", "elite": "outfit_warrior_m", "light": "spear"},
+      "palette": {"armor": "#2A3442", "cloth": "#1C2330", "leather": "#2A3442", "weapon": "#C9D3DE", "trim": "#FF7A70", "skin": "#C69C78", "body_tint": "#F6D6D4"}
+    },
+    "incense": {
+      "outfit": "outfit_priest",
+      "slots": {"melee": "outfit_priest_m", "ranged": "outfit_hunter_m", "elite": "outfit_apprentice_m", "light": "outfit_squire_m"},
+      "palette": {"armor": "#2A3442", "cloth": "#161B24", "leather": "#2A3442", "weapon": "#F4F7FB", "trim": "#FF8A3D", "skin": "#C69C78", "body_tint": "#F8E7DC"}
+    },
+    "tide": {
+      "outfit": "outfit_light",
+      "slots": {"melee": "outfit_light_m", "ranged": "outfit_hunter_m", "elite": "shield", "light": "spear"},
+      "palette": {"armor": "#2A3442", "cloth": "#1C2330", "leather": "#243830", "weapon": "#C9D3DE", "trim": "#5EE0B5", "skin": "#E2C1AC", "body_tint": "#D9F3EA"}
+    },
+    "porcelain": {
+      "outfit": "sword",
+      "slots": {"melee": "sword", "ranged": "outfit_archer_m", "elite": "outfit_heavy_m", "light": "outfit_squire_m"},
+      "palette": {"armor": "#C9D3DE", "cloth": "#1C2330", "leather": "#2A3442", "weapon": "#F4F7FB", "trim": "#C9D3DE", "skin": "#F1DCD0", "body_tint": "#F4F7FB"}
+    }
+  }
+}
