@@ -2,6 +2,7 @@ extends Node
 ## v9.1 fields round-trip, and v8.7 / v8.8 saves gain blood, rites, titles, courts and age stage.
 
 const _StoryCheck = preload("res://tests/suites/core/story_state_check.gd")
+const _FacadeCheck = preload("res://tests/suites/core/facade_check.gd")
 
 var _fails: Array = []
 
@@ -9,6 +10,8 @@ func _ready() -> void:
 	await get_tree().process_frame
 	var story_fails: Array = await _StoryCheck.run(self)
 	for f in story_fails:
+		_fails.append(f)
+	for f in _FacadeCheck.run():
 		_fails.append(f)
 	_round_trip()
 	_migrate("v8.7", false)
