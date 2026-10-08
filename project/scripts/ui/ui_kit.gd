@@ -4,7 +4,7 @@ extends RefCounted
 ## v8.6.0-art "CenturyKnights Frost" — tokens from the live Google Stitch design system (tokens.json).
 ## Dark luminous ink void · frosted glass panels · 1px highlight stroke · generous whitespace · thin type.
 ## Crystal frost = primary/focus only · mint = ally/heal · coral = enemy/deny · ember = sparks only.
-## NO medieval cliché, NO ice-crystal frame plates on chrome (retired v8.6), NO parchment/gold.
+## NO medieval cliché, NO ice-crystal frame plates on chrome (retired v8.6).
 const BG := Color("#07080C")
 const BG_DEEP := Color("#040507")
 const BG_GLOW := Color("#10141C")
@@ -313,6 +313,49 @@ static func make_panel() -> PanelContainer:
 	p.add_theme_stylebox_override("panel", glass())
 	return p
 
+static func list_row(title: String, meta: String = "") -> HBoxContainer:
+	var row := HBoxContainer.new()
+	row.custom_minimum_size = Vector2(0, 44)
+	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_theme_constant_override("separation", 12)
+	var name := make_label(title)
+	name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(name)
+	if meta != "":
+		var side := mono(meta, 12, TEXT_DIM, false)
+		side.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		row.add_child(side)
+	return row
+
+static func tab_bar(labels: PackedStringArray, selected: int = 0) -> HBoxContainer:
+	var bar := HBoxContainer.new()
+	bar.add_theme_constant_override("separation", 8)
+	for i in labels.size():
+		var tab := Button.new()
+		tab.text = labels[i]
+		tab.toggle_mode = true
+		tab.button_pressed = i == selected
+		tab.custom_minimum_size = Vector2(72, 44)
+		tab.focus_mode = Control.FOCUS_ALL
+		var on := i == selected
+		tab.add_theme_color_override("font_color", ACCENT if on else TEXT_DIM)
+		tab.add_theme_stylebox_override("normal", _btn_box(Color(ACCENT, 0.12) if on else Color(0, 0, 0, 0), ACCENT if on else STROKE, 1, 8))
+		bar.add_child(tab)
+	return bar
+
+static func dialog_panel(title: String, body: String) -> PanelContainer:
+	var panel := PanelContainer.new()
+	panel.add_theme_stylebox_override("panel", glass(16, 0.92, true))
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 10)
+	panel.add_child(box)
+	box.add_child(title_label(title, 22))
+	var copy := body_label(body, TEXT_DIM, 15)
+	copy.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	copy.custom_minimum_size = Vector2(280, 0)
+	box.add_child(copy)
+	return panel
+
 static func make_glass(radius: int = 12, alpha: float = 0.78) -> PanelContainer:
 	var p := PanelContainer.new()
 	p.add_theme_stylebox_override("panel", glass(radius, alpha))
@@ -346,7 +389,7 @@ static func page_header(parent: Control, title: String, eyebrow_text: String = "
 	parent.add_child(v)
 	return v
 
-static func parchment_style() -> StyleBoxFlat:
+static func plate_style() -> StyleBoxFlat:
 	var s := StyleBoxFlat.new()
 	s.bg_color = Color(PANEL, 0.82)
 	s.border_color = STROKE

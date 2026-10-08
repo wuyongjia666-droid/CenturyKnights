@@ -1,7 +1,7 @@
 # CenturyKnights Visual System · v8.0.0-art
 
 **Vibe lock (2026):** cutting-edge global contemporary fantasy SRPG — luminous ink voids, frosted matte chrome, crystal frost + mint/coral signals, editorial illustration.  
-**Explicit rejects:** retro medieval cliché, parchment kitsch, gothic stone thrift, war-banner gold frames.
+**Explicit rejects:** retro medieval cliché, aged-paper kitsch, gothic stone thrift, warm-metal frames.
 
 ## Coverage matrix (ship once — no half redesign)
 
@@ -67,7 +67,7 @@ Borders readable without text; nation plates + world plates; wire via `project/d
 2. **Flat panels, 1px strokes.** `UIKit.panel_at` = #0E1117 @ 0.90 + 1px white@0.10. Focus = 2px frost (#6ED4FF) stroke + 14px soft glow. Nothing else glows.
 3. **Chrome skeleton.** 56px `top_bar` (● CENTURY KNIGHTS // context · boxed resource chips · 返回 ESC) → editorial `page_head` (mono eyebrow `— X // SECTOR`, 30px title, mono English subtitle, one-line desc) → content → 28px `footer_bar` with keycaps at y692.
 4. **Hierarchy by type, not boxes.** 30 title / 22 section hero / 15–17 row title / 12 body / 9–10 mono meta. Mono (JetBrains) for numbers, IDs, eyebrows; Noto Sans SC for prose.
-5. **Colour is semantic.** Frost = primary/focus/selection; mint = ally/heal/OK; coral = enemy/deny/insufficient; ember = sparks only. Gold/parchment banned.
+5. **Colour is semantic.** Frost = primary/focus/selection; mint = ally/heal/OK; coral = enemy/deny/insufficient; ember = sparks only. Warm-metal trim and aged-paper textures are rejected.
 6. **Every action has a key.** CTAs carry `[A]`/`[ENTER]` keycaps; secondary actions are ghost buttons with their key (`[W]`, `[S]`); ESC always backs out. Hover / pressed / focus / disabled states on every control.
 7. **Whitespace over filler.** Empty slots render as dashed-quiet "空位 / SLOT AVAILABLE", not stretched panels.
 8. **Battle board is the hero.** HUD lives in the right rail + a centred turn pill (第 N 回合 · PHASE chip); objectives top-right; nothing overlays the board.
