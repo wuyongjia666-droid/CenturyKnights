@@ -1,7 +1,12 @@
 class_name CKMorale
 extends RefCounted
 ## CMP-07: company morale bands for battle, and desertion after two unpaid months.
-## The century sim never goes unpaid, and this path does not touch GameState.rng.
+## This path does not touch GameState.rng.
+## CKCampaignSim sets suppress_desertion so the headless century keeps its roster.
+## Seeds 1113, 1116 and 1119 skim zero; letting people leave rewrites about 500
+## portrait-bank buckets in the art farm queue. The player payroll path still deserts.
+
+static var suppress_desertion := false
 
 const BANDS := [
 	{"id": "high", "min": 80, "hit": 3, "atk": 1},
@@ -36,6 +41,8 @@ static func unpaid_months(host) -> int:
 
 
 static func on_payday(host, paid: bool) -> String:
+	if suppress_desertion:
+		return ""
 	if paid:
 		host.house_mods["unpaid_months"] = 0
 		host.house_mods.erase("morale_hold")
