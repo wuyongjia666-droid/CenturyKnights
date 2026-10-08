@@ -1,5 +1,5 @@
 {
- "version": "v8.9-bloodlines-1",
+ "version": "v8.9-bloodlines-2",
  "doc": "docs/design/bloodlines-v89.md",
  "motto": "血是所携，冕是所显",
  "tiers": {
@@ -144,6 +144,20 @@
    "short": "母传全部，父传为零",
    "desc": "萤光只经母系：母亲的萤值传给每个孩子，每代随机漂移(σ0.07)；父亲一分不传。萤值 ≥0.66 显萤斑，≥0.36 显萤痕。萤子发光，却注定无后可传。",
    "punnett": "萤母 × 任意父：子女萤值 ≈ 母值。萤子 × 任意母：子女萤值 = 母值，与他无关。"
+  },
+  "age_awakened": {
+   "name": "年觉律",
+   "name_en": "Age-awakened dominant",
+   "short": "显性携因，到龄方显",
+   "desc": "等位显性，但要到位点写明的年龄才在脸上显出来。此前是潜征，祠堂能验到因，肖像不画。",
+   "punnett": "显因 × 无：子代约 50% 携因；未到龄不显。纯合 × 无：子代全部携因，到龄才显。"
+  },
+  "pureblood": {
+   "name": "纯血律",
+   "name_en": "Pure-line recessive",
+   "short": "两份纯血，且本冕已显",
+   "desc": "稀有隐性。两份纯血等位，并且本国的王族冕征已经显出来，才出现那一个额外表情。冕征未显时纯血只是潜征。",
+   "punnett": "纯血杂合 × 杂合：约 25% 纯合。纯合是否看得见，还要看本冕是否已显。"
   }
  },
  "loci": {
@@ -319,6 +333,2073 @@
    "noble_min": 0.36,
    "latent_min": 0.25,
    "drift": 0.07
+  },
+  "tr_ash_wire": {
+   "nation": "ashbanner",
+   "slot": "hair",
+   "scope": "royal",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "ash_wire",
+    "ash_crop",
+    "none"
+   ],
+   "royal": "ash_wire",
+   "states": {
+    "royal": "ash_wire",
+    "noble": "ash_crop"
+   },
+   "generated": "trait-set-v89",
+   "noble": "ash_crop",
+   "mutation_loss": 0.004
+  },
+  "tr_ash_spoke": {
+   "nation": "ashbanner",
+   "slot": "iris",
+   "scope": "royal",
+   "law": "recessive",
+   "kind": "diploid",
+   "alleles": [
+    "ash_spoke",
+    "none"
+   ],
+   "royal": "ash_spoke",
+   "states": {
+    "royal": "ash_spoke"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "catch": true
+  },
+  "tr_ash_bone": {
+   "nation": "ashbanner",
+   "slot": "bone",
+   "scope": "royal",
+   "law": "threshold",
+   "kind": "value",
+   "alleles": [
+    "ash_bone",
+    "ash_jaw",
+    "none"
+   ],
+   "royal": "ash_bone",
+   "states": {
+    "royal": "ash_bone",
+    "noble": "ash_jaw"
+   },
+   "generated": "trait-set-v89",
+   "noble": "ash_jaw",
+   "royal_min": 0.72,
+   "noble_min": 0.48,
+   "latent_min": 0.4,
+   "noise": 0.035,
+   "regress": 0.15,
+   "catch": true
+  },
+  "tr_ash_jawcast": {
+   "nation": "ashbanner",
+   "slot": "skin",
+   "scope": "royal",
+   "law": "age_awakened",
+   "kind": "diploid",
+   "alleles": [
+    "ash_jawcast",
+    "none"
+   ],
+   "royal": "ash_jawcast",
+   "states": {
+    "royal": "ash_jawcast"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "age_min": 28
+  },
+  "tr_ash_hook": {
+   "nation": "ashbanner",
+   "slot": "bearing",
+   "scope": "royal",
+   "law": "penetrance",
+   "kind": "diploid",
+   "alleles": [
+    "ash_hook",
+    "none"
+   ],
+   "royal": "ash_hook",
+   "states": {
+    "royal": "ash_hook"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "penetrance": 0.6
+  },
+  "tr_ash_cloak": {
+   "nation": "ashbanner",
+   "slot": "regalia",
+   "scope": "royal",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "ash_cloak",
+    "none"
+   ],
+   "royal": "ash_cloak",
+   "states": {
+    "royal": "ash_cloak"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_ash_pure": {
+   "nation": "ashbanner",
+   "slot": "pure",
+   "scope": "royal",
+   "law": "pureblood",
+   "kind": "diploid",
+   "alleles": [
+    "ash_pure",
+    "none"
+   ],
+   "royal": "ash_pure",
+   "states": {
+    "royal": "ash_pure"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_marshal_strap": {
+   "nation": "ashbanner",
+   "slot": "bearing",
+   "scope": "noble",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "marshal_strap",
+    "none"
+   ],
+   "royal": "marshal_strap",
+   "states": {
+    "royal": "marshal_strap"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "noble"
+  },
+  "tr_folk_ash_hair": {
+   "nation": "ashbanner",
+   "slot": "hair",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_ash_hair",
+    "none"
+   ],
+   "royal": "folk_ash_hair",
+   "states": {
+    "royal": "folk_ash_hair"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_folk_ash_skin": {
+   "nation": "ashbanner",
+   "slot": "skin",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_ash_skin",
+    "none"
+   ],
+   "royal": "folk_ash_skin",
+   "states": {
+    "royal": "folk_ash_skin"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_folk_ash_bone": {
+   "nation": "ashbanner",
+   "slot": "bone",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_ash_bone",
+    "none"
+   ],
+   "royal": "folk_ash_bone",
+   "states": {
+    "royal": "folk_ash_bone"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_sy_geom": {
+   "nation": "shuoying",
+   "slot": "hair",
+   "scope": "royal",
+   "law": "recessive",
+   "kind": "diploid",
+   "alleles": [
+    "sy_geom",
+    "sy_crop",
+    "none"
+   ],
+   "royal": "sy_geom",
+   "states": {
+    "royal": "sy_geom",
+    "noble": "sy_crop"
+   },
+   "generated": "trait-set-v89",
+   "noble": "sy_crop",
+   "mutation_loss": 0.004
+  },
+  "tr_sy_sclera": {
+   "nation": "shuoying",
+   "slot": "iris",
+   "scope": "royal",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "sy_sclera",
+    "none"
+   ],
+   "royal": "sy_sclera",
+   "states": {
+    "royal": "sy_sclera"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "catch": true
+  },
+  "tr_sy_bridge": {
+   "nation": "shuoying",
+   "slot": "bone",
+   "scope": "royal",
+   "law": "threshold",
+   "kind": "value",
+   "alleles": [
+    "sy_bridge",
+    "sy_cheek",
+    "none"
+   ],
+   "royal": "sy_bridge",
+   "states": {
+    "royal": "sy_bridge",
+    "noble": "sy_cheek"
+   },
+   "generated": "trait-set-v89",
+   "noble": "sy_cheek",
+   "royal_min": 0.72,
+   "noble_min": 0.48,
+   "latent_min": 0.4,
+   "noise": 0.035,
+   "regress": 0.15,
+   "catch": true
+  },
+  "tr_sy_olive": {
+   "nation": "shuoying",
+   "slot": "skin",
+   "scope": "royal",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "sy_olive",
+    "none"
+   ],
+   "royal": "sy_olive",
+   "states": {
+    "royal": "sy_olive"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_sy_still": {
+   "nation": "shuoying",
+   "slot": "bearing",
+   "scope": "royal",
+   "law": "age_awakened",
+   "kind": "diploid",
+   "alleles": [
+    "sy_still",
+    "none"
+   ],
+   "royal": "sy_still",
+   "states": {
+    "royal": "sy_still"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "age_min": 22
+  },
+  "tr_sy_collar": {
+   "nation": "shuoying",
+   "slot": "regalia",
+   "scope": "royal",
+   "law": "x_dominant",
+   "kind": "x",
+   "alleles": [
+    "sy_collar",
+    "none"
+   ],
+   "royal": "sy_collar",
+   "states": {
+    "royal": "sy_collar"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_sy_pure": {
+   "nation": "shuoying",
+   "slot": "pure",
+   "scope": "royal",
+   "law": "pureblood",
+   "kind": "diploid",
+   "alleles": [
+    "sy_pure",
+    "none"
+   ],
+   "royal": "sy_pure",
+   "states": {
+    "royal": "sy_pure"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_sy_canthus": {
+   "nation": "shuoying",
+   "slot": "iris",
+   "scope": "noble",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "sy_canthus",
+    "none"
+   ],
+   "royal": "sy_canthus",
+   "states": {
+    "royal": "sy_canthus"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "noble"
+  },
+  "tr_folk_sy_hair": {
+   "nation": "shuoying",
+   "slot": "hair",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_sy_hair",
+    "none"
+   ],
+   "royal": "folk_sy_hair",
+   "states": {
+    "royal": "folk_sy_hair"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_folk_sy_skin": {
+   "nation": "shuoying",
+   "slot": "skin",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_sy_skin",
+    "none"
+   ],
+   "royal": "folk_sy_skin",
+   "states": {
+    "royal": "folk_sy_skin"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_folk_sy_bone": {
+   "nation": "shuoying",
+   "slot": "bone",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_sy_bone",
+    "none"
+   ],
+   "royal": "folk_sy_bone",
+   "states": {
+    "royal": "folk_sy_bone"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_qh_smooth": {
+   "nation": "qinghe",
+   "slot": "hair",
+   "scope": "royal",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "qh_smooth",
+    "qh_tuck",
+    "none"
+   ],
+   "royal": "qh_smooth",
+   "states": {
+    "royal": "qh_smooth",
+    "noble": "qh_tuck"
+   },
+   "generated": "trait-set-v89",
+   "noble": "qh_tuck",
+   "mutation_loss": 0.004
+  },
+  "tr_qh_limbal": {
+   "nation": "qinghe",
+   "slot": "iris",
+   "scope": "royal",
+   "law": "recessive",
+   "kind": "diploid",
+   "alleles": [
+    "qh_limbal",
+    "none"
+   ],
+   "royal": "qh_limbal",
+   "states": {
+    "royal": "qh_limbal"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "catch": true
+  },
+  "tr_qh_oval": {
+   "nation": "qinghe",
+   "slot": "bone",
+   "scope": "royal",
+   "law": "threshold",
+   "kind": "value",
+   "alleles": [
+    "qh_oval",
+    "qh_lowcheek",
+    "none"
+   ],
+   "royal": "qh_oval",
+   "states": {
+    "royal": "qh_oval",
+    "noble": "qh_lowcheek"
+   },
+   "generated": "trait-set-v89",
+   "noble": "qh_lowcheek",
+   "royal_min": 0.72,
+   "noble_min": 0.48,
+   "latent_min": 0.4,
+   "noise": 0.035,
+   "regress": 0.15,
+   "catch": true
+  },
+  "tr_qh_undertone": {
+   "nation": "qinghe",
+   "slot": "skin",
+   "scope": "royal",
+   "law": "maternal",
+   "kind": "value",
+   "alleles": [
+    "qh_undertone",
+    "none"
+   ],
+   "royal": "qh_undertone",
+   "states": {
+    "royal": "qh_undertone"
+   },
+   "generated": "trait-set-v89",
+   "royal_min": 0.7,
+   "noble_min": 0.4,
+   "latent_min": 0.28,
+   "drift": 0.05
+  },
+  "tr_qh_fold": {
+   "nation": "qinghe",
+   "slot": "bearing",
+   "scope": "royal",
+   "law": "penetrance",
+   "kind": "diploid",
+   "alleles": [
+    "qh_fold",
+    "none"
+   ],
+   "royal": "qh_fold",
+   "states": {
+    "royal": "qh_fold"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "penetrance": 0.6
+  },
+  "tr_qh_collar": {
+   "nation": "qinghe",
+   "slot": "regalia",
+   "scope": "royal",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "qh_collar",
+    "none"
+   ],
+   "royal": "qh_collar",
+   "states": {
+    "royal": "qh_collar"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_qh_pure": {
+   "nation": "qinghe",
+   "slot": "pure",
+   "scope": "royal",
+   "law": "pureblood",
+   "kind": "diploid",
+   "alleles": [
+    "qh_pure",
+    "none"
+   ],
+   "royal": "qh_pure",
+   "states": {
+    "royal": "qh_pure"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_qh_web": {
+   "nation": "qinghe",
+   "slot": "skin",
+   "scope": "noble",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "qh_web",
+    "none"
+   ],
+   "royal": "qh_web",
+   "states": {
+    "royal": "qh_web"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "noble"
+  },
+  "tr_folk_qh_hair": {
+   "nation": "qinghe",
+   "slot": "hair",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_qh_hair",
+    "none"
+   ],
+   "royal": "folk_qh_hair",
+   "states": {
+    "royal": "folk_qh_hair"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_folk_qh_skin": {
+   "nation": "qinghe",
+   "slot": "skin",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_qh_skin",
+    "none"
+   ],
+   "royal": "folk_qh_skin",
+   "states": {
+    "royal": "folk_qh_skin"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_folk_qh_bone": {
+   "nation": "qinghe",
+   "slot": "bone",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_qh_bone",
+    "none"
+   ],
+   "royal": "folk_qh_bone",
+   "states": {
+    "royal": "folk_qh_bone"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_lt_asym": {
+   "nation": "lantern",
+   "slot": "hair",
+   "scope": "royal",
+   "law": "recessive",
+   "kind": "diploid",
+   "alleles": [
+    "lt_asym",
+    "lt_merchantcut",
+    "none"
+   ],
+   "royal": "lt_asym",
+   "states": {
+    "royal": "lt_asym",
+    "noble": "lt_merchantcut"
+   },
+   "generated": "trait-set-v89",
+   "noble": "lt_merchantcut",
+   "mutation_loss": 0.004
+  },
+  "tr_lt_quartz": {
+   "nation": "lantern",
+   "slot": "iris",
+   "scope": "royal",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "lt_quartz",
+    "none"
+   ],
+   "royal": "lt_quartz",
+   "states": {
+    "royal": "lt_quartz"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "catch": true
+  },
+  "tr_lt_soft": {
+   "nation": "lantern",
+   "slot": "bone",
+   "scope": "royal",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "lt_soft",
+    "lt_shortchin",
+    "none"
+   ],
+   "royal": "lt_soft",
+   "states": {
+    "royal": "lt_soft",
+    "noble": "lt_shortchin"
+   },
+   "generated": "trait-set-v89",
+   "noble": "lt_shortchin",
+   "mutation_loss": 0.004,
+   "catch": true
+  },
+  "tr_lt_sheen": {
+   "nation": "lantern",
+   "slot": "skin",
+   "scope": "royal",
+   "law": "awakened",
+   "kind": "diploid",
+   "alleles": [
+    "lt_sheen",
+    "none"
+   ],
+   "royal": "lt_sheen",
+   "states": {
+    "royal": "lt_sheen"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "deed": {
+    "rank_min": "count",
+    "honors_any": [
+     "crown_line",
+     "banner_oath"
+    ]
+   }
+  },
+  "tr_lt_count": {
+   "nation": "lantern",
+   "slot": "bearing",
+   "scope": "royal",
+   "law": "penetrance",
+   "kind": "diploid",
+   "alleles": [
+    "lt_count",
+    "none"
+   ],
+   "royal": "lt_count",
+   "states": {
+    "royal": "lt_count"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "penetrance": 0.6
+  },
+  "tr_lt_bind": {
+   "nation": "lantern",
+   "slot": "regalia",
+   "scope": "royal",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "lt_bind",
+    "none"
+   ],
+   "royal": "lt_bind",
+   "states": {
+    "royal": "lt_bind"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_lt_pure": {
+   "nation": "lantern",
+   "slot": "pure",
+   "scope": "royal",
+   "law": "pureblood",
+   "kind": "diploid",
+   "alleles": [
+    "lt_pure",
+    "none"
+   ],
+   "royal": "lt_pure",
+   "states": {
+    "royal": "lt_pure"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_lt_knuckle": {
+   "nation": "lantern",
+   "slot": "skin",
+   "scope": "noble",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "lt_knuckle",
+    "none"
+   ],
+   "royal": "lt_knuckle",
+   "states": {
+    "royal": "lt_knuckle"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "noble"
+  },
+  "tr_folk_lt_hair": {
+   "nation": "lantern",
+   "slot": "hair",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_lt_hair",
+    "none"
+   ],
+   "royal": "folk_lt_hair",
+   "states": {
+    "royal": "folk_lt_hair"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_folk_lt_skin": {
+   "nation": "lantern",
+   "slot": "skin",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_lt_skin",
+    "none"
+   ],
+   "royal": "folk_lt_skin",
+   "states": {
+    "royal": "folk_lt_skin"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_folk_lt_bone": {
+   "nation": "lantern",
+   "slot": "bone",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_lt_bone",
+    "none"
+   ],
+   "royal": "folk_lt_bone",
+   "states": {
+    "royal": "folk_lt_bone"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_fc_temple": {
+   "nation": "frostcrown",
+   "slot": "hair",
+   "scope": "royal",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "fc_temple",
+    "fc_short",
+    "none"
+   ],
+   "royal": "fc_temple",
+   "states": {
+    "royal": "fc_temple",
+    "noble": "fc_short"
+   },
+   "generated": "trait-set-v89",
+   "noble": "fc_short",
+   "mutation_loss": 0.004
+  },
+  "tr_fc_storm": {
+   "nation": "frostcrown",
+   "slot": "iris",
+   "scope": "royal",
+   "law": "recessive",
+   "kind": "diploid",
+   "alleles": [
+    "fc_storm",
+    "none"
+   ],
+   "royal": "fc_storm",
+   "states": {
+    "royal": "fc_storm"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "catch": true
+  },
+  "tr_fc_long": {
+   "nation": "frostcrown",
+   "slot": "bone",
+   "scope": "royal",
+   "law": "threshold",
+   "kind": "value",
+   "alleles": [
+    "fc_long",
+    "fc_thin",
+    "none"
+   ],
+   "royal": "fc_long",
+   "states": {
+    "royal": "fc_long",
+    "noble": "fc_thin"
+   },
+   "generated": "trait-set-v89",
+   "noble": "fc_thin",
+   "royal_min": 0.72,
+   "noble_min": 0.48,
+   "latent_min": 0.4,
+   "noise": 0.035,
+   "regress": 0.15,
+   "catch": true
+  },
+  "tr_fc_skin": {
+   "nation": "frostcrown",
+   "slot": "skin",
+   "scope": "royal",
+   "law": "x_dominant",
+   "kind": "x",
+   "alleles": [
+    "fc_skin",
+    "none"
+   ],
+   "royal": "fc_skin",
+   "states": {
+    "royal": "fc_skin"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_fc_hands": {
+   "nation": "frostcrown",
+   "slot": "bearing",
+   "scope": "royal",
+   "law": "age_awakened",
+   "kind": "diploid",
+   "alleles": [
+    "fc_hands",
+    "none"
+   ],
+   "royal": "fc_hands",
+   "states": {
+    "royal": "fc_hands"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "age_min": 28
+  },
+  "tr_fc_collar": {
+   "nation": "frostcrown",
+   "slot": "regalia",
+   "scope": "royal",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "fc_collar",
+    "none"
+   ],
+   "royal": "fc_collar",
+   "states": {
+    "royal": "fc_collar"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_fc_pure": {
+   "nation": "frostcrown",
+   "slot": "pure",
+   "scope": "royal",
+   "law": "pureblood",
+   "kind": "diploid",
+   "alleles": [
+    "fc_pure",
+    "none"
+   ],
+   "royal": "fc_pure",
+   "states": {
+    "royal": "fc_pure"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_fc_mouth": {
+   "nation": "frostcrown",
+   "slot": "bearing",
+   "scope": "noble",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "fc_mouth",
+    "none"
+   ],
+   "royal": "fc_mouth",
+   "states": {
+    "royal": "fc_mouth"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "noble"
+  },
+  "tr_folk_fc_hair": {
+   "nation": "frostcrown",
+   "slot": "hair",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_fc_hair",
+    "none"
+   ],
+   "royal": "folk_fc_hair",
+   "states": {
+    "royal": "folk_fc_hair"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_folk_fc_skin": {
+   "nation": "frostcrown",
+   "slot": "skin",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_fc_skin",
+    "none"
+   ],
+   "royal": "folk_fc_skin",
+   "states": {
+    "royal": "folk_fc_skin"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_folk_fc_bone": {
+   "nation": "frostcrown",
+   "slot": "bone",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_fc_bone",
+    "none"
+   ],
+   "royal": "folk_fc_bone",
+   "states": {
+    "royal": "folk_fc_bone"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_eo_sweep": {
+   "nation": "emberold",
+   "slot": "hair",
+   "scope": "royal",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "eo_sweep",
+    "eo_short",
+    "none"
+   ],
+   "royal": "eo_sweep",
+   "states": {
+    "royal": "eo_sweep",
+    "noble": "eo_short"
+   },
+   "generated": "trait-set-v89",
+   "noble": "eo_short",
+   "mutation_loss": 0.004
+  },
+  "tr_eo_stroma": {
+   "nation": "emberold",
+   "slot": "iris",
+   "scope": "royal",
+   "law": "recessive",
+   "kind": "diploid",
+   "alleles": [
+    "eo_stroma",
+    "none"
+   ],
+   "royal": "eo_stroma",
+   "states": {
+    "royal": "eo_stroma"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "catch": true
+  },
+  "tr_eo_zygo": {
+   "nation": "emberold",
+   "slot": "bone",
+   "scope": "royal",
+   "law": "threshold",
+   "kind": "value",
+   "alleles": [
+    "eo_zygo",
+    "eo_shortnose",
+    "none"
+   ],
+   "royal": "eo_zygo",
+   "states": {
+    "royal": "eo_zygo",
+    "noble": "eo_shortnose"
+   },
+   "generated": "trait-set-v89",
+   "noble": "eo_shortnose",
+   "royal_min": 0.72,
+   "noble_min": 0.48,
+   "latent_min": 0.4,
+   "noise": 0.035,
+   "regress": 0.15,
+   "catch": true
+  },
+  "tr_eo_clay": {
+   "nation": "emberold",
+   "slot": "skin",
+   "scope": "royal",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "eo_clay",
+    "none"
+   ],
+   "royal": "eo_clay",
+   "states": {
+    "royal": "eo_clay"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_eo_pause": {
+   "nation": "emberold",
+   "slot": "bearing",
+   "scope": "royal",
+   "law": "penetrance",
+   "kind": "diploid",
+   "alleles": [
+    "eo_pause",
+    "none"
+   ],
+   "royal": "eo_pause",
+   "states": {
+    "royal": "eo_pause"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "penetrance": 0.6
+  },
+  "tr_eo_collar": {
+   "nation": "emberold",
+   "slot": "regalia",
+   "scope": "royal",
+   "law": "y_linked",
+   "kind": "y",
+   "alleles": [
+    "eo_collar",
+    "none"
+   ],
+   "royal": "eo_collar",
+   "states": {
+    "royal": "eo_collar"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_eo_pure": {
+   "nation": "emberold",
+   "slot": "pure",
+   "scope": "royal",
+   "law": "pureblood",
+   "kind": "diploid",
+   "alleles": [
+    "eo_pure",
+    "none"
+   ],
+   "royal": "eo_pure",
+   "states": {
+    "royal": "eo_pure"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_eo_notch": {
+   "nation": "emberold",
+   "slot": "bone",
+   "scope": "noble",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "eo_notch",
+    "none"
+   ],
+   "royal": "eo_notch",
+   "states": {
+    "royal": "eo_notch"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "noble"
+  },
+  "tr_folk_eo_hair": {
+   "nation": "emberold",
+   "slot": "hair",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_eo_hair",
+    "none"
+   ],
+   "royal": "folk_eo_hair",
+   "states": {
+    "royal": "folk_eo_hair"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_folk_eo_skin": {
+   "nation": "emberold",
+   "slot": "skin",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_eo_skin",
+    "none"
+   ],
+   "royal": "folk_eo_skin",
+   "states": {
+    "royal": "folk_eo_skin"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_folk_eo_bone": {
+   "nation": "emberold",
+   "slot": "bone",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_eo_bone",
+    "none"
+   ],
+   "royal": "folk_eo_bone",
+   "states": {
+    "royal": "folk_eo_bone"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_sm_coil": {
+   "nation": "saltmarsh",
+   "slot": "hair",
+   "scope": "royal",
+   "law": "recessive",
+   "kind": "diploid",
+   "alleles": [
+    "sm_coil",
+    "sm_knot",
+    "none"
+   ],
+   "royal": "sm_coil",
+   "states": {
+    "royal": "sm_coil",
+    "noble": "sm_knot"
+   },
+   "generated": "trait-set-v89",
+   "noble": "sm_knot",
+   "mutation_loss": 0.004
+  },
+  "tr_sm_iris": {
+   "nation": "saltmarsh",
+   "slot": "iris",
+   "scope": "royal",
+   "law": "x_dominant",
+   "kind": "x",
+   "alleles": [
+    "sm_iris",
+    "none"
+   ],
+   "royal": "sm_iris",
+   "states": {
+    "royal": "sm_iris"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "catch": true
+  },
+  "tr_sm_wide": {
+   "nation": "saltmarsh",
+   "slot": "bone",
+   "scope": "royal",
+   "law": "threshold",
+   "kind": "value",
+   "alleles": [
+    "sm_wide",
+    "sm_full",
+    "none"
+   ],
+   "royal": "sm_wide",
+   "states": {
+    "royal": "sm_wide",
+    "noble": "sm_full"
+   },
+   "generated": "trait-set-v89",
+   "noble": "sm_full",
+   "royal_min": 0.72,
+   "noble_min": 0.48,
+   "latent_min": 0.4,
+   "noise": 0.035,
+   "regress": 0.15,
+   "catch": true
+  },
+  "tr_sm_sheen": {
+   "nation": "saltmarsh",
+   "slot": "skin",
+   "scope": "royal",
+   "law": "maternal",
+   "kind": "value",
+   "alleles": [
+    "sm_sheen",
+    "none"
+   ],
+   "royal": "sm_sheen",
+   "states": {
+    "royal": "sm_sheen"
+   },
+   "generated": "trait-set-v89",
+   "royal_min": 0.7,
+   "noble_min": 0.4,
+   "latent_min": 0.28,
+   "drift": 0.05
+  },
+  "tr_sm_stance": {
+   "nation": "saltmarsh",
+   "slot": "bearing",
+   "scope": "royal",
+   "law": "age_awakened",
+   "kind": "diploid",
+   "alleles": [
+    "sm_stance",
+    "none"
+   ],
+   "royal": "sm_stance",
+   "states": {
+    "royal": "sm_stance"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "age_min": 24
+  },
+  "tr_sm_band": {
+   "nation": "saltmarsh",
+   "slot": "regalia",
+   "scope": "royal",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "sm_band",
+    "none"
+   ],
+   "royal": "sm_band",
+   "states": {
+    "royal": "sm_band"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_sm_pure": {
+   "nation": "saltmarsh",
+   "slot": "pure",
+   "scope": "royal",
+   "law": "pureblood",
+   "kind": "diploid",
+   "alleles": [
+    "sm_pure",
+    "none"
+   ],
+   "royal": "sm_pure",
+   "states": {
+    "royal": "sm_pure"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_sm_lip": {
+   "nation": "saltmarsh",
+   "slot": "skin",
+   "scope": "noble",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "sm_lip",
+    "none"
+   ],
+   "royal": "sm_lip",
+   "states": {
+    "royal": "sm_lip"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "noble"
+  },
+  "tr_folk_sm_hair": {
+   "nation": "saltmarsh",
+   "slot": "hair",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_sm_hair",
+    "none"
+   ],
+   "royal": "folk_sm_hair",
+   "states": {
+    "royal": "folk_sm_hair"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_folk_sm_skin": {
+   "nation": "saltmarsh",
+   "slot": "skin",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_sm_skin",
+    "none"
+   ],
+   "royal": "folk_sm_skin",
+   "states": {
+    "royal": "folk_sm_skin"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_folk_sm_bone": {
+   "nation": "saltmarsh",
+   "slot": "bone",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_sm_bone",
+    "none"
+   ],
+   "royal": "folk_sm_bone",
+   "states": {
+    "royal": "folk_sm_bone"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_ig_part": {
+   "nation": "irongorge",
+   "slot": "hair",
+   "scope": "royal",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "ig_part",
+    "ig_crop",
+    "none"
+   ],
+   "royal": "ig_part",
+   "states": {
+    "royal": "ig_part",
+    "noble": "ig_crop"
+   },
+   "generated": "trait-set-v89",
+   "noble": "ig_crop",
+   "mutation_loss": 0.004
+  },
+  "tr_ig_catch": {
+   "nation": "irongorge",
+   "slot": "iris",
+   "scope": "royal",
+   "law": "recessive",
+   "kind": "diploid",
+   "alleles": [
+    "ig_catch",
+    "none"
+   ],
+   "royal": "ig_catch",
+   "states": {
+    "royal": "ig_catch"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "catch": true
+  },
+  "tr_ig_jaw": {
+   "nation": "irongorge",
+   "slot": "bone",
+   "scope": "royal",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "ig_jaw",
+    "ig_gonial",
+    "none"
+   ],
+   "royal": "ig_jaw",
+   "states": {
+    "royal": "ig_jaw",
+    "noble": "ig_gonial"
+   },
+   "generated": "trait-set-v89",
+   "noble": "ig_gonial",
+   "mutation_loss": 0.004,
+   "catch": true
+  },
+  "tr_ig_steel": {
+   "nation": "irongorge",
+   "slot": "skin",
+   "scope": "royal",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "ig_steel",
+    "none"
+   ],
+   "royal": "ig_steel",
+   "states": {
+    "royal": "ig_steel"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_ig_lean": {
+   "nation": "irongorge",
+   "slot": "bearing",
+   "scope": "royal",
+   "law": "penetrance",
+   "kind": "diploid",
+   "alleles": [
+    "ig_lean",
+    "none"
+   ],
+   "royal": "ig_lean",
+   "states": {
+    "royal": "ig_lean"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "penetrance": 0.6
+  },
+  "tr_ig_throat": {
+   "nation": "irongorge",
+   "slot": "regalia",
+   "scope": "royal",
+   "law": "age_awakened",
+   "kind": "diploid",
+   "alleles": [
+    "ig_throat",
+    "none"
+   ],
+   "royal": "ig_throat",
+   "states": {
+    "royal": "ig_throat"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "age_min": 25
+  },
+  "tr_ig_pure": {
+   "nation": "irongorge",
+   "slot": "pure",
+   "scope": "royal",
+   "law": "pureblood",
+   "kind": "diploid",
+   "alleles": [
+    "ig_pure",
+    "none"
+   ],
+   "royal": "ig_pure",
+   "states": {
+    "royal": "ig_pure"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_ig_ridge": {
+   "nation": "irongorge",
+   "slot": "bone",
+   "scope": "noble",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "ig_ridge",
+    "none"
+   ],
+   "royal": "ig_ridge",
+   "states": {
+    "royal": "ig_ridge"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "noble"
+  },
+  "tr_folk_ig_hair": {
+   "nation": "irongorge",
+   "slot": "hair",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_ig_hair",
+    "none"
+   ],
+   "royal": "folk_ig_hair",
+   "states": {
+    "royal": "folk_ig_hair"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_folk_ig_skin": {
+   "nation": "irongorge",
+   "slot": "skin",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_ig_skin",
+    "none"
+   ],
+   "royal": "folk_ig_skin",
+   "states": {
+    "royal": "folk_ig_skin"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_folk_ig_bone": {
+   "nation": "irongorge",
+   "slot": "bone",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_ig_bone",
+    "none"
+   ],
+   "royal": "folk_ig_bone",
+   "states": {
+    "royal": "folk_ig_bone"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_sr_shave": {
+   "nation": "starriver",
+   "slot": "hair",
+   "scope": "royal",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "sr_shave",
+    "sr_half",
+    "none"
+   ],
+   "royal": "sr_shave",
+   "states": {
+    "royal": "sr_shave",
+    "noble": "sr_half"
+   },
+   "generated": "trait-set-v89",
+   "noble": "sr_half",
+   "mutation_loss": 0.004
+  },
+  "tr_sr_fleck": {
+   "nation": "starriver",
+   "slot": "iris",
+   "scope": "royal",
+   "law": "recessive",
+   "kind": "diploid",
+   "alleles": [
+    "sr_fleck",
+    "none"
+   ],
+   "royal": "sr_fleck",
+   "states": {
+    "royal": "sr_fleck"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "catch": true
+  },
+  "tr_sr_mid": {
+   "nation": "starriver",
+   "slot": "bone",
+   "scope": "royal",
+   "law": "threshold",
+   "kind": "value",
+   "alleles": [
+    "sr_mid",
+    "sr_brow",
+    "none"
+   ],
+   "royal": "sr_mid",
+   "states": {
+    "royal": "sr_mid",
+    "noble": "sr_brow"
+   },
+   "generated": "trait-set-v89",
+   "noble": "sr_brow",
+   "royal_min": 0.72,
+   "noble_min": 0.48,
+   "latent_min": 0.4,
+   "noise": 0.035,
+   "regress": 0.15,
+   "catch": true
+  },
+  "tr_sr_olive": {
+   "nation": "starriver",
+   "slot": "skin",
+   "scope": "royal",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "sr_olive",
+    "none"
+   ],
+   "royal": "sr_olive",
+   "states": {
+    "royal": "sr_olive"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_sr_glance": {
+   "nation": "starriver",
+   "slot": "bearing",
+   "scope": "royal",
+   "law": "x_dominant",
+   "kind": "x",
+   "alleles": [
+    "sr_glance",
+    "none"
+   ],
+   "royal": "sr_glance",
+   "states": {
+    "royal": "sr_glance"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_sr_arc": {
+   "nation": "starriver",
+   "slot": "regalia",
+   "scope": "royal",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "sr_arc",
+    "none"
+   ],
+   "royal": "sr_arc",
+   "states": {
+    "royal": "sr_arc"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_sr_pure": {
+   "nation": "starriver",
+   "slot": "pure",
+   "scope": "royal",
+   "law": "pureblood",
+   "kind": "diploid",
+   "alleles": [
+    "sr_pure",
+    "none"
+   ],
+   "royal": "sr_pure",
+   "states": {
+    "royal": "sr_pure"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_sr_tap": {
+   "nation": "starriver",
+   "slot": "bearing",
+   "scope": "noble",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "sr_tap",
+    "none"
+   ],
+   "royal": "sr_tap",
+   "states": {
+    "royal": "sr_tap"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "noble"
+  },
+  "tr_sr_shoulder": {
+   "nation": "starriver",
+   "slot": "bearing",
+   "scope": "noble",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "sr_shoulder",
+    "none"
+   ],
+   "royal": "sr_shoulder",
+   "states": {
+    "royal": "sr_shoulder"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "noble"
+  },
+  "tr_folk_sr_hair": {
+   "nation": "starriver",
+   "slot": "hair",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_sr_hair",
+    "none"
+   ],
+   "royal": "folk_sr_hair",
+   "states": {
+    "royal": "folk_sr_hair"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_folk_sr_skin": {
+   "nation": "starriver",
+   "slot": "skin",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_sr_skin",
+    "none"
+   ],
+   "royal": "folk_sr_skin",
+   "states": {
+    "royal": "folk_sr_skin"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_folk_sr_bone": {
+   "nation": "starriver",
+   "slot": "bone",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_sr_bone",
+    "none"
+   ],
+   "royal": "folk_sr_bone",
+   "states": {
+    "royal": "folk_sr_bone"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_sz_wave": {
+   "nation": "southzephyr",
+   "slot": "hair",
+   "scope": "royal",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "sz_wave",
+    "sz_short",
+    "none"
+   ],
+   "royal": "sz_wave",
+   "states": {
+    "royal": "sz_wave",
+    "noble": "sz_short"
+   },
+   "generated": "trait-set-v89",
+   "noble": "sz_short",
+   "mutation_loss": 0.004
+  },
+  "tr_sz_moss": {
+   "nation": "southzephyr",
+   "slot": "iris",
+   "scope": "royal",
+   "law": "maternal",
+   "kind": "value",
+   "alleles": [
+    "sz_moss",
+    "none"
+   ],
+   "royal": "sz_moss",
+   "states": {
+    "royal": "sz_moss"
+   },
+   "generated": "trait-set-v89",
+   "royal_min": 0.7,
+   "noble_min": 0.4,
+   "latent_min": 0.28,
+   "drift": 0.05,
+   "catch": true
+  },
+  "tr_sz_round": {
+   "nation": "southzephyr",
+   "slot": "bone",
+   "scope": "royal",
+   "law": "threshold",
+   "kind": "value",
+   "alleles": [
+    "sz_round",
+    "sz_smallnose",
+    "none"
+   ],
+   "royal": "sz_round",
+   "states": {
+    "royal": "sz_round",
+    "noble": "sz_smallnose"
+   },
+   "generated": "trait-set-v89",
+   "noble": "sz_smallnose",
+   "royal_min": 0.72,
+   "noble_min": 0.48,
+   "latent_min": 0.4,
+   "noise": 0.035,
+   "regress": 0.15,
+   "catch": true
+  },
+  "tr_sz_mint": {
+   "nation": "southzephyr",
+   "slot": "skin",
+   "scope": "royal",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "sz_mint",
+    "none"
+   ],
+   "royal": "sz_mint",
+   "states": {
+    "royal": "sz_mint"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_sz_listen": {
+   "nation": "southzephyr",
+   "slot": "bearing",
+   "scope": "royal",
+   "law": "age_awakened",
+   "kind": "diploid",
+   "alleles": [
+    "sz_listen",
+    "none"
+   ],
+   "royal": "sz_listen",
+   "states": {
+    "royal": "sz_listen"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "age_min": 26
+  },
+  "tr_sz_hood": {
+   "nation": "southzephyr",
+   "slot": "regalia",
+   "scope": "royal",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "sz_hood",
+    "none"
+   ],
+   "royal": "sz_hood",
+   "states": {
+    "royal": "sz_hood"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_sz_pure": {
+   "nation": "southzephyr",
+   "slot": "pure",
+   "scope": "royal",
+   "law": "pureblood",
+   "kind": "diploid",
+   "alleles": [
+    "sz_pure",
+    "none"
+   ],
+   "royal": "sz_pure",
+   "states": {
+    "royal": "sz_pure"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004
+  },
+  "tr_sz_squint": {
+   "nation": "southzephyr",
+   "slot": "bearing",
+   "scope": "noble",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "sz_squint",
+    "none"
+   ],
+   "royal": "sz_squint",
+   "states": {
+    "royal": "sz_squint"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "noble"
+  },
+  "tr_folk_sz_hair": {
+   "nation": "southzephyr",
+   "slot": "hair",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_sz_hair",
+    "none"
+   ],
+   "royal": "folk_sz_hair",
+   "states": {
+    "royal": "folk_sz_hair"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_folk_sz_skin": {
+   "nation": "southzephyr",
+   "slot": "skin",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_sz_skin",
+    "none"
+   ],
+   "royal": "folk_sz_skin",
+   "states": {
+    "royal": "folk_sz_skin"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
+  },
+  "tr_folk_sz_bone": {
+   "nation": "southzephyr",
+   "slot": "bone",
+   "scope": "folk",
+   "law": "dominant",
+   "kind": "diploid",
+   "alleles": [
+    "folk_sz_bone",
+    "none"
+   ],
+   "royal": "folk_sz_bone",
+   "states": {
+    "royal": "folk_sz_bone"
+   },
+   "generated": "trait-set-v89",
+   "mutation_loss": 0.004,
+   "display_tier": "folk"
   }
  },
  "signatures": {
@@ -511,6 +2592,1940 @@
    "nation": "southzephyr",
    "desc": "鼻梁上几点淡淡的薄荷微光。",
    "prompt": "a few faint mint-green luminous freckles on the nose bridge"
+  },
+  "ash_wire": {
+   "zh": "烬丝发",
+   "name_en": "ink wire-crop",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "ashbanner",
+   "slot": "hair",
+   "locus": "tr_ash_wire",
+   "desc": "粗硬墨发，脑后平切，额前一道灰纹。",
+   "prompt": "coarse ink-black hair cut blunt at the nape, with one ash-grey forelock stripe",
+   "prompt_young": "short soft ink-black hair, the ash forelock only a faint thread",
+   "prompt_elder": "thinned ink-black hair, the forelock stripe wider and frost-silver at the roots",
+   "generated": "trait-set-v89"
+  },
+  "ash_crop": {
+   "zh": "旗裁发",
+   "name_en": "marshal crop",
+   "tier": "noble",
+   "visibility": "overt",
+   "nation": "ashbanner",
+   "slot": "hair",
+   "locus": "tr_ash_wire",
+   "desc": "墨发平切到下颌，没有额纹。",
+   "prompt": "ink-black hair cut blunt at the jaw, with no forelock stripe",
+   "prompt_young": "a soft jaw-length ink crop, still uneven in youth",
+   "prompt_elder": "a jaw-length ink crop gone thin at the temples with age",
+   "generated": "trait-set-v89"
+  },
+  "ash_spoke": {
+   "zh": "石墨辐",
+   "name_en": "graphite iris spoke",
+   "tier": "royal",
+   "visibility": "subtle",
+   "nation": "ashbanner",
+   "slot": "iris",
+   "locus": "tr_ash_spoke",
+   "desc": "炭黑虹膜里，七点钟方向一根石墨色辐条。近看才稳。",
+   "prompt": "charcoal irises with a single graphite spoke at seven o'clock",
+   "prompt_young": "dark irises, the graphite spoke only a short tick in youth",
+   "prompt_elder": "charcoal irises, the graphite spoke longer and paler with age",
+   "generated": "trait-set-v89"
+  },
+  "ash_bone": {
+   "zh": "阔梁灰面",
+   "name_en": "wide low brow shelf",
+   "tier": "royal",
+   "visibility": "subtle",
+   "nation": "ashbanner",
+   "slot": "bone",
+   "locus": "tr_ash_bone",
+   "desc": "眉骨低平、鼻梁宽、颊面平、下巴方。玉值式的骨相，过槛才完整。",
+   "prompt": "a low straight brow shelf, a wide nasal bridge, flat cheek planes and a squared chin",
+   "prompt_young": "a softer wide face, the brow shelf not yet heavy in youth",
+   "prompt_elder": "the brow shelf heavier, cheek planes hollower, chin still square in age",
+   "generated": "trait-set-v89"
+  },
+  "ash_jaw": {
+   "zh": "厚颌",
+   "name_en": "heavy marshal jaw",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "ashbanner",
+   "slot": "bone",
+   "locus": "tr_ash_bone",
+   "desc": "下颌厚，眉骨还没有王族那么低。",
+   "prompt": "a heavy jaw and a moderate brow shelf, cheeks still full",
+   "prompt_young": "a heavy jaw still padded with youth",
+   "prompt_elder": "a heavy jaw, the cheek softer and lined with age",
+   "generated": "trait-set-v89"
+  },
+  "ash_jawcast": {
+   "zh": "冷颌",
+   "name_en": "cool jaw cast",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "ashbanner",
+   "slot": "skin",
+   "locus": "tr_ash_jawcast",
+   "desc": "暖泥肤。二十八岁后下颌浮出冷灰，此前看不出来。",
+   "prompt": "warm clay skin with a cool grey cast along the jaw",
+   "prompt_young": "even warm clay skin, the jaw still the same tone as the cheek",
+   "prompt_elder": "warm clay skin, the cool grey jaw cast deeper, with a silver-violet thread at the hairline",
+   "generated": "trait-set-v89"
+  },
+  "ash_hook": {
+   "zh": "钩领势",
+   "name_en": "collar-hook stance",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "ashbanner",
+   "slot": "bearing",
+   "locus": "tr_ash_hook",
+   "desc": "重心在后脚，下颌平，右手拇指扣着领缘。约六成外显。",
+   "prompt": "weight on the back foot, chin level, right thumb hooked on the collar edge, voice in short clipped orders",
+   "prompt_young": "the back-foot stance loose, the thumb hook not yet a habit in youth",
+   "prompt_elder": "the back-foot stance deeper, the thumb hook stiff, the voice lower and shorter with age",
+   "generated": "trait-set-v89",
+   "bark": "旗在左。"
+  },
+  "ash_cloak": {
+   "zh": "开领短氅",
+   "name_en": "open-collar short cloak",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "ashbanner",
+   "slot": "regalia",
+   "locus": "tr_ash_cloak",
+   "desc": "左领敞开的短灰氅，霜银发丝压边。衣冠是家传的披法，不是冠。",
+   "prompt": "a short ash cloak, collar open on the left, frost-silver hairline trim on matte technical cloth",
+   "prompt_young": "the same short ash cloak worn a little large, trim still bright in youth",
+   "prompt_elder": "the short ash cloak worn thinner at the edge, trim dulled to brushed frost metal with age",
+   "generated": "trait-set-v89",
+   "modules": [
+    "regalia_ash_collar",
+    "regalia_ash_cloak"
+   ],
+   "palette": {
+    "cloth": "#1C2330",
+    "trim": "#9AA6B8",
+    "metal": "#C9D3DE"
+   }
+  },
+  "ash_pure": {
+   "zh": "双烬纹",
+   "name_en": "split forelock pure mark",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "ashbanner",
+   "slot": "pure",
+   "locus": "tr_ash_pure",
+   "desc": "颈纹延伸到锁骨，额纹分成平行两股。只在河图已显且两份纯血等位时出现。",
+   "prompt": "the neck tracery continues onto the collarbone and the ash forelock stripe splits into two parallel threads",
+   "prompt_young": "the split forelock threads are short, the collarbone tracery faint in a young pure line",
+   "prompt_elder": "the split forelock threads are frost-silver and the collarbone tracery deeper with age",
+   "generated": "trait-set-v89"
+  },
+  "marshal_strap": {
+   "zh": "肩革痕",
+   "name_en": "strap pressure line",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "ashbanner",
+   "slot": "bearing",
+   "locus": "tr_marshal_strap",
+   "desc": "左肩一道皮带压出来的浅痕，皮略厚。旗帅自家的征，不是河图。",
+   "prompt": "a pale pressure line on the left shoulder where a strap sits, the skin there slightly thickened",
+   "prompt_young": "a faint shoulder pressure line, not yet thickened in youth",
+   "prompt_elder": "a pale shoulder pressure line, the skin thicker and a little creased with age",
+   "generated": "trait-set-v89"
+  },
+  "folk_ash_hair": {
+   "zh": "风剪灰棕",
+   "name_en": "weather-cropped ash hair",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "ashbanner",
+   "slot": "hair",
+   "locus": "tr_folk_ash_hair",
+   "desc": "风剪过的灰棕发，后颈参差。",
+   "prompt": "ash-brown hair cropped by weather, uneven at the nape",
+   "prompt_young": "softer ash-brown hair, the nape still uneven in youth",
+   "prompt_elder": "ash-brown hair thinner and more uneven at the nape with age",
+   "generated": "trait-set-v89"
+  },
+  "folk_ash_skin": {
+   "zh": "暖泥肤",
+   "name_en": "plain clay skin",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "ashbanner",
+   "slot": "skin",
+   "locus": "tr_folk_ash_skin",
+   "desc": "暖泥肤，下颌没有冷灰。",
+   "prompt": "warm clay skin with no grey cast along the jaw",
+   "prompt_young": "even warm clay skin, smoother in youth",
+   "prompt_elder": "warm clay skin, more creased at the eyes with age, still no grey jaw cast",
+   "generated": "trait-set-v89"
+  },
+  "folk_ash_bone": {
+   "zh": "劳作宽颌",
+   "name_en": "work-broad jaw",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "ashbanner",
+   "slot": "bone",
+   "locus": "tr_folk_ash_bone",
+   "desc": "劳作出来的宽下颌，眉骨低，颊有日晒纹。",
+   "prompt": "a broad work-worn jaw and a low brow, cheeks creased by weather",
+   "prompt_young": "a broad jaw still soft, the brow not yet low in youth",
+   "prompt_elder": "a broader jaw, the brow lower and the cheeks more lined with age",
+   "generated": "trait-set-v89"
+  },
+  "sy_geom": {
+   "zh": "几何墨裁",
+   "name_en": "geometric ink cut",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "shuoying",
+   "slot": "hair",
+   "locus": "tr_sy_geom",
+   "desc": "蓝黑直发中分，齐到下颌，切线几何。两份才显。",
+   "prompt": "straight blue-black hair, centre-parted, cut on a geometric line at the jaw",
+   "prompt_young": "shorter blue-black hair, the jaw line not yet exact in youth",
+   "prompt_elder": "blue-black hair still geometric, with a dull silver thread at the part in age",
+   "generated": "trait-set-v89"
+  },
+  "sy_crop": {
+   "zh": "夜裁",
+   "name_en": "night crop",
+   "tier": "noble",
+   "visibility": "overt",
+   "nation": "shuoying",
+   "slot": "hair",
+   "locus": "tr_sy_geom",
+   "desc": "墨发短于下颌，不是几何齐切。",
+   "prompt": "straight black hair cut shorter than the jaw, not a geometric line",
+   "prompt_young": "a soft black crop above the jaw in youth",
+   "prompt_elder": "a black crop, slightly receded at the temples with age",
+   "generated": "trait-set-v89"
+  },
+  "sy_sclera": {
+   "zh": "灰巩膜",
+   "name_en": "dusk-grey sclera",
+   "tier": "royal",
+   "visibility": "subtle",
+   "nation": "shuoying",
+   "slot": "iris",
+   "locus": "tr_sy_sclera",
+   "desc": "巩膜是暮灰而不是白，不充血。近看，和银环不是同一征。",
+   "prompt": "dusk-grey sclera rather than white, never bloodshot, a quiet field around the iris",
+   "prompt_young": "sclera only a shade off white in youth",
+   "prompt_elder": "sclera a deeper dusk-grey, still clear, in age",
+   "generated": "trait-set-v89"
+  },
+  "sy_bridge": {
+   "zh": "窄高梁",
+   "name_en": "narrow high bridge",
+   "tier": "royal",
+   "visibility": "subtle",
+   "nation": "shuoying",
+   "slot": "bone",
+   "locus": "tr_sy_bridge",
+   "desc": "窄脸、高鼻梁、颊浅、人中长。",
+   "prompt": "a narrow face, a high nasal bridge, shallow cheeks and a long philtrum",
+   "prompt_young": "a narrow face still soft, the bridge not yet high in youth",
+   "prompt_elder": "a narrower face, cheeks hollower, the bridge sharper with age",
+   "generated": "trait-set-v89"
+  },
+  "sy_cheek": {
+   "zh": "浅颊",
+   "name_en": "shallow court cheek",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "shuoying",
+   "slot": "bone",
+   "locus": "tr_sy_bridge",
+   "desc": "颊浅，鼻梁还没有王室那么高。",
+   "prompt": "shallow cheeks and a straight nose, the bridge not yet high",
+   "prompt_young": "shallow cheeks still rounded in youth",
+   "prompt_elder": "shallower cheeks and a finer nose with age",
+   "generated": "trait-set-v89"
+  },
+  "sy_olive": {
+   "zh": "冷橄榄",
+   "name_en": "cool olive-slate skin",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "shuoying",
+   "slot": "skin",
+   "locus": "tr_sy_olive",
+   "desc": "冷橄榄带石板灰，不是苍白。",
+   "prompt": "cool olive-slate skin, matte, not pale",
+   "prompt_young": "cool olive-slate skin, a little warmer and smoother in youth",
+   "prompt_elder": "cooler olive-slate skin, drier at the cheek, in age",
+   "generated": "trait-set-v89"
+  },
+  "sy_still": {
+   "zh": "静视",
+   "name_en": "still gaze",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "shuoying",
+   "slot": "bearing",
+   "locus": "tr_sy_still",
+   "desc": "二十二岁后视线放稳，少眨眼，嘴角不单侧上扬。",
+   "prompt": "a still gaze, a low blink, no one-sided smile, voice measured and quiet",
+   "prompt_young": "an ordinary blink and a mouth that still moves freely in youth",
+   "prompt_elder": "a stiller gaze, an even lower blink, the voice thinner with age",
+   "generated": "trait-set-v89",
+   "bark": "灯灭了。"
+  },
+  "sy_collar": {
+   "zh": "窄银领",
+   "name_en": "narrow frost collar band",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "shuoying",
+   "slot": "regalia",
+   "locus": "tr_sy_collar",
+   "desc": "窄霜银领，衣身墨色，一条竖向霜线。父传全女。",
+   "prompt": "a narrow frost-silver collar band on an ink coat, one vertical frost stitch, matte cloth",
+   "prompt_young": "the narrow collar band worn slightly loose in youth",
+   "prompt_elder": "the narrow collar band still exact, the frost stitch dulled with age",
+   "generated": "trait-set-v89",
+   "modules": [
+    "regalia_sy_collar",
+    "regalia_sy_cloak"
+   ],
+   "palette": {
+    "cloth": "#07080C",
+    "trim": "#C9D3DE",
+    "metal": "#6ED4FF"
+   }
+  },
+  "sy_pure": {
+   "zh": "双银环",
+   "name_en": "double eclipse ring",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "shuoying",
+   "slot": "pure",
+   "locus": "tr_sy_pure",
+   "desc": "瞳外银环变成同心两圈。须全朔已显且两份纯血。",
+   "prompt": "two thin concentric pale-silver rings around each pupil, the outer ring finer than the inner",
+   "prompt_young": "the outer silver ring only a broken arc in a young pure line",
+   "prompt_elder": "both silver rings complete and a little brighter against dusk-grey sclera in age",
+   "generated": "trait-set-v89"
+  },
+  "sy_canthus": {
+   "zh": "外眦银点",
+   "name_en": "outer-canthus silver tick",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "shuoying",
+   "slot": "iris",
+   "locus": "tr_sy_canthus",
+   "desc": "外眼角一点霜银，不是环。",
+   "prompt": "one pale-silver tick at the outer corner of each eye, not a ring",
+   "prompt_young": "a tiny pale tick at the outer eye corner, easy to miss in youth",
+   "prompt_elder": "a slightly longer pale tick at the outer eye corner in age",
+   "generated": "trait-set-v89"
+  },
+  "folk_sy_hair": {
+   "zh": "靛兜发",
+   "name_en": "hood-line black hair",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "shuoying",
+   "slot": "hair",
+   "locus": "tr_folk_sy_hair",
+   "desc": "直黑发，发际有深靛兜影。",
+   "prompt": "straight black hair with a deep indigo hood-line across the brow",
+   "prompt_young": "straight black hair, the indigo hood-line faint in youth",
+   "prompt_elder": "straight black hair, the indigo hood-line wider with age",
+   "generated": "trait-set-v89"
+  },
+  "folk_sy_skin": {
+   "zh": "风燎肤",
+   "name_en": "wind-burned slate skin",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "shuoying",
+   "slot": "skin",
+   "locus": "tr_folk_sy_skin",
+   "desc": "风燎过的石板肤，鼻梁更暗。",
+   "prompt": "wind-burned slate skin, darker across the nose",
+   "prompt_young": "slate skin, the nose not yet darker in youth",
+   "prompt_elder": "slate skin, the nose darker and the cheek drier with age",
+   "generated": "trait-set-v89"
+  },
+  "folk_sy_bone": {
+   "zh": "短梁",
+   "name_en": "short ridge bridge",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "shuoying",
+   "slot": "bone",
+   "locus": "tr_folk_sy_bone",
+   "desc": "鼻梁短、下颌紧，不像宫里的窄高脸。",
+   "prompt": "a short nasal bridge and a compact jaw, unlike the narrow court face",
+   "prompt_young": "a short bridge and a compact jaw still soft in youth",
+   "prompt_elder": "a shorter-looking bridge and a more compact jaw with age",
+   "generated": "trait-set-v89"
+  },
+  "qh_smooth": {
+   "zh": "顺水墨",
+   "name_en": "water-combed ink hair",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "qinghe",
+   "slot": "hair",
+   "locus": "tr_qh_smooth",
+   "desc": "其余的发光滑如水梳过，右耳后一挽。圆耳。",
+   "prompt": "the rest of the hair smooth and water-combed, one tuck behind the right ear",
+   "prompt_young": "softer ink hair, the tuck loose and unfinished in youth",
+   "prompt_elder": "water-combed ink hair, finer, the tuck still exact in age",
+   "generated": "trait-set-v89"
+  },
+  "qh_tuck": {
+   "zh": "单挽",
+   "name_en": "single tuck",
+   "tier": "noble",
+   "visibility": "overt",
+   "nation": "qinghe",
+   "slot": "hair",
+   "locus": "tr_qh_smooth",
+   "desc": "右耳后一挽，发没有王族那么顺。",
+   "prompt": "ink hair with one tuck behind the right ear, the lengths less smooth",
+   "prompt_young": "a loose tuck behind the right ear in youth",
+   "prompt_elder": "a precise tuck, the hair finer with age",
+   "generated": "trait-set-v89"
+  },
+  "qh_limbal": {
+   "zh": "玉缘瞳",
+   "name_en": "nephrite limbal ring",
+   "tier": "royal",
+   "visibility": "subtle",
+   "nation": "qinghe",
+   "slot": "iris",
+   "locus": "tr_qh_limbal",
+   "desc": "松绿灰虹膜，边缘一圈软玉色环。两份才显。",
+   "prompt": "pine-grey irises with a soft nephrite ring at the limbus",
+   "prompt_young": "pine-grey irises, the nephrite limbal ring only a faint arc in youth",
+   "prompt_elder": "pine-grey irises, the nephrite limbal ring wider and softer with age",
+   "generated": "trait-set-v89"
+  },
+  "qh_oval": {
+   "zh": "细梁卵面",
+   "name_en": "fine oval",
+   "tier": "royal",
+   "visibility": "subtle",
+   "nation": "qinghe",
+   "slot": "bone",
+   "locus": "tr_qh_oval",
+   "desc": "窄卵面、颊峰低、鼻梁细直、下颌柔。",
+   "prompt": "a narrow oval face, a low cheek apex, a fine straight nose and a gentle jaw",
+   "prompt_young": "a narrow oval still rounder, the nose finer but short in youth",
+   "prompt_elder": "a narrower oval, the cheek lower and the nose still fine in age",
+   "generated": "trait-set-v89"
+  },
+  "qh_lowcheek": {
+   "zh": "低颊",
+   "name_en": "low cheek",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "qinghe",
+   "slot": "bone",
+   "locus": "tr_qh_oval",
+   "desc": "颊峰低，卵面还没那么窄。",
+   "prompt": "a low cheek apex and a straight nose on a moderate oval",
+   "prompt_young": "a low cheek still full in youth",
+   "prompt_elder": "a lower cheek apex and a finer nose with age",
+   "generated": "trait-set-v89"
+  },
+  "qh_undertone": {
+   "zh": "青灰肤",
+   "name_en": "green-grey undertone",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "qinghe",
+   "slot": "skin",
+   "locus": "tr_qh_undertone",
+   "desc": "凉白里带青灰，只随母亲的数值走。",
+   "prompt": "cool fair skin with a green-grey undertone, matte rather than luminous",
+   "prompt_young": "cool fair skin, the green-grey undertone faint in youth",
+   "prompt_elder": "cooler fair skin, the green-grey undertone clearer at the temple in age",
+   "generated": "trait-set-v89"
+  },
+  "qh_fold": {
+   "zh": "合手",
+   "name_en": "folded-hands bearing",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "qinghe",
+   "slot": "bearing",
+   "locus": "tr_qh_fold",
+   "desc": "双手交叠，声线平，听人时头微侧。约六成外显。",
+   "prompt": "hands folded, voice even, a slight head tilt when listening",
+   "prompt_young": "hands not yet folded by habit, the head tilt occasional in youth",
+   "prompt_elder": "hands folded closer, the head tilt smaller, the voice drier with age",
+   "generated": "trait-set-v89",
+   "bark": "按牒。"
+  },
+  "qh_collar": {
+   "zh": "闭领",
+   "name_en": "closed slate collar",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "qinghe",
+   "slot": "regalia",
+   "locus": "tr_qh_collar",
+   "desc": "哑光石板高闭领，一条软玉色压线，短披肩。",
+   "prompt": "a high closed collar of matte slate, one nephrite-thread placket, a short capelet",
+   "prompt_young": "the closed slate collar a little tall for the neck in youth",
+   "prompt_elder": "the closed slate collar still exact, the nephrite thread paler with age",
+   "generated": "trait-set-v89",
+   "modules": [
+    "regalia_qh_collar",
+    "regalia_qh_capelet"
+   ],
+   "palette": {
+    "cloth": "#2A3442",
+    "trim": "#5EE0B5",
+    "metal": "#C9D3DE"
+   }
+  },
+  "qh_pure": {
+   "zh": "双玉缕",
+   "name_en": "second nape lock",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "qinghe",
+   "slot": "pure",
+   "locus": "tr_qh_pure",
+   "desc": "玉缕透到发根，颈后再有一缕极细的同色发。须玉缕已显。",
+   "prompt": "the jade lock is translucent to the root and a second micro-lock of the same green sits at the nape",
+   "prompt_young": "the nape micro-lock is short and the root translucency slight in youth",
+   "prompt_elder": "the nape micro-lock longer, the root translucency clearer in age",
+   "generated": "trait-set-v89"
+  },
+  "qh_web": {
+   "zh": "渡茧",
+   "name_en": "thumb-web pad",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "qinghe",
+   "slot": "skin",
+   "locus": "tr_qh_web",
+   "desc": "右拇指蹼一块厚茧。渡口世家的手，不是玉缕。",
+   "prompt": "a thickened pad of skin in the right thumb web",
+   "prompt_young": "a slight thickening in the right thumb web in youth",
+   "prompt_elder": "a thicker pad in the right thumb web, more creased with age",
+   "generated": "trait-set-v89"
+  },
+  "folk_qh_hair": {
+   "zh": "湿梢墨",
+   "name_en": "damp-ended ink hair",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "qinghe",
+   "slot": "hair",
+   "locus": "tr_folk_qh_hair",
+   "desc": "墨发松着，发梢常湿，没有鬓缕。",
+   "prompt": "loose ink-black hair, often damp at the ends, no temple lock",
+   "prompt_young": "looser ink-black hair, ends damp, shorter in youth",
+   "prompt_elder": "loose ink-black hair, ends still damp, finer with age",
+   "generated": "trait-set-v89"
+  },
+  "folk_qh_skin": {
+   "zh": "河岸肤",
+   "name_en": "river-tan skin",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "qinghe",
+   "slot": "skin",
+   "locus": "tr_folk_qh_skin",
+   "desc": "河岸暖棕，只有颊窝一点雾灰。",
+   "prompt": "river-tan skin with cool mist-grey only in the hollow of the cheek",
+   "prompt_young": "river-tan skin, the cheek hollow not yet grey in youth",
+   "prompt_elder": "river-tan skin, the cheek hollow greyer with age",
+   "generated": "trait-set-v89"
+  },
+  "folk_qh_bone": {
+   "zh": "圆颏",
+   "name_en": "soft delta chin",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "qinghe",
+   "slot": "bone",
+   "locus": "tr_folk_qh_bone",
+   "desc": "下巴圆，鼻梁有一点骨节。",
+   "prompt": "a soft rounded chin and a nose with a slight bridge bump",
+   "prompt_young": "a rounder chin, the bridge bump small in youth",
+   "prompt_elder": "a rounded chin and a more noticeable bridge bump with age",
+   "generated": "trait-set-v89"
+  },
+  "lt_asym": {
+   "zh": "偏裁墨",
+   "name_en": "asymmetric ink cut",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "lantern",
+   "slot": "hair",
+   "locus": "tr_lt_asym",
+   "desc": "玻璃般的直墨发，左侧更长。两份才显，和灯丝不是一回事。",
+   "prompt": "glassy-straight dark hair in an asymmetric cut, longer on the left",
+   "prompt_young": "dark hair only slightly longer on the left, still soft in youth",
+   "prompt_elder": "the left side still longer, the lengths finer and a little grey at the scalp in age",
+   "generated": "trait-set-v89"
+  },
+  "lt_merchantcut": {
+   "zh": "商裁",
+   "name_en": "merchant cut",
+   "tier": "noble",
+   "visibility": "overt",
+   "nation": "lantern",
+   "slot": "hair",
+   "locus": "tr_lt_asym",
+   "desc": "墨发收短，左右齐。",
+   "prompt": "dark hair cut even, practical, no long left side",
+   "prompt_young": "an even dark crop, a little fluffy in youth",
+   "prompt_elder": "an even dark crop, thinner at the temples with age",
+   "generated": "trait-set-v89"
+  },
+  "lt_quartz": {
+   "zh": "烟晶瞳",
+   "name_en": "smoky-quartz iris",
+   "tier": "royal",
+   "visibility": "subtle",
+   "nation": "lantern",
+   "slot": "iris",
+   "locus": "tr_lt_quartz",
+   "desc": "烟晶色虹膜，一点冷白高光，不是金瞳。",
+   "prompt": "smoky-quartz irises with a pinpoint cool-white catchlight",
+   "prompt_young": "smoky-quartz irises, the catchlight soft and wide in youth",
+   "prompt_elder": "smoky-quartz irises, the catchlight smaller and sharper with age",
+   "generated": "trait-set-v89"
+  },
+  "lt_soft": {
+   "zh": "软卵面",
+   "name_en": "soft oval",
+   "tier": "royal",
+   "visibility": "subtle",
+   "nation": "lantern",
+   "slot": "bone",
+   "locus": "tr_lt_soft",
+   "desc": "软卵面、短鼻、圆颏、眉会动。近看才和普通卵面分开。",
+   "prompt": "a soft oval face, a short nose, a rounded chin and mobile brows",
+   "prompt_young": "a softer rounder face, the nose short, brows very mobile in youth",
+   "prompt_elder": "a soft oval, the chin a little sharper, brows still mobile in age",
+   "generated": "trait-set-v89"
+  },
+  "lt_shortchin": {
+   "zh": "短颏",
+   "name_en": "short chin",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "lantern",
+   "slot": "bone",
+   "locus": "tr_lt_soft",
+   "desc": "下巴短，卵面普通。",
+   "prompt": "a short chin and ordinary cheeks",
+   "prompt_young": "a short chin still round in youth",
+   "prompt_elder": "a shorter-looking chin with a finer jawline in age",
+   "generated": "trait-set-v89"
+  },
+  "lt_sheen": {
+   "zh": "颊冷泽",
+   "name_en": "oath cheek sheen",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "lantern",
+   "slot": "skin",
+   "locus": "tr_lt_sheen",
+   "desc": "颊骨一层冷玻璃泽。伯爵或立过誓才显。",
+   "prompt": "an even neutral beige skin with a faint cool sheen on the cheekbones, like frosted glass",
+   "prompt_young": "even neutral beige skin, the cheek sheen not yet present",
+   "prompt_elder": "neutral beige skin, the cool cheek sheen wider and drier with age",
+   "generated": "trait-set-v89"
+  },
+  "lt_count": {
+   "zh": "抬颌数指",
+   "name_en": "coin-count gesture",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "lantern",
+   "slot": "bearing",
+   "locus": "tr_lt_count",
+   "desc": "下颌微抬，手指像在数看不见的钱。约六成外显。",
+   "prompt": "chin slightly lifted, fingers counting invisible coins, voice in a quick even cadence",
+   "prompt_young": "the chin lift occasional, the finger count not yet a habit in youth",
+   "prompt_elder": "the chin lift habitual, the finger count slower, the voice drier with age",
+   "generated": "trait-set-v89",
+   "bark": "这盏算我的。"
+  },
+  "lt_bind": {
+   "zh": "玻璃压边",
+   "name_en": "glass edge binding",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "lantern",
+   "slot": "regalia",
+   "locus": "tr_lt_bind",
+   "desc": "短石板外套，领与下摆是玻璃纤维压边。",
+   "prompt": "a short slate jacket with clear glass-fibre edge binding and a small cool-white stitch",
+   "prompt_young": "the glass-fibre binding bright and a little stiff in youth",
+   "prompt_elder": "the glass-fibre binding still clear, the jacket softer at the edge with age",
+   "generated": "trait-set-v89",
+   "modules": [
+    "regalia_lt_binding",
+    "regalia_lt_jacket"
+   ],
+   "palette": {
+    "cloth": "#161B24",
+    "trim": "#F4F7FB",
+    "metal": "#6ED4FF"
+   }
+  },
+  "lt_pure": {
+   "zh": "双层灯丝",
+   "name_en": "inner glass ring",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "lantern",
+   "slot": "pure",
+   "locus": "tr_lt_pure",
+   "desc": "灯丝之内再有一圈更短的玻璃丝。须灯丝已显且两份纯血。",
+   "prompt": "a second, shorter ring of glass fibre just inside the glowing hair ends",
+   "prompt_young": "the inner glass ring only a few fibres long in youth",
+   "prompt_elder": "the inner glass ring longer and still cool-white in age",
+   "generated": "trait-set-v89"
+  },
+  "lt_knuckle": {
+   "zh": "指节冷泽",
+   "name_en": "frosted knuckles",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "lantern",
+   "slot": "skin",
+   "locus": "tr_lt_knuckle",
+   "desc": "指节一层冷霜泽，像常握玻璃。",
+   "prompt": "a cool frosted sheen across the knuckles, as if they handled cold glass",
+   "prompt_young": "a faint cool sheen on the knuckles in youth",
+   "prompt_elder": "a wider cool sheen on the knuckles, skin drier with age",
+   "generated": "trait-set-v89"
+  },
+  "folk_lt_hair": {
+   "zh": "市井束发",
+   "name_en": "market tie",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "lantern",
+   "slot": "hair",
+   "locus": "tr_folk_lt_hair",
+   "desc": "深发束起干活，发梢普通、不透。",
+   "prompt": "practical dark hair tied up, the ends ordinary and opaque",
+   "prompt_young": "dark hair tied up, a little messy in youth",
+   "prompt_elder": "dark hair tied up, finer at the scalp with age, ends still opaque",
+   "generated": "trait-set-v89"
+  },
+  "folk_lt_skin": {
+   "zh": "港暖肤",
+   "name_en": "harbor beige",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "lantern",
+   "slot": "skin",
+   "locus": "tr_folk_lt_skin",
+   "desc": "中性米色，额心因港风更亮。",
+   "prompt": "neutral beige skin, slightly shinier at the forehead from harbor weather",
+   "prompt_young": "neutral beige skin, the forehead shine light in youth",
+   "prompt_elder": "neutral beige skin, the forehead drier and shinier with age",
+   "generated": "trait-set-v89"
+  },
+  "folk_lt_bone": {
+   "zh": "宽嘴",
+   "name_en": "wide easy mouth",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "lantern",
+   "slot": "bone",
+   "locus": "tr_folk_lt_bone",
+   "desc": "嘴宽、颊骨普通。",
+   "prompt": "a wide easy mouth and average cheekbones",
+   "prompt_young": "a wide mouth, cheeks still round in youth",
+   "prompt_elder": "a wide mouth and slightly lower cheeks with age",
+   "generated": "trait-set-v89"
+  },
+  "fc_temple": {
+   "zh": "鬓霜墨",
+   "name_en": "temple-silver ink hair",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "frostcrown",
+   "slot": "hair",
+   "locus": "tr_fc_temple",
+   "desc": "发身是墨，只有两鬓霜银，细而直。",
+   "prompt": "ink hair, fine and straight, frost-silver only at the temples",
+   "prompt_young": "ink hair, the temple silver only a few hairs in youth",
+   "prompt_elder": "ink hair finer, the temple silver wider toward the part in age",
+   "generated": "trait-set-v89"
+  },
+  "fc_short": {
+   "zh": "短霜鬓",
+   "name_en": "short temple silver",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "frostcrown",
+   "slot": "hair",
+   "locus": "tr_fc_temple",
+   "desc": "鬓角一点霜，发身不一定是墨。",
+   "prompt": "a small frost-silver patch at one temple, the rest of the hair dark",
+   "prompt_young": "a few frost-silver hairs at one temple in youth",
+   "prompt_elder": "a wider frost-silver patch at one temple in age",
+   "generated": "trait-set-v89"
+  },
+  "fc_storm": {
+   "zh": "风暴灰瞳",
+   "name_en": "storm-grey iris",
+   "tier": "royal",
+   "visibility": "subtle",
+   "nation": "frostcrown",
+   "slot": "iris",
+   "locus": "tr_fc_storm",
+   "desc": "风暴灰虹膜，瞳孔边缘一圈更深的石板色。两份才显。",
+   "prompt": "storm-grey irises with a darker slate collar around the pupil",
+   "prompt_young": "storm-grey irises, the slate collar faint in youth",
+   "prompt_elder": "storm-grey irises, the slate collar wider with age",
+   "generated": "trait-set-v89"
+  },
+  "fc_long": {
+   "zh": "长窄面",
+   "name_en": "long narrow face",
+   "tier": "royal",
+   "visibility": "subtle",
+   "nation": "frostcrown",
+   "slot": "bone",
+   "locus": "tr_fc_long",
+   "desc": "长窄脸、薄鼻、眉骨高、颊微凹。",
+   "prompt": "a long narrow face, a thin nose, a high brow bone and a slight hollow cheek",
+   "prompt_young": "a long face still softer, the nose thin, the cheek not hollow in youth",
+   "prompt_elder": "a longer-looking face, the cheek hollower, the nose still thin in age",
+   "generated": "trait-set-v89"
+  },
+  "fc_thin": {
+   "zh": "薄鼻",
+   "name_en": "thin nose",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "frostcrown",
+   "slot": "bone",
+   "locus": "tr_fc_long",
+   "desc": "鼻薄，脸还没有那么长。",
+   "prompt": "a thin nose and a moderately long face",
+   "prompt_young": "a thin nose on a face that is still short in youth",
+   "prompt_elder": "a thinner-looking nose and a longer face with age",
+   "generated": "trait-set-v89"
+  },
+  "fc_skin": {
+   "zh": "冷粉灰",
+   "name_en": "cool pink-grey skin",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "frostcrown",
+   "slot": "skin",
+   "locus": "tr_fc_skin",
+   "desc": "冷粉灰，太阳穴细血管看起来是银而不是蓝。父传全女。",
+   "prompt": "cool pink-grey skin, the fine temple vessels reading silver rather than blue",
+   "prompt_young": "cool pink-grey skin, temple vessels hardly visible in youth",
+   "prompt_elder": "cooler pink-grey skin, temple vessels a little clearer and still silver in age",
+   "generated": "trait-set-v89"
+  },
+  "fc_hands": {
+   "zh": "静手",
+   "name_en": "quiet hands",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "frostcrown",
+   "slot": "bearing",
+   "locus": "tr_fc_hands",
+   "desc": "二十八岁后手才放稳，声线往下走。",
+   "prompt": "upright posture, hands quiet at the sides, voice low and unhurried",
+   "prompt_young": "upright posture, hands still restless in youth",
+   "prompt_elder": "upright posture a little shorter, hands quieter, voice lower with age",
+   "generated": "trait-set-v89",
+   "bark": "钟还在。"
+  },
+  "fc_collar": {
+   "zh": "高直领",
+   "name_en": "tall matte collar",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "frostcrown",
+   "slot": "regalia",
+   "locus": "tr_fc_collar",
+   "desc": "高哑光领，霜白发丝滚边，短氅左右对称。",
+   "prompt": "a tall matte collar, frost-white hairline piping, a short symmetrical cloak",
+   "prompt_young": "the tall collar slightly too high, piping very bright in youth",
+   "prompt_elder": "the tall collar still symmetrical, piping softened to brushed frost metal in age",
+   "generated": "trait-set-v89",
+   "modules": [
+    "regalia_fc_collar",
+    "regalia_fc_cloak"
+   ],
+   "palette": {
+    "cloth": "#2A3442",
+    "trim": "#F4F7FB",
+    "metal": "#6ED4FF"
+   }
+  },
+  "fc_pure": {
+   "zh": "霜线合",
+   "name_en": "temple silver meets",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "frostcrown",
+   "slot": "pure",
+   "locus": "tr_fc_pure",
+   "desc": "两鬓霜银在头顶汇成一条细线。须霜睫已显且两份纯血。",
+   "prompt": "the temple silver of the hair meets in a fine line over the top of the head",
+   "prompt_young": "the meeting line of temple silver is broken in youth",
+   "prompt_elder": "the meeting line of temple silver is continuous and wider in age",
+   "generated": "trait-set-v89"
+  },
+  "fc_mouth": {
+   "zh": "闭唇",
+   "name_en": "level closed mouth",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "frostcrown",
+   "slot": "bearing",
+   "locus": "tr_fc_mouth",
+   "desc": "默认闭唇，嘴角平，没有笑纹。",
+   "prompt": "lips closed by default, corners level, no smile crease",
+   "prompt_young": "lips often closed, the face still smooth in youth",
+   "prompt_elder": "lips closed, a level line, still no smile crease in age",
+   "generated": "trait-set-v89"
+  },
+  "folk_fc_hair": {
+   "zh": "钝灰梢",
+   "name_en": "dull grey tips",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "frostcrown",
+   "slot": "hair",
+   "locus": "tr_folk_fc_hair",
+   "desc": "深发，梢是钝灰，不是鬓银。",
+   "prompt": "dark hair faded at the tips to a dull grey, not silver at the temples",
+   "prompt_young": "dark hair, the dull grey tips short in youth",
+   "prompt_elder": "dark hair, the dull grey tips longer with age, temples still dark",
+   "generated": "trait-set-v89"
+  },
+  "folk_fc_skin": {
+   "zh": "高原肤",
+   "name_en": "plateau skin",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "frostcrown",
+   "slot": "skin",
+   "locus": "tr_folk_fc_skin",
+   "desc": "高原肤，只有鼻翼发红粗糙。",
+   "prompt": "high-plateau skin, chapped and pink only at the nostrils",
+   "prompt_young": "high-plateau skin, nostrils barely chapped in youth",
+   "prompt_elder": "high-plateau skin, nostrils more chapped, cheeks drier with age",
+   "generated": "trait-set-v89"
+  },
+  "folk_fc_bone": {
+   "zh": "牧户宽面",
+   "name_en": "pastoral broad face",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "frostcrown",
+   "slot": "bone",
+   "locus": "tr_folk_fc_bone",
+   "desc": "牧户的宽面、短鼻。",
+   "prompt": "a broad pastoral face with a short nose",
+   "prompt_young": "a broad face, the nose short and the cheeks full in youth",
+   "prompt_elder": "a broad face, the nose still short, cheeks lower with age",
+   "generated": "trait-set-v89"
+  },
+  "eo_sweep": {
+   "zh": "青丝掠",
+   "name_en": "celadon-streak sweep",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "emberold",
+   "slot": "hair",
+   "locus": "tr_eo_sweep",
+   "desc": "密黑微卷，向后掠，左鬓一条青灰纹，不是开片。",
+   "prompt": "dense black hair with a slight wave, swept back, a celadon-grey streak at the left temple",
+   "prompt_young": "dense black hair, the celadon-grey streak only a few hairs in youth",
+   "prompt_elder": "dense black hair swept back, the celadon-grey streak wider in age",
+   "generated": "trait-set-v89"
+  },
+  "eo_short": {
+   "zh": "短掠",
+   "name_en": "short sweep",
+   "tier": "noble",
+   "visibility": "overt",
+   "nation": "emberold",
+   "slot": "hair",
+   "locus": "tr_eo_sweep",
+   "desc": "黑发后掠，没有青灰纹。",
+   "prompt": "black hair swept back, no grey-green streak",
+   "prompt_young": "shorter black hair swept back in youth",
+   "prompt_elder": "black hair swept back, thinner at the temples with age",
+   "generated": "trait-set-v89"
+  },
+  "eo_stroma": {
+   "zh": "裂丝瞳",
+   "name_en": "stroma crackle",
+   "tier": "royal",
+   "visibility": "subtle",
+   "nation": "emberold",
+   "slot": "iris",
+   "locus": "tr_eo_stroma",
+   "desc": "深暮色虹膜，基质里几根细裂丝。两份才显。",
+   "prompt": "deep dusk irises with a few fine crackle lines in the stroma",
+   "prompt_young": "deep dusk irises, one short crackle line in youth",
+   "prompt_elder": "deep dusk irises, the stromal crackle lines a little longer with age",
+   "generated": "trait-set-v89"
+  },
+  "eo_zygo": {
+   "zh": "阔颧",
+   "name_en": "broad cheekbone",
+   "tier": "royal",
+   "visibility": "subtle",
+   "nation": "emberold",
+   "slot": "bone",
+   "locus": "tr_eo_zygo",
+   "desc": "颧骨宽、鼻短而头平、眉脊重。",
+   "prompt": "broad cheekbones, a short nose with a flat tip and a heavy brow ridge",
+   "prompt_young": "broad cheekbones still padded, the nose short in youth",
+   "prompt_elder": "broader-looking cheekbones, the brow ridge heavier in age",
+   "generated": "trait-set-v89"
+  },
+  "eo_shortnose": {
+   "zh": "短鼻",
+   "name_en": "short flat nose",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "emberold",
+   "slot": "bone",
+   "locus": "tr_eo_zygo",
+   "desc": "鼻短头平，颧还没有那么宽。",
+   "prompt": "a short nose with a flat tip and moderate cheeks",
+   "prompt_young": "a short flat nose, cheeks still round in youth",
+   "prompt_elder": "a short flat nose and slightly wider cheeks with age",
+   "generated": "trait-set-v89"
+  },
+  "eo_clay": {
+   "zh": "窑灰暖肤",
+   "name_en": "kiln-clay skin",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "emberold",
+   "slot": "skin",
+   "locus": "tr_eo_clay",
+   "desc": "暖棕里带灰绿，像窑土，不是橙色。",
+   "prompt": "warm tan skin with a grey-green undertone, like kiln clay, matte",
+   "prompt_young": "warm tan skin, the grey-green undertone faint in youth",
+   "prompt_elder": "warm tan skin, the grey-green undertone clearer in the creases with age",
+   "generated": "trait-set-v89"
+  },
+  "eo_pause": {
+   "zh": "停顿掌心",
+   "name_en": "pause then palm",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "emberold",
+   "slot": "bearing",
+   "locus": "tr_eo_pause",
+   "desc": "肩平，先停一下再说话，掌心向下。约六成外显。",
+   "prompt": "shoulders square, a pause before speech, a palm-down gesture, voice low",
+   "prompt_young": "shoulders square, the pause not yet habitual in youth",
+   "prompt_elder": "shoulders still square, the pause longer, the voice rougher with age",
+   "generated": "trait-set-v89",
+   "bark": "窑还热。"
+  },
+  "eo_collar": {
+   "zh": "左偏领",
+   "name_en": "asymmetric left collar",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "emberold",
+   "slot": "regalia",
+   "locus": "tr_eo_collar",
+   "desc": "领口左偏，让出左鬓，压边是青灰。只传儿子。",
+   "prompt": "an asymmetric collar cut away on the left, celadon piping, matte charcoal cloth",
+   "prompt_young": "the left collar cut a little uneven in youth",
+   "prompt_elder": "the left collar cut still open, the celadon piping dulled with age",
+   "generated": "trait-set-v89",
+   "modules": [
+    "regalia_eo_collar",
+    "regalia_eo_piping"
+   ],
+   "palette": {
+    "cloth": "#1C2330",
+    "trim": "#9AA6B8",
+    "metal": "#C9D3DE"
+   }
+  },
+  "eo_pure": {
+   "zh": "裂及颌",
+   "name_en": "crackle to the jaw",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "emberold",
+   "slot": "pure",
+   "locus": "tr_eo_pure",
+   "desc": "开片延伸到下颌，青灰发纹分叉。须冰裂已显且两份纯血。",
+   "prompt": "the celadon crackle reaches the jawline and the temple streak forks",
+   "prompt_young": "the forked streak is short and the jawline crackle faint in youth",
+   "prompt_elder": "the forked streak wider and the jawline crackle clearer in age",
+   "generated": "trait-set-v89"
+  },
+  "eo_notch": {
+   "zh": "耳垂窑缺",
+   "name_en": "earlobe notch",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "emberold",
+   "slot": "bone",
+   "locus": "tr_eo_notch",
+   "desc": "左耳垂一个小缺口，耳廓仍圆、贴近。",
+   "prompt": "a small notch in the left earlobe; the ear is round and close-set",
+   "prompt_young": "a shallow notch in the left earlobe in youth",
+   "prompt_elder": "a small notch in the left earlobe, the lobe a little longer with age",
+   "generated": "trait-set-v89"
+  },
+  "folk_eo_hair": {
+   "zh": "窑短发",
+   "name_en": "kiln-short hair",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "emberold",
+   "slot": "hair",
+   "locus": "tr_folk_eo_hair",
+   "desc": "黑发剪短，沾一点灰，方便进窑。",
+   "prompt": "black hair cut short for kiln work, dulled by pale dust",
+   "prompt_young": "short black hair, the dusting light in youth",
+   "prompt_elder": "short black hair, thinner, still dust-dulled with age",
+   "generated": "trait-set-v89"
+  },
+  "folk_eo_skin": {
+   "zh": "手纹灰",
+   "name_en": "crease-grey tan",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "emberold",
+   "slot": "skin",
+   "locus": "tr_folk_eo_skin",
+   "desc": "窑镇暖棕，只有手纹是灰的。",
+   "prompt": "kiln-town tan, grey only in the creases of the hands",
+   "prompt_young": "kiln-town tan, hand creases barely grey in youth",
+   "prompt_elder": "kiln-town tan, hand creases greyer and deeper with age",
+   "generated": "trait-set-v89"
+  },
+  "folk_eo_bone": {
+   "zh": "方作颌",
+   "name_en": "square work jaw",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "emberold",
+   "slot": "bone",
+   "locus": "tr_folk_eo_bone",
+   "desc": "劳作的方颌，颧骨并不宽。",
+   "prompt": "a square work jaw without the wide cheekbones of the kiln house",
+   "prompt_young": "a square jaw still soft in youth",
+   "prompt_elder": "a squarer jaw, cheeks ordinary, with age",
+   "generated": "trait-set-v89"
+  },
+  "sm_coil": {
+   "zh": "盐硬盘",
+   "name_en": "salt-stiff nape coil",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "saltmarsh",
+   "slot": "hair",
+   "locus": "tr_sm_coil",
+   "desc": "发厚，在颈后盘低，手感盐硬。两份才显。",
+   "prompt": "thick hair in a low coil at the nape, salt-stiff to the touch",
+   "prompt_young": "thick hair, the nape coil loose and less stiff in youth",
+   "prompt_elder": "thick hair, the nape coil lower, salt-stiff and a little grey in age",
+   "generated": "trait-set-v89"
+  },
+  "sm_knot": {
+   "zh": "低髻",
+   "name_en": "low knot",
+   "tier": "noble",
+   "visibility": "overt",
+   "nation": "saltmarsh",
+   "slot": "hair",
+   "locus": "tr_sm_coil",
+   "desc": "低髻，并不盐硬。",
+   "prompt": "a low knot of dark hair, soft rather than salt-stiff",
+   "prompt_young": "a loose low knot in youth",
+   "prompt_elder": "a low knot, finer hair, in age",
+   "generated": "trait-set-v89"
+  },
+  "sm_iris": {
+   "zh": "海玻璃瞳",
+   "name_en": "sea-glass iris",
+   "tier": "royal",
+   "visibility": "subtle",
+   "nation": "saltmarsh",
+   "slot": "iris",
+   "locus": "tr_sm_iris",
+   "desc": "海玻璃般的灰绿虹膜，角膜缘一圈淡盐色。父传全女。",
+   "prompt": "sea-glass grey-green irises with a pale salt ring at the limbus",
+   "prompt_young": "sea-glass irises, the salt limbal ring faint in youth",
+   "prompt_elder": "sea-glass irises, the salt limbal ring a little wider with age",
+   "generated": "trait-set-v89"
+  },
+  "sm_wide": {
+   "zh": "宽短面",
+   "name_en": "wide short face",
+   "tier": "royal",
+   "visibility": "subtle",
+   "nation": "saltmarsh",
+   "slot": "bone",
+   "locus": "tr_sm_wide",
+   "desc": "脸宽、鼻短而阔、颊满、下颌浅。",
+   "prompt": "a wide face, a short broad nose, full cheeks and a shallow jaw",
+   "prompt_young": "a wide face still rounder, the nose short in youth",
+   "prompt_elder": "a wide face, cheeks a little lower, the nose still short and broad in age",
+   "generated": "trait-set-v89"
+  },
+  "sm_full": {
+   "zh": "丰颊",
+   "name_en": "full cheek",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "saltmarsh",
+   "slot": "bone",
+   "locus": "tr_sm_wide",
+   "desc": "颊满，脸还没有那么宽。",
+   "prompt": "full cheeks and a moderate nose",
+   "prompt_young": "full cheeks, rounder in youth",
+   "prompt_elder": "full cheeks, a little lower with age",
+   "generated": "trait-set-v89"
+  },
+  "sm_sheen": {
+   "zh": "盐光橄榄",
+   "name_en": "salt-sheen olive",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "saltmarsh",
+   "slot": "skin",
+   "locus": "tr_sm_sheen",
+   "desc": "日晒橄榄肤，表面一层凉盐光。只随母亲。",
+   "prompt": "sun-warmed olive skin with a cool salt sheen, matte in the shadows",
+   "prompt_young": "olive skin, the salt sheen faint in youth",
+   "prompt_elder": "olive skin, the salt sheen drier and more even in age",
+   "generated": "trait-set-v89"
+  },
+  "sm_stance": {
+   "zh": "宽站",
+   "name_en": "wide tide stance",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "saltmarsh",
+   "slot": "bearing",
+   "locus": "tr_sm_stance",
+   "desc": "二十四岁后站距变宽，转身先转头。",
+   "prompt": "a wide stance, the head turning before the body, voice counting like a tide",
+   "prompt_young": "a narrower stance, the head and body turning together in youth",
+   "prompt_elder": "a wider stance, the head turn slower, the voice lower with age",
+   "generated": "trait-set-v89",
+   "bark": "潮回来了。"
+  },
+  "sm_band": {
+   "zh": "横带短衣",
+   "name_en": "horizontal mint bands",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "saltmarsh",
+   "slot": "regalia",
+   "locus": "tr_sm_band",
+   "desc": "短外套，胸前两道霜薄荷横带，领口开。",
+   "prompt": "a cropped jacket with two horizontal frost-mint bands and an open throat, matte cloth",
+   "prompt_young": "the cropped jacket a little long, the mint bands very clean in youth",
+   "prompt_elder": "the cropped jacket still open at the throat, the mint bands softened with age",
+   "generated": "trait-set-v89",
+   "modules": [
+    "regalia_sm_band",
+    "regalia_sm_jacket"
+   ],
+   "palette": {
+    "cloth": "#2A3442",
+    "trim": "#5EE0B5",
+    "metal": "#F4F7FB"
+   }
+  },
+  "sm_pure": {
+   "zh": "三环潮",
+   "name_en": "three even tide rings",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "saltmarsh",
+   "slot": "pure",
+   "locus": "tr_sm_pure",
+   "desc": "潮环至少三道且间距相等，盐色角膜缘闭合成环。须潮痕已显。",
+   "prompt": "three or more evenly spaced salt-white hair rings and a complete salt ring at the limbus",
+   "prompt_young": "three hair rings present but the limbus ring still open in youth",
+   "prompt_elder": "three or more hair rings, the limbus ring complete and a little wider in age",
+   "generated": "trait-set-v89"
+  },
+  "sm_lip": {
+   "zh": "唇盐褶",
+   "name_en": "lower-lip crease",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "saltmarsh",
+   "slot": "skin",
+   "locus": "tr_sm_lip",
+   "desc": "下唇一道横褶。",
+   "prompt": "one horizontal crease across the lower lip",
+   "prompt_young": "a faint horizontal crease on the lower lip in youth",
+   "prompt_elder": "a deeper horizontal crease on the lower lip with age",
+   "generated": "trait-set-v89"
+  },
+  "folk_sm_hair": {
+   "zh": "盐硬辫",
+   "name_en": "work braid",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "saltmarsh",
+   "slot": "hair",
+   "locus": "tr_folk_sm_hair",
+   "desc": "盐硬的深发松辫，没有等距白环。",
+   "prompt": "salt-stiff dark hair in a loose work braid, with no even white bands",
+   "prompt_young": "a loose work braid, less stiff in youth",
+   "prompt_elder": "a work braid, stiffer and a little grey, still without even bands, in age",
+   "generated": "trait-set-v89"
+  },
+  "folk_sm_skin": {
+   "zh": "芦滩肤",
+   "name_en": "reed-marsh tan",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "saltmarsh",
+   "slot": "skin",
+   "locus": "tr_folk_sm_skin",
+   "desc": "芦滩暖棕，只有发际有干盐。",
+   "prompt": "reed-marsh tan with dry salt only at the hairline",
+   "prompt_young": "reed-marsh tan, the hairline salt faint in youth",
+   "prompt_elder": "reed-marsh tan, the hairline salt drier and wider with age",
+   "generated": "trait-set-v89"
+  },
+  "folk_sm_bone": {
+   "zh": "晒眯面",
+   "name_en": "sun-squint face",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "saltmarsh",
+   "slot": "bone",
+   "locus": "tr_folk_sm_bone",
+   "desc": "常眯眼的脸，鼻宽、颊浅。",
+   "prompt": "a sun-squint face with a broad nose and shallow cheeks",
+   "prompt_young": "a sun-squint face, cheeks still fuller in youth",
+   "prompt_elder": "a sun-squint face, the nose broad, cheeks shallower with age",
+   "generated": "trait-set-v89"
+  },
+  "ig_part": {
+   "zh": "铁黑侧分",
+   "name_en": "iron side part",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "irongorge",
+   "slot": "hair",
+   "locus": "tr_ig_part",
+   "desc": "铁黑短发，一道钝侧分。",
+   "prompt": "iron-black hair, short, cut by a blunt side part",
+   "prompt_young": "shorter iron-black hair, the side part soft in youth",
+   "prompt_elder": "iron-black hair, the side part higher, scalp a little visible in age",
+   "generated": "trait-set-v89"
+  },
+  "ig_crop": {
+   "zh": "短铁裁",
+   "name_en": "iron crop",
+   "tier": "noble",
+   "visibility": "overt",
+   "nation": "irongorge",
+   "slot": "hair",
+   "locus": "tr_ig_part",
+   "desc": "铁黑短发，没有侧分线。",
+   "prompt": "a short iron-black crop with no side part",
+   "prompt_young": "a soft short iron-black crop in youth",
+   "prompt_elder": "a short iron-black crop, thinner on top with age",
+   "generated": "trait-set-v89"
+  },
+  "ig_catch": {
+   "zh": "扁光瞳",
+   "name_en": "flat catchlight",
+   "tier": "royal",
+   "visibility": "subtle",
+   "nation": "irongorge",
+   "slot": "iris",
+   "locus": "tr_ig_catch",
+   "desc": "铁灰虹膜，高光是一条扁的长方形。两份才显。",
+   "prompt": "iron-grey irises with a flat rectangular catchlight",
+   "prompt_young": "iron-grey irises, the catchlight shorter in youth",
+   "prompt_elder": "iron-grey irises, the rectangular catchlight longer with age",
+   "generated": "trait-set-v89"
+  },
+  "ig_jaw": {
+   "zh": "重颌长鼻",
+   "name_en": "heavy jaw long nose",
+   "tier": "royal",
+   "visibility": "subtle",
+   "nation": "irongorge",
+   "slot": "bone",
+   "locus": "tr_ig_jaw",
+   "desc": "下颌重、鼻长梁高、下颌角宽。近看才稳。",
+   "prompt": "a heavy jaw, a long nose with a high bridge and a wide jaw angle",
+   "prompt_young": "a heavy jaw still padded, the nose long but softer in youth",
+   "prompt_elder": "a heavier jaw angle, the nose still long, cheeks lower in age",
+   "generated": "trait-set-v89"
+  },
+  "ig_gonial": {
+   "zh": "宽下颌",
+   "name_en": "wide jaw angle",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "irongorge",
+   "slot": "bone",
+   "locus": "tr_ig_jaw",
+   "desc": "下颌角宽，鼻还没有那么长。",
+   "prompt": "a wide jaw angle and a straight medium nose",
+   "prompt_young": "a wide jaw angle, still soft in youth",
+   "prompt_elder": "a wider jaw angle and a leaner cheek in age",
+   "generated": "trait-set-v89"
+  },
+  "ig_steel": {
+   "zh": "钢底肤",
+   "name_en": "steel-undertone skin",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "irongorge",
+   "slot": "skin",
+   "locus": "tr_ig_steel",
+   "desc": "中性红棕，底色是冷钢，毛孔可见。",
+   "prompt": "ruddy-neutral skin with a cool steel undertone and visible pores",
+   "prompt_young": "ruddy-neutral skin, pores finer, the steel undertone light in youth",
+   "prompt_elder": "ruddy-neutral skin, pores clearer, the steel undertone cooler in age",
+   "generated": "trait-set-v89"
+  },
+  "ig_lean": {
+   "zh": "前倾",
+   "name_en": "forward lean",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "irongorge",
+   "slot": "bearing",
+   "locus": "tr_ig_lean",
+   "desc": "身体前倾，收下颌，休息时拳是握着的。约六成外显。",
+   "prompt": "a forward lean, chin tucked, the resting hand closed, voice one hard syllable",
+   "prompt_young": "a slight forward lean, the hand not yet closed at rest in youth",
+   "prompt_elder": "a deeper forward lean, the closed hand stiffer, the voice rougher with age",
+   "generated": "trait-set-v89",
+   "bark": "断。"
+  },
+  "ig_throat": {
+   "zh": "钢喉领",
+   "name_en": "square throat plate",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "irongorge",
+   "slot": "regalia",
+   "locus": "tr_ig_throat",
+   "desc": "二十五岁后，拉丝钢喉领才坐正。",
+   "prompt": "a brushed-steel throat plate sitting square, with a short matte cape",
+   "prompt_young": "a brushed-steel throat plate sitting slightly crooked",
+   "prompt_elder": "a brushed-steel throat plate sitting square, the edge dulled with age",
+   "generated": "trait-set-v89",
+   "modules": [
+    "regalia_ig_throat",
+    "regalia_ig_cape"
+   ],
+   "palette": {
+    "cloth": "#2A3442",
+    "trim": "#9AA6B8",
+    "metal": "#C9D3DE"
+   }
+  },
+  "ig_pure": {
+   "zh": "发际峡口",
+   "name_en": "hairline notch",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "irongorge",
+   "slot": "pure",
+   "locus": "tr_ig_pure",
+   "desc": "双眉的窄隙之外，发际正中再有一个同样的缺口。须峡眉已显。",
+   "prompt": "a matching narrow notch in the centre hairline, aligned with the brow gaps",
+   "prompt_young": "the hairline notch shallow in youth",
+   "prompt_elder": "the hairline notch a little deeper, still narrow, in age",
+   "generated": "trait-set-v89"
+  },
+  "ig_ridge": {
+   "zh": "指节棱",
+   "name_en": "knuckle ridge",
+   "tier": "noble",
+   "visibility": "overt",
+   "nation": "irongorge",
+   "slot": "bone",
+   "locus": "tr_ig_ridge",
+   "desc": "两手第一指节一道凸棱。",
+   "prompt": "a raised ridge across the first knuckles of both hands",
+   "prompt_young": "a slight ridge across the first knuckles in youth",
+   "prompt_elder": "a higher ridge across the first knuckles with age",
+   "generated": "trait-set-v89"
+  },
+  "folk_ig_hair": {
+   "zh": "刀裁短发",
+   "name_en": "knife-cut hair",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "irongorge",
+   "slot": "hair",
+   "locus": "tr_folk_ig_hair",
+   "desc": "深发用刀削短，没有侧分。",
+   "prompt": "short dark hair cut with a knife, no side part",
+   "prompt_young": "short knife-cut dark hair, uneven in youth",
+   "prompt_elder": "short knife-cut dark hair, thinner, still without a side part, in age",
+   "generated": "trait-set-v89"
+  },
+  "folk_ig_skin": {
+   "zh": "峡尘肤",
+   "name_en": "canyon-dust skin",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "irongorge",
+   "slot": "skin",
+   "locus": "tr_folk_ig_skin",
+   "desc": "峡尘肤，毛孔发灰，只有指节发红。",
+   "prompt": "canyon-dust skin, grey in the pores, ruddy only at the knuckles",
+   "prompt_young": "canyon-dust skin, knuckles barely ruddy in youth",
+   "prompt_elder": "canyon-dust skin, pores greyer, knuckles ruddier with age",
+   "generated": "trait-set-v89"
+  },
+  "folk_ig_bone": {
+   "zh": "钝作鼻",
+   "name_en": "blunt work nose",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "irongorge",
+   "slot": "bone",
+   "locus": "tr_folk_ig_bone",
+   "desc": "鼻头钝、下颌因干活而重。",
+   "prompt": "a blunt nose and a jaw heavy from work",
+   "prompt_young": "a blunt nose and a jaw still soft in youth",
+   "prompt_elder": "a blunter nose and a heavier work jaw with age",
+   "generated": "trait-set-v89"
+  },
+  "sr_shave": {
+   "zh": "窄剃线",
+   "name_en": "narrow shaved line",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "starriver",
+   "slot": "hair",
+   "locus": "tr_sr_shave",
+   "desc": "墨发直，耳上一条窄剃线。",
+   "prompt": "straight ink hair with a narrow shaved line above the ear",
+   "prompt_young": "ink hair, the shaved line shorter and softer in youth",
+   "prompt_elder": "ink hair, the shaved line a little higher and wider with age",
+   "generated": "trait-set-v89"
+  },
+  "sr_half": {
+   "zh": "半剃",
+   "name_en": "half shave",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "starriver",
+   "slot": "hair",
+   "locus": "tr_sr_shave",
+   "desc": "耳上只有半段剃线。",
+   "prompt": "straight dark hair with a half-length shaved line above one ear",
+   "prompt_young": "a short half-line above one ear in youth",
+   "prompt_elder": "a half-length shaved line, a little wider with age",
+   "generated": "trait-set-v89"
+  },
+  "sr_fleck": {
+   "zh": "三微斑",
+   "name_en": "three iris flecks",
+   "tier": "royal",
+   "visibility": "subtle",
+   "nation": "starriver",
+   "slot": "iris",
+   "locus": "tr_sr_fleck",
+   "desc": "近黑虹膜里三粒淡斑，排成小弧。两份才显。不是脸上的痣。",
+   "prompt": "near-black irises with exactly three tiny pale flecks in a small arc",
+   "prompt_young": "near-black irises, only one pale fleck clear in youth",
+   "prompt_elder": "near-black irises, the three pale flecks a little larger with age",
+   "generated": "trait-set-v89"
+  },
+  "sr_mid": {
+   "zh": "长中面",
+   "name_en": "long midface",
+   "tier": "royal",
+   "visibility": "subtle",
+   "nation": "starriver",
+   "slot": "bone",
+   "locus": "tr_sr_mid",
+   "desc": "中面长、颊不高、鼻直、眉平。",
+   "prompt": "a long midface, modest cheeks, a straight nose and level brows",
+   "prompt_young": "a long midface still softer, brows level in youth",
+   "prompt_elder": "a longer midface, cheeks lower, brows still level in age",
+   "generated": "trait-set-v89"
+  },
+  "sr_brow": {
+   "zh": "平眉骨",
+   "name_en": "level brow bone",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "starriver",
+   "slot": "bone",
+   "locus": "tr_sr_mid",
+   "desc": "眉骨平，中面还没那么长。",
+   "prompt": "level brows and a moderate midface",
+   "prompt_young": "level brows on a shorter face in youth",
+   "prompt_elder": "level brows and a slightly longer midface with age",
+   "generated": "trait-set-v89"
+  },
+  "sr_olive": {
+   "zh": "匀橄榄",
+   "name_en": "even olive",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "starriver",
+   "slot": "skin",
+   "locus": "tr_sr_olive",
+   "desc": "浅橄榄，均匀。",
+   "prompt": "even light-olive skin, matte, no patches",
+   "prompt_young": "even light-olive skin, a little warmer in youth",
+   "prompt_elder": "even light-olive skin, drier at the cheek with age",
+   "generated": "trait-set-v89"
+  },
+  "sr_glance": {
+   "zh": "左上视",
+   "name_en": "up-left glance",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "starriver",
+   "slot": "bearing",
+   "locus": "tr_sr_glance",
+   "desc": "想事情时视线往左上，食指点两下。父传全女。",
+   "prompt": "the gaze ticks up and to the left when thinking, then the index finger taps twice",
+   "prompt_young": "the up-left glance occasional, the tap not yet paired in youth",
+   "prompt_elder": "the up-left glance slower, the double tap still exact in age",
+   "generated": "trait-set-v89",
+   "bark": "在那边。"
+  },
+  "sr_arc": {
+   "zh": "弧缝短氅",
+   "name_en": "arc-stitched short cloak",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "starriver",
+   "slot": "regalia",
+   "locus": "tr_sr_arc",
+   "desc": "不对称短氅，一道浅弧霜线，墨色领。",
+   "prompt": "an asymmetric short cloak with a shallow frost stitch in an arc, and an ink collar",
+   "prompt_young": "the short cloak a little long, the arc stitch very bright in youth",
+   "prompt_elder": "the short cloak still asymmetric, the arc stitch softened with age",
+   "generated": "trait-set-v89",
+   "modules": [
+    "regalia_sr_cloak",
+    "regalia_sr_arc"
+   ],
+   "palette": {
+    "cloth": "#10141C",
+    "trim": "#6ED4FF",
+    "metal": "#F4F7FB"
+   }
+  },
+  "sr_pure": {
+   "zh": "点线相合",
+   "name_en": "flecks align",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "starriver",
+   "slot": "pure",
+   "locus": "tr_sr_pure",
+   "desc": "三粒虹膜淡斑与外三颗痣的弧对齐。须七星已显且两份纯血。",
+   "prompt": "the three pale iris flecks align with the arc of the outer three moles",
+   "prompt_young": "the flecks and the outer moles nearly align, still a little off in youth",
+   "prompt_elder": "the flecks and the outer moles align exactly in age",
+   "generated": "trait-set-v89"
+  },
+  "sr_tap": {
+   "zh": "双点指",
+   "name_en": "double tap",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "starriver",
+   "slot": "bearing",
+   "locus": "tr_sr_tap",
+   "desc": "食指像刚点过两下，然后停住。东虹自家的手势。",
+   "prompt": "the index finger rests as if it has just tapped twice, then gone still",
+   "prompt_young": "an occasional single tap, not yet a double, in youth",
+   "prompt_elder": "the double-tap rest still exact, the finger a little stiffer in age",
+   "generated": "trait-set-v89"
+  },
+  "sr_shoulder": {
+   "zh": "左肩微耸",
+   "name_en": "raised left shoulder",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "starriver",
+   "slot": "bearing",
+   "locus": "tr_sr_shoulder",
+   "desc": "左肩比右肩略高。西虹自家的站法。",
+   "prompt": "the left shoulder sits slightly higher than the right",
+   "prompt_young": "the left shoulder only a little high, easy to miss in youth",
+   "prompt_elder": "the left shoulder higher, the line of the neck a little shorter in age",
+   "generated": "trait-set-v89"
+  },
+  "folk_sr_hair": {
+   "zh": "风缠发",
+   "name_en": "wind-tangled hair",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "starriver",
+   "slot": "hair",
+   "locus": "tr_folk_sr_hair",
+   "desc": "渡口黑发，被风缠着，没有剃线。",
+   "prompt": "ferry-black hair, wind-tangled, with no shaved line",
+   "prompt_young": "wind-tangled black hair, shorter in youth",
+   "prompt_elder": "wind-tangled black hair, a little grey, still with no shaved line, in age",
+   "generated": "trait-set-v89"
+  },
+  "folk_sr_skin": {
+   "zh": "桥镇肤",
+   "name_en": "bridge-town skin",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "starriver",
+   "slot": "skin",
+   "locus": "tr_folk_sr_skin",
+   "desc": "桥镇均匀肤，只有领口更暗一点。",
+   "prompt": "even bridge-town skin, a little darker at the collar line",
+   "prompt_young": "even bridge-town skin, the collar line not yet darker in youth",
+   "prompt_elder": "even bridge-town skin, the collar line darker with age",
+   "generated": "trait-set-v89"
+  },
+  "folk_sr_bone": {
+   "zh": "普通卵面",
+   "name_en": "ordinary oval",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "starriver",
+   "slot": "bone",
+   "locus": "tr_folk_sr_bone",
+   "desc": "普通卵面，眉平，鼻中等。",
+   "prompt": "an ordinary oval face with level brows and a medium nose",
+   "prompt_young": "an ordinary oval, cheeks fuller in youth",
+   "prompt_elder": "an ordinary oval, cheeks slightly lower with age",
+   "generated": "trait-set-v89"
+  },
+  "sz_wave": {
+   "zh": "雾尖波",
+   "name_en": "fog-tipped waves",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "southzephyr",
+   "slot": "hair",
+   "locus": "tr_sz_wave",
+   "desc": "柔软的深色波浪，梢是雾灰，不是金。",
+   "prompt": "soft dark waves with fog-grey tips, tucked behind one ear",
+   "prompt_young": "softer shorter waves, the fog-grey tips only a haze in youth",
+   "prompt_elder": "dark waves, the fog-grey tips longer and duller with age",
+   "generated": "trait-set-v89"
+  },
+  "sz_short": {
+   "zh": "短波",
+   "name_en": "short wave",
+   "tier": "noble",
+   "visibility": "overt",
+   "nation": "southzephyr",
+   "slot": "hair",
+   "locus": "tr_sz_wave",
+   "desc": "短波浪，梢不发灰。",
+   "prompt": "short dark waves with ordinary dark tips",
+   "prompt_young": "short soft waves in youth",
+   "prompt_elder": "shorter dark waves, a little finer with age",
+   "generated": "trait-set-v89"
+  },
+  "sz_moss": {
+   "zh": "苔缘瞳",
+   "name_en": "moss limbal haze",
+   "tier": "royal",
+   "visibility": "subtle",
+   "nation": "southzephyr",
+   "slot": "iris",
+   "locus": "tr_sz_moss",
+   "desc": "苔绿虹膜，角膜缘一圈薄荷雾。亮度跟母亲的数值。",
+   "prompt": "moss irises with a pale mint haze at the limbus",
+   "prompt_young": "moss irises, the mint limbal haze faint in youth",
+   "prompt_elder": "moss irises, the mint limbal haze a little wider with age",
+   "generated": "trait-set-v89"
+  },
+  "sz_round": {
+   "zh": "圆面",
+   "name_en": "round face",
+   "tier": "royal",
+   "visibility": "subtle",
+   "nation": "southzephyr",
+   "slot": "bone",
+   "locus": "tr_sz_round",
+   "desc": "圆脸、小鼻、低颊、眼距宽。",
+   "prompt": "a round face, a small nose, low cheeks and wide-set eyes",
+   "prompt_young": "a rounder face, the nose small, cheeks full in youth",
+   "prompt_elder": "a round face, cheeks lower, the nose still small in age",
+   "generated": "trait-set-v89"
+  },
+  "sz_smallnose": {
+   "zh": "小鼻",
+   "name_en": "small nose",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "southzephyr",
+   "slot": "bone",
+   "locus": "tr_sz_round",
+   "desc": "鼻小，脸还没那么圆。",
+   "prompt": "a small nose and moderate cheeks",
+   "prompt_young": "a small nose, cheeks fuller in youth",
+   "prompt_elder": "a small nose and slightly lower cheeks with age",
+   "generated": "trait-set-v89"
+  },
+  "sz_mint": {
+   "zh": "薄荷影",
+   "name_en": "mint-shadow skin",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "southzephyr",
+   "slot": "skin",
+   "locus": "tr_sz_mint",
+   "desc": "暖米色，阴影里一点薄荷底。",
+   "prompt": "warm beige skin with a cool mint undertone in the shadows",
+   "prompt_young": "warm beige skin, the mint undertone faint in youth",
+   "prompt_elder": "warm beige skin, the mint undertone clearer in the shadows with age",
+   "generated": "trait-set-v89"
+  },
+  "sz_listen": {
+   "zh": "侧耳晚笑",
+   "name_en": "late smile",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "southzephyr",
+   "slot": "bearing",
+   "locus": "tr_sz_listen",
+   "desc": "二十六岁后才习惯侧过来听，笑来得晚。",
+   "prompt": "a lean-in to listen, the smile arriving late, voice soft and short",
+   "prompt_young": "a quicker smile, the lean-in not yet habitual in youth",
+   "prompt_elder": "a slower lean-in, the late smile smaller, the voice softer with age",
+   "generated": "trait-set-v89",
+   "bark": "雾里见。"
+  },
+  "sz_hood": {
+   "zh": "兜领",
+   "name_en": "hood-collar",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "southzephyr",
+   "slot": "regalia",
+   "locus": "tr_sz_hood",
+   "desc": "哑光石板兜领，一道薄荷缝，短披。",
+   "prompt": "a hood-collar of matte slate with one mint stitch and a short cape",
+   "prompt_young": "the hood-collar a little deep, the mint stitch bright in youth",
+   "prompt_elder": "the hood-collar still soft, the mint stitch paler with age",
+   "generated": "trait-set-v89",
+   "modules": [
+    "regalia_sz_hood",
+    "regalia_sz_cape"
+   ],
+   "palette": {
+    "cloth": "#1C2330",
+    "trim": "#5EE0B5",
+    "metal": "#9AA6B8"
+   }
+  },
+  "sz_pure": {
+   "zh": "桥斑",
+   "name_en": "bridge freckle path",
+   "tier": "royal",
+   "visibility": "overt",
+   "nation": "southzephyr",
+   "slot": "pure",
+   "locus": "tr_sz_pure",
+   "desc": "萤斑在鼻梁上收成一条窄桥，薄荷角膜缘闭合成环。须萤斑已显。",
+   "prompt": "the luminous freckles tighten into a narrow bridge across the nose and the mint limbal haze closes into a ring",
+   "prompt_young": "the freckle bridge is short and the limbal ring still open in youth",
+   "prompt_elder": "the freckle bridge complete and the limbal ring closed in age",
+   "generated": "trait-set-v89"
+  },
+  "sz_squint": {
+   "zh": "左目微眯",
+   "name_en": "left-eye rest",
+   "tier": "noble",
+   "visibility": "subtle",
+   "nation": "southzephyr",
+   "slot": "bearing",
+   "locus": "tr_sz_squint",
+   "desc": "左眼静息时比右眼略窄。",
+   "prompt": "the left eye rests a little narrower than the right",
+   "prompt_young": "the left eye only slightly narrower, easy to miss in youth",
+   "prompt_elder": "the left eye narrower at rest, the difference clearer with age",
+   "generated": "trait-set-v89"
+  },
+  "folk_sz_hair": {
+   "zh": "雾卷",
+   "name_en": "fog curls",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "southzephyr",
+   "slot": "hair",
+   "locus": "tr_folk_sz_hair",
+   "desc": "紧的深卷，带着雾气，梢不发灰。",
+   "prompt": "tight dark curls with fog moisture, tips not grey",
+   "prompt_young": "tight dark curls, softer in youth, tips dark",
+   "prompt_elder": "tight dark curls, a little looser with age, tips still dark",
+   "generated": "trait-set-v89"
+  },
+  "folk_sz_skin": {
+   "zh": "林米色",
+   "name_en": "forest beige",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "southzephyr",
+   "slot": "skin",
+   "locus": "tr_folk_sz_skin",
+   "desc": "林间米色，雀斑普通、不发光。",
+   "prompt": "forest beige skin, freckles ordinary and not luminous",
+   "prompt_young": "forest beige skin, ordinary freckles light in youth",
+   "prompt_elder": "forest beige skin, ordinary freckles a little denser with age, still not luminous",
+   "generated": "trait-set-v89"
+  },
+  "folk_sz_bone": {
+   "zh": "雾林圆面",
+   "name_en": "fog-wood round face",
+   "tier": "folk",
+   "visibility": "overt",
+   "nation": "southzephyr",
+   "slot": "bone",
+   "locus": "tr_folk_sz_bone",
+   "desc": "圆脸、小鼻、眼距宽，没有光斑。",
+   "prompt": "a round fog-wood face with a small nose and wide-set eyes",
+   "prompt_young": "a rounder face, small nose, in youth",
+   "prompt_elder": "a round face, cheeks lower, nose still small, in age",
+   "generated": "trait-set-v89"
   }
  },
  "nations": {
@@ -564,6 +4579,10 @@
    "regalia": "a slim grey-violet banner pin of the Ash Seat at the collar",
    "exile": [
     "chart_wanderers"
+   ],
+   "catch_traits": [
+    "ash_spoke",
+    "ash_bone"
    ]
   },
   "shuoying": {
@@ -616,6 +4635,10 @@
    "regalia": "a black-glass crescent collar pin of the Night Palace",
    "exile": [
     "shadow_exiles"
+   ],
+   "catch_traits": [
+    "sy_sclera",
+    "sy_bridge"
    ]
   },
   "qinghe": {
@@ -667,6 +4690,10 @@
    "regalia": "a slim jade register tablet pendant",
    "exile": [
     "lan_branch"
+   ],
+   "catch_traits": [
+    "qh_limbal",
+    "qh_oval"
    ]
   },
   "lantern": {
@@ -752,7 +4779,11 @@
     ],
     "desc": "灯市出售「灯籍」：花银即得男爵或伯爵名分，戴灯籍徽，但没有灯丝。霜冕、清河、朔影的贵胤拒绝与纸冕者联姻。",
     "prompt": "a newly minted clear lamp-glass patent pin, almost too pristine"
-   }
+   },
+   "catch_traits": [
+    "lt_quartz",
+    "lt_soft"
+   ]
   },
   "frostcrown": {
    "id": "frostcrown",
@@ -803,6 +4834,10 @@
    "regalia": "an ice-glass bell clasp at the throat",
    "exile": [
     "snow_exiles"
+   ],
+   "catch_traits": [
+    "fc_storm",
+    "fc_long"
    ]
   },
   "emberold": {
@@ -856,6 +4891,10 @@
    "regalia": "a celadon porcelain seal toggle",
    "exile": [
     "kiln_exiles"
+   ],
+   "catch_traits": [
+    "eo_stroma",
+    "eo_zygo"
    ]
   },
   "saltmarsh": {
@@ -908,6 +4947,10 @@
    "exile": [
     "tide_lords",
     "tide_exiles"
+   ],
+   "catch_traits": [
+    "sm_iris",
+    "sm_wide"
    ]
   },
   "irongorge": {
@@ -959,6 +5002,10 @@
    "regalia": "a cold-steel collar ring of the forge seat",
    "exile": [
     "broken_bridge"
+   ],
+   "catch_traits": [
+    "ig_catch",
+    "ig_jaw"
    ]
   },
   "starriver": {
@@ -1011,6 +5058,10 @@
    "regalia": "a small crystal astrolabe pendant",
    "exile": [
     "fallen_star"
+   ],
+   "catch_traits": [
+    "sr_fleck",
+    "sr_mid"
    ]
   },
   "southzephyr": {
@@ -1062,6 +5113,10 @@
    "regalia": "a carved hardwood mother-bead necklace",
    "exile": [
     "firefly_sons"
+   ],
+   "catch_traits": [
+    "sz_moss",
+    "sz_round"
    ]
   }
  },
@@ -1399,13 +5454,81 @@
       "river_chart|none": 0.35,
       "chart_trunk|none": 0.05
      }
+    },
+    {
+     "locus": "tr_ash_wire",
+     "trait": true,
+     "genotypes": {
+      "ash_wire|ash_wire": 0.72,
+      "ash_wire|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_ash_spoke",
+     "trait": true,
+     "genotypes": {
+      "ash_spoke|ash_spoke": 0.55,
+      "ash_spoke|none": 0.4,
+      "none|none": 0.05
+     }
+    },
+    {
+     "locus": "tr_ash_bone",
+     "trait": true,
+     "value": [
+      0.88,
+      0.03
+     ]
+    },
+    {
+     "locus": "tr_ash_jawcast",
+     "trait": true,
+     "genotypes": {
+      "ash_jawcast|ash_jawcast": 0.72,
+      "ash_jawcast|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_ash_hook",
+     "trait": true,
+     "genotypes": {
+      "ash_hook|ash_hook": 0.72,
+      "ash_hook|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_ash_cloak",
+     "trait": true,
+     "genotypes": {
+      "ash_cloak|ash_cloak": 0.72,
+      "ash_cloak|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_ash_pure",
+     "trait": true,
+     "genotypes": {
+      "ash_pure|ash_pure": 0.16,
+      "ash_pure|none": 0.34,
+      "none|none": 0.5
+     }
     }
    ],
    "look": "Ashbanner styling: ash-grey long coat with a high open collar",
    "tavern": {
     "premium": 90,
     "rarity": "罕见"
-   }
+   },
+   "trait_set": [
+    "river_chart",
+    "ash_wire",
+    "ash_spoke",
+    "ash_bone",
+    "ash_jawcast",
+    "ash_hook",
+    "ash_cloak",
+    "ash_pure"
+   ]
   },
   {
    "id": "banner_marshal",
@@ -1488,13 +5611,41 @@
       "river_chart|none": 0.08,
       "none|none": 0.1
      }
+    },
+    {
+     "locus": "tr_marshal_strap",
+     "trait": true,
+     "genotypes": {
+      "marshal_strap|marshal_strap": 1.0
+     }
+    },
+    {
+     "locus": "tr_ash_wire",
+     "trait": true,
+     "genotypes": {
+      "ash_crop|none": 1.0
+     }
+    },
+    {
+     "locus": "tr_ash_bone",
+     "trait": true,
+     "value": [
+      0.56,
+      0.025
+     ]
     }
    ],
    "look": "Ashbanner marshal styling: structured ash-grey officer coat with a tall collar and a slim grey-violet sash",
    "tavern": {
     "premium": 22,
     "rarity": "少见"
-   }
+   },
+   "trait_set": [
+    "chart_trunk",
+    "ash_crop",
+    "ash_jaw",
+    "marshal_strap"
+   ]
   },
   {
    "id": "common_ash",
@@ -1576,13 +5727,39 @@
       "river_chart|none": 0.08,
       "chart_trunk|none": 0.02
      }
+    },
+    {
+     "locus": "tr_folk_ash_hair",
+     "trait": true,
+     "genotypes": {
+      "folk_ash_hair|folk_ash_hair": 1.0
+     }
+    },
+    {
+     "locus": "tr_folk_ash_skin",
+     "trait": true,
+     "genotypes": {
+      "folk_ash_skin|folk_ash_skin": 1.0
+     }
+    },
+    {
+     "locus": "tr_folk_ash_bone",
+     "trait": true,
+     "genotypes": {
+      "folk_ash_bone|folk_ash_bone": 1.0
+     }
     }
    ],
    "look": "Ashbanner borderfolk styling: practical ash-grey layered technical jacket with a slim grey-violet scarf",
    "tavern": {
     "premium": 0,
     "rarity": "常见"
-   }
+   },
+   "trait_set": [
+    "folk_ash_hair",
+    "folk_ash_skin",
+    "folk_ash_bone"
+   ]
   },
   {
    "id": "sy_eclipse",
@@ -1662,13 +5839,85 @@
       "eclipse|eclipse": 0.75,
       "eclipse|none": 0.25
      }
+    },
+    {
+     "locus": "tr_sy_geom",
+     "trait": true,
+     "genotypes": {
+      "sy_geom|sy_geom": 0.55,
+      "sy_geom|none": 0.4,
+      "none|none": 0.05
+     }
+    },
+    {
+     "locus": "tr_sy_sclera",
+     "trait": true,
+     "genotypes": {
+      "sy_sclera|sy_sclera": 0.72,
+      "sy_sclera|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_sy_bridge",
+     "trait": true,
+     "value": [
+      0.88,
+      0.03
+     ]
+    },
+    {
+     "locus": "tr_sy_olive",
+     "trait": true,
+     "genotypes": {
+      "sy_olive|sy_olive": 0.72,
+      "sy_olive|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_sy_still",
+     "trait": true,
+     "genotypes": {
+      "sy_still|sy_still": 0.72,
+      "sy_still|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_sy_collar",
+     "trait": true,
+     "f": {
+      "sy_collar|sy_collar": 0.7,
+      "sy_collar|none": 0.3
+     },
+     "m": {
+      "sy_collar": 0.9,
+      "none": 0.1
+     }
+    },
+    {
+     "locus": "tr_sy_pure",
+     "trait": true,
+     "genotypes": {
+      "sy_pure|sy_pure": 0.16,
+      "sy_pure|none": 0.34,
+      "none|none": 0.5
+     }
     }
    ],
    "look": "Shuoying night-court styling: midnight-indigo high collar with fine silver piping",
    "tavern": {
     "premium": 130,
     "rarity": "传说"
-   }
+   },
+   "trait_set": [
+    "eclipse_full",
+    "sy_geom",
+    "sy_sclera",
+    "sy_bridge",
+    "sy_olive",
+    "sy_still",
+    "sy_collar",
+    "sy_pure"
+   ]
   },
   {
    "id": "sy_night",
@@ -1747,13 +5996,41 @@
       "eclipse|eclipse": 0.08,
       "none|none": 0.22
      }
+    },
+    {
+     "locus": "tr_sy_canthus",
+     "trait": true,
+     "genotypes": {
+      "sy_canthus|sy_canthus": 1.0
+     }
+    },
+    {
+     "locus": "tr_sy_geom",
+     "trait": true,
+     "genotypes": {
+      "sy_crop|none": 1.0
+     }
+    },
+    {
+     "locus": "tr_sy_bridge",
+     "trait": true,
+     "value": [
+      0.56,
+      0.025
+     ]
     }
    ],
    "look": "Shuoying night-court styling: high indigo collar with a small black-glass crescent pin",
    "tavern": {
     "premium": 28,
     "rarity": "少见"
-   }
+   },
+   "trait_set": [
+    "eclipse_crescent",
+    "sy_crop",
+    "sy_cheek",
+    "sy_canthus"
+   ]
   },
   {
    "id": "sy_ridge",
@@ -1830,13 +6107,39 @@
       "none|none": 0.92,
       "eclipse|none": 0.08
      }
+    },
+    {
+     "locus": "tr_folk_sy_hair",
+     "trait": true,
+     "genotypes": {
+      "folk_sy_hair|folk_sy_hair": 1.0
+     }
+    },
+    {
+     "locus": "tr_folk_sy_skin",
+     "trait": true,
+     "genotypes": {
+      "folk_sy_skin|folk_sy_skin": 1.0
+     }
+    },
+    {
+     "locus": "tr_folk_sy_bone",
+     "trait": true,
+     "genotypes": {
+      "folk_sy_bone|folk_sy_bone": 1.0
+     }
     }
    ],
    "look": "Shuoying ridge styling: deep indigo hooded technical coat with frost-dusted shoulders",
    "tavern": {
     "premium": 0,
     "rarity": "常见"
-   }
+   },
+   "trait_set": [
+    "folk_sy_hair",
+    "folk_sy_skin",
+    "folk_sy_bone"
+   ]
   },
   {
    "id": "qh_jade",
@@ -1919,13 +6222,81 @@
       0.8,
       0.06
      ]
+    },
+    {
+     "locus": "tr_qh_smooth",
+     "trait": true,
+     "genotypes": {
+      "qh_smooth|qh_smooth": 0.72,
+      "qh_smooth|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_qh_limbal",
+     "trait": true,
+     "genotypes": {
+      "qh_limbal|qh_limbal": 0.55,
+      "qh_limbal|none": 0.4,
+      "none|none": 0.05
+     }
+    },
+    {
+     "locus": "tr_qh_oval",
+     "trait": true,
+     "value": [
+      0.88,
+      0.03
+     ]
+    },
+    {
+     "locus": "tr_qh_undertone",
+     "trait": true,
+     "value": [
+      0.88,
+      0.03
+     ]
+    },
+    {
+     "locus": "tr_qh_fold",
+     "trait": true,
+     "genotypes": {
+      "qh_fold|qh_fold": 0.72,
+      "qh_fold|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_qh_collar",
+     "trait": true,
+     "genotypes": {
+      "qh_collar|qh_collar": 0.72,
+      "qh_collar|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_qh_pure",
+     "trait": true,
+     "genotypes": {
+      "qh_pure|qh_pure": 0.16,
+      "qh_pure|none": 0.34,
+      "none|none": 0.5
+     }
     }
    ],
    "look": "Qinghe register styling: layered jade-grey and mist-white silk with a high mandarin collar",
    "tavern": {
     "premium": 120,
     "rarity": "传说"
-   }
+   },
+   "trait_set": [
+    "jade_lock",
+    "qh_smooth",
+    "qh_limbal",
+    "qh_oval",
+    "qh_undertone",
+    "qh_fold",
+    "qh_collar",
+    "qh_pure"
+   ]
   },
   {
    "id": "river_ward",
@@ -2007,13 +6378,41 @@
       0.46,
       0.08
      ]
+    },
+    {
+     "locus": "tr_qh_web",
+     "trait": true,
+     "genotypes": {
+      "qh_web|qh_web": 1.0
+     }
+    },
+    {
+     "locus": "tr_qh_smooth",
+     "trait": true,
+     "genotypes": {
+      "qh_tuck|none": 1.0
+     }
+    },
+    {
+     "locus": "tr_qh_oval",
+     "trait": true,
+     "value": [
+      0.56,
+      0.025
+     ]
     }
    ],
    "look": "Qinghe ferry-ward styling: jade-grey high-collared coat with a slim ferry-token pendant",
    "tavern": {
     "premium": 12,
     "rarity": "少见"
-   }
+   },
+   "trait_set": [
+    "jade_sheen",
+    "qh_tuck",
+    "qh_lowcheek",
+    "qh_web"
+   ]
   },
   {
    "id": "qh_delta",
@@ -2094,13 +6493,39 @@
       0.12,
       0.08
      ]
+    },
+    {
+     "locus": "tr_folk_qh_hair",
+     "trait": true,
+     "genotypes": {
+      "folk_qh_hair|folk_qh_hair": 1.0
+     }
+    },
+    {
+     "locus": "tr_folk_qh_skin",
+     "trait": true,
+     "genotypes": {
+      "folk_qh_skin|folk_qh_skin": 1.0
+     }
+    },
+    {
+     "locus": "tr_folk_qh_bone",
+     "trait": true,
+     "genotypes": {
+      "folk_qh_bone|folk_qh_bone": 1.0
+     }
     }
    ],
    "look": "Qinghe delta styling: mist-grey technical silk with indigo dye-stained cuffs",
    "tavern": {
     "premium": 0,
     "rarity": "常见"
-   }
+   },
+   "trait_set": [
+    "folk_qh_hair",
+    "folk_qh_skin",
+    "folk_qh_bone"
+   ]
   },
   {
    "id": "lt_filament",
@@ -2183,13 +6608,81 @@
       "filament|none": 0.35,
       "glass_sheen|none": 0.05
      }
+    },
+    {
+     "locus": "tr_lt_asym",
+     "trait": true,
+     "genotypes": {
+      "lt_asym|lt_asym": 0.55,
+      "lt_asym|none": 0.4,
+      "none|none": 0.05
+     }
+    },
+    {
+     "locus": "tr_lt_quartz",
+     "trait": true,
+     "genotypes": {
+      "lt_quartz|lt_quartz": 0.72,
+      "lt_quartz|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_lt_soft",
+     "trait": true,
+     "genotypes": {
+      "lt_soft|lt_soft": 0.72,
+      "lt_soft|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_lt_sheen",
+     "trait": true,
+     "genotypes": {
+      "lt_sheen|lt_sheen": 0.72,
+      "lt_sheen|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_lt_count",
+     "trait": true,
+     "genotypes": {
+      "lt_count|lt_count": 0.72,
+      "lt_count|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_lt_bind",
+     "trait": true,
+     "genotypes": {
+      "lt_bind|lt_bind": 0.72,
+      "lt_bind|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_lt_pure",
+     "trait": true,
+     "genotypes": {
+      "lt_pure|lt_pure": 0.16,
+      "lt_pure|none": 0.34,
+      "none|none": 0.5
+     }
     }
    ],
    "look": "Lantern League styling: tailored night-market coat with a clear glass collar bar",
    "tavern": {
     "premium": 80,
     "rarity": "罕见"
-   }
+   },
+   "trait_set": [
+    "filament",
+    "lt_asym",
+    "lt_quartz",
+    "lt_soft",
+    "lt_sheen",
+    "lt_count",
+    "lt_bind",
+    "lt_pure"
+   ]
   },
   {
    "id": "lt_glass",
@@ -2269,13 +6762,40 @@
       "filament|glass_sheen": 0.05,
       "none|none": 0.17
      }
+    },
+    {
+     "locus": "tr_lt_knuckle",
+     "trait": true,
+     "genotypes": {
+      "lt_knuckle|lt_knuckle": 1.0
+     }
+    },
+    {
+     "locus": "tr_lt_asym",
+     "trait": true,
+     "genotypes": {
+      "lt_merchantcut|none": 1.0
+     }
+    },
+    {
+     "locus": "tr_lt_soft",
+     "trait": true,
+     "genotypes": {
+      "lt_shortchin|none": 1.0
+     }
     }
    ],
    "look": "Lantern merchant styling: fitted slate coat with a row of clear lamp-glass buttons",
    "tavern": {
     "premium": 18,
     "rarity": "少见"
-   }
+   },
+   "trait_set": [
+    "glass_sheen",
+    "lt_merchantcut",
+    "lt_shortchin",
+    "lt_knuckle"
+   ]
   },
   {
    "id": "lt_tide",
@@ -2356,13 +6876,39 @@
       "glass_sheen|none": 0.07,
       "filament|none": 0.03
      }
+    },
+    {
+     "locus": "tr_folk_lt_hair",
+     "trait": true,
+     "genotypes": {
+      "folk_lt_hair|folk_lt_hair": 1.0
+     }
+    },
+    {
+     "locus": "tr_folk_lt_skin",
+     "trait": true,
+     "genotypes": {
+      "folk_lt_skin|folk_lt_skin": 1.0
+     }
+    },
+    {
+     "locus": "tr_folk_lt_bone",
+     "trait": true,
+     "genotypes": {
+      "folk_lt_bone|folk_lt_bone": 1.0
+     }
     }
    ],
    "look": "Lantern League harbor styling: waterproof slate harbor coat with small lamp-glass beads at the collar",
    "tavern": {
     "premium": 0,
     "rarity": "常见"
-   }
+   },
+   "trait_set": [
+    "folk_lt_hair",
+    "folk_lt_skin",
+    "folk_lt_bone"
+   ]
   },
   {
    "id": "frost_crown",
@@ -2447,13 +6993,85 @@
       "rime_tip|rime_lash": 0.13,
       "rime_lash|none": 0.15
      }
+    },
+    {
+     "locus": "tr_fc_temple",
+     "trait": true,
+     "genotypes": {
+      "fc_temple|fc_temple": 0.72,
+      "fc_temple|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_fc_storm",
+     "trait": true,
+     "genotypes": {
+      "fc_storm|fc_storm": 0.55,
+      "fc_storm|none": 0.4,
+      "none|none": 0.05
+     }
+    },
+    {
+     "locus": "tr_fc_long",
+     "trait": true,
+     "value": [
+      0.88,
+      0.03
+     ]
+    },
+    {
+     "locus": "tr_fc_skin",
+     "trait": true,
+     "f": {
+      "fc_skin|fc_skin": 0.7,
+      "fc_skin|none": 0.3
+     },
+     "m": {
+      "fc_skin": 0.9,
+      "none": 0.1
+     }
+    },
+    {
+     "locus": "tr_fc_hands",
+     "trait": true,
+     "genotypes": {
+      "fc_hands|fc_hands": 0.72,
+      "fc_hands|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_fc_collar",
+     "trait": true,
+     "genotypes": {
+      "fc_collar|fc_collar": 0.72,
+      "fc_collar|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_fc_pure",
+     "trait": true,
+     "genotypes": {
+      "fc_pure|fc_pure": 0.16,
+      "fc_pure|none": 0.34,
+      "none|none": 0.5
+     }
     }
    ],
    "look": "Frostcrown court styling: frost-white and pale slate layered robe-coat",
    "tavern": {
     "premium": 110,
     "rarity": "传说"
-   }
+   },
+   "trait_set": [
+    "rime_lash",
+    "fc_temple",
+    "fc_storm",
+    "fc_long",
+    "fc_skin",
+    "fc_hands",
+    "fc_collar",
+    "fc_pure"
+   ]
   },
   {
    "id": "fc_hall",
@@ -2535,13 +7153,41 @@
       "rime_lash|rime_lash": 0.05,
       "none|none": 0.05
      }
+    },
+    {
+     "locus": "tr_fc_mouth",
+     "trait": true,
+     "genotypes": {
+      "fc_mouth|fc_mouth": 1.0
+     }
+    },
+    {
+     "locus": "tr_fc_temple",
+     "trait": true,
+     "genotypes": {
+      "fc_short|none": 1.0
+     }
+    },
+    {
+     "locus": "tr_fc_long",
+     "trait": true,
+     "value": [
+      0.56,
+      0.025
+     ]
     }
    ],
    "look": "Frostcrown hall styling: frost-white high coat with an ice-glass clasp",
    "tavern": {
     "premium": 30,
     "rarity": "少见"
-   }
+   },
+   "trait_set": [
+    "rime_tip",
+    "fc_short",
+    "fc_thin",
+    "fc_mouth"
+   ]
   },
   {
    "id": "fc_plateau",
@@ -2620,13 +7266,39 @@
       "rime_lash|none": 0.1,
       "rime_tip|none": 0.04
      }
+    },
+    {
+     "locus": "tr_folk_fc_hair",
+     "trait": true,
+     "genotypes": {
+      "folk_fc_hair|folk_fc_hair": 1.0
+     }
+    },
+    {
+     "locus": "tr_folk_fc_skin",
+     "trait": true,
+     "genotypes": {
+      "folk_fc_skin|folk_fc_skin": 1.0
+     }
+    },
+    {
+     "locus": "tr_folk_fc_bone",
+     "trait": true,
+     "genotypes": {
+      "folk_fc_bone|folk_fc_bone": 1.0
+     }
     }
    ],
    "look": "Frostcrown plateau styling: layered frost-white felt with ice-glass toggles",
    "tavern": {
     "premium": 0,
     "rarity": "常见"
-   }
+   },
+   "trait_set": [
+    "folk_fc_hair",
+    "folk_fc_skin",
+    "folk_fc_bone"
+   ]
   },
   {
    "id": "eo_kiln",
@@ -2709,13 +7381,82 @@
       "kiln_crackle": 0.96,
       "none": 0.04
      }
+    },
+    {
+     "locus": "tr_eo_sweep",
+     "trait": true,
+     "genotypes": {
+      "eo_sweep|eo_sweep": 0.72,
+      "eo_sweep|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_eo_stroma",
+     "trait": true,
+     "genotypes": {
+      "eo_stroma|eo_stroma": 0.55,
+      "eo_stroma|none": 0.4,
+      "none|none": 0.05
+     }
+    },
+    {
+     "locus": "tr_eo_zygo",
+     "trait": true,
+     "value": [
+      0.88,
+      0.03
+     ]
+    },
+    {
+     "locus": "tr_eo_clay",
+     "trait": true,
+     "genotypes": {
+      "eo_clay|eo_clay": 0.72,
+      "eo_clay|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_eo_pause",
+     "trait": true,
+     "genotypes": {
+      "eo_pause|eo_pause": 0.72,
+      "eo_pause|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_eo_collar",
+     "trait": true,
+     "f": {},
+     "m": {
+      "eo_collar": 0.96,
+      "none": 0.04
+     }
+    },
+    {
+     "locus": "tr_eo_pure",
+     "trait": true,
+     "genotypes": {
+      "eo_pure|eo_pure": 0.16,
+      "eo_pure|none": 0.34,
+      "none|none": 0.5
+     }
     }
    ],
    "look": "Emberold old-canon styling: charcoal high coat with celadon porcelain toggles",
    "tavern": {
     "premium": 125,
     "rarity": "传说"
-   }
+   },
+   "trait_set": [
+    "kiln_crackle",
+    "eo_sweep",
+    "eo_stroma",
+    "eo_zygo",
+    "eo_clay",
+    "eo_pause",
+    "eo_collar",
+    "eo_pure"
+   ]
   },
   {
    "id": "ember_noble",
@@ -2798,13 +7539,41 @@
       "none": 0.9,
       "kiln_crackle": 0.1
      }
+    },
+    {
+     "locus": "tr_eo_notch",
+     "trait": true,
+     "genotypes": {
+      "eo_notch|eo_notch": 1.0
+     }
+    },
+    {
+     "locus": "tr_eo_sweep",
+     "trait": true,
+     "genotypes": {
+      "eo_short|none": 1.0
+     }
+    },
+    {
+     "locus": "tr_eo_zygo",
+     "trait": true,
+     "value": [
+      0.56,
+      0.025
+     ]
     }
    ],
    "look": "Emberold council styling: charcoal coat with porcelain-white piping",
    "tavern": {
     "premium": 25,
     "rarity": "少见"
-   }
+   },
+   "trait_set": [
+    "ember_sigil",
+    "eo_short",
+    "eo_shortnose",
+    "eo_notch"
+   ]
   },
   {
    "id": "eo_ashland",
@@ -2885,13 +7654,39 @@
       "none": 0.97,
       "kiln_crackle": 0.03
      }
+    },
+    {
+     "locus": "tr_folk_eo_hair",
+     "trait": true,
+     "genotypes": {
+      "folk_eo_hair|folk_eo_hair": 1.0
+     }
+    },
+    {
+     "locus": "tr_folk_eo_skin",
+     "trait": true,
+     "genotypes": {
+      "folk_eo_skin|folk_eo_skin": 1.0
+     }
+    },
+    {
+     "locus": "tr_folk_eo_bone",
+     "trait": true,
+     "genotypes": {
+      "folk_eo_bone|folk_eo_bone": 1.0
+     }
     }
    ],
    "look": "Emberold kiln-town styling: heat-proof ceramic-fibre apron over a charcoal work coat with porcelain toggles",
    "tavern": {
     "premium": 0,
     "rarity": "常见"
-   }
+   },
+   "trait_set": [
+    "folk_eo_hair",
+    "folk_eo_skin",
+    "folk_eo_bone"
+   ]
   },
   {
    "id": "sm_tide",
@@ -2979,13 +7774,85 @@
       "salt_band": 0.1,
       "none": 0.05
      }
+    },
+    {
+     "locus": "tr_sm_coil",
+     "trait": true,
+     "genotypes": {
+      "sm_coil|sm_coil": 0.55,
+      "sm_coil|none": 0.4,
+      "none|none": 0.05
+     }
+    },
+    {
+     "locus": "tr_sm_iris",
+     "trait": true,
+     "f": {
+      "sm_iris|sm_iris": 0.7,
+      "sm_iris|none": 0.3
+     },
+     "m": {
+      "sm_iris": 0.9,
+      "none": 0.1
+     }
+    },
+    {
+     "locus": "tr_sm_wide",
+     "trait": true,
+     "value": [
+      0.88,
+      0.03
+     ]
+    },
+    {
+     "locus": "tr_sm_sheen",
+     "trait": true,
+     "value": [
+      0.88,
+      0.03
+     ]
+    },
+    {
+     "locus": "tr_sm_stance",
+     "trait": true,
+     "genotypes": {
+      "sm_stance|sm_stance": 0.72,
+      "sm_stance|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_sm_band",
+     "trait": true,
+     "genotypes": {
+      "sm_band|sm_band": 0.72,
+      "sm_band|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_sm_pure",
+     "trait": true,
+     "genotypes": {
+      "sm_pure|sm_pure": 0.16,
+      "sm_pure|none": 0.34,
+      "none|none": 0.5
+     }
     }
    ],
    "look": "Saltmarsh tide-court styling: pale slate and salt-white layered coat",
    "tavern": {
     "premium": 115,
     "rarity": "传说"
-   }
+   },
+   "trait_set": [
+    "tide_ring",
+    "sm_coil",
+    "sm_iris",
+    "sm_wide",
+    "sm_sheen",
+    "sm_stance",
+    "sm_band",
+    "sm_pure"
+   ]
   },
   {
    "id": "sm_ledger",
@@ -3070,13 +7937,41 @@
       "tide_ring": 0.05,
       "none": 0.3
      }
+    },
+    {
+     "locus": "tr_sm_lip",
+     "trait": true,
+     "genotypes": {
+      "sm_lip|sm_lip": 1.0
+     }
+    },
+    {
+     "locus": "tr_sm_coil",
+     "trait": true,
+     "genotypes": {
+      "sm_knot|none": 1.0
+     }
+    },
+    {
+     "locus": "tr_sm_wide",
+     "trait": true,
+     "value": [
+      0.56,
+      0.025
+     ]
     }
    ],
    "look": "Saltmarsh ledger-house styling: pale slate coat with a thin salt-crystal chain",
    "tavern": {
     "premium": 20,
     "rarity": "少见"
-   }
+   },
+   "trait_set": [
+    "salt_band",
+    "sm_knot",
+    "sm_full",
+    "sm_lip"
+   ]
   },
   {
    "id": "sm_reed",
@@ -3160,13 +8055,39 @@
       "salt_band": 0.06,
       "tide_ring": 0.02
      }
+    },
+    {
+     "locus": "tr_folk_sm_hair",
+     "trait": true,
+     "genotypes": {
+      "folk_sm_hair|folk_sm_hair": 1.0
+     }
+    },
+    {
+     "locus": "tr_folk_sm_skin",
+     "trait": true,
+     "genotypes": {
+      "folk_sm_skin|folk_sm_skin": 1.0
+     }
+    },
+    {
+     "locus": "tr_folk_sm_bone",
+     "trait": true,
+     "genotypes": {
+      "folk_sm_bone|folk_sm_bone": 1.0
+     }
     }
    ],
    "look": "Saltmarsh reed styling: reed-weave cape over a waterproof jacket with salt-crystal toggles",
    "tavern": {
     "premium": 0,
     "rarity": "常见"
-   }
+   },
+   "trait_set": [
+    "folk_sm_hair",
+    "folk_sm_skin",
+    "folk_sm_bone"
+   ]
   },
   {
    "id": "ig_gorge",
@@ -3248,13 +8169,81 @@
       "gorge_split|brow_notch": 0.3,
       "gorge_split|none": 0.3
      }
+    },
+    {
+     "locus": "tr_ig_part",
+     "trait": true,
+     "genotypes": {
+      "ig_part|ig_part": 0.72,
+      "ig_part|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_ig_catch",
+     "trait": true,
+     "genotypes": {
+      "ig_catch|ig_catch": 0.55,
+      "ig_catch|none": 0.4,
+      "none|none": 0.05
+     }
+    },
+    {
+     "locus": "tr_ig_jaw",
+     "trait": true,
+     "genotypes": {
+      "ig_jaw|ig_jaw": 0.72,
+      "ig_jaw|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_ig_steel",
+     "trait": true,
+     "genotypes": {
+      "ig_steel|ig_steel": 0.72,
+      "ig_steel|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_ig_lean",
+     "trait": true,
+     "genotypes": {
+      "ig_lean|ig_lean": 0.72,
+      "ig_lean|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_ig_throat",
+     "trait": true,
+     "genotypes": {
+      "ig_throat|ig_throat": 0.72,
+      "ig_throat|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_ig_pure",
+     "trait": true,
+     "genotypes": {
+      "ig_pure|ig_pure": 0.16,
+      "ig_pure|none": 0.34,
+      "none|none": 0.5
+     }
     }
    ],
    "look": "Iron Gorge forge-lord styling: dark steel-grey coat with a cold-steel collar ring",
    "tavern": {
     "premium": 100,
     "rarity": "传说"
-   }
+   },
+   "trait_set": [
+    "gorge_split",
+    "ig_part",
+    "ig_catch",
+    "ig_jaw",
+    "ig_steel",
+    "ig_lean",
+    "ig_throat",
+    "ig_pure"
+   ]
   },
   {
    "id": "ig_warden",
@@ -3333,13 +8322,40 @@
       "gorge_split|none": 0.08,
       "none|none": 0.15
      }
+    },
+    {
+     "locus": "tr_ig_ridge",
+     "trait": true,
+     "genotypes": {
+      "ig_ridge|ig_ridge": 1.0
+     }
+    },
+    {
+     "locus": "tr_ig_part",
+     "trait": true,
+     "genotypes": {
+      "ig_crop|none": 1.0
+     }
+    },
+    {
+     "locus": "tr_ig_jaw",
+     "trait": true,
+     "genotypes": {
+      "ig_gonial|none": 1.0
+     }
     }
    ],
    "look": "Iron Gorge bridge-warden styling: dark steel-grey coat with a riveted gorget",
    "tavern": {
     "premium": 22,
     "rarity": "少见"
-   }
+   },
+   "trait_set": [
+    "brow_notch",
+    "ig_crop",
+    "ig_gonial",
+    "ig_ridge"
+   ]
   },
   {
    "id": "ig_forge",
@@ -3419,13 +8435,39 @@
       "brow_notch|none": 0.08,
       "gorge_split|none": 0.04
      }
+    },
+    {
+     "locus": "tr_folk_ig_hair",
+     "trait": true,
+     "genotypes": {
+      "folk_ig_hair|folk_ig_hair": 1.0
+     }
+    },
+    {
+     "locus": "tr_folk_ig_skin",
+     "trait": true,
+     "genotypes": {
+      "folk_ig_skin|folk_ig_skin": 1.0
+     }
+    },
+    {
+     "locus": "tr_folk_ig_bone",
+     "trait": true,
+     "genotypes": {
+      "folk_ig_bone|folk_ig_bone": 1.0
+     }
     }
    ],
    "look": "Iron Gorge forge styling: heat-shield leather vest with cold-steel rivets, canyon-dust goggles pushed up on the forehead",
    "tavern": {
     "premium": 0,
     "rarity": "常见"
-   }
+   },
+   "trait_set": [
+    "folk_ig_hair",
+    "folk_ig_skin",
+    "folk_ig_bone"
+   ]
   },
   {
    "id": "sr_dipper",
@@ -3508,13 +8550,85 @@
       "san_tai|san_tai": 0.075,
       "si_fu|si_fu": 0.075
      }
+    },
+    {
+     "locus": "tr_sr_shave",
+     "trait": true,
+     "genotypes": {
+      "sr_shave|sr_shave": 0.72,
+      "sr_shave|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_sr_fleck",
+     "trait": true,
+     "genotypes": {
+      "sr_fleck|sr_fleck": 0.55,
+      "sr_fleck|none": 0.4,
+      "none|none": 0.05
+     }
+    },
+    {
+     "locus": "tr_sr_mid",
+     "trait": true,
+     "value": [
+      0.88,
+      0.03
+     ]
+    },
+    {
+     "locus": "tr_sr_olive",
+     "trait": true,
+     "genotypes": {
+      "sr_olive|sr_olive": 0.72,
+      "sr_olive|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_sr_glance",
+     "trait": true,
+     "f": {
+      "sr_glance|sr_glance": 0.7,
+      "sr_glance|none": 0.3
+     },
+     "m": {
+      "sr_glance": 0.9,
+      "none": 0.1
+     }
+    },
+    {
+     "locus": "tr_sr_arc",
+     "trait": true,
+     "genotypes": {
+      "sr_arc|sr_arc": 0.72,
+      "sr_arc|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_sr_pure",
+     "trait": true,
+     "genotypes": {
+      "sr_pure|sr_pure": 0.16,
+      "sr_pure|none": 0.34,
+      "none|none": 0.5
+     }
     }
    ],
    "look": "Starriver observatory styling: frosted navy high collar",
    "tavern": {
     "premium": 135,
     "rarity": "传说"
-   }
+   },
+   "trait_set": [
+    "qi_xing",
+    "sr_shave",
+    "sr_fleck",
+    "sr_mid",
+    "sr_olive",
+    "sr_glance",
+    "sr_arc",
+    "sr_pure"
+   ]
   },
   {
    "id": "sr_east_arc",
@@ -3593,13 +8707,41 @@
       "san_tai|si_fu": 0.05,
       "none|none": 0.1
      }
+    },
+    {
+     "locus": "tr_sr_tap",
+     "trait": true,
+     "genotypes": {
+      "sr_tap|sr_tap": 1.0
+     }
+    },
+    {
+     "locus": "tr_sr_shave",
+     "trait": true,
+     "genotypes": {
+      "sr_half|none": 1.0
+     }
+    },
+    {
+     "locus": "tr_sr_mid",
+     "trait": true,
+     "value": [
+      0.56,
+      0.025
+     ]
     }
    ],
    "look": "Starriver East Rainbow styling: frosted navy coat with a thin pale arc embroidered across the chest",
    "tavern": {
     "premium": 24,
     "rarity": "少见"
-   }
+   },
+   "trait_set": [
+    "san_tai",
+    "sr_half",
+    "sr_brow",
+    "sr_tap"
+   ]
   },
   {
    "id": "sr_west_arc",
@@ -3678,13 +8820,41 @@
       "san_tai|si_fu": 0.05,
       "none|none": 0.1
      }
+    },
+    {
+     "locus": "tr_sr_shoulder",
+     "trait": true,
+     "genotypes": {
+      "sr_shoulder|sr_shoulder": 1.0
+     }
+    },
+    {
+     "locus": "tr_sr_shave",
+     "trait": true,
+     "genotypes": {
+      "sr_half|none": 1.0
+     }
+    },
+    {
+     "locus": "tr_sr_mid",
+     "trait": true,
+     "value": [
+      0.56,
+      0.025
+     ]
     }
    ],
    "look": "Starriver West Rainbow styling: frosted navy coat with a thin pale arc embroidered on the left shoulder",
    "tavern": {
     "premium": 24,
     "rarity": "少见"
-   }
+   },
+   "trait_set": [
+    "si_fu",
+    "sr_half",
+    "sr_brow",
+    "sr_shoulder"
+   ]
   },
   {
    "id": "sr_ford",
@@ -3765,13 +8935,39 @@
       "san_tai|none": 0.06,
       "si_fu|none": 0.06
      }
+    },
+    {
+     "locus": "tr_folk_sr_hair",
+     "trait": true,
+     "genotypes": {
+      "folk_sr_hair|folk_sr_hair": 1.0
+     }
+    },
+    {
+     "locus": "tr_folk_sr_skin",
+     "trait": true,
+     "genotypes": {
+      "folk_sr_skin|folk_sr_skin": 1.0
+     }
+    },
+    {
+     "locus": "tr_folk_sr_bone",
+     "trait": true,
+     "genotypes": {
+      "folk_sr_bone|folk_sr_bone": 1.0
+     }
     }
    ],
    "look": "Starriver ferry styling: frosted navy high collar embroidered with tiny star-chart dots",
    "tavern": {
     "premium": 0,
     "rarity": "常见"
-   }
+   },
+   "trait_set": [
+    "folk_sr_hair",
+    "folk_sr_skin",
+    "folk_sr_bone"
+   ]
   },
   {
    "id": "sz_firefly",
@@ -3852,13 +9048,80 @@
       0.8,
       0.07
      ]
+    },
+    {
+     "locus": "tr_sz_wave",
+     "trait": true,
+     "genotypes": {
+      "sz_wave|sz_wave": 0.72,
+      "sz_wave|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_sz_moss",
+     "trait": true,
+     "value": [
+      0.88,
+      0.03
+     ]
+    },
+    {
+     "locus": "tr_sz_round",
+     "trait": true,
+     "value": [
+      0.88,
+      0.03
+     ]
+    },
+    {
+     "locus": "tr_sz_mint",
+     "trait": true,
+     "genotypes": {
+      "sz_mint|sz_mint": 0.72,
+      "sz_mint|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_sz_listen",
+     "trait": true,
+     "genotypes": {
+      "sz_listen|sz_listen": 0.72,
+      "sz_listen|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_sz_hood",
+     "trait": true,
+     "genotypes": {
+      "sz_hood|sz_hood": 0.72,
+      "sz_hood|none": 0.28
+     }
+    },
+    {
+     "locus": "tr_sz_pure",
+     "trait": true,
+     "genotypes": {
+      "sz_pure|sz_pure": 0.16,
+      "sz_pure|none": 0.34,
+      "none|none": 0.5
+     }
     }
    ],
    "look": "South Zephyr matriarch styling: layered rain-cape of beeswaxed cloth with carved hardwood beads",
    "tavern": {
     "premium": 95,
     "rarity": "罕见"
-   }
+   },
+   "trait_set": [
+    "firefly",
+    "sz_wave",
+    "sz_moss",
+    "sz_round",
+    "sz_mint",
+    "sz_listen",
+    "sz_hood",
+    "sz_pure"
+   ]
   },
   {
    "id": "sz_ferry",
@@ -3935,13 +9198,41 @@
       0.48,
       0.08
      ]
+    },
+    {
+     "locus": "tr_sz_squint",
+     "trait": true,
+     "genotypes": {
+      "sz_squint|sz_squint": 1.0
+     }
+    },
+    {
+     "locus": "tr_sz_wave",
+     "trait": true,
+     "genotypes": {
+      "sz_short|none": 1.0
+     }
+    },
+    {
+     "locus": "tr_sz_round",
+     "trait": true,
+     "value": [
+      0.56,
+      0.025
+     ]
     }
    ],
    "look": "South Zephyr ferry styling: oiled rain jacket with a small ferry-lamp pendant",
    "tavern": {
     "premium": 18,
     "rarity": "少见"
-   }
+   },
+   "trait_set": [
+    "firefly_trace",
+    "sz_short",
+    "sz_smallnose",
+    "sz_squint"
+   ]
   },
   {
    "id": "sz_fogwood",
@@ -4020,13 +9311,401 @@
       0.1,
       0.08
      ]
+    },
+    {
+     "locus": "tr_folk_sz_hair",
+     "trait": true,
+     "genotypes": {
+      "folk_sz_hair|folk_sz_hair": 1.0
+     }
+    },
+    {
+     "locus": "tr_folk_sz_skin",
+     "trait": true,
+     "genotypes": {
+      "folk_sz_skin|folk_sz_skin": 1.0
+     }
+    },
+    {
+     "locus": "tr_folk_sz_bone",
+     "trait": true,
+     "genotypes": {
+      "folk_sz_bone|folk_sz_bone": 1.0
+     }
     }
    ],
    "look": "South Zephyr fog-forest styling: beeswax-coated rain cape and carved hardwood beads, tight dark curls",
    "tavern": {
     "premium": 0,
     "rarity": "常见"
-   }
+   },
+   "trait_set": [
+    "folk_sz_hair",
+    "folk_sz_skin",
+    "folk_sz_bone"
+   ]
   }
- ]
+ ],
+ "trait_order": [
+  "tr_ash_wire",
+  "tr_ash_spoke",
+  "tr_ash_bone",
+  "tr_ash_jawcast",
+  "tr_ash_hook",
+  "tr_ash_cloak",
+  "tr_ash_pure",
+  "tr_marshal_strap",
+  "tr_folk_ash_hair",
+  "tr_folk_ash_skin",
+  "tr_folk_ash_bone",
+  "tr_sy_geom",
+  "tr_sy_sclera",
+  "tr_sy_bridge",
+  "tr_sy_olive",
+  "tr_sy_still",
+  "tr_sy_collar",
+  "tr_sy_pure",
+  "tr_sy_canthus",
+  "tr_folk_sy_hair",
+  "tr_folk_sy_skin",
+  "tr_folk_sy_bone",
+  "tr_qh_smooth",
+  "tr_qh_limbal",
+  "tr_qh_oval",
+  "tr_qh_undertone",
+  "tr_qh_fold",
+  "tr_qh_collar",
+  "tr_qh_pure",
+  "tr_qh_web",
+  "tr_folk_qh_hair",
+  "tr_folk_qh_skin",
+  "tr_folk_qh_bone",
+  "tr_lt_asym",
+  "tr_lt_quartz",
+  "tr_lt_soft",
+  "tr_lt_sheen",
+  "tr_lt_count",
+  "tr_lt_bind",
+  "tr_lt_pure",
+  "tr_lt_knuckle",
+  "tr_folk_lt_hair",
+  "tr_folk_lt_skin",
+  "tr_folk_lt_bone",
+  "tr_fc_temple",
+  "tr_fc_storm",
+  "tr_fc_long",
+  "tr_fc_skin",
+  "tr_fc_hands",
+  "tr_fc_collar",
+  "tr_fc_pure",
+  "tr_fc_mouth",
+  "tr_folk_fc_hair",
+  "tr_folk_fc_skin",
+  "tr_folk_fc_bone",
+  "tr_eo_sweep",
+  "tr_eo_stroma",
+  "tr_eo_zygo",
+  "tr_eo_clay",
+  "tr_eo_pause",
+  "tr_eo_collar",
+  "tr_eo_pure",
+  "tr_eo_notch",
+  "tr_folk_eo_hair",
+  "tr_folk_eo_skin",
+  "tr_folk_eo_bone",
+  "tr_sm_coil",
+  "tr_sm_iris",
+  "tr_sm_wide",
+  "tr_sm_sheen",
+  "tr_sm_stance",
+  "tr_sm_band",
+  "tr_sm_pure",
+  "tr_sm_lip",
+  "tr_folk_sm_hair",
+  "tr_folk_sm_skin",
+  "tr_folk_sm_bone",
+  "tr_ig_part",
+  "tr_ig_catch",
+  "tr_ig_jaw",
+  "tr_ig_steel",
+  "tr_ig_lean",
+  "tr_ig_throat",
+  "tr_ig_pure",
+  "tr_ig_ridge",
+  "tr_folk_ig_hair",
+  "tr_folk_ig_skin",
+  "tr_folk_ig_bone",
+  "tr_sr_shave",
+  "tr_sr_fleck",
+  "tr_sr_mid",
+  "tr_sr_olive",
+  "tr_sr_glance",
+  "tr_sr_arc",
+  "tr_sr_pure",
+  "tr_sr_tap",
+  "tr_sr_shoulder",
+  "tr_folk_sr_hair",
+  "tr_folk_sr_skin",
+  "tr_folk_sr_bone",
+  "tr_sz_wave",
+  "tr_sz_moss",
+  "tr_sz_round",
+  "tr_sz_mint",
+  "tr_sz_listen",
+  "tr_sz_hood",
+  "tr_sz_pure",
+  "tr_sz_squint",
+  "tr_folk_sz_hair",
+  "tr_folk_sz_skin",
+  "tr_folk_sz_bone"
+ ],
+ "generated_traits": {
+  "loci": [
+   "tr_ash_wire",
+   "tr_ash_spoke",
+   "tr_ash_bone",
+   "tr_ash_jawcast",
+   "tr_ash_hook",
+   "tr_ash_cloak",
+   "tr_ash_pure",
+   "tr_marshal_strap",
+   "tr_folk_ash_hair",
+   "tr_folk_ash_skin",
+   "tr_folk_ash_bone",
+   "tr_sy_geom",
+   "tr_sy_sclera",
+   "tr_sy_bridge",
+   "tr_sy_olive",
+   "tr_sy_still",
+   "tr_sy_collar",
+   "tr_sy_pure",
+   "tr_sy_canthus",
+   "tr_folk_sy_hair",
+   "tr_folk_sy_skin",
+   "tr_folk_sy_bone",
+   "tr_qh_smooth",
+   "tr_qh_limbal",
+   "tr_qh_oval",
+   "tr_qh_undertone",
+   "tr_qh_fold",
+   "tr_qh_collar",
+   "tr_qh_pure",
+   "tr_qh_web",
+   "tr_folk_qh_hair",
+   "tr_folk_qh_skin",
+   "tr_folk_qh_bone",
+   "tr_lt_asym",
+   "tr_lt_quartz",
+   "tr_lt_soft",
+   "tr_lt_sheen",
+   "tr_lt_count",
+   "tr_lt_bind",
+   "tr_lt_pure",
+   "tr_lt_knuckle",
+   "tr_folk_lt_hair",
+   "tr_folk_lt_skin",
+   "tr_folk_lt_bone",
+   "tr_fc_temple",
+   "tr_fc_storm",
+   "tr_fc_long",
+   "tr_fc_skin",
+   "tr_fc_hands",
+   "tr_fc_collar",
+   "tr_fc_pure",
+   "tr_fc_mouth",
+   "tr_folk_fc_hair",
+   "tr_folk_fc_skin",
+   "tr_folk_fc_bone",
+   "tr_eo_sweep",
+   "tr_eo_stroma",
+   "tr_eo_zygo",
+   "tr_eo_clay",
+   "tr_eo_pause",
+   "tr_eo_collar",
+   "tr_eo_pure",
+   "tr_eo_notch",
+   "tr_folk_eo_hair",
+   "tr_folk_eo_skin",
+   "tr_folk_eo_bone",
+   "tr_sm_coil",
+   "tr_sm_iris",
+   "tr_sm_wide",
+   "tr_sm_sheen",
+   "tr_sm_stance",
+   "tr_sm_band",
+   "tr_sm_pure",
+   "tr_sm_lip",
+   "tr_folk_sm_hair",
+   "tr_folk_sm_skin",
+   "tr_folk_sm_bone",
+   "tr_ig_part",
+   "tr_ig_catch",
+   "tr_ig_jaw",
+   "tr_ig_steel",
+   "tr_ig_lean",
+   "tr_ig_throat",
+   "tr_ig_pure",
+   "tr_ig_ridge",
+   "tr_folk_ig_hair",
+   "tr_folk_ig_skin",
+   "tr_folk_ig_bone",
+   "tr_sr_shave",
+   "tr_sr_fleck",
+   "tr_sr_mid",
+   "tr_sr_olive",
+   "tr_sr_glance",
+   "tr_sr_arc",
+   "tr_sr_pure",
+   "tr_sr_tap",
+   "tr_sr_shoulder",
+   "tr_folk_sr_hair",
+   "tr_folk_sr_skin",
+   "tr_folk_sr_bone",
+   "tr_sz_wave",
+   "tr_sz_moss",
+   "tr_sz_round",
+   "tr_sz_mint",
+   "tr_sz_listen",
+   "tr_sz_hood",
+   "tr_sz_pure",
+   "tr_sz_squint",
+   "tr_folk_sz_hair",
+   "tr_folk_sz_skin",
+   "tr_folk_sz_bone"
+  ],
+  "signatures": [
+   "ash_wire",
+   "ash_crop",
+   "ash_spoke",
+   "ash_bone",
+   "ash_jaw",
+   "ash_jawcast",
+   "ash_hook",
+   "ash_cloak",
+   "ash_pure",
+   "marshal_strap",
+   "folk_ash_hair",
+   "folk_ash_skin",
+   "folk_ash_bone",
+   "sy_geom",
+   "sy_crop",
+   "sy_sclera",
+   "sy_bridge",
+   "sy_cheek",
+   "sy_olive",
+   "sy_still",
+   "sy_collar",
+   "sy_pure",
+   "sy_canthus",
+   "folk_sy_hair",
+   "folk_sy_skin",
+   "folk_sy_bone",
+   "qh_smooth",
+   "qh_tuck",
+   "qh_limbal",
+   "qh_oval",
+   "qh_lowcheek",
+   "qh_undertone",
+   "qh_fold",
+   "qh_collar",
+   "qh_pure",
+   "qh_web",
+   "folk_qh_hair",
+   "folk_qh_skin",
+   "folk_qh_bone",
+   "lt_asym",
+   "lt_merchantcut",
+   "lt_quartz",
+   "lt_soft",
+   "lt_shortchin",
+   "lt_sheen",
+   "lt_count",
+   "lt_bind",
+   "lt_pure",
+   "lt_knuckle",
+   "folk_lt_hair",
+   "folk_lt_skin",
+   "folk_lt_bone",
+   "fc_temple",
+   "fc_short",
+   "fc_storm",
+   "fc_long",
+   "fc_thin",
+   "fc_skin",
+   "fc_hands",
+   "fc_collar",
+   "fc_pure",
+   "fc_mouth",
+   "folk_fc_hair",
+   "folk_fc_skin",
+   "folk_fc_bone",
+   "eo_sweep",
+   "eo_short",
+   "eo_stroma",
+   "eo_zygo",
+   "eo_shortnose",
+   "eo_clay",
+   "eo_pause",
+   "eo_collar",
+   "eo_pure",
+   "eo_notch",
+   "folk_eo_hair",
+   "folk_eo_skin",
+   "folk_eo_bone",
+   "sm_coil",
+   "sm_knot",
+   "sm_iris",
+   "sm_wide",
+   "sm_full",
+   "sm_sheen",
+   "sm_stance",
+   "sm_band",
+   "sm_pure",
+   "sm_lip",
+   "folk_sm_hair",
+   "folk_sm_skin",
+   "folk_sm_bone",
+   "ig_part",
+   "ig_crop",
+   "ig_catch",
+   "ig_jaw",
+   "ig_gonial",
+   "ig_steel",
+   "ig_lean",
+   "ig_throat",
+   "ig_pure",
+   "ig_ridge",
+   "folk_ig_hair",
+   "folk_ig_skin",
+   "folk_ig_bone",
+   "sr_shave",
+   "sr_half",
+   "sr_fleck",
+   "sr_mid",
+   "sr_brow",
+   "sr_olive",
+   "sr_glance",
+   "sr_arc",
+   "sr_pure",
+   "sr_tap",
+   "sr_shoulder",
+   "folk_sr_hair",
+   "folk_sr_skin",
+   "folk_sr_bone",
+   "sz_wave",
+   "sz_short",
+   "sz_moss",
+   "sz_round",
+   "sz_smallnose",
+   "sz_mint",
+   "sz_listen",
+   "sz_hood",
+   "sz_pure",
+   "sz_squint",
+   "folk_sz_hair",
+   "folk_sz_skin",
+   "folk_sz_bone"
+  ]
+ },
+ "rng_note": "Original ten signature loci stay first in CKBloodline.LOCUS_ORDER and are drawn before trait_order. founder_sig/cross_sig use one forked RNG. Appending trait_order does not change draws for the original ten, nor the v8.7 loci (those run on the caller RNG before the fork). Reordering trait_order re-rolls trait genotypes only."
 }

@@ -146,6 +146,7 @@ static func _enemy_spec(c, tmpl: String) -> Dictionary:
 static func resolve(c, team: String, tmpl: String = "") -> Dictionary:
 	if str(team) == "enemy":
 		return _enemy_spec(c, tmpl)
+	var hints: Dictionary = CKBloodline.unit_model_hints(c) if c != null else {}
 	return {
 		"path": model_path(c, team, tmpl),
 		"theme": "",
@@ -153,6 +154,9 @@ static func resolve(c, team: String, tmpl: String = "") -> Dictionary:
 		"weapon": "",
 		"outfit": "",
 		"palette": {},
+		"blood_palette": hints.get("palette", {}),
+		"regalia_modules": hints.get("regalia_modules", []),
+		"bark_zh": hints.get("bark_zh", ""),
 		"trim": UIKit.ACCENT,
 		"body_tint": Color.WHITE,
 	}
@@ -194,6 +198,9 @@ static func instantiate(c, team: String, tmpl: String = "") -> Node3D:
 	n.set_meta("ck_model", p)
 	n.set_meta("ck_role", str(spec.get("role", "")))
 	n.set_meta("ck_weapon", str(spec.get("weapon", "")))
+	n.set_meta("ck_regalia_modules", spec.get("regalia_modules", []))
+	n.set_meta("ck_blood_palette", spec.get("blood_palette", {}))
+	n.set_meta("ck_bark", spec.get("bark_zh", ""))
 	var ap := find_anim(n)
 	if ap:
 		for an in ["idle", "advance"]:

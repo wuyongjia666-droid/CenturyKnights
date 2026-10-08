@@ -15,6 +15,7 @@ ATLAS = ROOT / "project/data/atlas_v8.json"
 SKILLS = ROOT / "project/data/skills.json"
 JOBS = ROOT / "project/data/jobs.json"
 GENOME = ROOT / "project/scripts/characters/genome.gd"
+BLOOD_GD = ROOT / "project/scripts/characters/bloodline_v89.gd"
 LOCK = ROOT / "docs/art/style-lock-v89.json"
 FIXTURES = ROOT / "project/tests/fixtures/bloodline_portraits_v89.json"
 STATS = ["str", "vit", "skl", "agi", "per", "wil"]
@@ -35,6 +36,14 @@ def err(msg):
 
 def load(p):
     return json.loads(p.read_text())
+
+
+def crown_order():
+    src = BLOOD_GD.read_text()
+    m = re.search(r"const LOCUS_ORDER := \[([^\]]+)\]", src)
+    if not m:
+        return []
+    return re.findall(r'"(\w+)"', m.group(1))
 
 
 def genome_loci():
@@ -74,27 +83,52 @@ def main():
         for f in LAW_FIELDS:
             if not str(law.get(f, "")).strip():
                 err(f"law {lid}: missing {f}")
-    if len(laws) != 10:
-        err(f"expected ten blood laws, got {len(laws)}")
+    crown = crown_order()
+    if crown != ["sig_ashbanner", "sig_shuoying", "jade", "sig_lantern", "sig_frostcrown", "sig_emberold", "sig_saltmarsh", "sig_irongorge", "sig_starriver", "glow"]:
+        err(f"LOCUS_ORDER drifted: {crown}")
+    trait_order = [str(x) for x in d.get("trait_order", [])]
+    if not trait_order:
+        err("trait_order missing")
+    if set(crown) & set(trait_order):
+        err(f"trait_order overlaps the original crown loci: {sorted(set(crown) & set(trait_order))}")
+    if not str(d.get("rng_note", "")).strip():
+        err("rng_note must document that trait loci append after the original ten")
 
     sigs = d.get("signatures", {})
+    palette_hex = {str(v).upper() for v in lock.get("palette", {}).values() if isinstance(v, str) and v.startswith("#")}
     for sid, s in sigs.items():
         for f in SIG_FIELDS:
             if f == "prompt" and s.get("described_by"):
                 continue
             if not str(s.get(f, "")).strip():
                 err(f"signature {sid}: missing {f}")
-        if s.get("tier") not in {"royal", "noble"}:
-            err(f"signature {sid}: tier must be royal/noble")
+        if s.get("tier") not in TIERS:
+            err(f"signature {sid}: tier must be royal/noble/folk")
         if s.get("visibility") not in d.get("visibility", {}):
             err(f"signature {sid}: unknown visibility {s.get('visibility')}")
         if not CJK.search(str(s.get("zh", ""))) or not CJK.search(str(s.get("desc", ""))):
             err(f"signature {sid}: zh/desc must be Chinese")
-        bad = forbidden(str(s.get("prompt", "")), forbid)
-        if bad:
-            err(f"signature {sid}: prompt uses forbidden trope '{bad}'")
+        for field in ("prompt", "prompt_young", "prompt_elder"):
+            bad = forbidden(str(s.get(field, "")), forbid)
+            if bad:
+                err(f"signature {sid}: {field} uses forbidden trope '{bad}'")
+        if s.get("generated") == "trait-set-v89":
+            if not str(s.get("prompt_young", "")).strip() or not str(s.get("prompt_elder", "")).strip():
+                err(f"signature {sid}: trait prompts need youth and elder wording")
+            for m in s.get("modules", []):
+                if not re.fullmatch(r"regalia_[a-z0-9_]+", str(m)):
+                    err(f"signature {sid}: module id {m} must look like regalia_*")
+            pal = s.get("palette", {})
+            if pal:
+                if not isinstance(pal, dict):
+                    err(f"signature {sid}: palette must be an object of hexes")
+                else:
+                    for pk, pv in pal.items():
+                        if str(pv).upper() not in palette_hex:
+                            err(f"signature {sid}: palette {pk} {pv} is outside the style-lock palette")
 
     used_laws = set()
+    scope_royal = {}
     for locus, ld in d.get("loci", {}).items():
         if ld.get("law") not in laws:
             err(f"locus {locus}: unknown law {ld.get('law')}")
@@ -102,8 +136,37 @@ def main():
         for k, st in ld.get("states", {}).items():
             if st not in sigs:
                 err(f"locus {locus}: state {st} has no signature definition")
+            elif str(ld.get("display_tier", "")) and k == "royal" and sigs[st].get("tier") != ld.get("display_tier"):
+                err(f"locus {locus}: display_tier {ld.get('display_tier')} but {st} is tier {sigs[st].get('tier')}")
+        if ld.get("scope") == "royal":
+            scope_royal.setdefault(ld.get("nation"), []).append(locus)
+        if locus in trait_order and locus in crown:
+            err(f"locus {locus} is both a crown locus and a trait locus")
+    crown_laws = []
+    for locus in crown:
+        ld = d.get("loci", {}).get(locus)
+        if ld is None:
+            err(f"crown locus {locus} missing from data")
+            continue
+        crown_laws.append(ld.get("law"))
+        if ld.get("generated") == "trait-set-v89":
+            err(f"crown locus {locus} must stay the original political sign, not a generated trait")
+    if len(crown_laws) != 10 or len(set(crown_laws)) != 10:
+        err(f"the original ten crown loci must keep ten distinct laws, got {crown_laws}")
+    extra = set(laws) - set(crown_laws)
+    if extra != {"age_awakened", "pureblood"}:
+        err(f"trait-only laws must be age_awakened and pureblood, got {sorted(extra)}")
     if used_laws != set(laws):
-        err(f"every law needs exactly one locus: unused {sorted(set(laws) - used_laws)}")
+        err(f"unused laws: {sorted(set(laws) - used_laws)}")
+    for nid, ids in scope_royal.items():
+        if len(ids) != 7:
+            err(f"nation {nid}: expected 7 royal-scope trait loci, got {len(ids)}")
+    if len(trait_order) != len(set(trait_order)):
+        err("trait_order has duplicate loci")
+    for locus in trait_order:
+        ld = d.get("loci", {}).get(locus)
+        if ld is None or ld.get("generated") != "trait-set-v89":
+            err(f"trait_order {locus} is not a generated trait locus")
 
     lines = {}
     for l in d.get("lines", []):
@@ -149,6 +212,28 @@ def main():
                 err(f"royal line {lid}: royal_skill {rs} missing, mis-tagged or job-learnable")
             if l.get("signature") not in sigs or sigs[l["signature"]].get("tier") != "royal":
                 err(f"royal line {lid}: signature must name a royal signature")
+        tset = l.get("trait_set", [])
+        if not isinstance(tset, list):
+            err(f"line {lid}: trait_set must be a list")
+        else:
+            need = {"royal": (6, 8), "noble": (3, 5), "folk": (2, 3)}.get(l.get("tier"), (0, 99))
+            if not (need[0] <= len(tset) <= need[1]):
+                err(f"line {lid}: trait_set length {len(tset)} outside {need[0]}-{need[1]}")
+            if l.get("tier") == "royal" and l.get("signature") not in tset:
+                err(f"line {lid}: trait_set must include the crown signature")
+            laws_here = set()
+            for sid in tset:
+                sd = sigs.get(sid)
+                if sd is None or sd.get("nation") != l.get("nation"):
+                    err(f"line {lid}: trait {sid} missing or from another nation")
+                    continue
+                loc = d["loci"].get(str(sd.get("locus", "")), {})
+                if sid == l.get("signature"):
+                    loc = d["loci"].get(str(d["nations"].get(l.get("nation"), {}).get("locus", "")), loc)
+                if loc:
+                    laws_here.add(loc.get("law"))
+            if l.get("tier") == "royal" and len(laws_here) < 4:
+                err(f"line {lid}: royal trait set should mix laws, got {sorted(laws_here)}")
         for e in l.get("sig", []):
             ld = d["loci"].get(e.get("locus", ""))
             if ld is None:
@@ -221,6 +306,17 @@ def main():
         bad = forbidden(str(n.get("forgery", {}).get("prompt", "")), forbid)
         if bad:
             err(f"nation {nid}: forgery prompt uses forbidden trope '{bad}'")
+        catches = n.get("catch_traits", [])
+        if not isinstance(catches, list) or len(catches) < 2:
+            err(f"nation {nid}: need at least 2 catch_traits")
+        else:
+            for cid in catches:
+                cs = sigs.get(cid, {})
+                if cs.get("visibility") != "subtle" or cs.get("nation") != nid:
+                    err(f"nation {nid}: catch {cid} must be a subtle sign of this house")
+                clocus = d.get("loci", {}).get(str(cs.get("locus", "")), {})
+                if not clocus.get("catch"):
+                    err(f"nation {nid}: catch {cid} locus is not marked catch")
         wb = world["nations"].get(nid, {}).get("blood", [])
         if not wb:
             err(f"world nation {nid}: empty blood pool")
@@ -247,6 +343,25 @@ def main():
         s = skills.get(sid)
         if s is None or not CJK.search(str(s.get("name", ""))) or not CJK.search(str(s.get("desc", ""))):
             err(f"royal skill {sid}: missing or not Chinese")
+
+    # Readability: any two royal houses differ in at least five prime-age prompts.
+    packs = {}
+    for nid, n in nations.items():
+        royal = lines.get(n.get("royal"), {})
+        bag = {}
+        for sid in royal.get("trait_set", []):
+            pr = str(sigs.get(sid, {}).get("prompt", "")).strip()
+            if pr:
+                bag[pr] = sid
+        if len(bag) < 6:
+            err(f"nation {nid}: royal trait set has only {len(bag)} distinct prime prompts")
+        packs[nid] = bag
+    nids = sorted(packs)
+    for i, a in enumerate(nids):
+        for b in nids[i + 1:]:
+            diff = sum(1 for k in packs[a] if k not in packs[b])
+            if diff < 5:
+                err(f"{a} vs {b} share too many traits (only {diff} differ)")
 
     # Plan A fixtures
     fx = load(FIXTURES) if FIXTURES.exists() else {}

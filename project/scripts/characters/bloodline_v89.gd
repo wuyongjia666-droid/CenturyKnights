@@ -1,11 +1,14 @@
 class_name CKBloodline
 extends RefCounted
-## v8.9 nation bloodlines: 10 nations x (royal / high noble / folk), ten inheritance laws, one signature locus
-## per nation. Blood is what you carry (blood_mix + genome.sig); the crown is what you show (express_nation).
+## v8.9 nation bloodlines: 10 nations x (royal / high noble / folk).
+## The original crown locus (LOCUS_ORDER) still decides succession, skills and pricing.
+## trait_order (appended, never inserted) is the multi-trait house set: hair, iris, bone, skin,
+## bearing, regalia and a rare pure-line expression. Blood is what you carry; the crown is what you show.
 ## Data: res://data/bloodlines_v89.json. Design: docs/design/bloodlines-v89.md.
 
 const DATA_PATH := "res://data/bloodlines_v89.json"
-## Draw order for founders and crosses. Appending is safe; reordering re-rolls every seeded recruit.
+## Draw order for the original ten crown loci. Do not insert or reorder: seeded recruits and the
+## v8.9 law tests depend on these draws happening first on the forked RNG. New trait loci append via trait_order.
 const LOCUS_ORDER := ["sig_ashbanner", "sig_shuoying", "jade", "sig_lantern", "sig_frostcrown", "sig_emberold", "sig_saltmarsh", "sig_irongorge", "sig_starriver", "glow"]
 const TIER_RANK := {"none": 0, "latent": 1, "noble": 2, "royal": 3}
 const RANKS := ["knight", "baron", "count", "duke"]
@@ -59,6 +62,23 @@ static func genome_table(id: String) -> Dictionary:
 
 static func locus_def(locus: String) -> Dictionary:
 	return data().get("loci", {}).get(locus, {})
+
+## Original crown loci, then the appended trait loci. Order is part of the save-stable RNG.
+static func _locus_order() -> Array:
+	var out: Array = []
+	for locus in LOCUS_ORDER:
+		out.append(locus)
+	for locus in data().get("trait_order", []):
+		var id := str(locus)
+		if not (id in out):
+			out.append(id)
+	return out
+
+static func trait_order() -> Array:
+	var out: Array = []
+	for locus in data().get("trait_order", []):
+		out.append(str(locus))
+	return out
 
 static func signature_def(state: String) -> Dictionary:
 	return data().get("signatures", {}).get(state, {})
@@ -195,7 +215,7 @@ static func _source_line(blood_mix: Dictionary, locus: String, rng: RandomNumber
 ## force_line pins that line's discrete loci (exiles keep their house sign however diluted the blood is).
 static func founder_sig(blood_mix: Dictionary, sex: String, rng: RandomNumberGenerator, force_line: String = "") -> Dictionary:
 	var out := {"pen": {}}
-	for locus in LOCUS_ORDER:
+	for locus in _locus_order():
 		var ld := locus_def(locus)
 		var kind := str(ld.get("kind", "diploid"))
 		var law := str(ld.get("law", ""))
@@ -229,7 +249,7 @@ static func _x_of(g: Dictionary, locus: String) -> Array:
 ## Threshold value: midparent + noise, regressed toward the child's blood mean. Mutations only ever lose a sign.
 static func cross_sig(father: Dictionary, mother: Dictionary, child_blood: Dictionary, child_sex: String, rng: RandomNumberGenerator) -> Dictionary:
 	var out := {"pen": {}}
-	for locus in LOCUS_ORDER:
+	for locus in _locus_order():
 		var ld := locus_def(locus)
 		var kind := str(ld.get("kind", "diploid"))
 		var law := str(ld.get("law", ""))
@@ -287,6 +307,7 @@ static func ctx_of(c: Object) -> Dictionary:
 	var meta: Dictionary = c.get("blood_meta") if typeof(c.get("blood_meta")) == TYPE_DICTIONARY else {}
 	return {
 		"sex": "f" if str(c.get("gender")) == "f" else "m",
+		"age": int(c.get("age")),
 		"rank": RANKS.find(str(c.get("rank"))),
 		"honors": honors,
 		"verified": bool(meta.get("verified", false)),
@@ -305,15 +326,20 @@ static func _put(res: Dictionary, tier: String, state: String, strength: float) 
 	res["state"] = state
 	res["strength"] = strength
 
-## One nation's signature for a genome: tier none / latent / noble / royal, the visual state id, strength.
+## One nation's crown: tier none / latent / noble / royal. Trait loci do not pass through here.
 static func express_nation(g: Dictionary, nid: String, ctx: Dictionary) -> Dictionary:
-	var nat := nation(nid)
-	var locus := str(nat.get("locus", ""))
+	var res := express_trait(g, str(nation(nid).get("locus", "")), ctx)
+	res["nation"] = nid
+	return res
+
+## Phenotype of one signature locus (crown or trait). Same laws as express_nation.
+static func express_trait(g: Dictionary, locus: String, ctx: Dictionary) -> Dictionary:
 	var ld := locus_def(locus)
 	var law := str(ld.get("law", ""))
 	var states: Dictionary = ld.get("states", {})
 	var sex := str(ctx.get("sex", "m"))
-	var res := {"nation": nid, "locus": locus, "law": law, "tier": "none", "state": "", "strength": 0.0, "carrier": false, "hidden": false}
+	var age := int(ctx.get("age", 30))
+	var res := {"nation": str(ld.get("nation", "")), "locus": locus, "law": law, "slot": str(ld.get("slot", "mark")), "scope": str(ld.get("scope", "crown")), "tier": "none", "state": "", "strength": 0.0, "carrier": false, "hidden": false}
 	var R := str(ld.get("royal", ""))
 	var N := str(ld.get("noble", ""))
 	match law:
@@ -370,10 +396,34 @@ static func express_nation(g: Dictionary, nid: String, ctx: Dictionary) -> Dicti
 			var y := _pair(g, locus)
 			if sex == "m" and y.size() > 0 and str(y[0]) == R:
 				_put(res, "royal", str(states.get("royal", "")), 1.0)
-			else:
+			elif str(ld.get("noble_from_mark", "")) != "":
 				var mk: Dictionary = CKGenome.express(g, "mark")
-				if str(mk.get("id", "")) == str(ld.get("noble_from_mark", "ember_sigil")):
+				if str(mk.get("id", "")) == str(ld.get("noble_from_mark", "")):
 					_put(res, "noble", str(states.get("noble", "")), float(mk.get("strength", 1.0)))
+		"age_awakened":
+			var pa := _dip(g, locus)
+			if R in pa:
+				res["carrier"] = true
+				if age >= int(ld.get("age_min", 28)):
+					_put(res, "royal", str(states.get("royal", "")), 1.0)
+				elif N != "" and N in pa:
+					_put(res, "noble", str(states.get("noble", "")), 1.0)
+				else:
+					_put(res, "latent", str(states.get("royal", "")), 0.0)
+			elif N != "" and N in pa:
+				_put(res, "noble", str(states.get("noble", "")), 1.0)
+		"pureblood":
+			var pb := _dip(g, locus)
+			var np := pb.count(R)
+			if np >= 2:
+				res["carrier"] = true
+				if express_nation(g, str(ld.get("nation", "")), ctx)["tier"] == "royal":
+					_put(res, "royal", str(states.get("royal", "")), 1.0)
+				else:
+					_put(res, "latent", str(states.get("royal", "")), 0.0)
+			elif np == 1:
+				res["carrier"] = true
+				_put(res, "latent", str(states.get("royal", "")), 0.0)
 		"x_dominant":
 			var x := _x_of(g, locus)
 			var order: Array = ld.get("alleles", [])
@@ -382,7 +432,7 @@ static func express_nation(g: Dictionary, nid: String, ctx: Dictionary) -> Dicti
 				shown = str(x[1])
 			if shown == R:
 				_put(res, "royal", str(states.get("royal", "")), 1.0)
-			elif shown == N:
+			elif N != "" and shown == N:
 				_put(res, "noble", str(states.get("noble", "")), 1.0)
 		"penetrance":
 			var p4 := _dip(g, locus)
@@ -410,6 +460,9 @@ static func express_nation(g: Dictionary, nid: String, ctx: Dictionary) -> Dicti
 				_put(res, "noble", str(states.get("noble_a", "")), 1.0)
 			elif has_b:
 				_put(res, "noble", str(states.get("noble_b", "")), 1.0)
+	var display := str(ld.get("display_tier", ""))
+	if display != "" and str(res["tier"]) == "royal":
+		res["tier"] = display
 	if str(res["state"]) != "":
 		var sd := signature_def(str(res["state"]))
 		res["zh"] = str(sd.get("zh", res["state"]))
@@ -938,7 +991,8 @@ static func verify(c: Object, chars: Dictionary = {}) -> Dictionary:
 	elif not carried.is_empty() or not shown.is_empty():
 		verdict = "carrier"
 		verdict_zh = "真胤·携因"
-	return {"carried": carried, "shown": shown, "contradictions": bad, "verdict": verdict, "verdict_zh": verdict_zh, "edge": edge_blood(c)}
+	var tells: Dictionary = missed_tells(c)
+	return {"carried": carried, "shown": shown, "contradictions": bad, "verdict": verdict, "verdict_zh": verdict_zh, "edge": edge_blood(c), "missed_tells": tells.get("alleles", []), "missed_visible": tells.get("visible", [])}
 
 ## Shrine service: records the verdict, unmasks pretenders (their blood is corrected to the true line).
 static func verify_and_record(c: Object, chars: Dictionary = {}) -> Dictionary:
@@ -959,6 +1013,9 @@ static func verify_and_record(c: Object, chars: Dictionary = {}) -> Dictionary:
 		if not (str(e.get("zh", "")) in bits):
 			bits.append("携%s" % str(e.get("zh", "")))
 	r["line_zh"] = "%s：%s%s" % [str(c.get("name")), str(r["verdict_zh"]), ("（" + "、".join(bits) + "）") if not bits.is_empty() else ""]
+	var missed: Array = r.get("missed_tells", [])
+	if not missed.is_empty():
+		r["line_zh"] += " 缺隐征：" + "、".join(missed)
 	return r
 
 # ── skills, births ───────────────────────────────────
@@ -1158,6 +1215,156 @@ static func forecast_zh(father: Object, mother: Object, limit: int = 2) -> Strin
 			bits.append("%s %d%%" % [zh, int(round(float(r["royal"]) * 100))])
 	return "冕征预期：" + ("；".join(bits) if not bits.is_empty() else "无")
 
+# ── multi-trait set (appended loci; does not feed succession or tavern price) ──
+static func expressed_traits(c: Object, include_latent: bool = false) -> Array:
+	_ensure(c)
+	var g: Dictionary = c.get("genome") if typeof(c.get("genome")) == TYPE_DICTIONARY else {}
+	var ctx := ctx_of(c)
+	var out: Array = []
+	for locus in trait_order():
+		var e := express_trait(g, locus, ctx)
+		if str(e["tier"]) == "none":
+			continue
+		if str(e["tier"]) == "latent" and not include_latent:
+			continue
+		out.append(e)
+	return out
+
+static func _age_word(age: int) -> String:
+	if age < 18:
+		return "youth"
+	if age >= 45:
+		return "elder"
+	return "prime"
+
+static func trait_prompt(state: String, age: int) -> String:
+	var sd := signature_def(state)
+	var stage := _age_word(age)
+	if stage == "youth" and str(sd.get("prompt_young", "")) != "":
+		return str(sd["prompt_young"])
+	if stage == "elder" and str(sd.get("prompt_elder", "")) != "":
+		return str(sd["prompt_elder"])
+	return str(sd.get("prompt", ""))
+
+## Canonical genotypes for tests and full-line portraits. mode: full / carrier / clear / noble.
+## Pure-line expression stays off unless include_pure, because it is rare.
+static func stamp_traits(g: Dictionary, nid: String, mode: String, sex: String, include_pure: bool = false) -> void:
+	if typeof(g) != TYPE_DICTIONARY:
+		return
+	if typeof(g.get("sig")) != TYPE_DICTIONARY:
+		g["sig"] = {"pen": {}}
+	var s: Dictionary = g["sig"]
+	if typeof(s.get("pen")) != TYPE_DICTIONARY:
+		s["pen"] = {}
+	for locus in trait_order():
+		var ld := locus_def(locus)
+		if str(ld.get("nation", "")) != nid or str(ld.get("scope", "")) != "royal":
+			continue
+		var use := mode
+		if str(ld.get("law", "")) == "pureblood" and mode == "full" and not include_pure:
+			use = "clear"
+		_write_stamp(s, locus, ld, use, sex)
+
+static func _write_stamp(s: Dictionary, locus: String, ld: Dictionary, mode: String, sex: String) -> void:
+	var kind := str(ld.get("kind", "diploid"))
+	var R := str(ld.get("royal", ""))
+	var N := str(ld.get("noble", ""))
+	var law := str(ld.get("law", ""))
+	if kind == "value":
+		s[locus] = {"full": 0.92, "noble": 0.56, "carrier": float(ld.get("latent_min", 0.4)) + 0.02, "clear": 0.02}.get(mode, 0.02)
+		return
+	var pair: Array = ["none", "none"]
+	if mode == "full":
+		pair = [R, R]
+	elif mode == "carrier":
+		pair = [R, "none"]
+	elif mode == "noble":
+		pair = [N if N != "" else "none", "none"]
+	if kind == "x":
+		s[locus] = [pair[0], "-"] if sex == "m" else pair
+	elif kind == "y":
+		s[locus] = [pair[0]] if sex == "m" else []
+	else:
+		s[locus] = pair
+	if law == "penetrance":
+		s["pen"][locus] = 0.05 if mode == "full" else 0.99
+
+static func battle_bark(c: Object) -> String:
+	for t in expressed_traits(c, false):
+		if str(t.get("slot", "")) != "bearing":
+			continue
+		var bark := str(signature_def(str(t.get("state", ""))).get("bark", ""))
+		if bark != "":
+			return bark
+	return ""
+
+## Palette hexes and regalia module ids only. No meshes. Pretenders and paper patents stay empty.
+static func unit_model_hints(c: Object) -> Dictionary:
+	var out := {"palette": {}, "regalia_modules": [], "bark_zh": ""}
+	if c == null:
+		return out
+	out["bark_zh"] = battle_bark(c)
+	for t in expressed_traits(c, false):
+		if str(t.get("slot", "")) != "regalia":
+			continue
+		var sd := signature_def(str(t.get("state", "")))
+		if typeof(sd.get("palette")) == TYPE_DICTIONARY and not (sd["palette"] as Dictionary).is_empty():
+			out["palette"] = sd["palette"]
+		for m in sd.get("modules", []):
+			out["regalia_modules"].append(str(m))
+	return out
+
+## Subtle catch-traits a claimed royal line should carry. Alleles are what the shrine reads;
+## visible misses are what a perceptive NPC can see are absent.
+static func missed_tells(c: Object) -> Dictionary:
+	var empty := {"alleles": [], "visible": []}
+	_ensure(c)
+	var meta: Dictionary = c.get("blood_meta") if typeof(c.get("blood_meta")) == TYPE_DICTIONARY else {}
+	var pretend: Dictionary = meta.get("pretend", {})
+	var claimed := ""
+	if not pretend.is_empty() and not bool(pretend.get("exposed", false)):
+		claimed = str(pretend.get("claimed", ""))
+	else:
+		var pb: String = c.call("primary_bloodline") if c.has_method("primary_bloodline") else ""
+		if tier_of(pb) == "royal":
+			claimed = pb
+	if claimed == "" or tier_of(claimed) != "royal":
+		return empty
+	var nid := nation_of_line(claimed)
+	var g: Dictionary = c.get("genome") if typeof(c.get("genome")) == TYPE_DICTIONARY else {}
+	var ctx := ctx_of(c)
+	var alleles: Array = []
+	var visible: Array = []
+	for sid in nation(nid).get("catch_traits", []):
+		var sd := signature_def(str(sid))
+		var locus := str(sd.get("locus", ""))
+		if locus == "":
+			continue
+		var ld := locus_def(locus)
+		var carried := false
+		if str(ld.get("kind", "")) == "value":
+			carried = _value(g, locus) >= float(ld.get("latent_min", 0.4))
+		else:
+			carried = _has_allele(g, locus, str(ld.get("royal", "")))
+		var e := express_trait(g, locus, ctx)
+		var shown := str(e.get("state", "")) == str(sid) and str(e.get("tier", "")) != "none" and str(e.get("tier", "")) != "latent"
+		var zh := str(sd.get("zh", sid))
+		if not carried:
+			alleles.append(zh)
+		if not shown:
+			visible.append(zh)
+	return {"alleles": alleles, "visible": visible}
+
+static func observe_zh(c: Object, level: int = -1) -> String:
+	if level < 0:
+		level = inspect_level()
+	if level < 1:
+		return ""
+	var vis: Array = missed_tells(c).get("visible", [])
+	if vis.is_empty():
+		return ""
+	return "近看缺隐征：" + "、".join(vis)
+
 # ── Plan A portrait clause (registered on CKGenomePortrait) ─────────────────────
 static func _parents_of(c: Object) -> Array:
 	var pids: Array = c.get("parent_ids") if typeof(c.get("parent_ids")) == TYPE_ARRAY else []
@@ -1186,6 +1393,28 @@ static func portrait_clause(c: Object) -> String:
 		var pr := str(sd.get("prompt", ""))
 		if pr != "":
 			parts.append(pr)
+	var age_i := int(c.get("age"))
+	var stage := _age_word(age_i)
+	var by_nat := {}
+	var nat_order: Array = []
+	for t in expressed_traits(c, false):
+		var tn := str(t.get("nation", ""))
+		var bit := trait_prompt(str(t.get("state", "")), age_i)
+		if bit == "":
+			continue
+		if not by_nat.has(tn):
+			by_nat[tn] = []
+			nat_order.append(tn)
+		(by_nat[tn] as Array).append(bit)
+	for tn in nat_order:
+		var bits: Array = by_nat[tn]
+		if bits.is_empty():
+			continue
+		parts.append("%s trait set, %s: %s" % [str(nation(tn).get("name_en", tn)), stage, "; ".join(bits)])
+	if nat_order.size() >= 2:
+		parts.append("mixed blood, both houses visible on the same face")
+	if not nat_order.is_empty():
+		parts.append("matte technical cloth, frosted metal, cool white key light, a small mint stitch at most")
 	var meta: Dictionary = c.get("blood_meta") if typeof(c.get("blood_meta")) == TYPE_DICTIONARY else {}
 	var pb: String = c.call("primary_bloodline") if c.has_method("primary_bloodline") else ""
 	var pnat := nation_of_line(pb)
