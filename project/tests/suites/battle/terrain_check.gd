@@ -222,8 +222,10 @@ func _scene_height() -> String:
 
 func _scene_interact() -> String:
 	var pi := _index("player")
-	if pi < 0:
+	var ei := _index("enemy")
+	if pi < 0 or ei < 0:
 		return "interact roster"
+	_battle.units[ei].pos = Vector2i(4, 2)
 	_battle.units[pi].pos = Vector2i(1, 1)
 	_battle.attack_mode = false
 	_battle._select_player(pi)
