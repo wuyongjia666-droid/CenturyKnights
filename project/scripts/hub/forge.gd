@@ -26,6 +26,11 @@ func _ready() -> void:
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 
+func apply_mobile_layout() -> void:
+	var scroll := find_child("SmithListScroll", true, false) as ScrollContainer
+	var foot := find_child("StitchFooter", true, false) as Control
+	MobileLayout.fill_scroll(scroll, foot, 346)
+
 func _back() -> void:
 	get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
 
@@ -47,6 +52,8 @@ func _render_all() -> void:
 	_render_left()
 	_render_mid()
 	_render_right()
+	if DeviceProfile.is_mobile() and is_inside_tree() and find_child("StitchFooter", true, false):
+		apply_mobile_layout()
 
 func _weapon_name(wid: String) -> String:
 	if World.is_world_item(wid):
@@ -91,6 +98,7 @@ func _render_left() -> void:
 	UIKit.panel_at(_left, Rect2(24, 280, 360, 400), 10)
 	UIKit.section_head(_left, Vector2(40, 294), "选择骑士", "EQUIPMENT SLOTS", 328, "[%d 名]" % GameState.roster().size())
 	var scroll := ScrollContainer.new()
+	scroll.name = "SmithListScroll"
 	scroll.position = Vector2(36, 322)
 	scroll.size = Vector2(336, 346)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -104,7 +112,10 @@ func _render_left() -> void:
 func _slot(c: CKCharacter) -> Button:
 	var on := _sel == c
 	var b := Button.new()
-	b.custom_minimum_size = Vector2(328, 58)
+	var row_h := 58.0
+	if DeviceProfile.is_mobile():
+		row_h = maxf(row_h, DeviceProfile.hit_px())
+	b.custom_minimum_size = Vector2(328, row_h)
 	b.focus_mode = Control.FOCUS_ALL
 	UIKit._apply_states(b, {
 		"normal": UIKit.flat_box(Color(UIKit.ACCENT, 0.08) if on else Color(1, 1, 1, 0.02), Color(UIKit.ACCENT, 0.9) if on else Color(1, 1, 1, 0.10), 6, 2 if on else 1),

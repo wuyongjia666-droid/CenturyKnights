@@ -20,6 +20,55 @@ godot --headless --path . --scene res://tests/tactics_e2e.tscn
 ../scripts/run_ci.sh
 ```
 
+## Android 调试包
+
+桌面版仍是 1280×720。手机（或 `CK_FORCE_MOBILE=1`）在运行时把拉伸改为 `expand`，按安全区摆放界面，目标分辨率是 **1080×1920（16:9）** 和 **1080×2400（20:9）**，横竖屏都能转。战棋盘和舆图保持 2D：点按＝选中/确认，长按＝情报，单指平移，双指缩放。鼠标左键仍在按下时选中，右键取消，滚轮缩放。战斗指令在手机上收进底栏。名册、酒馆、工坊列表可滚动，主按钮高度按 44dp 换算；舆图节点和顶栏返回键有上限，避免盖住 Stitch 霜色版式。低配手机会关掉 3D 过场的 MSAA、阴影和粒子，并改用简化着色；中配手机把 MSAA 降到 2×。可选 `CK_SIMPLE_TOON=1` 或存档设置 `simple_toon`。iOS 不在这次范围内。
+
+密钥只走环境变量，**不要把 `.keystore` / `.jks` 或密码提交进仓库**。`export_presets.cfg` 里的签名字段留空。本机编辑器第一次打开 Android 导出界面时，会在编辑器配置里生成 debug keystore；纯命令行环境没有这份配置，需要自己设下面的变量。示例在 `project/android/signing.example.env`（复制为 `project/android/signing.local.env`，该文件已被 gitignore）：
+
+- `GODOT_ANDROID_KEYSTORE_DEBUG_PATH` / `USER` / `PASSWORD`
+- `GODOT_ANDROID_KEYSTORE_RELEASE_PATH` / `USER` / `PASSWORD`
+
+Gradle：`minSdk` 24（Forward Plus / Vulkan）、`targetSdk` 34，调试包为 APK，架构 `arm64-v8a` 与模拟器用的 `x86_64`。
+
+### Linux
+
+```bash
+# JDK 17、Android SDK、与编辑器同版本的 Godot 4.3 导出模板
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+export ANDROID_SDK_ROOT="$HOME/Android/Sdk"
+# 编辑器里先做一次：项目 → 安装 Android 构建模板
+./scripts/build_android.sh
+# 产物：exports/android/CenturyKnights-debug.apk
+```
+
+SDK、JDK、Godot 或 Gradle 模板缺失时，脚本以状态码 2 退出并说明缺什么，不会去猜密钥。
+
+### Windows
+
+在 PowerShell 中安装 JDK 17 与 Android Studio（SDK 通常在 `%LOCALAPPDATA%\Android\Sdk`），再用 Git Bash 或 WSL 执行同一脚本：
+
+```bash
+export JAVA_HOME="/c/Program Files/Java/jdk-17"
+export ANDROID_SDK_ROOT="$LOCALAPPDATA/Android/Sdk"
+export GODOT="/c/Program Files/Godot/Godot_v4.3-stable_win64.exe"
+./scripts/build_android.sh
+```
+
+也可以在 Godot 4.3 里打开工程，导出预设选 **Android**，用「导出项目（调试）」打出 APK。编辑器需在 **编辑器设置 → Export → Android** 填 SDK 与 JDK 路径；脚本会尝试把这两个路径写入 `editor_settings-4.3.tres`。
+
+### 真机 / 模拟器手测
+
+无头 CI 不代替实机。装上调试 APK 后：
+
+1. 1080×1920 与 1080×2400（或同比例模拟器）各开一次。刘海和底部手势条不盖住顶栏标题与底栏按钮。
+2. 主菜单能点进新旗号。顶栏「返回」能点到。
+3. 战棋：点按选中并移动，再点敌人攻击；长按只刷新情报、不移动；单指平移、双指缩放棋盘；底栏可攻击、战技、待命、取消、结束回合。棋盘仍是 2D。
+4. 过场能播完，跳过按钮能点。低内存设备上不应再喷 3D 粒子。
+5. 舆图：点聚落选中，再点一次启程；长按只显示情报；单指平移、双指缩放。
+6. 名册、酒馆、工坊列表能滑动，行和招募按钮容易点中。
+7. 回到桌面：鼠标左键选子、右键取消、滚轮缩放仍然有效，`./scripts/run_ci.sh` 保持通过。
+
 ## Windows 试玩包
 
 见 GitHub Releases 最新：`CenturyKnights-windows-v7.18.0-depth.zip Ch229–231 + 第三十八卷瓷市中段 Ch232–234；教学约 4 vs 2）。

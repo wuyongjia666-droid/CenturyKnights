@@ -67,6 +67,12 @@ var _banter_kill: int = 0
 var _banter_played: Dictionary = {}
 var _btn_skill: Button
 var _skill_hint: Label
+var _board_router := InputRouter.new()
+var _board_xform: Node2D
+var _board_pan := Vector2.ZERO
+var _board_zoom := 1.0
+var _mobile_layer: CanvasLayer
+var _mobile_bar: PanelContainer
 
 
 const ESCORT_BANTER_TURN := [
@@ -806,7 +812,15 @@ func _ready() -> void:
 	queue_redraw()
 	set_process(true)
 
+func _ui_origin() -> Vector2:
+	if has_meta("mobile_origin"):
+		return get_meta("mobile_origin")
+	return Vector2.ZERO
+
 func _process(delta: float) -> void:
+	if _board_router:
+		for g in _board_router.poll(Time.get_ticks_msec()):
+			_apply_board_gesture(g)
 	UnitArt.tick(delta)
 	_sel_pulse += delta
 	if _turn_flash > 0.0:
@@ -839,13 +853,14 @@ func _process(delta: float) -> void:
 	if _shake > 0.0:
 		_trauma = clampf(_trauma + _shake * 0.08, 0.0, 1.0)
 		_shake = 0.0
+	var origin := _ui_origin()
 	if _trauma > 0.0:
 		_trauma = maxf(0.0, _trauma - delta * 1.35)
 		var shake = _trauma * _trauma
 		_shake_t += delta * 30.0
-		position = Vector2(10.0 * shake * sin(_shake_t * 1.7), 7.0 * shake * sin(_shake_t * 2.3))
+		position = origin + Vector2(10.0 * shake * sin(_shake_t * 1.7), 7.0 * shake * sin(_shake_t * 2.3))
 	else:
-		position = Vector2.ZERO
+		position = origin
 	if overlay:
 		overlay.queue_redraw()
 	if map_draw and _sel_pulse:
@@ -936,22 +951,28 @@ func _build_ui() -> void:
 	phase_label.add_theme_color_override("font_color", UIKit.TEXT)
 	phase_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	top.add_child(phase_label)
-	var tip = UIKit.mono("左键 选中/移动 · Q 攻击 · W 战技 · E 待命 · Enter 结束回合 · 右键 取消", 9, UIKit.TEXT_FAINT, false)
+	var tip_text := "左键 选中/移动 · Q 攻击 · W 战技 · E 待命 · Enter 结束回合 · 右键 取消"
+	if DeviceProfile.is_mobile():
+		tip_text = "点按 选中/确认 · 长按 情报 · 单指平移 · 双指缩放 · 底栏下达指令"
+	var tip = UIKit.mono(tip_text, 9, UIKit.TEXT_FAINT, false)
 	tip.position = Vector2(26, 58)
 	tip.name = "ControlsTip"
 	add_child(tip)
 
+	_board_xform = Node2D.new()
+	_board_xform.name = "BoardXform"
+	add_child(_board_xform)
 	_ground = ColorRect.new()
 	_ground.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(_ground)
+	_board_xform.add_child(_ground)
 
 	map_draw = Node2D.new()
 	map_draw.draw.connect(_draw_map)
-	add_child(map_draw)
+	_board_xform.add_child(map_draw)
 
 	overlay = Node2D.new()
 	overlay.draw.connect(_draw_overlay)
-	add_child(overlay)
+	_board_xform.add_child(overlay)
 
 	# --- right rail
 	_unit_panel = UIKit.make_panel()
@@ -1009,6 +1030,7 @@ func _build_ui() -> void:
 	_skill_hint.add_theme_font_size_override("font_size", 12)
 	add_child(_skill_hint)
 	var row := HBoxContainer.new()
+	row.name = "CommandRow"
 	row.position = Vector2(RAIL_X, 602)
 	row.add_theme_constant_override("separation", 8)
 	add_child(row)
@@ -1022,6 +1044,7 @@ func _build_ui() -> void:
 	_btn_wait.pressed.connect(_wait_selected)
 	row.add_child(_btn_wait)
 	var row2 := HBoxContainer.new()
+	row2.name = "CommandRow2"
 	row2.position = Vector2(RAIL_X, 648)
 	row2.add_theme_constant_override("separation", 8)
 	add_child(row2)
@@ -1042,11 +1065,31 @@ func _build_ui() -> void:
 	b_prev.button_pressed = BattleRules.preview_enabled
 	b_prev.toggled.connect(func(on): BattleRules.preview_enabled = on)
 	row2.add_child(b_prev)
+	if DeviceProfile.is_mobile():
+		row.visible = false
+		row2.visible = false
+	_build_mobile_bar()
+	_apply_board_xform()
+
+func _command_bar_px() -> float:
+	if not DeviceProfile.is_mobile():
+		return 0.0
+	return DeviceProfile.hit_px() + 16.0
 
 func _layout_board() -> void:
-	CELL = int(clampf(floorf(minf(BOARD_AREA.size.x / float(MAP_W), BOARD_AREA.size.y / float(MAP_H))), 44.0, 104.0))
+	var area := BOARD_AREA
+	if DeviceProfile.is_mobile() and is_inside_tree():
+		var vp := get_viewport().get_visible_rect().size
+		var sy := scale.y if scale.y > 0.01 else 1.0
+		var bottom_inset := 0.0
+		if has_meta("mobile_insets"):
+			bottom_inset = float((get_meta("mobile_insets") as Dictionary).get("bottom", 0.0))
+		var bar_top_local := (vp.y - bottom_inset - _command_bar_px() - global_position.y) / sy
+		if bar_top_local < area.end.y:
+			area.size.y = maxf(280.0, bar_top_local - area.position.y - 8.0)
+	CELL = int(clampf(floorf(minf(area.size.x / float(MAP_W), area.size.y / float(MAP_H))), 44.0, 104.0))
 	var bs := Vector2(MAP_W, MAP_H) * CELL
-	ORIGIN = (BOARD_AREA.position + (BOARD_AREA.size - bs) * 0.5).floor()
+	ORIGIN = (area.position + (area.size - bs) * 0.5).floor()
 	_build_ground()
 
 func _biome_ground() -> Array:
@@ -1100,7 +1143,8 @@ func _build_ground() -> void:
 	_ground.position = ORIGIN
 	_ground.size = Vector2(MAP_W, MAP_H) * CELL
 	# soft drop shadow + 1px stroke around the board stage
-	var sh_node := get_node_or_null("BoardFrame")
+	var host: Node = _board_xform if _board_xform else self
+	var sh_node := host.get_node_or_null("BoardFrame")
 	if sh_node:
 		sh_node.queue_free()
 	var frame := Panel.new()
@@ -1121,8 +1165,8 @@ func _build_ground() -> void:
 	frame.position = ORIGIN
 	frame.size = _ground.size
 	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(frame)
-	move_child(frame, _ground.get_index())
+	host.add_child(frame)
+	host.move_child(frame, _ground.get_index())
 
 func _player_skills(ui: int) -> Array:
 	if ui < 0 or ui >= units.size():
@@ -1804,27 +1848,163 @@ func _unhandled_key_input(event: InputEvent) -> void:
 func _gui_input(event: InputEvent) -> void:
 	if battle_over:
 		return
-	if event is InputEventMouseMotion:
-		var cell = _mouse_to_cell(event.position)
-		if cell != _hover_cell:
-			_hover_cell = cell
-			_zoc_hover_audio(cell)
-			map_draw.queue_redraw()
-			if overlay:
-				overlay.queue_redraw()
+	for g in _board_router.push(event, Time.get_ticks_msec()):
+		_apply_board_gesture(g)
+
+func apply_mobile_layout() -> void:
+	_place_mobile_bar()
+	if terrain.size() > 0:
+		_layout_board()
+
+func _screen_to_local(screen_pos: Vector2) -> Vector2:
+	## Viewport pixels → this control. Identity on the desktop 1280×720 root.
+	if not is_inside_tree():
+		return screen_pos
+	return get_global_transform().affine_inverse() * screen_pos
+
+func _screen_delta_to_local(delta: Vector2) -> Vector2:
+	return _screen_to_local(delta) - _screen_to_local(Vector2.ZERO)
+
+func _pointer_to_cell(screen_pos: Vector2) -> Vector2i:
+	var z := _board_zoom if _board_zoom > 0.001 else 1.0
+	return _mouse_to_cell((_screen_to_local(screen_pos) - _board_pan) / z)
+
+func _apply_board_xform() -> void:
+	if _board_xform == null:
 		return
-	if event is InputEventMouseButton and event.pressed:
-		if event.button_index == MOUSE_BUTTON_RIGHT:
+	_board_xform.position = _board_pan
+	_board_xform.scale = Vector2(_board_zoom, _board_zoom)
+
+func _clamp_board_pan() -> void:
+	var z := _board_zoom
+	var board := Vector2(MAP_W, MAP_H) * float(CELL) * z
+	var origin := ORIGIN * z
+	var min_keep := 64.0
+	_board_pan.x = clampf(_board_pan.x, BOARD_AREA.position.x + min_keep - origin.x - board.x, BOARD_AREA.end.x - min_keep - origin.x)
+	_board_pan.y = clampf(_board_pan.y, BOARD_AREA.position.y + min_keep - origin.y - board.y, BOARD_AREA.end.y - min_keep - origin.y)
+
+func _zoom_board_at(focal: Vector2, factor: float) -> void:
+	var old := _board_zoom
+	var next := clampf(old * factor, 0.65, 2.4)
+	if is_equal_approx(next, old) or old <= 0.001:
+		return
+	_board_zoom = next
+	_board_pan = focal - (focal - _board_pan) * (next / old)
+	_clamp_board_pan()
+	_apply_board_xform()
+
+func _hover_at(screen_pos: Vector2) -> void:
+	var cell := _pointer_to_cell(screen_pos)
+	if cell == _hover_cell:
+		return
+	_hover_cell = cell
+	_zoc_hover_audio(cell)
+	if map_draw:
+		map_draw.queue_redraw()
+	if overlay:
+		overlay.queue_redraw()
+
+func _inspect_cell(cell: Vector2i) -> void:
+	if not _in_bounds(cell):
+		return
+	var ui := _unit_at(cell)
+	if ui >= 0:
+		_refresh_info_for(ui)
+		_log("长按查看 %s" % units[ui].char.name)
+		return
+	var tid = terrain[cell.y][cell.x]
+	var tinfo = BattleRules.terrain_info(tid)
+	info_label.text = "[b]地形 · %s[/b]\n回避 +%d　防御 +%d\n（长按看情报，点按仍是选中/确认）" % [
+		tinfo.get("name", tid), int(tinfo.get("avo_bonus", 0)), int(tinfo.get("def_bonus", 0)),
+	]
+
+func _apply_board_gesture(g: Dictionary) -> void:
+	var kind := str(g.get("kind", ""))
+	var pos: Vector2 = g.get("pos", Vector2.ZERO)
+	match kind:
+		"hover":
+			_hover_at(pos)
+		"tap":
+			if turn_team != "player" or _cut_playing:
+				return
+			var cell := _pointer_to_cell(pos)
+			if cell.x < 0:
+				return
+			_click_cell(cell)
+		"long_press":
+			_inspect_cell(_pointer_to_cell(pos))
+		"cancel":
 			_cancel_selection()
-			return
-		if event.button_index != MOUSE_BUTTON_LEFT:
-			return
-		if turn_team != "player":
-			return
-		var cell2 = _mouse_to_cell(event.position)
-		if cell2.x < 0:
-			return
-		_click_cell(cell2)
+		"pan":
+			_board_pan += _screen_delta_to_local(g.get("delta", Vector2.ZERO))
+			_clamp_board_pan()
+			_apply_board_xform()
+			_hover_at(pos)
+		"pinch", "wheel":
+			_zoom_board_at(_screen_to_local(pos), float(g.get("factor", 1.0)))
+			_hover_at(pos)
+
+func _build_mobile_bar() -> void:
+	if not DeviceProfile.is_mobile():
+		return
+	_mobile_layer = CanvasLayer.new()
+	_mobile_layer.name = "MobileCommandBar"
+	_mobile_layer.layer = 30
+	add_child(_mobile_layer)
+	_mobile_bar = PanelContainer.new()
+	var st := UIKit.flat_box(Color(UIKit.PANEL, 0.94), Color(UIKit.ACCENT, 0.55), 0, 1)
+	st.border_width_left = 0
+	st.border_width_right = 0
+	st.border_width_bottom = 0
+	st.content_margin_left = 12
+	st.content_margin_right = 12
+	st.content_margin_top = 8
+	st.content_margin_bottom = 8
+	_mobile_bar.add_theme_stylebox_override("panel", st)
+	_mobile_layer.add_child(_mobile_bar)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 8)
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	_mobile_bar.add_child(row)
+	var h := int(DeviceProfile.hit_px())
+	_mobile_cmd(row, "攻击", h, false, _enter_attack_mode)
+	_mobile_cmd(row, "战技", h, false, _cycle_skill)
+	_mobile_cmd(row, "待命", h, false, _wait_selected)
+	_mobile_cmd(row, "取消", h, false, _cancel_selection)
+	_mobile_cmd(row, "结束回合", h, true, _end_player_turn)
+	_place_mobile_bar()
+	if not get_viewport().size_changed.is_connected(_on_viewport_resized):
+		get_viewport().size_changed.connect(_on_viewport_resized)
+
+func _mobile_cmd(row: HBoxContainer, text: String, h: int, accent: bool, cb: Callable) -> Button:
+	var b := UIKit.make_accent_button(text, 120) if accent else UIKit.make_button(text, 96)
+	b.custom_minimum_size = Vector2(0, h)
+	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	b.add_theme_font_size_override("font_size", 16)
+	b.pressed.connect(cb)
+	row.add_child(b)
+	return b
+
+func _place_mobile_bar() -> void:
+	if _mobile_bar == null:
+		return
+	var vp := get_viewport().get_visible_rect().size
+	var insets := {"left": 0.0, "top": 0.0, "right": 0.0, "bottom": 0.0}
+	if has_meta("mobile_insets"):
+		insets = get_meta("mobile_insets")
+	var h := _command_bar_px()
+	var left := float(insets.get("left", 0.0))
+	var right := float(insets.get("right", 0.0))
+	var bottom := float(insets.get("bottom", 0.0))
+	_mobile_bar.position = Vector2(left, vp.y - bottom - h)
+	_mobile_bar.size = Vector2(maxf(240.0, vp.x - left - right), h)
+
+func _on_viewport_resized() -> void:
+	if not DeviceProfile.is_mobile():
+		return
+	_place_mobile_bar()
+	if terrain.size() > 0:
+		_layout_board()
 
 func simulate_board_click(cell: Vector2i) -> void:
 	var ev := InputEventMouseButton.new()

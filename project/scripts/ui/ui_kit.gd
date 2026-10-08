@@ -947,7 +947,12 @@ static func top_bar(parent: Control, context: String, chips: Array = [], back_te
 	for c in chips:
 		right.add_child(res_chip(str(c[0]), str(c[1]), c[2] if c.size() > 2 else TEXT))
 	if back_cb.is_valid():
-		var b := ghost_button("%s  ESC" % back_text, 112, 32)
+		var back_w := 112
+		var back_h := 32
+		if DeviceProfile.is_mobile():
+			back_h = int(clampf(DeviceProfile.hit_px(), 44.0, 48.0))
+			back_w = 120
+		var b := ghost_button("%s  ESC" % back_text, back_w, back_h)
 		b.name = "BackButton"
 		b.pressed.connect(back_cb)
 		right.add_child(b)

@@ -43,6 +43,16 @@ static func is_ranged(c) -> bool:
 	return str(BattleRules.job_role(c.job_id)) in ["ranger", "mage"]
 
 const TOON_BODY := preload("res://shaders/toon_body_v87.gdshader")
+## Mobile low-end cutscenes set this so textured bodies skip the toon shader and outline.
+static var prefer_simple_shading := false
+
+static func _unshaded_tex(tex: Texture2D, tint: Color) -> StandardMaterial3D:
+	var sm := StandardMaterial3D.new()
+	sm.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	sm.albedo_texture = tex
+	sm.albedo_color = tint
+	sm.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
+	return sm
 
 static var _theme_data: Dictionary = {}
 
@@ -388,6 +398,9 @@ static func _walk_recolor(n: Node, pal: Dictionary, trim: Color, body_tint: Colo
 			var nm := str(m.resource_name) if m else ""
 			var base := nm.split(".")[0]
 			if base == "body" and m is BaseMaterial3D and (m as BaseMaterial3D).albedo_texture != null:
+				if prefer_simple_shading:
+					mi.set_surface_override_material(si, _unshaded_tex((m as BaseMaterial3D).albedo_texture, body_tint))
+					continue
 				var tm := ShaderMaterial.new()
 				tm.shader = TOON_BODY
 				tm.set_shader_parameter("albedo_tex", (m as BaseMaterial3D).albedo_texture)
@@ -412,6 +425,9 @@ static func _walk_recolor(n: Node, pal: Dictionary, trim: Color, body_tint: Colo
 				sm.emission_energy_multiplier = 2.4 if base == "visor" else 1.6
 				sm.roughness = 0.3
 			elif m is BaseMaterial3D and (m as BaseMaterial3D).albedo_texture != null:
+				if prefer_simple_shading:
+					mi.set_surface_override_material(si, _unshaded_tex((m as BaseMaterial3D).albedo_texture, body_tint))
+					continue
 				var tm2 := ShaderMaterial.new()
 				tm2.shader = TOON_BODY
 				tm2.set_shader_parameter("albedo_tex", (m as BaseMaterial3D).albedo_texture)
@@ -420,9 +436,10 @@ static func _walk_recolor(n: Node, pal: Dictionary, trim: Color, body_tint: Colo
 				tm2.next_pass = _outline_mat()
 				mi.set_surface_override_material(si, tm2)
 				continue
-			sm.rim_enabled = true
-			sm.rim = 0.35
-			sm.rim_tint = 0.6
+			if not prefer_simple_shading:
+				sm.rim_enabled = true
+				sm.rim = 0.35
+				sm.rim_tint = 0.6
 			mi.set_surface_override_material(si, sm)
 	for ch in n.get_children():
 		_walk_recolor(ch, pal, trim, body_tint, rim_color)

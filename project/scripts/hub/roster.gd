@@ -21,6 +21,7 @@ func _ready() -> void:
 	cnt.size = Vector2(372, 16)
 	add_child(cnt)
 	var scroll := ScrollContainer.new()
+	scroll.name = "RosterListScroll"
 	scroll.position = Vector2(42, 152)
 	scroll.size = Vector2(372, 508)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -48,6 +49,11 @@ func _ready() -> void:
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 
+func apply_mobile_layout() -> void:
+	var scroll := find_child("RosterListScroll", true, false) as ScrollContainer
+	var foot := find_child("StitchFooter", true, false) as Control
+	MobileLayout.fill_scroll(scroll, foot, 508)
+
 func _back() -> void:
 	get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
 
@@ -61,7 +67,10 @@ func _role_en(c: CKCharacter) -> String:
 
 func _row(c: CKCharacter, idx: int) -> Button:
 	var b := Button.new()
-	b.custom_minimum_size = Vector2(364, 66)
+	var row_h := 66.0
+	if DeviceProfile.is_mobile():
+		row_h = maxf(row_h, DeviceProfile.hit_px())
+	b.custom_minimum_size = Vector2(364, row_h)
 	b.focus_mode = Control.FOCUS_ALL
 	b.set_meta("cid", c.id)
 	UIKit._apply_states(b, {
