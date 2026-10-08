@@ -20,6 +20,10 @@ echo "==> style_lint"
 python3 "$ROOT/tools/ci/style_lint.py" 2>&1 | tee /tmp/ck_style_lint.log
 grep -q "STYLE LINT PASS" /tmp/ck_style_lint.log || { echo "style_lint FAILED"; exit 1; }
 
+echo "==> i18n_ratchet"
+python3 "$ROOT/tools/ci/i18n_ratchet.py" 2>&1 | tee /tmp/ck_i18n_ratchet.log
+grep -q "I18N RATCHET PASS" /tmp/ck_i18n_ratchet.log || { echo "i18n_ratchet FAILED"; exit 1; }
+
 cd "$ROOT/project"
 
 echo "==> suites"
