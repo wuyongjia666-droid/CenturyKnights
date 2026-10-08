@@ -1,0 +1,4 @@
+keys,zh_CN,en
+save_corrupt_rollback,存档损坏，已回退到最近的备份,
+save_unreadable,存档无法读取,
+save_migrated,存档已从 %s 迁移到 v9.2,

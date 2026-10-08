@@ -1,0 +1,37 @@
+{
+  "schema": "v8.8",
+  "version": 1,
+  "started": true,
+  "surname": "灰旗",
+  "silver": 48,
+  "food": 12,
+  "year": 3,
+  "month": 5,
+  "characters": {
+    "legacy_v88": {
+      "id": "legacy_v88",
+      "name": "旧档",
+      "gender": "m",
+      "age": 41,
+      "rank": "baron",
+      "blood_mix": {"common_ash": 1.0},
+      "stats": {"str": 8, "vit": 8, "skl": 8, "agi": 8, "per": 8, "wil": 8},
+      "alive": true,
+      "in_roster": true,
+      "is_leader": true,
+      "genome": {
+        "v": 2,
+        "loci": {
+          "hair": ["ink_black", "ink_black"],
+          "eyes": ["slate", "slate"],
+          "brow": ["straight", "straight"],
+          "ears": ["round", "round"],
+          "mark": ["crown_rime", "none"]
+        },
+        "face": {"width": 0.1},
+        "body": {"height": 0.2}
+      }
+    }
+  },
+  "world_v87": {"pos": "hq", "day": 2}
+}
