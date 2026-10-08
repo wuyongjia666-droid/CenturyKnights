@@ -958,7 +958,7 @@ static func top_bar(parent: Control, context: String, chips: Array = [], back_te
 		right.add_child(b)
 	return bar
 
-static func page_head(parent: Control, x: float, y: float, eyebrow_en: String, title: String, en_title: String = "", desc: String = "", tag: String = "") -> VBoxContainer:
+static func page_head(parent: Control, x: float, y: float, eyebrow_en: String, title: String, en_title: String = "", desc: String = "", tag: String = "", title_px: int = 30) -> VBoxContainer:
 	var v := VBoxContainer.new()
 	v.position = Vector2(x, y)
 	v.add_theme_constant_override("separation", 2)
@@ -975,7 +975,7 @@ static func page_head(parent: Control, x: float, y: float, eyebrow_en: String, t
 	v.add_child(th)
 	var t := Label.new()
 	t.text = title
-	t.add_theme_font_size_override("font_size", 30)
+	t.add_theme_font_size_override("font_size", title_px)
 	t.add_theme_color_override("font_color", TEXT)
 	th.add_child(t)
 	if en_title != "":

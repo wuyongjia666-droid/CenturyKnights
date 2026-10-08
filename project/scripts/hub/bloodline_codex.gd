@@ -7,14 +7,14 @@ var _nation := ""
 func _ready() -> void:
 	UIKit.void_bg(self)
 	UIKit.top_bar(self, "血脉图鉴", [["历", Calendar.label(), UIKit.TEXT_DIM]], "返回族谱", _back)
-	UIKit.page_head(self, 42, 72, "CODEX // TEN NATIONS", "十邦血脉", "BLOODLINE CODEX", "血是所携，冕是所显。谱系公开，单条特征要见过或验过才写进图鉴。")
-	var rail := UIKit.panel_at(self, Rect2(42, 168, 236, 508), 12)
+	UIKit.page_head(self, 42, 72, "CODEX // TEN NATIONS", "十邦血脉", "BLOODLINE CODEX", "血是所携，冕是所显。谱系公开，单条特征要见过或验过才写进图鉴。", "", 18)
+	var rail := UIKit.panel_at(self, Rect2(42, 220, 236, 456), 12)
 	var cap := UIKit.mono("NATIONS", 9, UIKit.TEXT_FAINT)
 	cap.position = Vector2(16, 12)
 	rail.add_child(cap)
 	var sc := ScrollContainer.new()
 	sc.position = Vector2(12, 36)
-	sc.size = Vector2(212, 456)
+	sc.size = Vector2(212, 404)
 	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	rail.add_child(sc)
 	var box := VBoxContainer.new()
@@ -26,18 +26,30 @@ func _ready() -> void:
 	var ids: Array = CKBloodline.nation_ids()
 	for nid in ids:
 		var nat: Dictionary = CKBloodline.nation(str(nid))
-		var b := UIKit.ghost_button("%s  %s" % [CKCourtChrome.law_glyph(str(nat.get("law", ""))), str(nat.get("name", nid))], 212, 44)
+		var b := UIKit.ghost_button("", 200, 44)
+		b.text = ""
 		b.name = "Nation_" + str(nid)
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.tooltip_text = "%s · %s" % [str(nat.get("name", nid)), str(nat.get("motto", ""))]
+		var mark := CKCourtChrome.nation_mark(str(nid))
+		mark.position = Vector2(6, 4)
+		b.add_child(mark)
+		var nm := UIKit.body_label(str(nat.get("name", nid)), UIKit.TEXT, 14)
+		nm.name = "NationName"
+		nm.position = Vector2(48, 12)
+		nm.size = Vector2(144, 22)
+		nm.clip_text = true
+		nm.autowrap_mode = TextServer.AUTOWRAP_OFF
+		nm.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		b.add_child(nm)
 		var captured := str(nid)
 		b.pressed.connect(func():
-			Sfx.click()
 			_show(captured))
 		box.add_child(b)
 	_body = Control.new()
 	_body.name = "CodexBody"
-	_body.position = Vector2(294, 168)
-	_body.size = Vector2(944, 508)
+	_body.position = Vector2(294, 220)
+	_body.size = Vector2(944, 456)
 	add_child(_body)
 	UIKit.footer_bar(self, [["ESC", "返回族谱"]], "BLOODLINE CODEX · FROST")
 	if not ids.is_empty():
@@ -61,29 +73,36 @@ func _show(nid: String) -> void:
 		ch.queue_free()
 	var nat: Dictionary = CKBloodline.nation(nid)
 	var known := CKCourtChrome.known_states()
-	var head := UIKit.panel_at(_body, Rect2(0, 0, 944, 92), 12, true)
+	var head := UIKit.panel_at(_body, Rect2(0, 0, 944, 96), 12, true)
 	var law := str(nat.get("law", ""))
-	var chip := CKCourtChrome.law_chip(law)
-	chip.position = Vector2(18, 22)
-	head.add_child(chip)
+	var mark := CKCourtChrome.nation_mark(nid)
+	mark.position = Vector2(16, 28)
+	head.add_child(mark)
 	var title := UIKit.title_label(str(nat.get("name", nid)), 26)
-	title.position = Vector2(74, 14)
+	title.position = Vector2(64, 12)
+	title.size = Vector2(280, 34)
+	title.clip_text = true
 	head.add_child(title)
 	var sub := UIKit.body_label("%s · %s" % [str(CKBloodline.data().get("laws", {}).get(law, {}).get("name", law)), str(nat.get("motto", ""))], UIKit.TEXT_DIM, 13)
-	sub.position = Vector2(74, 50)
-	sub.size = Vector2(640, 28)
+	sub.autowrap_mode = TextServer.AUTOWRAP_OFF
+	sub.clip_text = true
+	sub.position = Vector2(64, 50)
+	sub.size = Vector2(500, 28)
 	head.add_child(sub)
 	var skill := _royal_skill(nid)
-	var sk := UIKit.body_label(skill, UIKit.ACCENT, 12)
+	var sk := UIKit.body_label(str(skill.get("line", "")), UIKit.ACCENT, 12)
 	sk.name = "RoyalSkill"
-	sk.position = Vector2(620, 18)
-	sk.size = Vector2(300, 56)
+	sk.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	sk.clip_text = true
+	sk.position = Vector2(580, 16)
+	sk.size = Vector2(344, 64)
 	sk.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	sk.tooltip_text = str(skill.get("tip", ""))
 	head.add_child(sk)
 	var scroll := ScrollContainer.new()
 	scroll.name = "LineScroll"
-	scroll.position = Vector2(0, 104)
-	scroll.size = Vector2(944, 404)
+	scroll.position = Vector2(0, 108)
+	scroll.size = Vector2(944, 336)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_body.add_child(scroll)
 	var col := VBoxContainer.new()
@@ -123,6 +142,8 @@ func _line_card(parent: Node, line_id: String, tier_zh: String, known: Dictionar
 	var traits := HFlowContainer.new()
 	traits.add_theme_constant_override("h_separation", 8)
 	traits.add_theme_constant_override("v_separation", 8)
+	traits.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	traits.custom_minimum_size = Vector2(860, 0)
 	inner.add_child(traits)
 	var set: Array = ln.get("trait_set", [])
 	if set.is_empty():
@@ -130,27 +151,18 @@ func _line_card(parent: Node, line_id: String, tier_zh: String, known: Dictionar
 	for state_id in set:
 		var meta := CKCourtChrome.state_meta(str(state_id))
 		var seen: bool = known.has(str(state_id))
-		var chip := HBoxContainer.new()
-		chip.add_theme_constant_override("separation", 6)
-		chip.custom_minimum_size = Vector2(0, 44)
-		traits.add_child(chip)
-		if str(meta.get("law", "")) != "":
-			chip.add_child(CKCourtChrome.law_chip(str(meta["law"])))
 		if seen:
-			var lab := UIKit.tag_chip(str(meta.get("zh", state_id)), UIKit.OK, true)
-			lab.tooltip_text = str(meta.get("desc", ""))
-			chip.add_child(lab)
+			traits.add_child(CKCourtChrome.trait_known(meta))
 		else:
-			var hid := UIKit.tag_chip("未识征", UIKit.TEXT_FAINT)
-			hid.tooltip_text = "见过或在祠堂验到之后，图鉴才写下名字。"
-			chip.add_child(hid)
+			traits.add_child(CKCourtChrome.trait_silhouette(str(meta.get("law", ""))))
 
-func _royal_skill(nid: String) -> String:
+func _royal_skill(nid: String) -> Dictionary:
 	var gs = Engine.get_main_loop().root.get_node_or_null("GameState") if Engine.get_main_loop() else null
 	if gs == null:
-		return ""
+		return {"line": "", "tip": ""}
 	for s in gs.data_skills.get("skills", []):
 		if str(s.get("blood_sig", "")) != nid:
 			continue
-		return "王技 · %s\n%s" % [str(s.get("name", "")), str(s.get("desc", ""))]
-	return "此邦没有单独的王技。"
+		var desc := str(s.get("desc", ""))
+		return {"line": "王技 · %s\n%s" % [str(s.get("name", "")), desc], "tip": desc}
+	return {"line": "此邦没有单独的王技。", "tip": ""}

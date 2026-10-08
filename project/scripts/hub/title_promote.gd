@@ -9,7 +9,7 @@ func _ready() -> void:
 	_leader = GameState.get_leader()
 	UIKit.void_bg(self)
 	UIKit.top_bar(self, "请爵", [["历", Calendar.label(), UIKit.TEXT_DIM]], "返回城堡", _back)
-	UIKit.page_head(self, 42, 72, "TITLE LADDER", "勋士至侯", "MERIT", "功勋、封地、婚约、邦交。升到伯爵时，烬图携因者的河图纹会醒。")
+	UIKit.page_head(self, 42, 72, "TITLE LADDER", "勋士至侯", "MERIT", "功勋、封地、婚约、邦交。升到伯爵时，烬图携因者的河图纹会醒。", "", 18)
 	_paint()
 	UIKit.footer_bar(self, [["A", "请爵"], ["ESC", "返回城堡"]], "TITLE LADDER · FROST")
 	UIFX.page_enter(self)
@@ -33,7 +33,7 @@ func _paint() -> void:
 	var c := _leader
 	var now := CKCourt.current_title(c)
 	var step := HBoxContainer.new()
-	step.position = Vector2(42, 168)
+	step.position = Vector2(42, 200)
 	step.add_theme_constant_override("separation", 8)
 	_host.add_child(step)
 	for id in CKCourt.LADDER:
@@ -52,7 +52,7 @@ func _paint() -> void:
 		b.add_theme_font_size_override("font_size", 18)
 		step.add_child(b)
 	var grid := HBoxContainer.new()
-	grid.position = Vector2(42, 260)
+	grid.position = Vector2(42, 292)
 	grid.add_theme_constant_override("separation", 12)
 	_host.add_child(grid)
 	for row in CKCourt.requirement_rows(c, {}):
