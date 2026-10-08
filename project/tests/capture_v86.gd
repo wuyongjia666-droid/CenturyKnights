@@ -4,6 +4,8 @@ extends Node
 
 var OUT := "/workspace/shots_v86"
 var only := ""
+var foe_tmpl := ""
+var hero_key := ""
 
 func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
@@ -11,6 +13,10 @@ func _ready() -> void:
 			OUT = a.substr(6)
 		if a.begins_with("--only="):
 			only = a.substr(7)
+		if a.begins_with("--foe="):
+			foe_tmpl = a.substr(6)
+		if a.begins_with("--hero="):
+			hero_key = a.substr(7)
 	DirAccess.make_dir_recursive_absolute(OUT)
 	await get_tree().process_frame
 	GameState.new_game("烬行", "灰旗", "#c9a227")
@@ -140,7 +146,8 @@ func _cutscene(bow: bool) -> void:
 	var foe = null
 	for u in battle.units:
 		var ck := str(u.char.cast_key)
-		if u.team == "player" and ((bow and ck == "dengying") or (not bow and ck == "leader")):
+		var want := hero_key if hero_key != "" else ("dengying" if bow else "leader")
+		if u.team == "player" and ck == want:
 			hero = u
 		if u.team == "enemy" and foe == null:
 			foe = u
@@ -150,7 +157,7 @@ func _cutscene(bow: bool) -> void:
 	var ehp: int = int(foe.char.max_hp)
 	var rec := {
 		"right": {"char": hero.char, "team": "player", "hp0": hp, "hit": 86, "dmg": 9, "crit": hero.char.derived_crit()},
-		"left": {"char": foe.char, "team": "enemy", "template": str(foe.get("template", "")), "hp0": ehp, "hit": 64, "dmg": 6, "crit": 3},
+		"left": {"char": foe.char, "team": "enemy", "template": foe_tmpl if foe_tmpl != "" else str(foe.get("template", "")), "hp0": ehp, "hit": 64, "dmg": 6, "crit": 3},
 		"strikes": [
 			{"from": "right", "hit": true, "crit": false, "dmg": 7, "killed": false, "skill": "", "hp_after": ehp - 7},
 			{"from": "left", "hit": false, "crit": false, "dmg": 0, "killed": false, "skill": "", "hp_after": hp},

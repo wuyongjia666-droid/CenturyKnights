@@ -14,7 +14,7 @@ import build_standins_v86 as K
 H = 1.78
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 IN, OUT = argv[0], argv[1]
-OPT = {"sheet": "", "weapon": "sword", "shield": "0", "quiver": "0", "tris": "18000", "tex": "1024", "yaw": "0", "qa": "", "part": "body", "rim": "ally"}
+OPT = {"sheet": "", "weapon": "sword", "shield": "0", "quiver": "0", "tris": "18000", "tex": "1024", "yaw": "0", "qa": "", "part": "body", "rim": "ally", "dump": ""}
 i = 2
 while i < len(argv):
     OPT[argv[i].lstrip("-")] = argv[i + 1]; i += 2
@@ -193,6 +193,34 @@ def plain_material(ob):
         bpy.ops.uv.smart_project(); bpy.ops.object.mode_set(mode="OBJECT")
 
 # ---------------------------------------------------------------- landmarks -> fitted armature
+def _arm_points(co, sx):
+    """trace the free-hanging arm on one side top->down. Seed = outermost substantial |x| run just below the
+    shoulder; then follow a +-7cm window around the running arm centre (robust to sparse decimated verts and
+    fragmented runs). Coat hems/flaps are never reached because the window only moves with the arm.
+    Returns (points, per-slice runs top->down; last = hand)."""
+    side = co[(co[:, 0] * sx > 0.02) & (co[:, 2] > 0.30 * H) & (co[:, 2] < 0.80 * H)]
+    side = np.c_[np.abs(side[:, 0]), side[:, 1:]] * np.array([1, 1, 1])
+    step = 0.01 * H; c = None
+    for z0 in np.arange(0.74 * H, 0.66 * H, -step):  # seed band
+        sl = side[(side[:, 2] >= z0 - step) & (side[:, 2] < z0)]
+        if len(sl) < 6: continue
+        ax = np.sort(sl[:, 0]); k = np.where(np.diff(ax) > 0.022)[0]
+        runs = np.split(ax, k + 1); runs = [r for r in runs if len(r) >= 4]
+        if len(runs) >= 2 and np.mean(runs[-1]) > 0.13 * H: c = float(np.mean(runs[-1])); break
+    if c is None: return np.zeros((0, 3)), []
+    out = []; miss = 0; z0 = 0.74 * H
+    while z0 > 0.30 * H:
+        sl = side[(side[:, 2] >= z0 - step) & (side[:, 2] < z0)]
+        w = sl[np.abs(sl[:, 0] - c) < 0.07]
+        if len(w) >= 2:
+            miss = 0; c = float(np.mean(w[:, 0])); out.append(w)
+        else:
+            miss += 1
+            if miss >= 3: break
+        z0 -= step
+    out = [np.c_[r[:, 0] * sx, r[:, 1:]] for r in out]
+    return (np.concatenate(out) if out else np.zeros((0, 3))), out
+
 def landmarks(ob):
     co = np.array([v.co[:] for v in ob.data.vertices])
     J = {}
@@ -204,11 +232,13 @@ def landmarks(ob):
         J["hip." + s] = Vector((lx * 0.92, 0, 0.545 * H)); J["knee." + s] = Vector((lx, ly, 0.30 * H))
         J["ankle." + s] = Vector((lx, ly + 0.01, 0.05 * H)); J["toe." + s] = J["ankle." + s] + Vector((0, -0.09 * H, -0.03 * H))
         sh = Vector((sx * 0.118 * H, 0, 0.792 * H))
-        cand = co[(co[:, 0] * sx > 0.14 * H) & (co[:, 2] > 0.35 * H)]
-        if len(cand):
-            d = np.linalg.norm(cand - np.array(sh[:]), axis=1); tip = Vector(cand[int(np.argmax(d))])
-        else:
-            tip = sh + Vector((sx * 0.1, 0, -0.55))
+        cand, runs = _arm_points(co, sx)
+        if len(cand) >= 30 and len(runs) >= 6:
+            tip = Vector(np.mean(np.concatenate(runs[-2:]), axis=0))
+        else:  # arms fused to the coat/body: canonical stand-in direction
+            log("arm", s, "not separable -> canonical direction")
+            tip = sh + Vector((sx * 0.062 * H, -0.017 * H, -0.35 * H))
+        log("arm", s, "tip", tuple(round(c, 3) for c in tip), "pts", len(cand))
         # pull the tip inside the hand volume a little
         J["shoulder." + s] = sh
         J["elbow." + s] = sh.lerp(tip, 0.42); J["wrist." + s] = sh.lerp(tip, 0.80); J["handtip." + s] = sh.lerp(tip, 0.95)
@@ -276,6 +306,27 @@ def distance_weights(ob, rig):
         if md.type == "ARMATURE": ob.modifiers.remove(md)
     ob.parent = rig; am = ob.modifiers.new("Armature", "ARMATURE"); am.object = rig
 
+def _strip_arm_from_skirt(ob, rig):
+    """A-pose hands hang beside coats/skirts: nearest-transfer gives those cloth verts hand/forearm weights and they
+    tear off when the arm swings. Arm weights are only legal outboard of the wrist line or above the elbow."""
+    arm = [g.index for g in ob.vertex_groups if g.name.startswith(("upper_arm", "forearm", "hand"))]
+    if not arm: return
+    b = rig.data.bones
+    wx = abs(b["hand.L"].head_local.x); ez = b["forearm.L"].head_local.z
+    legs = {g.name: g for g in ob.vertex_groups}
+    n = 0
+    for v in ob.data.vertices:
+        if v.co.z > ez or abs(v.co.x) > wx - 0.05: continue
+        moved = 0.0
+        for ge in v.groups:
+            if ge.group in arm and ge.weight > 0:
+                moved += ge.weight; ge.weight = 0.0
+        if moved > 0:
+            side = "L" if v.co.x >= 0 else "R"
+            tgt = legs["thigh." + side] if v.co.z < b["thigh.L"].head_local.z else legs["hips"]
+            tgt.add([v.index], moved, "ADD"); n += 1
+    log("skirt verts freed from arm weights", n)
+
 def skin(ob, rig):
     # heat weights on a watertight voxel proxy, transferred to the real mesh (robust on farmed/non-manifold meshes)
     proxy = ob.copy(); proxy.data = ob.data.copy(); bpy.context.collection.objects.link(proxy)
@@ -315,6 +366,11 @@ def skin(ob, rig):
     dt.data_types_verts = {"VGROUP_WEIGHTS"}; dt.vert_mapping = "POLYINTERP_NEAREST"
     dt.layers_vgroup_select_src = "ALL"; dt.layers_vgroup_select_dst = "NAME"
     sel_only(ob); bpy.ops.object.modifier_apply(modifier=dt.name)
+    _strip_arm_from_skirt(ob, rig)
+    bpy.ops.object.vertex_group_normalize_all(lock_active=False)
+    # glTF keeps 4 influences/vertex: limit + renormalise HERE so Blender QA == exported GLB (no torn cloth sheets)
+    bpy.ops.object.vertex_group_clean(group_select_mode="ALL", limit=0.03)
+    bpy.ops.object.vertex_group_limit_total(group_select_mode="ALL", limit=4)
     bpy.ops.object.vertex_group_normalize_all(lock_active=False)
     bpy.data.objects.remove(proxy, do_unlink=True)
     ob.parent = rig; am = ob.modifiers.new("Armature", "ARMATURE"); am.object = rig
@@ -385,7 +441,11 @@ def main():
     ob = import_clean(); normalise(ob); decimate(ob)
     if OPT["sheet"]: project_albedo(ob)
     else: plain_material(ob)
-    J = landmarks(ob); rig = build_fitted_rig(J); skin(ob, rig); repose_to_canonical(ob, rig)
+    J = landmarks(ob)
+    if OPT["dump"]:  # debug: verts + joints for a silhouette overlay (tools/models/plot_landmarks)
+        np.savez(OPT["dump"], co=np.array([v.co[:] for v in ob.data.vertices]), names=np.array(list(J)),
+                 J=np.array([J[k][:] for k in J])); log("dumped", OPT["dump"]); return
+    rig = build_fitted_rig(J); skin(ob, rig); repose_to_canonical(ob, rig)
     ob.name = "Body"
     weapons(ob, rig)
     ob.name = "Body"
