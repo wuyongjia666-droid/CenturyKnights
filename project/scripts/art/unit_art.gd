@@ -335,7 +335,50 @@ static func _v83_elite_for(path: String) -> String:
 	var ep := "res://assets/art/farm_inbox/qwen_v830/v83_elite_%s.png" % key
 	return ep if ResourceLoader.exists(ep) else ""
 
+## "genome" when a farmed unit_id plate exists; otherwise the legacy named / hireuniq / bust chain.
+static func portrait_kind(c: CKCharacter, size: int = 96) -> String:
+	if CKGenomePortrait.texture(c) != null:
+		return "genome"
+	var path := _portrait_key(c)
+	var elite := _v83_elite_for(path)
+	if elite != "":
+		path = elite
+	if not _is_cartoon_key(path) and ResourceLoader.exists(path):
+		return "named"
+	var uid := _face_uid(c)
+	if ResourceLoader.exists("res://assets/art/portraits/hireuniq_%03d.png" % uid):
+		return "hireuniq"
+	var g := "f" if str(c.gender) == "f" else "m"
+	var role := "skirmisher"
+	if Engine.get_main_loop():
+		role = BattleRules.job_role(c.job_id)
+	var v8b: String = str({"skirmisher": "spear", "tank": "guard", "ranger": "archer", "mage": "scholar", "cavalry": "cavalry", "healer": "medic", "support": "medic"}.get(role, "duelist"))
+	if ResourceLoader.exists("res://assets/art/portraits/thumb_v8_bust_%s_%s.png" % [g, v8b]):
+		return "bust"
+	var age := int(c.age)
+	var geno := ""
+	if age <= 22:
+		geno = "v84_geno_youth_%s_vow" % g
+	elif age >= 50:
+		geno = "v84_geno_elder_%s_seal" % g
+	elif c.is_leader or str(c.job_id) in ["squire", "light_cavalry"]:
+		geno = "v84_geno_heir_%s_close" % g
+	else:
+		geno = "v84_geno_mid_%s_house" % g
+	var gp := "res://assets/art/portraits/%s.png" % geno
+	if size <= 240 and ResourceLoader.exists("res://assets/art/portraits/thumb_%s.png" % geno):
+		gp = "res://assets/art/portraits/thumb_%s.png" % geno
+	if ResourceLoader.exists(gp):
+		return "geno"
+	return "proc"
+
 static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
+	# v8.9: paper-doll is retired. One Qwen plate per unit_id when the farm has ingested it.
+	# Checked before the legacy cache so a late ingest still wins. Missing plates fall through
+	# to named cast art, then hireuniq, then the bust/geno chain.
+	var gtex: Texture2D = CKGenomePortrait.texture(c)
+	if gtex != null:
+		return gtex
 	var path = _portrait_key(c)
 	var _elite := _v83_elite_for(path)
 	if _elite != "":
@@ -343,12 +386,6 @@ static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
 	var ck = "p|" + path + "|" + str(c.id)
 	if _cache.has(ck):
 		return _cache[ck]
-	# v8.9: paper-doll compose DISABLED as primary path (layered parts retired for 2D).
-	# Prefer one full Qwen genome portrait (CKGenomePortrait) when farmed; else named/bespoke/hireuniq.
-	var gtex: Texture2D = CKGenomePortrait.texture(c)
-	if gtex != null:
-		_cache[ck] = gtex
-		return gtex
 	# v8.5: pre-v8 cartoon keys (allele-combo plates, hire_/role plates, old *_face_plate) must not
 	# shadow the 781 farmed hireuniq faces — renders showed every recruit/candidate as a cartoon.
 	var tex2 = null if _is_cartoon_key(path) else _try_load(path)
