@@ -270,17 +270,22 @@ func move_costs(map_terrain: Array, start: Vector2i, move_pts: int, blocked: Arr
 	return best
 
 ## HUD copy. Numbers come from the leave-cost constants so the panel cannot drift.
+## Colors are Frost tokens. BBCode is built at runtime so the source holds no hex literal.
 func engagement_note(locked: bool, engaged: bool, leave_free: bool, ignore_zoc: bool) -> String:
 	var eng := ""
 	if locked:
-		eng = "[color=#ff6b4a]〔交战锁定·脱离+%d移·反击优先〕[/color]\n" % LEAVE_COST_LOCK
+		eng = _rich(UIKit.DANGER, "〔交战锁定·脱离+%d移·反击优先〕" % LEAVE_COST_LOCK)
 	elif engaged:
-		eng = "[color=#e07070]〔交战中·脱离+%d移〕[/color]\n" % LEAVE_COST_ENGAGED
+		eng = _rich(UIKit.DANGER, "〔交战中·脱离+%d移〕" % LEAVE_COST_ENGAGED)
 	if leave_free:
-		eng += "[color=#8ecae6]〔抽身：脱离不耗〕[/color]\n"
+		eng += _rich(UIKit.ACCENT, "〔抽身：脱离不耗〕")
 	elif ignore_zoc:
-		eng += "[color=#c9a227]〔破控：无视地带〕[/color]\n"
+		eng += _rich(UIKit.ACCENT, "〔破控：无视地带〕")
 	return eng
+
+
+func _rich(c: Color, body: String) -> String:
+	return "[color=#%s]%s[/color]\n" % [c.to_html(false), body]
 
 func leave_cost_for(locked: bool, engaged: bool) -> int:
 	if locked:
