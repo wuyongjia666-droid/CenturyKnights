@@ -21,6 +21,7 @@ BattleRules="*res://autoload/battle_rules.gd"
 Sfx="*res://autoload/sfx.gd"
 Music="*res://autoload/music.gd"
 World="*res://autoload/world.gd"
+MobileChrome="*res://autoload/mobile_chrome.gd"
 
 [display]
 
@@ -28,6 +29,7 @@ window/size/viewport_width=1280
 window/size/viewport_height=720
 window/stretch/mode="canvas_items"
 window/stretch/aspect="keep"
+window/handheld/orientation="sensor"
 
 [gui]
 

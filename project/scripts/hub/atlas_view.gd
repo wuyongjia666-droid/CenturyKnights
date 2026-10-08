@@ -31,6 +31,10 @@ var _modal: Control
 var _top: Control
 var _toast: Label
 var _pulse_t := 0.0
+var _map_content: Control
+var _map_router := InputRouter.new()
+var _map_zoom := 1.0
+var _map_pan := Vector2.ZERO
 
 func _ready() -> void:
 	UIKit.void_bg(self)
@@ -53,6 +57,9 @@ func _exit_tree() -> void:
 
 func _process(dt: float) -> void:
 	_pulse_t += dt
+	if _map_router and _clip and _modal and _modal.get_children().is_empty() and not _busy:
+		for g in _map_router.poll(Time.get_ticks_msec()):
+			_apply_map_gesture(g)
 	if _roads and not _preview.is_empty():
 		_roads.queue_redraw()
 
@@ -69,30 +76,36 @@ func _build_frame() -> void:
 	_clip.position = MAP.position
 	_clip.size = MAP.size
 	_clip.clip_contents = true
+	_clip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_clip)
+	_map_content = Control.new()
+	_map_content.name = "MapContent"
+	_map_content.size = MAP.size
+	_map_content.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_clip.add_child(_map_content)
 	_plate = TextureRect.new()
 	_plate.name = "Plate"
 	_plate.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_plate.stretch_mode = TextureRect.STRETCH_SCALE
 	_plate.size = MAP.size
 	_plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_clip.add_child(_plate)
+	_map_content.add_child(_plate)
 	var veil := ColorRect.new()
 	veil.color = Color(UIKit.BG, 0.18)
 	veil.size = MAP.size
 	veil.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_clip.add_child(veil)
+	_map_content.add_child(veil)
 	_roads = Control.new()
 	_roads.name = "Roads"
 	_roads.size = MAP.size
 	_roads.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_roads.draw.connect(_draw_roads)
-	_clip.add_child(_roads)
+	_map_content.add_child(_roads)
 	_layer = Control.new()
 	_layer.name = "Nodes"
 	_layer.size = MAP.size
 	_layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_clip.add_child(_layer)
+	_map_content.add_child(_layer)
 	_token = Panel.new()
 	_token.name = "PartyToken"
 	_token.size = Vector2(26, 26)
@@ -107,7 +120,7 @@ func _build_frame() -> void:
 	tg.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	tg.size = Vector2(26, 26)
 	_token.add_child(tg)
-	_clip.add_child(_token)
+	_map_content.add_child(_token)
 	UIFX.breathe(_token, 0.05, 1.8)
 	_toast = UIKit.body_label("", UIKit.TEXT, 12)
 	_toast.name = "Toast"
@@ -206,10 +219,12 @@ func _add_region_button(nid: String) -> void:
 	var rep := World.nation_rep(nid)
 	var col: Color = UIKit.ACCENT if here else (UIKit.OK if rep >= 30 else (UIKit.TEXT if rep >= 0 else UIKit.DANGER))
 	_style_node(b, col, here, 8)
-	b.size = Vector2(b.get_minimum_size().x + 6, 30)
+	var rh := _fit_hit(30.0)
+	b.custom_minimum_size = Vector2(b.get_minimum_size().x + 6, rh)
+	b.size = Vector2(b.get_minimum_size().x + 6, rh)
 	b.position = _region_pos(nid) - b.size * 0.5
 	b.tooltip_text = "%s · 声望 %d（%s）· 聚落 %d" % [nat.get("name", ""), rep, World.rep_tier_name(rep), World.nodes_in(nid).size()]
-	b.pressed.connect(func(): _on_region_pressed(nid))
+	_bind_press(b, func(): _on_region_pressed(nid), func(): _info_region(nid))
 	_layer.add_child(b)
 	_node_btn[nid] = b
 	var sub := UIKit.mono("%s · %d" % [World.rep_tier_name(rep), World.nodes_in(nid).size()], 8, UIKit.TEXT_DIM, false)
@@ -252,7 +267,7 @@ func _style_node(b: Button, col: Color, filled: bool, radius: int, pad: int = 6)
 func _add_node_button(n: Dictionary, markers: Dictionary, mm: Dictionary) -> void:
 	var id := str(n.id)
 	var kind := str(n.kind)
-	var px := int(NODE_PX.get(kind, 20))
+	var px := int(_fit_hit(float(NODE_PX.get(kind, 20))))
 	var b := Button.new()
 	b.name = "Node_" + id
 	b.text = ""
@@ -268,7 +283,7 @@ func _add_node_button(n: Dictionary, markers: Dictionary, mm: Dictionary) -> voi
 	b.position = _np(id) - b.size * 0.5
 	b.tooltip_text = "%s · %s" % [n.get("name", id), World.kind_zh(id)]
 	b.disabled = _busy
-	b.pressed.connect(func(): _on_node_pressed(id))
+	_bind_press(b, func(): _on_node_pressed(id), func(): _select_node(id))
 	b.focus_entered.connect(func(): if not _busy: _select_node(id))
 	_layer.add_child(b)
 	b.size = Vector2(px, px)
@@ -339,7 +354,9 @@ func _add_gateway(from_id: String, to_id: String, r: Dictionary) -> void:
 	b.focus_mode = Control.FOCUS_ALL
 	b.add_theme_font_size_override("font_size", 10)
 	_style_node(b, Color("#B8C6FF"), false, 6)
-	b.size = Vector2(b.get_minimum_size().x, 22)
+	var gh := _fit_hit(22.0)
+	b.custom_minimum_size = Vector2(maxf(b.get_minimum_size().x, gh), gh)
+	b.size = Vector2(maxf(b.get_minimum_size().x, gh), gh)
 	b.position = _gate_pos(from_id, to_id) - b.size * 0.5
 	# stack gateways that land on the same spot
 	var dir_y := 26.0 if b.position.y < MAP.size.y * 0.5 else -26.0
@@ -359,7 +376,7 @@ func _add_gateway(from_id: String, to_id: String, r: Dictionary) -> void:
 	b.position.x = clampf(b.position.x, 2, MAP.size.x - b.size.x - 2)
 	b.tooltip_text = "%s · %s %d 日 · %s" % [World.node(to_id).get("name", to_id), "海路" if str(r.kind) == "sea" else "过境", int(r.days), "关税 %d 银" % World.toll_for(World.nation_of(to_id)) if str(r.kind) == "border" else "船资 %d 银" % int(r.get("fare", 30))]
 	b.disabled = _busy
-	b.pressed.connect(func(): _on_gateway(to_id))
+	_bind_press(b, func(): _on_gateway(to_id), func(): _info_gateway(to_id))
 	_layer.add_child(b)
 	_node_btn["gate_" + to_id] = b
 
@@ -817,6 +834,41 @@ func _render_hud() -> void:
 	p.add_child(go)
 
 # ── interaction ───────────────────────────────────────
+func _fit_hit(visual: float) -> float:
+	if not DeviceProfile.is_mobile():
+		return visual
+	return maxf(visual, minf(64.0, DeviceProfile.hit_px()))
+
+func _bind_press(b: Button, on_tap: Callable, on_info: Callable) -> void:
+	b.set_meta("ck_long", false)
+	b.button_down.connect(func():
+		if not is_instance_valid(b):
+			return
+		b.set_meta("ck_long", false)
+		var timer := b.get_tree().create_timer(float(InputRouter.LONG_MS) / 1000.0)
+		timer.timeout.connect(func():
+			if is_instance_valid(b) and b.button_pressed:
+				b.set_meta("ck_long", true)
+				on_info.call()))
+	b.pressed.connect(func():
+		if bool(b.get_meta("ck_long")):
+			b.set_meta("ck_long", false)
+			return
+		on_tap.call())
+
+func _info_region(nid: String) -> void:
+	_sel = nid
+	_preview = {}
+	var cap := str(World.nations.get(nid, {}).get("capital", ""))
+	if World.nation_of(World.pos) != nid and cap != "":
+		_preview = World.travel_preview(cap)
+	_render_right()
+	_render_hud()
+	_roads.queue_redraw()
+
+func _info_gateway(to_id: String) -> void:
+	_show_toast("关口通往 %s" % str(World.node(to_id).get("name", to_id)), UIKit.ACCENT)
+
 func _on_region_pressed(nid: String) -> void:
 	if _sel == nid:
 		_show_view(nid)
@@ -1130,6 +1182,91 @@ func _back() -> void:
 	if not _modal.get_children().is_empty() and not World.pending_event.is_empty():
 		return
 	_goto(CASTLE_SCENE)
+
+func _input(e: InputEvent) -> void:
+	if not (e is InputEventMouse or e is InputEventScreenTouch or e is InputEventScreenDrag):
+		return
+	if _clip == null or _map_content == null or _modal == null:
+		return
+	if _busy or not _modal.get_children().is_empty():
+		return
+	var pos := _event_pos(e)
+	var inside := pos.x > -10000.0 and _clip.get_global_rect().has_point(pos)
+	if not inside and not _map_router.has_pointers():
+		return
+	var gestures := _map_router.push(e, Time.get_ticks_msec())
+	var swallow := _map_router.gesture_locked()
+	for g in gestures:
+		var kind := str(g.get("kind", ""))
+		if kind in ["pan", "pinch", "wheel", "swallow"]:
+			swallow = true
+		_apply_map_gesture(g)
+	if swallow:
+		get_viewport().set_input_as_handled()
+
+func _event_pos(e: InputEvent) -> Vector2:
+	if e is InputEventMouse:
+		return (e as InputEventMouse).position
+	if e is InputEventScreenTouch:
+		return (e as InputEventScreenTouch).position
+	if e is InputEventScreenDrag:
+		return (e as InputEventScreenDrag).position
+	return Vector2(-99999, -99999)
+
+func _clip_local(vp: Vector2) -> Vector2:
+	return _clip.get_global_transform_with_canvas().affine_inverse() * vp
+
+func _apply_map_xform() -> void:
+	_clamp_map()
+	_map_content.position = _map_pan
+	_map_content.scale = Vector2(_map_zoom, _map_zoom)
+
+func _clamp_map() -> void:
+	var shown := MAP.size * _map_zoom
+	_map_pan.x = clampf(_map_pan.x, 40.0 - shown.x, MAP.size.x - 40.0)
+	_map_pan.y = clampf(_map_pan.y, 40.0 - shown.y, MAP.size.y - 40.0)
+
+func _zoom_map(factor: float, focal: Vector2) -> void:
+	var old := _map_zoom
+	var next := clampf(old * factor, 0.85, 2.8)
+	if is_equal_approx(next, old) or old <= 0.001:
+		return
+	var applied := next / old
+	_map_zoom = next
+	_map_pan = focal - (focal - _map_pan) * applied
+	_apply_map_xform()
+
+func _apply_map_gesture(g: Dictionary) -> void:
+	var kind := str(g.get("kind", ""))
+	var pos: Vector2 = g.get("pos", Vector2.ZERO)
+	match kind:
+		"pan":
+			var sc := _clip.get_global_transform_with_canvas().get_scale()
+			var sx := sc.x if absf(sc.x) > 0.01 else 1.0
+			var sy := sc.y if absf(sc.y) > 0.01 else 1.0
+			var delta: Vector2 = g.get("delta", Vector2.ZERO)
+			_map_pan += Vector2(delta.x / sx, delta.y / sy)
+			_apply_map_xform()
+		"pinch", "wheel":
+			_zoom_map(float(g.get("factor", 1.0)), _clip_local(pos))
+		"long_press":
+			var id := _node_at(pos)
+			if id.begins_with("gate_"):
+				_info_gateway(id.trim_prefix("gate_"))
+			elif id != "":
+				if _view == "":
+					_info_region(id)
+				else:
+					_select_node(id)
+			elif _sel != "":
+				_show_toast("长按聚落查看情报", UIKit.TEXT_DIM)
+
+func _node_at(vp: Vector2) -> String:
+	for k in _node_btn.keys():
+		var b: Button = _node_btn[k]
+		if is_instance_valid(b) and b.get_global_rect().has_point(vp):
+			return str(k)
+	return ""
 
 func _unhandled_input(e: InputEvent) -> void:
 	if _busy or not _modal.get_children().is_empty():

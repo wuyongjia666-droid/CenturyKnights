@@ -10,6 +10,10 @@ godot --headless --path . --scene res://tests/smoke_runner.tscn
 echo "==> layout_check"
 godot --headless --path . --script res://tests/layout_check.gd
 
+echo "==> touch_router"
+godot --headless --path . --script res://tests/touch_router_check.gd 2>&1 | tee /tmp/ck_touch.log
+grep -q "TOUCH ROUTER PASS" /tmp/ck_touch.log || { echo "touch_router FAILED"; exit 1; }
+
 echo "==> genome_check (v8.7 inheritance laws)"
 godot --headless --path . --script res://tests/genome_check.gd 2>&1 | tee /tmp/ck_genome.log
 grep -q "GENOME PASS" /tmp/ck_genome.log || { echo "genome_check FAILED"; exit 1; }

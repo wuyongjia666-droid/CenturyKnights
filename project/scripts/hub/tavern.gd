@@ -9,6 +9,7 @@ var _msg: Label
 var _portrait: TextureRect   # legacy handle
 var _trait_row: HBoxContainer
 var _cards: Control
+var _card_scroll: ScrollContainer
 
 func _ready() -> void:
 	_build()
@@ -56,7 +57,16 @@ func _build() -> void:
 	add_child(_portrait)
 	_cards = Control.new()
 	_cards.mouse_filter = Control.MOUSE_FILTER_PASS
-	add_child(_cards)
+	if DeviceProfile.is_mobile():
+		_card_scroll = ScrollContainer.new()
+		_card_scroll.name = "TavernCardScroll"
+		_card_scroll.position = Vector2(24, 108)
+		_card_scroll.size = Vector2(1232, 560)
+		_card_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		add_child(_card_scroll)
+		_card_scroll.add_child(_cards)
+	else:
+		add_child(_cards)
 	UIKit.footer_bar(self, [["A", "确认招募"], ["X", "刷新名单"], ["←→", "切换候选人"], ["ESC", "返回城堡"]], "TAVERN PROTOCOL · FROST_TACTICAL v8.6")
 
 func _payroll() -> int:
@@ -64,6 +74,13 @@ func _payroll() -> int:
 	for c in GameState.roster():
 		s += int(c.salary)
 	return s
+
+func apply_mobile_layout() -> void:
+	if _card_scroll == null:
+		return
+	var foot := find_child("StitchFooter", true, false) as Control
+	MobileLayout.fill_scroll(_card_scroll, foot, 560)
+	_refresh()
 
 func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("ui_cancel"):
@@ -92,9 +109,18 @@ func _refresh() -> void:
 	if _selected == null or not GameState.tavern_candidates.has(_selected):
 		_selected = GameState.tavern_candidates[0]
 	var i := 0
+	var mobile := DeviceProfile.is_mobile() and _card_scroll != null
+	var card_h := 540.0 + DeviceProfile.hit_px() if mobile else 570.0
+	var y := 0.0
 	for cand in GameState.tavern_candidates.slice(0, 3):
-		_card(cand, Rect2(42 + i * 404, 112, 388, 570), cand == _selected, i)
+		if mobile:
+			_card(cand, Rect2(0, y, 1196, card_h), cand == _selected, i)
+			y += card_h + 12.0
+		else:
+			_card(cand, Rect2(42 + i * 404, 112, 388, 570), cand == _selected, i)
 		i += 1
+	if mobile:
+		_cards.custom_minimum_size = Vector2(1196, y)
 
 func _select(c: CKCharacter) -> void:
 	_selected = c
@@ -241,11 +267,14 @@ func _card(c: CKCharacter, r: Rect2, focus: bool, idx: int) -> void:
 		nt.position = Vector2(18, ty)
 		p.add_child(nt)
 	var hire: Button
+	var hire_h := 46
+	if DeviceProfile.is_mobile():
+		hire_h = int(maxf(46.0, DeviceProfile.hit_px()))
 	if focus:
-		hire = UIKit.cta_button("招募加入军团（%d 银）" % _fee(c), "A", 352, 46)
+		hire = UIKit.cta_button("招募加入军团（%d 银）" % _fee(c), "A", 352, hire_h)
 		hire.call_deferred("grab_focus")
 	else:
-		hire = UIKit.ghost_button("招募备选（%d 银）" % _fee(c), 352, 42)
+		hire = UIKit.ghost_button("招募备选（%d 银）" % _fee(c), 352, maxi(42, hire_h - 4))
 	hire.position = Vector2(18, r.size.y - 18 - hire.custom_minimum_size.y)
 	hire.pressed.connect(func():
 		_selected = c

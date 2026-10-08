@@ -19,6 +19,7 @@ var _bars: Array = []
 var _cam_base: Transform3D
 var _shake := 0.0
 var _spd_btn: Button
+var _budget: Dictionary = {}
 
 var _pop_stack: Dictionary = {}
 
@@ -26,6 +27,8 @@ func setup(record: Dictionary) -> void:
 	rec = record
 
 func _ready() -> void:
+	_budget = DeviceProfile.cutscene_budget()
+	UnitModel.prefer_simple_shading = bool(_budget.get("simple", false))
 	speed = maxf(speed, float(GameState.settings.get("cutscene_speed", 1.0)))
 	layer = 60
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -40,8 +43,9 @@ func _ready() -> void:
 	_root.add_child(svc)
 	_vp = SubViewport.new()
 	_vp.own_world_3d = true
-	_vp.msaa_3d = Viewport.MSAA_4X
-	_vp.size = Vector2i(1280, 720)
+	_vp.msaa_3d = int(_budget.get("msaa", Viewport.MSAA_4X))
+	_vp.size = _budget.get("size", Vector2i(1280, 720))
+	_vp.screen_space_aa = Viewport.SCREEN_SPACE_AA_DISABLED
 	svc.add_child(_vp)
 	_build_stage()
 	_build_hud()
@@ -79,10 +83,10 @@ func _build_stage() -> void:
 	env.ambient_light_energy = 0.55
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	env.tonemap_white = 6.0
-	env.fog_enabled = true
+	env.fog_enabled = bool(_budget.get("fog", true))
 	env.fog_light_color = Color(0.10, 0.13, 0.19)
 	env.fog_density = 0.035
-	env.glow_enabled = true
+	env.glow_enabled = bool(_budget.get("glow", true))
 	env.glow_intensity = 0.7
 	env.glow_bloom = 0.08
 	var we := WorldEnvironment.new()
@@ -122,7 +126,7 @@ func _build_stage() -> void:
 	key.rotation_degrees = Vector3(-42, -28, 0)
 	key.light_color = Color(0.88, 0.94, 1.0)
 	key.light_energy = 1.25
-	key.shadow_enabled = true
+	key.shadow_enabled = bool(_budget.get("shadows", true))
 	key.directional_shadow_max_distance = 30.0
 	w.add_child(key)
 	for side in ["left", "right"]:
@@ -227,12 +231,15 @@ func _build_hud() -> void:
 	tr.add_theme_constant_override("separation", 8)
 	_root.add_child(tr)
 	_spd_btn = UIKit.make_button("%d×" % int(speed), 64)
-	_spd_btn.custom_minimum_size = Vector2(64, 36)
+	var hud_h := 36
+	if DeviceProfile.is_mobile():
+		hud_h = int(minf(64.0, maxf(44.0, DeviceProfile.hit_px())))
+	_spd_btn.custom_minimum_size = Vector2(64 if hud_h <= 40 else 88, hud_h)
 	_spd_btn.tooltip_text = "演出速度（Tab）"
 	_spd_btn.pressed.connect(_toggle_speed)
 	tr.add_child(_spd_btn)
 	var sk := UIKit.make_button("跳过  ␣", 140)
-	sk.custom_minimum_size = Vector2(140, 36)
+	sk.custom_minimum_size = Vector2(140 if hud_h <= 40 else 168, hud_h)
 	sk.tooltip_text = "跳过演出（Space / Esc）"
 	sk.pressed.connect(_do_skip)
 	tr.add_child(sk)
@@ -332,10 +339,13 @@ func _popup(side: String, text: String, col: Color, big: bool) -> void:
 		l.queue_free())
 
 func _sparks(side: String, col: Color, amount: int) -> void:
+	var scale := float(_budget.get("particles", 1.0))
+	if scale <= 0.01:
+		return
 	var n: Node3D = _units[side].node
 	var p := CPUParticles3D.new()
 	p.one_shot = true
-	p.amount = amount
+	p.amount = maxi(1, int(round(float(amount) * scale)))
 	p.lifetime = 0.45
 	p.explosiveness = 0.95
 	p.direction = Vector3(0, 0.5, 0)
@@ -493,6 +503,7 @@ func _finish() -> void:
 	if _done:
 		return
 	_done = true
+	UnitModel.prefer_simple_shading = false
 	Engine.time_scale = 1.0
 	# final HP state (skip-safe)
 	for s in rec.get("strikes", []):
