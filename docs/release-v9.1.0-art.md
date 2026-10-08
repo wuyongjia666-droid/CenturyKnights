@@ -19,5 +19,6 @@
 ## 发布
 
 - 标签：v9.1.0-art
-- 压缩包：`CenturyKnights-windows-v9.1.0-art.zip`
-- SHA256：（导出后填入）
+- 压缩包：https://github.com/wuyongjia666-droid/CenturyKnights/releases/download/v9.1.0-art/CenturyKnights-windows-v9.1.0-art.zip
+- 大小：639,866,066 字节
+- SHA256：`421a10254c0f08602cf62771e35c4266fce1b14f9b611bee231c750d977c6039`
