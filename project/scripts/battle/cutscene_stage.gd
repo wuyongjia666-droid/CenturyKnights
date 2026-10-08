@@ -8,21 +8,28 @@ const BIOMES := [
 	"shrine", "archive", "fort", "nightcamp", "hill", "plain", "pass", "urban",
 ]
 
+const FROST := Color8(110, 212, 255)
+const MINT := Color8(94, 224, 181)
+const WHITE := Color8(244, 247, 251)
+const SLATE := Color8(154, 166, 184)
+const INK := Color8(22, 27, 36)
+const SHADOW := Color8(42, 52, 66)
+
 const LOOK := {
-	"fog": {"fog": "#8AA0B5", "density": 0.055, "a": "#9AA6B8", "b": "#2A3442"},
-	"ford": {"fog": "#6ED4FF", "density": 0.028, "a": "#6ED4FF", "b": "#161B24"},
-	"harbor": {"fog": "#6ED4FF", "density": 0.032, "a": "#5EE0B5", "b": "#2A3442"},
-	"snow": {"fog": "#C5D4E4", "density": 0.03, "a": "#F4F7FB", "b": "#6ED4FF"},
-	"marsh": {"fog": "#5EE0B5", "density": 0.04, "a": "#1C3A34", "b": "#5EE0B5"},
-	"forge": {"fog": "#9AA6B8", "density": 0.038, "a": "#2A3442", "b": "#6ED4FF"},
-	"shrine": {"fog": "#C9D6EA", "density": 0.026, "a": "#F4F7FB", "b": "#6ED4FF"},
-	"archive": {"fog": "#8E9BB0", "density": 0.034, "a": "#161B24", "b": "#9AA6B8"},
-	"fort": {"fog": "#7E8DA3", "density": 0.03, "a": "#2A3442", "b": "#9AA6B8"},
-	"nightcamp": {"fog": "#1A2433", "density": 0.045, "a": "#161B24", "b": "#6ED4FF"},
-	"hill": {"fog": "#8FA3B8", "density": 0.028, "a": "#3A4A5C", "b": "#5EE0B5"},
-	"plain": {"fog": "#A9BCCC", "density": 0.022, "a": "#5EE0B5", "b": "#2A3442"},
-	"pass": {"fog": "#8AA0B8", "density": 0.036, "a": "#2A3442", "b": "#C5D0DC"},
-	"urban": {"fog": "#6E7C90", "density": 0.03, "a": "#161B24", "b": "#6ED4FF"},
+	"fog": {"fog": Color8(138, 160, 181), "density": 0.055, "a": SLATE, "b": SHADOW},
+	"ford": {"fog": FROST, "density": 0.028, "a": FROST, "b": INK},
+	"harbor": {"fog": FROST, "density": 0.032, "a": MINT, "b": SHADOW},
+	"snow": {"fog": Color8(197, 212, 228), "density": 0.03, "a": WHITE, "b": FROST},
+	"marsh": {"fog": MINT, "density": 0.04, "a": Color8(28, 58, 52), "b": MINT},
+	"forge": {"fog": SLATE, "density": 0.038, "a": SHADOW, "b": FROST},
+	"shrine": {"fog": Color8(201, 214, 234), "density": 0.026, "a": WHITE, "b": FROST},
+	"archive": {"fog": Color8(142, 155, 176), "density": 0.034, "a": INK, "b": SLATE},
+	"fort": {"fog": Color8(126, 141, 163), "density": 0.03, "a": SHADOW, "b": SLATE},
+	"nightcamp": {"fog": Color8(26, 36, 51), "density": 0.045, "a": INK, "b": FROST},
+	"hill": {"fog": Color8(143, 163, 184), "density": 0.028, "a": Color8(58, 74, 92), "b": MINT},
+	"plain": {"fog": Color8(169, 188, 204), "density": 0.022, "a": MINT, "b": SHADOW},
+	"pass": {"fog": Color8(138, 160, 184), "density": 0.036, "a": SHADOW, "b": Color8(197, 208, 220)},
+	"urban": {"fog": Color8(110, 124, 144), "density": 0.03, "a": INK, "b": FROST},
 }
 
 static func biome_ids() -> Array:
@@ -44,8 +51,9 @@ static func biome_from_record(rec: Dictionary) -> String:
 
 static func fog_for(biome: String) -> Dictionary:
 	var look := _look(biome)
+	var fog: Color = look.get("fog", Color8(16, 19, 26))
 	return {
-		"color": Color(str(look.get("fog", "#10131A"))),
+		"color": fog,
 		"density": float(look.get("density", 0.035)),
 	}
 
@@ -97,8 +105,8 @@ static func _look(biome: String) -> Dictionary:
 
 static func _fill(holder: Node3D, biome: String, layer: String, count: int) -> void:
 	var look := _look(biome)
-	var tint_a := Color(str(look.get("a", "#6ED4FF")))
-	var tint_b := Color(str(look.get("b", "#2A3442")))
+	var tint_a: Color = look.get("a", FROST)
+	var tint_b: Color = look.get("b", SHADOW)
 	var h := _hash(biome + ":" + layer)
 	for i in count:
 		h = _next(h)

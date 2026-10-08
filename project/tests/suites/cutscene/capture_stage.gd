@@ -25,7 +25,7 @@ func _ready() -> void:
 	ground.mesh = plane
 	var gm := StandardMaterial3D.new()
 	gm.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	gm.albedo_color = Color("#1A2433")
+	gm.albedo_color = Color8(26, 36, 51)
 	ground.material_override = gm
 	world.add_child(ground)
 	var cam := Camera3D.new()
@@ -34,24 +34,24 @@ func _ready() -> void:
 	cam.current = true
 	world.add_child(cam)
 	var sheet := Image.create(CELL_W * 4, CELL_H * 4, false, Image.FORMAT_RGBA8)
-	sheet.fill(Color("#07080C"))
+	sheet.fill(Color8(7, 8, 12))
 	var ids: Array = CutsceneStage.biome_ids()
 	var font: Font = load("res://assets/fonts/NotoSansSC-Bold-ck.otf")
 	for i in ids.size():
 		var id := str(ids[i])
 		var stage := CutsceneStage.build(world, id, false)
 		var fog: Dictionary = CutsceneStage.fog_for(id)
-		e.background_color = fog.get("color", Color("#10131A"))
+		e.background_color = fog.get("color", Color8(16, 19, 26))
 		e.fog_enabled = true
-		e.fog_light_color = fog.get("color", Color("#10131A"))
+		e.fog_light_color = fog.get("color", Color8(16, 19, 26))
 		e.fog_density = float(fog.get("density", 0.03))
 		var label := Label3D.new()
 		label.text = id
 		label.font = font
 		label.font_size = 48
 		label.pixel_size = 0.01
-		label.modulate = Color("#F4F7FB")
-		label.outline_modulate = Color("#0A0E14")
+		label.modulate = Color8(244, 247, 251)
+		label.outline_modulate = Color8(10, 14, 20)
 		label.outline_size = 8
 		label.position = Vector3(0, 3.2, -2)
 		label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
