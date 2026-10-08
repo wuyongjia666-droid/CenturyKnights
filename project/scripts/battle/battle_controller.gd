@@ -2,8 +2,14 @@ extends Control
 ## 灰旗战棋：8x6 教程图，移动/攻击/待命，敌 AI，规则透视
 ## 输入 FSM：IDLE → SELECTED → (MOVE) → ATTACK_AIM → 单位 done
 
-const CELL := 56
-const ORIGIN := Vector2(40, 80)
+var CELL: int = 56
+var ORIGIN: Vector2 = Vector2(40, 80)
+## v8.6: the board is the hero — cell size fits the map into the left stage (max 104px)
+const BOARD_AREA := Rect2(24, 76, 856, 620)
+const RAIL_X := 904.0
+const RAIL_W := 352.0
+var _ground: ColorRect
+const TERRAIN_IDS := {"plain": 0, "forest": 1, "hill": 2, "water": 3, "fort": 4, "bridge": 5}
 var MAP_W: int = 8
 var MAP_H: int = 6
 var map_id: String = "ch0_pass"
@@ -780,7 +786,8 @@ func _ready() -> void:
 		bbg.stretch_mode = TextureRect.STRETCH_SCALE
 		bbg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		bbg.z_index = -8
-		bbg.modulate = Color(1, 1, 1, 0.55)
+		bbg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		bbg.modulate = Color(0.55, 0.62, 0.72, 0.30)
 		add_child(bbg)
 		move_child(bbg, 0)
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -794,8 +801,6 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	UnitArt.tick(delta)
 	_sel_pulse += delta
-	if int(_sel_pulse * 10) % 5 == 0 and _banner_tex:
-		_banner_tex.texture = UnitArt.banner(56, 80, false)
 	if _turn_flash > 0.0:
 		_turn_flash = maxf(0.0, _turn_flash - delta)
 	var alive_fx: Array = []
@@ -863,68 +868,50 @@ func _warm_fx_cache() -> void:
 	for u in ["zoc_hatch_safe", "zoc_hatch_zoc", "zoc_hatch_leave", "zoc_hatch_lock", "zoc_chip_lock3", "zoc_chip_leave2", "zoc_leave_legend"]:
 		_tex("res://assets/art/ui/%s.png" % u)
 
+func _k() -> float:
+	return float(CELL) / 56.0
+
 func _build_ui() -> void:
+	## v8.6 layout (Stitch 06 战棋战斗 HUD): board stage left (hero), thin turn bar on top,
+	## right rail = selected-unit card · intel · compact log · command console. Nothing floats on the board.
 	_warm_fx_cache()
 	_bg = ColorRect.new()
-	_bg.color = UIKit.BG
+	_bg.color = Color(UIKit.BG, 0.72)
 	_bg.set_anchors_preset(PRESET_FULL_RECT)
 	_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_bg)
+	add_child(UIKit._vignette())
 
-	# 顶栏
-	var topbar := ColorRect.new()
-	topbar.color = UIKit.BG_DEEP
-	topbar.position = Vector2(0, 0)
-	topbar.size = Vector2(1280, 64)
-	topbar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(topbar)
-	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/turn_banner.png"):
-		var _tb := TextureRect.new()
-		_tb.texture = load("res://assets/art/ui/turn_banner.png")
-		_tb.position = Vector2(160, 4)
-		_tb.custom_minimum_size = Vector2(960, 56)
-		_tb.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		_tb.stretch_mode = TextureRect.STRETCH_SCALE
-		_tb.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		_tb.modulate = Color(1, 1, 1, 0.85)
-		add_child(_tb)
-		UIFX.banner_shimmer(_tb, 3.6)
-	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/battle_hud_frame.png"):
-		var _hf := TextureRect.new()
-		_hf.texture = load("res://assets/art/ui/battle_hud_frame.png")
-		_hf.position = Vector2(0, 500)
-		_hf.size = Vector2(1280, 220)
-		_hf.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		_hf.stretch_mode = TextureRect.STRETCH_SCALE
-		_hf.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		_hf.modulate = Color(1, 1, 1, 0.72)
-		_hf.z_index = -2
-		add_child(_hf)
-	var accent := ColorRect.new()
-	accent.color = UnitArt.crest_color()
-	accent.position = Vector2(0, 0)
-	accent.size = Vector2(1280, 3)
-	accent.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(accent)
-
-	_banner_tex = TextureRect.new()
-	_banner_tex.texture = UnitArt.banner(56, 80, false)
-	_banner_tex.position = Vector2(16, 8)
-	_banner_tex.custom_minimum_size = Vector2(40, 56)
-	_banner_tex.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_banner_tex.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	_banner_tex.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(_banner_tex)
-
-	phase_label = UIKit.make_label("玩家回合", true)
-	phase_label.position = Vector2(70, 12)
+	# turn bar: phase (headline) · map · controls hint — on clean ink, always readable
+	var top := HBoxContainer.new()
+	top.position = Vector2(24, 18)
+	top.add_theme_constant_override("separation", 14)
+	top.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(top)
+	var dot := ColorRect.new()
+	dot.custom_minimum_size = Vector2(8, 8)
+	dot.color = UIKit.ACCENT
+	dot.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	top.add_child(dot)
+	UIFX.breathe(dot, 0.2, 1.6)
+	phase_label = Label.new()
+	phase_label.text = "玩家回合"
+	phase_label.add_theme_font_size_override("font_size", 22)
+	phase_label.add_theme_color_override("font_color", UIKit.TEXT)
 	phase_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(phase_label)
-
-	var tip = UIKit.make_dim_label("左键选中/移动 · 攻击模式后点敌军 · 右键取消 · 绿林/褐丘/灰平")
-	tip.position = Vector2(280, 22)
+	top.add_child(phase_label)
+	var tip = UIKit.make_dim_label("左键 选中 / 移动　·　攻击模式后点敌军　·　右键 取消")
+	tip.add_theme_color_override("font_color", UIKit.TEXT_FAINT)
+	tip.add_theme_font_size_override("font_size", 12)
+	tip.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	tip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(tip)
+	tip.name = "ControlsTip"
+	top.add_child(tip)
+
+	_ground = ColorRect.new()
+	_ground.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_ground)
 
 	map_draw = Node2D.new()
 	map_draw.draw.connect(_draw_map)
@@ -934,67 +921,170 @@ func _build_ui() -> void:
 	overlay.draw.connect(_draw_overlay)
 	add_child(overlay)
 
-	# 右侧信息卡
+	# --- right rail
 	_unit_panel = UIKit.make_panel()
-	_unit_panel.position = Vector2(520, 80)
-	_unit_panel.custom_minimum_size = Vector2(720, 210)
+	_unit_panel.position = Vector2(RAIL_X, 76)
+	_unit_panel.custom_minimum_size = Vector2(RAIL_W, 0)
+	_unit_panel.size = Vector2(RAIL_W, 0)
 	add_child(_unit_panel)
-	var phb := HBoxContainer.new()
-	phb.add_theme_constant_override("separation", 12)
-	_unit_panel.add_child(phb)
 	var left_info := VBoxContainer.new()
-	left_info.add_theme_constant_override("separation", 4)
-	phb.add_child(left_info)
-	_unit_card = UnitCardScript.new(360.0)
+	left_info.add_theme_constant_override("separation", 12)
+	_unit_panel.add_child(left_info)
+	_unit_card = UnitCardScript.new(RAIL_W - 44.0)
 	left_info.add_child(_unit_card)
 	_portrait = _unit_card.portrait
 	_info_traits = HBoxContainer.new()
-	_info_traits.add_theme_constant_override("separation", 3)
+	_info_traits.add_theme_constant_override("separation", 4)
 	left_info.add_child(_info_traits)
+	left_info.add_child(UIKit.hairline())
 	info_label = RichTextLabel.new()
-	info_label.custom_minimum_size = Vector2(318, 180)
+	info_label.custom_minimum_size = Vector2(RAIL_W - 44.0, 0)
 	info_label.bbcode_enabled = true
 	info_label.fit_content = true
+	info_label.scroll_active = false
 	info_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	info_label.add_theme_color_override("default_color", UIKit.TEXT)
-	phb.add_child(info_label)
+	info_label.add_theme_color_override("default_color", UIKit.TEXT_DIM)
+	info_label.add_theme_font_size_override("normal_font_size", 12)
+	info_label.add_theme_font_size_override("bold_font_size", 13)
+	left_info.add_child(info_label)
 
-	var log_panel = UIKit.make_panel()
-	log_panel.position = Vector2(520, 310)
-	log_panel.custom_minimum_size = Vector2(720, 180)
+	var log_panel = UIKit.make_glass(12, 0.55)
+	log_panel.name = "LogPanel"
+	log_panel.position = Vector2(RAIL_X, 470)
+	log_panel.custom_minimum_size = Vector2(RAIL_W, 96)
+	log_panel.size = Vector2(RAIL_W, 96)
+	log_panel.clip_contents = true
 	add_child(log_panel)
-	log_label = UIKit.make_label("")
-	log_label.custom_minimum_size = Vector2(690, 160)
+	var lv := VBoxContainer.new()
+	lv.add_theme_constant_override("separation", 4)
+	log_panel.add_child(lv)
+	lv.add_child(UIKit.eyebrow("战报", UIKit.TEXT_FAINT))
+	log_label = Label.new()
+	log_label.custom_minimum_size = Vector2(RAIL_W - 44, 44)
 	log_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	log_label.add_theme_font_size_override("font_size", 13)
-	log_panel.add_child(log_label)
+	log_label.clip_text = true
+	log_label.max_lines_visible = 3
+	log_label.add_theme_font_size_override("font_size", 12)
+	log_label.add_theme_color_override("font_color", UIKit.TEXT_DIM)
+	lv.add_child(log_label)
 
+	# command console
+	_skill_hint = UIKit.make_dim_label("")
+	_skill_hint.position = Vector2(RAIL_X + 2, 578)
+	_skill_hint.custom_minimum_size = Vector2(RAIL_W, 18)
+	_skill_hint.size = Vector2(RAIL_W, 18)
+	_skill_hint.clip_text = true
+	_skill_hint.add_theme_font_size_override("font_size", 12)
+	add_child(_skill_hint)
 	var row := HBoxContainer.new()
-	row.position = Vector2(520, 520)
-	row.add_theme_constant_override("separation", 10)
+	row.position = Vector2(RAIL_X, 602)
+	row.add_theme_constant_override("separation", 8)
 	add_child(row)
-	_btn_atk = UIKit.make_accent_button("攻击模式", 130)
+	_btn_atk = UIKit.make_button("攻击", 112)
 	_btn_atk.pressed.connect(_enter_attack_mode)
 	row.add_child(_btn_atk)
-	_btn_skill = UIKit.make_accent_button("战技", 100)
+	_btn_skill = UIKit.make_button("战技", 112)
 	_btn_skill.pressed.connect(_cycle_skill)
 	row.add_child(_btn_skill)
-	_skill_hint = UIKit.make_dim_label("")
-	_skill_hint.position = Vector2(520, 500)
-	_skill_hint.custom_minimum_size = Vector2(700, 20)
-	add_child(_skill_hint)
-	_btn_wait = UIKit.make_button(Locale.t("wait"), 100)
+	_btn_wait = UIKit.make_button(Locale.t("wait"), 112)
 	_btn_wait.pressed.connect(_wait_selected)
 	row.add_child(_btn_wait)
-	_btn_end = UIKit.make_button(Locale.t("end_turn"), 120)
+	var row2 := HBoxContainer.new()
+	row2.position = Vector2(RAIL_X, 652)
+	row2.add_theme_constant_override("separation", 8)
+	add_child(row2)
+	_btn_end = UIKit.make_accent_button(Locale.t("end_turn"), 232)
+	_btn_end.custom_minimum_size = Vector2(232, 44)
 	_btn_end.pressed.connect(_end_player_turn)
-	row.add_child(_btn_end)
+	row2.add_child(_btn_end)
 	var b_prev = CheckButton.new()
 	b_prev.text = Locale.t("rules_preview")
+	b_prev.add_theme_font_size_override("font_size", 12)
+	b_prev.add_theme_color_override("font_color", UIKit.TEXT_DIM)
 	b_prev.button_pressed = BattleRules.preview_enabled
 	b_prev.toggled.connect(func(on): BattleRules.preview_enabled = on)
-	row.add_child(b_prev)
+	row2.add_child(b_prev)
 
+func _layout_board() -> void:
+	CELL = int(clampf(floorf(minf(BOARD_AREA.size.x / float(MAP_W), BOARD_AREA.size.y / float(MAP_H))), 44.0, 104.0))
+	var bs := Vector2(MAP_W, MAP_H) * CELL
+	ORIGIN = (BOARD_AREA.position + (BOARD_AREA.size - bs) * 0.5).floor()
+	_build_ground()
+
+func _biome_ground() -> Array:
+	## [base texture id, grade]
+	var _AtlasArt = preload("res://scripts/art/atlas_art.gd")
+	var bio := str(_AtlasArt.biome_for_map(map_id))
+	match bio:
+		"snow":
+			return ["snow", Vector3(0.92, 0.97, 1.04)]
+		"archive", "forge", "fort", "urban", "shrine":
+			return ["stone", Vector3(0.96, 0.98, 1.03)]
+		"harbor":
+			return ["stone", Vector3(0.90, 0.98, 1.05)]
+		"pass", "hill":
+			return ["dust", Vector3(0.97, 0.98, 1.02)]
+		"nightcamp":
+			return ["dust", Vector3(0.74, 0.80, 0.96)]
+		"fog":
+			return ["grass", Vector3(0.88, 0.94, 1.02)]
+		"marsh":
+			return ["grass", Vector3(0.90, 1.0, 0.96)]
+	return ["grass", Vector3(0.96, 1.0, 1.02)]
+
+func _build_ground() -> void:
+	if _ground == null:
+		return
+	var sh = load("res://shaders/board_ground.gdshader")
+	if sh == null:
+		return
+	var img := Image.create(MAP_W, MAP_H, false, Image.FORMAT_R8)
+	for y in MAP_H:
+		for x in MAP_W:
+			var tid := str(terrain[y][x]) if y < terrain.size() and x < terrain[y].size() else "plain"
+			img.set_pixel(x, y, Color(float(int(TERRAIN_IDS.get(tid, 0)) * 32) / 255.0, 0, 0))
+	var mat := ShaderMaterial.new()
+	mat.shader = sh
+	var bg: Array = _biome_ground()
+	var tdir := "res://assets/art/terrain_v86/"
+	mat.set_shader_parameter("t_base", load(tdir + str(bg[0]) + ".png"))
+	mat.set_shader_parameter("t_forest", load(tdir + "forest.png"))
+	mat.set_shader_parameter("t_hill", load(tdir + "hill.png"))
+	mat.set_shader_parameter("t_water", load(tdir + "water.png"))
+	mat.set_shader_parameter("t_fort", load(tdir + "fort.png"))
+	mat.set_shader_parameter("t_bridge", load(tdir + "bridge.png"))
+	mat.set_shader_parameter("t_noise", load(tdir + "noise.png"))
+	mat.set_shader_parameter("idmap", ImageTexture.create_from_image(img))
+	mat.set_shader_parameter("grid", Vector2(MAP_W, MAP_H))
+	mat.set_shader_parameter("cell_px", float(CELL))
+	mat.set_shader_parameter("grade", bg[1])
+	_ground.material = mat
+	_ground.position = ORIGIN
+	_ground.size = Vector2(MAP_W, MAP_H) * CELL
+	# soft drop shadow + 1px stroke around the board stage
+	var sh_node := get_node_or_null("BoardFrame")
+	if sh_node:
+		sh_node.queue_free()
+	var frame := Panel.new()
+	frame.name = "BoardFrame"
+	var fs := StyleBoxFlat.new()
+	fs.draw_center = false
+	fs.border_color = UIKit.STROKE
+	fs.set_border_width_all(1)
+	fs.set_corner_radius_all(4)
+	fs.shadow_color = Color(0, 0, 0, 0.55)
+	fs.shadow_size = 28
+	fs.shadow_offset = Vector2(0, 12)
+	fs.expand_margin_left = 1
+	fs.expand_margin_right = 1
+	fs.expand_margin_top = 1
+	fs.expand_margin_bottom = 1
+	frame.add_theme_stylebox_override("panel", fs)
+	frame.position = ORIGIN
+	frame.size = _ground.size
+	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(frame)
+	move_child(frame, _ground.get_index())
 
 func _player_skills(ui: int) -> Array:
 	if ui < 0 or ui >= units.size():
@@ -1196,6 +1286,7 @@ func _init_map() -> void:
 	else:
 		for y in grid.size():
 			terrain.append(grid[y].duplicate())
+	_layout_board()
 	if phase_label:
 		phase_label.text = "%s · 玩家回合" % map_name
 
@@ -1331,27 +1422,14 @@ func _deploy() -> void:
 	_refresh_info()
 
 func _draw_map() -> void:
-	# 棋盘阴影底板
-	map_draw.draw_rect(Rect2(ORIGIN - Vector2(6, 6), Vector2(MAP_W * CELL + 10, MAP_H * CELL + 10)), Color(0.05, 0.06, 0.08, 0.8))
-	for y in MAP_H:
-		for x in MAP_W:
-			var tid = terrain[y][x]
-			var info = BattleRules.terrain_info(tid)
-			var r = Rect2(ORIGIN + Vector2(x, y) * CELL, Vector2(CELL - 2, CELL - 2))
-			var tile_tex = UnitArt.terrain_tile(str(tid))
-			if tile_tex != null:
-				map_draw.draw_texture_rect(tile_tex, r, false)
-			else:
-				var col: Color = info["color"]
-				if (x + y) % 2 == 0:
-					col = col.lightened(0.04)
-				map_draw.draw_rect(r, col)
-			# 格线
-			map_draw.draw_rect(r, Color(0.08, 0.09, 0.11, 0.85), false, 1.0)
-			# 悬停高亮
-			if _hover_cell == Vector2i(x, y):
-				map_draw.draw_rect(r, Color(1, 1, 1, 0.10))
-
+	## v8.6: ground is the shader (_ground). Here: hover cell outline, token shadows, tokens, HP, CD pips, names.
+	var k := _k()
+	if _in_bounds(_hover_cell):
+		var hr = Rect2(ORIGIN + Vector2(_hover_cell) * CELL, Vector2(CELL, CELL))
+		map_draw.draw_rect(hr, Color(1, 1, 1, 0.07))
+		map_draw.draw_rect(hr.grow(-0.5), Color(0.85, 0.95, 1.0, 0.55), false, 1.0)
+	var fnt := UIKit.font("regular")
+	var fb := UIKit.font("bold")
 	# units
 	for i in units.size():
 		var u = units[i]
@@ -1359,16 +1437,25 @@ func _draw_map() -> void:
 			continue
 		var p: Vector2i = u.pos
 		var center = ORIGIN + Vector2(p) * CELL + Vector2(CELL / 2, CELL / 2)
-		UnitArt.draw_token_on(map_draw, center, u.char, u.team, 20.0, u.done)
+		var tr := 20.0 * k
+		# soft contact shadow (3 stacked ellipses)
+		for si in range(3):
+			var sr := tr * (1.05 + 0.16 * si)
+			var pts := PackedVector2Array()
+			for a in range(20):
+				var ang := TAU * a / 20.0
+				pts.append(center + Vector2(cos(ang) * sr, sin(ang) * sr * 0.42 + tr * 0.78))
+			map_draw.draw_colored_polygon(pts, Color(0, 0, 0, 0.20 - 0.05 * si))
+		UnitArt.draw_token_on(map_draw, center, u.char, u.team, tr, u.done)
 		if int(u.char.temp_combat_lock) > 0:
-			UnitArt.draw_lock_ring(map_draw, center, 22.0)
-		# HP 条
+			UnitArt.draw_lock_ring(map_draw, center, 22.0 * k)
+		# HP bar (slim token bar)
 		var hp_ratio = float(u.char.hp) / float(maxi(1, u.char.max_hp))
-		var bar_w = 36.0
-		var bar_pos = center + Vector2(-bar_w * 0.5, 18)
-		map_draw.draw_rect(Rect2(bar_pos, Vector2(bar_w, 5)), Color(0.1, 0.1, 0.12, 0.85))
-		var hp_col = Color(0.35, 0.75, 0.45) if u.team == "player" else Color(0.85, 0.35, 0.30)
-		map_draw.draw_rect(Rect2(bar_pos, Vector2(bar_w * hp_ratio, 5)), hp_col)
+		var bar_w = 36.0 * k
+		var bar_pos = center + Vector2(-bar_w * 0.5, tr + 6.0 * k)
+		map_draw.draw_rect(Rect2(bar_pos - Vector2(1, 1), Vector2(bar_w + 2, 6)), Color(0.02, 0.03, 0.05, 0.85))
+		var hp_col = UIKit.OK if u.team == "player" else UIKit.DANGER
+		map_draw.draw_rect(Rect2(bar_pos, Vector2(bar_w * hp_ratio, 4)), hp_col)
 		# CD meters: per-skill pip with initial + fill
 		if u.team == "player":
 			var cd_items: Array = []
@@ -1380,8 +1467,8 @@ func _draw_map() -> void:
 				var max_cd = maxf(1.0, float(sk.get("cooldown", 3)))
 				cd_items.append({"cd": cdv, "max": max_cd, "ch": initial, "ready": cdv <= 0})
 			if cd_items.size() > 0:
-				var cd_y = bar_pos.y + 6.0
-				var pip_w = 10.0
+				var cd_y = bar_pos.y + 7.0
+				var pip_w = 12.0
 				var gap = 2.0
 				var total_w = cd_items.size() * (pip_w + gap) - gap
 				var sx0 = center.x - total_w * 0.5
@@ -1390,22 +1477,27 @@ func _draw_map() -> void:
 					var sx = sx0 + ci * (pip_w + gap)
 					var ready = bool(it["ready"])
 					var fill = 1.0 if ready else clampf(1.0 - float(it["cd"]) / float(it["max"]), 0.0, 1.0)
-					map_draw.draw_rect(Rect2(Vector2(sx, cd_y), Vector2(pip_w, 11)), Color(0.08, 0.09, 0.12, 0.92))
-					var col = Color(0.45, 0.85, 0.55, 0.95) if ready else Color(0.45, 0.65, 0.95, 0.95)
-					map_draw.draw_rect(Rect2(Vector2(sx, cd_y + 11 * (1.0 - fill)), Vector2(pip_w, 11 * fill)), col)
-					var tcol = Color(0.95, 0.95, 0.9) if ready else Color(0.75, 0.8, 0.9)
-					map_draw.draw_string(ThemeDB.fallback_font, Vector2(sx + 1, cd_y + 9), str(it["ch"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 9, tcol)
-					if not ready:
-						map_draw.draw_string(ThemeDB.fallback_font, Vector2(sx + 2, cd_y - 1), str(int(it["cd"])), HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color(1, 0.85, 0.4))
-		# 名称短签
-		var nm = str(u.char.name)
-		if nm.length() > 4:
-			nm = nm.substr(0, 4)
-		map_draw.draw_string(ThemeDB.fallback_font, center + Vector2(-16, -26), nm, HORIZONTAL_ALIGNMENT_LEFT, -1, 11, Color(0.95, 0.93, 0.88))
+					map_draw.draw_rect(Rect2(Vector2(sx, cd_y), Vector2(pip_w, 12)), Color(0.03, 0.04, 0.06, 0.88))
+					var col = Color(UIKit.OK, 0.9) if ready else Color(UIKit.ACCENT, 0.75)
+					map_draw.draw_rect(Rect2(Vector2(sx, cd_y + 12 * (1.0 - fill)), Vector2(pip_w, 12 * fill)), Color(col, 0.35))
+					var tcol = UIKit.TEXT if ready else UIKit.TEXT_DIM
+					map_draw.draw_string(fnt, Vector2(sx + 1, cd_y + 10), str(it["ch"]), HORIZONTAL_ALIGNMENT_CENTER, pip_w - 2, 9, tcol)
+		# name pill above token — only for selected / hovered (unit card carries the rest; keeps the board clean)
+		if i != selected and p != _hover_cell:
+			continue
+		var nm2 = str(u.char.name)
+		if nm2.length() > 4:
+			nm2 = nm2.substr(0, 4)
+		var fsz := 12
+		var tw := fb.get_string_size(nm2, HORIZONTAL_ALIGNMENT_LEFT, -1, fsz).x
+		var np: Vector2 = center + Vector2(-tw * 0.5, -tr - 10.0 * k)
+		map_draw.draw_rect(Rect2(np + Vector2(-6, -13), Vector2(tw + 12, 18)), Color(0.03, 0.04, 0.06, 0.62))
+		map_draw.draw_rect(Rect2(np + Vector2(-6, 4), Vector2(tw + 12, 1)), Color(UIKit.OK if u.team == "player" else UIKit.DANGER, 0.8))
+		map_draw.draw_string(fb, np, nm2, HORIZONTAL_ALIGNMENT_LEFT, -1, fsz, UIKit.TEXT)
 		# 选中脉冲环
 		if i == selected:
 			var pulse = 0.5 + 0.5 * sin(_sel_pulse * 6.0)
-			map_draw.draw_arc(center, 24.0 + pulse * 2.0, 0, TAU, 32, UnitArt.crest_color(), 2.0)
+			map_draw.draw_arc(center, tr + 4.0 + pulse * 2.0, 0, TAU, 40, Color(UIKit.ACCENT, 0.9), 1.5, true)
 
 func _draw_overlay() -> void:
 	# 敌军控制地带（ZoC）浅红提示
@@ -1413,7 +1505,7 @@ func _draw_overlay() -> void:
 		var zcells = BattleRules.zoc_cells(MAP_W, MAP_H, _enemy_positions("player"))
 		for pos in zcells.keys():
 			var rz = Rect2(ORIGIN + Vector2(pos) * CELL, Vector2(CELL - 2, CELL - 2))
-			overlay.draw_rect(rz, Color(0.85, 0.25, 0.2, 0.16))
+			overlay.draw_rect(rz, Color(UIKit.DANGER, 0.09))
 	if not attack_mode:
 		var foes_ov = _enemy_positions("player")
 		var locked_ov = false
@@ -1486,8 +1578,8 @@ func _draw_overlay() -> void:
 					overlay.draw_rect(Rect2(tp, Vector2(18, 14)), Color(0.05, 0.05, 0.08, 0.75))
 		# 图例：纯图标芯片（无长文字）
 		if not move_cells.is_empty():
-			var lx = 40.0
-			var ly = ORIGIN.y + MAP_H * CELL + 6.0
+			var lx = ORIGIN.x + 10.0
+			var ly = ORIGIN.y + MAP_H * CELL - 58.0
 			if ResourceLoader.exists("res://assets/art/ui/zoc_leave_legend.png"):
 				var ltex = _tex("res://assets/art/ui/zoc_leave_legend.png")
 				overlay.draw_texture(ltex, Vector2(lx, ly))
@@ -1516,7 +1608,7 @@ func _draw_overlay() -> void:
 		var sp = "res://assets/art/fx/select_dense_%d.png" % sfi
 		if ResourceLoader.exists(sp):
 			var cpos = ORIGIN + Vector2(units[selected].pos) * CELL + Vector2(CELL, CELL) * 0.5 - Vector2(1, 1)
-			var rs := float(CELL) + 18.0
+			var rs := float(CELL) * 1.32
 			var scol = Color(1, 1, 1, 0.95) if units[selected].team == "player" else Color(1.0, 0.62, 0.62, 0.95)
 			overlay.draw_texture_rect(_tex(sp), Rect2(cpos - Vector2(rs, rs) * 0.5, Vector2(rs, rs)), false, scol)
 	# slash + hit_spark 分层（game-feel）
@@ -1532,14 +1624,14 @@ func _draw_overlay() -> void:
 		if not ResourceLoader.exists(path):
 			path = "res://assets/art/fx/slash_%d.png" % fi
 		if ResourceLoader.exists(path):
-			var fs: float = float(FX_SIZE.get(kind, 84.0))
+			var fs: float = float(FX_SIZE.get(kind, 84.0)) * _k()
 			overlay.draw_texture_rect(_tex(path), Rect2(s.pos - Vector2(fs, fs) * 0.5, Vector2(fs, fs)), false)
 		if kind in ["slash", "crit", "spark"]:
 			var spark = "res://assets/art/fx/hit_dense_%d.png" % fi
 			if not ResourceLoader.exists(spark):
 				spark = "res://assets/art/fx/hit_spark_%d.png" % fi
 			if ResourceLoader.exists(spark):
-				var hs := 72.0
+				var hs := 72.0 * _k()
 				overlay.draw_texture_rect(_tex(spark), Rect2(s.pos - Vector2(hs, hs) * 0.5, Vector2(hs, hs)), false, Color(1, 1, 1, 0.9))
 	# 交战锁定爆发环
 	for lb in _lock_burst_fx:
@@ -1549,7 +1641,7 @@ func _draw_overlay() -> void:
 			lp = "res://assets/art/fx/lock_%d.png" % fi3
 		if ResourceLoader.exists(lp):
 			var a3 = clampf(1.0 - lb.age / 0.55, 0.0, 1.0)
-			overlay.draw_texture_rect(_tex(lp), Rect2(lb.pos - Vector2(40, 40), Vector2(80, 80)), false, Color(1, 1, 1, a3))
+			overlay.draw_texture_rect(_tex(lp), Rect2(lb.pos - Vector2(40, 40) * _k(), Vector2(80, 80) * _k()), false, Color(1, 1, 1, a3))
 	# 伤害飘字 + dmg_pop 底板
 	for fx in _dmg_fx:
 		var a = clampf(1.0 - fx.age / 1.1, 0.0, 1.0)
@@ -1561,8 +1653,8 @@ func _draw_overlay() -> void:
 		if not ResourceLoader.exists(pop):
 			pop = "res://assets/art/fx/dmg_pop_%d.png" % fi2
 		if ResourceLoader.exists(pop):
-			overlay.draw_texture_rect(_tex(pop), Rect2(fx.pos + Vector2(-22, yoff - 30), Vector2(48, 48)), false, Color(1, 1, 1, a * 0.9))
-		overlay.draw_string(ThemeDB.fallback_font, fx.pos + Vector2(-10, yoff), fx.text, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, col)
+			overlay.draw_texture_rect(_tex(pop), Rect2(fx.pos + Vector2(-24, yoff - 32) * _k(), Vector2(48, 48) * _k()), false, Color(1, 1, 1, a * 0.9))
+		overlay.draw_string(UIKit.font("bold"), fx.pos + Vector2(-12, yoff) * _k(), fx.text, HORIZONTAL_ALIGNMENT_LEFT, -1, int(18 * sqrt(_k())), col)
 	# 回合横幅
 	if _turn_flash > 0.0:
 		var a2 = clampf(_turn_flash / 0.9, 0.0, 1.0)
@@ -1571,10 +1663,16 @@ func _draw_overlay() -> void:
 		var tfp = "res://assets/art/fx/turn_flash_dense_%d.png" % tfi
 		if not ResourceLoader.exists(tfp):
 			tfp = "res://assets/art/fx/turn_flash_%d.png" % tfi
+		var bc := ORIGIN + Vector2(MAP_W, MAP_H) * CELL * 0.5
+		var bandc: Color = UIKit.ACCENT if turn_team == "player" else UIKit.DANGER
+		overlay.draw_rect(Rect2(Vector2(ORIGIN.x, bc.y - 34), Vector2(MAP_W * CELL, 68)), Color(0.03, 0.04, 0.06, 0.72 * a2))
+		overlay.draw_rect(Rect2(Vector2(ORIGIN.x, bc.y - 34), Vector2(MAP_W * CELL, 1)), Color(bandc, 0.6 * a2))
+		overlay.draw_rect(Rect2(Vector2(ORIGIN.x, bc.y + 33), Vector2(MAP_W * CELL, 1)), Color(bandc, 0.6 * a2))
 		if ResourceLoader.exists(tfp):
-			overlay.draw_texture_rect(_tex(tfp), Rect2(Vector2(28, 277), Vector2(96, 96)), false, Color(1, 1, 1, a2 * 0.9))
-		overlay.draw_rect(Rect2(80, 300, 360, 50), Color(0.05, 0.06, 0.08, 0.75 * a2))
-		overlay.draw_string(ThemeDB.fallback_font, Vector2(120, 332), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(UnitArt.crest_color(), a2))
+			overlay.draw_texture_rect(_tex(tfp), Rect2(bc - Vector2(150, 48), Vector2(96, 96)), false, Color(1, 1, 1, a2 * 0.9))
+		var tf := UIKit.font("regular")
+		var tsz := tf.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 26)
+		overlay.draw_string(tf, bc + Vector2(-tsz.x * 0.5, 9), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 26, Color(UIKit.TEXT, a2))
 	# 地形悬停提示
 	if _in_bounds(_hover_cell):
 		var sw = "res://assets/art/fx/attack_wash.png" if attack_mode else ("res://assets/art/fx/move_wash.png" if ResourceLoader.exists("res://assets/art/fx/move_wash.png") else "res://assets/art/fx/select_wash.png")
@@ -1584,9 +1682,14 @@ func _draw_overlay() -> void:
 		var tid = terrain[_hover_cell.y][_hover_cell.x]
 		var ti = BattleRules.terrain_info(tid)
 		var tip = "%s　回避+%d　防+%d　移耗%d" % [ti.name, ti.avo_bonus, ti.get("def_bonus", 0), ti.move_cost]
-		var tip_pos = ORIGIN + Vector2(_hover_cell.x * CELL, _hover_cell.y * CELL) + Vector2(4, -18)
-		overlay.draw_rect(Rect2(tip_pos + Vector2(-4, -14), Vector2(210, 18)), Color(0.05, 0.06, 0.08, 0.82))
-		overlay.draw_string(ThemeDB.fallback_font, tip_pos, tip, HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.92, 0.88, 0.75))
+		var tfont := UIKit.font("regular")
+		var tws := tfont.get_string_size(tip, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x
+		var tip_pos = ORIGIN + Vector2(_hover_cell.x * CELL, _hover_cell.y * CELL) + Vector2(10, -10)
+		tip_pos.x = clampf(tip_pos.x, ORIGIN.x + 6, ORIGIN.x + MAP_W * CELL - tws - 16)
+		tip_pos.y = maxf(tip_pos.y, ORIGIN.y + 18)
+		overlay.draw_rect(Rect2(tip_pos + Vector2(-8, -15), Vector2(tws + 16, 22)), Color(0.06, 0.08, 0.11, 0.9))
+		overlay.draw_rect(Rect2(tip_pos + Vector2(-8, -15), Vector2(tws + 16, 22)), Color(1, 1, 1, 0.14), false, 1.0)
+		overlay.draw_string(tfont, tip_pos, tip, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, UIKit.TEXT)
 
 
 func _zoc_cell_kind(pos: Vector2i) -> String:
@@ -2053,8 +2156,8 @@ func _wait_selected() -> void:
 
 func _start_player_turn() -> void:
 	turn_team = "player"
-	phase_label.text = "玩家回合"
-	phase_label.add_theme_color_override("font_color", UnitArt.crest_color())
+	phase_label.text = "%s · 我方行动" % map_name
+	phase_label.add_theme_color_override("font_color", UIKit.TEXT)
 	_turn_flash = 0.9
 	Sfx.turn()
 	var pcs: Array = []
@@ -2092,7 +2195,7 @@ func _end_player_turn() -> void:
 		Sfx.miss()
 		return
 	turn_team = "enemy"
-	phase_label.text = "敌方回合"
+	phase_label.text = "%s · 敌方行动" % map_name
 	phase_label.add_theme_color_override("font_color", UIKit.DANGER)
 	_turn_flash = 0.9
 	for u in units:
@@ -2128,8 +2231,9 @@ func _show_lock_tip_once() -> void:
 
 func _show_lock_tip_panel(title: String, body: String, step: int, auto_sec: float) -> Control:
 	var panel = UIKit.make_panel()
-	panel.position = Vector2(520, 586)  # v8.5: lower band — never covers the unit card / map
-	panel.custom_minimum_size = Vector2(720, 100)
+	panel.position = Vector2(RAIL_X, 462)  # v8.6: rail slot over the log — never on the board
+	panel.custom_minimum_size = Vector2(RAIL_W, 96)
+	panel.add_theme_stylebox_override("panel", UIKit.glass(12, 0.94, true))
 	panel.z_index = 20
 	panel.name = "LockTipPanel"
 	add_child(panel)
@@ -2140,7 +2244,7 @@ func _show_lock_tip_panel(title: String, body: String, step: int, auto_sec: floa
 	panel.add_child(hrow)
 	var glyph := TextureRect.new()
 	glyph.texture = _tex("res://assets/art/fx/lock_dense_3.png")
-	glyph.custom_minimum_size = Vector2(72, 72)
+	glyph.custom_minimum_size = Vector2(44, 44)
 	glyph.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	glyph.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -2159,10 +2263,12 @@ func _show_lock_tip_panel(title: String, body: String, step: int, auto_sec: floa
 		pips.add_child(pip)
 	vb.add_child(pips)
 	var t = UIKit.make_label(title, true)
-	t.add_theme_color_override("font_color", Color(1.0, 0.45, 0.35))
+	t.add_theme_font_size_override("font_size", 16)
+	t.add_theme_color_override("font_color", UIKit.DANGER)
 	vb.add_child(t)
 	var d = UIKit.make_dim_label(body)
-	d.custom_minimum_size = Vector2(600, 40)
+	d.add_theme_font_size_override("font_size", 12)
+	d.custom_minimum_size = Vector2(RAIL_W - 110, 0)
 	d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	vb.add_child(d)
 	if auto_sec > 0.0:
@@ -2191,8 +2297,9 @@ func _run_lock_tutorial_sequence() -> void:
 		var p = _show_lock_tip_panel(str(steps[2].t), str(steps[2].b), 2, 0.0)
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 8)
-		p.add_child(row)
-		var dismiss = UIKit.make_accent_button("开始隘口教学", 160)
+		var host: Node = p.get_child(0).get_child(1) if p.get_child_count() > 0 and p.get_child(0).get_child_count() > 1 else p
+		host.add_child(row)
+		var dismiss = UIKit.make_accent_button("开始隘口教学", 140)
 		dismiss.pressed.connect(func():
 			if is_instance_valid(p):
 				p.queue_free()
@@ -2221,13 +2328,26 @@ func _show_lock_practice_banner() -> void:
 	if has_meta("lock_practice_banner"):
 		return
 	set_meta("lock_practice_banner", true)
-	var panel = UIKit.make_panel()
-	panel.position = Vector2(40, 520)
-	panel.custom_minimum_size = Vector2(450, 70)
+	## v8.6: slim coral pill in the turn bar — the board stays clear
+	var panel = UIKit.make_glass(18, 0.82)
+	var pst: StyleBoxFlat = UIKit.glass(18, 0.82)
+	pst.border_color = Color(UIKit.DANGER, 0.55)
+	pst.content_margin_top = 6
+	pst.content_margin_bottom = 6
+	pst.content_margin_left = 14
+	pst.content_margin_right = 14
+	pst.shadow_size = 0
+	panel.add_theme_stylebox_override("panel", pst)
+	panel.position = Vector2(372, 12)
+	panel.custom_minimum_size = Vector2(508, 0)
 	panel.z_index = 18
+	var ct := find_child("ControlsTip", true, false)
+	if ct:
+		ct.visible = false
 	panel.name = "LockPracticeBanner"
 	add_child(panel)
 	var vb := VBoxContainer.new()
+	vb.add_theme_constant_override("separation", 0)
 	panel.add_child(vb)
 	var title = "【强制练习】交战锁定"
 	var tip = "先选中单位 → 攻击模式 → 攻击一名敌人，触发锁定后才能结束回合。"
@@ -2241,15 +2361,24 @@ func _show_lock_practice_banner() -> void:
 		else:
 			title = "【中盘演练】交战锁定复习"
 			tip = "夜袭中再练一次锁定：攻击敌人触发红环锁定后，方可结束回合。"
-	var t = UIKit.make_label(title, true)
-	t.add_theme_color_override("font_color", Color(1.0, 0.45, 0.35))
+	var t = UIKit.make_label(title)
+	t.add_theme_font_size_override("font_size", 13)
+	t.add_theme_color_override("font_color", UIKit.DANGER)
 	vb.add_child(t)
-	vb.add_child(UIKit.make_dim_label(tip))
+	var tl = UIKit.make_dim_label(tip)
+	tl.add_theme_font_size_override("font_size", 11)
+	tl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	tl.custom_minimum_size = Vector2(478, 0)
+	vb.add_child(tl)
+	panel.tooltip_text = tip
 
 func _clear_lock_practice_banner() -> void:
 	var p = get_node_or_null("LockPracticeBanner")
 	if p:
 		p.queue_free()
+	var ct := find_child("ControlsTip", true, false)
+	if ct:
+		ct.visible = true
 
 func _enemy_known_skills(c: CKCharacter) -> Array:
 	var out: Array = []
@@ -2603,8 +2732,10 @@ func _finish(win: bool) -> void:
 	GameState.save_game()
 	# 胜负大面板
 	var end_panel = UIKit.make_panel()
-	end_panel.position = Vector2(520, 560)
-	end_panel.custom_minimum_size = Vector2(720, 100)
+	end_panel.add_theme_stylebox_override("panel", UIKit.glass(16, 0.92, true))
+	end_panel.custom_minimum_size = Vector2(480, 0)
+	end_panel.position = ORIGIN + Vector2(MAP_W, MAP_H) * CELL * 0.5 - Vector2(240, 60)
+	end_panel.z_index = 30
 	add_child(end_panel)
 	var vb := VBoxContainer.new()
 	end_panel.add_child(vb)
@@ -3531,7 +3662,8 @@ func _refresh_info() -> void:
 	info_label.text = txt
 
 func _log(t: String) -> void:
-	log_label.text = t + "\n" + log_label.text
+	var lines := (t + "\n" + log_label.text).split("\n")
+	log_label.text = "\n".join(lines.slice(0, mini(lines.size(), 12)))
 
 
 func _restore_heir_clash_hp() -> void:
