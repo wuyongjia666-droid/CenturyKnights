@@ -9,6 +9,11 @@ const BOARD_AREA := Rect2(24, 76, 856, 620)
 const RAIL_X := 904.0
 const RAIL_W := 352.0
 var _ground: ColorRect
+## v8.6 3D combat cutscenes: pure recorder (tactics logic untouched) -> queued overlay playback
+const CombatCutsceneScript = preload("res://scripts/battle/combat_cutscene.gd")
+var _combat_rec: Array = []
+var _cut_queue: Array = []
+var _cut_playing := false
 const TERRAIN_IDS := {"plain": 0, "forest": 1, "hill": 2, "water": 3, "fort": 4, "bridge": 5}
 var MAP_W: int = 8
 var MAP_H: int = 6
@@ -1936,6 +1941,9 @@ func _spawn_slash(cell: Vector2i, kind: String = "slash") -> void:
 	_shake = 3.5
 
 func _do_attack(ai: int, di: int) -> void:
+	_combat_rec = []
+	var _hp0a: int = int(units[ai].char.hp)
+	var _hp0d: int = int(units[di].char.hp)
 	_resolve_strike(ai, di, true)
 	var atk = units[ai]
 	var def = units[di]
@@ -1972,7 +1980,60 @@ func _do_attack(ai: int, di: int) -> void:
 	_refresh_info()
 	map_draw.queue_redraw()
 	overlay.queue_redraw()
+	_queue_cutscene(ai, di, _hp0a, _hp0d)
 	_check_end()
+
+func _cutscenes_enabled() -> bool:
+	return DisplayServer.get_name() != "headless" and bool(GameState.get_meta("cutscenes_on", true))
+
+func _queue_cutscene(ai: int, di: int, hp0a: int, hp0d: int) -> void:
+	if not _cutscenes_enabled() or _combat_rec.is_empty():
+		_combat_rec = []
+		return
+	var atk = units[ai]
+	var def = units[di]
+	var a_side := "right" if atk.team == "player" else "left"   # FE convention: our side on the right
+	var d_side := "left" if a_side == "right" else "right"
+	var strikes: Array = []
+	var fc := {a_side: {}, d_side: {}}
+	for r in _combat_rec:
+		var from: String = a_side if int(r.a) == ai else d_side
+		strikes.append({"from": from, "hit": r.hit, "crit": r.crit, "dmg": r.dmg, "killed": r.killed, "skill": r.skill, "hp_after": r.hp_after})
+		if fc[from].is_empty():
+			fc[from] = {"hit": r.hit_chance, "dmg": r.dmg if r.hit else "—"}
+	var tid := str(terrain[def.pos.y][def.pos.x])
+	var bg: Array = _biome_ground()
+	var ground: String = tid if tid in ["forest", "hill", "fort", "bridge"] else str(bg[0])
+	var gv: Vector3 = bg[1]
+	var _AtlasArt = preload("res://scripts/art/atlas_art.gd")
+	var rec := {
+		a_side: {"char": atk.char, "team": atk.team, "template": str(atk.get("template", "")), "hp0": hp0a,
+			"hit": fc[a_side].get("hit", "—"), "dmg": fc[a_side].get("dmg", "—"), "crit": atk.char.derived_crit()},
+		d_side: {"char": def.char, "team": def.team, "template": str(def.get("template", "")), "hp0": hp0d,
+			"hit": fc[d_side].get("hit", "—"), "dmg": fc[d_side].get("dmg", "—"), "crit": def.char.derived_crit()},
+		"strikes": strikes, "ground": ground, "grade": Color(gv.x, gv.y, gv.z),
+		"backdrop": str(_AtlasArt.battle_backdrop_for_map(map_id)),
+		"title": "%s · %s" % [map_name, str(BattleRules.terrain_info(tid).get("name", tid))],
+	}
+	_combat_rec = []
+	_cut_queue.append(rec)
+	if not _cut_playing:
+		_drain_cutscenes()
+
+func play_cutscene_record(rec: Dictionary) -> void:
+	_cut_queue.append(rec)
+	if not _cut_playing:
+		_drain_cutscenes()
+
+func _drain_cutscenes() -> void:
+	_cut_playing = true
+	while not _cut_queue.is_empty():
+		var r: Dictionary = _cut_queue.pop_front()
+		var cs = CombatCutsceneScript.new()
+		cs.setup(r)
+		add_child(cs)
+		await cs.finished
+	_cut_playing = false
 
 func _combat_extras(ai: int, di: int) -> Dictionary:
 	var atk = units[ai]
@@ -2016,6 +2077,7 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool) -> void:
 	var def = units[di]
 	if atk.char.hp <= 0 or def.char.hp <= 0:
 		return
+	var _hp_before: int = int(def.char.hp)
 	var tid = terrain[def.pos.y][def.pos.x]
 	var extras = _combat_extras(ai, di)
 	var skill_id = ""
@@ -2090,6 +2152,9 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool) -> void:
 		Sfx.miss()
 		msg += "未命中（命中率 %d%%）" % result.hit_chance
 		_spawn_dmg(def.pos, "未中", Color(0.7, 0.75, 0.85))
+	_combat_rec.append({"a": ai, "d": di, "hit": bool(result.hit), "crit": bool(result.get("crit", false)), "dmg": int(result.get("damage", 0)),
+		"killed": def.char.hp <= 0, "skill": str(sk.get("name", skill_id)) if skill_id != "" else "", "hp_before": _hp_before,
+		"hp_after": int(def.char.hp), "hit_chance": int(result.get("hit_chance", 0))})
 	if result.hit and skill_id != "" and sk.get("type") == "offense":
 		if float(sk.get("drain_pct", 0)) > 0:
 			var heal = maxi(1, int(result.damage * float(sk.get("drain_pct", 0))))

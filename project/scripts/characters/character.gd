@@ -12,6 +12,9 @@ var is_child: bool = false
 var in_roster: bool = true
 var alive: bool = true
 var retired: bool = false
+## v8.6: stable identity for the named cast ("leader", "dengying", "militia_a", "militia_b").
+## Portraits / tokens / 3D models key by this — never by name substring (random names collide).
+var cast_key: String = ""
 
 # 六维
 var stats: Dictionary = {"str": 8, "vit": 8, "skl": 8, "agi": 8, "per": 8, "wil": 8}
@@ -135,7 +138,7 @@ func to_dict() -> Dictionary:
 		"injured": injured, "salary": salary, "spouse_id": spouse_id,
 		"parent_ids": parent_ids.duplicate(), "children_ids": children_ids.duplicate(),
 		"pregnant_months": pregnant_months, "birthday_month": birthday_month,
-		"weapon_id": weapon_id, "faction": faction, "skills": skills.duplicate(), "unlocked_skills": unlocked_skills.duplicate(),
+		"weapon_id": weapon_id, "faction": faction, "cast_key": cast_key, "skills": skills.duplicate(), "unlocked_skills": unlocked_skills.duplicate(),
 	}
 
 static func from_dict(d: Dictionary) -> CKCharacter:
@@ -149,6 +152,13 @@ static func from_dict(d: Dictionary) -> CKCharacter:
 	c.in_roster = bool(d.get("in_roster", true))
 	c.alive = bool(d.get("alive", true))
 	c.retired = bool(d.get("retired", false))
+	c.cast_key = str(d.get("cast_key", ""))
+	if c.cast_key == "":
+		# migrate pre-v8.6 saves: exact cast identities only (id prefix + exact name), never substrings
+		if c.is_leader:
+			c.cast_key = "leader"
+		elif c.id.begins_with("ally") and c.name == "苇原·灯影":
+			c.cast_key = "dengying"
 	c.stats = d.get("stats", c.stats).duplicate()
 	c.apt_min = d.get("apt_min", {}).duplicate()
 	c.apt_max = d.get("apt_max", {}).duplicate()

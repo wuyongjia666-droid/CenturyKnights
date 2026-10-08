@@ -120,6 +120,10 @@ static func _try_load(path: String) -> Texture2D:
 			return tex
 	return null
 
+static func _cast(c) -> String:
+	## v8.6: named-cast identity by stable cast_key (id-keyed), never name substrings
+	return str(c.cast_key) if "cast_key" in c else ""
+
 static func _portrait_key(c: CKCharacter) -> String:
 	# v8.5: named core cast -> v8 hero / bust plates (thumb 220x270: right size for cards, no
 	# minification aliasing). The old *_face_plate cartoons were pre-v8 placeholders.
@@ -127,16 +131,12 @@ static func _portrait_key(c: CKCharacter) -> String:
 	var v8n := ""
 	if c.is_leader:
 		v8n = "v8_hero_leader_%s" % g8
-	elif c.name.find("灯影") >= 0:
+	elif _cast(c) == "dengying":
 		v8n = "v8_bust_%s_hunter" % g8
-	elif c.name.find("民兵·甲") >= 0:
+	elif _cast(c) == "militia_a":
 		v8n = "v8_bust_%s_spear" % g8
-	elif c.name.find("民兵·乙") >= 0:
+	elif _cast(c) == "militia_b":
 		v8n = "v8_bust_%s_guard" % g8
-	elif c.name.find("河荇") >= 0:
-		v8n = "v8_hero_strategist_f" if g8 == "f" else "v8_bust_m_scholar"
-	elif c.name.find("苇心") >= 0:
-		v8n = "v8_bust_%s_scout" % g8
 	if v8n != "":
 		for cand in ["res://assets/art/portraits/thumb_%s.png" % v8n, "res://assets/art/portraits/%s.png" % v8n]:
 			if ResourceLoader.exists(cand):
@@ -145,16 +145,12 @@ static func _portrait_key(c: CKCharacter) -> String:
 	var named_plate := ""
 	if c.is_leader:
 		named_plate = "leader_default_face_plate"
-	elif c.name.find("灯影") >= 0:
+	elif _cast(c) == "dengying":
 		named_plate = "ally_dengying_face_plate"
-	elif c.name.find("民兵·甲") >= 0:
+	elif _cast(c) == "militia_a":
 		named_plate = "militia_a_face_plate"
-	elif c.name.find("民兵·乙") >= 0:
+	elif _cast(c) == "militia_b":
 		named_plate = "militia_b_face_plate"
-	elif c.name.find("河荇") >= 0:
-		named_plate = "ally_heye_face_plate"
-	elif c.name.find("苇心") >= 0:
-		named_plate = "ally_weixin_face_plate"
 	if named_plate != "":
 		var pp = "res://assets/art/portraits/%s.png" % named_plate
 		if ResourceLoader.exists(pp):
@@ -163,11 +159,11 @@ static func _portrait_key(c: CKCharacter) -> String:
 		var p = "res://assets/art/portraits/leader_default.png"
 		if ResourceLoader.exists(p):
 			return p
-	if c.name.find("灯影") >= 0:
+	if _cast(c) == "dengying":
 		return "res://assets/art/portraits/ally_dengying.png"
-	if c.name.find("民兵·甲") >= 0:
+	if _cast(c) == "militia_a":
 		return "res://assets/art/portraits/militia_a.png"
-	if c.name.find("民兵·乙") >= 0:
+	if _cast(c) == "militia_b":
 		return "res://assets/art/portraits/militia_b.png"
 	if str(c.name).find("镖路匪首") >= 0:
 		return _boss_portrait("escort")
@@ -429,11 +425,11 @@ static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
 static func _token_key(c: CKCharacter, team: String, frame: int) -> String:
 	if c.is_leader:
 		return "res://assets/art/tokens/leader_default_%s_f%d.png" % [team, frame]
-	if c.name.find("灯影") >= 0:
+	if _cast(c) == "dengying":
 		return "res://assets/art/tokens/ally_dengying_%s_f%d.png" % [team, frame]
-	if c.name.find("民兵·甲") >= 0:
+	if _cast(c) == "militia_a":
 		return "res://assets/art/tokens/militia_a_%s_f%d.png" % [team, frame]
-	if c.name.find("民兵·乙") >= 0:
+	if _cast(c) == "militia_b":
 		return "res://assets/art/tokens/militia_b_%s_f%d.png" % [team, frame]
 	if str(c.name).find("镖路匪首") >= 0:
 		return "res://assets/art/tokens/escort_boss_enemy_f%d.png" % frame

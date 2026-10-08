@@ -23,8 +23,10 @@ func _ready() -> void:
 		await _scene("res://scenes/hub/estates.tscn", "estates", 1.2)
 	if only == "" or only == "marriage":
 		await _marriage()
+	if only == "cutscene" or only == "cutscene_bow":
+		await _cutscene(only == "cutscene_bow")
 	for pair in [["castle","res://scenes/hub/castle_hub.tscn"],["roster","res://scenes/hub/roster.tscn"],["tavern","res://scenes/hub/tavern.tscn"],["menu","res://scenes/ui/main_menu.tscn"],["atlas","res://scenes/hub/atlas_view.tscn"]]:
-		if only == "" or only == pair[0]:
+		if only == pair[0] or (only == "" and pair[0] != ""):
 			await _scene(pair[1], pair[0], 1.2)
 	print("CAPTURE_DONE ", OUT)
 	get_tree().quit(0)
@@ -111,3 +113,43 @@ func _marriage() -> void:
 	await _wait(0.5)
 	await _snap("marriage_seal")
 	n.queue_free()
+
+
+func _cutscene(bow: bool) -> void:
+	var battle = load("res://scenes/battle/battle.tscn").instantiate()
+	add_child(battle)
+	battle.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	battle.size = Vector2(1280, 720)
+	await _wait(1.0)
+	var hero = null
+	var foe = null
+	for u in battle.units:
+		var ck := str(u.char.cast_key)
+		if u.team == "player" and ((bow and ck == "dengying") or (not bow and ck == "leader")):
+			hero = u
+		if u.team == "enemy" and foe == null:
+			foe = u
+	if hero == null:
+		hero = battle.units[0]
+	var hp: int = int(hero.char.hp)
+	var ehp: int = int(foe.char.max_hp)
+	var rec := {
+		"right": {"char": hero.char, "team": "player", "hp0": hp, "hit": 86, "dmg": 9, "crit": hero.char.derived_crit()},
+		"left": {"char": foe.char, "team": "enemy", "template": str(foe.get("template", "")), "hp0": ehp, "hit": 64, "dmg": 6, "crit": 3},
+		"strikes": [
+			{"from": "right", "hit": true, "crit": false, "dmg": 7, "killed": false, "skill": "", "hp_after": ehp - 7},
+			{"from": "left", "hit": false, "crit": false, "dmg": 0, "killed": false, "skill": "", "hp_after": hp},
+			{"from": "right", "hit": true, "crit": true, "dmg": ehp - 7, "killed": true, "skill": "", "hp_after": 0},
+		],
+		"ground": "dust", "grade": Color(0.97, 0.98, 1.02),
+		"backdrop": "res://assets/art/battle/v8_battle_biome_pass.png", "title": "隘口之夜 · 平地",
+	}
+	battle.play_cutscene_record(rec)
+	var t := 0.0
+	var i := 0
+	while t < 8.6:
+		await _wait(0.3)
+		t += 0.3
+		await _snap("cut_%02d" % i)
+		i += 1
+	battle.queue_free()

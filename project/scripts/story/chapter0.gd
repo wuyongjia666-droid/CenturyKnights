@@ -85,7 +85,7 @@ func _speaker_portrait(speaker: String) -> void:
 	var leader = GameState.get_leader()
 	var ally: CKCharacter = null
 	for c in GameState.characters.values():
-		if c.name.find("灯影") >= 0:
+		if c.cast_key == "dengying" or c.name == "苇原·灯影":
 			ally = c
 			break
 	match speaker:

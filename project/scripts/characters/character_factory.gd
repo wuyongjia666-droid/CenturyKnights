@@ -10,6 +10,7 @@ static func next_id(prefix: String = "c") -> String:
 static func make_leader(given: String, surname: String, crest_color: String) -> CKCharacter:
 	var c := CKCharacter.new()
 	c.id = next_id("leader")
+	c.cast_key = "leader"
 	c.name = surname + given
 	c.gender = "m"
 	c.age = 22
@@ -31,6 +32,7 @@ static func make_leader(given: String, surname: String, crest_color: String) -> 
 static func make_ally_tutor() -> CKCharacter:
 	var c := CKCharacter.new()
 	c.id = next_id("ally")
+	c.cast_key = "dengying"
 	c.name = "苇原·灯影"
 	c.gender = "f"
 	c.age = 24
@@ -103,6 +105,7 @@ static func make_tutorial_militia(slot: int) -> CKCharacter:
 	## 第零章教学临时候补：不上花名册、不占编队栏，仅本场出战。
 	var c := CKCharacter.new()
 	c.id = next_id("militia")
+	c.cast_key = "militia_a" if slot == 0 else "militia_b"
 	c.name = "灰旗民兵·甲" if slot == 0 else "灰旗民兵·乙"
 	c.gender = "m"
 	c.age = 20
