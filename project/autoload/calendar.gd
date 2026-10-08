@@ -63,6 +63,7 @@ func advance(months: int = 1) -> Array:
 		var evs = _apply_month()
 		all_events.append_array(evs)
 		month_advanced.emit(year, month, evs)
+		CKAutosave.on_month()
 	GameState.mark_dirty()
 	return all_events
 

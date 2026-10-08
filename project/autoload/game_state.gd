@@ -77,6 +77,7 @@ var dirty: bool = false
 var play_seconds: float = 0.0
 var save_notice: String = ""
 var save_backup_used: String = ""
+var board_input_blocked: bool = false
 var dynasty_journal: String = ""
 var lineage_log: Array = []  # deeper marriage/lineage event strings
 var lineage_path: Dictionary = {}  # child_id -> "martial"|"scholar"|"merchant"
@@ -93,9 +94,21 @@ const REP_TIERS := [
 
 func _ready() -> void:
 	rng.randomize()
+	set_process_unhandled_input(true)
 	_load_data()
 	BattleRules.preview_enabled = settings.get("rules_preview", true)
 	CKGenomePortrait.set_bloodline_clause_hook(Callable(CKBloodline, "portrait_clause"))
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel"):
+		CKPauseMenu.toggle()
+		get_viewport().set_input_as_handled()
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_WM_CLOSE_REQUEST:
+		CKAutosave.on_background()
+	elif what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		CKPauseMenu.toggle()
 
 func _exit_tree() -> void:
 	# static hooks must not outlive the engine's script teardown
