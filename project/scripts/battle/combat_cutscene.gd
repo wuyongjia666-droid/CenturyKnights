@@ -128,12 +128,16 @@ func _build_stage() -> void:
 	for side in ["left", "right"]:
 		var o := OmniLight3D.new()
 		var team := str(rec[side].team)
-		o.light_color = UIKit.DANGER if team == "enemy" else UIKit.OK
+		var spec: Dictionary = UnitModel.resolve(rec[side].char, team, str(rec[side].get("template", "")))
+		if team == "enemy" and spec.get("trim", null) is Color:
+			o.light_color = spec["trim"]
+		else:
+			o.light_color = UIKit.OK
 		o.light_energy = 3.0
 		o.omni_range = 4.0
 		o.position = Vector3(-2.6 if side == "left" else 2.6, 2.2, -1.6)
 		w.add_child(o)
-	# units
+	# units — theme spec picks the reused GLB (palette / outfit / weapon) for this enemy
 	for side in ["left", "right"]:
 		var d: Dictionary = rec[side]
 		var n := UnitModel.instantiate(d.char, str(d.team), str(d.get("template", "")))

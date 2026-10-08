@@ -14,6 +14,18 @@ echo "==> genome_check (v8.7 inheritance laws)"
 godot --headless --path . --script res://tests/genome_check.gd 2>&1 | tee /tmp/ck_genome.log
 grep -q "GENOME PASS" /tmp/ck_genome.log || { echo "genome_check FAILED"; exit 1; }
 
+echo "==> portrait_manifest (v8.9 plan A genome plates)"
+godot --headless --path . --scene res://tests/portrait_manifest_check.tscn 2>&1 | tee /tmp/ck_portrait.log
+grep -q "PORTRAIT PASS" /tmp/ck_portrait.log || { echo "portrait_manifest FAILED"; exit 1; }
+
+echo "==> kinship_portrait (3-gen descriptor resemblance)"
+godot --headless --path . --scene res://tests/kinship_portrait_check.tscn 2>&1 | tee /tmp/ck_kinship.log
+grep -q "KINSHIP PASS" /tmp/ck_kinship.log || { echo "kinship_portrait FAILED"; exit 1; }
+
+echo "==> enemy_themes (reused GLB kits)"
+godot --headless --path . --scene res://tests/enemy_theme_check.tscn 2>&1 | tee /tmp/ck_enemy_theme.log
+grep -q "ENEMY THEME PASS" /tmp/ck_enemy_theme.log || { echo "enemy_themes FAILED"; exit 1; }
+
 echo "==> scene_load_check"
 godot --headless --path . --script res://tests/scene_load_check.gd 2>&1 | tee /tmp/ck_scene_load.log
 if grep -q "SCRIPT ERROR\|Parse Error\|^FAIL " /tmp/ck_scene_load.log || ! grep -q "SCENE LOAD PASS" /tmp/ck_scene_load.log; then echo "scene_load_check FAILED"; exit 1; fi
