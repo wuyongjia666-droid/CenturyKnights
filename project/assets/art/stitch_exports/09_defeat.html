@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <title>百年骑士 - 战局败北 (1920x1080)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      margin: 0;
+      padding: 0;
+      width: 1920px;
+      height: 1080px;
+      max-width: 1920px;
+      max-height: 1080px;
+      overflow: hidden;
+      background-color: #05080c;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+    }
+    .font-sans-sc {
+      font-family: 'Noto Sans SC', serif;
+    }
+    .font-cinzel {
+      font-family: 'Noto Sans SC', serif;
+    }
+    .font-mono-code {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .frosted-panel {
+      background: rgba(11, 16, 24, 0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 24px 48px -12px rgba(0, 0, 0, 0.7);
+    }
+    .frosted-subpanel {
+      background: rgba(18, 26, 38, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .defeat-glow {
+      text-shadow: 0 0 35px rgba(239, 68, 68, 0.35), 0 0 70px rgba(220, 38, 38, 0.15);
+    }
+    .gamepad-focused {
+      box-shadow: 0 0 0 2px #6ED4FF, 0 0 24px rgba(110, 212, 255, 0.45);
+    }
+    .vignette {
+      background: radial-gradient(circle at 50% 40%, rgba(18, 12, 16, 0) 30%, rgba(4, 6, 10, 0.85) 80%, rgba(2, 3, 6, 0.98) 100%);
+    }
+    .grid-lines {
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+  </style>
+</head>
+<body class="w-[1920px] h-[1080px] text-stone-200 relative overflow-hidden bg-[#05080c]">
+  <!-- Tactical Grid / Dark Ambient Texture -->
+  <div class="absolute inset-0 grid-lines pointer-events-none opacity-60"></div>
+  <div class="absolute inset-0 vignette pointer-events-none"></div>
+
+  <!-- Deep Crimson & Ice Cold Ambient Glow -->
+  <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[1100px] h-[550px] bg-red-950/20 blur-[130px] rounded-full pointer-events-none"></div>
+  <div class="absolute bottom-0 right-10 w-[700px] h-[400px] bg-sky-950/15 blur-[120px] rounded-full pointer-events-none"></div>
+
+  <!-- Main Root Container (1920 x 1080) -->
+  <div class="relative z-10 w-[1920px] h-[1080px] flex flex-col justify-between px-16 py-10">
+
+    <!-- Top Status Header -->
+    <header class="flex items-center justify-between border-b border-white/[0.08] pb-5">
+      <div class="flex items-center gap-6">
+        <div class="flex items-center gap-3">
+          <span class="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_10px_#ef4444]"></span>
+          <span class="font-cinzel text-xs tracking-[0.28em] text-stone-400 uppercase">Century Knights</span>
+          <span class="text-stone-600 font-mono-code text-xs">/</span>
+          <span class="text-stone-400 font-mono-code text-xs tracking-wider">TACTICAL SRPG ARCHIVE</span>
+        </div>
+        <span class="text-stone-600 font-mono-code text-xs">/</span>
+        <div class="flex items-center gap-2">
+          <span class="font-mono-code text-xs text-red-400/90 tracking-widest uppercase">ENGAGEMENT REPORT</span>
+          <span class="px-2 py-0.5 rounded text-[10px] font-mono-code bg-red-950/60 border border-red-500/30 text-red-300">STAGE FAILED</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-8 font-mono-code text-xs text-stone-400">
+        <div class="flex items-center gap-2">
+          <span class="text-stone-500">SECTOR:</span>
+          <span class="text-stone-200">赤原关 (SECTOR 02)</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-stone-500">TIME ELAPSED:</span>
+          <span class="text-stone-200">00:18:42</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-stone-500">ENVIRONMENT:</span>
+          <span class="text-sky-300">极寒 (-18°C)</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Center Content: Editorial Magazine Splitting -->
+    <main class="grid grid-cols-12 gap-12 my-auto items-stretch">
+      
+      <!-- Left Column: Big Statement & Narrative Defeat Context (5 cols) -->
+      <section class="col-span-5 flex flex-col justify-between pr-6 border-r border-white/[0.07]">
+        <div class="space-y-6">
+          <div class="flex items-center gap-3 font-mono-code text-xs tracking-[0.25em] text-red-400/80 uppercase">
+            <span>● DEFEAT RECORD</span>
+            <span class="text-stone-600">//</span>
+            <span class="text-stone-400">ACT III · FROSTLINE</span>
+          </div>
+
+          <!-- Headline Hero -->
+          <div class="space-y-3">
+            <h1 class="font-sans-sc text-[106px] font-light leading-none tracking-[0.16em] text-stone-100 defeat-glow">
+              败北
+            </h1>
+            <div class="flex items-center gap-4 text-stone-400 font-mono-code text-base tracking-wider pt-1">
+              <span class="text-stone-200 font-sans-sc font-normal text-lg tracking-widest">赤原关</span>
+              <span class="text-stone-600">·</span>
+              <span class="text-red-300/90 font-mono-code text-sm">第 09 回合 终结</span>
+              <span class="text-stone-600">·</span>
+              <span class="text-xs text-stone-400 tracking-normal px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.08]">全灭判定</span>
+            </div>
+          </div>
+
+          <!-- War Room Narrative / Tactical Post-Mortem -->
+          <div class="pt-6 space-y-4 max-w-[480px]">
+            <p class="text-stone-300 text-sm leading-relaxed font-light">
+              赤原峡谷的风暴已切断主攻纵队退路。敌方赤原重装步兵与冰术士合围前哨，我方阵型于第 9 回合被强行击破，未能成功夺取前沿隘口。
+            </p>
+            <div class="p-4 rounded-lg frosted-subpanel space-y-2">
+              <div class="flex items-center justify-between text-xs font-mono-code">
+                <span class="text-stone-400">失利主因</span>
+                <span class="text-red-400">侧翼斥候防线撕裂</span>
+              </div>
+              <p class="text-xs text-stone-400 font-light leading-normal">
+                阵线中央承受过量冰冻迟滞战技，先锋脱节导致掩护结界瓦解。
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Combat Summary Badges -->
+        <div class="pt-8 border-t border-white/[0.06] flex items-center gap-6 font-mono-code text-xs">
+          <div>
+            <div class="text-[11px] text-stone-400 tracking-wider">回合消耗</div>
+            <div class="text-stone-200 text-lg font-light mt-0.5">09 <span class="text-stone-400 text-xs">/ 15</span></div>
+          </div>
+          <div class="w-px h-8 bg-white/[0.08]"></div>
+          <div>
+            <div class="text-[11px] text-stone-400 tracking-wider">敌军消灭数</div>
+            <div class="text-stone-200 text-lg font-light mt-0.5">03 <span class="text-stone-400 text-xs">/ 08</span></div>
+          </div>
+          <div class="w-px h-8 bg-white/[0.08]"></div>
+          <div>
+            <div class="text-[11px] text-stone-400 tracking-wider">作战评价</div>
+            <div class="text-red-400 text-lg font-light mt-0.5 tracking-widest font-cinzel">RANK D</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Casualties, Loss Metrics, Loot Status (7 cols) -->
+      <section class="col-span-7 flex flex-col justify-between pl-2">
+        <div class="space-y-6">
+
+          <!-- Section 1: Casualties (伤亡名册) -->
+          <div class="space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span>
+                <span class="font-sans-sc text-base text-stone-200 tracking-widest">出战伤亡清册</span>
+                <span class="font-mono-code text-xs text-stone-400 uppercase tracking-wider">// CASUALTY DOSSIER</span>
+              </div>
+              <span class="text-xs font-mono-code text-stone-400">阵亡 0 · 重伤 1 · 撤退 1</span>
+            </div>
+
+            <!-- Casualty Cards -->
+            <div class="grid grid-cols-2 gap-4">
+              
+              <!-- Casualty 1: 雾泽·萤 重伤 -->
+              <div class="frosted-panel rounded-lg p-5 flex flex-col justify-between relative overflow-hidden group">
+                <div class="absolute top-0 left-0 right-0 h-[2px] bg-red-500/60"></div>
+                <div class="flex items-start justify-between">
+                  <div class="flex items-center gap-3">
+                    <!-- Unit Emblem Hexagon -->
+                    <div class="w-11 h-11 rounded-md bg-stone-900/90 border border-red-500/30 flex items-center justify-center text-red-400">
+                      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 2L3 7v6c0 5 9 9 9 9s9-4 9-9V7l-9-5z"/>
+                        <path d="M12 7v5m0 3h.01" stroke-width="2" stroke-linecap="round"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <span class="font-sans-sc text-base text-stone-100 tracking-wide font-normal">雾泽 · 萤</span>
+                        <span class="font-mono-code text-[11px] text-stone-400">LV. 33</span>
+                      </div>
+                      <div class="text-xs text-stone-400 font-light mt-0.5">幽林巡径 · 斥候</div>
+                    </div>
+                  </div>
+                  <span class="px-2.5 py-1 rounded text-xs font-mono-code bg-red-950/80 border border-red-500/40 text-red-300 tracking-wider">
+                    重伤 (CRITICAL)
+                  </span>
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-white/[0.05] flex items-center justify-between text-xs font-mono-code">
+                  <span class="text-stone-400">状态效应:</span>
+                  <span class="text-stone-300">需静养治疗 2 季 · 战技封锁</span>
+                </div>
+              </div>
+
+              <!-- Casualty 2: 铁岭·铠 撤退 -->
+              <div class="frosted-panel rounded-lg p-5 flex flex-col justify-between relative overflow-hidden group">
+                <div class="absolute top-0 left-0 right-0 h-[2px] bg-amber-500/50"></div>
+                <div class="flex items-start justify-between">
+                  <div class="flex items-center gap-3">
+                    <!-- Unit Emblem Hexagon -->
+                    <div class="w-11 h-11 rounded-md bg-stone-900/90 border border-amber-500/30 flex items-center justify-center text-amber-300">
+                      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        <path d="M9 12l2 2 4-4"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="flex items-center gap-2">
+                        <span class="font-sans-sc text-base text-stone-100 tracking-wide font-normal">铁岭 · 铠</span>
+                        <span class="font-mono-code text-[11px] text-stone-400">LV. 35</span>
+                      </div>
+                      <div class="text-xs text-stone-400 font-light mt-0.5">磐石要塞 · 重壁卫</div>
+                    </div>
+                  </div>
+                  <span class="px-2.5 py-1 rounded text-xs font-mono-code bg-amber-950/70 border border-amber-500/30 text-amber-300 tracking-wider">
+                    撤退 (RETREAT)
+                  </span>
+                </div>
+
+                <div class="mt-4 pt-3 border-t border-white/[0.05] flex items-center justify-between text-xs font-mono-code">
+                  <span class="text-stone-400">状态效应:</span>
+                  <span class="text-stone-300">装甲受损 40% · 士气下挫</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Section 2: Resource Losses & No Loot -->
+          <div class="grid grid-cols-2 gap-4">
+            
+            <!-- Lost Resources Panel -->
+            <div class="frosted-panel rounded-lg p-5 space-y-4">
+              <div class="flex items-center justify-between border-b border-white/[0.05] pb-2.5">
+                <div class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span>
+                  <span class="font-sans-sc text-sm text-stone-200 tracking-wider">战损军资耗损</span>
+                </div>
+                <span class="font-mono-code text-[11px] text-stone-400 uppercase">DEPLETED ASSETS</span>
+              </div>
+
+              <div class="space-y-3 font-mono-code">
+                <!-- Lost Money -->
+                <div class="flex items-center justify-between p-2.5 rounded bg-white/[0.02] border border-white/[0.04]">
+                  <div class="flex items-center gap-3">
+                    <div class="w-7 h-7 rounded bg-red-950/40 border border-red-500/20 flex items-center justify-center text-red-400 text-xs font-bold">
+                      ₮
+                    </div>
+                    <div>
+                      <div class="text-xs text-stone-300">金钱丢失</div>
+                      <div class="text-[10px] text-stone-400">战地溃散抚恤与辎重遗失</div>
+                    </div>
+                  </div>
+                  <div class="text-red-400 text-base font-medium">
+                    - 200 <span class="text-xs text-stone-400">克朗</span>
+                  </div>
+                </div>
+
+                <!-- Lost Reputation -->
+                <div class="flex items-center justify-between p-2.5 rounded bg-white/[0.02] border border-white/[0.04]">
+                  <div class="flex items-center gap-3">
+                    <div class="w-7 h-7 rounded bg-red-950/40 border border-red-500/20 flex items-center justify-center text-red-400 text-xs">
+                      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="text-xs text-stone-300">骑士团声望</div>
+                      <div class="text-[10px] text-stone-400">领主信任度震荡下降</div>
+                    </div>
+                  </div>
+                  <div class="text-red-400 text-base font-medium">
+                    - 15 <span class="text-xs text-stone-400">REP</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Loot Outcome Panel (Explicitly No Loot) -->
+            <div class="frosted-panel rounded-lg p-5 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between border-b border-white/[0.05] pb-2.5">
+                  <div class="flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-stone-500"></span>
+                    <span class="font-sans-sc text-sm text-stone-300 tracking-wider">战利品结算</span>
+                  </div>
+                  <span class="font-mono-code text-[11px] text-stone-400 uppercase">ACQUIRED LOOT</span>
+                </div>
+
+                <!-- Empty Loot State -->
+                <div class="py-7 flex flex-col items-center justify-center text-center space-y-2">
+                  <div class="w-10 h-10 rounded-full border border-dashed border-stone-700 flex items-center justify-center text-stone-600">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                      <rect x="3" y="8" width="18" height="12" rx="2"/>
+                      <path d="M7 8V5a5 5 0 0110 0v3"/>
+                      <line x1="4" y1="4" x2="20" y2="20"/>
+                    </svg>
+                  </div>
+                  <div class="text-stone-400 font-mono-code text-xs tracking-wider">无战利品缴获</div>
+                  <div class="text-[11px] text-stone-400 font-light max-w-[220px]">
+                    因战术溃退，关卡首通奖励与掉落素材均未封存
+                  </div>
+                </div>
+              </div>
+
+              <div class="pt-3 border-t border-white/[0.04] text-[11px] font-mono-code text-stone-400 flex justify-between">
+                <span>关卡首通奖励状态</span>
+                <span class="text-stone-400">未解锁 (LOCKED)</span>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Action Buttons Area: 重新挑战 (focused) and 撤退回城 -->
+        <div class="pt-6 mt-4 flex items-center justify-end gap-5">
+          
+          <!-- Secondary Action: 撤退回城 -->
+          <button class="px-8 py-3.5 rounded frosted-panel hover:bg-stone-800/80 active:scale-[0.99] transition-all flex items-center gap-3 text-stone-300 border border-white/[0.12] group cursor-pointer">
+            <span class="w-5 h-5 rounded-full bg-stone-800 border border-stone-600 font-mono-code text-[10px] text-stone-400 flex items-center justify-center group-hover:text-stone-200">
+              B
+            </span>
+            <span class="font-sans-sc text-sm tracking-widest text-stone-300 group-hover:text-white transition-colors">
+              撤退回城
+            </span>
+            <span class="font-mono-code text-[11px] text-stone-400 uppercase tracking-wider">
+              RETREAT
+            </span>
+          </button>
+
+          <!-- Primary Focused Action: 重新挑战 with clear Gamepad Focus Ring -->
+          <button class="relative px-10 py-3.5 rounded bg-[#6ED4FF] text-stone-950 font-medium active:scale-[0.99] transition-all flex items-center gap-3 gamepad-focused cursor-pointer group">
+            <!-- Gamepad Hint Tag -->
+            <span class="w-5 h-5 rounded-full bg-stone-950 text-[#6ED4FF] font-mono-code text-[11px] font-bold flex items-center justify-center shadow-inner">
+              A
+            </span>
+            <span class="font-sans-sc text-sm font-semibold tracking-widest text-stone-950">
+              重新挑战
+            </span>
+            <svg class="w-4 h-4 text-stone-900 group-hover:translate-x-0.5 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Footer Bar: Controller Prompts & Meta -->
+    <footer class="flex items-center justify-between border-t border-white/[0.08] pt-4 font-mono-code text-xs text-stone-400">
+      <div class="flex items-center gap-6">
+        <div class="flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+          <span class="text-stone-400">GAMEPAD CONNECTED:</span>
+          <span class="text-stone-300">XBOX WIRELESS CONTROLLER</span>
+        </div>
+        <span class="text-stone-700">|</span>
+        <div class="text-stone-400">
+          BUILD 2025.04.14-STABLE · 赤历一百二十八年 · 霜堡军令司
+        </div>
+      </div>
+
+      <div class="flex items-center gap-6">
+        <div class="flex items-center gap-1.5">
+          <span class="w-4 h-4 rounded bg-stone-800 border border-stone-600 text-[10px] text-stone-300 flex items-center justify-center">A</span>
+          <span>确认选定</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-4 h-4 rounded bg-stone-800 border border-stone-600 text-[10px] text-stone-300 flex items-center justify-center">B</span>
+          <span>放弃并撤军</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-4 h-4 rounded bg-stone-800 border border-stone-600 text-[10px] text-stone-300 flex items-center justify-center">X</span>
+          <span>查看战斗回放</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-4 h-4 rounded bg-stone-800 border border-stone-600 text-[10px] text-stone-300 flex items-center justify-center">Y</span>
+          <span>伤员救护详情</span>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>百年骑士 · 舆图</title>
+<!-- Google Fonts: Public Sans & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            frost: {
+              300: '#A3E7FC',
+              400: '#6ED4FF',
+              500: '#38BDF8',
+              900: '#0C4A6E',
+              950: '#082F49'
+            },
+            mint: {
+              400: '#4ADE80',
+              500: '#22C55E'
+            },
+            coral: {
+              400: '#FB7185',
+              500: '#F43F5E',
+              600: '#E11D48'
+            },
+            ember: {
+              400: '#FB923C',
+              500: '#F97316'
+            }
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Public Sans", "PingFang SC", "Hiragino Sans GB", "sans-serif"],
+            display: ["Public Sans", "PingFang SC", "sans-serif"],
+            body: ["Public Sans", "PingFang SC", "sans-serif"],
+            label: ["Public Sans", "PingFang SC", "sans-serif"],
+            mono: ["JetBrains Mono", "SF Mono", "Consolas", "monospace"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    /* Absolute fixed non-scrolling viewport */
+    html, body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      background-color: #050608;
+      color: #E2E8F0;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 20;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+
+    /* Subtle grid pattern overlay */
+    .bg-tactical-grid {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(110, 212, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(110, 212, 255, 0.03) 1px, transparent 1px);
+    }
+
+    /* Radar scanline animation */
+    @keyframes sweep {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .radar-sweep {
+      animation: sweep 16s linear infinite;
+      transform-origin: 50% 50%;
+    }
+
+    /* Pulse animation for marching trajectory and target */
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.85; filter: drop-shadow(0 0 6px rgba(110,212,255,0.7)); }
+      50% { opacity: 0.35; filter: drop-shadow(0 0 2px rgba(110,212,255,0.3)); }
+    }
+    .animate-marching {
+      animation: dash-flow 2.5s linear infinite;
+    }
+    @keyframes dash-flow {
+      to {
+        stroke-dashoffset: -32;
+      }
+    }
+    .pulse-target {
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="w-[1920px] h-[1080px] bg-stone-950 font-body relative overflow-hidden text-stone-200">
+<!-- ================= TOP HUD NAV BAR ================= -->
+<header class="fixed top-0 left-0 right-0 z-50 h-14 flex items-center justify-between px-8 w-full select-none bg-stone-950/80 backdrop-blur-md border-b border-sky-400/20 shadow-[0_4px_24px_rgba(0,0,0,0.85)]">
+<!-- Brand / Product Identity -->
+<div class="flex items-center gap-6">
+<div class="flex items-baseline gap-3">
+<span class="font-headline text-lg font-light tracking-widest text-sky-200 uppercase">百年骑士 · 舆图</span>
+<span class="text-xs font-mono text-sky-400/60 tracking-wider">STRATEGIC ATLAS // SEC.07</span>
+</div>
+<div class="h-3 w-px bg-stone-800"></div>
+<div class="flex items-center gap-2">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+<span class="font-mono text-xs text-stone-400">742年 霜降期 · 局势平稳</span>
+</div>
+</div>
+<!-- Navigation Tabs -->
+<nav class="flex items-center gap-8 h-full">
+<a class="text-sky-200 border-b-2 border-sky-400 font-medium pb-1 tracking-wider text-sm flex items-center gap-1.5 transition-colors" href="#">
+<span>战区全览</span>
+<span class="px-1 py-0.2 text-[10px] font-mono bg-sky-950 text-sky-300 rounded border border-sky-500/30">ACT</span>
+</a>
+<a class="text-stone-400 hover:text-stone-200 pb-1 tracking-wider transition-colors duration-150 text-sm" href="#">
+<span>兵团调配</span>
+</a>
+<a class="text-stone-400 hover:text-stone-200 pb-1 tracking-wider transition-colors duration-150 text-sm flex items-center gap-1" href="#">
+<span>战略谍报</span>
+<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+</a>
+<a class="text-stone-400 hover:text-stone-200 pb-1 tracking-wider transition-colors duration-150 text-sm" href="#">
+<span>补给天堑</span>
+</a>
+<a class="text-stone-400 hover:text-stone-200 pb-1 tracking-wider transition-colors duration-150 text-sm" href="#">
+<span>历法更迭</span>
+</a>
+</nav>
+<!-- Right Global Actions & Gamepad Hints -->
+<div class="flex items-center gap-4">
+<!-- Gamepad Shoulder Hint -->
+<div class="flex items-center gap-1 bg-stone-900/80 px-2.5 py-1 rounded border border-stone-800 text-xs font-mono text-stone-400">
+<span class="text-sky-300 font-bold">[LB/RB]</span>
+<span class="text-stone-400 ml-1">切换战区</span>
+</div>
+<!-- Icon Action Bar -->
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-stone-800/60 text-stone-400 hover:text-sky-200 transition-colors focus:outline-none focus:ring-1 focus:ring-sky-400/80">
+<span class="material-symbols-outlined text-[18px]">hub</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-stone-800/60 text-stone-400 hover:text-sky-200 transition-colors focus:outline-none focus:ring-1 focus:ring-sky-400/80">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-stone-800/60 text-stone-400 hover:text-sky-200 transition-colors relative focus:outline-none focus:ring-1 focus:ring-sky-400/80">
+<span class="material-symbols-outlined text-[18px]">notifications</span>
+<span class="absolute top-1 right-1 w-1.5 h-1.5 bg-rose-500 rounded-full"></span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded hover:bg-stone-800/60 text-stone-400 hover:text-sky-200 transition-colors focus:outline-none focus:ring-1 focus:ring-sky-400/80">
+<span class="material-symbols-outlined text-[18px]">help_outline</span>
+</button>
+</div>
+<div class="h-4 w-px bg-stone-800"></div>
+<!-- Secondary Weather CTA -->
+<button class="flex items-center gap-1.5 px-3 py-1 text-xs font-label text-stone-300 bg-stone-900/60 hover:bg-stone-800/80 border border-stone-700/60 rounded tracking-wider transition-colors duration-150 focus:outline-none">
+<span class="material-symbols-outlined text-sky-300 text-sm">ac_unit</span>
+<span>天候研判</span>
+</button>
+<!-- Profile Avatar -->
+<div class="flex items-center gap-2 pl-1">
+<div class="w-8 h-8 rounded-full border border-sky-400/40 p-0.5 bg-stone-900 overflow-hidden flex items-center justify-center">
+<img class="w-full h-full object-cover rounded-full" data-alt="Stylized coat of arms insignia for the CenturyKnights imperial tactical supreme commander. Intricate geometric cyan frost emblem engraved on matte obsidian metal with sharp heraldic crest lines in minimalist dark futuristic fantasy interface style." src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" data-stitch-asset="redacted"/>
+</div>
+</div>
+</div>
+</header>
+<!-- ================= LEFT RAIL OVERLAY (SIDENAVBAR) ================= -->
+<aside class="fixed left-0 top-14 bottom-0 z-40 w-64 flex flex-col justify-between py-6 px-3 select-none bg-stone-950/75 backdrop-blur-md border-r border-sky-400/15 shadow-[4px_0_24px_rgba(0,0,0,0.8)]">
+<!-- Top Rail Identity -->
+<div>
+<div class="px-3 pb-5 border-b border-stone-800/80 flex items-center gap-3">
+<div class="w-9 h-9 rounded bg-sky-950/60 border border-sky-400/30 flex items-center justify-center text-sky-300">
+<span class="material-symbols-outlined text-[20px]">military_tech</span>
+</div>
+<div>
+<div class="font-headline text-sm tracking-widest text-sky-300 font-light">参谋总席</div>
+<div class="font-mono text-[11px] text-stone-400 tracking-wider">第七执旗区 · 战略中枢</div>
+</div>
+</div>
+<!-- Main Navigation Rail Items (5 tabs) -->
+<nav class="mt-5 space-y-1">
+<!-- Active Tab: 十国疆域 -->
+<a class="flex items-center gap-3 px-4 py-3 bg-sky-950/40 text-sky-200 border-l-2 border-sky-400 font-medium transition-all group" href="#">
+<span class="material-symbols-outlined text-sky-400 text-lg group-hover:scale-105 transition-transform">public</span>
+<span class="font-label text-xs tracking-wider">十国疆域</span>
+<span class="ml-auto font-mono text-[10px] text-sky-400/80">10/10</span>
+</a>
+<!-- Inactive: 军势调度 -->
+<a class="flex items-center gap-3 px-4 py-3 text-stone-400 hover:text-stone-200 hover:bg-stone-900/40 transition-colors duration-150 group" href="#">
+<span class="material-symbols-outlined text-stone-400 group-hover:text-sky-300 text-lg transition-colors">military_tech</span>
+<span class="font-label text-xs tracking-wider">军势调度</span>
+</a>
+<!-- Inactive: 行军推演 -->
+<a class="flex items-center gap-3 px-4 py-3 text-stone-400 hover:text-stone-200 hover:bg-stone-900/40 transition-colors duration-150 group" href="#">
+<span class="material-symbols-outlined text-stone-400 group-hover:text-sky-300 text-lg transition-colors">route</span>
+<span class="font-label text-xs tracking-wider">行军推演</span>
+<span class="ml-auto w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+</a>
+<!-- Inactive: 险要哨岗 -->
+<a class="flex items-center gap-3 px-4 py-3 text-stone-400 hover:text-stone-200 hover:bg-stone-900/40 transition-colors duration-150 group" href="#">
+<span class="material-symbols-outlined text-stone-400 group-hover:text-sky-300 text-lg transition-colors">fort</span>
+<span class="font-label text-xs tracking-wider">险要哨岗</span>
+</a>
+<!-- Inactive: 史海方志 -->
+<a class="flex items-center gap-3 px-4 py-3 text-stone-400 hover:text-stone-200 hover:bg-stone-900/40 transition-colors duration-150 group" href="#">
+<span class="material-symbols-outlined text-stone-400 group-hover:text-sky-300 text-lg transition-colors">menu_book</span>
+<span class="font-label text-xs tracking-wider">史海方志</span>
+</a>
+</nav>
+<!-- Tactical Deployment Box -->
+<div class="mt-6 mx-2 p-3 bg-stone-900/40 rounded border border-stone-800/90 text-xs">
+<div class="flex items-center justify-between text-stone-400 mb-1.5 font-mono text-[11px]">
+<span>全军战备率</span>
+<span class="text-sky-300">92.4%</span>
+</div>
+<div class="w-full bg-stone-800 h-1 rounded-full overflow-hidden mb-3">
+<div class="bg-gradient-to-r from-sky-500 to-sky-300 h-full w-[92.4%]"></div>
+</div>
+<button class="w-full py-2 bg-sky-950/80 hover:bg-sky-900 border border-sky-500/40 text-sky-200 font-label text-xs tracking-widest rounded flex items-center justify-center gap-2 transition-all">
+<span class="material-symbols-outlined text-xs">bolt</span>
+<span>即刻部署</span>
+</button>
+</div>
+</div>
+<!-- Bottom Rail Auxiliary Options -->
+<div class="pt-4 border-t border-stone-800/80 space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 text-stone-400 hover:text-stone-200 hover:bg-stone-900/40 rounded transition-colors text-xs font-label" href="#">
+<span class="material-symbols-outlined text-stone-400 text-base">sensors</span>
+<span>声骸联络</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-stone-400 hover:text-stone-200 hover:bg-stone-900/40 rounded transition-colors text-xs font-label" href="#">
+<span class="material-symbols-outlined text-stone-400 text-base">history</span>
+<span>战局回溯</span>
+</a>
+</div>
+</aside>
+<!-- ================= MAIN MAP CANVAS CONTAINER ================= -->
+<main class="absolute left-64 top-14 right-0 bottom-0 overflow-hidden bg-tactical-grid select-none">
+<!-- Coordinate HUD Marks -->
+<div class="absolute top-4 left-6 z-20 pointer-events-none flex items-center gap-4 text-xs font-mono text-stone-500">
+<div class="flex items-center gap-1.5">
+<span class="text-sky-400 font-bold">GRID</span>
+<span>CN-742-SEC.NORD</span>
+</div>
+<span>//</span>
+<div>LAT 47°18'N · LON 12°04'E</div>
+<span>//</span>
+<div class="text-stone-400">战棋投影: 实时等角拓扑</div>
+</div>
+<!-- Top-Right Controller HUD Mapping Bar -->
+<div class="absolute top-4 right-[440px] z-20 pointer-events-none flex items-center gap-3 bg-stone-950/80 px-4 py-1.5 rounded-full border border-sky-400/20 backdrop-blur text-xs font-mono text-stone-300">
+<div class="flex items-center gap-1">
+<span class="w-4 h-4 rounded-full bg-sky-900/80 text-sky-300 border border-sky-400/40 flex items-center justify-center text-[10px] font-bold">A</span>
+<span>选定/进军</span>
+</div>
+<span class="text-stone-700">|</span>
+<div class="flex items-center gap-1">
+<span class="w-4 h-4 rounded-full bg-stone-800 text-stone-300 border border-stone-600 flex items-center justify-center text-[10px] font-bold">X</span>
+<span>行军推演</span>
+</div>
+<span class="text-stone-700">|</span>
+<div class="flex items-center gap-1">
+<span class="w-4 h-4 rounded-full bg-stone-800 text-stone-300 border border-stone-600 flex items-center justify-center text-[10px] font-bold">Y</span>
+<span>势力情报</span>
+</div>
+</div>
+<!-- SVG VECTOR ATLAS CANVAS -->
+<div class="absolute inset-0 z-10 w-full h-full">
+<svg class="w-full h-full" fill="none" viewbox="0 0 1656 1026" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<!-- Gradients for Territories -->
+<!-- Player / North: 霜北 (Cool Frost) -->
+<lineargradient id="grad-frost-north" x1="0" x2="1" y1="0" y2="1">
+<stop offset="0%" stop-color="#38BDF8" stop-opacity="0.18"></stop>
+<stop offset="100%" stop-color="#0284C7" stop-opacity="0.04"></stop>
+</lineargradient>
+<!-- Hostile Focus: 赤原 (Crimson Plains) -->
+<lineargradient id="grad-crimson-plains" x1="0" x2="1" y1="0" y2="1">
+<stop offset="0%" stop-color="#E11D48" stop-opacity="0.22"></stop>
+<stop offset="100%" stop-color="#881337" stop-opacity="0.06"></stop>
+</lineargradient>
+<!-- Allied: 青澜 (Mint) -->
+<lineargradient id="grad-qinglan" x1="0" x2="1" y1="0" y2="1">
+<stop offset="0%" stop-color="#22C55E" stop-opacity="0.12"></stop>
+<stop offset="100%" stop-color="#14532D" stop-opacity="0.02"></stop>
+</lineargradient>
+<!-- Neutral: 白塔 / 铁岭 / 云栈 / 沙洲 / 潮湾 / 雾泽 / 金穗 -->
+<lineargradient id="grad-neutral" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#475569" stop-opacity="0.09"></stop>
+<stop offset="100%" stop-color="#1E293B" stop-opacity="0.03"></stop>
+</lineargradient>
+<!-- Filter for node glow -->
+<filter height="140%" id="glow-cyan" width="140%" x="-20%" y="-20%">
+<fegaussianblur result="blur" stddeviation="6"></fegaussianblur>
+<femerge>
+<femergenode in="blur"></femergenode>
+<femergenode in="SourceGraphic"></femergenode>
+</femerge>
+</filter>
+<filter height="140%" id="glow-crimson" width="140%" x="-20%" y="-20%">
+<fegaussianblur result="blur" stddeviation="8"></fegaussianblur>
+<femerge>
+<femergenode in="blur"></femergenode>
+<femergenode in="SourceGraphic"></femergenode>
+</femerge>
+</filter>
+</defs>
+<!-- Compass Rose & Background Rings -->
+<g opacity="0.3" transform="translate(680, 480)">
+<circle cx="0" cy="0" r="380" stroke="#6ED4FF" stroke-dasharray="2 6" stroke-width="0.5"></circle>
+<circle cx="0" cy="0" r="240" stroke="#6ED4FF" stroke-dasharray="1 10" stroke-width="0.5"></circle>
+<circle cx="0" cy="0" opacity="0.5" r="120" stroke="#6ED4FF" stroke-width="0.7"></circle>
+<line stroke="#6ED4FF" stroke-dasharray="4 8" stroke-width="0.5" x1="-420" x2="420" y1="0" y2="0"></line>
+<line stroke="#6ED4FF" stroke-dasharray="4 8" stroke-width="0.5" x1="0" x2="0" y1="-420" y2="420"></line>
+</g>
+<!-- ================= THE TEN KINGDOMS POLYGONS ================= -->
+<!-- 1. 霜北 (Player Base - North) -->
+<polygon fill="url(#grad-frost-north)" points="260,80 540,60 680,140 650,300 480,360 280,310 200,190" stroke="#6ED4FF" stroke-dasharray="none" stroke-width="1.8"></polygon>
+<text fill="#6ED4FF" font-family="'Public Sans', sans-serif" font-size="20" font-weight="300" letter-spacing="6" x="430" y="210">霜北疆域</text>
+<text fill="#38BDF8" font-family="'JetBrains Mono', monospace" font-size="11" letter-spacing="2" opacity="0.6" x="430" y="235">DOMINION OF FROST-NORTH [ALLIED]</text>
+<!-- 2. 赤原 (Primary Hostile Focus Region) -->
+<polygon fill="url(#grad-crimson-plains)" points="760,210 1060,170 1190,320 1140,490 910,540 730,420 710,290" stroke="#FB7185" stroke-width="2.2"></polygon>
+<polygon fill="none" opacity="0.7" points="755,205 1065,165 1195,315 1145,495 905,545 725,425 705,285" stroke="#F43F5E" stroke-dasharray="6 4" stroke-width="0.75"></polygon>
+<text fill="#FB7185" font-family="'Public Sans', sans-serif" font-size="22" font-weight="400" letter-spacing="6" x="910" y="340">赤原领</text>
+<text fill="#F43F5E" font-family="'JetBrains Mono', monospace" font-size="11" letter-spacing="2" opacity="0.8" x="910" y="365">CRIMSON PLAINS // HOSTILE THREAT</text>
+<!-- 3. 青澜 (Allied Southeast) -->
+<polygon fill="url(#grad-qinglan)" opacity="0.9" points="460,420 680,380 770,550 710,740 490,720 400,560" stroke="#4ADE80" stroke-width="1.2"></polygon>
+<text fill="#86EFAC" font-family="'Public Sans', sans-serif" font-size="18" font-weight="300" letter-spacing="4" x="560" y="560">青澜国</text>
+<text fill="#4ADE80" font-family="'JetBrains Mono', monospace" font-size="10" opacity="0.6" x="560" y="582">COALITION ALLY</text>
+<!-- 4. 白塔 (White Tower Dominion - West) -->
+<polygon fill="url(#grad-neutral)" points="80,240 240,260 260,490 140,620 40,510" stroke="#64748B" stroke-width="1"></polygon>
+<text fill="#94A3B8" font-size="16" letter-spacing="4" x="120" y="410">白塔</text>
+<!-- 5. 沙洲 (Desert Region - Southwest) -->
+<polygon fill="url(#grad-neutral)" points="120,680 340,660 410,880 230,960 60,860" stroke="#64748B" stroke-width="1"></polygon>
+<text fill="#94A3B8" font-size="16" letter-spacing="4" x="210" y="800">沙洲</text>
+<!-- 6. 云栈 (Highland Paths - South) -->
+<polygon fill="url(#grad-neutral)" points="480,780 730,770 780,940 540,990 440,900" stroke="#64748B" stroke-width="1"></polygon>
+<text fill="#94A3B8" font-size="16" letter-spacing="4" x="590" y="870">云栈</text>
+<!-- 7. 铁岭 (Iron Peaks - Northwest/Center) -->
+<polygon fill="url(#grad-neutral)" points="560,70 750,90 750,220 660,280 520,200" stroke="#64748B" stroke-width="1"></polygon>
+<text fill="#94A3B8" font-size="15" letter-spacing="4" x="630" y="160">铁岭</text>
+<!-- 8. 潮湾 (Tidal Bay - East) -->
+<polygon fill="url(#grad-neutral)" points="1120,490 1280,420 1340,620 1210,750 1080,640" stroke="#64748B" stroke-width="1"></polygon>
+<text fill="#94A3B8" font-size="16" letter-spacing="4" x="1190" y="580">潮湾</text>
+<!-- 9. 雾泽 (Mist Marshes - Southeast) -->
+<polygon fill="url(#grad-neutral)" points="840,680 1060,650 1140,840 950,920 800,830" stroke="#64748B" stroke-width="1"></polygon>
+<text fill="#94A3B8" font-size="16" letter-spacing="4" x="940" y="770">雾泽</text>
+<!-- 10. 金穗 (Golden Plains - Far East) -->
+<polygon fill="url(#grad-neutral)" points="1110,180 1320,150 1380,340 1230,410" stroke="#64748B" stroke-width="1"></polygon>
+<text fill="#94A3B8" font-size="16" letter-spacing="4" x="1220" y="270">金穗</text>
+<!-- ================= MARCHING TRAJECTORY & VECTOR LOGISTICS ================= -->
+<!-- Secondary Supply lines (Faint dashed lines) -->
+<path d="M 460 270 L 610 460" opacity="0.4" stroke="#38BDF8" stroke-dasharray="3 4" stroke-width="1"></path>
+<path d="M 610 460 L 590 640" opacity="0.4" stroke="#38BDF8" stroke-dasharray="3 4" stroke-width="1"></path>
+<path d="M 610 460 L 740 370" opacity="0.3" stroke="#64748B" stroke-dasharray="2 4" stroke-width="0.8"></path>
+<path d="M 870 330 L 1110 320" opacity="0.4" stroke="#F43F5E" stroke-dasharray="2 4" stroke-width="1"></path>
+<!-- PRIMARY MARCHING ROUTE: 霜堡 (460, 270) -> 苍龙隘 (660, 310) -> 赤原关 (870, 330) -->
+<!-- Vector Halo -->
+<path d="M 460 270 Q 570 240, 660 310 T 870 330" fill="none" opacity="0.15" stroke="#6ED4FF" stroke-width="6"></path>
+<!-- Glowing Core Animated Dash -->
+<path class="animate-marching" d="M 460 270 Q 570 240, 660 310 T 870 330" fill="none" filter="url(#glow-cyan)" id="primary-marching-path" stroke="#6ED4FF" stroke-dasharray="10 6" stroke-width="2.5"></path>
+<!-- Waypoint Intercept Marker -->
+<g transform="translate(660, 310)">
+<circle cx="0" cy="0" fill="#0C4A6E" r="5" stroke="#6ED4FF" stroke-width="1.5"></circle>
+<circle cx="0" cy="0" fill="#6ED4FF" r="1.5"></circle>
+<!-- Tag text -->
+<rect fill="#082F49" height="15" rx="2" stroke="#6ED4FF" stroke-width="0.5" width="70" x="-35" y="-22"></rect>
+<text fill="#A3E7FC" font-family="'Public Sans', sans-serif" font-size="9" text-anchor="middle" x="0" y="-11">苍龙隘 · 补给</text>
+</g>
+<!-- Marching Telemetry HUD Chip along the route -->
+<g transform="translate(680, 245)">
+<rect fill="#050608" fill-opacity="0.85" height="34" rx="4" stroke="#6ED4FF" stroke-width="0.8" width="220" x="0" y="0"></rect>
+<!-- Accent Line -->
+<line stroke="#6ED4FF" stroke-width="3" x1="0" x2="3" y1="0" y2="34"></line>
+<text fill="#A3E7FC" font-family="'JetBrains Mono', monospace" font-size="10" x="14" y="15">行军推演: 3日 · 接触概率 88%</text>
+<text fill="#64748B" font-family="'Public Sans', sans-serif" font-size="9" x="14" y="27">先锋先遣骑士团 // 距赤原关 42 里</text>
+</g>
+<!-- ================= STRONGHOLD NODES (据点) ================= -->
+<!-- 1. 霜堡 (PLAYER BASE - Cyan Solid Anchor) -->
+<g class="cursor-pointer" transform="translate(460, 270)">
+<circle cx="0" cy="0" fill="#082F49" fill-opacity="0.5" r="22" stroke="#6ED4FF" stroke-dasharray="3 3" stroke-width="1"></circle>
+<circle cx="0" cy="0" fill="#0C4A6E" r="12" stroke="#6ED4FF" stroke-width="2"></circle>
+<polygon fill="#6ED4FF" points="0,-6 6,0 0,6 -6,0"></polygon>
+<!-- Label -->
+<rect fill="#030712" fill-opacity="0.9" height="20" rx="3" stroke="#38BDF8" stroke-width="0.8" width="84" x="-42" y="16"></rect>
+<text fill="#6ED4FF" font-family="'Public Sans', sans-serif" font-size="11" font-weight="600" text-anchor="middle" x="0" y="30">霜堡 (主营)</text>
+</g>
+<!-- 2. 镜湖城 (Node - West) -->
+<g transform="translate(240, 360)">
+<circle cx="0" cy="0" fill="#0F172A" r="6" stroke="#94A3B8" stroke-width="1.5"></circle>
+<circle cx="0" cy="0" fill="#94A3B8" r="2"></circle>
+<text fill="#94A3B8" font-size="10" text-anchor="middle" x="0" y="18">镜湖城</text>
+</g>
+<!-- 3. 铁崖 (Node - North East Mountain) -->
+<g transform="translate(680, 150)">
+<circle cx="0" cy="0" fill="#0F172A" r="6" stroke="#94A3B8" stroke-width="1.5"></circle>
+<circle cx="0" cy="0" fill="#94A3B8" r="2"></circle>
+<text fill="#94A3B8" font-size="10" text-anchor="middle" x="0" y="18">铁崖要塞</text>
+</g>
+<!-- 4. 渡风哨 (Node - South Allied) -->
+<g transform="translate(610, 460)">
+<circle cx="0" cy="0" fill="#064E3B" r="7" stroke="#4ADE80" stroke-width="1.5"></circle>
+<polygon fill="#4ADE80" points="0,-4 4,0 0,4 -4,0"></polygon>
+<text fill="#86EFAC" font-size="10" text-anchor="middle" x="0" y="20">渡风哨 [友邦]</text>
+</g>
+<!-- 5. 碧水关 (Node - South Bay) -->
+<g transform="translate(590, 640)">
+<circle cx="0" cy="0" fill="#0F172A" r="5" stroke="#94A3B8" stroke-width="1"></circle>
+<text fill="#94A3B8" font-size="10" text-anchor="middle" x="0" y="17">碧水关</text>
+</g>
+<!-- 6. TARGET NODE: 赤原关 (Target Fortress - Hostile Target with Focus Aura) -->
+<g class="cursor-pointer" transform="translate(870, 330)">
+<!-- Gamepad Selection Target Reticle -->
+<circle class="animate-spin" cx="0" cy="0" fill="none" r="30" stroke="#6ED4FF" stroke-dasharray="4 6" stroke-width="1" style="animation-duration: 20s;"></circle>
+<circle cx="0" cy="0" fill="#4C0519" fill-opacity="0.6" r="22" stroke="#FB7185" stroke-width="1.5"></circle>
+<!-- Tactical Brackets for Gamepad Focus -->
+<path d="M -16 -24 L -24 -24 L -24 -16" fill="none" stroke="#6ED4FF" stroke-width="2"></path>
+<path d="M 16 -24 L 24 -24 L 24 -16" fill="none" stroke="#6ED4FF" stroke-width="2"></path>
+<path d="M -16 24 L -24 24 L -24 16" fill="none" stroke="#6ED4FF" stroke-width="2"></path>
+<path d="M 16 24 L 24 24 L 24 16" fill="none" stroke="#6ED4FF" stroke-width="2"></path>
+<!-- Inner Core Pulse -->
+<circle class="pulse-target" cx="0" cy="0" fill="#E11D48" filter="url(#glow-crimson)" r="9"></circle>
+<circle cx="0" cy="0" fill="#FFFFFF" r="3"></circle>
+<!-- Target Callout Tag -->
+<rect fill="#1C1917" fill-opacity="0.95" height="22" rx="3" stroke="#FB7185" stroke-width="1" width="96" x="-48" y="32"></rect>
+<text fill="#FECDD3" font-family="'Public Sans', sans-serif" font-size="11" font-weight="600" text-anchor="middle" x="0" y="47">赤原关 (前线要塞)</text>
+</g>
+</svg>
+</div>
+<!-- ================= BOTTOM-LEFT MAP LEGEND (图例) ================= -->
+<div class="absolute bottom-6 left-6 z-30 w-72 p-4 bg-stone-950/85 backdrop-blur-md rounded border border-stone-800 shadow-[0_4px_20px_rgba(0,0,0,0.8)]">
+<div class="flex items-center justify-between pb-2 mb-3 border-b border-stone-800/80">
+<span class="text-xs font-headline font-light tracking-widest text-sky-300 uppercase">舆图图例 // LEGEND</span>
+<span class="font-mono text-[10px] text-stone-500">REV.04</span>
+</div>
+<div class="grid grid-cols-2 gap-y-2.5 gap-x-2 text-xs">
+<!--据点 (Stronghold)-->
+<div class="flex items-center gap-2">
+<div class="w-3.5 h-3.5 rounded-full border border-sky-400 bg-sky-950/80 flex items-center justify-center">
+<div class="w-1.5 h-1.5 rounded-full bg-sky-300"></div>
+</div>
+<span class="text-stone-300 text-[11px]">重要据点</span>
+</div>
+<!--行军 (Marching Route)-->
+<div class="flex items-center gap-2">
+<div class="w-5 h-0.5 border-b-2 border-dashed border-sky-400"></div>
+<span class="text-stone-300 text-[11px]">进军轨迹</span>
+</div>
+<!--友邦 (Allied Territory)-->
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded bg-emerald-500/20 border border-emerald-400"></div>
+<span class="text-stone-300 text-[11px]">盟友邦畿</span>
+</div>
+<!--敌国 (Hostile Territory)-->
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded bg-rose-500/20 border border-rose-500"></div>
+<span class="text-stone-300 text-[11px]">敌对战区</span>
+</div>
+</div>
+<!-- Mini Controller hint inside canvas -->
+<div class="mt-3 pt-2 border-t border-stone-800/60 flex items-center justify-between text-[10px] font-mono text-stone-400">
+<span>[R-STICK] 平移缩放</span>
+<span>[RT] 战术热力图</span>
+</div>
+</div>
+<!-- ================= RIGHT-SIDE PANEL: TACTICAL INTELLIGENCE CARD ================= -->
+<section class="absolute top-4 right-6 bottom-6 z-30 w-96 flex flex-col justify-between bg-stone-950/85 backdrop-blur-md rounded-lg border border-sky-400/20 shadow-[0_8px_32px_rgba(0,0,0,0.9)] overflow-hidden">
+<!-- Card Decorative Top Edge -->
+<div class="h-1 w-full bg-gradient-to-r from-rose-500 via-sky-400 to-sky-600"></div>
+<!-- Scrollable / Inner Content of Tactical Card -->
+<div class="p-6 flex-1 flex flex-col justify-between overflow-y-auto">
+<!-- Section 1: Header & Relation Status -->
+<div>
+<div class="flex items-start justify-between">
+<div>
+<span class="font-mono text-[10px] tracking-widest text-stone-500 uppercase">ENEMY PROFILE // 03</span>
+<h2 class="text-2xl font-headline font-light tracking-widest text-stone-100 flex items-center gap-2">
+<span>赤原</span>
+<span class="text-xs font-mono font-normal text-stone-400 tracking-normal">(Crimson Plains)</span>
+</h2>
+</div>
+<!-- Relation Tag: 敌对 -->
+<div class="px-2.5 py-1 rounded bg-rose-950/70 border border-rose-500/60 text-rose-400 font-label text-xs tracking-wider flex items-center gap-1.5 shadow-[0_0_10px_rgba(244,63,94,0.2)]">
+<span class="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+<span>敌对</span>
+</div>
+</div>
+<!-- Ruler and Behavior Profile -->
+<div class="mt-4 p-3 bg-stone-900/60 rounded border border-stone-800">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs text-stone-400">统帅君主</span>
+<span class="text-sm font-medium text-stone-200 tracking-wider">赤原公 · 赫连</span>
+</div>
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs text-stone-400">兵锋预估</span>
+<span class="font-mono text-sm font-semibold text-rose-400">约 4,200 刃</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs text-stone-400">军事秉性</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-medium bg-amber-950/60 text-amber-300 border border-amber-600/40">好战 · 偏好平原突袭</span>
+</div>
+</div>
+<!-- Section 2: Tactical Fortification Metrics -->
+<div class="mt-5 space-y-3">
+<div class="flex items-center justify-between text-xs pb-1 border-b border-stone-800/80">
+<span class="font-headline tracking-wider text-sky-300/90 text-xs font-light">战术研判与要塞韧度</span>
+<span class="font-mono text-[10px] text-stone-500">赤原关防线</span>
+</div>
+<!-- Metric 1: 城防韧度 -->
+<div>
+<div class="flex items-center justify-between text-xs mb-1">
+<span class="text-stone-400">城防要塞韧度</span>
+<span class="font-mono text-xs text-sky-300">78%</span>
+</div>
+<div class="w-full bg-stone-900 h-1.5 rounded-full overflow-hidden border border-stone-800">
+<div class="bg-gradient-to-r from-sky-500 to-sky-300 h-full w-[78%]"></div>
+</div>
+</div>
+<!-- Metric 2: 战备物资 & 主力兵种 Grid -->
+<div class="grid grid-cols-2 gap-2 mt-2">
+<div class="p-2.5 bg-stone-900/40 rounded border border-stone-800">
+<span class="text-[10px] text-stone-400 block mb-0.5">要塞战备物资</span>
+<span class="text-xs font-medium text-emerald-400 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">inventory_2</span>
+                  充足 (60日余)
+                </span>
+</div>
+<div class="p-2.5 bg-stone-900/40 rounded border border-stone-800">
+<span class="text-[10px] text-stone-400 block mb-0.5">主力驻防兵种</span>
+<span class="text-xs font-medium text-rose-300 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">shield</span>
+                  重装铁骑
+                </span>
+</div>
+</div>
+<!-- Tactical brief quote -->
+<div class="p-3 bg-stone-950/60 rounded border-l-2 border-amber-400/70 text-[11px] text-stone-400 leading-relaxed font-body">
+              情报参谋注记：赤原重装骑兵在平原冲击力极强，需优先以「霜堡第二枪阵」依托苍龙隘险隘阻击，避其锋芒。
+            </div>
+</div>
+</div>
+<!-- Section 3: Bottom Quick Command Actions with GAMEPAD FOCUS RING -->
+<div class="mt-6 pt-4 border-t border-stone-800/80 space-y-3">
+<!-- PRIMARY ACTION WITH GAMEPAD FOCUS RING -->
+<!-- Focus ring: distinctive glowing double-cyan outline ring with pulse/bracket indicators -->
+<div class="relative group">
+<button class="w-full py-3 px-4 rounded bg-gradient-to-r from-sky-500 to-sky-600 text-stone-950 font-label font-bold text-sm tracking-widest flex items-center justify-center gap-2 ring-2 ring-[#6ED4FF] ring-offset-2 ring-offset-stone-950 shadow-[0_0_20px_rgba(110,212,255,0.45)] transition-transform active:scale-[0.98]">
+<span class="material-symbols-outlined text-stone-950 text-base" style="font-variation-settings: 'FILL' 1;">send</span>
+<span>下达进军令</span>
+<span class="ml-auto font-mono text-xs bg-stone-950/20 text-stone-950 px-1.5 py-0.5 rounded font-bold">[A]</span>
+</button>
+<!-- Gamepad Focus Bracket Decorators -->
+<div class="absolute -top-1.5 -left-1.5 w-2 h-2 border-t-2 border-l-2 border-sky-300 pointer-events-none"></div>
+<div class="absolute -top-1.5 -right-1.5 w-2 h-2 border-t-2 border-r-2 border-sky-300 pointer-events-none"></div>
+<div class="absolute -bottom-1.5 -left-1.5 w-2 h-2 border-b-2 border-l-2 border-sky-300 pointer-events-none"></div>
+<div class="absolute -bottom-1.5 -right-1.5 w-2 h-2 border-b-2 border-r-2 border-sky-300 pointer-events-none"></div>
+</div>
+<!-- Secondary Tactical Actions -->
+<div class="grid grid-cols-2 gap-2">
+<button class="py-2 px-3 bg-stone-900/80 hover:bg-stone-800 border border-stone-700/80 text-stone-300 rounded font-label text-xs tracking-wider flex items-center justify-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-xs text-sky-400">visibility</span>
+<span>潜行侦察</span>
+<span class="font-mono text-[10px] text-stone-500">[X]</span>
+</button>
+<button class="py-2 px-3 bg-stone-900/80 hover:bg-stone-800 border border-stone-700/80 text-stone-300 rounded font-label text-xs tracking-wider flex items-center justify-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-xs text-emerald-400">handshake</span>
+<span>遣使求和</span>
+<span class="font-mono text-[10px] text-stone-500">[Y]</span>
+</button>
+</div>
+<div class="flex items-center justify-between text-[10px] font-mono text-stone-500 pt-1">
+<span>战术执行预演消耗: 12 行动力</span>
+<span class="text-sky-400">AP: 38/50</span>
+</div>
+</div>
+</div>
+<!-- Card Sub-footer Controller Help Bar -->
+<div class="px-6 py-2 bg-stone-950 border-t border-stone-900 flex items-center justify-between text-[11px] font-mono text-stone-400">
+<span>[B] 返回战区全览</span>
+<span class="text-stone-600">//</span>
+<span>[MENU] 战术指令菜单</span>
+</div>
+</section>
+</main>
+<!-- Global Footer Bar with Precise Console Diagnostics -->
+<footer class="fixed bottom-0 left-0 right-0 z-50 h-7 bg-stone-950/95 border-t border-stone-900 px-6 flex items-center justify-between text-[10px] font-mono text-stone-400 select-none">
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-1 text-sky-400">
+<span class="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+<span>TACTICAL SYSTEM ONLINE</span>
+</div>
+<span>|</span>
+<span>FRAME RATE: 60 FPS LOCKED</span>
+<span>|</span>
+<span>LATENCY: 0.12ms</span>
+</div>
+<div class="flex items-center gap-6">
+<div>GAMEPAD DETECTED: <span class="text-stone-300">XBOX WIRELESS CONTROLLER // PROFILE 1</span></div>
+<div class="text-stone-400">CENTURYKNIGHTS TACTICAL SUITE v2.4.0</div>
+</div>
+</footer>
+</body></html>

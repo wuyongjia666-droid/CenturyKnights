@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>百年骑士 - 领地营建 · 霜堡中枢 (1920x1080)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Noto Sans SC"', 'serif'],
+            display: ['Noto Sans SC', '"Noto Sans SC"', 'serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            frost: {
+              50: '#F0F9FF',
+              100: '#E0F2FE',
+              200: '#BAE6FD',
+              300: '#7DD3FC',
+              400: '#38BDF8',
+              500: '#0EA5E9',
+              primary: '#6ED4FF',
+              glow: 'rgba(110, 212, 255, 0.45)',
+              dim: '#183446',
+            },
+            void: '#03070D',
+            panel: '#08101A',
+            panelBorder: 'rgba(110, 212, 255, 0.16)',
+            stone: {
+              900: '#0A131F',
+              800: '#111D2D',
+              700: '#1B2C42',
+              600: '#2C4362',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+    }
+    html, body {
+      width: 1920px;
+      height: 1080px;
+      max-width: 1920px;
+      max-height: 1080px;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #03070D;
+      color: #E2E8F0;
+      font-family: "Noto Sans SC", serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .hud-bg {
+      background-color: #03070D;
+      background-image: 
+        radial-gradient(circle at 18% 12%, rgba(110, 212, 255, 0.07) 0%, transparent 45%),
+        radial-gradient(circle at 85% 80%, rgba(30, 58, 100, 0.12) 0%, transparent 55%),
+        linear-gradient(rgba(110, 212, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(110, 212, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+    }
+    .frosted-card {
+      background: rgba(8, 16, 26, 0.78);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(110, 212, 255, 0.14);
+      position: relative;
+    }
+    .frosted-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, rgba(110, 212, 255, 0.5) 40%, rgba(255, 255, 255, 0.7) 50%, rgba(110, 212, 255, 0.5) 60%, transparent 100%);
+      pointer-events: none;
+    }
+    .hairline-highlight {
+      box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+    }
+    .gamepad-focus-ring {
+      box-shadow: 0 0 0 1px rgba(110, 212, 255, 0.35), 0 0 24px 2px rgba(110, 212, 255, 0.5), inset 0 0 16px rgba(110, 212, 255, 0.18);
+      border-color: #6ED4FF !important;
+    }
+    .gamepad-badge {
+      box-shadow: 0 0 10px rgba(110, 212, 255, 0.6);
+    }
+    .scanline {
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.12),
+        rgba(0, 0, 0, 0.12) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="w-[1920px] h-[1080px] hud-bg relative flex flex-col justify-between overflow-hidden select-none">
+  <!-- Subtle ambient scanline overlay -->
+  <div class="scanline absolute inset-0 z-0 opacity-40 pointer-events-none"></div>
+
+  <!-- TOP HEADER HUD (Consistent with CenturyKnights design system) -->
+  <header class="relative z-10 w-full h-[68px] px-12 border-b border-white/[0.08] bg-[#03070D]/85 backdrop-blur-md flex items-center justify-between">
+    <!-- Left: Brand & Breadcrumb -->
+    <div class="flex items-center gap-6">
+      <div class="flex items-center gap-3">
+        <span class="inline-block w-2.5 h-2.5 bg-[#6ED4FF] rounded-full shadow-[0_0_8px_#6ED4FF]"></span>
+        <div class="font-sans tracking-[0.25em] text-[17px] font-bold text-white uppercase">
+          CENTURY KNIGHTS
+        </div>
+        <div class="h-3 w-[1px] bg-white/20 ml-1"></div>
+        <div class="text-[12px] tracking-[0.2em] font-mono text-cyan-300/80 uppercase">
+          ESTATE PROTOCOL // 领地营建
+        </div>
+      </div>
+      <div class="hidden xl:flex items-center gap-3 text-xs tracking-wider text-slate-400 font-mono pl-4 border-l border-white/10">
+        <span>赤历一百二十八年</span>
+        <span class="text-white/20">·</span>
+        <span class="text-cyan-200">霜降之月 · 第四旬</span>
+        <span class="text-white/20">·</span>
+        <span>极北主城 · 霜堡</span>
+      </div>
+    </div>
+
+    <!-- Center Navigation Tabs -->
+    <div class="flex items-center gap-1 bg-white/[0.03] p-1 rounded-sm border border-white/[0.06]">
+      <button class="px-5 py-1.5 text-xs tracking-widest text-slate-400 hover:text-white transition-colors font-mono">
+        内政全局
+      </button>
+      <button class="px-5 py-1.5 text-xs tracking-widest text-[#6ED4FF] bg-[#6ED4FF]/10 border-b border-[#6ED4FF] font-medium transition-colors font-mono shadow-[inset_0_0_12px_rgba(110,212,255,0.12)]">
+        建筑营造
+      </button>
+      <button class="px-5 py-1.5 text-xs tracking-widest text-slate-400 hover:text-white transition-colors font-mono">
+        领民徭役
+      </button>
+      <button class="px-5 py-1.5 text-xs tracking-widest text-slate-400 hover:text-white transition-colors font-mono">
+        商路配额
+      </button>
+    </div>
+
+    <!-- Right: Currencies & Return Hub -->
+    <div class="flex items-center gap-6">
+      <!-- Treasury Quick Stats -->
+      <div class="flex items-center gap-5 text-xs font-mono">
+        <div class="flex items-center gap-2 bg-[#08121E]/90 px-3.5 py-1.5 border border-white/10 rounded-sm">
+          <span class="text-amber-300 font-sans text-sm">Kr</span>
+          <span class="text-slate-400 text-[11px]">金库储备</span>
+          <span class="text-amber-200 font-semibold font-mono tracking-wider ml-1 text-[13px]">14,820</span>
+        </div>
+        <div class="flex items-center gap-2 bg-[#08121E]/90 px-3.5 py-1.5 border border-white/10 rounded-sm">
+          <span class="material-symbols-outlined text-[15px] text-cyan-300">grain</span>
+          <span class="text-slate-400 text-[11px]">粮草屯量</span>
+          <span class="text-cyan-100 font-semibold font-mono tracking-wider ml-1 text-[13px]">4,920 石</span>
+        </div>
+        <div class="flex items-center gap-2 bg-[#08121E]/90 px-3.5 py-1.5 border border-white/10 rounded-sm">
+          <span class="material-symbols-outlined text-[15px] text-emerald-400">shield</span>
+          <span class="text-slate-400 text-[11px]">城防稳固</span>
+          <span class="text-emerald-300 font-semibold font-mono tracking-wider ml-1 text-[13px]">94%</span>
+        </div>
+      </div>
+
+      <!-- Return Button -->
+      <button class="flex items-center gap-2 px-3.5 py-1.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/15 text-slate-300 text-xs tracking-wider transition-all font-mono">
+        <span class="w-4 h-4 rounded-full border border-slate-400 text-[10px] flex items-center justify-center text-slate-300 font-bold">B</span>
+        <span>返回枢纽</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN CANVAS AREA (Fixed 1920x1080 composition) -->
+  <main class="relative z-10 flex-1 px-14 py-7 flex flex-col justify-between overflow-hidden">
+    
+    <!-- SECTION TITLE & EDITORIAL SUBHEAD -->
+    <div class="flex items-end justify-between mb-4">
+      <div>
+        <div class="text-[11px] font-mono tracking-[0.3em] text-[#6ED4FF] uppercase flex items-center gap-2 mb-1">
+          <span class="w-2 h-[2px] bg-[#6ED4FF]"></span>
+          <span>ESTATE SANCTUARY INFRASTRUCTURE // SECTOR 01</span>
+        </div>
+        <h1 class="text-3xl font-sans font-light text-white tracking-widest flex items-baseline gap-4">
+          <span>领地营建</span>
+          <span class="text-sm font-mono text-slate-400 tracking-wider font-normal">FROSTHOLD TERRITORIAL PROSPERITY</span>
+        </h1>
+      </div>
+      <div class="text-right font-mono text-xs text-slate-400 flex items-center gap-6">
+        <div>
+          <span class="text-slate-500">工匠劳役负荷：</span>
+          <span class="text-cyan-300 font-medium">8 / 10 班组</span>
+        </div>
+        <div class="w-[1px] h-3 bg-white/10"></div>
+        <div>
+          <span class="text-slate-500">霜冻防御矩阵：</span>
+          <span class="text-emerald-400 font-medium">稳定运行中</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- UPPER ROW: THREE LARGE CARDS (粮仓, 金库, 工事) -->
+    <div class="grid grid-cols-3 gap-6 h-[270px]">
+      
+      <!-- CARD 1: 粮仓 -->
+      <div class="frosted-card rounded hairline-highlight p-6 flex flex-col justify-between border-cyan-500/20 group hover:border-cyan-400/40 transition-all">
+        <!-- Top bar of card -->
+        <div class="flex items-start justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-sm bg-cyan-950/60 border border-cyan-400/30 flex items-center justify-center text-[#6ED4FF] shadow-[0_0_12px_rgba(110,212,255,0.15)]">
+              <span class="material-symbols-outlined text-2xl">warehouse</span>
+            </div>
+            <div>
+              <div class="text-[10px] font-mono tracking-[0.2em] text-cyan-300/70 uppercase">GRANARY DEPOT</div>
+              <h2 class="text-2xl font-sans font-medium text-white tracking-wider">粮仓</h2>
+            </div>
+          </div>
+          <span class="px-2.5 py-1 text-[11px] font-mono tracking-wider text-cyan-300 bg-cyan-950/60 border border-cyan-500/30 rounded-sm">
+            CAPACITY LV.3
+          </span>
+        </div>
+
+        <!-- Metric Highlight -->
+        <div class="my-auto py-2">
+          <div class="text-[11px] font-mono text-slate-400 tracking-wider mb-1 flex items-center justify-between">
+            <span>季度净产盈余 // QUARTERLY YIELD</span>
+            <span class="text-cyan-300 font-mono text-[11px]">+19.8% 同比</span>
+          </div>
+          <div class="flex items-baseline gap-3">
+            <span class="text-4xl font-mono font-semibold text-white tracking-tight">季度 +820</span>
+            <span class="text-sm font-sans text-slate-400">石 / 旬末结算</span>
+          </div>
+        </div>
+
+        <!-- Progress bar and auxiliary data -->
+        <div class="pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs font-mono text-slate-400">
+          <div class="flex items-center gap-2">
+            <span class="text-slate-500">储存限界：</span>
+            <span class="text-slate-200">4,920 / 6,000 石</span>
+          </div>
+          <div class="w-32 bg-slate-900 h-1.5 rounded-full overflow-hidden border border-white/10">
+            <div class="bg-gradient-to-r from-cyan-500 to-[#6ED4FF] h-full w-[82%]"></div>
+          </div>
+          <span class="text-cyan-300 text-[11px]">82% 满载</span>
+        </div>
+      </div>
+
+      <!-- CARD 2: 金库 -->
+      <div class="frosted-card rounded hairline-highlight p-6 flex flex-col justify-between border-amber-500/20 group hover:border-amber-400/40 transition-all">
+        <!-- Top bar of card -->
+        <div class="flex items-start justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-sm bg-amber-950/60 border border-amber-400/30 flex items-center justify-center text-amber-300 shadow-[0_0_12px_rgba(251,191,36,0.15)]">
+              <span class="material-symbols-outlined text-2xl">account_balance</span>
+            </div>
+            <div>
+              <div class="text-[10px] font-mono tracking-[0.2em] text-amber-300/70 uppercase">IMPERIAL TREASURY</div>
+              <h2 class="text-2xl font-sans font-medium text-white tracking-wider">金库</h2>
+            </div>
+          </div>
+          <span class="px-2.5 py-1 text-[11px] font-mono tracking-wider text-amber-300 bg-amber-950/60 border border-amber-500/30 rounded-sm">
+            FISCAL LV.4
+          </span>
+        </div>
+
+        <!-- Metric Highlight -->
+        <div class="my-auto py-2">
+          <div class="text-[11px] font-mono text-slate-400 tracking-wider mb-1 flex items-center justify-between">
+            <span>季度赋税赋收 // QUARTERLY REVENUE</span>
+            <span class="text-amber-300 font-mono text-[11px]">+24.5% 商税拉动</span>
+          </div>
+          <div class="flex items-baseline gap-3">
+            <span class="text-4xl font-mono font-semibold text-amber-200 tracking-tight">季度 +1,140</span>
+            <span class="text-sm font-sans text-slate-400">克朗 / 旬末入账</span>
+          </div>
+        </div>
+
+        <!-- Progress bar and auxiliary data -->
+        <div class="pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs font-mono text-slate-400">
+          <div class="flex items-center gap-2">
+            <span class="text-slate-500">商路通关关税：</span>
+            <span class="text-slate-200">极北通道 420 Kr</span>
+          </div>
+          <div class="w-32 bg-slate-900 h-1.5 rounded-full overflow-hidden border border-white/10">
+            <div class="bg-gradient-to-r from-amber-600 to-amber-300 h-full w-[65%]"></div>
+          </div>
+          <span class="text-amber-300 text-[11px]">平稳增盈</span>
+        </div>
+      </div>
+
+      <!-- CARD 3: 工事 -->
+      <div class="frosted-card rounded hairline-highlight p-6 flex flex-col justify-between border-sky-500/20 group hover:border-sky-400/40 transition-all">
+        <!-- Top bar of card -->
+        <div class="flex items-start justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-sm bg-blue-950/60 border border-sky-400/30 flex items-center justify-center text-sky-300 shadow-[0_0_12px_rgba(56,189,248,0.15)]">
+              <span class="material-symbols-outlined text-2xl">fort</span>
+            </div>
+            <div>
+              <div class="text-[10px] font-mono tracking-[0.2em] text-sky-300/70 uppercase">DEFENSE FORTIFICATIONS</div>
+              <h2 class="text-2xl font-sans font-medium text-white tracking-wider">工事</h2>
+            </div>
+          </div>
+          <span class="px-2.5 py-1 text-[11px] font-mono tracking-wider text-sky-300 bg-sky-950/60 border border-sky-500/30 rounded-sm">
+            STATUS ACTIVE
+          </span>
+        </div>
+
+        <!-- Metric Highlight -->
+        <div class="my-auto py-2">
+          <div class="text-[11px] font-mono text-slate-400 tracking-wider mb-1 flex items-center justify-between">
+            <span>要塞防御能级 // BULWARK RATING</span>
+            <span class="text-sky-300 font-mono text-[11px]">冰霜符文护盾 780 pt</span>
+          </div>
+          <div class="flex items-baseline gap-3">
+            <span class="text-4xl font-mono font-semibold text-white tracking-tight">城防 2 级</span>
+            <span class="text-sm font-sans text-slate-400">次级重装关隘</span>
+          </div>
+        </div>
+
+        <!-- Progress bar and auxiliary data -->
+        <div class="pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs font-mono text-slate-400">
+          <div class="flex items-center gap-2">
+            <span class="text-slate-500">外垒护甲坚韧度：</span>
+            <span class="text-slate-200">1,840 / 2,400</span>
+          </div>
+          <div class="w-32 bg-slate-900 h-1.5 rounded-full overflow-hidden border border-white/10">
+            <div class="bg-gradient-to-r from-blue-500 to-sky-300 h-full w-[76%]"></div>
+          </div>
+          <span class="text-sky-300 text-[11px]">减伤 +24%</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- LOWER SECTION: BUILDING UPGRADE LIST (磨坊 可升级, 箭塔 材料不足, 医馆 已满级) -->
+    <div class="h-[490px] flex flex-col justify-between mt-3">
+      
+      <!-- Section Header -->
+      <div class="flex items-center justify-between mb-3 px-1">
+        <div class="flex items-center gap-3">
+          <span class="w-1.5 h-3 bg-[#6ED4FF] inline-block"></span>
+          <h3 class="text-sm font-sans tracking-widest text-white uppercase">营建设施改修名录 // ARCHITECTURE RETROFIT MATRIX</h3>
+          <span class="text-xs font-mono text-slate-500">（3 处营建序列等待督导）</span>
+        </div>
+        <div class="text-xs font-mono text-slate-400 flex items-center gap-4">
+          <span>快捷筛选：<span class="text-[#6ED4FF]">全领地</span></span>
+          <span class="text-white/20">|</span>
+          <span>排序依据：<span class="text-slate-200">营建优先级</span></span>
+        </div>
+      </div>
+
+      <!-- Upgrade Cards List -->
+      <div class="flex flex-col gap-4 flex-1">
+        
+        <!-- ITEM 1: 磨坊 (可升级) -> WITH VISIBLE GAMEPAD FOCUS RING AND ACTION FOCUSED -->
+        <div class="frosted-card rounded hairline-highlight p-5 flex items-center justify-between transition-all gamepad-focus-ring bg-slate-900/90 relative">
+          <!-- Gamepad indicator corner badge -->
+          <div class="absolute -top-3 left-6 bg-[#6ED4FF] text-stone-950 px-2.5 py-0.5 text-[10px] font-mono font-bold tracking-widest uppercase rounded-sm flex items-center gap-1.5 gamepad-badge shadow-[0_0_12px_#6ED4FF]">
+            <span class="w-3.5 h-3.5 rounded-full bg-stone-950 text-[#6ED4FF] flex items-center justify-center text-[9px]">A</span>
+            <span>当前选定焦点 (FOCUSED TARGET)</span>
+          </div>
+
+          <!-- Left Info: Icon, Name, Tier, Description -->
+          <div class="flex items-center gap-6 w-[420px]">
+            <div class="w-14 h-14 rounded-sm bg-cyan-950/80 border border-[#6ED4FF] flex items-center justify-center text-[#6ED4FF] shadow-[0_0_16px_rgba(110,212,255,0.3)]">
+              <span class="material-symbols-outlined text-3xl">wind_power</span>
+            </div>
+            <div>
+              <div class="flex items-center gap-3 mb-1">
+                <h4 class="text-xl font-sans font-medium text-white tracking-wider">磨坊</h4>
+                <span class="px-2 py-0.5 text-[11px] font-mono bg-cyan-500/20 text-cyan-200 border border-cyan-400/40 rounded-sm">
+                  1 阶 &rarr; 2 阶
+                </span>
+                <span class="text-xs font-mono px-2 py-0.5 bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 rounded-sm flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
+                  可升级
+                </span>
+              </div>
+              <p class="text-xs text-slate-300 font-sans leading-relaxed">
+                利用冰原山谷下切气流驱动的大型风轮磨坊。精细化脱粒以大幅减少冻原粮草损耗。
+              </p>
+            </div>
+          </div>
+
+          <!-- Middle: Resource Requirements & Upgrade Yield -->
+          <div class="flex items-center gap-10 font-mono">
+            <!-- Benefit -->
+            <div class="bg-black/40 px-5 py-2.5 rounded border border-white/10 w-[240px]">
+              <div class="text-[10px] text-slate-400 tracking-wider mb-1">升级收益预测 // YIELD DELTA</div>
+              <div class="text-cyan-200 text-sm font-semibold flex items-center gap-2">
+                <span>季度粮草净产</span>
+                <span class="text-emerald-400 font-mono text-base">+160 石/季</span>
+              </div>
+            </div>
+
+            <!-- Material Requirements -->
+            <div class="flex items-center gap-6">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded bg-slate-900 border border-white/10 flex items-center justify-center text-amber-300 text-xs font-sans">
+                  Kr
+                </div>
+                <div>
+                  <div class="text-[10px] text-slate-400">资金消耗</div>
+                  <div class="text-xs font-semibold text-emerald-400">450 / 14,820 <span class="text-[10px] font-normal text-slate-400">(充足)</span></div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded bg-slate-900 border border-white/10 flex items-center justify-center text-cyan-300">
+                  <span class="material-symbols-outlined text-sm">construction</span>
+                </div>
+                <div>
+                  <div class="text-[10px] text-slate-400">冷杉木料</div>
+                  <div class="text-xs font-semibold text-emerald-400">12 / 24 捆 <span class="text-[10px] font-normal text-slate-400">(充足)</span></div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded bg-slate-900 border border-white/10 flex items-center justify-center text-cyan-300">
+                  <span class="material-symbols-outlined text-sm">schedule</span>
+                </div>
+                <div>
+                  <div class="text-[10px] text-slate-400">营建工期</div>
+                  <div class="text-xs font-semibold text-cyan-100">1 季 (4 旬)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Focused Action Button with Distinct Gamepad Button Badge -->
+          <div class="flex items-center gap-3">
+            <button class="relative px-8 py-3 bg-[#6ED4FF] text-stone-950 font-sans font-bold text-sm tracking-widest rounded-sm flex items-center gap-3 shadow-[0_0_24px_rgba(110,212,255,0.6)] hover:bg-[#8ee0ff] active:scale-[0.98] transition-all cursor-pointer">
+              <span class="w-5 h-5 rounded-full bg-stone-950 text-[#6ED4FF] flex items-center justify-center font-mono text-xs font-bold">A</span>
+              <span class="text-stone-950 font-bold">升级磨坊</span>
+              <span class="material-symbols-outlined text-stone-950 text-base">north_east</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ITEM 2: 箭塔 (材料不足) -->
+        <div class="frosted-card rounded hairline-highlight p-5 flex items-center justify-between opacity-85 hover:opacity-100 transition-all border-white/10 bg-slate-950/60">
+          <!-- Left Info -->
+          <div class="flex items-center gap-6 w-[420px]">
+            <div class="w-14 h-14 rounded-sm bg-slate-900 border border-white/15 flex items-center justify-center text-slate-400">
+              <span class="material-symbols-outlined text-3xl">archery</span>
+            </div>
+            <div>
+              <div class="flex items-center gap-3 mb-1">
+                <h4 class="text-xl font-sans font-medium text-slate-200 tracking-wider">箭塔</h4>
+                <span class="px-2 py-0.5 text-[11px] font-mono bg-white/5 text-slate-300 border border-white/10 rounded-sm">
+                  2 阶 &rarr; 3 阶
+                </span>
+                <span class="text-xs font-mono px-2 py-0.5 bg-rose-500/15 text-rose-300 border border-rose-500/30 rounded-sm flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 bg-rose-400 rounded-full"></span>
+                  材料不足
+                </span>
+              </div>
+              <p class="text-xs text-slate-400 font-sans leading-relaxed">
+                戍卫要塞环形箭楼。增设淬冰重弩机位，提升对北境原野游掠斥候的先制警戒射程。
+              </p>
+            </div>
+          </div>
+
+          <!-- Middle: Requirements -->
+          <div class="flex items-center gap-10 font-mono">
+            <div class="bg-black/40 px-5 py-2.5 rounded border border-white/10 w-[240px]">
+              <div class="text-[10px] text-slate-400 tracking-wider mb-1">升级收益预测 // YIELD DELTA</div>
+              <div class="text-slate-300 text-sm font-semibold flex items-center gap-2">
+                <span>外围警戒视野</span>
+                <span class="text-cyan-300 font-mono text-base">+2 格 / 城防+120</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-6">
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded bg-slate-900 border border-white/10 flex items-center justify-center text-amber-300 text-xs font-sans">
+                  Kr
+                </div>
+                <div>
+                  <div class="text-[10px] text-slate-400">资金消耗</div>
+                  <div class="text-xs font-semibold text-emerald-400">800 / 14,820 <span class="text-[10px] font-normal text-slate-400">(充足)</span></div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded bg-rose-950/40 border border-rose-500/30 flex items-center justify-center text-rose-400">
+                  <span class="material-symbols-outlined text-sm">diamond</span>
+                </div>
+                <div>
+                  <div class="text-[10px] text-rose-300/80">赤铁锭 (需采掘)</div>
+                  <div class="text-xs font-semibold text-rose-300">2 / 8 块 <span class="text-[10px] font-normal text-rose-400/80">(缺 6 块)</span></div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded bg-slate-900 border border-white/10 flex items-center justify-center text-cyan-300">
+                  <span class="material-symbols-outlined text-sm">schedule</span>
+                </div>
+                <div>
+                  <div class="text-[10px] text-slate-400">营建工期</div>
+                  <div class="text-xs font-semibold text-slate-300">2 季 (8 旬)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Action -->
+          <div class="flex items-center gap-3">
+            <button class="px-7 py-2.5 bg-white/[0.04] text-slate-500 font-sans text-sm tracking-widest rounded-sm border border-white/10 cursor-not-allowed flex items-center gap-2" disabled>
+              <span class="material-symbols-outlined text-base">lock</span>
+              <span>前置未满足</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ITEM 3: 医馆 (已满级) -->
+        <div class="frosted-card rounded hairline-highlight p-5 flex items-center justify-between opacity-75 hover:opacity-90 transition-all border-white/5 bg-slate-950/40">
+          <!-- Left Info -->
+          <div class="flex items-center gap-6 w-[420px]">
+            <div class="w-14 h-14 rounded-sm bg-slate-900 border border-white/10 flex items-center justify-center text-slate-400">
+              <span class="material-symbols-outlined text-3xl">local_hospital</span>
+            </div>
+            <div>
+              <div class="flex items-center gap-3 mb-1">
+                <h4 class="text-xl font-sans font-medium text-slate-300 tracking-wider">医馆</h4>
+                <span class="px-2 py-0.5 text-[11px] font-mono bg-white/5 text-slate-400 border border-white/10 rounded-sm">
+                  MAX 3 阶
+                </span>
+                <span class="text-xs font-mono px-2 py-0.5 bg-cyan-900/30 text-cyan-300 border border-cyan-400/30 rounded-sm flex items-center gap-1">
+                  <span class="material-symbols-outlined text-[13px]">check</span>
+                  已满级
+                </span>
+              </div>
+              <p class="text-xs text-slate-400 font-sans leading-relaxed">
+                领地圣泉随侍医所。常备雪莲疗愈膏与伤势监护病榻，提供远征骑士战后重创加速愈合。
+              </p>
+            </div>
+          </div>
+
+          <!-- Middle: Requirements / Max Status -->
+          <div class="flex items-center gap-10 font-mono">
+            <div class="bg-black/30 px-5 py-2.5 rounded border border-white/5 w-[240px]">
+              <div class="text-[10px] text-slate-400 tracking-wider mb-1">当前常驻驻效 // ACTIVE PASSIVE</div>
+              <div class="text-slate-200 text-sm font-semibold flex items-center gap-2">
+                <span>伤员康复周期</span>
+                <span class="text-cyan-300 font-mono text-base">-50% (终阶加成)</span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-6 text-xs text-slate-400">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-base text-cyan-400">verified</span>
+                <span>营建矩阵已达到极北领地最高规格</span>
+              </div>
+              <div class="w-[1px] h-4 bg-white/10"></div>
+              <div>
+                <span>维护开销：<span class="text-slate-300">40 Kr / 季</span></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Action -->
+          <div class="flex items-center gap-3">
+            <div class="px-6 py-2.5 bg-transparent text-slate-400 font-sans text-sm tracking-widest border border-white/10 rounded-sm flex items-center gap-2 select-none">
+              <span class="material-symbols-outlined text-cyan-400 text-base">verified</span>
+              <span>已臻化境</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- BOTTOM FOOTER & CONTROLLER BAR (Exactly according to user specification) -->
+  <footer class="relative z-10 w-full h-[62px] px-12 border-t border-white/[0.08] bg-[#03070D]/95 backdrop-blur-md flex items-center justify-between">
+    <!-- Left: Required verbatim prompt line -->
+    <div class="flex items-center gap-4">
+      <div class="flex items-center gap-2 px-3 py-1 bg-cyan-950/50 border border-cyan-500/30 rounded-sm">
+        <span class="w-2 h-2 rounded-full bg-[#6ED4FF] animate-pulse"></span>
+        <span class="text-xs font-sans tracking-wider text-cyan-200">
+          本季结算将在霜降后入账
+        </span>
+      </div>
+      <span class="text-[11px] font-mono text-slate-400">
+        // 距离本季公报核定还剩 12 日
+      </span>
+    </div>
+
+    <!-- Center/Right: Gamepad Legend & System Meta -->
+    <div class="flex items-center gap-8 font-mono text-xs text-slate-400">
+      <!-- Gamepad prompts -->
+      <div class="flex items-center gap-6 text-slate-300">
+        <div class="flex items-center gap-1.5">
+          <span class="w-4 h-4 rounded-full border border-cyan-400/80 bg-cyan-950 text-cyan-300 text-[10px] flex items-center justify-center font-bold">A</span>
+          <span>执行升级</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-4 h-4 rounded-full border border-slate-400 text-[10px] flex items-center justify-center font-bold">X</span>
+          <span>检视图纸</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-4 h-4 rounded-full border border-slate-400 text-[10px] flex items-center justify-center font-bold">Y</span>
+          <span>调配劳役</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="w-4 h-4 rounded-full border border-slate-400 text-[10px] flex items-center justify-center font-bold">B</span>
+          <span>返回</span>
+        </div>
+        <div class="flex items-center gap-1.5 text-slate-400 pl-2 border-l border-white/10">
+          <span class="px-1.5 py-0.5 border border-slate-600 rounded text-[10px]">LT / RT</span>
+          <span>切换名录</span>
+        </div>
+      </div>
+
+      <!-- Engine Version & Safe Area Sign -->
+      <div class="hidden 2xl:flex items-center gap-4 text-slate-400 text-[11px] pl-4 border-l border-white/10">
+        <span>FROST_ENGINE v2.4.0</span>
+        <span class="text-white/20">|</span>
+        <span>1920 × 1080 NO-SCROLL NATIVE</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=1920, height=1080, initial-scale=1.0" name="viewport"/>
+<title>百年骑士 - 存读档管理 (1920x1080)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        void: '#070b10',
+        panel: 'rgba(11, 19, 29, 0.72)',
+        'panel-focused': 'rgba(14, 27, 43, 0.88)',
+        ice: {
+          50: '#F0F9FF',
+          100: '#E0F2FE',
+          200: '#BAE6FD',
+          300: '#7DD3FC',
+          400: '#38BDF8',
+          500: '#0EA5E9',
+        },
+        frost: '#6ED4FF',
+        'frost-glow': 'rgba(110, 212, 255, 0.28)',
+        subtext: '#7e93a6',
+        rim: 'rgba(110, 212, 255, 0.16)',
+        'rim-focused': 'rgba(110, 212, 255, 0.75)'
+      },
+      fontFamily: {
+        serif: ['"Noto Sans SC"', 'serif'],
+        display: ['"Noto Sans SC"', 'serif'],
+        mono: ['"JetBrains Mono"', 'monospace']
+      }
+    }
+  }
+}
+</script>
+<style>
+* {
+  box-sizing: border-box;
+  user-select: none;
+}
+html, body {
+  width: 1920px;
+  height: 1080px;
+  max-width: 1920px;
+  max-height: 1080px;
+  overflow: hidden;
+  background-color: #070b10;
+  color: #e2ecf5;
+  font-family: 'Noto Sans SC', serif;
+}
+
+/* 细致冰霜网格与环境微光 */
+.bg-ambient {
+  background: 
+    radial-gradient(circle at 18% 22%, rgba(20, 48, 77, 0.45) 0%, transparent 55%),
+    radial-gradient(circle at 82% 78%, rgba(14, 38, 62, 0.35) 0%, transparent 60%),
+    linear-gradient(180deg, #070B10 0%, #05080C 100%);
+}
+
+.tactical-grid {
+  background-image: 
+    linear-gradient(to right, rgba(110, 212, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(110, 212, 255, 0.035) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* 冰霜毛玻璃面板与高精细高光描边 */
+.frosted-card {
+  background: rgba(11, 20, 31, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(110, 212, 255, 0.16);
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.frosted-card:hover {
+  border-color: rgba(110, 212, 255, 0.35);
+  background: rgba(13, 24, 38, 0.82);
+}
+
+/* 手柄焦点高亮光环与精细角标 */
+.focused-card {
+  background: rgba(13, 27, 44, 0.88) !important;
+  border-color: rgba(110, 212, 255, 0.9) !important;
+  box-shadow: 
+    0 0 0 1px rgba(110, 212, 255, 0.4),
+    0 0 35px -5px rgba(110, 212, 255, 0.35),
+    inset 0 0 25px rgba(110, 212, 255, 0.06);
+}
+
+.corner-tick {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  pointer-events: none;
+}
+.corner-tl { top: -1px; left: -1px; border-top: 2px solid #6ED4FF; border-left: 2px solid #6ED4FF; }
+.corner-tr { top: -1px; right: -1px; border-top: 2px solid #6ED4FF; border-right: 2px solid #6ED4FF; }
+.corner-bl { bottom: -1px; left: -1px; border-bottom: 2px solid #6ED4FF; border-left: 2px solid #6ED4FF; }
+.corner-br { bottom: -1px; right: -1px; border-bottom: 2px solid #6ED4FF; border-right: 2px solid #6ED4FF; }
+
+/* 按钮微光态 */
+.btn-primary-focused {
+  background: linear-gradient(135deg, rgba(110, 212, 255, 0.95) 0%, rgba(56, 189, 248, 0.9) 100%);
+  color: #04090e;
+  box-shadow: 0 0 24px rgba(110, 212, 255, 0.45);
+}
+.btn-primary-focused:hover {
+  background: #ffffff;
+  box-shadow: 0 0 30px rgba(110, 212, 255, 0.65);
+}
+
+.btn-secondary {
+  background: rgba(17, 28, 42, 0.65);
+  border: 1px solid rgba(110, 212, 255, 0.28);
+  color: #cde4f7;
+}
+.btn-secondary:hover {
+  background: rgba(28, 45, 68, 0.85);
+  border-color: rgba(110, 212, 255, 0.6);
+  color: #ffffff;
+}
+</style>
+</link></head>
+<body class="w-[1920px] h-[1080px] bg-ambient tactical-grid relative flex flex-col justify-between p-12">
+<!-- 顶部 HUD 状态栏 -->
+<header class="w-full h-16 flex items-center justify-between border-b border-[#6ED4FF]/15 px-6 backdrop-blur-md bg-void/50">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3">
+<span class="w-2.5 h-2.5 bg-frost rounded-full shadow-[0_0_10px_#6ED4FF]"></span>
+<span class="font-sans tracking-[0.25em] text-sm text-ice-200 uppercase font-semibold">Century Knights</span>
+</div>
+<span class="text-[#6ED4FF]/30 font-mono text-xs">/ /</span>
+<span class="font-mono text-xs tracking-widest text-[#7e93a6] uppercase">Tactical State Archive</span>
+<span class="text-[#6ED4FF]/30 font-mono text-xs">/ /</span>
+<span class="text-xs text-ice-300 font-sans tracking-wider">纪元刻录 · 霜痕记忆宿主</span>
+</div>
+<!-- 右侧系统统计与快捷操作提示 -->
+<div class="flex items-center gap-8 font-mono text-xs text-[#8aa3b8]">
+<div class="flex items-center gap-2">
+<span class="text-[#6ED4FF]/60">当前宗脉:</span>
+<span class="text-ice-100 font-medium font-sans">极北 · 白霜世族</span>
+</div>
+<div class="h-3 w-px bg-[#6ED4FF]/20"></div>
+<div class="flex items-center gap-2">
+<span class="text-[#6ED4FF]/60">存储介质:</span>
+<span class="text-ice-100">FROST-CRYSTAL V3.8</span>
+</div>
+<div class="h-3 w-px bg-[#6ED4FF]/20"></div>
+<button class="flex items-center gap-2 text-ice-300 hover:text-white px-3 py-1 rounded border border-[#6ED4FF]/20 hover:border-[#6ED4FF]/50 transition-colors">
+<span class="material-symbols-outlined text-sm">settings_backup_restore</span>
+<span class="font-sans">云端备份核验</span>
+</button>
+<button class="flex items-center gap-1.5 text-[#7e93a6] hover:text-white transition-colors">
+<kbd class="px-1.5 py-0.5 rounded bg-[#101b28] border border-[#6ED4FF]/30 text-[10px] text-ice-300 font-mono">ESC</kbd>
+<span class="font-sans text-xs">返回</span>
+</button>
+</div>
+</header>
+<!-- 核心主区域：大标题 + 3列存档卡片 -->
+<main class="w-full flex-1 flex flex-col justify-center px-6 py-6">
+<!-- 标头与模式切换 -->
+<div class="flex items-end justify-between mb-8">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<span class="inline-block px-2 py-0.5 rounded text-[11px] font-mono tracking-widest bg-[#6ED4FF]/10 text-frost border border-[#6ED4FF]/25">
+            CHRONICLE REGISTER // SECTION 09
+          </span>
+<span class="text-xs text-subtext font-mono">LAST WRITE: 2025.04.14 02:40:19</span>
+</div>
+<h1 class="text-4xl font-light tracking-[0.18em] text-white font-sans flex items-baseline gap-4">
+          存读档协议
+          <span class="text-sm font-sans font-light text-subtext tracking-[0.3em] uppercase">Chronicle Archive &amp; Roster Load</span>
+</h1>
+</div>
+<!-- 选项卡切换: 存档 / 读档 -->
+<div class="flex items-center p-1 rounded bg-[#0b1420]/80 border border-[#6ED4FF]/20 backdrop-blur-sm">
+<button class="px-7 py-2 rounded text-sm font-sans tracking-wider text-frost bg-[#6ED4FF]/15 border border-[#6ED4FF]/40 shadow-[0_0_12px_rgba(110,212,255,0.2)] transition-all flex items-center gap-2">
+<span class="w-1.5 h-1.5 bg-frost rounded-full"></span>
+<span>读取记录 (LOAD)</span>
+</button>
+<button class="px-7 py-2 rounded text-sm font-sans tracking-wider text-subtext hover:text-ice-200 transition-colors flex items-center gap-2">
+<span>覆盖存储 (SAVE)</span>
+</button>
+</div>
+</div>
+<!-- 三栏插槽卡片容器 (Three Slot Cards) -->
+<div class="grid grid-cols-3 gap-7 w-full h-[620px]">
+<!-- ================= SLOT 1: FOCUSED PRIMARY ================= -->
+<article class="frosted-card focused-card rounded-lg p-6 flex flex-col justify-between group cursor-pointer">
+<!-- 4个手柄聚焦角标 -->
+<div class="corner-tick corner-tl"></div>
+<div class="corner-tick corner-tr"></div>
+<div class="corner-tick corner-bl"></div>
+<div class="corner-tick corner-br"></div>
+<!-- 顶部槽位编号与状态标签 -->
+<div>
+<div class="flex items-center justify-between pb-3 border-b border-[#6ED4FF]/20 mb-4">
+<div class="flex items-center gap-2.5">
+<span class="px-2 py-0.5 rounded font-mono text-xs font-semibold bg-frost text-[#060c14] tracking-wider">SLOT 01</span>
+<span class="text-xs font-sans text-frost font-medium tracking-wide">当前活动主历</span>
+</div>
+<!-- 手柄焦点标识 -->
+<div class="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#6ED4FF]/15 border border-[#6ED4FF]/40 text-frost text-[11px] font-mono shadow-[0_0_10px_rgba(110,212,255,0.3)]">
+<span class="w-1.5 h-1.5 rounded-full bg-frost animate-pulse"></span>
+<span>GAMEPAD FOCUSED</span>
+</div>
+</div>
+<!-- 缩略图视窗 (Slot 1: 霜降 霜堡 战役舆图/中枢) -->
+<div class="relative w-full h-52 rounded overflow-hidden border border-[#6ED4FF]/40 mb-5 bg-[#09111c] group-hover:border-[#6ED4FF]/70 transition-colors">
+<img alt="Slot 1 存档截图 - 霜堡中枢" class="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-500 opacity-90" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg"/>
+<!-- 渐变蒙版与扫描线 -->
+<div class="absolute inset-0 bg-gradient-to-t from-[#0b1420] via-transparent to-black/20 pointer-events-none"></div>
+<div class="absolute bottom-3 left-3 flex items-center gap-2">
+<span class="px-2 py-0.5 bg-black/75 backdrop-blur-md border border-[#6ED4FF]/30 rounded text-[11px] font-mono text-ice-200">
+                CHAP. IV // 极北主城
+              </span>
+<span class="px-2 py-0.5 bg-black/75 backdrop-blur-md border border-white/20 rounded text-[11px] font-mono text-[#8aa3b8]">
+                24h 12m
+              </span>
+</div>
+<div class="absolute top-3 right-3 w-7 h-7 rounded-full bg-black/70 backdrop-blur-md border border-frost/60 flex items-center justify-center text-frost">
+<span class="material-symbols-outlined text-sm">ac_unit</span>
+</div>
+</div>
+<!-- 槽位核心情报字段 -->
+<div class="space-y-3.5">
+<div class="flex items-baseline justify-between">
+<div>
+<div class="text-[11px] font-mono text-[#7e93a6] tracking-wider uppercase">PATRIARCH CLAN</div>
+<div class="text-2xl font-sans text-white tracking-widest font-normal flex items-center gap-2 mt-0.5">
+                  白霜
+                  <span class="text-xs px-2 py-0.5 rounded bg-[#6ED4FF]/10 text-frost border border-[#6ED4FF]/25 font-mono">GEN VII</span>
+</div>
+</div>
+<div class="text-right">
+<div class="text-[11px] font-mono text-[#7e93a6] tracking-wider uppercase">LOCATION</div>
+<div class="text-lg font-sans text-ice-100 font-medium tracking-wide mt-0.5">霜堡 · 极北宗祠</div>
+</div>
+</div>
+<!-- 纪元时间栏 -->
+<div class="p-3 rounded bg-[#0f1d2e]/80 border border-[#6ED4FF]/25 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-frost text-base">calendar_month</span>
+<span class="text-sm font-sans text-white tracking-wider">赤历 128 年</span>
+<span class="text-xs font-sans text-frost px-1.5 py-0.5 rounded bg-frost/10">霜降之月</span>
+</div>
+<span class="font-mono text-xs text-subtext">第 04 旬 · 寒夜战役前夕</span>
+</div>
+<!-- 随从与战备简报 -->
+<div class="grid grid-cols-2 gap-2 text-xs font-mono pt-1 text-[#8ba2b8]">
+<div class="flex items-center justify-between px-2.5 py-1.5 rounded bg-[#091320] border border-white/5">
+<span>主力先锋:</span>
+<span class="text-ice-100 font-sans">白霜·凛 (LV.34)</span>
+</div>
+<div class="flex items-center justify-between px-2.5 py-1.5 rounded bg-[#091320] border border-white/5">
+<span>军团储备:</span>
+<span class="text-frost">12,480 克朗</span>
+</div>
+</div>
+</div>
+</div>
+<!-- 底部交互操作栏 (读取 / 覆盖保存) -->
+<div class="pt-5 border-t border-[#6ED4FF]/20 flex items-center gap-3">
+<!-- 拥有主要焦点圈的按钮 -->
+<button class="flex-1 py-3 px-4 rounded font-sans text-sm font-medium tracking-widest flex items-center justify-center gap-2 btn-primary-focused transition-all">
+<kbd class="w-5 h-5 rounded-full bg-black/85 text-frost text-[11px] font-mono font-bold flex items-center justify-center shadow-inner">A</kbd>
+<span>读取此进度</span>
+<span class="material-symbols-outlined text-base">arrow_forward</span>
+</button>
+<button class="py-3 px-4 rounded font-sans text-sm tracking-wider flex items-center justify-center gap-2 btn-secondary transition-all hover:border-frost">
+<kbd class="w-5 h-5 rounded-full bg-[#0a121d] text-ice-200 border border-[#6ED4FF]/40 text-[11px] font-mono flex items-center justify-center">X</kbd>
+<span>覆盖保存</span>
+</button>
+</div>
+</article>
+<!-- ================= SLOT 2: SECONDARY SAVED ================= -->
+<article class="frosted-card rounded-lg p-6 flex flex-col justify-between group cursor-pointer">
+<div>
+<!-- 顶部状态 -->
+<div class="flex items-center justify-between pb-3 border-b border-[#6ED4FF]/10 mb-4">
+<div class="flex items-center gap-2.5">
+<span class="px-2 py-0.5 rounded font-mono text-xs font-semibold bg-[#132337] text-ice-300 border border-[#6ED4FF]/20 tracking-wider">SLOT 02</span>
+<span class="text-xs font-sans text-subtext tracking-wide">历史归档点</span>
+</div>
+<div class="text-[11px] font-mono text-subtext">AUTO_SAVE_02</div>
+</div>
+<!-- 缩略图视窗 (Slot 2: 春分 北境 边境哨所) -->
+<div class="relative w-full h-52 rounded overflow-hidden border border-[#6ED4FF]/20 mb-5 bg-[#09111c] group-hover:border-[#6ED4FF]/50 transition-colors">
+<img alt="Slot 2 存档截图 - 战略舆图北境" class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 opacity-75 group-hover:opacity-90" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-[#0b1420] via-transparent to-black/20 pointer-events-none"></div>
+<div class="absolute bottom-3 left-3 flex items-center gap-2">
+<span class="px-2 py-0.5 bg-black/75 backdrop-blur-md border border-[#6ED4FF]/20 rounded text-[11px] font-mono text-ice-300">
+                CHAP. III // 霜线哨站
+              </span>
+<span class="px-2 py-0.5 bg-black/75 backdrop-blur-md border border-white/10 rounded text-[11px] font-mono text-subtext">
+                18h 45m
+              </span>
+</div>
+<div class="absolute top-3 right-3 w-7 h-7 rounded-full bg-black/60 backdrop-blur-md border border-white/20 flex items-center justify-center text-subtext group-hover:text-ice-200">
+<span class="material-symbols-outlined text-sm">flag</span>
+</div>
+</div>
+<!-- 核心情报字段 -->
+<div class="space-y-3.5">
+<div class="flex items-baseline justify-between">
+<div>
+<div class="text-[11px] font-mono text-subtext tracking-wider uppercase">PATRIARCH CLAN</div>
+<div class="text-2xl font-sans text-ice-100 tracking-widest font-normal flex items-center gap-2 mt-0.5">
+                  白霜
+                  <span class="text-xs px-2 py-0.5 rounded bg-[#102030] text-[#8aa3b8] border border-white/10 font-mono">GEN VI</span>
+</div>
+</div>
+<div class="text-right">
+<div class="text-[11px] font-mono text-subtext tracking-wider uppercase">LOCATION</div>
+<div class="text-lg font-sans text-ice-200 font-normal tracking-wide mt-0.5">北境 · 苍龙哨前沿</div>
+</div>
+</div>
+<!-- 纪元时间栏 (赤历 121 春分 北境) -->
+<div class="p-3 rounded bg-[#0b1522] border border-[#6ED4FF]/15 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-ice-300 text-base">calendar_month</span>
+<span class="text-sm font-sans text-ice-100 tracking-wider">赤历 121 年</span>
+<span class="text-xs font-sans text-ice-200 px-1.5 py-0.5 rounded bg-[#16273c]">春分之月</span>
+</div>
+<span class="font-mono text-xs text-subtext">第 02 旬 · 边塞开拓期</span>
+</div>
+<!-- 随从与战备简报 -->
+<div class="grid grid-cols-2 gap-2 text-xs font-mono pt-1 text-subtext">
+<div class="flex items-center justify-between px-2.5 py-1.5 rounded bg-[#08101a] border border-white/5">
+<span>指挥序列:</span>
+<span class="text-ice-200 font-sans">白霜·岳 (享年68)</span>
+</div>
+<div class="flex items-center justify-between px-2.5 py-1.5 rounded bg-[#08101a] border border-white/5">
+<span>领地要塞:</span>
+<span class="text-ice-300">防壁 1 级</span>
+</div>
+</div>
+</div>
+</div>
+<!-- 底部交互操作栏 -->
+<div class="pt-5 border-t border-[#6ED4FF]/10 flex items-center gap-3">
+<button class="flex-1 py-3 px-4 rounded font-sans text-sm tracking-wider flex items-center justify-center gap-2 btn-secondary hover:border-frost text-ice-200 transition-all">
+<span class="material-symbols-outlined text-base text-frost">play_arrow</span>
+<span>读取此进度</span>
+</button>
+<button class="py-3 px-4 rounded font-sans text-sm tracking-wider flex items-center justify-center gap-2 btn-secondary transition-all opacity-85 hover:opacity-100">
+<span>覆盖保存</span>
+</button>
+</div>
+</article>
+<!-- ================= SLOT 3: EMPTY SLOT ================= -->
+<article class="frosted-card rounded-lg p-6 flex flex-col justify-between group cursor-pointer border-dashed border-[#6ED4FF]/25 hover:border-[#6ED4FF]/50 bg-[#09121d]/50">
+<div>
+<!-- 顶部状态 -->
+<div class="flex items-center justify-between pb-3 border-b border-white/10 mb-4">
+<div class="flex items-center gap-2.5">
+<span class="px-2 py-0.5 rounded font-mono text-xs font-semibold bg-[#101b28] text-subtext border border-white/10 tracking-wider">SLOT 03</span>
+<span class="text-xs font-sans text-subtext/75 tracking-wide">空闲阵列</span>
+</div>
+<div class="text-[11px] font-mono text-[#4e6478]">UNALLOCATED</div>
+</div>
+<!-- 缩略图视窗 (Slot 3: 空槽态) -->
+<div class="relative w-full h-52 rounded border border-dashed border-[#6ED4FF]/20 mb-5 bg-[#060c14]/70 flex flex-col items-center justify-center group-hover:border-[#6ED4FF]/45 transition-colors">
+<div class="w-14 h-14 rounded-full border border-[#6ED4FF]/25 flex items-center justify-center text-[#6ED4FF]/40 group-hover:text-frost group-hover:border-[#6ED4FF]/60 group-hover:scale-110 transition-all mb-3 bg-[#0c1826]">
+<span class="material-symbols-outlined text-2xl">add</span>
+</div>
+<span class="text-xs font-sans tracking-[0.2em] text-[#6d8296] group-hover:text-ice-200 transition-colors uppercase">未分配晶石插槽</span>
+<span class="text-[10px] font-mono text-[#4b5e70] mt-1">NO CHRONICLE DATA DETECTED</span>
+</div>
+<!-- 空槽信息展板 -->
+<div class="space-y-3.5">
+<div class="flex items-baseline justify-between opacity-60">
+<div>
+<div class="text-[11px] font-mono text-subtext tracking-wider uppercase">PATRIARCH CLAN</div>
+<div class="text-2xl font-sans text-[#60778c] tracking-widest font-normal mt-0.5">——</div>
+</div>
+<div class="text-right">
+<div class="text-[11px] font-mono text-subtext tracking-wider uppercase">LOCATION</div>
+<div class="text-lg font-sans text-[#60778c] font-normal tracking-wide mt-0.5">空槽</div>
+</div>
+</div>
+<!-- 空时间展板 -->
+<div class="p-3 rounded bg-[#070e17] border border-white/5 flex items-center justify-between text-[#55697d]">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base">hourglass_empty</span>
+<span class="text-sm font-sans tracking-wider">暂无年份刻录</span>
+</div>
+<span class="font-mono text-xs">READY FOR OVERWRITE</span>
+</div>
+<!-- 描述提示 -->
+<div class="p-3 rounded bg-[#09121e]/50 border border-white/5 text-xs text-[#687f94] font-sans leading-relaxed">
+              选择此插槽可将当前领地、家系谱系与军团战术部署固化至「空槽位 03」，不会改写现有白霜主支档案。
+            </div>
+</div>
+</div>
+<!-- 底部交互操作栏 (仅覆盖保存可用) -->
+<div class="pt-5 border-t border-white/10 flex items-center gap-3">
+<button class="flex-1 py-3 px-4 rounded font-sans text-sm tracking-wider flex items-center justify-center gap-2 bg-[#0c1420] text-[#4b5d6e] border border-white/5 cursor-not-allowed" disabled="">
+<span class="material-symbols-outlined text-base">lock</span>
+<span>无数据可读</span>
+</button>
+<button class="flex-1 py-3 px-4 rounded font-sans text-sm tracking-wider flex items-center justify-center gap-2 btn-secondary hover:border-frost text-ice-200 transition-all">
+<span class="material-symbols-outlined text-base text-frost">save</span>
+<span>写入全新存档</span>
+</button>
+</div>
+</article>
+</div>
+</main>
+<!-- 底部 手柄控制指南与系统版权底栏 (Gamepad Prompt Bar) -->
+<footer class="w-full h-14 flex items-center justify-between border-t border-[#6ED4FF]/15 px-6 backdrop-blur-md bg-void/70 font-mono text-xs">
+<!-- 手柄物理按键映射 -->
+<div class="flex items-center gap-6 text-[#8ba2b6]">
+<div class="flex items-center gap-2">
+<kbd class="w-5 h-5 rounded-full bg-frost text-[#050b12] text-[11px] font-bold flex items-center justify-center">A</kbd>
+<span class="font-sans text-white">确认读取进度</span>
+</div>
+<div class="flex items-center gap-2">
+<kbd class="w-5 h-5 rounded-full bg-[#142335] text-ice-200 border border-[#6ED4FF]/40 text-[11px] flex items-center justify-center">X</kbd>
+<span class="font-sans text-[#a6bdd0]">覆盖写入保存</span>
+</div>
+<div class="flex items-center gap-2">
+<kbd class="w-5 h-5 rounded-full bg-[#142335] text-ice-200 border border-[#6ED4FF]/40 text-[11px] flex items-center justify-center">Y</kbd>
+<span class="font-sans text-[#a6bdd0]">查看完整世代树</span>
+</div>
+<div class="flex items-center gap-2">
+<kbd class="w-5 h-5 rounded-full bg-[#142335] text-ice-200 border border-[#6ED4FF]/40 text-[11px] flex items-center justify-center">B</kbd>
+<span class="font-sans text-[#a6bdd0]">取消并返回标题</span>
+</div>
+<div class="h-3 w-px bg-white/15"></div>
+<div class="flex items-center gap-2 text-subtext">
+<span class="px-1.5 py-0.5 rounded bg-[#101b28] text-[10px] text-frost border border-[#6ED4FF]/30">D-PAD / 左摇杆</span>
+<span class="font-sans">切换槽位光标</span>
+</div>
+</div>
+<!-- 右侧系统状态 -->
+<div class="flex items-center gap-5 text-[#6c8397]">
+<div class="flex items-center gap-2">
+<span class="inline-block w-2 h-2 rounded-full bg-emerald-400/80"></span>
+<span>XBOX / D-INPUT DETECTED</span>
+</div>
+<span class="text-white/20">|</span>
+<span>BUILD 2025.04.14-STABLE</span>
+<span class="text-white/20">|</span>
+<span class="tracking-widest">1920 × 1080 NO-SCROLL NATIVE</span>
+</div>
+</footer>
+</body>
+</html>

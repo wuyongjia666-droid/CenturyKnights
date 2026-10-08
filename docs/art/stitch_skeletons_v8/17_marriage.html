@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080, initial-scale=1.0">
+  <title>百年骑士 - 联姻契约 (1920x1080)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              cyan: '#6ED4FF',
+              ice: '#AEE4FF',
+              dark: '#05070B',
+              panel: '#0B111A',
+              subtle: '#121A26',
+              border: '#1B293A'
+            }
+          },
+          fontFamily: {
+            serif: ['"Noto Sans SC"', '"Noto Sans SC"', 'serif'],
+            sans: ['"Noto Sans SC"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            cinzel: ['"Noto Sans SC"', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      width: 1920px;
+      height: 1080px;
+      max-width: 1920px;
+      max-height: 1080px;
+      overflow: hidden;
+      background-color: #04070B;
+      color: #E2E8F0;
+      font-family: "Noto Sans SC", sans-serif;
+      position: relative;
+    }
+    /* Subtle geometric grid background without medieval texture */
+    .tactical-grid {
+      background-image: 
+        radial-gradient(circle at 50% 30%, rgba(20, 35, 55, 0.45) 0%, transparent 70%),
+        linear-gradient(rgba(110, 212, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(110, 212, 255, 0.025) 1px, transparent 1px);
+      background-size: 100% 100%, 48px 48px, 48px 48px;
+    }
+    .frosted-panel {
+      background: rgba(11, 17, 26, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(110, 212, 255, 0.12);
+      box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06), 0 20px 40px rgba(0, 0, 0, 0.45);
+    }
+    .portrait-slot {
+      width: 180px;
+      height: 240px;
+      background: linear-gradient(180deg, rgba(18, 28, 42, 0.5) 0%, rgba(9, 14, 22, 0.8) 100%);
+      border: 1px solid rgba(110, 212, 255, 0.18);
+      position: relative;
+    }
+    .hairline-highlight {
+      box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
+    }
+    /* Gamepad Focused Primary Control */
+    .gamepad-focused {
+      outline: 2px solid #6ED4FF;
+      outline-offset: 3px;
+      box-shadow: 0 0 24px rgba(110, 212, 255, 0.35);
+    }
+  </style>
+</head>
+<body class="tactical-grid flex flex-col justify-between">
+
+  <!-- TOP PROTOCOL BAR (Game System Header) -->
+  <header class="w-full h-16 px-12 flex items-center justify-between border-b border-white/5 bg-brand-dark/60 backdrop-blur-md z-20">
+    <div class="flex items-center gap-6">
+      <div class="flex items-center gap-3">
+        <span class="inline-block w-2 h-2 rounded-full bg-brand-cyan shadow-[0_0_8px_#6ED4FF]"></span>
+        <span class="font-cinzel text-xs tracking-[0.25em] text-neutral-400">CENTURY KNIGHTS // GENE ARCHIVE</span>
+      </div>
+      <span class="text-neutral-600 font-mono text-xs">/</span>
+      <span class="font-sans text-sm tracking-widest text-neutral-200">宗族谱系枢纽 · 联姻盟誓</span>
+    </div>
+
+    <!-- Status Meta -->
+    <div class="flex items-center gap-8 font-mono text-xs text-neutral-400">
+      <div class="flex items-center gap-2">
+        <span class="text-neutral-500">纪元刻录:</span>
+        <span class="text-neutral-300">赤历一百二十八年 · 霜降月末</span>
+      </div>
+      <div class="h-3 w-[1px] bg-neutral-800"></div>
+      <div class="flex items-center gap-2">
+        <span class="text-neutral-500">公室储备金:</span>
+        <span class="text-brand-ice font-semibold">12,480 克朗</span>
+      </div>
+      <div class="h-3 w-[1px] bg-neutral-800"></div>
+      <div class="flex items-center gap-2">
+        <span class="text-neutral-500">礼制威信:</span>
+        <span class="text-neutral-300">860 REP</span>
+      </div>
+      <div class="h-3 w-[1px] bg-neutral-800"></div>
+      <button class="px-3 py-1 rounded border border-neutral-700/60 bg-neutral-900/40 text-neutral-400 hover:text-white hover:border-neutral-500 transition-colors text-[11px] font-sans">
+        返回宗祠 [ESC]
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN EDITORIAL MAGAZINE STAGE -->
+  <main class="w-full flex-1 px-16 py-8 flex flex-col justify-between z-10">
+    
+    <!-- Editorial Headline Block -->
+    <section class="flex items-end justify-between border-b border-brand-cyan/15 pb-6">
+      <div>
+        <div class="flex items-center gap-3 mb-2">
+          <span class="px-2 py-0.5 text-[10px] font-mono tracking-widest uppercase bg-brand-cyan/10 text-brand-cyan border border-brand-cyan/25 rounded-sm">PROTOCOL NO. 07-MARRIAGE</span>
+          <span class="text-xs text-neutral-500 font-mono tracking-wider">HARMONIC RATIO EVALUATION</span>
+        </div>
+        <h1 class="text-3xl font-sans font-medium tracking-[0.2em] text-white">联姻契约</h1>
+        <p class="text-xs text-neutral-400 font-sans tracking-wide mt-1.5">宗脉双源统合研判与血脉特质推演卷宗</p>
+      </div>
+
+      <div class="text-right font-mono text-xs text-neutral-400">
+        <div class="text-[11px] text-neutral-500 mb-1">RATING DISCIPLINE</div>
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          <span class="text-neutral-300">宗室公评生效准入</span>
+          <span class="text-brand-cyan ml-2 font-bold">GRADE S</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Center Stage: Symmetrical Frosted Panels & Affinity Engine -->
+    <section class="w-full my-auto grid grid-cols-12 gap-8 items-stretch pt-2">
+
+      <!-- LEFT SIDE: 白霜·凛 (Groom / Heir) -->
+      <div class="col-span-4 frosted-panel rounded-lg p-7 flex flex-col justify-between">
+        <div>
+          <!-- Sub-header badge -->
+          <div class="flex items-center justify-between pb-4 border-b border-white/5 mb-6">
+            <span class="text-[11px] font-mono tracking-widest text-brand-cyan uppercase">CLAN PRINCIPAL // 主方先锋</span>
+            <span class="text-[10px] font-mono text-neutral-500">SERIES: VII-01</span>
+          </div>
+
+          <!-- Empty frosted portrait frame + Information -->
+          <div class="flex gap-6 items-start">
+            <!-- Frosted Empty Portrait Frame (180px wide) -->
+            <div class="flex-shrink-0 flex flex-col items-center">
+              <div class="portrait-slot rounded-md flex flex-col items-center justify-center p-3 relative overflow-hidden group">
+                <!-- Hairline crosshairs inside empty frame -->
+                <div class="absolute inset-x-4 top-1/2 h-[1px] bg-brand-cyan/15 pointer-events-none"></div>
+                <div class="absolute inset-y-4 left-1/2 w-[1px] bg-brand-cyan/15 pointer-events-none"></div>
+                <div class="absolute top-2 left-2 text-[9px] font-mono text-neutral-600">180×240</div>
+                <div class="w-12 h-12 rounded-full border border-dashed border-brand-cyan/30 flex items-center justify-center mb-2">
+                  <svg class="w-5 h-5 text-brand-cyan/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                  </svg>
+                </div>
+                <span class="text-[10px] text-neutral-500 font-mono tracking-wider">FROST FRAME</span>
+              </div>
+              <!-- Identity label directly underneath as required -->
+              <div class="text-center mt-3">
+                <div class="text-lg font-sans font-medium text-white tracking-widest">白霜·凛</div>
+                <div class="text-xs font-mono text-brand-ice mt-0.5">27 岁 · 霜刃骑士</div>
+              </div>
+            </div>
+
+            <!-- Character Profile Metadata -->
+            <div class="flex-1 space-y-4 pt-1">
+              <div>
+                <div class="text-[11px] font-mono text-neutral-500 uppercase tracking-wider">家系源流</div>
+                <div class="text-sm font-sans text-neutral-200 mt-0.5 font-normal">极北霜堡 · 嫡系长女</div>
+              </div>
+
+              <div>
+                <div class="text-[11px] font-mono text-neutral-500 uppercase tracking-wider">战阶阶位</div>
+                <div class="text-sm font-sans text-neutral-200 mt-0.5">首席先锋官 (RANK IV)</div>
+              </div>
+
+              <div>
+                <div class="text-[11px] font-mono text-neutral-500 uppercase tracking-wider">固有血脉</div>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="px-2 py-0.5 bg-sky-950/60 border border-sky-400/30 text-sky-200 text-xs rounded font-sans">霜血 (高阶)</span>
+                  <span class="text-[11px] font-mono text-neutral-400">98% 纯血</span>
+                </div>
+              </div>
+
+              <div class="pt-2 border-t border-white/5 text-[11px] text-neutral-400 leading-relaxed font-sans">
+                寒冷气候作战全属性跃升，对迟滞与极寒抗性完备。剑锋过处寒霜凝刃。
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-xs font-mono text-neutral-500">
+          <span>PEDIGREE: GEN VII</span>
+          <span class="text-neutral-400">统御适性: S</span>
+        </div>
+      </div>
+
+      <!-- CENTER MATCH ENGINE: Score 86, Inherited Chips, Contract Line -->
+      <div class="col-span-4 frosted-panel rounded-lg p-7 flex flex-col justify-between border-brand-cyan/20">
+        <div>
+          <!-- Center Top Tag -->
+          <div class="text-center pb-3 border-b border-white/5">
+            <span class="text-[10px] font-mono tracking-[0.2em] uppercase text-neutral-400">GENOMIC HARMONY SIMULATION</span>
+          </div>
+
+          <!-- Match Score Display -->
+          <div class="py-6 flex flex-col items-center justify-center text-center">
+            <span class="text-xs font-sans text-neutral-400 tracking-widest mb-1">缔盟共鸣指标</span>
+            
+            <div class="relative flex items-baseline justify-center gap-1 my-1">
+              <span class="text-xs font-mono text-brand-cyan tracking-wider">匹配</span>
+              <span class="text-6xl font-cinzel font-light text-brand-cyan tracking-tight drop-shadow-[0_0_20px_rgba(110,212,255,0.4)]">86</span>
+              <span class="text-lg font-cinzel text-brand-ice/70">%</span>
+            </div>
+
+            <!-- Harmonic Progress Bar -->
+            <div class="w-48 h-1.5 bg-neutral-900 rounded-full overflow-hidden mt-3 p-[1px] border border-white/10">
+              <div class="h-full bg-gradient-to-r from-cyan-500 to-brand-cyan rounded-full" style="width: 86%;"></div>
+            </div>
+            <span class="text-[11px] font-mono text-neutral-400 mt-2 tracking-wider">OPTIMAL SYNTHESIS // 佳作天成</span>
+          </div>
+
+          <!-- Inherited Trait Preview Chips: 霜血, 潮咏, 冷静 -->
+          <div class="mt-2 bg-brand-dark/40 border border-white/5 rounded-md p-4">
+            <div class="text-[11px] font-mono text-neutral-400 uppercase tracking-widest text-center mb-3">
+              后代遗传特质推演 (INHERITANCE PREVIEW)
+            </div>
+            
+            <div class="flex items-center justify-center gap-3">
+              <!-- Trait Chip 1: 霜血 -->
+              <div class="flex-1 py-2 px-3 bg-neutral-900/80 border border-cyan-400/40 rounded flex flex-col items-center text-center">
+                <span class="text-xs font-sans text-cyan-200 font-medium">霜血</span>
+                <span class="text-[10px] font-mono text-neutral-400 mt-0.5">85% 显性</span>
+              </div>
+
+              <!-- Trait Chip 2: 潮咏 -->
+              <div class="flex-1 py-2 px-3 bg-neutral-900/80 border border-teal-400/40 rounded flex flex-col items-center text-center">
+                <span class="text-xs font-sans text-teal-200 font-medium">潮咏</span>
+                <span class="text-[10px] font-mono text-neutral-400 mt-0.5">78% 亲和</span>
+              </div>
+
+              <!-- Trait Chip 3: 冷静 -->
+              <div class="flex-1 py-2 px-3 bg-neutral-900/80 border border-sky-400/40 rounded flex flex-col items-center text-center">
+                <span class="text-xs font-sans text-sky-200 font-medium">冷静</span>
+                <span class="text-[10px] font-mono text-neutral-400 mt-0.5">92% 烙印</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Short Contract Line (editorial solemn vow) -->
+        <div class="mt-4 pt-4 border-t border-white/5">
+          <blockquote class="text-xs font-sans text-neutral-300 tracking-wider text-center leading-relaxed italic border-l-2 border-brand-cyan/40 pl-3 py-1 bg-white/[0.02]">
+            “霜刃与渊澜在此盟誓，血脉相续，战阵同心。此约由两邦长老共证，永代不渝。”
+          </blockquote>
+          <div class="text-[10px] font-mono text-neutral-500 text-center mt-2 tracking-widest uppercase">
+            PROTOCOL RATIFIED BY CLAN ELDERS COUNCIL
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT SIDE: 青澜·昭 (Bridegroom / Partner) -->
+      <div class="col-span-4 frosted-panel rounded-lg p-7 flex flex-col justify-between">
+        <div>
+          <!-- Sub-header badge -->
+          <div class="flex items-center justify-between pb-4 border-b border-white/5 mb-6">
+            <span class="text-[11px] font-mono tracking-widest text-teal-300 uppercase">ALLIED SPOUSE // 结盟方客座</span>
+            <span class="text-[10px] font-mono text-neutral-500">SERIES: IV-02</span>
+          </div>
+
+          <!-- Empty frosted portrait frame + Information -->
+          <div class="flex gap-6 items-start">
+            <!-- Frosted Empty Portrait Frame (180px wide) -->
+            <div class="flex-shrink-0 flex flex-col items-center">
+              <div class="portrait-slot rounded-md flex flex-col items-center justify-center p-3 relative overflow-hidden group">
+                <!-- Hairline crosshairs inside empty frame -->
+                <div class="absolute inset-x-4 top-1/2 h-[1px] bg-teal-400/15 pointer-events-none"></div>
+                <div class="absolute inset-y-4 left-1/2 w-[1px] bg-teal-400/15 pointer-events-none"></div>
+                <div class="absolute top-2 left-2 text-[9px] font-mono text-neutral-600">180×240</div>
+                <div class="w-12 h-12 rounded-full border border-dashed border-teal-400/30 flex items-center justify-center mb-2">
+                  <svg class="w-5 h-5 text-teal-400/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                  </svg>
+                </div>
+                <span class="text-[10px] text-neutral-500 font-mono tracking-wider">FROST FRAME</span>
+              </div>
+              <!-- Identity label directly underneath as required -->
+              <div class="text-center mt-3">
+                <div class="text-lg font-sans font-medium text-white tracking-widest">青澜·昭</div>
+                <div class="text-xs font-mono text-teal-300 mt-0.5">24 岁 · 潮咏术士</div>
+              </div>
+            </div>
+
+            <!-- Character Profile Metadata -->
+            <div class="flex-1 space-y-4 pt-1">
+              <div>
+                <div class="text-[11px] font-mono text-neutral-500 uppercase tracking-wider">家系源流</div>
+                <div class="text-sm font-sans text-neutral-200 mt-0.5 font-normal">临海瀚阁 · 第四代首席</div>
+              </div>
+
+              <div>
+                <div class="text-[11px] font-mono text-neutral-500 uppercase tracking-wider">战阶阶位</div>
+                <div class="text-sm font-sans text-neutral-200 mt-0.5">潮咏法流领主 (RANK IV)</div>
+              </div>
+
+              <div>
+                <div class="text-[11px] font-mono text-neutral-500 uppercase tracking-wider">固有血脉</div>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="px-2 py-0.5 bg-teal-950/60 border border-teal-400/30 text-teal-200 text-xs rounded font-sans">潮咏 (灵纯)</span>
+                  <span class="text-[11px] font-mono text-neutral-400">91% 纯血</span>
+                </div>
+              </div>
+
+              <div class="pt-2 border-t border-white/5 text-[11px] text-neutral-400 leading-relaxed font-sans">
+                水域深流共鸣，全水域术法战技回流引导，冰水复合战法战术拓展。
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-xs font-mono text-neutral-500">
+          <span>PEDIGREE: SEAWARD IV</span>
+          <span class="text-neutral-400">心智研习: A+</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- BOTTOM ACTION AND DOCK ROW -->
+    <section class="w-full flex items-center justify-between pt-6 border-t border-white/5">
+      
+      <!-- Auxiliary Tactical Status -->
+      <div class="flex items-center gap-6 font-mono text-xs text-neutral-400">
+        <div class="flex items-center gap-2">
+          <span class="text-neutral-500">盟誓收益预期:</span>
+          <span class="text-neutral-200 font-sans">两领贸易关税豁免 30% · 极北战线联防协议即刻生效</span>
+        </div>
+      </div>
+
+      <!-- Action Button Controls (Mouse-First, Primary 「缔约」 has gamepad focus ring) -->
+      <div class="flex items-center gap-4">
+        
+        <!-- Secondary Action: 「再议」 -->
+        <button class="px-7 py-2.5 rounded border border-neutral-700 bg-neutral-900/60 hover:bg-neutral-800 text-neutral-300 hover:text-white font-sans text-sm tracking-widest transition-all cursor-pointer flex items-center gap-2">
+          <span>再议</span>
+          <span class="text-[11px] font-mono text-neutral-500">[B]</span>
+        </button>
+
+        <!-- Primary Action: 「缔约」 Focused with clearly visible Gamepad Focus Ring -->
+        <button class="gamepad-focused px-9 py-2.5 rounded bg-brand-cyan hover:bg-[#82dcff] text-brand-dark font-sans font-medium text-sm tracking-widest transition-all cursor-pointer flex items-center gap-2.5 hairline-highlight">
+          <svg class="w-4 h-4 text-brand-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span class="font-semibold">缔约</span>
+          <span class="px-1.5 py-0.2 rounded bg-brand-dark/20 text-brand-dark font-mono text-xs font-bold">[A]</span>
+        </button>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BOTTOM FOOTER CONSOLE BAR -->
+  <footer class="w-full h-10 px-12 flex items-center justify-between border-t border-white/5 bg-brand-dark/80 font-mono text-[11px] text-neutral-500 z-20">
+    <div class="flex items-center gap-6">
+      <div class="flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-brand-cyan"></span>
+        <span class="text-neutral-400">手柄已就绪: XBOX WIRELESS CONTROLLER</span>
+      </div>
+      <span>·</span>
+      <span>CANVAS: 1920 × 1080 NO-SCROLL NATIVE</span>
+    </div>
+
+    <div class="flex items-center gap-8">
+      <span>[A] 确认缔约</span>
+      <span>[B] 再议返回</span>
+      <span>[X] 谱系溯源</span>
+      <span>[Y] 基因推演</span>
+    </div>
+  </footer>
+
+</body>
+</html>

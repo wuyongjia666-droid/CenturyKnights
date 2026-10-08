@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=1920, height=1080, initial-scale=1.0" name="viewport"/>
+<title>百年骑士 · 神殿 · 霜月祭</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<!-- Public Sans & Noto Sans SC for crisp editorial typography -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500;700&amp;family=Public+Sans:wght@200;300;400;500;600;700&amp;family=JetBrains+Mono:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            frost: {
+              50: '#F0F9FF',
+              100: '#E0F2FE',
+              300: '#7DD3FC',
+              400: '#38BDF8',
+              500: '#0EA5E9',
+              glow: '#6ED4FF',
+            },
+            mint: {
+              400: '#34D399',
+              500: '#10B981',
+            },
+            coral: {
+              400: '#FB7185',
+              500: '#F43F5E',
+            },
+            void: '#06090E',
+            panel: 'rgba(11, 17, 26, 0.72)',
+            panellight: 'rgba(18, 28, 42, 0.65)'
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Public Sans", "Noto Sans SC", "sans-serif"],
+            display: ["Public Sans", "Noto Sans SC", "sans-serif"],
+            body: ["Public Sans", "Noto Sans SC", "sans-serif"],
+            label: ["Public Sans", "Noto Sans SC", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+      vertical-align: middle;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Subtle geometric grid background pattern */
+    .bg-grid-frost {
+      background-size: 48px 48px;
+      background-image: 
+        linear-gradient(to right, rgba(110, 212, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(110, 212, 255, 0.025) 1px, transparent 1px);
+    }
+    /* Corner bracket targeting decorations */
+    .target-bracket-tl {
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      width: 14px;
+      height: 14px;
+      border-top: 2px solid #6ED4FF;
+      border-left: 2px solid #6ED4FF;
+    }
+    .target-bracket-tr {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 14px;
+      height: 14px;
+      border-top: 2px solid #6ED4FF;
+      border-right: 2px solid #6ED4FF;
+    }
+    .target-bracket-bl {
+      position: absolute;
+      bottom: -2px;
+      left: -2px;
+      width: 14px;
+      height: 14px;
+      border-bottom: 2px solid #6ED4FF;
+      border-left: 2px solid #6ED4FF;
+    }
+    .target-bracket-br {
+      position: absolute;
+      bottom: -2px;
+      right: -2px;
+      width: 14px;
+      height: 14px;
+      border-bottom: 2px solid #6ED4FF;
+      border-right: 2px solid #6ED4FF;
+    }
+    /* Ambient radial glow effect */
+    .radial-frost-halo {
+      background: radial-gradient(circle 600px at 50% 18%, rgba(56, 189, 248, 0.08), transparent 70%);
+    }
+    /* Hide scrollbars */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+</head>
+<body class="bg-void text-slate-200 antialiased select-none overflow-hidden m-0 p-0 font-body">
+<!-- Root Fixed Container 1920x1080 -->
+<div class="relative w-[1920px] h-[1080px] overflow-hidden bg-[#070b12] bg-grid-frost flex flex-col justify-between">
+<!-- Atmospheric Ambient Lighting Layer -->
+<div class="absolute inset-0 pointer-events-none radial-frost-halo"></div>
+<div class="absolute -top-[200px] left-1/2 -translate-x-1/2 w-[1200px] h-[500px] bg-cyan-500/[0.04] blur-[140px] pointer-events-none"></div>
+<div class="absolute bottom-0 right-0 w-[600px] h-[400px] bg-blue-600/[0.025] blur-[160px] pointer-events-none"></div>
+<!-- SHARED COMPONENT: TopNavBar -->
+<header class="w-full h-16 px-12 flex justify-between items-center fixed top-0 left-0 z-50 bg-transparent backdrop-blur-md border-b border-sky-400/10">
+<!-- Left: ESC Prompt & Product Brand -->
+<div class="flex items-center space-x-6">
+<a class="flex items-center space-x-2 text-xs font-mono tracking-widest text-slate-400 hover:text-frost-300 transition-colors duration-150" href="javascript:void(0)">
+<span class="inline-flex items-center justify-center px-1.5 py-0.5 rounded border border-slate-700 bg-slate-900/60 text-[10px] text-slate-300">ESC</span>
+<span class="font-light tracking-wider">返回城堡</span>
+</a>
+<div class="h-4 w-[1px] bg-slate-800"></div>
+<div class="flex items-center space-x-3">
+<span class="font-headline text-lg font-light tracking-widest text-slate-100 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#38bdf8]"></span>
+            百年骑士 · 神殿
+          </span>
+<span class="text-[10px] font-mono tracking-widest text-cyan-400/60 uppercase border border-cyan-500/20 px-1.5 py-0.5 rounded">TEMPLE DIVINITY</span>
+</div>
+</div>
+<!-- Center: Date Display -->
+<div class="flex items-center space-x-2 text-xs tracking-widest font-mono text-cyan-200/70">
+<span class="material-symbols-outlined text-sm text-cyan-400/80">calendar_month</span>
+<span class="font-light">赤历一百二十八年 · 霜降月末</span>
+<span class="text-slate-600">/</span>
+<span class="text-slate-400 text-[11px]">霜月祭典第三周期</span>
+</div>
+<!-- Right: Currencies & Top Icon Actions -->
+<div class="flex items-center space-x-8">
+<!-- Currencies group -->
+<div class="flex items-center space-x-6 text-xs font-mono">
+<!-- Gold -->
+<div class="flex items-center space-x-2 bg-slate-900/40 border border-slate-800/80 px-3 py-1.5 rounded">
+<span class="material-symbols-outlined text-sm text-amber-300">monetization_on</span>
+<span class="text-slate-400 text-[11px]">金钱</span>
+<span class="text-slate-100 font-medium tracking-tight">12,480</span>
+<span class="text-[10px] text-slate-500">克朗</span>
+</div>
+<!-- Prestige -->
+<div class="flex items-center space-x-2 bg-slate-900/40 border border-slate-800/80 px-3 py-1.5 rounded">
+<span class="material-symbols-outlined text-sm text-cyan-300">military_tech</span>
+<span class="text-slate-400 text-[11px]">声望</span>
+<span class="text-cyan-200 font-medium tracking-tight">860</span>
+</div>
+<!-- Faith Crystals -->
+<div class="flex items-center space-x-2 bg-slate-900/40 border border-slate-800/80 px-3 py-1.5 rounded">
+<span class="material-symbols-outlined text-sm text-indigo-300">diamond</span>
+<span class="text-slate-400 text-[11px]">信仰/晶石</span>
+<span class="text-indigo-200 font-medium tracking-tight">128</span>
+</div>
+</div>
+<!-- Trailing Icon Actions -->
+<div class="flex items-center space-x-3 text-slate-400">
+<button class="w-8 h-8 rounded border border-slate-800/60 bg-slate-900/30 flex items-center justify-center hover:text-cyan-300 hover:border-cyan-500/40 transition-all">
+<span class="material-symbols-outlined text-base">toll</span>
+</button>
+<button class="w-8 h-8 rounded border border-slate-800/60 bg-slate-900/30 flex items-center justify-center hover:text-cyan-300 hover:border-cyan-500/40 transition-all">
+<span class="material-symbols-outlined text-base">arrow_back</span>
+</button>
+</div>
+</div>
+</header>
+<!-- MAIN CANVASES AREA (Strictly 1920 layout without scrolling) -->
+<main class="relative z-10 w-full px-16 pt-24 pb-16 flex-1 flex flex-col justify-between max-w-[1920px] mx-auto">
+<!-- HERO HEADER AREA: Editorial Magazine Styling -->
+<section class="mt-4 flex justify-between items-end border-b border-sky-400/10 pb-7">
+<div class="space-y-2">
+<!-- Small Breadcrumb / Code -->
+<div class="flex items-center space-x-3">
+<span class="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse"></span>
+<span class="font-mono text-xs tracking-[0.28em] text-cyan-300/80 uppercase">FACILITY // SANCTUARY RITE 03</span>
+<span class="text-slate-700">·</span>
+<span class="font-mono text-[11px] tracking-widest text-slate-500 uppercase">COLD FANTASY SYSTEM · ACTIVE</span>
+</div>
+<!-- Prominent Title & Latin Subtitle -->
+<div class="flex items-baseline space-x-5 pt-1">
+<h1 class="text-4xl font-headline font-light tracking-[0.16em] text-white">神殿 · 霜月祭</h1>
+<span class="text-xs font-mono tracking-[0.35em] text-cyan-400/60 uppercase">SANCTUARY // FROST MOON RITE</span>
+</div>
+<!-- Rite lore quote & seasonal quota -->
+<div class="flex items-center space-x-6 pt-1">
+<p class="text-xs text-slate-400 font-light tracking-wide italic">
+              「霜月初升，愿永冻之息洗涤凡躯，刃尖重凝寒芒。」
+            </p>
+<div class="h-3 w-[1px] bg-slate-800"></div>
+<div class="flex items-center space-x-2 text-xs font-mono text-cyan-300/70">
+<span class="material-symbols-outlined text-xs text-cyan-400">auto_awesome</span>
+<span>祭司长聆听祈愿 · 当前季祈福余次: <span class="text-cyan-200 font-semibold font-mono text-sm">2/3</span></span>
+</div>
+</div>
+</div>
+<!-- Right Side: Status Index & Sanctuary Level -->
+<div class="flex items-center space-x-8 text-right font-mono text-xs">
+<div class="space-y-1">
+<div class="text-[10px] uppercase tracking-widest text-slate-500">SANCTUARY PURITY</div>
+<div class="text-sm text-cyan-300 font-medium flex items-center justify-end space-x-1.5">
+<span>98.4%</span>
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+</div>
+</div>
+<div class="h-8 w-[1px] bg-slate-800/80"></div>
+<div class="space-y-1">
+<div class="text-[10px] uppercase tracking-widest text-slate-500">TEMPLE RANK</div>
+<div class="text-sm text-slate-200 font-medium">TIER IV · 永凛级</div>
+</div>
+</div>
+</section>
+<!-- CARDS SECTION: Horizontal 3-Column Bento/Magazine Glass Panels -->
+<section class="grid grid-cols-3 gap-8 my-auto py-2 items-stretch">
+<!-- CARD 1: 祝福 (Blessing) -->
+<div class="relative group rounded-lg bg-panel backdrop-blur-xl border border-sky-400/20 p-8 flex flex-col justify-between hover:border-sky-400/40 transition-all duration-300">
+<!-- Top Row: ID & Status -->
+<div>
+<div class="flex justify-between items-center pb-4 border-b border-slate-800/80">
+<span class="text-[11px] font-mono tracking-widest text-cyan-400/70">SERVICE // 01 · 战意加护</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono tracking-wider bg-cyan-950/40 text-cyan-300 border border-cyan-800/50">
+                可施行 · AVAILABLE
+              </span>
+</div>
+<!-- Glyph & Main Header -->
+<div class="pt-6 pb-4 flex items-start justify-between">
+<div>
+<h2 class="text-3xl font-headline font-light tracking-wider text-slate-100">祝福</h2>
+<span class="text-[11px] font-mono text-slate-500 tracking-widest uppercase">TACTICAL BENEDICTION</span>
+</div>
+<div class="w-12 h-12 rounded border border-cyan-500/20 bg-cyan-950/20 flex items-center justify-center text-cyan-300">
+<span class="material-symbols-outlined text-2xl">flare</span>
+</div>
+</div>
+<!-- Effect description -->
+<div class="space-y-3 mt-2">
+<div class="text-base text-cyan-100 font-medium tracking-wide">
+                全队命中提升，持续一场
+              </div>
+<p class="text-xs text-slate-400 font-light leading-relaxed">
+                祭司以纯粹霜华浸润骑士纹章，提升全军在下一场战役中 <span class="text-cyan-300 font-mono font-medium">+15% 命中率</span> 与 <span class="text-cyan-300 font-mono font-medium">+5% 暴击概率</span>。
+              </p>
+</div>
+<!-- Tactical Spec list -->
+<div class="mt-6 pt-5 border-t border-slate-800/70 space-y-2 text-xs font-mono">
+<div class="flex justify-between text-slate-400">
+<span>作用范围:</span>
+<span class="text-slate-200">全体出战编队 (6/6人)</span>
+</div>
+<div class="flex justify-between text-slate-400">
+<span>持续效力:</span>
+<span class="text-slate-200">单次战役 (至决算时)</span>
+</div>
+<div class="flex justify-between text-slate-400">
+<span>神殿亲和:</span>
+<span class="text-cyan-300">+4 信仰点数</span>
+</div>
+</div>
+</div>
+<!-- Bottom Cost & Inactive Action -->
+<div class="mt-8 pt-6 border-t border-slate-800/80 flex items-center justify-between">
+<div class="space-y-0.5">
+<span class="text-[10px] font-mono text-slate-500 uppercase tracking-wider">CONSUMPTION</span>
+<div class="flex items-center space-x-1.5">
+<span class="material-symbols-outlined text-sm text-cyan-400">military_tech</span>
+<span class="text-xs text-slate-400 font-mono">费用</span>
+<span class="text-base font-mono font-semibold text-cyan-300">声望 40</span>
+</div>
+</div>
+<button class="px-5 py-2 rounded text-xs font-mono tracking-wider border border-slate-700/80 bg-slate-900/60 text-slate-300 hover:border-cyan-400/50 hover:text-cyan-200 transition-colors">
+              选择 [LB]
+            </button>
+</div>
+</div>
+<!-- CARD 2: 治疗 (Healing) — FOCUSED CARD (Active Gamepad Focus) -->
+<div class="relative rounded-lg bg-[#0e1622]/95 backdrop-blur-2xl border-2 border-frost-glow shadow-[0_0_35px_rgba(110,212,255,0.22)] p-8 flex flex-col justify-between transform scale-[1.02] z-20">
+<!-- Gamepad Targeting Bracket Decorators -->
+<div class="target-bracket-tl"></div>
+<div class="target-bracket-tr"></div>
+<div class="target-bracket-bl"></div>
+<div class="target-bracket-br"></div>
+<!-- Top Row: ID & Active Focus Badge -->
+<div>
+<div class="flex justify-between items-center pb-4 border-b border-cyan-400/20">
+<div class="flex items-center space-x-2">
+<span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+<span class="text-[11px] font-mono tracking-widest text-frost-glow font-medium">SERVICE // 02 · 愈痕之水</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono tracking-wider bg-cyan-500/20 text-cyan-200 border border-cyan-400/50">
+<span class="material-symbols-outlined text-xs mr-1 text-cyan-300">adjust</span>
+                  TARGET FOCUSED
+                </span>
+</div>
+</div>
+<!-- Glyph & Main Header -->
+<div class="pt-6 pb-4 flex items-start justify-between">
+<div>
+<h2 class="text-3xl font-headline font-normal tracking-wider text-white flex items-center gap-2">
+                  治疗
+                  <span class="text-xs px-2 py-0.5 rounded font-mono bg-mint-500/20 text-mint-400 border border-mint-400/30">即刻生效</span>
+</h2>
+<span class="text-[11px] font-mono text-cyan-300/80 tracking-widest uppercase">PURIFICATION &amp; HEALING</span>
+</div>
+<div class="w-12 h-12 rounded border border-cyan-400/60 bg-cyan-500/20 flex items-center justify-center text-cyan-200 shadow-[0_0_12px_rgba(110,212,255,0.3)]">
+<span class="material-symbols-outlined text-2xl">water_drop</span>
+</div>
+</div>
+<!-- Effect description -->
+<div class="space-y-3 mt-2">
+<div class="text-base text-cyan-50 font-medium tracking-wide">
+                恢复全队生命
+              </div>
+<p class="text-xs text-slate-300 font-light leading-relaxed">
+                引圣泉霜魄涤荡创口，修复全部驻编骑士生命值至 <span class="text-mint-400 font-mono font-medium">100% 满额状态</span>，并全面清除负伤疲劳、战意迟滞等异常状态。
+              </p>
+</div>
+<!-- Tactical Spec list with recovery breakdown -->
+<div class="mt-6 pt-5 border-t border-cyan-400/20 space-y-2 text-xs font-mono">
+<div class="flex justify-between text-slate-300">
+<span>受疗单位:</span>
+<span class="text-cyan-200 font-medium">先锋骑士兵团 (全员 6/6)</span>
+</div>
+<div class="flex justify-between text-slate-300">
+<span>治愈总量:</span>
+<span class="text-mint-400 font-medium">+1,420 HP (100% 溢额修复)</span>
+</div>
+<div class="flex justify-between text-slate-300">
+<span>负伤惩罚清除:</span>
+<span class="text-cyan-300">轻伤 ×2 · 重创 ×0</span>
+</div>
+</div>
+</div>
+<!-- Bottom Cost & Primary Action Button Docked -->
+<div class="mt-8 pt-6 border-t border-cyan-400/30 flex items-center justify-between">
+<div class="space-y-0.5">
+<span class="text-[10px] font-mono text-cyan-300/60 uppercase tracking-wider">COST REQUIREMENT</span>
+<div class="flex items-center space-x-1.5">
+<span class="material-symbols-outlined text-sm text-amber-300">monetization_on</span>
+<span class="text-xs text-slate-300 font-mono">费用</span>
+<span class="text-base font-mono font-semibold text-amber-200">300 克朗</span>
+</div>
+</div>
+<!-- PRIMARY ACTION BUTTON [A] -->
+<button class="relative group/btn px-6 py-2.5 rounded bg-frost-glow hover:bg-cyan-300 text-slate-950 font-mono font-semibold text-xs tracking-wider flex items-center space-x-2 shadow-[0_0_20px_rgba(110,212,255,0.4)] transition-all duration-150">
+<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-950 text-cyan-200 text-[11px] font-bold">A</span>
+<span>施行 (300 克朗)</span>
+<span class="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- CARD 3: 复活 (Resurrection) -->
+<div class="relative group rounded-lg bg-panel backdrop-blur-xl border border-sky-400/20 p-8 flex flex-col justify-between hover:border-sky-400/40 transition-all duration-300">
+<!-- Top Row: ID & Status -->
+<div>
+<div class="flex justify-between items-center pb-4 border-b border-slate-800/80">
+<span class="text-[11px] font-mono tracking-widest text-cyan-400/70">SERVICE // 03 · 归魂唤引</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono tracking-wider bg-amber-950/30 text-amber-300 border border-amber-800/40">
+                待确认 · PENDING
+              </span>
+</div>
+<!-- Glyph & Main Header -->
+<div class="pt-6 pb-4 flex items-start justify-between">
+<div>
+<h2 class="text-3xl font-headline font-light tracking-wider text-slate-100">复活</h2>
+<span class="text-[11px] font-mono text-slate-500 tracking-widest uppercase">SOUL RESURRECTION</span>
+</div>
+<div class="w-12 h-12 rounded border border-rose-500/20 bg-rose-950/20 flex items-center justify-center text-rose-300">
+<span class="material-symbols-outlined text-2xl">vital_signs</span>
+</div>
+</div>
+<!-- Effect description -->
+<div class="space-y-3 mt-2">
+<div class="text-base text-cyan-100 font-medium tracking-wide">
+                召回阵亡佣兵 雾泽·萤
+              </div>
+<p class="text-xs text-slate-400 font-light leading-relaxed">
+                重塑冰魄印记，解救重伤失联游侠斥候，恢复编制。复活后保持阵亡前全部经验及专精技能。
+              </p>
+</div>
+<!-- Target candidate card embedded -->
+<div class="mt-5 p-3.5 rounded bg-slate-900/50 border border-slate-800/80 space-y-1.5">
+<div class="text-[10px] font-mono text-slate-400 uppercase tracking-widest flex items-center justify-between">
+<span>候补重召目标</span>
+<span class="text-rose-400">失联状态</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="text-sm text-slate-100 font-medium">雾泽 · 萤</div>
+<div class="text-xs font-mono text-cyan-300">LV.33</div>
+</div>
+<div class="text-[11px] text-slate-400 font-mono">幽林巡径 · 斥候 / 弓步精通</div>
+</div>
+<!-- Tactical Spec list -->
+<div class="mt-4 space-y-1.5 text-xs font-mono">
+<div class="flex justify-between text-slate-400">
+<span>复活生命状态:</span>
+<span class="text-slate-200">50% 初始生命值</span>
+</div>
+<div class="flex justify-between text-slate-400">
+<span>虚弱衰减:</span>
+<span class="text-slate-200">无 (神殿保全)</span>
+</div>
+</div>
+</div>
+<!-- Bottom Cost & Select Action -->
+<div class="mt-8 pt-6 border-t border-slate-800/80 flex items-center justify-between">
+<div class="space-y-0.5">
+<span class="text-[10px] font-mono text-slate-500 uppercase tracking-wider">CONSUMPTION</span>
+<div class="flex items-center space-x-1.5">
+<span class="material-symbols-outlined text-sm text-amber-300">monetization_on</span>
+<span class="text-xs text-slate-400 font-mono">费用</span>
+<span class="text-base font-mono font-semibold text-slate-100">金钱 1,200</span>
+</div>
+</div>
+<button class="px-5 py-2 rounded text-xs font-mono tracking-wider border border-slate-700/80 bg-slate-900/60 text-slate-300 hover:border-cyan-400/50 hover:text-cyan-200 transition-colors">
+              选择 [RB]
+            </button>
+</div>
+</div>
+</section>
+<!-- Tactical Banner / Ritual Condition Notice -->
+<section class="mb-2 bg-slate-900/40 border border-sky-400/10 rounded px-6 py-3 flex items-center justify-between">
+<div class="flex items-center space-x-4">
+<span class="material-symbols-outlined text-cyan-400 text-lg">info</span>
+<span class="text-xs text-slate-300 font-light">
+            神殿霜月降临期间，所有施行效果附带 <span class="text-cyan-300 font-mono">「极寒坚韧」</span> 临时被动加成。离开神殿前请确认队伍编制与资源余量。
+          </span>
+</div>
+<div class="flex items-center space-x-3 text-xs font-mono text-slate-400">
+<span>神殿仪式契约书:</span>
+<span class="text-slate-200 underline decoration-cyan-500/40 cursor-pointer hover:text-cyan-300">查看典籍 [Y]</span>
+</div>
+</section>
+</main>
+<!-- SHARED COMPONENT: Footer (Bottom controller navigation bar) -->
+<footer class="fixed bottom-0 left-0 w-full h-12 px-12 flex justify-between items-center z-50 bg-transparent backdrop-blur-sm border-t border-sky-400/10">
+<!-- Left: Gamepad Control Legends -->
+<div class="flex items-center space-x-8 text-xs font-mono tracking-wider text-slate-300">
+<div class="flex items-center space-x-2">
+<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-cyan-400 text-slate-950 text-[10px] font-bold">A</span>
+<span class="text-slate-200">施行仪式</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-800 border border-slate-600 text-slate-300 text-[10px] font-bold">B</span>
+<span class="text-slate-400">返回城堡</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-800 border border-slate-600 text-slate-300 text-[10px] font-bold">X</span>
+<span class="text-slate-400">敬献贡物</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="inline-flex items-center justify-center px-1.5 py-0.5 rounded border border-slate-700 bg-slate-800 text-[10px] text-slate-300">LB / RB</span>
+<span class="text-slate-400">切换服务</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-slate-800 border border-slate-600 text-slate-300 text-[10px] font-bold">Y</span>
+<span class="text-slate-400">祈福细则</span>
+</div>
+</div>
+<!-- Right: System Metadata & Version -->
+<div class="flex items-center space-x-6 text-[11px] font-mono text-slate-500">
+<div class="flex items-center space-x-4">
+<a class="text-slate-400 hover:text-cyan-300 transition-colors" href="javascript:void(0)">百年骑士团</a>
+<span class="text-slate-700">·</span>
+<a class="text-slate-400 hover:text-cyan-300 transition-colors" href="javascript:void(0)">神殿仪式规范</a>
+<span class="text-slate-700">·</span>
+<a class="text-slate-400 hover:text-cyan-300 transition-colors" href="javascript:void(0)">纪元档案</a>
+</div>
+<div class="h-3 w-[1px] bg-slate-800"></div>
+<div class="tracking-widest">
+          BUILD 2025.04.14-STABLE · 赤历一百二十八年 · 霜堡军令司
+        </div>
+</div>
+</footer>
+</div>
+<!-- Micro-interactions: Lightweight soundless controller navigation feel -->
+<script>
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' || e.key.toLowerCase() === 'b') {
+        console.log('Action: Return to Castle');
+      } else if (e.key.toLowerCase() === 'a' || e.key === 'Enter') {
+        console.log('Action: Execute Healing Rite (300 Kr)');
+      }
+    });
+  </script>
+</body></html>

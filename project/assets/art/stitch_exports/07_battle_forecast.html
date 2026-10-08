@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>百年骑士 - 攻击预测 (1920x1080)</title>
+  <!-- Google Fonts: Cormorant Garamond, Inter, JetBrains Mono, Noto Sans SC, Noto Sans SC -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            frost: {
+              primary: '#6ED4FF',
+              dim: '#183b54',
+              surface: '#070b10',
+              panel: 'rgba(11, 19, 28, 0.78)',
+              crimson: '#FF5C67',
+              gold: '#E3C185',
+              border: 'rgba(110, 212, 255, 0.16)'
+            }
+          },
+          fontFamily: {
+            serifTitle: ['"Noto Sans SC"', '"Cormorant Garamond"', 'serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            sans: ['"Inter"', '"Noto Sans SC"', 'sans-serif'],
+            display: ['"Cormorant Garamond"', 'serif']
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+    }
+    html, body {
+      width: 1920px;
+      height: 1080px;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #04070a;
+      color: #e2ecf5;
+      font-family: 'Inter', 'Noto Sans SC', sans-serif;
+    }
+    /* Subtle grid backdrop representing tactical grid */
+    .tactical-grid {
+      background-size: 40px 40px;
+      background-image: 
+        radial-gradient(circle, rgba(110, 212, 255, 0.08) 1px, transparent 1px);
+    }
+    /* Hairline highlight stroke */
+    .hairline-panel {
+      background: rgba(9, 15, 23, 0.82);
+      backdrop-filter: blur(28px) saturate(130%);
+      -webkit-backdrop-filter: blur(28px) saturate(130%);
+      border: 1px solid rgba(110, 212, 255, 0.18);
+      box-shadow: 
+        0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+        0 24px 64px -12px rgba(0, 0, 0, 0.85),
+        0 8px 24px rgba(4, 9, 15, 0.6);
+    }
+    .inner-card {
+      background: rgba(14, 23, 35, 0.55);
+      border: 1px solid rgba(110, 212, 255, 0.1);
+      backdrop-filter: blur(12px);
+    }
+    .focus-ring-gamepad {
+      box-shadow: 0 0 0 1.5px #6ED4FF, 0 0 24px rgba(110, 212, 255, 0.45);
+    }
+  </style>
+</head>
+<body class="relative w-[1920px] h-[1080px] overflow-hidden bg-[#04070a] select-none text-slate-200">
+
+  <!-- ================= BACKGROUND BATTLEFIELD (DIMMED / FROST TACTICAL) ================= -->
+  <div class="absolute inset-0 pointer-events-none">
+    <!-- Atmospheric fog & frost glow -->
+    <div class="absolute inset-0 bg-gradient-to-tr from-[#020508] via-[#060e17] to-[#04080e] opacity-95"></div>
+    <div class="tactical-grid absolute inset-0 opacity-40"></div>
+    
+    <!-- Topo / Iso subtle vector lines in dimmed battlefield -->
+    <svg class="absolute inset-0 w-full h-full opacity-20 stroke-[#6ED4FF]" fill="none" stroke-width="0.7">
+      <path d="M -100 400 L 700 800 L 1400 350 L 2100 700" stroke-dasharray="4 6"/>
+      <path d="M 120 180 L 850 620 L 1600 210" stroke-dasharray="2 8"/>
+      <polygon points="450,420 620,490 580,590 410,530" stroke="rgba(110,212,255,0.3)" />
+      <polygon points="1280,380 1480,440 1420,560 1240,490" stroke="rgba(255,92,103,0.3)" />
+      <circle cx="520" cy="505" r="3" fill="#6ED4FF"/>
+      <circle cx="1360" cy="470" r="3" fill="#FF5C67"/>
+      <line x1="520" y1="505" x2="1360" y2="470" stroke="rgba(110,212,255,0.4)" stroke-dasharray="6 6"/>
+    </svg>
+
+    <!-- Vignette & Deep Dimmer for focus -->
+    <div class="absolute inset-0 bg-radial from-transparent via-[#03060a]/80 to-[#020406]/95"></div>
+    <div class="absolute inset-0 backdrop-blur-[6px] bg-[#03060a]/60"></div>
+  </div>
+
+  <!-- ================= TOP HUD HEADER (DIMMED CONTEXT) ================= -->
+  <header class="absolute top-0 left-0 w-full h-16 px-12 flex items-center justify-between border-b border-white/[0.04] text-xs font-mono tracking-widest text-slate-400 z-10">
+    <div class="flex items-center space-x-6">
+      <div class="flex items-center space-x-2">
+        <span class="w-2 h-2 rounded-full bg-[#6ED4FF]/60 animate-pulse"></span>
+        <span class="text-slate-300 font-sans tracking-widest font-light text-sm">世纪骑士 CENTURY KNIGHTS</span>
+      </div>
+      <span class="text-slate-600">/</span>
+      <span class="text-slate-400 tracking-wider">TACTICAL SRPG ARCHIVE // ACT III · 霜线</span>
+      <span class="text-slate-600">/</span>
+      <span class="text-[#6ED4FF] tracking-wider">SECTOR 02 · 赤原关前哨</span>
+    </div>
+
+    <div class="flex items-center space-x-8 text-[11px] text-slate-400">
+      <div class="flex items-center space-x-2">
+        <span class="text-slate-500">回合</span>
+        <span class="text-slate-200 font-bold">04 / 15</span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <span class="text-slate-500">军资消耗</span>
+        <span class="text-[#6ED4FF] font-medium">180 CP</span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <span class="text-slate-500">环境天候</span>
+        <span class="text-slate-300">极寒 (-18°C)</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= BOTTOM HUD FOOTER (GAMEPAD & SYSTEM CONTROLS) ================= -->
+  <footer class="absolute bottom-0 left-0 w-full h-12 px-12 flex items-center justify-between border-t border-white/[0.04] text-[11px] font-mono tracking-widest text-slate-500 z-10">
+    <div class="flex items-center space-x-6">
+      <span>BUILD 2025.04.14-STABLE</span>
+      <span>•</span>
+      <span>赤历一百二十八年 · 霜堡军令司</span>
+    </div>
+    <div class="flex items-center space-x-6 text-slate-400 font-sans">
+      <div class="flex items-center space-x-2">
+        <span class="px-1.5 py-0.5 rounded bg-white/10 text-white font-mono text-[10px]">A</span>
+        <span>确认执行指令</span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <span class="px-1.5 py-0.5 rounded bg-white/10 text-white font-mono text-[10px]">B</span>
+        <span>取消并返还战位</span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <span class="px-1.5 py-0.5 rounded bg-white/10 text-white font-mono text-[10px]">X</span>
+        <span>切换预测战技</span>
+      </div>
+      <div class="flex items-center space-x-2">
+        <span class="px-1.5 py-0.5 rounded bg-white/10 text-white font-mono text-[10px]">Y</span>
+        <span>详细相克推演</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================= CENTER ATTACK FORECAST MODAL ================= -->
+  <main class="absolute inset-0 flex items-center justify-center z-20">
+    <div class="hairline-panel w-[1180px] h-[670px] rounded-2xl flex flex-col justify-between p-10 relative overflow-hidden">
+      
+      <!-- Top Subtle Decorative Line & Radial Accent -->
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-[1px] bg-gradient-to-r from-transparent via-[#6ED4FF]/40 to-transparent"></div>
+      <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-[#6ED4FF]/5 blur-[80px] pointer-events-none rounded-full"></div>
+
+      <!-- MODAL HEADER -->
+      <div class="flex items-start justify-between border-b border-white/[0.06] pb-6">
+        <div>
+          <div class="flex items-center space-x-3 mb-1.5">
+            <span class="inline-block w-1.5 h-1.5 bg-[#6ED4FF] rounded-full"></span>
+            <span class="font-mono text-[11px] tracking-[0.28em] text-[#6ED4FF]/90 uppercase">Combat Engagement Forecast</span>
+            <span class="text-white/20 text-xs">|</span>
+            <span class="font-mono text-[11px] tracking-widest text-slate-400">PHASE // DIRECT CLASH</span>
+          </div>
+          <h1 class="text-3xl font-sansTitle tracking-[0.2em] font-light text-slate-100 flex items-baseline gap-3">
+            攻击预测
+            <span class="text-xs font-mono font-normal tracking-widest text-slate-400 uppercase">ATK // DEF EQUATION</span>
+          </h1>
+        </div>
+
+        <div class="flex items-center space-x-6 text-right">
+          <div>
+            <div class="font-mono text-[10px] text-slate-500 uppercase tracking-widest">Distance / Elevation</div>
+            <div class="font-mono text-sm text-slate-300 tracking-wider">近战 1格 · 平地接敌</div>
+          </div>
+          <div class="h-8 w-[1px] bg-white/[0.08]"></div>
+          <div>
+            <div class="font-mono text-[10px] text-slate-500 uppercase tracking-widest">Tactical Affinity</div>
+            <div class="font-sans text-sm font-medium text-emerald-400 tracking-wider flex items-center justify-end gap-1">
+              <span>优势</span>
+              <span class="font-mono text-xs text-emerald-400/80">(兵种克制 +15%)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL BODY: TWO PORTRAITS & STAT COMPARISON -->
+      <div class="flex items-center justify-between gap-6 py-6 px-2 my-auto">
+        
+        <!-- LEFT: ALLIED PORTRAIT (白霜·凛) -->
+        <div class="w-[330px] flex flex-col items-center">
+          <!-- Role Badge -->
+          <div class="w-full flex items-center justify-between mb-3 px-1">
+            <span class="font-mono text-[10px] tracking-widest text-[#6ED4FF] uppercase bg-[#6ED4FF]/10 px-2 py-0.5 rounded border border-[#6ED4FF]/30">
+              #01 主动出击 · 我方
+            </span>
+            <span class="font-mono text-[11px] text-slate-400">LV. 34</span>
+          </div>
+
+          <!-- Character Card & Portrait Illustration -->
+          <div class="inner-card w-full h-[320px] rounded-xl p-4 flex flex-col justify-between relative group overflow-hidden border border-[#6ED4FF]/25 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+            <!-- Subtle Cold Ambient Glow -->
+            <div class="absolute -top-12 -left-12 w-36 h-36 bg-[#6ED4FF]/15 blur-3xl pointer-events-none rounded-full"></div>
+
+            <!-- Stylized Minimal Line-Art Vector Portrait: Frost Knight -->
+            <div class="relative w-full h-[200px] flex items-center justify-center">
+              <svg viewBox="0 0 240 240" class="w-48 h-48 drop-shadow-[0_4px_16px_rgba(110,212,255,0.25)]" fill="none">
+                <!-- Outer Frost Halo / Emblem -->
+                <circle cx="120" cy="120" r="95" stroke="rgba(110, 212, 255, 0.15)" stroke-width="1" stroke-dasharray="4 4" />
+                <circle cx="120" cy="120" r="75" stroke="rgba(110, 212, 255, 0.3)" stroke-width="1.2" />
+                
+                <!-- Stylized Knight Head & Visor (Minimal editorial geometry) -->
+                <!-- Crest -->
+                <path d="M120 40 L125 70 L120 78 L115 70 Z" fill="#6ED4FF" opacity="0.8"/>
+                <!-- Helmet Silhouette -->
+                <path d="M120 55 C90 55 80 80 80 115 C80 150 95 175 120 185 C145 175 160 150 160 115 C160 80 150 55 120 55 Z" stroke="#6ED4FF" stroke-width="1.8" fill="rgba(110, 212, 255, 0.05)"/>
+                <!-- Cold Visor slit -->
+                <path d="M92 110 L148 110 L144 122 L96 122 Z" fill="#6ED4FF" opacity="0.9"/>
+                <!-- Jaw & Collar Armor plates -->
+                <path d="M100 135 L120 155 L140 135" stroke="#6ED4FF" stroke-width="1.5" stroke-linecap="round"/>
+                <path d="M85 145 L70 185 L120 198 L170 185 L155 145" stroke="rgba(110, 212, 255, 0.5)" stroke-width="1.4" fill="none"/>
+                <!-- Sharp Shoulders -->
+                <path d="M55 190 L75 180 L120 195 L165 180 L185 190" stroke="#6ED4FF" stroke-width="1.2"/>
+                <!-- Star accent -->
+                <polygon points="120,84 123,92 131,92 125,97 127,105 120,100 113,105 115,97 109,92 117,92" fill="#6ED4FF" opacity="0.7"/>
+              </svg>
+
+              <!-- Facing Direction Indicator -->
+              <div class="absolute right-2 top-2 font-mono text-[10px] text-[#6ED4FF]/70 tracking-widest flex items-center gap-1">
+                <span>先攻</span>
+                <span class="text-xs">▶</span>
+              </div>
+            </div>
+
+            <!-- Name & Class Block -->
+            <div class="border-t border-white/[0.06] pt-3">
+              <div class="flex items-baseline justify-between">
+                <h3 class="text-xl font-sansTitle tracking-widest text-white font-medium">白霜 · 凛</h3>
+                <span class="text-xs font-mono text-[#6ED4FF] tracking-wider">霜刃骑士</span>
+              </div>
+              <div class="flex items-center justify-between text-xs text-slate-400 mt-2 font-mono">
+                <span>HP 42 / 42</span>
+                <span class="text-slate-300">武器: 寒彻短剑+2</span>
+              </div>
+              <!-- HP Bar -->
+              <div class="w-full bg-slate-800/80 h-1.5 rounded-full mt-1.5 overflow-hidden">
+                <div class="bg-[#6ED4FF] h-full w-full rounded-full shadow-[0_0_8px_#6ED4FF]"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CENTER: STAT COMPARISON COLUMNS & HAIRLINE DIVIDERS -->
+        <div class="flex-1 flex items-center justify-center px-4">
+          <div class="w-full flex items-center justify-between max-w-[450px]">
+            
+            <!-- PRIMARY ATTACK STAT COLUMN (主动进攻预测) -->
+            <div class="flex-1 text-center pr-6">
+              <div class="font-mono text-[10px] tracking-[0.25em] text-[#6ED4FF] uppercase mb-4 pb-1 border-b border-[#6ED4FF]/25">
+                主动攻击预测
+              </div>
+
+              <!-- Stat Rows -->
+              <div class="space-y-4">
+                <!-- 命中 86 -->
+                <div class="flex items-baseline justify-between">
+                  <span class="font-sansTitle text-sm tracking-widest text-slate-400">命中</span>
+                  <div class="flex items-baseline gap-1">
+                    <span class="font-mono text-2xl font-light text-slate-100">86</span>
+                    <span class="font-mono text-[11px] text-slate-500">%</span>
+                  </div>
+                </div>
+
+                <!-- 伤害 24 -->
+                <div class="flex items-baseline justify-between">
+                  <span class="font-sansTitle text-sm tracking-widest text-slate-400">伤害</span>
+                  <div class="flex items-baseline gap-1">
+                    <span class="font-mono text-3xl font-semibold text-[#6ED4FF] tracking-tight">24</span>
+                    <span class="font-mono text-xs text-[#6ED4FF]/70">x1</span>
+                  </div>
+                </div>
+
+                <!-- 暴击 12 -->
+                <div class="flex items-baseline justify-between">
+                  <span class="font-sansTitle text-sm tracking-widest text-slate-400">暴击</span>
+                  <div class="flex items-baseline gap-1">
+                    <span class="font-mono text-2xl font-light text-slate-100">12</span>
+                    <span class="font-mono text-[11px] text-slate-500">%</span>
+                  </div>
+                </div>
+
+                <!-- 反击 会 -->
+                <div class="flex items-baseline justify-between">
+                  <span class="font-sansTitle text-sm tracking-widest text-slate-400">反击</span>
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                    <span class="font-sansTitle text-lg font-medium text-amber-300 tracking-wider">会</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ELEGANT HAIRLINE VERTICAL DIVIDER -->
+            <div class="h-56 w-[1px] bg-gradient-to-b from-transparent via-white/[0.15] to-transparent relative mx-2">
+              <div class="absolute top-1/2 -translate-y-1/2 -left-[3px] w-[7px] h-[7px] bg-[#070b10] border border-[#6ED4FF]/40 rotate-45"></div>
+            </div>
+
+            <!-- SECOND SMALLER COUNTER STAT COLUMN (敌方反击预测) -->
+            <div class="flex-1 text-center pl-6">
+              <div class="font-mono text-[10px] tracking-[0.25em] text-slate-400 uppercase mb-4 pb-1 border-b border-white/[0.08]">
+                敌方反击
+              </div>
+
+              <!-- Stat Rows -->
+              <div class="space-y-4">
+                <!-- 命中 64 -->
+                <div class="flex items-baseline justify-between">
+                  <span class="font-sansTitle text-sm tracking-widest text-slate-500">命中</span>
+                  <div class="flex items-baseline gap-1">
+                    <span class="font-mono text-2xl font-light text-slate-300">64</span>
+                    <span class="font-mono text-[11px] text-slate-600">%</span>
+                  </div>
+                </div>
+
+                <!-- 伤害 11 -->
+                <div class="flex items-baseline justify-between">
+                  <span class="font-sansTitle text-sm tracking-widest text-slate-500">伤害</span>
+                  <div class="flex items-baseline gap-1">
+                    <span class="font-mono text-3xl font-medium text-[#FF5C67] tracking-tight">11</span>
+                    <span class="font-mono text-xs text-[#FF5C67]/70">x1</span>
+                  </div>
+                </div>
+
+                <!-- Spacer to balance lines with quiet space -->
+                <div class="flex items-baseline justify-between opacity-50">
+                  <span class="font-sansTitle text-sm tracking-widest text-slate-600">暴击</span>
+                  <span class="font-mono text-xl font-light text-slate-400">03%</span>
+                </div>
+
+                <div class="flex items-baseline justify-between opacity-50">
+                  <span class="font-sansTitle text-sm tracking-widest text-slate-600">追击</span>
+                  <span class="font-sansTitle text-base text-slate-400">无</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- RIGHT: ENEMY PORTRAIT (赤原枪兵) -->
+        <div class="w-[330px] flex flex-col items-center">
+          <!-- Role Badge -->
+          <div class="w-full flex items-center justify-between mb-3 px-1">
+            <span class="font-mono text-[11px] text-slate-400">LV. 32</span>
+            <span class="font-mono text-[10px] tracking-widest text-[#FF5C67] uppercase bg-[#FF5C67]/10 px-2 py-0.5 rounded border border-[#FF5C67]/30">
+              #03 防守迎击 · 敌方
+            </span>
+          </div>
+
+          <!-- Character Card & Portrait Illustration -->
+          <div class="inner-card w-full h-[320px] rounded-xl p-4 flex flex-col justify-between relative group overflow-hidden border border-[#FF5C67]/20 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+            <!-- Subtle Crimson Ambient Glow -->
+            <div class="absolute -top-12 -right-12 w-36 h-36 bg-[#FF5C67]/12 blur-3xl pointer-events-none rounded-full"></div>
+
+            <!-- Stylized Minimal Line-Art Vector Portrait: Crimson Spearman -->
+            <div class="relative w-full h-[200px] flex items-center justify-center">
+              <svg viewBox="0 0 240 240" class="w-48 h-48 drop-shadow-[0_4px_16px_rgba(255,92,103,0.2)]" fill="none">
+                <!-- Outer Threat Emblem -->
+                <circle cx="120" cy="120" r="95" stroke="rgba(255, 92, 103, 0.12)" stroke-width="1" stroke-dasharray="4 4" />
+                <circle cx="120" cy="120" r="75" stroke="rgba(255, 92, 103, 0.25)" stroke-width="1.2" />
+
+                <!-- Crimson Spearman Helmet & Lance geometry -->
+                <!-- Spearhead in background (crossing left to face 白霜) -->
+                <path d="M190 40 L160 85 L150 75 Z" fill="#FF5C67" opacity="0.6"/>
+                <line x1="155" y1="80" x2="60" y2="210" stroke="rgba(255,92,103,0.4)" stroke-width="2" stroke-linecap="round"/>
+
+                <!-- Conical Iron Sallet Helmet -->
+                <path d="M120 60 C95 60 88 85 88 118 C88 150 100 172 120 182 C140 172 152 150 152 118 C152 85 145 60 120 60 Z" stroke="#FF5C67" stroke-width="1.8" fill="rgba(255, 92, 103, 0.05)"/>
+                <!-- Iron eye slit -->
+                <path d="M96 114 L144 114 L140 122 L100 122 Z" fill="#FF5C67" opacity="0.9"/>
+                <!-- Angular neckguard -->
+                <path d="M102 138 L120 150 L138 138" stroke="#FF5C67" stroke-width="1.5"/>
+                <path d="M78 155 L65 190 L120 200 L175 190 L162 155" stroke="rgba(255, 92, 103, 0.45)" stroke-width="1.4" fill="none"/>
+                <!-- Crimson Vanguard crest -->
+                <path d="M120 45 L115 60 L125 60 Z" fill="#FF5C67"/>
+              </svg>
+
+              <!-- Facing Direction Indicator -->
+              <div class="absolute left-2 top-2 font-mono text-[10px] text-[#FF5C67]/70 tracking-widest flex items-center gap-1">
+                <span class="text-xs">◀</span>
+                <span>迎击</span>
+              </div>
+            </div>
+
+            <!-- Name & Class Block -->
+            <div class="border-t border-white/[0.06] pt-3">
+              <div class="flex items-baseline justify-between">
+                <h3 class="text-xl font-sansTitle tracking-widest text-white font-medium">赤原枪兵</h3>
+                <span class="text-xs font-mono text-[#FF5C67] tracking-wider">赤原重装步军</span>
+              </div>
+              <div class="flex items-center justify-between text-xs text-slate-400 mt-2 font-mono">
+                <span>HP 38 / 38</span>
+                <span class="text-slate-400">武器: 铁叶长枪</span>
+              </div>
+              <!-- HP Bar -->
+              <div class="w-full bg-slate-800/80 h-1.5 rounded-full mt-1.5 overflow-hidden">
+                <div class="bg-[#FF5C67] h-full w-full rounded-full shadow-[0_0_8px_#FF5C67]"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- MODAL FOOTER: ACTIONS (确认 focused with visible Gamepad Focus Ring & 取消) -->
+      <div class="border-t border-white/[0.06] pt-6 flex items-center justify-between">
+        <!-- Battle Forecast Estimation Hint -->
+        <div class="flex items-center space-x-3 text-xs text-slate-400">
+          <span class="font-mono text-[#6ED4FF] text-sm">✦</span>
+          <span>战技预测：霜刃破击将对持枪单位施加冰冻迟滞；受击后预计剩余血量 <strong class="text-emerald-400 font-mono">31 HP</strong>。</span>
+        </div>
+
+        <!-- Mouse-first actions with gamepad focus indicator -->
+        <div class="flex items-center space-x-5">
+          <!-- Cancel Button -->
+          <button class="px-7 py-3 rounded-lg border border-white/10 hover:border-white/25 bg-white/[0.02] hover:bg-white/[0.06] text-slate-300 font-sans text-sm tracking-widest transition-all duration-150 flex items-center gap-2 cursor-pointer active:scale-95">
+            <span class="font-mono text-xs px-1.5 py-0.5 rounded bg-white/10 text-slate-400">B</span>
+            <span>取消</span>
+          </button>
+
+          <!-- Primary Confirm Button (FOCUSED with Gamepad Focus Ring) -->
+          <button class="relative px-9 py-3 rounded-lg bg-[#6ED4FF] text-[#070b10] font-sans text-sm font-semibold tracking-widest transition-all duration-150 flex items-center gap-2.5 cursor-pointer focus-ring-gamepad hover:bg-[#85ddff] active:scale-95">
+            <!-- Explicit gamepad button icon indicator -->
+            <span class="font-mono text-xs px-1.5 py-0.5 rounded bg-[#070b10]/20 text-[#070b10] font-bold">A</span>
+            <span>确认</span>
+            <!-- Trailing subtle direction glyph -->
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 16 16">
+              <path d="M6 3l5 5-5 5V3z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</body>
+</html>

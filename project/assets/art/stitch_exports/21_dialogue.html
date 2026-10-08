@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=1920, height=1080, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>CenturyKnights // 序章 · 霜刃之盟</title>
+<!-- Google Fonts: Public Sans & Noto Sans SC -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              frost: "#6ED4FF",
+              mint: "#68F2C7",
+              coral: "#FF6E7B",
+              ember: "#FFB067",
+              obsidian: "#060A10",
+              surface: "#0B111B",
+            }
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Public Sans", "Noto Sans SC", "sans-serif"],
+            display: ["Public Sans", "Noto Sans SC", "sans-serif"],
+            body: ["Public Sans", "Noto Sans SC", "sans-serif"],
+            label: ["Public Sans", "Noto Sans SC", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    /* Strict 1920x1080 Canvas Lock */
+    html, body {
+      width: 1920px;
+      height: 1080px;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #04070C;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Ambient atmospheric frost grid */
+    .bg-grid-cyber {
+      background-size: 60px 60px;
+      background-image: 
+        linear-gradient(to right, rgba(110, 212, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(110, 212, 255, 0.03) 1px, transparent 1px);
+    }
+
+    /* Subtlest animated cold dust particle simulation */
+    @keyframes crystalDrift {
+      0% { transform: translateY(0px) translateX(0px); opacity: 0.2; }
+      50% { transform: translateY(-40px) translateX(15px); opacity: 0.65; }
+      100% { transform: translateY(-80px) translateX(5px); opacity: 0; }
+    }
+
+    .particle-crystal {
+      position: absolute;
+      background: radial-gradient(circle, rgba(110, 212, 255, 0.8) 0%, rgba(110, 212, 255, 0) 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: crystalDrift 7s infinite ease-in-out;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.4; filter: drop-shadow(0 0 12px rgba(110, 212, 255, 0.3)); }
+      50% { opacity: 0.85; filter: drop-shadow(0 0 24px rgba(110, 212, 255, 0.7)); }
+    }
+
+    .frost-focus-ring {
+      box-shadow: 0 0 0 1px #6ED4FF, 0 0 20px -3px rgba(110, 212, 255, 0.45), inset 0 0 15px 0 rgba(110, 212, 255, 0.15);
+    }
+
+    .hairline-panel {
+      border: 1px solid rgba(110, 212, 255, 0.22);
+      background: linear-gradient(135deg, rgba(9, 16, 26, 0.78) 0%, rgba(5, 9, 16, 0.88) 100%);
+      backdrop-filter: blur(20px);
+    }
+
+    .speaker-active-sheen {
+      filter: drop-shadow(0 0 35px rgba(110, 212, 255, 0.22)) contrast(1.04) brightness(1.02);
+      transform: scale(1.02) translateY(-10px);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .speaker-idle-sheen {
+      filter: brightness(0.65) saturate(0.85) blur(0.5px);
+      transform: scale(0.97) translateY(20px);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+  </style>
+</head>
+<body class="relative w-[1920px] h-[1080px] bg-[#04070C] text-neutral-100 overflow-hidden font-sans flex flex-col justify-between selection:bg-cyan-500/20">
+<!-- ==================== BACKGROUND & CINEMATIC LAYERS ==================== -->
+<div class="absolute inset-0 pointer-events-none z-0">
+<!-- Deep ink void gradient -->
+<div class="absolute inset-0 bg-radial from-[#0C1626]/40 via-[#060A12] to-[#020408]"></div>
+<!-- Geometric cold grid -->
+<div class="absolute inset-0 bg-grid-cyber opacity-60"></div>
+<!-- Atmospheric light vignettes -->
+<div class="absolute -top-32 left-1/4 w-[900px] h-[600px] bg-cyan-950/20 rounded-full blur-[140px]"></div>
+<div class="absolute -bottom-20 right-1/4 w-[750px] h-[550px] bg-blue-950/30 rounded-full blur-[160px]"></div>
+<!-- Particles -->
+<div class="particle-crystal w-2.5 h-2.5 left-[240px] top-[480px]" style="animation-delay: 0s;"></div>
+<div class="particle-crystal w-3.5 h-3.5 left-[420px] top-[720px]" style="animation-delay: 1.8s;"></div>
+<div class="particle-crystal w-2 h-2 left-[1280px] top-[340px]" style="animation-delay: 3.4s;"></div>
+<div class="particle-crystal w-3 h-3 left-[1620px] top-[580px]" style="animation-delay: 2.1s;"></div>
+<div class="particle-crystal w-1.5 h-1.5 left-[880px] top-[680px]" style="animation-delay: 4.5s;"></div>
+</div>
+<!-- ==================== TOP NAVIGATION BAR (FROM SHARED COMPONENT JSON) ==================== -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-12 py-5 max-w-full bg-transparent backdrop-blur-md border-b border-white/10 shadow-none font-headline text-sm tracking-widest uppercase font-light">
+<!-- Brand Title & Scene Metadata -->
+<div class="flex items-center space-x-6">
+<div class="font-headline font-light tracking-widest text-neutral-100 text-sm border-l-2 border-cyan-300 pl-3 flex items-center gap-3">
+<span>CenturyKnights // 序章 · 霜刃之盟</span>
+<span class="text-xs text-neutral-500 font-mono tracking-normal">REV.072-FR</span>
+</div>
+<div class="hidden xl:flex items-center gap-2 pl-4 border-l border-white/10 text-neutral-400 font-normal normal-case text-xs tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+<span>幕间 · 凛冬议事厅</span>
+</div>
+</div>
+<!-- Navigation & Story Actions -->
+<div class="flex items-center space-x-8">
+<nav class="flex items-center space-x-7 text-xs font-mono">
+<!-- Inactive items -->
+<button class="text-neutral-400 hover:text-neutral-200 transition-colors duration-200 hover:text-cyan-200 hover:border-white/20 active:scale-95 transition-transform duration-100 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 0;">history</span>
+<span>回放 LOG</span>
+</button>
+<!-- Active item example -->
+<button class="text-cyan-300 font-normal tracking-wider flex items-center gap-1.5 hover:text-cyan-200 active:scale-95 transition-all">
+<span class="w-1 h-3 bg-cyan-300 rounded-sm inline-block"></span>
+<span>自动 AUTO</span>
+</button>
+<button class="text-neutral-400 hover:text-neutral-200 transition-colors duration-200 hover:text-cyan-200 hover:border-white/20 active:scale-95 transition-transform duration-100 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px]">fast_forward</span>
+<span>快进 FF</span>
+</button>
+<button class="text-neutral-400 hover:text-neutral-200 transition-colors duration-200 hover:text-cyan-200 hover:border-white/20 active:scale-95 transition-transform duration-100 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px]">skip_next</span>
+<span>跳过 SKIP</span>
+</button>
+</nav>
+<!-- Trailing Action Cluster -->
+<div class="flex items-center space-x-4 pl-6 border-l border-white/10">
+<button class="text-neutral-400 hover:text-cyan-300 transition-colors duration-150 p-1" title="Volume">
+<span class="material-symbols-outlined text-[20px]" data-icon="volume_up">volume_up</span>
+</button>
+<button class="text-neutral-400 hover:text-cyan-300 transition-colors duration-150 p-1" title="Settings">
+<span class="material-symbols-outlined text-[20px]" data-icon="settings">settings</span>
+</button>
+<button class="ml-2 px-4 py-1.5 border border-white/20 rounded text-xs font-mono tracking-widest text-neutral-200 hover:border-cyan-300 hover:text-cyan-300 hover:bg-cyan-950/20 active:scale-95 transition-all duration-150 flex items-center gap-2">
+<span>主菜单 MENU</span>
+<span class="text-[10px] text-cyan-400/70 border border-cyan-400/40 rounded px-1 font-mono">ESC</span>
+</button>
+</div>
+</div>
+</header>
+<!-- ==================== CHARACTER PORTRAITS STAGE ==================== -->
+<main class="relative w-full h-full flex items-end justify-between px-28 pb-10 pointer-events-none z-10">
+<!-- LEFT CHARACTER: ACTIVE SPEAKER (白霜·凛) -->
+<div class="relative w-[560px] h-[860px] flex flex-col justify-end items-center pointer-events-auto speaker-active-sheen">
+<!-- Speaker aura gradient -->
+<div class="absolute inset-0 bg-gradient-to-t from-cyan-950/40 via-transparent to-transparent pointer-events-none rounded-2xl"></div>
+<!-- Tactical Holo-Reticule Indicator -->
+<div class="absolute -top-4 left-6 flex items-center gap-2 font-mono text-[11px] text-cyan-300 tracking-wider">
+<span class="w-2 h-2 rounded-full bg-cyan-300 animate-pulse"></span>
+<span class="uppercase tracking-widest">SPEAKER ACTIVE // 01</span>
+<span class="text-neutral-600">|</span>
+<span class="text-neutral-400 font-light">POS: 04-VANGUARD</span>
+</div>
+<!-- Character Portrait Image (Asset IMAGE_17) -->
+<div class="relative w-full h-[810px] overflow-hidden rounded-t-lg">
+<img alt="白霜·凛 Frost Knight" class="w-full h-full object-contain object-bottom drop-shadow-[0_20px_35px_rgba(0,0,0,0.85)] filter contrast-[1.03]" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" data-stitch-asset="redacted"/>
+<!-- Vignette blend bottom -->
+<div class="absolute bottom-0 inset-x-0 h-44 bg-gradient-to-t from-[#04070C] via-[#04070C]/80 to-transparent"></div>
+</div>
+<!-- Minimal Tactical Spec Tag -->
+<div class="absolute bottom-28 left-4 flex flex-col font-mono text-[10px] text-neutral-400 tracking-widest bg-black/40 backdrop-blur-md px-3 py-1.5 border-l-2 border-cyan-400">
+<span class="text-neutral-200 font-semibold tracking-wider font-headline">COMMANDER BAI SHUANG</span>
+<span class="text-cyan-400/80">AFFILIATION: FROST CREST</span>
+</div>
+</div>
+<!-- RIGHT CHARACTER: LISTENER (青澜·昭) -->
+<div class="relative w-[520px] h-[830px] flex flex-col justify-end items-center pointer-events-auto speaker-idle-sheen">
+<!-- Idle Aura Indicator -->
+<div class="absolute -top-2 right-8 flex items-center gap-2 font-mono text-[11px] text-neutral-500 tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-neutral-600"></span>
+<span class="uppercase tracking-widest">LISTENER // 02</span>
+</div>
+<!-- Character Portrait Image (Asset IMAGE_6) -->
+<div class="relative w-full h-[780px] overflow-hidden rounded-t-lg">
+<img alt="青澜·昭 Water Tide Warlock" class="w-full h-full object-contain object-bottom drop-shadow-[0_20px_35px_rgba(0,0,0,0.85)] opacity-90" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" data-stitch-asset="redacted"/>
+<!-- Vignette blend bottom -->
+<div class="absolute bottom-0 inset-x-0 h-44 bg-gradient-to-t from-[#04070C] via-[#04070C]/80 to-transparent"></div>
+</div>
+<!-- Minimal Tactical Spec Tag (Subdued) -->
+<div class="absolute bottom-28 right-4 flex flex-col text-right font-mono text-[10px] text-neutral-500 tracking-widest bg-black/40 backdrop-blur-md px-3 py-1.5 border-r border-neutral-700">
+<span class="text-neutral-400 font-headline">QING LAN ZHAO</span>
+<span>SCHOLAR // TIDE WARLOCK</span>
+</div>
+</div>
+</main>
+<!-- ==================== DIALOGUE & BRANCHING INTERACTION SYSTEM ==================== -->
+<footer class="fixed bottom-0 inset-x-0 z-40 pb-5 px-16 flex flex-col items-center">
+<!-- INTERACTIVE BRANCHING CHOICES CONTAINER -->
+<div class="w-full max-w-[1380px] flex justify-end gap-5 mb-3 pointer-events-auto">
+<!-- Option 1: Primary Focused Choice (Gamepad active [A]) -->
+<button class="relative group hairline-panel frost-focus-ring rounded-lg px-8 py-3.5 flex items-center gap-5 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] text-left overflow-hidden bg-gradient-to-r from-cyan-950/50 to-neutral-900/80">
+<!-- Focus side jewel indicator -->
+<div class="w-1.5 h-7 bg-cyan-400 rounded-full shadow-[0_0_8px_#6ED4FF]"></div>
+<div class="flex flex-col">
+<span class="text-[10px] font-mono tracking-widest text-cyan-300 uppercase">CHOICE BRANCH 01</span>
+<span class="text-base font-headline font-medium text-neutral-50 tracking-wide">「就叫澄。」</span>
+</div>
+<!-- Button Confirm Pill -->
+<div class="ml-4 flex items-center gap-1.5 bg-cyan-400 text-neutral-950 text-xs font-mono font-bold px-2.5 py-1 rounded shadow-sm">
+<span class="text-[11px]">A</span>
+<span class="text-[10px] font-headline font-semibold">确认</span>
+</div>
+<!-- Hairline corner accent -->
+<div class="absolute top-0 right-0 w-2 h-2 border-t border-r border-cyan-300"></div>
+</button>
+<!-- Option 2: Secondary Choice (Unfocused) -->
+<button class="relative group hairline-panel rounded-lg px-7 py-3.5 flex items-center gap-4 transition-all duration-200 hover:border-cyan-400/50 hover:bg-neutral-900/60 active:scale-[0.99] text-left opacity-70 hover:opacity-100">
+<div class="w-1 h-5 bg-neutral-600 rounded-full group-hover:bg-cyan-400/60 transition-colors"></div>
+<div class="flex flex-col">
+<span class="text-[10px] font-mono tracking-widest text-neutral-500 uppercase">CHOICE BRANCH 02</span>
+<span class="text-base font-headline font-light text-neutral-300 tracking-wide group-hover:text-neutral-100 transition-colors">「再等等。」</span>
+</div>
+<span class="text-xs font-mono text-neutral-600 pl-3">B</span>
+</button>
+</div>
+<!-- MAIN DIALOGUE PANEL (FROSTED OBSIDIAN) -->
+<div class="relative w-full max-w-[1380px] hairline-panel rounded-xl px-12 pt-7 pb-6 pointer-events-auto shadow-[0_15px_45px_rgba(0,0,0,0.8)] border border-cyan-400/25">
+<!-- Top Decorative Accent Lines & Watermark -->
+<div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent"></div>
+<div class="absolute top-2.5 right-6 font-mono text-[9px] text-neutral-600 tracking-widest uppercase">
+        ENCRYPTED TRANSCRIPT // LOG 0049-D
+      </div>
+<!-- SPEAKER NAMEPLATE & TITLE BADGE -->
+<div class="flex items-center gap-4 mb-4">
+<!-- Stylized Name Badge -->
+<div class="relative bg-cyan-950/60 border border-cyan-400/40 rounded px-4 py-1.5 flex items-center gap-2.5 backdrop-blur-md">
+<span class="w-2 h-2 rotate-45 bg-cyan-300 shadow-[0_0_6px_#6ED4FF]"></span>
+<span class="text-lg font-headline font-semibold text-neutral-50 tracking-wider">白霜 · 凛</span>
+<span class="text-[11px] font-mono text-cyan-300/80 font-normal">FROST KNIGHT</span>
+</div>
+<!-- Rank / Status Tag -->
+<div class="flex items-center gap-2 text-xs font-mono text-neutral-400 tracking-wider">
+<span class="text-neutral-600">//</span>
+<span class="text-neutral-300">霜刃领主</span>
+<span class="text-neutral-600">·</span>
+<span class="text-neutral-400">首席先锋官</span>
+</div>
+</div>
+<!-- DIALOGUE CONTENT STREAM -->
+<div class="relative pr-16 py-1">
+<p class="text-[23px] font-headline font-light text-neutral-100 leading-relaxed tracking-wide select-text">
+          「霜线还能守一个冬天。开春之前，把孩子的名字定下来。」
+        </p>
+<!-- Subtle Text Sub-Narrative/Flavor Annotation -->
+<p class="text-xs text-neutral-500 font-mono tracking-wider mt-2 flex items-center gap-2">
+<span class="text-cyan-400/70 font-bold">&gt;</span>
+<span>语调平缓，指节轻扣着腰间未出鞘的冰魄长剑。大厅外的暴雪正击打着穹顶棱镜。</span>
+</p>
+<!-- Waiting for input caret indicator (Pulsing Diamond) -->
+<div class="absolute bottom-2 right-1 flex items-center gap-2 text-cyan-300">
+<span class="text-[10px] font-mono tracking-widest opacity-60">NEXT</span>
+<div class="w-3 h-3 border border-cyan-300 rotate-45 flex items-center justify-center animate-bounce">
+<div class="w-1.5 h-1.5 bg-cyan-300"></div>
+</div>
+</div>
+</div>
+<!-- FOOTER CONTROLLER & KEYBOARD NAVIGATION PROMPTS -->
+<div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-neutral-400 tracking-wider">
+<!-- Controller Key Mappings -->
+<div class="flex items-center space-x-6">
+<div class="flex items-center gap-1.5 hover:text-neutral-200 transition-colors">
+<span class="w-4 h-4 rounded-full bg-cyan-950 border border-cyan-400/50 flex items-center justify-center text-[9px] text-cyan-300 font-bold">A</span>
+<span class="text-neutral-300">推进对白 / 抉择</span>
+</div>
+<div class="flex items-center gap-1.5 hover:text-neutral-200 transition-colors">
+<span class="w-4 h-4 rounded-full bg-neutral-900 border border-neutral-700 flex items-center justify-center text-[9px] text-neutral-300 font-bold">X</span>
+<span>历史记录</span>
+</div>
+<div class="flex items-center gap-1.5 hover:text-neutral-200 transition-colors">
+<span class="w-4 h-4 rounded-full bg-neutral-900 border border-neutral-700 flex items-center justify-center text-[9px] text-neutral-300 font-bold">Y</span>
+<span>隐去界面 (UI OFF)</span>
+</div>
+<div class="flex items-center gap-1.5 hover:text-neutral-200 transition-colors">
+<span class="w-4 h-4 rounded-full bg-neutral-900 border border-neutral-700 flex items-center justify-center text-[9px] text-neutral-300 font-bold">RT</span>
+<span>快进剧情</span>
+</div>
+</div>
+<!-- System Status Stamp -->
+<div class="flex items-center gap-3 text-neutral-500">
+<span>GAMEPAD READY</span>
+<span class="w-1 h-1 rounded-full bg-emerald-400"></span>
+<span>[START] 暂停系统</span>
+</div>
+</div>
+</div>
+</footer>
+<!-- ==================== FLOATING MINIMAL HUD ACCENTS ==================== -->
+<!-- Left Side Coordinate & Timeline Marker -->
+<div class="fixed left-8 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-4 pointer-events-none opacity-40">
+<div class="w-[1px] h-20 bg-gradient-to-b from-transparent via-cyan-400 to-transparent"></div>
+<span class="font-mono text-[9px] text-cyan-300 tracking-widest [writing-mode:vertical-lr] uppercase">SECTOR 09 // FROST VAULT</span>
+<div class="w-1 h-1 rounded-full bg-cyan-400"></div>
+<div class="w-[1px] h-20 bg-gradient-to-b from-cyan-400 via-transparent to-transparent"></div>
+</div>
+<!-- Right Side Scene Code -->
+<div class="fixed right-8 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-4 pointer-events-none opacity-40">
+<div class="w-[1px] h-16 bg-neutral-700"></div>
+<span class="font-mono text-[9px] text-neutral-400 tracking-widest [writing-mode:vertical-lr]">CH-01 · SC-04</span>
+<div class="w-[1px] h-16 bg-neutral-700"></div>
+</div>
+</body></html>

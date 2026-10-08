@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>百年骑士 CENTURY KNIGHTS - 锻造工坊</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            surface: {
+              DEFAULT: '#060a12',
+              variant: '#0d1526'
+            },
+            'surface-container': {
+              DEFAULT: '#0b1322',
+              low: '#070d18',
+              high: '#131e33',
+              highest: '#1a2842'
+            },
+            primary: {
+              DEFAULT: '#38bdf8',
+              container: '#0369a1',
+              focus: '#7dd3fc'
+            },
+            'on-primary': '#02131f',
+            'on-surface': '#f0f6fc',
+            'on-surface-variant': '#8ba2c4',
+            outline: {
+              DEFAULT: '#1e293b',
+              variant: '#334155'
+            },
+            secondary: {
+              DEFAULT: '#34d399',
+              light: '#6ee7b7'
+            },
+            tertiary: {
+              DEFAULT: '#f87171',
+              light: '#fca5a5'
+            },
+            ember: '#fb923c'
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Public Sans", "sans-serif"],
+            display: ["Public Sans", "sans-serif"],
+            body: ["Public Sans", "sans-serif"],
+            label: ["Public Sans", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    /* Custom scanlines & technical backdrop elements */
+    .bg-tech-grid {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(56, 189, 248, 0.03) 1px, transparent 1px);
+    }
+    .hud-bracket {
+      position: relative;
+    }
+    .hud-bracket::before {
+      content: '';
+      position: absolute;
+      top: -1px; left: -1px;
+      width: 6px; height: 6px;
+      border-top: 1px solid rgba(56, 189, 248, 0.7);
+      border-left: 1px solid rgba(56, 189, 248, 0.7);
+    }
+    .hud-bracket::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; right: -1px;
+      width: 6px; height: 6px;
+      border-bottom: 1px solid rgba(56, 189, 248, 0.7);
+      border-right: 1px solid rgba(56, 189, 248, 0.7);
+    }
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.9; }
+    }
+    .animate-pulse-glow {
+      animation: pulseGlow 2.5s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body select-none overflow-hidden antialiased">
+<!-- STRICT ROOT CONTAINER: 1920x1080 Non-scrolling Canvas -->
+<div class="relative w-[1920px] h-[1080px] overflow-hidden bg-[#05080f] bg-tech-grid flex flex-col justify-between">
+<!-- Background Cold Atmospheric Lighting Vignette -->
+<div class="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_80%_60%_at_50%_40%,rgba(14,35,66,0.35)_0%,rgba(5,8,15,0.95)_100%)]"></div>
+<div class="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-sky-500/5 rounded-full blur-[100px] pointer-events-none"></div>
+<!-- ========================================== -->
+<!-- 1. TOP HEADER (Height: 64px)               -->
+<!-- ========================================== -->
+<header class="relative z-50 h-16 w-full px-8 bg-surface/80 backdrop-blur-md border-b border-outline-variant/30 flex items-center justify-between shadow-sm">
+<!-- Left: Logo & Workshop Module Status -->
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_8px_#38bdf8] animate-pulse"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary/40"></span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-3">
+<span class="font-sans font-light text-xl tracking-widest text-on-surface">百年骑士 · 锻造工坊</span>
+<span class="text-[10px] font-mono tracking-widest px-2 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">FORGE FACILITY // MK-IV</span>
+</div>
+<span class="text-[10px] font-mono tracking-widest text-on-surface-variant/70 uppercase">ARMAMENT ENHANCEMENT PROTOCOL // SEC-09</span>
+</div>
+</div>
+<!-- Center: Reforging Mode Sub-tabs -->
+<nav class="flex items-center gap-1">
+<button class="px-6 py-4 text-sm font-medium tracking-widest text-primary border-b-2 border-primary bg-primary/5 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-base">hardware</span>
+<span>武器强化</span>
+</button>
+<button class="px-6 py-4 text-sm font-normal tracking-wider text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/40 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-base">auto_fix_high</span>
+<span>装备精炼</span>
+</button>
+<button class="px-6 py-4 text-sm font-normal tracking-wider text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/40 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-base">grain</span>
+<span>符文镶嵌</span>
+</button>
+<button class="px-6 py-4 text-sm font-normal tracking-wider text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/40 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-base">build</span>
+<span>分解拆解</span>
+</button>
+</nav>
+<!-- Right: Resources & Telemetry Counters -->
+<div class="flex items-center gap-6 font-mono text-xs">
+<div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container/60 rounded border border-outline-variant/30">
+<span class="text-amber-400 font-sans text-xs">金钱</span>
+<span class="text-on-surface font-semibold tracking-wider">18,450</span>
+<span class="text-[10px] text-on-surface-variant font-sans">克朗</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container/60 rounded border border-outline-variant/30">
+<span class="w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_6px_rgba(244,63,94,0.6)]"></span>
+<span class="text-on-surface-variant text-xs font-sans">赤铁</span>
+<span class="text-on-surface font-semibold">14</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container/60 rounded border border-outline-variant/30">
+<span class="w-2 h-2 rounded-full bg-primary shadow-[0_0_6px_rgba(56,189,248,0.7)]"></span>
+<span class="text-on-surface-variant text-xs font-sans">霜晶</span>
+<span class="text-on-surface font-semibold">06</span>
+</div>
+<div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container/60 rounded border border-outline-variant/30">
+<span class="material-symbols-outlined text-sm text-secondary">token</span>
+<span class="text-on-surface-variant text-xs font-sans">军资</span>
+<span class="text-secondary font-semibold">420</span>
+<span class="text-[10px] text-on-surface-variant">CP</span>
+</div>
+<div class="h-4 w-[1px] bg-outline-variant/40"></div>
+<div class="text-right">
+<span class="text-[11px] text-on-surface font-sans">赤历一百二十八年 · 霜降</span>
+<p class="text-[9px] text-on-surface-variant tracking-wider">ST-CYCLE 44.18</p>
+</div>
+</div>
+</header>
+<!-- ========================================== -->
+<!-- 2. MAIN WORKSPACE (Height: ~976px) 3 Cols  -->
+<!-- ========================================== -->
+<main class="relative z-10 w-full flex-1 px-8 py-4 flex gap-6 overflow-hidden">
+<!-- ======================================================== -->
+<!-- COLUMN 1: LEFT PANEL (~420px) - Operative & Slots        -->
+<!-- ======================================================== -->
+<section class="w-[420px] h-full flex flex-col gap-4">
+<!-- Operative Card Component -->
+<div class="hud-bracket relative p-4 rounded bg-surface-container-low/75 backdrop-blur-lg border border-outline-variant/30 flex flex-col gap-3">
+<div class="flex items-center justify-between border-b border-outline-variant/20 pb-2">
+<span class="text-[11px] font-mono text-primary tracking-widest uppercase">OPERATIVE PROFILE // 驻守干员</span>
+<span class="px-2 py-0.5 rounded-full text-[10px] bg-secondary/10 text-secondary border border-secondary/30 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+              出战就绪
+            </span>
+</div>
+<div class="flex gap-4 items-center">
+<!-- Operative Portrait Avatar -->
+<div class="relative w-24 h-28 rounded overflow-hidden border border-primary/40 bg-surface-container-high/60 shrink-0 shadow-[0_0_15px_rgba(56,189,248,0.15)]">
+<img alt="白霜 · 凛" class="w-full h-full object-cover object-top scale-105" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" data-stitch-asset="redacted"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface via-transparent to-transparent opacity-60"></div>
+<div class="absolute bottom-1 left-1.5 font-mono text-[9px] text-primary bg-surface/80 px-1 rounded border border-primary/20">
+                NO.04
+              </div>
+</div>
+<!-- Operative Stats Details -->
+<div class="flex-1 flex flex-col justify-center gap-1.5">
+<div class="flex items-baseline gap-2">
+<h2 class="text-xl font-light tracking-wide text-on-surface">白霜 · 凛</h2>
+<span class="text-xs font-mono text-primary font-semibold">LV. 34</span>
+</div>
+<p class="text-xs text-on-surface-variant font-light tracking-wider">霜刃骑士团 · 首席先锋</p>
+<div class="grid grid-cols-2 gap-2 mt-1 text-[11px] font-mono">
+<div class="bg-surface-container/60 px-2 py-1 rounded border border-outline-variant/20">
+<span class="text-on-surface-variant/70 text-[9px]">CHRONO AGE</span>
+<div class="text-on-surface font-semibold">27 岁</div>
+</div>
+<div class="bg-surface-container/60 px-2 py-1 rounded border border-outline-variant/20">
+<span class="text-on-surface-variant/70 text-[9px]">AFFINITY</span>
+<div class="text-primary font-semibold">极寒冰霜</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Equipment Slots Section -->
+<div class="hud-bracket flex-1 p-4 rounded bg-surface-container-low/75 backdrop-blur-lg border border-outline-variant/30 flex flex-col justify-between">
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between border-b border-outline-variant/20 pb-2">
+<span class="text-[11px] font-mono text-on-surface-variant tracking-wider uppercase">EQUIPMENT SLOTS // 装备挂载</span>
+<span class="text-[10px] font-mono text-primary/70">[1/3 已选定]</span>
+</div>
+<!-- SLOT 1: Primary Weapon (Active / Target) -->
+<div class="group relative p-3.5 rounded bg-surface-container-high/90 border-2 border-primary shadow-[0_0_20px_rgba(56,189,248,0.2)] cursor-pointer transition-all">
+<div class="absolute -top-2.5 right-3 px-2 py-0.5 rounded bg-primary text-slate-950 font-mono text-[9px] font-bold tracking-widest uppercase">
+                TARGET // 强化对象
+              </div>
+<div class="flex items-center gap-3.5">
+<div class="w-12 h-12 rounded bg-sky-950/60 border border-primary/50 flex items-center justify-center text-primary shrink-0 relative overflow-hidden">
+<div class="absolute inset-0 bg-primary/10 animate-pulse-glow"></div>
+<span class="material-symbols-outlined text-2xl relative z-10">swords</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="font-medium text-sm text-on-surface tracking-wide">霜刃剑</span>
+<span class="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-primary/20 text-primary border border-primary/30">+2</span>
+</div>
+<span class="text-[11px] font-mono text-secondary">ATK +48</span>
+</div>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-[11px] text-on-surface-variant font-light">近战物理 · 寒霜属性</span>
+<span class="text-[10px] font-mono text-primary/80">霜冻易伤 +12%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- SLOT 2: Armor Slot (Equipped) -->
+<div class="group relative p-3 rounded bg-surface-container/50 border border-outline-variant/30 hover:border-outline-variant/60 cursor-pointer transition-colors">
+<div class="flex items-center gap-3.5">
+<div class="w-12 h-12 rounded bg-surface-container-high/60 border border-outline-variant/40 flex items-center justify-center text-on-surface-variant shrink-0">
+<span class="material-symbols-outlined text-2xl">shield</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="text-sm text-on-surface/90 font-light tracking-wide">防具 · 躯干: 轻型巡防甲</span>
+<span class="text-[11px] font-mono text-on-surface-variant">DEF +22</span>
+</div>
+<div class="flex items-center gap-2 mt-1">
+<span class="text-[11px] text-on-surface-variant/70">高机动防具</span>
+<span class="text-[10px] font-mono text-secondary/80">移动惩罚 0</span>
+</div>
+</div>
+</div>
+</div>
+<!-- SLOT 3: Accessory Slot (Empty) -->
+<div class="p-3 rounded border border-dashed border-outline-variant/40 bg-surface/30 flex items-center gap-3.5 opacity-70 hover:opacity-100 transition-opacity cursor-pointer">
+<div class="w-12 h-12 rounded border border-dashed border-outline-variant/50 flex items-center justify-center text-on-surface-variant/40 shrink-0">
+<span class="material-symbols-outlined text-2xl">add</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="text-xs text-on-surface-variant tracking-wide font-light">饰品 · 佩饰: 未装备</span>
+<span class="text-[10px] font-mono text-on-surface-variant/50">[空置]</span>
+</div>
+<p class="text-[11px] text-on-surface-variant/60 mt-0.5">可镶嵌冰核徽记或共鸣晶石</p>
+</div>
+</div>
+</div>
+<!-- Bottom Equipment Action -->
+<div class="pt-4 border-t border-outline-variant/20 flex flex-col gap-2">
+<button class="w-full py-2.5 px-4 rounded border border-outline-variant/40 hover:border-primary/40 text-on-surface-variant hover:text-on-surface text-xs font-mono tracking-wider flex items-center justify-center gap-2 transition-all active:scale-[0.99]">
+<span class="px-1.5 py-0.5 rounded bg-surface-container-high text-[10px] text-primary border border-primary/30">X</span>
+<span>卸下装备 [UNMOUNT GEAR]</span>
+</button>
+<div class="text-[10px] font-mono text-center text-on-surface-variant/50">
+              SLOT RECONFIG PROTOCOL VERIFIED
+            </div>
+</div>
+</div>
+</section>
+<!-- ======================================================== -->
+<!-- COLUMN 2: CENTER PANEL (~820px) - Forge Workstation      -->
+<!-- ======================================================== -->
+<section class="w-[820px] h-full flex flex-col gap-4">
+<!-- Forge Matrix Container -->
+<div class="hud-bracket flex-1 p-6 rounded bg-surface-container-low/75 backdrop-blur-lg border border-outline-variant/30 flex flex-col justify-between">
+<!-- Top Title Bar -->
+<div class="flex items-center justify-between border-b border-outline-variant/20 pb-3">
+<div class="flex items-center gap-3">
+<span class="w-2 h-2 bg-primary"></span>
+<h1 class="text-sm font-headline tracking-widest text-on-surface uppercase">
+                ARMAMENT REFORGING MATRIX // 武器锻造推演
+              </h1>
+</div>
+<span class="text-xs font-mono text-primary/80">RESONANCE_FREQ: 114.28 Hz</span>
+</div>
+<!-- Middle Visual: Futuristic Wireframe Schematic & Transition Display -->
+<div class="relative py-4 flex flex-col items-center justify-center gap-6">
+<!-- Technical HUD Reticle Background Graphic -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20">
+<div class="w-72 h-72 rounded-full border border-primary border-dashed animate-[spin_60s_linear_infinite]"></div>
+<div class="absolute w-96 h-96 rounded-full border border-outline-variant/40"></div>
+<div class="absolute w-[500px] h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent"></div>
+<div class="absolute h-[320px] w-px bg-gradient-to-b from-transparent via-primary/40 to-transparent"></div>
+</div>
+<!-- Center Blade Blueprint Graphic Representation -->
+<div class="relative z-10 w-full max-w-lg h-36 flex items-center justify-center">
+<div class="relative flex items-center gap-8 w-full justify-center">
+<!-- Current Tier Preview -->
+<div class="w-48 p-3 rounded bg-surface-container-high/60 border border-outline-variant/40 text-center flex flex-col items-center">
+<span class="text-[10px] font-mono text-on-surface-variant uppercase tracking-widest">CURRENT // 当前阶位</span>
+<div class="text-2xl font-mono text-on-surface font-light my-1">+2</div>
+<div class="text-xs text-primary font-medium">白霜流线形研磨</div>
+<div class="text-[10px] font-mono text-on-surface-variant mt-1">ATK 48 · 冰冻积蓄 35</div>
+</div>
+<!-- Animated Resonance Flow Arrow -->
+<div class="flex flex-col items-center justify-center text-primary">
+<div class="w-10 h-10 rounded-full border border-primary/50 bg-primary/10 flex items-center justify-center shadow-[0_0_12px_rgba(56,189,248,0.4)]">
+<span class="material-symbols-outlined text-xl animate-pulse">arrow_forward</span>
+</div>
+<span class="text-[9px] font-mono tracking-widest text-primary/80 mt-1">RESONATE</span>
+</div>
+<!-- Target Tier Preview -->
+<div class="w-48 p-3 rounded bg-surface-container-high/90 border-2 border-primary/60 text-center flex flex-col items-center shadow-[0_0_20px_rgba(56,189,248,0.15)]">
+<span class="text-[10px] font-mono text-secondary uppercase tracking-widest">NEXT TIER // 目标阶位</span>
+<div class="text-2xl font-mono text-primary font-bold my-1">+3</div>
+<div class="text-xs text-secondary font-medium">极寒碎霜共鸣态</div>
+<div class="text-[10px] font-mono text-secondary mt-1">ATK 58 · 冰冻积蓄 45</div>
+</div>
+</div>
+</div>
+<!-- Detailed Stat Transformation Compare Table -->
+<div class="relative z-10 w-full grid grid-cols-4 gap-3 bg-surface-container/60 p-4 rounded border border-outline-variant/30">
+<div class="flex flex-col gap-1 border-r border-outline-variant/20 pr-3">
+<span class="text-[11px] text-on-surface-variant">基础物攻 (ATK)</span>
+<div class="flex items-baseline gap-2">
+<span class="text-sm font-mono text-on-surface font-normal">48</span>
+<span class="text-xs font-mono text-primary">→ 58</span>
+<span class="text-[10px] font-mono text-secondary font-semibold">[+10]</span>
+</div>
+</div>
+<div class="flex flex-col gap-1 border-r border-outline-variant/20 pr-3">
+<span class="text-[11px] text-on-surface-variant">综合命中率 (HIT)</span>
+<div class="flex items-baseline gap-2">
+<span class="text-sm font-mono text-on-surface font-normal">94%</span>
+<span class="text-xs font-mono text-primary">→ 96%</span>
+<span class="text-[10px] font-mono text-secondary font-semibold">[+2%]</span>
+</div>
+</div>
+<div class="flex flex-col gap-1 border-r border-outline-variant/20 pr-3">
+<span class="text-[11px] text-on-surface-variant">冰冻积蓄率 (FROST)</span>
+<div class="flex items-baseline gap-2">
+<span class="text-sm font-mono text-on-surface font-normal">35</span>
+<span class="text-xs font-mono text-primary">→ 45</span>
+<span class="text-[10px] font-mono text-secondary font-semibold">[+10]</span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-[11px] text-on-surface-variant">解锁附加特性</span>
+<div class="text-xs font-mono text-primary font-medium truncate flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-primary">ac_unit</span>
+<span>碎霜裂隙 · 激活</span>
+</div>
+</div>
+</div>
+<!-- Success Rate Bar & Safe Shield Protection Gauge -->
+<div class="relative z-10 w-full flex flex-col gap-2">
+<div class="flex items-center justify-between text-xs font-mono">
+<div class="flex items-center gap-2">
+<span class="text-on-surface">强化成功率</span>
+<span class="text-secondary font-bold text-sm">100%</span>
+<span class="px-2 py-0.5 rounded bg-secondary/10 text-secondary text-[10px] border border-secondary/20">保底共鸣生效中</span>
+</div>
+<div class="text-[11px] text-on-surface-variant/80 flex items-center gap-1">
+<span class="material-symbols-outlined text-xs text-secondary">verified_user</span>
+<span>无损毁风险 / 零阶位回退保护</span>
+</div>
+</div>
+<!-- Bar Graphic -->
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden p-0.5 border border-outline-variant/30 flex">
+<div class="w-full h-full bg-gradient-to-r from-sky-500 to-secondary rounded-full shadow-[0_0_10px_rgba(52,211,153,0.5)]"></div>
+</div>
+</div>
+<!-- Material & Cost Requirements Section -->
+<div class="relative z-10 w-full grid grid-cols-3 gap-3">
+<!-- Material 1: Crimson Ore -->
+<div class="p-3 rounded bg-surface-container/70 border border-outline-variant/30 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded bg-rose-950/40 border border-rose-500/30 flex items-center justify-center text-rose-400">
+<span class="material-symbols-outlined text-sm">hexagon</span>
+</div>
+<div>
+<div class="text-xs font-sans text-on-surface">赤铁</div>
+<div class="text-[10px] font-mono text-on-surface-variant">需求: 3 / 拥有: 14</div>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-secondary/10 text-secondary border border-secondary/30">满足</span>
+</div>
+<!-- Material 2: Frost Crystal -->
+<div class="p-3 rounded bg-surface-container/70 border border-outline-variant/30 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded bg-sky-950/40 border border-primary/30 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-sm">diamond</span>
+</div>
+<div>
+<div class="text-xs font-sans text-on-surface">霜晶</div>
+<div class="text-[10px] font-mono text-on-surface-variant">需求: 1 / 拥有: 06</div>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-secondary/10 text-secondary border border-secondary/30">满足</span>
+</div>
+<!-- Currency Fee -->
+<div class="p-3 rounded bg-surface-container/70 border border-outline-variant/30 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded bg-amber-950/40 border border-amber-500/30 flex items-center justify-center text-amber-400">
+<span class="material-symbols-outlined text-sm">payments</span>
+</div>
+<div>
+<div class="text-xs font-sans text-on-surface">工坊手续费</div>
+<div class="text-[10px] font-mono text-on-surface-variant">450 克朗</div>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-secondary/10 text-secondary border border-secondary/30">支付就绪</span>
+</div>
+</div>
+</div>
+<!-- Bottom Action Buttons Cluster with Gamepad Rings -->
+<div class="pt-4 border-t border-outline-variant/20 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<button class="px-4 py-2.5 rounded border border-outline-variant/40 hover:border-outline-variant text-on-surface-variant hover:text-on-surface text-xs font-mono tracking-wider flex items-center gap-2 transition-all">
+<span class="px-1.5 py-0.5 rounded bg-surface-container-high text-[10px] text-on-surface-variant border border-outline-variant/40">Y</span>
+<span>检视武器详细属性</span>
+</button>
+<button class="px-4 py-2.5 rounded border border-outline-variant/40 hover:border-outline-variant text-on-surface-variant hover:text-on-surface text-xs font-mono tracking-wider flex items-center gap-2 transition-all">
+<span>连续强化设置</span>
+</button>
+</div>
+<div class="flex items-center gap-4">
+<!-- Cancel / Back -->
+<button class="px-5 py-3 rounded border border-outline-variant/40 hover:border-outline-variant/80 text-on-surface-variant hover:text-on-surface text-xs font-mono tracking-wider flex items-center gap-2 transition-all">
+<span class="px-1.5 py-0.5 rounded bg-surface-container text-[10px] text-tertiary border border-tertiary/30">B</span>
+<span>取消选择</span>
+</button>
+<!-- PRIMARY ACTION: Cyan Glow Focus Ring -->
+<button class="relative group px-8 py-3.5 rounded bg-primary text-slate-950 font-bold text-sm tracking-wider flex items-center gap-3 transition-all transform active:scale-95 ring-4 ring-sky-400 shadow-[0_0_28px_rgba(56,189,248,0.7)] hover:shadow-[0_0_36px_rgba(56,189,248,0.9)]">
+<span class="px-2 py-0.5 rounded bg-slate-950 text-primary font-mono text-xs font-extrabold border border-primary/40">A</span>
+<span class="font-headline tracking-widest uppercase">确认强化装备</span>
+<span class="material-symbols-outlined text-lg">bolt</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================================================== -->
+<!-- COLUMN 3: RIGHT PANEL (~580px) - Material Depot Inventory-->
+<!-- ======================================================== -->
+<section class="w-[580px] h-full flex flex-col gap-4">
+<div class="hud-bracket flex-1 p-5 rounded bg-surface-container-low/75 backdrop-blur-lg border border-outline-variant/30 flex flex-col justify-between">
+<div class="flex flex-col gap-3">
+<!-- Depot Header -->
+<div class="flex items-center justify-between border-b border-outline-variant/20 pb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">inventory_2</span>
+<span class="text-xs font-headline tracking-widest text-on-surface uppercase">
+                  DEPOT INVENTORY // 冶炼锻材仓储
+                </span>
+</div>
+<span class="text-xs font-mono text-on-surface-variant">容量: 18/60</span>
+</div>
+<!-- Filter Pills -->
+<div class="flex items-center gap-1.5 text-xs">
+<button class="px-3 py-1.5 rounded bg-primary/20 text-primary border border-primary/40 font-medium">
+                全部素材 (12)
+              </button>
+<button class="px-3 py-1.5 rounded bg-surface-container/60 hover:bg-surface-variant/40 text-on-surface-variant border border-outline-variant/30">
+                晶矿核心
+              </button>
+<button class="px-3 py-1.5 rounded bg-surface-container/60 hover:bg-surface-variant/40 text-on-surface-variant border border-outline-variant/30">
+                锻造铁淬
+              </button>
+<button class="px-3 py-1.5 rounded bg-surface-container/60 hover:bg-surface-variant/40 text-on-surface-variant border border-outline-variant/30">
+                强化附魔
+              </button>
+</div>
+<!-- Materials Grid List -->
+<div class="grid grid-cols-2 gap-2.5 mt-1 max-h-[500px]">
+<!-- Item 1: 赤铁 (Selected Catalyst) -->
+<div class="p-2.5 rounded bg-surface-container-high/70 border border-primary/40 flex items-start gap-2.5 cursor-pointer hover:border-primary transition-colors">
+<div class="w-10 h-10 rounded bg-rose-950/40 border border-rose-500/30 flex items-center justify-center text-rose-400 shrink-0">
+<span class="material-symbols-outlined text-base">hexagon</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-on-surface truncate">赤铁</span>
+<span class="text-xs font-mono font-bold text-rose-400">×14</span>
+</div>
+<div class="text-[10px] text-rose-300 font-mono mt-0.5">稀有级锻料</div>
+<div class="text-[10px] text-on-surface-variant/70 truncate mt-0.5">赤原裂谷高纯度矿料</div>
+</div>
+</div>
+<!-- Item 2: 霜晶 (Selected Catalyst) -->
+<div class="p-2.5 rounded bg-surface-container-high/70 border border-primary/40 flex items-start gap-2.5 cursor-pointer hover:border-primary transition-colors">
+<div class="w-10 h-10 rounded bg-sky-950/40 border border-primary/40 flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-base">diamond</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-on-surface truncate">霜晶</span>
+<span class="text-xs font-mono font-bold text-primary">×06</span>
+</div>
+<div class="text-[10px] text-primary font-mono mt-0.5">史诗级晶魄</div>
+<div class="text-[10px] text-on-surface-variant/70 truncate mt-0.5">永冻冰川凝结核心</div>
+</div>
+</div>
+<!-- Item 3: 极寒精钢 -->
+<div class="p-2.5 rounded bg-surface-container/50 border border-outline-variant/30 flex items-start gap-2.5 cursor-pointer hover:border-outline-variant/60 transition-colors">
+<div class="w-10 h-10 rounded bg-slate-900 border border-outline-variant/40 flex items-center justify-center text-slate-300 shrink-0">
+<span class="material-symbols-outlined text-base">layers</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-on-surface/90 truncate">极寒精钢</span>
+<span class="text-xs font-mono text-on-surface-variant">×22</span>
+</div>
+<div class="text-[10px] text-slate-400 font-mono mt-0.5">精良级金属</div>
+<div class="text-[10px] text-on-surface-variant/70 truncate mt-0.5">耐低温淬火装甲板</div>
+</div>
+</div>
+<!-- Item 4: 铭文石板 -->
+<div class="p-2.5 rounded bg-surface-container/50 border border-outline-variant/30 flex items-start gap-2.5 cursor-pointer hover:border-outline-variant/60 transition-colors">
+<div class="w-10 h-10 rounded bg-amber-950/30 border border-amber-500/30 flex items-center justify-center text-amber-300 shrink-0">
+<span class="material-symbols-outlined text-base">history_edu</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-on-surface/90 truncate">铭文石板</span>
+<span class="text-xs font-mono text-amber-300">×03</span>
+</div>
+<div class="text-[10px] text-amber-400 font-mono mt-0.5">传说级古籍</div>
+<div class="text-[10px] text-on-surface-variant/70 truncate mt-0.5">骑士团剑术秘典铭片</div>
+</div>
+</div>
+<!-- Item 5: 熔融核心 -->
+<div class="p-2.5 rounded bg-surface-container/50 border border-outline-variant/30 flex items-start gap-2.5 cursor-pointer hover:border-outline-variant/60 transition-colors">
+<div class="w-10 h-10 rounded bg-orange-950/30 border border-ember/30 flex items-center justify-center text-ember shrink-0">
+<span class="material-symbols-outlined text-base">whatshot</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-on-surface/90 truncate">熔融核心</span>
+<span class="text-xs font-mono text-ember">×01</span>
+</div>
+<div class="text-[10px] text-ember font-mono mt-0.5">史诗级异火</div>
+<div class="text-[10px] text-on-surface-variant/70 truncate mt-0.5">地心热源微缩单元</div>
+</div>
+</div>
+<!-- Item 6: 纯净冰晶核心 -->
+<div class="p-2.5 rounded bg-surface-container/50 border border-outline-variant/30 flex items-start gap-2.5 cursor-pointer hover:border-outline-variant/60 transition-colors">
+<div class="w-10 h-10 rounded bg-cyan-950/40 border border-cyan-400/40 flex items-center justify-center text-cyan-300 shrink-0">
+<span class="material-symbols-outlined text-base">hub</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-on-surface/90 truncate">纯净冰晶核心</span>
+<span class="text-xs font-mono text-cyan-300">×02</span>
+</div>
+<div class="text-[10px] text-cyan-300 font-mono mt-0.5">极品聚合相</div>
+<div class="text-[10px] text-on-surface-variant/70 truncate mt-0.5">零度绝对纯净晶胞</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Selected Material Detail Preview Card -->
+<div class="mt-4 p-4 rounded bg-surface-container/80 border border-outline-variant/30 flex flex-col gap-2">
+<div class="flex items-center justify-between border-b border-outline-variant/20 pb-2">
+<span class="text-[10px] font-mono text-primary tracking-widest uppercase">CATALYST TELEMETRY // 锻材效果预览</span>
+<span class="text-[10px] font-mono text-secondary">已配置为当前锻造媒剂</span>
+</div>
+<p class="text-xs text-on-surface-variant font-light leading-relaxed">
+              「霜晶」注入可激活武器的深层寒霜共鸣，不仅能直接赋予 <span class="text-primary font-mono">+10 冰冻积蓄</span>，还将激发白霜流派特有的碎霜破绽破防机制。
+            </p>
+<div class="flex items-center justify-between pt-1 text-[11px] font-mono">
+<span class="text-on-surface-variant/70">共鸣亲和度: <span class="text-primary font-bold">100% 极高</span></span>
+<span class="text-on-surface-variant/70">工坊加成: <span class="text-secondary">+15% 临界效能</span></span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- ========================================== -->
+<!-- 3. FOOTER: GAMEPAD BAR (Height: 40px)      -->
+<!-- ========================================== -->
+<footer class="relative z-50 h-10 w-full px-8 bg-surface/90 backdrop-blur-md border-t border-outline-variant/30 flex items-center justify-between select-none">
+<!-- Left: Gamepad Prompts -->
+<div class="flex items-center gap-6 font-mono text-xs tracking-wider text-on-surface-variant">
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.2 rounded bg-surface-container-high text-primary font-bold text-[10px] border border-primary/30">A</span>
+<span class="text-on-surface text-[11px] font-sans">确认强化</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.2 rounded bg-surface-container-high text-on-surface font-bold text-[10px] border border-outline-variant">X</span>
+<span class="text-on-surface-variant text-[11px] font-sans">卸下装备</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.2 rounded bg-surface-container-high text-on-surface font-bold text-[10px] border border-outline-variant">Y</span>
+<span class="text-on-surface-variant text-[11px] font-sans">检视武器详情</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="px-1.5 py-0.2 rounded bg-surface-container-high text-tertiary font-bold text-[10px] border border-tertiary/30">B</span>
+<span class="text-on-surface-variant text-[11px] font-sans">返回枢纽</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant/80">
+<span class="px-1.5 py-0.2 rounded bg-surface-container text-[10px] border border-outline-variant/40">LT / RT</span>
+<span class="text-[11px] font-sans">切换角色</span>
+</div>
+</div>
+<!-- Right: Technical Engine & Hardware Status -->
+<div class="flex items-center gap-4 font-mono text-[11px] text-on-surface-variant/70">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span>XBOX WIRELESS CONTROLLER CONNECTED</span>
+</div>
+<div class="h-3 w-[1px] bg-outline-variant/40"></div>
+<span>BUILD 2025.04.14-STABLE</span>
+</div>
+</footer>
+</div>
+</body></html>

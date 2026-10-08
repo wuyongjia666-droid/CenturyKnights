@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080, initial-scale=1.0, user-scalable=no">
+  <title>百年骑士 - 城堡中枢</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            void: '#070A0E',
+            surface: {
+              DEFAULT: '#0D1219',
+              raised: '#131A24',
+              frost: 'rgba(16, 23, 34, 0.65)',
+            },
+            accent: {
+              DEFAULT: '#6ED4FF',
+              glow: 'rgba(110, 212, 255, 0.25)',
+              dim: 'rgba(110, 212, 255, 0.12)'
+            },
+            ice: '#E2F1F8',
+            subtle: '#6A7D93',
+            borderStroke: 'rgba(255, 255, 255, 0.08)',
+            borderHighlight: 'rgba(110, 212, 255, 0.4)'
+          },
+          fontFamily: {
+            serif: ['"Noto Sans SC"', 'serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            cinzel: ['Noto Sans SC', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+    }
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 1920px;
+      height: 1080px;
+      max-width: 1920px;
+      max-height: 1080px;
+      overflow: hidden;
+      background-color: #070A0E;
+      color: #E2F1F8;
+      font-family: 'Noto Sans SC', serif;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    .frosted-panel {
+      background: rgba(13, 19, 28, 0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+    .gamepad-focus-ring {
+      outline: 2px solid #6ED4FF;
+      outline-offset: 3px;
+      box-shadow: 0 0 20px rgba(110, 212, 255, 0.45), inset 0 0 12px rgba(110, 212, 255, 0.15);
+    }
+    /* Subtle background grid & atmospheric gradient */
+    .bg-atmosphere {
+      background: 
+        radial-gradient(circle at 80% 25%, rgba(110, 212, 255, 0.04) 0%, transparent 60%),
+        radial-gradient(circle at 15% 85%, rgba(44, 76, 102, 0.08) 0%, transparent 50%),
+        linear-gradient(180deg, #070A0E 0%, #090E16 50%, #06080C 100%);
+    }
+    .subtle-line {
+      background: linear-gradient(90deg, rgba(110, 212, 255, 0.3) 0%, rgba(255, 255, 255, 0.06) 50%, transparent 100%);
+    }
+  </style>
+</head>
+<body class="w-[1920px] h-[1080px] bg-atmosphere relative flex flex-col justify-between overflow-hidden text-ice">
+
+  <!-- ================= TOP BAR ================= -->
+  <header class="w-full h-[76px] px-10 flex items-center justify-between frosted-panel border-b border-white/10 z-30">
+    <div class="flex items-center space-x-8">
+      <!-- Title / Castle Hub Location -->
+      <div class="flex items-center space-x-3.5">
+        <span class="inline-block w-2 h-2 rounded-full bg-accent shadow-[0_0_8px_#6ED4FF]"></span>
+        <div class="flex items-baseline space-x-2">
+          <span class="text-xs uppercase tracking-[0.3em] text-accent/70 font-mono">SEAT OF FROST</span>
+          <h1 class="text-xl font-medium tracking-widest text-ice drop-shadow-sm">「北境 · 霜堡」</h1>
+        </div>
+      </div>
+      <div class="h-4 w-px bg-white/15"></div>
+      <div class="flex items-center space-x-2 text-xs text-subtle font-mono tracking-wider">
+        <span class="text-white/40">CENTURY KNIGHTS</span>
+        <span class="text-white/20">/</span>
+        <span class="text-accent/90">CHAPTER IV</span>
+      </div>
+    </div>
+
+    <!-- 4 Resource Chips with Monospace Numbers -->
+    <div class="flex items-center space-x-4">
+      <!-- 金钱 -->
+      <div class="flex items-center space-x-3 px-4 py-2 rounded bg-white/[0.03] border border-white/5 hover:border-white/15 transition">
+        <span class="material-symbols-outlined text-accent text-lg">monetization_on</span>
+        <span class="text-xs text-subtle font-light">金钱</span>
+        <span class="font-mono text-sm tracking-wider text-ice font-medium">12,480</span>
+      </div>
+
+      <!-- 粮草 -->
+      <div class="flex items-center space-x-3 px-4 py-2 rounded bg-white/[0.03] border border-white/5 hover:border-white/15 transition">
+        <span class="material-symbols-outlined text-[#9FD8A3] text-lg">grain</span>
+        <span class="text-xs text-subtle font-light">粮草</span>
+        <span class="font-mono text-sm tracking-wider text-ice font-medium">3,260</span>
+      </div>
+
+      <!-- 声望 -->
+      <div class="flex items-center space-x-3 px-4 py-2 rounded bg-white/[0.03] border border-white/5 hover:border-white/15 transition">
+        <span class="material-symbols-outlined text-[#E0C088] text-lg">military_tech</span>
+        <span class="text-xs text-subtle font-light">声望</span>
+        <span class="font-mono text-sm tracking-wider text-ice font-medium">860</span>
+      </div>
+
+      <!-- 赤历 -->
+      <div class="flex items-center space-x-3 px-4 py-2 rounded bg-white/[0.03] border border-white/5 hover:border-white/15 transition">
+        <span class="material-symbols-outlined text-[#89B9E1] text-lg">ac_unit</span>
+        <span class="text-xs text-subtle font-light">赤历</span>
+        <span class="font-mono text-sm tracking-wider text-accent font-medium">128 · 霜降</span>
+      </div>
+
+      <!-- System Quick Prompt/Badge -->
+      <div class="ml-4 pl-4 border-l border-white/10 flex items-center space-x-2 text-white/50 hover:text-white cursor-pointer transition">
+        <span class="material-symbols-outlined text-xl">settings</span>
+        <div class="font-mono text-[11px] px-1.5 py-0.5 rounded border border-white/20 bg-white/5 text-white/70">ESC</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN BODY LAYOUT ================= -->
+  <main class="w-full h-[1004px] px-10 py-8 flex gap-8 relative z-20">
+
+    <!-- LEFT NAVIGATION RAIL: 10 Items (Icon + Label), '战役' focused with Gamepad Ring -->
+    <aside class="w-[210px] h-full flex flex-col justify-between frosted-panel rounded-lg p-3 py-5 shrink-0">
+      <div class="space-y-1">
+        <div class="px-3 pb-3 mb-2 border-b border-white/10 flex items-center justify-between">
+          <span class="text-[11px] font-mono tracking-widest text-white/40">NAVIGATION</span>
+          <span class="text-[10px] font-mono text-accent/70 bg-accent/10 px-1.5 py-0.5 rounded">D-PAD</span>
+        </div>
+
+        <!-- 1. 战役 (FOCUSED with visible gamepad focus ring) -->
+        <button class="w-full flex items-center space-x-3.5 px-3.5 py-3 rounded-md bg-accent/20 text-white font-medium relative gamepad-focus-ring group text-left transition duration-150">
+          <span class="material-symbols-outlined text-accent text-xl">swords</span>
+          <span class="text-sm tracking-wider font-medium text-white">战役</span>
+          <span class="ml-auto font-mono text-[10px] text-accent font-semibold px-1 py-0.2 bg-black/40 rounded border border-accent/40">A</span>
+        </button>
+
+        <!-- 2. 佣兵 -->
+        <button class="w-full flex items-center space-x-3.5 px-3.5 py-2.5 rounded-md text-subtle hover:text-ice hover:bg-white/[0.04] text-left transition duration-150">
+          <span class="material-symbols-outlined text-lg">shield_person</span>
+          <span class="text-sm tracking-wide">佣兵</span>
+        </button>
+
+        <!-- 3. 酒馆 -->
+        <button class="w-full flex items-center space-x-3.5 px-3.5 py-2.5 rounded-md text-subtle hover:text-ice hover:bg-white/[0.04] text-left transition duration-150">
+          <span class="material-symbols-outlined text-lg">sports_bar</span>
+          <span class="text-sm tracking-wide">酒馆</span>
+          <span class="ml-auto w-1.5 h-1.5 rounded-full bg-accent/80"></span>
+        </button>
+
+        <!-- 4. 锻造 -->
+        <button class="w-full flex items-center space-x-3.5 px-3.5 py-2.5 rounded-md text-subtle hover:text-ice hover:bg-white/[0.04] text-left transition duration-150">
+          <span class="material-symbols-outlined text-lg">hardware</span>
+          <span class="text-sm tracking-wide">锻造</span>
+        </button>
+
+        <!-- 5. 市集 -->
+        <button class="w-full flex items-center space-x-3.5 px-3.5 py-2.5 rounded-md text-subtle hover:text-ice hover:bg-white/[0.04] text-left transition duration-150">
+          <span class="material-symbols-outlined text-lg">storefront</span>
+          <span class="text-sm tracking-wide">市集</span>
+        </button>
+
+        <!-- 6. 神殿 -->
+        <button class="w-full flex items-center space-x-3.5 px-3.5 py-2.5 rounded-md text-subtle hover:text-ice hover:bg-white/[0.04] text-left transition duration-150">
+          <span class="material-symbols-outlined text-lg">temple_buddhist</span>
+          <span class="text-sm tracking-wide">神殿</span>
+        </button>
+
+        <!-- 7. 领地 -->
+        <button class="w-full flex items-center space-x-3.5 px-3.5 py-2.5 rounded-md text-subtle hover:text-ice hover:bg-white/[0.04] text-left transition duration-150">
+          <span class="material-symbols-outlined text-lg">fort</span>
+          <span class="text-sm tracking-wide">领地</span>
+        </button>
+
+        <!-- 8. 联姻 -->
+        <button class="w-full flex items-center space-x-3.5 px-3.5 py-2.5 rounded-md text-subtle hover:text-ice hover:bg-white/[0.04] text-left transition duration-150">
+          <span class="material-symbols-outlined text-lg">favorite</span>
+          <span class="text-sm tracking-wide">联姻</span>
+          <span class="ml-auto w-1.5 h-1.5 rounded-full bg-accent/80"></span>
+        </button>
+
+        <!-- 9. 谱系 -->
+        <button class="w-full flex items-center space-x-3.5 px-3.5 py-2.5 rounded-md text-subtle hover:text-ice hover:bg-white/[0.04] text-left transition duration-150">
+          <span class="material-symbols-outlined text-lg">account_tree</span>
+          <span class="text-sm tracking-wide">谱系</span>
+        </button>
+
+        <!-- 10. 舆图 -->
+        <button class="w-full flex items-center space-x-3.5 px-3.5 py-2.5 rounded-md text-subtle hover:text-ice hover:bg-white/[0.04] text-left transition duration-150">
+          <span class="material-symbols-outlined text-lg">explore</span>
+          <span class="text-sm tracking-wide">舆图</span>
+        </button>
+      </div>
+
+      <!-- Rail Footer: Status indicators -->
+      <div class="pt-4 border-t border-white/10 px-2">
+        <div class="flex items-center justify-between text-[11px] text-white/40 font-mono">
+          <span>GAMEPAD</span>
+          <span class="flex items-center gap-1 text-accent/80"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span> CONNECTED</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- CENTER: MAIN STAGE 「本季事务」 with 3 Editorial Cards -->
+    <section class="flex-1 h-full frosted-panel rounded-lg p-9 flex flex-col justify-between relative overflow-hidden">
+      <!-- Hairline and Header of the Stage -->
+      <div>
+        <div class="flex items-baseline justify-between mb-2">
+          <div class="flex items-center space-x-4">
+            <span class="text-xs uppercase tracking-[0.25em] text-accent font-mono font-medium">SEASONAL DOSSIER</span>
+            <div class="w-12 h-px bg-accent/40"></div>
+          </div>
+          <span class="text-xs font-mono text-white/40">ENTRY 01-03 / 03 PENDING</span>
+        </div>
+
+        <div class="flex items-end justify-between pb-6 border-b border-white/10">
+          <h2 class="text-3xl font-light tracking-widest text-ice">本季事务</h2>
+          <p class="text-xs text-subtle tracking-wider font-light">霜降之月 · 诸领地军情备忘录及家族事务呈览</p>
+        </div>
+
+        <!-- 3 EDITORIAL CARDS -->
+        <div class="grid grid-cols-3 gap-6 mt-8">
+          
+          <!-- Card 1: 北境边境告急 -->
+          <div class="group frosted-panel bg-white/[0.02] hover:bg-white/[0.05] p-7 rounded-lg border border-white/10 hover:border-accent/40 transition-all duration-200 flex flex-col justify-between h-[510px] relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-28 h-28 bg-red-500/5 blur-3xl pointer-events-none"></div>
+            <div>
+              <div class="flex items-center justify-between mb-5">
+                <span class="text-[11px] font-mono text-red-300/80 bg-red-950/40 border border-red-500/20 px-2 py-0.5 rounded tracking-widest">URGENT · 军务</span>
+                <span class="text-xs font-mono text-white/30">№ 01</span>
+              </div>
+              <h3 class="text-xl font-medium text-white mb-4 tracking-wider group-hover:text-accent transition">北境边境告急</h3>
+              <p class="text-sm text-subtle leading-relaxed font-light mb-6">
+                黑松林哨塔烽燧已燃，游骑探查到蛮族重甲先锋营正逼近霜隘关卡。
+              </p>
+              
+              <!-- Data preview specs -->
+              <div class="mt-8 pt-5 border-t border-white/5 space-y-2.5 font-mono text-xs">
+                <div class="flex justify-between text-white/40">
+                  <span>威慑等级</span>
+                  <span class="text-red-400 font-medium">RANK IV (极高)</span>
+                </div>
+                <div class="flex justify-between text-white/40">
+                  <span>预计交战期</span>
+                  <span class="text-ice">3 日后</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Text Action -->
+            <div class="pt-6 border-t border-white/10 flex items-center justify-between">
+              <span class="text-xs font-mono text-white/40 group-hover:text-white/60">ACTION</span>
+              <button class="inline-flex items-center space-x-1.5 text-sm font-medium text-accent hover:text-white transition tracking-wider">
+                <span>调遣守军御敌</span>
+                <span class="material-symbols-outlined text-base">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 2: 酒馆新到两名佣兵 -->
+          <div class="group frosted-panel bg-white/[0.02] hover:bg-white/[0.05] p-7 rounded-lg border border-white/10 hover:border-accent/40 transition-all duration-200 flex flex-col justify-between h-[510px] relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-28 h-28 bg-accent/5 blur-3xl pointer-events-none"></div>
+            <div>
+              <div class="flex items-center justify-between mb-5">
+                <span class="text-[11px] font-mono text-accent/80 bg-accent/10 border border-accent/20 px-2 py-0.5 rounded tracking-widest">RECRUIT · 征募</span>
+                <span class="text-xs font-mono text-white/30">№ 02</span>
+              </div>
+              <h3 class="text-xl font-medium text-white mb-4 tracking-wider group-hover:text-accent transition">酒馆新到两名佣兵</h3>
+              <p class="text-sm text-subtle leading-relaxed font-light mb-6">
+                来自东境荒原的流浪重剑士与神圣修会退役修士正暂歇于鹿角酒馆。
+              </p>
+
+              <!-- Data preview specs -->
+              <div class="mt-8 pt-5 border-t border-white/5 space-y-2.5 font-mono text-xs">
+                <div class="flex justify-between text-white/40">
+                  <span>推荐资质</span>
+                  <span class="text-accent font-medium">B+ / S-</span>
+                </div>
+                <div class="flex justify-between text-white/40">
+                  <span>留驻期限</span>
+                  <span class="text-ice">本季结束止</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Text Action -->
+            <div class="pt-6 border-t border-white/10 flex items-center justify-between">
+              <span class="text-xs font-mono text-white/40 group-hover:text-white/60">ACTION</span>
+              <button class="inline-flex items-center space-x-1.5 text-sm font-medium text-accent hover:text-white transition tracking-wider">
+                <span>前往酒馆接洽</span>
+                <span class="material-symbols-outlined text-base">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 3: 联姻回函未拆 -->
+          <div class="group frosted-panel bg-white/[0.02] hover:bg-white/[0.05] p-7 rounded-lg border border-white/10 hover:border-accent/40 transition-all duration-200 flex flex-col justify-between h-[510px] relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-28 h-28 bg-purple-500/5 blur-3xl pointer-events-none"></div>
+            <div>
+              <div class="flex items-center justify-between mb-5">
+                <span class="text-[11px] font-mono text-purple-300/80 bg-purple-950/40 border border-purple-500/20 px-2 py-0.5 rounded tracking-widest">ALLIANCE · 家族</span>
+                <span class="text-xs font-mono text-white/30">№ 03</span>
+              </div>
+              <h3 class="text-xl font-medium text-white mb-4 tracking-wider group-hover:text-accent transition">联姻回函未拆</h3>
+              <p class="text-sm text-subtle leading-relaxed font-light mb-6">
+                银誓领主特使已送达蜡封回信，事关次子艾尔温与海港贵女之结盟。
+              </p>
+
+              <!-- Data preview specs -->
+              <div class="mt-8 pt-5 border-t border-white/5 space-y-2.5 font-mono text-xs">
+                <div class="flex justify-between text-white/40">
+                  <span>结盟期望</span>
+                  <span class="text-[#E0C088] font-medium">商贸协定 / 海军借调</span>
+                </div>
+                <div class="flex justify-between text-white/40">
+                  <span>信笺状态</span>
+                  <span class="text-purple-300">蜡印完好</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Text Action -->
+            <div class="pt-6 border-t border-white/10 flex items-center justify-between">
+              <span class="text-xs font-mono text-white/40 group-hover:text-white/60">ACTION</span>
+              <button class="inline-flex items-center space-x-1.5 text-sm font-medium text-accent hover:text-white transition tracking-wider">
+                <span>拆启阅览回函</span>
+                <span class="material-symbols-outlined text-base">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Bottom Stage Footer / Gamepad Quick Hotkeys Bar -->
+      <div class="pt-6 border-t border-white/10 flex items-center justify-between text-xs text-subtle">
+        <div class="flex items-center space-x-8 font-mono">
+          <div class="flex items-center space-x-2">
+            <span class="w-5 h-5 rounded border border-white/20 bg-white/5 flex items-center justify-center text-[10px] text-white">A</span>
+            <span>确认 / 选定</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="w-5 h-5 rounded border border-white/20 bg-white/5 flex items-center justify-center text-[10px] text-white">B</span>
+            <span>返回中枢</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="w-5 h-5 rounded border border-white/20 bg-white/5 flex items-center justify-center text-[10px] text-white">X</span>
+            <span>全览档案</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="w-5 h-5 rounded border border-white/20 bg-white/5 flex items-center justify-center text-[10px] text-white">Y</span>
+            <span>快速休整</span>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-4">
+          <span class="text-xs font-light text-white/50">当前中枢守备安定度: <span class="font-mono text-accent">94%</span></span>
+          <span class="inline-block w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT EDGE: SLIM PORTRAIT PLATE 「白霜·凛, 27, 霜刃骑士」 -->
+    <aside class="w-[340px] h-full frosted-panel rounded-lg p-6 flex flex-col justify-between shrink-0 relative overflow-hidden">
+      <!-- Top header for the plate -->
+      <div>
+        <div class="flex items-center justify-between pb-4 border-b border-white/10">
+          <span class="text-[11px] font-mono tracking-widest text-accent uppercase">KNIGHT ROSTER</span>
+          <span class="text-xs font-mono text-white/30">PLATE #01</span>
+        </div>
+
+        <!-- Portrait Silhouette / Stylized Figure Representation -->
+        <div class="my-6 w-full h-[360px] rounded-md bg-gradient-to-b from-[#111A26] to-[#0A1017] border border-white/10 relative overflow-hidden flex flex-col items-center justify-end p-5">
+          <!-- Subtle Frost Background Pattern -->
+          <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#6ED4FF_1px,transparent_1px)] [background-size:16px_16px]"></div>
+          
+          <!-- Geometric Knight Silhouette & Sigil -->
+          <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <svg width="220" height="260" viewBox="0 0 200 240" fill="none" class="opacity-35 text-accent stroke-current" stroke-width="1.2">
+              <!-- Helmet & Pauldron stylization -->
+              <path d="M100 30 L130 75 L120 130 L100 160 L80 130 L70 75 Z" />
+              <path d="M100 20 L100 170" stroke-dasharray="3 3" />
+              <path d="M60 90 L140 90" />
+              <path d="M40 140 L100 170 L160 140" />
+              <path d="M50 180 L100 215 L150 180" />
+              <circle cx="100" cy="90" r="45" stroke-opacity="0.4" />
+              <circle cx="100" cy="90" r="65" stroke-dasharray="2 4" stroke-opacity="0.3" />
+            </svg>
+          </div>
+
+          <!-- Bottom subtle lighting -->
+          <div class="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[#0D131C] to-transparent z-10"></div>
+
+          <!-- Overlay Badge in portrait -->
+          <div class="relative z-20 w-full flex items-center justify-between text-xs font-mono">
+            <span class="px-2 py-0.5 rounded bg-black/60 border border-white/10 text-accent">ACTIVE GUARD</span>
+            <span class="text-white/40">SR-709</span>
+          </div>
+        </div>
+
+        <!-- Knight Typography & Details -->
+        <div class="space-y-4">
+          <div>
+            <div class="flex items-baseline justify-between mb-1">
+              <h3 class="text-2xl font-normal text-white tracking-widest">白霜 · 凛</h3>
+              <span class="text-sm font-mono text-subtle">27 岁</span>
+            </div>
+            <p class="text-sm font-light text-accent tracking-wider font-mono">霜刃骑士 · FROSTBLADE KNIGHT</p>
+          </div>
+
+          <!-- Attributes Grid -->
+          <div class="grid grid-cols-2 gap-3 pt-3 border-t border-white/5 font-mono text-xs">
+            <div class="p-2.5 rounded bg-white/[0.02] border border-white/5">
+              <span class="text-white/40 block text-[10px] mb-1">统率力 (LEAD)</span>
+              <span class="text-base text-ice font-medium">88 <span class="text-accent text-xs">+3</span></span>
+            </div>
+            <div class="p-2.5 rounded bg-white/[0.02] border border-white/5">
+              <span class="text-white/40 block text-[10px] mb-1">武勇 (VALOR)</span>
+              <span class="text-base text-ice font-medium">94 <span class="text-accent text-xs">+5</span></span>
+            </div>
+            <div class="p-2.5 rounded bg-white/[0.02] border border-white/5">
+              <span class="text-white/40 block text-[10px] mb-1">忠诚度 (LOYAL)</span>
+              <span class="text-base text-ice font-medium">100%</span>
+            </div>
+            <div class="p-2.5 rounded bg-white/[0.02] border border-white/5">
+              <span class="text-white/40 block text-[10px] mb-1">佩剑 (BLADE)</span>
+              <span class="text-xs text-ice truncate block mt-0.5 font-sans font-light">「雪寂之痕」</span>
+            </div>
+          </div>
+
+          <p class="text-xs text-subtle leading-relaxed font-light pt-2">
+            北境白霜家族第七代次席骑士，曾于第三次朔风之战中单骑扼守断龙桥。
+          </p>
+        </div>
+      </div>
+
+      <!-- Action Footer for Portrait Plate -->
+      <div class="pt-5 border-t border-white/10 flex items-center justify-between">
+        <button class="w-full py-2.5 px-4 rounded bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-xs font-mono tracking-wider text-ice hover:text-white transition flex items-center justify-center space-x-2">
+          <span class="material-symbols-outlined text-sm">badge</span>
+          <span>检视骑士完整档案</span>
+        </button>
+      </div>
+    </aside>
+
+  </main>
+
+</body>
+</html>

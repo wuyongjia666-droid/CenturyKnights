@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CenturyKnights Frost // 组件规范设计器</title>
+<!-- Google Fonts: Public Sans & JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            surface: {
+              DEFAULT: '#0c0f14',
+              low: '#080a0d',
+              container: '#11161f',
+              high: '#18202c',
+              highest: '#222d3d'
+            },
+            primary: {
+              DEFAULT: '#38bdf8',
+              container: '#0c4a6e',
+              focus: '#7dd3fc'
+            },
+            secondary: {
+              DEFAULT: '#34d399',
+              container: '#064e3b'
+            },
+            tertiary: {
+              DEFAULT: '#f87171',
+              container: '#7f1d1d'
+            },
+            ember: {
+              DEFAULT: '#fb923c'
+            },
+            outline: {
+              DEFAULT: '#334155',
+              variant: '#1e293b'
+            }
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Public Sans", "sans-serif"],
+            display: ["Public Sans", "sans-serif"],
+            body: ["Public Sans", "sans-serif"],
+            label: ["Public Sans", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    /* Fixed 1920x1080 viewport lock */
+    body, html {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      background-color: #05070a;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    }
+
+    /* Ambient Cryolite Grid Canvas */
+    .cryo-grid {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(56, 189, 248, 0.035) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(56, 189, 248, 0.035) 1px, transparent 1px);
+    }
+
+    /* Blinking Cursor Simulation */
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    .cursor-blink {
+      animation: blink 1s infinite;
+    }
+
+    /* Subtle Specimen Highlight Edge */
+    .frost-border {
+      box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08), 0 0 16px -4px rgba(56, 189, 248, 0.05);
+    }
+    .frost-card-glow {
+      box-shadow: inset 0 1px 0 0 rgba(56, 189, 248, 0.25), 0 8px 32px -8px rgba(0, 0, 0, 0.85);
+    }
+  </style>
+</head>
+<body class="dark font-body text-slate-200 antialiased relative cryo-grid flex flex-col justify-between selection:bg-cyan-500/30 selection:text-cyan-200">
+<!-- Ambient Glow Gradients in Void -->
+<div class="pointer-events-none absolute top-[-10%] left-[20%] w-[800px] h-[450px] bg-cyan-600/10 blur-[140px] rounded-full"></div>
+<div class="pointer-events-none absolute bottom-[-5%] right-[15%] w-[700px] h-[400px] bg-sky-900/15 blur-[160px] rounded-full"></div>
+<div class="pointer-events-none absolute top-[40%] right-[35%] w-[400px] h-[400px] bg-teal-500/5 blur-[120px] rounded-full"></div>
+<!-- ========================================================================= -->
+<!-- TOP BAR / HEADER (1920 x 70)                                             -->
+<!-- ========================================================================= -->
+<header class="h-[70px] w-full shrink-0 flex items-center justify-between px-8 bg-surface-low/85 backdrop-blur-md border-b border-cyan-400/20 z-50">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-DEFAULT bg-cyan-950/80 border border-cyan-400/40 flex items-center justify-center text-cyan-300">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">terminal</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-mono text-[11px] tracking-widest text-cyan-400 font-medium">CENTURY KNIGHTS // DESIGN SYSTEM</span>
+<span class="text-[10px] px-1.5 py-0.5 rounded-DEFAULT bg-cyan-950/90 border border-cyan-500/30 text-cyan-300 font-mono">SPECIMEN V4.2</span>
+</div>
+<h1 class="text-lg font-headline font-light tracking-wide text-white flex items-center gap-2">
+            规范设计器 · 交互组件标本表 <span class="text-cyan-400 font-normal">「组件」</span>
+</h1>
+</div>
+</div>
+<div class="h-6 w-[1px] bg-slate-800"></div>
+<div class="text-[11px] font-mono text-slate-400 tracking-wider">
+        CORE-STATE // CANVAS: <span class="text-cyan-200">1920×1080 FIXED</span> // OVERFLOW: HIDDEN
+      </div>
+</div>
+<!-- Right Controls / System Status -->
+<div class="flex items-center gap-4">
+<!-- Toast specimen indicator badge -->
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-DEFAULT bg-surface/80 border border-emerald-500/30 text-emerald-300 font-mono text-[12px]">
+<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+<span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;">sports_esports</span>
+<span>[手柄连接: XBOX CONTROLLER READY]</span>
+</div>
+<div class="px-3 py-1.5 rounded-DEFAULT bg-surface/60 border border-cyan-400/20 text-slate-300 font-mono text-[12px] flex items-center gap-3">
+<span class="text-slate-400">FRAME TIME:</span>
+<span class="text-cyan-300 font-bold">6.94ms // 144FPS</span>
+</div>
+<div class="flex items-center gap-1 border-l border-slate-800 pl-4">
+<button class="w-8 h-8 rounded-DEFAULT flex items-center justify-center text-slate-400 hover:text-cyan-300 hover:bg-surface-high/40 transition-colors">
+<span class="material-symbols-outlined text-lg">refresh</span>
+</button>
+<button class="w-8 h-8 rounded-DEFAULT flex items-center justify-center text-slate-400 hover:text-cyan-300 hover:bg-surface-high/40 transition-colors">
+<span class="material-symbols-outlined text-lg">help_outline</span>
+</button>
+<button class="w-8 h-8 rounded-DEFAULT flex items-center justify-center text-slate-400 hover:text-cyan-300 hover:bg-surface-high/40 transition-colors">
+<span class="material-symbols-outlined text-lg">fullscreen</span>
+</button>
+</div>
+</div>
+</header>
+<!-- ========================================================================= -->
+<!-- MAIN SPECIMEN MATRIX CONTAINER (1920 x 970)                              -->
+<!-- ========================================================================= -->
+<main class="h-[970px] w-full px-8 py-5 grid grid-cols-12 gap-5 relative z-10 box-border overflow-hidden">
+<!-- ======================================================================= -->
+<!-- COLUMN 1: INTERACTIVE BUTTON STATES & ICON BUTTONS (Width: 4 cols)     -->
+<!-- ======================================================================= -->
+<section class="col-span-4 flex flex-col gap-4">
+<!-- Panel 1: 文本按钮 (5 Interactive States) -->
+<div class="p-5 rounded-lg bg-surface/80 backdrop-blur-md border border-cyan-400/20 frost-border flex flex-col justify-between">
+<div class="flex items-center justify-between pb-3 border-b border-white/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-cyan-400 text-lg">smart_button</span>
+<h2 class="text-sm font-headline tracking-wider text-white font-medium">01 // 文本按钮状态 (TEXT BUTTONS)</h2>
+</div>
+<span class="text-[10px] font-mono text-cyan-400/80 px-2 py-0.5 rounded bg-cyan-950/40 border border-cyan-500/20">5 STATES EXHIBIT</span>
+</div>
+<div class="grid grid-cols-5 gap-2.5 pt-3">
+<!-- State 1: 默认 (Default) -->
+<div class="flex flex-col gap-2">
+<span class="text-[11px] font-mono text-slate-400 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>默认
+            </span>
+<button class="h-10 px-2.5 rounded-DEFAULT bg-cyan-950/40 border border-cyan-400/30 text-cyan-100 text-xs font-medium hover:border-cyan-400 flex items-center justify-center tracking-wide transition-all shadow-[0_0_12px_rgba(56,189,248,0.06)]">
+              确认部署
+            </button>
+<span class="text-[9px] font-mono text-slate-400 truncate">bg-cyan-950/40</span>
+</div>
+<!-- State 2: 悬停 (Hover) -->
+<div class="flex flex-col gap-2">
+<span class="text-[11px] font-mono text-cyan-300 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>悬停
+            </span>
+<button class="h-10 px-2.5 rounded-DEFAULT bg-cyan-500/20 border border-cyan-300 text-cyan-50 text-xs font-medium flex items-center justify-center tracking-wide shadow-[0_0_16px_rgba(56,189,248,0.25)]">
+              确认部署
+            </button>
+<span class="text-[9px] font-mono text-cyan-400 truncate">border-cyan-300</span>
+</div>
+<!-- State 3: 按下 (Pressed) -->
+<div class="flex flex-col gap-2">
+<span class="text-[11px] font-mono text-cyan-200 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-cyan-200"></span>按下
+            </span>
+<button class="h-10 px-2.5 rounded-DEFAULT bg-cyan-400 border border-cyan-300 text-slate-950 text-xs font-bold scale-[0.96] flex items-center justify-center tracking-wide shadow-[0_0_20px_rgba(56,189,248,0.45)]">
+              确认部署
+            </button>
+<span class="text-[9px] font-mono text-cyan-400 truncate">scale-95·solid</span>
+</div>
+<!-- State 4: 焦点 (Gamepad Focus Ring) -->
+<div class="flex flex-col gap-2">
+<span class="text-[11px] font-mono text-cyan-300 font-semibold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>焦点 [A]
+            </span>
+<button class="h-10 px-2.5 rounded-DEFAULT bg-cyan-950/60 border border-cyan-300 text-cyan-100 text-xs font-semibold flex items-center justify-center tracking-wide ring-2 ring-cyan-400 ring-offset-2 ring-offset-stone-950 shadow-[0_0_18px_rgba(56,189,248,0.5)] relative">
+<span class="absolute -top-1.5 -right-1 px-1 text-[8px] bg-cyan-400 text-stone-950 font-mono font-black rounded-full leading-tight">A</span>
+              确认部署
+            </button>
+<span class="text-[9px] font-mono text-cyan-400 truncate">ring-2·cyan</span>
+</div>
+<!-- State 5: 禁用 (Disabled) -->
+<div class="flex flex-col gap-2">
+<span class="text-[11px] font-mono text-stone-600 flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-stone-700"></span>禁用
+            </span>
+<button class="h-10 px-2.5 rounded-DEFAULT bg-stone-900/40 border border-white/5 text-stone-600 text-xs cursor-not-allowed flex items-center justify-center tracking-wide opacity-50" disabled="">
+              确认部署
+            </button>
+<span class="text-[9px] font-mono text-stone-600 truncate">opacity-40</span>
+</div>
+</div>
+</div>
+<!-- Panel 2: 图标按钮 (5 States) -->
+<div class="p-5 rounded-lg bg-surface/80 backdrop-blur-md border border-cyan-400/20 frost-border flex flex-col justify-between">
+<div class="flex items-center justify-between pb-3 border-b border-white/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-cyan-400 text-lg">widgets</span>
+<h2 class="text-sm font-headline tracking-wider text-white font-medium">02 // 图标按钮标本 (ICON BUTTONS)</h2>
+</div>
+<span class="text-[10px] font-mono text-slate-400">40×40 TACTICAL GRID</span>
+</div>
+<div class="grid grid-cols-5 gap-3 pt-3">
+<!-- Icon 1: 默认 (Swords) -->
+<div class="flex flex-col items-center gap-2">
+<button class="w-11 h-11 rounded-DEFAULT bg-cyan-950/30 border border-cyan-400/30 text-cyan-200 flex items-center justify-center transition-all hover:bg-cyan-950/50">
+<span class="material-symbols-outlined text-xl">swords</span>
+</button>
+<span class="text-[11px] font-mono text-slate-400">默认</span>
+</div>
+<!-- Icon 2: 悬停 (Shield) -->
+<div class="flex flex-col items-center gap-2">
+<button class="w-11 h-11 rounded-DEFAULT bg-cyan-500/20 border border-cyan-300 text-cyan-50 flex items-center justify-center shadow-[0_0_15px_rgba(56,189,248,0.3)]">
+<span class="material-symbols-outlined text-xl">shield</span>
+</button>
+<span class="text-[11px] font-mono text-cyan-300">悬停</span>
+</div>
+<!-- Icon 3: 按下 (Radar) -->
+<div class="flex flex-col items-center gap-2">
+<button class="w-11 h-11 rounded-DEFAULT bg-cyan-400 text-stone-950 flex items-center justify-center scale-95 shadow-[0_0_18px_rgba(56,189,248,0.5)]">
+<span class="material-symbols-outlined text-xl font-bold">radar</span>
+</button>
+<span class="text-[11px] font-mono text-cyan-200">按下</span>
+</div>
+<!-- Icon 4: 焦点 (Track_Changes) -->
+<div class="flex flex-col items-center gap-2">
+<button class="w-11 h-11 rounded-DEFAULT bg-cyan-950/70 border border-cyan-300 text-cyan-200 flex items-center justify-center ring-2 ring-cyan-400 ring-offset-2 ring-offset-stone-950 shadow-[0_0_18px_rgba(56,189,248,0.4)] relative">
+<span class="material-symbols-outlined text-xl">track_changes</span>
+<span class="absolute -top-1 -right-1 w-3 h-3 bg-cyan-400 text-[8px] text-stone-950 font-bold flex items-center justify-center rounded-full">X</span>
+</button>
+<span class="text-[11px] font-mono text-cyan-300">焦点 [X]</span>
+</div>
+<!-- Icon 5: 禁用 (Lock) -->
+<div class="flex flex-col items-center gap-2">
+<button class="w-11 h-11 rounded-DEFAULT bg-stone-900/40 border border-white/5 text-stone-600 flex items-center justify-center opacity-40 cursor-not-allowed" disabled="">
+<span class="material-symbols-outlined text-xl">lock</span>
+</button>
+<span class="text-[11px] font-mono text-stone-600">禁用</span>
+</div>
+</div>
+</div>
+<!-- Panel 3: 选项卡 + 下拉选择器 + 开关 -->
+<div class="p-5 rounded-lg bg-surface/80 backdrop-blur-md border border-cyan-400/20 frost-border flex flex-col gap-4 flex-1 justify-between">
+<div class="flex items-center justify-between pb-2 border-b border-white/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-cyan-400 text-lg">segment</span>
+<h2 class="text-sm font-headline tracking-wider text-white font-medium">03 // 选项卡与导航 (TABS &amp; CONTROLS)</h2>
+</div>
+<span class="text-[10px] font-mono text-cyan-300">SEGMENTED</span>
+</div>
+<!-- Specimen 3: 选项卡 (Tabs) -->
+<div class="flex flex-col gap-1.5">
+<label class="text-[11px] font-mono text-slate-400 tracking-wide">战阵专精分段标签 [RB / LB 切换]</label>
+<div class="flex items-center bg-surface-low/90 p-1 rounded-DEFAULT border border-cyan-400/20">
+<button class="flex-1 py-1.5 text-xs font-medium text-cyan-300 bg-cyan-950/60 border border-cyan-400/40 rounded-DEFAULT shadow-[0_0_10px_rgba(56,189,248,0.2)] flex items-center justify-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+              基础战技
+            </button>
+<button class="flex-1 py-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors flex items-center justify-center">
+              先天气质
+            </button>
+<button class="flex-1 py-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors flex items-center justify-center">
+              血脉家谱
+            </button>
+<button class="flex-1 py-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors flex items-center justify-center">
+              功勋装备
+            </button>
+</div>
+</div>
+<!-- Specimen 6: 下拉选择器 (Dropdown Closed) -->
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between items-center">
+<label class="text-[11px] font-mono text-slate-400 tracking-wide">执旗军团选择 (DROPDOWN)</label>
+<span class="text-[10px] font-mono text-cyan-400">STATE: CLOSED</span>
+</div>
+<div class="h-10 px-3.5 rounded-DEFAULT bg-surface-container/90 border border-cyan-400/30 flex items-center justify-between hover:border-cyan-400 transition-colors cursor-pointer group">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-cyan-400 text-sm">flag</span>
+<span class="text-xs text-cyan-100 font-medium tracking-wide">第七先锋骑兵军团 <span class="text-[10px] text-cyan-400/80 font-mono">[已配置]</span></span>
+</div>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-cyan-300 transition-transform group-hover:translate-y-0.5 text-base">expand_more</span>
+</div>
+</div>
+<!-- Specimen 5: 切换开关 (Toggle Switch ON/OFF) -->
+<div class="flex flex-col gap-1.5 pt-1">
+<label class="text-[11px] font-mono text-slate-400 tracking-wide">系统偏好切换 (TOGGLE SWITCH STATES)</label>
+<div class="grid grid-cols-2 gap-3">
+<!-- Toggle ON -->
+<div class="flex items-center justify-between p-2.5 rounded-DEFAULT bg-surface-container/60 border border-cyan-400/20">
+<span class="text-xs text-slate-200">自动格挡 [开启]</span>
+<div class="w-11 h-6 rounded-full bg-cyan-500/30 border border-cyan-400/80 p-0.5 flex items-center justify-end shadow-[0_0_10px_rgba(56,189,248,0.3)]">
+<div class="w-4 h-4 rounded-full bg-cyan-300 shadow-sm flex items-center justify-center text-[8px] text-slate-900 font-bold">✓</div>
+</div>
+</div>
+<!-- Toggle OFF -->
+<div class="flex items-center justify-between p-2.5 rounded-DEFAULT bg-surface-container/60 border border-white/5">
+<span class="text-xs text-stone-500">动态镜头 [关闭]</span>
+<div class="w-11 h-6 rounded-full bg-stone-900 border border-stone-700/60 p-0.5 flex items-center justify-start">
+<div class="w-4 h-4 rounded-full bg-stone-600"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================================================================= -->
+<!-- COLUMN 2: INPUTS, SLIDERS, PROGRESS & COMBAT METRICS (Width: 4 cols)  -->
+<!-- ======================================================================= -->
+<section class="col-span-4 flex flex-col gap-4">
+<!-- Panel 4: 文本输入框 (Text field with gamepad focus ring) -->
+<div class="p-5 rounded-lg bg-surface/80 backdrop-blur-md border border-cyan-400/20 frost-border flex flex-col gap-3">
+<div class="flex items-center justify-between pb-2 border-b border-white/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-cyan-400 text-lg">edit_note</span>
+<h2 class="text-sm font-headline tracking-wider text-white font-medium">04 // 文本输入框 (ACTIVE FOCUS RING)</h2>
+</div>
+<span class="text-[10px] font-mono text-cyan-400 px-1.5 py-0.5 rounded bg-cyan-950/60 border border-cyan-500/20">KEYBOARD / V-PAD</span>
+</div>
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between items-center text-[11px] font-mono text-slate-400">
+<span>骑士代号重命名 (KNIGHT CODENAME)</span>
+<span class="text-cyan-400">FOCUSED / EDITING</span>
+</div>
+<!-- Luminous Focused Input Box -->
+<div class="relative flex items-center">
+<input class="w-full h-11 px-3.5 bg-surface-low border border-cyan-300 text-cyan-50 text-sm font-mono tracking-wider rounded-DEFAULT ring-2 ring-cyan-400 ring-offset-2 ring-offset-stone-950 shadow-[0_0_20px_rgba(56,189,248,0.25)] focus:outline-none" readonly="" type="text" value="白霜·澄 [G7-HEIR]"/>
+<!-- Simulated Blinking Cursor Overlay -->
+<div class="absolute left-[162px] top-3 h-5 w-[2px] bg-cyan-400 cursor-blink"></div>
+<div class="absolute right-3 flex items-center gap-2 text-slate-400">
+<span class="text-[10px] font-mono bg-cyan-950/80 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-500/30">ESC 取消</span>
+<span class="text-[10px] font-mono bg-cyan-400 text-slate-950 font-bold px-1.5 py-0.5 rounded">ENTER 确定</span>
+</div>
+</div>
+<div class="flex justify-between text-[10px] font-mono text-slate-400 pt-0.5">
+<span>字符限制: 14/20 CHARS</span>
+<span class="text-emerald-400">校验通过: 命名符合北方氏族律法</span>
+</div>
+</div>
+</div>
+<!-- Panel 5: 滑动输入器 (Tactile Slider Specimen) -->
+<div class="p-5 rounded-lg bg-surface/80 backdrop-blur-md border border-cyan-400/20 frost-border flex flex-col gap-4">
+<div class="flex items-center justify-between pb-2 border-b border-white/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-cyan-400 text-lg">tune</span>
+<h2 class="text-sm font-headline tracking-wider text-white font-medium">05 // 步进滑动器 (SLIDER SPECIMEN)</h2>
+</div>
+<span class="text-[10px] font-mono text-cyan-300 bg-cyan-950/40 px-2 py-0.5 rounded border border-cyan-500/20">75% // 144Hz</span>
+</div>
+<div class="flex flex-col gap-3 py-1">
+<div class="flex justify-between text-xs font-mono">
+<span class="text-slate-300">战斗战术推演节奏 (COMBAT PACE)</span>
+<span class="text-cyan-300 font-bold">1.75x 标准流速</span>
+</div>
+<!-- Custom Glowing Slider Track -->
+<div class="relative h-6 flex items-center">
+<!-- Rail background -->
+<div class="w-full h-1.5 rounded-full bg-surface-highest border border-white/5 relative overflow-hidden">
+<!-- Filled Active Glow Line -->
+<div class="w-[75%] h-full bg-gradient-to-r from-cyan-600 via-cyan-400 to-primary-focus shadow-[0_0_12px_rgba(56,189,248,0.8)]"></div>
+</div>
+<!-- Slider Thumb with Value Tooltip -->
+<div class="absolute left-[75%] -translate-x-1/2 flex flex-col items-center group cursor-grab">
+<!-- Floating Tooltip Above Thumb -->
+<div class="absolute -top-7 px-2 py-0.5 rounded bg-cyan-950 border border-cyan-400 text-cyan-200 text-[10px] font-mono whitespace-nowrap shadow-[0_0_10px_rgba(56,189,248,0.4)]">
+                75% // 144Hz
+              </div>
+<div class="w-5 h-5 rounded-full bg-cyan-100 border-2 border-cyan-400 shadow-[0_0_15px_rgba(56,189,248,0.9)] ring-2 ring-cyan-500/50 flex items-center justify-center">
+<div class="w-1.5 h-1.5 rounded-full bg-cyan-950"></div>
+</div>
+</div>
+</div>
+<div class="flex justify-between text-[10px] font-mono text-slate-400">
+<span>0.5x 迟滞战局</span>
+<span>1.0x 标准时态</span>
+<span>1.5x 疾风骤雨</span>
+<span class="text-cyan-400">2.0x 极速推演</span>
+</div>
+</div>
+</div>
+<!-- Panel 6: 进度条与生命值条 (Dual Progress & Dynamic HP Bar) -->
+<div class="p-5 rounded-lg bg-surface/80 backdrop-blur-md border border-cyan-400/20 frost-border flex flex-col gap-4 flex-1 justify-between">
+<div class="flex items-center justify-between pb-2 border-b border-white/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-cyan-400 text-lg">vital_signs</span>
+<h2 class="text-sm font-headline tracking-wider text-white font-medium">06 // 战术计量仪 (HP &amp; TACTICAL CHARGE)</h2>
+</div>
+<span class="text-[10px] font-mono text-emerald-400">DYNAMIC METRIC</span>
+</div>
+<!-- HP Bar Metric -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-baseline">
+<div class="flex items-center gap-2">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-950/80 border border-emerald-500/40 text-emerald-300">HP VITAL</span>
+<span class="text-xs text-slate-300 font-medium">先锋骑士体征生命</span>
+</div>
+<div class="font-mono text-xs text-emerald-400">
+<span class="font-bold text-sm">2,450</span> <span class="text-slate-400">/ 3,200</span> <span class="text-emerald-300 text-[11px]">(76.5%)</span>
+</div>
+</div>
+<!-- Segmented HP Track -->
+<div class="w-full h-3.5 bg-surface-low rounded-DEFAULT border border-white/10 p-0.5 relative overflow-hidden flex">
+<!-- Dynamic buffer shadow bar -->
+<div class="absolute top-0 bottom-0 left-0 w-[84%] bg-emerald-700/30"></div>
+<!-- Main active HP fill -->
+<div class="h-full w-[76.5%] bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-DEFAULT shadow-[0_0_12px_rgba(52,211,153,0.5)] relative z-10"></div>
+</div>
+<div class="flex justify-between text-[9px] font-mono text-slate-400">
+<span>[+] 霜甲减伤生效中: -24% 穿刺伤害</span>
+<span class="text-emerald-400">蓄力护盾缓冲: 340 抵消额</span>
+</div>
+</div>
+<!-- Tactical Charge Progress Bar (68%) -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-baseline">
+<div class="flex items-center gap-2">
+<span class="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan-950/80 border border-cyan-500/40 text-cyan-300">SP CHARGE</span>
+<span class="text-xs text-slate-300 font-medium">终结战技「永冻绝域」充能</span>
+</div>
+<span class="font-mono text-xs text-cyan-400 font-bold">68.0% // READY SOON</span>
+</div>
+<!-- Segmented Ticks Bar -->
+<div class="relative w-full h-4 bg-surface-low rounded-DEFAULT border border-cyan-500/30 p-0.5 overflow-hidden">
+<!-- 68% Glow fill -->
+<div class="h-full w-[68%] bg-gradient-to-r from-cyan-600 via-cyan-500 to-cyan-300 rounded-DEFAULT shadow-[0_0_16px_rgba(56,189,248,0.7)]"></div>
+<!-- Vertical ruler ticks overlay -->
+<div class="absolute inset-0 flex justify-between px-2 pointer-events-none opacity-40">
+<div class="w-[1px] h-full bg-black/80"></div>
+<div class="w-[1px] h-full bg-black/80"></div>
+<div class="w-[1px] h-full bg-black/80"></div>
+<div class="w-[1px] h-full bg-black/80"></div>
+<div class="w-[1px] h-full bg-black/80"></div>
+<div class="w-[1px] h-full bg-black/80"></div>
+<div class="w-[1px] h-full bg-black/80"></div>
+<div class="w-[1px] h-full bg-black/80"></div>
+<div class="w-[1px] h-full bg-black/80"></div>
+</div>
+</div>
+<div class="flex justify-between text-[10px] font-mono text-cyan-300/80">
+<span>段位 I: 战刃覆霜</span>
+<span>段位 II: 霜风裂甲</span>
+<span class="text-slate-400">段位 III: 极光肃清 (锁定)</span>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================================================================= -->
+<!-- COLUMN 3: BADGES, TOOLTIPS, MODAL & TOAST NOTIFICATION (Width: 4 cols)  -->
+<!-- ======================================================================= -->
+<section class="col-span-4 flex flex-col gap-4">
+<!-- Panel 7: 特质徽章与浮动提示框 (Trait Badges & Floating Tooltip) -->
+<div class="p-5 rounded-lg bg-surface/80 backdrop-blur-md border border-cyan-400/20 frost-border flex flex-col gap-3 relative">
+<div class="flex items-center justify-between pb-2 border-b border-white/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-cyan-400 text-lg">verified</span>
+<h2 class="text-sm font-headline tracking-wider text-white font-medium">07 // 特质徽章与浮动提示 (TRAITS &amp; TOOLTIP)</h2>
+</div>
+<span class="text-[10px] font-mono text-cyan-400">TOOLTIP ANCHOR</span>
+</div>
+<!-- Badges Row -->
+<div class="flex items-center gap-2.5 pt-1">
+<!-- Trait 1: 霜血 [极阶] (Active Hovered target for tooltip) -->
+<div class="px-2.5 py-1.5 rounded-DEFAULT bg-cyan-950/80 border border-cyan-400 text-cyan-200 text-xs font-medium flex items-center gap-1.5 shadow-[0_0_12px_rgba(56,189,248,0.3)] ring-1 ring-cyan-400/60 cursor-pointer">
+<span class="material-symbols-outlined text-sm text-cyan-300" style="font-variation-settings: 'FILL' 1;">ac_unit</span>
+<span>霜血</span>
+<span class="text-[10px] font-mono text-cyan-400 bg-cyan-900/60 px-1 py-0.2 rounded border border-cyan-500/40">[极阶]</span>
+</div>
+<!-- Trait 2: 冷静 [心性] -->
+<div class="px-2.5 py-1.5 rounded-DEFAULT bg-surface-container border border-slate-700 text-slate-300 text-xs font-medium flex items-center gap-1.5 hover:border-slate-500 cursor-pointer">
+<span class="material-symbols-outlined text-sm text-emerald-400">shield</span>
+<span>冷静</span>
+<span class="text-[10px] font-mono text-slate-400 bg-surface-highest px-1 py-0.2 rounded">[心性]</span>
+</div>
+<!-- Trait 3: 逆境破阵 [战术] -->
+<div class="px-2.5 py-1.5 rounded-DEFAULT bg-orange-950/30 border border-orange-500/40 text-orange-200 text-xs font-medium flex items-center gap-1.5 cursor-pointer">
+<span class="material-symbols-outlined text-sm text-orange-400">bolt</span>
+<span>逆境破阵</span>
+<span class="text-[10px] font-mono text-orange-400 bg-orange-900/40 px-1 py-0.2 rounded">[战术]</span>
+</div>
+</div>
+<!-- Specimen 10: 浮动提示框 (Floating Tooltip pointing with caret) -->
+<div class="relative mt-2 p-3.5 rounded-DEFAULT bg-surface-low/95 border border-cyan-400/60 shadow-[0_12px_30px_rgba(0,0,0,0.85)] frost-card-glow">
+<!-- Caret Pointer pointing to Trait 1 above -->
+<div class="absolute -top-1.5 left-8 w-3 h-3 bg-surface-low border-t border-l border-cyan-400/60 rotate-45"></div>
+<div class="flex items-start gap-2.5">
+<div class="w-6 h-6 rounded bg-cyan-950 border border-cyan-400/50 flex items-center justify-center text-cyan-300 shrink-0">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">info</span>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-cyan-200 font-headline">【霜血 · 极阶】</span>
+<span class="text-[10px] font-mono text-cyan-400 px-1 rounded bg-cyan-950/70 border border-cyan-500/30">PASSIVE BUFF</span>
+</div>
+<p class="text-xs text-slate-300 leading-relaxed">
+                北境上位古纯血脉，寒冷气候下暴击率 <span class="text-cyan-300 font-mono font-bold">+15%</span>，完全免疫冻伤与迟滞减益。受到致死伤害时保留 1 点生命并释放寒冰护盾。
+              </p>
+</div>
+</div>
+</div>
+</div>
+<!-- Panel 8: 状态提示条 (Toast Banner Specimen) -->
+<div class="p-3.5 rounded-DEFAULT bg-surface-low/90 backdrop-blur-md border border-cyan-400/50 frost-card-glow flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-cyan-950/80 border border-cyan-400/60 flex items-center justify-center text-cyan-300 shadow-[0_0_10px_rgba(56,189,248,0.4)]">
+<span class="material-symbols-outlined text-base font-bold" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-white tracking-wide">战术物资已入库</span>
+<span class="text-[9px] font-mono text-cyan-400 bg-cyan-950/90 px-1 py-0.2 rounded border border-cyan-500/30">AUTO SAVED</span>
+</div>
+<p class="text-[11px] font-mono text-cyan-200/90">获得赤铁 <span class="text-cyan-300 font-bold">x4</span>，金币 <span class="text-amber-300 font-bold">+640</span> 克朗</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-mono text-slate-400">DISMISS IN 3s</span>
+<button class="w-6 h-6 rounded flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/5">
+<span class="material-symbols-outlined text-sm">close</span>
+</button>
+</div>
+</div>
+<!-- Panel 9: 小型模态弹窗 (Small Modal Dialog Specimen) -->
+<div class="p-5 rounded-lg bg-surface/90 backdrop-blur-xl border border-cyan-400/40 frost-card-glow flex flex-col justify-between flex-1 shadow-[0_20px_50px_rgba(0,0,0,0.9)]">
+<div class="flex items-center justify-between pb-3 border-b border-white/5">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-rose-400 text-lg">warning</span>
+<h2 class="text-sm font-headline tracking-wider text-white font-medium">解散整编确认 (DISMISSAL MODAL)</h2>
+</div>
+<span class="text-[10px] font-mono text-rose-400 bg-rose-950/60 px-2 py-0.5 rounded border border-rose-500/30">CONFIRMATION</span>
+</div>
+<!-- Modal Dialog Content -->
+<div class="my-3 p-3 rounded-DEFAULT bg-surface-low/80 border border-white/5 flex flex-col gap-2">
+<p class="text-xs text-slate-200 leading-normal">
+            确认要将该名骑士 <span class="text-cyan-300 font-mono font-medium">白霜·澄 [G7-HEIR]</span> 移出先锋作战序列？
+          </p>
+<div class="text-[11px] text-rose-300/80 font-mono flex items-center gap-1.5 bg-rose-950/20 p-2 rounded border border-rose-500/20">
+<span class="material-symbols-outlined text-xs">info</span>
+<span>注意：骑士解散后将回归家族领地，战阵羁绊加成将即时失效。</span>
+</div>
+</div>
+<!-- Modal Action Buttons with Gamepad Prompts -->
+<div class="flex items-center justify-end gap-3 pt-2">
+<!-- Abandon / Cancel [B] -->
+<button class="px-3.5 py-2 rounded-DEFAULT bg-surface-container hover:bg-surface-highest border border-slate-700 text-slate-300 text-xs font-medium flex items-center gap-1.5 transition-colors">
+<span class="w-4 h-4 rounded-full bg-stone-800 border border-stone-600 text-[9px] font-mono text-slate-300 flex items-center justify-center font-bold">B</span>
+<span>放弃操作</span>
+</button>
+<!-- Confirm [A] -->
+<button class="px-4 py-2 rounded-DEFAULT bg-rose-950/80 hover:bg-rose-900 border border-rose-500/50 text-rose-100 text-xs font-medium flex items-center gap-1.5 shadow-[0_0_15px_rgba(244,63,94,0.3)] transition-all">
+<span class="w-4 h-4 rounded-full bg-rose-500 text-[9px] font-mono text-slate-950 flex items-center justify-center font-black">A</span>
+<span>确认移除</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<!-- ========================================================================= -->
+<!-- FOOTER / AUDIT BAR (1920 x 40)                                           -->
+<!-- ========================================================================= -->
+<footer class="h-[40px] w-full shrink-0 flex items-center justify-between px-8 bg-surface-low/95 border-t border-cyan-400/20 z-50 text-[11px] font-mono text-slate-400">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+<span class="text-slate-300">CENTURYKNIGHTS TACTICAL TURN-BASED SRPG UI</span>
+</div>
+<div class="text-slate-400">|</div>
+<div>COLOR TOKENS: <span class="text-cyan-300">CYAN FROST / SLATE STONE / EMERALD VITAL</span></div>
+<div class="text-slate-400">|</div>
+<div>INPUT MATRIX: <span class="text-slate-300">GAMEPAD FOCUS DUAL-RING COMPLIANT</span></div>
+</div>
+<div class="flex items-center gap-5">
+<span>CHINESE SIMPLIFIED (ZH-CN)</span>
+<span class="text-cyan-400">[LS/RS] 视角平移</span>
+<span class="text-cyan-400">[D-PAD] 节点遍历</span>
+<span class="px-2 py-0.5 rounded bg-cyan-950/90 text-cyan-300 border border-cyan-500/30">PASS: 0 WARNINGS</span>
+</div>
+</footer>
+</body></html>

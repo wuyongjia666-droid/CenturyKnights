@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080, initial-scale=1.0">
+  <title>百年骑士 - 骑士档案 · 白霜·凛 (1920x1080)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-sans: 'Noto Sans SC', 'Noto Sans SC', serif;
+      --font-sans: 'Noto Sans SC', serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-sans: 'Noto Sans SC', sans-serif;
+    }
+    * {
+      box-sizing: border-box;
+      user-select: none;
+    }
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 1920px;
+      height: 1080px;
+      max-width: 1920px;
+      max-height: 1080px;
+      overflow: hidden;
+      background-color: #05080c;
+      font-family: var(--font-sans);
+      color: #dbe7f2;
+    }
+    .font-sans-title {
+      font-family: var(--font-sans);
+    }
+    .font-num {
+      font-family: var(--font-mono);
+    }
+    .font-cinzel {
+      font-family: var(--font-sans);
+    }
+    /* Grid background */
+    .bg-tactical-grid {
+      background-image: 
+        radial-gradient(circle at 50% 30%, rgba(30, 68, 97, 0.16) 0%, transparent 65%),
+        linear-gradient(to right, rgba(110, 212, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(110, 212, 255, 0.035) 1px, transparent 1px);
+      background-size: 100% 100%, 64px 64px, 64px 64px;
+    }
+    /* Hairline frosted matte panels */
+    .frosted-panel {
+      background: rgba(8, 14, 22, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(110, 212, 255, 0.14);
+      box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.06), 0 12px 32px rgba(0, 0, 0, 0.45);
+    }
+    .frosted-panel-subtle {
+      background: rgba(10, 18, 28, 0.55);
+      border: 1px solid rgba(110, 212, 255, 0.1);
+    }
+    /* Focused ring state */
+    .gamepad-focus-ring {
+      box-shadow: 0 0 0 1px #05080c, 0 0 0 3px #6ed4ff, 0 0 20px rgba(110, 212, 255, 0.45);
+    }
+  </style>
+</head>
+<body class="w-[1920px] h-[1080px] bg-tactical-grid flex flex-col justify-between p-8 text-slate-200">
+
+  <!-- TOP HEADER / HUD NAVIGATION BAR -->
+  <header class="w-full h-14 flex items-center justify-between border-b border-cyan-400/20 pb-3">
+    <!-- Brand & Subtitle -->
+    <div class="flex items-center gap-6">
+      <div class="flex items-center gap-3">
+        <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#6ed4ff]"></span>
+        <span class="font-cinzel text-lg tracking-[0.28em] text-slate-100 font-bold">CENTURY KNIGHTS</span>
+        <span class="text-xs text-cyan-400/60 font-num tracking-widest">// ROSTER ARCHIVE #01-SR709</span>
+      </div>
+      <div class="h-4 w-[1px] bg-cyan-400/20"></div>
+      <div class="text-xs text-slate-400 tracking-wider">
+        <span class="text-cyan-300 font-num">赤历128年</span> · 霜降月末 · 极北宗祠宿卫司
+      </div>
+    </div>
+
+    <!-- TABS: 属性 (Focused), 技能, 血统 -->
+    <div class="flex items-center gap-2 bg-slate-950/60 p-1 rounded border border-cyan-400/20">
+      <!-- FOCUSED TAB -->
+      <button class="relative px-6 py-1.5 rounded text-sm font-medium tracking-wider flex items-center gap-2 bg-cyan-400/15 text-cyan-200 border border-cyan-400/60 gamepad-focus-ring transition-all">
+        <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+        <span>属性</span>
+        <span class="text-[10px] font-num px-1 py-0.5 rounded bg-cyan-400/20 text-cyan-300 border border-cyan-400/40">LS</span>
+      </button>
+
+      <button class="px-6 py-1.5 rounded text-sm font-light tracking-wider text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 transition-colors">
+        技能
+      </button>
+
+      <button class="px-6 py-1.5 rounded text-sm font-light tracking-wider text-slate-400 hover:text-slate-200 hover:bg-slate-800/40 transition-colors">
+        血统
+      </button>
+    </div>
+
+    <!-- System Status & Esc Return -->
+    <div class="flex items-center gap-6 font-num text-xs text-slate-400">
+      <div class="flex items-center gap-2">
+        <span class="text-slate-500">COMMAND READY</span>
+        <span class="text-cyan-300 font-medium tracking-wider">LEADERSHIP 88 <span class="text-cyan-500/70">(+3)</span></span>
+      </div>
+      <div class="flex items-center gap-2 px-3 py-1 rounded border border-slate-700/60 bg-slate-900/40 hover:border-slate-500 text-slate-300 cursor-pointer">
+        <span class="text-[10px] border border-slate-600 px-1 rounded text-slate-400">B</span>
+        <span>返回中枢</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN EDITORIAL CONTENT: 3 COLUMNS -->
+  <main class="w-full flex-1 grid grid-cols-12 gap-6 my-5 min-h-0">
+    
+    <!-- LEFT COLUMN: PORTRAIT (EMPTY FROSTED FRAME 180px), IDENTITY & TRAITS (Col 1-3) -->
+    <section class="col-span-3 frosted-panel rounded p-6 flex flex-col justify-between">
+      <div>
+        <!-- Tier & Classification Badge -->
+        <div class="flex items-center justify-between border-b border-cyan-400/15 pb-4 mb-5">
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] font-num tracking-wider px-2 py-0.5 rounded bg-cyan-950/70 text-cyan-300 border border-cyan-500/40">SR-709</span>
+            <span class="text-xs text-cyan-400/80 tracking-widest font-sans-title">领衔先锋骑士</span>
+          </div>
+          <span class="text-xs font-num text-slate-400">RANK IV // 主力编队</span>
+        </div>
+
+        <!-- Empty 180px Frosted Portrait Frame (as instructed: no full-bleed artwork) -->
+        <div class="flex flex-col items-center mb-6">
+          <div class="w-[180px] h-[180px] frosted-panel-subtle rounded border border-cyan-300/30 relative flex flex-col items-center justify-center p-3 group">
+            <!-- Corner Accents -->
+            <div class="absolute top-1 left-1 w-2.5 h-2.5 border-t border-l border-cyan-400"></div>
+            <div class="absolute top-1 right-1 w-2.5 h-2.5 border-t border-r border-cyan-400"></div>
+            <div class="absolute bottom-1 left-1 w-2.5 h-2.5 border-b border-l border-cyan-400"></div>
+            <div class="absolute bottom-1 right-1 w-2.5 h-2.5 border-b border-r border-cyan-400"></div>
+            
+            <!-- Frosted Inner Reticle -->
+            <div class="w-24 h-24 rounded-full border border-dashed border-cyan-400/25 flex items-center justify-center mb-2">
+              <svg class="w-10 h-10 text-cyan-400/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                <path d="M12 2L15 8L21 9L17 14L18 20L12 17L6 20L7 14L3 9L9 8L12 2Z" />
+              </svg>
+            </div>
+            <span class="text-[11px] font-num text-cyan-300/80 tracking-widest uppercase">PORTRAIT FRAME</span>
+            <span class="text-[10px] text-slate-500">白霜·凛 // 待命造像标本</span>
+          </div>
+        </div>
+
+        <!-- Name & Core Biographical Identifiers -->
+        <div class="space-y-3 mb-6">
+          <div class="flex items-baseline justify-between">
+            <h1 class="text-3xl font-sans-title font-semibold tracking-wider text-slate-100">白霜 · 凛</h1>
+            <span class="font-cinzel text-xs text-cyan-400 tracking-[0.2em]">FROSTBLADE KNIGHT</span>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-2 text-xs py-3 border-y border-cyan-400/10">
+            <div class="text-slate-400">职业：<span class="text-cyan-200 font-medium">霜刃骑士</span></div>
+            <div class="text-slate-400">年龄：<span class="text-slate-200 font-num">27 岁</span></div>
+            <div class="text-slate-400">家族：<span class="text-cyan-200 font-sans-title">白霜 (直系)</span></div>
+            <div class="text-slate-400">统御位阶：<span class="text-emerald-300 font-num">S 级 (先锋)</span></div>
+          </div>
+        </div>
+
+        <!-- Lineage Strip (as requested: 「父 白霜·岳 · 母 青澜·宁」) -->
+        <div class="mb-6">
+          <div class="text-[11px] font-num text-cyan-400/60 uppercase tracking-widest mb-1.5 flex items-center justify-between">
+            <span>LINEAGE AFFILIATION // 血统溯源</span>
+            <span class="text-[10px] text-cyan-400">纯血 98%</span>
+          </div>
+          <div class="frosted-panel-subtle px-3 py-2.5 rounded border border-cyan-400/20 text-xs text-slate-300 flex items-center justify-between">
+            <div class="flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+              <span class="tracking-wide">父 <span class="text-cyan-200 font-medium">白霜·岳</span></span>
+              <span class="text-slate-600 mx-1">·</span>
+              <span>母 <span class="text-cyan-200 font-medium">青澜·宁</span></span>
+            </div>
+            <span class="text-[10px] text-slate-500 font-num">GEN VII</span>
+          </div>
+        </div>
+
+        <!-- Trait Badges: 霜血, 冷静, 血脉·北境 -->
+        <div>
+          <div class="text-[11px] font-num text-cyan-400/60 uppercase tracking-widest mb-2">
+            INNATE TRAITS // 专属特质烙印
+          </div>
+          <div class="grid grid-cols-3 gap-2">
+            <!-- Badge 1: 霜血 -->
+            <div class="frosted-panel-subtle p-2 rounded border border-cyan-400/25 flex flex-col items-center justify-center text-center">
+              <span class="text-[10px] text-cyan-400 font-num mb-0.5">极阶印记</span>
+              <span class="text-xs font-semibold text-cyan-200 tracking-wider">霜血</span>
+              <span class="text-[9px] text-slate-500 mt-1">暴击率+15%</span>
+            </div>
+            <!-- Badge 2: 冷静 -->
+            <div class="frosted-panel-subtle p-2 rounded border border-cyan-400/25 flex flex-col items-center justify-center text-center">
+              <span class="text-[10px] text-slate-400 font-num mb-0.5">心性特质</span>
+              <span class="text-xs font-semibold text-slate-200 tracking-wider">冷静</span>
+              <span class="text-[9px] text-slate-500 mt-1">免惊乱判定</span>
+            </div>
+            <!-- Badge 3: 血脉·北境 -->
+            <div class="frosted-panel-subtle p-2 rounded border border-cyan-400/25 flex flex-col items-center justify-center text-center">
+              <span class="text-[10px] text-cyan-400 font-num mb-0.5">古宗血脉</span>
+              <span class="text-xs font-semibold text-cyan-200 tracking-wider">血脉·北境</span>
+              <span class="text-[9px] text-slate-500 mt-1">寒战适应S</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Status Footer -->
+      <div class="pt-4 border-t border-cyan-400/10 flex items-center justify-between text-[11px] text-slate-400 font-num">
+        <span>战备状态：<span class="text-emerald-400 font-medium">全备完足 (100%)</span></span>
+        <span>出战军资：180 CP</span>
+      </div>
+    </section>
+
+    <!-- CENTER COLUMN: ATTRIBUTE RADAR & PRIMARY STAT BARS (Col 4-8) -->
+    <section class="col-span-5 frosted-panel rounded p-6 flex flex-col justify-between">
+      <div>
+        <!-- Section Header -->
+        <div class="flex items-center justify-between border-b border-cyan-400/15 pb-4 mb-4">
+          <div class="flex items-center gap-3">
+            <span class="text-xs font-num text-cyan-400 tracking-widest">// PENTAGONAL RADAR METRICS</span>
+            <h2 class="text-base font-sans-title tracking-wider text-slate-100">五维军略雷达标定</h2>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-400">总评综合度</span>
+            <span class="font-num text-sm text-cyan-300 font-semibold px-2 py-0.5 bg-cyan-950/60 rounded border border-cyan-500/30">428 · S级</span>
+          </div>
+        </div>
+
+        <!-- 5-AXIS RADAR CHART (SVG) labeled: 力, 技, 速, 魔, 耐 -->
+        <div class="relative w-full h-[360px] flex items-center justify-center">
+          <svg class="w-full h-full" viewBox="0 0 500 360">
+            <!-- Background Grids (Polar Rings) -->
+            <!-- Center at (250, 180), R_max = 130 -->
+            <!-- Angles for 5-axis: top = 力 (270 deg / -90 deg), 技 (342 deg / -18 deg), 耐 (54 deg), 魔 (126 deg), 速 (198 deg) -->
+            <!-- Let's map conventionally:
+                 力 (Power): Top (250, 50)
+                 技 (Skill): Top-Right (374, 140)
+                 耐 (Endurance): Bottom-Right (326, 285)
+                 速 (Speed): Bottom-Left (174, 285)
+                 魔 (Magic): Top-Left (126, 140)
+            -->
+            
+            <!-- Outer grid polygon 100% -->
+            <polygon points="250,50 374,140 326,285 174,285 126,140" fill="none" stroke="rgba(110, 212, 255, 0.2)" stroke-width="1" />
+            <!-- Grid polygon 75% -->
+            <polygon points="250,82.5 343,150 307,259 193,259 157,150" fill="none" stroke="rgba(110, 212, 255, 0.12)" stroke-width="1" stroke-dasharray="3 3" />
+            <!-- Grid polygon 50% -->
+            <polygon points="250,115 312,160 288,232.5 212,232.5 188,160" fill="none" stroke="rgba(110, 212, 255, 0.12)" stroke-width="1" />
+            <!-- Grid polygon 25% -->
+            <polygon points="250,147.5 281,170 269,206 231,206 219,170" fill="none" stroke="rgba(110, 212, 255, 0.08)" stroke-width="1" />
+
+            <!-- Axis Lines from center (250, 180) -->
+            <line x1="250" y1="180" x2="250" y2="50" stroke="rgba(110, 212, 255, 0.25)" stroke-width="1" />
+            <line x1="250" y1="180" x2="374" y2="140" stroke="rgba(110, 212, 255, 0.25)" stroke-width="1" />
+            <line x1="250" y1="180" x2="326" y2="285" stroke="rgba(110, 212, 255, 0.25)" stroke-width="1" />
+            <line x1="250" y1="180" x2="174" y2="285" stroke="rgba(110, 212, 255, 0.25)" stroke-width="1" />
+            <line x1="250" y1="180" x2="126" y2="140" stroke="rgba(110, 212, 255, 0.25)" stroke-width="1" />
+
+            <!-- Unit Value Polygon (力: 82, 技: 92, 耐: 76, 速: 88, 魔: 64) -->
+            <!-- 
+                Center: (250, 180)
+                力 (82%): (250, 180 - 130 * 0.82) = (250, 73.4)
+                技 (92%): (250 + 124 * 0.92, 180 - 40 * 0.92) = (364, 143.2)
+                耐 (76%): (250 + 76 * 0.76, 180 + 105 * 0.76) = (307.7, 259.8)
+                速 (88%): (250 - 76 * 0.88, 180 + 105 * 0.88) = (183.1, 272.4)
+                魔 (64%): (250 - 124 * 0.64, 180 - 40 * 0.64) = (170.6, 154.4)
+            -->
+            <!-- Area fill -->
+            <polygon points="250,73.4 364,143.2 307.7,259.8 183.1,272.4 170.6,154.4" 
+                     fill="rgba(110, 212, 255, 0.22)" 
+                     stroke="#6ed4ff" 
+                     stroke-width="2" 
+                     filter="drop-shadow(0 0 10px rgba(110, 212, 255, 0.5))" />
+
+            <!-- Radar Node Dots -->
+            <circle cx="250" cy="73.4" r="4.5" fill="#6ed4ff" stroke="#05080c" stroke-width="1.5" />
+            <circle cx="364" cy="143.2" r="4.5" fill="#6ed4ff" stroke="#05080c" stroke-width="1.5" />
+            <circle cx="307.7" cy="259.8" r="4.5" fill="#6ed4ff" stroke="#05080c" stroke-width="1.5" />
+            <circle cx="183.1" cy="272.4" r="4.5" fill="#6ed4ff" stroke="#05080c" stroke-width="1.5" />
+            <circle cx="170.6" cy="154.4" r="4.5" fill="#6ed4ff" stroke="#05080c" stroke-width="1.5" />
+
+            <!-- Labels for 5-axis: 力, 技, 耐, 速, 魔 -->
+            <!-- 力 (Power) -->
+            <text x="250" y="30" text-anchor="middle" fill="#dbe7f2" font-family="'Noto Sans SC', serif" font-size="14" font-weight="600">力</text>
+            <text x="250" y="44" text-anchor="middle" fill="#6ed4ff" font-family="'JetBrains Mono', monospace" font-size="11">STR 82</text>
+
+            <!-- 技 (Skill) -->
+            <text x="398" y="136" text-anchor="start" fill="#dbe7f2" font-family="'Noto Sans SC', serif" font-size="14" font-weight="600">技</text>
+            <text x="398" y="150" text-anchor="start" fill="#6ed4ff" font-family="'JetBrains Mono', monospace" font-size="11">SKL 92</text>
+
+            <!-- 耐 (Endurance) -->
+            <text x="345" y="305" text-anchor="start" fill="#dbe7f2" font-family="'Noto Sans SC', serif" font-size="14" font-weight="600">耐</text>
+            <text x="345" y="319" text-anchor="start" fill="#6ed4ff" font-family="'JetBrains Mono', monospace" font-size="11">DEF 76</text>
+
+            <!-- 速 (Speed) -->
+            <text x="155" y="305" text-anchor="end" fill="#dbe7f2" font-family="'Noto Sans SC', serif" font-size="14" font-weight="600">速</text>
+            <text x="155" y="319" text-anchor="end" fill="#6ed4ff" font-family="'JetBrains Mono', monospace" font-size="11">SPD 88</text>
+
+            <!-- 魔 (Magic) -->
+            <text x="105" y="136" text-anchor="end" fill="#dbe7f2" font-family="'Noto Sans SC', serif" font-size="14" font-weight="600">魔</text>
+            <text x="105" y="150" text-anchor="end" fill="#6ed4ff" font-family="'JetBrains Mono', monospace" font-size="11">MAG 64</text>
+          </svg>
+        </div>
+
+        <!-- Primary Stat Numerical Breakdown (HP, MP & Attributes) -->
+        <div class="mt-4 space-y-3">
+          <div class="text-[11px] font-num text-cyan-400/60 uppercase tracking-widest flex items-center justify-between">
+            <span>DETAILED STATISTIC RUNTIME // 基础属性条目</span>
+            <span>基准比率 +12% 优</span>
+          </div>
+
+          <!-- HP / MP Dual Bar -->
+          <div class="grid grid-cols-2 gap-3">
+            <div class="frosted-panel-subtle p-2.5 rounded border border-cyan-400/20">
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-slate-400">生命值 (HP)</span>
+                <span class="font-num text-cyan-300 font-semibold">42 / 42</span>
+              </div>
+              <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                <div class="w-full h-full bg-cyan-400 rounded-full shadow-[0_0_8px_#6ed4ff]"></div>
+              </div>
+            </div>
+
+            <div class="frosted-panel-subtle p-2.5 rounded border border-cyan-400/20">
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-slate-400">战技值 (MP)</span>
+                <span class="font-num text-cyan-300 font-semibold">12 / 12</span>
+              </div>
+              <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                <div class="w-full h-full bg-sky-400 rounded-full shadow-[0_0_8px_#38bdf8]"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 5 Bars Table -->
+          <div class="space-y-2 pt-1">
+            <div class="flex items-center text-xs">
+              <span class="w-14 text-slate-400">力量 [力]</span>
+              <div class="flex-1 h-1.5 bg-slate-800/80 rounded-full mx-3 overflow-hidden">
+                <div class="h-full bg-cyan-400 rounded-full" style="width: 82%;"></div>
+              </div>
+              <span class="w-10 text-right font-num text-slate-200">82</span>
+              <span class="w-8 text-right font-num text-cyan-400 text-[11px]">+6</span>
+            </div>
+
+            <div class="flex items-center text-xs">
+              <span class="w-14 text-slate-400">技巧 [技]</span>
+              <div class="flex-1 h-1.5 bg-slate-800/80 rounded-full mx-3 overflow-hidden">
+                <div class="h-full bg-cyan-400 rounded-full" style="width: 92%;"></div>
+              </div>
+              <span class="w-10 text-right font-num text-slate-200">92</span>
+              <span class="w-8 text-right font-num text-cyan-400 text-[11px]">+9</span>
+            </div>
+
+            <div class="flex items-center text-xs">
+              <span class="w-14 text-slate-400">速度 [速]</span>
+              <div class="flex-1 h-1.5 bg-slate-800/80 rounded-full mx-3 overflow-hidden">
+                <div class="h-full bg-cyan-400 rounded-full" style="width: 88%;"></div>
+              </div>
+              <span class="w-10 text-right font-num text-slate-200">88</span>
+              <span class="w-8 text-right font-num text-cyan-400 text-[11px]">+4</span>
+            </div>
+
+            <div class="flex items-center text-xs">
+              <span class="w-14 text-slate-400">耐力 [耐]</span>
+              <div class="flex-1 h-1.5 bg-slate-800/80 rounded-full mx-3 overflow-hidden">
+                <div class="h-full bg-cyan-400 rounded-full" style="width: 76%;"></div>
+              </div>
+              <span class="w-10 text-right font-num text-slate-200">76</span>
+              <span class="w-8 text-right font-num text-slate-500 text-[11px]">±0</span>
+            </div>
+
+            <div class="flex items-center text-xs">
+              <span class="w-14 text-slate-400">魔素 [魔]</span>
+              <div class="flex-1 h-1.5 bg-slate-800/80 rounded-full mx-3 overflow-hidden">
+                <div class="h-full bg-cyan-400 rounded-full" style="width: 64%;"></div>
+              </div>
+              <span class="w-10 text-right font-num text-slate-200">64</span>
+              <span class="w-8 text-right font-num text-cyan-400 text-[11px]">+2</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tactical Evaluation Banner -->
+      <div class="frosted-panel-subtle p-3 rounded border border-cyan-400/20 text-xs text-slate-400 flex items-center gap-3">
+        <span class="w-2 h-2 rounded-full bg-cyan-400 shrink-0"></span>
+        <span class="leading-relaxed">五维兼具高敏捷与高技巧，擅长以突击与连环霜斩压制重甲兵种；受极寒地貌环境增益加成。</span>
+      </div>
+    </section>
+
+    <!-- RIGHT COLUMN: SKILL TREE (3 UNLOCKED NODES, 2 LOCKED NODES) (Col 9-12) -->
+    <section class="col-span-4 frosted-panel rounded p-6 flex flex-col justify-between">
+      <div>
+        <!-- Section Header -->
+        <div class="flex items-center justify-between border-b border-cyan-400/15 pb-4 mb-4">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-num text-cyan-400 tracking-widest">// DISCIPLINE MATRIX</span>
+            <h2 class="text-base font-sans-title tracking-wider text-slate-100">战技谱系 · 霜刃宗脉</h2>
+          </div>
+          <div class="text-xs font-num text-cyan-300">
+            <span class="text-slate-500">SP 可用：</span> <span class="font-bold">4 点</span>
+          </div>
+        </div>
+
+        <!-- 5 Skill Nodes (Vertical Connected Sequence) -->
+        <!-- Unlocked: 1. 霜斩, 2. 守势, 3. 冲锋 | Locked: 4. 极寒领域, 5. 白霜绝剑 -->
+        <div class="relative space-y-3.5 pl-4 before:absolute before:left-7 before:top-4 before:bottom-4 before:w-[1px] before:bg-gradient-to-b before:from-cyan-400/50 before:via-cyan-400/30 before:to-slate-800">
+          
+          <!-- NODE 1: 霜斩 (Unlocked) -->
+          <div class="relative flex items-start gap-3.5 p-3 rounded frosted-panel-subtle border border-cyan-400/40 bg-cyan-950/20">
+            <!-- Node Icon / Marker -->
+            <div class="w-8 h-8 rounded bg-cyan-900/60 border border-cyan-400 flex items-center justify-center shrink-0 z-10 shadow-[0_0_10px_rgba(110,212,255,0.3)]">
+              <span class="text-xs font-num text-cyan-200">I</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between mb-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-semibold text-slate-100 font-sans-title">霜斩</span>
+                  <span class="text-[10px] font-num px-1.5 py-0.2 rounded bg-cyan-400/20 text-cyan-300 border border-cyan-400/30">主动 · 消耗 3 MP</span>
+                </div>
+                <span class="text-[10px] text-emerald-400 font-num">已掌握 (Lv.MAX)</span>
+              </div>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                对目标造成 136% 物理伤害，附加【冰冻迟滞】效果，使其移动力-1，持续2回合。
+              </p>
+            </div>
+          </div>
+
+          <!-- NODE 2: 守势 (Unlocked) -->
+          <div class="relative flex items-start gap-3.5 p-3 rounded frosted-panel-subtle border border-cyan-400/40 bg-cyan-950/20">
+            <!-- Node Icon / Marker -->
+            <div class="w-8 h-8 rounded bg-cyan-900/60 border border-cyan-400 flex items-center justify-center shrink-0 z-10 shadow-[0_0_10px_rgba(110,212,255,0.3)]">
+              <span class="text-xs font-num text-cyan-200">II</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between mb-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-semibold text-slate-100 font-sans-title">守势</span>
+                  <span class="text-[10px] font-num px-1.5 py-0.2 rounded bg-cyan-400/20 text-cyan-300 border border-cyan-400/30">被动 · 姿态</span>
+                </div>
+                <span class="text-[10px] text-emerald-400 font-num">已掌握 (Lv.2)</span>
+              </div>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                回合结束未移动时自动架盾，正面格挡率提升 +35%，减免 20% 穿刺物理伤害。
+              </p>
+            </div>
+          </div>
+
+          <!-- NODE 3: 冲锋 (Unlocked) -->
+          <div class="relative flex items-start gap-3.5 p-3 rounded frosted-panel-subtle border border-cyan-400/40 bg-cyan-950/20">
+            <!-- Node Icon / Marker -->
+            <div class="w-8 h-8 rounded bg-cyan-900/60 border border-cyan-400 flex items-center justify-center shrink-0 z-10 shadow-[0_0_10px_rgba(110,212,255,0.3)]">
+              <span class="text-xs font-num text-cyan-200">III</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between mb-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-semibold text-slate-100 font-sans-title">冲锋</span>
+                  <span class="text-[10px] font-num px-1.5 py-0.2 rounded bg-cyan-400/20 text-cyan-300 border border-cyan-400/30">战术位移 · 4 MP</span>
+                </div>
+                <span class="text-[10px] text-emerald-400 font-num">已掌握 (Lv.1)</span>
+              </div>
+              <p class="text-xs text-slate-400 leading-relaxed">
+                直线突破最多3格，对路径上的所有敌方单位施加击退与护甲震碎效果。
+              </p>
+            </div>
+          </div>
+
+          <!-- NODE 4: 极寒领域 (Locked) -->
+          <div class="relative flex items-start gap-3.5 p-3 rounded frosted-panel-subtle border border-slate-700/40 bg-slate-900/30 opacity-70">
+            <!-- Node Icon / Marker -->
+            <div class="w-8 h-8 rounded bg-slate-900 border border-slate-700 flex items-center justify-center shrink-0 z-10">
+              <svg class="w-3.5 h-3.5 text-slate-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between mb-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-medium text-slate-400 font-sans-title">极寒领域</span>
+                  <span class="text-[10px] font-num px-1.5 py-0.2 rounded bg-slate-800 text-slate-500">领域掌控</span>
+                </div>
+                <span class="text-[10px] text-slate-500 font-num">需求：等级 30</span>
+              </div>
+              <p class="text-xs text-slate-500 leading-relaxed">
+                展开半径3格冻气光环，强制使敌方每回合减速50%，并削减其冰霜抗性。
+              </p>
+            </div>
+          </div>
+
+          <!-- NODE 5: 白霜绝剑 · 终焉 (Locked) -->
+          <div class="relative flex items-start gap-3.5 p-3 rounded frosted-panel-subtle border border-slate-700/40 bg-slate-900/30 opacity-70">
+            <!-- Node Icon / Marker -->
+            <div class="w-8 h-8 rounded bg-slate-900 border border-slate-700 flex items-center justify-center shrink-0 z-10">
+              <svg class="w-3.5 h-3.5 text-slate-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center justify-between mb-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-medium text-slate-400 font-sans-title">白霜绝剑 · 终焉</span>
+                  <span class="text-[10px] font-num px-1.5 py-0.2 rounded bg-slate-800 text-slate-500">奥义 · 绝响</span>
+                </div>
+                <span class="text-[10px] text-slate-500 font-num">需求：宗匠位阶</span>
+              </div>
+              <p class="text-xs text-slate-500 leading-relaxed">
+                白霜家主传承秘剑。凝聚极致绝对零度斩击，直接冻结击杀生命值低于25%的敌人。
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Action & Skill Tree Summary Footer -->
+      <div class="pt-4 border-t border-cyan-400/10 flex items-center justify-between">
+        <div class="text-xs text-slate-400">
+          当前流派：<span class="text-cyan-300 font-medium">极寒破阵专精</span>
+        </div>
+        <button class="px-4 py-1.5 rounded bg-cyan-950/70 border border-cyan-400/30 hover:border-cyan-400 text-cyan-200 text-xs font-medium tracking-wider transition-all">
+          重构战技树
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BOTTOM FOOTER / GAMEPAD PROMPT BAR -->
+  <footer class="w-full h-11 border-t border-cyan-400/20 pt-2 flex items-center justify-between text-xs text-slate-400 font-num">
+    <div class="flex items-center gap-6">
+      <div class="flex items-center gap-1.5">
+        <span class="px-1.5 py-0.5 rounded bg-slate-800 text-cyan-300 border border-slate-700 text-[10px]">A</span>
+        <span>确认 / 切换视图</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">B</span>
+        <span>返回上级舆图</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">X</span>
+        <span>加点与战技配置</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 text-[10px]">Y</span>
+        <span>阅读骑士列传与传记</span>
+      </div>
+    </div>
+
+    <!-- Center Tab Switch Prompt -->
+    <div class="flex items-center gap-3 text-slate-400">
+      <span class="px-1.5 py-0.5 rounded bg-slate-800 text-cyan-300 border border-slate-700 text-[10px]">LB</span>
+      <span>属性 / 技能 / 血统 快速轮换</span>
+      <span class="px-1.5 py-0.5 rounded bg-slate-800 text-cyan-300 border border-slate-700 text-[10px]">RB</span>
+    </div>
+
+    <!-- Right System Info -->
+    <div class="flex items-center gap-4 text-slate-500 text-[11px]">
+      <span>FROST_ENGINE v2.4</span>
+      <span>•</span>
+      <span class="text-cyan-400/80">XBOX CONTROLLER DETECTED</span>
+      <span>•</span>
+      <span>BUILD 2025.04.14-STABLE</span>
+    </div>
+  </footer>
+
+</body>
+</html>

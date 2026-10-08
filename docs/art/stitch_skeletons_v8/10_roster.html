@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, height=1080, initial-scale=1.0">
+<title>百年骑士 - 佣兵名册 (1920x1080)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-void: #070b10;
+    --ice-cyan: #6ED4FF;
+    --frost-blue: #38bdf8;
+    --cold-slate: #94a3b8;
+    --panel-border: rgba(110, 212, 255, 0.15);
+    --panel-bg: rgba(11, 19, 30, 0.72);
+  }
+  * {
+    box-sizing: border-box;
+    user-select: none;
+  }
+  body {
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-void);
+    color: #e2e8f0;
+    font-family: 'Noto Sans SC', -apple-system, serif;
+  }
+  .font-mono-code {
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .font-title {
+    font-family: 'Noto Sans SC', 'Noto Sans SC', serif;
+  }
+  .glass-panel {
+    background: var(--panel-bg);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--panel-border);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  }
+  .frost-glow {
+    box-shadow: 0 0 25px -4px rgba(110, 212, 255, 0.28);
+  }
+  .gamepad-focus-ring {
+    outline: 2px solid #6ED4FF;
+    outline-offset: -1px;
+    box-shadow: 0 0 18px rgba(110, 212, 255, 0.45), inset 0 0 12px rgba(110, 212, 255, 0.12);
+  }
+  /* Grid scanline fine bg texture */
+  .void-grid {
+    background-image: 
+      radial-gradient(circle at 75% 30%, rgba(30, 64, 100, 0.22) 0%, transparent 65%),
+      radial-gradient(circle at 20% 80%, rgba(14, 30, 48, 0.35) 0%, transparent 60%),
+      linear-gradient(rgba(110, 212, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(110, 212, 255, 0.03) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+  }
+</style>
+</head>
+<body class="w-[1920px] h-[1080px] relative overflow-hidden bg-[#070b10] text-slate-200 void-grid">
+
+  <!-- TOP HEADER HUD (Consistent with CenturyKnights Frost design system) -->
+  <header class="w-full h-16 px-12 flex items-center justify-between border-b border-[#6ED4FF]/15 bg-[#070b10]/80 backdrop-blur-md z-30">
+    <div class="flex items-center gap-6">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-[#6ED4FF] animate-pulse"></span>
+        <span class="font-mono-code text-[11px] uppercase tracking-[0.25em] text-[#6ED4FF]/80">MILITARY ROSTER // BATTALION ARCHIVE</span>
+      </div>
+      <span class="text-white/20">|</span>
+      <h1 class="text-xl tracking-[0.2em] font-light text-white font-title">
+        百年骑士 <span class="text-xs font-mono-code tracking-[0.25em] text-slate-400 font-normal ml-2">CENTURY KNIGHTS</span>
+      </h1>
+    </div>
+
+    <!-- Center category breadcrumb -->
+    <div class="flex items-center gap-8 text-sm tracking-widest font-light text-slate-400">
+      <span class="text-slate-500 font-mono-code text-xs">ARCHIVE : 07</span>
+      <span class="text-slate-300 border-b border-[#6ED4FF] pb-0.5 text-[#6ED4FF] font-medium">驻营佣兵名册</span>
+      <span class="hover:text-slate-200 cursor-pointer transition-colors">战力评级</span>
+      <span class="hover:text-slate-200 cursor-pointer transition-colors">功勋叙奖</span>
+    </div>
+
+    <!-- Right status info -->
+    <div class="flex items-center gap-8 font-mono-code text-xs tracking-wider text-slate-400">
+      <div class="flex items-center gap-2">
+        <span class="text-slate-500">军饷储备</span>
+        <span class="text-amber-300 font-medium">18,450 充索</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-slate-500">编成上限</span>
+        <span class="text-[#6ED4FF]">06 / 12 名</span>
+      </div>
+      <div class="text-[11px] text-slate-500 border border-slate-700/60 px-2 py-0.5 rounded">
+        赤历一百二十八年 · 霜降
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN VIEWPORT (Exact fit 1920x(1080 - 64 - 56) = 960px height) -->
+  <main class="w-full h-[960px] px-12 py-7 flex gap-8 relative z-20">
+
+    <!-- LEFT COLUMN: ROSTER LIST (Width 760px) -->
+    <section class="w-[740px] h-full flex flex-col justify-between">
+      
+      <!-- List Header -->
+      <div class="flex items-end justify-between pb-3 border-b border-white/10">
+        <div>
+          <div class="text-[11px] font-mono-code uppercase tracking-[0.2em] text-[#6ED4FF]">MERCENARY CADRE</div>
+          <h2 class="text-2xl font-light tracking-[0.15em] text-white mt-0.5">驻编骑士名册</h2>
+        </div>
+        <div class="font-mono-code text-xs text-slate-400 flex items-center gap-4">
+          <span>共六名精锐待命</span>
+          <span class="text-slate-600">//</span>
+          <span class="text-[#6ED4FF]/80">↑↓ 切换检索目标</span>
+        </div>
+      </div>
+
+      <!-- Mercenary Cards Stack (6 Items) -->
+      <div class="flex flex-col gap-3.5 my-auto">
+
+        <!-- ITEM 1: 白霜·凛 (PRIMARY FOCUSED TARGET - WITH GAMEPAD FOCUS RING) -->
+        <div class="glass-panel gamepad-focus-ring relative rounded-none p-5 bg-[#0f2136]/90 cursor-pointer transition-all duration-150">
+          <!-- Active Corner Marks -->
+          <div class="absolute top-0 right-0 w-2 h-2 border-t-2 border-r-2 border-[#6ED4FF]"></div>
+          <div class="absolute bottom-0 left-0 w-2 h-2 border-b-2 border-l-2 border-[#6ED4FF]"></div>
+
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-5">
+              <!-- Number badge -->
+              <div class="w-10 h-10 border border-[#6ED4FF]/60 bg-[#6ED4FF]/10 flex flex-col items-center justify-center font-mono-code">
+                <span class="text-[10px] text-[#6ED4FF]/70 leading-none">NO</span>
+                <span class="text-sm font-bold text-[#6ED4FF] leading-tight">01</span>
+              </div>
+              <div>
+                <div class="flex items-center gap-3">
+                  <span class="text-xl font-medium tracking-[0.15em] text-white">白霜 · 凛</span>
+                  <span class="px-2 py-0.5 text-xs font-mono-code bg-[#6ED4FF]/20 text-[#6ED4FF] border border-[#6ED4FF]/40 rounded-sm">队长待命</span>
+                </div>
+                <div class="flex items-center gap-3 mt-1 text-xs text-slate-300 tracking-wider">
+                  <span class="text-[#6ED4FF] font-medium">霜刃骑士</span>
+                  <span class="text-slate-600">/</span>
+                  <span class="font-mono-code text-slate-400">年龄 27 岁</span>
+                  <span class="text-slate-600">/</span>
+                  <span class="text-slate-400">统领适性 S</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-6">
+              <div class="text-right">
+                <div class="text-[11px] font-mono-code text-slate-400">STATUS</div>
+                <div class="text-xs text-[#6ED4FF] font-mono-code tracking-wider mt-0.5">READY // 战备全满</div>
+              </div>
+              <!-- Focus indicator -->
+              <div class="w-7 h-7 rounded border border-[#6ED4FF] bg-[#6ED4FF]/20 flex items-center justify-center">
+                <span class="text-xs font-mono-code text-[#6ED4FF] font-bold">A</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ITEM 2: 青澜·昭 -->
+        <div class="glass-panel relative rounded-none p-4 hover:border-slate-400/30 hover:bg-[#0c1828]/60 cursor-pointer transition-all">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-5">
+              <div class="w-10 h-10 border border-slate-700 bg-slate-900/40 flex flex-col items-center justify-center font-mono-code">
+                <span class="text-[10px] text-slate-500 leading-none">NO</span>
+                <span class="text-sm text-slate-300 leading-tight">02</span>
+              </div>
+              <div>
+                <div class="flex items-center gap-3">
+                  <span class="text-lg font-light tracking-[0.15em] text-slate-200">青澜 · 昭</span>
+                  <span class="px-1.5 py-0.2 text-[11px] font-mono-code bg-sky-950/40 text-sky-300 border border-sky-800/40 rounded-sm">临海学派</span>
+                </div>
+                <div class="flex items-center gap-3 mt-1 text-xs text-slate-400 tracking-wider">
+                  <span class="text-slate-300">潮咏术士</span>
+                  <span class="text-slate-700">/</span>
+                  <span class="font-mono-code text-slate-400">年龄 24 岁</span>
+                  <span class="text-slate-700">/</span>
+                  <span class="text-slate-500">水象共鸣</span>
+                </div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-[11px] font-mono-code text-slate-500">CLASS</div>
+              <div class="text-xs text-slate-400 font-mono-code">SUPPORT // 远程施法</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ITEM 3: 铁岭·铠 -->
+        <div class="glass-panel relative rounded-none p-4 hover:border-slate-400/30 hover:bg-[#0c1828]/60 cursor-pointer transition-all">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-5">
+              <div class="w-10 h-10 border border-slate-700 bg-slate-900/40 flex flex-col items-center justify-center font-mono-code">
+                <span class="text-[10px] text-slate-500 leading-none">NO</span>
+                <span class="text-sm text-slate-300 leading-tight">03</span>
+              </div>
+              <div>
+                <div class="flex items-center gap-3">
+                  <span class="text-lg font-light tracking-[0.15em] text-slate-200">铁岭 · 铠</span>
+                  <span class="px-1.5 py-0.2 text-[11px] font-mono-code bg-amber-950/30 text-amber-300 border border-amber-800/40 rounded-sm">磐石要塞</span>
+                </div>
+                <div class="flex items-center gap-3 mt-1 text-xs text-slate-400 tracking-wider">
+                  <span class="text-slate-300">重壁卫</span>
+                  <span class="text-slate-700">/</span>
+                  <span class="font-mono-code text-slate-400">年龄 31 岁</span>
+                  <span class="text-slate-700">/</span>
+                  <span class="text-slate-500">前线据守</span>
+                </div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-[11px] font-mono-code text-slate-500">CLASS</div>
+              <div class="text-xs text-slate-400 font-mono-code">DEFENDER // 坚韧堡垒</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ITEM 4: 雾泽·萤 -->
+        <div class="glass-panel relative rounded-none p-4 hover:border-slate-400/30 hover:bg-[#0c1828]/60 cursor-pointer transition-all">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-5">
+              <div class="w-10 h-10 border border-slate-700 bg-slate-900/40 flex flex-col items-center justify-center font-mono-code">
+                <span class="text-[10px] text-slate-500 leading-none">NO</span>
+                <span class="text-sm text-slate-300 leading-tight">04</span>
+              </div>
+              <div>
+                <div class="flex items-center gap-3">
+                  <span class="text-lg font-light tracking-[0.15em] text-slate-200">雾泽 · 萤</span>
+                  <span class="px-1.5 py-0.2 text-[11px] font-mono-code bg-emerald-950/30 text-emerald-300 border border-emerald-800/40 rounded-sm">幽林巡径</span>
+                </div>
+                <div class="flex items-center gap-3 mt-1 text-xs text-slate-400 tracking-wider">
+                  <span class="text-slate-300">斥候</span>
+                  <span class="text-slate-700">/</span>
+                  <span class="font-mono-code text-slate-400">年龄 19 岁</span>
+                  <span class="text-slate-700">/</span>
+                  <span class="text-slate-500">机动侦察</span>
+                </div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-[11px] font-mono-code text-slate-500">CLASS</div>
+              <div class="text-xs text-slate-400 font-mono-code">SCOUT // 丛林隐伏</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ITEM 5: 沙洲·禾 -->
+        <div class="glass-panel relative rounded-none p-4 hover:border-slate-400/30 hover:bg-[#0c1828]/60 cursor-pointer transition-all">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-5">
+              <div class="w-10 h-10 border border-slate-700 bg-slate-900/40 flex flex-col items-center justify-center font-mono-code">
+                <span class="text-[10px] text-slate-500 leading-none">NO</span>
+                <span class="text-sm text-slate-300 leading-tight">05</span>
+              </div>
+              <div>
+                <div class="flex items-center gap-3">
+                  <span class="text-lg font-light tracking-[0.15em] text-slate-200">沙洲 · 禾</span>
+                  <span class="px-1.5 py-0.2 text-[11px] font-mono-code bg-amber-950/20 text-yellow-300 border border-yellow-800/40 rounded-sm">荒漠猎游</span>
+                </div>
+                <div class="flex items-center gap-3 mt-1 text-xs text-slate-400 tracking-wider">
+                  <span class="text-slate-300">弓手</span>
+                  <span class="text-slate-700">/</span>
+                  <span class="font-mono-code text-slate-400">年龄 22 岁</span>
+                  <span class="text-slate-700">/</span>
+                  <span class="text-slate-500">高地制空</span>
+                </div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-[11px] font-mono-code text-slate-500">CLASS</div>
+              <div class="text-xs text-slate-400 font-mono-code">ARCHER // 精确贯穿</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ITEM 6: 云栈·衡 -->
+        <div class="glass-panel relative rounded-none p-4 hover:border-slate-400/30 hover:bg-[#0c1828]/60 cursor-pointer transition-all">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-5">
+              <div class="w-10 h-10 border border-slate-700 bg-slate-900/40 flex flex-col items-center justify-center font-mono-code">
+                <span class="text-[10px] text-slate-500 leading-none">NO</span>
+                <span class="text-sm text-slate-300 leading-tight">06</span>
+              </div>
+              <div>
+                <div class="flex items-center gap-3">
+                  <span class="text-lg font-light tracking-[0.15em] text-slate-200">云栈 · 衡</span>
+                  <span class="px-1.5 py-0.2 text-[11px] font-mono-code bg-purple-950/30 text-purple-300 border border-purple-800/40 rounded-sm">天枢策论</span>
+                </div>
+                <div class="flex items-center gap-3 mt-1 text-xs text-slate-400 tracking-wider">
+                  <span class="text-slate-300">军师</span>
+                  <span class="text-slate-700">/</span>
+                  <span class="font-mono-code text-slate-400">年龄 35 岁</span>
+                  <span class="text-slate-700">/</span>
+                  <span class="text-slate-500">阵线谋略</span>
+                </div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-[11px] font-mono-code text-slate-500">CLASS</div>
+              <div class="text-xs text-slate-400 font-mono-code">TACTICIAN // 全局增益</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Left Footnote / Filter stats -->
+      <div class="pt-3 border-t border-white/10 flex items-center justify-between text-xs text-slate-400 font-mono-code">
+        <div>FILTER: 全部职业 (6/6)</div>
+        <div class="flex gap-4 text-slate-500">
+          <span>[X] 职业筛选</span>
+          <span>[Y] 薪俸重排</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT COLUMN: FOCUSED DETAIL DOSSIER (Width 1060px) -->
+    <section class="flex-1 h-full glass-panel p-8 relative flex flex-col justify-between">
+      
+      <!-- Top Dossier Navigation / Metadata -->
+      <div class="flex items-center justify-between pb-4 border-b border-white/10">
+        <div class="flex items-center gap-4">
+          <span class="text-[11px] font-mono-code uppercase px-2 py-0.5 bg-[#6ED4FF]/10 text-[#6ED4FF] border border-[#6ED4FF]/30">DOSSIER #01</span>
+          <span class="font-mono-code text-xs text-slate-400">IDENTIFIER: SR-709 // CENTURY KNIGHTS REGISTER</span>
+        </div>
+        <div class="flex items-center gap-3 text-xs font-mono-code text-slate-400">
+          <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          <span>领地驻防契约有效</span>
+        </div>
+      </div>
+
+      <!-- Dossier Center Body: Portrait Frame (Left) + Detailed Specs (Right) -->
+      <div class="flex gap-8 my-auto h-[710px]">
+        
+        <!-- Half-body Portrait Frame (Editorial Architectural Style) -->
+        <div class="w-[380px] h-full flex flex-col">
+          <div class="w-full flex-1 relative border border-[#6ED4FF]/25 bg-[#08121f] overflow-hidden flex flex-col items-center justify-center p-6">
+            
+            <!-- Fine frosted background grid lines inside frame -->
+            <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: linear-gradient(to right, #6ED4FF 1px, transparent 1px), linear-gradient(to bottom, #6ED4FF 1px, transparent 1px); background-size: 32px 32px;"></div>
+
+            <!-- Stylized Geometric Vector Half-Body / Knight Helm & Mantle Silhouette -->
+            <div class="relative z-10 w-full h-[440px] flex items-center justify-center">
+              <svg viewBox="0 0 320 420" class="w-full h-full text-[#6ED4FF]">
+                <!-- Ambient outer glow aura -->
+                <circle cx="160" cy="180" r="130" fill="none" stroke="#6ED4FF" stroke-width="0.75" stroke-dasharray="4 6" opacity="0.4"/>
+                <circle cx="160" cy="180" r="105" fill="none" stroke="#6ED4FF" stroke-width="1" opacity="0.6"/>
+
+                <!-- Knight Visor / Crest / Half-Body Stylized Armor Lines -->
+                <!-- Crest Star -->
+                <polygon points="160,50 164,65 178,65 166,74 170,88 160,79 150,88 154,74 142,65 156,65" fill="#6ED4FF" opacity="0.85"/>
+                
+                <!-- Helmet Helm Shape -->
+                <path d="M 120 100 Q 160 80 200 100 L 210 160 Q 200 210 160 220 Q 120 210 110 160 Z" fill="rgba(14, 34, 54, 0.7)" stroke="#6ED4FF" stroke-width="2"/>
+                
+                <!-- Slit / Visor Glow -->
+                <polygon points="135,145 185,145 178,160 142,160" fill="#6ED4FF" opacity="0.95"/>
+                <line x1="160" y1="130" x2="160" y2="185" stroke="#6ED4FF" stroke-width="1.5"/>
+
+                <!-- Gorget / Throat Guard -->
+                <path d="M 130 215 L 160 240 L 190 215 L 205 245 L 160 268 L 115 245 Z" fill="rgba(11, 25, 42, 0.85)" stroke="#6ED4FF" stroke-width="1.5"/>
+
+                <!-- Shoulders / Pauldrons / Mantle Silhouette -->
+                <path d="M 115 245 L 45 285 L 30 380 L 110 395 L 135 290 Z" fill="rgba(10, 22, 38, 0.75)" stroke="#6ED4FF" stroke-width="1.5"/>
+                <path d="M 205 245 L 275 285 L 290 380 L 210 395 L 185 290 Z" fill="rgba(10, 22, 38, 0.75)" stroke="#6ED4FF" stroke-width="1.5"/>
+                
+                <!-- Chestplate Cuirass Lines -->
+                <path d="M 135 290 L 160 270 L 185 290 L 180 405 L 140 405 Z" fill="rgba(13, 30, 50, 0.9)" stroke="#6ED4FF" stroke-width="1.5"/>
+                <line x1="160" y1="270" x2="160" y2="405" stroke="#6ED4FF" stroke-width="1" stroke-dasharray="2 2" opacity="0.8"/>
+
+                <!-- Frost Crystal Crest Flares -->
+                <line x1="60" y1="120" x2="100" y2="140" stroke="#6ED4FF" stroke-width="1" opacity="0.3"/>
+                <line x1="260" y1="120" x2="220" y2="140" stroke="#6ED4FF" stroke-width="1" opacity="0.3"/>
+              </svg>
+            </div>
+
+            <!-- Plate Badge Overlay -->
+            <div class="w-full text-center mt-2 pt-3 border-t border-[#6ED4FF]/20">
+              <div class="text-[11px] font-mono-code uppercase tracking-[0.25em] text-[#6ED4FF]">HALF-BODY PORTRAIT // SPEC 01</div>
+              <div class="text-xs text-slate-400 mt-0.5 tracking-wider">北境第七执行序列 · 直属家督</div>
+            </div>
+
+            <!-- Calibration corner tags -->
+            <span class="absolute top-2 left-2 text-[9px] font-mono-code text-[#6ED4FF]/40">CAM: 50mm FL</span>
+            <span class="absolute bottom-2 right-2 text-[9px] font-mono-code text-[#6ED4FF]/40">EXP: 0.94 LUX</span>
+          </div>
+
+          <!-- Short Bio Box directly below portrait -->
+          <div class="mt-4 p-4 border border-white/10 bg-[#08121f]/60">
+            <div class="text-[11px] font-mono-code text-slate-500 uppercase tracking-wider">CHRONICLE BIO</div>
+            <p class="text-sm text-slate-200 mt-1.5 tracking-widest font-light leading-relaxed">
+              「霜堡家主，第三代。」
+            </p>
+            <p class="text-xs text-slate-400 mt-1 tracking-wider font-light leading-relaxed">
+              自长夜战役归来，执掌极北边垒与霜刃禁卫，行事果决而严整。
+            </p>
+          </div>
+        </div>
+
+        <!-- Specifications & Attribute Breakdown (Right Half) -->
+        <div class="flex-1 flex flex-col justify-between pl-2">
+          
+          <!-- Identity Banner -->
+          <div>
+            <div class="flex items-baseline justify-between">
+              <div>
+                <span class="text-xs font-mono-code uppercase tracking-[0.25em] text-[#6ED4FF]">PRIMARY OPERATIVE</span>
+                <h3 class="text-4xl font-light tracking-[0.18em] text-white mt-1">白霜 · 凛</h3>
+              </div>
+              <div class="text-right">
+                <span class="text-xs font-mono-code text-slate-500">EXPERIENCE RANK</span>
+                <div class="text-xl font-mono-code text-[#6ED4FF] font-medium tracking-wider">LV. 34 <span class="text-xs text-slate-400">/ 50</span></div>
+              </div>
+            </div>
+
+            <!-- Key Metric Strips: Class & Age -->
+            <div class="grid grid-cols-2 gap-4 mt-6">
+              <div class="border border-white/10 p-3.5 bg-white/[0.02]">
+                <div class="text-[11px] font-mono-code text-slate-400 uppercase tracking-wider">职业 // CLASS</div>
+                <div class="text-lg text-white font-medium tracking-widest mt-0.5 flex items-center justify-between">
+                  <span>霜刃骑士</span>
+                  <span class="text-xs font-mono-code text-[#6ED4FF] bg-[#6ED4FF]/10 px-2 py-0.5 border border-[#6ED4FF]/25">近战物理 / 冰相</span>
+                </div>
+              </div>
+
+              <div class="border border-white/10 p-3.5 bg-white/[0.02]">
+                <div class="text-[11px] font-mono-code text-slate-400 uppercase tracking-wider">年龄 // CHRONO AGE</div>
+                <div class="text-lg text-white font-mono-code font-light tracking-widest mt-0.5 flex items-center justify-between">
+                  <span>27 <span class="text-xs font-sans text-slate-400">岁</span></span>
+                  <span class="text-xs text-slate-400 font-mono-code">壮年盛期 · 巅峰</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Traits Section: 霜血, 冷静 -->
+          <div class="border-t border-white/10 pt-5">
+            <div class="flex items-center justify-between mb-3">
+              <div class="text-[11px] font-mono-code uppercase tracking-[0.2em] text-[#6ED4FF]">CHARACTER TRAITS // 先天特质</div>
+              <span class="text-xs font-mono-code text-slate-500">2 项固化秉赋</span>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+              <!-- Trait 1: 霜血 -->
+              <div class="p-4 border border-[#6ED4FF]/30 bg-[#6ED4FF]/5 relative">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rotate-45 bg-[#6ED4FF]"></span>
+                    <span class="text-base text-white tracking-widest font-medium">霜血</span>
+                  </div>
+                  <span class="text-[11px] font-mono-code text-[#6ED4FF]">PASSIVE // 血统</span>
+                </div>
+                <p class="text-xs text-slate-300 mt-2 leading-relaxed font-light tracking-wide">
+                  极北严寒气候下全属性提升 15%，免疫「冻伤」状态，近战攻击附带霜刃减速判定。
+                </p>
+              </div>
+
+              <!-- Trait 2: 冷静 -->
+              <div class="p-4 border border-white/10 bg-white/[0.02] relative">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rotate-45 bg-slate-400"></span>
+                    <span class="text-base text-white tracking-widest font-medium">冷静</span>
+                  </div>
+                  <span class="text-[11px] font-mono-code text-slate-400">MENTAL // 心性</span>
+                </div>
+                <p class="text-xs text-slate-300 mt-2 leading-relaxed font-light tracking-wide">
+                  士气动摇抗性 +40%。身处被包围或绝境战局时，会心一击率额外追加 +25%。
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Equipment Section: 霜刃剑 / 轻甲 / 行军靴 -->
+          <div class="border-t border-white/10 pt-5">
+            <div class="flex items-center justify-between mb-3">
+              <div class="text-[11px] font-mono-code uppercase tracking-[0.2em] text-[#6ED4FF]">CURRENT LOADOUT // 佩装配置</div>
+              <span class="text-xs font-mono-code text-slate-500">3 槽位整备完好</span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3">
+              <!-- Equip 1: 霜刃剑 -->
+              <div class="p-3.5 border border-white/10 bg-[#08121f]/70">
+                <div class="text-[10px] font-mono-code text-slate-400 uppercase tracking-wider">主手佩武 · MAIN HAND</div>
+                <div class="text-base text-white font-medium tracking-wider mt-1 text-[#6ED4FF]">霜刃剑</div>
+                <div class="text-xs text-slate-400 mt-1 font-mono-code">物理 ATK +48 · 寒霜属性</div>
+                <div class="mt-2 text-[11px] text-slate-500 border-t border-white/5 pt-1.5">家传陨铁锻造，刃口不凝霜露</div>
+              </div>
+
+              <!-- Equip 2: 轻甲 -->
+              <div class="p-3.5 border border-white/10 bg-[#08121f]/70">
+                <div class="text-[10px] font-mono-code text-slate-400 uppercase tracking-wider">躯干护甲 · BODY ARMOR</div>
+                <div class="text-base text-white font-medium tracking-wider mt-1">轻甲</div>
+                <div class="text-xs text-slate-400 mt-1 font-mono-code">防御 DEF +22 · 敏捷惩罚 0</div>
+                <div class="mt-2 text-[11px] text-slate-500 border-t border-white/5 pt-1.5">双层熟皮缝合，外缀冷锻薄钢片</div>
+              </div>
+
+              <!-- Equip 3: 行军靴 -->
+              <div class="p-3.5 border border-white/10 bg-[#08121f]/70">
+                <div class="text-[10px] font-mono-code text-slate-400 uppercase tracking-wider">足部行具 · FOOTWEAR</div>
+                <div class="text-base text-white font-medium tracking-wider mt-1">行军靴</div>
+                <div class="text-xs text-slate-400 mt-1 font-mono-code">移动力 MOV +1 · 沼泽减免</div>
+                <div class="mt-2 text-[11px] text-slate-500 border-t border-white/5 pt-1.5">雪地踏行防滑底，适宜长途奔袭</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Combat Performance Quick Gauge Bar -->
+          <div class="border-t border-white/10 pt-4 flex items-center justify-between text-xs text-slate-400 font-mono-code">
+            <div class="flex items-center gap-6">
+              <span>生命值 <strong class="text-white font-normal ml-1">42/42</strong></span>
+              <span>物攻 <strong class="text-white font-normal ml-1">28</strong></span>
+              <span>防御 <strong class="text-white font-normal ml-1">16</strong></span>
+              <span>速度 <strong class="text-white font-normal ml-1">14</strong></span>
+              <span>命中率 <strong class="text-emerald-400 font-normal ml-1">94%</strong></span>
+            </div>
+            <div class="text-[#6ED4FF] tracking-wider">
+              [CRUSADE READY] 战备状态就绪
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Dossier Footer Action Strip -->
+      <div class="pt-3 border-t border-white/10 flex items-center justify-between">
+        <div class="flex items-center gap-6 text-xs text-slate-400">
+          <span class="font-mono-code text-slate-500">OPERATIVE ID: #01-FROSTBLADE</span>
+          <span>最后校准：赤原关战役前哨</span>
+        </div>
+
+        <div class="flex items-center gap-4">
+          <button class="px-5 py-2 border border-slate-700 bg-slate-800/40 hover:bg-slate-700/60 text-slate-300 text-xs tracking-widest transition-colors font-medium">
+            查看完整传记 (Y)
+          </button>
+          <button class="px-5 py-2 border border-slate-700 bg-slate-800/40 hover:bg-slate-700/60 text-slate-300 text-xs tracking-widest transition-colors font-medium">
+            更换佩装配置 (X)
+          </button>
+          <button class="px-6 py-2 border border-[#6ED4FF] bg-[#6ED4FF] text-slate-950 text-xs tracking-widest font-semibold hover:bg-sky-300 transition-colors shadow-[0_0_15px_rgba(110,212,255,0.4)]">
+            委排出战 (A)
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- BOTTOM FOOTER CONTROLS HUD (Game Gamepad & Mouse prompts) -->
+  <footer class="w-full h-14 px-12 flex items-center justify-between border-t border-white/10 bg-[#070b10]/90 backdrop-blur-md z-30 font-mono-code text-xs text-slate-400">
+    <!-- Left Gamepad buttons prompts -->
+    <div class="flex items-center gap-7">
+      <div class="flex items-center gap-2">
+        <span class="w-5 h-5 rounded-full border border-slate-600 bg-slate-800/80 text-center leading-5 text-[11px] text-slate-200">A</span>
+        <span class="text-slate-300 tracking-wider">确认选定</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="w-5 h-5 rounded-full border border-slate-600 bg-slate-800/80 text-center leading-5 text-[11px] text-slate-200">B</span>
+        <span class="text-slate-400 tracking-wider">返回军略</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="w-5 h-5 rounded-full border border-slate-600 bg-slate-800/80 text-center leading-5 text-[11px] text-slate-200">X</span>
+        <span class="text-slate-400 tracking-wider">整备佩装</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="w-5 h-5 rounded-full border border-slate-600 bg-slate-800/80 text-center leading-5 text-[11px] text-slate-200">Y</span>
+        <span class="text-slate-400 tracking-wider">人物纪事</span>
+      </div>
+      <div class="flex items-center gap-2 text-slate-500">
+        <span class="px-1.5 py-0.5 border border-slate-700 rounded text-[10px]">D-PAD / 光标</span>
+        <span>上下切换骑士</span>
+      </div>
+    </div>
+
+    <!-- Center build version -->
+    <div class="text-[11px] text-slate-600 tracking-widest">
+      CENTURY KNIGHTS · BUILD 2025.04.14-STABLE
+    </div>
+
+    <!-- Right status -->
+    <div class="flex items-center gap-4 text-slate-500 text-[11px]">
+      <span class="inline-block w-2 h-2 rounded-full bg-[#6ED4FF]/60"></span>
+      <span>手柄连接就绪 // XBOX CONTROLLER</span>
+    </div>
+  </footer>
+
+</body>
+</html>

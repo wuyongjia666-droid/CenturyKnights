@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<title>CenturyKnights // 招募所</title>
+<!-- Google Fonts: Public Sans & JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            surface: "#090F17",
+            "surface-panel": "rgba(14, 22, 33, 0.72)",
+            "surface-panel-focused": "rgba(16, 28, 43, 0.90)",
+            primary: "#6ED4FF",
+            "primary-container": "rgba(110, 212, 255, 0.12)",
+            "on-primary": "#04141E",
+            "on-surface": "#F0F5FA",
+            "on-surface-variant": "#7F93A6",
+            "outline-variant": "rgba(110, 212, 255, 0.18)",
+            "outline-strong": "rgba(110, 212, 255, 0.45)",
+            mint: "#7FF1C3",
+            coral: "#FF7373",
+            ember: "#FFB066"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Public Sans", "Noto Sans SC", "sans-serif"],
+            display: ["Public Sans", "Noto Sans SC", "sans-serif"],
+            body: ["Public Sans", "Noto Sans SC", "sans-serif"],
+            label: ["Public Sans", "Noto Sans SC", "sans-serif"],
+            mono: ["JetBrains Mono", "monospace"]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #03060A;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: "Public Sans", "Noto Sans SC", sans-serif;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-outlined.filled {
+      font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    /* Subtle geometric grid background */
+    .ink-grid {
+      background-image: 
+        radial-gradient(circle at 50% 10%, rgba(110, 212, 255, 0.08) 0%, transparent 60%),
+        radial-gradient(circle at 15% 90%, rgba(7, 18, 30, 0.8) 0%, transparent 70%),
+        linear-gradient(rgba(110, 212, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(110, 212, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+    }
+  </style>
+</head>
+<body class="dark overflow-hidden">
+<!-- 1920x1080 Viewport Canvas -->
+<div class="ink-grid text-on-surface flex flex-col justify-between selection:bg-primary selection:text-on-primary" style="width: 1920px; height: 1080px; overflow: hidden; position: relative; background: #070B11;">
+<!-- Subtle Ambient Frost Particles & Border Accents -->
+<div class="pointer-events-none absolute inset-0 z-0">
+<div class="absolute top-0 left-1/4 w-[600px] h-[350px] bg-primary/5 blur-[120px] rounded-full"></div>
+<div class="absolute bottom-10 right-1/4 w-[500px] h-[300px] bg-mint/5 blur-[140px] rounded-full"></div>
+<!-- Subtle top decorative precision coordinate lines -->
+<div class="absolute top-3 left-10 font-mono text-[10px] tracking-widest text-outline-variant/60">SYS_COORD // 44.821°N, 12.004°E · RECRUIT_STATION_CHAMBER_03</div>
+<div class="absolute top-3 right-10 font-mono text-[10px] tracking-widest text-outline-variant/60">CIPHER: 0x88F9_FROST_TACTICS</div>
+</div>
+<!-- ========================================== -->
+<!-- 1. TOP HEADER BAR                          -->
+<!-- ========================================== -->
+<header class="relative z-20 w-full h-20 px-10 flex items-center justify-between border-b border-outline-variant/30 bg-surface/80 backdrop-blur-md">
+<!-- Left: Breadcrumb / System Tag -->
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded border border-primary/40 bg-primary/10 flex items-center justify-center text-primary shadow-[0_0_12px_rgba(110,212,255,0.2)]">
+<span class="material-symbols-outlined text-lg" data-icon="swords">swords</span>
+</div>
+<div>
+<div class="font-headline text-xs font-light tracking-[0.22em] text-primary uppercase">CenturyKnights // 招募所</div>
+<div class="text-xs text-on-surface-variant font-mono tracking-wider">TACTICAL SRPG PROTOCOL</div>
+</div>
+</div>
+<div class="h-6 w-px bg-outline-variant/40"></div>
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse shadow-[0_0_8px_#6ED4FF]"></span>
+<span class="font-headline text-sm font-medium tracking-wider text-on-surface">酒馆 · 本旬候选人</span>
+<span class="text-xs font-mono text-outline-strong ml-2 px-2 py-0.5 rounded border border-outline-variant/40 bg-surface/60">Dossier #084</span>
+</div>
+</div>
+<!-- Center & Right Center: Treasury Status + Refresh Action -->
+<div class="flex items-center gap-8">
+<!-- Treasury Widget -->
+<div class="flex items-center gap-6 px-5 py-2 rounded-lg bg-surface-panel border border-outline-variant/30 backdrop-blur-md">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-primary text-base" data-icon="account_balance_wallet">account_balance_wallet</span>
+<div class="flex flex-col">
+<span class="text-[10px] uppercase font-mono tracking-wider text-on-surface-variant">库银结存</span>
+<span class="font-mono text-sm font-semibold tracking-wide text-on-surface">12,480 <span class="text-xs font-light text-primary">克朗</span></span>
+</div>
+</div>
+<div class="h-5 w-px bg-outline-variant/30"></div>
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-mint text-base" data-icon="payments">payments</span>
+<div class="flex flex-col">
+<span class="text-[10px] uppercase font-mono tracking-wider text-on-surface-variant">季俸预估</span>
+<span class="font-mono text-sm font-medium tracking-wide text-mint">-120 <span class="text-[11px] text-on-surface-variant">/季</span></span>
+</div>
+</div>
+</div>
+<!-- Refresh Button -->
+<button class="flex items-center gap-2 px-4 py-2 rounded border border-outline-variant hover:border-primary hover:bg-primary/10 transition-colors duration-150 group active:scale-95 bg-surface/70 backdrop-blur-md">
+<span class="w-5 h-5 rounded bg-surface border border-outline-variant/80 font-mono text-xs flex items-center justify-center text-primary font-bold group-hover:border-primary">X</span>
+<span class="text-xs font-headline font-light tracking-wider text-on-surface group-hover:text-primary">刷新候选</span>
+<span class="text-[11px] font-mono text-on-surface-variant">(50 晶石)</span>
+<span class="material-symbols-outlined text-sm text-outline-strong group-hover:text-primary transition-transform group-hover:rotate-180 duration-500" data-icon="refresh">refresh</span>
+</button>
+<!-- Season / Calendar & Return -->
+<div class="flex items-center gap-4 pl-4 border-l border-outline-variant/30">
+<div class="flex items-center gap-2 text-right">
+<span class="material-symbols-outlined text-primary/70 text-base" data-icon="ac_unit">ac_unit</span>
+<div>
+<div class="font-headline text-xs font-medium tracking-wider text-on-surface">霜降之月 · 第四旬</div>
+<div class="font-mono text-[10px] text-on-surface-variant tracking-wider">HARVEST RECESSION · END CYCLE</div>
+</div>
+</div>
+<div class="flex items-center gap-1.5 px-3 py-1.5 rounded border border-outline-variant/30 bg-surface-panel text-on-surface-variant text-xs hover:text-on-surface hover:border-outline-strong cursor-pointer transition-colors">
+<span class="font-mono text-[10px] px-1 py-0.5 rounded bg-surface border border-outline-variant text-primary">ESC</span>
+<span class="text-xs tracking-wider">返回领地</span>
+</div>
+</div>
+</div>
+</header>
+<!-- ========================================== -->
+<!-- 2. CANDIDATES MAIN BENTO CARDS CONTAINER   -->
+<!-- ========================================== -->
+<main class="relative z-10 flex-1 px-14 py-8 flex flex-col justify-center">
+<!-- Section Sub-header / Filter context -->
+<div class="w-full max-w-[1760px] mx-auto mb-6 flex items-center justify-between">
+<div class="flex items-baseline gap-4">
+<h1 class="text-xl font-headline font-light tracking-[0.16em] text-on-surface">
+            招募名册 <span class="text-sm font-mono text-primary font-normal">/ RECRUITMENT ROSTER</span>
+</h1>
+<p class="text-xs font-light text-on-surface-variant tracking-wider">
+            当前检阅：第 VII 边境哨站旅者营地 · 今日特选游荡战力
+          </p>
+</div>
+<div class="flex items-center gap-6 font-mono text-xs text-on-surface-variant">
+<span class="flex items-center gap-1.5">
+<span class="inline-block w-2 h-2 rounded-full border border-primary bg-primary/40"></span>
+            当前聚焦对象已锁定
+          </span>
+<span class="text-outline-variant/50">|</span>
+<span class="text-xs font-mono">第 <span class="text-primary font-bold">1</span> / 3 位名士</span>
+</div>
+</div>
+<!-- Candidate Cards Triad -->
+<div class="w-full max-w-[1760px] mx-auto grid grid-cols-3 gap-8 items-stretch h-[760px]">
+<!-- ======================================== -->
+<!-- CARD 1: 沙洲·禾 (FOCUSED / ACTIVATED)    -->
+<!-- ======================================== -->
+<div class="relative rounded-xl bg-surface-panel-focused backdrop-blur-xl border-2 border-primary ring-2 ring-primary/40 shadow-[0_0_36px_rgba(110,212,255,0.22)] p-7 flex flex-col justify-between transition-all duration-300 transform -translate-y-1">
+<!-- Gamepad Focus Bracket Indicators (Editorial Tactical HUD) -->
+<div class="absolute -top-1.5 -left-1.5 w-4 h-4 border-t-2 border-l-2 border-primary"></div>
+<div class="absolute -top-1.5 -right-1.5 w-4 h-4 border-t-2 border-r-2 border-primary"></div>
+<div class="absolute -bottom-1.5 -left-1.5 w-4 h-4 border-b-2 border-l-2 border-primary"></div>
+<div class="absolute -bottom-1.5 -right-1.5 w-4 h-4 border-b-2 border-r-2 border-primary"></div>
+<!-- Top Status Tag & Price Ribbon -->
+<div class="flex items-center justify-between border-b border-primary/20 pb-4">
+<div class="flex items-center gap-2.5">
+<span class="px-2.5 py-0.5 rounded bg-primary text-on-primary font-mono text-xs font-bold tracking-wider uppercase">
+                TARGET FOCUSED
+              </span>
+<span class="text-xs font-mono text-primary tracking-widest">ID #ARCH-091</span>
+</div>
+<div class="flex items-baseline gap-1">
+<span class="text-xs text-on-surface-variant font-light">应募酬金</span>
+<span class="font-mono text-xl font-bold tracking-tight text-primary">1,200</span>
+<span class="font-mono text-xs text-primary/80">克朗</span>
+</div>
+</div>
+<!-- Character Header: Portrait Badge & General Info -->
+<div class="mt-4 flex gap-6 items-start">
+<!-- Geometric Frost Frame Portrait Area -->
+<div class="relative w-36 h-44 rounded-lg bg-surface/90 border border-primary/40 flex-shrink-0 overflow-hidden flex flex-col items-center justify-center p-3 shadow-inner group">
+<!-- Geometric Tactical Background Watermark -->
+<div class="absolute inset-0 opacity-15 bg-[radial-gradient(#6ED4FF_1px,transparent_1px)] [background-size:8px_8px]"></div>
+<!-- Character Icon / Emblem -->
+<div class="relative z-10 w-20 h-20 rounded-full border border-primary/60 bg-primary/10 flex items-center justify-center text-primary shadow-[0_0_18px_rgba(110,212,255,0.3)]">
+<span class="material-symbols-outlined text-4xl" data-icon="crisis_alert">crisis_alert</span>
+</div>
+<div class="relative z-10 mt-3 text-center">
+<span class="text-[10px] font-mono tracking-widest text-primary uppercase">MARKSMAN I</span>
+<div class="text-[9px] font-mono text-on-surface-variant/80">DESERT HAWK</div>
+</div>
+<div class="absolute bottom-1 right-2 font-mono text-[9px] text-primary/40">CALIBER 0.85</div>
+</div>
+<!-- Identity Specs -->
+<div class="flex-1 flex flex-col justify-between h-44">
+<div>
+<div class="text-xs font-mono text-outline-strong tracking-widest uppercase">NOMAD ARCHER · 游侠阶</div>
+<h2 class="text-2xl font-headline font-medium text-on-surface tracking-wider mt-0.5 flex items-baseline gap-2">
+                  沙洲·禾
+                  <span class="text-xs font-mono text-on-surface-variant font-light tracking-widest uppercase">SHAZHOU HE</span>
+</h2>
+</div>
+<!-- Badges Cluster -->
+<div class="grid grid-cols-2 gap-2 my-2">
+<div class="px-2.5 py-1.5 rounded bg-surface/80 border border-outline-variant/40">
+<span class="text-[10px] block font-mono text-on-surface-variant uppercase tracking-wider">职阶</span>
+<span class="text-xs font-medium text-primary">弓手 (Marksman)</span>
+</div>
+<div class="px-2.5 py-1.5 rounded bg-surface/80 border border-outline-variant/40">
+<span class="text-[10px] block font-mono text-on-surface-variant uppercase tracking-wider">年龄 / 出身</span>
+<span class="text-xs font-medium text-on-surface">22 岁 · 荒砂绿洲</span>
+</div>
+</div>
+<div class="text-[11px] font-light text-on-surface-variant leading-relaxed line-clamp-2">
+                曾服役于北沙巡斥连队，在寒风风暴中保持着罕见的八百步贯甲命中记录。
+              </div>
+</div>
+</div>
+<!-- Attributes Radar Gauges -->
+<div class="mt-4 p-3.5 rounded-lg bg-surface/60 border border-outline-variant/30">
+<div class="flex items-center justify-between mb-2">
+<span class="text-[10px] font-mono uppercase tracking-widest text-on-surface-variant">战术体格参量 (ATTRIBUTES)</span>
+<span class="text-[10px] font-mono text-primary">综合评级: A-</span>
+</div>
+<div class="space-y-2">
+<!-- ATK -->
+<div>
+<div class="flex justify-between text-xs font-mono mb-1">
+<span class="text-on-surface-variant">物理攻击 (ATK)</span>
+<span class="text-primary font-semibold">88 <span class="text-[10px] text-mint font-normal">+14</span></span>
+</div>
+<div class="h-1.5 w-full bg-surface rounded-full overflow-hidden border border-outline-variant/20">
+<div class="h-full bg-primary rounded-full" style="width: 82%"></div>
+</div>
+</div>
+<!-- HIT -->
+<div>
+<div class="flex justify-between text-xs font-mono mb-1">
+<span class="text-on-surface-variant">精准命中 (HIT)</span>
+<span class="text-primary font-semibold">96 <span class="text-[10px] text-mint font-normal">+20</span></span>
+</div>
+<div class="h-1.5 w-full bg-surface rounded-full overflow-hidden border border-outline-variant/20">
+<div class="h-full bg-primary rounded-full shadow-[0_0_8px_#6ED4FF]" style="width: 94%"></div>
+</div>
+</div>
+<!-- SPD -->
+<div>
+<div class="flex justify-between text-xs font-mono mb-1">
+<span class="text-on-surface-variant">行进机动 (SPD)</span>
+<span class="text-on-surface font-semibold">74</span>
+</div>
+<div class="h-1.5 w-full bg-surface rounded-full overflow-hidden border border-outline-variant/20">
+<div class="h-full bg-primary/70 rounded-full" style="width: 72%"></div>
+</div>
+</div>
+<!-- HP & DEF compact line -->
+<div class="grid grid-cols-2 gap-3 pt-1">
+<div>
+<div class="flex justify-between text-xs font-mono mb-0.5">
+<span class="text-on-surface-variant text-[11px]">生命 (HP)</span>
+<span class="text-on-surface text-[11px]">420</span>
+</div>
+<div class="h-1 w-full bg-surface rounded-full overflow-hidden">
+<div class="h-full bg-outline-strong rounded-full" style="width: 58%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs font-mono mb-0.5">
+<span class="text-on-surface-variant text-[11px]">韧性护甲 (DEF)</span>
+<span class="text-on-surface text-[11px]">38</span>
+</div>
+<div class="h-1 w-full bg-surface rounded-full overflow-hidden">
+<div class="h-full bg-outline-strong rounded-full" style="width: 40%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Traits Preview Block -->
+<div class="mt-4 space-y-2">
+<span class="text-[10px] font-mono uppercase tracking-widest text-on-surface-variant">专属特质预览 (TRAITS)</span>
+<!-- Trait 1: 鹰眼 -->
+<div class="flex items-start gap-3 p-2.5 rounded border border-primary/30 bg-primary/5">
+<div class="w-6 h-6 rounded bg-primary/20 text-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-sm" data-icon="visibility">visibility</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-primary">「鹰眼」 (Eagle Eye)</span>
+<span class="text-[10px] font-mono text-mint tracking-wider">常驻被动</span>
+</div>
+<p class="text-[11px] font-light text-on-surface/90 mt-0.5">命中率提升 15%，攻击射程 +1 格；忽视薄雾视界惩罚。</p>
+</div>
+</div>
+<!-- Trait 2: 节俭 -->
+<div class="flex items-start gap-3 p-2.5 rounded border border-outline-variant/30 bg-surface/50">
+<div class="w-6 h-6 rounded bg-surface border border-outline-variant text-on-surface-variant flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-sm" data-icon="savings">savings</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-on-surface">「节俭」 (Frugal)</span>
+<span class="text-[10px] font-mono text-on-surface-variant tracking-wider">后勤加护</span>
+</div>
+<p class="text-[11px] font-light text-on-surface-variant mt-0.5">所属编队战损补给消耗降低 25%，战后物资回收率微幅上浮。</p>
+</div>
+</div>
+</div>
+<!-- Primary Focused Action Button (Gamepad [A]) -->
+<div class="mt-5 pt-3 border-t border-primary/20">
+<button class="w-full py-3.5 px-6 rounded-lg bg-primary hover:bg-sky-300 text-on-primary font-headline font-semibold text-sm tracking-widest flex items-center justify-center gap-3 shadow-[0_0_24px_rgba(110,212,255,0.4)] transition-all active:scale-[0.98]">
+<span class="w-6 h-6 rounded-full bg-on-primary/15 border border-on-primary/30 font-mono text-xs flex items-center justify-center text-on-primary font-bold">A</span>
+<span>招募加入军团</span>
+<span class="font-mono text-xs font-normal opacity-90">(1,200 克朗)</span>
+</button>
+</div>
+</div>
+<!-- ======================================== -->
+<!-- CARD 2: 潮湾·笙 (UNFOCUSED MATTE)         -->
+<!-- ======================================== -->
+<div class="relative rounded-xl bg-surface-panel backdrop-blur-md border border-outline-variant/30 p-7 flex flex-col justify-between transition-all duration-200 hover:border-outline-strong hover:bg-surface-panel-focused group">
+<!-- Top Status Tag & Price Ribbon -->
+<div class="flex items-center justify-between border-b border-outline-variant/20 pb-4">
+<div class="flex items-center gap-2.5">
+<span class="px-2.5 py-0.5 rounded bg-surface border border-outline-variant/50 text-on-surface-variant font-mono text-xs tracking-wider">
+                STANDBY
+              </span>
+<span class="text-xs font-mono text-on-surface-variant/80 tracking-widest">ID #BARD-033</span>
+</div>
+<div class="flex items-baseline gap-1">
+<span class="text-xs text-on-surface-variant font-light">应募酬金</span>
+<span class="font-mono text-xl font-medium tracking-tight text-on-surface">800</span>
+<span class="font-mono text-xs text-on-surface-variant">克朗</span>
+</div>
+</div>
+<!-- Character Header: Portrait Badge & General Info -->
+<div class="mt-4 flex gap-6 items-start">
+<!-- Geometric Frost Frame Portrait Area -->
+<div class="relative w-36 h-44 rounded-lg bg-surface/70 border border-outline-variant/30 flex-shrink-0 overflow-hidden flex flex-col items-center justify-center p-3">
+<div class="relative z-10 w-20 h-20 rounded-full border border-mint/40 bg-mint/5 flex items-center justify-center text-mint">
+<span class="material-symbols-outlined text-4xl" data-icon="waves">waves</span>
+</div>
+<div class="relative z-10 mt-3 text-center">
+<span class="text-[10px] font-mono tracking-widest text-mint uppercase">MINSTREL II</span>
+<div class="text-[9px] font-mono text-on-surface-variant/80">TIDE MELODY</div>
+</div>
+<div class="absolute bottom-1 right-2 font-mono text-[9px] text-outline-variant/40">CALIBER 0.62</div>
+</div>
+<!-- Identity Specs -->
+<div class="flex-1 flex flex-col justify-between h-44">
+<div>
+<div class="text-xs font-mono text-on-surface-variant tracking-widest uppercase">TIDE MINSTREL · 辅助法师</div>
+<h2 class="text-2xl font-headline font-medium text-on-surface tracking-wider mt-0.5 flex items-baseline gap-2">
+                  潮湾·笙
+                  <span class="text-xs font-mono text-on-surface-variant font-light tracking-widest uppercase">CHAOWAN SHENG</span>
+</h2>
+</div>
+<!-- Badges Cluster -->
+<div class="grid grid-cols-2 gap-2 my-2">
+<div class="px-2.5 py-1.5 rounded bg-surface/60 border border-outline-variant/20">
+<span class="text-[10px] block font-mono text-on-surface-variant uppercase tracking-wider">职阶</span>
+<span class="text-xs font-medium text-mint">乐师 (Minstrel)</span>
+</div>
+<div class="px-2.5 py-1.5 rounded bg-surface/60 border border-outline-variant/20">
+<span class="text-[10px] block font-mono text-on-surface-variant uppercase tracking-wider">年龄 / 出身</span>
+<span class="text-xs font-medium text-on-surface">20 岁 · 听潮群岛</span>
+</div>
+</div>
+<div class="text-[11px] font-light text-on-surface-variant leading-relaxed line-clamp-2">
+                携七弦骨琴而来的流浪乐手，音律中融汇潮汐灵力，可极大舒缓霜寒侵蚀下的军旅恐慌。
+              </div>
+</div>
+</div>
+<!-- Attributes Radar Gauges -->
+<div class="mt-4 p-3.5 rounded-lg bg-surface/50 border border-outline-variant/20">
+<div class="flex items-center justify-between mb-2">
+<span class="text-[10px] font-mono uppercase tracking-widest text-on-surface-variant">战术体格参量 (ATTRIBUTES)</span>
+<span class="text-[10px] font-mono text-mint">综合评级: B+</span>
+</div>
+<div class="space-y-2">
+<!-- ATK -->
+<div>
+<div class="flex justify-between text-xs font-mono mb-1">
+<span class="text-on-surface-variant">秘法共鸣 (MAG)</span>
+<span class="text-on-surface font-semibold">72</span>
+</div>
+<div class="h-1.5 w-full bg-surface rounded-full overflow-hidden border border-outline-variant/10">
+<div class="h-full bg-mint/80 rounded-full" style="width: 70%"></div>
+</div>
+</div>
+<!-- SPD -->
+<div>
+<div class="flex justify-between text-xs font-mono mb-1">
+<span class="text-on-surface-variant">敏捷闪避 (EVA)</span>
+<span class="text-mint font-semibold">86 <span class="text-[10px] text-mint font-normal">+12</span></span>
+</div>
+<div class="h-1.5 w-full bg-surface rounded-full overflow-hidden border border-outline-variant/10">
+<div class="h-full bg-mint rounded-full" style="width: 84%"></div>
+</div>
+</div>
+<!-- DEF -->
+<div>
+<div class="flex justify-between text-xs font-mono mb-1">
+<span class="text-on-surface-variant">护甲抗性 (DEF)</span>
+<span class="text-on-surface font-semibold">32</span>
+</div>
+<div class="h-1.5 w-full bg-surface rounded-full overflow-hidden border border-outline-variant/10">
+<div class="h-full bg-outline-strong/50 rounded-full" style="width: 32%"></div>
+</div>
+</div>
+<!-- HP & MORALE compact line -->
+<div class="grid grid-cols-2 gap-3 pt-1">
+<div>
+<div class="flex justify-between text-xs font-mono mb-0.5">
+<span class="text-on-surface-variant text-[11px]">生命 (HP)</span>
+<span class="text-on-surface text-[11px]">340</span>
+</div>
+<div class="h-1 w-full bg-surface rounded-full overflow-hidden">
+<div class="h-full bg-outline-strong/60 rounded-full" style="width: 45%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs font-mono mb-0.5">
+<span class="text-on-surface-variant text-[11px]">士气增幅</span>
+<span class="text-mint text-[11px]">+35%</span>
+</div>
+<div class="h-1 w-full bg-surface rounded-full overflow-hidden">
+<div class="h-full bg-mint/70 rounded-full" style="width: 78%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Traits Preview Block -->
+<div class="mt-4 space-y-2">
+<span class="text-[10px] font-mono uppercase tracking-widest text-on-surface-variant">专属特质预览 (TRAITS)</span>
+<!-- Trait 1: 安抚 -->
+<div class="flex items-start gap-3 p-2.5 rounded border border-outline-variant/20 bg-surface/40">
+<div class="w-6 h-6 rounded bg-mint/10 text-mint flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-sm" data-icon="favorite">favorite</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-mint">「安抚」 (Soothe)</span>
+<span class="text-[10px] font-mono text-mint tracking-wider">光环激励</span>
+</div>
+<p class="text-[11px] font-light text-on-surface-variant mt-0.5">每回合行动结束时，自动恢复相邻一圈友军 5 点战意士气。</p>
+</div>
+</div>
+<!-- Trait 2: 浪子 -->
+<div class="flex items-start gap-3 p-2.5 rounded border border-outline-variant/20 bg-surface/40">
+<div class="w-6 h-6 rounded bg-surface border border-outline-variant text-on-surface-variant flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-sm" data-icon="sprint">sprint</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-on-surface">「浪子」 (Wanderer)</span>
+<span class="text-[10px] font-mono text-on-surface-variant tracking-wider">移动特性</span>
+</div>
+<p class="text-[11px] font-light text-on-surface-variant mt-0.5">基础移动力 +1；脱离战线范围时，受到突袭的闪避率大幅攀升。</p>
+</div>
+</div>
+</div>
+<!-- Secondary Unfocused Action Button -->
+<div class="mt-5 pt-3 border-t border-outline-variant/20">
+<button class="w-full py-3 px-6 rounded-lg bg-surface border border-outline-variant hover:border-primary/60 hover:text-primary text-on-surface-variant font-headline font-medium text-sm tracking-wider flex items-center justify-center gap-2 transition-all">
+<span>招募备选</span>
+<span class="font-mono text-xs opacity-70">(800 克朗)</span>
+</button>
+</div>
+</div>
+<!-- ======================================== -->
+<!-- CARD 3: 铁岭·砧 (UNFOCUSED MATTE)         -->
+<!-- ======================================== -->
+<div class="relative rounded-xl bg-surface-panel backdrop-blur-md border border-outline-variant/30 p-7 flex flex-col justify-between transition-all duration-200 hover:border-outline-strong hover:bg-surface-panel-focused group">
+<!-- Top Status Tag & Price Ribbon -->
+<div class="flex items-center justify-between border-b border-outline-variant/20 pb-4">
+<div class="flex items-center gap-2.5">
+<span class="px-2.5 py-0.5 rounded bg-surface border border-outline-variant/50 text-on-surface-variant font-mono text-xs tracking-wider">
+                STANDBY
+              </span>
+<span class="text-xs font-mono text-on-surface-variant/80 tracking-widest">ID #SMTH-108</span>
+</div>
+<div class="flex items-baseline gap-1">
+<span class="text-xs text-on-surface-variant font-light">应募酬金</span>
+<span class="font-mono text-xl font-medium tracking-tight text-on-surface">1,500</span>
+<span class="font-mono text-xs text-on-surface-variant">克朗</span>
+</div>
+</div>
+<!-- Character Header: Portrait Badge & General Info -->
+<div class="mt-4 flex gap-6 items-start">
+<!-- Geometric Frost Frame Portrait Area -->
+<div class="relative w-36 h-44 rounded-lg bg-surface/70 border border-outline-variant/30 flex-shrink-0 overflow-hidden flex flex-col items-center justify-center p-3">
+<div class="relative z-10 w-20 h-20 rounded-full border border-primary/30 bg-primary/5 flex items-center justify-center text-primary/80">
+<span class="material-symbols-outlined text-4xl" data-icon="hardware">hardware</span>
+</div>
+<div class="relative z-10 mt-3 text-center">
+<span class="text-[10px] font-mono tracking-widest text-on-surface uppercase">BASTION III</span>
+<div class="text-[9px] font-mono text-on-surface-variant/80">IRON FORGE</div>
+</div>
+<div class="absolute bottom-1 right-2 font-mono text-[9px] text-outline-variant/40">CALIBER 0.94</div>
+</div>
+<!-- Identity Specs -->
+<div class="flex-1 flex flex-col justify-between h-44">
+<div>
+<div class="text-xs font-mono text-on-surface-variant tracking-widest uppercase">BASTION SMITH · 重步战辅</div>
+<h2 class="text-2xl font-headline font-medium text-on-surface tracking-wider mt-0.5 flex items-baseline gap-2">
+                  铁岭·砧
+                  <span class="text-xs font-mono text-on-surface-variant font-light tracking-widest uppercase">TIELING ZHEN</span>
+</h2>
+</div>
+<!-- Badges Cluster -->
+<div class="grid grid-cols-2 gap-2 my-2">
+<div class="px-2.5 py-1.5 rounded bg-surface/60 border border-outline-variant/20">
+<span class="text-[10px] block font-mono text-on-surface-variant uppercase tracking-wider">职阶</span>
+<span class="text-xs font-medium text-on-surface">铁匠 (Bastion Smith)</span>
+</div>
+<div class="px-2.5 py-1.5 rounded bg-surface/60 border border-outline-variant/20">
+<span class="text-[10px] block font-mono text-on-surface-variant uppercase tracking-wider">年龄 / 出身</span>
+<span class="text-xs font-medium text-on-surface">29 岁 · 霜脊熔炉</span>
+</div>
+</div>
+<div class="text-[11px] font-light text-on-surface-variant leading-relaxed line-clamp-2">
+                北境重防要塞的前首席军械副匠，身披手锻冷淬百炼重铠，亦擅就地加固阵地盾线。
+              </div>
+</div>
+</div>
+<!-- Attributes Radar Gauges -->
+<div class="mt-4 p-3.5 rounded-lg bg-surface/50 border border-outline-variant/20">
+<div class="flex items-center justify-between mb-2">
+<span class="text-[10px] font-mono uppercase tracking-widest text-on-surface-variant">战术体格参量 (ATTRIBUTES)</span>
+<span class="text-[10px] font-mono text-on-surface-variant">综合评级: A</span>
+</div>
+<div class="space-y-2">
+<!-- DEF -->
+<div>
+<div class="flex justify-between text-xs font-mono mb-1">
+<span class="text-on-surface-variant">护甲抗减 (DEF)</span>
+<span class="text-on-surface font-semibold">95 <span class="text-[10px] text-mint font-normal">+20</span></span>
+</div>
+<div class="h-1.5 w-full bg-surface rounded-full overflow-hidden border border-outline-variant/10">
+<div class="h-full bg-primary/70 rounded-full" style="width: 92%"></div>
+</div>
+</div>
+<!-- HP -->
+<div>
+<div class="flex justify-between text-xs font-mono mb-1">
+<span class="text-on-surface-variant">生命血量 (HP)</span>
+<span class="text-on-surface font-semibold">680</span>
+</div>
+<div class="h-1.5 w-full bg-surface rounded-full overflow-hidden border border-outline-variant/10">
+<div class="h-full bg-outline-strong rounded-full" style="width: 88%"></div>
+</div>
+</div>
+<!-- SPD -->
+<div>
+<div class="flex justify-between text-xs font-mono mb-1">
+<span class="text-on-surface-variant">行进机动 (SPD)</span>
+<span class="text-coral font-semibold">42 <span class="text-[10px] text-coral font-normal">-10</span></span>
+</div>
+<div class="h-1.5 w-full bg-surface rounded-full overflow-hidden border border-outline-variant/10">
+<div class="h-full bg-coral/60 rounded-full" style="width: 40%"></div>
+</div>
+</div>
+<!-- ATK & RESIST compact line -->
+<div class="grid grid-cols-2 gap-3 pt-1">
+<div>
+<div class="flex justify-between text-xs font-mono mb-0.5">
+<span class="text-on-surface-variant text-[11px]">物理攻击 (ATK)</span>
+<span class="text-on-surface text-[11px]">64</span>
+</div>
+<div class="h-1 w-full bg-surface rounded-full overflow-hidden">
+<div class="h-full bg-outline-strong/60 rounded-full" style="width: 62%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs font-mono mb-0.5">
+<span class="text-on-surface-variant text-[11px]">格挡减免</span>
+<span class="text-mint text-[11px]">45%</span>
+</div>
+<div class="h-1 w-full bg-surface rounded-full overflow-hidden">
+<div class="h-full bg-mint/70 rounded-full" style="width: 85%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Traits Preview Block -->
+<div class="mt-4 space-y-2">
+<span class="text-[10px] font-mono uppercase tracking-widest text-on-surface-variant">专属特质预览 (TRAITS)</span>
+<!-- Trait 1: 锻骨 -->
+<div class="flex items-start gap-3 p-2.5 rounded border border-outline-variant/20 bg-surface/40">
+<div class="w-6 h-6 rounded bg-primary/10 text-primary flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-sm" data-icon="shield">shield</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-on-surface">「锻骨」 (Bone Forged)</span>
+<span class="text-[10px] font-mono text-mint tracking-wider">防卫特权</span>
+</div>
+<p class="text-[11px] font-light text-on-surface-variant mt-0.5">全源护甲伤害减免提高 20%；完全免疫物理击退与阵线失衡状态。</p>
+</div>
+</div>
+<!-- Trait 2: 寡言 -->
+<div class="flex items-start gap-3 p-2.5 rounded border border-outline-variant/20 bg-surface/40">
+<div class="w-6 h-6 rounded bg-surface border border-outline-variant text-on-surface-variant flex items-center justify-center flex-shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-sm" data-icon="psychology">psychology</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="text-xs font-medium text-on-surface">「寡言」 (Taciturn)</span>
+<span class="text-[10px] font-mono text-on-surface-variant tracking-wider">心智坚定</span>
+</div>
+<p class="text-[11px] font-light text-on-surface-variant mt-0.5">铁砧战技发动判定恒定，完全豁免战场恐慌与敌军威慑效果。</p>
+</div>
+</div>
+</div>
+<!-- Secondary Unfocused Action Button -->
+<div class="mt-5 pt-3 border-t border-outline-variant/20">
+<button class="w-full py-3 px-6 rounded-lg bg-surface border border-outline-variant hover:border-primary/60 hover:text-primary text-on-surface-variant font-headline font-medium text-sm tracking-wider flex items-center justify-center gap-2 transition-all">
+<span>招募备选</span>
+<span class="font-mono text-xs opacity-70">(1,500 克朗)</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- ========================================== -->
+<!-- 3. BOTTOM GAMEPAD PROMPT BAR               -->
+<!-- ========================================== -->
+<footer class="relative z-20 w-full h-16 px-10 flex items-center justify-between border-t border-outline-variant/30 bg-surface/90 backdrop-blur-md">
+<!-- Gamepad Shortcut Cluster -->
+<div class="flex items-center gap-7">
+<!-- [A] Confirm -->
+<div class="flex items-center gap-2">
+<span class="w-5 h-5 rounded-full bg-primary text-on-primary font-mono text-xs font-bold flex items-center justify-center shadow-[0_0_8px_rgba(110,212,255,0.4)]">A</span>
+<span class="text-xs font-headline font-medium tracking-wide text-on-surface">确认招募</span>
+</div>
+<div class="h-3.5 w-px bg-outline-variant/30"></div>
+<!-- [X] Refresh -->
+<div class="flex items-center gap-2">
+<span class="w-5 h-5 rounded bg-surface border border-outline-strong font-mono text-xs text-primary font-bold flex items-center justify-center">X</span>
+<span class="text-xs font-headline font-light tracking-wide text-on-surface-variant">刷新名册</span>
+</div>
+<div class="h-3.5 w-px bg-outline-variant/30"></div>
+<!-- [Y] Lore Dossier -->
+<div class="flex items-center gap-2">
+<span class="w-5 h-5 rounded bg-surface border border-outline-strong font-mono text-xs text-mint font-bold flex items-center justify-center">Y</span>
+<span class="text-xs font-headline font-light tracking-wide text-on-surface-variant">查看候选人传记与命轨</span>
+</div>
+<div class="h-3.5 w-px bg-outline-variant/30"></div>
+<!-- [LB/RB] Switch Target -->
+<div class="flex items-center gap-2">
+<div class="flex gap-1">
+<span class="px-1.5 py-0.5 rounded bg-surface border border-outline-variant text-[10px] font-mono text-on-surface">LB</span>
+<span class="px-1.5 py-0.5 rounded bg-surface border border-outline-variant text-[10px] font-mono text-on-surface">RB</span>
+</div>
+<span class="text-xs font-headline font-light tracking-wide text-on-surface-variant">切换候选人</span>
+</div>
+<div class="h-3.5 w-px bg-outline-variant/30"></div>
+<!-- [B] Cancel / Back -->
+<div class="flex items-center gap-2">
+<span class="w-5 h-5 rounded-full bg-surface border border-coral text-coral font-mono text-xs font-bold flex items-center justify-center">B</span>
+<span class="text-xs font-headline font-light tracking-wide text-on-surface-variant">返回城堡中枢</span>
+</div>
+</div>
+<!-- Engine & Build Status Info -->
+<div class="flex items-center gap-3 font-mono text-[11px] text-on-surface-variant/70 tracking-wider">
+<span>BUILD 2025.04.14-STABLE</span>
+<span class="text-outline-variant/50">·</span>
+<span>赤历一百二十八年</span>
+<span class="text-outline-variant/50">·</span>
+<span class="text-primary/70">霜堡军令司</span>
+</div>
+</footer>
+</div>
+</body></html>

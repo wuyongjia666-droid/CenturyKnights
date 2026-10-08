@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=1920, height=1080, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>世纪骑士 CENTURY KNIGHTS - 战役章节选择</title>
+<!-- Google Fonts: Public Sans & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            surface: "#060B12",
+            "surface-variant": "#0B1522",
+            "surface-container-low": "#080E18",
+            "surface-container": "#0E1A2B",
+            "surface-container-high": "#13243C",
+            primary: "#6ED4FF",
+            "on-primary": "#003549",
+            "primary-container": "#004D68",
+            "on-primary-container": "#BEE8FF",
+            secondary: "#4ECCA3",
+            "on-secondary": "#00382B",
+            tertiary: "#FF6B6B",
+            ember: "#FF9F43",
+            "on-surface": "#EDF2F7",
+            "on-surface-variant": "#8B9BB0",
+            "outline-variant": "#1E334D"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Public Sans", "sans-serif"],
+            display: ["Public Sans", "sans-serif"],
+            body: ["Public Sans", "sans-serif"],
+            label: ["Public Sans", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    /* Strict 1920x1080 Viewport Enforcer */
+    html, body {
+      width: 1920px;
+      height: 1080px;
+      min-width: 1920px;
+      max-width: 1920px;
+      min-height: 1080px;
+      max-height: 1080px;
+      overflow: hidden !important;
+      margin: 0;
+      padding: 0;
+      background-color: #060B12;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .active-reticle-tl {
+      position: absolute;
+      top: -3px;
+      left: -3px;
+      width: 12px;
+      height: 12px;
+      border-top: 2px solid #6ED4FF;
+      border-left: 2px solid #6ED4FF;
+    }
+    .active-reticle-tr {
+      position: absolute;
+      top: -3px;
+      right: -3px;
+      width: 12px;
+      height: 12px;
+      border-top: 2px solid #6ED4FF;
+      border-right: 2px solid #6ED4FF;
+    }
+    .active-reticle-bl {
+      position: absolute;
+      bottom: -3px;
+      left: -3px;
+      width: 12px;
+      height: 12px;
+      border-bottom: 2px solid #6ED4FF;
+      border-left: 2px solid #6ED4FF;
+    }
+    .active-reticle-br {
+      position: absolute;
+      bottom: -3px;
+      right: -3px;
+      width: 12px;
+      height: 12px;
+      border-bottom: 2px solid #6ED4FF;
+      border-right: 2px solid #6ED4FF;
+    }
+    .grid-bg-overlay {
+      background-image: 
+        radial-gradient(circle at 50% 10%, rgba(110, 212, 255, 0.08) 0%, transparent 60%),
+        linear-gradient(to right, rgba(110, 212, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(110, 212, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 60px 60px, 60px 60px;
+    }
+    .glow-active-card {
+      box-shadow: 0 0 35px -5px rgba(110, 212, 255, 0.3), inset 0 0 20px rgba(110, 212, 255, 0.06);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body w-[1920px] h-[1080px] relative overflow-hidden select-none">
+<!-- Atmospheric Background Layer -->
+<div class="absolute inset-0 w-full h-full grid-bg-overlay pointer-events-none z-0"></div>
+<!-- Subtle Top Ambient Vignette -->
+<div class="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-primary/5 via-transparent to-transparent pointer-events-none z-0"></div>
+<!-- ========================================================================= -->
+<!-- TOP SYSTEM HUD NAVIGATION (SHARED COMPONENT: TopNavBar)                  -->
+<!-- ========================================================================= -->
+<header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-8 h-16 bg-surface/80 dark:bg-surface/80 backdrop-blur-md border-b border-outline-variant/30 dark:border-outline-variant/30 shadow-sm dark:shadow-none">
+<!-- Brand / Theater Identity -->
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-3">
+<div class="w-2.5 h-2.5 bg-primary rounded-none shadow-[0_0_8px_#6ED4FF]"></div>
+<span class="font-sans font-light text-xl tracking-widest text-on-surface dark:text-on-surface">世纪骑士 CENTURY KNIGHTS</span>
+</div>
+<div class="h-4 w-[1px] bg-outline-variant/50"></div>
+<span class="font-label text-xs tracking-widest text-on-surface-variant font-mono uppercase">
+        TACTICAL SRPG ARCHIVE // OPERATION THEATER
+      </span>
+</div>
+<!-- Center Nav Links -->
+<nav class="flex items-center gap-8 h-full">
+<a class="h-full flex items-center text-primary dark:text-primary border-b-2 border-primary tracking-widest font-medium font-headline uppercase text-sm px-2 transition-colors" href="#">
+        战术总览
+      </a>
+<a class="h-full flex items-center text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface dark:hover:text-on-surface tracking-wider font-headline font-light uppercase text-sm px-2 transition-colors" href="#">
+        编队整备
+      </a>
+<a class="h-full flex items-center text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface dark:hover:text-on-surface tracking-wider font-headline font-light uppercase text-sm px-2 transition-colors" href="#">
+        军略推演
+      </a>
+<a class="h-full flex items-center text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface dark:hover:text-on-surface tracking-wider font-headline font-light uppercase text-sm px-2 transition-colors" href="#">
+        情报档案
+      </a>
+</nav>
+<!-- Top Right Status Cluster & Actions -->
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-4 px-3 py-1.5 rounded bg-surface-container-low/80 border border-outline-variant/40 font-mono text-xs text-on-surface-variant">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span>CP</span>
+<span class="text-primary font-medium">12/12</span>
+</div>
+<div class="w-[1px] h-3 bg-outline-variant/60"></div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px] text-secondary">deployed_code</span>
+<span>补给 840</span>
+</div>
+<div class="w-[1px] h-3 bg-outline-variant/60"></div>
+<div class="flex items-center gap-1.5">
+<span class="text-on-surface">天候: 暴风雪前夕</span>
+</div>
+<div class="w-[1px] h-3 bg-outline-variant/60"></div>
+<div class="px-1.5 py-0.5 bg-primary/10 text-primary border border-primary/30 text-[10px]">战术级</div>
+</div>
+<!-- Icon Actions -->
+<button class="w-8 h-8 flex items-center justify-center rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/40 transition-colors duration-150 focus:ring-1 focus:ring-primary focus:outline-none" title="系统设置">
+<span class="material-symbols-outlined text-lg" data-icon="settings">settings</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/40 transition-colors duration-150 focus:ring-1 focus:ring-primary focus:outline-none" title="操作协助">
+<span class="material-symbols-outlined text-lg" data-icon="help">help</span>
+</button>
+<!-- Trailing Action -->
+<button class="ml-2 px-4 py-1.5 border border-primary/40 text-primary hover:bg-primary/10 text-xs tracking-wider transition-all font-mono focus:ring-1 focus:ring-primary">
+        战术菜单
+      </button>
+<button class="px-4 py-1.5 bg-primary text-on-primary font-medium hover:bg-primary/90 text-xs tracking-wider shadow-sm transition-all font-mono">
+        结束回合
+      </button>
+</div>
+</header>
+<!-- ========================================================================= -->
+<!-- CHAPTER HEADER & PROGRESS RAIL (Y: ~80px - 210px)                        -->
+<!-- ========================================================================= -->
+<main class="relative z-10 w-full h-[calc(1080px-64px-40px)] mt-16 px-14 flex flex-col justify-between py-6">
+<!-- Top Chapter Meta Header -->
+<section class="flex flex-col gap-3">
+<div class="flex items-center justify-between border-b border-outline-variant/20 pb-3">
+<div class="flex items-baseline gap-4">
+<div class="flex items-center gap-2">
+<span class="font-mono text-xs tracking-widest text-primary border border-primary/30 px-2 py-0.5 bg-primary/5">
+              OPERATION NO. 128
+            </span>
+<span class="text-xs text-on-surface-variant font-mono tracking-wider">SECTOR // FROSTLINE CORRIDOR</span>
+</div>
+<span class="text-xs text-on-surface-variant font-mono">|</span>
+<span class="text-xs text-on-surface-variant tracking-wider font-light">赤历一百二十八年 · 极北走廊推进战</span>
+</div>
+<div class="flex items-center gap-3 font-mono text-xs text-on-surface-variant">
+<span class="text-primary font-medium tracking-wide">STAGE PROGRESS</span>
+<span class="text-on-surface">2 / 4 关卡已就绪</span>
+<span class="px-2 py-0.5 bg-primary/15 text-primary text-[11px] font-semibold border border-primary/30">50% 推进度</span>
+</div>
+</div>
+<!-- Main Title Block & Timeline Bar -->
+<div class="flex items-end justify-between pt-1">
+<div>
+<div class="flex items-center gap-3 mb-1">
+<span class="w-6 h-[1px] bg-primary"></span>
+<span class="text-xs font-mono text-primary tracking-widest">ACT III // PRIMARY THEATER</span>
+</div>
+<h1 class="text-4xl font-headline font-light tracking-[0.2em] text-on-surface flex items-baseline gap-3">
+<span>战役 · 第三章</span>
+<span class="text-primary font-normal text-4xl">霜线</span>
+<span class="text-xs tracking-widest text-on-surface-variant font-mono font-light ml-2">FROSTLINE OPERATION</span>
+</h1>
+</div>
+<!-- Chapter Switch Helper Inline -->
+<div class="flex items-center gap-6 font-mono text-xs pb-1">
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="px-1.5 py-0.5 rounded border border-outline-variant/60 bg-surface-container-low text-[10px] text-primary">LB</span>
+<span class="hover:text-on-surface cursor-pointer transition-colors">II 凛冬城</span>
+</div>
+<div class="h-3 w-[1px] bg-outline-variant/40"></div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="hover:text-on-surface cursor-pointer transition-colors">IV 永夜裂谷</span>
+<span class="px-1.5 py-0.5 rounded border border-outline-variant/60 bg-surface-container-low text-[10px] text-primary">RB</span>
+</div>
+</div>
+</div>
+<!-- Precision Hairline Progress Rail -->
+<div class="w-full mt-2 relative">
+<div class="w-full h-[2px] bg-outline-variant/40 rounded-full relative overflow-visible">
+<!-- 50% Progress Fill -->
+<div class="h-full bg-gradient-to-r from-secondary via-primary to-primary w-1/2 relative shadow-[0_0_12px_#6ED4FF]"></div>
+</div>
+<!-- Milestone Markers -->
+<div class="absolute -top-[5px] left-0 w-full flex justify-between px-[12.5%] pointer-events-none">
+<!-- Node 1 -->
+<div class="flex flex-col items-center">
+<div class="w-3 h-3 rounded-full bg-secondary border-2 border-surface shadow-[0_0_8px_#4ECCA3]"></div>
+</div>
+<!-- Node 2 (Active Target) -->
+<div class="flex flex-col items-center">
+<div class="w-3.5 h-3.5 rounded-full bg-primary border-2 border-surface shadow-[0_0_12px_#6ED4FF] ring-2 ring-primary/40 animate-pulse"></div>
+</div>
+<!-- Node 3 -->
+<div class="flex flex-col items-center">
+<div class="w-2.5 h-2.5 rounded-full bg-outline-variant border-2 border-surface"></div>
+</div>
+<!-- Node 4 -->
+<div class="flex flex-col items-center">
+<div class="w-2.5 h-2.5 rounded-full bg-outline-variant/60 border-2 border-surface"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- ========================================================================= -->
+<!-- MISSION CARDS CONTAINER (4 SLEEK CARDS ROW)                              -->
+<!-- ========================================================================= -->
+<section class="grid grid-cols-4 gap-6 my-auto pt-2 pb-2 h-[580px] items-stretch">
+<!-- --------------------------------------------------------------------- -->
+<!-- CARD 1: COMPLETED                                                     -->
+<!-- --------------------------------------------------------------------- -->
+<article class="relative flex flex-col justify-between p-6 bg-surface-container-low/70 backdrop-blur-md rounded-none border border-outline-variant/30 hover:border-outline-variant/70 transition-all duration-200 group">
+<!-- Subtle Top Stripe -->
+<div class="absolute top-0 left-0 w-full h-[2px] bg-secondary/60"></div>
+<!-- Header / Index & Status -->
+<div>
+<div class="flex items-center justify-between font-mono text-xs mb-3">
+<span class="text-on-surface-variant font-light tracking-wider">MISSION // 01</span>
+<span class="flex items-center gap-1.5 px-2 py-0.5 rounded-none bg-secondary/10 border border-secondary/30 text-secondary text-[11px]">
+<span class="material-symbols-outlined text-[13px]" data-icon="health_and_safety" style="font-variation-settings: 'FILL' 1;">health_and_safety</span>
+<span>已达成</span>
+</span>
+</div>
+<div class="space-y-1 mb-4">
+<span class="text-[11px] font-mono tracking-widest text-secondary block uppercase">OUTPOST FORTRESS</span>
+<h2 class="text-2xl font-headline font-light tracking-widest text-on-surface group-hover:text-primary transition-colors">
+              「霜堡外垒」
+            </h2>
+</div>
+<!-- Brief Meta -->
+<div class="space-y-2 py-3 border-y border-outline-variant/20 font-mono text-xs">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>推荐等级</span>
+<span class="text-on-surface font-medium">LV. 08</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>战场类型</span>
+<span class="text-on-surface font-medium">冻土防线 · 歼灭战</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>回合限制</span>
+<span class="text-on-surface font-medium">15 回合</span>
+</div>
+</div>
+<!-- Tactical Summary Paragraph -->
+<p class="mt-4 text-xs text-on-surface-variant/80 font-body leading-relaxed tracking-wide">
+            极北关塞的第一道屏障。驻防在此的霜斧卫队已被击溃，隘口已完全落入我方控制。巡航小队可随时再次进驻以收集遗留军资。
+          </p>
+</div>
+<!-- Bottom Rewards & Action -->
+<div class="space-y-4 pt-4 border-t border-outline-variant/20">
+<div>
+<div class="text-[10px] font-mono tracking-widest text-on-surface-variant mb-2 uppercase">MISSION ACQUIRED REWARDS</div>
+<div class="space-y-1.5 font-mono text-xs">
+<div class="flex items-center gap-2 text-on-surface">
+<span class="w-1.5 h-1.5 bg-secondary"></span>
+<span>金钱 1,200 克朗</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface">
+<span class="w-1.5 h-1.5 bg-secondary"></span>
+<span>特质徽章【坚韧】(已入库)</span>
+</div>
+</div>
+</div>
+<button class="w-full py-2.5 bg-surface-container/60 hover:bg-surface-container border border-outline-variant/40 text-on-surface-variant hover:text-on-surface text-xs font-mono tracking-widest flex items-center justify-center gap-2 transition-colors">
+<span>可再战 (演习复盘)</span>
+</button>
+</div>
+</article>
+<!-- --------------------------------------------------------------------- -->
+<!-- CARD 2: THE ACTIVE GAMEPAD FOCUS CONTROL                              -->
+<!-- --------------------------------------------------------------------- -->
+<article class="relative flex flex-col justify-between p-6 bg-surface-container/90 backdrop-blur-xl border border-primary glow-active-card transition-all duration-300 transform scale-[1.02] z-20">
+<!-- Reticle Corner Brackets -->
+<div class="active-reticle-tl"></div>
+<div class="active-reticle-tr"></div>
+<div class="active-reticle-bl"></div>
+<div class="active-reticle-br"></div>
+<!-- Top Accent Bar -->
+<div class="absolute top-0 left-0 w-full h-[3px] bg-primary shadow-[0_0_12px_#6ED4FF]"></div>
+<!-- Header / Index & Focus Status -->
+<div>
+<div class="flex items-center justify-between font-mono text-xs mb-3">
+<span class="text-primary font-semibold tracking-widest flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 bg-primary animate-ping"></span>
+              MISSION // 02
+            </span>
+<span class="flex items-center gap-1.5 px-2.5 py-0.5 bg-primary/20 border border-primary text-primary text-[11px] font-semibold tracking-wider">
+<span class="material-symbols-outlined text-[14px]" data-icon="swords">swords</span>
+<span>当前目标 / IN PROGRESS</span>
+</span>
+</div>
+<div class="space-y-1 mb-4">
+<span class="text-[11px] font-mono tracking-widest text-primary/80 block uppercase">CLIFF CHOKEPOINT ASSAULT</span>
+<h2 class="text-3xl font-headline font-normal tracking-widest text-on-surface flex items-center justify-between">
+<span>「赤原关」</span>
+<span class="text-xs font-mono text-primary border border-primary/40 px-2 py-0.5">TARGET ACTIVE</span>
+</h2>
+</div>
+<!-- Extended Tactical Parameters -->
+<div class="space-y-2 py-3 border-y border-primary/25 font-mono text-xs bg-primary/5 px-3 -mx-3">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>推荐作战等级</span>
+<span class="text-primary font-bold">LV. 12</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>地形险要</span>
+<span class="text-on-surface font-medium">绝壁咽喉 · 突破战</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>敌军部署规模</span>
+<span class="text-tertiary font-medium">精锐盾卫 ×4 / 冰术士 ×2</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>战场气温</span>
+<span class="text-primary font-medium">-18°C 极寒 (机动力-1)</span>
+</div>
+</div>
+<!-- Tactical Summary Paragraph -->
+<p class="mt-4 text-xs text-on-surface font-body leading-relaxed tracking-wide">
+            极北隘口的枢纽隘塞。敌军在险峻谷地架设了复合式连环弩堡，必须依靠重装游击骑兵强行撕开第一道防线并斩杀守关千夫长。
+          </p>
+</div>
+<!-- Bottom Rewards Preview & Prompt Action -->
+<div class="space-y-4 pt-4 border-t border-primary/25">
+<div class="bg-surface-container-high/60 p-2.5 border border-primary/20">
+<div class="text-[10px] font-mono tracking-widest text-primary mb-1.5 uppercase flex items-center justify-between">
+<span>TACTICAL TARGET REWARDS</span>
+<span class="text-[9px] text-on-surface-variant">FIRST CLEAR</span>
+</div>
+<div class="space-y-1 font-mono text-xs">
+<div class="flex items-center gap-2 text-primary font-medium">
+<span class="w-1.5 h-1.5 bg-primary"></span>
+<span>稀有武器图纸【霜蚀重剑】</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="w-1.5 h-1.5 bg-outline-variant"></span>
+<span>纯净冰晶核心 ×2</span>
+</div>
+</div>
+</div>
+<!-- Gamepad Primary Focus Button -->
+<button class="w-full py-3 bg-primary text-on-primary font-headline font-semibold text-sm tracking-widest shadow-[0_0_20px_rgba(110,212,255,0.4)] flex items-center justify-center gap-3 transition-transform active:scale-[0.98]">
+<span class="w-5 h-5 rounded-full bg-on-primary text-primary flex items-center justify-center text-xs font-mono font-bold">A</span>
+<span>部署出击 (DEPLOY)</span>
+<span class="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+</button>
+</div>
+</article>
+<!-- --------------------------------------------------------------------- -->
+<!-- CARD 3: AVAILABLE                                                     -->
+<!-- --------------------------------------------------------------------- -->
+<article class="relative flex flex-col justify-between p-6 bg-surface-container-low/70 backdrop-blur-md rounded-none border border-outline-variant/30 hover:border-primary/50 transition-all duration-200 group">
+<!-- Top Accent Bar -->
+<div class="absolute top-0 left-0 w-full h-[2px] bg-outline-variant/60 group-hover:bg-primary/50 transition-colors"></div>
+<!-- Header / Index & Status -->
+<div>
+<div class="flex items-center justify-between font-mono text-xs mb-3">
+<span class="text-on-surface-variant font-light tracking-wider">MISSION // 03</span>
+<span class="flex items-center gap-1.5 px-2 py-0.5 rounded-none bg-surface-container-high border border-outline-variant text-on-surface text-[11px]">
+<span class="material-symbols-outlined text-[13px] text-primary" data-icon="radar">radar</span>
+<span>已解锁</span>
+</span>
+</div>
+<div class="space-y-1 mb-4">
+<span class="text-[11px] font-mono tracking-widest text-on-surface-variant/70 block uppercase">MIST MARSH CROSSING</span>
+<h2 class="text-2xl font-headline font-light tracking-widest text-on-surface group-hover:text-primary transition-colors">
+              「雾泽渡」
+            </h2>
+</div>
+<!-- Brief Meta -->
+<div class="space-y-2 py-3 border-y border-outline-variant/20 font-mono text-xs">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>推荐等级</span>
+<span class="text-on-surface font-medium">LV. 15</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>战场类型</span>
+<span class="text-on-surface font-medium">迷雾沼泽 · 伏击战</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span>战场视野</span>
+<span class="text-on-surface font-medium">重雾笼罩 (视野限制 3 格)</span>
+</div>
+</div>
+<!-- Tactical Summary Paragraph -->
+<p class="mt-4 text-xs text-on-surface-variant/80 font-body leading-relaxed tracking-wide">
+            绕过赤原关侧翼的泥泞沼泽水道。侦察兵回报水汽浓厚，暗哨林立，若正面突破赤原关受阻，亦可作为迂回补给路线实施渗透突袭。
+          </p>
+</div>
+<!-- Bottom Rewards & Action -->
+<div class="space-y-4 pt-4 border-t border-outline-variant/20">
+<div>
+<div class="text-[10px] font-mono tracking-widest text-on-surface-variant mb-2 uppercase">MISSION REWARD ESTIMATE</div>
+<div class="space-y-1.5 font-mono text-xs">
+<div class="flex items-center gap-2 text-on-surface">
+<span class="w-1.5 h-1.5 bg-primary/70"></span>
+<span>军备粮草 ×300</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface">
+<span class="w-1.5 h-1.5 bg-primary/70"></span>
+<span>骑士团声望 +150</span>
+</div>
+</div>
+</div>
+<button class="w-full py-2.5 bg-surface-container/60 hover:bg-surface-container border border-outline-variant/40 text-on-surface hover:text-primary text-xs font-mono tracking-widest flex items-center justify-center gap-2 transition-colors">
+<span>预备推演 / 查看情报</span>
+</button>
+</div>
+</article>
+<!-- --------------------------------------------------------------------- -->
+<!-- CARD 4: LOCKED                                                        -->
+<!-- --------------------------------------------------------------------- -->
+<article class="relative flex flex-col justify-between p-6 bg-surface-container-low/40 backdrop-blur-md rounded-none border border-outline-variant/20 opacity-50 select-none">
+<!-- Top Accent Bar -->
+<div class="absolute top-0 left-0 w-full h-[2px] bg-outline-variant/30"></div>
+<!-- Header / Index & Lock Status -->
+<div>
+<div class="flex items-center justify-between font-mono text-xs mb-3">
+<span class="text-on-surface-variant/60 font-light tracking-wider">MISSION // 04</span>
+<span class="flex items-center gap-1.5 px-2 py-0.5 rounded-none bg-surface-container border border-outline-variant/40 text-on-surface-variant text-[11px]">
+<span class="material-symbols-outlined text-[13px]" data-icon="lock">lock</span>
+<span>未解锁</span>
+</span>
+</div>
+<div class="space-y-1 mb-4">
+<span class="text-[11px] font-mono tracking-widest text-on-surface-variant/40 block uppercase">WHITE TOWER VIGIL</span>
+<h2 class="text-2xl font-headline font-light tracking-widest text-on-surface-variant/70">
+              「白塔夜谈」
+            </h2>
+</div>
+<!-- Brief Meta -->
+<div class="space-y-2 py-3 border-y border-outline-variant/10 font-mono text-xs text-on-surface-variant/60">
+<div class="flex items-center justify-between">
+<span>推荐等级</span>
+<span>LV. 16</span>
+</div>
+<div class="flex items-center justify-between">
+<span>战场类型</span>
+<span>高塔回廊 · 决战</span>
+</div>
+<div class="flex items-center justify-between text-tertiary/70">
+<span>前置条件</span>
+<span>通关赤原关</span>
+</div>
+</div>
+<!-- Tactical Summary Paragraph Locked -->
+<p class="mt-4 text-xs text-on-surface-variant/40 font-body leading-relaxed tracking-wide">
+            极北天际耸立的古老观测要塞。唯有突破关塞咽喉后方可获悉顶层密室守将之真正身份。战术档案目前处于封印状态。
+          </p>
+</div>
+<!-- Bottom Rewards Locked -->
+<div class="space-y-4 pt-4 border-t border-outline-variant/10">
+<div>
+<div class="text-[10px] font-mono tracking-widest text-on-surface-variant/40 mb-2 uppercase">CLASSIFIED REWARDS</div>
+<div class="space-y-1.5 font-mono text-xs text-on-surface-variant/40">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 bg-outline-variant/40"></span>
+<span>？？？ 机密军略奖励</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 bg-outline-variant/40"></span>
+<span>？？？ 骑士授勋令</span>
+</div>
+</div>
+</div>
+<div class="w-full py-2.5 bg-surface-container-low/80 border border-outline-variant/20 text-on-surface-variant/40 text-xs font-mono tracking-widest flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[13px]">lock</span>
+<span>档案锁闭中</span>
+</div>
+</div>
+</article>
+</section>
+<!-- Tactical Information Quick Ribbon -->
+<div class="flex items-center justify-between px-4 py-2 bg-surface-container-low/50 border border-outline-variant/20 text-xs font-mono">
+<div class="flex items-center gap-6 text-on-surface-variant">
+<span class="text-primary flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm">shield</span>
+<span>出战编队: 第六重装先遣营</span>
+</span>
+<span>出战人数: 6 / 8 骑</span>
+<span>敌对首领: 赤原守将「霜甲巨犀」</span>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<span>环境影响: 冰风阻击 (-20% 远程命中率)</span>
+<span class="text-primary tracking-wider">[Y] 查看详细地势与天气推演</span>
+</div>
+</div>
+</main>
+<!-- ========================================================================= -->
+<!-- FOOTER & GAMEPAD PROMPT BAR (SHARED COMPONENT: Footer)                   -->
+<!-- ========================================================================= -->
+<footer class="fixed bottom-0 left-0 w-full z-50 flex items-center justify-between px-8 h-10 select-none bg-surface/90 dark:bg-surface/90 backdrop-blur-md border-t border-outline-variant/30 dark:border-outline-variant/30 shadow-none font-label font-mono text-xs tracking-wider">
+<!-- Left: Build Version and System Meta -->
+<div class="flex items-center gap-4 text-on-surface-variant dark:text-on-surface-variant">
+<span class="text-primary font-semibold">BUILD 2025.04.14-STABLE</span>
+<span class="text-outline-variant/70">/</span>
+<span>战略推演引擎</span>
+<span class="text-outline-variant/70">|</span>
+<span>网络同步正常</span>
+<span>延迟 12ms</span>
+<span>版本 1.0.4</span>
+</div>
+<!-- Center/Right: Gamepad Prompts (Literal strings from JSON + SRPG Keybinds) -->
+<div class="flex items-center gap-6">
+<!-- [A] Confirm -->
+<div class="flex items-center gap-1.5">
+<span class="w-4 h-4 rounded-full bg-primary text-on-primary flex items-center justify-center text-[10px] font-bold">A</span>
+<span class="text-on-surface font-medium">确认选关</span>
+</div>
+<!-- [B] Back -->
+<div class="flex items-center gap-1.5">
+<span class="w-4 h-4 rounded-full bg-surface-container-high border border-outline-variant text-on-surface flex items-center justify-center text-[10px] font-bold">B</span>
+<span class="text-on-surface-variant">返回战略总览</span>
+</div>
+<!-- [X] Formations -->
+<div class="flex items-center gap-1.5">
+<span class="w-4 h-4 rounded-full bg-surface-container-high border border-outline-variant text-on-surface flex items-center justify-center text-[10px] font-bold">X</span>
+<span class="text-on-surface-variant">编队整备</span>
+</div>
+<!-- [Y] Intel -->
+<div class="flex items-center gap-1.5">
+<span class="w-4 h-4 rounded-full bg-surface-container-high border border-outline-variant text-on-surface flex items-center justify-center text-[10px] font-bold">Y</span>
+<span class="text-on-surface-variant">关卡战报与情报</span>
+</div>
+<!-- [LB/RB] Switch Chapter -->
+<div class="flex items-center gap-1.5 pl-2 border-l border-outline-variant/40">
+<span class="px-1 py-0.5 rounded border border-outline-variant text-[10px] text-primary">LB/RB</span>
+<span class="text-on-surface-variant">切换章节</span>
+</div>
+<!-- [LT/RT] Switch Formations (from JSON footer prompt) -->
+<div class="flex items-center gap-1.5">
+<span class="px-1 py-0.5 rounded border border-outline-variant text-[10px] text-on-surface-variant">LT/RT</span>
+<span class="text-on-surface-variant">切换编队</span>
+</div>
+<!-- [START] Pause -->
+<div class="flex items-center gap-1.5">
+<span class="px-1 py-0.5 rounded border border-outline-variant text-[10px] text-on-surface-variant">START</span>
+<span class="text-on-surface-variant">战术暂停</span>
+</div>
+</div>
+</footer>
+</body></html>

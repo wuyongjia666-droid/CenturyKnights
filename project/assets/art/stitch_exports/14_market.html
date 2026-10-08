@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080, initial-scale=1.0">
+  <title>百年骑士 - 城堡行商与军市 (1920x1080)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            frost: {
+              primary: '#6ED4FF',
+              secondary: '#90CAF9',
+              dark: '#070C12',
+              surface: 'rgba(10, 18, 28, 0.72)',
+              surfaceDark: 'rgba(5, 10, 16, 0.88)',
+              border: 'rgba(110, 212, 255, 0.16)',
+              borderBright: 'rgba(110, 212, 255, 0.45)',
+              accent: '#38BDF8',
+              up: '#F87171',
+              down: '#34D399',
+            }
+          },
+          fontFamily: {
+            sans: ['"Noto Sans SC"', 'sans-serif'],
+            display: ['Noto Sans SC', '"Noto Sans SC"', 'serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+    }
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 1920px;
+      height: 1080px;
+      min-width: 1920px;
+      min-height: 1080px;
+      max-width: 1920px;
+      max-height: 1080px;
+      overflow: hidden;
+      background-color: #06090e;
+      color: #e2e8f0;
+    }
+    .panel-frost {
+      background: rgba(8, 14, 22, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(110, 212, 255, 0.14);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.55), inset 0 1px 0 0 rgba(255, 255, 255, 0.06);
+    }
+    .panel-subtle {
+      background: rgba(13, 22, 34, 0.55);
+      border: 1px solid rgba(110, 212, 255, 0.08);
+    }
+    .gamepad-focused-ring {
+      box-shadow: 0 0 0 2px rgba(110, 212, 255, 0.9), 0 0 24px rgba(110, 212, 255, 0.45);
+      border-color: #6ED4FF !important;
+    }
+    .hairline-b {
+      border-bottom: 1px solid rgba(110, 212, 255, 0.12);
+    }
+    .hairline-t {
+      border-top: 1px solid rgba(110, 212, 255, 0.12);
+    }
+  </style>
+</head>
+<body class="w-[1920px] h-[1080px] bg-[#05080D] relative flex flex-col justify-between font-sans overflow-hidden">
+  <!-- Subtle Background Atmospheric Grid & Radial Frost Glow -->
+  <div class="absolute inset-0 pointer-events-none opacity-40 bg-[radial-gradient(circle_at_20%_15%,rgba(110,212,255,0.08),transparent_45%),radial-gradient(circle_at_80%_80%,rgba(56,189,248,0.05),transparent_40%)]"></div>
+  <div class="absolute inset-0 pointer-events-none opacity-10 bg-[linear-gradient(to_right,rgba(110,212,255,0.1)_1px,transparent_1px),linear-gradient(to_bottom,rgba(110,212,255,0.1)_1px,transparent_1px)] bg-[size:64px_64px]"></div>
+
+  <!-- TOP HEADER HUD (Height: 76px) -->
+  <header class="relative z-20 w-full h-[76px] px-12 flex items-center justify-between hairline-b bg-[#060B12]/85 backdrop-blur-xl">
+    <div class="flex items-center gap-6">
+      <div class="flex items-center gap-3">
+        <span class="inline-block w-2.5 h-2.5 rounded-full bg-frost-primary shadow-[0_0_10px_#6ED4FF]"></span>
+        <h1 class="font-sans tracking-[0.25em] text-lg font-bold text-slate-100 flex items-center gap-3">
+          CENTURY KNIGHTS <span class="text-xs text-frost-primary font-mono font-normal tracking-widest px-2 py-0.5 rounded bg-frost-primary/10 border border-frost-primary/20">MARKET // 市集枢纽</span>
+        </h1>
+      </div>
+      <div class="h-4 w-px bg-slate-800"></div>
+      <div class="text-xs font-mono tracking-wider text-slate-400">
+        赤历一百二十八年 · 霜降月 · 极北商路行营
+      </div>
+    </div>
+
+    <!-- Header Resources & Treasury -->
+    <div class="flex items-center gap-8">
+      <!-- Currency: 金钱 12,480 -->
+      <div class="flex items-center gap-3 bg-slate-900/80 px-4 py-2 rounded border border-frost-primary/25 shadow-[inset_0_1px_2px_rgba(0,0,0,0.6)]">
+        <div class="w-6 h-6 rounded flex items-center justify-center bg-amber-500/10 text-amber-300 font-mono text-sm border border-amber-400/30">
+          <span class="material-symbols-outlined text-base">monetization_on</span>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-[10px] font-mono tracking-wider text-slate-400 uppercase">军费储备 / Kr</span>
+          <div class="flex items-baseline gap-1">
+            <span class="text-xs text-amber-200/80 font-medium">金钱</span>
+            <span class="font-mono text-lg font-bold text-amber-300 tracking-wide">12,480</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Garrison Treasury Indicators -->
+      <div class="flex items-center gap-6 text-xs font-mono text-slate-400">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-sm text-sky-400">inventory_2</span>
+          <span>行军负重</span>
+          <span class="text-slate-200 font-bold">420 / 600 <span class="text-[10px] text-slate-500">kg</span></span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-sm text-sky-400">trending_up</span>
+          <span>商税加成</span>
+          <span class="text-emerald-400 font-bold">+12%</span>
+        </div>
+      </div>
+
+      <!-- Return Button / Gamepad shortcut -->
+      <div class="flex items-center gap-2 text-xs font-mono text-slate-400 bg-slate-900/50 hover:bg-slate-800/80 transition px-3 py-1.5 rounded border border-slate-700/50 cursor-pointer">
+        <span class="w-4 h-4 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-[10px] text-slate-300">B</span>
+        <span>返回中枢</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN VIEWPORT (Height: 932px, Width: 1920px) -->
+  <main class="relative z-10 w-full flex-1 px-12 py-7 flex gap-8 items-start justify-between overflow-hidden">
+    
+    <!-- LEFT COLUMN: 「买入」 PURCHASE LIST (Width: 540px) -->
+    <section class="w-[530px] h-[870px] panel-frost rounded-lg p-6 flex flex-col justify-between">
+      <div>
+        <!-- Column Header -->
+        <div class="flex items-center justify-between pb-4 hairline-b mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-2 h-5 bg-frost-primary rounded-sm shadow-[0_0_8px_#6ED4FF]"></div>
+            <h2 class="text-xl font-bold tracking-wider text-slate-100 flex items-center gap-2">
+              买入 <span class="font-sans text-xs text-frost-primary font-normal tracking-widest">PURCHASE // 补给采购</span>
+            </h2>
+          </div>
+          <span class="text-xs font-mono text-slate-400 bg-slate-900/70 px-2 py-1 rounded border border-slate-800">市场刷新: 03回目</span>
+        </div>
+
+        <!-- Table Legend / Column titles -->
+        <div class="grid grid-cols-12 text-[11px] font-mono tracking-wider text-slate-400 px-3 py-2 uppercase hairline-b mb-2">
+          <div class="col-span-5">军需品类 / ITEM</div>
+          <div class="col-span-4 text-right">商贾牌价 / 单价</div>
+          <div class="col-span-3 text-right">行情浮动</div>
+        </div>
+
+        <!-- Items List -->
+        <div class="flex flex-col gap-2">
+          
+          <!-- Item 1: 粮草 (Unselected) -->
+          <div class="grid grid-cols-12 items-center p-3.5 rounded transition cursor-pointer border border-transparent hover:border-frost-border hover:bg-slate-800/40 panel-subtle">
+            <div class="col-span-5 flex items-center gap-3">
+              <div class="w-10 h-10 rounded bg-slate-900/80 border border-slate-700 flex items-center justify-center text-frost-secondary">
+                <span class="material-symbols-outlined text-xl text-amber-300">grass</span>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-slate-200">粮草</div>
+                <div class="text-[10px] text-slate-400 font-mono">SUPPLIES // 战略储备</div>
+              </div>
+            </div>
+            <div class="col-span-4 text-right font-mono">
+              <span class="text-base font-bold text-slate-200">15</span>
+              <span class="text-[10px] text-slate-400 ml-1">Kr</span>
+            </div>
+            <div class="col-span-3 text-right flex items-center justify-end gap-1 font-mono text-xs text-frost-down">
+              <span class="material-symbols-outlined text-sm">trending_down</span>
+              <span>-2</span>
+            </div>
+          </div>
+
+          <!-- Item 2: 赤铁 (SELECTED ROW - Price 80, Tick +6) -->
+          <div class="grid grid-cols-12 items-center p-3.5 rounded transition cursor-pointer border border-frost-primary/60 bg-frost-primary/10 relative shadow-[0_0_20px_rgba(110,212,255,0.15)]">
+            <!-- Active Indicator Pill -->
+            <div class="absolute -left-1 top-1/2 -translate-y-1/2 w-1.5 h-7 bg-frost-primary rounded-r shadow-[0_0_8px_#6ED4FF]"></div>
+            <div class="col-span-5 flex items-center gap-3">
+              <div class="w-10 h-10 rounded bg-slate-900 border border-frost-primary/50 flex items-center justify-center text-frost-primary shadow-[inset_0_0_8px_rgba(110,212,255,0.2)]">
+                <span class="material-symbols-outlined text-xl text-rose-400">diamond</span>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-white flex items-center gap-1.5">
+                  赤铁
+                  <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-300 border border-rose-400/30">锻造贵稀</span>
+                </div>
+                <div class="text-[10px] text-frost-primary/80 font-mono">CRIMSON ORE // 稀有矿脉</div>
+              </div>
+            </div>
+            <div class="col-span-4 text-right font-mono">
+              <span class="text-lg font-bold text-frost-primary">80</span>
+              <span class="text-[10px] text-slate-400 ml-1">Kr</span>
+            </div>
+            <div class="col-span-3 text-right flex items-center justify-end gap-1 font-mono text-xs text-frost-up font-bold">
+              <span class="material-symbols-outlined text-sm">trending_up</span>
+              <span>+6</span>
+            </div>
+          </div>
+
+          <!-- Item 3: 伤药 (Unselected) -->
+          <div class="grid grid-cols-12 items-center p-3.5 rounded transition cursor-pointer border border-transparent hover:border-frost-border hover:bg-slate-800/40 panel-subtle">
+            <div class="col-span-5 flex items-center gap-3">
+              <div class="w-10 h-10 rounded bg-slate-900/80 border border-slate-700 flex items-center justify-center text-frost-secondary">
+                <span class="material-symbols-outlined text-xl text-emerald-400">medication</span>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-slate-200">伤药</div>
+                <div class="text-[10px] text-slate-400 font-mono">SALVE // 行军医护</div>
+              </div>
+            </div>
+            <div class="col-span-4 text-right font-mono">
+              <span class="text-base font-bold text-slate-200">45</span>
+              <span class="text-[10px] text-slate-400 ml-1">Kr</span>
+            </div>
+            <div class="col-span-3 text-right flex items-center justify-end gap-1 font-mono text-xs text-frost-up">
+              <span class="material-symbols-outlined text-sm">trending_up</span>
+              <span>+3</span>
+            </div>
+          </div>
+
+          <!-- Item 4: 霜晶 (Unselected) -->
+          <div class="grid grid-cols-12 items-center p-3.5 rounded transition cursor-pointer border border-transparent hover:border-frost-border hover:bg-slate-800/40 panel-subtle">
+            <div class="col-span-5 flex items-center gap-3">
+              <div class="w-10 h-10 rounded bg-slate-900/80 border border-slate-700 flex items-center justify-center text-frost-secondary">
+                <span class="material-symbols-outlined text-xl text-sky-300">ac_unit</span>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-slate-200">霜晶</div>
+                <div class="text-[10px] text-slate-400 font-mono">FROST CORE // 术法原晶</div>
+              </div>
+            </div>
+            <div class="col-span-4 text-right font-mono">
+              <span class="text-base font-bold text-slate-200">120</span>
+              <span class="text-[10px] text-slate-400 ml-1">Kr</span>
+            </div>
+            <div class="col-span-3 text-right flex items-center justify-end gap-1 font-mono text-xs text-frost-down">
+              <span class="material-symbols-outlined text-sm">trending_down</span>
+              <span>-5</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Left Bottom Tip / Quick Quote -->
+      <div class="p-4 rounded panel-subtle text-xs text-slate-400 flex items-start gap-3 border border-slate-800">
+        <span class="material-symbols-outlined text-frost-primary text-base mt-0.5">info</span>
+        <div>
+          <span class="text-slate-200 font-medium">北境商路行情通报：</span>
+          <p class="text-[11px] text-slate-400 mt-0.5 leading-relaxed">
+            赤原关战役打通后，铁匠炉火昼夜不息，赤铁供需紧张（行市 +6 Kr）。若有积存可在「卖出」侧结算换取充裕军资。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CENTER COLUMN: TRANSACTION INSPECTOR & INTERACTION (Width: 700px) -->
+    <section class="w-[700px] h-[870px] panel-frost rounded-lg p-7 flex flex-col justify-between">
+      
+      <!-- Top Dossier Meta -->
+      <div>
+        <div class="flex items-center justify-between pb-4 hairline-b mb-6">
+          <div class="flex items-center gap-3">
+            <span class="font-mono text-xs text-frost-primary tracking-widest px-2 py-0.5 rounded bg-frost-primary/10 border border-frost-primary/20">TARGET COMMODITY // 当前选定</span>
+            <span class="text-xs font-mono text-slate-400">REG-ID: #ORE-CRIMSON-02</span>
+          </div>
+          <div class="text-xs font-mono text-slate-400">交易税率: <span class="text-slate-200">0% (免役税)</span></div>
+        </div>
+
+        <!-- Featured Commodity Banner -->
+        <div class="flex gap-6 items-center p-5 rounded-lg panel-subtle border border-frost-primary/20 mb-6 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-transparent">
+          <!-- Large Vector Icon Badge -->
+          <div class="w-20 h-20 rounded-lg bg-slate-950 border border-frost-primary/40 flex items-center justify-center relative shadow-[0_0_24px_rgba(244,63,94,0.18)]">
+            <span class="material-symbols-outlined text-5xl text-rose-400">diamond</span>
+            <div class="absolute -bottom-1 -right-1 text-[9px] font-mono px-1.5 py-0.5 rounded bg-slate-900 border border-slate-700 text-slate-300">
+              GRADE S
+            </div>
+          </div>
+
+          <div class="flex-1">
+            <div class="flex items-baseline gap-3">
+              <h3 class="text-2xl font-bold text-white tracking-wide">赤铁</h3>
+              <span class="font-mono text-xs text-frost-primary">Crimson Ore</span>
+              <span class="text-xs font-mono text-slate-400">| 重质锻造材料</span>
+            </div>
+            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+              产自赤原断层裂谷的高温熔凝结晶，质地致密坚硬，散发幽微暗赤色荧光。霜刃骑士团升级三阶阶位兵刃「霜蚀重剑」之必备核心耗材。
+            </p>
+          </div>
+        </div>
+
+        <!-- Market Ticker & Statistics -->
+        <div class="grid grid-cols-3 gap-4 mb-8">
+          <div class="p-3.5 rounded panel-subtle border border-slate-800 flex flex-col">
+            <span class="text-[11px] font-mono text-slate-400">买入基准价</span>
+            <div class="flex items-baseline gap-1 mt-1">
+              <span class="font-mono text-xl font-bold text-slate-100">80</span>
+              <span class="text-xs text-slate-400 font-mono">Kr / 单位</span>
+            </div>
+            <span class="text-[10px] text-slate-500 font-mono mt-1">全季中位: 74 Kr</span>
+          </div>
+
+          <div class="p-3.5 rounded panel-subtle border border-slate-800 flex flex-col">
+            <span class="text-[11px] font-mono text-slate-400">当日浮动行情</span>
+            <div class="flex items-center gap-1.5 mt-1">
+              <span class="material-symbols-outlined text-frost-up text-base">trending_up</span>
+              <span class="font-mono text-xl font-bold text-frost-up">+6</span>
+              <span class="text-xs text-frost-up font-mono">(+8.1%)</span>
+            </div>
+            <span class="text-[10px] text-slate-500 font-mono mt-1">走势评级: 持续看涨</span>
+          </div>
+
+          <div class="p-3.5 rounded panel-subtle border border-slate-800 flex flex-col">
+            <span class="text-[11px] font-mono text-slate-400">背包持有量</span>
+            <div class="flex items-baseline gap-1 mt-1">
+              <span class="font-mono text-xl font-bold text-sky-300">2</span>
+              <span class="text-xs text-slate-400 font-mono">单位</span>
+            </div>
+            <span class="text-[10px] text-slate-500 font-mono mt-1">占用承重: 24 kg</span>
+          </div>
+        </div>
+
+        <!-- TRANSACTION STEPPER CONTROL (QUANTITY STEPPER) -->
+        <div class="p-6 rounded-lg panel-subtle border border-frost-primary/25 mb-6">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-mono uppercase tracking-wider text-slate-300 flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-frost-primary"></span>
+              采购数量核定 // QUANTITY SELECTOR
+            </span>
+            <span class="text-xs font-mono text-slate-400">最大可购配额: 156 份</span>
+          </div>
+
+          <!-- Stepper Buttons & Large Number -->
+          <div class="flex items-center justify-between gap-4 bg-slate-950/70 p-3 rounded-lg border border-slate-800">
+            <!-- Minus 10 -->
+            <button class="w-12 h-12 rounded bg-slate-900 border border-slate-700 hover:border-frost-border text-slate-300 hover:text-white font-mono text-xs font-bold transition flex items-center justify-center active:scale-95">
+              -10
+            </button>
+            <!-- Minus 1 -->
+            <button class="w-12 h-12 rounded bg-slate-900 border border-slate-700 hover:border-frost-border text-slate-300 hover:text-white font-mono text-base font-bold transition flex items-center justify-center active:scale-95">
+              <span class="material-symbols-outlined">remove</span>
+            </button>
+
+            <!-- Quantity Display -->
+            <div class="flex-1 text-center py-1">
+              <div class="font-mono text-4xl font-extrabold text-white tracking-wider flex items-center justify-center gap-2">
+                <span>05</span>
+                <span class="text-xs font-sans font-normal text-slate-400 self-end mb-1">份</span>
+              </div>
+              <div class="text-[10px] font-mono text-slate-400">单组装箱重: 12 kg / 份</div>
+            </div>
+
+            <!-- Plus 1 -->
+            <button class="w-12 h-12 rounded bg-slate-900 border border-slate-700 hover:border-frost-border text-slate-300 hover:text-white font-mono text-base font-bold transition flex items-center justify-center active:scale-95">
+              <span class="material-symbols-outlined">add</span>
+            </button>
+            <!-- Plus 10 -->
+            <button class="w-12 h-12 rounded bg-slate-900 border border-slate-700 hover:border-frost-border text-slate-300 hover:text-white font-mono text-xs font-bold transition flex items-center justify-center active:scale-95">
+              +10
+            </button>
+          </div>
+
+          <!-- Quick presets -->
+          <div class="flex items-center justify-end gap-2 mt-3 font-mono text-xs">
+            <span class="text-slate-500 mr-2 text-[11px]">快速配比:</span>
+            <button class="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700 transition text-[11px]">最小 (1)</button>
+            <button class="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700 transition text-[11px]">半量 (25)</button>
+            <button class="px-2.5 py-1 rounded bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200 hover:border-slate-700 transition text-[11px]">上限 (156)</button>
+          </div>
+        </div>
+
+        <!-- Settlement Summary -->
+        <div class="p-4 rounded panel-subtle border border-slate-800 flex items-center justify-between font-mono">
+          <div class="flex flex-col">
+            <span class="text-[11px] text-slate-400">本次结算预估 // TOTAL ESTIMATE</span>
+            <div class="text-xs text-slate-300 mt-0.5">80 Kr × 5 份 = <span class="text-slate-100 font-bold">400 Kr</span></div>
+          </div>
+          <div class="text-right">
+            <span class="text-[11px] text-slate-400">支付后军费结余</span>
+            <div class="text-sm font-bold text-amber-300">12,080 <span class="text-[11px] text-slate-400 font-normal">Kr</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTTOM PRIMARY ACTION BUTTON WITH GAMEPAD FOCUS RING -->
+      <div class="pt-4 hairline-t flex items-center justify-between gap-6">
+        <div class="flex items-center gap-4 text-xs font-mono text-slate-400">
+          <div class="flex items-center gap-1.5">
+            <span class="w-4 h-4 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-[10px] text-slate-300">X</span>
+            <span>清零</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-4 h-4 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-[10px] text-slate-300">Y</span>
+            <span>商贾议价</span>
+          </div>
+        </div>
+
+        <!-- FOCUSED ACTION: 「买入」 (Highlighted with clear gamepad focus ring) -->
+        <button class="gamepad-focused-ring flex-1 max-w-[340px] h-14 bg-gradient-to-r from-frost-primary via-sky-400 to-sky-300 hover:brightness-110 active:brightness-95 text-slate-950 font-bold rounded-lg px-8 flex items-center justify-between transition cursor-pointer relative">
+          <!-- Gamepad Prompt Tag -->
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-6 rounded-full bg-slate-950 text-frost-primary font-mono text-xs font-bold flex items-center justify-center shadow-md">
+              A
+            </div>
+            <span class="text-lg tracking-widest font-sans font-extrabold text-slate-950">买入</span>
+          </div>
+          
+          <div class="flex items-center gap-2 font-mono">
+            <span class="text-sm font-bold text-slate-900">400 Kr</span>
+            <span class="material-symbols-outlined text-lg text-slate-950">arrow_forward</span>
+          </div>
+        </button>
+      </div>
+
+    </section>
+
+    <!-- RIGHT COLUMN: 「卖出」 PLAYER STOCK (Width: 540px) -->
+    <section class="w-[530px] h-[870px] panel-frost rounded-lg p-6 flex flex-col justify-between">
+      <div>
+        <!-- Column Header -->
+        <div class="flex items-center justify-between pb-4 hairline-b mb-4">
+          <div class="flex items-center gap-3">
+            <div class="w-2 h-5 bg-amber-400 rounded-sm shadow-[0_0_8px_rgba(251,191,36,0.5)]"></div>
+            <h2 class="text-xl font-bold tracking-wider text-slate-100 flex items-center gap-2">
+              卖出 <span class="font-sans text-xs text-amber-300 font-normal tracking-widest">SELL // 军资变现</span>
+            </h2>
+          </div>
+          <span class="text-xs font-mono text-slate-400 bg-slate-900/70 px-2 py-1 rounded border border-slate-800">辎重仓库: 04 类目</span>
+        </div>
+
+        <!-- Table Legend / Column titles -->
+        <div class="grid grid-cols-12 text-[11px] font-mono tracking-wider text-slate-400 px-3 py-2 uppercase hairline-b mb-2">
+          <div class="col-span-5">库藏军备 / STOCK</div>
+          <div class="col-span-3 text-right">持有数</div>
+          <div class="col-span-4 text-right">回收折价</div>
+        </div>
+
+        <!-- Items List (Player stock of the same 4 goods) -->
+        <div class="flex flex-col gap-2">
+          
+          <!-- Stock 1: 粮草 (Player Stock) -->
+          <div class="grid grid-cols-12 items-center p-3.5 rounded transition cursor-pointer border border-transparent hover:border-amber-400/30 hover:bg-slate-800/40 panel-subtle">
+            <div class="col-span-5 flex items-center gap-3">
+              <div class="w-10 h-10 rounded bg-slate-900/80 border border-slate-700 flex items-center justify-center text-amber-300">
+                <span class="material-symbols-outlined text-xl">grass</span>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-slate-200">粮草</div>
+                <div class="text-[10px] text-slate-400 font-mono">SUPPLIES</div>
+              </div>
+            </div>
+            <div class="col-span-3 text-right font-mono">
+              <span class="text-base font-bold text-white">3,260</span>
+              <span class="text-[10px] text-slate-400 ml-0.5">石</span>
+            </div>
+            <div class="col-span-4 text-right font-mono">
+              <span class="text-sm font-semibold text-amber-300">12</span>
+              <span class="text-[10px] text-slate-400 ml-1">Kr/石</span>
+            </div>
+          </div>
+
+          <!-- Stock 2: 赤铁 (Player Stock) -->
+          <div class="grid grid-cols-12 items-center p-3.5 rounded transition cursor-pointer border border-slate-700/60 bg-slate-900/40 hover:border-amber-400/40 panel-subtle">
+            <div class="col-span-5 flex items-center gap-3">
+              <div class="w-10 h-10 rounded bg-slate-900/80 border border-slate-700 flex items-center justify-center text-rose-400">
+                <span class="material-symbols-outlined text-xl">diamond</span>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-slate-200">赤铁</div>
+                <div class="text-[10px] text-slate-400 font-mono">CRIMSON ORE</div>
+              </div>
+            </div>
+            <div class="col-span-3 text-right font-mono">
+              <span class="text-base font-bold text-sky-300">2</span>
+              <span class="text-[10px] text-slate-400 ml-0.5">块</span>
+            </div>
+            <div class="col-span-4 text-right font-mono">
+              <span class="text-sm font-semibold text-amber-300">68</span>
+              <span class="text-[10px] text-slate-400 ml-1">Kr/块</span>
+            </div>
+          </div>
+
+          <!-- Stock 3: 伤药 (Player Stock) -->
+          <div class="grid grid-cols-12 items-center p-3.5 rounded transition cursor-pointer border border-transparent hover:border-amber-400/30 hover:bg-slate-800/40 panel-subtle">
+            <div class="col-span-5 flex items-center gap-3">
+              <div class="w-10 h-10 rounded bg-slate-900/80 border border-slate-700 flex items-center justify-center text-emerald-400">
+                <span class="material-symbols-outlined text-xl">medication</span>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-slate-200">伤药</div>
+                <div class="text-[10px] text-slate-400 font-mono">SALVE</div>
+              </div>
+            </div>
+            <div class="col-span-3 text-right font-mono">
+              <span class="text-base font-bold text-white">18</span>
+              <span class="text-[10px] text-slate-400 ml-0.5">剂</span>
+            </div>
+            <div class="col-span-4 text-right font-mono">
+              <span class="text-sm font-semibold text-amber-300">36</span>
+              <span class="text-[10px] text-slate-400 ml-1">Kr/剂</span>
+            </div>
+          </div>
+
+          <!-- Stock 4: 霜晶 (Player Stock) -->
+          <div class="grid grid-cols-12 items-center p-3.5 rounded transition cursor-pointer border border-transparent hover:border-amber-400/30 hover:bg-slate-800/40 panel-subtle">
+            <div class="col-span-5 flex items-center gap-3">
+              <div class="w-10 h-10 rounded bg-slate-900/80 border border-slate-700 flex items-center justify-center text-sky-300">
+                <span class="material-symbols-outlined text-xl">ac_unit</span>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-slate-200">霜晶</div>
+                <div class="text-[10px] text-slate-400 font-mono">FROST CORE</div>
+              </div>
+            </div>
+            <div class="col-span-3 text-right font-mono">
+              <span class="text-base font-bold text-white">5</span>
+              <span class="text-[10px] text-slate-400 ml-0.5">枚</span>
+            </div>
+            <div class="col-span-4 text-right font-mono">
+              <span class="text-sm font-semibold text-amber-300">96</span>
+              <span class="text-[10px] text-slate-400 ml-1">Kr/枚</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Right Bottom Quick Sell Action Card -->
+      <div class="p-4 rounded panel-subtle border border-slate-800 flex flex-col gap-3">
+        <div class="flex items-center justify-between text-xs font-mono text-slate-300">
+          <span>仓库预估总估值</span>
+          <span class="text-amber-300 font-bold text-sm">40,272 Kr</span>
+        </div>
+        <div class="text-[11px] text-slate-500 leading-relaxed">
+          驻地商队按公允行价回收战役战利品与闲置辎重。选定物品后可通过右摇杆快速切换至卖出核算。
+        </div>
+        <button class="w-full h-11 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 text-xs font-mono font-medium transition flex items-center justify-center gap-2 cursor-pointer">
+          <span class="material-symbols-outlined text-sm">swap_horiz</span>
+          <span>切换至「卖出」操作模式</span>
+        </button>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- BOTTOM STATUS & GAMEPAD BAR (Height: 44px) -->
+  <footer class="relative z-20 w-full h-[44px] px-12 flex items-center justify-between hairline-t bg-[#060B12]/90 backdrop-blur-md text-xs font-mono text-slate-400">
+    <div class="flex items-center gap-6">
+      <div class="flex items-center gap-2 text-frost-primary">
+        <span class="inline-block w-2 h-2 rounded-full bg-frost-primary shadow-[0_0_6px_#6ED4FF]"></span>
+        <span>CENTURY KNIGHTS TACTICAL SYSTEM v2.4.0</span>
+      </div>
+      <div class="h-3 w-px bg-slate-800"></div>
+      <span class="text-slate-500">CANVAS: 1920 × 1080 NO-SCROLL NATIVE</span>
+    </div>
+
+    <!-- Gamepad Shortcuts Bar -->
+    <div class="flex items-center gap-6 text-[11px] text-slate-400">
+      <div class="flex items-center gap-1.5">
+        <span class="w-4 h-4 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-[10px] text-slate-200">D-PAD</span>
+        <span>选择品类</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="w-4 h-4 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-[10px] text-slate-200">LT / RT</span>
+        <span>调整数量</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="w-4 h-4 rounded-full bg-frost-primary/20 border border-frost-primary/60 flex items-center justify-center text-[10px] text-frost-primary font-bold">A</span>
+        <span class="text-frost-primary font-medium">确认买入</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <span class="w-4 h-4 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-[10px] text-slate-200">B</span>
+        <span>取消返回</span>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

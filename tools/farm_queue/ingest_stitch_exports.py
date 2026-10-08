@@ -11,7 +11,7 @@ OUT = ROOT / "docs/art/stitch_skeletons_v8"
 MANIFEST = ROOT / "tools/farm_queue/stitch_export_manifest.json"
 
 # Expected screen basenames from live Stitch project
-EXPECT = ["castle_hub", "battle_hud", "menu", "atlas", "tavern", "roster", "deploy"]
+EXPECT = ["01_menu","02_castle_hub","03_atlas","04_chapter_select","05_deploy","06_battle_hud","07_battle_forecast","08_victory","09_defeat","10_roster","11_unit_detail","12_tavern","13_forge","14_market","15_temple","16_estates","17_marriage","18_lineage","19_birth","20_years","21_dialogue","22_save_load","23_settings","24_components","tokens"]
 
 def main() -> int:
     OUT.mkdir(parents=True, exist_ok=True)

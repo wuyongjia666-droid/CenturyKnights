@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080, initial-scale=1.0">
+  <title>百年骑士 CenturyKnights - 标题画面</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Noto Sans SC"', 'serif'],
+            display: ['Noto Sans SC', 'serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          },
+          colors: {
+            void: '#06080d',
+            frost: '#6ED4FF',
+            ink: '#0b0f19'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    html, body {
+      width: 1920px;
+      height: 1080px;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #05070c;
+    }
+
+    /* Ambient atmospheric depth & subtle vignette */
+    .void-background {
+      background: 
+        radial-gradient(circle at 75% 42%, rgba(26, 44, 76, 0.28) 0%, rgba(13, 21, 38, 0.15) 35%, transparent 72%),
+        radial-gradient(circle at 18% 25%, rgba(110, 212, 255, 0.04) 0%, transparent 45%),
+        radial-gradient(circle at 50% 100%, rgba(10, 16, 28, 0.9) 0%, #05070c 80%);
+    }
+
+    /* Subtle geometric grid backdrop line for editorial precision */
+    .grid-lines {
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+      background-size: 120px 120px;
+    }
+
+    /* Frosted matte panel treatment */
+    .frosted-plate {
+      background: rgba(11, 16, 26, 0.42);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      box-shadow: 
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
+        0 24px 64px -12px rgba(0, 0, 0, 0.65);
+    }
+
+    /* Key gamepad focus ring */
+    .gamepad-focused {
+      position: relative;
+    }
+    .gamepad-focused::before {
+      content: '';
+      position: absolute;
+      inset: -6px -16px;
+      border: 1px solid rgba(110, 212, 255, 0.85);
+      background: linear-gradient(90deg, rgba(110, 212, 255, 0.09) 0%, rgba(110, 212, 255, 0.01) 100%);
+      box-shadow: 
+        0 0 16px rgba(110, 212, 255, 0.22),
+        inset 0 0 12px rgba(110, 212, 255, 0.05);
+      border-radius: 2px;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="relative w-[1920px] h-[1080px] overflow-hidden text-neutral-100 font-sans void-background antialiased">
+  
+  <!-- Subtle architectural atmospheric coordinate grid -->
+  <div class="absolute inset-0 grid-lines pointer-events-none opacity-60"></div>
+
+  <!-- Background illustration placeholder vignette (atmospheric empty void on right) -->
+  <div class="absolute right-0 top-0 w-[1240px] h-[1080px] pointer-events-none flex items-center justify-center">
+    <!-- Subtle luminous haze contour indicating where key art plate will sit -->
+    <div class="absolute w-[800px] h-[800px] rounded-full bg-gradient-to-tr from-cyan-950/20 via-sky-900/10 to-transparent blur-[120px] opacity-70"></div>
+    <!-- Editorial minimalist watermark coordinates in void -->
+    <div class="absolute right-20 top-20 text-right font-mono text-[11px] text-neutral-600/60 tracking-[0.25em] uppercase leading-relaxed">
+      PLATE: ARCH_01 // VOID SPACE<br>
+      LAT. 68°14'N · LONG. 12°08'E<br>
+      SURFACE: CRYOLITE MATTE
+    </div>
+  </div>
+
+  <!-- Main Viewport Shell / Layout Structure -->
+  <div class="relative w-full h-full flex flex-col justify-between px-28 py-20 z-10">
+
+    <!-- Top Status / Auxiliary System Metadata Bar -->
+    <header class="w-full flex justify-between items-center text-xs tracking-[0.2em] font-mono text-neutral-400">
+      <div class="flex items-center space-x-6">
+        <span class="inline-flex items-center gap-2 text-cyan-300/80">
+          <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#6ed4ff]"></span>
+          <span>SYSTEM READY</span>
+        </span>
+        <span class="text-neutral-700">/</span>
+        <span class="text-neutral-500 tracking-widest">TACTICAL SRPG ARCHIVE</span>
+      </div>
+
+      <!-- Quick controller hotkey prompt header -->
+      <div class="flex items-center gap-5 text-neutral-400 font-sans text-xs">
+        <div class="flex items-center gap-2">
+          <span class="w-5 h-5 rounded bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-mono text-neutral-300">W/S</span>
+          <span class="tracking-normal text-neutral-400 text-[11px]">或十字键导航</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="w-5 h-5 rounded bg-cyan-500/10 border border-cyan-400/40 flex items-center justify-center text-[10px] font-mono text-cyan-300">A</span>
+          <span class="tracking-normal text-neutral-300 text-[11px]">确认</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Stage: Left-Aligned Editorial Stack -->
+    <div class="flex-1 flex items-center">
+      <div class="max-w-[620px] w-full">
+        
+        <!-- Category & Tracking Label -->
+        <div class="flex items-center gap-3.5 mb-5">
+          <div class="w-5 h-[1px] bg-cyan-400/80"></div>
+          <span class="font-sans text-[13px] tracking-[0.45em] text-cyan-300 font-medium">CENTURY KNIGHTS</span>
+          <span class="text-[11px] font-mono text-neutral-600 tracking-widest">NO. 128</span>
+        </div>
+
+        <!-- Large Thin Title -->
+        <h1 class="text-[88px] leading-[1.04] font-extralight tracking-[0.14em] text-white text-transparent bg-clip-text bg-gradient-to-b from-white via-neutral-100 to-neutral-400 mb-5 select-none drop-shadow-[0_8px_32px_rgba(0,0,0,0.8)]">
+          百年骑士
+        </h1>
+
+        <!-- Subline & Narrative Placement -->
+        <div class="flex items-center gap-4 text-neutral-400 font-sans text-[17px] font-light tracking-[0.2em] mb-16 pl-1 border-l-2 border-white/10 py-0.5">
+          <span>赤历一百二十八年</span>
+          <span class="w-1 h-1 rounded-full bg-cyan-400/60"></span>
+          <span>霜堡</span>
+          <span class="text-neutral-600 text-xs font-mono ml-2 tracking-widest">PROLOGUE : FROSTHOLD</span>
+        </div>
+
+        <!-- Menu Section (Editorial Vertical Text Rows, Not Chunky Buttons) -->
+        <nav class="flex flex-col space-y-7 pl-1" aria-label="游戏主菜单">
+          
+          <!-- 1. 新游戏 -->
+          <button class="group text-left transition-all duration-200 outline-none flex items-center w-fit">
+            <span class="font-mono text-[11px] text-neutral-600 tracking-wider mr-5 opacity-40 group-hover:opacity-100 group-hover:text-cyan-400 transition-opacity">01</span>
+            <span class="text-[22px] font-light tracking-[0.24em] text-neutral-400 group-hover:text-white group-hover:translate-x-1.5 transition-all duration-200">
+              新游戏
+            </span>
+            <span class="opacity-0 group-hover:opacity-100 ml-4 font-mono text-[11px] text-cyan-400/70 tracking-widest uppercase transition-opacity">NEW EXPEDITION</span>
+          </button>
+
+          <!-- 2. 继续 (Primary Control with clearly visible gamepad focus ring) -->
+          <div class="gamepad-focused w-fit flex items-center py-1">
+            <button class="group text-left transition-all duration-200 outline-none flex items-center w-fit cursor-pointer">
+              <!-- Focus indicator glyph -->
+              <span class="w-1.5 h-1.5 bg-cyan-400 rounded-full mr-3 shadow-[0_0_10px_#6ed4ff]"></span>
+              <span class="font-mono text-[11px] text-cyan-300 tracking-wider mr-4 font-medium">02</span>
+              
+              <span class="text-[24px] font-normal tracking-[0.24em] text-white drop-shadow-[0_0_12px_rgba(110,212,255,0.45)]">
+                继续
+              </span>
+              
+              <!-- Focus status tag / metadata -->
+              <div class="ml-6 px-2.5 py-0.5 rounded-sm bg-cyan-400/10 border border-cyan-400/30 flex items-center gap-2">
+                <span class="w-1 h-1 rounded-full bg-cyan-300 animate-pulse"></span>
+                <span class="font-mono text-[11px] text-cyan-200 tracking-wider">第4节 · 凛冬议事厅 (24h 12m)</span>
+              </div>
+            </button>
+          </div>
+
+          <!-- 3. 读档 -->
+          <button class="group text-left transition-all duration-200 outline-none flex items-center w-fit">
+            <span class="font-mono text-[11px] text-neutral-600 tracking-wider mr-5 opacity-40 group-hover:opacity-100 group-hover:text-cyan-400 transition-opacity">03</span>
+            <span class="text-[22px] font-light tracking-[0.24em] text-neutral-400 group-hover:text-white group-hover:translate-x-1.5 transition-all duration-200">
+              读档
+            </span>
+            <span class="opacity-0 group-hover:opacity-100 ml-4 font-mono text-[11px] text-cyan-400/70 tracking-widest uppercase transition-opacity">LOAD ARCHIVE</span>
+          </button>
+
+          <!-- 4. 设置 -->
+          <button class="group text-left transition-all duration-200 outline-none flex items-center w-fit">
+            <span class="font-mono text-[11px] text-neutral-600 tracking-wider mr-5 opacity-40 group-hover:opacity-100 group-hover:text-cyan-400 transition-opacity">04</span>
+            <span class="text-[22px] font-light tracking-[0.24em] text-neutral-400 group-hover:text-white group-hover:translate-x-1.5 transition-all duration-200">
+              设置
+            </span>
+            <span class="opacity-0 group-hover:opacity-100 ml-4 font-mono text-[11px] text-cyan-400/70 tracking-widest uppercase transition-opacity">PREFERENCES</span>
+          </button>
+
+          <!-- 5. 退出 -->
+          <button class="group text-left transition-all duration-200 outline-none flex items-center w-fit">
+            <span class="font-mono text-[11px] text-neutral-600 tracking-wider mr-5 opacity-40 group-hover:opacity-100 group-hover:text-cyan-400 transition-opacity">05</span>
+            <span class="text-[22px] font-light tracking-[0.24em] text-neutral-500 group-hover:text-rose-300 group-hover:translate-x-1.5 transition-all duration-200">
+              退出
+            </span>
+            <span class="opacity-0 group-hover:opacity-100 ml-4 font-mono text-[11px] text-neutral-500 tracking-widest uppercase transition-opacity">QUIT GAME</span>
+          </button>
+        </nav>
+
+      </div>
+    </div>
+
+    <!-- Bottom Metadata Bar -->
+    <footer class="w-full flex justify-between items-end pb-2">
+      <!-- Bottom-Left Tiny Build Label -->
+      <div class="flex items-center space-x-6 text-neutral-500 font-mono text-[12px] tracking-[0.16em]">
+        <div class="flex items-center gap-2">
+          <span class="text-neutral-400 font-medium font-sans">版本 0.9</span>
+          <span class="text-neutral-700">|</span>
+          <span class="text-neutral-600">BUILD 2025.04.14-STABLE</span>
+        </div>
+        <div class="hidden md:flex items-center gap-1.5 text-neutral-600 text-[11px]">
+          <span>© CENTURY KNIGHTS STUDIO. ALL RIGHTS RESERVED.</span>
+        </div>
+      </div>
+
+      <!-- Bottom-Right Input Prompt Indicators -->
+      <div class="frosted-plate px-5 py-2.5 rounded-sm flex items-center space-x-6 text-xs text-neutral-400 font-mono">
+        <div class="flex items-center gap-2">
+          <span class="w-4 h-4 rounded-full border border-neutral-600 flex items-center justify-center text-[10px] text-neutral-400 font-sans">✕</span>
+          <span class="text-neutral-400 text-[11px] font-sans">返回 / 取消</span>
+        </div>
+        <div class="w-[1px] h-3 bg-white/10"></div>
+        <div class="flex items-center gap-2">
+          <span class="w-4 h-4 rounded-full border border-cyan-400/70 text-cyan-300 flex items-center justify-center text-[10px] font-sans">○</span>
+          <span class="text-neutral-300 text-[11px] font-sans">确认选择</span>
+        </div>
+        <div class="w-[1px] h-3 bg-white/10"></div>
+        <div class="flex items-center gap-2">
+          <span class="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] text-neutral-400">SELECT</span>
+          <span class="text-neutral-400 text-[11px] font-sans">选项信息</span>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+</body>
+</html>

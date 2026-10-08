@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>百年骑士 - 白霜家谱</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            frost: {
+              50: '#F0F9FF',
+              100: '#E0F2FE',
+              200: '#BAE6FD',
+              300: '#7DD3FC',
+              400: '#38BDF8',
+              500: '#0EA5E9',
+              primary: '#6ED4FF',
+              deep: '#030712',
+              surface: 'rgba(8, 14, 24, 0.72)',
+              panel: 'rgba(12, 22, 38, 0.65)',
+              border: 'rgba(110, 212, 255, 0.22)',
+              glow: 'rgba(110, 212, 255, 0.45)'
+            }
+          },
+          fontFamily: {
+            serif: ['"Noto Sans SC"', 'serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            sans: ['Inter', 'sans-serif'],
+            cinzel: ['Noto Sans SC', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #030712;
+      width: 1920px;
+      height: 1080px;
+      color: #E2E8F0;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    /* Subtle geometric grid backdrop */
+    .bg-grid-pattern {
+      background-image: 
+        linear-gradient(to right, rgba(110, 212, 255, 0.035) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(110, 212, 255, 0.035) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    .frost-glass {
+      background: rgba(9, 17, 30, 0.72);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(110, 212, 255, 0.18);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.48), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+    .frost-glass-highlight {
+      background: rgba(14, 27, 48, 0.82);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(110, 212, 255, 0.45);
+      box-shadow: 0 0 25px rgba(110, 212, 255, 0.2), inset 0 0 20px rgba(110, 212, 255, 0.08);
+    }
+    .gamepad-focus-ring {
+      outline: 2px solid #6ED4FF;
+      outline-offset: 3px;
+      box-shadow: 0 0 0 1px rgba(3, 7, 18, 0.9), 0 0 28px rgba(110, 212, 255, 0.65);
+    }
+    /* Hairline connective lineage lines */
+    .lineage-svg {
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="w-[1920px] h-[1080px] relative overflow-hidden bg-[#030712] font-sans text-slate-200">
+
+  <!-- Ambient background glow layers -->
+  <div class="absolute inset-0 bg-grid-pattern opacity-80 pointer-events-none"></div>
+  <div class="absolute -top-[20%] -left-[10%] w-[900px] h-[900px] rounded-full bg-sky-950/20 blur-[140px] pointer-events-none"></div>
+  <div class="absolute -bottom-[20%] right-[10%] w-[1000px] h-[1000px] rounded-full bg-cyan-950/25 blur-[160px] pointer-events-none"></div>
+  <div class="absolute top-[35%] left-[30%] w-[600px] h-[600px] rounded-full bg-sky-900/10 blur-[130px] pointer-events-none"></div>
+
+  <!-- SVG Family Tree Connectors Layer -->
+  <svg class="absolute inset-0 w-[1920px] h-[1080px] lineage-svg z-10" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <!-- Glowing active line filter -->
+      <filter id="frostGlow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="3" result="blur" />
+        <feMerge>
+          <feMergeNode in="blur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+      <!-- Bloodline shimmer gradient -->
+      <linearGradient id="bloodlineGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#38BDF8" stop-opacity="0.2" />
+        <stop offset="50%" stop-color="#6ED4FF" stop-opacity="0.9" />
+        <stop offset="100%" stop-color="#6ED4FF" stop-opacity="1" />
+      </linearGradient>
+      <linearGradient id="deceasedLine" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#64748B" stop-opacity="0.4" />
+        <stop offset="100%" stop-color="#38BDF8" stop-opacity="0.5" />
+      </linearGradient>
+    </defs>
+
+    <!-- 1. Generation I Marriage Link (白霜·岳 (X: 385, Y: 295) <-> 青澜·宁 (X: 635, Y: 295)) -->
+    <path d="M 450 295 L 570 295" stroke="rgba(148, 163, 184, 0.35)" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <circle cx="510" cy="295" r="4" fill="#030712" stroke="rgba(148, 163, 184, 0.6)" stroke-width="1.5"/>
+
+    <!-- 2. Descent from Gen I Marriage (510, 295) down to intermediate trunk, branching to 白霜·凛 (430) and 白霜·朔 (720) -->
+    <!-- Downward stem from union node -->
+    <path d="M 510 299 L 510 395" stroke="rgba(110, 212, 255, 0.45)" stroke-width="1.5"/>
+    <circle cx="510" cy="395" r="3" fill="#6ED4FF" />
+
+    <!-- Branch horizontal bar -->
+    <path d="M 430 395 L 720 395" stroke="rgba(110, 212, 255, 0.45)" stroke-width="1.5"/>
+
+    <!-- Path down to 白霜·凛 (Primary Focus node at X: 430, Top: 460) -->
+    <path d="M 430 395 L 430 460" stroke="#6ED4FF" stroke-width="2" filter="url(#frostGlow)"/>
+
+    <!-- Path down to 白霜·朔 (Sibling node at X: 720, Top: 460) -->
+    <path d="M 720 395 L 720 460" stroke="rgba(110, 212, 255, 0.45)" stroke-width="1.5"/>
+
+    <!-- 3. Descent from 白霜·凛 (Center X: 430, Bottom: 660) down to Gen III 白霜·澄 (Center X: 430, Top: 775) -->
+    <path d="M 430 660 L 430 775" stroke="#6ED4FF" stroke-width="2" filter="url(#frostGlow)"/>
+    <!-- Lineage Pulse Mark -->
+    <circle cx="430" cy="718" r="4.5" fill="#030712" stroke="#6ED4FF" stroke-width="2"/>
+    <circle cx="430" cy="718" r="1.5" fill="#6ED4FF"/>
+
+    <!-- Small decorative coordinate corner ticks -->
+    <path d="M 40 40 L 60 40 M 40 40 L 40 60" stroke="rgba(110, 212, 255, 0.3)" stroke-width="1.5" fill="none"/>
+    <path d="M 1880 40 L 1860 40 M 1880 40 L 1880 60" stroke="rgba(110, 212, 255, 0.3)" stroke-width="1.5" fill="none"/>
+    <path d="M 40 1040 L 60 1040 M 40 1040 L 40 1020" stroke="rgba(110, 212, 255, 0.3)" stroke-width="1.5" fill="none"/>
+    <path d="M 1880 1040 L 1860 1040 M 1880 1040 L 1880 1020" stroke="rgba(110, 212, 255, 0.3)" stroke-width="1.5" fill="none"/>
+  </svg>
+
+  <!-- TOP HUD BAR (Height: 64px) -->
+  <header class="relative z-30 h-16 w-full px-10 flex items-center justify-between border-b border-sky-400/20 bg-slate-950/70 backdrop-blur-md select-none">
+    <div class="flex items-center gap-6">
+      <div class="flex items-center gap-3">
+        <span class="inline-block w-2.5 h-2.5 rounded-full bg-frost-primary shadow-[0_0_10px_#6ED4FF]"></span>
+        <span class="font-cinzel tracking-[0.28em] text-sm text-sky-200 uppercase font-light">CENTURY KNIGHTS</span>
+        <span class="text-xs text-slate-500 font-mono tracking-widest">// GENEALOGY PROTOCOL</span>
+      </div>
+      <div class="h-4 w-[1px] bg-sky-500/30"></div>
+      <nav class="flex items-center gap-5 text-xs tracking-wider">
+        <span class="text-slate-400 hover:text-slate-200 transition-colors cursor-pointer">赤历一百二十八年 · 霜降月末</span>
+        <span class="text-slate-600">/</span>
+        <span class="text-slate-400">极北主城 · 霜堡宗祠</span>
+        <span class="text-slate-600">/</span>
+        <span class="text-frost-primary font-medium tracking-widest bg-sky-950/60 border border-sky-400/30 px-2.5 py-1 rounded">白霜宗族脉系</span>
+      </nav>
+    </div>
+
+    <!-- Header Stats & Quick Actions -->
+    <div class="flex items-center gap-7">
+      <div class="flex items-center gap-3 px-3 py-1 rounded border border-sky-400/20 bg-slate-900/60 text-xs">
+        <span class="text-slate-400 font-mono">血脉纯度指数</span>
+        <div class="w-16 h-1.5 bg-slate-800 rounded-full overflow-hidden">
+          <div class="h-full bg-frost-primary rounded-full w-[94%] shadow-[0_0_8px_#6ED4FF]"></div>
+        </div>
+        <span class="font-mono text-frost-primary font-semibold">94%</span>
+      </div>
+
+      <div class="flex items-center gap-2 text-xs text-slate-400 font-mono">
+        <span class="material-symbols-outlined text-sm text-sky-300">account_tree</span>
+        <span>谱系收录代数: <span class="text-sky-200 font-bold">III 代</span></span>
+      </div>
+
+      <div class="h-4 w-[1px] bg-sky-500/20"></div>
+
+      <div class="flex items-center gap-2">
+        <button class="flex items-center gap-2 px-3 py-1 rounded bg-slate-900/80 border border-slate-700/60 text-slate-300 text-xs hover:border-sky-400/50 hover:text-white transition-all">
+          <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-800 text-[10px] font-mono text-slate-400 border border-slate-600">B</span>
+          <span>返回城堡</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN VIEWPORT CONTAINER (Height: 966px, Top 64 to Bottom 50) -->
+  <main class="relative z-20 w-full h-[966px] flex px-10 py-6 gap-8 overflow-hidden">
+
+    <!-- LEFT COLUMN / MAIN CANVAS: Title + Interactive Tree (Width: 1240px) -->
+    <div class="relative w-[1240px] h-full flex flex-col justify-between">
+      
+      <!-- Screen Header & Editorial Description -->
+      <div class="flex justify-between items-start select-none">
+        <div>
+          <div class="flex items-center gap-3 mb-1.5">
+            <span class="text-xs font-mono tracking-[0.25em] text-frost-primary uppercase font-light">— LINEAGE CHRONICLE // SECTOR 07</span>
+            <span class="px-2 py-0.5 rounded text-[11px] font-mono bg-sky-950/80 border border-sky-400/30 text-sky-300">霜月承袭法典</span>
+          </div>
+          <div class="flex items-baseline gap-4">
+            <h1 class="text-4xl font-sans tracking-widest text-white font-light drop-shadow-[0_2px_12px_rgba(110,212,255,0.2)]">白霜家谱</h1>
+            <span class="text-sm font-mono tracking-widest text-slate-400 uppercase">HOUSE OF FROSTBLADE GENEALOGY</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-2 tracking-wide max-w-2xl leading-relaxed">
+            极北古老领主世族「白霜氏」三代传序谱系。北境绝境长夜战役后存续之主支，血脉印刻隐秘冰相特质「霜血」。
+          </p>
+        </div>
+
+        <!-- Legend / Status Key -->
+        <div class="frost-glass rounded-lg px-4 py-2.5 flex items-center gap-6 border border-sky-400/20 text-xs">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-frost-primary shadow-[0_0_8px_#6ED4FF]"></span>
+            <span class="text-slate-300">在世成员</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-slate-600 border border-slate-500"></span>
+            <span class="text-slate-500">亡故先祖</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="inline-flex items-center justify-center px-1.5 py-0.2 rounded text-[10px] bg-sky-500/20 text-frost-primary border border-sky-400/40 font-mono">✦ 霜血</span>
+            <span class="text-slate-300">隐性/显性烙印</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- GENERATION LABELS ON LEFT FLANK -->
+      <div class="absolute left-0 top-[140px] flex flex-col justify-between h-[660px] pointer-events-none select-none">
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] font-mono text-slate-500 tracking-widest uppercase">GEN I · 祖辈</span>
+          <div class="w-12 h-[1px] bg-slate-700/60"></div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] font-mono text-sky-400 tracking-widest uppercase font-semibold">GEN II · 父辈 / 现役</span>
+          <div class="w-16 h-[1px] bg-sky-500/60"></div>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-[10px] font-mono text-slate-400 tracking-widest uppercase">GEN III · 嗣代</span>
+          <div class="w-12 h-[1px] bg-slate-700/60"></div>
+        </div>
+      </div>
+
+      <!-- FAMILY TREE NODE CANVAS -->
+      <div class="relative w-full h-[730px]">
+
+        <!-- ==================== GENERATION 1: GRANDPARENTS ==================== -->
+        <!-- Node 1: 白霜·岳 (Grandfather, Deceased, Carrier of 霜血) -->
+        <div class="absolute top-[20px] left-[150px] w-[260px] frost-glass rounded-xl p-4 opacity-75 border-slate-700 hover:opacity-95 transition-all">
+          <div class="flex justify-between items-start mb-2">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-slate-400 border border-slate-700">祖父</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/90 text-slate-500 border border-slate-800 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-slate-600"></span> 亡故
+              </span>
+            </div>
+            <!-- Trait Tag: 霜血 (Highlighted Inherited Trait) -->
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-sky-950/70 border border-sky-400/50 text-frost-primary flex items-center gap-1 shadow-[0_0_10px_rgba(110,212,255,0.25)]">
+              <span class="material-symbols-outlined text-[12px]">ac_unit</span> 霜血 Ⅰ阶
+            </span>
+          </div>
+
+          <div class="flex items-center gap-3.5 mt-2">
+            <!-- Avatar Frame Deceased -->
+            <div class="relative w-14 h-14 rounded-lg bg-slate-900 border border-slate-700/80 flex items-center justify-center overflow-hidden">
+              <span class="material-symbols-outlined text-3xl text-slate-600">shield_with_house</span>
+              <div class="absolute inset-0 bg-slate-950/40"></div>
+              <div class="absolute bottom-0 inset-x-0 bg-slate-900/90 text-[9px] font-mono text-center text-slate-500 py-0.5">EXPIRED</div>
+            </div>
+            <div>
+              <div class="text-lg font-sans text-slate-300 font-medium">白霜 · 岳</div>
+              <div class="text-[11px] text-slate-500 font-mono mt-0.5">第五代席位领主 · 霜卫执旗</div>
+              <div class="text-[11px] text-slate-500 font-mono">寿数: 享年 68 岁 · 极寒战殉</div>
+            </div>
+          </div>
+
+          <div class="mt-3 pt-2 border-t border-slate-800/80 flex justify-between items-center text-[10px] font-mono text-slate-500">
+            <span>宗族统领契约: [已终局]</span>
+            <span class="text-slate-400">始祖传承</span>
+          </div>
+        </div>
+
+        <!-- Node 2: 青澜·宁 (Grandmother, Deceased, No Frost Trait) -->
+        <div class="absolute top-[20px] left-[450px] w-[260px] frost-glass rounded-xl p-4 opacity-70 border-slate-700 hover:opacity-95 transition-all">
+          <div class="flex justify-between items-start mb-2">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-slate-400 border border-slate-700">祖母</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/90 text-slate-500 border border-slate-800 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-slate-600"></span> 亡故
+              </span>
+            </div>
+            <span class="text-[10px] font-mono text-slate-500">青澜宗脉入联</span>
+          </div>
+
+          <div class="flex items-center gap-3.5 mt-2">
+            <!-- Avatar Frame Deceased -->
+            <div class="relative w-14 h-14 rounded-lg bg-slate-900 border border-slate-700/80 flex items-center justify-center overflow-hidden">
+              <span class="material-symbols-outlined text-3xl text-slate-600">waves</span>
+              <div class="absolute inset-0 bg-slate-950/40"></div>
+              <div class="absolute bottom-0 inset-x-0 bg-slate-900/90 text-[9px] font-mono text-center text-slate-500 py-0.5">EXPIRED</div>
+            </div>
+            <div>
+              <div class="text-lg font-sans text-slate-300 font-medium">青澜 · 宁</div>
+              <div class="text-[11px] text-slate-500 font-mono mt-0.5">临海学派主母 · 潮咏长老</div>
+              <div class="text-[11px] text-slate-500 font-mono">寿数: 享年 72 岁 · 善终</div>
+            </div>
+          </div>
+
+          <div class="mt-3 pt-2 border-t border-slate-800/80 flex justify-between items-center text-[10px] font-mono text-slate-500">
+            <span>水系秘法引渡: [纯正]</span>
+            <span class="text-slate-400">母系血契</span>
+          </div>
+        </div>
+
+        <!-- ==================== GENERATION 2: PARENTS / CURRENT (FOCUSED) ==================== -->
+        <!-- Node 3: 白霜·凛 (PRIMARY FOCUSED NODE - GAMEPAD FOCUS RING) -->
+        <div class="absolute top-[260px] left-[270px] w-[320px] frost-glass-highlight rounded-xl p-5 gamepad-focus-ring z-20 cursor-pointer transition-transform hover:scale-[1.01]">
+          <!-- Top Row Focus Badge & Trait -->
+          <div class="flex justify-between items-center mb-3">
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-sky-500 text-slate-950 font-bold flex items-center gap-1 shadow-[0_0_10px_#6ED4FF]">
+                <span class="w-1.5 h-1.5 rounded-full bg-slate-950"></span> 当前主控 · 在世
+              </span>
+              <span class="text-[11px] font-mono text-sky-200">27 岁</span>
+            </div>
+
+            <!-- Highly prominent 霜血 trait badge -->
+            <span class="px-2.5 py-1 rounded text-xs font-mono bg-sky-950 border border-sky-400 text-frost-primary flex items-center gap-1.5 shadow-[0_0_14px_rgba(110,212,255,0.45)] font-semibold">
+              <span class="material-symbols-outlined text-sm text-frost-primary animate-pulse">ac_unit</span>
+              霜血 · 完全显性
+            </span>
+          </div>
+
+          <!-- Character Card Info with Portrait -->
+          <div class="flex items-center gap-4">
+            <div class="relative w-20 h-20 rounded-lg overflow-hidden border-2 border-frost-primary shadow-[0_0_16px_rgba(110,212,255,0.4)] flex-shrink-0 bg-slate-900">
+              <img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" data-stitch-asset="redacted" alt="白霜·凛 肖像" class="w-full h-full object-cover object-top" />
+              <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950 via-slate-950/70 to-transparent py-0.5 text-center">
+                <span class="text-[9px] font-mono text-sky-300 font-bold tracking-wider">LV. 34</span>
+              </div>
+            </div>
+
+            <div class="flex-1">
+              <div class="flex items-center justify-between">
+                <h2 class="text-2xl font-sans text-white font-medium tracking-wide">白霜 · 凛</h2>
+                <span class="text-xs font-mono text-sky-300 border border-sky-500/40 px-1.5 py-0.5 rounded bg-sky-950/60">第七代席位</span>
+              </div>
+              <div class="text-xs text-sky-200 font-mono mt-1">霜刃骑士团 · 首席先锋</div>
+              <div class="text-[11px] text-slate-300 font-mono mt-1 flex items-center gap-3">
+                <span>统御适性: <span class="text-frost-primary font-bold">S 级</span></span>
+                <span>宗谱直系承位</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Inherited Status Details inside node -->
+          <div class="mt-4 pt-3 border-t border-sky-400/25 grid grid-cols-3 gap-2 text-center text-[10px] font-mono">
+            <div class="bg-sky-950/40 rounded py-1.5 border border-sky-400/15">
+              <div class="text-slate-400">血脉浓度</div>
+              <div class="text-frost-primary font-bold text-xs mt-0.5">98% 纯血</div>
+            </div>
+            <div class="bg-sky-950/40 rounded py-1.5 border border-sky-400/15">
+              <div class="text-slate-400">寒气免疫</div>
+              <div class="text-sky-200 font-bold text-xs mt-0.5">极寒免疫</div>
+            </div>
+            <div class="bg-sky-950/40 rounded py-1.5 border border-sky-400/15">
+              <div class="text-slate-400">奥义契和</div>
+              <div class="text-sky-200 font-bold text-xs mt-0.5">霜绝绝剑</div>
+            </div>
+          </div>
+
+          <!-- Controller Prompt Tag on Node -->
+          <div class="mt-3 flex items-center justify-between text-[11px] font-mono text-sky-300 bg-sky-950/50 px-3 py-1 rounded border border-sky-400/20">
+            <span class="flex items-center gap-1.5">
+              <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-frost-primary text-slate-950 text-[10px] font-bold">A</span>
+              <span>查看个人深度卷宗与命轨</span>
+            </span>
+            <span class="text-[10px] text-slate-400 font-mono">[已锁定当前焦点]</span>
+          </div>
+        </div>
+
+        <!-- Node 4: 白霜·朔 (Sibling, Living, Carrier of 霜血) -->
+        <div class="absolute top-[260px] left-[650px] w-[290px] frost-glass rounded-xl p-4.5 border-sky-400/25 hover:border-sky-400/50 transition-all cursor-pointer">
+          <div class="flex justify-between items-center mb-2.5">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-sky-950 text-sky-300 border border-sky-500/40 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> 胞弟 · 在世
+              </span>
+              <span class="text-[11px] font-mono text-slate-300">23 岁</span>
+            </div>
+
+            <!-- Trait Tag: 霜血 -->
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-sky-950/80 border border-sky-400/50 text-frost-primary flex items-center gap-1 shadow-[0_0_8px_rgba(110,212,255,0.2)]">
+              <span class="material-symbols-outlined text-[12px]">ac_unit</span> 霜血 Ⅱ阶
+            </span>
+          </div>
+
+          <div class="flex items-center gap-3.5">
+            <div class="relative w-16 h-16 rounded-lg overflow-hidden border border-sky-400/30 flex-shrink-0 bg-slate-900 flex items-center justify-center">
+              <span class="material-symbols-outlined text-4xl text-sky-300/70">military_tech</span>
+              <div class="absolute bottom-0 inset-x-0 bg-slate-950/80 text-[9px] font-mono text-center text-sky-300 py-0.5">LV. 26</div>
+            </div>
+            <div>
+              <div class="text-xl font-sans text-slate-100 font-medium">白霜 · 朔</div>
+              <div class="text-xs text-slate-300 font-mono mt-0.5">北境巡境游侠 · 苍龙哨长</div>
+              <div class="text-[11px] text-slate-400 font-mono mt-1">血统浓度: 85% · 次子从军</div>
+            </div>
+          </div>
+
+          <div class="mt-3 pt-2.5 border-t border-slate-800 flex justify-between items-center text-[10px] font-mono text-slate-400">
+            <span>当前驻扎: 苍龙哨所前沿</span>
+            <span class="text-sky-300">战力评级 A</span>
+          </div>
+        </div>
+
+        <!-- ==================== GENERATION 3: CHILD ==================== -->
+        <!-- Node 5: 白霜·澄 (Child node, Living, Age 1, Inherited 霜血) -->
+        <div class="absolute top-[520px] left-[295px] w-[270px] frost-glass rounded-xl p-4 border-sky-400/35 hover:border-sky-400/60 transition-all cursor-pointer">
+          <div class="flex justify-between items-center mb-2">
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-sky-950 text-sky-300 border border-sky-500/40 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> 嗣女 · 在世
+              </span>
+              <span class="text-[11px] font-mono text-sky-200 font-bold">1 岁</span>
+            </div>
+
+            <!-- Trait Tag: 霜血 (Inherited) -->
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-sky-950/90 border border-sky-400/60 text-frost-primary flex items-center gap-1 shadow-[0_0_10px_rgba(110,212,255,0.3)]">
+              <span class="material-symbols-outlined text-[12px]">ac_unit</span> 霜血 · 潜质
+            </span>
+          </div>
+
+          <div class="flex items-center gap-3.5">
+            <div class="relative w-14 h-14 rounded-lg bg-sky-950/40 border border-sky-400/40 flex items-center justify-center flex-shrink-0">
+              <span class="material-symbols-outlined text-3xl text-frost-primary">child_care</span>
+              <div class="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-frost-primary shadow-[0_0_8px_#6ED4FF]"></div>
+            </div>
+            <div>
+              <div class="text-lg font-sans text-white font-medium">白霜 · 澄</div>
+              <div class="text-[11px] text-sky-300 font-mono mt-0.5">第八代合法承继候选</div>
+              <div class="text-[11px] text-slate-400 font-mono">初生觉醒: 霜华凝晶共振</div>
+            </div>
+          </div>
+
+          <div class="mt-3 pt-2 border-t border-slate-800/90 flex justify-between items-center text-[10px] font-mono">
+            <span class="text-slate-400">宗祠启蒙倒计时:</span>
+            <span class="text-frost-primary font-semibold">5 季 (20 旬)</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN / SIDE NOTE PANEL: Trait Analysis & Pedigree Dossier (Width: 600px) -->
+    <aside class="w-[600px] h-full flex flex-col justify-between frost-glass rounded-2xl p-6 border border-sky-400/25 relative overflow-hidden">
+      <!-- Top Title of Side Note -->
+      <div>
+        <div class="flex items-center justify-between border-b border-sky-400/20 pb-3 mb-5">
+          <div class="flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-frost-primary text-xl">biotech</span>
+            <div>
+              <h3 class="text-base font-sans font-medium text-white tracking-wider">血脉溯源与传承特质</h3>
+              <p class="text-[11px] font-mono text-slate-400">TRAIT HERITAGE DOSSIER // BLOODLINE ARCHIVE</p>
+            </div>
+          </div>
+          <span class="px-2.5 py-1 rounded bg-sky-950/80 border border-sky-400/30 text-frost-primary text-xs font-mono font-medium">
+            典藏卷 #07-FR
+          </span>
+        </div>
+
+        <!-- HIGHLIGHTED TRAIT CARD: 霜血 (Detailed breakdown) -->
+        <div class="frost-glass-highlight rounded-xl p-4.5 border border-sky-400/40 mb-5 relative overflow-hidden">
+          <div class="absolute -right-6 -bottom-6 w-32 h-32 rounded-full bg-sky-400/10 blur-xl pointer-events-none"></div>
+
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg bg-sky-950 border border-frost-primary flex items-center justify-center shadow-[0_0_12px_rgba(110,212,255,0.35)]">
+                <span class="material-symbols-outlined text-2xl text-frost-primary">ac_unit</span>
+              </div>
+              <div>
+                <div class="flex items-center gap-2">
+                  <h4 class="text-lg font-sans text-white font-medium">霜血 (Frostblood)</h4>
+                  <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-sky-500/20 text-frost-primary border border-sky-400/40">极北主干核心印记</span>
+                </div>
+                <div class="text-xs font-mono text-sky-200 mt-0.5">传承归属: 白霜氏直系 · 世代显性印记</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-3.5 text-xs text-slate-200 leading-relaxed font-sans bg-slate-950/50 p-3 rounded-lg border border-sky-400/15">
+            极寒气候下作战全属性提升 <span class="text-frost-primary font-bold">+15%</span>，完全免疫「冻伤」与「迟滞」减益状态。近战兵刃命中敌方单位时附带霜刃减速判定（敌方移动力 -1，持续 2 回合）。
+          </div>
+
+          <!-- Inherited Nodes Distribution Breakdown -->
+          <div class="mt-4 pt-3 border-t border-sky-400/20">
+            <div class="text-xs font-mono text-slate-300 font-medium mb-2.5 flex items-center justify-between">
+              <span>当前谱系承载成员分布</span>
+              <span class="text-frost-primary">4 / 5 位成员承袭</span>
+            </div>
+            
+            <div class="space-y-2 text-xs font-mono">
+              <div class="flex items-center justify-between p-2 rounded bg-slate-900/60 border border-slate-800">
+                <div class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
+                  <span class="text-slate-300 font-sans">白霜 · 岳</span>
+                  <span class="text-[10px] text-slate-500">祖父 · 亡故</span>
+                </div>
+                <span class="text-slate-400">Ⅰ阶 始祖觉醒 (100% 显性)</span>
+              </div>
+
+              <div class="flex items-center justify-between p-2 rounded bg-sky-950/50 border border-sky-400/40">
+                <div class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-frost-primary shadow-[0_0_6px_#6ED4FF]"></span>
+                  <span class="text-white font-sans font-medium">白霜 · 凛 (主控)</span>
+                  <span class="text-[10px] text-sky-300">长女 · 在世</span>
+                </div>
+                <span class="text-frost-primary font-bold">完全显性 极阶 (纯血 98%)</span>
+              </div>
+
+              <div class="flex items-center justify-between p-2 rounded bg-slate-900/60 border border-slate-800">
+                <div class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                  <span class="text-slate-200 font-sans">白霜 · 朔</span>
+                  <span class="text-[10px] text-slate-400">次子 · 在世</span>
+                </div>
+                <span class="text-sky-300">Ⅱ阶 稳态承袭 (纯血 85%)</span>
+              </div>
+
+              <div class="flex items-center justify-between p-2 rounded bg-slate-900/60 border border-slate-800">
+                <div class="flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                  <span class="text-slate-200 font-sans">白霜 · 澄</span>
+                  <span class="text-[10px] text-sky-300">嗣女 · 1岁</span>
+                </div>
+                <span class="text-frost-primary">潜质雏晶 (预估承袭度 96%)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lineage Policy & Strategic Note -->
+        <div class="p-3.5 rounded-xl bg-slate-950/60 border border-sky-400/20 text-xs text-slate-300 space-y-2 font-sans">
+          <div class="flex items-center gap-2 text-sky-300 font-mono text-[11px] font-semibold">
+            <span class="material-symbols-outlined text-sm">shield</span>
+            <span>世族传承律令 · 霜堡法度</span>
+          </div>
+          <p class="text-[11px] leading-relaxed text-slate-400">
+            依照百年契约，持有高阶「霜血」之骑士可免受极境绝地严寒惩戒，并有权优先调配霜堡圣殿之霜月祷祭祝福。白霜·凛之嗣代白霜·澄将在年满 6 岁时入宗祠接受洗练。
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick Action Buttons on Side Note -->
+      <div class="mt-4 pt-4 border-t border-sky-400/20 flex items-center justify-between">
+        <button class="px-4 py-2.5 rounded-lg bg-slate-900 border border-slate-700 hover:border-sky-400/60 text-slate-300 text-xs font-mono flex items-center gap-2 transition-all">
+          <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-800 text-[10px] text-slate-400 border border-slate-600">X</span>
+          <span>谱系联姻推演</span>
+        </button>
+
+        <button class="px-5 py-2.5 rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs font-mono flex items-center gap-2 shadow-[0_0_18px_rgba(110,212,255,0.4)] transition-all">
+          <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-950 text-frost-primary text-[10px] font-bold">Y</span>
+          <span>铭刻血脉烙印</span>
+        </button>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- BOTTOM GAMEPAD PROMPT BAR (Height: 50px) -->
+  <footer class="absolute bottom-0 inset-x-0 h-[50px] px-10 flex items-center justify-between border-t border-sky-400/20 bg-slate-950/85 backdrop-blur-md z-30 select-none text-xs font-mono text-slate-400">
+    <div class="flex items-center gap-6">
+      <div class="flex items-center gap-2 text-sky-200">
+        <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-frost-primary text-slate-950 font-bold text-[10px]">A</span>
+        <span>检视选定成员档案</span>
+      </div>
+      <div class="flex items-center gap-2 hover:text-slate-200 cursor-pointer">
+        <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-800 text-slate-300 border border-slate-600 text-[10px]">X</span>
+        <span>比对血脉纯度</span>
+      </div>
+      <div class="flex items-center gap-2 hover:text-slate-200 cursor-pointer">
+        <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-800 text-slate-300 border border-slate-600 text-[10px]">Y</span>
+        <span>特质传承明细</span>
+      </div>
+      <div class="flex items-center gap-2 hover:text-slate-200 cursor-pointer">
+        <span class="inline-flex items-center justify-center w-4 h-4 rounded-full bg-slate-800 text-slate-300 border border-slate-600 text-[10px]">B</span>
+        <span>返回领地枢纽</span>
+      </div>
+      <div class="h-3.5 w-[1px] bg-slate-700"></div>
+      <div class="flex items-center gap-2 text-slate-500">
+        <span class="px-1.5 py-0.5 rounded bg-slate-900 border border-slate-700 text-[10px]">LT / RT</span>
+        <span>切换代际视图</span>
+      </div>
+    </div>
+
+    <!-- Right System Indicators -->
+    <div class="flex items-center gap-5 text-slate-500 text-[11px]">
+      <div class="flex items-center gap-1.5">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_#34D399]"></span>
+        <span>手柄已连接: XBOX WIRELESS CONTROLLER</span>
+      </div>
+      <span>·</span>
+      <span>FROST_TACTICAL v2.4</span>
+      <span>·</span>
+      <span>CANVAS: 1920 × 1080 NO-SCROLL NATIVE</span>
+    </div>
+  </footer>
+
+</body>
+</html>

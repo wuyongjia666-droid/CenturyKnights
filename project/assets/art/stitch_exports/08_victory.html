@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080, initial-scale=1.0">
+  <title>百年骑士 - 战斗结算 · 胜利</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Noto Sans SC"', 'serif'],
+            sans: ['"Noto Sans SC"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            frost: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              primary: '#6ED4FF',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+    }
+    html, body {
+      width: 1920px;
+      height: 1080px;
+      min-width: 1920px;
+      min-height: 1080px;
+      max-width: 1920px;
+      max-height: 1080px;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      background-color: #06090e;
+      color: #e2e8f0;
+      font-family: 'Noto Sans SC', sans-serif;
+    }
+
+    /* Ambient radial glow & fine tactical grid */
+    .bg-void {
+      background: 
+        radial-gradient(circle at 18% 28%, rgba(20, 48, 70, 0.45) 0%, transparent 55%),
+        radial-gradient(circle at 82% 70%, rgba(14, 30, 45, 0.35) 0%, transparent 60%),
+        radial-gradient(circle at 50% 50%, rgba(10, 16, 24, 0.8) 0%, #05080c 100%);
+    }
+
+    .grid-overlay {
+      background-image: 
+        radial-gradient(rgba(110, 212, 255, 0.12) 1px, transparent 1px);
+      background-size: 32px 32px;
+    }
+
+    /* Frosted matte stone panel with 1px hairline highlight stroke */
+    .frosted-panel {
+      background: rgba(10, 16, 24, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(110, 212, 255, 0.14);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    .frosted-panel-subtle {
+      background: rgba(13, 21, 32, 0.45);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(110, 212, 255, 0.08);
+    }
+
+    /* Primary gamepad focus ring */
+    .gamepad-focus-ring {
+      box-shadow: 0 0 0 2px rgba(110, 212, 255, 0.95), 0 0 28px rgba(110, 212, 255, 0.4);
+      outline: none;
+    }
+
+    /* Thin elegant lines */
+    .hairline-b {
+      border-bottom: 1px solid rgba(110, 212, 255, 0.15);
+    }
+  </style>
+</head>
+<body class="bg-void relative overflow-hidden text-slate-200 antialiased">
+
+  <!-- Ambient Grid & Dust particles effect -->
+  <div class="absolute inset-0 grid-overlay opacity-40 pointer-events-none"></div>
+
+  <!-- Subtle Top Vignette & Corner HUD markings -->
+  <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#6ED4FF]/40 to-transparent"></div>
+  <div class="absolute top-8 left-12 flex items-center space-x-3 text-[11px] font-mono tracking-[0.3em] text-[#6ED4FF]/70 uppercase">
+    <span class="inline-block w-2 h-2 rounded-full bg-[#6ED4FF] shadow-[0_0_8px_#6ED4FF]"></span>
+    <span>POST-ACTION REPORT // DEPLOYMENT PROTOCOL 07</span>
+    <span class="text-slate-600">|</span>
+    <span class="text-slate-400">CENTURY KNIGHTS : CH.03 FROSTLINE</span>
+  </div>
+
+  <div class="absolute top-8 right-12 flex items-center space-x-6 text-[12px] font-mono tracking-widest text-slate-400">
+    <div class="flex items-center space-x-2">
+      <span class="text-slate-500">SYSTEM TIME:</span>
+      <span class="text-slate-300">赤历一百二十八年 · 霜降</span>
+    </div>
+    <div class="flex items-center space-x-2 bg-slate-900/60 px-3 py-1 rounded border border-slate-700/40">
+      <span class="text-[#6ED4FF] font-semibold">RECORD #841</span>
+    </div>
+  </div>
+
+  <!-- Main Canvas Workspace (1920x1080 boundary) -->
+  <main class="w-[1920px] h-[1080px] p-16 pt-20 flex flex-col justify-between relative z-10">
+
+    <!-- Top Section: Editorial Headline & Victory Meta -->
+    <header class="flex items-end justify-between border-b border-slate-800/80 pb-8 mt-2">
+      <div class="flex items-baseline space-x-12">
+        <div class="relative">
+          <span class="absolute -top-7 left-1 text-[11px] font-mono tracking-[0.45em] text-[#6ED4FF]/60 uppercase">STAGE CLEARED · VICTORY OVERRIDE</span>
+          <h1 class="text-8xl font-sans font-extralight tracking-[0.22em] text-white select-none drop-shadow-sm">胜利</h1>
+        </div>
+
+        <div class="h-16 w-px bg-slate-800 self-center"></div>
+
+        <div class="flex flex-col justify-center space-y-1">
+          <div class="text-2xl font-light tracking-[0.18em] text-slate-200 font-sans">
+            赤原关 <span class="text-slate-500 mx-2">·</span> 第 6 回合
+          </div>
+          <div class="text-xs font-mono tracking-[0.25em] text-slate-400 uppercase">
+            OBJECTIVE COMPLETE // ENEMY FIELD FORCE SUPPRESSED
+          </div>
+        </div>
+      </div>
+
+      <!-- Casualty & Evaluation Banner -->
+      <div class="flex items-center space-x-8 pb-1">
+        <!-- Casualty Line: 无人阵亡 -->
+        <div class="frosted-panel-subtle px-6 py-3.5 rounded-sm flex items-center space-x-3.5 border-l-2 border-l-[#6ED4FF]">
+          <span class="material-symbols-outlined text-[#6ED4FF] text-xl">shield_person</span>
+          <div>
+            <div class="text-[10px] font-mono tracking-widest text-slate-400 uppercase">CASUALTY STATUS</div>
+            <div class="text-base font-medium tracking-[0.15em] text-emerald-400 flex items-center space-x-1.5">
+              <span>无人阵亡</span>
+              <span class="text-xs text-emerald-500/80 font-mono tracking-normal font-normal">PERFECT SURVIVAL</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Combat Efficiency Rating -->
+        <div class="frosted-panel-subtle px-6 py-3.5 rounded-sm flex items-center space-x-4 border-l-2 border-l-amber-400/80">
+          <span class="material-symbols-outlined text-amber-300 text-xl">military_tech</span>
+          <div>
+            <div class="text-[10px] font-mono tracking-widest text-slate-400 uppercase">COMBAT RATING</div>
+            <div class="text-base font-semibold tracking-wider text-amber-300 font-mono">
+              GRADE S <span class="text-xs font-sans text-slate-400 font-light ml-1">完胜达成</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Center Content: Grid 12 Columns -->
+    <div class="grid grid-cols-12 gap-8 my-auto py-4">
+
+      <!-- Left 7 Columns: Experience Rows for 3 Units -->
+      <section class="col-span-7 flex flex-col justify-between">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center space-x-3">
+            <span class="w-1.5 h-3 bg-[#6ED4FF]"></span>
+            <h2 class="text-xs font-mono tracking-[0.25em] text-slate-300 uppercase">出战骑士历练获益 // UNIT EXPERIENCE</h2>
+          </div>
+          <span class="text-xs font-mono text-slate-500 tracking-wider">3 ACTIVE COMBATANTS</span>
+        </div>
+
+        <div class="space-y-4">
+
+          <!-- Row 1: 白霜·凛 +180 升级 (Highlighted Unit) -->
+          <div class="frosted-panel rounded-sm p-5 relative overflow-hidden border-[#6ED4FF]/30 transition-all duration-200 hover:border-[#6ED4FF]/50">
+            <!-- Subtle luminous gradient edge for level up -->
+            <div class="absolute -right-12 -top-12 w-40 h-40 bg-[#6ED4FF]/10 rounded-full blur-2xl pointer-events-none"></div>
+            
+            <div class="flex items-center justify-between mb-3 relative z-10">
+              <div class="flex items-center space-x-4">
+                <!-- Class Icon Hexagon -->
+                <div class="w-11 h-11 rounded-sm bg-slate-900/90 border border-[#6ED4FF]/40 flex items-center justify-center text-[#6ED4FF] relative shadow-[0_0_12px_rgba(110,212,255,0.15)]">
+                  <span class="material-symbols-outlined text-2xl">swords</span>
+                  <span class="absolute -bottom-1 -right-1 text-[9px] font-mono bg-[#6ED4FF] text-slate-950 font-bold px-1 rounded-xs">#01</span>
+                </div>
+                
+                <div>
+                  <div class="flex items-center space-x-3">
+                    <span class="text-xl font-medium tracking-wide text-white font-sans">白霜 · 凛</span>
+                    <span class="text-xs px-2 py-0.5 rounded bg-sky-950/70 border border-[#6ED4FF]/30 text-[#6ED4FF] font-mono tracking-wider">霜刃骑士</span>
+                    <span class="text-xs text-slate-400 font-mono">LV.34</span>
+                  </div>
+                  <div class="text-[11px] font-mono text-slate-400 tracking-wider mt-0.5">
+                    FROSTBLADE KNIGHT <span class="text-slate-600">|</span> 霜裔家族
+                  </div>
+                </div>
+              </div>
+
+              <!-- XP & LEVEL UP TAG -->
+              <div class="flex items-center space-x-4">
+                <div class="text-right">
+                  <div class="text-xs font-mono text-slate-400 tracking-wider">EXP GAIN</div>
+                  <div class="text-2xl font-mono font-medium text-[#6ED4FF] tracking-tight">+180</div>
+                </div>
+
+                <div class="px-3.5 py-1.5 rounded-sm bg-gradient-to-r from-[#6ED4FF] to-sky-400 text-slate-950 font-sans font-bold text-xs tracking-widest shadow-[0_0_16px_rgba(110,212,255,0.45)] flex items-center space-x-1">
+                  <span class="material-symbols-outlined text-sm font-bold">arrow_upward</span>
+                  <span>升级</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Experience Progress Bar -->
+            <div class="relative z-10 mt-3">
+              <div class="flex justify-between items-center text-[11px] font-mono text-slate-400 mb-1.5">
+                <span class="flex items-center space-x-2">
+                  <span class="text-slate-300 font-medium">NEXT LEVEL</span>
+                  <span class="text-[#6ED4FF] font-bold">LV.35 REACHED</span>
+                </span>
+                <span class="tracking-wider text-slate-300"><span class="text-white font-semibold">1,820</span> / 1,820 EXP</span>
+              </div>
+              <div class="w-full h-2.5 bg-slate-900/90 rounded-full overflow-hidden p-0.5 border border-slate-700/60">
+                <div class="h-full bg-gradient-to-r from-sky-500 via-[#6ED4FF] to-sky-300 rounded-full shadow-[0_0_10px_#6ED4FF] w-full transition-all duration-500"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 2: 青澜·昭 +120 -->
+          <div class="frosted-panel rounded-sm p-5 border-slate-800/80 transition-all duration-200 hover:border-slate-700">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center space-x-4">
+                <div class="w-11 h-11 rounded-sm bg-slate-900/90 border border-slate-700 flex items-center justify-center text-sky-300">
+                  <span class="material-symbols-outlined text-2xl">auto_fix_high</span>
+                </div>
+                
+                <div>
+                  <div class="flex items-center space-x-3">
+                    <span class="text-xl font-medium tracking-wide text-white font-sans">青澜 · 昭</span>
+                    <span class="text-xs px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono tracking-wider">潮咏术士</span>
+                    <span class="text-xs text-slate-400 font-mono">LV.32</span>
+                  </div>
+                  <div class="text-[11px] font-mono text-slate-400 tracking-wider mt-0.5">
+                    TIDE CASTER <span class="text-slate-600">|</span> 临海学派
+                  </div>
+                </div>
+              </div>
+
+              <!-- XP gain -->
+              <div class="text-right">
+                <div class="text-xs font-mono text-slate-400 tracking-wider">EXP GAIN</div>
+                <div class="text-2xl font-mono font-medium text-slate-200 tracking-tight">+120</div>
+              </div>
+            </div>
+
+            <!-- Experience Progress Bar -->
+            <div>
+              <div class="flex justify-between items-center text-[11px] font-mono text-slate-400 mb-1.5">
+                <span>PROGRESSION TO LV.33</span>
+                <span class="tracking-wider text-slate-300"><span class="text-white font-medium">940</span> / 1,450 EXP (64%)</span>
+              </div>
+              <div class="w-full h-2.5 bg-slate-900/90 rounded-full overflow-hidden p-0.5 border border-slate-800">
+                <div class="h-full bg-gradient-to-r from-sky-600 to-[#6ED4FF]/80 rounded-full w-[64%]"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 3: 铁岭·铠 +90 -->
+          <div class="frosted-panel rounded-sm p-5 border-slate-800/80 transition-all duration-200 hover:border-slate-700">
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center space-x-4">
+                <div class="w-11 h-11 rounded-sm bg-slate-900/90 border border-slate-700 flex items-center justify-center text-amber-300/90">
+                  <span class="material-symbols-outlined text-2xl">shield</span>
+                </div>
+                
+                <div>
+                  <div class="flex items-center space-x-3">
+                    <span class="text-xl font-medium tracking-wide text-white font-sans">铁岭 · 铠</span>
+                    <span class="text-xs px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 font-mono tracking-wider">重壁卫</span>
+                    <span class="text-xs text-slate-400 font-mono">LV.35</span>
+                  </div>
+                  <div class="text-[11px] font-mono text-slate-400 tracking-wider mt-0.5">
+                    BASTION GUARD <span class="text-slate-600">|</span> 磐石要塞
+                  </div>
+                </div>
+              </div>
+
+              <!-- XP gain -->
+              <div class="text-right">
+                <div class="text-xs font-mono text-slate-400 tracking-wider">EXP GAIN</div>
+                <div class="text-2xl font-mono font-medium text-slate-200 tracking-tight">+90</div>
+              </div>
+            </div>
+
+            <!-- Experience Progress Bar -->
+            <div>
+              <div class="flex justify-between items-center text-[11px] font-mono text-slate-400 mb-1.5">
+                <span>PROGRESSION TO LV.36</span>
+                <span class="tracking-wider text-slate-300"><span class="text-white font-medium">1,510</span> / 1,980 EXP (76%)</span>
+              </div>
+              <div class="w-full h-2.5 bg-slate-900/90 rounded-full overflow-hidden p-0.5 border border-slate-800">
+                <div class="h-full bg-gradient-to-r from-sky-600 to-[#6ED4FF]/80 rounded-full w-[76%]"></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Right 5 Columns: Drop List & Spoils of War -->
+      <section class="col-span-5 flex flex-col justify-between pl-4">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center space-x-3">
+              <span class="w-1.5 h-3 bg-amber-400"></span>
+              <h2 class="text-xs font-mono tracking-[0.25em] text-slate-300 uppercase">战役缴获物资 // SPOILS OF VICTORY</h2>
+            </div>
+            <span class="text-xs font-mono text-slate-500 tracking-wider">3 ENTRIES REGISTERED</span>
+          </div>
+
+          <!-- Drop List Container -->
+          <div class="frosted-panel rounded-sm p-6 space-y-4">
+
+            <!-- Item 1: 赤铁 2 -->
+            <div class="flex items-center justify-between p-4 bg-slate-900/70 rounded border border-slate-800/90 hover:border-slate-700/80 transition-colors">
+              <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 rounded bg-red-950/40 border border-red-500/30 flex items-center justify-center text-red-400">
+                  <span class="material-symbols-outlined text-2xl">diamond</span>
+                </div>
+                <div>
+                  <div class="text-lg font-medium text-slate-100 tracking-wide font-sans">赤铁</div>
+                  <div class="text-xs font-mono text-slate-400 tracking-wider">CRIMSON ORE · 锻造贵稀材质</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="text-2xl font-mono font-medium text-white tracking-wider">× 2</div>
+                <div class="text-[10px] font-mono text-emerald-400 uppercase tracking-widest">SECURED</div>
+              </div>
+            </div>
+
+            <!-- Item 2: 金钱 640 -->
+            <div class="flex items-center justify-between p-4 bg-slate-900/70 rounded border border-slate-800/90 hover:border-slate-700/80 transition-colors">
+              <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 rounded bg-amber-950/40 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                  <span class="material-symbols-outlined text-2xl">paid</span>
+                </div>
+                <div>
+                  <div class="text-lg font-medium text-slate-100 tracking-wide font-sans">金钱</div>
+                  <div class="text-xs font-mono text-slate-400 tracking-wider">KRONE CURRENCY · 军费军饷</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="text-2xl font-mono font-medium text-amber-300 tracking-wider">640 <span class="text-xs text-amber-400/70 font-sans font-normal">克朗</span></div>
+                <div class="text-[10px] font-mono text-emerald-400 uppercase tracking-widest">DEPOSITED</div>
+              </div>
+            </div>
+
+            <!-- Item 3: 声望 +20 -->
+            <div class="flex items-center justify-between p-4 bg-slate-900/70 rounded border border-slate-800/90 hover:border-slate-700/80 transition-colors">
+              <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 rounded bg-sky-950/40 border border-[#6ED4FF]/30 flex items-center justify-center text-[#6ED4FF]">
+                  <span class="material-symbols-outlined text-2xl">flag</span>
+                </div>
+                <div>
+                  <div class="text-lg font-medium text-slate-100 tracking-wide font-sans">声望</div>
+                  <div class="text-xs font-mono text-slate-400 tracking-wider">MILITARY RENOWN · 北境诸领认同</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="text-2xl font-mono font-medium text-[#6ED4FF] tracking-wider">+20</div>
+                <div class="text-[10px] font-mono text-emerald-400 uppercase tracking-widest">ACQUIRED</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Combat Summary Quote / Dossier memo -->
+        <div class="frosted-panel-subtle rounded-sm p-4 mt-4 border-l border-slate-700/60">
+          <div class="text-[11px] font-mono text-slate-400 tracking-wider uppercase mb-1">STRATEGIC ARCHIVE NOTE</div>
+          <p class="text-xs text-slate-300 leading-relaxed font-sans font-light">
+            赤原关隘敌军溃退，险道各要冲工事已被霜刃骑士团接管。守关物资已清点入库，霜堡粮道彻底畅通。
+          </p>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Bottom Action Dock: Primary Action 「返回城堡」 with Gamepad Focus Ring -->
+    <footer class="hairline-b pb-6 pt-4 border-t border-slate-800/80 flex items-center justify-between">
+      
+      <!-- Left side: Controller Navigation Hints -->
+      <div class="flex items-center space-x-8 text-xs font-mono text-slate-400">
+        <div class="flex items-center space-x-2">
+          <kbd class="px-2 py-1 rounded bg-slate-900 border border-slate-700 text-slate-300 text-[11px] font-bold">A</kbd>
+          <span class="tracking-wider">确认指令</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <kbd class="px-2 py-1 rounded bg-slate-900 border border-slate-700 text-slate-300 text-[11px] font-bold">X</kbd>
+          <span class="tracking-wider">战况明细回溯</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <kbd class="px-2 py-1 rounded bg-slate-900 border border-slate-700 text-slate-300 text-[11px] font-bold">Y</kbd>
+          <span class="tracking-wider">查看装备耐久</span>
+        </div>
+      </div>
+
+      <!-- Right side: Secondary button & PRIMARY FOCUSED ACTION -->
+      <div class="flex items-center space-x-6">
+
+        <button type="button" class="px-6 py-3.5 rounded-sm bg-slate-900/60 hover:bg-slate-800 text-slate-300 border border-slate-700/80 text-sm font-sans tracking-widest transition-all cursor-pointer flex items-center space-x-2">
+          <span class="material-symbols-outlined text-base">receipt_long</span>
+          <span>详细战报</span>
+        </button>
+
+        <!-- PRIMARY ACTION: 返回城堡 with clearly visible gamepad focus ring -->
+        <button type="button" class="relative group px-10 py-3.5 rounded-sm bg-gradient-to-r from-[#17384f] to-[#12283a] border border-[#6ED4FF] text-white font-sans text-base font-medium tracking-[0.2em] cursor-pointer transition-all duration-200 gamepad-focus-ring flex items-center space-x-3">
+          <!-- Controller badge A -->
+          <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#6ED4FF] text-slate-950 font-mono font-bold text-xs shadow-sm">A</span>
+          
+          <span class="text-white drop-shadow-[0_0_8px_rgba(110,212,255,0.4)]">返回城堡</span>
+          
+          <span class="material-symbols-outlined text-lg text-[#6ED4FF] group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+
+          <!-- Corner accents -->
+          <span class="absolute -top-1 -left-1 w-1.5 h-1.5 bg-[#6ED4FF]"></span>
+          <span class="absolute -top-1 -right-1 w-1.5 h-1.5 bg-[#6ED4FF]"></span>
+          <span class="absolute -bottom-1 -left-1 w-1.5 h-1.5 bg-[#6ED4FF]"></span>
+          <span class="absolute -bottom-1 -right-1 w-1.5 h-1.5 bg-[#6ED4FF]"></span>
+        </button>
+
+      </div>
+
+    </footer>
+
+  </main>
+
+</body>
+</html>

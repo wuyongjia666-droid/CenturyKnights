@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080, initial-scale=1.0">
+  <title>百年骑士 - 出战编成 · 赤原关</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@200;300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+    }
+    :root {
+      --bg-dark: #070B11;
+      --panel-bg: rgba(13, 21, 32, 0.72);
+      --panel-border: rgba(110, 212, 255, 0.18);
+      --cyan-glow: #6ED4FF;
+      --cyan-dim: rgba(110, 212, 255, 0.12);
+      --font-sans: 'Noto Sans SC', serif;
+      --font-sans: 'Noto Sans SC', serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at 18% 12%, #111e30 0%, #080d16 55%, #04070c 100%);
+      color: #E2ECF7;
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+    }
+    .panel-frost {
+      background: var(--panel-bg);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid var(--panel-border);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+    .panel-frost-subtle {
+      background: rgba(16, 26, 40, 0.5);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(110, 212, 255, 0.12);
+    }
+    .gamepad-focus-ring {
+      outline: none;
+      border-color: #6ED4FF !important;
+      box-shadow: 0 0 0 1px #6ED4FF, 0 0 24px rgba(110, 212, 255, 0.45), inset 0 0 12px rgba(110, 212, 255, 0.2);
+    }
+    .hud-line {
+      background: linear-gradient(90deg, rgba(110, 212, 255, 0.5), rgba(110, 212, 255, 0.04) 80%, transparent);
+    }
+    .stat-bar-track {
+      background: rgba(255, 255, 255, 0.06);
+      height: 6px;
+      position: relative;
+    }
+    .stat-bar-fill {
+      background: linear-gradient(90deg, #3FA9F5, #6ED4FF);
+      height: 100%;
+      box-shadow: 0 0 10px rgba(110, 212, 255, 0.4);
+    }
+    .stat-bar-benchmark {
+      position: absolute;
+      top: -3px;
+      bottom: -3px;
+      width: 2px;
+      background: #F3BA4F;
+      box-shadow: 0 0 8px #F3BA4F;
+    }
+  </style>
+</head>
+<body class="relative flex flex-col justify-between p-12 w-[1920px] h-[1080px] overflow-hidden select-none">
+  <!-- Subtle Ambient Constellation Grid (Editorial Sci-Fantasy) -->
+  <div class="pointer-events-none absolute inset-0 opacity-20" style="background-image: radial-gradient(rgba(110, 212, 255, 0.35) 1px, transparent 1px); background-size: 48px 48px;"></div>
+  
+  <!-- Subtle Top Decorative Glow -->
+  <div class="pointer-events-none absolute -top-40 left-1/4 w-[700px] h-[300px] bg-[#3FA9F5] opacity-[0.07] blur-[140px] rounded-full"></div>
+
+  <!-- HEADER -->
+  <header class="relative z-10 flex items-center justify-between border-b border-[#6ED4FF]/15 pb-5">
+    <div class="flex items-center gap-6">
+      <div class="flex items-center gap-3">
+        <span class="inline-block w-2.5 h-2.5 rounded-full bg-[#6ED4FF] shadow-[0_0_10px_#6ED4FF]"></span>
+        <span class="font-['Noto Sans SC'] tracking-[0.25em] text-xs text-[#6ED4FF]/80 uppercase">TACTICAL DEPLOYMENT // PROT. 07</span>
+      </div>
+      <div class="h-4 w-px bg-white/20"></div>
+      <div class="flex items-baseline gap-4">
+        <h1 class="text-3xl font-light tracking-wide text-white">出战编成 <span class="text-[#6ED4FF] font-extralight font-sans">·</span> 赤原关</h1>
+        <span class="font-['Noto Sans SC'] text-sm tracking-widest text-slate-400">CENTURY KNIGHTS : THE FROST MARCH</span>
+      </div>
+    </div>
+
+    <!-- Header Meta & Status -->
+    <div class="flex items-center gap-8 font-mono text-xs tracking-wider">
+      <div class="flex items-center gap-3 bg-[#0d1724]/60 border border-[#6ED4FF]/20 px-4 py-2 rounded">
+        <span class="text-slate-400">战役推荐评级</span>
+        <span class="text-amber-300 font-semibold tracking-normal">CRUSADE IV</span>
+      </div>
+      <div class="flex items-center gap-3 bg-[#0d1724]/60 border border-[#6ED4FF]/20 px-4 py-2 rounded">
+        <span class="text-slate-400">出战军资消耗</span>
+        <span class="text-[#6ED4FF] font-semibold tracking-normal">180 / 420 CP</span>
+      </div>
+      <div class="flex items-center gap-2 text-slate-400">
+        <span class="inline-flex items-center justify-center w-5 h-5 rounded border border-white/20 text-[10px] bg-white/5">ESC</span>
+        <span>战术全览</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN VIEWPORT : 2 COLUMNS (SLOTS 65% + COMPARISON 35%) -->
+  <main class="relative z-10 grid grid-cols-12 gap-8 my-auto h-[780px] items-stretch">
+    
+    <!-- LEFT SECTION: 6 UNIT DEPLOYMENT SLOTS (Col 8) -->
+    <section class="col-span-8 flex flex-col justify-between">
+      
+      <!-- Deployment Header sub-info -->
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-4">
+          <div class="text-xs uppercase tracking-[0.2em] font-mono text-[#6ED4FF]/90 font-medium">BATTLE VANGUARD MATRIX</div>
+          <span class="text-xs text-slate-400 font-sans">可上阵编制位：4 / 6 人</span>
+        </div>
+        <div class="flex items-center gap-6 text-xs text-slate-400 font-mono">
+          <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> 阵型共鸣: 霜冽前哨 (+8% 暴击)</span>
+          <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-sky-400"></span> 阵营契合度: 94%</span>
+        </div>
+      </div>
+
+      <!-- SIX SLOTS IN A ROW -->
+      <div class="grid grid-cols-6 gap-3.5 h-[680px]">
+        
+        <!-- SLOT 1: 白霜·凛 (ACTIVE FOCUS) -->
+        <div class="group relative rounded-lg panel-frost flex flex-col justify-between p-4 cursor-pointer transition-all duration-200 border-[#6ED4FF] shadow-[0_0_24px_rgba(110,212,255,0.22)] bg-gradient-to-b from-[#122136]/90 to-[#0c1624]/90">
+          <!-- Top Tag & Order -->
+          <div class="flex items-center justify-between border-b border-[#6ED4FF]/30 pb-2.5">
+            <span class="font-mono text-[11px] text-[#6ED4FF] font-semibold">#01 LEADER</span>
+            <span class="px-1.5 py-0.5 rounded text-[10px] bg-[#6ED4FF]/20 text-[#6ED4FF] font-mono">SELECTED</span>
+          </div>
+
+          <!-- Unit Emblem Graphic -->
+          <div class="my-auto flex flex-col items-center">
+            <div class="relative w-28 h-28 flex items-center justify-center my-3">
+              <div class="absolute inset-0 rounded-full border border-[#6ED4FF]/40 border-dashed animate-spin" style="animation-duration: 26s;"></div>
+              <div class="absolute inset-2 rounded-full border border-[#6ED4FF]/20"></div>
+              <!-- Class Icon / Graphic: Frostblade -->
+              <svg class="w-14 h-14 text-[#6ED4FF] drop-shadow-[0_0_12px_#6ED4FF]" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M32 4L37 20L53 25L39 34L42 51L32 41L22 51L25 34L11 25L27 20L32 4Z" />
+                <path d="M32 14V46M20 32H44" stroke-opacity="0.6" stroke-width="1.2" />
+                <circle cx="32" cy="32" r="3" fill="#6ED4FF" />
+              </svg>
+            </div>
+
+            <!-- Identity -->
+            <div class="text-center mt-2">
+              <div class="text-lg font-normal tracking-wider text-white">白霜 · 凛</div>
+              <div class="text-xs font-light text-[#6ED4FF] tracking-widest mt-0.5">霜刃骑士</div>
+              <div class="text-[10px] font-mono text-slate-400 mt-1">LV.34 · 霜裔家族</div>
+            </div>
+          </div>
+
+          <!-- Quick Stats Footer -->
+          <div class="border-t border-[#6ED4FF]/20 pt-3 space-y-1.5 font-mono text-xs">
+            <div class="flex justify-between items-center text-slate-400">
+              <span class="text-[11px]">HP</span>
+              <span class="text-white font-medium">42 / 42</span>
+            </div>
+            <div class="flex justify-between items-center text-slate-400">
+              <span class="text-[11px]">物理攻击</span>
+              <span class="text-[#6ED4FF] font-medium">28</span>
+            </div>
+            <div class="mt-2 text-center text-[10px] text-[#6ED4FF] bg-[#6ED4FF]/10 py-1 rounded border border-[#6ED4FF]/30 tracking-wider">
+              当前检视中
+            </div>
+          </div>
+        </div>
+
+        <!-- SLOT 2: 青澜·昭 (潮咏术士) -->
+        <div class="group relative rounded-lg panel-frost flex flex-col justify-between p-4 cursor-pointer transition-all duration-200 hover:border-[#6ED4FF]/60 hover:bg-[#101c2d]/70">
+          <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+            <span class="font-mono text-[11px] text-slate-400 font-semibold">#02 REAR</span>
+            <span class="text-[10px] text-slate-500 font-mono">WAIT</span>
+          </div>
+
+          <div class="my-auto flex flex-col items-center">
+            <div class="relative w-28 h-28 flex items-center justify-center my-3">
+              <div class="absolute inset-2 rounded-full border border-sky-400/20"></div>
+              <!-- Class Icon: Tide Sorcerer / Staff -->
+              <svg class="w-14 h-14 text-sky-300 drop-shadow-[0_0_8px_rgba(56,189,248,0.4)]" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.8">
+                <circle cx="32" cy="22" r="14" stroke-dasharray="4 2" />
+                <path d="M32 8V56M24 36C28 40 36 40 40 36M22 22L42 22" />
+                <circle cx="32" cy="22" r="4" fill="currentColor" fill-opacity="0.3" />
+              </svg>
+            </div>
+            <div class="text-center mt-2">
+              <div class="text-lg font-normal tracking-wider text-slate-200 group-hover:text-white">青澜 · 昭</div>
+              <div class="text-xs font-light text-sky-400 tracking-widest mt-0.5">潮咏术士</div>
+              <div class="text-[10px] font-mono text-slate-400 mt-1">LV.32 · 临海学派</div>
+            </div>
+          </div>
+
+          <div class="border-t border-white/10 pt-3 space-y-1.5 font-mono text-xs">
+            <div class="flex justify-between items-center text-slate-400">
+              <span class="text-[11px]">HP</span>
+              <span class="text-slate-300 font-medium">31 / 31</span>
+            </div>
+            <div class="flex justify-between items-center text-slate-400">
+              <span class="text-[11px]">法术攻击</span>
+              <span class="text-sky-300 font-medium">34</span>
+            </div>
+            <div class="mt-2 text-center text-[10px] text-slate-400 bg-white/5 py-1 rounded tracking-wider group-hover:border group-hover:border-white/20">
+              点击切换目标
+            </div>
+          </div>
+        </div>
+
+        <!-- SLOT 3: 铁岭·铠 (重壁卫) -->
+        <div class="group relative rounded-lg panel-frost flex flex-col justify-between p-4 cursor-pointer transition-all duration-200 hover:border-[#6ED4FF]/60 hover:bg-[#101c2d]/70">
+          <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+            <span class="font-mono text-[11px] text-slate-400 font-semibold">#03 TANK</span>
+            <span class="text-[10px] text-slate-500 font-mono">WAIT</span>
+          </div>
+
+          <div class="my-auto flex flex-col items-center">
+            <div class="relative w-28 h-28 flex items-center justify-center my-3">
+              <div class="absolute inset-2 rounded-full border border-amber-400/20"></div>
+              <!-- Class Icon: Shield / Fortress -->
+              <svg class="w-14 h-14 text-amber-200 drop-shadow-[0_0_8px_rgba(251,191,36,0.3)]" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M16 12L32 6L48 12V30C48 44 32 56 32 56C32 56 16 44 16 30V12Z" />
+                <path d="M32 18V48M22 28H42" stroke-opacity="0.5" />
+              </svg>
+            </div>
+            <div class="text-center mt-2">
+              <div class="text-lg font-normal tracking-wider text-slate-200 group-hover:text-white">铁岭 · 铠</div>
+              <div class="text-xs font-light text-amber-300 tracking-widest mt-0.5">重壁卫</div>
+              <div class="text-[10px] font-mono text-slate-400 mt-1">LV.35 · 磐石要塞</div>
+            </div>
+          </div>
+
+          <div class="border-t border-white/10 pt-3 space-y-1.5 font-mono text-xs">
+            <div class="flex justify-between items-center text-slate-400">
+              <span class="text-[11px]">HP</span>
+              <span class="text-slate-300 font-medium">68 / 68</span>
+            </div>
+            <div class="flex justify-between items-center text-slate-400">
+              <span class="text-[11px]">防御力</span>
+              <span class="text-amber-200 font-medium">32</span>
+            </div>
+            <div class="mt-2 text-center text-[10px] text-slate-400 bg-white/5 py-1 rounded tracking-wider group-hover:border group-hover:border-white/20">
+              点击切换目标
+            </div>
+          </div>
+        </div>
+
+        <!-- SLOT 4: 雾泽·萤 (斥候) -->
+        <div class="group relative rounded-lg panel-frost flex flex-col justify-between p-4 cursor-pointer transition-all duration-200 hover:border-[#6ED4FF]/60 hover:bg-[#101c2d]/70">
+          <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+            <span class="font-mono text-[11px] text-slate-400 font-semibold">#04 FLANK</span>
+            <span class="text-[10px] text-slate-500 font-mono">WAIT</span>
+          </div>
+
+          <div class="my-auto flex flex-col items-center">
+            <div class="relative w-28 h-28 flex items-center justify-center my-3">
+              <div class="absolute inset-2 rounded-full border border-teal-400/20"></div>
+              <!-- Class Icon: Scout / Bow / Dagger -->
+              <svg class="w-14 h-14 text-teal-300 drop-shadow-[0_0_8px_rgba(45,212,191,0.3)]" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 52L52 12M52 12H34M52 12V30" />
+                <path d="M22 26L38 42M16 48L24 40" stroke-opacity="0.6" />
+                <circle cx="44" cy="20" r="2.5" fill="#2DD4BF" />
+              </svg>
+            </div>
+            <div class="text-center mt-2">
+              <div class="text-lg font-normal tracking-wider text-slate-200 group-hover:text-white">雾泽 · 萤</div>
+              <div class="text-xs font-light text-teal-400 tracking-widest mt-0.5">斥候</div>
+              <div class="text-[10px] font-mono text-slate-400 mt-1">LV.33 · 幽林巡径</div>
+            </div>
+          </div>
+
+          <div class="border-t border-white/10 pt-3 space-y-1.5 font-mono text-xs">
+            <div class="flex justify-between items-center text-slate-400">
+              <span class="text-[11px]">HP</span>
+              <span class="text-slate-300 font-medium">35 / 35</span>
+            </div>
+            <div class="flex justify-between items-center text-slate-400">
+              <span class="text-[11px]">机动敏捷</span>
+              <span class="text-teal-300 font-medium">29</span>
+            </div>
+            <div class="mt-2 text-center text-[10px] text-slate-400 bg-white/5 py-1 rounded tracking-wider group-hover:border group-hover:border-white/20">
+              点击切换目标
+            </div>
+          </div>
+        </div>
+
+        <!-- SLOT 5: 空位 (EMPTY) -->
+        <div class="group relative rounded-lg panel-frost-subtle flex flex-col justify-between p-4 border-dashed border-white/15 hover:border-[#6ED4FF]/40 cursor-pointer transition-all duration-200 bg-[#090f19]/40 hover:bg-[#0c1624]/60">
+          <div class="flex items-center justify-between border-b border-white/5 pb-2.5">
+            <span class="font-mono text-[11px] text-slate-600 font-medium">#05 VACANT</span>
+            <span class="text-[10px] text-slate-600 font-mono">AVAILABLE</span>
+          </div>
+
+          <div class="my-auto flex flex-col items-center justify-center py-8">
+            <div class="w-16 h-16 rounded-full border border-white/15 flex items-center justify-center text-slate-500 group-hover:text-[#6ED4FF] group-hover:border-[#6ED4FF]/50 transition-colors">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M12 5V19M5 12H19" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="mt-4 text-base font-light text-slate-400 tracking-wider">空位</div>
+            <div class="text-[11px] font-mono text-slate-600 mt-1">SLOT AVAILABLE</div>
+          </div>
+
+          <div class="border-t border-white/5 pt-3 text-center">
+            <span class="text-[11px] text-slate-500 group-hover:text-[#6ED4FF] transition-colors">+ 委任候补骑士</span>
+          </div>
+        </div>
+
+        <!-- SLOT 6: 空位 (EMPTY) -->
+        <div class="group relative rounded-lg panel-frost-subtle flex flex-col justify-between p-4 border-dashed border-white/15 hover:border-[#6ED4FF]/40 cursor-pointer transition-all duration-200 bg-[#090f19]/40 hover:bg-[#0c1624]/60">
+          <div class="flex items-center justify-between border-b border-white/5 pb-2.5">
+            <span class="font-mono text-[11px] text-slate-600 font-medium">#06 VACANT</span>
+            <span class="text-[10px] text-slate-600 font-mono">AVAILABLE</span>
+          </div>
+
+          <div class="my-auto flex flex-col items-center justify-center py-8">
+            <div class="w-16 h-16 rounded-full border border-white/15 flex items-center justify-center text-slate-500 group-hover:text-[#6ED4FF] group-hover:border-[#6ED4FF]/50 transition-colors">
+              <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M12 5V19M5 12H19" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div class="mt-4 text-base font-light text-slate-400 tracking-wider">空位</div>
+            <div class="text-[11px] font-mono text-slate-600 mt-1">SLOT AVAILABLE</div>
+          </div>
+
+          <div class="border-t border-white/5 pt-3 text-center">
+            <span class="text-[11px] text-slate-500 group-hover:text-[#6ED4FF] transition-colors">+ 委任候补骑士</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- RIGHT SECTION: COMPARISON PANEL & ACTIONS (Col 4) -->
+    <aside class="col-span-4 flex flex-col justify-between panel-frost rounded-xl p-7 relative">
+      
+      <!-- Panel Header: Targeted Unit Info -->
+      <div>
+        <div class="flex items-center justify-between border-b border-[#6ED4FF]/20 pb-4">
+          <div class="flex items-center gap-3">
+            <!-- Focused Unit Class Icon -->
+            <div class="w-10 h-10 rounded border border-[#6ED4FF]/40 bg-[#6ED4FF]/10 flex items-center justify-center text-[#6ED4FF]">
+              <svg class="w-6 h-6" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M32 4L37 20L53 25L39 34L42 51L32 41L22 51L25 34L11 25L27 20L32 4Z" />
+              </svg>
+            </div>
+            <div>
+              <div class="flex items-baseline gap-2">
+                <h2 class="text-xl font-normal tracking-wide text-white">白霜 · 凛</h2>
+                <span class="text-xs text-[#6ED4FF] font-light">霜刃骑士</span>
+              </div>
+              <p class="text-[10px] font-mono text-slate-400 tracking-widest uppercase">FOCUSED UNIT METRICS // PLATE #01</p>
+            </div>
+          </div>
+          <span class="font-mono text-xs text-[#6ED4FF] px-2 py-0.5 bg-[#6ED4FF]/10 rounded border border-[#6ED4FF]/30">主力队长</span>
+        </div>
+
+        <!-- Metric Explanation & Mission Benchmark Line Legend -->
+        <div class="flex items-center justify-between my-5 text-xs">
+          <span class="text-slate-400">属性效能 vs 关卡基准指标</span>
+          <div class="flex items-center gap-4 font-mono text-[11px]">
+            <span class="flex items-center gap-1.5 text-[#6ED4FF]">
+              <span class="w-2.5 h-1.5 rounded-sm bg-[#6ED4FF]"></span> 当前骑士
+            </span>
+            <span class="flex items-center gap-1.5 text-amber-300">
+              <span class="w-2.5 h-1.5 rounded-sm bg-amber-400"></span> 关卡推荐线
+            </span>
+          </div>
+        </div>
+
+        <!-- STATS COMPARISON LIST (HP 42, 攻击 28, 防御 16, 速度 14, 魔攻 6) -->
+        <div class="space-y-4 font-mono">
+          
+          <!-- Stat 1: HP 42 vs 36 -->
+          <div class="bg-black/30 p-3 rounded border border-white/5">
+            <div class="flex justify-between items-baseline text-xs mb-2">
+              <span class="font-sans text-slate-300">生命值 (HP)</span>
+              <div class="flex items-center gap-2">
+                <span class="text-white font-semibold text-sm">42</span>
+                <span class="text-slate-500 text-[11px]">/ 推荐 36</span>
+                <span class="text-emerald-400 text-[11px] font-medium">+6 (优)</span>
+              </div>
+            </div>
+            <div class="stat-bar-track rounded-full overflow-visible">
+              <div class="stat-bar-fill rounded-full" style="width: 70%;"></div>
+              <!-- Mission Benchmark line at 60% -->
+              <div class="stat-bar-benchmark" style="left: 60%;" title="关卡基准: 36"></div>
+            </div>
+          </div>
+
+          <!-- Stat 2: 攻击 28 vs 24 -->
+          <div class="bg-black/30 p-3 rounded border border-white/5">
+            <div class="flex justify-between items-baseline text-xs mb-2">
+              <span class="font-sans text-slate-300">攻击 (ATK)</span>
+              <div class="flex items-center gap-2">
+                <span class="text-white font-semibold text-sm">28</span>
+                <span class="text-slate-500 text-[11px]">/ 推荐 24</span>
+                <span class="text-emerald-400 text-[11px] font-medium">+4 (优)</span>
+              </div>
+            </div>
+            <div class="stat-bar-track rounded-full overflow-visible">
+              <div class="stat-bar-fill rounded-full" style="width: 78%;"></div>
+              <div class="stat-bar-benchmark" style="left: 66%;" title="关卡基准: 24"></div>
+            </div>
+          </div>
+
+          <!-- Stat 3: 防御 16 vs 18 (Slightly lower) -->
+          <div class="bg-black/30 p-3 rounded border border-white/5">
+            <div class="flex justify-between items-baseline text-xs mb-2">
+              <span class="font-sans text-slate-300">防御 (DEF)</span>
+              <div class="flex items-center gap-2">
+                <span class="text-white font-semibold text-sm">16</span>
+                <span class="text-slate-500 text-[11px]">/ 推荐 18</span>
+                <span class="text-amber-400 text-[11px] font-medium">-2 (防守偏紧)</span>
+              </div>
+            </div>
+            <div class="stat-bar-track rounded-full overflow-visible">
+              <div class="stat-bar-fill rounded-full" style="width: 53%;"></div>
+              <div class="stat-bar-benchmark" style="left: 60%;" title="关卡基准: 18"></div>
+            </div>
+          </div>
+
+          <!-- Stat 4: 速度 14 vs 12 -->
+          <div class="bg-black/30 p-3 rounded border border-white/5">
+            <div class="flex justify-between items-baseline text-xs mb-2">
+              <span class="font-sans text-slate-300">速度 (SPD)</span>
+              <div class="flex items-center gap-2">
+                <span class="text-white font-semibold text-sm">14</span>
+                <span class="text-slate-500 text-[11px]">/ 推荐 12</span>
+                <span class="text-emerald-400 text-[11px] font-medium">+2 (先手优先)</span>
+              </div>
+            </div>
+            <div class="stat-bar-track rounded-full overflow-visible">
+              <div class="stat-bar-fill rounded-full" style="width: 58%;"></div>
+              <div class="stat-bar-benchmark" style="left: 50%;" title="关卡基准: 12"></div>
+            </div>
+          </div>
+
+          <!-- Stat 5: 魔攻 6 vs 10 -->
+          <div class="bg-black/30 p-3 rounded border border-white/5">
+            <div class="flex justify-between items-baseline text-xs mb-2">
+              <span class="font-sans text-slate-300">魔攻 (MATK)</span>
+              <div class="flex items-center gap-2">
+                <span class="text-white font-semibold text-sm">6</span>
+                <span class="text-slate-500 text-[11px]">/ 推荐 10</span>
+                <span class="text-slate-400 text-[11px]">物攻特化</span>
+              </div>
+            </div>
+            <div class="stat-bar-track rounded-full overflow-visible">
+              <div class="stat-bar-fill rounded-full" style="width: 30%;"></div>
+              <div class="stat-bar-benchmark" style="left: 50%;" title="关卡基准: 10"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Tactical Advice Note -->
+        <div class="mt-4 p-3 rounded bg-[#6ED4FF]/5 border border-[#6ED4FF]/15 text-xs text-slate-300 flex items-start gap-2.5">
+          <span class="text-[#6ED4FF] mt-0.5">◈</span>
+          <p class="leading-relaxed font-sans text-[12px]">
+            白霜·凛之霜刃特技针对赤原关前哨斥候群拥有克制效果；防御虽略低于推荐基准，但可由「铁岭·铠」施展护卫光环补足。
+          </p>
+        </div>
+      </div>
+
+      <!-- BOTTOM ACTIONS: PRIMARY "出战" (FOCUSED WITH GAMEPAD FOCUS RING) & SECONDARY "返回" -->
+      <div class="pt-6 border-t border-white/10 space-y-4">
+        
+        <!-- Primary Action : 出战 (With clearly visible gamepad focus ring) -->
+        <button class="gamepad-focus-ring group w-full relative py-4 px-6 rounded-lg bg-gradient-to-r from-[#173859] via-[#1A456E] to-[#173859] text-white flex items-center justify-between transition-all duration-150 cursor-pointer active:scale-[0.99]">
+          <div class="flex items-center gap-3">
+            <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-[#6ED4FF] text-slate-950 font-mono text-xs font-bold shadow-[0_0_10px_#6ED4FF]">A</span>
+            <span class="text-lg font-normal tracking-[0.25em] pl-1 font-sans">出战</span>
+          </div>
+          <div class="flex items-center gap-2 text-xs font-mono text-[#6ED4FF] tracking-wider">
+            <span>START CRUSADE</span>
+            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+            </svg>
+          </div>
+        </button>
+
+        <!-- Secondary Action : 返回 -->
+        <div class="flex items-center justify-between px-2">
+          <button class="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors cursor-pointer py-1 font-sans">
+            <span class="inline-flex items-center justify-center w-5 h-5 rounded border border-slate-600 text-slate-400 font-mono text-[10px] bg-slate-800/40">B</span>
+            <span class="tracking-widest">返回</span>
+          </button>
+          
+          <div class="flex items-center gap-4 text-xs font-mono text-slate-500">
+            <span class="flex items-center gap-1"><kbd class="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[10px]">X</kbd> 自动配置</span>
+            <span class="flex items-center gap-1"><kbd class="px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-[10px]">Y</kbd> 卸除全员</span>
+          </div>
+        </div>
+
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- FOOTER BAR: KEYBOARD / GAMEPAD SHORTCUT HINTS -->
+  <footer class="relative z-10 flex items-center justify-between border-t border-[#6ED4FF]/15 pt-3.5 text-xs text-slate-400 font-mono">
+    <div class="flex items-center gap-8">
+      <div class="flex items-center gap-2">
+        <span class="px-1.5 py-0.5 rounded bg-white/10 border border-white/10 text-[10px]">D-PAD / 光标</span>
+        <span>移动选位</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="px-1.5 py-0.5 rounded bg-white/10 border border-white/10 text-[10px]">LB / RB</span>
+        <span>切换预设编组</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="px-1.5 py-0.5 rounded bg-white/10 border border-white/10 text-[10px]">LT / RT</span>
+        <span>检视兵种克制</span>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-3 text-slate-500 text-[11px]">
+      <span>BUILD 2025.04.14-STABLE</span>
+      <span>•</span>
+      <span>赤历一百二十八年 · 霜堡军令司</span>
+    </div>
+  </footer>
+
+</body>
+</html>
