@@ -172,8 +172,29 @@ func _show_line() -> void:
 	var line = lines[_line_idx]
 	var sp := str(line.get("speaker", ""))
 	_speaker.text = sp
-	_body.text = str(line.get("text", ""))
+	_body.text = _line_text(line)
 	_speaker_portrait(sp, str(line.get("expression", line.get("emotion", ""))))
+
+func _line_text(line) -> String:
+	var body := str(line.get("text", ""))
+	if body.find("{heir}") < 0:
+		return body
+	return body.replace("{heir}", _living_heir_name())
+
+## Living child whose parent_ids include the leader. Locale key holds the unnamed fallback.
+func _living_heir_name() -> String:
+	var leader = GameState.get_leader()
+	if leader == null:
+		return Locale.t("nar06_no_heir")
+	for c in GameState.characters.values():
+		if c == null or not c.alive:
+			continue
+		var parents = c.parent_ids
+		if typeof(parents) != TYPE_ARRAY:
+			continue
+		if leader.id in parents and str(c.name) != "":
+			return str(c.name)
+	return Locale.t("nar06_no_heir")
 
 func _character_named(speaker: String) -> CKCharacter:
 	for c in GameState.characters.values():
