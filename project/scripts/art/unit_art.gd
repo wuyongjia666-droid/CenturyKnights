@@ -396,6 +396,65 @@ static func portrait_kind(c: CKCharacter, size: int = 96) -> String:
 		return "geno"
 	return "proc"
 
+const COMPANION_TABLE := "res://data/cast/companions_v92.json"
+const EXPRESSION_DIR := "res://assets/art/portraits/expressions"
+static var _companion_slots: Dictionary = {}
+static var _companion_slots_ready := false
+
+static func companion_slots() -> Dictionary:
+	if _companion_slots_ready:
+		return _companion_slots
+	_companion_slots_ready = true
+	var f := FileAccess.open(COMPANION_TABLE, FileAccess.READ)
+	if f == null:
+		return _companion_slots
+	var parsed = JSON.parse_string(f.get_as_text())
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return _companion_slots
+	var i := 1
+	for row in parsed.get("companions", []):
+		if typeof(row) != TYPE_DICTIONARY:
+			continue
+		var slot := "c%02d" % i
+		_companion_slots[str(row.get("name", ""))] = slot
+		_companion_slots[str(row.get("cast_key", ""))] = slot
+		_companion_slots[str(row.get("id", ""))] = slot
+		i += 1
+	return _companion_slots
+
+static func companion_slot(speaker: String) -> String:
+	return str(companion_slots().get(speaker, ""))
+
+static func expression_key(raw: String) -> String:
+	var key := str(raw).strip_edges()
+	match key:
+		"joy", "喜":
+			return "joy"
+		"anger", "怒":
+			return "anger"
+		"sorrow", "悲":
+			return "sorrow"
+		"surprise", "惊":
+			return "surprise"
+		_:
+			return "neutral"
+
+static func expression_plate_path(slot: String, emotion: String) -> String:
+	return "%s/v92_expr_%s_%s.png" % [EXPRESSION_DIR, slot, expression_key(emotion)]
+
+## Missing expression plates fall back to the speaker's base portrait. Farm output is not required.
+static func dialogue_portrait(speaker: String, emotion: String, who: CKCharacter, size: int = 120) -> Texture2D:
+	var slot := companion_slot(speaker)
+	if slot != "":
+		var path := expression_plate_path(slot, emotion)
+		if ResourceLoader.exists(path):
+			var tex = load(path)
+			if tex is Texture2D:
+				return tex
+	if who != null:
+		return portrait(who, size)
+	return null
+
 static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
 	# v8.9: paper-doll is retired. One Qwen plate per unit_id when the farm has ingested it.
 	# Checked before the legacy cache so a late ingest still wins. Missing plates fall through
