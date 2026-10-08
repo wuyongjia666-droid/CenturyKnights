@@ -41,7 +41,7 @@ func _ladder() -> void:
 
 func _unlock_and_scale() -> void:
 	_ok(Todo.is_unlocked("deploy"), "deploy locked")
-	_ok(Todo.is_unlocked("marriage"), "marriage locked")
+	_ok(not Todo.is_unlocked("marriage"), "marriage open before its chapter")
 	_ok(not Todo.is_unlocked("not_a_real_entry"), "unknown entry unlocked")
 	_ok(is_equal_approx(Todo.narrow_scale(1280.0), 1.0), "desktop scale")
 	_ok(is_equal_approx(Todo.narrow_scale(1080.0), 1080.0 / 1280.0), "phone scale")
@@ -79,8 +79,9 @@ func _hub() -> void:
 		hub.queue_free()
 		return
 	var labels: Array = hub.panel_button_labels()
-	_ok(labels.size() >= 8, "buttons %s" % str(labels))
-	for sub in ["花名册", "酒馆", "联姻", "岁月", "族谱", "委任"]:
+	_ok(labels.size() <= 6, "year-one buttons %s" % str(labels))
+	_ok(labels.size() >= 4, "buttons %s" % str(labels))
+	for sub in ["出战", "演武", "酒馆", "花名册", "岁月", "设置"]:
 		var found := false
 		for lb in labels:
 			if str(lb).find(sub) >= 0:

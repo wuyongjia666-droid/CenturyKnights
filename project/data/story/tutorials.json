@@ -1,0 +1,124 @@
+{
+  "year_one": ["deploy", "roster", "tavern", "hourglass", "settings", "train"],
+  "unlocks": [
+    {"flag": "e1_01_fought", "entries": ["skills"]},
+    {"flag": "e1_04_fought", "entries": ["market", "atlas"]},
+    {"flag": "e1_05_fought", "entries": ["forge"]},
+    {"flag": "e1_06_fought", "entries": ["shrine"]},
+    {"flag": "e1_07_fought", "entries": ["marriage"]},
+    {"flag": "e1_08_fought", "entries": ["quests"]},
+    {"flag": "child_born", "entries": ["lineage"]},
+    {"heir": true, "entries": ["rite"]},
+    {"flag": "e2_holdings", "entries": ["estates", "works"]}
+  ],
+  "systems": [
+    {
+      "id": "deploy",
+      "scene_tail": "deploy.tscn",
+      "title_key": "nar05_deploy_title",
+      "body_key": "nar05_deploy_body",
+      "steps": [
+        {"id": "deploy_count", "text_key": "nar05_deploy_s1"},
+        {"id": "deploy_leave", "text_key": "nar05_deploy_s2"}
+      ]
+    },
+    {
+      "id": "train",
+      "scene_tail": "train.tscn",
+      "title_key": "nar05_train_title",
+      "body_key": "nar05_train_body",
+      "steps": [{"id": "train_stats", "text_key": "nar05_train_s1"}]
+    },
+    {
+      "id": "skills",
+      "scene_tail": "skill_tree.tscn",
+      "title_key": "nar05_skills_title",
+      "body_key": "nar05_skills_body",
+      "steps": [{"id": "skills_cool", "text_key": "nar05_skills_s1"}]
+    },
+    {
+      "id": "tavern",
+      "scene_tail": "tavern.tscn",
+      "title_key": "nar05_tavern_title",
+      "body_key": "nar05_tavern_body",
+      "steps": [{"id": "tavern_month", "text_key": "nar05_tavern_s1"}]
+    },
+    {
+      "id": "forge",
+      "scene_tail": "forge.tscn",
+      "title_key": "nar05_forge_title",
+      "body_key": "nar05_forge_body",
+      "steps": [{"id": "forge_gear", "text_key": "nar05_forge_s1"}]
+    },
+    {
+      "id": "market",
+      "scene_tail": "market.tscn",
+      "title_key": "nar05_market_title",
+      "body_key": "nar05_market_body",
+      "steps": [{"id": "market_stock", "text_key": "nar05_market_s1"}]
+    },
+    {
+      "id": "estates",
+      "scene_tail": "estates.tscn",
+      "title_key": "nar05_estates_title",
+      "body_key": "nar05_estates_body",
+      "steps": [{"id": "estates_rent", "text_key": "nar05_estates_s1"}]
+    },
+    {
+      "id": "quests",
+      "scene_tail": "quests.tscn",
+      "title_key": "nar05_quests_title",
+      "body_key": "nar05_quests_body",
+      "steps": [{"id": "quests_term", "text_key": "nar05_quests_s1"}]
+    },
+    {
+      "id": "roster",
+      "scene_tail": "roster.tscn",
+      "title_key": "nar05_roster_title",
+      "body_key": "nar05_roster_body",
+      "steps": [{"id": "roster_hurt", "text_key": "nar05_roster_s1"}]
+    },
+    {
+      "id": "shrine",
+      "scene_tail": "shrine.tscn",
+      "title_key": "nar05_shrine_title",
+      "body_key": "nar05_shrine_body",
+      "steps": [{"id": "shrine_time", "text_key": "nar05_shrine_s1"}]
+    },
+    {
+      "id": "marriage",
+      "scene_tail": "marriage.tscn",
+      "title_key": "nar05_marriage_title",
+      "body_key": "nar05_marriage_body",
+      "steps": [{"id": "marriage_write", "text_key": "nar05_marriage_s1"}]
+    },
+    {
+      "id": "lineage",
+      "scene_tail": "lineage_view.tscn",
+      "title_key": "nar05_lineage_title",
+      "body_key": "nar05_lineage_body",
+      "steps": [{"id": "lineage_child", "text_key": "nar05_lineage_s1"}]
+    },
+    {
+      "id": "rite",
+      "scene_tail": "lineage_rite.tscn",
+      "title_key": "nar05_rite_title",
+      "body_key": "nar05_rite_body",
+      "steps": [{"id": "rite_steps", "text_key": "nar05_rite_s1"}]
+    },
+    {
+      "id": "hourglass",
+      "scene_tail": "hourglass.tscn",
+      "title_key": "nar05_hourglass_title",
+      "body_key": "nar05_hourglass_body",
+      "steps": [{"id": "hourglass_month", "text_key": "nar05_hourglass_s1"}]
+    },
+    {
+      "id": "atlas",
+      "scene_tail": "atlas_view.tscn",
+      "title_key": "nar05_atlas_title",
+      "body_key": "nar05_atlas_body",
+      "steps": [{"id": "atlas_flag", "text_key": "nar05_atlas_s1"}]
+    }
+  ]
+}
