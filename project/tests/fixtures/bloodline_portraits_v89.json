@@ -1,0 +1,353 @@
+{
+	"note": "Plan A examples: CKGenomePortrait.manifest_entry + CKBloodline.portrait_clause. Regenerate with CK_UPDATE_FIXTURES=1.",
+	"rows": [
+		{
+			"age": 30,
+			"case": "royal_ashbanner",
+			"clause": "Bloodline: a fine silver-violet branching line pattern on the left side of the neck below the jaw, like a river-delta map drawn in hairline ink, a natural skin pattern rather than a tattoo, the collar open on the left so the neck shows; Ashbanner styling: ash-grey long coat with a high open collar; a slim grey-violet banner pin of the Ash Seat at the collar.",
+			"line": "ash_chart",
+			"negative": "medieval, gothic, parchment, aged paper, sepia, gold, gilded, golden filigree, brass, ornate baroque, warm golden lighting, sunset, candlelight, heavy black ink outlines, sketch, hatching, chibi, 3d render, photo, text, letters, watermark, logo, signature, frame, border, blurry, lowres, jpeg artifacts, extra fingers, extra limbs, deformed, pointed ears, elf ears, long pointed ears, blue birthmark, cyan birthmark, glowing blue facial marking, crystal forehead gem, golden eyes, gold irises, crown, tiara, halo",
+			"notes_zh": "灰烬邦王胤：河图纹",
+			"out_path": "project/assets/art/portraits/genome/fx_royal_ashbanner.png",
+			"positive": "CenturyKnights style lock v8.9: 2026 contemporary fantasy SRPG art, refined semi-realistic illustration with soft airbrushed painterly shading and crisp clean edges, thin dark-slate contour lines, cool white key light from the upper left, thin crystal-frost cyan (#6ED4FF) rim light from the back right, palette of ink-navy (#1C2330), slate (#2A3442), frosted silver (#C9D3DE) and frost white (#F4F7FB) with small crystal-frost accents, matte technical woven fabrics and frosted brushed-chrome metal with 1px glowing frost hairline trims, clean modern silhouettes, AAA editorial quality. small mint (#5EE0B5) accent details Waist-up half-body portrait, three-quarter view facing camera-left, chest-up, eye level, single person, plain plate background #D9DEE3. adult man, ash-brown hair (5c4a40), dusk-violet eyes (6b4c7a), straight brows, rounded ears, a balanced face width, a defined jaw, moderate cheeks, a strong nose, level eyes, large eyes, mid-set brows, no birthmark, unscarred skin, skin tone c8977a Bloodline: a fine silver-violet branching line pattern on the left side of the neck below the jaw, like a river-delta map drawn in hairline ink, a natural skin pattern rather than a tattoo, the collar open on the left so the neck shows; Ashbanner styling: ash-grey long coat with a high open collar; a slim grey-violet banner pin of the Ash Seat at the collar.",
+			"seed": 2124962640,
+			"sex": "m",
+			"signatures": [
+				"river_chart"
+			],
+			"signatures_zh": [
+				"河图纹"
+			],
+			"unit_id": "fx_royal_ashbanner"
+		},
+		{
+			"age": 30,
+			"case": "royal_shuoying",
+			"clause": "Bloodline: very dark irises with a thin luminous pale-silver ring hugging each pupil, like a total eclipse, a cool low light that makes the eyes read clearly; Shuoying night-court styling: midnight-indigo high collar with fine silver piping; a black-glass crescent collar pin of the Night Palace.",
+			"line": "sy_eclipse",
+			"negative": "medieval, gothic, parchment, aged paper, sepia, gold, gilded, golden filigree, brass, ornate baroque, warm golden lighting, sunset, candlelight, heavy black ink outlines, sketch, hatching, chibi, 3d render, photo, text, letters, watermark, logo, signature, frame, border, blurry, lowres, jpeg artifacts, extra fingers, extra limbs, deformed, pointed ears, elf ears, long pointed ears, blue birthmark, cyan birthmark, glowing blue facial marking, crystal forehead gem, golden eyes, gold irises, crown, tiara, halo",
+			"notes_zh": "朔影国王胤：全朔瞳",
+			"out_path": "project/assets/art/portraits/genome/fx_royal_shuoying.png",
+			"positive": "CenturyKnights style lock v8.9: 2026 contemporary fantasy SRPG art, refined semi-realistic illustration with soft airbrushed painterly shading and crisp clean edges, thin dark-slate contour lines, cool white key light from the upper left, thin crystal-frost cyan (#6ED4FF) rim light from the back right, palette of ink-navy (#1C2330), slate (#2A3442), frosted silver (#C9D3DE) and frost white (#F4F7FB) with small crystal-frost accents, matte technical woven fabrics and frosted brushed-chrome metal with 1px glowing frost hairline trims, clean modern silhouettes, AAA editorial quality. small mint (#5EE0B5) accent details Waist-up half-body portrait, three-quarter view facing camera-left, chest-up, eye level, single person, plain plate background #D9DEE3. adult woman, ink-black hair (1b1d24), dusk-violet eyes (6b4c7a), arched brows, rounded ears, a balanced face width, a soft jaw, high cheekbones, a fine nose, level eyes, medium eyes, mid-set brows, no birthmark, unscarred skin, skin tone eedcd3 Bloodline: very dark irises with a thin luminous pale-silver ring hugging each pupil, like a total eclipse, a cool low light that makes the eyes read clearly; Shuoying night-court styling: midnight-indigo high collar with fine silver piping; a black-glass crescent collar pin of the Night Palace.",
+			"seed": 253704434,
+			"sex": "f",
+			"signatures": [
+				"eclipse_full"
+			],
+			"signatures_zh": [
+				"全朔瞳"
+			],
+			"unit_id": "fx_royal_shuoying"
+		},
+		{
+			"age": 30,
+			"case": "royal_qinghe",
+			"clause": "Bloodline: a single lock of translucent jade-green hair falling from the left temple, softly lit from within like polished nephrite; Qinghe register styling: layered jade-grey and mist-white silk with a high mandarin collar; a slim jade register tablet pendant.",
+			"line": "qh_jade",
+			"negative": "medieval, gothic, parchment, aged paper, sepia, gold, gilded, golden filigree, brass, ornate baroque, warm golden lighting, sunset, candlelight, heavy black ink outlines, sketch, hatching, chibi, 3d render, photo, text, letters, watermark, logo, signature, frame, border, blurry, lowres, jpeg artifacts, extra fingers, extra limbs, deformed, pointed ears, elf ears, long pointed ears, blue birthmark, cyan birthmark, glowing blue facial marking, crystal forehead gem, golden eyes, gold irises, crown, tiara, halo",
+			"notes_zh": "清河国王胤：玉缕",
+			"out_path": "project/assets/art/portraits/genome/fx_royal_qinghe.png",
+			"positive": "CenturyKnights style lock v8.9: 2026 contemporary fantasy SRPG art, refined semi-realistic illustration with soft airbrushed painterly shading and crisp clean edges, thin dark-slate contour lines, cool white key light from the upper left, thin crystal-frost cyan (#6ED4FF) rim light from the back right, palette of ink-navy (#1C2330), slate (#2A3442), frosted silver (#C9D3DE) and frost white (#F4F7FB) with small crystal-frost accents, matte technical woven fabrics and frosted brushed-chrome metal with 1px glowing frost hairline trims, clean modern silhouettes, AAA editorial quality. small mint (#5EE0B5) accent details Waist-up half-body portrait, three-quarter view facing camera-left, chest-up, eye level, single person, plain plate background #D9DEE3. adult woman, ink-black hair with a ash-brown undertone (28262a), slate-grey eyes, hint of pine-green eyes (546669), soft brows, rounded ears, a balanced face width, a defined jaw, moderate cheeks, a fine nose, level eyes, medium eyes, low-set brows, no birthmark, unscarred skin, skin tone e6c9b5 Bloodline: a single lock of translucent jade-green hair falling from the left temple, softly lit from within like polished nephrite; Qinghe register styling: layered jade-grey and mist-white silk with a high mandarin collar; a slim jade register tablet pendant.",
+			"seed": 1064040043,
+			"sex": "f",
+			"signatures": [
+				"jade_lock"
+			],
+			"signatures_zh": [
+				"玉缕"
+			],
+			"unit_id": "fx_royal_qinghe"
+		},
+		{
+			"age": 30,
+			"case": "royal_lantern",
+			"clause": "Bloodline: hair ends that turn translucent like spun glass fibre, glowing a soft cool white at the very tips, hair loose enough to show the ends; Lantern League styling: tailored night-market coat with a clear glass collar bar; a clear lamp-glass collar chain of the Lamp Seat.",
+			"line": "lt_filament",
+			"negative": "medieval, gothic, parchment, aged paper, sepia, gold, gilded, golden filigree, brass, ornate baroque, warm golden lighting, sunset, candlelight, heavy black ink outlines, sketch, hatching, chibi, 3d render, photo, text, letters, watermark, logo, signature, frame, border, blurry, lowres, jpeg artifacts, extra fingers, extra limbs, deformed, pointed ears, elf ears, long pointed ears, blue birthmark, cyan birthmark, glowing blue facial marking, crystal forehead gem, golden eyes, gold irises, crown, tiara, halo",
+			"notes_zh": "灯市联王胤：灯丝发",
+			"out_path": "project/assets/art/portraits/genome/fx_royal_lantern.png",
+			"positive": "CenturyKnights style lock v8.9: 2026 contemporary fantasy SRPG art, refined semi-realistic illustration with soft airbrushed painterly shading and crisp clean edges, thin dark-slate contour lines, cool white key light from the upper left, thin crystal-frost cyan (#6ED4FF) rim light from the back right, palette of ink-navy (#1C2330), slate (#2A3442), frosted silver (#C9D3DE) and frost white (#F4F7FB) with small crystal-frost accents, matte technical woven fabrics and frosted brushed-chrome metal with 1px glowing frost hairline trims, clean modern silhouettes, AAA editorial quality. small mint (#5EE0B5) accent details Waist-up half-body portrait, three-quarter view facing camera-left, chest-up, eye level, single person, plain plate background #D9DEE3. adult man, ink-black hair with a ash-brown undertone (28262a), pine-green eyes (3d6b4f), straight brows, rounded ears, a balanced face width, a defined jaw, high cheekbones, a straight nose, level eyes, large eyes, low-set brows, no birthmark, unscarred skin, skin tone ae7a57 Bloodline: hair ends that turn translucent like spun glass fibre, glowing a soft cool white at the very tips, hair loose enough to show the ends; Lantern League styling: tailored night-market coat with a clear glass collar bar; a clear lamp-glass collar chain of the Lamp Seat.",
+			"seed": 1087038184,
+			"sex": "m",
+			"signatures": [
+				"filament"
+			],
+			"signatures_zh": [
+				"灯丝发"
+			],
+			"unit_id": "fx_royal_lantern"
+		},
+		{
+			"age": 30,
+			"case": "royal_frostcrown",
+			"clause": "Bloodline: rime-white eyelashes and white outer brow tips regardless of hair colour, as if dusted with frost, eyes framed close; Frostcrown court styling: frost-white and pale slate layered robe-coat; an ice-glass bell clasp at the throat.",
+			"line": "frost_crown",
+			"negative": "medieval, gothic, parchment, aged paper, sepia, gold, gilded, golden filigree, brass, ornate baroque, warm golden lighting, sunset, candlelight, heavy black ink outlines, sketch, hatching, chibi, 3d render, photo, text, letters, watermark, logo, signature, frame, border, blurry, lowres, jpeg artifacts, extra fingers, extra limbs, deformed, pointed ears, elf ears, long pointed ears, blue birthmark, cyan birthmark, glowing blue facial marking, crystal forehead gem, golden eyes, gold irises, crown, tiara, halo",
+			"notes_zh": "霜冕廷王胤：霜睫",
+			"out_path": "project/assets/art/portraits/genome/fx_royal_frostcrown.png",
+			"positive": "CenturyKnights style lock v8.9: 2026 contemporary fantasy SRPG art, refined semi-realistic illustration with soft airbrushed painterly shading and crisp clean edges, thin dark-slate contour lines, cool white key light from the upper left, thin crystal-frost cyan (#6ED4FF) rim light from the back right, palette of ink-navy (#1C2330), slate (#2A3442), frosted silver (#C9D3DE) and frost white (#F4F7FB) with small crystal-frost accents, matte technical woven fabrics and frosted brushed-chrome metal with 1px glowing frost hairline trims, clean modern silhouettes, AAA editorial quality. small mint (#5EE0B5) accent details Waist-up half-body portrait, three-quarter view facing camera-left, chest-up, eye level, single person, plain plate background #D9DEE3. adult woman, ink-black hair (1b1d24), pale glacier-rime eyes with a thin frost ring (bfefff), arched brows, rounded ears, a narrow face, a defined jaw, moderate cheeks, a straight nose, up-tilted eyes, medium eyes, mid-set brows, no birthmark, unscarred skin, skin tone f1dcd0 Bloodline: rime-white eyelashes and white outer brow tips regardless of hair colour, as if dusted with frost, eyes framed close; Frostcrown court styling: frost-white and pale slate layered robe-coat; an ice-glass bell clasp at the throat.",
+			"seed": 1284497930,
+			"sex": "f",
+			"signatures": [
+				"rime_lash"
+			],
+			"signatures_zh": [
+				"霜睫"
+			],
+			"unit_id": "fx_royal_frostcrown"
+		},
+		{
+			"age": 30,
+			"case": "royal_emberold",
+			"clause": "Bloodline: a fine network of crackle lines like crazed pale celadon glaze across the left temple and cheekbone, the skin there faintly glossy like fired porcelain, hair swept back from the left temple; Emberold old-canon styling: charcoal high coat with celadon porcelain toggles; a celadon porcelain seal toggle.",
+			"line": "eo_kiln",
+			"negative": "medieval, gothic, parchment, aged paper, sepia, gold, gilded, golden filigree, brass, ornate baroque, warm golden lighting, sunset, candlelight, heavy black ink outlines, sketch, hatching, chibi, 3d render, photo, text, letters, watermark, logo, signature, frame, border, blurry, lowres, jpeg artifacts, extra fingers, extra limbs, deformed, pointed ears, elf ears, long pointed ears, blue birthmark, cyan birthmark, glowing blue facial marking, crystal forehead gem, golden eyes, gold irises, crown, tiara, halo",
+			"notes_zh": "余烬旧邦王胤：冰裂纹",
+			"out_path": "project/assets/art/portraits/genome/fx_royal_emberold.png",
+			"positive": "CenturyKnights style lock v8.9: 2026 contemporary fantasy SRPG art, refined semi-realistic illustration with soft airbrushed painterly shading and crisp clean edges, thin dark-slate contour lines, cool white key light from the upper left, thin crystal-frost cyan (#6ED4FF) rim light from the back right, palette of ink-navy (#1C2330), slate (#2A3442), frosted silver (#C9D3DE) and frost white (#F4F7FB) with small crystal-frost accents, matte technical woven fabrics and frosted brushed-chrome metal with 1px glowing frost hairline trims, clean modern silhouettes, AAA editorial quality. small mint (#5EE0B5) accent details Waist-up half-body portrait, three-quarter view facing camera-left, chest-up, eye level, single person, plain plate background #D9DEE3. adult man, ink-black hair (1b1d24), slate-grey eyes (5a6570), straight brows, rounded ears, a balanced face width, a defined jaw, high cheekbones, a straight nose, down-tilted eyes, small eyes, mid-set brows, no birthmark, unscarred skin, skin tone c49670 Bloodline: a fine network of crackle lines like crazed pale celadon glaze across the left temple and cheekbone, the skin there faintly glossy like fired porcelain, hair swept back from the left temple; Emberold old-canon styling: charcoal high coat with celadon porcelain toggles; a celadon porcelain seal toggle.",
+			"seed": 329480736,
+			"sex": "m",
+			"signatures": [
+				"kiln_crackle"
+			],
+			"signatures_zh": [
+				"冰裂纹"
+			],
+			"unit_id": "fx_royal_emberold"
+		},
+		{
+			"age": 30,
+			"case": "royal_saltmarsh",
+			"clause": "Bloodline: hair with fine alternating salt-white bands at regular intervals, like tide rings left on a salt shore, long hair worn loose to show the bands; Saltmarsh tide-court styling: pale slate and salt-white layered coat; a salt-crystal chain of office.",
+			"line": "sm_tide",
+			"negative": "medieval, gothic, parchment, aged paper, sepia, gold, gilded, golden filigree, brass, ornate baroque, warm golden lighting, sunset, candlelight, heavy black ink outlines, sketch, hatching, chibi, 3d render, photo, text, letters, watermark, logo, signature, frame, border, blurry, lowres, jpeg artifacts, extra fingers, extra limbs, deformed, pointed ears, elf ears, long pointed ears, blue birthmark, cyan birthmark, glowing blue facial marking, crystal forehead gem, golden eyes, gold irises, crown, tiara, halo",
+			"notes_zh": "盐泽盟王胤：潮痕发",
+			"out_path": "project/assets/art/portraits/genome/fx_royal_saltmarsh.png",
+			"positive": "CenturyKnights style lock v8.9: 2026 contemporary fantasy SRPG art, refined semi-realistic illustration with soft airbrushed painterly shading and crisp clean edges, thin dark-slate contour lines, cool white key light from the upper left, thin crystal-frost cyan (#6ED4FF) rim light from the back right, palette of ink-navy (#1C2330), slate (#2A3442), frosted silver (#C9D3DE) and frost white (#F4F7FB) with small crystal-frost accents, matte technical woven fabrics and frosted brushed-chrome metal with 1px glowing frost hairline trims, clean modern silhouettes, AAA editorial quality. small mint (#5EE0B5) accent details Waist-up half-body portrait, three-quarter view facing camera-left, chest-up, eye level, single person, plain plate background #D9DEE3. adult woman, ink-black hair with a ash-brown undertone (28262a), slate-grey eyes (5a6570), straight brows, rounded ears, a balanced face width, a defined jaw, flat cheeks, a straight nose, level eyes, large eyes, high-set brows, no birthmark, unscarred skin, skin tone b88563 Bloodline: hair with fine alternating salt-white bands at regular intervals, like tide rings left on a salt shore, long hair worn loose to show the bands; Saltmarsh tide-court styling: pale slate and salt-white layered coat; a salt-crystal chain of office.",
+			"seed": 973466593,
+			"sex": "f",
+			"signatures": [
+				"tide_ring"
+			],
+			"signatures_zh": [
+				"潮痕发"
+			],
+			"unit_id": "fx_royal_saltmarsh"
+		},
+		{
+			"age": 30,
+			"case": "royal_irongorge",
+			"clause": "Bloodline: each eyebrow cleanly split by a narrow natural gap, like a canyon seen from above, hair kept clear of the brows; Iron Gorge forge-lord styling: dark steel-grey coat with a cold-steel collar ring; a cold-steel collar ring of the forge seat.",
+			"line": "ig_gorge",
+			"negative": "medieval, gothic, parchment, aged paper, sepia, gold, gilded, golden filigree, brass, ornate baroque, warm golden lighting, sunset, candlelight, heavy black ink outlines, sketch, hatching, chibi, 3d render, photo, text, letters, watermark, logo, signature, frame, border, blurry, lowres, jpeg artifacts, extra fingers, extra limbs, deformed, pointed ears, elf ears, long pointed ears, blue birthmark, cyan birthmark, glowing blue facial marking, crystal forehead gem, golden eyes, gold irises, crown, tiara, halo",
+			"notes_zh": "铁峡领王胤：峡眉",
+			"out_path": "project/assets/art/portraits/genome/fx_royal_irongorge.png",
+			"positive": "CenturyKnights style lock v8.9: 2026 contemporary fantasy SRPG art, refined semi-realistic illustration with soft airbrushed painterly shading and crisp clean edges, thin dark-slate contour lines, cool white key light from the upper left, thin crystal-frost cyan (#6ED4FF) rim light from the back right, palette of ink-navy (#1C2330), slate (#2A3442), frosted silver (#C9D3DE) and frost white (#F4F7FB) with small crystal-frost accents, matte technical woven fabrics and frosted brushed-chrome metal with 1px glowing frost hairline trims, clean modern silhouettes, AAA editorial quality. small mint (#5EE0B5) accent details Waist-up half-body portrait, three-quarter view facing camera-left, chest-up, eye level, single person, plain plate background #D9DEE3. adult man, ink-black hair with a ash-brown undertone (28262a), dusk-violet eyes (6b4c7a), thick brows, rounded ears, a broad face, a square jaw, high cheekbones, a straight nose, level eyes, medium eyes, mid-set brows, no birthmark, unscarred skin, skin tone 9a684b Bloodline: each eyebrow cleanly split by a narrow natural gap, like a canyon seen from above, hair kept clear of the brows; Iron Gorge forge-lord styling: dark steel-grey coat with a cold-steel collar ring; a cold-steel collar ring of the forge seat.",
+			"seed": 2771391,
+			"sex": "m",
+			"signatures": [
+				"gorge_split"
+			],
+			"signatures_zh": [
+				"峡眉"
+			],
+			"unit_id": "fx_royal_irongorge"
+		},
+		{
+			"age": 30,
+			"case": "royal_starriver",
+			"clause": "Bloodline: seven small dark moles arranged in the shape of the Big Dipper across the left cheekbone and temple, left cheek turned toward the light; Starriver observatory styling: frosted navy high collar; a small crystal astrolabe pendant.",
+			"line": "sr_dipper",
+			"negative": "medieval, gothic, parchment, aged paper, sepia, gold, gilded, golden filigree, brass, ornate baroque, warm golden lighting, sunset, candlelight, heavy black ink outlines, sketch, hatching, chibi, 3d render, photo, text, letters, watermark, logo, signature, frame, border, blurry, lowres, jpeg artifacts, extra fingers, extra limbs, deformed, pointed ears, elf ears, long pointed ears, blue birthmark, cyan birthmark, glowing blue facial marking, crystal forehead gem, golden eyes, gold irises, crown, tiara, halo",
+			"notes_zh": "星津邦王胤：七星痣",
+			"out_path": "project/assets/art/portraits/genome/fx_royal_starriver.png",
+			"positive": "CenturyKnights style lock v8.9: 2026 contemporary fantasy SRPG art, refined semi-realistic illustration with soft airbrushed painterly shading and crisp clean edges, thin dark-slate contour lines, cool white key light from the upper left, thin crystal-frost cyan (#6ED4FF) rim light from the back right, palette of ink-navy (#1C2330), slate (#2A3442), frosted silver (#C9D3DE) and frost white (#F4F7FB) with small crystal-frost accents, matte technical woven fabrics and frosted brushed-chrome metal with 1px glowing frost hairline trims, clean modern silhouettes, AAA editorial quality. small mint (#5EE0B5) accent details Waist-up half-body portrait, three-quarter view facing camera-left, chest-up, eye level, single person, plain plate background #D9DEE3. adult woman, ink-black hair with a ash-brown undertone (28262a), river-blue eyes (3a6ea5), arched brows, rounded ears, a balanced face width, a defined jaw, moderate cheeks, a fine nose, down-tilted eyes, medium eyes, mid-set brows, no birthmark, unscarred skin, skin tone dbb59b Bloodline: seven small dark moles arranged in the shape of the Big Dipper across the left cheekbone and temple, left cheek turned toward the light; Starriver observatory styling: frosted navy high collar; a small crystal astrolabe pendant.",
+			"seed": 350381931,
+			"sex": "f",
+			"signatures": [
+				"qi_xing"
+			],
+			"signatures_zh": [
+				"七星痣"
+			],
+			"unit_id": "fx_royal_starriver"
+		},
+		{
+			"age": 30,
+			"case": "royal_southzephyr",
+			"clause": "Bloodline: soft mint-green luminous freckles across the nose bridge and upper cheeks, glowing faintly like fireflies in fog, soft low light so the freckles read; South Zephyr matriarch styling: layered rain-cape of beeswaxed cloth with carved hardwood beads; a carved hardwood mother-bead necklace.",
+			"line": "sz_firefly",
+			"negative": "medieval, gothic, parchment, aged paper, sepia, gold, gilded, golden filigree, brass, ornate baroque, warm golden lighting, sunset, candlelight, heavy black ink outlines, sketch, hatching, chibi, 3d render, photo, text, letters, watermark, logo, signature, frame, border, blurry, lowres, jpeg artifacts, extra fingers, extra limbs, deformed, pointed ears, elf ears, long pointed ears, blue birthmark, cyan birthmark, glowing blue facial marking, crystal forehead gem, golden eyes, gold irises, crown, tiara, halo",
+			"notes_zh": "南泽邦王胤：萤斑",
+			"out_path": "project/assets/art/portraits/genome/fx_royal_southzephyr.png",
+			"positive": "CenturyKnights style lock v8.9: 2026 contemporary fantasy SRPG art, refined semi-realistic illustration with soft airbrushed painterly shading and crisp clean edges, thin dark-slate contour lines, cool white key light from the upper left, thin crystal-frost cyan (#6ED4FF) rim light from the back right, palette of ink-navy (#1C2330), slate (#2A3442), frosted silver (#C9D3DE) and frost white (#F4F7FB) with small crystal-frost accents, matte technical woven fabrics and frosted brushed-chrome metal with 1px glowing frost hairline trims, clean modern silhouettes, AAA editorial quality. small mint (#5EE0B5) accent details Waist-up half-body portrait, three-quarter view facing camera-left, chest-up, eye level, single person, plain plate background #D9DEE3. adult woman, ink-black hair (1b1d24), pine-green eyes (3d6b4f), arched brows, rounded ears, a balanced face width, a soft jaw, flat cheeks, a straight nose, up-tilted eyes, medium eyes, mid-set brows, no birthmark, unscarred skin, skin tone 7a4c36 Bloodline: soft mint-green luminous freckles across the nose bridge and upper cheeks, glowing faintly like fireflies in fog, soft low light so the freckles read; South Zephyr matriarch styling: layered rain-cape of beeswaxed cloth with carved hardwood beads; a carved hardwood mother-bead necklace.",
+			"seed": 1893820798,
+			"sex": "f",
+			"signatures": [
+				"firefly"
+			],
+			"signatures_zh": [
+				"萤斑"
+			],
+			"unit_id": "fx_royal_southzephyr"
+		},
+		{
+			"age": 27,
+			"case": "noble_shuoying",
+			"clause": "Bloodline: dark irises with a thin pale-silver crescent along the upper rim of each pupil; Shuoying night-court styling: high indigo collar with a small black-glass crescent pin; a black-glass crescent collar pin of the Night Palace.",
+			"line": "sy_night",
+			"negative": "medieval, gothic, parchment, aged paper, sepia, gold, gilded, golden filigree, brass, ornate baroque, warm golden lighting, sunset, candlelight, heavy black ink outlines, sketch, hatching, chibi, 3d render, photo, text, letters, watermark, logo, signature, frame, border, blurry, lowres, jpeg artifacts, extra fingers, extra limbs, deformed, pointed ears, elf ears, long pointed ears, blue birthmark, cyan birthmark, glowing blue facial marking, crystal forehead gem, golden eyes, gold irises, crown, tiara, halo",
+			"notes_zh": "夜阙卿：弦朔瞳（隐征）",
+			"out_path": "project/assets/art/portraits/genome/fx_noble_sy_night.png",
+			"positive": "CenturyKnights style lock v8.9: 2026 contemporary fantasy SRPG art, refined semi-realistic illustration with soft airbrushed painterly shading and crisp clean edges, thin dark-slate contour lines, cool white key light from the upper left, thin crystal-frost cyan (#6ED4FF) rim light from the back right, palette of ink-navy (#1C2330), slate (#2A3442), frosted silver (#C9D3DE) and frost white (#F4F7FB) with small crystal-frost accents, matte technical woven fabrics and frosted brushed-chrome metal with 1px glowing frost hairline trims, clean modern silhouettes, AAA editorial quality. small mint (#5EE0B5) accent details Waist-up half-body portrait, three-quarter view facing camera-left, chest-up, eye level, single person, plain plate background #D9DEE3. adult woman, ink-black hair (1b1d24), dusk-violet eyes (6b4c7a), straight brows, rounded ears, a narrow face, a defined jaw, moderate cheeks, a strong nose, up-tilted eyes, medium eyes, mid-set brows, no birthmark, unscarred skin, skin tone ebd8ce Bloodline: dark irises with a thin pale-silver crescent along the upper rim of each pupil; Shuoying night-court styling: high indigo collar with a small black-glass crescent pin; a black-glass crescent collar pin of the Night Palace.",
+			"seed": 1699565260,
+			"sex": "f",
+			"signatures": [
+				"eclipse_crescent"
+			],
+			"signatures_zh": [
+				"弦朔瞳"
+			],
+			"unit_id": "fx_noble_sy_night"
+		},
+		{
+			"age": 33,
+			"case": "noble_starriver_east",
+			"clause": "Bloodline: three small dark moles in a slanted line under the left eye; Starriver East Rainbow styling: frosted navy coat with a thin pale arc embroidered across the chest; a small crystal astrolabe pendant.",
+			"line": "sr_east_arc",
+			"negative": "medieval, gothic, parchment, aged paper, sepia, gold, gilded, golden filigree, brass, ornate baroque, warm golden lighting, sunset, candlelight, heavy black ink outlines, sketch, hatching, chibi, 3d render, photo, text, letters, watermark, logo, signature, frame, border, blurry, lowres, jpeg artifacts, extra fingers, extra limbs, deformed, pointed ears, elf ears, long pointed ears, blue birthmark, cyan birthmark, glowing blue facial marking, crystal forehead gem, golden eyes, gold irises, crown, tiara, halo",
+			"notes_zh": "东虹：三台痣（隐征）",
+			"out_path": "project/assets/art/portraits/genome/fx_noble_sr_east.png",
+			"positive": "CenturyKnights style lock v8.9: 2026 contemporary fantasy SRPG art, refined semi-realistic illustration with soft airbrushed painterly shading and crisp clean edges, thin dark-slate contour lines, cool white key light from the upper left, thin crystal-frost cyan (#6ED4FF) rim light from the back right, palette of ink-navy (#1C2330), slate (#2A3442), frosted silver (#C9D3DE) and frost white (#F4F7FB) with small crystal-frost accents, matte technical woven fabrics and frosted brushed-chrome metal with 1px glowing frost hairline trims, clean modern silhouettes, AAA editorial quality. small mint (#5EE0B5) accent details Waist-up half-body portrait, three-quarter view facing camera-left, chest-up, eye level, single person, plain plate background #D9DEE3. adult man, ink-black hair with a ash-brown undertone (28262a), dusk-violet eyes (6b4c7a), arched brows, rounded ears, a balanced face width, a defined jaw, moderate cheeks, a straight nose, down-tilted eyes, medium eyes, low-set brows, no birthmark, unscarred skin, skin tone ddb89e Bloodline: three small dark moles in a slanted line under the left eye; Starriver East Rainbow styling: frosted navy coat with a thin pale arc embroidered across the chest; a small crystal astrolabe pendant.",
+			"seed": 350140210,
+			"sex": "m",
+			"signatures": [
+				"san_tai"
+			],
+			"signatures_zh": [
+				"三台痣"
+			],
+			"unit_id": "fx_noble_sr_east"
+		},
+		{
+			"age": 19,
+			"case": "heir_dual_crown",
+			"clause": "Bloodline: hair with fine alternating salt-white bands at regular intervals, like tide rings left on a salt shore, long hair worn loose to show the bands; each eyebrow cleanly split by a narrow natural gap, like a canyon seen from above, hair kept clear of the brows; Iron Gorge forge-lord styling: dark steel-grey coat with a cold-steel collar ring; heir of a father from the Iron Gorge royal line and a mother from the Saltmarsh royal line, with the tide-ringed hair from the mother's line, the gorge-split brows from the father's line, the father's eye colour, the father's brow shape, a clear family resemblance.",
+			"line": "ig_gorge",
+			"negative": "medieval, gothic, parchment, aged paper, sepia, gold, gilded, golden filigree, brass, ornate baroque, warm golden lighting, sunset, candlelight, heavy black ink outlines, sketch, hatching, chibi, 3d render, photo, text, letters, watermark, logo, signature, frame, border, blurry, lowres, jpeg artifacts, extra fingers, extra limbs, deformed, pointed ears, elf ears, long pointed ears, blue birthmark, cyan birthmark, glowing blue facial marking, crystal forehead gem, golden eyes, gold irises, crown, tiara, halo",
+			"notes_zh": "双冕：峡眉（父）＋潮痕发（母）",
+			"out_path": "project/assets/art/portraits/genome/fx_heir_dual.png",
+			"positive": "CenturyKnights style lock v8.9: 2026 contemporary fantasy SRPG art, refined semi-realistic illustration with soft airbrushed painterly shading and crisp clean edges, thin dark-slate contour lines, cool white key light from the upper left, thin crystal-frost cyan (#6ED4FF) rim light from the back right, palette of ink-navy (#1C2330), slate (#2A3442), frosted silver (#C9D3DE) and frost white (#F4F7FB) with small crystal-frost accents, matte technical woven fabrics and frosted brushed-chrome metal with 1px glowing frost hairline trims, clean modern silhouettes, AAA editorial quality. small mint (#5EE0B5) accent details Waist-up half-body portrait, three-quarter view facing camera-left, chest-up, eye level, single person, plain plate background #D9DEE3. adult woman, ink-black hair with a ash-brown undertone (28262a), dusk-violet eyes (6b4c7a), thick brows, rounded ears, a balanced face width, a square jaw, high cheekbones, a straight nose, level eyes, medium eyes, mid-set brows, no birthmark, unscarred skin, skin tone a97757 Bloodline: hair with fine alternating salt-white bands at regular intervals, like tide rings left on a salt shore, long hair worn loose to show the bands; each eyebrow cleanly split by a narrow natural gap, like a canyon seen from above, hair kept clear of the brows; Iron Gorge forge-lord styling: dark steel-grey coat with a cold-steel collar ring; heir of a father from the Iron Gorge royal line and a mother from the Saltmarsh royal line, with the tide-ringed hair from the mother's line, the gorge-split brows from the father's line, the father's eye colour, the father's brow shape, a clear family resemblance.",
+			"seed": 238798256,
+			"sex": "f",
+			"signatures": [
+				"tide_ring",
+				"gorge_split"
+			],
+			"signatures_zh": [
+				"潮痕发",
+				"峡眉"
+			],
+			"unit_id": "fx_heir_dual"
+		},
+		{
+			"age": 18,
+			"case": "heir_banner_latent",
+			"clause": "Bloodline: Qinghe delta styling: mist-grey technical silk with indigo dye-stained cuffs; heir of a father from the Ash Banner common line and a mother from the Qinghe common line, a clear family resemblance.",
+			"line": "qh_delta",
+			"negative": "medieval, gothic, parchment, aged paper, sepia, gold, gilded, golden filigree, brass, ornate baroque, warm golden lighting, sunset, candlelight, heavy black ink outlines, sketch, hatching, chibi, 3d render, photo, text, letters, watermark, logo, signature, frame, border, blurry, lowres, jpeg artifacts, extra fingers, extra limbs, deformed, pointed ears, elf ears, long pointed ears, blue birthmark, cyan birthmark, glowing blue facial marking, crystal forehead gem, golden eyes, gold irises, crown, tiara, halo",
+			"notes_zh": "灰旗之子：携潜图，肖像不显，仅父母特征",
+			"out_path": "project/assets/art/portraits/genome/fx_heir_banner.png",
+			"positive": "CenturyKnights style lock v8.9: 2026 contemporary fantasy SRPG art, refined semi-realistic illustration with soft airbrushed painterly shading and crisp clean edges, thin dark-slate contour lines, cool white key light from the upper left, thin crystal-frost cyan (#6ED4FF) rim light from the back right, palette of ink-navy (#1C2330), slate (#2A3442), frosted silver (#C9D3DE) and frost white (#F4F7FB) with small crystal-frost accents, matte technical woven fabrics and frosted brushed-chrome metal with 1px glowing frost hairline trims, clean modern silhouettes, AAA editorial quality. small mint (#5EE0B5) accent details Waist-up half-body portrait, three-quarter view facing camera-left, chest-up, eye level, single person, plain plate background #D9DEE3. adult man, ink-black hair (1b1d24), pine-green eyes, hint of river-blue eyes (3c6c60), arched brows, rounded ears, a balanced face width, a defined jaw, moderate cheeks, a straight nose, up-tilted eyes, medium eyes, low-set brows, no birthmark, unscarred skin, skin tone dab49c Bloodline: Qinghe delta styling: mist-grey technical silk with indigo dye-stained cuffs; heir of a father from the Ash Banner common line and a mother from the Qinghe common line, a clear family resemblance.",
+			"seed": 772720749,
+			"sex": "m",
+			"signatures": [],
+			"signatures_zh": [],
+			"unit_id": "fx_heir_banner"
+		},
+		{
+			"age": 18,
+			"case": "edge_dark_firefly",
+			"clause": "Bloodline: South Zephyr matriarch styling: layered rain-cape of beeswaxed cloth with carved hardwood beads; heir of a father from the South Zephyr royal line and a mother from the Lantern League common line, a clear family resemblance.",
+			"line": "sz_firefly",
+			"negative": "medieval, gothic, parchment, aged paper, sepia, gold, gilded, golden filigree, brass, ornate baroque, warm golden lighting, sunset, candlelight, heavy black ink outlines, sketch, hatching, chibi, 3d render, photo, text, letters, watermark, logo, signature, frame, border, blurry, lowres, jpeg artifacts, extra fingers, extra limbs, deformed, pointed ears, elf ears, long pointed ears, blue birthmark, cyan birthmark, glowing blue facial marking, crystal forehead gem, golden eyes, gold irises, crown, tiara, halo",
+			"notes_zh": "熄萤：萤母血 50%，脸上一片黑暗",
+			"out_path": "project/assets/art/portraits/genome/fx_heir_dark_firefly.png",
+			"positive": "CenturyKnights style lock v8.9: 2026 contemporary fantasy SRPG art, refined semi-realistic illustration with soft airbrushed painterly shading and crisp clean edges, thin dark-slate contour lines, cool white key light from the upper left, thin crystal-frost cyan (#6ED4FF) rim light from the back right, palette of ink-navy (#1C2330), slate (#2A3442), frosted silver (#C9D3DE) and frost white (#F4F7FB) with small crystal-frost accents, matte technical woven fabrics and frosted brushed-chrome metal with 1px glowing frost hairline trims, clean modern silhouettes, AAA editorial quality. small mint (#5EE0B5) accent details Waist-up half-body portrait, three-quarter view facing camera-left, chest-up, eye level, single person, plain plate background #D9DEE3. adult man, ink-black hair with a ash-brown undertone (28262a), pine-green eyes (3d6b4f), straight brows, rounded ears, a balanced face width, a soft jaw, moderate cheeks, a straight nose, level eyes, large eyes, low-set brows, no birthmark, unscarred skin, skin tone 915f43 Bloodline: South Zephyr matriarch styling: layered rain-cape of beeswaxed cloth with carved hardwood beads; heir of a father from the South Zephyr royal line and a mother from the Lantern League common line, a clear family resemblance.",
+			"seed": 1375459977,
+			"sex": "m",
+			"signatures": [],
+			"signatures_zh": [],
+			"unit_id": "fx_heir_dark_firefly"
+		},
+		{
+			"age": 26,
+			"case": "pretender_dyed_jade",
+			"clause": "Bloodline: a dyed green lock of hair with darker dye-stained roots; Qinghe register styling: layered jade-grey and mist-white silk with a high mandarin collar; a slim jade register tablet pendant.",
+			"line": "qh_jade",
+			"negative": "medieval, gothic, parchment, aged paper, sepia, gold, gilded, golden filigree, brass, ornate baroque, warm golden lighting, sunset, candlelight, heavy black ink outlines, sketch, hatching, chibi, 3d render, photo, text, letters, watermark, logo, signature, frame, border, blurry, lowres, jpeg artifacts, extra fingers, extra limbs, deformed, pointed ears, elf ears, long pointed ears, blue birthmark, cyan birthmark, glowing blue facial marking, crystal forehead gem, golden eyes, gold irises, crown, tiara, halo",
+			"notes_zh": "伪胤：染缕（发根发黑）",
+			"out_path": "project/assets/art/portraits/genome/fx_pretender_jade.png",
+			"positive": "CenturyKnights style lock v8.9: 2026 contemporary fantasy SRPG art, refined semi-realistic illustration with soft airbrushed painterly shading and crisp clean edges, thin dark-slate contour lines, cool white key light from the upper left, thin crystal-frost cyan (#6ED4FF) rim light from the back right, palette of ink-navy (#1C2330), slate (#2A3442), frosted silver (#C9D3DE) and frost white (#F4F7FB) with small crystal-frost accents, matte technical woven fabrics and frosted brushed-chrome metal with 1px glowing frost hairline trims, clean modern silhouettes, AAA editorial quality. small mint (#5EE0B5) accent details Waist-up half-body portrait, three-quarter view facing camera-left, chest-up, eye level, single person, plain plate background #D9DEE3. adult woman, ink-black hair (1b1d24), pine-green eyes, hint of river-blue eyes (3c6c60), arched brows, rounded ears, a broad face, a defined jaw, high cheekbones, a straight nose, up-tilted eyes, medium eyes, mid-set brows, no birthmark, unscarred skin, skin tone e6c9b5 Bloodline: a dyed green lock of hair with darker dye-stained roots; Qinghe register styling: layered jade-grey and mist-white silk with a high mandarin collar; a slim jade register tablet pendant.",
+			"seed": 620213265,
+			"sex": "f",
+			"signatures": [],
+			"signatures_zh": [],
+			"unit_id": "fx_pretender_jade"
+		},
+		{
+			"age": 35,
+			"case": "paper_patent_lantern",
+			"clause": "Bloodline: Lantern League harbor styling: waterproof slate harbor coat with small lamp-glass beads at the collar; a newly minted clear lamp-glass patent pin, almost too pristine.",
+			"line": "lt_tide",
+			"negative": "medieval, gothic, parchment, aged paper, sepia, gold, gilded, golden filigree, brass, ornate baroque, warm golden lighting, sunset, candlelight, heavy black ink outlines, sketch, hatching, chibi, 3d render, photo, text, letters, watermark, logo, signature, frame, border, blurry, lowres, jpeg artifacts, extra fingers, extra limbs, deformed, pointed ears, elf ears, long pointed ears, blue birthmark, cyan birthmark, glowing blue facial marking, crystal forehead gem, golden eyes, gold irises, crown, tiara, halo",
+			"notes_zh": "纸冕：灯籍男爵，无灯丝",
+			"out_path": "project/assets/art/portraits/genome/fx_paper_patent.png",
+			"positive": "CenturyKnights style lock v8.9: 2026 contemporary fantasy SRPG art, refined semi-realistic illustration with soft airbrushed painterly shading and crisp clean edges, thin dark-slate contour lines, cool white key light from the upper left, thin crystal-frost cyan (#6ED4FF) rim light from the back right, palette of ink-navy (#1C2330), slate (#2A3442), frosted silver (#C9D3DE) and frost white (#F4F7FB) with small crystal-frost accents, matte technical woven fabrics and frosted brushed-chrome metal with 1px glowing frost hairline trims, clean modern silhouettes, AAA editorial quality. small mint (#5EE0B5) accent details Waist-up half-body portrait, three-quarter view facing camera-left, chest-up, eye level, single person, plain plate background #D9DEE3. adult man, ink-black hair (1b1d24), pine-green eyes (3d6b4f), thick brows, rounded ears, a balanced face width, a defined jaw, moderate cheeks, a fine nose, down-tilted eyes, large eyes, low-set brows, no birthmark, unscarred skin, skin tone a8724f Bloodline: Lantern League harbor styling: waterproof slate harbor coat with small lamp-glass beads at the collar; a newly minted clear lamp-glass patent pin, almost too pristine.",
+			"seed": 339206614,
+			"sex": "m",
+			"signatures": [],
+			"signatures_zh": [],
+			"unit_id": "fx_paper_patent"
+		},
+		{
+			"age": 24,
+			"case": "exile_firefly_son",
+			"clause": "Bloodline: soft mint-green luminous freckles across the nose bridge and upper cheeks, glowing faintly like fireflies in fog, soft low light so the freckles read; South Zephyr matriarch styling: layered rain-cape of beeswaxed cloth with carved hardwood beads; travel-worn clothes without any house insignia.",
+			"line": "sz_firefly",
+			"negative": "medieval, gothic, parchment, aged paper, sepia, gold, gilded, golden filigree, brass, ornate baroque, warm golden lighting, sunset, candlelight, heavy black ink outlines, sketch, hatching, chibi, 3d render, photo, text, letters, watermark, logo, signature, frame, border, blurry, lowres, jpeg artifacts, extra fingers, extra limbs, deformed, pointed ears, elf ears, long pointed ears, blue birthmark, cyan birthmark, glowing blue facial marking, crystal forehead gem, golden eyes, gold irises, crown, tiara, halo",
+			"notes_zh": "流裔·萤子：有萤斑而无徽记",
+			"out_path": "project/assets/art/portraits/genome/fx_exile_firefly_son.png",
+			"positive": "CenturyKnights style lock v8.9: 2026 contemporary fantasy SRPG art, refined semi-realistic illustration with soft airbrushed painterly shading and crisp clean edges, thin dark-slate contour lines, cool white key light from the upper left, thin crystal-frost cyan (#6ED4FF) rim light from the back right, palette of ink-navy (#1C2330), slate (#2A3442), frosted silver (#C9D3DE) and frost white (#F4F7FB) with small crystal-frost accents, matte technical woven fabrics and frosted brushed-chrome metal with 1px glowing frost hairline trims, clean modern silhouettes, AAA editorial quality. small mint (#5EE0B5) accent details Waist-up half-body portrait, three-quarter view facing camera-left, chest-up, eye level, single person, plain plate background #D9DEE3. adult man, ink-black hair with a ash-brown undertone (28262a), slate-grey eyes, hint of pine-green eyes (546669), straight brows, rounded ears, a balanced face width, a defined jaw, high cheekbones, a strong nose, level eyes, medium eyes, mid-set brows, no birthmark, unscarred skin, skin tone 915f43 Bloodline: soft mint-green luminous freckles across the nose bridge and upper cheeks, glowing faintly like fireflies in fog, soft low light so the freckles read; South Zephyr matriarch styling: layered rain-cape of beeswaxed cloth with carved hardwood beads; travel-worn clothes without any house insignia.",
+			"seed": 1380017605,
+			"sex": "m",
+			"signatures": [
+				"firefly"
+			],
+			"signatures_zh": [
+				"萤斑"
+			],
+			"unit_id": "fx_exile_firefly_son"
+		},
+		{
+			"age": 52,
+			"case": "legacy_v87_frost_royal",
+			"clause": "Bloodline: rime-white eyelashes and white outer brow tips regardless of hair colour, as if dusted with frost, eyes framed close; Frostcrown court styling: frost-white and pale slate layered robe-coat; an ice-glass bell clasp at the throat.",
+			"line": "frost_crown",
+			"negative": "medieval, gothic, parchment, aged paper, sepia, gold, gilded, golden filigree, brass, ornate baroque, warm golden lighting, sunset, candlelight, heavy black ink outlines, sketch, hatching, chibi, 3d render, photo, text, letters, watermark, logo, signature, frame, border, blurry, lowres, jpeg artifacts, extra fingers, extra limbs, deformed, pointed ears, elf ears, long pointed ears, blue birthmark, cyan birthmark, glowing blue facial marking, crystal forehead gem, golden eyes, gold irises, crown, tiara, halo",
+			"notes_zh": "v8.7 存档：crown_rime×2 → 霜睫；冕耳不再画成尖耳",
+			"out_path": "project/assets/art/portraits/genome/fx_legacy_frost.png",
+			"positive": "CenturyKnights style lock v8.9: 2026 contemporary fantasy SRPG art, refined semi-realistic illustration with soft airbrushed painterly shading and crisp clean edges, thin dark-slate contour lines, cool white key light from the upper left, thin crystal-frost cyan (#6ED4FF) rim light from the back right, palette of ink-navy (#1C2330), slate (#2A3442), frosted silver (#C9D3DE) and frost white (#F4F7FB) with small crystal-frost accents, matte technical woven fabrics and frosted brushed-chrome metal with 1px glowing frost hairline trims, clean modern silhouettes, AAA editorial quality. small mint (#5EE0B5) accent details Waist-up half-body portrait, three-quarter view facing camera-left, chest-up, eye level, single person, plain plate background #D9DEE3. elder woman, ink-black hair, greying toward frost silver (767c84), river-blue eyes (3a6ea5), soft brows, neat close-set ears, a narrow face, a defined jaw, moderate cheeks, a straight nose, level eyes, medium eyes, mid-set brows, no birthmark, unscarred skin, skin tone f1dcd0 Bloodline: rime-white eyelashes and white outer brow tips regardless of hair colour, as if dusted with frost, eyes framed close; Frostcrown court styling: frost-white and pale slate layered robe-coat; an ice-glass bell clasp at the throat.",
+			"seed": 1452808872,
+			"sex": "f",
+			"signatures": [
+				"rime_lash"
+			],
+			"signatures_zh": [
+				"霜睫"
+			],
+			"unit_id": "fx_legacy_frost"
+		}
+	],
+	"version": "v8.9-bloodline-portraits-1"
+}

@@ -229,11 +229,14 @@ func _step_tavern() -> void:
 	print("--- STEP: tavern ---")
 	var lst: Array = World.city_recruits("qh_capital")
 	_ok(lst.size() == 3, "玉澜 tavern 3 recruits")
-	var rw := 0
+	var own := 0
+	var wanderers := 0
 	for c in lst:
-		if c.primary_bloodline() in ["river_ward", "common_ash"]:
-			rw += 1
-	_ok(rw == lst.size(), "regional bloodlines (清河 → 河卫/民胤)")
+		if CKBloodline.nation_of_line(c.primary_bloodline()) == "qinghe":
+			own += 1
+		elif str(c.blood_meta.get("exile", "")) != "":
+			wanderers += 1
+	_ok(own + wanderers == lst.size() and own >= 1, "regional bloodlines (清河 → 汀洲/河卫/玉牒，或流裔)")
 
 func _step_depth() -> void:
 	print("--- STEP: board depth + reputation unlocks ---")
