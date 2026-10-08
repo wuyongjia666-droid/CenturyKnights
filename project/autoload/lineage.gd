@@ -1,6 +1,12 @@
 extends Node
 ## 联姻 · 血胤 · 遗传 · 子嗣期望（X1/X2）
 
+const _Ambitions := preload("res://scripts/characters/ambitions.gd")
+
+
+func _ready() -> void:
+	Calendar.register("post", Callable(_Ambitions, "on_month"), 80)
+
 const REP_RANK_NEED := {
 	"knight": "known",
 	"baron": "friendly",
@@ -440,5 +446,6 @@ func transfer_banner(reason: String) -> Dictionary:
 	var verb := str(verbs.get(reason, "交旗"))
 	var msg := "%s %s %s。" % [leader.name, verb, heir.name]
 	GameState.add_lineage_event(msg)
+	_Ambitions.on_banner(heir)
 	GameState.mark_dirty()
 	return {"ok": true, "msg": msg, "heir_id": heir.id, "heir": heir.name, "reason": reason}

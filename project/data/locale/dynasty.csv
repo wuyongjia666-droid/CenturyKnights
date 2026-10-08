@@ -42,3 +42,55 @@ archive_tactic_none,战术禀性：没有可预期的条目,No tactical trait is
 archive_tactic_list,战术禀性 %s,Tactics %s
 archive_tactic_unshown,战术禀性：尚未显出,No tactical trait is shown yet
 marriage_compact_who,%s · %d岁,%s · %d,
+amb_offer_body,这一代接旗，从三条志向里选一条。当前团长：%s,Choose one ambition for this generation. Leader: %s
+amb_chosen,志向已定：%s,Ambition set: %s
+amb_honor,先祖碑称号已记下。永久旁注 %d。,Stele title kept. Lasting note %d.
+amb_done_log,志向达成：%s,Ambition done: %s
+amb_purify_ash_name,灰谱回纯,Ash chart restored
+amb_purify_ash_blurb,在世族人的灰烬王胤达到五成五,A living member carries the ash royal line at fifty-five percent
+amb_purify_ash_title,纯谱,Pure chart
+amb_lamp_seat_name,灯籍落槌,Lamp seat
+amb_lamp_seat_blurb,有人取得灯籍席位,Someone holds a lamp-registry seat
+amb_lamp_seat_title,灯籍,Lamp patent
+amb_three_marriages_name,三国姻谱,Three realms
+amb_three_marriages_blurb,配偶来自三个不同的国,Spouses come from three nations
+amb_three_marriages_title,三国姻,Three marriages
+amb_academy_three_name,书院三阶,Academy three
+amb_academy_three_blurb,书院记到第三阶,The academy reaches the third tier
+amb_academy_three_title,书院师,Academy master
+amb_three_masters_name,三阶旗手,Three masters
+amb_three_masters_blurb,三名花名册成员走到二阶职业且等级不低于三,Three roster members reach a second-tier job at level three
+amb_three_masters_title,三阶旗,Three banners
+amb_heir_born_name,初啼入旁注,First cry
+amb_heir_born_blurb,团长名下有一名在世子嗣,The leader has a living child
+amb_heir_born_title,初啼,Firstborn
+amb_rank_baron_name,男爵印,Baron seal
+amb_rank_baron_blurb,团长爵位至少到男爵,The leader's rank reaches baron
+amb_rank_baron_title,男爵,Baron
+amb_decade_name,十年旗,Ten-year banner
+amb_decade_blurb,旗历走到第十年,The banner calendar reaches year ten
+amb_decade_title,十年,Decade
+amb_ash_respect_name,灰烬敬席,Ash respect
+amb_ash_respect_blurb,灰烬邦声望到尊敬,Ashland regard reaches respect
+amb_ash_respect_title,敬席,Respect
+amb_two_paths_name,文武两路,Two paths
+amb_two_paths_blurb,族中同时有两条不同的早教路,Two different early paths are open in the house
+amb_two_paths_title,两路,Two paths
+amb_roster_four_name,四旗同帐,Four banners
+amb_roster_four_blurb,花名册至少四人,At least four names are on the roster
+amb_roster_four_title,四旗,Four
+amb_granary_name,满仓,Full granary
+amb_granary_blurb,粮至少八十,The granary holds at least eighty
+amb_granary_title,满仓,Granary
+amb_shrine_two_name,祠堂再葺,Shrine repaired
+amb_shrine_two_blurb,祠堂升到二阶,The shrine reaches the second tier
+amb_shrine_two_title,再葺,Repaired
+amb_ford_two_name,苇渡加深,Ford deepened
+amb_ford_two_blurb,苇原渡升到二阶,Reed Ford reaches the second tier
+amb_ford_two_title,深渡,Deep ford
+amb_marked_heir_name,承旗印记,Heir mark
+amb_marked_heir_blurb,有人带上承旗印记,Someone carries the heir mark
+amb_marked_heir_title,承印,Marked
+amb_three_friends_name,三邦友善,Three friends
+amb_three_friends_blurb,三个邦的声望至少到友善,Three realms are at least friendly
+amb_three_friends_title,三邦,Three realms

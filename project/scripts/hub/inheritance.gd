@@ -1,6 +1,8 @@
 extends Control
 ## 嗣位冲突：互动抉择场景（偏武/偏文/偏商继承人旁注 vs 朔影家）
 
+const _Amb := preload("res://scripts/characters/ambitions.gd")
+
 var _body: RichTextLabel
 var _actions: VBoxContainer
 var _msg: Label
@@ -74,6 +76,37 @@ func _pick_heir() -> void:
 	if _heir == null:
 		_heir = GameState.get_leader()
 
+func _show_offer(leader: CKCharacter) -> void:
+	var lines: PackedStringArray = PackedStringArray()
+	lines.append(Locale.t("amb_offer_body", [leader.name]))
+	for id in _Amb.open_offer(leader):
+		var sid := str(id)
+		lines.append(Locale.t("amb_" + sid + "_name") + " — " + Locale.t("amb_" + sid + "_blurb"))
+	if int(_Amb.honor_bonus().get("stele", 0)) > 0:
+		lines.append(Locale.t("amb_honor", [int(_Amb.honor_bonus().get("stele", 0))]))
+	_body.text = "\n".join(lines)
+	var gap := Control.new()
+	gap.custom_minimum_size = Vector2(0, 150)
+	gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_actions.add_child(gap)
+	for id in _Amb.open_offer(leader):
+		_add_offer(str(id))
+
+
+func _add_offer(id: String) -> void:
+	var b = UIKit.make_accent_button(Locale.t("amb_" + id + "_name"), 520)
+	b.name = "Ambition_" + id
+	b.pressed.connect(func(): _pick_ambition(id))
+	_actions.add_child(b)
+
+
+func _pick_ambition(id: String) -> void:
+	if not _Amb.choose(id):
+		return
+	_msg.text = Locale.t("amb_chosen", [Locale.t("amb_" + id + "_name")])
+	_show()
+
+
 func _clear_actions() -> void:
 	for c in _actions.get_children():
 		c.queue_free()
@@ -85,6 +118,10 @@ func _add(text: String, cb: Callable) -> void:
 
 func _show() -> void:
 	_clear_actions()
+	var leader := GameState.get_leader()
+	if leader != null and _Amb.needs_choice():
+		_show_offer(leader)
+		return
 	var hname = _heir.name if _heir else "（无嗣）"
 	var path = str(GameState.lineage_path.get(_heir.id, "")) if _heir else ""
 	var pn = {"martial": "偏武", "scholar": "偏文", "merchant": "偏商"}.get(path, "未择路")

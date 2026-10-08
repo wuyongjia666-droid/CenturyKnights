@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "note": "One dynasty ambition per generation. Completion records a stele title and a small morale note. It does not spend silver, food, or the campaign RNG.",
+  "ambitions": [
+    {"id": "purify_ash", "metric": "blood", "line": "ash_chart", "min": 0.55},
+    {"id": "lamp_seat", "metric": "lamp"},
+    {"id": "three_marriages", "metric": "spouse_nations", "min": 3},
+    {"id": "academy_three", "metric": "academy", "min": 3},
+    {"id": "three_masters", "metric": "masters", "min": 3, "job_tier": 2, "level": 3},
+    {"id": "heir_born", "metric": "children", "min": 1},
+    {"id": "rank_baron", "metric": "rank", "min": 1},
+    {"id": "decade", "metric": "year", "min": 10},
+    {"id": "ash_respect", "metric": "rep", "realm": "ashland", "tier": "respected"},
+    {"id": "two_paths", "metric": "paths", "min": 2},
+    {"id": "roster_four", "metric": "roster", "min": 4},
+    {"id": "granary", "metric": "food", "min": 80},
+    {"id": "shrine_two", "metric": "building", "building": "shrine", "min": 2},
+    {"id": "ford_two", "metric": "holding", "holding": "reed_ford", "min": 2},
+    {"id": "marked_heir", "metric": "trait", "trait": "heir_mark"},
+    {"id": "three_friends", "metric": "friendly", "min": 3}
+  ]
+}
