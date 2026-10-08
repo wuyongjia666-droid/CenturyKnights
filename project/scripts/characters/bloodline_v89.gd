@@ -7,6 +7,8 @@ extends RefCounted
 ## Data: res://data/bloodlines_v89.json. Design: docs/design/bloodlines-v89.md.
 
 const DATA_PATH := "res://data/bloodlines_v89.json"
+## v8.7 file. Read only by migrate_* / legacy_row. Not a runtime catalog.
+const LEGACY_PATH := "res://data/bloodlines.json"
 ## Draw order for the original ten crown loci. Do not insert or reorder: seeded recruits and the
 ## v8.9 law tests depend on these draws happening first on the forked RNG. New trait loci append via trait_order.
 const LOCUS_ORDER := ["sig_ashbanner", "sig_shuoying", "jade", "sig_lantern", "sig_frostcrown", "sig_emberold", "sig_saltmarsh", "sig_irongorge", "sig_starriver", "glow"]
@@ -15,6 +17,7 @@ const RANKS := ["knight", "baron", "count", "duke"]
 
 static var _data: Dictionary = {}
 static var _lines: Dictionary = {}
+static var _legacy: Dictionary = {}
 ## Extra characters for parent lookups outside GameState (fixtures, debug scenes).
 static var people: Dictionary = {}
 
@@ -59,6 +62,99 @@ static func tier_of(id: String) -> String:
 
 static func genome_table(id: String) -> Dictionary:
 	return line(id).get("genome", {})
+
+## v8.9 table when the line exists; CKGenome.BLOOD only if the table is missing.
+static func genome_or_fallback(id: String) -> Dictionary:
+	var t := genome_table(id)
+	if not t.is_empty():
+		return t
+	if CKGenome.BLOOD.has(id):
+		return CKGenome.BLOOD[id]
+	return CKGenome.BLOOD["common_ash"]
+
+static func _legacy_doc() -> Dictionary:
+	if not _legacy.is_empty():
+		return _legacy
+	var f := FileAccess.open(LEGACY_PATH, FileAccess.READ)
+	if f != null:
+		var parsed = JSON.parse_string(f.get_as_text())
+		if typeof(parsed) == TYPE_DICTIONARY:
+			_legacy = parsed
+	return _legacy
+
+static func legacy_id_map() -> Dictionary:
+	var doc := _legacy_doc()
+	var mp: Dictionary = doc.get("map", {})
+	if not mp.is_empty():
+		return mp
+	var out := {}
+	for b in doc.get("bloodlines", []):
+		var id := str(b.get("id", ""))
+		if id != "":
+			out[id] = id
+	return out
+
+static func legacy_row(id: String) -> Dictionary:
+	for b in _legacy_doc().get("bloodlines", []):
+		if str(b.get("id", "")) == id:
+			return b
+	return {}
+
+static func mix_equal(a: Dictionary, b: Dictionary) -> bool:
+	if a.size() != b.size():
+		return false
+	for k in a.keys():
+		if not b.has(k) or not is_equal_approx(float(a[k]), float(b[k])):
+			return false
+	return true
+
+## Rewrite retired v8.7 ids onto v8.9 line ids. Known v8.9 ids pass through unchanged.
+static func migrate_blood_mix(mix: Dictionary) -> Dictionary:
+	var mp := legacy_id_map()
+	var out := {}
+	for k in mix.keys():
+		var id := str(k)
+		var dest := id
+		if not has_line(id):
+			if mp.has(id) and has_line(str(mp[id])):
+				dest = str(mp[id])
+			else:
+				dest = "common_ash"
+		out[dest] = float(out.get(dest, 0.0)) + float(mix[k])
+	return out
+
+static func migrate_character_row(row: Dictionary) -> Dictionary:
+	var out := row.duplicate(true)
+	if typeof(out.get("blood_mix")) != TYPE_DICTIONARY:
+		return out
+	var before: Dictionary = out["blood_mix"]
+	var after := migrate_blood_mix(before)
+	if mix_equal(before, after):
+		return out
+	out["blood_mix"] = after
+	var meta: Dictionary = out.get("blood_meta", {}) if typeof(out.get("blood_meta")) == TYPE_DICTIONARY else {}
+	meta["legacy_blood"] = before.duplicate()
+	out["blood_meta"] = meta
+	return out
+
+static func migrate_save(data: Dictionary) -> Dictionary:
+	var out := data.duplicate(true)
+	if typeof(out.get("characters")) == TYPE_DICTIONARY:
+		var chars: Dictionary = out["characters"]
+		for id in chars.keys():
+			if typeof(chars[id]) == TYPE_DICTIONARY:
+				chars[id] = migrate_character_row(chars[id])
+		out["characters"] = chars
+	for bucket in ["tavern", "marriage"]:
+		if typeof(out.get(bucket)) != TYPE_ARRAY:
+			continue
+		var arr: Array = out[bucket]
+		for i in arr.size():
+			if typeof(arr[i]) == TYPE_DICTIONARY:
+				arr[i] = migrate_character_row(arr[i])
+		out[bucket] = arr
+	out["blood_migrated_to"] = "v89"
+	return out
 
 static func locus_def(locus: String) -> Dictionary:
 	return data().get("loci", {}).get(locus, {})
