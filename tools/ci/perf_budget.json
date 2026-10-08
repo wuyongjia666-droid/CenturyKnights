@@ -1,0 +1,12 @@
+{
+  "boot_ms": 800,
+  "memory_static_bytes": 120000000,
+  "scenes_ms": {
+    "atlas_view": 700,
+    "battle": 1200,
+    "castle_hub": 500,
+    "main_menu": 400
+  },
+  "slack": 1.2,
+  "texture_mem_bytes": 500000000
+}
