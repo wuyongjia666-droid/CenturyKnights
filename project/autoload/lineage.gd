@@ -92,6 +92,7 @@ func heir_expectation(a: CKCharacter, b: CKCharacter) -> Dictionary:
 	var look_probs = _appearance_probs(a, b)
 	var father: CKCharacter = b if a.gender == "f" and b.gender == "m" else a
 	var mother: CKCharacter = a if father == b else b
+	var combat: Dictionary = CKFamilyState.combat_expectation(a, b)
 	return {
 		"blood_mix": mix,
 		"apt_min": apt["min"],
@@ -101,6 +102,10 @@ func heir_expectation(a: CKCharacter, b: CKCharacter) -> Dictionary:
 		"rank_hint": _child_rank(a, b),
 		"sig_probs": CKBloodline.forecast(father, mother),
 		"sig_zh": CKBloodline.forecast_zh(father, mother),
+		"combat": combat,
+		"apt_zh": str(combat.get("apt_zh", "")),
+		"tactics": combat.get("tactics", []),
+		"royal_tiers": combat.get("royal_tiers", []),
 	}
 
 func birth_child(mother: CKCharacter) -> CKCharacter:
