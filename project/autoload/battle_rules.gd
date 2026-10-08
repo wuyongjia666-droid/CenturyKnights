@@ -128,6 +128,12 @@ func calc_hit(attacker: CKCharacter, defender: CKCharacter, terrain_id: String, 
 	var rm = extras.get("role", role_mods(attacker, defender))
 	hit += int(rm.get("hit_mod", 0))
 	hit += int(extras.get("hit_mod", 0))
+	if bool(extras.get("night", false)):
+		hit += tac(attacker, "night_hit")
+	if bool(extras.get("opening", false)):
+		hit += tac(attacker, "first_hit")
+	if terrain_id == "forest":
+		avo += tac(defender, "forest_avo")
 	return clampi(hit - avo, HIT_MIN, HIT_MAX)
 
 func calc_damage_range(attacker: CKCharacter, defender: CKCharacter, terrain_id: String = "plain", extras: Dictionary = {}) -> Vector2i:
@@ -135,11 +141,15 @@ func calc_damage_range(attacker: CKCharacter, defender: CKCharacter, terrain_id:
 	var tdef = int(int(terrain_info(terrain_id).get("def_bonus", 0)) * tmul) + int(extras.get("flat_def", 0))
 	var rm = extras.get("role", role_mods(attacker, defender))
 	var def_eff = defender.derived_def() + tdef + int(rm.get("def_mod", 0))
+	if terrain_id == "fort":
+		def_eff += tac(defender, "fort_def")
 	var raw = maxi(1, attacker.derived_atk() - int(def_eff / 2.0))
 	raw += int(rm.get("dmg_mod", 0))
 	if extras.get("flank", false):
 		raw += FLANK_DMG
 	raw += int(extras.get("dmg_mod", 0))
+	if bool(extras.get("counter", false)):
+		raw += tac(attacker, "counter")
 	return Vector2i(maxi(1, raw - 1), maxi(1, raw + 1))
 
 func roll_attack(attacker: CKCharacter, defender: CKCharacter, terrain_id: String, rng: RandomNumberGenerator, extras: Dictionary = {}) -> Dictionary:
@@ -188,6 +198,16 @@ func preview(attacker: CKCharacter, defender: CKCharacter, terrain_id: String, e
 		tags.append("锁垒")
 	if can_follow_up(attacker, defender):
 		tags.append("连击")
+	if bool(extras.get("night", false)) and tac(attacker, "night_hit") > 0:
+		tags.append(tr("夜战"))
+	if bool(extras.get("opening", false)) and tac(attacker, "first_hit") > 0:
+		tags.append(tr("先手"))
+	if terrain_id == "forest" and tac(defender, "forest_avo") > 0:
+		tags.append(tr("密林"))
+	if terrain_id == "fort" and tac(defender, "fort_def") > 0:
+		tags.append(tr("垒骨"))
+	if bool(extras.get("counter", false)) and tac(attacker, "counter") > 0:
+		tags.append(tr("反步"))
 	return {
 		"hit": calc_hit(attacker, defender, terrain_id, extras),
 		"dmg": calc_damage_range(attacker, defender, terrain_id, extras),
@@ -212,6 +232,36 @@ func expected_damage(attacker: CKCharacter, defender: CKCharacter, terrain_id: S
 func _is_melee(c: CKCharacter) -> bool:
 	var job = GameState.get_job(c.job_id)
 	return str(job.get("atk_type", "melee")) == "melee"
+
+## Shown blood tactics. An empty genome stays at 0 so formula fixtures do not roll a founder.
+func tac(c: CKCharacter, key: String) -> int:
+	if c == null or c.genome.is_empty():
+		return 0
+	return int(round(c.tactical_amount(key)))
+
+func attack_reach(c: CKCharacter, terrain_id: String) -> int:
+	var at := str(GameState.get_job(c.job_id).get("atk_type", "melee"))
+	var reach := 1 if at == "melee" else 2
+	if terrain_id == "hill":
+		reach += tac(c, "range_high")
+	return reach
+
+func zoc_charges(c: CKCharacter) -> int:
+	return tac(c, "zoc_ignore")
+
+func push_tiles(c: CKCharacter, skill_push: int = 0) -> int:
+	return maxi(0, skill_push) + tac(c, "push")
+
+func heal_pulse(c: CKCharacter) -> int:
+	return tac(c, "heal_pulse")
+
+func royal_damage(c: CKCharacter, nation: String, dmg: int) -> int:
+	if c == null or c.genome.is_empty() or nation == "":
+		return dmg
+	var scale := c.royal_skill_scale(nation)
+	if scale <= 0.0:
+		return dmg
+	return maxi(1, int(round(float(dmg) * scale)))
 
 ## 是否与任一控制源相邻（控制地带 ZoC）
 func in_zoc(cell: Vector2i, zoc_sources: Array) -> bool:

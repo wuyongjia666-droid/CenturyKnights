@@ -36,6 +36,9 @@ func _run() -> String:
 	var cerr := _check_copy()
 	if cerr != "":
 		return cerr
+	var terr := _check_tactics()
+	if terr != "":
+		return terr
 	print("formula matrix OK cases=%d" % cases.size())
 	return ""
 
@@ -214,4 +217,83 @@ func _check_copy() -> String:
 		return "engaged helper"
 	if BattleRules.leave_cost_for(false, false) != BattleRules.LEAVE_COST_DEFAULT:
 		return "default helper"
+	return ""
+
+
+func _shown(locus: String, allele: String, copies: int) -> CKCharacter:
+	var c := _unit("light_inf", 1, [])
+	var pair := [allele, allele if copies >= 2 else "none"]
+	c.genome = {"sig": {locus: pair, "pen": {}}, "loci": {"mark": ["none", "none"]}}
+	c.age = 30
+	return c
+
+
+func _check_tactics() -> String:
+	var keys := {
+		"range_high": _shown("tr_ash_wire", "ash_wire", 1),
+		"counter": _shown("tr_fc_storm", "fc_storm", 2),
+		"night_hit": _shown("tr_sy_geom", "sy_geom", 2),
+		"first_hit": _shown("tr_sy_sclera", "sy_sclera", 1),
+		"forest_avo": _shown("tr_qh_smooth", "qh_smooth", 1),
+		"zoc_ignore": _shown("tr_lt_asym", "lt_asym", 2),
+		"fort_def": _shown("tr_fc_temple", "fc_temple", 1),
+		"push": _shown("tr_eo_sweep", "eo_sweep", 1),
+		"heal_pulse": _shown("tr_sr_fleck", "sr_fleck", 2),
+	}
+	var want := {
+		"range_high": 1, "counter": 3, "night_hit": 8, "first_hit": 5,
+		"forest_avo": 6, "zoc_ignore": 1, "fort_def": 2, "push": 1, "heal_pulse": 2,
+	}
+	for key in want.keys():
+		var got := int(keys[key].tactical_amount(key))
+		if got != int(want[key]):
+			return "%s amount %s" % [key, got]
+	var plain := _unit("light_inf", 1, [])
+	var hill: CKCharacter = keys["range_high"]
+	if BattleRules.attack_reach(plain, "hill") != 1 or BattleRules.attack_reach(hill, "hill") != 2:
+		return "range_high reach"
+	if BattleRules.attack_reach(hill, "plain") != 1:
+		return "range_high off hill"
+	var night_base := BattleRules.calc_hit(plain, plain, "plain", {})
+	var night_hit := BattleRules.calc_hit(keys["night_hit"], plain, "plain", {"night": true})
+	if night_hit != night_base + 8:
+		return "night_hit %s vs %s" % [night_hit, night_base]
+	var open_hit := BattleRules.calc_hit(keys["first_hit"], plain, "plain", {"opening": true})
+	if open_hit != night_base + 5:
+		return "first_hit %s" % open_hit
+	var forest_base := BattleRules.calc_hit(plain, plain, "forest", {})
+	var forest_hit := BattleRules.calc_hit(plain, keys["forest_avo"], "forest", {})
+	if forest_hit != forest_base - 6:
+		return "forest_avo %s vs %s" % [forest_hit, forest_base]
+	var fort_base: Vector2i = BattleRules.calc_damage_range(plain, plain, "fort", {})
+	var fort_dmg: Vector2i = BattleRules.calc_damage_range(plain, keys["fort_def"], "fort", {})
+	if fort_dmg.x >= fort_base.x and fort_dmg.y >= fort_base.y:
+		return "fort_def %s vs %s" % [fort_dmg, fort_base]
+	var counter_base: Vector2i = BattleRules.calc_damage_range(plain, plain, "plain", {})
+	var counter_dmg: Vector2i = BattleRules.calc_damage_range(keys["counter"], plain, "plain", {"counter": true})
+	if counter_dmg.x != counter_base.x + 3 or counter_dmg.y != counter_base.y + 3:
+		return "counter %s vs %s" % [counter_dmg, counter_base]
+	if BattleRules.zoc_charges(keys["zoc_ignore"]) != 1 or BattleRules.push_tiles(keys["push"], 0) != 1:
+		return "zoc or push"
+	if BattleRules.heal_pulse(keys["heal_pulse"]) != 2:
+		return "heal_pulse"
+	var crowned := _unit("light_inf", 1, [])
+	crowned.age = 30
+	crowned.rank = "count"
+	crowned.blood_mix = {"ash_chart": 0.2}
+	crowned.genome = {"sig": {"sig_ashbanner": ["river_chart", "none"], "pen": {}}, "loci": {"mark": ["none", "none"]}}
+	if not is_equal_approx(crowned.royal_skill_scale("ashbanner"), 0.6):
+		return "echo scale %s" % crowned.royal_skill_scale("ashbanner")
+	if BattleRules.royal_damage(crowned, "ashbanner", 10) != 6:
+		return "echo damage"
+	var full := _unit("light_inf", 1, [])
+	full.age = 30
+	full.blood_mix = {"sy_eclipse": 1.0}
+	full.genome = {"sig": {"sig_shuoying": ["eclipse", "eclipse"], "pen": {}}, "loci": {"mark": ["none", "none"]}}
+	if not is_equal_approx(full.royal_skill_scale("shuoying"), 1.35):
+		return "full scale %s" % full.royal_skill_scale("shuoying")
+	if BattleRules.royal_damage(full, "shuoying", 20) != 27:
+		return "full damage"
+	if BattleRules.royal_damage(plain, "shuoying", 20) != 20:
+		return "empty genome scaled"
 	return ""
