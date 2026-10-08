@@ -24,6 +24,11 @@ var map_id: String = "ch0_pass"
 var map_name: String = "隘口之夜"
 
 var terrain: Array = []
+var height_grid: Array = []
+var weather: String = "clear"
+var scout_map: bool = false
+var interactives: Array = []
+var _fx_marks: Array = []
 var units: Array = []
 var turn_team: String = "player"
 var selected: int = -1
@@ -742,9 +747,125 @@ func _init_map() -> void:
 	else:
 		for y in grid.size():
 			terrain.append(grid[y].duplicate())
+	_load_terrain_fx(m)
 	_layout_board()
 	if phase_label:
 		phase_label.text = "%s · 玩家回合" % map_name
+
+func _load_terrain_fx(m: Dictionary) -> void:
+	height_grid.clear()
+	var grid: Array = m.get("height", [])
+	for y in grid.size():
+		var src: Array = grid[y]
+		var row: Array = []
+		for x in src.size():
+			row.append(TerrainFx.clamp_height(int(src[x])))
+		height_grid.append(row)
+	weather = str(m.get("weather", "clear"))
+	scout_map = bool(m.get("scout", false))
+	interactives.clear()
+	for raw in m.get("interactives", []):
+		if typeof(raw) != TYPE_DICTIONARY:
+			continue
+		var spot: Array = raw.get("cell", [0, 0])
+		interactives.append({
+			"cell": Vector2i(int(spot[0]), int(spot[1])),
+			"kind": str(raw.get("kind", "")),
+			"state": str(raw.get("state", "")),
+		})
+	_rebuild_fx_marks()
+
+func _height_at(cell: Vector2i) -> int:
+	if cell.y < 0 or cell.y >= height_grid.size():
+		return 0
+	var row: Array = height_grid[cell.y]
+	if cell.x < 0 or cell.x >= row.size():
+		return 0
+	return int(row[cell.x])
+
+func _interactive_index(cell: Vector2i) -> int:
+	for i in interactives.size():
+		if interactives[i].get("cell", Vector2i(-9, -9)) == cell:
+			return i
+	return -1
+
+func _terrain_blocked() -> Array:
+	var out: Array = []
+	for item in interactives:
+		if TerrainFx.blocks(str(item.get("kind", "")), str(item.get("state", ""))):
+			out.append(item.get("cell"))
+	return out
+
+func _rebuild_fx_marks() -> void:
+	_fx_marks.clear()
+	for y in MAP_H:
+		for x in MAP_W:
+			var cell := Vector2i(x, y)
+			var h := _height_at(cell)
+			var kind := ""
+			var state := ""
+			var idx := _interactive_index(cell)
+			if idx >= 0:
+				kind = str(interactives[idx].get("kind", ""))
+				state = str(interactives[idx].get("state", ""))
+			if h <= 0 and kind == "":
+				continue
+			_fx_marks.append({"cell": cell, "h": h, "kind": kind, "state": state})
+
+func _paint_terrain_fx() -> void:
+	for mark in _fx_marks:
+		var cell: Vector2i = mark["cell"]
+		var h := int(mark.get("h", 0))
+		var rect := Rect2(ORIGIN + Vector2(cell) * CELL, Vector2(CELL, CELL))
+		if h > 0:
+			var drop := Vector2(float(h) * 2.0, float(h) * 1.5)
+			map_draw.draw_rect(Rect2(rect.position + drop, rect.size), Color(0, 0, 0, 0.05 * h))
+			map_draw.draw_rect(rect.grow(-1.0), Color(UIKit.ACCENT, 0.18 + 0.1 * h), false, 1.0)
+		if str(mark.get("kind", "")) != "":
+			var col := UIKit.OK
+			if TerrainFx.blocks(str(mark.get("kind", "")), str(mark.get("state", ""))):
+				col = UIKit.DANGER
+			map_draw.draw_rect(rect.grow(-8.0), Color(col, 0.55), false, 1.5)
+
+func _atk_type(c: CKCharacter) -> String:
+	return str(GameState.get_job(c.job_id).get("atk_type", "melee"))
+
+func _players_see(cell: Vector2i) -> bool:
+	var watchers: Array = []
+	for u in units:
+		if u.char.hp <= 0:
+			continue
+		var team := str(u.team)
+		if team != "player" and team != "ally":
+			continue
+		watchers.append(u.pos)
+	return TerrainFx.seen_by(watchers, cell, TerrainFx.vision_range(scout_map, weather))
+
+func _log_enemy_move(u: Dictionary, cell: Vector2i) -> void:
+	if not _players_see(cell):
+		return
+	_log("%s 机动至 (%d,%d)" % [u.char.name, cell.x, cell.y])
+
+func _try_interact(actor: Dictionary, cell: Vector2i) -> bool:
+	if _manhattan(actor.pos, cell) != 1:
+		return false
+	var idx := _interactive_index(cell)
+	if idx < 0:
+		return false
+	var item: Dictionary = interactives[idx]
+	var kind := str(item.get("kind", ""))
+	var state := str(item.get("state", ""))
+	if not TerrainFx.can_use(kind, state):
+		return false
+	item["state"] = TerrainFx.interact(kind, state)
+	interactives[idx] = item
+	_rebuild_fx_marks()
+	_log(BattleObjectives.text("terrain_used") % [BattleObjectives.text("terrain_" + kind), cell.x, cell.y])
+	if map_draw:
+		map_draw.queue_redraw()
+	if overlay:
+		overlay.queue_redraw()
+	return true
 
 func _deploy() -> void:
 	units.clear()
@@ -885,10 +1006,13 @@ func _deploy() -> void:
 	var _diff = GameState.battle_difficulty_from_map(map_id)
 	_log("敌军战技档：%d（地图 %s）" % [_diff, map_id])
 	_log(BattleObjectives.text("diff_now") % BattleObjectives.text("diff_" + CKEnemyLoadout.mode_of(GameState)))
+	if weather != "clear":
+		_log(BattleObjectives.text("terrain_weather") % BattleObjectives.text("terrain_" + weather))
 	_refresh_info()
 
 func _draw_map() -> void:
 	## v8.6: ground is the shader (_ground). Here: hover cell outline, token shadows, tokens, HP, CD pips, names.
+	_paint_terrain_fx()
 	var k := _k()
 	if _in_bounds(_hover_cell):
 		var hr = Rect2(ORIGIN + Vector2(_hover_cell) * CELL, Vector2(CELL, CELL))
@@ -902,6 +1026,8 @@ func _draw_map() -> void:
 		if u.char.hp <= 0:
 			continue
 		var p: Vector2i = u.pos
+		if str(u.team) == "enemy" and not _players_see(p):
+			continue
 		var center = ORIGIN + Vector2(p) * CELL + Vector2(CELL / 2, CELL / 2)
 		var tr := 20.0 * k
 		# soft contact shadow (3 stacked ellipses)
@@ -1453,7 +1579,7 @@ func _can_attack_from(su: Dictionary, cell: Vector2i) -> bool:
 	var tid := "plain"
 	if _in_bounds(su.pos):
 		tid = str(terrain[su.pos.y][su.pos.x])
-	return d <= BattleRules.attack_reach(su.char, tid)
+	return d <= BattleRules.attack_reach(su.char, tid, _height_at(su.pos))
 
 func _click_cell(cell: Vector2i) -> void:
 	var ui = _unit_at(cell)
@@ -1472,6 +1598,8 @@ func _click_cell(cell: Vector2i) -> void:
 					_log("目标超出攻击范围")
 					return
 				_refresh_info_for(ui)
+				return
+			if ui < 0 and not attack_mode and _try_interact(su, cell):
 				return
 			if ui < 0 and not attack_mode and not moved_this_select and move_cells.has(cell):
 				var origin_cell: Vector2i = su.pos
@@ -1546,7 +1674,12 @@ func _compute_move_cells(ui: int) -> Dictionary:
 	elif u.team == "player":
 		zoc_extra = _ally_zoc_extra("enemy")  # 敌军若有强化控带（少见）
 	var leave_cost := BattleRules.leave_cost_for(int(u.char.temp_combat_lock) > 0, BattleRules.is_engaged(u.pos, foes))
-	var mv = BattleRules.move_costs(terrain, u.pos, u.char.derived_move(), foes, foes, ignore, zoc_extra, leave_cost, leave_free)
+	var blocked: Array = foes.duplicate()
+	for cell in _terrain_blocked():
+		if cell != u.pos:
+			blocked.append(cell)
+	var move_extra := TerrainFx.weather_move_extra(weather)
+	var mv = BattleRules.move_costs(terrain, u.pos, u.char.derived_move(), blocked, foes, ignore, zoc_extra, leave_cost, leave_free, move_extra)
 	for ou in units:
 		if ou.char.hp > 0 and ou.pos != u.pos:
 			mv.erase(ou.pos)
@@ -1588,7 +1721,7 @@ func _do_attack(ai: int, di: int) -> void:
 		_spawn_dmg(def.pos, "连击", Color(0.95, 0.75, 0.35))
 		_resolve_strike(ai, di, false)
 	# 反击：存活且射程覆盖——锁定单位反击命中+10
-	if def.char.hp > 0 and BattleRules.can_counter(atk.char, def.char, atk.pos, def.pos):
+	if def.char.hp > 0 and BattleRules.can_counter(atk.char, def.char, atk.pos, def.pos, _height_at(def.pos)):
 		var bonus = 0
 		if int(def.char.temp_combat_lock) > 0:
 			def.char.temp_hit_bonus += 10
@@ -1685,6 +1818,9 @@ func _combat_extras(ai: int, di: int) -> Dictionary:
 	extras["night"] = _battle_night()
 	extras["opening"] = not bool(atk.get("has_struck", false))
 	extras["foe_opening"] = not bool(def.get("has_struck", false))
+	extras["height_hit"] = TerrainFx.height_delta_hit(_height_at(atk.pos), _height_at(def.pos))
+	extras["weather_hit"] = TerrainFx.weather_hit(weather, _atk_type(atk.char))
+	extras["weather"] = weather
 	return extras
 
 
@@ -2339,9 +2475,10 @@ func _tick_skill_cds(team: String) -> void:
 func _planner_board() -> Dictionary:
 	var rows: Array = []
 	for u in units:
-		var reach := 1
-		if not _is_melee(u.char):
-			reach = 2
+		var tid := "plain"
+		if _in_bounds(u.pos):
+			tid = str(terrain[u.pos.y][u.pos.x])
+		var reach := BattleRules.attack_reach(u.char, tid, _height_at(u.pos))
 		rows.append({
 			"id": str(u.char.id),
 			"team": str(u.team),
@@ -2432,7 +2569,7 @@ func _enemy_ai() -> void:
 				if not _same_side("player", str(t.team)) or t.char.hp <= 0:
 					continue
 				var d = _manhattan(pos, t.pos)
-				var reach := BattleRules.attack_reach(u.char, str(stand_tid))
+				var reach := BattleRules.attack_reach(u.char, str(stand_tid), _height_at(pos))
 				var can_hit = d >= 1 and d <= reach
 				if not can_hit:
 					var approach = -float(d) * 2.0
@@ -2452,7 +2589,11 @@ func _enemy_ai() -> void:
 					continue
 				var old = u.pos
 				u.pos = pos
-				var extras = {"flank": BattleRules.has_flank(pos, t.pos, units, "enemy", i)}
+				var extras = {
+					"flank": BattleRules.has_flank(pos, t.pos, units, "enemy", i),
+					"height_hit": TerrainFx.height_delta_hit(_height_at(pos), _height_at(t.pos)),
+					"weather_hit": TerrainFx.weather_hit(weather, _atk_type(u.char)),
+				}
 				u.pos = old
 				var tid = terrain[t.pos.y][t.pos.x]
 				var expect = BattleRules.expected_damage(u.char, t.char, tid, extras)
@@ -2501,11 +2642,11 @@ func _enemy_ai() -> void:
 			u.pos = best_pos
 			_spend_zoc(u, origin_ai, best_pos)
 			_spawn_move_dust(best_pos)
-			_log("%s 机动至 (%d,%d)" % [u.char.name, best_pos.x, best_pos.y])
+			_log_enemy_move(u, best_pos)
 			map_draw.queue_redraw()
 		if best_target >= 0:
 			var d2 = _manhattan(u.pos, units[best_target].pos)
-			var reach2 := BattleRules.attack_reach(u.char, str(terrain[u.pos.y][u.pos.x]))
+			var reach2 := BattleRules.attack_reach(u.char, str(terrain[u.pos.y][u.pos.x]), _height_at(u.pos))
 			var ok = d2 >= 1 and d2 <= reach2
 			if ok:
 				var tgt = units[best_target]
