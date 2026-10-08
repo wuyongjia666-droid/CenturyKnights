@@ -1,106 +1,193 @@
 extends Control
-## 城堡工事：厅堂/校场/市集/工坊/祠堂升级 —— 经营闭环核心
+## v8.6 — Stitch language (tokens of 02/16): top bar · editorial head · FORTIFICATION MATRIX (five building
+## rows: level pips, effect, cost check, upgrade CTA) · AMBITION LEDGER (堡志 checklist) + HOUSE MODIFIERS · footer.
+## Logic unchanged: GameState.upgrade_building(id), BUILDING_COST, ambition_list().
 
-var _msg: Label
-var _list: VBoxContainer
+const ICON := {"hall": "res://assets/art/ui/v86/kpi_fortify.png", "barracks": "res://assets/art/ui/v86/mk_iron.png", "market": "res://assets/art/ui/v86/kpi_cash.png", "forge": "res://assets/art/ui/v86/mk_iron.png", "shrine": "res://assets/art/ui/v86/mk_herb.png"}
+const EN := {"hall": "COUNCIL HALL", "barracks": "DRILL YARD", "market": "MARKET", "forge": "FORGE", "shrine": "SANCTUARY"}
+
+var _msg := ""
+var _msg_ok := true
+var _body: Control
+var _bar: Control
 
 func _ready() -> void:
-	UIKit.make_themed_bg(self, "works")
-	UIFX.page_enter(self)
-	UIFX.fade_in(self, 0.28)
+	UIKit.void_bg(self)
 	Music.play_castle()
-	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/works_banner.png"):
-		var wb := TextureRect.new()
-		wb.texture = load("res://assets/art/ui/works_banner.png")
-		wb.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		wb.stretch_mode = TextureRect.STRETCH_SCALE
-		wb.position = Vector2(0, 0)
-		wb.size = Vector2(1280, 52)
-		wb.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(wb)
-		UIFX.banner_shimmer(wb, 3.8)
-	elif not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/hub_banner_strip.png"):
-		var strip := TextureRect.new()
-		strip.texture = load("res://assets/art/ui/hub_banner_strip.png")
-		strip.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		strip.stretch_mode = TextureRect.STRETCH_SCALE
-		strip.position = Vector2(0, 0)
-		strip.size = Vector2(1280, 48)
-		strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(strip)
-	var t = UIKit.make_label("城堡工事", true)
-	t.position = Vector2(40, 16)
-	add_child(t)
-	var tip = UIKit.make_dim_label("工事至 Lv5；属地庄园可委任庄头抗劫掠。堡志：战勋十次、两岸/四野/深耕、庄头遍野、家训周岁、精锻、库银、六旗等。")
-	tip.position = Vector2(40, 56)
-	tip.custom_minimum_size = Vector2(1100, 40)
-	tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	add_child(tip)
-
-	var summary = UIKit.make_label(GameState.building_summary())
-	summary.position = Vector2(40, 100)
-	summary.add_theme_color_override("font_color", UIKit.ACCENT)
-	summary.name = "Summary"
-	add_child(summary)
-
-	var mods = UIKit.make_dim_label(_house_mod_text())
-	mods.position = Vector2(40, 128)
-	mods.custom_minimum_size = Vector2(1100, 40)
-	mods.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	mods.name = "Mods"
-	add_child(mods)
-
-	var scroll := ScrollContainer.new()
-	scroll.position = Vector2(40, 180)
-	scroll.custom_minimum_size = Vector2(1200, 320)
-	add_child(scroll)
-	_list = VBoxContainer.new()
-	_list.add_theme_constant_override("separation", 10)
-	scroll.add_child(_list)
-	_rebuild()
-	UIFX.stagger_children(_list, 0.04, 0.24)
+	_body = Control.new()
+	_body.mouse_filter = Control.MOUSE_FILTER_PASS
+	add_child(_body)
+	_render()
+	UIKit.footer_bar(self, [["A", "升级"], ["↑↓", "切换工事"], ["ESC", "返回城堡"]], "FORTIFICATION WORKS · v8.6")
+	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 
-	if ResourceLoader.exists("res://assets/art/ui/ambition_strip.png"):
-		var astr := TextureRect.new()
-		astr.texture = load("res://assets/art/ui/ambition_strip.png")
-		astr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		astr.stretch_mode = TextureRect.STRETCH_SCALE
-		astr.position = Vector2(40, 520)
-		astr.size = Vector2(1200, 36)
-		astr.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(astr)
-	if ResourceLoader.exists("res://assets/art/ui/month_chip_ambition.png"):
-		var achip := TextureRect.new()
-		achip.texture = load("res://assets/art/ui/month_chip_ambition.png")
-		achip.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		achip.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		achip.position = Vector2(40, 556)
-		achip.size = Vector2(28, 28)
-		achip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(achip)
-	var amb_title = UIKit.make_label("堡志（中长期）")
-	amb_title.position = Vector2(76, 560)
-	amb_title.add_theme_color_override("font_color", UIKit.ACCENT)
-	add_child(amb_title)
-	var amb_lines: Array = []
-	for a in GameState.ambition_list():
-		var mark = "✓" if a.get("done") else "·"
-		amb_lines.append("%s %s — %s（奖：%s）" % [mark, a.name, a.desc, a.reward])
-	var amb_lbl = UIKit.make_dim_label("\n".join(amb_lines))
-	amb_lbl.position = Vector2(40, 588)
-	amb_lbl.custom_minimum_size = Vector2(1200, 90)
-	amb_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	amb_lbl.name = "Ambitions"
-	add_child(amb_lbl)
+func _back() -> void:
+	get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
 
-	_msg = UIKit.make_label("")
-	_msg.position = Vector2(40, 680)
-	add_child(_msg)
-	var back = UIKit.make_button(Locale.t("btn_back"), 120)
-	back.position = Vector2(40, 700)
-	back.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
-	add_child(back)
+func _unhandled_input(e: InputEvent) -> void:
+	if e.is_action_pressed("ui_cancel"):
+		_back()
+
+func _render() -> void:
+	if _bar:
+		_bar.queue_free()
+	_bar = UIKit.top_bar(self, "城堡工事 · WORKS", [["银币", str(GameState.silver), UIKit.ACCENT], ["铁", str(GameState.iron), UIKit.TEXT], ["粮", str(GameState.food), UIKit.TEXT], ["历", Calendar.label(), UIKit.TEXT_DIM]], "返回城堡", _back)
+	for n in _body.get_children():
+		_body.remove_child(n)
+		n.queue_free()
+	UIKit.page_head(_body, 42, 70, "FORTIFICATION // CASTLE WORKS", "城堡工事", "FORTIFICATION MATRIX", "工事至 Lv%d；升级扩编、降价、增产。全部工事 Lv3 / Lv5 达成堡志。" % GameState.BUILDING_MAX)
+	var total := 0
+	for id in ["hall", "barracks", "market", "forge", "shrine"]:
+		total += GameState.building_level(id)
+	var k := UIKit.stat_box("工事总等级", "%d / %d" % [total, 5 * GameState.BUILDING_MAX], UIKit.ACCENT)
+	k.position = Vector2(756, 82)
+	_body.add_child(k)
+	var k2 := UIKit.stat_box("出战上限", "%d 人" % GameState.max_deploy(), UIKit.TEXT)
+	k2.position = Vector2(884, 82)
+	_body.add_child(k2)
+	UIKit.panel_at(_body, Rect2(24, 160, 828, 520), 10)
+	UIKit.section_head(_body, Vector2(42, 174), "工事矩阵", "BUILDINGS", 792, "LV MAX %d" % GameState.BUILDING_MAX)
+	var descs := {
+		"hall": "扩编队上限（现 %d 人）。Lv2→5人，Lv3→6人。" % GameState.max_deploy(),
+		"barracks": "演武花费现 %d 银；Lv2+ 月结士气，Lv3 有概率双加。" % GameState.train_cost(),
+		"market": "买价更低、卖价更高。商路旁注可再叠加。",
+		"forge": "打造更省铁银；Lv4 产出精灰刃（+3攻）。",
+		"shrine": "丰收粮产与祈愈强度随等级上升。",
+	}
+	var y := 204.0
+	var first: Button = null
+	for id in ["hall", "barracks", "market", "forge", "shrine"]:
+		var b := _row(id, Rect2(38, y, 800, 88), str(descs[id]))
+		if first == null and b != null and not b.disabled:
+			first = b
+		y += 94
+	if _msg != "":
+		var m := UIKit.body_label(_msg, UIKit.OK if _msg_ok else UIKit.DANGER, 12)
+		m.autowrap_mode = TextServer.AUTOWRAP_OFF
+		m.position = Vector2(500, 176)
+		_body.add_child(m)
+	if first:
+		first.call_deferred("grab_focus")
+	# ambitions
+	UIKit.panel_at(_body, Rect2(864, 160, 392, 400), 10)
+	var amb: Array = GameState.ambition_list()
+	var done := 0
+	for a in amb:
+		if a.get("done"):
+			done += 1
+	UIKit.section_head(_body, Vector2(882, 174), "堡志", "AMBITION LEDGER", 356, "%d / %d" % [done, amb.size()])
+	var sc := ScrollContainer.new()
+	sc.position = Vector2(876, 202)
+	sc.size = Vector2(368, 346)
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_body.add_child(sc)
+	var vb := VBoxContainer.new()
+	vb.add_theme_constant_override("separation", 6)
+	sc.add_child(vb)
+	for a in amb:
+		var p := PanelContainer.new()
+		p.custom_minimum_size = Vector2(356, 0)
+		var ok: bool = bool(a.get("done"))
+		var ps := UIKit.flat_box(Color(UIKit.OK, 0.06) if ok else Color(1, 1, 1, 0.02), Color(UIKit.OK, 0.4) if ok else Color(1, 1, 1, 0.07), 6)
+		ps.content_margin_top = 6
+		ps.content_margin_bottom = 6
+		ps.content_margin_left = 10
+		ps.content_margin_right = 10
+		p.add_theme_stylebox_override("panel", ps)
+		var pv := VBoxContainer.new()
+		pv.add_theme_constant_override("separation", 1)
+		p.add_child(pv)
+		var h := HBoxContainer.new()
+		h.add_theme_constant_override("separation", 8)
+		pv.add_child(h)
+		h.add_child(UIKit.mono("✓" if ok else "○", 11, UIKit.OK if ok else UIKit.TEXT_FAINT, false))
+		var n := UIKit.title_label(str(a.name), 13, UIKit.TEXT if ok else UIKit.TEXT_DIM)
+		n.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		h.add_child(n)
+		var d := UIKit.body_label("%s · 奖：%s" % [a.desc, a.reward], UIKit.TEXT_FAINT, 11)
+		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		d.custom_minimum_size = Vector2(334, 0)
+		pv.add_child(d)
+		vb.add_child(p)
+	UIKit.panel_at(_body, Rect2(864, 572, 392, 108), 10)
+	UIKit.section_head(_body, Vector2(882, 586), "家族旁注", "HOUSE MODIFIERS", 356, "")
+	var mods := UIKit.body_label(_house_mod_text(), UIKit.TEXT_DIM, 12)
+	mods.position = Vector2(882, 612)
+	mods.size = Vector2(356, 56)
+	mods.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_body.add_child(mods)
+
+func _row(id: String, r: Rect2, desc: String) -> Button:
+	var lv := GameState.building_level(id)
+	var mx: int = GameState.BUILDING_MAX
+	var p := Panel.new()
+	p.position = r.position
+	p.size = r.size
+	p.add_theme_stylebox_override("panel", UIKit.flat_box(Color(1, 1, 1, 0.02), Color(1, 1, 1, 0.08), 8))
+	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_body.add_child(p)
+	var ib := Panel.new()
+	ib.position = r.position + Vector2(14, 16)
+	ib.size = Vector2(56, 56)
+	ib.add_theme_stylebox_override("panel", UIKit.flat_box(Color(UIKit.ACCENT, 0.06), Color(UIKit.ACCENT, 0.35), 6))
+	ib.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_body.add_child(ib)
+	var ic := TextureRect.new()
+	if ResourceLoader.exists(ICON[id]):
+		ic.texture = load(ICON[id])
+	ic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	ic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	ic.position = Vector2(10, 10)
+	ic.size = Vector2(36, 36)
+	ic.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ib.add_child(ic)
+	var h := HBoxContainer.new()
+	h.position = r.position + Vector2(86, 12)
+	h.add_theme_constant_override("separation", 10)
+	_body.add_child(h)
+	h.add_child(UIKit.title_label(str(GameState.BUILDING_NAMES[id]), 17, UIKit.TEXT))
+	var en := UIKit.mono(EN[id], 9, UIKit.TEXT_FAINT, false)
+	en.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	h.add_child(en)
+	h.add_child(UIKit.tag_chip("LV %d / %d" % [lv, mx], UIKit.OK if lv >= mx else UIKit.ACCENT))
+	# level pips
+	for i in range(mx):
+		var pip := ColorRect.new()
+		pip.color = UIKit.ACCENT if i < lv else Color(1, 1, 1, 0.10)
+		pip.position = r.position + Vector2(86 + i * 26, 42)
+		pip.size = Vector2(22, 3)
+		_body.add_child(pip)
+	var d := UIKit.body_label(desc, UIKit.TEXT_DIM, 12)
+	d.autowrap_mode = TextServer.AUTOWRAP_OFF
+	d.position = r.position + Vector2(86, 54)
+	_body.add_child(d)
+	var b: Button
+	if lv < mx:
+		var cost: Dictionary = GameState.BUILDING_COST.get(lv + 1, {})
+		var need_s := int(cost.get("silver", 0))
+		if bool(GameState.house_mods.get("hall_discount", false)) and id == "hall":
+			need_s = int(need_s * 0.75)
+		var ni := int(cost.get("iron", 0))
+		var nf := int(cost.get("food", 0))
+		var ok := GameState.silver >= need_s and GameState.iron >= ni and GameState.food >= nf
+		var cl := UIKit.mono("COST", 8, UIKit.TEXT_FAINT, false)
+		cl.position = r.position + Vector2(470, 18)
+		_body.add_child(cl)
+		var cv := UIKit.body_label("%d 银 · %d 铁 · %d 粮" % [need_s, ni, nf], UIKit.TEXT if ok else UIKit.DANGER, 12)
+		cv.autowrap_mode = TextServer.AUTOWRAP_OFF
+		cv.position = r.position + Vector2(470, 34)
+		_body.add_child(cv)
+		b = UIKit.cta_button("升级", "A", 128, 40)
+		b.tooltip_text = "" if ok else "资源不足"
+	else:
+		b = UIKit.ghost_button("已满级", 128, 40)
+		b.disabled = true
+	b.position = r.position + Vector2(r.size.x - 142, 24)
+	var bid := id
+	b.pressed.connect(func(): _upgrade(bid))
+	_body.add_child(b)
+	return b
 
 func _house_mod_text() -> String:
 	var parts: Array = []
@@ -119,60 +206,16 @@ func _house_mod_text() -> String:
 	if int(GameState.house_mods.get("war_memory", 0)) > 0:
 		parts.append("战勋×%d" % int(GameState.house_mods.war_memory))
 	if parts.is_empty():
-		return "家族旁注：尚无永久修正——完成委任首通或联姻誓约会写入。"
-	return "家族旁注：" + " · ".join(parts)
-
-func _rebuild() -> void:
-	for c in _list.get_children():
-		c.queue_free()
-	var descs := {
-		"hall": "扩编队上限（现 %d 人）。Lv2→5人，Lv3→6人。" % GameState.max_deploy(),
-		"barracks": "演武花费现 %d 银；Lv2+ 月结士气，Lv3 有概率双加。" % GameState.train_cost(),
-		"market": "买价更低、卖价更高。商路旁注可再叠加。",
-		"forge": "打造更省铁银；Lv3 产出精灰刃（+3攻）。",
-		"shrine": "丰收粮产与祈愈强度随等级上升。",
-	}
-	for id in ["hall", "barracks", "market", "forge", "shrine"]:
-		var lv = GameState.building_level(id)
-		var card = UIKit.make_panel()
-		card.custom_minimum_size = Vector2(1160, 0)
-		_list.add_child(card)
-		var hb := HBoxContainer.new()
-		hb.add_theme_constant_override("separation", 16)
-		card.add_child(hb)
-		var vb := VBoxContainer.new()
-		vb.custom_minimum_size = Vector2(900, 0)
-		hb.add_child(vb)
-		var title = UIKit.make_label("%s　Lv%d / %d" % [GameState.BUILDING_NAMES[id], lv, GameState.BUILDING_MAX])
-		title.add_theme_color_override("font_color", UIKit.ACCENT)
-		vb.add_child(title)
-		vb.add_child(UIKit.make_dim_label(str(descs.get(id, ""))))
-		if lv < GameState.BUILDING_MAX:
-			var cost: Dictionary = GameState.BUILDING_COST.get(lv + 1, {})
-			var need_s = int(cost.get("silver", 0))
-			if bool(GameState.house_mods.get("hall_discount", false)) and id == "hall":
-				need_s = int(need_s * 0.75)
-			vb.add_child(UIKit.make_dim_label("升级需：%d 银 · %d 铁 · %d 粮" % [need_s, int(cost.get("iron", 0)), int(cost.get("food", 0))]))
-		var bid = id
-		var b = UIKit.make_accent_button("升级" if lv < GameState.BUILDING_MAX else "满级", 120)
-		b.disabled = lv >= GameState.BUILDING_MAX
-		b.pressed.connect(func(): _upgrade(bid))
-		hb.add_child(b)
+		return "尚无永久修正——完成委任首通或联姻誓约会写入。"
+	return " · ".join(parts)
 
 func _upgrade(id: String) -> void:
-	var r = GameState.upgrade_building(id)
-	_msg.text = str(r.get("msg", ""))
-	if r.get("ok"):
+	var r: Dictionary = GameState.upgrade_building(id)
+	_msg = str(r.get("msg", ""))
+	_msg_ok = bool(r.get("ok"))
+	if _msg_ok:
 		Sfx.confirm()
 		GameState.save_game()
-		get_node("Summary").text = GameState.building_summary()
-		get_node("Mods").text = _house_mod_text()
-		var al: Array = []
-		for a in GameState.ambition_list():
-			var mark = "✓" if a.get("done") else "·"
-			al.append("%s %s — %s（奖：%s）" % [mark, a.name, a.desc, a.reward])
-		if has_node("Ambitions"):
-			get_node("Ambitions").text = "\n".join(al)
-		_rebuild()
 	else:
 		Sfx.miss()
+	_render()
