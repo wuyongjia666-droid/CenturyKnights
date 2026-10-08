@@ -13,17 +13,22 @@ func _ready() -> void:
 	UIKit.void_bg(self)
 	var cost := CKBloodline.verify_cost(GameState.building_level("shrine"))
 	UIKit.top_bar(self, "祠堂验血", [["银币", str(GameState.silver), UIKit.ACCENT], ["每人", "%d 银" % cost, UIKit.TEXT_DIM]], "返回祠堂", _back)
-	UIKit.page_head(self, 42, 72, "SANCTUARY // BLOOD ASSAY", "验血", "REVEAL", "一次验明尚未入册的族人。潜征展开，伪胤在灯下现形。")
-	var left := UIKit.panel_at(self, Rect2(42, 168, 420, 508), 12)
+	UIKit.page_head(self, 42, 72, "SANCTUARY // BLOOD ASSAY", "验血", "REVEAL", "一次验明尚未入册的族人。潜征展开，伪胤在灯下现形。", "", 18)
+	var left := UIKit.panel_at(self, Rect2(42, 200, 420, 476), 12)
 	left.name = "AssayQueue"
 	var cap := UIKit.mono("QUEUE · %d" % _pending.size(), 9, UIKit.TEXT_FAINT)
 	cap.position = Vector2(16, 14)
 	left.add_child(cap)
+	var queue_scroll := ScrollContainer.new()
+	queue_scroll.position = Vector2(16, 40)
+	queue_scroll.size = Vector2(388, 360)
+	queue_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	left.add_child(queue_scroll)
 	var list := VBoxContainer.new()
-	list.position = Vector2(16, 40)
-	list.size = Vector2(388, 380)
+	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	list.custom_minimum_size = Vector2(360, 0)
 	list.add_theme_constant_override("separation", 8)
-	left.add_child(list)
+	queue_scroll.add_child(list)
 	if _pending.is_empty():
 		list.add_child(UIKit.empty_state("族中人人都已验过血。"))
 	for c in _pending:
@@ -32,20 +37,21 @@ func _ready() -> void:
 		list.add_child(row)
 	var begin := UIKit.cta_button("开始验血", "A", 220, 44)
 	begin.name = "BeginReveal"
-	begin.position = Vector2(16, 444)
+	begin.position = Vector2(16, 416)
 	var affordable := not _pending.is_empty() and GameState.silver >= cost
 	begin.disabled = not affordable
 	begin.tooltip_text = "银币不足" if not _pending.is_empty() and not affordable else ""
 	begin.pressed.connect(_begin)
 	left.add_child(begin)
-	var right := UIKit.panel_at(self, Rect2(478, 168, 760, 508), 12, true)
+	var right := UIKit.panel_at(self, Rect2(478, 200, 760, 476), 12, true)
 	right.name = "RevealStage"
 	var rh := UIKit.mono("REVEAL", 9, UIKit.ACCENT)
 	rh.position = Vector2(18, 14)
 	right.add_child(rh)
 	_status = UIKit.body_label("灯还没点。按下开始之后，结果会一张一张掀开。", UIKit.TEXT_DIM, 14)
+	_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_status.position = Vector2(18, 40)
-	_status.size = Vector2(720, 36)
+	_status.size = Vector2(720, 40)
 	right.add_child(_status)
 	_stage = VBoxContainer.new()
 	_stage.name = "RevealCards"

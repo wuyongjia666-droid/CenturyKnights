@@ -9,21 +9,87 @@ const LAW_GLYPH := {
 	"complement": "合", "maternal": "母", "age_awakened": "龄", "pureblood": "纯",
 }
 const KIND_ZH := {"birth": "添丁", "death": "辞世", "succession": "更替", "crisis": "危机", "marriage": "配婚", "recall": "归国"}
+## Contemporary monograms. Letters are a house code, not an inheritance-law glyph.
+const NATION_MARK := {
+	"ashbanner": {"letters": "AB", "ink": "#C5D0DC", "kind": "bars"},
+	"shuoying": {"letters": "SY", "ink": "#9BB4FF", "kind": "arc"},
+	"qinghe": {"letters": "QH", "ink": "#5EE0B5", "kind": "wave"},
+	"lantern": {"letters": "LN", "ink": "#6ED4FF", "kind": "filament"},
+	"frostcrown": {"letters": "FC", "ink": "#E8F6FF", "kind": "ring"},
+	"emberold": {"letters": "EO", "ink": "#FF8A80", "kind": "notch"},
+	"saltmarsh": {"letters": "SM", "ink": "#7ED6C8", "kind": "tide"},
+	"irongorge": {"letters": "IG", "ink": "#B7C3D1", "kind": "chevron"},
+	"starriver": {"letters": "SR", "ink": "#8FD4FF", "kind": "spark"},
+	"southzephyr": {"letters": "SZ", "ink": "#9DCFB8", "kind": "leaf"},
+}
 
 static func law_glyph(law: String) -> String:
 	return str(LAW_GLYPH.get(law, "·"))
 
 static func law_chip(law: String) -> Control:
 	var box := PanelContainer.new()
-	box.custom_minimum_size = Vector2(44, 28)
+	box.name = "LawChip"
+	box.custom_minimum_size = Vector2(36, 28)
 	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	box.add_theme_stylebox_override("panel", UIKit.flat_box(Color(UIKit.ACCENT, 0.10), Color(UIKit.ACCENT, 0.45), 8))
 	var l := UIKit.mono(law_glyph(law), 14, UIKit.ACCENT, false)
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	box.add_child(l)
 	box.tooltip_text = str(CKBloodline.data().get("laws", {}).get(law, {}).get("name", law))
 	return box
+
+static func nation_mark(nid: String) -> Control:
+	var spec: Dictionary = NATION_MARK.get(nid, {"letters": "··", "ink": "#6ED4FF", "kind": "ring"})
+	var nat: Dictionary = CKBloodline.nation(nid)
+	var mark := NationMark.new()
+	mark.name = "NationEmblem"
+	mark.ink = Color(str(spec.get("ink", "#6ED4FF")))
+	mark.kind = str(spec.get("kind", "ring"))
+	mark.letters = str(spec.get("letters", "··"))
+	mark.custom_minimum_size = Vector2(36, 36)
+	mark.size = Vector2(36, 36)
+	mark.tooltip_text = "%s · %s" % [str(nat.get("name", nid)), str(nat.get("motto", ""))]
+	return mark
+
+## Unknown codex trait: frost bars stand in for the name. The law icon stays; the name does not.
+static func trait_silhouette(law: String) -> Control:
+	var row := HBoxContainer.new()
+	row.name = "TraitSilhouette"
+	row.add_theme_constant_override("separation", 8)
+	row.custom_minimum_size = Vector2(148, 44)
+	row.mouse_filter = Control.MOUSE_FILTER_STOP
+	var law_name := str(CKBloodline.data().get("laws", {}).get(law, {}).get("name", law))
+	row.tooltip_text = "尚未入册。法则：%s。见过或在祠堂验到之后，图鉴才写下名字。" % law_name
+	row.add_child(law_chip(law))
+	var frost := Panel.new()
+	frost.custom_minimum_size = Vector2(104, 32)
+	frost.size = Vector2(104, 32)
+	frost.mouse_filter = Control.MOUSE_FILTER_STOP
+	frost.tooltip_text = row.tooltip_text
+	frost.add_theme_stylebox_override("panel", UIKit.flat_box(Color("#C9D3DE", 0.06), Color("#6ED4FF", 0.35), 8))
+	row.add_child(frost)
+	var widths := [68, 44, 56]
+	for i in widths.size():
+		var bar := ColorRect.new()
+		bar.color = Color("#F4F7FB", 0.22)
+		bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		bar.position = Vector2(12, 7 + i * 8)
+		bar.size = Vector2(widths[i], 3)
+		frost.add_child(bar)
+	return row
+
+static func trait_known(meta: Dictionary) -> Control:
+	var row := HBoxContainer.new()
+	row.name = "TraitKnown"
+	row.add_theme_constant_override("separation", 8)
+	row.custom_minimum_size = Vector2(0, 44)
+	row.add_child(law_chip(str(meta.get("law", ""))))
+	var lab := UIKit.tag_chip(str(meta.get("zh", "")), UIKit.OK, true)
+	lab.tooltip_text = str(meta.get("desc", ""))
+	row.add_child(lab)
+	return row
 
 static func known_states() -> Dictionary:
 	var known := {}
@@ -162,13 +228,18 @@ static func fill_punnett(host: Control, father: Object, mother: Object, limit: i
 		line.add_theme_constant_override("separation", 8)
 		box.add_child(line)
 		var name := UIKit.body_label(str(row["name"]), UIKit.TEXT, 12)
-		name.custom_minimum_size = Vector2(180, 18)
+		name.custom_minimum_size = Vector2(168, 18)
+		name.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		name.clip_text = true
+		name.autowrap_mode = TextServer.AUTOWRAP_OFF
 		line.add_child(name)
-		var bar := UIKit.slim_bar(float(row["pct"]), 100.0, UIKit.OK if int(row["pct"]) >= 50 else UIKit.ACCENT, 120, 4)
+		var bar := UIKit.slim_bar(float(row["pct"]), 100.0, UIKit.OK if int(row["pct"]) >= 50 else UIKit.ACCENT, 96, 4)
 		bar.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		line.add_child(bar)
-		line.add_child(UIKit.mono("%d%%  %s" % [int(row["pct"]), str(row["hint"])], 11, UIKit.TEXT_DIM, false))
+		var hint := UIKit.mono("%d%%  %s" % [int(row["pct"]), str(row["hint"])], 11, UIKit.TEXT_DIM, false)
+		hint.custom_minimum_size = Vector2(108, 18)
+		hint.clip_text = true
+		line.add_child(hint)
 
 static func _gs():
 	return Engine.get_main_loop().root.get_node_or_null("GameState") if Engine.get_main_loop() else null
@@ -199,3 +270,70 @@ static func _parent_has_locus(p: Object, locus: String) -> bool:
 			continue
 		return true
 	return false
+
+
+class NationMark extends Control:
+	var ink: Color = Color.WHITE
+	var kind: String = "ring"
+	var letters: String = ""
+
+	func _ready() -> void:
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+		custom_minimum_size = Vector2(36, 36)
+		if size.x < 4.0:
+			size = Vector2(36, 36)
+		var lab := UIKit.mono(letters, 9, ink, false)
+		lab.name = "EmblemLetters"
+		lab.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		lab.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		lab.position = Vector2(0, 20)
+		lab.size = Vector2(36, 14)
+		lab.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(lab)
+		queue_redraw()
+
+	func _draw() -> void:
+		var s := size
+		if s.x < 4.0:
+			s = Vector2(36, 36)
+		var c := Color(ink, 0.95)
+		draw_rect(Rect2(Vector2(1, 1), s - Vector2(2, 2)), Color(ink, 0.14), true)
+		draw_rect(Rect2(Vector2(0.5, 0.5), s - Vector2(1, 1)), Color(ink, 0.8), false, 1.0)
+		match kind:
+			"bars":
+				draw_rect(Rect2(8, 5, 3, 13), c, true)
+				draw_rect(Rect2(14, 8, 3, 10), c, true)
+			"arc":
+				draw_arc(Vector2(18, 12), 7.0, 3.5, 5.9, 18, c, 1.5, true)
+			"wave":
+				draw_line(Vector2(7, 8), Vector2(14, 6), c, 1.4)
+				draw_line(Vector2(14, 6), Vector2(28, 10), c, 1.4)
+				draw_line(Vector2(7, 13), Vector2(16, 11), c, 1.4)
+				draw_line(Vector2(16, 11), Vector2(28, 14), c, 1.4)
+			"filament":
+				draw_line(Vector2(18, 5), Vector2(18, 16), c, 1.6)
+				draw_arc(Vector2(18, 7), 4.5, PI, TAU, 12, c, 1.2, true)
+			"ring":
+				draw_arc(Vector2(14, 11), 6.0, 0.0, TAU, 24, c, 1.5, true)
+			"notch":
+				draw_line(Vector2(8, 16), Vector2(8, 7), c, 1.5)
+				draw_line(Vector2(8, 7), Vector2(20, 7), c, 1.5)
+				draw_line(Vector2(20, 7), Vector2(26, 13), c, 1.5)
+				draw_line(Vector2(26, 13), Vector2(8, 13), c, 1.5)
+			"tide":
+				draw_rect(Rect2(8, 6, 16, 2), c, true)
+				draw_rect(Rect2(8, 11, 12, 2), c, true)
+				draw_rect(Rect2(8, 16, 8, 2), c, true)
+			"chevron":
+				draw_line(Vector2(8, 7), Vector2(18, 15), c, 1.6)
+				draw_line(Vector2(18, 15), Vector2(28, 7), c, 1.6)
+			"spark":
+				draw_circle(Vector2(12, 8), 1.6, c)
+				draw_circle(Vector2(22, 11), 1.3, c)
+				draw_circle(Vector2(15, 15), 1.2, c)
+			"leaf":
+				draw_colored_polygon(PackedVector2Array([
+					Vector2(18, 5), Vector2(26, 12), Vector2(18, 17), Vector2(10, 12)
+				]), c)
+			_:
+				draw_arc(Vector2(18, 12), 6.0, 0.0, TAU, 20, c, 1.4, true)

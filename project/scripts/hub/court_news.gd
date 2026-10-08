@@ -8,10 +8,10 @@ var _scroll: ScrollContainer
 func _ready() -> void:
 	UIKit.void_bg(self)
 	UIKit.top_bar(self, "朝报", [["历", Calendar.label(), UIKit.TEXT_DIM]], "返回舆图", _back)
-	UIKit.page_head(self, 42, 72, "COURT GAZETTE", "十邦朝报", "BIRTHS · DEATHS · SUCCESSION", "邻国王室的添丁、辞世与承座危机。舆图上的标记与这里同一份记录。")
+	UIKit.page_head(self, 42, 72, "COURT GAZETTE", "十邦朝报", "BIRTHS · DEATHS · SUCCESSION", "邻国王室的添丁、辞世与承座危机。舆图上的标记与这里同一份记录。", "", 18)
 	var bar := HBoxContainer.new()
 	bar.name = "FilterBar"
-	bar.position = Vector2(42, 168)
+	bar.position = Vector2(42, 200)
 	bar.add_theme_constant_override("separation", 8)
 	add_child(bar)
 	for it in [["all", "全部", "FilterAll"], ["birth", "添丁", "FilterBirth"], ["death", "辞世", "FilterDeath"], ["succession", "更替", "FilterSuccession"], ["marriage", "配婚", "FilterMarriage"], ["recall", "归国", "FilterRecall"]]:
@@ -24,11 +24,11 @@ func _ready() -> void:
 			Sfx.click()
 			_set_filter(kind))
 		bar.add_child(b)
-	var panel := UIKit.panel_at(self, Rect2(42, 224, 1196, 452), 12)
+	var panel := UIKit.panel_at(self, Rect2(42, 256, 1196, 420), 12)
 	panel.name = "NewsList"
 	_scroll = ScrollContainer.new()
 	_scroll.position = Vector2(16, 16)
-	_scroll.size = Vector2(1164, 420)
+	_scroll.size = Vector2(1164, 388)
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	panel.add_child(_scroll)
 	_list = VBoxContainer.new()

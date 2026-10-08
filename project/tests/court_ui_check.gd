@@ -51,8 +51,8 @@ func _scene(path: String, names: Array, tall: Array) -> void:
 	if n == null:
 		return
 	get_tree().root.add_child(n)
-	await get_tree().process_frame
-	await get_tree().process_frame
+	for _i in 4:
+		await get_tree().process_frame
 	for nm in names:
 		_ok(n.find_child(str(nm), true, false) != null or str(n.name) == str(nm), "%s missing %s" % [path, nm])
 	for nm2 in tall:
@@ -65,6 +65,11 @@ func _scene(path: String, names: Array, tall: Array) -> void:
 			h = b.size.y
 		_ok(h >= 44.0, "%s %s target %s < 44" % [path, nm2, h])
 	_bounds(n, path)
+	_label_overlap(n, path)
+	if path.ends_with("bloodline_codex.tscn"):
+		_codex_marks(n)
+	if path.ends_with("marriage.tscn"):
+		_marriage_footer(n)
 	if path.ends_with("court_news.tscn"):
 		var birth := n.find_child("FilterBirth", true, false) as Button
 		if birth:
@@ -78,6 +83,8 @@ func _scene(path: String, names: Array, tall: Array) -> void:
 	if n is Control:
 		MobileLayout.apply_root(n, fit)
 		_ok((n as Control).position.y >= 84.0 - 0.5, "%s safe-area pin %s" % [path, (n as Control).position])
+		await get_tree().process_frame
+		_label_overlap(n, path + " @safe")
 	n.queue_free()
 	await get_tree().process_frame
 
@@ -91,6 +98,150 @@ func _bounds(scene: Node, path: String) -> void:
 		var gp := ctrl.global_position
 		if gp.x < -24.0 or gp.y < -24.0 or gp.x > 1304.0 or gp.y > 744.0:
 			_fails.append("%s off canvas %s at %s" % [path, ctrl.name, gp])
+
+func _codex_marks(scene: Node) -> void:
+	var glyphs := ["功", "剂", "槛", "显", "隐", "父", "女", "六", "合", "母", "龄", "纯"]
+	var rail := scene.find_child("NationRail", true, false)
+	_ok(rail != null, "codex rail")
+	if rail == null:
+		return
+	var emblems := rail.find_children("NationEmblem", "", true, false)
+	_ok(emblems.size() >= 10, "nation emblems %d" % emblems.size())
+	for b in rail.get_children():
+		if not (b is Button):
+			continue
+		_ok(str((b as Button).text).strip_edges() == "", "nation button keeps a law glyph in its caption")
+		for lab in b.find_children("*", "Label", true, false):
+			if str(lab.name) == "NationName":
+				_ok(str(lab.text).strip_edges().length() >= 2, "nation name")
+				continue
+			_ok(not glyphs.has(str(lab.text).strip_edges()), "nation list uses law glyph %s" % lab.text)
+	var sils := scene.find_children("TraitSilhouette", "", true, false)
+	_ok(not sils.is_empty(), "unknown traits are silhouettes")
+	for sil in sils:
+		var leaked := false
+		for lab in sil.find_children("*", "Label", true, false):
+			var tx := str(lab.text).strip_edges()
+			if tx == "未识征" or (tx != "" and not glyphs.has(tx)):
+				leaked = true
+		_ok(not leaked, "silhouette shows a trait name")
+	for known in scene.find_children("TraitKnown", "", true, false):
+		var named := false
+		for lab2 in known.find_children("*", "Label", true, false):
+			var tx2 := str(lab2.text).strip_edges()
+			if tx2.length() > 1 and not glyphs.has(tx2):
+				named = true
+		_ok(named, "known trait has no name")
+
+func _marriage_footer(scene: Node) -> void:
+	var ages := scene.find_children("AgeLine", "", true, false)
+	var caps := scene.find_children("PedigreeCaption", "", true, false)
+	_ok(ages.size() >= 2 and caps.size() >= 2, "marriage cards name the age and the pedigree")
+	for age in ages:
+		var ar := _visual_rect(age as Label)
+		for cap in caps:
+			var cr := _visual_rect(cap as Label)
+			if not ar.intersects(cr):
+				continue
+			var hit := ar.intersection(cr)
+			_ok(hit.size.x <= 2.0 or hit.size.y <= 2.0, "age overlaps pedigree %s" % hit)
+
+func _label_overlap(scene: Node, path: String) -> void:
+	var labels: Array = []
+	for n in scene.find_children("*", "Label", true, false):
+		var l := n as Label
+		if l == null or not l.is_visible_in_tree():
+			continue
+		if str(l.text).strip_edges() == "":
+			continue
+		labels.append(l)
+	for i in labels.size():
+		var a: Label = labels[i]
+		var ra := _visual_rect(a)
+		if ra.size.x < 2.0 or ra.size.y < 2.0:
+			continue
+		_clipped(a, path)
+		for j in range(i + 1, labels.size()):
+			var b: Label = labels[j]
+			if _ancestor(a, b) or _ancestor(b, a):
+				continue
+			var rb := _visual_rect(b)
+			if rb.size.x < 2.0 or rb.size.y < 2.0:
+				continue
+			if not ra.intersects(rb):
+				continue
+			var hit := ra.intersection(rb)
+			if hit.size.x <= 2.0 or hit.size.y <= 2.0:
+				continue
+			_fails.append("%s label overlap «%s» × «%s»" % [path, _snip(a), _snip(b)])
+
+func _clipped(l: Label, path: String) -> void:
+	if l.clip_text and l.autowrap_mode == TextServer.AUTOWRAP_OFF:
+		var need_w := l.get_minimum_size().x
+		if l.size.x > 8.0 and need_w > l.size.x + 8.0:
+			_fails.append("%s clipped «%s»" % [path, _snip(l)])
+
+func _visual_rect(l: Label) -> Rect2:
+	## Painted glyphs inside the label. Noto's line box is 3em and only the middle em is ink,
+	## so empty leading above and below a control is not treated as a collision. Horizontal
+	## overflow is included when the label does not clip. Checked on the 1280x720 design
+	## and again after the mobile safe-area scale.
+	var r := l.get_global_rect()
+	var fs := float(l.get_theme_font_size("font_size"))
+	if fs < 1.0:
+		fs = 15.0
+	var sc := l.get_global_transform().get_scale().abs()
+	var em := fs * sc.y
+	var line := em * 3.0
+	var lines := 1
+	if l.autowrap_mode != TextServer.AUTOWRAP_OFF and r.size.y > line * 1.2:
+		lines = maxi(1, int(round(r.size.y / line)))
+	var block := line * float(lines)
+	var top := r.position.y
+	if l.vertical_alignment == VERTICAL_ALIGNMENT_CENTER:
+		top += maxf(0.0, (r.size.y - block) * 0.5)
+	elif l.vertical_alignment == VERTICAL_ALIGNMENT_BOTTOM:
+		top += maxf(0.0, r.size.y - block)
+	var ink := Rect2(r.position.x, top + em, r.size.x, em * float(lines))
+	if not l.clip_text and l.autowrap_mode == TextServer.AUTOWRAP_OFF:
+		var need_w := l.get_minimum_size().x * sc.x
+		if need_w > ink.size.x + 1.0:
+			var extra := need_w - ink.size.x
+			if l.horizontal_alignment == HORIZONTAL_ALIGNMENT_CENTER:
+				ink.position.x -= extra * 0.5
+			elif l.horizontal_alignment == HORIZONTAL_ALIGNMENT_RIGHT:
+				ink.position.x -= extra
+			ink.size.x = need_w
+	if l.clip_text:
+		ink = ink.intersection(r)
+		if ink.size.x < 0.0:
+			ink.size = Vector2.ZERO
+	return ink
+
+func _card_of(n: Node) -> Node:
+	var p := n.get_parent()
+	while p:
+		if p is Panel or p is PanelContainer:
+			return p
+		p = p.get_parent()
+	var scene := n
+	while scene.get_parent() and scene.get_parent() != n.get_tree().root:
+		scene = scene.get_parent()
+	return scene
+
+func _ancestor(a: Node, b: Node) -> bool:
+	var p := b.get_parent()
+	while p:
+		if p == a:
+			return true
+		p = p.get_parent()
+	return false
+
+func _snip(l: Label) -> String:
+	var t := str(l.text).replace("\n", " ")
+	if t.length() > 18:
+		t = t.substr(0, 18)
+	return t
 
 func _in_scroll(n: Node) -> bool:
 	var p := n.get_parent()

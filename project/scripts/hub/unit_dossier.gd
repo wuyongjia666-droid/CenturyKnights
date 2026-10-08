@@ -8,7 +8,7 @@ func _ready() -> void:
 	UIKit.void_bg(self)
 	var who := _focus.name if _focus != null else "无人"
 	UIKit.top_bar(self, "血脉详档 · %s" % who, [["历", Calendar.label(), UIKit.TEXT_DIM]], "返回", _back)
-	UIKit.page_head(self, 42, 72, "UNIT DOSSIER", who, "EXPRESSED / CARRIED", "明征写在脸上。携因要祠堂验过才展开，并注明来自父或母。")
+	UIKit.page_head(self, 42, 72, "UNIT DOSSIER", who, "EXPRESSED / CARRIED", "明征写在脸上。携因要祠堂验过才展开，并注明来自父或母。", "", 18)
 	_build()
 	UIKit.footer_bar(self, [["Y", "血脉图鉴"], ["ESC", "返回"]], "UNIT DOSSIER · FROST")
 	UIFX.page_enter(self)
@@ -40,18 +40,21 @@ func _unhandled_input(e: InputEvent) -> void:
 func _build() -> void:
 	var c := _focus
 	var sheet: Dictionary = CKCourtChrome.unit_sheet(c)
-	var left := UIKit.panel_at(self, Rect2(42, 168, 300, 508), 12, true)
+	var left := UIKit.panel_at(self, Rect2(42, 200, 300, 476), 12, true)
 	left.name = "PortraitColumn"
 	if c != null:
 		UIKit.portrait_plate(left, Rect2(18, 16, 264, 300), c, CKGenomePortrait.STAGE_ZH.get(str(sheet.get("stage", "")), ""))
+	var chips := HBoxContainer.new()
+	chips.position = Vector2(18, 324)
+	chips.size = Vector2(264, 32)
+	chips.add_theme_constant_override("separation", 8)
+	left.add_child(chips)
 	var stage := UIKit.tag_chip("龄段 · %s" % str(sheet.get("stage_zh", "—")), UIKit.ACCENT, true)
 	stage.name = "AgeStage"
-	stage.position = Vector2(18, 328)
-	left.add_child(stage)
+	chips.add_child(stage)
 	var title := UIKit.tag_chip("爵 · %s" % str(sheet.get("title", "—")), UIKit.TEXT)
 	title.name = "TitleChip"
-	title.position = Vector2(150, 328)
-	left.add_child(title)
+	chips.add_child(title)
 	var line := UIKit.title_label(str(sheet.get("line_zh", "—")), 18)
 	line.position = Vector2(18, 368)
 	left.add_child(line)
@@ -68,14 +71,14 @@ func _build() -> void:
 	note.position = Vector2(18, 446)
 	note.size = Vector2(264, 40)
 	left.add_child(note)
-	var mid := UIKit.panel_at(self, Rect2(358, 168, 440, 508), 12)
+	var mid := UIKit.panel_at(self, Rect2(358, 200, 440, 476), 12)
 	mid.name = "TraitList"
 	var sh := UIKit.mono("EXPRESSED", 9, UIKit.ACCENT)
 	sh.position = Vector2(16, 14)
 	mid.add_child(sh)
 	var scroll := ScrollContainer.new()
 	scroll.position = Vector2(12, 36)
-	scroll.size = Vector2(416, 460)
+	scroll.size = Vector2(416, 424)
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	mid.add_child(scroll)
 	var col := VBoxContainer.new()
@@ -87,14 +90,14 @@ func _build() -> void:
 	_trait_block(col, carry_title, sheet.get("carried", []) if bool(sheet.get("verified", false)) else [], UIKit.ACCENT)
 	if not bool(sheet.get("verified", false)):
 		col.add_child(UIKit.body_label("祠堂验血之前，潜征保持未识。", UIKit.TEXT_FAINT, 12))
-	var right := UIKit.panel_at(self, Rect2(814, 168, 424, 508), 12)
+	var right := UIKit.panel_at(self, Rect2(814, 200, 424, 476), 12)
 	right.name = "FamilyTree"
 	var fh := UIKit.mono("FAMILY · TRAIT HIGHLIGHT", 9, UIKit.TEXT_FAINT)
 	fh.position = Vector2(16, 14)
 	right.add_child(fh)
 	var tree_scroll := ScrollContainer.new()
 	tree_scroll.position = Vector2(12, 40)
-	tree_scroll.size = Vector2(400, 400)
+	tree_scroll.size = Vector2(400, 360)
 	tree_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	right.add_child(tree_scroll)
 	var tree := VBoxContainer.new()
@@ -104,7 +107,7 @@ func _build() -> void:
 	_tree(tree, c, sheet)
 	var codex := UIKit.ghost_button("打开血脉图鉴", 180, 44)
 	codex.name = "OpenCodex"
-	codex.position = Vector2(220, 452)
+	codex.position = Vector2(220, 416)
 	codex.pressed.connect(func():
 		Sfx.click()
 		get_tree().change_scene_to_file("res://scenes/hub/bloodline_codex.tscn"))
@@ -129,9 +132,16 @@ func _trait_block(parent: Node, title: String, rows: Array, col: Color) -> void:
 		v.add_child(top)
 		top.add_child(CKCourtChrome.law_chip(str(e.get("law", ""))))
 		var nm := UIKit.body_label(str(e.get("zh", e.get("state", ""))), UIKit.TEXT, 14)
+		nm.autowrap_mode = TextServer.AUTOWRAP_OFF
+		nm.clip_text = true
+		nm.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		nm.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		nm.custom_minimum_size = Vector2(180, 0)
 		top.add_child(nm)
-		v.add_child(UIKit.body_label("%s · %s" % [str(e.get("law_zh", "")), str(e.get("from", ""))], UIKit.TEXT_DIM, 12))
+		var sub := UIKit.body_label("%s · %s" % [str(e.get("law_zh", "")), str(e.get("from", ""))], UIKit.TEXT_DIM, 12)
+		sub.autowrap_mode = TextServer.AUTOWRAP_OFF
+		sub.clip_text = true
+		v.add_child(sub)
 
 func _tree(parent: Node, focus: CKCharacter, sheet: Dictionary) -> void:
 	if focus == null:

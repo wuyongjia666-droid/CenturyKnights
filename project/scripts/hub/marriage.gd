@@ -43,7 +43,7 @@ func _build() -> void:
 		["河卫邦", GameState.get_rep_name("riverland"), UIKit.TEXT],
 		["银币", str(GameState.silver), UIKit.ACCENT],
 		["历", Calendar.label(), UIKit.TEXT_DIM]], "返回城堡", _back)
-	UIKit.page_head(self, 42, 72, "HARMONIC RATIO EVALUATION", "联姻契约", "MARRIAGE PROTOCOL", "宗族双源结合研判与血脉特质推演 —— 声望是门，子嗣期望是窗。", "PROTOCOL NO.07")
+	UIKit.page_head(self, 42, 72, "HARMONIC RATIO EVALUATION", "联姻契约", "MARRIAGE PROTOCOL", "宗族双源结合研判与血脉特质推演 —— 声望是门，子嗣期望是窗。", "PROTOCOL NO.07", 18)
 	var rd := UIKit.mono("RATING DISCIPLINE", 9, UIKit.TEXT_FAINT)
 	rd.position = Vector2(1238 - rd.get_minimum_size().x, 96)
 	add_child(rd)
@@ -54,17 +54,17 @@ func _build() -> void:
 	_grade.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	add_child(_grade)
 	var hl := UIKit.hairline(Color(1, 1, 1, 0.07))
-	hl.position = Vector2(42, 150)
+	hl.position = Vector2(42, 196)
 	hl.size = Vector2(1196, 1)
 	add_child(hl)
 	var cl := UIKit.mono("CANDIDATES // 春令应帖", 9, UIKit.TEXT_FAINT)
-	cl.position = Vector2(42, 166)
+	cl.position = Vector2(42, 204)
 	add_child(cl)
 	_list = VBoxContainer.new()   # legacy handle (unused for layout)
 	_list.visible = false
 	add_child(_list)
 	_tabs = HBoxContainer.new()
-	_tabs.position = Vector2(42, 184)
+	_tabs.position = Vector2(300, 200)
 	_tabs.add_theme_constant_override("separation", 8)
 	add_child(_tabs)
 
@@ -89,10 +89,11 @@ func _build() -> void:
 	_punnett = UIKit.panel_at(self, Rect2(654, 516, 584, 112), 10)
 	_punnett.name = "PunnettBoard"
 	_msg = UIKit.body_label("选定婚仪后，这里写明子女会怎样入谱。", UIKit.TEXT_DIM, 12)
-	_msg.position = Vector2(54, 600)
-	_msg.size = Vector2(560, 24)
-	_msg.custom_minimum_size = Vector2(560, 0)
-	add_child(_msg)
+	_msg.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_msg.clip_text = true
+	_msg.position = Vector2(12, 80)
+	_msg.size = Vector2(576, 22)
+	_rite_board.add_child(_msg)
 	var row := HBoxContainer.new()
 	row.position = Vector2(602, 636)
 	row.size = Vector2(636, 44)
@@ -186,86 +187,101 @@ func _refresh() -> void:
 
 func _house_card(rect: Rect2, c: CKCharacter, side_tag: String, side_en: String, col: Color, series: String) -> void:
 	var p := UIKit.panel_at(_cards, rect, 10)
-	var h := UIKit.mono(side_en, 9, col)
-	h.position = Vector2(20, 20)
-	p.add_child(h)
+	p.clip_contents = true
+	var footer_y := rect.size.y - 32.0
+	var head := HBoxContainer.new()
+	head.position = Vector2(12, 10)
+	head.size = Vector2(rect.size.x - 24, 20)
+	head.add_theme_constant_override("separation", 8)
+	p.add_child(head)
+	var left_h := HBoxContainer.new()
+	left_h.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	left_h.clip_contents = true
+	left_h.add_theme_constant_override("separation", 6)
+	head.add_child(left_h)
+	left_h.add_child(UIKit.mono(side_en, 9, col))
 	var hz := UIKit.body_label("// " + side_tag, col, 11)
 	hz.autowrap_mode = TextServer.AUTOWRAP_OFF
-	hz.position = Vector2(26 + h.get_minimum_size().x, 17)
-	p.add_child(hz)
+	hz.clip_text = true
+	hz.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	left_h.add_child(hz)
 	var se := UIKit.mono(series, 9, UIKit.TEXT_FAINT)
-	se.position = Vector2(rect.size.x - 20 - se.get_minimum_size().x, 20)
-	p.add_child(se)
+	head.add_child(se)
 	if c == null:
 		return
-	UIKit.portrait_plate(p, Rect2(20, 48, 132, 168), c, "FROST FRAME")
-	var nm := UIKit.title_label(c.name, 18)
+	var plate := Rect2(14, 36, 120, 128)
+	UIKit.portrait_plate(p, plate, c, "FROST")
+	var nm := UIKit.title_label(c.name, 15)
+	nm.name = "CardName"
 	nm.add_theme_font_override("font", UIKit.font("bold"))
-	nm.position = Vector2(20, 226)
-	nm.size = Vector2(132, 24)
+	nm.position = Vector2(10, plate.end.y + 4)
+	nm.size = Vector2(128, 20)
+	nm.clip_text = true
 	nm.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	p.add_child(nm)
-	var sub := UIKit.body_label("%d 岁 · %s" % [c.age, GameState.get_job(c.job_id).get("name", "")], col, 12)
-	sub.autowrap_mode = TextServer.AUTOWRAP_OFF
-	sub.position = Vector2(20, 252)
-	sub.size = Vector2(132, 18)
+	var sub := UIKit.body_label("%d岁 · %s" % [c.age, GameState.get_job(c.job_id).get("name", "")], col, 11)
+	sub.name = "AgeLine"
+	sub.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	sub.clip_text = true
+	sub.position = Vector2(10, plate.end.y + 24)
+	sub.size = Vector2(128, 32)
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	p.add_child(sub)
 	var v := VBoxContainer.new()
-	v.position = Vector2(168, 50)
-	v.size = Vector2(rect.size.x - 188, 200)
-	v.add_theme_constant_override("separation", 3)
+	v.position = Vector2(150, 36)
+	v.size = Vector2(rect.size.x - 164, footer_y - 44)
+	v.clip_contents = true
+	v.add_theme_constant_override("separation", 2)
 	p.add_child(v)
-	v.add_child(UIKit.mono("家系源流 · LINEAGE", 9, UIKit.TEXT_FAINT, false))
 	var ln := UIKit.body_label("%s旗 · %s" % [GameState.surname if c.is_leader else str(c.name).substr(0, 1), "家主" if c.is_leader else "应帖者"], UIKit.TEXT, 13)
+	ln.autowrap_mode = TextServer.AUTOWRAP_OFF
+	ln.clip_text = true
 	v.add_child(ln)
-	var g1 := Control.new()
-	g1.custom_minimum_size = Vector2(0, 6)
-	v.add_child(g1)
-	v.add_child(UIKit.mono("品阶 · RANK", 9, UIKit.TEXT_FAINT, false))
-	v.add_child(UIKit.body_label("%s（LV %d）" % [c.rank_name(), c.level], UIKit.TEXT, 13))
-	var g2 := Control.new()
-	g2.custom_minimum_size = Vector2(0, 6)
-	v.add_child(g2)
-	v.add_child(UIKit.mono("骨相血脉 · BLOOD", 9, UIKit.TEXT_FAINT, false))
-	var bh := HBoxContainer.new()
-	bh.add_theme_constant_override("separation", 8)
-	v.add_child(bh)
+	v.add_child(UIKit.body_label("%s  LV %d" % [c.rank_name(), c.level], UIKit.TEXT, 13))
 	var pb := str(c.primary_bloodline())
 	var bl: Dictionary = GameState.get_bloodline(pb)
-	bh.add_child(UIKit.tag_chip(str(bl.get("name", pb)), col))
 	var pct := int(round(float(c.blood_mix.get(pb, 1.0)) * 100))
-	var pl := UIKit.mono("%d%% 纯度" % pct, 11, UIKit.TEXT_DIM, false)
-	pl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	bh.add_child(pl)
-	var g3 := Control.new()
-	g3.custom_minimum_size = Vector2(0, 8)
-	v.add_child(g3)
+	var blood := UIKit.body_label("%s  %d%%" % [str(bl.get("name", pb)), pct], col, 13)
+	blood.autowrap_mode = TextServer.AUTOWRAP_OFF
+	blood.clip_text = true
+	v.add_child(blood)
 	var tr_names: Array = []
 	for tid in c.traits.slice(0, 3):
 		tr_names.append(str(GameState.get_trait(str(tid)).get("name", tid)))
-	var dsc := UIKit.body_label("禀性：%s" % ("、".join(tr_names) if not tr_names.is_empty() else "未显"), UIKit.TEXT_FAINT, 12)
-	dsc.custom_minimum_size = Vector2(rect.size.x - 188, 0)
+	var dsc := UIKit.body_label("禀性 %s" % ("、".join(tr_names) if not tr_names.is_empty() else "未显"), UIKit.TEXT_FAINT, 12)
+	dsc.autowrap_mode = TextServer.AUTOWRAP_OFF
+	dsc.clip_text = true
 	v.add_child(dsc)
 	var fh := UIKit.hairline(Color(1, 1, 1, 0.07))
-	fh.position = Vector2(20, rect.size.y - 46)
-	fh.size = Vector2(rect.size.x - 40, 1)
+	fh.position = Vector2(12, footer_y - 6)
+	fh.size = Vector2(rect.size.x - 24, 1)
 	p.add_child(fh)
-	var pd := UIKit.mono("PEDIGREE: GEN %s" % ("I" if c.parent_ids.is_empty() else "II"), 9, UIKit.TEXT_FAINT)
-	pd.position = Vector2(20, rect.size.y - 30)
-	p.add_child(pd)
-	var fit := UIKit.body_label("战力 ATK %d · DEF %d" % [c.derived_atk(), c.derived_def()], UIKit.TEXT_DIM, 11)
+	var foot := HBoxContainer.new()
+	foot.position = Vector2(12, footer_y)
+	foot.size = Vector2(rect.size.x - 24, 20)
+	foot.add_theme_constant_override("separation", 8)
+	p.add_child(foot)
+	var pd := UIKit.mono("PEDIGREE · GEN %s" % ("I" if c.parent_ids.is_empty() else "II"), 9, UIKit.TEXT_FAINT)
+	pd.name = "PedigreeCaption"
+	pd.clip_text = true
+	pd.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	pd.custom_minimum_size = Vector2(120, 16)
+	foot.add_child(pd)
+	var fit := UIKit.body_label("ATK %d · DEF %d" % [c.derived_atk(), c.derived_def()], UIKit.TEXT_DIM, 11)
 	fit.autowrap_mode = TextServer.AUTOWRAP_OFF
-	fit.position = Vector2(rect.size.x - 180, rect.size.y - 32)
-	fit.size = Vector2(160, 16)
+	fit.clip_text = true
+	fit.custom_minimum_size = Vector2(108, 16)
 	fit.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	p.add_child(fit)
+	foot.add_child(fit)
 
 func _harmony_card(rect: Rect2, a: CKCharacter, b: CKCharacter) -> void:
 	## 子嗣期望 — every block has its own fixed row; nothing overlaps (v8.5 bug)
 	var p := UIKit.panel_at(_cards, rect, 10)
-	var t := UIKit.mono("GENOMIC HARMONY SIMULATION", 9, UIKit.TEXT_DIM)
-	t.position = Vector2((rect.size.x - t.get_minimum_size().x) * 0.5, 20)
+	var t := UIKit.mono("GENOMIC HARMONY", 9, UIKit.TEXT_DIM)
+	t.clip_text = true
+	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	t.position = Vector2(8, 12)
+	t.size = Vector2(rect.size.x - 16, 16)
 	p.add_child(t)
 	if a == null or b == null:
 		return
@@ -279,40 +295,45 @@ func _harmony_card(rect: Rect2, a: CKCharacter, b: CKCharacter) -> void:
 	_grade.text = "●  子嗣资质评级  %s" % ("S" if pct >= 85 else ("A" if pct >= 70 else ("B" if pct >= 55 else "C")))
 	var lab := UIKit.body_label("子嗣期望 · 资质共鸣指标", UIKit.TEXT_DIM, 12)
 	lab.autowrap_mode = TextServer.AUTOWRAP_OFF
-	lab.position = Vector2(0, 44)
-	lab.size = Vector2(rect.size.x, 18)
+	lab.clip_text = true
+	lab.position = Vector2(8, 32)
+	lab.size = Vector2(rect.size.x - 16, 36)
 	lab.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	p.add_child(lab)
 	var big := Label.new()
 	big.text = "%d" % pct
 	big.add_theme_font_override("font", UIKit.font("mono"))
-	big.add_theme_font_size_override("font_size", 52)
+	big.add_theme_font_size_override("font_size", 36)
 	big.add_theme_color_override("font_color", UIKit.ACCENT)
-	big.position = Vector2(0, 60)
-	big.size = Vector2(rect.size.x, 64)
-	big.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	p.add_child(big)
-	var pc := UIKit.mono("%", 16, UIKit.ACCENT, false)
-	pc.position = Vector2(rect.size.x * 0.5 + big.get_minimum_size().x * 0.5 + 2, 92)
+	var bw := big.get_minimum_size()
+	big.position = Vector2((rect.size.x - bw.x) * 0.5 - 8, 70)
+	big.size = bw
+	var pc := UIKit.mono("%", 14, UIKit.ACCENT, false)
+	pc.position = Vector2(big.position.x + bw.x + 4, 70 + 36)
 	p.add_child(pc)
 	var bar := UIKit.slim_bar(pct, 100, UIKit.ACCENT, 160, 3)
-	bar.position = Vector2((rect.size.x - 160) * 0.5, 128)
+	bar.position = Vector2((rect.size.x - 160) * 0.5, 168)
 	p.add_child(bar)
-	var rk := UIKit.mono("RANK HINT // %s" % CKCharacter.RANK_NAMES.get(ex.rank_hint, ex.rank_hint), 9, UIKit.TEXT_FAINT, false)
-	rk.position = Vector2((rect.size.x - rk.get_minimum_size().x) * 0.5, 138)
+	var rk := UIKit.mono("RANK // %s" % CKCharacter.RANK_NAMES.get(ex.rank_hint, ex.rank_hint), 9, UIKit.TEXT_FAINT, false)
+	rk.clip_text = true
+	rk.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	rk.position = Vector2(8, 176)
+	rk.size = Vector2(rect.size.x - 16, 24)
 	p.add_child(rk)
 	# inheritance preview: top-3 traits
-	var ib := UIKit.panel_at(p, Rect2(16, 162, rect.size.x - 32, 74), 6)
-	var it := UIKit.body_label("后代遗传特质推演 · INHERITANCE", UIKit.TEXT_DIM, 11)
+	var ib := UIKit.panel_at(p, Rect2(16, 198, rect.size.x - 32, 60), 6)
+	var it := UIKit.body_label("后代遗传特质推演", UIKit.TEXT_DIM, 11)
 	it.autowrap_mode = TextServer.AUTOWRAP_OFF
-	it.position = Vector2(0, 6)
-	it.size = Vector2(rect.size.x - 32, 16)
+	it.clip_text = true
+	it.position = Vector2(4, 6)
+	it.size = Vector2(rect.size.x - 40, 16)
 	it.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	ib.add_child(it)
 	var tp: Array = ex.trait_probs.slice(0, 3)
 	var cw := (rect.size.x - 32 - 24 - 16) / 3.0
 	for i in tp.size():
-		var chip := UIKit.panel_at(ib, Rect2(12 + i * (cw + 8), 28, cw, 38), 4)
+		var chip := UIKit.panel_at(ib, Rect2(12 + i * (cw + 8), 24, cw, 32), 4)
 		var cs: StyleBoxFlat = chip.get_theme_stylebox("panel").duplicate()
 		cs.bg_color = Color(UIKit.OK, 0.06)
 		cs.border_color = Color(UIKit.OK, 0.45)
@@ -320,41 +341,43 @@ func _harmony_card(rect: Rect2, a: CKCharacter, b: CKCharacter) -> void:
 		var cn := UIKit.body_label(str(tp[i].name), UIKit.OK, 12)
 		cn.autowrap_mode = TextServer.AUTOWRAP_OFF
 		cn.clip_text = true
-		cn.position = Vector2(0, 2)
-		cn.size = Vector2(cw, 18)
+		cn.position = Vector2(2, 2)
+		cn.size = Vector2(cw - 4, 16)
 		cn.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		chip.add_child(cn)
 		var cp := UIKit.mono("%d%% 显性" % int(round(float(tp[i].prob) * 100)), 9, UIKit.TEXT_FAINT, false)
-		cp.position = Vector2((cw - cp.get_minimum_size().x) * 0.5, 20)
+		cp.clip_text = true
+		cp.position = Vector2(2, 20)
+		cp.size = Vector2(cw - 4, 14)
+		cp.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		chip.add_child(cp)
 func _render_cards() -> void:
 	for c in _cards.get_children():
 		_cards.remove_child(c)
 		c.queue_free()
 	var leader = GameState.get_leader()
-	_house_card(Rect2(42, 218, 386, 292), leader, "宗主一方", "CLAN PRINCIPAL", UIKit.ACCENT, "SERIES: VII-01")
-	_harmony_card(Rect2(448, 218, 384, 292), leader, _selected)
-	_house_card(Rect2(852, 218, 386, 292), _selected, "应帖一方", "ALLIED SPOUSE", UIKit.OK, "SERIES: IV-02")
+	_house_card(Rect2(42, 244, 386, 264), leader, "宗主一方", "CLAN PRINCIPAL", UIKit.ACCENT, "SERIES: VII-01")
+	_harmony_card(Rect2(448, 244, 384, 264), leader, _selected)
+	_house_card(Rect2(852, 244, 386, 264), _selected, "应帖一方", "ALLIED SPOUSE", UIKit.OK, "SERIES: IV-02")
 	_fill_forecast(leader, _selected)
 
 func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 	if _rite_board == null or _punnett == null:
 		return
 	for ch in _rite_board.get_children():
+		if ch == _msg:
+			continue
 		ch.queue_free()
 	for ch in _punnett.get_children():
 		ch.queue_free()
-	var cap := UIKit.mono("RITES // 婚仪与后果", 9, UIKit.ACCENT)
+	var cap := UIKit.mono("RITES // 婚仪", 9, UIKit.ACCENT)
+	cap.clip_text = true
 	cap.position = Vector2(12, 8)
+	cap.size = Vector2(280, 16)
 	_rite_board.add_child(cap)
 	_sync_rite_flags(a, b)
 	var rites: Array = CKCourt.required_rites(a, b) if a != null and b != null else []
-	if rites.is_empty():
-		var none := UIKit.body_label("无必须婚仪。子女按常例入谱。", UIKit.TEXT_DIM, 12)
-		none.position = Vector2(12, 40)
-		none.size = Vector2(560, 36)
-		_rite_board.add_child(none)
-	else:
+	if not rites.is_empty():
 		var x := 12.0
 		for r in rites:
 			var id := str(r.get("id", ""))
@@ -374,7 +397,9 @@ func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 			x += 144.0
 	_consequence_line(a, b)
 	var ph := UIKit.mono("PUNNETT // 每项性状", 9, UIKit.TEXT_FAINT)
+	ph.clip_text = true
 	ph.position = Vector2(12, 6)
+	ph.size = Vector2(240, 16)
 	_punnett.add_child(ph)
 	var holder := VBoxContainer.new()
 	holder.position = Vector2(12, 24)
