@@ -220,4 +220,10 @@ static func from_dict(d: Dictionary) -> CKCharacter:
 	c.scars = d.get("scars", []).duplicate()
 	c.honors = d.get("honors", []).duplicate()
 	c.blood_meta = d.get("blood_meta", {}).duplicate(true)
+	if typeof(c.blood_meta) != TYPE_DICTIONARY:
+		c.blood_meta = {}
+	var migrated_mix := CKBloodline.migrate_blood_mix(c.blood_mix)
+	if not CKBloodline.mix_equal(c.blood_mix, migrated_mix):
+		c.blood_meta["legacy_blood"] = c.blood_mix.duplicate()
+		c.blood_mix = migrated_mix
 	return c
