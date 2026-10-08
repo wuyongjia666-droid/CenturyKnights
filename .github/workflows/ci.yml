@@ -1,0 +1,51 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: ci
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache Godot 4.3
+        uses: actions/cache@v4
+        with:
+          path: ~/.local/share/godot
+          key: godot-4.3-stable-linux-x86_64-${{ hashFiles('scripts/install_godot.sh') }}
+
+      - name: Cache imported assets
+        uses: actions/cache@v4
+        with:
+          path: project/.godot/imported
+          key: godot-imported-${{ hashFiles('project/project.godot') }}
+          restore-keys: |
+            godot-imported-
+
+      - name: Install Godot
+        run: bash scripts/install_godot.sh
+
+      - name: Import project
+        run: |
+          export PATH="${HOME}/.local/bin:${PATH}"
+          cd project
+          godot --headless --import || godot --headless --editor --quit
+
+      - name: Run CI
+        run: |
+          export PATH="${HOME}/.local/bin:${PATH}"
+          ./scripts/run_ci.sh
+
+      - name: Upload CI logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ck-logs
+          path: /tmp/ck_*.log
+          if-no-files-found: ignore
