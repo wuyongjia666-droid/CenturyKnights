@@ -1,25 +1,94 @@
 {
   "houses": [
     {
+      "id": "ashbanner",
+      "nation": "ashbanner",
+      "name": "白垣旗社",
+      "creed": "旗要自己打出来，旁支不替人醒图。",
+      "stance": "wary",
+      "desc": "灰烬邦议会旁的旗社。专盯还没立功的携图者，也肯把席位让给真正醒过河图的人。",
+      "rep_key": "ashbanner"
+    },
+    {
       "id": "shuoying",
+      "nation": "shuoying",
       "name": "朔影家",
+      "creed": "眼睛不说谎，弦外的人不入席。",
       "stance": "hostile",
       "desc": "宴后余波的主谋。觊觎灰旗嗣位旁注。",
       "rep_key": "shuoying"
     },
     {
       "id": "qinghe",
+      "nation": "qinghe",
       "name": "清河宅",
+      "creed": "谱上差一缕，席位就让开。",
       "stance": "wary",
       "desc": "陆桥旧族。可交涉换情报与银。",
       "rep_key": "qinghe"
     },
     {
       "id": "lantern",
+      "nation": "lantern",
       "name": "灯市会",
+      "creed": "灯丝可以买，隐征买不到。",
       "stance": "neutral",
       "desc": "港市商团旁支。偏商子嗣更易谈拢。",
       "rep_key": "lantern"
+    },
+    {
+      "id": "frostcrown",
+      "nation": "frostcrown",
+      "name": "缄钟别院",
+      "creed": "冰钟不开口，别院就不点名。",
+      "stance": "wary",
+      "desc": "霜阙外的静院。专门等隐性复现，也专门拆别人提前宣布的继承。",
+      "rep_key": "frostcrown"
+    },
+    {
+      "id": "emberold",
+      "nation": "emberold",
+      "name": "冷窑旁支",
+      "creed": "窑纹只认父亲那一支。",
+      "stance": "hostile",
+      "desc": "旧邦窑议没坐下的一支。儿子缺席时就来争窑，也派人来核父系。",
+      "rep_key": "emberold"
+    },
+    {
+      "id": "saltmarsh",
+      "nation": "saltmarsh",
+      "name": "退潮盐庄",
+      "creed": "女儿坐席，儿子只掌船。",
+      "stance": "neutral",
+      "desc": "盐泽外港的庄户。潮痕女儿一多，他们就来提亲，也来抢船队。",
+      "rep_key": "saltmarsh"
+    },
+    {
+      "id": "irongorge",
+      "nation": "irongorge",
+      "name": "藏钢炉户",
+      "creed": "眉上那道缝，不必先给人看。",
+      "stance": "wary",
+      "desc": "峡口的炉户联盟。锻选之前先挖人，也先散布谁在藏着钢纹。",
+      "rep_key": "irongorge"
+    },
+    {
+      "id": "starriver",
+      "nation": "starriver",
+      "name": "双弧渡口",
+      "creed": "一座桥要对上另一座。",
+      "stance": "neutral",
+      "desc": "星津渡口两边的人家。单弧在位时他们就来争座，也来撮合另一弧。",
+      "rep_key": "starriver"
+    },
+    {
+      "id": "southzephyr",
+      "nation": "southzephyr",
+      "name": "雾林渡家",
+      "creed": "光从母亲那边来，父亲这边不发光。",
+      "stance": "neutral",
+      "desc": "南泽雾林的渡家。萤光转弱时来提亲，也来核谁在冒充母系。",
+      "rep_key": "southzephyr"
     }
   ]
 }

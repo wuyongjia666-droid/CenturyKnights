@@ -4,6 +4,10 @@ var _list: VBoxContainer
 var _body: RichTextLabel
 var _actions: VBoxContainer
 var _msg: Label
+var _left: Control
+var _right: Control
+var _back: Button
+var _inh: Button
 var _selected: Dictionary = {}
 
 func _ready() -> void:
@@ -34,43 +38,93 @@ func _ready() -> void:
 	var t = UIKit.make_label("敌宅交涉", true)
 	t.position = Vector2(40, 16)
 	add_child(t)
-	var tip = UIKit.make_dim_label("朔影家是余波主谋；清河可换情报；灯市会偏商子嗣更易谈拢。")
+	var tip = UIKit.make_dim_label("十国各有一家。图谋写在朝堂年历上，使馆可以反制。")
 	tip.position = Vector2(40, 56)
 	add_child(tip)
 	var left = UIKit.make_panel()
+	left.name = "RivalList"
 	left.position = Vector2(40, 100)
-	left.custom_minimum_size = Vector2(360, 420)
+	left.custom_minimum_size = Vector2(360, 500)
+	left.size = Vector2(360, 500)
 	add_child(left)
+	_left = left
+	var scroll := ScrollContainer.new()
+	scroll.position = Vector2(12, 12)
+	scroll.size = Vector2(336, 476)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	left.add_child(scroll)
 	_list = VBoxContainer.new()
 	_list.add_theme_constant_override("separation", 8)
-	left.add_child(_list)
+	_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_list.custom_minimum_size = Vector2(320, 0)
+	scroll.add_child(_list)
 	var right = UIKit.make_panel()
+	right.name = "RivalDetail"
 	right.position = Vector2(420, 100)
-	right.custom_minimum_size = Vector2(820, 420)
+	right.custom_minimum_size = Vector2(820, 500)
+	right.size = Vector2(820, 500)
 	add_child(right)
+	_right = right
+	var detail := VBoxContainer.new()
+	detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	detail.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	detail.add_theme_constant_override("separation", 8)
+	right.add_child(detail)
 	_body = RichTextLabel.new()
 	_body.bbcode_enabled = true
-	_body.custom_minimum_size = Vector2(780, 260)
+	_body.fit_content = true
+	_body.scroll_active = false
+	_body.custom_minimum_size = Vector2(0, 96)
+	_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_body.add_theme_color_override("default_color", UIKit.TEXT)
-	right.add_child(_body)
+	detail.add_child(_body)
 	_actions = VBoxContainer.new()
-	_actions.position = Vector2(16, 290)
+	_actions.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_actions.add_theme_constant_override("separation", 8)
-	right.add_child(_actions)
+	detail.add_child(_actions)
 	_msg = UIKit.make_label("")
 	_msg.position = Vector2(40, 540)
 	add_child(_msg)
 	var back = UIKit.make_button(Locale.t("btn_back"), 120)
+	back.name = "RivalBack"
 	back.position = Vector2(40, 640)
+	_back = back
 	back.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
 	add_child(back)
 	var inh = UIKit.make_accent_button("嗣位冲突", 140)
+	inh.name = "RivalInherit"
 	inh.position = Vector2(180, 640)
+	_inh = inh
 	inh.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/inheritance.tscn"))
 	add_child(inh)
 	_refresh()
 	UIFX.stagger_children(_list, 0.05, 0.22)
 	UIFX.wire_tree(self)
+
+func apply_mobile_layout() -> void:
+	var w := get_viewport_rect().size.x
+	if _left == null or _right == null or w >= 1000:
+		MobileLayout.pin_footer(get_node_or_null("StitchFooter"))
+		return
+	_left.clip_contents = true
+	_left.position = Vector2(12, 88)
+	_left.size = Vector2(w - 24, 168)
+	_left.custom_minimum_size = Vector2(w - 24, 168)
+	if _left.get_child_count() > 0:
+		var sc := _left.get_child(0) as Control
+		sc.position = Vector2(8, 8)
+		sc.size = Vector2(w - 40, 152)
+		sc.custom_minimum_size = sc.size
+	var h := get_viewport_rect().size.y
+	_right.position = Vector2(12, 264)
+	_right.size = Vector2(w - 24, maxf(220.0, h - 352.0))
+	_right.custom_minimum_size = _right.size
+	if _back != null:
+		_back.position = Vector2(12, h - 72)
+	if _inh != null:
+		_inh.position = Vector2(140, h - 72)
+	_body.custom_minimum_size = Vector2(0, 72)
+	MobileLayout.pin_footer(get_node_or_null("StitchFooter"))
 
 func _refresh() -> void:
 	for c in _list.get_children():
@@ -78,7 +132,7 @@ func _refresh() -> void:
 	for h in GameState.data_rivals.get("houses", []):
 		var hid = str(h.get("id"))
 		var stance = GameState.get_rival_stance(hid)
-		var b = UIKit.make_button("%s　[%s]" % [h.get("name"), _stance_cn(stance)], 320)
+		var b = UIKit.make_button("%s　[%s]" % [h.get("name"), _stance_cn(stance)], 300)
 		var captured = h
 		b.pressed.connect(func(): _select(captured))
 		_list.add_child(b)
@@ -86,7 +140,7 @@ func _refresh() -> void:
 		_select(GameState.data_rivals.get("houses", [])[0])
 
 func _stance_cn(s: String) -> String:
-	return {"hostile": "敌对", "wary": "对峙", "neutral": "中立", "cordial": "并席"}.get(s, s)
+	return CKSchemes.band_zh(s)
 
 func _select(h: Dictionary) -> void:
 	_selected = h
@@ -94,16 +148,23 @@ func _select(h: Dictionary) -> void:
 		c.queue_free()
 	var hid = str(h.get("id"))
 	var stance = GameState.get_rival_stance(hid)
-	_body.text = "[b]%s[/b]\n立场：%s\n%s\n\n交涉会写入族谱纪事，并可能改变立场。" % [h.get("name"), _stance_cn(stance), h.get("desc", "")]
+	var court := _court_house(hid)
+	var rel := int(court.get("relation", CKSchemes.opening_relation(hid))) if not court.is_empty() else CKSchemes.opening_relation(hid)
+	var band := str(court.get("relation_band", "")) if court.has("relation_band") else CKSchemes.band_of(rel)
+	var last := CKSchemes.latest(court)
+	var scheme_line := str(last.get("text", "今年还没有新的图谋。"))
+	_body.text = "[b]%s[/b]\n家风：%s\n关系：%s（%d）\n%s\n\n最近图谋：%s\n\n交涉会写入族谱纪事，并可能改变立场。" % [h.get("name"), h.get("creed", ""), _stance_cn(band if band != "" else stance), rel, h.get("desc", ""), scheme_line]
 	var deal = GameState.rival_deals.get(hid, {})
 	if int(deal.get("turns_left", 0)) > 0:
 		var mid = str(deal.get("last_event", ""))
 		var mid_n = int(deal.get("mid_ticks", 0))
-		_body.text += "\n\n[color=#c9a227]进行中契约：%s（余%d月 · 已过%d月中检）[/color]" % [deal.get("kind"), deal.get("turns_left"), mid_n]
+		var accent := UIKit.ACCENT.to_html(false)
+		var dim := UIKit.TEXT_DIM.to_html(false)
+		_body.text += "\n\n[color=#%s]进行中契约：%s（余%d月 · 已过%d月中检）[/color]" % [accent, deal.get("kind"), deal.get("turns_left"), mid_n]
 		if mid != "":
-			_body.text += "\n[color=#e8d5a3]最近月中：%s[/color]" % mid
+			_body.text += "\n[color=#%s]最近月中：%s[/color]" % [dim, mid]
 		elif GameState.last_deal_events.size() > 0:
-			_body.text += "\n[color=#e8d5a3]最近月中纪事：%s[/color]" % str(GameState.last_deal_events[0])
+			_body.text += "\n[color=#%s]最近月中纪事：%s[/color]" % [dim, str(GameState.last_deal_events[0])]
 		_add("推进一月（看契约中期）", func(): _tick_month(hid))
 		_add("改约→商路（+15银）", func(): _renego(hid, "trade"))
 		_add("改约→情报（+15银）", func(): _renego(hid, "intel"))
@@ -113,6 +174,7 @@ func _select(h: Dictionary) -> void:
 		_add("立约·商路（25银/3月→银+50）", func(): _deal(hid, "trade"))
 		_add("立约·情报（25银/3月→战技点）", func(): _deal(hid, "intel"))
 		_add("立约·停战（40银/2月→并席）", func(): _deal(hid, "truce", 2, 40))
+	_add("使馆反制最近图谋", func(): _counter(hid))
 	_add("送礼交涉（30银）", func(): _gift(hid))
 	_add("示威施压", func(): _pressure(hid))
 	if hid == "shuoying" and stance in ["hostile", "wary"]:
@@ -123,6 +185,33 @@ func _add(text: String, cb: Callable) -> void:
 	var b = UIKit.make_accent_button(text, 360)
 	b.pressed.connect(cb)
 	_actions.add_child(b)
+
+func _court_house(hid: String) -> Dictionary:
+	if typeof(World.royal_courts) != TYPE_DICTIONARY:
+		return {}
+	var nations: Dictionary = World.royal_courts.get("nations", {})
+	var row = nations.get(hid, {})
+	return row if typeof(row) == TYPE_DICTIONARY else {}
+
+func _counter(hid: String) -> void:
+	var court := _court_house(hid)
+	var last := CKSchemes.latest(court)
+	if last.is_empty() or bool(last.get("foiled", false)):
+		_msg.text = "这家今年没有可反制的图谋。"
+		return
+	var built := GameState.buildings.has("embassy") and int(GameState.buildings.get("embassy", 0)) >= 1
+	if not built:
+		_msg.text = "使馆还没建。反制接口已留给使馆，建好之后才能挡下图谋。"
+		return
+	CKSchemes.apply_counter(court, last)
+	var nations: Dictionary = World.royal_courts.get("nations", {})
+	nations[hid] = court
+	World.royal_courts["nations"] = nations
+	GameState.add_lineage_event("使馆反制：%s" % hid)
+	_msg.text = "使馆挡下了%s的%s。" % [str(_selected.get("name", hid)), str(last.get("kind_zh", ""))]
+	Sfx.confirm()
+	GameState.save_game()
+	_refresh()
 
 func _gift(hid: String) -> void:
 	if GameState.silver < 30:
