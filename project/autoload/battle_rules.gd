@@ -99,16 +99,17 @@ func _manhattan(a: Vector2i, b: Vector2i) -> int:
 func can_follow_up(attacker: CKCharacter, defender: CKCharacter) -> bool:
 	return int(attacker.stats.get("agi", 8)) >= int(defender.stats.get("agi", 8)) + FOLLOW_UP_AGI
 
-func can_counter(attacker: CKCharacter, defender: CKCharacter, atk_pos: Vector2i, def_pos: Vector2i) -> bool:
+func can_counter(attacker: CKCharacter, defender: CKCharacter, atk_pos: Vector2i, def_pos: Vector2i, height: int = 0) -> bool:
 	if defender.hp <= 0:
 		return false
 	var dist = _manhattan(atk_pos, def_pos)
 	var djob = GameState.get_job(defender.job_id)
 	var at = str(djob.get("atk_type", "melee"))
+	var bonus := TerrainFx.range_bonus(height)
 	if at == "melee":
-		return dist == 1
+		return dist >= 1 and dist <= 1 + bonus
 	if at == "ranged" or at == "magic":
-		return dist >= 1 and dist <= 2
+		return dist >= 1 and dist <= 2 + bonus
 	return false
 
 func calc_hit(attacker: CKCharacter, defender: CKCharacter, terrain_id: String, extras: Dictionary = {}) -> int:
@@ -134,6 +135,8 @@ func calc_hit(attacker: CKCharacter, defender: CKCharacter, terrain_id: String, 
 		hit += tac(attacker, "first_hit")
 	if terrain_id == "forest":
 		avo += tac(defender, "forest_avo")
+	hit += int(extras.get("height_hit", 0))
+	hit += int(extras.get("weather_hit", 0))
 	return clampi(hit - avo, HIT_MIN, HIT_MAX)
 
 func calc_damage_range(attacker: CKCharacter, defender: CKCharacter, terrain_id: String = "plain", extras: Dictionary = {}) -> Vector2i:
@@ -208,6 +211,14 @@ func preview(attacker: CKCharacter, defender: CKCharacter, terrain_id: String, e
 		tags.append(tr("垒骨"))
 	if bool(extras.get("counter", false)) and tac(attacker, "counter") > 0:
 		tags.append(tr("反步"))
+	var hh := int(extras.get("height_hit", 0))
+	if hh > 0:
+		tags.append(BattleObjectives.text("terrain_high"))
+	elif hh < 0:
+		tags.append(BattleObjectives.text("terrain_low"))
+	var wname := str(extras.get("weather", ""))
+	if wname == "rain" or wname == "snow" or wname == "fog":
+		tags.append(BattleObjectives.text("terrain_" + wname))
 	return {
 		"hit": calc_hit(attacker, defender, terrain_id, extras),
 		"dmg": calc_damage_range(attacker, defender, terrain_id, extras),
@@ -239,11 +250,12 @@ func tac(c: CKCharacter, key: String) -> int:
 		return 0
 	return int(round(c.tactical_amount(key)))
 
-func attack_reach(c: CKCharacter, terrain_id: String) -> int:
+func attack_reach(c: CKCharacter, terrain_id: String, height: int = 0) -> int:
 	var at := str(GameState.get_job(c.job_id).get("atk_type", "melee"))
 	var reach := 1 if at == "melee" else 2
 	if terrain_id == "hill":
 		reach += tac(c, "range_high")
+	reach += TerrainFx.range_bonus(height)
 	return reach
 
 func zoc_charges(c: CKCharacter) -> int:
@@ -276,7 +288,7 @@ func in_zoc(cell: Vector2i, zoc_sources: Array) -> bool:
 ## - 从控带/交战格离开到非控带：额外 leave_zoc_cost（脱离代价）
 ## - zoc_extra_cost：方阵等强化「入控」额外耗
 ## leave_free：无视脱离代价（脱离战技）
-func move_costs(map_terrain: Array, start: Vector2i, move_pts: int, blocked: Array = [], zoc_sources: Array = [], ignore_zoc: bool = false, zoc_extra_cost: int = 0, leave_zoc_cost: int = 1, leave_free: bool = false) -> Dictionary:
+func move_costs(map_terrain: Array, start: Vector2i, move_pts: int, blocked: Array = [], zoc_sources: Array = [], ignore_zoc: bool = false, zoc_extra_cost: int = 0, leave_zoc_cost: int = 1, leave_free: bool = false, move_extra: int = 0) -> Dictionary:
 	var h = map_terrain.size()
 	var w = map_terrain[0].size() if h > 0 else 0
 	var block_set: Dictionary = {}
@@ -300,7 +312,7 @@ func move_costs(map_terrain: Array, start: Vector2i, move_pts: int, blocked: Arr
 			if block_set.has(np):
 				continue
 			var tid = map_terrain[np.y][np.x]
-			var step = int(terrain_info(tid).get("move_cost", 1))
+			var step = int(terrain_info(tid).get("move_cost", 1)) + maxi(0, move_extra)
 			if not ignore_zoc:
 				var from_z = in_zoc(pos, zoc_sources) or (pos == start and start_engaged)
 				var to_z = in_zoc(np, zoc_sources)

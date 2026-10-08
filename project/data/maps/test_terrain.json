@@ -1,0 +1,80 @@
+{
+  "maps": {
+    "test_terrain_height": {
+      "name": "地形探针·高低",
+      "w": 6,
+      "h": 4,
+      "weather": "clear",
+      "scout": false,
+      "player_spots": [[1, 1]],
+      "enemy_spots": [[4, 2]],
+      "enemy_templates": ["bandit_weak"],
+      "height": [
+        [0, 2, 0, 0, 0, 3],
+        [0, 3, 0, 0, 0, 0],
+        [1, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0]
+      ],
+      "interactives": [
+        {"cell": [2, 1], "kind": "door", "state": "closed"},
+        {"cell": [1, 0], "kind": "bridge", "state": "up"},
+        {"cell": [0, 1], "kind": "fire", "state": "lit"},
+        {"cell": [1, 2], "kind": "fence", "state": "up"}
+      ],
+      "terrain": [
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"]
+      ]
+    },
+    "test_terrain_rain": {
+      "name": "地形探针·雨",
+      "w": 4,
+      "h": 3,
+      "weather": "rain",
+      "scout": false,
+      "player_spots": [[0, 2]],
+      "enemy_spots": [[3, 0]],
+      "enemy_templates": ["bandit_weak"],
+      "terrain": [
+        ["plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain"]
+      ]
+    },
+    "test_terrain_snow": {
+      "name": "地形探针·雪",
+      "w": 4,
+      "h": 3,
+      "weather": "snow",
+      "scout": false,
+      "player_spots": [[0, 0]],
+      "enemy_spots": [[3, 2]],
+      "enemy_templates": ["bandit_weak"],
+      "terrain": [
+        ["plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain"]
+      ]
+    },
+    "test_terrain_fog": {
+      "name": "地形探针·侦察雾",
+      "w": 8,
+      "h": 6,
+      "weather": "fog",
+      "scout": true,
+      "player_spots": [[0, 5]],
+      "enemy_spots": [[7, 0]],
+      "enemy_templates": ["bandit_weak"],
+      "terrain": [
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain"]
+      ]
+    }
+  }
+}
