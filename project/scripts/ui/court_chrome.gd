@@ -199,7 +199,9 @@ static func fill_punnett(host: Control, father: Object, mother: Object, limit: i
 		host.add_child(UIKit.body_label("选定双方后，这里按性状给出子嗣概率。", UIKit.TEXT_FAINT, 12))
 		return
 	var rows: Array = []
-	for r in CKBloodline.forecast(father, mother).slice(0, 3):
+	for r in CKBloodline.forecast(father, mother).slice(0, limit):
+		if rows.size() >= limit:
+			break
 		var pct := int(round(float(r.get("royal", 0.0)) * 100.0))
 		var note := str(r.get("royal_zh", ""))
 		if bool(r.get("needs_deed", false)):
@@ -209,13 +211,13 @@ static func fill_punnett(host: Control, father: Object, mother: Object, limit: i
 			note += "  女%d%% · 男%d%%" % [int(round(float(r.get("royal_f", 0.0)) * 100.0)), int(round(float(r.get("royal_m", 0.0)) * 100.0))]
 		rows.append({"name": note, "pct": pct, "hint": str(r.get("law_zh", ""))})
 	for r2 in CKBloodline.trait_odds(father, mother).slice(0, limit):
+		if rows.size() >= limit:
+			break
 		var shown := float(r2.get("shown", 0.0))
 		var note2 := str(r2.get("zh", ""))
 		if absf(float(r2.get("shown_f", 0.0)) - float(r2.get("shown_m", 0.0))) > 0.05:
 			note2 += "  女%d · 男%d" % [int(round(float(r2.get("shown_f", 0.0)) * 100.0)), int(round(float(r2.get("shown_m", 0.0)) * 100.0))]
 		rows.append({"name": note2, "pct": int(round(shown * 100.0)), "hint": str(r2.get("law_zh", ""))})
-		if rows.size() >= limit:
-			break
 	if rows.is_empty():
 		host.add_child(UIKit.body_label("这对父母没有可计算的冕征或特征。", UIKit.TEXT_FAINT, 12))
 		return
