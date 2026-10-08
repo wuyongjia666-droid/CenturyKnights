@@ -511,11 +511,11 @@ static func update_resources(bar: HBoxContainer) -> void:
 	for c in bar.get_children():
 		c.queue_free()
 	var items = [
-		["银币", GameState.silver, ACCENT],
-		["粮", GameState.food, TEXT],
-		["铁", GameState.iron, TEXT],
-		["药", GameState.herb, TEXT],
-		["士气", GameState.morale, OK if GameState.morale >= 50 else DANGER],
+		[Locale.t("shell_946c7148"), GameState.silver, ACCENT],
+		[Locale.t("shell_6763b86e"), GameState.food, TEXT],
+		[Locale.t("shell_69e7baef"), GameState.iron, TEXT],
+		[Locale.t("shell_55b7d0db"), GameState.herb, TEXT],
+		[Locale.t("shell_dc89dbfe"), GameState.morale, OK if GameState.morale >= 50 else DANGER],
 	]
 	for it in items:
 		var hb := HBoxContainer.new()
@@ -542,16 +542,16 @@ static func update_resources(bar: HBoxContainer) -> void:
 static func char_card_text(c: CKCharacter) -> String:
 	var job = GameState.get_job(c.job_id)
 	var lines = [
-		"[b]%s[/b]　%s　%d岁　%s" % [c.name, job.get("name", ""), c.age, c.rank_name()],
-		"六维 力%d 体%d 技%d 敏%d 感%d 意%d" % [c.stats["str"], c.stats["vit"], c.stats["skl"], c.stats["agi"], c.stats["per"], c.stats["wil"]],
-		"血胤 %s" % c.bloodline_display(),
+		Locale.t("shell_983cd466") % [c.name, job.get("name", ""), c.age, c.rank_name()],
+		Locale.t("shell_af764dc4") % [c.stats["str"], c.stats["vit"], c.stats["skl"], c.stats["agi"], c.stats["per"], c.stats["wil"]],
+		Locale.t("shell_77545e18") % c.bloodline_display(),
 	]
 	var tnames: Array = []
 	for tid in c.traits:
 		tnames.append(GameState.get_trait(tid).get("name", tid))
-	lines.append("禀性 " + ("、".join(tnames) if tnames.size() else "无"))
+	lines.append(Locale.t("shell_8ad097fe") + ("、".join(tnames) if tnames.size() else Locale.t("shell_72077749")))
 	if c.injured:
-		lines.append("[color=#c75a5a]【临时伤】[/color]")
+		lines.append(Locale.t("shell_484a9984"))
 	return "\n".join(lines)
 
 static func make_portrait_rect(c: CKCharacter, size: int = 72) -> TextureRect:
@@ -935,15 +935,17 @@ static func res_chip(label: String, value: String, col: Color = TEXT) -> PanelCo
 
 static func std_resource_chips() -> Array:
 	return [
-		["银币", str(GameState.silver), ACCENT],
-		["粮", str(GameState.food), TEXT],
-		["铁", str(GameState.iron), TEXT],
-		["士气", str(GameState.morale), OK if GameState.morale >= 50 else DANGER],
-		["历", Calendar.label(), TEXT_DIM],
+		[Locale.t("shell_946c7148"), str(GameState.silver), ACCENT],
+		[Locale.t("shell_6763b86e"), str(GameState.food), TEXT],
+		[Locale.t("shell_69e7baef"), str(GameState.iron), TEXT],
+		[Locale.t("shell_dc89dbfe"), str(GameState.morale), OK if GameState.morale >= 50 else DANGER],
+		[Locale.t("shell_5cf1eb8d"), Calendar.label(), TEXT_DIM],
 	]
 
-static func top_bar(parent: Control, context: String, chips: Array = [], back_text: String = "返回城堡", back_cb: Callable = Callable()) -> Control:
+static func top_bar(parent: Control, context: String, chips: Array = [], back_text: String = "", back_cb: Callable = Callable()) -> Control:
 	## 56px Stitch top bar: ● CENTURY KNIGHTS // context ……… [chips] [返回 ESC]
+	if back_text == "":
+		back_text = Locale.t("shell_0d711744")
 	var bar := Control.new()
 	bar.name = "StitchTopBar"
 	bar.position = Vector2.ZERO
@@ -1283,7 +1285,7 @@ static func stitch_dialogue(scene: Control) -> void:
 			cb.custom_minimum_size = Vector2(maxf(cb.custom_minimum_size.x, 112), 32)
 			compact(cb, 32)
 			cb.position = Vector2(1238 - maxf(cb.size.x, cb.custom_minimum_size.x), 10)
-	footer_bar(scene, [["A", "继续 / 选择"]], "STORY // TRANSCRIPT v8.6")
+	footer_bar(scene, [["A", Locale.t("shell_13023d2e")]], "STORY // TRANSCRIPT v8.6")
 
 const _FactionMark := preload("res://scripts/ui/widgets/faction_mark.gd")
 

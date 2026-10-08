@@ -39,7 +39,7 @@ func _build() -> void:
 	col.custom_minimum_size = Vector2(440, 0)
 	col.add_theme_constant_override("separation", 4)
 	add_child(col)
-	col.add_child(UIKit.eyebrow("CENTURY KNIGHTS · 百年骑士"))
+	col.add_child(UIKit.eyebrow(Locale.t("shell_a683d75b")))
 	var title := UIKit.title_label(Locale.t("game_title"), 56)
 	col.add_child(title)
 	var sub := UIKit.title_label(Locale.t("subtitle"), UIKit.SZ_HEADLINE, UIKit.ACCENT)
@@ -47,7 +47,7 @@ func _build() -> void:
 	var gap := Control.new()
 	gap.custom_minimum_size = Vector2(0, 10)
 	col.add_child(gap)
-	col.add_child(UIKit.body_label("战棋 · 城堡 · 联姻 · 传代——一面旗，要扛过百年。", UIKit.TEXT_DIM, 14))
+	col.add_child(UIKit.body_label(Locale.t("shell_0a5b0c2e"), UIKit.TEXT_DIM, 14))
 	var gap2 := Control.new()
 	gap2.custom_minimum_size = Vector2(0, 36)
 	col.add_child(gap2)
@@ -77,11 +77,11 @@ func _build() -> void:
 	if first:
 		first.call_deferred("grab_focus")
 
-	var foot := UIKit.body_label("原创 IP · v8.6 · Godot 4.3", UIKit.TEXT_FAINT, 12)
+	var foot := UIKit.body_label(Locale.t("shell_aaf46948"), UIKit.TEXT_FAINT, 12)
 	foot.position = Vector2(96, 664)
 	foot.size = Vector2(400, 20)
 	add_child(foot)
-	var keys := UIKit.body_label("↑ ↓ 选择    Enter 确认", UIKit.TEXT_FAINT, 12)
+	var keys := UIKit.body_label(Locale.t("shell_7af5bdc2"), UIKit.TEXT_FAINT, 12)
 	keys.position = Vector2(984, 664)
 	keys.size = Vector2(200, 20)
 	keys.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT

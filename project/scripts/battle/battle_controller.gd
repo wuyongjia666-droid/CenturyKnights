@@ -289,7 +289,7 @@ func _build_ui() -> void:
 	top.add_child(dot)
 	UIFX.breathe(dot, 0.2, 1.6)
 	_round_label = Label.new()
-	_round_label.text = "第 1 回合"
+	_round_label.text = Locale.t("shell_593b489a")
 	_round_label.add_theme_font_override("font", UIKit.font("bold"))
 	_round_label.add_theme_font_size_override("font_size", 16)
 	_round_label.add_theme_color_override("font_color", UIKit.TEXT)
@@ -302,14 +302,14 @@ func _build_ui() -> void:
 	_phase_chip = UIKit.tag_chip("PHASE 01", UIKit.ACCENT)
 	top.add_child(_phase_chip)
 	phase_label = Label.new()
-	phase_label.text = "玩家回合"
+	phase_label.text = Locale.t("shell_d95adbd6")
 	phase_label.add_theme_font_size_override("font_size", 16)
 	phase_label.add_theme_color_override("font_color", UIKit.TEXT)
 	phase_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	top.add_child(phase_label)
-	var tip_text := "左键 选中/移动 · Q 攻击 · W 战技 · E 待命 · Enter 结束回合 · 右键 取消"
+	var tip_text := Locale.t("shell_8ed10247")
 	if DeviceProfile.is_mobile():
-		tip_text = "点按 选中/确认 · 长按 情报 · 单指平移 · 双指缩放 · 底栏下达指令"
+		tip_text = Locale.t("shell_f4b70638")
 	var tip = UIKit.mono(tip_text, 9, UIKit.TEXT_FAINT, false)
 	tip.position = Vector2(26, 58)
 	tip.name = "ControlsTip"
@@ -367,7 +367,7 @@ func _build_ui() -> void:
 	var lv := VBoxContainer.new()
 	lv.add_theme_constant_override("separation", 4)
 	log_panel.add_child(lv)
-	lv.add_child(UIKit.eyebrow("战报", UIKit.TEXT_FAINT))
+	lv.add_child(UIKit.eyebrow(Locale.t("shell_9ca5135f"), UIKit.TEXT_FAINT))
 	log_label = Label.new()
 	log_label.custom_minimum_size = Vector2(RAIL_W - 44, 44)
 	log_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -390,10 +390,10 @@ func _build_ui() -> void:
 	row.position = Vector2(RAIL_X, 602)
 	row.add_theme_constant_override("separation", 8)
 	add_child(row)
-	_btn_atk = UIKit.make_button("攻击   Q", 112)
+	_btn_atk = UIKit.make_button(Locale.t("shell_atk_q"), 112)
 	_btn_atk.pressed.connect(_enter_attack_mode)
 	row.add_child(_btn_atk)
-	_btn_skill = UIKit.make_button("战技   W", 112)
+	_btn_skill = UIKit.make_button(Locale.t("shell_art_w"), 112)
 	_btn_skill.pressed.connect(_cycle_skill)
 	row.add_child(_btn_skill)
 	_btn_wait = UIKit.make_button("%s   E" % Locale.t("wait"), 112)
@@ -621,7 +621,7 @@ func _update_skill_hint() -> void:
 			armed = "　【将释放：%s】" % GameState.get_skill(active_skill_id).get("name", active_skill_id)
 		_skill_hint.text = ("战技：" + " · ".join(parts) if parts else "战技：无") + armed
 	else:
-		_skill_hint.text = "选中单位后点「战技」循环选择；进攻技在攻击时消耗。"
+		_skill_hint.text = Locale.t("shell_94db6f97")
 
 func _consume_skill(c: CKCharacter, sid: String) -> void:
 	var left = int(c.skill_uses.get(sid, 0))
@@ -728,7 +728,7 @@ func _enter_attack_mode() -> void:
 func _init_map() -> void:
 	map_id = str(GameState.get_meta("battle_map", "ch0_pass"))
 	var m: Dictionary = BattleMaps.get_map(map_id)
-	map_name = str(m.get("name", map_id))
+	map_name = Locale.latin(str(m.get("name", map_id)), str(map_id))
 	MAP_W = int(m.get("w", 8))
 	MAP_H = int(m.get("h", 6))
 	terrain.clear()
@@ -744,7 +744,7 @@ func _init_map() -> void:
 			terrain.append(grid[y].duplicate())
 	_layout_board()
 	if phase_label:
-		phase_label.text = "%s · 玩家回合" % map_name
+		phase_label.text = Locale.t("shell_a63e5b28") % map_name
 
 func _deploy() -> void:
 	units.clear()
@@ -860,7 +860,7 @@ func _deploy() -> void:
 			units.append({"char": e, "pos": enemy_spots[ei], "team": "enemy", "done": false, "template": tmpl, "tag": tag})
 			ei += 1
 	BattleObjectives.deploy_npcs(m, units)
-	_log("%s：我军 %d · 敌军 %d" % [map_name, i, ei])
+	_log(Locale.t("shell_battle_deploy") % [map_name, i, ei])
 	_theme_banter("start")
 	if _is_escort_map():
 		Sfx.cart_rattle()
@@ -1127,7 +1127,7 @@ func _draw_overlay() -> void:
 	# 回合横幅
 	if _turn_flash > 0.0:
 		var a2 = clampf(_turn_flash / 0.9, 0.0, 1.0)
-		var txt = "—— 玩家回合 ——" if turn_team == "player" else "—— 敌方回合 ——"
+		var txt = Locale.t("shell_turn_player") if turn_team == "player" else Locale.t("shell_turn_enemy")
 		var tfi = mini(5, int((0.9 - _turn_flash) / 0.15))
 		var tfp = "res://assets/art/fx/turn_flash_dense_%d.png" % tfi
 		if not ResourceLoader.exists(tfp):
@@ -1150,7 +1150,8 @@ func _draw_overlay() -> void:
 			overlay.draw_texture_rect(_tex(sw), hr.grow(2.0), false, Color(1, 1, 1, 0.55 + 0.25 * sin(_sel_pulse * 6.0)))
 		var tid = terrain[_hover_cell.y][_hover_cell.x]
 		var ti = BattleRules.terrain_info(tid)
-		var tip = "%s　回避+%d　防+%d　移耗%d" % [ti.name, ti.avo_bonus, ti.get("def_bonus", 0), ti.move_cost]
+		var tname := Locale.latin(str(ti.name), str(tid))
+		var tip = Locale.t("shell_terrain_tip") % [tname, ti.avo_bonus, ti.get("def_bonus", 0), ti.move_cost]
 		var tfont := UIKit.font("regular")
 		var tws := tfont.get_string_size(tip, HORIZONTAL_ALIGNMENT_LEFT, -1, 12).x
 		var tip_pos = ORIGIN + Vector2(_hover_cell.x * CELL, _hover_cell.y * CELL) + Vector2(10, -10)
@@ -1896,11 +1897,11 @@ func _start_player_turn() -> void:
 	turn_team = "player"
 	_round_no += 1
 	if _round_label:
-		_round_label.text = "第 %d 回合" % _round_no
+		_round_label.text = Locale.t("shell_4b1b8d2e") % _round_no
 	if _phase_chip:
 		_phase_chip.text = "PHASE 01"
 		_phase_chip.add_theme_color_override("font_color", UIKit.ACCENT)
-	phase_label.text = "%s · 我方行动" % map_name
+	phase_label.text = Locale.t("shell_742d7d53") % map_name
 	phase_label.add_theme_color_override("font_color", UIKit.TEXT)
 	_turn_flash = 0.9
 	Sfx.turn()
@@ -1941,7 +1942,7 @@ func _end_player_turn() -> void:
 		Sfx.miss()
 		return
 	turn_team = "enemy"
-	phase_label.text = "%s · 敌方行动" % map_name
+	phase_label.text = Locale.t("shell_2a6d5eac") % map_name
 	if _phase_chip:
 		_phase_chip.text = "PHASE 02"
 		_phase_chip.add_theme_color_override("font_color", UIKit.DANGER)
@@ -2031,9 +2032,9 @@ func _show_lock_tip_panel(title: String, body: String, step: int, auto_sec: floa
 func _run_lock_tutorial_sequence() -> void:
 	## 教学三拍：咬住 → 脱离代价 → 拆锁/反击
 	var steps: Array = [
-		{"t": "① 交战锁定·咬住", "b": "攻或受击后，双方棋子外圈出现锁定环——这就是「咬住」。"},
-		{"t": "② 脱离更贵", "b": "锁定中离开交战格额外消耗 +%d 移力（高于普通交战 +%d）。想走，先算步数。" % [BattleRules.LEAVE_COST_LOCK, BattleRules.LEAVE_COST_ENGAGED]},
-		{"t": "③ 锁反与拆锁", "b": "锁定单位反击命中+10。用战技「抽身一步 / 拆锁突围」可解除锁定。"},
+		{"t": Locale.t("shell_lock_1t"), "b": Locale.t("shell_lock_1b")},
+		{"t": Locale.t("shell_lock_2t"), "b": Locale.t("shell_lock_2b") % [BattleRules.LEAVE_COST_LOCK, BattleRules.LEAVE_COST_ENGAGED]},
+		{"t": Locale.t("shell_lock_3t"), "b": Locale.t("shell_lock_3b")},
 	]
 	_show_lock_tip_panel(str(steps[0].t), str(steps[0].b), 0, 0.0)
 	get_tree().create_timer(3.2).timeout.connect(func():
@@ -2049,7 +2050,7 @@ func _run_lock_tutorial_sequence() -> void:
 		row.add_theme_constant_override("separation", 8)
 		var host: Node = p.get_child(0).get_child(1) if p.get_child_count() > 0 and p.get_child(0).get_child_count() > 1 else p
 		host.add_child(row)
-		var dismiss = UIKit.make_accent_button("开始隘口教学", 140)
+		var dismiss = UIKit.make_accent_button(Locale.t("shell_lock_start"), 140)
 		dismiss.pressed.connect(func():
 			if is_instance_valid(p):
 				p.queue_free()
@@ -2099,18 +2100,18 @@ func _show_lock_practice_banner() -> void:
 	var vb := VBoxContainer.new()
 	vb.add_theme_constant_override("separation", 0)
 	panel.add_child(vb)
-	var title = "【强制练习】交战锁定"
-	var tip = "先选中单位 → 攻击模式 → 攻击一名敌人，触发锁定后才能结束回合。"
+	var title = Locale.t("shell_lock_drill")
+	var tip = Locale.t("shell_lock_drill_tip")
 	if bool(BattleMaps.get_map(map_id).get("lock_drill", false)) and not map_id.begins_with("ch0"):
 		if map_id.begins_with("ch6"):
-			title = "【终局演练】交战锁定决战复习"
-			tip = "托孤堡垒：终局再练锁定。攻击敌人触发红环后，才能结束回合——此后全靠判断。"
+			title = Locale.t("shell_lock_final")
+			tip = Locale.t("shell_lock_final_tip")
 		elif map_id.begins_with("ch5") or map_id.begins_with("ch4"):
-			title = "【后期演练】交战锁定总复习"
-			tip = "断桥守夜：再次强制练习锁定。攻击敌人触发红环后，才能结束回合。"
+			title = Locale.t("shell_lock_late")
+			tip = Locale.t("shell_lock_late_tip")
 		else:
-			title = "【中盘演练】交战锁定复习"
-			tip = "夜袭中再练一次锁定：攻击敌人触发红环锁定后，方可结束回合。"
+			title = Locale.t("shell_lock_mid")
+			tip = Locale.t("shell_lock_mid_tip")
 	var t = UIKit.make_label(title)
 	t.add_theme_font_size_override("font_size", 12)
 	t.add_theme_color_override("font_color", UIKit.DANGER)
@@ -2674,7 +2675,12 @@ func _arm_lamps() -> void:
 
 
 func _log(t: String) -> void:
-	var lines := (t + "\n" + log_label.text).split("\n")
+	var line := t
+	if Locale.is_en() and Locale.has_cjk(line):
+		line = Locale.latin(line, "")
+		if line == "":
+			return
+	var lines := (line + "\n" + log_label.text).split("\n")
 	log_label.text = "\n".join(lines.slice(0, mini(lines.size(), 12)))
 
 

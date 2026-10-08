@@ -50,7 +50,7 @@ func _build_card() -> void:
 	box.mouse_filter = MOUSE_FILTER_IGNORE
 	box.add_theme_constant_override("separation", 8)
 	_card.add_child(box)
-	var eye := UIKit.eyebrow("LAMP · 灯引")
+	var eye := UIKit.eyebrow(Locale.t("shell_271e69ff"))
 	eye.mouse_filter = MOUSE_FILTER_IGNORE
 	box.add_child(eye)
 	_body = UIKit.body_label("", UIKit.TEXT, 15)
@@ -59,7 +59,7 @@ func _build_card() -> void:
 	_body.custom_minimum_size = Vector2(300, 0)
 	_body.mouse_filter = MOUSE_FILTER_IGNORE
 	box.add_child(_body)
-	var hint := UIKit.body_label(_line("ux_coach_continue", "点击继续"), UIKit.ACCENT, 12)
+	var hint := UIKit.body_label(_line("ux_coach_continue", Locale.t("shell_49ed92fc")), UIKit.ACCENT, 12)
 	hint.mouse_filter = MOUSE_FILTER_IGNORE
 	box.add_child(hint)
 	_step = UIKit.body_label("", UIKit.TEXT_DIM, 12)

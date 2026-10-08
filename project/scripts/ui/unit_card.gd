@@ -118,9 +118,11 @@ func set_unit(c, team: String = "player") -> void:
 		portrait.texture = tex
 	var enemy := team != "player"
 	var tc: Color = UIKit.DANGER if enemy else UIKit.OK
-	_name.text = str(c.name)
-	var role := BattleRules.role_label(BattleRules.job_role(c.job_id))
-	_sub.text = "%s · %s · LV %d" % ["敌军" if enemy else "我军", role, int(c.level)]
+	var name_fallback := str(c.id) if "id" in c else "Knight"
+	_name.text = Locale.latin(str(c.name), name_fallback)
+	var role := str(BattleRules.role_label(BattleRules.job_role(c.job_id)))
+	role = Locale.latin(role, str(BattleRules.job_role(c.job_id)))
+	_sub.text = "%s · %s · LV %d" % [Locale.t("shell_f4069c8b") if enemy else Locale.t("shell_c832b9ce"), role, int(c.level)]
 	_sub.add_theme_color_override("font_color", tc)
 	_hp_fill.bg_color = tc
 	_hp.max_value = maxi(1, int(c.max_hp))
@@ -132,7 +134,7 @@ func set_unit(c, team: String = "player") -> void:
 		_hp.value = target
 	_last_uid = uid
 	_hp_txt.text = "%d / %d" % [int(c.hp), int(c.max_hp)]
-	_stats.text = "攻%d  防%d  命%d  避%d  移%d" % [c.derived_atk(), c.derived_def(), c.derived_hit(), c.derived_avo(), c.derived_move()]
+	_stats.text = Locale.t("shell_f59809be") % [c.derived_atk(), c.derived_def(), c.derived_hit(), c.derived_avo(), c.derived_move()]
 	for ch in _chips.get_children():
 		ch.queue_free()
 	var n := 0
@@ -150,7 +152,10 @@ func _make_chip(c, sid: String, enemy: bool) -> Control:
 	var cd := int(c.skill_cd.get(sid, 0)) if "skill_cd" in c else 0
 	var ready := left > 0 and cd <= 0
 	var b := Button.new()
-	b.text = nm.substr(0, 1)
+	var chip := nm
+	if Locale.is_en() and Locale.has_cjk(nm):
+		chip = sid
+	b.text = chip.substr(0, 1)
 	b.custom_minimum_size = Vector2(sz, sz)
 	b.focus_mode = Control.FOCUS_NONE
 	b.add_theme_font_size_override("font_size", 12)
@@ -178,7 +183,7 @@ func _make_chip(c, sid: String, enemy: bool) -> Control:
 	b.add_theme_color_override("font_color", col if ready else UIKit.TEXT_FAINT)
 	b.add_theme_color_override("font_hover_color", Color.WHITE)
 	b.add_theme_color_override("font_disabled_color", UIKit.TEXT_FAINT)
-	b.tooltip_text = "%s　余%d%s" % [nm, left, ("　冷却%d" % cd) if cd > 0 else ""]
+	b.tooltip_text = Locale.t("shell_77586a60") % [Locale.latin(nm, sid), left, (Locale.t("shell_4140eed2") % cd) if cd > 0 else ""]
 	b.pivot_offset = Vector2(sz, sz) * 0.5
 	b.mouse_entered.connect(func(): b.create_tween().tween_property(b, "scale", Vector2(1.1, 1.1), 0.08))
 	b.mouse_exited.connect(func(): b.create_tween().tween_property(b, "scale", Vector2.ONE, 0.1))

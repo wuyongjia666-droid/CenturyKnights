@@ -77,11 +77,11 @@ func _build() -> void:
 	var titles := VBoxContainer.new()
 	titles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(titles)
-	titles.add_child(UIKit.eyebrow("CODEX · 系统百科"))
-	var title := UIKit.title_label(_line("ux_codex_title", "系统百科"), UIKit.SZ_TITLE)
+	titles.add_child(UIKit.eyebrow(Locale.t("shell_500dbaa1")))
+	var title := UIKit.title_label(_line("ux_codex_title", Locale.t("shell_645c19e1")), UIKit.SZ_TITLE)
 	title.name = "CodexTitle"
 	titles.add_child(title)
-	var close := UIKit.make_button(_line("ux_codex_close", "关闭"), 120)
+	var close := UIKit.make_button(_line("ux_codex_close", Locale.t("shell_6c14bd7f")), 120)
 	close.custom_minimum_size = Vector2(120, 44)
 	close.pressed.connect(queue_free)
 	head.add_child(close)

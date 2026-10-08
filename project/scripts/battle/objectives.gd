@@ -9,6 +9,10 @@ static var _csv_loaded := false
 
 
 static func text(key: String) -> String:
+	# en lives in battle.csv. Locale.t returns it when the shell language is English
+	# and keeps zh_CN otherwise, including when the English cell is empty.
+	if Locale != null and (Locale._zh.has(key) or Locale._en.has(key)):
+		return Locale.t(key)
 	_load_csv()
 	return str(_csv.get(key, key))
 

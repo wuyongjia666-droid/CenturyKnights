@@ -19,8 +19,8 @@ static func refresh_for(host, ui: int) -> void:
 	var tid = host.terrain[u.pos.y][u.pos.x]
 	var tinfo = BattleRules.terrain_info(tid)
 	var role2 = BattleRules.role_label(BattleRules.job_role(c.job_id))
-	host.info_label.text = "[b]%s[/b]（%s·%s） HP %d/%d\n攻 %d 防 %d\n地形：%s（回避+%d 防+%d）\n（仍选中我军，可继续移动/攻击）" % [
-		c.name, "我军" if u.team == "player" else "敌军", role2,
+	host.info_label.text = Locale.t("shell_c5c4fa01") % [
+		c.name, Locale.t("shell_c832b9ce") if u.team == "player" else Locale.t("shell_f4069c8b"), role2,
 		c.hp, c.max_hp, c.derived_atk(), c.derived_def(),
 		tinfo["name"], tinfo.get("avo_bonus", 0), tinfo.get("def_bonus", 0),
 	]
@@ -42,7 +42,7 @@ static func fill_traits(host, c: CKCharacter) -> void:
 
 static func refresh(host) -> void:
 	if host.selected < 0 or host.selected >= host.units.size():
-		host.info_label.text = "[b]选择己方单位开始行动[/b]\n目标：歼灭全部敌人。\n蓝格可移动 · 红格为可攻目标 · 攻击模式后点敌。"
+		host.info_label.text = Locale.t("shell_82b986d8")
 		if GameState.get_leader():
 			host._portrait.texture = UnitArt.portrait(GameState.get_leader(), 96)
 			if host._unit_card:
@@ -65,18 +65,18 @@ static func refresh(host) -> void:
 	var mode := ""
 	if u.team == "player" and not u.done:
 		if host.attack_mode:
-			mode = BattleRules._rich(UIKit.DANGER, "【攻击模式】点击红格敌人")
+			mode = BattleRules._rich(UIKit.DANGER, Locale.t("shell_64295185"))
 		elif host.moved_this_select:
-			mode = BattleRules._rich(UIKit.ACCENT, "【已移动】可攻击 / 待命")
+			mode = BattleRules._rich(UIKit.ACCENT, Locale.t("shell_8736b101"))
 		else:
-			mode = BattleRules._rich(UIKit.ACCENT, "【已选中】点击蓝格移动，或开攻击模式")
+			mode = BattleRules._rich(UIKit.ACCENT, Locale.t("shell_31067370"))
 	var role = BattleRules.role_label(BattleRules.job_role(c.job_id))
 	var foes = host._enemy_positions(u.team)
 	var engaged = BattleRules.is_engaged(u.pos, foes)
 	var locked = int(c.temp_combat_lock) > 0
 	var eng := BattleRules.engagement_note(locked, engaged, c.temp_leave_free, c.temp_ignore_zoc)
-	var txt = mode + eng + "[b]%s[/b]（%s·%s） HP %d/%d\n攻 %d 防 %d 命中 %d 回避 %d 移动 %d\n地形：%s（回避+%d 防+%d）\n" % [
-		c.name, "我军" if u.team == "player" else "敌军", role,
+	var txt = mode + eng + Locale.t("shell_b1a2868a") % [
+		c.name, Locale.t("shell_c832b9ce") if u.team == "player" else Locale.t("shell_f4069c8b"), role,
 		c.hp, c.max_hp, c.derived_atk(), c.derived_def(), c.derived_hit(), c.derived_avo(), c.derived_move(),
 		tinfo["name"], tinfo["avo_bonus"], tinfo.get("def_bonus", 0),
 	]
@@ -87,7 +87,7 @@ static func refresh(host) -> void:
 				var ex = {"flank": BattleRules.has_flank(u.pos, e.pos, host.units, "player", host.selected)}
 				var pv = BattleRules.preview(c, e.char, host.terrain[e.pos.y][e.pos.x], ex)
 				var tagjoin = "·".join(pv.tags) if pv.tags else ""
-				txt += "透视→%s：命中 %d%% 伤害 %d–%d 暴%d%%%s\n" % [
+				txt += Locale.t("shell_f29bbf0a") % [
 					e.char.name, pv.hit, pv.dmg.x, pv.dmg.y, pv.crit,
 					(" 〔" + tagjoin + "〕") if tagjoin else "",
 				]

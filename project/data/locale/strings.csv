@@ -1,0 +1,868 @@
+keys,zh_CN,en
+menu_new,新的旗号,New banner
+menu_continue,继续历程,Continue
+menu_settings,设置,Settings
+menu_quit,退出,Quit
+game_title,百年骑士·同型原创,Century Knights
+subtitle,灰烬旗 · 朔澜陆桥,Ash Banner · Shuo Lan Bridge
+hub_title,灰旗堡,Ash Keep
+btn_roster,花名册,Roster
+btn_tavern,烽火酒馆,Beacon Tavern
+btn_quests,委任榜,Contracts
+btn_train,演武场,Drill yard
+btn_forge,炉火工坊,Forge
+btn_shrine,祠堂,Shrine
+btn_lineage,族谱,Lineage
+btn_marriage,联姻廷,Marriage court
+btn_hourglass,岁月沙漏,Hourglass
+btn_market,陆桥商路,Bridge market
+btn_back,返回,Back
+btn_deploy,出战编队,Deploy
+silver,银币,Silver
+food,粮食,Grain
+iron,铁料,Iron
+herb,药材,Herbs
+morale,士气,Morale
+year_month,第 %d 年 %d 月,"Year %d, month %d"
+rep_none,陌生,Unknown
+rep_known,认识,Known
+rep_friendly,友善,Friendly
+rep_trusted,信赖,Trusted
+rep_respected,尊敬,Respected
+stat_str,力,STR
+stat_vit,体,VIT
+stat_skl,技,SKL
+stat_agi,敏,AGI
+stat_per,感,PER
+stat_wil,意,WIL
+rules_preview,规则透视,Rules preview
+dynasty_journal,王朝手记,Dynasty journal
+heir_expect,子嗣期望,Heir expectations
+not_enough_silver,银币不足,Not enough silver
+not_enough_rep,声望不足，还差：%s,Renown short: %s
+save_ok,存档成功,Saved
+load_ok,读档成功,Loaded
+battle_win,胜利,Victory
+battle_lose,全军覆没——可重试,Wiped out — you can retry
+move,移动,Move
+attack,攻击,Attack
+wait,待命,Wait
+end_turn,结束回合,End turn
+recruit,招募,Recruit
+marry,成婚,Marry
+advance_month,度过一月,Advance a month
+advance_season,度过一季,Advance a season
+forecast,将发生,Coming
+heirloom_preview,传家宝槽（完整版开放）,Heirloom slot (opens in the full edition)
+chapter1_title,第一章·陆桥烽火,Chapter 1 · Bridge beacons
+shell_language,语言,Language
+shell_lang_zh,中文,Chinese
+shell_lang_en,English,English
+locale_missing,（缺译文）,
+shell_battle_deploy,%s：我军 %d · 敌军 %d,%s: allies %d · enemies %d
+shell_atk_q,攻击   Q,Attack   Q
+shell_art_w,战技   W,Art   W
+shell_lock_1t,① 交战锁定·咬住,1. Lock · the bite
+shell_lock_1b,攻或受击后，双方棋子外圈出现锁定环——这就是「咬住」。,"After a strike or a hit, a lock ring appears around both pieces. That is the bite."
+shell_lock_2t,② 脱离更贵,2. Leaving costs more
+shell_lock_2b,锁定中离开交战格额外消耗 +%d 移力（高于普通交战 +%d）。想走，先算步数。,Leaving a locked fight costs +%d move (a normal fight is +%d). Count the steps before you go.
+shell_lock_3t,③ 锁反与拆锁,3. Counter and break
+shell_lock_3b,锁定单位反击命中+10。用战技「抽身一步 / 拆锁突围」可解除锁定。,A locked unit counters at +10 hit. The arts Step Out and Break the Lock clear it.
+shell_lock_start,开始隘口教学,Start the pass lesson
+shell_lock_drill,【强制练习】交战锁定,[Drill] Engagement lock
+shell_lock_drill_tip,先选中单位 → 攻击模式 → 攻击一名敌人，触发锁定后才能结束回合。,"Select a unit, enter attack mode, and strike an enemy. End the turn after the lock triggers."
+shell_lock_final,【终局演练】交战锁定决战复习,[Final drill] Lock review
+shell_lock_final_tip,托孤堡垒：终局再练锁定。攻击敌人触发红环后，才能结束回合——此后全靠判断。,Orphan Keep: practice the lock once more. Strike an enemy to raise the red ring before you can end the turn.
+shell_lock_late,【后期演练】交战锁定总复习,[Late drill] Lock review
+shell_lock_late_tip,断桥守夜：再次强制练习锁定。攻击敌人触发红环后，才能结束回合。,Broken Bridge: practice the lock again. Strike an enemy to raise the red ring before you can end the turn.
+shell_lock_mid,【中盘演练】交战锁定复习,[Mid drill] Lock review
+shell_lock_mid_tip,夜袭中再练一次锁定：攻击敌人触发红环锁定后，方可结束回合。,Practice the lock once more in the night raid. End the turn after the red ring appears.
+pause_heading,暂停,Paused
+pause_continue,继续,Continue
+pause_save,存档,Save
+pause_load,读档,Load
+pause_settings,设置,Settings
+pause_title,回到标题,Title
+shell_00222e62,可继续第一百二十九章·二十卷席终。,Continue Chapter 129 · Volume 20 closing.
+shell_0098c87d,第一百四十七章·席终,Chapter 147 · closing
+shell_00eeac7e,可继续第二百二十一章·烟径。,Continue Chapter 221 · smoke path.
+shell_01644c1e,四卷已执。可继续第五卷或经营。,Volume 4 is done. Continue Volume 5 or run the keep.
+shell_019b849d,第四十七章·冠火,Chapter 47 · crown fire
+shell_025e1a68,卷八,Volume 8
+shell_02828d8d,第十一章·门阙,Chapter 11 · gate gate
+shell_0295ed30,RECRUIT · 征募,RECRUIT · Hiring
+shell_02acf5eb,第一百一十八章·码头,Chapter 118 · yard head
+shell_02be2aed,%d 人负伤撤离,%d withdrawn wounded
+shell_030b0284,二十九卷已执。可继续第三十卷或经营。,Volume 29 is done. Continue Volume 30 or run the keep.
+shell_03d1e8c7,第零章已完成。可点「第一章·陆桥」推进新地图战役；亦可自由经营。,"Chapter 0already done complete. Open ""Chapter 1 · land bridge""push advance new field chart battle service; also can self from pass camp."
+shell_03ffa791,百年骑士,Century Knights
+shell_0490d840,可继续第一百四十三章·仓房。,Continue Chapter 143 · granary room.
+shell_04fa4f5f,第一百五十一章·雪市,Chapter 151 · snow market
+shell_0511f605,文字速度,Text speed
+shell_051bec8b,可继续第三十五章·晚钟。,Continue Chapter 35 · late bell.
+shell_051f9803,第四章·百年,Chapter 4 · hundred year
+shell_057163a9,可继续第一百八十五章·烟熏。,Continue Chapter 185 · smoke smoke.
+shell_05820eaa,预告与推进,Forecast and advance
+shell_0587a9d0,可继续第九十三章·十四卷席终。,Continue Chapter 93 · Volume 14 closing.
+shell_05c09e1b,可继续第三十二章·星津。,Continue Chapter 32 · star ford.
+shell_05d1457e,第二百一十二章·独染,Chapter 212 · lone dye
+shell_05e8ea3d,第十七卷后半：点「继续主线」或卷十七选第一百零九章·开酿。,Volume 17 second half: choose Continue or volume ten seven chooseChapter 109 · open brew.
+shell_05fb976c,可继续第一百五十三章·二十四卷席终。,Continue Chapter 153 · Volume 24 closing.
+shell_06eba986,标准（薄荷 / 珊瑚）,Standard (mint / coral)
+shell_0872a62e,%s肃清。灰旗仍在风里——战报已写入家族史。,%s is clear. The ash banner is still in the wind. The report is in the family history.
+shell_094324b3,七卷中段已执。可继续后半或经营。,Volume 7 midpoint is done. Continue second half or run the keep.
+shell_09dac31a,卷十九,Volume 19
+shell_0a5b0c2e,战棋 · 城堡 · 联姻 · 传代——一面旗，要扛过百年。,"Tactics, a keep, marriage, and succession. One banner has to last a century."
+shell_0a77c583,二十九卷中段已执。可继续后半或经营。,Volume 29 midpoint is done. Continue second half or run the keep.
+shell_0a920a45,第七章·子嗣,Chapter 7 · child heir
+shell_0abe57cf,第二十三章·霜桥,Chapter 23 · frost bridge
+shell_0b17dd98,第一百八十五章·烟熏,Chapter 185 · smoke smoke
+shell_0c282b9f,第七十三章·烟囱,Chapter 73 · smoke chimney
+shell_0c545bed,第六十七章·盐船,Chapter 67 · salt boat
+shell_0c5cbf76,战斗规则透视（命中/伤害区间）,Combat readout (hit and damage range)
+shell_0c82786d,二十五卷已执。可继续第二十六卷或经营。,Volume 25 is done. Continue Volume 26 or run the keep.
+shell_0ca7f8f4,二十八卷中段已执。可继续后半或经营。,Volume 28 midpoint is done. Continue second half or run the keep.
+shell_0cb33307,六维与转职,Six stats and class change
+shell_0ccbf4c2,二卷已执。可继续第三卷或经营。,Volume 2 is done. Continue Volume 3 or run the keep.
+shell_0d23bdc0,可继续第一百五十八章·篁祠。,Continue Chapter 158 · bamboo shrine.
+shell_0d711744,返回城堡,Back to keep
+shell_0da704f9,可继续第一百一十一章·十七卷席终。,Continue Chapter 111 · Volume 17 closing.
+shell_0e504333,第二百一十四章·鼓楼,Chapter 214 · drum tower
+shell_0e6f1865,第六十一章·烬原,Chapter 61 · ember plain
+shell_0e80284d,十卷中段已执。可继续后半或经营。,Volume 10 midpoint is done. Continue second half or run the keep.
+shell_0ea8299b,ALLIANCE · 家族,ALLIANCE · Household
+shell_0ef79222,第二十四卷·雪栈：点「继续主线」或卷二十四选第一百四十八章·雪栈。,Volume 24 · snow trestle: choose Continue or volume two ten four chooseChapter 148 · snow trestle.
+shell_0f34c51b,可继续第一百五十九章·二十五卷席终。,Continue Chapter 159 · Volume 25 closing.
+shell_0f971623,卷十一,Volume 11
+shell_0f9a0879,第八十六章·经轴,Chapter 86 · pass axle
+shell_1036ccaf,可继续第五十一章·七卷席终。,Continue Chapter 51 · Volume 7 closing.
+shell_10725d6a,可点「第二十三章·霜桥」落霜印。,"Open ""Chapter 23 · frost bridge""fall frost seal."
+shell_108b5beb,检视骑士完整档案,Open the full file
+shell_10b0f331,可继续第一百四十一章·二十二卷席终。,Continue Chapter 141 · Volume 22 closing.
+shell_118fc252,可继续第五十七章·八卷席终。,Continue Chapter 57 · Volume 8 closing.
+shell_11b256f0,第十七卷·酒坊：点「继续主线」或卷十七选第一百零六章·曲房。,Volume 17 · wine workshop: choose Continue or volume ten seven chooseChapter 106 · bend room.
+shell_11d02415,返回,Back
+shell_11fcdc75,第八十一章·席终,Chapter 81 · closing
+shell_123e020b,可继续第二百零一章·三十二卷席终。,Continue Chapter 201 · Volume 32 closing.
+shell_12e258e0,已全员回满，可立即重试,Everyone is restored. You can retry now.
+shell_13023d2e,继续 / 选择,Continue / choose
+shell_136dbcb0,第一百三十章·铜炉,Chapter 130 · copper forge
+shell_136f5ff9,可点「第五章·烽烟」开启王朝级战役；先升战技树二阶。,"Open ""Chapter 5 · beacon smoke""open open king court grade battle service; first rise battle skill tree two step."
+shell_13f16886,可继续第二百二十七章·礁脉。,Continue Chapter 227 · reef vein.
+shell_141d265b,PROGRESS · 旗标保留,PROGRESS · flags kept
+shell_14502c2a,第一百四十章·灯塔,Chapter 140 · lamp tower
+shell_1467a998,可继续第一百五十二章·暖驿。,Continue Chapter 152 · warm post.
+shell_15c92308,战役,Campaign
+shell_1666962a,第二百零八章·染坊,Chapter 208 · dye workshop
+shell_16d512cd,可继续第六十六章·井印（十卷中段）。,Continue Chapter 66 · well seal (Volume 10 midpoint).
+shell_181e100b,红色弱,Red-weak
+shell_18a8f730,可继续第四十一章·石冢。,Continue Chapter 41 · stone mound.
+shell_18bac93d,第九十九章·席终,Chapter 99 · closing
+shell_19c16eaa,可继续第五十六章·曜廷。,Continue Chapter 56 · light court.
+shell_19d04eb7,第二百二十三章·香摊,Chapter 223 · incense stall
+shell_1a0c01c5,可继续第二十九章·金陌（章节下拉）。,Continue Chapter 29 · metal lane (chapter festival lower pull).
+shell_1a0db8dc,待命,Wait
+shell_1a151070,可继续第九十六章·方印（十五卷中段）。,Continue Chapter 96 · side seal (Volume 15 midpoint).
+shell_1ae08583,RENOWN · 灰烬邦,RENOWN · Ash League
+shell_1b1fc612,第一百零一章·驯场,Chapter 101 · tame yard
+shell_1bce1e7f,二十三卷中段已执。可继续后半或经营。,Volume 23 midpoint is done. Continue second half or run the keep.
+shell_1bdd74da,第二百零三章·盐堆,Chapter 203 · salt stack
+shell_1c453b2f,第二十七卷后半：点「继续主线」或卷二十七选第一百六十九章·钟市。,Volume 27 second half: choose Continue or volume two ten seven chooseChapter 169 · bell market.
+shell_1c7432f9,MAINLINE · 主线,MAINLINE · Story
+shell_1cff9c49,可继续第六十八章·纸坊。,Continue Chapter 68 · paper workshop.
+shell_1d0997d8,主线暂缓。敌宅交涉、授旗分支、战技与传代皆可。,"The story is paused. Rival houses, banner branches, battle arts, and succession are all open."
+shell_1d0b7c61,第十六卷后半：点「继续主线」或卷十六选第一百零三章·马市。,Volume 16 second half: choose Continue or volume ten six chooseChapter 103 · horse market.
+shell_1d24bfcf,可继续第一百零二章·马印（十六卷中段）。,Continue Chapter 102 · horse seal (Volume 16 midpoint).
+shell_1d2b8398,第一百三十四章·甲库,Chapter 134 · first store
+shell_1d64bc38,第一百五十章·雪印,Chapter 150 · snow seal
+shell_1e62632d,返回章节,Back to chapter
+shell_1e883f07,可继续第一百五十六章·竹印（二十五卷中段）。,Continue Chapter 156 · bamboo seal (Volume 25 midpoint).
+shell_1ec9ffcb,第一百二十章·港印,Chapter 120 · port seal
+shell_1f34f1ec,第七十二章·窑印,Chapter 72 · kiln seal
+shell_1f5ecf5c,可继续第一百六十二章·驿印（二十六卷中段）。,Continue Chapter 162 · post seal (Volume 26 midpoint).
+shell_1f6a2fed,冷却与二阶,Cooldowns and the second tier
+shell_1fd20bd9,第二十六卷·驿道：点「继续主线」或卷二十六选第一百六十章·驿站。,Volume 26 · post road: choose Continue or volume two ten six chooseChapter 160 · post station.
+shell_1ff6c16b,第一百二十五章·抄帘,Chapter 125 · copy curtain
+shell_20463660,第九十六章·方印,Chapter 96 · side seal
+shell_205e0a89,可继续第一百三十四章·甲库。,Continue Chapter 134 · first store.
+shell_2084654e,第一百九十八章·影印,Chapter 198 · shadow seal
+shell_2155ceaf,规则与速度,Rules and speed
+shell_2161ad4e,二十四卷已执。可继续第二十五卷或经营。,Volume 24 is done. Continue Volume 25 or run the keep.
+shell_216a69b5,当前中枢士气：%d%%  ●,Hub morale: %d%%
+shell_2170288b,第二百零九章·晾竿,Chapter 209 · air pole
+shell_21e0f656,第十卷后半：点「继续主线」或卷十选第六十七章·盐船。,Volume 10 second half: choose Continue or volume ten chooseChapter 67 · salt boat.
+shell_2233f86c,第四十九章·烬原,Chapter 49 · ember plain
+shell_22841003,确认指令,Confirm
+shell_229da75f,第二百二十章·香市,Chapter 220 · incense market
+shell_2336506f,震屏强度,Shake
+shell_23ae85e9,三十二卷中段已执。可继续后半或经营。,Volume 32 midpoint is done. Continue second half or run the keep.
+shell_23da6099,可继续第七十七章·检场。,Continue Chapter 77 · inspect yard.
+shell_23f12fb9,二十卷中段已执。可继续后半或经营。,Volume 20 midpoint is done. Continue second half or run the keep.
+shell_25a47ba0,可继续第一百二十八章·案库。,Continue Chapter 128 · desk store.
+shell_25e7f8ca,二十七卷已执。可继续第二十八卷或经营。,Volume 27 is done. Continue Volume 28 or run the keep.
+shell_25ee1cf0,第八十八章·茶梯,Chapter 88 · tea ladder
+shell_26982a24,第一百三十五章·席终,Chapter 135 · closing
+shell_26a377a3,舆图,Atlas
+shell_26a58a94,可继续第一百零八章·酒印（十七卷中段）。,Continue Chapter 108 · wine seal (Volume 17 midpoint).
+shell_271e69ff,LAMP · 灯引,LAMP
+shell_279f00b1,卷二十,Volume 20
+shell_27b90fa3,第一百二十七章·压榨,Chapter 127 · press press
+shell_27c725ec,第一百二十六章·纸印,Chapter 126 · paper seal
+shell_27f72f6b,第一百一十二章·镖局,Chapter 112 · escort board
+shell_28034c74,SILVER · 军资入库,SILVER · deposited
+shell_282b8946,可继续第二百零七章·三十三卷席终。,Continue Chapter 207 · Volume 33 closing.
+shell_28d5a1e7,第二百一十七章·鼓市,Chapter 217 · drum market
+shell_291459bc,音频为程序生成。色觉模式用圆和三角区分敌我，不单靠颜色。,"Audio is generated in code. Color-vision modes mark allies with a circle and enemies with a triangle, not color alone."
+shell_29af4ffc,可继续第一百八十三章·二十九卷席终。,Continue Chapter 183 · Volume 29 closing.
+shell_2a04e5d0,第一百五十七章·竹市,Chapter 157 · bamboo market
+shell_2a6d5eac,%s · 敌方行动,%s · Enemy move
+shell_2c5932ce,第十二卷·梨园：点「继续主线」或卷十二选第七十六章·台口。,Volume 12 · pear garden: choose Continue or volume ten two chooseChapter 76 · stage mouth.
+shell_2c88342b,第一百八十六章·蜂印,Chapter 186 · bee seal
+shell_2cac5d78,第六十九章·席终,Chapter 69 · closing
+shell_2d7ba2f4,卷十四,Volume 14
+shell_2d873b56,可继续第六十二章·曜阙。,Continue Chapter 62 · light gate.
+shell_2de08d7f,第一章已完成。可点「第二章·姓氏」继续主线。,"Chapter 1already done complete. Open ""Chapter 2 · surname clan""continue the story."
+shell_2e03166c,可继续第一百八十二章·捺印。,Continue Chapter 182 · press seal.
+shell_2e23c3c3,第三十三卷·盐滩：点「继续主线」或卷三十三选第二百零二章·盐滩。,Volume 33 · salt beach: choose Continue or volume three ten three chooseChapter 202 · salt beach.
+shell_2e248ac0,第二十一卷·铜市：点「继续主线」或卷二十一选第一百三十章·铜炉。,Volume 21 · copper market: choose Continue or volume two ten one chooseChapter 130 · copper forge.
+shell_2e9528f4,二十四卷中段已执。可继续后半或经营。,Volume 24 midpoint is done. Continue second half or run the keep.
+shell_2ee293da,第三十一卷·笛楼：点「继续主线」或卷三十一选第一百九十章·笛楼。,Volume 31 · flute tower: choose Continue or volume three ten one chooseChapter 190 · flute tower.
+shell_2f072c0c,第二百零六章·独晒,Chapter 206 · lone sun
+shell_2f116b7d,切换,Toggle
+shell_2f209da9,第一百四十二章·粮囤,Chapter 142 · grain hoard
+shell_2f9ff777,十七卷已执。可继续第十八卷或经营。,Volume 17 is done. Continue Volume 18 or run the keep.
+shell_30576f99,第一百一十章·排档,Chapter 110 · rank file
+shell_30f48a02,第一百六十三章·驿市,Chapter 163 · post market
+shell_31067370,【已选中】点击蓝格移动，或开攻击模式,"[Selected] Tap a blue cell to move, or enter attack mode"
+shell_3126a10d,第一百五十九章·席终,Chapter 159 · closing
+shell_3143c1c7,SIL Open Font License 1.1。本仓库只带项目用到的子集。,SIL Open Font License 1.1. This repo ships only the subset the project uses.
+shell_31e8e2bf,可继续第一百八十章·砚印（二十九卷中段）。,Continue Chapter 180 · inkstone seal (Volume 29 midpoint).
+shell_31f67480,可继续第三十九章·五卷席终。,Continue Chapter 39 · Volume 5 closing.
+shell_32953e9c,背景音乐（程序氛围床）,Music (procedural bed)
+shell_32c2e64f,第三十三章·席终,Chapter 33 · closing
+shell_339725a4,第八十九章·蒸青,Chapter 89 · steam cyan
+shell_33c0c569,可继续第八十三章·缫丝。,Continue Chapter 83 · reel silk.
+shell_33f3dc0b,十八卷中段已执。可继续后半或经营。,Volume 18 midpoint is done. Continue second half or run the keep.
+shell_346c388c,第八十二章·桑陌,Chapter 82 · mulberry lane
+shell_348b9a85,第一百零二章·马印,Chapter 102 · horse seal
+shell_34f6bccc,战役缴获物资,Spoils
+shell_355c3e55,原创声明,Original work
+shell_3569a444,可继续第六十九章·十卷席终。,Continue Chapter 69 · Volume 10 closing.
+shell_35e2096c,第一百八十七章·蜜市,Chapter 187 · honey market
+shell_36471665,第一百六十二章·驿印,Chapter 162 · post seal
+shell_3697b5b7,第四卷开启：点「继续主线」或章节下拉选第二十八章·南泽。,Volume 4open open: choose Continue or chapter festival lower pull chooseChapter 28 · south marsh.
+shell_36ae776a,卷三十,Volume 30
+shell_37237945,第一百七十六章·避雨,Chapter 176 · avoid rain
+shell_37850170,可继续第一百一十章·排档。,Continue Chapter 110 · rank file.
+shell_37d0b58b,二十七卷中段已执。可继续后半或经营。,Volume 27 midpoint is done. Continue second half or run the keep.
+shell_37fd8efe,第六十六章·井印,Chapter 66 · well seal
+shell_384ef0a0,可继续第一百零四章·鞍房。,Continue Chapter 104 · saddle room.
+shell_38d59a59,第一百零八章·酒印,Chapter 108 · wine seal
+shell_38ef7187,第四卷后半：第三十一章·铁峡。,Volume 4 second half: Chapter 31 · iron gorge.
+shell_39ae4021,第五章·烽烟,Chapter 5 · beacon smoke
+shell_39c95219,可点「第十三章·嗣位」完成对决。,"Open ""Chapter 13 · heir seat""done complete pair decide."
+shell_3a4dd820,第一百九十二章·笛印,Chapter 192 · flute seal
+shell_3a562ed8,第二十二卷后半：点「继续主线」或卷二十二选第一百三十九章·灯会。,Volume 22 second half: choose Continue or volume two ten two chooseChapter 139 · lamp meet.
+shell_3a7326c5,第六十章·钤印,Chapter 60 · seal seal
+shell_3b7c185e,可继续第一百七十一章·二十七卷席终。,Continue Chapter 171 · Volume 27 closing.
+shell_3b9b1e91,第四十六章·余烬,Chapter 46 · after ember
+shell_3bae68b9,可继续第一百八十八章·蜂后。,Continue Chapter 188 · bee after.
+shell_3c10b27c,减动效,Reduced motion
+shell_3c69d4d1,第二十三卷·粮仓：点「继续主线」或卷二十三选第一百四十二章·粮囤。,Volume 23 · grain granary: choose Continue or volume two ten three chooseChapter 142 · grain hoard.
+shell_3c6d9940,第五十六章·曜廷,Chapter 56 · light court
+shell_3ca58880,可继续第二百零四章·盐印（三十三卷中段）。,Continue Chapter 204 · salt seal (Volume 33 midpoint).
+shell_3d90ba4a,胜利,Victory
+shell_3db26845,败北,Defeat
+shell_3db8066d,第七十一章·釉河,Chapter 71 · glaze river
+shell_3de6cab8,卷二,Volume 2
+shell_3e118248,十六卷已执。可继续第十七卷或经营。,Volume 16 is done. Continue Volume 17 or run the keep.
+shell_3e7d9621,六卷已执。可继续第七卷或经营。,Volume 6 is done. Continue Volume 7 or run the keep.
+shell_3fe672c9,第三十章·钤印,Chapter 30 · seal seal
+shell_40e191bd,存档,Save
+shell_40f6d47a,第二百零一章·席终,Chapter 201 · closing
+shell_4140eed2,　冷却%d,  cooldown %d
+shell_41ec1a25,战技,Art
+shell_421b0b2d,三十二卷已执。可继续第三十三卷或经营。,Volume 32 is done. Continue Volume 33 or run the keep.
+shell_439af96b,第十九卷后半：点「继续主线」或卷十九选第一百二十一章·渔市。,Volume 19 second half: choose Continue or volume ten nine chooseChapter 121 · fish market.
+shell_439c9c71,第一百零三章·马市,Chapter 103 · horse market
+shell_445831ea,第一百零七章·糟坊,Chapter 107 · lees workshop
+shell_445ffb2d,%d 人,%d people
+shell_44a0ddb2,可继续第八十一章·十二卷席终。,Continue Chapter 81 · Volume 12 closing.
+shell_44dca801,第二十五卷后半：点「继续主线」或卷二十五选第一百五十七章·竹市。,Volume 25 second half: choose Continue or volume two ten five chooseChapter 157 · bamboo market.
+shell_450a0438,字体许可,Font licenses
+shell_4518ecf7,可继续第三十六章·钤印（五卷中段）。,Continue Chapter 36 · seal seal (Volume 5 midpoint).
+shell_451f5c38,第二百一十六章·鼓印,Chapter 216 · drum seal
+shell_45257aa4,卷二十七,Volume 27
+shell_469a57a3,可继续第七十二章·窑印（十一卷中段）。,Continue Chapter 72 · kiln seal (Volume 11 midpoint).
+shell_46e58184,第三十七卷·潮汐：点「继续主线」或卷三十七选第二百二十六章·潮滩。,Volume 37 · tide tide: choose Continue or volume three ten seven chooseChapter 226 · tide beach.
+shell_46e81496,第三十八卷·瓷市：点「继续主线」或卷三十八选第二百三十二章·瓷市。,Volume 38 · porcelain market: choose Continue or volume three ten eight chooseChapter 232 · porcelain market.
+shell_47697449,卷三十一,Volume 31
+shell_47c0b245,三十七卷已执。可继续第三十八卷或经营。,Volume 37 is done. Continue Volume 38 or run the keep.
+shell_47cc5569,卷三十五,Volume 35
+shell_47cdb84d,可点「第二十一章·席终」完成第二卷。,"Open ""Chapter 21 · closing""done completeVolume 2."
+shell_484a9984,[color=#c75a5a]【临时伤】[/color],[b]Temporary wound[/b]
+shell_484ed2d3,第三十八章·终阙,Chapter 38 · end gate
+shell_48df07e6,可继续第二百一十五章·擂台。,Continue Chapter 215 · beat stage.
+shell_498a1fd0,三十五卷已执。可继续第三十六卷或经营。,Volume 35 is done. Continue Volume 36 or run the keep.
+shell_49ed92fc,点击继续,Tap to continue
+shell_4a2cd1f6,可点「第六章·托孤」签署托孤之约。,"Open ""Chapter 6 · entrust orphan""tally office entrust orphan of pact."
+shell_4aa6b05b,十五卷中段已执。可继续后半或经营。,Volume 15 midpoint is done. Continue second half or run the keep.
+shell_4ab83a7e,第二十八卷后半：点「继续主线」或卷二十八选第一百七十五章·雨市。,Volume 28 second half: choose Continue or volume two ten eight chooseChapter 175 · rain market.
+shell_4ae95e09,十二卷已执。可继续第十三卷或经营。,Volume 12 is done. Continue Volume 13 or run the keep.
+shell_4b15853f,第一百八十章·砚印,Chapter 180 · inkstone seal
+shell_4b1b8d2e,第 %d 回合,Round %d
+shell_4b44e78c,可继续第二百三十三章·釉池。,Continue Chapter 233 · glaze pool.
+shell_4b8faabb,第五十二章·破晓,Chapter 52 · break dawn
+shell_4be1f5ab,第七十章·窑口,Chapter 70 · kiln mouth
+shell_4beea25c,第二十五章·朔原,Chapter 25 · new-moon plain
+shell_4bf78788,九卷中段已执。可继续后半或经营。,Volume 9 midpoint is done. Continue second half or run the keep.
+shell_4c997942,三十一卷已执。可继续第三十二卷或经营。,Volume 31 is done. Continue Volume 32 or run the keep.
+shell_4c9acc44,可继续第一百二十五章·抄帘。,Continue Chapter 125 · copy curtain.
+shell_4cb20896,第一百五十四章·竹海,Chapter 154 · bamboo sea
+shell_4cdf2ae2,可继续第一百一十九章·潮汐。,Continue Chapter 119 · tide tide.
+shell_4ce1e23a,第一百六十四章·夜驿,Chapter 164 · night post
+shell_4d0b4688,取消,Cancel
+shell_4df63b66,第三十一章·铁峡,Chapter 31 · iron gorge
+shell_4e33a0a0,可继续第一百六十四章·夜驿。,Continue Chapter 164 · night post.
+shell_4e3fe9c0,可继续第三十八章·终阙。,Continue Chapter 38 · end gate.
+shell_4e4b2279,CAMPAIGN // 章节直达,CAMPAIGN // chapter jump
+shell_4ea013c3,第一百四十九章·冰窖,Chapter 149 · ice cellar
+shell_4ee049e9,卷十六,Volume 16
+shell_4ef519df,第三十五卷·鼓楼：点「继续主线」或卷三十五选第二百一十四章·鼓楼。,Volume 35 · drum tower: choose Continue or volume three ten five chooseChapter 214 · drum tower.
+shell_4f0d4639,第二百二十四章·独香,Chapter 224 · lone incense
+shell_4f21c510,前往酒馆接洽,Go to the tavern
+shell_4f929f0d,卷六,Volume 6
+shell_4faa58f5,结束回合,End turn
+shell_500dbaa1,CODEX · 系统百科,CODEX
+shell_50511c53,出战骑士状态,Knight status
+shell_505e64c2,音效,Sound effects
+shell_5068e1b6,第一百二十二章·货栈,Chapter 122 · goods trestle
+shell_5080eb2e,SIL Open Font License 1.1。用于数字与等宽读数。,SIL Open Font License 1.1. Used for numerals and monospace readouts.
+shell_50fd5719,卷三十六,Volume 36
+shell_52368959,卷二十六,Volume 26
+shell_52c5968e,第五十九章·霜驿,Chapter 59 · frost post
+shell_52cb1a0f,第四十三章·黑潮,Chapter 43 · black tide
+shell_52f3174e,3D 战斗演出,3D battle scenes
+shell_5357977d,三十四卷中段已执。可继续后半或经营。,Volume 34 midpoint is done. Continue second half or run the keep.
+shell_5366fd25,战技树,Battle arts
+shell_53bcbb9f,卷三十二,Volume 32
+shell_53cd6403,十卷已执。可继续第十一卷或经营。,Volume 10 is done. Continue Volume 11 or run the keep.
+shell_540b56e5,第二百三十章·独潮,Chapter 230 · lone tide
+shell_55019a69,第一百七十一章·席终,Chapter 171 · closing
+shell_557adf45,卷三十八,Volume 38
+shell_557cfaac,可点「第十五章·席散」完成第一卷终章。,"Open ""Chapter 15 · seat scatter""done completeVolume 1end chapter."
+shell_557fbcc5,第一百七十八章·砚坑,Chapter 178 · inkstone pit
+shell_55b7d0db,药,Herb
+shell_55cfd979,重新挑战,Retry
+shell_55dea989,粮铁药材,"Grain, iron, herbs"
+shell_568cabb7,第十章·回响,Chapter 10 · return echo
+shell_57ea9dbf,设置 · SETTINGS,Settings
+shell_587639e7,第二十四章·钤印,Chapter 24 · seal seal
+shell_58f1f999,可点「第十七章·盐河」重开盐路。,"Open ""Chapter 17 · salt river""heavy open salt road."
+shell_59261888,第二百一十九章·席终,Chapter 219 · closing
+shell_593b489a,第 1 回合,Round 1
+shell_5a06f598,可点「第十四章·并席」共持火把。,"Open ""Chapter 14 · join seat""joint hold fire grip."
+shell_5a0a47eb,%d 岁,Age %d
+shell_5a1ec09e,卷十二,Volume 12
+shell_5a692396,第一百七十七章·席终,Chapter 177 · closing
+shell_5af9737f,可继续第一百三十七章·灯棚。,Continue Chapter 137 · lamp shed.
+shell_5ca1578f,第一百五十五章·笋市,Chapter 155 · shoot market
+shell_5cda5bb8,麾下,Company
+shell_5cf1eb8d,历,Date
+shell_5d2cf665,陆桥委托,Land-bridge contracts
+shell_5d79b77d,三十六卷中段已执。可继续后半或经营。,Volume 36 midpoint is done. Continue second half or run the keep.
+shell_5dee6bda,可点「第二十七章·席终」完成第三卷。,"Open ""Chapter 27 · closing""done completeVolume 3."
+shell_5e470cd3,第一百五十二章·暖驿,Chapter 152 · warm post
+shell_5e5f966c,返回中枢,Back to the hub
+shell_5e65942a,第一百三十二章·铜印,Chapter 132 · copper seal
+shell_5e9e9ddb,可继续第一百九十七章·灯影。,Continue Chapter 197 · lamp shadow.
+shell_5f02af91,第六卷开启：点「继续主线」选第四十章·雾原。,Volume 6open open: choose Continue chooseChapter 40 · fog plain.
+shell_5f25faf0,第九十章·茶印,Chapter 90 · tea seal
+shell_5f26d015,第一百六十九章·钟市,Chapter 169 · bell market
+shell_5f6f029c,可继续第一百九十八章·影印（三十二卷中段）。,Continue Chapter 198 · shadow seal (Volume 32 midpoint).
+shell_5fe8b249,第十九卷·渔港：点「继续主线」或卷十九选第一百一十八章·码头。,Volume 19 · fish port: choose Continue or volume ten nine chooseChapter 118 · yard head.
+shell_60f3bc4d,可点「第十二章·余波」应对朔影家夜袭。,"Open ""Chapter 12 · after wave""answer pair new-moon shadow house night raid."
+shell_6104cf16,三份字体均为 SIL Open Font License 1.1，说明见 docs/licenses.md。,All three fonts are SIL Open Font License 1.1. See docs/licenses.md.
+shell_612f1ea0,十四卷中段已执。可继续后半或经营。,Volume 14 midpoint is done. Continue second half or run the keep.
+shell_61626390,十三卷中段已执。可继续后半或经营。,Volume 13 midpoint is done. Continue second half or run the keep.
+shell_61669bfd,第一百七十章·撞钟,Chapter 170 · strike bell
+shell_619fcd33,可继续第一百二十六章·纸印（二十卷中段）。,Continue Chapter 126 · paper seal (Volume 20 midpoint).
+shell_61b3a288,可继续第九十二章·茶引。,Continue Chapter 92 · tea guide.
+shell_62088a8a,可继续第九十五章·医馆。,Continue Chapter 95 · heal hall.
+shell_626f5aee,第一百九十一章·回音,Chapter 191 · return sound
+shell_6290c003,第二百零四章·盐印,Chapter 204 · salt seal
+shell_6293619b,卷二十一,Volume 21
+shell_6302da57,第十四卷后半：点「继续主线」或卷十四选第九十一章·晾青。,Volume 14 second half: choose Continue or volume ten four chooseChapter 91 · air cyan.
+shell_6359daa4,第二十九卷后半：点「继续主线」或卷二十九选第一百八十一章·砚市。,Volume 29 second half: choose Continue or volume two ten nine chooseChapter 181 · inkstone market.
+shell_638399df,可继续第五十章·百旗。,Continue Chapter 50 · hundred banner.
+shell_64295185,【攻击模式】点击红格敌人,[Attack] Tap an enemy on a red cell
+shell_645c19e1,系统百科,System codex
+shell_657780f3,第零章进行中：节拍 %s —— 点「第零章节拍」继续剧情,Chapter 0 is in progress: beat %s. Continue the story from that beat.
+shell_65b5422d,可继续第二百二十八章·潮印（三十七卷中段）。,Continue Chapter 228 · tide seal (Volume 37 midpoint).
+shell_66136c41,SIL Open Font License 1.1。粗体子集，许可与常规体相同。,"SIL Open Font License 1.1. Bold subset, same license as the regular face."
+shell_66850a99,第九十七章·煎药,Chapter 97 · pan herb
+shell_6763b86e,粮,Grain
+shell_689bc28d,可继续第一百五十五章·笋市。,Continue Chapter 155 · shoot market.
+shell_68a022c7,可继续第二百三十一章·三十七卷席终。,Continue Chapter 231 · Volume 37 closing.
+shell_68a1257b,第二百二十九章·潮市,Chapter 229 · tide market
+shell_690e6993,第三卷开启：可点「第二十二章·北风」。,"Volume 3open open: Open ""Chapter 22 · north wind""."
+shell_69569e88,第二十九章·金陌,Chapter 29 · metal lane
+shell_69c2458c,第一百四十五章·开仓,Chapter 145 · open granary
+shell_69e7baef,铁,Iron
+shell_69fd29d1,十二卷中段已执。可继续后半或经营。,Volume 12 midpoint is done. Continue second half or run the keep.
+shell_6a9a154f,第十五章·席散,Chapter 15 · seat scatter
+shell_6ad43ccd,卷二十九,Volume 29
+shell_6b732027,第一百七十五章·雨市,Chapter 175 · rain market
+shell_6c0bea3c,第九十四章·药圃,Chapter 94 · herb plot
+shell_6c14bd7f,关闭,Close
+shell_6c72f720,可继续第一百五十章·雪印（二十四卷中段）。,Continue Chapter 150 · snow seal (Volume 24 midpoint).
+shell_6caa671c,卷五,Volume 5
+shell_6d009e7d,八卷中段已执。可继续后半或经营。,Volume 8 midpoint is done. Continue second half or run the keep.
+shell_6dded41e,第一百一十五章·镖市,Chapter 115 · escort market
+shell_6e3951bc,第一百四十一章·席终,Chapter 141 · closing
+shell_6e6133cb,十一卷已执。可继续第十二卷或经营。,Volume 11 is done. Continue Volume 12 or run the keep.
+shell_6e89d3a3,切换分区,Switch section
+shell_6e9b4479,第一百三十六章·灯街,Chapter 136 · lamp street
+shell_6f09e310,可继续第九十八章·医籍。,Continue Chapter 98 · heal register.
+shell_6f0d0156,可点「第八章·港灯」签署海商盟约。,"Open ""Chapter 8 · port lamp""tally office sea trade oath pact."
+shell_6ff28c78,十九卷中段已执。可继续后半或经营。,Volume 19 midpoint is done. Continue second half or run the keep.
+shell_703d0f48,第二十一章·席终,Chapter 21 · closing
+shell_7041e4dc,第二百二十一章·烟径,Chapter 221 · smoke path
+shell_705f477a,攻击 ATK,ATK
+shell_709f2e05,第一百五十六章·竹印,Chapter 156 · bamboo seal
+shell_70f83a5e,生命 HP,HP
+shell_71e987bf,%d 章,%d
+shell_72077749,无,None
+shell_720f7a1d,第五十三章·镜湖,Chapter 53 · mirror lake
+shell_729a2cc4,十五卷已执。可继续第十六卷或经营。,Volume 15 is done. Continue Volume 16 or run the keep.
+shell_73266386,新手高亮指引,First-visit highlights
+shell_7358884b,第二十八章·南泽,Chapter 28 · south marsh
+shell_742d7d53,%s · 我方行动,%s · Your move
+shell_743453d5,无人阵亡,No one fell
+shell_74866b4f,第二章·姓氏,Chapter 2 · surname clan
+shell_74d825cb,第八十三章·缫丝,Chapter 83 · reel silk
+shell_74f80552,招募新刃,Recruit a new blade
+shell_751dce91,第八章·港灯,Chapter 8 · port lamp
+shell_7587975e,可继续第九十九章·十五卷席终。,Continue Chapter 99 · Volume 15 closing.
+shell_75c28136,第一百九十三章·笛市,Chapter 193 · flute market
+shell_76551b18,可点「第二十四章·钤印」完成三卷中段。,"Open ""Chapter 24 · seal seal""done complete three volume midpoint."
+shell_7694041a,三十七卷中段已执。可继续后半或经营。,Volume 37 midpoint is done. Continue second half or run the keep.
+shell_773855ef,第十九章·远岸,Chapter 19 · far shore
+shell_77545e18,血胤 %s,Blood %s
+shell_77586a60,%s　余%d%s,%s  left %d%s
+shell_77b3b3e7,可继续第七十五章·十一卷席终。,Continue Chapter 75 · Volume 11 closing.
+shell_77e418c5,第二卷后半：可点「第十九章·远岸」。,"Volume 2 second half: Open ""Chapter 19 · far shore""."
+shell_78dc26d1,第十三卷·蚕桑：点「继续主线」或卷十三选第八十二章·桑陌。,Volume 13 · silkworm mulberry: choose Continue or volume ten three chooseChapter 82 · mulberry lane.
+shell_78dfbf16,第三十卷后半：点「继续主线」或卷三十选第一百八十七章·蜜市。,Volume 30 second half: choose Continue or volume three ten chooseChapter 187 · honey market.
+shell_790f35e9,第八卷后半：点「继续主线」或卷八选第五十五章·朔风。,Volume 8 second half: choose Continue or volume eight chooseChapter 55 · new-moon wind.
+shell_793abfbf,第九十五章·医馆,Chapter 95 · heal hall
+shell_797d26c9,返回章节  ESC,return return chapter festival ESC
+shell_79be047e,可继续第一百三十八章·灯印（二十二卷中段）。,Continue Chapter 138 · lamp seal (Volume 22 midpoint).
+shell_7a30559d,第一百八十八章·蜂后,Chapter 188 · bee after
+shell_7a7c41fc,第一百八十一章·砚市,Chapter 181 · inkstone market
+shell_7ad482f1,第六十二章·曜阙,Chapter 62 · light gate
+shell_7af5bdc2,↑ ↓ 选择    Enter 确认,Up / down to choose    Enter to confirm
+shell_7bc11e9b,可继续第一百六十五章·二十六卷席终。,Continue Chapter 165 · Volume 26 closing.
+shell_7c9e016b,返回舆图,Back to atlas
+shell_7ce4ea33,第五卷后半：点「继续主线」选第三十七章·长川。,Volume 5 second half: choose Continue chooseChapter 37 · long river.
+shell_7cf8cb7b,第一百五十八章·篁祠,Chapter 158 · bamboo shrine
+shell_7d1a90d6,第八卷开启：点「继续主线」或卷八选第五十二章·破晓。,Volume 8open open: choose Continue or volume eight chooseChapter 52 · break dawn.
+shell_7ddf921c,第十四章·并席,Chapter 14 · join seat
+shell_7dea5328,厅堂校场市集,"Hall, yard, and market"
+shell_7debf9cb,设置,Settings
+shell_7e7dd025,可继续第一百三十五章·二十一卷席终。,Continue Chapter 135 · Volume 21 closing.
+shell_7ee9f2e0,第十一卷·窑火：点「继续主线」或卷十一选第七十章·窑口。,Volume 11 · kiln fire: choose Continue or volume ten one chooseChapter 70 · kiln mouth.
+shell_7f3e7140,第一百七十二章·雨巷,Chapter 172 · rain lane
+shell_7f865451,可继续第一百一十四章·镖印（十八卷中段）。,Continue Chapter 114 · escort seal (Volume 18 midpoint).
+shell_7fec9db5,界面缩放,UI scale
+shell_800e0a67,三十六卷已执。可继续第三十七卷或经营。,Volume 36 is done. Continue Volume 37 or run the keep.
+shell_803f8893,第七十四章·火塘,Chapter 74 · fire pond
+shell_808565e3,三十一卷中段已执。可继续后半或经营。,Volume 31 midpoint is done. Continue second half or run the keep.
+shell_80ec05de,二十五卷中段已执。可继续后半或经营。,Volume 25 midpoint is done. Continue second half or run the keep.
+shell_8112901e,主菜单,Main menu
+shell_8157054c,可继续第二百一十六章·鼓印（三十五卷中段）。,Continue Chapter 216 · drum seal (Volume 35 midpoint).
+shell_8169362a,可继续第二百三十章·独潮。,Continue Chapter 230 · lone tide.
+shell_81df3e5d,可继续第二百零六章·独晒。,Continue Chapter 206 · lone sun.
+shell_82106f23,出战编成 · 最多四人,Field company · four at most
+shell_824394d7,第九十三章·席终,Chapter 93 · closing
+shell_8297e3d4,第三十九章·席终,Chapter 39 · closing
+shell_82a2150f,第一百二十四章·纸坊,Chapter 124 · paper workshop
+shell_82b986d8,"[b]选择己方单位开始行动[/b]
+目标：歼灭全部敌人。
+蓝格可移动 · 红格为可攻目标 · 攻击模式后点敌。","[b]Choose one of yours to act[/b]
+Goal: defeat every enemy.
+Blue cells are movement · red cells can be attacked · enter attack mode, then tap a foe."
+shell_82f362f5,可继续第四十七章·冠火。,Continue Chapter 47 · crown fire.
+shell_830b485d,战役推进,Campaign
+shell_833195a8,卷三十四,Volume 34
+shell_835bb0fc,卷十七,Volume 17
+shell_8391fd27,蓝色弱,Blue-weak
+shell_84b0ecbb,三十三卷中段已执。可继续后半或经营。,Volume 33 midpoint is done. Continue second half or run the keep.
+shell_85b32796,可继续第一百七十六章·避雨。,Continue Chapter 176 · avoid rain.
+shell_85cb9c46,第二百零五章·盐市,Chapter 205 · salt market
+shell_85cde9e6,第八十五章·烘茧,Chapter 85 · bake cocoon
+shell_8669d292,攻击,Attack
+shell_869aacec,第一百三十一章·砧台,Chapter 131 · anvil stage
+shell_86a71783,可继续第五十四章·钤印（八卷中段）。,Continue Chapter 54 · seal seal (Volume 8 midpoint).
+shell_86c1c45f,第一百零五章·席终,Chapter 105 · closing
+shell_86c59866,第七卷开启：点「继续主线」或卷七选第四十六章·余烬。,Volume 7open open: choose Continue or volume seven chooseChapter 46 · after ember.
+shell_8709847e,二十八卷已执。可继续第二十九卷或经营。,Volume 28 is done. Continue Volume 29 or run the keep.
+shell_8736b101,【已移动】可攻击 / 待命,[Moved] You can attack or wait
+shell_881b3529,第八十四章·丝印,Chapter 84 · silk seal
+shell_886ea5c9,第三十二章·星津,Chapter 32 · star ford
+shell_88f0768b,第一百四十四章·粮印,Chapter 144 · grain seal
+shell_894c13a1,出战骑士历练,Knights in the field
+shell_895f014c,五卷中段已执。可继续后半或经营。,Volume 5 midpoint is done. Continue second half or run the keep.
+shell_8a32b3fe,第十一卷后半：点「继续主线」或选第七十三章·烟囱。,Volume 11 second half: choose Continue or chooseChapter 73 · smoke chimney.
+shell_8a653f27,可继续第一百七十四章·雨印（二十八卷中段）。,Continue Chapter 174 · rain seal (Volume 28 midpoint).
+shell_8a74087d,第六章·托孤,Chapter 6 · entrust orphan
+shell_8a91fe2c,跑图 · 城镇 · 委托,"Roads, towns, contracts"
+shell_8ad097fe,禀性 ,Traits 
+shell_8ae4b9db,卷七,Volume 7
+shell_8c33eefe,战斗演出默认 2×,Battle scenes default to 2x
+shell_8c5c223a,可继续第一百九十一章·回音。,Continue Chapter 191 · return sound.
+shell_8d192207,第六十四章·井市,Chapter 64 · well market
+shell_8d3d6c29,属地,Estates
+shell_8d56ed42,第八十七章·席终,Chapter 87 · closing
+shell_8d5e5c37,第一百五十三章·席终,Chapter 153 · closing
+shell_8dfd9a2f,可继续第一百零五章·十六卷席终。,Continue Chapter 105 · Volume 16 closing.
+shell_8dffb0b0,可点「第二十章·潮墙」落两印。,"Open ""Chapter 20 · tide wall""fall two seal."
+shell_8eb87ab3,第十八卷·镖行：点「继续主线」或卷十八选第一百一十二章·镖局。,Volume 18 · escort march: choose Continue or volume ten eight chooseChapter 112 · escort board.
+shell_8ed10247,左键 选中/移动 · Q 攻击 · W 战技 · E 待命 · Enter 结束回合 · 右键 取消,Left click select/move · Q attack · W art · E wait · Enter end turn · Right click cancel
+shell_8fe158c4,可继续第一百四十九章·冰窖。,Continue Chapter 149 · ice cellar.
+shell_908496c6,卷三,Volume 3
+shell_90ec31fb,第四十四章·曜塔,Chapter 44 · light tower
+shell_915752d2,卷一,Volume 1
+shell_9219bb7b,%d 对,%d pairs
+shell_928b7503,可继续第七十八章·戏印（十二卷中段）。,Continue Chapter 78 · play seal (Volume 12 midpoint).
+shell_92bb4d72,子嗣三步入队,Three steps for an heir to join
+shell_92cc6bc7,防御 DEF,DEF
+shell_93848c5b,可点「第十一章·门阙」验旗。,"Open ""Chapter 11 · gate gate""test banner."
+shell_945540ca,第三卷后半：可点「第二十五章·朔原」。,"Volume 3 second half: Open ""Chapter 25 · new-moon plain""."
+shell_9466cac8,已缔约,Contracted
+shell_946c7148,银币,Silver
+shell_94716fdd,系统百科收着战棋、城堡、联姻和舆图的短说明，随时能翻。,"The codex keeps short notes on tactics, the keep, marriage, and the atlas."
+shell_94db6f97,选中单位后点「战技」循环选择；进攻技在攻击时消耗。,"Select a unit, then tap Art to cycle. Attack arts are spent when you strike."
+shell_94fb60fe,%s · 第 %d 回合,%s · Round %d
+shell_95473687,FORCE WITHDRAWN // 战败可重试，进度旗标保留,"FORCE WITHDRAWN // you can retry, and progress flags stay"
+shell_956be5af,七卷已执。可继续第八卷或经营。,Volume 7 is done. Continue Volume 8 or run the keep.
+shell_957db539,第二十五卷·竹海：点「继续主线」或卷二十五选第一百五十四章·竹海。,Volume 25 · bamboo sea: choose Continue or volume two ten five chooseChapter 154 · bamboo sea.
+shell_9590f94b,可继续第一百六十八章·钟印（二十七卷中段）。,Continue Chapter 168 · bell seal (Volume 27 midpoint).
+shell_95e5f18f,六卷中段已执。可继续后半或经营。,Volume 6 midpoint is done. Continue second half or run the keep.
+shell_9639cd7e,请爵,Petitions
+shell_96660831,卷十八,Volume 18
+shell_97317279,第四十一章·石冢,Chapter 41 · stone mound
+shell_980c8ea6,三十三卷已执。可继续第三十四卷或经营。,Volume 33 is done. Continue Volume 34 or run the keep.
+shell_983cd466,[b]%s[/b]　%s　%d岁　%s,[b]%s[/b]  %s  age %d  %s
+shell_986a2cd3,第七十五章·席终,Chapter 75 · closing
+shell_98a65e37,第二百一十八章·独擂,Chapter 218 · lone beat
+shell_98e9ce74,可继续第四十五章·六卷席终。,Continue Chapter 45 · Volume 6 closing.
+shell_994ca053,联姻与传承,Marriage and inheritance
+shell_99b888a5,第三章·铁祷,Chapter 3 · iron prayer
+shell_99c9db29,第一百九十五章·席终,Chapter 195 · closing
+shell_9a4d8978,第九十一章·晾青,Chapter 91 · air cyan
+shell_9ad5e8f0,第一百八十四章·蜂巢,Chapter 184 · bee nest
+shell_9b3287cb,可点「第七章·子嗣」打响正名战。,"Open ""Chapter 7 · child heir""strike echo straight name battle."
+shell_9b72b839,第二十八卷·雨巷：点「继续主线」或卷二十八选第一百七十二章·雨巷。,Volume 28 · rain lane: choose Continue or volume two ten eight chooseChapter 172 · rain lane.
+shell_9be5b6f4,第二百章·独影,Chapter 200 · lone shadow
+shell_9c575371,卷十三,Volume 13
+shell_9c597a79,三十卷中段已执。可继续后半或经营。,Volume 30 midpoint is done. Continue second half or run the keep.
+shell_9c678de1,战技点,Art points
+shell_9c6a962e,前往选中章,Open the selected chapter
+shell_9ca5135f,战报,Report
+shell_9d41e521,第三十四卷后半：点「继续主线」或卷三十四选第二百一十一章·色市。,Volume 34 second half: choose Continue or volume three ten four chooseChapter 211 · color market.
+shell_9d4c3025,可继续第一百四十七章·二十三卷席终。,Continue Chapter 147 · Volume 23 closing.
+shell_9d7230c7,第一百九十章·笛楼,Chapter 190 · flute tower
+shell_9df03327,可继续第一百一十三章·夜营。,Continue Chapter 113 · night camp.
+shell_9e4c88e1,第一百零六章·曲房,Chapter 106 · bend room
+shell_9e80d6b4,可继续第七十四章·火塘。,Continue Chapter 74 · fire pond.
+shell_9f0e9e29,三卷中段已执。可继续后半或经营。,Volume 3 midpoint is done. Continue second half or run the keep.
+shell_a07db291,灰刃与铁火,Ash blades and iron fire
+shell_a095b439,第六卷后半：点「继续主线」或卷六选第四十三章·黑潮。,Volume 6 second half: choose Continue or volume six chooseChapter 43 · black tide.
+shell_a1149920,第一百七十四章·雨印,Chapter 174 · rain seal
+shell_a14cfe81,第四十八章·钤印,Chapter 48 · seal seal
+shell_a17e1ac7,第一百八十二章·捺印,Chapter 182 · press seal
+shell_a20f869f,十四卷已执。可继续第十五卷或经营。,Volume 14 is done. Continue Volume 15 or run the keep.
+shell_a21ba281,当前卷,Current volume
+shell_a226adc8,第七十八章·戏印,Chapter 78 · play seal
+shell_a27dfae3,第三十七卷后半：点「继续主线」或卷三十七选第二百二十九章·潮市。,Volume 37 second half: choose Continue or volume three ten seven chooseChapter 229 · tide market.
+shell_a2f977d5,第一百三十七章·灯棚,Chapter 137 · lamp shed
+shell_a3118d34,第一百六十七章·守钟,Chapter 167 · guard bell
+shell_a32d644c,九卷已执。可继续第十卷或经营。,Volume 9 is done. Continue Volume 10 or run the keep.
+shell_a35854f4,第五卷开启：点「继续主线」选第三十四章·破晓。,Volume 5open open: choose Continue chooseChapter 34 · break dawn.
+shell_a41ed39f,可点「第四章·百年」挑战断字关。,"Open ""Chapter 4 · hundred year""raise battle break glyph pass."
+shell_a44399cd,第三十二卷后半：点「继续主线」或卷三十二选第一百九十九章·影市。,Volume 32 second half: choose Continue or volume three ten two chooseChapter 199 · shadow market.
+shell_a47f14f0,可继续第七十一章·釉河。,Continue Chapter 71 · glaze river.
+shell_a562316a,卷二十四,Volume 24
+shell_a5dac062,旗可再举。败北不毁进度：调整编成与站位后重试。,"The banner can be raised again. A loss does not erase progress. Change the company and the line, then retry."
+shell_a5dfcb81,TIP · 先锁定再推进,TIP · lock a foe before you advance
+shell_a63412f2,第一百一十四章·镖印,Chapter 114 · escort seal
+shell_a63e5b28,%s · 玩家回合,%s · Player turn
+shell_a675f919,血胤与容貌,Bloodline and looks
+shell_a683d75b,CENTURY KNIGHTS · 百年骑士,CENTURY KNIGHTS
+shell_a6e14f30,第一百一十三章·夜营,Chapter 113 · night camp
+shell_a6f29559,可点继续主线赴第三十三章·四卷席终。,Open continue the storygoChapter 33 · Volume 4 closing.
+shell_a711bbd5,第六十三章·席终,Chapter 63 · closing
+shell_a7909a8a,可继续第一百四十四章·粮印（二十三卷中段）。,Continue Chapter 144 · grain seal (Volume 23 midpoint).
+shell_a7a21cd5,十七卷中段已执。可继续后半或经营。,Volume 17 midpoint is done. Continue second half or run the keep.
+shell_a7b56ca8,可继续第二百二十五章·三十六卷席终。,Continue Chapter 225 · Volume 36 closing.
+shell_aa522cc3,第二百二十五章·席终,Chapter 225 · closing
+shell_aa5892ca,第一百二十三章·席终,Chapter 123 · closing
+shell_aa5cfee6,五卷已执。可继续第六卷或经营。,Volume 5 is done. Continue Volume 6 or run the keep.
+shell_aac34b52,可继续第一百一十七章·十八卷席终。,Continue Chapter 117 · Volume 18 closing.
+shell_aaf46948,原创 IP · v8.6 · Godot 4.3,Original · v8.6 · Godot 4.3
+shell_ab04dbbb,第一百一十六章·驿站,Chapter 116 · post station
+shell_ab76fa61,卷四,Volume 4
+shell_ab7d3f08,可继续第二百零三章·盐堆。,Continue Chapter 203 · salt stack.
+shell_ac0a50d1,第二十二章·北风,Chapter 22 · north wind
+shell_ac282558,可继续第二百二十四章·独香。,Continue Chapter 224 · lone incense.
+shell_ac46ccb4,三卷已执。可继续第四卷或经营。,Volume 3 is done. Continue Volume 4 or run the keep.
+shell_acd80e41,系统、文本、界面与代码均为本项目原创。对战棋类型的致敬只留在规则层，不收入其他作品的名称、角色、图像或音频。,"Systems, text, interface, and code are original to this project. The nod to the tactics genre stays in the rules. No other work's names, characters, images, or audio are included."
+shell_acf014bf,进度,Progress
+shell_ad2147c1,第一百二十一章·渔市,Chapter 121 · fish market
+shell_ad3c5ca1,第二十三卷后半：点「继续主线」或卷二十三选第一百四十五章·开仓。,Volume 23 second half: choose Continue or volume two ten three chooseChapter 145 · open granary.
+shell_ada37c6b,第六十八章·纸坊,Chapter 68 · paper workshop
+shell_aecb1b93,可继续第五十三章·镜湖。,Continue Chapter 53 · mirror lake.
+shell_af1e27c0,第一百七十三章·伞棚,Chapter 173 · umbrella shed
+shell_af22c7fd,第二百二十八章·潮印,Chapter 228 · tide seal
+shell_af764dc4,六维 力%d 体%d 技%d 敏%d 感%d 意%d,Stats STR %d VIT %d SKL %d AGI %d PER %d WIL %d
+shell_afa16e78,快速休整,Quick rest
+shell_b04514e7,可继续第一百七十七章·二十八卷席终。,Continue Chapter 177 · Volume 28 closing.
+shell_b11b51bd,可继续第一百零七章·糟坊。,Continue Chapter 107 · lees workshop.
+shell_b1a2868a,"[b]%s[/b]（%s·%s） HP %d/%d
+攻 %d 防 %d 命中 %d 回避 %d 移动 %d
+地形：%s（回避+%d 防+%d）
+","[b]%s[/b] (%s · %s) HP %d/%d
+ATK %d DEF %d HIT %d AVO %d MOV %d
+Terrain: %s (avo +%d def +%d)
+"
+shell_b1fbbf65,可点「第三章·铁祷」学习战技与转职深造。,"Open ""Chapter 3 · iron prayer""study drill battle skill and turn post deep make."
+shell_b2923ff4,第一百九十九章·影市,Chapter 199 · shadow market
+shell_b29a25d3,二十二卷中段已执。可继续后半或经营。,Volume 22 midpoint is done. Continue second half or run the keep.
+shell_b40e1411,可继续第六十三章·九卷席终。,Continue Chapter 63 · Volume 9 closing.
+shell_b426baa8,第九卷开启：点「继续主线」或卷九选第五十八章·余烬港。,Volume 9open open: choose Continue or volume nine chooseChapter 58 · after ember port.
+shell_b4dacf75,第十三卷后半：点「继续主线」或卷十三选第八十五章·烘茧。,Volume 13 second half: choose Continue or volume ten three chooseChapter 85 · bake cocoon.
+shell_b56d9ac6,确认,Confirm
+shell_b58ae3d1,第三十五卷后半：点「继续主线」或卷三十五选第二百一十七章·鼓市。,Volume 35 second half: choose Continue or volume three ten five chooseChapter 217 · drum market.
+shell_b5d00d3a,第二十六章·冠雪,Chapter 26 · crown snow
+shell_b5f809dd,可继续第一百一十六章·驿站。,Continue Chapter 116 · post station.
+shell_b610b8de,二十卷已执。可继续第二十一卷或经营。,Volume 20 is done. Continue Volume 21 or run the keep.
+shell_b62a393c,第二百一十五章·擂台,Chapter 215 · beat stage
+shell_b69fd89f,本季事务,This season
+shell_b6d661b1,第四十章·雾原,Chapter 40 · fog plain
+shell_b74f3aed,前往联姻廷,Go to the marriage court
+shell_b78f10b8,第九卷后半：点「继续主线」或卷九选第六十一章·烬原。,Volume 9 second half: choose Continue or volume nine chooseChapter 61 · ember plain.
+shell_b79fba72,第二十二卷·灯市：点「继续主线」或卷二十二选第一百三十六章·灯街。,Volume 22 · lamp market: choose Continue or volume two ten two chooseChapter 136 · lamp street.
+shell_b8692224,可继续第一百九十五章·三十一卷席终。,Continue Chapter 195 · Volume 31 closing.
+shell_b883c04b,负伤撤离 · HP 已按 30% 回复,Withdrawn wounded · HP restored to 30%
+shell_b894a8c9,生命,HP
+shell_b945840e,可继续第二百一十三章·三十四卷席终。,Continue Chapter 213 · Volume 34 closing.
+shell_b99c62c6,可继续第一百七十章·撞钟。,Continue Chapter 170 · strike bell.
+shell_ba0796dc,十六卷中段已执。可继续后半或经营。,Volume 16 midpoint is done. Continue second half or run the keep.
+shell_ba1141aa,卷十,Volume 10
+shell_ba23b7d0,第二十九卷·砚市：点「继续主线」或卷二十九选第一百七十八章·砚坑。,Volume 29 · inkstone market: choose Continue or volume two ten nine chooseChapter 178 · inkstone pit.
+shell_ba4e55a3,第一百六十五章·席终,Chapter 165 · closing
+shell_babb457e,灯引只在第一次走进某个地方时点亮。设置里可以关掉新手高亮。,The lamp guide lights only the first time you enter a place. First-visit highlights can be turned off in settings.
+shell_bb37d6fb,可点「第十章·回响」赴盟主宴。,"Open ""Chapter 10 · return echo""go oath main feast."
+shell_bb7dace7,可继续第一百二十二章·货栈。,Continue Chapter 122 · goods trestle.
+shell_bb8c800d,第三十三卷后半：点「继续主线」或卷三十三选第二百零五章·盐市。,Volume 33 second half: choose Continue or volume three ten three chooseChapter 205 · salt market.
+shell_bb9bee08,可继续第二百零九章·晾竿。,Continue Chapter 209 · air pole.
+shell_bbb2fbe8,第十八章·门阙,Chapter 18 · gate gate
+shell_bbef247d,第一百章·马厩,Chapter 100 · horse stable
+shell_bc55cd66,卷二十五,Volume 25
+shell_bc8c2ff0,第一百三十九章·灯会,Chapter 139 · lamp meet
+shell_bce10b89,第三十七章·长川,Chapter 37 · long river
+shell_bd1759e1,烽火酒馆的候选人每旬轮换；职业、特质与佣金各不相同。,"Beacon Tavern rotates candidates every tenday. Class, traits, and fee all differ."
+shell_bd4ea252,可继续第八十四章·丝印（十三卷中段）。,Continue Chapter 84 · silk seal (Volume 13 midpoint).
+shell_bd657d70,子嗣,Heirs
+shell_bd901bb9,第一百七十九章·案台,Chapter 179 · desk stage
+shell_bda544ee,战败须知,After a loss
+shell_bdab6026,第一百四十三章·仓房,Chapter 143 · granary room
+shell_bdb72c85,第一百八十九章·席终,Chapter 189 · closing
+shell_be28a894,四野租佃庄园,Tenant manors in the four fields
+shell_bfba3c72,可继续第一百八十九章·三十卷席终。,Continue Chapter 189 · Volume 30 closing.
+shell_c0931d92,二十三卷已执。可继续第二十四卷或经营。,Volume 23 is done. Continue Volume 24 or run the keep.
+shell_c0988848,第五十五章·朔风,Chapter 55 · new-moon wind
+shell_c102b818,第六十五章·铜铃,Chapter 65 · copper bell
+shell_c19a53f0,第二十章·潮墙,Chapter 20 · tide wall
+shell_c1a3cfb2,可继续第二百二十二章·香印（三十六卷中段）。,Continue Chapter 222 · incense seal (Volume 36 midpoint).
+shell_c2031627,第一百三十八章·灯印,Chapter 138 · lamp seal
+shell_c2d3165c,第二百三十二章·瓷市,Chapter 232 · porcelain market
+shell_c3bc8c05,可继续第三十章·钤印（四卷中段）。,Continue Chapter 30 · seal seal (Volume 4 midpoint).
+shell_c400f629,第一章·陆桥,Chapter 1 · land bridge
+shell_c456b86d,第二百三十一章·席终,Chapter 231 · closing
+shell_c493c936,第七十七章·检场,Chapter 77 · inspect yard
+shell_c5134eb1,建议,Tip
+shell_c52c0365,第四十二章·钤印,Chapter 42 · seal seal
+shell_c5922dc9,%s旗家主，率 %d 名骑士守着这座堡。工事、委任与联姻誓约都会写入家族旁注。,"%s heads the house and holds this keep with %d knights. Works, contracts, and marriage vows are written into the family notes."
+shell_c5c4fa01,"[b]%s[/b]（%s·%s） HP %d/%d
+攻 %d 防 %d
+地形：%s（回避+%d 防+%d）
+（仍选中我军，可继续移动/攻击）","[b]%s[/b] (%s · %s) HP %d/%d
+ATK %d DEF %d
+Terrain: %s (avo +%d def +%d)
+(Your unit stays selected. You can still move or attack.)"
+shell_c5eb3538,第一百六十章·驿站,Chapter 160 · post station
+shell_c5fbbc27,第七卷后半：点「继续主线」或卷七选第四十九章·烬原。,Volume 7 second half: choose Continue or volume seven chooseChapter 49 · ember plain.
+shell_c601ae43,可继续第一百二十三章·十九卷席终。,Continue Chapter 123 · Volume 19 closing.
+shell_c64d2eec,可继续第九十章·茶印（十四卷中段）。,Continue Chapter 90 · tea seal (Volume 14 midpoint).
+shell_c6d0b7e7,第二十七章·席终,Chapter 27 · closing
+shell_c7ca73e8,可继续第一百六十七章·守钟。,Continue Chapter 167 · guard bell.
+shell_c7f03a04,二十一卷已执。可继续第二十二卷或经营。,Volume 21 is done. Continue Volume 22 or run the keep.
+shell_c832b9ce,我军,Ally
+shell_c84f88cd,「%s堡」,%s Keep
+shell_c8563e2a,第三十四卷·染坊：点「继续主线」或卷三十四选第二百零八章·染坊。,Volume 34 · dye workshop: choose Continue or volume three ten four chooseChapter 208 · dye workshop.
+shell_c8925dcc,第四十五章·席终,Chapter 45 · closing
+shell_c93ae063,第十二卷后半：点「继续主线」或卷十二选第七十九章·后台。,Volume 12 second half: choose Continue or volume ten two chooseChapter 79 · after stage.
+shell_ca9d02b2,可继续第八十六章·经轴。,Continue Chapter 86 · pass axle.
+shell_cbc0f1d3,二十六卷中段已执。可继续后半或经营。,Volume 26 midpoint is done. Continue second half or run the keep.
+shell_cbd73db4,第五十四章·钤印,Chapter 54 · seal seal
+shell_cbde0e46,确认 / 选定,Confirm / choose
+shell_ccb1cfc4,联姻缔约决定血脉与可遗传特质；子嗣成年后可行授旗礼入队。,A marriage contract sets the blood and the traits that pass on. Grown heirs can take the banner rite and join.
+shell_ccca15a3,可继续第五十九章·霜驿。,Continue Chapter 59 · frost post.
+shell_ccdd777b,卷二十三,Volume 23
+shell_cd1c5c53,第十七章·盐河,Chapter 17 · salt river
+shell_cd96627f,第二十卷后半：点「继续主线」或卷二十选第一百二十七章·压榨。,Volume 20 second half: choose Continue or volume two ten chooseChapter 127 · press press.
+shell_ce5be43a,第五十章·百旗,Chapter 50 · hundred banner
+shell_cf5e0830,第九十八章·医籍,Chapter 98 · heal register
+shell_cf645c7c,可继续第八十九章·蒸青。,Continue Chapter 89 · steam cyan.
+shell_d003793c,第一百一十一章·席终,Chapter 111 · closing
+shell_d046ac70,保留,Kept
+shell_d04aaaa0,可继续第二百一十二章·独染。,Continue Chapter 212 · lone dye.
+shell_d06129d8,可点「第二十六章·冠雪」落两印。,"Open ""Chapter 26 · crown snow""fall two seal."
+shell_d0c87fe3,第一百三十三章·铜市,Chapter 133 · copper market
+shell_d0d30beb,工事,Works
+shell_d0edd474,第三十六章·钤印,Chapter 36 · seal seal
+shell_d0ef54b9,可继续第八十七章·十三卷席终。,Continue Chapter 87 · Volume 13 closing.
+shell_d2261e98,可继续第二百一十章·染印（三十四卷中段）。,Continue Chapter 210 · dye seal (Volume 34 midpoint).
+shell_d26e5808,第二十七卷·钟鼓：点「继续主线」或卷二十七选第一百六十六章·钟楼。,Volume 27 · bell drum: choose Continue or volume two ten seven chooseChapter 166 · bell tower.
+shell_d2a07750,第一百一十九章·潮汐,Chapter 119 · tide tide
+shell_d2cf4e81,棋子预览,Piece preview
+shell_d3014537,三十四卷已执。可继续第三十五卷或经营。,Volume 34 is done. Continue Volume 35 or run the keep.
+shell_d341f387,可继续第六十五章·铜铃。,Continue Chapter 65 · copper bell.
+shell_d349b252,可继续第二百一十九章·三十五卷席终。,Continue Chapter 219 · Volume 35 closing.
+shell_d38bcf50,可继续第八十章·灯架。,Continue Chapter 80 · lamp frame.
+shell_d3dd2d22,第一百零九章·开酿,Chapter 109 · open brew
+shell_d50391de,酒馆有新面孔,New faces in the tavern
+shell_d6468c3e,可继续第一百九十四章·独奏。,Continue Chapter 194 · lone play.
+shell_d678bca7,触感,Haptics
+shell_d6a2341b,第二百零七章·席终,Chapter 207 · closing
+shell_d70c51b8,卷三十七,Volume 37
+shell_d7678724,第一百六十六章·钟楼,Chapter 166 · bell tower
+shell_d7c2d62e,可继续第四十四章·曜塔。,Continue Chapter 44 · light tower.
+shell_d87c2b89,卷二十八,Volume 28
+shell_d8e5378c,卷十五,Volume 15
+shell_d8fcb9ac,第二百三十四章·瓷印,Chapter 234 · porcelain seal
+shell_d95adbd6,玩家回合,Player turn
+shell_d9602008,第五十七章·席终,Chapter 57 · closing
+shell_d9d4eaba,第十三章·嗣位,Chapter 13 · heir seat
+shell_d9efbbee,八卷已执。可继续第九卷或经营。,Volume 8 is done. Continue Volume 9 or run the keep.
+shell_d9f64f13,%s · %s旗大厅事务汇总,"%s · %s hall, this month"
+shell_da14da4d,第二百一十一章·色市,Chapter 211 · color market
+shell_da522cd9,第十八卷后半：点「继续主线」或卷十八选第一百一十五章·镖市。,Volume 18 second half: choose Continue or volume ten eight chooseChapter 115 · escort market.
+shell_da706a57,十九卷已执。可继续第二十卷或经营。,Volume 19 is done. Continue Volume 20 or run the keep.
+shell_da8696b4,第十二章·余波,Chapter 12 · after wave
+shell_dc89dbfe,士气,Morale
+shell_dcb83d03,授旗礼,Banner rite
+shell_dd256405,第二百二十七章·礁脉,Chapter 227 · reef vein
+shell_dd5eb2b4,绿色弱,Green-weak
+shell_de5c040f,三十五卷中段已执。可继续后半或经营。,Volume 35 midpoint is done. Continue second half or run the keep.
+shell_dec14f66,可继续第一百六十一章·急递。,Continue Chapter 161 · urgent relay.
+shell_dfa63efe,第一百零四章·鞍房,Chapter 104 · saddle room
+shell_e01a1440,第八十章·灯架,Chapter 80 · lamp frame
+shell_e0646f1c,第九十二章·茶引,Chapter 92 · tea guide
+shell_e114b029,第一百八十三章·席终,Chapter 183 · closing
+shell_e2071c84,第七十九章·后台,Chapter 79 · after stage
+shell_e2120b8f,可继续第一百二十章·港印（十九卷中段）。,Continue Chapter 120 · port seal (Volume 19 midpoint).
+shell_e218e2a6,第三十卷·蜂场：点「继续主线」或卷三十选第一百八十四章·蜂巢。,Volume 30 · bee yard: choose Continue or volume three ten chooseChapter 184 · bee nest.
+shell_e284e16a,第三十五章·晚钟,Chapter 35 · late bell
+shell_e2ceca2d,第五十一章·席终,Chapter 51 · closing
+shell_e2d53a6d,重试,Retry
+shell_e3d14011,可继续第二百一十八章·独擂。,Continue Chapter 218 · lone beat.
+shell_e3db61a6,第一百六十八章·钟印,Chapter 168 · bell seal
+shell_e4492ae0,继续主线,Continue story
+shell_e4daf17b,移动 MOV,MOV
+shell_e4e0bbeb,二十六卷已执。可继续第二十七卷或经营。,Volume 26 is done. Continue Volume 27 or run the keep.
+shell_e4e3c70c,第二百一十三章·席终,Chapter 213 · closing
+shell_e6247ac7,已解锁章节,Chapters open
+shell_e721af9c,三十卷已执。可继续第三十一卷或经营。,Volume 30 is done. Continue Volume 31 or run the keep.
+shell_e7a9d262,第一百六十一章·急递,Chapter 161 · urgent relay
+shell_e9220e38,第一百九十七章·灯影,Chapter 197 · lamp shadow
+shell_e98d3d31,第三十一卷后半：点「继续主线」或卷三十一选第一百九十三章·笛市。,Volume 31 second half: choose Continue or volume three ten one chooseChapter 193 · flute market.
+shell_e9bdace4,第一百九十六章·影幕,Chapter 196 · shadow curtain
+shell_ea18aad3,HP · 全员回满,HP · fully restored
+shell_ea51b651,可继续第一百三十一章·砧台。,Continue Chapter 131 · anvil stage.
+shell_ea69504a,二十二卷已执。可继续第二十三卷或经营。,Volume 22 is done. Continue Volume 23 or run the keep.
+shell_eb0fecee,可继续第四十八章·钤印（七卷中段）。,Continue Chapter 48 · seal seal (Volume 7 midpoint).
+shell_eb3e8e7d,第七十六章·台口,Chapter 76 · stage mouth
+shell_eb45e3e1,第二百二十二章·香印,Chapter 222 · incense seal
+shell_eb85a22e,第一百一十七章·席终,Chapter 117 · closing
+shell_ebd378a1,第二十一卷后半：点「继续主线」或卷二十一选第一百三十三章·铜市。,Volume 21 second half: choose Continue or volume two ten one chooseChapter 133 · copper market.
+shell_ec74342f,可继续第一百八十六章·蜂印（三十卷中段）。,Continue Chapter 186 · bee seal (Volume 30 midpoint).
+shell_ed24d742,SKILL POINT · 可在战技树分配,ART POINT · spend it on the art tree
+shell_eda18708,第十六章·海草,Chapter 16 · sea grass
+shell_edd70261,第二十六卷后半：点「继续主线」或卷二十六选第一百六十三章·驿市。,Volume 26 second half: choose Continue or volume two ten six chooseChapter 163 · post market.
+shell_ee9dfd33,可继续第一百三十二章·铜印（二十一卷中段）。,Continue Chapter 132 · copper seal (Volume 21 midpoint).
+shell_eeaa7f1c,可点「第九章·商路」夺回辎重。,"Open ""Chapter 9 · trade road""seize return baggage heavy."
+shell_eebc3f40,可点「第十八章·门阙」写入二卷可入。,"Open ""Chapter 18 · gate gate""write enter two volume can enter."
+shell_eed3622a,二十一卷中段已执。可继续后半或经营。,Volume 21 midpoint is done. Continue second half or run the keep.
+shell_ef0904d2,卷二十二,Volume 22
+shell_ef26d4ec,第一百四十八章·雪栈,Chapter 148 · snow trestle
+shell_ef4e3c97,可继续第一百七十九章·案台。,Continue Chapter 179 · desk stage.
+shell_eff83765,第三十二卷·影戏：点「继续主线」或卷三十二选第一百九十六章·影幕。,Volume 32 · shadow play: choose Continue or volume three ten two chooseChapter 196 · shadow curtain.
+shell_f03fd785,第三十四章·破晓,Chapter 34 · break dawn
+shell_f05a04a7,第九章·商路,Chapter 9 · trade road
+shell_f06dd3d7,第十卷·井市：点「继续主线」或卷十选第六十四章·井市。,Volume 10 · well market: choose Continue or volume ten chooseChapter 64 · well market.
+shell_f075f209,春令与期望,Spring rite and expectations
+shell_f0ea80bf,名册与立绘,Roster and portraits
+shell_f0f3ce67,第一卷·已执百年。可继续第二卷或经营。,Volume 1 · is donehundred year. Continue Volume 2 or run the keep.
+shell_f1245588,第二卷前半完成。可继续后半或经营。,Volume 2 first halfdone complete. Continue second half or run the keep.
+shell_f2447884,第二卷开启：可点「第十六章·海草」。,"Volume 2open open: Open ""Chapter 16 · sea grass""."
+shell_f2706207,第十六卷·马市：点「继续主线」或卷十六选第一百章·马厩。,Volume 16 · horse market: choose Continue or volume ten six chooseChapter 100 · horse stable.
+shell_f283ea9e,卷九,Volume 9
+shell_f29bbf0a,"透视→%s：命中 %d%% 伤害 %d–%d 暴%d%%%s
+","Preview → %s: hit %d%% damage %d–%d crit %d%%%s
+"
+shell_f39331c7,可继续第六十章·九卷钤印（九卷中段）。,Continue Chapter 60 · Volume 9seal seal (Volume 9 midpoint).
+shell_f3a26fd2,三十八卷中段已执。可继续后半或经营。,Volume 38 midpoint is done. Continue second half or run the keep.
+shell_f4069c8b,敌军,Enemy
+shell_f406bde1,色觉,Color vision
+shell_f4218c64,第二十卷·纸坊：点「继续主线」或卷二十选第一百二十四章·纸坊。,Volume 20 · paper workshop: choose Continue or volume two ten chooseChapter 124 · paper workshop.
+shell_f447086a,第十五卷后半：点「继续主线」或卷十五选第九十七章·煎药。,Volume 15 second half: choose Continue or volume ten five chooseChapter 97 · pan herb.
+shell_f44b8914,可继续第一百零一章·驯场。,Continue Chapter 101 · tame yard.
+shell_f4866c3e,可继续第一百九十二章·笛印（三十一卷中段）。,Continue Chapter 192 · flute seal (Volume 31 midpoint).
+shell_f4b70638,点按 选中/确认 · 长按 情报 · 单指平移 · 双指缩放 · 底栏下达指令,Tap select/confirm · Hold for intel · Drag to pan · Pinch to zoom · Commands sit on the bottom bar
+shell_f5962bf7,第一百四十六章·义仓,Chapter 146 · oath granary
+shell_f59809be,攻%d  防%d  命%d  避%d  移%d,ATK %d  DEF %d  HIT %d  AVO %d  MOV %d
+shell_f5c7c372,可继续第一百四十六章·义仓。,Continue Chapter 146 · oath granary.
+shell_f5e8973e,第二百三十三章·釉池,Chapter 233 · glaze pool
+shell_f6254cbf,十八卷已执。可继续第十九卷或经营。,Volume 18 is done. Continue Volume 19 or run the keep.
+shell_f6384789,第五十八章·余烬港,Chapter 58 · after ember port
+shell_f64789a6,可继续第一百七十三章·伞棚。,Continue Chapter 173 · umbrella shed.
+shell_f655689f,可继续第二百三十四章·瓷印（三十八卷中段）。,Continue Chapter 234 · porcelain seal (Volume 38 midpoint).
+shell_f7881394,祈愈与丰收,"Prayer, healing, harvest"
+shell_f789bb89,可继续第四十二章·钤印（六卷中段）。,Continue Chapter 42 · seal seal (Volume 6 midpoint).
+shell_f79bb2e7,第一百二十九章·席终,Chapter 129 · closing
+shell_f79c095f,第二百二十六章·潮滩,Chapter 226 · tide beach
+shell_f7c782f3,高对比,High contrast
+shell_f843472a,第一百九十四章·独奏,Chapter 194 · lone play
+shell_f84f65ce,第一百二十八章·案库,Chapter 128 · desk store
+shell_f8d01bd3,第十四卷·茶岭：点「继续主线」或卷十四选第八十八章·茶梯。,Volume 14 · tea ridge: choose Continue or volume ten four chooseChapter 88 · tea ladder.
+shell_f8eb58d6,第二百一十章·染印,Chapter 210 · dye seal
+shell_f8fce0c2,卷零,Volume 0
+shell_f916540d,可继续第一百四十章·灯塔。,Continue Chapter 140 · lamp tower.
+shell_f9219b9d,可继续第二百章·独影。,Continue Chapter 200 · lone shadow.
+shell_f95ba58b,独立原创项目。本页只列仓库里真实在用的第三方字体，不编造职务名单。,An original project. This page lists only the third-party fonts actually used in the repo. It does not invent a staff list.
+shell_f9d63576,卷三十三,Volume 33
+shell_fa3b4fd2,第三十六卷后半：点「继续主线」或卷三十六选第二百二十三章·香摊。,Volume 36 second half: choose Continue or volume three ten six chooseChapter 223 · incense stall.
+shell_fb8a673d,第三十六卷·香市：点「继续主线」或卷三十六选第二百二十章·香市。,Volume 36 · incense market: choose Continue or volume three ten six chooseChapter 220 · incense market.
+shell_fcbc88d8,第二十四卷后半：点「继续主线」或卷二十四选第一百五十一章·雪市。,Volume 24 second half: choose Continue or volume two ten four chooseChapter 151 · snow market.
+shell_fcfbe002,第二百零二章·盐滩,Chapter 202 · salt beach
+shell_fd490f03,制作人员 · CREDITS,Credits
+shell_fe3695dc,声望,Renown
+shell_ff331fc1,第十五卷·药市：点「继续主线」或卷十五选第九十四章·药圃。,Volume 15 · herb market: choose Continue or volume ten five chooseChapter 94 · herb plot.
+shell_ff9edff6,第零章,Chapter 0
+shell_fff5a58f,十三卷已执。可继续第十四卷或经营。,Volume 13 is done. Continue Volume 14 or run the keep.
+shell_turn_player,—— 玩家回合 ——,—— Your turn ——
+shell_turn_enemy,—— 敌方回合 ——,—— Enemy turn ——
+shell_terrain_tip,%s　回避+%d　防+%d　移耗%d,%s  avoid +%d  def +%d  move %d
