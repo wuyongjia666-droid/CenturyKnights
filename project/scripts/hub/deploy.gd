@@ -45,14 +45,36 @@ func _unhandled_input(e: InputEvent) -> void:
 		_back()
 	elif e is InputEventKey and e.pressed and not e.echo and (e as InputEventKey).keycode in [KEY_ENTER, KEY_KP_ENTER]:
 		_fight()
+	elif e is InputEventKey and e.pressed and not e.echo and (e as InputEventKey).keycode == KEY_LEFT:
+		_nudge_slot(-1)
+	elif e is InputEventKey and e.pressed and not e.echo and (e as InputEventKey).keycode == KEY_RIGHT:
+		_nudge_slot(1)
 
 func _fight() -> void:
 	GameState.set_meta("battle_return", "res://scenes/hub/castle_hub.tscn")
 	GameState.set_meta("battle_map", "quest_bandit")
 	get_tree().change_scene_to_file("res://scenes/battle/battle.tscn")
 
+func _nudge_slot(dir: int) -> void:
+	if _focus == null:
+		return
+	var ids: Array = GameState.deploy_ids
+	var i := ids.find(_focus.id)
+	if i < 0:
+		return
+	var j := i + dir
+	if j < 0 or j >= ids.size():
+		return
+	var swap = ids[i]
+	ids[i] = ids[j]
+	ids[j] = swap
+	_render()
+
 func _toggle(c: CKCharacter) -> void:
 	_focus = c
+	if DeployBrief.bench_reason(c) != "":
+		_render()
+		return
 	if c.id in GameState.deploy_ids:
 		GameState.deploy_ids.erase(c.id)
 	elif GameState.deploy_ids.size() < GameState.max_deploy():
@@ -68,7 +90,13 @@ func _render() -> void:
 	_clear(_cards)
 	_clear(_metrics)
 	var roster: Array = GameState.roster()
-	_count.text = "已上阵 %d / %d 人 · 共 %d 名可选" % [GameState.deploy_ids.size(), GameState.max_deploy(), roster.size()]
+	var kept: Array = []
+	for cid in GameState.deploy_ids:
+		var who: CKCharacter = GameState.characters.get(cid)
+		if who != null and DeployBrief.bench_reason(who) == "":
+			kept.append(cid)
+	GameState.deploy_ids = kept
+	_count.text = "%s · %d" % [DeployBrief.cap_line(), GameState.deploy_ids.size()]
 	var slots := maxi(roster.size(), GameState.max_deploy())
 	slots = mini(slots, 6)
 	var gap := 12.0
@@ -92,6 +120,7 @@ func _render() -> void:
 
 func _card(c: CKCharacter, i: int, r: Rect2) -> Button:
 	var on: bool = c.id in GameState.deploy_ids
+	var hurt := DeployBrief.bench_reason(c)
 	var b := Button.new()
 	b.position = r.position
 	b.custom_minimum_size = r.size
@@ -108,6 +137,7 @@ func _card(c: CKCharacter, i: int, r: Rect2) -> Button:
 		"focus": UIKit._focus_ring(UIKit.FOCUS_RING, 10),
 		"disabled": UIKit.flat_box(Color(0, 0, 0, 0.3), Color(1, 1, 1, 0.05), 8),
 	})
+	b.disabled = hurt != ""
 	b.pressed.connect(func(): _toggle(c))
 	b.focus_entered.connect(func():
 		if _focus != c:
@@ -115,10 +145,16 @@ func _card(c: CKCharacter, i: int, r: Rect2) -> Button:
 			_clear(_metrics)
 			_render_metrics())
 	_cards.add_child(b)
-	var hd := UIKit.mono("#%02d %s" % [i + 1, "LEADER" if c.is_leader else "UNIT"], 8, UIKit.ACCENT if on else UIKit.TEXT_FAINT, false)
+	var slot := GameState.deploy_ids.find(c.id)
+	var hd_txt := "#%02d %s" % [i + 1, "LEADER" if c.is_leader else "UNIT"]
+	if slot >= 0:
+		hd_txt = BattleObjectives.text("deploy_slot") % (slot + 1)
+	var hd := UIKit.mono(hd_txt, 8, UIKit.ACCENT if on else UIKit.TEXT_FAINT, false)
 	hd.position = Vector2(10, 12)
 	b.add_child(hd)
-	var st := UIKit.tag_chip("出战" if on else "待命", UIKit.ACCENT if on else UIKit.TEXT_FAINT, on)
+	var chip := hurt if hurt != "" else ("出战" if on else "待命")
+	var chip_col := UIKit.DANGER if hurt != "" else (UIKit.ACCENT if on else UIKit.TEXT_FAINT)
+	var st := UIKit.tag_chip(chip, chip_col, on and hurt == "")
 	st.position = Vector2(r.size.x - 10 - st.get_minimum_size().x, 8)
 	b.add_child(st)
 	var plate := Panel.new()
@@ -211,12 +247,9 @@ func _render_metrics() -> void:
 	var tag := UIKit.tag_chip("主力队长" if c.is_leader else ("已上阵" if c.id in GameState.deploy_ids else "待命"), UIKit.ACCENT if c.id in GameState.deploy_ids else UIKit.TEXT_DIM)
 	tag.position = Vector2(R.end.x - 20 - tag.get_minimum_size().x, R.position.y + 24)
 	_metrics.add_child(tag)
-	var sub := UIKit.body_label("属性数值 · 条长按本队最高值归一", UIKit.TEXT_FAINT, 11)
-	sub.autowrap_mode = TextServer.AUTOWRAP_OFF
-	sub.position = Vector2(x, R.position.y + 82)
-	_metrics.add_child(sub)
-	var stats := [["生命值 (HP)", c.max_hp, "max_hp"], ["攻击 (ATK)", c.derived_atk(), "atk"], ["防御 (DEF)", c.derived_def(), "def"], ["命中 (HIT)", c.derived_hit(), "hit"], ["回避 (AVO)", c.derived_avo(), "avo"]]
-	var y := R.position.y + 108
+	DeployBrief.attach(_metrics, DeployBrief.practice_map_id(), Rect2(x, R.position.y + 78, w, 128))
+	var stats := [["生命值 (HP)", c.max_hp, "max_hp"], ["攻击 (ATK)", c.derived_atk(), "atk"]]
+	var y := R.position.y + 224
 	for s in stats:
 		var best := 1
 		for o in GameState.roster():

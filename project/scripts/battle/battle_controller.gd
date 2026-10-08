@@ -747,8 +747,10 @@ func _deploy() -> void:
 	var ids: Array = GameState.deploy_ids.duplicate()
 	if ids.is_empty():
 		for c in GameState.roster():
+			if DeployBrief.bench_reason(c) != "":
+				continue
 			ids.append(c.id)
-			if ids.size() >= 4:
+			if ids.size() >= GameState.max_deploy():
 				break
 	# 双嗣校场：真人子嗣分列双方
 	var heir_a_id = str(GameState.get_meta("heir_clash_a", ""))
@@ -767,7 +769,7 @@ func _deploy() -> void:
 				continue
 			if c.id not in ids:
 				ids.append(c.id)
-			if ids.size() >= 4:
+			if ids.size() >= GameState.max_deploy():
 				break
 	var spots: Array = []
 	for s in m.get("player_spots", [[1,4],[2,5],[0,5],[3,4]]):
@@ -777,7 +779,7 @@ func _deploy() -> void:
 		if i >= spots.size():
 			break
 		var c: CKCharacter = GameState.characters.get(cid)
-		if c == null or not c.alive:
+		if c == null or not c.alive or DeployBrief.bench_reason(c) != "":
 			continue
 		# 校场临时满血
 		if is_heir_clash:
