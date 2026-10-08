@@ -13,9 +13,9 @@ func _ready() -> void:
 			out_path = a.substr(6)
 	var fam := _family()
 	_build_ui(fam)
-	for i in 40:
-		await get_tree().process_frame
-	await RenderingServer.frame_post_draw
+	await get_tree().create_timer(0.8).timeout
+	RenderingServer.force_draw(true)
+	await get_tree().create_timer(0.25).timeout
 	var img := get_viewport().get_texture().get_image()
 	img.save_png(out_path)
 	print("TRIO_DONE ", out_path, " seed=", seed_used)

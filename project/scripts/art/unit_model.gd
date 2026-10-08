@@ -128,7 +128,8 @@ static func attach_modules(n: Node3D, c, team: String) -> void:
 	var att := BoneAttachment3D.new()
 	att.bone_name = "head"
 	sk.add_child(att)
-	var s := 1.0  # modules are authored for the canonical head (rig_mesh_v87 normalises every body to 1.78 m)
+	# farmed hair caps are authored for the canonical head; 0.92 shrink + tiny lift keeps volume off the collar/scalp
+	var s := 0.90
 	var style := CKPortraitDoll._style(c)
 	var mods: Array = [["hair_%s" % style, ph["hair_color"]]]
 	if ph["loci"]["ears"]["id"] == "crest":
@@ -142,6 +143,7 @@ static func attach_modules(n: Node3D, c, team: String) -> void:
 		var ps: PackedScene = load(path)
 		var inst: Node3D = ps.instantiate()
 		inst.scale = Vector3.ONE * s
+		inst.position = Vector3(0, 0.018, 0)  # lift off the bald scalp / high collar (v8.8 clip polish)
 		att.add_child(inst)
 		var col: Color = m[1]
 		if col.a > 0.0:
