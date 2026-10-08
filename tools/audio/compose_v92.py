@@ -14,10 +14,31 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import importlib
 import json
 import random
+import shutil
+import subprocess
 import sys
 from pathlib import Path
+
+
+def ensure_runtime() -> None:
+    """GitHub runners do not ship NumPy or ffmpeg. Pin the versions this score was encoded with."""
+    try:
+        importlib.import_module("numpy")
+    except ImportError:
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "--user", "numpy==2.4.4"])
+        import site
+        site.addsitedir(site.getusersitepackages())
+        importlib.invalidate_caches()
+        importlib.import_module("numpy")
+    if shutil.which("ffmpeg") is None:
+        subprocess.check_call(["sudo", "apt-get", "update", "-qq"])
+        subprocess.check_call(["sudo", "apt-get", "install", "-y", "-qq", "ffmpeg"])
+
+
+ensure_runtime()
 
 import numpy as np
 
