@@ -818,6 +818,9 @@ func _render_hud() -> void:
 		var t2 := UIKit.title_label("驻扎于 %s" % here.get("name", ""), 16)
 		t2.position = Vector2(16, 28)
 		p.add_child(t2)
+		if CKHoldings.owned(GameState):
+			_mount_garrison(p)
+			return
 		var d2 := UIKit.body_label("在地图上选择一处聚落查看路线；跨国经陆桥关隘，海港可走海路。", UIKit.TEXT_DIM, 12)
 		d2.position = Vector2(16, 56)
 		d2.size = Vector2(476, 40)
@@ -877,6 +880,29 @@ func _render_hud() -> void:
 	p.add_child(go)
 
 # ── interaction ───────────────────────────────────────
+func _mount_garrison(p: Control) -> void:
+	var seat := CKHoldings.seat(GameState)
+	var send := UIKit.ghost_button(Locale.t("hold_send"), 148, 32)
+	send.name = "GarrisonToSeat"
+	send.position = Vector2(16, 64)
+	send.pressed.connect(func():
+		CKHoldings.transfer(GameState, 1, true)
+		_show_toast(Locale.t("hold_garrison") % [int(CKHoldings.seat(GameState).get("garrison_home", 0)), int(CKHoldings.seat(GameState).get("garrison_away", 0))], UIKit.ACCENT)
+		_render_hud())
+	p.add_child(send)
+	var back := UIKit.ghost_button(Locale.t("hold_recall"), 148, 32)
+	back.name = "GarrisonToHome"
+	back.position = Vector2(172, 64)
+	back.pressed.connect(func():
+		CKHoldings.transfer(GameState, 1, false)
+		_show_toast(Locale.t("hold_garrison") % [int(CKHoldings.seat(GameState).get("garrison_home", 0)), int(CKHoldings.seat(GameState).get("garrison_away", 0))], UIKit.ACCENT)
+		_render_hud())
+	p.add_child(back)
+	var note := UIKit.mono(Locale.t("hold_garrison") % [int(seat.get("garrison_home", 0)), int(seat.get("garrison_away", 0))], 10, UIKit.TEXT_FAINT, false)
+	note.name = "GarrisonNote"
+	note.position = Vector2(16, 104)
+	p.add_child(note)
+
 func _fit_hit(visual: float) -> float:
 	if not DeviceProfile.is_mobile():
 		return visual

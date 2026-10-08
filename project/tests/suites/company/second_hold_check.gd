@@ -1,7 +1,7 @@
 extends Node
 
 func _ready() -> void:
-	var err := _run()
+	var err: String = await _run()
 	if err != "":
 		print("FAIL second hold: ", err)
 		get_tree().quit(1)
@@ -46,4 +46,15 @@ func _run() -> String:
 		return "city dropped"
 	if int(CKHoldings.seat(GameState).get("garrison_away", 0)) != 4:
 		return "garrison dropped"
+	var atlas := (load("res://scenes/hub/atlas_view.tscn") as PackedScene).instantiate()
+	add_child(atlas)
+	for _i in 4:
+		await get_tree().process_frame
+	var send := atlas.find_child("GarrisonToSeat", true, false) as Button
+	if send == null:
+		return "atlas has no garrison button"
+	var away := int(CKHoldings.seat(GameState).get("garrison_away", 0))
+	send.pressed.emit()
+	if int(CKHoldings.seat(GameState).get("garrison_away", 0)) != away + 1:
+		return "atlas send"
 	return ""
