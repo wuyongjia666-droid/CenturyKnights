@@ -16,7 +16,9 @@ static func register(category: String, group: String, label: String, count: int)
 	})
 
 static func is_unlocked(entry: String) -> bool:
-	return bool(_entries().get(entry, false))
+	# NAR-05 的日程。未知入口仍是锁上的。
+	UnlockSchedule.install()
+	return UnlockSchedule.allows(entry)
 
 static func narrow_scale(width: float) -> float:
 	if width >= 1200.0 or width < 64.0:
@@ -46,27 +48,6 @@ static func snapshot() -> Array:
 
 static func _row(category: String, group: String, label: String, count: int) -> Dictionary:
 	return {"category": category, "group": group, "label": label, "count": count}
-
-static func _entries() -> Dictionary:
-	return {
-		"deploy": true,
-		"train": true,
-		"skills": true,
-		"tavern": true,
-		"forge": true,
-		"market": true,
-		"estates": true,
-		"quests": true,
-		"works": true,
-		"roster": true,
-		"shrine": true,
-		"marriage": true,
-		"lineage": true,
-		"rite": true,
-		"hourglass": true,
-		"settings": true,
-		"atlas": true,
-	}
 
 static func _building_count() -> int:
 	var n := 0
