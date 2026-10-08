@@ -1,0 +1,190 @@
+{
+  "files": {
+    "amb_archive.ogg": {
+      "bytes": 131999,
+      "sha256": "c9400514ef1ab293f248044f61221167fbf170481b5b5f1c63b5794d3893d659"
+    },
+    "amb_fog.ogg": {
+      "bytes": 132082,
+      "sha256": "082f8a97cc1314c9d404b342f474c5aaec1c7814db3ba80882a2b84e16d4ed8e"
+    },
+    "amb_ford.ogg": {
+      "bytes": 133615,
+      "sha256": "ddf90c69bb26d6fbb56f95fc05c7cb16d94079b8d048fd271690e6538f367275"
+    },
+    "amb_forge.ogg": {
+      "bytes": 133987,
+      "sha256": "525deb767685292f678e789a709467793b223dfffdf34345ec3c9d79a15e1328"
+    },
+    "amb_fort.ogg": {
+      "bytes": 132679,
+      "sha256": "9d3e76f82ac8d5d51e4fe1ca1e7e2884477722fa6b08f923f325418871380e31"
+    },
+    "amb_harbor.ogg": {
+      "bytes": 134215,
+      "sha256": "d0babbc8856cbc573d5f21815b2263b27a3c3ba7eb8c23df5cbdad94c9ffa64d"
+    },
+    "amb_hill.ogg": {
+      "bytes": 134479,
+      "sha256": "f28fe52b1ddabf5372121f43252dcf06e212fb9a6fa18dd3a6449faed93e0636"
+    },
+    "amb_marsh.ogg": {
+      "bytes": 129633,
+      "sha256": "c4b5a470375992e58442c7940a1e02eea55cf4cbc87bd17039f47187d86b3fbf"
+    },
+    "amb_nightcamp.ogg": {
+      "bytes": 134035,
+      "sha256": "19bc994055145a372a2f6fdcd15d9a70db79834402413bd9a942e29f725fd530"
+    },
+    "amb_pass.ogg": {
+      "bytes": 132262,
+      "sha256": "aee7005d6ffea740bcd2effa851ae49b5e93b1985f5ef6dcaf69d563ceb8ac40"
+    },
+    "amb_plain.ogg": {
+      "bytes": 133287,
+      "sha256": "91adb76dfd4011871ab48f233d7473251e26210c4be28aa054ab6272a0645015"
+    },
+    "amb_shrine.ogg": {
+      "bytes": 134312,
+      "sha256": "911f70acf6b4c593ffa1094e1568c26145aac2b16154f6ed70a5cd94d2d583d5"
+    },
+    "amb_snow.ogg": {
+      "bytes": 139565,
+      "sha256": "a31be3e0f4cc9804ee047b4a7df89c125d9434f828c0f1e071dd19635c56aff9"
+    },
+    "amb_urban.ogg": {
+      "bytes": 134746,
+      "sha256": "f70ac02ab56bca2b9e99270383f58c48c2f975bc152a2801f0b66b9f93abbff9"
+    },
+    "hit_axe_0.wav": {
+      "bytes": 84716,
+      "sha256": "028f17e90e49c52b62f129df743b4f66aa5fc5655a5d842847e672fb3b021845"
+    },
+    "hit_axe_1.wav": {
+      "bytes": 84716,
+      "sha256": "a18478be6575ff637a15d7f14a77bb734de1a84c46ee859d6bcfc4b2604d7bee"
+    },
+    "hit_axe_2.wav": {
+      "bytes": 84716,
+      "sha256": "27690f988bb2b9d5ac066f2168934c429e3b62a984268d95bd88a87020f2d555"
+    },
+    "hit_bow_0.wav": {
+      "bytes": 63548,
+      "sha256": "f1a0a9b10fa7b63530f43182a0fc98cefea3736143e854bb0c157717fba8c4fd"
+    },
+    "hit_bow_1.wav": {
+      "bytes": 63548,
+      "sha256": "52dbfe358566d7479923b7fa06476d69df405c94de184424a3997d01b1bc644f"
+    },
+    "hit_bow_2.wav": {
+      "bytes": 63548,
+      "sha256": "20c53cfc2b800b84cb40ca03f775c56fff2453c9459326d0488e5589858d8446"
+    },
+    "hit_lance_0.wav": {
+      "bytes": 60020,
+      "sha256": "82728c035eca2705994d91593582d739b3557fef90f29f507d52bf2f63101cbd"
+    },
+    "hit_lance_1.wav": {
+      "bytes": 60020,
+      "sha256": "6ca1b9a83335340f13b6224f4cb1fb16b9c8b1da279dd02d4a527b4327f7943f"
+    },
+    "hit_lance_2.wav": {
+      "bytes": 60020,
+      "sha256": "a0f702b15b18d7e7ed15bb97287deb87580d652ada7535596703b37c464d0919"
+    },
+    "hit_spell_0.wav": {
+      "bytes": 123520,
+      "sha256": "1d56e50c6606031441b5ce0d48cde32a08568b9a8f73e4950a7dec9fa8053ca3"
+    },
+    "hit_spell_1.wav": {
+      "bytes": 123520,
+      "sha256": "1d01e40d5313f1eb82d69713545ac1f611e7199c6e02d4171173a5e5227cffd8"
+    },
+    "hit_spell_2.wav": {
+      "bytes": 123520,
+      "sha256": "21af57c53387ec384cff539581f0d3df2db75929bda9dc8e4aea81032c9b20d1"
+    },
+    "hit_sword_0.wav": {
+      "bytes": 74132,
+      "sha256": "4f1f7a6a2cbc4c7668bf6ac5ada8d18bd558c044e5b74c75cb173a8197a2c447"
+    },
+    "hit_sword_1.wav": {
+      "bytes": 74132,
+      "sha256": "f624a45dcce95a7822dd3c22465edc545cf4cd35ede764ea59552379cc44508e"
+    },
+    "hit_sword_2.wav": {
+      "bytes": 74132,
+      "sha256": "b61fb980a047b22e705832864af2b01514a6754e4e2bd3378f46e6737ae83a48"
+    },
+    "step_bridge_0.wav": {
+      "bytes": 45908,
+      "sha256": "77399306125d4867d6bd998815ed6bcfec88210b17ee28cfca04006ea1d167df"
+    },
+    "step_bridge_1.wav": {
+      "bytes": 45908,
+      "sha256": "bf025a670a57987248f992b7e93502a1088e29f53b1dfadedee208e7fbed483a"
+    },
+    "step_forest_0.wav": {
+      "bytes": 45908,
+      "sha256": "2c470ba6ed799d2c87253e8885210d3c1b1be25836fc07739e78b52e02b403fd"
+    },
+    "step_forest_1.wav": {
+      "bytes": 45908,
+      "sha256": "3dcf6ee244e8135d78f1908d06717f1788ddb6684547e9e61aaf35faaa30d382"
+    },
+    "step_fort_0.wav": {
+      "bytes": 45908,
+      "sha256": "b78b4a50235ecf0afc3fc7db738104458e08eb4031c3cdfbe6dbb0d20ff9d104"
+    },
+    "step_fort_1.wav": {
+      "bytes": 45908,
+      "sha256": "288e742befe3b82f174eddd72e520c5196c7947642f1768234f6630c940288e1"
+    },
+    "step_hill_0.wav": {
+      "bytes": 45908,
+      "sha256": "f5e4f33cf876a1df1a6df2b11eef23ec6e15ca41b3b37fdaeda7d6e7e40c8b81"
+    },
+    "step_hill_1.wav": {
+      "bytes": 45908,
+      "sha256": "316f11ddac22027545615d6ab4263c114b69125c6fdfa9dc701f9ba92600d06c"
+    },
+    "step_plain_0.wav": {
+      "bytes": 45908,
+      "sha256": "f0293b3cba784fb300973b318713d79a3231768b8bcf63322f3070a053f2dbda"
+    },
+    "step_plain_1.wav": {
+      "bytes": 45908,
+      "sha256": "b9c31567d4d156fc4a465195ccd2282de6e75556f4c3da58fea96103dca778ed"
+    },
+    "step_water_0.wav": {
+      "bytes": 60020,
+      "sha256": "5276a05d5d55a5e4a24dcd4522f48298b2053a368ac148afc01cd80b32550a1d"
+    },
+    "step_water_1.wav": {
+      "bytes": 60020,
+      "sha256": "d68104d06ae9a6ea049b166fb97df27d492bef0fcdaa1714c8ce126b46d3e754"
+    },
+    "ui_back.wav": {
+      "bytes": 60020,
+      "sha256": "c5b34ded7a38c1e5a1ef6e021775dda523cb4ae95826029073bc2d6c9925c184"
+    },
+    "ui_close.wav": {
+      "bytes": 65312,
+      "sha256": "8e5baac936e604578474cfa54aee2a234f30efeaa43176b346198d5d69dd6ddb"
+    },
+    "ui_deny.wav": {
+      "bytes": 52964,
+      "sha256": "7550a4e0c6f890430e3e60ce1149408617ecc7224c798176bc94a9c33878a2e0"
+    },
+    "ui_hover.wav": {
+      "bytes": 30028,
+      "sha256": "7e0513e6c7a671395ada4a2f15807e828478ad06088d3f65c3d98515721f5003"
+    },
+    "ui_open.wav": {
+      "bytes": 68840,
+      "sha256": "a11fffb64824e891c57347c0ce272fcf49b9083b295bbadbde533f45ea57e804"
+    }
+  },
+  "sample_rate": 44100,
+  "seed": 9202601
+}
