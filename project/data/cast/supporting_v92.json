@@ -52,6 +52,30 @@
       "name": "盟友亲属",
       "cast_key": "ally_kin",
       "role": "第零章已有的声音"
+    },
+    {
+      "id": "dukou_batou",
+      "name": "渡口·把头",
+      "cast_key": "batou",
+      "role": "苇原渡粮队的把头。不是同伴。"
+    },
+    {
+      "id": "dukou_ahe",
+      "name": "渡口·阿禾",
+      "cast_key": "ahe",
+      "role": "灯影临时雇来引开视线的孩子。不是初啼。"
+    },
+    {
+      "id": "jinghu_hutie",
+      "name": "镜湖·护帖",
+      "cast_key": "hutie",
+      "role": "霜冕护送队长。聘书上没有他的姓被写成继承人。"
+    },
+    {
+      "id": "lengyao_shouhuo",
+      "name": "冷窑·收火",
+      "cast_key": "shouhuo",
+      "role": "循烟灰来要人的窑债主。"
     }
   ]
 }
