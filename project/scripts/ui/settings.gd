@@ -19,7 +19,7 @@ func _unhandled_input(e: InputEvent) -> void:
 func _ready() -> void:
 	## v8.6 Stitch 23 tokens: ink void · top bar · centred frosted settings column
 	UIKit.void_bg(self)
-	UIKit.top_bar(self, "设置 · SETTINGS", [], "返回", _back)
+	UIKit.top_bar(self, Locale.t("shell_57ea9dbf"), [], Locale.t("shell_11d02415"), _back)
 	var vp := get_viewport_rect().size
 	var column_w := minf(520.0, vp.x - 64.0)
 	var side := maxf(24.0, (vp.x - column_w) * 0.5)
@@ -39,7 +39,22 @@ func _ready() -> void:
 	scroll.add_child(box)
 
 	box.add_child(UIKit.eyebrow("ACCESS"))
-	box.add_child(UIKit.make_label(_line("ux_scale", "界面缩放")))
+	box.add_child(UIKit.make_label(Locale.t("shell_language")))
+	var lang_row := HBoxContainer.new()
+	lang_row.name = "LanguageRow"
+	lang_row.add_theme_constant_override("separation", 8)
+	var zh_b := UIKit.make_button(Locale.t("shell_lang_zh"), 140)
+	var en_b := UIKit.make_button(Locale.t("shell_lang_en"), 140)
+	zh_b.pressed.connect(func():
+		Locale.set_lang("zh_CN")
+		get_tree().reload_current_scene())
+	en_b.pressed.connect(func():
+		Locale.set_lang("en")
+		get_tree().reload_current_scene())
+	lang_row.add_child(zh_b)
+	lang_row.add_child(en_b)
+	box.add_child(lang_row)
+	box.add_child(UIKit.make_label(_line("ux_scale", Locale.t("shell_7fec9db5"))))
 	var scale := HSlider.new()
 	scale.name = "UiScale"
 	scale.min_value = 0.9
@@ -57,16 +72,16 @@ func _ready() -> void:
 	box.add_child(scale)
 	box.add_child(_scale_readout)
 
-	box.add_child(UIKit.make_label(_line("ux_colorblind", "色觉")))
+	box.add_child(UIKit.make_label(_line("ux_colorblind", Locale.t("shell_f406bde1"))))
 	var modes := OptionButton.new()
 	modes.name = "Colorblind"
 	modes.custom_minimum_size = Vector2(0, 44)
 	modes.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	var ids := [
-		["none", _line("ux_cb_none", "标准（薄荷 / 珊瑚）")],
-		["deuteranopia", _line("ux_cb_deutan", "绿色弱")],
-		["protanopia", _line("ux_cb_protan", "红色弱")],
-		["tritanopia", _line("ux_cb_tritan", "蓝色弱")],
+		["none", _line("ux_cb_none", Locale.t("shell_06eba986"))],
+		["deuteranopia", _line("ux_cb_deutan", Locale.t("shell_dd5eb2b4"))],
+		["protanopia", _line("ux_cb_protan", Locale.t("shell_181e100b"))],
+		["tritanopia", _line("ux_cb_tritan", Locale.t("shell_8391fd27"))],
 	]
 	var current := Frost.mode()
 	var select := 0
@@ -81,25 +96,25 @@ func _ready() -> void:
 		_refresh_palette()
 	)
 	box.add_child(modes)
-	box.add_child(_check(_line("ux_contrast", "高对比"), Frost.high_contrast(), func(on):
+	box.add_child(_check(_line("ux_contrast", Locale.t("shell_f7c782f3")), Frost.high_contrast(), func(on):
 		GameState.settings["high_contrast"] = on
 		_refresh_palette()
 	))
 
-	box.add_child(UIKit.make_label(_line("ux_preview", "棋子预览")))
+	box.add_child(UIKit.make_label(_line("ux_preview", Locale.t("shell_d2cf4e81"))))
 	var preview_row := HBoxContainer.new()
 	preview_row.name = "FactionPreview"
 	preview_row.add_theme_constant_override("separation", 18)
 	box.add_child(preview_row)
-	preview_row.add_child(_token("player", _line("ux_ally", "我军")))
-	preview_row.add_child(_token("enemy", _line("ux_enemy", "敌军")))
+	preview_row.add_child(_token("player", _line("ux_ally", Locale.t("shell_c832b9ce"))))
+	preview_row.add_child(_token("enemy", _line("ux_enemy", Locale.t("shell_f4069c8b"))))
 	_swatch = BattleSwatchScript.new()
 	_swatch.name = "BattleSwatch"
 	_swatch.custom_minimum_size = Vector2(0, 150)
 	_swatch.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	box.add_child(_swatch)
 
-	box.add_child(UIKit.make_label(_line("ux_shake", "震屏强度")))
+	box.add_child(UIKit.make_label(_line("ux_shake", Locale.t("shell_2336506f"))))
 	var shake := HSlider.new()
 	shake.name = "ScreenShake"
 	shake.min_value = 0
@@ -110,16 +125,16 @@ func _ready() -> void:
 	shake.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	shake.value_changed.connect(func(v): GameState.settings["screen_shake"] = v)
 	box.add_child(shake)
-	box.add_child(_check(_line("ux_haptics", "触感"), Frost.haptics_enabled(), func(on):
+	box.add_child(_check(_line("ux_haptics", Locale.t("shell_d678bca7")), Frost.haptics_enabled(), func(on):
 		GameState.settings["haptics"] = on
 	))
 
 	box.add_child(UIKit.hairline(UIKit.STROKE, 1.0))
-	box.add_child(_check("战斗规则透视（命中/伤害区间）", bool(GameState.settings.get("rules_preview", true)), func(on):
+	box.add_child(_check(Locale.t("shell_0c5cbf76"), bool(GameState.settings.get("rules_preview", true)), func(on):
 		GameState.settings["rules_preview"] = on
 		BattleRules.preview_enabled = on
 	))
-	var highlight := _check("新手高亮指引", bool(GameState.settings.get("tutorial_highlight", true)), func(on):
+	var highlight := _check(Locale.t("shell_73266386"), bool(GameState.settings.get("tutorial_highlight", true)), func(on):
 		GameState.settings["tutorial_highlight"] = on
 	)
 	highlight.name = "TutorialHighlight"
@@ -131,7 +146,7 @@ func _ready() -> void:
 	codex.pressed.connect(func(): CKHelpCodex.open(self))
 	box.add_child(codex)
 
-	box.add_child(UIKit.make_label("文字速度"))
+	box.add_child(UIKit.make_label(Locale.t("shell_0511f605")))
 	var speed = HSlider.new()
 	speed.min_value = 0.5
 	speed.max_value = 2.0
@@ -141,25 +156,25 @@ func _ready() -> void:
 	speed.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	speed.value_changed.connect(func(v): GameState.settings["text_speed"] = v)
 	box.add_child(speed)
-	box.add_child(_check("背景音乐（程序氛围床）", Music.enabled if Music else true, func(on):
+	box.add_child(_check(Locale.t("shell_32953e9c"), Music.enabled if Music else true, func(on):
 		Music.enabled = on
 		if on:
 			Music.play_hub()
 		else:
 			Music.stop()
 	))
-	box.add_child(_check("音效", Sfx.enabled, func(on): Sfx.enabled = on))
-	box.add_child(_check("3D 战斗演出", bool(GameState.settings.get("cutscenes", true)), func(on):
+	box.add_child(_check(Locale.t("shell_505e64c2"), Sfx.enabled, func(on): Sfx.enabled = on))
+	box.add_child(_check(Locale.t("shell_52f3174e"), bool(GameState.settings.get("cutscenes", true)), func(on):
 		GameState.settings["cutscenes"] = on
 	))
-	box.add_child(_check("战斗演出默认 2×", float(GameState.settings.get("cutscene_speed", 1.0)) >= 2.0, func(on):
+	box.add_child(_check(Locale.t("shell_8c33eefe"), float(GameState.settings.get("cutscene_speed", 1.0)) >= 2.0, func(on):
 		GameState.settings["cutscene_speed"] = 2.0 if on else 1.0
 		CombatCutsceneScript.speed = 2.0 if on else 1.0
 	))
-	box.add_child(_check("减动效", bool(GameState.settings.get("reduced_motion", false)), func(on):
+	box.add_child(_check(Locale.t("shell_3c10b27c"), bool(GameState.settings.get("reduced_motion", false)), func(on):
 		GameState.settings["reduced_motion"] = on
 	))
-	var note = UIKit.make_dim_label("音频为程序生成。色觉模式用圆和三角区分敌我，不单靠颜色。")
+	var note = UIKit.make_dim_label(Locale.t("shell_291459bc"))
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.custom_minimum_size = Vector2(0, 0)
 	note.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -174,7 +189,7 @@ func _ready() -> void:
 	back.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	back.pressed.connect(_back)
 	back_row.add_child(back)
-	UIKit.footer_bar(self, [["A", "切换"], ["ESC", "返回"]], "SETTINGS · FROST")
+	UIKit.footer_bar(self, [["A", Locale.t("shell_2f116b7d")], ["ESC", Locale.t("shell_11d02415")]], "SETTINGS · FROST")
 	UIFX.wire_tree(self)
 
 func _check(text: String, on: bool, cb: Callable) -> CheckButton:

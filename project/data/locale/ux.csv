@@ -1,48 +1,48 @@
 keys,zh_CN,en
-ux_codex_open,系统百科,
-ux_codex_title,系统百科,
-ux_codex_close,关闭,
-ux_coach_continue,点击继续,
-ux_codex_board_title,战棋,
-ux_codex_board_body,墨蓝棋盘上轮流行动。薄荷标记是自己人，珊瑚标记是对手，危险区用半透明珊瑚铺开。,
-ux_codex_castle_title,城堡,
-ux_codex_castle_body,灰旗堡按月推进。名册、酒馆、工坊、商路和祠堂都从这里进出。,
-ux_codex_company_title,佣兵团,
-ux_codex_company_body,银币、粮食、铁料和药材是这个月过不过得去的账。出战前先看伤病和士气。,
-ux_codex_marriage_title,联姻,
-ux_codex_marriage_body,婚约写进族谱。显征会传到下一代，朝堂上看的是血缘，不是空头衔。,
-ux_codex_atlas_title,舆图,
-ux_codex_atlas_body,十国城埠之间跑商、接委托。路上的旗号决定别人认不认你。,
-ux_codex_lamp_title,灯引,
-ux_codex_lamp_body,第一次走进某个地方时，灯引只亮一次。可以在设置里关掉高亮，也可以在这本百科里重看。,
-ux_scale,界面缩放,
-ux_colorblind,色觉,
-ux_cb_none,标准（薄荷 / 珊瑚）,
-ux_cb_deutan,绿色弱,
-ux_cb_protan,红色弱,
-ux_cb_tritan,蓝色弱,
-ux_contrast,高对比,
-ux_shake,震屏强度,
-ux_haptics,触感,
-ux_preview,棋子预览,
-ux_ally,我军,
-ux_enemy,敌军,
-ux_hub_military,军务,
-ux_hub_civil,内政,
-ux_hub_family,家族,
-ux_hub_court,朝堂,
-ux_hub_atlas,舆图,
-ux_hub_todo,本月待办,
-ux_todo_buildings,可升级工事,
-ux_todo_quests,可交付委托,
-ux_todo_marriage,可议婚事,
-ux_todo_injured,伤病,
-ux_todo_festival,节庆,
-ux_todo_train,可演武,
-ux_credits_bar,制作人员 · CREDITS,
-ux_credits_title,百年骑士,
-ux_credits_who,独立原创项目。本页只列仓库里真实在用的第三方字体，不编造职务名单。,
-ux_credits_original_h,原创声明,
-ux_credits_original,系统、文本、界面与代码均为本项目原创。对战棋类型的致敬只留在规则层，不收入其他作品的名称、角色、图像或音频。,
-ux_credits_fonts_h,字体许可,
-ux_credits_ofl,三份字体均为 SIL Open Font License 1.1，说明见 docs/licenses.md。,
+ux_codex_open,系统百科,System codex
+ux_codex_title,系统百科,System codex
+ux_codex_close,关闭,Close
+ux_coach_continue,点击继续,Tap to continue
+ux_codex_board_title,战棋,Tactics
+ux_codex_board_body,墨蓝棋盘上轮流行动。薄荷标记是自己人，珊瑚标记是对手，危险区用半透明珊瑚铺开。,"Sides act in turns on the ink-blue board. Mint marks your own people, coral marks the opponent, and danger is laid down in translucent coral."
+ux_codex_castle_title,城堡,Castle
+ux_codex_castle_body,灰旗堡按月推进。名册、酒馆、工坊、商路和祠堂都从这里进出。,"Ash Keep advances by the month. The roster, tavern, workshop, trade road, and shrine are all entered from here."
+ux_codex_company_title,佣兵团,Company
+ux_codex_company_body,银币、粮食、铁料和药材是这个月过不过得去的账。出战前先看伤病和士气。,"Silver, grain, iron, and herbs are the books for this month. Check wounds and morale before you march."
+ux_codex_marriage_title,联姻,Marriage
+ux_codex_marriage_body,婚约写进族谱。显征会传到下一代，朝堂上看的是血缘，不是空头衔。,"A marriage contract is written into the lineage. Visible traits pass on. The court reads blood, not empty titles."
+ux_codex_atlas_title,舆图,Atlas
+ux_codex_atlas_body,十国城埠之间跑商、接委托。路上的旗号决定别人认不认你。,Trade and contracts run between the cities of the ten nations. The banner you fly decides whether they know you.
+ux_codex_lamp_title,灯引,Lamp guide
+ux_codex_lamp_body,第一次走进某个地方时，灯引只亮一次。可以在设置里关掉高亮，也可以在这本百科里重看。,"The lamp guide lights only the first time you enter a place. Turn the highlight off in settings, or reread it in this codex."
+ux_scale,界面缩放,UI scale
+ux_colorblind,色觉,Color vision
+ux_cb_none,标准（薄荷 / 珊瑚）,Standard (mint / coral)
+ux_cb_deutan,绿色弱,Green-weak
+ux_cb_protan,红色弱,Red-weak
+ux_cb_tritan,蓝色弱,Blue-weak
+ux_contrast,高对比,High contrast
+ux_shake,震屏强度,Shake
+ux_haptics,触感,Haptics
+ux_preview,棋子预览,Piece preview
+ux_ally,我军,Ally
+ux_enemy,敌军,Enemy
+ux_hub_military,军务,Military
+ux_hub_civil,内政,Stewardship
+ux_hub_family,家族,Household
+ux_hub_court,朝堂,Court
+ux_hub_atlas,舆图,Atlas
+ux_hub_todo,本月待办,This month
+ux_todo_buildings,可升级工事,Works to raise
+ux_todo_quests,可交付委托,Contracts ready
+ux_todo_marriage,可议婚事,Marriages to discuss
+ux_todo_injured,伤病,Wounded
+ux_todo_festival,节庆,Festival
+ux_todo_train,可演武,Drill is open
+ux_credits_bar,制作人员 · CREDITS,Credits
+ux_credits_title,百年骑士,Century Knights
+ux_credits_who,独立原创项目。本页只列仓库里真实在用的第三方字体，不编造职务名单。,An original project. This page lists only the third-party fonts actually used in the repo. It does not invent a staff list.
+ux_credits_original_h,原创声明,Original work
+ux_credits_original,系统、文本、界面与代码均为本项目原创。对战棋类型的致敬只留在规则层，不收入其他作品的名称、角色、图像或音频。,"Systems, text, interface, and code are original to this project. The nod to the tactics genre stays in the rules. No other work's names, characters, images, or audio are included."
+ux_credits_fonts_h,字体许可,Font licenses
+ux_credits_ofl,三份字体均为 SIL Open Font License 1.1，说明见 docs/licenses.md。,All three fonts are SIL Open Font License 1.1. See docs/licenses.md.

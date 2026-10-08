@@ -25,11 +25,11 @@ static func build(host) -> void:
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	host._mobile_bar.add_child(row)
 	var h := int(DeviceProfile.hit_px())
-	command(row, "攻击", h, false, host._enter_attack_mode)
-	command(row, "战技", h, false, host._cycle_skill)
-	command(row, "待命", h, false, host._wait_selected)
-	command(row, "取消", h, false, host._cancel_selection)
-	command(row, "结束回合", h, true, host._end_player_turn)
+	command(row, Locale.t("shell_8669d292"), h, false, host._enter_attack_mode)
+	command(row, Locale.t("shell_41ec1a25"), h, false, host._cycle_skill)
+	command(row, Locale.t("shell_1a0db8dc"), h, false, host._wait_selected)
+	command(row, Locale.t("shell_4d0b4688"), h, false, host._cancel_selection)
+	command(row, Locale.t("shell_4faa58f5"), h, true, host._end_player_turn)
 	place(host)
 	if not host.get_viewport().size_changed.is_connected(host._on_viewport_resized):
 		host.get_viewport().size_changed.connect(host._on_viewport_resized)

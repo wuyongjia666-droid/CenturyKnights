@@ -14,18 +14,19 @@ extends RefCounted
 
 static var _extra: Array = []
 
-const BUILTIN: Array = [
+static func _builtin() -> Array:
+	return [
 	{
 		"id": "menu_lamp",
 		"scene_tail": "main_menu.tscn",
 		"anchor": "MenuColumn",
-		"text": "灯引只在第一次走进某个地方时点亮。设置里可以关掉新手高亮。",
+		"text": Locale.t("shell_babb457e"),
 	},
 	{
 		"id": "settings_lamp",
 		"scene_tail": "settings.tscn",
 		"anchor": "",
-		"text": "系统百科收着战棋、城堡、联姻和舆图的短说明，随时能翻。",
+		"text": Locale.t("shell_94716fdd"),
 	},
 ]
 
@@ -44,7 +45,7 @@ static func register(tip: Dictionary) -> void:
 
 static func all_tips() -> Array:
 	var out: Array = []
-	for tip in BUILTIN:
+	for tip in _builtin():
 		out.append(tip)
 	for tip in _extra:
 		out.append(tip)
