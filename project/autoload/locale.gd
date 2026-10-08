@@ -62,6 +62,8 @@ var strings: Dictionary = {
 
 func _ready() -> void:
 	_merge_locale_dir("res://data/locale")
+	# S09 的曲名表。目录扫描已经会带上它；这里再按路径登记一次，避免以后收窄扫描时丢掉。
+	_merge_csv("res://data/locale/audio.csv")
 
 func _merge_locale_dir(path: String) -> void:
 	var dir := DirAccess.open(path)
