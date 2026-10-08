@@ -36,7 +36,9 @@
 
 条件写在 `when`：`flag`、`not_flag`、`any_flag`、`not_any_flag`、`bloodline`、`companion`、`all`、`any`、`not`。节拍和单句台词也可以带 `when`。不满足的节拍顺着 `next` 跳过，不满足的台词不显示。
 
-`battle` 把 `objective` 记在 meta `battle_objective`。真正结算的是地图 JSON 里的 `objective`（BTL-02）。第一纪元八场在 `data/maps/story_era1.json`，章节在 `data/story/chapters/era1_*.json`。
+`battle` 把 `objective` 记在 meta `battle_objective`。真正结算的是地图 JSON 里的 `objective`（BTL-02）。第一纪元八场在 `data/maps/story_era1.json`，章节在 `data/story/chapters/era1_*.json`。第二、三纪元十六章在 `era2_*.json`、`era3_*.json`，地图在 `story_era2.json`、`story_era3.json`。
+
+台词里的 `{heir}` 在显示时换成族谱上还活着、且 `parent_ids` 含当前旗主 id 的那个人的名字。没有这样的人时，换成 `narrative.csv` 的 `nar06_no_heir`。授旗章 `e3_05` 的 `rite` 节拍用这一处，不把孩子的名字写死。
 
 ## 第零章
 
