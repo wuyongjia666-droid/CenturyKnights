@@ -43,3 +43,35 @@ func _apply() -> void:
 	MobileLayout.apply_root(root, fitted)
 	if root.has_method("apply_mobile_layout"):
 		root.apply_mobile_layout()
+	MobileLayout.extend_portrait_lists(root)
+	MobileLayout.ensure_hit_targets(root)
+
+func _input(event: InputEvent) -> void:
+	if not event.is_action_pressed("ui_cancel"):
+		return
+	var focus := get_viewport().gui_get_focus_owner()
+	if focus is LineEdit or focus is TextEdit:
+		return
+	if CKPauseMenu.current == null and _focus_in_coach(focus):
+		return
+	CKPauseMenu.toggle()
+	get_viewport().set_input_as_handled()
+	if CKPauseMenu.current != null and is_instance_valid(CKPauseMenu.current):
+		var vp := get_viewport().get_visible_rect().size
+		MobileLayout.place_pause(CKPauseMenu.current, vp)
+
+func _focus_in_coach(focus: Control) -> bool:
+	if focus == null:
+		return false
+	var scene := get_tree().current_scene
+	if scene == null:
+		return false
+	var coach := scene.find_child("LampCoach", true, false)
+	if coach == null:
+		return false
+	var cursor: Node = focus
+	while cursor:
+		if cursor == coach:
+			return true
+		cursor = cursor.get_parent()
+	return false
