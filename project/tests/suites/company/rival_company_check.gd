@@ -22,7 +22,7 @@ func _run() -> String:
 	var err := _static_checks()
 	if err != "":
 		return err
-	GameState.new_game("委托", "灰旗", "#6ED4FF")
+	GameState.new_game("委托", "灰旗", GameState.crest_color)
 	World.events_enabled = false
 	World.rivals_enabled = true
 	for nid in World.nations.keys():
