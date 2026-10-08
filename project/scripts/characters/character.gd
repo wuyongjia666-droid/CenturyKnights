@@ -28,6 +28,8 @@ var rank: String = "knight"  # knight/baron/count/duke
 
 # 血胤：{bloodline_id: weight}
 var blood_mix: Dictionary = {"common_ash": 1.0}
+## v8.9 lineage facts the blood % cannot say: exile (diaspora id), pretend ({claimed, true, exposed}), verified.
+var blood_meta: Dictionary = {}
 var traits: Array = []  # trait ids
 var appearance: Dictionary = {"hair": "ink_black", "eyes": "slate", "brow": "straight", "scar": "none"}
 ## v8.7 genome (CKGenome): diploid loci + polygenic face/body; acquired marks persist for life (not inherited)
@@ -144,15 +146,18 @@ func to_dict() -> Dictionary:
 		"pregnant_months": pregnant_months, "birthday_month": birthday_month,
 		"weapon_id": weapon_id, "faction": faction, "cast_key": cast_key, "skills": skills.duplicate(), "unlocked_skills": unlocked_skills.duplicate(),
 		"genome": genome.duplicate(true), "scars": scars.duplicate(), "honors": honors.duplicate(),
+		"blood_meta": blood_meta.duplicate(true),
 	}
 
 ## v8.7: founders / pre-v8.7 saves get a genome lazily (deterministic per id, keeps the visible legacy look)
 func ensure_genome() -> void:
 	if not genome.is_empty():
+		if not genome.has("sig"):
+			CKBloodline.upgrade_genome(self)
 		return
 	var rng := RandomNumberGenerator.new()
 	rng.seed = hash(id + "|" + name)
-	genome = CKGenome.founder(blood_mix, appearance, rng)
+	genome = CKGenome.founder(blood_mix, appearance, rng, gender)
 	var legacy_scar := str(appearance.get("scar", "none"))
 	if scars.is_empty() and legacy_scar in ["cheek", "brow"]:
 		scars.append("cheek_l" if legacy_scar == "cheek" else "brow_r")
@@ -213,4 +218,5 @@ static func from_dict(d: Dictionary) -> CKCharacter:
 	c.genome = d.get("genome", {}).duplicate(true)
 	c.scars = d.get("scars", []).duplicate()
 	c.honors = d.get("honors", []).duplicate()
+	c.blood_meta = d.get("blood_meta", {}).duplicate(true)
 	return c

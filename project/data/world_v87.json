@@ -14,7 +14,7 @@
    "blood": [
     "common_ash",
     "common_ash",
-    "river_ward"
+    "banner_marshal"
    ],
    "jobs": [
     "light_inf",
@@ -43,8 +43,9 @@
     "snow"
    ],
    "blood": [
-    "common_ash",
-    "ember_noble"
+    "sy_ridge",
+    "sy_ridge",
+    "sy_night"
    ],
    "jobs": [
     "hunter",
@@ -73,9 +74,9 @@
     "paper"
    ],
    "blood": [
-    "river_ward",
-    "river_ward",
-    "common_ash"
+    "qh_delta",
+    "qh_delta",
+    "river_ward"
    ],
    "jobs": [
     "hunter",
@@ -105,8 +106,9 @@
     "tide"
    ],
    "blood": [
-    "common_ash",
-    "river_ward"
+    "lt_tide",
+    "lt_tide",
+    "lt_glass"
    ],
    "jobs": [
     "squire",
@@ -135,8 +137,9 @@
     "bell"
    ],
    "blood": [
-    "common_ash",
-    "frost_crown"
+    "fc_plateau",
+    "fc_plateau",
+    "fc_hall"
    ],
    "jobs": [
     "heavy_inf",
@@ -165,9 +168,9 @@
     "incense"
    ],
    "blood": [
-    "ember_noble",
-    "ember_noble",
-    "common_ash"
+    "eo_ashland",
+    "eo_ashland",
+    "ember_noble"
    ],
    "jobs": [
     "heavy_inf",
@@ -196,8 +199,9 @@
     "rain"
    ],
    "blood": [
-    "common_ash",
-    "river_ward"
+    "sm_reed",
+    "sm_reed",
+    "sm_ledger"
    ],
    "jobs": [
     "hunter",
@@ -226,8 +230,9 @@
     "relay"
    ],
    "blood": [
-    "common_ash",
-    "ember_noble"
+    "ig_forge",
+    "ig_forge",
+    "ig_warden"
    ],
    "jobs": [
     "heavy_inf",
@@ -257,8 +262,10 @@
     "bell"
    ],
    "blood": [
-    "river_ward",
-    "common_ash"
+    "sr_ford",
+    "sr_ford",
+    "sr_east_arc",
+    "sr_west_arc"
    ],
    "jobs": [
     "apprentice",
@@ -288,8 +295,9 @@
     "grain"
    ],
    "blood": [
-    "common_ash",
-    "river_ward"
+    "sz_fogwood",
+    "sz_fogwood",
+    "sz_ferry"
    ],
    "jobs": [
     "light_inf",
@@ -318,6 +326,10 @@
    ],
    "blood": [
     "common_ash",
+    "qh_delta",
+    "sr_ford",
+    "lt_tide",
+    "banner_marshal",
     "river_ward"
    ],
    "jobs": [

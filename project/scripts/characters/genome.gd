@@ -45,10 +45,17 @@ static func _pick(rng: RandomNumberGenerator, weights: Dictionary) -> String:
 			return str(k)
 	return str(weights.keys()[0])
 
+## v8.9: res://data/bloodlines_v89.json is canonical for all 31 lines; BLOOD above is the offline fallback.
+static func _blood(bl: String) -> Dictionary:
+	var t := CKBloodline.genome_table(bl)
+	if not t.is_empty():
+		return t
+	return BLOOD.get(bl, BLOOD["common_ash"])
+
 static func _blend_weights(blood_mix: Dictionary, locus: String) -> Dictionary:
 	var out := {}
 	for bl in blood_mix.keys():
-		var t: Dictionary = BLOOD.get(str(bl), BLOOD["common_ash"])
+		var t: Dictionary = _blood(str(bl))
 		var w: Dictionary = t.get(locus, {})
 		for a in w.keys():
 			out[a] = float(out.get(a, 0.0)) + float(w[a]) * float(blood_mix[bl])
@@ -59,7 +66,7 @@ static func _blend_weights(blood_mix: Dictionary, locus: String) -> Dictionary:
 static func _mean(blood_mix: Dictionary, group: String, key: String) -> float:
 	var s := 0.0
 	for bl in blood_mix.keys():
-		var t: Dictionary = BLOOD.get(str(bl), BLOOD["common_ash"])
+		var t: Dictionary = _blood(str(bl))
 		s += float(t.get(group, {}).get(key, 0.0)) * float(blood_mix[bl])
 	return s
 
@@ -68,8 +75,9 @@ static func _gauss(rng: RandomNumberGenerator) -> float:
 
 ## founder (recruit / marriage candidate / NPC): alleles rolled from bloodline tables; if a legacy phenotype is
 ## given, the expressed allele is forced onto one chromosome so the visible look is preserved.
-static func founder(blood_mix: Dictionary, appearance: Dictionary, rng: RandomNumberGenerator) -> Dictionary:
-	var g := {"loci": {}, "face": {}, "body": {}, "v": 2}
+## v8.9: also rolls the nation signature loci (CKBloodline); sex decides X/Y-linked loci.
+static func founder(blood_mix: Dictionary, appearance: Dictionary, rng: RandomNumberGenerator, sex: String = "") -> Dictionary:
+	var g := {"loci": {}, "face": {}, "body": {}, "v": 3}
 	for locus in LOCI.keys():
 		var w := _blend_weights(blood_mix, locus)
 		var a := _pick(rng, w)
@@ -84,6 +92,7 @@ static func founder(blood_mix: Dictionary, appearance: Dictionary, rng: RandomNu
 		g["face"][k] = clampf(_mean(blood_mix, "face", k) + 0.35 * _gauss(rng), -1.0, 1.0)
 	for k in BODY_KEYS:
 		g["body"][k] = clampf(_mean(blood_mix, "body", k) + 0.35 * _gauss(rng), -1.0, 1.0)
+	g["sig"] = CKBloodline.founder_sig(blood_mix, sex, CKBloodline.fork(rng, "founder"))
 	return g
 
 static func _rank(locus: String, allele: String) -> int:
@@ -93,8 +102,9 @@ static func _rank(locus: String, allele: String) -> int:
 
 ## Mendelian cross: one random allele from each parent per locus (+1.5% mutation);
 ## polygenic = midparent + noise, regressed 10% toward the child's bloodline mean.
-static func cross(father: Dictionary, mother: Dictionary, child_blood: Dictionary, rng: RandomNumberGenerator) -> Dictionary:
-	var g := {"loci": {}, "face": {}, "body": {}, "v": 2}
+## v8.9: nation signature loci follow their own laws (CKBloodline.cross_sig); child_sex drives X/Y.
+static func cross(father: Dictionary, mother: Dictionary, child_blood: Dictionary, rng: RandomNumberGenerator, child_sex: String = "") -> Dictionary:
+	var g := {"loci": {}, "face": {}, "body": {}, "v": 3}
 	for locus in LOCI.keys():
 		var fa: Array = father.get("loci", {}).get(locus, [LOCI[locus][0], LOCI[locus][0]])
 		var mo: Array = mother.get("loci", {}).get(locus, [LOCI[locus][0], LOCI[locus][0]])
@@ -109,6 +119,7 @@ static func cross(father: Dictionary, mother: Dictionary, child_blood: Dictionar
 			var mid := 0.5 * (float(father.get(grp, {}).get(k, 0.0)) + float(mother.get(grp, {}).get(k, 0.0)))
 			var pull := _mean(child_blood, grp, k) - mid
 			g[grp][k] = clampf(mid + 0.10 * pull + 0.15 * _gauss(rng), -1.0, 1.0)
+	g["sig"] = CKBloodline.cross_sig(father, mother, child_blood, child_sex, CKBloodline.fork(rng, "cross"))
 	return g
 
 ## expressed allele + strength (1.0 full; PARTIAL heterozygotes fainter; adjacent-rank hair/eye blend)
@@ -149,7 +160,7 @@ static func phenotype(c: Object) -> Dictionary:
 	var skin := Color(0, 0, 0)
 	var tw := 0.0
 	for bl in c.blood_mix.keys():
-		skin += Color(BLOOD.get(str(bl), BLOOD["common_ash"])["skin"]) * float(c.blood_mix[bl])
+		skin += Color(str(_blood(str(bl)).get("skin", "#C99A7E"))) * float(c.blood_mix[bl])
 		tw += float(c.blood_mix[bl])
 	skin = skin / maxf(tw, 0.001)
 	skin.a = 1.0
