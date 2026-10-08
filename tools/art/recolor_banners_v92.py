@@ -12,12 +12,13 @@ from __future__ import annotations
 
 import colorsys
 import json
+import struct
 import sys
+import zlib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 BANNERS = ROOT / "project" / "assets" / "art" / "banners"
-sys.path.insert(0, str(ROOT / "tools" / "art"))
 
 # Style-lock frost family. Hexes stay lowercase so filenames match unit_art.
 PALETTE = [
@@ -108,9 +109,87 @@ def build() -> None:
     print(f"recolored frames={len(FRAMES)} colors={len(PALETTE)} migrate c9a227->{nearest_hex()}")
 
 
-def check() -> int:
-    import style_check_v87 as sc
+def _ratios(path: Path) -> tuple[float, float]:
+    """gold / parchment ratios. Same hue gates as style_check, no Pillow."""
+    data = path.read_bytes()
+    if data[:8] != b"\x89PNG\r\n\x1a\n":
+        raise ValueError(f"not a png {path.name}")
+    pos = 8
+    width = height = color_type = None
+    idat = []
+    while pos < len(data):
+        length = struct.unpack(">I", data[pos : pos + 4])[0]
+        ctype = data[pos + 4 : pos + 8]
+        chunk = data[pos + 8 : pos + 8 + length]
+        pos += 12 + length
+        if ctype == b"IHDR":
+            width, height, bit_depth, color_type = struct.unpack(">IIBB", chunk[:10])
+            if bit_depth != 8 or color_type not in (2, 6):
+                raise ValueError(f"unsupported png {path.name}")
+        elif ctype == b"IDAT":
+            idat.append(chunk)
+        elif ctype == b"IEND":
+            break
+    raw = zlib.decompress(b"".join(idat))
+    bpp = 4 if color_type == 6 else 3
+    stride = width * bpp
+    i = 0
+    prev = bytearray(stride)
+    gold = parch = n = 0
+    for _y in range(height):
+        filt = raw[i]
+        i += 1
+        row = bytearray(raw[i : i + stride])
+        i += stride
+        if filt == 1:
+            for x in range(stride):
+                left = row[x - bpp] if x >= bpp else 0
+                row[x] = (row[x] + left) & 255
+        elif filt == 2:
+            for x in range(stride):
+                row[x] = (row[x] + prev[x]) & 255
+        elif filt == 3:
+            for x in range(stride):
+                left = row[x - bpp] if x >= bpp else 0
+                row[x] = (row[x] + ((left + prev[x]) // 2)) & 255
+        elif filt == 4:
+            for x in range(stride):
+                a = row[x - bpp] if x >= bpp else 0
+                b = prev[x]
+                c = prev[x - bpp] if x >= bpp else 0
+                p = a + b - c
+                pa, pb, pc = abs(p - a), abs(p - b), abs(p - c)
+                pr = a if pa <= pb and pa <= pc else (b if pb <= pc else c)
+                row[x] = (row[x] + pr) & 255
+        elif filt != 0:
+            raise ValueError(f"filter {filt} {path.name}")
+        prev = row
+        for x in range(0, stride, bpp):
+            r, g, b = row[x] / 255.0, row[x + 1] / 255.0, row[x + 2] / 255.0
+            alpha = row[x + 3] / 255.0 if bpp == 4 else 1.0
+            if alpha < 0.5:
+                continue
+            n += 1
+            mx, mn = max(r, g, b), min(r, g, b)
+            delta = mx - mn + 1e-6
+            if mx == r:
+                hue = ((g - b) / delta) % 6
+            elif mx == g:
+                hue = (b - r) / delta + 2
+            else:
+                hue = (r - g) / delta + 4
+            hue *= 60.0
+            sat = (mx - mn) / (mx + 1e-6) if mx > 0 else 0.0
+            if 32.0 < hue < 58.0 and sat > 0.42 and mx > 0.35:
+                gold += 1
+            if 20.0 < hue < 50.0 and 0.12 < sat < 0.40 and mx > 0.55:
+                parch += 1
+    if n == 0:
+        return 1.0, 1.0
+    return gold / n, parch / n
 
+
+def check() -> int:
     errors = []
     leftover = list(BANNERS.glob("*c9a227*"))
     if leftover:
@@ -123,9 +202,9 @@ def check() -> int:
             if not path.exists():
                 errors.append(f"missing {path.name}")
                 continue
-            m = sc.judge(str(path), "icon")
-            if m["gold_ratio"] > 0.04 or not m["pass"]:
-                errors.append(f"{path.name} gold={m['gold_ratio']:.3f} fails={m['fails']}")
+            gold, parch = _ratios(path)
+            if gold > 0.04 or parch != 0.0:
+                errors.append(f"{path.name} gold={gold:.3f} parch={parch:.3f}")
     if errors:
         for err in errors:
             print("FAIL", err)

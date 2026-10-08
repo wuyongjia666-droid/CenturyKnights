@@ -92,14 +92,30 @@ static func tick(delta: float) -> void:
 static func crest_color() -> Color:
 	return Color(str(GameState.crest_color))
 
-## Old saves and tests still store #c9a227. CIE76 nearest Frost crest is frost silver.
+## Old saves still store a retired crest key. The map lives in crest_palette_v92.json.
 ## game_state.gd / naming.gd defaults stay with core and narrative.
-const CREST_MIGRATION := {"c9a227": "c9d3de"}
-const CREST_FALLBACK := "6ed4ff"
+const CREST_DATA := "res://assets/art/crest_palette_v92.json"
+static var _crest_table: Dictionary = {}
+static var _crest_ready := false
+
+static func crest_table() -> Dictionary:
+	if _crest_ready:
+		return _crest_table
+	_crest_ready = true
+	var f := FileAccess.open(CREST_DATA, FileAccess.READ)
+	if f:
+		var parsed = JSON.parse_string(f.get_as_text())
+		if typeof(parsed) == TYPE_DICTIONARY:
+			_crest_table = parsed
+	return _crest_table
+
+static func crest_fallback() -> String:
+	return UIKit.ACCENT.to_html(false).trim_prefix("#").to_lower()
 
 static func migrate_crest_hex(raw: String) -> String:
 	var c := str(raw).trim_prefix("#").to_lower()
-	return str(CREST_MIGRATION.get(c, c))
+	var mig: Dictionary = crest_table().get("migration", {})
+	return str(mig.get(c, c))
 
 static func _crest_hex() -> String:
 	return migrate_crest_hex(str(GameState.crest_color))
@@ -752,7 +768,7 @@ static func banner(w: int = 160, h: int = 220, with_name: bool = true) -> Textur
 		return _cache[ck]
 	var tex2 = _try_load(path)
 	if tex2 == null:
-		path = "res://assets/art/banners/banner_%s_w%d.png" % [CREST_FALLBACK, _banner_frame]
+		path = "res://assets/art/banners/banner_%s_w%d.png" % [crest_fallback(), _banner_frame]
 		ck = "b|" + path
 		tex2 = _try_load(path)
 	if tex2 != null:
