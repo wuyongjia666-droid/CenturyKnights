@@ -36,3 +36,11 @@ forecast_counter,反击,Counter
 forecast_yes,会,Yes
 forecast_no,不会,No
 forecast_no_counter,不会反击,No counter
+deploy_cap,出战上限 %d 人,Field up to %d
+deploy_hurt,带伤,Injured
+deploy_down,无法出战,Unavailable
+deploy_enemy_n,敌军 %d 人,Enemies %d
+deploy_jobs,推荐 %s,Suggest %s
+deploy_mix,编制 %s,Force %s
+deploy_slot,起始 %d,Start %d
+deploy_obj,目标 %s,Goal %s
