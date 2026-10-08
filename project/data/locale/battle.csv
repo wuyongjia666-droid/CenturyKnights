@@ -25,3 +25,14 @@ obj_lose_wipe,我军覆没,Company wiped
 obj_lose_leader,主将倒下,Leader down
 obj_lose_vip,保护对象倒下,Ward down
 obj_lose_turns,超过回合上限,Turn limit
+danger_toggle,危险区,Danger
+forecast_ours,我方,Ally
+forecast_theirs,对方,Foe
+forecast_hit,命中,Hit
+forecast_dmg,伤害,Damage
+forecast_crit,暴击,Crit
+forecast_follow,追击,Follow-up
+forecast_counter,反击,Counter
+forecast_yes,会,Yes
+forecast_no,不会,No
+forecast_no_counter,不会反击,No counter

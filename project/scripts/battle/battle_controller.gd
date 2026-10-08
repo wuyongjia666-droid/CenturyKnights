@@ -77,6 +77,9 @@ var _board_pan := Vector2.ZERO
 var _board_zoom := 1.0
 var _mobile_layer: CanvasLayer
 var _mobile_bar: PanelContainer
+var danger_on := false
+var danger_focus := -1
+var _btn_danger: CheckButton
 
 
 func _map_theme() -> String:
@@ -406,19 +409,35 @@ func _build_ui() -> void:
 	_btn_end.add_theme_stylebox_override("normal", eglow)
 	_btn_end.pressed.connect(_end_player_turn)
 	row2.add_child(_btn_end)
+	var toggles := VBoxContainer.new()
+	toggles.name = "RuleToggles"
+	toggles.add_theme_constant_override("separation", 0)
+	toggles.custom_minimum_size = Vector2(112, 52)
+	row2.add_child(toggles)
 	var b_prev = CheckButton.new()
 	b_prev.text = Locale.t("rules_preview")
-	b_prev.add_theme_font_size_override("font_size", 12)
+	b_prev.clip_text = true
+	b_prev.custom_minimum_size = Vector2(112, 24)
+	b_prev.add_theme_font_size_override("font_size", 11)
 	b_prev.add_theme_color_override("font_color", UIKit.TEXT_DIM)
 	b_prev.button_pressed = BattleRules.preview_enabled
 	b_prev.toggled.connect(func(on): BattleRules.preview_enabled = on)
-	row2.add_child(b_prev)
+	toggles.add_child(b_prev)
+	_btn_danger = CheckButton.new()
+	_btn_danger.text = BattleObjectives.text("danger_toggle")
+	_btn_danger.clip_text = true
+	_btn_danger.custom_minimum_size = Vector2(112, 24)
+	_btn_danger.add_theme_font_size_override("font_size", 11)
+	_btn_danger.add_theme_color_override("font_color", UIKit.DANGER)
+	_btn_danger.toggled.connect(_on_danger_toggled)
+	toggles.add_child(_btn_danger)
 	if DeviceProfile.is_mobile():
 		row.visible = false
 		row2.visible = false
 	_build_mobile_bar()
 	_apply_board_xform()
 	ObjectiveHud.attach(self)
+	ForecastPanel.attach(self)
 
 func _command_bar_px() -> float:
 	if not DeviceProfile.is_mobile():
@@ -698,6 +717,7 @@ func _enter_attack_mode() -> void:
 	move_cells.clear()
 	overlay.queue_redraw()
 	_refresh_info()
+	ForecastPanel.refresh(self)
 	_log("攻击模式：点击射程内敌人")
 
 func _init_map() -> void:
@@ -937,6 +957,7 @@ func _draw_map() -> void:
 			map_draw.draw_arc(center, tr + 4.0 + pulse * 2.0, 0, TAU, 40, Color(UIKit.ACCENT, 0.9), 1.5, true)
 
 func _draw_overlay() -> void:
+	_draw_danger()
 	# 敌军控制地带（ZoC）浅红提示
 	if turn_team == "player":
 		var zcells = BattleRules.zoc_cells(MAP_W, MAP_H, _enemy_positions("player"))
@@ -999,6 +1020,7 @@ func _draw_overlay() -> void:
 					var pf = "res://assets/art/fx/zoc_pulse_%d.png" % (int(_sel_pulse * 10.0) % 6)
 					if ResourceLoader.exists(pf):
 						overlay.draw_texture_rect(_tex(pf), r.grow(4.0), false, Color(1, 1, 1, 0.55 + 0.35 * pulse))
+			overlay.draw_string(UIKit.font("mono"), r.position + Vector2(4, 16), str(int(move_cells[pos])), HORIZONTAL_ALIGNMENT_LEFT, -1, 11, UIKit.TEXT)
 			if tag != "":
 				var chip_path = ""
 				if tag == "锁3":
@@ -1257,6 +1279,51 @@ func _hover_at(screen_pos: Vector2) -> void:
 		map_draw.queue_redraw()
 	if overlay:
 		overlay.queue_redraw()
+	ForecastPanel.refresh(self)
+
+func _on_danger_toggled(on: bool) -> void:
+	danger_on = on
+	if not on:
+		danger_focus = -1
+	if overlay:
+		overlay.queue_redraw()
+
+
+func _set_danger(on: bool, focus: int) -> void:
+	danger_on = on
+	danger_focus = focus
+	if _btn_danger:
+		_btn_danger.set_pressed_no_signal(on)
+	if overlay:
+		overlay.queue_redraw()
+
+
+func _draw_danger() -> void:
+	if not danger_on or overlay == null:
+		return
+	var cells := DangerZone.collect(self)
+	var hatch := bool(GameState.settings.get("colorblind", false))
+	for pos in cells.keys():
+		var r := Rect2(ORIGIN + Vector2(pos) * CELL, Vector2(CELL - 2, CELL - 2))
+		overlay.draw_rect(r, Color(UIKit.DANGER, 0.28))
+		if hatch:
+			overlay.draw_line(r.position, r.position + r.size, Color(UIKit.DANGER, 0.9), 1.5)
+			overlay.draw_line(r.position + Vector2(0, r.size.y), r.position + Vector2(r.size.x, 0), Color(UIKit.DANGER, 0.9), 1.5)
+
+
+func _on_long_press_cell(cell: Vector2i) -> void:
+	if not _in_bounds(cell):
+		return
+	var ui := _unit_at(cell)
+	if ui >= 0 and str(units[ui].team) == "enemy" and units[ui].char.hp > 0:
+		if danger_on and danger_focus == ui:
+			_set_danger(false, -1)
+		else:
+			_set_danger(true, ui)
+		_refresh_info_for(ui)
+		return
+	_inspect_cell(cell)
+
 
 func _inspect_cell(cell: Vector2i) -> void:
 	if not _in_bounds(cell):
@@ -1286,7 +1353,7 @@ func _apply_board_gesture(g: Dictionary) -> void:
 				return
 			_click_cell(cell)
 		"long_press":
-			_inspect_cell(_pointer_to_cell(pos))
+			_on_long_press_cell(_pointer_to_cell(pos))
 		"cancel":
 			_cancel_selection()
 		"pan":
