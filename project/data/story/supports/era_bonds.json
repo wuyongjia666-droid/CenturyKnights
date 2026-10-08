@@ -1,0 +1,1164 @@
+{
+  "conversations": [
+    {
+      "id": "dengying_zhegan_c",
+      "a": "weiyuan_dengying",
+      "b": "baiyuan_zhegan",
+      "rank": "C",
+      "title": "倒旗",
+      "lines": [
+        {
+          "id": "dengying_zhegan_c_l0",
+          "speaker": "苇原·灯影",
+          "text": "你把旗倒向自己人的时候，我以为你在改口。"
+        },
+        {
+          "id": "dengying_zhegan_c_l1",
+          "speaker": "白垣·折杆",
+          "text": "改的是功绩单，不是路。路还是你在看。"
+        },
+        {
+          "id": "dengying_zhegan_c_l2",
+          "speaker": "苇原·灯影",
+          "text": "功绩单先于人。你自己说过这句。"
+        },
+        {
+          "id": "dengying_zhegan_c_l3",
+          "speaker": "白垣·折杆",
+          "text": "所以我站到这边。数字可以晚一点再报。"
+        }
+      ]
+    },
+    {
+      "id": "dengying_zhegan_b",
+      "a": "weiyuan_dengying",
+      "b": "baiyuan_zhegan",
+      "rank": "B",
+      "title": "同一种墨",
+      "lines": [
+        {
+          "id": "dengying_zhegan_b_l0",
+          "speaker": "白垣·折杆",
+          "text": "册子上的墨，和你被涂掉的那页是同一种。"
+        },
+        {
+          "id": "dengying_zhegan_b_l1",
+          "speaker": "苇原·灯影",
+          "text": "你现在才说。并肩走过两场了。"
+        },
+        {
+          "id": "dengying_zhegan_b_l2",
+          "speaker": "白垣·折杆",
+          "text": "早说，你会以为我是来核对你的。"
+        },
+        {
+          "id": "dengying_zhegan_b_l3",
+          "speaker": "苇原·灯影",
+          "text": "核对可以。别把我的名字再写成你的附件。"
+        }
+      ]
+    },
+    {
+      "id": "dengying_zhegan_a",
+      "a": "weiyuan_dengying",
+      "b": "baiyuan_zhegan",
+      "rank": "A",
+      "title": "缝还在",
+      "lines": [
+        {
+          "id": "dengying_zhegan_a_l0",
+          "speaker": "苇原·灯影",
+          "text": "旗正过来了。缝还在。"
+        },
+        {
+          "id": "dengying_zhegan_a_l1",
+          "speaker": "白垣·折杆",
+          "text": "缝提醒我，功可以先于人。我留着它。"
+        },
+        {
+          "id": "dengying_zhegan_a_l2",
+          "speaker": "苇原·灯影",
+          "text": "留着。别把它补成一张新的功绩。"
+        },
+        {
+          "id": "dengying_zhegan_a_l3",
+          "speaker": "白垣·折杆",
+          "text": "不补。下次再倒，我先告诉你。"
+        }
+      ]
+    },
+    {
+      "id": "dengying_xiaoxian_c",
+      "a": "weiyuan_dengying",
+      "b": "yingzhen_xiaoxian",
+      "rank": "C",
+      "title": "半环",
+      "lines": [
+        {
+          "id": "dengying_xiaoxian_c_l0",
+          "speaker": "影针·小弦",
+          "text": "袖里那支签是我打的。半环印还没干。"
+        },
+        {
+          "id": "dengying_xiaoxian_c_l1",
+          "speaker": "苇原·灯影",
+          "text": "我留着，没交给议会。"
+        },
+        {
+          "id": "dengying_xiaoxian_c_l2",
+          "speaker": "影针·小弦",
+          "text": "不交，就不是功。是我写过的坏句子。"
+        },
+        {
+          "id": "dengying_xiaoxian_c_l3",
+          "speaker": "苇原·灯影",
+          "text": "坏句子可以认。认完了路还要走。"
+        }
+      ]
+    },
+    {
+      "id": "dengying_xiaoxian_b",
+      "a": "weiyuan_dengying",
+      "b": "yingzhen_xiaoxian",
+      "rank": "B",
+      "title": "哥哥",
+      "lines": [
+        {
+          "id": "dengying_xiaoxian_b_l0",
+          "speaker": "影针·小弦",
+          "text": "哥哥的眼睛是整环。整环的人被派去更干净的楼。"
+        },
+        {
+          "id": "dengying_xiaoxian_b_l1",
+          "speaker": "苇原·灯影",
+          "text": "你被留下打签。这不是你的错。"
+        },
+        {
+          "id": "dengying_xiaoxian_b_l2",
+          "speaker": "影针·小弦",
+          "text": "错不错以后再说。我不再对孩子下手。"
+        },
+        {
+          "id": "dengying_xiaoxian_b_l3",
+          "speaker": "苇原·灯影",
+          "text": "这句我听见了。下次我站在你前面。"
+        }
+      ]
+    },
+    {
+      "id": "dengying_xiaoxian_a",
+      "a": "weiyuan_dengying",
+      "b": "yingzhen_xiaoxian",
+      "rank": "A",
+      "title": "半张脸",
+      "lines": [
+        {
+          "id": "dengying_xiaoxian_a_l0",
+          "speaker": "苇原·灯影",
+          "text": "他们说半张脸不该被晋升。我不管这句。"
+        },
+        {
+          "id": "dengying_xiaoxian_a_l1",
+          "speaker": "影针·小弦",
+          "text": "不管，我就还能留在队里。"
+        },
+        {
+          "id": "dengying_xiaoxian_a_l2",
+          "speaker": "苇原·灯影",
+          "text": "留。半环算你的，不算他们的工具。"
+        },
+        {
+          "id": "dengying_xiaoxian_a_l3",
+          "speaker": "影针·小弦",
+          "text": "算我的。你别替我把它画成全的。"
+        }
+      ]
+    },
+    {
+      "id": "dengying_pingshao_c",
+      "a": "weiyuan_dengying",
+      "b": "yuhuo_pingshao",
+      "rank": "C",
+      "title": "空船",
+      "lines": [
+        {
+          "id": "dengying_pingshao_c_l0",
+          "speaker": "渔火·平梢",
+          "text": "船没有灯。没有灯也能把人送过河。"
+        },
+        {
+          "id": "dengying_pingshao_c_l1",
+          "speaker": "苇原·灯影",
+          "text": "我看见了。追兵怕的就是这个。"
+        },
+        {
+          "id": "dengying_pingshao_c_l2",
+          "speaker": "渔火·平梢",
+          "text": "怕可以。别把我写成藏起假丝的人。"
+        },
+        {
+          "id": "dengying_pingshao_c_l3",
+          "speaker": "苇原·灯影",
+          "text": "不写。无丝两个字我认得。"
+        }
+      ]
+    },
+    {
+      "id": "dengying_pingshao_b",
+      "a": "weiyuan_dengying",
+      "b": "yuhuo_pingshao",
+      "rank": "B",
+      "title": "灯籍",
+      "lines": [
+        {
+          "id": "dengying_pingshao_b_l0",
+          "speaker": "渔火·平梢",
+          "text": "家里的信三天一封，问灯籍办了没有。"
+        },
+        {
+          "id": "dengying_pingshao_b_l1",
+          "speaker": "苇原·灯影",
+          "text": "你回了船还在。他们当成没回。"
+        },
+        {
+          "id": "dengying_pingshao_b_l2",
+          "speaker": "渔火·平梢",
+          "text": "没回的句子有时比回了的真。"
+        },
+        {
+          "id": "dengying_pingshao_b_l3",
+          "speaker": "苇原·灯影",
+          "text": "真句子别写进籍里。籍只收他们要的真。"
+        }
+      ]
+    },
+    {
+      "id": "dengying_pingshao_a",
+      "a": "weiyuan_dengying",
+      "b": "yuhuo_pingshao",
+      "rank": "A",
+      "title": "绳",
+      "lines": [
+        {
+          "id": "dengying_pingshao_a_l0",
+          "speaker": "渔火·平梢",
+          "text": "你抓我的绳，别抓我的袖。袖里是你的签。"
+        },
+        {
+          "id": "dengying_pingshao_a_l1",
+          "speaker": "苇原·灯影",
+          "text": "签不能落水。人也不能。"
+        },
+        {
+          "id": "dengying_pingshao_a_l2",
+          "speaker": "渔火·平梢",
+          "text": "人在，船资以后再算。"
+        },
+        {
+          "id": "dengying_pingshao_a_l3",
+          "speaker": "苇原·灯影",
+          "text": "算清楚。情分留给别人。我们记路。"
+        }
+      ]
+    },
+    {
+      "id": "dengying_chenban_c",
+      "a": "weiyuan_dengying",
+      "b": "guzhang_chenban",
+      "rank": "C",
+      "title": "不拆",
+      "lines": [
+        {
+          "id": "dengying_chenban_c_l0",
+          "speaker": "古樟·沉斑",
+          "text": "纸可以交给你。不许拆。拆是另一件事。"
+        },
+        {
+          "id": "dengying_chenban_c_l1",
+          "speaker": "苇原·灯影",
+          "text": "我拿着。重量我守得住。"
+        },
+        {
+          "id": "dengying_chenban_c_l2",
+          "speaker": "古樟·沉斑",
+          "text": "守住不是看。看了，秘密就变成你的。"
+        },
+        {
+          "id": "dengying_chenban_c_l3",
+          "speaker": "苇原·灯影",
+          "text": "那我等你自己摊开。"
+        }
+      ]
+    },
+    {
+      "id": "dengying_chenban_b",
+      "a": "weiyuan_dengying",
+      "b": "guzhang_chenban",
+      "rank": "B",
+      "title": "提前",
+      "lines": [
+        {
+          "id": "dengying_chenban_b_l0",
+          "speaker": "苇原·灯影",
+          "text": "我想问。问了你会恨这个提前。"
+        },
+        {
+          "id": "dengying_chenban_b_l1",
+          "speaker": "古樟·沉斑",
+          "text": "恨归恨。被逼的时候我会用完整的句子。"
+        },
+        {
+          "id": "dengying_chenban_b_l2",
+          "speaker": "苇原·灯影",
+          "text": "完整的句子很贵。别在刀下面给。"
+        },
+        {
+          "id": "dengying_chenban_b_l3",
+          "speaker": "古樟·沉斑",
+          "text": "所以我把蜡按上。你负责挡手。"
+        }
+      ]
+    },
+    {
+      "id": "dengying_chenban_a",
+      "a": "weiyuan_dengying",
+      "b": "guzhang_chenban",
+      "rank": "A",
+      "title": "第三行",
+      "lines": [
+        {
+          "id": "dengying_chenban_a_l0",
+          "speaker": "古樟·沉斑",
+          "text": "第三行是还没出生的那份。格子空着。"
+        },
+        {
+          "id": "dengying_chenban_a_l1",
+          "speaker": "苇原·灯影",
+          "text": "空着，是那个人还没被世界写错。"
+        },
+        {
+          "id": "dengying_chenban_a_l2",
+          "speaker": "古樟·沉斑",
+          "text": "你懂这句。我就还能把纸放在你手里。"
+        },
+        {
+          "id": "dengying_chenban_a_l3",
+          "speaker": "苇原·灯影",
+          "text": "放着。我不会把它写进功绩单。"
+        }
+      ]
+    },
+    {
+      "id": "zhegan_zhensheng_c",
+      "a": "baiyuan_zhegan",
+      "b": "liegu_zhensheng",
+      "rank": "C",
+      "title": "铁箍",
+      "lines": [
+        {
+          "id": "zhegan_zhensheng_c_l0",
+          "speaker": "裂谷·砧声",
+          "text": "我来修箍。修的时候别问我脸上的纹。"
+        },
+        {
+          "id": "zhegan_zhensheng_c_l1",
+          "speaker": "白垣·折杆",
+          "text": "不问。箍不修，旗今晚就倒。"
+        },
+        {
+          "id": "zhegan_zhensheng_c_l2",
+          "speaker": "裂谷·砧声",
+          "text": "倒了不只是布的事。这句你比我清楚。"
+        },
+        {
+          "id": "zhegan_zhensheng_c_l3",
+          "speaker": "白垣·折杆",
+          "text": "清楚。所以门我来守。"
+        }
+      ]
+    },
+    {
+      "id": "zhegan_zhensheng_b",
+      "a": "baiyuan_zhegan",
+      "b": "liegu_zhensheng",
+      "rank": "B",
+      "title": "烟灰",
+      "lines": [
+        {
+          "id": "zhegan_zhensheng_b_l0",
+          "speaker": "白垣·折杆",
+          "text": "烟灰盖着的东西，一旦写成父亲，就会被拿走。"
+        },
+        {
+          "id": "zhegan_zhensheng_b_l1",
+          "speaker": "裂谷·砧声",
+          "text": "拿走的是孩子，或者是我。我都见过。"
+        },
+        {
+          "id": "zhegan_zhensheng_b_l2",
+          "speaker": "白垣·折杆",
+          "text": "功绩单也是一种假处所。我不当这个证人。"
+        },
+        {
+          "id": "zhegan_zhensheng_b_l3",
+          "speaker": "裂谷·砧声",
+          "text": "不当就好。热源从哪来，你再问我脸。"
+        }
+      ]
+    },
+    {
+      "id": "zhegan_zhensheng_a",
+      "a": "baiyuan_zhegan",
+      "b": "liegu_zhensheng",
+      "rank": "A",
+      "title": "门内",
+      "lines": [
+        {
+          "id": "zhegan_zhensheng_a_l0",
+          "speaker": "裂谷·砧声",
+          "text": "人进来了。箍也立住了。"
+        },
+        {
+          "id": "zhegan_zhensheng_a_l1",
+          "speaker": "白垣·折杆",
+          "text": "我把今晚记成守门，不记成功绩。"
+        },
+        {
+          "id": "zhegan_zhensheng_a_l2",
+          "speaker": "裂谷·砧声",
+          "text": "功绩已经够多。多一张铁箍没什么好看的。"
+        },
+        {
+          "id": "zhegan_zhensheng_a_l3",
+          "speaker": "白垣·折杆",
+          "text": "好看的留给旗。旗还要能举过明天。"
+        }
+      ]
+    },
+    {
+      "id": "zhegan_wanshuang_c",
+      "a": "baiyuan_zhegan",
+      "b": "shuangque_wanshuang",
+      "rank": "C",
+      "title": "先于人",
+      "lines": [
+        {
+          "id": "zhegan_wanshuang_c_l0",
+          "speaker": "霜阙·晚霜",
+          "text": "瓶子可以先到。人我自己来。"
+        },
+        {
+          "id": "zhegan_wanshuang_c_l1",
+          "speaker": "白垣·折杆",
+          "text": "先到的东西最容易变成功绩。"
+        },
+        {
+          "id": "zhegan_wanshuang_c_l2",
+          "speaker": "霜阙·晚霜",
+          "text": "我不是来领功的。我是来听一句概率。"
+        },
+        {
+          "id": "zhegan_wanshuang_c_l3",
+          "speaker": "白垣·折杆",
+          "text": "概率可以晚念。人先站在门口。"
+        }
+      ]
+    },
+    {
+      "id": "zhegan_wanshuang_b",
+      "a": "baiyuan_zhegan",
+      "b": "shuangque_wanshuang",
+      "rank": "B",
+      "title": "精确",
+      "lines": [
+        {
+          "id": "zhegan_wanshuang_b_l0",
+          "speaker": "白垣·折杆",
+          "text": "知道答案的求婚又冷又精确。"
+        },
+        {
+          "id": "zhegan_wanshuang_b_l1",
+          "speaker": "霜阙·晚霜",
+          "text": "精确不是善意。善意我没带来。"
+        },
+        {
+          "id": "zhegan_wanshuang_b_l2",
+          "speaker": "白垣·折杆",
+          "text": "那就把停的权利留下。停了，人还可以在。"
+        },
+        {
+          "id": "zhegan_wanshuang_b_l3",
+          "speaker": "霜阙·晚霜",
+          "text": "这句我要写进期望里。不是写进功绩。"
+        }
+      ]
+    },
+    {
+      "id": "zhegan_wanshuang_a",
+      "a": "baiyuan_zhegan",
+      "b": "shuangque_wanshuang",
+      "rank": "A",
+      "title": "不报",
+      "lines": [
+        {
+          "id": "zhegan_wanshuang_a_l0",
+          "speaker": "霜阙·晚霜",
+          "text": "你主持誓的时候，会不会把分数也念出来。"
+        },
+        {
+          "id": "zhegan_wanshuang_a_l1",
+          "speaker": "白垣·折杆",
+          "text": "不念。分数是我逃离的那套算术。"
+        },
+        {
+          "id": "zhegan_wanshuang_a_l2",
+          "speaker": "霜阙·晚霜",
+          "text": "那我们还站得住同一扇门。"
+        },
+        {
+          "id": "zhegan_wanshuang_a_l3",
+          "speaker": "白垣·折杆",
+          "text": "站得住。数字放下，人还在。"
+        }
+      ]
+    },
+    {
+      "id": "xiaoxian_pingshao_c",
+      "a": "yingzhen_xiaoxian",
+      "b": "yuhuo_pingshao",
+      "rank": "C",
+      "title": "带信",
+      "lines": [
+        {
+          "id": "xiaoxian_pingshao_c_l0",
+          "speaker": "影针·小弦",
+          "text": "如果我不在队里，信得靠你的船。"
+        },
+        {
+          "id": "xiaoxian_pingshao_c_l1",
+          "speaker": "渔火·平梢",
+          "text": "信我可以带。带信不是加入谁的眼睛。"
+        },
+        {
+          "id": "xiaoxian_pingshao_c_l2",
+          "speaker": "影针·小弦",
+          "text": "眼睛的事我自己担。你只把纸送到。"
+        },
+        {
+          "id": "xiaoxian_pingshao_c_l3",
+          "speaker": "渔火·平梢",
+          "text": "送到。船资另算，不算人情。"
+        }
+      ]
+    },
+    {
+      "id": "xiaoxian_pingshao_b",
+      "a": "yingzhen_xiaoxian",
+      "b": "yuhuo_pingshao",
+      "rank": "B",
+      "title": "半句",
+      "lines": [
+        {
+          "id": "xiaoxian_pingshao_b_l0",
+          "speaker": "渔火·平梢",
+          "text": "你说话不看眼睛，看手。手比眼睛老实。"
+        },
+        {
+          "id": "xiaoxian_pingshao_b_l1",
+          "speaker": "影针·小弦",
+          "text": "港口的人也这么看我。看我有没有把环画全。"
+        },
+        {
+          "id": "xiaoxian_pingshao_b_l2",
+          "speaker": "渔火·平梢",
+          "text": "没有灯的人懂这种看。他们总觉得你藏了东西。"
+        },
+        {
+          "id": "xiaoxian_pingshao_b_l3",
+          "speaker": "影针·小弦",
+          "text": "我没藏。我只是没做完。"
+        }
+      ]
+    },
+    {
+      "id": "xiaoxian_pingshao_a",
+      "a": "yingzhen_xiaoxian",
+      "b": "yuhuo_pingshao",
+      "rank": "A",
+      "title": "不补",
+      "lines": [
+        {
+          "id": "xiaoxian_pingshao_a_l0",
+          "speaker": "影针·小弦",
+          "text": "名册上若有人给我补一圈光，你撕不撕。"
+        },
+        {
+          "id": "xiaoxian_pingshao_a_l1",
+          "speaker": "渔火·平梢",
+          "text": "撕。补上去的光和假灯丝是一类。"
+        },
+        {
+          "id": "xiaoxian_pingshao_a_l2",
+          "speaker": "影针·小弦",
+          "text": "那就说定。半环留着，不许画圆。"
+        },
+        {
+          "id": "xiaoxian_pingshao_a_l3",
+          "speaker": "渔火·平梢",
+          "text": "说定。我看涂改，看得比看航道还熟。"
+        }
+      ]
+    },
+    {
+      "id": "pingshao_yuguang_c",
+      "a": "yuhuo_pingshao",
+      "b": "wugang_yuguang",
+      "rank": "C",
+      "title": "标价",
+      "lines": [
+        {
+          "id": "pingshao_yuguang_c_l0",
+          "speaker": "雾港·余光",
+          "text": "有人要买我去配一场婚礼。价写在脸上。"
+        },
+        {
+          "id": "pingshao_yuguang_c_l1",
+          "speaker": "渔火·平梢",
+          "text": "脸上的价我见过。我的价写在没有灯上。"
+        },
+        {
+          "id": "pingshao_yuguang_c_l2",
+          "speaker": "雾港·余光",
+          "text": "没有灯，他们就说你藏了灯。"
+        },
+        {
+          "id": "pingshao_yuguang_c_l3",
+          "speaker": "渔火·平梢",
+          "text": "有光，他们就说你的光可以借。两边都是买。"
+        }
+      ]
+    },
+    {
+      "id": "pingshao_yuguang_b",
+      "a": "yuhuo_pingshao",
+      "b": "wugang_yuguang",
+      "rank": "B",
+      "title": "客气",
+      "lines": [
+        {
+          "id": "pingshao_yuguang_b_l0",
+          "speaker": "渔火·平梢",
+          "text": "你被人标价的时候反而客气。"
+        },
+        {
+          "id": "pingshao_yuguang_b_l1",
+          "speaker": "雾港·余光",
+          "text": "客气是警告。真生气的话，价会更高。"
+        },
+        {
+          "id": "pingshao_yuguang_b_l2",
+          "speaker": "渔火·平梢",
+          "text": "我谈船资也像谈天气。天气不会还价。"
+        },
+        {
+          "id": "pingshao_yuguang_b_l3",
+          "speaker": "雾港·余光",
+          "text": "那就别让他们把我们写成一对好货。"
+        }
+      ]
+    },
+    {
+      "id": "pingshao_yuguang_a",
+      "a": "yuhuo_pingshao",
+      "b": "wugang_yuguang",
+      "rank": "A",
+      "title": "不断",
+      "lines": [
+        {
+          "id": "pingshao_yuguang_a_l0",
+          "speaker": "雾港·余光",
+          "text": "娶无光的人，光在这一代就断。"
+        },
+        {
+          "id": "pingshao_yuguang_a_l1",
+          "speaker": "渔火·平梢",
+          "text": "断就断。我不要一份被写进籍的光。"
+        },
+        {
+          "id": "pingshao_yuguang_a_l2",
+          "speaker": "雾港·余光",
+          "text": "你这句不是安慰。我收下。"
+        },
+        {
+          "id": "pingshao_yuguang_a_l3",
+          "speaker": "渔火·平梢",
+          "text": "不是安慰。是船还能开。"
+        }
+      ]
+    },
+    {
+      "id": "chenban_yuguang_c",
+      "a": "guzhang_chenban",
+      "b": "wugang_yuguang",
+      "rank": "C",
+      "title": "亮",
+      "lines": [
+        {
+          "id": "chenban_yuguang_c_l0",
+          "speaker": "古樟·沉斑",
+          "text": "雾里你的斑更亮。亮会从两个方向说谎。"
+        },
+        {
+          "id": "chenban_yuguang_c_l1",
+          "speaker": "雾港·余光",
+          "text": "磷粉也能亮。你要怎么分。"
+        },
+        {
+          "id": "chenban_yuguang_c_l2",
+          "speaker": "古樟·沉斑",
+          "text": "今晚不分。分要等蜡干。"
+        },
+        {
+          "id": "chenban_yuguang_c_l3",
+          "speaker": "雾港·余光",
+          "text": "等可以。别把我的脸先写进结果。"
+        }
+      ]
+    },
+    {
+      "id": "chenban_yuguang_b",
+      "a": "guzhang_chenban",
+      "b": "wugang_yuguang",
+      "rank": "B",
+      "title": "母传",
+      "lines": [
+        {
+          "id": "chenban_yuguang_b_l0",
+          "speaker": "雾港·余光",
+          "text": "光传不走。每个来提亲的人都读错了这句。"
+        },
+        {
+          "id": "chenban_yuguang_b_l1",
+          "speaker": "古樟·沉斑",
+          "text": "读错的人很吵。读对了、只想借光的人更安静。"
+        },
+        {
+          "id": "chenban_yuguang_b_l2",
+          "speaker": "雾港·余光",
+          "text": "安静的那种你见过。"
+        },
+        {
+          "id": "chenban_yuguang_b_l3",
+          "speaker": "古樟·沉斑",
+          "text": "见过。所以我先看，后写。"
+        }
+      ]
+    },
+    {
+      "id": "chenban_yuguang_a",
+      "a": "guzhang_chenban",
+      "b": "wugang_yuguang",
+      "rank": "A",
+      "title": "不卖",
+      "lines": [
+        {
+          "id": "chenban_yuguang_a_l0",
+          "speaker": "古樟·沉斑",
+          "text": "你的光不是灯会的特许。我不会把它写成产品。"
+        },
+        {
+          "id": "chenban_yuguang_a_l1",
+          "speaker": "雾港·余光",
+          "text": "写成产品，婚礼就只是一次照明。"
+        },
+        {
+          "id": "chenban_yuguang_a_l2",
+          "speaker": "古樟·沉斑",
+          "text": "照明留给路。你的脸留给你自己。"
+        },
+        {
+          "id": "chenban_yuguang_a_l3",
+          "speaker": "雾港·余光",
+          "text": "这句比客气有用。我记住。"
+        }
+      ]
+    },
+    {
+      "id": "zhensheng_pingmei_c",
+      "a": "liegu_zhensheng",
+      "b": "shengao_pingmei",
+      "rank": "C",
+      "title": "尺子",
+      "lines": [
+        {
+          "id": "zhensheng_pingmei_c_l0",
+          "speaker": "深镐·平眉",
+          "text": "锻场用眉量人。我的眉是完整的，他们仍要量。"
+        },
+        {
+          "id": "zhensheng_pingmei_c_l1",
+          "speaker": "裂谷·砧声",
+          "text": "冷窑用裂纹量人。裂纹盖住也闻得见。"
+        },
+        {
+          "id": "zhensheng_pingmei_c_l2",
+          "speaker": "深镐·平眉",
+          "text": "闻见和量眉是一把尺子。"
+        },
+        {
+          "id": "zhensheng_pingmei_c_l3",
+          "speaker": "裂谷·砧声",
+          "text": "尺子我修过。修完它还是会卡人。"
+        }
+      ]
+    },
+    {
+      "id": "zhensheng_pingmei_b",
+      "a": "liegu_zhensheng",
+      "b": "shengao_pingmei",
+      "rank": "B",
+      "title": "骰子",
+      "lines": [
+        {
+          "id": "zhensheng_pingmei_b_l0",
+          "speaker": "深镐·平眉",
+          "text": "我厌恶祠堂的骰子。孩子脸上可能还是会有。"
+        },
+        {
+          "id": "zhensheng_pingmei_b_l1",
+          "speaker": "裂谷·砧声",
+          "text": "儿子若在旗的名册上，窑就少一个内战的地址。"
+        },
+        {
+          "id": "zhensheng_pingmei_b_l2",
+          "speaker": "深镐·平眉",
+          "text": "地址不是安慰。安慰我不要。"
+        },
+        {
+          "id": "zhensheng_pingmei_b_l3",
+          "speaker": "裂谷·砧声",
+          "text": "不安慰。我只问热源。热源不对，纹就会露。"
+        }
+      ]
+    },
+    {
+      "id": "zhensheng_pingmei_a",
+      "a": "liegu_zhensheng",
+      "b": "shengao_pingmei",
+      "rank": "A",
+      "title": "重赛",
+      "lines": [
+        {
+          "id": "zhensheng_pingmei_a_l0",
+          "speaker": "深镐·平眉",
+          "text": "我要一场不看眉的重赛。不是要当王。"
+        },
+        {
+          "id": "zhensheng_pingmei_a_l1",
+          "speaker": "裂谷·砧声",
+          "text": "不看纹的铁箍我打过。打的时候门得关紧。"
+        },
+        {
+          "id": "zhensheng_pingmei_a_l2",
+          "speaker": "深镐·平眉",
+          "text": "门你守。尺子我来砸。"
+        },
+        {
+          "id": "zhensheng_pingmei_a_l3",
+          "speaker": "裂谷·砧声",
+          "text": "砸。砸完把碎片收好，别让他们捡去当证据。"
+        }
+      ]
+    },
+    {
+      "id": "qiaowai_ceju_c",
+      "a": "donghong_qiaowai",
+      "b": "xihong_ceju",
+      "rank": "C",
+      "title": "不是另一半",
+      "lines": [
+        {
+          "id": "qiaowai_ceju_c_l0",
+          "speaker": "西虹·测距",
+          "text": "桥被改绘了。我来要一张还能用的图。"
+        },
+        {
+          "id": "qiaowai_ceju_c_l1",
+          "speaker": "东虹·桥外",
+          "text": "图可以拿。别把我算进图的另一半。"
+        },
+        {
+          "id": "qiaowai_ceju_c_l2",
+          "speaker": "西虹·测距",
+          "text": "你不是公式。我纠正过这个称谓。"
+        },
+        {
+          "id": "qiaowai_ceju_c_l3",
+          "speaker": "东虹·桥外",
+          "text": "纠正要当着他们的面。背地里不算。"
+        }
+      ]
+    },
+    {
+      "id": "qiaowai_ceju_b",
+      "a": "donghong_qiaowai",
+      "b": "xihong_ceju",
+      "rank": "B",
+      "title": "两本账",
+      "lines": [
+        {
+          "id": "qiaowai_ceju_b_l0",
+          "speaker": "东虹·桥外",
+          "text": "桥税有了两本账。哪一本写着我的痣。"
+        },
+        {
+          "id": "qiaowai_ceju_b_l1",
+          "speaker": "西虹·测距",
+          "text": "两本都写了距离，没有一本写你的名字。"
+        },
+        {
+          "id": "qiaowai_ceju_b_l2",
+          "speaker": "东虹·桥外",
+          "text": "没有名字，就还会有人来配平。"
+        },
+        {
+          "id": "qiaowai_ceju_b_l3",
+          "speaker": "西虹·测距",
+          "text": "配平之前我把图放在桌上。桌上不是婚书。"
+        }
+      ]
+    },
+    {
+      "id": "qiaowai_ceju_a",
+      "a": "donghong_qiaowai",
+      "b": "xihong_ceju",
+      "rank": "A",
+      "title": "地图不是孩子",
+      "lines": [
+        {
+          "id": "qiaowai_ceju_a_l0",
+          "speaker": "西虹·测距",
+          "text": "用地图代替孩子，这办法可能失败。"
+        },
+        {
+          "id": "qiaowai_ceju_a_l1",
+          "speaker": "东虹·桥外",
+          "text": "失败也得说。别把失败写成我们终于成对。"
+        },
+        {
+          "id": "qiaowai_ceju_a_l2",
+          "speaker": "西虹·测距",
+          "text": "不成对。图若被用来换沉默，证据就是脏的。"
+        },
+        {
+          "id": "qiaowai_ceju_a_l3",
+          "speaker": "东虹·桥外",
+          "text": "脏的你就说脏。我仍用我的名字答。"
+        }
+      ]
+    },
+    {
+      "id": "xiaoxian_chenban_c",
+      "a": "yingzhen_xiaoxian",
+      "b": "guzhang_chenban",
+      "rank": "C",
+      "title": "看手",
+      "lines": [
+        {
+          "id": "xiaoxian_chenban_c_l0",
+          "speaker": "古樟·沉斑",
+          "text": "你不看人的眼睛。你看手。"
+        },
+        {
+          "id": "xiaoxian_chenban_c_l1",
+          "speaker": "影针·小弦",
+          "text": "手不会把半环说成全环。"
+        },
+        {
+          "id": "xiaoxian_chenban_c_l2",
+          "speaker": "古樟·沉斑",
+          "text": "眼睛会。磷粉也会。所以我先看。"
+        },
+        {
+          "id": "xiaoxian_chenban_c_l3",
+          "speaker": "影针·小弦",
+          "text": "看可以。看完别替我交上去。"
+        }
+      ]
+    },
+    {
+      "id": "xiaoxian_chenban_b",
+      "a": "yingzhen_xiaoxian",
+      "b": "guzhang_chenban",
+      "rank": "B",
+      "title": "封口",
+      "lines": [
+        {
+          "id": "xiaoxian_chenban_b_l0",
+          "speaker": "影针·小弦",
+          "text": "你把结果封上的时候，像不肯交作业。"
+        },
+        {
+          "id": "xiaoxian_chenban_b_l1",
+          "speaker": "古樟·沉斑",
+          "text": "作业两个字太轻。这是人还认不认得出自己。"
+        },
+        {
+          "id": "xiaoxian_chenban_b_l2",
+          "speaker": "影针·小弦",
+          "text": "认得出就好。认成完整的那一圈，我就走。"
+        },
+        {
+          "id": "xiaoxian_chenban_b_l3",
+          "speaker": "古樟·沉斑",
+          "text": "不写那一圈。半环在纸上就是半环。"
+        }
+      ]
+    },
+    {
+      "id": "wanshuang_xihui_c",
+      "a": "shuangque_wanshuang",
+      "b": "lupu_xihui",
+      "rank": "C",
+      "title": "等待",
+      "lines": [
+        {
+          "id": "wanshuang_xihui_c_l0",
+          "speaker": "芦浦·汐回",
+          "text": "海会因我的发环找上门。我知道。"
+        },
+        {
+          "id": "wanshuang_xihui_c_l1",
+          "speaker": "霜阙·晚霜",
+          "text": "廷也会因我眉尾那一点霜白而等。"
+        },
+        {
+          "id": "wanshuang_xihui_c_l2",
+          "speaker": "芦浦·汐回",
+          "text": "等的人总觉得自己很有礼貌。"
+        },
+        {
+          "id": "wanshuang_xihui_c_l3",
+          "speaker": "霜阙·晚霜",
+          "text": "礼貌可以停在门口。不要停在孩子的脸上。"
+        }
+      ]
+    },
+    {
+      "id": "wanshuang_xihui_b",
+      "a": "shuangque_wanshuang",
+      "b": "lupu_xihui",
+      "rank": "B",
+      "title": "不承座",
+      "lines": [
+        {
+          "id": "wanshuang_xihui_b_l0",
+          "speaker": "霜阙·晚霜",
+          "text": "你不是盐后。我不是一张还没显出来的脸。"
+        },
+        {
+          "id": "wanshuang_xihui_b_l1",
+          "speaker": "芦浦·汐回",
+          "text": "两句都对。对的句子最容易被拿去征用。"
+        },
+        {
+          "id": "wanshuang_xihui_b_l2",
+          "speaker": "霜阙·晚霜",
+          "text": "征用之前把概率念出来。念完可以停。"
+        },
+        {
+          "id": "wanshuang_xihui_b_l3",
+          "speaker": "芦浦·汐回",
+          "text": "停。我不为女儿答应任何回海的话。"
+        }
+      ]
+    },
+    {
+      "id": "zhegan_yuguang_c",
+      "a": "baiyuan_zhegan",
+      "b": "wugang_yuguang",
+      "rank": "C",
+      "title": "选票",
+      "lines": [
+        {
+          "id": "zhegan_yuguang_c_l0",
+          "speaker": "雾港·余光",
+          "text": "每一份婚约都像一张选票。票上是我的光。"
+        },
+        {
+          "id": "zhegan_yuguang_c_l1",
+          "speaker": "白垣·折杆",
+          "text": "每一桩婚都可能变成功绩。我讨厌这个顺序。"
+        },
+        {
+          "id": "zhegan_yuguang_c_l2",
+          "speaker": "雾港·余光",
+          "text": "顺序一换，人就比光先到。"
+        },
+        {
+          "id": "zhegan_yuguang_c_l3",
+          "speaker": "白垣·折杆",
+          "text": "先到的应该是人。光不要先被唱票。"
+        }
+      ]
+    },
+    {
+      "id": "zhegan_yuguang_b",
+      "a": "baiyuan_zhegan",
+      "b": "wugang_yuguang",
+      "rank": "B",
+      "title": "放下",
+      "lines": [
+        {
+          "id": "zhegan_yuguang_b_l0",
+          "speaker": "白垣·折杆",
+          "text": "你客气的时候，我听得出你在警告。"
+        },
+        {
+          "id": "zhegan_yuguang_b_l1",
+          "speaker": "雾港·余光",
+          "text": "警告不必大声。大声会被写成失礼。"
+        },
+        {
+          "id": "zhegan_yuguang_b_l2",
+          "speaker": "白垣·折杆",
+          "text": "失礼他们会计分。分我不再报。"
+        },
+        {
+          "id": "zhegan_yuguang_b_l3",
+          "speaker": "雾港·余光",
+          "text": "不报，我就还能站在你旁边。"
+        }
+      ]
+    },
+    {
+      "id": "chenban_zhensheng_c",
+      "a": "guzhang_chenban",
+      "b": "liegu_zhensheng",
+      "rank": "C",
+      "title": "盖住",
+      "lines": [
+        {
+          "id": "chenban_zhensheng_c_l0",
+          "speaker": "古樟·沉斑",
+          "text": "烟灰下有一道白纹。我看见了，可以不写。"
+        },
+        {
+          "id": "chenban_zhensheng_c_l1",
+          "speaker": "裂谷·砧声",
+          "text": "不写就先别问热源。问了，灰会掉。"
+        },
+        {
+          "id": "chenban_zhensheng_c_l2",
+          "speaker": "古樟·沉斑",
+          "text": "掉了我再看。现在这行空着。"
+        },
+        {
+          "id": "chenban_zhensheng_c_l3",
+          "speaker": "裂谷·砧声",
+          "text": "空着好。空着不是没有父亲，是还没被写成窑的。"
+        }
+      ]
+    }
+  ]
+}
