@@ -198,3 +198,110 @@ static func grant_job_skills(host, c: CKCharacter) -> void:
 			c.skills.append(sid)
 	CKBloodline.sync_signature_skills(c)
 
+
+static var _difficulty: Dictionary = {}
+
+
+static func profiles() -> Dictionary:
+	if not _difficulty.is_empty():
+		return _difficulty
+	var f := FileAccess.open("res://data/difficulty.json", FileAccess.READ)
+	if f == null:
+		return {}
+	var parsed = JSON.parse_string(f.get_as_text())
+	if typeof(parsed) == TYPE_DICTIONARY:
+		_difficulty = parsed
+	return _difficulty
+
+
+static func mode_of(host) -> String:
+	var fallback := str(profiles().get("default", "standard"))
+	var picked := str(host.settings.get("battle_mode", fallback))
+	if not profiles().get("modes", {}).has(picked):
+		return fallback
+	return picked
+
+
+static func profile(mode: String) -> Dictionary:
+	var row = profiles().get("modes", {}).get(mode, {})
+	return row if typeof(row) == TYPE_DICTIONARY else {}
+
+
+static func rank_of(mode: String) -> int:
+	return int(profile(mode).get("rank", 1))
+
+
+## First pick may be any tier. After that the campaign can only step down.
+static func choose(host, mode: String) -> bool:
+	if profile(mode).is_empty():
+		return false
+	if host.settings.has("battle_mode") and rank_of(mode) > rank_of(mode_of(host)):
+		return false
+	host.settings["battle_mode"] = mode
+	if host.has_method("mark_dirty"):
+		host.mark_dirty()
+	return true
+
+
+static func unlock_for_new_game(host) -> void:
+	host.settings.erase("battle_mode")
+
+
+static func lamp_rule(map_diff: int, mode: String) -> Dictionary:
+	# Same base table as the lamp rewind card. Kept local so this branch
+	# compiles before that card is on main.
+	var table := {0: 3, 1: 2, 2: 1, 3: 0, 4: 0}
+	var base := {
+		"charges": int(table.get(clampi(map_diff, 0, 4), 1)),
+		"refill": false,
+	}
+	var prof := profile(mode)
+	var charges := maxi(0, int(base.get("charges", 0)) + int(prof.get("lamp_bonus", 0)))
+	var refill := bool(base.get("refill", false)) or bool(prof.get("lamp_refill", false))
+	return {
+		"charges": charges,
+		"refill": refill,
+		"ai_tier": int(prof.get("ai_tier", 1)),
+		"defeat": str(prof.get("defeat", "injury")),
+	}
+
+
+static func stamp_enemy(c: CKCharacter, mode: String) -> void:
+	if c == null or c.has_meta("btl_mode_stamped"):
+		return
+	var flat := int(profile(mode).get("stat_flat", 0))
+	c.set_meta("btl_mode_stamped", true)
+	c.set_meta("btl_str0", int(c.stats.get("str", 8)))
+	c.set_meta("btl_vit0", int(c.stats.get("vit", 8)))
+	if flat == 0:
+		return
+	c.stats["str"] = maxi(1, int(c.stats.get("str", 8)) + flat)
+	c.stats["vit"] = maxi(1, int(c.stats.get("vit", 8)) + flat)
+
+
+static func unstamp(c: CKCharacter) -> void:
+	if c == null or not c.has_meta("btl_mode_stamped"):
+		return
+	c.stats["str"] = int(c.get_meta("btl_str0"))
+	c.stats["vit"] = int(c.get_meta("btl_vit0"))
+	c.remove_meta("btl_mode_stamped")
+	c.remove_meta("btl_str0")
+	c.remove_meta("btl_vit0")
+
+
+static func apply_defeat(units: Array, mode: String) -> void:
+	var kind := str(profile(mode).get("defeat", "injury"))
+	for u in units:
+		if str(u.get("team", "")) != "player":
+			continue
+		var c: CKCharacter = u.char
+		if kind == "retreat":
+			c.hp = c.max_hp
+		elif kind == "permadeath":
+			c.hp = 0
+			c.injured = true
+			c.set_meta("classic_down", true)
+		else:
+			c.injured = true
+			c.hp = maxi(1, int(c.max_hp * 0.3))
+

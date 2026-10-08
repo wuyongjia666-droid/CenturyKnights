@@ -1,0 +1,29 @@
+{
+  "default": "standard",
+  "modes": {
+    "casual": {
+      "rank": 0,
+      "stat_flat": -6,
+      "ai_tier": 0,
+      "lamp_bonus": 2,
+      "lamp_refill": true,
+      "defeat": "retreat"
+    },
+    "standard": {
+      "rank": 1,
+      "stat_flat": 0,
+      "ai_tier": 1,
+      "lamp_bonus": 0,
+      "lamp_refill": false,
+      "defeat": "injury"
+    },
+    "classic": {
+      "rank": 2,
+      "stat_flat": 6,
+      "ai_tier": 2,
+      "lamp_bonus": -1,
+      "lamp_refill": false,
+      "defeat": "permadeath"
+    }
+  }
+}
