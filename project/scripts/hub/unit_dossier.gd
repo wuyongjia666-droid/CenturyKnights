@@ -16,6 +16,25 @@ func _ready() -> void:
 
 func apply_mobile_layout() -> void:
 	MobileLayout.pin_footer(get_node_or_null("StitchFooter"))
+	var w := get_viewport_rect().size.x
+	if w >= 1000.0:
+		return
+	var left := get_node_or_null("PortraitColumn") as Control
+	var mid := get_node_or_null("TraitList") as Control
+	var right := get_node_or_null("FamilyTree") as Control
+	if left != null:
+		left.position = Vector2(8, 160)
+		left.size = Vector2(w - 16.0, 400)
+		left.clip_contents = true
+	if mid != null:
+		mid.visible = false
+	if right != null:
+		right.position = Vector2(8, 572)
+		right.size = Vector2(w - 16.0, 176)
+		right.clip_contents = true
+		var codex := right.get_node_or_null("OpenCodex") as Control
+		if codex != null:
+			codex.visible = false
 
 func _resolve() -> CKCharacter:
 	var want := ""
@@ -104,6 +123,7 @@ func _build() -> void:
 	tree.custom_minimum_size = Vector2(380, 0)
 	tree.add_theme_constant_override("separation", 8)
 	tree_scroll.add_child(tree)
+	_archive(tree, c)
 	_tree(tree, c, sheet)
 	var codex := UIKit.ghost_button("打开血脉图鉴", 180, 44)
 	codex.name = "OpenCodex"
@@ -142,6 +162,18 @@ func _trait_block(parent: Node, title: String, rows: Array, col: Color) -> void:
 		sub.autowrap_mode = TextServer.AUTOWRAP_OFF
 		sub.clip_text = true
 		v.add_child(sub)
+
+func _archive(parent: Node, focus: CKCharacter) -> void:
+	var arch: Dictionary = CKFamilyState.child_archive(GameState, focus)
+	parent.add_child(UIKit.mono("OFFSPRING ARCHIVE", 9, UIKit.ACCENT, false))
+	for row in [["AptBand", str(arch.get("apt_zh", ""))], ["TacticOdds", str(arch.get("tactics_zh", ""))], ["RoyalOdds", str(arch.get("royal_zh", ""))]]:
+		var lab := UIKit.body_label(row[1], UIKit.TEXT, 12)
+		lab.name = row[0]
+		lab.autowrap_mode = TextServer.AUTOWRAP_OFF
+		lab.clip_text = true
+		lab.custom_minimum_size = Vector2(360, 16)
+		parent.add_child(lab)
+
 
 func _tree(parent: Node, focus: CKCharacter, sheet: Dictionary) -> void:
 	if focus == null:

@@ -25,6 +25,12 @@
 
 二倍体拷贝数是王级等位的个数。互补律按配对等位里已经出现的个数计。X / Y 单倍体：已显且纯度 ≥ 0.75 视作满份（2），否则 1。数值位点：不低于 `royal_min + 0.1` 算 2 份，否则 1。倍率读 `royal_skill_tiers`。`skills.json` 不改。
 
+## 子嗣档案
+
+`CKFamilyState.combat_expectation` 读父母双方已经抽好的基因，给出资质区间、战术禀性概率、王技阶概率。`CKFamilyState.child_archive` 从家庭名册里找父母，再调用同一份投影。血脉详档把这三行写在族谱栏顶部。联姻性状板的战斗投影改用这一行。抽签函数不参与。
+
+王技阶概率：纯度取父母血胤权重的中点。离散位点走 `_child_pairs`，只有 `express_nation` 的 tier 仍是 `royal` 才分阶。数值位点用和 `trait_odds` 相同的正态，不低于 `royal_min + 0.1` 的概率算两份。
+
 ## 没有做的部分
 
-需要 `family_state` 的子嗣档案、以及把倍率写进战斗结算，等 CORE-02 与战斗流。本卡不创建 `family_state.gd`，也不改 `game_state.gd`。
+倍率写进 `battle_rules.gd` 交给战斗流。本卡不改 `game_state.gd`。

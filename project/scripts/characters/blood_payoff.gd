@@ -136,6 +136,151 @@ static func combat_forecast_zh(father: Object, mother: Object, limit: int = 3) -
 	return "战斗投影：" + "；".join(bits)
 
 
+## Per-nation odds that a child shows crown tier 1/2/3. Purity is the midparent
+## blood weight. Copy count follows the same rules as _copies(). No extra draw.
+static func royal_tier_forecast(father: Object, mother: Object) -> Array:
+	if father == null or mother == null:
+		return []
+	_prepare(father)
+	_prepare(mother)
+	var mix := _mix_blood(father, mother)
+	var fg := _genome(father)
+	var mg := _genome(mother)
+	var out: Array = []
+	for nid_v in CKBloodline.nation_ids():
+		var nid := str(nid_v)
+		var locus := str(CKBloodline.nation(nid).get("locus", ""))
+		var ld := CKBloodline.locus_def(locus)
+		if ld.is_empty():
+			continue
+		var purity := float(mix.get(str(CKBloodline.nation(nid).get("royal", "")), 0.0))
+		var buckets := {"0": 0.0, "1": 0.0, "2": 0.0, "3": 0.0}
+		var kind := str(ld.get("kind", "diploid"))
+		if kind == "value":
+			_fill_value_tiers(buckets, fg, mg, father, mother, locus, ld, purity)
+		else:
+			for sex in ["f", "m"]:
+				for row in CKBloodline._child_pairs(fg, mg, locus, kind, sex):
+					var alleles: Array = row[0]
+					var g := {"loci": {"mark": ["none", "none"]}, "sig": {locus: alleles, "pen": {locus: 0.0}}}
+					var e := CKBloodline.express_nation(g, nid, {"sex": sex, "age": 30, "rank": 0, "honors": []})
+					var tier := 0
+					if str(e.get("tier", "")) == "royal":
+						tier = _tier_from(purity, _forecast_copies(kind, ld, alleles, purity))
+					var key := str(tier)
+					buckets[key] = float(buckets.get(key, 0.0)) + 0.5 * float(row[1])
+		var shown := 1.0 - float(buckets["0"])
+		if shown < 0.005:
+			continue
+		out.append({
+			"nation": nid,
+			"zh": str(CKBloodline.nation(nid).get("name", nid)),
+			"purity": purity,
+			"p0": float(buckets["0"]),
+			"p1": float(buckets["1"]),
+			"p2": float(buckets["2"]),
+			"p3": float(buckets["3"]),
+			"p_shown": shown,
+		})
+	out.sort_custom(func(a, b): return float(a["p_shown"]) > float(b["p_shown"]))
+	return out
+
+
+static func royal_tier_forecast_zh(father: Object, mother: Object, limit: int = 1) -> String:
+	var rows := royal_tier_forecast(father, mother)
+	if rows.is_empty():
+		return "王技阶：这对父母没有可预期的显冕。"
+	var names := {1: "残响", 2: "正冕", 3: "满冕"}
+	var bits: Array = []
+	for row in rows.slice(0, limit):
+		var best := 1
+		var bp := float(row["p1"])
+		for tier in [2, 3]:
+			var p := float(row["p%d" % tier])
+			if p > bp:
+				bp = p
+				best = tier
+		bits.append("%s · %s %d%%" % [str(row.get("zh", "")), names[best], int(round(bp * 100.0))])
+	return "王技阶 " + "；".join(bits)
+
+
+static func _mix_blood(a: Object, b: Object) -> Dictionary:
+	var keys := {}
+	for src_c in [a, b]:
+		var src = src_c.get("blood_mix") if src_c != null else {}
+		if typeof(src) != TYPE_DICTIONARY:
+			continue
+		for k in (src as Dictionary).keys():
+			keys[k] = true
+	var out := {}
+	var total := 0.0
+	for k in keys.keys():
+		var wa := 0.0
+		var wb := 0.0
+		var ma = a.get("blood_mix") if a != null else {}
+		var mb = b.get("blood_mix") if b != null else {}
+		if typeof(ma) == TYPE_DICTIONARY:
+			wa = float(ma.get(k, 0.0))
+		if typeof(mb) == TYPE_DICTIONARY:
+			wb = float(mb.get(k, 0.0))
+		var w := 0.5 * wa + 0.5 * wb
+		out[k] = w
+		total += w
+	if total <= 0.0:
+		return {"common_ash": 1.0}
+	for k in out.keys():
+		out[k] = float(out[k]) / total
+	return out
+
+
+static func _fill_value_tiers(buckets: Dictionary, fg: Dictionary, mg: Dictionary, father: Object, mother: Object, locus: String, ld: Dictionary, purity: float) -> void:
+	var law := str(ld.get("law", ""))
+	var blood := _mix_blood(father, mother)
+	var mu := CKBloodline._value(mg, locus)
+	var sd := float(ld.get("drift", 0.07))
+	if law == "threshold":
+		var mid := 0.5 * (CKBloodline._value(fg, locus) + CKBloodline._value(mg, locus))
+		mu = mid + float(ld.get("regress", 0.15)) * (CKBloodline.line_mean(blood, locus) - mid)
+		sd = float(ld.get("noise", 0.06))
+	var z := maxf(sd, 0.001)
+	var royal_min := float(ld.get("royal_min", 0.7))
+	var p_royal := clampf(1.0 - CKBloodline._ncdf((royal_min - mu) / z), 0.0, 1.0)
+	var p_full := clampf(1.0 - CKBloodline._ncdf((royal_min + 0.1 - mu) / z), 0.0, p_royal)
+	var p_thin := maxf(0.0, p_royal - p_full)
+	if purity >= 0.75:
+		buckets["3"] = p_full
+		buckets["2"] = p_thin
+	elif purity >= 0.5:
+		buckets["2"] = p_royal
+	else:
+		buckets["2"] = p_full
+		buckets["1"] = p_thin
+	buckets["0"] = maxf(0.0, 1.0 - p_royal)
+
+
+static func _forecast_copies(kind: String, ld: Dictionary, alleles: Array, purity: float) -> int:
+	if kind == "x" or kind == "y":
+		return 2 if purity >= 0.75 else 1
+	if str(ld.get("law", "")) == "complement":
+		var n := 0
+		for al in ld.get("pair", []):
+			if str(al) in alleles:
+				n += 1
+		return n
+	var allele := str(ld.get("royal", ""))
+	if allele == "":
+		return 0
+	return int(alleles.count(allele))
+
+
+static func _tier_from(purity: float, copies: int) -> int:
+	if copies >= 2 and purity >= 0.75:
+		return 3
+	if copies >= 2 or purity >= 0.5:
+		return 2
+	return 1
+
+
 static func royal_skill_tier(c: Object, nation_id: String = "") -> int:
 	if c == null:
 		return 0

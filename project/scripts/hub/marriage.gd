@@ -408,7 +408,7 @@ func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 	holder.clip_contents = true
 	_punnett.add_child(holder)
 	CKCourtChrome.fill_punnett(holder, a, b, 2)
-	var cast := UIKit.body_label(CKBloodPayoff.combat_forecast_zh(a, b, 1), UIKit.ACCENT, 12)
+	var cast := UIKit.body_label(str(CKFamilyState.combat_expectation(a, b).get("line", "")), UIKit.ACCENT, 12)
 	cast.name = "CombatForecast"
 	cast.autowrap_mode = TextServer.AUTOWRAP_OFF
 	cast.clip_text = true
