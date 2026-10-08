@@ -51,5 +51,16 @@ func _run() -> String:
 		return "third gen atk"
 	if World.gear_bonus(bearer, "atk") < 2:
 		return "heir gear"
+	if bool(CKHeirloom.store(GameState, bearer.id).get("ok", false)):
+		return "stored with no treasury"
+	GameState.buildings["treasury"] = 1
+	if not bool(CKHeirloom.store(GameState, bearer.id).get("ok", false)):
+		return "store"
+	if CKHeirloom.plus_bonus(bearer, "atk") != 0:
+		return "vault still grants atk"
+	if not bool(CKHeirloom.withdraw(GameState, bearer.id).get("ok", false)):
+		return "withdraw"
+	if CKHeirloom.plus_bonus(bearer, "atk") < 2:
+		return "atk after withdraw"
 	GameState.characters.erase(heir.id)
 	return ""

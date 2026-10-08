@@ -56,3 +56,9 @@ forge_plus_max,已经加到三成,Already at plus 3
 forge_plus_short,铁或银不够,Short on iron or silver
 forge_plus_fail,改造 +%d 没成，材料已经入炉,Plus %d failed and the materials are spent
 forge_plus_ok,改造成了 +%d,Forged to plus %d
+heirloom_none,手里没有传家宝,No heirloom
+heirloom_vault_full,宝库槽位已满,Treasury is full
+heirloom_vaulted,传家宝入了宝库,Heirloom stored
+heirloom_not_vaulted,宝库里没有这件,Not in the treasury
+heirloom_withdrawn,传家宝取回了,Heirloom withdrawn
+heirloom_store,收入宝库,Store heirloom

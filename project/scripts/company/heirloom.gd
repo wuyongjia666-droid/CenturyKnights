@@ -81,13 +81,49 @@ static func pass_down(from_id: String, to_id: String) -> Dictionary:
 	nxt["plus"] = int(g.get("plus", 0))
 	_write(to_id, nxt)
 	g["heirloom"] = false
+	g["in_vault"] = false
 	_write(from_id, g)
 	return {"ok": true, "gen": int(nxt.gen)}
+
+static func vault_cap(host) -> int:
+	return maxi(0, int(host.buildings.get("treasury", 0)))
+
+static func vault_count() -> int:
+	var n := 0
+	for cid in World.gear.keys():
+		var g = World.gear[cid]
+		if typeof(g) == TYPE_DICTIONARY and bool(g.get("in_vault", false)):
+			n += 1
+	return n
+
+static func store(host, cid: String) -> Dictionary:
+	var g := row(cid)
+	if not bool(g.get("heirloom", false)):
+		return {"ok": false, "msg": Locale.t("heirloom_none")}
+	if bool(g.get("in_vault", false)):
+		return {"ok": true, "msg": Locale.t("heirloom_vaulted")}
+	if vault_count() >= vault_cap(host):
+		return {"ok": false, "msg": Locale.t("heirloom_vault_full")}
+	g["in_vault"] = true
+	_write(cid, g)
+	host.log_event(Locale.t("heirloom_vaulted"))
+	return {"ok": true, "msg": Locale.t("heirloom_vaulted")}
+
+static func withdraw(host, cid: String) -> Dictionary:
+	var g := row(cid)
+	if not bool(g.get("in_vault", false)):
+		return {"ok": false, "msg": Locale.t("heirloom_not_vaulted")}
+	g["in_vault"] = false
+	_write(cid, g)
+	host.log_event(Locale.t("heirloom_withdrawn"))
+	return {"ok": true, "msg": Locale.t("heirloom_withdrawn")}
 
 static func plus_bonus(c, stat: String) -> int:
 	if c == null or str(stat) != "atk":
 		return 0
 	var g := row(str(c.id))
+	if bool(g.get("in_vault", false)):
+		return 0
 	var bonus := int(g.get("plus", 0))
 	if bool(g.get("heirloom", false)):
 		bonus += grown_atk(int(g.get("gen", 1)), int(g.get("merit", 0)))

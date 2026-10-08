@@ -319,6 +319,15 @@ func _render_right() -> void:
 		_msg.text = str(r.get("msg", ""))
 		_render_all())
 	_right.add_child(mod)
+	var vault := UIKit.ghost_button(Locale.t("heirloom_store"), 140, 36)
+	vault.position = Vector2(1088, 600)
+	vault.pressed.connect(func():
+		if _sel == null:
+			return
+		var r: Dictionary = CKHeirloom.store(GameState, _sel.id)
+		_msg.text = str(r.get("msg", ""))
+		_render_all())
+	_right.add_child(vault)
 	heir.position = Vector2(912, 526)
 	heir.size = Vector2(328, 68)
 	heir.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
