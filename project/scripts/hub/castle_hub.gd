@@ -1,4 +1,5 @@
 extends Control
+const HubTodo := preload("res://scripts/ui/widgets/todo_center.gd")
 var _chapter_pick: OptionButton
 var _vol_pick: OptionButton
 var _chapter_paths: Array = []
@@ -42,54 +43,73 @@ func _build() -> void:
 	var nl := UIKit.mono("NAVIGATION", 9, UIKit.TEXT_FAINT)
 	nl.position = Vector2(40, 86)
 	add_child(nl)
-	var grid := GridContainer.new()
-	grid.name = "NavRail"
-	grid.columns = 1
-	grid.position = Vector2(34, 108)
-	grid.add_theme_constant_override("v_separation", 2)
-	add_child(grid)
-	var buttons = [
-		["战役", "出战编成 · 最多四人", "res://scenes/hub/deploy.tscn", Locale.t("btn_deploy")],
-		[Locale.t("btn_roster"), "名册与立绘", "res://scenes/hub/roster.tscn", ""],
-		[Locale.t("btn_tavern"), "招募新刃", "res://scenes/hub/tavern.tscn", ""],
-		[Locale.t("btn_forge"), "灰刃与铁火", "res://scenes/hub/forge.tscn", ""],
-		[Locale.t("btn_market"), "粮铁药材", "res://scenes/hub/market.tscn", ""],
-		[Locale.t("btn_shrine"), "祈愈与丰收", "res://scenes/hub/shrine.tscn", ""],
-		["属地", "四野租佃庄园", "res://scenes/hub/estates.tscn", ""],
-		[Locale.t("btn_marriage"), "春令与期望", "res://scenes/hub/marriage.tscn", ""],
-		[Locale.t("btn_lineage"), "血胤与容貌", "res://scenes/hub/lineage_view.tscn", ""],
-		["舆图", "跑图 · 城镇 · 委托", "res://scenes/hub/atlas_view.tscn", ""],
-		["—", "", "", ""],
-		[Locale.t("btn_quests"), "陆桥委托", "res://scenes/hub/quests.tscn", ""],
-		[Locale.t("btn_train"), "六维与转职", "res://scenes/hub/train.tscn", ""],
-		["战技树", "冷却与二阶", "res://scenes/hub/skill_tree.tscn", ""],
-		["工事", "厅堂校场市集", "res://scenes/hub/works.tscn", ""],
-		[Locale.t("btn_hourglass"), "预告与推进", "res://scenes/hub/hourglass.tscn", ""],
-		["授旗礼", "子嗣三步入队", "res://scenes/hub/lineage_rite.tscn", ""],
-		["设置", "规则与速度", "res://scenes/ui/settings.tscn", ""],
+	var scroll := ScrollContainer.new()
+	scroll.name = "NavRail"
+	scroll.position = Vector2(34, 108)
+	scroll.size = Vector2(142, 540)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
+	add_child(scroll)
+	var rail := VBoxContainer.new()
+	rail.add_theme_constant_override("separation", 4)
+	rail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(rail)
+	var groups: Array = [
+		{"id": "military", "title": Locale.t("ux_hub_military"), "items": [
+			["战役", "出战编成 · 最多四人", "res://scenes/hub/deploy.tscn", Locale.t("btn_deploy"), "deploy"],
+			[Locale.t("btn_train"), "六维与转职", "res://scenes/hub/train.tscn", Locale.t("btn_train"), "train"],
+			["战技树", "冷却与二阶", "res://scenes/hub/skill_tree.tscn", "战技树", "skills"],
+		]},
+		{"id": "civil", "title": Locale.t("ux_hub_civil"), "items": [
+			[Locale.t("btn_tavern"), "招募新刃", "res://scenes/hub/tavern.tscn", Locale.t("btn_tavern"), "tavern"],
+			[Locale.t("btn_forge"), "灰刃与铁火", "res://scenes/hub/forge.tscn", Locale.t("btn_forge"), "forge"],
+			[Locale.t("btn_market"), "粮铁药材", "res://scenes/hub/market.tscn", Locale.t("btn_market"), "market"],
+			["属地", "四野租佃庄园", "res://scenes/hub/estates.tscn", "属地", "estates"],
+			[Locale.t("btn_quests"), "陆桥委托", "res://scenes/hub/quests.tscn", Locale.t("btn_quests"), "quests"],
+			["工事", "厅堂校场市集", "res://scenes/hub/works.tscn", "工事", "works"],
+		]},
+		{"id": "family", "title": Locale.t("ux_hub_family"), "items": [
+			[Locale.t("btn_roster"), "名册与立绘", "res://scenes/hub/roster.tscn", Locale.t("btn_roster"), "roster"],
+			[Locale.t("btn_shrine"), "祈愈与丰收", "res://scenes/hub/shrine.tscn", Locale.t("btn_shrine"), "shrine"],
+			[Locale.t("btn_marriage"), "春令与期望", "res://scenes/hub/marriage.tscn", Locale.t("btn_marriage"), "marriage"],
+			[Locale.t("btn_lineage"), "血胤与容貌", "res://scenes/hub/lineage_view.tscn", Locale.t("btn_lineage"), "lineage"],
+			["授旗礼", "子嗣三步入队", "res://scenes/hub/lineage_rite.tscn", "授旗礼", "rite"],
+		]},
+		{"id": "court", "title": Locale.t("ux_hub_court"), "items": [
+			[Locale.t("btn_hourglass"), "预告与推进", "res://scenes/hub/hourglass.tscn", Locale.t("btn_hourglass"), "hourglass"],
+			["设置", "规则与速度", "res://scenes/ui/settings.tscn", "设置", "settings"],
+		]},
+		{"id": "atlas", "title": Locale.t("ux_hub_atlas"), "items": [
+			["舆图", "跑图 · 城镇 · 委托", "res://scenes/hub/atlas_view.tscn", "舆图", "atlas"],
+		]},
 	]
 	var n := 0
-	for item in buttons:
-		if str(item[0]) == "—":
-			var sep := Control.new()
-			sep.custom_minimum_size = Vector2(134, 11)
-			var hl := UIKit.hairline(Color(1, 1, 1, 0.07))
-			hl.position = Vector2(8, 5)
-			hl.size = Vector2(118, 1)
-			sep.add_child(hl)
-			grid.add_child(sep)
-			continue
-		n += 1
-		var b := _nav_item("%02d" % n, str(item[0]), str(item[1]), n == 1, n > 10)
-		if str(item[3]) != "":
-			b.set_meta("legacy_label", str(item[3]))
-		var path: String = item[2]
-		b.pressed.connect(func():
-			UIFX.press_feedback(b)
-			Sfx.click()
-			get_tree().change_scene_to_file(path))
-		grid.add_child(b)
-	UIFX.stagger_children(grid, 0.018, 0.2)
+	var first := true
+	for group in groups:
+		var box := VBoxContainer.new()
+		box.name = "NavGroup_%s" % str(group["id"])
+		box.add_theme_constant_override("separation", 1)
+		rail.add_child(box)
+		var badge := HubTodo.count_for(str(group["id"]))
+		var head_txt := str(group["title"])
+		if badge > 0:
+			head_txt = "%s %d" % [head_txt, badge]
+		var head := UIKit.mono(head_txt, 9, UIKit.ACCENT, false)
+		head.custom_minimum_size = Vector2(134, 14)
+		box.add_child(head)
+		for item in group["items"]:
+			if not HubTodo.is_unlocked(str(item[4])):
+				continue
+			n += 1
+			var b := _nav_item("%02d" % n, str(item[0]), str(item[1]), first, false, true)
+			first = false
+			var legacy := str(item[3]) if str(item[3]) != "" else str(item[0])
+			b.set_meta("legacy_label", legacy)
+			b.set_meta("hub_entry", str(item[4]))
+			var path: String = item[2]
+			b.pressed.connect(_go_nav.bind(b, path))
+			box.add_child(b)
+	UIFX.stagger_children(rail, 0.018, 0.2)
 	var gp := UIKit.mono("GAMEPAD", 9, UIKit.TEXT_FAINT)
 	gp.position = Vector2(40, 660)
 	add_child(gp)
@@ -142,7 +162,7 @@ func _build() -> void:
 	var first_link: Button = null
 	for i in cards.size():
 		var cd: Dictionary = cards[i]
-		var card := UIKit.panel_at(cp, Rect2(26 + i * 262, 92, 246, 340), 8)
+		var card := UIKit.panel_at(cp, Rect2(26 + i * 262, 86, 246, 312), 8)
 		var tg := UIKit.tag_chip(str(cd.tag), cd.col)
 		tg.position = Vector2(16, 18)
 		card.add_child(tg)
@@ -165,14 +185,14 @@ func _build() -> void:
 		for row in cd.kv:
 			kv.add_child(UIKit.kv_row(str(row[0]), str(row[1]), row[2], 214))
 		var fh := UIKit.hairline(Color(1, 1, 1, 0.07))
-		fh.position = Vector2(16, 286)
+		fh.position = Vector2(16, 258)
 		fh.size = Vector2(214, 1)
 		card.add_child(fh)
 		var al := UIKit.mono("ACTION", 9, UIKit.TEXT_FAINT)
-		al.position = Vector2(16, 304)
+		al.position = Vector2(16, 274)
 		card.add_child(al)
 		var lb := UIKit.link_button(str(cd.act))
-		lb.position = Vector2(230 - lb.get_combined_minimum_size().x, 296)
+		lb.position = Vector2(230 - lb.get_combined_minimum_size().x, 268)
 		lb.pressed.connect(cd.cb)
 		card.add_child(lb)
 		if first_link == null:
@@ -180,10 +200,10 @@ func _build() -> void:
 
 	# campaign row (chapter picker) — inside dossier, below the cards
 	var crl := UIKit.mono("CAMPAIGN // 章节直达", 9, UIKit.TEXT_FAINT)
-	crl.position = Vector2(26, 456)
+	crl.position = Vector2(26, 408)
 	cp.add_child(crl)
 	var row := HBoxContainer.new()
-	row.position = Vector2(26, 476)
+	row.position = Vector2(26, 426)
 	row.add_theme_constant_override("separation", 10)
 	cp.add_child(row)
 	_vol_pick = OptionButton.new()
@@ -204,17 +224,29 @@ func _build() -> void:
 		if i >= 0 and i < _chapter_paths.size():
 			get_tree().change_scene_to_file(str(_chapter_paths[i])))
 	row.add_child(go_b)
-	var cont_b := UIKit.cta_button("继续主线", "A", 220, 44)
-	cont_b.position = Vector2(794 - 220, 473)
+	var cont_b := UIKit.cta_button("继续主线", "A", 220, 40)
+	cont_b.position = Vector2(794 - 220, 424)
 	cont_b.pressed.connect(_continue_mainline)
 	cp.add_child(cont_b)
 	cont_b.call_deferred("grab_focus")
+	var todo_row := HBoxContainer.new()
+	todo_row.name = "TodoRow"
+	todo_row.position = Vector2(26, 476)
+	todo_row.size = Vector2(520, 28)
+	todo_row.clip_contents = true
+	todo_row.add_theme_constant_override("separation", 6)
+	cp.add_child(todo_row)
+	todo_row.add_child(UIKit.mono(Locale.t("ux_hub_todo"), 10, UIKit.ACCENT, false))
+	for todo in HubTodo.snapshot():
+		if int(todo.get("count", 0)) <= 0:
+			continue
+		todo_row.add_child(UIKit.tag_chip("%s %d" % [str(todo.get("label", "")), int(todo.get("count", 0))], UIKit.ACCENT))
 	var ih := UIKit.hairline(Color(1, 1, 1, 0.07))
-	ih.position = Vector2(26, 556)
+	ih.position = Vector2(26, 512)
 	ih.size = Vector2(768, 1)
 	cp.add_child(ih)
 	var hints := HBoxContainer.new()
-	hints.position = Vector2(26, 574)
+	hints.position = Vector2(26, 528)
 	hints.add_theme_constant_override("separation", 6)
 	cp.add_child(hints)
 	for hk in [["A", "确认 / 选定"], ["B", "返回中枢"], ["X", "存档"], ["Y", "快速休整"]]:
@@ -226,7 +258,7 @@ func _build() -> void:
 		g2.custom_minimum_size = Vector2(14, 0)
 		hints.add_child(g2)
 	_hint = UIKit.body_label("", UIKit.OK, 11)
-	_hint.position = Vector2(494, 574)
+	_hint.position = Vector2(494, 528)
 	_hint.size = Vector2(300, 18)
 	_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	cp.add_child(_hint)
@@ -282,8 +314,19 @@ func _build() -> void:
 		rp.add_child(pb)
 
 	UIKit.footer_bar(self, [["A", "确认"], ["B", "返回"], ["LB/RB", "切换分区"], ["ESC", "主菜单"]], "CENTURYKNIGHTS · FROST_TACTICAL v8.6")
+	_fit_narrow()
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
+
+func _go_nav(btn: Button, dest: String) -> void:
+	UIFX.press_feedback(btn)
+	Sfx.click()
+	get_tree().change_scene_to_file(dest)
+
+func _fit_narrow() -> void:
+	var vp := get_viewport().get_visible_rect().size
+	var s := HubTodo.narrow_scale(vp.x)
+	scale = Vector2(s, s)
 
 func _open_promote() -> void:
 	var old := get_node_or_null("PromoteModal")
@@ -320,11 +363,18 @@ func _do_promote() -> void:
 	if modal:
 		modal.queue_free()
 
+func _chapter_cleared(id: int) -> bool:
+	if id < 0 or GameState.story == null:
+		return false
+	return bool(GameState.story.flags.get("chapter%d_done" % id, false))
+
+func _need_cleared(prev: int) -> bool:
+	return prev < 0 or _chapter_cleared(prev)
+
 func _unlocked_count() -> int:
 	var k := 0
 	for entry in _chapter_catalog():
-		var need = str(entry[2])
-		if need == "" or GameState.flag(need):
+		if _need_cleared(int(entry[2])):
 			k += 1
 	return k
 
@@ -338,20 +388,20 @@ func _unhandled_input(e: InputEvent) -> void:
 		GameState.save_game()
 		get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn")
 
-func _nav_item(idx: String, title_t: String, sub_t: String, active: bool = false, minor: bool = false) -> Button:
+func _nav_item(idx: String, title_t: String, sub_t: String, active: bool = false, minor: bool = false, compact: bool = false) -> Button:
 	## Stitch nav item: mono index (icon slot) + label; active = boxed frost; five states
 	var b := Button.new()
 	b.text = "%s   %s" % [idx, title_t]
 	b.tooltip_text = sub_t
 	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-	b.custom_minimum_size = Vector2(134, 25 if minor else 30)
-	b.add_theme_font_size_override("font_size", 12 if minor else 13)
+	b.custom_minimum_size = Vector2(134, 20 if compact else (25 if minor else 30))
+	b.add_theme_font_size_override("font_size", 11 if compact else (12 if minor else 13))
 	b.focus_mode = Control.FOCUS_ALL
 	var mk := func(bg: Color, bd: Color, bw: int) -> StyleBoxFlat:
 		var s := UIKit._btn_box(bg, bd, bw, 6)
-		s.content_margin_left = 10
-		s.content_margin_top = 3
-		s.content_margin_bottom = 3
+		s.content_margin_left = 8 if compact else 10
+		s.content_margin_top = 0 if compact else 3
+		s.content_margin_bottom = 0 if compact else 3
 		return s
 	var normal: StyleBoxFlat = mk.call(Color(UIKit.ACCENT, 0.10), Color(UIKit.ACCENT, 0.75), 1) if active else mk.call(Color(0, 0, 0, 0), Color(0, 0, 0, 0), 0)
 	if active:
@@ -382,477 +432,17 @@ func _refresh() -> void:
 	_update_story_hint()
 
 func _update_story_hint() -> void:
-	if not GameState.flag("chapter0_done"):
-		_story_hint.text = "第零章进行中：节拍 %s —— 点「第零章节拍」继续剧情" % GameState.chapter0_beat
-	elif not GameState.flag("chapter1_done"):
-		_story_hint.text = "第零章已完成。可点「第一章·陆桥」推进新地图战役；亦可自由经营。"
-	elif not GameState.flag("chapter2_done"):
-		_story_hint.text = "第一章已完成。可点「第二章·姓氏」继续主线。"
-	elif not GameState.flag("chapter3_done"):
-		_story_hint.text = "可点「第三章·铁祷」学习战技与转职深造。"
-	elif not GameState.flag("chapter4_done"):
-		_story_hint.text = "可点「第四章·百年」挑战断字关。"
-	elif not GameState.flag("chapter5_done"):
-		_story_hint.text = "可点「第五章·烽烟」开启王朝级战役；先升战技树二阶。"
-	elif not GameState.flag("chapter6_done"):
-		_story_hint.text = "可点「第六章·托孤」签署托孤之约。"
-	elif not GameState.flag("chapter7_done"):
-		_story_hint.text = "可点「第七章·子嗣」打响正名战。"
-	elif not GameState.flag("chapter8_done"):
-		_story_hint.text = "可点「第八章·港灯」签署海商盟约。"
-	elif not GameState.flag("chapter9_done"):
-		_story_hint.text = "可点「第九章·商路」夺回辎重。"
-	elif not GameState.flag("chapter10_done"):
-		_story_hint.text = "可点「第十章·回响」赴盟主宴。"
-	elif not GameState.flag("chapter11_done"):
-		_story_hint.text = "可点「第十一章·门阙」验旗。"
-	elif not GameState.flag("chapter12_done"):
-		_story_hint.text = "可点「第十二章·余波」应对朔影家夜袭。"
-	elif not GameState.flag("chapter13_done"):
-		_story_hint.text = "可点「第十三章·嗣位」完成对决。"
-	elif not GameState.flag("chapter14_done"):
-		_story_hint.text = "可点「第十四章·并席」共持火把。"
-	elif not GameState.flag("chapter15_done"):
-		_story_hint.text = "可点「第十五章·席散」完成第一卷终章。"
-	elif not GameState.flag("chapter16_done"):
-		_story_hint.text = "第二卷开启：可点「第十六章·海草」。"
-	elif not GameState.flag("chapter17_done"):
-		_story_hint.text = "可点「第十七章·盐河」重开盐路。"
-	elif not GameState.flag("chapter18_done"):
-		_story_hint.text = "可点「第十八章·门阙」写入二卷可入。"
-	elif not GameState.flag("chapter19_done"):
-		_story_hint.text = "第二卷后半：可点「第十九章·远岸」。"
-	elif not GameState.flag("chapter20_done"):
-		_story_hint.text = "可点「第二十章·潮墙」落两印。"
-	elif not GameState.flag("chapter21_done"):
-		_story_hint.text = "可点「第二十一章·席终」完成第二卷。"
-	elif not GameState.flag("chapter22_done"):
-		_story_hint.text = "第三卷开启：可点「第二十二章·北风」。"
-	elif not GameState.flag("chapter23_done"):
-		_story_hint.text = "可点「第二十三章·霜桥」落霜印。"
-	elif not GameState.flag("chapter24_done"):
-		_story_hint.text = "可点「第二十四章·钤印」完成三卷中段。"
-	elif not GameState.flag("chapter25_done"):
-		_story_hint.text = "第三卷后半：可点「第二十五章·朔原」。"
-	elif not GameState.flag("chapter26_done"):
-		_story_hint.text = "可点「第二十六章·冠雪」落两印。"
-	elif not GameState.flag("chapter27_done"):
-		_story_hint.text = "可点「第二十七章·席终」完成第三卷。"
-	elif not GameState.flag("chapter28_done"):
-		_story_hint.text = "第四卷开启：点「继续主线」或章节下拉选第二十八章·南泽。"
-	elif not GameState.flag("chapter29_done"):
-		_story_hint.text = "可继续第二十九章·金陌（章节下拉）。"
-	elif not GameState.flag("chapter30_done"):
-		_story_hint.text = "可继续第三十章·钤印（四卷中段）。"
-	elif not GameState.flag("chapter31_done"):
-		_story_hint.text = "第四卷后半：第三十一章·铁峡。"
-	elif not GameState.flag("chapter32_done"):
-		_story_hint.text = "可继续第三十二章·星津。"
-	elif not GameState.flag("chapter33_done"):
-		_story_hint.text = "可点继续主线赴第三十三章·四卷席终。"
-	elif not GameState.flag("chapter34_done"):
-		_story_hint.text = "第五卷开启：点「继续主线」选第三十四章·破晓。"
-	elif not GameState.flag("chapter35_done"):
-		_story_hint.text = "可继续第三十五章·晚钟。"
-	elif not GameState.flag("chapter36_done"):
-		_story_hint.text = "可继续第三十六章·钤印（五卷中段）。"
-	elif not GameState.flag("chapter37_done"):
-		_story_hint.text = "第五卷后半：点「继续主线」选第三十七章·长川。"
-	elif not GameState.flag("chapter38_done"):
-		_story_hint.text = "可继续第三十八章·终阙。"
-	elif not GameState.flag("chapter39_done"):
-		_story_hint.text = "可继续第三十九章·五卷席终。"
-	elif not GameState.flag("chapter40_done"):
-		_story_hint.text = "第六卷开启：点「继续主线」选第四十章·雾原。"
-	elif not GameState.flag("chapter41_done"):
-		_story_hint.text = "可继续第四十一章·石冢。"
-	elif not GameState.flag("chapter42_done"):
-		_story_hint.text = "可继续第四十二章·钤印（六卷中段）。"
-	elif not GameState.flag("chapter43_done"):
-		_story_hint.text = "第六卷后半：点「继续主线」或卷六选第四十三章·黑潮。"
-	elif not GameState.flag("chapter44_done"):
-		_story_hint.text = "可继续第四十四章·曜塔。"
-	elif not GameState.flag("chapter45_done"):
-		_story_hint.text = "可继续第四十五章·六卷席终。"
-	elif not GameState.flag("chapter46_done"):
-		_story_hint.text = "第七卷开启：点「继续主线」或卷七选第四十六章·余烬。"
-	elif not GameState.flag("chapter47_done"):
-		_story_hint.text = "可继续第四十七章·冠火。"
-	elif not GameState.flag("chapter48_done"):
-		_story_hint.text = "可继续第四十八章·钤印（七卷中段）。"
-	elif not GameState.flag("chapter49_done"):
-		_story_hint.text = "第七卷后半：点「继续主线」或卷七选第四十九章·烬原。"
-	elif not GameState.flag("chapter50_done"):
-		_story_hint.text = "可继续第五十章·百旗。"
-	elif not GameState.flag("chapter51_done"):
-		_story_hint.text = "可继续第五十一章·七卷席终。"
-	elif not GameState.flag("chapter52_done"):
-		_story_hint.text = "第八卷开启：点「继续主线」或卷八选第五十二章·破晓。"
-	elif not GameState.flag("chapter53_done"):
-		_story_hint.text = "可继续第五十三章·镜湖。"
-	elif not GameState.flag("chapter54_done"):
-		_story_hint.text = "可继续第五十四章·钤印（八卷中段）。"
-	elif not GameState.flag("chapter55_done"):
-		_story_hint.text = "第八卷后半：点「继续主线」或卷八选第五十五章·朔风。"
-	elif not GameState.flag("chapter56_done"):
-		_story_hint.text = "可继续第五十六章·曜廷。"
-	elif not GameState.flag("chapter57_done"):
-		_story_hint.text = "可继续第五十七章·八卷席终。"
-	elif not GameState.flag("chapter58_done"):
-		_story_hint.text = "第九卷开启：点「继续主线」或卷九选第五十八章·余烬港。"
-	elif not GameState.flag("chapter59_done"):
-		_story_hint.text = "可继续第五十九章·霜驿。"
-	elif not GameState.flag("chapter60_done"):
-		_story_hint.text = "可继续第六十章·九卷钤印（九卷中段）。"
-	elif not GameState.flag("chapter61_done"):
-		_story_hint.text = "第九卷后半：点「继续主线」或卷九选第六十一章·烬原。"
-	elif not GameState.flag("chapter62_done"):
-		_story_hint.text = "可继续第六十二章·曜阙。"
-	elif not GameState.flag("chapter63_done"):
-		_story_hint.text = "可继续第六十三章·九卷席终。"
-	elif not GameState.flag("chapter64_done"):
-		_story_hint.text = "第十卷·井市：点「继续主线」或卷十选第六十四章·井市。"
-	elif not GameState.flag("chapter65_done"):
-		_story_hint.text = "可继续第六十五章·铜铃。"
-	elif not GameState.flag("chapter66_done"):
-		_story_hint.text = "可继续第六十六章·井印（十卷中段）。"
-	elif not GameState.flag("chapter67_done"):
-		_story_hint.text = "第十卷后半：点「继续主线」或卷十选第六十七章·盐船。"
-	elif not GameState.flag("chapter68_done"):
-		_story_hint.text = "可继续第六十八章·纸坊。"
-	elif not GameState.flag("chapter69_done"):
-		_story_hint.text = "可继续第六十九章·十卷席终。"
-	elif not GameState.flag("chapter70_done"):
-		_story_hint.text = "第十一卷·窑火：点「继续主线」或卷十一选第七十章·窑口。"
-	elif not GameState.flag("chapter71_done"):
-		_story_hint.text = "可继续第七十一章·釉河。"
-	elif not GameState.flag("chapter72_done"):
-		_story_hint.text = "可继续第七十二章·窑印（十一卷中段）。"
-	elif not GameState.flag("chapter73_done"):
-		_story_hint.text = "第十一卷后半：点「继续主线」或选第七十三章·烟囱。"
-	elif not GameState.flag("chapter74_done"):
-		_story_hint.text = "可继续第七十四章·火塘。"
-	elif not GameState.flag("chapter75_done"):
-		_story_hint.text = "可继续第七十五章·十一卷席终。"
-	elif not GameState.flag("chapter76_done"):
-		_story_hint.text = "第十二卷·梨园：点「继续主线」或卷十二选第七十六章·台口。"
-	elif not GameState.flag("chapter77_done"):
-		_story_hint.text = "可继续第七十七章·检场。"
-	elif not GameState.flag("chapter78_done"):
-		_story_hint.text = "可继续第七十八章·戏印（十二卷中段）。"
-	elif not GameState.flag("chapter79_done"):
-		_story_hint.text = "第十二卷后半：点「继续主线」或卷十二选第七十九章·后台。"
-	elif not GameState.flag("chapter80_done"):
-		_story_hint.text = "可继续第八十章·灯架。"
-	elif not GameState.flag("chapter81_done"):
-		_story_hint.text = "可继续第八十一章·十二卷席终。"
-	elif not GameState.flag("chapter82_done"):
-		_story_hint.text = "第十三卷·蚕桑：点「继续主线」或卷十三选第八十二章·桑陌。"
-	elif not GameState.flag("chapter83_done"):
-		_story_hint.text = "可继续第八十三章·缫丝。"
-	elif not GameState.flag("chapter84_done"):
-		_story_hint.text = "可继续第八十四章·丝印（十三卷中段）。"
-	elif not GameState.flag("chapter85_done"):
-		_story_hint.text = "第十三卷后半：点「继续主线」或卷十三选第八十五章·烘茧。"
-	elif not GameState.flag("chapter86_done"):
-		_story_hint.text = "可继续第八十六章·经轴。"
-	elif not GameState.flag("chapter87_done"):
-		_story_hint.text = "可继续第八十七章·十三卷席终。"
-	elif not GameState.flag("chapter88_done"):
-		_story_hint.text = "第十四卷·茶岭：点「继续主线」或卷十四选第八十八章·茶梯。"
-	elif not GameState.flag("chapter89_done"):
-		_story_hint.text = "可继续第八十九章·蒸青。"
-	elif not GameState.flag("chapter90_done"):
-		_story_hint.text = "可继续第九十章·茶印（十四卷中段）。"
-	elif not GameState.flag("chapter91_done"):
-		_story_hint.text = "第十四卷后半：点「继续主线」或卷十四选第九十一章·晾青。"
-	elif not GameState.flag("chapter92_done"):
-		_story_hint.text = "可继续第九十二章·茶引。"
-	elif not GameState.flag("chapter93_done"):
-		_story_hint.text = "可继续第九十三章·十四卷席终。"
-	elif not GameState.flag("chapter94_done"):
-		_story_hint.text = "第十五卷·药市：点「继续主线」或卷十五选第九十四章·药圃。"
-	elif not GameState.flag("chapter95_done"):
-		_story_hint.text = "可继续第九十五章·医馆。"
-	elif not GameState.flag("chapter96_done"):
-		_story_hint.text = "可继续第九十六章·方印（十五卷中段）。"
-	elif not GameState.flag("chapter97_done"):
-		_story_hint.text = "第十五卷后半：点「继续主线」或卷十五选第九十七章·煎药。"
-	elif not GameState.flag("chapter98_done"):
-		_story_hint.text = "可继续第九十八章·医籍。"
-	elif not GameState.flag("chapter99_done"):
-		_story_hint.text = "可继续第九十九章·十五卷席终。"
-	elif not GameState.flag("chapter100_done"):
-		_story_hint.text = "第十六卷·马市：点「继续主线」或卷十六选第一百章·马厩。"
-	elif not GameState.flag("chapter101_done"):
-		_story_hint.text = "可继续第一百零一章·驯场。"
-	elif not GameState.flag("chapter102_done"):
-		_story_hint.text = "可继续第一百零二章·马印（十六卷中段）。"
-	elif not GameState.flag("chapter103_done"):
-		_story_hint.text = "第十六卷后半：点「继续主线」或卷十六选第一百零三章·马市。"
-	elif not GameState.flag("chapter104_done"):
-		_story_hint.text = "可继续第一百零四章·鞍房。"
-	elif not GameState.flag("chapter105_done"):
-		_story_hint.text = "可继续第一百零五章·十六卷席终。"
-	elif not GameState.flag("chapter106_done"):
-		_story_hint.text = "第十七卷·酒坊：点「继续主线」或卷十七选第一百零六章·曲房。"
-	elif not GameState.flag("chapter107_done"):
-		_story_hint.text = "可继续第一百零七章·糟坊。"
-	elif not GameState.flag("chapter108_done"):
-		_story_hint.text = "可继续第一百零八章·酒印（十七卷中段）。"
-	elif not GameState.flag("chapter109_done"):
-		_story_hint.text = "第十七卷后半：点「继续主线」或卷十七选第一百零九章·开酿。"
-	elif not GameState.flag("chapter110_done"):
-		_story_hint.text = "可继续第一百一十章·排档。"
-	elif not GameState.flag("chapter111_done"):
-		_story_hint.text = "可继续第一百一十一章·十七卷席终。"
-	elif not GameState.flag("chapter112_done"):
-		_story_hint.text = "第十八卷·镖行：点「继续主线」或卷十八选第一百一十二章·镖局。"
-	elif not GameState.flag("chapter113_done"):
-		_story_hint.text = "可继续第一百一十三章·夜营。"
-	elif not GameState.flag("chapter114_done"):
-		_story_hint.text = "可继续第一百一十四章·镖印（十八卷中段）。"
-	elif not GameState.flag("chapter115_done"):
-		_story_hint.text = "第十八卷后半：点「继续主线」或卷十八选第一百一十五章·镖市。"
-	elif not GameState.flag("chapter116_done"):
-		_story_hint.text = "可继续第一百一十六章·驿站。"
-	elif not GameState.flag("chapter117_done"):
-		_story_hint.text = "可继续第一百一十七章·十八卷席终。"
-	elif not GameState.flag("chapter118_done"):
-		_story_hint.text = "第十九卷·渔港：点「继续主线」或卷十九选第一百一十八章·码头。"
-	elif not GameState.flag("chapter119_done"):
-		_story_hint.text = "可继续第一百一十九章·潮汐。"
-	elif not GameState.flag("chapter120_done"):
-		_story_hint.text = "可继续第一百二十章·港印（十九卷中段）。"
-	elif not GameState.flag("chapter121_done"):
-		_story_hint.text = "第十九卷后半：点「继续主线」或卷十九选第一百二十一章·渔市。"
-	elif not GameState.flag("chapter122_done"):
-		_story_hint.text = "可继续第一百二十二章·货栈。"
-	elif not GameState.flag("chapter123_done"):
-		_story_hint.text = "可继续第一百二十三章·十九卷席终。"
-	elif not GameState.flag("chapter124_done"):
-		_story_hint.text = "第二十卷·纸坊：点「继续主线」或卷二十选第一百二十四章·纸坊。"
-	elif not GameState.flag("chapter125_done"):
-		_story_hint.text = "可继续第一百二十五章·抄帘。"
-	elif not GameState.flag("chapter126_done"):
-		_story_hint.text = "可继续第一百二十六章·纸印（二十卷中段）。"
-	elif not GameState.flag("chapter127_done"):
-		_story_hint.text = "第二十卷后半：点「继续主线」或卷二十选第一百二十七章·压榨。"
-	elif not GameState.flag("chapter128_done"):
-		_story_hint.text = "可继续第一百二十八章·案库。"
-	elif not GameState.flag("chapter129_done"):
-		_story_hint.text = "可继续第一百二十九章·二十卷席终。"
-	elif not GameState.flag("chapter130_done"):
-		_story_hint.text = "第二十一卷·铜市：点「继续主线」或卷二十一选第一百三十章·铜炉。"
-	elif not GameState.flag("chapter131_done"):
-		_story_hint.text = "可继续第一百三十一章·砧台。"
-	elif not GameState.flag("chapter132_done"):
-		_story_hint.text = "可继续第一百三十二章·铜印（二十一卷中段）。"
-	elif not GameState.flag("chapter133_done"):
-		_story_hint.text = "第二十一卷后半：点「继续主线」或卷二十一选第一百三十三章·铜市。"
-	elif not GameState.flag("chapter134_done"):
-		_story_hint.text = "可继续第一百三十四章·甲库。"
-	elif not GameState.flag("chapter135_done"):
-		_story_hint.text = "可继续第一百三十五章·二十一卷席终。"
-	elif not GameState.flag("chapter136_done"):
-		_story_hint.text = "第二十二卷·灯市：点「继续主线」或卷二十二选第一百三十六章·灯街。"
-	elif not GameState.flag("chapter137_done"):
-		_story_hint.text = "可继续第一百三十七章·灯棚。"
-	elif not GameState.flag("chapter138_done"):
-		_story_hint.text = "可继续第一百三十八章·灯印（二十二卷中段）。"
-	elif not GameState.flag("chapter139_done"):
-		_story_hint.text = "第二十二卷后半：点「继续主线」或卷二十二选第一百三十九章·灯会。"
-	elif not GameState.flag("chapter140_done"):
-		_story_hint.text = "可继续第一百四十章·灯塔。"
-	elif not GameState.flag("chapter141_done"):
-		_story_hint.text = "可继续第一百四十一章·二十二卷席终。"
-	elif not GameState.flag("chapter142_done"):
-		_story_hint.text = "第二十三卷·粮仓：点「继续主线」或卷二十三选第一百四十二章·粮囤。"
-	elif not GameState.flag("chapter143_done"):
-		_story_hint.text = "可继续第一百四十三章·仓房。"
-	elif not GameState.flag("chapter144_done"):
-		_story_hint.text = "可继续第一百四十四章·粮印（二十三卷中段）。"
-	elif not GameState.flag("chapter145_done"):
-		_story_hint.text = "第二十三卷后半：点「继续主线」或卷二十三选第一百四十五章·开仓。"
-	elif not GameState.flag("chapter146_done"):
-		_story_hint.text = "可继续第一百四十六章·义仓。"
-	elif not GameState.flag("chapter147_done"):
-		_story_hint.text = "可继续第一百四十七章·二十三卷席终。"
-	elif not GameState.flag("chapter148_done"):
-		_story_hint.text = "第二十四卷·雪栈：点「继续主线」或卷二十四选第一百四十八章·雪栈。"
-	elif not GameState.flag("chapter149_done"):
-		_story_hint.text = "可继续第一百四十九章·冰窖。"
-	elif not GameState.flag("chapter150_done"):
-		_story_hint.text = "可继续第一百五十章·雪印（二十四卷中段）。"
-	elif not GameState.flag("chapter151_done"):
-		_story_hint.text = "第二十四卷后半：点「继续主线」或卷二十四选第一百五十一章·雪市。"
-	elif not GameState.flag("chapter152_done"):
-		_story_hint.text = "可继续第一百五十二章·暖驿。"
-	elif not GameState.flag("chapter153_done"):
-		_story_hint.text = "可继续第一百五十三章·二十四卷席终。"
-	elif not GameState.flag("chapter154_done"):
-		_story_hint.text = "第二十五卷·竹海：点「继续主线」或卷二十五选第一百五十四章·竹海。"
-	elif not GameState.flag("chapter155_done"):
-		_story_hint.text = "可继续第一百五十五章·笋市。"
-	elif not GameState.flag("chapter156_done"):
-		_story_hint.text = "可继续第一百五十六章·竹印（二十五卷中段）。"
-	elif not GameState.flag("chapter157_done"):
-		_story_hint.text = "第二十五卷后半：点「继续主线」或卷二十五选第一百五十七章·竹市。"
-	elif not GameState.flag("chapter158_done"):
-		_story_hint.text = "可继续第一百五十八章·篁祠。"
-	elif not GameState.flag("chapter159_done"):
-		_story_hint.text = "可继续第一百五十九章·二十五卷席终。"
-	elif not GameState.flag("chapter160_done"):
-		_story_hint.text = "第二十六卷·驿道：点「继续主线」或卷二十六选第一百六十章·驿站。"
-	elif not GameState.flag("chapter161_done"):
-		_story_hint.text = "可继续第一百六十一章·急递。"
-	elif not GameState.flag("chapter162_done"):
-		_story_hint.text = "可继续第一百六十二章·驿印（二十六卷中段）。"
-	elif not GameState.flag("chapter163_done"):
-		_story_hint.text = "第二十六卷后半：点「继续主线」或卷二十六选第一百六十三章·驿市。"
-	elif not GameState.flag("chapter164_done"):
-		_story_hint.text = "可继续第一百六十四章·夜驿。"
-	elif not GameState.flag("chapter165_done"):
-		_story_hint.text = "可继续第一百六十五章·二十六卷席终。"
-	elif not GameState.flag("chapter166_done"):
-		_story_hint.text = "第二十七卷·钟鼓：点「继续主线」或卷二十七选第一百六十六章·钟楼。"
-	elif not GameState.flag("chapter167_done"):
-		_story_hint.text = "可继续第一百六十七章·守钟。"
-	elif not GameState.flag("chapter168_done"):
-		_story_hint.text = "可继续第一百六十八章·钟印（二十七卷中段）。"
-	elif not GameState.flag("chapter169_done"):
-		_story_hint.text = "第二十七卷后半：点「继续主线」或卷二十七选第一百六十九章·钟市。"
-	elif not GameState.flag("chapter170_done"):
-		_story_hint.text = "可继续第一百七十章·撞钟。"
-	elif not GameState.flag("chapter171_done"):
-		_story_hint.text = "可继续第一百七十一章·二十七卷席终。"
-	elif not GameState.flag("chapter172_done"):
-		_story_hint.text = "第二十八卷·雨巷：点「继续主线」或卷二十八选第一百七十二章·雨巷。"
-	elif not GameState.flag("chapter173_done"):
-		_story_hint.text = "可继续第一百七十三章·伞棚。"
-	elif not GameState.flag("chapter174_done"):
-		_story_hint.text = "可继续第一百七十四章·雨印（二十八卷中段）。"
-	elif not GameState.flag("chapter175_done"):
-		_story_hint.text = "第二十八卷后半：点「继续主线」或卷二十八选第一百七十五章·雨市。"
-	elif not GameState.flag("chapter176_done"):
-		_story_hint.text = "可继续第一百七十六章·避雨。"
-	elif not GameState.flag("chapter177_done"):
-		_story_hint.text = "可继续第一百七十七章·二十八卷席终。"
-	elif not GameState.flag("chapter178_done"):
-		_story_hint.text = "第二十九卷·砚市：点「继续主线」或卷二十九选第一百七十八章·砚坑。"
-	elif not GameState.flag("chapter179_done"):
-		_story_hint.text = "可继续第一百七十九章·案台。"
-	elif not GameState.flag("chapter180_done"):
-		_story_hint.text = "可继续第一百八十章·砚印（二十九卷中段）。"
-	elif not GameState.flag("chapter181_done"):
-		_story_hint.text = "第二十九卷后半：点「继续主线」或卷二十九选第一百八十一章·砚市。"
-	elif not GameState.flag("chapter182_done"):
-		_story_hint.text = "可继续第一百八十二章·捺印。"
-	elif not GameState.flag("chapter183_done"):
-		_story_hint.text = "可继续第一百八十三章·二十九卷席终。"
-	elif not GameState.flag("chapter184_done"):
-		_story_hint.text = "第三十卷·蜂场：点「继续主线」或卷三十选第一百八十四章·蜂巢。"
-	elif not GameState.flag("chapter185_done"):
-		_story_hint.text = "可继续第一百八十五章·烟熏。"
-	elif not GameState.flag("chapter186_done"):
-		_story_hint.text = "可继续第一百八十六章·蜂印（三十卷中段）。"
-	elif not GameState.flag("chapter187_done"):
-		_story_hint.text = "第三十卷后半：点「继续主线」或卷三十选第一百八十七章·蜜市。"
-	elif not GameState.flag("chapter188_done"):
-		_story_hint.text = "可继续第一百八十八章·蜂后。"
-	elif not GameState.flag("chapter189_done"):
-		_story_hint.text = "可继续第一百八十九章·三十卷席终。"
-	elif not GameState.flag("chapter190_done"):
-		_story_hint.text = "第三十一卷·笛楼：点「继续主线」或卷三十一选第一百九十章·笛楼。"
-	elif not GameState.flag("chapter191_done"):
-		_story_hint.text = "可继续第一百九十一章·回音。"
-	elif not GameState.flag("chapter192_done"):
-		_story_hint.text = "可继续第一百九十二章·笛印（三十一卷中段）。"
-	elif not GameState.flag("chapter193_done"):
-		_story_hint.text = "第三十一卷后半：点「继续主线」或卷三十一选第一百九十三章·笛市。"
-	elif not GameState.flag("chapter194_done"):
-		_story_hint.text = "可继续第一百九十四章·独奏。"
-	elif not GameState.flag("chapter195_done"):
-		_story_hint.text = "可继续第一百九十五章·三十一卷席终。"
-	elif not GameState.flag("chapter196_done"):
-		_story_hint.text = "第三十二卷·影戏：点「继续主线」或卷三十二选第一百九十六章·影幕。"
-	elif not GameState.flag("chapter197_done"):
-		_story_hint.text = "可继续第一百九十七章·灯影。"
-	elif not GameState.flag("chapter198_done"):
-		_story_hint.text = "可继续第一百九十八章·影印（三十二卷中段）。"
-	elif not GameState.flag("chapter199_done"):
-		_story_hint.text = "第三十二卷后半：点「继续主线」或卷三十二选第一百九十九章·影市。"
-	elif not GameState.flag("chapter200_done"):
-		_story_hint.text = "可继续第二百章·独影。"
-	elif not GameState.flag("chapter201_done"):
-		_story_hint.text = "可继续第二百零一章·三十二卷席终。"
-	elif not GameState.flag("chapter202_done"):
-		_story_hint.text = "第三十三卷·盐滩：点「继续主线」或卷三十三选第二百零二章·盐滩。"
-	elif not GameState.flag("chapter203_done"):
-		_story_hint.text = "可继续第二百零三章·盐堆。"
-	elif not GameState.flag("chapter204_done"):
-		_story_hint.text = "可继续第二百零四章·盐印（三十三卷中段）。"
-	elif not GameState.flag("chapter205_done"):
-		_story_hint.text = "第三十三卷后半：点「继续主线」或卷三十三选第二百零五章·盐市。"
-	elif not GameState.flag("chapter206_done"):
-		_story_hint.text = "可继续第二百零六章·独晒。"
-	elif not GameState.flag("chapter207_done"):
-		_story_hint.text = "可继续第二百零七章·三十三卷席终。"
-	elif not GameState.flag("chapter208_done"):
-		_story_hint.text = "第三十四卷·染坊：点「继续主线」或卷三十四选第二百零八章·染坊。"
-	elif not GameState.flag("chapter209_done"):
-		_story_hint.text = "可继续第二百零九章·晾竿。"
-	elif not GameState.flag("chapter210_done"):
-		_story_hint.text = "可继续第二百一十章·染印（三十四卷中段）。"
-	elif not GameState.flag("chapter211_done"):
-		_story_hint.text = "第三十四卷后半：点「继续主线」或卷三十四选第二百一十一章·色市。"
-	elif not GameState.flag("chapter212_done"):
-		_story_hint.text = "可继续第二百一十二章·独染。"
-	elif not GameState.flag("chapter213_done"):
-		_story_hint.text = "可继续第二百一十三章·三十四卷席终。"
-	elif not GameState.flag("chapter214_done"):
-		_story_hint.text = "第三十五卷·鼓楼：点「继续主线」或卷三十五选第二百一十四章·鼓楼。"
-	elif not GameState.flag("chapter215_done"):
-		_story_hint.text = "可继续第二百一十五章·擂台。"
-	elif not GameState.flag("chapter216_done"):
-		_story_hint.text = "可继续第二百一十六章·鼓印（三十五卷中段）。"
-	elif not GameState.flag("chapter217_done"):
-		_story_hint.text = "第三十五卷后半：点「继续主线」或卷三十五选第二百一十七章·鼓市。"
-	elif not GameState.flag("chapter218_done"):
-		_story_hint.text = "可继续第二百一十八章·独擂。"
-	elif not GameState.flag("chapter219_done"):
-		_story_hint.text = "可继续第二百一十九章·三十五卷席终。"
-	elif not GameState.flag("chapter220_done"):
-		_story_hint.text = "第三十六卷·香市：点「继续主线」或卷三十六选第二百二十章·香市。"
-	elif not GameState.flag("chapter221_done"):
-		_story_hint.text = "可继续第二百二十一章·烟径。"
-	elif not GameState.flag("chapter222_done"):
-		_story_hint.text = "可继续第二百二十二章·香印（三十六卷中段）。"
-	elif not GameState.flag("chapter223_done"):
-		_story_hint.text = "第三十六卷后半：点「继续主线」或卷三十六选第二百二十三章·香摊。"
-	elif not GameState.flag("chapter224_done"):
-		_story_hint.text = "可继续第二百二十四章·独香。"
-	elif not GameState.flag("chapter225_done"):
-		_story_hint.text = "可继续第二百二十五章·三十六卷席终。"
-	elif not GameState.flag("chapter226_done"):
-		_story_hint.text = "第三十七卷·潮汐：点「继续主线」或卷三十七选第二百二十六章·潮滩。"
-	elif not GameState.flag("chapter227_done"):
-		_story_hint.text = "可继续第二百二十七章·礁脉。"
-	elif not GameState.flag("chapter228_done"):
-		_story_hint.text = "可继续第二百二十八章·潮印（三十七卷中段）。"
-	elif not GameState.flag("chapter229_done"):
-		_story_hint.text = "第三十七卷后半：点「继续主线」或卷三十七选第二百二十九章·潮市。"
-	elif not GameState.flag("chapter230_done"):
-		_story_hint.text = "可继续第二百三十章·独潮。"
-	elif not GameState.flag("chapter231_done"):
-		_story_hint.text = "可继续第二百三十一章·三十七卷席终。"
-	elif not GameState.flag("chapter232_done"):
-		_story_hint.text = "第三十八卷·瓷市：点「继续主线」或卷三十八选第二百三十二章·瓷市。"
-	elif not GameState.flag("chapter233_done"):
-		_story_hint.text = "可继续第二百三十三章·釉池。"
-	elif not GameState.flag("chapter234_done"):
-		_story_hint.text = "可继续第二百三十四章·瓷印（三十八卷中段）。"
-	elif GameState.flag("volume38_mid_done"):
+	var lines := _story_hint_lines()
+	for i in lines.size():
+		if _chapter_cleared(i):
+			continue
+		var line: String = lines[i]
+		if i == 0:
+			_story_hint.text = line % GameState.story.beat(0)
+		else:
+			_story_hint.text = line
+		return
+	if GameState.story.flags.get("volume38_mid_done", false):
 		_story_hint.text = "三十八卷中段已执。可继续后半或经营。"
 	elif GameState.flag("volume37_done"):
 		_story_hint.text = "三十七卷已执。可继续第三十八卷或经营。"
@@ -1000,244 +590,483 @@ func _update_story_hint() -> void:
 		_story_hint.text = "主线暂缓。敌宅交涉、授旗分支、战技与传代皆可。"
 
 
+func _story_hint_lines() -> Array:
+	return [
+		"第零章进行中：节拍 %s —— 点「第零章节拍」继续剧情",
+		"第零章已完成。可点「第一章·陆桥」推进新地图战役；亦可自由经营。",
+		"第一章已完成。可点「第二章·姓氏」继续主线。",
+		"可点「第三章·铁祷」学习战技与转职深造。",
+		"可点「第四章·百年」挑战断字关。",
+		"可点「第五章·烽烟」开启王朝级战役；先升战技树二阶。",
+		"可点「第六章·托孤」签署托孤之约。",
+		"可点「第七章·子嗣」打响正名战。",
+		"可点「第八章·港灯」签署海商盟约。",
+		"可点「第九章·商路」夺回辎重。",
+		"可点「第十章·回响」赴盟主宴。",
+		"可点「第十一章·门阙」验旗。",
+		"可点「第十二章·余波」应对朔影家夜袭。",
+		"可点「第十三章·嗣位」完成对决。",
+		"可点「第十四章·并席」共持火把。",
+		"可点「第十五章·席散」完成第一卷终章。",
+		"第二卷开启：可点「第十六章·海草」。",
+		"可点「第十七章·盐河」重开盐路。",
+		"可点「第十八章·门阙」写入二卷可入。",
+		"第二卷后半：可点「第十九章·远岸」。",
+		"可点「第二十章·潮墙」落两印。",
+		"可点「第二十一章·席终」完成第二卷。",
+		"第三卷开启：可点「第二十二章·北风」。",
+		"可点「第二十三章·霜桥」落霜印。",
+		"可点「第二十四章·钤印」完成三卷中段。",
+		"第三卷后半：可点「第二十五章·朔原」。",
+		"可点「第二十六章·冠雪」落两印。",
+		"可点「第二十七章·席终」完成第三卷。",
+		"第四卷开启：点「继续主线」或章节下拉选第二十八章·南泽。",
+		"可继续第二十九章·金陌（章节下拉）。",
+		"可继续第三十章·钤印（四卷中段）。",
+		"第四卷后半：第三十一章·铁峡。",
+		"可继续第三十二章·星津。",
+		"可点继续主线赴第三十三章·四卷席终。",
+		"第五卷开启：点「继续主线」选第三十四章·破晓。",
+		"可继续第三十五章·晚钟。",
+		"可继续第三十六章·钤印（五卷中段）。",
+		"第五卷后半：点「继续主线」选第三十七章·长川。",
+		"可继续第三十八章·终阙。",
+		"可继续第三十九章·五卷席终。",
+		"第六卷开启：点「继续主线」选第四十章·雾原。",
+		"可继续第四十一章·石冢。",
+		"可继续第四十二章·钤印（六卷中段）。",
+		"第六卷后半：点「继续主线」或卷六选第四十三章·黑潮。",
+		"可继续第四十四章·曜塔。",
+		"可继续第四十五章·六卷席终。",
+		"第七卷开启：点「继续主线」或卷七选第四十六章·余烬。",
+		"可继续第四十七章·冠火。",
+		"可继续第四十八章·钤印（七卷中段）。",
+		"第七卷后半：点「继续主线」或卷七选第四十九章·烬原。",
+		"可继续第五十章·百旗。",
+		"可继续第五十一章·七卷席终。",
+		"第八卷开启：点「继续主线」或卷八选第五十二章·破晓。",
+		"可继续第五十三章·镜湖。",
+		"可继续第五十四章·钤印（八卷中段）。",
+		"第八卷后半：点「继续主线」或卷八选第五十五章·朔风。",
+		"可继续第五十六章·曜廷。",
+		"可继续第五十七章·八卷席终。",
+		"第九卷开启：点「继续主线」或卷九选第五十八章·余烬港。",
+		"可继续第五十九章·霜驿。",
+		"可继续第六十章·九卷钤印（九卷中段）。",
+		"第九卷后半：点「继续主线」或卷九选第六十一章·烬原。",
+		"可继续第六十二章·曜阙。",
+		"可继续第六十三章·九卷席终。",
+		"第十卷·井市：点「继续主线」或卷十选第六十四章·井市。",
+		"可继续第六十五章·铜铃。",
+		"可继续第六十六章·井印（十卷中段）。",
+		"第十卷后半：点「继续主线」或卷十选第六十七章·盐船。",
+		"可继续第六十八章·纸坊。",
+		"可继续第六十九章·十卷席终。",
+		"第十一卷·窑火：点「继续主线」或卷十一选第七十章·窑口。",
+		"可继续第七十一章·釉河。",
+		"可继续第七十二章·窑印（十一卷中段）。",
+		"第十一卷后半：点「继续主线」或选第七十三章·烟囱。",
+		"可继续第七十四章·火塘。",
+		"可继续第七十五章·十一卷席终。",
+		"第十二卷·梨园：点「继续主线」或卷十二选第七十六章·台口。",
+		"可继续第七十七章·检场。",
+		"可继续第七十八章·戏印（十二卷中段）。",
+		"第十二卷后半：点「继续主线」或卷十二选第七十九章·后台。",
+		"可继续第八十章·灯架。",
+		"可继续第八十一章·十二卷席终。",
+		"第十三卷·蚕桑：点「继续主线」或卷十三选第八十二章·桑陌。",
+		"可继续第八十三章·缫丝。",
+		"可继续第八十四章·丝印（十三卷中段）。",
+		"第十三卷后半：点「继续主线」或卷十三选第八十五章·烘茧。",
+		"可继续第八十六章·经轴。",
+		"可继续第八十七章·十三卷席终。",
+		"第十四卷·茶岭：点「继续主线」或卷十四选第八十八章·茶梯。",
+		"可继续第八十九章·蒸青。",
+		"可继续第九十章·茶印（十四卷中段）。",
+		"第十四卷后半：点「继续主线」或卷十四选第九十一章·晾青。",
+		"可继续第九十二章·茶引。",
+		"可继续第九十三章·十四卷席终。",
+		"第十五卷·药市：点「继续主线」或卷十五选第九十四章·药圃。",
+		"可继续第九十五章·医馆。",
+		"可继续第九十六章·方印（十五卷中段）。",
+		"第十五卷后半：点「继续主线」或卷十五选第九十七章·煎药。",
+		"可继续第九十八章·医籍。",
+		"可继续第九十九章·十五卷席终。",
+		"第十六卷·马市：点「继续主线」或卷十六选第一百章·马厩。",
+		"可继续第一百零一章·驯场。",
+		"可继续第一百零二章·马印（十六卷中段）。",
+		"第十六卷后半：点「继续主线」或卷十六选第一百零三章·马市。",
+		"可继续第一百零四章·鞍房。",
+		"可继续第一百零五章·十六卷席终。",
+		"第十七卷·酒坊：点「继续主线」或卷十七选第一百零六章·曲房。",
+		"可继续第一百零七章·糟坊。",
+		"可继续第一百零八章·酒印（十七卷中段）。",
+		"第十七卷后半：点「继续主线」或卷十七选第一百零九章·开酿。",
+		"可继续第一百一十章·排档。",
+		"可继续第一百一十一章·十七卷席终。",
+		"第十八卷·镖行：点「继续主线」或卷十八选第一百一十二章·镖局。",
+		"可继续第一百一十三章·夜营。",
+		"可继续第一百一十四章·镖印（十八卷中段）。",
+		"第十八卷后半：点「继续主线」或卷十八选第一百一十五章·镖市。",
+		"可继续第一百一十六章·驿站。",
+		"可继续第一百一十七章·十八卷席终。",
+		"第十九卷·渔港：点「继续主线」或卷十九选第一百一十八章·码头。",
+		"可继续第一百一十九章·潮汐。",
+		"可继续第一百二十章·港印（十九卷中段）。",
+		"第十九卷后半：点「继续主线」或卷十九选第一百二十一章·渔市。",
+		"可继续第一百二十二章·货栈。",
+		"可继续第一百二十三章·十九卷席终。",
+		"第二十卷·纸坊：点「继续主线」或卷二十选第一百二十四章·纸坊。",
+		"可继续第一百二十五章·抄帘。",
+		"可继续第一百二十六章·纸印（二十卷中段）。",
+		"第二十卷后半：点「继续主线」或卷二十选第一百二十七章·压榨。",
+		"可继续第一百二十八章·案库。",
+		"可继续第一百二十九章·二十卷席终。",
+		"第二十一卷·铜市：点「继续主线」或卷二十一选第一百三十章·铜炉。",
+		"可继续第一百三十一章·砧台。",
+		"可继续第一百三十二章·铜印（二十一卷中段）。",
+		"第二十一卷后半：点「继续主线」或卷二十一选第一百三十三章·铜市。",
+		"可继续第一百三十四章·甲库。",
+		"可继续第一百三十五章·二十一卷席终。",
+		"第二十二卷·灯市：点「继续主线」或卷二十二选第一百三十六章·灯街。",
+		"可继续第一百三十七章·灯棚。",
+		"可继续第一百三十八章·灯印（二十二卷中段）。",
+		"第二十二卷后半：点「继续主线」或卷二十二选第一百三十九章·灯会。",
+		"可继续第一百四十章·灯塔。",
+		"可继续第一百四十一章·二十二卷席终。",
+		"第二十三卷·粮仓：点「继续主线」或卷二十三选第一百四十二章·粮囤。",
+		"可继续第一百四十三章·仓房。",
+		"可继续第一百四十四章·粮印（二十三卷中段）。",
+		"第二十三卷后半：点「继续主线」或卷二十三选第一百四十五章·开仓。",
+		"可继续第一百四十六章·义仓。",
+		"可继续第一百四十七章·二十三卷席终。",
+		"第二十四卷·雪栈：点「继续主线」或卷二十四选第一百四十八章·雪栈。",
+		"可继续第一百四十九章·冰窖。",
+		"可继续第一百五十章·雪印（二十四卷中段）。",
+		"第二十四卷后半：点「继续主线」或卷二十四选第一百五十一章·雪市。",
+		"可继续第一百五十二章·暖驿。",
+		"可继续第一百五十三章·二十四卷席终。",
+		"第二十五卷·竹海：点「继续主线」或卷二十五选第一百五十四章·竹海。",
+		"可继续第一百五十五章·笋市。",
+		"可继续第一百五十六章·竹印（二十五卷中段）。",
+		"第二十五卷后半：点「继续主线」或卷二十五选第一百五十七章·竹市。",
+		"可继续第一百五十八章·篁祠。",
+		"可继续第一百五十九章·二十五卷席终。",
+		"第二十六卷·驿道：点「继续主线」或卷二十六选第一百六十章·驿站。",
+		"可继续第一百六十一章·急递。",
+		"可继续第一百六十二章·驿印（二十六卷中段）。",
+		"第二十六卷后半：点「继续主线」或卷二十六选第一百六十三章·驿市。",
+		"可继续第一百六十四章·夜驿。",
+		"可继续第一百六十五章·二十六卷席终。",
+		"第二十七卷·钟鼓：点「继续主线」或卷二十七选第一百六十六章·钟楼。",
+		"可继续第一百六十七章·守钟。",
+		"可继续第一百六十八章·钟印（二十七卷中段）。",
+		"第二十七卷后半：点「继续主线」或卷二十七选第一百六十九章·钟市。",
+		"可继续第一百七十章·撞钟。",
+		"可继续第一百七十一章·二十七卷席终。",
+		"第二十八卷·雨巷：点「继续主线」或卷二十八选第一百七十二章·雨巷。",
+		"可继续第一百七十三章·伞棚。",
+		"可继续第一百七十四章·雨印（二十八卷中段）。",
+		"第二十八卷后半：点「继续主线」或卷二十八选第一百七十五章·雨市。",
+		"可继续第一百七十六章·避雨。",
+		"可继续第一百七十七章·二十八卷席终。",
+		"第二十九卷·砚市：点「继续主线」或卷二十九选第一百七十八章·砚坑。",
+		"可继续第一百七十九章·案台。",
+		"可继续第一百八十章·砚印（二十九卷中段）。",
+		"第二十九卷后半：点「继续主线」或卷二十九选第一百八十一章·砚市。",
+		"可继续第一百八十二章·捺印。",
+		"可继续第一百八十三章·二十九卷席终。",
+		"第三十卷·蜂场：点「继续主线」或卷三十选第一百八十四章·蜂巢。",
+		"可继续第一百八十五章·烟熏。",
+		"可继续第一百八十六章·蜂印（三十卷中段）。",
+		"第三十卷后半：点「继续主线」或卷三十选第一百八十七章·蜜市。",
+		"可继续第一百八十八章·蜂后。",
+		"可继续第一百八十九章·三十卷席终。",
+		"第三十一卷·笛楼：点「继续主线」或卷三十一选第一百九十章·笛楼。",
+		"可继续第一百九十一章·回音。",
+		"可继续第一百九十二章·笛印（三十一卷中段）。",
+		"第三十一卷后半：点「继续主线」或卷三十一选第一百九十三章·笛市。",
+		"可继续第一百九十四章·独奏。",
+		"可继续第一百九十五章·三十一卷席终。",
+		"第三十二卷·影戏：点「继续主线」或卷三十二选第一百九十六章·影幕。",
+		"可继续第一百九十七章·灯影。",
+		"可继续第一百九十八章·影印（三十二卷中段）。",
+		"第三十二卷后半：点「继续主线」或卷三十二选第一百九十九章·影市。",
+		"可继续第二百章·独影。",
+		"可继续第二百零一章·三十二卷席终。",
+		"第三十三卷·盐滩：点「继续主线」或卷三十三选第二百零二章·盐滩。",
+		"可继续第二百零三章·盐堆。",
+		"可继续第二百零四章·盐印（三十三卷中段）。",
+		"第三十三卷后半：点「继续主线」或卷三十三选第二百零五章·盐市。",
+		"可继续第二百零六章·独晒。",
+		"可继续第二百零七章·三十三卷席终。",
+		"第三十四卷·染坊：点「继续主线」或卷三十四选第二百零八章·染坊。",
+		"可继续第二百零九章·晾竿。",
+		"可继续第二百一十章·染印（三十四卷中段）。",
+		"第三十四卷后半：点「继续主线」或卷三十四选第二百一十一章·色市。",
+		"可继续第二百一十二章·独染。",
+		"可继续第二百一十三章·三十四卷席终。",
+		"第三十五卷·鼓楼：点「继续主线」或卷三十五选第二百一十四章·鼓楼。",
+		"可继续第二百一十五章·擂台。",
+		"可继续第二百一十六章·鼓印（三十五卷中段）。",
+		"第三十五卷后半：点「继续主线」或卷三十五选第二百一十七章·鼓市。",
+		"可继续第二百一十八章·独擂。",
+		"可继续第二百一十九章·三十五卷席终。",
+		"第三十六卷·香市：点「继续主线」或卷三十六选第二百二十章·香市。",
+		"可继续第二百二十一章·烟径。",
+		"可继续第二百二十二章·香印（三十六卷中段）。",
+		"第三十六卷后半：点「继续主线」或卷三十六选第二百二十三章·香摊。",
+		"可继续第二百二十四章·独香。",
+		"可继续第二百二十五章·三十六卷席终。",
+		"第三十七卷·潮汐：点「继续主线」或卷三十七选第二百二十六章·潮滩。",
+		"可继续第二百二十七章·礁脉。",
+		"可继续第二百二十八章·潮印（三十七卷中段）。",
+		"第三十七卷后半：点「继续主线」或卷三十七选第二百二十九章·潮市。",
+		"可继续第二百三十章·独潮。",
+		"可继续第二百三十一章·三十七卷席终。",
+		"第三十八卷·瓷市：点「继续主线」或卷三十八选第二百三十二章·瓷市。",
+		"可继续第二百三十三章·釉池。",
+		"可继续第二百三十四章·瓷印（三十八卷中段）。",
+	]
+
 func _chapter_catalog() -> Array:
 	# [label, scene, unlock_flag, volume_index]
 	return [
-		["第零章", "res://scenes/story/chapter0.tscn", "", 0],
-		["第一章·陆桥", "res://scenes/story/chapter1.tscn", "chapter0_done", 1],
-		["第二章·姓氏", "res://scenes/story/chapter2.tscn", "chapter1_done", 1],
-		["第三章·铁祷", "res://scenes/story/chapter3.tscn", "chapter2_done", 1],
-		["第四章·百年", "res://scenes/story/chapter4.tscn", "chapter3_done", 1],
-		["第五章·烽烟", "res://scenes/story/chapter5.tscn", "chapter4_done", 1],
-		["第六章·托孤", "res://scenes/story/chapter6.tscn", "chapter5_done", 1],
-		["第七章·子嗣", "res://scenes/story/chapter7.tscn", "chapter6_done", 1],
-		["第八章·港灯", "res://scenes/story/chapter8.tscn", "chapter7_done", 1],
-		["第九章·商路", "res://scenes/story/chapter9.tscn", "chapter8_done", 1],
-		["第十章·回响", "res://scenes/story/chapter10.tscn", "chapter9_done", 1],
-		["第十一章·门阙", "res://scenes/story/chapter11.tscn", "chapter10_done", 1],
-		["第十二章·余波", "res://scenes/story/chapter12.tscn", "chapter11_done", 1],
-		["第十三章·嗣位", "res://scenes/story/chapter13.tscn", "chapter12_done", 1],
-		["第十四章·并席", "res://scenes/story/chapter14.tscn", "chapter13_done", 1],
-		["第十五章·席散", "res://scenes/story/chapter15.tscn", "chapter14_done", 1],
-		["第十六章·海草", "res://scenes/story/chapter16.tscn", "chapter15_done", 2],
-		["第十七章·盐河", "res://scenes/story/chapter17.tscn", "chapter16_done", 2],
-		["第十八章·门阙", "res://scenes/story/chapter18.tscn", "chapter17_done", 2],
-		["第十九章·远岸", "res://scenes/story/chapter19.tscn", "chapter18_done", 2],
-		["第二十章·潮墙", "res://scenes/story/chapter20.tscn", "chapter19_done", 2],
-		["第二十一章·席终", "res://scenes/story/chapter21.tscn", "chapter20_done", 2],
-		["第二十二章·北风", "res://scenes/story/chapter22.tscn", "chapter21_done", 3],
-		["第二十三章·霜桥", "res://scenes/story/chapter23.tscn", "chapter22_done", 3],
-		["第二十四章·钤印", "res://scenes/story/chapter24.tscn", "chapter23_done", 3],
-		["第二十五章·朔原", "res://scenes/story/chapter25.tscn", "chapter24_done", 3],
-		["第二十六章·冠雪", "res://scenes/story/chapter26.tscn", "chapter25_done", 3],
-		["第二十七章·席终", "res://scenes/story/chapter27.tscn", "chapter26_done", 3],
-		["第二十八章·南泽", "res://scenes/story/chapter28.tscn", "chapter27_done", 4],
-		["第二十九章·金陌", "res://scenes/story/chapter29.tscn", "chapter28_done", 4],
-		["第三十章·钤印", "res://scenes/story/chapter30.tscn", "chapter29_done", 4],
-		["第三十一章·铁峡", "res://scenes/story/chapter31.tscn", "chapter30_done", 4],
-		["第三十二章·星津", "res://scenes/story/chapter32.tscn", "chapter31_done", 4],
-		["第三十三章·席终", "res://scenes/story/chapter33.tscn", "chapter32_done", 4],
-		["第三十四章·破晓", "res://scenes/story/chapter34.tscn", "chapter33_done", 5],
-		["第三十五章·晚钟", "res://scenes/story/chapter35.tscn", "chapter34_done", 5],
-		["第三十六章·钤印", "res://scenes/story/chapter36.tscn", "chapter35_done", 5],
-		["第三十七章·长川", "res://scenes/story/chapter37.tscn", "chapter36_done", 5],
-		["第三十八章·终阙", "res://scenes/story/chapter38.tscn", "chapter37_done", 5],
-		["第三十九章·席终", "res://scenes/story/chapter39.tscn", "chapter38_done", 5],
-		["第四十章·雾原", "res://scenes/story/chapter40.tscn", "chapter39_done", 6],
-		["第四十一章·石冢", "res://scenes/story/chapter41.tscn", "chapter40_done", 6],
-		["第四十二章·钤印", "res://scenes/story/chapter42.tscn", "chapter41_done", 6],
-		["第四十三章·黑潮", "res://scenes/story/chapter43.tscn", "chapter42_done", 6],
-		["第四十四章·曜塔", "res://scenes/story/chapter44.tscn", "chapter43_done", 6],
-		["第四十五章·席终", "res://scenes/story/chapter45.tscn", "chapter44_done", 6],
-		["第四十六章·余烬", "res://scenes/story/chapter46.tscn", "chapter45_done", 7],
-		["第四十七章·冠火", "res://scenes/story/chapter47.tscn", "chapter46_done", 7],
-		["第四十八章·钤印", "res://scenes/story/chapter48.tscn", "chapter47_done", 7],
-		["第四十九章·烬原", "res://scenes/story/chapter49.tscn", "chapter48_done", 7],
-		["第五十章·百旗", "res://scenes/story/chapter50.tscn", "chapter49_done", 7],
-		["第五十一章·席终", "res://scenes/story/chapter51.tscn", "chapter50_done", 7],
-		["第五十二章·破晓", "res://scenes/story/chapter52.tscn", "chapter51_done", 8],
-		["第五十三章·镜湖", "res://scenes/story/chapter53.tscn", "chapter52_done", 8],
-		["第五十四章·钤印", "res://scenes/story/chapter54.tscn", "chapter53_done", 8],
-		["第五十五章·朔风", "res://scenes/story/chapter55.tscn", "chapter54_done", 8],
-		["第五十六章·曜廷", "res://scenes/story/chapter56.tscn", "chapter55_done", 8],
-		["第五十七章·席终", "res://scenes/story/chapter57.tscn", "chapter56_done", 8],
-		["第五十八章·余烬港", "res://scenes/story/chapter58.tscn", "chapter57_done", 9],
-		["第五十九章·霜驿", "res://scenes/story/chapter59.tscn", "chapter58_done", 9],
-		["第六十章·钤印", "res://scenes/story/chapter60.tscn", "chapter59_done", 9],
-		["第六十一章·烬原", "res://scenes/story/chapter61.tscn", "chapter60_done", 9],
-		["第六十二章·曜阙", "res://scenes/story/chapter62.tscn", "chapter61_done", 9],
-		["第六十三章·席终", "res://scenes/story/chapter63.tscn", "chapter62_done", 9],
-		["第六十四章·井市", "res://scenes/story/chapter64.tscn", "chapter63_done", 10],
-		["第六十五章·铜铃", "res://scenes/story/chapter65.tscn", "chapter64_done", 10],
-		["第六十六章·井印", "res://scenes/story/chapter66.tscn", "chapter65_done", 10],
-		["第六十七章·盐船", "res://scenes/story/chapter67.tscn", "chapter66_done", 10],
-		["第六十八章·纸坊", "res://scenes/story/chapter68.tscn", "chapter67_done", 10],
-		["第六十九章·席终", "res://scenes/story/chapter69.tscn", "chapter68_done", 10],
-		["第七十章·窑口", "res://scenes/story/chapter70.tscn", "chapter69_done", 11],
-		["第七十一章·釉河", "res://scenes/story/chapter71.tscn", "chapter70_done", 11],
-		["第七十二章·窑印", "res://scenes/story/chapter72.tscn", "chapter71_done", 11],
-		["第七十三章·烟囱", "res://scenes/story/chapter73.tscn", "chapter72_done", 11],
-		["第七十四章·火塘", "res://scenes/story/chapter74.tscn", "chapter73_done", 11],
-		["第七十五章·席终", "res://scenes/story/chapter75.tscn", "chapter74_done", 11],
-		["第七十六章·台口", "res://scenes/story/chapter76.tscn", "chapter75_done", 12],
-		["第七十七章·检场", "res://scenes/story/chapter77.tscn", "chapter76_done", 12],
-		["第七十八章·戏印", "res://scenes/story/chapter78.tscn", "chapter77_done", 12],
-		["第七十九章·后台", "res://scenes/story/chapter79.tscn", "chapter78_done", 12],
-		["第八十章·灯架", "res://scenes/story/chapter80.tscn", "chapter79_done", 12],
-		["第八十一章·席终", "res://scenes/story/chapter81.tscn", "chapter80_done", 12],
-		["第八十二章·桑陌", "res://scenes/story/chapter82.tscn", "chapter81_done", 13],
-		["第八十三章·缫丝", "res://scenes/story/chapter83.tscn", "chapter82_done", 13],
-		["第八十四章·丝印", "res://scenes/story/chapter84.tscn", "chapter83_done", 13],
-		["第八十五章·烘茧", "res://scenes/story/chapter85.tscn", "chapter84_done", 13],
-		["第八十六章·经轴", "res://scenes/story/chapter86.tscn", "chapter85_done", 13],
-		["第八十七章·席终", "res://scenes/story/chapter87.tscn", "chapter86_done", 13],
-		["第八十八章·茶梯", "res://scenes/story/chapter88.tscn", "chapter87_done", 14],
-		["第八十九章·蒸青", "res://scenes/story/chapter89.tscn", "chapter88_done", 14],
-		["第九十章·茶印", "res://scenes/story/chapter90.tscn", "chapter89_done", 14],
-		["第九十一章·晾青", "res://scenes/story/chapter91.tscn", "chapter90_done", 14],
-		["第九十二章·茶引", "res://scenes/story/chapter92.tscn", "chapter91_done", 14],
-		["第九十三章·席终", "res://scenes/story/chapter93.tscn", "chapter92_done", 14],
-		["第九十四章·药圃", "res://scenes/story/chapter94.tscn", "chapter93_done", 15],
-		["第九十五章·医馆", "res://scenes/story/chapter95.tscn", "chapter94_done", 15],
-		["第九十六章·方印", "res://scenes/story/chapter96.tscn", "chapter95_done", 15],
-		["第九十七章·煎药", "res://scenes/story/chapter97.tscn", "chapter96_done", 15],
-		["第九十八章·医籍", "res://scenes/story/chapter98.tscn", "chapter97_done", 15],
-		["第九十九章·席终", "res://scenes/story/chapter99.tscn", "chapter98_done", 15],
-		["第一百章·马厩", "res://scenes/story/chapter100.tscn", "chapter99_done", 16],
-		["第一百零一章·驯场", "res://scenes/story/chapter101.tscn", "chapter100_done", 16],
-		["第一百零二章·马印", "res://scenes/story/chapter102.tscn", "chapter101_done", 16],
-		["第一百零三章·马市", "res://scenes/story/chapter103.tscn", "chapter102_done", 16],
-		["第一百零四章·鞍房", "res://scenes/story/chapter104.tscn", "chapter103_done", 16],
-		["第一百零五章·席终", "res://scenes/story/chapter105.tscn", "chapter104_done", 16],
-		["第一百零六章·曲房", "res://scenes/story/chapter106.tscn", "chapter105_done", 17],
-		["第一百零七章·糟坊", "res://scenes/story/chapter107.tscn", "chapter106_done", 17],
-		["第一百零八章·酒印", "res://scenes/story/chapter108.tscn", "chapter107_done", 17],
-		["第一百零九章·开酿", "res://scenes/story/chapter109.tscn", "chapter108_done", 17],
-		["第一百一十章·排档", "res://scenes/story/chapter110.tscn", "chapter109_done", 17],
-		["第一百一十一章·席终", "res://scenes/story/chapter111.tscn", "chapter110_done", 17],
-		["第一百一十二章·镖局", "res://scenes/story/chapter112.tscn", "chapter111_done", 18],
-		["第一百一十三章·夜营", "res://scenes/story/chapter113.tscn", "chapter112_done", 18],
-		["第一百一十四章·镖印", "res://scenes/story/chapter114.tscn", "chapter113_done", 18],
-		["第一百一十五章·镖市", "res://scenes/story/chapter115.tscn", "chapter114_done", 18],
-		["第一百一十六章·驿站", "res://scenes/story/chapter116.tscn", "chapter115_done", 18],
-		["第一百一十七章·席终", "res://scenes/story/chapter117.tscn", "chapter116_done", 18],
-		["第一百一十八章·码头", "res://scenes/story/chapter118.tscn", "chapter117_done", 19],
-		["第一百一十九章·潮汐", "res://scenes/story/chapter119.tscn", "chapter118_done", 19],
-		["第一百二十章·港印", "res://scenes/story/chapter120.tscn", "chapter119_done", 19],
-		["第一百二十一章·渔市", "res://scenes/story/chapter121.tscn", "chapter120_done", 19],
-		["第一百二十二章·货栈", "res://scenes/story/chapter122.tscn", "chapter121_done", 19],
-		["第一百二十三章·席终", "res://scenes/story/chapter123.tscn", "chapter122_done", 19],
-		["第一百二十四章·纸坊", "res://scenes/story/chapter124.tscn", "chapter123_done", 20],
-		["第一百二十五章·抄帘", "res://scenes/story/chapter125.tscn", "chapter124_done", 20],
-		["第一百二十六章·纸印", "res://scenes/story/chapter126.tscn", "chapter125_done", 20],
-		["第一百二十七章·压榨", "res://scenes/story/chapter127.tscn", "chapter126_done", 20],
-		["第一百二十八章·案库", "res://scenes/story/chapter128.tscn", "chapter127_done", 20],
-		["第一百二十九章·席终", "res://scenes/story/chapter129.tscn", "chapter128_done", 20],
-		["第一百三十章·铜炉", "res://scenes/story/chapter130.tscn", "chapter129_done", 21],
-		["第一百三十一章·砧台", "res://scenes/story/chapter131.tscn", "chapter130_done", 21],
-		["第一百三十二章·铜印", "res://scenes/story/chapter132.tscn", "chapter131_done", 21],
-		["第一百三十三章·铜市", "res://scenes/story/chapter133.tscn", "chapter132_done", 21],
-		["第一百三十四章·甲库", "res://scenes/story/chapter134.tscn", "chapter133_done", 21],
-		["第一百三十五章·席终", "res://scenes/story/chapter135.tscn", "chapter134_done", 21],
-		["第一百三十六章·灯街", "res://scenes/story/chapter136.tscn", "chapter135_done", 22],
-		["第一百三十七章·灯棚", "res://scenes/story/chapter137.tscn", "chapter136_done", 22],
-		["第一百三十八章·灯印", "res://scenes/story/chapter138.tscn", "chapter137_done", 22],
-		["第一百三十九章·灯会", "res://scenes/story/chapter139.tscn", "chapter138_done", 22],
-		["第一百四十章·灯塔", "res://scenes/story/chapter140.tscn", "chapter139_done", 22],
-		["第一百四十一章·席终", "res://scenes/story/chapter141.tscn", "chapter140_done", 22],
-		["第一百四十二章·粮囤", "res://scenes/story/chapter142.tscn", "chapter141_done", 23],
-		["第一百四十三章·仓房", "res://scenes/story/chapter143.tscn", "chapter142_done", 23],
-		["第一百四十四章·粮印", "res://scenes/story/chapter144.tscn", "chapter143_done", 23],
-		["第一百四十五章·开仓", "res://scenes/story/chapter145.tscn", "chapter144_done", 23],
-		["第一百四十六章·义仓", "res://scenes/story/chapter146.tscn", "chapter145_done", 23],
-		["第一百四十七章·席终", "res://scenes/story/chapter147.tscn", "chapter146_done", 23],
-		["第一百四十八章·雪栈", "res://scenes/story/chapter148.tscn", "chapter147_done", 24],
-		["第一百四十九章·冰窖", "res://scenes/story/chapter149.tscn", "chapter148_done", 24],
-		["第一百五十章·雪印", "res://scenes/story/chapter150.tscn", "chapter149_done", 24],
-		["第一百五十一章·雪市", "res://scenes/story/chapter151.tscn", "chapter150_done", 24],
-		["第一百五十二章·暖驿", "res://scenes/story/chapter152.tscn", "chapter151_done", 24],
-		["第一百五十三章·席终", "res://scenes/story/chapter153.tscn", "chapter152_done", 24],
-		["第一百五十四章·竹海", "res://scenes/story/chapter154.tscn", "chapter153_done", 25],
-		["第一百五十五章·笋市", "res://scenes/story/chapter155.tscn", "chapter154_done", 25],
-		["第一百五十六章·竹印", "res://scenes/story/chapter156.tscn", "chapter155_done", 25],
-		["第一百五十七章·竹市", "res://scenes/story/chapter157.tscn", "chapter156_done", 25],
-		["第一百五十八章·篁祠", "res://scenes/story/chapter158.tscn", "chapter157_done", 25],
-		["第一百五十九章·席终", "res://scenes/story/chapter159.tscn", "chapter158_done", 25],
-		["第一百六十章·驿站", "res://scenes/story/chapter160.tscn", "chapter159_done", 26],
-		["第一百六十一章·急递", "res://scenes/story/chapter161.tscn", "chapter160_done", 26],
-		["第一百六十二章·驿印", "res://scenes/story/chapter162.tscn", "chapter161_done", 26],
-		["第一百六十三章·驿市", "res://scenes/story/chapter163.tscn", "chapter162_done", 26],
-		["第一百六十四章·夜驿", "res://scenes/story/chapter164.tscn", "chapter163_done", 26],
-		["第一百六十五章·席终", "res://scenes/story/chapter165.tscn", "chapter164_done", 26],
-		["第一百六十六章·钟楼", "res://scenes/story/chapter166.tscn", "chapter165_done", 27],
-		["第一百六十七章·守钟", "res://scenes/story/chapter167.tscn", "chapter166_done", 27],
-		["第一百六十八章·钟印", "res://scenes/story/chapter168.tscn", "chapter167_done", 27],
-		["第一百六十九章·钟市", "res://scenes/story/chapter169.tscn", "chapter168_done", 27],
-		["第一百七十章·撞钟", "res://scenes/story/chapter170.tscn", "chapter169_done", 27],
-		["第一百七十一章·席终", "res://scenes/story/chapter171.tscn", "chapter170_done", 27],
-		["第一百七十二章·雨巷", "res://scenes/story/chapter172.tscn", "chapter171_done", 28],
-		["第一百七十三章·伞棚", "res://scenes/story/chapter173.tscn", "chapter172_done", 28],
-		["第一百七十四章·雨印", "res://scenes/story/chapter174.tscn", "chapter173_done", 28],
-		["第一百七十五章·雨市", "res://scenes/story/chapter175.tscn", "chapter174_done", 28],
-		["第一百七十六章·避雨", "res://scenes/story/chapter176.tscn", "chapter175_done", 28],
-		["第一百七十七章·席终", "res://scenes/story/chapter177.tscn", "chapter176_done", 28],
-		["第一百七十八章·砚坑", "res://scenes/story/chapter178.tscn", "chapter177_done", 29],
-		["第一百七十九章·案台", "res://scenes/story/chapter179.tscn", "chapter178_done", 29],
-		["第一百八十章·砚印", "res://scenes/story/chapter180.tscn", "chapter179_done", 29],
-		["第一百八十一章·砚市", "res://scenes/story/chapter181.tscn", "chapter180_done", 29],
-		["第一百八十二章·捺印", "res://scenes/story/chapter182.tscn", "chapter181_done", 29],
-		["第一百八十三章·席终", "res://scenes/story/chapter183.tscn", "chapter182_done", 29],
-		["第一百八十四章·蜂巢", "res://scenes/story/chapter184.tscn", "chapter183_done", 30],
-		["第一百八十五章·烟熏", "res://scenes/story/chapter185.tscn", "chapter184_done", 30],
-		["第一百八十六章·蜂印", "res://scenes/story/chapter186.tscn", "chapter185_done", 30],
-		["第一百八十七章·蜜市", "res://scenes/story/chapter187.tscn", "chapter186_done", 30],
-		["第一百八十八章·蜂后", "res://scenes/story/chapter188.tscn", "chapter187_done", 30],
-		["第一百八十九章·席终", "res://scenes/story/chapter189.tscn", "chapter188_done", 30],
-		["第一百九十章·笛楼", "res://scenes/story/chapter190.tscn", "chapter189_done", 31],
-		["第一百九十一章·回音", "res://scenes/story/chapter191.tscn", "chapter190_done", 31],
-		["第一百九十二章·笛印", "res://scenes/story/chapter192.tscn", "chapter191_done", 31],
-		["第一百九十三章·笛市", "res://scenes/story/chapter193.tscn", "chapter192_done", 31],
-		["第一百九十四章·独奏", "res://scenes/story/chapter194.tscn", "chapter193_done", 31],
-		["第一百九十五章·席终", "res://scenes/story/chapter195.tscn", "chapter194_done", 31],
-		["第一百九十六章·影幕", "res://scenes/story/chapter196.tscn", "chapter195_done", 32],
-		["第一百九十七章·灯影", "res://scenes/story/chapter197.tscn", "chapter196_done", 32],
-		["第一百九十八章·影印", "res://scenes/story/chapter198.tscn", "chapter197_done", 32],
-		["第一百九十九章·影市", "res://scenes/story/chapter199.tscn", "chapter198_done", 32],
-		["第二百章·独影", "res://scenes/story/chapter200.tscn", "chapter199_done", 32],
-		["第二百零一章·席终", "res://scenes/story/chapter201.tscn", "chapter200_done", 32],
-		["第二百零二章·盐滩", "res://scenes/story/chapter202.tscn", "chapter201_done", 33],
-		["第二百零三章·盐堆", "res://scenes/story/chapter203.tscn", "chapter202_done", 33],
-		["第二百零四章·盐印", "res://scenes/story/chapter204.tscn", "chapter203_done", 33],
-		["第二百零五章·盐市", "res://scenes/story/chapter205.tscn", "chapter204_done", 33],
-		["第二百零六章·独晒", "res://scenes/story/chapter206.tscn", "chapter205_done", 33],
-		["第二百零七章·席终", "res://scenes/story/chapter207.tscn", "chapter206_done", 33],
-		["第二百零八章·染坊", "res://scenes/story/chapter208.tscn", "chapter207_done", 34],
-		["第二百零九章·晾竿", "res://scenes/story/chapter209.tscn", "chapter208_done", 34],
-		["第二百一十章·染印", "res://scenes/story/chapter210.tscn", "chapter209_done", 34],
-		["第二百一十一章·色市", "res://scenes/story/chapter211.tscn", "chapter210_done", 34],
-		["第二百一十二章·独染", "res://scenes/story/chapter212.tscn", "chapter211_done", 34],
-		["第二百一十三章·席终", "res://scenes/story/chapter213.tscn", "chapter212_done", 34],
-		["第二百一十四章·鼓楼", "res://scenes/story/chapter214.tscn", "chapter213_done", 35],
-		["第二百一十五章·擂台", "res://scenes/story/chapter215.tscn", "chapter214_done", 35],
-		["第二百一十六章·鼓印", "res://scenes/story/chapter216.tscn", "chapter215_done", 35],
-		["第二百一十七章·鼓市", "res://scenes/story/chapter217.tscn", "chapter216_done", 35],
-		["第二百一十八章·独擂", "res://scenes/story/chapter218.tscn", "chapter217_done", 35],
-		["第二百一十九章·席终", "res://scenes/story/chapter219.tscn", "chapter218_done", 35],
-		["第二百二十章·香市", "res://scenes/story/chapter220.tscn", "chapter219_done", 36],
-		["第二百二十一章·烟径", "res://scenes/story/chapter221.tscn", "chapter220_done", 36],
-		["第二百二十二章·香印", "res://scenes/story/chapter222.tscn", "chapter221_done", 36],
-		["第二百二十三章·香摊", "res://scenes/story/chapter223.tscn", "chapter222_done", 36],
-		["第二百二十四章·独香", "res://scenes/story/chapter224.tscn", "chapter223_done", 36],
-		["第二百二十五章·席终", "res://scenes/story/chapter225.tscn", "chapter224_done", 36],
-		["第二百二十六章·潮滩", "res://scenes/story/chapter226.tscn", "chapter225_done", 37],
-		["第二百二十七章·礁脉", "res://scenes/story/chapter227.tscn", "chapter226_done", 37],
-		["第二百二十八章·潮印", "res://scenes/story/chapter228.tscn", "chapter227_done", 37],
-		["第二百二十九章·潮市", "res://scenes/story/chapter229.tscn", "chapter228_done", 37],
-		["第二百三十章·独潮", "res://scenes/story/chapter230.tscn", "chapter229_done", 37],
-		["第二百三十一章·席终", "res://scenes/story/chapter231.tscn", "chapter230_done", 37],
-		["第二百三十二章·瓷市", "res://scenes/story/chapter232.tscn", "chapter231_done", 38],
-		["第二百三十三章·釉池", "res://scenes/story/chapter233.tscn", "chapter232_done", 38],
-		["第二百三十四章·瓷印", "res://scenes/story/chapter234.tscn", "chapter233_done", 38],
+		["第零章", "res://scenes/story/chapter0.tscn", -1, 0],
+		["第一章·陆桥", "res://scenes/story/chapter1.tscn", 0, 1],
+		["第二章·姓氏", "res://scenes/story/chapter2.tscn", 1, 1],
+		["第三章·铁祷", "res://scenes/story/chapter3.tscn", 2, 1],
+		["第四章·百年", "res://scenes/story/chapter4.tscn", 3, 1],
+		["第五章·烽烟", "res://scenes/story/chapter5.tscn", 4, 1],
+		["第六章·托孤", "res://scenes/story/chapter6.tscn", 5, 1],
+		["第七章·子嗣", "res://scenes/story/chapter7.tscn", 6, 1],
+		["第八章·港灯", "res://scenes/story/chapter8.tscn", 7, 1],
+		["第九章·商路", "res://scenes/story/chapter9.tscn", 8, 1],
+		["第十章·回响", "res://scenes/story/chapter10.tscn", 9, 1],
+		["第十一章·门阙", "res://scenes/story/chapter11.tscn", 10, 1],
+		["第十二章·余波", "res://scenes/story/chapter12.tscn", 11, 1],
+		["第十三章·嗣位", "res://scenes/story/chapter13.tscn", 12, 1],
+		["第十四章·并席", "res://scenes/story/chapter14.tscn", 13, 1],
+		["第十五章·席散", "res://scenes/story/chapter15.tscn", 14, 1],
+		["第十六章·海草", "res://scenes/story/chapter16.tscn", 15, 2],
+		["第十七章·盐河", "res://scenes/story/chapter17.tscn", 16, 2],
+		["第十八章·门阙", "res://scenes/story/chapter18.tscn", 17, 2],
+		["第十九章·远岸", "res://scenes/story/chapter19.tscn", 18, 2],
+		["第二十章·潮墙", "res://scenes/story/chapter20.tscn", 19, 2],
+		["第二十一章·席终", "res://scenes/story/chapter21.tscn", 20, 2],
+		["第二十二章·北风", "res://scenes/story/chapter22.tscn", 21, 3],
+		["第二十三章·霜桥", "res://scenes/story/chapter23.tscn", 22, 3],
+		["第二十四章·钤印", "res://scenes/story/chapter24.tscn", 23, 3],
+		["第二十五章·朔原", "res://scenes/story/chapter25.tscn", 24, 3],
+		["第二十六章·冠雪", "res://scenes/story/chapter26.tscn", 25, 3],
+		["第二十七章·席终", "res://scenes/story/chapter27.tscn", 26, 3],
+		["第二十八章·南泽", "res://scenes/story/chapter28.tscn", 27, 4],
+		["第二十九章·金陌", "res://scenes/story/chapter29.tscn", 28, 4],
+		["第三十章·钤印", "res://scenes/story/chapter30.tscn", 29, 4],
+		["第三十一章·铁峡", "res://scenes/story/chapter31.tscn", 30, 4],
+		["第三十二章·星津", "res://scenes/story/chapter32.tscn", 31, 4],
+		["第三十三章·席终", "res://scenes/story/chapter33.tscn", 32, 4],
+		["第三十四章·破晓", "res://scenes/story/chapter34.tscn", 33, 5],
+		["第三十五章·晚钟", "res://scenes/story/chapter35.tscn", 34, 5],
+		["第三十六章·钤印", "res://scenes/story/chapter36.tscn", 35, 5],
+		["第三十七章·长川", "res://scenes/story/chapter37.tscn", 36, 5],
+		["第三十八章·终阙", "res://scenes/story/chapter38.tscn", 37, 5],
+		["第三十九章·席终", "res://scenes/story/chapter39.tscn", 38, 5],
+		["第四十章·雾原", "res://scenes/story/chapter40.tscn", 39, 6],
+		["第四十一章·石冢", "res://scenes/story/chapter41.tscn", 40, 6],
+		["第四十二章·钤印", "res://scenes/story/chapter42.tscn", 41, 6],
+		["第四十三章·黑潮", "res://scenes/story/chapter43.tscn", 42, 6],
+		["第四十四章·曜塔", "res://scenes/story/chapter44.tscn", 43, 6],
+		["第四十五章·席终", "res://scenes/story/chapter45.tscn", 44, 6],
+		["第四十六章·余烬", "res://scenes/story/chapter46.tscn", 45, 7],
+		["第四十七章·冠火", "res://scenes/story/chapter47.tscn", 46, 7],
+		["第四十八章·钤印", "res://scenes/story/chapter48.tscn", 47, 7],
+		["第四十九章·烬原", "res://scenes/story/chapter49.tscn", 48, 7],
+		["第五十章·百旗", "res://scenes/story/chapter50.tscn", 49, 7],
+		["第五十一章·席终", "res://scenes/story/chapter51.tscn", 50, 7],
+		["第五十二章·破晓", "res://scenes/story/chapter52.tscn", 51, 8],
+		["第五十三章·镜湖", "res://scenes/story/chapter53.tscn", 52, 8],
+		["第五十四章·钤印", "res://scenes/story/chapter54.tscn", 53, 8],
+		["第五十五章·朔风", "res://scenes/story/chapter55.tscn", 54, 8],
+		["第五十六章·曜廷", "res://scenes/story/chapter56.tscn", 55, 8],
+		["第五十七章·席终", "res://scenes/story/chapter57.tscn", 56, 8],
+		["第五十八章·余烬港", "res://scenes/story/chapter58.tscn", 57, 9],
+		["第五十九章·霜驿", "res://scenes/story/chapter59.tscn", 58, 9],
+		["第六十章·钤印", "res://scenes/story/chapter60.tscn", 59, 9],
+		["第六十一章·烬原", "res://scenes/story/chapter61.tscn", 60, 9],
+		["第六十二章·曜阙", "res://scenes/story/chapter62.tscn", 61, 9],
+		["第六十三章·席终", "res://scenes/story/chapter63.tscn", 62, 9],
+		["第六十四章·井市", "res://scenes/story/chapter64.tscn", 63, 10],
+		["第六十五章·铜铃", "res://scenes/story/chapter65.tscn", 64, 10],
+		["第六十六章·井印", "res://scenes/story/chapter66.tscn", 65, 10],
+		["第六十七章·盐船", "res://scenes/story/chapter67.tscn", 66, 10],
+		["第六十八章·纸坊", "res://scenes/story/chapter68.tscn", 67, 10],
+		["第六十九章·席终", "res://scenes/story/chapter69.tscn", 68, 10],
+		["第七十章·窑口", "res://scenes/story/chapter70.tscn", 69, 11],
+		["第七十一章·釉河", "res://scenes/story/chapter71.tscn", 70, 11],
+		["第七十二章·窑印", "res://scenes/story/chapter72.tscn", 71, 11],
+		["第七十三章·烟囱", "res://scenes/story/chapter73.tscn", 72, 11],
+		["第七十四章·火塘", "res://scenes/story/chapter74.tscn", 73, 11],
+		["第七十五章·席终", "res://scenes/story/chapter75.tscn", 74, 11],
+		["第七十六章·台口", "res://scenes/story/chapter76.tscn", 75, 12],
+		["第七十七章·检场", "res://scenes/story/chapter77.tscn", 76, 12],
+		["第七十八章·戏印", "res://scenes/story/chapter78.tscn", 77, 12],
+		["第七十九章·后台", "res://scenes/story/chapter79.tscn", 78, 12],
+		["第八十章·灯架", "res://scenes/story/chapter80.tscn", 79, 12],
+		["第八十一章·席终", "res://scenes/story/chapter81.tscn", 80, 12],
+		["第八十二章·桑陌", "res://scenes/story/chapter82.tscn", 81, 13],
+		["第八十三章·缫丝", "res://scenes/story/chapter83.tscn", 82, 13],
+		["第八十四章·丝印", "res://scenes/story/chapter84.tscn", 83, 13],
+		["第八十五章·烘茧", "res://scenes/story/chapter85.tscn", 84, 13],
+		["第八十六章·经轴", "res://scenes/story/chapter86.tscn", 85, 13],
+		["第八十七章·席终", "res://scenes/story/chapter87.tscn", 86, 13],
+		["第八十八章·茶梯", "res://scenes/story/chapter88.tscn", 87, 14],
+		["第八十九章·蒸青", "res://scenes/story/chapter89.tscn", 88, 14],
+		["第九十章·茶印", "res://scenes/story/chapter90.tscn", 89, 14],
+		["第九十一章·晾青", "res://scenes/story/chapter91.tscn", 90, 14],
+		["第九十二章·茶引", "res://scenes/story/chapter92.tscn", 91, 14],
+		["第九十三章·席终", "res://scenes/story/chapter93.tscn", 92, 14],
+		["第九十四章·药圃", "res://scenes/story/chapter94.tscn", 93, 15],
+		["第九十五章·医馆", "res://scenes/story/chapter95.tscn", 94, 15],
+		["第九十六章·方印", "res://scenes/story/chapter96.tscn", 95, 15],
+		["第九十七章·煎药", "res://scenes/story/chapter97.tscn", 96, 15],
+		["第九十八章·医籍", "res://scenes/story/chapter98.tscn", 97, 15],
+		["第九十九章·席终", "res://scenes/story/chapter99.tscn", 98, 15],
+		["第一百章·马厩", "res://scenes/story/chapter100.tscn", 99, 16],
+		["第一百零一章·驯场", "res://scenes/story/chapter101.tscn", 100, 16],
+		["第一百零二章·马印", "res://scenes/story/chapter102.tscn", 101, 16],
+		["第一百零三章·马市", "res://scenes/story/chapter103.tscn", 102, 16],
+		["第一百零四章·鞍房", "res://scenes/story/chapter104.tscn", 103, 16],
+		["第一百零五章·席终", "res://scenes/story/chapter105.tscn", 104, 16],
+		["第一百零六章·曲房", "res://scenes/story/chapter106.tscn", 105, 17],
+		["第一百零七章·糟坊", "res://scenes/story/chapter107.tscn", 106, 17],
+		["第一百零八章·酒印", "res://scenes/story/chapter108.tscn", 107, 17],
+		["第一百零九章·开酿", "res://scenes/story/chapter109.tscn", 108, 17],
+		["第一百一十章·排档", "res://scenes/story/chapter110.tscn", 109, 17],
+		["第一百一十一章·席终", "res://scenes/story/chapter111.tscn", 110, 17],
+		["第一百一十二章·镖局", "res://scenes/story/chapter112.tscn", 111, 18],
+		["第一百一十三章·夜营", "res://scenes/story/chapter113.tscn", 112, 18],
+		["第一百一十四章·镖印", "res://scenes/story/chapter114.tscn", 113, 18],
+		["第一百一十五章·镖市", "res://scenes/story/chapter115.tscn", 114, 18],
+		["第一百一十六章·驿站", "res://scenes/story/chapter116.tscn", 115, 18],
+		["第一百一十七章·席终", "res://scenes/story/chapter117.tscn", 116, 18],
+		["第一百一十八章·码头", "res://scenes/story/chapter118.tscn", 117, 19],
+		["第一百一十九章·潮汐", "res://scenes/story/chapter119.tscn", 118, 19],
+		["第一百二十章·港印", "res://scenes/story/chapter120.tscn", 119, 19],
+		["第一百二十一章·渔市", "res://scenes/story/chapter121.tscn", 120, 19],
+		["第一百二十二章·货栈", "res://scenes/story/chapter122.tscn", 121, 19],
+		["第一百二十三章·席终", "res://scenes/story/chapter123.tscn", 122, 19],
+		["第一百二十四章·纸坊", "res://scenes/story/chapter124.tscn", 123, 20],
+		["第一百二十五章·抄帘", "res://scenes/story/chapter125.tscn", 124, 20],
+		["第一百二十六章·纸印", "res://scenes/story/chapter126.tscn", 125, 20],
+		["第一百二十七章·压榨", "res://scenes/story/chapter127.tscn", 126, 20],
+		["第一百二十八章·案库", "res://scenes/story/chapter128.tscn", 127, 20],
+		["第一百二十九章·席终", "res://scenes/story/chapter129.tscn", 128, 20],
+		["第一百三十章·铜炉", "res://scenes/story/chapter130.tscn", 129, 21],
+		["第一百三十一章·砧台", "res://scenes/story/chapter131.tscn", 130, 21],
+		["第一百三十二章·铜印", "res://scenes/story/chapter132.tscn", 131, 21],
+		["第一百三十三章·铜市", "res://scenes/story/chapter133.tscn", 132, 21],
+		["第一百三十四章·甲库", "res://scenes/story/chapter134.tscn", 133, 21],
+		["第一百三十五章·席终", "res://scenes/story/chapter135.tscn", 134, 21],
+		["第一百三十六章·灯街", "res://scenes/story/chapter136.tscn", 135, 22],
+		["第一百三十七章·灯棚", "res://scenes/story/chapter137.tscn", 136, 22],
+		["第一百三十八章·灯印", "res://scenes/story/chapter138.tscn", 137, 22],
+		["第一百三十九章·灯会", "res://scenes/story/chapter139.tscn", 138, 22],
+		["第一百四十章·灯塔", "res://scenes/story/chapter140.tscn", 139, 22],
+		["第一百四十一章·席终", "res://scenes/story/chapter141.tscn", 140, 22],
+		["第一百四十二章·粮囤", "res://scenes/story/chapter142.tscn", 141, 23],
+		["第一百四十三章·仓房", "res://scenes/story/chapter143.tscn", 142, 23],
+		["第一百四十四章·粮印", "res://scenes/story/chapter144.tscn", 143, 23],
+		["第一百四十五章·开仓", "res://scenes/story/chapter145.tscn", 144, 23],
+		["第一百四十六章·义仓", "res://scenes/story/chapter146.tscn", 145, 23],
+		["第一百四十七章·席终", "res://scenes/story/chapter147.tscn", 146, 23],
+		["第一百四十八章·雪栈", "res://scenes/story/chapter148.tscn", 147, 24],
+		["第一百四十九章·冰窖", "res://scenes/story/chapter149.tscn", 148, 24],
+		["第一百五十章·雪印", "res://scenes/story/chapter150.tscn", 149, 24],
+		["第一百五十一章·雪市", "res://scenes/story/chapter151.tscn", 150, 24],
+		["第一百五十二章·暖驿", "res://scenes/story/chapter152.tscn", 151, 24],
+		["第一百五十三章·席终", "res://scenes/story/chapter153.tscn", 152, 24],
+		["第一百五十四章·竹海", "res://scenes/story/chapter154.tscn", 153, 25],
+		["第一百五十五章·笋市", "res://scenes/story/chapter155.tscn", 154, 25],
+		["第一百五十六章·竹印", "res://scenes/story/chapter156.tscn", 155, 25],
+		["第一百五十七章·竹市", "res://scenes/story/chapter157.tscn", 156, 25],
+		["第一百五十八章·篁祠", "res://scenes/story/chapter158.tscn", 157, 25],
+		["第一百五十九章·席终", "res://scenes/story/chapter159.tscn", 158, 25],
+		["第一百六十章·驿站", "res://scenes/story/chapter160.tscn", 159, 26],
+		["第一百六十一章·急递", "res://scenes/story/chapter161.tscn", 160, 26],
+		["第一百六十二章·驿印", "res://scenes/story/chapter162.tscn", 161, 26],
+		["第一百六十三章·驿市", "res://scenes/story/chapter163.tscn", 162, 26],
+		["第一百六十四章·夜驿", "res://scenes/story/chapter164.tscn", 163, 26],
+		["第一百六十五章·席终", "res://scenes/story/chapter165.tscn", 164, 26],
+		["第一百六十六章·钟楼", "res://scenes/story/chapter166.tscn", 165, 27],
+		["第一百六十七章·守钟", "res://scenes/story/chapter167.tscn", 166, 27],
+		["第一百六十八章·钟印", "res://scenes/story/chapter168.tscn", 167, 27],
+		["第一百六十九章·钟市", "res://scenes/story/chapter169.tscn", 168, 27],
+		["第一百七十章·撞钟", "res://scenes/story/chapter170.tscn", 169, 27],
+		["第一百七十一章·席终", "res://scenes/story/chapter171.tscn", 170, 27],
+		["第一百七十二章·雨巷", "res://scenes/story/chapter172.tscn", 171, 28],
+		["第一百七十三章·伞棚", "res://scenes/story/chapter173.tscn", 172, 28],
+		["第一百七十四章·雨印", "res://scenes/story/chapter174.tscn", 173, 28],
+		["第一百七十五章·雨市", "res://scenes/story/chapter175.tscn", 174, 28],
+		["第一百七十六章·避雨", "res://scenes/story/chapter176.tscn", 175, 28],
+		["第一百七十七章·席终", "res://scenes/story/chapter177.tscn", 176, 28],
+		["第一百七十八章·砚坑", "res://scenes/story/chapter178.tscn", 177, 29],
+		["第一百七十九章·案台", "res://scenes/story/chapter179.tscn", 178, 29],
+		["第一百八十章·砚印", "res://scenes/story/chapter180.tscn", 179, 29],
+		["第一百八十一章·砚市", "res://scenes/story/chapter181.tscn", 180, 29],
+		["第一百八十二章·捺印", "res://scenes/story/chapter182.tscn", 181, 29],
+		["第一百八十三章·席终", "res://scenes/story/chapter183.tscn", 182, 29],
+		["第一百八十四章·蜂巢", "res://scenes/story/chapter184.tscn", 183, 30],
+		["第一百八十五章·烟熏", "res://scenes/story/chapter185.tscn", 184, 30],
+		["第一百八十六章·蜂印", "res://scenes/story/chapter186.tscn", 185, 30],
+		["第一百八十七章·蜜市", "res://scenes/story/chapter187.tscn", 186, 30],
+		["第一百八十八章·蜂后", "res://scenes/story/chapter188.tscn", 187, 30],
+		["第一百八十九章·席终", "res://scenes/story/chapter189.tscn", 188, 30],
+		["第一百九十章·笛楼", "res://scenes/story/chapter190.tscn", 189, 31],
+		["第一百九十一章·回音", "res://scenes/story/chapter191.tscn", 190, 31],
+		["第一百九十二章·笛印", "res://scenes/story/chapter192.tscn", 191, 31],
+		["第一百九十三章·笛市", "res://scenes/story/chapter193.tscn", 192, 31],
+		["第一百九十四章·独奏", "res://scenes/story/chapter194.tscn", 193, 31],
+		["第一百九十五章·席终", "res://scenes/story/chapter195.tscn", 194, 31],
+		["第一百九十六章·影幕", "res://scenes/story/chapter196.tscn", 195, 32],
+		["第一百九十七章·灯影", "res://scenes/story/chapter197.tscn", 196, 32],
+		["第一百九十八章·影印", "res://scenes/story/chapter198.tscn", 197, 32],
+		["第一百九十九章·影市", "res://scenes/story/chapter199.tscn", 198, 32],
+		["第二百章·独影", "res://scenes/story/chapter200.tscn", 199, 32],
+		["第二百零一章·席终", "res://scenes/story/chapter201.tscn", 200, 32],
+		["第二百零二章·盐滩", "res://scenes/story/chapter202.tscn", 201, 33],
+		["第二百零三章·盐堆", "res://scenes/story/chapter203.tscn", 202, 33],
+		["第二百零四章·盐印", "res://scenes/story/chapter204.tscn", 203, 33],
+		["第二百零五章·盐市", "res://scenes/story/chapter205.tscn", 204, 33],
+		["第二百零六章·独晒", "res://scenes/story/chapter206.tscn", 205, 33],
+		["第二百零七章·席终", "res://scenes/story/chapter207.tscn", 206, 33],
+		["第二百零八章·染坊", "res://scenes/story/chapter208.tscn", 207, 34],
+		["第二百零九章·晾竿", "res://scenes/story/chapter209.tscn", 208, 34],
+		["第二百一十章·染印", "res://scenes/story/chapter210.tscn", 209, 34],
+		["第二百一十一章·色市", "res://scenes/story/chapter211.tscn", 210, 34],
+		["第二百一十二章·独染", "res://scenes/story/chapter212.tscn", 211, 34],
+		["第二百一十三章·席终", "res://scenes/story/chapter213.tscn", 212, 34],
+		["第二百一十四章·鼓楼", "res://scenes/story/chapter214.tscn", 213, 35],
+		["第二百一十五章·擂台", "res://scenes/story/chapter215.tscn", 214, 35],
+		["第二百一十六章·鼓印", "res://scenes/story/chapter216.tscn", 215, 35],
+		["第二百一十七章·鼓市", "res://scenes/story/chapter217.tscn", 216, 35],
+		["第二百一十八章·独擂", "res://scenes/story/chapter218.tscn", 217, 35],
+		["第二百一十九章·席终", "res://scenes/story/chapter219.tscn", 218, 35],
+		["第二百二十章·香市", "res://scenes/story/chapter220.tscn", 219, 36],
+		["第二百二十一章·烟径", "res://scenes/story/chapter221.tscn", 220, 36],
+		["第二百二十二章·香印", "res://scenes/story/chapter222.tscn", 221, 36],
+		["第二百二十三章·香摊", "res://scenes/story/chapter223.tscn", 222, 36],
+		["第二百二十四章·独香", "res://scenes/story/chapter224.tscn", 223, 36],
+		["第二百二十五章·席终", "res://scenes/story/chapter225.tscn", 224, 36],
+		["第二百二十六章·潮滩", "res://scenes/story/chapter226.tscn", 225, 37],
+		["第二百二十七章·礁脉", "res://scenes/story/chapter227.tscn", 226, 37],
+		["第二百二十八章·潮印", "res://scenes/story/chapter228.tscn", 227, 37],
+		["第二百二十九章·潮市", "res://scenes/story/chapter229.tscn", 228, 37],
+		["第二百三十章·独潮", "res://scenes/story/chapter230.tscn", 229, 37],
+		["第二百三十一章·席终", "res://scenes/story/chapter231.tscn", 230, 37],
+		["第二百三十二章·瓷市", "res://scenes/story/chapter232.tscn", 231, 38],
+		["第二百三十三章·釉池", "res://scenes/story/chapter233.tscn", 232, 38],
+		["第二百三十四章·瓷印", "res://scenes/story/chapter234.tscn", 233, 38],
 	]
 
 func _volume_labels() -> Array:
@@ -1248,8 +1077,7 @@ func _volume_unlocked(vol: int) -> bool:
 	for entry in _chapter_catalog():
 		if int(entry[3]) != vol:
 			continue
-		var need = str(entry[2])
-		if need == "" or GameState.flag(need):
+		if _need_cleared(int(entry[2])):
 			return true
 	return false
 
@@ -1269,10 +1097,8 @@ func _rebuild_volume_picker() -> void:
 				continue
 			var path = str(entry[1])
 			var bn = path.get_file().replace(".tscn", "").replace("chapter", "")
-			var done_flag = "chapter%s_done" % bn
-			var need = str(entry[2])
-			var unlocked = need == "" or GameState.flag(need)
-			if unlocked and not GameState.flag(done_flag):
+			var unlocked = _need_cleared(int(entry[2]))
+			if unlocked and bn.is_valid_int() and not _chapter_cleared(int(bn)):
 				incomplete = true
 				break
 		if incomplete:
@@ -1302,15 +1128,13 @@ func _rebuild_chapter_picker() -> void:
 			continue
 		var label = str(entry[0])
 		var path = str(entry[1])
-		var need = str(entry[2])
-		var unlocked = need == "" or GameState.flag(need)
+		var unlocked = _need_cleared(int(entry[2]))
 		if not unlocked:
 			continue
 		_chapter_pick.add_item(label)
 		_chapter_paths.append(path)
 		var bn = path.get_file().replace(".tscn", "").replace("chapter", "")
-		var done_flag = "chapter%s_done" % bn
-		if not GameState.flag(done_flag):
+		if bn.is_valid_int() and not _chapter_cleared(int(bn)):
 			select_idx = _chapter_paths.size() - 1
 	if _chapter_paths.size() > 0:
 		_chapter_pick.select(select_idx)
@@ -1323,14 +1147,12 @@ func _continue_mainline() -> void:
 	var last_path := ""
 	for entry in _chapter_catalog():
 		var path = str(entry[1])
-		var need = str(entry[2])
-		var unlocked = need == "" or GameState.flag(need)
+		var unlocked = _need_cleared(int(entry[2]))
 		if not unlocked:
 			continue
 		last_path = path
 		var bn = path.get_file().replace(".tscn", "").replace("chapter", "")
-		var done_flag = "chapter%s_done" % bn
-		if not GameState.flag(done_flag):
+		if bn.is_valid_int() and not _chapter_cleared(int(bn)):
 			get_tree().change_scene_to_file(path)
 			return
 	if last_path != "":
@@ -1341,7 +1163,11 @@ func panel_button_labels() -> Array:
 	var out: Array = []
 	var g := get_node_or_null("NavRail")
 	if g:
-		for b in g.get_children():
-			if b is BaseButton:
-				out.append(str(b.get_meta("legacy_label", str(b.text).split("\n")[0])))
+		_collect_labels(g, out)
 	return out
+
+func _collect_labels(n: Node, out: Array) -> void:
+	for b in n.get_children():
+		if b is BaseButton:
+			out.append(str(b.get_meta("legacy_label", str(b.text).split("\n")[0])))
+		_collect_labels(b, out)
