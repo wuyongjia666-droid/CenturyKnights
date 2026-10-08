@@ -246,7 +246,7 @@ func _house_card(rect: Rect2, c: CKCharacter, side_tag: String, side_en: String,
 	v.add_theme_constant_override("separation", 6 if compact else 2)
 	p.add_child(v)
 	if compact:
-		var age := UIKit.body_label("%s · %d岁" % [c.name, c.age], UIKit.TEXT, 12)
+		var age := UIKit.body_label(Locale.t("marriage_compact_who", [c.name, c.age]), UIKit.TEXT, 12)
 		age.name = "AgeLine"
 		age.autowrap_mode = TextServer.AUTOWRAP_OFF
 		age.clip_text = true
