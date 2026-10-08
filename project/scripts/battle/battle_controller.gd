@@ -213,7 +213,7 @@ func _process(delta: float) -> void:
 	var origin := _ui_origin()
 	if _trauma > 0.0:
 		_trauma = maxf(0.0, _trauma - delta * 1.35)
-		var shake = _trauma * _trauma
+		var shake = _trauma * _trauma * UIKit.shake_gain()
 		_shake_t += delta * 30.0
 		position = origin + Vector2(10.0 * shake * sin(_shake_t * 1.7), 7.0 * shake * sin(_shake_t * 2.3))
 	else:
@@ -222,6 +222,7 @@ func _process(delta: float) -> void:
 		overlay.queue_redraw()
 	if map_draw and _sel_pulse:
 		map_draw.queue_redraw()
+	_sync_faction_marks()
 
 ## v8.5: texture cache. A texture load()ed for the first time inside _draw records as a
 ## white placeholder on the GL renderer (seen in real renders) — warm FX here, cache everything.
@@ -921,7 +922,7 @@ func _draw_map() -> void:
 		var bar_w = 36.0 * k
 		var bar_pos = center + Vector2(-bar_w * 0.5, tr + 6.0 * k)
 		map_draw.draw_rect(Rect2(bar_pos - Vector2(1, 1), Vector2(bar_w + 2, 6)), Color(0.02, 0.03, 0.05, 0.85))
-		var hp_col = UIKit.OK if _same_side("player", str(u.team)) else UIKit.DANGER
+		var hp_col = UIKit.faction_color(str(u.team))
 		map_draw.draw_rect(Rect2(bar_pos, Vector2(bar_w * hp_ratio, 4)), hp_col)
 		# CD meters: per-skill pip with initial + fill
 		if u.team == "player":
@@ -959,7 +960,7 @@ func _draw_map() -> void:
 		var tw := fb.get_string_size(nm2, HORIZONTAL_ALIGNMENT_LEFT, -1, fsz).x
 		var np: Vector2 = center + Vector2(-tw * 0.5, -tr - 10.0 * k)
 		map_draw.draw_rect(Rect2(np + Vector2(-6, -13), Vector2(tw + 12, 18)), Color(0.03, 0.04, 0.06, 0.62))
-		map_draw.draw_rect(Rect2(np + Vector2(-6, 4), Vector2(tw + 12, 1)), Color(UIKit.OK if _same_side("player", str(u.team)) else UIKit.DANGER, 0.8))
+		map_draw.draw_rect(Rect2(np + Vector2(-6, 4), Vector2(tw + 12, 1)), Color(UIKit.faction_color(str(u.team)), 0.8))
 		map_draw.draw_string(fb, np, nm2, HORIZONTAL_ALIGNMENT_LEFT, -1, fsz, UIKit.TEXT)
 		# 选中脉冲环
 		if i == selected:
@@ -1712,6 +1713,32 @@ func _pulse_heal(team: String) -> void:
 			continue
 		u.char.hp = mini(u.char.max_hp, u.char.hp + amt)
 
+
+func _sync_faction_marks() -> void:
+	var layer := get_node_or_null("FactionMarks") as Control
+	if layer == null:
+		layer = Control.new()
+		layer.name = "FactionMarks"
+		layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		add_child(layer)
+	while layer.get_child_count() < units.size():
+		layer.add_child(UIKit.faction_mark("player"))
+	for i in layer.get_child_count():
+		var mark := layer.get_child(i) as Control
+		if i >= units.size() or units[i].char.hp <= 0:
+			mark.visible = false
+			continue
+		var u = units[i]
+		mark.visible = true
+		mark.team = "enemy" if str(u.team) == "enemy" else "player"
+		mark.queue_redraw()
+		var center := ORIGIN + Vector2(u.pos) * CELL + Vector2(CELL * 0.5, CELL * 0.5)
+		var side := 22.0
+		mark.size = Vector2(side, side)
+		mark.position = center + Vector2(-side * 0.5, 8.0)
+
+
 func _apply_combat_lock(ai: int, di: int) -> void:
 	# 双方进入交战锁定（再交战刷新至 2）
 	for idx in [ai, di]:
@@ -1824,7 +1851,7 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 				_spawn_slash(def.pos, "crit")
 				if _unit_panel:
 					UIFX.flash_modulate(_unit_panel, Color(1.35, 1.15, 0.7), 0.2)
-					UIFX.shake_control(_unit_panel, 5.0, 0.2)
+					UIFX.shake_control(_unit_panel, 5.0 * UIKit.shake_gain(), 0.2)
 				dmg = int(dmg * 1.5)
 			def.char.hp = maxi(0, def.char.hp - dmg)
 		result = {"hit": hit, "crit": crit, "damage": dmg, "hit_chance": hit_chance, "dmg_range": dmg_range, "killed": def.char.hp <= 0, "flank": extras.get("flank", false), "role_label": str(BattleRules.role_mods(atk.char, def.char).get("label", "")), "terrain_def": int(BattleRules.terrain_info(tid).get("def_bonus", 0))}
