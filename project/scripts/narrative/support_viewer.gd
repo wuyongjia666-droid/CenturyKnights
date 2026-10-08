@@ -17,7 +17,7 @@ var _actions: VBoxContainer
 func _ready() -> void:
 	Bonds.conversations()
 	UIKit.make_screen_bg(self)
-	var title := UIKit.make_label("羁绊", true)
+	var title := UIKit.make_label(Locale.t("nar04_title"), true)
 	title.position = Vector2(48, 28)
 	add_child(title)
 	_list = VBoxContainer.new()
@@ -39,7 +39,7 @@ func _ready() -> void:
 	_actions = VBoxContainer.new()
 	_actions.position = Vector2(500, 440)
 	add_child(_actions)
-	var back := UIKit.make_button("回城堡", 160)
+	var back := UIKit.make_button(Locale.t("nar04_back"), 160)
 	back.position = Vector2(1060, 28)
 	back.pressed.connect(_back)
 	add_child(back)
@@ -78,7 +78,7 @@ func _refresh_list() -> void:
 		child.queue_free()
 	var rows: Array = Bonds.available()
 	if rows.is_empty():
-		var empty := UIKit.make_label("还没有可以看的羁绊。")
+		var empty := UIKit.make_label(Locale.t("nar04_empty"))
 		_list.add_child(empty)
 		return
 	for convo in rows:
@@ -96,7 +96,7 @@ func _open(convo: Dictionary) -> void:
 	_show()
 	for child in _actions.get_children():
 		child.queue_free()
-	var next := UIKit.make_accent_button("继续", 200)
+	var next := UIKit.make_accent_button(Locale.t("nar04_continue"), 200)
 	next.pressed.connect(_advance)
 	_actions.add_child(next)
 
@@ -104,7 +104,7 @@ func _open(convo: Dictionary) -> void:
 func _show() -> void:
 	if _idx < 0 or _idx >= _lines.size():
 		_speaker.text = ""
-		_body.text = "这段看完了。"
+		_body.text = Locale.t("nar04_done")
 		if _open_id != "":
 			GameState.set_flag("bond_seen:" + _open_id, true)
 		return
