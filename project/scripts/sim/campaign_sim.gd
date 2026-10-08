@@ -12,6 +12,7 @@ static func run(years: int = 100, seed_i: int = 91) -> Dictionary:
 		"commission_gold": 0, "commissions": 0, "smith_gold": 0, "smith_buys": 0,
 		"lamp": {}, "crises": 0, "recalls": 0, "royal_casts": 0, "births": 0,
 		"silver_min": 999999, "silver_max": 0, "years_broke": 0, "years_starved": 0,
+		"tight_years": 0, "pressure_early": 0, "pressure_mid": 0, "pressure_late": 0, "spring_purse": 0,
 		"samples": [], "stuck": "", "opening": "", "line": [],
 	}
 	GameState.rng.seed = seed_i
@@ -33,6 +34,9 @@ static func run(years: int = 100, seed_i: int = 91) -> Dictionary:
 	while _abs() < end_abs and guard < years * 14:
 		guard += 1
 		var advanced := false
+		if Calendar.month == 4 and Calendar.year == 1:
+			var purse: Dictionary = CKEconomyState.apply_spring_purse(GameState)
+			report["spring_purse"] = int(purse.get("silver", 0))
 		if Calendar.month == 1 and Calendar.year != last_year:
 			last_year = Calendar.year
 			_january(report, Calendar.year)
@@ -96,6 +100,11 @@ static func _january(report: Dictionary, year: int) -> void:
 	_upgrade_castle()
 	if GameState.roster().size() < 5 and year % 6 == 0:
 		_recruit(report)
+	var press: Dictionary = CKEconomyState.apply_epoch_pressure(GameState, year)
+	var paid: int = int(press.get("silver", 0))
+	if paid > 0:
+		var phase := str(press.get("phase", "early"))
+		report["pressure_" + phase] = int(report.get("pressure_" + phase, 0)) + paid
 
 static func _sample(report: Dictionary) -> void:
 	var leader := GameState.get_leader()
@@ -104,6 +113,9 @@ static func _sample(report: Dictionary) -> void:
 	report["silver_max"] = maxi(int(report["silver_max"]), silver)
 	if silver <= 0:
 		report["years_broke"] = int(report["years_broke"]) + 1
+	var wage_now := CKEconomyState.monthly_wage(GameState)
+	if Calendar.year >= 1 and Calendar.year <= 10 and silver < wage_now * 3:
+		report["tight_years"] = int(report.get("tight_years", 0)) + 1
 	if GameState.food <= 0:
 		report["years_starved"] = int(report["years_starved"]) + 1
 	if int(report["samples"].size()) < 12 or Calendar.year % 10 == 0:
