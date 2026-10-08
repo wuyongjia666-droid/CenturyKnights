@@ -1,0 +1,75 @@
+name: android
+
+on:
+  workflow_dispatch:
+
+jobs:
+  apk:
+    name: debug-apk
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Cache Godot 4.3
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/share/godot
+            ~/.local/share/godot/export_templates
+          key: godot-4.3-android-${{ hashFiles('scripts/install_godot.sh') }}
+
+      - name: Install Godot
+        run: bash scripts/install_godot.sh
+
+      - name: Install export templates
+        run: |
+          set -euo pipefail
+          DEST="${HOME}/.local/share/godot/export_templates/4.3.stable"
+          if [[ -f "${DEST}/android_source.zip" || -f "${DEST}/android_debug.apk" ]]; then
+            echo "export templates already present"
+            exit 0
+          fi
+          mkdir -p "${DEST}"
+          curl -fL --retry 3 -o /tmp/godot-templates.tpz \
+            https://github.com/godotengine/godot/releases/download/4.3-stable/Godot_v4.3-stable_export_templates.tpz
+          unzip -q /tmp/godot-templates.tpz -d /tmp/godot-templates
+          cp -a /tmp/godot-templates/templates/* "${DEST}/"
+          rm -rf /tmp/godot-templates /tmp/godot-templates.tpz
+
+      - name: Install Android SDK
+        run: |
+          set -euo pipefail
+          SDK="${HOME}/Android/Sdk"
+          mkdir -p "${SDK}/cmdline-tools"
+          curl -fL --retry 3 -o /tmp/cmdtools.zip \
+            https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          rm -rf /tmp/cmdline-tools
+          unzip -q /tmp/cmdtools.zip -d /tmp
+          rm -rf "${SDK}/cmdline-tools/latest"
+          mv /tmp/cmdline-tools "${SDK}/cmdline-tools/latest"
+          export ANDROID_SDK_ROOT="${SDK}"
+          yes | "${SDK}/cmdline-tools/latest/bin/sdkmanager" --sdk_root="${SDK}" --licenses >/dev/null || true
+          "${SDK}/cmdline-tools/latest/bin/sdkmanager" --sdk_root="${SDK}" \
+            "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+          echo "ANDROID_SDK_ROOT=${SDK}" >> "${GITHUB_ENV}"
+
+      - name: Build debug APK
+        env:
+          CK_INSTALL_ANDROID_TEMPLATE: "1"
+        run: |
+          set -euo pipefail
+          export PATH="${HOME}/.local/bin:${JAVA_HOME}/bin:${PATH}"
+          ./scripts/build_android.sh
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: CenturyKnights-debug
+          path: exports/android/CenturyKnights-debug.apk
