@@ -8,6 +8,12 @@ ROOT = Path(__file__).resolve().parents[2]
 FX = ROOT / "project/assets/art/fx"
 
 SHEETS = [
+    ("lineage_link_sheet.png", "lineage_link", 6),
+    ("marriage_seal_sheet.png", "marriage_seal", 6),
+    ("select_dense_sheet.png", "select_dense", 6),
+    ("heal_dense_sheet.png", "heal_dense", 6),
+    ("slash_dense_sheet.png", "slash_dense", 6),
+    ("hit_dense_sheet.png", "hit_dense", 6),
     ("critical_crystal_sheet.png", "critical_crystal", 6),
     ("boss_entrance_sheet.png", "boss_entrance", 6),
     ("heal_priest_sheet.png", "heal_priest", 6),

@@ -70,10 +70,19 @@ func _build() -> void:
 	dv.add_theme_constant_override("separation", 8)
 	detail_panel.add_child(dv)
 	_portrait = TextureRect.new()
-	_portrait.custom_minimum_size = Vector2(96, 96)
+	_portrait.custom_minimum_size = Vector2(180, 220)
 	_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	dv.add_child(_portrait)
+	if ResourceLoader.exists("res://assets/art/ui/dual_portrait_frame.png"):
+		var _df := TextureRect.new()
+		_df.texture = load("res://assets/art/ui/dual_portrait_frame.png")
+		_df.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		_df.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		_df.custom_minimum_size = Vector2(360, 160)
+		_df.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		dv.add_child(_df)
+		UIFX.banner_shimmer(_df, 4.0)
 	_detail = RichTextLabel.new()
 	_detail.custom_minimum_size = Vector2(360, 250)
 	_detail.bbcode_enabled = true
@@ -179,7 +188,20 @@ func _refresh() -> void:
 
 func _select(c: CKCharacter) -> void:
 	_selected = c
-	_portrait.texture = UnitArt.portrait(c, 96)
+	var _g := str(c.gender)
+	var _age := int(c.age)
+	var _geno := "v84_geno_mid_%s_house" % _g
+	if _age <= 22:
+		_geno = "v84_geno_youth_%s_vow" % _g
+	elif _age >= 50:
+		_geno = "v84_geno_elder_%s_seal" % _g
+	var _gp := "res://assets/art/portraits/%s.png" % _geno
+	if ResourceLoader.exists(_gp):
+		_portrait.texture = load(_gp)
+	else:
+		_portrait.texture = UnitArt.portrait(c, 180)
+	UIFX.focus_ring(_portrait)
+	UIFX.select_pulse(_portrait)
 	var check = Lineage.can_propose(GameState.get_leader(), c)
 	_detail.text = UIKit.char_card_text(c) + "\n\n门槛：%s\n%s" % [check.get("need", ""), check.get("msg", "")]
 	var leader = GameState.get_leader()

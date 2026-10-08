@@ -848,6 +848,28 @@ func _build_ui() -> void:
 	topbar.size = Vector2(1280, 64)
 	topbar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(topbar)
+	if ResourceLoader.exists("res://assets/art/ui/turn_banner.png"):
+		var _tb := TextureRect.new()
+		_tb.texture = load("res://assets/art/ui/turn_banner.png")
+		_tb.position = Vector2(160, 4)
+		_tb.custom_minimum_size = Vector2(960, 56)
+		_tb.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		_tb.stretch_mode = TextureRect.STRETCH_SCALE
+		_tb.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_tb.modulate = Color(1, 1, 1, 0.85)
+		add_child(_tb)
+		UIFX.banner_shimmer(_tb, 3.6)
+	if ResourceLoader.exists("res://assets/art/ui/battle_hud_frame.png"):
+		var _hf := TextureRect.new()
+		_hf.texture = load("res://assets/art/ui/battle_hud_frame.png")
+		_hf.position = Vector2(0, 500)
+		_hf.size = Vector2(1280, 220)
+		_hf.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		_hf.stretch_mode = TextureRect.STRETCH_SCALE
+		_hf.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_hf.modulate = Color(1, 1, 1, 0.72)
+		_hf.z_index = -2
+		add_child(_hf)
 	var accent := ColorRect.new()
 	accent.color = UnitArt.crest_color()
 	accent.position = Vector2(0, 0)
@@ -1464,15 +1486,25 @@ func _draw_overlay() -> void:
 	for s in _slash_fx:
 		var fi = mini(5, int(s.age / 0.08))
 		var kind = str(s.get("kind", "slash"))
-		var path = "res://assets/art/fx/%s_%d.png" % [kind, fi]
+		# v8.4 dense 128px frames first, then legacy 64px
+		var path = "res://assets/art/fx/%s_dense_%d.png" % [kind, fi]
+		if not ResourceLoader.exists(path):
+			path = "res://assets/art/fx/%s_%d.png" % [kind, fi]
+		if not ResourceLoader.exists(path):
+			path = "res://assets/art/fx/slash_dense_%d.png" % fi
 		if not ResourceLoader.exists(path):
 			path = "res://assets/art/fx/slash_%d.png" % fi
 		if ResourceLoader.exists(path):
 			var tex = load(path)
-			overlay.draw_texture(tex, s.pos - Vector2(32, 32))
-		var spark = "res://assets/art/fx/hit_spark_%d.png" % fi
+			var half = Vector2(tex.get_width(), tex.get_height()) * 0.5
+			overlay.draw_texture(tex, s.pos - half)
+		var spark = "res://assets/art/fx/hit_dense_%d.png" % fi
+		if not ResourceLoader.exists(spark):
+			spark = "res://assets/art/fx/hit_spark_%d.png" % fi
 		if ResourceLoader.exists(spark):
-			overlay.draw_texture(load(spark), s.pos - Vector2(32, 32), Color(1, 1, 1, 0.85))
+			var stex = load(spark)
+			var shalf = Vector2(stex.get_width(), stex.get_height()) * 0.5
+			overlay.draw_texture(stex, s.pos - shalf, Color(1, 1, 1, 0.85))
 	# 交战锁定爆发环
 	for lb in _lock_burst_fx:
 		var fi3 = mini(5, int(lb.age / 0.09))

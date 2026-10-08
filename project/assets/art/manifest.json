@@ -1,5 +1,5 @@
 {
-  "art_pass": "v8.3.0-art",
+  "art_pass": "v8.4.0-art",
   "patrol_frames": 12,
   "heroes": [
     "leader_default",
@@ -10,7 +10,7 @@
     "mage_plate",
     "skirm_plate"
   ],
-  "farm_batch": "qwen_v830",
+  "farm_batch": "qwen_v840 (32 plates)",
   "ingested": [
     "battle_backdrop_wash.png",
     "concept_hire_plate_f.png",
@@ -71,5 +71,13 @@
   "stitch": "watch empty",
   "polish": "hub_lift+token_rims+v810+shimmer",
   "job_tokens": "9x2+3elite",
-  "elite_themes": 21
+  "elite_themes": 21,
+  "v840": {
+    "hubs": 4,
+    "ui": 14,
+    "fx_sheets": 6,
+    "fx_dense_frames": 36,
+    "geno_portraits": 8,
+    "stitch_exports": 0
+  }
 }

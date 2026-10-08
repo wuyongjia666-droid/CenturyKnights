@@ -1,0 +1,194 @@
+[
+  {
+    "label": "v84_hub_rite",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. fullscreen lineage rite pavilion interior, cool silk and crystal light, night garden depth, dark UI-safe zones",
+    "width": 1920,
+    "height": 1088
+  },
+  {
+    "label": "v84_hub_marriage_stage",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. fullscreen marriage ceremony stage, twin portrait pedestals empty, soft aurora ink sky, frosted aisle",
+    "width": 1920,
+    "height": 1088
+  },
+  {
+    "label": "v84_hub_lineage_tree",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. fullscreen genealogy sanctum, floating portrait silk panels in depth, incense haze contemporary",
+    "width": 1920,
+    "height": 1088
+  },
+  {
+    "label": "v84_hub_estates_vista",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. fullscreen estate vista terraces under dusk, river ribbon jade-mint, manor silhouette, UI-safe lower third",
+    "width": 1920,
+    "height": 1088
+  },
+  {
+    "label": "v84_ui_dual_portrait_frame",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. UI dual portrait frame 720x320, two frosted ovals side by side with crystal rim, empty centers, connection thread",
+    "width": 720,
+    "height": 320
+  },
+  {
+    "label": "v84_ui_lineage_card",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. UI lineage person card 360x480, frosted matte panel, portrait window top, empty meta area, crystal border",
+    "width": 360,
+    "height": 480
+  },
+  {
+    "label": "v84_ui_bloodline_strip",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. UI bloodline mix strip 640x48, mint-coral gradient bar with crystal ticks, empty, no glyphs",
+    "width": 640,
+    "height": 48
+  },
+  {
+    "label": "v84_ui_marriage_banner",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. UI marriage banner strip 1280x64, cool silk aurora, crystal underline, transparent ends",
+    "width": 1280,
+    "height": 64
+  },
+  {
+    "label": "v84_ui_lineage_banner",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. UI lineage banner strip 1280x64, ancestral ink aurora, crystal underline, transparent ends",
+    "width": 1280,
+    "height": 64
+  },
+  {
+    "label": "v84_ui_estate_card_grain",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. UI estate card 400x240, grain fields motif frosted, crystal rim, empty title zone",
+    "width": 400,
+    "height": 240
+  },
+  {
+    "label": "v84_ui_estate_card_cash",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. UI estate card 400x240, market/cash motif frosted, crystal rim, empty title zone",
+    "width": 400,
+    "height": 240
+  },
+  {
+    "label": "v84_ui_estate_card_fort",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. UI estate card 400x240, fortify walls motif frosted, crystal rim, empty title zone",
+    "width": 400,
+    "height": 240
+  },
+  {
+    "label": "v84_ui_estate_focus_bar",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. UI estate focus progress bar kit 512x48, mint fill track, crystal rim",
+    "width": 512,
+    "height": 48
+  },
+  {
+    "label": "v84_ui_battle_hud_dense",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. battle HUD bottom frame 1920x220, frosted matte glass, unit card slot left, skill chips right empty, crystal hairline",
+    "width": 1920,
+    "height": 220
+  },
+  {
+    "label": "v84_ui_turn_banner_dense",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. battle turn banner 960x72, crystal frost bar, empty center, soft glow",
+    "width": 960,
+    "height": 72
+  },
+  {
+    "label": "v84_ui_unit_card_frame",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. battle unit card frame 320x120, portrait square left empty, HP track area, frosted",
+    "width": 320,
+    "height": 120
+  },
+  {
+    "label": "v84_ui_skill_chip",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. battle skill chip button 96x96, frosted crystal square, empty glyph area",
+    "width": 96,
+    "height": 96
+  },
+  {
+    "label": "v84_ui_hp_bar_dense",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. HUD HP bar kit 640x72, mint ally fill + coral enemy fill side by side, thicker readable tracks",
+    "width": 640,
+    "height": 72
+  },
+  {
+    "label": "v84_geno_youth_m_vow",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. character bust portrait young male marriage candidate, sincere eyes, formal contemporary coat, painterly contemporary fantasy, soft cool gradient void, game portrait quality",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v84_geno_youth_f_vow",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. character bust portrait young female marriage candidate, quiet grace, ink-silk accents, painterly contemporary fantasy, soft cool gradient void, game portrait quality",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v84_geno_mid_m_house",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. character bust portrait mid-age male house match, composed diplomat face, painterly contemporary fantasy, soft cool gradient void, game portrait quality",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v84_geno_mid_f_house",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. character bust portrait mid-age female house match, keen intelligent eyes, painterly contemporary fantasy, soft cool gradient void, game portrait quality",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v84_geno_elder_m_seal",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. character bust portrait elder male clan elder portrait, serene authority, painterly contemporary fantasy, soft cool gradient void, game portrait quality",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v84_geno_elder_f_seal",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. character bust portrait elder female matron portrait, warm severity, painterly contemporary fantasy, soft cool gradient void, game portrait quality",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v84_geno_heir_m_close",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. character bust portrait young male heir close-up bust, hopeful ambition, painterly contemporary fantasy, soft cool gradient void, game portrait quality",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v84_geno_heir_f_close",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. character bust portrait young female heir close-up bust, quiet resolve, painterly contemporary fantasy, soft cool gradient void, game portrait quality",
+    "width": 512,
+    "height": 640
+  },
+  {
+    "label": "v84_fx_hit_dense_sheet",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. VFX sprite sheet 6 frames 768x128, denser crystal hit sparks, transparent bg",
+    "width": 768,
+    "height": 128
+  },
+  {
+    "label": "v84_fx_slash_dense_sheet",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. VFX sprite sheet 6 frames 768x128, denser ink-crystal slash arc, transparent bg",
+    "width": 768,
+    "height": 128
+  },
+  {
+    "label": "v84_fx_heal_dense_sheet",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. VFX sprite sheet 6 frames 768x128, denser mint heal bloom, transparent bg",
+    "width": 768,
+    "height": 128
+  },
+  {
+    "label": "v84_fx_select_dense_sheet",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. VFX sprite sheet 6 frames 768x128, denser crystal select pulse, transparent bg",
+    "width": 768,
+    "height": 128
+  },
+  {
+    "label": "v84_fx_marriage_seal_sheet",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. VFX sprite sheet 6 frames 768x128, marriage vow seal burst frost-mint, transparent bg",
+    "width": 768,
+    "height": 128
+  },
+  {
+    "label": "v84_fx_lineage_link_sheet",
+    "prompt": "2026 cutting-edge contemporary fantasy SRPG concept art, luminous ink void, frosted matte chrome, crystal frost accents, editorial AAA quality, NO text glyphs, NO watermark, NO medieval parchment/gothic cliché. VFX sprite sheet 6 frames 768x128, bloodline link thread pulse, transparent bg",
+    "width": 768,
+    "height": 128
+  }
+]

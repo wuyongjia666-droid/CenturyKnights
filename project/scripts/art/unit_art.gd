@@ -339,6 +339,24 @@ static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
 		if pt != null:
 			_cache["plate|" + plate + "|" + str(size)] = pt
 			return pt
+	# v8.4 genealogy / vow busts by age+gender
+	var _g := str(c.gender)
+	var _age := int(c.age)
+	var _geno := ""
+	if _age <= 22:
+		_geno = "v84_geno_youth_%s_vow" % _g
+	elif _age >= 50:
+		_geno = "v84_geno_elder_%s_seal" % _g
+	elif c.is_leader or str(c.job_id) in ["squire", "light_cavalry"]:
+		_geno = "v84_geno_heir_%s_close" % _g
+	else:
+		_geno = "v84_geno_mid_%s_house" % _g
+	var _gp := "res://assets/art/portraits/%s.png" % _geno
+	if ResourceLoader.exists(_gp):
+		var _gt = _try_load(_gp)
+		if _gt != null:
+			_cache["geno|" + _geno + "|" + str(size)] = _gt
+			return _gt
 	return _proc_portrait(c, size)
 
 static func _token_key(c: CKCharacter, team: String, frame: int) -> String:
