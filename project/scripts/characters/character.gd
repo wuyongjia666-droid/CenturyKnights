@@ -67,35 +67,35 @@ func derived_atk() -> int:
 	var wbonus = 0
 	if weapon_id == "ash_blade_fine":
 		wbonus = 3
-	elif weapon_id != "":
+	elif weapon_id != "" and not World.is_world_item(weapon_id):
 		wbonus = 2
-	return base + int(stats.get("str", 8) / 2) + wbonus
+	return base + int(stats.get("str", 8) / 2) + wbonus + World.gear_bonus(self, "atk")
 
 func derived_def() -> int:
 	var job = _job()
 	var base = int(job.get("base_def", 3))
-	return base + int(stats.get("vit", 8) / 3) + temp_def_buff - temp_exposed
+	return base + int(stats.get("vit", 8) / 3) + temp_def_buff - temp_exposed + World.gear_bonus(self, "def")
 
 func derived_hit() -> int:
-	return 70 + int(stats.get("skl", 8)) + int(stats.get("agi", 8) / 2) + temp_hit_bonus
+	return 70 + int(stats.get("skl", 8)) + int(stats.get("agi", 8) / 2) + temp_hit_bonus + World.gear_bonus(self, "hit")
 
 func derived_avo() -> int:
-	return int(stats.get("agi", 8)) + int(stats.get("per", 8) / 2)
+	return int(stats.get("agi", 8)) + int(stats.get("per", 8) / 2) + World.gear_bonus(self, "avo")
 
 func derived_crit() -> int:
 	var c = 5 + int(stats.get("skl", 8) / 3)
 	if "lucky" in traits:
 		c += 3
-	return c + temp_crit_bonus
+	return c + temp_crit_bonus + World.gear_bonus(self, "crit")
 
 func derived_move() -> int:
-	return int(_job().get("move", 4))
+	return int(_job().get("move", 4)) + World.gear_bonus(self, "move")
 
 func recalc_hp() -> void:
 	var mod = 1.0
 	if "sturdy" in traits:
 		mod += 0.08
-	max_hp = int((20 + stats.get("vit", 8) * 2 + level * 2) * mod)
+	max_hp = int((20 + stats.get("vit", 8) * 2 + level * 2) * mod) + World.gear_bonus(self, "hp")
 	hp = mini(hp, max_hp)
 	if hp <= 0:
 		hp = max_hp

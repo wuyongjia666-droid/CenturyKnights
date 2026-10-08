@@ -10,6 +10,11 @@ static func ensure_loaded() -> void:
 		return
 	_maps = GameState.data_maps.get("maps", {})
 
+## v8.7: overworld encounters register generated maps (biome base map + regional foes) at runtime
+static func register_map(map_id: String, m: Dictionary) -> void:
+	ensure_loaded()
+	_maps[map_id] = m
+
 static func get_map(map_id: String) -> Dictionary:
 	ensure_loaded()
 	if _maps.has(map_id):

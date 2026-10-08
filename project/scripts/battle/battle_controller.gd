@@ -1450,6 +1450,7 @@ func _deploy() -> void:
 			GameState.grant_battle_enemy_skills(u.char, elite, diff, map_id, tmpl)
 		else:
 			GameState.grant_job_skills(u.char)
+			World.grant_gear_skills(u.char)  # v8.7 signature arms grant battle skills while equipped
 		chars.append(u.char)
 	GameState.reset_battle_skills(chars)
 	_show_lock_tip_once()
@@ -2817,10 +2818,13 @@ func _check_end() -> void:
 	elif pc == 0:
 		_finish(false)
 
+var _world_enc := false
+
 func _finish(win: bool) -> void:
 	if battle_over:
 		return
 	battle_over = true
+	_world_enc = GameState.has_meta("world_encounter")
 	var purse := 0
 	var sp_gain := 0
 	var exp_before := {}
@@ -2865,6 +2869,10 @@ func _finish(win: bool) -> void:
 		for u in units:
 			if u.team == "player":
 				u.char.hp = u.char.max_hp
+	if _world_enc:
+		var wr: Dictionary = World.on_battle_end(win)  # v8.7 overworld encounter → loot / quest objective / retreat
+		if not wr.is_empty():
+			_log(str(wr.get("msg", "")))
 	GameState.save_game()
 	_show_report(win, purse, sp_gain, exp_before)
 
@@ -3010,7 +3018,8 @@ func _show_report(win: bool, purse: int, sp_gain: int, exp_before: Dictionary) -
 	keys.position = Vector2(42, 634)
 	keys.add_theme_constant_override("separation", 6)
 	root.add_child(keys)
-	for kh in ([["A", "确认指令"], ["ESC", "返回章节"]] if win else [["A", "重新挑战"], ["ESC", "返回章节"]]):
+	var back_word := "返回舆图" if _world_enc else "返回章节"
+	for kh in ([["A", "确认指令"], ["ESC", back_word]] if win else ([["A", back_word]] if _world_enc else [["A", "重新挑战"], ["ESC", "返回章节"]])):
 		keys.add_child(UIKit.keycap(str(kh[0])))
 		var kl := UIKit.body_label(str(kh[1]), UIKit.TEXT_DIM, 11)
 		kl.autowrap_mode = TextServer.AUTOWRAP_OFF
@@ -3018,10 +3027,10 @@ func _show_report(win: bool, purse: int, sp_gain: int, exp_before: Dictionary) -
 		var gp := Control.new()
 		gp.custom_minimum_size = Vector2(12, 0)
 		keys.add_child(gp)
-	var back_path := str(GameState.get_meta("battle_return", "res://scenes/story/chapter0.tscn")) if win else "res://scenes/story/chapter0.tscn"
+	var back_path := str(GameState.get_meta("battle_return", "res://scenes/story/chapter0.tscn")) if (win or _world_enc) else "res://scenes/story/chapter0.tscn"
 	set_meta("result_back", back_path)
-	if win:
-		var b := UIKit.cta_button("返回章节", "A", 220, 48)
+	if win or _world_enc:
+		var b := UIKit.cta_button(back_word, "A", 220, 48)
 		b.position = Vector2(1018, 620)
 		b.pressed.connect(func(): get_tree().change_scene_to_file(back_path))
 		root.add_child(b)

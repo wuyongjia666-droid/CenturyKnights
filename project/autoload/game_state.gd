@@ -1154,6 +1154,7 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	refresh_tavern()
 	refresh_marriage_candidates()
 	_init_quests()
+	World.reset()  # v8.7 playable atlas: position, reputation, markets, boards
 	log_event("灰烬旗立团：「%s」" % leader.name)
 	mark_dirty()
 
@@ -2988,6 +2989,7 @@ func save_game() -> bool:
 		"marriage": [],
 		"quests": quests,
 		"started": started,
+		"world_v87": World.to_save(),
 	}
 	for id in characters.keys():
 		data["characters"][id] = characters[id].to_dict()
@@ -3293,6 +3295,8 @@ func load_game() -> bool:
 	marriage_candidates.clear()
 	for d in data.get("marriage", []):
 		marriage_candidates.append(CKCharacter.from_dict(d))
+	var _wd = data.get("world_v87", {})
+	World.from_save(_wd if typeof(_wd) == TYPE_DICTIONARY else {})
 	BattleRules.preview_enabled = settings.get("rules_preview", true)
 	mark_dirty()
 	return true
