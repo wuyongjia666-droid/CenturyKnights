@@ -1,0 +1,6218 @@
+{
+  "actions": [
+    "idle",
+    "advance",
+    "attack",
+    "skill",
+    "hit",
+    "dodge",
+    "crit",
+    "death"
+  ],
+  "impact": {
+    "attack": 0.458,
+    "skill": 0.792,
+    "crit": 0.5
+  },
+  "track_root": "Rig/Skeleton3D",
+  "archetypes": {
+    "sword": {
+      "idle": {
+        "length": 1.6,
+        "loop": true,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                22,
+                0,
+                -12
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.8,
+            "bones": {
+              "upper_arm.R": [
+                22,
+                0,
+                -12
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                7,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.6,
+            "bones": {
+              "upper_arm.R": [
+                22,
+                0,
+                -12
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "advance": {
+        "length": 0.52,
+        "loop": true,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                4
+              ]
+            }
+          },
+          {
+            "t": 0.26,
+            "bones": {
+              "upper_arm.R": [
+                16,
+                0,
+                -4
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                -4
+              ]
+            }
+          },
+          {
+            "t": 0.52,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                4
+              ]
+            }
+          }
+        ]
+      },
+      "attack": {
+        "length": 0.92,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                22,
+                0,
+                -12
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.2519,
+            "bones": {
+              "upper_arm.R": [
+                150,
+                0,
+                -28
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                -6,
+                0,
+                18
+              ]
+            }
+          },
+          {
+            "t": 0.458,
+            "bones": {
+              "upper_arm.R": [
+                58,
+                0,
+                18
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                16,
+                0,
+                -22
+              ]
+            }
+          },
+          {
+            "t": 0.658,
+            "bones": {
+              "upper_arm.R": [
+                24,
+                0,
+                32
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                -16
+              ]
+            }
+          },
+          {
+            "t": 0.92,
+            "bones": {
+              "upper_arm.R": [
+                22,
+                0,
+                -12
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ],
+        "impact": 0.458
+      },
+      "skill": {
+        "length": 1.36,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                22,
+                0,
+                -12
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.491,
+            "bones": {
+              "upper_arm.R": [
+                170,
+                0,
+                -8
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                -12,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.792,
+            "bones": {
+              "upper_arm.R": [
+                64,
+                0,
+                -6
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                24,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.032,
+            "bones": {
+              "upper_arm.R": [
+                30,
+                0,
+                10
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                14,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.36,
+            "bones": {
+              "upper_arm.R": [
+                22,
+                0,
+                -12
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ],
+        "impact": 0.792
+      },
+      "hit": {
+        "length": 0.56,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                22,
+                0,
+                -12
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.12,
+            "bones": {
+              "upper_arm.R": [
+                -8,
+                0,
+                -22
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                -20,
+                0,
+                8
+              ]
+            }
+          },
+          {
+            "t": 0.56,
+            "bones": {
+              "upper_arm.R": [
+                22,
+                0,
+                -12
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "dodge": {
+        "length": 0.72,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                22,
+                0,
+                -12
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.22,
+            "bones": {
+              "upper_arm.R": [
+                8,
+                0,
+                -30
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                -8,
+                -14,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.4,
+            "bones": {
+              "upper_arm.R": [
+                22,
+                0,
+                -12
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                -8,
+                -14,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.72,
+            "bones": {
+              "upper_arm.R": [
+                22,
+                0,
+                -12
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "crit": {
+        "length": 1.08,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                22,
+                0,
+                -12
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.275,
+            "bones": {
+              "upper_arm.R": [
+                120,
+                0,
+                -50
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                0,
+                0,
+                40
+              ]
+            }
+          },
+          {
+            "t": 0.5,
+            "bones": {
+              "upper_arm.R": [
+                48,
+                0,
+                36
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                22,
+                0,
+                -30
+              ]
+            }
+          },
+          {
+            "t": 0.78,
+            "bones": {
+              "upper_arm.R": [
+                18,
+                0,
+                20
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.08,
+            "bones": {
+              "upper_arm.R": [
+                22,
+                0,
+                -12
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ],
+        "impact": 0.5
+      },
+      "death": {
+        "length": 1.4,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                22,
+                0,
+                -12
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "t": 0.42,
+            "bones": {
+              "upper_arm.R": [
+                -6,
+                0,
+                -18
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                22,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              -0.28
+            ]
+          },
+          {
+            "t": 0.9,
+            "bones": {
+              "upper_arm.R": [
+                22,
+                0,
+                -12
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                40,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              -0.55
+            ]
+          },
+          {
+            "t": 1.4,
+            "bones": {
+              "upper_arm.R": [
+                22,
+                0,
+                -12
+              ],
+              "forearm.R": [
+                40,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                12,
+                0,
+                8
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                40,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              -0.55
+            ]
+          }
+        ]
+      }
+    },
+    "spear": {
+      "idle": {
+        "length": 1.6,
+        "loop": true,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                36,
+                0,
+                -14
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.8,
+            "bones": {
+              "upper_arm.R": [
+                36,
+                0,
+                -14
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                7,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.6,
+            "bones": {
+              "upper_arm.R": [
+                36,
+                0,
+                -14
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "advance": {
+        "length": 0.52,
+        "loop": true,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                4
+              ]
+            }
+          },
+          {
+            "t": 0.26,
+            "bones": {
+              "upper_arm.R": [
+                16,
+                0,
+                -4
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                -4
+              ]
+            }
+          },
+          {
+            "t": 0.52,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                4
+              ]
+            }
+          }
+        ]
+      },
+      "attack": {
+        "length": 0.92,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                36,
+                0,
+                -14
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.2519,
+            "bones": {
+              "upper_arm.R": [
+                12,
+                0,
+                -22
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                -6,
+                0,
+                18
+              ]
+            }
+          },
+          {
+            "t": 0.458,
+            "bones": {
+              "upper_arm.R": [
+                92,
+                0,
+                4
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                16,
+                0,
+                -22
+              ]
+            }
+          },
+          {
+            "t": 0.658,
+            "bones": {
+              "upper_arm.R": [
+                78,
+                0,
+                2
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                -16
+              ]
+            }
+          },
+          {
+            "t": 0.92,
+            "bones": {
+              "upper_arm.R": [
+                36,
+                0,
+                -14
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ],
+        "impact": 0.458
+      },
+      "skill": {
+        "length": 1.36,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                36,
+                0,
+                -14
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.491,
+            "bones": {
+              "upper_arm.R": [
+                8,
+                0,
+                -30
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                -12,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.792,
+            "bones": {
+              "upper_arm.R": [
+                100,
+                0,
+                8
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                24,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.032,
+            "bones": {
+              "upper_arm.R": [
+                70,
+                0,
+                0
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                14,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.36,
+            "bones": {
+              "upper_arm.R": [
+                36,
+                0,
+                -14
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ],
+        "impact": 0.792
+      },
+      "hit": {
+        "length": 0.56,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                36,
+                0,
+                -14
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.12,
+            "bones": {
+              "upper_arm.R": [
+                -8,
+                0,
+                -22
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                -20,
+                0,
+                8
+              ]
+            }
+          },
+          {
+            "t": 0.56,
+            "bones": {
+              "upper_arm.R": [
+                36,
+                0,
+                -14
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "dodge": {
+        "length": 0.72,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                36,
+                0,
+                -14
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.22,
+            "bones": {
+              "upper_arm.R": [
+                8,
+                0,
+                -30
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                -8,
+                -14,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.4,
+            "bones": {
+              "upper_arm.R": [
+                36,
+                0,
+                -14
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                -8,
+                -14,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.72,
+            "bones": {
+              "upper_arm.R": [
+                36,
+                0,
+                -14
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "crit": {
+        "length": 1.08,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                36,
+                0,
+                -14
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.275,
+            "bones": {
+              "upper_arm.R": [
+                20,
+                0,
+                -40
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                0,
+                0,
+                40
+              ]
+            }
+          },
+          {
+            "t": 0.5,
+            "bones": {
+              "upper_arm.R": [
+                110,
+                0,
+                12
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                22,
+                0,
+                -30
+              ]
+            }
+          },
+          {
+            "t": 0.78,
+            "bones": {
+              "upper_arm.R": [
+                80,
+                0,
+                6
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.08,
+            "bones": {
+              "upper_arm.R": [
+                36,
+                0,
+                -14
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ],
+        "impact": 0.5
+      },
+      "death": {
+        "length": 1.4,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                36,
+                0,
+                -14
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "t": 0.42,
+            "bones": {
+              "upper_arm.R": [
+                -6,
+                0,
+                -18
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                22,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              -0.28
+            ]
+          },
+          {
+            "t": 0.9,
+            "bones": {
+              "upper_arm.R": [
+                36,
+                0,
+                -14
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                40,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              -0.55
+            ]
+          },
+          {
+            "t": 1.4,
+            "bones": {
+              "upper_arm.R": [
+                36,
+                0,
+                -14
+              ],
+              "forearm.R": [
+                70,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                42,
+                0,
+                18
+              ],
+              "forearm.L": [
+                55,
+                0,
+                0
+              ],
+              "chest": [
+                40,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              -0.55
+            ]
+          }
+        ]
+      }
+    },
+    "bow": {
+      "idle": {
+        "length": 1.6,
+        "loop": true,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                48,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.8,
+            "bones": {
+              "upper_arm.R": [
+                48,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                7,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.6,
+            "bones": {
+              "upper_arm.R": [
+                48,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "advance": {
+        "length": 0.52,
+        "loop": true,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                4
+              ]
+            }
+          },
+          {
+            "t": 0.26,
+            "bones": {
+              "upper_arm.R": [
+                16,
+                0,
+                -4
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                -4
+              ]
+            }
+          },
+          {
+            "t": 0.52,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                4
+              ]
+            }
+          }
+        ]
+      },
+      "attack": {
+        "length": 0.92,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                48,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.2519,
+            "bones": {
+              "upper_arm.R": [
+                86,
+                0,
+                -36
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                -6,
+                0,
+                18
+              ]
+            }
+          },
+          {
+            "t": 0.458,
+            "bones": {
+              "upper_arm.R": [
+                68,
+                0,
+                -62
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                16,
+                0,
+                -22
+              ]
+            }
+          },
+          {
+            "t": 0.658,
+            "bones": {
+              "upper_arm.R": [
+                46,
+                0,
+                -28
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                -16
+              ]
+            }
+          },
+          {
+            "t": 0.92,
+            "bones": {
+              "upper_arm.R": [
+                48,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ],
+        "impact": 0.458
+      },
+      "skill": {
+        "length": 1.36,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                48,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.491,
+            "bones": {
+              "upper_arm.R": [
+                96,
+                0,
+                -20
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                -12,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.792,
+            "bones": {
+              "upper_arm.R": [
+                74,
+                0,
+                -70
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                24,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.032,
+            "bones": {
+              "upper_arm.R": [
+                40,
+                0,
+                -18
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                14,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.36,
+            "bones": {
+              "upper_arm.R": [
+                48,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ],
+        "impact": 0.792
+      },
+      "hit": {
+        "length": 0.56,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                48,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.12,
+            "bones": {
+              "upper_arm.R": [
+                -8,
+                0,
+                -22
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                -20,
+                0,
+                8
+              ]
+            }
+          },
+          {
+            "t": 0.56,
+            "bones": {
+              "upper_arm.R": [
+                48,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "dodge": {
+        "length": 0.72,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                48,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.22,
+            "bones": {
+              "upper_arm.R": [
+                8,
+                0,
+                -30
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                -8,
+                -14,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.4,
+            "bones": {
+              "upper_arm.R": [
+                48,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                -8,
+                -14,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.72,
+            "bones": {
+              "upper_arm.R": [
+                48,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "crit": {
+        "length": 1.08,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                48,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.275,
+            "bones": {
+              "upper_arm.R": [
+                100,
+                0,
+                -48
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                0,
+                0,
+                40
+              ]
+            }
+          },
+          {
+            "t": 0.5,
+            "bones": {
+              "upper_arm.R": [
+                60,
+                0,
+                -80
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                22,
+                0,
+                -30
+              ]
+            }
+          },
+          {
+            "t": 0.78,
+            "bones": {
+              "upper_arm.R": [
+                36,
+                0,
+                -24
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.08,
+            "bones": {
+              "upper_arm.R": [
+                48,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ],
+        "impact": 0.5
+      },
+      "death": {
+        "length": 1.4,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                48,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "t": 0.42,
+            "bones": {
+              "upper_arm.R": [
+                -6,
+                0,
+                -18
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                22,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              -0.28
+            ]
+          },
+          {
+            "t": 0.9,
+            "bones": {
+              "upper_arm.R": [
+                48,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                40,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              -0.55
+            ]
+          },
+          {
+            "t": 1.4,
+            "bones": {
+              "upper_arm.R": [
+                48,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                90,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                78,
+                0,
+                12
+              ],
+              "forearm.L": [
+                8,
+                0,
+                0
+              ],
+              "chest": [
+                40,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              -0.55
+            ]
+          }
+        ]
+      }
+    },
+    "staff": {
+      "idle": {
+        "length": 1.6,
+        "loop": true,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                30,
+                0,
+                -6
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.8,
+            "bones": {
+              "upper_arm.R": [
+                30,
+                0,
+                -6
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                7,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.6,
+            "bones": {
+              "upper_arm.R": [
+                30,
+                0,
+                -6
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "advance": {
+        "length": 0.52,
+        "loop": true,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                4
+              ]
+            }
+          },
+          {
+            "t": 0.26,
+            "bones": {
+              "upper_arm.R": [
+                16,
+                0,
+                -4
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                -4
+              ]
+            }
+          },
+          {
+            "t": 0.52,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                4
+              ]
+            }
+          }
+        ]
+      },
+      "attack": {
+        "length": 0.92,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                30,
+                0,
+                -6
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.2519,
+            "bones": {
+              "upper_arm.R": [
+                168,
+                0,
+                -4
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                -6,
+                0,
+                18
+              ]
+            }
+          },
+          {
+            "t": 0.458,
+            "bones": {
+              "upper_arm.R": [
+                146,
+                0,
+                6
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                16,
+                0,
+                -22
+              ]
+            }
+          },
+          {
+            "t": 0.658,
+            "bones": {
+              "upper_arm.R": [
+                90,
+                0,
+                0
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                -16
+              ]
+            }
+          },
+          {
+            "t": 0.92,
+            "bones": {
+              "upper_arm.R": [
+                30,
+                0,
+                -6
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ],
+        "impact": 0.458
+      },
+      "skill": {
+        "length": 1.36,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                30,
+                0,
+                -6
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.491,
+            "bones": {
+              "upper_arm.R": [
+                175,
+                0,
+                0
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                -12,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.792,
+            "bones": {
+              "upper_arm.R": [
+                158,
+                0,
+                10
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                24,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.032,
+            "bones": {
+              "upper_arm.R": [
+                80,
+                0,
+                -8
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                14,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.36,
+            "bones": {
+              "upper_arm.R": [
+                30,
+                0,
+                -6
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ],
+        "impact": 0.792
+      },
+      "hit": {
+        "length": 0.56,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                30,
+                0,
+                -6
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.12,
+            "bones": {
+              "upper_arm.R": [
+                -8,
+                0,
+                -22
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                -20,
+                0,
+                8
+              ]
+            }
+          },
+          {
+            "t": 0.56,
+            "bones": {
+              "upper_arm.R": [
+                30,
+                0,
+                -6
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "dodge": {
+        "length": 0.72,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                30,
+                0,
+                -6
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.22,
+            "bones": {
+              "upper_arm.R": [
+                8,
+                0,
+                -30
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                -8,
+                -14,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.4,
+            "bones": {
+              "upper_arm.R": [
+                30,
+                0,
+                -6
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                -8,
+                -14,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.72,
+            "bones": {
+              "upper_arm.R": [
+                30,
+                0,
+                -6
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "crit": {
+        "length": 1.08,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                30,
+                0,
+                -6
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.275,
+            "bones": {
+              "upper_arm.R": [
+                160,
+                0,
+                -20
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                0,
+                0,
+                40
+              ]
+            }
+          },
+          {
+            "t": 0.5,
+            "bones": {
+              "upper_arm.R": [
+                132,
+                0,
+                22
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                22,
+                0,
+                -30
+              ]
+            }
+          },
+          {
+            "t": 0.78,
+            "bones": {
+              "upper_arm.R": [
+                70,
+                0,
+                8
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.08,
+            "bones": {
+              "upper_arm.R": [
+                30,
+                0,
+                -6
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ],
+        "impact": 0.5
+      },
+      "death": {
+        "length": 1.4,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                30,
+                0,
+                -6
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "t": 0.42,
+            "bones": {
+              "upper_arm.R": [
+                -6,
+                0,
+                -18
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                22,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              -0.28
+            ]
+          },
+          {
+            "t": 0.9,
+            "bones": {
+              "upper_arm.R": [
+                30,
+                0,
+                -6
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                40,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              -0.55
+            ]
+          },
+          {
+            "t": 1.4,
+            "bones": {
+              "upper_arm.R": [
+                30,
+                0,
+                -6
+              ],
+              "forearm.R": [
+                20,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                28,
+                0,
+                10
+              ],
+              "forearm.L": [
+                18,
+                0,
+                0
+              ],
+              "chest": [
+                40,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              -0.55
+            ]
+          }
+        ]
+      }
+    },
+    "shield": {
+      "idle": {
+        "length": 1.6,
+        "loop": true,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                16,
+                0,
+                -10
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.8,
+            "bones": {
+              "upper_arm.R": [
+                16,
+                0,
+                -10
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                7,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.6,
+            "bones": {
+              "upper_arm.R": [
+                16,
+                0,
+                -10
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "advance": {
+        "length": 0.52,
+        "loop": true,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                4
+              ]
+            }
+          },
+          {
+            "t": 0.26,
+            "bones": {
+              "upper_arm.R": [
+                16,
+                0,
+                -4
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                -4
+              ]
+            }
+          },
+          {
+            "t": 0.52,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                4
+              ]
+            }
+          }
+        ]
+      },
+      "attack": {
+        "length": 0.92,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                16,
+                0,
+                -10
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.2519,
+            "bones": {
+              "upper_arm.R": [
+                40,
+                0,
+                -18
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                -6,
+                0,
+                18
+              ]
+            }
+          },
+          {
+            "t": 0.458,
+            "bones": {
+              "upper_arm.R": [
+                36,
+                0,
+                24
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                16,
+                0,
+                -22
+              ]
+            }
+          },
+          {
+            "t": 0.658,
+            "bones": {
+              "upper_arm.R": [
+                14,
+                0,
+                8
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                -16
+              ]
+            }
+          },
+          {
+            "t": 0.92,
+            "bones": {
+              "upper_arm.R": [
+                16,
+                0,
+                -10
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ],
+        "impact": 0.458
+      },
+      "skill": {
+        "length": 1.36,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                16,
+                0,
+                -10
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.491,
+            "bones": {
+              "upper_arm.R": [
+                55,
+                0,
+                -24
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                -12,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.792,
+            "bones": {
+              "upper_arm.R": [
+                42,
+                0,
+                30
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                24,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.032,
+            "bones": {
+              "upper_arm.R": [
+                12,
+                0,
+                6
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                14,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.36,
+            "bones": {
+              "upper_arm.R": [
+                16,
+                0,
+                -10
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ],
+        "impact": 0.792
+      },
+      "hit": {
+        "length": 0.56,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                16,
+                0,
+                -10
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.12,
+            "bones": {
+              "upper_arm.R": [
+                -8,
+                0,
+                -22
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                -20,
+                0,
+                8
+              ]
+            }
+          },
+          {
+            "t": 0.56,
+            "bones": {
+              "upper_arm.R": [
+                16,
+                0,
+                -10
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "dodge": {
+        "length": 0.72,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                16,
+                0,
+                -10
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.22,
+            "bones": {
+              "upper_arm.R": [
+                8,
+                0,
+                -30
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                -8,
+                -14,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.4,
+            "bones": {
+              "upper_arm.R": [
+                16,
+                0,
+                -10
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                -8,
+                -14,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.72,
+            "bones": {
+              "upper_arm.R": [
+                16,
+                0,
+                -10
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "crit": {
+        "length": 1.08,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                16,
+                0,
+                -10
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.275,
+            "bones": {
+              "upper_arm.R": [
+                70,
+                0,
+                -36
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                0,
+                0,
+                40
+              ]
+            }
+          },
+          {
+            "t": 0.5,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                40
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                22,
+                0,
+                -30
+              ]
+            }
+          },
+          {
+            "t": 0.78,
+            "bones": {
+              "upper_arm.R": [
+                10,
+                0,
+                12
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.08,
+            "bones": {
+              "upper_arm.R": [
+                16,
+                0,
+                -10
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            }
+          }
+        ],
+        "impact": 0.5
+      },
+      "death": {
+        "length": 1.4,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                16,
+                0,
+                -10
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                4,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "t": 0.42,
+            "bones": {
+              "upper_arm.R": [
+                -6,
+                0,
+                -18
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                22,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              -0.28
+            ]
+          },
+          {
+            "t": 0.9,
+            "bones": {
+              "upper_arm.R": [
+                16,
+                0,
+                -10
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                40,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              -0.55
+            ]
+          },
+          {
+            "t": 1.4,
+            "bones": {
+              "upper_arm.R": [
+                16,
+                0,
+                -10
+              ],
+              "forearm.R": [
+                45,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                18,
+                0,
+                28
+              ],
+              "forearm.L": [
+                50,
+                0,
+                0
+              ],
+              "chest": [
+                40,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              -0.55
+            ]
+          }
+        ]
+      }
+    },
+    "heavy": {
+      "idle": {
+        "length": 1.6,
+        "loop": true,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -20
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                8,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.8,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -20
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                7,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.6,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -20
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                8,
+                0,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "advance": {
+        "length": 0.52,
+        "loop": true,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                4
+              ]
+            }
+          },
+          {
+            "t": 0.26,
+            "bones": {
+              "upper_arm.R": [
+                16,
+                0,
+                -4
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                -4
+              ]
+            }
+          },
+          {
+            "t": 0.52,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                4
+              ]
+            }
+          }
+        ]
+      },
+      "attack": {
+        "length": 0.92,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -20
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                8,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.2519,
+            "bones": {
+              "upper_arm.R": [
+                165,
+                0,
+                -40
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                -6,
+                0,
+                18
+              ]
+            }
+          },
+          {
+            "t": 0.458,
+            "bones": {
+              "upper_arm.R": [
+                22,
+                0,
+                28
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                16,
+                0,
+                -22
+              ]
+            }
+          },
+          {
+            "t": 0.658,
+            "bones": {
+              "upper_arm.R": [
+                10,
+                0,
+                16
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                12,
+                0,
+                -16
+              ]
+            }
+          },
+          {
+            "t": 0.92,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -20
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                8,
+                0,
+                0
+              ]
+            }
+          }
+        ],
+        "impact": 0.458
+      },
+      "skill": {
+        "length": 1.36,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -20
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                8,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.491,
+            "bones": {
+              "upper_arm.R": [
+                172,
+                0,
+                -16
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                -12,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.792,
+            "bones": {
+              "upper_arm.R": [
+                18,
+                0,
+                -8
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                24,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.032,
+            "bones": {
+              "upper_arm.R": [
+                8,
+                0,
+                4
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                14,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.36,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -20
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                8,
+                0,
+                0
+              ]
+            }
+          }
+        ],
+        "impact": 0.792
+      },
+      "hit": {
+        "length": 0.56,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -20
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                8,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.12,
+            "bones": {
+              "upper_arm.R": [
+                -8,
+                0,
+                -22
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                -20,
+                0,
+                8
+              ]
+            }
+          },
+          {
+            "t": 0.56,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -20
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                8,
+                0,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "dodge": {
+        "length": 0.72,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -20
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                8,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.22,
+            "bones": {
+              "upper_arm.R": [
+                8,
+                0,
+                -30
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                -8,
+                -14,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.4,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -20
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                -8,
+                -14,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.72,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -20
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                8,
+                0,
+                0
+              ]
+            }
+          }
+        ]
+      },
+      "crit": {
+        "length": 1.08,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -20
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                8,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 0.275,
+            "bones": {
+              "upper_arm.R": [
+                150,
+                0,
+                -55
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                0,
+                0,
+                40
+              ]
+            }
+          },
+          {
+            "t": 0.5,
+            "bones": {
+              "upper_arm.R": [
+                12,
+                0,
+                44
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                22,
+                0,
+                -30
+              ]
+            }
+          },
+          {
+            "t": 0.78,
+            "bones": {
+              "upper_arm.R": [
+                6,
+                0,
+                18
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                8,
+                0,
+                0
+              ]
+            }
+          },
+          {
+            "t": 1.08,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -20
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                8,
+                0,
+                0
+              ]
+            }
+          }
+        ],
+        "impact": 0.5
+      },
+      "death": {
+        "length": 1.4,
+        "loop": false,
+        "keys": [
+          {
+            "t": 0.0,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -20
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                8,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              0
+            ]
+          },
+          {
+            "t": 0.42,
+            "bones": {
+              "upper_arm.R": [
+                -6,
+                0,
+                -18
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                22,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              -0.28
+            ]
+          },
+          {
+            "t": 0.9,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -20
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                40,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              -0.55
+            ]
+          },
+          {
+            "t": 1.4,
+            "bones": {
+              "upper_arm.R": [
+                28,
+                0,
+                -20
+              ],
+              "forearm.R": [
+                55,
+                0,
+                0
+              ],
+              "upper_arm.L": [
+                24,
+                0,
+                16
+              ],
+              "forearm.L": [
+                30,
+                0,
+                0
+              ],
+              "chest": [
+                40,
+                0,
+                0
+              ]
+            },
+            "root": [
+              0,
+              0,
+              -0.55
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

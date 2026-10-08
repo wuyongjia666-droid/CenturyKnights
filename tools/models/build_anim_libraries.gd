@@ -2,7 +2,10 @@ extends SceneTree
 ## Turns archetypes_v92.json into one AnimationLibrary per weapon prototype.
 
 func _init() -> void:
-	var path := "res://assets/models/anim/archetypes_v92.json"
+	var proj := ProjectSettings.globalize_path("res://")
+	if proj.ends_with("/"):
+		proj = proj.substr(0, proj.length() - 1)
+	var path := proj.get_base_dir().path_join("tools/models/archetypes_v92.json")
 	var parsed = JSON.parse_string(FileAccess.get_file_as_string(path))
 	if typeof(parsed) != TYPE_DICTIONARY:
 		push_error("archetype json missing")

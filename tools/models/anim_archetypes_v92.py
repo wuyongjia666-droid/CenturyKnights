@@ -19,13 +19,7 @@ READY = {
     "forearm.R": (45, 0, 0),
     "upper_arm.L": (12, 0, 8),
     "forearm.L": (30, 0, 0),
-    "thigh.L": (8, 0, 0),
-    "thigh.R": (-6, 0, 0),
-    "shin.L": (10, 0, 0),
-    "shin.R": (6, 0, 0),
     "chest": (4, 0, 0),
-    "spine": (0, 0, 0),
-    "head": (0, 0, 0),
 }
 
 # Per-archetype rest pose, then attack / skill / crit triples: wind, hit, follow.
@@ -103,47 +97,47 @@ def build_archetype(name: str) -> dict:
             {"t": idle_len, "bones": _pose(name)},
         ], loop=True),
         "advance": _clip(advance_len, [
-            {"t": 0.0, "bones": _pose(name, **{"thigh.L": (-32, 0, 0), "thigh.R": (28, 0, 0), "shin.R": (50, 0, 0), "chest": (12, 0, 0)})},
-            {"t": advance_len * 0.5, "bones": _pose(name, **{"thigh.L": (28, 0, 0), "thigh.R": (-32, 0, 0), "shin.L": (50, 0, 0), "chest": (12, 0, 0)})},
-            {"t": advance_len, "bones": _pose(name, **{"thigh.L": (-32, 0, 0), "thigh.R": (28, 0, 0), "shin.R": (50, 0, 0), "chest": (12, 0, 0)})},
+            {"t": 0.0, "bones": _pose(name, chest=(12, 0, 4), **{"upper_arm.R": (28, 0, -16)})},
+            {"t": advance_len * 0.5, "bones": _pose(name, chest=(12, 0, -4), **{"upper_arm.R": (16, 0, -4)})},
+            {"t": advance_len, "bones": _pose(name, chest=(12, 0, 4), **{"upper_arm.R": (28, 0, -16)})},
         ], loop=True),
         "attack": _clip(0.92, [
             {"t": 0.0, "bones": _pose(name)},
             {"t": round(attack_hit * 0.55, 4), "bones": _arm(name, "attack", 0, chest=(-6, 0, 18))},
-            {"t": attack_hit, "bones": _arm(name, "attack", 1, chest=(16, 0, -22), **{"thigh.L": (-24, 0, 0)})},
+            {"t": attack_hit, "bones": _arm(name, "attack", 1, chest=(16, 0, -22))},
             {"t": round(attack_hit + 0.2, 4), "bones": _arm(name, "attack", 2, chest=(12, 0, -16))},
             {"t": 0.92, "bones": _pose(name)},
         ], impact=attack_hit),
         "skill": _clip(1.36, [
             {"t": 0.0, "bones": _pose(name)},
-            {"t": round(skill_hit * 0.62, 4), "bones": _arm(name, "skill", 0, chest=(-12, 0, 0), spine=(-4, 0, 0))},
-            {"t": skill_hit, "bones": _arm(name, "skill", 1, chest=(24, 0, 0), spine=(8, 0, 0), **{"thigh.L": (-36, 0, 0)})},
+            {"t": round(skill_hit * 0.62, 4), "bones": _arm(name, "skill", 0, chest=(-12, 0, 0))},
+            {"t": skill_hit, "bones": _arm(name, "skill", 1, chest=(24, 0, 0))},
             {"t": round(skill_hit + 0.24, 4), "bones": _arm(name, "skill", 2, chest=(14, 0, 0))},
             {"t": 1.36, "bones": _pose(name)},
         ], impact=skill_hit),
         "hit": _clip(0.56, [
             {"t": 0.0, "bones": _pose(name)},
-            {"t": 0.12, "bones": _pose(name, chest=(-20, 0, 8), head=(-16, 0, 0), **{"upper_arm.R": (-8, 0, -22)})},
+            {"t": 0.12, "bones": _pose(name, chest=(-20, 0, 8), **{"upper_arm.R": (-8, 0, -22)})},
             {"t": 0.56, "bones": _pose(name)},
         ]),
         "dodge": _clip(0.72, [
             {"t": 0.0, "bones": _pose(name)},
-            {"t": 0.22, "bones": _pose(name, spine=(0, -20, 0), chest=(-8, -14, 0), **{"thigh.L": (-12, -16, 0)})},
-            {"t": 0.4, "bones": _pose(name, spine=(0, -20, 0), chest=(-8, -14, 0))},
+            {"t": 0.22, "bones": _pose(name, chest=(-8, -14, 0), **{"upper_arm.R": (8, 0, -30)})},
+            {"t": 0.4, "bones": _pose(name, chest=(-8, -14, 0))},
             {"t": 0.72, "bones": _pose(name)},
         ]),
         "crit": _clip(1.08, [
             {"t": 0.0, "bones": _pose(name)},
-            {"t": round(crit_hit * 0.55, 4), "bones": _arm(name, "crit", 0, chest=(0, 0, 40), spine=(0, 0, 22))},
-            {"t": crit_hit, "bones": _arm(name, "crit", 1, chest=(22, 0, -30), **{"thigh.L": (-40, 0, 0)})},
+            {"t": round(crit_hit * 0.55, 4), "bones": _arm(name, "crit", 0, chest=(0, 0, 40))},
+            {"t": crit_hit, "bones": _arm(name, "crit", 1, chest=(22, 0, -30))},
             {"t": round(crit_hit + 0.28, 4), "bones": _arm(name, "crit", 2)},
             {"t": 1.08, "bones": _pose(name)},
         ], impact=crit_hit),
         "death": _clip(1.4, [
             {"t": 0.0, "bones": _pose(name), "root": [0, 0, 0]},
-            {"t": 0.42, "bones": _pose(name, chest=(22, 0, 0), **{"thigh.L": (-68, 0, 0), "shin.L": (100, 0, 0)}), "root": [0, 0, -0.28]},
-            {"t": 0.9, "bones": _pose(name, chest=(40, 0, 0), spine=(28, 0, 0)), "root": [0, 0, -0.55]},
-            {"t": 1.4, "bones": _pose(name, chest=(40, 0, 0), spine=(28, 0, 0)), "root": [0, 0, -0.55]},
+            {"t": 0.42, "bones": _pose(name, chest=(22, 0, 0), **{"upper_arm.R": (-6, 0, -18)}), "root": [0, 0, -0.28]},
+            {"t": 0.9, "bones": _pose(name, chest=(40, 0, 0)), "root": [0, 0, -0.55]},
+            {"t": 1.4, "bones": _pose(name, chest=(40, 0, 0)), "root": [0, 0, -0.55]},
         ]),
     }
 
@@ -158,8 +152,8 @@ def payload() -> dict:
 
 
 def main() -> None:
-    root = Path(__file__).resolve().parents[2]
-    out = root / "project" / "assets" / "models" / "anim" / "archetypes_v92.json"
+    root = Path(__file__).resolve().parent
+    out = root / "archetypes_v92.json"
     if len(sys.argv) > 1:
         out = Path(sys.argv[1])
     out.parent.mkdir(parents=True, exist_ok=True)
