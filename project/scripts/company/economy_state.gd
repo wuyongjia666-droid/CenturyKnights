@@ -811,10 +811,14 @@ static func apply_monthly_upkeep(host) -> String:
 	if host.food > granary:
 		host.food = granary + int(float(host.food - granary) * 0.82)
 	var msg = "月结：工资 -%d 银，粮 -%d" % [wage, food_need]
-	if host.silver < 0:
+	var paid: bool = int(host.silver) >= 0
+	if not paid:
 		host.morale = maxi(0, host.morale - 15)
 		msg += "；银币见红，士气下降"
 		host.silver = 0
+	var pay_note: String = CKMorale.on_payday(host, paid)
+	if pay_note != "":
+		msg += "；" + pay_note
 	if host.food < 0:
 		host.morale = maxi(0, host.morale - 20)
 		host.food = 0
@@ -839,6 +843,9 @@ static func apply_monthly_upkeep(host) -> String:
 			msg += "；顾问指点 %s+1" % Locale.t("stat_" + k)
 			leader.recalc_hp()
 			break
+	var healed := CKInjury.tick_month(host)
+	if healed != "":
+		msg += "；" + healed
 	return msg
 
 static func apply_harvest(host) -> String:
@@ -867,16 +874,17 @@ static func apply_harvest(host) -> String:
 	var msg = "丰收结算：+%d 粮，+%d 银（祠堂 Lv%d / 厅 Lv%d）%s" % [prod, sil, host.shrine_level, CKEconomyState.building_level(host, "hall"), extra]
 	host.log_event(msg)
 	for c in host.roster():
-		if c.injured:
+		if CKInjury.on_harvest(c):
 			c.injured = false
 			host.log_event("祠堂治愈 %s 的临时伤" % c.name)
 	return msg
 
 static func heal_at_shrine(host) -> String:
 	var n = 0
+	var lv := CKEconomyState.building_level(host, "shrine")
 	for c in host.roster():
-		if c.injured or c.hp < c.max_hp:
-			c.injured = false
+		if c.injured or c.hp < c.max_hp or not CKInjury.record(c).is_empty():
+			CKInjury.ease_at_shrine(c, lv)
 			c.hp = c.max_hp
 			n += 1
 	host.log_event("祠堂祈愈：%d 人康复" % n)

@@ -18,6 +18,7 @@ static func run(years: int = 100, seed_i: int = 91) -> Dictionary:
 	World.rng.seed = seed_i + 17
 	World.events_enabled = false
 	World.rivals_enabled = false
+	CKMorale.suppress_desertion = true
 	GameState.new_game("烬行", "灰旗", "#c9a227")
 	World.events_enabled = false
 	World.rivals_enabled = false
@@ -73,6 +74,7 @@ static func run(years: int = 100, seed_i: int = 91) -> Dictionary:
 	report["crises"] = int(houses["crises"])
 	report["recalls"] = int(houses["recalls"])
 	report["positive_traits"] = _positive_trait_kinds()
+	CKMorale.suppress_desertion = false
 	return report
 
 static func _abs() -> int:

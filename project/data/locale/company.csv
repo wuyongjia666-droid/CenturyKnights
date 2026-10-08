@@ -34,3 +34,11 @@ festival_barter_done,易货启航：8 粮换成 6 银,Barter: 8 grain for 6 silv
 festival_tourney_purse,比武散场，灰烬邦记下了旗,The muster is noted
 festival_memorial_done,追思灯前，伤月少了一截,The lamp shortens the rest
 festival_memorial_stele,追思把名字记上了先祖碑,Names go on the stele
+injury_light,轻伤,
+injury_grave,重伤休养,
+injury_dead,已阵亡,
+injury_words,遗言,
+morale_high,士气高昂,
+morale_low,士气低落,
+morale_desert,因连续欠饷离队,
+morale_held,挽留下了要走的人,
