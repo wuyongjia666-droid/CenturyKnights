@@ -2285,12 +2285,44 @@ func _tick_skill_cds(team: String) -> void:
 			if v > 0:
 				u.char.skill_cd[sid] = v - 1
 
+func _planner_board() -> Dictionary:
+	var rows: Array = []
+	for u in units:
+		var reach := 1
+		if not _is_melee(u.char):
+			reach = 2
+		rows.append({
+			"id": str(u.char.id),
+			"team": str(u.team),
+			"pos": [int(u.pos.x), int(u.pos.y)],
+			"hp": int(u.char.hp),
+			"max_hp": int(u.char.max_hp),
+			"move": int(u.char.derived_move()),
+			"reach": reach,
+			"power": int(u.char.derived_atk()),
+			"boss": bool(u.get("boss", false)),
+			"tag": str(u.get("tag", "")),
+		})
+	return {
+		"w": MAP_W,
+		"h": MAP_H,
+		"tier": AIPlanner.tier_of(GameState),
+		"objective": BattleObjectives.spec(BattleMaps.get_map(map_id)),
+		"units": rows,
+		"round": _round_no,
+		"summoned": bool(get_meta("ai_summoned", false)),
+	}
+
+
 func _enemy_ai() -> void:
 	var ecs: Array = []
 	for u in units:
 		if u.team == "enemy" and u.char.hp > 0:
 			ecs.append(u.char)
 	GameState.tick_skill_cooldowns(ecs)
+	var ai_plan := {}
+	for act in AIPlanner.plan(_planner_board()):
+		ai_plan[str(act.get("id", ""))] = act
 	for i in units.size():
 		var u = units[i]
 		if u.team != "enemy" or u.char.hp <= 0:
@@ -2302,6 +2334,10 @@ func _enemy_ai() -> void:
 		if units[i].char.hp <= 0:
 			continue
 		u = units[i]
+		var planned: Dictionary = ai_plan.get(str(u.char.id), {})
+		if str(planned.get("action", "")) == "summon" and not has_meta("ai_summoned"):
+			set_meta("ai_summoned", true)
+			_sync_objectives()
 		# 被锁且残血：优先抽身到高防格（不主动贴战）
 		var locked_self = int(u.char.temp_combat_lock) > 0
 		var mv = _compute_move_cells(i)
@@ -2354,6 +2390,10 @@ func _enemy_ai() -> void:
 					if locked_self and float(u.char.hp) / float(maxi(1, u.char.max_hp)) < 0.55:
 						approach = stand_bonus * 3.0 - float(d) * 0.25
 					var sc2 = approach + stand_bonus
+					if str(planned.get("action", "")) == "move":
+						var want: Vector2i = planned.get("cell", u.pos)
+						if pos == want:
+							sc2 += 30.0
 					if sc2 > best_score and best_target < 0:
 						best_score = sc2
 						best_pos = pos
@@ -2364,6 +2404,8 @@ func _enemy_ai() -> void:
 				u.pos = old
 				var tid = terrain[t.pos.y][t.pos.x]
 				var expect = BattleRules.expected_damage(u.char, t.char, tid, extras)
+				if str(planned.get("action", "")) == "attack" and str(t.char.id) == str(planned.get("target", "")):
+					expect += 80.0
 				if expect >= t.char.hp:
 					expect += 20.0
 					if locked_self and pos == u.pos:
