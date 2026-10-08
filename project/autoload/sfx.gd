@@ -1,22 +1,159 @@
 extends Node
 ## 原创程序 WAV 音效（无授权曲库）
 
+const WEAPONS := ["sword", "lance", "axe", "bow", "spell"]
+const TERRAINS := ["plain", "forest", "hill", "water", "bridge", "fort"]
+const BIOMES := ["fort", "urban", "ford", "hill", "fog", "nightcamp", "snow", "pass", "harbor", "plain", "archive", "forge", "shrine", "marsh"]
+const UI_SET := ["ui_hover", "ui_back", "ui_deny", "ui_open", "ui_close"]
+
 var _players: Dictionary = {}
 var _players2d: Dictionary = {}  # id -> AudioStreamPlayer2D
 var enabled: bool = true
 var _listener_origin: Vector2 = Vector2.ZERO
+var _groups: Dictionary = {}
+var _last_pick: Dictionary = {}
+var _rng := RandomNumberGenerator.new()
+var _ambience: AudioStreamPlayer
+var _ambience_id: String = ""
 
 func _ready() -> void:
+	_rng.randomize()
 	for id in ["ui_click", "ui_confirm", "hit", "miss", "win", "lose", "move", "turn", "fanfare", "lineage_chime", "skill", "deal", "crit", "heal", "escort_whip", "cart_rattle", "escort_horn", "wave_splash", "paper_tear", "anvil_clang", "lamp_flicker", "grain_pour", "frost_crackle", "bamboo_creak", "post_horn", "bell_toll", "rain_patter", "ink_drip", "bee_buzz", "flute_tone", "shadow_whoosh", "salt_crunch", "dye_splash", "drum_thump", "incense_hiss", "tide_wash", "porcelain_chime", "zoc_pulse", "zoc_leave"]:
 		var p := AudioStreamPlayer.new()
 		p.name = id
 		var path = "res://assets/sfx/%s.wav" % id
 		if ResourceLoader.exists(path):
 			p.stream = load(path)
-		p.bus = "Master"
+		p.bus = bus_for(id)
 		p.volume_db = -6.0
 		add_child(p)
 		_players[id] = p
+	_load_generated()
+	_ambience = AudioStreamPlayer.new()
+	_ambience.name = "AmbienceBed"
+	_ambience.bus = bus_for("amb_bed")
+	add_child(_ambience)
+
+func _load_generated() -> void:
+	for weapon in WEAPONS:
+		var ids: Array = []
+		for i in 3:
+			var id := "hit_%s_%d" % [weapon, i]
+			_ensure_player(id)
+			ids.append(id)
+		_groups[weapon] = ids
+	for terrain in TERRAINS:
+		var ids: Array = []
+		for i in 2:
+			var id := "step_%s_%d" % [terrain, i]
+			_ensure_player(id)
+			ids.append(id)
+		_groups["step_" + terrain] = ids
+	for id in UI_SET:
+		_ensure_player(id)
+
+func _ensure_player(id: String) -> void:
+	if _players.has(id):
+		return
+	var p := AudioStreamPlayer.new()
+	p.name = id
+	var wav := "res://assets/sfx/%s.wav" % id
+	var ogg := "res://assets/sfx/%s.ogg" % id
+	if ResourceLoader.exists(wav):
+		p.stream = load(wav)
+	elif ResourceLoader.exists(ogg):
+		p.stream = load(ogg)
+	p.bus = bus_for(id)
+	p.volume_db = -6.0
+	add_child(p)
+	_players[id] = p
+
+func bus_for(id: String) -> String:
+	var bus_name := "SFX"
+	if id.begins_with("ui_"):
+		bus_name = "UI"
+	elif id.begins_with("amb_"):
+		bus_name = "Ambience"
+	if AudioServer.get_bus_index(bus_name) < 0:
+		return "Master"
+	return bus_name
+
+func pick_variant(group: String) -> String:
+	var ids: Array = _groups.get(group, [])
+	if ids.is_empty():
+		return ""
+	var last := str(_last_pick.get(group, ""))
+	var pool: Array = []
+	for id in ids:
+		if str(id) != last:
+			pool.append(id)
+	if pool.is_empty():
+		pool = ids.duplicate()
+	var pick := str(pool[_rng.randi() % pool.size()])
+	_last_pick[group] = pick
+	return pick
+
+func next_pitch() -> float:
+	return _rng.randf_range(0.96, 1.05)
+
+func play_weapon(weapon: String) -> void:
+	var id := pick_variant(weapon)
+	if id == "":
+		play("hit")
+		return
+	_play_pitched(id)
+
+func play_attack(atk_type: String) -> void:
+	var weapon := "sword"
+	if atk_type == "ranged":
+		weapon = "bow"
+	elif atk_type == "magic":
+		weapon = "spell"
+	play_weapon(weapon)
+
+func play_footstep(terrain: String) -> void:
+	var id := pick_variant("step_" + terrain)
+	if id == "":
+		play("move")
+		return
+	_play_pitched(id)
+
+func play_ambience(biome: String) -> void:
+	if not enabled:
+		return
+	if not BIOMES.has(biome):
+		stop_ambience()
+		return
+	var id := "amb_" + biome
+	var path := "res://assets/sfx/%s.ogg" % id
+	if not ResourceLoader.exists(path):
+		stop_ambience()
+		return
+	if _ambience_id == id and _ambience.playing:
+		return
+	var stream: AudioStream = load(path)
+	if stream is AudioStreamOggVorbis:
+		(stream as AudioStreamOggVorbis).loop = true
+	_ambience.stream = stream
+	_ambience.bus = bus_for(id)
+	_ambience.volume_db = -10.0
+	_ambience_id = id
+	_ambience.play()
+
+func stop_ambience() -> void:
+	_ambience_id = ""
+	if _ambience != null:
+		_ambience.stop()
+
+func _play_pitched(id: String) -> void:
+	if not enabled:
+		return
+	var p: AudioStreamPlayer = _players.get(id)
+	if p == null or p.stream == null:
+		return
+	p.pitch_scale = next_pitch()
+	p.volume_db = -6.0
+	p.play()
 
 func play(id: String) -> void:
 	play_vol(id, -6.0)
@@ -51,7 +188,7 @@ func play_spatial(id: String, world_pos: Vector2, volume_db: float = -6.0, max_d
 		p2 = AudioStreamPlayer2D.new()
 		p2.name = id + "_2d"
 		p2.stream = p1.stream
-		p2.bus = "Master"
+		p2.bus = bus_for(id)
 		p2.max_distance = max_dist
 		p2.attenuation = 1.2
 		add_child(p2)
