@@ -44,3 +44,9 @@ deploy_jobs,推荐 %s,Suggest %s
 deploy_mix,编制 %s,Force %s
 deploy_slot,起始 %d,Start %d
 deploy_obj,目标 %s,Goal %s
+diff_pick,开局难度,Difficulty
+diff_now,当前难度 %s,Difficulty %s
+diff_casual,休闲,Casual
+diff_standard,标准,Standard
+diff_classic,经典,Classic
+diff_down_only,已选定后只能往低调,After the pick only a lower rank

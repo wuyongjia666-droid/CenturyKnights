@@ -80,6 +80,10 @@ var _mobile_bar: PanelContainer
 var danger_on := false
 var danger_focus := -1
 var _btn_danger: CheckButton
+var _lamp_charges := 0
+var _lamp_max := 0
+var _lamp_refill := false
+var _lamps_armed := false
 
 
 func _map_theme() -> String:
@@ -865,6 +869,7 @@ func _deploy() -> void:
 	var chars: Array = []
 	for u in units:
 		if u.team == "enemy":
+			CKEnemyLoadout.stamp_enemy(u.char, CKEnemyLoadout.mode_of(GameState))
 			var elite = u.char.is_leader or str(u.char.name).find("首") >= 0 or str(u.char.name).find("头目") >= 0 or str(u.char.name).find("匪首") >= 0 or u.char.level >= 4
 			var diff = GameState.battle_difficulty_from_map(map_id)
 			var tmpl = str(u.get("template", ""))
@@ -879,6 +884,7 @@ func _deploy() -> void:
 		_show_lock_practice_banner()
 	var _diff = GameState.battle_difficulty_from_map(map_id)
 	_log("敌军战技档：%d（地图 %s）" % [_diff, map_id])
+	_log(BattleObjectives.text("diff_now") % BattleObjectives.text("diff_" + CKEnemyLoadout.mode_of(GameState)))
 	_refresh_info()
 
 func _draw_map() -> void:
@@ -1844,6 +1850,7 @@ func _wait_selected() -> void:
 	_refresh_info()
 
 func _start_player_turn() -> void:
+	_arm_lamps()
 	turn_team = "player"
 	_round_no += 1
 	if _round_label:
@@ -2442,6 +2449,7 @@ func _sync_objectives() -> void:
 
 func _arm_spawned(u: Dictionary) -> void:
 	if str(u.get("team", "")) == "enemy":
+		CKEnemyLoadout.stamp_enemy(u.char, CKEnemyLoadout.mode_of(GameState))
 		var elite = u.char.is_leader or str(u.char.name).find("首") >= 0 or u.char.level >= 4
 		var diff = GameState.battle_difficulty_from_map(map_id)
 		GameState.grant_battle_enemy_skills(u.char, elite, diff, map_id, str(u.get("template", "")))
@@ -2510,13 +2518,13 @@ func _finish(win: bool) -> void:
 			_log(why)
 		phase_label.text = Locale.t("battle_lose")
 		phase_label.add_theme_color_override("font_color", UIKit.DANGER)
-		for u in units:
-			if u.team == "player":
-				u.char.hp = u.char.max_hp
+		CKEnemyLoadout.apply_defeat(units, CKEnemyLoadout.mode_of(GameState))
 	if _world_enc:
 		var wr: Dictionary = World.on_battle_end(win)  # v8.7 overworld encounter → loot / quest objective / retreat
 		if not wr.is_empty():
 			_log(str(wr.get("msg", "")))
+	for u in units:
+		CKEnemyLoadout.unstamp(u.char)
 	GameState.save_game()
 	CKAutosave.after_battle()
 	var finished := {
@@ -2562,6 +2570,18 @@ func _note_unit_downed(u, killer) -> void:
 		"killer": str(killer.name) if killer != null else "",
 	}
 	unit_downed.emit(u.char, info)
+
+func _arm_lamps() -> void:
+	if _lamps_armed:
+		return
+	_lamps_armed = true
+	var diff := int(GameState.battle_difficulty_from_map(map_id))
+	var rule := CKEnemyLoadout.lamp_rule(diff, CKEnemyLoadout.mode_of(GameState))
+	_lamp_max = int(rule.get("charges", 0))
+	_lamp_charges = _lamp_max
+	_lamp_refill = bool(rule.get("refill", false))
+	set_meta("ai_tier", int(rule.get("ai_tier", 1)))
+
 
 func _log(t: String) -> void:
 	var lines := (t + "\n" + log_label.text).split("\n")
