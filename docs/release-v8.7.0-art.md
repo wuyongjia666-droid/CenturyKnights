@@ -30,3 +30,8 @@ Playable atlas with reputation unlocks, nation gating, city vignettes (style-gat
 ## Known gaps
 - 2D doll part ingest incomplete at ship (farm batch E still draining; m173 relay intermittently unreachable). Named cast uses bespoke portraits; modular doll fills in as parts land.
 - Remaining outfit archetypes / named-hero fullbodies continue on the farm (bF4); stand-ins remain as fallback via `UnitModel.archetype_for`.
+
+## Download
+- Release: https://github.com/wuyongjia666-droid/CenturyKnights/releases/tag/v8.7.0-art
+- ZIP: https://github.com/wuyongjia666-droid/CenturyKnights/releases/download/v8.7.0-art/CenturyKnights-windows-v8.7.0-art.zip
+- SHA256: `6bc88c0979ee859b33cf76566f942c46168207778379cab1d5d931a73a4a8da3`
