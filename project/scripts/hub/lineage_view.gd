@@ -64,7 +64,28 @@ func _build() -> void:
 	_link_fx.modulate = Color(1, 1, 1, 0)
 	_link_fx.z_index = 5
 	add_child(_link_fx)
-	UIKit.footer_bar(self, [["A", "检视成员档案"], ["X", "比对血胤"], ["Y", "授旗礼"], ["ESC", "返回城堡"]], "GENEALOGY PROTOCOL · FROST_TACTICAL v8.6")
+	var jumps := HBoxContainer.new()
+	jumps.name = "LineageJumps"
+	jumps.position = Vector2(42, 604)
+	jumps.add_theme_constant_override("separation", 8)
+	add_child(jumps)
+	var codex := UIKit.ghost_button("血脉图鉴", 140, 44)
+	codex.name = "OpenCodex"
+	codex.pressed.connect(func():
+		Sfx.click()
+		get_tree().change_scene_to_file("res://scenes/hub/bloodline_codex.tscn"))
+	jumps.add_child(codex)
+	var dossier := UIKit.ghost_button("血脉详档", 140, 44)
+	dossier.name = "OpenDossier"
+	dossier.pressed.connect(func(): _open_dossier())
+	jumps.add_child(dossier)
+	var news := UIKit.ghost_button("朝报", 120, 44)
+	news.name = "OpenNews"
+	news.pressed.connect(func():
+		Sfx.click()
+		get_tree().change_scene_to_file("res://scenes/hub/court_news.tscn"))
+	jumps.add_child(news)
+	UIKit.footer_bar(self, [["A", "检视成员档案"], ["Y", "授旗礼"], ["ESC", "返回城堡"]], "GENEALOGY PROTOCOL · FROST")
 	UIFX.page_enter(self)
 
 func _gen_of(c: CKCharacter, memo: Dictionary) -> int:
@@ -244,7 +265,8 @@ func _node_card(c: CKCharacter, at: Vector2) -> void:
 	var tc := UIKit.tag_chip(tag, UIKit.ACCENT if c.is_leader else (UIKit.OK if not c.is_child else UIKit.TEXT_DIM))
 	tc.position = Vector2(12, 10)
 	b.add_child(tc)
-	var st := UIKit.body_label(("● " if c.alive else "○ ") + "%d 岁" % c.age, UIKit.OK if c.alive else UIKit.TEXT_FAINT, 11)
+	var stage := str(CKGenomePortrait.STAGE_ZH.get(CKGenomePortrait.stage_for_age(c.age), ""))
+	var st := UIKit.body_label(("● " if c.alive else "○ ") + "%d岁·%s" % [c.age, stage], UIKit.OK if c.alive else UIKit.TEXT_FAINT, 11)
 	st.autowrap_mode = TextServer.AUTOWRAP_OFF
 	st.position = Vector2(150, 10)
 	st.size = Vector2(58, 16)
@@ -298,15 +320,47 @@ func _select(c: CKCharacter) -> void:
 	_highlight()
 	_play_link_fx()
 
+func _open_dossier() -> void:
+	if _selected == null:
+		return
+	Sfx.click()
+	GameState.set_meta("dossier_id", _selected.id)
+	GameState.set_meta("dossier_back", "res://scenes/hub/lineage_view.tscn")
+	get_tree().change_scene_to_file("res://scenes/hub/unit_dossier.tscn")
+
+func _share_label(c: CKCharacter) -> String:
+	if _selected == null or c == null or c == _selected:
+		return ""
+	var focus := {}
+	for e in CKBloodline.signatures(_selected, false) + CKBloodline.expressed_traits(_selected, false):
+		if str(e.get("tier", "")) in ["royal", "noble"]:
+			focus[str(e.get("state", ""))] = str(e.get("zh", ""))
+	for e in CKBloodline.signatures(c, false) + CKBloodline.expressed_traits(c, false):
+		if focus.has(str(e.get("state", ""))) and str(e.get("tier", "")) in ["royal", "noble"]:
+			return str(focus[str(e.get("state", ""))])
+	return ""
+
 func _highlight() -> void:
 	for n in _tree.get_children():
 		if n is Button and n.has_meta("cid"):
+			var person: CKCharacter = GameState.characters.get(str(n.get_meta("cid")))
 			var on: bool = _selected != null and str(n.get_meta("cid")) == str(_selected.id)
-			var s := UIKit.flat_box(Color(UIKit.ACCENT, 0.07) if on else Color(0.055, 0.067, 0.090, 0.92), Color(UIKit.ACCENT, 0.9) if on else Color(1, 1, 1, 0.10), 8, 2 if on else 1)
+			var share := _share_label(person) if person != null else ""
+			var bd: Color = UIKit.OK if share != "" and not on else (UIKit.ACCENT if on else Color(1, 1, 1, 0.10))
+			var s := UIKit.flat_box(Color(UIKit.OK, 0.08) if share != "" and not on else (Color(UIKit.ACCENT, 0.07) if on else Color(0.055, 0.067, 0.090, 0.92)), bd, 8, 2 if on or share != "" else 1)
 			if on:
 				s.shadow_color = Color(UIKit.ACCENT, 0.25)
 				s.shadow_size = 12
 			n.add_theme_stylebox_override("normal", s)
+			var old := n.get_node_or_null("ShareMark")
+			if old:
+				old.queue_free()
+			if share != "":
+				var mk := UIKit.tag_chip(share, UIKit.OK, true)
+				mk.name = "ShareMark"
+				mk.position = Vector2(70, 90)
+				mk.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				n.add_child(mk)
 
 func _play_link_fx() -> void:
 	if _link_fx == null or _selected == null:

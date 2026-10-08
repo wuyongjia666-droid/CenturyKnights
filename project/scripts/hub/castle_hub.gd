@@ -276,7 +276,9 @@ func _build() -> void:
 		var pb := UIKit.ghost_button("请爵", 200, 32)
 		pb.name = "PromoteOpen"
 		pb.position = Vector2(16, 560)
-		pb.pressed.connect(_open_promote)
+		pb.pressed.connect(func():
+			Sfx.click()
+			get_tree().change_scene_to_file("res://scenes/hub/title_promote.tscn"))
 		rp.add_child(pb)
 
 	UIKit.footer_bar(self, [["A", "确认"], ["B", "返回"], ["LB/RB", "切换分区"], ["ESC", "主菜单"]], "CENTURYKNIGHTS · FROST_TACTICAL v8.6")

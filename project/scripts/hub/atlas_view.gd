@@ -223,16 +223,48 @@ func _add_region_button(nid: String) -> void:
 	b.custom_minimum_size = Vector2(b.get_minimum_size().x + 6, rh)
 	b.size = Vector2(b.get_minimum_size().x + 6, rh)
 	b.position = _region_pos(nid) - b.size * 0.5
-	b.tooltip_text = "%s · 声望 %d（%s）· 聚落 %d" % [nat.get("name", ""), rep, World.rep_tier_name(rep), World.nodes_in(nid).size()]
+	var marker := CKCourt.latest_marker(nid)
+	var tip := "%s · 声望 %d（%s）· 聚落 %d" % [nat.get("name", ""), rep, World.rep_tier_name(rep), World.nodes_in(nid).size()]
+	if not marker.is_empty():
+		tip += " · 朝报：%s" % str(marker.get("text", ""))
+	b.tooltip_text = tip
 	_bind_press(b, func(): _on_region_pressed(nid), func(): _info_region(nid))
 	_layer.add_child(b)
 	_node_btn[nid] = b
+	_stamp_court_mark(b, marker)
 	var sub := UIKit.mono("%s · %d" % [World.rep_tier_name(rep), World.nodes_in(nid).size()], 8, UIKit.TEXT_DIM, false)
 	sub.position = b.position + Vector2(4, 33)
 	sub.add_theme_color_override("font_outline_color", Color(0.02, 0.03, 0.05, 0.95))
 	sub.add_theme_constant_override("outline_size", 3)
 	sub.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_layer.add_child(sub)
+
+func _court_glyph(kind: String) -> String:
+	return {"birth": "生", "death": "丧", "succession": "嗣", "crisis": "危", "marriage": "婚", "recall": "归"}.get(kind, "报")
+
+func _court_color(kind: String) -> Color:
+	if kind == "birth":
+		return UIKit.OK
+	if kind == "death" or kind == "crisis":
+		return UIKit.DANGER
+	return UIKit.ACCENT
+
+func _stamp_court_mark(b: Button, marker: Dictionary) -> void:
+	if marker.is_empty():
+		return
+	var kind := str(marker.get("kind", ""))
+	var mark := Label.new()
+	mark.name = "CourtMark"
+	mark.text = _court_glyph(kind)
+	mark.position = Vector2(b.size.x - 16, -6)
+	mark.add_theme_font_size_override("font_size", 12)
+	mark.add_theme_color_override("font_color", _court_color(kind))
+	mark.add_theme_color_override("font_outline_color", Color(0.02, 0.03, 0.05, 1))
+	mark.add_theme_constant_override("outline_size", 4)
+	mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	mark.tooltip_text = str(marker.get("text", ""))
+	b.add_child(mark)
+	UIFX.breathe(mark, 0.06, 1.8)
 
 func _style_node(b: Button, col: Color, filled: bool, radius: int, pad: int = 6) -> void:
 	var n := UIKit.flat_box(Color(col, 0.92) if filled else Color(0.03, 0.04, 0.06, 0.82), Color(col, 0.9), radius, 2 if filled else 1)
@@ -313,6 +345,10 @@ func _add_node_button(n: Dictionary, markers: Dictionary, mm: Dictionary) -> voi
 		badges.append(["✓", UIKit.OK] if str(mk.kind) == "turnin" else ["◆", UIKit.DANGER])
 	if str(mm.get("node", "")) == id:
 		badges.append(["★", UIKit.EMBER])
+	if id == str(World.nations.get(_view, {}).get("capital", "")):
+		var marker := CKCourt.latest_marker(_view)
+		if not marker.is_empty():
+			badges.append([_court_glyph(str(marker.get("kind", ""))), _court_color(str(marker.get("kind", "")))])
 	var bx := _np(id).x + px * 0.5 - 4
 	for bd in badges:
 		var bl := UIKit.title_label(str(bd[0]), 12, bd[1])
@@ -744,6 +780,13 @@ func _render_hud() -> void:
 	lv.position = Vector2(520, 10)
 	lv.add_theme_constant_override("separation", 2)
 	p.add_child(lv)
+	var news_b := UIKit.ghost_button("朝报", 88, 44)
+	news_b.name = "CourtNewsOpen"
+	news_b.position = Vector2(400, 8)
+	news_b.pressed.connect(func():
+		Sfx.click()
+		_goto("res://scenes/hub/court_news.tscn"))
+	p.add_child(news_b)
 	lv.add_child(UIKit.mono("ROAD LOG", 9, UIKit.TEXT_FAINT))
 	for i in mini(6, World.travel_log.size()):
 		var l := UIKit.body_label(str(World.travel_log[i]), UIKit.TEXT_DIM if i > 0 else UIKit.TEXT, 10)
