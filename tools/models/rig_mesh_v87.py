@@ -209,7 +209,7 @@ def _arm_points(co, sx):
         if len(runs) >= 2 and np.mean(runs[-1]) > 0.13 * H: c = float(np.mean(runs[-1])); break
     if c is None: return np.zeros((0, 3)), []
     out = []; miss = 0; z0 = 0.74 * H
-    while z0 > 0.30 * H:
+    while z0 > 0.40 * H:  # A-pose hands sit ~0.45-0.5H; below that the window only finds coat strands
         sl = side[(side[:, 2] >= z0 - step) & (side[:, 2] < z0)]
         w = sl[np.abs(sl[:, 0] - c) < 0.07]
         if len(w) >= 2:
@@ -242,6 +242,14 @@ def landmarks(ob):
         # pull the tip inside the hand volume a little
         J["shoulder." + s] = sh
         J["elbow." + s] = sh.lerp(tip, 0.42); J["wrist." + s] = sh.lerp(tip, 0.80); J["handtip." + s] = sh.lerp(tip, 0.95)
+    # A-pose bodies are symmetric: a trace that wandered onto the coat (tip far inboard of the other side) is mirrored
+    tl, tr = J["handtip.L"], J["handtip.R"]
+    for bad, good in (("R", "L"), ("L", "R")):
+        if abs(J["handtip." + good].x) - abs(J["handtip." + bad].x) > 0.12:
+            sh = J["shoulder." + bad]; tip = J["handtip." + good].copy(); tip.x = -tip.x
+            tip = sh + (tip - sh) / 0.95  # handtip sits at 0.95 of shoulder->tip
+            J["elbow." + bad] = sh.lerp(tip, 0.42); J["wrist." + bad] = sh.lerp(tip, 0.80); J["handtip." + bad] = sh.lerp(tip, 0.95)
+            log("arm", bad, "mirrored from", good)
     torso = co[(co[:, 2] > 0.55 * H) & (co[:, 2] < 0.80 * H) & (np.abs(co[:, 0]) < 0.10 * H)]
     ty = float(np.median(torso[:, 1])) if len(torso) else 0.0
     head = co[co[:, 2] > 0.88 * H]
