@@ -1,9 +1,10 @@
 class_name CKGenomePortrait
 extends RefCounted
-## Plan A (v8.9): one genome-seeded half-body portrait per unit. Paper-doll layering is retired.
-## The art farm renders `export_manifest()`; `ingest_dir` / `ingest_manifest` map files back by unit_id.
-## Family resemblance is the shared prompt descriptors, not a shared file.
-## Bloodline copy is NOT owned here. Register `set_bloodline_clause_hook` from the bloodline pack.
+## Plan A: one complete Qwen gene-seed half-body per unit. Paper-doll layering is retired.
+## Resolution order: unit_id plate (current stage, else nearest rendered stage, else legacy file)
+## → nearest genome-bank bucket (CKPortraitBank) → null, so UnitArt keeps its old fallback chain.
+## An empty bank directory does not change that fallback. Family resemblance is the shared
+## descriptors, not a shared collage. Bloodline copy is NOT owned here.
 
 const RES_DIR := "res://assets/art/portraits/genome/"
 const USER_DIR := "user://genome_portrait_cache/"
@@ -306,7 +307,7 @@ static func describe(c: Object) -> Dictionary:
 	tokens.append("mark:%s" % mk)
 	heritable.append("mark:%s" % mk)
 	if mk == "none":
-		prose.append("no birthmark")
+		prose.append("unmarked skin")
 	elif mk == "ember_sigil":
 		var faint := mk_s < 0.99
 		var stok := "mark_strength:%s" % ("faint" if faint else "full")
@@ -317,7 +318,7 @@ static func describe(c: Object) -> Dictionary:
 		# v8.9: no glowing temple birthmark; the Frostcrown sign (rime lashes) comes from the bloodline clause
 		tokens.append("mark_strength:full")
 		heritable.append("mark_strength:full")
-		prose.append("no birthmark")
+		prose.append("unmarked skin")
 	else:
 		prose.append(mk)
 	var scars: Array = []
@@ -493,12 +494,26 @@ static func texture(c: Object) -> Texture2D:
 	if legacy != null:
 		_mem[key] = legacy
 		return legacy
+	var bank := _bank_plate(c)
+	if bank != null:
+		_mem[key] = bank
+		return bank
 	_miss[key] = true
 	return null
+
+static func _bank_plate(c: Object) -> Texture2D:
+	var scr = load("res://scripts/art/portrait_bank.gd")
+	if scr == null:
+		return null
+	var tex = scr.try_texture(c)
+	return tex if tex is Texture2D else null
 
 static func clear_mem() -> void:
 	_mem.clear()
 	_miss.clear()
+	var scr = load("res://scripts/art/portrait_bank.gd")
+	if scr != null:
+		scr.clear_cache()
 
 static func cache_key(c: Object) -> String:
 	_ensure(c)
