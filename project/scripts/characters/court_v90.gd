@@ -80,6 +80,61 @@ static func promotion_block(c: Object, ctx: Dictionary = {}) -> String:
 		return ""
 	return "升%s还差：%s" % [ladder_zh(nxt), "、".join(bits)]
 
+## Display rows for the promotion screen. Same gates as promotion_block.
+static func requirement_rows(c: Object, ctx: Dictionary = {}) -> Array:
+	var nxt := next_title(c)
+	if nxt == "":
+		return []
+	var need: Dictionary = STEP_NEED.get(nxt, {})
+	var got := _profile(c, ctx)
+	var married_need := 1 if bool(need.get("married", false)) else 0
+	var married_have := 1 if bool(got["married"]) else 0
+	return [
+		{"id": "merit", "label": "功勋", "have": int(got["merit"]), "need": int(need.get("merit", 0))},
+		{"id": "fiefs", "label": "封地", "have": int(got["fiefs"]), "need": int(need.get("fiefs", 0))},
+		{"id": "married", "label": "婚约", "have": married_have, "need": married_need},
+		{"id": "rep", "label": "邦交", "have": int(got["rep"]), "need": int(need.get("rep", 0))},
+	]
+
+static func news_events() -> Array:
+	var world = Engine.get_main_loop().root.get_node_or_null("World") if Engine.get_main_loop() else null
+	if world == null or typeof(world.get("royal_courts")) != TYPE_DICTIONARY:
+		return []
+	var nations: Dictionary = (world.royal_courts as Dictionary).get("nations", {})
+	var out: Array = []
+	for nid in nations.keys():
+		var house: Dictionary = nations[nid] if typeof(nations[nid]) == TYPE_DICTIONARY else {}
+		var crisis := str(house.get("crisis_name", ""))
+		for ev in house.get("log", []):
+			if typeof(ev) != TYPE_DICTIONARY:
+				continue
+			out.append({
+				"year": int(ev.get("year", 0)),
+				"kind": str(ev.get("kind", "")),
+				"text": str(ev.get("text", "")),
+				"nation": str(nid),
+				"nation_zh": str(CKBloodline.nation(str(nid)).get("name", nid)),
+				"crisis": crisis,
+			})
+	out.sort_custom(func(a, b): return int(a["year"]) > int(b["year"]))
+	return out
+
+static func latest_marker(nid: String) -> Dictionary:
+	var world = Engine.get_main_loop().root.get_node_or_null("World") if Engine.get_main_loop() else null
+	if world == null or typeof(world.get("royal_courts")) != TYPE_DICTIONARY:
+		return {}
+	var nations: Dictionary = (world.royal_courts as Dictionary).get("nations", {})
+	var house: Dictionary = nations.get(nid, {}) if typeof(nations.get(nid, {})) == TYPE_DICTIONARY else {}
+	if house.is_empty():
+		return {}
+	var crisis := str(house.get("crisis_name", ""))
+	var log: Array = house.get("log", []) if typeof(house.get("log")) == TYPE_ARRAY else []
+	if log.is_empty() and crisis == "":
+		return {}
+	var last: Dictionary = log[log.size() - 1] if not log.is_empty() and typeof(log[log.size() - 1]) == TYPE_DICTIONARY else {}
+	var kind := "crisis" if crisis != "" else str(last.get("kind", ""))
+	return {"kind": kind, "text": str(last.get("text", crisis)), "crisis": crisis}
+
 ## Raise one step. Reaching 伯爵 writes rank "count", which wakes the Ashbanner chart the same way a deed does.
 static func promote(c: Object, ctx: Dictionary = {}) -> Dictionary:
 	var block := promotion_block(c, ctx)
@@ -588,43 +643,92 @@ static func _nudge_rep(world, nid: String, delta: int) -> void:
 
 # ── Stitch panels (same kit as the city and the castle) ──
 static func build_lamp_ui(host: Control, board: Dictionary, on_bid: Callable) -> void:
-	var p := UIKit.panel_at(host, Rect2(0, 0, 520, 420), 10)
+	var p := UIKit.panel_at(host, Rect2(0, 0, 820, 540), 12)
 	p.name = "LampSeat"
 	var en := UIKit.mono("LAMP SEAT // 灯籍竞价", 9, UIKit.ACCENT)
-	en.position = Vector2(16, 12)
+	en.position = Vector2(22, 16)
 	p.add_child(en)
-	var title := UIKit.title_label("灯籍", 20)
-	title.position = Vector2(16, 28)
+	var title := UIKit.title_label("灯籍", 28)
+	title.position = Vector2(22, 32)
 	p.add_child(title)
 	var purity := int(round(float(board.get("purity", 0.0)) * 100.0))
-	var body := UIKit.body_label("灯丝不卖。灯籍只是名分。血越纯、邦交越高，底价越低。夜市上还有别人在出价。\n灯丝纯度 %d%% · 男爵底价 %d · 伯爵底价 %d · 邦交折让 %d" % [purity, int(board.get("ask_baron", 0)), int(board.get("ask_count", 0)), int(board.get("cut", 0))], UIKit.TEXT_DIM, 12)
-	body.position = Vector2(16, 64)
-	body.size = Vector2(488, 72)
-	body.custom_minimum_size = Vector2(488, 0)
+	var purity_l := UIKit.mono("灯丝纯度", 9, UIKit.TEXT_FAINT)
+	purity_l.position = Vector2(560, 18)
+	p.add_child(purity_l)
+	var purity_v := UIKit.mono("%d%%" % purity, 22, UIKit.ACCENT)
+	purity_v.position = Vector2(560, 34)
+	p.add_child(purity_v)
+	var bar := UIKit.slim_bar(float(purity), 100.0, UIKit.ACCENT, 220, 4)
+	bar.position = Vector2(560, 66)
+	p.add_child(bar)
+	var body := UIKit.body_label("灯丝不卖。灯籍只是名分。血越纯、邦交越高，底价越低。夜市按本年种子出价，落槌不改血。", UIKit.TEXT_DIM, 13)
+	body.position = Vector2(22, 78)
+	body.size = Vector2(500, 40)
+	body.custom_minimum_size = Vector2(500, 0)
 	p.add_child(body)
-	var y := 150.0
+	var meta := UIKit.mono("男爵底价 %d    伯爵底价 %d    邦交折让 %d" % [int(board.get("ask_baron", 0)), int(board.get("ask_count", 0)), int(board.get("cut", 0))], 11, UIKit.TEXT_DIM, false)
+	meta.position = Vector2(22, 124)
+	p.add_child(meta)
+	var track := Control.new()
+	track.name = "BidTimeline"
+	track.position = Vector2(22, 168)
+	track.size = Vector2(776, 210)
+	p.add_child(track)
+	var rail := UIKit.hairline(Color(UIKit.ACCENT, 0.35))
+	rail.position = Vector2(8, 78)
+	rail.size = Vector2(760, 2)
+	track.add_child(rail)
+	var bids: Array = []
+	var lo := int(board.get("ask_baron", 80))
+	var hi := maxi(int(board.get("ask_count", lo + 1)), int(board.get("top", lo + 1)))
 	for rv in board.get("rivals", []):
-		var row := UIKit.body_label("%s 出价 %d" % [rv.get("name", ""), int(rv.get("bid", 0))], UIKit.TEXT, 13)
-		row.position = Vector2(16, y)
-		p.add_child(row)
-		y += 22.0
-	var top := UIKit.body_label("要压过夜市，至少 %d" % int(board.get("top", 0)), UIKit.ACCENT, 13)
-	top.position = Vector2(16, y + 6)
+		bids.append({"name": str(rv.get("name", "")), "bid": int(rv.get("bid", 0)), "you": false})
+	bids.append({"name": "男爵席", "bid": int(board.get("ask_baron", 0)), "you": true, "seat": "baron"})
+	bids.append({"name": "伯爵席", "bid": maxi(int(board.get("ask_count", 0)), int(board.get("top", 0))), "you": true, "seat": "count"})
+	var span := maxi(1, hi - mini(lo, int(board.get("ask_baron", lo))) + 40)
+	var origin := mini(lo, int(board.get("ask_baron", lo))) - 20
+	bids.sort_custom(func(a, b): return int(a["bid"]) < int(b["bid"]))
+	for i in bids.size():
+		var bid := int(bids[i]["bid"])
+		var x := clampf(float(bid - origin) / float(span), 0.0, 1.0) * 720.0
+		var you: bool = bool(bids[i].get("you", false))
+		var dot := Panel.new()
+		dot.position = Vector2(x, 70)
+		dot.size = Vector2(16, 16)
+		dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var col: Color = UIKit.ACCENT if you else UIKit.TEXT_DIM
+		dot.add_theme_stylebox_override("panel", UIKit.flat_box(col, col, 8))
+		track.add_child(dot)
+		var nm := UIKit.body_label("%s\n%d" % [str(bids[i]["name"]), bid], col, 12)
+		nm.position = Vector2(x - 36, 22 if i % 2 == 0 else 96)
+		nm.size = Vector2(110, 40)
+		nm.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		track.add_child(nm)
+	var top := UIKit.body_label("压过夜市至少 %d。低于此数，灯籍不落槌。" % int(board.get("top", 0)), UIKit.ACCENT, 13)
+	top.position = Vector2(22, 392)
 	p.add_child(top)
-	var bid_b := UIKit.cta_button("出价男爵 %d" % int(board.get("ask_baron", 0)), "", 220, 40)
+	var bid_b := UIKit.cta_button("出价男爵 %d" % int(board.get("ask_baron", 0)), "", 240, 44)
 	bid_b.name = "LampBidBaron"
-	bid_b.position = Vector2(16, 340)
-	bid_b.pressed.connect(func(): on_bid.call(int(board.get("ask_baron", 0))))
+	bid_b.position = Vector2(22, 468)
+	bid_b.pressed.connect(func():
+		Sfx.click()
+		Sfx.play("lamp_flicker")
+		on_bid.call(int(board.get("ask_baron", 0))))
 	p.add_child(bid_b)
-	var bid_c := UIKit.ghost_button("出价伯爵 %d" % maxi(int(board.get("ask_count", 0)), int(board.get("top", 0))), 240, 40)
-	bid_c.name = "LampBidCount"
-	bid_c.position = Vector2(250, 340)
 	var count_bid := maxi(int(board.get("ask_count", 0)), int(board.get("top", 0)))
-	bid_c.pressed.connect(func(): on_bid.call(count_bid))
+	var bid_c := UIKit.ghost_button("出价伯爵 %d" % count_bid, 260, 44)
+	bid_c.name = "LampBidCount"
+	bid_c.position = Vector2(280, 468)
+	bid_c.pressed.connect(func():
+		Sfx.click()
+		Sfx.play("lamp_flicker")
+		on_bid.call(count_bid))
 	p.add_child(bid_c)
+	UIFX.wire_tree(p)
+	UIFX.fade_in(track, 0.28)
 
 static func build_promote_ui(host: Control, c: Object, ctx: Dictionary, on_promote: Callable) -> void:
-	var p := UIKit.panel_at(host, Rect2(0, 0, 360, 220), 10)
+	var p := UIKit.panel_at(host, Rect2(0, 0, 420, 300), 10)
 	p.name = "PromoteSeat"
 	var en := UIKit.mono("TITLE // 请爵", 9, UIKit.ACCENT)
 	en.position = Vector2(16, 12)
@@ -634,15 +738,32 @@ static func build_promote_ui(host: Control, c: Object, ctx: Dictionary, on_promo
 	var title := UIKit.title_label("%s → %s" % [ladder_zh(now), ladder_zh(nxt) if nxt != "" else "—"], 18)
 	title.position = Vector2(16, 28)
 	p.add_child(title)
+	var y := 68.0
+	for row in requirement_rows(c, ctx):
+		var have := int(row["have"])
+		var need := int(row["need"])
+		var ok := need <= 0 or have >= need
+		var lab := UIKit.body_label("%s  %d / %d" % [str(row["label"]), have, need], UIKit.OK if ok else UIKit.TEXT, 13)
+		lab.name = "Req" + str(row["id"]).capitalize()
+		lab.position = Vector2(16, y)
+		lab.size = Vector2(180, 18)
+		p.add_child(lab)
+		var bar := UIKit.slim_bar(float(have), float(maxi(need, 1)), UIKit.OK if ok else UIKit.ACCENT, 180, 4)
+		bar.position = Vector2(210, y + 7)
+		p.add_child(bar)
+		y += 28.0
 	var block := promotion_block(c, ctx)
-	var body := UIKit.body_label(block if block != "" else "功勋、封地、婚约与邦交都够。升到伯爵时，烬图携因者的河图纹会醒。旗誓仍是另一条路。", UIKit.TEXT_DIM, 12)
-	body.position = Vector2(16, 64)
-	body.size = Vector2(328, 80)
-	body.custom_minimum_size = Vector2(328, 0)
+	var body := UIKit.body_label(block if block != "" else "四项都够。升到伯爵时，烬图携因者的河图纹会醒。旗誓仍是另一条路。", UIKit.TEXT_DIM, 12)
+	body.position = Vector2(16, 188)
+	body.size = Vector2(388, 48)
+	body.custom_minimum_size = Vector2(388, 0)
 	p.add_child(body)
-	var b := UIKit.cta_button("请爵", "", 140, 40)
+	var b := UIKit.cta_button("请爵", "", 160, 44)
 	b.name = "PromoteTitle"
-	b.position = Vector2(16, 160)
+	b.position = Vector2(16, 240)
 	b.disabled = block != ""
-	b.pressed.connect(on_promote)
+	b.pressed.connect(func():
+		Sfx.click()
+		on_promote.call())
 	p.add_child(b)
+	UIFX.wire_tree(p)

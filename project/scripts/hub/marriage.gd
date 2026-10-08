@@ -20,6 +20,9 @@ var _tabs: HBoxContainer
 var _cards: Control
 var _grade: Label
 var _marry_btn: Button
+var _rite_on: Dictionary = {}
+var _rite_board: Control
+var _punnett: Control
 
 func _ready() -> void:
 	UIFX.fade_in(self, 0.3)
@@ -81,16 +84,17 @@ func _build() -> void:
 	_seal_fx.z_index = 5
 	add_child(_seal_fx)
 
-	var fl := UIKit.mono("ALLIANCE FORECAST", 9, UIKit.TEXT_FAINT)
-	fl.position = Vector2(42, 594)
-	add_child(fl)
-	_msg = UIKit.body_label("联姻后可起「义役」：六月护路共济——真月结代价，换声望与商路安稳。", UIKit.TEXT_DIM, 12)
-	_msg.position = Vector2(42, 612)
-	_msg.size = Vector2(560, 40)
+	_rite_board = UIKit.panel_at(self, Rect2(42, 516, 600, 112), 10)
+	_rite_board.name = "RiteBoard"
+	_punnett = UIKit.panel_at(self, Rect2(654, 516, 584, 112), 10)
+	_punnett.name = "PunnettBoard"
+	_msg = UIKit.body_label("选定婚仪后，这里写明子女会怎样入谱。", UIKit.TEXT_DIM, 12)
+	_msg.position = Vector2(54, 600)
+	_msg.size = Vector2(560, 24)
 	_msg.custom_minimum_size = Vector2(560, 0)
 	add_child(_msg)
 	var row := HBoxContainer.new()
-	row.position = Vector2(602, 628)
+	row.position = Vector2(602, 636)
 	row.size = Vector2(636, 44)
 	row.alignment = BoxContainer.ALIGNMENT_END
 	row.add_theme_constant_override("separation", 10)
@@ -323,38 +327,104 @@ func _harmony_card(rect: Rect2, a: CKCharacter, b: CKCharacter) -> void:
 		var cp := UIKit.mono("%d%% 显性" % int(round(float(tp[i].prob) * 100)), 9, UIKit.TEXT_FAINT, false)
 		cp.position = Vector2((cw - cp.get_minimum_size().x) * 0.5, 20)
 		chip.add_child(cp)
-	# aptitude ranges 3×2
-	var ag := GridContainer.new()
-	ag.columns = 3
-	ag.position = Vector2(22, 248)
-	ag.add_theme_constant_override("h_separation", 10)
-	ag.add_theme_constant_override("v_separation", 2)
-	p.add_child(ag)
-	for sk in CKCharacter.STAT_KEYS:
-		var cell := UIKit.kv_row(Locale.t("stat_" + sk), "%d–%d" % [ex.apt_min[sk], ex.apt_max[sk]], UIKit.TEXT, (rect.size.x - 64) / 3.0)
-		ag.add_child(cell)
-	# blood mix + hair line
-	var parts: Array = []
-	for k in ex.blood_mix.keys():
-		parts.append("%s %d%%" % [GameState.get_bloodline(k).get("name", k), int(round(float(ex.blood_mix[k]) * 100))])
-	var hair: Array = []
-	for ap in ex.appearance_probs.get("hair", []).slice(0, 2):
-		hair.append("%s %.0f%%" % [ap.name, ap.prob * 100])
-	var sig := str(ex.get("sig_zh", "")).trim_prefix("冕征预期：")
-	var bl := UIKit.body_label("血胤  %s\n发色  %s\n冕征  %s" % [" · ".join(parts), " · ".join(hair), sig], UIKit.TEXT_FAINT, 11)
-	bl.position = Vector2(22, 290)
-	bl.size = Vector2(rect.size.x - 44, 52)
-	bl.custom_minimum_size = Vector2(rect.size.x - 44, 0)
-	p.add_child(bl)
-
 func _render_cards() -> void:
 	for c in _cards.get_children():
 		_cards.remove_child(c)
 		c.queue_free()
 	var leader = GameState.get_leader()
-	_house_card(Rect2(42, 226, 386, 348), leader, "宗主一方", "CLAN PRINCIPAL", UIKit.ACCENT, "SERIES: VII-01")
-	_harmony_card(Rect2(448, 226, 384, 348), leader, _selected)
-	_house_card(Rect2(852, 226, 386, 348), _selected, "应帖一方", "ALLIED SPOUSE", UIKit.OK, "SERIES: IV-02")
+	_house_card(Rect2(42, 218, 386, 292), leader, "宗主一方", "CLAN PRINCIPAL", UIKit.ACCENT, "SERIES: VII-01")
+	_harmony_card(Rect2(448, 218, 384, 292), leader, _selected)
+	_house_card(Rect2(852, 218, 386, 292), _selected, "应帖一方", "ALLIED SPOUSE", UIKit.OK, "SERIES: IV-02")
+	_fill_forecast(leader, _selected)
+
+func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
+	if _rite_board == null or _punnett == null:
+		return
+	for ch in _rite_board.get_children():
+		ch.queue_free()
+	for ch in _punnett.get_children():
+		ch.queue_free()
+	var cap := UIKit.mono("RITES // 婚仪与后果", 9, UIKit.ACCENT)
+	cap.position = Vector2(12, 8)
+	_rite_board.add_child(cap)
+	_sync_rite_flags(a, b)
+	var rites: Array = CKCourt.required_rites(a, b) if a != null and b != null else []
+	if rites.is_empty():
+		var none := UIKit.body_label("无必须婚仪。子女按常例入谱。", UIKit.TEXT_DIM, 12)
+		none.position = Vector2(12, 40)
+		none.size = Vector2(560, 36)
+		_rite_board.add_child(none)
+	else:
+		var x := 12.0
+		for r in rites:
+			var id := str(r.get("id", ""))
+			var on := bool(_rite_on.get(id, true))
+			var btn := UIKit.ghost_button("%s %s" % ["✓" if on else "○", str(r.get("name", id))], 136, 44)
+			btn.name = "Rite_" + id
+			btn.position = Vector2(x, 32)
+			btn.tooltip_text = "%s\n若不接受：%s" % [str(r.get("desc", "")), str(r.get("block", ""))]
+			var captured := id
+			btn.pressed.connect(func():
+				_rite_on[captured] = not bool(_rite_on.get(captured, true))
+				Sfx.click()
+				if str(captured) == "frost":
+					Sfx.play("frost_crackle")
+				_fill_forecast(GameState.get_leader(), _selected))
+			_rite_board.add_child(btn)
+			x += 144.0
+	_consequence_line(a, b)
+	var ph := UIKit.mono("PUNNETT // 每项性状", 9, UIKit.TEXT_FAINT)
+	ph.position = Vector2(12, 6)
+	_punnett.add_child(ph)
+	var holder := VBoxContainer.new()
+	holder.position = Vector2(12, 24)
+	holder.size = Vector2(560, 76)
+	_punnett.add_child(holder)
+	CKCourtChrome.fill_punnett(holder, a, b, 2)
+	UIFX.wire_tree(_rite_board)
+
+func _sync_rite_flags(a: CKCharacter, b: CKCharacter) -> void:
+	var nxt := {}
+	if a != null and b != null:
+		for r in CKCourt.required_rites(a, b):
+			var id := str(r.get("id", ""))
+			nxt[id] = bool(_rite_on.get(id, true))
+	_rite_on = nxt
+
+func _vow_rite_copy(leader: CKCharacter) -> String:
+	if leader == null or _selected == null:
+		return ""
+	var bits: Array = []
+	var cost := 0
+	for r in CKCourt.required_rites(leader, _selected):
+		var id := str(r.get("id", ""))
+		var on := bool(_rite_on.get(id, false))
+		cost += int(r.get("cost", 0)) if on else 0
+		bits.append("%s：%s" % [str(r.get("name", id)), str(r.get("desc", "")) if on else str(r.get("block", ""))])
+	if bits.is_empty():
+		return "无必须婚仪。"
+	return "婚仪（礼银 %d）\n%s" % [cost, "\n".join(bits)]
+
+func _accepted_ids() -> Array:
+	var ids: Array = []
+	for k in _rite_on.keys():
+		if bool(_rite_on[k]):
+			ids.append(str(k))
+	return ids
+
+func _consequence_line(a: CKCharacter, b: CKCharacter) -> void:
+	if _msg == null:
+		return
+	if a == null or b == null:
+		_msg.text = "选定双方后，这里写明婚仪会把子女写成什么样。"
+		return
+	var bits: Array = []
+	for r in CKCourt.required_rites(a, b):
+		var id := str(r.get("id", ""))
+		bits.append(str(r.get("desc", "")) if bool(_rite_on.get(id, false)) else str(r.get("block", "")))
+	_msg.text = " ".join(bits) if not bits.is_empty() else "无特殊婚仪。子女按常例入谱。"
+	var blocked := CKCourt.rite_block(a, b, _accepted_ids()) != ""
+	_msg.add_theme_color_override("font_color", UIKit.DANGER if blocked else UIKit.TEXT_DIM)
 
 func play_seal_fx(hold: bool = false) -> void:
 	if _seal_fx == null:
@@ -384,12 +454,12 @@ func _select(c: CKCharacter) -> void:
 			b.button_pressed = (b.get_meta("cand") == c)
 	_render_cards()
 	var check = Lineage.can_propose(GameState.get_leader(), c)
-	_marry_btn.disabled = not bool(check.get("ok"))
-	_marry_btn.tooltip_text = str(check.get("msg", ""))
+	var rite_block := CKCourt.rite_block(GameState.get_leader(), c, _accepted_ids()) if check.get("ok") else ""
+	_marry_btn.disabled = not bool(check.get("ok")) or rite_block != ""
+	_marry_btn.tooltip_text = str(check.get("msg", "")) if not check.get("ok") else rite_block
 	if not check.get("ok"):
 		_msg.text = "门槛：%s" % str(check.get("msg", ""))
-	else:
-		_msg.text = "盟约收益预期：灰烬邦声望 +6 · 嫁妆旁注永续 · 子嗣可于成年行授旗礼入队。"
+		_msg.add_theme_color_override("font_color", UIKit.DANGER)
 
 func _start_vow() -> void:
 	if _selected == null:
@@ -410,9 +480,8 @@ func _show_vow() -> void:
 	var b = _selected.name
 	match _vow_step:
 		0:
-			var rite := CKCourt.explain_zh(leader, _selected) if leader != null and _selected != null else ""
-			var rite_block := ("\n\n[b]婚约前置[/b]\n" + rite) if rite != "" else ""
-			_vow_body.text = "[b]誓约·第一步 · 宣读子嗣期望[/b]\n\n厅上众人静听。\n%s 与 %s 将共旗同席。\n请确认右侧子嗣期望无误，再向前一步。%s" % [a, b, rite_block]
+			var rite := _vow_rite_copy(leader)
+			_vow_body.text = "[b]誓约·第一步 · 宣读子嗣期望[/b]\n\n厅上众人静听。\n%s 与 %s 将共旗同席。\n婚仪在下方点选：勾上才写入子女，取消则按那条誓约拦住这门亲事。\n%s" % [a, b, rite]
 			_vow_btn("确认期望，继续", func(): _vow_step = 1; _show_vow())
 			_vow_btn("取消", func(): _vow_panel.visible = false)
 		1:
@@ -428,16 +497,8 @@ func _show_vow() -> void:
 			_vow_btn("商本", func(): _vow_doctrine = "commerce"; _vow_step = 3; _show_vow())
 			_vow_btn("取消", func(): _vow_panel.visible = false)
 		3:
-			var rite_line := ""
-			if leader != null and _selected != null:
-				var bits: Array = []
-				var cost := 0
-				for r in CKCourt.required_rites(leader, _selected):
-					bits.append(str(r.get("name", "")))
-					cost += int(r.get("cost", 0))
-				if not bits.is_empty():
-					rite_line = "\n已确认：%s。礼银 %d，与聘礼一并入库。子女按这些誓约入谱。" % ["、".join(bits), cost]
-			_vow_body.text = "[b]誓约·第四步 · 定聘落成[/b]\n\n聘礼 40 银将入库。家训与嫁妆写入族谱旁注。\n妊娠将在岁月中推进；陆桥会传『灰旗有家，可托孤』。%s" % rite_line
+			var rite_line := _vow_rite_copy(leader)
+			_vow_body.text = "[b]誓约·第四步 · 定聘落成[/b]\n\n聘礼 40 银将入库。家训与嫁妆写入族谱旁注。\n妊娠将在岁月中推进；陆桥会传『灰旗有家，可托孤』。\n%s" % rite_line
 			_vow_btn("落成婚约", func(): _finish_marry())
 			_vow_btn("取消", func(): _vow_panel.visible = false)
 
@@ -452,9 +513,7 @@ func _finish_marry() -> void:
 	if _selected == null:
 		return
 	var leader = GameState.get_leader()
-	var ids: Array = []
-	for rite in CKCourt.required_rites(leader, _selected):
-		ids.append(str(rite.get("id", "")))
+	var ids := _accepted_ids()
 	var r = Lineage.marry(leader, _selected, 40, ids)
 	_msg.text = str(r.get("msg", ""))
 	_vow_panel.visible = false

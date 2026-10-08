@@ -54,7 +54,9 @@ func _ready() -> void:
 	vb.name = "VerifyBlood"
 	vb.position = Vector2(1016, 634)
 	vb.tooltip_text = "为家族与编制中尚未验血者验明血谱：揭出潜征携因、拆穿伪胤，验过者可凭血契议婚、入锻场。"
-	vb.pressed.connect(_verify)
+	vb.pressed.connect(func():
+		Sfx.click()
+		get_tree().change_scene_to_file("res://scenes/hub/blood_test.tscn"))
 	add_child(vb)
 	UIKit.footer_bar(self, [["A", "祈愈"], ["V", "验血"], ["W", "前往工事"], ["ESC", "返回城堡"]], "SANCTUARY // LV %d · v8.9" % lv)
 	UIFX.page_enter(self)
@@ -69,7 +71,7 @@ func _unhandled_input(e: InputEvent) -> void:
 	elif e is InputEventKey and e.pressed and not e.echo and (e as InputEventKey).keycode == KEY_W:
 		get_tree().change_scene_to_file("res://scenes/hub/works.tscn")
 	elif e is InputEventKey and e.pressed and not e.echo and (e as InputEventKey).keycode == KEY_V:
-		_verify()
+		get_tree().change_scene_to_file("res://scenes/hub/blood_test.tscn")
 
 func _verify() -> void:
 	var r: Dictionary = GameState.verify_bloodlines_at_shrine()

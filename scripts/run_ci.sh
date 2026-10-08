@@ -29,6 +29,10 @@ echo "==> court_v90 (lamp seat, marriage rites, royal houses, titles, regalia)"
 godot --headless --path . --scene res://tests/court_v90_check.tscn 2>&1 | tee /tmp/ck_court.log
 grep -q "COURT V90 PASS" /tmp/ck_court.log || { echo "court_v90 FAILED"; exit 1; }
 
+echo "==> court_ui (codex, dossier, blood test, rites, gazette, titles, safe area)"
+godot --headless --path . --scene res://tests/court_ui_check.tscn 2>&1 | tee /tmp/ck_court_ui.log
+grep -q "COURT UI PASS" /tmp/ck_court_ui.log || { echo "court_ui FAILED"; exit 1; }
+
 echo "==> portrait_manifest (v8.9 plan A genome plates)"
 godot --headless --path . --scene res://tests/portrait_manifest_check.tscn 2>&1 | tee /tmp/ck_portrait.log
 grep -q "PORTRAIT PASS" /tmp/ck_portrait.log || { echo "portrait_manifest FAILED"; exit 1; }

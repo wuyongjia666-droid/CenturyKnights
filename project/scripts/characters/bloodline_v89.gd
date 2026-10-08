@@ -1205,6 +1205,78 @@ static func forecast(father: Object, mother: Object) -> Array:
 	rows.sort_custom(func(a, b): return float(a["royal"]) + float(a["carrier"]) * 0.5 > float(b["royal"]) + float(b["carrier"]) * 0.5)
 	return rows
 
+## Read-only heir odds for the trait loci. Same pairing rules as forecast(); no RNG, no balance change.
+static func trait_odds(father: Object, mother: Object) -> Array:
+	_ensure(father)
+	_ensure(mother)
+	var fg: Dictionary = father.get("genome") if typeof(father.get("genome")) == TYPE_DICTIONARY else {}
+	var mg: Dictionary = mother.get("genome") if typeof(mother.get("genome")) == TYPE_DICTIONARY else {}
+	var blood := {}
+	for src in [father.get("blood_mix"), mother.get("blood_mix")]:
+		if typeof(src) != TYPE_DICTIONARY:
+			continue
+		for k in (src as Dictionary).keys():
+			blood[k] = float(blood.get(k, 0.0)) + 0.5 * float(src[k])
+	var rows: Array = []
+	for locus_v in trait_order():
+		var locus := str(locus_v)
+		var ld := locus_def(locus)
+		if ld.is_empty():
+			continue
+		var law := str(ld.get("law", ""))
+		var kind := str(ld.get("kind", "diploid"))
+		var by_sex := {}
+		for sex in ["f", "m"]:
+			var p := {"royal": 0.0, "noble": 0.0, "carrier": 0.0}
+			if kind == "value":
+				var mu := _value(mg, locus)
+				var sd := float(ld.get("drift", 0.07))
+				if law == "threshold":
+					var mid := 0.5 * (_value(fg, locus) + _value(mg, locus))
+					mu = mid + float(ld.get("regress", 0.15)) * (line_mean(blood, locus) - mid)
+					sd = float(ld.get("noise", 0.06))
+				var pr := 1.0 - _ncdf((float(ld.get("royal_min", 0.7)) - mu) / maxf(sd, 0.001))
+				var pn := 1.0 - _ncdf((float(ld.get("noble_min", 0.45)) - mu) / maxf(sd, 0.001)) - pr
+				var pl := 1.0 - _ncdf((float(ld.get("latent_min", 0.4)) - mu) / maxf(sd, 0.001)) - pr - pn
+				p["royal"] = pr
+				p["noble"] = pn
+				p["carrier"] = pl
+			else:
+				for row in _child_pairs(fg, mg, locus, kind, sex):
+					var tmp := {"loci": {"mark": ["none", "none"]}, "sig": {locus: row[0], "pen": {locus: 0.0}}}
+					var e := express_trait(tmp, locus, {"sex": sex, "rank": 0, "honors": [], "age": 30})
+					var w := float(row[1])
+					if e["tier"] == "royal":
+						var pen := float(ld.get("penetrance", 1.0))
+						p["royal"] += w * pen
+						p["carrier"] += w * (1.0 - pen)
+					elif e["tier"] == "noble":
+						p["noble"] += w
+					if e["tier"] == "latent" or (bool(e.get("carrier", false)) and e["tier"] != "royal"):
+						p["carrier"] += w
+			by_sex[sex] = p
+		var f: Dictionary = by_sex["f"]
+		var m: Dictionary = by_sex["m"]
+		var shown := 0.5 * (float(f["royal"]) + float(m["royal"]) + float(f["noble"]) + float(m["noble"]))
+		var carried := 0.5 * (float(f["carrier"]) + float(m["carrier"]))
+		if shown + carried < 0.02:
+			continue
+		var states: Dictionary = ld.get("states", {})
+		var zh := str(signature_def(str(states.get("royal", ""))).get("zh", ""))
+		if zh == "":
+			zh = str(signature_def(str(states.get("noble", ""))).get("zh", locus))
+		rows.append({
+			"locus": locus, "law": law,
+			"law_zh": str(data().get("laws", {}).get(law, {}).get("name", law)),
+			"punnett": str(data().get("laws", {}).get(law, {}).get("punnett", "")),
+			"zh": zh,
+			"shown": shown, "carrier": carried,
+			"shown_f": float(f["royal"]) + float(f["noble"]),
+			"shown_m": float(m["royal"]) + float(m["noble"]),
+		})
+	rows.sort_custom(func(a, b): return float(a["shown"]) + float(a["carrier"]) * 0.4 > float(b["shown"]) + float(b["carrier"]) * 0.4)
+	return rows
+
 static func forecast_zh(father: Object, mother: Object, limit: int = 2) -> String:
 	var bits: Array = []
 	for r in forecast(father, mother).slice(0, limit):
