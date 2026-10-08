@@ -1,5 +1,5 @@
 """v8.7 farmed hair MODULE: Hunyuan3D mesh of a faceless mannequin wearing one hairstyle -> hair cap in HEAD-BONE space.
-  blender -b -P hair_module_v87.py -- in.glb out.glb --plate front_plate.png [--qa qa.png] [--tris 7000]
+  blender -b -P hair_module_v87.py -- in.glb out.glb --plate front_plate.png --style <id> [--qa qa.png] [--tris 7000]
 Head-bone space (same as unit_model.attach_modules / build_head_modules_v87): origin = head bone head, Z up along the
 bone, face toward -Y. Calibrated on the rigged farmed bald heads (rig_mesh_v87, H=1.78): chin z~-0.02, crown z~0.249,
 half-width ~0.10, face front y~-0.135.
@@ -13,12 +13,17 @@ import numpy as np
 from mathutils import Vector
 argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 IN, OUT = argv[0], argv[1]
-OPT = {"plate": "", "qa": "", "tris": "7000"}
+OPT = {"plate": "", "qa": "", "tris": "7000", "style": ""}
 i = 2
 while i < len(argv):
     OPT[argv[i].lstrip("-")] = argv[i + 1]; i += 2
 CHIN_Z, CROWN_Z, FACE_Y, HALF_W = -0.02, 0.249, -0.135, 0.10
 SKULL_C = Vector((0.0, -0.03, 0.115))
+# per-style plate calibration (measured on the style-locked hair plates, docs/art/review/hair_plates_grid_v87.png):
+# chin row as a fraction of the subject bbox from the top, and hair volume above the skull as a fraction of chin->top.
+# Hunyuan keeps the front silhouette, so the mesh bbox maps 1:1 onto the plate subject bbox.
+STYLE_CAL = {"bob": (0.72, 0.06), "crop": (0.68, 0.08), "crown": (0.75, 0.08), "long": (0.64, 0.05),
+             "messy": (0.73, 0.12), "pony": (0.66, 0.24), "swept": (0.70, 0.13), "tied": (0.675, 0.06)}
 
 def log(*a): print("[hair_v87]", *a, flush=True)
 
@@ -94,33 +99,77 @@ def landmarks(co):
 
 def to_head_space(ob):
     co = np.array([v.co[:] for v in ob.data.vertices])
-    top, chin, face_y, cx = landmarks(co)
-    s = (CROWN_Z - CHIN_Z) * 1.07 / (top - chin)   # hair volume above the skull ~7%
+    top, bot = co[:, 2].max(), co[:, 2].min()
+    cx = 0.5 * (co[:, 0].max() + co[:, 0].min())
+    if OPT["style"] in STYLE_CAL:
+        cf, vol = STYLE_CAL[OPT["style"]]
+        chin = top - cf * (top - bot)
+    else:
+        top, chin, _, cx = landmarks(co); vol = 0.07
+    hh = top - chin
+    # face front = front-most centre-column point on the LOWER face (below any fringe/bangs)
+    W = co[:, 0].max() - co[:, 0].min()
+    band = co[(np.abs(co[:, 0] - cx) < 0.06 * W) & (co[:, 2] > chin + 0.12 * hh) & (co[:, 2] < chin + 0.42 * hh)]
+    face_y = float(band[:, 1].min()) if len(band) else float(co[:, 1].min())
+    s = (CROWN_Z - CHIN_Z) / (hh * (1.0 - vol))
     for v in ob.data.vertices:
         p = v.co
         v.co = Vector(((p.x - cx) * s, (p.y - face_y) * s + FACE_Y, (p.z - chin) * s + CHIN_Z))
     ob.data.update()
-    log("landmarks top %.3f chin %.3f face_y %.3f scale %.4f" % (top, chin, face_y, s))
+    log("map top %.3f chin %.3f face_y %.3f scale %.4f style %s" % (top, chin, face_y, s, OPT["style"] or "auto"))
+
+def roughness(bm):
+    """per-vertex strand relief: 1 - n.(2-ring mean normal), relaxed 3x. Mannequin skin ~0, farmed hair clumps >> 0."""
+    bm.verts.ensure_lookup_table(); bm.normal_update()
+    dev = np.zeros(len(bm.verts))
+    for v in bm.verts:
+        ring = set([v])
+        for e in v.link_edges:
+            w = e.other_vert(v); ring.add(w)
+            for e2 in w.link_edges: ring.add(e2.other_vert(w))
+        n = Vector((0, 0, 0))
+        for w in ring: n += w.normal
+        if n.length > 0: dev[v.index] = 1.0 - v.normal.dot(n.normalized())
+    for _ in range(3):
+        nd = dev.copy()
+        for v in bm.verts:
+            nb = [e.other_vert(v).index for e in v.link_edges]
+            if nb: nd[v.index] = 0.5 * dev[v.index] + 0.5 * dev[nb].mean()
+        dev = nd
+    return dev
+
+BELOW_CHIN = {"tied": "back", "pony": "back", "long": "sides", "bob": "sides"}
 
 def cut(ob):
     me = ob.data
-    bm = bmesh.new(); bm.from_mesh(me); bm.normal_update()
+    bm = bmesh.new(); bm.from_mesh(me)
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces); bm.normal_update()
+    dev = roughness(bm)
+    co = np.array([v.co[:] for v in bm.verts])
+    skin_ref = dev[(co[:, 1] < -0.10) & (np.abs(co[:, 0]) < 0.04) & (co[:, 2] > 0.02) & (co[:, 2] < 0.10)]
+    hair_ref = dev[co[:, 2] > 0.21]
+    t = float(np.sqrt(max(1e-6, np.median(skin_ref) if len(skin_ref) else 0.002) * max(1e-6, np.median(hair_ref))))
+    log("roughness skin %.4f hair %.4f -> thr %.4f" % (np.median(skin_ref) if len(skin_ref) else -1, np.median(hair_ref), t))
+    mode = BELOW_CHIN.get(OPT["style"], "none")
     brow = 0.155; kill = []
     for v in bm.verts:
-        p = v.co; n = v.normal
-        r = math.hypot(p.x, p.y - SKULL_C.y)
-        face = (p.z < brow) and (p.z > CHIN_Z - 0.03) and (n.y < -0.30) and (abs(p.x) < 0.082) and (p.y < SKULL_C.y - 0.02)
-        neck = (p.z < CHIN_Z + 0.035) and (r < 0.085)
-        low = (p.z < CHIN_Z - 0.035) and (abs(p.x) > 0.13 or r < 0.10)   # mannequin shoulders / neck base
-        if face or neck or low: kill.append(v)
+        p = v.co; d = dev[v.index]
+        smooth = d < t
+        face = (p.z < brow) and (p.z > CHIN_Z - 0.04) and (abs(p.x) < 0.085) and (p.y < SKULL_C.y - 0.04)
+        skin_low = smooth and p.z < 0.13                      # nape / sides / neck skin the farm invented
+        below = p.z < CHIN_Z + 0.01
+        keep_below = False
+        if below:
+            if mode == "back": keep_below = (p.y > SKULL_C.y + 0.07) and not smooth
+            elif mode == "sides": keep_below = (p.z > CHIN_Z - 0.12) and (abs(p.x) > 0.07 or p.y > SKULL_C.y + 0.07) and not smooth
+        if face or skin_low or (below and not keep_below): kill.append(v)
     bmesh.ops.delete(bm, geom=kill, context="VERTS")
     bm.to_mesh(me); bm.free(); me.update()
     shells = keep_largest(ob, 0.03)
-    # inflate off the skull so the cap never z-fights the bald scalp
     for v in me.vertices:
         d = v.co - SKULL_C; v.co = SKULL_C + d * 1.03
     me.update()
-    log("cut verts", len(kill), "shells", shells, "faces", len(me.polygons))
+    log("cut verts", len(kill), "shells", shells, "faces", len(me.polygons), "below-chin", mode)
 
 def albedo(ob):
     mat = bpy.data.materials.new("hair"); mat.use_nodes = True
@@ -174,6 +223,7 @@ def qa(ob, path):
     bpy.data.objects.remove(sk, do_unlink=True)
 
 ob = load(); to_head_space(ob); cut(ob); ob.name = "hair"; albedo(ob)
+for poly in ob.data.polygons: poly.use_smooth = True
 sel_only(ob)
 os.makedirs(os.path.dirname(os.path.abspath(OUT)), exist_ok=True)
 bpy.ops.export_scene.gltf(filepath=OUT, export_format="GLB", use_selection=True, export_yup=True, export_materials="EXPORT",

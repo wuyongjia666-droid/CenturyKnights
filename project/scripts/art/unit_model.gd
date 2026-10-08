@@ -171,6 +171,10 @@ static func _tint_all(n: Node, col: Color) -> void:
 			var sm := StandardMaterial3D.new()
 			sm.albedo_color = col
 			sm.roughness = 0.55
+			# farmed modules carry a neutral greyscale strand texture: the genome colour multiplies it
+			var om = mi.mesh.surface_get_material(si)
+			if om is BaseMaterial3D and (om as BaseMaterial3D).albedo_texture != null:
+				sm.albedo_texture = (om as BaseMaterial3D).albedo_texture
 			sm.diffuse_mode = BaseMaterial3D.DIFFUSE_TOON
 			sm.specular_mode = BaseMaterial3D.SPECULAR_TOON
 			sm.rim_enabled = true
