@@ -12,6 +12,49 @@ extends RefCounted
 ## Every GLB uses the shared armature + actions: idle advance attack skill hit dodge crit death.
 const DIR := "res://assets/models/units/"
 const IMPACT := {"attack": 0.458, "skill": 0.792, "crit": 0.5}
+## Weapon-archetype clips (CUT-02). Job ids from jobs.json; unknown jobs keep the GLB actions.
+const ANIM_ARCHETYPES := ["sword", "spear", "bow", "staff", "shield", "heavy"]
+const JOB_ANIM := {
+	"squire": "sword",
+	"light_inf": "sword",
+	"light_cavalry": "spear",
+	"hunter": "bow",
+	"archer": "bow",
+	"apprentice": "staff",
+	"priest": "staff",
+	"heavy_inf": "shield",
+	"warrior": "heavy",
+}
+
+static func anim_archetype(job_id: String) -> String:
+	return str(JOB_ANIM.get(job_id, ""))
+
+static func apply_anim_archetype(ap: AnimationPlayer, job_id: String) -> String:
+	var arch := anim_archetype(job_id)
+	if arch == "" or ap == null:
+		return ""
+	var path := "res://assets/models/anim/%s.res" % arch
+	if not ResourceLoader.exists(path):
+		return ""
+	var src := load(path) as AnimationLibrary
+	if src == null:
+		return ""
+	var base := ap.get_animation_library("")
+	if base == null:
+		base = AnimationLibrary.new()
+		ap.add_animation_library("", base)
+	else:
+		var copy := base.duplicate(true) as AnimationLibrary
+		ap.remove_animation_library("")
+		ap.add_animation_library("", copy)
+		base = copy
+	for action in src.get_animation_list():
+		var clip := src.get_animation(action).duplicate(true) as Animation
+		if base.has_animation(action):
+			base.remove_animation(action)
+		base.add_animation(action, clip)
+	ap.set_meta("ck_anim_archetype", arch)
+	return arch
 
 static func archetype_for(c, team: String, tmpl: String = "") -> String:
 	var role := str(BattleRules.job_role(c.job_id))
@@ -213,6 +256,10 @@ static func instantiate(c, team: String, tmpl: String = "") -> Node3D:
 	n.set_meta("ck_bark", spec.get("bark_zh", ""))
 	var ap := find_anim(n)
 	if ap:
+		var job := ""
+		if c != null:
+			job = str(c.get("job_id"))
+		apply_anim_archetype(ap, job)
 		for an in ["idle", "advance"]:
 			if ap.has_animation(an):
 				ap.get_animation(an).loop_mode = Animation.LOOP_LINEAR
