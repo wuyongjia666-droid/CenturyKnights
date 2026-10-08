@@ -20,6 +20,13 @@ var _dialogue: bool = false
 var _nation: String = ""
 var _era: int = 0
 var _cache: Dictionary = {}
+var _volumes: Dictionary = {
+	"Master": 1.0,
+	"Music": 1.0,
+	"SFX": 1.0,
+	"Ambience": 1.0,
+	"UI": 1.0,
+}
 
 func _ready() -> void:
 	_ensure_buses()
@@ -27,6 +34,42 @@ func _ready() -> void:
 	_b = _make_player("MusicB")
 	_layer = _make_player("MusicTension")
 	_to = _a
+	if not GameState.state_changed.is_connected(_sync_volumes_from_save):
+		GameState.state_changed.connect(_sync_volumes_from_save)
+	_sync_volumes_from_save()
+
+func set_bus_volume(bus: String, linear: float) -> void:
+	var gain := clampf(linear, 0.0, 1.0)
+	_volumes[bus] = gain
+	_apply_bus(bus, gain)
+	if is_instance_valid(GameState) and typeof(GameState.settings) == TYPE_DICTIONARY:
+		GameState.settings["audio_bus"] = _volumes.duplicate()
+
+func get_bus_volume(bus: String) -> float:
+	return float(_volumes.get(bus, 1.0))
+
+func _apply_bus(bus: String, gain: float) -> void:
+	var idx := AudioServer.get_bus_index(bus)
+	if idx < 0:
+		return
+	if gain <= 0.0001:
+		AudioServer.set_bus_mute(idx, true)
+		AudioServer.set_bus_volume_db(idx, -80.0)
+	else:
+		AudioServer.set_bus_mute(idx, false)
+		AudioServer.set_bus_volume_db(idx, linear_to_db(gain))
+
+func _sync_volumes_from_save() -> void:
+	if not is_instance_valid(GameState) or typeof(GameState.settings) != TYPE_DICTIONARY:
+		return
+	var stored = GameState.settings.get("audio_bus", null)
+	if typeof(stored) != TYPE_DICTIONARY:
+		return
+	for key in stored.keys():
+		var bus := str(key)
+		var gain := clampf(float(stored[key]), 0.0, 1.0)
+		_volumes[bus] = gain
+		_apply_bus(bus, gain)
 
 func _process(delta: float) -> void:
 	advance(delta)
