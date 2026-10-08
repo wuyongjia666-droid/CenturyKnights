@@ -162,7 +162,10 @@ func _card(c: CKCharacter, r: Rect2, focus: bool, idx: int) -> void:
 	b2.custom_minimum_size = Vector2(105, 0)
 	g.add_child(b2)
 	var sig_txt := CKBloodline.summary_zh(c)
-	var ds := UIKit.body_label("%s血胤。%s" % [c.bloodline_display(), sig_txt if sig_txt != "冕征：未见" else "看脸，也看数。"], UIKit.TEXT_FAINT, 11)
+	var obs := CKBloodline.observe_zh(c)
+	if obs != "":
+		sig_txt += " " + obs
+	var ds := UIKit.body_label("%s血胤。%s" % [c.bloodline_display(), sig_txt if not sig_txt.begins_with("冕征：未见") else "看脸，也看数。"], UIKit.TEXT_FAINT, 11)
 	ds.position = Vector2(154, 172)
 	ds.size = Vector2(216, 32)
 	ds.custom_minimum_size = Vector2(216, 0)

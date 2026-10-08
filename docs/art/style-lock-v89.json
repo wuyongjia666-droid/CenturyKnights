@@ -78,14 +78,20 @@
     ]
   },
   "anti_trope": {
-    "why": "CenturyKnights bloodlines are original: no reference-game looks (pointed ears, blue/cyan birthmarks, blond or gold-eyed royal lines, crowns as genetic signs).",
+    "why": "CenturyKnights bloodlines are original. Do not copy reference-game royal looks: no elf or animal ears, no blue/cyan birthmarks or forehead gems, no blond or gold-eyed lines, no crowns as genetic signs, no parchment/medieval costume, no orc tusks, fangs, halos, or heterochromia cliches. Royal houses are multi-trait sets (docs/design/bloodlines-v89.md).",
     "forbid_in_positive": [
       "pointed ear",
       "elf",
       "elven",
+      "animal ear",
+      "cat ear",
       "blue birthmark",
       "cyan birthmark",
       "blue facial mark",
+      "glowing blue mark",
+      "forehead gem",
+      "third eye",
+      "birthmark",
       "golden eye",
       "gold eye",
       "gold iris",
@@ -95,7 +101,18 @@
       "crown",
       "tiara",
       "halo",
-      "gilded"
+      "gilded",
+      "medieval",
+      "parchment",
+      "gothic",
+      "orc",
+      "tusk",
+      "vampire",
+      "demon",
+      "angel wing",
+      "fang",
+      "heterochromia",
+      "albino"
     ],
     "royal_genome_forbid": {
       "hair": [

@@ -19,6 +19,7 @@ func _ready() -> void:
 	_social()
 	_skills()
 	_portraits()
+	_traits()
 	var fx := _fixtures()
 	CKBloodline.people.clear()
 	if _fails.is_empty():
@@ -58,7 +59,10 @@ func _mk(id: String, sex: String, blood: Dictionary, nid: String = "", tier: Str
 
 func _royal(nid: String, sex: String, id: String = "") -> CKCharacter:
 	var nat := CKBloodline.nation(nid)
-	return _mk(id if id != "" else "r_%s_%s" % [nid, sex], sex, {str(nat.royal): 1.0}, nid, "royal", 30, "count")
+	var c := _mk(id if id != "" else "r_%s_%s" % [nid, sex], sex, {str(nat.royal): 1.0}, nid, "royal", 30, "count")
+	# Full house set except the rare pure-line expression. Crown locus stays on force_tier.
+	CKBloodline.stamp_traits(c.genome, nid, "full", sex, false)
+	return c
 
 func _tier_of_child(nid: String, fa: CKCharacter, mo: CKCharacter, sex: String, rng: RandomNumberGenerator) -> String:
 	var blood := {}
@@ -426,6 +430,258 @@ func _forbidden(text: String, forbid: Array) -> String:
 		if re.search(low) != null:
 			return str(w)
 	return ""
+
+# ── multi-trait sets ──────────────────────────────────
+const TRAIT_N := 400
+
+func _trait_child(fa: CKCharacter, mo: CKCharacter, sex: String, blood: Dictionary, rng: RandomNumberGenerator, age: int, rank: int) -> Dictionary:
+	var g := CKGenome.cross(fa.genome, mo.genome, blood, rng, sex)
+	return {"genome": g}
+
+func _show_rate(locus: String, fa: CKCharacter, mo: CKCharacter, sex: String, blood: Dictionary, seed_i: int, age: int, rank: int) -> float:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed_i
+	var hit := 0
+	for i in TRAIT_N:
+		var s := sex if sex != "" else ("f" if i % 2 == 0 else "m")
+		var g := CKGenome.cross(fa.genome, mo.genome, blood, rng, s)
+		var e := CKBloodline.express_trait(g, locus, {"sex": s, "age": age, "rank": rank, "honors": [], "verified": false})
+		if str(e["tier"]) == "royal":
+			hit += 1
+	return float(hit) / float(TRAIT_N)
+
+func _pair_clear(tag: String, nid: String) -> Array:
+	var fa := _mk(tag + "_fa", "m", {"common_ash": 1.0})
+	var mo := _mk(tag + "_mo", "f", {"common_ash": 1.0})
+	CKBloodline.stamp_traits(fa.genome, nid, "clear", "m", false)
+	CKBloodline.stamp_traits(mo.genome, nid, "clear", "f", false)
+	return [fa, mo]
+
+func _traits() -> void:
+	var rank_count := CKBloodline.RANKS.find("count")
+	var seen_laws := {}
+	for locus in CKBloodline.trait_order():
+		var ld := CKBloodline.locus_def(locus)
+		if str(ld.get("scope", "")) != "royal":
+			continue
+		var nid := str(ld.get("nation", ""))
+		var law := str(ld.get("law", ""))
+		var nat := CKBloodline.nation(nid)
+		var blood := {str(nat.royal): 1.0}
+		var pair: Array = _pair_clear("tr_" + locus, nid)
+		var fa: CKCharacter = pair[0]
+		var mo: CKCharacter = pair[1]
+		seen_laws[law] = true
+		var seed_i := int(hash(locus) % 100000) + 17
+		match law:
+			"dominant", "age_awakened", "awakened":
+				CKBloodline.stamp_traits(fa.genome, nid, "full", "m", false)
+				_ok(_show_rate(locus, fa, mo, "", blood, seed_i, 36, rank_count) >= 0.97, "%s %s transmits" % [locus, law])
+				if law == "age_awakened":
+					var allele := str(ld.get("royal", ""))
+					var g: Dictionary = {}
+					for attempt in 12:
+						g = CKGenome.cross(fa.genome, mo.genome, blood, _rng(seed_i + 9 + attempt), "f")
+						if allele in CKBloodline._dip(g, locus):
+							break
+					var young := CKBloodline.express_trait(g, locus, {"sex": "f", "age": 12, "rank": rank_count, "honors": [], "verified": false})
+					var grown := CKBloodline.express_trait(g, locus, {"sex": "f", "age": 36, "rank": rank_count, "honors": [], "verified": false})
+					_ok(str(young["tier"]) == "latent" and str(grown["tier"]) == "royal", "%s hidden until age" % locus)
+				if law == "awakened":
+					var allele2 := str(ld.get("royal", ""))
+					var g2: Dictionary = {}
+					for attempt2 in 12:
+						g2 = CKGenome.cross(fa.genome, mo.genome, blood, _rng(seed_i + 11 + attempt2), "m")
+						if allele2 in CKBloodline._dip(g2, locus):
+							break
+					var low := CKBloodline.express_trait(g2, locus, {"sex": "m", "age": 30, "rank": 0, "honors": [], "verified": false})
+					var high := CKBloodline.express_trait(g2, locus, {"sex": "m", "age": 30, "rank": rank_count, "honors": [], "verified": false})
+					_ok(str(low["tier"]) == "latent" and str(high["tier"]) == "royal", "%s waits on a deed" % locus)
+			"recessive":
+				CKBloodline.stamp_traits(fa.genome, nid, "carrier", "m", false)
+				CKBloodline.stamp_traits(mo.genome, nid, "carrier", "f", false)
+				_near(_show_rate(locus, fa, mo, "", blood, seed_i, 30, rank_count), 0.25, 0.08, "%s recessive" % locus)
+			"penetrance":
+				CKBloodline.stamp_traits(fa.genome, nid, "full", "m", false)
+				_near(_show_rate(locus, fa, mo, "", blood, seed_i, 30, rank_count), 0.6, 0.1, "%s penetrance" % locus)
+			"threshold":
+				CKBloodline.stamp_traits(fa.genome, nid, "full", "m", false)
+				CKBloodline.stamp_traits(mo.genome, nid, "full", "f", false)
+				_ok(_show_rate(locus, fa, mo, "", blood, seed_i, 30, rank_count) > 0.9, "%s polygenic threshold" % locus)
+			"maternal":
+				CKBloodline.stamp_traits(mo.genome, nid, "full", "f", false)
+				_ok(_show_rate(locus, fa, mo, "", blood, seed_i, 30, rank_count) > 0.9, "%s follows the mother" % locus)
+				CKBloodline.stamp_traits(mo.genome, nid, "clear", "f", false)
+				CKBloodline.stamp_traits(fa.genome, nid, "full", "m", false)
+				_ok(_show_rate(locus, fa, mo, "", blood, seed_i + 3, 30, rank_count) < 0.08, "%s ignores the father" % locus)
+			"x_dominant":
+				CKBloodline.stamp_traits(fa.genome, nid, "full", "m", false)
+				_ok(_show_rate(locus, fa, mo, "f", blood, seed_i, 30, rank_count) >= 0.97, "%s father to daughters" % locus)
+				_ok(_show_rate(locus, fa, mo, "m", blood, seed_i + 5, 30, rank_count) == 0.0, "%s father to no sons" % locus)
+			"y_linked":
+				CKBloodline.stamp_traits(fa.genome, nid, "full", "m", false)
+				_ok(_show_rate(locus, fa, mo, "m", blood, seed_i, 30, rank_count) >= 0.97, "%s father to sons" % locus)
+				_ok(_show_rate(locus, fa, mo, "f", blood, seed_i + 7, 30, rank_count) == 0.0, "%s no daughters" % locus)
+			"pureblood":
+				CKBloodline.stamp_traits(fa.genome, nid, "full", "m", true)
+				CKBloodline.stamp_traits(mo.genome, nid, "full", "f", true)
+				var rng := _rng(seed_i)
+				var hom := 0
+				var allele := str(ld.get("royal", ""))
+				for i in TRAIT_N:
+					var s := "f" if i % 2 == 0 else "m"
+					var g := CKGenome.cross(fa.genome, mo.genome, blood, rng, s)
+					var n := 0
+					for a in CKBloodline._dip(g, locus):
+						if str(a) == allele:
+							n += 1
+					if n >= 2:
+						hom += 1
+				_ok(float(hom) / float(TRAIT_N) >= 0.97, "%s pure allele breeds true" % locus)
+			_:
+				_ok(false, "untested trait law %s on %s" % [law, locus])
+	for need in ["dominant", "recessive", "penetrance", "threshold", "maternal", "x_dominant", "y_linked", "age_awakened", "awakened", "pureblood"]:
+		_ok(seen_laws.has(need), "trait laws include %s" % need)
+	# pure expression needs the crown, not just the allele
+	var gate := _royal("ashbanner", "m", "trait_pure_gate")
+	CKBloodline.stamp_traits(gate.genome, "ashbanner", "full", "m", true)
+	gate.rank = "knight"
+	var shut := CKBloodline.express_trait(gate.genome, "tr_ash_pure", CKBloodline.ctx_of(gate))
+	gate.rank = "count"
+	var open := CKBloodline.express_trait(gate.genome, "tr_ash_pure", CKBloodline.ctx_of(gate))
+	_ok(str(shut["tier"]) == "latent" and str(open["tier"]) == "royal", "pure-line expression waits on the shown crown")
+	# diluted royals keep a partial set; folk traits still show through the mix
+	var dil_sum := 0.0
+	var dil_folk := 0.0
+	var dil_n := 240
+	var dr := _rng(4242)
+	for i in dil_n:
+		var c := CKCharacter.new()
+		c.id = "dil_%d" % i
+		c.gender = "f" if i % 2 == 0 else "m"
+		c.age = 30
+		c.rank = "count"
+		c.blood_mix = {"ash_chart": 0.28, "common_ash": 0.72}
+		c.genome = CKGenome.founder(c.blood_mix, {}, dr, c.gender)
+		var roy := 0
+		var folk := 0
+		for t in CKBloodline.expressed_traits(c, false):
+			if str(t.get("scope", "")) == "royal" and str(t.get("nation", "")) == "ashbanner" and str(t.get("tier", "")) in ["royal", "noble"]:
+				roy += 1
+			if str(t.get("scope", "")) == "folk" and str(t.get("nation", "")) == "ashbanner":
+				folk += 1
+		dil_sum += roy
+		dil_folk += folk
+	var dil_mean := dil_sum / float(dil_n)
+	_ok(dil_mean > 0.35 and dil_mean < 5.5, "diluted Ashbanner shows a partial set (mean %.2f)" % dil_mean)
+	_ok(dil_folk / float(dil_n) > 0.8, "diluted mix still shows folk traits")
+	# two houses blend on one face
+	var bfa := _royal("ashbanner", "m", "trait_blend_fa")
+	var bmo := _royal("saltmarsh", "f", "trait_blend_mo")
+	var blend_hit := 0
+	var br := _rng(5150)
+	for i in 100:
+		var ch := CKCharacter.new()
+		ch.id = "blend_%d" % i
+		ch.gender = "f"
+		ch.age = 30
+		ch.rank = "count"
+		ch.blood_mix = {"ash_chart": 0.5, "sm_tide": 0.5}
+		ch.genome = CKGenome.cross(bfa.genome, bmo.genome, ch.blood_mix, br, "f")
+		var clause := CKBloodline.portrait_clause(ch)
+		if clause.contains("Ash Banner trait set") and clause.contains("Saltmarsh trait set") and clause.contains("mixed blood, both houses visible"):
+			blend_hit += 1
+	_ok(blend_hit >= 85, "mixed blood blends both houses (%d/100)" % blend_hit)
+	# impostor misses the subtle tells a true royal shows
+	var rng_fake := _rng(6060)
+	var fake := CKCharacter.new()
+	fake.id = "trait_fake_jade"
+	fake.name = "伪玉"
+	fake.gender = "f"
+	fake.age = 27
+	fake.rank = "baron"
+	CKBloodline.apply_recruit(fake, {"blood_mix": {"qh_jade": 1.0}, "tier": "royal", "line": "qh_jade", "pretend": {"claimed": "qh_jade", "true": "qh_delta"}}, rng_fake)
+	var fv := CKBloodline.verify(fake)
+	_ok((fv["missed_tells"] as Array).size() >= 2, "shrine lists the tells an impostor lacks")
+	var obs := CKBloodline.observe_zh(fake, 1)
+	_ok(obs.contains("玉缘瞳") and obs.contains("细梁卵面"), "a perceptive NPC names the missing tells")
+	_ok(CKBloodline.observe_zh(fake, 0) == "", "a casual glance does not catch subtle tells")
+	var true_qh := _royal("qinghe", "f", "trait_true_jade")
+	_ok((CKBloodline.missed_tells(true_qh)["alleles"] as Array).is_empty(), "a true jade royal carries the catch alleles")
+	_ok(CKBloodline.observe_zh(true_qh, 1) == "", "a true jade royal does not look incomplete")
+	var limbal := str(CKBloodline.signature_def("qh_limbal").get("prompt", ""))
+	_ok(limbal != "" and not CKBloodline.portrait_clause(fake).contains(limbal), "impostor portrait lacks the subtle iris")
+	_ok(CKBloodline.portrait_clause(true_qh).contains(limbal), "true royal portrait includes the subtle iris")
+	# age stages rewrite the same locus
+	var aged := _royal("ashbanner", "m", "trait_age_ash")
+	var young_p := str(CKBloodline.signature_def("ash_wire").get("prompt_young", ""))
+	var prime_p := str(CKBloodline.signature_def("ash_wire").get("prompt", ""))
+	var elder_p := str(CKBloodline.signature_def("ash_wire").get("prompt_elder", ""))
+	var jaw := str(CKBloodline.signature_def("ash_jawcast").get("prompt", ""))
+	aged.age = 16
+	var yclause := CKBloodline.portrait_clause(aged)
+	aged.age = 34
+	var pclause := CKBloodline.portrait_clause(aged)
+	aged.age = 62
+	var eclause := CKBloodline.portrait_clause(aged)
+	_ok(yclause.contains(young_p) and not yclause.contains(elder_p) and not yclause.contains(jaw), "youth wording, jaw cast still asleep")
+	_ok(pclause.contains(prime_p) and pclause.contains(jaw) and not pclause.contains(young_p), "prime wording includes the awakened jaw cast")
+	_ok(eclause.contains(elder_p) and not eclause.contains(young_p), "elder wording")
+	# 3D hints are ids and palette only
+	var hints := CKBloodline.unit_model_hints(aged)
+	_ok((hints["regalia_modules"] as Array).has("regalia_ash_cloak") and str(hints["palette"].get("cloth", "")) == "#1C2330", "regalia module ids and palette")
+	_ok(str(hints["bark_zh"]) == "旗在左。", "battle bark from the bearing trait")
+	var spec := UnitModel.resolve(aged, "player")
+	_ok(JSON.stringify(spec.get("regalia_modules", [])) == JSON.stringify(hints["regalia_modules"]), "unit model carries the module ids")
+	_ok((CKBloodline.unit_model_hints(fake)["regalia_modules"] as Array).is_empty(), "impostor has no genetic regalia modules")
+	# any two stamped royal houses differ in at least five visible traits
+	var packs := {}
+	for nid in CKBloodline.nation_ids():
+		var sex := "m" if nid in ["ashbanner", "lantern", "emberold", "irongorge"] else "f"
+		var r := _royal(nid, sex, "trait_read_" + nid)
+		CKBloodline.stamp_traits(r.genome, nid, "full", sex, true)
+		var bag := {}
+		for t in CKBloodline.expressed_traits(r, false):
+			if str(t.get("scope", "")) != "royal":
+				continue
+			var pr := CKBloodline.trait_prompt(str(t.get("state", "")), 34)
+			if pr != "":
+				bag[pr] = true
+		_ok(bag.size() >= 6, "%s shows a full trait set (%d)" % [nid, bag.size()])
+		packs[nid] = bag
+	for i in CKBloodline.nation_ids().size():
+		for j in range(i + 1, CKBloodline.nation_ids().size()):
+			var a: String = CKBloodline.nation_ids()[i]
+			var b: String = CKBloodline.nation_ids()[j]
+			var da: Dictionary = packs[a]
+			var db: Dictionary = packs[b]
+			var diff := 0
+			for k in da.keys():
+				if not db.has(k):
+					diff += 1
+			_ok(diff >= 5, "%s vs %s differ in %d visible traits" % [a, b, diff])
+	# folk lines actually wear their regional traits; nobles echo the house
+	for nid2 in CKBloodline.nation_ids():
+		var nat2 := CKBloodline.nation(nid2)
+		var folk := _mk("trait_folk_" + nid2, "f", {str(nat2.folk): 1.0}, "", "", 28, "knight")
+		var fn := 0
+		for t in CKBloodline.expressed_traits(folk, false):
+			if str(t.get("scope", "")) == "folk" and str(t.get("nation", "")) == nid2:
+				fn += 1
+		_ok(fn >= 2, "%s folk shows regional traits (%d)" % [nid2, fn])
+		for nb in nat2.noble:
+			var noble := _mk("trait_nb_" + str(nb), "m", {str(nb): 1.0}, "", "", 32, "baron")
+			var want: Array = CKBloodline.line(str(nb)).get("trait_set", [])
+			var got := 0
+			for t2 in CKBloodline.expressed_traits(noble, false):
+				if str(t2.get("state", "")) in want:
+					got += 1
+			_ok(got >= 3 and got <= 5, "%s noble echo count %d" % [nb, got])
+
+func _rng(seed_i: int) -> RandomNumberGenerator:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed_i
+	return rng
 
 # ── Plan A fixtures ───────────────────────────────────
 func _fixture_people() -> Array:

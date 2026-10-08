@@ -855,7 +855,11 @@ func _tab_tavern() -> void:
 		tl.position = Vector2(16, 360)
 		card.add_child(tl)
 		var shown_sigs := CKBloodline.visible_signatures(c, inspect)
-		var sg := _para(CKBloodline.summary_zh(c, inspect), UIKit.ACCENT if not shown_sigs.is_empty() else UIKit.TEXT_FAINT, 11, 228)
+		var sig_line := CKBloodline.summary_zh(c, inspect)
+		var obs := CKBloodline.observe_zh(c, inspect)
+		if obs != "":
+			sig_line += "\n" + obs
+		var sg := _para(sig_line, UIKit.ACCENT if not shown_sigs.is_empty() else UIKit.TEXT_FAINT, 11, 228)
 		sg.name = "Sig%d" % i
 		sg.position = Vector2(16, 404)
 		card.add_child(sg)
