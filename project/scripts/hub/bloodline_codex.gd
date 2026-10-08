@@ -3,12 +3,14 @@ extends Control
 
 var _body: Control
 var _nation := ""
+var _panel_w := 920.0
 
 func _ready() -> void:
 	UIKit.void_bg(self)
 	UIKit.top_bar(self, "血脉图鉴", [["历", Calendar.label(), UIKit.TEXT_DIM]], "返回族谱", _back)
 	UIKit.page_head(self, 42, 72, "CODEX // TEN NATIONS", "十邦血脉", "BLOODLINE CODEX", "血是所携，冕是所显。谱系公开，单条特征要见过或验过才写进图鉴。", "", 18)
 	var rail := UIKit.panel_at(self, Rect2(42, 220, 236, 456), 12)
+	rail.name = "NationRailPanel"
 	var cap := UIKit.mono("NATIONS", 9, UIKit.TEXT_FAINT)
 	cap.position = Vector2(16, 12)
 	rail.add_child(cap)
@@ -57,9 +59,6 @@ func _ready() -> void:
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 
-func apply_mobile_layout() -> void:
-	MobileLayout.pin_footer(get_node_or_null("StitchFooter"))
-
 func _back() -> void:
 	get_tree().change_scene_to_file("res://scenes/hub/lineage_view.tscn")
 
@@ -73,41 +72,63 @@ func _show(nid: String) -> void:
 		ch.queue_free()
 	var nat: Dictionary = CKBloodline.nation(nid)
 	var known := CKCourtChrome.known_states()
-	var head := UIKit.panel_at(_body, Rect2(0, 0, 944, 96), 12, true)
+	var bw := _body.size.x
+	var narrow := bw < 700.0
+	_panel_w = maxf(240.0, bw - 24.0)
+	var head_h := 176.0 if narrow else 96.0
+	var head := UIKit.panel_at(_body, Rect2(0, 0, bw, head_h), 12, true)
 	var law := str(nat.get("law", ""))
 	var mark := CKCourtChrome.nation_mark(nid)
 	mark.position = Vector2(16, 28)
 	head.add_child(mark)
 	var title := UIKit.title_label(str(nat.get("name", nid)), 26)
 	title.position = Vector2(64, 12)
-	title.size = Vector2(280, 34)
+	title.size = Vector2(260.0 if not narrow else maxf(96.0, bw - 72.0), 34)
 	title.clip_text = true
 	head.add_child(title)
 	var sub := UIKit.body_label("%s · %s" % [str(CKBloodline.data().get("laws", {}).get(law, {}).get("name", law)), str(nat.get("motto", ""))], UIKit.TEXT_DIM, 13)
 	sub.autowrap_mode = TextServer.AUTOWRAP_OFF
 	sub.clip_text = true
 	sub.position = Vector2(64, 50)
-	sub.size = Vector2(500, 28)
+	sub.size = Vector2(maxf(96.0, bw - 72.0) if narrow else 400.0, 28)
 	head.add_child(sub)
 	var skill := _royal_skill(nid)
-	var sk := UIKit.body_label(str(skill.get("line", "")), UIKit.ACCENT, 12)
+	var side := VBoxContainer.new()
+	side.name = "PayoffColumn"
+	side.add_theme_constant_override("separation", 2)
+	if narrow:
+		side.position = Vector2(12, 76)
+		side.size = Vector2(bw - 24, 92)
+	else:
+		side.position = Vector2(500, 8)
+		side.size = Vector2(bw - 516, 80)
+	head.add_child(side)
+	var sk := UIKit.body_label(str(skill.get("line", "")).split("\n")[0], UIKit.ACCENT, 12)
 	sk.name = "RoyalSkill"
-	sk.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	sk.autowrap_mode = TextServer.AUTOWRAP_OFF
 	sk.clip_text = true
-	sk.position = Vector2(580, 16)
-	sk.size = Vector2(344, 64)
-	sk.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	sk.tooltip_text = str(skill.get("tip", ""))
-	head.add_child(sk)
+	side.add_child(sk)
+	for t in CKBloodPayoff.for_nation(nid):
+		var line := UIKit.body_label("%s · %s" % [str(t.get("zh", "")), str(t.get("effect", ""))], UIKit.TEXT, 12)
+		line.name = "TacticEffect"
+		line.autowrap_mode = TextServer.AUTOWRAP_OFF
+		line.clip_text = true
+		line.tooltip_text = str(t.get("effect", ""))
+		side.add_child(line)
+	var legend := UIKit.body_label(CKBloodPayoff.legend_zh(), UIKit.TEXT_DIM, 11)
+	legend.autowrap_mode = TextServer.AUTOWRAP_OFF
+	legend.clip_text = true
+	side.add_child(legend)
 	var scroll := ScrollContainer.new()
 	scroll.name = "LineScroll"
-	scroll.position = Vector2(0, 108)
-	scroll.size = Vector2(944, 336)
+	scroll.position = Vector2(0, (head_h + 12.0) if narrow else 108.0)
+	scroll.size = Vector2(bw, maxf(160.0, _body.size.y - scroll.position.y))
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_body.add_child(scroll)
 	var col := VBoxContainer.new()
 	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	col.custom_minimum_size = Vector2(920, 0)
+	col.custom_minimum_size = Vector2(_panel_w, 0)
 	col.add_theme_constant_override("separation", 10)
 	scroll.add_child(col)
 	_line_card(col, str(nat.get("royal", "")), "王胤", known)
@@ -137,13 +158,13 @@ func _line_card(parent: Node, line_id: String, tier_zh: String, known: Dictionar
 	h.add_child(nm)
 	var desc := UIKit.body_label(str(ln.get("desc", "")), UIKit.TEXT_DIM, 13)
 	desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	desc.custom_minimum_size = Vector2(860, 0)
+	desc.custom_minimum_size = Vector2(_panel_w - 8.0, 0)
 	inner.add_child(desc)
 	var traits := HFlowContainer.new()
 	traits.add_theme_constant_override("h_separation", 8)
 	traits.add_theme_constant_override("v_separation", 8)
 	traits.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	traits.custom_minimum_size = Vector2(860, 0)
+	traits.custom_minimum_size = Vector2(_panel_w - 8.0, 0)
 	inner.add_child(traits)
 	var set: Array = ln.get("trait_set", [])
 	if set.is_empty():
@@ -164,5 +185,19 @@ func _royal_skill(nid: String) -> Dictionary:
 		if str(s.get("blood_sig", "")) != nid:
 			continue
 		var desc := str(s.get("desc", ""))
-		return {"line": "王技 · %s\n%s" % [str(s.get("name", "")), desc], "tip": desc}
-	return {"line": "此邦没有单独的王技。", "tip": ""}
+		return {"line": "王技 · %s\n%s" % [str(s.get("name", "")), desc], "tip": "%s\n%s" % [desc, CKBloodPayoff.legend_zh()]}
+	return {"line": "此邦没有单独的王技。", "tip": CKBloodPayoff.legend_zh()}
+
+func apply_mobile_layout() -> void:
+	MobileLayout.pin_footer(get_node_or_null("StitchFooter"))
+	var w := get_viewport_rect().size.x
+	if w >= 1000.0 or _body == null:
+		return
+	var rail := get_node_or_null("NationRailPanel") as Control
+	if rail:
+		rail.position = Vector2(8, 168)
+		rail.size = Vector2(112, 520)
+	_body.position = Vector2(128, 168)
+	_body.size = Vector2(maxf(220.0, w - 136.0), 560)
+	if _nation != "":
+		_show(_nation)
