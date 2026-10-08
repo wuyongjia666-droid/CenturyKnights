@@ -375,12 +375,23 @@ static func stone_style() -> StyleBoxFlat:
 
 
 static func make_themed_bg(parent: Control, theme: String = "castle") -> ColorRect:
+	## v8.6 Stitch: ink void + 48px grid is the base for every screen; the themed painting survives only as a
+	## faint atmospheric wash (no more painted plates competing with frosted panels).
 	var bg = make_screen_bg(parent, false)
+	void_bg(parent)
 	var path = "res://assets/art/ui/%s_backdrop.png" % theme
 	if not ResourceLoader.exists(path):
 		path = "res://assets/art/ui/castle_backdrop.png"
 	if ResourceLoader.exists(path):
-		_add_backdrop(parent, load(path), 0.62)
+		var tr := TextureRect.new()
+		tr.texture = load(path)
+		tr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		tr.modulate = Color(0.55, 0.66, 0.85, 0.10)
+		tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		parent.add_child(tr)
+		parent.add_child(_vignette())
 	return bg
 
 static func _add_backdrop(parent: Control, tex: Texture2D, veil_a: float = 0.62) -> void:
