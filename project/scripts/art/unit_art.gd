@@ -92,9 +92,17 @@ static func tick(delta: float) -> void:
 static func crest_color() -> Color:
 	return Color(str(GameState.crest_color))
 
+## Old saves and tests still store #c9a227. CIE76 nearest Frost crest is frost silver.
+## game_state.gd / naming.gd defaults stay with core and narrative.
+const CREST_MIGRATION := {"c9a227": "c9d3de"}
+const CREST_FALLBACK := "6ed4ff"
+
+static func migrate_crest_hex(raw: String) -> String:
+	var c := str(raw).trim_prefix("#").to_lower()
+	return str(CREST_MIGRATION.get(c, c))
+
 static func _crest_hex() -> String:
-	var c = str(GameState.crest_color).trim_prefix("#").to_lower()
-	return c
+	return migrate_crest_hex(str(GameState.crest_color))
 
 static func hair_color(appearance: Dictionary) -> Color:
 	var hid = str(appearance.get("hair", "ink_black"))
@@ -744,7 +752,7 @@ static func banner(w: int = 160, h: int = 220, with_name: bool = true) -> Textur
 		return _cache[ck]
 	var tex2 = _try_load(path)
 	if tex2 == null:
-		path = "res://assets/art/banners/banner_c9a227_w%d.png" % _banner_frame
+		path = "res://assets/art/banners/banner_%s_w%d.png" % [CREST_FALLBACK, _banner_frame]
 		ck = "b|" + path
 		tex2 = _try_load(path)
 	if tex2 != null:

@@ -1,0 +1,35 @@
+{
+  "method": "CIE76 Lab",
+  "from": "#c9a227",
+  "to": "#c9d3de",
+  "palette": [
+    {
+      "hex": "#6ed4ff",
+      "name": "主霜"
+    },
+    {
+      "hex": "#9be4ff",
+      "name": "霜雾"
+    },
+    {
+      "hex": "#3aaddf",
+      "name": "深霜"
+    },
+    {
+      "hex": "#5ee0b5",
+      "name": "薄荷"
+    },
+    {
+      "hex": "#c9d3de",
+      "name": "霜银"
+    },
+    {
+      "hex": "#2e6f8f",
+      "name": "潮蓝"
+    },
+    {
+      "hex": "#d7f4ff",
+      "name": "冰白"
+    }
+  ]
+}
