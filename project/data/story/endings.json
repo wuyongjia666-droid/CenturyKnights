@@ -1,0 +1,667 @@
+{
+  "version": 1,
+  "endings": [
+    {
+      "id": "end_sign",
+      "title_key": "nar09_end_sign_title",
+      "beats": [
+        {
+          "id": "hall",
+          "lines": [
+            {
+              "id": "end_sign_l000",
+              "speaker": "旁白",
+              "text": "百年后的旗厅不新加王冠。灯只照见一张还带着旧纹的脸。"
+            },
+            {
+              "id": "end_sign_l001",
+              "speaker": "旁白",
+              "text": "那纹不是画上去的。祠堂的玻璃从血里把它读出来，读完它还在。"
+            },
+            {
+              "id": "end_sign_l002",
+              "speaker": "老旗手",
+              "text": "纹还在活人脸上。旗可以留下，不必再去借别人的姓。"
+            },
+            {
+              "id": "end_sign_l003",
+              "speaker": "旁白",
+              "text": "名册最下一行写的是显征，不是爵位。孩子那一栏没有被涂掉。"
+            },
+            {
+              "id": "end_sign_l004",
+              "speaker": "管事",
+              "text": "银库的锁我照旧换。今晚点名，先点脸上有纹的那一个。"
+            },
+            {
+              "id": "end_sign_l005",
+              "speaker": "旁白",
+              "text": "唱票时站过的位置空着。旗布垂下来，纹还在，人也还在呼吸。"
+            },
+            {
+              "id": "end_sign_l006",
+              "speaker": "旁白",
+              "text": "再往后的年月，这支旗不靠新的王室。它靠这道没被洗掉的纹。"
+            },
+            {
+              "id": "end_sign_l007",
+              "speaker": "掌柜",
+              "text": "账可以薄。薄了也别把这张脸从名册上换成一个更好听的姓。"
+            }
+          ]
+        },
+        {
+          "id": "stele",
+          "lines": [
+            {
+              "id": "end_sign_l008",
+              "speaker": "旁白",
+              "text": "这一代的碑上多了一行。那是他们自己选过，并且做成的一件事。"
+            },
+            {
+              "id": "end_sign_l009",
+              "speaker": "老旗手",
+              "text": "碑可以短。短过的事，不许再写成从来没有。"
+            },
+            {
+              "id": "end_sign_l010",
+              "speaker": "管事",
+              "text": "我把这一行抄进月结。抄的是做成的事，不是一句祝词。"
+            }
+          ],
+          "when": {
+            "ambition": true
+          }
+        },
+        {
+          "id": "open",
+          "lines": [
+            {
+              "id": "end_sign_l011",
+              "speaker": "旁白",
+              "text": "碑上没有这一代的新行。纹还在，志向那一栏是空的。"
+            },
+            {
+              "id": "end_sign_l012",
+              "speaker": "老旗手",
+              "text": "空着就空着。别用一句好话把空栏填满。"
+            },
+            {
+              "id": "end_sign_l013",
+              "speaker": "管事",
+              "text": "月结里不写没发生的志向。纹还在，这就单独记一笔。"
+            }
+          ],
+          "when": {
+            "ambition": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "end_marry",
+      "title_key": "nar09_end_marry_title",
+      "beats": [
+        {
+          "id": "door",
+          "lines": [
+            {
+              "id": "end_marry_l000",
+              "speaker": "旁白",
+              "text": "旗主自己的血里没有留下王胤的纹。门口的姓写在婚书上。"
+            },
+            {
+              "id": "end_marry_l001",
+              "speaker": "旁白",
+              "text": "{house}没有把旗收走。他们让出一扇侧门，门上仍是霜玻璃。"
+            },
+            {
+              "id": "end_marry_l002",
+              "speaker": "管事",
+              "text": "聘书在柜里。银两按月走，人按月留。这不是买来的席位。"
+            },
+            {
+              "id": "end_marry_l003",
+              "speaker": "旁白",
+              "text": "香盏照的是婚书的边。没有人把脖子当成选票。"
+            },
+            {
+              "id": "end_marry_l004",
+              "speaker": "旁白",
+              "text": "孩子若在，名册跟两边走。纹从配偶那一侧来，不从旗主的旧账上来。"
+            },
+            {
+              "id": "end_marry_l005",
+              "speaker": "掌柜",
+              "text": "王室的席位不打折。我们付的是月银，不是一句认亲。"
+            },
+            {
+              "id": "end_marry_l006",
+              "speaker": "旁白",
+              "text": "百年结束时，旗还叫{surname}。席位在别人的厅里，钥匙在我们柜上。"
+            },
+            {
+              "id": "end_marry_l007",
+              "speaker": "老旗手",
+              "text": "侧门不是家。家还在旗下。进了这扇门，只说明婚书生效了。"
+            }
+          ]
+        },
+        {
+          "id": "stele",
+          "lines": [
+            {
+              "id": "end_marry_l008",
+              "speaker": "旁白",
+              "text": "这一代做成的事写在碑上。婚书旁边多了这一行，不是多了一个王室。"
+            },
+            {
+              "id": "end_marry_l009",
+              "speaker": "老旗手",
+              "text": "碑上那一行归旗，不归侧门里的席位。"
+            },
+            {
+              "id": "end_marry_l010",
+              "speaker": "管事",
+              "text": "月结抄的是做成的事。席位还在，席位不是这件事本身。"
+            }
+          ],
+          "when": {
+            "ambition": true
+          }
+        },
+        {
+          "id": "open",
+          "lines": [
+            {
+              "id": "end_marry_l011",
+              "speaker": "旁白",
+              "text": "碑上没有这一代的新行。婚书在，志向那一栏空着。"
+            },
+            {
+              "id": "end_marry_l012",
+              "speaker": "老旗手",
+              "text": "空栏不要用王室的姓去填。"
+            },
+            {
+              "id": "end_marry_l013",
+              "speaker": "管事",
+              "text": "月结只记婚书和月银。没做成的志向不写进去。"
+            }
+          ],
+          "when": {
+            "ambition": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "end_rite",
+      "title_key": "nar09_end_rite_title",
+      "beats": [
+        {
+          "id": "lamp",
+          "lines": [
+            {
+              "id": "end_rite_l000",
+              "speaker": "旁白",
+              "text": "没有王胤的纹，也没有一纸王室婚书。人们停步，是因为声望先到了。"
+            },
+            {
+              "id": "end_rite_l001",
+              "speaker": "旁白",
+              "text": "祠堂的灯比议事厅亮。家训若在，就写在玻璃上，不写在布告上。"
+            },
+            {
+              "id": "end_rite_l002",
+              "speaker": "老旗手",
+              "text": "他们信的不是旗的新旧。他们信这盏灯每个月都还在。"
+            },
+            {
+              "id": "end_rite_l003",
+              "speaker": "管事",
+              "text": "邦交簿上的字比银库厚。厚的那一页换不来纹，换得来让路。"
+            },
+            {
+              "id": "end_rite_l004",
+              "speaker": "旁白",
+              "text": "信仰在这里不是神。是祠堂还肯为活人点灯，家训还肯按月被提起。"
+            },
+            {
+              "id": "end_rite_l005",
+              "speaker": "旁白",
+              "text": "{surname}的柜里有{silver}银，外面有{holdings}处据点。人们记得的仍是这盏灯。"
+            },
+            {
+              "id": "end_rite_l006",
+              "speaker": "旁白",
+              "text": "百年的最后一夜，来的人把霜露留在台阶上。没有人来收旗。"
+            },
+            {
+              "id": "end_rite_l007",
+              "speaker": "掌柜",
+              "text": "声望开了门。祠堂把灯留下。地和银还在，但它们不是这夜被记住的理由。"
+            }
+          ]
+        },
+        {
+          "id": "stele",
+          "lines": [
+            {
+              "id": "end_rite_l008",
+              "speaker": "旁白",
+              "text": "碑上多了一行他们做成的事。声望没有替他们把这一行写完。"
+            },
+            {
+              "id": "end_rite_l009",
+              "speaker": "老旗手",
+              "text": "灯还在。做成的事也还在。两件都要记，不许混成一句。"
+            },
+            {
+              "id": "end_rite_l010",
+              "speaker": "管事",
+              "text": "月结先写灯，再写这一行。顺序不能反。"
+            }
+          ],
+          "when": {
+            "ambition": true
+          }
+        },
+        {
+          "id": "open",
+          "lines": [
+            {
+              "id": "end_rite_l011",
+              "speaker": "旁白",
+              "text": "碑上没有这一代的新行。声望还在，志向那一栏空着。"
+            },
+            {
+              "id": "end_rite_l012",
+              "speaker": "老旗手",
+              "text": "空着的志向不要借声望去填。"
+            },
+            {
+              "id": "end_rite_l013",
+              "speaker": "管事",
+              "text": "灯按月亮。没做成的事，月结里不出现。"
+            }
+          ],
+          "when": {
+            "ambition": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "end_ledger",
+      "title_key": "nar09_end_ledger_title",
+      "beats": [
+        {
+          "id": "books",
+          "lines": [
+            {
+              "id": "end_ledger_l000",
+              "speaker": "旁白",
+              "text": "纹没有留下，婚书也没有把谁送进王室。留下的是地和柜。"
+            },
+            {
+              "id": "end_ledger_l001",
+              "speaker": "旁白",
+              "text": "{holdings}处据点还在交租。安静的月份，粮先进仓，再谈别的。"
+            },
+            {
+              "id": "end_ledger_l002",
+              "speaker": "掌柜",
+              "text": "银库里是{silver}。我按月念这个数。念完，旗还在，人可以换。"
+            },
+            {
+              "id": "end_ledger_l003",
+              "speaker": "管事",
+              "text": "庄头还在各自的地上。他们认的是租约，不是唱票时的站位。"
+            },
+            {
+              "id": "end_ledger_l004",
+              "speaker": "旁白",
+              "text": "声望没有高到让全城让路。祠堂的灯也没有变成别人的习惯。"
+            },
+            {
+              "id": "end_ledger_l005",
+              "speaker": "旁白",
+              "text": "柜门一开，百年的仗还付得起下一次出门。"
+            },
+            {
+              "id": "end_ledger_l006",
+              "speaker": "老旗手",
+              "text": "旗主若问结局在哪里，答案不在脸上。在两本账：地是一本，银是一本。"
+            },
+            {
+              "id": "end_ledger_l007",
+              "speaker": "旁白",
+              "text": "{surname}这个姓还在杆上。姓下面先是租约，然后才是人。"
+            }
+          ]
+        },
+        {
+          "id": "stele",
+          "lines": [
+            {
+              "id": "end_ledger_l008",
+              "speaker": "旁白",
+              "text": "做成的事写进碑里。地还在交租，这件事单独占一行。"
+            },
+            {
+              "id": "end_ledger_l009",
+              "speaker": "老旗手",
+              "text": "租约不是志向。做成的那一件，要写在租约旁边。"
+            },
+            {
+              "id": "end_ledger_l010",
+              "speaker": "管事",
+              "text": "月结抄碑上的一行，也抄银库的数。两列不要并成一列。"
+            }
+          ],
+          "when": {
+            "ambition": true
+          }
+        },
+        {
+          "id": "open",
+          "lines": [
+            {
+              "id": "end_ledger_l011",
+              "speaker": "旁白",
+              "text": "碑上没有这一代的新行。地还在，志向那一栏空着。"
+            },
+            {
+              "id": "end_ledger_l012",
+              "speaker": "老旗手",
+              "text": "空栏不能用银库的数字去填。"
+            },
+            {
+              "id": "end_ledger_l013",
+              "speaker": "管事",
+              "text": "月结只留下租和银。没发生的志向不记。"
+            }
+          ],
+          "when": {
+            "ambition": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "end_people",
+      "title_key": "nar09_end_people_title",
+      "beats": [
+        {
+          "id": "door",
+          "lines": [
+            {
+              "id": "end_people_l000",
+              "speaker": "旁白",
+              "text": "账没有厚到能替人说话。纹也不在。站着的是还活着的那几个。"
+            },
+            {
+              "id": "end_people_l001",
+              "speaker": "深镐·平眉",
+              "text": "砧可以停。人还在门口，旗就还不是一块空布。",
+              "when": {
+                "companion": "pingmei"
+              }
+            },
+            {
+              "id": "end_people_l002",
+              "speaker": "东虹·桥外",
+              "text": "桥图我还拿着。谁想把我们从旗下抹掉，先把这张图还给我。",
+              "when": {
+                "companion": "qiaowai"
+              }
+            },
+            {
+              "id": "end_people_l003",
+              "speaker": "西虹·测距",
+              "text": "距离我量过。他们还在，就不是空旗。空的是位子，不是人。",
+              "when": {
+                "companion": "ceju"
+              }
+            },
+            {
+              "id": "end_people_l004",
+              "speaker": "旁白",
+              "text": "三个人不必都在。还在的这些名字，已经够把最后一夜说完。"
+            },
+            {
+              "id": "end_people_l005",
+              "speaker": "旁白",
+              "text": "银库可以薄，据点可以少。名册上这几个名字没有被划掉。"
+            },
+            {
+              "id": "end_people_l006",
+              "speaker": "旁白",
+              "text": "唱票时的站位已经散了。散了以后，还说话的是这些人。"
+            },
+            {
+              "id": "end_people_l007",
+              "speaker": "旁白",
+              "text": "没有王室的侧门，也没有高到让全城让路的声望。人还在，这就单独成立。"
+            },
+            {
+              "id": "end_people_l008",
+              "speaker": "老旗手",
+              "text": "最后一夜不点爵位。点名点到谁应声，旗就还没有空。"
+            },
+            {
+              "id": "end_people_l009",
+              "speaker": "旁白",
+              "text": "旗还叫{surname}。叫这个姓的时候，先答应的是活人，不是柜。"
+            }
+          ]
+        },
+        {
+          "id": "stele",
+          "lines": [
+            {
+              "id": "end_people_l010",
+              "speaker": "旁白",
+              "text": "碑上多了他们做成的一行。应声的人还在，这一行才算数。"
+            },
+            {
+              "id": "end_people_l011",
+              "speaker": "老旗手",
+              "text": "做成的事不能替人站着。人在，事才留得住。"
+            },
+            {
+              "id": "end_people_l012",
+              "speaker": "管事",
+              "text": "月结把这一行写在名字下面。先有人，才有这件事。"
+            }
+          ],
+          "when": {
+            "ambition": true
+          }
+        },
+        {
+          "id": "open",
+          "lines": [
+            {
+              "id": "end_people_l013",
+              "speaker": "旁白",
+              "text": "碑上没有这一代的新行。人还在，志向那一栏空着。"
+            },
+            {
+              "id": "end_people_l014",
+              "speaker": "老旗手",
+              "text": "人在就够点名。空着的志向别算到他们头上。"
+            },
+            {
+              "id": "end_people_l015",
+              "speaker": "管事",
+              "text": "月结只点还在的名字。没做成的事，不跟他们绑在一起。"
+            }
+          ],
+          "when": {
+            "ambition": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "end_empty",
+      "title_key": "nar09_end_empty_title",
+      "beats": [
+        {
+          "id": "hall",
+          "lines": [
+            {
+              "id": "end_empty_l000",
+              "speaker": "旁白",
+              "text": "旗布还在杆上。杆下没有那张该站着的脸。"
+            },
+            {
+              "id": "end_empty_l001",
+              "speaker": "旁白",
+              "text": "王胤的纹没有留下来。婚书没有把这支旗送进任何王室。"
+            },
+            {
+              "id": "end_empty_l002",
+              "speaker": "老旗手",
+              "text": "声望薄，祠堂的灯也薄。据点凑不齐两处，银库撑不住下一季。"
+            },
+            {
+              "id": "end_empty_l003",
+              "speaker": "旁白",
+              "text": "关键的那几个人不在名册上。有的已经不在，有的没有走进这百年。"
+            },
+            {
+              "id": "end_empty_l004",
+              "speaker": "管事",
+              "text": "我把柜锁上。不是因为满，是因为没有下一笔要记。"
+            },
+            {
+              "id": "end_empty_l005",
+              "speaker": "旁白",
+              "text": "唱票结束以后的这些年，旗还叫{surname}。姓下面是空的。"
+            },
+            {
+              "id": "end_empty_l006",
+              "speaker": "旁白",
+              "text": "这不是把一句旁白翻过去就能算完的。大厅里真的没有人应声。"
+            },
+            {
+              "id": "end_empty_l007",
+              "speaker": "老旗手",
+              "text": "空着就让它空着。别临时找一张脸，贴到布上去。"
+            }
+          ]
+        },
+        {
+          "id": "stele",
+          "lines": [
+            {
+              "id": "end_empty_l008",
+              "speaker": "旁白",
+              "text": "碑上有他们做成的一行。做成了，厅里还是没有人应声。"
+            },
+            {
+              "id": "end_empty_l009",
+              "speaker": "老旗手",
+              "text": "这一行不替空旗找一张脸。"
+            },
+            {
+              "id": "end_empty_l010",
+              "speaker": "管事",
+              "text": "月结抄下这一行。抄完，杆下仍是空的。"
+            }
+          ],
+          "when": {
+            "ambition": true
+          }
+        },
+        {
+          "id": "open",
+          "lines": [
+            {
+              "id": "end_empty_l011",
+              "speaker": "旁白",
+              "text": "碑上没有这一代的新行。厅是空的，志向那一栏也是空的。"
+            },
+            {
+              "id": "end_empty_l012",
+              "speaker": "老旗手",
+              "text": "两处空着，不要用一句好话叠在一起。"
+            },
+            {
+              "id": "end_empty_l013",
+              "speaker": "管事",
+              "text": "月结没有新的志向。柜锁着，这就够记了。"
+            }
+          ],
+          "when": {
+            "ambition": false
+          }
+        }
+      ]
+    }
+  ],
+  "echoes": {
+    "id": "echo",
+    "lines": [
+      {
+        "id": "end_echo_lamp_on",
+        "speaker": "旁白",
+        "text": "验血的结果被说出来了。灯下的人听见的是血，不是口号。",
+        "when": {
+          "flag": "e5_lamp_speaks"
+        }
+      },
+      {
+        "id": "end_echo_lamp_off",
+        "speaker": "旁白",
+        "text": "灯没有把验血说出来。大厅里留下的是沉默，不是一份公告。",
+        "when": {
+          "flag": "e5_lamp_silent"
+        }
+      },
+      {
+        "id": "end_echo_empty_stand",
+        "speaker": "旁白",
+        "text": "唱票那夜旗下本就没有脸。结局没有把一张新脸贴回去。",
+        "when": {
+          "flag": "e5_stand_empty_flag"
+        }
+      },
+      {
+        "id": "end_echo_price",
+        "speaker": "旁白",
+        "text": "守过的那个价还在。没有人被写成必须死在唱票里。",
+        "when": {
+          "flag": "e4_never_complete"
+        }
+      },
+      {
+        "id": "end_echo_sea",
+        "speaker": "旁白",
+        "text": "盐泽那头的誓还在海上。旗没有把她的誓改成自己的。",
+        "when": {
+          "flag": "e5_oath_sea"
+        }
+      },
+      {
+        "id": "end_echo_flag",
+        "speaker": "旁白",
+        "text": "她的誓最后站到旗下。站过来的是她自己，不是一份公文。",
+        "when": {
+          "flag": "e5_oath_flag"
+        }
+      },
+      {
+        "id": "end_echo_neither",
+        "speaker": "旁白",
+        "text": "两道誓都没有把她收下。这不是折中，是她哪一边都不进。",
+        "when": {
+          "flag": "e5_oath_neither"
+        }
+      }
+    ]
+  }
+}
