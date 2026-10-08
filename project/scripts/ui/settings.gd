@@ -43,10 +43,18 @@ func _ready() -> void:
 	box.add_child(preview)
 
 	var highlight = CheckButton.new()
+	highlight.name = "TutorialHighlight"
 	highlight.text = "新手高亮指引"
 	highlight.button_pressed = GameState.settings.get("tutorial_highlight", true)
 	highlight.toggled.connect(func(on): GameState.settings["tutorial_highlight"] = on)
 	box.add_child(highlight)
+
+	var codex := UIKit.make_button(Locale.t("ux_codex_open"), 280)
+	codex.name = "OpenCodex"
+	codex.custom_minimum_size = Vector2(280, 44)
+	codex.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	codex.pressed.connect(func(): CKHelpCodex.open(self))
+	box.add_child(codex)
 
 	box.add_child(UIKit.make_label("文字速度"))
 	var speed = HSlider.new()
