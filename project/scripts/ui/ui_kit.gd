@@ -558,3 +558,94 @@ static func empty_state(text: String) -> Label:
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	return l
+
+# --- v8.6 Stitch layout primitives ---------------------------------------------------------
+static func side_veil(parent: Control, from_left: bool = true, reach: float = 0.62, a: float = 0.92) -> TextureRect:
+	## horizontal ink gradient so an editorial column sits over full-bleed key art
+	var g := Gradient.new()
+	g.set_color(0, Color(BG, a))
+	g.set_color(1, Color(BG, 0.0))
+	g.set_offset(0, 0.0)
+	g.set_offset(1, reach)
+	var gt := GradientTexture2D.new()
+	gt.gradient = g
+	gt.fill_from = Vector2(0.0 if from_left else 1.0, 0.5)
+	gt.fill_to = Vector2(1.0 if from_left else 0.0, 0.5)
+	gt.width = 256
+	gt.height = 4
+	var v := TextureRect.new()
+	v.texture = gt
+	v.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	v.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	v.stretch_mode = TextureRect.STRETCH_SCALE
+	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(v)
+	return v
+
+static func glass_at(parent: Control, rect: Rect2, radius: int = 14, alpha: float = 0.72) -> Panel:
+	## absolutely-placed frosted panel (1px highlight stroke, soft shadow)
+	var p := Panel.new()
+	p.position = rect.position
+	p.size = rect.size
+	p.add_theme_stylebox_override("panel", glass(radius, alpha))
+	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(p)
+	return p
+
+static func index_button(idx: String, text: String, min_w: int = 320) -> Button:
+	## editorial list item: mono index + label, left aligned, underline-on-hover glass states
+	var b := Button.new()
+	b.text = "%s    %s" % [idx, text]
+	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	b.custom_minimum_size = Vector2(min_w, 48)
+	b.add_theme_font_size_override("font_size", 18)
+	b.focus_mode = Control.FOCUS_ALL
+	var n := _btn_box(Color(0, 0, 0, 0), Color(0, 0, 0, 0), 0, 10)
+	n.content_margin_left = 18
+	var h := _btn_box(Color(ACCENT, 0.10), Color(ACCENT, 0.45), 1, 10)
+	h.content_margin_left = 18
+	var pr := _btn_box(Color(ACCENT, 0.18), Color(ACCENT, 0.7), 1, 10)
+	pr.content_margin_left = 18
+	var d := _btn_box(Color(0, 0, 0, 0), Color(0, 0, 0, 0), 0, 10)
+	d.content_margin_left = 18
+	_apply_states(b, {"normal": n, "hover": h, "pressed": pr, "focus": _focus_ring(FOCUS_RING, 12), "disabled": d})
+	b.add_theme_color_override("font_color", TEXT)
+	b.add_theme_color_override("font_hover_color", Color.WHITE)
+	b.add_theme_color_override("font_pressed_color", ACCENT_HOVER)
+	b.add_theme_color_override("font_focus_color", Color.WHITE)
+	b.add_theme_color_override("font_disabled_color", DISABLED_TEXT)
+	UIFX.wire_button(b)
+	return b
+
+static func stat_chip(label: String, value: String, col: Color = TEXT) -> HBoxContainer:
+	## label (faint, small) + mono value
+	var h := HBoxContainer.new()
+	h.add_theme_constant_override("separation", 6)
+	var l := Label.new()
+	l.text = label
+	l.add_theme_font_size_override("font_size", SZ_LABEL)
+	l.add_theme_color_override("font_color", TEXT_FAINT)
+	l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	h.add_child(l)
+	var v := Label.new()
+	v.text = value
+	v.add_theme_font_override("font", font("mono"))
+	v.add_theme_font_size_override("font_size", 14)
+	v.add_theme_color_override("font_color", col)
+	h.add_child(v)
+	return h
+
+static func title_label(text: String, size: int = SZ_TITLE, col: Color = TEXT) -> Label:
+	var t := Label.new()
+	t.text = text
+	t.add_theme_font_size_override("font_size", size)
+	t.add_theme_color_override("font_color", col)
+	return t
+
+static func body_label(text: String, col: Color = TEXT_DIM, size: int = 13) -> Label:
+	var t := Label.new()
+	t.text = text
+	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	t.add_theme_font_size_override("font_size", size)
+	t.add_theme_color_override("font_color", col)
+	return t

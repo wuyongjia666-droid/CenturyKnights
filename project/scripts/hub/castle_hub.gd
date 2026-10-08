@@ -17,168 +17,255 @@ func _ready() -> void:
 	GameState.state_changed.connect(_refresh)
 
 func _build() -> void:
+	## v8.6 — Stitch 02_castle_hub: top resource bar · left nav rail · hero art · mission card · leader column
 	for c in get_children():
 		c.queue_free()
-	UIKit.make_themed_bg(self, "castle")
-	# 美术：堡顶横幅条
-	var _hub_strip = TextureRect.new()
-	_hub_strip.texture = load("res://assets/art/ui/hub_banner_strip.png")
-	_hub_strip.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_hub_strip.stretch_mode = TextureRect.STRETCH_SCALE
-	_hub_strip.position = Vector2(0, 0)
-	_hub_strip.size = Vector2(1280, 40)
-	_hub_strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_hub_strip.z_index = -1
-	add_child(_hub_strip)
-	UIFX.banner_shimmer(_hub_strip, 4.2)
+	UIKit.make_screen_bg(self, false)
+	var art := TextureRect.new()
+	art.texture = load("res://assets/art/ui/castle_backdrop.png") if ResourceLoader.exists("res://assets/art/ui/castle_backdrop.png") else null
+	art.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	art.modulate = Color(0.62, 0.68, 0.80)
+	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(art)
+	UIKit.side_veil(self, true, 0.42, 0.90)
+	UIKit.side_veil(self, false, 0.36, 0.80)
+	add_child(UIKit._vignette())
 
-	var banner: Control
-	if ResourceLoader.exists("res://assets/art/ui/castle_crest_plate.png"):
-		var cr := TextureRect.new()
-		cr.texture = load("res://assets/art/ui/castle_crest_plate.png")
-		cr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		cr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		cr.custom_minimum_size = Vector2(64, 92)
-		cr.size = Vector2(64, 92)
-		banner = cr
-	else:
-		banner = UIKit.make_banner_rect(64, 92)
-	banner.position = Vector2(36, 16)
-	add_child(banner)
-	UIFX.breathe(banner, 0.01, 3.2)
-
-	var title = UIKit.make_label(Locale.t("hub_title"), true)
-	title.position = Vector2(120, 18)
+	# ── top bar ───────────────────────────────────────────
+	var top := UIKit.glass_at(self, Rect2(0, 0, 1280, 56), 0, 0.55)
+	var tsb: StyleBoxFlat = top.get_theme_stylebox("panel").duplicate()
+	tsb.border_width_top = 0
+	tsb.border_width_left = 0
+	tsb.border_width_right = 0
+	tsb.shadow_size = 0
+	top.add_theme_stylebox_override("panel", tsb)
+	var crest := ColorRect.new()
+	crest.color = UIKit.ACCENT
+	crest.position = Vector2(28, 20)
+	crest.size = Vector2(4, 16)
+	add_child(crest)
+	var title := UIKit.title_label(Locale.t("hub_title"), 20)
+	title.position = Vector2(42, 12)
 	add_child(title)
-
-	var sub = UIKit.make_dim_label("%s旗 · 纹章已升 · 「%s」仍在风里" % [GameState.surname, GameState.surname])
-	sub.position = Vector2(120, 56)
+	var sub := UIKit.body_label("%s旗 · 纹章已升" % GameState.surname, UIKit.TEXT_FAINT, 12)
+	sub.position = Vector2(42 + title.get_minimum_size().x + 14, 19)
+	sub.size = Vector2(200, 18)
 	add_child(sub)
-
 	_res_bar = UIKit.resource_bar()
-	_res_bar.position = Vector2(40, 88)
+	_res_bar.add_theme_constant_override("separation", 22)
+	_res_bar.position = Vector2(470, 17)
 	add_child(_res_bar)
 	UIKit.update_resources(_res_bar)
-
-	_story_hint = UIKit.make_label("")
-	_story_hint.position = Vector2(40, 118)
-	_story_hint.add_theme_color_override("font_color", UIKit.ACCENT)
-	add_child(_story_hint)
-	_update_story_hint()
-
-	# 领袖卡
-	var leader = GameState.get_leader()
-	if leader:
-		var lp = UIKit.make_panel()
-		lp.position = Vector2(980, 88)
-		lp.custom_minimum_size = Vector2(260, 140)
-		add_child(lp)
-		var lhb := HBoxContainer.new()
-		lhb.add_theme_constant_override("separation", 8)
-		lp.add_child(lhb)
-		lhb.add_child(UIKit.make_portrait_rect(leader, 72))
-		var lv := VBoxContainer.new()
-		lhb.add_child(lv)
-		lv.add_child(UIKit.make_label(leader.name))
-		lv.add_child(UIKit.make_dim_label("%s · %d岁" % [GameState.get_job(leader.job_id).get("name", ""), leader.age]))
-		lv.add_child(UIKit.make_dim_label(leader.rank_name()))
-
-	var grid := GridContainer.new()
-	grid.columns = 3
-	grid.position = Vector2(40, 160)
-	grid.add_theme_constant_override("h_separation", 14)
-	grid.add_theme_constant_override("v_separation", 12)
-	add_child(grid)
-
-	var buttons = [
-		[Locale.t("btn_roster"), "名册与立绘", "res://scenes/hub/roster.tscn"],
-		[Locale.t("btn_tavern"), "招募新刃", "res://scenes/hub/tavern.tscn"],
-		[Locale.t("btn_quests"), "陆桥委托", "res://scenes/hub/quests.tscn"],
-		["舆图", "邦国与陆桥", "res://scenes/hub/atlas_view.tscn"],
-		[Locale.t("btn_train"), "六维与转职", "res://scenes/hub/train.tscn"],
-		[Locale.t("btn_forge"), "灰刃与铁火", "res://scenes/hub/forge.tscn"],
-		["工事", "厅堂校场市集", "res://scenes/hub/works.tscn"],
-		["属地", "四野租佃庄园", "res://scenes/hub/estates.tscn"],
-		[Locale.t("btn_shrine"), "祈愈与丰收", "res://scenes/hub/shrine.tscn"],
-		[Locale.t("btn_lineage"), "血胤与容貌", "res://scenes/hub/lineage_view.tscn"],
-		[Locale.t("btn_marriage"), "春令与期望", "res://scenes/hub/marriage.tscn"],
-		[Locale.t("btn_hourglass"), "预告与推进", "res://scenes/hub/hourglass.tscn"],
-		[Locale.t("btn_market"), "粮铁药材", "res://scenes/hub/market.tscn"],
-		[Locale.t("btn_deploy"), "最多四人", "res://scenes/hub/deploy.tscn"],
-		["战技树", "冷却与二阶", "res://scenes/hub/skill_tree.tscn"],
-		["授旗礼", "子嗣三步入队", "res://scenes/hub/lineage_rite.tscn"],
-		["设置", "规则与速度", "res://scenes/ui/settings.tscn"],
-	]
-	for item in buttons:
-		var b = UIKit.make_hub_nav_button(item[0], item[1], 210)
-		var path = item[2]
-		UIFX.wire_button(b)
-		b.pressed.connect(func():
-			UIFX.press_feedback(b)
-			UIFX.select_pulse(b)
-			Sfx.click()
-			get_tree().change_scene_to_file(path)
-		)
-		grid.add_child(b)
-
-	UIFX.stagger_children(grid, 0.028, 0.26)
-	UIFX.nav_slide(grid, -18.0, 0.30)
-	UIFX.list_ripple(grid, 0.04)
-	UIFX.page_enter(self)
-	UIFX.wire_tree(self)
-	var flavor = UIKit.make_panel()
-	flavor.position = Vector2(40, 520)
-	flavor.custom_minimum_size = Vector2(900, 70)
-	add_child(flavor)
-	var fl = UIKit.make_dim_label("大厅风里有铁锈与灯油味。工事可升厅堂/校场/市集/工坊/祠堂；委任首通与联姻誓约会写入永久家族旁注。")
-	fl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	fl.custom_minimum_size = Vector2(860, 50)
-	flavor.add_child(fl)
-
-	_hint = UIKit.make_label("")
-	_hint.position = Vector2(40, 600)
-	_hint.custom_minimum_size = Vector2(1000, 40)
-	_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	add_child(_hint)
-
-	var row := HBoxContainer.new()
-	row.position = Vector2(40, 650)
-	row.add_theme_constant_override("separation", 10)
-	add_child(row)
-	var save_b = UIKit.make_button("存档", 100)
+	var save_b := UIKit.make_button("存档", 72)
+	save_b.custom_minimum_size = Vector2(72, 32)
+	save_b.position = Vector2(1098, 12)
 	save_b.pressed.connect(func():
 		GameState.save_game()
 		_hint.text = Locale.t("save_ok")
 	)
-	row.add_child(save_b)
-	var cont_b = UIKit.make_accent_button("继续主线", 140)
-	cont_b.pressed.connect(_continue_mainline)
-	row.add_child(cont_b)
+	add_child(save_b)
+	var menu_b := UIKit.make_button("主菜单", 84)
+	menu_b.custom_minimum_size = Vector2(84, 32)
+	menu_b.position = Vector2(1178, 12)
+	menu_b.pressed.connect(func():
+		GameState.save_game()
+		get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn")
+	)
+	add_child(menu_b)
+
+	# ── left nav rail ─────────────────────────────────────
+	UIKit.glass_at(self, Rect2(20, 72, 236, 628), 14, 0.70)
+	var nav_eb := UIKit.eyebrow("城堡 · 导航", UIKit.TEXT_FAINT)
+	nav_eb.position = Vector2(40, 86)
+	add_child(nav_eb)
+	var grid := GridContainer.new()
+	grid.name = "NavRail"
+	grid.columns = 1
+	grid.position = Vector2(30, 108)
+	grid.add_theme_constant_override("v_separation", 2)
+	add_child(grid)
+	var buttons = [
+		["战役", "出战编成 · 最多四人", "res://scenes/hub/deploy.tscn", Locale.t("btn_deploy")],
+		[Locale.t("btn_roster"), "名册与立绘", "res://scenes/hub/roster.tscn", ""],
+		[Locale.t("btn_tavern"), "招募新刃", "res://scenes/hub/tavern.tscn", ""],
+		[Locale.t("btn_forge"), "灰刃与铁火", "res://scenes/hub/forge.tscn", ""],
+		[Locale.t("btn_market"), "粮铁药材", "res://scenes/hub/market.tscn", ""],
+		[Locale.t("btn_shrine"), "祈愈与丰收", "res://scenes/hub/shrine.tscn", ""],
+		["属地", "四野租佃庄园", "res://scenes/hub/estates.tscn", ""],
+		[Locale.t("btn_marriage"), "春令与期望", "res://scenes/hub/marriage.tscn", ""],
+		[Locale.t("btn_lineage"), "血胤与容貌", "res://scenes/hub/lineage_view.tscn", ""],
+		["舆图", "邦国与陆桥", "res://scenes/hub/atlas_view.tscn", ""],
+		["—", "", "", ""],
+		[Locale.t("btn_quests"), "陆桥委托", "res://scenes/hub/quests.tscn", ""],
+		[Locale.t("btn_train"), "六维与转职", "res://scenes/hub/train.tscn", ""],
+		["战技树", "冷却与二阶", "res://scenes/hub/skill_tree.tscn", ""],
+		["工事", "厅堂校场市集", "res://scenes/hub/works.tscn", ""],
+		[Locale.t("btn_hourglass"), "预告与推进", "res://scenes/hub/hourglass.tscn", ""],
+		["授旗礼", "子嗣三步入队", "res://scenes/hub/lineage_rite.tscn", ""],
+		["设置", "规则与速度", "res://scenes/ui/settings.tscn", ""],
+	]
+	for item in buttons:
+		if str(item[0]) == "—":
+			var sep := Control.new()
+			sep.custom_minimum_size = Vector2(216, 9)
+			var hl := UIKit.hairline()
+			hl.position = Vector2(12, 4)
+			hl.size = Vector2(192, 1)
+			sep.add_child(hl)
+			grid.add_child(sep)
+			continue
+		var b := _nav_item(str(item[0]), str(item[1]))
+		if str(item[3]) != "":
+			b.set_meta("legacy_label", str(item[3]))
+		var path: String = item[2]
+		b.pressed.connect(func():
+			UIFX.press_feedback(b)
+			Sfx.click()
+			get_tree().change_scene_to_file(path)
+		)
+		grid.add_child(b)
+	UIFX.stagger_children(grid, 0.02, 0.22)
+	UIFX.nav_slide(grid, -14.0, 0.28)
+
+	# ── right column: leader + house notes ────────────────
+	var leader = GameState.get_leader()
+	if leader:
+		var lp := UIKit.glass_at(self, Rect2(936, 72, 324, 176), 14, 0.74)
+		lp.mouse_filter = Control.MOUSE_FILTER_PASS
+		var mask := Panel.new()
+		var msb := StyleBoxFlat.new()
+		msb.bg_color = UIKit.PANEL_LIT
+		msb.set_corner_radius_all(10)
+		mask.add_theme_stylebox_override("panel", msb)
+		mask.clip_contents = true
+		mask.position = Vector2(18, 18)
+		mask.size = Vector2(108, 140)
+		lp.add_child(mask)
+		var pr := UIKit.make_portrait_rect(leader, 140)
+		pr.position = Vector2(-16, 0)
+		pr.size = Vector2(140, 140)
+		pr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		pr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		mask.add_child(pr)
+		var ring := Panel.new()
+		var rsb := StyleBoxFlat.new()
+		rsb.draw_center = false
+		rsb.set_border_width_all(1)
+		rsb.border_color = UIKit.STROKE_HI
+		rsb.set_corner_radius_all(10)
+		ring.add_theme_stylebox_override("panel", rsb)
+		ring.position = mask.position
+		ring.size = mask.size
+		ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		lp.add_child(ring)
+		var lv := VBoxContainer.new()
+		lv.position = Vector2(142, 20)
+		lv.size = Vector2(166, 136)
+		lv.add_theme_constant_override("separation", 4)
+		lp.add_child(lv)
+		lv.add_child(UIKit.eyebrow("家主 · %s" % leader.rank_name(), UIKit.OK))
+		lv.add_child(UIKit.title_label(leader.name, 21))
+		lv.add_child(UIKit.body_label("%s · %d 岁" % [GameState.get_job(leader.job_id).get("name", ""), leader.age], UIKit.TEXT_DIM, 13))
+		var gap := Control.new()
+		gap.custom_minimum_size = Vector2(0, 6)
+		lv.add_child(gap)
+		lv.add_child(UIKit.stat_chip("麾下", "%d 人" % GameState.roster().size(), UIKit.TEXT))
+		lv.add_child(UIKit.body_label(Calendar.label(), UIKit.TEXT_FAINT, 12))
+
+	var np := UIKit.glass_at(self, Rect2(936, 264, 324, 150), 14, 0.66)
+	var nv := VBoxContainer.new()
+	nv.position = Vector2(20, 16)
+	nv.size = Vector2(284, 124)
+	nv.add_theme_constant_override("separation", 8)
+	np.add_child(nv)
+	nv.add_child(UIKit.eyebrow("堡内近况", UIKit.TEXT_FAINT))
+	var fl := UIKit.body_label("大厅风里有铁锈与灯油味。工事可升厅堂 / 校场 / 市集 / 工坊 / 祠堂；委任首通与联姻誓约会写入永久家族旁注。", UIKit.TEXT_DIM, 13)
+	fl.custom_minimum_size = Vector2(284, 0)
+	nv.add_child(fl)
+	_hint = UIKit.body_label("", UIKit.OK, 13)
+	_hint.custom_minimum_size = Vector2(284, 0)
+	nv.add_child(_hint)
+
+	# ── mission card (bottom centre) ──────────────────────
+	var mc := UIKit.glass_at(self, Rect2(276, 548, 984, 152), 16, 0.78)
+	mc.mouse_filter = Control.MOUSE_FILTER_PASS
+	var meb := UIKit.eyebrow("主线 · 战役", UIKit.ACCENT)
+	meb.position = Vector2(26, 20)
+	mc.add_child(meb)
+	_story_hint = UIKit.title_label("", UIKit.SZ_HEADLINE, UIKit.TEXT)
+	_story_hint.position = Vector2(26, 40)
+	_story_hint.size = Vector2(640, 28)
+	_story_hint.clip_text = true
+	mc.add_child(_story_hint)
+	_update_story_hint()
+	var row := HBoxContainer.new()
+	row.position = Vector2(26, 88)
+	row.add_theme_constant_override("separation", 10)
+	mc.add_child(row)
 	_vol_pick = OptionButton.new()
-	_vol_pick.custom_minimum_size = Vector2(120, 36)
-	_vol_pick.add_theme_font_size_override("font_size", 15)
+	_vol_pick.custom_minimum_size = Vector2(112, 40)
+	_vol_pick.add_theme_font_size_override("font_size", 14)
 	row.add_child(_vol_pick)
 	_chapter_pick = OptionButton.new()
-	_chapter_pick.custom_minimum_size = Vector2(240, 36)
-	_chapter_pick.add_theme_font_size_override("font_size", 15)
+	_chapter_pick.custom_minimum_size = Vector2(260, 40)
+	_chapter_pick.add_theme_font_size_override("font_size", 14)
 	row.add_child(_chapter_pick)
 	_rebuild_volume_picker()
 	_rebuild_chapter_picker()
 	_vol_pick.item_selected.connect(_on_volume_picked)
 	_chapter_pick.item_selected.connect(_on_chapter_picked)
-	var go_b = UIKit.make_accent_button("前往选中章", 140)
+	var go_b := UIKit.make_button("前往选中章", 128)
 	go_b.pressed.connect(func():
 		var i = _chapter_pick.selected
 		if i >= 0 and i < _chapter_paths.size():
 			get_tree().change_scene_to_file(str(_chapter_paths[i]))
 	)
 	row.add_child(go_b)
-	var menu_b = UIKit.make_button("主菜单", 100)
-	menu_b.pressed.connect(func():
-		GameState.save_game()
-		get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn")
-	)
-	row.add_child(menu_b)
+	var cont_b := UIKit.make_accent_button("继续主线  ›", 220)
+	cont_b.custom_minimum_size = Vector2(220, 52)
+	cont_b.add_theme_font_size_override("font_size", 17)
+	cont_b.position = Vector2(984 - 26 - 220, 76)
+	cont_b.pressed.connect(_continue_mainline)
+	mc.add_child(cont_b)
+	cont_b.call_deferred("grab_focus")
+
+	UIFX.page_enter(self)
+	UIFX.wire_tree(self)
+
+func _nav_item(title_t: String, sub_t: String) -> Button:
+	## compact rail item: title left, faint subtitle as tooltip; full five-state styling
+	var b := Button.new()
+	b.text = title_t
+	b.tooltip_text = sub_t
+	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	b.custom_minimum_size = Vector2(216, 30)
+	b.add_theme_font_size_override("font_size", 14)
+	b.focus_mode = Control.FOCUS_ALL
+	var mk := func(bg: Color, bd: Color, bw: int) -> StyleBoxFlat:
+		var s := UIKit._btn_box(bg, bd, bw, 8)
+		s.content_margin_left = 14
+		s.content_margin_top = 4
+		s.content_margin_bottom = 4
+		return s
+	var hov: StyleBoxFlat = mk.call(Color(UIKit.ACCENT, 0.10), Color(UIKit.ACCENT, 0.0), 0)
+	hov.border_width_left = 2
+	hov.border_color = UIKit.ACCENT
+	UIKit._apply_states(b, {
+		"normal": mk.call(Color(0, 0, 0, 0), Color(0, 0, 0, 0), 0),
+		"hover": hov,
+		"pressed": mk.call(Color(UIKit.ACCENT, 0.18), Color(UIKit.ACCENT, 0.5), 1),
+		"focus": UIKit._focus_ring(UIKit.FOCUS_RING, 9),
+		"disabled": mk.call(Color(0, 0, 0, 0), Color(0, 0, 0, 0), 0),
+	})
+	b.add_theme_color_override("font_color", UIKit.TEXT_DIM)
+	b.add_theme_color_override("font_hover_color", Color.WHITE)
+	b.add_theme_color_override("font_pressed_color", UIKit.ACCENT)
+	b.add_theme_color_override("font_focus_color", Color.WHITE)
+	b.add_theme_color_override("font_disabled_color", UIKit.DISABLED_TEXT)
+	UIFX.wire_button(b)
+	return b
 
 
 func _refresh() -> void:
@@ -1146,11 +1233,9 @@ func _continue_mainline() -> void:
 
 func panel_button_labels() -> Array:
 	var out: Array = []
-	for c in get_children():
-		if c is GridContainer:
-			for b in c.get_children():
-				if b is BaseButton:
-					# hub buttons now have subtitle newlines — take first line
-					var txt = str(b.text).split("\n")[0]
-					out.append(txt)
+	var g := get_node_or_null("NavRail")
+	if g:
+		for b in g.get_children():
+			if b is BaseButton:
+				out.append(str(b.get_meta("legacy_label", str(b.text).split("\n")[0])))
 	return out

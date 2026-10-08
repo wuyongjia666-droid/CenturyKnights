@@ -1,4 +1,5 @@
 extends Control
+## v8.6 — Stitch 01_menu: full-bleed key art, editorial left column, indexed menu list, no banner/parchment.
 
 func _ready() -> void:
 	_build()
@@ -6,123 +7,84 @@ func _ready() -> void:
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 	Music.play_hub()
-	set_process(true)
-
-var _banner_node: TextureRect
-var _anim_acc: float = 0.0
-func _process(delta: float) -> void:
-	UnitArt.tick(delta)
-	_anim_acc += delta
-	if _anim_acc < 0.2:
-		return
-	_anim_acc = 0.0
-	if _banner_node == null:
-		for c in get_children():
-			if c is TextureRect:
-				_banner_node = c
-				break
-	if _banner_node:
-		_banner_node.texture = UnitArt.banner(180, 260, true)
 
 func _build() -> void:
 	for c in get_children():
 		c.queue_free()
+	var bg := ColorRect.new()
+	bg.color = UIKit.BG
+	bg.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(bg)
+	var art_path := "res://assets/art/ui/hub_backdrop.png"
+	for p in ["res://assets/art/ui/menu_backdrop.png", "res://assets/art/ui/castle_backdrop.png"]:
+		if ResourceLoader.exists(p):
+			art_path = p
+			break
+	if ResourceLoader.exists(art_path):
+		var art := TextureRect.new()
+		art.texture = load(art_path)
+		art.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+		art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		art.modulate = Color(0.78, 0.84, 0.95)
+		art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(art)
+	UIKit.side_veil(self, true, 0.68, 0.94)
+	add_child(UIKit._vignette())
 
-	# 概念板级菜单底图
-	if ResourceLoader.exists("res://assets/art/ui/menu_backdrop.png"):
-		var mbg := TextureRect.new()
-		mbg.texture = load("res://assets/art/ui/menu_backdrop.png")
-		mbg.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
-		mbg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		mbg.stretch_mode = TextureRect.STRETCH_SCALE
-		mbg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(mbg)
-		var veil := ColorRect.new()
-		veil.color = Color(0.05, 0.06, 0.09, 0.48)
-		veil.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
-		veil.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(veil)
-	else:
-		var bg := ColorRect.new()
-		bg.color = UIKit.BG
-		bg.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
-		bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(bg)
+	var col := VBoxContainer.new()
+	col.position = Vector2(96, 132)
+	col.custom_minimum_size = Vector2(440, 0)
+	col.add_theme_constant_override("separation", 4)
+	add_child(col)
+	col.add_child(UIKit.eyebrow("CENTURY KNIGHTS · 百年骑士"))
+	var title := UIKit.title_label(Locale.t("game_title"), 56)
+	col.add_child(title)
+	var sub := UIKit.title_label(Locale.t("subtitle"), UIKit.SZ_HEADLINE, UIKit.ACCENT)
+	col.add_child(sub)
+	var gap := Control.new()
+	gap.custom_minimum_size = Vector2(0, 10)
+	col.add_child(gap)
+	col.add_child(UIKit.body_label("战棋 · 城堡 · 联姻 · 传代——一面旗，要扛过百年。", UIKit.TEXT_DIM, 14))
+	var gap2 := Control.new()
+	gap2.custom_minimum_size = Vector2(0, 36)
+	col.add_child(gap2)
+	var line := UIKit.hairline()
+	line.custom_minimum_size = Vector2(360, 1)
+	col.add_child(line)
+	var gap3 := Control.new()
+	gap3.custom_minimum_size = Vector2(0, 14)
+	col.add_child(gap3)
 
-	# 氛围底纹：深色石砖感色块
-	var left := ColorRect.new()
-	left.color = UIKit.BG_DEEP
-	left.set_anchors_preset(PRESET_LEFT_WIDE)
-	left.offset_right = 280
-	left.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(left)
-	var accent := ColorRect.new()
-	accent.color = UIKit.ACCENT
-	accent.position = Vector2(280, 0)
-	accent.size = Vector2(4, 720)
-	accent.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(accent)
+	var items := [
+		["01", Locale.t("menu_new"), Callable(self, "_on_new"), false],
+		["02", Locale.t("menu_continue"), Callable(self, "_on_continue"), not GameState.has_save()],
+		["03", Locale.t("menu_settings"), Callable(self, "_on_settings"), false],
+		["04", Locale.t("menu_quit"), func(): get_tree().quit(), false],
+	]
+	var first: Button = null
+	for it in items:
+		var b := UIKit.index_button(it[0], it[1], 360)
+		b.disabled = it[3]
+		b.pressed.connect(it[2])
+		if it[0] == "01":
+			b.add_theme_color_override("font_color", UIKit.ACCENT)
+		col.add_child(b)
+		if first == null and not b.disabled:
+			first = b
+	if first:
+		first.call_deferred("grab_focus")
 
-	# 左侧大旗
-	var big_banner := TextureRect.new()
-	big_banner.texture = UnitArt.banner(180, 260, true)
-	big_banner.position = Vector2(50, 180)
-	big_banner.custom_minimum_size = Vector2(180, 260)
-	big_banner.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	big_banner.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	big_banner.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(big_banner)
-
-	var center := CenterContainer.new()
-	center.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
-	center.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	center.grow_vertical = Control.GROW_DIRECTION_BOTH
-	add_child(center)
-
-	var box := VBoxContainer.new()
-	box.custom_minimum_size = Vector2(420, 0)
-	box.add_theme_constant_override("separation", 14)
-	box.alignment = BoxContainer.ALIGNMENT_CENTER
-	center.add_child(box)
-
-	var title := UIKit.make_label(Locale.t("game_title"), true)
-	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	title.add_theme_font_size_override("font_size", 34)
-	box.add_child(title)
-
-	var sub := UIKit.make_label(Locale.t("subtitle"))
-	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	sub.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	sub.add_theme_color_override("font_color", UIKit.ACCENT)
-	box.add_child(sub)
-
-	var flavor := UIKit.make_dim_label("战棋 · 城堡 · 联姻 · 传代——一面旗，要扛过百年。")
-	flavor.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	flavor.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	box.add_child(flavor)
-
-	var spacer := Control.new()
-	spacer.custom_minimum_size = Vector2(0, 16)
-	box.add_child(spacer)
-
-	for item in [
-		[Locale.t("menu_new"), Callable(self, "_on_new"), false],
-		[Locale.t("menu_continue"), Callable(self, "_on_continue"), not GameState.has_save()],
-		[Locale.t("menu_settings"), Callable(self, "_on_settings"), false],
-		[Locale.t("menu_quit"), func(): get_tree().quit(), false],
-	]:
-		var b: Button = UIKit.make_accent_button(item[0], 300) if item[0] == Locale.t("menu_new") else UIKit.make_button(item[0], 300)
-		b.disabled = item[2]
-		b.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-		b.pressed.connect(item[1])
-		box.add_child(b)
-
-	var tip := UIKit.make_dim_label("原创 IP · 第零章加长 · Godot 4.3")
-	tip.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	tip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	tip.add_theme_font_size_override("font_size", 12)
-	box.add_child(tip)
+	var foot := UIKit.body_label("原创 IP · v8.6 · Godot 4.3", UIKit.TEXT_FAINT, 12)
+	foot.position = Vector2(96, 664)
+	foot.size = Vector2(400, 20)
+	add_child(foot)
+	var keys := UIKit.body_label("↑ ↓ 选择    Enter 确认", UIKit.TEXT_FAINT, 12)
+	keys.position = Vector2(984, 664)
+	keys.size = Vector2(200, 20)
+	keys.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	add_child(keys)
 
 func _on_new() -> void:
 	get_tree().change_scene_to_file("res://scenes/story/naming.tscn")
