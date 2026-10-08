@@ -1,5 +1,5 @@
 {
-  "export_budget_bytes": 523000000,
+  "export_budget_bytes": 466000000,
   "i18n": {
     "project/autoload/battle_rules.gd": 26,
     "project/autoload/calendar.gd": 19,

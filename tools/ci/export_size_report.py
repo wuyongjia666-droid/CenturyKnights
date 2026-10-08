@@ -6,11 +6,13 @@ when any preset pattern matches its relative path. Godot's String.match treats
 '*' as any run of characters, including slashes. Fails when the total is above
 tools/ci/ratchet.json export_budget_bytes.
 
-The 400MiB cap in the v9.2 card is not reachable while doll plates, hireuniq
-faces and hub backdrops are still loaded by name. The active budget sits just
-above the measured total. ART-02's docs/art/retired-assets-v92.json, when it
-appears, adds more exclude globs; infra then lowers export_budget_bytes toward
-250MiB.
+The 400MiB cap in the v9.2 card is still above the measured total: ART-02
+moved zero-reference files out of project/assets, then ART-04 added city
+fallback crests and item glyphs. Doll plates, live portraits, and hub
+backdrops remain because they are loaded by name. The active budget sits
+just above the measured total. If
+docs/art/retired-assets-v92.json grows an exclude_globs list, those patterns
+are applied on top and the budget can drop toward 250MiB.
 """
 from __future__ import annotations
 
@@ -114,7 +116,7 @@ def main() -> int:
     if budget > CAP_BYTES:
         print(
             "EXPORT NOTE active budget is above the 400MiB cap; "
-            "doll/hireuniq/backdrops are still referenced. Tighten after ART-02."
+            "ART-02 moved zero-reference files, ART-04 added city fallbacks and glyphs, and doll/portraits/backdrops are still referenced."
         )
     print("EXPORT SIZE PASS")
     return 0
