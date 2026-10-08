@@ -1,0 +1,127 @@
+{
+  "style": {
+    "project/autoload/game_state.gd": {
+      "gold": 2,
+      "hex": 2
+    },
+    "project/scripts/art/genome_portrait.gd": {
+      "hex": 1
+    },
+    "project/scripts/art/portrait_doll.gd": {
+      "hex": 1
+    },
+    "project/scripts/art/unit_art.gd": {
+      "hex": 4
+    },
+    "project/scripts/art/unit_model.gd": {
+      "hex": 6
+    },
+    "project/scripts/battle/battle_controller.gd": {
+      "gold": 2,
+      "hex": 7
+    },
+    "project/scripts/battle/combat_cutscene.gd": {
+      "hex": 1
+    },
+    "project/scripts/characters/genome.gd": {
+      "hex": 21
+    },
+    "project/scripts/hub/atlas_view.gd": {
+      "hex": 5
+    },
+    "project/scripts/hub/city.gd": {
+      "hex": 6
+    },
+    "project/scripts/hub/hourglass.gd": {
+      "gold": 1,
+      "hex": 1
+    },
+    "project/scripts/hub/lineage_rite.gd": {
+      "gold": 2,
+      "hex": 6
+    },
+    "project/scripts/hub/marriage.gd": {
+      "hex": 3
+    },
+    "project/scripts/hub/rival_houses.gd": {
+      "gold": 1,
+      "hex": 3
+    },
+    "project/scripts/hub/skill_tree.gd": {
+      "gold": 1,
+      "hex": 2
+    },
+    "project/scripts/sim/campaign_sim.gd": {
+      "gold": 1,
+      "hex": 1
+    },
+    "project/scripts/story/naming.gd": {
+      "gold": 1,
+      "hex": 5
+    },
+    "project/scripts/ui/court_chrome.gd": {
+      "hex": 15
+    },
+    "project/scripts/ui/main_menu.gd": {
+      "parchment": 1
+    },
+    "project/scripts/ui/ui_kit.gd": {
+      "parchment": 2
+    },
+    "project/tests/atlas_e2e.gd": {
+      "gold": 1,
+      "hex": 1
+    },
+    "project/tests/bloodline_v89_check.gd": {
+      "gold": 1,
+      "hex": 2
+    },
+    "project/tests/capture_v85.gd": {
+      "gold": 1,
+      "hex": 1
+    },
+    "project/tests/capture_v86.gd": {
+      "gold": 1,
+      "hex": 1
+    },
+    "project/tests/capture_v87_atlas.gd": {
+      "gold": 1,
+      "hex": 1
+    },
+    "project/tests/court_ui_check.gd": {
+      "gold": 1,
+      "hex": 1
+    },
+    "project/tests/court_v90_check.gd": {
+      "gold": 1,
+      "hex": 1
+    },
+    "project/tests/full_chain_e2e.gd": {
+      "gold": 1,
+      "hex": 1
+    },
+    "project/tests/save_roundtrip_check.gd": {
+      "gold": 1,
+      "hex": 1
+    },
+    "project/tests/scene_load_check.gd": {
+      "gold": 1,
+      "hex": 1
+    },
+    "project/tests/smoke_runner.gd": {
+      "gold": 1,
+      "hex": 1
+    },
+    "project/tests/smoke_test.gd": {
+      "gold": 1,
+      "hex": 1
+    },
+    "project/tests/tactics_e2e.gd": {
+      "gold": 1,
+      "hex": 1
+    },
+    "project/tests/trio_proof_v87.gd": {
+      "hex": 3
+    }
+  }
+}

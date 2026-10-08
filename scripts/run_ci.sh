@@ -16,6 +16,10 @@ echo "==> json_lint"
 python3 "$ROOT/tools/ci/json_lint.py" 2>&1 | tee /tmp/ck_json_lint.log
 grep -q "JSON LINT PASS" /tmp/ck_json_lint.log || { echo "json_lint FAILED"; exit 1; }
 
+echo "==> style_lint"
+python3 "$ROOT/tools/ci/style_lint.py" 2>&1 | tee /tmp/ck_style_lint.log
+grep -q "STYLE LINT PASS" /tmp/ck_style_lint.log || { echo "style_lint FAILED"; exit 1; }
+
 cd "$ROOT/project"
 
 echo "==> suites"
