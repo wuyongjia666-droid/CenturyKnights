@@ -42,3 +42,9 @@ morale_high,士气高昂,
 morale_low,士气低落,
 morale_desert,因连续欠饷离队,
 morale_held,挽留下了要走的人,
+hold_already,已经有第二据点,Already holding a second seat
+hold_no_city,舆图上没有这座城,That city is not on the map
+hold_claimed,第二据点落在 %s,Second seat at %s
+hold_month,据点月结银 %+d 粮 %+d,Seat month silver %+d food %+d
+hold_none,还没有第二据点,No second seat
+hold_short,驻军不够调,Not enough garrison

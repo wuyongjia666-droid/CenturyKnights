@@ -437,6 +437,7 @@ static func holding_yield_preview(host, hid: String) -> Dictionary:
 static func holdings_monthly_yield(host) -> String:
 	if host.holdings.is_empty():
 		return ""
+	var seat_note := CKHoldings.apply_month(host)
 	var sf = 0
 	var ss = 0
 	var sh = 0
@@ -444,6 +445,8 @@ static func holdings_monthly_yield(host) -> String:
 	var names: Array = []
 	var raids: Array = []
 	for hid in host.holdings.keys():
+		if hid not in HOLDING_DEFS:
+			continue
 		var def = HOLDING_DEFS.get(hid, {})
 		var pv = CKEconomyState.holding_yield_preview(host, hid)
 		# 劫掠检定：无庄头且士气偏低时有风险
@@ -482,6 +485,8 @@ static func holdings_monthly_yield(host) -> String:
 		host.add_rep("ashland", sr)
 		host.add_rep("riverland", maxi(0, sr - 1))
 	var msg = "属地收成：%s → 粮+%d 银+%d%s" % ["、".join(names) if names else "无", sf, ss, (" 药+%d" % sh) if sh else ""]
+	if seat_note != "":
+		msg += "；" + seat_note
 	if raids:
 		msg += "；劫掠：%s（无庄头/士气不稳）" % "、".join(raids)
 		host.morale = maxi(0, host.morale - 3 * raids.size())
@@ -503,11 +508,17 @@ static func holdings_monthly_yield(host) -> String:
 	return msg
 
 static func unlocked_holdings_count(host) -> int:
-	return host.holdings.size()
+	var n := 0
+	for hid in host.holdings.keys():
+		if hid in HOLDING_DEFS:
+			n += 1
+	return n
 
 static func total_holding_levels(host) -> int:
 	var n = 0
 	for hid in host.holdings.keys():
+		if hid not in HOLDING_DEFS:
+			continue
 		n += CKEconomyState.holding_level(host, hid)
 	return n
 
