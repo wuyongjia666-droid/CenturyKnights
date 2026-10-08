@@ -134,6 +134,27 @@ def kpi_fortify(n=64):
     poly(d, n, [(0.42, 0.44), (0.58, 0.44)], MINT, 0.045)
     finish(im, n, ROOT / "ui/v86/kpi_fortify.png")
 
+def mk_iron(n=64):
+    """market: stacked ingots (trapezoids) + spark tick"""
+    im = canvas(n); d = ImageDraw.Draw(im)
+    poly(d, n, [(0.16, 0.80), (0.24, 0.62), (0.50, 0.62), (0.58, 0.80)], FROST, 0.05, True)
+    poly(d, n, [(0.44, 0.80), (0.52, 0.62), (0.76, 0.62), (0.84, 0.80)], FROST, 0.05, True)
+    poly(d, n, [(0.30, 0.58), (0.38, 0.40), (0.62, 0.40), (0.70, 0.58)], MINT, 0.05, True)
+    poly(d, n, [(0.62, 0.16), (0.62, 0.28)], MINT, 0.04)
+    poly(d, n, [(0.56, 0.22), (0.68, 0.22)], MINT, 0.04)
+    finish(im, n, ROOT / "ui/v86/mk_iron.png")
+
+def mk_herb(n=64):
+    """market: salve vial with leaf"""
+    im = canvas(n); d = ImageDraw.Draw(im)
+    poly(d, n, [(0.42, 0.16), (0.58, 0.16)], FROST, 0.05)
+    poly(d, n, [(0.44, 0.16), (0.44, 0.34), (0.28, 0.50), (0.28, 0.80), (0.72, 0.80), (0.72, 0.50), (0.56, 0.34), (0.56, 0.16)], FROST, 0.05)
+    poly(d, n, [(0.30, 0.60), (0.70, 0.60)], DIM, 0.035)
+    pts = [(0.50 + 0.10 * math.sin(t / 20 * math.pi), 0.76 - 0.14 * t / 20) for t in range(21)]
+    pts2 = [(0.50 - 0.10 * math.sin(t / 20 * math.pi), 0.76 - 0.14 * t / 20) for t in range(21)]
+    poly(d, n, pts, MINT, 0.04); poly(d, n, pts2, MINT, 0.04)
+    finish(im, n, ROOT / "ui/v86/mk_herb.png")
+
 if __name__ == "__main__":
-    for f in (reed_ford, stone_slope, fog_vale, tide_bridge, kpi_grain, kpi_cash, kpi_fortify):
+    for f in (reed_ford, stone_slope, fog_vale, tide_bridge, kpi_grain, kpi_cash, kpi_fortify, mk_iron, mk_herb):
         f()
