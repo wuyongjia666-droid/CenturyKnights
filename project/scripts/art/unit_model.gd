@@ -15,7 +15,11 @@ const IMPACT := {"attack": 0.458, "skill": 0.792, "crit": 0.5}
 static func archetype_for(c, team: String, tmpl: String = "") -> String:
 	var role := str(BattleRules.job_role(c.job_id))
 	if team == "enemy":
-		return "bandit_bow" if role in ["ranger", "mage"] else "bandit_axe"
+		var t := str(tmpl)
+		# prefer dedicated enemy_<tmpl>.glb via model_path; archetype is last-resort stand-in
+		if t.ends_with("_archer") or role in ["ranger", "mage"]:
+			return "bandit_bow"
+		return "bandit_axe"
 	var ck := str(c.cast_key) if "cast_key" in c else ""
 	if ck == "leader":
 		return "knight_sword"
@@ -69,7 +73,7 @@ static func instantiate(c, team: String, tmpl: String = "") -> Node3D:
 	if ps == null:
 		return null
 	var n: Node3D = ps.instantiate()
-	recolor(n, c, team)
+	recolor(n, c, team, tmpl)
 	if p.get_file().begins_with("outfit_"):
 		attach_modules(n, c, team)
 	var ap := find_anim(n)
@@ -91,11 +95,29 @@ static func find_anim(n: Node) -> AnimationPlayer:
 			return a
 	return null
 
-static func recolor(n: Node, c, team: String) -> void:
+
+## nation-themed enemy accent (style-lock accents only)
+static func _enemy_trim(tmpl: String) -> Color:
+	var t := str(tmpl).replace("_archer", "").replace("_weak", "").replace("_chief", "").replace("_boss", "")
+	match t:
+		"shadow":
+			return Color("#6ED4FF")
+		"snow", "bell":
+			return Color("#C9D3DE")
+		"tide", "flute", "hive", "fisher":
+			return Color("#5EE0B5")
+		"salt", "copper", "ember", "incense":
+			return Color("#FF8A3D")
+		"dye", "porcelain", "ink", "paper":
+			return Color("#FF7A70")
+		_:
+			return UIKit.DANGER
+
+static func recolor(n: Node, c, team: String, tmpl: String = "") -> void:
 	## frosted chrome allies (mint trim; leader frost) · gunmetal enemies (coral trim)
 	var enemy := team == "enemy"
 	var leader: bool = ("cast_key" in c) and str(c.cast_key) == "leader"
-	var trim: Color = UIKit.DANGER if enemy else (UIKit.ACCENT if leader else UIKit.OK)
+	var trim: Color = (_enemy_trim(tmpl) if enemy else (UIKit.ACCENT if leader else UIKit.OK))
 	var pal := {
 		"armor": [Color(0.46, 0.47, 0.52) if enemy else Color(0.80, 0.85, 0.92), 0.85, 0.30],
 		"cloth": [Color(0.30, 0.13, 0.13) if enemy else (Color(0.08, 0.11, 0.19) if leader else _hair_tint(c).lerp(Color(0.12, 0.16, 0.22), 0.5)), 0.0, 0.85],

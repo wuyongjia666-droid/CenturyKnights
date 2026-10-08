@@ -343,13 +343,12 @@ static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
 	var ck = "p|" + path + "|" + str(c.id)
 	if _cache.has(ck):
 		return _cache[ck]
-	# v8.7/v8.8: named cast keeps bespoke busts; everyone else prefers the genome paper-doll when parts exist
-	var named := c.is_leader or _cast(c) in ["leader", "dengying", "militia_a", "militia_b"]
-	if not named:
-		var doll := CKPortraitDoll.compose(c)
-		if doll != null:
-			_cache[ck] = doll
-			return doll
+	# v8.9: paper-doll compose DISABLED as primary path (layered parts retired for 2D).
+	# Prefer one full Qwen genome portrait (CKGenomePortrait) when farmed; else named/bespoke/hireuniq.
+	var gtex: Texture2D = CKGenomePortrait.texture(c)
+	if gtex != null:
+		_cache[ck] = gtex
+		return gtex
 	# v8.5: pre-v8 cartoon keys (allele-combo plates, hire_/role plates, old *_face_plate) must not
 	# shadow the 781 farmed hireuniq faces — renders showed every recruit/candidate as a cartoon.
 	var tex2 = null if _is_cartoon_key(path) else _try_load(path)
