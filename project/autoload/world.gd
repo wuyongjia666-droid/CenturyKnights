@@ -13,6 +13,25 @@ const KIND_ZH := {"capital": "都城", "city": "城", "town": "镇", "port": "�
 const QUEST_KIND_ZH := {"deliver": "递送", "escort": "护送", "hunt": "追缉", "clear": "清剿", "defend": "防守", "gather": "收购", "scout": "探查"}
 const STAT_ZH := {"atk": "攻", "def": "防", "hit": "命中", "avo": "回避", "crit": "暴击", "move": "移动", "hp": "生命"}
 const SLOT_ZH := {"weapon": "武器", "armor": "护具", "charm": "饰品"}
+const REP_TIER_ZH := ["陌生", "认识", "友善", "信赖", "盟誓"]
+## what each city-reputation tier opens (shown on the city 概览 ladder; enforced below)
+const CITY_UNLOCKS := [
+	"基础货品 · 一阶委托",
+	"本城签名兵器 · 二阶委托 · 委托榜 +1",
+	"铁匠铺扩建 · 三阶与名誉委托 · 买卖价优 2.5%",
+	"铁匠铺再扩建 · 传奇兵器（须名誉委托）· 委托榜 +1 · 价优 5%",
+	"城中贵胄投效（酒馆 +1 爵位候选）· 价优 7.5% · 名誉委托报酬 +20%",
+]
+## nation-reputation tiers (邦交)
+const NATION_UNLOCKS := [
+	"敌对 / 戒备之邦不接外人委托",
+	"可接该国全部委托 · 关税 -3",
+	"关税全免 · 该国二阶以上委托开放",
+	"该国全境市集价优 5% · 巡逻放行",
+	"该国都城酒馆出现本国最高血脉",
+]
+const CHAIN_NEXT := {"deliver": "escort", "escort": "defend", "scout": "hunt", "hunt": "clear", "clear": "defend", "gather": "deliver", "defend": "hunt"}
+signal rep_milestone(kind: String, id: String, tier: int)
 
 var data: Dictionary = {}
 var nodes: Dictionary = {}      # id -> node
@@ -51,6 +70,7 @@ var month_reports: Array = []
 var _qseq: int = 0
 var _enc_seq: int = 0
 var _in_travel_month := false
+var milestones: Array = []      # UI toasts: {"kind": "city"|"nation", "id", "tier", "text"}
 var events_enabled := true       # tests may disable random road events
 var rng := RandomNumberGenerator.new()
 
@@ -287,18 +307,34 @@ func rep_tier_index(v: int) -> int:
 	return t
 
 func rep_tier_name(v: int) -> String:
-	return ["陌生", "认识", "友善", "信赖", "尊敬"][rep_tier_index(v)]
+	return str(REP_TIER_ZH[rep_tier_index(v)])
 
 func add_city_rep(city: String, amt: int) -> void:
 	if not nodes.has(city):
 		return
+	var t0 := rep_tier_index(rep_of(city))
 	rep_city[city] = clampi(rep_of(city) + amt, 0, 100)
+	var t1 := rep_tier_index(rep_of(city))
+	if t1 > t0:
+		var txt := "%s声望升至「%s」：%s" % [node(city).get("name", ""), REP_TIER_ZH[t1], CITY_UNLOCKS[t1]]
+		milestones.append({"kind": "city", "id": city, "tier": t1, "text": txt})
+		_tlog(txt)
+		GameState.log_event(txt)
+		boards.erase(city)  # board grows / new tiers appear right away
+		rep_milestone.emit("city", city, t1)
 	add_nation_rep(nation_of(city), int(round(amt * 0.5)))
 
 func add_nation_rep(nid: String, amt: int) -> void:
 	if nid == "":
 		return
+	var t0 := rep_tier_index(nation_rep(nid))
 	rep_nation[nid] = clampi(nation_rep(nid) + amt, 0, 100)
+	var t1 := rep_tier_index(nation_rep(nid))
+	if t1 > t0:
+		var txt := "%s邦交升至「%s」：%s" % [nations.get(nid, {}).get("name", ""), REP_TIER_ZH[t1], NATION_UNLOCKS[t1]]
+		milestones.append({"kind": "nation", "id": nid, "tier": t1, "text": txt})
+		_tlog(txt)
+		rep_milestone.emit("nation", nid, t1)
 	# mirror into the legacy realm reputation (castle / story systems read these)
 	if nid == "ashbanner":
 		GameState.add_rep("ashland", int(round(amt * 0.5)))
@@ -308,7 +344,18 @@ func add_nation_rep(nid: String, amt: int) -> void:
 func toll_for(nid: String) -> int:
 	var base := int(nations.get(nid, {}).get("toll", 0))
 	var cut := rep_tier_index(nation_rep(nid))
+	if cut >= 2:
+		return 0  # 友善邦交：关税全免
 	return maxi(0, base - cut * 3)
+
+func nation_stance(nid: String) -> String:
+	return str(nations.get(nid, {}).get("stance", "neutral"))
+
+func board_size(city: String) -> int:
+	var n := node(city)
+	var sz := int(rules.get("board_size", {}).get(str(n.get("kind", "")), 3))
+	var t := rep_tier_index(rep_of(city))
+	return sz + (1 if t >= 1 else 0) + (1 if t >= 3 else 0)
 
 # ── pathfinding / travel preview ──────────────────────
 func route(from_id: String, to_id: String) -> Dictionary:
@@ -577,6 +624,8 @@ func price(city: String, g: String, side: String = "buy") -> int:
 		mid *= 1.15
 	var spread := float(rules.get("price_spread", 0.08))
 	var cut := float(rules.get("rep_price_cut", 0.10)) * rep_tier_index(rep_of(city)) / 4.0
+	if rep_tier_index(nation_rep(str(n.get("nation", "")))) >= 3:
+		cut += 0.05
 	if side == "buy":
 		return maxi(1, int(round(mid * (1.0 + spread) * (1.0 - cut))))
 	return maxi(1, int(round(mid * (1.0 - spread) * (1.0 + cut * 0.5))))
@@ -629,6 +678,8 @@ func market_sell(city: String, g: String, qty: int = 1) -> Dictionary:
 	market[city][g] = stock(city, g) + qty
 	_add_good(g, -qty)
 	GameState.silver += gain
+	if g in node(city).get("demand", []) and qty >= 5:
+		add_city_rep(city, qty / 5)  # 供货解困：每 5 份求购货 +1 城声望
 	_check_gather_ready()
 	GameState.mark_dirty()
 	world_changed.emit()
@@ -871,8 +922,11 @@ func city_recruits(city: String) -> Array:
 	var slots := int(n.get("tavern_slots", 0))
 	if slots <= 0:
 		return []
+	var noble := rep_tier_index(rep_of(city)) >= 4
+	if noble:
+		slots += 1
 	var rec: Dictionary = recruits.get(city, {})
-	if rec.is_empty() or int(rec.get("epoch", -1)) != _epoch():
+	if rec.is_empty() or int(rec.get("epoch", -1)) != _epoch() or int(rec.get("slots", slots)) != slots:
 		var lst: Array = []
 		var nat: Dictionary = nations.get(str(n.nation), {})
 		var r := RandomNumberGenerator.new()
@@ -883,16 +937,24 @@ func city_recruits(city: String) -> Array:
 			var b := str(bl[r.randi() % bl.size()])
 			if b == "frost_crown" and not (str(n.kind) == "capital" and rep_of(city) >= 30):
 				b = "common_ash"
+			var top_blood := str(bl[0])
+			for cand in bl:
+				if str(cand) in ["frost_crown", "ember_noble"]:
+					top_blood = str(cand)
+			if str(n.kind) == "capital" and rep_tier_index(nation_rep(str(n.nation))) >= 4 and i == 0:
+				b = top_blood
 			c.blood_mix = {b: 1.0}
 			var jb: Array = nat.get("jobs", ["light_inf"])
 			c.job_id = str(jb[r.randi() % jb.size()])
 			if b == "ember_noble" and r.randf() < 0.4:
 				c.rank = "baron"
+			if noble and i == slots - 1:
+				c.rank = "baron"  # 盟誓：城中贵胄投效
 			CharacterFactory._roll_stats_from_blood(c)
 			c.salary = 6 + c.rank_index() * 3 + c.level + (6 if b == "frost_crown" else 0)
 			c.recalc_hp()
 			lst.append(c.to_dict())
-		rec = {"epoch": _epoch(), "list": lst}
+		rec = {"epoch": _epoch(), "list": lst, "slots": slots}
 		recruits[city] = rec
 	var out: Array = []
 	for d in rec.list:
@@ -932,7 +994,7 @@ func _ensure_board(city: String) -> void:
 		return
 	var r := RandomNumberGenerator.new()
 	r.seed = hash("board:%s#%d" % [city, _epoch()])
-	var size := int(rules.get("board_size", {}).get(str(n.kind), 3))
+	var size := board_size(city)
 	var offers: Array = []
 	var kinds: Array = ["deliver", "escort", "hunt", "clear", "defend", "gather", "scout"]
 	for i in size:
@@ -949,6 +1011,10 @@ func _ensure_board(city: String) -> void:
 		var q2 := _make_quest(city, str(sq.kind), 3, r, sq)
 		if not q2.is_empty():
 			offers.push_front(q2)
+	# follow-up commissions carried over from the previous board survive the refresh
+	for q3 in b.get("offers", []):
+		if bool(q3.get("chain", false)):
+			offers.push_front(q3)
 	boards[city] = {"epoch": _epoch(), "offers": offers}
 
 func _is_active(qid: String) -> bool:
@@ -1085,9 +1151,23 @@ func _make_quest(city: String, kind: String, tier: int, r: RandomNumberGenerator
 		q.id = "wq_%s_%d_%d" % [city, _epoch(), r.randi() % 100000]
 	return q
 
+func quest_req_nation(q: Dictionary) -> int:
+	var st := nation_stance(nation_of(str(q.issuer)))
+	if st == "hostile":
+		return 10 if int(q.tier) <= 1 else 30
+	if st == "wary" and int(q.tier) >= 2:
+		return 10
+	if int(q.tier) >= 3 and not bool(q.get("sig", false)):
+		return 10
+	return 0
+
 func quest_locked_reason(q: Dictionary) -> String:
 	if rep_of(str(q.issuer)) < int(q.get("req_rep", 0)):
 		return "需本城声望「%s」（%d）" % [rep_tier_name(int(q.req_rep)), int(q.req_rep)]
+	var rn := quest_req_nation(q)
+	var nid := nation_of(str(q.issuer))
+	if nation_rep(nid) < rn:
+		return "需%s邦交「%s」（%d）" % [nations.get(nid, {}).get("name", ""), rep_tier_name(rn), rn]
 	if active.size() >= int(rules.get("active_limit", 5)):
 		return "同时最多接 %d 个委托" % int(rules.get("active_limit", 5))
 	if str(q.kind) == "deliver" and cargo_used() + 2 > cargo_cap():
@@ -1148,6 +1228,8 @@ func turn_in(qid: String) -> Dictionary:
 	if str(q.kind) == "gather":
 		_add_good(str(q.good), -int(q.qty))
 	var silver := int(q.reward_silver)
+	if bool(q.get("sig", false)) and rep_tier_index(rep_of(str(q.issuer))) >= 4:
+		silver = int(round(silver * 1.2))
 	GameState.silver += silver
 	add_city_rep(str(q.issuer), int(q.reward_rep))
 	if turn_in_city(q) != str(q.issuer):
@@ -1164,6 +1246,9 @@ func turn_in(qid: String) -> Dictionary:
 		GameState.add_lineage_event("灰旗完成%s名誉委托「%s」" % [node(str(q.issuer)).get("name", ""), q.title])
 	q.state = "done"
 	active.erase(q)
+	var follow := _spawn_follow_up(q)
+	if not follow.is_empty():
+		extra += "；%s 有后续委托「%s」" % [node(str(follow.issuer)).get("name", ""), follow.title]
 	stats_done[str(q.kind)] = int(stats_done.get(str(q.kind), 0)) + 1
 	quest_log.push_front("%s · %s（+%d 银）" % [date_label(), q.title, silver])
 	if quest_log.size() > 20:
@@ -1172,6 +1257,31 @@ func turn_in(qid: String) -> Dictionary:
 	GameState.mark_dirty()
 	world_changed.emit()
 	return {"ok": true, "msg": "交付「%s」：+%d 银，声望 +%d%s" % [q.title, silver, int(q.reward_rep), extra]}
+
+## 委托链：二阶以下普通委托完成后，交付城可能递来更难的后续（报酬 +25%，跨刷新保留）
+func _spawn_follow_up(q: Dictionary) -> Dictionary:
+	if bool(q.get("sig", false)) or int(q.tier) >= 3:
+		return {}
+	var r := RandomNumberGenerator.new()
+	r.seed = hash("chain:%s" % str(q.id))
+	if r.randf() > 0.45 and not bool(q.get("chain", false)):
+		return {}
+	var at := turn_in_city(q)
+	if node(at).is_empty() or str(node(at).kind) == "castle":
+		return {}
+	var nq := _make_quest(at, str(CHAIN_NEXT.get(str(q.kind), "deliver")), int(q.tier) + 1, r)
+	if nq.is_empty():
+		return {}
+	nq.id = "wq_chain_%s_%d" % [at, r.randi() % 100000]
+	nq.title = "续·" + str(nq.title)
+	nq.desc = "（承接「%s」）%s" % [q.title, nq.desc]
+	nq.reward_silver = int(round(int(nq.reward_silver) * 1.25 / 5.0)) * 5
+	nq.chain = true
+	nq.chain_from = str(q.id)
+	_ensure_board(at)
+	boards[at].offers.push_front(nq)
+	_tlog("%s 递来后续委托「%s」" % [node(at).get("name", ""), nq.title])
+	return nq
 
 func abandon(qid: String) -> Dictionary:
 	var q := quest_by_id(qid)

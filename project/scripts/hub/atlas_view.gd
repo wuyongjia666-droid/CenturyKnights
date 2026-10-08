@@ -687,11 +687,11 @@ func _render_region_profile(p: Panel, nid: String) -> void:
 	p.add_child(go)
 
 func _fill_vignette(th: Control, id: String) -> void:
-	var farm := "res://assets/art/atlas/cities/v87_city_%s.png" % id
+	var farm := AtlasArt.city_plate(id)
 	var tr := TextureRect.new()
 	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	if ResourceLoader.exists(farm):
+	if farm != "":
 		tr.texture = load(farm)
 		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 		tr.size = th.size
@@ -1100,6 +1100,11 @@ func _launch_battle() -> void:
 	World.launch_encounter(get_tree())
 
 func _show_toast(text: String, col: Color) -> void:
+	if not World.milestones.is_empty():
+		var ms: Dictionary = World.milestones.pop_back()
+		World.milestones.clear()
+		text = str(ms.text)
+		col = UIKit.OK
 	if text == "":
 		return
 	_toast.text = text

@@ -17,6 +17,7 @@ func _ready() -> void:
 	_step_deliver()
 	_step_events()
 	_step_tavern()
+	_step_depth()
 	_step_save_load()
 	await _step_scenes()
 	if errors.is_empty():
@@ -233,6 +234,46 @@ func _step_tavern() -> void:
 		if c.primary_bloodline() in ["river_ward", "common_ash"]:
 			rw += 1
 	_ok(rw == lst.size(), "regional bloodlines (清河 → 河卫/民胤)")
+
+func _step_depth() -> void:
+	print("--- STEP: board depth + reputation unlocks ---")
+	var city := "qh_capital"
+	World.rep_city[city] = 8
+	var sz0: int = World.board_size(city)
+	World.milestones.clear()
+	World.add_city_rep(city, 3)
+	_ok(World.board_size(city) == sz0 + 1, "认识 tier grows the board (%d → %d)" % [sz0, World.board_size(city)])
+	_ok(not World.milestones.is_empty() and str(World.milestones[-1].text).contains("认识"), "milestone raised: %s" % (World.milestones[-1].text if not World.milestones.is_empty() else "none"))
+	# hostile nation gating (朔影国)
+	var sy := ""
+	for n in World.nodes_in("shuoying"):
+		if str(n.kind) != "castle":
+			sy = str(n.id)
+			break
+	World.rep_nation["shuoying"] = 0
+	var r := RandomNumberGenerator.new()
+	r.seed = 11
+	var hq: Dictionary = World._make_quest(sy, "deliver", 1, r)
+	_ok(World.quest_locked_reason(hq).contains("邦交"), "hostile nation locks commissions: %s" % World.quest_locked_reason(hq))
+	World.rep_nation["shuoying"] = 12
+	_ok(World.quest_locked_reason(hq) == "", "邦交「认识」opens them")
+	# nation tolls waived at 友善
+	World.rep_nation["frostcrown"] = 30
+	_ok(World.toll_for("frostcrown") == 0, "友善邦交 waives tolls")
+	# commission chain
+	var q: Dictionary = World._make_quest("ash_capital", "deliver", 1, r)
+	q["chain"] = true
+	var f: Dictionary = World._spawn_follow_up(q)
+	_ok(not f.is_empty() and str(f.title).begins_with("续·") and int(f.tier) == 2, "follow-up commission spawned: %s" % f.get("title", ""))
+	var found := false
+	for o in World.board(World.turn_in_city(q)):
+		if str(o.id) == str(f.get("id", "")):
+			found = true
+	_ok(found, "follow-up sits on the turn-in city's board")
+	# 盟誓 tavern noble
+	World.rep_city["ash_capital"] = 85
+	var lst: Array = World.city_recruits("ash_capital")
+	_ok(lst.size() == int(World.node("ash_capital").tavern_slots) + 1 and (lst[-1] as CKCharacter).rank == "baron", "盟誓 adds a titled recruit")
 
 func _step_save_load() -> void:
 	print("--- STEP: save/load ---")

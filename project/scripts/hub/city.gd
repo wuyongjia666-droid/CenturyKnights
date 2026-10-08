@@ -16,6 +16,8 @@ var tab := "overview"
 var _sel_item := ""
 var _sel_quest := ""
 var _sel_char := ""
+var _board_filter := "all"   # all / battle / trade
+const BOARD_FILTERS := [["all", "全部"], ["battle", "战斗"], ["trade", "商旅"]]
 var _top: Control
 var _side: Control
 var _tabbar: HBoxContainer
@@ -79,8 +81,8 @@ func _add_backdrop() -> void:
 	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	tr.modulate = Color(0.42, 0.48, 0.58, 0.55)
-	var farm := "res://assets/art/atlas/cities/v87_city_%s.png" % city
-	if ResourceLoader.exists(farm):
+	var farm := AtlasArt.city_plate(city)
+	if farm != "":
 		tr.texture = load(farm)
 	else:
 		var p := _Atlas.plate_path(str(World.nations.get(World.nation_of(city), {}).get("plate", "")))
@@ -200,11 +202,11 @@ func _goods_list(arr: Array) -> String:
 	return "、".join(out) if not out.is_empty() else "—"
 
 func _fill_vignette(th: Control) -> void:
-	var farm := "res://assets/art/atlas/cities/v87_city_%s.png" % city
+	var farm := AtlasArt.city_plate(city)
 	var tr := TextureRect.new()
 	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	if ResourceLoader.exists(farm):
+	if farm != "":
 		tr.texture = load(farm)
 		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 		tr.size = th.size
@@ -334,8 +336,8 @@ func _icon(it: Dictionary, sz: float) -> Control:
 		st.shadow_color = Color(col, 0.45)
 		st.shadow_size = 8
 	box.add_theme_stylebox_override("panel", st)
-	var path := "res://assets/art/ui/items/v87_item_%s.png" % str(it.get("id", ""))
-	if ResourceLoader.exists(path):
+	var path := AtlasArt.item_icon(str(it.get("id", "")))
+	if path != "":
 		var tr := TextureRect.new()
 		tr.texture = load(path)
 		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -363,8 +365,8 @@ func _tab_overview() -> void:
 	var p := _panel(Rect2(0, 0, 420, 576))
 	_head(p, Vector2(18, 14), "声望阶梯", "REPUTATION LADDER")
 	var tiers: Array = World.rules.get("rep_tiers", [0, 10, 30, 55, 80])
-	var names := ["陌生", "认识", "友善", "信赖", "盟誓"]
-	var unlocks := ["基础货品 · 普通委托", "本城签名兵器 · 二阶委托", "铁匠铺扩建一阶 · 三阶与名誉委托 · 价格优惠", "铁匠铺再扩建 · 传奇兵器（须完成名誉委托）", "最优价格 · 城中贵胄投效"]
+	var names: Array = World.REP_TIER_ZH
+	var unlocks: Array = World.CITY_UNLOCKS
 	var rep := World.rep_of(city)
 	var v := VBoxContainer.new()
 	v.position = Vector2(18, 56)
@@ -379,6 +381,15 @@ func _tab_overview() -> void:
 		row.add_child(chip)
 		row.add_child(_para(str(unlocks[i]) if i < unlocks.size() else "", UIKit.TEXT if reached else UIKit.TEXT_FAINT, 12, 300))
 		v.add_child(row)
+	var nid := str(n.get("nation", ""))
+	var nrep := World.nation_rep(nid)
+	var nt := World.rep_tier_index(nrep)
+	var nl := UIKit.mono("NATION %s · %d · %s" % [str(World.nations.get(nid, {}).get("en", "")), nrep, World.rep_tier_name(nrep)], 9, UIKit.ACCENT)
+	nl.position = Vector2(18, 232)
+	p.add_child(nl)
+	var nx := _para("当前：%s\n下一阶：%s" % [World.NATION_UNLOCKS[nt], World.NATION_UNLOCKS[mini(nt + 1, 4)] if nt < 4 else "已达最高"], UIKit.TEXT_DIM, 11, 384)
+	nx.position = Vector2(18, 250)
+	p.add_child(nx)
 	var sq: Dictionary = n.get("sig_quest", {})
 	if not sq.is_empty():
 		var sl := UIKit.mono("HONOUR COMMISSION", 9, UIKit.EMBER)
@@ -439,6 +450,16 @@ func _tab_overview() -> void:
 
 # ── 铁匠铺 ────────────────────────────────────────────
 func _tab_smith() -> void:
+	var sp := AtlasArt.smith_plate(World.nation_of(city))
+	if sp != "":
+		var bg := TextureRect.new()
+		bg.texture = load(sp)
+		bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		bg.size = CONTENT.size
+		bg.modulate = Color(1, 1, 1, 0.22)
+		bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_body.add_child(bg)
 	var st: Array = World.smith_stock(city)
 	var nat: Dictionary = World.nations.get(World.nation_of(city), {})
 	var p := _panel(Rect2(0, 0, 420, 576))
@@ -654,27 +675,53 @@ func _tab_board() -> void:
 	var offers: Array = World.board(city)
 	var p := _panel(Rect2(0, 0, 420, 576))
 	_head(p, Vector2(18, 14), "委托榜", "COMMISSION BOARD · REFRESH %d 日" % int(World.rules.get("board_refresh_days", 30)))
+	var fh := HBoxContainer.new()
+	fh.position = Vector2(250, 14)
+	fh.add_theme_constant_override("separation", 4)
+	p.add_child(fh)
+	for f in BOARD_FILTERS:
+		var fb := UIKit.ghost_button(str(f[1]), 48, 24)
+		fb.name = "Filter_" + str(f[0])
+		var fid := str(f[0])
+		if fid == _board_filter:
+			fb.add_theme_color_override("font_color", UIKit.ACCENT)
+			var fs := UIKit.flat_box(Color(UIKit.ACCENT, 0.16), Color(UIKit.ACCENT, 0.7), 6)
+			fs.content_margin_top = 2
+			fs.content_margin_bottom = 2
+			fb.add_theme_stylebox_override("normal", fs)
+		fb.pressed.connect(func(): _board_filter = fid; _render_tab())
+		fh.add_child(fb)
 	var v := _scroll(p, Rect2(12, 58, 400, 300))
 	var all_q: Array = []
+	var shown: Array = []
 	for q in offers:
 		all_q.append(q)
-	if _sel_quest == "" and not offers.is_empty():
-		_sel_quest = str(offers[0].id)
-	for q in offers:
+		var is_battle := bool(q.get("battle", false))
+		if _board_filter == "all" or (_board_filter == "battle" and is_battle) or (_board_filter == "trade" and not is_battle):
+			shown.append(q)
+	if _sel_quest == "" and not shown.is_empty():
+		_sel_quest = str(shown[0].id)
+	for q in shown:
 		var why := World.quest_locked_reason(q)
-		var lab := "%s【%s】%s" % ["★" if bool(q.get("sig", false)) else "", World.QUEST_KIND_ZH.get(str(q.kind), ""), q.title]
+		var lab := "%s【%s】%s%s" % ["★" if bool(q.get("sig", false)) else "", World.QUEST_KIND_ZH.get(str(q.kind), ""), q.title, "  ⛓" if bool(q.get("chain", false)) else ""]
 		var sub := "%d 银 · 声望 +%d · 期限 %d 日 · 险 %s" % [int(q.reward_silver), int(q.reward_rep), int(q.days_budget), "▮".repeat(int(q.danger))]
 		if why != "":
 			sub = "🔒 " + why
 		var b := _row_button(lab, sub, 388, str(q.id) == _sel_quest, why != "")
 		b.name = "Offer_" + str(q.id)
-		var badge := UIKit.title_label(str(World.QUEST_KIND_ZH.get(str(q.kind), "?")).substr(0, 1), 18, UIKit.EMBER if bool(q.get("sig", false)) else UIKit.ACCENT)
+		var badge := UIKit.title_label(str(World.QUEST_KIND_ZH.get(str(q.kind), "?")).substr(0, 1), 18, UIKit.EMBER if bool(q.get("sig", false)) else (Color("#C9B8FF") if bool(q.get("chain", false)) else UIKit.ACCENT))
+		var tier_l := UIKit.mono("T%d" % int(q.tier), 8, UIKit.TEXT_FAINT, false)
+		tier_l.position = Vector2(14, 32)
+		tier_l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		b.add_child(tier_l)
 		badge.position = Vector2(14, 10)
 		badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		b.add_child(badge)
 		var qid := str(q.id)
 		b.pressed.connect(func(): _sel_quest = qid; _render_tab())
 		v.add_child(b)
+	if shown.is_empty() and not offers.is_empty():
+		v.add_child(_para("此筛选下没有委托。", UIKit.TEXT_FAINT, 12, 380))
 	if offers.is_empty():
 		v.add_child(_para("榜上暂无委托——%d 日后刷新。" % (int(World.rules.get("board_refresh_days", 30)) - World.days_total % int(World.rules.get("board_refresh_days", 30))), UIKit.TEXT_FAINT, 12, 380))
 	var al := UIKit.mono("ACTIVE %d/%d" % [World.active.size(), int(World.rules.get("active_limit", 5))], 9, UIKit.ACCENT)
@@ -716,7 +763,9 @@ func _tab_board() -> void:
 	kv.position = Vector2(18, 210)
 	kv.add_theme_constant_override("separation", 5)
 	d.add_child(kv)
-	kv.add_child(UIKit.kv_row("发布", str(World.node(str(sel.issuer)).get("name", "")), UIKit.TEXT, 380))
+	kv.add_child(UIKit.kv_row("发布", "%s · T%d%s" % [World.node(str(sel.issuer)).get("name", ""), int(sel.tier), " · 委托链" if bool(sel.get("chain", false)) else ""], UIKit.TEXT, 380))
+	var need_n := World.quest_req_nation(sel)
+	kv.add_child(UIKit.kv_row("门槛", "城声望 %d%s" % [int(sel.get("req_rep", 0)), " · 邦交 %d" % need_n if need_n > 0 else ""], UIKit.TEXT_DIM, 380))
 	if str(sel.kind) == "gather":
 		kv.add_child(UIKit.kv_row("所需", "%s ×%d（持有 %d）" % [World.good_name(str(sel.good)), int(sel.qty), World.have_good(str(sel.good))], UIKit.TEXT, 380))
 	elif str(sel.kind) == "clear":
@@ -912,7 +961,13 @@ func _armory_count() -> int:
 # ── shared ────────────────────────────────────────────
 func _do(r: Dictionary) -> void:
 	var ok := bool(r.get("ok", false))
-	_toast_msg(str(r.get("msg", "")), UIKit.OK if ok else UIKit.DANGER)
+	var msg := str(r.get("msg", ""))
+	if not World.milestones.is_empty():
+		var ms: Dictionary = World.milestones.pop_back()
+		World.milestones.clear()
+		msg = str(ms.text)
+		UIFX.confirm_burst(_side)
+	_toast_msg(msg, UIKit.OK if ok else UIKit.DANGER)
 	if ok:
 		Sfx.play("anvil_clang" if tab == "smith" else ("deal" if tab == "market" else "ui_confirm"))
 	else:

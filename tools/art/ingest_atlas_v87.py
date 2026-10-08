@@ -5,8 +5,8 @@
 
 Farm files are named 8322__<label>__<comfy file>.png (tools/farm_v87/farm.ps1 fetch). For each label the newest
 file is judged with tools/art/style_check_v87.judge (kind city / icon). Only PASS plates are written:
-  v87_city_<id>      -> project/assets/art/atlas/cities/v87_city_<id>.png    (1280x720)
-  v87_smith_<nation> -> project/assets/art/atlas/smiths/v87_smith_<nation>.png (1280x720)
+  v87_city_<id>      -> project/assets/art/atlas/cities/v87_city_<id>.jpg    (1280x720, q90)
+  v87_smith_<nation> -> project/assets/art/atlas/smiths/v87_smith_<nation>.jpg (1280x720, q90)
   v87_item_<id>      -> project/assets/art/ui/items/v87_item_<id>.png         (256x256, plate bg keyed to alpha)
 Rejects are listed (with reasons) in docs/art/review/atlas_v87_ingest.json and shown red on the contact sheets
 docs/art/review/atlas_v87_{city,icon}_sheet.jpg. Missing art keeps the procedural fallbacks in city.gd / atlas_view.gd.
@@ -172,7 +172,15 @@ def main(argv):
                 report.setdefault("cropped", []).append(label)
             if im.size != size:
                 im = im.resize(size, Image.LANCZOS)
-        im.save(os.path.join(ROOT, dst_dir, label + ".png"), optimize=True)
+        if kind == "icon":
+            im.save(os.path.join(ROOT, dst_dir, label + ".png"), optimize=True)
+        else:  # opaque 1280x720 vignettes ship as q90 JPG (~10x smaller than PNG)
+            im.save(os.path.join(ROOT, dst_dir, label + ".jpg"), quality=90, optimize=True, progressive=True)
+            stale = os.path.join(ROOT, dst_dir, label + ".png")
+            if os.path.exists(stale):
+                os.remove(stale)
+                if os.path.exists(stale + ".import"):
+                    os.remove(stale + ".import")
     for pre, (kind, _, _) in OUT.items():
         report["counts"][pre.rstrip("_")] = {"seen": sum(1 for l in files if l.startswith(pre)),
                                              "passed": sum(1 for l in report["passed"] if l.startswith(pre))}

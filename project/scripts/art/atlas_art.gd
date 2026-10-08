@@ -34,6 +34,25 @@ static func world_plate() -> String:
 static func nation_plate(nation_id: String) -> String:
 	return plate_path("v8_atlas_nation_%s" % nation_id)
 
+static func city_plate(node_id: String) -> String:
+	## v8.7 style-gated city vignette (tools/art/ingest_atlas_v87.py); "" -> caller falls back to a plate crop
+	for ext in [".jpg", ".png"]:
+		var p := "res://assets/art/atlas/cities/v87_city_%s%s" % [node_id, ext]
+		if ResourceLoader.exists(p):
+			return p
+	return ""
+
+static func smith_plate(nation_id: String) -> String:
+	for ext in [".jpg", ".png"]:
+		var p := "res://assets/art/atlas/smiths/v87_smith_%s%s" % [nation_id, ext]
+		if ResourceLoader.exists(p):
+			return p
+	return ""
+
+static func item_icon(item_id: String) -> String:
+	var p := "res://assets/art/ui/items/v87_item_%s.png" % item_id
+	return p if ResourceLoader.exists(p) else ""
+
 static func scene_plate(scene_id: String) -> String:
 	return plate_path("v8_scene_%s" % scene_id, "res://assets/art/scenes/")
 
