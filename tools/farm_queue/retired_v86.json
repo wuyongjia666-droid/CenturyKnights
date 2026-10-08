@@ -1,0 +1,17 @@
+{
+  "_doc": "v8.6.0-art: plates retired by the Stitch flat layout rebuild (frosted glass, 1px strokes, no painted chrome). Audited by tools/audit_v840_usage.py — a retired plate is accounted for, not leftover. Files stay on disk for history; nothing loads them at runtime.",
+  "marriage_backdrop.png": "Stitch 17 marriage: ink void + 48px grid, painted stage retired",
+  "lineage_backdrop.png": "Stitch 18 lineage: ink void + data-driven generation tree",
+  "estates_backdrop.png": "Stitch 16 estates: ink void + KPI cards + holding matrix",
+  "marriage_banner.png": "Stitch 17: editorial page head (mono eyebrow / 30px title) replaces banner strip",
+  "lineage_banner.png": "Stitch 18: editorial page head replaces banner strip",
+  "estate_focus_bar.png": "Stitch 16: compact segmented focus control replaces painted bar",
+  "battle_hud_frame.png": "Stitch 06 battle HUD: flat right rail panels with 1px stroke",
+  "turn_banner.png": "Stitch 06: turn pill (第 N 回合 · PHASE chip) replaces painted turn banner",
+  "lineage_card.png": "Stitch 18: flat portrait cards with frost focus stroke",
+  "bloodline_strip.png": "Stitch 18: slim_bar bloodline ratios",
+  "dual_portrait_frame.png": "Stitch 17: house cards with portrait_plate",
+  "estate_focus_grain.png": "Stitch 16: frost KPI icons (assets/art/ui/v86/kpi_grain.png)",
+  "estate_focus_cash.png": "Stitch 16: frost KPI icons (assets/art/ui/v86/kpi_cash.png)",
+  "estate_focus_fortify.png": "Stitch 16: frost KPI icons (assets/art/ui/v86/kpi_fortify.png)"
+}

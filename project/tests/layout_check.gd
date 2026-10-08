@@ -16,35 +16,35 @@ func _run() -> void:
 		push_error("no current scene")
 		quit(1)
 		return
-	var cc: CenterContainer = null
-	for c in root_scene.get_children():
-		if c is CenterContainer:
-			cc = c
-			break
-	if cc == null:
-		push_error("FAIL: no CenterContainer on main menu")
+	## v8.6 Stitch 01: editorial left column (not centred) — must sit in the left third, fully on-screen
+	var box := root_scene.find_child("MenuColumn", false, false) as VBoxContainer
+	if box == null:
+		push_error("FAIL: no MenuColumn on main menu")
 		quit(2)
 		return
-	var box: VBoxContainer = null
-	for c in cc.get_children():
-		if c is VBoxContainer:
-			box = c
-			break
-	if box == null:
-		push_error("FAIL: no VBox under CenterContainer")
-		quit(3)
-		return
 	var vp := root.get_visible_rect().size
-	var mid := vp * 0.5
-	var box_mid := box.global_position + box.size * 0.5
-	var drift := (box_mid - mid).abs()
-	print("LAYOUT_OK viewport=%s box_pos=%s box_size=%s box_mid=%s drift=%s" % [
-		vp, box.global_position, box.size, box_mid, drift
-	])
-	if drift.x > 40.0 or drift.y > 80.0:
-		push_error("FAIL: menu not centered, drift=%s" % drift)
+	var r := Rect2(box.global_position, Vector2.ZERO)
+	for ch in box.get_children():
+		if ch is Control and (ch as Control).visible:
+			r = r.merge(Rect2((ch as Control).global_position, (ch as Control).size))
+	print("LAYOUT_OK viewport=%s col=%s" % [vp, r])
+	## (headless --script has no autoload fonts, so line heights inflate: check slot + first CTA visibility, not full height)
+	var first_btn: Control = null
+	for ch in box.get_children():
+		if ch is Button:
+			first_btn = ch
+			break
+	if r.position.x < 24.0 or r.position.y < 24.0 or r.end.x > vp.x * 0.5 or first_btn == null or first_btn.global_position.y > vp.y - 120.0:
+		push_error("FAIL: menu column off its Stitch 01 slot: %s" % r)
 		quit(4)
 		return
-	# Ensure no hard-coded broken pattern remains in script source check via presence of CenterContainer
-	print("PASS main menu centered")
+	var btns := 0
+	for c in box.find_children("*", "Button", true, false):
+		if (c as Button).visible:
+			btns += 1
+	if btns < 3:
+		push_error("FAIL: menu column has %d buttons" % btns)
+		quit(3)
+		return
+	print("PASS main menu column (Stitch 01)")
 	quit(0)

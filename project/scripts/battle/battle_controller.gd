@@ -47,6 +47,9 @@ const FX_SIZE := {"slash": 80.0, "heal": 84.0, "crit": 108.0, "lock": 80.0, "shi
 var _info_traits: HBoxContainer
 var _dmg_fx: Array = []  # {pos, text, age, col}
 var _turn_flash: float = 0.0
+var _round_no: int = 0
+var _round_label: Label
+var _phase_chip: Label
 var _sel_pulse: float = 0.0
 var _btn_atk: Button
 var _btn_wait: Button
@@ -887,32 +890,56 @@ func _build_ui() -> void:
 	add_child(_bg)
 	add_child(UIKit._vignette())
 
-	# turn bar: phase (headline) · map · controls hint — on clean ink, always readable
+	# v8.6 Stitch 06 turn pill: ◉ 第 N 回合 │ PHASE 01 │ map · 我方行动 — then controls hint
+	var pill := PanelContainer.new()
+	var pst := UIKit.flat_box(Color(0.04, 0.05, 0.07, 0.88), Color(1, 1, 1, 0.14), 20)
+	pst.content_margin_left = 14
+	pst.content_margin_right = 18
+	pst.content_margin_top = 6
+	pst.content_margin_bottom = 6
+	pill.add_theme_stylebox_override("panel", pst)
+	pill.position = Vector2(24, 14)
+	pill.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(pill)
 	var top := HBoxContainer.new()
-	top.position = Vector2(24, 18)
-	top.add_theme_constant_override("separation", 14)
+	top.add_theme_constant_override("separation", 10)
 	top.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(top)
-	var dot := ColorRect.new()
+	pill.add_child(top)
+	var dot := Panel.new()
+	var dsb := StyleBoxFlat.new()
+	dsb.bg_color = UIKit.ACCENT
+	dsb.set_corner_radius_all(4)
+	dsb.shadow_color = Color(UIKit.ACCENT, 0.6)
+	dsb.shadow_size = 5
+	dot.add_theme_stylebox_override("panel", dsb)
 	dot.custom_minimum_size = Vector2(8, 8)
-	dot.color = UIKit.ACCENT
 	dot.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	top.add_child(dot)
 	UIFX.breathe(dot, 0.2, 1.6)
+	_round_label = Label.new()
+	_round_label.text = "第 1 回合"
+	_round_label.add_theme_font_override("font", UIKit.font("bold"))
+	_round_label.add_theme_font_size_override("font_size", 16)
+	_round_label.add_theme_color_override("font_color", UIKit.TEXT)
+	top.add_child(_round_label)
+	var vs := ColorRect.new()
+	vs.color = Color(1, 1, 1, 0.14)
+	vs.custom_minimum_size = Vector2(1, 18)
+	vs.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	top.add_child(vs)
+	_phase_chip = UIKit.tag_chip("PHASE 01", UIKit.ACCENT)
+	top.add_child(_phase_chip)
 	phase_label = Label.new()
 	phase_label.text = "玩家回合"
-	phase_label.add_theme_font_size_override("font_size", 22)
+	phase_label.add_theme_font_size_override("font_size", 16)
 	phase_label.add_theme_color_override("font_color", UIKit.TEXT)
 	phase_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	top.add_child(phase_label)
-	var tip = UIKit.make_dim_label("左键 选中 / 移动　·　攻击模式后点敌军　·　右键 取消")
-	tip.add_theme_color_override("font_color", UIKit.TEXT_FAINT)
-	tip.add_theme_font_size_override("font_size", 12)
-	tip.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-	tip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var tip = UIKit.mono("左键 选中/移动 · Q 攻击 · W 战技 · E 待命 · Enter 结束回合 · 右键 取消", 9, UIKit.TEXT_FAINT, false)
+	tip.position = Vector2(26, 58)
 	tip.name = "ControlsTip"
-	top.add_child(tip)
+	add_child(tip)
 
 	_ground = ColorRect.new()
 	_ground.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -985,21 +1012,27 @@ func _build_ui() -> void:
 	row.position = Vector2(RAIL_X, 602)
 	row.add_theme_constant_override("separation", 8)
 	add_child(row)
-	_btn_atk = UIKit.make_button("攻击", 112)
+	_btn_atk = UIKit.make_button("攻击   Q", 112)
 	_btn_atk.pressed.connect(_enter_attack_mode)
 	row.add_child(_btn_atk)
-	_btn_skill = UIKit.make_button("战技", 112)
+	_btn_skill = UIKit.make_button("战技   W", 112)
 	_btn_skill.pressed.connect(_cycle_skill)
 	row.add_child(_btn_skill)
-	_btn_wait = UIKit.make_button(Locale.t("wait"), 112)
+	_btn_wait = UIKit.make_button("%s   E" % Locale.t("wait"), 112)
 	_btn_wait.pressed.connect(_wait_selected)
 	row.add_child(_btn_wait)
 	var row2 := HBoxContainer.new()
-	row2.position = Vector2(RAIL_X, 652)
+	row2.position = Vector2(RAIL_X, 648)
 	row2.add_theme_constant_override("separation", 8)
 	add_child(row2)
-	_btn_end = UIKit.make_accent_button(Locale.t("end_turn"), 232)
-	_btn_end.custom_minimum_size = Vector2(232, 44)
+	_btn_end = UIKit.make_accent_button("%s   ⏎\nEND PLAYER TURN" % Locale.t("end_turn"), 232)
+	_btn_end.custom_minimum_size = Vector2(232, 52)
+	_btn_end.add_theme_font_size_override("font_size", 14)
+	UIKit.compact(_btn_end, 30)
+	var eglow: StyleBoxFlat = (_btn_end.get_theme_stylebox("normal") as StyleBoxFlat).duplicate()
+	eglow.shadow_color = Color(UIKit.ACCENT, 0.35)
+	eglow.shadow_size = 14
+	_btn_end.add_theme_stylebox_override("normal", eglow)
 	_btn_end.pressed.connect(_end_player_turn)
 	row2.add_child(_btn_end)
 	var b_prev = CheckButton.new()
@@ -1745,6 +1778,24 @@ func _zoc_hover_audio(cell: Vector2i) -> void:
 	elif kind == "zoc":
 		Sfx.play_spatial("zoc_leave", world, vol - 1.5)
 
+func _unhandled_key_input(event: InputEvent) -> void:
+	## v8.6 Stitch 06 keycaps: Q 攻击 · W 战技 · E 待命 · Enter 结束回合
+	if battle_over or turn_team != "player" or _cut_playing:
+		return
+	if event is InputEventKey and event.pressed and not event.echo:
+		match event.keycode:
+			KEY_Q:
+				if _btn_atk and not _btn_atk.disabled: _enter_attack_mode()
+			KEY_W:
+				if _btn_skill and not _btn_skill.disabled: _cycle_skill()
+			KEY_E:
+				if _btn_wait and not _btn_wait.disabled: _wait_selected()
+			KEY_ENTER, KEY_KP_ENTER:
+				if _btn_end and not _btn_end.disabled: _end_player_turn()
+			_:
+				return
+		get_viewport().set_input_as_handled()
+
 func _gui_input(event: InputEvent) -> void:
 	if battle_over:
 		return
@@ -1984,7 +2035,7 @@ func _do_attack(ai: int, di: int) -> void:
 	_check_end()
 
 func _cutscenes_enabled() -> bool:
-	return DisplayServer.get_name() != "headless" and bool(GameState.get_meta("cutscenes_on", true))
+	return DisplayServer.get_name() != "headless" and bool(GameState.get_meta("cutscenes_on", true)) and bool(GameState.settings.get("cutscenes", true))
 
 func _queue_cutscene(ai: int, di: int, hp0a: int, hp0d: int) -> void:
 	if not _cutscenes_enabled() or _combat_rec.is_empty():
@@ -2221,6 +2272,12 @@ func _wait_selected() -> void:
 
 func _start_player_turn() -> void:
 	turn_team = "player"
+	_round_no += 1
+	if _round_label:
+		_round_label.text = "第 %d 回合" % _round_no
+	if _phase_chip:
+		_phase_chip.text = "PHASE 01"
+		_phase_chip.add_theme_color_override("font_color", UIKit.ACCENT)
 	phase_label.text = "%s · 我方行动" % map_name
 	phase_label.add_theme_color_override("font_color", UIKit.TEXT)
 	_turn_flash = 0.9
@@ -2261,6 +2318,9 @@ func _end_player_turn() -> void:
 		return
 	turn_team = "enemy"
 	phase_label.text = "%s · 敌方行动" % map_name
+	if _phase_chip:
+		_phase_chip.text = "PHASE 02"
+		_phase_chip.add_theme_color_override("font_color", UIKit.DANGER)
 	phase_label.add_theme_color_override("font_color", UIKit.DANGER)
 	_turn_flash = 0.9
 	for u in units:
@@ -2397,14 +2457,14 @@ func _show_lock_practice_banner() -> void:
 	var panel = UIKit.make_glass(18, 0.82)
 	var pst: StyleBoxFlat = UIKit.glass(18, 0.82)
 	pst.border_color = Color(UIKit.DANGER, 0.55)
-	pst.content_margin_top = 6
-	pst.content_margin_bottom = 6
+	pst.content_margin_top = 4
+	pst.content_margin_bottom = 4
 	pst.content_margin_left = 14
 	pst.content_margin_right = 14
 	pst.shadow_size = 0
 	panel.add_theme_stylebox_override("panel", pst)
-	panel.position = Vector2(372, 12)
-	panel.custom_minimum_size = Vector2(508, 0)
+	panel.position = Vector2(RAIL_X, 4)
+	panel.custom_minimum_size = Vector2(RAIL_W, 0)
 	panel.z_index = 18
 	var ct := find_child("ControlsTip", true, false)
 	if ct:
@@ -2427,13 +2487,13 @@ func _show_lock_practice_banner() -> void:
 			title = "【中盘演练】交战锁定复习"
 			tip = "夜袭中再练一次锁定：攻击敌人触发红环锁定后，方可结束回合。"
 	var t = UIKit.make_label(title)
-	t.add_theme_font_size_override("font_size", 13)
+	t.add_theme_font_size_override("font_size", 12)
 	t.add_theme_color_override("font_color", UIKit.DANGER)
 	vb.add_child(t)
 	var tl = UIKit.make_dim_label(tip)
-	tl.add_theme_font_size_override("font_size", 11)
+	tl.add_theme_font_size_override("font_size", 10)
 	tl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	tl.custom_minimum_size = Vector2(478, 0)
+	tl.custom_minimum_size = Vector2(RAIL_W - 28, 0)
 	vb.add_child(tl)
 	panel.tooltip_text = tip
 

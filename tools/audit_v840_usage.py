@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """v8.5 audit: every v840 farm output must be consumed at runtime (directly, via a v85 derivative,
 or via make_themed_bg theme), or explicitly rejected with a reason. Exit 1 on any leftover."""
-import re, sys
+import json, re, sys
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = "\n".join(p.read_text() for p in (ROOT / "project/scripts").rglob("*.gd"))
@@ -14,6 +14,7 @@ DERIVED = {  # v840 plate -> v85 runtime derivative (tools/farm_queue/prep_v850_
     "estate_focus_grain.png": "v85/estate_tile_%s.png", "estate_focus_cash.png": "v85/estate_tile_%s.png",
     "estate_focus_fortify.png": "v85/estate_tile_%s.png",
 }
+RETIRED = {k: v for k, v in json.loads((ROOT / "tools/farm_queue/retired_v86.json").read_text()).items() if not k.startswith("_")}
 THEMES = set(re.findall(r'make_themed_bg\(self,\s*"([a-z_]+)"\)', SCRIPTS))
 rows, bad = [], 0
 for key, fname in outs:
@@ -27,6 +28,8 @@ for key, fname in outs:
         how = f"derived {DERIVED[fname]}"
     elif fname in SCRIPTS or ('"res://assets/art/ui/%s' % stem) in SCRIPTS:
         how = "direct"
+    elif fname in RETIRED:
+        how = f"RETIRED v8.6 — {RETIRED[fname]}"
     elif fname in DERIVED:
         how = f"derived {DERIVED[fname]}"
     if not how:

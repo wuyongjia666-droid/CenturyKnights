@@ -34,6 +34,7 @@ func _build() -> void:
 	add_child(UIKit._vignette())
 
 	var col := VBoxContainer.new()
+	col.name = "MenuColumn"
 	col.position = Vector2(96, 132)
 	col.custom_minimum_size = Vector2(440, 0)
 	col.add_theme_constant_override("separation", 4)

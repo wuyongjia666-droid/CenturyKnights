@@ -25,7 +25,7 @@ func _ready() -> void:
 		await _marriage()
 	if only == "cutscene" or only == "cutscene_bow":
 		await _cutscene(only == "cutscene_bow")
-	for pair in [["castle","res://scenes/hub/castle_hub.tscn"],["roster","res://scenes/hub/roster.tscn"],["tavern","res://scenes/hub/tavern.tscn"],["menu","res://scenes/ui/main_menu.tscn"],["atlas","res://scenes/hub/atlas_view.tscn"]]:
+	for pair in [["castle","res://scenes/hub/castle_hub.tscn"],["roster","res://scenes/hub/roster.tscn"],["tavern","res://scenes/hub/tavern.tscn"],["menu","res://scenes/ui/main_menu.tscn"],["atlas","res://scenes/hub/atlas_view.tscn"],["settings","res://scenes/ui/settings.tscn"]]:
 		if only == pair[0] or (only == "" and pair[0] != ""):
 			await _scene(pair[1], pair[0], 1.2)
 	print("CAPTURE_DONE ", OUT)

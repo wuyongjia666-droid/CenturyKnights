@@ -629,20 +629,18 @@ func _step_beyond_ch0() -> void:
 	await get_tree().process_frame
 	var has_pick := false
 	var has_continue := false
-	for c in hub.get_children():
-		if c is OptionButton:
-			has_pick = true
-			if c.item_count < 1:
-				_err("hub2: chapter picker empty")
-			else:
-				print("OK hub chapter picker items=", c.item_count)
-		if c is HBoxContainer:
-			for b in c.get_children():
-				if b is BaseButton and str(b.text).find("继续主线") >= 0:
-					has_continue = true
-				if b is OptionButton:
-					has_pick = true
-					print("OK hub chapter picker items=", b.item_count)
+	## v8.6 Stitch 02 nests the picker/CTA inside panels — search the whole hub tree
+	for c in hub.find_children("*", "OptionButton", true, false):
+		has_pick = true
+		if (c as OptionButton).item_count < 1:
+			_err("hub2: chapter picker empty")
+		else:
+			print("OK hub chapter picker items=", (c as OptionButton).item_count)
+		break
+	for b in hub.find_children("*", "BaseButton", true, false):
+		if str((b as BaseButton).get("text")).find("继续主线") >= 0:
+			has_continue = true
+			break
 	if not has_pick:
 		_err("hub2: OptionButton chapter picker missing")
 	if not has_continue:

@@ -24,6 +24,7 @@ func setup(record: Dictionary) -> void:
 	rec = record
 
 func _ready() -> void:
+	speed = maxf(speed, float(GameState.settings.get("cutscene_speed", 1.0)))
 	layer = 60
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_root = Control.new()
