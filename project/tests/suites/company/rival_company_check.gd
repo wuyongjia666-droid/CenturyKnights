@@ -1,7 +1,7 @@
 extends Node
 ## CMP-04 world-internal: rival companies steal offers and raise prices;
 ## one scripted contract chain per nation can be walked to the end.
-## Objective-typed commissions wait on BTL-02.
+## Objective-typed commissions are covered by objective_commission_check and atlas_e2e.
 
 const NATIONS := [
 	"ashbanner", "shuoying", "qinghe", "lantern", "frostcrown",
