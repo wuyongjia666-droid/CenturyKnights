@@ -811,10 +811,14 @@ static func apply_monthly_upkeep(host) -> String:
 	if host.food > granary:
 		host.food = granary + int(float(host.food - granary) * 0.82)
 	var msg = "月结：工资 -%d 银，粮 -%d" % [wage, food_need]
-	if host.silver < 0:
+	var paid: bool = int(host.silver) >= 0
+	if not paid:
 		host.morale = maxi(0, host.morale - 15)
 		msg += "；银币见红，士气下降"
 		host.silver = 0
+	var pay_note: String = CKMorale.on_payday(host, paid)
+	if pay_note != "":
+		msg += "；" + pay_note
 	if host.food < 0:
 		host.morale = maxi(0, host.morale - 20)
 		host.food = 0
