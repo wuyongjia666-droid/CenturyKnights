@@ -46,6 +46,10 @@ def collect(root: Path) -> list:
     sfx = root / "project" / "assets" / "sfx"
     catalog = json.loads((sfx / "catalog_v92.json").read_text())
     paths = [sfx / name for name in sorted(catalog["files"])]
+    bark_catalog = sfx / "barks" / "catalog_barks.json"
+    if bark_catalog.exists():
+        barks = json.loads(bark_catalog.read_text())
+        paths.extend(sfx / "barks" / name for name in sorted(barks["files"]))
     paths.extend(sorted((root / "project" / "assets" / "music").glob("*.ogg")))
     return paths
 

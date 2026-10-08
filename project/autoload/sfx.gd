@@ -145,6 +145,50 @@ func stop_ambience() -> void:
 	if _ambience != null:
 		_ambience.stop()
 
+func age_band(age: int) -> String:
+	if age < 15:
+		return "child"
+	if age < 30:
+		return "youth"
+	if age < 55:
+		return "adult"
+	return "elder"
+
+func bark_id(gender: String, age: int, kind: String) -> String:
+	if gender != "m" and gender != "f":
+		return ""
+	if kind != "breath" and kind != "shout":
+		return ""
+	return "bark_%s_%s_%s" % [gender, age_band(age), kind]
+
+func play_bark(gender: String, age: int, kind: String) -> void:
+	var id := bark_id(gender, age, kind)
+	if id == "":
+		return
+	var gain := -10.0 if kind == "breath" else -4.0
+	play_bark_id(id, gain)
+
+func play_bark_id(id: String, volume_db: float = -6.0) -> bool:
+	if not enabled or id == "":
+		return false
+	var path := "res://assets/sfx/barks/%s.ogg" % id
+	if not ResourceLoader.exists(path):
+		return false
+	var p: AudioStreamPlayer = _players.get(id)
+	if p == null:
+		p = AudioStreamPlayer.new()
+		p.name = id
+		p.stream = load(path)
+		p.bus = bus_for(id)
+		add_child(p)
+		_players[id] = p
+	if p.stream == null:
+		return false
+	p.volume_db = volume_db
+	p.pitch_scale = next_pitch()
+	p.play()
+	return true
+
 func _play_pitched(id: String) -> void:
 	if not enabled:
 		return

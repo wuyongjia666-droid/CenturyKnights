@@ -5,3 +5,5 @@
 其余 `*.wav` 是更早的程序化短音效，同样不包含外部采样。其中三段 `music_*.wav` 只作为 OGG 曲库缺失时的回退。
 
 汇总进 `docs/licenses.md` 时请 UX 流带上这一段。曲库说明见 `project/assets/music/LICENSES.md`。
+
+`barks/` 里的 16 段呼喊由 `tools/audio/barks_v92.py` 合成（气声、喝声，按性别和年龄段），同样没有外部采样。清单在 `barks/catalog_barks.json`。

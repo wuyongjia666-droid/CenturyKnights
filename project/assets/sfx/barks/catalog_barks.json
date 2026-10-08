@@ -1,0 +1,70 @@
+{
+  "files": {
+    "bark_f_adult_breath.ogg": {
+      "bytes": 8914,
+      "sha256": "0813ed2d92cd7ed4f459f9af0eaa9c3b7e1a4067aad285a2d6e7e18fb1bdde52"
+    },
+    "bark_f_adult_shout.ogg": {
+      "bytes": 7636,
+      "sha256": "6b121116662f68dd6bd24661bdd5ddf3c95474ed700c8701b7cae17f549806af"
+    },
+    "bark_f_child_breath.ogg": {
+      "bytes": 8937,
+      "sha256": "eb71e0fa833116be4cf40052983e20abc8abe9c0dbbe3063e75630addd14868f"
+    },
+    "bark_f_child_shout.ogg": {
+      "bytes": 7592,
+      "sha256": "c2373d732a0bfc3ee376b59c4d99974cb3b6ee935261e0ccc96a129dca24e09a"
+    },
+    "bark_f_elder_breath.ogg": {
+      "bytes": 8897,
+      "sha256": "0ca2809fbd5320adfc6019d21e36733490e221e16dd50f4e30f2d8e6ab8c5401"
+    },
+    "bark_f_elder_shout.ogg": {
+      "bytes": 7662,
+      "sha256": "2121adb4b15972f9c41bf9255e7aefcaf7771b131f99f35b5e985edfad1476c7"
+    },
+    "bark_f_youth_breath.ogg": {
+      "bytes": 8821,
+      "sha256": "231b5a65e22444134f6b9230e4a3c19c141284abf34df5f096ed6341cf6547d1"
+    },
+    "bark_f_youth_shout.ogg": {
+      "bytes": 7632,
+      "sha256": "d12e852203f355244a45ae587cbaf19e1b8d0ae95ac4768a71f0d12b2edcde46"
+    },
+    "bark_m_adult_breath.ogg": {
+      "bytes": 8965,
+      "sha256": "2e0e789b25f7ca01209abf903c307f0fe668a5c57bdda2509ebd4acc2ede90a4"
+    },
+    "bark_m_adult_shout.ogg": {
+      "bytes": 7716,
+      "sha256": "07f6b1487cb8f0eab825b487e7ba263d1e0abcd73eec292189d61b29584c058a"
+    },
+    "bark_m_child_breath.ogg": {
+      "bytes": 8826,
+      "sha256": "4641dd5d0bdd85e3381633464690173b76d0526d5457c73cb22acf9db7905583"
+    },
+    "bark_m_child_shout.ogg": {
+      "bytes": 7594,
+      "sha256": "6a09ddf50b106d58df7ee7ad8c5cae2e054317563dbf0fae6261e17779981383"
+    },
+    "bark_m_elder_breath.ogg": {
+      "bytes": 8877,
+      "sha256": "fca6bd496ef03355b516e21ef1430ec44e641ba4f6e2d153baa60363d9eb52bd"
+    },
+    "bark_m_elder_shout.ogg": {
+      "bytes": 7627,
+      "sha256": "b702eec7a3d51fcf3a30b6280abe35f55358b027e60a22058e88412ad9b42a37"
+    },
+    "bark_m_youth_breath.ogg": {
+      "bytes": 8858,
+      "sha256": "3e357af304da214dd2716d8a8cadb136c65604fc0aca3569a978ed6d31da134b"
+    },
+    "bark_m_youth_shout.ogg": {
+      "bytes": 7692,
+      "sha256": "eea78d1966d783facb5b4318fc3ccdd60c0575bb77b09be60f00eab7c90c56e7"
+    }
+  },
+  "sample_rate": 44100,
+  "seed": 9202601
+}
