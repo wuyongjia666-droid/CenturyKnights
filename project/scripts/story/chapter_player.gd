@@ -141,6 +141,11 @@ func _load_beat(beat_id: String) -> void:
 		_speaker.text = ""
 		_body.text = ""
 		return
+	if not StoryConditions.met(_beat.get("when", {})):
+		var skipped = _beat.get("next")
+		if skipped != null and str(skipped) != "" and str(skipped) != beat_id:
+			_load_beat(str(skipped))
+		return
 	_remember_beat(beat_id)
 	_line_idx = 0
 	_title.text = "%s · %s" % [str(_chapter.get("title", "")), str(_beat.get("title", ""))]
@@ -149,8 +154,17 @@ func _load_beat(beat_id: String) -> void:
 	_show_line()
 	_refresh_actions()
 
+func _visible_lines() -> Array:
+	var out: Array = []
+	for line in _beat.get("lines", []):
+		if typeof(line) != TYPE_DICTIONARY:
+			continue
+		if StoryConditions.met(line.get("when", {})):
+			out.append(line)
+	return out
+
 func _show_line() -> void:
-	var lines: Array = _beat.get("lines", [])
+	var lines: Array = _visible_lines()
 	if _line_idx >= lines.size():
 		_speaker.text = ""
 		_body.text = "（本节对白结束——请选择下方行动）"
@@ -188,7 +202,7 @@ func _speaker_portrait(speaker: String) -> void:
 func _refresh_actions() -> void:
 	for c in _actions.get_children():
 		c.queue_free()
-	var lines: Array = _beat.get("lines", [])
+	var lines: Array = _visible_lines()
 	if _line_idx >= lines.size() - 1:
 		for step in _beat.get("prepare", []):
 			_run_op(step)
@@ -334,7 +348,7 @@ func action_labels() -> Array:
 func simulate_finish_dialogue() -> void:
 	for c in _actions.get_children():
 		c.free()
-	var lines: Array = _beat.get("lines", [])
+	var lines: Array = _visible_lines()
 	_line_idx = maxi(0, lines.size() - 1)
 	_show_line()
 	_refresh_actions()

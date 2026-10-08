@@ -34,9 +34,9 @@
 | `ensure_reputation` | 春令试婚前把灰烬邦声望补到友善 |
 | `archive_notice` | 旧卷封存说明 |
 
-条件写在 `when`：`flag`、`not_flag`、`any_flag`、`not_any_flag`、`bloodline`、`companion`、`all`、`any`、`not`。
+条件写在 `when`：`flag`、`not_flag`、`any_flag`、`not_any_flag`、`bloodline`、`companion`、`all`、`any`、`not`。节拍和单句台词也可以带 `when`。不满足的节拍顺着 `next` 跳过，不满足的台词不显示。
 
-`objective` 先记在 meta `battle_objective`。战斗脚本还不读它，等 BTL-02。
+`battle` 把 `objective` 记在 meta `battle_objective`。真正结算的是地图 JSON 里的 `objective`（BTL-02）。第一纪元八场在 `data/maps/story_era1.json`，章节在 `data/story/chapters/era1_*.json`。
 
 ## 第零章
 
