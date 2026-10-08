@@ -8,6 +8,11 @@ const HIT_SCALE := {"light": 0.62, "mid": 0.45, "heavy": 0.32}
 const PUNCH := {"light": 0.035, "mid": 0.07, "heavy": 0.12}
 const FROST := Color8(110, 212, 255)
 const FROST_WHITE := Color8(244, 247, 251)
+const MINT := Color8(94, 224, 181)
+const SLATE := Color8(154, 166, 184)
+const CORAL := Color8(255, 122, 112)
+const INK := Color8(22, 27, 36)
+const EMBER := Color8(255, 138, 61)
 const DISSOLVE := preload("res://shaders/frost_dissolve.gdshader")
 
 static func weight_of_job(job_id: String) -> String:
@@ -102,16 +107,16 @@ static func _shards(root: Node3D, scale: float) -> void:
 
 ## Ten royal skills. Ember is only the kiln spark accent; every fill stays cool.
 const SIG := {
-	"chart_rally": {"tint": "#6ED4FF", "shape": "banner", "sparks": false},
-	"eclipse_gaze": {"tint": "#9AA6B8", "shape": "eclipse", "sparks": false},
-	"jade_clarity": {"tint": "#5EE0B5", "shape": "arc", "sparks": false},
-	"lamp_feint": {"tint": "#6ED4FF", "shape": "lamp", "sparks": false},
-	"bell_hush": {"tint": "#F4F7FB", "shape": "bell", "sparks": false},
-	"kiln_reforge": {"tint": "#6ED4FF", "shape": "kiln", "sparks": true},
-	"tide_edict": {"tint": "#5EE0B5", "shape": "tide", "sparks": false},
-	"gorge_breaker": {"tint": "#FF7A70", "shape": "slash", "sparks": false},
-	"dipper_fix": {"tint": "#F4F7FB", "shape": "dipper", "sparks": false},
-	"firefly_ferry": {"tint": "#5EE0B5", "shape": "ferry", "sparks": false},
+	"chart_rally": {"tint": FROST, "shape": "banner", "sparks": false},
+	"eclipse_gaze": {"tint": SLATE, "shape": "eclipse", "sparks": false},
+	"jade_clarity": {"tint": MINT, "shape": "arc", "sparks": false},
+	"lamp_feint": {"tint": FROST, "shape": "lamp", "sparks": false},
+	"bell_hush": {"tint": FROST_WHITE, "shape": "bell", "sparks": false},
+	"kiln_reforge": {"tint": FROST, "shape": "kiln", "sparks": true},
+	"tide_edict": {"tint": MINT, "shape": "tide", "sparks": false},
+	"gorge_breaker": {"tint": CORAL, "shape": "slash", "sparks": false},
+	"dipper_fix": {"tint": FROST_WHITE, "shape": "dipper", "sparks": false},
+	"firefly_ferry": {"tint": MINT, "shape": "ferry", "sparks": false},
 }
 
 static func royal_ids() -> Array:
@@ -158,14 +163,14 @@ static func spawn_signature(parent: Node, at: Vector3, skill_id: String, skill_n
 	root.set_meta("vfx_id", str(spec.get("id", "")))
 	if spec.is_empty():
 		return root
-	var tint := Color(str(spec.get("tint", "#6ED4FF")))
+	var tint: Color = spec.get("tint", FROST)
 	match str(spec.get("shape", "")):
 		"banner":
 			_add_box(root, Vector3(0.04, 0.7, 0.02), tint, Vector3(-0.22, 0, 0))
 			_add_box(root, Vector3(0.04, 0.7, 0.02), tint, Vector3(0.22, 0, 0))
 			_add_box(root, Vector3(0.46, 0.28, 0.02), tint, Vector3(0, 0.12, 0))
 		"eclipse":
-			_add_sphere(root, 0.22, Color("#161B24"), Vector3.ZERO)
+			_add_sphere(root, 0.22, INK, Vector3.ZERO)
 			_add_torus(root, 0.34, 0.03, tint, Vector3.ZERO)
 		"arc":
 			for i in 5:
@@ -176,7 +181,7 @@ static func spawn_signature(parent: Node, at: Vector3, skill_id: String, skill_n
 			_add_box(root, Vector3(0.36, 0.04, 0.04), tint, Vector3(0, -0.22, 0))
 			_add_box(root, Vector3(0.04, 0.44, 0.04), tint, Vector3(-0.16, 0, 0))
 			_add_box(root, Vector3(0.04, 0.44, 0.04), tint, Vector3(0.16, 0, 0))
-			_add_sphere(root, 0.08, Color("#F4F7FB"), Vector3.ZERO)
+			_add_sphere(root, 0.08, FROST_WHITE, Vector3.ZERO)
 		"bell":
 			_add_torus(root, 0.28, 0.025, tint, Vector3(0, 0.2, 0))
 			for i in 3:
@@ -216,7 +221,7 @@ static func _build_arrow(root: Node3D, color: Color) -> void:
 	_add_mesh(root, shaft, color, Vector3(0, 0, 0.05), Vector3(90, 0, 0))
 	var head := PrismMesh.new()
 	head.size = Vector3(0.07, 0.16, 0.025)
-	_add_mesh(root, head, Color("#F4F7FB"), Vector3(0, 0, -0.32), Vector3(90, 0, 0))
+	_add_mesh(root, head, FROST_WHITE, Vector3(0, 0, -0.32), Vector3(90, 0, 0))
 	var fletch := BoxMesh.new()
 	fletch.size = Vector3(0.08, 0.012, 0.14)
 	_add_mesh(root, fletch, color, Vector3(0, 0.02, 0.32), Vector3(0, 0, 40))
@@ -226,7 +231,7 @@ static func _build_arrow(root: Node3D, color: Color) -> void:
 
 static func _build_bolt(root: Node3D, color: Color) -> void:
 	_add_sphere(root, 0.09, color, Vector3(0, 0, -0.05))
-	_add_torus(root, 0.16, 0.018, Color("#F4F7FB"), Vector3(0, 0, 0.08))
+	_add_torus(root, 0.16, 0.018, FROST_WHITE, Vector3(0, 0, 0.08))
 	var trail := BoxMesh.new()
 	trail.size = Vector3(0.03, 0.03, 0.48)
 	_add_mesh(root, trail, color, Vector3(0, 0, 0.36), Vector3.ZERO, 0.4)
@@ -270,9 +275,9 @@ static func _ember_sparks(root: Node3D, scale: float) -> void:
 	mesh.height = 0.05
 	var m := StandardMaterial3D.new()
 	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	m.albedo_color = Color("#FF8A3D")
+	m.albedo_color = EMBER
 	m.emission_enabled = true
-	m.emission = Color("#FF8A3D")
+	m.emission = EMBER
 	mesh.material = m
 	p.mesh = mesh
 	root.add_child(p)

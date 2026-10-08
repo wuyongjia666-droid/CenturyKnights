@@ -24,8 +24,10 @@ func _run() -> String:
 		var by_name := CutsceneVfx.signature_for("", str(table[id].get("name", "")))
 		if str(by_name.get("id", "")) != str(id):
 			return "name mismatch %s" % str(id)
-		var tint := str(spec.get("tint", ""))
-		if tint == "" or tint == "#FF8A3D" or tint == "#c9a227":
+		if not (spec.get("tint") is Color):
+			return "tint %s" % str(id)
+		var tint: Color = spec.get("tint")
+		if tint.r > 0.95 and tint.g < 0.7 and tint.b < 0.4:
 			return "warm fill %s" % str(id)
 		seen[str(id)] = true
 		if bool(spec.get("sparks", false)) and str(id) != "kiln_reforge":
@@ -38,8 +40,8 @@ func _run() -> String:
 	add_child(host)
 	for id in CutsceneVfx.royal_ids():
 		CutsceneVfx.spawn_signature(host, Vector3.ZERO, str(id), "", 0.0)
-	CutsceneVfx.spawn_projectile(host, Vector3(-1, 1, 0), Vector3(1, 1, 0), "arrow", Color("#6ED4FF"), 0.0)
-	CutsceneVfx.spawn_projectile(host, Vector3(-1, 1, 0), Vector3(1, 1, 0), "bolt", Color("#5EE0B5"), 0.0)
+	CutsceneVfx.spawn_projectile(host, Vector3(-1, 1, 0), Vector3(1, 1, 0), "arrow", CutsceneVfx.FROST, 0.0)
+	CutsceneVfx.spawn_projectile(host, Vector3(-1, 1, 0), Vector3(1, 1, 0), "bolt", CutsceneVfx.MINT, 0.0)
 	if _count_class(host, "GPUParticles3D") != 0:
 		return "gpu particles on low"
 	if _count_class(host, "CPUParticles3D") != 0:
