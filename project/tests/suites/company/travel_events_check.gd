@@ -18,7 +18,7 @@ func _ready() -> void:
 	get_tree().quit(0)
 
 func _run() -> String:
-	GameState.new_game("路遇", "灰旗", "#6ED4FF")
+	GameState.new_game("路遇", "灰旗", GameState.crest_color)
 	var events: Array = World.data.get("events", [])
 	if events.size() < 48:
 		return "event count %d < 48" % events.size()

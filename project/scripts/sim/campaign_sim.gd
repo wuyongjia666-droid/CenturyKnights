@@ -17,8 +17,10 @@ static func run(years: int = 100, seed_i: int = 91) -> Dictionary:
 	GameState.rng.seed = seed_i
 	World.rng.seed = seed_i + 17
 	World.events_enabled = false
+	World.rivals_enabled = false
 	GameState.new_game("烬行", "灰旗", "#c9a227")
 	World.events_enabled = false
+	World.rivals_enabled = false
 	# The scripted company has already stood the opening chapter, the way a loaded campaign would.
 	GameState.add_rep("ashland", 16)
 	World.add_nation_rep("ashbanner", 8)

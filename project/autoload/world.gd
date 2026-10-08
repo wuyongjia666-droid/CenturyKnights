@@ -74,6 +74,10 @@ var _enc_seq: int = 0
 var _in_travel_month := false
 var milestones: Array = []      # UI toasts: {"kind": "city"|"nation", "id", "tier", "text"}
 var events_enabled := true       # tests may disable random road events
+var rivals_enabled := true       # CMP-04: rival companies move, steal offers, raise prices. Century sim turns this off.
+var rivals: Array = []           # {id, name, pos, home, stolen, price_mul}
+var rival_thefts: Array = []
+var chain_progress: Dictionary = {}  # chain id -> {step, status}
 var rng := RandomNumberGenerator.new()
 
 func _ready() -> void:
@@ -160,6 +164,8 @@ func reset() -> void:
 	royal_courts = {}
 	_qseq = 0
 	_enc_seq = 0
+	chain_progress = {}
+	_init_rivals()
 	world_changed.emit()
 
 func to_save() -> Dictionary:
@@ -171,7 +177,7 @@ func to_save() -> Dictionary:
 		"cargo": cargo, "market": market, "fairs": fairs, "intel": intel, "tips": tips, "boards": boards, "active": active,
 		"done_sig": done_sig, "quest_log": quest_log, "stats_done": stats_done, "armory": armory, "gear": gear, "recruits": rc,
 		"travel": travel, "pending_event": pending_event, "road_flags": road_flags, "encounter": encounter, "travel_log": travel_log, "qseq": _qseq, "enc_seq": _enc_seq,
-		"royal_courts": royal_courts,
+		"royal_courts": royal_courts, "rivals": rivals, "rival_thefts": rival_thefts, "chain_progress": chain_progress,
 	}
 
 func from_save(d: Dictionary) -> void:
@@ -217,6 +223,9 @@ func from_save(d: Dictionary) -> void:
 	royal_courts = d.get("royal_courts", {}) if typeof(d.get("royal_courts", {})) == TYPE_DICTIONARY else {}
 	_qseq = int(d.get("qseq", 0))
 	_enc_seq = int(d.get("enc_seq", 0))
+	chain_progress = d.get("chain_progress", {}) if typeof(d.get("chain_progress", {})) == TYPE_DICTIONARY else {}
+	_restore_rivals(d.get("rivals", []))
+	rival_thefts = d.get("rival_thefts", []) if typeof(d.get("rival_thefts", [])) == TYPE_ARRAY else []
 	world_changed.emit()
 
 func _int_dict(src) -> Dictionary:
@@ -590,6 +599,8 @@ func _on_month(_y: int, _m: int, _evs: Array) -> void:
 		day = 1  # castle-side month advance resets the road calendar
 	for id in market.keys():
 		_regen_market(id)
+	if rivals_enabled:
+		tick_rivals()
 
 func date_label() -> String:
 	return "%s %d 日" % [Calendar.label(), day]
@@ -636,6 +647,7 @@ func price(city: String, g: String, side: String = "buy") -> int:
 	var mid := base * local * supply
 	if fairs.has(city) and int(fairs[city]) >= days_total and side == "sell":
 		mid *= 1.15
+	mid *= rival_price_mul(city)
 	var spread := float(rules.get("price_spread", 0.08))
 	var cut := float(rules.get("rep_price_cut", 0.10)) * rep_tier_index(rep_of(city)) / 4.0
 	if rep_tier_index(nation_rep(str(n.get("nation", "")))) >= 3:
@@ -1262,6 +1274,8 @@ func turn_in(qid: String) -> Dictionary:
 
 ## 委托链：二阶以下普通委托完成后，交付城可能递来更难的后续（报酬 +25%，跨刷新保留）
 func _spawn_follow_up(q: Dictionary) -> Dictionary:
+	if str(q.get("scripted_chain", "")) != "":
+		return _advance_scripted_chain(q)
 	if bool(q.get("sig", false)) or int(q.tier) >= 3:
 		return {}
 	var r := RandomNumberGenerator.new()
@@ -1283,6 +1297,218 @@ func _spawn_follow_up(q: Dictionary) -> Dictionary:
 	_ensure_board(at)
 	boards[at].offers.push_front(nq)
 	_tlog("%s 递来后续委托「%s」" % [node(at).get("name", ""), nq.title])
+	return nq
+
+# ── CMP-04 scripted chains and rival companies ─────────
+func _init_rivals() -> void:
+	rivals = []
+	rival_thefts = []
+	for row in data.get("rival_companies", []):
+		if typeof(row) != TYPE_DICTIONARY:
+			continue
+		rivals.append({
+			"id": str(row.get("id", "")),
+			"name": str(row.get("name", "")),
+			"home": str(row.get("home", "")),
+			"pos": str(row.get("home", "")),
+			"stolen": 0,
+			"price_mul": float(row.get("price_mul", 1.2)),
+		})
+
+func _restore_rivals(saved) -> void:
+	_init_rivals()
+	if typeof(saved) != TYPE_ARRAY:
+		return
+	var by_id := {}
+	for row in saved:
+		if typeof(row) == TYPE_DICTIONARY:
+			by_id[str(row.get("id", ""))] = row
+	for rv in rivals:
+		if not by_id.has(str(rv.id)):
+			continue
+		var row: Dictionary = by_id[str(rv.id)]
+		rv.pos = str(row.get("pos", rv.pos))
+		rv.stolen = int(row.get("stolen", 0))
+
+func rival_price_mul(city: String) -> float:
+	if not rivals_enabled:
+		return 1.0
+	var mul := 1.0
+	for rv in rivals:
+		if str(rv.get("pos", "")) == city:
+			mul = maxf(mul, float(rv.get("price_mul", 1.2)))
+	return mul
+
+func tick_rivals() -> Dictionary:
+	## One beat: each company steals a posted offer where it stands, or steps toward one.
+	## Uses no World.rng, so the century sim stays put when rivals_enabled is false.
+	if not rivals_enabled:
+		return {"ok": true, "stolen": 0, "total": _rival_stolen_total()}
+	var stolen_now := 0
+	for rv in rivals:
+		if _rival_steal(rv):
+			stolen_now += 1
+		else:
+			_rival_step(rv)
+	return {"ok": true, "stolen": stolen_now, "total": _rival_stolen_total()}
+
+func _rival_stolen_total() -> int:
+	var n := 0
+	for rv in rivals:
+		n += int(rv.get("stolen", 0))
+	return n
+
+func _rival_steal(rv: Dictionary) -> bool:
+	var city := str(rv.get("pos", ""))
+	var idx := _stealable_index(city)
+	if idx < 0:
+		return false
+	var offers: Array = boards[city].offers
+	var q: Dictionary = offers[idx]
+	offers.remove_at(idx)
+	rv.stolen = int(rv.get("stolen", 0)) + 1
+	rival_thefts.append({"by": str(rv.id), "city": city, "quest": str(q.get("id", "")), "title": str(q.get("title", ""))})
+	_tlog("%s截走了%s的委托「%s」" % [rv.get("name", ""), node(city).get("name", city), q.get("title", "")])
+	return true
+
+func _stealable_index(city: String) -> int:
+	var offers: Array = boards.get(city, {}).get("offers", [])
+	for i in offers.size():
+		var q: Dictionary = offers[i]
+		if bool(q.get("sig", false)) or str(q.get("scripted_chain", "")) != "":
+			continue
+		return i
+	return -1
+
+func _rival_step(rv: Dictionary) -> void:
+	var here := str(rv.get("pos", ""))
+	if here == "" or not nodes.has(here):
+		return
+	var best := ""
+	var best_len := 9999
+	var cities: Array = boards.keys()
+	cities.sort()
+	for c in cities:
+		if str(c) == here or _stealable_index(str(c)) < 0:
+			continue
+		var path: Array = route(here, str(c)).get("path", [])
+		if path.size() >= 2 and path.size() < best_len:
+			best_len = path.size()
+			best = str(path[1])
+	if best != "":
+		rv.pos = best
+
+func rival_here() -> Dictionary:
+	for rv in rivals:
+		if str(rv.get("pos", "")) == pos:
+			return rv
+	return {}
+
+func rival_clash() -> Dictionary:
+	## Opt-in encounter. Travel does not start this by itself.
+	var rv := rival_here()
+	if rv.is_empty():
+		return {}
+	return start_encounter("road", {"node": pos, "from": pos, "event": "rival_%s" % str(rv.id)})
+
+func scripted_chains() -> Array:
+	return data.get("contract_chains", [])
+
+func start_scripted_chain(chain_id: String) -> Dictionary:
+	if str(chain_progress.get(chain_id, {}).get("status", "")) == "active":
+		return {"ok": false, "msg": "这条委托链还没走完"}
+	var chain := _scripted_chain(chain_id)
+	if chain.is_empty():
+		return {"ok": false, "msg": "没有这条委托链"}
+	var steps: Array = chain.get("steps", [])
+	if steps.is_empty():
+		return {"ok": false, "msg": "委托链没有步骤"}
+	chain_progress[chain_id] = {"step": 0, "status": "active"}
+	var q := _quest_from_chain_step(chain, 0)
+	_post_chain_offer(q)
+	return {"ok": true, "msg": "接下委托链「%s」" % str(chain.get("title", "")), "quest": q}
+
+func chain_status(chain_id: String) -> Dictionary:
+	var prog: Dictionary = chain_progress.get(chain_id, {})
+	var status := str(prog.get("status", "idle"))
+	var out := {"id": chain_id, "status": status, "step": int(prog.get("step", 0))}
+	if status != "active":
+		return out
+	var live := _chain_quest(chain_id)
+	if live.is_empty():
+		return out
+	out["quest_id"] = str(live.get("id", ""))
+	out["issuer"] = str(live.get("issuer", ""))
+	out["state"] = str(live.get("state", ""))
+	out["on_board"] = str(live.get("state", "")) == "offer"
+	return out
+
+func chain_done(chain_id: String) -> bool:
+	return str(chain_progress.get(chain_id, {}).get("status", "")) == "done"
+
+func _scripted_chain(chain_id: String) -> Dictionary:
+	for row in data.get("contract_chains", []):
+		if str(row.get("id", "")) == chain_id:
+			return row
+	return {}
+
+func _quest_from_chain_step(chain: Dictionary, step_idx: int) -> Dictionary:
+	var steps: Array = chain.get("steps", [])
+	var step: Dictionary = steps[step_idx]
+	var issuer := str(step.get("issuer", ""))
+	var target := str(step.get("target", issuer))
+	return {
+		"id": "chain_%s_%d" % [str(chain.get("id", "")), step_idx],
+		"kind": str(step.get("kind", "deliver")),
+		"issuer": issuer,
+		"target": target,
+		"tier": 1,
+		"state": "offer",
+		"sig": false,
+		"title": str(step.get("title", "")),
+		"desc": str(step.get("brief", "")),
+		"reward_silver": 40 + step_idx * 10,
+		"reward_rep": 4,
+		"req_rep": 0,
+		"battle": false,
+		"danger": 1,
+		"days_budget": 40,
+		"route_days": 2,
+		"chain": true,
+		"scripted_chain": str(chain.get("id", "")),
+		"scripted_step": step_idx,
+	}
+
+func _post_chain_offer(q: Dictionary) -> void:
+	var issuer := str(q.get("issuer", ""))
+	_ensure_board(issuer)
+	if not boards.has(issuer):
+		boards[issuer] = {"epoch": _epoch(), "offers": []}
+	boards[issuer].offers.push_front(q)
+
+func _chain_quest(chain_id: String) -> Dictionary:
+	for q in active:
+		if str(q.get("scripted_chain", "")) == chain_id:
+			return q
+	for city in boards.keys():
+		for q in boards[city].get("offers", []):
+			if str(q.get("scripted_chain", "")) == chain_id:
+				return q
+	return {}
+
+func _advance_scripted_chain(q: Dictionary) -> Dictionary:
+	var chain_id := str(q.get("scripted_chain", ""))
+	var chain := _scripted_chain(chain_id)
+	var steps: Array = chain.get("steps", [])
+	var nxt := int(q.get("scripted_step", 0)) + 1
+	if chain.is_empty() or nxt >= steps.size():
+		chain_progress[chain_id] = {"step": nxt, "status": "done"}
+		_tlog("委托链「%s」走完" % str(chain.get("title", chain_id)))
+		return {}
+	chain_progress[chain_id] = {"step": nxt, "status": "active"}
+	var nq := _quest_from_chain_step(chain, nxt)
+	_post_chain_offer(nq)
+	_tlog("委托链续上「%s」" % str(nq.title))
 	return nq
 
 func abandon(qid: String) -> Dictionary:

@@ -6,7 +6,7 @@ Deterministic: re-running yields identical files. Also writes tools/world/shots_
 style-lock prefix applied by tools/farm_v87/gen_atlas_v87.py)."""
 import json, math, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from world_content_v87 import NATIONS, C, ROADS, CROSS, TRAVEL_EVENTS
+from world_content_v87 import NATIONS, C, ROADS, CROSS, TRAVEL_EVENTS, CONTRACT_CHAINS, RIVAL_COMPANIES
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 DATA = os.path.join(ROOT, "project", "data")
@@ -237,6 +237,8 @@ def main():
         "volume_nation": ["ashbanner", "ashbanner", "saltmarsh", "frostcrown", "starriver", "irongorge", "emberold", "shuoying",
                           "qinghe", "lantern", "southzephyr", "landbridge"],
         "rules": RULES,
+        "contract_chains": CONTRACT_CHAINS,
+        "rival_companies": RIVAL_COMPANIES,
         "foe_templates": foe_templates(),
         "biome_keyword": {"fort": "keep", "urban": "street", "ford": "ford", "hill": "hill", "fog": "fog", "snow": "snow", "pass": "pass",
                           "nightcamp": "night", "harbor": "harbor", "archive": "archive", "plain": "plain", "marsh": "marsh", "forge": "forge", "shrine": "shrine"},

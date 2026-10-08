@@ -106,7 +106,7 @@ func _same_list(a, b) -> bool:
 	return true
 
 func _run_battle() -> String:
-	GameState.new_game("探针", "灰旗", "#6ED4FF")
+	GameState.new_game("探针", "灰旗", GameState.crest_color)
 	var leader: CKCharacter = GameState.get_leader()
 	if leader == null:
 		return "no leader"

@@ -489,3 +489,6 @@ CROSS = [
 # CMP-09 road encounters. Catalog lives in travel_events_v92.py so gen_world and
 # project/data/world_v87.json stay on one list. Do not hand-edit the JSON events array.
 from travel_events_v92 import TRAVEL_EVENTS  # noqa: E402
+# CMP-04 scripted chains and rival companies. Kept beside the geography so gen_world can
+# embed them without rewriting commission silver by hand.
+from company_ops_v92 import CONTRACT_CHAINS, RIVAL_COMPANIES  # noqa: E402
