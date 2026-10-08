@@ -6,7 +6,7 @@ Deterministic: re-running yields identical files. Also writes tools/world/shots_
 style-lock prefix applied by tools/farm_v87/gen_atlas_v87.py)."""
 import json, math, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from world_content_v87 import NATIONS, C, ROADS, CROSS
+from world_content_v87 import NATIONS, C, ROADS, CROSS, TRAVEL_EVENTS
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 DATA = os.path.join(ROOT, "project", "data")
@@ -285,45 +285,8 @@ ENG_MOTIF = {"ashbanner": "faint luminous river-vein etching", "shuoying": "indi
 ENG_TYPE = {"sword": "longsword", "blade": "single-edged sabre", "spear": "spear", "lance": "cavalry lance", "axe": "battle axe", "bow": "recurve longbow",
             "crossbow": "crossbow", "staff": "mage staff", "focus": "arcane focus orb", "shield": "tower shield", "armor": "armour cuirass", "charm": "amulet charm"}
 
-# ── road events: weight, filters, options[effects] ─────────────
-EVENTS = [
- {"id": "ambush", "title": "伏击", "text": "道旁林影一动——{foe}早已埋伏在此。", "weight": 10, "min_danger": 1, "kinds": ["road", "border"],
-  "options": [{"label": "列阵迎战", "fx": {"battle": "ambush"}}, {"label": "丢下部分货物脱身", "fx": {"lose_cargo": 0.3, "morale": -2}}]},
- {"id": "toll", "title": "拦路收银", "text": "一伙人横在路中：「过路银，{toll} 两。」", "weight": 8, "min_danger": 1, "kinds": ["road", "border"],
-  "options": [{"label": "付银了事", "fx": {"silver": "-toll"}}, {"label": "拔刀", "fx": {"battle": "toll"}}]},
- {"id": "merchant", "title": "行商", "text": "一位行商赶着驮兽同路，愿意低价出手一批{good}。", "weight": 9, "min_danger": 0, "kinds": ["road", "border", "sea"],
-  "options": [{"label": "买下（7 折）", "fx": {"buy_deal": 0.7}}, {"label": "道别", "fx": {}}]},
- {"id": "refugees", "title": "难民", "text": "一队难民向你们讨粮，孩子们看着军旗。", "weight": 6, "min_danger": 0, "kinds": ["road", "border"],
-  "options": [{"label": "分出 6 份粮", "fx": {"food": -6, "rep_nation": 4, "morale": 1}}, {"label": "继续赶路", "fx": {"morale": -1}}]},
- {"id": "shrine", "title": "路边小祠", "text": "古祠里还有人添灯。歇一歇脚？", "weight": 6, "min_danger": 0, "kinds": ["road"],
-  "options": [{"label": "歇息疗伤（+1 日）", "fx": {"heal": 0.35, "days": 1}}, {"label": "上香祈愿", "fx": {"morale": 2}}]},
- {"id": "storm", "title": "恶劣天气", "text": "{weather}压了下来，前路难辨。", "weight": 7, "min_danger": 0, "kinds": ["road", "border"],
-  "options": [{"label": "就地扎营（+1 日）", "fx": {"days": 1}}, {"label": "花 12 银借宿农家", "fx": {"silver": -12}}]},
- {"id": "crate", "title": "遗落货箱", "text": "翻倒的货车旁散着几箱{good}，主人不知去向。", "weight": 5, "min_danger": 0, "kinds": ["road"],
-  "options": [{"label": "收下", "fx": {"gain_good": 3, "rep_nation": -1}}, {"label": "交给下一座城的巡卫", "fx": {"rep_dest": 3}}]},
- {"id": "patrol", "title": "巡逻队盘查", "text": "{nation}巡逻队拦下了你们，要查文书。", "weight": 6, "min_danger": 0, "kinds": ["road", "border"],
-  "options": [{"label": "出示佣兵契", "fx": {"patrol": True}}, {"label": "塞 15 银", "fx": {"silver": -15, "rep_nation": 1}}]},
- {"id": "merc", "title": "落单佣兵", "text": "一名落单的佣兵坐在路边磨刀，打量着你们的旗。", "weight": 4, "min_danger": 0, "kinds": ["road", "border"],
-  "options": [{"label": "邀其入团（{hire} 银）", "fx": {"recruit": True}}, {"label": "点头而过", "fx": {}}]},
- {"id": "rumor", "title": "茶摊传闻", "text": "茶摊老板压低声音：{tip}", "weight": 6, "min_danger": 0, "kinds": ["road", "border", "sea"],
-  "options": [{"label": "记下", "fx": {"tip": True}}]},
- {"id": "herbs", "title": "野生药草", "text": "路旁坡地长满了药草。", "weight": 4, "min_danger": 0, "kinds": ["road"], "biomes": ["fog", "plain", "hill", "shrine", "marsh", "ford"],
-  "options": [{"label": "采集（+1 日，+3 药材）", "fx": {"herb": 3, "days": 1}}, {"label": "不耽搁", "fx": {}}]},
- {"id": "bridge", "title": "断桥", "text": "桥被冲垮了一半。", "weight": 4, "min_danger": 0, "kinds": ["road"], "biomes": ["ford", "marsh", "pass", "harbor"],
-  "options": [{"label": "绕路（+1 日）", "fx": {"days": 1}}, {"label": "出 15 银雇人修桥", "fx": {"silver": -15, "rep_nation": 3}}]},
- {"id": "caravan", "title": "同路商队", "text": "一支商队请求同行，愿付护送费。", "weight": 5, "min_danger": 1, "kinds": ["road", "border"],
-  "options": [{"label": "同行护送（+20 银，伏击风险）", "fx": {"silver": 20, "risk": 0.35}}, {"label": "婉拒", "fx": {}}]},
- {"id": "deserters", "title": "逃兵", "text": "一群逃兵占了路边的驿亭，正在抢劫旅人。", "weight": 5, "min_danger": 2, "kinds": ["road", "border"],
-  "options": [{"label": "驱逐他们", "fx": {"battle": "deserters", "rep_nation_win": 5}}, {"label": "避开", "fx": {"days": 1}}]},
- {"id": "omen", "title": "异兆", "text": "夜空里{omen}。老兵说这是好兆头。", "weight": 3, "min_danger": 0, "kinds": ["road", "sea"],
-  "options": [{"label": "全军振奋", "fx": {"morale": 3}}]},
- {"id": "rival_scouts", "title": "朔影探子", "text": "几个朔影探子尾随你们多时。", "weight": 6, "min_danger": 0, "kinds": ["road", "border"], "nations": ["shuoying", "ashbanner", "frostcrown"],
-  "options": [{"label": "反包围", "fx": {"battle": "scouts"}}, {"label": "放出假消息（-10 银）", "fx": {"silver": -10, "rep_nation": 1}}]},
- {"id": "sea_storm", "title": "海上风暴", "text": "风暴把船推离了航线。", "weight": 10, "min_danger": 0, "kinds": ["sea"],
-  "options": [{"label": "硬扛（+2 日）", "fx": {"days": 2}}, {"label": "抛货减重", "fx": {"lose_cargo": 0.25}}]},
- {"id": "fair", "title": "集会消息", "text": "前方{dest}正逢集会，商人们说货价会涨。", "weight": 4, "min_danger": 0, "kinds": ["road", "border", "sea"],
-  "options": [{"label": "加快脚步", "fx": {"fair": True}}]},
-]
+# Road events live in travel_events_v92.py (re-exported by world_content_v87).
+EVENTS = TRAVEL_EVENTS
 WEATHER = {"snow": "暴雪", "marsh": "潮雾", "fog": "浓雾", "harbor": "海风", "pass": "山崩落石", "forge": "灰烬雨", "nightcamp": "冰雾"}
 
 COMMISSIONS = [
