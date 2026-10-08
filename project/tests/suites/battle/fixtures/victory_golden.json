@@ -1,0 +1,5267 @@
+{
+  "schema": "clean_victory_v1",
+  "source": "battle_controller._mark_map_victory + _finish before BTL-01",
+  "assumptions": "no house_mods, no active quest; silver is the total delta (base purse only)",
+  "silver_cases": [
+    {
+      "mods": {},
+      "tutorial": false,
+      "base_purse": 35,
+      "memory_bonus": 0,
+      "silver": 35,
+      "skill_points": 1
+    },
+    {
+      "mods": {
+        "warlord_purse": true
+      },
+      "tutorial": false,
+      "base_purse": 45,
+      "memory_bonus": 0,
+      "silver": 45,
+      "skill_points": 1
+    },
+    {
+      "mods": {
+        "warlord_purse": true,
+        "warlord_purse2": true
+      },
+      "tutorial": false,
+      "base_purse": 55,
+      "memory_bonus": 0,
+      "silver": 55,
+      "skill_points": 1
+    },
+    {
+      "mods": {
+        "war_memory": 3
+      },
+      "tutorial": false,
+      "base_purse": 35,
+      "memory_bonus": 6,
+      "silver": 41,
+      "skill_points": 1
+    },
+    {
+      "mods": {
+        "war_memory": 9
+      },
+      "tutorial": false,
+      "base_purse": 35,
+      "memory_bonus": 10,
+      "silver": 45,
+      "skill_points": 1
+    },
+    {
+      "mods": {},
+      "tutorial": true,
+      "base_purse": 35,
+      "memory_bonus": 0,
+      "silver": 35,
+      "skill_points": 0
+    }
+  ],
+  "count": 400,
+  "maps": {
+    "ch0_pass": {
+      "flags": [
+        "battle_done"
+      ],
+      "silver": 35,
+      "skill_points": 0,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch1_hill": {
+      "flags": [
+        "battle_done",
+        "ch1_hill_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch1_ford": {
+      "flags": [
+        "battle_done",
+        "ch1_ford_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch1_fog": {
+      "flags": [
+        "battle_done",
+        "ch1_fog_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "quest_bandit": {
+      "flags": [
+        "battle_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch2_night": {
+      "flags": [
+        "battle_done",
+        "ch2_night_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch3_forge": {
+      "flags": [
+        "battle_done",
+        "ch3_forge_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch3_shrine": {
+      "flags": [
+        "battle_done",
+        "ch3_shrine_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch4_gate": {
+      "flags": [
+        "battle_done",
+        "ch4_gate_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch5_river": {
+      "flags": [
+        "battle_done",
+        "ch5_river_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch5_feast": {
+      "flags": [
+        "battle_done",
+        "ch5_feast_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch5_bridge": {
+      "flags": [
+        "battle_done",
+        "ch5_bridge_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch6_archive": {
+      "flags": [
+        "battle_done",
+        "ch6_archive_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch6_redoubt": {
+      "flags": [
+        "battle_done",
+        "ch6_redoubt_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch6_bloodseal": {
+      "flags": [
+        "battle_done",
+        "ch6_bloodseal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch7_field": {
+      "flags": [
+        "battle_done",
+        "ch7_field_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch8_harbor": {
+      "flags": [
+        "battle_done",
+        "ch8_harbor_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch8_quay": {
+      "flags": [
+        "battle_done",
+        "ch8_quay_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch8_treaty": {
+      "flags": [
+        "battle_done",
+        "ch8_treaty_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch9_caravan": {
+      "flags": [
+        "battle_done",
+        "ch9_caravan_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch10_echo": {
+      "flags": [
+        "battle_done",
+        "ch10_echo_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch10_banner": {
+      "flags": [
+        "battle_done",
+        "ch10_banner_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch10_seal": {
+      "flags": [
+        "battle_done",
+        "ch10_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch11_gate": {
+      "flags": [
+        "battle_done",
+        "ch11_gate_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch12_granary": {
+      "flags": [
+        "battle_done",
+        "ch12_granary_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch12_ambush": {
+      "flags": [
+        "battle_done",
+        "ch12_ambush_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch12_rival": {
+      "flags": [
+        "battle_done",
+        "ch12_rival_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch13_heir": {
+      "flags": [
+        "battle_done",
+        "ch13_heir_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch14_torch": {
+      "flags": [
+        "battle_done",
+        "ch14_torch_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch14_margin": {
+      "flags": [
+        "battle_done",
+        "ch14_margin_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch14_cohold": {
+      "flags": [
+        "battle_done",
+        "ch14_cohold_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch15_finale": {
+      "flags": [
+        "battle_done",
+        "ch15_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch_heir_clash": {
+      "flags": [
+        "battle_done",
+        "ch_heir_clash_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [
+        "heir_clash_restore"
+      ],
+      "unlocks": []
+    },
+    "ch16_sea": {
+      "flags": [
+        "battle_done",
+        "ch16_sea_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch16_grass": {
+      "flags": [
+        "battle_done",
+        "ch16_grass_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch16_beacon": {
+      "flags": [
+        "battle_done",
+        "ch16_beacon_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch17_ford": {
+      "flags": [
+        "battle_done",
+        "ch17_ford_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch17_keep": {
+      "flags": [
+        "battle_done",
+        "ch17_keep_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch18_gate": {
+      "flags": [
+        "battle_done",
+        "ch18_gate_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch19_shore": {
+      "flags": [
+        "battle_done",
+        "ch19_shore_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch19_reef": {
+      "flags": [
+        "battle_done",
+        "ch19_reef_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch19_isle": {
+      "flags": [
+        "battle_done",
+        "ch19_isle_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch20_wall": {
+      "flags": [
+        "battle_done",
+        "ch20_wall_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch20_spire": {
+      "flags": [
+        "battle_done",
+        "ch20_spire_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch21_finale": {
+      "flags": [
+        "battle_done",
+        "ch21_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch22_pass": {
+      "flags": [
+        "battle_done",
+        "ch22_pass_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch22_camp": {
+      "flags": [
+        "battle_done",
+        "ch22_camp_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch23_frost": {
+      "flags": [
+        "battle_done",
+        "ch23_frost_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch23_watch": {
+      "flags": [
+        "battle_done",
+        "ch23_watch_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch24_seal": {
+      "flags": [
+        "battle_done",
+        "ch24_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch25_plain": {
+      "flags": [
+        "battle_done",
+        "ch25_plain_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch25_ridge": {
+      "flags": [
+        "battle_done",
+        "ch25_ridge_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch26_snow": {
+      "flags": [
+        "battle_done",
+        "ch26_snow_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch26_peak": {
+      "flags": [
+        "battle_done",
+        "ch26_peak_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch27_finale": {
+      "flags": [
+        "battle_done",
+        "ch27_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch28_marsh": {
+      "flags": [
+        "battle_done",
+        "ch28_marsh_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch28_ferry": {
+      "flags": [
+        "battle_done",
+        "ch28_ferry_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch29_field": {
+      "flags": [
+        "battle_done",
+        "ch29_field_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch29_barn": {
+      "flags": [
+        "battle_done",
+        "ch29_barn_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch30_seal": {
+      "flags": [
+        "battle_done",
+        "ch30_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch31_gorge": {
+      "flags": [
+        "battle_done",
+        "ch31_gorge_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch31_forge": {
+      "flags": [
+        "battle_done",
+        "ch31_forge_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch32_star": {
+      "flags": [
+        "battle_done",
+        "ch32_star_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch32_tower": {
+      "flags": [
+        "battle_done",
+        "ch32_tower_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch33_finale": {
+      "flags": [
+        "battle_done",
+        "ch33_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch34_dawn": {
+      "flags": [
+        "battle_done",
+        "ch34_dawn_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch34_cross": {
+      "flags": [
+        "battle_done",
+        "ch34_cross_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch35_bell": {
+      "flags": [
+        "battle_done",
+        "ch35_bell_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch35_keep": {
+      "flags": [
+        "battle_done",
+        "ch35_keep_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch36_seal": {
+      "flags": [
+        "battle_done",
+        "ch36_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch37_plain": {
+      "flags": [
+        "battle_done",
+        "ch37_plain_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch37_ridge": {
+      "flags": [
+        "battle_done",
+        "ch37_ridge_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch38_gate": {
+      "flags": [
+        "battle_done",
+        "ch38_gate_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch38_hall": {
+      "flags": [
+        "battle_done",
+        "ch38_hall_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch39_finale": {
+      "flags": [
+        "battle_done",
+        "ch39_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch40_mist": {
+      "flags": [
+        "battle_done",
+        "ch40_mist_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch40_ford": {
+      "flags": [
+        "battle_done",
+        "ch40_ford_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch41_cairn": {
+      "flags": [
+        "battle_done",
+        "ch41_cairn_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch41_vault": {
+      "flags": [
+        "battle_done",
+        "ch41_vault_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch42_seal": {
+      "flags": [
+        "battle_done",
+        "ch42_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch43_tide": {
+      "flags": [
+        "battle_done",
+        "ch43_tide_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch43_reef": {
+      "flags": [
+        "battle_done",
+        "ch43_reef_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch44_tower": {
+      "flags": [
+        "battle_done",
+        "ch44_tower_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch44_spire": {
+      "flags": [
+        "battle_done",
+        "ch44_spire_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch45_finale": {
+      "flags": [
+        "battle_done",
+        "ch45_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch46_ember": {
+      "flags": [
+        "battle_done",
+        "ch46_ember_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch46_ash": {
+      "flags": [
+        "battle_done",
+        "ch46_ash_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch47_crown": {
+      "flags": [
+        "battle_done",
+        "ch47_crown_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch47_hearth": {
+      "flags": [
+        "battle_done",
+        "ch47_hearth_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch48_seal": {
+      "flags": [
+        "battle_done",
+        "ch48_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch49_cinder": {
+      "flags": [
+        "battle_done",
+        "ch49_cinder_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch49_kiln": {
+      "flags": [
+        "battle_done",
+        "ch49_kiln_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch50_gate": {
+      "flags": [
+        "battle_done",
+        "ch50_gate_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch50_hall": {
+      "flags": [
+        "battle_done",
+        "ch50_hall_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch51_finale": {
+      "flags": [
+        "battle_done",
+        "ch51_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch52_dawn": {
+      "flags": [
+        "battle_done",
+        "ch52_dawn_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch52_bridge": {
+      "flags": [
+        "battle_done",
+        "ch52_bridge_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch53_mirror": {
+      "flags": [
+        "battle_done",
+        "ch53_mirror_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch53_isle": {
+      "flags": [
+        "battle_done",
+        "ch53_isle_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch54_seal": {
+      "flags": [
+        "battle_done",
+        "ch54_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch55_gale": {
+      "flags": [
+        "battle_done",
+        "ch55_gale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch55_pass": {
+      "flags": [
+        "battle_done",
+        "ch55_pass_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch56_court": {
+      "flags": [
+        "battle_done",
+        "ch56_court_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch56_throne": {
+      "flags": [
+        "battle_done",
+        "ch56_throne_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch57_finale": {
+      "flags": [
+        "battle_done",
+        "ch57_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch58_ember": {
+      "flags": [
+        "battle_done",
+        "ch58_ember_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch58_tide": {
+      "flags": [
+        "battle_done",
+        "ch58_tide_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch59_frost": {
+      "flags": [
+        "battle_done",
+        "ch59_frost_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch59_night": {
+      "flags": [
+        "battle_done",
+        "ch59_night_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch60_seal": {
+      "flags": [
+        "battle_done",
+        "ch60_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch61_ash": {
+      "flags": [
+        "battle_done",
+        "ch61_ash_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch61_banner": {
+      "flags": [
+        "battle_done",
+        "ch61_banner_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch62_court": {
+      "flags": [
+        "battle_done",
+        "ch62_court_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch62_throne": {
+      "flags": [
+        "battle_done",
+        "ch62_throne_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch63_finale": {
+      "flags": [
+        "battle_done",
+        "ch63_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch64_canal": {
+      "flags": [
+        "battle_done",
+        "ch64_canal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch64_bazaar": {
+      "flags": [
+        "battle_done",
+        "ch64_bazaar_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch65_bell": {
+      "flags": [
+        "battle_done",
+        "ch65_bell_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch65_mute": {
+      "flags": [
+        "battle_done",
+        "ch65_mute_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch66_wellseal": {
+      "flags": [
+        "battle_done",
+        "ch66_wellseal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch67_salt": {
+      "flags": [
+        "battle_done",
+        "ch67_salt_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch67_wharf": {
+      "flags": [
+        "battle_done",
+        "ch67_wharf_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch68_paper": {
+      "flags": [
+        "battle_done",
+        "ch68_paper_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch68_ink": {
+      "flags": [
+        "battle_done",
+        "ch68_ink_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch69_finale": {
+      "flags": [
+        "battle_done",
+        "ch69_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch70_kiln": {
+      "flags": [
+        "battle_done",
+        "ch70_kiln_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch70_sagger": {
+      "flags": [
+        "battle_done",
+        "ch70_sagger_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch71_glaze": {
+      "flags": [
+        "battle_done",
+        "ch71_glaze_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch71_bisque": {
+      "flags": [
+        "battle_done",
+        "ch71_bisque_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch72_kilnseal": {
+      "flags": [
+        "battle_done",
+        "ch72_kilnseal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch73_chimney": {
+      "flags": [
+        "battle_done",
+        "ch73_chimney_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch73_kilngod": {
+      "flags": [
+        "battle_done",
+        "ch73_kilngod_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch74_hearth": {
+      "flags": [
+        "battle_done",
+        "ch74_hearth_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch74_cool": {
+      "flags": [
+        "battle_done",
+        "ch74_cool_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch75_finale": {
+      "flags": [
+        "battle_done",
+        "ch75_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch76_stage": {
+      "flags": [
+        "battle_done",
+        "ch76_stage_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch76_gallery": {
+      "flags": [
+        "battle_done",
+        "ch76_gallery_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch77_check": {
+      "flags": [
+        "battle_done",
+        "ch77_check_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch77_drum": {
+      "flags": [
+        "battle_done",
+        "ch77_drum_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch78_playseal": {
+      "flags": [
+        "battle_done",
+        "ch78_playseal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch79_backstage": {
+      "flags": [
+        "battle_done",
+        "ch79_backstage_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch79_mirror": {
+      "flags": [
+        "battle_done",
+        "ch79_mirror_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch80_lamps": {
+      "flags": [
+        "battle_done",
+        "ch80_lamps_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch80_curtain": {
+      "flags": [
+        "battle_done",
+        "ch80_curtain_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch81_finale": {
+      "flags": [
+        "battle_done",
+        "ch81_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch82_mulberry": {
+      "flags": [
+        "battle_done",
+        "ch82_mulberry_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch82_cocoon": {
+      "flags": [
+        "battle_done",
+        "ch82_cocoon_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch83_reel": {
+      "flags": [
+        "battle_done",
+        "ch83_reel_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch83_loom": {
+      "flags": [
+        "battle_done",
+        "ch83_loom_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch84_silkseal": {
+      "flags": [
+        "battle_done",
+        "ch84_silkseal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch85_bake": {
+      "flags": [
+        "battle_done",
+        "ch85_bake_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch85_dye": {
+      "flags": [
+        "battle_done",
+        "ch85_dye_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch86_warp": {
+      "flags": [
+        "battle_done",
+        "ch86_warp_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch86_bolt": {
+      "flags": [
+        "battle_done",
+        "ch86_bolt_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch87_finale": {
+      "flags": [
+        "battle_done",
+        "ch87_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch88_terrace": {
+      "flags": [
+        "battle_done",
+        "ch88_terrace_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch88_heap": {
+      "flags": [
+        "battle_done",
+        "ch88_heap_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch89_steam": {
+      "flags": [
+        "battle_done",
+        "ch89_steam_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch89_roast": {
+      "flags": [
+        "battle_done",
+        "ch89_roast_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch90_teaseal": {
+      "flags": [
+        "battle_done",
+        "ch90_teaseal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch91_wither": {
+      "flags": [
+        "battle_done",
+        "ch91_wither_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch91_scent": {
+      "flags": [
+        "battle_done",
+        "ch91_scent_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch92_permit": {
+      "flags": [
+        "battle_done",
+        "ch92_permit_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch92_post": {
+      "flags": [
+        "battle_done",
+        "ch92_post_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch93_finale": {
+      "flags": [
+        "battle_done",
+        "ch93_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch94_herb": {
+      "flags": [
+        "battle_done",
+        "ch94_herb_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch94_mortar": {
+      "flags": [
+        "battle_done",
+        "ch94_mortar_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch95_clinic": {
+      "flags": [
+        "battle_done",
+        "ch95_clinic_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch95_store": {
+      "flags": [
+        "battle_done",
+        "ch95_store_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch96_dose": {
+      "flags": [
+        "battle_done",
+        "ch96_dose_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch97_decoct": {
+      "flags": [
+        "battle_done",
+        "ch97_decoct_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch97_point": {
+      "flags": [
+        "battle_done",
+        "ch97_point_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch98_canon": {
+      "flags": [
+        "battle_done",
+        "ch98_canon_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch98_gourd": {
+      "flags": [
+        "battle_done",
+        "ch98_gourd_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch99_finale": {
+      "flags": [
+        "battle_done",
+        "ch99_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch100_stable": {
+      "flags": [
+        "battle_done",
+        "ch100_stable_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch100_hoof": {
+      "flags": [
+        "battle_done",
+        "ch100_hoof_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch101_ring": {
+      "flags": [
+        "battle_done",
+        "ch101_ring_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch101_bit": {
+      "flags": [
+        "battle_done",
+        "ch101_bit_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch102_brand": {
+      "flags": [
+        "battle_done",
+        "ch102_brand_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch103_market": {
+      "flags": [
+        "battle_done",
+        "ch103_market_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch103_rein": {
+      "flags": [
+        "battle_done",
+        "ch103_rein_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch104_saddle": {
+      "flags": [
+        "battle_done",
+        "ch104_saddle_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch104_gallop": {
+      "flags": [
+        "battle_done",
+        "ch104_gallop_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch105_finale": {
+      "flags": [
+        "battle_done",
+        "ch105_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch106_qu": {
+      "flags": [
+        "battle_done",
+        "ch106_qu_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch106_cellar": {
+      "flags": [
+        "battle_done",
+        "ch106_cellar_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch107_mash": {
+      "flags": [
+        "battle_done",
+        "ch107_mash_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch107_banner": {
+      "flags": [
+        "battle_done",
+        "ch107_banner_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch108_seal": {
+      "flags": [
+        "battle_done",
+        "ch108_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch109_brew": {
+      "flags": [
+        "battle_done",
+        "ch109_brew_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch109_vat": {
+      "flags": [
+        "battle_done",
+        "ch109_vat_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch110_tap": {
+      "flags": [
+        "battle_done",
+        "ch110_tap_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch110_toast": {
+      "flags": [
+        "battle_done",
+        "ch110_toast_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch111_finale": {
+      "flags": [
+        "battle_done",
+        "ch111_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch112_yard": {
+      "flags": [
+        "battle_done",
+        "ch112_yard_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch112_road": {
+      "flags": [
+        "battle_done",
+        "ch112_road_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch113_camp": {
+      "flags": [
+        "battle_done",
+        "ch113_camp_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch113_pass": {
+      "flags": [
+        "battle_done",
+        "ch113_pass_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch114_seal": {
+      "flags": [
+        "battle_done",
+        "ch114_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch115_convoy": {
+      "flags": [
+        "battle_done",
+        "ch115_convoy_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch115_ambush": {
+      "flags": [
+        "battle_done",
+        "ch115_ambush_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch116_way": {
+      "flags": [
+        "battle_done",
+        "ch116_way_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch116_escort": {
+      "flags": [
+        "battle_done",
+        "ch116_escort_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch117_finale": {
+      "flags": [
+        "battle_done",
+        "ch117_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch118_pier": {
+      "flags": [
+        "battle_done",
+        "ch118_pier_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch118_net": {
+      "flags": [
+        "battle_done",
+        "ch118_net_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch119_tide": {
+      "flags": [
+        "battle_done",
+        "ch119_tide_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch119_reef": {
+      "flags": [
+        "battle_done",
+        "ch119_reef_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch120_seal": {
+      "flags": [
+        "battle_done",
+        "ch120_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch121_fishmarket": {
+      "flags": [
+        "battle_done",
+        "ch121_fishmarket_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch121_cable": {
+      "flags": [
+        "battle_done",
+        "ch121_cable_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch122_wharf": {
+      "flags": [
+        "battle_done",
+        "ch122_wharf_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch122_beacon": {
+      "flags": [
+        "battle_done",
+        "ch122_beacon_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch123_finale": {
+      "flags": [
+        "battle_done",
+        "ch123_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch124_mill": {
+      "flags": [
+        "battle_done",
+        "ch124_mill_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch124_pulp": {
+      "flags": [
+        "battle_done",
+        "ch124_pulp_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch125_screen": {
+      "flags": [
+        "battle_done",
+        "ch125_screen_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch125_dry": {
+      "flags": [
+        "battle_done",
+        "ch125_dry_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch126_seal": {
+      "flags": [
+        "battle_done",
+        "ch126_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch127_press": {
+      "flags": [
+        "battle_done",
+        "ch127_press_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch127_ink": {
+      "flags": [
+        "battle_done",
+        "ch127_ink_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch128_archive": {
+      "flags": [
+        "battle_done",
+        "ch128_archive_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch128_edict": {
+      "flags": [
+        "battle_done",
+        "ch128_edict_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch129_finale": {
+      "flags": [
+        "battle_done",
+        "ch129_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch130_forge": {
+      "flags": [
+        "battle_done",
+        "ch130_forge_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch130_ore": {
+      "flags": [
+        "battle_done",
+        "ch130_ore_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch131_anvil": {
+      "flags": [
+        "battle_done",
+        "ch131_anvil_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch131_mold": {
+      "flags": [
+        "battle_done",
+        "ch131_mold_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch132_seal": {
+      "flags": [
+        "battle_done",
+        "ch132_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch133_copmarket": {
+      "flags": [
+        "battle_done",
+        "ch133_copmarket_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch133_slag": {
+      "flags": [
+        "battle_done",
+        "ch133_slag_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch134_armory": {
+      "flags": [
+        "battle_done",
+        "ch134_armory_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch134_plate": {
+      "flags": [
+        "battle_done",
+        "ch134_plate_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch135_finale": {
+      "flags": [
+        "battle_done",
+        "ch135_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch136_street": {
+      "flags": [
+        "battle_done",
+        "ch136_street_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch136_wick": {
+      "flags": [
+        "battle_done",
+        "ch136_wick_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch137_booth": {
+      "flags": [
+        "battle_done",
+        "ch137_booth_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch137_oil": {
+      "flags": [
+        "battle_done",
+        "ch137_oil_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch138_seal": {
+      "flags": [
+        "battle_done",
+        "ch138_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch139_fair": {
+      "flags": [
+        "battle_done",
+        "ch139_fair_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch139_oilroad": {
+      "flags": [
+        "battle_done",
+        "ch139_oilroad_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch140_tower": {
+      "flags": [
+        "battle_done",
+        "ch140_tower_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch140_vigil": {
+      "flags": [
+        "battle_done",
+        "ch140_vigil_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch141_finale": {
+      "flags": [
+        "battle_done",
+        "ch141_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch142_silo": {
+      "flags": [
+        "battle_done",
+        "ch142_silo_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch142_mill": {
+      "flags": [
+        "battle_done",
+        "ch142_mill_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch143_barn": {
+      "flags": [
+        "battle_done",
+        "ch143_barn_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch143_scale": {
+      "flags": [
+        "battle_done",
+        "ch143_scale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch144_seal": {
+      "flags": [
+        "battle_done",
+        "ch144_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch145_open": {
+      "flags": [
+        "battle_done",
+        "ch145_open_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch145_canal": {
+      "flags": [
+        "battle_done",
+        "ch145_canal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch146_charity": {
+      "flags": [
+        "battle_done",
+        "ch146_charity_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch146_guard": {
+      "flags": [
+        "battle_done",
+        "ch146_guard_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch147_finale": {
+      "flags": [
+        "battle_done",
+        "ch147_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch148_lodge": {
+      "flags": [
+        "battle_done",
+        "ch148_lodge_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch148_trail": {
+      "flags": [
+        "battle_done",
+        "ch148_trail_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch149_icehouse": {
+      "flags": [
+        "battle_done",
+        "ch149_icehouse_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch149_warm": {
+      "flags": [
+        "battle_done",
+        "ch149_warm_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch150_seal": {
+      "flags": [
+        "battle_done",
+        "ch150_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch151_snowfair": {
+      "flags": [
+        "battle_done",
+        "ch151_snowfair_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch151_charcoal": {
+      "flags": [
+        "battle_done",
+        "ch151_charcoal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch152_inn": {
+      "flags": [
+        "battle_done",
+        "ch152_inn_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch152_hold": {
+      "flags": [
+        "battle_done",
+        "ch152_hold_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch153_finale": {
+      "flags": [
+        "battle_done",
+        "ch153_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch154_sea": {
+      "flags": [
+        "battle_done",
+        "ch154_sea_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch154_path": {
+      "flags": [
+        "battle_done",
+        "ch154_path_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch155_market": {
+      "flags": [
+        "battle_done",
+        "ch155_market_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch155_tower": {
+      "flags": [
+        "battle_done",
+        "ch155_tower_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch156_seal": {
+      "flags": [
+        "battle_done",
+        "ch156_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch157_grove": {
+      "flags": [
+        "battle_done",
+        "ch157_grove_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch157_raft": {
+      "flags": [
+        "battle_done",
+        "ch157_raft_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch158_altar": {
+      "flags": [
+        "battle_done",
+        "ch158_altar_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch158_watch": {
+      "flags": [
+        "battle_done",
+        "ch158_watch_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch159_finale": {
+      "flags": [
+        "battle_done",
+        "ch159_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch160_post": {
+      "flags": [
+        "battle_done",
+        "ch160_post_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch160_swap": {
+      "flags": [
+        "battle_done",
+        "ch160_swap_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch161_express": {
+      "flags": [
+        "battle_done",
+        "ch161_express_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch161_token": {
+      "flags": [
+        "battle_done",
+        "ch161_token_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch162_seal": {
+      "flags": [
+        "battle_done",
+        "ch162_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch163_market": {
+      "flags": [
+        "battle_done",
+        "ch163_market_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch163_relayroad": {
+      "flags": [
+        "battle_done",
+        "ch163_relayroad_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch164_nightpost": {
+      "flags": [
+        "battle_done",
+        "ch164_nightpost_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch164_guardpost": {
+      "flags": [
+        "battle_done",
+        "ch164_guardpost_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch165_finale": {
+      "flags": [
+        "battle_done",
+        "ch165_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch166_belltower": {
+      "flags": [
+        "battle_done",
+        "ch166_belltower_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch166_drum": {
+      "flags": [
+        "battle_done",
+        "ch166_drum_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch167_watchbell": {
+      "flags": [
+        "battle_done",
+        "ch167_watchbell_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch167_square": {
+      "flags": [
+        "battle_done",
+        "ch167_square_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch168_seal": {
+      "flags": [
+        "battle_done",
+        "ch168_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch169_fair": {
+      "flags": [
+        "battle_done",
+        "ch169_fair_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch169_echo": {
+      "flags": [
+        "battle_done",
+        "ch169_echo_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch170_strike": {
+      "flags": [
+        "battle_done",
+        "ch170_strike_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch170_nightwatch": {
+      "flags": [
+        "battle_done",
+        "ch170_nightwatch_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch171_finale": {
+      "flags": [
+        "battle_done",
+        "ch171_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch172_alley": {
+      "flags": [
+        "battle_done",
+        "ch172_alley_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch172_eaves": {
+      "flags": [
+        "battle_done",
+        "ch172_eaves_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch173_umbrella": {
+      "flags": [
+        "battle_done",
+        "ch173_umbrella_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch173_drain": {
+      "flags": [
+        "battle_done",
+        "ch173_drain_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch174_seal": {
+      "flags": [
+        "battle_done",
+        "ch174_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch175_market": {
+      "flags": [
+        "battle_done",
+        "ch175_market_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch175_gutter": {
+      "flags": [
+        "battle_done",
+        "ch175_gutter_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch176_shelter": {
+      "flags": [
+        "battle_done",
+        "ch176_shelter_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch176_hold": {
+      "flags": [
+        "battle_done",
+        "ch176_hold_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch177_finale": {
+      "flags": [
+        "battle_done",
+        "ch177_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch178_quarry": {
+      "flags": [
+        "battle_done",
+        "ch178_quarry_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch178_inkwell": {
+      "flags": [
+        "battle_done",
+        "ch178_inkwell_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch179_desk": {
+      "flags": [
+        "battle_done",
+        "ch179_desk_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch179_sealroom": {
+      "flags": [
+        "battle_done",
+        "ch179_sealroom_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch180_seal": {
+      "flags": [
+        "battle_done",
+        "ch180_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch181_market": {
+      "flags": [
+        "battle_done",
+        "ch181_market_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch181_grind": {
+      "flags": [
+        "battle_done",
+        "ch181_grind_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch182_press": {
+      "flags": [
+        "battle_done",
+        "ch182_press_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch182_vault": {
+      "flags": [
+        "battle_done",
+        "ch182_vault_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch183_finale": {
+      "flags": [
+        "battle_done",
+        "ch183_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch184_hive": {
+      "flags": [
+        "battle_done",
+        "ch184_hive_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch184_meadow": {
+      "flags": [
+        "battle_done",
+        "ch184_meadow_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch185_smoker": {
+      "flags": [
+        "battle_done",
+        "ch185_smoker_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch185_comb": {
+      "flags": [
+        "battle_done",
+        "ch185_comb_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch186_seal": {
+      "flags": [
+        "battle_done",
+        "ch186_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch187_fair": {
+      "flags": [
+        "battle_done",
+        "ch187_fair_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch187_swarm": {
+      "flags": [
+        "battle_done",
+        "ch187_swarm_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch188_queen": {
+      "flags": [
+        "battle_done",
+        "ch188_queen_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch188_guard": {
+      "flags": [
+        "battle_done",
+        "ch188_guard_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch189_finale": {
+      "flags": [
+        "battle_done",
+        "ch189_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch190_tower": {
+      "flags": [
+        "battle_done",
+        "ch190_tower_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch190_gallery": {
+      "flags": [
+        "battle_done",
+        "ch190_gallery_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch191_echo": {
+      "flags": [
+        "battle_done",
+        "ch191_echo_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch191_stage": {
+      "flags": [
+        "battle_done",
+        "ch191_stage_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch192_seal": {
+      "flags": [
+        "battle_done",
+        "ch192_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch193_fair": {
+      "flags": [
+        "battle_done",
+        "ch193_fair_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch193_score": {
+      "flags": [
+        "battle_done",
+        "ch193_score_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch194_solo": {
+      "flags": [
+        "battle_done",
+        "ch194_solo_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch194_night": {
+      "flags": [
+        "battle_done",
+        "ch194_night_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch195_finale": {
+      "flags": [
+        "battle_done",
+        "ch195_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch196_screen": {
+      "flags": [
+        "battle_done",
+        "ch196_screen_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch196_booth": {
+      "flags": [
+        "battle_done",
+        "ch196_booth_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch197_lamp": {
+      "flags": [
+        "battle_done",
+        "ch197_lamp_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch197_backstage": {
+      "flags": [
+        "battle_done",
+        "ch197_backstage_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch198_seal": {
+      "flags": [
+        "battle_done",
+        "ch198_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch199_fair": {
+      "flags": [
+        "battle_done",
+        "ch199_fair_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch199_box": {
+      "flags": [
+        "battle_done",
+        "ch199_box_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch200_solo": {
+      "flags": [
+        "battle_done",
+        "ch200_solo_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch200_night": {
+      "flags": [
+        "battle_done",
+        "ch200_night_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch201_finale": {
+      "flags": [
+        "battle_done",
+        "ch201_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch202_flat": {
+      "flags": [
+        "battle_done",
+        "ch202_flat_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch202_canal": {
+      "flags": [
+        "battle_done",
+        "ch202_canal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch203_pile": {
+      "flags": [
+        "battle_done",
+        "ch203_pile_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch203_pan": {
+      "flags": [
+        "battle_done",
+        "ch203_pan_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch204_seal": {
+      "flags": [
+        "battle_done",
+        "ch204_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch205_fair": {
+      "flags": [
+        "battle_done",
+        "ch205_fair_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch205_rack": {
+      "flags": [
+        "battle_done",
+        "ch205_rack_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch206_solo": {
+      "flags": [
+        "battle_done",
+        "ch206_solo_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch206_night": {
+      "flags": [
+        "battle_done",
+        "ch206_night_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch207_finale": {
+      "flags": [
+        "battle_done",
+        "ch207_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch208_yard": {
+      "flags": [
+        "battle_done",
+        "ch208_yard_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch208_vat": {
+      "flags": [
+        "battle_done",
+        "ch208_vat_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch209_rack": {
+      "flags": [
+        "battle_done",
+        "ch209_rack_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch209_press": {
+      "flags": [
+        "battle_done",
+        "ch209_press_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch210_seal": {
+      "flags": [
+        "battle_done",
+        "ch210_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch211_fair": {
+      "flags": [
+        "battle_done",
+        "ch211_fair_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch211_loom": {
+      "flags": [
+        "battle_done",
+        "ch211_loom_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch212_solo": {
+      "flags": [
+        "battle_done",
+        "ch212_solo_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch212_night": {
+      "flags": [
+        "battle_done",
+        "ch212_night_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch213_finale": {
+      "flags": [
+        "battle_done",
+        "ch213_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch214_tower": {
+      "flags": [
+        "battle_done",
+        "ch214_tower_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch214_gallery": {
+      "flags": [
+        "battle_done",
+        "ch214_gallery_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch215_beat": {
+      "flags": [
+        "battle_done",
+        "ch215_beat_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch215_night": {
+      "flags": [
+        "battle_done",
+        "ch215_night_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch216_seal": {
+      "flags": [
+        "battle_done",
+        "ch216_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch217_fair": {
+      "flags": [
+        "battle_done",
+        "ch217_fair_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch217_rack": {
+      "flags": [
+        "battle_done",
+        "ch217_rack_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch218_solo": {
+      "flags": [
+        "battle_done",
+        "ch218_solo_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch218_night": {
+      "flags": [
+        "battle_done",
+        "ch218_night_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch219_finale": {
+      "flags": [
+        "battle_done",
+        "ch219_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch220_market": {
+      "flags": [
+        "battle_done",
+        "ch220_market_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch220_hall": {
+      "flags": [
+        "battle_done",
+        "ch220_hall_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch221_smoke": {
+      "flags": [
+        "battle_done",
+        "ch221_smoke_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch221_ash": {
+      "flags": [
+        "battle_done",
+        "ch221_ash_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch222_seal": {
+      "flags": [
+        "battle_done",
+        "ch222_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch223_fair": {
+      "flags": [
+        "battle_done",
+        "ch223_fair_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch223_rack": {
+      "flags": [
+        "battle_done",
+        "ch223_rack_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch224_solo": {
+      "flags": [
+        "battle_done",
+        "ch224_solo_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch224_night": {
+      "flags": [
+        "battle_done",
+        "ch224_night_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch225_finale": {
+      "flags": [
+        "battle_done",
+        "ch225_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch226_flat": {
+      "flags": [
+        "battle_done",
+        "ch226_flat_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch226_channel": {
+      "flags": [
+        "battle_done",
+        "ch226_channel_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch227_reef": {
+      "flags": [
+        "battle_done",
+        "ch227_reef_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch227_night": {
+      "flags": [
+        "battle_done",
+        "ch227_night_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch228_seal": {
+      "flags": [
+        "battle_done",
+        "ch228_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch229_fair": {
+      "flags": [
+        "battle_done",
+        "ch229_fair_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch229_rack": {
+      "flags": [
+        "battle_done",
+        "ch229_rack_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch230_solo": {
+      "flags": [
+        "battle_done",
+        "ch230_solo_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch230_night": {
+      "flags": [
+        "battle_done",
+        "ch230_night_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch231_finale": {
+      "flags": [
+        "battle_done",
+        "ch231_finale_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch232_yard": {
+      "flags": [
+        "battle_done",
+        "ch232_yard_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch232_kiln": {
+      "flags": [
+        "battle_done",
+        "ch232_kiln_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch233_glaze": {
+      "flags": [
+        "battle_done",
+        "ch233_glaze_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch233_shelf": {
+      "flags": [
+        "battle_done",
+        "ch233_shelf_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    },
+    "ch234_seal": {
+      "flags": [
+        "battle_done",
+        "ch234_seal_done"
+      ],
+      "silver": 35,
+      "skill_points": 1,
+      "rep": {
+        "ashland": 8
+      },
+      "actions": [],
+      "unlocks": []
+    }
+  }
+}
