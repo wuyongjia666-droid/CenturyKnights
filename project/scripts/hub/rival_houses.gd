@@ -41,10 +41,9 @@ func _ready() -> void:
 	var tip = UIKit.make_dim_label("十国各有一家。图谋写在朝堂年历上，使馆可以反制。")
 	tip.position = Vector2(40, 56)
 	add_child(tip)
-	var left = UIKit.make_panel()
+	var left = _frost_panel()
 	left.name = "RivalList"
 	left.position = Vector2(40, 100)
-	left.custom_minimum_size = Vector2(360, 500)
 	left.size = Vector2(360, 500)
 	add_child(left)
 	_left = left
@@ -58,11 +57,11 @@ func _ready() -> void:
 	_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_list.custom_minimum_size = Vector2(320, 0)
 	scroll.add_child(_list)
-	var right = UIKit.make_panel()
+	var right = _frost_panel()
 	right.name = "RivalDetail"
 	right.position = Vector2(420, 100)
-	right.custom_minimum_size = Vector2(820, 500)
 	right.size = Vector2(820, 500)
+	right.z_index = 2
 	add_child(right)
 	_right = right
 	var detail := VBoxContainer.new()
@@ -100,31 +99,90 @@ func _ready() -> void:
 	_refresh()
 	UIFX.stagger_children(_list, 0.05, 0.22)
 	UIFX.wire_tree(self)
+	apply_mobile_layout()
+
+func _frost_panel() -> Panel:
+	var p := Panel.new()
+	p.mouse_filter = Control.MOUSE_FILTER_STOP
+	p.clip_contents = true
+	var sb := UIKit.glass(12, 0.98, true)
+	sb.shadow_size = 8
+	sb.content_margin_left = 0
+	sb.content_margin_right = 0
+	sb.content_margin_top = 0
+	sb.content_margin_bottom = 0
+	p.add_theme_stylebox_override("panel", sb)
+	var mask := ColorRect.new()
+	mask.name = "FrostMask"
+	mask.mouse_filter = Control.MOUSE_FILTER_STOP
+	mask.color = Color(UIKit.BG, 0.82)
+	var shader_path := "res://shaders/frost_mask.gdshader"
+	if ResourceLoader.exists(shader_path):
+		var mat := ShaderMaterial.new()
+		mat.shader = load(shader_path)
+		mask.material = mat
+	p.add_child(mask)
+	var fill := ColorRect.new()
+	fill.name = "FrostFill"
+	fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	fill.color = Color(UIKit.PANEL, 0.96)
+	p.add_child(fill)
+	return p
+
+func _sync_frost(p: Control) -> void:
+	if p == null:
+		return
+	for nm in ["FrostMask", "FrostFill"]:
+		var c := p.get_node_or_null(nm) as Control
+		if c == null:
+			continue
+		c.position = Vector2.ZERO
+		c.size = p.size
 
 func apply_mobile_layout() -> void:
-	var w := get_viewport_rect().size.x
-	if _left == null or _right == null or w >= 1000:
-		MobileLayout.pin_footer(get_node_or_null("StitchFooter"))
+	if _left == null or _right == null:
 		return
-	_left.clip_contents = true
-	_left.position = Vector2(12, 88)
-	_left.size = Vector2(w - 24, 168)
-	_left.custom_minimum_size = Vector2(w - 24, 168)
-	if _left.get_child_count() > 0:
-		var sc := _left.get_child(0) as Control
-		sc.position = Vector2(8, 8)
-		sc.size = Vector2(w - 40, 152)
-		sc.custom_minimum_size = sc.size
-	var h := get_viewport_rect().size.y
-	_right.position = Vector2(12, 264)
-	_right.size = Vector2(w - 24, maxf(220.0, h - 352.0))
-	_right.custom_minimum_size = _right.size
-	if _back != null:
-		_back.position = Vector2(12, h - 72)
-	if _inh != null:
-		_inh.position = Vector2(140, h - 72)
-	_body.custom_minimum_size = Vector2(0, 72)
-	MobileLayout.pin_footer(get_node_or_null("StitchFooter"))
+	var vp := get_viewport_rect().size
+	var wide := vp.x >= 1100.0 and vp.y >= 680.0
+	if wide:
+		_left.position = Vector2(40, 100)
+		_left.size = Vector2(360, 500)
+		_right.position = Vector2(420, 100)
+		_right.size = Vector2(820, 500)
+		if _back:
+			_back.position = Vector2(40, 640)
+		if _inh:
+			_inh.position = Vector2(180, 640)
+		_msg.position = Vector2(40, 612)
+		_msg.size = Vector2(780, 22)
+	else:
+		var margin := 12.0
+		var list_h := 132.0
+		_left.position = Vector2(margin, 88)
+		_left.size = Vector2(vp.x - margin * 2.0, list_h)
+		var btn_y := vp.y - 52.0
+		_right.position = Vector2(margin, 88.0 + list_h + 8.0)
+		_right.size = Vector2(_left.size.x, maxf(96.0, btn_y - 8.0 - _right.position.y))
+		if _back:
+			_back.position = Vector2(margin, btn_y)
+		if _inh:
+			_inh.position = Vector2(margin + 132.0, btn_y)
+		_msg.position = Vector2(margin, btn_y - 22.0)
+		_msg.size = Vector2(maxf(80.0, vp.x - margin * 2.0), 20)
+		_msg.clip_text = true
+	_place_inner(_left, 12.0)
+	_place_inner(_right, 12.0)
+	_sync_frost(_left)
+	_sync_frost(_right)
+
+func _place_inner(panel: Control, pad: float) -> void:
+	var inner := Vector2(maxf(40.0, panel.size.x - pad * 2.0), maxf(40.0, panel.size.y - pad * 2.0))
+	for ch in panel.get_children():
+		if str(ch.name) == "FrostMask" or str(ch.name) == "FrostFill":
+			continue
+		if ch is Control:
+			(ch as Control).position = Vector2(pad, pad)
+			(ch as Control).size = inner
 
 func _refresh() -> void:
 	for c in _list.get_children():

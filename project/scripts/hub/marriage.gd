@@ -23,6 +23,10 @@ var _marry_btn: Button
 var _rite_on: Dictionary = {}
 var _rite_board: Control
 var _punnett: Control
+var _narrow := false
+var _rect_principal := Rect2(42, 244, 386, 252)
+var _rect_harmony := Rect2(448, 244, 384, 264)
+var _rect_spouse := Rect2(852, 244, 386, 252)
 
 func _ready() -> void:
 	UIFX.fade_in(self, 0.3)
@@ -89,6 +93,7 @@ func _build() -> void:
 	_punnett = UIKit.panel_at(self, Rect2(654, 508, 584, 148), 10)
 	_punnett.name = "PunnettBoard"
 	_msg = UIKit.body_label("选定婚仪后，这里写明子女会怎样入谱。", UIKit.TEXT_DIM, 12)
+	_msg.name = "RiteExplain"
 	_msg.autowrap_mode = TextServer.AUTOWRAP_OFF
 	_msg.clip_text = true
 	_msg.position = Vector2(12, 80)
@@ -153,6 +158,7 @@ func _build() -> void:
 	_vow_actions.add_theme_constant_override("separation", 10)
 	vp.add_child(_vow_actions)
 	UIFX.page_enter(self)
+	apply_mobile_layout()
 
 func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("ui_cancel"):
@@ -210,30 +216,42 @@ func _house_card(rect: Rect2, c: CKCharacter, side_tag: String, side_en: String,
 	head.add_child(se)
 	if c == null:
 		return
+	var compact := rect.size.y < 230.0
 	var plate := Rect2(14, 36, 120, 128)
+	if compact:
+		plate = Rect2(10, 34, 72, maxf(56.0, footer_y - 42.0))
 	UIKit.portrait_plate(p, plate, c, "FROST")
-	var nm := UIKit.title_label(c.name, 15)
-	nm.name = "CardName"
-	nm.add_theme_font_override("font", UIKit.font("bold"))
-	nm.position = Vector2(10, plate.end.y + 4)
-	nm.size = Vector2(128, 20)
-	nm.clip_text = true
-	nm.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	p.add_child(nm)
-	var sub := UIKit.body_label("%d岁 · %s" % [c.age, GameState.get_job(c.job_id).get("name", "")], col, 11)
-	sub.name = "AgeLine"
-	sub.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	sub.clip_text = true
-	sub.position = Vector2(10, plate.end.y + 24)
-	sub.size = Vector2(128, 32)
-	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	p.add_child(sub)
+	if not compact:
+		var nm := UIKit.title_label(c.name, 15)
+		nm.name = "CardName"
+		nm.add_theme_font_override("font", UIKit.font("bold"))
+		nm.position = Vector2(10, plate.end.y + 4)
+		nm.size = Vector2(128, 20)
+		nm.clip_text = true
+		nm.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		p.add_child(nm)
+		var sub := UIKit.body_label("%d岁 · %s" % [c.age, GameState.get_job(c.job_id).get("name", "")], col, 11)
+		sub.name = "AgeLine"
+		sub.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		sub.clip_text = true
+		sub.position = Vector2(10, plate.end.y + 24)
+		sub.size = Vector2(128, 32)
+		sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		p.add_child(sub)
+	var text_x := plate.end.x + 8.0
 	var v := VBoxContainer.new()
-	v.position = Vector2(150, 36)
-	v.size = Vector2(rect.size.x - 164, footer_y - 44)
+	v.position = Vector2(text_x, 36)
+	v.size = Vector2(maxf(40.0, rect.size.x - text_x - 10.0), maxf(24.0, footer_y - 44.0))
 	v.clip_contents = true
-	v.add_theme_constant_override("separation", 2)
+	v.add_theme_constant_override("separation", 6 if compact else 2)
 	p.add_child(v)
+	if compact:
+		var age := UIKit.body_label(Locale.t("marriage_compact_who", [c.name, c.age]), UIKit.TEXT, 12)
+		age.name = "AgeLine"
+		age.autowrap_mode = TextServer.AUTOWRAP_OFF
+		age.clip_text = true
+		age.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		v.add_child(age)
 	var ln := UIKit.body_label("%s旗 · %s" % [GameState.surname if c.is_leader else str(c.name).substr(0, 1), "家主" if c.is_leader else "应帖者"], UIKit.TEXT, 13)
 	ln.autowrap_mode = TextServer.AUTOWRAP_OFF
 	ln.clip_text = true
@@ -294,36 +312,45 @@ func _harmony_card(rect: Rect2, a: CKCharacter, b: CKCharacter) -> void:
 		hi = maxf(hi, float(ex.apt_max[sk]))
 	var pct := clampi(int(round(mids / CKCharacter.STAT_KEYS.size() / maxf(hi, 12.0) * 100.0)), 1, 99)
 	_grade.text = "●  子嗣资质评级  %s" % ("S" if pct >= 85 else ("A" if pct >= 70 else ("B" if pct >= 55 else "C")))
+	var compact := rect.size.y < 230.0
 	var lab := UIKit.body_label("子嗣期望 · 资质共鸣指标", UIKit.TEXT_DIM, 12)
 	lab.autowrap_mode = TextServer.AUTOWRAP_OFF
 	lab.clip_text = true
-	lab.position = Vector2(8, 32)
-	lab.size = Vector2(rect.size.x - 16, 36)
+	lab.position = Vector2(8, 28 if compact else 32)
+	lab.size = Vector2(rect.size.x - 16, 18 if compact else 36)
 	lab.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	p.add_child(lab)
 	var big := Label.new()
 	big.text = "%d" % pct
 	big.add_theme_font_override("font", UIKit.font("mono"))
-	big.add_theme_font_size_override("font_size", 36)
+	big.add_theme_font_size_override("font_size", 22 if compact else 36)
 	big.add_theme_color_override("font_color", UIKit.ACCENT)
 	p.add_child(big)
 	var bw := big.get_minimum_size()
-	big.position = Vector2((rect.size.x - bw.x) * 0.5 - 8, 70)
+	var big_y := 48.0 if compact else 70.0
+	big.position = Vector2((rect.size.x - bw.x) * 0.5 - 8, big_y)
 	big.size = bw
 	var pc := UIKit.mono("%", 14, UIKit.ACCENT, false)
-	pc.position = Vector2(big.position.x + bw.x + 4, 70 + 36)
+	pc.position = Vector2(big.position.x + bw.x + 4, big_y + (22.0 if compact else 36.0))
 	p.add_child(pc)
-	var bar := UIKit.slim_bar(pct, 100, UIKit.ACCENT, 160, 3)
-	bar.position = Vector2((rect.size.x - 160) * 0.5, 168)
-	p.add_child(bar)
-	var rk := UIKit.mono("RANK // %s" % CKCharacter.RANK_NAMES.get(ex.rank_hint, ex.rank_hint), 9, UIKit.TEXT_FAINT, false)
-	rk.clip_text = true
-	rk.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	rk.position = Vector2(8, 176)
-	rk.size = Vector2(rect.size.x - 16, 24)
-	p.add_child(rk)
-	# inheritance preview: top-3 traits
-	var ib := UIKit.panel_at(p, Rect2(16, 198, rect.size.x - 32, 60), 6)
+	var preview_y := 198.0
+	var preview_h := 60.0
+	if compact:
+		preview_h = minf(52.0, maxf(36.0, rect.size.y * 0.34))
+		preview_y = rect.size.y - preview_h - 6.0
+	else:
+		var bar := UIKit.slim_bar(pct, 100, UIKit.ACCENT, 160, 3)
+		bar.position = Vector2((rect.size.x - 160) * 0.5, 168)
+		p.add_child(bar)
+		var rk := UIKit.mono("RANK // %s" % CKCharacter.RANK_NAMES.get(ex.rank_hint, ex.rank_hint), 9, UIKit.TEXT_FAINT, false)
+		rk.clip_text = true
+		rk.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		rk.position = Vector2(8, 176)
+		rk.size = Vector2(rect.size.x - 16, 20)
+		p.add_child(rk)
+	var ib := UIKit.panel_at(p, Rect2(8, preview_y, rect.size.x - 16, preview_h), 6)
+	ib.name = "HeirPreview"
+	ib.clip_contents = true
 	var it := UIKit.body_label("后代遗传特质推演", UIKit.TEXT_DIM, 11)
 	it.autowrap_mode = TextServer.AUTOWRAP_OFF
 	it.clip_text = true
@@ -332,7 +359,7 @@ func _harmony_card(rect: Rect2, a: CKCharacter, b: CKCharacter) -> void:
 	it.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	ib.add_child(it)
 	var tp: Array = ex.trait_probs.slice(0, 3)
-	var cw := (rect.size.x - 32 - 24 - 16) / 3.0
+	var cw := maxf(28.0, (ib.size.x - 36.0) / 3.0)
 	for i in tp.size():
 		var chip := UIKit.panel_at(ib, Rect2(12 + i * (cw + 8), 24, cw, 32), 4)
 		var cs: StyleBoxFlat = chip.get_theme_stylebox("panel").duplicate()
@@ -357,9 +384,9 @@ func _render_cards() -> void:
 		_cards.remove_child(c)
 		c.queue_free()
 	var leader = GameState.get_leader()
-	_house_card(Rect2(42, 244, 386, 252), leader, "宗主一方", "CLAN PRINCIPAL", UIKit.ACCENT, "SERIES: VII-01")
-	_harmony_card(Rect2(448, 244, 384, 264), leader, _selected)
-	_house_card(Rect2(852, 244, 386, 252), _selected, "应帖一方", "ALLIED SPOUSE", UIKit.OK, "SERIES: IV-02")
+	_house_card(_rect_principal, leader, "宗主一方", "CLAN PRINCIPAL", UIKit.ACCENT, "SERIES: VII-01")
+	_harmony_card(_rect_harmony, leader, _selected)
+	_house_card(_rect_spouse, _selected, "应帖一方", "ALLIED SPOUSE", UIKit.OK, "SERIES: IV-02")
 	_fill_forecast(leader, _selected)
 
 func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
@@ -378,14 +405,20 @@ func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 	_rite_board.add_child(cap)
 	_sync_rite_flags(a, b)
 	var rites: Array = CKCourt.required_rites(a, b) if a != null and b != null else []
+	var row_y := 32.0
 	if not rites.is_empty():
 		var x := 12.0
+		var btn_w := 136.0 if _rite_board.size.x >= 560.0 else 108.0
+		var step := btn_w + 8.0
 		for r in rites:
 			var id := str(r.get("id", ""))
 			var on := bool(_rite_on.get(id, true))
-			var btn := UIKit.ghost_button("%s %s" % ["✓" if on else "○", str(r.get("name", id))], 136, 44)
+			var btn := UIKit.ghost_button("%s %s" % ["✓" if on else "○", str(r.get("name", id))], btn_w, 40)
 			btn.name = "Rite_" + id
-			btn.position = Vector2(x, 32)
+			if x + btn_w > _rite_board.size.x - 8.0 and x > 12.0:
+				x = 12.0
+				row_y += 44.0
+			btn.position = Vector2(x, row_y)
 			btn.tooltip_text = "%s\n若不接受：%s" % [str(r.get("desc", "")), str(r.get("block", ""))]
 			var captured := id
 			btn.pressed.connect(func():
@@ -395,41 +428,158 @@ func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 					Sfx.play("frost_crackle")
 				_fill_forecast(GameState.get_leader(), _selected))
 			_rite_board.add_child(btn)
-			x += 144.0
+			x += step
 	_consequence_line(a, b)
+	if _narrow:
+		_msg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_msg.position = Vector2(8, row_y + 44.0)
+		_msg.size = Vector2(maxf(40.0, _rite_board.size.x - 16.0), maxf(16.0, _rite_board.size.y - _msg.position.y - 6.0))
+	else:
+		_msg.autowrap_mode = TextServer.AUTOWRAP_OFF
+		_msg.position = Vector2(12, 80)
+		_msg.size = Vector2(minf(576.0, _rite_board.size.x - 24.0), 22)
 	var ph := UIKit.mono("PUNNETT // 每项性状", 9, UIKit.TEXT_FAINT)
 	ph.clip_text = true
 	ph.position = Vector2(12, 6)
 	ph.size = Vector2(240, 16)
 	_punnett.add_child(ph)
+	_punnett.clip_contents = true
+	_rite_board.clip_contents = true
 	var holder := VBoxContainer.new()
+	var hold_w := maxf(80.0, _punnett.size.x - 24.0)
+	var hold_h := 70.0 if _punnett.size.y >= 140.0 else maxf(28.0, _punnett.size.y - 50.0)
 	holder.position = Vector2(12, 22)
-	holder.size = Vector2(560, 70)
+	holder.size = Vector2(hold_w, hold_h)
 	holder.clip_contents = true
 	_punnett.add_child(holder)
 	CKCourtChrome.fill_punnett(holder, a, b, 2)
 	var cast := UIKit.body_label(str(CKFamilyState.combat_expectation(a, b).get("line", "")), UIKit.ACCENT, 12)
 	cast.name = "CombatForecast"
-	cast.autowrap_mode = TextServer.AUTOWRAP_OFF
 	cast.clip_text = true
-	cast.position = Vector2(12, 108)
-	cast.size = Vector2(560, 28)
+	if _punnett.size.y >= 140.0:
+		cast.autowrap_mode = TextServer.AUTOWRAP_OFF
+		cast.position = Vector2(12, 108)
+		cast.size = Vector2(560, 28)
+	else:
+		cast.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		cast.position = Vector2(8, holder.position.y + holder.size.y + 2.0)
+		cast.size = Vector2(hold_w, maxf(16.0, _punnett.size.y - cast.position.y - 4.0))
 	_punnett.add_child(cast)
 	UIFX.wire_tree(_rite_board)
 
 func apply_mobile_layout() -> void:
-	MobileLayout.pin_footer(get_node_or_null("StitchFooter"))
-	if _punnett == null:
+	var vp := get_viewport_rect().size
+	_fit_chrome(vp)
+	if _punnett == null or _rite_board == null:
 		return
-	var w := get_viewport_rect().size.x
-	if w >= 1000.0:
+	var wide := vp.x >= 1100.0 and vp.y >= 680.0
+	_narrow = not wide
+	if wide:
+		_rect_principal = Rect2(42, 244, 386, 252)
+		_rect_harmony = Rect2(448, 244, 384, 264)
+		_rect_spouse = Rect2(852, 244, 386, 252)
+		_rite_board.position = Vector2(42, 516)
+		_rite_board.size = Vector2(600, 112)
+		_punnett.position = Vector2(654, 508)
+		_punnett.size = Vector2(584, 148)
+		var actions_wide := get_node_or_null("MarriageActions") as Control
+		if actions_wide:
+			actions_wide.position = Vector2(602, 660)
+			actions_wide.size = Vector2(636, 44)
+	else:
+		var margin := 8.0
+		var foot := get_node_or_null("StitchFooter") as Control
+		var foot_y := vp.y - 8.0
+		if foot:
+			foot_y = foot.position.y
+		var actions := get_node_or_null("MarriageActions") as Control
+		if actions:
+			actions.position = Vector2(margin, foot_y - 50.0)
+			actions.size = Vector2(vp.x - margin * 2.0, 44)
+		if _tabs:
+			_tabs.position = Vector2(margin, 130)
+			_tabs.size = Vector2(vp.x - margin * 2.0, 32)
+			_tabs.clip_contents = true
+		for ch in get_children():
+			if ch is VBoxContainer and (ch as Control).position.y > 60.0 and (ch as Control).position.y < 100.0:
+				var head := ch as VBoxContainer
+				if head.get_child_count() >= 3:
+					var desc := head.get_child(2) as CanvasItem
+					if desc:
+						desc.visible = false
+		var y0 := 168.0
+		var actions_y := actions.position.y if actions else foot_y - 8.0
+		var gap := 8.0
+		var board_h := 92.0
+		var card_h := actions_y - gap - board_h - gap - y0
+		if card_h < 132.0:
+			board_h = 78.0
+			card_h = maxf(112.0, actions_y - gap - board_h - gap - y0)
+		var inner := vp.x - margin * 2.0
+		var col_w := (inner - gap * 2.0) / 3.0
+		_rect_principal = Rect2(margin, y0, col_w, card_h)
+		_rect_harmony = Rect2(margin + col_w + gap, y0, col_w, card_h)
+		_rect_spouse = Rect2(margin + (col_w + gap) * 2.0, y0, col_w, card_h)
+		var boards_y := y0 + card_h + gap
+		var half := (inner - gap) * 0.5
+		_rite_board.position = Vector2(margin, boards_y)
+		_rite_board.size = Vector2(half, board_h)
+		_punnett.position = Vector2(margin + half + gap, boards_y)
+		_punnett.size = Vector2(half, board_h)
+		_grade.position = Vector2(maxf(8.0, vp.x - 308.0), 96)
+		_grade.size = Vector2(minf(300.0, vp.x - _grade.position.x - 8.0), 18)
+		_grade.clip_text = true
+	if _selected != null:
+		_render_cards()
+
+func _fit_chrome(vp: Vector2) -> void:
+	var bar := get_node_or_null("StitchTopBar") as Control
+	if bar and vp.x < 1270.0:
+		bar.size.x = vp.x
+		var right: HBoxContainer = null
+		for ch in bar.get_children():
+			if ch is ColorRect:
+				(ch as ColorRect).size.x = vp.x
+			elif ch is HBoxContainer:
+				right = ch
+		if right:
+			var limit := maxf(120.0, vp.x - 280.0)
+			var guard := 0
+			while right.get_combined_minimum_size().x > limit and guard < 6:
+				var dropped := false
+				for drop in right.get_children():
+					if drop is Control and (drop as Control).visible and str(drop.name) != "BackButton":
+						(drop as Control).visible = false
+						dropped = true
+						break
+				if not dropped:
+					break
+				guard += 1
+			var width := minf(right.get_combined_minimum_size().x, vp.x - 16.0)
+			right.position = Vector2(vp.x - 8.0 - width, right.position.y)
+			right.custom_minimum_size = Vector2(width, right.size.y)
+			right.size = Vector2(width, right.size.y)
+			right.clip_contents = true
+			for ch2 in bar.get_children():
+				if ch2 is Label and (ch2 as Label).position.x > 120.0:
+					var lab := ch2 as Label
+					lab.size = Vector2(maxf(48.0, right.position.x - lab.position.x - 8.0), 26)
+					lab.clip_text = true
+					lab.autowrap_mode = TextServer.AUTOWRAP_OFF
+					lab.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	var foot := get_node_or_null("StitchFooter") as Control
+	MobileLayout.pin_footer(foot)
+	if foot == null:
 		return
-	_punnett.position = Vector2(8, 500)
-	_punnett.size = Vector2(maxf(280.0, w - 16.0), 150)
-	var actions := get_node_or_null("MarriageActions")
-	if actions:
-		actions.position = Vector2(8, 660)
-		actions.size = Vector2(maxf(280.0, w - 16.0), 44)
+	if vp.y < 680.0:
+		foot.position.y = vp.y - foot.size.y
+	foot.size.x = vp.x
+	foot.clip_contents = true
+	for ch3 in foot.get_children():
+		if ch3 is ColorRect:
+			(ch3 as ColorRect).size.x = vp.x
+		elif ch3 is Label and vp.x < 1100.0:
+			(ch3 as Label).visible = false
 
 func _sync_rite_flags(a: CKCharacter, b: CKCharacter) -> void:
 	var nxt := {}

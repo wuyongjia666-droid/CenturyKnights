@@ -41,3 +41,4 @@ archive_apt_band,资质区间 %s,Aptitude %s
 archive_tactic_none,战术禀性：没有可预期的条目,No tactical trait is expected
 archive_tactic_list,战术禀性 %s,Tactics %s
 archive_tactic_unshown,战术禀性：尚未显出,No tactical trait is shown yet
+marriage_compact_who,%s · %d岁,%s · %d,
