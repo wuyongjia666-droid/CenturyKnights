@@ -1,4 +1,4 @@
-class_name CutsceneVfx
+class_name CutsceneSignature
 extends RefCounted
 ## Procedural projectiles and the ten royal skill signatures.
 ## Ember stays on kiln sparks only. Fills stay cool.

@@ -23,14 +23,14 @@ func _ready() -> void:
 	cam.current = true
 	world.add_child(cam)
 	var i := 0
-	for id in CutsceneVfx.royal_ids():
+	for id in CutsceneSignature.royal_ids():
 		var col := i % 5
 		var row := int(i / 5)
 		var at := Vector3(-2.4 + float(col) * 1.2, 1.55 - float(row) * 1.35, 0)
-		CutsceneVfx.spawn_signature(world, at, str(id), "", 0.35)
+		CutsceneSignature.spawn_signature(world, at, str(id), "", 0.35)
 		i += 1
-	CutsceneVfx.spawn_projectile(world, Vector3(-1.4, -0.15, 1.2), Vector3(0.2, -0.15, 1.2), "arrow", CutsceneVfx.FROST, 0.35)
-	CutsceneVfx.spawn_projectile(world, Vector3(0.4, -0.15, 1.2), Vector3(1.8, -0.15, 1.2), "bolt", CutsceneVfx.MINT, 0.35)
+	CutsceneSignature.spawn_projectile(world, Vector3(-1.4, -0.15, 1.2), Vector3(0.2, -0.15, 1.2), "arrow", CutsceneSignature.FROST, 0.35)
+	CutsceneSignature.spawn_projectile(world, Vector3(0.4, -0.15, 1.2), Vector3(1.8, -0.15, 1.2), "bolt", CutsceneSignature.MINT, 0.35)
 	for _k in 3:
 		await get_tree().process_frame
 	await RenderingServer.frame_post_draw

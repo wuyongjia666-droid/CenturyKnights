@@ -479,7 +479,7 @@ func _arrow(from_side: String, to_side: String, dur: float) -> void:
 	var col: Color = UIKit.DANGER if str(_units[from_side].team) == "enemy" else UIKit.ACCENT
 	var p0 := a.position + Vector3(0, 1.35, 0)
 	var p1 := b.position + Vector3(0, 1.25, 0)
-	var proj := CutsceneVfx.spawn_projectile(a.get_parent(), p0, p1, kind, col, float(_budget.get("particles", 1.0)))
+	var proj := CutsceneSignature.spawn_projectile(a.get_parent(), p0, p1, kind, col, float(_budget.get("particles", 1.0)))
 	var t := _tw()
 	t.tween_property(proj, "position", p1, maxf(0.05, dur))
 	var holder: WeakRef = weakref(proj)
@@ -492,7 +492,7 @@ func _royal_vfx(side: String, strike: Dictionary) -> void:
 	var n := _node(side)
 	if n == null or n.get_parent() == null:
 		return
-	CutsceneVfx.spawn_signature(n.get_parent(), n.position + Vector3(0, 1.45, 0), str(strike.get("skill_id", "")), str(strike.get("skill", "")), float(_budget.get("particles", 1.0)))
+	CutsceneSignature.spawn_signature(n.get_parent(), n.position + Vector3(0, 1.45, 0), str(strike.get("skill_id", "")), str(strike.get("skill", "")), float(_budget.get("particles", 1.0)))
 
 func _set_hp(side: String, v: int) -> void:
 	if not _hud.has(side):

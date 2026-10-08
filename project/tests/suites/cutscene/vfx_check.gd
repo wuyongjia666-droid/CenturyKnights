@@ -16,12 +16,12 @@ func _run() -> String:
 		return "royal count %d" % table.size()
 	var seen := {}
 	for id in table.keys():
-		var spec := CutsceneVfx.signature_for(str(id), "")
+		var spec := CutsceneSignature.signature_for(str(id), "")
 		if spec.is_empty():
 			return "missing %s" % str(id)
 		if str(spec.get("id", "")) != str(id):
 			return "id mismatch %s" % str(id)
-		var by_name := CutsceneVfx.signature_for("", str(table[id].get("name", "")))
+		var by_name := CutsceneSignature.signature_for("", str(table[id].get("name", "")))
 		if str(by_name.get("id", "")) != str(id):
 			return "name mismatch %s" % str(id)
 		if not (spec.get("tint") is Color):
@@ -34,14 +34,14 @@ func _run() -> String:
 			return "sparks on %s" % str(id)
 	if seen.size() != 10:
 		return "seen %d" % seen.size()
-	if not bool(CutsceneVfx.signature_for("kiln_reforge", "").get("sparks", false)):
+	if not bool(CutsceneSignature.signature_for("kiln_reforge", "").get("sparks", false)):
 		return "kiln sparks"
 	var host := Node3D.new()
 	add_child(host)
-	for id in CutsceneVfx.royal_ids():
-		CutsceneVfx.spawn_signature(host, Vector3.ZERO, str(id), "", 0.0)
-	CutsceneVfx.spawn_projectile(host, Vector3(-1, 1, 0), Vector3(1, 1, 0), "arrow", CutsceneVfx.FROST, 0.0)
-	CutsceneVfx.spawn_projectile(host, Vector3(-1, 1, 0), Vector3(1, 1, 0), "bolt", CutsceneVfx.MINT, 0.0)
+	for id in CutsceneSignature.royal_ids():
+		CutsceneSignature.spawn_signature(host, Vector3.ZERO, str(id), "", 0.0)
+	CutsceneSignature.spawn_projectile(host, Vector3(-1, 1, 0), Vector3(1, 1, 0), "arrow", CutsceneSignature.FROST, 0.0)
+	CutsceneSignature.spawn_projectile(host, Vector3(-1, 1, 0), Vector3(1, 1, 0), "bolt", CutsceneSignature.MINT, 0.0)
 	if _count_class(host, "GPUParticles3D") != 0:
 		return "gpu particles on low"
 	if _count_class(host, "CPUParticles3D") != 0:
