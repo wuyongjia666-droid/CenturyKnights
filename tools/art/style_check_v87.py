@@ -65,13 +65,13 @@ def metrics(p):
     h, s, v = _hsv(rgb)
     hm, sm, vm = h[mask], s[mask], v[mask]
     n = max(1, mask.sum())
-    # natural skin is exempt from warm/cool tests (faces are the subject of portrait parts)
+    # natural skin is exempt from warm/cool/parchment tests (faces are the subject of portrait parts)
     skin = (hm < 32) & (sm > 0.10) & (sm < 0.62) & (vm > 0.30)
     ns = ~skin
     nn = max(1, ns.sum())
     m = {
         "gold_ratio": float(((hm > 32) & (hm < 58) & (sm > 0.42) & (vm > 0.35)).sum() / n),
-        "parchment_ratio": float(((hm > 20) & (hm < 50) & (sm > 0.12) & (sm < 0.40) & (vm > 0.55)).sum() / n),
+        "parchment_ratio": float(((hm > 20) & (hm < 50) & (sm > 0.12) & (sm < 0.40) & (vm > 0.55) & ns).sum() / n),  # skin-exempt like warm/cool
         "warm_ratio": float(((((hm < 60) | (hm > 330)) & (sm > 0.30)) & ns).sum() / n),
         "skin_ratio": float(skin.sum() / n),
         "mean_saturation": float(sm.mean()) if mask.any() else 0.0,

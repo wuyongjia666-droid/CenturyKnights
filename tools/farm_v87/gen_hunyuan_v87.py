@@ -1,16 +1,16 @@
 """Batch F (Hunyuan3D-v2 shape, farm :8327): FRONT half of each style-locked turnaround -> background keyed to white,
 padded to a centred square (CLIPVisionEncode crops the centre) -> GeneRanch 'peak' graph -> SaveGLB.
-  gen_hunyuan_v87.py <sheets_dir> <batch_dir> [names...]"""
+  gen_hunyuan_v87.py <sheets_dir> <batch_dir> [--full] [names...]   (--full: whole image, e.g. hair-module plates)"""
 import sys, os, json, glob
 import numpy as np
 from PIL import Image
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from gen_qwen import Batch, seed_of
 
-def front_square(sheet_p, out_p, size=768):
+def front_square(sheet_p, out_p, size=768, full=False):
     im = np.array(Image.open(sheet_p).convert("RGB")).astype(np.float32)
     h, w, _ = im.shape
-    half = im[:, : w // 2]
+    half = im if full else im[:, : w // 2]  # full=True: single front view (hair/head part plates)
     border = np.concatenate([half[0], half[-1], half[:, 0], half[:, -1]])
     bg = np.median(border, 0)
     d = np.abs(half - bg).sum(-1)
@@ -53,13 +53,14 @@ def hy_job(image, prefix, seed, res=8192, steps=50):
 
 if __name__ == "__main__":
     src, root = sys.argv[1], sys.argv[2]
-    want = set(sys.argv[3:])
+    full = "--full" in sys.argv
+    want = set(a for a in sys.argv[3:] if a != "--full")
     b = Batch(root)
     for p in sorted(glob.glob(os.path.join(src, "*.png"))):
         name = os.path.basename(p).split("__")[1] if "__" in os.path.basename(p) else os.path.splitext(os.path.basename(p))[0]
         if want and name not in want: continue
         if name.startswith("face_"): continue  # 2D only
         inp = f"ck87_hy_{name}.jpg"
-        front_square(p, os.path.join(root, "inputs", inp))
+        front_square(p, os.path.join(root, "inputs", inp), full=full)
         b.add("hy_" + name, hy_job(inp, "ck87_hy_" + name, seed_of(name) % 1000000), port=8327)
     print("hunyuan jobs", b.n)
