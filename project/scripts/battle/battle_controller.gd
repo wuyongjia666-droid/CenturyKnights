@@ -2690,6 +2690,44 @@ func _clear_lock_practice_banner() -> void:
 	if ct:
 		ct.visible = true
 
+func _unit_theme(u) -> String:
+	return str(UnitModel.parse_enemy_template(str(u.get("template", ""))).get("theme", "bandit"))
+
+func _enemy_situation(ui: int, foe_i: int = -1) -> Dictionary:
+	var u = units[ui]
+	var allies_near := 0
+	var ally_hurt := false
+	var foe_near := false
+	for ou in units:
+		if ou == u or ou.char.hp <= 0:
+			continue
+		var d := _manhattan(u.pos, ou.pos)
+		if ou.team == u.team and d <= 2:
+			allies_near += 1
+			if float(ou.char.hp) < float(ou.char.max_hp) * 0.65:
+				ally_hurt = true
+		elif ou.team != u.team and d <= 2:
+			foe_near = true
+	var foe_hp := 1.0
+	var cover := false
+	if foe_i >= 0 and foe_i < units.size():
+		var foe = units[foe_i]
+		foe_hp = float(foe.char.hp) / float(maxi(1, foe.char.max_hp))
+		var tid := str(terrain[foe.pos.y][foe.pos.x])
+		cover = tid in ["fort", "forest", "hill"]
+		foe_near = true
+	var stand := str(terrain[u.pos.y][u.pos.x])
+	return {
+		"hp_frac": float(u.char.hp) / float(maxi(1, u.char.max_hp)),
+		"locked": int(u.char.temp_combat_lock) > 0,
+		"on_ground": stand in ["fort", "forest", "hill"],
+		"ally_hurt": ally_hurt,
+		"allies_near": allies_near,
+		"foe_near": foe_near,
+		"foe_hp_frac": foe_hp,
+		"foe_on_cover": cover,
+	}
+
 func _enemy_known_skills(c: CKCharacter) -> Array:
 	var out: Array = []
 	for sid in c.skills:
@@ -2710,6 +2748,23 @@ func _enemy_skill_ready(c: CKCharacter, sid: String) -> bool:
 func _enemy_try_skills(ui: int) -> void:
 	var u = units[ui]
 	var c: CKCharacter = u.char
+	var beh := CKTacticsAI.behavior_for(_unit_theme(u))
+	var sit := _enemy_situation(ui)
+	var gate := 1.55 - float(beh.get("skill", 0.5))
+	if bool(sit.get("locked", false)) and float(sit.get("hp_frac", 1.0)) < 0.55:
+		gate = 0.35
+	var ready := func(sid: String) -> bool:
+		return _enemy_skill_ready(c, sid)
+	var picked := CKTacticsAI.best_skill(_enemy_known_skills(c), ready, sit, "prep", gate)
+	if picked != "":
+		var skp := GameState.get_skill(picked)
+		if str(skp.get("type", "")) == "support":
+			_cast_support_skill_for_team(ui, picked, u.team)
+		else:
+			_cast_buff_skill_for_team(ui, picked)
+			_log("%s 敌技「%s」" % [c.name, skp.get("name", picked)])
+		await get_tree().create_timer(0.18).timeout
+		return
 	# 1) 残血被锁 → 抽身/拆锁
 	if int(c.temp_combat_lock) > 0 and float(c.hp) / float(maxi(1, c.max_hp)) < 0.85:
 		for sid in ["disengage_step", "lock_breaker"]:
@@ -2807,6 +2862,11 @@ func _cast_support_skill_for_team(ui: int, sid: String, team: String) -> void:
 			healed += 1
 			_spawn_dmg(o.pos, "+%d" % amt, Color(0.4, 0.9, 0.5))
 			_spawn_slash(o.pos, "heal")
+	if sk.get("party_def_buff"):
+		var add := int(sk.get("party_def_buff"))
+		for ou in units:
+			if ou.team == team and ou.char.hp > 0:
+				ou.char.temp_def_buff = maxi(ou.char.temp_def_buff, add)
 	_consume_skill(u.char, sid)
 	_log("%s 敌疗「%s」×%d" % [u.char.name, sk.get("name", ""), healed])
 	Sfx.skill()
@@ -2815,21 +2875,12 @@ func _cast_support_skill_for_team(ui: int, sid: String, team: String) -> void:
 
 func _enemy_arm_offense(ai: int, di: int) -> void:
 	var u = units[ai]
-	var best_sid = ""
-	var best_sc = -1.0
-	for sid in _enemy_known_skills(u.char):
-		if not _enemy_skill_ready(u.char, sid):
-			continue
-		var sk = GameState.get_skill(sid)
-		if str(sk.get("type", "")) != "offense":
-			continue
-		var sc = 1.0 + float(sk.get("dmg_mul", 1.0)) + float(sk.get("hit_mod", 0)) * 0.02
-		if units[di].char.hp <= u.char.derived_atk():
-			sc += 2.0  # 斩杀感
-		if sc > best_sc:
-			best_sc = sc
-			best_sid = sid
-	if best_sid != "" and rng.randf() < 0.80:
+	var beh := CKTacticsAI.behavior_for(_unit_theme(u))
+	var sit := _enemy_situation(ai, di)
+	var ready := func(sid: String) -> bool:
+		return _enemy_skill_ready(u.char, sid)
+	var best_sid := CKTacticsAI.best_skill(_enemy_known_skills(u.char), ready, sit, "offense", 0.7)
+	if best_sid != "" and rng.randf() < CKTacticsAI.cast_gate(float(beh.get("skill", 0.5))):
 		skill_mode = true
 		active_skill_id = best_sid
 		_log("%s 蓄力「%s」" % [u.char.name, GameState.get_skill(best_sid).get("name", best_sid)])
@@ -2871,13 +2922,15 @@ func _enemy_ai() -> void:
 		var best_pos: Vector2i = u.pos
 		var best_target := -1
 		var melee = _is_melee(u.char)
+		var beh := CKTacticsAI.behavior_for(_unit_theme(u))
 		var foes_player = _enemy_positions("enemy")  # player positions as ZoC sources for enemy
 		for pos in mv.keys():
 			var stand_tid = terrain[pos.y][pos.x]
 			var tinfo = BattleRules.terrain_info(stand_tid)
 			var stand_bonus = float(tinfo.get("def_bonus", 0)) * 2.6 + float(tinfo.get("avo_bonus", 0)) * 0.12
+			stand_bonus *= 0.65 + float(beh.get("hold", 0.4))
 			if stand_tid in ["fort", "forest", "hill"]:
-				stand_bonus += 2.0
+				stand_bonus += 2.0 * (0.45 + float(beh.get("hold", 0.4)))
 			# 占位卡住敌方 Cont：邻格有残血玩家则加分
 			for j2 in units.size():
 				var tj = units[j2]
@@ -2929,9 +2982,11 @@ func _enemy_ai() -> void:
 				var hp_frac = float(t.char.hp) / float(maxi(1, t.char.max_hp))
 				expect += (1.0 - hp_frac) * 4.5
 				if extras.get("flank", false):
-					expect += 4.8
+					expect += 4.8 * (0.35 + float(beh.get("flank", 0.4)))
 				if not melee and d == 2:
-					expect += 2.5
+					expect += 2.5 * (0.4 + float(beh.get("skirmish", 0.4)))
+				elif melee and d == 1 and float(beh.get("skirmish", 0.4)) > 0.72:
+					expect -= 1.6
 				# 优先咬住已锁定的目标（延长交战）
 				if int(t.char.temp_combat_lock) > 0:
 					expect += 4.2
@@ -2946,9 +3001,10 @@ func _enemy_ai() -> void:
 							threat = true
 							break
 				if threat:
-					expect += 4.2
+					expect += 4.2 * (0.35 + float(beh.get("protect", 0.4)))
 					if BattleRules.is_engaged(pos, foes_player):
 						expect += 2.0  # 占控带压残血
+				expect *= 0.55 + 0.9 * float(beh.get("aggression", 0.5))
 				# 攻击会刷新己方锁定——残血时略减
 				if locked_self and float(u.char.hp) / float(maxi(1, u.char.max_hp)) < 0.35:
 					expect -= 2.5

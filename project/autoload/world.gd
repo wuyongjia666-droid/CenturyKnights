@@ -1234,6 +1234,7 @@ func turn_in(qid: String) -> Dictionary:
 		extra = "，%s ×%d" % [good_name(str(q.reward_good)), int(q.reward_qty)]
 	for c in GameState.roster():
 		c.exp += 6 * int(q.tier)
+		GameState.settle_exp(c)
 	if bool(q.get("sig", false)):
 		done_sig[str(q.id)] = true
 		extra += "；解锁传奇装备「%s」" % items.get(str(q.get("unlock", "")), {}).get("name", "")

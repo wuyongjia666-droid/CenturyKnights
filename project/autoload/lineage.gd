@@ -291,13 +291,20 @@ func _inherit_traits(father: CKCharacter, mother: CKCharacter, rng: RandomNumber
 	for tid in mother.traits:
 		pool[tid] = pool.get(tid, 0.0) + 0.6
 	var chosen: Array = []
-	var ids = pool.keys()
-	ids.shuffle()
+	var ids: Array = pool.keys()
+	ids.sort()
+	# Order is deterministic. Every parent trait still draws once, so the genome RNG that follows is not shifted by a global shuffle.
+	var fork := RandomNumberGenerator.new()
+	fork.seed = hash("%s|%s|traits" % [father.id if father else "", mother.id if mother else ""])
+	for i in range(ids.size() - 1, 0, -1):
+		var j := fork.randi_range(0, i)
+		var tmp = ids[i]
+		ids[i] = ids[j]
+		ids[j] = tmp
 	for tid in ids:
-		if rng.randf() < clampf(float(pool[tid]), 0.2, 0.85):
+		var take := rng.randf() < clampf(float(pool[tid]), 0.2, 0.85)
+		if take and chosen.size() < 4:
 			chosen.append(tid)
-		if chosen.size() >= 4:
-			break
 	while chosen.size() < 2:
 		var all_t: Array = GameState.data_traits.get("traits", [])
 		var t = all_t[rng.randi() % all_t.size()]
@@ -335,6 +342,98 @@ func enlist_adult(child: CKCharacter) -> Dictionary:
 		return {"ok": false, "msg": "需满 %d 岁（当前 %d）" % [Calendar.ADULT_AGE, child.age]}
 	child.is_child = false
 	child.in_roster = true
+	child.retired = false
 	child.salary = 5 + child.rank_index() * 2
 	GameState.mark_dirty()
 	return {"ok": true, "msg": "%s 授旗入队" % child.name}
+
+func _heir_score(c: CKCharacter) -> float:
+	if c == null or not c.alive or c.retired:
+		return -1.0
+	if c.age < Calendar.ADULT_AGE:
+		return -1.0
+	var meta: Dictionary = c.blood_meta if typeof(c.blood_meta) == TYPE_DICTIONARY else {}
+	if str(meta.get("succession_bar", "")) == "player":
+		return -1.0
+	if bool(meta.get("return_grove", false)):
+		return -1.0
+	return float(CKCourt.merit_of(c)) + float(c.age) * 0.15 + (8.0 if "heir_mark" in c.traits else 0.0)
+
+func _is_descendant(c: CKCharacter, ancestor_id: String, guard: int = 0) -> bool:
+	if c == null or guard > 8 or ancestor_id == "":
+		return false
+	if ancestor_id in c.parent_ids:
+		return true
+	for pid in c.parent_ids:
+		var p: CKCharacter = GameState.characters.get(str(pid))
+		if p != null and _is_descendant(p, ancestor_id, guard + 1):
+			return true
+	return false
+
+## Living adult descendant, else any living adult still with the company.
+func pick_heir(leader: CKCharacter, descendants_only: bool = false) -> CKCharacter:
+	if leader == null:
+		return null
+	var best: CKCharacter = null
+	var best_s := -1.0
+	for c in GameState.characters.values():
+		if c == leader or not _is_descendant(c, leader.id):
+			continue
+		var s := _heir_score(c)
+		if s > best_s:
+			best_s = s
+			best = c
+	if best != null or descendants_only:
+		return best
+	for c in GameState.characters.values():
+		if c == leader or not c.in_roster:
+			continue
+		var s2 := _heir_score(c)
+		if s2 > best_s:
+			best_s = s2
+			best = c
+	return best
+
+func generation_depth(c: CKCharacter) -> int:
+	return _generation_depth(c, {}, 0)
+
+## Depth follows the longer parent chain. A marriage candidate has no parents, so the first id in
+## parent_ids is often the outsider; counting only that side made a five-generation house look like two.
+func _generation_depth(c: CKCharacter, seen: Dictionary, guard: int) -> int:
+	if c == null or guard > 12 or seen.has(c.id):
+		return 0
+	var best := 0
+	for pid in c.parent_ids:
+		var p: CKCharacter = GameState.characters.get(str(pid))
+		if p == null:
+			continue
+		var branch := seen.duplicate()
+		branch[c.id] = true
+		best = maxi(best, 1 + _generation_depth(p, branch, guard + 1))
+	return best
+
+## Pass the banner. Abdication requires a descendant. Death or retirement may fall back to a captain.
+func transfer_banner(reason: String) -> Dictionary:
+	var leader := GameState.get_leader()
+	if leader == null:
+		return {"ok": false, "msg": "无团长"}
+	var descendants_only := reason == "abdicate"
+	var heir := pick_heir(leader, descendants_only)
+	if heir == null:
+		return {"ok": false, "msg": "无可承旗之人"}
+	leader.is_leader = false
+	if reason == "abdicate" or reason == "retire":
+		leader.retired = true
+		leader.in_roster = false
+	heir.is_leader = true
+	heir.is_child = false
+	heir.retired = false
+	heir.in_roster = true
+	heir.alive = true
+	heir.salary = 0
+	var verbs := {"abdicate": "传旗", "retire": "退役交旗", "death": "辞世，旗交"}
+	var verb := str(verbs.get(reason, "交旗"))
+	var msg := "%s %s %s。" % [leader.name, verb, heir.name]
+	GameState.add_lineage_event(msg)
+	GameState.mark_dirty()
+	return {"ok": true, "msg": msg, "heir_id": heir.id, "heir": heir.name, "reason": reason}

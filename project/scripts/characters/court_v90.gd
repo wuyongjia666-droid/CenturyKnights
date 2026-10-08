@@ -379,6 +379,24 @@ static func blank_courts(seed_i: int = 1) -> Dictionary:
 		}
 	return {"year": 0, "nations": nations, "rumors": []}
 
+static func _ensure_spouse(house: Dictionary, monarch: Dictionary, nid: String, year: int, members: Array) -> void:
+	var spouse := _find_member(house, str(monarch.get("spouse_id", "")))
+	if not spouse.is_empty() and bool(spouse.get("alive", false)):
+		return
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash("spouse|%s|%s|%d" % [nid, str(monarch.get("id", "")), year])
+	var sex := "f" if str(monarch.get("gender")) == "m" else "m"
+	var age := maxi(16, int(monarch.get("age", 24)) - 2)
+	var made := _member(nid, members.size() + year * 3 + 4, sex, age, false, rng)
+	made["spouse_id"] = str(monarch.get("id", ""))
+	monarch["spouse_id"] = made["id"]
+	members.append(made)
+	house["members"] = members
+	var line := "%s 为新君配婚 %s。" % [CKBloodline.nation(nid).get("name", nid), made.get("name", "")]
+	if typeof(house.get("log")) != TYPE_ARRAY:
+		house["log"] = []
+	house["log"].append({"year": year, "kind": "marriage", "text": line})
+
 static func _find_member(house: Dictionary, id: String) -> Dictionary:
 	for m in house.get("members", []):
 		if str(m.get("id", "")) == id:
@@ -391,6 +409,8 @@ static func tick(state: Dictionary, year: int) -> Dictionary:
 	for nid in nations.keys():
 		var house: Dictionary = nations[nid]
 		var members: Array = house.get("members", [])
+		if typeof(house.get("log")) != TYPE_ARRAY:
+			house["log"] = []
 		var living := 0
 		for m in members:
 			if not bool(m.get("alive", false)):
@@ -419,6 +439,17 @@ static func tick(state: Dictionary, year: int) -> Dictionary:
 			house["crisis"] = str(sx.get("crisis", ""))
 			house["crisis_name"] = str(sx.get("crisis_name", ""))
 			var heir_id := str(sx.get("heir", ""))
+			if heir_id == "":
+				var eldest := {}
+				var eldest_age := -1
+				for m2 in members:
+					if bool(m2.get("alive", false)) and int(m2.get("age", 0)) > eldest_age:
+						eldest = m2
+						eldest_age = int(m2.get("age", 0))
+				heir_id = str(eldest.get("id", ""))
+				if heir_id != "" and str(house.get("crisis_name", "")) == "":
+					house["crisis"] = "vacant"
+					house["crisis_name"] = str(CKBloodline.nation(nid).get("crisis", {}).get("vacant", "空位"))
 			if heir_id != "":
 				house["monarch"] = heir_id
 			var cz := str(house.get("crisis_name", ""))
@@ -426,10 +457,38 @@ static func tick(state: Dictionary, year: int) -> Dictionary:
 			if cz != "":
 				text += "，危机「%s」" % cz
 			text += "。"
+			if typeof(house.get("log")) != TYPE_ARRAY:
+				house["log"] = []
 			house["log"].append({"year": year, "kind": "succession", "text": text})
+			if cz != "":
+				house["crisis_total"] = int(house.get("crisis_total", 0)) + 1
 			rumors.push_front(text)
 			monarch = _find_member(house, str(house.get("monarch", "")))
-		if living < 8 and not monarch.is_empty() and bool(monarch.get("alive", false)) and int(monarch.get("age", 99)) < 48:
+		if living <= 0:
+			var rng_c := RandomNumberGenerator.new()
+			rng_c.seed = hash("cadet|%s|%d" % [nid, year])
+			var recalled := _member(str(nid), members.size() + year * 3 + 11, "m" if rng_c.randf() < 0.5 else "f", 24, true, rng_c)
+			var consort_sex := "f" if str(recalled.get("gender")) == "m" else "m"
+			var consort := _member(str(nid), members.size() + year * 3 + 12, consort_sex, 22, false, rng_c)
+			recalled["spouse_id"] = consort["id"]
+			consort["spouse_id"] = recalled["id"]
+			members.append(recalled)
+			members.append(consort)
+			house["monarch"] = recalled["id"]
+			house["members"] = members
+			living = 2
+			var back := "%s流裔归国：%s 承灯未灭的王脉。" % [CKBloodline.nation(nid).get("name", nid), recalled.get("name", "")]
+			house["log"].append({"year": year, "kind": "recall", "text": back})
+			house["recall_total"] = int(house.get("recall_total", 0)) + 1
+			rumors.push_front(back)
+			monarch = recalled
+		elif not monarch.is_empty() and bool(monarch.get("alive", false)):
+			_ensure_spouse(house, monarch, str(nid), year, members)
+			living = 0
+			for m3 in members:
+				if bool(m3.get("alive", false)):
+					living += 1
+		if living < 8 and not monarch.is_empty() and bool(monarch.get("alive", false)) and int(monarch.get("age", 99)) < 54:
 			var spouse := _find_member(house, str(monarch.get("spouse_id", "")))
 			if not spouse.is_empty() and bool(spouse.get("alive", false)) and posmod(hash("birth|%s|%d" % [nid, year]), 3) == 0:
 				var rng := RandomNumberGenerator.new()
@@ -449,8 +508,10 @@ static func tick(state: Dictionary, year: int) -> Dictionary:
 				var born := "%s 添丁 %s。" % [CKBloodline.nation(nid).get("name", nid), baby["name"]]
 				house["log"].append({"year": year, "kind": "birth", "text": born})
 				rumors.push_front(born)
-		if house["log"].size() > 24:
-			house["log"] = (house["log"] as Array).slice(house["log"].size() - 24)
+		if typeof(house.get("log")) != TYPE_ARRAY:
+			house["log"] = []
+		if house["log"].size() > 48:
+			house["log"] = (house["log"] as Array).slice(house["log"].size() - 48)
 		nations[nid] = house
 	if rumors.size() > 16:
 		rumors = rumors.slice(0, 16)

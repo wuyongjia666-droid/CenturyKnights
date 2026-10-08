@@ -5,7 +5,8 @@ static var _id_seq: int = 0
 
 static func next_id(prefix: String = "c") -> String:
 	_id_seq += 1
-	return "%s_%d_%d" % [prefix, Time.get_ticks_msec(), _id_seq]
+	# Sequence only. A wall-clock suffix made births and the century sim depend on the minute.
+	return "%s_%d" % [prefix, _id_seq]
 
 static func make_leader(given: String, surname: String, crest_color: String) -> CKCharacter:
 	var c := CKCharacter.new()
@@ -491,6 +492,12 @@ static func _pick_traits(rng: RandomNumberGenerator, mn: int, mx: int) -> Array:
 	for t in all_traits:
 		if t.get("polarity", "pos") == "pos" or rng.randf() < 0.25:
 			pool.append(t["id"])
-	pool.shuffle()
+	var fork := RandomNumberGenerator.new()
+	fork.seed = hash("|".join(pool))
+	for i in range(pool.size() - 1, 0, -1):
+		var j := fork.randi_range(0, i)
+		var tmp = pool[i]
+		pool[i] = pool[j]
+		pool[j] = tmp
 	var n = rng.randi_range(mn, mx)
 	return pool.slice(0, mini(n, pool.size()))
