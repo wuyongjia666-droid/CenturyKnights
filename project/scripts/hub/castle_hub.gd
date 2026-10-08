@@ -57,7 +57,7 @@ func _build() -> void:
 	scroll.add_child(rail)
 	var groups: Array = [
 		{"id": "military", "title": Locale.t("ux_hub_military"), "items": [
-			[Locale.t("shell_15c92308"), Locale.t("shell_82106f23"), "res://scenes/hub/deploy.tscn", Locale.t("btn_deploy"), "deploy"],
+			[Locale.t("shell_15c92308"), DeployBrief.cap_line(), "res://scenes/hub/deploy.tscn", Locale.t("btn_deploy"), "deploy"],
 			[Locale.t("btn_train"), Locale.t("shell_0cb33307"), "res://scenes/hub/train.tscn", Locale.t("btn_train"), "train"],
 			[Locale.t("shell_5366fd25"), Locale.t("shell_1f6a2fed"), "res://scenes/hub/skill_tree.tscn", Locale.t("shell_5366fd25"), "skills"],
 		]},

@@ -14,7 +14,14 @@ func _ready() -> void:
 	GameState.new_game("Ash", "Ash", GameState.crest_color)
 	if GameState.settings is Dictionary:
 		GameState.settings["tutorial_highlight"] = false
+	_ok(GameState.max_deploy() == 4, "hall1 cap %s" % GameState.max_deploy())
+	var cap := DeployBrief.cap_line()
+	_ok(cap == BattleObjectives.text("deploy_cap") % GameState.max_deploy(), "cap line %s" % cap)
+	_ok(not cap.contains("四人"), "hardcoded four %s" % cap)
 	Locale.set_lang("en")
+	var cap_en := DeployBrief.cap_line()
+	_ok(cap_en == "Field up to 4", "en cap %s" % cap_en)
+	_ok(not Locale.has_cjk(cap_en), "en cap cjk %s" % cap_en)
 	await _scan("res://scenes/ui/main_menu.tscn")
 	await _scan("res://scenes/ui/settings.tscn")
 	await _scan("res://scenes/hub/castle_hub.tscn")
