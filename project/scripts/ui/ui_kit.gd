@@ -649,3 +649,423 @@ static func body_label(text: String, col: Color = TEXT_DIM, size: int = 13) -> L
 	t.add_theme_font_size_override("font_size", size)
 	t.add_theme_color_override("font_color", col)
 	return t
+
+# --- v8.6 Stitch kit: shared scaffold matching docs/art/stitch_skeletons_v8/*.png --------------------
+const MONO_TRACK := "\u2009"
+
+static func mono(text: String, size: int = 11, col: Color = TEXT_FAINT, tracked: bool = true) -> Label:
+	var l := Label.new()
+	if tracked:
+		var s := ""
+		for ch in text:
+			s += ch + (MONO_TRACK if ch.unicode_at(0) < 128 and ch != " " else "")
+		l.text = s
+	else:
+		l.text = text
+	l.add_theme_font_override("font", font("mono"))
+	l.add_theme_font_size_override("font_size", size)
+	l.add_theme_color_override("font_color", col)
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return l
+
+static func void_bg(parent: Control) -> ColorRect:
+	var r := ColorRect.new()
+	r.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	r.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if ResourceLoader.exists("res://shaders/frost_void.gdshader"):
+		var m := ShaderMaterial.new()
+		m.shader = load("res://shaders/frost_void.gdshader")
+		r.material = m
+	r.color = BG
+	parent.add_child(r)
+	return r
+
+static func flat_box(bg: Color = Color(0.055, 0.067, 0.090, 0.88), border: Color = Color(1, 1, 1, 0.10), radius: int = 10, bw: int = 1) -> StyleBoxFlat:
+	var s := StyleBoxFlat.new()
+	s.bg_color = bg
+	s.border_color = border
+	s.set_border_width_all(bw)
+	s.set_corner_radius_all(radius)
+	s.anti_aliasing = true
+	s.content_margin_left = 16
+	s.content_margin_right = 16
+	s.content_margin_top = 12
+	s.content_margin_bottom = 12
+	return s
+
+static func panel_at(parent: Control, rect: Rect2, radius: int = 10, focus: bool = false) -> Panel:
+	## Stitch panel: flat ink fill, 1px stroke; focus=true → frost border + soft outer glow
+	var p := Panel.new()
+	p.position = rect.position
+	p.size = rect.size
+	var s := flat_box(Color(0.055, 0.067, 0.090, 0.90), Color(ACCENT, 0.85) if focus else Color(1, 1, 1, 0.10), radius, 2 if focus else 1)
+	if focus:
+		s.shadow_color = Color(ACCENT, 0.22)
+		s.shadow_size = 14
+	p.add_theme_stylebox_override("panel", s)
+	p.mouse_filter = Control.MOUSE_FILTER_PASS
+	parent.add_child(p)
+	return p
+
+static func keycap(t: String) -> Label:
+	var l := Label.new()
+	l.text = t
+	l.add_theme_font_override("font", font("mono"))
+	l.add_theme_font_size_override("font_size", 10)
+	l.add_theme_color_override("font_color", TEXT_DIM)
+	var s := flat_box(Color(1, 1, 1, 0.04), Color(1, 1, 1, 0.22), 4)
+	s.content_margin_left = 5
+	s.content_margin_right = 5
+	s.content_margin_top = 1
+	s.content_margin_bottom = 1
+	l.add_theme_stylebox_override("normal", s)
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return l
+
+static func tag_chip(text: String, col: Color = ACCENT, filled: bool = false) -> Label:
+	var l := Label.new()
+	l.text = text
+	l.add_theme_font_override("font", font("bold"))
+	l.add_theme_font_size_override("font_size", 11)
+	l.add_theme_color_override("font_color", ON_ACCENT if filled else col)
+	var s := flat_box(col if filled else Color(col, 0.10), Color(col, 0.55), 4)
+	s.content_margin_left = 7
+	s.content_margin_right = 7
+	s.content_margin_top = 1
+	s.content_margin_bottom = 1
+	l.add_theme_stylebox_override("normal", s)
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	l.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	return l
+
+static func kv_row(k: String, v: String, col: Color = TEXT, w: float = 0.0) -> HBoxContainer:
+	var h := HBoxContainer.new()
+	if w > 0:
+		h.custom_minimum_size = Vector2(w, 0)
+	var kl := Label.new()
+	kl.text = k
+	kl.add_theme_font_size_override("font_size", 12)
+	kl.add_theme_color_override("font_color", TEXT_FAINT)
+	kl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	h.add_child(kl)
+	var vl := Label.new()
+	vl.text = v
+	vl.add_theme_font_override("font", font("bold"))
+	vl.add_theme_font_size_override("font_size", 12)
+	vl.add_theme_color_override("font_color", col)
+	h.add_child(vl)
+	return h
+
+static func stat_box(label: String, value: String, col: Color = TEXT, delta: String = "") -> PanelContainer:
+	var p := PanelContainer.new()
+	var s := flat_box(Color(1, 1, 1, 0.025), Color(1, 1, 1, 0.09), 6)
+	s.content_margin_left = 10
+	s.content_margin_right = 10
+	s.content_margin_top = 6
+	s.content_margin_bottom = 7
+	p.add_theme_stylebox_override("panel", s)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 1)
+	p.add_child(v)
+	v.add_child(mono(label, 9, TEXT_FAINT))
+	var h := HBoxContainer.new()
+	h.add_theme_constant_override("separation", 5)
+	v.add_child(h)
+	var vl := Label.new()
+	vl.text = value
+	vl.add_theme_font_override("font", font("mono"))
+	vl.add_theme_font_size_override("font_size", 16)
+	vl.add_theme_color_override("font_color", col)
+	h.add_child(vl)
+	if delta != "":
+		var d := mono(delta, 11, OK, false)
+		d.size_flags_vertical = Control.SIZE_SHRINK_END
+		h.add_child(d)
+	return p
+
+static func slim_bar(value: float, max_v: float, col: Color = ACCENT, w: float = 160.0, h: float = 4.0) -> ProgressBar:
+	var b := ProgressBar.new()
+	b.min_value = 0
+	b.max_value = max(1.0, max_v)
+	b.value = value
+	b.show_percentage = false
+	b.custom_minimum_size = Vector2(w, h)
+	var bg := StyleBoxFlat.new()
+	bg.bg_color = Color(1, 1, 1, 0.07)
+	bg.set_corner_radius_all(2)
+	var fg := StyleBoxFlat.new()
+	fg.bg_color = col
+	fg.set_corner_radius_all(2)
+	b.add_theme_stylebox_override("background", bg)
+	b.add_theme_stylebox_override("fill", fg)
+	b.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return b
+
+static func cta_button(text: String, key: String = "A", w: int = 200, h: int = 44) -> Button:
+	var b := make_accent_button("%s   [%s]" % [text, key] if key != "" else text, w)
+	b.custom_minimum_size = Vector2(w, h)
+	b.add_theme_font_size_override("font_size", 15)
+	return b
+
+static func ghost_button(text: String, w: int = 120, h: int = 36) -> Button:
+	var b := make_button(text, w)
+	b.custom_minimum_size = Vector2(w, h)
+	b.add_theme_font_size_override("font_size", 13)
+	return b
+
+static func link_button(text: String, col: Color = ACCENT) -> Button:
+	## text-only action link ("前往酒馆接洽 →") with hover underline-ish tint + focus ring
+	var b := Button.new()
+	b.text = text + "  →"
+	b.flat = false
+	b.add_theme_font_override("font", font("bold"))
+	b.add_theme_font_size_override("font_size", 13)
+	var e := _btn_box(Color(0, 0, 0, 0), Color(0, 0, 0, 0), 0, 6)
+	e.content_margin_left = 6
+	e.content_margin_right = 6
+	var h := _btn_box(Color(col, 0.10), Color(col, 0.35), 1, 6)
+	h.content_margin_left = 6
+	h.content_margin_right = 6
+	_apply_states(b, {"normal": e, "hover": h, "pressed": h, "focus": _focus_ring(FOCUS_RING, 8), "disabled": e})
+	b.add_theme_color_override("font_color", col)
+	b.add_theme_color_override("font_hover_color", Color.WHITE)
+	b.add_theme_color_override("font_pressed_color", col)
+	b.add_theme_color_override("font_focus_color", Color.WHITE)
+	b.add_theme_color_override("font_disabled_color", DISABLED_TEXT)
+	b.focus_mode = Control.FOCUS_ALL
+	UIFX.wire_button(b)
+	return b
+
+static func res_chip(label: String, value: String, col: Color = TEXT) -> PanelContainer:
+	var p := PanelContainer.new()
+	var s := flat_box(Color(1, 1, 1, 0.03), Color(1, 1, 1, 0.10), 6)
+	s.content_margin_left = 10
+	s.content_margin_right = 10
+	s.content_margin_top = 5
+	s.content_margin_bottom = 5
+	p.add_theme_stylebox_override("panel", s)
+	var h := HBoxContainer.new()
+	h.add_theme_constant_override("separation", 8)
+	p.add_child(h)
+	var k := Label.new()
+	k.text = label
+	k.add_theme_font_size_override("font_size", 11)
+	k.add_theme_color_override("font_color", TEXT_FAINT)
+	k.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	h.add_child(k)
+	var v := Label.new()
+	v.text = value
+	v.add_theme_font_override("font", font("mono"))
+	v.add_theme_font_size_override("font_size", 14)
+	v.add_theme_color_override("font_color", col)
+	h.add_child(v)
+	return p
+
+static func std_resource_chips() -> Array:
+	return [
+		["银币", str(GameState.silver), ACCENT],
+		["粮", str(GameState.food), TEXT],
+		["铁", str(GameState.iron), TEXT],
+		["士气", str(GameState.morale), OK if GameState.morale >= 50 else DANGER],
+		["历", Calendar.label(), TEXT_DIM],
+	]
+
+static func top_bar(parent: Control, context: String, chips: Array = [], back_text: String = "返回城堡", back_cb: Callable = Callable()) -> Control:
+	## 56px Stitch top bar: ● CENTURY KNIGHTS // context ……… [chips] [返回 ESC]
+	var bar := Control.new()
+	bar.name = "StitchTopBar"
+	bar.position = Vector2.ZERO
+	bar.size = Vector2(1280, 56)
+	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(bar)
+	var bgc := ColorRect.new()
+	bgc.color = Color(0.02, 0.024, 0.035, 0.72)
+	bgc.size = Vector2(1280, 56)
+	bgc.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	bar.add_child(bgc)
+	var hl := hairline(Color(1, 1, 1, 0.08))
+	hl.position = Vector2(0, 55)
+	hl.size = Vector2(1280, 1)
+	bar.add_child(hl)
+	var dot := Panel.new()
+	var ds := StyleBoxFlat.new()
+	ds.bg_color = ACCENT
+	ds.set_corner_radius_all(4)
+	ds.shadow_color = Color(ACCENT, 0.6)
+	ds.shadow_size = 6
+	dot.add_theme_stylebox_override("panel", ds)
+	dot.position = Vector2(26, 24)
+	dot.size = Vector2(8, 8)
+	bar.add_child(dot)
+	var brand := mono("CENTURY KNIGHTS", 11, TEXT_DIM)
+	brand.position = Vector2(44, 19)
+	bar.add_child(brand)
+	var sep := mono("//", 11, TEXT_FAINT, false)
+	sep.position = Vector2(44 + brand.get_minimum_size().x + 10, 19)
+	bar.add_child(sep)
+	var ctx := Label.new()
+	ctx.text = context
+	ctx.add_theme_font_size_override("font_size", 15)
+	ctx.add_theme_color_override("font_color", TEXT)
+	ctx.position = Vector2(sep.position.x + 26, 15)
+	bar.add_child(ctx)
+	var right := HBoxContainer.new()
+	right.add_theme_constant_override("separation", 8)
+	right.alignment = BoxContainer.ALIGNMENT_END
+	right.position = Vector2(400, 11)
+	right.size = Vector2(856, 34)
+	bar.add_child(right)
+	for c in chips:
+		right.add_child(res_chip(str(c[0]), str(c[1]), c[2] if c.size() > 2 else TEXT))
+	if back_cb.is_valid():
+		var b := ghost_button("%s  ESC" % back_text, 112, 32)
+		b.name = "BackButton"
+		b.pressed.connect(back_cb)
+		right.add_child(b)
+	return bar
+
+static func page_head(parent: Control, x: float, y: float, eyebrow_en: String, title: String, en_title: String = "", desc: String = "", tag: String = "") -> VBoxContainer:
+	var v := VBoxContainer.new()
+	v.position = Vector2(x, y)
+	v.add_theme_constant_override("separation", 2)
+	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(v)
+	var eh := HBoxContainer.new()
+	eh.add_theme_constant_override("separation", 10)
+	v.add_child(eh)
+	eh.add_child(mono("— " + eyebrow_en, 10, ACCENT))
+	if tag != "":
+		eh.add_child(tag_chip(tag, ACCENT))
+	var th := HBoxContainer.new()
+	th.add_theme_constant_override("separation", 14)
+	v.add_child(th)
+	var t := Label.new()
+	t.text = title
+	t.add_theme_font_size_override("font_size", 30)
+	t.add_theme_color_override("font_color", TEXT)
+	th.add_child(t)
+	if en_title != "":
+		var e := mono(en_title, 11, TEXT_FAINT)
+		e.size_flags_vertical = Control.SIZE_SHRINK_END
+		e.custom_minimum_size = Vector2(0, 30)
+		th.add_child(e)
+	if desc != "":
+		var d := Label.new()
+		d.text = desc
+		d.add_theme_font_size_override("font_size", 12)
+		d.add_theme_color_override("font_color", TEXT_DIM)
+		v.add_child(d)
+	return v
+
+static func footer_bar(parent: Control, hints: Array, meta: String = "FROST_TACTICAL v8.6") -> Control:
+	var bar := Control.new()
+	bar.name = "StitchFooter"
+	bar.position = Vector2(0, 692)
+	bar.size = Vector2(1280, 28)
+	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(bar)
+	var hl := hairline(Color(1, 1, 1, 0.07))
+	hl.size = Vector2(1280, 1)
+	bar.add_child(hl)
+	var h := HBoxContainer.new()
+	h.position = Vector2(26, 5)
+	h.add_theme_constant_override("separation", 6)
+	bar.add_child(h)
+	for it in hints:
+		h.add_child(keycap(str(it[0])))
+		var l := Label.new()
+		l.text = str(it[1])
+		l.add_theme_font_size_override("font_size", 11)
+		l.add_theme_color_override("font_color", TEXT_DIM)
+		l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		h.add_child(l)
+		var gap := Control.new()
+		gap.custom_minimum_size = Vector2(12, 0)
+		h.add_child(gap)
+	var m := mono(meta, 9, TEXT_FAINT)
+	m.position = Vector2(1254 - m.get_minimum_size().x, 8)
+	bar.add_child(m)
+	return bar
+
+static func section_head(parent: Control, pos: Vector2, title_zh: String, en: String, w: float, right_text: String = "") -> void:
+	var t := Label.new()
+	t.text = title_zh
+	t.position = pos
+	t.add_theme_font_override("font", font("bold"))
+	t.add_theme_font_size_override("font_size", 12)
+	t.add_theme_color_override("font_color", ACCENT)
+	parent.add_child(t)
+	var e := mono("// " + en, 9, TEXT_FAINT)
+	e.position = pos + Vector2(t.get_minimum_size().x + 8, 3)
+	parent.add_child(e)
+	if right_text != "":
+		var r := Label.new()
+		r.text = right_text
+		r.add_theme_font_size_override("font_size", 11)
+		r.add_theme_color_override("font_color", TEXT_FAINT)
+		r.position = pos + Vector2(w - r.get_minimum_size().x, 1)
+		parent.add_child(r)
+
+static func portrait_plate(parent: Control, rect: Rect2, c, caption: String = "", focus: bool = false) -> Panel:
+	## blueprint plate: thin frame + corner ticks + clipped portrait + mono caption
+	var p := panel_at(parent, rect, 8, focus)
+	var inner := Control.new()
+	inner.position = Vector2(1, 1)
+	inner.size = rect.size - Vector2(2, 2)
+	inner.clip_contents = true
+	inner.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	p.add_child(inner)
+	if c != null:
+		var tex: Texture2D = null
+		var pr: TextureRect = make_portrait_rect(c, int(rect.size.y))
+		tex = pr.texture
+		pr.queue_free()
+		if tex:
+			var t := TextureRect.new()
+			t.texture = tex
+			t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+			t.size = inner.size
+			t.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			inner.add_child(t)
+	var shade := TextureRect.new()
+	var g := Gradient.new()
+	g.set_color(0, Color(0, 0, 0, 0))
+	g.set_color(1, Color(BG, 0.85))
+	g.set_offset(0, 0.55)
+	var gt := GradientTexture2D.new()
+	gt.gradient = g
+	gt.fill_from = Vector2(0.5, 0)
+	gt.fill_to = Vector2(0.5, 1)
+	gt.width = 4
+	gt.height = 64
+	shade.texture = gt
+	shade.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	shade.stretch_mode = TextureRect.STRETCH_SCALE
+	shade.size = inner.size
+	shade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	inner.add_child(shade)
+	for corner in [Vector2(6, 6), Vector2(rect.size.x - 16, 6), Vector2(6, rect.size.y - 16), Vector2(rect.size.x - 16, rect.size.y - 16)]:
+		var tick := Control.new()
+		tick.position = corner
+		tick.size = Vector2(10, 10)
+		tick.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var a := ColorRect.new()
+		a.color = Color(ACCENT, 0.55)
+		var b := ColorRect.new()
+		b.color = Color(ACCENT, 0.55)
+		var left: bool = corner.x < 10
+		var top: bool = corner.y < 10
+		a.size = Vector2(10, 1)
+		a.position = Vector2(0, 0 if top else 9)
+		b.size = Vector2(1, 10)
+		b.position = Vector2(0 if left else 9, 0)
+		tick.add_child(a)
+		tick.add_child(b)
+		p.add_child(tick)
+	if caption != "":
+		var cap := mono(caption, 9, ACCENT)
+		cap.position = Vector2(12, rect.size.y - 22)
+		p.add_child(cap)
+	return p

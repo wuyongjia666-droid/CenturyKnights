@@ -108,6 +108,7 @@ func _marriage() -> void:
 	n.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	n.size = Vector2(1280, 720)
 	await _wait(1.0)
+	await _snap("marriage")
 	if n.has_method("play_seal_fx"):
 		n.play_seal_fx(true)
 	await _wait(0.5)

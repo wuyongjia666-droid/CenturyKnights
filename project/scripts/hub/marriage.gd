@@ -16,6 +16,10 @@ var _vow_body: RichTextLabel
 var _vow_actions: HBoxContainer
 var _vow_gift: String = "banner"
 var _vow_doctrine: String = "strict"
+var _tabs: HBoxContainer
+var _cards: Control
+var _grade: Label
+var _marry_btn: Button
 
 func _ready() -> void:
 	UIFX.fade_in(self, 0.3)
@@ -28,94 +32,70 @@ func _ready() -> void:
 	UIFX.slide_from_bottom(self, 24.0, 0.32)
 
 func _build() -> void:
-	UIKit.make_themed_bg(self, "marriage")
-	UIFX.page_enter(self)
-	UIFX.wire_tree(self)
-	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/hub_banner_strip.png"):
-		var strip := TextureRect.new()
-		strip.texture = load("res://assets/art/ui/hub_banner_strip.png")
-		strip.position = Vector2(0, 0)
-		strip.custom_minimum_size = Vector2(1280, 48)
-		strip.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		strip.stretch_mode = TextureRect.STRETCH_SCALE
-		strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(strip)
+	## v8.6 — layout-matched to Stitch 17_marriage.png: protocol header · candidate tabs ·
+	## CLAN PRINCIPAL | GENOMIC HARMONY | ALLIED SPOUSE · forecast + 再议/缔约 · footer
+	UIKit.void_bg(self)
+	UIKit.top_bar(self, "宗族谱系枢纽 · 联姻盟誓", [
+		["灰烬邦", GameState.get_rep_name("ashland"), UIKit.ACCENT],
+		["河卫邦", GameState.get_rep_name("riverland"), UIKit.TEXT],
+		["银币", str(GameState.silver), UIKit.ACCENT],
+		["历", Calendar.label(), UIKit.TEXT_DIM]], "返回城堡", _back)
+	UIKit.page_head(self, 42, 72, "HARMONIC RATIO EVALUATION", "联姻契约", "MARRIAGE PROTOCOL", "宗族双源结合研判与血脉特质推演 —— 声望是门，子嗣期望是窗。", "PROTOCOL NO.07")
+	var rd := UIKit.mono("RATING DISCIPLINE", 9, UIKit.TEXT_FAINT)
+	rd.position = Vector2(1238 - rd.get_minimum_size().x, 96)
+	add_child(rd)
+	_grade = UIKit.body_label("", UIKit.OK, 12)
+	_grade.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_grade.position = Vector2(938, 112)
+	_grade.size = Vector2(300, 18)
+	_grade.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	add_child(_grade)
+	var hl := UIKit.hairline(Color(1, 1, 1, 0.07))
+	hl.position = Vector2(42, 150)
+	hl.size = Vector2(1196, 1)
+	add_child(hl)
+	var cl := UIKit.mono("CANDIDATES // 春令应帖", 9, UIKit.TEXT_FAINT)
+	cl.position = Vector2(42, 166)
+	add_child(cl)
+	_list = VBoxContainer.new()   # legacy handle (unused for layout)
+	_list.visible = false
+	add_child(_list)
+	_tabs = HBoxContainer.new()
+	_tabs.position = Vector2(42, 184)
+	_tabs.add_theme_constant_override("separation", 8)
+	add_child(_tabs)
 
-	var _mb = TextureRect.new()
-	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/marriage_banner.png"):
-		_mb.texture = load("res://assets/art/ui/marriage_banner.png")
-		_mb.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		_mb.stretch_mode = TextureRect.STRETCH_SCALE
-		_mb.position = Vector2(0, 0)
-		_mb.size = Vector2(1280, 56)
-		_mb.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(_mb)
-		UIFX.banner_shimmer(_mb, 3.6)
-	var t = UIKit.make_label("联姻廷 · 春令试婚", true)
-	t.position = Vector2(40, 12)
-	add_child(t)
-	var rep = UIKit.make_dim_label("灰烬邦声望：%s　河卫邦：%s　——声望是门，子嗣期望是窗。" % [GameState.get_rep_name("ashland"), GameState.get_rep_name("riverland")])
-	rep.position = Vector2(40, 52)
-	add_child(rep)
+	_cards = Control.new()
+	_cards.position = Vector2(0, 0)
+	_cards.size = Vector2(1280, 720)
+	_cards.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_cards)
 
-	var list_panel = UIKit.make_panel()
-	list_panel.position = Vector2(40, 90)
-	list_panel.custom_minimum_size = Vector2(360, 380)
-	add_child(list_panel)
-	_list = VBoxContainer.new()
-	_list.add_theme_constant_override("separation", 8)
-	list_panel.add_child(_list)
+	_seal_fx = TextureRect.new()
+	_seal_fx.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_seal_fx.stretch_mode = TextureRect.STRETCH_SCALE
+	_seal_fx.size = Vector2(220, 220)
+	_seal_fx.position = Vector2(640 - 110, 300 - 110)
+	_seal_fx.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_seal_fx.modulate = Color(1, 1, 1, 0)
+	_seal_fx.z_index = 5
+	add_child(_seal_fx)
 
-	var detail_panel = UIKit.make_panel()
-	detail_panel.position = Vector2(420, 90)
-	detail_panel.custom_minimum_size = Vector2(400, 380)
-	add_child(detail_panel)
-	var dv := VBoxContainer.new()
-	dv.add_theme_constant_override("separation", 8)
-	detail_panel.add_child(dv)
-	dv.add_child(_build_dual())
-	_detail = RichTextLabel.new()
-	_detail.scroll_active = true
-	_detail.custom_minimum_size = Vector2(380, 190)
-	_detail.bbcode_enabled = true
-	_detail.add_theme_color_override("default_color", UIKit.TEXT)
-	dv.add_child(_detail)
-
-	var el = UIKit.make_label(Locale.t("heir_expect"))
-	el.position = Vector2(840, 90)
-	el.add_theme_color_override("font_color", UIKit.ACCENT)
-	add_child(el)
-	var exp_panel = UIKit.make_panel()
-	exp_panel.position = Vector2(840, 120)
-	exp_panel.custom_minimum_size = Vector2(400, 350)
-	add_child(exp_panel)
-	_expect = RichTextLabel.new()
-	_expect.custom_minimum_size = Vector2(370, 320)
-	_expect.bbcode_enabled = true
-	_expect.add_theme_color_override("default_color", UIKit.TEXT)
-	exp_panel.add_child(_expect)
-
-	_msg = UIKit.make_label("")
-	_msg.position = Vector2(40, 500)
-	_msg.custom_minimum_size = Vector2(800, 40)
+	var fl := UIKit.mono("ALLIANCE FORECAST", 9, UIKit.TEXT_FAINT)
+	fl.position = Vector2(42, 594)
+	add_child(fl)
+	_msg = UIKit.body_label("联姻后可起「义役」：六月护路共济——真月结代价，换声望与商路安稳。", UIKit.TEXT_DIM, 12)
+	_msg.position = Vector2(42, 612)
+	_msg.size = Vector2(560, 40)
+	_msg.custom_minimum_size = Vector2(560, 0)
 	add_child(_msg)
-	var flavor = UIKit.make_dim_label("厅外有人比较旗色与族谱。王朝烽烟里，联姻是同盟，子嗣期望是承诺——订婚前务必读完。")
-	flavor.position = Vector2(40, 540)
-	add_child(flavor)
-	var duty_tip = UIKit.make_dim_label("联姻后可起「义役」：六月护路共济——真月结代价，换声望与商路安稳。")
-	duty_tip.position = Vector2(40, 570)
-	add_child(duty_tip)
-	var duty_btn = UIKit.make_accent_button("起誓·联姻义役", 160)
-	duty_btn.position = Vector2(900, 560)
-	if ResourceLoader.exists("res://assets/art/ui/alliance_duty_chip.png"):
-		var dc := TextureRect.new()
-		dc.texture = load("res://assets/art/ui/alliance_duty_chip.png")
-		dc.position = Vector2(860, 558)
-		dc.custom_minimum_size = Vector2(32, 32)
-		dc.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		dc.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		dc.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(dc)
+	var row := HBoxContainer.new()
+	row.position = Vector2(602, 628)
+	row.size = Vector2(636, 44)
+	row.alignment = BoxContainer.ALIGNMENT_END
+	row.add_theme_constant_override("separation", 10)
+	add_child(row)
+	var duty_btn := UIKit.ghost_button("起誓·义役", 108, 40)
 	duty_btn.pressed.connect(func():
 		UIFX.press_feedback(duty_btn)
 		var r = GameState.start_alliance_duty()
@@ -123,117 +103,257 @@ func _build() -> void:
 		if r.get("ok"):
 			UIFX.confirm_burst(duty_btn)
 			Sfx.lineage_chime()
-			GameState.save_game()
-)
-	add_child(duty_btn)
-
-	var row := HBoxContainer.new()
-	row.position = Vector2(40, 590)
-	row.add_theme_constant_override("separation", 10)
-	add_child(row)
-	var marry = UIKit.make_accent_button("进入誓约仪式（40银）", 240)
-	marry.pressed.connect(_start_vow)
-	row.add_child(marry)
-	var rite = UIKit.make_button("族谱授旗礼", 140)
+			GameState.save_game())
+	row.add_child(duty_btn)
+	var rite := UIKit.ghost_button("族谱授旗礼", 108, 40)
 	rite.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/lineage_rite.tscn"))
 	row.add_child(rite)
-	var refresh = UIKit.make_button("刷新候选", 120)
+	var refresh := UIKit.ghost_button("再议   [B]", 108, 40)
+	refresh.tooltip_text = "刷新春令候选"
 	refresh.pressed.connect(func():
 		GameState.refresh_marriage_candidates()
-		_refresh()
-	)
+		_refresh())
 	row.add_child(refresh)
-	var back = UIKit.make_button(Locale.t("btn_back"), 100)
-	back.pressed.connect(_back)
-	row.add_child(back)
+	_marry_btn = UIKit.cta_button("✓ 缔约 · 40 银", "A", 196, 44)
+	_marry_btn.pressed.connect(_start_vow)
+	row.add_child(_marry_btn)
+	UIKit.footer_bar(self, [["A", "缔约"], ["B", "再议"], ["←→", "切换候选"], ["ESC", "返回城堡"]], "GENE ARCHIVE · FROST_TACTICAL v8.6")
 
-	_vow_panel = UIKit.make_panel()
-	_vow_panel.position = Vector2(200, 160)
-	_vow_panel.custom_minimum_size = Vector2(880, 360)
+	# vow ritual modal
+	_vow_panel = Control.new()
+	_vow_panel.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 	_vow_panel.visible = false
+	_vow_panel.z_index = 20
 	add_child(_vow_panel)
+	var dim := ColorRect.new()
+	dim.color = Color(UIKit.BG, 0.72)
+	dim.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+	_vow_panel.add_child(dim)
+	var vp := UIKit.panel_at(_vow_panel, Rect2(260, 190, 760, 320), 12, true)
+	var ve := UIKit.mono("VOW RITUAL // 誓约仪式", 10, UIKit.ACCENT)
+	ve.position = Vector2(28, 22)
+	vp.add_child(ve)
 	_vow_body = RichTextLabel.new()
 	_vow_body.bbcode_enabled = true
-	_vow_body.custom_minimum_size = Vector2(840, 260)
-	_vow_body.position = Vector2(20, 16)
+	_vow_body.fit_content = false
+	_vow_body.position = Vector2(28, 48)
+	_vow_body.size = Vector2(704, 190)
 	_vow_body.add_theme_color_override("default_color", UIKit.TEXT)
-	_vow_panel.add_child(_vow_body)
+	_vow_body.add_theme_font_size_override("normal_font_size", 14)
+	_vow_body.add_theme_font_size_override("bold_font_size", 18)
+	vp.add_child(_vow_body)
 	_vow_actions = HBoxContainer.new()
-	_vow_actions.position = Vector2(20, 290)
-	_vow_actions.add_theme_constant_override("separation", 12)
-	_vow_panel.add_child(_vow_actions)
+	_vow_actions.position = Vector2(28, 256)
+	_vow_actions.add_theme_constant_override("separation", 10)
+	vp.add_child(_vow_actions)
+	UIFX.page_enter(self)
+
+func _unhandled_input(e: InputEvent) -> void:
+	if e.is_action_pressed("ui_cancel"):
+		if _vow_panel and _vow_panel.visible:
+			_vow_panel.visible = false
+		else:
+			_back()
+	elif e.is_action_pressed("ui_left") or e.is_action_pressed("ui_right"):
+		if GameState.marriage_candidates.is_empty() or _selected == null:
+			return
+		var i := GameState.marriage_candidates.find(_selected)
+		i = (i + (1 if e.is_action_pressed("ui_right") else -1) + GameState.marriage_candidates.size()) % GameState.marriage_candidates.size()
+		_select(GameState.marriage_candidates[i])
 
 func _refresh() -> void:
-	for c in _list.get_children():
+	for c in _tabs.get_children():
 		c.queue_free()
 	if GameState.marriage_candidates.is_empty():
-		_list.add_child(UIKit.empty_state("春令无人应帖。刷新或提高声望。"))
+		_tabs.add_child(UIKit.empty_state("春令无人应帖。再议或提高声望。"))
 		return
+	var k := 0
 	for cand in GameState.marriage_candidates:
+		k += 1
 		var check = Lineage.can_propose(GameState.get_leader(), cand)
-		var tag = "可表白" if check.get("ok") else "声望不足"
-		var b = UIKit.make_button("%s　%s　%s" % [cand.name, cand.rank_name(), tag], 320)
+		var b := UIKit.ghost_button("%02d  %s · %s  %s" % [k, cand.name, cand.rank_name(), "●" if check.get("ok") else "○"], 0, 32)
+		b.tooltip_text = "可表白" if check.get("ok") else str(check.get("msg", "声望不足"))
+		b.toggle_mode = true
+		b.set_meta("cand", cand)
 		var captured = cand
 		b.pressed.connect(func(): _select(captured))
-		_list.add_child(b)
+		_tabs.add_child(b)
 	_select(GameState.marriage_candidates[0])
 
-func _oval_portrait(parent: Control, box: Rect2, s: float) -> TextureRect:
-	## portrait clipped to an ellipse (oval_mask) so it sits inside the dual frame's rings
-	var mask := TextureRect.new()
-	mask.texture = load("res://assets/art/ui/v85/oval_mask.png")
-	mask.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	mask.stretch_mode = TextureRect.STRETCH_SCALE
-	mask.position = box.position * s
-	mask.size = box.size * s
-	mask.clip_children = CanvasItem.CLIP_CHILDREN_ONLY
-	mask.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	parent.add_child(mask)
-	var bgc := ColorRect.new()
-	bgc.color = UIKit.BG
-	bgc.size = mask.size
-	bgc.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	mask.add_child(bgc)
-	var tr := TextureRect.new()
-	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	tr.size = mask.size
-	tr.pivot_offset = mask.size * 0.5
-	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	mask.add_child(tr)
-	return tr
+func _house_card(rect: Rect2, c: CKCharacter, side_tag: String, side_en: String, col: Color, series: String) -> void:
+	var p := UIKit.panel_at(_cards, rect, 10)
+	var h := UIKit.mono(side_en, 9, col)
+	h.position = Vector2(20, 20)
+	p.add_child(h)
+	var hz := UIKit.body_label("// " + side_tag, col, 11)
+	hz.autowrap_mode = TextServer.AUTOWRAP_OFF
+	hz.position = Vector2(26 + h.get_minimum_size().x, 17)
+	p.add_child(hz)
+	var se := UIKit.mono(series, 9, UIKit.TEXT_FAINT)
+	se.position = Vector2(rect.size.x - 20 - se.get_minimum_size().x, 20)
+	p.add_child(se)
+	if c == null:
+		return
+	UIKit.portrait_plate(p, Rect2(20, 48, 132, 168), c, "FROST FRAME")
+	var nm := UIKit.title_label(c.name, 18)
+	nm.add_theme_font_override("font", UIKit.font("bold"))
+	nm.position = Vector2(20, 226)
+	nm.size = Vector2(132, 24)
+	nm.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	p.add_child(nm)
+	var sub := UIKit.body_label("%d 岁 · %s" % [c.age, GameState.get_job(c.job_id).get("name", "")], col, 12)
+	sub.autowrap_mode = TextServer.AUTOWRAP_OFF
+	sub.position = Vector2(20, 252)
+	sub.size = Vector2(132, 18)
+	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	p.add_child(sub)
+	var v := VBoxContainer.new()
+	v.position = Vector2(168, 50)
+	v.size = Vector2(rect.size.x - 188, 200)
+	v.add_theme_constant_override("separation", 3)
+	p.add_child(v)
+	v.add_child(UIKit.mono("家系源流 · LINEAGE", 9, UIKit.TEXT_FAINT, false))
+	var ln := UIKit.body_label("%s旗 · %s" % [GameState.surname if c.is_leader else str(c.name).substr(0, 1), "家主" if c.is_leader else "应帖者"], UIKit.TEXT, 13)
+	v.add_child(ln)
+	var g1 := Control.new()
+	g1.custom_minimum_size = Vector2(0, 6)
+	v.add_child(g1)
+	v.add_child(UIKit.mono("品阶 · RANK", 9, UIKit.TEXT_FAINT, false))
+	v.add_child(UIKit.body_label("%s（LV %d）" % [c.rank_name(), c.level], UIKit.TEXT, 13))
+	var g2 := Control.new()
+	g2.custom_minimum_size = Vector2(0, 6)
+	v.add_child(g2)
+	v.add_child(UIKit.mono("骨相血脉 · BLOOD", 9, UIKit.TEXT_FAINT, false))
+	var bh := HBoxContainer.new()
+	bh.add_theme_constant_override("separation", 8)
+	v.add_child(bh)
+	var pb := str(c.primary_bloodline())
+	var bl: Dictionary = GameState.get_bloodline(pb)
+	bh.add_child(UIKit.tag_chip(str(bl.get("name", pb)), col))
+	var pct := int(round(float(c.blood_mix.get(pb, 1.0)) * 100))
+	var pl := UIKit.mono("%d%% 纯度" % pct, 11, UIKit.TEXT_DIM, false)
+	pl.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	bh.add_child(pl)
+	var g3 := Control.new()
+	g3.custom_minimum_size = Vector2(0, 8)
+	v.add_child(g3)
+	var tr_names: Array = []
+	for tid in c.traits.slice(0, 3):
+		tr_names.append(str(GameState.get_trait(str(tid)).get("name", tid)))
+	var dsc := UIKit.body_label("禀性：%s" % ("、".join(tr_names) if not tr_names.is_empty() else "未显"), UIKit.TEXT_FAINT, 12)
+	dsc.custom_minimum_size = Vector2(rect.size.x - 188, 0)
+	v.add_child(dsc)
+	var fh := UIKit.hairline(Color(1, 1, 1, 0.07))
+	fh.position = Vector2(20, rect.size.y - 46)
+	fh.size = Vector2(rect.size.x - 40, 1)
+	p.add_child(fh)
+	var pd := UIKit.mono("PEDIGREE: GEN %s" % ("I" if c.parent_ids.is_empty() else "II"), 9, UIKit.TEXT_FAINT)
+	pd.position = Vector2(20, rect.size.y - 30)
+	p.add_child(pd)
+	var fit := UIKit.body_label("战力 ATK %d · DEF %d" % [c.derived_atk(), c.derived_def()], UIKit.TEXT_DIM, 11)
+	fit.autowrap_mode = TextServer.AUTOWRAP_OFF
+	fit.position = Vector2(rect.size.x - 180, rect.size.y - 32)
+	fit.size = Vector2(160, 16)
+	fit.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	p.add_child(fit)
 
-func _build_dual() -> Control:
-	## v8.5 dual vow frame: v840 dual_portrait_frame with ovals cut (prep_v850_chrome.py);
-	## leader left, candidate right, authored marriage_seal FX blooms at the join.
-	var s := DUAL_W / 720.0
-	_dual = Control.new()
-	_dual.custom_minimum_size = Vector2(720, 320) * s
-	_dual.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_leader_portrait = _oval_portrait(_dual, Rect2(62, 48, 262, 230), s)
-	_portrait = _oval_portrait(_dual, Rect2(405, 36, 258, 246), s)
-	var fr := TextureRect.new()
-	var fp := "res://assets/art/ui/v85/dual_portrait_frame_cut.png"
-	if ResourceLoader.exists(fp):
-		fr.texture = load(fp)
-	fr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	fr.stretch_mode = TextureRect.STRETCH_SCALE
-	fr.size = _dual.custom_minimum_size
-	fr.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_dual.add_child(fr)
-	UIFX.banner_shimmer(fr, 4.0)
-	_seal_fx = TextureRect.new()
-	_seal_fx.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_seal_fx.stretch_mode = TextureRect.STRETCH_SCALE
-	_seal_fx.size = Vector2(150, 150)
-	_seal_fx.position = Vector2(363, 160) * s - _seal_fx.size * 0.5
-	_seal_fx.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_seal_fx.modulate = Color(1, 1, 1, 0)
-	_dual.add_child(_seal_fx)
+func _harmony_card(rect: Rect2, a: CKCharacter, b: CKCharacter) -> void:
+	## 子嗣期望 — every block has its own fixed row; nothing overlaps (v8.5 bug)
+	var p := UIKit.panel_at(_cards, rect, 10)
+	var t := UIKit.mono("GENOMIC HARMONY SIMULATION", 9, UIKit.TEXT_DIM)
+	t.position = Vector2((rect.size.x - t.get_minimum_size().x) * 0.5, 20)
+	p.add_child(t)
+	if a == null or b == null:
+		return
+	var ex: Dictionary = Lineage.heir_expectation(a, b)
+	var mids := 0.0
+	var hi := 1.0
+	for sk in CKCharacter.STAT_KEYS:
+		mids += (float(ex.apt_min[sk]) + float(ex.apt_max[sk])) * 0.5
+		hi = maxf(hi, float(ex.apt_max[sk]))
+	var pct := clampi(int(round(mids / CKCharacter.STAT_KEYS.size() / maxf(hi, 12.0) * 100.0)), 1, 99)
+	_grade.text = "●  子嗣资质评级  %s" % ("S" if pct >= 85 else ("A" if pct >= 70 else ("B" if pct >= 55 else "C")))
+	var lab := UIKit.body_label("子嗣期望 · 资质共鸣指标", UIKit.TEXT_DIM, 12)
+	lab.autowrap_mode = TextServer.AUTOWRAP_OFF
+	lab.position = Vector2(0, 44)
+	lab.size = Vector2(rect.size.x, 18)
+	lab.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	p.add_child(lab)
+	var big := Label.new()
+	big.text = "%d" % pct
+	big.add_theme_font_override("font", UIKit.font("mono"))
+	big.add_theme_font_size_override("font_size", 52)
+	big.add_theme_color_override("font_color", UIKit.ACCENT)
+	big.position = Vector2(0, 60)
+	big.size = Vector2(rect.size.x, 64)
+	big.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	p.add_child(big)
+	var pc := UIKit.mono("%", 16, UIKit.ACCENT, false)
+	pc.position = Vector2(rect.size.x * 0.5 + big.get_minimum_size().x * 0.5 + 2, 92)
+	p.add_child(pc)
+	var bar := UIKit.slim_bar(pct, 100, UIKit.ACCENT, 160, 3)
+	bar.position = Vector2((rect.size.x - 160) * 0.5, 128)
+	p.add_child(bar)
+	var rk := UIKit.mono("RANK HINT // %s" % CKCharacter.RANK_NAMES.get(ex.rank_hint, ex.rank_hint), 9, UIKit.TEXT_FAINT, false)
+	rk.position = Vector2((rect.size.x - rk.get_minimum_size().x) * 0.5, 138)
+	p.add_child(rk)
+	# inheritance preview: top-3 traits
+	var ib := UIKit.panel_at(p, Rect2(16, 162, rect.size.x - 32, 74), 6)
+	var it := UIKit.body_label("后代遗传特质推演 · INHERITANCE", UIKit.TEXT_DIM, 11)
+	it.autowrap_mode = TextServer.AUTOWRAP_OFF
+	it.position = Vector2(0, 6)
+	it.size = Vector2(rect.size.x - 32, 16)
+	it.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	ib.add_child(it)
+	var tp: Array = ex.trait_probs.slice(0, 3)
+	var cw := (rect.size.x - 32 - 24 - 16) / 3.0
+	for i in tp.size():
+		var chip := UIKit.panel_at(ib, Rect2(12 + i * (cw + 8), 28, cw, 38), 4)
+		var cs: StyleBoxFlat = chip.get_theme_stylebox("panel").duplicate()
+		cs.bg_color = Color(UIKit.OK, 0.06)
+		cs.border_color = Color(UIKit.OK, 0.45)
+		chip.add_theme_stylebox_override("panel", cs)
+		var cn := UIKit.body_label(str(tp[i].name), UIKit.OK, 12)
+		cn.autowrap_mode = TextServer.AUTOWRAP_OFF
+		cn.clip_text = true
+		cn.position = Vector2(0, 2)
+		cn.size = Vector2(cw, 18)
+		cn.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		chip.add_child(cn)
+		var cp := UIKit.mono("%d%% 显性" % int(round(float(tp[i].prob) * 100)), 9, UIKit.TEXT_FAINT, false)
+		cp.position = Vector2((cw - cp.get_minimum_size().x) * 0.5, 20)
+		chip.add_child(cp)
+	# aptitude ranges 3×2
+	var ag := GridContainer.new()
+	ag.columns = 3
+	ag.position = Vector2(22, 248)
+	ag.add_theme_constant_override("h_separation", 10)
+	ag.add_theme_constant_override("v_separation", 2)
+	p.add_child(ag)
+	for sk in CKCharacter.STAT_KEYS:
+		var cell := UIKit.kv_row(Locale.t("stat_" + sk), "%d–%d" % [ex.apt_min[sk], ex.apt_max[sk]], UIKit.TEXT, (rect.size.x - 64) / 3.0)
+		ag.add_child(cell)
+	# blood mix + hair line
+	var parts: Array = []
+	for k in ex.blood_mix.keys():
+		parts.append("%s %d%%" % [GameState.get_bloodline(k).get("name", k), int(round(float(ex.blood_mix[k]) * 100))])
+	var hair: Array = []
+	for ap in ex.appearance_probs.get("hair", []).slice(0, 2):
+		hair.append("%s %.0f%%" % [ap.name, ap.prob * 100])
+	var bl := UIKit.body_label("血胤  %s\n发色  %s" % [" · ".join(parts), " · ".join(hair)], UIKit.TEXT_FAINT, 11)
+	bl.position = Vector2(22, 296)
+	bl.size = Vector2(rect.size.x - 44, 34)
+	bl.custom_minimum_size = Vector2(rect.size.x - 44, 0)
+	p.add_child(bl)
+
+func _render_cards() -> void:
+	for c in _cards.get_children():
+		_cards.remove_child(c)
+		c.queue_free()
 	var leader = GameState.get_leader()
-	if leader:
-		_leader_portrait.texture = UnitArt.portrait(leader, 220)
-	return _dual
+	_house_card(Rect2(42, 226, 386, 348), leader, "宗主一方", "CLAN PRINCIPAL", UIKit.ACCENT, "SERIES: VII-01")
+	_harmony_card(Rect2(448, 226, 384, 348), leader, _selected)
+	_house_card(Rect2(852, 226, 386, 348), _selected, "应帖一方", "ALLIED SPOUSE", UIKit.OK, "SERIES: IV-02")
 
 func play_seal_fx(hold: bool = false) -> void:
 	if _seal_fx == null:
@@ -258,42 +378,17 @@ func play_seal_fx(hold: bool = false) -> void:
 
 func _select(c: CKCharacter) -> void:
 	_selected = c
-	var _g := str(c.gender)
-	var _age := int(c.age)
-	var _geno := "v84_geno_mid_%s_house" % _g
-	if _age <= 22:
-		_geno = "v84_geno_youth_%s_vow" % _g
-	elif _age >= 50:
-		_geno = "v84_geno_elder_%s_seal" % _g
-	var _gp := "res://assets/art/portraits/%s.png" % _geno
-	# own face first (per-tag farm faces); v84 geno plate only as fallback
-	var own = UnitArt.portrait(c, 220)
-	if own != null:
-		_portrait.texture = own
-	elif ResourceLoader.exists(_gp):
-		_portrait.texture = load(_gp)
-	UIFX.focus_ring(_portrait)
-	UIFX.select_pulse(_portrait)
+	for b in _tabs.get_children():
+		if b is Button and b.has_meta("cand"):
+			b.button_pressed = (b.get_meta("cand") == c)
+	_render_cards()
 	var check = Lineage.can_propose(GameState.get_leader(), c)
-	_detail.text = UIKit.char_card_text(c) + "\n\n门槛：%s\n%s" % [check.get("need", ""), check.get("msg", "")]
-	var leader = GameState.get_leader()
-	var exp = Lineage.heir_expectation(leader, c)
-	var lines: Array = ["[b]子嗣期望（订婚前）[/b]"]
-	lines.append("血胤混合预览：")
-	for k in exp.blood_mix.keys():
-		var bl = GameState.get_bloodline(k)
-		lines.append("  %s %d%%" % [bl.get("name", k), int(round(float(exp.blood_mix[k]) * 100))])
-	lines.append("六维资质区间：")
-	for sk in CKCharacter.STAT_KEYS:
-		lines.append("  %s %d–%d" % [Locale.t("stat_" + sk), exp.apt_min[sk], exp.apt_max[sk]])
-	lines.append("禀性概率（前几）：")
-	for tp in exp.trait_probs.slice(0, mini(5, exp.trait_probs.size())):
-		lines.append("  %s %.0f%%" % [tp.name, tp.prob * 100])
-	lines.append("容貌·发色：")
-	for ap in exp.appearance_probs.get("hair", []).slice(0, 3):
-		lines.append("  %s %.0f%%" % [ap.name, ap.prob * 100])
-	lines.append("预估子代勋位：%s" % CKCharacter.RANK_NAMES.get(exp.rank_hint, exp.rank_hint))
-	_expect.text = "\n".join(lines)
+	_marry_btn.disabled = not bool(check.get("ok"))
+	_marry_btn.tooltip_text = str(check.get("msg", ""))
+	if not check.get("ok"):
+		_msg.text = "门槛：%s" % str(check.get("msg", ""))
+	else:
+		_msg.text = "盟约收益预期：灰烬邦声望 +6 · 嫁妆旁注永续 · 子嗣可于成年行授旗礼入队。"
 
 func _start_vow() -> void:
 	if _selected == null:
@@ -335,9 +430,11 @@ func _show_vow() -> void:
 			_vow_btn("取消", func(): _vow_panel.visible = false)
 
 func _vow_btn(text: String, cb: Callable) -> void:
-	var b = UIKit.make_accent_button(text, 200)
+	var b: Button = UIKit.ghost_button(text, 132, 40) if text == "取消" else UIKit.make_accent_button(text, 150)
 	b.pressed.connect(cb)
 	_vow_actions.add_child(b)
+	if _vow_actions.get_child_count() == 1:
+		b.call_deferred("grab_focus")
 
 func _finish_marry() -> void:
 	if _selected == null:
@@ -371,7 +468,6 @@ func _finish_marry() -> void:
 		Sfx.confirm()
 		Sfx.lineage_chime()
 		play_seal_fx()
-		if _dual: UIFX.select_pulse(_dual)
 		_refresh()
 
 func _back() -> void:
