@@ -5600,5 +5600,387 @@
   "marsh": "marsh",
   "forge": "forge",
   "shrine": "shrine"
- }
+ },
+ "contract_chains": [
+  {
+   "id": "chain_ash",
+   "nation": "ashbanner",
+   "title": "烬纹三程",
+   "steps": [
+    {
+     "kind": "deliver",
+     "issuer": "ash_capital",
+     "target": "reed_ford",
+     "title": "白垣的未签字账",
+     "brief": "议会账房少了一本没签字的过路账。送到苇原渡的船工手里，让他核对夜航的粮袋。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "reed_ford",
+     "target": "stone_slope",
+     "title": "苇原的回执",
+     "brief": "船工在回执上画了渡口的水位。石垒坡的采石匠要拿它去对洞口的工期。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "stone_slope",
+     "target": "fog_vale",
+     "title": "石垒的样本",
+     "brief": "采石匠封了一小袋石粉，雾谷的药户要用它试井水。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "fog_vale",
+     "target": "ash_market",
+     "title": "雾谷的结算单",
+     "brief": "药户把结算单交给灰市账房。这本账从白垣走到这里，才算合上。"
+    }
+   ]
+  },
+  {
+   "id": "chain_sy",
+   "nation": "shuoying",
+   "title": "夜阙点名",
+   "steps": [
+    {
+     "kind": "deliver",
+     "issuer": "sy_capital",
+     "target": "sy_stair",
+     "title": "兵器名录的副本",
+     "brief": "夜阙把外来兵器名录的副本交到千阶城，上层要亲自看。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "sy_stair",
+     "target": "sy_coast",
+     "title": "千阶的夜航许可",
+     "brief": "千阶城开了一张只在入夜后有效的出海许可，冷湾的港吏认这个印。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "sy_coast",
+     "target": "sy_ridge",
+     "title": "冷湾的冰情",
+     "brief": "港吏把冰层厚度写在一张布上。狼脊村的猎人要按它改猎线。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "sy_ridge",
+     "target": "sy_frostfort",
+     "title": "狼脊的回报",
+     "brief": "猎人把改过的猎线交回寒垒。点名从夜阙开始，在军垒结束。"
+    }
+   ]
+  },
+  {
+   "id": "chain_qh",
+   "nation": "qinghe",
+   "title": "河道正本",
+   "steps": [
+    {
+     "kind": "deliver",
+     "issuer": "qh_capital",
+     "target": "qh_isle",
+     "title": "抄反的河道图",
+     "brief": "书院学徒把左右抄反了。正本要先送到浮洲，染坊靠这条河吃饭。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "qh_isle",
+     "target": "qh_orchard",
+     "title": "浮洲的水色样本",
+     "brief": "染工封了一小瓶上游的水。粉霞坞的果户要看它会不会伤花。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "qh_orchard",
+     "target": "qh_mist",
+     "title": "花坞的勘误",
+     "brief": "果户在图边上标了三处雾里会消失的渡口。送回雾果村的驿柜。"
+    }
+   ]
+  },
+  {
+   "id": "chain_lt",
+   "nation": "lantern",
+   "title": "灯价五夜",
+   "steps": [
+    {
+     "kind": "deliver",
+     "issuer": "lt_capital",
+     "target": "lt_harbor",
+     "title": "被涂改的价牌",
+     "brief": "夜市同一盏灯写了两个价。把原牌送到港上，让船主按旧价装货。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "lt_harbor",
+     "target": "lt_isle",
+     "title": "港上的夜契",
+     "brief": "船主签了一份只在灯亮时生效的短契。岛上的琉璃匠要看条款。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "lt_isle",
+     "target": "lt_south",
+     "title": "岛上的灯芯清单",
+     "brief": "匠人列出熄过的潮灯。南岸的市吏负责把它们点回去。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "lt_south",
+     "target": "lt_lane",
+     "title": "南岸的对牌记录",
+     "brief": "市吏的对牌记录要交给巷里的账房，避免明天再被涂掉。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "lt_lane",
+     "target": "lt_docks",
+     "title": "巷里的静港账",
+     "brief": "账房不肯把这笔写进税牌。码头只收这份私下的账，五夜到此为止。"
+    }
+   ]
+  },
+  {
+   "id": "chain_fc",
+   "nation": "frostcrown",
+   "title": "冰钟四响",
+   "steps": [
+    {
+     "kind": "deliver",
+     "issuer": "fc_capital",
+     "target": "fc_tower",
+     "title": "少了一声的钟谱",
+     "brief": "这一时辰冰钟少了一声。把钟谱送到塔上，问值钟人缺的是哪一拍。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "fc_tower",
+     "target": "fc_lake",
+     "title": "值钟人的批注",
+     "brief": "值钟人在谱边写了风从湖上来。湖畔的库吏要按它改开门的时辰。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "fc_lake",
+     "target": "fc_peak",
+     "title": "库吏的旧信",
+     "brief": "霜晶裂开时露出的旧信，库吏请你带到峰上的观测点。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "fc_peak",
+     "target": "fc_banner",
+     "title": "峰上的时辰",
+     "brief": "观测点确认了少掉的那一声。把更正后的时辰交到关楼，仪仗才重新上路。"
+    }
+   ]
+  },
+  {
+   "id": "chain_eo",
+   "nation": "emberold",
+   "title": "冷窑四印",
+   "steps": [
+    {
+     "kind": "deliver",
+     "issuer": "eo_capital",
+     "target": "eo_kiln",
+     "title": "没对上的窑印",
+     "brief": "城档里有一块对不上号的窑印。送到还温着的窑，让师傅认。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "eo_kiln",
+     "target": "eo_shrine",
+     "title": "师傅的窑号",
+     "brief": "师傅指出它属于一座已经冷掉的窑。祠边的守档人收这个号。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "eo_shrine",
+     "target": "eo_crack",
+     "title": "旧典的陶片",
+     "brief": "守档人从旧典里抄下一片过路数目。废墟口的人在按这片陶片收费。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "eo_crack",
+     "target": "eo_glass",
+     "title": "废墟的勘误",
+     "brief": "把陶片上的数目更正，交到玻璃城的城防。夹层里的敲击不归旧典管。"
+    }
+   ]
+  },
+  {
+   "id": "chain_sm",
+   "nation": "saltmarsh",
+   "title": "盐印四潮",
+   "steps": [
+    {
+     "kind": "deliver",
+     "issuer": "sm_capital",
+     "target": "sm_mid",
+     "title": "缺角的盐引",
+     "brief": "关卡说盐引缺了一角。中段的潮吏有补印的模。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "sm_mid",
+     "target": "sm_banner",
+     "title": "补好的一角",
+     "brief": "潮吏补了印。关楼上的人要在下一潮之前核过。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "sm_banner",
+     "target": "sm_south",
+     "title": "关楼的潮时",
+     "brief": "核过的潮时和告示差了半个时辰。南岸的船要按新的时辰走。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "sm_south",
+     "target": "sm_west",
+     "title": "南岸的干粮账",
+     "brief": "船走了，岸上留下等退潮的人。把干粮账交回西岸，盐引这才算完整。"
+    }
+   ]
+  },
+  {
+   "id": "chain_ig",
+   "nation": "irongorge",
+   "title": "峡索四班",
+   "steps": [
+    {
+     "kind": "deliver",
+     "issuer": "ig_capital",
+     "target": "ig_tower",
+     "title": "少了一根的索册",
+     "brief": "中层吊桥少了一根钢索。索册要先送到塔上的值桥人。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "ig_tower",
+     "target": "ig_bottom",
+     "title": "值桥人的班表",
+     "brief": "值桥人的今夜班表被送到了错的城。底层炉区才是正主。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "ig_bottom",
+     "target": "ig_lower",
+     "title": "底层的钢印",
+     "brief": "炉区在班表上盖了钢印。下层吊篮的人要拿它核对夜运。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "ig_lower",
+     "target": "ig_mine",
+     "title": "吊篮的税牌",
+     "brief": "没有税牌的峡钢锭不该出矿。把税牌送到矿口，这一班才算闭。"
+    }
+   ]
+  },
+  {
+   "id": "chain_sr",
+   "nation": "starriver",
+   "title": "星位四宿",
+   "steps": [
+    {
+     "kind": "deliver",
+     "issuer": "sr_capital",
+     "target": "sr_pagoda",
+     "title": "对不上的路引",
+     "brief": "观象台说今夜星位和路引差了一宿。把路引送到塔上重抄。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "sr_pagoda",
+     "target": "sr_east",
+     "title": "重抄的星位",
+     "brief": "塔上抄好的星位要交给东桥的桥吏，他只收写明了星位的文书。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "sr_east",
+     "target": "sr_south",
+     "title": "桥吏的船号",
+     "brief": "桥吏发现船号被记成了邻队的。南岸货栈正准备错发。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "sr_south",
+     "target": "sr_west",
+     "title": "更正后的船号",
+     "brief": "货栈更正了船号。西岸的渡手要按新号靠岸。"
+    }
+   ]
+  },
+  {
+   "id": "chain_sz",
+   "nation": "southzephyr",
+   "title": "萤雾四渡",
+   "steps": [
+    {
+     "kind": "deliver",
+     "issuer": "sz_capital",
+     "target": "sz_harbor",
+     "title": "被雾吞掉的渡灯图",
+     "brief": "渡口的灯进了萤雾。把灯位图送到港上，让对岸的船对准。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "sz_harbor",
+     "target": "sz_isle",
+     "title": "港上的蜂蜡账",
+     "brief": "货栈说蜂蜡短了两块。岛上的仓要按昨晚的账重称。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "sz_isle",
+     "target": "sz_south",
+     "title": "仓里的椒引",
+     "brief": "重称之后多出来的南椒引，南岸的人循着气味跟了一夜。把引子交给他们的头。"
+    },
+    {
+     "kind": "deliver",
+     "issuer": "sz_south",
+     "target": "sz_bamboo",
+     "title": "南岸的雾路",
+     "brief": "头目把一条只在雾里看得见的小路画下来。竹林驿要收这张图，四渡才算完。"
+    }
+   ]
+  }
+ ],
+ "rival_companies": [
+  {
+   "id": "night_ledger",
+   "name": "夜账行",
+   "home": "lt_capital",
+   "price_mul": 1.2,
+   "blurb": "灯市出身的账房佣兵。他们不抢货，抢的是别人已经贴出来的护送单，再把城里的买价抬一成。"
+  },
+  {
+   "id": "bridge_bone",
+   "name": "桥骨团",
+   "home": "lb_mid",
+   "price_mul": 1.2,
+   "blurb": "长年睡在陆桥驿棚的老团。委托榜一换，他们的旗比雇主的信使先到。"
+  },
+  {
+   "id": "frost_blade",
+   "name": "霜刃伙",
+   "home": "fc_capital",
+   "price_mul": 1.2,
+   "blurb": "从霜冕廷下来的散团。遇见别的旗就要求让路，不让就在原地开打。"
+  },
+  {
+   "id": "salt_crow",
+   "name": "盐鸦队",
+   "home": "sm_capital",
+   "price_mul": 1.2,
+   "blurb": "盐泽的船佣兵。潮一起他们就改道，专截送达和收购，把岸上的价一起带高。"
+  }
+ ]
 }

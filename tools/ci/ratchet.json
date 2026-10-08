@@ -16,12 +16,12 @@
     "project/scripts/art/unit_model.gd": {
       "hex": 6
     },
-    "project/scripts/battle/battle_controller.gd": {
-      "gold": 2,
-      "hex": 7
-    },
     "project/scripts/battle/combat_cutscene.gd": {
       "hex": 1
+    },
+    "project/scripts/battle/ui/battle_info_panel.gd": {
+      "gold": 2,
+      "hex": 7
     },
     "project/scripts/characters/genome.gd": {
       "hex": 21
