@@ -1,7 +1,13 @@
 #!/usr/bin/env python3
-"""v8.6: subset Noto Sans CJK SC (Regular/Bold, OFL) to every char the game uses + GB2312 + ASCII.
-Output: project/assets/fonts/NotoSansSC-{Regular,Bold}-ck.otf ; JetBrains Mono (OFL) copied for numerics."""
-import pathlib, shutil, subprocess, sys
+"""Subset Noto Sans CJK SC (Regular/Bold, OFL) to every char the game uses + GB2312 + ASCII.
+
+Output: project/assets/fonts/NotoSansSC-{Regular,Bold}-ck.otf
+JetBrains Mono (OFL) is copied for numerics when the system file is present.
+
+Rebuild (also printed by tests/suites/ux/glyph_coverage_check.gd on failure):
+    python3 tools/fonts/subset_fonts_v86.py
+"""
+import pathlib, shutil, unicodedata
 from fontTools.ttLib import TTCollection
 from fontTools import subset
 ROOT = pathlib.Path(__file__).resolve().parents[2]
@@ -18,7 +24,9 @@ for hi in range(0xB0, 0xF8):
         try: chars.add(bytes([hi, lo]).decode("gb2312"))
         except Exception: pass
 chars |= set("·—…“”‘’《》「」『』【】、，。！？：；（）～￥％＋－×÷＝＜＞★☆●○◆◇■□▲△▼▽→←↑↓")
-text = "".join(sorted(c for c in chars if c.isprintable()))
+# Keep ideographic / thin spaces. str.isprintable() drops every Zs character,
+# so U+3000 never reached the subset and rendered as a missing glyph.
+text = "".join(sorted(c for c in chars if c.isprintable() or unicodedata.category(c) == "Zs"))
 print("chars", len(text))
 for w in ("Regular", "Bold"):
     col = TTCollection(f"/usr/share/fonts/opentype/noto/NotoSansCJK-{w}.ttc")
