@@ -35,7 +35,16 @@ jobs:
         run: |
           export PATH="${HOME}/.local/bin:${PATH}"
           cd project
-          godot --headless --import || godot --headless --editor --quit
+          ok=0
+          for _try in 1 2 3; do
+            if godot --headless --import; then
+              ok=1
+              break
+            fi
+            echo "import attempt ${_try} crashed; clearing imported cache"
+            rm -rf .godot/imported
+          done
+          test "$ok" = 1
 
       - name: Run CI
         run: |
