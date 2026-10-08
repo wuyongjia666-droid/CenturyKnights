@@ -9734,5 +9734,12 @@
   {"tier": 2, "id": "shown", "zh": "正冕", "scale": 1.0},
   {"tier": 3, "id": "full", "zh": "满冕", "scale": 1.35}
  ],
+ "fusions": [
+  {"id": "lamp_frost_read", "zh": "灯霜对读", "effect": "夜战命中 +4", "key": "night_hit", "amount": 4, "nations": ["lantern", "frostcrown"], "min_purity": 0.35, "min_copies": 2}
+ ],
+ "congenital": [
+  {"id": "closed_hearth", "kind": "sterile", "zh": "闭灶", "effect": "不育", "fusion": "lamp_frost_read", "locus": "tr_ash_spoke", "zygosity": "homozygous"},
+  {"id": "thin_marrow", "kind": "frail", "zh": "髓薄", "effect": "体弱，体质上限减 2", "loci": ["tr_eo_stroma", "tr_fc_storm"], "zygosity": "homozygous"}
+ ],
  "rng_note": "Original ten signature loci stay first in CKBloodline.LOCUS_ORDER and are drawn before trait_order. founder_sig/cross_sig use one forked RNG. Appending trait_order does not change draws for the original ten, nor the v8.7 loci (those run on the caller RNG before the fork). Reordering trait_order re-rolls trait genotypes only."
 }

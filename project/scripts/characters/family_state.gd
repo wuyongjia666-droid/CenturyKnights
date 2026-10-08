@@ -248,6 +248,8 @@ static func fertility_of(age: int) -> float:
 static func conception_rate(person) -> float:
 	if person == null:
 		return 0.0
+	if CKBloodFusion.is_sterile(person):
+		return 0.0
 	return fertility_of(int(person.age))
 
 

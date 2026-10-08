@@ -446,6 +446,20 @@ def main():
     if scales.get(1) != 0.6 or scales.get(2) != 1.0 or scales.get(3) != 1.35:
         err(f"royal_skill_tiers scales drifted: {scales}")
 
+    # DYN-07: fusion and congenital text stay inside the anti-trope list and do not add loci.
+    for row in d.get("fusions", []) + d.get("congenital", []):
+        blob = " ".join(str(row.get(k, "")) for k in ("zh", "effect"))
+        bad = forbidden(blob, forbid)
+        if bad:
+            err(f"{row.get('id')}: forbidden trope '{bad}'")
+        for w in zh_forbid:
+            if w in blob:
+                err(f"{row.get('id')}: forbidden trope '{w}'")
+        if not row.get("zh") or not row.get("effect"):
+            err(f"{row.get('id')}: needs zh and effect")
+    if len(d.get("fusions", [])) < 1 or len(d.get("congenital", [])) < 2:
+        err("fusion / congenital rows missing")
+
     if errors:
         for e in errors:
             print("FAIL bloodlines_v89:", e)

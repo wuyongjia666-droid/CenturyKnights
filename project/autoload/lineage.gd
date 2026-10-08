@@ -169,6 +169,7 @@ func birth_child(mother: CKCharacter) -> CKCharacter:
 		father.ensure_genome()
 	child.genome = CKGenome.cross(father.genome if father else mother.genome, mother.genome, child.blood_mix, rng, child.gender)
 	CKGenome.sync_appearance(child)
+	CKBloodFusion.apply_birth(child)
 	for note in CKBloodline.on_birth(child, father, mother):
 		GameState.lineage_log.append(note)
 		GameState.log_event(note)
