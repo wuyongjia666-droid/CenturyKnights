@@ -147,6 +147,7 @@ func to_dict() -> Dictionary:
 		"weapon_id": weapon_id, "faction": faction, "cast_key": cast_key, "skills": skills.duplicate(), "unlocked_skills": unlocked_skills.duplicate(),
 		"genome": genome.duplicate(true), "scars": scars.duplicate(), "honors": honors.duplicate(),
 		"blood_meta": blood_meta.duplicate(true),
+		"age_stage": CKGenomePortrait.stage_for_age(age),
 	}
 
 ## v8.7: founders / pre-v8.7 saves get a genome lazily (deterministic per id, keeps the visible legacy look)

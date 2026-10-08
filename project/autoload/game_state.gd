@@ -533,10 +533,10 @@ var estate_quiet_months: int = 0  # 连续无劫掠月数
 var patrol_cooldown: int = 0  # 全堡巡防冷却（月）
 var patrol_boost_months: int = 0  # 主动巡防抗劫剩余月
 const HOLDING_DEFS := {
-	"reed_ford": {"name": "苇原渡", "desc": "护商旧道属地", "food": 3, "silver": 2, "quest": "q_escort"},
-	"stone_slope": {"name": "石垒坡", "desc": "清匪后的丘地佃庄", "food": 2, "silver": 4, "quest": "q_bandit"},
-	"fog_vale": {"name": "雾谷药田", "desc": "药草租佃", "food": 1, "silver": 2, "herb": 1, "quest": "q_herb"},
-	"tide_bridge": {"name": "断潮渡哨", "desc": "河卫守桥契约地", "food": 2, "silver": 3, "rep": 1, "quest": "q_bridge"},
+	"reed_ford": {"name": "苇原渡", "desc": "护商旧道属地", "food": 3, "silver": 3, "quest": "q_escort"},
+	"stone_slope": {"name": "石垒坡", "desc": "清匪后的丘地佃庄", "food": 2, "silver": 5, "quest": "q_bandit"},
+	"fog_vale": {"name": "雾谷药田", "desc": "药草租佃", "food": 1, "silver": 3, "herb": 1, "quest": "q_herb"},
+	"tide_bridge": {"name": "断潮渡哨", "desc": "河卫守桥契约地", "food": 2, "silver": 4, "rep": 1, "quest": "q_bridge"},
 }
 var deploy_ids: Array = []
 var dirty: bool = false
@@ -545,6 +545,7 @@ var lineage_log: Array = []  # deeper marriage/lineage event strings
 var lineage_path: Dictionary = {}  # child_id -> "martial"|"scholar"|"merchant"
 
 const SAVE_PATH := "user://century_knights_save.json"
+const SAVE_SCHEMA := "v9.1"
 const REP_TIERS := [
 	{"id": "none", "min": 0},
 	{"id": "known", "min": 10},
@@ -1933,6 +1934,7 @@ func accept_quest(qid: String) -> Dictionary:
 		add_rep("riverland", 4)
 	for c in roster():
 		c.exp += 8 * int(q["stars"])
+		settle_exp(c)
 	var first = apply_quest_first_clear(qid)
 	log_event("完成任务「%s」+ %d 银%s" % [q["name"], q["silver"], ("；" + first) if first else ""])
 	mark_dirty()
@@ -2052,6 +2054,30 @@ func tick_doctrine_and_marriage_month() -> Array:
 	mark_dirty()
 	return msgs
 
+func exp_to_next(level: int) -> int:
+	return 36 + maxi(1, level) * 14
+
+## Turn stored exp into levels without touching the campaign RNG. Merit for titles reads level.
+func settle_exp(c: CKCharacter) -> int:
+	if c == null:
+		return 0
+	var ups := 0
+	while c.level < 20 and c.exp >= exp_to_next(c.level):
+		c.exp -= exp_to_next(c.level)
+		c.level += 1
+		ups += 1
+		var fork := RandomNumberGenerator.new()
+		fork.seed = hash("%s|lv|%d" % [c.id, c.level])
+		var key: String = CKCharacter.STAT_KEYS[fork.randi() % CKCharacter.STAT_KEYS.size()]
+		var cap := int(c.apt_max.get(key, 20))
+		if cap <= 0:
+			cap = 20
+		c.stats[key] = mini(cap, int(c.stats.get(key, 8)) + 1)
+	if ups > 0:
+		c.recalc_hp()
+		log_event("%s 升至 %d 级" % [c.name, c.level])
+	return ups
+
 func apply_monthly_upkeep() -> String:
 	var wage = 0
 	var mouths = 0
@@ -2066,6 +2092,10 @@ func apply_monthly_upkeep() -> String:
 	silver -= wage
 	var food_need = maxi(1, mouths)
 	food -= food_need
+	# A century of harvests with no sink became a grain ocean. Surplus above two years of rations spoils.
+	var granary := maxi(120, mouths * 24)
+	if food > granary:
+		food = granary + int(float(food - granary) * 0.82)
 	var msg = "月结：工资 -%d 银，粮 -%d" % [wage, food_need]
 	if silver < 0:
 		morale = maxi(0, morale - 15)
@@ -2099,9 +2129,9 @@ func apply_monthly_upkeep() -> String:
 
 func apply_harvest() -> String:
 	shrine_level = building_level("shrine")
-	var prod = 25 + shrine_level * 8 + building_level("hall") * 3
+	var prod = 22 + shrine_level * 6 + building_level("hall") * 2
 	food += prod
-	var sil = 15 + building_level("market") * 5
+	var sil = 22 + building_level("market") * 6
 	if bool(house_mods.get("trade_route", false)):
 		sil += 10
 	if bool(house_mods.get("vow_trade", false)):
@@ -2320,6 +2350,13 @@ func enemy_skill_table_for(map_id: String) -> Dictionary:
 	# chapter wildcard: ch5_* → try nothing; fall to diff defaults
 	return {}
 
+func _grant_theme_skill(c: CKCharacter, elite: bool, template_id: String, granted: Array) -> void:
+	if not elite or template_id == "":
+		return
+	var sid := CKTacticsAI.theme_skill(str(UnitModel.parse_enemy_template(template_id).get("theme", "")))
+	if sid != "" and not (sid in granted):
+		granted.append(sid)
+
 func _apply_skill_list(c: CKCharacter, sids: Array) -> void:
 	for sid in sids:
 		var id = str(sid)
@@ -2374,9 +2411,10 @@ func grant_battle_enemy_skills(c: CKCharacter, elite: bool = false, difficulty: 
 			granted.append_array(_skills_from_table_entry(gentry))
 			if elite:
 				granted.append_array(_elite_from_table_entry(gentry))
-	if used_table:
-		_apply_skill_list(c, granted)
-		return
+		if used_table:
+			_grant_theme_skill(c, elite, template_id, granted)
+			_apply_skill_list(c, granted)
+			return
 	# 回退：_defaults by diff
 	var defaults = root.get("_defaults", {})
 	var key = "diff_%d" % clampi(difficulty, 0, 4)
@@ -2386,6 +2424,7 @@ func grant_battle_enemy_skills(c: CKCharacter, elite: bool = false, difficulty: 
 		granted2.append_array(dtab.get("default", []))
 		if elite:
 			granted2.append_array(dtab.get("elite", []))
+		_grant_theme_skill(c, elite, template_id, granted2)
 		_apply_skill_list(c, granted2)
 		return
 	# 最终回退：旧曲线（稳定选取）
@@ -2436,6 +2475,10 @@ func grant_battle_enemy_skills(c: CKCharacter, elite: bool = false, difficulty: 
 		for k in need_t3:
 			var sid3 = str(t3[(start3 + k) % t3.size()])
 			_apply_skill_list(c, [sid3])
+	var themed: Array = []
+	_grant_theme_skill(c, elite, template_id, themed)
+	if not themed.is_empty():
+		_apply_skill_list(c, themed)
 
 func grant_job_skills(c: CKCharacter) -> void:
 	if c == null:
@@ -2768,9 +2811,72 @@ func build_dynasty_journal() -> String:
 	mark_dirty()
 	return dynasty_journal
 
+## v8.7 saves have no genome and no court fields. v8.8 saves have a v2 genome without signature loci.
+## Current saves already carry blood_meta; migration only fills what is missing.
+func migrate_save_data(data: Dictionary) -> Dictionary:
+	if data.is_empty():
+		return data
+	var schema := str(data.get("schema", ""))
+	var legacy := schema in ["v8.7", "v8.8", "8.7", "8.8"] or schema == ""
+	if not legacy and schema == SAVE_SCHEMA:
+		return data
+	var from := schema if schema != "" else "v8.7"
+	var saw_genome := false
+	var saw_sig := false
+	for id in data.get("characters", {}).keys():
+		var row: Dictionary = data["characters"][id]
+		if typeof(row.get("genome", {})) == TYPE_DICTIONARY and not (row.get("genome", {}) as Dictionary).is_empty():
+			saw_genome = true
+			if (row["genome"] as Dictionary).has("sig"):
+				saw_sig = true
+		row = _migrate_character_row(row)
+		data["characters"][id] = row
+	for bucket in ["tavern", "marriage"]:
+		var arr: Array = data.get(bucket, [])
+		for i in arr.size():
+			if typeof(arr[i]) == TYPE_DICTIONARY:
+				arr[i] = _migrate_character_row(arr[i])
+		data[bucket] = arr
+	if schema == "":
+		from = "v8.8" if saw_genome and not saw_sig else ("v9.0" if saw_sig else "v8.7")
+	var world: Dictionary = data.get("world_v87", {}) if typeof(data.get("world_v87", {})) == TYPE_DICTIONARY else {}
+	if typeof(world.get("royal_courts", {})) != TYPE_DICTIONARY or (world.get("royal_courts", {}) as Dictionary).is_empty():
+		if from in ["v8.7", "v8.8"]:
+			world["royal_courts"] = CKCourt.blank_courts(int(data.get("year", 1)) * 17 + 3)
+	data["world_v87"] = world
+	data["migrated_from"] = from
+	data["schema"] = SAVE_SCHEMA
+	data["version"] = 1
+	return data
+
+func _migrate_character_row(row: Dictionary) -> Dictionary:
+	if typeof(row.get("blood_meta")) != TYPE_DICTIONARY:
+		row["blood_meta"] = {}
+	var meta: Dictionary = row["blood_meta"]
+	if not meta.has("verified"):
+		meta["verified"] = false
+	if not meta.has("verdict"):
+		meta["verdict"] = ""
+	if typeof(meta.get("rites")) != TYPE_ARRAY:
+		meta["rites"] = []
+	if str(meta.get("title", "")) == "":
+		var rank := str(row.get("rank", "knight"))
+		meta["title"] = rank if rank in CKCharacter.RANK_ORDER else "knight"
+	if not meta.has("lamp_seat"):
+		meta["lamp_seat"] = ""
+	row["blood_meta"] = meta
+	if str(row.get("age_stage", "")) == "":
+		row["age_stage"] = CKGenomePortrait.stage_for_age(int(row.get("age", 20)))
+	if typeof(row.get("honors")) != TYPE_ARRAY:
+		row["honors"] = []
+	if typeof(row.get("genome")) != TYPE_DICTIONARY:
+		row["genome"] = {}
+	return row
+
 func save_game() -> bool:
 	var data = {
 		"version": 1,
+		"schema": SAVE_SCHEMA,
 		"surname": surname,
 		"crest_color": crest_color,
 		"silver": silver, "food": food, "iron": iron, "herb": herb, "morale": morale,
@@ -3061,6 +3167,12 @@ func load_game() -> bool:
 	var data = JSON.parse_string(f.get_as_text())
 	if typeof(data) != TYPE_DICTIONARY:
 		return false
+	return apply_save_data(data)
+
+func apply_save_data(data: Dictionary) -> bool:
+	if data.is_empty():
+		return false
+	data = migrate_save_data(data)
 	started = bool(data.get("started", true))
 	surname = str(data.get("surname", "灰旗"))
 	crest_color = str(data.get("crest_color", "#c9a227"))
@@ -3339,6 +3451,7 @@ func load_game() -> bool:
 	characters.clear()
 	for id in data.get("characters", {}).keys():
 		characters[id] = CKCharacter.from_dict(data["characters"][id])
+		characters[id].ensure_genome()
 	tavern_candidates.clear()
 	for d in data.get("tavern", []):
 		tavern_candidates.append(CKCharacter.from_dict(d))

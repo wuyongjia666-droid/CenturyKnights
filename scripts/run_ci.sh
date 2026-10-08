@@ -59,6 +59,14 @@ echo "==> atlas_e2e (v8.7 overworld: travel → city → smith → commission �
 godot --headless --path . --scene res://tests/atlas_e2e.tscn 2>&1 | tee /tmp/ck_atlas_e2e.log
 grep -q "=== ATLAS E2E PASS ===" /tmp/ck_atlas_e2e.log || { echo "atlas_e2e FAILED"; exit 1; }
 
+echo "==> save_roundtrip (v9.1 fields, v8.7/v8.8 migration)"
+godot --headless --path . --scene res://tests/save_roundtrip_check.tscn 2>&1 | tee /tmp/ck_save.log
+grep -q "SAVE ROUNDTRIP PASS" /tmp/ck_save.log || { echo "save_roundtrip FAILED"; exit 1; }
+
+echo "==> campaign_century (100-year scripted company)"
+godot --headless --path . --scene res://tests/campaign_century_check.tscn 2>&1 | tee /tmp/ck_campaign.log
+grep -q "CAMPAIGN CENTURY PASS" /tmp/ck_campaign.log || { echo "campaign_century FAILED"; exit 1; }
+
 echo "==> CI ALL PASS"
 
 # GitHub Actions: add .github/workflows/ci.yml that runs this script when the

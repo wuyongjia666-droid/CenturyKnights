@@ -108,10 +108,16 @@ func _apply_month() -> Array:
 				c.in_roster = false
 				evs.append({"type": "death", "text": "%s 辞世，入族谱碑" % c.name, "cid": c.id})
 			if c.is_child and c.age >= ADULT_AGE:
+				# Adults leave the child ration. They can still be enlisted; they no longer eat as infants for life.
+				c.is_child = false
 				var am = "%s 已达授旗年龄——可入花名册授旗；陆桥传『灰旗有嗣』。" % c.name
 				evs.append({"type": "adult", "text": am, "cid": c.id})
 				GameState.add_lineage_event(am)
 				GameState.add_skill_point(1)
+			if c.is_leader and (not c.alive or c.retired):
+				var handed: Dictionary = Lineage.transfer_banner("death" if not c.alive else "retire")
+				if bool(handed.get("ok", false)):
+					evs.append({"type": "succession", "text": str(handed.get("msg", "")), "cid": str(handed.get("heir_id", ""))})
 	# 月结粮饷
 	var pay = GameState.apply_monthly_upkeep()
 	evs.append({"type": "payroll", "text": pay})

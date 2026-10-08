@@ -4182,7 +4182,7 @@
     "铁匠图样",
     "议会公文"
    ],
-   "silver": 28,
+   "silver": 42,
    "rep": 5,
    "battle": false
   },
@@ -4206,7 +4206,7 @@
     "退役骑士",
     "说书人"
    ],
-   "silver": 40,
+   "silver": 58,
    "rep": 7,
    "battle": false,
    "risk": 0.25
@@ -4228,7 +4228,7 @@
     "盗墓头子",
     "人贩团伙"
    ],
-   "silver": 55,
+   "silver": 74,
    "rep": 9,
    "battle": true
   },
@@ -4240,7 +4240,7 @@
     "打通{road}"
    ],
    "turn_in": "issuer",
-   "silver": 60,
+   "silver": 82,
    "rep": 10,
    "battle": true
   },
@@ -4252,7 +4252,7 @@
     "{target}求援"
    ],
    "turn_in": "target",
-   "silver": 65,
+   "silver": 88,
    "rep": 11,
    "battle": true
   },
@@ -4264,7 +4264,7 @@
     "紧缺：{good}"
    ],
    "turn_in": "issuer",
-   "silver": 18,
+   "silver": 26,
    "rep": 5,
    "battle": false
   },
@@ -4276,7 +4276,7 @@
     "走一趟{target}"
    ],
    "turn_in": "issuer",
-   "silver": 22,
+   "silver": 34,
    "rep": 5,
    "battle": false
   }
