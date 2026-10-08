@@ -6,6 +6,10 @@ var _expect: RichTextLabel
 var _selected: CKCharacter
 var _msg: Label
 var _portrait: TextureRect
+var _leader_portrait: TextureRect
+var _seal_fx: TextureRect
+var _dual: Control
+const DUAL_W := 380.0
 var _vow_step: int = 0
 var _vow_panel: Control
 var _vow_body: RichTextLabel
@@ -69,22 +73,10 @@ func _build() -> void:
 	var dv := VBoxContainer.new()
 	dv.add_theme_constant_override("separation", 8)
 	detail_panel.add_child(dv)
-	_portrait = TextureRect.new()
-	_portrait.custom_minimum_size = Vector2(180, 220)
-	_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	dv.add_child(_portrait)
-	if ResourceLoader.exists("res://assets/art/ui/dual_portrait_frame.png"):
-		var _df := TextureRect.new()
-		_df.texture = load("res://assets/art/ui/dual_portrait_frame.png")
-		_df.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		_df.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		_df.custom_minimum_size = Vector2(360, 160)
-		_df.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		dv.add_child(_df)
-		UIFX.banner_shimmer(_df, 4.0)
+	dv.add_child(_build_dual())
 	_detail = RichTextLabel.new()
-	_detail.custom_minimum_size = Vector2(360, 250)
+	_detail.scroll_active = true
+	_detail.custom_minimum_size = Vector2(380, 190)
 	_detail.bbcode_enabled = true
 	_detail.add_theme_color_override("default_color", UIKit.TEXT)
 	dv.add_child(_detail)
@@ -186,6 +178,84 @@ func _refresh() -> void:
 		_list.add_child(b)
 	_select(GameState.marriage_candidates[0])
 
+func _oval_portrait(parent: Control, box: Rect2, s: float) -> TextureRect:
+	## portrait clipped to an ellipse (oval_mask) so it sits inside the dual frame's rings
+	var mask := TextureRect.new()
+	mask.texture = load("res://assets/art/ui/v85/oval_mask.png")
+	mask.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	mask.stretch_mode = TextureRect.STRETCH_SCALE
+	mask.position = box.position * s
+	mask.size = box.size * s
+	mask.clip_children = CanvasItem.CLIP_CHILDREN_ONLY
+	mask.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(mask)
+	var bgc := ColorRect.new()
+	bgc.color = UIKit.BG
+	bgc.size = mask.size
+	bgc.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	mask.add_child(bgc)
+	var tr := TextureRect.new()
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	tr.size = mask.size
+	tr.pivot_offset = mask.size * 0.5
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	mask.add_child(tr)
+	return tr
+
+func _build_dual() -> Control:
+	## v8.5 dual vow frame: v840 dual_portrait_frame with ovals cut (prep_v850_chrome.py);
+	## leader left, candidate right, authored marriage_seal FX blooms at the join.
+	var s := DUAL_W / 720.0
+	_dual = Control.new()
+	_dual.custom_minimum_size = Vector2(720, 320) * s
+	_dual.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_leader_portrait = _oval_portrait(_dual, Rect2(62, 48, 262, 230), s)
+	_portrait = _oval_portrait(_dual, Rect2(405, 36, 258, 246), s)
+	var fr := TextureRect.new()
+	var fp := "res://assets/art/ui/v85/dual_portrait_frame_cut.png"
+	if ResourceLoader.exists(fp):
+		fr.texture = load(fp)
+	fr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	fr.stretch_mode = TextureRect.STRETCH_SCALE
+	fr.size = _dual.custom_minimum_size
+	fr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_dual.add_child(fr)
+	UIFX.banner_shimmer(fr, 4.0)
+	_seal_fx = TextureRect.new()
+	_seal_fx.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_seal_fx.stretch_mode = TextureRect.STRETCH_SCALE
+	_seal_fx.size = Vector2(150, 150)
+	_seal_fx.position = Vector2(363, 160) * s - _seal_fx.size * 0.5
+	_seal_fx.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_seal_fx.modulate = Color(1, 1, 1, 0)
+	_dual.add_child(_seal_fx)
+	var leader = GameState.get_leader()
+	if leader:
+		_leader_portrait.texture = UnitArt.portrait(leader, 220)
+	return _dual
+
+func play_seal_fx(hold: bool = false) -> void:
+	if _seal_fx == null:
+		return
+	var frames: Array = []
+	for i in range(8):
+		var fp = "res://assets/art/fx/marriage_seal_dense_%d.png" % i
+		if ResourceLoader.exists(fp):
+			frames.append(load(fp))
+	if frames.is_empty():
+		return
+	_seal_fx.texture = frames[0]
+	_seal_fx.modulate = Color(1, 1, 1, 1)
+	for i in range(1, frames.size()):
+		var fi = i
+		get_tree().create_timer(0.07 * fi).timeout.connect(func():
+			if is_instance_valid(_seal_fx): _seal_fx.texture = frames[fi])
+	if not hold:
+		var tw = _seal_fx.create_tween()
+		tw.tween_interval(0.07 * frames.size() + 0.6)
+		tw.tween_property(_seal_fx, "modulate:a", 0.0, 0.5)
+
 func _select(c: CKCharacter) -> void:
 	_selected = c
 	var _g := str(c.gender)
@@ -196,10 +266,12 @@ func _select(c: CKCharacter) -> void:
 	elif _age >= 50:
 		_geno = "v84_geno_elder_%s_seal" % _g
 	var _gp := "res://assets/art/portraits/%s.png" % _geno
-	if ResourceLoader.exists(_gp):
+	# own face first (per-tag farm faces); v84 geno plate only as fallback
+	var own = UnitArt.portrait(c, 220)
+	if own != null:
+		_portrait.texture = own
+	elif ResourceLoader.exists(_gp):
 		_portrait.texture = load(_gp)
-	else:
-		_portrait.texture = UnitArt.portrait(c, 180)
 	UIFX.focus_ring(_portrait)
 	UIFX.select_pulse(_portrait)
 	var check = Lineage.can_propose(GameState.get_leader(), c)
@@ -298,6 +370,8 @@ func _finish_marry() -> void:
 		GameState.add_rep("ashland", 2)
 		Sfx.confirm()
 		Sfx.lineage_chime()
+		play_seal_fx()
+		if _dual: UIFX.select_pulse(_dual)
 		_refresh()
 
 func _back() -> void:

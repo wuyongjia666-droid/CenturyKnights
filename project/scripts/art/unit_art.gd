@@ -121,6 +121,26 @@ static func _try_load(path: String) -> Texture2D:
 	return null
 
 static func _portrait_key(c: CKCharacter) -> String:
+	# v8.5: named core cast -> v8 hero / bust plates (thumb 220x270: right size for cards, no
+	# minification aliasing). The old *_face_plate cartoons were pre-v8 placeholders.
+	var g8 := "f" if str(c.gender) == "f" else "m"
+	var v8n := ""
+	if c.is_leader:
+		v8n = "v8_hero_leader_%s" % g8
+	elif c.name.find("灯影") >= 0:
+		v8n = "v8_bust_%s_hunter" % g8
+	elif c.name.find("民兵·甲") >= 0:
+		v8n = "v8_bust_%s_spear" % g8
+	elif c.name.find("民兵·乙") >= 0:
+		v8n = "v8_bust_%s_guard" % g8
+	elif c.name.find("河荇") >= 0:
+		v8n = "v8_hero_strategist_f" if g8 == "f" else "v8_bust_m_scholar"
+	elif c.name.find("苇心") >= 0:
+		v8n = "v8_bust_%s_scout" % g8
+	if v8n != "":
+		for cand in ["res://assets/art/portraits/thumb_%s.png" % v8n, "res://assets/art/portraits/%s.png" % v8n]:
+			if ResourceLoader.exists(cand):
+				return cand
 	# 具名角色优先 face_plate（美术升档）
 	var named_plate := ""
 	if c.is_leader:
@@ -287,12 +307,49 @@ static func _portrait_key(c: CKCharacter) -> String:
 		job = job_map[job]
 	return "res://assets/art/portraits/%s_%s_%s_%s.png" % [hair, eyes, g, job]
 
+static var _cartoon_re: RegEx = null
+
+static func _is_cartoon_key(path: String) -> bool:
+	var f := path.get_file()
+	if f.begins_with("thumb_v8_") or f.begins_with("v8_") or f.begins_with("v84_") or path.find("qwen_v830") >= 0:
+		return false
+	if _cartoon_re == null:
+		_cartoon_re = RegEx.create_from_string("_(f|m)_(hunter|heavy_inf|light_inf|archer|priest|apprentice|squire|warrior|light_cavalry)\\.png$")
+	if _cartoon_re.search(f) != null:
+		return true
+	if f.begins_with("hire_") and f.ends_with("_plate.png"):
+		return true
+	if f.ends_with("_face_plate.png") or f in ["tank_plate.png", "ranger_plate.png", "mage_plate.png", "leader_plate.png", "skirm_plate.png", "leader_default.png"]:
+		return true
+	return false
+
+static func _v83_elite_for(path: String) -> String:
+	## v8.5: enemy portraits (bandit / {theme}_{thug,archer} / {theme}_boss[_face_plate]) are pre-v8
+	## procedural cartoons -> v8.3 dedicated elite plates (coral silhouettes) until enemy busts are farmed.
+	var f := path.get_file().get_basename()
+	var key := ""
+	if f == "bandit":
+		key = "bandit_captain"
+	elif f.ends_with("_boss_face_plate"):
+		key = f.trim_suffix("_face_plate")
+	elif f.ends_with("_boss") or f.ends_with("_thug") or f.ends_with("_archer") or f.ends_with("_raider") or f.ends_with("_thief"):
+		key = f
+	if key == "":
+		return ""
+	var ep := "res://assets/art/farm_inbox/qwen_v830/v83_elite_%s.png" % key
+	return ep if ResourceLoader.exists(ep) else ""
+
 static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
 	var path = _portrait_key(c)
+	var _elite := _v83_elite_for(path)
+	if _elite != "":
+		path = _elite
 	var ck = "p|" + path + "|" + str(c.id)
 	if _cache.has(ck):
 		return _cache[ck]
-	var tex2 = _try_load(path)
+	# v8.5: pre-v8 cartoon keys (allele-combo plates, hire_/role plates, old *_face_plate) must not
+	# shadow the 781 farmed hireuniq faces — renders showed every recruit/candidate as a cartoon.
+	var tex2 = null if _is_cartoon_key(path) else _try_load(path)
 	if tex2 != null:
 		_cache[ck] = tex2
 		return tex2
@@ -313,13 +370,19 @@ static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
 	if brow == "":
 		brow = "straight"
 	var face_p = "res://assets/art/portraits/hireface_%s_%s_%s_%s_%s.png" % [hair, eyes, g, scar, brow]
-	var ft = _try_load(face_p)
+	var ft = null  # v8.5: hireface_* are cartoon allele plates — skipped
 	if ft != null:
 		return _fingerprint_portrait(ft, c)
 	# 雇佣/花名册：角色×性别板（回退）
 	var role = BattleRules.job_role(c.job_id) if Engine.get_main_loop() else "skirmisher"
 	var hire_p = "res://assets/art/portraits/hire_%s_%s_plate.png" % [role, g]
-	var ht = _try_load(hire_p)
+	var ht = null  # v8.5: hire_*_plate cartoon — skipped
+	# v8.5: role-matched v8 bust before geno/procedural
+	var v8b = {"skirmisher": "spear", "tank": "guard", "ranger": "archer", "mage": "scholar", "cavalry": "cavalry", "healer": "medic", "support": "medic"}.get(role, "duelist")
+	var v8bp = "res://assets/art/portraits/thumb_v8_bust_%s_%s.png" % [g, v8b]
+	var v8bt = _try_load(v8bp)
+	if v8bt != null:
+		return _fingerprint_portrait(v8bt, c)
 	if ht != null:
 		_cache["hire|" + role + "|" + g + "|" + str(size)] = ht
 		return ht
@@ -335,7 +398,7 @@ static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
 		plate = "leader_plate"
 	if plate != "":
 		var pp = "res://assets/art/portraits/%s.png" % plate
-		var pt = _try_load(pp)
+		var pt = null  # v8.5: role plates are cartoon — skipped
 		if pt != null:
 			_cache["plate|" + plate + "|" + str(size)] = pt
 			return pt
@@ -352,6 +415,10 @@ static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
 	else:
 		_geno = "v84_geno_mid_%s_house" % _g
 	var _gp := "res://assets/art/portraits/%s.png" % _geno
+	# v8.5: card/list sizes use the pre-downscaled 220x270 thumb (crisper, lighter)
+	var _thumb := "res://assets/art/portraits/thumb_%s.png" % _geno
+	if size <= 240 and ResourceLoader.exists(_thumb):
+		_gp = _thumb
 	if ResourceLoader.exists(_gp):
 		var _gt = _try_load(_gp)
 		if _gt != null:
@@ -553,6 +620,13 @@ static func token(c: CKCharacter, team: String, size: int = 48, done: bool = fal
 	if _cache.has(ck):
 		return _cache[ck]
 	var tex2 = _try_load(path)
+	# v8.5: leader shard-plate + legacy 72px chibi tokens are unreadable on the board ->
+	# bust token composed from the unit's own portrait (face crop, team rim).
+	if path.find("leader_default") >= 0 or (tex2 != null and tex2.get_width() <= 72):
+		var bt = _bust_token(c, team, done)
+		if bt != null:
+			_cache[ck] = bt
+			return bt
 	if tex2 != null:
 		_cache[ck] = tex2
 		return tex2
@@ -573,6 +647,55 @@ static func token(c: CKCharacter, team: String, size: int = 48, done: bool = fal
 			_cache["tplate|" + plate + "|" + team + "|" + str(frame)] = pt
 			return pt
 	return _proc_token(c, team, size, done)
+
+static func _bust_token(c: CKCharacter, team: String, done: bool = false) -> Texture2D:
+	var key = "bust|%s|%s|%s" % [str(c.id) if c.id != "" else c.name, team, str(done)]
+	if _cache.has(key):
+		return _cache[key]
+	var pt = portrait(c, 220)
+	if pt == null:
+		return null
+	var img: Image = pt.get_image()
+	if img == null or img.is_empty():
+		return null
+	if img.is_compressed():
+		img.decompress()
+	img.convert(Image.FORMAT_RGBA8)
+	var w := img.get_width()
+	var h := img.get_height()
+	var side := int(min(w, h) * 0.80)
+	var x0 := int((w - side) / 2)
+	var y0 := clampi(int(h * 0.05), 0, maxi(0, h - side))
+	var crop := img.get_region(Rect2i(x0, y0, side, side))
+	var S := 128
+	crop.resize(S, S, Image.INTERPOLATE_LANCZOS)
+	var out := Image.create(S, S, false, Image.FORMAT_RGBA8)
+	var rim := Color(0.45, 0.95, 0.82) if team == "player" else Color(1.0, 0.48, 0.45)
+	if c.is_leader:
+		rim = Color(0.62, 0.86, 1.0)
+	var cxy := (S - 1) * 0.5
+	for y in S:
+		for x in S:
+			var r := Vector2(x - cxy, y - cxy).length() / (S * 0.5)
+			if r > 1.0:
+				continue
+			var col := crop.get_pixel(x, y)
+			col.a = 1.0
+			# subtle bottom vignette for depth
+			var vg := clampf((float(y) / S - 0.55) * 0.6, 0.0, 0.3)
+			col = col.darkened(vg)
+			if done:
+				var g := col.get_luminance()
+				col = Color(g, g, g).lerp(col, 0.25).darkened(0.25)
+			var ring := exp(-pow((r - 0.915) / 0.035, 2.0))
+			col = col.lerp(rim, clampf(ring, 0.0, 1.0))
+			var inner_glow := exp(-pow((r - 0.86) / 0.05, 2.0)) * 0.25
+			col = col.lerp(rim, inner_glow)
+			col.a = clampf((0.985 - r) * S * 0.25, 0.0, 1.0)
+			out.set_pixel(x, y, col)
+	var tex := ImageTexture.create_from_image(out)
+	_cache[key] = tex
+	return tex
 
 static func banner(w: int = 160, h: int = 220, with_name: bool = true) -> Texture2D:
 	var hex = _crest_hex()

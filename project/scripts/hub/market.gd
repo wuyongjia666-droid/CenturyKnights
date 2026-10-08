@@ -136,11 +136,13 @@ func _ready() -> void:
 		_msg.text = str(r.get("msg"))
 		if r.get("ok"):
 			UIFX.confirm_burst(escort)
-				UIFX.chip_pulse(escort)
+			UIFX.chip_pulse(escort)
 			Sfx.confirm()
 			GameState.save_game()
 			_refresh_prices()
-)
+		else:
+			UIFX.soft_deny(escort)
+	)
 	add_child(escort)
 	if ResourceLoader.exists("res://assets/art/ui/caravan_escort_chip.png"):
 		var ec := TextureRect.new()

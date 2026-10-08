@@ -7,13 +7,11 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[2]
 FX = ROOT / "project/assets/art/fx"
 
+# v8.5: these prefixes are authored by tools/fx/author_vfx_v85.py — never overwrite with farm slices.
+AUTHORED_V85 = {"hit_spark", "hit_dense", "slash", "slash_dense", "heal", "heal_dense", "crit", "lock", "shield",
+                "spark", "dmg_pop", "zoc_pulse", "unlock", "turn_flash", "select_dense", "marriage_seal", "lineage_link"}
+
 SHEETS = [
-    ("lineage_link_sheet.png", "lineage_link", 6),
-    ("marriage_seal_sheet.png", "marriage_seal", 6),
-    ("select_dense_sheet.png", "select_dense", 6),
-    ("heal_dense_sheet.png", "heal_dense", 6),
-    ("slash_dense_sheet.png", "slash_dense", 6),
-    ("hit_dense_sheet.png", "hit_dense", 6),
     ("critical_crystal_sheet.png", "critical_crystal", 6),
     ("boss_entrance_sheet.png", "boss_entrance", 6),
     ("heal_priest_sheet.png", "heal_priest", 6),
@@ -64,6 +62,9 @@ def key_plate(cell: Image.Image, black_thr: int = 32, white_thr: int = 235) -> I
     return cell
 
 def slice_one(sheet: Path, prefix: str, n: int) -> int:
+    if prefix in AUTHORED_V85:
+        print("SKIP authored", prefix)
+        return 0
     if not sheet.exists():
         print("skip missing", sheet.name); return 0
     im = Image.open(sheet).convert("RGBA")

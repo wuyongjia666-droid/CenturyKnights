@@ -43,11 +43,14 @@ static func make_accent_button(text: String, min_w: int = 160) -> Button:
 	b.add_theme_stylebox_override("pressed", p)
 	b.add_theme_stylebox_override("focus", f)
 	b.add_theme_stylebox_override("disabled", d)
-	b.add_theme_color_override("font_color", Color(0.12, 0.10, 0.06))
-	b.add_theme_color_override("font_hover_color", Color(0.08, 0.06, 0.02))
-	b.add_theme_color_override("font_pressed_color", Color(0.05, 0.04, 0.02))
-	b.add_theme_color_override("font_focus_color", Color(0.10, 0.08, 0.04))
+	# v8.5: accent chrome plate is dark glass -> frost-light text (old gold-era brown text was unreadable)
+	b.add_theme_color_override("font_color", Color(0.84, 0.94, 1.0))
+	b.add_theme_color_override("font_hover_color", Color(1, 1, 1))
+	b.add_theme_color_override("font_pressed_color", ACCENT)
+	b.add_theme_color_override("font_focus_color", Color(1, 1, 1))
 	b.add_theme_color_override("font_disabled_color", DISABLED_TEXT)
+	b.add_theme_color_override("font_outline_color", Color(0.03, 0.05, 0.09, 0.9))
+	b.add_theme_constant_override("outline_size", 4)
 	b.focus_mode = Control.FOCUS_ALL
 	return b
 
@@ -143,7 +146,24 @@ static func make_dim_label(text: String) -> Label:
 static func make_panel() -> PanelContainer:
 	var p := PanelContainer.new()
 	var flat = parchment_style()
-	p.add_theme_stylebox_override("panel", _tex_style("res://assets/art/ui/panel_chrome.png", flat))
+	# v8.5: panel_chrome has a thick ice border -> content margins clear it (renders showed overlap)
+	# v8.5: half-scale chrome + 9-slice margins that contain the whole ice border (24/20) -> border
+	# thickness is constant on every panel size (12px margins let the spikes stretch into content)
+	var hp := "res://assets/art/ui/v85/panel_chrome_half.png"
+	if ResourceLoader.exists(hp):
+		var sb := StyleBoxTexture.new()
+		sb.texture = load(hp)
+		sb.texture_margin_left = 25
+		sb.texture_margin_right = 25
+		sb.texture_margin_top = 21
+		sb.texture_margin_bottom = 21
+		sb.content_margin_left = 26
+		sb.content_margin_right = 26
+		sb.content_margin_top = 22
+		sb.content_margin_bottom = 22
+		p.add_theme_stylebox_override("panel", sb)
+	else:
+		p.add_theme_stylebox_override("panel", _tex_style("res://assets/art/ui/panel_chrome.png", flat, Vector2i(24, 22)))
 	return p
 
 static func parchment_style() -> StyleBoxFlat:

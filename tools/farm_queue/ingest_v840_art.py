@@ -9,6 +9,8 @@ ROOT = Path(__file__).resolve().parents[2]
 SRC = ROOT / "project/assets/art/farm_inbox/qwen_v840"
 UI = ROOT / "project/assets/art/ui"
 FX = ROOT / "project/assets/art/fx"
+REJ = ROOT / "tools/farm_queue/rejected_v840"
+REJ.mkdir(parents=True, exist_ok=True)
 POR = ROOT / "project/assets/art/portraits"
 
 MAP = {
@@ -30,12 +32,14 @@ MAP = {
     "v84_ui_unit_card_frame": UI / "unit_card_frame.png",
     "v84_ui_skill_chip": UI / "skill_chip.png",
     "v84_ui_hp_bar_dense": UI / "hp_bar_kit.png",
-    "v84_fx_hit_dense_sheet": FX / "hit_dense_sheet.png",
-    "v84_fx_slash_dense_sheet": FX / "slash_dense_sheet.png",
-    "v84_fx_heal_dense_sheet": FX / "heal_dense_sheet.png",
-    "v84_fx_select_dense_sheet": FX / "select_dense_sheet.png",
-    "v84_fx_marriage_seal_sheet": FX / "marriage_seal_sheet.png",
-    "v84_fx_lineage_link_sheet": FX / "lineage_link_sheet.png",
+    # v8.5: v840 "FX sheets" came back as illustration panels (characters/castles), not VFX.
+    # Rejected -> archived outside runtime; battle FX are authored (tools/fx/author_vfx_v85.py).
+    "v84_fx_hit_dense_sheet": REJ / "hit_dense_sheet.png",
+    "v84_fx_slash_dense_sheet": REJ / "slash_dense_sheet.png",
+    "v84_fx_heal_dense_sheet": REJ / "heal_dense_sheet.png",
+    "v84_fx_select_dense_sheet": REJ / "select_dense_sheet.png",
+    "v84_fx_marriage_seal_sheet": REJ / "marriage_seal_sheet.png",
+    "v84_fx_lineage_link_sheet": REJ / "lineage_link_sheet.png",
 }
 
 def mild(im: Image.Image) -> Image.Image:

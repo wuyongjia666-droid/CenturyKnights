@@ -1,5 +1,5 @@
 {
-  "art_pass": "v8.4.0-art",
+  "art_pass": "v8.5.0-art",
   "patrol_frames": 12,
   "heroes": [
     "leader_default",
@@ -79,5 +79,35 @@
     "fx_dense_frames": 36,
     "geno_portraits": 8,
     "stitch_exports": 0
+  },
+  "v850": {
+    "wired": [
+      "lineage_card_frame",
+      "bloodline_strip(fill/frame/under)",
+      "marriage/lineage banners",
+      "estate tiles grain/cash/fortify",
+      "estate_focus_bar",
+      "unit_card_shell",
+      "skill_chip_frame",
+      "hp_bar_kit(frame/under/ally/enemy)",
+      "dual_portrait_frame_cut",
+      "panel_chrome_half"
+    ],
+    "chrome_dir": "project/assets/art/ui/v85/",
+    "fx": "procedurally authored (tools/fx/author_vfx_v85.py); v840 FX sheets rejected (illustration panels, not VFX)",
+    "fx_draw_sizes_px_on_56_cell": {
+      "slash": 80,
+      "heal": 84,
+      "crit": 108,
+      "lock": 80,
+      "shield": 80,
+      "spark": 76,
+      "hit_spark": 72,
+      "select": 74
+    },
+    "texture_filter": "linear",
+    "tokens": "v8_job_* readability pass (silhouette on clean field, team rim)",
+    "audit": "tools/audit_v840_usage.py LEFTOVER 0 (in CI)",
+    "stitch": "24 live Stitch Pro screens snapshot -> docs/art/stitch_skeletons_v8/live_v850/"
   }
 }

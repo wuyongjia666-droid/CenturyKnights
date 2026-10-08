@@ -29,6 +29,10 @@ var _zoc_hover_kind: String = ""  # "", "lock3", "leave2", "zoc"
 var _banner_tex: TextureRect
 var _unit_panel: PanelContainer
 var _portrait: TextureRect
+const UnitCardScript = preload("res://scripts/ui/unit_card.gd")
+var _unit_card: Control
+## v8.5 authored FX draw sizes (px) — 56px cells; 128px sources downsampled for crisp reads
+const FX_SIZE := {"slash": 80.0, "heal": 84.0, "crit": 108.0, "lock": 80.0, "shield": 80.0, "spark": 76.0}
 var _info_traits: HBoxContainer
 var _dmg_fx: Array = []  # {pos, text, age, col}
 var _turn_flash: float = 0.0
@@ -834,7 +838,33 @@ func _process(delta: float) -> void:
 	if map_draw and _sel_pulse:
 		map_draw.queue_redraw()
 
+## v8.5: texture cache. A texture load()ed for the first time inside _draw records as a
+## white placeholder on the GL renderer (seen in real renders) — warm FX here, cache everything.
+var _tex_cache: Dictionary = {}
+
+func _tex(path: String) -> Texture2D:
+	if _tex_cache.has(path):
+		return _tex_cache[path]
+	var t: Texture2D = load(path) if ResourceLoader.exists(path) else null
+	_tex_cache[path] = t
+	return t
+
+func _warm_fx_cache() -> void:
+	var kinds := ["hit", "slash", "heal", "crit", "lock", "shield", "spark", "dmg_pop", "turn_flash", "zoc_pulse", "select"]
+	for k in kinds:
+		for i in range(8):
+			_tex("res://assets/art/fx/%s_dense_%d.png" % [k, i])
+			_tex("res://assets/art/fx/%s_%d.png" % [k, i])
+	for i in range(6):
+		_tex("res://assets/art/fx/hit_spark_%d.png" % i)
+		_tex("res://assets/art/fx/move_dust_%d.png" % i)
+	for w in ["select_wash", "move_wash", "attack_wash"]:
+		_tex("res://assets/art/fx/%s.png" % w)
+	for u in ["zoc_hatch_safe", "zoc_hatch_zoc", "zoc_hatch_leave", "zoc_hatch_lock", "zoc_chip_lock3", "zoc_chip_leave2", "zoc_leave_legend"]:
+		_tex("res://assets/art/ui/%s.png" % u)
+
 func _build_ui() -> void:
+	_warm_fx_cache()
 	_bg = ColorRect.new()
 	_bg.color = UIKit.BG
 	_bg.set_anchors_preset(PRESET_FULL_RECT)
@@ -915,16 +945,14 @@ func _build_ui() -> void:
 	var left_info := VBoxContainer.new()
 	left_info.add_theme_constant_override("separation", 4)
 	phb.add_child(left_info)
-	_portrait = TextureRect.new()
-	_portrait.custom_minimum_size = Vector2(96, 96)
-	_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	left_info.add_child(_portrait)
+	_unit_card = UnitCardScript.new(360.0)
+	left_info.add_child(_unit_card)
+	_portrait = _unit_card.portrait
 	_info_traits = HBoxContainer.new()
 	_info_traits.add_theme_constant_override("separation", 3)
 	left_info.add_child(_info_traits)
 	info_label = RichTextLabel.new()
-	info_label.custom_minimum_size = Vector2(580, 180)
+	info_label.custom_minimum_size = Vector2(318, 180)
 	info_label.bbcode_enabled = true
 	info_label.fit_content = true
 	info_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -1435,13 +1463,13 @@ func _draw_overlay() -> void:
 			else:
 				hatch = "res://assets/art/ui/zoc_hatch_safe.png"
 			if hatch != "" and ResourceLoader.exists(hatch):
-				var ht: Texture2D = load(hatch)
+				var ht: Texture2D = _tex(hatch)
 				var ha = (0.55 + 0.45 * pulse) if hovered else (0.75 + 0.25 * pulse)
 				overlay.draw_texture_rect(ht, r, false, Color(1, 1, 1, clampf(ha, 0.4, 1.0)))
 				if hovered and tag != "":
 					var pf = "res://assets/art/fx/zoc_pulse_%d.png" % (int(_sel_pulse * 10.0) % 6)
 					if ResourceLoader.exists(pf):
-						overlay.draw_texture_rect(load(pf), r.grow(4.0), false, Color(1, 1, 1, 0.55 + 0.35 * pulse))
+						overlay.draw_texture_rect(_tex(pf), r.grow(4.0), false, Color(1, 1, 1, 0.55 + 0.35 * pulse))
 			if tag != "":
 				var chip_path = ""
 				if tag == "锁3":
@@ -1453,7 +1481,7 @@ func _draw_overlay() -> void:
 				var tp = ORIGIN + Vector2(pos) * CELL + Vector2(CELL - 22, 2)
 				var csz = 20.0 if hovered else 18.0
 				if chip_path != "" and ResourceLoader.exists(chip_path):
-					overlay.draw_texture_rect(load(chip_path), Rect2(tp, Vector2(csz, csz)), false)
+					overlay.draw_texture_rect(_tex(chip_path), Rect2(tp, Vector2(csz, csz)), false)
 				else:
 					overlay.draw_rect(Rect2(tp, Vector2(18, 14)), Color(0.05, 0.05, 0.08, 0.75))
 		# 图例：纯图标芯片（无长文字）
@@ -1461,7 +1489,7 @@ func _draw_overlay() -> void:
 			var lx = 40.0
 			var ly = ORIGIN.y + MAP_H * CELL + 6.0
 			if ResourceLoader.exists("res://assets/art/ui/zoc_leave_legend.png"):
-				var ltex = load("res://assets/art/ui/zoc_leave_legend.png")
+				var ltex = _tex("res://assets/art/ui/zoc_leave_legend.png")
 				overlay.draw_texture(ltex, Vector2(lx, ly))
 	if selected >= 0 and selected < units.size():
 		var u = units[selected]
@@ -1482,6 +1510,15 @@ func _draw_overlay() -> void:
 						var a = 0.45 if attack_mode else 0.25
 						overlay.draw_rect(r2, Color(0.95, 0.2, 0.2, a))
 						overlay.draw_rect(r2, Color(1.0, 0.4, 0.3, 0.8), false, 2.0)
+	# v8.5 选中准星（authored select_dense 8帧循环）
+	if selected >= 0 and selected < units.size() and units[selected].char.hp > 0:
+		var sfi = int(_sel_pulse * 12.0) % 8
+		var sp = "res://assets/art/fx/select_dense_%d.png" % sfi
+		if ResourceLoader.exists(sp):
+			var cpos = ORIGIN + Vector2(units[selected].pos) * CELL + Vector2(CELL, CELL) * 0.5 - Vector2(1, 1)
+			var rs := float(CELL) + 18.0
+			var scol = Color(1, 1, 1, 0.95) if units[selected].team == "player" else Color(1.0, 0.62, 0.62, 0.95)
+			overlay.draw_texture_rect(_tex(sp), Rect2(cpos - Vector2(rs, rs) * 0.5, Vector2(rs, rs)), false, scol)
 	# slash + hit_spark 分层（game-feel）
 	for s in _slash_fx:
 		var fi = mini(5, int(s.age / 0.08))
@@ -1495,23 +1532,24 @@ func _draw_overlay() -> void:
 		if not ResourceLoader.exists(path):
 			path = "res://assets/art/fx/slash_%d.png" % fi
 		if ResourceLoader.exists(path):
-			var tex = load(path)
-			var half = Vector2(tex.get_width(), tex.get_height()) * 0.5
-			overlay.draw_texture(tex, s.pos - half)
-		var spark = "res://assets/art/fx/hit_dense_%d.png" % fi
-		if not ResourceLoader.exists(spark):
-			spark = "res://assets/art/fx/hit_spark_%d.png" % fi
-		if ResourceLoader.exists(spark):
-			var stex = load(spark)
-			var shalf = Vector2(stex.get_width(), stex.get_height()) * 0.5
-			overlay.draw_texture(stex, s.pos - shalf, Color(1, 1, 1, 0.85))
+			var fs: float = float(FX_SIZE.get(kind, 84.0))
+			overlay.draw_texture_rect(_tex(path), Rect2(s.pos - Vector2(fs, fs) * 0.5, Vector2(fs, fs)), false)
+		if kind in ["slash", "crit", "spark"]:
+			var spark = "res://assets/art/fx/hit_dense_%d.png" % fi
+			if not ResourceLoader.exists(spark):
+				spark = "res://assets/art/fx/hit_spark_%d.png" % fi
+			if ResourceLoader.exists(spark):
+				var hs := 72.0
+				overlay.draw_texture_rect(_tex(spark), Rect2(s.pos - Vector2(hs, hs) * 0.5, Vector2(hs, hs)), false, Color(1, 1, 1, 0.9))
 	# 交战锁定爆发环
 	for lb in _lock_burst_fx:
 		var fi3 = mini(5, int(lb.age / 0.09))
-		var lp = "res://assets/art/fx/lock_%d.png" % fi3
+		var lp = "res://assets/art/fx/lock_dense_%d.png" % fi3
+		if not ResourceLoader.exists(lp):
+			lp = "res://assets/art/fx/lock_%d.png" % fi3
 		if ResourceLoader.exists(lp):
 			var a3 = clampf(1.0 - lb.age / 0.55, 0.0, 1.0)
-			overlay.draw_texture(load(lp), lb.pos - Vector2(36, 36), Color(1, 1, 1, a3))
+			overlay.draw_texture_rect(_tex(lp), Rect2(lb.pos - Vector2(40, 40), Vector2(80, 80)), false, Color(1, 1, 1, a3))
 	# 伤害飘字 + dmg_pop 底板
 	for fx in _dmg_fx:
 		var a = clampf(1.0 - fx.age / 1.1, 0.0, 1.0)
@@ -1519,18 +1557,22 @@ func _draw_overlay() -> void:
 		var col: Color = fx.col
 		col.a = a
 		var fi2 = mini(5, int(fx.age / 0.12))
-		var pop = "res://assets/art/fx/dmg_pop_%d.png" % fi2
+		var pop = "res://assets/art/fx/dmg_pop_dense_%d.png" % fi2
+		if not ResourceLoader.exists(pop):
+			pop = "res://assets/art/fx/dmg_pop_%d.png" % fi2
 		if ResourceLoader.exists(pop):
-			overlay.draw_texture(load(pop), fx.pos + Vector2(-24, yoff - 18), Color(1, 1, 1, a * 0.9))
+			overlay.draw_texture_rect(_tex(pop), Rect2(fx.pos + Vector2(-22, yoff - 30), Vector2(48, 48)), false, Color(1, 1, 1, a * 0.9))
 		overlay.draw_string(ThemeDB.fallback_font, fx.pos + Vector2(-10, yoff), fx.text, HORIZONTAL_ALIGNMENT_LEFT, -1, 18, col)
 	# 回合横幅
 	if _turn_flash > 0.0:
 		var a2 = clampf(_turn_flash / 0.9, 0.0, 1.0)
 		var txt = "—— 玩家回合 ——" if turn_team == "player" else "—— 敌方回合 ——"
 		var tfi = mini(5, int((0.9 - _turn_flash) / 0.15))
-		var tfp = "res://assets/art/fx/turn_flash_%d.png" % tfi
+		var tfp = "res://assets/art/fx/turn_flash_dense_%d.png" % tfi
+		if not ResourceLoader.exists(tfp):
+			tfp = "res://assets/art/fx/turn_flash_%d.png" % tfi
 		if ResourceLoader.exists(tfp):
-			overlay.draw_texture(load(tfp), Vector2(40, 280), Color(1, 1, 1, a2 * 0.85))
+			overlay.draw_texture_rect(_tex(tfp), Rect2(Vector2(28, 277), Vector2(96, 96)), false, Color(1, 1, 1, a2 * 0.9))
 		overlay.draw_rect(Rect2(80, 300, 360, 50), Color(0.05, 0.06, 0.08, 0.75 * a2))
 		overlay.draw_string(ThemeDB.fallback_font, Vector2(120, 332), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 22, Color(UnitArt.crest_color(), a2))
 	# 地形悬停提示
@@ -1538,7 +1580,7 @@ func _draw_overlay() -> void:
 		var sw = "res://assets/art/fx/attack_wash.png" if attack_mode else ("res://assets/art/fx/move_wash.png" if ResourceLoader.exists("res://assets/art/fx/move_wash.png") else "res://assets/art/fx/select_wash.png")
 		if ResourceLoader.exists(sw):
 			var hr = Rect2(ORIGIN + Vector2(_hover_cell) * CELL, Vector2(CELL - 2, CELL - 2))
-			overlay.draw_texture_rect(load(sw), hr.grow(2.0), false, Color(1, 1, 1, 0.55 + 0.25 * sin(_sel_pulse * 6.0)))
+			overlay.draw_texture_rect(_tex(sw), hr.grow(2.0), false, Color(1, 1, 1, 0.55 + 0.25 * sin(_sel_pulse * 6.0)))
 		var tid = terrain[_hover_cell.y][_hover_cell.x]
 		var ti = BattleRules.terrain_info(tid)
 		var tip = "%s　回避+%d　防+%d　移耗%d" % [ti.name, ti.avo_bonus, ti.get("def_bonus", 0), ti.move_cost]
@@ -2086,36 +2128,41 @@ func _show_lock_tip_once() -> void:
 
 func _show_lock_tip_panel(title: String, body: String, step: int, auto_sec: float) -> Control:
 	var panel = UIKit.make_panel()
-	panel.position = Vector2(280, 72)
+	panel.position = Vector2(520, 586)  # v8.5: lower band — never covers the unit card / map
 	panel.custom_minimum_size = Vector2(720, 100)
 	panel.z_index = 20
 	panel.name = "LockTipPanel"
 	add_child(panel)
-	var step_path = "res://assets/art/ui/lock_tip_step%d.png" % clampi(step, 0, 2)
-	if ResourceLoader.exists(step_path):
-		var bg = TextureRect.new()
-		bg.texture = load(step_path)
-		bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		bg.stretch_mode = TextureRect.STRETCH_SCALE
-		bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		panel.add_child(bg)
-	elif ResourceLoader.exists("res://assets/art/ui/lock_tip_banner.png"):
-		var bg2 = TextureRect.new()
-		bg2.texture = load("res://assets/art/ui/lock_tip_banner.png")
-		bg2.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		bg2.stretch_mode = TextureRect.STRETCH_SCALE
-		bg2.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		bg2.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		panel.add_child(bg2)
+	# v8.5: legacy gold lock_tip_step plates retired (off-vibe, stretched) -> design-system chrome:
+	# frosted panel + authored coral lock glyph + step pips
+	var hrow := HBoxContainer.new()
+	hrow.add_theme_constant_override("separation", 14)
+	panel.add_child(hrow)
+	var glyph := TextureRect.new()
+	glyph.texture = _tex("res://assets/art/fx/lock_dense_3.png")
+	glyph.custom_minimum_size = Vector2(72, 72)
+	glyph.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	glyph.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hrow.add_child(glyph)
+	UIFX.breathe(glyph, 0.04, 1.6)
 	var vb := VBoxContainer.new()
 	vb.add_theme_constant_override("separation", 4)
-	panel.add_child(vb)
+	hrow.add_child(vb)
+	var pips := HBoxContainer.new()
+	pips.add_theme_constant_override("separation", 6)
+	for pi in range(3):
+		var pip := ColorRect.new()
+		pip.custom_minimum_size = Vector2(22 if pi == step else 10, 4)
+		pip.color = UIKit.DANGER if pi == step else Color(UIKit.TEXT_DIM, 0.5)
+		pip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		pips.add_child(pip)
+	vb.add_child(pips)
 	var t = UIKit.make_label(title, true)
 	t.add_theme_color_override("font_color", Color(1.0, 0.45, 0.35))
 	vb.add_child(t)
 	var d = UIKit.make_dim_label(body)
-	d.custom_minimum_size = Vector2(680, 40)
+	d.custom_minimum_size = Vector2(600, 40)
 	d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	vb.add_child(d)
 	if auto_sec > 0.0:
@@ -3397,6 +3444,7 @@ func _refresh_info_for(ui: int) -> void:
 	var u = units[ui]
 	var c: CKCharacter = u.char
 	_portrait.texture = UnitArt.portrait(c, 96)
+	if _unit_card: _unit_card.set_unit(c, u.team)
 	var _nm := str(c.name)
 	if (u.team == "enemy" or c.faction == "enemy") and (_nm.find("匪首") >= 0 or _nm.find("头目") >= 0 or _nm.find("Boss") >= 0):
 		if _portrait:
@@ -3429,14 +3477,17 @@ func _refresh_info() -> void:
 		info_label.text = "[b]选择己方单位开始行动[/b]\n目标：歼灭全部敌人。\n蓝格可移动 · 红格为可攻目标 · 攻击模式后点敌。"
 		if GameState.get_leader():
 			_portrait.texture = UnitArt.portrait(GameState.get_leader(), 96)
+			if _unit_card: _unit_card.set_unit(GameState.get_leader(), "player")
 			_fill_info_traits(GameState.get_leader())
 		else:
 			_portrait.texture = UnitArt.banner(96, 96, false)
+			if _unit_card: _unit_card.set_unit(null)
 			_fill_info_traits(null)
 		return
 	var u = units[selected]
 	var c: CKCharacter = u.char
 	_portrait.texture = UnitArt.portrait(c, 96)
+	if _unit_card: _unit_card.set_unit(c, u.team)
 	_fill_info_traits(c)
 	var tid = terrain[u.pos.y][u.pos.x]
 	var tinfo = BattleRules.terrain_info(tid)

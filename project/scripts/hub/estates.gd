@@ -41,9 +41,30 @@ func _ready() -> void:
 	sum.name = "Sum"
 	add_child(sum)
 
+	# v8.5 estate_focus_bar plate: focus overview strip (counts overlay on the plate's clear lane)
+	var fbar := TextureRect.new()
+	fbar.name = "FocusBar"
+	if ResourceLoader.exists("res://assets/art/ui/estate_focus_bar.png"):
+		fbar.texture = load("res://assets/art/ui/estate_focus_bar.png")
+	fbar.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	fbar.stretch_mode = TextureRect.STRETCH_SCALE
+	fbar.position = Vector2(728, 92)
+	fbar.size = Vector2(512, 48)
+	fbar.mouse_filter = Control.MOUSE_FILTER_PASS
+	add_child(fbar)
+	UIFX.banner_shimmer(fbar, 4.4)
+	var fcount := UIKit.make_label(_focus_counts_text())
+	fcount.name = "FocusCounts"
+	fcount.add_theme_font_size_override("font_size", 13)
+	fcount.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.9))
+	fcount.add_theme_constant_override("outline_size", 4)
+	fcount.position = Vector2(740, 120)
+	add_child(fcount)
+	fbar.tooltip_text = "经营偏向总览：粮作 / 钱作 / 戍卫"
+
 	var scroll := ScrollContainer.new()
-	scroll.position = Vector2(40, 140)
-	scroll.custom_minimum_size = Vector2(1200, 460)
+	scroll.position = Vector2(40, 146)
+	scroll.custom_minimum_size = Vector2(1200, 466)
 	add_child(scroll)
 	_list = VBoxContainer.new()
 	_list.add_theme_constant_override("separation", 12)
@@ -76,6 +97,55 @@ func _ready() -> void:
 		picon.position = Vector2(490, 662)
 		picon.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(picon)
+
+func _focus_counts_text() -> String:
+	var n := {"grain": 0, "cash": 0, "fortify": 0}
+	for hid in GameState.HOLDING_DEFS.keys():
+		if GameState.holding_unlocked(hid):
+			var f = str(GameState.holding_focus(hid))
+			n[f] = int(n.get(f, 0)) + 1
+	return "粮作 %d　·　钱作 %d　·　戍卫 %d" % [n.grain, n.cash, n.fortify]
+
+func _refresh_focus_counts() -> void:
+	var fc = get_node_or_null("FocusCounts")
+	if fc: fc.text = _focus_counts_text()
+
+func _focus_tile(fk: String, current: bool, hid: String) -> Button:
+	## v8.5 estate_focus_{grain,cash,fortify} plates (duotoned) as illustrated focus buttons.
+	var flab = {"grain": "粮作", "cash": "钱作", "fortify": "戍卫"}[fk]
+	var b: Button = UIKit.make_accent_button(flab + "　·　当前", 168) if current else UIKit.make_button(flab, 168)
+	b.custom_minimum_size = Vector2(168, 124)
+	var tp = "res://assets/art/ui/v85/estate_tile_%s.png" % fk
+	if ResourceLoader.exists(tp):
+		b.icon = load(tp)
+		b.expand_icon = true
+		b.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		b.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
+	b.tooltip_text = {"grain": "粮作：月结偏粮", "cash": "钱作：月结偏银", "fortify": "戍卫：抗劫掠"}[fk] + "（改作10银/冷却2月）"
+	if current:
+		UIFX.select_pulse(b)
+	else:
+		b.modulate = Color(0.82, 0.86, 0.92, 1)
+	var capt_h = hid
+	b.pressed.connect(func():
+		UIFX.press_feedback(b)
+		if current:
+			_msg.text = "已是当前经营偏向：%s" % flab
+			return
+		var rr = GameState.set_holding_focus(capt_h, fk)
+		_msg.text = str(rr.get("msg"))
+		if rr.get("ok"):
+			UIFX.confirm_burst(b)
+			Sfx.confirm()
+			GameState.save_game()
+			_rebuild()
+			_refresh_focus_counts()
+			var sum2 = get_node_or_null("Sum")
+			if sum2: sum2.text = _sum_text()
+		else:
+			UIFX.soft_deny(b)
+	)
+	return b
 
 func _sum_text() -> String:
 	var stewards = 0
@@ -164,37 +234,12 @@ func _rebuild() -> void:
 			var foc_row := HBoxContainer.new()
 			foc_row.add_theme_constant_override("separation", 8)
 			vb.add_child(foc_row)
-			var ficon = TextureRect.new()
-			var icon_path = "res://assets/art/ui/estate_focus_%s.png" % foc
-			if ResourceLoader.exists(icon_path):
-				ficon.texture = load(icon_path)
-				ficon.custom_minimum_size = Vector2(28, 28)
-				ficon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-				ficon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-				foc_row.add_child(ficon)
 			foc_row.add_child(UIKit.make_dim_label("经营偏向：%s（改作10银/冷却2月）" % foc_cn))
 			var fbtns := HBoxContainer.new()
-			fbtns.add_theme_constant_override("separation", 6)
+			fbtns.add_theme_constant_override("separation", 10)
 			vb.add_child(fbtns)
 			for fk in ["grain", "cash", "fortify"]:
-				var flab = {"grain": "粮作", "cash": "钱作", "fortify": "戍卫"}[fk]
-				var fb = UIKit.make_button(flab, 72)
-				fb.disabled = (fk == foc)
-				var capt_h = hid
-				var capt_f = fk
-				fb.pressed.connect(func():
-					UIFX.press_feedback(fb)
-					var rr = GameState.set_holding_focus(capt_h, capt_f)
-					_msg.text = str(rr.get("msg"))
-					if rr.get("ok"):
-						UIFX.confirm_burst(fb)
-						Sfx.confirm()
-						GameState.save_game()
-						_rebuild()
-						var sum2 = get_node_or_null("Sum")
-						if sum2: sum2.text = _sum_text()
-				)
-				fbtns.add_child(fb)
+				fbtns.add_child(_focus_tile(fk, fk == foc, hid))
 		else:
 			vb.add_child(UIKit.make_dim_label("完成委任「%s」首通后开垦" % str(def.get("quest", ""))))
 
