@@ -13,10 +13,20 @@ func _ready() -> void:
 		var path = "res://assets/sfx/%s.wav" % id
 		if ResourceLoader.exists(path):
 			p.stream = load(path)
-		p.bus = "Master"
+		p.bus = bus_for(id)
 		p.volume_db = -6.0
 		add_child(p)
 		_players[id] = p
+
+func bus_for(id: String) -> String:
+	var bus_name := "SFX"
+	if id.begins_with("ui_"):
+		bus_name = "UI"
+	elif id.begins_with("amb_"):
+		bus_name = "Ambience"
+	if AudioServer.get_bus_index(bus_name) < 0:
+		return "Master"
+	return bus_name
 
 func play(id: String) -> void:
 	play_vol(id, -6.0)
@@ -51,7 +61,7 @@ func play_spatial(id: String, world_pos: Vector2, volume_db: float = -6.0, max_d
 		p2 = AudioStreamPlayer2D.new()
 		p2.name = id + "_2d"
 		p2.stream = p1.stream
-		p2.bus = "Master"
+		p2.bus = bus_for(id)
 		p2.max_distance = max_dist
 		p2.attenuation = 1.2
 		add_child(p2)
