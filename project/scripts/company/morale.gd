@@ -50,14 +50,14 @@ static func on_payday(host, paid: bool) -> String:
 	var n := unpaid_months(host) + 1
 	host.house_mods["unpaid_months"] = n
 	if n < 2:
-		return "欠饷 %d 个月" % n
+		return Locale.t("欠饷 %d 个月") % n
 	if bool(host.house_mods.get("morale_hold", false)):
 		host.house_mods.erase("morale_hold")
-		host.log_event("欠饷已两月，挽留下了要走的人")
-		return "欠饷已两月，挽留下了要走的人"
+		host.log_event(Locale.t("欠饷已两月，挽留下了要走的人"))
+		return Locale.t("欠饷已两月，挽留下了要走的人")
 	var who := _lowest(host)
 	if who == null:
-		return "欠饷已两月，没有可走的人"
+		return Locale.t("欠饷已两月，没有可走的人")
 	who.in_roster = false
 	if typeof(who.blood_meta) != TYPE_DICTIONARY:
 		who.blood_meta = {}
@@ -67,7 +67,7 @@ static func on_payday(host, paid: bool) -> String:
 		if str(id) != who.id:
 			kept.append(id)
 	host.deploy_ids = kept
-	var text := "%s 因连续欠饷离队" % who.name
+	var text := Locale.t("%s 因连续欠饷离队") % who.name
 	host.log_event(text)
 	host.add_lineage_event(text)
 	return text
