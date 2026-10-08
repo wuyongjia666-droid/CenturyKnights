@@ -42,6 +42,7 @@ func _ready() -> void:
 		nm.size = Vector2(144, 22)
 		nm.clip_text = true
 		nm.autowrap_mode = TextServer.AUTOWRAP_OFF
+		nm.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		nm.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		b.add_child(nm)
 		var captured := str(nid)
@@ -58,6 +59,7 @@ func _ready() -> void:
 		_show(str(ids[0]))
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
+	apply_mobile_layout()
 
 func _back() -> void:
 	get_tree().change_scene_to_file("res://scenes/hub/lineage_view.tscn")
@@ -189,15 +191,104 @@ func _royal_skill(nid: String) -> Dictionary:
 	return {"line": "此邦没有单独的王技。", "tip": CKBloodPayoff.legend_zh()}
 
 func apply_mobile_layout() -> void:
-	MobileLayout.pin_footer(get_node_or_null("StitchFooter"))
-	var w := get_viewport_rect().size.x
-	if w >= 1000.0 or _body == null:
+	var vp := get_viewport_rect().size
+	_fit_chrome(vp)
+	if _body == null:
+		return
+	if vp.x >= 1100.0 and vp.y >= 680.0:
 		return
 	var rail := get_node_or_null("NationRailPanel") as Control
-	if rail:
-		rail.position = Vector2(8, 168)
-		rail.size = Vector2(112, 520)
-	_body.position = Vector2(128, 168)
-	_body.size = Vector2(maxf(220.0, w - 136.0), 560)
+	if rail == null:
+		return
+	var margin := 8.0
+	var top := 158.0
+	var rail_h := 52.0
+	rail.clip_contents = true
+	rail.position = Vector2(margin, top)
+	rail.size = Vector2(maxf(160.0, vp.x - margin * 2.0), rail_h)
+	var sc := _rail_scroll(rail)
+	if sc:
+		sc.position = Vector2(8, 4)
+		sc.size = Vector2(maxf(80.0, rail.size.x - 16.0), rail_h - 8.0)
+		sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+		sc.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		_nation_row(sc)
+	var foot := get_node_or_null("StitchFooter") as Control
+	var foot_y := vp.y - 8.0
+	if foot:
+		foot_y = foot.position.y
+	_body.clip_contents = true
+	_body.position = Vector2(margin, top + rail_h + 8.0)
+	_body.size = Vector2(rail.size.x, maxf(120.0, foot_y - 8.0 - _body.position.y))
 	if _nation != "":
 		_show(_nation)
+
+func _fit_chrome(vp: Vector2) -> void:
+	var bar := get_node_or_null("StitchTopBar") as Control
+	if bar and vp.x < 1270.0:
+		bar.size.x = vp.x
+		var right: HBoxContainer = null
+		for ch in bar.get_children():
+			if ch is ColorRect:
+				(ch as ColorRect).size.x = vp.x
+			elif ch is HBoxContainer:
+				right = ch
+		if right:
+			var width := minf(right.get_combined_minimum_size().x, maxf(140.0, vp.x * 0.42))
+			right.position = Vector2(vp.x - 8.0 - width, right.position.y)
+			right.size = Vector2(width, right.size.y)
+			right.clip_contents = true
+			for ch2 in bar.get_children():
+				if ch2 is Label and (ch2 as Label).position.x > 120.0:
+					var lab := ch2 as Label
+					lab.size = Vector2(maxf(48.0, right.position.x - lab.position.x - 8.0), 26)
+					lab.clip_text = true
+					lab.autowrap_mode = TextServer.AUTOWRAP_OFF
+					lab.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	var foot := get_node_or_null("StitchFooter") as Control
+	MobileLayout.pin_footer(foot)
+	if foot == null:
+		return
+	if vp.y < 680.0:
+		foot.position.y = vp.y - foot.size.y
+	foot.size.x = vp.x
+	foot.clip_contents = true
+	for ch3 in foot.get_children():
+		if ch3 is ColorRect:
+			(ch3 as ColorRect).size.x = vp.x
+		elif ch3 is Label and vp.x < 1100.0:
+			(ch3 as Label).visible = false
+
+func _rail_scroll(rail: Control) -> ScrollContainer:
+	for ch in rail.get_children():
+		if ch is ScrollContainer:
+			return ch
+	return null
+
+func _nation_row(sc: ScrollContainer) -> void:
+	var box := sc.get_node_or_null("NationRail")
+	if box == null:
+		return
+	var row := box
+	if box is VBoxContainer:
+		row = HBoxContainer.new()
+		row.name = "NationRail"
+		row.add_theme_constant_override("separation", 4)
+		for k in box.get_children():
+			box.remove_child(k)
+			row.add_child(k)
+		sc.remove_child(box)
+		box.queue_free()
+		sc.add_child(row)
+	for b in row.get_children():
+		if not (b is Button):
+			continue
+		(b as Button).custom_minimum_size = Vector2(128, 40)
+		var nm := b.get_node_or_null("NationName") as Label
+		if nm == null:
+			continue
+		nm.position = Vector2(40, 9)
+		nm.size = Vector2(82, 22)
+		nm.clip_text = true
+		nm.autowrap_mode = TextServer.AUTOWRAP_OFF
+		nm.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
