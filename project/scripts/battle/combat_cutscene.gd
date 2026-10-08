@@ -471,30 +471,28 @@ func _arrow(from_side: String, to_side: String, dur: float) -> void:
 		return
 	var a: Node3D = _units[from_side].node
 	var b: Node3D = _units[to_side].node
-	var mi := MeshInstance3D.new()
-	var cm := CylinderMesh.new()
-	cm.top_radius = 0.012
-	cm.bottom_radius = 0.012
-	cm.height = 0.7
-	mi.mesh = cm
-	var m := StandardMaterial3D.new()
-	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	var ch = _units[from_side].get("char", null)
+	var job := ""
+	if ch != null:
+		job = str(ch.job_id)
+	var kind := "bolt" if job in ["apprentice", "priest"] else "arrow"
 	var col: Color = UIKit.DANGER if str(_units[from_side].team) == "enemy" else UIKit.ACCENT
-	m.albedo_color = col
-	m.emission_enabled = true
-	m.emission = col
-	m.emission_energy_multiplier = 3.0
-	mi.material_override = m
-	mi.rotation_degrees = Vector3(0, 0, 90)
 	var p0 := a.position + Vector3(0, 1.35, 0)
 	var p1 := b.position + Vector3(0, 1.25, 0)
-	mi.position = p0
-	a.get_parent().add_child(mi)
+	var proj := CutsceneSignature.spawn_projectile(a.get_parent(), p0, p1, kind, col, float(_budget.get("particles", 1.0)))
 	var t := _tw()
-	t.tween_property(mi, "position", p1, maxf(0.05, dur))
+	t.tween_property(proj, "position", p1, maxf(0.05, dur))
+	var holder: WeakRef = weakref(proj)
 	t.tween_callback(func():
-		if is_instance_valid(mi):
-			mi.queue_free())
+		var alive: Object = holder.get_ref()
+		if alive != null:
+			alive.call("queue_free"))
+
+func _royal_vfx(side: String, strike: Dictionary) -> void:
+	var n := _node(side)
+	if n == null or n.get_parent() == null:
+		return
+	CutsceneSignature.spawn_signature(n.get_parent(), n.position + Vector3(0, 1.45, 0), str(strike.get("skill_id", "")), str(strike.get("skill", "")), float(_budget.get("particles", 1.0)))
 
 func _set_hp(side: String, v: int) -> void:
 	if not _hud.has(side):
@@ -586,6 +584,8 @@ func _begin_segment(sid: String, dur: float, a: String, d: String, dir: float, a
 			_play(a, action, 0.05)
 			if ranged:
 				_arrow(a, d, dur)
+			if CutsceneTimeline.is_royal_skill(str(strike.get("skill", ""))) or CutsceneTimeline.is_royal_skill(str(strike.get("skill_id", ""))):
+				_royal_vfx(a, strike)
 		"hitstop", "react":
 			_apply_hit(a, d, dir, strike, sid == "hitstop")
 		"whiff":
