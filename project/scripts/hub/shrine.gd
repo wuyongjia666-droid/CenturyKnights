@@ -34,7 +34,7 @@ func _ready() -> void:
 		"CONSUMPTION", "无消耗", false, "", Callable())
 	_card(Rect2(450, y, w, 412), "SERVICE // 02 · 祈愈之水", "TARGET FOCUSED", "祈愈", "PURIFICATION & HEALING",
 		"清除临时伤 · 回满全队生命",
-		"在祠堂焚香祈愈：所有负伤者清除临时伤，生命回满。出征前来一趟，旗下人才走得远。",
+		"在祠堂焚香祈愈：轻伤清除，重伤缩短休养，生命回满。永久伤要药材，或靠传家兵器缓解。重伤期间不能出战。",
 		[["负伤骑士", "%d 人" % injured, UIKit.DANGER if injured > 0 else UIKit.OK], ["未满生命", "%d / %d 人" % [hurt, roster.size()], UIKit.TEXT], ["回复量", "100% 生命", UIKit.OK]],
 		"COST REQUIREMENT", "免费 · 祠堂恩典", true, "祈愈", Callable(self, "_heal"))
 	_card(Rect2(858, y + 16, w, 380), "SERVICE // 03 · 祠堂修缮", "工事 · WORKS", "修缮", "SANCTUARY RESTORATION",

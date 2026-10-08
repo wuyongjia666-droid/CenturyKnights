@@ -85,6 +85,11 @@ func _ready() -> void:
 	_load()
 	if not Calendar.month_advanced.is_connected(_on_month):
 		Calendar.month_advanced.connect(_on_month)
+	if not get_tree().node_added.is_connected(_bind_battle_casualty):
+		get_tree().node_added.connect(_bind_battle_casualty)
+
+func _bind_battle_casualty(n: Node) -> void:
+	CKInjury.attach(n)
 
 func _read(path: String) -> Dictionary:
 	if not FileAccess.file_exists(path):
