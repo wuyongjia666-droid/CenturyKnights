@@ -27,7 +27,7 @@ func _ready() -> void:
 		await _marriage()
 	if only == "cutscene" or only == "cutscene_bow":
 		await _cutscene(only == "cutscene_bow")
-	for pair in [["castle","res://scenes/hub/castle_hub.tscn"],["roster","res://scenes/hub/roster.tscn"],["tavern","res://scenes/hub/tavern.tscn"],["menu","res://scenes/ui/main_menu.tscn"],["atlas","res://scenes/hub/atlas_view.tscn"],["settings","res://scenes/ui/settings.tscn"],["forge","res://scenes/hub/forge.tscn"],["shrine","res://scenes/hub/shrine.tscn"],["market","res://scenes/hub/market.tscn"],["deploy","res://scenes/hub/deploy.tscn"]]:
+	for pair in [["castle","res://scenes/hub/castle_hub.tscn"],["roster","res://scenes/hub/roster.tscn"],["tavern","res://scenes/hub/tavern.tscn"],["menu","res://scenes/ui/main_menu.tscn"],["atlas","res://scenes/hub/atlas_view.tscn"],["settings","res://scenes/ui/settings.tscn"],["forge","res://scenes/hub/forge.tscn"],["shrine","res://scenes/hub/shrine.tscn"],["market","res://scenes/hub/market.tscn"],["deploy","res://scenes/hub/deploy.tscn"],["chapter0","res://scenes/story/chapter0.tscn"],["chapter50","res://scenes/story/chapter50.tscn"]]:
 		if only == pair[0] or (only == "" and pair[0] != ""):
 			await _scene(pair[1], pair[0], 1.2)
 	print("CAPTURE_DONE ", OUT)

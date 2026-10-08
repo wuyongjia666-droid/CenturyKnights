@@ -9,7 +9,7 @@ var _portrait: TextureRect
 var _banner: TextureRect
 
 func _ready() -> void:
-	_build(); UIFX.fade_in(self, 0.4); Music.play_hub()
+	_build(); UIKit.stitch_dialogue(self); UIFX.fade_in(self, 0.4); Music.play_hub()
 	_load_beat(GameState.chapter18_beat if GameState.chapter18_beat != "" else "18.0")
 
 func _build() -> void:

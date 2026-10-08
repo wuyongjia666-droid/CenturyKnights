@@ -1086,3 +1086,142 @@ static func portrait_plate(parent: Control, rect: Rect2, c, caption: String = ""
 		cap.position = Vector2(12, rect.size.y - 22)
 		p.add_child(cap)
 	return p
+
+static func stitch_dialogue(scene: Control) -> void:
+	## v8.6 — Stitch 21_dialogue skin for every story chapter (scripts share _banner/_title/_portrait/_speaker/
+	## _body/_actions). Re-lays the built nodes: ink void + grid, brand line, large speaker plate left,
+	## bottom transcript box, choice branch cards right-aligned above the box, footer keycaps. Logic untouched.
+	var portrait = scene.get("_portrait")
+	var speaker = scene.get("_speaker")
+	var body = scene.get("_body")
+	var actions = scene.get("_actions")
+	var title = scene.get("_title")
+	var banner = scene.get("_banner")
+	if not (portrait is TextureRect and speaker is Label and body is RichTextLabel and actions is Control):
+		return
+	var vg := void_bg(scene)
+	scene.move_child(vg, 1 if scene.get_child_count() > 1 else 0)
+	if banner is CanvasItem:
+		(banner as CanvasItem).visible = false
+	# brand line + chapter title
+	var brand := mono("CENTURY KNIGHTS //", 10, TEXT_DIM)
+	brand.position = Vector2(42, 22)
+	scene.add_child(brand)
+	if title is Label:
+		var t := title as Label
+		t.position = Vector2(48 + brand.get_minimum_size().x, 16)
+		t.add_theme_font_size_override("font_size", 16)
+		t.add_theme_color_override("font_color", TEXT)
+	var hl := hairline(Color(1, 1, 1, 0.08))
+	hl.position = Vector2(0, 52)
+	hl.size = Vector2(1280, 1)
+	scene.add_child(hl)
+	var eb := mono("● SPEAKER ACTIVE // 01", 9, ACCENT, false)
+	eb.position = Vector2(56, 74)
+	scene.add_child(eb)
+	# speaker plate (left)
+	var plate := Panel.new()
+	plate.name = "SpeakerPlate"
+	plate.position = Vector2(56, 96)
+	plate.size = Vector2(300, 420)
+	plate.clip_contents = true
+	var ps := flat_box(Color(0.04, 0.05, 0.07, 0.9), Color(ACCENT, 0.45), 6)
+	ps.shadow_color = Color(ACCENT, 0.14)
+	ps.shadow_size = 18
+	plate.add_theme_stylebox_override("panel", ps)
+	plate.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	scene.add_child(plate)
+	var panel: Control = null
+	var hb = (portrait as Control).get_parent()
+	if hb is Control and (hb as Control).get_parent() is Control:
+		panel = (hb as Control).get_parent()
+	if panel and panel.get_parent() == scene:
+		scene.move_child(plate, panel.get_index())
+	(portrait as Control).reparent(plate, false)
+	var pr := portrait as TextureRect
+	pr.position = Vector2(1, 1)
+	pr.custom_minimum_size = Vector2(298, 418)
+	pr.size = Vector2(298, 418)
+	pr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	var shade := ColorRect.new()
+	shade.color = Color(BG, 0.0)
+	var g := Gradient.new()
+	g.set_color(0, Color(BG, 0.0))
+	g.set_color(1, Color(BG, 0.9))
+	g.set_offset(0, 0.62)
+	var gt := GradientTexture2D.new()
+	gt.gradient = g
+	gt.fill_from = Vector2(0, 0)
+	gt.fill_to = Vector2(0, 1)
+	var sh := TextureRect.new()
+	sh.texture = gt
+	sh.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	sh.stretch_mode = TextureRect.STRETCH_SCALE
+	sh.size = Vector2(300, 420)
+	sh.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	plate.add_child(sh)
+	var cap := mono("", 9, TEXT_DIM, false)
+	cap.position = Vector2(14, 392)
+	plate.add_child(cap)
+	# transcript box (bottom)
+	if panel:
+		panel.position = Vector2(180, 486)
+		panel.custom_minimum_size = Vector2(920, 176)
+		panel.size = Vector2(920, 176)
+		panel.set_deferred("size", Vector2(920, 176))
+		var bs := flat_box(Color(0.035, 0.045, 0.065, 0.94), Color(ACCENT, 0.30), 8)
+		bs.content_margin_left = 26
+		bs.content_margin_right = 26
+		bs.content_margin_top = 16
+		bs.content_margin_bottom = 14
+		panel.add_theme_stylebox_override("panel", bs)
+		var tr := mono("TRANSCRIPT // LOG", 8, TEXT_FAINT, false)
+		tr.position = Vector2(1090 - 110, 472)
+		scene.add_child(tr)
+	var sp := speaker as Label
+	var chip := flat_box(Color(ACCENT, 0.10), Color(ACCENT, 0.55), 4)
+	chip.content_margin_left = 10
+	chip.content_margin_right = 10
+	chip.content_margin_top = 2
+	chip.content_margin_bottom = 2
+	sp.add_theme_stylebox_override("normal", chip)
+	sp.add_theme_font_size_override("font_size", 15)
+	sp.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	var bd := body as RichTextLabel
+	bd.custom_minimum_size = Vector2(860, 96)
+	bd.add_theme_font_size_override("normal_font_size", 17)
+	bd.add_theme_constant_override("line_separation", 6)
+	# choice branch cards: right-aligned, bottom pinned above the transcript box
+	var act := actions as Control
+	var relayout := func():
+		if not is_instance_valid(act):
+			return
+		var sz := act.get_combined_minimum_size()
+		act.position = Vector2(1100 - maxf(sz.x, 240.0), 462 - sz.y)
+	if act is BoxContainer:
+		(act as BoxContainer).alignment = BoxContainer.ALIGNMENT_END
+		act.sort_children.connect(relayout)
+	relayout.call()
+	# narrator / crest banner → hide plate; keep caption in sync with speaker
+	var tm := Timer.new()
+	tm.wait_time = 0.1
+	tm.autostart = true
+	scene.add_child(tm)
+	var sync := func():
+		if not is_instance_valid(pr):
+			return
+		var tex: Texture2D = pr.texture
+		var is_banner := tex == null or (tex.resource_path.find("/banners/") >= 0) or (tex.get_width() < 200 and tex.get_height() > tex.get_width() * 1.2)
+		plate.visible = not is_banner
+		eb.visible = plate.visible
+		cap.text = ("SPEAKER // " + sp.text) if sp.text != "" else ""
+	tm.timeout.connect(sync)
+	sync.call()
+	# chapter-level buttons (存档 / 返回灰旗堡) sit in the brand bar, right-aligned
+	for ch in scene.get_children():
+		if ch is Button and (ch as Button).position.y < 90:
+			var cb := ch as Button
+			cb.custom_minimum_size = Vector2(maxf(cb.custom_minimum_size.x, 112), 32)
+			compact(cb, 32)
+			cb.position = Vector2(1238 - maxf(cb.size.x, cb.custom_minimum_size.x), 10)
+	footer_bar(scene, [["A", "继续 / 选择"]], "STORY // TRANSCRIPT v8.6")

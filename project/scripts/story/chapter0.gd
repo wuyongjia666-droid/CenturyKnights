@@ -13,6 +13,7 @@ var _beat_meta: Label
 
 func _ready() -> void:
 	_build()
+	UIKit.stitch_dialogue(self)
 	_load_beat(GameState.chapter0_beat)
 
 func _build() -> void:

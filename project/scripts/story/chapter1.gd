@@ -12,6 +12,7 @@ var _banner: TextureRect
 
 func _ready() -> void:
 	_build()
+	UIKit.stitch_dialogue(self)
 	UIFX.fade_in(self, 0.4)
 	_load_beat(GameState.chapter1_beat if GameState.chapter1_beat != "" else "1.0")
 
