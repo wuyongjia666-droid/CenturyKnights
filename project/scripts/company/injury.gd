@@ -51,10 +51,10 @@ static func deploy_block_reason(c: CKCharacter) -> String:
 	if c == null:
 		return ""
 	if not c.alive:
-		return "已阵亡"
+		return Locale.t("已阵亡")
 	var rec := record(c)
 	if str(rec.get("tier", "")) == "grave" and int(rec.get("months_left", 0)) > 0:
-		return "重伤休养，还要 %d 个月" % int(rec.get("months_left", 0))
+		return Locale.t("重伤休养，还要 %d 个月") % int(rec.get("months_left", 0))
 	return ""
 
 
@@ -74,12 +74,12 @@ static func label(c: CKCharacter) -> String:
 	var rec := record(c)
 	if rec.is_empty():
 		return ""
-	var name := str(rec.get("name", "负伤"))
+	var name := str(rec.get("name", Locale.t("负伤")))
 	var left := int(rec.get("months_left", 0))
 	if str(rec.get("tier", "")) == "lasting":
 		return name
 	if left > 0:
-		return "%s · %d月" % [name, left]
+		return Locale.t("%s · %d月") % [name, left]
 	return name
 
 
@@ -108,7 +108,7 @@ static func tick_month(host) -> String:
 		var left := int(rec.get("months_left", 0)) - 1
 		if left <= 0:
 			_clear(c)
-			notes.append("%s 的伤好了" % c.name)
+			notes.append(Locale.t("%s 的伤好了") % c.name)
 		else:
 			rec["months_left"] = left
 			_write(c, rec)
@@ -149,23 +149,23 @@ static func ease_at_shrine(c: CKCharacter, shrine_level: int) -> void:
 static func mitigate(c: CKCharacter, source: String) -> Dictionary:
 	var rec := record(c)
 	if str(rec.get("tier", "")) != "lasting":
-		return {"ok": false, "msg": "没有永久伤"}
+		return {"ok": false, "msg": Locale.t("没有永久伤")}
 	if source == "clinic":
 		if GameState.herb < 1:
-			return {"ok": false, "msg": "药材不够"}
+			return {"ok": false, "msg": Locale.t("药材不够")}
 		GameState.herb -= 1
 	elif source == "heirloom":
 		if str(c.weapon_id) == "":
-			return {"ok": false, "msg": "没有可依的传家兵器"}
+			return {"ok": false, "msg": Locale.t("没有可依的传家兵器")}
 	else:
-		return {"ok": false, "msg": "未知的缓解"}
+		return {"ok": false, "msg": Locale.t("未知的缓解")}
 	var back := int(rec.get("skl_applied", 0))
 	if back != 0:
 		c.stats["skl"] = int(c.stats.get("skl", 0)) + back
 	_clear(c)
 	c.injured = false
-	GameState.log_event("%s 的永久伤缓解了（%s）" % [c.name, "药材" if source == "clinic" else "传家兵器"])
-	return {"ok": true, "msg": "永久伤缓解了"}
+	GameState.log_event(Locale.t("%s 的永久伤缓解了（%s）") % [c.name, Locale.t("药材") if source == "clinic" else Locale.t("传家兵器")])
+	return {"ok": true, "msg": Locale.t("永久伤缓解了")}
 
 
 static func attach(battle: Node) -> void:
@@ -234,9 +234,9 @@ static func _wound(c: CKCharacter, difficulty: int, rng: RandomNumberGenerator) 
 	var rec := {"tier": tier, "months_left": 0, "skl_applied": 0, "move": 0, "id": "", "name": ""}
 	if tier == "lasting":
 		var kinds: Array = spec.get("lasting", [])
-		var kind: Dictionary = kinds[rng.randi() % kinds.size()] if not kinds.is_empty() else {"id": "limp", "name": "跛足", "skl": 0, "move": -1}
+		var kind: Dictionary = kinds[rng.randi() % kinds.size()] if not kinds.is_empty() else {"id": "limp", "name": Locale.t("跛足"), "skl": 0, "move": -1}
 		rec["id"] = str(kind.get("id", "limp"))
-		rec["name"] = str(kind.get("name", "永久伤"))
+		rec["name"] = str(kind.get("name", Locale.t("永久伤")))
 		var skl_delta := int(kind.get("skl", 0))
 		if skl_delta < 0:
 			c.stats["skl"] = maxi(1, int(c.stats.get("skl", 1)) + skl_delta)
@@ -248,14 +248,14 @@ static func _wound(c: CKCharacter, difficulty: int, rng: RandomNumberGenerator) 
 		var hi := int(span[1]) if span.size() > 1 else lo
 		rec["months_left"] = lo + rng.randi_range(0, maxi(0, hi - lo))
 		rec["id"] = "fracture"
-		rec["name"] = "重伤"
+		rec["name"] = Locale.t("重伤")
 	else:
 		var span2: Array = spec.get("light_months", [1, 2])
 		var lo2 := int(span2[0])
 		var hi2 := int(span2[1]) if span2.size() > 1 else lo2
 		rec["months_left"] = lo2 + rng.randi_range(0, maxi(0, hi2 - lo2))
 		rec["id"] = "bruise"
-		rec["name"] = "轻伤"
+		rec["name"] = Locale.t("轻伤")
 	_write(c, rec)
 	c.injured = true
 	return {"ok": true, "outcome": tier, "months": int(rec["months_left"]), "id": str(rec["id"])}
@@ -275,7 +275,7 @@ static func _kill(c: CKCharacter, rng: RandomNumberGenerator, killer: String) ->
 	c.injured = false
 	c.hp = 0
 	var words: Array = table().get("words", [])
-	var line := str(words[rng.randi() % words.size()]) if not words.is_empty() else "旗还在。"
+	var line := str(words[rng.randi() % words.size()]) if not words.is_empty() else Locale.t("旗还在。")
 	if typeof(c.blood_meta) != TYPE_DICTIONARY:
 		c.blood_meta = {}
 	c.blood_meta["stele"] = {
@@ -285,7 +285,7 @@ static func _kill(c: CKCharacter, rng: RandomNumberGenerator, killer: String) ->
 		"killer": killer,
 		"name": c.name,
 	}
-	var text := "%s 阵亡。遗言：%s" % [c.name, line]
+	var text := Locale.t("%s 阵亡。遗言：%s") % [c.name, line]
 	GameState.add_lineage_event(text)
 	GameState.log_event(text)
 	var kept: Array = []
