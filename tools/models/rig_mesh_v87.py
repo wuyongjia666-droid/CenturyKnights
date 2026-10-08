@@ -78,13 +78,41 @@ def normalise(ob):
     ob.data.update()
     log("normalised scale", round(s, 4))
 
+def _tris(ob):
+    return sum(len(p.vertices) - 2 for p in ob.data.polygons)
+
 def decimate(ob):
-    tris = int(OPT["tris"]); cur = sum(len(p.vertices) - 2 for p in ob.data.polygons)
-    if cur > tris:
-        md = ob.modifiers.new("dec", "DECIMATE"); md.ratio = tris / cur; md.use_collapse_triangulate = True
-        sel_only(ob); bpy.ops.object.modifier_apply(modifier=md.name)
+    tris = int(OPT["tris"]); cur0 = _tris(ob)
+    ob.data.validate(clean_customdata=False)
+    sel_only(ob)
+    if cur0 > tris * 3:
+        # farmed surface-net meshes: uniform voxel re-skin (closes thin double walls) -> outer shell -> collapse works
+        md = ob.modifiers.new("rv", "REMESH"); md.mode = "VOXEL"; md.voxel_size = float(OPT.get("voxel", "0.0075"))
+        bpy.ops.object.modifier_apply(modifier=md.name)
+        bm = bmesh.new(); bm.from_mesh(ob.data); bm.verts.ensure_lookup_table(); seen = set(); comps = []
+        for v in bm.verts:
+            if v.index in seen: continue
+            st = [v]; comp = []; seen.add(v.index)
+            while st:
+                x = st.pop(); comp.append(x)
+                for e in x.link_edges:
+                    y = e.other_vert(x)
+                    if y.index not in seen: seen.add(y.index); st.append(y)
+            comps.append(comp)
+        comps.sort(key=lambda c: -len(c))
+        kill = [v for c in comps[1:] if len(c) < 0.02 * len(bm.verts) for v in c]
+        if kill: bmesh.ops.delete(bm, geom=kill, context="VERTS")
+        bm.to_mesh(ob.data); bm.free()
+        log("voxel re-skin", cur0, "->", _tris(ob), "shells", len(comps))
+    for _ in range(6):
+        cur = _tris(ob)
+        if cur <= tris * 1.05: break
+        md = ob.modifiers.new("dec", "DECIMATE"); md.ratio = max(0.05, tris / cur); md.use_collapse_triangulate = True
+        bpy.ops.object.modifier_apply(modifier=md.name)
+        if _tris(ob) > cur * 0.97:  # stalled on non-manifold borders: weld + retry
+            bm = bmesh.new(); bm.from_mesh(ob.data); bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=0.002); bm.to_mesh(ob.data); bm.free()
     bpy.ops.object.shade_smooth()
-    log("tris", cur, "->", sum(len(p.vertices) - 2 for p in ob.data.polygons))
+    log("tris", cur0, "->", _tris(ob))
 
 # ---------------------------------------------------------------- albedo projection from turnaround sheet
 def sheet_boxes(img):
@@ -212,12 +240,65 @@ def build_fitted_rig(J):
     bpy.ops.object.mode_set(mode="OBJECT")
     return rig
 
+def _seg_dist(p, a, b):
+    ab = b - a; t = max(0.0, min(1.0, (p - a).dot(ab) / max(1e-9, ab.length_squared)))
+    return (p - (a + ab * t)).length
+
+def distance_weights(ob, rig):
+    """anatomically gated inverse-distance-to-bone weights (A-pose humanoid), smoothed. Limb bones only bind their
+    side; arm bones only bind outside the shoulder line, leg bones only below the hips."""
+    ob.vertex_groups.clear()
+    bones = [(b.name, b.head_local.copy(), b.tail_local.copy()) for b in rig.data.bones if b.name != "root"]
+    groups = {n: ob.vertex_groups.new(name=n) for n, _, _ in bones}
+    sh_x = rig.data.bones["upper_arm.L"].head_local.x * 0.85
+    hip_z = rig.data.bones["thigh.L"].head_local.z
+    for v in ob.data.vertices:
+        p = v.co; cand = []
+        for n, a, b in bones:
+            side = n[-1] if n[-2] == "." else ""
+            if side == "L" and p.x < -0.02: continue
+            if side == "R" and p.x > 0.02: continue
+            if n.startswith(("upper_arm", "forearm", "hand")) and abs(p.x) < sh_x: continue
+            if n.startswith(("thigh", "shin", "foot")) and p.z > hip_z + 0.05: continue
+            if n in ("hips", "spine", "chest", "neck", "head") and abs(p.x) > sh_x * 1.25 and p.z > hip_z: continue
+            cand.append((_seg_dist(p, a, b), n))
+        cand.sort()
+        cand = cand[:3] or [(1.0, "chest")]
+        ws = [(1.0 / max(1e-4, d) ** 4, n) for d, n in cand]
+        tot = sum(w for w, _ in ws)
+        for w, n in ws:
+            groups[n].add([v.index], w / tot, "REPLACE")
+    sel_only(ob); bpy.ops.object.mode_set(mode="WEIGHT_PAINT")
+    bpy.ops.object.vertex_group_smooth(group_select_mode="ALL", factor=0.5, repeat=4)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    bpy.ops.object.vertex_group_normalize_all(lock_active=False)
+    for md in list(ob.modifiers):
+        if md.type == "ARMATURE": ob.modifiers.remove(md)
+    ob.parent = rig; am = ob.modifiers.new("Armature", "ARMATURE"); am.object = rig
+
 def skin(ob, rig):
     # heat weights on a watertight voxel proxy, transferred to the real mesh (robust on farmed/non-manifold meshes)
     proxy = ob.copy(); proxy.data = ob.data.copy(); bpy.context.collection.objects.link(proxy)
     proxy.modifiers.clear()
-    md = proxy.modifiers.new("vox", "REMESH"); md.mode = "VOXEL"; md.voxel_size = 0.014
+    md = proxy.modifiers.new("vox", "REMESH"); md.mode = "VOXEL"; md.voxel_size = 0.016
     sel_only(proxy); bpy.ops.object.modifier_apply(modifier=md.name)
+    # keep only the OUTER shell (surface-net thin walls leave inner cavity shells that break the heat solve)
+    bm = bmesh.new(); bm.from_mesh(proxy.data); bm.verts.ensure_lookup_table()
+    seen = set(); comps = []
+    for v in bm.verts:
+        if v.index in seen: continue
+        st = [v]; comp = []; seen.add(v.index)
+        while st:
+            x = st.pop(); comp.append(x)
+            for e in x.link_edges:
+                y = e.other_vert(x)
+                if y.index not in seen: seen.add(y.index); st.append(y)
+        comps.append(comp)
+    comps.sort(key=lambda c: -len(c))
+    kill = [v for c in comps[1:] for v in c]
+    if kill: bmesh.ops.delete(bm, geom=kill, context="VERTS")
+    bm.to_mesh(proxy.data); bm.free()
+    log("proxy shells", len(comps), "kept", len(proxy.data.vertices))
     bpy.ops.object.select_all(action="DESELECT"); proxy.select_set(True); rig.select_set(True); bpy.context.view_layer.objects.active = rig
     ok = True
     try:
@@ -226,10 +307,8 @@ def skin(ob, rig):
         ok = False; log("heat failed", e)
     nonzero = sum(1 for v in proxy.data.vertices if len(v.groups))
     if not ok or nonzero < 0.9 * len(proxy.data.vertices):
-        log("heat coverage", nonzero, "/", len(proxy.data.vertices), "-> envelope fallback")
-        proxy.vertex_groups.clear()
-        bpy.ops.object.select_all(action="DESELECT"); proxy.select_set(True); rig.select_set(True); bpy.context.view_layer.objects.active = rig
-        bpy.ops.object.parent_set(type="ARMATURE_ENVELOPE")
+        log("heat coverage", nonzero, "/", len(proxy.data.vertices), "-> gated bone-distance weights")
+        distance_weights(proxy, rig)
     for b in rig.data.bones:
         if b.name not in ob.vertex_groups: ob.vertex_groups.new(name=b.name)
     dt = ob.modifiers.new("dt", "DATA_TRANSFER"); dt.object = proxy; dt.use_vert_data = True
