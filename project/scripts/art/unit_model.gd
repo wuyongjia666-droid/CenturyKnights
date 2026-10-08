@@ -37,6 +37,8 @@ static func archetype_for(c, team: String, tmpl: String = "") -> String:
 static func is_ranged(c) -> bool:
 	return str(BattleRules.job_role(c.job_id)) in ["ranger", "mage"]
 
+const TOON_BODY := preload("res://shaders/toon_body_v87.gdshader")
+
 static func model_path(c, team: String, tmpl: String = "") -> String:
 	var ck := str(c.cast_key) if "cast_key" in c else ""
 	var cands: Array = []
@@ -210,14 +212,15 @@ static func _walk_recolor(n: Node, pal: Dictionary, trim: Color) -> void:
 				sm.emission = trim
 				sm.emission_energy_multiplier = 2.4 if base == "visor" else 1.6
 				sm.roughness = 0.3
-			elif m is BaseMaterial3D:
-				# farmed textured body: keep the projected albedo, style-lock toon response + outline
-				sm = (m as BaseMaterial3D).duplicate()
-				sm.diffuse_mode = BaseMaterial3D.DIFFUSE_TOON
-				sm.specular_mode = BaseMaterial3D.SPECULAR_TOON
-				sm.roughness = 0.62
-				sm.metallic = 0.0
-				sm.next_pass = _outline_mat()
+			elif m is BaseMaterial3D and (m as BaseMaterial3D).albedo_texture != null:
+				# farmed textured body: projected albedo through the style-lock toon shader (+ team rim, outline)
+				var tm := ShaderMaterial.new()
+				tm.shader = TOON_BODY
+				tm.set_shader_parameter("albedo_tex", (m as BaseMaterial3D).albedo_texture)
+				tm.set_shader_parameter("rim_color", Color("#FF7A70") if trim == UIKit.DANGER else Color("#6ED4FF"))
+				tm.next_pass = _outline_mat()
+				mi.set_surface_override_material(si, tm)
+				continue
 			sm.rim_enabled = true
 			sm.rim = 0.35
 			sm.rim_tint = 0.6

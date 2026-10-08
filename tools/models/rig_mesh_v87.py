@@ -172,7 +172,7 @@ def project_albedo(ob):
     scn = bpy.context.scene; scn.render.engine = "CYCLES"; scn.cycles.samples = 1; scn.cycles.device = "CPU"
     scn.render.bake.margin = 6
     bpy.ops.object.bake(type="EMIT")
-    out.filepath_raw = "/tmp/_albedo_v87.png"; out.file_format = "PNG"; out.save()
+    out.filepath_raw = os.path.join(__import__("tempfile").mkdtemp(prefix="ckrig_"), "_albedo_v87.png")  # per-process (parallel-safe), stable name; out.file_format = "PNG"; out.save()
     out.pack()
     # final material: the "body" BaseMaterial keeps its texture in Godot (unit_model duplicates + adds rim)
     fm = bpy.data.materials.new("body"); fm.use_nodes = True
@@ -327,6 +327,30 @@ def _strip_arm_from_skirt(ob, rig):
             tgt.add([v.index], moved, "ADD"); n += 1
     log("skirt verts freed from arm weights", n)
 
+def _arm_proximity_guard(ob, rig):
+    """arm weights are only legal close to the arm itself: fade them out between 0.04H and 0.07H from the side's
+    upper_arm/forearm/hand segments and hand the rest to the torso/leg bone. Stops capes, coat backs and wide
+    pauldrons being dragged into slabs when the arm swings overhead (glTF export == Blender QA)."""
+    b = rig.data.bones; G = {g.name: g for g in ob.vertex_groups}
+    segs = {s: [(b[n + "." + s].head_local, b[n + "." + s].tail_local) for n in ("upper_arm", "forearm", "hand")] for s in "LR"}
+    armidx = {G[n + "." + s].index: s for s in "LR" for n in ("upper_arm", "forearm", "hand") if n + "." + s in G}
+    r_in, r_out = 0.04 * H, 0.07 * H
+    hip_z = b["thigh.L"].head_local.z; sp_z = b["spine"].head_local.z; ch_z = b["chest"].head_local.z
+    n = 0
+    for v in ob.data.vertices:
+        moved = 0.0
+        for ge in v.groups:
+            sd = armidx.get(ge.group)
+            if sd is None or ge.weight <= 0: continue
+            d = min(_seg_dist(v.co, a, t) for a, t in segs[sd])
+            f = min(1.0, max(0.0, (d - r_in) / (r_out - r_in)))
+            if f > 0: moved += ge.weight * f; ge.weight *= (1 - f)
+        if moved > 1e-4:
+            z = v.co.z; side = "L" if v.co.x >= 0 else "R"
+            tgt = "chest" if z >= ch_z else "spine" if z >= sp_z else "hips" if z >= hip_z else "thigh." + side
+            G[tgt].add([v.index], moved, "ADD"); n += 1
+    log("arm proximity guard moved", n)
+
 def skin(ob, rig):
     # heat weights on a watertight voxel proxy, transferred to the real mesh (robust on farmed/non-manifold meshes)
     proxy = ob.copy(); proxy.data = ob.data.copy(); bpy.context.collection.objects.link(proxy)
@@ -367,6 +391,7 @@ def skin(ob, rig):
     dt.layers_vgroup_select_src = "ALL"; dt.layers_vgroup_select_dst = "NAME"
     sel_only(ob); bpy.ops.object.modifier_apply(modifier=dt.name)
     _strip_arm_from_skirt(ob, rig)
+    _arm_proximity_guard(ob, rig)
     bpy.ops.object.vertex_group_normalize_all(lock_active=False)
     # glTF keeps 4 influences/vertex: limit + renormalise HERE so Blender QA == exported GLB (no torn cloth sheets)
     bpy.ops.object.vertex_group_clean(group_select_mode="ALL", limit=0.03)
