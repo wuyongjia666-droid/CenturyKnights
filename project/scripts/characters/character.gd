@@ -30,6 +30,10 @@ var rank: String = "knight"  # knight/baron/count/duke
 var blood_mix: Dictionary = {"common_ash": 1.0}
 var traits: Array = []  # trait ids
 var appearance: Dictionary = {"hair": "ink_black", "eyes": "slate", "brow": "straight", "scar": "none"}
+## v8.7 genome (CKGenome): diploid loci + polygenic face/body; acquired marks persist for life (not inherited)
+var genome: Dictionary = {}
+var scars: Array = []  # slots: cheek_l, cheek_r, brow_l, brow_r, chin, neck
+var honors: Array = []  # frost_pin (baron), rime_circlet (count), crown_line (duke), titles
 
 var hp: int = 30
 var max_hp: int = 30
@@ -139,7 +143,31 @@ func to_dict() -> Dictionary:
 		"parent_ids": parent_ids.duplicate(), "children_ids": children_ids.duplicate(),
 		"pregnant_months": pregnant_months, "birthday_month": birthday_month,
 		"weapon_id": weapon_id, "faction": faction, "cast_key": cast_key, "skills": skills.duplicate(), "unlocked_skills": unlocked_skills.duplicate(),
+		"genome": genome.duplicate(true), "scars": scars.duplicate(), "honors": honors.duplicate(),
 	}
+
+## v8.7: founders / pre-v8.7 saves get a genome lazily (deterministic per id, keeps the visible legacy look)
+func ensure_genome() -> void:
+	if not genome.is_empty():
+		return
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash(id + "|" + name)
+	genome = CKGenome.founder(blood_mix, appearance, rng)
+	var legacy_scar := str(appearance.get("scar", "none"))
+	if scars.is_empty() and legacy_scar in ["cheek", "brow"]:
+		scars.append("cheek_l" if legacy_scar == "cheek" else "brow_r")
+	CKGenome.sync_appearance(self)
+
+## acquired: battle scar (crit at low HP / survived a fall) - persists, never inherited
+func add_scar(rng: RandomNumberGenerator) -> String:
+	var slots := ["cheek_l", "cheek_r", "brow_l", "brow_r", "chin", "neck"]
+	var free: Array = slots.filter(func(x): return x not in scars)
+	if free.is_empty() or scars.size() >= 3:
+		return ""
+	var s: String = free[rng.randi() % free.size()]
+	scars.append(s)
+	appearance["scar"] = scars[0]
+	return s
 
 static func from_dict(d: Dictionary) -> CKCharacter:
 	var c := CKCharacter.new()
@@ -182,4 +210,7 @@ static func from_dict(d: Dictionary) -> CKCharacter:
 	c.faction = str(d.get("faction", "player"))
 	c.skills = d.get("skills", []).duplicate()
 	c.unlocked_skills = d.get("unlocked_skills", []).duplicate()
+	c.genome = d.get("genome", {}).duplicate(true)
+	c.scars = d.get("scars", []).duplicate()
+	c.honors = d.get("honors", []).duplicate()
 	return c

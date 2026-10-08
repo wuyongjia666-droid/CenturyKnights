@@ -118,7 +118,12 @@ func birth_child(mother: CKCharacter) -> CKCharacter:
 		if rng.randf() < 0.55 and "malnourished" not in child.traits:
 			child.traits.append("malnourished")
 			GameState.log_event("儿童因粮饷紧张获得禀性：营养不良")
-	child.appearance = _inherit_appearance(father, mother, rng)
+	# v8.7 genome: Mendelian loci (recessives can skip a generation) + polygenic face/body (family resemblance)
+	mother.ensure_genome()
+	if father:
+		father.ensure_genome()
+	child.genome = CKGenome.cross(father.genome if father else mother.genome, mother.genome, child.blood_mix, rng)
+	CKGenome.sync_appearance(child)
 	child.rank = _child_rank(father if father else mother, mother)
 	child.job_id = "light_inf"
 	child.recalc_hp()
@@ -195,6 +200,24 @@ func _trait_probs(a: CKCharacter, b: CKCharacter) -> Array:
 	return arr.slice(0, mini(8, arr.size()))
 
 func _appearance_probs(a: CKCharacter, b: CKCharacter) -> Dictionary:
+	# v8.7: exact Punnett squares from the genomes (shows recessive returns the old 45/45 table could not)
+	a.ensure_genome()
+	b.ensure_genome()
+	var pun := {}
+	var alleles_all: Dictionary = GameState.data_appearance.get("alleles", {})
+	for key in ["hair", "eyes", "brow"]:
+		var rows: Array = []
+		for e in CKGenome.punnett(a.genome, b.genome, key):
+			var nm := str(e["id"])
+			for al in alleles_all.get(key, []):
+				if al["id"] == e["id"]:
+					nm = al.get("name", nm)
+			rows.append({"id": e["id"], "name": nm, "prob": e["prob"]})
+		pun[key] = rows
+	pun["scar"] = [{"id": "none", "name": "无疤", "prob": 1.0}]
+	return pun
+
+func _appearance_probs_legacy(a: CKCharacter, b: CKCharacter) -> Dictionary:
 	var out := {}
 	for key in ["hair", "eyes", "brow", "scar"]:
 		var counts: Dictionary = {}
