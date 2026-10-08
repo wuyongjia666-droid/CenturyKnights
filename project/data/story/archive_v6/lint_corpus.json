@@ -1,0 +1,27 @@
+{
+  "id": "lint_corpus",
+  "role": "negative_fixture",
+  "note": "永久反例。NAR-02 归档旧章时保留本文件，不要当成可玩章节。",
+  "lines": [
+    {
+      "id": "bad_volume",
+      "speaker": "系统",
+      "text": "第二十四卷中段完成（v4.7）。"
+    },
+    {
+      "id": "bad_chapter",
+      "speaker": "旁白",
+      "text": "第一百五十章完成。"
+    },
+    {
+      "id": "bad_trope",
+      "speaker": "旅馆掌柜",
+      "text": "精灵耳、金发、金瞳和羊皮纸都不属于这盏灯。"
+    },
+    {
+      "id": "bad_length",
+      "speaker": "旁白",
+      "text": "旗下的人把一句话写得太长于是对白检查就该把它拦下来这行一共要超过六十个汉字现在继续往后面添几个字才算数啊呀好了吧还要再长一点"
+    }
+  ]
+}

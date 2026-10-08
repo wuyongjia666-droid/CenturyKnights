@@ -1,8 +1,64 @@
 #!/usr/bin/env bash
-# CI entry: smoke + layout + tactics e2e + full-chain e2e. Non-zero exit fails the pipeline.
+# CI entry: json lint + auto-discovered suites + smoke + layout + tactics e2e + full-chain e2e.
+# Non-zero exit fails the pipeline. Last line on success is "CI ALL PASS".
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+if [[ -n "${GODOT_PREFIX:-}" ]]; then
+	export PATH="${GODOT_PREFIX}/bin:${PATH}"
+fi
+export PATH="${HOME}/.local/bin:${PATH}"
+if ! command -v godot >/dev/null 2>&1; then
+	echo "godot not found. Run scripts/install_godot.sh first." >&2
+	exit 1
+fi
+
+echo "==> json_lint"
+python3 "$ROOT/tools/ci/json_lint.py" 2>&1 | tee /tmp/ck_json_lint.log
+grep -q "JSON LINT PASS" /tmp/ck_json_lint.log || { echo "json_lint FAILED"; exit 1; }
+
+echo "==> style_lint"
+python3 "$ROOT/tools/ci/style_lint.py" 2>&1 | tee /tmp/ck_style_lint.log
+grep -q "STYLE LINT PASS" /tmp/ck_style_lint.log || { echo "style_lint FAILED"; exit 1; }
+
 cd "$ROOT/project"
+
+echo "==> suites"
+suite_files=()
+if [[ -d "$ROOT/project/tests/suites" ]]; then
+	while IFS= read -r -d '' suite_file; do
+		suite_files+=("$suite_file")
+	done < <(find "$ROOT/project/tests/suites" -type f \( -name '*_check.tscn' -o -name '*_check.gd' \) -print0 | sort -z)
+fi
+echo "suites discovered: ${#suite_files[@]}"
+for suite_file in "${suite_files[@]}"; do
+	# A *_check.gd next to *_check.tscn is the scene script (extends Node). Godot
+	# runs it through the scene; launching it with --script would fail.
+	if [[ "$suite_file" == *.gd && -f "${suite_file%.gd}.tscn" ]]; then
+		continue
+	fi
+	suite_rel="${suite_file#"$ROOT/project/"}"
+	suite_name="$(basename "$suite_file")"
+	suite_log="/tmp/ck_suite_${suite_name}.log"
+	echo "==> suite ${suite_name}"
+	if [[ "$suite_file" == *.tscn ]]; then
+		godot --headless --path . --scene "res://${suite_rel}" >"$suite_log" 2>&1 || {
+			echo "suite ${suite_name} FAILED"
+			cat "$suite_log"
+			exit 1
+		}
+	else
+		godot --headless --path . --script "res://${suite_rel}" >"$suite_log" 2>&1 || {
+			echo "suite ${suite_name} FAILED"
+			cat "$suite_log"
+			exit 1
+		}
+	fi
+	grep -q "PASS" "$suite_log" || {
+		echo "suite ${suite_name} FAILED (no PASS)"
+		cat "$suite_log"
+		exit 1
+	}
+done
 
 echo "==> smoke"
 godot --headless --path . --scene res://tests/smoke_runner.tscn
@@ -72,6 +128,3 @@ godot --headless --path . --scene res://tests/campaign_century_check.tscn 2>&1 |
 grep -q "CAMPAIGN CENTURY PASS" /tmp/ck_campaign.log || { echo "campaign_century FAILED"; exit 1; }
 
 echo "==> CI ALL PASS"
-
-# GitHub Actions: add .github/workflows/ci.yml that runs this script when the
-# token has `workflow` scope. Local/agent CI: non-zero exit fails the pipeline.

@@ -3779,7 +3779,9 @@
     },
     {
      "label": "道别",
-     "fx": {}
+     "fx": {
+      "flag": "road_merchant_passed"
+     }
     }
    ]
   },
@@ -3930,7 +3932,9 @@
     },
     {
      "label": "点头而过",
-     "fx": {}
+     "fx": {
+      "flag": "road_merc_passed"
+     }
     }
    ]
   },
@@ -3951,6 +3955,13 @@
      "fx": {
       "tip": true
      }
+    },
+    {
+     "label": "只当闲话",
+     "fx": {
+      "flag": "road_rumor_idle",
+      "morale": -1
+     }
     }
    ]
   },
@@ -3963,14 +3974,6 @@
    "kinds": [
     "road"
    ],
-   "biomes": [
-    "fog",
-    "plain",
-    "hill",
-    "shrine",
-    "marsh",
-    "ford"
-   ],
    "options": [
     {
      "label": "采集（+1 日，+3 药材）",
@@ -3981,8 +3984,18 @@
     },
     {
      "label": "不耽搁",
-     "fx": {}
+     "fx": {
+      "flag": "road_herbs_skipped"
+     }
     }
+   ],
+   "biomes": [
+    "fog",
+    "plain",
+    "hill",
+    "shrine",
+    "marsh",
+    "ford"
    ]
   },
   {
@@ -3993,12 +4006,6 @@
    "min_danger": 0,
    "kinds": [
     "road"
-   ],
-   "biomes": [
-    "ford",
-    "marsh",
-    "pass",
-    "harbor"
    ],
    "options": [
     {
@@ -4014,6 +4021,12 @@
       "rep_nation": 3
      }
     }
+   ],
+   "biomes": [
+    "ford",
+    "marsh",
+    "pass",
+    "harbor"
    ]
   },
   {
@@ -4036,7 +4049,9 @@
     },
     {
      "label": "婉拒",
-     "fx": {}
+     "fx": {
+      "flag": "road_caravan_declined"
+     }
     }
    ]
   },
@@ -4082,6 +4097,13 @@
      "fx": {
       "morale": 3
      }
+    },
+    {
+     "label": "记入路引批注",
+     "fx": {
+      "flag": "road_omen_logged",
+      "sp": 1
+     }
     }
    ]
   },
@@ -4094,11 +4116,6 @@
    "kinds": [
     "road",
     "border"
-   ],
-   "nations": [
-    "shuoying",
-    "ashbanner",
-    "frostcrown"
    ],
    "options": [
     {
@@ -4114,6 +4131,11 @@
       "rep_nation": 1
      }
     }
+   ],
+   "nations": [
+    "shuoying",
+    "ashbanner",
+    "frostcrown"
    ]
   },
   {
@@ -4156,6 +4178,1098 @@
      "label": "加快脚步",
      "fx": {
       "fair": true
+     }
+    },
+    {
+     "label": "先去粮栈补货",
+     "fx": {
+      "food": 4,
+      "days": 1
+     }
+    }
+   ]
+  },
+  {
+   "id": "ash_false_receipt",
+   "title": "灰市假收据",
+   "text": "灰市账房门口有人兜售盖着烬纹的过路收据，墨迹还没干。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "买下当路引",
+     "fx": {
+      "silver": -18,
+      "flag": "ash_false_receipt_bought"
+     }
+    },
+    {
+     "label": "揭穿并交给巡卫",
+     "fx": {
+      "rep_nation": 3,
+      "morale": 1
+     }
+    },
+    {
+     "label": "当作没听见",
+     "fx": {
+      "flag": "ash_false_receipt_ignored",
+      "morale": -1
+     }
+    }
+   ],
+   "nations": [
+    "ashbanner"
+   ]
+  },
+  {
+   "id": "ash_night_ferry",
+   "title": "苇原夜船",
+   "text": "苇原渡的船工想连夜把粮袋送过发光河，求你们压一趟舱。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "上船押运",
+     "fx": {
+      "silver": 16,
+      "risk": 0.25
+     }
+    },
+    {
+     "label": "留下守渡口",
+     "fx": {
+      "rep_dest": 3,
+      "days": 1
+     }
+    }
+   ],
+   "nations": [
+    "ashbanner"
+   ]
+  },
+  {
+   "id": "ash_quarry_knock",
+   "title": "石垒洞响",
+   "text": "石垒坡的采石洞里有人敲壁，分不清是匠人还是躲进去的剪径者。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "进洞查看",
+     "fx": {
+      "battle": "quarry"
+     }
+    },
+    {
+     "label": "封上洞口再报官",
+     "fx": {
+      "rep_nation": 2,
+      "days": 1
+     }
+    }
+   ],
+   "nations": [
+    "ashbanner"
+   ]
+  },
+  {
+   "id": "sy_weapon_roll",
+   "title": "夜阙兵器名录",
+   "text": "夜阙关卒把一本兵器名录摊在灯下，要你们逐件对上号。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "配合点验",
+     "fx": {
+      "days": 1,
+      "rep_nation": 2
+     }
+    },
+    {
+     "label": "塞银省事",
+     "fx": {
+      "silver": -20,
+      "flag": "sy_roll_bribe"
+     }
+    }
+   ],
+   "nations": [
+    "shuoying"
+   ]
+  },
+  {
+   "id": "sy_lost_packs",
+   "title": "寒垒驮队",
+   "text": "寒垒的补给驮队在霜脊上散了，护队只找回一半驮兽。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "帮他们把货拢回",
+     "fx": {
+      "rep_nation": 4,
+      "morale": 1
+     }
+    },
+    {
+     "label": "只护送人，货留给风",
+     "fx": {
+      "days": 1,
+      "flag": "sy_packs_left"
+     }
+    }
+   ],
+   "nations": [
+    "shuoying"
+   ]
+  },
+  {
+   "id": "sy_ice_smuggle",
+   "title": "冷湾冰下灯",
+   "text": "冷湾渔民说冰层下有一串不该出现的灯，像走私船在贴着冰走。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "凿冰截停",
+     "fx": {
+      "battle": "ice_lamp",
+      "rep_nation_win": 4
+     }
+    },
+    {
+     "label": "把坐标卖给港吏",
+     "fx": {
+      "silver": 14,
+      "rep_nation": -2
+     }
+    }
+   ],
+   "nations": [
+    "shuoying"
+   ]
+  },
+  {
+   "id": "qh_dye_upstream",
+   "title": "浮洲水色",
+   "text": "浮洲染坊的水一夜变深，工头说上游有人倒了不该倒的料。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "沿河去看一眼",
+     "fx": {
+      "days": 1,
+      "rep_dest": 3
+     }
+    },
+    {
+     "label": "分出药材给染工",
+     "fx": {
+      "herb": -2,
+      "rep_nation": 2
+     }
+    }
+   ],
+   "nations": [
+    "qinghe"
+   ]
+  },
+  {
+   "id": "qh_wrong_chart",
+   "title": "错抄的河道图",
+   "text": "玉澜书院的学徒把河道图抄反了左右，正本还在雾果村的驿柜里。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "绕去取回正本",
+     "fx": {
+      "days": 1,
+      "rep_nation": 3
+     }
+    },
+    {
+     "label": "按错图走",
+     "fx": {
+      "flag": "qh_wrong_chart",
+      "morale": -1
+     }
+    }
+   ],
+   "nations": [
+    "qinghe"
+   ]
+  },
+  {
+   "id": "qh_orchard_fog",
+   "title": "雾果林打转",
+   "text": "一队收果的人在雾果林里打转，把你们的旗当成了渡口的灯。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "带他们出林",
+     "fx": {
+      "days": 1,
+      "food": -3,
+      "rep_dest": 2
+     }
+    },
+    {
+     "label": "把路引抄给他们",
+     "fx": {
+      "flag": "qh_fog_copy",
+      "morale": 1
+     }
+    }
+   ],
+   "nations": [
+    "qinghe"
+   ]
+  },
+  {
+   "id": "lt_remarked_price",
+   "title": "灯价被涂改",
+   "text": "灯市的价牌被人连夜涂过，同一盏琉璃灯写着两个数。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "按低价收一批",
+     "fx": {
+      "buy_deal": 0.6
+     }
+    },
+    {
+     "label": "叫来市吏对牌",
+     "fx": {
+      "rep_nation": 3,
+      "flag": "lt_price_reported"
+     }
+    }
+   ],
+   "nations": [
+    "lantern"
+   ]
+  },
+  {
+   "id": "lt_night_contract",
+   "title": "夜市契约",
+   "text": "掮客把一份只在灯亮时生效的契约塞过来，换你们下一座城的路引。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "签字交换",
+     "fx": {
+      "silver": 12,
+      "rep_nation": -1,
+      "flag": "lt_contract_signed"
+     }
+    },
+    {
+     "label": "拒绝，并记住他的脸",
+     "fx": {
+      "flag": "lt_contract_refused",
+      "morale": 1
+     }
+    }
+   ],
+   "nations": [
+    "lantern"
+   ]
+  },
+  {
+   "id": "lt_dark_beacon",
+   "title": "熄掉的潮灯",
+   "text": "港外有一盏潮灯熄了，渔船在雾里互相喊号。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "出人去把灯点上",
+     "fx": {
+      "days": 1,
+      "rep_dest": 4
+     }
+    },
+    {
+     "label": "把自己的路灯借出",
+     "fx": {
+      "morale": 2,
+      "flag": "lt_lamp_lent"
+     }
+    }
+   ],
+   "nations": [
+    "lantern"
+   ]
+  },
+  {
+   "id": "fc_bell_missed",
+   "title": "冰钟少了一声",
+   "text": "霜冕廷的冰钟这一时辰少了一声。街上的人都停下来听。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "去钟楼问值钟人",
+     "fx": {
+      "rep_nation": 2,
+      "days": 1
+     }
+    },
+    {
+     "label": "按旧节奏继续赶路",
+     "fx": {
+      "flag": "fc_bell_ignored",
+      "morale": -1
+     }
+    }
+   ],
+   "nations": [
+    "frostcrown"
+   ]
+  },
+  {
+   "id": "fc_quiet_escort",
+   "title": "静路仪仗",
+   "text": "廷里的仪仗要过路，要求所有兵器包进布套，一路不许说话。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "照办",
+     "fx": {
+      "days": 1,
+      "rep_nation": 3
+     }
+    },
+    {
+     "label": "绕开仪仗走坡路",
+     "fx": {
+      "days": 1,
+      "flag": "fc_escort_detour"
+     }
+    }
+   ],
+   "nations": [
+    "frostcrown"
+   ]
+  },
+  {
+   "id": "fc_crystal_letter",
+   "title": "裂开的霜晶",
+   "text": "路上一块霜晶自己裂开，里面是一封没署名的旧信，收信人是下一座城的库吏。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "把信送到库吏",
+     "fx": {
+      "rep_dest": 4,
+      "flag": "fc_letter_delivered"
+     }
+    },
+    {
+     "label": "读完烧掉",
+     "fx": {
+      "morale": 1,
+      "flag": "fc_letter_burned",
+      "rep_nation": -1
+     }
+    }
+   ],
+   "nations": [
+    "frostcrown"
+   ]
+  },
+  {
+   "id": "eo_kiln_mark",
+   "title": "旧窑印",
+   "text": "窑匠捧出一块还温着的窑印，请你们辨它属于哪一座冷掉的窑。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "对照路引上的窑号",
+     "fx": {
+      "rep_nation": 3,
+      "days": 1
+     }
+    },
+    {
+     "label": "出银请师傅直接说",
+     "fx": {
+      "silver": -16,
+      "flag": "eo_kiln_paid"
+     }
+    }
+   ],
+   "nations": [
+    "emberold"
+   ]
+  },
+  {
+   "id": "eo_old_toll",
+   "title": "旧典过路礼",
+   "text": "废墟口有人按一本旧典收过路礼，数目写在陶片上，不是现在的税。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "按陶片付银",
+     "fx": {
+      "silver": -14,
+      "rep_nation": 1
+     }
+    },
+    {
+     "label": "拒绝旧典",
+     "fx": {
+      "flag": "eo_old_toll_refused",
+      "morale": 1
+     }
+    }
+   ],
+   "nations": [
+    "emberold"
+   ]
+  },
+  {
+   "id": "eo_glass_knock",
+   "title": "熔玻墙缝",
+   "text": "冷暮下的玻璃墙缝里有敲击，像有人被关在夹层里。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "砸开夹层",
+     "fx": {
+      "battle": "glass_wall"
+     }
+    },
+    {
+     "label": "记下位置交给城防",
+     "fx": {
+      "rep_dest": 3,
+      "flag": "eo_glass_reported"
+     }
+    }
+   ],
+   "nations": [
+    "emberold"
+   ]
+  },
+  {
+   "id": "sm_short_warrant",
+   "title": "盐引缺角",
+   "text": "盐泽关卡说你们的盐引缺了一角印，潮水上来之前必须补上。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "补印",
+     "fx": {
+      "silver": -12,
+      "rep_nation": 2
+     }
+    },
+    {
+     "label": "等下一潮再过",
+     "fx": {
+      "days": 1,
+      "flag": "sm_wait_tide"
+     }
+    }
+   ],
+   "nations": [
+    "saltmarsh"
+   ]
+  },
+  {
+   "id": "sm_early_tide",
+   "title": "潮时提前",
+   "text": "潮水比告示早了半个时辰，旧路已经没到脚踝。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "雇浅舟",
+     "fx": {
+      "silver": -10,
+      "morale": 1
+     }
+    },
+    {
+     "label": "涉水硬走",
+     "fx": {
+      "days": 1,
+      "food": -2,
+      "flag": "sm_wade"
+     }
+    }
+   ],
+   "nations": [
+    "saltmarsh"
+   ]
+  },
+  {
+   "id": "sm_reed_passenger",
+   "title": "芦雾里的搭船人",
+   "text": "芦雾里有人挥灯，想搭你们的船过一条正在涨的潮沟。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "让他上船",
+     "fx": {
+      "days": 1,
+      "rep_nation": 2,
+      "morale": 1
+     }
+    },
+    {
+     "label": "留下干粮让他等退潮",
+     "fx": {
+      "food": -4,
+      "flag": "sm_left_rations"
+     }
+    }
+   ],
+   "nations": [
+    "saltmarsh"
+   ]
+  },
+  {
+   "id": "ig_cable",
+   "title": "吊桥少索",
+   "text": "铁峡中层吊桥少了一根钢索，桥面会在下一个人踩上去时偏一掌。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "出峡钢补索",
+     "fx": {
+      "iron": -2,
+      "rep_dest": 4
+     }
+    },
+    {
+     "label": "贴告示绕下层",
+     "fx": {
+      "days": 1,
+      "flag": "ig_cable_posted"
+     }
+    }
+   ],
+   "nations": [
+    "irongorge"
+   ]
+  },
+  {
+   "id": "ig_shift_slip",
+   "title": "班次送错城",
+   "text": "锻炉学徒把今夜的换班表送到了你们手里，表上的城不是这座。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "送回正确的炉区",
+     "fx": {
+      "days": 1,
+      "rep_nation": 3
+     }
+    },
+    {
+     "label": "把表卖给对头炉",
+     "fx": {
+      "silver": 18,
+      "rep_nation": -3,
+      "flag": "ig_shift_sold"
+     }
+    }
+   ],
+   "nations": [
+    "irongorge"
+   ]
+  },
+  {
+   "id": "ig_night_ingot",
+   "title": "夜运峡钢",
+   "text": "峡谷吊篮里有人在关灯之后往下运峡钢锭，没有税牌。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "截住盘问",
+     "fx": {
+      "battle": "ingot",
+      "rep_nation_win": 4
+     }
+    },
+    {
+     "label": "换一笔封口银",
+     "fx": {
+      "silver": 22,
+      "rep_nation": -2,
+      "flag": "ig_ingot_hush"
+     }
+    }
+   ],
+   "nations": [
+    "irongorge"
+   ]
+  },
+  {
+   "id": "sr_star_off",
+   "title": "星位不符",
+   "text": "观象台说今夜的星位和你们路引上抄的那一宿对不上。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "留下来重抄路引",
+     "fx": {
+      "days": 1,
+      "rep_nation": 2,
+      "sp": 1
+     }
+    },
+    {
+     "label": "按旧路引走",
+     "fx": {
+      "flag": "sr_old_chart",
+      "morale": -1
+     }
+    }
+   ],
+   "nations": [
+    "starriver"
+   ]
+  },
+  {
+   "id": "sr_bridge_clerk",
+   "title": "双虹桥文书",
+   "text": "双虹桥的桥吏不收过桥银，只收一份写明星位的过桥文书。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "现写一份",
+     "fx": {
+      "days": 1,
+      "rep_dest": 2
+     }
+    },
+    {
+     "label": "花银请代书",
+     "fx": {
+      "silver": -15,
+      "flag": "sr_clerk_paid"
+     }
+    }
+   ],
+   "nations": [
+    "starriver"
+   ]
+  },
+  {
+   "id": "sr_wrong_boat",
+   "title": "记错的船号",
+   "text": "夜河渡手把你们的船号记成了邻国商队的号，货栈正准备错发。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "当场更正",
+     "fx": {
+      "rep_nation": 2,
+      "flag": "sr_boat_fixed"
+     }
+    },
+    {
+     "label": "领走邻队的一箱货",
+     "fx": {
+      "gain_good": 2,
+      "rep_nation": -2
+     }
+    }
+   ],
+   "nations": [
+    "starriver"
+   ]
+  },
+  {
+   "id": "sz_ferry_fog",
+   "title": "萤雾吞了渡灯",
+   "text": "渡口的灯被萤雾吞了，对岸的船在喊，却看不见缆。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "举旗给对岸对准",
+     "fx": {
+      "days": 1,
+      "rep_dest": 3
+     }
+    },
+    {
+     "label": "雇熟悉雾路的渡手",
+     "fx": {
+      "silver": -12,
+      "morale": 1
+     }
+    }
+   ],
+   "nations": [
+    "southzephyr"
+   ]
+  },
+  {
+   "id": "sz_wax_short",
+   "title": "蜂蜡短两块",
+   "text": "货栈说你们名下的蜂蜡短了两块，账是昨晚才改的。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "补上差额",
+     "fx": {
+      "silver": -8,
+      "rep_nation": 1
+     }
+    },
+    {
+     "label": "要求对账",
+     "fx": {
+      "days": 1,
+      "flag": "sz_wax_audit"
+     }
+    }
+   ],
+   "nations": [
+    "southzephyr"
+   ]
+  },
+  {
+   "id": "sz_pepper_tail",
+   "title": "循椒而来",
+   "text": "有人循着南椒的气味跟了你们一夜，脚步很轻，不像劫道。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "回头问清楚并邀入团",
+     "fx": {
+      "recruit": true,
+      "flag": "sz_pepper_joined"
+     }
+    },
+    {
+     "label": "甩掉他们",
+     "fx": {
+      "days": 1,
+      "flag": "sz_pepper_lost",
+      "morale": -1
+     }
+    }
+   ],
+   "nations": [
+    "southzephyr"
+   ]
+  },
+  {
+   "id": "lb_banner_check",
+   "title": "过桥符",
+   "text": "陆桥驿卒要核验灰旗的过桥符，符上的日期还是上一旬。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "补办",
+     "fx": {
+      "days": 1,
+      "silver": -8,
+      "rep_nation": 2
+     }
+    },
+    {
+     "label": "走货运桥洞绕过",
+     "fx": {
+      "flag": "lb_under_bridge",
+      "morale": -1
+     }
+    }
+   ],
+   "nations": [
+    "landbridge"
+   ]
+  },
+  {
+   "id": "lb_fallen_stone",
+   "title": "桥面新石",
+   "text": "陆桥中段多了一块不该有的落石，石上还沾着东岸的泥。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "搬开并记下缺口",
+     "fx": {
+      "days": 1,
+      "rep_dest": 3
+     }
+    },
+    {
+     "label": "留下标记连夜通过",
+     "fx": {
+      "flag": "lb_stone_marked",
+      "morale": 1
+     }
+    }
+   ],
+   "nations": [
+    "landbridge"
+   ]
+  },
+  {
+   "id": "lb_pass_mismatch",
+   "title": "两陆关牒",
+   "text": "东岸关牒和西岸关牒对不上同一个商队的名字，驿吏请你们作个见证。",
+   "weight": 3,
+   "min_danger": 0,
+   "kinds": [
+    "road",
+    "border"
+   ],
+   "options": [
+    {
+     "label": "留下作见证",
+     "fx": {
+      "days": 1,
+      "rep_nation": 4
+     }
+    },
+    {
+     "label": "两头都不沾",
+     "fx": {
+      "flag": "lb_pass_skipped",
+      "morale": -1
+     }
+    }
+   ],
+   "nations": [
+    "landbridge"
+   ]
+  },
+  {
+   "id": "sea_beacon",
+   "title": "漂离的航标",
+   "text": "一盏航标漂离了原位，夜航的船会把它当成下一港的灯。",
+   "weight": 6,
+   "min_danger": 0,
+   "kinds": [
+    "sea"
+   ],
+   "options": [
+    {
+     "label": "把它拖回原位",
+     "fx": {
+      "silver": -6,
+      "rep_nation": 3,
+      "days": 1
+     }
+    },
+    {
+     "label": "记下偏位，到港再报",
+     "fx": {
+      "flag": "sea_beacon_logged",
+      "morale": 1
+     }
+    }
+   ]
+  },
+  {
+   "id": "sea_ballast",
+   "title": "压舱争议",
+   "text": "船主要把你们的货算进压舱，说这样风暴里船才稳。",
+   "weight": 6,
+   "min_danger": 0,
+   "kinds": [
+    "sea"
+   ],
+   "options": [
+    {
+     "label": "同意用货压舱",
+     "fx": {
+      "lose_cargo": 0.2,
+      "morale": 1,
+      "flag": "sea_ballast_agreed"
+     }
+    },
+    {
+     "label": "出银加真正的压石",
+     "fx": {
+      "silver": -18,
+      "flag": "sea_ballast_paid"
+     }
+    }
+   ]
+  },
+  {
+   "id": "sea_quiet_due",
+   "title": "静港银",
+   "text": "水手说下一港在收一笔不写进税牌的静港银，不付就让你在雾里多停一夜。",
+   "weight": 5,
+   "min_danger": 0,
+   "kinds": [
+    "sea"
+   ],
+   "options": [
+    {
+     "label": "付掉",
+     "fx": {
+      "silver": -16,
+      "flag": "sea_quiet_paid"
+     }
+    },
+    {
+     "label": "不付，在雾里多停",
+     "fx": {
+      "days": 2,
+      "flag": "sea_quiet_refused",
+      "morale": -1
      }
     }
    ]

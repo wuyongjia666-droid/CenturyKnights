@@ -1,0 +1,13 @@
+keys,zh_CN,en
+cutscene.ally,我军,
+cutscene.enemy,敌军,
+cutscene.forecast,命中 %s  伤害 %s  暴击 %s,
+cutscene.skip,跳过,
+cutscene.skip_tip,点按空格或 Esc 跳过；按住任意键 3× 快进,
+cutscene.speed_tip,演出速度（Tab）。按住任意键或长按画面为 3×,
+cutscene.crit,暴击,
+cutscene.break,击破,
+cutscene.miss,未中,
+cutscene.mode.full,全开,
+cutscene.mode.key,仅关键,
+cutscene.mode.off,关闭,

@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "people": [
+    {
+      "id": "tengqiao_xinyu",
+      "name": "藤桥·新雨",
+      "surname": "藤桥",
+      "given": "新雨",
+      "cast_key": "xinyu",
+      "role": "沉斑的学徒。终章举起香盏的人。不是第十三名同伴。",
+      "nation": "southzephyr",
+      "line": "sz_fogwood"
+    },
+    {
+      "id": "voice_old_standard",
+      "name": "老旗手",
+      "cast_key": "old_standard",
+      "role": "第零章已有的声音"
+    },
+    {
+      "id": "voice_steward",
+      "name": "管事",
+      "cast_key": "steward",
+      "role": "第零章已有的声音"
+    },
+    {
+      "id": "voice_midwife",
+      "name": "稳婆",
+      "cast_key": "midwife",
+      "role": "第零章已有的声音"
+    },
+    {
+      "id": "voice_barkeep",
+      "name": "掌柜",
+      "cast_key": "barkeep",
+      "role": "第零章已有的声音"
+    },
+    {
+      "id": "voice_spring_envoy",
+      "name": "春令使者",
+      "cast_key": "spring_envoy",
+      "role": "第零章已有的声音"
+    },
+    {
+      "id": "voice_scout",
+      "name": "斥候",
+      "cast_key": "scout",
+      "role": "第零章已有的声音"
+    },
+    {
+      "id": "voice_kin",
+      "name": "盟友亲属",
+      "cast_key": "ally_kin",
+      "role": "第零章已有的声音"
+    }
+  ]
+}

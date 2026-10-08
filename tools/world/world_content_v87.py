@@ -485,3 +485,7 @@ CROSS = [
  ("lt_lane", "eo_banner", 3, 2, "border"), ("eo_crack", "sz_temple", 3, 2, "border"), ("sz_harbor", "sr_south", 3, 1, "border"),
  ("sm_south", "lt_docks", 6, 0, "sea"), ("sy_coast", "sz_south", 8, 0, "sea"),
 ]
+
+# CMP-09 road encounters. Catalog lives in travel_events_v92.py so gen_world and
+# project/data/world_v87.json stay on one list. Do not hand-edit the JSON events array.
+from travel_events_v92 import TRAVEL_EVENTS  # noqa: E402

@@ -1,0 +1,1717 @@
+{
+  "id": "campaign_v92",
+  "title": "半张图到唱票",
+  "theme": "旗是声称，灯是显证。一家佣兵团用联姻撞上十种互相不承认的继承法。",
+  "founder_age_at_start": 24,
+  "founder_death_year": 46,
+  "finale_year": 76,
+  "sandbox_after_year": 76,
+  "prologue_flags": [
+    "child_born",
+    "married",
+    "battle_done",
+    "hub_open",
+    "recruited"
+  ],
+  "objective_types": [
+    "rout",
+    "seize",
+    "defend",
+    "survive",
+    "escort",
+    "boss",
+    "escape",
+    "protect"
+  ],
+  "eras": [
+    {
+      "id": 1,
+      "title": "半张图",
+      "years": [
+        0,
+        12
+      ],
+      "theme": "声称还是一块布，灯还没点。",
+      "question": "团长要不要把半张河图交给议会去点亮？",
+      "antagonist": "lengwan_zhexian",
+      "turn_chapter": "e1_08"
+    },
+    {
+      "id": 2,
+      "title": "第二种名字",
+      "years": [
+        13,
+        24
+      ],
+      "theme": "别人的法律要给初啼第二个名字。",
+      "question": "你把孩子交给哪一种检验？",
+      "antagonist": "bitan_lanzhi",
+      "turn_chapter": "e2_06"
+    },
+    {
+      "id": 3,
+      "title": "传旗",
+      "years": [
+        25,
+        38
+      ],
+      "theme": "公司的礼和某国的律指向不同的人。",
+      "question": "旗交给谁？",
+      "antagonist": "baiyuan_jixun",
+      "turn_chapter": "e3_05"
+    },
+    {
+      "id": 4,
+      "title": "收据",
+      "years": [
+        42,
+        58
+      ],
+      "theme": "孙辈开始被标价。一张收据想统一各国的读法。",
+      "question": "你卖不卖那盏灯？",
+      "antagonist": "nandeng_qianzhan",
+      "turn_chapter": "e4_08"
+    },
+    {
+      "id": 5,
+      "title": "谁还站在旗下",
+      "years": [
+        62,
+        76
+      ],
+      "theme": "每一桩婚都变成一张选票。开局的人已经不在厅里。",
+      "question": "唱票的时候，灯说不说？",
+      "antagonist": "guanxiang_guheng",
+      "turn_chapter": "e5_08"
+    }
+  ],
+  "chapters": [
+    {
+      "id": "e1_01",
+      "era": 1,
+      "year": 0,
+      "title": "过路银的收据",
+      "place": "苇原渡",
+      "objective_type": "escort",
+      "companions": [
+        "weiyuan_dengying"
+      ],
+      "unlocks": [
+        "deploy",
+        "roster"
+      ],
+      "brief": "灯影从隘口活口的靴筒里抽出冷湾影裔的账签。护送粮队时，同样的签会从第二具尸体上掉出来。",
+      "choice": {
+        "prompt": "账签和活口交给谁？",
+        "options": [
+          {
+            "id": "e1_receipt_to_parliament",
+            "label": "交给白垣议会",
+            "payoff_chapter": "e1_02"
+          },
+          {
+            "id": "e1_receipt_to_dengying",
+            "label": "只留给灯影",
+            "payoff_chapter": "e1_03"
+          }
+        ]
+      },
+      "reads": [
+        "child_born",
+        "married"
+      ]
+    },
+    {
+      "id": "e1_02",
+      "era": 1,
+      "year": 1,
+      "title": "名册不进酒馆",
+      "place": "断潮渡哨",
+      "objective_type": "rout",
+      "companions": [
+        "weiyuan_dengying",
+        "baiyuan_zhegan"
+      ],
+      "unlocks": [
+        "tavern"
+      ],
+      "brief": "折杆在敌阵里把旗倒向自己人。战后那本弦朔薄册，墨色和灯影的除名页是同一种。",
+      "choice": {
+        "prompt": "薄册怎么处理？",
+        "options": [
+          {
+            "id": "e1_register_to_dengying",
+            "label": "交给灯影",
+            "payoff_chapter": "e2_02"
+          },
+          {
+            "id": "e1_register_burned",
+            "label": "当众烧掉",
+            "payoff_chapter": "e2_03"
+          }
+        ]
+      },
+      "reads": [
+        "e1_receipt_to_parliament",
+        "s13_toll_ledger"
+      ]
+    },
+    {
+      "id": "e1_03",
+      "era": 1,
+      "year": 3,
+      "title": "半只眼睛",
+      "place": "墨旗关",
+      "objective_type": "protect",
+      "companions": [
+        "weiyuan_dengying",
+        "yingzhen_xiaoxian"
+      ],
+      "unlocks": [],
+      "brief": "小弦奉命除掉一个被误认的幼童雇工。她不下手。胜负是她活着过关。交还夜阙则后文改由书信完成。",
+      "choice": {
+        "prompt": "小弦留在哪一边？",
+        "options": [
+          {
+            "id": "e1_xiaoxian_joined",
+            "label": "招她入队",
+            "payoff_chapter": "e2_07"
+          },
+          {
+            "id": "e1_xiaoxian_handed",
+            "label": "交给夜阙换邦交",
+            "payoff_chapter": "e4_03"
+          }
+        ]
+      },
+      "reads": [
+        "e1_receipt_to_dengying",
+        "s02_marriage_ban_witness"
+      ]
+    },
+    {
+      "id": "e1_04",
+      "era": 1,
+      "year": 4,
+      "title": "平梢的空船",
+      "place": "西桥头堡",
+      "objective_type": "escape",
+      "companions": [
+        "yuhuo_pingshao",
+        "weiyuan_dengying"
+      ],
+      "unlocks": [
+        "atlas",
+        "market"
+      ],
+      "brief": "没有灯丝的平梢能把公司撤出桥头。付船资让她走，或留下并在名册上写死无丝二字。",
+      "choice": {
+        "prompt": "船与人如何结算？",
+        "options": [
+          {
+            "id": "e1_pingshao_paid",
+            "label": "付船资，人离开",
+            "payoff_chapter": "e4_03"
+          },
+          {
+            "id": "e1_pingshao_stayed",
+            "label": "留下，名册写无丝",
+            "payoff_chapter": "e4_03"
+          }
+        ]
+      },
+      "reads": [
+        "s04_ledger_transfer"
+      ]
+    },
+    {
+      "id": "e1_05",
+      "era": 1,
+      "year": 6,
+      "title": "烟灰下的开片",
+      "place": "灰旗堡",
+      "objective_type": "defend",
+      "companions": [
+        "liegu_zhensheng",
+        "baiyuan_zhegan"
+      ],
+      "unlocks": [
+        "forge"
+      ],
+      "brief": "砧声用烟灰盖住冰裂来修旗杆。焚阙的债主循味而来。当众验纹，或让烟灰留着。",
+      "choice": {
+        "prompt": "裂纹见不见人？",
+        "options": [
+          {
+            "id": "e1_crack_public",
+            "label": "当众温瓷验纹",
+            "payoff_chapter": "e3_04"
+          },
+          {
+            "id": "e1_crack_hidden",
+            "label": "烟灰继续盖着",
+            "payoff_chapter": "e3_08"
+          }
+        ]
+      },
+      "reads": [
+        "s05_father_name"
+      ]
+    },
+    {
+      "id": "e1_06",
+      "era": 1,
+      "year": 8,
+      "title": "雨还没下",
+      "place": "雾谷",
+      "objective_type": "survive",
+      "companions": [
+        "guzhang_chenban",
+        "weiyuan_dengying"
+      ],
+      "unlocks": [
+        "shrine"
+      ],
+      "brief": "沉斑把三份雨验结果封上。撑到她写完。现在就问，或允许她暂时不说。",
+      "choice": {
+        "prompt": "封口要不要提前拆开？",
+        "options": [
+          {
+            "id": "e1_chenban_asked",
+            "label": "现在就问结果",
+            "payoff_chapter": "e2_05"
+          },
+          {
+            "id": "e1_chenban_silent",
+            "label": "允许沉默",
+            "payoff_chapter": "e2_05"
+          }
+        ]
+      },
+      "reads": [
+        "s06_true_glow_infant"
+      ]
+    },
+    {
+      "id": "e1_07",
+      "era": 1,
+      "year": 10,
+      "title": "聘书先到",
+      "place": "镜湖关",
+      "objective_type": "boss",
+      "companions": [
+        "weiyuan_dengying",
+        "baiyuan_zhegan"
+      ],
+      "unlocks": [
+        "marriage"
+      ],
+      "brief": "霜冕护送队长来取初啼的血样。晚霜的名字在信末，人不在。击败队长即可，不必屠队。",
+      "choice": {
+        "prompt": "血样留不留？",
+        "options": [
+          {
+            "id": "e1_sample_given",
+            "label": "祠堂抽血",
+            "payoff_chapter": "e2_01"
+          },
+          {
+            "id": "e1_sample_refused",
+            "label": "退兵，不留样本",
+            "payoff_chapter": "e2_01"
+          }
+        ]
+      },
+      "reads": []
+    },
+    {
+      "id": "e1_08",
+      "era": 1,
+      "year": 12,
+      "title": "桥头不点灯",
+      "place": "西桥头堡",
+      "objective_type": "protect",
+      "companions": [
+        "weiyuan_dengying",
+        "baiyuan_zhegan",
+        "yingzhen_xiaoxian",
+        "yuhuo_pingshao",
+        "liegu_zhensheng",
+        "guzhang_chenban"
+      ],
+      "unlocks": [
+        "quests"
+      ],
+      "brief": "香盏点亮则团长觉醒，折弦把联姻名单卖给夜阙。吹灭则这一代不觉醒，折弦留下半张图也可以不卖之后离开。两种他都活着。",
+      "choice": {
+        "prompt": "闸门前的香盏怎么处置？",
+        "options": [
+          {
+            "id": "e1_oath_sworn",
+            "label": "踏进光里，立旗誓",
+            "payoff_chapter": "e2_08"
+          },
+          {
+            "id": "e1_oath_refused",
+            "label": "吹灭香盏",
+            "payoff_chapter": "e2_08"
+          }
+        ]
+      },
+      "reads": [
+        "s01_painted_chart"
+      ]
+    },
+    {
+      "id": "e2_01",
+      "era": 2,
+      "year": 13,
+      "title": "晚霜亲自来",
+      "place": "镜湖关",
+      "objective_type": "escort",
+      "companions": [
+        "shuangque_wanshuang",
+        "weiyuan_dengying"
+      ],
+      "unlocks": [
+        "lineage"
+      ],
+      "brief": "晚霜在逃她自己的廷。护送她进堡。婚约可以先不谈，概率留到后来那一章再念。",
+      "choice": {
+        "prompt": "她以什么身份留下？",
+        "options": [
+          {
+            "id": "e2_courtship_opened",
+            "label": "验契接进联姻席",
+            "payoff_chapter": "e3_02"
+          },
+          {
+            "id": "e2_advisor_only",
+            "label": "只做顾问，不谈婚",
+            "payoff_chapter": "e3_02"
+          }
+        ]
+      },
+      "reads": [
+        "e1_sample_given",
+        "e1_sample_refused",
+        "s15_thin_frost_word"
+      ]
+    },
+    {
+      "id": "e2_02",
+      "era": 2,
+      "year": 15,
+      "title": "书院那一页",
+      "place": "上河书院",
+      "objective_type": "seize",
+      "companions": [
+        "weiyuan_dengying"
+      ],
+      "unlocks": [],
+      "brief": "灯影的除名页和澜芷的伪页可能订在一起。占领档案室。烧，或读。",
+      "choice": {
+        "prompt": "那一页留不留？",
+        "options": [
+          {
+            "id": "e2_page_burned",
+            "label": "按灯影的意思烧",
+            "payoff_chapter": "e5_04"
+          },
+          {
+            "id": "e2_page_read",
+            "label": "按继承人的意思读",
+            "payoff_chapter": "e5_04"
+          }
+        ]
+      },
+      "reads": [
+        "e1_register_to_dengying",
+        "s14_double_fare"
+      ]
+    },
+    {
+      "id": "e2_03",
+      "era": 2,
+      "year": 16,
+      "title": "染坊的根",
+      "place": "粉霞坞",
+      "objective_type": "rout",
+      "companions": [
+        "weiyuan_dengying",
+        "guzhang_chenban"
+      ],
+      "unlocks": [],
+      "brief": "清河宅来抓所谓返照。歼灭的是护卫。染坊供词交出去，澜芷更脆；留她一条命，假缕仍像一份合同。",
+      "choice": {
+        "prompt": "染坊的供词给谁？",
+        "options": [
+          {
+            "id": "e2_dye_testimony",
+            "label": "交出供词",
+            "payoff_chapter": "e2_06"
+          },
+          {
+            "id": "e2_lanzhi_spared",
+            "label": "留下澜芷这条线",
+            "payoff_chapter": "e2_06"
+          }
+        ]
+      },
+      "reads": [
+        "e1_register_burned",
+        "s03_dye_vat"
+      ]
+    },
+    {
+      "id": "e2_04",
+      "era": 2,
+      "year": 18,
+      "title": "雾港的标价",
+      "place": "雾港",
+      "objective_type": "defend",
+      "companions": [
+        "wugang_yuguang",
+        "guzhang_chenban"
+      ],
+      "unlocks": [],
+      "brief": "有人要买余光去配萤母之女。守到交易作废。替他付钱，或让他自己拒绝并承受跌价。",
+      "choice": {
+        "prompt": "这桩买卖谁来拒绝？",
+        "options": [
+          {
+            "id": "e2_bought_out",
+            "label": "公司付钱解约",
+            "payoff_chapter": "e4_02"
+          },
+          {
+            "id": "e2_self_refused",
+            "label": "让他自己拒绝",
+            "payoff_chapter": "e4_02"
+          }
+        ]
+      },
+      "reads": []
+    },
+    {
+      "id": "e2_05",
+      "era": 2,
+      "year": 19,
+      "title": "三个结果",
+      "place": "灰旗堡",
+      "objective_type": "survive",
+      "companions": [
+        "guzhang_chenban",
+        "liegu_zhensheng",
+        "weiyuan_dengying"
+      ],
+      "unlocks": [
+        "blood_test"
+      ],
+      "brief": "沉斑的沉默到期。活过回合，听她说发根、裂纹，以及继承人身上她愿意说的部分。可以只听一个。",
+      "choice": {
+        "prompt": "三份结果听几份？",
+        "options": [
+          {
+            "id": "e2_three_truths",
+            "label": "三份都听",
+            "payoff_chapter": "e3_04"
+          },
+          {
+            "id": "e2_one_truth",
+            "label": "只听一份",
+            "payoff_chapter": "e2_06"
+          }
+        ]
+      },
+      "reads": [
+        "e1_chenban_asked",
+        "e1_chenban_silent"
+      ]
+    },
+    {
+      "id": "e2_06",
+      "era": 2,
+      "year": 20,
+      "title": "牒上的假缕",
+      "place": "上河书院",
+      "objective_type": "boss",
+      "companions": [
+        "weiyuan_dengying"
+      ],
+      "unlocks": [
+        "dossier"
+      ],
+      "brief": "击败档案护卫。澜芷可死可活。继承人接受假缕，或当众承认牒外。第二种名字从这里分裂。",
+      "choice": {
+        "prompt": "继承人在牒上是谁？",
+        "options": [
+          {
+            "id": "e2_false_lock_accepted",
+            "label": "接受假缕",
+            "payoff_chapter": "e3_05"
+          },
+          {
+            "id": "e2_register_out_public",
+            "label": "当众承认牒外",
+            "payoff_chapter": "e3_05"
+          }
+        ]
+      },
+      "reads": [
+        "e2_dye_testimony",
+        "e2_lanzhi_spared",
+        "e2_one_truth"
+      ]
+    },
+    {
+      "id": "e2_07",
+      "era": 2,
+      "year": 22,
+      "title": "边血过桥",
+      "place": "碧潭城",
+      "objective_type": "escape",
+      "companions": [
+        "yingzhen_xiaoxian",
+        "weiyuan_dengying"
+      ],
+      "unlocks": [],
+      "brief": "牒外和弦外的人在城里被压价围捕。撤离。走清河的门，或走盐泽的船。小弦若已不在队里，这章仍要能走完。",
+      "choice": {
+        "prompt": "从哪边出城？",
+        "options": [
+          {
+            "id": "e2_exit_qinghe",
+            "label": "走清河的门",
+            "payoff_chapter": "e3_01"
+          },
+          {
+            "id": "e2_exit_salt",
+            "label": "走盐泽的船",
+            "payoff_chapter": "e3_01"
+          }
+        ]
+      },
+      "reads": [
+        "e1_xiaoxian_joined",
+        "e1_xiaoxian_handed"
+      ]
+    },
+    {
+      "id": "e2_08",
+      "era": 2,
+      "year": 24,
+      "title": "提名册",
+      "place": "烬都·白垣",
+      "objective_type": "seize",
+      "companions": [
+        "baiyuan_zhegan",
+        "yuhuo_pingshao",
+        "weiyuan_dengying"
+      ],
+      "unlocks": [],
+      "brief": "从议会夺回公推提名册，免得初啼被提前写上。撕掉，或在已觉醒的前提下写上创始人自己。",
+      "choice": {
+        "prompt": "提名册留下什么？",
+        "options": [
+          {
+            "id": "e2_nomination_torn",
+            "label": "撕掉提名",
+            "payoff_chapter": "e3_05"
+          },
+          {
+            "id": "e2_founder_nominated",
+            "label": "写上创始人",
+            "payoff_chapter": "e3_05"
+          }
+        ]
+      },
+      "reads": [
+        "e1_oath_sworn",
+        "e1_oath_refused"
+      ]
+    },
+    {
+      "id": "e3_01",
+      "era": 3,
+      "year": 25,
+      "title": "潮伯下船",
+      "place": "芦浦城",
+      "objective_type": "escort",
+      "companions": [
+        "lupu_xihui",
+        "yuhuo_pingshao"
+      ],
+      "unlocks": [
+        "estates"
+      ],
+      "brief": "汐回护送盐引，姐妹的人要把船开回去。准他入队且不提婚，或把子嗣期望摆上桌。后者他视为侮辱。",
+      "choice": {
+        "prompt": "上船时谈不谈婚？",
+        "options": [
+          {
+            "id": "e3_no_proposal",
+            "label": "入队，不提婚事",
+            "payoff_chapter": "e3_06"
+          },
+          {
+            "id": "e3_forecast_on_table",
+            "label": "把预报摆上桌",
+            "payoff_chapter": "e4_05"
+          }
+        ]
+      },
+      "reads": [
+        "e2_exit_qinghe",
+        "e2_exit_salt"
+      ]
+    },
+    {
+      "id": "e3_02",
+      "era": 3,
+      "year": 27,
+      "title": "念出那一行",
+      "place": "灰旗堡",
+      "objective_type": "defend",
+      "companions": [
+        "shuangque_wanshuang",
+        "weiyuan_dengying"
+      ],
+      "unlocks": [],
+      "brief": "霜使来抢晚霜。守住联姻厅。把霜睫的概率念给她，或先答应不看。赢了之后她仍可以停掉亲事。",
+      "choice": {
+        "prompt": "概率念不念？",
+        "options": [
+          {
+            "id": "e3_forecast_spoken",
+            "label": "念出那一行",
+            "payoff_chapter": "e4_01"
+          },
+          {
+            "id": "e3_promise_blind",
+            "label": "先答应，不看",
+            "payoff_chapter": "e4_01"
+          }
+        ]
+      },
+      "reads": [
+        "e2_courtship_opened",
+        "e2_advisor_only",
+        "s07_regent_year"
+      ]
+    },
+    {
+      "id": "e3_03",
+      "era": 3,
+      "year": 28,
+      "title": "眉是完整的",
+      "place": "灰旗堡",
+      "objective_type": "boss",
+      "companions": [
+        "shengao_pingmei",
+        "liegu_zhensheng"
+      ],
+      "unlocks": [
+        "train",
+        "skills"
+      ],
+      "brief": "平眉在校场击败锻场代理人。打完仍去祠堂验一次，或把解释权从祠堂拿开。",
+      "choice": {
+        "prompt": "校场之后认谁的尺子？",
+        "options": [
+          {
+            "id": "e3_shrine_after",
+            "label": "仍去祠堂验一次",
+            "payoff_chapter": "e4_07"
+          },
+          {
+            "id": "e3_yard_only",
+            "label": "只认校场",
+            "payoff_chapter": "e4_07"
+          }
+        ]
+      },
+      "reads": [
+        "s09_hidden_list"
+      ]
+    },
+    {
+      "id": "e3_04",
+      "era": 3,
+      "year": 29,
+      "title": "收窑的人",
+      "place": "焰旗要塞",
+      "objective_type": "protect",
+      "companions": [
+        "liegu_zhensheng",
+        "shengao_pingmei"
+      ],
+      "unlocks": [],
+      "brief": "保护砧声或他的儿子穿过要塞。焚阙要把窑接回去。当众承认冰裂，或继续称他是来修旗杆的。",
+      "choice": {
+        "prompt": "要塞门口他是谁？",
+        "options": [
+          {
+            "id": "e3_crack_admitted",
+            "label": "承认冰裂",
+            "payoff_chapter": "e3_08"
+          },
+          {
+            "id": "e3_still_apprentice",
+            "label": "仍称学徒",
+            "payoff_chapter": "e5_03"
+          }
+        ]
+      },
+      "reads": [
+        "e1_crack_public",
+        "e2_three_truths",
+        "s16_heat_test"
+      ]
+    },
+    {
+      "id": "e3_05",
+      "era": 3,
+      "year": 30,
+      "title": "授旗",
+      "place": "灰旗堡",
+      "objective_type": "defend",
+      "companions": [
+        "weiyuan_dengying",
+        "baiyuan_zhegan"
+      ],
+      "unlocks": [
+        "rite",
+        "hourglass"
+      ],
+      "brief": "守住庭院直到誓词说完。计勋要在这之前带走分数更高的孩子。此后玩家操控旗主，创始人退为顾问，活到第四十六年。",
+      "choice": {
+        "prompt": "誓词指向谁？",
+        "options": [
+          {
+            "id": "e3_rite_company_heir",
+            "label": "交给公司礼法选中的人",
+            "payoff_chapter": "e5_08"
+          },
+          {
+            "id": "e3_rite_awakened_heir",
+            "label": "交给已经点亮的人",
+            "payoff_chapter": "e5_08"
+          }
+        ]
+      },
+      "reads": [
+        "e2_false_lock_accepted",
+        "e2_register_out_public",
+        "e2_nomination_torn",
+        "e2_founder_nominated"
+      ]
+    },
+    {
+      "id": "e3_06",
+      "era": 3,
+      "year": 32,
+      "title": "女儿看见海",
+      "place": "晶滩港",
+      "objective_type": "escape",
+      "companions": [
+        "lupu_xihui"
+      ],
+      "unlocks": [],
+      "brief": "若已有女儿，盐泽的船来接，战斗是把她撤向内陆。若还没有，同一艘船改来抢汐回本人。",
+      "choice": {
+        "prompt": "海给不给她看？",
+        "options": [
+          {
+            "id": "e3_daughter_sees_sea",
+            "label": "让她看一眼海",
+            "payoff_chapter": "e4_05"
+          },
+          {
+            "id": "e3_daughter_kept_inland",
+            "label": "连海都不给看",
+            "payoff_chapter": "e5_05"
+          }
+        ]
+      },
+      "reads": [
+        "e3_no_proposal"
+      ]
+    },
+    {
+      "id": "e3_07",
+      "era": 3,
+      "year": 35,
+      "title": "冒窑",
+      "place": "灰市",
+      "objective_type": "rout",
+      "companions": [
+        "liegu_zhensheng",
+        "guzhang_chenban"
+      ],
+      "unlocks": [],
+      "brief": "清掉灰市里描釉的冒窑者。真冰裂的证据交给旧典派，或两派都不给。",
+      "choice": {
+        "prompt": "证据落在谁手里？",
+        "options": [
+          {
+            "id": "e3_evidence_to_old_canon",
+            "label": "交给旧典派",
+            "payoff_chapter": "e5_03"
+          },
+          {
+            "id": "e3_evidence_to_neither",
+            "label": "两派都不给",
+            "payoff_chapter": "e5_03"
+          }
+        ]
+      },
+      "reads": []
+    },
+    {
+      "id": "e3_08",
+      "era": 3,
+      "year": 38,
+      "title": "注脚",
+      "place": "灰典城",
+      "objective_type": "seize",
+      "companions": [
+        "liegu_zhensheng"
+      ],
+      "unlocks": [],
+      "brief": "占领典阁，处理那条旧注：灰旗之中若有冰裂男子生子，窑归于灰旗。留下或毁掉。这是砧声的最后一拍。",
+      "choice": {
+        "prompt": "旧注留不留？",
+        "options": [
+          {
+            "id": "e3_footnote_kept",
+            "label": "留下这条法律",
+            "payoff_chapter": "e5_03"
+          },
+          {
+            "id": "e3_footnote_burned",
+            "label": "毁掉以保护孩子",
+            "payoff_chapter": "e5_03"
+          }
+        ]
+      },
+      "reads": [
+        "e1_crack_hidden",
+        "e3_crack_admitted"
+      ]
+    },
+    {
+      "id": "e4_01",
+      "era": 4,
+      "year": 42,
+      "title": "灯还不是货",
+      "place": "陆桥驿",
+      "objective_type": "escort",
+      "companions": [
+        "guzhang_chenban",
+        "shuangque_wanshuang"
+      ],
+      "unlocks": [],
+      "brief": "欠盏的伙计来量香盏的尺寸。沉斑拒绝把雨验写成产品。晚霜决定携霜二字进不进公司名册。两人此后不久都会老死。",
+      "choice": {
+        "prompt": "携带写不写进名册？",
+        "options": [
+          {
+            "id": "e4_write_carrier",
+            "label": "写成聘礼，也写成绳",
+            "payoff_chapter": "e5_08"
+          },
+          {
+            "id": "e4_erase_carrier",
+            "label": "涂掉，连自己也不留底",
+            "payoff_chapter": "e5_08"
+          }
+        ]
+      },
+      "reads": [
+        "e3_forecast_spoken",
+        "e3_promise_blind"
+      ]
+    },
+    {
+      "id": "e4_02",
+      "era": 4,
+      "year": 45,
+      "title": "光传不走",
+      "place": "萤洲",
+      "objective_type": "protect",
+      "companions": [
+        "wugang_yuguang"
+      ],
+      "unlocks": [],
+      "brief": "余光的婚礼。对象由此前的选择收束：无光的人把光断开，有光的人让女儿会被召回。保护婚礼，不屠来宾。",
+      "choice": {
+        "prompt": "这门亲事接哪一种光？",
+        "options": [
+          {
+            "id": "e4_marry_unlit",
+            "label": "娶无光的人",
+            "payoff_chapter": "e5_06"
+          },
+          {
+            "id": "e4_marry_glowing",
+            "label": "娶发光的人",
+            "payoff_chapter": "e5_06"
+          }
+        ]
+      },
+      "reads": [
+        "e2_bought_out",
+        "e2_self_refused",
+        "s11_glow_pact"
+      ]
+    },
+    {
+      "id": "e4_03",
+      "era": 4,
+      "year": 48,
+      "title": "免费的灯籍",
+      "place": "灯都·琉光",
+      "objective_type": "survive",
+      "companions": [
+        "yuhuo_pingshao",
+        "yingzhen_xiaoxian"
+      ],
+      "unlocks": [
+        "titles"
+      ],
+      "brief": "满港竞价之夜，活到锤子落下。平梢撕掉灯籍。小弦若在，把离队条件写在纸背；若已被交还，条件在她留下的信里。",
+      "choice": {
+        "prompt": "拍卖席上那张纸做什么？",
+        "options": [
+          {
+            "id": "e4_testimony_given",
+            "label": "出庭作证，换通行",
+            "payoff_chapter": "e5_07"
+          },
+          {
+            "id": "e4_ledger_torn",
+            "label": "撕掉灯籍",
+            "payoff_chapter": "e5_07"
+          }
+        ]
+      },
+      "reads": [
+        "e1_pingshao_paid",
+        "e1_pingshao_stayed",
+        "e1_xiaoxian_joined",
+        "e1_xiaoxian_handed",
+        "s17_spectrum",
+        "s19_paper_rite"
+      ]
+    },
+    {
+      "id": "e4_04",
+      "era": 4,
+      "year": 50,
+      "title": "桥外过关",
+      "place": "渡星关",
+      "objective_type": "escort",
+      "companions": [
+        "donghong_qiaowai"
+      ],
+      "unlocks": [],
+      "brief": "桥外独自赶路，躲开把她当成缺项的求婚。护送过关。绕开西虹，或看见测距而不说话。",
+      "choice": {
+        "prompt": "渡星关上看不见谁？",
+        "options": [
+          {
+            "id": "e4_avoid_west",
+            "label": "绕开西虹",
+            "payoff_chapter": "e4_08"
+          },
+          {
+            "id": "e4_saw_ceju",
+            "label": "看见他，不说话",
+            "payoff_chapter": "e4_08"
+          }
+        ]
+      },
+      "reads": []
+    },
+    {
+      "id": "e4_05",
+      "era": 4,
+      "year": 52,
+      "title": "借一代",
+      "place": "盐都·晶垣",
+      "objective_type": "boss",
+      "companions": [
+        "lupu_xihui"
+      ],
+      "unlocks": [],
+      "brief": "汐回的姐妹来借潮痕女儿一代。击败的是冠军，不是姐妹。借出则孙女归海；拒绝则两个誓会在同一天到期。",
+      "choice": {
+        "prompt": "这一代借不借？",
+        "options": [
+          {
+            "id": "e4_lend_a_generation",
+            "label": "借出一代",
+            "payoff_chapter": "e5_05"
+          },
+          {
+            "id": "e4_refuse_lend",
+            "label": "拒绝",
+            "payoff_chapter": "e5_05"
+          }
+        ]
+      },
+      "reads": [
+        "e3_forecast_on_table",
+        "e3_daughter_sees_sea",
+        "s08_three_sisters"
+      ]
+    },
+    {
+      "id": "e4_06",
+      "era": 4,
+      "year": 54,
+      "title": "两本桥税",
+      "place": "星都·双虹",
+      "objective_type": "seize",
+      "companions": [
+        "xihong_ceju"
+      ],
+      "unlocks": [],
+      "brief": "测距加入。他要的是被孤衡改绘之前的桥，不是桥外。夺取地图。公布，或用它交换沉默。",
+      "choice": {
+        "prompt": "地图拿去做什么？",
+        "options": [
+          {
+            "id": "e4_map_published",
+            "label": "公布桥图",
+            "payoff_chapter": "e5_08"
+          },
+          {
+            "id": "e4_map_traded",
+            "label": "用来换孤衡的沉默",
+            "payoff_chapter": "e5_08"
+          }
+        ]
+      },
+      "reads": [
+        "s10_dotted_moles",
+        "s18_two_ledgers"
+      ]
+    },
+    {
+      "id": "e4_07",
+      "era": 4,
+      "year": 56,
+      "title": "锻选",
+      "place": "峡都·铁阙",
+      "objective_type": "escape",
+      "companions": [
+        "shengao_pingmei"
+      ],
+      "unlocks": [],
+      "brief": "平眉被征召。把她撤出锻场，或让她打完再撤。留下并胜出，她可能在终局之前成为峡座。",
+      "choice": {
+        "prompt": "她把这场打完吗？",
+        "options": [
+          {
+            "id": "e4_pingmei_stays",
+            "label": "留下打完锻选",
+            "payoff_chapter": "e5_01"
+          },
+          {
+            "id": "e4_pingmei_pulled",
+            "label": "把她拽走",
+            "payoff_chapter": "e5_01"
+          }
+        ]
+      },
+      "reads": [
+        "e3_shrine_after",
+        "e3_yard_only",
+        "s12_audience"
+      ]
+    },
+    {
+      "id": "e4_08",
+      "era": 4,
+      "year": 58,
+      "title": "孤衡的价",
+      "place": "观象台",
+      "objective_type": "protect",
+      "companions": [
+        "donghong_qiaowai",
+        "xihong_ceju"
+      ],
+      "unlocks": [
+        "court_news"
+      ],
+      "brief": "保护桥外与测距不要在同一间屋里被请去补全七星。答应永不成全，或拒绝并把决定还给他们。孤衡要活着。",
+      "choice": {
+        "prompt": "这个价接不接？",
+        "options": [
+          {
+            "id": "e4_never_complete",
+            "label": "答应永不成全",
+            "payoff_chapter": "e5_02"
+          },
+          {
+            "id": "e4_their_choice",
+            "label": "让他们自己决定",
+            "payoff_chapter": "e5_02"
+          }
+        ]
+      },
+      "reads": [
+        "e4_avoid_west",
+        "e4_saw_ceju"
+      ]
+    },
+    {
+      "id": "e5_01",
+      "era": 5,
+      "year": 62,
+      "title": "锻声",
+      "place": "鹰旗关",
+      "objective_type": "rout",
+      "companions": [
+        "shengao_pingmei"
+      ],
+      "unlocks": [],
+      "brief": "平眉若留在峡都，这一仗面对她的继任者，她在对面。若还在队里，则是帮她拒绝第三轮征召。",
+      "choice": {
+        "prompt": "锻选的胜者有没有召人权？",
+        "options": [
+          {
+            "id": "e5_forge_law_stands",
+            "label": "铁峡的胜者可以召人",
+            "payoff_chapter": "e5_08"
+          },
+          {
+            "id": "e5_company_law_stands",
+            "label": "公司礼法更高",
+            "payoff_chapter": "e5_08"
+          }
+        ]
+      },
+      "reads": [
+        "e4_pingmei_stays",
+        "e4_pingmei_pulled"
+      ]
+    },
+    {
+      "id": "e5_02",
+      "era": 5,
+      "year": 66,
+      "title": "七星不是义务",
+      "place": "星都·双虹",
+      "objective_type": "survive",
+      "companions": [
+        "donghong_qiaowai",
+        "xihong_ceju",
+        "wugang_yuguang"
+      ],
+      "unlocks": [],
+      "brief": "孤衡发动星验。活到观测结束。公开拒绝被放进同一张星图，或交出一个已经出生的七星孩子。",
+      "choice": {
+        "prompt": "星图上放不放人？",
+        "options": [
+          {
+            "id": "e5_refuse_chart",
+            "label": "公开拒绝",
+            "payoff_chapter": "e5_08"
+          },
+          {
+            "id": "e5_give_seven_star",
+            "label": "交出七星孩子换承认",
+            "payoff_chapter": "e5_08"
+          }
+        ]
+      },
+      "reads": [
+        "e4_never_complete",
+        "e4_their_choice"
+      ]
+    },
+    {
+      "id": "e5_03",
+      "era": 5,
+      "year": 69,
+      "title": "冷窑上门",
+      "place": "旧都·焚阙",
+      "objective_type": "escort",
+      "companions": [
+        "shengao_pingmei",
+        "xihong_ceju"
+      ],
+      "echo": [
+        "liegu_zhensheng"
+      ],
+      "unlocks": [],
+      "brief": "把砧声的儿子护送到焚阙门口，让他自己决定进不进。砧声已死。平眉懂被征召，所以由她护送。",
+      "choice": {
+        "prompt": "门口的孩子进不进？",
+        "options": [
+          {
+            "id": "e5_son_enters_kiln",
+            "label": "进门承窑",
+            "payoff_chapter": "e5_08"
+          },
+          {
+            "id": "e5_son_returns",
+            "label": "涂上烟灰，回堡",
+            "payoff_chapter": "e5_08"
+          }
+        ]
+      },
+      "reads": [
+        "e3_still_apprentice",
+        "e3_evidence_to_old_canon",
+        "e3_evidence_to_neither",
+        "e3_footnote_kept",
+        "e3_footnote_burned"
+      ]
+    },
+    {
+      "id": "e5_04",
+      "era": 5,
+      "year": 71,
+      "title": "那一页还在不在",
+      "place": "上河书院",
+      "objective_type": "seize",
+      "companions": [
+        "donghong_qiaowai",
+        "xihong_ceju"
+      ],
+      "echo": [
+        "weiyuan_dengying"
+      ],
+      "unlocks": [],
+      "brief": "灯影已死。若页已烧，占领的是空柜。若页还在，由桥外决定要不要把它放在星图旁边。",
+      "choice": {
+        "prompt": "空柜或残页，怎么收场？",
+        "options": [
+          {
+            "id": "e5_page_as_company_name",
+            "label": "牒外写成公司的正式身份",
+            "payoff_chapter": "e5_08"
+          },
+          {
+            "id": "e5_page_seeks_return",
+            "label": "为继承人求一次返照",
+            "payoff_chapter": "e5_08"
+          }
+        ]
+      },
+      "reads": [
+        "e2_page_burned",
+        "e2_page_read"
+      ]
+    },
+    {
+      "id": "e5_05",
+      "era": 5,
+      "year": 73,
+      "title": "两个誓",
+      "place": "晶滩港",
+      "objective_type": "protect",
+      "companions": [
+        "donghong_qiaowai",
+        "shengao_pingmei"
+      ],
+      "echo": [
+        "lupu_xihui"
+      ],
+      "unlocks": [],
+      "brief": "保护汐回的女儿，不要在同一天被潮法和旗誓同时抓住。她可以向海、向旗，或两边都不跪。",
+      "choice": {
+        "prompt": "她先向谁开口？",
+        "options": [
+          {
+            "id": "e5_oath_sea",
+            "label": "先向海发誓",
+            "payoff_chapter": "e5_08"
+          },
+          {
+            "id": "e5_oath_flag",
+            "label": "先向旗发誓",
+            "payoff_chapter": "e5_08"
+          },
+          {
+            "id": "e5_oath_neither",
+            "label": "哪一边都不跪",
+            "payoff_chapter": "e5_08"
+          }
+        ]
+      },
+      "reads": [
+        "e3_daughter_kept_inland",
+        "e4_lend_a_generation",
+        "e4_refuse_lend"
+      ]
+    },
+    {
+      "id": "e5_06",
+      "era": 5,
+      "year": 74,
+      "title": "雨",
+      "place": "泽都·雾林",
+      "objective_type": "boss",
+      "companions": [
+        "xihong_ceju"
+      ],
+      "echo": [
+        "guzhang_chenban",
+        "wugang_yuguang"
+      ],
+      "unlocks": [],
+      "brief": "藤桥·新雨在雨里说结果。击败护送队长，但胜利是雨落下并且话说完。无光的王血孩子要不要被淋到。",
+      "choice": {
+        "prompt": "雨淋到谁？",
+        "options": [
+          {
+            "id": "e5_rain_public",
+            "label": "当众说没有光，或有光",
+            "payoff_chapter": "e5_08"
+          },
+          {
+            "id": "e5_rain_hidden",
+            "label": "把孩子留在屋里",
+            "payoff_chapter": "e5_08"
+          }
+        ]
+      },
+      "reads": [
+        "e4_marry_unlit",
+        "e4_marry_glowing"
+      ]
+    },
+    {
+      "id": "e5_07",
+      "era": 5,
+      "year": 75,
+      "title": "半环的信",
+      "place": "夜航渡",
+      "objective_type": "escape",
+      "companions": [
+        "donghong_qiaowai"
+      ],
+      "echo": [
+        "yingzhen_xiaoxian"
+      ],
+      "unlocks": [],
+      "brief": "小弦已不在场。夜阙来追认全朔的孙辈，或来签一份预防的契。桥外朗读纸背上的条件。撤离使团。",
+      "choice": {
+        "prompt": "全朔的孩子给人看吗？",
+        "options": [
+          {
+            "id": "e5_eclipse_shown",
+            "label": "留下，当旗帜",
+            "payoff_chapter": "e5_08"
+          },
+          {
+            "id": "e5_eclipse_hidden",
+            "label": "按信中的安排离开",
+            "payoff_chapter": "e5_08"
+          }
+        ]
+      },
+      "reads": [
+        "e4_testimony_given",
+        "e4_ledger_torn"
+      ]
+    },
+    {
+      "id": "e5_08",
+      "era": 5,
+      "year": 76,
+      "title": "白垣唱票",
+      "place": "烬都·白垣",
+      "objective_type": "seize",
+      "companions": [
+        "donghong_qiaowai",
+        "xihong_ceju",
+        "shengao_pingmei"
+      ],
+      "echo": [
+        "weiyuan_dengying",
+        "baiyuan_zhegan",
+        "yingzhen_xiaoxian",
+        "yuhuo_pingshao",
+        "liegu_zhensheng",
+        "guzhang_chenban",
+        "shuangque_wanshuang",
+        "lupu_xihui",
+        "wugang_yuguang"
+      ],
+      "unlocks": [],
+      "brief": "占领议事厅，把旗插进一场还在进行的公推。新雨问灯说不说。第77年到第100年不再排主线。",
+      "choice": {
+        "prompt": "谁站在旗下？",
+        "options": [
+          {
+            "id": "e5_stand_awakened",
+            "label": "已觉醒的人",
+            "payoff_chapter": "ending"
+          },
+          {
+            "id": "e5_stand_rite_heir",
+            "label": "公司礼法的继承人",
+            "payoff_chapter": "ending"
+          },
+          {
+            "id": "e5_stand_living_companion",
+            "label": "一名仍在世的同伴",
+            "payoff_chapter": "ending"
+          },
+          {
+            "id": "e5_stand_empty_flag",
+            "label": "空旗，只有布",
+            "payoff_chapter": "ending"
+          }
+        ]
+      },
+      "lamp": {
+        "prompt": "验血结果当众说不说？",
+        "options": [
+          {
+            "id": "e5_lamp_speaks",
+            "label": "说",
+            "payoff_chapter": "ending"
+          },
+          {
+            "id": "e5_lamp_silent",
+            "label": "不说",
+            "payoff_chapter": "ending"
+          }
+        ]
+      },
+      "reads": [
+        "e3_rite_company_heir",
+        "e3_rite_awakened_heir",
+        "e4_write_carrier",
+        "e4_erase_carrier",
+        "e4_map_published",
+        "e4_map_traded",
+        "e5_forge_law_stands",
+        "e5_company_law_stands",
+        "e5_refuse_chart",
+        "e5_give_seven_star",
+        "e5_son_enters_kiln",
+        "e5_son_returns",
+        "e5_page_as_company_name",
+        "e5_page_seeks_return",
+        "e5_oath_sea",
+        "e5_oath_flag",
+        "e5_oath_neither",
+        "e5_rain_public",
+        "e5_rain_hidden",
+        "e5_eclipse_shown",
+        "e5_eclipse_hidden",
+        "s20_empty_flag_night"
+      ]
+    }
+  ],
+  "side_stories": [
+    {
+      "id": "s01",
+      "era": 1,
+      "title": "石垒坡的伪图",
+      "place": "石垒坡",
+      "law": "awakened",
+      "flag": "s01_painted_chart",
+      "payoff_chapter": "e1_08",
+      "hook": "一名旗帅用颜料画了河图纹，请你作证。拆穿他，计勋会少一分对眼见功绩的信任。"
+    },
+    {
+      "id": "s02",
+      "era": 1,
+      "title": "影针塔的夜禁婚",
+      "place": "影针塔",
+      "law": "dose",
+      "flag": "s02_marriage_ban_witness",
+      "payoff_chapter": "e1_03",
+      "hook": "小弦的表亲来信，求你做她拒绝宫内联姻的证人。"
+    },
+    {
+      "id": "s03",
+      "era": 2,
+      "title": "粉霞坞的染缸",
+      "place": "粉霞坞",
+      "law": "threshold",
+      "flag": "s03_dye_vat",
+      "payoff_chapter": "e2_03",
+      "hook": "买下或烧掉染缸，会改变澜芷后来供词的硬度。"
+    },
+    {
+      "id": "s04",
+      "era": 1,
+      "title": "西港的过户",
+      "place": "西港",
+      "law": "dominant",
+      "flag": "s04_ledger_transfer",
+      "payoff_chapter": "e1_04",
+      "hook": "平梢的姐姐要把真灯籍过户到她名下，像过户一条船。"
+    },
+    {
+      "id": "s05",
+      "era": 1,
+      "title": "余火祠的父名",
+      "place": "余火祠",
+      "law": "y_linked",
+      "flag": "s05_father_name",
+      "payoff_chapter": "e1_05",
+      "hook": "有人指控砧声之父没有冰裂。验或不验，都是后来冒窑的预演。"
+    },
+    {
+      "id": "s06",
+      "era": 1,
+      "title": "古樟祠的弃婴",
+      "place": "古樟祠",
+      "law": "maternal",
+      "flag": "s06_true_glow_infant",
+      "payoff_chapter": "e1_06",
+      "hook": "沉斑做义务雨验，遇见一个真萤斑的弃婴。留下，或送回雾林。"
+    },
+    {
+      "id": "s07",
+      "era": 2,
+      "title": "雪幡哨的一年",
+      "place": "雪幡哨",
+      "law": "recessive",
+      "flag": "s07_regent_year",
+      "payoff_chapter": "e3_02",
+      "hook": "晚霜的旧同事请她回去摄霜一年。去了，霜使后来会称她为逃吏。"
+    },
+    {
+      "id": "s08",
+      "era": 3,
+      "title": "晶滩的三姐妹",
+      "place": "晶滩港",
+      "law": "x_dominant",
+      "flag": "s08_three_sisters",
+      "payoff_chapter": "e4_05",
+      "hook": "汐回姐妹的女儿们争一艘船。他帮谁，都会泄露给后来借一代的人。"
+    },
+    {
+      "id": "s09",
+      "era": 3,
+      "title": "悬桥的榜",
+      "place": "悬桥城",
+      "law": "penetrance",
+      "flag": "s09_hidden_list",
+      "payoff_chapter": "e3_03",
+      "hook": "平眉的名字在藏钢榜上，旁边是一个剃了眉的骗子。"
+    },
+    {
+      "id": "s10",
+      "era": 4,
+      "title": "落星的点痣",
+      "place": "落星村",
+      "law": "complement",
+      "flag": "s10_dotted_moles",
+      "payoff_chapter": "e4_06",
+      "hook": "有人点了七颗痣冒充桥外的远亲。测距要不要公开标准星距。"
+    },
+    {
+      "id": "s11",
+      "era": 4,
+      "title": "萤洲的萤约",
+      "place": "萤洲",
+      "law": "maternal",
+      "flag": "s11_glow_pact",
+      "payoff_chapter": "e4_02",
+      "hook": "南泽用粮约换一个孙女归林。这是余光婚礼之前的压力，不是婚礼本身。"
+    },
+    {
+      "id": "s12",
+      "era": 4,
+      "title": "鹰旗关的旁听",
+      "place": "鹰旗关",
+      "law": "penetrance",
+      "flag": "s12_audience",
+      "payoff_chapter": "e4_07",
+      "hook": "你只是去看锻选，平眉被观众认出来。"
+    },
+    {
+      "id": "s13",
+      "era": 1,
+      "title": "陆桥驿的账本",
+      "place": "陆桥驿",
+      "law": "dose",
+      "flag": "s13_toll_ledger",
+      "payoff_chapter": "e1_02",
+      "hook": "第零章流匪的账还在，最后一页是折弦的签。"
+    },
+    {
+      "id": "s14",
+      "era": 2,
+      "title": "三汊渡的双倍船资",
+      "place": "三汊渡",
+      "law": "threshold",
+      "flag": "s14_double_fare",
+      "payoff_chapter": "e2_02",
+      "hook": "牒外过河要双倍船资。灯影拒绝付。你若代付，她并不感激。"
+    },
+    {
+      "id": "s15",
+      "era": 2,
+      "title": "冻原的称呼",
+      "place": "冻原村",
+      "law": "recessive",
+      "flag": "s15_thin_frost_word",
+      "payoff_chapter": "e2_01",
+      "hook": "一个孩子被喊作薄霜。晚霜不许这个词进公司名册。"
+    },
+    {
+      "id": "s16",
+      "era": 3,
+      "title": "窑火镇的温瓷",
+      "place": "窑火镇",
+      "law": "y_linked",
+      "flag": "s16_heat_test",
+      "payoff_chapter": "e3_04",
+      "hook": "真冰裂遇热会透光。若第一章已经当众验过，这里不能假装从来没有。"
+    },
+    {
+      "id": "s17",
+      "era": 4,
+      "title": "望灯台的光谱",
+      "place": "望灯台",
+      "law": "dominant",
+      "flag": "s17_spectrum",
+      "payoff_chapter": "e4_03",
+      "hook": "欠盏请你看她的灯丝在霜灯下折出的光，证明她不是假货，然后再开价。"
+    },
+    {
+      "id": "s18",
+      "era": 4,
+      "title": "双虹的两本账",
+      "place": "星都·双虹",
+      "law": "complement",
+      "flag": "s18_two_ledgers",
+      "payoff_chapter": "e4_06",
+      "hook": "东虹和西虹把桥税分成两本账。测距想先合成一本，再谈夺取地图。"
+    },
+    {
+      "id": "s19",
+      "era": 4,
+      "title": "桥市的纸冕婚礼",
+      "place": "桥市",
+      "law": "dominant",
+      "flag": "s19_paper_rite",
+      "payoff_chapter": "e4_03",
+      "hook": "你被请来给一场婚礼站台。新人有冠饰，没有脸上的显证。平梢若在，她会离席。"
+    },
+    {
+      "id": "s20",
+      "era": 5,
+      "title": "空旗夜",
+      "place": "灰旗堡",
+      "law": "awakened",
+      "flag": "s20_empty_flag_night",
+      "payoff_chapter": "e5_08",
+      "hook": "继承人病重或濒死的夜里，谁还活着谁留下一句替代台词。不发奖。只给终章备用。"
+    }
+  ]
+}
