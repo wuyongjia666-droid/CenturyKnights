@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "project/data/bloodlines_v89.json"
 LEGACY = ROOT / "project/data/bloodlines.json"
 WORLD = ROOT / "project/data/world_v87.json"
+RIVALS = ROOT / "project/data/rival_houses.json"
 ATLAS = ROOT / "project/data/atlas_v8.json"
 SKILLS = ROOT / "project/data/skills.json"
 JOBS = ROOT / "project/data/jobs.json"
@@ -390,6 +391,27 @@ def main():
         royal_state = lines.get(n.get("royal"), {}).get("signature")
         if royal_state not in seen_states:
             err(f"fixtures: no example shows {nid}'s royal sign {royal_state}")
+
+    # DYN-03 rival houses: original names and creeds, same anti-trope list.
+    zh_forbid = ["精灵", "尖耳", "金瞳", "金发", "蓝胎记", "青胎记", "冠冕"]
+    rivals = load(RIVALS).get("houses", [])
+    if len(rivals) != 10:
+        err(f"rival houses: expected 10, got {len(rivals)}")
+    seen_nations = set()
+    for h in rivals:
+        hid = str(h.get("id", ""))
+        blob = " ".join(str(h.get(k, "")) for k in ("name", "creed", "desc"))
+        if not h.get("name") or not h.get("creed") or h.get("nation") != hid:
+            err(f"rival house {hid}: needs original name, creed, and nation id")
+        seen_nations.add(hid)
+        bad = forbidden(blob, forbid)
+        if bad:
+            err(f"rival house {hid}: forbidden trope '{bad}'")
+        for w in zh_forbid:
+            if w in blob:
+                err(f"rival house {hid}: forbidden trope '{w}'")
+    if seen_nations != set(nations):
+        err(f"rival houses {sorted(seen_nations)} != nations {sorted(nations)}")
 
     if errors:
         for e in errors:

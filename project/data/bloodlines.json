@@ -1,4 +1,16 @@
 {
+  "role": "legacy_migration",
+  "note": "v8.7 catalog. Runtime draws use bloodlines_v89.json through CKBloodline. This file is only the migration map and the stat-range lock.",
+  "map": {
+    "common_ash": "common_ash",
+    "river_ward": "river_ward",
+    "ember_noble": "ember_noble",
+    "frost_crown": "frost_crown",
+    "ash_folk": "common_ash",
+    "river_gentry": "river_ward",
+    "ember_house": "ember_noble",
+    "frost_royal": "frost_crown"
+  },
   "bloodlines": [
     {
       "id": "common_ash",

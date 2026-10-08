@@ -64,6 +64,7 @@ var gear: Dictionary = {}       # cid -> {"armor": id, "charm": id}
 var recruits: Dictionary = {}   # city -> {"epoch": int, "list": [char dict]}
 var travel: Dictionary = {}     # {"route": [ids], "leg": int, "dest": id}
 var pending_event: Dictionary = {}
+var road_flags: Dictionary = {}  # CMP-09: choice flags set by road events
 var encounter: Dictionary = {}
 var travel_log: Array = []
 var month_reports: Array = []
@@ -152,6 +153,7 @@ func reset() -> void:
 	recruits = {}
 	travel = {}
 	pending_event = {}
+	road_flags = {}
 	encounter = {}
 	travel_log = []
 	month_reports = []
@@ -168,7 +170,7 @@ func to_save() -> Dictionary:
 		"v": 1, "pos": pos, "day": day, "days_total": days_total, "visited": visited, "rep_city": rep_city, "rep_nation": rep_nation,
 		"cargo": cargo, "market": market, "fairs": fairs, "intel": intel, "tips": tips, "boards": boards, "active": active,
 		"done_sig": done_sig, "quest_log": quest_log, "stats_done": stats_done, "armory": armory, "gear": gear, "recruits": rc,
-		"travel": travel, "pending_event": pending_event, "encounter": encounter, "travel_log": travel_log, "qseq": _qseq, "enc_seq": _enc_seq,
+		"travel": travel, "pending_event": pending_event, "road_flags": road_flags, "encounter": encounter, "travel_log": travel_log, "qseq": _qseq, "enc_seq": _enc_seq,
 		"royal_courts": royal_courts,
 	}
 
@@ -205,6 +207,11 @@ func from_save(d: Dictionary) -> void:
 	recruits = d.get("recruits", {})
 	travel = d.get("travel", {})
 	pending_event = d.get("pending_event", {})
+	road_flags = {}
+	var saved_flags = d.get("road_flags", {})
+	if typeof(saved_flags) == TYPE_DICTIONARY:
+		for fk in saved_flags.keys():
+			road_flags[str(fk)] = bool(saved_flags[fk])
 	encounter = d.get("encounter", {})
 	travel_log = d.get("travel_log", [])
 	royal_courts = d.get("royal_courts", {}) if typeof(d.get("royal_courts", {})) == TYPE_DICTIONARY else {}
@@ -1514,6 +1521,13 @@ func choose_event(idx: int) -> Dictionary:
 					fx = {"battle": "ambush"}
 			"sp":
 				GameState.add_skill_point(int(v))
+				lines.append("战技点 %+d" % int(v))
+			"iron":
+				GameState.iron = maxi(0, GameState.iron + int(v))
+				lines.append("铁 %+d" % int(v))
+			"flag":
+				road_flags[str(v)] = true
+				lines.append("记下了旗标")
 	if fx.has("battle"):
 		var enc := start_encounter("road", {"node": str(ev.b), "from": str(ev.a), "event": str(ev.id), "rep_win": int(fx.get("rep_nation_win", 0))})
 		return {"ok": true, "msg": "，".join(lines), "encounter": enc}

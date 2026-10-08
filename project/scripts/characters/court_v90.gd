@@ -563,6 +563,7 @@ static func tick(state: Dictionary, year: int) -> Dictionary:
 				var born := "%s 添丁 %s。" % [CKBloodline.nation(nid).get("name", nid), baby["name"]]
 				house["log"].append({"year": year, "kind": "birth", "text": born})
 				rumors.push_front(born)
+		CKSchemes.record_year(house, str(nid), year)
 		if typeof(house.get("log")) != TYPE_ARRAY:
 			house["log"] = []
 		if house["log"].size() > 48:

@@ -1,0 +1,12 @@
+{
+  "id": "lint_clean",
+  "role": "positive_fixture",
+  "note": "播放器应忽略 lint_ 前缀。这不是主线章。",
+  "lines": [
+    {
+      "id": "clean_1",
+      "speaker": "旁白",
+      "text": "旗还在，灯还没点。"
+    }
+  ]
+}

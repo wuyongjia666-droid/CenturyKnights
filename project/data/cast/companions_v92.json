@@ -1,0 +1,347 @@
+{
+  "version": 1,
+  "note": "十二名具名同伴。弧光章节必须落在七十岁之前。动机以 docs/design/story-bible-v92.md 为准。",
+  "companions": [
+    {
+      "id": "weiyuan_dengying",
+      "name": "苇原·灯影",
+      "surname": "苇原",
+      "given": "灯影",
+      "cast_key": "dengying",
+      "pronouns": "她",
+      "join_chapter": "e1_01",
+      "age_at_join": 20,
+      "nation": "qinghe",
+      "line": "river_ward",
+      "law": "threshold",
+      "job": "hunter",
+      "mark": "无玉缕。谱上是河卫，牒上是除名。发根是黑的，染坊补不了她的页。",
+      "motive": "隘口的路还要能走人。姓是别人可以涂改的格子，她拒绝被写回去。",
+      "contradiction": "她说过没姓的旗会散，又不肯要一本能把人涂掉的姓。",
+      "marriage": {
+        "eligible": true,
+        "condition": "配偶在公司名册上保留本姓。旗可共举，牒不可合并。",
+        "forecast_bind": "她拒绝任何为了补玉值而安排的玉牒亲事。"
+      },
+      "voice": "短句。先说路，再说人。不解释血律。",
+      "arc_beats": [
+        {"id": "dengying_1", "chapter": "e1_02", "beat": "影裔薄册上的墨，和她被除名的格式是同一种。"},
+        {"id": "dengying_2", "chapter": "e2_02", "beat": "她要烧掉自己的那一页，即使继承人需要它做官。"},
+        {"id": "dengying_3", "chapter": "e3_05", "beat": "授旗时她只问旗主的名字是公司起的，还是牒起的。"}
+      ]
+    },
+    {
+      "id": "baiyuan_zhegan",
+      "name": "白垣·折杆",
+      "surname": "白垣",
+      "given": "折杆",
+      "cast_key": "zhegan",
+      "pronouns": "他",
+      "join_chapter": "e1_02",
+      "age_at_join": 30,
+      "nation": "ashbanner",
+      "line": "banner_marshal",
+      "law": "awakened",
+      "job": "heavy_inf",
+      "mark": "颈侧淡旗痕，未觉醒。没有河图纹。",
+      "motive": "议会命令他把画出来的颈纹计成功绩。他带走了和第零章同一根断杆的另一截。",
+      "contradiction": "他要旗永远不要变成选票，又是唯一会主持誓词的人。",
+      "marriage": {
+        "eligible": true,
+        "condition": "他知道自己的孩子有一半机会携河图，也知道这会被当成留种。",
+        "forecast_bind": "他不会假装自己不懂这行概率。"
+      },
+      "voice": "像在报一项他不愿报的数字，然后把数字放下。",
+      "arc_beats": [
+        {"id": "zhegan_1", "chapter": "e1_02", "beat": "在断潮渡哨把旗倒指向自己人，随后加入。"},
+        {"id": "zhegan_2", "chapter": "e1_08", "beat": "点灯或吹灯他都不庆祝。前者是他逃离的算术，后者会让议会改去收割孩子。"},
+        {"id": "zhegan_3", "chapter": "e3_05", "beat": "他主持公司的誓，拒绝在誓词里朗读计勋的分数。"}
+      ]
+    },
+    {
+      "id": "yingzhen_xiaoxian",
+      "name": "影针·小弦",
+      "surname": "影针",
+      "given": "小弦",
+      "cast_key": "xiaoxian",
+      "pronouns": "她",
+      "join_chapter": "e1_03",
+      "age_at_join": 18,
+      "nation": "shuoying",
+      "line": "sy_night",
+      "pool": "shadow_exiles",
+      "law": "dose",
+      "job": "hunter",
+      "mark": "弦朔。瞳缘一弯银弦，不是整圈。",
+      "motive": "夜禁婚要她回去把两份半环合成全朔。她的哥哥就是被那圈完整的银环比下去的。",
+      "contradiction": "她加入是为了不再制造全朔。与另一份朔因成婚，恰恰可能生出全朔。",
+      "marriage": {
+        "eligible": true,
+        "condition": "配偶若也是一份朔因，这门亲事就是背叛她。",
+        "forecast_bind": "四分之一的全朔是她的离队条件，不是喜讯。"
+      },
+      "voice": "平静，不提高音量。说到哥哥时不停顿给别人插话。",
+      "arc_beats": [
+        {"id": "xiaoxian_1", "chapter": "e1_03", "beat": "她不杀那个被指认为携河图的幼童雇工。"},
+        {"id": "xiaoxian_2", "chapter": "e2_07", "beat": "边血过桥，她再次拒绝把半环的人交还夜阙。"},
+        {"id": "xiaoxian_3", "chapter": "e4_03", "beat": "她在撕剩的灯籍背面写下：旗下若出现全朔，她在那孩子被给人看之前离开。"}
+      ]
+    },
+    {
+      "id": "yuhuo_pingshao",
+      "name": "渔火·平梢",
+      "surname": "渔火",
+      "given": "平梢",
+      "cast_key": "pingshao",
+      "pronouns": "她",
+      "join_chapter": "e1_04",
+      "age_at_join": 18,
+      "nation": "lantern",
+      "line": "lt_tide",
+      "law": "dominant",
+      "job": "light_inf",
+      "mark": "无灯丝。发梢是普通的发。港口常把她当成藏起假丝的人。",
+      "motive": "她厌倦被当成伪胤讲价。她什么都没伪造。",
+      "contradiction": "她靠一张空船谋生，又痛恨任何可以把人写进籍里的纸。",
+      "marriage": {
+        "eligible": true,
+        "condition": "名册必须写无丝，不许补栏。",
+        "forecast_bind": "娶她是选择灯不会奉承的下一代。欠盏会因此更想买这个家族。"
+      },
+      "voice": "谈船资时像谈天气。谈到灯籍时句子变短。",
+      "arc_beats": [
+        {"id": "pingshao_1", "chapter": "e1_04", "beat": "她的船能撤离桥头，不要求把追兵杀光。"},
+        {"id": "pingshao_2", "chapter": "e2_08", "beat": "她看见公推提名册可以被补写。"},
+        {"id": "pingshao_3", "chapter": "e4_03", "beat": "满港竞价之夜，她撕掉写着自己名字的灯籍。"}
+      ]
+    },
+    {
+      "id": "liegu_zhensheng",
+      "name": "裂谷·砧声",
+      "surname": "裂谷",
+      "given": "砧声",
+      "cast_key": "zhensheng",
+      "pronouns": "他",
+      "join_chapter": "e1_05",
+      "age_at_join": 30,
+      "nation": "emberold",
+      "line": "eo_kiln",
+      "pool": "kiln_exiles",
+      "law": "y_linked",
+      "job": "heavy_inf",
+      "mark": "左鬓冰裂纹，用烟灰盖住。血统约两成五，裂纹不因此变少。",
+      "motive": "他要一个儿子出生在焚阙以外的名册上，让冷窑有个不必内战的地址。",
+      "contradiction": "他来修旗杆，修完之后这面旗可能在法律上变成窑的地址。",
+      "marriage": {
+        "eligible": true,
+        "condition": "儿子在族谱上留他的姓，旗上留公司的姓。女儿不继承冰裂。",
+        "forecast_bind": "团长若另娶窑女，裂纹不会出现。这不是分支，是父传子。"
+      },
+      "voice": "谈铁比谈脸多。被要求洗脸时会先问热源从哪来。",
+      "arc_beats": [
+        {"id": "zhensheng_1", "chapter": "e1_05", "beat": "债主循着烟灰下的瓷味来到工坊。"},
+        {"id": "zhensheng_2", "chapter": "e3_04", "beat": "收窑的人要他把儿子，或把他自己，接回焚阙。"},
+        {"id": "zhensheng_3", "chapter": "e3_08", "beat": "他决定那条「窑归于灰旗」的旧注留下还是毁掉。"}
+      ]
+    },
+    {
+      "id": "guzhang_chenban",
+      "name": "古樟·沉斑",
+      "surname": "古樟",
+      "given": "沉斑",
+      "cast_key": "chenban",
+      "pronouns": "她",
+      "join_chapter": "e1_06",
+      "age_at_join": 28,
+      "nation": "southzephyr",
+      "line": "sz_fogwood",
+      "blood_note": "父为萤子，母无光。谱上有王血，雨里无萤斑。",
+      "law": "maternal",
+      "job": "apprentice",
+      "mark": "无萤斑，无萤痕。鼻梁是暗的。",
+      "motive": "她给人做雨验，因为脸会从两个方向说谎：磷粉能亮，真携带者也能一片黑暗。",
+      "contradiction": "她靠沉默保护别人，终章的问题却是她的学徒必须开口。",
+      "marriage": {
+        "eligible": true,
+        "condition": "她做母亲，孩子无光，与父亲亮不亮无关。",
+        "forecast_bind": "与余光成婚得到王血与一张暗脸。她不会假装这是南泽的胜利。"
+      },
+      "voice": "先看，后写。能不说的结果就不说。被逼说时用完整的句子。",
+      "arc_beats": [
+        {"id": "chenban_1", "chapter": "e1_06", "beat": "雾谷夜袭里她把三份结果封上，可以不许你拆。"},
+        {"id": "chenban_2", "chapter": "e2_05", "beat": "她说完澜芷的发根、砧声的裂纹，以及继承人身上她愿意说的那部分。"},
+        {"id": "chenban_3", "chapter": "e4_01", "beat": "她拒绝把雨验写成灯会的特许产品。"}
+      ]
+    },
+    {
+      "id": "shuangque_wanshuang",
+      "name": "霜阙·晚霜",
+      "surname": "霜阙",
+      "given": "晚霜",
+      "cast_key": "wanshuang",
+      "pronouns": "她",
+      "join_chapter": "e2_01",
+      "age_at_join": 34,
+      "nation": "frostcrown",
+      "line": "fc_hall",
+      "law": "recessive",
+      "job": "apprentice",
+      "mark": "眉尾一点霜白。没有霜睫。携带者不显。",
+      "motive": "候冕之年她看够了廷议等待一张脸。她也不想再当一个也许。",
+      "contradiction": "她逃离等待，又带着一份会让下一代被等待的携带。",
+      "marriage": {
+        "eligible": true,
+        "condition": "先念子嗣期望。概率若高过她能忍受的安静，亲事停，人可以留下。",
+        "forecast_bind": "拒绝不是背叛。赢下战斗之后这个停仍然有效。"
+      },
+      "voice": "礼貌，冷，不软化最后半句。",
+      "arc_beats": [
+        {"id": "wanshuang_1", "chapter": "e2_01", "beat": "她亲自越过镜湖关，不让护送队长代她看人。"},
+        {"id": "wanshuang_2", "chapter": "e3_02", "beat": "她要你把霜睫的概率念出来，并保留取消亲事的权利。"},
+        {"id": "wanshuang_3", "chapter": "e4_01", "beat": "她决定携霜二字写不写进公司名册。"}
+      ]
+    },
+    {
+      "id": "lupu_xihui",
+      "name": "芦浦·汐回",
+      "surname": "芦浦",
+      "given": "汐回",
+      "cast_key": "xihui",
+      "pronouns": "他",
+      "join_chapter": "e3_01",
+      "age_at_join": 26,
+      "nation": "saltmarsh",
+      "line": "sm_tide",
+      "pool": "tide_lords",
+      "law": "x_dominant",
+      "job": "light_inf",
+      "mark": "潮痕发。等距的盐白发环。男子，不承座。",
+      "motive": "他永远不是盐后。他想要一个不被拖回晶垣的女儿，后来必须看见这个愿望也会伤害她。",
+      "contradiction": "他离开海，是为了女儿可以不回去；海仍会因他的发环找上门。",
+      "marriage": {
+        "eligible": true,
+        "condition": "每个女儿都有潮痕，每个儿子都没有。",
+        "forecast_bind": "不要把这行字读得像恩赐。他识字。"
+      },
+      "voice": "军人的简短。提到姐妹时不用仇视，用疲倦。",
+      "arc_beats": [
+        {"id": "xihui_1", "chapter": "e3_01", "beat": "他下船加入，拒绝被人用预报提醒他已经知道的律。"},
+        {"id": "xihui_2", "chapter": "e3_06", "beat": "女儿与海。看一眼，或连海都不给看。"},
+        {"id": "xihui_3", "chapter": "e4_05", "beat": "姐妹来借一代。他不能替女儿答应。"}
+      ]
+    },
+    {
+      "id": "shengao_pingmei",
+      "name": "深镐·平眉",
+      "surname": "深镐",
+      "given": "平眉",
+      "cast_key": "pingmei",
+      "pronouns": "她",
+      "join_chapter": "e3_03",
+      "age_at_join": 18,
+      "nation": "irongorge",
+      "line": "ig_forge",
+      "law": "penetrance",
+      "job": "heavy_inf",
+      "mark": "眉形完整。峡眉之因在，出生时没有外显。",
+      "motive": "她要一场不看眉的重赛，让锻场的尺子失效一次，而不是证明自己是王。",
+      "contradiction": "她厌恶祠堂的骰子，又可能把同样的骰子生在孩子脸上。",
+      "marriage": {
+        "eligible": true,
+        "condition": "你若在答应之前先看那行约六成，她知道。",
+        "forecast_bind": "显出峡眉的孩子会被征召。她必须看着自己想要的脸长在可能不想要锻场的人身上。"
+      },
+      "voice": "直接。不接受安慰。校场上比屋里话多。",
+      "arc_beats": [
+        {"id": "pingmei_1", "chapter": "e3_03", "beat": "她在校场击败锻场代理人，不以眉认人。"},
+        {"id": "pingmei_2", "chapter": "e4_07", "beat": "锻选征召。留下打完，或被拽走。"},
+        {"id": "pingmei_3", "chapter": "e5_01", "beat": "她面对这场胜负的政治后果，人在队里或已经在峡座上。"}
+      ]
+    },
+    {
+      "id": "wugang_yuguang",
+      "name": "雾港·余光",
+      "surname": "雾港",
+      "given": "余光",
+      "cast_key": "yuguang",
+      "pronouns": "他",
+      "join_chapter": "e2_04",
+      "age_at_join": 18,
+      "nation": "southzephyr",
+      "line": "sz_firefly",
+      "pool": "firefly_sons",
+      "law": "maternal",
+      "job": "light_inf",
+      "mark": "鼻梁与上颊有真萤斑，雾里更亮。儿子，光传不走。",
+      "motive": "每一份婚约都来自没读懂母传律的人，或读懂了、只想借他的脸照婚礼的人。",
+      "contradiction": "只有娶发光的母亲，光才会继续。那正是他逃走的交易。",
+      "marriage": {
+        "eligible": true,
+        "condition": "娶无光的人，光在这一代断开。娶有光的人，女儿会被萤母议召回。",
+        "forecast_bind": "不要把婚礼写成自动的浪漫成功。"
+      },
+      "voice": "轻。被人标价时反而客气。客气是警告。",
+      "arc_beats": [
+        {"id": "yuguang_1", "chapter": "e2_04", "beat": "雾港酒馆里有人要买他去配萤母之女。"},
+        {"id": "yuguang_2", "chapter": "e4_02", "beat": "婚礼的对象决定光断不断。"},
+        {"id": "yuguang_3", "chapter": "e5_02", "beat": "星验围城里他认出另一种标价，站在拒绝被放进星图的一边。"}
+      ]
+    },
+    {
+      "id": "donghong_qiaowai",
+      "name": "东虹·桥外",
+      "surname": "东虹",
+      "given": "桥外",
+      "cast_key": "qiaowai",
+      "pronouns": "她",
+      "join_chapter": "e4_04",
+      "age_at_join": 18,
+      "nation": "starriver",
+      "line": "sr_east_arc",
+      "law": "complement",
+      "job": "hunter",
+      "mark": "左眼下三台痣。没有四辅，不是七星。",
+      "motive": "她从十六岁起就是制造君主的缺项。她要在被配平之前先被人用名字呼叫。",
+      "contradiction": "她越是拒绝公式，孤衡越能拿她的存在做交易。",
+      "marriage": {
+        "eligible": true,
+        "condition": "与测距生下的孩子是七星，星津会来认领。拒绝必须被接受。",
+        "forecast_bind": "这不是强度搭配。促成这门婚，羁绊不写成感激。"
+      },
+      "voice": "拒绝时不道歉。解释自己的痣时像在读别人的病历。",
+      "arc_beats": [
+        {"id": "qiaowai_1", "chapter": "e4_04", "beat": "她独自过渡星关，可以看见测距而不说话。"},
+        {"id": "qiaowai_2", "chapter": "e4_08", "beat": "孤衡的价压在她身上：永不成全，换灰旗被承认。"},
+        {"id": "qiaowai_3", "chapter": "e5_08", "beat": "唱票厅里她仍在场，作为已经说过不的人，而不是等玩家代答。"}
+      ]
+    },
+    {
+      "id": "xihong_ceju",
+      "name": "西虹·测距",
+      "surname": "西虹",
+      "given": "测距",
+      "cast_key": "ceju",
+      "pronouns": "他",
+      "join_chapter": "e4_06",
+      "age_at_join": 20,
+      "nation": "starriver",
+      "line": "sr_west_arc",
+      "law": "complement",
+      "job": "apprentice",
+      "mark": "左鬓四辅痣。没有三台，不是七星。",
+      "motive": "他加入是因为桥被改绘了。他要一张还能用的地图，不是桥对面的人。",
+      "contradiction": "他提出用地图代替孩子来打破摄政。这办法可能失败，失败也得说。",
+      "marriage": {
+        "eligible": true,
+        "condition": "他可以拒绝桥外，即使玩家想要七星。",
+        "forecast_bind": "反复弹出同一场求婚是写作错误。"
+      },
+      "voice": "谈距离、桥税、两本账。被人当成另一半公式时，他纠正称谓。",
+      "arc_beats": [
+        {"id": "ceju_1", "chapter": "e4_06", "beat": "他夺取被改绘的桥图，因为桥税有了两本账。"},
+        {"id": "ceju_2", "chapter": "e4_08", "beat": "他和桥外在同一扇门后，仍然不是佳偶。"},
+        {"id": "ceju_3", "chapter": "e5_08", "beat": "他把地图放在旗旁边。若地图曾被用来换沉默，他会说这份证据是脏的。"}
+      ]
+    }
+  ]
+}

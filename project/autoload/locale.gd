@@ -60,6 +60,43 @@ var strings: Dictionary = {
 	"chapter1_title": "第一章·陆桥烽火",
 }
 
+func _ready() -> void:
+	_merge_locale_dir("res://data/locale")
+
+func _merge_locale_dir(path: String) -> void:
+	var dir := DirAccess.open(path)
+	if dir == null:
+		return
+	dir.list_dir_begin()
+	var file_name := dir.get_next()
+	while file_name != "":
+		if not dir.current_is_dir() and file_name.ends_with(".csv"):
+			_merge_csv("%s/%s" % [path, file_name])
+		file_name = dir.get_next()
+	dir.list_dir_end()
+
+func _merge_csv(path: String) -> void:
+	var f := FileAccess.open(path, FileAccess.READ)
+	if f == null:
+		return
+	var header := f.get_csv_line()
+	var key_i := header.find("keys")
+	if key_i < 0:
+		key_i = header.find("key")
+	var zh_i := header.find("zh_CN")
+	if key_i < 0 or zh_i < 0:
+		f.close()
+		return
+	while not f.eof_reached():
+		var row := f.get_csv_line()
+		if row.size() <= maxi(key_i, zh_i):
+			continue
+		var k := str(row[key_i]).strip_edges()
+		if k == "" or strings.has(k):
+			continue
+		strings[k] = str(row[zh_i])
+	f.close()
+
 func t(key: String, args: Array = []) -> String:
 	var s = strings.get(key, key)
 	if args.is_empty():

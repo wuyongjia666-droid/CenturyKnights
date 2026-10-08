@@ -1,0 +1,25 @@
+{
+  "schema": "v8.7",
+  "characters": {
+    "old_knight": {
+      "id": "old_knight",
+      "name": "旧档骑士",
+      "gender": "m",
+      "age": 28,
+      "blood_mix": {
+        "frost_royal": 0.25,
+        "ash_folk": 0.75
+      }
+    },
+    "kept_line": {
+      "id": "kept_line",
+      "name": "仍用旧号",
+      "gender": "f",
+      "age": 22,
+      "blood_mix": {
+        "river_ward": 0.6,
+        "ember_noble": 0.4
+      }
+    }
+  }
+}

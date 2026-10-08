@@ -45,12 +45,9 @@ static func _pick(rng: RandomNumberGenerator, weights: Dictionary) -> String:
 			return str(k)
 	return str(weights.keys()[0])
 
-## v8.9: res://data/bloodlines_v89.json is canonical for all 31 lines; BLOOD above is the offline fallback.
+## Live allele weights come from CKBloodline. BLOOD above is only the offline fallback.
 static func _blood(bl: String) -> Dictionary:
-	var t := CKBloodline.genome_table(bl)
-	if not t.is_empty():
-		return t
-	return BLOOD.get(bl, BLOOD["common_ash"])
+	return CKBloodline.genome_or_fallback(bl)
 
 static func _blend_weights(blood_mix: Dictionary, locus: String) -> Dictionary:
 	var out := {}

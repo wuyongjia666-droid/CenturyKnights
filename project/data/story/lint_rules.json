@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "max_hanzi": 60,
+  "cast_dir": "res://data/cast",
+  "allowed_speakers": ["旁白"],
+  "forbidden_speakers": ["系统"],
+  "patterns": [
+    {"id": "volume_ordinal", "pattern": "第[0-9０-９一二三四五六七八九十百千]+卷"},
+    {"id": "chapter_done", "pattern": "第[0-9０-９一二三四五六七八九十百千]+章完成"},
+    {"id": "version_tag", "pattern": "[vV]\\d+\\.\\d+"},
+    {"id": "volume_mid", "pattern": "卷中段"}
+  ],
+  "anti_trope": [
+    "精灵耳",
+    "精灵",
+    "尖耳",
+    "金发",
+    "金瞳",
+    "羊皮纸",
+    "鎏金",
+    "elf",
+    "elven",
+    "blond",
+    "golden eye",
+    "pointed ear"
+  ],
+  "port_target": "tools/ci/dialogue_lint.py",
+  "note": "规则由叙事套件执行。tools/ci 归基础设施流，接入时按本文件移植，不要在叙事卡里新建那个脚本。"
+}
