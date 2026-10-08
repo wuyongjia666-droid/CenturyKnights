@@ -1,0 +1,89 @@
+[
+  {"name": "focus", "tier": 1, "objective": {"type": "rout"}, "expect": {"e1": ["attack:p1"], "e2": ["attack:p1"]}, "units": [
+    {"id": "e1", "team": "enemy", "pos": [0, 2], "hp": 20, "max_hp": 20, "move": 2, "reach": 1, "power": 20},
+    {"id": "e2", "team": "enemy", "pos": [4, 2], "hp": 20, "max_hp": 20, "move": 2, "reach": 1, "power": 20},
+    {"id": "p1", "team": "player", "pos": [2, 2], "hp": 5, "max_hp": 20, "move": 3, "reach": 1, "power": 4},
+    {"id": "pn", "team": "player", "pos": [0, 1], "hp": 80, "max_hp": 80, "move": 3, "reach": 1, "power": 4},
+    {"id": "pf", "team": "player", "pos": [4, 1], "hp": 80, "max_hp": 80, "move": 3, "reach": 1, "power": 4}
+  ]},
+  {"name": "casual_nearest", "tier": 0, "objective": {"type": "rout"}, "expect": {"e1": ["attack:pn"], "e2": ["attack:pf"]}, "units": [
+    {"id": "e1", "team": "enemy", "pos": [0, 2], "hp": 20, "max_hp": 20, "move": 2, "reach": 1, "power": 20},
+    {"id": "e2", "team": "enemy", "pos": [4, 2], "hp": 20, "max_hp": 20, "move": 2, "reach": 1, "power": 20},
+    {"id": "p1", "team": "player", "pos": [2, 2], "hp": 5, "max_hp": 20, "move": 3, "reach": 1, "power": 4},
+    {"id": "pn", "team": "player", "pos": [0, 1], "hp": 80, "max_hp": 80, "move": 3, "reach": 1, "power": 4},
+    {"id": "pf", "team": "player", "pos": [4, 1], "hp": 80, "max_hp": 80, "move": 3, "reach": 1, "power": 4}
+  ]},
+  {"name": "classic_focus", "tier": 2, "objective": {"type": "rout"}, "expect": {"e1": ["attack:p1"]}, "units": [
+    {"id": "e1", "team": "enemy", "pos": [0, 2], "hp": 20, "max_hp": 20, "move": 2, "reach": 1, "power": 20},
+    {"id": "e2", "team": "enemy", "pos": [4, 2], "hp": 20, "max_hp": 20, "move": 2, "reach": 1, "power": 20},
+    {"id": "p1", "team": "player", "pos": [2, 2], "hp": 5, "max_hp": 20, "move": 3, "reach": 1, "power": 4}
+  ]},
+  {"name": "seize_step", "tier": 1, "objective": {"type": "seize", "tile": [3, 0]}, "expect": {"e1": ["move:1,0"]}, "units": [
+    {"id": "e1", "team": "enemy", "pos": [0, 0], "hp": 10, "max_hp": 10, "move": 2, "reach": 1, "power": 0}
+  ]},
+  {"name": "seize_held", "tier": 1, "objective": {"type": "seize", "tile": [3, 0]}, "expect": {"e1": ["wait"]}, "units": [
+    {"id": "e1", "team": "enemy", "pos": [3, 0], "hp": 10, "max_hp": 10, "move": 2, "reach": 1, "power": 0}
+  ]},
+  {"name": "defend_hold", "tier": 1, "objective": {"type": "defend", "tiles": [[2, 2], [4, 2]]}, "expect": {"e1": ["wait"]}, "units": [
+    {"id": "e1", "team": "enemy", "pos": [2, 2], "hp": 10, "max_hp": 10, "move": 2, "reach": 1, "power": 0}
+  ]},
+  {"name": "defend_approach", "tier": 1, "objective": {"type": "defend", "tiles": [[3, 2]]}, "expect": {"e1": ["move:1,2"]}, "units": [
+    {"id": "e1", "team": "enemy", "pos": [0, 2], "hp": 10, "max_hp": 10, "move": 3, "reach": 1, "power": 0}
+  ]},
+  {"name": "escort_cut", "tier": 1, "objective": {"type": "escort", "npc": "vip"}, "expect": {"e1": ["move:4,1"]}, "units": [
+    {"id": "e1", "team": "enemy", "pos": [4, 2], "hp": 10, "max_hp": 10, "move": 3, "reach": 1, "power": 0},
+    {"id": "vip", "team": "player", "tag": "vip", "pos": [4, 0], "hp": 12, "max_hp": 12, "move": 3, "reach": 1, "power": 1}
+  ]},
+  {"name": "escort_adjacent", "tier": 1, "objective": {"type": "escort", "npc": "vip"}, "expect": {"e1": ["wait"]}, "units": [
+    {"id": "e1", "team": "enemy", "pos": [4, 1], "hp": 10, "max_hp": 10, "move": 3, "reach": 1, "power": 0},
+    {"id": "vip", "team": "player", "tag": "vip", "pos": [4, 0], "hp": 12, "max_hp": 12, "move": 3, "reach": 1, "power": 1}
+  ]},
+  {"name": "boss_summon", "tier": 1, "boss_phase": 0.5, "objective": {"type": "boss"}, "expect": {"boss": ["summon"]}, "units": [
+    {"id": "boss", "team": "enemy", "boss": true, "pos": [2, 2], "hp": 4, "max_hp": 10, "move": 2, "reach": 1, "power": 8},
+    {"id": "p1", "team": "player", "pos": [2, 3], "hp": 20, "max_hp": 20, "move": 3, "reach": 1, "power": 4}
+  ]},
+  {"name": "boss_healthy", "tier": 1, "boss_phase": 0.5, "objective": {"type": "boss"}, "expect": {"boss": ["attack:p1"]}, "units": [
+    {"id": "boss", "team": "enemy", "boss": true, "pos": [2, 2], "hp": 9, "max_hp": 10, "move": 2, "reach": 1, "power": 12},
+    {"id": "p1", "team": "player", "pos": [2, 3], "hp": 6, "max_hp": 20, "move": 3, "reach": 1, "power": 4}
+  ]},
+  {"name": "boss_already_summoned", "tier": 1, "summoned": true, "boss_phase": 0.5, "objective": {"type": "boss"}, "expect": {"boss": ["attack:p1"]}, "units": [
+    {"id": "boss", "team": "enemy", "boss": true, "pos": [2, 2], "hp": 4, "max_hp": 10, "move": 2, "reach": 1, "power": 12},
+    {"id": "p1", "team": "player", "pos": [2, 3], "hp": 6, "max_hp": 20, "move": 3, "reach": 1, "power": 4}
+  ]},
+  {"name": "ranged_hit", "tier": 1, "objective": {"type": "rout"}, "expect": {"e1": ["attack:p1"]}, "units": [
+    {"id": "e1", "team": "enemy", "pos": [0, 0], "hp": 10, "max_hp": 10, "move": 0, "reach": 2, "power": 9},
+    {"id": "p1", "team": "player", "pos": [0, 2], "hp": 8, "max_hp": 20, "move": 3, "reach": 1, "power": 3}
+  ]},
+  {"name": "melee_step", "tier": 1, "objective": {"type": "rout"}, "expect": {"e1": ["move:0,1"]}, "units": [
+    {"id": "e1", "team": "enemy", "pos": [0, 0], "hp": 10, "max_hp": 10, "move": 0, "reach": 1, "power": 9},
+    {"id": "p1", "team": "player", "pos": [0, 2], "hp": 30, "max_hp": 30, "move": 3, "reach": 1, "power": 3}
+  ]},
+  {"name": "empty_field", "tier": 1, "objective": {"type": "rout"}, "expect": {"e1": ["wait"]}, "units": [
+    {"id": "e1", "team": "enemy", "pos": [1, 1], "hp": 10, "max_hp": 10, "move": 3, "reach": 1, "power": 5}
+  ]},
+  {"name": "lowest_kill", "tier": 1, "objective": {"type": "rout"}, "expect": {"e1": ["attack:low"]}, "units": [
+    {"id": "e1", "team": "enemy", "pos": [1, 1], "hp": 20, "max_hp": 20, "move": 4, "reach": 1, "power": 20},
+    {"id": "low", "team": "player", "pos": [1, 0], "hp": 4, "max_hp": 20, "move": 3, "reach": 1, "power": 2},
+    {"id": "high", "team": "player", "pos": [0, 1], "hp": 12, "max_hp": 20, "move": 3, "reach": 1, "power": 2}
+  ]},
+  {"name": "sidestep", "tier": 1, "objective": {"type": "rout"}, "expect": {"e1": ["move:0,1"]}, "units": [
+    {"id": "e1", "team": "enemy", "pos": [0, 0], "hp": 10, "max_hp": 10, "move": 3, "reach": 1, "power": 0},
+    {"id": "e2", "team": "enemy", "pos": [1, 0], "hp": 10, "max_hp": 10, "move": 0, "reach": 1, "power": 0},
+    {"id": "p1", "team": "player", "pos": [2, 2], "hp": 40, "max_hp": 40, "move": 3, "reach": 1, "power": 2}
+  ]},
+  {"name": "one_killer", "tier": 1, "objective": {"type": "rout"}, "expect": {"e1": ["attack:p1"], "e2": ["attack:p2"]}, "units": [
+    {"id": "e1", "team": "enemy", "pos": [0, 0], "hp": 10, "max_hp": 10, "move": 2, "reach": 1, "power": 15},
+    {"id": "e2", "team": "enemy", "pos": [6, 0], "hp": 10, "max_hp": 10, "move": 1, "reach": 1, "power": 8},
+    {"id": "p1", "team": "player", "pos": [1, 0], "hp": 6, "max_hp": 20, "move": 3, "reach": 1, "power": 2},
+    {"id": "p2", "team": "player", "pos": [6, 1], "hp": 20, "max_hp": 20, "move": 3, "reach": 1, "power": 2}
+  ]},
+  {"name": "dead_ignored", "tier": 1, "objective": {"type": "rout"}, "expect": {"e1": ["attack:p1"]}, "units": [
+    {"id": "e1", "team": "enemy", "pos": [1, 1], "hp": 10, "max_hp": 10, "move": 2, "reach": 1, "power": 10},
+    {"id": "gone", "team": "player", "pos": [1, 0], "hp": 0, "max_hp": 10, "move": 3, "reach": 1, "power": 2},
+    {"id": "p1", "team": "player", "pos": [2, 1], "hp": 4, "max_hp": 10, "move": 3, "reach": 1, "power": 2}
+  ]},
+  {"name": "threat_and_rout", "tier": 1, "objective": {"type": "rout"}, "expect": {"e1": ["move:1,4"]}, "units": [
+    {"id": "e1", "team": "enemy", "pos": [0, 4], "hp": 10, "max_hp": 10, "move": 3, "reach": 1, "power": 1},
+    {"id": "p1", "team": "player", "pos": [3, 4], "hp": 20, "max_hp": 20, "move": 0, "reach": 1, "power": 3}
+  ]}
+]
