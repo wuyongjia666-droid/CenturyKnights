@@ -1,0 +1,25 @@
+{
+  "schema": "v8.7",
+  "version": 1,
+  "started": true,
+  "surname": "灰旗",
+  "silver": 40,
+  "food": 10,
+  "year": 3,
+  "month": 4,
+  "characters": {
+    "legacy_v87": {
+      "id": "legacy_v87",
+      "name": "旧档",
+      "gender": "m",
+      "age": 41,
+      "rank": "baron",
+      "blood_mix": {"common_ash": 1.0},
+      "stats": {"str": 8, "vit": 8, "skl": 8, "agi": 8, "per": 8, "wil": 8},
+      "alive": true,
+      "in_roster": true,
+      "is_leader": true
+    }
+  },
+  "world_v87": {"pos": "hq", "day": 2}
+}

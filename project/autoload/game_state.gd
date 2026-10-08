@@ -11,6 +11,7 @@ var story = _StoryStateScript.new()
 const _EconomyScript = preload("res://scripts/company/economy_state.gd")
 const _LoadoutScript = preload("res://scripts/battle/enemy_loadout.gd")
 const _FamilyScript = preload("res://scripts/characters/family_state.gd")
+const _SaveService = preload("res://scripts/core/save_service.gd")
 const HOLDING_DEFS = _EconomyScript.HOLDING_DEFS
 const BUILDING_NAMES = _EconomyScript.BUILDING_NAMES
 const BUILDING_MAX = _EconomyScript.BUILDING_MAX
@@ -73,12 +74,15 @@ var patrol_cooldown: int = 0  # 全堡巡防冷却（月）
 var patrol_boost_months: int = 0  # 主动巡防抗劫剩余月
 var deploy_ids: Array = []
 var dirty: bool = false
+var play_seconds: float = 0.0
+var save_notice: String = ""
+var save_backup_used: String = ""
 var dynasty_journal: String = ""
 var lineage_log: Array = []  # deeper marriage/lineage event strings
 var lineage_path: Dictionary = {}  # child_id -> "martial"|"scholar"|"merchant"
 
 const SAVE_PATH := "user://century_knights_save.json"
-const SAVE_SCHEMA := "v9.1"
+const SAVE_SCHEMA := "v9.2"
 const REP_TIERS := [
 	{"id": "none", "min": 0},
 	{"id": "known", "min": 10},
@@ -230,6 +234,9 @@ func add_rep(realm: String, amount: int) -> void:
 
 func new_game(leader_given: String, leader_surname: String, color: String) -> void:
 	started = true
+	play_seconds = 0.0
+	save_notice = ""
+	save_backup_used = ""
 	Calendar.reset()
 	silver = 120
 	food = 40
@@ -686,76 +693,19 @@ func add_skill_point(n: int = 1) -> void:
 	mark_dirty()
 
 
-## v8.7 saves have no genome and no court fields. v8.8 saves have a v2 genome without signature loci.
-## Current saves already carry blood_meta; migration only fills what is missing.
+## v8.7 → v8.8 → v9.1 → v9.2. The chain lives on CKSaveService.
 func migrate_save_data(data: Dictionary) -> Dictionary:
-	if data.is_empty():
-		return data
-	var schema := str(data.get("schema", ""))
-	var legacy := schema in ["v8.7", "v8.8", "8.7", "8.8"] or schema == ""
-	if not legacy and schema == SAVE_SCHEMA:
-		return data
-	var from := schema if schema != "" else "v8.7"
-	var saw_genome := false
-	var saw_sig := false
-	for id in data.get("characters", {}).keys():
-		var row: Dictionary = data["characters"][id]
-		if typeof(row.get("genome", {})) == TYPE_DICTIONARY and not (row.get("genome", {}) as Dictionary).is_empty():
-			saw_genome = true
-			if (row["genome"] as Dictionary).has("sig"):
-				saw_sig = true
-		row = _migrate_character_row(row)
-		data["characters"][id] = row
-	for bucket in ["tavern", "marriage"]:
-		var arr: Array = data.get(bucket, [])
-		for i in arr.size():
-			if typeof(arr[i]) == TYPE_DICTIONARY:
-				arr[i] = _migrate_character_row(arr[i])
-		data[bucket] = arr
-	if schema == "":
-		from = "v8.8" if saw_genome and not saw_sig else ("v9.0" if saw_sig else "v8.7")
-	var world: Dictionary = data.get("world_v87", {}) if typeof(data.get("world_v87", {})) == TYPE_DICTIONARY else {}
-	if typeof(world.get("royal_courts", {})) != TYPE_DICTIONARY or (world.get("royal_courts", {}) as Dictionary).is_empty():
-		if from in ["v8.7", "v8.8"]:
-			world["royal_courts"] = CKCourt.blank_courts(int(data.get("year", 1)) * 17 + 3)
-	data["world_v87"] = world
-	data["migrated_from"] = from
-	data["schema"] = SAVE_SCHEMA
-	data["version"] = 1
-	return data
+	return CKSaveService.migrate(data)
 
-func _migrate_character_row(row: Dictionary) -> Dictionary:
-	if typeof(row.get("blood_meta")) != TYPE_DICTIONARY:
-		row["blood_meta"] = {}
-	var meta: Dictionary = row["blood_meta"]
-	if not meta.has("verified"):
-		meta["verified"] = false
-	if not meta.has("verdict"):
-		meta["verdict"] = ""
-	if typeof(meta.get("rites")) != TYPE_ARRAY:
-		meta["rites"] = []
-	if str(meta.get("title", "")) == "":
-		var rank := str(row.get("rank", "knight"))
-		meta["title"] = rank if rank in CKCharacter.RANK_ORDER else "knight"
-	if not meta.has("lamp_seat"):
-		meta["lamp_seat"] = ""
-	row["blood_meta"] = meta
-	if str(row.get("age_stage", "")) == "":
-		row["age_stage"] = CKGenomePortrait.stage_for_age(int(row.get("age", 20)))
-	if typeof(row.get("honors")) != TYPE_ARRAY:
-		row["honors"] = []
-	if typeof(row.get("genome")) != TYPE_DICTIONARY:
-		row["genome"] = {}
-	return row
-
-func save_game() -> bool:
-	var data = {
+func build_save_data() -> Dictionary:
+	var data := {
 		"version": 1,
 		"schema": SAVE_SCHEMA,
 		"surname": surname,
 		"crest_color": crest_color,
 		"silver": silver, "food": food, "iron": iron, "herb": herb, "morale": morale,
 		"year": Calendar.year, "month": Calendar.month,
+		"play_seconds": play_seconds,
 		"story": {"beats": story.export_beats()},
 		"rival_stances": rival_stances.duplicate(true),
 		"rival_deals": rival_deals.duplicate(true),
@@ -794,21 +744,35 @@ func save_game() -> bool:
 		data["tavern"].append(c.to_dict())
 	for c in marriage_candidates:
 		data["marriage"].append(c.to_dict())
-	var f = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
-	if f == null:
+	return data
+
+func save_meta(slot: String) -> Dictionary:
+	var leader := get_leader()
+	return {
+		"slot": slot,
+		"leader": leader.name if leader else "",
+		"year": Calendar.year,
+		"month": Calendar.month,
+		"chapter": story.current_chapter(),
+		"play_seconds": play_seconds,
+		"version": str(ProjectSettings.get_setting("application/config/version", "")),
+		"schema": SAVE_SCHEMA,
+	}
+
+func save_game() -> bool:
+	return save_to_slot("manual_0")
+
+func save_to_slot(slot: String) -> bool:
+	if not CKSaveService.save_slot(self, slot):
 		return false
-	f.store_string(JSON.stringify(data))
 	dirty = false
 	return true
 
 func load_game() -> bool:
-	if not FileAccess.file_exists(SAVE_PATH):
-		return false
-	var f = FileAccess.open(SAVE_PATH, FileAccess.READ)
-	var data = JSON.parse_string(f.get_as_text())
-	if typeof(data) != TYPE_DICTIONARY:
-		return false
-	return apply_save_data(data)
+	return load_from_slot("manual_0")
+
+func load_from_slot(slot: String) -> bool:
+	return CKSaveService.load_slot(self, slot)
 
 func apply_save_data(data: Dictionary) -> bool:
 	if data.is_empty():
@@ -824,6 +788,7 @@ func apply_save_data(data: Dictionary) -> bool:
 	morale = int(data.get("morale", 50))
 	Calendar.year = int(data.get("year", 1))
 	Calendar.month = int(data.get("month", 1))
+	play_seconds = float(data.get("play_seconds", 0))
 	story.import_save(data)
 	rival_stances = data.get("rival_stances", {"shuoying": "hostile", "qinghe": "wary", "lantern": "neutral"}).duplicate(true)
 	rival_deals = data.get("rival_deals", {}).duplicate(true)

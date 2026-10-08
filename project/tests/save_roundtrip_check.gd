@@ -57,7 +57,7 @@ func _round_trip() -> void:
 	_ok(GameState.save_game(), "save_game")
 	var raw_text := FileAccess.get_file_as_string(GameState.SAVE_PATH)
 	var raw = JSON.parse_string(raw_text)
-	_ok(typeof(raw) == TYPE_DICTIONARY and str(raw.get("schema", "")) == "v9.1", "schema v9.1 written")
+	_ok(typeof(raw) == TYPE_DICTIONARY and str(raw.get("schema", "")) == "v9.2", "schema v9.2 written")
 	var row: Dictionary = raw.get("characters", {}).get(c.id, {})
 	_ok(str(row.get("age_stage", "")) == stage, "age stage persisted")
 	_ok(str(row.get("blood_meta", {}).get("lamp_seat", "")) == "baron", "lamp seat persisted")
@@ -98,7 +98,7 @@ func _migrate(schema: String, with_genome: bool) -> void:
 		"year": 3, "month": 4, "characters": {row["id"]: row}, "world_v87": {"pos": "hq", "day": 2},
 	}
 	var migrated: Dictionary = GameState.migrate_save_data(data)
-	_ok(str(migrated.get("schema", "")) == "v9.1", "%s schema upgraded" % schema)
+	_ok(str(migrated.get("schema", "")) == "v9.2", "%s schema upgraded" % schema)
 	_ok(str(migrated.get("migrated_from", "")) == schema, "%s remembers its origin" % schema)
 	var mrow: Dictionary = migrated["characters"][row["id"]]
 	_ok(str(mrow.get("age_stage", "")) == "middle", "%s age stage filled" % schema)
