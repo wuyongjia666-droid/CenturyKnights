@@ -40,7 +40,7 @@ func _curve(fails: Array) -> void:
 
 
 func _term(fails: Array) -> void:
-	GameState.new_game("灯影", "灰旗", "#6ED4FF")
+	GameState.new_game("灯影", "灰旗", "frost")
 	GameState.add_rep("ashland", 80)
 	CKFamilyState.set_fast_family(GameState, false)
 	var slow := _couple("slow", 22)
