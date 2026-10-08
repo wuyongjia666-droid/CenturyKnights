@@ -78,7 +78,10 @@ def ui_band(path):
     y0 = h
     while y0 > int(h * 0.5) and rowstd[y0 - 1] < 0.09:
         y0 -= 1
-    if h - y0 >= int(h * 0.05) and rowstd[h - 3:].mean() < 0.06:
+    # Only a thin footer (<=15% of the height) counts. The v87 city prompt deliberately asks for a tall, soft,
+    # shadowed lower third (text-safe area for the city panel), which is also low-variance but is composition,
+    # not a caption bar; treating it as a bar rejected or over-cropped good plates.
+    if int(h * 0.05) <= h - y0 <= int(h * 0.15) and rowstd[h - 3:].mean() < 0.06:
         best = min(best, y0 / h) if best is not None else y0 / h
     # hairline: one crisp full-width rule with quiet rows beneath it
     fr2 = (dy > 0.04).mean(axis=1)

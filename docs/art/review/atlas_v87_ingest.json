@@ -22,7 +22,16 @@
   "v87_city_ig_tower",
   "v87_city_lb_east",
   "v87_city_lb_mid",
-  "v87_city_lb_south"
+  "v87_city_lb_south",
+  "v87_city_lb_west",
+  "v87_city_lt_capital",
+  "v87_city_lt_hill",
+  "v87_city_lt_isle",
+  "v87_city_lt_lane",
+  "v87_city_qh_capital",
+  "v87_city_qh_ford",
+  "v87_city_qh_isle",
+  "v87_city_qh_mist"
  ],
  "rejected": {
   "v87_city_eo_archive": [
@@ -39,12 +48,21 @@
   ],
   "v87_city_eo_glass": [
    "saturation"
+  ],
+  "v87_city_lt_docks": [
+   "saturation"
+  ],
+  "v87_city_lt_harbor": [
+   "saturation"
+  ],
+  "v87_city_lt_south": [
+   "saturation"
   ]
  },
  "counts": {
   "v87_city": {
-   "seen": 28,
-   "passed": 23
+   "seen": 40,
+   "passed": 32
   },
   "v87_smith": {
    "seen": 0,
@@ -57,13 +75,12 @@
  },
  "cropped": [
   "v87_city_ash_market",
-  "v87_city_eo_kiln",
   "v87_city_eo_shrine",
   "v87_city_fc_spire",
-  "v87_city_fog_vale",
   "v87_city_ig_bottom",
   "v87_city_ig_plateau",
   "v87_city_ig_tower",
-  "v87_city_lb_south"
+  "v87_city_lb_south",
+  "v87_city_lb_west"
  ]
 }
