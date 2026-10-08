@@ -58,3 +58,16 @@ Borders readable without text; nation plates + world plates; wire via `project/d
 - **Cartoon-key ban.** Pre-v8 cartoon portraits (`*_f_<job>.png`, `hire_*_plate`, `*_face_plate`, role plates, leader_default) are never shown; route to v8 hero/bust/farm faces.
 - **Zero leftover plates.** `tools/audit_v840_usage.py` runs in CI and fails on any unused v840 output.
 - **Stitch live design system "CenturyKnights Frost"** (`docs/art/stitch_skeletons_v8/live_v850/tokens.json`) is the layout reference; palette matches UIKit (void #07080C, frost #6ED4FF, mint #5EE0B5, coral #FF7A70, ember sparks only).
+
+---
+
+## v8.6 laws — Stitch layout parity (supersedes painted chrome)
+
+1. **Ink void first.** Every screen starts from `UIKit.void_bg` (frost_void shader: #07090D base, 48px grid at 3%). Painted backdrops survive only as a ≤10% atmospheric wash (`make_themed_bg`). No painted plates, banner strips, or ice-crystal frames.
+2. **Flat panels, 1px strokes.** `UIKit.panel_at` = #0E1117 @ 0.90 + 1px white@0.10. Focus = 2px frost (#6ED4FF) stroke + 14px soft glow. Nothing else glows.
+3. **Chrome skeleton.** 56px `top_bar` (● CENTURY KNIGHTS // context · boxed resource chips · 返回 ESC) → editorial `page_head` (mono eyebrow `— X // SECTOR`, 30px title, mono English subtitle, one-line desc) → content → 28px `footer_bar` with keycaps at y692.
+4. **Hierarchy by type, not boxes.** 30 title / 22 section hero / 15–17 row title / 12 body / 9–10 mono meta. Mono (JetBrains) for numbers, IDs, eyebrows; Noto Sans SC for prose.
+5. **Colour is semantic.** Frost = primary/focus/selection; mint = ally/heal/OK; coral = enemy/deny/insufficient; ember = sparks only. Gold/parchment banned.
+6. **Every action has a key.** CTAs carry `[A]`/`[ENTER]` keycaps; secondary actions are ghost buttons with their key (`[W]`, `[S]`); ESC always backs out. Hover / pressed / focus / disabled states on every control.
+7. **Whitespace over filler.** Empty slots render as dashed-quiet "空位 / SLOT AVAILABLE", not stretched panels.
+8. **Battle board is the hero.** HUD lives in the right rail + a centred turn pill (第 N 回合 · PHASE chip); objectives top-right; nothing overlays the board.
