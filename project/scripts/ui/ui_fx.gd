@@ -6,8 +6,34 @@ extends RefCounted
 static func reduced() -> bool:
 	return bool(GameState.settings.get("reduced_motion", false))
 
+static var vibrate_hook: Callable = Callable()
+static var vibrate_calls: int = 0
+
+static func transition_seconds(base: float = 0.22) -> float:
+	var dur := minf(maxf(base, 0.0), 0.25)
+	if reduced():
+		return minf(dur, 0.08)
+	return dur
+
 static func _dur(base: float) -> float:
 	return base * 0.35 if reduced() else base
+
+static func play_transition(node: CanvasItem, dur: float = 0.22) -> void:
+	if node == null:
+		return
+	var seconds := transition_seconds(dur)
+	node.modulate.a = 0.0
+	var tw := node.create_tween()
+	tw.tween_property(node, "modulate:a", 1.0, seconds).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
+
+static func haptic(ms: int = 12) -> void:
+	if not UIKit.haptics_enabled():
+		return
+	vibrate_calls += 1
+	if vibrate_hook.is_valid():
+		vibrate_hook.call(ms)
+		return
+	Input.vibrate_handheld(ms)
 
 static func fade_in(node: CanvasItem, dur: float = 0.32) -> void:
 	if node == null: return
@@ -80,11 +106,15 @@ static func stagger_children(parent: Node, delay: float = 0.045, dur: float = 0.
 			i += 1
 
 static func press_feedback(node: Control) -> void:
-	## 按压微交互 ~120ms（web button press）
+	## 按压微交互 ~120ms：缩小并提亮
 	if node == null: return
 	var tw = node.create_tween()
+	tw.set_parallel(true)
 	tw.tween_property(node, "scale", Vector2(0.96, 0.96), _dur(0.07)).set_ease(Tween.EASE_OUT)
+	tw.tween_property(node, "modulate", Color(1.12, 1.16, 1.22, 1.0), _dur(0.07)).set_ease(Tween.EASE_OUT)
+	tw.chain().set_parallel(true)
 	tw.tween_property(node, "scale", Vector2.ONE, _dur(0.11)).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	tw.tween_property(node, "modulate", Color.WHITE, _dur(0.11)).set_ease(Tween.EASE_OUT)
 
 static func hover_lift(node: Control, up: float = 0.03) -> void:
 	if node == null: return
@@ -146,6 +176,7 @@ static func wire_button(btn: BaseButton) -> void:
 			soft_deny(btn)
 		else:
 			press_feedback(btn)
+			haptic(12)
 	)
 	btn.mouse_entered.connect(func():
 		_sync_disabled_modulate(btn)
@@ -198,10 +229,10 @@ static func wire_tree(root: Node) -> void:
 static func page_enter(root: Control, from: Vector2 = Vector2(0, 28)) -> void:
 	## 页面级入场：淡入 + 微位移（AT / 前端 page transition）
 	if root == null: return
-	fade_in(root, 0.34)
+	play_transition(root, 0.22)
 	if reduced():
 		return
-	# 顶栏金线闪一下（若有 transition_rule）
+	# 顶栏细线闪一下（若有 transition_rule）
 	if ResourceLoader.exists("res://assets/art/ui/transition_rule.png"):
 		var rule := TextureRect.new()
 		rule.texture = load("res://assets/art/ui/transition_rule.png")
