@@ -1,0 +1,27 @@
+keys,zh_CN,en
+obj_eyebrow,目标,Objective
+obj_unknown,战斗目标,Objective
+obj_rout,歼灭敌军,Rout
+obj_seize,占领指定格,Seize
+obj_defend,守住据点,Defend
+obj_survive,坚守到时限,Survive
+obj_escort,护送至撤离格,Escort
+obj_boss,击败标记目标,Defeat marked unit
+obj_escape,撤离战场,Escape
+obj_protect,保护目标并歼敌,Protect
+obj_ally,同行,Ally
+obj_round,第 %d 回合,Turn %d
+obj_remain_enemies,敌军 %d,Enemies %d
+obj_remain_tiles,未占领 %d,Tiles left %d
+obj_remain_turns,还需 %d 回合,Turns left %d
+obj_remain_hold,未守住 %d,Tiles open %d
+obj_remain_escape,尚需撤离 %d,Still to escape %d
+obj_remain_boss,目标仍在,Target stands
+obj_remain_boss_down,目标已倒,Target down
+obj_remain_escort,尚未抵达,Not at the exit
+obj_remain_escort_ok,已抵达,At the exit
+obj_reinf_log,增援抵达 %d·%d,Reinforcements at %d·%d
+obj_lose_wipe,我军覆没,Company wiped
+obj_lose_leader,主将倒下,Leader down
+obj_lose_vip,保护对象倒下,Ward down
+obj_lose_turns,超过回合上限,Turn limit

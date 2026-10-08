@@ -418,6 +418,7 @@ func _build_ui() -> void:
 		row2.visible = false
 	_build_mobile_bar()
 	_apply_board_xform()
+	ObjectiveHud.attach(self)
 
 func _command_bar_px() -> float:
 	if not DeviceProfile.is_mobile():
@@ -825,8 +826,13 @@ func _deploy() -> void:
 			var e = CharacterFactory.make_enemy(tmpl, rng)
 			if e.appearance.get("hair","") == "" or e.faction == "enemy":
 				e.appearance = {"hair": "ink_black", "eyes": "dusk", "brow": "thick", "scar": "cheek"}
-			units.append({"char": e, "pos": enemy_spots[ei], "team": "enemy", "done": false, "template": tmpl})
+			var tag := ""
+			var tag_list: Array = m.get("enemy_tags", [])
+			if ti < tag_list.size():
+				tag = str(tag_list[ti])
+			units.append({"char": e, "pos": enemy_spots[ei], "team": "enemy", "done": false, "template": tmpl, "tag": tag})
 			ei += 1
+	BattleObjectives.deploy_npcs(m, units)
 	_log("%s：我军 %d · 敌军 %d" % [map_name, i, ei])
 	_theme_banter("start")
 	if _is_escort_map():
@@ -885,7 +891,7 @@ func _draw_map() -> void:
 		var bar_w = 36.0 * k
 		var bar_pos = center + Vector2(-bar_w * 0.5, tr + 6.0 * k)
 		map_draw.draw_rect(Rect2(bar_pos - Vector2(1, 1), Vector2(bar_w + 2, 6)), Color(0.02, 0.03, 0.05, 0.85))
-		var hp_col = UIKit.OK if u.team == "player" else UIKit.DANGER
+		var hp_col = UIKit.OK if _same_side("player", str(u.team)) else UIKit.DANGER
 		map_draw.draw_rect(Rect2(bar_pos, Vector2(bar_w * hp_ratio, 4)), hp_col)
 		# CD meters: per-skill pip with initial + fill
 		if u.team == "player":
@@ -923,7 +929,7 @@ func _draw_map() -> void:
 		var tw := fb.get_string_size(nm2, HORIZONTAL_ALIGNMENT_LEFT, -1, fsz).x
 		var np: Vector2 = center + Vector2(-tw * 0.5, -tr - 10.0 * k)
 		map_draw.draw_rect(Rect2(np + Vector2(-6, -13), Vector2(tw + 12, 18)), Color(0.03, 0.04, 0.06, 0.62))
-		map_draw.draw_rect(Rect2(np + Vector2(-6, 4), Vector2(tw + 12, 1)), Color(UIKit.OK if u.team == "player" else UIKit.DANGER, 0.8))
+		map_draw.draw_rect(Rect2(np + Vector2(-6, 4), Vector2(tw + 12, 1)), Color(UIKit.OK if _same_side("player", str(u.team)) else UIKit.DANGER, 0.8))
 		map_draw.draw_string(fb, np, nm2, HORIZONTAL_ALIGNMENT_LEFT, -1, fsz, UIKit.TEXT)
 		# 选中脉冲环
 		if i == selected:
@@ -1399,6 +1405,7 @@ func _click_cell(cell: Vector2i) -> void:
 				overlay.queue_redraw()
 				Sfx.move()
 				_log("%s 移动至 (%d,%d)" % [su.char.name, cell.x, cell.y])
+				_sync_objectives()
 				return
 			if ui >= 0 and units[ui].team == "player" and not units[ui].done and ui != selected:
 				_select_player(ui)
@@ -1423,13 +1430,20 @@ func _is_melee(c: CKCharacter) -> bool:
 func _manhattan(a: Vector2i, b: Vector2i) -> int:
 	return absi(a.x - b.x) + absi(a.y - b.y)
 
+func _same_side(a: String, b: String) -> bool:
+	if a == b:
+		return true
+	return (a == "player" and b == "ally") or (a == "ally" and b == "player")
+
+
 func _enemy_positions(for_team: String) -> Array:
 	var out: Array = []
 	for u in units:
 		if u.char.hp <= 0:
 			continue
-		if u.team != for_team:
-			out.append(u.pos)
+		if _same_side(for_team, str(u.team)):
+			continue
+		out.append(u.pos)
 	return out
 
 func _ally_zoc_extra(for_team: String) -> int:
@@ -1796,6 +1810,7 @@ func _start_player_turn() -> void:
 	map_draw.queue_redraw()
 	overlay.queue_redraw()
 	_update_skill_hint()
+	_sync_objectives()
 
 func _end_player_turn() -> void:
 	if battle_over:
@@ -2238,7 +2253,7 @@ func _enemy_ai() -> void:
 			# 占位卡住敌方 Cont：邻格有残血玩家则加分
 			for j2 in units.size():
 				var tj = units[j2]
-				if tj.team == "player" and tj.char.hp > 0 and _manhattan(pos, tj.pos) == 1:
+				if _same_side("player", str(tj.team)) and tj.char.hp > 0 and _manhattan(pos, tj.pos) == 1:
 					if float(tj.char.hp) / float(maxi(1, tj.char.max_hp)) < 0.55:
 						stand_bonus += 2.4
 					break
@@ -2257,7 +2272,7 @@ func _enemy_ai() -> void:
 					stand_bonus -= 2.4  # 控带脱离 leave_cost=2 对齐
 			for j in units.size():
 				var t = units[j]
-				if t.team != "player" or t.char.hp <= 0:
+				if not _same_side("player", str(t.team)) or t.char.hp <= 0:
 					continue
 				var d = _manhattan(pos, t.pos)
 				var can_hit = (d == 1) if melee else (d >= 1 and d <= 2)
@@ -2343,20 +2358,39 @@ func _enemy_ai() -> void:
 		if battle_over:
 			return
 
+func _sync_objectives() -> void:
+	if battle_over:
+		return
+	var fresh: Array = BattleObjectives.spawn_due(self, BattleMaps.get_map(map_id), _round_no)
+	for u in fresh:
+		_arm_spawned(u)
+	if not fresh.is_empty() and map_draw:
+		map_draw.queue_redraw()
+	ObjectiveHud.refresh(self)
+	_check_end()
+
+
+func _arm_spawned(u: Dictionary) -> void:
+	if str(u.get("team", "")) == "enemy":
+		var elite = u.char.is_leader or str(u.char.name).find("首") >= 0 or u.char.level >= 4
+		var diff = GameState.battle_difficulty_from_map(map_id)
+		GameState.grant_battle_enemy_skills(u.char, elite, diff, map_id, str(u.get("template", "")))
+	else:
+		GameState.grant_job_skills(u.char)
+		World.grant_gear_skills(u.char)
+	GameState.reset_battle_skills([u.char])
+
+
 func _check_end() -> void:
-	var pc = 0
-	var ec = 0
-	for u in units:
-		if u.char.hp <= 0:
-			continue
-		if u.team == "player":
-			pc += 1
-		else:
-			ec += 1
-	if ec == 0:
-		_finish(true)
-	elif pc == 0:
-		_finish(false)
+	if battle_over:
+		return
+	ObjectiveHud.refresh(self)
+	var verdict := BattleObjectives.outcome(BattleMaps.get_map(map_id), units, _round_no)
+	var result := str(verdict.get("result", "continue"))
+	if result == "continue":
+		return
+	set_meta("battle_verdict", verdict)
+	_finish(result == "win")
 
 var _world_enc := false
 
@@ -2401,6 +2435,9 @@ func _finish(win: bool) -> void:
 	else:
 		Sfx.lose()
 		_log("【败北】可重试，进度旗标保留。")
+		var why := BattleObjectives.defeat_line(str(get_meta("battle_verdict", {}).get("reason", "")))
+		if why != "":
+			_log(why)
 		phase_label.text = Locale.t("battle_lose")
 		phase_label.add_theme_color_override("font_color", UIKit.DANGER)
 		for u in units:
@@ -2417,6 +2454,7 @@ func _finish(win: bool) -> void:
 		"silver": purse if win else 0,
 		"skill_points": sp_gain,
 		"flags": BattleVictory.spec(map_id).flags if win else [],
+		"reason": str(get_meta("battle_verdict", {}).get("reason", "")),
 	}
 	battle_finished.emit(finished)
 	_show_report(win, purse, sp_gain, exp_before)

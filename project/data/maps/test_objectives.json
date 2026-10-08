@@ -1,0 +1,198 @@
+{
+  "maps": {
+    "obj_rout": {
+      "name": "目标探针·歼灭",
+      "w": 6,
+      "h": 4,
+      "player_spots": [[0, 3]],
+      "enemy_spots": [[5, 0]],
+      "enemy_templates": ["bandit_weak"],
+      "terrain": [
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"]
+      ]
+    },
+    "obj_seize": {
+      "name": "目标探针·占领",
+      "w": 6,
+      "h": 4,
+      "player_spots": [[0, 3]],
+      "enemy_spots": [[5, 0]],
+      "enemy_templates": ["bandit_weak"],
+      "objective": {"type": "seize", "tile": [1, 3]},
+      "terrain": [
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"]
+      ]
+    },
+    "obj_defend": {
+      "name": "目标探针·防守",
+      "w": 6,
+      "h": 4,
+      "player_spots": [[0, 3]],
+      "enemy_spots": [[5, 0]],
+      "enemy_templates": ["bandit_weak"],
+      "objective": {"type": "defend", "tiles": [[0, 2]], "turns": 2},
+      "failure": {"turn_limit": 3},
+      "terrain": [
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"]
+      ]
+    },
+    "obj_survive": {
+      "name": "目标探针·生存",
+      "w": 6,
+      "h": 4,
+      "player_spots": [[0, 3]],
+      "enemy_spots": [[5, 0]],
+      "enemy_templates": ["bandit_weak"],
+      "objective": {"type": "survive", "turns": 2},
+      "terrain": [
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"]
+      ]
+    },
+    "obj_escort": {
+      "name": "目标探针·护送",
+      "w": 6,
+      "h": 4,
+      "player_spots": [[0, 3]],
+      "enemy_spots": [[5, 0]],
+      "enemy_templates": ["bandit_weak"],
+      "objective": {"type": "escort", "npc": "guide", "exit_tile": [5, 2]},
+      "npcs": [{"name": "灯队向导", "tag": "guide", "spot": [0, 2], "team": "ally"}],
+      "terrain": [
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"]
+      ]
+    },
+    "obj_boss": {
+      "name": "目标探针·斩首",
+      "w": 6,
+      "h": 4,
+      "player_spots": [[0, 3]],
+      "enemy_spots": [[5, 0], [4, 0]],
+      "enemy_templates": ["bandit_chief", "bandit_weak"],
+      "enemy_tags": ["chief", ""],
+      "objective": {"type": "boss", "unit_tag": "chief"},
+      "terrain": [
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"]
+      ]
+    },
+    "obj_escape": {
+      "name": "目标探针·撤离",
+      "w": 6,
+      "h": 4,
+      "player_spots": [[0, 3]],
+      "enemy_spots": [[5, 0]],
+      "enemy_templates": ["bandit_weak"],
+      "objective": {"type": "escape", "n": 1, "exit_tiles": [[1, 3]]},
+      "terrain": [
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"]
+      ]
+    },
+    "obj_protect": {
+      "name": "目标探针·保护",
+      "w": 6,
+      "h": 4,
+      "player_spots": [[0, 3]],
+      "enemy_spots": [[5, 0]],
+      "enemy_templates": ["bandit_weak"],
+      "objective": {"type": "protect", "unit_tag": "vip"},
+      "npcs": [{"name": "灯芯", "tag": "vip", "spot": [1, 2], "team": "ally"}],
+      "terrain": [
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"]
+      ]
+    },
+    "obj_leader": {
+      "name": "目标探针·主将",
+      "w": 6,
+      "h": 4,
+      "player_spots": [[0, 3], [1, 3]],
+      "enemy_spots": [[5, 0]],
+      "enemy_templates": ["bandit_weak"],
+      "failure": {"leader_down": true},
+      "terrain": [
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"]
+      ]
+    },
+    "obj_reinf": {
+      "name": "目标探针·增援",
+      "w": 6,
+      "h": 4,
+      "player_spots": [[0, 3]],
+      "enemy_spots": [[5, 0]],
+      "enemy_templates": ["bandit_weak"],
+      "reinforcements": [
+        {
+          "id": "wave_occupied",
+          "turn": 2,
+          "team": "enemy",
+          "spots": [[0, 3]],
+          "templates": ["bandit_weak"],
+          "tags": [""]
+        },
+        {
+          "id": "wave_open",
+          "turn": 2,
+          "team": "enemy",
+          "spots": [[5, 1]],
+          "templates": ["bandit_weak"],
+          "tags": [""]
+        }
+      ],
+      "terrain": [
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"]
+      ]
+    },
+    "obj_trigger": {
+      "name": "目标探针·踩格增援",
+      "w": 6,
+      "h": 4,
+      "player_spots": [[0, 3]],
+      "enemy_spots": [[5, 0]],
+      "enemy_templates": ["bandit_weak"],
+      "reinforcements": [
+        {
+          "id": "ambush",
+          "trigger_tile": [1, 3],
+          "team": "enemy",
+          "spots": [[5, 1]],
+          "templates": ["bandit_weak"],
+          "tags": [""]
+        }
+      ],
+      "terrain": [
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain", "plain", "plain"]
+      ]
+    }
+  }
+}
