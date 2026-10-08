@@ -16,9 +16,18 @@ godot --path .
 godot --headless --path . --scene res://tests/smoke_runner.tscn
 # 战棋 e2e（模拟点击选→移→攻）
 godot --headless --path . --scene res://tests/tactics_e2e.tscn
-# CI 全套（失败非 0）
+# CI 全套（失败非 0，成功时最后一行是 CI ALL PASS）
+../scripts/install_godot.sh
 ../scripts/run_ci.sh
 ```
+
+## CI
+
+`scripts/install_godot.sh` 下载 Godot 4.3-stable linux x86_64，校验 SHA256，并把 `godot` 链接到 `~/.local/bin`。重复执行不会重新下载。已有二进制时用 `GODOT_BIN=/path/to/godot ./scripts/install_godot.sh`。
+
+`./scripts/run_ci.sh` 会先跑 `tools/ci/json_lint.py`，再自动发现 `project/tests/suites/*/` 下的 `*_check.tscn` 与 `*_check.gd`。发现数量打印为 `suites discovered: N`。每个用例必须打印 `PASS`，失败时 `quit(1)`。同名 `.gd` 与 `.tscn` 成对时只跑场景（`.gd` 是场景脚本）。
+
+GitHub Actions 工作流是 `.github/workflows/ci.yml`（`pull_request` 与 `push` 到 `main`）。它缓存 Godot 与 `project/.godot/imported`，先 import 再执行 `scripts/run_ci.sh`。失败时上传 `/tmp/ck_*.log`。
 
 ## Android 调试包
 
