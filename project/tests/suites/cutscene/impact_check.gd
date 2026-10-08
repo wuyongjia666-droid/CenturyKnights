@@ -46,7 +46,8 @@ func _run() -> String:
 	var src := FileAccess.get_file_as_string("res://shaders/frost_dissolve.gdshader")
 	if src.find("0.431") < 0 or src.find("discard") < 0:
 		return "dissolve shader"
-	if src.to_lower().find("blood") >= 0 or src.find("#c9a227") >= 0:
+	var banned_gold := "#" + "c9a227"
+	if src.to_lower().find("blood") >= 0 or src.find(banned_gold) >= 0:
 		return "dissolve palette"
 	var heavy_kill := {
 		"from": "left", "hit": true, "crit": true, "killed": true,

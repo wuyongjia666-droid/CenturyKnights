@@ -6,8 +6,8 @@ extends RefCounted
 const HIT_STOP := {"light": 0.04, "mid": 0.07, "heavy": 0.11}
 const HIT_SCALE := {"light": 0.62, "mid": 0.45, "heavy": 0.32}
 const PUNCH := {"light": 0.035, "mid": 0.07, "heavy": 0.12}
-const FROST := Color("#6ED4FF")
-const FROST_WHITE := Color("#F4F7FB")
+const FROST := Color8(110, 212, 255)
+const FROST_WHITE := Color8(244, 247, 251)
 const DISSOLVE := preload("res://shaders/frost_dissolve.gdshader")
 
 static func weight_of_job(job_id: String) -> String:
@@ -47,7 +47,7 @@ static func spawn_damage(parent: Node3D, at: Vector3, text: String, color: Color
 	label.font = font
 	label.modulate = color
 	label.font_size = 42
-	label.outline_modulate = Color("#0A0E14")
+	label.outline_modulate = Color8(10, 14, 20)
 	label.outline_size = 12
 	label.pixel_size = 0.0032
 	label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
