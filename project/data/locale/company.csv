@@ -19,3 +19,18 @@ annex_unknown,没有这栋附楼,Unknown annex
 annex_max,这栋附楼已到第三阶,Annex is at tier 3
 annex_short,还缺 %d 银 / %d 铁 / %d 粮,Need %d silver / %d iron / %d food
 annex_up,%s 升至第 %d 阶,%s rose to tier %d
+festival_spring,春令节,Spring rite
+festival_spring_blurb,联姻的帖子在这个月换一轮,Marriage letters refresh
+festival_harvest,丰收,Harvest
+festival_harvest_blurb,城堡把这个月的粮和银记上一笔,Castle books the month
+festival_barter,易货启航,Barter launch
+festival_barter_blurb,陆桥开埠，粮可以换成一小笔银,Grain crosses the bridge for silver
+festival_tourney,比武,Muster of arms
+festival_tourney_blurb,旗下较技，奖的是声望。竞技场规则战还没接上,Reputation only until the arena rules land
+festival_memorial,追思,Memorial lamps
+festival_memorial_blurb,祠前点一盏灯，养伤的人少一个月,A lamp shortens a month of rest
+festival_barter_short,粮不够开埠,Not enough grain
+festival_barter_done,易货启航：8 粮换成 6 银,Barter: 8 grain for 6 silver
+festival_tourney_purse,比武散场，灰烬邦记下了旗,The muster is noted
+festival_memorial_done,追思灯前，伤月少了一截,The lamp shortens the rest
+festival_memorial_stele,追思把名字记上了先祖碑,Names go on the stele

@@ -1,0 +1,40 @@
+{
+  "version": "v9.2",
+  "festivals": [
+    {
+      "id": "spring",
+      "month": 5,
+      "name_key": "festival_spring",
+      "blurb_key": "festival_spring_blurb",
+      "settled_elsewhere": true
+    },
+    {
+      "id": "harvest",
+      "month": 8,
+      "name_key": "festival_harvest",
+      "blurb_key": "festival_harvest_blurb",
+      "settled_elsewhere": true
+    },
+    {
+      "id": "barter",
+      "month": 3,
+      "name_key": "festival_barter",
+      "blurb_key": "festival_barter_blurb",
+      "settled_elsewhere": false
+    },
+    {
+      "id": "tourney",
+      "month": 10,
+      "name_key": "festival_tourney",
+      "blurb_key": "festival_tourney_blurb",
+      "settled_elsewhere": false
+    },
+    {
+      "id": "memorial",
+      "month": 11,
+      "name_key": "festival_memorial",
+      "blurb_key": "festival_memorial_blurb",
+      "settled_elsewhere": false
+    }
+  ]
+}

@@ -95,6 +95,7 @@ func _ready() -> void:
 	_load()
 	if not Calendar.month_advanced.is_connected(_on_month):
 		Calendar.month_advanced.connect(_on_month)
+	CKFestivals.install()
 
 func _read(path: String) -> Dictionary:
 	if not FileAccess.file_exists(path):
