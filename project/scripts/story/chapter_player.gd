@@ -159,21 +159,24 @@ func _show_line() -> void:
 	var sp := str(line.get("speaker", ""))
 	_speaker.text = sp
 	_body.text = str(line.get("text", ""))
-	_speaker_portrait(sp)
+	_speaker_portrait(sp, str(line.get("expression", line.get("emotion", ""))))
 
-func _speaker_portrait(speaker: String) -> void:
-	var leader = GameState.get_leader()
-	var ally: CKCharacter = null
+func _character_named(speaker: String) -> CKCharacter:
 	for c in GameState.characters.values():
-		if c.cast_key == "dengying" or c.name == "苇原·灯影":
-			ally = c
-			break
+		if c.name == speaker or str(c.cast_key) == speaker:
+			return c
+	return null
+
+func _speaker_portrait(speaker: String, emotion: String = "") -> void:
+	var who := _character_named(speaker)
+	if who == null and UnitArt.companion_slot(speaker) != "":
+		who = GameState.get_leader()
+	var plate := UnitArt.dialogue_portrait(speaker, emotion, who, 120)
+	if plate != null:
+		_portrait.texture = plate
+		return
+	var leader = GameState.get_leader()
 	match speaker:
-		"苇原·灯影":
-			if ally:
-				_portrait.texture = UnitArt.portrait(ally, 120)
-			elif leader:
-				_portrait.texture = UnitArt.portrait(leader, 120)
 		"旁白", "掌柜", "管事", "稳婆", "春令使者", "老旗手", "斥候", "盟友亲属":
 			if leader and speaker in ["老旗手", "斥候"]:
 				_portrait.texture = UnitArt.portrait(leader, 120)

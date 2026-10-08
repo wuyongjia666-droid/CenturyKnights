@@ -81,12 +81,13 @@ GRADES = [
     (5, "a wide domain of fields and a small citadel"),
 ]
 EMOTIONS = [
-    ("neutral", "a calm neutral expression"),
-    ("anger", "a contained angry expression, jaw set"),
-    ("sorrow", "a quiet sorrowful expression"),
-    ("joy", "a small genuine smile"),
-    ("resolve", "a steady resolute expression"),
+    ("neutral", "a calm neutral expression, relaxed mouth and open eyes"),
+    ("joy", "a small genuine smile, joy only in the eyes and mouth"),
+    ("anger", "a contained angry expression, jaw set, brows drawn"),
+    ("sorrow", "a quiet sorrowful expression, lowered eyes"),
+    ("surprise", "a brief surprised expression, eyes widened, lips parted"),
 ]
+CAST = json.loads((ROOT / "project/data/cast/companions_v92.json").read_text())["companions"]
 BIOMES = [
     "fog valley",
     "river ford",
@@ -226,21 +227,38 @@ def scenes() -> list[dict]:
 
 
 def expressions() -> list[dict]:
-    """12 slots × 5 emotions. NAR-01 names the twelve companions; ids stay stable."""
+    """12 named companions × 5 emotions. One seed per person; other plates are local redraws."""
     rows = []
-    for i in range(1, 13):
-        slot = f"c{i:02d}"
+    glass = "frosted glass behind the shoulders, small mint accent, small coral accent"
+    for i, person in enumerate(CAST):
+        slot = f"c{i + 1:02d}"
+        seed = _seed("v92_expr_" + slot)
+        neutral = f"project/assets/art/portraits/expressions/v92_expr_{slot}_neutral.png"
         for emo, desc in EMOTIONS:
             ident = f"v92_expr_{slot}_{emo}"
             clause = (
-                f"waist-up portrait of companion slot {slot}, same face across the set, {desc}, "
-                "three-quarter view facing camera-left, plain plate background #D9DEE3, "
-                "unmarked skin, rounded ears, ink-navy cloth, no text"
+                f"waist-up portrait of {person['name']}, companion slot {slot}, "
+                f"same face and same costume as this slot, {desc}, "
+                "three-quarter view facing camera-left, "
+                f"{glass}, plain plate background, unmarked skin, rounded ears, "
+                "ink-navy cloth, no text"
             )
+            extra = {
+                "companion_slot": slot,
+                "companion_id": person["id"],
+                "companion_name": person["name"],
+                "cast_key": person["cast_key"],
+                "emotion": emo,
+                "seed": seed,
+                "edit": "full" if emo == "neutral" else "local",
+            }
+            if emo != "neutral":
+                extra["identity_ref"] = neutral
+                clause += ", local redraw of the eyes and mouth only, keep hair costume and pose"
             rows.append(_job(
                 "expression", ident, clause, 768, 1024,
                 f"project/assets/art/portraits/expressions/{ident}.png",
-                {"companion_slot": slot, "emotion": emo},
+                extra,
             ))
     return rows
 
@@ -313,7 +331,7 @@ def main() -> int:
     )
     _write(
         "v92_expressions.json", "expression", expressions(),
-        "12 companion slots × 5 emotions. NAR-01 assigns the twelve names onto c01-c12. Identity must stay fixed per slot.",
+        "FARM-04: 12 named companions × neutral/joy/anger/sorrow/surprise. One seed per person; non-neutral plates are local redraws of the neutral plate.",
     )
     _write(
         "v92_castle.json", "castle", castle(),

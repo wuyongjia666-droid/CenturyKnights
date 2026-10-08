@@ -19,6 +19,8 @@ LOCK_PATH = ROOT / "docs" / "art" / "style-lock-v89.json"
 WORLD = ROOT / "project" / "data" / "world_v87.json"
 ITEMS = ROOT / "project" / "data" / "world_items_v87.json"
 PASSED = ROOT / "docs" / "art" / "review" / "atlas_v87_ingest.json"
+CAST = ROOT / "project" / "data" / "cast" / "companions_v92.json"
+EXPR_EMOTIONS = {"neutral", "joy", "anger", "sorrow", "surprise"}
 
 SIZES = {
     "city": (1280, 720),
@@ -104,6 +106,57 @@ def _cfg_ok(value) -> bool:
         return abs(float(value) - 1.0) < 1e-6
     except (TypeError, ValueError):
         return False
+
+
+def _expression_identity(expr: list[dict], forbid: list[str]) -> list[str]:
+    """FARM-04 list: 12 named companions, five emotions, one seed, local redraws."""
+    errors: list[str] = []
+    cast = _load(CAST).get("companions", [])
+    if len(cast) != 12:
+        errors.append(f"cast {len(cast)}")
+        return errors
+    by_slot: dict[str, dict[str, dict]] = {}
+    for row in expr:
+        slot = str(row.get("companion_slot", ""))
+        emo = str(row.get("emotion", ""))
+        by_slot.setdefault(slot, {})[emo] = row
+    want_slots = [f"c{i:02d}" for i in range(1, 13)]
+    if sorted(by_slot) != want_slots:
+        errors.append(f"expression slots {sorted(by_slot)}")
+        return errors
+    for i, person in enumerate(cast):
+        slot = want_slots[i]
+        rows = by_slot[slot]
+        if set(rows) != EXPR_EMOTIONS:
+            errors.append(f"{slot} emotions {sorted(rows)}")
+            continue
+        seeds = {int(rows[emo].get("seed", 0)) for emo in EXPR_EMOTIONS}
+        if seeds != {int(rows["neutral"].get("seed", 0))} or min(seeds) <= 0:
+            errors.append(f"{slot} seed")
+        neutral = rows["neutral"]
+        if str(neutral.get("companion_id", "")) != str(person.get("id", "")):
+            errors.append(f"{slot} id")
+        if str(neutral.get("companion_name", "")) != str(person.get("name", "")):
+            errors.append(f"{slot} name")
+        if str(neutral.get("cast_key", "")) != str(person.get("cast_key", "")):
+            errors.append(f"{slot} cast_key")
+        if str(neutral.get("edit", "")) != "full":
+            errors.append(f"{slot} neutral edit")
+        ref = str(neutral.get("out_path", ""))
+        for emo, row in rows.items():
+            pos = str(row.get("positive", ""))
+            if "frosted glass" not in pos or "mint" not in pos or "coral" not in pos:
+                errors.append(f"{slot} {emo} finish")
+            hits = forbidden_hits(pos, forbid)
+            if hits:
+                errors.append(f"{slot} {emo} trope {hits}")
+            if emo == "neutral":
+                continue
+            if str(row.get("edit", "")) != "local" or str(row.get("identity_ref", "")) != ref:
+                errors.append(f"{slot} {emo} redraw")
+            if "local redraw" not in pos:
+                errors.append(f"{slot} {emo} redraw clause")
+    return errors
 
 
 def check() -> list[str]:
@@ -212,6 +265,7 @@ def check() -> list[str]:
     expr = by_kind.get("expression", [])
     if len(expr) != 60:
         errors.append(f"expressions {len(expr)}")
+    errors.extend(_expression_identity(expr, forbid))
     if len(by_kind.get("castle", [])) != 28:
         errors.append(f"castle {len(by_kind.get('castle', []))}")
     if len(by_kind.get("estate", [])) != 55:
