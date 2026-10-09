@@ -62,6 +62,7 @@ terrain_rain,雨,Rain
 terrain_snow,雪,Snow
 terrain_fog,雾,Fog
 link_with,连携 %s,Link %s
+class_path,%s / %s / %s,%s / %s / %s
 rewind_undo,撤回,Undo move
 rewind_lamp,回灯,Turn the lamp back
 rewind_wicks,灯芯 %d,Wicks %d
