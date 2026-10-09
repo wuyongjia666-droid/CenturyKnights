@@ -1,5 +1,6 @@
 {
  "version": "v8.7-atlas-1",
+ "forge_plus": {"max": 3, "success": {"1": 0.8, "2": 0.55, "3": 0.3}},
  "items": [
   {
    "id": "ashbanner_sword_1",
