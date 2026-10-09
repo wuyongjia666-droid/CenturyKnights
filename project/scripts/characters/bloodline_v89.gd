@@ -1665,6 +1665,11 @@ static func _heir_clause(c: Object) -> String:
 		s += ", with " + ", ".join(from)
 	return s + ", a clear family resemblance"
 
+## Fusion is a read of crowns already rolled. It is not a locus and not a draw.
+static func fusions_of(c: Object) -> Array:
+	return CKBloodFusion.active(c)
+
+
 static func _parent_has(p: Object, nid: String) -> bool:
 	_ensure(p)
 	var e := express_nation(p.get("genome"), nid, ctx_of(p))
