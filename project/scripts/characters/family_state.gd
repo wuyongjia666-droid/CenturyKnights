@@ -3,6 +3,8 @@ extends RefCounted
 ## Marriage candidates and the small family helpers that used to live on GameState.
 ## Merged ownership moves to the dynasty stream.
 
+const LifeEvents := preload("res://scripts/characters/life_events.gd")
+
 static func family_members(host) -> Array:
 	var out: Array = []
 	for c in host.characters.values():
@@ -72,6 +74,7 @@ static func tick_doctrine_and_marriage_month(host) -> Array:
 		msgs.append(m)
 	for m2 in host.tick_alliance_duty_month():
 		msgs.append(m2)
+	LifeEvents.ensure()
 	host.mark_dirty()
 	return msgs
 
