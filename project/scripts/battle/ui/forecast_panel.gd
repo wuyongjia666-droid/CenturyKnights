@@ -101,7 +101,7 @@ static func _fill(box: Node, title: String, info: Dictionary, counter_side: bool
 	var title_l := box.get_node("Title") as Label
 	var body := box.get_node("Body") as Label
 	title_l.text = title
-	title_l.add_theme_color_override("font_color", UIKit.DANGER if counter_side else UIKit.OK)
+	title_l.add_theme_color_override("font_color", UIKit.faction_color("enemy" if counter_side else "player"))
 	if counter_side and not bool(info.counter):
 		body.text = BattleObjectives.text("forecast_no_counter")
 		return
