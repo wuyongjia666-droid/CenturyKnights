@@ -61,3 +61,4 @@ terrain_weather,天气 %s,Weather %s
 terrain_rain,雨,Rain
 terrain_snow,雪,Snow
 terrain_fog,雾,Fog
+stage_next,下一阶段 %s,Next stage %s

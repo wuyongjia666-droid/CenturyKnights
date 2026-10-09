@@ -56,6 +56,7 @@ var _info_traits: HBoxContainer
 var _dmg_fx: Array = []  # {pos, text, age, col}
 var _turn_flash: float = 0.0
 var _round_no: int = 0
+var _arena_snap: Dictionary = {}
 var _round_label: Label
 var _phase_chip: Label
 var _sel_pulse: float = 0.0
@@ -551,6 +552,8 @@ func _build_ground() -> void:
 func _player_skills(ui: int) -> Array:
 	if ui < 0 or ui >= units.size():
 		return []
+	if not BattleObjectives.skills_allowed(BattleMaps.get_map(map_id)):
+		return []
 	var c: CKCharacter = units[ui].char
 	var out: Array = []
 	for sid in c.skills:
@@ -1010,6 +1013,7 @@ func _deploy() -> void:
 	_log(BattleObjectives.text("diff_now") % BattleObjectives.text("diff_" + CKEnemyLoadout.mode_of(GameState)))
 	if weather != "clear":
 		_log(BattleObjectives.text("terrain_weather") % BattleObjectives.text("terrain_" + weather))
+	_take_arena_snap()
 	_refresh_info()
 
 func _draw_map() -> void:
@@ -2790,6 +2794,8 @@ func _check_end() -> void:
 	var result := str(verdict.get("result", "continue"))
 	if result == "continue":
 		return
+	if result == "win" and _advance_stage():
+		return
 	set_meta("battle_verdict", verdict)
 	_finish(result == "win")
 
@@ -2851,6 +2857,8 @@ func _finish(win: bool) -> void:
 			_log(str(wr.get("msg", "")))
 	for u in units:
 		CKEnemyLoadout.unstamp(u.char)
+	if BattleObjectives.is_arena(BattleMaps.get_map(map_id)):
+		_restore_arena()
 	GameState.save_game()
 	CKAutosave.after_battle()
 	var finished := {
@@ -2863,6 +2871,82 @@ func _finish(win: bool) -> void:
 	}
 	battle_finished.emit(finished)
 	_show_report(win, purse, sp_gain, exp_before)
+
+
+func _advance_stage() -> bool:
+	var cur := BattleMaps.get_map(map_id)
+	var nxt := BattleObjectives.next_stage(cur)
+	if nxt == "":
+		return false
+	var nxt_map := BattleMaps.get_map(nxt)
+	if str(nxt_map.get("id", "")) != nxt:
+		return false
+	var kept := {}
+	for u in units:
+		var side := str(u.get("team", ""))
+		if side != "player" and side != "ally":
+			continue
+		if int(u.char.hp) <= 0:
+			continue
+		kept[str(u.char.id)] = {
+			"hp": int(u.char.hp),
+			"lock": int(u.char.temp_combat_lock),
+			"def": int(u.char.temp_def_buff),
+			"hit": int(u.char.temp_hit_bonus),
+			"ward": bool(u.char.temp_terrain_ward),
+		}
+	GameState.set_meta("battle_map", nxt)
+	_init_map()
+	_deploy()
+	var live: Array = []
+	for u in units:
+		var row: Dictionary = kept.get(str(u.char.id), {})
+		if row.is_empty():
+			if str(u.get("team", "")) == "player" or str(u.get("team", "")) == "ally":
+				continue
+			live.append(u)
+			continue
+		u.char.hp = int(row["hp"])
+		u.char.temp_combat_lock = int(row["lock"])
+		u.char.temp_def_buff = int(row["def"])
+		u.char.temp_hit_bonus = int(row["hit"])
+		u.char.temp_terrain_ward = bool(row["ward"])
+		live.append(u)
+	units = live
+	battle_over = false
+	turn_team = "player"
+	_log(BattleObjectives.text("stage_next") % map_name)
+	_refresh_info()
+	ObjectiveHud.refresh(self)
+	if map_draw:
+		map_draw.queue_redraw()
+	return true
+
+
+func _take_arena_snap() -> void:
+	if not BattleObjectives.is_arena(BattleMaps.get_map(map_id)):
+		return
+	if not _arena_snap.is_empty():
+		return
+	for c in GameState.roster():
+		_arena_snap[str(c.id)] = {
+			"hp": int(c.hp),
+			"injured": bool(c.injured),
+			"down": c.has_meta("classic_down"),
+		}
+
+
+func _restore_arena() -> void:
+	for c in GameState.roster():
+		var row: Dictionary = _arena_snap.get(str(c.id), {})
+		if row.is_empty():
+			continue
+		c.hp = int(row["hp"])
+		c.injured = bool(row["injured"])
+		if bool(row["down"]):
+			c.set_meta("classic_down", true)
+		elif c.has_meta("classic_down"):
+			c.remove_meta("classic_down")
 
 func _show_report(win: bool, purse: int, sp_gain: int, exp_before: Dictionary) -> void:
 	BattleReport.present(self, win, purse, sp_gain, exp_before)
