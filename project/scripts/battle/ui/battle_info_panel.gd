@@ -65,11 +65,11 @@ static func refresh(host) -> void:
 	var mode := ""
 	if u.team == "player" and not u.done:
 		if host.attack_mode:
-			mode = BattleRules._rich(UIKit.DANGER, Locale.t("shell_64295185"))
+			mode = BattleRules._rich(Frost.swatch("enemy"), Locale.t("shell_64295185"))
 		elif host.moved_this_select:
-			mode = BattleRules._rich(UIKit.ACCENT, Locale.t("shell_8736b101"))
+			mode = BattleRules._rich(Frost.swatch("ally"), Locale.t("shell_8736b101"))
 		else:
-			mode = BattleRules._rich(UIKit.ACCENT, Locale.t("shell_31067370"))
+			mode = BattleRules._rich(Frost.swatch("ally"), Locale.t("shell_31067370"))
 	var role = BattleRules.role_label(BattleRules.job_role(c.job_id))
 	var foes = host._enemy_positions(u.team)
 	var engaged = BattleRules.is_engaged(u.pos, foes)
