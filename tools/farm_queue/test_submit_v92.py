@@ -1,0 +1,204 @@
+#!/usr/bin/env python3
+"""Converter and host-plan checks for the v9.2 stills submit path."""
+from __future__ import annotations
+
+import json
+import os
+import subprocess
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+from unittest import mock
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import submit_v92_stills as submit  # noqa: E402
+import validate_queue_v92 as gate  # noqa: E402
+
+
+class SubmitV92Test(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.jobs, cls.names = gate.collect_jobs()
+        cls.shots = submit.build_shots(cls.jobs)
+
+    def test_queue_files_present(self) -> None:
+        self.assertIn("genome_bank_v92.json", self.names)
+        self.assertGreaterEqual(len(self.names), 8)
+
+    def test_city_shot_copies_lock_fields(self) -> None:
+        city = next(job for job in self.jobs if job["kind"] == "city")
+        shot = submit.job_to_shot(city)
+        self.assertEqual(shot["id"], city["id"])
+        self.assertEqual(shot["prompt"], city["positive"])
+        self.assertEqual(shot["positive"], city["positive"])
+        self.assertEqual(shot["negative"], city["negative"])
+        self.assertEqual(shot["seed"], int(city["seed"]))
+        self.assertEqual(shot["steps"], 28)
+        self.assertEqual(shot["cfg"], 1.0)
+        self.assertEqual(shot["sampler"], "euler")
+        self.assertEqual(shot["scheduler"], "simple")
+        self.assertEqual(shot["w"], 1280)
+        self.assertEqual(shot["h"], 720)
+        self.assertEqual(shot["width"], 1280)
+        self.assertEqual(shot["height"], 720)
+        self.assertEqual(shot["role"], "city")
+        self.assertEqual(shot["farm"], "FARM-02")
+        self.assertEqual(shot["out_path"], city["out_path"])
+        self.assertEqual(shot["filename_prefix"], city["id"])
+
+    def test_genome_uses_bucket_key(self) -> None:
+        bucket = next(job for job in self.jobs if job["kind"] == "genome")
+        shot = submit.job_to_shot(bucket)
+        self.assertEqual(shot["id"], bucket["bucket_key"])
+        self.assertEqual(shot["prompt"], bucket["positive"])
+        self.assertEqual(shot["farm"], "FARM-01")
+        self.assertEqual((shot["w"], shot["h"]), (768, 1024))
+
+    def test_expression_local_keeps_identity_ref(self) -> None:
+        local = next(
+            job for job in self.jobs if job["kind"] == "expression" and job.get("edit") == "local"
+        )
+        shot = submit.job_to_shot(local)
+        self.assertEqual(shot["edit"], "local")
+        self.assertEqual(shot["identity_ref"], local["identity_ref"])
+        self.assertIn("local redraw", shot["prompt"])
+        self.assertEqual(shot["farm"], "FARM-04")
+
+    def test_full_batch_is_unique_and_ordered(self) -> None:
+        self.assertEqual(len(self.shots), len(self.jobs))
+        ids = [shot["id"] for shot in self.shots]
+        self.assertEqual(len(ids), len(set(ids)))
+        farms = [shot["farm"] for shot in self.shots]
+        self.assertEqual(farms, sorted(farms, key=submit.FARM_ORDER.index))
+        farm03 = [shot["role"] for shot in self.shots if shot["farm"] == "FARM-03"]
+        self.assertEqual(farm03[0], "smith")
+        last_smith = max(i for i, role in enumerate(farm03) if role == "smith")
+        self.assertLess(last_smith, farm03.index("item"))
+
+    def test_farm_filter(self) -> None:
+        cities = submit.build_shots(self.jobs, {"FARM-02"})
+        self.assertTrue(cities)
+        self.assertTrue(all(shot["farm"] == "FARM-02" for shot in cities))
+        self.assertTrue(all(shot["role"] == "city" for shot in cities))
+
+    def test_envelope_refuses_cloud(self) -> None:
+        doc = submit.shots_document(self.shots[:1], submit.QWEN_DEFAULT, submit.SN_DEFAULT)
+        self.assertEqual(doc["book"], "CenturyKnights")
+        self.assertTrue(doc["dual_submit"])
+        self.assertEqual(doc["prefer"], "qwen")
+        self.assertEqual(doc["shots"][0]["id"], self.shots[0]["id"])
+        for banned in ("sn_api", "sn_cloud", "qwen_api_nodes", "flux"):
+            self.assertIn(banned, doc["refuse"])
+        self.assertNotIn("api", doc["bases"])
+
+    def test_both_hosts_use_spread_local(self) -> None:
+        plan = submit.decide_plan(True, True, False)
+        argv = submit.build_argv("python", "dual_submit_stills.py", r"D:\AIComics\CenturyKnights_farm", "shots.json", plan)
+        self.assertEqual(
+            argv,
+            [
+                "python",
+                "dual_submit_stills.py",
+                "--root",
+                r"D:\AIComics\CenturyKnights_farm",
+                "--shots-json",
+                "shots.json",
+                "--spread",
+                "--sn-backend",
+                "local",
+                "--only",
+                "both",
+            ],
+        )
+
+    def test_sn_down_without_flag_does_not_submit(self) -> None:
+        plan = submit.decide_plan(True, False, False)
+        self.assertEqual(plan.code, 3)
+        self.assertEqual(plan.only, "")
+
+    def test_qwen_only_escape_is_env_only(self) -> None:
+        blocked = submit.decide_plan(True, False, False)
+        self.assertNotEqual(blocked.code, 0)
+        plan = submit.decide_plan(True, False, True)
+        self.assertEqual(plan.code, 0)
+        self.assertEqual(plan.only, "qwen")
+        self.assertFalse(plan.spread)
+        argv = submit.build_argv("python", "dual.py", "root", "shots.json", plan)
+        self.assertNotIn("--spread", argv)
+        self.assertEqual(argv[argv.index("--sn-backend") + 1], "local")
+        self.assertEqual(argv[argv.index("--only") + 1], "qwen")
+        self.assertFalse(submit.allow_qwen_only({"CK_FARM_ALLOW_QWEN_ONLY": "0"}))
+        self.assertTrue(submit.allow_qwen_only({"CK_FARM_ALLOW_QWEN_ONLY": "1"}))
+
+    def test_escape_does_not_drop_sensenova_when_up(self) -> None:
+        plan = submit.decide_plan(True, True, True)
+        self.assertEqual(plan.only, "both")
+        self.assertTrue(plan.spread)
+
+    def test_qwen_down_always_aborts(self) -> None:
+        self.assertEqual(submit.decide_plan(False, True, True).code, 2)
+        self.assertEqual(submit.decide_plan(False, False, True).code, 2)
+
+    def test_main_both_hosts_spreads_even_if_escape_set(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            shots = str(Path(tmp) / "shots.json")
+            root = Path(tmp) / "root"
+            with mock.patch.object(submit, "probe", return_value=(True, True)), \
+                 mock.patch.object(submit, "find_dual", return_value=Path("dual_submit_stills.py")), \
+                 mock.patch.object(submit, "farm_root", return_value=root), \
+                 mock.patch.object(submit.subprocess, "run", return_value=subprocess.CompletedProcess([], 0)) as run, \
+                 mock.patch.dict(os.environ, {"CK_FARM_ALLOW_QWEN_ONLY": "1"}):
+                code = submit.main(["--farms", "FARM-02", "--shots-out", shots])
+            self.assertEqual(code, 0)
+            argv = run.call_args.args[0]
+            self.assertIn("--spread", argv)
+            self.assertEqual(argv[argv.index("--sn-backend") + 1], "local")
+            self.assertEqual(argv[argv.index("--only") + 1], "both")
+            doc = json.loads(Path(shots).read_text(encoding="utf-8"))
+            self.assertEqual(len(doc["shots"]), 35)
+            self.assertEqual(doc["refuse"], ["sn_api", "sn_cloud", "qwen_api_nodes", "flux"])
+            self.assertEqual(doc["shots"][0]["prompt"], doc["shots"][0]["positive"])
+
+    def test_main_sn_down_does_not_submit(self) -> None:
+        env = os.environ.copy()
+        env.pop("CK_FARM_ALLOW_QWEN_ONLY", None)
+        with mock.patch.object(submit, "probe", return_value=(True, False)), \
+             mock.patch.object(submit.subprocess, "run") as run, \
+             mock.patch.dict(os.environ, env, clear=True):
+            code = submit.main(["--farms", "FARM-02"])
+        self.assertEqual(code, 3)
+        run.assert_not_called()
+
+    def test_main_escape_is_qwen_only_without_spread(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            shots = str(Path(tmp) / "shots.json")
+            root = Path(tmp) / "root"
+            with mock.patch.object(submit, "probe", return_value=(True, False)), \
+                 mock.patch.object(submit, "find_dual", return_value=Path("dual_submit_stills.py")), \
+                 mock.patch.object(submit, "farm_root", return_value=root), \
+                 mock.patch.object(submit.subprocess, "run", return_value=subprocess.CompletedProcess([], 0)) as run, \
+                 mock.patch.dict(os.environ, {"CK_FARM_ALLOW_QWEN_ONLY": "1"}):
+                code = submit.main(["--farms", "FARM-02", "--shots-out", shots])
+            self.assertEqual(code, 0)
+            argv = run.call_args.args[0]
+            self.assertNotIn("--spread", argv)
+            self.assertEqual(argv[argv.index("--sn-backend") + 1], "local")
+            self.assertEqual(argv[argv.index("--only") + 1], "qwen")
+
+    def test_main_missing_dual_stages_shots(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            shots = str(Path(tmp) / "shots.json")
+            root = Path(tmp) / "root"
+            with mock.patch.object(submit, "probe", return_value=(True, True)), \
+                 mock.patch.object(submit, "find_dual", return_value=None), \
+                 mock.patch.object(submit, "farm_root", return_value=root), \
+                 mock.patch.object(submit.subprocess, "run") as run:
+                code = submit.main(["--farms", "FARM-02", "--shots-out", shots])
+            self.assertEqual(code, 4)
+            run.assert_not_called()
+            self.assertTrue(Path(shots).is_file())
+
+
+if __name__ == "__main__":
+    unittest.main()

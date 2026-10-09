@@ -12,7 +12,7 @@ for url in "$QWEN/system_stats" "$QWEN/v1/models" "$SN/system_stats"; do
   if [[ "$code" == "200" ]]; then ok=1; fi
 done
 if [[ "$ok" -eq 1 ]]; then
-  echo "[probe] FARM REACHABLE — run tools/farm_queue/submit_ck_v720_queue.py"
+  echo "[probe] FARM REACHABLE — on m173 run tools/farm_queue/submit_v92_on_m173.ps1 (FARM-01..05 stills)"
   exit 0
 fi
 echo "[probe] FARM UNREACHABLE — box not on m173 LAN or Comfy down"
