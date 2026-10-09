@@ -36,6 +36,21 @@ static func failure(map_data: Dictionary) -> Dictionary:
 	return raw.duplicate(true)
 
 
+static func next_stage(map_data: Dictionary) -> String:
+	return str(map_data.get("next_stage", ""))
+
+
+static func is_arena(map_data: Dictionary) -> bool:
+	return bool(map_data.get("arena", false))
+
+
+static func skills_allowed(map_data: Dictionary) -> bool:
+	var rules = map_data.get("rules", {})
+	if typeof(rules) != TYPE_DICTIONARY:
+		return true
+	return bool(rules.get("skills", true))
+
+
 static func outcome(map_data: Dictionary, units: Array, round_no: int) -> Dictionary:
 	var obj := spec(map_data)
 	var fail := failure(map_data)
