@@ -89,6 +89,9 @@ var _lamp_charges := 0
 var _lamp_max := 0
 var _lamp_refill := false
 var _lamps_armed := false
+var _lamp_stack: Array = []
+var _turn_snap: Dictionary = {}
+var _move_undo: Dictionary = {}
 
 
 func _map_theme() -> String:
@@ -450,6 +453,7 @@ func _build_ui() -> void:
 	_apply_board_xform()
 	ObjectiveHud.attach(self)
 	ForecastPanel.attach(self)
+	RewindBar.attach(self)
 
 func _command_bar_px() -> float:
 	if not DeviceProfile.is_mobile():
@@ -640,6 +644,7 @@ func _consume_skill(c: CKCharacter, sid: String) -> void:
 	_update_skill_hint()
 
 func _cast_support_skill(ui: int, sid: String) -> void:
+	_push_lamp()
 	Sfx.skill()
 	if Sfx.has_method("heal"):
 		Sfx.heal()
@@ -672,6 +677,7 @@ func _cast_support_skill(ui: int, sid: String) -> void:
 	_check_end()
 
 func _cast_buff_skill(ui: int, sid: String) -> void:
+	_push_lamp()
 	var sk = GameState.get_skill(sid)
 	var u = units[ui]
 	if sk.get("def_buff"):
@@ -1605,6 +1611,7 @@ func _click_cell(cell: Vector2i) -> void:
 			if ui < 0 and not attack_mode and _try_interact(su, cell):
 				return
 			if ui < 0 and not attack_mode and not moved_this_select and move_cells.has(cell):
+				_move_undo = BattleSnapshot.capture(self)
 				var origin_cell: Vector2i = su.pos
 				su.pos = cell
 				_spend_zoc(su, origin_cell, cell)
@@ -1617,6 +1624,7 @@ func _click_cell(cell: Vector2i) -> void:
 				overlay.queue_redraw()
 				_log("%s 移动至 (%d,%d)" % [su.char.name, cell.x, cell.y])
 				_sync_objectives()
+				RewindBar.refresh(self)
 				return
 			if ui >= 0 and units[ui].team == "player" and not units[ui].done and ui != selected:
 				_select_player(ui)
@@ -1708,6 +1716,8 @@ func _spawn_slash(cell: Vector2i, kind: String = "slash") -> void:
 	_shake = 3.5
 
 func _do_attack(ai: int, di: int) -> void:
+	if str(units[ai].team) == "player":
+		_push_lamp()
 	_combat_rec = []
 	var _hp0a: int = int(units[ai].char.hp)
 	var _hp0d: int = int(units[di].char.hp)
@@ -2106,6 +2116,7 @@ func _wait_selected() -> void:
 	var u = units[selected]
 	if u.team != "player" or u.done:
 		return
+	_push_lamp()
 	u.done = true
 	selected = -1
 	move_cells.clear()
@@ -2157,6 +2168,7 @@ func _start_player_turn() -> void:
 	overlay.queue_redraw()
 	_update_skill_hint()
 	_sync_objectives()
+	_seal_turn()
 
 func _end_player_turn() -> void:
 	if battle_over:
@@ -2907,6 +2919,22 @@ func _arm_lamps() -> void:
 	_lamp_charges = _lamp_max
 	_lamp_refill = bool(rule.get("refill", false))
 	set_meta("ai_tier", int(rule.get("ai_tier", 1)))
+
+
+func _seal_turn() -> void:
+	BattleSnapshot.seal_turn(self)
+
+
+func _push_lamp() -> void:
+	BattleSnapshot.push_lamp(self)
+
+
+func _undo_move() -> void:
+	BattleSnapshot.undo_move(self)
+
+
+func _rewind_lamp() -> void:
+	BattleSnapshot.rewind_lamp(self)
 
 
 func _log(t: String) -> void:
