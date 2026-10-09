@@ -54,7 +54,7 @@ static func deploy_block_reason(c: CKCharacter) -> String:
 		return Locale.t("已阵亡")
 	var rec := record(c)
 	if str(rec.get("tier", "")) == "grave" and int(rec.get("months_left", 0)) > 0:
-		return Locale.t("重伤休养，还要 %d 个月") % int(rec.get("months_left", 0))
+		return Locale.t("injury.grave_months") % int(rec.get("months_left", 0))
 	return ""
 
 
@@ -79,7 +79,7 @@ static func label(c: CKCharacter) -> String:
 	if str(rec.get("tier", "")) == "lasting":
 		return name
 	if left > 0:
-		return Locale.t("%s · %d月") % [name, left]
+		return Locale.t("injury.wound_label") % [name, left]
 	return name
 
 
@@ -108,7 +108,7 @@ static func tick_month(host) -> String:
 		var left := int(rec.get("months_left", 0)) - 1
 		if left <= 0:
 			_clear(c)
-			notes.append(Locale.t("%s 的伤好了") % c.name)
+			notes.append(Locale.t("injury.healed") % c.name)
 		else:
 			rec["months_left"] = left
 			_write(c, rec)
@@ -164,7 +164,7 @@ static func mitigate(c: CKCharacter, source: String) -> Dictionary:
 		c.stats["skl"] = int(c.stats.get("skl", 0)) + back
 	_clear(c)
 	c.injured = false
-	GameState.log_event(Locale.t("%s 的永久伤缓解了（%s）") % [c.name, Locale.t("药材") if source == "clinic" else Locale.t("传家兵器")])
+	GameState.log_event(Locale.t("injury.eased") % [c.name, Locale.t("药材") if source == "clinic" else Locale.t("传家兵器")])
 	return {"ok": true, "msg": Locale.t("永久伤缓解了")}
 
 
@@ -285,7 +285,7 @@ static func _kill(c: CKCharacter, rng: RandomNumberGenerator, killer: String) ->
 		"killer": killer,
 		"name": c.name,
 	}
-	var text := Locale.t("%s 阵亡。遗言：%s") % [c.name, line]
+	var text := Locale.t("injury.death_last_words") % [c.name, line]
 	GameState.add_lineage_event(text)
 	GameState.log_event(text)
 	var kept: Array = []
