@@ -85,8 +85,34 @@ func _build() -> void:
 		Sfx.click()
 		get_tree().change_scene_to_file("res://scenes/hub/court_news.tscn"))
 	jumps.add_child(news)
+	var pace := UIKit.ghost_button(_pace_label(), 168, 44)
+	pace.name = "FastFamily"
+	pace.pressed.connect(func():
+		CKFamilyState.set_fast_family(GameState, not CKFamilyState.fast_family(GameState))
+		pace.text = _pace_label()
+		Sfx.click())
+	jumps.add_child(pace)
 	UIKit.footer_bar(self, [["A", "检视成员档案"], ["Y", "授旗礼"], ["ESC", "返回城堡"]], "GENEALOGY PROTOCOL · FROST")
 	UIFX.page_enter(self)
+
+func _pace_label() -> String:
+	return Locale.t("fertility_fast") if CKFamilyState.fast_family(GameState) else Locale.t("fertility_term")
+
+
+func apply_mobile_layout() -> void:
+	MobileLayout.pin_footer(get_node_or_null("StitchFooter"))
+	var w := get_viewport_rect().size.x
+	if w >= 1000.0:
+		return
+	var pace := find_child("FastFamily", true, false) as Control
+	if pace != null and pace.get_parent() != self:
+		pace.get_parent().remove_child(pace)
+		add_child(pace)
+	if pace != null:
+		pace.position = Vector2(8, 536)
+		pace.size = Vector2(w - 16.0, 44)
+		pace.z_index = 6
+
 
 func _gen_of(c: CKCharacter, memo: Dictionary) -> int:
 	if memo.has(c.id):

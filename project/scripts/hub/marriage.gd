@@ -712,7 +712,7 @@ func _finish_marry() -> void:
 		return
 	var leader = GameState.get_leader()
 	var ids := _accepted_ids()
-	var r = Lineage.marry(leader, _selected, 40, ids)
+	var r = Lineage.marry(leader, _selected, 40, ids, true)
 	_msg.text = str(r.get("msg", ""))
 	_vow_panel.visible = false
 	if r.get("ok"):
