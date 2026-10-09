@@ -1,6 +1,6 @@
 extends Node
-## Hundred-year scripted campaign. Invariants keep a default company and the ten royal houses
-## inside the bands documented in docs/design/balance-v91.md.
+## Hundred-year scripted campaign. Structural bands stay in docs/design/balance-v91.md.
+## Silver checkpoints are the v9.2 curve in docs/design/balance-v92.md.
 
 func _ready() -> void:
 	await get_tree().process_frame
@@ -85,6 +85,44 @@ func _generation_probe() -> bool:
 		return false
 	return true
 
+func _at(r: Dictionary, year: int) -> int:
+	for s in r.get("samples", []):
+		if int(s.get("year", -1)) == year:
+			return int(s.get("silver", -1))
+	return -1
+
+func _band(r: Dictionary, year: int, lo: int, hi: int) -> String:
+	var silver := _at(r, year)
+	if silver < lo or silver > hi:
+		return "year %d silver %d outside %d..%d" % [year, silver, lo, hi]
+	return ""
+
+func _silver_curve(r: Dictionary) -> String:
+	if int(r.get("tight_years", 0)) < 1:
+		return "no tight year in 1..10"
+	if int(r.get("pressure_mid", 0)) <= 0:
+		return "mid-campaign sinks did not fire"
+	if int(r.get("pressure_late", 0)) <= 0:
+		return "late sinks did not fire"
+	if int(r.get("spring_purse", 0)) != 180:
+		return "spring purse %s" % str(r.get("spring_purse", 0))
+	var checkpoints := [
+		[10, 600, 2000],
+		[30, 400, 2000],
+		[60, 400, 2500],
+		[100, 200, 2000],
+	]
+	for row in checkpoints:
+		var why := _band(r, int(row[0]), int(row[1]), int(row[2]))
+		if why != "":
+			return why
+	var silver := int(r.get("silver_end", 0))
+	if silver < 100 or silver > 2000:
+		return "end silver %d" % silver
+	if int(r.get("silver_max", 0)) > 3500:
+		return "silver exploded %s" % str(r.get("silver_max", 0))
+	return ""
+
 func _invariants(r: Dictionary) -> String:
 	if str(r.get("stuck", "")) != "":
 		return str(r["stuck"])
@@ -107,12 +145,10 @@ func _invariants(r: Dictionary) -> String:
 	var crises := int(r.get("crises", 0))
 	if crises < 8 or crises > 160:
 		return "crises %d outside 8..160" % crises
-	var silver := int(r.get("silver_end", 0))
-	if silver < 80 or silver > 14000:
-		return "end silver %d" % silver
-	if int(r.get("silver_max", 0)) > 20000:
-		return "silver exploded %s" % str(r.get("silver_max", 0))
-	if int(r.get("years_broke", 0)) > 18:
+	var curve := _silver_curve(r)
+	if curve != "":
+		return curve
+	if int(r.get("years_broke", 0)) > 6:
 		return "broke years %s" % str(r.get("years_broke", 0))
 	if int(r.get("years_starved", 0)) > 20:
 		return "starved years %s" % str(r.get("years_starved", 0))

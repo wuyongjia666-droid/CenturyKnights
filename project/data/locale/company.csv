@@ -69,3 +69,10 @@ injury.eased,%s 的永久伤缓解了（%s）,%s lasting wound eased (%s)
 injury.death_last_words,%s 阵亡。遗言：%s,%s fell. Last words: %s
 morale.unpaid_months,欠饷 %d 个月,Unpaid for %d months
 morale.deserted,%s 因连续欠饷离队,%s left after months unpaid
+pressure_muster,立旗旗饷,Muster pay
+pressure_drill,开年操练,Opening drill
+pressure_mid,城堡、嫁妆与传家,Castle dowry and heirlooms
+pressure_late,灯籍、爵位与使馆,Lamp title and embassy
+pressure_spring,春令预付,Spring purse
+pressure_spring_paid,春令预付 +%d 银,Spring purse +%d silver
+pressure_paid,%s -%d 银,%s -%d silver
