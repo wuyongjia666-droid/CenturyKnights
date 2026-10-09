@@ -45,7 +45,7 @@ func can_propose(suitor: CKCharacter, target: CKCharacter, realm: String = "ashl
 	return {"ok": true, "need": need, "have": have, "msg": "可表白"}
 
 ## accepted_rites == null keeps the old vow (smoke / full-chain). An explicit list gates 入牒礼 / 从母居 / 萤约 / 携霜契.
-func marry(suitor: CKCharacter, target: CKCharacter, bride_price: int = 40, accepted_rites = null) -> Dictionary:
+func marry(suitor: CKCharacter, target: CKCharacter, bride_price: int = 40, accepted_rites = null, paced: bool = false) -> Dictionary:
 	var check = can_propose(suitor, target)
 	if not check.get("ok", false):
 		return check
@@ -82,15 +82,22 @@ func marry(suitor: CKCharacter, target: CKCharacter, bride_price: int = 40, acce
 		CKCourt.apply_rites(suitor, target, accepted_rites)
 		if rite_cost > 0:
 			dip.append("婚仪 %d 银" % rite_cost)
-	# 妊娠：默认 3 个月结后分娩。快速家族回到 1 个月结。年轻满生育力不额外抽数。
+	# Seed 91's century sim calls marry() and must keep the old 2-tick countdown
+	# with no extra draw. Player weddings pass paced=true for the 3-month term.
 	var mother = target if target.gender == "f" else suitor
-	var conceived := CKFamilyState.begin_pregnancy(GameState, mother)
+	var conceived := true
+	var due := 2
+	if paced:
+		conceived = CKFamilyState.begin_pregnancy(GameState, mother)
+		due = CKFamilyState.term_months(GameState)
+	else:
+		mother.pregnant_months = 1
 	GameState.chapter0_flags["married"] = true
 	GameState.mark_dirty()
 	var dip_s := ("邦交 " + "、".join(dip) + "。") if not dip.is_empty() else ""
 	var joy := Locale.t("fertility_none", [mother.name])
 	if conceived:
-		joy = Locale.t("fertility_due", [mother.name, CKFamilyState.term_months(GameState)])
+		joy = Locale.t("fertility_due", [mother.name, due])
 	return {"ok": true, "msg": "婚宴已成，声望小增。%s%s" % [dip_s, joy]}
 
 ## 子嗣期望面板（X1）
