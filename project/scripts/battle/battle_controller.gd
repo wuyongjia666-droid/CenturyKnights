@@ -58,6 +58,7 @@ var _turn_flash: float = 0.0
 var _round_no: int = 0
 var _link_seg: Dictionary = {}
 var _link_guard: int = 0
+var _arena_snap: Dictionary = {}
 var _round_label: Label
 var _phase_chip: Label
 var _sel_pulse: float = 0.0
@@ -557,6 +558,8 @@ func _build_ground() -> void:
 func _player_skills(ui: int) -> Array:
 	if ui < 0 or ui >= units.size():
 		return []
+	if not BattleObjectives.skills_allowed(BattleMaps.get_map(map_id)):
+		return []
 	var c: CKCharacter = units[ui].char
 	var out: Array = []
 	for sid in c.skills:
@@ -1018,6 +1021,7 @@ func _deploy() -> void:
 	_log(BattleObjectives.text("diff_now") % BattleObjectives.text("diff_" + CKEnemyLoadout.mode_of(GameState)))
 	if weather != "clear":
 		_log(BattleObjectives.text("terrain_weather") % BattleObjectives.text("terrain_" + weather))
+	BattleStages.snap_arena(self)
 	_refresh_info()
 
 func _draw_map() -> void:
@@ -2827,6 +2831,8 @@ func _check_end() -> void:
 	var result := str(verdict.get("result", "continue"))
 	if result == "continue":
 		return
+	if result == "win" and BattleStages.advance(self):
+		return
 	set_meta("battle_verdict", verdict)
 	_finish(result == "win")
 
@@ -2889,6 +2895,8 @@ func _finish(win: bool) -> void:
 			_log(str(wr.get("msg", "")))
 	for u in units:
 		CKEnemyLoadout.unstamp(u.char)
+	if BattleObjectives.is_arena(BattleMaps.get_map(map_id)):
+		BattleStages.restore_arena(self)
 	GameState.save_game()
 	CKAutosave.after_battle()
 	var finished := {
