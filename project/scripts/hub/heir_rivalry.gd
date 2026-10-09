@@ -1,7 +1,7 @@
 extends Control
 ## 双嗣校场：两名有道路的子嗣对决旁注，可开战或调解
 
-const _Life := preload("res://scripts/characters/life_events.gd")
+const LifeEvents := preload("res://scripts/characters/life_events.gd")
 
 var _body: RichTextLabel
 var _actions: VBoxContainer
@@ -131,7 +131,7 @@ func _succession_card() -> Dictionary:
 	for who in [_a, _b]:
 		if who == null:
 			continue
-		var card: Dictionary = _Life.pending_band(who.id, "succession")
+		var card: Dictionary = LifeEvents.pending_band(who.id, "succession")
 		if not card.is_empty():
 			card["cid"] = who.id
 			return card
@@ -159,7 +159,7 @@ func _queue_life(cid: String, event_id: String, option_id: String, label: String
 
 
 func _resolve_life(cid: String, event_id: String, option_id: String) -> void:
-	_Life.resolve(cid, event_id, option_id)
+	LifeEvents.resolve(cid, event_id, option_id)
 	_life = {}
 	_msg.text = Locale.t("life_resolved")
 	_step = 1
