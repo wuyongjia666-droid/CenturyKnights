@@ -51,3 +51,10 @@ hold_short,驻军不够调,Not enough garrison
 hold_send,派一人去据点,Send one to the seat
 hold_recall,召一人回主堡,Recall one home
 hold_garrison,主堡 %d · 据点 %d,Home %d seat %d
+injury.grave_months,重伤休养，还要 %d 个月,Grave rest for %d more months
+injury.wound_label,%s · %d月,%s · %d mo
+injury.healed,%s 的伤好了,%s recovered
+injury.eased,%s 的永久伤缓解了（%s）,%s lasting wound eased (%s)
+injury.death_last_words,%s 阵亡。遗言：%s,%s fell. Last words: %s
+morale.unpaid_months,欠饷 %d 个月,Unpaid for %d months
+morale.deserted,%s 因连续欠饷离队,%s left after months unpaid
