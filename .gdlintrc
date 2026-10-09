@@ -1,0 +1,14 @@
+# Relaxed for this repo: line length 180, and names may use a leading
+# underscore or a capital (Godot locals such as _ready helpers and L1).
+# class-definitions-order and unused-argument are off so a normal callback
+# does not fail the gate. Legacy lines inside a touched file are ignored by
+# tools/ci/gdlint_changed.py; this file still applies to added and edited lines.
+disable:
+  - class-definitions-order
+  - unused-argument
+max-line-length: 180
+max-file-lines: 5000
+max-returns: 12
+max-public-methods: 40
+function-arguments-number: 12
+function-variable-name: '_?[A-Za-z][A-Za-z0-9]*(_[A-Za-z0-9]+)*'

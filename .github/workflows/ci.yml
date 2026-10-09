@@ -37,6 +37,9 @@ jobs:
       - name: Install Godot
         run: bash scripts/install_godot.sh
 
+      - name: Install gdtoolkit
+        run: python3 -m pip install --user --quiet 'gdtoolkit==4.*'
+
       - name: Import project
         run: |
           export PATH="${HOME}/.local/bin:${PATH}"

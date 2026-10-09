@@ -24,6 +24,10 @@ echo "==> i18n_ratchet"
 python3 "$ROOT/tools/ci/i18n_ratchet.py" 2>&1 | tee /tmp/ck_i18n_ratchet.log
 grep -q "I18N RATCHET PASS" /tmp/ck_i18n_ratchet.log || { echo "i18n_ratchet FAILED"; exit 1; }
 
+echo "==> gdlint"
+python3 "$ROOT/tools/ci/gdlint_changed.py" 2>&1 | tee /tmp/ck_gdlint.log
+grep -q "GDLINT PASS" /tmp/ck_gdlint.log || { echo "gdlint FAILED"; exit 1; }
+
 echo "==> export_size"
 python3 "$ROOT/tools/ci/export_size_report.py" 2>&1 | tee /tmp/ck_export_size.log
 grep -q "EXPORT SIZE PASS" /tmp/ck_export_size.log || { echo "export_size FAILED"; exit 1; }
