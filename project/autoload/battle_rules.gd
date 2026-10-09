@@ -342,13 +342,13 @@ func move_costs(map_terrain: Array, start: Vector2i, move_pts: int, blocked: Arr
 func engagement_note(locked: bool, engaged: bool, leave_free: bool, ignore_zoc: bool) -> String:
 	var eng := ""
 	if locked:
-		eng = _rich(UIKit.DANGER, "〔交战锁定·脱离+%d移·反击优先〕" % LEAVE_COST_LOCK)
+		eng = _rich(Frost.swatch("enemy"), "〔交战锁定·脱离+%d移·反击优先〕" % LEAVE_COST_LOCK)
 	elif engaged:
-		eng = _rich(UIKit.DANGER, "〔交战中·脱离+%d移〕" % LEAVE_COST_ENGAGED)
+		eng = _rich(Frost.swatch("enemy"), "〔交战中·脱离+%d移〕" % LEAVE_COST_ENGAGED)
 	if leave_free:
-		eng += _rich(UIKit.ACCENT, "〔抽身：脱离不耗〕")
+		eng += _rich(Frost.swatch("ally"), "〔抽身：脱离不耗〕")
 	elif ignore_zoc:
-		eng += _rich(UIKit.ACCENT, "〔破控：无视地带〕")
+		eng += _rich(Frost.swatch("ally"), "〔破控：无视地带〕")
 	return eng
 
 
