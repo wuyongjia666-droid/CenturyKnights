@@ -57,6 +57,13 @@ func _ready() -> void:
 				Sfx.confirm()
 		)
 		pv.add_child(b)
+	var path_box := VBoxContainer.new()
+	path_box.name = "ClassPaths"
+	path_box.position = Vector2(820, 140)
+	path_box.add_theme_constant_override("separation", 4)
+	add_child(path_box)
+	for row in BattleRules.class_paths():
+		path_box.add_child(UIKit.make_dim_label(BattleObjectives.text("class_path") % [row[0], row[1], row[2]]))
 	_msg = UIKit.make_label(""); _msg.position = Vector2(40, 480); add_child(_msg)
 	var skl = UIKit.make_dim_label("转职成功后自动学会对应战技（破旗斩/穿林箭/灰焰祷言等），战场「战技」按钮释放，每场限次。")
 	skl.position = Vector2(40, 530); skl.custom_minimum_size = Vector2(1100, 40); skl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; add_child(skl)
