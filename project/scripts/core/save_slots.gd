@@ -25,8 +25,9 @@ static func continue_line(slot: String) -> String:
 	var meta := CKSaveService.read_meta(slot)
 	if meta.is_empty():
 		return Locale.t("menu_slot_empty")
+	var leader := Locale.latin(str(meta.get("leader", "")), "Leader")
 	return Locale.t("menu_continue_summary", [
-		str(meta.get("leader", "")),
+		leader,
 		int(meta.get("year", 1)),
 		int(meta.get("month", 1)),
 		int(meta.get("chapter", 0)),
