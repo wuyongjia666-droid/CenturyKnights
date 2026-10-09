@@ -182,8 +182,14 @@ func _show(c: CKCharacter) -> void:
 			_node_btns[k].queue_free()
 	_node_btns.clear()
 	for child in _graph.get_children():
-		if str(child.name).begins_with("TreeTitle_") or str(child.name).begins_with("Node_"):
+		if str(child.name).begins_with("TreeTitle_") or str(child.name).begins_with("Node_") or str(child.name) == "ClassPath":
 			child.queue_free()
+	var path_l := Label.new()
+	path_l.name = "ClassPath"
+	path_l.text = BattleRules.class_path_text(c.job_id)
+	path_l.position = Vector2(24, 8)
+	path_l.add_theme_color_override("font_color", UIKit.ACCENT)
+	_graph.add_child(path_l)
 	var trees: Array = GameState.data_skills.get("trees", [])
 	var by_tree: Dictionary = {}
 	for sk in GameState.data_skills.get("skills", []):

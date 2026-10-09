@@ -657,7 +657,7 @@ func _cast_support_skill(ui: int, sid: String) -> void:
 			continue
 		if _manhattan(u.pos, o.pos) <= 1:
 			var amt = rng.randi_range(int(sk.get("heal_min", 8)), int(sk.get("heal_max", 12)))
-			o.char.hp = mini(o.char.max_hp, o.char.hp + amt)
+			amt = int(BattleRules.apply_class_heal(u.char, o.char, amt).get("healed", amt))
 			healed += 1
 			_spawn_dmg(o.pos, "+%d" % amt, Color(0.4, 0.9, 0.5))
 			_spawn_slash(o.pos, "heal")
@@ -1194,7 +1194,7 @@ func _draw_overlay() -> void:
 				for x in MAP_W:
 					var ap = Vector2i(x, y)
 					var d = _manhattan(u.pos, ap)
-					if d < 1 or d > max_r:
+					if not BattleRules.in_weapon_range(u.char, d, stand_tid, _height_at(u.pos)):
 						continue
 					var ui = _unit_at(ap)
 					if ui < 0:
@@ -1588,7 +1588,7 @@ func _can_attack_from(su: Dictionary, cell: Vector2i) -> bool:
 	var tid := "plain"
 	if _in_bounds(su.pos):
 		tid = str(terrain[su.pos.y][su.pos.x])
-	return d <= BattleRules.attack_reach(su.char, tid, _height_at(su.pos))
+	return BattleRules.in_weapon_range(su.char, d, tid, _height_at(su.pos))
 
 func _click_cell(cell: Vector2i) -> void:
 	var ui = _unit_at(cell)
@@ -1747,8 +1747,13 @@ func _do_attack(ai: int, di: int) -> void:
 		_resolve_strike(di, ai, false, true)
 		if bonus > 0:
 			def.char.temp_hit_bonus = maxi(0, def.char.temp_hit_bonus - bonus)
-	atk.done = true
-	selected = -1
+	var canto: bool = BattleRules.can_canto(atk.char) and atk.char.hp > 0 and not bool(atk.get("canto_used", false))
+	atk.done = not canto
+	if canto:
+		atk["canto_used"] = true
+		selected = ai
+	else:
+		selected = -1
 	move_cells.clear()
 	attack_mode = false
 	skill_mode = false
@@ -1834,6 +1839,9 @@ func _combat_extras(ai: int, di: int) -> Dictionary:
 	extras["height_hit"] = TerrainFx.height_delta_hit(_height_at(atk.pos), _height_at(def.pos))
 	extras["weather_hit"] = TerrainFx.weather_hit(weather, _atk_type(atk.char))
 	extras["weather"] = weather
+	var guard := BattleRules.adjacent_class_def(units, di)
+	if guard > 0:
+		extras["flat_def"] = int(extras.get("flat_def", 0)) + guard
 	return extras
 
 
@@ -2537,7 +2545,7 @@ func _cast_support_skill_for_team(ui: int, sid: String, team: String) -> void:
 			continue
 		if _manhattan(u.pos, o.pos) <= 1:
 			var amt = rng.randi_range(int(sk.get("heal_min", 8)), int(sk.get("heal_max", 12)))
-			o.char.hp = mini(o.char.max_hp, o.char.hp + amt)
+			amt = int(BattleRules.apply_class_heal(u.char, o.char, amt).get("healed", amt))
 			healed += 1
 			_spawn_dmg(o.pos, "+%d" % amt, Color(0.4, 0.9, 0.5))
 			_spawn_slash(o.pos, "heal")
@@ -2672,8 +2680,7 @@ func _enemy_ai() -> void:
 				if not _same_side("player", str(t.team)) or t.char.hp <= 0:
 					continue
 				var d = _manhattan(pos, t.pos)
-				var reach := BattleRules.attack_reach(u.char, str(stand_tid), _height_at(pos))
-				var can_hit = d >= 1 and d <= reach
+				var can_hit = BattleRules.in_weapon_range(u.char, d, str(stand_tid), _height_at(pos))
 				if not can_hit:
 					var approach = -float(d) * 2.0
 					if not melee and d == 1:
@@ -2750,8 +2757,7 @@ func _enemy_ai() -> void:
 			map_draw.queue_redraw()
 		if best_target >= 0:
 			var d2 = _manhattan(u.pos, units[best_target].pos)
-			var reach2 := BattleRules.attack_reach(u.char, str(terrain[u.pos.y][u.pos.x]), _height_at(u.pos))
-			var ok = d2 >= 1 and d2 <= reach2
+			var ok = BattleRules.in_weapon_range(u.char, d2, str(terrain[u.pos.y][u.pos.x]), _height_at(u.pos))
 			if ok:
 				var tgt = units[best_target]
 				# 敌方进攻战技
@@ -2826,6 +2832,7 @@ func _finish(win: bool) -> void:
 		for u in units:
 			if u.team == "player" and u.char.hp > 0:
 				u.char.exp += 15
+				BattleRules.note_class_mastery(u.char)
 				_bark(u.char, "shout")
 			elif u.team == "player":
 				u.char.hp = maxi(1, int(u.char.max_hp * 0.3))
