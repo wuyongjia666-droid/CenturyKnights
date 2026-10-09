@@ -595,6 +595,816 @@
       "def_buff": 2,
       "tree": "blood",
       "blood_sig": "southzephyr"
+    },
+    {
+      "id": "outrider_oath",
+      "name": "outrider-1",
+      "jobs": [
+        "outrider"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 2,
+      "tier": 1,
+      "desc": "outrider drill 1",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "outrider_drill_2",
+      "name": "outrider-2",
+      "jobs": [
+        "outrider"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 3,
+      "tier": 1,
+      "desc": "outrider drill 2",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "outrider_drill_3",
+      "name": "outrider-3",
+      "jobs": [
+        "outrider"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 1,
+      "tier": 1,
+      "desc": "outrider drill 3",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "outrider_drill_4",
+      "name": "outrider-4",
+      "jobs": [
+        "outrider"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 2,
+      "tier": 3,
+      "desc": "outrider drill 4",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "outrider_drill_5",
+      "name": "outrider-5",
+      "jobs": [
+        "outrider"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 3,
+      "tier": 3,
+      "desc": "outrider drill 5",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "outrider_drill_6",
+      "name": "outrider-6",
+      "jobs": [
+        "outrider"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 1,
+      "tier": 3,
+      "desc": "outrider drill 6",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "veteran_oath",
+      "name": "veteran-1",
+      "jobs": [
+        "veteran"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 2,
+      "tier": 1,
+      "desc": "veteran drill 1",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "veteran_drill_2",
+      "name": "veteran-2",
+      "jobs": [
+        "veteran"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 3,
+      "tier": 1,
+      "desc": "veteran drill 2",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "veteran_drill_3",
+      "name": "veteran-3",
+      "jobs": [
+        "veteran"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 1,
+      "tier": 1,
+      "desc": "veteran drill 3",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "veteran_drill_4",
+      "name": "veteran-4",
+      "jobs": [
+        "veteran"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 2,
+      "tier": 3,
+      "desc": "veteran drill 4",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "veteran_drill_5",
+      "name": "veteran-5",
+      "jobs": [
+        "veteran"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 3,
+      "tier": 3,
+      "desc": "veteran drill 5",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "veteran_drill_6",
+      "name": "veteran-6",
+      "jobs": [
+        "veteran"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 1,
+      "tier": 3,
+      "desc": "veteran drill 6",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "bulwark_oath",
+      "name": "bulwark-1",
+      "jobs": [
+        "bulwark"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 2,
+      "tier": 1,
+      "desc": "bulwark drill 1",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "bulwark_drill_2",
+      "name": "bulwark-2",
+      "jobs": [
+        "bulwark"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 3,
+      "tier": 1,
+      "desc": "bulwark drill 2",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "bulwark_drill_3",
+      "name": "bulwark-3",
+      "jobs": [
+        "bulwark"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 1,
+      "tier": 1,
+      "desc": "bulwark drill 3",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "bulwark_drill_4",
+      "name": "bulwark-4",
+      "jobs": [
+        "bulwark"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 2,
+      "tier": 3,
+      "desc": "bulwark drill 4",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "bulwark_drill_5",
+      "name": "bulwark-5",
+      "jobs": [
+        "bulwark"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 3,
+      "tier": 3,
+      "desc": "bulwark drill 5",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "bulwark_drill_6",
+      "name": "bulwark-6",
+      "jobs": [
+        "bulwark"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 1,
+      "tier": 3,
+      "desc": "bulwark drill 6",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "marksman_oath",
+      "name": "marksman-1",
+      "jobs": [
+        "marksman"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 2,
+      "tier": 1,
+      "desc": "marksman drill 1",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "range"
+    },
+    {
+      "id": "marksman_drill_2",
+      "name": "marksman-2",
+      "jobs": [
+        "marksman"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 3,
+      "tier": 1,
+      "desc": "marksman drill 2",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "range"
+    },
+    {
+      "id": "marksman_drill_3",
+      "name": "marksman-3",
+      "jobs": [
+        "marksman"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 1,
+      "tier": 1,
+      "desc": "marksman drill 3",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "range"
+    },
+    {
+      "id": "marksman_drill_4",
+      "name": "marksman-4",
+      "jobs": [
+        "marksman"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 2,
+      "tier": 3,
+      "desc": "marksman drill 4",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "range"
+    },
+    {
+      "id": "marksman_drill_5",
+      "name": "marksman-5",
+      "jobs": [
+        "marksman"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 3,
+      "tier": 3,
+      "desc": "marksman drill 5",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "range"
+    },
+    {
+      "id": "marksman_drill_6",
+      "name": "marksman-6",
+      "jobs": [
+        "marksman"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 1,
+      "tier": 3,
+      "desc": "marksman drill 6",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "range"
+    },
+    {
+      "id": "medic_oath",
+      "name": "medic-1",
+      "jobs": [
+        "medic"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 2,
+      "tier": 1,
+      "desc": "medic drill 1",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "faith"
+    },
+    {
+      "id": "medic_drill_2",
+      "name": "medic-2",
+      "jobs": [
+        "medic"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 3,
+      "tier": 1,
+      "desc": "medic drill 2",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "faith"
+    },
+    {
+      "id": "medic_drill_3",
+      "name": "medic-3",
+      "jobs": [
+        "medic"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 1,
+      "tier": 1,
+      "desc": "medic drill 3",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "faith"
+    },
+    {
+      "id": "medic_drill_4",
+      "name": "medic-4",
+      "jobs": [
+        "medic"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 2,
+      "tier": 3,
+      "desc": "medic drill 4",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "faith"
+    },
+    {
+      "id": "medic_drill_5",
+      "name": "medic-5",
+      "jobs": [
+        "medic"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 3,
+      "tier": 3,
+      "desc": "medic drill 5",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "faith"
+    },
+    {
+      "id": "medic_drill_6",
+      "name": "medic-6",
+      "jobs": [
+        "medic"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 1,
+      "tier": 3,
+      "desc": "medic drill 6",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "faith"
+    },
+    {
+      "id": "warlock_oath",
+      "name": "warlock-1",
+      "jobs": [
+        "warlock"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 2,
+      "tier": 1,
+      "desc": "warlock drill 1",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "faith"
+    },
+    {
+      "id": "warlock_drill_2",
+      "name": "warlock-2",
+      "jobs": [
+        "warlock"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 3,
+      "tier": 1,
+      "desc": "warlock drill 2",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "faith"
+    },
+    {
+      "id": "warlock_drill_3",
+      "name": "warlock-3",
+      "jobs": [
+        "warlock"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 1,
+      "tier": 1,
+      "desc": "warlock drill 3",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "faith"
+    },
+    {
+      "id": "warlock_drill_4",
+      "name": "warlock-4",
+      "jobs": [
+        "warlock"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 2,
+      "tier": 3,
+      "desc": "warlock drill 4",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "faith"
+    },
+    {
+      "id": "warlock_drill_5",
+      "name": "warlock-5",
+      "jobs": [
+        "warlock"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 3,
+      "tier": 3,
+      "desc": "warlock drill 5",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "faith"
+    },
+    {
+      "id": "warlock_drill_6",
+      "name": "warlock-6",
+      "jobs": [
+        "warlock"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 1,
+      "tier": 3,
+      "desc": "warlock drill 6",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "faith"
+    },
+    {
+      "id": "pathfinder_oath",
+      "name": "pathfinder-1",
+      "jobs": [
+        "pathfinder"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 2,
+      "tier": 1,
+      "desc": "pathfinder drill 1",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "pathfinder_drill_2",
+      "name": "pathfinder-2",
+      "jobs": [
+        "pathfinder"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 3,
+      "tier": 1,
+      "desc": "pathfinder drill 2",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "pathfinder_drill_3",
+      "name": "pathfinder-3",
+      "jobs": [
+        "pathfinder"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 1,
+      "tier": 1,
+      "desc": "pathfinder drill 3",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "pathfinder_drill_4",
+      "name": "pathfinder-4",
+      "jobs": [
+        "pathfinder"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 2,
+      "tier": 3,
+      "desc": "pathfinder drill 4",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "pathfinder_drill_5",
+      "name": "pathfinder-5",
+      "jobs": [
+        "pathfinder"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 3,
+      "tier": 3,
+      "desc": "pathfinder drill 5",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "pathfinder_drill_6",
+      "name": "pathfinder-6",
+      "jobs": [
+        "pathfinder"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 1,
+      "tier": 3,
+      "desc": "pathfinder drill 6",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "captain_oath",
+      "name": "captain-1",
+      "jobs": [
+        "captain"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 2,
+      "tier": 1,
+      "desc": "captain drill 1",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "captain_drill_2",
+      "name": "captain-2",
+      "jobs": [
+        "captain"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 3,
+      "tier": 1,
+      "desc": "captain drill 2",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "captain_drill_3",
+      "name": "captain-3",
+      "jobs": [
+        "captain"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 1,
+      "tier": 1,
+      "desc": "captain drill 3",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "captain_drill_4",
+      "name": "captain-4",
+      "jobs": [
+        "captain"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 2,
+      "tier": 3,
+      "desc": "captain drill 4",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "captain_drill_5",
+      "name": "captain-5",
+      "jobs": [
+        "captain"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 3,
+      "tier": 3,
+      "desc": "captain drill 5",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "captain_drill_6",
+      "name": "captain-6",
+      "jobs": [
+        "captain"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 1,
+      "tier": 3,
+      "desc": "captain drill 6",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "melee"
+    },
+    {
+      "id": "chorister_oath",
+      "name": "chorister-1",
+      "jobs": [
+        "chorister"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 2,
+      "tier": 1,
+      "desc": "chorister drill 1",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "faith"
+    },
+    {
+      "id": "chorister_drill_2",
+      "name": "chorister-2",
+      "jobs": [
+        "chorister"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 3,
+      "tier": 1,
+      "desc": "chorister drill 2",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "faith"
+    },
+    {
+      "id": "chorister_drill_3",
+      "name": "chorister-3",
+      "jobs": [
+        "chorister"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 1,
+      "tier": 1,
+      "desc": "chorister drill 3",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "faith"
+    },
+    {
+      "id": "chorister_drill_4",
+      "name": "chorister-4",
+      "jobs": [
+        "chorister"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 2,
+      "tier": 3,
+      "desc": "chorister drill 4",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "faith"
+    },
+    {
+      "id": "chorister_drill_5",
+      "name": "chorister-5",
+      "jobs": [
+        "chorister"
+      ],
+      "type": "offense",
+      "uses": 2,
+      "cooldown": 3,
+      "tier": 3,
+      "desc": "chorister drill 5",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "faith"
+    },
+    {
+      "id": "chorister_drill_6",
+      "name": "chorister-6",
+      "jobs": [
+        "chorister"
+      ],
+      "type": "support",
+      "uses": 2,
+      "cooldown": 1,
+      "tier": 3,
+      "desc": "chorister drill 6",
+      "dmg_mul": 1.1,
+      "hit_mod": 0,
+      "tree": "faith"
     }
   ],
   "trees": [
