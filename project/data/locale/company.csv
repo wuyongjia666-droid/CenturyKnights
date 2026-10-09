@@ -62,3 +62,10 @@ heirloom_vaulted,传家宝入了宝库,Heirloom stored
 heirloom_not_vaulted,宝库里没有这件,Not in the treasury
 heirloom_withdrawn,传家宝取回了,Heirloom withdrawn
 heirloom_store,收入宝库,Store heirloom
+重伤休养，还要 %d 个月,重伤休养，还要 %d 个月,
+%s · %d月,%s · %d月,
+%s 的伤好了,%s 的伤好了,
+%s 的永久伤缓解了（%s）,%s 的永久伤缓解了（%s）,
+%s 阵亡。遗言：%s,%s 阵亡。遗言：%s,
+欠饷 %d 个月,欠饷 %d 个月,
+%s 因连续欠饷离队,%s 因连续欠饷离队,
