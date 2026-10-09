@@ -31,6 +31,13 @@ func _err(msg: String) -> void:
 	errors.append(msg)
 	print("ERR: ", msg)
 
+func _continue_wired(button: BaseButton) -> bool:
+	for conn in button.pressed.get_connections():
+		var cb: Callable = conn.get("callable", Callable())
+		if cb.is_valid() and cb.get_method() == "_continue_mainline":
+			return true
+	return false
+
 func _fail(errs: Array) -> void:
 	print("=== FULL_CHAIN E2E FAIL ===")
 	for e in errs:
@@ -603,7 +610,7 @@ func _step_aging() -> void:
 
 
 func _step_beyond_ch0() -> void:
-	_step("beyond Ch0: player still up, old volume sealed, deals + hub picker")
+	_step("beyond Ch0: player still up, old volume sealed, deals + chapter player")
 	GameState.set_flag("chapter0_done")
 	if ResourceLoader.exists("res://scenes/story/chapter1.tscn"):
 		_err("ch1: template scene should stay archived")
@@ -647,7 +654,7 @@ func _step_beyond_ch0() -> void:
 	else:
 		print("OK deal mid/fulfill events=", mid_hits, " sample=", evs.slice(0, mini(3, evs.size())), " silver ", before_silver, "->", GameState.silver)
 
-	# Hub chapter picker present
+	# UX-06: the hub CTA calls StoryCatalog.request_chapter. There is no chapter OptionButton.
 	var hub_packed: PackedScene = load("res://scenes/hub/castle_hub.tscn")
 	if hub_packed == null:
 		_err("hub2: load fail")
@@ -658,23 +665,33 @@ func _step_beyond_ch0() -> void:
 	hub.size = Vector2(1280, 720)
 	await get_tree().process_frame
 	await get_tree().process_frame
-	var has_pick := false
-	var has_continue := false
-	## v8.6 Stitch 02 nests the picker/CTA inside panels — search the whole hub tree
-	for c in hub.find_children("*", "OptionButton", true, false):
-		has_pick = true
-		if (c as OptionButton).item_count < 1:
-			_err("hub2: chapter picker empty")
-		else:
-			print("OK hub chapter picker items=", (c as OptionButton).item_count)
-		break
-	for b in hub.find_children("*", "BaseButton", true, false):
-		if str((b as BaseButton).get("text")).find("继续主线") >= 0:
-			has_continue = true
-			break
-	if not has_pick:
-		_err("hub2: OptionButton chapter picker missing")
-	if not has_continue:
+	var cont := hub.find_child("ContinueMainline", true, false)
+	var now := hub.find_child("MainlineNow", true, false)
+	if cont == null or not (cont is BaseButton):
+		_err("hub2: ContinueMainline missing")
+	elif str((cont as BaseButton).text).find("继续主线") < 0:
 		_err("hub2: 继续主线 button missing")
+	elif not _continue_wired(cont as BaseButton):
+		_err("hub2: ContinueMainline is not wired to _continue_mainline")
+	else:
+		print("OK hub continue mainline=", (cont as BaseButton).text)
+	if now == null or str(now.get("text")) == "":
+		_err("hub2: MainlineNow caption missing")
+	else:
+		print("OK hub mainline caption=", now.get("text"))
+	var cursor: Dictionary = preload("res://scripts/ui/widgets/todo_center.gd").mainline_target()
+	var chapter_id := str(cursor.get("id", ""))
+	if chapter_id == "":
+		_err("hub2: mainline cursor empty")
+	else:
+		var scene := StoryCatalog.request_chapter(chapter_id)
+		var expect := StoryCatalog.chapter0_scene() if chapter_id == "ch0" else StoryCatalog.player_scene()
+		var meta := str(GameState.get_meta("story_chapter_id", ""))
+		if scene != expect:
+			_err("hub2: request_chapter(%s) -> %s want %s" % [chapter_id, scene, expect])
+		elif meta != chapter_id:
+			_err("hub2: story_chapter_id meta %s" % meta)
+		else:
+			print("OK hub request_chapter id=", chapter_id, " scene=", scene)
 	hub.queue_free()
 	await get_tree().process_frame
