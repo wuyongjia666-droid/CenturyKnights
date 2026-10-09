@@ -310,10 +310,28 @@ func _render_right() -> void:
 	UIKit.panel_at(_right, Rect2(896, 484, 360, 196), 10)
 	UIKit.section_head(_right, Vector2(912, 498), "传家器预告", "CATALYST TELEMETRY", 328, "")
 	var heir := UIKit.body_label(Locale.t("heirloom_preview"), UIKit.TEXT_DIM, 12)
+	var mod := UIKit.ghost_button(Locale.t("forge_modify"), 160, 36)
+	mod.position = Vector2(912, 600)
+	mod.pressed.connect(func():
+		if _sel == null:
+			return
+		var r: Dictionary = CKHeirloom.try_modify(GameState, _sel.id)
+		_msg.text = str(r.get("msg", ""))
+		_render_all())
+	_right.add_child(mod)
+	var vault := UIKit.ghost_button(Locale.t("heirloom_store"), 140, 36)
+	vault.position = Vector2(1088, 600)
+	vault.pressed.connect(func():
+		if _sel == null:
+			return
+		var r: Dictionary = CKHeirloom.store(GameState, _sel.id)
+		_msg.text = str(r.get("msg", ""))
+		_render_all())
+	_right.add_child(vault)
 	heir.position = Vector2(912, 526)
-	heir.size = Vector2(328, 100)
+	heir.size = Vector2(328, 68)
 	heir.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_right.add_child(heir)
 	var foot := UIKit.mono("工坊等级 LV %d · 上限随议事厅" % GameState.building_level("forge"), 9, UIKit.TEXT_FAINT, false)
-	foot.position = Vector2(912, 650)
+	foot.position = Vector2(912, 644)
 	_right.add_child(foot)

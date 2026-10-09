@@ -51,6 +51,17 @@ hold_short,驻军不够调,Not enough garrison
 hold_send,派一人去据点,Send one to the seat
 hold_recall,召一人回主堡,Recall one home
 hold_garrison,主堡 %d · 据点 %d,Home %d seat %d
+forge_modify,改造装备,Modify gear
+forge_plus_max,已经加到三成,Already at plus 3
+forge_plus_short,铁或银不够,Short on iron or silver
+forge_plus_fail,改造 +%d 没成，材料已经入炉,Plus %d failed and the materials are spent
+forge_plus_ok,改造成了 +%d,Forged to plus %d
+heirloom_none,手里没有传家宝,No heirloom
+heirloom_vault_full,宝库槽位已满,Treasury is full
+heirloom_vaulted,传家宝入了宝库,Heirloom stored
+heirloom_not_vaulted,宝库里没有这件,Not in the treasury
+heirloom_withdrawn,传家宝取回了,Heirloom withdrawn
+heirloom_store,收入宝库,Store heirloom
 injury.grave_months,重伤休养，还要 %d 个月,Grave rest for %d more months
 injury.wound_label,%s · %d月,%s · %d mo
 injury.healed,%s 的伤好了,%s recovered
