@@ -98,6 +98,8 @@ fertility_term,孕期三月,
 fertility_fast,快速家族,
 fertility_none,%s 此龄未有孕。,%s did not conceive at this age.
 fertility_due,%s 有喜，约 %d 个月后分娩。,%s is with child. Birth in about %d months.
+life_succession_btn,嗣争旁注,Succession note
+life_resolved,旁注已写下。,The note is written.
 ancestor_title,先祖碑,Ancestor stele
 ancestor_honor,家族荣誉 +%d,Family honor +%d
 ancestor_cause_battle,阵亡,Killed in battle
