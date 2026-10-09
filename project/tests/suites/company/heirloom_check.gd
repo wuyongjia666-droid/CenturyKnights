@@ -10,6 +10,14 @@ func _ready() -> void:
 		get_tree().quit(0)
 
 func _run() -> String:
+	var err := _tables()
+	if err == "":
+		err = _rolls()
+	if err == "":
+		err = _vault()
+	return err
+
+func _tables() -> String:
 	if CKHeirloom.succeeds(1, 0.79) != true or CKHeirloom.succeeds(1, 0.80) != false:
 		return "plus1 table"
 	if CKHeirloom.succeeds(2, 0.54) != true or CKHeirloom.succeeds(2, 0.55) != false:
@@ -18,6 +26,9 @@ func _run() -> String:
 		return "plus3 table"
 	if CKHeirloom.succeeds(4, 0.0):
 		return "plus4 should be closed"
+	return ""
+
+func _rolls() -> String:
 	GameState.new_game("烬行", "灰旗", GameState.crest_color)
 	var bearer: CKCharacter = GameState.get_leader()
 	if bearer == null:
@@ -51,6 +62,12 @@ func _run() -> String:
 		return "third gen atk"
 	if World.gear_bonus(bearer, "atk") < 2:
 		return "heir gear"
+	return ""
+
+func _vault() -> String:
+	var bearer: CKCharacter = GameState.get_leader()
+	if bearer == null:
+		return "no leader"
 	if bool(CKHeirloom.store(GameState, bearer.id).get("ok", false)):
 		return "stored with no treasury"
 	GameState.buildings["treasury"] = 1
@@ -62,5 +79,5 @@ func _run() -> String:
 		return "withdraw"
 	if CKHeirloom.plus_bonus(bearer, "atk") < 2:
 		return "atk after withdraw"
-	GameState.characters.erase(heir.id)
+	GameState.characters.erase("heir_probe")
 	return ""
