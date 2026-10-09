@@ -1,6 +1,7 @@
 extends Node
 ## BTL-11: a two-stage map keeps HP and status. An arena fight writes no injury.
 
+const BATTLE_SCENE := preload("res://scenes/battle/battle.tscn")
 
 var _battle
 
@@ -25,7 +26,7 @@ func _stages() -> String:
 		return "no leader"
 	GameState.deploy_ids = [leader.id]
 	GameState.set_meta("battle_map", "stage_a")
-	_battle = load("res://scenes/battle/battle.tscn").instantiate()
+	_battle = BATTLE_SCENE.instantiate()
 	add_child(_battle)
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -61,7 +62,7 @@ func _arena() -> String:
 	var leader: CKCharacter = GameState.get_leader()
 	GameState.deploy_ids = [leader.id]
 	GameState.set_meta("battle_map", "arena_yard")
-	_battle = load("res://scenes/battle/battle.tscn").instantiate()
+	_battle = BATTLE_SCENE.instantiate()
 	add_child(_battle)
 	await get_tree().process_frame
 	await get_tree().process_frame
