@@ -88,9 +88,9 @@ func marry(suitor: CKCharacter, target: CKCharacter, bride_price: int = 40, acce
 	GameState.chapter0_flags["married"] = true
 	GameState.mark_dirty()
 	var dip_s := ("邦交 " + "、".join(dip) + "。") if not dip.is_empty() else ""
-	var joy := "%s 此龄未有孕。" % mother.name
+	var joy := Locale.t("fertility_none", [mother.name])
 	if conceived:
-		joy = "%s 有喜，约 %d 个月后分娩。" % [mother.name, CKFamilyState.term_months(GameState)]
+		joy = Locale.t("fertility_due", [mother.name, CKFamilyState.term_months(GameState)])
 	return {"ok": true, "msg": "婚宴已成，声望小增。%s%s" % [dip_s, joy]}
 
 ## 子嗣期望面板（X1）

@@ -96,6 +96,8 @@ amb_three_friends_blurb,三个邦的声望至少到友善,Three realms are at le
 amb_three_friends_title,三邦,Three realms
 fertility_term,孕期三月,
 fertility_fast,快速家族,
+fertility_none,%s 此龄未有孕。,%s did not conceive at this age.
+fertility_due,%s 有喜，约 %d 个月后分娩。,%s is with child. Birth in about %d months.
 fusion_read,灯霜对读,
 congenital_sterile,闭灶,
 congenital_frail,髓薄,

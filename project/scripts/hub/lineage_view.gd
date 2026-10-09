@@ -96,7 +96,7 @@ func _build() -> void:
 	UIFX.page_enter(self)
 
 func _pace_label() -> String:
-	return "孕期 · 快速" if CKFamilyState.fast_family(GameState) else "孕期 · 三月"
+	return Locale.t("fertility_fast") if CKFamilyState.fast_family(GameState) else Locale.t("fertility_term")
 
 
 func apply_mobile_layout() -> void:
