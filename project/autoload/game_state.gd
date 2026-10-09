@@ -98,6 +98,7 @@ func _ready() -> void:
 	_load_data()
 	BattleRules.preview_enabled = settings.get("rules_preview", true)
 	CKGenomePortrait.set_bloodline_clause_hook(Callable(CKBloodline, "portrait_clause"))
+	CKPlayStats.install(get_tree())
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
