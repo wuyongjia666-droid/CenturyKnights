@@ -2922,69 +2922,19 @@ func _arm_lamps() -> void:
 
 
 func _seal_turn() -> void:
-	_arm_lamps()
-	_move_undo = {}
-	_lamp_stack.clear()
-	if _lamp_refill:
-		_lamp_charges = _lamp_max
-	_turn_snap = BattleSnapshot.capture(self)
-	RewindBar.refresh(self)
+	BattleSnapshot.seal_turn(self)
 
 
 func _push_lamp() -> void:
-	if battle_over or turn_team != "player":
-		return
-	_lamp_stack.append({
-		"snap": BattleSnapshot.capture(self),
-		"undo": _move_undo.duplicate(true),
-	})
-	_move_undo = {}
-	RewindBar.refresh(self)
+	BattleSnapshot.push_lamp(self)
 
 
 func _undo_move() -> void:
-	if _move_undo.is_empty() or battle_over:
-		return
-	BattleSnapshot.apply(self, _move_undo)
-	_move_undo = {}
-	_after_restore()
+	BattleSnapshot.undo_move(self)
 
 
 func _rewind_lamp() -> void:
-	if _lamp_charges <= 0 or battle_over or turn_team != "player":
-		return
-	var snap: Dictionary = {}
-	var undo: Dictionary = {}
-	if not _lamp_stack.is_empty():
-		var top: Dictionary = _lamp_stack.pop_back()
-		snap = top.get("snap", {})
-		undo = top.get("undo", {})
-	else:
-		snap = _turn_snap
-		if snap.is_empty():
-			return
-		if BattleSnapshot.hash_of(snap) == BattleSnapshot.hash_of(BattleSnapshot.capture(self)):
-			return
-	_lamp_charges -= 1
-	BattleSnapshot.apply(self, snap)
-	_move_undo = undo
-	_after_restore()
-
-
-func _after_restore() -> void:
-	if selected >= 0 and selected < units.size() and not units[selected].done and not moved_this_select and str(units[selected].team) == "player":
-		move_cells = _compute_move_cells(selected)
-	else:
-		move_cells.clear()
-	_refresh_info()
-	_update_skill_hint()
-	ObjectiveHud.refresh(self)
-	ForecastPanel.refresh(self)
-	RewindBar.refresh(self)
-	if map_draw:
-		map_draw.queue_redraw()
-	if overlay:
-		overlay.queue_redraw()
+	BattleSnapshot.rewind_lamp(self)
 
 
 func _log(t: String) -> void:

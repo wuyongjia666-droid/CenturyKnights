@@ -39,6 +39,77 @@ static func capture(host) -> Dictionary:
 	}
 
 
+static func seal_turn(host) -> void:
+	host._arm_lamps()
+	host._move_undo = {}
+	host._lamp_stack.clear()
+	if host._lamp_refill:
+		host._lamp_charges = host._lamp_max
+	host._turn_snap = capture(host)
+	RewindBar.refresh(host)
+
+
+static func push_lamp(host) -> void:
+	if host.battle_over or str(host.turn_team) != "player":
+		return
+	host._lamp_stack.append({
+		"snap": capture(host),
+		"undo": host._move_undo.duplicate(true),
+	})
+	host._move_undo = {}
+	RewindBar.refresh(host)
+
+
+static func undo_move(host) -> void:
+	if host._move_undo.is_empty() or host.battle_over:
+		return
+	apply(host, host._move_undo)
+	host._move_undo = {}
+	after_restore(host)
+
+
+static func rewind_lamp(host) -> void:
+	if int(host._lamp_charges) <= 0 or host.battle_over or str(host.turn_team) != "player":
+		return
+	var snap: Dictionary = {}
+	var undo: Dictionary = {}
+	if not host._lamp_stack.is_empty():
+		var top: Dictionary = host._lamp_stack.pop_back()
+		snap = top.get("snap", {})
+		undo = top.get("undo", {})
+	else:
+		snap = host._turn_snap
+		if snap.is_empty():
+			return
+		if hash_of(snap) == hash_of(capture(host)):
+			return
+	host._lamp_charges -= 1
+	apply(host, snap)
+	host._move_undo = undo
+	after_restore(host)
+
+
+static func after_restore(host) -> void:
+	var ui := int(host.selected)
+	var keep := false
+	if ui >= 0 and ui < host.units.size():
+		var unit = host.units[ui]
+		keep = not unit.done and not host.moved_this_select and str(unit.team) == "player"
+	if keep:
+		host.move_cells = host._compute_move_cells(ui)
+	else:
+		host.move_cells.clear()
+	host._refresh_info()
+	host._update_skill_hint()
+	ObjectiveHud.refresh(host)
+	ForecastPanel.refresh(host)
+	RewindBar.refresh(host)
+	if host.map_draw:
+		host.map_draw.queue_redraw()
+	if host.overlay:
+		host.overlay.queue_redraw()
+
+
 static func apply(host, snap: Dictionary) -> void:
 	host.rng.seed = int(snap.get("rng_seed", 1))
 	host.rng.state = int(snap.get("rng_state", 1))
