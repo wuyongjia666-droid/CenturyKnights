@@ -106,6 +106,8 @@ func can_counter(attacker: CKCharacter, defender: CKCharacter, atk_pos: Vector2i
 	var djob = GameState.get_job(defender.job_id)
 	var at = str(djob.get("atk_type", "melee"))
 	var bonus := TerrainFx.range_bonus(height)
+	if job_mechanic(defender.job_id) == "long_range":
+		return dist >= min_range(defender) and dist <= attack_reach(defender, "plain", height)
 	if at == "melee":
 		return dist >= 1 and dist <= 1 + bonus
 	if at == "ranged" or at == "magic":
@@ -126,6 +128,7 @@ func calc_hit(attacker: CKCharacter, defender: CKCharacter, terrain_id: String, 
 	hit += level_diff * 2
 	if extras.get("flank", false):
 		hit += FLANK_HIT
+	hit += class_hit_bonus(attacker, extras)
 	var rm = extras.get("role", role_mods(attacker, defender))
 	hit += int(rm.get("hit_mod", 0))
 	hit += int(extras.get("hit_mod", 0))
@@ -143,7 +146,7 @@ func calc_damage_range(attacker: CKCharacter, defender: CKCharacter, terrain_id:
 	var tmul = float(extras.get("terrain_mul", 1.0))
 	var tdef = int(int(terrain_info(terrain_id).get("def_bonus", 0)) * tmul) + int(extras.get("flat_def", 0))
 	var rm = extras.get("role", role_mods(attacker, defender))
-	var def_eff = defender.derived_def() + tdef + int(rm.get("def_mod", 0))
+	var def_eff = int(round(float(defender.derived_def()) * class_def_scale(attacker))) + tdef + int(rm.get("def_mod", 0))
 	if terrain_id == "fort":
 		def_eff += tac(defender, "fort_def")
 	var raw = maxi(1, attacker.derived_atk() - int(def_eff / 2.0))
@@ -256,6 +259,8 @@ func attack_reach(c: CKCharacter, terrain_id: String, height: int = 0) -> int:
 	if terrain_id == "hill":
 		reach += tac(c, "range_high")
 	reach += TerrainFx.range_bonus(height)
+	if job_mechanic(c.job_id) == "long_range":
+		reach += 1
 	return reach
 
 func zoc_charges(c: CKCharacter) -> int:
@@ -265,7 +270,8 @@ func push_tiles(c: CKCharacter, skill_push: int = 0) -> int:
 	return maxi(0, skill_push) + tac(c, "push")
 
 func heal_pulse(c: CKCharacter) -> int:
-	return tac(c, "heal_pulse")
+	var extra := 2 if job_mechanic(c.job_id) == "hymn" else 0
+	return tac(c, "heal_pulse") + extra
 
 func royal_damage(c: CKCharacter, nation: String, dmg: int) -> int:
 	if c == null or c.genome.is_empty() or nation == "":
@@ -358,6 +364,137 @@ func leave_cost_for(locked: bool, engaged: bool) -> int:
 
 func is_engaged(cell: Vector2i, zoc_sources: Array) -> bool:
 	return in_zoc(cell, zoc_sources)
+
+func job_mechanic(job_id: String) -> String:
+	return str(GameState.get_job(job_id).get("mechanic", ""))
+
+
+func min_range(c: CKCharacter) -> int:
+	if c != null and job_mechanic(c.job_id) == "long_range":
+		return 2
+	return 1
+
+
+func in_weapon_range(c: CKCharacter, dist: int, terrain_id: String, height: int = 0) -> bool:
+	return dist >= min_range(c) and dist <= attack_reach(c, terrain_id, height)
+
+
+func can_canto(c: CKCharacter) -> bool:
+	return c != null and job_mechanic(c.job_id) == "canto"
+
+
+func class_hit_bonus(c: CKCharacter, extras: Dictionary) -> int:
+	var mech := job_mechanic(c.job_id)
+	var bonus := 0
+	if mech == "ambush" and bool(extras.get("flank", false)):
+		bonus += 10
+	if mech == "riposte" and bool(extras.get("counter", false)):
+		bonus += 10
+	return bonus
+
+
+func class_def_scale(c: CKCharacter) -> float:
+	if c != null and job_mechanic(c.job_id) == "pierce":
+		return 0.5
+	return 1.0
+
+
+func adjacent_class_def(units: Array, defender_index: int) -> int:
+	if defender_index < 0 or defender_index >= units.size():
+		return 0
+	var host = units[defender_index]
+	var bonus := 0
+	for i in units.size():
+		if i == defender_index:
+			continue
+		var other = units[i]
+		if str(other.get("team", "")) != str(host.get("team", "")):
+			continue
+		if int(other.char.hp) <= 0:
+			continue
+		if _manhattan(host.pos, other.pos) != 1:
+			continue
+		var mech := job_mechanic(other.char.job_id)
+		if mech == "guard_adj":
+			bonus += 3
+		elif mech == "rally":
+			bonus += 1
+	return bonus
+
+
+func apply_class_heal(healer: CKCharacter, target: CKCharacter, amount: int) -> Dictionary:
+	var room := maxi(0, int(target.max_hp) - int(target.hp))
+	var healed := mini(amount, room)
+	target.hp += healed
+	var shield := 0
+	if healer != null and job_mechanic(healer.job_id) == "overheal":
+		shield = amount - healed
+		if shield > 0:
+			target.set_meta("class_shield", int(target.get_meta("class_shield", 0)) + shield)
+			target.temp_def_buff += 1
+	return {"healed": healed, "shield": shield}
+
+
+func note_class_mastery(c: CKCharacter) -> String:
+	if c == null:
+		return ""
+	var skill := str(GameState.get_job(c.job_id).get("mastery_skill", ""))
+	if skill == "":
+		return ""
+	var n := int(c.get_meta("class_fights", 0)) + 1
+	c.set_meta("class_fights", n)
+	if n >= 3 and skill not in c.skills:
+		c.skills.append(skill)
+		return skill
+	return ""
+
+
+func class_paths() -> Array:
+	var jobs: Array = GameState.data_jobs.get("jobs", [])
+	var by_id := {}
+	for row in jobs:
+		by_id[str(row.get("id", ""))] = row
+	var out: Array = []
+	for row in jobs:
+		if int(row.get("tier", 0)) != 3:
+			continue
+		var mid := str(row.get("promote_from", ""))
+		var low := ""
+		if by_id.has(mid):
+			low = str(by_id[mid].get("promote_from", ""))
+		out.append([
+			str(by_id.get(low, {}).get("name", low)),
+			str(by_id.get(mid, {}).get("name", mid)),
+			str(row.get("name", "")),
+		])
+	return out
+
+
+func class_path_text(job_id: String) -> String:
+	var jobs: Array = GameState.data_jobs.get("jobs", [])
+	var by_id := {}
+	for row in jobs:
+		by_id[str(row.get("id", ""))] = row
+	if not by_id.has(job_id):
+		return ""
+	var here: Dictionary = by_id[job_id]
+	var top := job_id
+	if int(here.get("tier", 0)) < 3:
+		for row in jobs:
+			if int(row.get("tier", 0)) == 3 and str(row.get("promote_from", "")) == job_id:
+				top = str(row.get("id", ""))
+				break
+			if int(row.get("tier", 0)) == 3:
+				var mid := str(row.get("promote_from", ""))
+				if by_id.has(mid) and str(by_id[mid].get("promote_from", "")) == job_id:
+					top = str(row.get("id", ""))
+					break
+	for path in class_paths():
+		var top_row: Dictionary = by_id.get(top, {})
+		if str(path[2]) == str(top_row.get("name", "")):
+			return "%s / %s / %s" % [path[0], path[1], path[2]]
+	return ""
+
 
 func zoc_cells(map_w: int, map_h: int, zoc_sources: Array) -> Dictionary:
 	var out: Dictionary = {}
