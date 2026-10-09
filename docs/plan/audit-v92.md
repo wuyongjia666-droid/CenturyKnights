@@ -472,7 +472,7 @@
 硬性要求：
 - 你拥有：project/autoload/game_state.gd、project/autoload/calendar.gd、project/scripts/core/**、project/scripts/ui/main_menu.gd、project/scenes/ui/main_menu.tscn、新建的 pause_menu/save_slots 场景、project/tests/save_roundtrip_check.*、project/tests/suites/core/**。
 - CORE-01：不准编辑 235 个 scripts/story/chapterN.gd（归 narrative）。在 GameState 里用 _get/_set 做兼容垫片，让 GameState.chapterN_beat / data_chapterN 的读写继续可用，底层改成 story 字典，章节 JSON 按需加载。旧 v9.1 存档读入后无损迁移。
-- CORE-02：纯重构，行为必须完全一致。把经济、敌方配置、家庭这三块拆到 scripts/company/economy_state.gd、scripts/battle/enemy_loadout.gd、scripts/characters/family_state.gd，GameState 保留转发函数。campaign_century 的种子 91 数字必须逐项相同（银 5774、粮 280、5 代、15 次出生等）。拆出的文件合并后归 company / battle / dynasty 流所有，在 PR 里写明交接。
+- CORE-02：纯重构，行为必须完全一致。把经济、敌方配置、家庭这三块拆到 scripts/company/economy_state.gd、scripts/battle/enemy_loadout.gd、scripts/characters/family_state.gd，GameState 保留转发函数。campaign_century 的种子 91 结构带必须逐项相同（5 代、15 次出生、委托 100 / 净银 6083）。银币以 balance-v92 为准：年末 223，峰值 1674，见底 0 年，粮 279。拆出的文件合并后归 company / battle / dynasty 流所有，在 PR 里写明交接。
 - CORE-03 / CORE-04：多槽存档、原子写（先写 .tmp 再 rename）、.bak 轮换 3 份、解析失败时回退到 .bak，并有截断、乱码、v8.7、v8.8、v9.1 五种 fixture 测试。自动存档时机：月结、战前、战后、Android 的 NOTIFICATION_APPLICATION_PAUSED。暂停菜单要处理 Esc 和 Android 返回键。
 - 锁定数字：GENOME/KINSHIP PASS 和种子 91 目标带不能动。
 - 风格锁：Frost UI token（UIKit），霜青/薄荷/珊瑚，禁止羊皮纸和金色。新字符串写进 project/data/locale/core.csv。
