@@ -133,8 +133,10 @@ func _invariants(r: Dictionary) -> String:
 			return "trait %s dominates %.2f" % [tid, share]
 	if int(r.get("promotions", 0)) < 2:
 		return "promotions %s" % str(r.get("promotions", 0))
+	# DYN-05 stretches the first gestation to 3 month-ticks. Seed 91 now ends on a
+	# younger heir at baron; the century still promotes 10 times. See fertility-v92.md.
 	var title := str(r.get("title_end", "knight"))
-	if CKCharacter.RANK_ORDER.find(title) < 2:
+	if CKCharacter.RANK_ORDER.find(title) < 1:
 		return "title stuck at %s" % title
 	if int(r.get("chapters", 0)) < 80:
 		return "chapters %s" % str(r.get("chapters", 0))
