@@ -942,6 +942,7 @@ func gear_bonus(c, stat: String) -> int:
 			ids.append(str(g[s]))
 	for iid in ids:
 		total += int(items[iid].get("stats", {}).get(stat, 0))
+	total += CKHeirloom.plus_bonus(c, stat)
 	return total
 
 func is_world_item(iid: String) -> bool:
