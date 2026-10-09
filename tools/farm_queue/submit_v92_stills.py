@@ -2,8 +2,10 @@
 """One-shot submit of CenturyKnights v9.2 FARM-01..05 stills.
 
 Converts tools/farm_queue/v92_*.json and genome_bank_v92.json into the
-dual_submit_stills shots envelope (same top-level shape as shots_v721.json)
-and, when both farm hosts are up, runs:
+list dual_submit_stills.load_shots accepts: a JSON array of shot objects.
+Each object carries ``label`` (the name load_shots reads) and the same string
+in ``id``. The file is not a ``{"shots": [...]}`` envelope.
+When both farm hosts are up, runs:
 
   dual_submit_stills.py --root ROOT --shots-json SHOTS --spread --sn-backend local --only both
 
@@ -50,7 +52,6 @@ KIND_ORDER = {
     "FARM-04": ("scene", "expression"),
     "FARM-05": ("castle", "estate"),
 }
-REFUSE = ("sn_api", "sn_cloud", "qwen_api_nodes", "flux")
 ROOT_CANDIDATES = (
     Path(r"D:\AIComics\CenturyKnights_farm"),
     Path(r"D:\CenturyKnights_farm"),
@@ -103,7 +104,8 @@ def build_argv(python: str, dual: str, root: str, shots: str, plan: Plan) -> lis
 def job_to_shot(job: dict) -> dict:
     """Map one queue row onto a dual_submit_stills shot.
 
-    Historical shots (shots_v721.json) use id, w, h, role, prompt.
+    dual_submit_stills.load_shots reads a list and the ``label`` field.
+    ``id`` is the same string, kept so older notes still match the queue id.
     Style-lock fields are copied through unchanged so the farm does not
     invent a seed, a negative, or a sampler.
     """
@@ -120,6 +122,7 @@ def job_to_shot(job: dict) -> dict:
     width = int(job["width"])
     height = int(job["height"])
     shot = {
+        "label": ident,
         "id": ident,
         "w": width,
         "h": height,
@@ -164,29 +167,18 @@ def build_shots(jobs: list[dict], farms: set[str] | None = None) -> list[dict]:
             by_kind[shot["role"]].append(shot)
         for kind in KIND_ORDER[farm]:
             ordered.extend(by_kind[kind])
-    ids = [shot["id"] for shot in ordered]
-    if len(ids) != len(set(ids)):
+    labels = [shot["label"] for shot in ordered]
+    if any(shot["label"] != shot["id"] for shot in ordered):
+        raise ValueError("label and id diverged")
+    if len(labels) != len(set(labels)):
         seen: set[str] = set()
         dupes = []
-        for ident in ids:
+        for ident in labels:
             if ident in seen:
                 dupes.append(ident)
             seen.add(ident)
-        raise ValueError(f"duplicate shot id {dupes[:5]}")
+        raise ValueError(f"duplicate shot label {dupes[:5]}")
     return ordered
-
-
-def shots_document(shots: list[dict], qwen: str, sn: str) -> dict:
-    return {
-        "book": "CenturyKnights",
-        "round": "v9.2-farm",
-        "prefer": "qwen",
-        "dual_submit": True,
-        "bases": {"qwen": qwen, "sn_local": sn},
-        "refuse": list(REFUSE),
-        "note": "FARM-01..05 stills. sn-backend stays local. No SN cloud, no Qwen API nodes, no Flux.",
-        "shots": shots,
-    }
 
 
 def count_lines(shots: list[dict]) -> list[str]:
@@ -278,9 +270,12 @@ def parse_farms(text: str) -> set[str]:
     return farms
 
 
-def write_shots(path: Path, document: dict) -> None:
+def write_shots(path: Path, shots: list[dict]) -> None:
+    """Write the load_shots file: a JSON list, never a {shots: ...} object."""
+    if not isinstance(shots, list):
+        raise TypeError("shots file must be a JSON list")
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(document, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    path.write_text(json.dumps(shots, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -323,15 +318,14 @@ def main(argv: list[str] | None = None) -> int:
         print("FAIL no shots after farm filter")
         return 1
 
-    document = shots_document(shots, args.qwen, args.sn)
-    print(f"[v92-farm] files={len(names)} queue_jobs={len(jobs)} shots={len(shots)}")
+    print(f"[v92-farm] files={len(names)} queue_jobs={len(jobs)} shots={len(shots)} shape=list")
     for line in count_lines(shots):
         print(line)
 
     if args.dry_run:
         if args.shots_out:
             dest = Path(args.shots_out)
-            write_shots(dest, document)
+            write_shots(dest, shots)
             print(f"[v92-farm] wrote {dest}")
         plan = decide_plan(True, True, False)
         shown = build_argv(
@@ -354,8 +348,8 @@ def main(argv: list[str] | None = None) -> int:
     root = farm_root(args.root)
     root.mkdir(parents=True, exist_ok=True)
     shots_path = Path(args.shots_out) if args.shots_out else root / "shots_v92_farm.json"
-    write_shots(shots_path, document)
-    print(f"[v92-farm] wrote {shots_path}")
+    write_shots(shots_path, shots)
+    print(f"[v92-farm] wrote {shots_path} (JSON list, label==id)")
 
     dual = find_dual(args.scripts)
     if dual is None:

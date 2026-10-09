@@ -29,6 +29,7 @@ class SubmitV92Test(unittest.TestCase):
     def test_city_shot_copies_lock_fields(self) -> None:
         city = next(job for job in self.jobs if job["kind"] == "city")
         shot = submit.job_to_shot(city)
+        self.assertEqual(shot["label"], city["id"])
         self.assertEqual(shot["id"], city["id"])
         self.assertEqual(shot["prompt"], city["positive"])
         self.assertEqual(shot["positive"], city["positive"])
@@ -50,6 +51,7 @@ class SubmitV92Test(unittest.TestCase):
     def test_genome_uses_bucket_key(self) -> None:
         bucket = next(job for job in self.jobs if job["kind"] == "genome")
         shot = submit.job_to_shot(bucket)
+        self.assertEqual(shot["label"], bucket["bucket_key"])
         self.assertEqual(shot["id"], bucket["bucket_key"])
         self.assertEqual(shot["prompt"], bucket["positive"])
         self.assertEqual(shot["farm"], "FARM-01")
@@ -67,8 +69,10 @@ class SubmitV92Test(unittest.TestCase):
 
     def test_full_batch_is_unique_and_ordered(self) -> None:
         self.assertEqual(len(self.shots), len(self.jobs))
-        ids = [shot["id"] for shot in self.shots]
-        self.assertEqual(len(ids), len(set(ids)))
+        labels = [shot["label"] for shot in self.shots]
+        self.assertEqual(labels, [shot["id"] for shot in self.shots])
+        self.assertEqual(len(labels), len(set(labels)))
+        self.assertEqual(len(self.shots), 2057)
         farms = [shot["farm"] for shot in self.shots]
         self.assertEqual(farms, sorted(farms, key=submit.FARM_ORDER.index))
         farm03 = [shot["role"] for shot in self.shots if shot["farm"] == "FARM-03"]
@@ -82,15 +86,17 @@ class SubmitV92Test(unittest.TestCase):
         self.assertTrue(all(shot["farm"] == "FARM-02" for shot in cities))
         self.assertTrue(all(shot["role"] == "city" for shot in cities))
 
-    def test_envelope_refuses_cloud(self) -> None:
-        doc = submit.shots_document(self.shots[:1], submit.QWEN_DEFAULT, submit.SN_DEFAULT)
-        self.assertEqual(doc["book"], "CenturyKnights")
-        self.assertTrue(doc["dual_submit"])
-        self.assertEqual(doc["prefer"], "qwen")
-        self.assertEqual(doc["shots"][0]["id"], self.shots[0]["id"])
-        for banned in ("sn_api", "sn_cloud", "qwen_api_nodes", "flux"):
-            self.assertIn(banned, doc["refuse"])
-        self.assertNotIn("api", doc["bases"])
+    def test_written_file_is_label_list(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "shots_v92_farm.json"
+            submit.write_shots(path, self.shots)
+            text = path.read_text(encoding="utf-8")
+            payload = json.loads(text)
+        self.assertIsInstance(payload, list)
+        self.assertEqual(len(payload), 2057)
+        self.assertTrue(text.lstrip().startswith("["))
+        self.assertEqual(payload[0]["label"], payload[0]["id"])
+        self.assertTrue(all(row["label"] == row["id"] and row["label"] for row in payload))
 
     def test_both_hosts_use_spread_local(self) -> None:
         plan = submit.decide_plan(True, True, False)
@@ -155,10 +161,12 @@ class SubmitV92Test(unittest.TestCase):
             self.assertIn("--spread", argv)
             self.assertEqual(argv[argv.index("--sn-backend") + 1], "local")
             self.assertEqual(argv[argv.index("--only") + 1], "both")
-            doc = json.loads(Path(shots).read_text(encoding="utf-8"))
-            self.assertEqual(len(doc["shots"]), 35)
-            self.assertEqual(doc["refuse"], ["sn_api", "sn_cloud", "qwen_api_nodes", "flux"])
-            self.assertEqual(doc["shots"][0]["prompt"], doc["shots"][0]["positive"])
+            payload = json.loads(Path(shots).read_text(encoding="utf-8"))
+            self.assertIsInstance(payload, list)
+            self.assertEqual(len(payload), 35)
+            self.assertEqual(payload[0]["label"], payload[0]["id"])
+            self.assertEqual(payload[0]["prompt"], payload[0]["positive"])
+            self.assertEqual(payload[0]["role"], "city")
 
     def test_main_sn_down_does_not_submit(self) -> None:
         env = os.environ.copy()

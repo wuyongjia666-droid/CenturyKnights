@@ -14,6 +14,8 @@
 #   D:\AIComics\CenturyKnights_farm
 #   fallback D:\CenturyKnights_farm
 # Staged shots JSON: <root>\shots_v92_farm.json
+#   JSON list, not {"shots":[...]}. load_shots reads each object's "label".
+#   "id" is the same string as "label".
 # Repo destinations stay on each shot as out_path (project/assets/art/...).
 #
 # Poll only when an operator asks (this script does not loop):

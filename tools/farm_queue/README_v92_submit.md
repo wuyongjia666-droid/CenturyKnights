@@ -69,7 +69,9 @@ dual_submit_stills.py --root <输出根> --shots-json <输出根>\shots_v92_farm
 
 优先 `D:\AIComics\CenturyKnights_farm`，目录不存在时用 `D:\CenturyKnights_farm`。也可以设 `CK_FARM_ROOT`。
 
-提交前会把 shots JSON 写到 `<输出根>\shots_v92_farm.json`。每条 shot 的 `out_path` 仍是仓库里的目标相对路径（`project/assets/art/...`）。农场落盘在输出根下，按 shot `id` / `filename_prefix` 取名；入库是下一步，本脚本不把 PNG 写回仓库。
+提交前会把 shots JSON 写到 `<输出根>\shots_v92_farm.json`。这个文件是 **JSON 数组**，给 `dual_submit_stills.load_shots` 直接读。每条有 `label`（加载器认这个字段），`id` 是同一个字符串。不要再包一层 `{"shots": [...]}`。
+
+每条 shot 的 `out_path` 仍是仓库里的目标相对路径（`project/assets/art/...`）。农场落盘在输出根下，按 `label` / `filename_prefix` 取名；入库是下一步，本脚本不把 PNG 写回仓库。
 
 ## 5. 怎么看进度
 
