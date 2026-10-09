@@ -49,7 +49,7 @@ func _build() -> void:
 	col.add_child(gap)
 	col.add_child(UIKit.body_label(Locale.t("shell_0a5b0c2e"), UIKit.TEXT_DIM, 14))
 	var gap2 := Control.new()
-	gap2.custom_minimum_size = Vector2(0, 36)
+	gap2.custom_minimum_size = Vector2(0, 12)
 	col.add_child(gap2)
 	var line := UIKit.hairline()
 	line.custom_minimum_size = Vector2(360, 1)
@@ -58,26 +58,40 @@ func _build() -> void:
 	gap3.custom_minimum_size = Vector2(0, 14)
 	col.add_child(gap3)
 
+	var latest := CKSaveSlots.latest_slot()
 	var items := [
-		["01", Locale.t("menu_new"), Callable(self, "_on_new"), false],
-		["02", Locale.t("menu_continue"), Callable(self, "_on_continue"), not GameState.has_save()],
-		["03", Locale.t("menu_settings"), Callable(self, "_on_settings"), false],
-		["04", Locale.t("menu_quit"), func(): get_tree().quit(), false],
+		["01", "MenuNew", Locale.t("menu_new"), Callable(self, "_on_new"), false],
+		["02", "MenuContinue", Locale.t("menu_continue"), Callable(self, "_on_continue"), latest == ""],
+		["03", "MenuLoad", Locale.t("menu_load"), Callable(self, "_on_load"), false],
+		["04", "MenuSettings", Locale.t("menu_settings"), Callable(self, "_on_settings"), false],
+		["05", "MenuCredits", Locale.t("menu_credits"), Callable(self, "_on_credits"), false],
+		["06", "MenuQuit", Locale.t("menu_quit"), func(): get_tree().quit(), false],
 	]
 	var first: Button = null
 	for it in items:
-		var b := UIKit.index_button(it[0], it[1], 360)
-		b.disabled = it[3]
-		b.pressed.connect(it[2])
+		var b := UIKit.index_button(it[0], it[2], 360)
+		b.name = it[1]
+		b.disabled = it[4]
+		b.pressed.connect(it[3])
 		if it[0] == "01":
 			b.add_theme_color_override("font_color", UIKit.ACCENT)
 		col.add_child(b)
+		if it[1] == "MenuContinue":
+			var summary := UIKit.body_label(CKSaveSlots.continue_line(latest), UIKit.TEXT_DIM, 13)
+			summary.name = "ContinueSummary"
+			summary.custom_minimum_size = Vector2(360, 0)
+			col.add_child(summary)
 		if first == null and not b.disabled:
 			first = b
 	if first:
 		first.call_deferred("grab_focus")
 
-	var foot := UIKit.body_label(Locale.t("shell_aaf46948"), UIKit.TEXT_FAINT, 12)
+	var version := str(ProjectSettings.get_setting("application/config/version", ""))
+	var foot_text := Locale.t("menu_footer_plain")
+	if version != "":
+		foot_text = Locale.t("menu_footer", [version])
+	var foot := UIKit.body_label(foot_text, UIKit.TEXT_FAINT, 12)
+	foot.name = "VersionLabel"
 	foot.position = Vector2(96, 664)
 	foot.size = Vector2(400, 20)
 	add_child(foot)
@@ -91,12 +105,15 @@ func _on_new() -> void:
 	get_tree().change_scene_to_file("res://scenes/story/naming.tscn")
 
 func _on_continue() -> void:
-	if GameState.load_game():
-		UnitArt.clear_cache()
-		if GameState.flag("hub_open") or GameState.chapter0_beat >= "0.3":
-			get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
-		else:
-			get_tree().change_scene_to_file("res://scenes/story/chapter0.tscn")
+	var slot := CKSaveSlots.latest_slot()
+	if slot != "" and GameState.load_from_slot(slot):
+		CKSaveSlots.enter_loaded(get_tree())
+
+func _on_load() -> void:
+	get_tree().change_scene_to_file("res://scenes/ui/save_slots.tscn")
+
+func _on_credits() -> void:
+	get_tree().change_scene_to_file("res://scenes/ui/credits.tscn")
 
 func _on_settings() -> void:
 	get_tree().change_scene_to_file("res://scenes/ui/settings.tscn")
