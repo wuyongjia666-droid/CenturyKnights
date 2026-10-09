@@ -90,24 +90,19 @@ func _seed(report: Dictionary, seed: Dictionary) -> String:
 		return "seed ledger axes %s" % str(axes)
 	if int(axes.get("companions", -1)) != 0:
 		return "seed companions %s" % str(axes)
-	var closed := bool(axes.get("generation_closed", false))
-	if closed != CKAmbitions.generation_probe():
+	if not bool(axes.get("generation_closed", false)):
+		return "seed generation still open %s" % str(axes)
+	if not CKAmbitions.generation_probe():
 		return "seed probe diverged"
 	if str(seed.get("title", "")) == str(seed.get("title_key", "")):
 		return "title key missing"
 	var text := _texts(seed)
 	if text.find("5774") < 0 or text.find("4处据点") < 0:
 		return "rite ending hid the treasury"
-	if closed:
-		if text.find("声望没有替他们把这一行写完") < 0:
-			return "closed stele missing"
-		if text.find("志向那一栏空着") >= 0:
-			return "open beat leaked"
-	else:
-		if text.find("志向那一栏空着") < 0:
-			return "open generation missing"
-		if text.find("声望没有替他们把这一行写完") >= 0:
-			return "closed stele showed without a generation"
+	if text.find("已写下志向") < 0:
+		return "closed rite missing"
+	if text.find("志向那一栏空着") >= 0:
+		return "open beat leaked into seed 91"
 	return _body(seed)
 
 
