@@ -8,3 +8,5 @@ pause_save,存档,
 pause_load,读档,
 pause_settings,设置,
 pause_title,回到标题,
+playstats_title,游玩统计,Play stats
+playstats_export,导出游玩统计,Export play stats
