@@ -101,3 +101,12 @@ fertility_due,%s 有喜，约 %d 个月后分娩。,%s is with child. Birth in a
 fusion_read,灯霜对读,
 congenital_sterile,闭灶,
 congenital_frail,髓薄,
+ancestor_title,先祖碑,Ancestor stele
+ancestor_honor,家族荣誉 +%d,Family honor +%d
+ancestor_cause_battle,阵亡,Killed in battle
+ancestor_cause_age,老死,Old age
+ancestor_age_words,旗还在。,The banner remains.
+ancestor_no_deed,功绩未记,No deed written
+ancestor_no_title,无志向称号,No ambition title
+ancestor_empty,碑上还没有人。,The stele is empty.
+ancestor_card,%s\n%d – %d · %s\n%s\n%s\n%s,%s\n%d - %d · %s\n%s\n%s\n%s
