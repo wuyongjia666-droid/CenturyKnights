@@ -44,7 +44,7 @@ func _term(fails: Array) -> void:
 	GameState.add_rep("ashland", 80)
 	CKFamilyState.set_fast_family(GameState, false)
 	var slow := _couple("slow", 22)
-	if not Lineage.marry(slow[0], slow[1], 0, []).get("ok", false):
+	if not Lineage.marry(slow[0], slow[1], 0, [], true).get("ok", false):
 		fails.append("young wedding refused")
 		return
 	if slow[1].pregnant_months != 2:
@@ -54,7 +54,7 @@ func _term(fails: Array) -> void:
 		fails.append("default birth took %d ticks, want 3" % born)
 	CKFamilyState.set_fast_family(GameState, true)
 	var fast := _couple("fast", 24)
-	if not Lineage.marry(fast[0], fast[1], 0, []).get("ok", false):
+	if not Lineage.marry(fast[0], fast[1], 0, [], true).get("ok", false):
 		fails.append("fast wedding refused")
 		return
 	if _ticks_until_birth(fast[1]) != 1:
@@ -63,7 +63,7 @@ func _term(fails: Array) -> void:
 
 func _late(fails: Array) -> void:
 	var late := _couple("late", 55)
-	var res: Dictionary = Lineage.marry(late[0], late[1], 0, [])
+	var res: Dictionary = Lineage.marry(late[0], late[1], 0, [], true)
 	if not res.get("ok", false):
 		fails.append("late wedding should still bind: %s" % str(res.get("msg", "")))
 		return
