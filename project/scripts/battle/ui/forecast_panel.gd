@@ -26,6 +26,7 @@ static func sides(attacker: CKCharacter, defender: CKCharacter, terrain_id: Stri
 		"counter_hi": int(theirs.dmg.y) if counter else 0,
 		"counter_crit": int(theirs.crit) if counter else 0,
 		"tags": ours.tags,
+		"link_names": extras.get("link_names", []),
 	}
 
 
@@ -118,6 +119,9 @@ static func _fill(box: Node, title: String, info: Dictionary, counter_side: bool
 		BattleObjectives.text("forecast_follow"), follow,
 		BattleObjectives.text("forecast_counter"), back,
 	]
+	var links: Array = info.get("link_names", [])
+	if not counter_side and not links.is_empty():
+		body.text += "\n" + (BattleObjectives.text("link_with") % str(links[0]))
 
 
 static func _place(host, panel: Control) -> void:
