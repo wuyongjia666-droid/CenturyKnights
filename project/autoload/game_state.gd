@@ -77,6 +77,8 @@ var dirty: bool = false
 var play_seconds: float = 0.0
 var save_notice: String = ""
 var save_backup_used: String = ""
+var _court_derived: bool = false
+var _courts_empty_before: bool = false
 var board_input_blocked: bool = false
 var dynasty_journal: String = ""
 var lineage_log: Array = []  # deeper marriage/lineage event strings
@@ -99,6 +101,8 @@ func _ready() -> void:
 	BattleRules.preview_enabled = settings.get("rules_preview", true)
 	CKGenomePortrait.set_bloodline_clause_hook(Callable(CKBloodline, "portrait_clause"))
 	CKPlayStats.install(get_tree())
+	Calendar.register("post", Callable(self, "_court_before"), 39)
+	Calendar.register("post", Callable(self, "_court_after"), 50)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
@@ -246,8 +250,17 @@ func get_rep_name(realm: String) -> String:
 func add_rep(realm: String, amount: int) -> void:
 	reputation[realm] = clampi(int(reputation.get(realm, 0)) + amount, 0, 100)
 
+func _court_before(_ctx: Dictionary) -> void:
+	var courts = World.royal_courts
+	_courts_empty_before = typeof(courts) != TYPE_DICTIONARY or (courts as Dictionary).is_empty()
+
+func _court_after(_ctx: Dictionary) -> void:
+	if Calendar.month == 1 and Calendar.year > 1 and _courts_empty_before:
+		_court_derived = true
+
 func new_game(leader_given: String, leader_surname: String, color: String) -> void:
 	started = true
+	_court_derived = false
 	play_seconds = 0.0
 	save_notice = ""
 	save_backup_used = ""
@@ -750,7 +763,7 @@ func build_save_data() -> Dictionary:
 		"marriage": [],
 		"quests": quests,
 		"started": started,
-		"world_v87": World.to_save(),
+		"world_v87": CKSaveService.compact_world(World.to_save(), _court_derived),
 	}
 	for id in characters.keys():
 		data["characters"][id] = characters[id].to_dict()
@@ -844,7 +857,14 @@ func apply_save_data(data: Dictionary) -> bool:
 	for d in data.get("marriage", []):
 		marriage_candidates.append(CKCharacter.from_dict(d))
 	var _wd = data.get("world_v87", {})
-	World.from_save(_wd if typeof(_wd) == TYPE_DICTIONARY else {})
+	var _world: Dictionary = _wd if typeof(_wd) == TYPE_DICTIONARY else {}
+	var _derived := str(_world.get("court_genomes", "")) == "derived"
+	World.from_save(_world)
+	CKSaveService.restore_market()
+	if _derived:
+		_court_derived = CKSaveService.restore_court_genomes()
+	else:
+		_court_derived = false
 	BattleRules.preview_enabled = settings.get("rules_preview", true)
 	mark_dirty()
 	return true
