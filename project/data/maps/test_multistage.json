@@ -1,0 +1,49 @@
+{
+  "maps": {
+    "stage_a": {
+      "id": "stage_a",
+      "name": "StageA",
+      "w": 4,
+      "h": 3,
+      "next_stage": "stage_b",
+      "player_spots": [[0, 1]],
+      "enemy_spots": [[3, 1]],
+      "enemy_templates": ["bandit"],
+      "terrain": [
+        ["plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain"]
+      ]
+    },
+    "stage_b": {
+      "id": "stage_b",
+      "name": "StageB",
+      "w": 4,
+      "h": 3,
+      "player_spots": [[0, 1]],
+      "enemy_spots": [[3, 1]],
+      "enemy_templates": ["bandit"],
+      "terrain": [
+        ["plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain"]
+      ]
+    },
+    "arena_yard": {
+      "id": "arena_yard",
+      "name": "Arena",
+      "w": 4,
+      "h": 3,
+      "arena": true,
+      "rules": {"skills": false},
+      "player_spots": [[0, 1]],
+      "enemy_spots": [[3, 1]],
+      "enemy_templates": ["bandit"],
+      "terrain": [
+        ["plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain"],
+        ["plain", "plain", "plain", "plain"]
+      ]
+    }
+  }
+}
