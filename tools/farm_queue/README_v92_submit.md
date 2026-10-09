@@ -1,6 +1,6 @@
 # v9.2 静帧一次性投农场（FARM-01…05）
 
-在 **m173** 上执行。本机不直连 `192.168.9.244`。这一枪把已经写好的静帧队列全部交给本机双机位，让 Qwen `:8322` 和 SenseNova 本地 `:8329` 同时有活。
+在 **m173** 上执行。本机不直连 `192.168.9.244`。新批次默认只投 Qwen `:8322`。SenseNova 本地 `:8329` 的静帧观感差一截，所以默认空着；要双机位必须显式打开。
 
 覆盖：
 
@@ -36,26 +36,27 @@ python3 tools/farm_queue/validate_queue_v92.py
 
 ## 2. 在 m173 上探端口
 
-两台都要通。只通 Qwen 时默认不提交。
+默认提交只要求 Qwen `:8322` 通。SenseNova 可以不通。
 
 ```powershell
 Invoke-WebRequest http://192.168.9.244:8322/system_stats -TimeoutSec 5 -UseBasicParsing
-Invoke-WebRequest http://192.168.9.244:8329/system_stats -TimeoutSec 5 -UseBasicParsing
 ```
 
-仓库里的 `tools/farm_queue/probe_farm.sh` 是同一组 URL，给能访问该网段的环境用。
+要看可选的双机位时再探 `:8329`。仓库里的 `tools/farm_queue/probe_farm.sh` 会打两边的状态；Qwen 不通就失败，SenseNova 不通不影响默认提交。
 
-## 3. 一次性提交
+## 3. 一次性提交（默认只投 Qwen）
 
 ```powershell
 powershell -File tools\farm_queue\submit_v92_on_m173.ps1
 ```
 
-等价于：两台都在线时执行
+等价于：
 
 ```text
-dual_submit_stills.py --root <输出根> --shots-json <输出根>\shots_v92_farm.json --spread --sn-backend local --only both
+dual_submit_stills.py --root <输出根> --shots-json <输出根>\shots_v92_farm.json --sn-backend local --only qwen
 ```
+
+没有 `--spread`。SenseNova 即使在线也不接这批。`CK_FARM_ALLOW_QWEN_ONLY` 不用再设。
 
 脚本搜索顺序：
 
@@ -63,7 +64,7 @@ dual_submit_stills.py --root <输出根> --shots-json <输出根>\shots_v92_farm
 - `C:\Users\m1736\.cursor\skills\aic-farm\scripts`
 - 环境变量 `AIC_FARM_SCRIPTS`
 
-`--sn-backend` 固定为 `local`。不会走 SenseNova 云、API 节点或 Flux。
+`--sn-backend` 固定为 `local`。不会走 SenseNova 云、API 节点或 Flux。Qwen `:8322` 不通则退出（码 2）。没有「只投 SenseNova」。
 
 ## 4. 输出根
 
@@ -88,20 +89,24 @@ Invoke-WebRequest http://192.168.9.244:8322/queue -UseBasicParsing
 Invoke-WebRequest http://192.168.9.244:8329/queue -UseBasicParsing
 ```
 
-`--spread` 把同一份清单分到两台机器上，避免一台空转。
+默认不看 `:8329` 的队列。只有打开双机位时，`--spread` 才把同一份清单分到两台机器上。
 
-## 6. 只投 Qwen 的逃生口
+## 6. 双机位是可选项
 
-默认：SenseNova `:8329` 不通就退出（码 3），不悄悄单边提交。Qwen `:8322` 不通则退出（码 2），没有「只投 SenseNova」。
-
-只有确认要让 Qwen 单独吃完整批时：
+新批次不要靠 SenseNova。确认仍要两边一起画时：
 
 ```powershell
-$env:CK_FARM_ALLOW_QWEN_ONLY = "1"
+powershell -File tools\farm_queue\submit_v92_on_m173.ps1 -Dual
+```
+
+或：
+
+```powershell
+$env:CK_FARM_DUAL = "1"
 powershell -File tools\farm_queue\submit_v92_on_m173.ps1
 ```
 
-两台都在线时，这个变量不会把 SenseNova 关掉，仍然是 `--only both`。没有命令行 `--only` 开关。
+这才会执行 `--spread --sn-backend local --only both`。此时 SenseNova `:8329` 不通就退出（码 3），不会悄悄退回只投 Qwen。没有命令行 `--only` 开关。
 
 ## 表情局部重绘
 

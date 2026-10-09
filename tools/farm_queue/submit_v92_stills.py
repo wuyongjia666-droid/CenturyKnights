@@ -5,12 +5,17 @@ Converts tools/farm_queue/v92_*.json and genome_bank_v92.json into the
 list dual_submit_stills.load_shots accepts: a JSON array of shot objects.
 Each object carries ``label`` (the name load_shots reads) and the same string
 in ``id``. The file is not a ``{"shots": [...]}`` envelope.
-When both farm hosts are up, runs:
+Default is Qwen only:
+
+  dual_submit_stills.py --root ROOT --shots-json SHOTS --sn-backend local --only qwen
+
+SenseNova stills look worse, so dual is opt-in (``--dual`` or CK_FARM_DUAL=1).
+That path is the old spread command:
 
   dual_submit_stills.py --root ROOT --shots-json SHOTS --spread --sn-backend local --only both
 
-Qwen-only is not a CLI switch. It runs solely when SenseNova :8329 is down
-and CK_FARM_ALLOW_QWEN_ONLY=1. SenseNova cloud / api backends are never selected.
+SenseNova cloud / api backends are never selected. CK_FARM_ALLOW_QWEN_ONLY is
+obsolete: Qwen-only no longer needs it.
 
 Dry-run does not probe the LAN and does not call dual_submit:
 
@@ -33,7 +38,7 @@ import validate_queue_v92 as gate  # noqa: E402
 
 QWEN_DEFAULT = "http://192.168.9.244:8322"
 SN_DEFAULT = "http://192.168.9.244:8329"
-ESCAPE_ENV = "CK_FARM_ALLOW_QWEN_ONLY"
+DUAL_ENV = "CK_FARM_DUAL"
 FARM_ORDER = ("FARM-01", "FARM-02", "FARM-03", "FARM-04", "FARM-05")
 KIND_FARM = {
     "genome": "FARM-01",
@@ -71,26 +76,31 @@ class Plan:
         self.reason = reason
 
 
-def allow_qwen_only(env: dict[str, str] | None = None) -> bool:
+def want_dual(cli: bool = False, env: dict[str, str] | None = None) -> bool:
+    """Dual is opt-in. The old CK_FARM_ALLOW_QWEN_ONLY flag does not select a mode."""
     source = os.environ if env is None else env
-    return source.get(ESCAPE_ENV) == "1"
+    return bool(cli) or source.get(DUAL_ENV) == "1"
 
 
-def decide_plan(qwen_ok: bool, sn_ok: bool, qwen_only_escape: bool) -> Plan:
-    """Both hosts -> dual spread. Qwen-only only through the env escape hatch."""
+def decide_plan(qwen_ok: bool, sn_ok: bool, dual: bool) -> Plan:
+    """Default is Qwen-only even when SenseNova is up. Dual requires both hosts."""
     if not qwen_ok:
         return Plan("", False, 2, "Qwen :8322 unreachable — abort; queue stays on disk")
+    if not dual:
+        return Plan("qwen", False, 0, "default Qwen-only; SenseNova is idle unless --dual / CK_FARM_DUAL=1")
     if sn_ok:
-        return Plan("both", True, 0, "both hosts up")
-    if qwen_only_escape:
-        return Plan("qwen", False, 0, f"{ESCAPE_ENV}=1 and SenseNova :8329 is down")
-    return Plan(
-        "",
-        False,
-        3,
-        "SenseNova :8329 unreachable — set "
-        f"{ESCAPE_ENV}=1 to submit Qwen only",
-    )
+        return Plan("both", True, 0, "dual opt-in and both hosts up")
+    return Plan("", False, 3, "dual requested but SenseNova :8329 is unreachable")
+
+
+def host_status(qwen: str, sn: str, dual: bool) -> tuple[bool, bool]:
+    """Probe Qwen always. Probe SenseNova only when dual was requested."""
+    if not dual:
+        base = qwen.rstrip("/")
+        print(f"[v92-farm] probe Qwen={base} (SenseNova skipped; dual is opt-in)")
+        ok = http_ok(f"{base}/system_stats") or http_ok(f"{base}/v1/models")
+        return ok, False
+    return probe(qwen, sn)
 
 
 def build_argv(python: str, dual: str, root: str, shots: str, plan: Plan) -> list[str]:
@@ -288,6 +298,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--farms", default=",".join(FARM_ORDER), help="comma list, default FARM-01..05")
     parser.add_argument("--qwen", default=os.environ.get("COMFYUI_QWEN", QWEN_DEFAULT))
     parser.add_argument("--sn", default=os.environ.get("COMFYUI_SN", SN_DEFAULT))
+    parser.add_argument("--dual", action="store_true", help="also submit SenseNova local and spread across both hosts")
     args = parser.parse_args(argv)
 
     if args.poll and not args.dry_run:
@@ -327,7 +338,7 @@ def main(argv: list[str] | None = None) -> int:
             dest = Path(args.shots_out)
             write_shots(dest, shots)
             print(f"[v92-farm] wrote {dest}")
-        plan = decide_plan(True, True, False)
+        plan = decide_plan(True, True, want_dual(args.dual))
         shown = build_argv(
             sys.executable,
             "dual_submit_stills.py",
@@ -339,8 +350,9 @@ def main(argv: list[str] | None = None) -> int:
         print("DRY-RUN PASS shots=%d hosts_not_contacted=1" % len(shots))
         return 0
 
-    q_ok, s_ok = probe(args.qwen, args.sn)
-    plan = decide_plan(q_ok, s_ok, allow_qwen_only())
+    dual = want_dual(args.dual)
+    q_ok, s_ok = host_status(args.qwen, args.sn, dual)
+    plan = decide_plan(q_ok, s_ok, dual)
     print(f"[v92-farm] plan only={plan.only or '-'} spread={int(plan.spread)} {plan.reason}")
     if plan.code != 0:
         return plan.code

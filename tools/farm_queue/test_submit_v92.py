@@ -98,8 +98,10 @@ class SubmitV92Test(unittest.TestCase):
         self.assertEqual(payload[0]["label"], payload[0]["id"])
         self.assertTrue(all(row["label"] == row["id"] and row["label"] for row in payload))
 
-    def test_both_hosts_use_spread_local(self) -> None:
+    def test_default_is_qwen_even_when_sensenova_is_up(self) -> None:
         plan = submit.decide_plan(True, True, False)
+        self.assertEqual(plan.only, "qwen")
+        self.assertFalse(plan.spread)
         argv = submit.build_argv("python", "dual_submit_stills.py", r"D:\AIComics\CenturyKnights_farm", "shots.json", plan)
         self.assertEqual(
             argv,
@@ -110,57 +112,56 @@ class SubmitV92Test(unittest.TestCase):
                 r"D:\AIComics\CenturyKnights_farm",
                 "--shots-json",
                 "shots.json",
-                "--spread",
                 "--sn-backend",
                 "local",
                 "--only",
-                "both",
+                "qwen",
             ],
         )
 
-    def test_sn_down_without_flag_does_not_submit(self) -> None:
+    def test_sn_down_still_submits_qwen(self) -> None:
         plan = submit.decide_plan(True, False, False)
-        self.assertEqual(plan.code, 3)
-        self.assertEqual(plan.only, "")
-
-    def test_qwen_only_escape_is_env_only(self) -> None:
-        blocked = submit.decide_plan(True, False, False)
-        self.assertNotEqual(blocked.code, 0)
-        plan = submit.decide_plan(True, False, True)
         self.assertEqual(plan.code, 0)
         self.assertEqual(plan.only, "qwen")
-        self.assertFalse(plan.spread)
-        argv = submit.build_argv("python", "dual.py", "root", "shots.json", plan)
-        self.assertNotIn("--spread", argv)
-        self.assertEqual(argv[argv.index("--sn-backend") + 1], "local")
-        self.assertEqual(argv[argv.index("--only") + 1], "qwen")
-        self.assertFalse(submit.allow_qwen_only({"CK_FARM_ALLOW_QWEN_ONLY": "0"}))
-        self.assertTrue(submit.allow_qwen_only({"CK_FARM_ALLOW_QWEN_ONLY": "1"}))
 
-    def test_escape_does_not_drop_sensenova_when_up(self) -> None:
+    def test_dual_is_opt_in(self) -> None:
+        self.assertFalse(submit.want_dual(False, {}))
+        self.assertFalse(submit.want_dual(False, {"CK_FARM_ALLOW_QWEN_ONLY": "1"}))
+        self.assertFalse(submit.want_dual(False, {"CK_FARM_DUAL": "0"}))
+        self.assertTrue(submit.want_dual(False, {"CK_FARM_DUAL": "1"}))
+        self.assertTrue(submit.want_dual(True, {}))
         plan = submit.decide_plan(True, True, True)
         self.assertEqual(plan.only, "both")
         self.assertTrue(plan.spread)
+        argv = submit.build_argv("python", "dual.py", "root", "shots.json", plan)
+        self.assertIn("--spread", argv)
+        self.assertEqual(argv[argv.index("--sn-backend") + 1], "local")
+        self.assertEqual(argv[argv.index("--only") + 1], "both")
+        blocked = submit.decide_plan(True, False, True)
+        self.assertEqual(blocked.code, 3)
+        self.assertEqual(blocked.only, "")
 
     def test_qwen_down_always_aborts(self) -> None:
         self.assertEqual(submit.decide_plan(False, True, True).code, 2)
-        self.assertEqual(submit.decide_plan(False, False, True).code, 2)
+        self.assertEqual(submit.decide_plan(False, False, False).code, 2)
 
-    def test_main_both_hosts_spreads_even_if_escape_set(self) -> None:
+    def test_main_default_skips_sensenova_even_if_up(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             shots = str(Path(tmp) / "shots.json")
             root = Path(tmp) / "root"
-            with mock.patch.object(submit, "probe", return_value=(True, True)), \
+            with mock.patch.object(submit, "host_status", return_value=(True, True)) as status, \
                  mock.patch.object(submit, "find_dual", return_value=Path("dual_submit_stills.py")), \
                  mock.patch.object(submit, "farm_root", return_value=root), \
                  mock.patch.object(submit.subprocess, "run", return_value=subprocess.CompletedProcess([], 0)) as run, \
-                 mock.patch.dict(os.environ, {"CK_FARM_ALLOW_QWEN_ONLY": "1"}):
+                 mock.patch.dict(os.environ, {"CK_FARM_ALLOW_QWEN_ONLY": "1"}, clear=False):
+                os.environ.pop("CK_FARM_DUAL", None)
                 code = submit.main(["--farms", "FARM-02", "--shots-out", shots])
             self.assertEqual(code, 0)
+            self.assertFalse(status.call_args.args[2])
             argv = run.call_args.args[0]
-            self.assertIn("--spread", argv)
+            self.assertNotIn("--spread", argv)
             self.assertEqual(argv[argv.index("--sn-backend") + 1], "local")
-            self.assertEqual(argv[argv.index("--only") + 1], "both")
+            self.assertEqual(argv[argv.index("--only") + 1], "qwen")
             payload = json.loads(Path(shots).read_text(encoding="utf-8"))
             self.assertIsInstance(payload, list)
             self.assertEqual(len(payload), 35)
@@ -168,40 +169,55 @@ class SubmitV92Test(unittest.TestCase):
             self.assertEqual(payload[0]["prompt"], payload[0]["positive"])
             self.assertEqual(payload[0]["role"], "city")
 
-    def test_main_sn_down_does_not_submit(self) -> None:
-        env = os.environ.copy()
-        env.pop("CK_FARM_ALLOW_QWEN_ONLY", None)
-        with mock.patch.object(submit, "probe", return_value=(True, False)), \
-             mock.patch.object(submit.subprocess, "run") as run, \
-             mock.patch.dict(os.environ, env, clear=True):
-            code = submit.main(["--farms", "FARM-02"])
-        self.assertEqual(code, 3)
-        run.assert_not_called()
-
-    def test_main_escape_is_qwen_only_without_spread(self) -> None:
+    def test_main_dual_flag_spreads_when_both_up(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             shots = str(Path(tmp) / "shots.json")
             root = Path(tmp) / "root"
-            with mock.patch.object(submit, "probe", return_value=(True, False)), \
+            with mock.patch.object(submit, "host_status", return_value=(True, True)) as status, \
+                 mock.patch.object(submit, "find_dual", return_value=Path("dual_submit_stills.py")), \
+                 mock.patch.object(submit, "farm_root", return_value=root), \
+                 mock.patch.object(submit.subprocess, "run", return_value=subprocess.CompletedProcess([], 0)) as run:
+                code = submit.main(["--farms", "FARM-02", "--shots-out", shots, "--dual"])
+            self.assertEqual(code, 0)
+            self.assertTrue(status.call_args.args[2])
+            argv = run.call_args.args[0]
+            self.assertIn("--spread", argv)
+            self.assertEqual(argv[argv.index("--only") + 1], "both")
+
+    def test_main_dual_env_spreads(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            shots = str(Path(tmp) / "shots.json")
+            root = Path(tmp) / "root"
+            with mock.patch.object(submit, "host_status", return_value=(True, True)), \
                  mock.patch.object(submit, "find_dual", return_value=Path("dual_submit_stills.py")), \
                  mock.patch.object(submit, "farm_root", return_value=root), \
                  mock.patch.object(submit.subprocess, "run", return_value=subprocess.CompletedProcess([], 0)) as run, \
-                 mock.patch.dict(os.environ, {"CK_FARM_ALLOW_QWEN_ONLY": "1"}):
+                 mock.patch.dict(os.environ, {"CK_FARM_DUAL": "1"}):
                 code = submit.main(["--farms", "FARM-02", "--shots-out", shots])
             self.assertEqual(code, 0)
             argv = run.call_args.args[0]
-            self.assertNotIn("--spread", argv)
-            self.assertEqual(argv[argv.index("--sn-backend") + 1], "local")
-            self.assertEqual(argv[argv.index("--only") + 1], "qwen")
+            self.assertEqual(argv[argv.index("--only") + 1], "both")
+            self.assertIn("--spread", argv)
 
-    def test_main_missing_dual_stages_shots(self) -> None:
+    def test_main_dual_aborts_when_sn_down(self) -> None:
+        with mock.patch.object(submit, "host_status", return_value=(True, False)), \
+             mock.patch.object(submit.subprocess, "run") as run, \
+             mock.patch.dict(os.environ, {"CK_FARM_DUAL": "1"}):
+            code = submit.main(["--farms", "FARM-02", "--dual"])
+        self.assertEqual(code, 3)
+        run.assert_not_called()
+
+    def test_main_missing_script_stages_shots(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             shots = str(Path(tmp) / "shots.json")
             root = Path(tmp) / "root"
-            with mock.patch.object(submit, "probe", return_value=(True, True)), \
+            env = os.environ.copy()
+            env.pop("CK_FARM_DUAL", None)
+            with mock.patch.object(submit, "host_status", return_value=(True, False)), \
                  mock.patch.object(submit, "find_dual", return_value=None), \
                  mock.patch.object(submit, "farm_root", return_value=root), \
-                 mock.patch.object(submit.subprocess, "run") as run:
+                 mock.patch.object(submit.subprocess, "run") as run, \
+                 mock.patch.dict(os.environ, env, clear=True):
                 code = submit.main(["--farms", "FARM-02", "--shots-out", shots])
             self.assertEqual(code, 4)
             run.assert_not_called()
