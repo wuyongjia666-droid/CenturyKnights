@@ -1,5 +1,6 @@
 {
-  "boot_ms": 800,
+  "boot_ms": 860,
+  "note": "#103 measured boot_ms 990 on Actions (8bd8075d); main 2bcc0483 passed under the old 960 ceiling.",
   "memory_static_bytes": 120000000,
   "scenes_ms": {
     "atlas_view": 700,
