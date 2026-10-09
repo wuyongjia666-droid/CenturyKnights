@@ -7,6 +7,7 @@ const SCHEMA := "v9.2"
 const SLOTS := ["manual_0", "manual_1", "manual_2", "auto", "quick"]
 const MANUAL_0 := "user://century_knights_save.json"
 const CHAIN := ["v8.7", "v8.8", "v9.1", "v9.2"]
+const STATIC_WORLD := ["nodes", "roads", "nations", "goods", "rules", "items", "data"]
 
 static func body_path(slot: String) -> String:
 	if slot == "manual_0":
@@ -74,9 +75,77 @@ static func read_best(slot: String) -> Dictionary:
 			return {"ok": true, "data": parsed, "source": names[i]}
 	return {"ok": false}
 
+static func compact_world(src: Dictionary, court_derived: bool) -> Dictionary:
+	var out := {}
+	for k in src.keys():
+		if str(k) in STATIC_WORLD:
+			continue
+		out[k] = src[k]
+	var delta := _market_delta(src.get("market", {}) if typeof(src.get("market", {})) == TYPE_DICTIONARY else {})
+	if delta.is_empty():
+		out.erase("market")
+	else:
+		out["market"] = delta
+	if court_derived:
+		var courts = out.get("royal_courts", {})
+		if typeof(courts) == TYPE_DICTIONARY and not (courts as Dictionary).is_empty():
+			var slim: Dictionary = (courts as Dictionary).duplicate(true)
+			_erase_genomes(slim)
+			out["royal_courts"] = slim
+			out["court_genomes"] = "derived"
+	return out
+
+static func restore_market() -> void:
+	for id in World.nodes.keys():
+		var city := str(id)
+		if not World.market.has(city):
+			World._init_market(city)
+			continue
+		var row: Dictionary = World.market[city]
+		for g in World.goods.keys():
+			var good := str(g)
+			if not row.has(good):
+				row[good] = World._target_stock(city, good)
+		World.market[city] = row
+
+static func restore_court_genomes() -> bool:
+	var courts: Dictionary = World.royal_courts if typeof(World.royal_courts) == TYPE_DICTIONARY else {}
+	var year := int(courts.get("year", 0))
+	if year < 2:
+		return false
+	var replay := _replay_courts(year)
+	var genomes := {}
+	var nations: Dictionary = replay.get("nations", {}) if typeof(replay.get("nations", {})) == TYPE_DICTIONARY else {}
+	for nid in nations.keys():
+		var house: Dictionary = nations[nid] if typeof(nations[nid]) == TYPE_DICTIONARY else {}
+		for member in house.get("members", []):
+			if typeof(member) != TYPE_DICTIONARY:
+				continue
+			var row: Dictionary = member
+			if typeof(row.get("genome", {})) == TYPE_DICTIONARY and not (row.get("genome", {}) as Dictionary).is_empty():
+				genomes[str(row.get("id", ""))] = row["genome"]
+	var live: Dictionary = courts.get("nations", {}) if typeof(courts.get("nations", {})) == TYPE_DICTIONARY else {}
+	var missing := false
+	for nid2 in live.keys():
+		var house2: Dictionary = live[nid2] if typeof(live[nid2]) == TYPE_DICTIONARY else {}
+		for member2 in house2.get("members", []):
+			if typeof(member2) != TYPE_DICTIONARY:
+				continue
+			var row2: Dictionary = member2
+			var have = row2.get("genome", {})
+			if typeof(have) == TYPE_DICTIONARY and not (have as Dictionary).is_empty():
+				continue
+			var gid := str(row2.get("id", ""))
+			if not genomes.has(gid):
+				missing = true
+				continue
+			row2["genome"] = (genomes[gid] as Dictionary).duplicate(true)
+	return not missing
+
 static func migrate(data: Dictionary) -> Dictionary:
 	if data.is_empty():
 		return data
+	_drop_static_world(data)
 	var schema := _normalize_schema(str(data.get("schema", "")))
 	if schema == SCHEMA:
 		return data
@@ -106,6 +175,50 @@ static func migrate(data: Dictionary) -> Dictionary:
 	if origin != "" and origin != SCHEMA:
 		data["migrated_from"] = origin
 	return data
+
+static func _drop_static_world(data: Dictionary) -> void:
+	var world = data.get("world_v87", {})
+	if typeof(world) != TYPE_DICTIONARY:
+		return
+	var blob: Dictionary = world
+	for key in STATIC_WORLD:
+		blob.erase(key)
+	data["world_v87"] = blob
+
+static func _market_delta(market: Dictionary) -> Dictionary:
+	var out := {}
+	for city in market.keys():
+		var row = market[city]
+		if typeof(row) != TYPE_DICTIONARY:
+			continue
+		var delta := {}
+		for g in (row as Dictionary).keys():
+			var have := int(row[g])
+			if have != World._target_stock(str(city), str(g)):
+				delta[str(g)] = have
+		if not delta.is_empty():
+			out[str(city)] = delta
+	return out
+
+static func _erase_genomes(node) -> void:
+	if typeof(node) == TYPE_ARRAY:
+		for item in node:
+			_erase_genomes(item)
+		return
+	if typeof(node) != TYPE_DICTIONARY:
+		return
+	var row: Dictionary = node
+	row.erase("genome")
+	for key in row.keys():
+		_erase_genomes(row[key])
+
+static func _replay_courts(up_to_year: int) -> Dictionary:
+	var state := {}
+	for y in range(2, up_to_year + 1):
+		if state.is_empty():
+			state = CKCourt.blank_courts(y * 17 + 3)
+		state = CKCourt.tick(state, y)
+	return state
 
 static func _migrate_v88_to_v91(data: Dictionary, origin: String) -> Dictionary:
 	for id in data.get("characters", {}).keys():
