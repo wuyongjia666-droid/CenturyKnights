@@ -365,6 +365,75 @@ func leave_cost_for(locked: bool, engaged: bool) -> int:
 func is_engaged(cell: Vector2i, zoc_sources: Array) -> bool:
 	return in_zoc(cell, zoc_sources)
 
+## Bond rank to a link chance. Kinship adds a resonance bonus. BTL-09.
+func link_chance(rank: String, kin: bool) -> int:
+	var base := 0
+	match rank:
+		"C":
+			base = 25
+		"B":
+			base = 45
+		"A":
+			base = 70
+		_:
+			base = 0
+	if base == 0:
+		return 0
+	if kin:
+		base += 15
+	return mini(95, base)
+
+
+func link_offers(units: Array, ai: int) -> Array:
+	if ai < 0 or ai >= units.size():
+		return []
+	var atk = units[ai]
+	var out: Array = []
+	for i in units.size():
+		if i == ai:
+			continue
+		var other = units[i]
+		if str(other.get("team", "")) != str(atk.get("team", "")):
+			continue
+		if int(other.char.hp) <= 0:
+			continue
+		if _manhattan(atk.pos, other.pos) != 1:
+			continue
+		var left := str(atk.char.cast_key) if str(atk.char.cast_key) != "" else str(atk.char.name)
+		var right := str(other.char.cast_key) if str(other.char.cast_key) != "" else str(other.char.name)
+		var rank := Bonds.rank(left, right)
+		var kin := CKBloodline.kinship_degree(atk.char, other.char, GameState.characters) < 99
+		var chance := link_chance(rank, kin)
+		if chance <= 0:
+			continue
+		out.append({
+			"index": i,
+			"name": str(other.char.name),
+			"rank": rank,
+			"kin": kin,
+			"chance": chance,
+		})
+	out.sort_custom(func(a, b): return int(a["chance"]) > int(b["chance"]))
+	return out
+
+
+func link_names(units: Array, ai: int) -> Array:
+	var names: Array = []
+	for row in link_offers(units, ai):
+		names.append(str(row.get("name", "")))
+	return names
+
+
+func roll_link(offers: Array, rng: RandomNumberGenerator) -> Dictionary:
+	if offers.is_empty():
+		return {}
+	var best: Dictionary = offers[0]
+	if rng.randi_range(1, 100) > int(best.get("chance", 0)):
+		return {}
+	var picked := best.duplicate()
+	picked["kind"] = "strike" if rng.randi_range(0, 1) == 0 else "guard"
+	return picked
+
 func job_mechanic(job_id: String) -> String:
 	return str(GameState.get_job(job_id).get("mechanic", ""))
 
