@@ -1,11 +1,10 @@
 class_name Endings
 extends RefCounted
 ## NAR-09: one substantial ending from the dynasty already on GameState.
-## The only ambition call is CKAmbitions.generation_probe(), and only when that
-## script exists. This file does not write silver, food, or the campaign RNG.
+## Ambition completion is CKAmbitions.generation_probe() and nothing else.
+## This file does not write silver, food, or the campaign RNG.
 
 const DATA := "res://data/story/endings.json"
-const AMBITION_SCRIPT := "res://scripts/characters/ambitions.gd"
 const KEY_COMPANIONS := ["pingmei", "qiaowai", "ceju"]
 const ROYAL_WEIGHT := 0.5
 const PRESTIGE_REP := 55
@@ -67,19 +66,7 @@ static func _pick(axes: Dictionary) -> String:
 
 
 static func _probe() -> bool:
-	if not FileAccess.file_exists(AMBITION_SCRIPT):
-		return _probe_mark()
-	var script = load(AMBITION_SCRIPT)
-	if script == null:
-		return _probe_mark()
-	return bool(script.call("generation_probe"))
-
-
-static func _probe_mark() -> bool:
-	var leader := GameState.get_leader()
-	if leader != null and str(GameState.house_mods.get("dyn_gen_done", "")) == leader.id:
-		return true
-	return str(GameState.house_mods.get("dyn_done", "")) != ""
+	return CKAmbitions.generation_probe()
 
 
 static func _sign() -> bool:

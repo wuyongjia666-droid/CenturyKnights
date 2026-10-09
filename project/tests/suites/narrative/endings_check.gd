@@ -88,17 +88,21 @@ func _seed(report: Dictionary, seed: Dictionary) -> String:
 		return "seed prestige/faith %s" % str(axes)
 	if int(axes.get("holdings", -1)) != 4 or int(axes.get("silver", -1)) != 5774:
 		return "seed ledger axes %s" % str(axes)
-	if int(axes.get("companions", -1)) != 0 or bool(axes.get("generation_closed", true)):
-		return "seed companions/ambition %s" % str(axes)
+	if int(axes.get("companions", -1)) != 0:
+		return "seed companions %s" % str(axes)
+	if not bool(axes.get("generation_closed", false)):
+		return "seed generation still open %s" % str(axes)
+	if not CKAmbitions.generation_probe():
+		return "seed probe diverged"
 	if str(seed.get("title", "")) == str(seed.get("title_key", "")):
 		return "title key missing"
 	var text := _texts(seed)
 	if text.find("5774") < 0 or text.find("4处据点") < 0:
 		return "rite ending hid the treasury"
-	if text.find("志向那一栏空着") < 0:
-		return "open generation missing"
-	if text.find("声望没有替他们把这一行写完") >= 0:
-		return "closed stele showed without a generation"
+	if text.find("已写下志向") < 0:
+		return "closed rite missing"
+	if text.find("志向那一栏空着") >= 0:
+		return "open beat leaked into seed 91"
 	return _body(seed)
 
 
@@ -110,12 +114,14 @@ func _details() -> String:
 		ids[str(line.get("id", ""))] = true
 	if not ids.has("end_people_l001") or not ids.has("end_people_l002") or ids.has("end_people_l003"):
 		return "companion lines %s" % str(ids.keys())
-	_empty_state()
-	var leader := GameState.get_leader()
-	GameState.house_mods["dyn_gen_done"] = leader.id if leader else ""
+	var arm_err := _close_by_probe()
+	if arm_err != "":
+		return arm_err
 	var closed: Dictionary = EndingsScript.resolve()
 	if str(closed.get("id", "")) != "end_empty" or not bool(closed.get("axes", {}).get("generation_closed", false)):
-		return "generation mark %s" % str(closed.get("axes", {}))
+		return "generation probe %s" % str(closed.get("axes", {}))
+	if not CKAmbitions.generation_probe():
+		return "probe did not stay closed"
 	if _texts(closed).find("厅里还是没有人应声") < 0:
 		return "stele beat missing"
 	if _texts(closed).find("志向那一栏也是空的") >= 0:
@@ -170,7 +176,7 @@ func _ledger_state() -> void:
 	GameState.reputation = {"ashland": 0, "riverland": 0}
 	GameState.buildings["shrine"] = 1
 	GameState.holdings["reed_ford"] = {"level": 1, "steward_id": ""}
-	GameState.holdings["west_span"] = {"level": 1, "steward_id": ""}
+	GameState.holdings["stone_slope"] = {"level": 1, "steward_id": ""}
 
 
 func _people_state() -> void:
@@ -181,6 +187,109 @@ func _people_state() -> void:
 
 func _empty_state() -> void:
 	_fresh()
+
+
+func _close_by_probe() -> String:
+	_empty_state()
+	var leader := GameState.get_leader()
+	if leader == null:
+		return "no leader"
+	var offers: Array = CKAmbitions.open_offer(leader)
+	var armed := ""
+	for id in offers:
+		if str(id) == "purify_ash":
+			continue
+		if _arm_offer(str(id), leader):
+			armed = str(id)
+			break
+	if armed == "":
+		return "no armable offer %s" % str(offers)
+	if not CKAmbitions.met(CKAmbitions.row(armed)):
+		return "unmet " + armed
+	return ""
+
+
+func _arm_offer(id: String, leader: CKCharacter) -> bool:
+	match id:
+		"marked_heir":
+			return "heir_mark" in leader.traits
+		"decade":
+			Calendar.year = 10
+		"academy_three":
+			GameState.house_mods["dyn_academy"] = 3
+		"granary":
+			GameState.food = 80
+		"shrine_two":
+			GameState.buildings["shrine"] = 2
+		"lamp_seat":
+			leader.blood_meta["lamp_seat"] = "kept"
+		"two_paths":
+			GameState.lineage_path["end_a"] = "martial"
+			GameState.lineage_path["end_b"] = "scholar"
+		"rank_baron":
+			leader.rank = "baron"
+		"heir_born":
+			_child(leader)
+		"ford_two":
+			GameState.holdings["reed_ford"] = {"level": 2, "steward_id": ""}
+		"roster_four":
+			_extra("end_roster_a")
+			_extra("end_roster_b")
+		"three_masters":
+			for person in [leader, _ally(), _extra("end_master")]:
+				person.job_id = "warrior"
+				person.level = 3
+				person.in_roster = true
+		"three_friends":
+			GameState.reputation["ashland"] = 30
+			GameState.reputation["riverland"] = 30
+			GameState.reputation["northroad"] = 30
+		"ash_respect":
+			GameState.reputation["ashland"] = 80
+		"three_marriages":
+			_noble_pairs()
+		_:
+			return false
+	return true
+
+
+func _child(leader: CKCharacter) -> void:
+	var child := CKCharacter.new()
+	child.id = "end_child"
+	child.alive = true
+	child.in_roster = false
+	child.parent_ids = [leader.id]
+	child.blood_mix = {"common_ash": 1.0}
+	leader.children_ids = [child.id]
+	GameState.characters[child.id] = child
+
+
+func _ally() -> CKCharacter:
+	for person in GameState.characters.values():
+		if str(person.cast_key) == "dengying":
+			return person
+	return _extra("end_ally")
+
+
+func _extra(pid: String) -> CKCharacter:
+	var person := CKCharacter.new()
+	person.id = pid
+	person.cast_key = pid
+	person.alive = true
+	person.in_roster = true
+	person.blood_mix = {"common_ash": 1.0}
+	GameState.characters[pid] = person
+	return person
+
+
+func _noble_pairs() -> void:
+	var lines := ["banner_marshal", "sy_night", "river_ward"]
+	for i in lines.size():
+		var host := _extra("end_host_%d" % i)
+		var spouse := _extra("end_noble_%d" % i)
+		host.spouse_id = spouse.id
+		spouse.spouse_id = host.id
+		spouse.blood_mix = {lines[i]: 1.0}
 
 
 func _fresh() -> void:
