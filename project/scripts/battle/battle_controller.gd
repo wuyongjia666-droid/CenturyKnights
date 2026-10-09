@@ -56,6 +56,8 @@ var _info_traits: HBoxContainer
 var _dmg_fx: Array = []  # {pos, text, age, col}
 var _turn_flash: float = 0.0
 var _round_no: int = 0
+var _link_seg: Dictionary = {}
+var _link_guard: int = 0
 var _round_label: Label
 var _phase_chip: Label
 var _sel_pulse: float = 0.0
@@ -1709,9 +1711,13 @@ func _spawn_slash(cell: Vector2i, kind: String = "slash") -> void:
 
 func _do_attack(ai: int, di: int) -> void:
 	_combat_rec = []
+	_link_seg = BattleRules.roll_link(BattleRules.link_offers(units, ai), rng)
+	_link_guard = 3 if str(_link_seg.get("kind", "")) == "guard" else 0
 	var _hp0a: int = int(units[ai].char.hp)
 	var _hp0d: int = int(units[di].char.hp)
 	_resolve_strike(ai, di, true)
+	if str(_link_seg.get("kind", "")) == "strike" and units[di].char.hp > 0:
+		_resolve_strike(int(_link_seg.get("index", ai)), di, false)
 	var atk = units[ai]
 	var def = units[di]
 	# 交战锁定：攻/受击双方咬住（脱离代价加重，反击优先）
@@ -1753,7 +1759,14 @@ func _do_attack(ai: int, di: int) -> void:
 func _cutscenes_enabled() -> bool:
 	return DisplayServer.get_name() != "headless" and bool(GameState.get_meta("cutscenes_on", true)) and bool(GameState.settings.get("cutscenes", true))
 
+func _cut_links() -> Array:
+	if _link_seg.is_empty():
+		return []
+	return [_link_seg]
+
+
 func _queue_cutscene(ai: int, di: int, hp0a: int, hp0d: int) -> void:
+	set_meta("cut_links", _cut_links())
 	if not _cutscenes_enabled() or _combat_rec.is_empty():
 		_combat_rec = []
 		return
@@ -1781,6 +1794,7 @@ func _queue_cutscene(ai: int, di: int, hp0a: int, hp0d: int) -> void:
 		"strikes": strikes, "ground": ground, "grade": Color(gv.x, gv.y, gv.z),
 		"backdrop": str(_AtlasArt.battle_backdrop_for_map(map_id)),
 		"title": "%s · %s" % [map_name, str(BattleRules.terrain_info(tid).get("name", tid))],
+		"links": _cut_links(),
 	}
 	_combat_rec = []
 	_cut_queue.append(rec)
@@ -1824,6 +1838,11 @@ func _combat_extras(ai: int, di: int) -> Dictionary:
 	extras["height_hit"] = TerrainFx.height_delta_hit(_height_at(atk.pos), _height_at(def.pos))
 	extras["weather_hit"] = TerrainFx.weather_hit(weather, _atk_type(atk.char))
 	extras["weather"] = weather
+	var names := BattleRules.link_names(units, ai)
+	if not names.is_empty():
+		extras["link_names"] = names
+	if _link_guard > 0:
+		extras["flat_def"] = int(extras.get("flat_def", 0)) + _link_guard
 	return extras
 
 
