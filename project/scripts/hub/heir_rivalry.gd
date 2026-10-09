@@ -1,12 +1,15 @@
 extends Control
 ## 双嗣校场：两名有道路的子嗣对决旁注，可开战或调解
 
+const LifeEvents := preload("res://scripts/characters/life_events.gd")
+
 var _body: RichTextLabel
 var _actions: VBoxContainer
 var _msg: Label
 var _a: CKCharacter
 var _b: CKCharacter
 var _step: int = 0
+var _life: Dictionary = {}
 
 func _ready() -> void:
 	UIKit.make_themed_bg(self, "heir")
@@ -92,6 +95,9 @@ func _add(text: String, cb: Callable) -> void:
 
 func _show() -> void:
 	_clear()
+	if not _life.is_empty():
+		_show_life()
+		return
 	if _a == null:
 		_body.text = "族谱中尚无足够年长的子嗣。联姻传代后再来校场。"
 		_add("回堡", func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
@@ -106,13 +112,59 @@ func _show() -> void:
 			_body.text = "[b]双嗣争执[/b]\n\n%s（%s）与 %s（%s）在校场争执『谁更配写进执宴旁注』。\n\n可选：调解、支持其一、或开放校场对决战。" % [
 				_a.name, _path_cn(_a), _b.name, _path_cn(_b)
 			]
+			var gap := Control.new()
+			gap.custom_minimum_size = Vector2(0, 148)
+			gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			_actions.add_child(gap)
 			_add("调解：各退一步（银-15，双方声望旁注）", func(): _mediate())
 			_add("支持长嗣 %s" % _a.name, func(): _support(_a, _b))
 			_add("支持次嗣 %s" % _b.name, func(): _support(_b, _a))
 			_add("校场对决开战", func(): _battle())
+			var card := _succession_card()
+			if not card.is_empty():
+				_add(Locale.t("life_succession_btn"), func(): _life = card; _show())
 		1:
 			_add("再议", func(): _step = 0; _show())
 			_add("回堡", func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
+
+func _succession_card() -> Dictionary:
+	for who in [_a, _b]:
+		if who == null:
+			continue
+		var card: Dictionary = LifeEvents.pending_band(who.id, "succession")
+		if not card.is_empty():
+			card["cid"] = who.id
+			return card
+	return {}
+
+
+func _show_life() -> void:
+	var lines: PackedStringArray = PackedStringArray()
+	for row in _life.get("lines", []):
+		lines.append(str(row.get("text", "")))
+	_body.text = "\n".join(lines)
+	var cid := str(_life.get("cid", ""))
+	var eid := str(_life.get("id", ""))
+	for opt in _life.get("options", []):
+		var label := ""
+		for row in opt.get("lines", []):
+			label = str(row.get("text", ""))
+			break
+		_queue_life(cid, eid, str(opt.get("id", "")), label)
+	_add(Locale.t("btn_back"), func(): _life = {}; _show())
+
+
+func _queue_life(cid: String, event_id: String, option_id: String, label: String) -> void:
+	_add(label, func(): _resolve_life(cid, event_id, option_id))
+
+
+func _resolve_life(cid: String, event_id: String, option_id: String) -> void:
+	LifeEvents.resolve(cid, event_id, option_id)
+	_life = {}
+	_msg.text = Locale.t("life_resolved")
+	_step = 1
+	_show()
+
 
 func _mediate() -> void:
 	if GameState.silver >= 15:
