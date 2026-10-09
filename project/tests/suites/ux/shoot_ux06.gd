@@ -32,10 +32,19 @@ func _ready() -> void:
 	if phone:
 		var fitted: float = 720.0 * hub.scale.x
 		hub.position.y = maxf(0.0, (float(win.y) - fitted) * 0.5)
-	for _i in 36:
+	for _i in 8:
 		await get_tree().process_frame
-	await RenderingServer.frame_post_draw
-	var img := get_viewport().get_texture().get_image()
+	RenderingServer.force_draw()
+	var tex := get_viewport().get_texture()
+	if tex == null:
+		print("SHOOT no texture")
+		get_tree().quit(1)
+		return
+	var img := tex.get_image()
+	if img == null:
+		print("SHOOT null image")
+		get_tree().quit(1)
+		return
 	if img.get_height() > 8 and img.get_pixel(4, 4).a < 0.01 and img.get_pixel(4, img.get_height() - 4).a > 0.5:
 		img.flip_y()
 	var path := OS.get_environment("CK_SHOOT_OUT")

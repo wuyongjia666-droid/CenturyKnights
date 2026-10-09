@@ -39,6 +39,10 @@ ux_todo_marriage,可议婚事,Marriages to discuss
 ux_todo_injured,伤病,Wounded
 ux_todo_festival,节庆,Festival
 ux_todo_train,可演武,Drill is open
+ux_hub_now,眼下：%s,Now: %s
+ux_hub_era0,卷零,Volume 0
+ux_hub_era,第 %d 纪元,Era %d
+ux_hub_mainline_done,主线已走到头,The main line is finished
 ux_credits_bar,制作人员 · CREDITS,Credits
 ux_credits_title,百年骑士,Century Knights
 ux_credits_who,独立原创项目。本页只列仓库里真实在用的第三方字体，不编造职务名单。,An original project. This page lists only the third-party fonts actually used in the repo. It does not invent a staff list.
