@@ -296,6 +296,10 @@ func _style_node(b: Button, col: Color, filled: bool, radius: int, pad: int = 6)
 	b.add_theme_color_override("font_focus_color", UIKit.ON_ACCENT if filled else Color.WHITE)
 	b.add_theme_color_override("font_disabled_color", UIKit.DISABLED_TEXT)
 
+func _on_node_focus(id: String) -> void:
+	if not _busy:
+		_select_node(id)
+
 func _add_node_button(n: Dictionary, markers: Dictionary, mm: Dictionary) -> void:
 	var id := str(n.id)
 	var kind := str(n.kind)
@@ -316,7 +320,7 @@ func _add_node_button(n: Dictionary, markers: Dictionary, mm: Dictionary) -> voi
 	b.tooltip_text = "%s · %s" % [n.get("name", id), World.kind_zh(id)]
 	b.disabled = _busy
 	_bind_press(b, func(): _on_node_pressed(id), func(): _select_node(id))
-	b.focus_entered.connect(func(): if not _busy: _select_node(id))
+	b.focus_entered.connect(_on_node_focus.bind(id))
 	_layer.add_child(b)
 	b.size = Vector2(px, px)
 	b.position = _np(id) - b.size * 0.5

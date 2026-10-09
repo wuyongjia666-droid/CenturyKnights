@@ -40,12 +40,9 @@ func _run() -> String:
 	GameState.silver = 1
 	if not CKSaveService.load_slot(GameState, "manual_2"):
 		return "load"
-	if not CKHoldings.owned(GameState):
-		return "seat dropped"
-	if str(CKHoldings.seat(GameState).get("city", "")) != city:
-		return "city dropped"
-	if int(CKHoldings.seat(GameState).get("garrison_away", 0)) != 4:
-		return "garrison dropped"
+	var seat: Dictionary = CKHoldings.seat(GameState)
+	if not CKHoldings.owned(GameState) or str(seat.get("city", "")) != city or int(seat.get("garrison_away", 0)) != 4:
+		return "roundtrip"
 	var atlas := (load("res://scenes/hub/atlas_view.tscn") as PackedScene).instantiate()
 	add_child(atlas)
 	for _i in 4:
