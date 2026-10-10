@@ -30,11 +30,11 @@ func _run() -> String:
 		return "path " + path
 	if not ResourceLoader.exists(path):
 		return "farm plate missing " + path
-	var missing := UnitArt.expression_plate_path("c01", "怒")
-	if not missing.ends_with("v92_expr_c01_anger.png"):
-		return "missing path " + missing
-	if ResourceLoader.exists(missing):
-		return "anger plate unexpectedly present"
+	var anger := UnitArt.expression_plate_path("c01", "怒")
+	if not anger.ends_with("v92_expr_c01_anger.png"):
+		return "anger path " + anger
+	if not ResourceLoader.exists(anger):
+		return "anger plate missing " + anger
 	GameState.new_game("烬行", "灰旗", GameState.crest_color)
 	var leader = GameState.get_leader()
 	if leader == null:
@@ -46,7 +46,13 @@ func _run() -> String:
 	var shown := UnitArt.dialogue_portrait(str(people[0].get("name", "")), "惊", leader, 120)
 	if shown == null or shown != plate:
 		return "ingested plate not used"
-	var fallback := UnitArt.dialogue_portrait(str(people[0].get("name", "")), "怒", leader, 120)
+	var anger_plate = load(anger)
+	if not (anger_plate is Texture2D):
+		return "anger plate load"
+	var shown_anger := UnitArt.dialogue_portrait(str(people[0].get("name", "")), "怒", leader, 120)
+	if shown_anger == null or shown_anger != anger_plate:
+		return "anger plate not used"
+	var fallback := UnitArt.dialogue_portrait("not-a-companion", "怒", leader, 120)
 	if fallback == null or fallback != base:
 		return "missing plate did not use the base portrait"
 	var queue_text := FileAccess.get_file_as_string(_repo().path_join("tools/farm_queue/v92_expressions.json"))

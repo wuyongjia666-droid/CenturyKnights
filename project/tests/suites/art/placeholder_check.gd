@@ -18,8 +18,11 @@ func _run() -> String:
 	var city := AtlasArt.city_plate("stone_slope")
 	if not city.ends_with("v87_city_stone_slope.png"):
 		return "city plate " + city
-	var missing := AtlasArt.city_plate("eo_banner")
-	if not missing.ends_with("v92_fallback_eo_banner.png"):
+	var banner := AtlasArt.city_plate("eo_banner")
+	if not banner.ends_with("v87_city_eo_banner.png"):
+		return "city plate " + banner
+	var missing := AtlasArt.city_plate("sy_banner")
+	if not missing.ends_with("v92_fallback_sy_banner.png"):
 		return "city fallback " + missing
 	var kept := AtlasArt.city_plate("ash_capital")
 	if kept == "" or kept.find("v92_fallback") >= 0:

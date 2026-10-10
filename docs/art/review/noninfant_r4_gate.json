@@ -1,0 +1,153 @@
+{
+  "batch": "v92-noninfant-r4",
+  "engine": "qwen-only",
+  "prompt_note": "unchanged from prior reject round",
+  "downloaded": 19,
+  "final_pass": 6,
+  "staged": 6,
+  "by_kind": {
+    "city": 3,
+    "item": 1,
+    "expression": 1,
+    "genome": 1
+  },
+  "combined": {
+    "downloaded": 19,
+    "shots": 19,
+    "missing_png": [],
+    "anatomy": {
+      "scanned": 2,
+      "pass": 2,
+      "reject": 0,
+      "reasons": {},
+      "elapsed_s": 0.4
+    },
+    "anatomy_reject": 0,
+    "style": {
+      "scanned": 19,
+      "pass": 6,
+      "reject": 13,
+      "fail_reasons": {
+        "saturation": 13
+      },
+      "elapsed_s": 2.7
+    },
+    "final_pass": 6,
+    "final_reject": 13
+  },
+  "anatomy_rejects": [],
+  "style_rejects": [
+    {
+      "label": "v87_city_sr_capital",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sr_capital.png"
+    },
+    {
+      "label": "v87_city_sr_east",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sr_east.png"
+    },
+    {
+      "label": "v87_city_sr_pagoda",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sr_pagoda.png"
+    },
+    {
+      "label": "v87_city_sr_south",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sr_south.png"
+    },
+    {
+      "label": "v87_city_sr_sw",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sr_sw.png"
+    },
+    {
+      "label": "v87_city_sr_west",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sr_west.png"
+    },
+    {
+      "label": "v87_city_sy_banner",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sy_banner.png"
+    },
+    {
+      "label": "v87_city_sy_coast",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sy_coast.png"
+    },
+    {
+      "label": "v87_city_sy_frostfort",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sy_frostfort.png"
+    },
+    {
+      "label": "v87_city_sy_ridge",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sy_ridge.png"
+    },
+    {
+      "label": "v87_city_sy_spire",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sy_spire.png"
+    },
+    {
+      "label": "v87_smith_shuoying",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/smiths/v87_smith_shuoying.png"
+    },
+    {
+      "label": "v87_smith_starriver",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/smiths/v87_smith_starriver.png"
+    }
+  ],
+  "pass_labels": [
+    "v87_city_eo_banner",
+    "v87_city_sy_capital",
+    "v87_city_sy_stair",
+    "v87_smith_emberold",
+    "v92_expr_c01_anger",
+    "young_adult_b3dbe8d118e4ac8c"
+  ]
+}
