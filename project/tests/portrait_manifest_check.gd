@@ -225,9 +225,12 @@ func _stages(a: CKCharacter) -> String:
 		return "identity overlap %.3f below threshold" % frac
 	var infant_prose := " ".join(infant["prose"])
 	var elder_prose := " ".join(elder["prose"])
-	if infant_prose.find("swaddle") < 0 or infant_prose.find("carried") < 0:
+	if infant_prose.find("single infant only") < 0 or infant_prose.find("one person only") < 0:
 		a.age = saved
-		return "infant outfit missing"
+		return "infant solo framing missing"
+	if infant_prose.find("carried against") >= 0 or infant_prose.find("adult's chest") >= 0 or infant_prose.find("plain swaddle") >= 0:
+		a.age = saved
+		return "infant still has adult-hold/swaddle clause"
 	if elder_prose.find("elder robes") < 0 or elder_prose.find("thinning") < 0:
 		a.age = saved
 		return "elder hair/robes missing"

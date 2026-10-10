@@ -89,14 +89,14 @@ const STAGE_SKIN := {
 	"elder": "thinner creased elder skin",
 }
 const STAGE_POSTURE := {
-	"infant": "an infant carried against an adult's chest, head supported",
+	"infant": "single infant only, waist-up or bust portrait, one person only, no adult in frame, no caregiver hands",
 	"youth": "a loose youthful stance",
 	"young_adult": "an upright young-adult stance",
 	"middle": "a settled middle-aged stance",
 	"elder": "a slightly stooped elder stance",
 }
 const STAGE_OUTFIT := {
-	"infant": "wrapped in a plain swaddle and carried",
+	"infant": "soft infant cloth tunic only, empty hands, no holding, no swaddle bundle that reads as a second body",
 	"youth": "a simpler shorter outfit",
 	"young_adult": "a fitted contemporary outfit",
 	"middle": "the same cut worn a little heavier",
