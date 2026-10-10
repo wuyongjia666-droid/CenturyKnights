@@ -7,6 +7,22 @@ on:
       - main
 
 jobs:
+  farm_queue:
+    name: farm-queue
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate v9.2 farm queues
+        run: python3 tools/farm_queue/validate_queue_v92.py
+
+      - name: Dry-run v9.2 stills submit
+        run: python3 tools/farm_queue/submit_v92_stills.py --dry-run
+
+      - name: Submit converter tests
+        run: python3 tools/farm_queue/test_submit_v92.py
+
   test:
     name: ci
     runs-on: ubuntu-latest
