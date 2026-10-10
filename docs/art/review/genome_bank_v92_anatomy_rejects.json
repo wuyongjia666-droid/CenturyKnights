@@ -1,0 +1,1017 @@
+{
+  "batch": "v92-farm-FARM-01-anatomy+pose",
+  "engine": "qwen-only",
+  "summary": {
+    "scanned": 1655,
+    "pass": 1572,
+    "reject": 83,
+    "pass_rate": 0.9498,
+    "reasons": {
+      "multi_face": 82,
+      "multi_person_infant": 10,
+      "multi_person": 35
+    },
+    "by_role": {
+      "genome": {
+        "total": 1595,
+        "pass": 1512,
+        "reject": 83
+      },
+      "expression": {
+        "total": 60,
+        "pass": 60,
+        "reject": 0
+      }
+    },
+    "elapsed_s": 274.3,
+    "thresholds": {
+      "person_conf": 0.35,
+      "min_person_area_frac": 0.03,
+      "max_hands": 2,
+      "max_faces": 1
+    },
+    "pose_second_pass": {
+      "scanned_infant_pass": 237,
+      "pass": 236,
+      "reject": 1,
+      "reasons": {
+        "multi_skeleton": 1,
+        "extra_wrists": 1
+      },
+      "elapsed_s": 35.2
+    },
+    "pass_after_pose": 1571,
+    "reject_after_pose": 84
+  },
+  "rejects": [
+    {
+      "label": "infant_00abfda26cf4f0a1",
+      "role": "genome",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_0133cd4f080bf504",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_097a33e08ea6c693",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_09d7a2f2ac3591cb",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_10d48edf27b5aec0",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 1,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_167fdcdd1dc1ff2a",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_16a14ee1a05564ba",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_1808940d683001f0",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_19b7dadefd60aacd",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_1cff6483ab7de9f8",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_211da799e5b981a6",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_24de0cd8424dd56b",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 1,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_2533e9771787108a",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_28baa5af349206dc",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_29a815797f56c12e",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_2d7548b5436a1c02",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 1,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_2db395394b42f4e8",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 1,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_357e585056d9aa5d",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_35cd44624f1aa4df",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 2,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_37930d712ad4da80",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_37f5f49ae0ec7635",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_42e47b519dfdfd72",
+      "role": "genome",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_4ac59b2c3562c2f1",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_4be9880050a19deb",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_4cdce236a4fb6a91",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 1,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_4d377d3542c2b490",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_4f3344e48e30a041",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 1,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_4f6cac92e10a1029",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_51af0b9c6a5c1245",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_53609d21cf211494",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_5563b8b652593257",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_55e36dbe1e0beecb",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_58d81fda82def06d",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_592ac2f0374d2fc3",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_5d78d4e42ee519b3",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_5d967770bf356cbb",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_5fa9afea93258793",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_674bf84f61508d26",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_6c0fc0bdbe766456",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_6cf0be839cd058c4",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_6e4d3189baee2556",
+      "role": "genome",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_7025be6a6cd9276d",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 1,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_72a9676089db51df",
+      "role": "genome",
+      "reasons": [
+        "multi_person"
+      ],
+      "n_person": 2,
+      "n_face": 1,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_79ab7e3df7b25ad4",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_7bb067a8e2c60347",
+      "role": "genome",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_7ea9fbe254be52fd",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_8628b7e293e80cf5",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 1,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_8856b2fbf2a754f4",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_89ff4b829729c83b",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 1,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_9009d551f46e8b5a",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_90d9def8bbbc997f",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_9353d14d4a5b8414",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_95b231173d99b75e",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_95b6d7b9af52d2ca",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_98c04dff28bfdc1a",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_9b6d123433f6e3a5",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 1,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_9cb90542d3005bdf",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_9d105e05aec8ad26",
+      "role": "genome",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_a3357c182e87c689",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_ab01d6c5d1c054aa",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 1,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_ab9c6bf297f97e27",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_aee29977d9b70774",
+      "role": "genome",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_af409a28bdeff081",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_b3f8987b55fc225a",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_b406dd92ee482b57",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_bc459a32d3b71ba3",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 1,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_c82d838010432cd1",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_c8577524514225eb",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_c9f9a303a0548a5e",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_cd4e97e3f56dc8ba",
+      "role": "genome",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_d4375e151d457be8",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 1,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_d5be297a7171a2f7",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 1,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_d93a90c27b884c55",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_dd61210536859566",
+      "role": "genome",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_dd9d0226e01cbe59",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_eacff2650beb891c",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_ee4900643e9225a5",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_ee6faafcc5949d87",
+      "role": "genome",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_f40485e0a0736139",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 1,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_f6ea87a689b45c7b",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_fb3e9a61020169e0",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 1,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_fd9cd718f7e8ad89",
+      "role": "genome",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "youth_684a47f012d45dad",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0,
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_1284214afc000313",
+      "role": "genome",
+      "reasons": [
+        "multi_skeleton",
+        "extra_wrists"
+      ],
+      "n_person": 2,
+      "n_face": null,
+      "n_hand": 3,
+      "source": "pose_limb_gate"
+    }
+  ]
+}
