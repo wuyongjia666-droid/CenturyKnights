@@ -1,5 +1,5 @@
 extends Node
-## ART-04: real v8.7 plates win; missing ids still use the frost glyph or city badge.
+## ART-04: real v8.7 plates win; missing cities still use the nation-crop badge.
 
 func _ready() -> void:
 	var err := _run()
@@ -12,9 +12,9 @@ func _run() -> String:
 	var landed := AtlasArt.item_icon("ashbanner_sword_1")
 	if not landed.ends_with("v87_item_ashbanner_sword_1.png"):
 		return "item icon " + landed
-	var glyph := AtlasArt.item_icon("eo_archive_sig1")
-	if not glyph.ends_with("v92_glyph_eo_archive_sig1.png"):
-		return "glyph fallback " + glyph
+	var sig := AtlasArt.item_icon("eo_archive_sig1")
+	if not sig.ends_with("v87_item_eo_archive_sig1.png"):
+		return "item icon " + sig
 	var city := AtlasArt.city_plate("stone_slope")
 	if not city.ends_with("v87_city_stone_slope.png"):
 		return "city plate " + city
