@@ -72,7 +72,7 @@ class SubmitV92Test(unittest.TestCase):
         labels = [shot["label"] for shot in self.shots]
         self.assertEqual(labels, [shot["id"] for shot in self.shots])
         self.assertEqual(len(labels), len(set(labels)))
-        self.assertEqual(len(self.shots), 2057)
+        self.assertEqual(len(self.shots), 2067)
         farms = [shot["farm"] for shot in self.shots]
         self.assertEqual(farms, sorted(farms, key=submit.FARM_ORDER.index))
         farm03 = [shot["role"] for shot in self.shots if shot["farm"] == "FARM-03"]
@@ -93,7 +93,7 @@ class SubmitV92Test(unittest.TestCase):
             text = path.read_text(encoding="utf-8")
             payload = json.loads(text)
         self.assertIsInstance(payload, list)
-        self.assertEqual(len(payload), 2057)
+        self.assertEqual(len(payload), 2067)
         self.assertTrue(text.lstrip().startswith("["))
         self.assertEqual(payload[0]["label"], payload[0]["id"])
         self.assertTrue(all(row["label"] == row["id"] and row["label"] for row in payload))
