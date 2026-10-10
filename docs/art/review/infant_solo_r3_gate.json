@@ -1,0 +1,79 @@
+{
+  "batch": "v92-infant-solo-r3",
+  "engine": "qwen-only",
+  "prompt_fix": "solo_infant_no_adult_hold",
+  "downloaded": 28,
+  "final_pass": 28,
+  "staged": 28,
+  "by_kind": {
+    "genome": 28
+  },
+  "combined": {
+    "downloaded": 28,
+    "shots": 28,
+    "missing_png": [],
+    "anatomy": {
+      "scanned": 28,
+      "pass": 28,
+      "reject": 0,
+      "reasons": {},
+      "elapsed_s": 5.1
+    },
+    "pose": {
+      "scanned_infant_pass": 28,
+      "pass": 28,
+      "reject": 0,
+      "reasons": {},
+      "elapsed_s": 2.7
+    },
+    "anatomy_or_pose_reject": 0,
+    "style": {
+      "scanned": 28,
+      "pass": 28,
+      "reject": 0,
+      "fail_reasons": {},
+      "elapsed_s": 3.0
+    },
+    "final_pass": 28,
+    "final_reject": 0
+  },
+  "anatomy_rejects": [],
+  "pose": {
+    "scanned_infant_pass": 28,
+    "pass": 28,
+    "reject": 0,
+    "reasons": {},
+    "elapsed_s": 2.7
+  },
+  "style_rejects": [],
+  "pass_labels": [
+    "infant_097a33e08ea6c693",
+    "infant_1284214afc000313",
+    "infant_1808940d683001f0",
+    "infant_1cff6483ab7de9f8",
+    "infant_211da799e5b981a6",
+    "infant_24de0cd8424dd56b",
+    "infant_2533e9771787108a",
+    "infant_2d7548b5436a1c02",
+    "infant_357e585056d9aa5d",
+    "infant_35cd44624f1aa4df",
+    "infant_37930d712ad4da80",
+    "infant_37f5f49ae0ec7635",
+    "infant_51af0b9c6a5c1245",
+    "infant_53609d21cf211494",
+    "infant_55e36dbe1e0beecb",
+    "infant_58d81fda82def06d",
+    "infant_592ac2f0374d2fc3",
+    "infant_5d78d4e42ee519b3",
+    "infant_5d967770bf356cbb",
+    "infant_6e4d3189baee2556",
+    "infant_8856b2fbf2a754f4",
+    "infant_95b231173d99b75e",
+    "infant_ab01d6c5d1c054aa",
+    "infant_c8577524514225eb",
+    "infant_cd4e97e3f56dc8ba",
+    "infant_d4375e151d457be8",
+    "infant_d93a90c27b884c55",
+    "infant_f6ea87a689b45c7b"
+  ]
+}
