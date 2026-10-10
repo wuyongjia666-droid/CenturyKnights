@@ -1,0 +1,590 @@
+{
+  "batch": "v92-resubmit-rejects-qwen",
+  "engine": "qwen-only",
+  "downloaded": 134,
+  "final_pass": 87,
+  "staged": 87,
+  "by_kind": {
+    "genome": 71,
+    "city": 2,
+    "item": 3,
+    "castle": 1,
+    "expression": 10
+  },
+  "combined": {
+    "downloaded": 134,
+    "shots": 134,
+    "missing_png": [],
+    "anatomy": {
+      "scanned": 111,
+      "pass": 83,
+      "reject": 28,
+      "reasons": {
+        "multi_face": 28,
+        "multi_person": 5,
+        "multi_person_infant": 4
+      },
+      "elapsed_s": 20.4
+    },
+    "pose": {
+      "scanned_infant_pass": 55,
+      "pass": 55,
+      "reject": 0,
+      "reasons": {},
+      "elapsed_s": 5.3
+    },
+    "anatomy_or_pose_reject": 28,
+    "style": {
+      "scanned": 106,
+      "pass": 87,
+      "reject": 19,
+      "fail_reasons": {
+        "saturation": 19
+      },
+      "elapsed_s": 8.9
+    },
+    "final_pass": 87,
+    "final_reject": 47
+  },
+  "anatomy_rejects": [
+    {
+      "label": "infant_097a33e08ea6c693",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0
+    },
+    {
+      "label": "infant_1284214afc000313",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0
+    },
+    {
+      "label": "infant_1808940d683001f0",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0
+    },
+    {
+      "label": "infant_1cff6483ab7de9f8",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0
+    },
+    {
+      "label": "infant_211da799e5b981a6",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0
+    },
+    {
+      "label": "infant_24de0cd8424dd56b",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0
+    },
+    {
+      "label": "infant_2533e9771787108a",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 1
+    },
+    {
+      "label": "infant_2d7548b5436a1c02",
+      "role": "genome",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0
+    },
+    {
+      "label": "infant_357e585056d9aa5d",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0
+    },
+    {
+      "label": "infant_35cd44624f1aa4df",
+      "role": "genome",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 1
+    },
+    {
+      "label": "infant_37930d712ad4da80",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0
+    },
+    {
+      "label": "infant_37f5f49ae0ec7635",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0
+    },
+    {
+      "label": "infant_51af0b9c6a5c1245",
+      "role": "genome",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 1
+    },
+    {
+      "label": "infant_53609d21cf211494",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0
+    },
+    {
+      "label": "infant_55e36dbe1e0beecb",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0
+    },
+    {
+      "label": "infant_58d81fda82def06d",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0
+    },
+    {
+      "label": "infant_592ac2f0374d2fc3",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0
+    },
+    {
+      "label": "infant_5d78d4e42ee519b3",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0
+    },
+    {
+      "label": "infant_5d967770bf356cbb",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 1
+    },
+    {
+      "label": "infant_6e4d3189baee2556",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0
+    },
+    {
+      "label": "infant_8856b2fbf2a754f4",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 1
+    },
+    {
+      "label": "infant_95b231173d99b75e",
+      "role": "genome",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0
+    },
+    {
+      "label": "infant_ab01d6c5d1c054aa",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 0
+    },
+    {
+      "label": "infant_c8577524514225eb",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0
+    },
+    {
+      "label": "infant_cd4e97e3f56dc8ba",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0
+    },
+    {
+      "label": "infant_d4375e151d457be8",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 0
+    },
+    {
+      "label": "infant_d93a90c27b884c55",
+      "role": "genome",
+      "reasons": [
+        "multi_face"
+      ],
+      "n_person": 1,
+      "n_face": 2,
+      "n_hand": 1
+    },
+    {
+      "label": "infant_f6ea87a689b45c7b",
+      "role": "genome",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "n_person": 2,
+      "n_face": 2,
+      "n_hand": 1
+    }
+  ],
+  "pose": {
+    "scanned_infant_pass": 55,
+    "pass": 55,
+    "reject": 0,
+    "reasons": {},
+    "elapsed_s": 5.3
+  },
+  "style_rejects": [
+    {
+      "label": "v87_city_eo_banner",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_eo_banner.png"
+    },
+    {
+      "label": "v87_city_sr_capital",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sr_capital.png"
+    },
+    {
+      "label": "v87_city_sr_east",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sr_east.png"
+    },
+    {
+      "label": "v87_city_sr_pagoda",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sr_pagoda.png"
+    },
+    {
+      "label": "v87_city_sr_south",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sr_south.png"
+    },
+    {
+      "label": "v87_city_sr_sw",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sr_sw.png"
+    },
+    {
+      "label": "v87_city_sr_west",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sr_west.png"
+    },
+    {
+      "label": "v87_city_sy_banner",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sy_banner.png"
+    },
+    {
+      "label": "v87_city_sy_capital",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sy_capital.png"
+    },
+    {
+      "label": "v87_city_sy_coast",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sy_coast.png"
+    },
+    {
+      "label": "v87_city_sy_frostfort",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sy_frostfort.png"
+    },
+    {
+      "label": "v87_city_sy_ridge",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sy_ridge.png"
+    },
+    {
+      "label": "v87_city_sy_spire",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sy_spire.png"
+    },
+    {
+      "label": "v87_city_sy_stair",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sy_stair.png"
+    },
+    {
+      "label": "v87_smith_emberold",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/smiths/v87_smith_emberold.png"
+    },
+    {
+      "label": "v87_smith_shuoying",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/smiths/v87_smith_shuoying.png"
+    },
+    {
+      "label": "v87_smith_starriver",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "out_path": "project/assets/art/atlas/smiths/v87_smith_starriver.png"
+    },
+    {
+      "label": "v92_expr_c01_anger",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "out_path": "project/assets/art/portraits/expressions/v92_expr_c01_anger.png"
+    },
+    {
+      "label": "young_adult_b3dbe8d118e4ac8c",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "out_path": "project/assets/art/portraits/genome/bank/young_adult_b3dbe8d118e4ac8c.png"
+    }
+  ],
+  "pass_labels": [
+    "elder_081d99db7f160a2e",
+    "elder_5d78d4e42ee519b3",
+    "elder_65eb2d9b959d11d6",
+    "elder_6c8837a85b1cd08d",
+    "elder_9cb90542d3005bdf",
+    "infant_00abfda26cf4f0a1",
+    "infant_0133cd4f080bf504",
+    "infant_09d7a2f2ac3591cb",
+    "infant_10d48edf27b5aec0",
+    "infant_167fdcdd1dc1ff2a",
+    "infant_16a14ee1a05564ba",
+    "infant_19b7dadefd60aacd",
+    "infant_28baa5af349206dc",
+    "infant_29a815797f56c12e",
+    "infant_2db395394b42f4e8",
+    "infant_42e47b519dfdfd72",
+    "infant_4ac59b2c3562c2f1",
+    "infant_4be9880050a19deb",
+    "infant_4cdce236a4fb6a91",
+    "infant_4d377d3542c2b490",
+    "infant_4f3344e48e30a041",
+    "infant_4f6cac92e10a1029",
+    "infant_5563b8b652593257",
+    "infant_5fa9afea93258793",
+    "infant_674bf84f61508d26",
+    "infant_6c0fc0bdbe766456",
+    "infant_6cf0be839cd058c4",
+    "infant_7025be6a6cd9276d",
+    "infant_72a9676089db51df",
+    "infant_79ab7e3df7b25ad4",
+    "infant_7bb067a8e2c60347",
+    "infant_7ea9fbe254be52fd",
+    "infant_8628b7e293e80cf5",
+    "infant_89ff4b829729c83b",
+    "infant_9009d551f46e8b5a",
+    "infant_90d9def8bbbc997f",
+    "infant_9353d14d4a5b8414",
+    "infant_95b6d7b9af52d2ca",
+    "infant_98c04dff28bfdc1a",
+    "infant_9b6d123433f6e3a5",
+    "infant_9cb90542d3005bdf",
+    "infant_9d105e05aec8ad26",
+    "infant_a3357c182e87c689",
+    "infant_ab9c6bf297f97e27",
+    "infant_aee29977d9b70774",
+    "infant_af409a28bdeff081",
+    "infant_b3f8987b55fc225a",
+    "infant_b406dd92ee482b57",
+    "infant_bc459a32d3b71ba3",
+    "infant_c82d838010432cd1",
+    "infant_c9f9a303a0548a5e",
+    "infant_d5be297a7171a2f7",
+    "infant_dd61210536859566",
+    "infant_dd9d0226e01cbe59",
+    "infant_eacff2650beb891c",
+    "infant_ee4900643e9225a5",
+    "infant_ee6faafcc5949d87",
+    "infant_f40485e0a0736139",
+    "infant_fb3e9a61020169e0",
+    "infant_fd9cd718f7e8ad89",
+    "middle_00647ff1b34ec210",
+    "middle_0133cd4f080bf504",
+    "middle_684a47f012d45dad",
+    "v87_city_eo_crack",
+    "v87_city_lt_docks",
+    "v87_item_eo_archive_sig1",
+    "v87_item_sm_shoal_sig1",
+    "v87_smith_irongorge",
+    "v92_castle_hall_t1",
+    "v92_expr_c01_neutral",
+    "v92_expr_c03_anger",
+    "v92_expr_c03_sorrow",
+    "v92_expr_c06_anger",
+    "v92_expr_c06_joy",
+    "v92_expr_c06_neutral",
+    "v92_expr_c06_sorrow",
+    "v92_expr_c06_surprise",
+    "v92_expr_c09_anger",
+    "v92_expr_c09_sorrow",
+    "young_adult_0133cd4f080bf504",
+    "young_adult_36d37d04e783d0e7",
+    "young_adult_5d78d4e42ee519b3",
+    "young_adult_684a47f012d45dad",
+    "young_adult_6debee51d0461fa6",
+    "young_adult_e61a9972e30c16b7",
+    "youth_684a47f012d45dad",
+    "youth_d69937af197f597e"
+  ]
+}
