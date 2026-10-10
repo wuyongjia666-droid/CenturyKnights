@@ -1,0 +1,1016 @@
+{
+  "batch": "v92-farm-FARM-01..05-gate",
+  "engine": "qwen-only",
+  "anatomy": {
+    "reject": 84,
+    "reasons": {
+      "multi_face": 82,
+      "multi_person_infant": 10,
+      "multi_person": 35,
+      "multi_skeleton": 1,
+      "extra_wrists": 1
+    }
+  },
+  "style": {
+    "reject": 50,
+    "reasons": {
+      "saturation": 50,
+      "palette-drift": 1
+    }
+  },
+  "final_pass_by_farm": {
+    "FARM-01": 1495,
+    "FARM-02": 19,
+    "FARM-03": 228,
+    "FARM-04": 99,
+    "FARM-05": 82
+  },
+  "anatomy_rejects": [
+    {
+      "label": "infant_00abfda26cf4f0a1",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_0133cd4f080bf504",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_097a33e08ea6c693",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_09d7a2f2ac3591cb",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_10d48edf27b5aec0",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_167fdcdd1dc1ff2a",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_16a14ee1a05564ba",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_1808940d683001f0",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_19b7dadefd60aacd",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_1cff6483ab7de9f8",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_211da799e5b981a6",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_24de0cd8424dd56b",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_2533e9771787108a",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_28baa5af349206dc",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_29a815797f56c12e",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_2d7548b5436a1c02",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_2db395394b42f4e8",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_357e585056d9aa5d",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_35cd44624f1aa4df",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_37930d712ad4da80",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_37f5f49ae0ec7635",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_42e47b519dfdfd72",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_4ac59b2c3562c2f1",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_4be9880050a19deb",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_4cdce236a4fb6a91",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_4d377d3542c2b490",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_4f3344e48e30a041",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_4f6cac92e10a1029",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_51af0b9c6a5c1245",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_53609d21cf211494",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_5563b8b652593257",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_55e36dbe1e0beecb",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_58d81fda82def06d",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_592ac2f0374d2fc3",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_5d78d4e42ee519b3",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_5d967770bf356cbb",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_5fa9afea93258793",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_674bf84f61508d26",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_6c0fc0bdbe766456",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_6cf0be839cd058c4",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_6e4d3189baee2556",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_7025be6a6cd9276d",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_72a9676089db51df",
+      "reasons": [
+        "multi_person"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_79ab7e3df7b25ad4",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_7bb067a8e2c60347",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_7ea9fbe254be52fd",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_8628b7e293e80cf5",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_8856b2fbf2a754f4",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_89ff4b829729c83b",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_9009d551f46e8b5a",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_90d9def8bbbc997f",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_9353d14d4a5b8414",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_95b231173d99b75e",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_95b6d7b9af52d2ca",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_98c04dff28bfdc1a",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_9b6d123433f6e3a5",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_9cb90542d3005bdf",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_9d105e05aec8ad26",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_a3357c182e87c689",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_ab01d6c5d1c054aa",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_ab9c6bf297f97e27",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_aee29977d9b70774",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_af409a28bdeff081",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_b3f8987b55fc225a",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_b406dd92ee482b57",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_bc459a32d3b71ba3",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_c82d838010432cd1",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_c8577524514225eb",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_c9f9a303a0548a5e",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_cd4e97e3f56dc8ba",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_d4375e151d457be8",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_d5be297a7171a2f7",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_d93a90c27b884c55",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_dd61210536859566",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_dd9d0226e01cbe59",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_eacff2650beb891c",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_ee4900643e9225a5",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_ee6faafcc5949d87",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_f40485e0a0736139",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_f6ea87a689b45c7b",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_fb3e9a61020169e0",
+      "reasons": [
+        "multi_person",
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_fd9cd718f7e8ad89",
+      "reasons": [
+        "multi_face",
+        "multi_person_infant"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "youth_684a47f012d45dad",
+      "reasons": [
+        "multi_face"
+      ],
+      "source": "anatomy"
+    },
+    {
+      "label": "infant_1284214afc000313",
+      "reasons": [
+        "multi_skeleton",
+        "extra_wrists"
+      ],
+      "source": "pose_limb_gate"
+    }
+  ],
+  "style_rejects": [
+    {
+      "label": "elder_081d99db7f160a2e",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-01_genome"
+    },
+    {
+      "label": "elder_5d78d4e42ee519b3",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-01_genome"
+    },
+    {
+      "label": "elder_65eb2d9b959d11d6",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-01_genome"
+    },
+    {
+      "label": "elder_6c8837a85b1cd08d",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-01_genome"
+    },
+    {
+      "label": "elder_9cb90542d3005bdf",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-01_genome"
+    },
+    {
+      "label": "middle_00647ff1b34ec210",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-01_genome"
+    },
+    {
+      "label": "middle_0133cd4f080bf504",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-01_genome"
+    },
+    {
+      "label": "middle_684a47f012d45dad",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-01_genome"
+    },
+    {
+      "label": "young_adult_0133cd4f080bf504",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-01_genome"
+    },
+    {
+      "label": "young_adult_36d37d04e783d0e7",
+      "fails": [
+        "saturation",
+        "palette-drift"
+      ],
+      "farm": "FARM-01_genome"
+    },
+    {
+      "label": "young_adult_5d78d4e42ee519b3",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-01_genome"
+    },
+    {
+      "label": "young_adult_684a47f012d45dad",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-01_genome"
+    },
+    {
+      "label": "young_adult_6debee51d0461fa6",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-01_genome"
+    },
+    {
+      "label": "young_adult_b3dbe8d118e4ac8c",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-01_genome"
+    },
+    {
+      "label": "young_adult_e61a9972e30c16b7",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-01_genome"
+    },
+    {
+      "label": "youth_d69937af197f597e",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-01_genome"
+    },
+    {
+      "label": "v87_city_sy_capital",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-02_city"
+    },
+    {
+      "label": "v87_city_sy_frostfort",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-02_city"
+    },
+    {
+      "label": "v87_city_sy_spire",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-02_city"
+    },
+    {
+      "label": "v87_city_sy_banner",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-02_city"
+    },
+    {
+      "label": "v87_city_sy_stair",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-02_city"
+    },
+    {
+      "label": "v87_city_sy_coast",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-02_city"
+    },
+    {
+      "label": "v87_city_sy_ridge",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-02_city"
+    },
+    {
+      "label": "v87_city_lt_docks",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-02_city"
+    },
+    {
+      "label": "v87_city_eo_crack",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-02_city"
+    },
+    {
+      "label": "v87_city_eo_banner",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-02_city"
+    },
+    {
+      "label": "v87_city_sr_capital",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-02_city"
+    },
+    {
+      "label": "v87_city_sr_west",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-02_city"
+    },
+    {
+      "label": "v87_city_sr_pagoda",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-02_city"
+    },
+    {
+      "label": "v87_city_sr_east",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-02_city"
+    },
+    {
+      "label": "v87_city_sr_sw",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-02_city"
+    },
+    {
+      "label": "v87_city_sr_south",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-02_city"
+    },
+    {
+      "label": "v87_smith_emberold",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-03_smith_item"
+    },
+    {
+      "label": "v87_smith_irongorge",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-03_smith_item"
+    },
+    {
+      "label": "v87_smith_shuoying",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-03_smith_item"
+    },
+    {
+      "label": "v87_smith_starriver",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-03_smith_item"
+    },
+    {
+      "label": "v87_item_eo_archive_sig1",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-03_smith_item"
+    },
+    {
+      "label": "v87_item_sm_shoal_sig1",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-03_smith_item"
+    },
+    {
+      "label": "v92_expr_c01_neutral",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-04_scene_expr"
+    },
+    {
+      "label": "v92_expr_c01_anger",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-04_scene_expr"
+    },
+    {
+      "label": "v92_expr_c03_anger",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-04_scene_expr"
+    },
+    {
+      "label": "v92_expr_c03_sorrow",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-04_scene_expr"
+    },
+    {
+      "label": "v92_expr_c06_neutral",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-04_scene_expr"
+    },
+    {
+      "label": "v92_expr_c06_joy",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-04_scene_expr"
+    },
+    {
+      "label": "v92_expr_c06_anger",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-04_scene_expr"
+    },
+    {
+      "label": "v92_expr_c06_sorrow",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-04_scene_expr"
+    },
+    {
+      "label": "v92_expr_c06_surprise",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-04_scene_expr"
+    },
+    {
+      "label": "v92_expr_c09_anger",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-04_scene_expr"
+    },
+    {
+      "label": "v92_expr_c09_sorrow",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-04_scene_expr"
+    },
+    {
+      "label": "v92_castle_hall_t1",
+      "fails": [
+        "saturation"
+      ],
+      "farm": "FARM-05_castle_estate"
+    }
+  ]
+}

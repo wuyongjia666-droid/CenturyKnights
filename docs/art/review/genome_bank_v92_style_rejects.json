@@ -1,0 +1,789 @@
+{
+  "batch": "v92-farm-style",
+  "summary": {
+    "checked": 1973,
+    "pass": 1923,
+    "reject": 50,
+    "pass_rate": 0.9747,
+    "fail_reasons": {
+      "saturation": 50,
+      "palette-drift": 1
+    },
+    "by_farm": {
+      "FARM-01_genome": {
+        "pass": 1495,
+        "reject": 16
+      },
+      "FARM-02_city": {
+        "pass": 19,
+        "reject": 16
+      },
+      "FARM-03_smith_item": {
+        "pass": 228,
+        "reject": 6
+      },
+      "FARM-04_scene_expr": {
+        "pass": 99,
+        "reject": 11
+      },
+      "FARM-05_castle_estate": {
+        "pass": 82,
+        "reject": 1
+      }
+    },
+    "elapsed_s": 163.4
+  },
+  "rejects": [
+    {
+      "label": "elder_081d99db7f160a2e",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-01_genome",
+      "out_path": "project/assets/art/portraits/genome/bank/elder_081d99db7f160a2e.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.001238894775450322,
+      "mean_saturation": 0.43019574880599976,
+      "cool_bias": 0.1271616816520691,
+      "lab_dist": 0.553268082438806
+    },
+    {
+      "label": "elder_5d78d4e42ee519b3",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-01_genome",
+      "out_path": "project/assets/art/portraits/genome/bank/elder_5d78d4e42ee519b3.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.00015571032217881207,
+      "mean_saturation": 0.43983617424964905,
+      "cool_bias": 0.13178914785385132,
+      "lab_dist": 0.4184412339851284
+    },
+    {
+      "label": "elder_65eb2d9b959d11d6",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-01_genome",
+      "out_path": "project/assets/art/portraits/genome/bank/elder_65eb2d9b959d11d6.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.001698398652698884,
+      "mean_saturation": 0.43520498275756836,
+      "cool_bias": 0.09575250744819641,
+      "lab_dist": 0.45118185828396246
+    },
+    {
+      "label": "elder_6c8837a85b1cd08d",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-01_genome",
+      "out_path": "project/assets/art/portraits/genome/bank/elder_6c8837a85b1cd08d.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.00046650044237110915,
+      "mean_saturation": 0.43133309483528137,
+      "cool_bias": 0.12768803536891937,
+      "lab_dist": 0.43632104760351315
+    },
+    {
+      "label": "elder_9cb90542d3005bdf",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-01_genome",
+      "out_path": "project/assets/art/portraits/genome/bank/elder_9cb90542d3005bdf.png",
+      "gold_ratio": 3.168818822783807e-05,
+      "parchment_ratio": 1.5844094113919036e-05,
+      "warm_ratio": 0.0006971401410124376,
+      "mean_saturation": 0.43613213300704956,
+      "cool_bias": 0.13766105473041534,
+      "lab_dist": 0.4967989329542914
+    },
+    {
+      "label": "middle_00647ff1b34ec210",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-01_genome",
+      "out_path": "project/assets/art/portraits/genome/bank/middle_00647ff1b34ec210.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.008337310583462595,
+      "mean_saturation": 0.441859632730484,
+      "cool_bias": 0.0900859460234642,
+      "lab_dist": 0.5276141597433169
+    },
+    {
+      "label": "middle_0133cd4f080bf504",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-01_genome",
+      "out_path": "project/assets/art/portraits/genome/bank/middle_0133cd4f080bf504.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0004844408982104183,
+      "mean_saturation": 0.43703359365463257,
+      "cool_bias": 0.10813896358013153,
+      "lab_dist": 0.5440110553883154
+    },
+    {
+      "label": "middle_684a47f012d45dad",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-01_genome",
+      "out_path": "project/assets/art/portraits/genome/bank/middle_684a47f012d45dad.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.00034746876557944194,
+      "mean_saturation": 0.4238714873790741,
+      "cool_bias": 0.10245873034000397,
+      "lab_dist": 0.4939329922949375
+    },
+    {
+      "label": "young_adult_0133cd4f080bf504",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-01_genome",
+      "out_path": "project/assets/art/portraits/genome/bank/young_adult_0133cd4f080bf504.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.005437150094383763,
+      "mean_saturation": 0.44518280029296875,
+      "cool_bias": 0.10613592714071274,
+      "lab_dist": 0.5612120653406761
+    },
+    {
+      "label": "young_adult_36d37d04e783d0e7",
+      "fails": [
+        "saturation",
+        "palette-drift"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-01_genome",
+      "out_path": "project/assets/art/portraits/genome/bank/young_adult_36d37d04e783d0e7.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0004282247704239425,
+      "mean_saturation": 0.4952026605606079,
+      "cool_bias": 0.12042567133903503,
+      "lab_dist": 0.6492763693619137
+    },
+    {
+      "label": "young_adult_5d78d4e42ee519b3",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-01_genome",
+      "out_path": "project/assets/art/portraits/genome/bank/young_adult_5d78d4e42ee519b3.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.00045280593613975634,
+      "mean_saturation": 0.4706030488014221,
+      "cool_bias": 0.1046292781829834,
+      "lab_dist": 0.5207651561312032
+    },
+    {
+      "label": "young_adult_684a47f012d45dad",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-01_genome",
+      "out_path": "project/assets/art/portraits/genome/bank/young_adult_684a47f012d45dad.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0007818728153553689,
+      "mean_saturation": 0.5152314901351929,
+      "cool_bias": 0.13280507922172546,
+      "lab_dist": 0.5748913933884408
+    },
+    {
+      "label": "young_adult_6debee51d0461fa6",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-01_genome",
+      "out_path": "project/assets/art/portraits/genome/bank/young_adult_6debee51d0461fa6.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 5.823687850331222e-05,
+      "warm_ratio": 2.911843925165611e-05,
+      "mean_saturation": 0.42162787914276123,
+      "cool_bias": 0.09712173789739609,
+      "lab_dist": 0.48995715538618356
+    },
+    {
+      "label": "young_adult_b3dbe8d118e4ac8c",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-01_genome",
+      "out_path": "project/assets/art/portraits/genome/bank/young_adult_b3dbe8d118e4ac8c.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.003819041102429865,
+      "mean_saturation": 0.46725577116012573,
+      "cool_bias": 0.10631628334522247,
+      "lab_dist": 0.6071764539786322
+    },
+    {
+      "label": "young_adult_e61a9972e30c16b7",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-01_genome",
+      "out_path": "project/assets/art/portraits/genome/bank/young_adult_e61a9972e30c16b7.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 1.4898466947751077e-05,
+      "warm_ratio": 0.004082179943683795,
+      "mean_saturation": 0.439995139837265,
+      "cool_bias": 0.09845903515815735,
+      "lab_dist": 0.4538958981445342
+    },
+    {
+      "label": "youth_d69937af197f597e",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-01_genome",
+      "out_path": "project/assets/art/portraits/genome/bank/youth_d69937af197f597e.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 1.6228760609552248e-05,
+      "warm_ratio": 0.005761210016391048,
+      "mean_saturation": 0.4348466694355011,
+      "cool_bias": 0.11088162660598755,
+      "lab_dist": 0.5034951431255403
+    },
+    {
+      "label": "v87_city_sy_capital",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "farm": "FARM-02_city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sy_capital.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0,
+      "mean_saturation": 0.5418838262557983,
+      "cool_bias": 0.22941121459007263,
+      "lab_dist": 0.46165608601278035
+    },
+    {
+      "label": "v87_city_sy_frostfort",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "farm": "FARM-02_city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sy_frostfort.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0,
+      "mean_saturation": 0.47006845474243164,
+      "cool_bias": 0.2041023075580597,
+      "lab_dist": 0.33530986938937
+    },
+    {
+      "label": "v87_city_sy_spire",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "farm": "FARM-02_city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sy_spire.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0,
+      "mean_saturation": 0.4892670214176178,
+      "cool_bias": 0.1915518045425415,
+      "lab_dist": 0.3229582296190589
+    },
+    {
+      "label": "v87_city_sy_banner",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "farm": "FARM-02_city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sy_banner.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0,
+      "mean_saturation": 0.4815255105495453,
+      "cool_bias": 0.16111643612384796,
+      "lab_dist": 0.2780657611166415
+    },
+    {
+      "label": "v87_city_sy_stair",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "farm": "FARM-02_city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sy_stair.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0,
+      "mean_saturation": 0.5143293738365173,
+      "cool_bias": 0.2221713662147522,
+      "lab_dist": 0.40974670003125413
+    },
+    {
+      "label": "v87_city_sy_coast",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "farm": "FARM-02_city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sy_coast.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0,
+      "mean_saturation": 0.49790751934051514,
+      "cool_bias": 0.19450701773166656,
+      "lab_dist": 0.32905694433735155
+    },
+    {
+      "label": "v87_city_sy_ridge",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "farm": "FARM-02_city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sy_ridge.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 4.020908725371934e-05,
+      "warm_ratio": 0.0,
+      "mean_saturation": 0.5269715189933777,
+      "cool_bias": 0.2436022013425827,
+      "lab_dist": 0.5050599764776166
+    },
+    {
+      "label": "v87_city_lt_docks",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "farm": "FARM-02_city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_lt_docks.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0003145772355499631,
+      "warm_ratio": 0.0,
+      "mean_saturation": 0.4458558261394501,
+      "cool_bias": 0.18642780184745789,
+      "lab_dist": 0.27517267192491307
+    },
+    {
+      "label": "v87_city_eo_crack",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "farm": "FARM-02_city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_eo_crack.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.00013061309788145556,
+      "warm_ratio": 0.0021681774248321624,
+      "mean_saturation": 0.4526832699775696,
+      "cool_bias": 0.17818515002727509,
+      "lab_dist": 0.27940484470963295
+    },
+    {
+      "label": "v87_city_eo_banner",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "farm": "FARM-02_city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_eo_banner.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.009164903353108407,
+      "mean_saturation": 0.4534663259983063,
+      "cool_bias": 0.14181703329086304,
+      "lab_dist": 0.31391805581494336
+    },
+    {
+      "label": "v87_city_sr_capital",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "farm": "FARM-02_city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sr_capital.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0001366642978188378,
+      "warm_ratio": 0.0,
+      "mean_saturation": 0.460191935300827,
+      "cool_bias": 0.20737792551517487,
+      "lab_dist": 0.28816687728882934
+    },
+    {
+      "label": "v87_city_sr_west",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "farm": "FARM-02_city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sr_west.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0006288987473016844,
+      "warm_ratio": 0.0,
+      "mean_saturation": 0.4204012453556061,
+      "cool_bias": 0.15279556810855865,
+      "lab_dist": 0.2743674435126926
+    },
+    {
+      "label": "v87_city_sr_pagoda",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "farm": "FARM-02_city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sr_pagoda.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0,
+      "mean_saturation": 0.447174072265625,
+      "cool_bias": 0.20418447256088257,
+      "lab_dist": 0.34790151929614804
+    },
+    {
+      "label": "v87_city_sr_east",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "farm": "FARM-02_city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sr_east.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 2.9222249821013718e-05,
+      "mean_saturation": 0.4717729985713959,
+      "cool_bias": 0.20425713062286377,
+      "lab_dist": 0.24598692921482926
+    },
+    {
+      "label": "v87_city_sr_sw",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "farm": "FARM-02_city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sr_sw.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0,
+      "mean_saturation": 0.5168049335479736,
+      "cool_bias": 0.19779253005981445,
+      "lab_dist": 0.4127098509324973
+    },
+    {
+      "label": "v87_city_sr_south",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "farm": "FARM-02_city",
+      "out_path": "project/assets/art/atlas/cities/v87_city_sr_south.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0,
+      "mean_saturation": 0.48974451422691345,
+      "cool_bias": 0.1985331028699875,
+      "lab_dist": 0.3214008665575988
+    },
+    {
+      "label": "v87_smith_emberold",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "farm": "FARM-03_smith_item",
+      "out_path": "project/assets/art/atlas/smiths/v87_smith_emberold.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 4.587576841912102e-05,
+      "warm_ratio": 0.0013151053613481359,
+      "mean_saturation": 0.45887264609336853,
+      "cool_bias": 0.18000276386737823,
+      "lab_dist": 0.24867275120803947
+    },
+    {
+      "label": "v87_smith_irongorge",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "farm": "FARM-03_smith_item",
+      "out_path": "project/assets/art/atlas/smiths/v87_smith_irongorge.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0,
+      "mean_saturation": 0.43284526467323303,
+      "cool_bias": 0.1844337284564972,
+      "lab_dist": 0.15218258972573934
+    },
+    {
+      "label": "v87_smith_shuoying",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "farm": "FARM-03_smith_item",
+      "out_path": "project/assets/art/atlas/smiths/v87_smith_shuoying.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0,
+      "mean_saturation": 0.5602748394012451,
+      "cool_bias": 0.1975899040699005,
+      "lab_dist": 0.4572638435722825
+    },
+    {
+      "label": "v87_smith_starriver",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "farm": "FARM-03_smith_item",
+      "out_path": "project/assets/art/atlas/smiths/v87_smith_starriver.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0,
+      "mean_saturation": 0.49331071972846985,
+      "cool_bias": 0.17402169108390808,
+      "lab_dist": 0.33166632091721526
+    },
+    {
+      "label": "v87_item_eo_archive_sig1",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "icon",
+      "farm": "FARM-03_smith_item",
+      "out_path": "project/assets/art/ui/items/v87_item_eo_archive_sig1.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0,
+      "mean_saturation": 0.4284090995788574,
+      "cool_bias": 0.18159104883670807,
+      "lab_dist": 0.16262508102032694
+    },
+    {
+      "label": "v87_item_sm_shoal_sig1",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "icon",
+      "farm": "FARM-03_smith_item",
+      "out_path": "project/assets/art/ui/items/v87_item_sm_shoal_sig1.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0,
+      "mean_saturation": 0.46402600407600403,
+      "cool_bias": 0.1657223254442215,
+      "lab_dist": 0.15651545841768638
+    },
+    {
+      "label": "v92_expr_c01_neutral",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-04_scene_expr",
+      "out_path": "project/assets/art/portraits/expressions/v92_expr_c01_neutral.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0005733678387131766,
+      "mean_saturation": 0.4465964734554291,
+      "cool_bias": 0.1741008162498474,
+      "lab_dist": 0.27646929897437217
+    },
+    {
+      "label": "v92_expr_c01_anger",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-04_scene_expr",
+      "out_path": "project/assets/art/portraits/expressions/v92_expr_c01_anger.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0003782033826510544,
+      "mean_saturation": 0.4253139793872833,
+      "cool_bias": 0.17601774632930756,
+      "lab_dist": 0.2608318501259525
+    },
+    {
+      "label": "v92_expr_c03_anger",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-04_scene_expr",
+      "out_path": "project/assets/art/portraits/expressions/v92_expr_c03_anger.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.00034190956492007865,
+      "mean_saturation": 0.439230740070343,
+      "cool_bias": 0.16071410477161407,
+      "lab_dist": 0.3791360954620259
+    },
+    {
+      "label": "v92_expr_c03_sorrow",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-04_scene_expr",
+      "out_path": "project/assets/art/portraits/expressions/v92_expr_c03_sorrow.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0011347557473277202,
+      "mean_saturation": 0.43156448006629944,
+      "cool_bias": 0.14641815423965454,
+      "lab_dist": 0.3452170757994016
+    },
+    {
+      "label": "v92_expr_c06_neutral",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-04_scene_expr",
+      "out_path": "project/assets/art/portraits/expressions/v92_expr_c06_neutral.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.002661474456849094,
+      "mean_saturation": 0.44994616508483887,
+      "cool_bias": 0.13880009949207306,
+      "lab_dist": 0.3105262532912934
+    },
+    {
+      "label": "v92_expr_c06_joy",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-04_scene_expr",
+      "out_path": "project/assets/art/portraits/expressions/v92_expr_c06_joy.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.002837885775097552,
+      "mean_saturation": 0.44823235273361206,
+      "cool_bias": 0.14791928231716156,
+      "lab_dist": 0.32607107106188354
+    },
+    {
+      "label": "v92_expr_c06_anger",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-04_scene_expr",
+      "out_path": "project/assets/art/portraits/expressions/v92_expr_c06_anger.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.00244687532712237,
+      "mean_saturation": 0.4400228261947632,
+      "cool_bias": 0.14168892800807953,
+      "lab_dist": 0.2888136178116555
+    },
+    {
+      "label": "v92_expr_c06_sorrow",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-04_scene_expr",
+      "out_path": "project/assets/art/portraits/expressions/v92_expr_c06_sorrow.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0022,
+      "mean_saturation": 0.4545884430408478,
+      "cool_bias": 0.14245691895484924,
+      "lab_dist": 0.28340215916983946
+    },
+    {
+      "label": "v92_expr_c06_surprise",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-04_scene_expr",
+      "out_path": "project/assets/art/portraits/expressions/v92_expr_c06_surprise.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.003098259073473001,
+      "mean_saturation": 0.43164828419685364,
+      "cool_bias": 0.14494577050209045,
+      "lab_dist": 0.3133381714191701
+    },
+    {
+      "label": "v92_expr_c09_anger",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-04_scene_expr",
+      "out_path": "project/assets/art/portraits/expressions/v92_expr_c09_anger.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0002828254260057979,
+      "mean_saturation": 0.42166826128959656,
+      "cool_bias": 0.16275599598884583,
+      "lab_dist": 0.2267327957193437
+    },
+    {
+      "label": "v92_expr_c09_sorrow",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "portrait",
+      "farm": "FARM-04_scene_expr",
+      "out_path": "project/assets/art/portraits/expressions/v92_expr_c09_sorrow.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0010604145785215206,
+      "mean_saturation": 0.4325546622276306,
+      "cool_bias": 0.1544427126646042,
+      "lab_dist": 0.2583107348627203
+    },
+    {
+      "label": "v92_castle_hall_t1",
+      "fails": [
+        "saturation"
+      ],
+      "kind": "city",
+      "farm": "FARM-05_castle_estate",
+      "out_path": "project/assets/art/castle/v92_castle_hall_t1.png",
+      "gold_ratio": 0.0,
+      "parchment_ratio": 0.0,
+      "warm_ratio": 0.0,
+      "mean_saturation": 0.43193286657333374,
+      "cool_bias": 0.1657293736934662,
+      "lab_dist": 0.19089463822260094
+    }
+  ]
+}
