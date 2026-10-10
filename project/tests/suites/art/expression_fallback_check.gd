@@ -1,5 +1,5 @@
 extends Node
-## ART-06: 12 companions × 5 expressions, missing plates fall back to the base portrait.
+## ART-06: ingested expression plates win; missing plates fall back to the base portrait.
 
 func _ready() -> void:
 	var err := _run()
@@ -28,15 +28,26 @@ func _run() -> String:
 	var path := UnitArt.expression_plate_path("c01", "惊")
 	if not path.ends_with("v92_expr_c01_surprise.png"):
 		return "path " + path
-	if ResourceLoader.exists(path):
-		return "farm plate already ingested"
+	if not ResourceLoader.exists(path):
+		return "farm plate missing " + path
+	var missing := UnitArt.expression_plate_path("c01", "怒")
+	if not missing.ends_with("v92_expr_c01_anger.png"):
+		return "missing path " + missing
+	if ResourceLoader.exists(missing):
+		return "anger plate unexpectedly present"
 	GameState.new_game("烬行", "灰旗", GameState.crest_color)
 	var leader = GameState.get_leader()
 	if leader == null:
 		return "no leader"
 	var base := UnitArt.portrait(leader, 120)
+	var plate = load(path)
+	if not (plate is Texture2D):
+		return "plate load"
 	var shown := UnitArt.dialogue_portrait(str(people[0].get("name", "")), "惊", leader, 120)
-	if shown == null or shown != base:
+	if shown == null or shown != plate:
+		return "ingested plate not used"
+	var fallback := UnitArt.dialogue_portrait(str(people[0].get("name", "")), "怒", leader, 120)
+	if fallback == null or fallback != base:
 		return "missing plate did not use the base portrait"
 	var queue_text := FileAccess.get_file_as_string(_repo().path_join("tools/farm_queue/v92_expressions.json"))
 	var queue = JSON.parse_string(queue_text)
