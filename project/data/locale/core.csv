@@ -10,3 +10,16 @@ pause_settings,设置,
 pause_title,回到标题,
 playstats_title,游玩统计,Play stats
 playstats_export,导出游玩统计,Export play stats
+menu_no_save,尚无存档，无法继续,No save to continue
+menu_continue_summary,%s · %d年%d月 · 第%d章,%s · Y%d M%d · Ch %d
+menu_load,读档,Load
+menu_credits,制作人员,Credits
+menu_footer,原创 IP · %s,Original IP · %s
+menu_footer_plain,原创 IP,Original IP
+menu_slot_empty,空槽,Empty
+slot_manual_0,手动存档 1,Manual 1
+slot_manual_1,手动存档 2,Manual 2
+slot_manual_2,手动存档 3,Manual 3
+slot_auto,自动存档,Autosave
+slot_quick,快速存档,Quick save
+slot_back,返回,Back

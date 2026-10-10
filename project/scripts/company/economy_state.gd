@@ -963,6 +963,60 @@ static func market_buy(host, item: String, qty: int = 1) -> Dictionary:
 	host.mark_dirty()
 	return {"ok": true, "msg": "购入 %s x%d" % [Locale.t(item), qty]}
 
+## CMP-02. January muster, mid-campaign castle/dowry/heirloom dues, late lamp/title/embassy dues.
+## Does not draw GameState.rng. The year-1 spring purse is paid back in April so the May wedding still clears.
+static func monthly_wage(host) -> int:
+	var wage := 0
+	for c in host.roster():
+		wage += int(c.salary)
+	return wage
+
+
+static func apply_spring_purse(host) -> Dictionary:
+	var purse := 180
+	host.silver += purse
+	host.log_event(Locale.t("pressure_spring_paid") % purse)
+	return {"silver": purse, "note": Locale.t("pressure_spring")}
+
+
+static func apply_epoch_pressure(host, year: int) -> Dictionary:
+	var wage := maxi(1, monthly_wage(host))
+	var silver := int(host.silver)
+	var due := 0
+	var phase := "early"
+	var note := ""
+	if year <= 10:
+		if year == 1:
+			due = maxi(0, silver - (wage * 3 - 1))
+			note = Locale.t("pressure_muster")
+		else:
+			due = mini(48, maxi(0, silver - 80))
+			note = Locale.t("pressure_drill")
+	elif year <= 40:
+		phase = "mid"
+		var want := 80
+		if year % 5 == 0:
+			want += 100
+		if year % 4 == 0:
+			want += 50
+		due = mini(want, maxi(0, silver - 360))
+		note = Locale.t("pressure_mid")
+	else:
+		phase = "late"
+		var want_late := 60
+		if year % 5 == 0:
+			want_late += 120
+		if silver > 1600:
+			want_late += int((silver - 1600) / 2.0)
+		due = mini(want_late, maxi(0, silver - 1100))
+		note = Locale.t("pressure_late")
+	if due <= 0:
+		return {"silver": 0, "phase": phase, "note": ""}
+	host.silver = silver - due
+	host.log_event(Locale.t("pressure_paid") % [note, due])
+	return {"silver": due, "phase": phase, "note": note}
+
+
 static func market_sell(host, item: String, qty: int = 1) -> Dictionary:
 	var prices = CKEconomyState.market_sell_prices(host)
 	if int(host.get(item)) < qty:

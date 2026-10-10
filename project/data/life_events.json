@@ -1,0 +1,3231 @@
+{
+  "version": 1,
+  "events": [
+    {
+      "id": "birth_01",
+      "band": "birth",
+      "age_min": 0,
+      "age_max": 1,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "产室灯芯爆了一星，抄手停笔。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "把灯花记成吉兆。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "flag",
+              "key": "le_0_0"
+            },
+            {
+              "op": "flag",
+              "key": "le_birth_01_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "吹灭，不让外宅听见。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat",
+              "key": "vit",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_birth_01_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "birth_02",
+      "band": "birth",
+      "age_min": 0,
+      "age_max": 1,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "婴孩第一声哭得很短。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "记下这一声。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "trait",
+              "trait": "keen_eye"
+            },
+            {
+              "op": "flag",
+              "key": "le_birth_02_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "让乳母先抱走。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "rep",
+              "realm": "riverland",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_birth_02_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "birth_03",
+      "band": "birth",
+      "age_min": 0,
+      "age_max": 1,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "脐带上有一粒霜点。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "留在旁注里。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "merchant"
+            },
+            {
+              "op": "flag",
+              "key": "le_birth_03_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "用温水拭去。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "flag",
+              "key": "le_2_1"
+            },
+            {
+              "op": "flag",
+              "key": "le_birth_03_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "birth_04",
+      "band": "birth",
+      "age_min": 0,
+      "age_max": 1,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "窗外旗绳碰了三下。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "当作接旗的兆头。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat",
+              "key": "agi",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_birth_04_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "只当作风声。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "trait",
+              "trait": "charmer"
+            },
+            {
+              "op": "flag",
+              "key": "le_birth_04_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "birth_05",
+      "band": "birth",
+      "age_min": 0,
+      "age_max": 1,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "产婆说这孩子眼仁偏深。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "写入相貌条。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "rep",
+              "realm": "ashland",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_birth_05_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "先不落笔。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "merchant"
+            },
+            {
+              "op": "flag",
+              "key": "le_birth_05_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "birth_06",
+      "band": "birth",
+      "age_min": 0,
+      "age_max": 1,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "胎发湿成一缕，贴在额上。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "剪下来收好。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "flag",
+              "key": "le_5_0"
+            },
+            {
+              "op": "flag",
+              "key": "le_birth_06_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "随手拭干。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat",
+              "key": "str",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_birth_06_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "birth_07",
+      "band": "birth",
+      "age_min": 0,
+      "age_max": 1,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "邻舍送来一碗薄粥。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "收下，回一炷香。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "trait",
+              "trait": "lucky"
+            },
+            {
+              "op": "flag",
+              "key": "le_birth_07_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "婉拒，把门关上。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "rep",
+              "realm": "riverland",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_birth_07_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "birth_08",
+      "band": "birth",
+      "age_min": 0,
+      "age_max": 1,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "午夜的钟只敲了半下。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "把时辰写清楚。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "scholar"
+            },
+            {
+              "op": "flag",
+              "key": "le_birth_08_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "改记成黎明。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "flag",
+              "key": "le_7_1"
+            },
+            {
+              "op": "flag",
+              "key": "le_birth_08_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "birth_09",
+      "band": "birth",
+      "age_min": 0,
+      "age_max": 1,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "婴孩握住抄手的指节。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "让他多握一会儿。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat",
+              "key": "skl",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_birth_09_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "轻轻抽回手。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "trait",
+              "trait": "brave"
+            },
+            {
+              "op": "flag",
+              "key": "le_birth_09_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "child_01",
+      "band": "childhood",
+      "age_min": 2,
+      "age_max": 7,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "孩子把木旗插进泥里。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "夸他站得住。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "rep",
+              "realm": "ashland",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_child_01_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "把旗拔出来。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "scholar"
+            },
+            {
+              "op": "flag",
+              "key": "le_child_01_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "child_02",
+      "band": "childhood",
+      "age_min": 2,
+      "age_max": 7,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "他问族谱上为什么有空行。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "说那是留给来者的。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "flag",
+              "key": "le_10_0"
+            },
+            {
+              "op": "flag",
+              "key": "le_child_02_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "说现在不必懂。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat",
+              "key": "wil",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_child_02_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "child_03",
+      "band": "childhood",
+      "age_min": 2,
+      "age_max": 7,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "课上他把名字写成反字。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "扶着他再写一遍。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "trait",
+              "trait": "iron_gut"
+            },
+            {
+              "op": "flag",
+              "key": "le_child_03_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "留到明天再改。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "rep",
+              "realm": "riverland",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_child_03_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "child_04",
+      "band": "childhood",
+      "age_min": 2,
+      "age_max": 7,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "夜路他不肯松手。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "陪他走到灯下。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "martial"
+            },
+            {
+              "op": "flag",
+              "key": "le_child_04_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "让他自己走几步。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "flag",
+              "key": "le_12_1"
+            },
+            {
+              "op": "flag",
+              "key": "le_child_04_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "child_05",
+      "band": "childhood",
+      "age_min": 2,
+      "age_max": 7,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "他藏起一块发亮的石子。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "让他留着。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat",
+              "key": "vit",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_child_05_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "放回溪边。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "trait",
+              "trait": "sturdy"
+            },
+            {
+              "op": "flag",
+              "key": "le_child_05_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "child_06",
+      "band": "childhood",
+      "age_min": 2,
+      "age_max": 7,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "两个孩子争同一张弓。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "让他们轮流拉。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "rep",
+              "realm": "ashland",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_child_06_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "把弓挂回墙上。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "martial"
+            },
+            {
+              "op": "flag",
+              "key": "le_child_06_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "child_07",
+      "band": "childhood",
+      "age_min": 2,
+      "age_max": 7,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "他学着大人的步子过桥。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "在桥头等他。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "flag",
+              "key": "le_15_0"
+            },
+            {
+              "op": "flag",
+              "key": "le_child_07_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "牵住他的袖口。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat",
+              "key": "per",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_child_07_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "child_08",
+      "band": "childhood",
+      "age_min": 2,
+      "age_max": 7,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "灶房的灰沾到他脸上。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "给他擦掉。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "trait",
+              "trait": "night_owl"
+            },
+            {
+              "op": "flag",
+              "key": "le_child_08_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "说灰也是旗的颜色。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "rep",
+              "realm": "riverland",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_child_08_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "child_09",
+      "band": "childhood",
+      "age_min": 2,
+      "age_max": 7,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "他半夜醒，说梦见大河。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "坐到天明。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "merchant"
+            },
+            {
+              "op": "flag",
+              "key": "le_child_09_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "告诉他河还在原处。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "flag",
+              "key": "le_17_1"
+            },
+            {
+              "op": "flag",
+              "key": "le_child_09_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "edu_01",
+      "band": "education",
+      "age_min": 8,
+      "age_max": 14,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "书院抄本缺了最后一页。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "让他自己补一句。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "academy",
+              "tier": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_edu_01_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "去借完整的一本。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "trait",
+              "trait": "keen_eye"
+            },
+            {
+              "op": "flag",
+              "key": "le_edu_01_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "edu_02",
+      "band": "education",
+      "age_min": 8,
+      "age_max": 14,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "先生问他先救旗还是先救人。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "他答救人。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "academy",
+              "tier": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_edu_02_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "他答先看旗在谁手里。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "merchant"
+            },
+            {
+              "op": "flag",
+              "key": "le_edu_02_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "edu_03",
+      "band": "education",
+      "age_min": 8,
+      "age_max": 14,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "他算粮帐算错了一石。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "让他当场重算。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "academy",
+              "tier": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_edu_03_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "把错处讲给他听。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat",
+              "key": "agi",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_edu_03_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "edu_04",
+      "band": "education",
+      "age_min": 8,
+      "age_max": 14,
+      "need": "academy",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "院里比箭，他射中了绳。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "记一笔准头。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "trait",
+              "trait": "scholar"
+            },
+            {
+              "op": "flag",
+              "key": "le_edu_04_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "让他再射一次。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "rep",
+              "realm": "riverland",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_edu_04_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "edu_05",
+      "band": "education",
+      "age_min": 8,
+      "age_max": 14,
+      "need": "academy",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "他想留在院里夜读。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "准到一更。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "scholar"
+            },
+            {
+              "op": "flag",
+              "key": "le_edu_05_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "让他天亮再读。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "flag",
+              "key": "le_22_1"
+            },
+            {
+              "op": "flag",
+              "key": "le_edu_05_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "edu_06",
+      "band": "education",
+      "age_min": 8,
+      "age_max": 14,
+      "need": "academy",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "同学笑他的口音。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "教他慢慢说。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat",
+              "key": "wil",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_edu_06_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "请先生止住笑声。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "trait",
+              "trait": "lucky"
+            },
+            {
+              "op": "flag",
+              "key": "le_edu_06_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "edu_07",
+      "band": "education",
+      "age_min": 8,
+      "age_max": 14,
+      "need": "academy",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "他带回一张河道草图。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "贴进书夹。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "rep",
+              "realm": "ashland",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_edu_07_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "先核对渡口。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "scholar"
+            },
+            {
+              "op": "flag",
+              "key": "le_edu_07_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "edu_08",
+      "band": "education",
+      "age_min": 8,
+      "age_max": 14,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "问他愿走武路还是文路。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "记下武路。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "academy",
+              "tier": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_edu_08_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "记下文路。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat",
+              "key": "skl",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_edu_08_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "edu_09",
+      "band": "education",
+      "age_min": 8,
+      "age_max": 14,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "书院点名，他站到了前列。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "让他留在前列。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "academy",
+              "tier": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_edu_09_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "把他换回原位。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "rep",
+              "realm": "riverland",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_edu_09_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adult_01",
+      "band": "adulthood",
+      "age_min": 15,
+      "age_max": 40,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "授旗那天风很大。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "把旗绳系紧。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "martial"
+            },
+            {
+              "op": "flag",
+              "key": "le_adult_01_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "改到午后。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "flag",
+              "key": "le_27_1"
+            },
+            {
+              "op": "flag",
+              "key": "le_adult_01_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adult_02",
+      "band": "adulthood",
+      "age_min": 15,
+      "age_max": 40,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "他第一次独自守夜。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "添一盏灯。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat",
+              "key": "per",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_adult_02_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "让他适应暗处。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "trait",
+              "trait": "iron_gut"
+            },
+            {
+              "op": "flag",
+              "key": "le_adult_02_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adult_03",
+      "band": "adulthood",
+      "age_min": 15,
+      "age_max": 40,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "市集有人喊他的姓。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "应一声。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "rep",
+              "realm": "ashland",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_adult_03_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "不回头。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "martial"
+            },
+            {
+              "op": "flag",
+              "key": "le_adult_03_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adult_04",
+      "band": "adulthood",
+      "age_min": 15,
+      "age_max": 40,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "他想把月俸分给弟妹。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "准他分一份。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "flag",
+              "key": "le_30_0"
+            },
+            {
+              "op": "flag",
+              "key": "le_adult_04_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "先留在账上。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat",
+              "key": "vit",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_adult_04_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adult_05",
+      "band": "adulthood",
+      "age_min": 15,
+      "age_max": 40,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "旧伤在雨天发紧。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "让祠堂看一看。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "trait",
+              "trait": "charmer"
+            },
+            {
+              "op": "flag",
+              "key": "le_adult_05_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "照常出操。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "rep",
+              "realm": "riverland",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_adult_05_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adult_06",
+      "band": "adulthood",
+      "age_min": 15,
+      "age_max": 40,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "他拒绝了一门不合的亲事。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "记下他的拒绝。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "merchant"
+            },
+            {
+              "op": "flag",
+              "key": "le_adult_06_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "再问他一次。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "flag",
+              "key": "le_32_1"
+            },
+            {
+              "op": "flag",
+              "key": "le_adult_06_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adult_07",
+      "band": "adulthood",
+      "age_min": 15,
+      "age_max": 40,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "同伴邀他去河对岸。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "派他去。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat",
+              "key": "agi",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_adult_07_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "留下他守堡。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "trait",
+              "trait": "night_owl"
+            },
+            {
+              "op": "flag",
+              "key": "le_adult_07_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adult_08",
+      "band": "adulthood",
+      "age_min": 15,
+      "age_max": 40,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "他把自己的刀让给新人。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "收下这份让。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "rep",
+              "realm": "ashland",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_adult_08_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "让他留着刀。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "merchant"
+            },
+            {
+              "op": "flag",
+              "key": "le_adult_08_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adult_09",
+      "band": "adulthood",
+      "age_min": 15,
+      "age_max": 40,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "夜谈时他提起远行。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "许他一年。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "flag",
+              "key": "le_35_0"
+            },
+            {
+              "op": "flag",
+              "key": "le_adult_09_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "让他先把帐做完。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat",
+              "key": "str",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_adult_09_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "marry_01",
+      "band": "marriage",
+      "age_min": 16,
+      "age_max": 55,
+      "need": "spouse",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "婚宴上有人坐错了席。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "重新排座。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "trait",
+              "trait": "brave"
+            },
+            {
+              "op": "flag",
+              "key": "le_marry_01_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "将错就错，敬一杯。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "rep",
+              "realm": "riverland",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_marry_01_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "marry_02",
+      "band": "marriage",
+      "age_min": 16,
+      "age_max": 55,
+      "need": "spouse",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "配偶带来一匣乡信。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "当众读一封。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "scholar"
+            },
+            {
+              "op": "flag",
+              "key": "le_marry_02_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "留到夜里再看。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "flag",
+              "key": "le_37_1"
+            },
+            {
+              "op": "flag",
+              "key": "le_marry_02_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "marry_03",
+      "band": "marriage",
+      "age_min": 16,
+      "age_max": 55,
+      "need": "spouse",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "两家对孩子的姓争执。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "从团长的姓。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat",
+              "key": "skl",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_marry_03_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "两姓并列。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "trait",
+              "trait": "scholar"
+            },
+            {
+              "op": "flag",
+              "key": "le_marry_03_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "marry_04",
+      "band": "marriage",
+      "age_min": 16,
+      "age_max": 55,
+      "need": "spouse",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "配偶想回母国过冬。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "准行。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "rep",
+              "realm": "ashland",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_marry_04_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "请对方春天再去。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "scholar"
+            },
+            {
+              "op": "flag",
+              "key": "le_marry_04_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "marry_05",
+      "band": "marriage",
+      "age_min": 16,
+      "age_max": 55,
+      "need": "spouse",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "婚约抄本有一个空格。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "当场补上。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "flag",
+              "key": "le_40_0"
+            },
+            {
+              "op": "flag",
+              "key": "le_marry_05_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "退回重抄。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat",
+              "key": "wil",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_marry_05_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "marry_06",
+      "band": "marriage",
+      "age_min": 16,
+      "age_max": 55,
+      "need": "spouse",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "宾客问远邦的礼数。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "按灯市的规矩答。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "trait",
+              "trait": "sturdy"
+            },
+            {
+              "op": "flag",
+              "key": "le_marry_06_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "按清河的规矩答。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "rep",
+              "realm": "riverland",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_marry_06_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "marry_07",
+      "band": "marriage",
+      "age_min": 16,
+      "age_max": 55,
+      "need": "spouse",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "配偶病了，宴还开着。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "把宴停了。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "martial"
+            },
+            {
+              "op": "flag",
+              "key": "le_marry_07_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "让宴继续，人去歇。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "flag",
+              "key": "le_42_1"
+            },
+            {
+              "op": "flag",
+              "key": "le_marry_07_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "marry_08",
+      "band": "marriage",
+      "age_min": 16,
+      "age_max": 55,
+      "need": "spouse",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "有人私下改了嫁妆数。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "追回差额。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat",
+              "key": "vit",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_marry_08_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "当作没看见。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "trait",
+              "trait": "heir_mark"
+            },
+            {
+              "op": "flag",
+              "key": "le_marry_08_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "death_01",
+      "band": "deathbed",
+      "age_min": 60,
+      "age_max": 90,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "老人要把旗绳交给谁。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "交给长嗣。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "rep",
+              "realm": "ashland",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_death_01_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "交给在场的人。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "martial"
+            },
+            {
+              "op": "flag",
+              "key": "le_death_01_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "death_02",
+      "band": "deathbed",
+      "age_min": 60,
+      "age_max": 90,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "他要一句能刻上碑的话。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "写下他的原话。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "flag",
+              "key": "le_45_0"
+            },
+            {
+              "op": "flag",
+              "key": "le_death_02_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "由族里代拟一句。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat",
+              "key": "per",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_death_02_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "death_03",
+      "band": "deathbed",
+      "age_min": 60,
+      "age_max": 90,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "药碗他推到一边。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "尊重他。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "trait",
+              "trait": "keen_eye"
+            },
+            {
+              "op": "flag",
+              "key": "le_death_03_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "再劝一口。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "rep",
+              "realm": "riverland",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_death_03_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "death_04",
+      "band": "deathbed",
+      "age_min": 60,
+      "age_max": 90,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "他点名要见一个人。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "去请。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "merchant"
+            },
+            {
+              "op": "flag",
+              "key": "le_death_04_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "说人已在路上。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "flag",
+              "key": "le_47_1"
+            },
+            {
+              "op": "flag",
+              "key": "le_death_04_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "death_05",
+      "band": "deathbed",
+      "age_min": 60,
+      "age_max": 90,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "遗物里有一封未寄的信。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "把信寄出。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat",
+              "key": "str",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_death_05_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "把信烧了。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "trait",
+              "trait": "charmer"
+            },
+            {
+              "op": "flag",
+              "key": "le_death_05_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "death_06",
+      "band": "deathbed",
+      "age_min": 60,
+      "age_max": 90,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "他问旗还在不在。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "把旗拿到床前。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "rep",
+              "realm": "ashland",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_death_06_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "告诉他旗在城上。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "merchant"
+            },
+            {
+              "op": "flag",
+              "key": "le_death_06_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "death_07",
+      "band": "deathbed",
+      "age_min": 60,
+      "age_max": 90,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "呼吸很轻，他还想听雨。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "打开窗。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "flag",
+              "key": "le_50_0"
+            },
+            {
+              "op": "flag",
+              "key": "le_death_07_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "留一盆水在屋里。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat",
+              "key": "agi",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_death_07_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "death_08",
+      "band": "deathbed",
+      "age_min": 60,
+      "age_max": 90,
+      "need": "",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "他把一枚旧扣塞到孩子手里。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "让孩子收下。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "trait",
+              "trait": "lucky"
+            },
+            {
+              "op": "flag",
+              "key": "le_death_08_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "先收进匣子。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "rep",
+              "realm": "riverland",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_death_08_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "succ_01",
+      "band": "succession",
+      "age_min": 8,
+      "age_max": 40,
+      "need": "sibling",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "两个孩子都说旗该自己拿。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "让他们各写一条理由。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "scholar"
+            },
+            {
+              "op": "flag",
+              "key": "le_succ_01_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "先按年纪排。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "flag",
+              "key": "le_52_1"
+            },
+            {
+              "op": "flag",
+              "key": "le_succ_01_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "succ_02",
+      "band": "succession",
+      "age_min": 8,
+      "age_max": 40,
+      "need": "sibling",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "校场上有人先动了手。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "把人拉开。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat",
+              "key": "wil",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_succ_02_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "让他们点到为止。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "trait",
+              "trait": "brave"
+            },
+            {
+              "op": "flag",
+              "key": "le_succ_02_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "succ_03",
+      "band": "succession",
+      "age_min": 8,
+      "age_max": 40,
+      "need": "sibling",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "族谱旁注只够写一个名字。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "写年长的那个。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "rep",
+              "realm": "ashland",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_succ_03_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "写此刻在堡的那个。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "scholar"
+            },
+            {
+              "op": "flag",
+              "key": "le_succ_03_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "succ_04",
+      "band": "succession",
+      "age_min": 8,
+      "age_max": 40,
+      "need": "sibling",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "有人提议抽签。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "不用签。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "flag",
+              "key": "le_55_0"
+            },
+            {
+              "op": "flag",
+              "key": "le_succ_04_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "用签，但当众。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat",
+              "key": "skl",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_succ_04_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "succ_05",
+      "band": "succession",
+      "age_min": 8,
+      "age_max": 40,
+      "need": "sibling",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "弟妹不愿给兄长让路。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "听弟妹说完。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "trait",
+              "trait": "iron_gut"
+            },
+            {
+              "op": "flag",
+              "key": "le_succ_05_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "维持长幼。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "rep",
+              "realm": "riverland",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_succ_05_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "succ_06",
+      "band": "succession",
+      "age_min": 8,
+      "age_max": 40,
+      "need": "sibling",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "外宅送来支持次嗣的信。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "公开这封信。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "martial"
+            },
+            {
+              "op": "flag",
+              "key": "le_succ_06_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "先把信压下。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "flag",
+              "key": "le_57_1"
+            },
+            {
+              "op": "flag",
+              "key": "le_succ_06_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "succ_07",
+      "band": "succession",
+      "age_min": 8,
+      "age_max": 40,
+      "need": "sibling",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "两人愿意共写一页。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "准他们合写。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "stat",
+              "key": "per",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_succ_07_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "仍要分出主笔。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "trait",
+              "trait": "sturdy"
+            },
+            {
+              "op": "flag",
+              "key": "le_succ_07_b"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "succ_08",
+      "band": "succession",
+      "age_min": 8,
+      "age_max": 40,
+      "need": "sibling",
+      "lines": [
+        {
+          "speaker": "旁白",
+          "text": "争执停在晚饭前。"
+        }
+      ],
+      "options": [
+        {
+          "id": "a",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "饭后再议。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "rep",
+              "realm": "ashland",
+              "delta": 1
+            },
+            {
+              "op": "flag",
+              "key": "le_succ_08_a"
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "lines": [
+            {
+              "speaker": "旁白",
+              "text": "今晚就定下来。"
+            }
+          ],
+          "effects": [
+            {
+              "op": "path",
+              "path": "martial"
+            },
+            {
+              "op": "flag",
+              "key": "le_succ_08_b"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

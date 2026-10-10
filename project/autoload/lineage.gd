@@ -6,6 +6,7 @@ const _Ambitions := preload("res://scripts/characters/ambitions.gd")
 
 func _ready() -> void:
 	Calendar.register("post", Callable(_Ambitions, "on_month"), 80)
+	Calendar.register("pre", Callable(self, "note_deaths"), 80)
 
 const REP_RANK_NEED := {
 	"knight": "known",
@@ -45,7 +46,7 @@ func can_propose(suitor: CKCharacter, target: CKCharacter, realm: String = "ashl
 	return {"ok": true, "need": need, "have": have, "msg": "可表白"}
 
 ## accepted_rites == null keeps the old vow (smoke / full-chain). An explicit list gates 入牒礼 / 从母居 / 萤约 / 携霜契.
-func marry(suitor: CKCharacter, target: CKCharacter, bride_price: int = 40, accepted_rites = null) -> Dictionary:
+func marry(suitor: CKCharacter, target: CKCharacter, bride_price: int = 40, accepted_rites = null, paced: bool = false) -> Dictionary:
 	var check = can_propose(suitor, target)
 	if not check.get("ok", false):
 		return check
@@ -82,13 +83,23 @@ func marry(suitor: CKCharacter, target: CKCharacter, bride_price: int = 40, acce
 		CKCourt.apply_rites(suitor, target, accepted_rites)
 		if rite_cost > 0:
 			dip.append("婚仪 %d 银" % rite_cost)
-	# 妊娠：教程 1 月后出生（岁月压缩）
+	# Seed 91's century sim calls marry() and must keep the old 2-tick countdown
+	# with no extra draw. Player weddings pass paced=true for the 3-month term.
 	var mother = target if target.gender == "f" else suitor
-	mother.pregnant_months = 1
+	var conceived := true
+	var due := 2
+	if paced:
+		conceived = CKFamilyState.begin_pregnancy(GameState, mother)
+		due = CKFamilyState.term_months(GameState)
+	else:
+		mother.pregnant_months = 1
 	GameState.chapter0_flags["married"] = true
 	GameState.mark_dirty()
 	var dip_s := ("邦交 " + "、".join(dip) + "。") if not dip.is_empty() else ""
-	return {"ok": true, "msg": "婚宴已成，声望小增。%s%s 有喜。" % [dip_s, mother.name]}
+	var joy := Locale.t("fertility_none", [mother.name])
+	if conceived:
+		joy = Locale.t("fertility_due", [mother.name, due])
+	return {"ok": true, "msg": "婚宴已成，声望小增。%s%s" % [dip_s, joy]}
 
 ## 子嗣期望面板（X1）
 func heir_expectation(a: CKCharacter, b: CKCharacter) -> Dictionary:
@@ -166,6 +177,7 @@ func birth_child(mother: CKCharacter) -> CKCharacter:
 		father.ensure_genome()
 	child.genome = CKGenome.cross(father.genome if father else mother.genome, mother.genome, child.blood_mix, rng, child.gender)
 	CKGenome.sync_appearance(child)
+	CKBloodFusion.apply_birth(child)
 	for note in CKBloodline.on_birth(child, father, mother):
 		GameState.lineage_log.append(note)
 		GameState.log_event(note)
@@ -449,3 +461,115 @@ func transfer_banner(reason: String) -> Dictionary:
 	_Ambitions.on_banner(heir)
 	GameState.mark_dirty()
 	return {"ok": true, "msg": msg, "heir_id": heir.id, "heir": heir.name, "reason": reason}
+
+## After Calendar ages the living, copy the dead onto the stele. Battle rows already
+## carry CMP-01 words; old age is filled here. This does not spend silver, food, or morale.
+func note_deaths(_ctx: Dictionary = {}) -> void:
+	for c in GameState.characters.values():
+		if c == null or c.alive:
+			continue
+		_inscribe(c)
+
+func ancestor_rows() -> Array:
+	note_deaths()
+	var rows: Array = []
+	for c in GameState.characters.values():
+		if c == null or c.alive:
+			continue
+		rows.append(_row_for(c))
+	rows.sort_custom(Callable(self, "_by_death"))
+	return rows
+
+## Family honor is a read for the stele and for whoever applies the bonus. The month tick does not.
+func honor_bonus() -> int:
+	return mini(3, ancestor_rows().size())
+
+func _inscribe(c: CKCharacter) -> void:
+	if typeof(c.blood_meta) != TYPE_DICTIONARY:
+		c.blood_meta = {}
+	var raw = c.blood_meta.get("stele", {})
+	var stele: Dictionary = raw if typeof(raw) == TYPE_DICTIONARY else {}
+	if str(stele.get("cause", "")) == "":
+		stele["cause"] = "age"
+		stele["words"] = Locale.t("ancestor_age_words")
+		stele["when"] = Calendar.label() if Calendar else ""
+		stele["name"] = c.name
+	if not stele.has("born_year"):
+		var death_year := _year_of(str(stele.get("when", "")))
+		stele["death_year"] = death_year
+		stele["born_year"] = death_year - int(c.age)
+	c.blood_meta["stele"] = stele
+
+func _year_of(when: String) -> int:
+	var found := ""
+	for i in when.length():
+		var ch := when.substr(i, 1)
+		if ch >= "0" and ch <= "9":
+			found += ch
+			continue
+		if found != "":
+			return int(found)
+	if found != "":
+		return int(found)
+	return Calendar.year if Calendar else 0
+
+func _deeds(c: CKCharacter) -> String:
+	var hits: PackedStringArray = []
+	for row in GameState.lineage_log:
+		var text := ""
+		if typeof(row) == TYPE_DICTIONARY:
+			text = str(row.get("text", ""))
+		else:
+			text = str(row)
+		if c.name != "" and text.find(c.name) >= 0:
+			hits.append(text)
+		if hits.size() >= 2:
+			break
+	if hits.is_empty():
+		return Locale.t("ancestor_no_deed")
+	return " / ".join(hits)
+
+func _titles(c: CKCharacter) -> String:
+	var hits: PackedStringArray = []
+	for item in c.honors:
+		var token := str(item)
+		if token.begins_with("dyn:"):
+			hits.append(_title_label(token.substr(4)))
+	if hits.is_empty():
+		return Locale.t("ancestor_no_title")
+	return " / ".join(hits)
+
+func _title_label(suffix: String) -> String:
+	var key := "amb_%s_title" % suffix
+	var label := Locale.t(key)
+	var missing := Locale.t("locale_missing")
+	if label == "" or label == "..." or label == missing or label == key:
+		return suffix
+	return label
+
+func _row_for(c: CKCharacter) -> Dictionary:
+	var stele: Dictionary = {}
+	if typeof(c.blood_meta) == TYPE_DICTIONARY:
+		var raw = c.blood_meta.get("stele", {})
+		if typeof(raw) == TYPE_DICTIONARY:
+			stele = raw
+	var cause := str(stele.get("cause", "age"))
+	var cause_key := "ancestor_cause_battle" if cause == "battle" else "ancestor_cause_age"
+	return {
+		"id": c.id,
+		"name": c.name,
+		"born_year": int(stele.get("born_year", 0)),
+		"death_year": int(stele.get("death_year", 0)),
+		"cause": cause,
+		"cause_zh": Locale.t(cause_key),
+		"words": str(stele.get("words", "")),
+		"deeds": _deeds(c),
+		"titles": _titles(c),
+	}
+
+func _by_death(a: Dictionary, b: Dictionary) -> bool:
+	var ay := int(a.get("death_year", 0))
+	var by := int(b.get("death_year", 0))
+	if ay == by:
+		return str(a.get("id", "")) < str(b.get("id", ""))
+	return ay < by

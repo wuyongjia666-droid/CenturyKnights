@@ -61,9 +61,9 @@ func _run() -> String:
 
 
 func _locked(report: Dictionary) -> String:
-	if int(report.get("silver_end", -1)) != 5774:
+	if int(report.get("silver_end", -1)) != 223:
 		return "silver %s" % str(report.get("silver_end", ""))
-	if int(report.get("food_end", -1)) != 280:
+	if int(report.get("food_end", -1)) != 279:
 		return "food %s" % str(report.get("food_end", ""))
 	if int(report.get("generations", -1)) != 5:
 		return "generations %s" % str(report.get("generations", ""))
@@ -86,7 +86,7 @@ func _seed(report: Dictionary, seed: Dictionary) -> String:
 		return "seed axes drifted %s" % str(axes)
 	if not bool(axes.get("prestige", false)) or not bool(axes.get("faith", false)):
 		return "seed prestige/faith %s" % str(axes)
-	if int(axes.get("holdings", -1)) != 4 or int(axes.get("silver", -1)) != 5774:
+	if int(axes.get("holdings", -1)) != 4 or int(axes.get("silver", -1)) != 223:
 		return "seed ledger axes %s" % str(axes)
 	if int(axes.get("companions", -1)) != 0:
 		return "seed companions %s" % str(axes)
@@ -97,7 +97,7 @@ func _seed(report: Dictionary, seed: Dictionary) -> String:
 	if str(seed.get("title", "")) == str(seed.get("title_key", "")):
 		return "title key missing"
 	var text := _texts(seed)
-	if text.find("5774") < 0 or text.find("4处据点") < 0:
+	if text.find("223") < 0 or text.find("4处据点") < 0:
 		return "rite ending hid the treasury"
 	if text.find("已写下志向") < 0:
 		return "closed rite missing"
