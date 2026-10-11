@@ -50,16 +50,19 @@ runs:
     - name: Asset tree key
       id: tree
       shell: bash
-      run: echo "project=$(git rev-parse HEAD:project)" >> "$GITHUB_OUTPUT"
+      run: |
+        echo "project=$(git rev-parse HEAD:project)" >> "$GITHUB_OUTPUT"
+        # Godot re-imports on any mtime change; content-derived mtimes keep the restored cache valid.
+        python3 tools/ci/content_mtime.py
 
     - name: Restore project/.godot
       id: dotgodot
       uses: actions/cache/restore@v4
       with:
         path: project/.godot
-        key: godot-dotgodot-v3-${{ steps.tree.outputs.project }}
+        key: godot-dotgodot-v4-${{ steps.tree.outputs.project }}
         restore-keys: |
-          godot-dotgodot-v3-
+          godot-dotgodot-v4-
 
     - name: Import project
       shell: bash
@@ -79,6 +82,8 @@ runs:
         done
         echo "import took $((SECONDS - start))s (cache: ${{ steps.dotgodot.outputs.cache-matched-key || 'none' }})"
         test "$ok" = 1
+        cd ..
+        python3 tools/ci/content_mtime.py --fix-cache
 
     - name: Guard against stale .import files
       if: inputs.check-import-drift == 'true'
@@ -98,4 +103,4 @@ runs:
       uses: actions/cache/save@v4
       with:
         path: project/.godot
-        key: godot-dotgodot-v3-${{ steps.tree.outputs.project }}
+        key: godot-dotgodot-v4-${{ steps.tree.outputs.project }}
