@@ -18,14 +18,20 @@ static func data() -> Dictionary:
 				_data = parsed
 	return _data
 
+static func _has(path: String) -> bool:
+	return CKArtPaths.exists(path)
+
+
 static func plate_path(label: String, folder: String = ART) -> String:
 	var png := folder + label + ".png"
-	if ResourceLoader.exists(png):
-		return png
+	var hit := CKArtPaths.resolve(png)
+	if _has(hit):
+		return hit
 	# farm ingest may land under ui/ temporarily
 	var alt := "res://assets/art/ui/" + label + ".png"
-	if ResourceLoader.exists(alt):
-		return alt
+	var alt_hit := CKArtPaths.resolve(alt)
+	if _has(alt_hit):
+		return alt_hit
 	return ""
 
 static func world_plate() -> String:
@@ -36,28 +42,28 @@ static func nation_plate(nation_id: String) -> String:
 
 static func city_plate(node_id: String) -> String:
 	## v8.7 style-gated city vignette; missing plates use the v9.2 nation-crop badge.
-	for ext in [".jpg", ".png"]:
+	for ext in [".webp", ".jpg", ".png"]:
 		var p := "res://assets/art/atlas/cities/v87_city_%s%s" % [node_id, ext]
-		if ResourceLoader.exists(p):
+		if _has(p):
 			return p
-	var fb := "res://assets/art/atlas/cities/v92_fallback_%s.png" % node_id
-	if ResourceLoader.exists(fb):
+	var fb := CKArtPaths.resolve("res://assets/art/atlas/cities/v92_fallback_%s.png" % node_id)
+	if _has(fb):
 		return fb
 	return ""
 
 static func smith_plate(nation_id: String) -> String:
-	for ext in [".jpg", ".png"]:
+	for ext in [".webp", ".jpg", ".png"]:
 		var p := "res://assets/art/atlas/smiths/v87_smith_%s%s" % [nation_id, ext]
-		if ResourceLoader.exists(p):
+		if _has(p):
 			return p
 	return ""
 
 static func item_icon(item_id: String) -> String:
-	var p := "res://assets/art/ui/items/v87_item_%s.png" % item_id
-	if ResourceLoader.exists(p):
+	var p := CKArtPaths.resolve("res://assets/art/ui/items/v87_item_%s.png" % item_id)
+	if _has(p):
 		return p
 	var g := "res://assets/art/items/glyph/v92_glyph_%s.png" % item_id
-	return g if ResourceLoader.exists(g) else ""
+	return g if _has(g) else ""
 
 static func scene_plate(scene_id: String) -> String:
 	return plate_path("v8_scene_%s" % scene_id, "res://assets/art/scenes/")
@@ -85,10 +91,11 @@ static func biome_for_map(map_id: String) -> String:
 
 static func battle_backdrop_for_map(map_id: String) -> String:
 	var bio := biome_for_map(map_id)
-	var path := "res://assets/art/battle/v8_battle_biome_%s.png" % bio
-	if ResourceLoader.exists(path):
+	var path := CKArtPaths.resolve("res://assets/art/battle/v8_battle_biome_%s.png" % bio)
+	if _has(path):
 		return path
 	# fallback legacy
-	if ResourceLoader.exists("res://assets/art/ui/battle_backdrop.png"):
-		return "res://assets/art/ui/battle_backdrop.png"
+	var legacy := CKArtPaths.resolve("res://assets/art/ui/battle_backdrop.png")
+	if _has(legacy):
+		return legacy
 	return ""

@@ -458,17 +458,15 @@ static func _stage_names(stage: String) -> Array:
 
 static func _load_named(stem: String) -> Texture2D:
 	var abs_png := portrait_dir_abs().path_join(stem + ".png")
-	var hit := _load_png(abs_png)
+	var hit := CKArtPaths.load_texture(abs_png)
 	if hit != null:
 		return hit
 	if dir_override != "":
 		return null
-	var res_path := RES_DIR + stem + ".png"
-	if ResourceLoader.exists(res_path):
-		var tex: Texture2D = load(res_path)
-		if tex != null:
-			return tex
-	return _load_png(USER_DIR + stem + ".png")
+	var res_hit := CKArtPaths.load_texture(RES_DIR + stem + ".png")
+	if res_hit != null:
+		return res_hit
+	return CKArtPaths.load_texture(USER_DIR + stem + ".png")
 
 ## Current stage plate, else the nearest stage that has been rendered, else the unsuffixed legacy file.
 static func texture(c: Object) -> Texture2D:
@@ -487,10 +485,9 @@ static func texture(c: Object) -> Texture2D:
 	var legacy := _load_named(stem)
 	if legacy == null and dir_override == "":
 		var old := cache_key(c)
-		if ResourceLoader.exists(RES_DIR + old + ".png"):
-			legacy = load(RES_DIR + old + ".png")
+		legacy = CKArtPaths.load_texture(RES_DIR + old + ".png")
 		if legacy == null:
-			legacy = _load_png(USER_DIR + old + ".png")
+			legacy = CKArtPaths.load_texture(USER_DIR + old + ".png")
 	if legacy != null:
 		_mem[key] = legacy
 		return legacy

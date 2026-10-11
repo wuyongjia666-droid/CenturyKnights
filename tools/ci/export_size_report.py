@@ -6,13 +6,11 @@ when any preset pattern matches its relative path. Godot's String.match treats
 '*' as any run of characters, including slashes. Fails when the total is above
 tools/ci/ratchet.json export_budget_bytes.
 
-The 400MiB cap in the v9.2 card is still above the measured total: ART-02
-moved zero-reference files out of project/assets, then ART-04 added city
-fallback crests and item glyphs. Doll plates, live portraits, and hub
-backdrops remain because they are loaded by name. The active budget sits
-just above the measured total. If
-docs/art/retired-assets-v92.json grows an exclude_globs list, those patterns
-are applied on top and the budget can drop toward 250MiB.
+Shipping photographs are lossy WebP (gene plates stay 768x1024; 1920
+backdrops and battle plates are capped at 1280). Doll parts are lossless
+WebP. The active budget sits just above the measured total and under the
+400MiB cap. If docs/art/retired-assets-v92.json grows an exclude_globs
+list, those patterns are applied on top.
 """
 from __future__ import annotations
 

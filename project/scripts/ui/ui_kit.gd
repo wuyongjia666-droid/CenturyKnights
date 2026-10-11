@@ -422,12 +422,12 @@ static func make_themed_bg(parent: Control, theme: String = "castle") -> ColorRe
 	## faint atmospheric wash (no more painted plates competing with frosted panels).
 	var bg = make_screen_bg(parent, false)
 	void_bg(parent)
-	var path = "res://assets/art/ui/%s_backdrop.png" % theme
-	if not ResourceLoader.exists(path):
-		path = "res://assets/art/ui/castle_backdrop.png"
-	if ResourceLoader.exists(path):
+	var path = CKArtPaths.resolve("res://assets/art/ui/%s_backdrop.png" % theme)
+	if not CKArtPaths.exists(path):
+		path = CKArtPaths.resolve("res://assets/art/ui/castle_backdrop.png")
+	if CKArtPaths.exists(path):
 		var tr := TextureRect.new()
-		tr.texture = load(path)
+		tr.texture = CKArtPaths.load_texture(path)
 		tr.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
@@ -481,11 +481,11 @@ static func make_screen_bg(parent: Control, illustrated: bool = false) -> ColorR
 	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	parent.add_child(bg)
 	if illustrated:
-		var path = "res://assets/art/ui/castle_backdrop.png"
-		if not ResourceLoader.exists(path):
-			path = "res://assets/art/ui/hub_backdrop.png"
-		if ResourceLoader.exists(path):
-			_add_backdrop(parent, load(path), 0.58)
+		var path = CKArtPaths.resolve("res://assets/art/ui/castle_backdrop.png")
+		if not CKArtPaths.exists(path):
+			path = CKArtPaths.resolve("res://assets/art/ui/hub_backdrop.png")
+		if CKArtPaths.exists(path):
+			_add_backdrop(parent, CKArtPaths.load_texture(path), 0.58)
 	return bg
 
 static func trait_icon_rect(trait_id: String, size: float = 28.0) -> TextureRect:

@@ -168,15 +168,15 @@ func _build_stage() -> void:
 	var we := WorldEnvironment.new()
 	we.environment = env
 	w.add_child(we)
-	var bb := str(rec.get("backdrop", ""))
-	if bb != "" and ResourceLoader.exists(bb):
+	var bb := CKArtPaths.resolve(str(rec.get("backdrop", "")))
+	if bb != "" and CKArtPaths.exists(bb):
 		var q := MeshInstance3D.new()
 		var qm := QuadMesh.new()
 		qm.size = Vector2(72, 40)
 		q.mesh = qm
 		var m := StandardMaterial3D.new()
 		m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-		m.albedo_texture = load(bb)
+		m.albedo_texture = CKArtPaths.load_texture(bb)
 		m.albedo_color = Color(0.58, 0.64, 0.74)
 		q.material_override = m
 		q.position = Vector3(0, 9.0, -15)

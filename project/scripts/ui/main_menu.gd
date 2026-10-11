@@ -16,14 +16,15 @@ func _build() -> void:
 	bg.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(bg)
-	var art_path := "res://assets/art/ui/hub_backdrop.png"
+	var art_path := CKArtPaths.resolve("res://assets/art/ui/hub_backdrop.png")
 	for p in ["res://assets/art/ui/menu_backdrop.png", "res://assets/art/ui/castle_backdrop.png"]:
-		if ResourceLoader.exists(p):
-			art_path = p
+		var resolved := CKArtPaths.resolve(p)
+		if CKArtPaths.exists(resolved):
+			art_path = resolved
 			break
-	if ResourceLoader.exists(art_path):
+	if CKArtPaths.exists(art_path):
 		var art := TextureRect.new()
-		art.texture = load(art_path)
+		art.texture = CKArtPaths.load_texture(art_path)
 		art.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 		art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED

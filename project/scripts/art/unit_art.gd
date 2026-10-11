@@ -134,12 +134,17 @@ static func eye_color(appearance: Dictionary) -> Color:
 			return Color(str(a.get("color", "#5a6570")))
 	return Color("#5a6570")
 
+static func _art_exists(path: String) -> bool:
+	return CKArtPaths.exists(path)
+
+
 static func _try_load(path: String) -> Texture2D:
+	path = CKArtPaths.resolve(path)
 	if _cache.has(path):
 		return _cache[path]
-	if ResourceLoader.exists(path):
-		var tex = load(path)
-		if tex is Texture2D:
+	if _art_exists(path):
+		var tex = CKArtPaths.load_texture(path)
+		if tex != null:
 			_cache[path] = tex
 			return tex
 	return null
@@ -163,7 +168,7 @@ static func _portrait_key(c: CKCharacter) -> String:
 		v8n = "v8_bust_%s_guard" % g8
 	if v8n != "":
 		for cand in ["res://assets/art/portraits/thumb_%s.png" % v8n, "res://assets/art/portraits/%s.png" % v8n]:
-			if ResourceLoader.exists(cand):
+			if _art_exists(cand):
 				return cand
 	# 具名角色优先 face_plate（美术升档）
 	var named_plate := ""
@@ -177,11 +182,11 @@ static func _portrait_key(c: CKCharacter) -> String:
 		named_plate = "militia_b_face_plate"
 	if named_plate != "":
 		var pp = "res://assets/art/portraits/%s.png" % named_plate
-		if ResourceLoader.exists(pp):
+		if _art_exists(pp):
 			return pp
 	if c.is_leader:
 		var p = "res://assets/art/portraits/leader_default.png"
-		if ResourceLoader.exists(p):
+		if _art_exists(p):
 			return p
 	if _cast(c) == "dengying":
 		return "res://assets/art/portraits/ally_dengying.png"
@@ -357,7 +362,7 @@ static func _v83_elite_for(path: String) -> String:
 	if key == "":
 		return ""
 	var ep := "res://assets/art/farm_inbox/qwen_v830/v83_elite_%s.png" % key
-	return ep if ResourceLoader.exists(ep) else ""
+	return ep if _art_exists(ep) else ""
 
 ## "genome" when a farmed unit_id plate exists; otherwise the legacy named / hireuniq / bust chain.
 static func portrait_kind(c: CKCharacter, size: int = 96) -> String:
@@ -367,17 +372,17 @@ static func portrait_kind(c: CKCharacter, size: int = 96) -> String:
 	var elite := _v83_elite_for(path)
 	if elite != "":
 		path = elite
-	if not _is_cartoon_key(path) and ResourceLoader.exists(path):
+	if not _is_cartoon_key(path) and _art_exists(path):
 		return "named"
 	var uid := _face_uid(c)
-	if ResourceLoader.exists("res://assets/art/portraits/hireuniq_%03d.png" % uid):
+	if _art_exists("res://assets/art/portraits/hireuniq_%03d.png" % uid):
 		return "hireuniq"
 	var g := "f" if str(c.gender) == "f" else "m"
 	var role := "skirmisher"
 	if Engine.get_main_loop():
 		role = BattleRules.job_role(c.job_id)
 	var v8b: String = str({"skirmisher": "spear", "tank": "guard", "ranger": "archer", "mage": "scholar", "cavalry": "cavalry", "healer": "medic", "support": "medic"}.get(role, "duelist"))
-	if ResourceLoader.exists("res://assets/art/portraits/thumb_v8_bust_%s_%s.png" % [g, v8b]):
+	if _art_exists("res://assets/art/portraits/thumb_v8_bust_%s_%s.png" % [g, v8b]):
 		return "bust"
 	var age := int(c.age)
 	var geno := ""
@@ -390,9 +395,9 @@ static func portrait_kind(c: CKCharacter, size: int = 96) -> String:
 	else:
 		geno = "v84_geno_mid_%s_house" % g
 	var gp := "res://assets/art/portraits/%s.png" % geno
-	if size <= 240 and ResourceLoader.exists("res://assets/art/portraits/thumb_%s.png" % geno):
+	if size <= 240 and _art_exists("res://assets/art/portraits/thumb_%s.png" % geno):
 		gp = "res://assets/art/portraits/thumb_%s.png" % geno
-	if ResourceLoader.exists(gp):
+	if _art_exists(gp):
 		return "geno"
 	return "proc"
 
@@ -447,8 +452,8 @@ static func dialogue_portrait(speaker: String, emotion: String, who: CKCharacter
 	var slot := companion_slot(speaker)
 	if slot != "":
 		var path := expression_plate_path(slot, emotion)
-		if ResourceLoader.exists(path):
-			var tex = load(path)
+		if _art_exists(path):
+			var tex = CKArtPaths.load_texture(path)
 			if tex is Texture2D:
 				return tex
 	if who != null:
@@ -539,9 +544,9 @@ static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
 	var _gp := "res://assets/art/portraits/%s.png" % _geno
 	# v8.5: card/list sizes use the pre-downscaled 220x270 thumb (crisper, lighter)
 	var _thumb := "res://assets/art/portraits/thumb_%s.png" % _geno
-	if size <= 240 and ResourceLoader.exists(_thumb):
+	if size <= 240 and _art_exists(_thumb):
 		_gp = _thumb
-	if ResourceLoader.exists(_gp):
+	if _art_exists(_gp):
 		var _gt = _try_load(_gp)
 		if _gt != null:
 			_cache["geno|" + _geno + "|" + str(size)] = _gt
@@ -688,43 +693,43 @@ static func _token_key(c: CKCharacter, team: String, frame: int) -> String:
 	var _side = "enemy" if (team == "enemy" or c.faction == "enemy") else "ally"
 	if c.is_leader and _side == "ally":
 		var _lead = "res://assets/art/tokens/v8_job_squire_ally.png"
-		if ResourceLoader.exists("res://assets/art/tokens/v8_job_leader_ally.png"):
+		if _art_exists("res://assets/art/tokens/v8_job_leader_ally.png"):
 			_lead = "res://assets/art/tokens/v8_job_leader_ally.png"
-		elif ResourceLoader.exists("res://assets/art/tokens/v8_role_leader.png"):
+		elif _art_exists("res://assets/art/tokens/v8_role_leader.png"):
 			_lead = "res://assets/art/tokens/v8_role_leader.png"
-		if ResourceLoader.exists(_lead):
+		if _art_exists(_lead):
 			return _lead
 	var _jp = "res://assets/art/tokens/v8_job_%s_%s.png" % [_job, _side]
-	if ResourceLoader.exists(_jp):
+	if _art_exists(_jp):
 		return _jp
 	var _v8role = BattleRules.job_role(c.job_id) if Engine.get_main_loop() else "skirmisher"
 	if c.is_leader:
 		_v8role = "leader"
 	if _side == "enemy":
 		var _ep = "res://assets/art/tokens/hire_%s_enemy_f%d.png" % [_v8role, frame % 4]
-		if ResourceLoader.exists(_ep):
+		if _art_exists(_ep):
 			return _ep
 		var _eb = "res://assets/art/tokens/v82_enemy_boss.png"
-		if ResourceLoader.exists(_eb) and (str(c.name).find("匪首") >= 0 or str(c.name).find("头目") >= 0):
+		if _art_exists(_eb) and (str(c.name).find("匪首") >= 0 or str(c.name).find("头目") >= 0):
 			return _eb
 	else:
 		var _v8p = "res://assets/art/tokens/v8_role_%s.png" % _v8role
-		if ResourceLoader.exists(_v8p):
+		if _art_exists(_v8p):
 			return _v8p
 		var _hp = "res://assets/art/tokens/hire_%s_%s_f%d.png" % [_v8role, team, frame % 4]
-		if ResourceLoader.exists(_hp):
+		if _art_exists(_hp):
 			return _hp
 	# 敌军：加密度 hire/role token，再回退 bandit
 	if team == "enemy" or c.faction == "enemy":
 		var erole = BattleRules.job_role(c.job_id) if Engine.get_main_loop() else "skirmisher"
 		var ep = "res://assets/art/tokens/hire_%s_enemy_f%d.png" % [erole, frame % 4]
-		if ResourceLoader.exists(ep):
+		if _art_exists(ep):
 			return ep
 		return "res://assets/art/tokens/bandit_enemy_f%d.png" % (frame % 4)
 	# 雇佣棋子（具名检查之后）
 	var role2 = BattleRules.job_role(c.job_id) if Engine.get_main_loop() else "skirmisher"
 	var hp = "res://assets/art/tokens/hire_%s_%s_f%d.png" % [role2, team, frame % 4]
-	if ResourceLoader.exists(hp):
+	if _art_exists(hp):
 		return hp
 	var hair = str(c.appearance.get("hair", "ash_brown"))
 	var eyes = str(c.appearance.get("eyes", "slate"))
@@ -876,7 +881,7 @@ static func _fill_rect(img: Image, r: Rect2i, col: Color) -> void:
 
 static func _boss_portrait(key: String) -> String:
 	var fp = "res://assets/art/portraits/%s_boss_face_plate.png" % key
-	if ResourceLoader.exists(fp):
+	if _art_exists(fp):
 		return fp
 	return "res://assets/art/portraits/%s_boss.png" % key
 

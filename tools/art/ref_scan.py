@@ -31,7 +31,7 @@ CONST = re.compile(r'const\s+([A-Za-z_][A-Za-z0-9_]*)\s*(?::=\s*|\s*=\s*)"([^"\n
 THEME_RE = re.compile(r'make_themed_bg\([^)]*"([a-z_]+)"\)')
 DOLL_PART = re.compile(
     r"^(base|infant|youth|young_adult|middle|elder|young|ears_crest|iris_mask|"
-    r"brow_[a-z0-9_]+|mark_[a-z0-9_]+|scar_[a-z0-9_]+|hair_[a-z0-9_]+)\.png$"
+    r"brow_[a-z0-9_]+|mark_[a-z0-9_]+|scar_[a-z0-9_]+|hair_[a-z0-9_]+)\.(?:png|webp)$"
 )
 # Plates unit_art.gd builds without a quoted filename. Existence changes portrait_kind.
 LIVE_V8 = {
@@ -153,7 +153,7 @@ def _is_doll_live(rel: str) -> bool:
         return False
     name = rel.split("/")[-1]
     if "/outfit/" in rel or "/honor/" in rel:
-        return name.endswith(".png")
+        return name.endswith(".png") or name.endswith(".webp")
     return DOLL_PART.match(name) is not None
 
 
@@ -179,26 +179,42 @@ def _dynamic_keep(rel: str) -> bool:
     if rel.startswith("art/portraits/") and stem in LIVE_V8:
         return True
     if rel.startswith("art/portraits/") and (
-        name.endswith("_boss.png") or name.endswith("_face_plate.png")
+        name.endswith("_boss.png") or name.endswith("_boss.webp")
+        or name.endswith("_face_plate.png") or name.endswith("_face_plate.webp")
     ):
         return True
     return False
+
+
+def _png_alias(path: str) -> str:
+    """Loaders still spell the farm name as .png and swap in the shipping .webp."""
+    if path.endswith(".webp"):
+        return path[: -len(".webp")] + ".png"
+    return ""
 
 
 def _referenced(rel: str, res_path: str, names: set[str], patterns: list[re.Pattern], stems: set[str], themes: set[str]) -> bool:
     base = rel.split("/")[-1]
     stem = base.rsplit(".", 1)[0]
     inbox = rel.startswith("art/farm_inbox/")
-    if res_path in names or rel in names or ("project/assets/" + rel) in names:
+    aliases = [res_path, rel, "project/assets/" + rel, base]
+    png_rel = _png_alias(rel)
+    if png_rel:
+        aliases.extend([png_rel, "res://assets/" + png_rel, "project/assets/" + png_rel, png_rel.split("/")[-1]])
+    alias_set = set(aliases)
+    if alias_set & names:
         return True
     for n in names:
-        if "/" in n and (res_path.endswith(n) or n.endswith("/" + rel) or n.endswith(rel)):
-            return True
+        if "/" not in n:
+            continue
+        for cand in (res_path, rel, png_rel):
+            if cand and (cand.endswith(n) or n.endswith("/" + cand) or n.endswith(cand)):
+                return True
     # Bare basename collisions: ingested plates and their farm_inbox copies share a name.
     # Shot-list stems name the plate, not the inbox copy.
     if inbox:
         pass
-    elif base in names:
+    elif base in names or (png_rel and png_rel.split("/")[-1] in names):
         return True
     elif len(stem) >= 8 and stem in stems:
         return True
@@ -208,6 +224,8 @@ def _referenced(rel: str, res_path: str, names: set[str], patterns: list[re.Patt
             return True
     for cre in patterns:
         if cre.search(res_path) or cre.search("/" + rel):
+            return True
+        if png_rel and (cre.search("res://assets/" + png_rel) or cre.search("/" + png_rel)):
             return True
     return False
 

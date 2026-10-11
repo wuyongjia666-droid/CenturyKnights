@@ -10,19 +10,19 @@ func _ready() -> void:
 
 func _run() -> String:
 	var landed := AtlasArt.item_icon("ashbanner_sword_1")
-	if not landed.ends_with("v87_item_ashbanner_sword_1.png"):
+	if not landed.ends_with("v87_item_ashbanner_sword_1.webp"):
 		return "item icon " + landed
 	var sig := AtlasArt.item_icon("eo_archive_sig1")
-	if not sig.ends_with("v87_item_eo_archive_sig1.png"):
+	if not sig.ends_with("v87_item_eo_archive_sig1.webp"):
 		return "item icon " + sig
 	var city := AtlasArt.city_plate("stone_slope")
-	if not city.ends_with("v87_city_stone_slope.png"):
+	if not city.ends_with("v87_city_stone_slope.webp"):
 		return "city plate " + city
 	var banner := AtlasArt.city_plate("eo_banner")
-	if not banner.ends_with("v87_city_eo_banner.png"):
+	if not banner.ends_with("v87_city_eo_banner.webp"):
 		return "city plate " + banner
 	var missing := AtlasArt.city_plate("sy_banner")
-	if not missing.ends_with("v92_fallback_sy_banner.png"):
+	if not missing.ends_with("v92_fallback_sy_banner.webp"):
 		return "city fallback " + missing
 	var kept := AtlasArt.city_plate("ash_capital")
 	if kept == "" or kept.find("v92_fallback") >= 0:
