@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://yayzeis4pgqtb"
-path="res://.godot/imported/v8_bust_m_guard.medium.webp-dcc1b38ae7f72f7b3459c3411d95bff6.ctex"
+uid="uid://3jrt6bmb8iap"
+path="res://.godot/imported/v8_bust_m_guard.medium.webp-241c73ce52e3b1377d7f830ec0be0c92.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/v8_bust_m_guard.medium.webp"
-dest_files=["res://.godot/imported/v8_bust_m_guard.medium.webp-dcc1b38ae7f72f7b3459c3411d95bff6.ctex"]
+dest_files=["res://.godot/imported/v8_bust_m_guard.medium.webp-241c73ce52e3b1377d7f830ec0be0c92.ctex"]
 
 [params]
 

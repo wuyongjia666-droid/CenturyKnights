@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://w4vjzfezrpkjb"
-path="res://.godot/imported/v8_bust_m_spear.medium.webp-fdc09a4778d1ad79f5856cacd9109519.ctex"
+uid="uid://dst614sqxo6qh"
+path="res://.godot/imported/v8_bust_m_spear.medium.webp-fa4e1abce0f4fd3da237b1a24fc5cf38.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/v8_bust_m_spear.medium.webp"
-dest_files=["res://.godot/imported/v8_bust_m_spear.medium.webp-fdc09a4778d1ad79f5856cacd9109519.ctex"]
+dest_files=["res://.godot/imported/v8_bust_m_spear.medium.webp-fa4e1abce0f4fd3da237b1a24fc5cf38.ctex"]
 
 [params]
 

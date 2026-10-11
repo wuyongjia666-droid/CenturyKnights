@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://43675zja9abut"
-path="res://.godot/imported/v8_bust_f_hunter.medium.webp-0da5b92619dbe49227826bfb8dfde369.ctex"
+uid="uid://c2c41l3jbt6kh"
+path="res://.godot/imported/v8_bust_f_hunter.medium.webp-4a5a797918e7a377e1e933a98c01fa11.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/v8_bust_f_hunter.medium.webp"
-dest_files=["res://.godot/imported/v8_bust_f_hunter.medium.webp-0da5b92619dbe49227826bfb8dfde369.ctex"]
+dest_files=["res://.godot/imported/v8_bust_f_hunter.medium.webp-4a5a797918e7a377e1e933a98c01fa11.ctex"]
 
 [params]
 

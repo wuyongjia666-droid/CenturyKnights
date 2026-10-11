@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://anc74kj3i2i33"
-path="res://.godot/imported/v8_bust_f_medic.medium.webp-018b8d017327841c2454a12c3ce5a596.ctex"
+uid="uid://nc74kj3i2i33"
+path="res://.godot/imported/v8_bust_f_medic.medium.webp-fa121f5fc6c1672b4adac3b426b757fc.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/v8_bust_f_medic.medium.webp"
-dest_files=["res://.godot/imported/v8_bust_f_medic.medium.webp-018b8d017327841c2454a12c3ce5a596.ctex"]
+dest_files=["res://.godot/imported/v8_bust_f_medic.medium.webp-fa121f5fc6c1672b4adac3b426b757fc.ctex"]
 
 [params]
 
