@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://s9yphfd8mzjge"
-path="res://.godot/imported/v87_city_sy_coast.webp-593395e5c76fd0352bae703a74ef3ade.ctex"
+uid="uid://dtc736o8d61fc"
+path="res://.godot/imported/v87_city_sy_coast.webp-acb1fd0243facb4cddaa5614af1f8156.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/cities/v87_city_sy_coast.webp"
-dest_files=["res://.godot/imported/v87_city_sy_coast.webp-593395e5c76fd0352bae703a74ef3ade.ctex"]
+dest_files=["res://.godot/imported/v87_city_sy_coast.webp-acb1fd0243facb4cddaa5614af1f8156.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://3febqjcvzhhgj"
-path="res://.godot/imported/v87_city_sr_pagoda.webp-f8df7ce7adce0ae812cc78e9b2df19fa.ctex"
+uid="uid://bdi7l4v412c46"
+path="res://.godot/imported/v87_city_sr_pagoda.webp-6a5dadae63dc92cab11f541c3d76c59f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/cities/v87_city_sr_pagoda.webp"
-dest_files=["res://.godot/imported/v87_city_sr_pagoda.webp-f8df7ce7adce0ae812cc78e9b2df19fa.ctex"]
+dest_files=["res://.godot/imported/v87_city_sr_pagoda.webp-6a5dadae63dc92cab11f541c3d76c59f.ctex"]
 
 [params]
 

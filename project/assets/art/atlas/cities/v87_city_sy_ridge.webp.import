@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://9ueejrqtymd4r"
-path="res://.godot/imported/v87_city_sy_ridge.webp-157994237e16433b3ad3520a3e891cb9.ctex"
+uid="uid://dw4ftcetg0d2n"
+path="res://.godot/imported/v87_city_sy_ridge.webp-1c3c5b01114adb3e0710ca3bc79b33be.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/cities/v87_city_sy_ridge.webp"
-dest_files=["res://.godot/imported/v87_city_sy_ridge.webp-157994237e16433b3ad3520a3e891cb9.ctex"]
+dest_files=["res://.godot/imported/v87_city_sy_ridge.webp-1c3c5b01114adb3e0710ca3bc79b33be.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://xkuawde8kvzdx"
-path="res://.godot/imported/v87_smith_starriver.webp-deace137189103d897472e75038686ab.ctex"
+uid="uid://ee2d0vp6oqtd"
+path="res://.godot/imported/v87_smith_starriver.webp-d044df0c30abd52e59f6d574b570466c.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/smiths/v87_smith_starriver.webp"
-dest_files=["res://.godot/imported/v87_smith_starriver.webp-deace137189103d897472e75038686ab.ctex"]
+dest_files=["res://.godot/imported/v87_smith_starriver.webp-d044df0c30abd52e59f6d574b570466c.ctex"]
 
 [params]
 

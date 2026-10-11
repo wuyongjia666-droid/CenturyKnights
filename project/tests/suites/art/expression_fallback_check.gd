@@ -11,6 +11,25 @@ func _ready() -> void:
 func _repo() -> String:
 	return ProjectSettings.globalize_path("res://").path_join("..")
 
+func _shipped(logical_png: String, webp_name: String) -> String:
+	var shipped := CKArtPaths.resolve(logical_png)
+	if not shipped.ends_with(webp_name):
+		return "shipped " + shipped
+	if not CKArtPaths.exists(shipped):
+		return "farm plate missing " + shipped
+	return ""
+
+func _same_plate(shown, plate) -> bool:
+	if shown == null or plate == null:
+		return false
+	if shown == plate:
+		return true
+	var a: Image = shown.get_image()
+	var b: Image = plate.get_image()
+	if a == null or b == null:
+		return false
+	return a.get_width() == b.get_width() and a.get_height() == b.get_height() and a.get_data() == b.get_data()
+
 func _run() -> String:
 	var cast_file := FileAccess.get_file_as_string("res://data/cast/companions_v92.json")
 	var cast = JSON.parse_string(cast_file)
@@ -28,29 +47,31 @@ func _run() -> String:
 	var path := UnitArt.expression_plate_path("c01", "惊")
 	if not path.ends_with("v92_expr_c01_surprise.png"):
 		return "path " + path
-	if not ResourceLoader.exists(path):
-		return "farm plate missing " + path
+	var shipped := _shipped(path, "v92_expr_c01_surprise.webp")
+	if shipped != "":
+		return shipped
 	var anger := UnitArt.expression_plate_path("c01", "怒")
 	if not anger.ends_with("v92_expr_c01_anger.png"):
 		return "anger path " + anger
-	if not ResourceLoader.exists(anger):
-		return "anger plate missing " + anger
+	var anger_shipped := _shipped(anger, "v92_expr_c01_anger.webp")
+	if anger_shipped != "":
+		return anger_shipped
 	GameState.new_game("烬行", "灰旗", GameState.crest_color)
 	var leader = GameState.get_leader()
 	if leader == null:
 		return "no leader"
 	var base := UnitArt.portrait(leader, 120)
-	var plate = load(path)
+	var plate := CKArtPaths.load_texture(path)
 	if not (plate is Texture2D):
 		return "plate load"
 	var shown := UnitArt.dialogue_portrait(str(people[0].get("name", "")), "惊", leader, 120)
-	if shown == null or shown != plate:
+	if not _same_plate(shown, plate):
 		return "ingested plate not used"
-	var anger_plate = load(anger)
+	var anger_plate := CKArtPaths.load_texture(anger)
 	if not (anger_plate is Texture2D):
 		return "anger plate load"
 	var shown_anger := UnitArt.dialogue_portrait(str(people[0].get("name", "")), "怒", leader, 120)
-	if shown_anger == null or shown_anger != anger_plate:
+	if not _same_plate(shown_anger, anger_plate):
 		return "anger plate not used"
 	var fallback := UnitArt.dialogue_portrait("not-a-companion", "怒", leader, 120)
 	if fallback == null or fallback != base:

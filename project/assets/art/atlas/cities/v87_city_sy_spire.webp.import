@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6yxg8jnicqeed"
-path="res://.godot/imported/v87_city_sy_spire.webp-470972cafc760d4abd09cc501a3b40c6.ctex"
+uid="uid://2oii3bhs4eb8"
+path="res://.godot/imported/v87_city_sy_spire.webp-3bb3a2e8b4c27667d3e6ee30da2251c5.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/cities/v87_city_sy_spire.webp"
-dest_files=["res://.godot/imported/v87_city_sy_spire.webp-470972cafc760d4abd09cc501a3b40c6.ctex"]
+dest_files=["res://.godot/imported/v87_city_sy_spire.webp-3bb3a2e8b4c27667d3e6ee30da2251c5.ctex"]
 
 [params]
 

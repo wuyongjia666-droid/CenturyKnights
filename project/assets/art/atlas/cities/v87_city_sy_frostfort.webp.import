@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://n8x7v43gzssxd"
-path="res://.godot/imported/v87_city_sy_frostfort.webp-937c50355bf1b09245939bb61c24cedc.ctex"
+uid="uid://cnql4ycpb66n2"
+path="res://.godot/imported/v87_city_sy_frostfort.webp-c55e0a0f95745a9f27c7b92f91425a1e.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/cities/v87_city_sy_frostfort.webp"
-dest_files=["res://.godot/imported/v87_city_sy_frostfort.webp-937c50355bf1b09245939bb61c24cedc.ctex"]
+dest_files=["res://.godot/imported/v87_city_sy_frostfort.webp-c55e0a0f95745a9f27c7b92f91425a1e.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://j2bjgxthkb779"
-path="res://.godot/imported/v87_smith_shuoying.webp-1f7f74b0bff03725ec78a8c36cc616a6.ctex"
+uid="uid://cchsatyyfwhpq"
+path="res://.godot/imported/v87_smith_shuoying.webp-2e7936c91ef9d11f1b38d0294d06cf1e.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/smiths/v87_smith_shuoying.webp"
-dest_files=["res://.godot/imported/v87_smith_shuoying.webp-1f7f74b0bff03725ec78a8c36cc616a6.ctex"]
+dest_files=["res://.godot/imported/v87_smith_shuoying.webp-2e7936c91ef9d11f1b38d0294d06cf1e.ctex"]
 
 [params]
 

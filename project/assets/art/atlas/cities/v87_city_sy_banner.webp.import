@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://navnbdveiib53"
-path="res://.godot/imported/v87_city_sy_banner.webp-ed61d6cbfd94e241109ed119d89f7aaf.ctex"
+uid="uid://bon1i64msvovs"
+path="res://.godot/imported/v87_city_sy_banner.webp-b12a9892f1b0c9dfd5b241e61630ad22.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/cities/v87_city_sy_banner.webp"
-dest_files=["res://.godot/imported/v87_city_sy_banner.webp-ed61d6cbfd94e241109ed119d89f7aaf.ctex"]
+dest_files=["res://.godot/imported/v87_city_sy_banner.webp-b12a9892f1b0c9dfd5b241e61630ad22.ctex"]
 
 [params]
 
