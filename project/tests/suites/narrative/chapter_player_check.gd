@@ -6,6 +6,7 @@ const Cond = preload("res://scripts/narrative/story_conditions.gd")
 const Catalog = preload("res://scripts/narrative/story_catalog.gd")
 const SAMPLE := "res://tests/suites/narrative/fixtures/player_sample.json"
 const CH0 := "res://data/story/chapters/ch0.json"
+const DENGYING_LINE := "我跟着你不是为了姓。是为了隘口那条路还能走人。不过——姓也重要。没姓的旗，风一吹就散。"
 
 func _ready() -> void:
 	var err := await _run()
@@ -116,10 +117,10 @@ func _run() -> String:
 	add_child(ch0)
 	await get_tree().process_frame
 	var ch0_lines := [
-		"朔澜陆桥的夜贴着断杆。灰旗被血黏住，边熏得发黑。有人把「还在」按进最后一口气。",
-		"你把它从杆上揭下来。不是为了哪扇城门。是因为旗下还有人：伤的、饿的，和不肯散的苇原·灯影。",
-		"扛杆的人不会再答应你。姓已经写下，色已经在布里。团长这个字，从你掌心的血算起。",
-		"我跟着你不是为了姓。是为了隘口那条路还能走人。不过——姓也重要。没姓的旗，风一吹就散。",
+		"石垒坡的麦还没黄。你把石担搁在田埂上，看陆桥那边的烟。没有爵，也没有一扇肯为你开的门。",
+		"你吃得下更长的路。你要挣一个称呼，立一个家，让别人不得不念你的姓。",
+		"你又在看烟。去年你说要挣一个称呼。我还在。旗可以以后再有，人我现在就跟。",
+		"隘口外，旗杆断着。灰布被烟熏黑，还钉在半截杆上。风比村里的风硬。",
 	]
 	var ch0_open := await _advance_lines(ch0, ch0_lines)
 	if ch0_open != "":
@@ -212,10 +213,44 @@ func _ch0_covers_four() -> String:
 					saw_battle = true
 	if not saw_choice or not saw_when or not saw_flag or not saw_battle:
 		return "ch0 missing choice=%s when=%s flag=%s battle=%s" % [saw_choice, saw_when, saw_flag, saw_battle]
+	return _ch0_novel_arc()
+
+func _ch0_novel_arc() -> String:
+	var raw := FileAccess.get_file_as_string(CH0)
+	for banned in ["血黏", "掌心的血", "替你去死", "渗着血", "四对二", "血胤混合", "给我们一个姓"]:
+		if raw.find(banned) >= 0:
+			return "ch0 still has superseded prose %s" % banned
+	var data = JSON.parse_string(raw)
+	var wantan_at := -1
+	var dengying_at := -1
+	var idx := 0
+	for beat in data.get("beats", []):
+		if str(beat.get("id", "")) != "0.0":
+			continue
+		for line in beat.get("lines", []):
+			var speaker := str(line.get("speaker", ""))
+			var text := str(line.get("text", ""))
+			if speaker == "石垒·晚担" and wantan_at < 0:
+				wantan_at = idx
+			if speaker == "苇原·灯影" and text == DENGYING_LINE:
+				dengying_at = idx
+			idx += 1
+	if wantan_at < 0 or dengying_at < 0 or wantan_at > dengying_at:
+		return "ch0 0.0 wantan %d dengying %d" % [wantan_at, dengying_at]
+	print("OK ch0 novel arc")
 	return ""
 
 func _conditions() -> String:
 	GameState.new_game("烬行", "灰旗", GameState.crest_color)
+	var names: Array = []
+	for c in GameState.roster():
+		names.append(str(c.name))
+	if names.size() < 3 or str(names[1]) != "石垒·晚担" or str(names[2]) != "苇原·灯影":
+		return "roster order %s" % str(names)
+	if int(GameState.roster()[1].salary) >= int(GameState.roster()[2].salary):
+		return "wantan pay should stay under dengying"
+	if GameState.roster()[1].traits.has("heir_mark"):
+		return "wantan carries an heir mark"
 	if not Cond.met({"companion": "dengying"}):
 		return "dengying should be present"
 	if not Cond.met({"companion": "weiyuan_dengying"}):

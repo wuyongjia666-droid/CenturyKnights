@@ -27,8 +27,8 @@ func _build() -> void:
 	box.alignment = BoxContainer.ALIGNMENT_CENTER
 	center.add_child(box)
 
-	box.add_child(UIKit.make_label("破旗 · 立姓", true))
-	box.add_child(UIKit.make_dim_label("朔澜陆桥边境，灰烬旗需要一个姓氏与纹章色。旗面与团长立绘将随你的选择即时变化。"))
+	box.add_child(UIKit.make_label("写下这个姓", true))
+	box.add_child(UIKit.make_dim_label("你还没有爵。先写下你要别人不得不念的姓，和旗心的颜色。"))
 
 	var art_row := HBoxContainer.new()
 	art_row.alignment = BoxContainer.ALIGNMENT_CENTER

@@ -298,10 +298,13 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	crest_color = color
 	var leader = CharacterFactory.make_leader(leader_given, leader_surname, color)
 	characters[leader.id] = leader
+	var wantan = CharacterFactory.make_shilei_wantan()
+	characters[wantan.id] = wantan
 	var ally = CharacterFactory.make_ally_tutor()
 	characters[ally.id] = ally
-	deploy_ids = [leader.id, ally.id]
+	deploy_ids = [leader.id, wantan.id, ally.id]
 	grant_job_skills(leader)
+	grant_job_skills(wantan)
 	grant_job_skills(ally)
 	refresh_tavern()
 	marriage_nation = ""

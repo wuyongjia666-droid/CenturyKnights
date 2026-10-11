@@ -61,9 +61,9 @@ func _run() -> String:
 
 
 func _locked(report: Dictionary) -> String:
-	if int(report.get("silver_end", -1)) != 223:
+	if int(report.get("silver_end", -1)) != 1472:
 		return "silver %s" % str(report.get("silver_end", ""))
-	if int(report.get("food_end", -1)) != 279:
+	if int(report.get("food_end", -1)) != 282:
 		return "food %s" % str(report.get("food_end", ""))
 	if int(report.get("generations", -1)) != 5:
 		return "generations %s" % str(report.get("generations", ""))
@@ -86,23 +86,23 @@ func _seed(report: Dictionary, seed: Dictionary) -> String:
 		return "seed axes drifted %s" % str(axes)
 	if not bool(axes.get("prestige", false)) or not bool(axes.get("faith", false)):
 		return "seed prestige/faith %s" % str(axes)
-	if int(axes.get("holdings", -1)) != 4 or int(axes.get("silver", -1)) != 223:
+	if int(axes.get("holdings", -1)) != 4 or int(axes.get("silver", -1)) != 1472:
 		return "seed ledger axes %s" % str(axes)
 	if int(axes.get("companions", -1)) != 0:
 		return "seed companions %s" % str(axes)
-	if not bool(axes.get("generation_closed", false)):
-		return "seed generation still open %s" % str(axes)
-	if not CKAmbitions.generation_probe():
+	if bool(axes.get("generation_closed", true)):
+		return "seed generation closed %s" % str(axes)
+	if CKAmbitions.generation_probe():
 		return "seed probe diverged"
 	if str(seed.get("title", "")) == str(seed.get("title_key", "")):
 		return "title key missing"
 	var text := _texts(seed)
-	if text.find("223") < 0 or text.find("4处据点") < 0:
+	if text.find("1472") < 0 or text.find("4处据点") < 0:
 		return "rite ending hid the treasury"
-	if text.find("已写下志向") < 0:
-		return "closed rite missing"
-	if text.find("志向那一栏空着") >= 0:
-		return "open beat leaked into seed 91"
+	if text.find("志向那一栏空着") < 0:
+		return "open rite missing"
+	if text.find("已写下志向") >= 0:
+		return "closed beat leaked into seed 91"
 	return _body(seed)
 
 
@@ -126,6 +126,19 @@ func _details() -> String:
 		return "stele beat missing"
 	if _texts(closed).find("志向那一栏也是空的") >= 0:
 		return "open beat leaked into a closed generation"
+	var rep_before = GameState.reputation.get("ashland", 0)
+	var shrine_before = GameState.buildings.get("shrine", 0)
+	GameState.reputation["ashland"] = 80
+	GameState.buildings["shrine"] = 3
+	var rite: Dictionary = EndingsScript.resolve()
+	if str(rite.get("id", "")) != "end_rite" or not bool(rite.get("axes", {}).get("generation_closed", false)):
+		return "closed rite %s" % str(rite.get("axes", {}))
+	if _texts(rite).find("已写下志向") < 0:
+		return "closed rite missing"
+	if _texts(rite).find("志向那一栏空着") >= 0:
+		return "open beat leaked into a closed rite"
+	GameState.reputation["ashland"] = rep_before
+	GameState.buildings["shrine"] = shrine_before
 	GameState.set_flag("e5_lamp_speaks", true)
 	var echoed: Dictionary = EndingsScript.resolve()
 	var echo_ids := {}
