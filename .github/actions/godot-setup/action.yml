@@ -1,8 +1,8 @@
 name: godot-setup
 description: >
   Godot 4.3 binary, optional export templates, and project/.godot restored from the
-  newest main cache, then an incremental import. Caches are written only from main
-  (push, schedule, dispatch) so every PR restores main's state and imports just its delta.
+  newest main cache, then an incremental import. Caches are written from main
+  (push, schedule, dispatch) and on a cold branch start, so a PR restores main and imports its delta.
 
 inputs:
   templates:
