@@ -53,6 +53,9 @@ func _run() -> String:
 	add_child(player)
 	await get_tree().process_frame
 	await get_tree().process_frame
+	var opened := await _advance_lines(player, ["灯还在桌上。", "选一条。"])
+	if opened != "":
+		return opened
 	player.simulate_finish_dialogue()
 	await get_tree().process_frame
 	var labels: Array = player.action_labels()
@@ -112,6 +115,15 @@ func _run() -> String:
 	ch0.suppress_scene_change = true
 	add_child(ch0)
 	await get_tree().process_frame
+	var ch0_lines := [
+		"朔澜陆桥的边境，风比刀硬。一面撕破的灰旗仍钉在折断的旗杆上，布边被烟熏成近黑——像有人用尽最后一口气，也要把「还在」两个字留在天际。",
+		"你把它拾起。不是为了王庭的册封，不是为了哪一座城门的钥匙。只是因为旗下还有人：伤的、饿的、不肯散的。",
+		"团长……不，你还没被叫过团长。可今夜之后，总得有人扛这名字。给我们一个姓，一种颜色。灰烬旗从今夜起算第一夜。",
+		"我跟着你不是为了姓。是为了隘口那条路还能走人。不过——姓也重要。没姓的旗，风一吹就散。",
+	]
+	var ch0_open := await _advance_lines(ch0, ch0_lines)
+	if ch0_open != "":
+		return ch0_open
 	ch0.simulate_goto_beat("0.4")
 	ch0.simulate_finish_dialogue()
 	await get_tree().process_frame
@@ -120,6 +132,28 @@ func _run() -> String:
 	if int(GameState.reputation.get("ashland", 0)) < 30:
 		return "spring reputation was not prepared"
 	print("OK ch0 marriage gate")
+	return ""
+
+func _advance_lines(player, expected: Array) -> String:
+	if player.auto_translate_mode != Node.AUTO_TRANSLATE_MODE_DISABLED:
+		return "chapter player still auto-translates"
+	var body := player.get("_body") as RichTextLabel
+	if body == null:
+		return "dialogue body missing"
+	if body.fit_content:
+		return "dialogue body fit_content can collapse the page"
+	if body.bbcode_enabled:
+		return "dialogue body still parses bbcode"
+	for i in expected.size():
+		var shown := str(body.text)
+		if shown == "" or shown == "...":
+			return "blank dialogue page %d" % i
+		if shown != str(expected[i]):
+			return "line %d got %s" % [i, shown]
+		if i + 1 < expected.size():
+			if not player.simulate_press_action_containing("继续"):
+				return "could not advance line %d" % i
+			await get_tree().process_frame
 	return ""
 
 func _schemas() -> String:

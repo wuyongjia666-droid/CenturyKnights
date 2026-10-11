@@ -23,6 +23,10 @@ var _beat_meta: Label
 var test_capture: Dictionary = {}
 
 func _ready() -> void:
+	# Story lines are authored text. RichTextLabel.set_text runs them through
+	# TranslationServer, and an exported OptimizedTranslation can hash-collide
+	# a line into empty text (a black transcript page).
+	auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	_build()
 	UIKit.stitch_dialogue(self)
 	_open(_resolve_path())
@@ -104,10 +108,16 @@ func _build() -> void:
 	_speaker.add_theme_font_size_override("font_size", 18)
 	vb.add_child(_speaker)
 	_body = RichTextLabel.new()
-	_body.bbcode_enabled = true
-	_body.fit_content = true
-	_body.custom_minimum_size = Vector2(780, 200)
+	_body.bbcode_enabled = false
+	_body.fit_content = false
+	_body.scroll_active = true
+	_body.scroll_following = false
+	_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_body.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_body.custom_minimum_size = Vector2(640, 96)
 	_body.add_theme_color_override("default_color", UIKit.TEXT)
+	_body.add_theme_font_override("normal_font", UIKit.font("regular"))
 	_body.add_theme_font_size_override("normal_font_size", 16)
 	vb.add_child(_body)
 	_actions = VBoxContainer.new()
@@ -139,7 +149,7 @@ func _load_beat(beat_id: String) -> void:
 	if _beat.is_empty():
 		_hint.text = "章节结束"
 		_speaker.text = ""
-		_body.text = ""
+		_set_body("")
 		return
 	if not StoryConditions.met(_beat.get("when", {})):
 		var skipped = _beat.get("next")
@@ -167,13 +177,19 @@ func _show_line() -> void:
 	var lines: Array = _visible_lines()
 	if _line_idx >= lines.size():
 		_speaker.text = ""
-		_body.text = "（本节对白结束——请选择下方行动）"
+		_set_body("（本节对白结束——请选择下方行动）")
 		return
 	var line = lines[_line_idx]
 	var sp := str(line.get("speaker", ""))
 	_speaker.text = sp
-	_body.text = _line_text(line)
+	_set_body(_line_text(line))
 	_speaker_portrait(sp, str(line.get("expression", line.get("emotion", ""))))
+
+func _set_body(text: String) -> void:
+	_body.text = text
+	# A previous long line leaves the scrollbar past the new text, so the
+	# page draws as an empty dark box until the player scrolls back up.
+	_body.scroll_to_line(0)
 
 func _line_text(line) -> String:
 	var body := str(line.get("text", ""))
@@ -306,7 +322,7 @@ func _run_op(step) -> String:
 			_fast_to_harvest()
 			return "stop"
 		"journal":
-			_body.text = GameState.build_dynasty_journal()
+			_set_body(GameState.build_dynasty_journal())
 			_speaker.text = Locale.t("dynasty_journal")
 			GameState.set_flag("chapter0_done")
 			GameState.save_game()
@@ -316,7 +332,7 @@ func _run_op(step) -> String:
 			var msg := Locale.t("story_archive_sealed")
 			if msg == "story_archive_sealed":
 				msg = "旧卷已封存。这些模板章不再作为主线，也不再重玩。"
-			_body.text = msg
+			_set_body(msg)
 			_speaker.text = "老旗手"
 			_hint.text = msg
 	return ""

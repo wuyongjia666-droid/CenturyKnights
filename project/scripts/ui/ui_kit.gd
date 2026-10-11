@@ -1249,7 +1249,13 @@ static func stitch_dialogue(scene: Control) -> void:
 	sp.add_theme_font_size_override("font_size", 15)
 	sp.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	var bd := body as RichTextLabel
-	bd.custom_minimum_size = Vector2(860, 96)
+	bd.bbcode_enabled = false
+	bd.fit_content = false
+	bd.scroll_active = true
+	bd.scroll_following = false
+	bd.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+	bd.add_theme_font_override("normal_font", font("regular"))
+	bd.custom_minimum_size = Vector2(820, 96)
 	bd.add_theme_font_size_override("normal_font_size", 17)
 	bd.add_theme_constant_override("line_separation", 6)
 	# choice branch cards: right-aligned, bottom pinned above the transcript box

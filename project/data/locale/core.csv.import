@@ -1,0 +1,10 @@
+[remap]
+
+importer="keep"
+uid="uid://35nmbs4e021ce"
+
+[deps]
+
+source_file="res://data/locale/core.csv"
+
+[params]
