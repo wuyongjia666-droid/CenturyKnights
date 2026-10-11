@@ -1,5 +1,5 @@
 extends Node
-## ART-04: real v8.7 plates win; missing cities still use the nation-crop badge.
+## ART-04: real v8.7 plates win. Every city node now has a plate.
 
 func _ready() -> void:
 	var err := _run()
@@ -21,9 +21,9 @@ func _run() -> String:
 	var banner := AtlasArt.city_plate("eo_banner")
 	if not banner.ends_with("v87_city_eo_banner.png"):
 		return "city plate " + banner
-	var missing := AtlasArt.city_plate("sy_banner")
-	if not missing.ends_with("v92_fallback_sy_banner.png"):
-		return "city fallback " + missing
+	var sy := AtlasArt.city_plate("sy_banner")
+	if not sy.ends_with("v87_city_sy_banner.png"):
+		return "city plate " + sy
 	var kept := AtlasArt.city_plate("ash_capital")
 	if kept == "" or kept.find("v92_fallback") >= 0:
 		return "passed city lost " + kept

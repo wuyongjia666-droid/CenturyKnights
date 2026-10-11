@@ -1,0 +1,36 @@
+{
+  "batch": "v92-saturation-soft-r5",
+  "engine": "qwen-only",
+  "prompt_note": "softened chroma + muted cyan rim; seed bump 91033471",
+  "downloaded": 13,
+  "final_pass": 13,
+  "staged": 13,
+  "by_kind": {
+    "city": 11,
+    "smith": 2
+  },
+  "style": {
+    "scanned": 13,
+    "pass": 13,
+    "reject": 0,
+    "fail_reasons": {},
+    "elapsed_s": 2.3
+  },
+  "style_rejects": [],
+  "pass_labels": [
+    "v87_city_sr_capital",
+    "v87_city_sr_east",
+    "v87_city_sr_pagoda",
+    "v87_city_sr_south",
+    "v87_city_sr_sw",
+    "v87_city_sr_west",
+    "v87_city_sy_banner",
+    "v87_city_sy_coast",
+    "v87_city_sy_frostfort",
+    "v87_city_sy_ridge",
+    "v87_city_sy_spire",
+    "v87_smith_shuoying",
+    "v87_smith_starriver"
+  ],
+  "chronic_fails": []
+}
