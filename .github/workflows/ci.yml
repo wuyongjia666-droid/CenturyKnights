@@ -60,7 +60,7 @@ jobs:
         run: bash scripts/install_godot.sh
 
       - name: Install gdtoolkit
-        run: python3 -m pip install --user --quiet 'gdtoolkit==4.*'
+        run: python3 -m pip install --user --quiet 'gdtoolkit==4.*' pillow
 
       - name: Import project
         run: |
