@@ -134,6 +134,27 @@ func _run() -> String:
 	print("OK ch0 marriage gate")
 	return ""
 
+func _continue_clears_text(player) -> String:
+	player.size = Vector2(1280, 720)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var actions := player.get("_actions") as Control
+	var body := player.get("_body") as Control
+	var btn := player.find_child("AdvanceLine", true, false) as Control
+	if actions == null or body == null or btn == null:
+		return "continue control missing"
+	if actions.get_parent() == player:
+		return "continue still floats over the page"
+	if btn.size.x > 200.0:
+		return "continue too wide %s" % btn.size
+	var br := body.get_global_rect()
+	var ar := btn.get_global_rect()
+	if br.size.x > 8.0 and br.size.y > 8.0 and ar.size.x > 8.0 and ar.size.y > 8.0 and br.intersects(ar):
+		var hit := br.intersection(ar)
+		if hit.size.x > 2.0 and hit.size.y > 2.0:
+			return "continue covers dialogue %s" % hit
+	return ""
+
 func _advance_lines(player, expected: Array) -> String:
 	if player.auto_translate_mode != Node.AUTO_TRANSLATE_MODE_DISABLED:
 		return "chapter player still auto-translates"
@@ -150,6 +171,10 @@ func _advance_lines(player, expected: Array) -> String:
 			return "blank dialogue page %d" % i
 		if shown != str(expected[i]):
 			return "line %d got %s" % [i, shown]
+		if i == 0 and i + 1 < expected.size():
+			var cover := await _continue_clears_text(player)
+			if cover != "":
+				return cover
 		if i + 1 < expected.size():
 			if not player.simulate_press_action_containing("继续"):
 				return "could not advance line %d" % i

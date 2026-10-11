@@ -4,6 +4,16 @@ extends Control
 
 static var _extra: Array = []
 
+const GUIDE: Array = [
+	{"id": "guide_dialogue", "title": "ux_help_dialogue_title", "body": "ux_help_dialogue_body"},
+	{"id": "guide_posts", "title": "ux_help_posts_title", "body": "ux_help_posts_body"},
+	{"id": "guide_vow", "title": "ux_help_vow_title", "body": "ux_help_vow_body"},
+	{"id": "guide_after", "title": "ux_help_after_title", "body": "ux_help_after_body"},
+	{"id": "guide_rites", "title": "ux_help_rites_title", "body": "ux_help_rites_body"},
+	{"id": "guide_duty", "title": "ux_help_duty_title", "body": "ux_help_duty_body"},
+	{"id": "guide_flag", "title": "ux_help_flag_title", "body": "ux_help_flag_body"},
+]
+
 const ENTRIES: Array = [
 	{"id": "board", "title": "ux_codex_board_title", "body": "ux_codex_board_body"},
 	{"id": "castle", "title": "ux_codex_castle_title", "body": "ux_codex_castle_body"},
@@ -12,6 +22,8 @@ const ENTRIES: Array = [
 	{"id": "atlas", "title": "ux_codex_atlas_title", "body": "ux_codex_atlas_body"},
 	{"id": "lamp", "title": "ux_codex_lamp_title", "body": "ux_codex_lamp_body"},
 ]
+
+var as_guide := false
 
 static func reset_for_tests() -> void:
 	_extra.clear()
@@ -27,14 +39,15 @@ static func register_entry(entry: Dictionary) -> void:
 	_extra.append(entry)
 
 static func entry_count() -> int:
-	return ENTRIES.size() + _extra.size()
+	return GUIDE.size() + ENTRIES.size() + _extra.size()
 
-static func open(host: Node) -> CKHelpCodex:
+static func open(host: Node, guide: bool = false) -> CKHelpCodex:
 	var prev := host.find_child("HelpCodex", true, false)
 	if prev:
 		prev.queue_free()
 	var panel := CKHelpCodex.new()
 	panel.name = "HelpCodex"
+	panel.as_guide = guide
 	host.add_child(panel)
 	return panel
 
@@ -77,8 +90,10 @@ func _build() -> void:
 	var titles := VBoxContainer.new()
 	titles.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(titles)
-	titles.add_child(UIKit.eyebrow(Locale.t("shell_500dbaa1")))
-	var title := UIKit.title_label(_line("ux_codex_title", Locale.t("shell_645c19e1")), UIKit.SZ_TITLE)
+	titles.add_child(UIKit.eyebrow(Locale.t("ux_help_open") if as_guide else Locale.t("shell_500dbaa1")))
+	var title_key := "ux_help_title" if as_guide else "ux_codex_title"
+	var title_fallback := Locale.t("ux_help_title") if as_guide else Locale.t("shell_645c19e1")
+	var title := UIKit.title_label(_line(title_key, title_fallback), UIKit.SZ_TITLE)
 	title.name = "CodexTitle"
 	titles.add_child(title)
 	var close := UIKit.make_button(_line("ux_codex_close", Locale.t("shell_6c14bd7f")), 120)
@@ -102,6 +117,8 @@ func _build() -> void:
 
 func _all() -> Array:
 	var out: Array = []
+	for entry in GUIDE:
+		out.append(entry)
 	for entry in ENTRIES:
 		out.append(entry)
 	for entry in _extra:

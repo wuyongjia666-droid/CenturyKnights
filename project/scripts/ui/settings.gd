@@ -145,6 +145,12 @@ func _ready() -> void:
 	codex.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	codex.pressed.connect(func(): CKHelpCodex.open(self))
 	box.add_child(codex)
+	var guide := UIKit.make_button(Locale.t("ux_help_open"), 220)
+	guide.name = "OpenGuide"
+	guide.custom_minimum_size = Vector2(220, 44)
+	guide.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	guide.pressed.connect(func(): CKHelpCodex.open(self, true))
+	box.add_child(guide)
 
 	box.add_child(UIKit.make_label(Locale.t("shell_0511f605")))
 	var speed = HSlider.new()

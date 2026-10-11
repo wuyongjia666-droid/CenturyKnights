@@ -27,6 +27,10 @@ func _build() -> void:
 	_res_bar.visible = false
 	add_child(_res_bar)
 	var right_box: HBoxContainer = tb.get_child(tb.get_child_count() - 1)
+	var help_b := UIKit.ghost_button(Locale.t("ux_help_open"), 108, 32)
+	help_b.name = "OpenGuide"
+	help_b.pressed.connect(func(): CKHelpCodex.open(self, true))
+	right_box.add_child(help_b)
 	var save_b := UIKit.ghost_button(Locale.t("shell_40e191bd"), 64, 32)
 	save_b.pressed.connect(func():
 		GameState.save_game()
