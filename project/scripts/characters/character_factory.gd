@@ -81,7 +81,7 @@ static func make_tavern_candidate(rng: RandomNumberGenerator, roll: Dictionary =
 	c.recalc_hp()
 	return c
 
-static func make_marriage_candidate(rng: RandomNumberGenerator, prefer_rank: String = "baron") -> CKCharacter:
+static func make_marriage_candidate(rng: RandomNumberGenerator, prefer_rank: String = "baron", nation_id: String = "") -> CKCharacter:
 	var c := make_tavern_candidate(rng)
 	c.gender = "f" if GameState.get_leader() and GameState.get_leader().gender == "m" else "m"
 	c.in_roster = false
@@ -94,6 +94,8 @@ static func make_marriage_candidate(rng: RandomNumberGenerator, prefer_rank: Str
 		for nid in world.nation_ids():
 			stance[nid] = world.nation_stance(nid)
 		ctx = {"rep": world.rep_nation, "stance": stance}
+	if nation_id != "":
+		ctx["nation"] = nation_id
 	var mr := CKBloodline.roll_marriage(rng, prefer_rank, ctx)
 	CKBloodline.apply_recruit(c, {"blood_mix": mr.blood_mix, "tier": mr.tier, "line": mr.line}, rng)
 	c.rank = str(mr.rank)

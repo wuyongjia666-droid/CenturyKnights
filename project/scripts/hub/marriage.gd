@@ -20,7 +20,15 @@ var _tabs: HBoxContainer
 var _cards: Control
 var _grade: Label
 var _marry_btn: Button
+var _marry_idle := ""
 var _rite_on: Dictionary = {}
+var _posts_label: Label
+var _post_nation := ""
+var _wed_line: Label
+var _toast: Label
+var _toast_tw: Tween
+var _chip_value: Array = []
+var _result_hold := ""
 var _rite_board: Control
 var _punnett: Control
 var _narrow := false
@@ -32,8 +40,7 @@ func _ready() -> void:
 	UIFX.fade_in(self, 0.3)
 	if int(GameState.reputation.get("ashland", 0)) < 30:
 		GameState.reputation["ashland"] = maxi(int(GameState.reputation.get("ashland", 0)), 35)
-	if GameState.marriage_candidates.is_empty():
-		GameState.refresh_marriage_candidates()
+	_ensure_posts()
 	_build()
 	_refresh()
 	UIFX.slide_from_bottom(self, 24.0, 0.32)
@@ -42,11 +49,12 @@ func _build() -> void:
 	## v8.6 — layout-matched to Stitch 17_marriage.png: protocol header · candidate tabs ·
 	## CLAN PRINCIPAL | GENOMIC HARMONY | ALLIED SPOUSE · forecast + 再议/缔约 · footer
 	UIKit.void_bg(self)
-	UIKit.top_bar(self, "宗族谱系枢纽 · 联姻盟誓", [
+	var tb := UIKit.top_bar(self, "宗族谱系枢纽 · 联姻盟誓", [
 		["灰烬邦", GameState.get_rep_name("ashland"), UIKit.ACCENT],
 		["河卫邦", GameState.get_rep_name("riverland"), UIKit.TEXT],
 		["银币", str(GameState.silver), UIKit.ACCENT],
 		["历", Calendar.label(), UIKit.TEXT_DIM]], "返回城堡", _back)
+	_bind_chips(tb)
 	UIKit.page_head(self, 42, 72, "HARMONIC RATIO EVALUATION", "联姻契约", "MARRIAGE PROTOCOL", "宗族双源结合研判与血脉特质推演 —— 声望是门，子嗣期望是窗。", "PROTOCOL NO.07", 18)
 	var rd := UIKit.mono("RATING DISCIPLINE", 9, UIKit.TEXT_FAINT)
 	rd.position = Vector2(1238 - rd.get_minimum_size().x, 96)
@@ -61,9 +69,14 @@ func _build() -> void:
 	hl.position = Vector2(42, 196)
 	hl.size = Vector2(1196, 1)
 	add_child(hl)
-	var cl := UIKit.mono("CANDIDATES // 春令应帖", 9, UIKit.TEXT_FAINT)
-	cl.position = Vector2(42, 204)
-	add_child(cl)
+	_posts_label = UIKit.mono(Locale.t("ux_marriage_posts", [_nation_name(_post_nation)]), 9, UIKit.TEXT_FAINT)
+	_posts_label.position = Vector2(42, 204)
+	add_child(_posts_label)
+	var help := UIKit.ghost_button(Locale.t("ux_help_open"), 132, 32)
+	help.name = "OpenGuide"
+	help.position = Vector2(1106, 158)
+	help.pressed.connect(func(): CKHelpCodex.open(self, true))
+	add_child(help)
 	_list = VBoxContainer.new()   # legacy handle (unused for layout)
 	_list.visible = false
 	add_child(_list)
@@ -90,7 +103,7 @@ func _build() -> void:
 
 	_rite_board = UIKit.panel_at(self, Rect2(42, 516, 600, 112), 10)
 	_rite_board.name = "RiteBoard"
-	_punnett = UIKit.panel_at(self, Rect2(654, 508, 584, 148), 10)
+	_punnett = UIKit.panel_at(self, Rect2(654, 508, 584, 128), 10)
 	_punnett.name = "PunnettBoard"
 	_msg = UIKit.body_label("选定婚仪后，这里写明子女会怎样入谱。", UIKit.TEXT_DIM, 12)
 	_msg.name = "RiteExplain"
@@ -101,33 +114,62 @@ func _build() -> void:
 	_rite_board.add_child(_msg)
 	var row := HBoxContainer.new()
 	row.name = "MarriageActions"
-	row.position = Vector2(602, 660)
+	row.position = Vector2(602, 642)
 	row.size = Vector2(636, 44)
 	row.alignment = BoxContainer.ALIGNMENT_END
 	row.add_theme_constant_override("separation", 10)
 	add_child(row)
 	var duty_btn := UIKit.ghost_button("起誓·义役", 108, 40)
+	duty_btn.name = "DutyOath"
 	duty_btn.pressed.connect(func():
 		UIFX.press_feedback(duty_btn)
 		var r = GameState.start_alliance_duty()
 		_msg.text = str(r.get("msg"))
+		_show_toast(str(r.get("msg")), bool(r.get("ok")))
 		if r.get("ok"):
 			UIFX.confirm_burst(duty_btn)
 			Sfx.lineage_chime()
-			GameState.save_game())
+			GameState.save_game()
+			_refresh_chips())
 	row.add_child(duty_btn)
 	var rite := UIKit.ghost_button("族谱授旗礼", 108, 40)
+	rite.name = "FlagRite"
 	rite.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/lineage_rite.tscn"))
 	row.add_child(rite)
 	var refresh := UIKit.ghost_button("再议   [B]", 108, 40)
-	refresh.tooltip_text = "刷新春令候选"
+	refresh.tooltip_text = Locale.t("ux_marriage_reroll_tip")
 	refresh.pressed.connect(func():
-		GameState.refresh_marriage_candidates()
+		var nid := _post_nation if _post_nation != "" else CKFamilyState.active_marriage_nation(GameState)
+		GameState.refresh_marriage_candidates(nid)
 		_refresh())
 	row.add_child(refresh)
 	_marry_btn = UIKit.cta_button("✓ 缔约 · 40 银", "A", 196, 44)
+	_marry_idle = _marry_btn.text
 	_marry_btn.pressed.connect(_start_vow)
 	row.add_child(_marry_btn)
+	_wed_line = UIKit.body_label("", UIKit.OK, 13)
+	_wed_line.name = "SpouseLine"
+	_wed_line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_wed_line.position = Vector2(42, 646)
+	_wed_line.size = Vector2(520, 32)
+	_wed_line.visible = false
+	add_child(_wed_line)
+	_toast = UIKit.body_label("", UIKit.TEXT, 14)
+	_toast.name = "MarriageToast"
+	_toast.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_toast.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_toast.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_toast.position = Vector2(340, 292)
+	_toast.size = Vector2(600, 84)
+	_toast.z_index = 30
+	_toast.visible = false
+	var tst := UIKit.flat_box(Color(0.03, 0.045, 0.07, 0.94), Color(UIKit.ACCENT, 0.55), 8)
+	tst.content_margin_left = 16
+	tst.content_margin_right = 16
+	tst.content_margin_top = 10
+	tst.content_margin_bottom = 10
+	_toast.add_theme_stylebox_override("normal", tst)
+	add_child(_toast)
 	UIKit.footer_bar(self, [["A", "缔约"], ["B", "再议"], ["←→", "切换候选"], ["ESC", "返回城堡"]], "GENE ARCHIVE · FROST_TACTICAL v8.6")
 
 	# vow ritual modal
@@ -176,14 +218,20 @@ func _unhandled_input(e: InputEvent) -> void:
 func _refresh() -> void:
 	for c in _tabs.get_children():
 		c.queue_free()
+	if _posts_label:
+		_posts_label.text = Locale.t("ux_marriage_posts", [_nation_name(_post_nation)])
 	if GameState.marriage_candidates.is_empty():
 		_tabs.add_child(UIKit.empty_state("春令无人应帖。再议或提高声望。"))
 		return
+	var leader = GameState.get_leader()
 	var k := 0
 	for cand in GameState.marriage_candidates:
 		k += 1
-		var check = Lineage.can_propose(GameState.get_leader(), cand)
-		var b := UIKit.ghost_button("%02d  %s · %s  %s" % [k, cand.name, cand.rank_name(), "●" if check.get("ok") else "○"], 0, 32)
+		var check = Lineage.can_propose(leader, cand)
+		var mark := "●" if check.get("ok") else "○"
+		if leader != null and str(leader.spouse_id) == str(cand.id):
+			mark = Locale.t("ux_spouse_mark")
+		var b := UIKit.ghost_button("%02d  %s · %s  %s" % [k, cand.name, cand.rank_name(), mark], 0, 32)
 		b.tooltip_text = "可表白" if check.get("ok") else str(check.get("msg", "声望不足"))
 		b.toggle_mode = true
 		b.set_meta("cand", cand)
@@ -239,12 +287,20 @@ func _house_card(rect: Rect2, c: CKCharacter, side_tag: String, side_en: String,
 		sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		p.add_child(sub)
 	var text_x := plate.end.x + 8.0
+	var col_h := maxf(24.0, footer_y - 44.0)
+	var col_w := maxf(40.0, rect.size.x - text_x - 10.0)
+	var clip := Control.new()
+	clip.position = Vector2(text_x, 36)
+	clip.size = Vector2(col_w, col_h)
+	clip.clip_contents = true
+	clip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	p.add_child(clip)
 	var v := VBoxContainer.new()
-	v.position = Vector2(text_x, 36)
-	v.size = Vector2(maxf(40.0, rect.size.x - text_x - 10.0), maxf(24.0, footer_y - 44.0))
+	v.position = Vector2.ZERO
+	v.size = Vector2(col_w, col_h)
 	v.clip_contents = true
 	v.add_theme_constant_override("separation", 6 if compact else 2)
-	p.add_child(v)
+	clip.add_child(v)
 	if compact:
 		var age := UIKit.body_label(Locale.t("marriage_compact_who", [c.name, c.age]), UIKit.TEXT, 12)
 		age.name = "AgeLine"
@@ -481,11 +537,14 @@ func apply_mobile_layout() -> void:
 		_rite_board.position = Vector2(42, 516)
 		_rite_board.size = Vector2(600, 112)
 		_punnett.position = Vector2(654, 508)
-		_punnett.size = Vector2(584, 148)
+		_punnett.size = Vector2(584, 128)
 		var actions_wide := get_node_or_null("MarriageActions") as Control
 		if actions_wide:
-			actions_wide.position = Vector2(602, 660)
+			actions_wide.position = Vector2(602, 642)
 			actions_wide.size = Vector2(636, 44)
+		if _wed_line:
+			_wed_line.position = Vector2(42, 646)
+			_wed_line.size = Vector2(520, 32)
 	else:
 		var margin := 8.0
 		var foot := get_node_or_null("StitchFooter") as Control
@@ -494,8 +553,11 @@ func apply_mobile_layout() -> void:
 			foot_y = foot.position.y
 		var actions := get_node_or_null("MarriageActions") as Control
 		if actions:
-			actions.position = Vector2(margin, foot_y - 50.0)
+			actions.position = Vector2(margin, foot_y - 58.0)
 			actions.size = Vector2(vp.x - margin * 2.0, 44)
+		if _wed_line:
+			_wed_line.position = Vector2(margin, actions.position.y - 18.0 if actions else foot_y - 76.0)
+			_wed_line.size = Vector2(maxf(120.0, vp.x * 0.42), 18.0)
 		if _tabs:
 			_tabs.position = Vector2(margin, 130)
 			_tabs.size = Vector2(vp.x - margin * 2.0, 32)
@@ -529,6 +591,11 @@ func apply_mobile_layout() -> void:
 		_grade.position = Vector2(maxf(8.0, vp.x - 308.0), 96)
 		_grade.size = Vector2(minf(300.0, vp.x - _grade.position.x - 8.0), 18)
 		_grade.clip_text = true
+		var help := get_node_or_null("OpenGuide") as Control
+		if help:
+			var help_w := help.size.x
+			var x := minf(vp.x - 8.0 - help_w, _grade.position.x - 8.0 - help_w)
+			help.position = Vector2(maxf(8.0, x), 72)
 	if _selected != null:
 		_render_cards()
 
@@ -658,8 +725,18 @@ func _select(c: CKCharacter) -> void:
 	if not check.get("ok"):
 		_msg.text = "门槛：%s" % str(check.get("msg", ""))
 		_msg.add_theme_color_override("font_color", UIKit.DANGER)
+	_sync_contract_button()
+	if _result_hold != "":
+		_msg.text = _result_hold
+		_msg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_msg.clip_text = false
+		_msg.add_theme_color_override("font_color", UIKit.OK)
 
 func _start_vow() -> void:
+	var leader = GameState.get_leader()
+	if leader != null and str(leader.spouse_id) != "":
+		_present_wed(Locale.t("ux_married_block"), false)
+		return
 	if _selected == null:
 		return
 	var check = Lineage.can_propose(GameState.get_leader(), _selected)
@@ -741,7 +818,86 @@ func _finish_marry() -> void:
 		Sfx.confirm()
 		Sfx.lineage_chime()
 		play_seal_fx()
+		_present_wed(_msg.text, true)
 		_refresh()
+
+func _ensure_posts() -> void:
+	var nid := CKFamilyState.active_marriage_nation(GameState)
+	if str(GameState.marriage_nation) != nid or not CKFamilyState.posts_match_nation(GameState, nid):
+		GameState.refresh_marriage_candidates(nid)
+	_post_nation = nid
+
+func _nation_name(nid: String) -> String:
+	return str(CKBloodline.nation(nid).get("name", nid))
+
+func _bind_chips(bar: Control) -> void:
+	_chip_value.clear()
+	if bar == null or bar.get_child_count() == 0:
+		return
+	var right := bar.get_child(bar.get_child_count() - 1)
+	if right == null:
+		return
+	for ch in right.get_children():
+		if ch is PanelContainer and ch.get_child_count() > 0:
+			var row := ch.get_child(0)
+			if row.get_child_count() >= 2 and row.get_child(1) is Label:
+				_chip_value.append(row.get_child(1))
+
+func _refresh_chips() -> void:
+	if _chip_value.size() < 4:
+		return
+	(_chip_value[0] as Label).text = GameState.get_rep_name("ashland")
+	(_chip_value[1] as Label).text = GameState.get_rep_name("riverland")
+	(_chip_value[2] as Label).text = str(GameState.silver)
+	(_chip_value[3] as Label).text = Calendar.label()
+
+func _sync_contract_button() -> void:
+	if _marry_btn == null:
+		return
+	var leader = GameState.get_leader()
+	var wed := leader != null and str(leader.spouse_id) != ""
+	if wed:
+		_marry_btn.disabled = true
+		_marry_btn.text = Locale.t("ux_married_cta")
+	elif _marry_idle != "":
+		_marry_btn.text = _marry_idle
+	if _wed_line == null:
+		return
+	if wed and GameState.characters.has(str(leader.spouse_id)):
+		var sp: CKCharacter = GameState.characters[str(leader.spouse_id)]
+		_wed_line.text = Locale.t("ux_spouse_line", [sp.name])
+		_wed_line.visible = true
+	else:
+		_wed_line.visible = false
+		_wed_line.text = ""
+
+func _show_toast(text: String, ok: bool) -> void:
+	if _toast == null or text == "":
+		return
+	_toast.text = text
+	_toast.add_theme_color_override("font_color", UIKit.OK if ok else UIKit.DANGER)
+	_toast.visible = true
+	_toast.modulate.a = 1.0
+	if _toast_tw:
+		_toast_tw.kill()
+	_toast_tw = _toast.create_tween()
+	_toast_tw.tween_interval(3.4)
+	_toast_tw.tween_property(_toast, "modulate:a", 0.0, 0.35)
+	_toast_tw.tween_callback(func():
+		if is_instance_valid(_toast):
+			_toast.visible = false)
+
+func _present_wed(text: String, ok: bool) -> void:
+	if ok:
+		_result_hold = text
+	_show_toast(text, ok)
+	_refresh_chips()
+	_sync_contract_button()
+	if _msg and text != "":
+		_msg.text = text
+		_msg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_msg.clip_text = false
+		_msg.add_theme_color_override("font_color", UIKit.OK if ok else UIKit.DANGER)
 
 func _back() -> void:
 	if str(GameState.chapter0_beat) in ["0.4", "0.45", "0.5"] and not GameState.flag("chapter0_done"):

@@ -50,3 +50,25 @@ ux_credits_original_h,原创声明,Original work
 ux_credits_original,系统、文本、界面与代码均为本项目原创。对战棋类型的致敬只留在规则层，不收入其他作品的名称、角色、图像或音频。,"Systems, text, interface, and code are original to this project. The nod to the tactics genre stays in the rules. No other work's names, characters, images, or audio are included."
 ux_credits_fonts_h,字体许可,Font licenses
 ux_credits_ofl,三份字体均为 SIL Open Font License 1.1，说明见 docs/licenses.md。,All three fonts are SIL Open Font License 1.1. See docs/licenses.md.
+ux_help_open,游戏说明,How to play
+ux_help_title,游戏说明,How to play
+ux_help_dialogue_title,对白 · 继续,Dialogue · continue
+ux_help_dialogue_body,蓝色「继续」在正文下面，只推进下一句，不会挡住这句话。这一句念完，下面才换成选项。点一条选项，才会离开这段对白。,The blue continue control sits under the line and advances one sentence. It does not cover the words. Choices replace it only after the line is finished.
+ux_help_posts_title,应帖 · 只看脚下这一国,Posts · this nation only
+ux_help_posts_body,联姻廷的应帖只来自你现在站着的国家，不会把各国的人混在一份名单里。人在灰旗堡，堡在灰烬邦，应帖全是灰烬邦。走到别国的城里或那国的堡里再开廷，名单换成那一国。左上角会写着国名。「再议」只在这一国里另抽三人，抽不到别国。,Marriage posts come only from the nation you are standing in. Ash Keep is in Ash Banner so the list is Ash Banner. Open the court from a city or keep in another nation and the list changes with you. Reroll stays inside that nation.
+ux_help_vow_title,缔约 · 四步才落成,Contract · four steps
+ux_help_vow_body,「缔约 · 40银」先打开誓约，不会马上成婚。第一步确认子嗣期望，并核对左侧婚仪勾选。第二步嫁妆旁注：旗饰是丰收月持续加声望；祷文是嗣子意志资质；商契是丰收月持续加银。第三步家训：严教是月结士气微升、子嗣早教偏武；仁恤是月结加粮与士气；商本是月结加银。第四步「落成婚约」才扣 40 银，再加上你勾上的婚仪礼银。,Contract opens the vow. It does not marry you yet. Confirm the heir forecast and the rite ticks; pick a dowry note (banner / prayer / trade) and a house rule (strict / mercy / commerce); the last step spends 40 silver plus any ticked rite.
+ux_help_after_title,缔约之后,After the contract
+ux_help_after_body,落成成功会在屏上写出成婚说明，顶上的银币和邦交会改掉。缔约按钮变成「已缔约」并且按不了：已有配偶，不能再定一门。配偶写入家族。能怀孕的话，说明里会写是谁、还有几个月。,A finished vow leaves a notice on screen and refreshes silver and standing. The contract button becomes already-wed and stays shut. The spouse joins the house. If a child is coming the notice names them and the months left.
+ux_help_rites_title,左侧婚仪 · 何时才要点,Rite ticks · when they appear
+ux_help_rites_body,这些是勾选，不是随时去办的仪式。没有对应血胤时这一栏不会出现。勾上才写入子女；取消勾选，这门亲事会被那条誓约拦住，落不成。入牒礼：清河贵胤才要。勾上并付 80 银，子女写入玉牒，才算牒内继承人、可以承座。从母居：盐泽婚约。女儿承潮座，儿子不承座。萤约：娶萤母之女才要。第一位女儿归雾林，不入本旗花名册。携霜契：霜冕才要，付 40 银，而且双方至少一人得在祠堂验到霜因，否则契开不出来。,These ticks appear only when that bloodline is in the match. Leaving one off blocks the vow. Register (Qinghe nobles; 80 silver) writes children into the jade register so they can inherit. Matrilocal (Saltmarsh) seats daughters and bars sons. Firefly pact returns the first daughter to the grove and keeps her off the roster. Frost bond (40 silver) needs a verified frost carrier or it cannot be opened.
+ux_help_duty_title,起誓 · 义役,Oath of service
+ux_help_duty_body,要先有配偶。没成婚就点，只会告诉你需先联姻，不会生效。点了之后共 6 个月：每月付 5 银，商队更不容易遇劫，士气 +1，灰烬声望 +1。银不够则士气 -3。满 6 个月，河卫声望 +2，商路更稳。进行中再点，会写还剩几个月。它不代替缔约。,You need a spouse first. Before that the button only says so and does nothing. Afterward it runs six months: 5 silver a month; caravans are raided less often; morale +1 and Ash standing +1. Missing the silver costs morale. At the end River standing rises by 2 and the roads sit quieter. It does not replace the contract.
+ux_help_flag_title,族谱授旗礼,Pedigree flag rite
+ux_help_flag_body,这是另一间厅，不是缔约的一步。没有孩子时进去，只会看到尚无子嗣；要先联姻，再等岁月里把孩子生下来。未成年可以早教择路（武、文、商），生日时对应资质 +1。成年且还没入队：择路、宣名、按印，然后入花名册。偏武另给战技点，偏文加河卫声望，偏商加银。,This is a separate hall. It is not a step of the contract. With no child the hall only says so: marry first and wait out the months. A minor can pick a martial / scholar / merchant path and gains that aptitude on birthdays. An adult not yet rostered is named and sealed into the company. Martial adds a skill point; scholar adds River standing; merchant adds silver.
+ux_married_cta,已缔约,Already wed
+ux_married_block,已经有配偶，不能再缔约。,You already have a spouse. The contract stays closed.
+ux_spouse_line,配偶 %s 已写入家族。,%s is written into the house as spouse.
+ux_spouse_mark,配偶,spouse
+ux_marriage_posts,%s · 应帖,%s · posts
+ux_marriage_reroll_tip,仍在这一国里另抽三人,Draw three more from this nation only
