@@ -30,7 +30,26 @@ static func manifest_path() -> String:
 static func bank_dir() -> String:
 	if dir_override != "":
 		return dir_override
-	return ProjectSettings.globalize_path("res://assets/art/portraits/genome/bank")
+	var res := ProjectSettings.globalize_path("res://assets/art/portraits/genome/bank")
+	if _dir_has_plate(res):
+		return res
+	var packed := CKArtPacks.gene_bank_dir()
+	if packed != "" and _dir_has_plate(packed):
+		return packed
+	return res
+
+
+static func _dir_has_plate(dir: String) -> bool:
+	if not DirAccess.dir_exists_absolute(dir):
+		return false
+	var da := DirAccess.open(dir)
+	if da == null:
+		return false
+	for fn in da.get_files():
+		var low := str(fn).to_lower()
+		if low.ends_with(".webp") or low.ends_with(".png"):
+			return true
+	return false
 
 static func clear_cache() -> void:
 	_plates_known = false
@@ -42,16 +61,7 @@ static func clear_cache() -> void:
 static func has_plates() -> bool:
 	if _plates_known:
 		return _plates
-	_plates = false
-	var dir := bank_dir()
-	if DirAccess.dir_exists_absolute(dir):
-		var da := DirAccess.open(dir)
-		if da != null:
-			for fn in da.get_files():
-				var low := str(fn).to_lower()
-				if low.ends_with(".webp") or low.ends_with(".png"):
-					_plates = true
-					break
+	_plates = _dir_has_plate(bank_dir())
 	_plates_known = true
 	return _plates
 

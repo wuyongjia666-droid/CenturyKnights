@@ -1107,6 +1107,7 @@ static func portrait_plate(parent: Control, rect: Rect2, c, caption: String = ""
 			t.size = inner.size
 			t.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			inner.add_child(t)
+		CKPortraitStatus.attach(inner, c, inner.size)
 	var shade := TextureRect.new()
 	var g := Gradient.new()
 	g.set_color(0, Color(0, 0, 0, 0))

@@ -6,11 +6,12 @@ when any preset pattern matches its relative path. Godot's String.match treats
 '*' as any run of characters, including slashes. Fails when the total is above
 tools/ci/ratchet.json export_budget_bytes.
 
-Shipping photographs are lossy WebP (gene plates stay 768x1024; 1920
-backdrops and battle plates are capped at 1280). Doll parts are lossless
-WebP. The active budget sits just above the measured total and under the
-400MiB cap. If docs/art/retired-assets-v92.json grows an exclude_globs
-list, those patterns are applied on top.
+Shipping photographs are WebP quality 92 at native resolution. Doll parts
+are lossless WebP. The gene-portrait bank is an on-demand pack: it stays
+in the repo at full quality and is excluded from the base export. The
+active budget sits just above the measured base total. If
+docs/art/retired-assets-v92.json grows an exclude_globs list, those
+patterns are applied on top.
 """
 from __future__ import annotations
 

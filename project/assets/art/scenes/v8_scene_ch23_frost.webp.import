@@ -16,8 +16,8 @@ dest_files=["res://.godot/imported/v8_scene_ch23_frost.webp-65de4557df42f9b39faf
 [params]
 
 compress/mode=1
-compress/high_quality=false
-compress/lossy_quality=0.76
+compress/high_quality=true
+compress/lossy_quality=0.92
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

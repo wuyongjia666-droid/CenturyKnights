@@ -10,6 +10,7 @@ static func refresh_for(host, ui: int) -> void:
 	var u = host.units[ui]
 	var c: CKCharacter = u.char
 	host._portrait.texture = UnitArt.portrait(c, 96)
+	_sync_status(host, c)
 	if host._unit_card:
 		host._unit_card.set_unit(c, u.team)
 	var _nm := str(c.name)
@@ -45,11 +46,13 @@ static func refresh(host) -> void:
 		host.info_label.text = Locale.t("shell_82b986d8")
 		if GameState.get_leader():
 			host._portrait.texture = UnitArt.portrait(GameState.get_leader(), 96)
+			_sync_status(host, GameState.get_leader())
 			if host._unit_card:
 				host._unit_card.set_unit(GameState.get_leader(), "player")
 			fill_traits(host, GameState.get_leader())
 		else:
 			host._portrait.texture = UnitArt.banner(96, 96, false)
+			_sync_status(host, null)
 			if host._unit_card:
 				host._unit_card.set_unit(null)
 			fill_traits(host, null)
@@ -57,6 +60,7 @@ static func refresh(host) -> void:
 	var u = host.units[host.selected]
 	var c: CKCharacter = u.char
 	host._portrait.texture = UnitArt.portrait(c, 96)
+	_sync_status(host, c)
 	if host._unit_card:
 		host._unit_card.set_unit(c, u.team)
 	fill_traits(host, c)
@@ -92,3 +96,11 @@ static func refresh(host) -> void:
 					(" 〔" + tagjoin + "〕") if tagjoin else "",
 				]
 	host.info_label.text = txt
+
+
+static func _sync_status(host, c) -> void:
+	if host._portrait == null:
+		return
+	var parent := host._portrait.get_parent() as Control
+	if parent != null:
+		CKPortraitStatus.attach(parent, c, host._portrait.size)

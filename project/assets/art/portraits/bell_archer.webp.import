@@ -16,8 +16,8 @@ dest_files=["res://.godot/imported/bell_archer.webp-393d2c74c79a80056e86e502899d
 [params]
 
 compress/mode=1
-compress/high_quality=false
-compress/lossy_quality=0.78
+compress/high_quality=true
+compress/lossy_quality=0.92
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

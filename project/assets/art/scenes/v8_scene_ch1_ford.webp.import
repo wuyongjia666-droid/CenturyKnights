@@ -16,8 +16,8 @@ dest_files=["res://.godot/imported/v8_scene_ch1_ford.webp-8ab5fbc74c78023e79d463
 [params]
 
 compress/mode=1
-compress/high_quality=false
-compress/lossy_quality=0.76
+compress/high_quality=true
+compress/lossy_quality=0.92
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

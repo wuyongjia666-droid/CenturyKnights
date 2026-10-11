@@ -5,10 +5,15 @@ extends RefCounted
 
 static func resolve(path: String) -> String:
 	var webp := _webp_sibling(path)
-	if webp == "":
-		return path
-	if _exists_any(webp):
+	if webp != "" and _exists_any(webp):
 		return webp
+	if _exists_any(path):
+		return path
+	var packed := CKArtPacks.mirror(webp if webp != "" else path)
+	if packed == "" and webp != "":
+		packed = CKArtPacks.mirror(path)
+	if packed != "":
+		return packed
 	return path
 
 

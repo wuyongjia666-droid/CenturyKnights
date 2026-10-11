@@ -16,8 +16,8 @@ dest_files=["res://.godot/imported/relay_boss_face_plate.webp-76ed31f8d5e02655ae
 [params]
 
 compress/mode=1
-compress/high_quality=false
-compress/lossy_quality=0.78
+compress/high_quality=true
+compress/lossy_quality=0.92
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

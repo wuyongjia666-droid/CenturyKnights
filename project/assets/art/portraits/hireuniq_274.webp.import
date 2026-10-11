@@ -16,8 +16,8 @@ dest_files=["res://.godot/imported/hireuniq_274.webp-54f38be5814aa53ca9af2a41264
 [params]
 
 compress/mode=1
-compress/high_quality=false
-compress/lossy_quality=0.78
+compress/high_quality=true
+compress/lossy_quality=0.92
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

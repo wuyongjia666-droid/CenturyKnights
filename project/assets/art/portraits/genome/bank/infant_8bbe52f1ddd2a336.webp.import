@@ -16,8 +16,8 @@ dest_files=["res://.godot/imported/infant_8bbe52f1ddd2a336.webp-15e83da66031efa1
 [params]
 
 compress/mode=1
-compress/high_quality=false
-compress/lossy_quality=0.78
+compress/high_quality=true
+compress/lossy_quality=0.92
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

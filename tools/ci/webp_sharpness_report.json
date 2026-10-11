@@ -1,0 +1,186 @@
+{
+  "quality": 92,
+  "method": 6,
+  "resized": false,
+  "masters": "git 8be73223^ project/assets/art PNG",
+  "restored": 3681,
+  "missing_master": 0,
+  "skipped_lossless": 139,
+  "errors": 0,
+  "bytes_before": 152116446,
+  "bytes_after": 350311614,
+  "samples": [
+    {
+      "path": "project/assets/art/atlas/cities/v87_city_eo_archive.webp",
+      "status": "restored",
+      "before": 207122,
+      "after": 386904,
+      "master_bytes": 2027006,
+      "before_size": [
+        1280,
+        720
+      ],
+      "after_size": [
+        1280,
+        720
+      ],
+      "import": "import-92",
+      "sample": true,
+      "rmse_before": 5.671,
+      "rmse_after": 3.759
+    },
+    {
+      "path": "project/assets/art/battle/v8_battle_biome_archive.webp",
+      "status": "restored",
+      "before": 169998,
+      "after": 598108,
+      "master_bytes": 3650582,
+      "before_size": [
+        1280,
+        726
+      ],
+      "after_size": [
+        1920,
+        1088
+      ],
+      "import": "import-92",
+      "sample": true,
+      "rmse_before": 6.432,
+      "rmse_after": 2.942
+    },
+    {
+      "path": "project/assets/art/castle/v92_castle_academy_t1.webp",
+      "status": "restored",
+      "before": 192150,
+      "after": 301050,
+      "master_bytes": 1738473,
+      "before_size": [
+        1280,
+        720
+      ],
+      "after_size": [
+        1280,
+        720
+      ],
+      "import": "import-92",
+      "sample": true,
+      "rmse_before": 4.646,
+      "rmse_after": 2.84
+    },
+    {
+      "path": "project/assets/art/estates/v92_estate_ashbanner_g1.webp",
+      "status": "restored",
+      "before": 254866,
+      "after": 420854,
+      "master_bytes": 2076570,
+      "before_size": [
+        1280,
+        720
+      ],
+      "after_size": [
+        1280,
+        720
+      ],
+      "import": "import-92",
+      "sample": true,
+      "rmse_before": 5.228,
+      "rmse_after": 3.222
+    },
+    {
+      "path": "project/assets/art/portraits/genome/bank/elder_0133cd4f080bf504.webp",
+      "status": "restored",
+      "before": 59046,
+      "after": 145756,
+      "master_bytes": 1252986,
+      "before_size": [
+        768,
+        1024
+      ],
+      "after_size": [
+        768,
+        1024
+      ],
+      "import": "import-92",
+      "sample": true,
+      "rmse_before": 3.345,
+      "rmse_after": 2.172
+    },
+    {
+      "path": "project/assets/art/portraits/hireface_wheat_pine_m_cheek_thick.webp",
+      "status": "restored",
+      "before": 4086,
+      "after": 5802,
+      "master_bytes": 19595,
+      "before_size": [
+        160,
+        192
+      ],
+      "after_size": [
+        160,
+        192
+      ],
+      "import": "import-92",
+      "sample": true,
+      "rmse_before": 3.834,
+      "rmse_after": 2.879
+    },
+    {
+      "path": "project/assets/art/portraits/hireuniq_376.webp",
+      "status": "restored",
+      "before": 4526,
+      "after": 12818,
+      "master_bytes": 93923,
+      "before_size": [
+        220,
+        270
+      ],
+      "after_size": [
+        220,
+        270
+      ],
+      "import": "import-92",
+      "sample": true,
+      "rmse_before": 3.084,
+      "rmse_after": 1.823
+    },
+    {
+      "path": "project/assets/art/scenes/v8_scene_ch0_pass.webp",
+      "status": "restored",
+      "before": 85302,
+      "after": 267482,
+      "master_bytes": 1775154,
+      "before_size": [
+        1280,
+        720
+      ],
+      "after_size": [
+        1280,
+        720
+      ],
+      "import": "import-92",
+      "sample": true,
+      "rmse_before": 4.362,
+      "rmse_after": 2.727
+    },
+    {
+      "path": "project/assets/art/ui/battle_backdrop.webp",
+      "status": "restored",
+      "before": 83906,
+      "after": 455960,
+      "master_bytes": 3629429,
+      "before_size": [
+        1280,
+        726
+      ],
+      "after_size": [
+        1920,
+        1088
+      ],
+      "import": "import-92",
+      "sample": true,
+      "rmse_before": 6.885,
+      "rmse_after": 3.108
+    }
+  ],
+  "policy": "WebP quality 92 at native resolution. Godot import lossy_quality 0.92. Gene bank is excluded from the base export and ships as the gene-bank pack."
+}

@@ -112,10 +112,14 @@ func set_unit(c, team: String = "player") -> void:
 		_hp.value = 0
 		for ch in _chips.get_children():
 			ch.queue_free()
+		if portrait != null and portrait.get_parent() is Control:
+			CKPortraitStatus.attach(portrait.get_parent(), null, portrait.size)
 		return
 	var tex = UnitArt.portrait(c, 128)
 	if tex != null:
 		portrait.texture = tex
+	if portrait != null and portrait.get_parent() is Control:
+		CKPortraitStatus.attach(portrait.get_parent(), c, portrait.size)
 	var enemy := team != "player"
 	var tc: Color = UIKit.DANGER if enemy else UIKit.OK
 	var name_fallback := str(c.id) if "id" in c else "Knight"

@@ -28,6 +28,7 @@ SIZES = {
     "item": (512, 512),
     "scene": (1280, 720),
     "expression": (768, 1024),
+    "status_overlay": (768, 1024),
     "castle": (1280, 720),
     "estate": (1280, 720),
     "genome": (768, 1024),

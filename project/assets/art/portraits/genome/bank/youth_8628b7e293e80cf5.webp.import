@@ -16,8 +16,8 @@ dest_files=["res://.godot/imported/youth_8628b7e293e80cf5.webp-8a85fa6457c7bc1a0
 [params]
 
 compress/mode=1
-compress/high_quality=false
-compress/lossy_quality=0.78
+compress/high_quality=true
+compress/lossy_quality=0.92
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
