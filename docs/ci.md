@@ -29,10 +29,11 @@ scripts/precheck.sh --no-godot # 约 10 秒：只跑 Python 部分
 
 ## 为什么快
 
-- **Godot 套件并行**：`scripts/run_ci.sh godot` 用 `xargs -P $(nproc)` 同时跑套件；每个进程有自己的 `XDG_DATA_HOME`，`user://` 存档互不干扰。带墙钟预算的 `perf_boot`、`ai_regression`、`impact` 在池子跑完后单独跑。失败时列出所有失败的套件，不在第一个就停。
+- **Godot 套件并行**：`scripts/run_ci.sh godot` 用 `xargs -P $(nproc)` 同时跑套件；每个进程有自己的 `XDG_DATA_HOME`，`user://` 存档互不干扰。带墙钟预算或耗时比的 `perf_boot`、`ai_regression`、`impact`、`terrain` 在池子跑完后单独跑。失败时列出所有失败的套件，不在第一个就停。
 - **基因库检查分层**：`portrait_bank_check` 原来每次重放 20 局百年战役（CI 上约 13 分钟）。快速模式只重放第一个种子：桶按个体确定、第一个种子先产出，所以它的桶必须逐字段等于清单里的同名桶，漂移照样能抓到。`CK_PORTRAIT_BANK_FULL=1` 走完整 20 种子并要求数量完全相等。
 - **基因库图片索引**：`tools/ci/portrait_bank_index.py` 每次检查每张图的三档（大/中/小）和 `.import` 是否齐全，并打印 git blob 内容索引摘要；只有 PR 改动的图才用 Pillow 解码校验尺寸（768×1024、2/3、1/2）和是否纯色。`main` / 夜间解码全部，已验证的 blob 记在缓存里，下次跳过。
-- **缓存**：Godot 二进制、导出模板（只保留 Windows/Android）、Android SDK、`project/.godot`。`.godot` 的 key 是 `git rev-parse HEAD:project`（资源树哈希），只在 `main` 上保存；PR 恢复 `main` 最新的一份，只导入自己改动的资源。
+- **缓存**：Godot 二进制、导出模板（只保留 Windows/Android）、Android SDK、`project/.godot`。`.godot` 的 key 是 `git rev-parse HEAD:project`（资源树哈希），由 `main` 保存（分支只在完全没命中时保存一次）；PR 恢复 `main` 最新的一份，只导入自己改动的资源。
+- **缓存真正生效**：Godot 4.3 只要资源或其 `.import` 的修改时间和 `.godot/editor/filesystem_cache8` 里记的不同就重新导入，内容没变也一样；每次 checkout 时间都是新的，所以以前的 `.godot/imported` 缓存命中了也要导入 3–5 分钟。`tools/ci/content_mtime.py` 在导入前把每个受控文件的 mtime 设为由 git blob id 推出的固定值，导入后再把 `filesystem_cache8` 里记的时间改成同样的值。内容没变的文件在任何机器上 mtime 都一样，不会重导；改过的文件 blob 变了，mtime 跟着变，照常重导。
 - **`.import` 一致**：以前 `tools/art/compress_shipping_webp.py`、`build_portrait_tiers.py` 按 `md5(相对路径)` 写 `.ctex` 名，Godot 用的是 `md5("res://"+路径)`，约 3300 张 WebP 每次都被重新导入（CI 上 import 约 3.7 分钟）。工具已修正，`.import` 文件已用 Godot 重新生成。`godot-suites` 和 precheck 在 import 后检查 `.import` 有没有被改写或新增，有就失败并提示提交。
 - **lint 与 Godot 分开**：`scripts/run_ci.sh lint` 不需要 Godot，几秒出结果；checkout 用 `filter: blob:none`，不拉历史大文件。
 
@@ -50,6 +51,10 @@ scripts/precheck.sh --no-godot # 约 10 秒：只跑 Python 部分
 
 - `ci` 在 `pull_request` 和 `merge_group` 上都会报告，并且跳过的子作业不会让它卡在 pending，所以 `gh pr merge --auto --squash` 能在变绿后自动合并。
 - 需要仓库管理员在 Settings 打开一次 **Allow auto-merge**（目前是关的），并在分支保护或 ruleset 里把必需检查设为 `ci`；如果要 merge queue，在 ruleset 里开启 “Require merge queue”。
+
+## Android 导出
+
+`main` 上 `android.yml` 之前一直失败，Godot 只打印空的 “configuration errors”。原因有两个，都已修好：非 gradle 预设里还留着 `gradle_build/min_sdk` / `target_sdk`（4.3 只允许 gradle 构建覆盖，值与预编译模板默认的 24 / 34 相同，清空不改变 APK）；`project.godot` 没开 `rendering/textures/vram_compression/import_etc2_astc`（Android 导出强制要求，工程里没有 VRAM 压缩纹理，开启后 `.import` 无变化）。
 
 ## 发布
 

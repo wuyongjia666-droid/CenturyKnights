@@ -115,7 +115,7 @@ run_godot() {
 	local started=$SECONDS
 	# Each run gets its own XDG_DATA_HOME so user:// saves never leak between parallel suites.
 	# Suites with wall-clock budgets run alone after the pool so CPU contention cannot fail them.
-	local timed='^suite_(perf_boot_check|ai_regression_check|impact_check)\.'
+	local timed='^suite_(perf_boot_check|ai_regression_check|impact_check|terrain_check)\.'
 	grep -vE "$timed" "$tasks" | tr '\n' '\0' | xargs -0 -P "$jobs" -I{} bash "$ROOT/scripts/ci_godot_run.sh" "$ROOT/project" "{}"
 	grep -E "$timed" "$tasks" | tr '\n' '\0' | xargs -0 -P 1 -I{} bash "$ROOT/scripts/ci_godot_run.sh" "$ROOT/project" "{}"
 	echo "==> godot runs finished in $((SECONDS - started))s"
