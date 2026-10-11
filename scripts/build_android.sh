@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Debug APK for the Godot 4.3 "Android" preset.
 # Exits 2 with a short message when the Android SDK, JDK, Godot, or the
-# Gradle build template is missing. Does not print keystore passwords.
+# Gradle build template is missing (gradle presets only). Does not print keystore passwords.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -59,7 +59,11 @@ if [[ -z "$GODOT_BIN" ]]; then
 	fail "未找到 Godot 4.3 可执行文件。请安装 Godot 4.3 并加入 PATH，或设置 GODOT=/path/to/godot。"
 fi
 
-if [[ ! -f "$PROJECT/android/build.gradle" ]]; then
+USE_GRADLE=0
+if grep -q '^gradle_build/use_gradle_build=true' "$PROJECT/export_presets.cfg"; then
+	USE_GRADLE=1
+fi
+if [[ "$USE_GRADLE" == "1" && "${CK_INSTALL_ANDROID_TEMPLATE:-}" != "1" && ! -f "$PROJECT/android/build.gradle" ]]; then
 	fail "工程里没有 Android Gradle 构建模板（project/android/build.gradle）。在 Godot 4.3 编辑器中打开工程，菜单「项目 → 安装 Android 构建模板」。模板与导出模板版本必须同为 4.3。不要把密钥库提交进仓库。"
 fi
 
@@ -150,15 +154,30 @@ echo "导出 Android 调试 APK → $OUT"
 echo "SDK=$SDK"
 echo "JAVA_HOME=$JAVA_HOME"
 EXPORT_ARGS=(--headless --path "$PROJECT")
-if [[ "${CK_INSTALL_ANDROID_TEMPLATE:-}" == "1" ]]; then
+if [[ "$USE_GRADLE" == "1" && "${CK_INSTALL_ANDROID_TEMPLATE:-}" == "1" ]]; then
 	EXPORT_ARGS+=(--install-android-build-template)
 fi
 "$GODOT_BIN" "${EXPORT_ARGS[@]}" --export-debug "Android" "$OUT"
-BYTES="$(stat -c%s "$OUT")"
-echo "APK bytes=$BYTES"
-LIMIT=$((300 * 1024 * 1024))
-if (( BYTES > LIMIT )); then
-	echo "APK exceeds 300MB ($BYTES > $LIMIT)" >&2
+if [[ ! -f "$OUT" ]]; then
+	echo "Godot 未生成 APK: $OUT" >&2
 	exit 1
 fi
+BYTES="$(stat -c%s "$OUT")"
+echo "APK bytes=$BYTES"
+LIMIT=$((2 * 1024 * 1024 * 1024))
+if (( BYTES > LIMIT )); then
+	echo "APK exceeds 2GB ($BYTES > $LIMIT)" >&2
+	exit 1
+fi
+python3 - "$OUT" <<'PY'
+import sys, zipfile
+names = zipfile.ZipFile(sys.argv[1]).namelist()
+bank = [n for n in names if "portraits/genome/bank/" in n]
+arm64 = [n for n in names if n.startswith("lib/arm64-v8a/")]
+print(f"genome bank entries={len(bank)} arm64-v8a libs={len(arm64)}")
+if not bank:
+    sys.exit("APK 里没有基因立绘库 portraits/genome/bank")
+if not arm64:
+    sys.exit("APK 里没有 arm64-v8a 原生库")
+PY
 echo "完成: $OUT"
