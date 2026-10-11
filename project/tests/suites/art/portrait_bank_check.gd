@@ -15,11 +15,19 @@ func _wants_write() -> bool:
 			return true
 	return false
 
+## Fast mode replays only the first coverage seed. Bucket rows are deterministic per
+## person and the first seed emits first, so its rows must be an exact subset of the
+## manifest. CK_PORTRAIT_BANK_FULL=1 (main, nightly, generator changes) replays all seeds.
+func _full_run() -> bool:
+	return _wants_write() or OS.get_environment("CK_PORTRAIT_BANK_FULL") == "1"
+
 func _run() -> String:
 	var fb := _fallback_chain()
 	if fb != "":
 		return fb
-	var built: Dictionary = CKPortraitBank.build_from_campaigns()
+	var full := _full_run()
+	var seeds: Array = CKPortraitBank.COVERAGE_SEEDS if full else [CKPortraitBank.COVERAGE_SEEDS[0]]
+	var built: Dictionary = CKPortraitBank.build_from_campaigns(seeds)
 	var rows: Array = built.get("rows", [])
 	var observed: Array = built.get("observed", [])
 	if _wants_write():
@@ -30,7 +38,7 @@ func _run() -> String:
 	var loaded := CKPortraitBank.load_manifest()
 	if loaded.is_empty():
 		return "manifest missing; re-run with --write"
-	var drift := _same_rows(rows, loaded.get("buckets", []))
+	var drift := _same_rows(rows, loaded.get("buckets", []), full)
 	if drift != "":
 		return "manifest drift " + drift
 	var why := CKPortraitBank.validate_payload(loaded)
@@ -49,15 +57,18 @@ func _run() -> String:
 	var plate := _plate_priority()
 	if plate != "":
 		return plate
-	print("PORTRAIT BANK PASS births=%d hit_rate=%.3f mean_overlap=%.3f buckets=%d worst=%.3f" % [
+	print("PORTRAIT BANK PASS mode=%s seeds=%d births=%d hit_rate=%.3f mean_overlap=%.3f buckets=%d worst=%.3f" % [
+		"full" if full else "fast", seeds.size(),
 		int(cov.get("births", 0)), float(cov.get("hit_rate", 0.0)), float(cov.get("mean_overlap", 0.0)),
 		(loaded.get("buckets", []) as Array).size(), float(cov.get("worst", 0.0)),
 	])
 	return ""
 
-func _same_rows(built: Array, loaded: Array) -> String:
-	if built.size() != loaded.size():
+func _same_rows(built: Array, loaded: Array, exact: bool) -> String:
+	if exact and built.size() != loaded.size():
 		return "count %d vs %d" % [built.size(), loaded.size()]
+	if built.size() > loaded.size():
+		return "count %d > %d" % [built.size(), loaded.size()]
 	var by := {}
 	for row in loaded:
 		by[str(row.get("bucket_key", ""))] = row
