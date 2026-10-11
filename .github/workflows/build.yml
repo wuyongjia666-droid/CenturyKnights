@@ -1,0 +1,101 @@
+name: build
+
+# Reusable Windows zip + Android debug APK, built in parallel from cached Godot,
+# export templates, Android SDK and main's project/.godot. Called by release.yml
+# and android.yml; also runnable by hand, and on PRs that touch the build path.
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/build.yml"
+      - ".github/actions/**"
+      - "scripts/build_windows.sh"
+      - "scripts/build_android.sh"
+      - "project/export_presets.cfg"
+  workflow_call:
+    inputs:
+      windows:
+        type: boolean
+        default: true
+      android:
+        type: boolean
+        default: true
+  workflow_dispatch:
+    inputs:
+      windows:
+        type: boolean
+        default: true
+      android:
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  windows:
+    name: windows-zip
+    if: inputs.windows != false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Godot setup
+        uses: ./.github/actions/godot-setup
+        with:
+          templates: "true"
+
+      - name: Export Windows
+        run: |
+          set -euo pipefail
+          export PATH="${HOME}/.local/bin:${PATH}"
+          ./scripts/build_windows.sh
+          short="$(git rev-parse --short=8 HEAD)"
+          name="CenturyKnights-windows-${short}"
+          mkdir -p "/tmp/${name}"
+          cp exports/CenturyKnights.exe "/tmp/${name}/"
+          cp exports/HOW_TO_PLAY_zh.txt "/tmp/${name}/"
+          (cd /tmp && zip -q -r -1 "${name}.zip" "${name}")
+          mkdir -p dist
+          mv "/tmp/${name}.zip" dist/
+          ls -la dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-zip
+          path: dist/*.zip
+          compression-level: 0
+          if-no-files-found: error
+
+  android:
+    name: debug-apk
+    if: inputs.android != false
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Android SDK
+        uses: ./.github/actions/android-sdk
+
+      - name: Godot setup
+        uses: ./.github/actions/godot-setup
+        with:
+          templates: "true"
+
+      - name: Build debug APK
+        run: |
+          set -euo pipefail
+          export PATH="${HOME}/.local/bin:${JAVA_HOME}/bin:${PATH}"
+          ./scripts/build_android.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: CenturyKnights-debug
+          path: exports/android/CenturyKnights-debug.apk
+          compression-level: 0
+          if-no-files-found: error
