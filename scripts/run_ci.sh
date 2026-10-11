@@ -110,6 +110,7 @@ run_godot() {
 	godot_tasks >"$tasks"
 	rm -rf /tmp/ck_failed /tmp/ck_xdg
 	mkdir -p /tmp/ck_failed
+	echo "suites discovered: $(grep -c '^suite_' "$tasks")"
 	echo "==> godot runs: $(wc -l <"$tasks") with ${jobs} in parallel"
 	local started=$SECONDS
 	# Each run gets its own XDG_DATA_HOME so user:// saves never leak between parallel suites.
