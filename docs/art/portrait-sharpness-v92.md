@@ -42,7 +42,7 @@ q78 的出货 WebP 把脸压软了，Godot 导入再按同样的 `lossy_quality`
 
 Godot 导入从 `lossy_quality` 0.74–0.78 改为 0.92，并且 `compress/high_quality=true`。加载器用 `Image.load_from_file` 读这份 q92 文件；导入质量不再把同一张图再压软一档。
 
-基础导出含基因库和 small / medium 档。按源文件计，约 663,942,234 字节（基因库大档仍是 q92 原尺寸，small 约 62 MB，medium 约 108 MB）。预算写在 `tools/ci/ratchet.json` 的 `export_budget_bytes`，由 `tools/ci/export_size_report.py` 按两个预设的排除规则计源文件字节。
+基础导出含基因库和 small / medium 档。按源文件计，约 663,942,234 字节（基因库大档仍是 q92 原尺寸，small 约 62 MB，medium 约 108 MB）。预算由 `tools/ci/ratchet.json` 推导：`export_base_budget_bytes`（基因库以外）加上每张基因库图 `export_bank_bytes_per_plate`，单张超过 `export_bank_plate_max_bytes` 直接失败，由 `tools/ci/export_size_report.py` 按两个预设的排除规则计源文件字节。
 
 ## m173
 
