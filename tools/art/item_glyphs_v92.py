@@ -9,6 +9,7 @@ fallbacks. --check asserts style_check gold and parchment are 0.
 """
 from __future__ import annotations
 
+import io
 import json
 import struct
 import sys
@@ -167,8 +168,17 @@ def _fallback(node: dict) -> Image.Image:
 
 
 def _ratios(path: Path) -> tuple[float, float]:
-    """gold / parchment ratios. Same hue gates as style_check, no Pillow."""
-    data = path.read_bytes()
+    """gold / parchment ratios. Same hue gates as style_check.
+
+    Glyphs stay PNG. Shipped city fallbacks are lossy WebP, decoded here.
+    """
+    if path.suffix.lower() == ".webp":
+        _need_pil()
+        buf = io.BytesIO()
+        Image.open(path).convert("RGBA").save(buf, format="PNG")
+        data = buf.getvalue()
+    else:
+        data = path.read_bytes()
     if data[:8] != b"\x89PNG\r\n\x1a\n":
         raise ValueError(f"not a png {path.name}")
     pos = 8
@@ -278,6 +288,9 @@ def check() -> int:
         if node["id"] in PASSED:
             continue
         path = CITIES / f"v92_fallback_{node['id']}.png"
+        webp = path.with_suffix(".webp")
+        if webp.exists():
+            path = webp
         if not path.exists():
             errors.append(f"missing fallback {node['id']}")
         else:

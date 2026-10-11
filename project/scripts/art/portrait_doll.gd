@@ -10,12 +10,10 @@ const SCAR_SLOT := {"cheek_l": "scar_cheek_l", "cheek_r": "scar_cheek_l", "brow_
 static var _cache: Dictionary = {}
 
 static func available(bloodline: String, gender: String) -> bool:
-	return ResourceLoader.exists(DIR + "%s_%s/base.png" % [bloodline, gender])
+	return CKArtPaths.exists(DIR + "%s_%s/base.png" % [bloodline, gender])
 
 static func _img(path: String) -> Image:
-	if not ResourceLoader.exists(path):
-		return null
-	var t: Texture2D = load(path)
+	var t := CKArtPaths.load_texture(path)
 	if t == null:
 		return null
 	var im: Image = t.get_image()

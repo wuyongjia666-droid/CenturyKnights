@@ -1,0 +1,53 @@
+{
+  "converted": 3807,
+  "skipped": 2380,
+  "errors": 0,
+  "before": {
+    "ui": 48099214,
+    "atlas": 45757332,
+    "estates": 107638826,
+    "banners": 71144,
+    "tokens": 21602288,
+    "battle": 49838749,
+    "portraits/other": 176911677,
+    "scenes": 117720638,
+    "fx": 6995439,
+    "tiles": 3704,
+    "castle": 45199786,
+    "terrain_v86": 723438,
+    "ui/items": 58529941,
+    "atlas/cities": 70087955,
+    "portraits/genome": 1957894885,
+    "doll": 77734144,
+    "items": 255842,
+    "farm_inbox": 3048705
+  },
+  "after": {
+    "ui": 4039471,
+    "atlas": 3866602,
+    "estates": 12256911,
+    "banners": 71144,
+    "tokens": 21602288,
+    "battle": 1606810,
+    "portraits/other": 15946344,
+    "scenes": 10586102,
+    "fx": 6995439,
+    "tiles": 3704,
+    "castle": 4313270,
+    "terrain_v86": 723438,
+    "ui/items": 2700500,
+    "atlas/cities": 15917927,
+    "portraits/genome": 91619212,
+    "doll": 13152864,
+    "items": 255842,
+    "farm_inbox": 3048705
+  },
+  "notes": {
+    "portraits": "768x1024 kept so half-body faces stay readable on a phone",
+    "cities": "1280x720 city boards kept (game viewport)",
+    "backdrops": "1920 plates in ui/ and battle/ capped to 1280",
+    "doll": "lossless WebP; alpha overlays",
+    "kept_png": "fx, tokens, terrain, banners, glyphs, small UI chrome, farm_inbox",
+    "ui_chrome": "thin rules and focus bars stayed PNG"
+  }
+}

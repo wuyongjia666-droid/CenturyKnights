@@ -48,7 +48,8 @@ static func has_plates() -> bool:
 		var da := DirAccess.open(dir)
 		if da != null:
 			for fn in da.get_files():
-				if str(fn).to_lower().ends_with(".png"):
+				var low := str(fn).to_lower()
+				if low.ends_with(".webp") or low.ends_with(".png"):
 					_plates = true
 					break
 	_plates_known = true
@@ -60,7 +61,7 @@ static func try_texture(c: Object) -> Texture2D:
 	var m := best_match(c)
 	if not bool(m.get("hit", false)):
 		return null
-	return _load_png(bank_dir().path_join(str(m.get("bucket_key", "")) + ".png"))
+	return _load_plate(str(m.get("bucket_key", "")))
 
 static func best_match(c: Object) -> Dictionary:
 	_ensure_index()
@@ -391,6 +392,15 @@ static func _has_term(text: String, term: String) -> bool:
 
 static func _is_word(ch: int) -> bool:
 	return (ch >= 48 and ch <= 57) or (ch >= 65 and ch <= 90) or (ch >= 97 and ch <= 122) or ch == 95
+
+static func _load_plate(key: String) -> Texture2D:
+	if dir_override != "":
+		var webp := dir_override.path_join(key + ".webp")
+		if FileAccess.file_exists(webp):
+			return _load_png(webp)
+		return _load_png(dir_override.path_join(key + ".png"))
+	return CKArtPaths.load_texture("res://assets/art/portraits/genome/bank/%s.png" % key)
+
 
 static func _load_png(path: String) -> Texture2D:
 	if not FileAccess.file_exists(path):
