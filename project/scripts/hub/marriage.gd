@@ -139,7 +139,8 @@ func _build() -> void:
 	var refresh := UIKit.ghost_button("再议   [B]", 108, 40)
 	refresh.tooltip_text = Locale.t("ux_marriage_reroll_tip")
 	refresh.pressed.connect(func():
-		GameState.refresh_marriage_candidates()
+		var nid := _post_nation if _post_nation != "" else CKFamilyState.active_marriage_nation(GameState)
+		GameState.refresh_marriage_candidates(nid)
 		_refresh())
 	row.add_child(refresh)
 	_marry_btn = UIKit.cta_button("✓ 缔约 · 40 银", "A", 196, 44)

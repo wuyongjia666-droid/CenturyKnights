@@ -140,11 +140,11 @@ func _marriage_posts_and_wed(scene: Node) -> void:
 	_ok(home == "ashbanner", "castle court nation %s" % home)
 	_ok(CKFamilyState.posts_match_nation(GameState, "ashbanner"), "castle posts stay in ash banner")
 	World.pos = "qh_capital"
-	GameState.refresh_marriage_candidates()
+	GameState.refresh_marriage_candidates(CKFamilyState.active_marriage_nation(GameState))
 	_ok(str(GameState.marriage_nation) == "qinghe", "qinghe court %s" % GameState.marriage_nation)
 	_ok(CKFamilyState.posts_match_nation(GameState, "qinghe"), "qinghe posts mixed")
 	World.pos = "hq"
-	GameState.refresh_marriage_candidates()
+	GameState.refresh_marriage_candidates(CKFamilyState.active_marriage_nation(GameState))
 	if scene.has_method("_ensure_posts"):
 		scene._ensure_posts()
 	if scene.has_method("_refresh"):

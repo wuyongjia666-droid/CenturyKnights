@@ -58,8 +58,9 @@ static func posts_match_nation(host, nid: String) -> bool:
 	return true
 
 static func refresh_marriage_candidates(host, nation_id: String = "") -> void:
-	if nation_id == "":
-		nation_id = active_marriage_nation(host)
+	## A blank nation keeps the diplomacy-weighted draw. The marriage screen passes the
+	## court it is standing in. Calendar, new game, and the century sim pass nothing,
+	## so their shared RNG and the portrait bank stay on the previous sequence.
 	host.marriage_nation = nation_id
 	host.marriage_candidates.clear()
 	for i in 3:

@@ -304,10 +304,10 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	grant_job_skills(leader)
 	grant_job_skills(ally)
 	refresh_tavern()
-	_init_quests()
-	World.reset()  # v8.7 playable atlas: position, reputation, markets, boards
 	marriage_nation = ""
 	refresh_marriage_candidates()
+	_init_quests()
+	World.reset()  # v8.7 playable atlas: position, reputation, markets, boards
 	log_event("灰烬旗立团：「%s」" % leader.name)
 	mark_dirty()
 
