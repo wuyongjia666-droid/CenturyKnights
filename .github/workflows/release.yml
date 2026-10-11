@@ -1,0 +1,85 @@
+name: release
+
+# Every push to main (and v* tags) builds the Windows zip and Android APK in
+# parallel and publishes both on a GitHub Release. A newer main push cancels an
+# older in-flight release build.
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref == 'refs/heads/main' }}
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      windows: true
+      android: true
+
+  publish:
+    name: publish
+    needs: build
+    # Publish whatever built: an Android failure must not hold back the Windows zip.
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          short="${GITHUB_SHA::8}"
+          if [[ "${GITHUB_REF_TYPE}" == tag ]]; then
+            tag="${GITHUB_REF_NAME}"
+            title="CenturyKnights ${tag}"
+          else
+            tag="main-${short}"
+            title="试玩包 · main ${short}"
+          fi
+          mkdir -p dist && cd dist
+          if [[ -f CenturyKnights-debug.apk ]]; then
+            mv CenturyKnights-debug.apk "CenturyKnights-android-${short}.apk"
+          fi
+          shopt -s nullglob
+          files=(*.zip *.apk)
+          if (( ${#files[@]} == 0 )); then
+            echo "::error::neither the Windows zip nor the APK built"
+            exit 1
+          fi
+          missing=""
+          compgen -G '*.zip' >/dev/null || missing="${missing} Windows"
+          compgen -G '*.apk' >/dev/null || missing="${missing} Android"
+          sha256sum -- "${files[@]}" > "SHA256-${short}.txt"
+          cat "SHA256-${short}.txt"
+          subject="$(gh api "repos/${GH_REPO}/commits/${GITHUB_SHA}" --jq '.commit.message' | head -1)"
+          notes="$(printf 'Built by %s from %s.\n\n%s\n' "${GITHUB_WORKFLOW}" "${GITHUB_SHA}" "${subject}")"
+          if [[ -n "${missing}" ]]; then
+            notes="${notes}"$'\n\n'"Build failed, not attached:${missing}"
+          fi
+          if gh release view "${tag}" >/dev/null 2>&1; then
+            gh release upload --clobber "${tag}" -- "${files[@]}" "SHA256-${short}.txt"
+          else
+            gh release create "${tag}" --target "${GITHUB_SHA}" --title "${title}" --notes "${notes}" \
+              -- "${files[@]}" "SHA256-${short}.txt"
+          fi
+          if [[ -n "${missing}" ]]; then
+            echo "::error::release published without:${missing}"
+            exit 1
+          fi

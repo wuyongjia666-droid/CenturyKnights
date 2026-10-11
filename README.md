@@ -27,7 +27,7 @@ godot --headless --path . --scene res://tests/tactics_e2e.tscn
 
 `./scripts/run_ci.sh` 会先跑 `tools/ci/json_lint.py`，再自动发现 `project/tests/suites/*/` 下的 `*_check.tscn` 与 `*_check.gd`。发现数量打印为 `suites discovered: N`。每个用例必须打印 `PASS`，失败时 `quit(1)`。同名 `.gd` 与 `.tscn` 成对时只跑场景（`.gd` 是场景脚本）。
 
-GitHub Actions 工作流是 `.github/workflows/ci.yml`（`pull_request` 与 `push` 到 `main`）。它缓存 Godot 与 `project/.godot/imported`，先 import 再执行 `scripts/run_ci.sh`。失败时上传 `/tmp/ck_*.log`。
+GitHub Actions 的触发、缓存、并行、自动发布和必需检查 `ci` 见 [docs/ci.md](docs/ci.md)。推送前先跑 `scripts/precheck.sh`（约 2–3 分钟）。
 
 ## Android 调试包
 

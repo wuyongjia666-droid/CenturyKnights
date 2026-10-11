@@ -64,7 +64,8 @@ def _lossless_source(path: Path) -> bool:
 
 def _write_import(webp: Path) -> None:
     rel = webp.relative_to(PROJECT).as_posix()
-    digest = hashlib.md5(rel.encode()).hexdigest()
+    # Godot names the .ctex after md5("res://" + rel); any other digest forces a reimport on every fresh checkout.
+    digest = hashlib.md5(f"res://{rel}".encode()).hexdigest()
     dest = f"res://.godot/imported/{webp.name}-{digest}.ctex"
     uid_digest = hashlib.sha1(rel.encode()).digest()
     chars = "".join(UID_ALPHABET[b % len(UID_ALPHABET)] for b in uid_digest[:13])

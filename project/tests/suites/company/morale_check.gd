@@ -41,11 +41,10 @@ func _bands() -> String:
 			return "band %s got %s" % [morale, got]
 	return ""
 
+## new_game rolls stats from a randomized rng and the opening roster has several
+## companions, so the one who deserts is whoever CKMorale picks, not the first.
 func _non_leader() -> CKCharacter:
-	for c in GameState.roster():
-		if not c.is_leader:
-			return c
-	return null
+	return CKMorale._lowest(GameState)
 
 func _desert() -> String:
 	GameState.new_game("士气", "灰旗", GameState.crest_color)
