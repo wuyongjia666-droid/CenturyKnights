@@ -287,12 +287,20 @@ func _house_card(rect: Rect2, c: CKCharacter, side_tag: String, side_en: String,
 		sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		p.add_child(sub)
 	var text_x := plate.end.x + 8.0
+	var col_h := maxf(24.0, footer_y - 44.0)
+	var col_w := maxf(40.0, rect.size.x - text_x - 10.0)
+	var clip := Control.new()
+	clip.position = Vector2(text_x, 36)
+	clip.size = Vector2(col_w, col_h)
+	clip.clip_contents = true
+	clip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	p.add_child(clip)
 	var v := VBoxContainer.new()
-	v.position = Vector2(text_x, 36)
-	v.size = Vector2(maxf(40.0, rect.size.x - text_x - 10.0), maxf(24.0, footer_y - 44.0))
+	v.position = Vector2.ZERO
+	v.size = Vector2(col_w, col_h)
 	v.clip_contents = true
 	v.add_theme_constant_override("separation", 6 if compact else 2)
-	p.add_child(v)
+	clip.add_child(v)
 	if compact:
 		var age := UIKit.body_label(Locale.t("marriage_compact_who", [c.name, c.age]), UIKit.TEXT, 12)
 		age.name = "AgeLine"
@@ -583,6 +591,11 @@ func apply_mobile_layout() -> void:
 		_grade.position = Vector2(maxf(8.0, vp.x - 308.0), 96)
 		_grade.size = Vector2(minf(300.0, vp.x - _grade.position.x - 8.0), 18)
 		_grade.clip_text = true
+		var help := get_node_or_null("OpenGuide") as Control
+		if help:
+			var help_w := help.size.x
+			var x := minf(vp.x - 8.0 - help_w, _grade.position.x - 8.0 - help_w)
+			help.position = Vector2(maxf(8.0, x), 72)
 	if _selected != null:
 		_render_cards()
 
