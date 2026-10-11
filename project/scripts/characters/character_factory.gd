@@ -36,7 +36,7 @@ static func make_shilei_wantan() -> CKCharacter:
 	var c := CKCharacter.new()
 	c.id = next_id("ally")
 	c.cast_key = "wantan"
-	c.name = "石垒·晚担"
+	c.name = _supporting_name("wantan")
 	c.gender = "m"
 	c.age = 22
 	c.job_id = "light_inf"
@@ -50,6 +50,15 @@ static func make_shilei_wantan() -> CKCharacter:
 	c.salary = 3
 	c.recalc_hp()
 	return c
+
+static func _supporting_name(cast_key: String) -> String:
+	var data = JSON.parse_string(FileAccess.get_file_as_string("res://data/cast/supporting_v92.json"))
+	if typeof(data) != TYPE_DICTIONARY:
+		return ""
+	for person in data.get("people", []):
+		if typeof(person) == TYPE_DICTIONARY and str(person.get("cast_key", "")) == cast_key:
+			return str(person.get("name", ""))
+	return ""
 
 static func make_ally_tutor() -> CKCharacter:
 	var c := CKCharacter.new()
