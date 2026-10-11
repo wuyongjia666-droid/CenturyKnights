@@ -117,7 +117,7 @@ func _step_story_start() -> void:
 	labels = story.action_labels()
 	var has_battle_action := false
 	for lb in labels:
-		if str(lb).find("战斗") >= 0:
+		if str(lb).find("战斗") >= 0 or str(lb).find("隘口") >= 0:
 			has_battle_action = true
 	if not has_battle_action and not GameState.flag("battle_done"):
 		_err("story 0.1: expected battle teaching action, got %s" % str(labels))
