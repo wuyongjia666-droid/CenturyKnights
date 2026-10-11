@@ -130,10 +130,11 @@ jobs:
 
       # Suites shell out to python3 tools that read WebP/PNG and render audio. The audio tools
       # apt-install ffmpeg on demand, which collides on the apt lock when suites run in parallel.
+      # Runs in the background while Godot imports; the suites step waits for it.
       - name: Python and audio tools
         run: |
           python3 -m pip install --quiet pillow numpy
-          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
+          nohup bash -c 'sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; echo $? > /tmp/ck_apt.done' >/tmp/ck_apt.log 2>&1 &
 
       - name: Godot setup
         uses: ./.github/actions/godot-setup
@@ -143,6 +144,8 @@ jobs:
       - name: Godot suites and e2e
         run: |
           export PATH="${HOME}/.local/bin:${PATH}"
+          while [[ ! -f /tmp/ck_apt.done ]]; do sleep 2; done
+          test "$(cat /tmp/ck_apt.done)" = 0 || { cat /tmp/ck_apt.log; exit 1; }
           ./scripts/run_ci.sh godot
 
       - name: Upload CI logs
