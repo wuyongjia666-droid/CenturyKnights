@@ -2,9 +2,13 @@
 """Compress shipping art under project/assets/art to Godot 4.3 WebP.
 
 Photographs (gene portraits, cities, scenes, castle, estates, backdrops)
-become lossy WebP. Paper-doll parts stay lossless WebP so alpha edges
-remain sharp. UI chrome, FX, tokens, terrain, glyphs and the farm inbox
-stay PNG.
+become WebP at quality 92, at the master's native resolution. Nothing in
+this pass is resized, and nothing is encoded below PHOTO_QUALITY. Package
+size is not a reason to soften a plate. Portrait lists, dialogue, and
+detail use the small / medium / large siblings from
+tools/art/build_portrait_tiers.py. The gene bank stays in the base export.
+Paper-doll parts stay lossless WebP so alpha edges remain sharp. UI chrome,
+FX, tokens, terrain, glyphs and the farm inbox stay PNG.
 
 Farm queue JSON still names the generator's .png target. Loaders resolve
 the shipped .webp beside that name.
@@ -26,6 +30,20 @@ PROJECT = ROOT / "project"
 REPORT = ROOT / "tools" / "ci" / "webp_pass_report.json"
 UID_ALPHABET = "abcdefghijkmnpqrstuvwxyz23456789"
 SKIP_TOP = {"fx", "tokens", "tiles", "terrain_v86", "banners", "farm_inbox"}
+# Near-lossless. Do not drop this to save bytes; split packs instead.
+PHOTO_QUALITY = 0.92
+
+
+def shipping_quality(parts: tuple[str, ...]) -> float | None:
+    """Lossy quality in 0..1, or None when the plate must stay lossless."""
+    if parts and parts[0] == "doll":
+        return None
+    return PHOTO_QUALITY
+
+
+def shipping_size(width: int, height: int, _parts: tuple[str, ...]) -> tuple[int, int]:
+    """Native pixels. Shipping never resizes a plate to hit a size budget."""
+    return width, height
 
 
 def _bucket(path: Path) -> str:
@@ -72,7 +90,7 @@ def _write_import(webp: Path, lossy_q: float | None, old_import: Path) -> None:
     digest = hashlib.md5(rel.encode()).hexdigest()
     dest = f"res://.godot/imported/{webp.name}-{digest}.ctex"
     mode = 0 if lossy_q is None else 1
-    quality = 0.70 if lossy_q is None else lossy_q
+    quality = 1.0 if lossy_q is None else lossy_q
     uid = _uid_for(rel, old_import)
     text = (
         "[remap]\n\n"
@@ -88,7 +106,7 @@ def _write_import(webp: Path, lossy_q: float | None, old_import: Path) -> None:
         f'dest_files=["{dest}"]\n\n'
         "[params]\n\n"
         f"compress/mode={mode}\n"
-        "compress/high_quality=false\n"
+        "compress/high_quality=true\n"
         f"compress/lossy_quality={quality:.2f}\n"
         "compress/hdr_compression=1\n"
         "compress/normal_map=0\n"
@@ -133,6 +151,9 @@ def _prepare(path: Path) -> tuple[Image.Image, float | None, str] | None:
         return im.convert("RGBA"), None, "doll-lossless"
     name = path.name
     w, h = im.size
+    w, h = shipping_size(w, h, parts)
+    if (w, h) != im.size:
+        im = im.resize((w, h), Image.Resampling.LANCZOS)
     if parts[0] == "ui" and "items" not in parts:
         if "backdrop" not in name and max(w, h) < 480:
             return None
@@ -140,14 +161,6 @@ def _prepare(path: Path) -> tuple[Image.Image, float | None, str] | None:
             return None
     if parts[0] == "estates" and max(w, h) <= 256:
         return None
-    cap = 1280 if parts[0] in {"ui", "battle"} and max(w, h) > 1600 else 0
-    # Half-body plates are already 768x1024. City boards stay at the 1280 viewport.
-    # Only full-bleed 1920 backdrops and battle plates are oversized on a phone.
-    if cap:
-        scale = cap / max(w, h)
-        nw = max(2, int(round(w * scale / 2.0) * 2))
-        nh = max(2, int(round(h * scale / 2.0) * 2))
-        im = im.resize((nw, nh), Image.Resampling.LANCZOS)
     keep_alpha = False
     if im.mode in {"RGBA", "LA"} or (im.mode == "P" and "transparency" in im.info):
         rgba = im.convert("RGBA")
@@ -156,13 +169,8 @@ def _prepare(path: Path) -> tuple[Image.Image, float | None, str] | None:
         im = rgba if keep_alpha else rgba.convert("RGB")
     else:
         im = im.convert("RGB")
-    if parts[0] in {"scenes", "atlas", "castle", "estates"}:
-        quality = 0.76
-    elif cap:
-        quality = 0.74
-    else:
-        quality = 0.78
-    note = "downscale-1280" if cap else "native"
+    quality = shipping_quality(parts)
+    note = "native-q92"
     if keep_alpha:
         note += "+alpha"
     return im, quality, note
@@ -183,7 +191,7 @@ def _convert(path_str: str) -> dict:
         im.save(dest, "WEBP", lossless=True, quality=100, method=4)
     else:
         q = int(round(quality * 100))
-        im.save(dest, "WEBP", quality=q, method=4, alpha_quality=95)
+        im.save(dest, "WEBP", quality=q, method=6, alpha_quality=100)
     after = dest.stat().st_size
     if after >= int(before * 0.92):
         dest.unlink(missing_ok=True)
@@ -241,9 +249,10 @@ def main() -> int:
         "before": before,
         "after": after,
         "notes": {
-            "portraits": "768x1024 kept so half-body faces stay readable on a phone",
-            "cities": "1280x720 city boards kept (game viewport)",
-            "backdrops": "1920 plates in ui/ and battle/ capped to 1280",
+            "quality": "photographs encode at WebP quality 92, native resolution",
+            "portraits": "768x1024 gene plates stay full size; Godot import lossy_quality 0.92",
+            "cities": "city boards stay at their master size",
+            "backdrops": "1920 plates stay 1920; portrait lists use a prebuilt small tier instead of a softer encode",
             "doll": "lossless WebP; alpha overlays",
             "kept_png": "fx, tokens, terrain, banners, glyphs, small UI chrome, farm_inbox",
         },

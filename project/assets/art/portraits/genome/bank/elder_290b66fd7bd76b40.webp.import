@@ -16,8 +16,8 @@ dest_files=["res://.godot/imported/elder_290b66fd7bd76b40.webp-389b59e81a992dbf6
 [params]
 
 compress/mode=1
-compress/high_quality=false
-compress/lossy_quality=0.78
+compress/high_quality=true
+compress/lossy_quality=0.92
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

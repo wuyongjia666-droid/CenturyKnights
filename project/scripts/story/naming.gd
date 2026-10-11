@@ -105,7 +105,7 @@ func _refresh_preview_art() -> void:
 	tmp.job_id = "squire"
 	tmp.gender = "m"
 	tmp.appearance = {"hair": "ash_brown", "eyes": "river_blue", "brow": "thick", "scar": "none"}
-	_portrait.texture = UnitArt.portrait(tmp, 140)
+	_portrait.texture = UnitArt.portrait(tmp, 140, CKArtPaths.TIER_MEDIUM)
 	GameState.crest_color = prev_c
 	GameState.surname = prev_s
 

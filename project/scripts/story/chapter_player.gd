@@ -230,12 +230,12 @@ func _speaker_portrait(speaker: String, emotion: String = "") -> void:
 	match speaker:
 		"旁白", "掌柜", "管事", "稳婆", "春令使者", "老旗手", "斥候", "盟友亲属":
 			if leader and speaker in ["老旗手", "斥候"]:
-				_portrait.texture = UnitArt.portrait(leader, 120)
+				_portrait.texture = UnitArt.portrait(leader, 120, CKArtPaths.TIER_MEDIUM)
 			else:
 				_portrait.texture = UnitArt.banner(120, 120, false)
 		_:
 			if leader:
-				_portrait.texture = UnitArt.portrait(leader, 120)
+				_portrait.texture = UnitArt.portrait(leader, 120, CKArtPaths.TIER_MEDIUM)
 			else:
 				_portrait.texture = UnitArt.banner(120, 120, false)
 

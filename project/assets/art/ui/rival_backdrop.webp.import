@@ -16,8 +16,8 @@ dest_files=["res://.godot/imported/rival_backdrop.webp-9b67c4220e3c7bc6e64e40b7a
 [params]
 
 compress/mode=1
-compress/high_quality=false
-compress/lossy_quality=0.74
+compress/high_quality=true
+compress/lossy_quality=0.92
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

@@ -554,12 +554,12 @@ static func char_card_text(c: CKCharacter) -> String:
 		lines.append(Locale.t("shell_484a9984"))
 	return "\n".join(lines)
 
-static func make_portrait_rect(c: CKCharacter, size: int = 72) -> TextureRect:
+static func make_portrait_rect(c: CKCharacter, size: int = 72, tier: String = "") -> TextureRect:
 	var tr := TextureRect.new()
 	tr.custom_minimum_size = Vector2(size, size)
 	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	tr.texture = UnitArt.portrait(c, size)
+	tr.texture = UnitArt.portrait(c, size, tier)
 	return tr
 
 static func make_banner_rect(w: int = 72, h: int = 100) -> TextureRect:
@@ -1085,7 +1085,7 @@ static func section_head(parent: Control, pos: Vector2, title_zh: String, en: St
 		r.position = pos + Vector2(w - r.get_minimum_size().x, 1)
 		parent.add_child(r)
 
-static func portrait_plate(parent: Control, rect: Rect2, c, caption: String = "", focus: bool = false) -> Panel:
+static func portrait_plate(parent: Control, rect: Rect2, c, caption: String = "", focus: bool = false, tier: String = "") -> Panel:
 	## blueprint plate: thin frame + corner ticks + clipped portrait + mono caption
 	var p := panel_at(parent, rect, 8, focus)
 	var inner := Control.new()
@@ -1096,7 +1096,7 @@ static func portrait_plate(parent: Control, rect: Rect2, c, caption: String = ""
 	p.add_child(inner)
 	if c != null:
 		var tex: Texture2D = null
-		var pr: TextureRect = make_portrait_rect(c, int(rect.size.y))
+		var pr: TextureRect = make_portrait_rect(c, int(rect.size.y), tier)
 		tex = pr.texture
 		pr.queue_free()
 		if tex:
@@ -1107,6 +1107,7 @@ static func portrait_plate(parent: Control, rect: Rect2, c, caption: String = ""
 			t.size = inner.size
 			t.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			inner.add_child(t)
+		CKPortraitStatus.attach(inner, c, inner.size)
 	var shade := TextureRect.new()
 	var g := Gradient.new()
 	g.set_color(0, Color(0, 0, 0, 0))

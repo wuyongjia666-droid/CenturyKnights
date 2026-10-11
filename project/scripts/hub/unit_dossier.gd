@@ -62,7 +62,7 @@ func _build() -> void:
 	var left := UIKit.panel_at(self, Rect2(42, 200, 300, 476), 12, true)
 	left.name = "PortraitColumn"
 	if c != null:
-		UIKit.portrait_plate(left, Rect2(18, 16, 264, 300), c, CKGenomePortrait.STAGE_ZH.get(str(sheet.get("stage", "")), ""))
+		UIKit.portrait_plate(left, Rect2(18, 16, 264, 300), c, CKGenomePortrait.STAGE_ZH.get(str(sheet.get("stage", "")), ""), false, CKArtPaths.TIER_LARGE)
 	var chips := HBoxContainer.new()
 	chips.position = Vector2(18, 324)
 	chips.size = Vector2(264, 32)

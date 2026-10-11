@@ -16,8 +16,8 @@ dest_files=["res://.godot/imported/train_backdrop.webp-4bf0950b977c1c7db67659df0
 [params]
 
 compress/mode=1
-compress/high_quality=false
-compress/lossy_quality=0.74
+compress/high_quality=true
+compress/lossy_quality=0.92
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
