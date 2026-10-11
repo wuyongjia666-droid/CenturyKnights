@@ -16,6 +16,22 @@ import submit_v92_stills as submit  # noqa: E402
 import validate_queue_v92 as gate  # noqa: E402
 
 
+QUEUE = Path(__file__).resolve().parent
+
+
+def _raw_rows(name: str) -> int:
+    doc = json.loads((QUEUE / name).read_text(encoding="utf-8"))
+    return len(doc.get("jobs", doc.get("buckets", [])))
+
+
+def expected_shot_count() -> int:
+    """Rows on disk, counted without the validator, so new art never needs a literal bump."""
+    names = [p.name for p in sorted(QUEUE.glob("v92_*.json"))]
+    if (QUEUE / "genome_bank_v92.json").exists():
+        names.append("genome_bank_v92.json")
+    return sum(_raw_rows(name) for name in names)
+
+
 class SubmitV92Test(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -72,7 +88,7 @@ class SubmitV92Test(unittest.TestCase):
         labels = [shot["label"] for shot in self.shots]
         self.assertEqual(labels, [shot["id"] for shot in self.shots])
         self.assertEqual(len(labels), len(set(labels)))
-        self.assertEqual(len(self.shots), 2068)
+        self.assertEqual(len(self.shots), expected_shot_count())
         farms = [shot["farm"] for shot in self.shots]
         self.assertEqual(farms, sorted(farms, key=submit.FARM_ORDER.index))
         farm03 = [shot["role"] for shot in self.shots if shot["farm"] == "FARM-03"]
@@ -93,7 +109,7 @@ class SubmitV92Test(unittest.TestCase):
             text = path.read_text(encoding="utf-8")
             payload = json.loads(text)
         self.assertIsInstance(payload, list)
-        self.assertEqual(len(payload), 2068)
+        self.assertEqual(len(payload), expected_shot_count())
         self.assertTrue(text.lstrip().startswith("["))
         self.assertEqual(payload[0]["label"], payload[0]["id"])
         self.assertTrue(all(row["label"] == row["id"] and row["label"] for row in payload))
@@ -164,7 +180,7 @@ class SubmitV92Test(unittest.TestCase):
             self.assertEqual(argv[argv.index("--only") + 1], "qwen")
             payload = json.loads(Path(shots).read_text(encoding="utf-8"))
             self.assertIsInstance(payload, list)
-            self.assertEqual(len(payload), 35)
+            self.assertEqual(len(payload), _raw_rows("v92_cities.json"))
             self.assertEqual(payload[0]["label"], payload[0]["id"])
             self.assertEqual(payload[0]["prompt"], payload[0]["positive"])
             self.assertEqual(payload[0]["role"], "city")
