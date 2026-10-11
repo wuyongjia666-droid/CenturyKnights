@@ -1,0 +1,10 @@
+[remap]
+
+importer="keep"
+uid="uid://46nr3nx831q7e"
+
+[deps]
+
+source_file="res://data/locale/ux.csv"
+
+[params]

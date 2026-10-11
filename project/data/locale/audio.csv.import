@@ -1,17 +1,10 @@
 [remap]
 
-importer="csv_translation"
-type="Translation"
+importer="keep"
 uid="uid://dub6kib1gricv"
 
 [deps]
 
-files=["res://data/locale/audio.zh_CN.translation", "res://data/locale/audio.en.translation"]
-
 source_file="res://data/locale/audio.csv"
-dest_files=["res://data/locale/audio.zh_CN.translation", "res://data/locale/audio.en.translation"]
 
 [params]
-
-compress=true
-delimiter=0

@@ -1,6 +1,21 @@
 extends Node
 ## UI string table. CSV columns are keys, zh_CN, en.
 ## An empty English cell falls back to zh_CN. A missing key never echoes the key name.
+## data/locale/*.csv.import must stay importer="keep". csv_translation omits the
+## source from an exported PCK, so every Locale.t call becomes "...".
+
+const _CSV_DIR := "res://data/locale"
+const _CSV_FILES: Array[String] = [
+	"audio.csv",
+	"battle.csv",
+	"company.csv",
+	"core.csv",
+	"cutscene.csv",
+	"dynasty.csv",
+	"narrative.csv",
+	"strings.csv",
+	"ux.csv",
+]
 
 var lang: String = "zh_CN"
 var _zh: Dictionary = {}
@@ -8,7 +23,7 @@ var _en: Dictionary = {}
 var _by_zh: Dictionary = {}
 
 func _ready() -> void:
-	_load_dir("res://data/locale")
+	_load_dir(_CSV_DIR)
 	var saved := ""
 	if GameState != null and GameState.settings is Dictionary:
 		saved = str(GameState.settings.get("locale", ""))
@@ -18,20 +33,21 @@ func _ready() -> void:
 		TranslationServer.set_locale("zh_CN")
 
 func _load_dir(path: String) -> void:
+	# Exported PCK listings have reported current_is_dir() == true for files,
+	# which used to skip every CSV. Union an explicit list with get_files().
+	var names := {}
 	var dir := DirAccess.open(path)
-	if dir == null:
-		return
-	var names: Array[String] = []
-	dir.list_dir_begin()
-	var file_name := dir.get_next()
-	while file_name != "":
-		if not dir.current_is_dir() and file_name.ends_with(".csv"):
-			names.append(file_name)
-		file_name = dir.get_next()
-	dir.list_dir_end()
-	names.sort()
-	for csv_name in names:
-		_merge_csv("%s/%s" % [path, csv_name])
+	if dir != null:
+		for file_name in dir.get_files():
+			var listed := str(file_name)
+			if listed.ends_with(".csv"):
+				names[listed] = true
+	for csv_name in _CSV_FILES:
+		names[csv_name] = true
+	var ordered: Array = names.keys()
+	ordered.sort()
+	for csv_name in ordered:
+		_merge_csv("%s/%s" % [path, str(csv_name)])
 
 func _merge_csv(path: String) -> void:
 	var handle := FileAccess.open(path, FileAccess.READ)
