@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://7rrkqhmbaqgii"
-path="res://.godot/imported/v92_expr_c05_sorrow.medium.webp-00998f550b32ca44b0a304514c43e883.ctex"
+uid="uid://buil01aaq4gge"
+path="res://.godot/imported/v92_expr_c05_sorrow.medium.webp-4f510c880651a69d114f3b214e4f81ed.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/expressions/v92_expr_c05_sorrow.medium.webp"
-dest_files=["res://.godot/imported/v92_expr_c05_sorrow.medium.webp-00998f550b32ca44b0a304514c43e883.ctex"]
+dest_files=["res://.godot/imported/v92_expr_c05_sorrow.medium.webp-4f510c880651a69d114f3b214e4f81ed.ctex"]
 
 [params]
 

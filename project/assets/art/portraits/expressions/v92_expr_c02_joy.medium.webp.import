@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://du7mugv9tqmah"
-path="res://.godot/imported/v92_expr_c02_joy.medium.webp-8ae2cc0d1a6a44ab268e845659928756.ctex"
+uid="uid://du7mugwatqmah"
+path="res://.godot/imported/v92_expr_c02_joy.medium.webp-ecd24093e7648ee2aac2316cd052357b.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/expressions/v92_expr_c02_joy.medium.webp"
-dest_files=["res://.godot/imported/v92_expr_c02_joy.medium.webp-8ae2cc0d1a6a44ab268e845659928756.ctex"]
+dest_files=["res://.godot/imported/v92_expr_c02_joy.medium.webp-ecd24093e7648ee2aac2316cd052357b.ctex"]
 
 [params]
 

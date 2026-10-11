@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://wmagx2q8kvxfe"
-path="res://.godot/imported/v8_hero_heir_f.medium.webp-34659f067e2083f22ab911721885d60b.ctex"
+uid="uid://da730r5yqvkmk"
+path="res://.godot/imported/v8_hero_heir_f.medium.webp-6cd9b8a6a505def98329ad0078cb8be8.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/v8_hero_heir_f.medium.webp"
-dest_files=["res://.godot/imported/v8_hero_heir_f.medium.webp-34659f067e2083f22ab911721885d60b.ctex"]
+dest_files=["res://.godot/imported/v8_hero_heir_f.medium.webp-6cd9b8a6a505def98329ad0078cb8be8.ctex"]
 
 [params]
 
