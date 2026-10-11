@@ -91,8 +91,10 @@ runs:
           exit 1
         fi
 
+    # main keeps the shared cache fresh; a branch saves only on a cold start (nothing matched).
     - name: Save project/.godot
-      if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && steps.dotgodot.outputs.cache-hit != 'true'
+      if: steps.dotgodot.outputs.cache-hit != 'true' && ((github.ref == 'refs/heads/main' && github.event_name != 'pull_request') || steps.dotgodot.outputs.cache-matched-key == '')
+      continue-on-error: true
       uses: actions/cache/save@v4
       with:
         path: project/.godot
