@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://by52y5hi3yh99"
-path="res://.godot/imported/v84_geno_mid_f_house.medium.webp-493c27ad2133962191e593f0da1b7486.ctex"
+uid="uid://by52y5hi3yiba"
+path="res://.godot/imported/v84_geno_mid_f_house.medium.webp-cb835e9eefba363d0a144196e3c54611.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/v84_geno_mid_f_house.medium.webp"
-dest_files=["res://.godot/imported/v84_geno_mid_f_house.medium.webp-493c27ad2133962191e593f0da1b7486.ctex"]
+dest_files=["res://.godot/imported/v84_geno_mid_f_house.medium.webp-cb835e9eefba363d0a144196e3c54611.ctex"]
 
 [params]
 
