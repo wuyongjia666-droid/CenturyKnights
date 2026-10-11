@@ -46,7 +46,8 @@ static func make_shilei_wantan() -> CKCharacter:
 	c.appearance = {"hair": "ash_brown", "eyes": "slate", "brow": "straight", "scar": "none"}
 	c.stats = {"str": 8, "vit": 9, "skl": 6, "agi": 7, "per": 5, "wil": 7}
 	c.birthday_month = 8
-	c.salary = 4
+	# 低于灯影的 6。月饷 4 会把种子 91 的第 30 年银压出 400 的下限。
+	c.salary = 3
 	c.recalc_hp()
 	return c
 
