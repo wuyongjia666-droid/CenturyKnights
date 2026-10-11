@@ -27,6 +27,20 @@ scripts/precheck.sh --no-godot # 约 10 秒：只跑 Python 部分
 
 同一 PR 的新提交会取消旧的 CI（`concurrency: cancel-in-progress`），`main` 上的运行不取消。
 
+## 实测（GitHub Actions，ubuntu-latest 4 vCPU）
+
+| | 以前（#118–#128 期间的运行） | 现在（PR #131，缓存已热） |
+|---|---|---|
+| PR 整体 wall-clock | 28–31 分钟 | 4.7 分钟 |
+| `ci` / `godot-suites` 作业 | 24–31 分钟 | 4.2 分钟 |
+| 其中 Godot import | 3.7–4.8 分钟（缓存命中也全量重导） | 9 秒 |
+| 其中套件 | 20.5 分钟（串行，基因库 13 分钟） | 3.2 分钟（并行，基因库快速模式 82 秒） |
+| `shots` | 3.7–6.6 分钟 | 1.5 分钟 |
+| Android APK | 一直失败 | 1.4 分钟（冷 6 分钟） |
+| Windows zip | 手动 | 1.5 分钟（冷 5 分钟） |
+
+`main` 和夜间走完整基因库重放（20 种子，约 13 分钟，是那次运行的最长路径），不影响 PR。
+
 ## 为什么快
 
 - **Godot 套件并行**：`scripts/run_ci.sh godot` 用 `xargs -P $(nproc)` 同时跑套件；每个进程有自己的 `XDG_DATA_HOME`，`user://` 存档互不干扰。带墙钟预算或耗时比的 `perf_boot`、`ai_regression`、`impact`、`terrain` 在池子跑完后单独跑。失败时列出所有失败的套件，不在第一个就停。
