@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://a32tgyddnsuna"
-path="res://.godot/imported/v87_item_ashbanner_spear_1.webp-b61071f793e1f073f9e4485de92c9ae0.ctex"
+uid="uid://32tgyddnsuna"
+path="res://.godot/imported/v87_item_ashbanner_spear_1.webp-ae1ae79c3211677f7a569ae39b2b0608.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_ashbanner_spear_1.webp"
-dest_files=["res://.godot/imported/v87_item_ashbanner_spear_1.webp-b61071f793e1f073f9e4485de92c9ae0.ctex"]
+dest_files=["res://.godot/imported/v87_item_ashbanner_spear_1.webp-ae1ae79c3211677f7a569ae39b2b0608.ctex"]
 
 [params]
 

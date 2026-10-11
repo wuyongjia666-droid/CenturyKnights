@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://r94asq52erues"
-path="res://.godot/imported/v87_item_emberold_armor_2.webp-d335eb08bfa945ee6ab7c29ca31f569c.ctex"
+uid="uid://cthsgjh14yddq"
+path="res://.godot/imported/v87_item_emberold_armor_2.webp-889a0c4f60971b6c7e529cd99ae04736.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_emberold_armor_2.webp"
-dest_files=["res://.godot/imported/v87_item_emberold_armor_2.webp-d335eb08bfa945ee6ab7c29ca31f569c.ctex"]
+dest_files=["res://.godot/imported/v87_item_emberold_armor_2.webp-889a0c4f60971b6c7e529cd99ae04736.ctex"]
 
 [params]
 

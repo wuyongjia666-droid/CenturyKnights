@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cx852c8aacqtl"
-path="res://.godot/imported/hireface_frost_silver_pine_f_none_thick.webp-8202f26dfc9e54803d6f80050593d229.ctex"
+path="res://.godot/imported/hireface_frost_silver_pine_f_none_thick.webp-24b67a17edfe682ea2839c64c348d9bc.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/hireface_frost_silver_pine_f_none_thick.webp"
-dest_files=["res://.godot/imported/hireface_frost_silver_pine_f_none_thick.webp-8202f26dfc9e54803d6f80050593d229.ctex"]
+dest_files=["res://.godot/imported/hireface_frost_silver_pine_f_none_thick.webp-24b67a17edfe682ea2839c64c348d9bc.ctex"]
 
 [params]
 

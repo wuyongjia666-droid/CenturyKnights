@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://vsjjgh7ak6gaz"
-path="res://.godot/imported/v87_item_tide_bridge_sig1.webp-b092e83c4133845aa438d7c03502f3a5.ctex"
+uid="uid://chh6h7l0q52h6"
+path="res://.godot/imported/v87_item_tide_bridge_sig1.webp-9c7a4a3e548e3cd9d3cecdbc2f101bfe.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_tide_bridge_sig1.webp"
-dest_files=["res://.godot/imported/v87_item_tide_bridge_sig1.webp-b092e83c4133845aa438d7c03502f3a5.ctex"]
+dest_files=["res://.godot/imported/v87_item_tide_bridge_sig1.webp-9c7a4a3e548e3cd9d3cecdbc2f101bfe.ctex"]
 
 [params]
 

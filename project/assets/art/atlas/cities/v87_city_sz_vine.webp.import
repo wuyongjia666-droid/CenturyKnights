@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d48sx7av2iyby"
-path="res://.godot/imported/v87_city_sz_vine.webp-3a96e07891ce5ab04b99d75d5d9a9afe.ctex"
+uid="uid://txd5dnib3j7"
+path="res://.godot/imported/v87_city_sz_vine.webp-1fb4dd00a8b1d92d05198bde699142e4.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/cities/v87_city_sz_vine.webp"
-dest_files=["res://.godot/imported/v87_city_sz_vine.webp-3a96e07891ce5ab04b99d75d5d9a9afe.ctex"]
+dest_files=["res://.godot/imported/v87_city_sz_vine.webp-1fb4dd00a8b1d92d05198bde699142e4.ctex"]
 
 [params]
 

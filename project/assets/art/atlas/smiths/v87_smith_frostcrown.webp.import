@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://gwtq9fjixu2xr"
-path="res://.godot/imported/v87_smith_frostcrown.webp-ec1d7e0ae0e380c2dcff890ef15faf7e.ctex"
+uid="uid://c2fvodmaen660"
+path="res://.godot/imported/v87_smith_frostcrown.webp-15f32ac2e937da4a1956da94ec7838a5.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/smiths/v87_smith_frostcrown.webp"
-dest_files=["res://.godot/imported/v87_smith_frostcrown.webp-ec1d7e0ae0e380c2dcff890ef15faf7e.ctex"]
+dest_files=["res://.godot/imported/v87_smith_frostcrown.webp-15f32ac2e937da4a1956da94ec7838a5.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://xym46e7rtde3b"
-path="res://.godot/imported/v92_castle_forge_t2.webp-f6964edc49e4ffd42b59bd4fdb6d6b04.ctex"
+uid="uid://r6wm2paf45jp"
+path="res://.godot/imported/v92_castle_forge_t2.webp-db305ed2eaa41361a958492f42c807f3.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/castle/v92_castle_forge_t2.webp"
-dest_files=["res://.godot/imported/v92_castle_forge_t2.webp-f6964edc49e4ffd42b59bd4fdb6d6b04.ctex"]
+dest_files=["res://.godot/imported/v92_castle_forge_t2.webp-db305ed2eaa41361a958492f42c807f3.ctex"]
 
 [params]
 

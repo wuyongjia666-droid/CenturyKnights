@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c0njr3hnlr0v"
-path="res://.godot/imported/hireface_wheat_amber_m_none_straight.webp-6e0349eb83796dc62932b81385c14f9f.ctex"
+path="res://.godot/imported/hireface_wheat_amber_m_none_straight.webp-0d5468a46b44ff1865a2b41125582d5b.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/hireface_wheat_amber_m_none_straight.webp"
-dest_files=["res://.godot/imported/hireface_wheat_amber_m_none_straight.webp-6e0349eb83796dc62932b81385c14f9f.ctex"]
+dest_files=["res://.godot/imported/hireface_wheat_amber_m_none_straight.webp-0d5468a46b44ff1865a2b41125582d5b.ctex"]
 
 [params]
 

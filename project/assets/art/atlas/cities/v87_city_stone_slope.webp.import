@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ne8xxhfufvmad"
-path="res://.godot/imported/v87_city_stone_slope.webp-cc6b9871afa4565c35c9e94c1741ca34.ctex"
+uid="uid://bs1c6bn3qayy2"
+path="res://.godot/imported/v87_city_stone_slope.webp-8a4acbed43014bb5b4fad5b32a41cce3.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/cities/v87_city_stone_slope.webp"
-dest_files=["res://.godot/imported/v87_city_stone_slope.webp-cc6b9871afa4565c35c9e94c1741ca34.ctex"]
+dest_files=["res://.godot/imported/v87_city_stone_slope.webp-8a4acbed43014bb5b4fad5b32a41cce3.ctex"]
 
 [params]
 

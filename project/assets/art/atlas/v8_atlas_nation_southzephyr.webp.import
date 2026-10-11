@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dnlrs22qrkoln"
-path="res://.godot/imported/v8_atlas_nation_southzephyr.webp-e8b956a54a331e749ae7ed68d3373520.ctex"
+path="res://.godot/imported/v8_atlas_nation_southzephyr.webp-ebfb322f63af98258ab3fee5dc73f6fe.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/v8_atlas_nation_southzephyr.webp"
-dest_files=["res://.godot/imported/v8_atlas_nation_southzephyr.webp-e8b956a54a331e749ae7ed68d3373520.ctex"]
+dest_files=["res://.godot/imported/v8_atlas_nation_southzephyr.webp-ebfb322f63af98258ab3fee5dc73f6fe.ctex"]
 
 [params]
 

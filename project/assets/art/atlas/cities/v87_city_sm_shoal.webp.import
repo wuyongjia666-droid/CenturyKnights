@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://jwfs7ghq24j9h"
-path="res://.godot/imported/v87_city_sm_shoal.webp-59df65311ff49609800fb6743882a95b.ctex"
+uid="uid://b6l21cm8xpsqx"
+path="res://.godot/imported/v87_city_sm_shoal.webp-b7eb22ae149fb7f43ee45adae393e73e.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/cities/v87_city_sm_shoal.webp"
-dest_files=["res://.godot/imported/v87_city_sm_shoal.webp-59df65311ff49609800fb6743882a95b.ctex"]
+dest_files=["res://.godot/imported/v87_city_sm_shoal.webp-b7eb22ae149fb7f43ee45adae393e73e.ctex"]
 
 [params]
 

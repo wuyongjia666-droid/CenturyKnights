@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ycnn6fpk1r6r"
-path="res://.godot/imported/v8_atlas_world_political.webp-fc4f1620fb2e415a0ef493ac42c1d7f5.ctex"
+path="res://.godot/imported/v8_atlas_world_political.webp-e2bb976f553441417337257688d41e0a.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/v8_atlas_world_political.webp"
-dest_files=["res://.godot/imported/v8_atlas_world_political.webp-fc4f1620fb2e415a0ef493ac42c1d7f5.ctex"]
+dest_files=["res://.godot/imported/v8_atlas_world_political.webp-e2bb976f553441417337257688d41e0a.ctex"]
 
 [params]
 

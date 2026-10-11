@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://9iswvq86m3b9d"
-path="res://.godot/imported/v87_item_frostcrown_sword_2.webp-5aaaa2b3874c5d88aeb2aea2e05a1d61.ctex"
+uid="uid://dljx6bv54hb68"
+path="res://.godot/imported/v87_item_frostcrown_sword_2.webp-127b018dd409e0f5b3dfaa479cd80dd7.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_frostcrown_sword_2.webp"
-dest_files=["res://.godot/imported/v87_item_frostcrown_sword_2.webp-5aaaa2b3874c5d88aeb2aea2e05a1d61.ctex"]
+dest_files=["res://.godot/imported/v87_item_frostcrown_sword_2.webp-127b018dd409e0f5b3dfaa479cd80dd7.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://4dc5dtyyhxnpk"
-path="res://.godot/imported/v87_item_qinghe_focus_2.webp-114d218c9e4ea0316e0f7f31e707d035.ctex"
+uid="uid://cbh18gj7jjje7"
+path="res://.godot/imported/v87_item_qinghe_focus_2.webp-5fbeda1145d3daf049d13b44ad8be511.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_qinghe_focus_2.webp"
-dest_files=["res://.godot/imported/v87_item_qinghe_focus_2.webp-114d218c9e4ea0316e0f7f31e707d035.ctex"]
+dest_files=["res://.godot/imported/v87_item_qinghe_focus_2.webp-5fbeda1145d3daf049d13b44ad8be511.ctex"]
 
 [params]
 

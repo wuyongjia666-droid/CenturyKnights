@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://f54jh67rb9bnj"
-path="res://.godot/imported/v87_item_sy_frostfort_sig1.webp-0dcf121fa7f6e4c008577b11b3897af6.ctex"
+uid="uid://cbpnv5biq2fvr"
+path="res://.godot/imported/v87_item_sy_frostfort_sig1.webp-7073f260d074a96d8fbf95b2e37c928b.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_sy_frostfort_sig1.webp"
-dest_files=["res://.godot/imported/v87_item_sy_frostfort_sig1.webp-0dcf121fa7f6e4c008577b11b3897af6.ctex"]
+dest_files=["res://.godot/imported/v87_item_sy_frostfort_sig1.webp-7073f260d074a96d8fbf95b2e37c928b.ctex"]
 
 [params]
 

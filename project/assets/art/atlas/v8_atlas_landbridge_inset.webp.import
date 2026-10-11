@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dbdq31jrasqix"
-path="res://.godot/imported/v8_atlas_landbridge_inset.webp-be15c3275660886c9ccdf22cffab9d28.ctex"
+path="res://.godot/imported/v8_atlas_landbridge_inset.webp-c2efc4fef5112be4c440d9a9e974e6d3.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/v8_atlas_landbridge_inset.webp"
-dest_files=["res://.godot/imported/v8_atlas_landbridge_inset.webp-be15c3275660886c9ccdf22cffab9d28.ctex"]
+dest_files=["res://.godot/imported/v8_atlas_landbridge_inset.webp-c2efc4fef5112be4c440d9a9e974e6d3.ctex"]
 
 [params]
 

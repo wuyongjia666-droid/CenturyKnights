@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://au649arbgmkqj"
-path="res://.godot/imported/v87_item_sy_spire_sig2.webp-08d6115ec9c6a99eeb8e7a941586856d.ctex"
+uid="uid://u65aarbgmkqj"
+path="res://.godot/imported/v87_item_sy_spire_sig2.webp-0e92e23d4fb4855bf6ac419135dd7c19.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_sy_spire_sig2.webp"
-dest_files=["res://.godot/imported/v87_item_sy_spire_sig2.webp-08d6115ec9c6a99eeb8e7a941586856d.ctex"]
+dest_files=["res://.godot/imported/v87_item_sy_spire_sig2.webp-0e92e23d4fb4855bf6ac419135dd7c19.ctex"]
 
 [params]
 

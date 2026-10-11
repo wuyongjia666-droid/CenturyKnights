@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://gfriq3dspwu8y"
-path="res://.godot/imported/v87_item_fc_lake_sig1.webp-e7ac2d3038170d6ac06e1e24e8c10e97.ctex"
+uid="uid://ckdm51gj5p0h7"
+path="res://.godot/imported/v87_item_fc_lake_sig1.webp-9cd4157b22d7fd528f6aea2f074f78ad.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_fc_lake_sig1.webp"
-dest_files=["res://.godot/imported/v87_item_fc_lake_sig1.webp-e7ac2d3038170d6ac06e1e24e8c10e97.ctex"]
+dest_files=["res://.godot/imported/v87_item_fc_lake_sig1.webp-9cd4157b22d7fd528f6aea2f074f78ad.ctex"]
 
 [params]
 

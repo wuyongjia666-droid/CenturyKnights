@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://a7kk6cfqcbcfj"
-path="res://.godot/imported/v87_item_lantern_blade_3.webp-e2d7e37db10c951133d0f37dcb638850.ctex"
+uid="uid://7kk6cfqcbcfj"
+path="res://.godot/imported/v87_item_lantern_blade_3.webp-83f2a9da5766297e71ecb058d3afe7f0.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_lantern_blade_3.webp"
-dest_files=["res://.godot/imported/v87_item_lantern_blade_3.webp-e2d7e37db10c951133d0f37dcb638850.ctex"]
+dest_files=["res://.godot/imported/v87_item_lantern_blade_3.webp-83f2a9da5766297e71ecb058d3afe7f0.ctex"]
 
 [params]
 

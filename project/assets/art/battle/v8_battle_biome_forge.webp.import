@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://sm7453onbqu7"
-path="res://.godot/imported/v8_battle_biome_forge.webp-193142e0e6f795b7821374a673b5683c.ctex"
+path="res://.godot/imported/v8_battle_biome_forge.webp-fe71247125905ee0560e143c086b0e15.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/battle/v8_battle_biome_forge.webp"
-dest_files=["res://.godot/imported/v8_battle_biome_forge.webp-193142e0e6f795b7821374a673b5683c.ctex"]
+dest_files=["res://.godot/imported/v8_battle_biome_forge.webp-fe71247125905ee0560e143c086b0e15.ctex"]
 
 [params]
 

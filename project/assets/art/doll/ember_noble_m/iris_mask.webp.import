@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bpexcvry34irl"
-path="res://.godot/imported/iris_mask.webp-3975cc728223dfa43560ca4ef484a630.ctex"
+path="res://.godot/imported/iris_mask.webp-6b1cabf22237a0b16a063237b8bbd48b.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,13 +11,13 @@ metadata={
 [deps]
 
 source_file="res://assets/art/doll/ember_noble_m/iris_mask.webp"
-dest_files=["res://.godot/imported/iris_mask.webp-3975cc728223dfa43560ca4ef484a630.ctex"]
+dest_files=["res://.godot/imported/iris_mask.webp-6b1cabf22237a0b16a063237b8bbd48b.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
-compress/lossy_quality=0.70
+compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

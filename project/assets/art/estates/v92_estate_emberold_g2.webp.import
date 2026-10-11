@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ny6y7hhq34atc"
-path="res://.godot/imported/v92_estate_emberold_g2.webp-b556595b90e00ab4a4790c46955f0cdc.ctex"
+uid="uid://ceyegbp0finj1"
+path="res://.godot/imported/v92_estate_emberold_g2.webp-92b9c5d9f153703c4868628a392953a3.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/estates/v92_estate_emberold_g2.webp"
-dest_files=["res://.godot/imported/v92_estate_emberold_g2.webp-b556595b90e00ab4a4790c46955f0cdc.ctex"]
+dest_files=["res://.godot/imported/v92_estate_emberold_g2.webp-92b9c5d9f153703c4868628a392953a3.ctex"]
 
 [params]
 

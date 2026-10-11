@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ksfck8apudty3"
-path="res://.godot/imported/v87_item_saltmarsh_armor_2.webp-f533bc31cd3ab5d7433e964f8c83bb78.ctex"
+uid="uid://c2lle4f7px3hk"
+path="res://.godot/imported/v87_item_saltmarsh_armor_2.webp-267fdaa53c18b23b1c39378e4564cfdc.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_saltmarsh_armor_2.webp"
-dest_files=["res://.godot/imported/v87_item_saltmarsh_armor_2.webp-f533bc31cd3ab5d7433e964f8c83bb78.ctex"]
+dest_files=["res://.godot/imported/v87_item_saltmarsh_armor_2.webp-267fdaa53c18b23b1c39378e4564cfdc.ctex"]
 
 [params]
 

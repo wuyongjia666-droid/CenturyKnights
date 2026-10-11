@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://t33s36ccrbzxy"
-path="res://.godot/imported/v87_item_emberold_focus_3.webp-6a9a903e2e57c946f4f9787c78888437.ctex"
+uid="uid://r2g5vp2xbm55"
+path="res://.godot/imported/v87_item_emberold_focus_3.webp-5f68bd16d2996237d0ea23054854b674.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_emberold_focus_3.webp"
-dest_files=["res://.godot/imported/v87_item_emberold_focus_3.webp-6a9a903e2e57c946f4f9787c78888437.ctex"]
+dest_files=["res://.godot/imported/v87_item_emberold_focus_3.webp-5f68bd16d2996237d0ea23054854b674.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://sthnwrfpmdypm"
-path="res://.godot/imported/v87_item_sy_coast_sig2.webp-c4082a7af409a70fd5de879f622e295c.ctex"
+uid="uid://ddt6kjqpdkhok"
+path="res://.godot/imported/v87_item_sy_coast_sig2.webp-dc12cadb609f074261c8ab401e8bef84.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_sy_coast_sig2.webp"
-dest_files=["res://.godot/imported/v87_item_sy_coast_sig2.webp-c4082a7af409a70fd5de879f622e295c.ctex"]
+dest_files=["res://.godot/imported/v87_item_sy_coast_sig2.webp-dc12cadb609f074261c8ab401e8bef84.ctex"]
 
 [params]
 

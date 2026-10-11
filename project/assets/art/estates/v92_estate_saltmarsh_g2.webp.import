@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://jipbaitfascsi"
-path="res://.godot/imported/v92_estate_saltmarsh_g2.webp-5a6211452517aa53b2cc0c93022e3f73.ctex"
+uid="uid://brvj3eyv5elay"
+path="res://.godot/imported/v92_estate_saltmarsh_g2.webp-536575dd42ab23e528377997e4882e6f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/estates/v92_estate_saltmarsh_g2.webp"
-dest_files=["res://.godot/imported/v92_estate_saltmarsh_g2.webp-5a6211452517aa53b2cc0c93022e3f73.ctex"]
+dest_files=["res://.godot/imported/v92_estate_saltmarsh_g2.webp-536575dd42ab23e528377997e4882e6f.ctex"]
 
 [params]
 

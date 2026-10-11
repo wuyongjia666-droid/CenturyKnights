@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dq55vxugo35fu"
-path="res://.godot/imported/brow_soft.webp-a98d77573315d2b9db46289fd53b74be.ctex"
+path="res://.godot/imported/brow_soft.webp-e6337460173ef84fc92f0647c85f70b6.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,13 +11,13 @@ metadata={
 [deps]
 
 source_file="res://assets/art/doll/river_ward_m/brow_soft.webp"
-dest_files=["res://.godot/imported/brow_soft.webp-a98d77573315d2b9db46289fd53b74be.ctex"]
+dest_files=["res://.godot/imported/brow_soft.webp-e6337460173ef84fc92f0647c85f70b6.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
-compress/lossy_quality=0.70
+compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

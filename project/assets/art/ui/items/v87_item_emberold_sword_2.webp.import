@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://z9hyd34y4srhq"
-path="res://.godot/imported/v87_item_emberold_sword_2.webp-baf7637ebfb5160ce962da4ca88cefea.ctex"
+uid="uid://c21qtrmhqliw5"
+path="res://.godot/imported/v87_item_emberold_sword_2.webp-78f25a3477387ccf81256b2de2afaef4.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_emberold_sword_2.webp"
-dest_files=["res://.godot/imported/v87_item_emberold_sword_2.webp-baf7637ebfb5160ce962da4ca88cefea.ctex"]
+dest_files=["res://.godot/imported/v87_item_emberold_sword_2.webp-78f25a3477387ccf81256b2de2afaef4.ctex"]
 
 [params]
 

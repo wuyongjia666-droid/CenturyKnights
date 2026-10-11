@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cb3mvvpspe8ue"
-path="res://.godot/imported/mark_ember_sigil.webp-c8cdfcb3a2a1e7a99a106d3844cd9d0e.ctex"
+path="res://.godot/imported/mark_ember_sigil.webp-d4aebae3d81473a68acedbe9480fcd1f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,13 +11,13 @@ metadata={
 [deps]
 
 source_file="res://assets/art/doll/frost_crown_m/mark_ember_sigil.webp"
-dest_files=["res://.godot/imported/mark_ember_sigil.webp-c8cdfcb3a2a1e7a99a106d3844cd9d0e.ctex"]
+dest_files=["res://.godot/imported/mark_ember_sigil.webp-d4aebae3d81473a68acedbe9480fcd1f.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
-compress/lossy_quality=0.70
+compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

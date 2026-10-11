@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bv3oc6j43u1ci"
-path="res://.godot/imported/v8_scene_ch2_night.webp-218e6b628a13293f077526ea808e7876.ctex"
+path="res://.godot/imported/v8_scene_ch2_night.webp-79b195df1669d8c314d9c7bb26986741.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/scenes/v8_scene_ch2_night.webp"
-dest_files=["res://.godot/imported/v8_scene_ch2_night.webp-218e6b628a13293f077526ea808e7876.ctex"]
+dest_files=["res://.godot/imported/v8_scene_ch2_night.webp-79b195df1669d8c314d9c7bb26986741.ctex"]
 
 [params]
 

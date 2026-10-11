@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dvgxgvvyuthj2"
-path="res://.godot/imported/menu_backdrop.webp-30460e431f874b59b354ca250411de1e.ctex"
+path="res://.godot/imported/menu_backdrop.webp-335b265fc4a0f568c5b0b8dc2751816e.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/menu_backdrop.webp"
-dest_files=["res://.godot/imported/menu_backdrop.webp-30460e431f874b59b354ca250411de1e.ctex"]
+dest_files=["res://.godot/imported/menu_backdrop.webp-335b265fc4a0f568c5b0b8dc2751816e.ctex"]
 
 [params]
 

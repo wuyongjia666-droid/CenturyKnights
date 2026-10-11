@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://qtkc8kvg7tudd"
-path="res://.godot/imported/v87_item_irongorge_sword_1.webp-33c0fa5e7108128f7fe403d3715319a6.ctex"
+uid="uid://bdwuvc7gx1dcb"
+path="res://.godot/imported/v87_item_irongorge_sword_1.webp-7822729d29c29dd39a70a5a222888c05.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_irongorge_sword_1.webp"
-dest_files=["res://.godot/imported/v87_item_irongorge_sword_1.webp-33c0fa5e7108128f7fe403d3715319a6.ctex"]
+dest_files=["res://.godot/imported/v87_item_irongorge_sword_1.webp-7822729d29c29dd39a70a5a222888c05.ctex"]
 
 [params]
 

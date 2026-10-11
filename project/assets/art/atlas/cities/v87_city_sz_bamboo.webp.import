@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://wp4ynk3q52rkh"
-path="res://.godot/imported/v87_city_sz_bamboo.webp-9b596fccb065f724e5355ba7ad46e719.ctex"
+uid="uid://de3mpbiic2ern"
+path="res://.godot/imported/v87_city_sz_bamboo.webp-28e4312df3c14d199b2298b44a22abd8.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/cities/v87_city_sz_bamboo.webp"
-dest_files=["res://.godot/imported/v87_city_sz_bamboo.webp-9b596fccb065f724e5355ba7ad46e719.ctex"]
+dest_files=["res://.godot/imported/v87_city_sz_bamboo.webp-28e4312df3c14d199b2298b44a22abd8.ctex"]
 
 [params]
 

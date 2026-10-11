@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://wxjdt6mtcqzma"
-path="res://.godot/imported/v92_estate_lantern_g5.webp-6ef9908012bdbafd392172118cb8f8c5.ctex"
+uid="uid://dmh0vv1kiqmtg"
+path="res://.godot/imported/v92_estate_lantern_g5.webp-477da35ee04591ba1bd7bc39f96fdcd8.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/estates/v92_estate_lantern_g5.webp"
-dest_files=["res://.godot/imported/v92_estate_lantern_g5.webp-6ef9908012bdbafd392172118cb8f8c5.ctex"]
+dest_files=["res://.godot/imported/v92_estate_lantern_g5.webp-477da35ee04591ba1bd7bc39f96fdcd8.ctex"]
 
 [params]
 

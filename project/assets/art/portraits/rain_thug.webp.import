@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ywr55pcqsf67"
-path="res://.godot/imported/rain_thug.webp-14d9fc8206087b17fed4a3e81f4fae5d.ctex"
+path="res://.godot/imported/rain_thug.webp-77a1dadcfe528e41c6fe65d5b6e36014.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/rain_thug.webp"
-dest_files=["res://.godot/imported/rain_thug.webp-14d9fc8206087b17fed4a3e81f4fae5d.ctex"]
+dest_files=["res://.godot/imported/rain_thug.webp-77a1dadcfe528e41c6fe65d5b6e36014.ctex"]
 
 [params]
 

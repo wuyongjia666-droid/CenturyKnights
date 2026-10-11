@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cqn5m0rs3x52w"
-path="res://.godot/imported/v92_fallback_lt_docks.webp-561ac0fb6c217e17ec2a27d58f48328b.ctex"
+path="res://.godot/imported/v92_fallback_lt_docks.webp-fe6487bd36d19c3e691dd53cf17ebdc3.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/cities/v92_fallback_lt_docks.webp"
-dest_files=["res://.godot/imported/v92_fallback_lt_docks.webp-561ac0fb6c217e17ec2a27d58f48328b.ctex"]
+dest_files=["res://.godot/imported/v92_fallback_lt_docks.webp-fe6487bd36d19c3e691dd53cf17ebdc3.ctex"]
 
 [params]
 

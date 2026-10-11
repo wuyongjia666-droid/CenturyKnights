@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://28no5b8mc05y"
-path="res://.godot/imported/v8_battle_biome_harbor.webp-b69e14f69991e956f1b1c905f1280ab1.ctex"
+path="res://.godot/imported/v8_battle_biome_harbor.webp-75efba97adbd1dd0ab56e9e00e07d948.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/battle/v8_battle_biome_harbor.webp"
-dest_files=["res://.godot/imported/v8_battle_biome_harbor.webp-b69e14f69991e956f1b1c905f1280ab1.ctex"]
+dest_files=["res://.godot/imported/v8_battle_biome_harbor.webp-75efba97adbd1dd0ab56e9e00e07d948.ctex"]
 
 [params]
 

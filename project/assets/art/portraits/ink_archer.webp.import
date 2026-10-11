@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c5rpp1pbvt1m2"
-path="res://.godot/imported/ink_archer.webp-4e490f2ce50137e83908fec5b3a40a08.ctex"
+path="res://.godot/imported/ink_archer.webp-fcacc0a6555a9f0cb83605347ee76790.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/ink_archer.webp"
-dest_files=["res://.godot/imported/ink_archer.webp-4e490f2ce50137e83908fec5b3a40a08.ctex"]
+dest_files=["res://.godot/imported/ink_archer.webp-fcacc0a6555a9f0cb83605347ee76790.ctex"]
 
 [params]
 

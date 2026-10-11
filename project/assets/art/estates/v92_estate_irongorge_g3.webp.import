@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://2zmqt4asphbhx"
-path="res://.godot/imported/v92_estate_irongorge_g3.webp-2ae1876dabeeeb98ce074668f944ea4b.ctex"
+uid="uid://xrnppt1q156l"
+path="res://.godot/imported/v92_estate_irongorge_g3.webp-b24c2d617a53cf54297477e2c3f26b9f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/estates/v92_estate_irongorge_g3.webp"
-dest_files=["res://.godot/imported/v92_estate_irongorge_g3.webp-2ae1876dabeeeb98ce074668f944ea4b.ctex"]
+dest_files=["res://.godot/imported/v92_estate_irongorge_g3.webp-b24c2d617a53cf54297477e2c3f26b9f.ctex"]
 
 [params]
 

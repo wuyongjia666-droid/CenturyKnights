@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://4mi14af02ary"
-path="res://.godot/imported/scar_cheek_l.webp-c479b52d019d27682e6a0dd0bc8b6f6d.ctex"
+path="res://.godot/imported/scar_cheek_l.webp-1ab8136082c2111d7331eb5ad2d3e48c.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,13 +11,13 @@ metadata={
 [deps]
 
 source_file="res://assets/art/doll/river_ward_f/scar_cheek_l.webp"
-dest_files=["res://.godot/imported/scar_cheek_l.webp-c479b52d019d27682e6a0dd0bc8b6f6d.ctex"]
+dest_files=["res://.godot/imported/scar_cheek_l.webp-1ab8136082c2111d7331eb5ad2d3e48c.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
-compress/lossy_quality=0.70
+compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://drjfcuho3y65c"
-path="res://.godot/imported/scar_chin.webp-403da6f36a4d9249486996d9e212b426.ctex"
+path="res://.godot/imported/scar_chin.webp-f46a85c3288d9f41dbae3a2e24e32a23.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,13 +11,13 @@ metadata={
 [deps]
 
 source_file="res://assets/art/doll/river_ward_m/scar_chin.webp"
-dest_files=["res://.godot/imported/scar_chin.webp-403da6f36a4d9249486996d9e212b426.ctex"]
+dest_files=["res://.godot/imported/scar_chin.webp-f46a85c3288d9f41dbae3a2e24e32a23.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
-compress/lossy_quality=0.70
+compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

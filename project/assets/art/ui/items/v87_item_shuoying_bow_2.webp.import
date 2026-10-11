@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://nnp82dwh62tvk"
-path="res://.godot/imported/v87_item_shuoying_bow_2.webp-eb6fcfa81dbd325be98a3531f9b0d669.ctex"
+uid="uid://b2ina65qig7ma"
+path="res://.godot/imported/v87_item_shuoying_bow_2.webp-8bf79735c3962ae3faaba9461ccde207.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_shuoying_bow_2.webp"
-dest_files=["res://.godot/imported/v87_item_shuoying_bow_2.webp-eb6fcfa81dbd325be98a3531f9b0d669.ctex"]
+dest_files=["res://.godot/imported/v87_item_shuoying_bow_2.webp-8bf79735c3962ae3faaba9461ccde207.ctex"]
 
 [params]
 

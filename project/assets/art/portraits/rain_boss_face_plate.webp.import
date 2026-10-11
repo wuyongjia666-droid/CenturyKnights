@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://4ub3l74dwmpb"
-path="res://.godot/imported/rain_boss_face_plate.webp-6e4d2cace13581ebe780b608d978cd7c.ctex"
+path="res://.godot/imported/rain_boss_face_plate.webp-96950caf841c57a53d2619e388f7edec.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/rain_boss_face_plate.webp"
-dest_files=["res://.godot/imported/rain_boss_face_plate.webp-6e4d2cace13581ebe780b608d978cd7c.ctex"]
+dest_files=["res://.godot/imported/rain_boss_face_plate.webp-96950caf841c57a53d2619e388f7edec.ctex"]
 
 [params]
 

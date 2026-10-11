@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://einhn9h25ce4m"
-path="res://.godot/imported/v87_item_lantern_crossbow_2.webp-d268279c07fff6f08c75dce5b6a56b83.ctex"
+uid="uid://m8l27ktk4jdu"
+path="res://.godot/imported/v87_item_lantern_crossbow_2.webp-00a0737cebdd73456630819f6a91b46f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_lantern_crossbow_2.webp"
-dest_files=["res://.godot/imported/v87_item_lantern_crossbow_2.webp-d268279c07fff6f08c75dce5b6a56b83.ctex"]
+dest_files=["res://.godot/imported/v87_item_lantern_crossbow_2.webp-00a0737cebdd73456630819f6a91b46f.ctex"]
 
 [params]
 

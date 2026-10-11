@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://8mpkqtemhysrz"
-path="res://.godot/imported/v87_item_starriver_spear_2.webp-3ac807438330c622c21b894523b97dc1.ctex"
+uid="uid://cpgl1d1lydspv"
+path="res://.godot/imported/v87_item_starriver_spear_2.webp-ed2dfa522694e7082e63444a975766c1.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_starriver_spear_2.webp"
-dest_files=["res://.godot/imported/v87_item_starriver_spear_2.webp-3ac807438330c622c21b894523b97dc1.ctex"]
+dest_files=["res://.godot/imported/v87_item_starriver_spear_2.webp-ed2dfa522694e7082e63444a975766c1.ctex"]
 
 [params]
 

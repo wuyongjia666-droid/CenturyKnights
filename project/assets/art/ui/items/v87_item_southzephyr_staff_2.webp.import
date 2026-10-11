@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ey59fxny39kxk"
-path="res://.godot/imported/v87_item_southzephyr_staff_2.webp-66d675fa7334f5c09c745913c5e0edb1.ctex"
+uid="uid://4retvqqj2o6s"
+path="res://.godot/imported/v87_item_southzephyr_staff_2.webp-dbd8561e6a7c28d3115e8176c81fb810.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_southzephyr_staff_2.webp"
-dest_files=["res://.godot/imported/v87_item_southzephyr_staff_2.webp-66d675fa7334f5c09c745913c5e0edb1.ctex"]
+dest_files=["res://.godot/imported/v87_item_southzephyr_staff_2.webp-dbd8561e6a7c28d3115e8176c81fb810.ctex"]
 
 [params]
 

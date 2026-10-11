@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://wqvfrf2rm7k4"
-path="res://.godot/imported/hair_crop.webp-354824850b20b3e78580f303cf6044a0.ctex"
+path="res://.godot/imported/hair_crop.webp-c744b5564949cb986b270f92827a3818.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,13 +11,13 @@ metadata={
 [deps]
 
 source_file="res://assets/art/doll/frost_crown_m/hair_crop.webp"
-dest_files=["res://.godot/imported/hair_crop.webp-354824850b20b3e78580f303cf6044a0.ctex"]
+dest_files=["res://.godot/imported/hair_crop.webp-c744b5564949cb986b270f92827a3818.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
-compress/lossy_quality=0.70
+compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

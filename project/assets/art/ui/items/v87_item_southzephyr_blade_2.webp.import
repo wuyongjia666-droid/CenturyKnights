@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://j5ydi6kihvx5f"
-path="res://.godot/imported/v87_item_southzephyr_blade_2.webp-7132db80a73c8cd303854e2813e1c2cf.ctex"
+uid="uid://cf5mc2p0dh7mv"
+path="res://.godot/imported/v87_item_southzephyr_blade_2.webp-841b4f37647577b8b6a95b13d325206e.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_southzephyr_blade_2.webp"
-dest_files=["res://.godot/imported/v87_item_southzephyr_blade_2.webp-7132db80a73c8cd303854e2813e1c2cf.ctex"]
+dest_files=["res://.godot/imported/v87_item_southzephyr_blade_2.webp-841b4f37647577b8b6a95b13d325206e.ctex"]
 
 [params]
 

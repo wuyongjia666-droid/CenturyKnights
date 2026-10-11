@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dsmh85etq7i4v"
-path="res://.godot/imported/train_backdrop.webp-65fd808c2f333f721692e2e1031453e0.ctex"
+path="res://.godot/imported/train_backdrop.webp-4bf0950b977c1c7db67659df054ef181.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/train_backdrop.webp"
-dest_files=["res://.godot/imported/train_backdrop.webp-65fd808c2f333f721692e2e1031453e0.ctex"]
+dest_files=["res://.godot/imported/train_backdrop.webp-4bf0950b977c1c7db67659df054ef181.ctex"]
 
 [params]
 

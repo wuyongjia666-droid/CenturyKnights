@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://gjt8y4ps66wsq"
-path="res://.godot/imported/v87_item_ashbanner_bow_2.webp-d7f03bebf02524ba873c1ab9394ce86b.ctex"
+uid="uid://cogee2skmy11y"
+path="res://.godot/imported/v87_item_ashbanner_bow_2.webp-a7d47eb23ee8da54395d1b4e86ca49bb.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_ashbanner_bow_2.webp"
-dest_files=["res://.godot/imported/v87_item_ashbanner_bow_2.webp-d7f03bebf02524ba873c1ab9394ce86b.ctex"]
+dest_files=["res://.godot/imported/v87_item_ashbanner_bow_2.webp-a7d47eb23ee8da54395d1b4e86ca49bb.ctex"]
 
 [params]
 

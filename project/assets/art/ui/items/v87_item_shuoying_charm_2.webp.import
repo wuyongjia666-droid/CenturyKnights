@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://niex3xp92cab4"
-path="res://.godot/imported/v87_item_shuoying_charm_2.webp-d1882163dc4af6462e436c04e7f3da50.ctex"
+uid="uid://bv6dcryjdpm1t"
+path="res://.godot/imported/v87_item_shuoying_charm_2.webp-d82d18148365e3c546b80551060d5263.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_shuoying_charm_2.webp"
-dest_files=["res://.godot/imported/v87_item_shuoying_charm_2.webp-d1882163dc4af6462e436c04e7f3da50.ctex"]
+dest_files=["res://.godot/imported/v87_item_shuoying_charm_2.webp-d82d18148365e3c546b80551060d5263.ctex"]
 
 [params]
 

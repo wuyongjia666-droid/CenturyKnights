@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://zgc68vmjiztyf"
-path="res://.godot/imported/v87_item_qinghe_charm_2.webp-20cd586ada700719d88add977deece2d.ctex"
+uid="uid://b8vypj304slft"
+path="res://.godot/imported/v87_item_qinghe_charm_2.webp-ec832584558a5984f73f00b4543e25aa.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_qinghe_charm_2.webp"
-dest_files=["res://.godot/imported/v87_item_qinghe_charm_2.webp-20cd586ada700719d88add977deece2d.ctex"]
+dest_files=["res://.godot/imported/v87_item_qinghe_charm_2.webp-ec832584558a5984f73f00b4543e25aa.ctex"]
 
 [params]
 

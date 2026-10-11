@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://0ydc3xtm10rg"
-path="res://.godot/imported/relay_archer.webp-4045f5ed423a35b299c23d60742a8285.ctex"
+path="res://.godot/imported/relay_archer.webp-4881ca40fbba4999fc3a4b2496f4da39.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/relay_archer.webp"
-dest_files=["res://.godot/imported/relay_archer.webp-4045f5ed423a35b299c23d60742a8285.ctex"]
+dest_files=["res://.godot/imported/relay_archer.webp-4881ca40fbba4999fc3a4b2496f4da39.ctex"]
 
 [params]
 

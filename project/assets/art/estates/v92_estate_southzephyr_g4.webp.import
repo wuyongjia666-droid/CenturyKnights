@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ewh4y23d4sa9v"
-path="res://.godot/imported/v92_estate_southzephyr_g4.webp-2e6f2c662a3244f014169fef7ffce080.ctex"
+uid="uid://13ae054klfi4"
+path="res://.godot/imported/v92_estate_southzephyr_g4.webp-a990d96d102a901cef4ef8ed13a0f894.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/estates/v92_estate_southzephyr_g4.webp"
-dest_files=["res://.godot/imported/v92_estate_southzephyr_g4.webp-2e6f2c662a3244f014169fef7ffce080.ctex"]
+dest_files=["res://.godot/imported/v92_estate_southzephyr_g4.webp-a990d96d102a901cef4ef8ed13a0f894.ctex"]
 
 [params]
 

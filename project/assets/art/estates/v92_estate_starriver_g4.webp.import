@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://zgyd6qb4hnqqi"
-path="res://.godot/imported/v92_estate_starriver_g4.webp-0f7ed01e2f013b81cd12f1eedbdc4d8d.ctex"
+uid="uid://cai5nesl3gh6w"
+path="res://.godot/imported/v92_estate_starriver_g4.webp-43ba97ce161bbb11d843272050862994.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/estates/v92_estate_starriver_g4.webp"
-dest_files=["res://.godot/imported/v92_estate_starriver_g4.webp-0f7ed01e2f013b81cd12f1eedbdc4d8d.ctex"]
+dest_files=["res://.godot/imported/v92_estate_starriver_g4.webp-43ba97ce161bbb11d843272050862994.ctex"]
 
 [params]
 

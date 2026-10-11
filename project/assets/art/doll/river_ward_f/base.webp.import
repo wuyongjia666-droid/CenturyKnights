@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dlqiijg4cfecm"
-path="res://.godot/imported/base.webp-b8900b206bff9af99d8df76c5d564733.ctex"
+path="res://.godot/imported/base.webp-a8cb2cb827b38af3538809bd1bac1f53.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,13 +11,13 @@ metadata={
 [deps]
 
 source_file="res://assets/art/doll/river_ward_f/base.webp"
-dest_files=["res://.godot/imported/base.webp-b8900b206bff9af99d8df76c5d564733.ctex"]
+dest_files=["res://.godot/imported/base.webp-a8cb2cb827b38af3538809bd1bac1f53.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
-compress/lossy_quality=0.70
+compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

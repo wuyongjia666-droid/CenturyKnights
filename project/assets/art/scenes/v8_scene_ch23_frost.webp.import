@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bumcy5v7dxxdb"
-path="res://.godot/imported/v8_scene_ch23_frost.webp-41b3ff6d89343a50d80d35045f14df52.ctex"
+path="res://.godot/imported/v8_scene_ch23_frost.webp-65de4557df42f9b39faf3a9393458e9c.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/scenes/v8_scene_ch23_frost.webp"
-dest_files=["res://.godot/imported/v8_scene_ch23_frost.webp-41b3ff6d89343a50d80d35045f14df52.ctex"]
+dest_files=["res://.godot/imported/v8_scene_ch23_frost.webp-65de4557df42f9b39faf3a9393458e9c.ctex"]
 
 [params]
 

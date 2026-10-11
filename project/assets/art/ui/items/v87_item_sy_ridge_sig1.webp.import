@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://7382xinzyiryx"
-path="res://.godot/imported/v87_item_sy_ridge_sig1.webp-ca621611622ed0dc3e11140ae3632c05.ctex"
+uid="uid://b6y372b0gvrwt"
+path="res://.godot/imported/v87_item_sy_ridge_sig1.webp-89dcb805856190fb1a4dfce5cf73029b.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_sy_ridge_sig1.webp"
-dest_files=["res://.godot/imported/v87_item_sy_ridge_sig1.webp-ca621611622ed0dc3e11140ae3632c05.ctex"]
+dest_files=["res://.godot/imported/v87_item_sy_ridge_sig1.webp-89dcb805856190fb1a4dfce5cf73029b.ctex"]
 
 [params]
 

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bnwg4nkxkrcpj"
-path="res://.godot/imported/escort_boss_face_plate.webp-f85887bd3cf080242e981ef3aae2efd1.ctex"
+path="res://.godot/imported/escort_boss_face_plate.webp-fd088c11b9a4eaf29bae62894b118a56.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/escort_boss_face_plate.webp"
-dest_files=["res://.godot/imported/escort_boss_face_plate.webp-f85887bd3cf080242e981ef3aae2efd1.ctex"]
+dest_files=["res://.godot/imported/escort_boss_face_plate.webp-fd088c11b9a4eaf29bae62894b118a56.ctex"]
 
 [params]
 

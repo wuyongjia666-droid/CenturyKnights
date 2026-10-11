@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://krw7t23pbymvd"
-path="res://.godot/imported/v87_item_sr_nw_sig2.webp-ae6c882c148426ce298c18168b9a05bc.ctex"
+uid="uid://c14hnx866kvdt"
+path="res://.godot/imported/v87_item_sr_nw_sig2.webp-e1fffaad9470d758c01ac3a10bb8538d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_sr_nw_sig2.webp"
-dest_files=["res://.godot/imported/v87_item_sr_nw_sig2.webp-ae6c882c148426ce298c18168b9a05bc.ctex"]
+dest_files=["res://.godot/imported/v87_item_sr_nw_sig2.webp-e1fffaad9470d758c01ac3a10bb8538d.ctex"]
 
 [params]
 

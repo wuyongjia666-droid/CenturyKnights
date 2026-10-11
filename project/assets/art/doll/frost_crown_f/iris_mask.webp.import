@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cviasef8yq208"
-path="res://.godot/imported/iris_mask.webp-6b874ed42665bce5b435f9326d6fe584.ctex"
+path="res://.godot/imported/iris_mask.webp-210bbab34a130854e8b712478fd747f0.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,13 +11,13 @@ metadata={
 [deps]
 
 source_file="res://assets/art/doll/frost_crown_f/iris_mask.webp"
-dest_files=["res://.godot/imported/iris_mask.webp-6b874ed42665bce5b435f9326d6fe584.ctex"]
+dest_files=["res://.godot/imported/iris_mask.webp-210bbab34a130854e8b712478fd747f0.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
-compress/lossy_quality=0.70
+compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://duaner88w6ula"
-path="res://.godot/imported/flute_thug.webp-b8c501e308a001c5d785aad792677105.ctex"
+path="res://.godot/imported/flute_thug.webp-645d9f457b4b2987ae990b84f0a2b8a1.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/flute_thug.webp"
-dest_files=["res://.godot/imported/flute_thug.webp-b8c501e308a001c5d785aad792677105.ctex"]
+dest_files=["res://.godot/imported/flute_thug.webp-645d9f457b4b2987ae990b84f0a2b8a1.ctex"]
 
 [params]
 

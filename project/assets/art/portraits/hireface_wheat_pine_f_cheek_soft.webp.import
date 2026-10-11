@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bf4sb368caumh"
-path="res://.godot/imported/hireface_wheat_pine_f_cheek_soft.webp-c87df2c267687da548070076db392deb.ctex"
+path="res://.godot/imported/hireface_wheat_pine_f_cheek_soft.webp-362febe59f5ccfe6b7d192037a675f4f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/hireface_wheat_pine_f_cheek_soft.webp"
-dest_files=["res://.godot/imported/hireface_wheat_pine_f_cheek_soft.webp-c87df2c267687da548070076db392deb.ctex"]
+dest_files=["res://.godot/imported/hireface_wheat_pine_f_cheek_soft.webp-362febe59f5ccfe6b7d192037a675f4f.ctex"]
 
 [params]
 

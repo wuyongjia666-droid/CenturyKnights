@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6qr3dhiur9fvf"
-path="res://.godot/imported/v87_item_sz_vine_sig1.webp-f0f22b6cc5bb12e5a8ee83aa3c998c6a.ctex"
+uid="uid://ti4m05uanftb"
+path="res://.godot/imported/v87_item_sz_vine_sig1.webp-14cd08b1334269b4cd2fbe39565e0aa9.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_sz_vine_sig1.webp"
-dest_files=["res://.godot/imported/v87_item_sz_vine_sig1.webp-f0f22b6cc5bb12e5a8ee83aa3c998c6a.ctex"]
+dest_files=["res://.godot/imported/v87_item_sz_vine_sig1.webp-14cd08b1334269b4cd2fbe39565e0aa9.ctex"]
 
 [params]
 

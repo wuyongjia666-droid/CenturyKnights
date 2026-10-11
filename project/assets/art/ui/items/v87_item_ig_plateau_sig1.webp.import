@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://kdpjnnsfphu5g"
-path="res://.godot/imported/v87_item_ig_plateau_sig1.webp-88ad60989f001e27314991b7ae701a12.ctex"
+uid="uid://cmvshjxwk24mw"
+path="res://.godot/imported/v87_item_ig_plateau_sig1.webp-c809ce3b6dfd74d2385792869062d0eb.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_ig_plateau_sig1.webp"
-dest_files=["res://.godot/imported/v87_item_ig_plateau_sig1.webp-88ad60989f001e27314991b7ae701a12.ctex"]
+dest_files=["res://.godot/imported/v87_item_ig_plateau_sig1.webp-c809ce3b6dfd74d2385792869062d0eb.ctex"]
 
 [params]
 

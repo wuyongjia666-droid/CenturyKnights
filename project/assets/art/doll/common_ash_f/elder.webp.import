@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cqw14sphbd6yb"
-path="res://.godot/imported/elder.webp-bbc473d8b430d1cf993cc5cdb265f3e7.ctex"
+path="res://.godot/imported/elder.webp-db9fec777c2ba1b8d63d2146d02f590b.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,13 +11,13 @@ metadata={
 [deps]
 
 source_file="res://assets/art/doll/common_ash_f/elder.webp"
-dest_files=["res://.godot/imported/elder.webp-bbc473d8b430d1cf993cc5cdb265f3e7.ctex"]
+dest_files=["res://.godot/imported/elder.webp-db9fec777c2ba1b8d63d2146d02f590b.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
-compress/lossy_quality=0.70
+compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ihpubt73wdmex"
-path="res://.godot/imported/v87_city_sz_harbor.webp-4a7520420e4cfc9873ec8bb66b9b7c62.ctex"
+uid="uid://qv34qelrxuvf"
+path="res://.godot/imported/v87_city_sz_harbor.webp-bd01d0e9c5cba3382a0b08c5e5f0a3f3.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/cities/v87_city_sz_harbor.webp"
-dest_files=["res://.godot/imported/v87_city_sz_harbor.webp-4a7520420e4cfc9873ec8bb66b9b7c62.ctex"]
+dest_files=["res://.godot/imported/v87_city_sz_harbor.webp-bd01d0e9c5cba3382a0b08c5e5f0a3f3.ctex"]
 
 [params]
 

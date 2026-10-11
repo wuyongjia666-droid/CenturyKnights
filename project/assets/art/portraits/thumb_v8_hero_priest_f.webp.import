@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b2hr8xl7iy1av"
-path="res://.godot/imported/thumb_v8_hero_priest_f.webp-9e4f3862612ac7974c0ac3b3d01562d5.ctex"
+path="res://.godot/imported/thumb_v8_hero_priest_f.webp-74bc095cb722c4511a465bcc93bb4dfe.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/thumb_v8_hero_priest_f.webp"
-dest_files=["res://.godot/imported/thumb_v8_hero_priest_f.webp-9e4f3862612ac7974c0ac3b3d01562d5.ctex"]
+dest_files=["res://.godot/imported/thumb_v8_hero_priest_f.webp-74bc095cb722c4511a465bcc93bb4dfe.ctex"]
 
 [params]
 

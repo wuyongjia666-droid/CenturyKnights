@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://iqz38c899w59y"
-path="res://.godot/imported/v92_castle_barracks_t1.webp-097009f11254a990a0fcdfd908b3c4cc.ctex"
+uid="uid://07d18fr5jfrg"
+path="res://.godot/imported/v92_castle_barracks_t1.webp-a9f507d40b95d1cbb6b6ea36d9939025.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/castle/v92_castle_barracks_t1.webp"
-dest_files=["res://.godot/imported/v92_castle_barracks_t1.webp-097009f11254a990a0fcdfd908b3c4cc.ctex"]
+dest_files=["res://.godot/imported/v92_castle_barracks_t1.webp-a9f507d40b95d1cbb6b6ea36d9939025.ctex"]
 
 [params]
 

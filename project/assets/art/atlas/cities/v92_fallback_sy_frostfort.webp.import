@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bppequn86rogi"
-path="res://.godot/imported/v92_fallback_sy_frostfort.webp-73204c51935cab4324563a1749fab1b6.ctex"
+path="res://.godot/imported/v92_fallback_sy_frostfort.webp-b5e97a721d1fc05791103c9b70de7f85.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/cities/v92_fallback_sy_frostfort.webp"
-dest_files=["res://.godot/imported/v92_fallback_sy_frostfort.webp-73204c51935cab4324563a1749fab1b6.ctex"]
+dest_files=["res://.godot/imported/v92_fallback_sy_frostfort.webp-b5e97a721d1fc05791103c9b70de7f85.ctex"]
 
 [params]
 

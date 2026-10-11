@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c7b27176p200k"
-path="res://.godot/imported/hair_pony.webp-413d9f2c9de8981e92ec41249a44d78b.ctex"
+path="res://.godot/imported/hair_pony.webp-5b74d6336fe9b1a57e877d6db201a971.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,13 +11,13 @@ metadata={
 [deps]
 
 source_file="res://assets/art/doll/common_ash_f/hair_pony.webp"
-dest_files=["res://.godot/imported/hair_pony.webp-413d9f2c9de8981e92ec41249a44d78b.ctex"]
+dest_files=["res://.godot/imported/hair_pony.webp-5b74d6336fe9b1a57e877d6db201a971.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
-compress/lossy_quality=0.70
+compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

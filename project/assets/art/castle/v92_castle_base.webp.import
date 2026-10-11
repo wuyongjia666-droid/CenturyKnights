@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://hicwjztiwyf4x"
-path="res://.godot/imported/v92_castle_base.webp-b9c91abcebe1614997af1ebb5441e410.ctex"
+uid="uid://dmw1xxwadrkd6"
+path="res://.godot/imported/v92_castle_base.webp-ae8b001f70aa174b4d80b4852f08a38d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/castle/v92_castle_base.webp"
-dest_files=["res://.godot/imported/v92_castle_base.webp-b9c91abcebe1614997af1ebb5441e410.ctex"]
+dest_files=["res://.godot/imported/v92_castle_base.webp-ae8b001f70aa174b4d80b4852f08a38d.ctex"]
 
 [params]
 

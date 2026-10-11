@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cb53y2cd37g2x"
-path="res://.godot/imported/hireface_wheat_river_blue_m_none_straight.webp-aef6ffd75a7e065c526a90514eb526bf.ctex"
+path="res://.godot/imported/hireface_wheat_river_blue_m_none_straight.webp-f5d616213fbbf5cda80b47389ee751ca.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/hireface_wheat_river_blue_m_none_straight.webp"
-dest_files=["res://.godot/imported/hireface_wheat_river_blue_m_none_straight.webp-aef6ffd75a7e065c526a90514eb526bf.ctex"]
+dest_files=["res://.godot/imported/hireface_wheat_river_blue_m_none_straight.webp-f5d616213fbbf5cda80b47389ee751ca.ctex"]
 
 [params]
 

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://out032g3f0jd"
-path="res://.godot/imported/incense_archer.webp-f801808e899c1faf5ef557fa08999c62.ctex"
+path="res://.godot/imported/incense_archer.webp-8e350527544495905f61f8a72984c5a3.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/incense_archer.webp"
-dest_files=["res://.godot/imported/incense_archer.webp-f801808e899c1faf5ef557fa08999c62.ctex"]
+dest_files=["res://.godot/imported/incense_archer.webp-8e350527544495905f61f8a72984c5a3.ctex"]
 
 [params]
 

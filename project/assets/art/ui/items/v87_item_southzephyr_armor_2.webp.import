@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://yedrei2g9waaq"
-path="res://.godot/imported/v87_item_southzephyr_armor_2.webp-18887e0d8c50dbfc58fc91c64d95409d.ctex"
+uid="uid://6wjt6jxvo0p5"
+path="res://.godot/imported/v87_item_southzephyr_armor_2.webp-ef72b948615f442caf87d7ab7b99e380.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_southzephyr_armor_2.webp"
-dest_files=["res://.godot/imported/v87_item_southzephyr_armor_2.webp-18887e0d8c50dbfc58fc91c64d95409d.ctex"]
+dest_files=["res://.godot/imported/v87_item_southzephyr_armor_2.webp-ef72b948615f442caf87d7ab7b99e380.ctex"]
 
 [params]
 

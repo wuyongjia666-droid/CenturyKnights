@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d1cwvyfw0iclr"
-path="res://.godot/imported/militia_b_face_plate.webp-2b3ba02f75c53872f02cdff73ee9ed97.ctex"
+path="res://.godot/imported/militia_b_face_plate.webp-583e5c5ed5f09d842e645b6833dd7d4b.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/militia_b_face_plate.webp"
-dest_files=["res://.godot/imported/militia_b_face_plate.webp-2b3ba02f75c53872f02cdff73ee9ed97.ctex"]
+dest_files=["res://.godot/imported/militia_b_face_plate.webp-583e5c5ed5f09d842e645b6833dd7d4b.ctex"]
 
 [params]
 

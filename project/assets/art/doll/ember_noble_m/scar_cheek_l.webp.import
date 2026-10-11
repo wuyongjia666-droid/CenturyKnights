@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cutp0u42vimnl"
-path="res://.godot/imported/scar_cheek_l.webp-99d8d0ed4f7ea4ed710df732c53a8af0.ctex"
+path="res://.godot/imported/scar_cheek_l.webp-23d43d943cb8f39787419f3d27282b82.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,13 +11,13 @@ metadata={
 [deps]
 
 source_file="res://assets/art/doll/ember_noble_m/scar_cheek_l.webp"
-dest_files=["res://.godot/imported/scar_cheek_l.webp-99d8d0ed4f7ea4ed710df732c53a8af0.ctex"]
+dest_files=["res://.godot/imported/scar_cheek_l.webp-23d43d943cb8f39787419f3d27282b82.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
-compress/lossy_quality=0.70
+compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

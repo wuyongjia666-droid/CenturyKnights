@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bxwws6rkhokty"
-path="res://.godot/imported/hireface_frost_silver_amber_f_none_arch.webp-8478ff9bca032a0133240a18413197cc.ctex"
+path="res://.godot/imported/hireface_frost_silver_amber_f_none_arch.webp-ec7dd77c9723ee670adc9a905b0659d7.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/hireface_frost_silver_amber_f_none_arch.webp"
-dest_files=["res://.godot/imported/hireface_frost_silver_amber_f_none_arch.webp-8478ff9bca032a0133240a18413197cc.ctex"]
+dest_files=["res://.godot/imported/hireface_frost_silver_amber_f_none_arch.webp-ec7dd77c9723ee670adc9a905b0659d7.ctex"]
 
 [params]
 

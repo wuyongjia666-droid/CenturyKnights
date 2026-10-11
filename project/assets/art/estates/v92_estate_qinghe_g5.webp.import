@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6egq6te3qvxev"
-path="res://.godot/imported/v92_estate_qinghe_g5.webp-b702afd6a38c1195dc92aab4ce12ae04.ctex"
+uid="uid://g6shd128axcr"
+path="res://.godot/imported/v92_estate_qinghe_g5.webp-987f3c7cd135a1dcdc28520a1027835f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/estates/v92_estate_qinghe_g5.webp"
-dest_files=["res://.godot/imported/v92_estate_qinghe_g5.webp-b702afd6a38c1195dc92aab4ce12ae04.ctex"]
+dest_files=["res://.godot/imported/v92_estate_qinghe_g5.webp-987f3c7cd135a1dcdc28520a1027835f.ctex"]
 
 [params]
 

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bg8phorpl4a2g"
-path="res://.godot/imported/escort_raider.webp-11e4bb79bc49bd49147f4a638065c7ab.ctex"
+path="res://.godot/imported/escort_raider.webp-bad6a8fd8b5cafd678d08ec9c271ca70.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/escort_raider.webp"
-dest_files=["res://.godot/imported/escort_raider.webp-11e4bb79bc49bd49147f4a638065c7ab.ctex"]
+dest_files=["res://.godot/imported/escort_raider.webp-bad6a8fd8b5cafd678d08ec9c271ca70.ctex"]
 
 [params]
 

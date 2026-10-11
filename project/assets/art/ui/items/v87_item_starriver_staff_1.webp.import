@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://aptm8cvhsdnwb"
-path="res://.godot/imported/v87_item_starriver_staff_1.webp-c56a8284d02dd63830e15a16e9b901be.ctex"
+uid="uid://ptm8cvhsdnwb"
+path="res://.godot/imported/v87_item_starriver_staff_1.webp-955b25a19b4a79f34f8c0ec62db975dd.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_starriver_staff_1.webp"
-dest_files=["res://.godot/imported/v87_item_starriver_staff_1.webp-c56a8284d02dd63830e15a16e9b901be.ctex"]
+dest_files=["res://.godot/imported/v87_item_starriver_staff_1.webp-955b25a19b4a79f34f8c0ec62db975dd.ctex"]
 
 [params]
 

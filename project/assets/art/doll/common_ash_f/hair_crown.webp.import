@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cqgxi3fgbo1mq"
-path="res://.godot/imported/hair_crown.webp-0fba05127033a555b8fbd3dda6f9ee20.ctex"
+path="res://.godot/imported/hair_crown.webp-7a3836317954d9b58d38e10c2915eeb4.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,13 +11,13 @@ metadata={
 [deps]
 
 source_file="res://assets/art/doll/common_ash_f/hair_crown.webp"
-dest_files=["res://.godot/imported/hair_crown.webp-0fba05127033a555b8fbd3dda6f9ee20.ctex"]
+dest_files=["res://.godot/imported/hair_crown.webp-7a3836317954d9b58d38e10c2915eeb4.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
-compress/lossy_quality=0.70
+compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

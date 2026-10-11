@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://kfx53x65jwesi"
-path="res://.godot/imported/v87_item_lantern_sword_2.webp-678fd7135d429e89ab3193a1b087013a.ctex"
+uid="uid://co5fwudnfinay"
+path="res://.godot/imported/v87_item_lantern_sword_2.webp-17202d1b114a91984e8b8249a6da662f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_lantern_sword_2.webp"
-dest_files=["res://.godot/imported/v87_item_lantern_sword_2.webp-678fd7135d429e89ab3193a1b087013a.ctex"]
+dest_files=["res://.godot/imported/v87_item_lantern_sword_2.webp-17202d1b114a91984e8b8249a6da662f.ctex"]
 
 [params]
 

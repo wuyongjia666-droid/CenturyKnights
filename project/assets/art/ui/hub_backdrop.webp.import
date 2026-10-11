@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://7nw72bb7sjx1"
-path="res://.godot/imported/hub_backdrop.webp-94363371990fac0ce0b31797f236405b.ctex"
+path="res://.godot/imported/hub_backdrop.webp-24e97e9f0c65b646889013140657a86b.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/hub_backdrop.webp"
-dest_files=["res://.godot/imported/hub_backdrop.webp-94363371990fac0ce0b31797f236405b.ctex"]
+dest_files=["res://.godot/imported/hub_backdrop.webp-24e97e9f0c65b646889013140657a86b.ctex"]
 
 [params]
 

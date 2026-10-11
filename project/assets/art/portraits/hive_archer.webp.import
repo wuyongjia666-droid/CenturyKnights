@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://2hvu5op3b84o"
-path="res://.godot/imported/hive_archer.webp-375b52c59439303e4e1c08066f51fadf.ctex"
+path="res://.godot/imported/hive_archer.webp-07f327fa5b2be89bcfa23e112e44b60d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/hive_archer.webp"
-dest_files=["res://.godot/imported/hive_archer.webp-375b52c59439303e4e1c08066f51fadf.ctex"]
+dest_files=["res://.godot/imported/hive_archer.webp-07f327fa5b2be89bcfa23e112e44b60d.ctex"]
 
 [params]
 

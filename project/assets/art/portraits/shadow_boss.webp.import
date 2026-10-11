@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cbfy5u2pcmvdb"
-path="res://.godot/imported/shadow_boss.webp-e42811eab98125e6f127bd6ca9de1bef.ctex"
+path="res://.godot/imported/shadow_boss.webp-ae4a4ac7cf2901d5860dc684e9ea5f48.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/shadow_boss.webp"
-dest_files=["res://.godot/imported/shadow_boss.webp-e42811eab98125e6f127bd6ca9de1bef.ctex"]
+dest_files=["res://.godot/imported/shadow_boss.webp-ae4a4ac7cf2901d5860dc684e9ea5f48.ctex"]
 
 [params]
 

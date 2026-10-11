@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://fnrrevpzbkpeg"
-path="res://.godot/imported/v87_smith_saltmarsh.webp-ed66c95f5e6cc3ae18979f6993f4e045.ctex"
+uid="uid://bsdvstsqqdtmo"
+path="res://.godot/imported/v87_smith_saltmarsh.webp-7e4616eabf7de0bab487b11f878f1dcc.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/smiths/v87_smith_saltmarsh.webp"
-dest_files=["res://.godot/imported/v87_smith_saltmarsh.webp-ed66c95f5e6cc3ae18979f6993f4e045.ctex"]
+dest_files=["res://.godot/imported/v87_smith_saltmarsh.webp-7e4616eabf7de0bab487b11f878f1dcc.ctex"]
 
 [params]
 

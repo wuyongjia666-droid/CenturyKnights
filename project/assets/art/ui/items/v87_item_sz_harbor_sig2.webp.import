@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://wgqveyde6jmam"
-path="res://.godot/imported/v87_item_sz_harbor_sig2.webp-268b3b4465b897231452a629c2f640cf.ctex"
+uid="uid://c4pjgoq5di8hs"
+path="res://.godot/imported/v87_item_sz_harbor_sig2.webp-800b49b28b85a588d08d2e971cd5cd71.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_sz_harbor_sig2.webp"
-dest_files=["res://.godot/imported/v87_item_sz_harbor_sig2.webp-268b3b4465b897231452a629c2f640cf.ctex"]
+dest_files=["res://.godot/imported/v87_item_sz_harbor_sig2.webp-800b49b28b85a588d08d2e971cd5cd71.ctex"]
 
 [params]
 

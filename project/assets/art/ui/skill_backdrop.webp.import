@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://csgelxli37gap"
-path="res://.godot/imported/skill_backdrop.webp-c6e41650a7d6757e49301f3cb1c383db.ctex"
+path="res://.godot/imported/skill_backdrop.webp-3e74a9897e2d5cbd4f142c2c1fa210cd.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/skill_backdrop.webp"
-dest_files=["res://.godot/imported/skill_backdrop.webp-c6e41650a7d6757e49301f3cb1c383db.ctex"]
+dest_files=["res://.godot/imported/skill_backdrop.webp-3e74a9897e2d5cbd4f142c2c1fa210cd.ctex"]
 
 [params]
 

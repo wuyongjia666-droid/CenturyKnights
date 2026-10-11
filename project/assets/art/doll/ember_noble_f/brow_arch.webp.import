@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cg2qr5vmboo6y"
-path="res://.godot/imported/brow_arch.webp-5de48ceb8870f9188ce585468620b768.ctex"
+path="res://.godot/imported/brow_arch.webp-12f438a5f88c8a3038ae123ca15028e2.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,13 +11,13 @@ metadata={
 [deps]
 
 source_file="res://assets/art/doll/ember_noble_f/brow_arch.webp"
-dest_files=["res://.godot/imported/brow_arch.webp-5de48ceb8870f9188ce585468620b768.ctex"]
+dest_files=["res://.godot/imported/brow_arch.webp-12f438a5f88c8a3038ae123ca15028e2.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
-compress/lossy_quality=0.70
+compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

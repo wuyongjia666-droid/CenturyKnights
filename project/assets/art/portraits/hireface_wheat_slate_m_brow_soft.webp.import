@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bq4s6m0ag8afp"
-path="res://.godot/imported/hireface_wheat_slate_m_brow_soft.webp-963deb2ccb2e6831f07da8d4d51073eb.ctex"
+path="res://.godot/imported/hireface_wheat_slate_m_brow_soft.webp-d1399c310ee423d95d8da9361341e6f5.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/hireface_wheat_slate_m_brow_soft.webp"
-dest_files=["res://.godot/imported/hireface_wheat_slate_m_brow_soft.webp-963deb2ccb2e6831f07da8d4d51073eb.ctex"]
+dest_files=["res://.godot/imported/hireface_wheat_slate_m_brow_soft.webp-d1399c310ee423d95d8da9361341e6f5.ctex"]
 
 [params]
 

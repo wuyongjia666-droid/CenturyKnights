@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ck7mc7pvrelxs"
-path="res://.godot/imported/mark_crown_rime.webp-be4fe26fe09584f90400e74574204fac.ctex"
+path="res://.godot/imported/mark_crown_rime.webp-b93ceba42ef05e05f5cdb7eb03dbe52b.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,13 +11,13 @@ metadata={
 [deps]
 
 source_file="res://assets/art/doll/common_ash_f/mark_crown_rime.webp"
-dest_files=["res://.godot/imported/mark_crown_rime.webp-be4fe26fe09584f90400e74574204fac.ctex"]
+dest_files=["res://.godot/imported/mark_crown_rime.webp-b93ceba42ef05e05f5cdb7eb03dbe52b.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
-compress/lossy_quality=0.70
+compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

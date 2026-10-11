@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://mzw25uqkw99c7"
-path="res://.godot/imported/v87_item_ig_tower_sig1.webp-fd8261e163186b2fbfc85e85eddf3eb2.ctex"
+uid="uid://bfpheoys8om2w"
+path="res://.godot/imported/v87_item_ig_tower_sig1.webp-1f54a6190699675057c31a12587158b4.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_ig_tower_sig1.webp"
-dest_files=["res://.godot/imported/v87_item_ig_tower_sig1.webp-fd8261e163186b2fbfc85e85eddf3eb2.ctex"]
+dest_files=["res://.godot/imported/v87_item_ig_tower_sig1.webp-1f54a6190699675057c31a12587158b4.ctex"]
 
 [params]
 

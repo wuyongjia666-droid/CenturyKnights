@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://jq9ihqnv6pkxp"
-path="res://.godot/imported/v92_castle_shrine_t1.webp-b192852b54c1302e3fc9746ecf15b803.ctex"
+uid="uid://b1grbmte2btf6"
+path="res://.godot/imported/v92_castle_shrine_t1.webp-b72a21d0e692470449aad6877f1feeef.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/castle/v92_castle_shrine_t1.webp"
-dest_files=["res://.godot/imported/v92_castle_shrine_t1.webp-b192852b54c1302e3fc9746ecf15b803.ctex"]
+dest_files=["res://.godot/imported/v92_castle_shrine_t1.webp-b72a21d0e692470449aad6877f1feeef.ctex"]
 
 [params]
 

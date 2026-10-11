@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dyus10pj3nkd4"
-path="res://.godot/imported/hire_skirmisher_f_plate.webp-c0ca7af39bd7b4ef4fcd680906a1a8d7.ctex"
+path="res://.godot/imported/hire_skirmisher_f_plate.webp-51bc05f04611321009ad1136dd762b78.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/hire_skirmisher_f_plate.webp"
-dest_files=["res://.godot/imported/hire_skirmisher_f_plate.webp-c0ca7af39bd7b4ef4fcd680906a1a8d7.ctex"]
+dest_files=["res://.godot/imported/hire_skirmisher_f_plate.webp-51bc05f04611321009ad1136dd762b78.ctex"]
 
 [params]
 

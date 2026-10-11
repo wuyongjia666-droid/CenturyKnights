@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cm1vlqigq2vai"
-path="res://.godot/imported/thumb_v8_bust_m_hunter.webp-ba9f27280731dcfc9a62a2f628f5bb0d.ctex"
+path="res://.godot/imported/thumb_v8_bust_m_hunter.webp-b625145b70c6cad095f416f971712cd5.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/thumb_v8_bust_m_hunter.webp"
-dest_files=["res://.godot/imported/thumb_v8_bust_m_hunter.webp-ba9f27280731dcfc9a62a2f628f5bb0d.ctex"]
+dest_files=["res://.godot/imported/thumb_v8_bust_m_hunter.webp-b625145b70c6cad095f416f971712cd5.ctex"]
 
 [params]
 

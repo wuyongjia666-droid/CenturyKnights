@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://heq82ch85njhm"
-path="res://.godot/imported/v87_item_irongorge_armor_3.webp-0fa7c671787edb1aa80b0e56042eab16.ctex"
+uid="uid://djdehak0lgnpu"
+path="res://.godot/imported/v87_item_irongorge_armor_3.webp-c0c54d0ecf95ecfac6e34d90db6fb402.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_irongorge_armor_3.webp"
-dest_files=["res://.godot/imported/v87_item_irongorge_armor_3.webp-0fa7c671787edb1aa80b0e56042eab16.ctex"]
+dest_files=["res://.godot/imported/v87_item_irongorge_armor_3.webp-c0c54d0ecf95ecfac6e34d90db6fb402.ctex"]
 
 [params]
 

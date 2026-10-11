@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://wjm5zhkn9692e"
-path="res://.godot/imported/v87_city_sz_temple.webp-823da513ef00614c36de0b53e0f79f73.ctex"
+uid="uid://c7ls16yfg6wak"
+path="res://.godot/imported/v87_city_sz_temple.webp-c972b2c2eca16e47502f52fb17fc261d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/cities/v87_city_sz_temple.webp"
-dest_files=["res://.godot/imported/v87_city_sz_temple.webp-823da513ef00614c36de0b53e0f79f73.ctex"]
+dest_files=["res://.godot/imported/v87_city_sz_temple.webp-c972b2c2eca16e47502f52fb17fc261d.ctex"]
 
 [params]
 

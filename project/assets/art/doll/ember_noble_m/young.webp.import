@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dxtw0gjdqnwko"
-path="res://.godot/imported/young.webp-2e389452e24e3d1c1b706e9810dffbd4.ctex"
+path="res://.godot/imported/young.webp-6434dacba1f3cb073e807476ce56556d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,13 +11,13 @@ metadata={
 [deps]
 
 source_file="res://assets/art/doll/ember_noble_m/young.webp"
-dest_files=["res://.godot/imported/young.webp-2e389452e24e3d1c1b706e9810dffbd4.ctex"]
+dest_files=["res://.godot/imported/young.webp-6434dacba1f3cb073e807476ce56556d.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
-compress/lossy_quality=0.70
+compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

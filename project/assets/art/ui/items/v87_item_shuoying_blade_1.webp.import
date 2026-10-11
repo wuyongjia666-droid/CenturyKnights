@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://z3ghjbqi49kwa"
-path="res://.godot/imported/v87_item_shuoying_blade_1.webp-45882b124d1318d5d0992565753b0c85.ctex"
+uid="uid://cvy8yx70q2cdo"
+path="res://.godot/imported/v87_item_shuoying_blade_1.webp-5b327dff157695e1b06d6c5e42749239.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_shuoying_blade_1.webp"
-dest_files=["res://.godot/imported/v87_item_shuoying_blade_1.webp-45882b124d1318d5d0992565753b0c85.ctex"]
+dest_files=["res://.godot/imported/v87_item_shuoying_blade_1.webp-5b327dff157695e1b06d6c5e42749239.ctex"]
 
 [params]
 

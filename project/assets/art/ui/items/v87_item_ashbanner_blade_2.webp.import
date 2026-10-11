@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://mqwsnw3kjq2pt"
-path="res://.godot/imported/v87_item_ashbanner_blade_2.webp-1a7d4c35079839157d3f828620f85724.ctex"
+uid="uid://5o6vrcst5ggj"
+path="res://.godot/imported/v87_item_ashbanner_blade_2.webp-4da31e97f6c80092f9b14fee7b32a95a.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_ashbanner_blade_2.webp"
-dest_files=["res://.godot/imported/v87_item_ashbanner_blade_2.webp-1a7d4c35079839157d3f828620f85724.ctex"]
+dest_files=["res://.godot/imported/v87_item_ashbanner_blade_2.webp-4da31e97f6c80092f9b14fee7b32a95a.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://5gisyejt2c626"
-path="res://.godot/imported/v87_item_landbridge_armor_3.webp-a530313af14499fe22befe57bebb95cd.ctex"
+uid="uid://denpty323w2rt"
+path="res://.godot/imported/v87_item_landbridge_armor_3.webp-0dbfffbaa310b759e619aa82f5638d0e.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_landbridge_armor_3.webp"
-dest_files=["res://.godot/imported/v87_item_landbridge_armor_3.webp-a530313af14499fe22befe57bebb95cd.ctex"]
+dest_files=["res://.godot/imported/v87_item_landbridge_armor_3.webp-0dbfffbaa310b759e619aa82f5638d0e.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://4qz98793tdvik"
-path="res://.godot/imported/v87_item_sz_temple_sig2.webp-ea2bd21597ca28ed007ce643c463a271.ctex"
+uid="uid://co564tucuxq67"
+path="res://.godot/imported/v87_item_sz_temple_sig2.webp-acebb4ae248650830dfd1dd6ff233332.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_sz_temple_sig2.webp"
-dest_files=["res://.godot/imported/v87_item_sz_temple_sig2.webp-ea2bd21597ca28ed007ce643c463a271.ctex"]
+dest_files=["res://.godot/imported/v87_item_sz_temple_sig2.webp-acebb4ae248650830dfd1dd6ff233332.ctex"]
 
 [params]
 

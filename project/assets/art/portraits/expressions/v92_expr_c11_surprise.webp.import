@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://mmzkmmwmwyjh9"
-path="res://.godot/imported/v92_expr_c11_surprise.webp-f0d8be0ed41509a5a571ea6e4b41a6f6.ctex"
+uid="uid://1rxug5u8dv7y"
+path="res://.godot/imported/v92_expr_c11_surprise.webp-8ce302d1b54baf079ea59bc3dc5483d2.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/expressions/v92_expr_c11_surprise.webp"
-dest_files=["res://.godot/imported/v92_expr_c11_surprise.webp-f0d8be0ed41509a5a571ea6e4b41a6f6.ctex"]
+dest_files=["res://.godot/imported/v92_expr_c11_surprise.webp-8ce302d1b54baf079ea59bc3dc5483d2.ctex"]
 
 [params]
 

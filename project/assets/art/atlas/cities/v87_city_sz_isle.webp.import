@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://kauzadem5p7sr"
-path="res://.godot/imported/v87_city_sz_isle.webp-7923ca4af0ca87b7b7c9232828cd4eec.ctex"
+uid="uid://cj1828j41cha8"
+path="res://.godot/imported/v87_city_sz_isle.webp-436e55dbaf67ac553242dd502b88ad53.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/cities/v87_city_sz_isle.webp"
-dest_files=["res://.godot/imported/v87_city_sz_isle.webp-7923ca4af0ca87b7b7c9232828cd4eec.ctex"]
+dest_files=["res://.godot/imported/v87_city_sz_isle.webp-436e55dbaf67ac553242dd502b88ad53.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://qkyxkvnhgkmax"
-path="res://.godot/imported/v87_item_saltmarsh_blade_1.webp-b254d90afb86eda710781346152feddd.ctex"
+uid="uid://4dg7nyg6q38v"
+path="res://.godot/imported/v87_item_saltmarsh_blade_1.webp-da142f56a1df1ed0c1c49e98bbeb0e79.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_saltmarsh_blade_1.webp"
-dest_files=["res://.godot/imported/v87_item_saltmarsh_blade_1.webp-b254d90afb86eda710781346152feddd.ctex"]
+dest_files=["res://.godot/imported/v87_item_saltmarsh_blade_1.webp-da142f56a1df1ed0c1c49e98bbeb0e79.ctex"]
 
 [params]
 

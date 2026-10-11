@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://z2zsg47cgahqk"
-path="res://.godot/imported/v87_item_starriver_bow_3.webp-7cdc80e292ef8eb4cc7aed8d9bbe1c80.ctex"
+uid="uid://cvkkwsos1176y"
+path="res://.godot/imported/v87_item_starriver_bow_3.webp-fbc8cd530be51dc2229d00a3ff985e6b.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_starriver_bow_3.webp"
-dest_files=["res://.godot/imported/v87_item_starriver_bow_3.webp-7cdc80e292ef8eb4cc7aed8d9bbe1c80.ctex"]
+dest_files=["res://.godot/imported/v87_item_starriver_bow_3.webp-fbc8cd530be51dc2229d00a3ff985e6b.ctex"]
 
 [params]
 

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://byp7r7ns0scim"
-path="res://.godot/imported/bandit.webp-7126fd80d3f97a4bc9bf842cd7e124b8.ctex"
+path="res://.godot/imported/bandit.webp-5d4891f3ac4e93840e804ad42f3de290.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/bandit.webp"
-dest_files=["res://.godot/imported/bandit.webp-7126fd80d3f97a4bc9bf842cd7e124b8.ctex"]
+dest_files=["res://.godot/imported/bandit.webp-5d4891f3ac4e93840e804ad42f3de290.ctex"]
 
 [params]
 

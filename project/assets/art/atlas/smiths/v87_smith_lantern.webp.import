@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://7hv7tmvfsegwv"
-path="res://.godot/imported/v87_smith_lantern.webp-a0dc3a44c07e2d5bbd5bfed50e01ed1d.ctex"
+uid="uid://bkm836jfargur"
+path="res://.godot/imported/v87_smith_lantern.webp-efe703413779c0ab595d482f2c75d220.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/smiths/v87_smith_lantern.webp"
-dest_files=["res://.godot/imported/v87_smith_lantern.webp-a0dc3a44c07e2d5bbd5bfed50e01ed1d.ctex"]
+dest_files=["res://.godot/imported/v87_smith_lantern.webp-efe703413779c0ab595d482f2c75d220.ctex"]
 
 [params]
 

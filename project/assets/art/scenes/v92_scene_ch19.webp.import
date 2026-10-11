@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://mpqwi3pmytv33"
-path="res://.godot/imported/v92_scene_ch19.webp-e45360bdb8b7f04b603d69211b25ad91.ctex"
+uid="uid://4jbqwxva8ats"
+path="res://.godot/imported/v92_scene_ch19.webp-54990540c28154f9db278fb08e66a501.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/scenes/v92_scene_ch19.webp"
-dest_files=["res://.godot/imported/v92_scene_ch19.webp-e45360bdb8b7f04b603d69211b25ad91.ctex"]
+dest_files=["res://.godot/imported/v92_scene_ch19.webp-54990540c28154f9db278fb08e66a501.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://npw4q8wi9xj9j"
-path="res://.godot/imported/v87_item_southzephyr_spear_1.webp-8b120be5f65a11e95cdf94293f42dcce.ctex"
+uid="uid://b4piy25rlcwy8"
+path="res://.godot/imported/v87_item_southzephyr_spear_1.webp-b64f9853e928283f77ffa7145ab7d924.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_southzephyr_spear_1.webp"
-dest_files=["res://.godot/imported/v87_item_southzephyr_spear_1.webp-8b120be5f65a11e95cdf94293f42dcce.ctex"]
+dest_files=["res://.godot/imported/v87_item_southzephyr_spear_1.webp-b64f9853e928283f77ffa7145ab7d924.ctex"]
 
 [params]
 

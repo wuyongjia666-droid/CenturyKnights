@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://hs2pm0dsx145"
-path="res://.godot/imported/hire_cavalry_f_plate.webp-4c8109cbb5fd2e78dd82f40a10c86179.ctex"
+path="res://.godot/imported/hire_cavalry_f_plate.webp-fa4037852dc5166e752a49880a99e123.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/hire_cavalry_f_plate.webp"
-dest_files=["res://.godot/imported/hire_cavalry_f_plate.webp-4c8109cbb5fd2e78dd82f40a10c86179.ctex"]
+dest_files=["res://.godot/imported/hire_cavalry_f_plate.webp-fa4037852dc5166e752a49880a99e123.ctex"]
 
 [params]
 

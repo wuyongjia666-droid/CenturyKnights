@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://5ijv98a47knj5"
-path="res://.godot/imported/v87_item_landbridge_sword_2.webp-28d63c521b249473f73e48b9bccd335e.ctex"
+uid="uid://dgos5tud85i8s"
+path="res://.godot/imported/v87_item_landbridge_sword_2.webp-b50112e31af1051742e0d2c16fa56751.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_landbridge_sword_2.webp"
-dest_files=["res://.godot/imported/v87_item_landbridge_sword_2.webp-28d63c521b249473f73e48b9bccd335e.ctex"]
+dest_files=["res://.godot/imported/v87_item_landbridge_sword_2.webp-b50112e31af1051742e0d2c16fa56751.ctex"]
 
 [params]
 

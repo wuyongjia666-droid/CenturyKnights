@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dxfsupirryknj"
-path="res://.godot/imported/grain_boss.webp-f45299dc9ae40d7505c330669ac9f44d.ctex"
+path="res://.godot/imported/grain_boss.webp-9171261949a6a64bc9000d2e8aef716f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/grain_boss.webp"
-dest_files=["res://.godot/imported/grain_boss.webp-f45299dc9ae40d7505c330669ac9f44d.ctex"]
+dest_files=["res://.godot/imported/grain_boss.webp-9171261949a6a64bc9000d2e8aef716f.ctex"]
 
 [params]
 

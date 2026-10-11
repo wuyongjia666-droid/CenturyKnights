@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://kuv52rand3jj"
-path="res://.godot/imported/thumb_v8_hero_strategist_f.webp-a24eaa0c38952ba3e44b787dea0d2ca3.ctex"
+path="res://.godot/imported/thumb_v8_hero_strategist_f.webp-d8ee5e40bbd2772d98d7a8b9d705145e.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/thumb_v8_hero_strategist_f.webp"
-dest_files=["res://.godot/imported/thumb_v8_hero_strategist_f.webp-a24eaa0c38952ba3e44b787dea0d2ca3.ctex"]
+dest_files=["res://.godot/imported/thumb_v8_hero_strategist_f.webp-d8ee5e40bbd2772d98d7a8b9d705145e.ctex"]
 
 [params]
 

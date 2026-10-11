@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cnym024qbcaog"
-path="res://.godot/imported/scar_cheek_l.webp-65d9c144a8277578e03200f7188f8e99.ctex"
+path="res://.godot/imported/scar_cheek_l.webp-82babcbd6dc4a5ebafc477dab6760260.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,13 +11,13 @@ metadata={
 [deps]
 
 source_file="res://assets/art/doll/frost_crown_f/scar_cheek_l.webp"
-dest_files=["res://.godot/imported/scar_cheek_l.webp-65d9c144a8277578e03200f7188f8e99.ctex"]
+dest_files=["res://.godot/imported/scar_cheek_l.webp-82babcbd6dc4a5ebafc477dab6760260.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
-compress/lossy_quality=0.70
+compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://8733r75md1mb"
-path="res://.godot/imported/base.webp-f407bb9ef2c44112f49f520f2ba5ea79.ctex"
+path="res://.godot/imported/base.webp-0223e43698b59d06a0eaf42f7636ddd2.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,13 +11,13 @@ metadata={
 [deps]
 
 source_file="res://assets/art/doll/frost_crown_m/base.webp"
-dest_files=["res://.godot/imported/base.webp-f407bb9ef2c44112f49f520f2ba5ea79.ctex"]
+dest_files=["res://.godot/imported/base.webp-0223e43698b59d06a0eaf42f7636ddd2.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
-compress/lossy_quality=0.70
+compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

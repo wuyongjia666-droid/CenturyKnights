@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ry0qqiw5pmd8"
-path="res://.godot/imported/bell_archer.webp-0062d5174a62c961b5b04af73819805e.ctex"
+path="res://.godot/imported/bell_archer.webp-393d2c74c79a80056e86e502899da7b8.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/bell_archer.webp"
-dest_files=["res://.godot/imported/bell_archer.webp-0062d5174a62c961b5b04af73819805e.ctex"]
+dest_files=["res://.godot/imported/bell_archer.webp-393d2c74c79a80056e86e502899da7b8.ctex"]
 
 [params]
 

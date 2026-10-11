@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://n6ctp8ecgdu"
-path="res://.godot/imported/bamboo_boss.webp-3c9da4e40b814150dcd8b617fecab441.ctex"
+path="res://.godot/imported/bamboo_boss.webp-102da17bd80a34281d18029220667020.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/bamboo_boss.webp"
-dest_files=["res://.godot/imported/bamboo_boss.webp-3c9da4e40b814150dcd8b617fecab441.ctex"]
+dest_files=["res://.godot/imported/bamboo_boss.webp-102da17bd80a34281d18029220667020.ctex"]
 
 [params]
 

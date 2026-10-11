@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cxqsgg7pjsrql"
-path="res://.godot/imported/hireface_wheat_pine_m_cheek_straight.webp-6bd42356407136c039b315c65c87de89.ctex"
+path="res://.godot/imported/hireface_wheat_pine_m_cheek_straight.webp-b4502cfa39fb4b06ce0ba6db02c84cdf.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/hireface_wheat_pine_m_cheek_straight.webp"
-dest_files=["res://.godot/imported/hireface_wheat_pine_m_cheek_straight.webp-6bd42356407136c039b315c65c87de89.ctex"]
+dest_files=["res://.godot/imported/hireface_wheat_pine_m_cheek_straight.webp-b4502cfa39fb4b06ce0ba6db02c84cdf.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://icwvvffri78k6"
-path="res://.godot/imported/v92_castle_infirmary_t1.webp-bf69374cdbf60c4882400d44c2b195af.ctex"
+uid="uid://l35pblaeth2n"
+path="res://.godot/imported/v92_castle_infirmary_t1.webp-c78c9fee69451be1f7128e86dbca92cb.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/castle/v92_castle_infirmary_t1.webp"
-dest_files=["res://.godot/imported/v92_castle_infirmary_t1.webp-bf69374cdbf60c4882400d44c2b195af.ctex"]
+dest_files=["res://.godot/imported/v92_castle_infirmary_t1.webp-c78c9fee69451be1f7128e86dbca92cb.ctex"]
 
 [params]
 

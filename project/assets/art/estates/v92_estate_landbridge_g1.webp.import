@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://czeb7tsjzyekc"
-path="res://.godot/imported/v92_estate_landbridge_g1.webp-69c7da7c6093d9f4d57bd45eedce273d.ctex"
+uid="uid://c0eb7tsj0yekc"
+path="res://.godot/imported/v92_estate_landbridge_g1.webp-bdad4b5512df1cfb9b74160ac2f4c0bf.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/estates/v92_estate_landbridge_g1.webp"
-dest_files=["res://.godot/imported/v92_estate_landbridge_g1.webp-69c7da7c6093d9f4d57bd45eedce273d.ctex"]
+dest_files=["res://.godot/imported/v92_estate_landbridge_g1.webp-bdad4b5512df1cfb9b74160ac2f4c0bf.ctex"]
 
 [params]
 

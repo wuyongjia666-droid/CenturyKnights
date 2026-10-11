@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bc6f78629y5mj"
-path="res://.godot/imported/v87_smith_qinghe.webp-919e806728ff10d3d79c1f8ab8d6fdc1.ctex"
+uid="uid://bc6f7863ay5mj"
+path="res://.godot/imported/v87_smith_qinghe.webp-a99cfd774110341aeb2553bca5bcff90.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/smiths/v87_smith_qinghe.webp"
-dest_files=["res://.godot/imported/v87_smith_qinghe.webp-919e806728ff10d3d79c1f8ab8d6fdc1.ctex"]
+dest_files=["res://.godot/imported/v87_smith_qinghe.webp-a99cfd774110341aeb2553bca5bcff90.ctex"]
 
 [params]
 

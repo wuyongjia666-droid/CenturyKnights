@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://diqv187mhw6xo"
-path="res://.godot/imported/hireface_ash_brown_slate_m_brow_thick.webp-1aa701abbf39a164bdb1b078623ee192.ctex"
+path="res://.godot/imported/hireface_ash_brown_slate_m_brow_thick.webp-32570dc0da6faee0844f64c8b011cde9.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/hireface_ash_brown_slate_m_brow_thick.webp"
-dest_files=["res://.godot/imported/hireface_ash_brown_slate_m_brow_thick.webp-1aa701abbf39a164bdb1b078623ee192.ctex"]
+dest_files=["res://.godot/imported/hireface_ash_brown_slate_m_brow_thick.webp-32570dc0da6faee0844f64c8b011cde9.ctex"]
 
 [params]
 

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bqcgljww6vbcb"
-path="res://.godot/imported/scar_brow_r.webp-78ca553106aa917b595ebc916efe3f8f.ctex"
+path="res://.godot/imported/scar_brow_r.webp-2ff44692719b7cc381b4b06e8a05ad2d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,13 +11,13 @@ metadata={
 [deps]
 
 source_file="res://assets/art/doll/common_ash_f/scar_brow_r.webp"
-dest_files=["res://.godot/imported/scar_brow_r.webp-78ca553106aa917b595ebc916efe3f8f.ctex"]
+dest_files=["res://.godot/imported/scar_brow_r.webp-2ff44692719b7cc381b4b06e8a05ad2d.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
-compress/lossy_quality=0.70
+compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

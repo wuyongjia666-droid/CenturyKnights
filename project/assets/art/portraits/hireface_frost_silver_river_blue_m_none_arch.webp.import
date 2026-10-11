@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://2k5akif3mjq1"
-path="res://.godot/imported/hireface_frost_silver_river_blue_m_none_arch.webp-f9945798dfa9a8b26ccb51450c2ab0ec.ctex"
+path="res://.godot/imported/hireface_frost_silver_river_blue_m_none_arch.webp-abf50bc46cb835b23a43b154692c71c1.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/hireface_frost_silver_river_blue_m_none_arch.webp"
-dest_files=["res://.godot/imported/hireface_frost_silver_river_blue_m_none_arch.webp-f9945798dfa9a8b26ccb51450c2ab0ec.ctex"]
+dest_files=["res://.godot/imported/hireface_frost_silver_river_blue_m_none_arch.webp-abf50bc46cb835b23a43b154692c71c1.ctex"]
 
 [params]
 

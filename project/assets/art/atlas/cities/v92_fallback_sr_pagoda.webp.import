@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://d4ftpcu824mg7"
-path="res://.godot/imported/v92_fallback_sr_pagoda.webp-9fb15a4ab74056da53b1ab0fbeb41385.ctex"
+path="res://.godot/imported/v92_fallback_sr_pagoda.webp-3d2022b2b4ed9c3ac42fe96de7809fd0.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/cities/v92_fallback_sr_pagoda.webp"
-dest_files=["res://.godot/imported/v92_fallback_sr_pagoda.webp-9fb15a4ab74056da53b1ab0fbeb41385.ctex"]
+dest_files=["res://.godot/imported/v92_fallback_sr_pagoda.webp-3d2022b2b4ed9c3ac42fe96de7809fd0.ctex"]
 
 [params]
 

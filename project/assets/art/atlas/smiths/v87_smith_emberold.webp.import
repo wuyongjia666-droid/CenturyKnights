@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d42zaee95cbxk"
-path="res://.godot/imported/v87_smith_emberold.webp-4bfb36b8ac7ad97e614849f7277ccaa4.ctex"
+uid="uid://n4och1k4f6s"
+path="res://.godot/imported/v87_smith_emberold.webp-04e0d2f7a9a5f08a39853b24bdf3aac0.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/smiths/v87_smith_emberold.webp"
-dest_files=["res://.godot/imported/v87_smith_emberold.webp-4bfb36b8ac7ad97e614849f7277ccaa4.ctex"]
+dest_files=["res://.godot/imported/v87_smith_emberold.webp-04e0d2f7a9a5f08a39853b24bdf3aac0.ctex"]
 
 [params]
 

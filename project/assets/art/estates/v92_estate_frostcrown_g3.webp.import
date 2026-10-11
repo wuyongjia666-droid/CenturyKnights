@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ny2c79gg8uwe4"
-path="res://.godot/imported/v92_estate_frostcrown_g3.webp-99ca5c39c15fc1007df7d4149a6236e8.ctex"
+uid="uid://cetqg3opkaa4t"
+path="res://.godot/imported/v92_estate_frostcrown_g3.webp-bfdea220a1834fedd8c8c9af79407a56.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/estates/v92_estate_frostcrown_g3.webp"
-dest_files=["res://.godot/imported/v92_estate_frostcrown_g3.webp-99ca5c39c15fc1007df7d4149a6236e8.ctex"]
+dest_files=["res://.godot/imported/v92_estate_frostcrown_g3.webp-bfdea220a1834fedd8c8c9af79407a56.ctex"]
 
 [params]
 

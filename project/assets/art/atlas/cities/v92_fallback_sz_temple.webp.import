@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://doy2kv2845fvp"
-path="res://.godot/imported/v92_fallback_sz_temple.webp-645c0a12f2ad352819b66e9d23bf1c5d.ctex"
+path="res://.godot/imported/v92_fallback_sz_temple.webp-9790729efa857c5c0e5121abdbaac8de.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/cities/v92_fallback_sz_temple.webp"
-dest_files=["res://.godot/imported/v92_fallback_sz_temple.webp-645c0a12f2ad352819b66e9d23bf1c5d.ctex"]
+dest_files=["res://.godot/imported/v92_fallback_sz_temple.webp-9790729efa857c5c0e5121abdbaac8de.ctex"]
 
 [params]
 

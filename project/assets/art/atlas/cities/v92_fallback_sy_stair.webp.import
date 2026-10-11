@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://o04uv8bofmbh"
-path="res://.godot/imported/v92_fallback_sy_stair.webp-7365fe71299671cfe63f490abf9b0d16.ctex"
+path="res://.godot/imported/v92_fallback_sy_stair.webp-78a61379d6e8f86208803a3621f76c92.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/cities/v92_fallback_sy_stair.webp"
-dest_files=["res://.godot/imported/v92_fallback_sy_stair.webp-7365fe71299671cfe63f490abf9b0d16.ctex"]
+dest_files=["res://.godot/imported/v92_fallback_sy_stair.webp-78a61379d6e8f86208803a3621f76c92.ctex"]
 
 [params]
 

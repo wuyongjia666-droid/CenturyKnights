@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://4gwu7wa32yzxp"
-path="res://.godot/imported/v87_item_landbridge_shield_2.webp-4fde4fcb20e1e70e121ac2e6f70d1a48.ctex"
+uid="uid://ce2r3iuc4kvnd"
+path="res://.godot/imported/v87_item_landbridge_shield_2.webp-27de1583c9a322ac2c9b54a9117c7e79.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_landbridge_shield_2.webp"
-dest_files=["res://.godot/imported/v87_item_landbridge_shield_2.webp-4fde4fcb20e1e70e121ac2e6f70d1a48.ctex"]
+dest_files=["res://.godot/imported/v87_item_landbridge_shield_2.webp-27de1583c9a322ac2c9b54a9117c7e79.ctex"]
 
 [params]
 

@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://fyjajfqx54n7f"
-path="res://.godot/imported/v87_item_qinghe_sword_1.webp-5fde4aa45ab10fe68d88c2ec1de02893.ctex"
+uid="uid://b34exdtplwsgn"
+path="res://.godot/imported/v87_item_qinghe_sword_1.webp-8e98b0c7aee205ae7b29cdfe76913336.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_qinghe_sword_1.webp"
-dest_files=["res://.godot/imported/v87_item_qinghe_sword_1.webp-5fde4aa45ab10fe68d88c2ec1de02893.ctex"]
+dest_files=["res://.godot/imported/v87_item_qinghe_sword_1.webp-8e98b0c7aee205ae7b29cdfe76913336.ctex"]
 
 [params]
 

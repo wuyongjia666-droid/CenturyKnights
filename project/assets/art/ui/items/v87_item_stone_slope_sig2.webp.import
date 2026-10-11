@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://2s97f2furiqu4"
-path="res://.godot/imported/v87_item_stone_slope_sig2.webp-c6434192975b9b7141a5e4e05c23d4ac.ctex"
+uid="uid://rf4bny3s3mkr"
+path="res://.godot/imported/v87_item_stone_slope_sig2.webp-43244ec0f38f3a13e4a5ee4ab5a75e99.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_stone_slope_sig2.webp"
-dest_files=["res://.godot/imported/v87_item_stone_slope_sig2.webp-c6434192975b9b7141a5e4e05c23d4ac.ctex"]
+dest_files=["res://.godot/imported/v87_item_stone_slope_sig2.webp-43244ec0f38f3a13e4a5ee4ab5a75e99.ctex"]
 
 [params]
 

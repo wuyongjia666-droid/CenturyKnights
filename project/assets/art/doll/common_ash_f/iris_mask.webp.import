@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dmejiiq4cewod"
-path="res://.godot/imported/iris_mask.webp-d447c8224da79b18c30ba3ea5a0da861.ctex"
+path="res://.godot/imported/iris_mask.webp-766dae982dbbbb5e2dc3a86ddd7abe6a.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,13 +11,13 @@ metadata={
 [deps]
 
 source_file="res://assets/art/doll/common_ash_f/iris_mask.webp"
-dest_files=["res://.godot/imported/iris_mask.webp-d447c8224da79b18c30ba3ea5a0da861.ctex"]
+dest_files=["res://.godot/imported/iris_mask.webp-766dae982dbbbb5e2dc3a86ddd7abe6a.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
-compress/lossy_quality=0.70
+compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

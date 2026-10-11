@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://3zizm9yt8xbaj"
-path="res://.godot/imported/v87_smith_southzephyr.webp-ea3584af38fad293dc3eec579ea751ea.ctex"
+uid="uid://bxnwivj3bi5x6"
+path="res://.godot/imported/v87_smith_southzephyr.webp-536464c10c9159120ed144ee75ad1b32.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/smiths/v87_smith_southzephyr.webp"
-dest_files=["res://.godot/imported/v87_smith_southzephyr.webp-ea3584af38fad293dc3eec579ea751ea.ctex"]
+dest_files=["res://.godot/imported/v87_smith_southzephyr.webp-536464c10c9159120ed144ee75ad1b32.ctex"]
 
 [params]
 

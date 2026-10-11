@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://m7hsbxdtzit3q"
-path="res://.godot/imported/v87_item_landbridge_spear_2.webp-b6ad1d3eca1f26039e34bb27e94195e9.ctex"
+uid="uid://bl86jrl3bv7tg"
+path="res://.godot/imported/v87_item_landbridge_spear_2.webp-df2da4b1e0627c67ad03c4037b663818.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_landbridge_spear_2.webp"
-dest_files=["res://.godot/imported/v87_item_landbridge_spear_2.webp-b6ad1d3eca1f26039e34bb27e94195e9.ctex"]
+dest_files=["res://.godot/imported/v87_item_landbridge_spear_2.webp-df2da4b1e0627c67ad03c4037b663818.ctex"]
 
 [params]
 

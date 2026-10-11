@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://26tbjbmqixjb"
-path="res://.godot/imported/v92_fallback_sy_banner.webp-968cea9e631f2ae00458ec072eacd59f.ctex"
+path="res://.godot/imported/v92_fallback_sy_banner.webp-daccd6a5edee9bcb1c7897d24c454f3f.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/cities/v92_fallback_sy_banner.webp"
-dest_files=["res://.godot/imported/v92_fallback_sy_banner.webp-968cea9e631f2ae00458ec072eacd59f.ctex"]
+dest_files=["res://.godot/imported/v92_fallback_sy_banner.webp-daccd6a5edee9bcb1c7897d24c454f3f.ctex"]
 
 [params]
 

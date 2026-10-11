@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://5dcam3uqyg2tz"
-path="res://.godot/imported/v87_item_landbridge_blade_1.webp-40520113376f40b35c25efde25061152.ctex"
+uid="uid://dbg6ipfy01xjn"
+path="res://.godot/imported/v87_item_landbridge_blade_1.webp-1f95bbfe6986cd2c13a8bc2fe8f4290b.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_landbridge_blade_1.webp"
-dest_files=["res://.godot/imported/v87_item_landbridge_blade_1.webp-40520113376f40b35c25efde25061152.ctex"]
+dest_files=["res://.godot/imported/v87_item_landbridge_blade_1.webp-1f95bbfe6986cd2c13a8bc2fe8f4290b.ctex"]
 
 [params]
 

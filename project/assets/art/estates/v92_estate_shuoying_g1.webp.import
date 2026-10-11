@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://xna3e2rm9c6tk"
-path="res://.godot/imported/v92_estate_shuoying_g1.webp-3eb047a380935bb23f9f37ceeef0e729.ctex"
+uid="uid://gtuup84u4xay"
+path="res://.godot/imported/v92_estate_shuoying_g1.webp-995f0dffe3a3a2f0f758378fdd90de09.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/estates/v92_estate_shuoying_g1.webp"
-dest_files=["res://.godot/imported/v92_estate_shuoying_g1.webp-3eb047a380935bb23f9f37ceeef0e729.ctex"]
+dest_files=["res://.godot/imported/v92_estate_shuoying_g1.webp-995f0dffe3a3a2f0f758378fdd90de09.ctex"]
 
 [params]
 

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cvusj5rjarqy6"
-path="res://.godot/imported/v92_fallback_sz_isle.webp-51b533a5515ae36ea6e0472a7ea497a5.ctex"
+path="res://.godot/imported/v92_fallback_sz_isle.webp-e51462ca677a44b1a3304db6312d9201.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/cities/v92_fallback_sz_isle.webp"
-dest_files=["res://.godot/imported/v92_fallback_sz_isle.webp-51b533a5515ae36ea6e0472a7ea497a5.ctex"]
+dest_files=["res://.godot/imported/v92_fallback_sz_isle.webp-e51462ca677a44b1a3304db6312d9201.ctex"]
 
 [params]
 

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://q3g0unvn4ysr"
-path="res://.godot/imported/hire_mage_m_plate.webp-101dd1802cfaa7f4926e682db3a1dda5.ctex"
+path="res://.godot/imported/hire_mage_m_plate.webp-43bc4070faa3782528cd46a050108307.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/hire_mage_m_plate.webp"
-dest_files=["res://.godot/imported/hire_mage_m_plate.webp-101dd1802cfaa7f4926e682db3a1dda5.ctex"]
+dest_files=["res://.godot/imported/hire_mage_m_plate.webp-43bc4070faa3782528cd46a050108307.ctex"]
 
 [params]
 

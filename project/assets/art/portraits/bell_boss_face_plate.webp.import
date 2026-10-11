@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://i07qwqhrfayd"
-path="res://.godot/imported/bell_boss_face_plate.webp-2c8d86521fdc9b8cb9a8455e6b197f1a.ctex"
+path="res://.godot/imported/bell_boss_face_plate.webp-eb471dc4c86a5a9d820e16752b69642a.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/bell_boss_face_plate.webp"
-dest_files=["res://.godot/imported/bell_boss_face_plate.webp-2c8d86521fdc9b8cb9a8455e6b197f1a.ctex"]
+dest_files=["res://.godot/imported/bell_boss_face_plate.webp-eb471dc4c86a5a9d820e16752b69642a.ctex"]
 
 [params]
 

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c5xg452juro8l"
-path="res://.godot/imported/tide_archer.webp-81bb6caf88b8ee84c7d5f4e30efa1804.ctex"
+path="res://.godot/imported/tide_archer.webp-495a1cc940585135e6c53021fc34f730.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/tide_archer.webp"
-dest_files=["res://.godot/imported/tide_archer.webp-81bb6caf88b8ee84c7d5f4e30efa1804.ctex"]
+dest_files=["res://.godot/imported/tide_archer.webp-495a1cc940585135e6c53021fc34f730.ctex"]
 
 [params]
 

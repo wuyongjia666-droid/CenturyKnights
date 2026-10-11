@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://6364kly3rpmx"
-path="res://.godot/imported/hair_long.webp-c4a47176018ccf6c12ab33865326eb2b.ctex"
+path="res://.godot/imported/hair_long.webp-c5bf5bc0a7346b75cb389838ac33a5c3.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,13 +11,13 @@ metadata={
 [deps]
 
 source_file="res://assets/art/doll/common_ash_f/hair_long.webp"
-dest_files=["res://.godot/imported/hair_long.webp-c4a47176018ccf6c12ab33865326eb2b.ctex"]
+dest_files=["res://.godot/imported/hair_long.webp-c5bf5bc0a7346b75cb389838ac33a5c3.ctex"]
 
 [params]
 
 compress/mode=0
 compress/high_quality=false
-compress/lossy_quality=0.70
+compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

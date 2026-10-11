@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://3ri5mkg7q85s"
-path="res://.godot/imported/hireface_ink_black_slate_m_brow_arch.webp-f4af7f53cedb9338892c08bbb6b677d9.ctex"
+path="res://.godot/imported/hireface_ink_black_slate_m_brow_arch.webp-ce84c95861bf03b9258864e64de64a27.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/hireface_ink_black_slate_m_brow_arch.webp"
-dest_files=["res://.godot/imported/hireface_ink_black_slate_m_brow_arch.webp-f4af7f53cedb9338892c08bbb6b677d9.ctex"]
+dest_files=["res://.godot/imported/hireface_ink_black_slate_m_brow_arch.webp-ce84c95861bf03b9258864e64de64a27.ctex"]
 
 [params]
 

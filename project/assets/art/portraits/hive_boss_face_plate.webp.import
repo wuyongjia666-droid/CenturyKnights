@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dd1ddrri2fd6d"
-path="res://.godot/imported/hive_boss_face_plate.webp-af946da63d02a3f4bfa2574e990b5bfc.ctex"
+path="res://.godot/imported/hive_boss_face_plate.webp-84d7d97d5f56afafda40d1a4642bf752.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/hive_boss_face_plate.webp"
-dest_files=["res://.godot/imported/hive_boss_face_plate.webp-af946da63d02a3f4bfa2574e990b5bfc.ctex"]
+dest_files=["res://.godot/imported/hive_boss_face_plate.webp-84d7d97d5f56afafda40d1a4642bf752.ctex"]
 
 [params]
 

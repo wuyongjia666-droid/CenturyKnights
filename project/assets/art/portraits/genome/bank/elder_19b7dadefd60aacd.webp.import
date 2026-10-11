@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://k7qk2wkged2hc"
-path="res://.godot/imported/elder_19b7dadefd60aacd.webp-9603a3fee6145f4b6807197504dc2ae1.ctex"
+uid="uid://dhwtvspw8ybxs"
+path="res://.godot/imported/elder_19b7dadefd60aacd.webp-89d5fbcb1f9499d8405cff08d49af029.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/genome/bank/elder_19b7dadefd60aacd.webp"
-dest_files=["res://.godot/imported/elder_19b7dadefd60aacd.webp-9603a3fee6145f4b6807197504dc2ae1.ctex"]
+dest_files=["res://.godot/imported/elder_19b7dadefd60aacd.webp-89d5fbcb1f9499d8405cff08d49af029.ctex"]
 
 [params]
 

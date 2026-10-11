@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://zmpu9npypaca5"
-path="res://.godot/imported/v87_item_southzephyr_charm_3.webp-5e1b873be961cd6c56b6a5e0e1dc8c68.ctex"
+uid="uid://cganqb7hb12qk"
+path="res://.godot/imported/v87_item_southzephyr_charm_3.webp-2c569b29abd8beba981fad5ea2c27beb.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_southzephyr_charm_3.webp"
-dest_files=["res://.godot/imported/v87_item_southzephyr_charm_3.webp-5e1b873be961cd6c56b6a5e0e1dc8c68.ctex"]
+dest_files=["res://.godot/imported/v87_item_southzephyr_charm_3.webp-2c569b29abd8beba981fad5ea2c27beb.ctex"]
 
 [params]
 

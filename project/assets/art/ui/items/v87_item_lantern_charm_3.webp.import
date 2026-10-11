@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://w7w2bj8r3thcq"
-path="res://.godot/imported/v87_item_lantern_charm_3.webp-e0b52bbb3cdbb27966358bed96adc00e.ctex"
+uid="uid://dvvpdanjas3jw"
+path="res://.godot/imported/v87_item_lantern_charm_3.webp-7489ac08ed2e659aa3157972fd8dad43.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_lantern_charm_3.webp"
-dest_files=["res://.godot/imported/v87_item_lantern_charm_3.webp-e0b52bbb3cdbb27966358bed96adc00e.ctex"]
+dest_files=["res://.godot/imported/v87_item_lantern_charm_3.webp-7489ac08ed2e659aa3157972fd8dad43.ctex"]
 
 [params]
 

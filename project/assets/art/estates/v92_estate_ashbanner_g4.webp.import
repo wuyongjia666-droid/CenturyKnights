@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ugq8w82j5h8h2"
-path="res://.godot/imported/v92_estate_ashbanner_g4.webp-42bc458dc4901a1993825a1791ce324e.ctex"
+uid="uid://4pvyyhbchuo8"
+path="res://.godot/imported/v92_estate_ashbanner_g4.webp-f1be0204d5c22c7b1fd1333106c5503d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/estates/v92_estate_ashbanner_g4.webp"
-dest_files=["res://.godot/imported/v92_estate_ashbanner_g4.webp-42bc458dc4901a1993825a1791ce324e.ctex"]
+dest_files=["res://.godot/imported/v92_estate_ashbanner_g4.webp-f1be0204d5c22c7b1fd1333106c5503d.ctex"]
 
 [params]
 

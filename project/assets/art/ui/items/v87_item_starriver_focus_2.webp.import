@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://njijp8rewbnqr"
-path="res://.godot/imported/v87_item_starriver_focus_2.webp-4f8da99987bedbc683c0edb7e924f273.ctex"
+uid="uid://bxawx20m7o1hh"
+path="res://.godot/imported/v87_item_starriver_focus_2.webp-4f35a13bf8b38f1ec275af9186379612.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_starriver_focus_2.webp"
-dest_files=["res://.godot/imported/v87_item_starriver_focus_2.webp-4f8da99987bedbc683c0edb7e924f273.ctex"]
+dest_files=["res://.godot/imported/v87_item_starriver_focus_2.webp-4f35a13bf8b38f1ec275af9186379612.ctex"]
 
 [params]
 

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dtc6woxqu23f6"
-path="res://.godot/imported/copper_thug.webp-82682e30f678a31a8263a7e2046a9b7d.ctex"
+path="res://.godot/imported/copper_thug.webp-d843815b35964aa192b0a1838deb0145.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/copper_thug.webp"
-dest_files=["res://.godot/imported/copper_thug.webp-82682e30f678a31a8263a7e2046a9b7d.ctex"]
+dest_files=["res://.godot/imported/copper_thug.webp-d843815b35964aa192b0a1838deb0145.ctex"]
 
 [params]
 

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c2yh3ouowh6w8"
-path="res://.godot/imported/hireface_ember_red_river_blue_f_none_thick.webp-dafddee75fb55bbe077c2cbe15503066.ctex"
+path="res://.godot/imported/hireface_ember_red_river_blue_f_none_thick.webp-ab61b3cd4fb2e0e1ef89f0b45cd1dd7c.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/hireface_ember_red_river_blue_f_none_thick.webp"
-dest_files=["res://.godot/imported/hireface_ember_red_river_blue_f_none_thick.webp-dafddee75fb55bbe077c2cbe15503066.ctex"]
+dest_files=["res://.godot/imported/hireface_ember_red_river_blue_f_none_thick.webp-ab61b3cd4fb2e0e1ef89f0b45cd1dd7c.ctex"]
 
 [params]
 

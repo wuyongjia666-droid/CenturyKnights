@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bwjpwv3ytzq6g"
-path="res://.godot/imported/v87_item_irongorge_axe_3.webp-0bb3f1b331476aa37d7867c4f5c9c387.ctex"
+uid="uid://bwjpwv3yt0q6g"
+path="res://.godot/imported/v87_item_irongorge_axe_3.webp-9b96e3c35d6de825e0f3ba0ace0d1253.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_irongorge_axe_3.webp"
-dest_files=["res://.godot/imported/v87_item_irongorge_axe_3.webp-0bb3f1b331476aa37d7867c4f5c9c387.ctex"]
+dest_files=["res://.godot/imported/v87_item_irongorge_axe_3.webp-9b96e3c35d6de825e0f3ba0ace0d1253.ctex"]
 
 [params]
 

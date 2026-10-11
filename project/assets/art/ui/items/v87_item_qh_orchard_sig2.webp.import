@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://nmxnc4gc8i37p"
-path="res://.godot/imported/v87_item_qh_orchard_sig2.webp-5a1d44359edfef79e00df0870a74e80b.ctex"
+uid="uid://b1p1kxoljwhxf"
+path="res://.godot/imported/v87_item_qh_orchard_sig2.webp-a1548dc870a75312a6233bc9828723d2.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_qh_orchard_sig2.webp"
-dest_files=["res://.godot/imported/v87_item_qh_orchard_sig2.webp-5a1d44359edfef79e00df0870a74e80b.ctex"]
+dest_files=["res://.godot/imported/v87_item_qh_orchard_sig2.webp-a1548dc870a75312a6233bc9828723d2.ctex"]
 
 [params]
 

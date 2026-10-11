@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://gt8vja8b21v1"
-path="res://.godot/imported/hireuniq_701.webp-79e07bb219144a8bba0f105868f38a35.ctex"
+path="res://.godot/imported/hireuniq_701.webp-5690f799c86e5f17f86992c18b7909ce.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/hireuniq_701.webp"
-dest_files=["res://.godot/imported/hireuniq_701.webp-79e07bb219144a8bba0f105868f38a35.ctex"]
+dest_files=["res://.godot/imported/hireuniq_701.webp-5690f799c86e5f17f86992c18b7909ce.ctex"]
 
 [params]
 

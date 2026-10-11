@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bcvec3lut2ui2"
-path="res://.godot/imported/v92_fallback_sz_harbor.webp-4517befa4d217a9272ade0d9fe2dff9e.ctex"
+path="res://.godot/imported/v92_fallback_sz_harbor.webp-864cbf6658df371501fce0441dbc7cb1.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/cities/v92_fallback_sz_harbor.webp"
-dest_files=["res://.godot/imported/v92_fallback_sz_harbor.webp-4517befa4d217a9272ade0d9fe2dff9e.ctex"]
+dest_files=["res://.godot/imported/v92_fallback_sz_harbor.webp-864cbf6658df371501fce0441dbc7cb1.ctex"]
 
 [params]
 

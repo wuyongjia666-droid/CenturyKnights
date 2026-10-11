@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ett3m8wf7aacy"
-path="res://.godot/imported/v87_item_fog_vale_sig1.webp-27ae1b4fd439c7ff49e62f98cf85e775.ctex"
+uid="uid://yf716y6m2ek7"
+path="res://.godot/imported/v87_item_fog_vale_sig1.webp-5f8e112d1fea41eff2affe2d0e527252.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_fog_vale_sig1.webp"
-dest_files=["res://.godot/imported/v87_item_fog_vale_sig1.webp-27ae1b4fd439c7ff49e62f98cf85e775.ctex"]
+dest_files=["res://.godot/imported/v87_item_fog_vale_sig1.webp-5f8e112d1fea41eff2affe2d0e527252.ctex"]
 
 [params]
 

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://vdcdo1wutog1"
-path="res://.godot/imported/hireface_wheat_pine_f_brow_straight.webp-b04762eb63abbc992cf4c3384338edce.ctex"
+path="res://.godot/imported/hireface_wheat_pine_f_brow_straight.webp-429acbdcfd51001ed8664d80cdca364b.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/hireface_wheat_pine_f_brow_straight.webp"
-dest_files=["res://.godot/imported/hireface_wheat_pine_f_brow_straight.webp-b04762eb63abbc992cf4c3384338edce.ctex"]
+dest_files=["res://.godot/imported/hireface_wheat_pine_f_brow_straight.webp-429acbdcfd51001ed8664d80cdca364b.ctex"]
 
 [params]
 

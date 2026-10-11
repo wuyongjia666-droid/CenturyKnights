@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://8gwt9bhkv6hj7"
-path="res://.godot/imported/v87_item_sz_bamboo_sig2.webp-571d11c31084a221ff1ec9c235709ee2.ctex"
+uid="uid://cjnvjt4kekhh3"
+path="res://.godot/imported/v87_item_sz_bamboo_sig2.webp-beaf733a24a28f7ede83e143656486c0.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_sz_bamboo_sig2.webp"
-dest_files=["res://.godot/imported/v87_item_sz_bamboo_sig2.webp-571d11c31084a221ff1ec9c235709ee2.ctex"]
+dest_files=["res://.godot/imported/v87_item_sz_bamboo_sig2.webp-beaf733a24a28f7ede83e143656486c0.ctex"]
 
 [params]
 

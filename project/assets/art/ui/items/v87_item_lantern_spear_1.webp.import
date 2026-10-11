@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://nkb627zke7ubn"
-path="res://.godot/imported/v87_item_lantern_spear_1.webp-d8b6118669656da4abae25f095766842.ctex"
+uid="uid://bx3lb18spl71d"
+path="res://.godot/imported/v87_item_lantern_spear_1.webp-40a4da4117b5d64fb79dbf1bfaa3c50c.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_lantern_spear_1.webp"
-dest_files=["res://.godot/imported/v87_item_lantern_spear_1.webp-d8b6118669656da4abae25f095766842.ctex"]
+dest_files=["res://.godot/imported/v87_item_lantern_spear_1.webp-40a4da4117b5d64fb79dbf1bfaa3c50c.ctex"]
 
 [params]
 

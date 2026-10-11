@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b0o342rnb2jl6"
-path="res://.godot/imported/flute_boss.webp-c7a1305d15294a1f7393f10624aebddf.ctex"
+path="res://.godot/imported/flute_boss.webp-36c952271bcd4acb70bba6735d08307d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/flute_boss.webp"
-dest_files=["res://.godot/imported/flute_boss.webp-c7a1305d15294a1f7393f10624aebddf.ctex"]
+dest_files=["res://.godot/imported/flute_boss.webp-36c952271bcd4acb70bba6735d08307d.ctex"]
 
 [params]
 

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cpf4ryoijjn6c"
-path="res://.godot/imported/incense_boss_face_plate.webp-93496ab9221eec8bda13e8ae4b4b9bef.ctex"
+path="res://.godot/imported/incense_boss_face_plate.webp-4eaf4662d77b081641e03fd5ebe1d5d6.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/incense_boss_face_plate.webp"
-dest_files=["res://.godot/imported/incense_boss_face_plate.webp-93496ab9221eec8bda13e8ae4b4b9bef.ctex"]
+dest_files=["res://.godot/imported/incense_boss_face_plate.webp-4eaf4662d77b081641e03fd5ebe1d5d6.ctex"]
 
 [params]
 

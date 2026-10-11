@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://jv6r8m59p6kx8"
-path="res://.godot/imported/v87_item_irongorge_spear_2.webp-5dd0019c5677bdc05ad640d293eb049b.ctex"
+uid="uid://b6d12jcrlrtgp"
+path="res://.godot/imported/v87_item_irongorge_spear_2.webp-13ffa141dd03406c46a59cdcbbc427c8.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_irongorge_spear_2.webp"
-dest_files=["res://.godot/imported/v87_item_irongorge_spear_2.webp-5dd0019c5677bdc05ad640d293eb049b.ctex"]
+dest_files=["res://.godot/imported/v87_item_irongorge_spear_2.webp-13ffa141dd03406c46a59cdcbbc427c8.ctex"]
 
 [params]
 

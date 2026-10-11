@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b0wwp1bdhilpb"
-path="res://.godot/imported/bell_boss.webp-0422c79c6272f74ddc6c3cb11a2e8844.ctex"
+path="res://.godot/imported/bell_boss.webp-58b0db09892b68c12642b148bd3cf026.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/bell_boss.webp"
-dest_files=["res://.godot/imported/bell_boss.webp-0422c79c6272f74ddc6c3cb11a2e8844.ctex"]
+dest_files=["res://.godot/imported/bell_boss.webp-58b0db09892b68c12642b148bd3cf026.ctex"]
 
 [params]
 

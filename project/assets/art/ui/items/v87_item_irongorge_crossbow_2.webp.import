@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://fy9d66yw27cwd"
-path="res://.godot/imported/v87_item_irongorge_crossbow_2.webp-1b046ec1c4df0bbcb058fe17b07ebfc7.ctex"
+uid="uid://b4uil42oi0g5l"
+path="res://.godot/imported/v87_item_irongorge_crossbow_2.webp-3e9e2b27be33473a79578be4023319d5.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_irongorge_crossbow_2.webp"
-dest_files=["res://.godot/imported/v87_item_irongorge_crossbow_2.webp-1b046ec1c4df0bbcb058fe17b07ebfc7.ctex"]
+dest_files=["res://.godot/imported/v87_item_irongorge_crossbow_2.webp-3e9e2b27be33473a79578be4023319d5.ctex"]
 
 [params]
 

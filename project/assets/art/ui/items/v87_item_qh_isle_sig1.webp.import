@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dip3m4se9unju"
-path="res://.godot/imported/v87_item_qh_isle_sig1.webp-f9d4777c98ff046998734fd4233514c0.ctex"
+uid="uid://dip3m4sfaunju"
+path="res://.godot/imported/v87_item_qh_isle_sig1.webp-147a46717a320d893a74c613f546c884.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_qh_isle_sig1.webp"
-dest_files=["res://.godot/imported/v87_item_qh_isle_sig1.webp-f9d4777c98ff046998734fd4233514c0.ctex"]
+dest_files=["res://.godot/imported/v87_item_qh_isle_sig1.webp-147a46717a320d893a74c613f546c884.ctex"]
 
 [params]
 

@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cr4ul0irel4qu"
-path="res://.godot/imported/tide_boss_face_plate.webp-f83ac59359470b6c5149ee2df7ae8fd1.ctex"
+path="res://.godot/imported/tide_boss_face_plate.webp-98b4b02c130946f5bb98f3aeda5f89cc.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/tide_boss_face_plate.webp"
-dest_files=["res://.godot/imported/tide_boss_face_plate.webp-f83ac59359470b6c5149ee2df7ae8fd1.ctex"]
+dest_files=["res://.godot/imported/tide_boss_face_plate.webp-98b4b02c130946f5bb98f3aeda5f89cc.ctex"]
 
 [params]
 

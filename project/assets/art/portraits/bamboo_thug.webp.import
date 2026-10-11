@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b44hwyu650uvu"
-path="res://.godot/imported/bamboo_thug.webp-add925baa4d5fbe5a1e0a50ff1575ef8.ctex"
+path="res://.godot/imported/bamboo_thug.webp-6caa4f405bb7cdae5fd394f7bd341514.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/portraits/bamboo_thug.webp"
-dest_files=["res://.godot/imported/bamboo_thug.webp-add925baa4d5fbe5a1e0a50ff1575ef8.ctex"]
+dest_files=["res://.godot/imported/bamboo_thug.webp-6caa4f405bb7cdae5fd394f7bd341514.ctex"]
 
 [params]
 

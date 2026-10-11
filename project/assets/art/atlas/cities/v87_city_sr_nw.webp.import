@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://zjvicdjdkejdx"
-path="res://.godot/imported/v87_city_sr_nw.webp-65b93b2e9e7507c66534d47536d04e7d.ctex"
+uid="uid://cdgar00t56atd"
+path="res://.godot/imported/v87_city_sr_nw.webp-64cc59aa1db965e622fc7e00ab51df1b.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/atlas/cities/v87_city_sr_nw.webp"
-dest_files=["res://.godot/imported/v87_city_sr_nw.webp-65b93b2e9e7507c66534d47536d04e7d.ctex"]
+dest_files=["res://.godot/imported/v87_city_sr_nw.webp-64cc59aa1db965e622fc7e00ab51df1b.ctex"]
 
 [params]
 

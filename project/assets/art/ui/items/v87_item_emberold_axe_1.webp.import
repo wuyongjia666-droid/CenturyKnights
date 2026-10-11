@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://83ip6qpcfjx35"
-path="res://.godot/imported/v87_item_emberold_axe_1.webp-83ba752207031d6f92122fc9a83db555.ctex"
+uid="uid://c58rhbdbvwx11"
+path="res://.godot/imported/v87_item_emberold_axe_1.webp-b57f3bd5e77ddb9337b79c5a60fc307d.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_emberold_axe_1.webp"
-dest_files=["res://.godot/imported/v87_item_emberold_axe_1.webp-83ba752207031d6f92122fc9a83db555.ctex"]
+dest_files=["res://.godot/imported/v87_item_emberold_axe_1.webp-b57f3bd5e77ddb9337b79c5a60fc307d.ctex"]
 
 [params]
 

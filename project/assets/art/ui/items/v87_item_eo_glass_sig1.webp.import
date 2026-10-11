@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://i8ganst4ik6au"
-path="res://.godot/imported/v87_item_eo_glass_sig1.webp-15fd2140500c3f668783e83a200d43cb.ctex"
+uid="uid://bimjho0md6frc"
+path="res://.godot/imported/v87_item_eo_glass_sig1.webp-0a6cda2f27511e5491288fa150ccb923.ctex"
 metadata={
 "vram_texture": false
 }
@@ -11,7 +11,7 @@ metadata={
 [deps]
 
 source_file="res://assets/art/ui/items/v87_item_eo_glass_sig1.webp"
-dest_files=["res://.godot/imported/v87_item_eo_glass_sig1.webp-15fd2140500c3f668783e83a200d43cb.ctex"]
+dest_files=["res://.godot/imported/v87_item_eo_glass_sig1.webp-0a6cda2f27511e5491288fa150ccb923.ctex"]
 
 [params]
 
