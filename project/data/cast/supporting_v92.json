@@ -12,6 +12,14 @@
       "line": "sz_fogwood"
     },
     {
+      "id": "shilei_wantan",
+      "name": "石垒·晚担",
+      "surname": "石垒",
+      "given": "晚担",
+      "cast_key": "wantan",
+      "role": "石垒坡同乡。因人而留的第一人。不是十二同伴。"
+    },
+    {
       "id": "voice_old_standard",
       "name": "老旗手",
       "cast_key": "old_standard",

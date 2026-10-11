@@ -31,6 +31,25 @@ static func make_leader(given: String, surname: String, crest_color: String) -> 
 	GameState.surname = surname
 	return c
 
+## 石垒坡同乡。因人而留，排在灯影前面。不上十二同伴。六维写死，避免打乱 new_game 的随机序列。
+static func make_shilei_wantan() -> CKCharacter:
+	var c := CKCharacter.new()
+	c.id = next_id("ally")
+	c.cast_key = "wantan"
+	c.name = "石垒·晚担"
+	c.gender = "m"
+	c.age = 22
+	c.job_id = "light_inf"
+	c.rank = "knight"
+	c.blood_mix = {"common_ash": 1.0}
+	c.traits = ["sturdy"]
+	c.appearance = {"hair": "ash_brown", "eyes": "slate", "brow": "straight", "scar": "none"}
+	c.stats = {"str": 8, "vit": 9, "skl": 6, "agi": 7, "per": 5, "wil": 7}
+	c.birthday_month = 8
+	c.salary = 4
+	c.recalc_hp()
+	return c
+
 static func make_ally_tutor() -> CKCharacter:
 	var c := CKCharacter.new()
 	c.id = next_id("ally")

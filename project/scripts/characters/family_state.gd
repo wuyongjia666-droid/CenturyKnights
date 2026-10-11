@@ -139,7 +139,7 @@ static func build_dynasty_journal(host) -> String:
 			kids.append("%s〔%s〕" % [c.name, c.bloodline_display()])
 	if kids.size() > 0:
 		child_summary = "、".join(kids)
-	host.dynasty_journal = "【王朝手记·第零章】\n团长：%s\n配偶：%s\n子嗣：%s\n岁时：%s\n声望：灰烬邦 %s / 河卫邦 %s\n\n破旗立团，隘口一战，酒馆添人，春令成婚，初啼入谱，秋收簿清。灰烬旗的第一页，已用血与粮写就。" % [
+	host.dynasty_journal = "【王朝手记·第零章】\n团长：%s\n配偶：%s\n子嗣：%s\n岁时：%s\n声望：灰烬邦 %s / 河卫邦 %s\n\n石垒坡出来的平民把自己做成了一个姓。同乡先跟，烽火把姓打进传闻，酒馆添了认银的人，春令是一场不谈爱的试婚，初啼入谱，粮饷结清。" % [
 		leader.name if leader else "?",
 		spouse_name,
 		child_summary,
