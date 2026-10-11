@@ -4,10 +4,11 @@
 Photographs (gene portraits, cities, scenes, castle, estates, backdrops)
 become WebP at quality 92, at the master's native resolution. Nothing in
 this pass is resized, and nothing is encoded below PHOTO_QUALITY. Package
-size is an on-demand pack problem (see docs/art/portrait-sharpness-v92.md),
-not a reason to soften a plate. Paper-doll parts stay lossless WebP so
-alpha edges remain sharp. UI chrome, FX, tokens, terrain, glyphs and the
-farm inbox stay PNG.
+size is not a reason to soften a plate. Portrait lists, dialogue, and
+detail use the small / medium / large siblings from
+tools/art/build_portrait_tiers.py. The gene bank stays in the base export.
+Paper-doll parts stay lossless WebP so alpha edges remain sharp. UI chrome,
+FX, tokens, terrain, glyphs and the farm inbox stay PNG.
 
 Farm queue JSON still names the generator's .png target. Loaders resolve
 the shipped .webp beside that name.
@@ -251,7 +252,7 @@ def main() -> int:
             "quality": "photographs encode at WebP quality 92, native resolution",
             "portraits": "768x1024 gene plates stay full size; Godot import lossy_quality 0.92",
             "cities": "city boards stay at their master size",
-            "backdrops": "1920 plates stay 1920; size comes from on-demand packs, not a smaller pixel grid",
+            "backdrops": "1920 plates stay 1920; portrait lists use a prebuilt small tier instead of a softer encode",
             "doll": "lossless WebP; alpha overlays",
             "kept_png": "fx, tokens, terrain, banners, glyphs, small UI chrome, farm_inbox",
         },

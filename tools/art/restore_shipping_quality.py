@@ -148,6 +148,9 @@ def main() -> int:
         return 1
     tasks = []
     for path in sorted(ART.rglob("*.webp")):
+        name = path.name
+        if name.endswith(".small.webp") or name.endswith(".medium.webp") or name.endswith(".large.webp"):
+            continue
         rel = path.relative_to(ROOT).as_posix()
         png_rel = rel[: -len(".webp")] + ".png"
         tasks.append((str(path), str(masters / png_rel), rel in SAMPLES))
@@ -193,7 +196,7 @@ def main() -> int:
         "policy": (
             "WebP quality 92 at native resolution. "
             "Godot import lossy_quality 0.92. "
-            "Gene bank is excluded from the base export and ships as the gene-bank pack."
+            "Gene bank ships in the base export. Small and medium tiers are separate siblings."
         ),
     }
     REPORT.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

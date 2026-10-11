@@ -182,5 +182,5 @@
       "rmse_after": 3.108
     }
   ],
-  "policy": "WebP quality 92 at native resolution. Godot import lossy_quality 0.92. Gene bank is excluded from the base export and ships as the gene-bank pack."
+  "policy": "WebP quality 92 at native resolution. Godot import lossy_quality 0.92. Gene bank ships in the base export. Small and medium tiers are separate siblings."
 }

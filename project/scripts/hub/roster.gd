@@ -163,7 +163,7 @@ func _render() -> void:
 	st.size = Vector2(180, 16)
 	st.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	p.add_child(st)
-	UIKit.portrait_plate(p, Rect2(22, 52, 238, 330), c, "HALF-BODY PORTRAIT // SPEC 01")
+	UIKit.portrait_plate(p, Rect2(22, 52, 238, 330), c, "HALF-BODY PORTRAIT // SPEC 01", false, CKArtPaths.TIER_MEDIUM)
 	var bio := UIKit.panel_at(p, Rect2(22, 394, 238, 120), 8)
 	var bl := UIKit.mono("CHRONICLE BIO", 9, UIKit.TEXT_FAINT)
 	bl.position = Vector2(14, 12)

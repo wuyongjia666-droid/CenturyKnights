@@ -30,13 +30,7 @@ static func manifest_path() -> String:
 static func bank_dir() -> String:
 	if dir_override != "":
 		return dir_override
-	var res := ProjectSettings.globalize_path("res://assets/art/portraits/genome/bank")
-	if _dir_has_plate(res):
-		return res
-	var packed := CKArtPacks.gene_bank_dir()
-	if packed != "" and _dir_has_plate(packed):
-		return packed
-	return res
+	return ProjectSettings.globalize_path("res://assets/art/portraits/genome/bank")
 
 
 static func _dir_has_plate(dir: String) -> bool:
@@ -65,13 +59,13 @@ static func has_plates() -> bool:
 	_plates_known = true
 	return _plates
 
-static func try_texture(c: Object) -> Texture2D:
+static func try_texture(c: Object, tier: String = "large") -> Texture2D:
 	if not has_plates():
 		return null
 	var m := best_match(c)
 	if not bool(m.get("hit", false)):
 		return null
-	return _load_plate(str(m.get("bucket_key", "")))
+	return _load_plate(str(m.get("bucket_key", "")), tier)
 
 static func best_match(c: Object) -> Dictionary:
 	_ensure_index()
@@ -403,19 +397,7 @@ static func _has_term(text: String, term: String) -> bool:
 static func _is_word(ch: int) -> bool:
 	return (ch >= 48 and ch <= 57) or (ch >= 65 and ch <= 90) or (ch >= 97 and ch <= 122) or ch == 95
 
-static func _load_plate(key: String) -> Texture2D:
+static func _load_plate(key: String, tier: String = "large") -> Texture2D:
 	if dir_override != "":
-		var webp := dir_override.path_join(key + ".webp")
-		if FileAccess.file_exists(webp):
-			return _load_png(webp)
-		return _load_png(dir_override.path_join(key + ".png"))
-	return CKArtPaths.load_texture("res://assets/art/portraits/genome/bank/%s.png" % key)
-
-
-static func _load_png(path: String) -> Texture2D:
-	if not FileAccess.file_exists(path):
-		return null
-	var img := Image.load_from_file(path)
-	if img == null:
-		return null
-	return ImageTexture.create_from_image(img)
+		return CKArtPaths.load_portrait(dir_override.path_join(key + ".png"), tier)
+	return CKArtPaths.load_portrait("res://assets/art/portraits/genome/bank/%s.png" % key, tier)

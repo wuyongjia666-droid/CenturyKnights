@@ -7,9 +7,9 @@ when any preset pattern matches its relative path. Godot's String.match treats
 tools/ci/ratchet.json export_budget_bytes.
 
 Shipping photographs are WebP quality 92 at native resolution. Doll parts
-are lossless WebP. The gene-portrait bank is an on-demand pack: it stays
-in the repo at full quality and is excluded from the base export. The
-active budget sits just above the measured base total. If
+are lossless WebP. The gene-portrait bank ships inside the base Windows
+and Android exports, with small and medium siblings beside each large
+plate. The active budget sits just above the measured total. If
 docs/art/retired-assets-v92.json grows an exclude_globs list, those
 patterns are applied on top.
 """

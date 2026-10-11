@@ -456,53 +456,56 @@ static func _stage_names(stage: String) -> Array:
 				names.append(str(STAGES[j]))
 	return names
 
-static func _load_named(stem: String) -> Texture2D:
+static func _load_named(stem: String, tier: String = "large") -> Texture2D:
 	var abs_png := portrait_dir_abs().path_join(stem + ".png")
-	var hit := CKArtPaths.load_texture(abs_png)
+	var hit := CKArtPaths.load_portrait(abs_png, tier)
 	if hit != null:
 		return hit
 	if dir_override != "":
 		return null
-	var res_hit := CKArtPaths.load_texture(RES_DIR + stem + ".png")
+	var res_hit := CKArtPaths.load_portrait(RES_DIR + stem + ".png", tier)
 	if res_hit != null:
 		return res_hit
-	return CKArtPaths.load_texture(USER_DIR + stem + ".png")
+	return CKArtPaths.load_portrait(USER_DIR + stem + ".png", tier)
 
 ## Current stage plate, else the nearest stage that has been rendered, else the unsuffixed legacy file.
-static func texture(c: Object) -> Texture2D:
+static func texture(c: Object, tier: String = "large") -> Texture2D:
+	var use_tier := "large"
+	if tier == "small" or tier == "medium":
+		use_tier = tier
 	var stem := file_stem(str(c.get("id")))
 	var stage := age_stage_of(c)
-	var key := "%s|%s" % [stem, stage]
+	var key := "%s|%s|%s" % [stem, stage, use_tier]
 	if _mem.has(key) and _mem[key] is Texture2D:
 		return _mem[key]
 	if _miss.has(key):
 		return null
 	for name in _stage_names(stage):
-		var hit := _load_named("%s_%s" % [stem, name])
+		var hit := _load_named("%s_%s" % [stem, name], use_tier)
 		if hit != null:
 			_mem[key] = hit
 			return hit
-	var legacy := _load_named(stem)
+	var legacy := _load_named(stem, use_tier)
 	if legacy == null and dir_override == "":
 		var old := cache_key(c)
-		legacy = CKArtPaths.load_texture(RES_DIR + old + ".png")
+		legacy = CKArtPaths.load_portrait(RES_DIR + old + ".png", use_tier)
 		if legacy == null:
-			legacy = CKArtPaths.load_texture(USER_DIR + old + ".png")
+			legacy = CKArtPaths.load_portrait(USER_DIR + old + ".png", use_tier)
 	if legacy != null:
 		_mem[key] = legacy
 		return legacy
-	var bank := _bank_plate(c)
+	var bank := _bank_plate(c, use_tier)
 	if bank != null:
 		_mem[key] = bank
 		return bank
 	_miss[key] = true
 	return null
 
-static func _bank_plate(c: Object) -> Texture2D:
+static func _bank_plate(c: Object, tier: String = "large") -> Texture2D:
 	var scr = load("res://scripts/art/portrait_bank.gd")
 	if scr == null:
 		return null
-	var tex = scr.try_texture(c)
+	var tex = scr.try_texture(c, tier)
 	return tex if tex is Texture2D else null
 
 static func clear_mem() -> void:

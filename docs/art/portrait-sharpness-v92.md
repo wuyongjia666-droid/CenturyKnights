@@ -10,14 +10,19 @@ q78 的出货 WebP 把脸压软了，Godot 导入再按同样的 `lossy_quality`
 
 ## 体积
 
-省字节只走按需包。基因立绘库 `project/assets/art/portraits/genome/bank/` 仍以 q92 留在仓库里，两个导出预设用 `*portraits/genome/bank/*` 把它排除在基础包之外。安装包放在：
+省字节不靠把脸压软，也不把基因库拆成外置包。基因立绘库 `project/assets/art/portraits/genome/bank/` 以 q92 原尺寸留在仓库里，并且打进 Windows 和 Android 的基础导出。安装包是一份离线完整的包，不读 `user://packs/gene-bank`，也不读可执行文件旁边的 `packs/gene-bank`。
 
-- `user://packs/gene-bank/assets/art/...`（与 `res://` 后的相对路径相同）
-- 或可执行文件旁边的 `packs/gene-bank/assets/art/...`
+同一张脸另有两档，在导出前用 Lanczos 从这张 q92 板生成，再按质量 92 编码。运行时按界面去取，缺档就退回更大的一档，不在运行时把软图缩小。
 
-`CKArtPacks` 在 `res://` 找不到文件时走这两处。编辑器和带仓库的运行仍直接读 `res://`。基础包没有基因库时，`CKPortraitBank` 保持原有的空库回退。
+| 档 | 相对母版 | 768×1024 的像素 | 用在哪 |
+|---|---|---|---|
+| small | 1/2 | 384×512 | 名册、列表、战棋棋子 |
+| medium | 2/3 | 512×682 | 对话、半身 |
+| large | 1 | 768×1024（现有文件） | 档案详情 |
 
-雇佣脸、具名半身、城图、场景、城堡、领地、战斗背景都留在基础包里，并且是 q92 原尺寸。
+已经小于 640px 长边的雇佣脸不再缩。再缩一档会比现在更糊。状态叠层仍是对齐半身板的透明图，界面把它铺在当前这档立绘上。
+
+`tools/art/build_portrait_tiers.py` 写 `名字.small.webp` 和 `名字.medium.webp`，并带上 `lossy_quality=0.92` 的导入。体积数字在 `tools/ci/portrait_tiers_report.json` 和导出报告里。
 
 ## 前后
 
@@ -37,8 +42,8 @@ q78 的出货 WebP 把脸压软了，Godot 导入再按同样的 `lossy_quality`
 
 Godot 导入从 `lossy_quality` 0.74–0.78 改为 0.92，并且 `compress/high_quality=true`。加载器用 `Image.load_from_file` 读这份 q92 文件；导入质量不再把同一张图再压软一档。
 
-基础导出（基因库除外）255,989,322 字节，预算 300,000,000，通过。被排除的基因库约 223 MB，是 q92 原尺寸，不是缩过的副本。
+基础导出含基因库和 small / medium 档。按源文件计，约 663,942,234 字节（基因库大档仍是 q92 原尺寸，small 约 62 MB，medium 约 108 MB）。预算写在 `tools/ci/ratchet.json` 的 `export_budget_bytes`，由 `tools/ci/export_size_report.py` 按两个预设的排除规则计源文件字节。
 
 ## m173
 
-这一轮不需要重画脸。若以后某张板在 m173 上重出，把 PNG 交进农场入库，再跑现在的压缩脚本。它不会降质量，也不会缩小。基因库若要进玩家机器，打 `gene-bank` 包，不要把 q92 文件再压回 q78 塞进基础包。
+这一轮不需要重画脸。若以后某张板在 m173 上重出，把 PNG 交进农场入库，再跑现在的压缩脚本。它不会降质量，也不会缩小母版。新的大板入库后跑 `tools/art/build_portrait_tiers.py`，补上 small 和 medium。不要把 q92 母版再压回 q78，也不要把它排除出基础包。

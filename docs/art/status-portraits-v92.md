@@ -29,7 +29,7 @@
 - 战棋单位卡：`unit_card.gd`
 - 战斗情报：`battle_info_panel.gd`
 
-三处都调用 `CKPortraitStatus.attach`。底图仍走 `UnitArt.portrait`。
+三处都调用 `CKPortraitStatus.attach`。底图仍走 `UnitArt.portrait`。列表和棋子取 small，对话和半身取 medium，档案详情取 large。叠层按控件尺寸盖上去，不另做一套缩小的状态图。
 
 ## m173
 

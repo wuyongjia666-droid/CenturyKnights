@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Lock the shipping encode: quality 92, native pixels, gene bank on demand."""
+"""Lock the shipping encode: quality 92, native pixels, gene bank in the base export."""
 from __future__ import annotations
 
 import importlib.util
@@ -39,9 +39,12 @@ class ShippingQualityTest(unittest.TestCase):
         self.assertNotIn("0.74", text)
         self.assertNotIn("downscale", text)
 
-    def test_gene_bank_is_ondemand(self) -> None:
+    def test_gene_bank_ships_in_base_export(self) -> None:
         presets = (ROOT / "project" / "export_presets.cfg").read_text(encoding="utf-8")
-        self.assertEqual(presets.count("*portraits/genome/bank/*"), 2)
+        self.assertEqual(presets.count('exclude_filter="tests/*,*.md,*farm_inbox/*,*stitch_exports/*,*_src_*/*"'), 2)
+        self.assertNotIn("genome/bank", presets)
+        self.assertNotIn("gene-bank", presets)
+        self.assertFalse((ROOT / "project" / "scripts" / "art" / "art_packs.gd").exists())
 
 
 if __name__ == "__main__":
