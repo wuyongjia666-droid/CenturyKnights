@@ -15,10 +15,11 @@ timeout 30 git fetch -q --no-tags --filter=blob:none origin "$GITHUB_BASE_REF" 2
 	echo "precheck: could not fetch origin/${GITHUB_BASE_REF}; comparing with the local copy"
 start=$SECONDS
 
-python3 -c "import PIL" 2>/dev/null || {
-	echo "precheck: Pillow missing (WebP checks need it): python3 -m pip install --user pillow numpy 'gdtoolkit==4.*'" >&2
+python3 -c "import PIL, numpy" 2>/dev/null || {
+	echo "precheck: Pillow/numpy missing (WebP and audio checks need them): python3 -m pip install --user pillow numpy 'gdtoolkit==4.*'" >&2
 	exit 1
 }
+command -v ffmpeg >/dev/null 2>&1 || echo "precheck: ffmpeg missing; audio suites will try to apt-install it" >&2
 
 echo "==> farm queue"
 python3 tools/farm_queue/validate_queue_v92.py >/tmp/ck_pre_farm.log 2>&1 &&

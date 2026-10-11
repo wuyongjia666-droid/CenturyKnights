@@ -128,9 +128,12 @@ jobs:
         if: github.event_name == 'pull_request'
         run: git fetch --no-tags --filter=blob:none origin "${{ github.base_ref }}"
 
-      # Suites shell out to python3 tools that read WebP/PNG (placeholder, crest, audio checks).
-      - name: Python image libs
-        run: python3 -m pip install --quiet pillow numpy
+      # Suites shell out to python3 tools that read WebP/PNG and render audio. The audio tools
+      # apt-install ffmpeg on demand, which collides on the apt lock when suites run in parallel.
+      - name: Python and audio tools
+        run: |
+          python3 -m pip install --quiet pillow numpy
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg >/dev/null
 
       - name: Godot setup
         uses: ./.github/actions/godot-setup
