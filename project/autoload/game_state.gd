@@ -44,6 +44,7 @@ var morale: int = 70
 var characters: Dictionary = {}  # id -> CKCharacter
 var tavern_candidates: Array = []
 var marriage_candidates: Array = []
+var marriage_nation: String = ""
 var quests: Array = []
 var event_log: Array = []
 var settings: Dictionary = {
@@ -303,9 +304,10 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	grant_job_skills(leader)
 	grant_job_skills(ally)
 	refresh_tavern()
-	refresh_marriage_candidates()
 	_init_quests()
 	World.reset()  # v8.7 playable atlas: position, reputation, markets, boards
+	marriage_nation = ""
+	refresh_marriage_candidates()
 	log_event("灰烬旗立团：「%s」" % leader.name)
 	mark_dirty()
 
@@ -761,6 +763,7 @@ func build_save_data() -> Dictionary:
 		"characters": {},
 		"tavern": [],
 		"marriage": [],
+		"marriage_nation": marriage_nation,
 		"quests": quests,
 		"started": started,
 		"world_v87": CKSaveService.compact_world(World.to_save(), _court_derived),
@@ -856,6 +859,7 @@ func apply_save_data(data: Dictionary) -> bool:
 	marriage_candidates.clear()
 	for d in data.get("marriage", []):
 		marriage_candidates.append(CKCharacter.from_dict(d))
+	marriage_nation = str(data.get("marriage_nation", ""))
 	var _wd = data.get("world_v87", {})
 	var _world: Dictionary = _wd if typeof(_wd) == TYPE_DICTIONARY else {}
 	var _derived := str(_world.get("court_genomes", "")) == "derived"
@@ -872,8 +876,8 @@ func apply_save_data(data: Dictionary) -> bool:
 func family_members() -> Array:
 	return CKFamilyState.family_members(self)
 
-func refresh_marriage_candidates() -> void:
-	CKFamilyState.refresh_marriage_candidates(self)
+func refresh_marriage_candidates(nation_id: String = "") -> void:
+	CKFamilyState.refresh_marriage_candidates(self, nation_id)
 
 func _init_quests() -> void:
 	CKEconomyState._init_quests(self)

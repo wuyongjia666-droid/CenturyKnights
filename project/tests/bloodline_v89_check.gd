@@ -383,6 +383,14 @@ func _social() -> void:
 		var mr := CKBloodline.roll_marriage(rng, "baron", {"rep": {"ashbanner": 40}, "stance": {"ashbanner": "home", "shuoying": "hostile"}})
 		counts[mr.nation] = int(counts.get(mr.nation, 0)) + 1
 	_ok(int(counts.get("ashbanner", 0)) > int(counts.get("shuoying", 0)) * 3, "marriage offers follow diplomacy %s" % str(counts))
+	for _i in 24:
+		var locked := CKBloodline.roll_marriage(rng, "baron", {"nation": "qinghe", "rep": {"ashbanner": 80}, "stance": {"ashbanner": "home"}})
+		_ok(str(locked.nation) == "qinghe", "locked offer nation %s" % str(locked.nation))
+		_ok(CKBloodline.nation_of_line(str(locked.line)) == "qinghe", "locked offer line %s" % str(locked.line))
+		var mix: Dictionary = locked.blood_mix
+		for bk in mix.keys():
+			var home := CKBloodline.nation_of_line(str(bk))
+			_ok(home == "" or home == "qinghe", "locked mix left qinghe %s" % str(bk))
 	# births
 	var notes := CKBloodline.on_birth(daughter, king, dark)
 	_ok(str(notes).contains("窑女"), "birth note for a kiln daughter %s" % str(notes))

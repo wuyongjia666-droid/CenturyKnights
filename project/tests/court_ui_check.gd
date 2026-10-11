@@ -70,6 +70,7 @@ func _scene(path: String, names: Array, tall: Array) -> void:
 		_codex_marks(n)
 	if path.ends_with("marriage.tscn"):
 		_marriage_footer(n)
+		_marriage_posts_and_wed(n)
 	if path.ends_with("court_news.tscn"):
 		var birth := n.find_child("FilterBirth", true, false) as Button
 		if birth:
@@ -132,6 +133,50 @@ func _codex_marks(scene: Node) -> void:
 			if tx2.length() > 1 and not glyphs.has(tx2):
 				named = true
 		_ok(named, "known trait has no name")
+
+func _marriage_posts_and_wed(scene: Node) -> void:
+	_ok(scene.find_child("OpenGuide", true, false) != null, "marriage guide button")
+	var home := CKFamilyState.active_marriage_nation(GameState)
+	_ok(home == "ashbanner", "castle court nation %s" % home)
+	_ok(CKFamilyState.posts_match_nation(GameState, "ashbanner"), "castle posts stay in ash banner")
+	World.pos = "qh_capital"
+	GameState.refresh_marriage_candidates()
+	_ok(str(GameState.marriage_nation) == "qinghe", "qinghe court %s" % GameState.marriage_nation)
+	_ok(CKFamilyState.posts_match_nation(GameState, "qinghe"), "qinghe posts mixed")
+	World.pos = "hq"
+	GameState.refresh_marriage_candidates()
+	if scene.has_method("_ensure_posts"):
+		scene._ensure_posts()
+	if scene.has_method("_refresh"):
+		scene._refresh()
+	_ok(CKFamilyState.posts_match_nation(GameState, "ashbanner"), "return to keep restores ash posts")
+	GameState.reputation["ashland"] = 80
+	GameState.silver = 400
+	var leader = GameState.get_leader()
+	var picked = null
+	for cand in GameState.marriage_candidates:
+		if bool(Lineage.can_propose(leader, cand).get("ok")):
+			picked = cand
+			break
+	_ok(picked != null, "no proposable ash post")
+	if picked == null:
+		return
+	var wed = Lineage.marry(leader, picked, 40, null, true)
+	_ok(bool(wed.get("ok")), "marry %s" % str(wed))
+	if scene.has_method("_present_wed"):
+		scene._present_wed(str(wed.get("msg", "")), true)
+	var btn := scene.get("_marry_btn") as Button
+	_ok(btn != null and btn.disabled and btn.text == Locale.t("ux_married_cta"), "contract locked %s" % (btn.text if btn else ""))
+	var toast := scene.find_child("MarriageToast", true, false) as Label
+	_ok(toast != null and toast.visible and str(toast.text).find(str(wed.get("msg", ""))) >= 0, "wedding toast")
+	var line := scene.find_child("SpouseLine", true, false) as Label
+	_ok(line != null and line.visible and str(line.text).find(str(picked.name)) >= 0, "spouse line")
+	var silver := ""
+	if scene.get("_chip_value") is Array and (scene.get("_chip_value") as Array).size() >= 3:
+		silver = str((scene.get("_chip_value") as Array)[2].text)
+	_ok(silver == str(GameState.silver), "silver chip %s vs %s" % [silver, GameState.silver])
+	if toast:
+		toast.visible = false
 
 func _marriage_footer(scene: Node) -> void:
 	var ages := scene.find_children("AgeLine", "", true, false)
