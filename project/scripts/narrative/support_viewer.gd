@@ -15,6 +15,7 @@ var _actions: VBoxContainer
 
 
 func _ready() -> void:
+	auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	Bonds.conversations()
 	UIKit.make_screen_bg(self)
 	var title := UIKit.make_label(Locale.t("nar04_title"), true)
@@ -30,10 +31,15 @@ func _ready() -> void:
 	add_child(_speaker)
 	_body = RichTextLabel.new()
 	_body.bbcode_enabled = false
+	_body.fit_content = false
+	_body.scroll_following = false
 	_body.position = Vector2(500, 120)
 	_body.custom_minimum_size = Vector2(720, 280)
-	_body.scroll_active = false
+	_body.size = Vector2(720, 280)
+	_body.scroll_active = true
+	_body.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	_body.add_theme_color_override("default_color", UIKit.TEXT)
+	_body.add_theme_font_override("normal_font", UIKit.font("regular"))
 	_body.add_theme_font_size_override("normal_font_size", 16)
 	add_child(_body)
 	_actions = VBoxContainer.new()
@@ -105,12 +111,14 @@ func _show() -> void:
 	if _idx < 0 or _idx >= _lines.size():
 		_speaker.text = ""
 		_body.text = Locale.t("nar04_done")
+		_body.scroll_to_line(0)
 		if _open_id != "":
 			GameState.set_flag("bond_seen:" + _open_id, true)
 		return
 	var line: Dictionary = _lines[_idx]
 	_speaker.text = str(line.get("speaker", ""))
 	_body.text = str(line.get("text", ""))
+	_body.scroll_to_line(0)
 
 
 func _advance() -> void:

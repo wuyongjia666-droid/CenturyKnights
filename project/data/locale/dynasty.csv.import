@@ -1,0 +1,10 @@
+[remap]
+
+importer="keep"
+uid="uid://t4agn3yhj8lik"
+
+[deps]
+
+source_file="res://data/locale/dynasty.csv"
+
+[params]
