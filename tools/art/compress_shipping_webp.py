@@ -87,7 +87,8 @@ def _uid_for(rel: str, old_import: Path) -> str:
 
 def _write_import(webp: Path, lossy_q: float | None, old_import: Path) -> None:
     rel = webp.relative_to(PROJECT).as_posix()
-    digest = hashlib.md5(rel.encode()).hexdigest()
+    # Godot names the .ctex after md5("res://" + rel); any other digest forces a reimport on every fresh checkout.
+    digest = hashlib.md5(f"res://{rel}".encode()).hexdigest()
     dest = f"res://.godot/imported/{webp.name}-{digest}.ctex"
     mode = 0 if lossy_q is None else 1
     quality = 1.0 if lossy_q is None else lossy_q
