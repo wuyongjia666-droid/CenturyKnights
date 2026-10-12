@@ -102,7 +102,11 @@ static func train_cost(host) -> int:
 
 static func forge_craft_cost(host) -> Dictionary:
 	var lv = CKEconomyState.building_level(host, "forge")
-	return {"iron": maxi(1, 3 - mini(lv, 3)), "silver": maxi(8, 24 - lv * 4)}
+	var iron := maxi(1, 3 - mini(lv, 3))
+	## 杂货铺「冷钢油」：下一次堡内打刀少用 1 块铁
+	if int(host.house_mods.get("sundry_forge_iron", 0)) > 0:
+		iron = maxi(1, iron - 1)
+	return {"iron": iron, "silver": maxi(8, 24 - lv * 4)}
 
 static func market_buy_prices(host) -> Dictionary:
 	var lv = CKEconomyState.building_level(host, "market")
@@ -908,6 +912,7 @@ static func craft_weapon(host, cid: String) -> Dictionary:
 		return {"ok": false, "msg": "选择角色"}
 	host.iron -= int(cost.iron)
 	host.silver -= int(cost.silver)
+	host.house_mods.erase("sundry_forge_iron")
 	if World.is_world_item(c.weapon_id):  # v8.7: a world weapon goes back to the armory, not the scrap heap
 		World.armory[c.weapon_id] = int(World.armory.get(c.weapon_id, 0)) + 1
 	c.weapon_id = "ash_blade_fine" if CKEconomyState.building_level(host, "forge") >= 4 else "ash_blade"

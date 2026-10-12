@@ -6,7 +6,7 @@ extends Control
 
 const _Atlas = preload("res://scripts/art/atlas_art.gd")
 const ATLAS := "res://scenes/hub/atlas_view.tscn"
-const TABS := [["overview", "概览"], ["smith", "铁匠铺"], ["market", "市集"], ["board", "委托榜"], ["tavern", "酒馆"], ["armory", "军械库"], ["lamp", "灯籍"]]
+const TABS := [["overview", "概览"], ["smith", "铁匠铺"], ["market", "市集"], ["sundry", "杂货铺"], ["board", "委托榜"], ["tavern", "酒馆"], ["armory", "军械库"], ["lamp", "灯籍"]]
 const TYPE_GLYPH := {"sword": "剑", "blade": "刀", "spear": "枪", "lance": "骑", "axe": "斧", "bow": "弓", "crossbow": "弩", "staff": "杖", "focus": "器", "armor": "甲", "shield": "盾", "charm": "符"}
 const TIER_COL := [Color("#9AA6B8"), Color("#9AA6B8"), Color("#5EE0B5"), Color("#6ED4FF"), Color("#C9B8FF")]
 const CONTENT := Rect2(416, 108, 848, 576)
@@ -42,8 +42,10 @@ func _ready() -> void:
 	_tabbar.position = Vector2(416, 64)
 	_tabbar.add_theme_constant_override("separation", 6)
 	add_child(_tabbar)
+	## 八个页签要挤进内容区 848 宽，不能超出屏幕右边。
+	var tab_w := int(floor((CONTENT.size.x - 6.0 * (TABS.size() - 1)) / TABS.size()))
 	for t in TABS:
-		var b := UIKit.ghost_button(str(t[1]), 108, 34)
+		var b := UIKit.ghost_button(str(t[1]), tab_w, 34)
 		b.name = "Tab_" + str(t[0])
 		var tid := str(t[0])
 		b.pressed.connect(func(): _set_tab(tid))
@@ -249,6 +251,7 @@ func _render_tab() -> void:
 		"overview": _tab_overview()
 		"smith": _tab_smith()
 		"market": _tab_market()
+		"sundry": _tab_sundry()
 		"board": _tab_board()
 		"tavern": _tab_tavern()
 		"armory": _tab_armory()
@@ -1102,3 +1105,71 @@ func selftest() -> Dictionary:
 	_set_tab("armory")
 	await get_tree().process_frame
 	return {"ok": true, "msg": ", ".join(msgs)}
+
+
+
+# ── 杂货铺（v9.2 §4.2）：本国日用品只在本国卖，陆桥卖两侧过路货 ──────────
+func _tab_sundry() -> void:
+	var p := _panel(Rect2(0, 0, 848, 576))
+	_head(p, Vector2(18, 14), "杂货铺", "SUNDRIES · LOCAL GOODS")
+	var note := _para(Locale.t("sundry_note"), UIKit.TEXT_DIM, 13, 812)
+	note.position = Vector2(18, 52)
+	p.add_child(note)
+	var v := _scroll(p, Rect2(12, 92, 830, 474))
+	var shelf: Array = CKSundries.shelf_for_city(city)
+	if shelf.is_empty():
+		v.add_child(_para(Locale.t("sundry_empty_shelf"), UIKit.TEXT_DIM, 14, 800))
+	for offer in shelf:
+		var iid := str(offer.get("id", ""))
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 8)
+		row.custom_minimum_size = Vector2(812, 52)
+		var info := VBoxContainer.new()
+		info.custom_minimum_size = Vector2(480, 0)
+		info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		info.add_child(_line("%s  ·  %d 银  ·  有 %d/%d" % [str(offer.get("name", iid)), int(offer.get("price", 0)), CKSundries.owned(iid), CKSundries.max_stack()], UIKit.TEXT, 14, 480))
+		info.add_child(_line(str(offer.get("desc", "")), UIKit.TEXT_DIM, 12, 480))
+		row.add_child(info)
+		var buy := UIKit.ghost_button(Locale.t("sundry_buy"), 120, 48)
+		buy.name = "SundryBuy_" + iid
+		buy.pressed.connect(func(): _sundry_result(CKSundries.buy(city, iid)))
+		row.add_child(buy)
+		var use := UIKit.ghost_button(Locale.t("sundry_use"), 120, 48)
+		var can: Dictionary = CKSundries.usable(iid)
+		use.disabled = not bool(can.get("ok", false))
+		use.tooltip_text = str(can.get("msg", ""))
+		use.pressed.connect(func(): _sundry_result(CKSundries.use(iid, "", city)))
+		row.add_child(use)
+		v.add_child(row)
+	## 行李里别国带来的：只能半价清掉
+	var foreign: Array = []
+	for k in CKSundries.bag().keys():
+		var on_shelf := false
+		for o in shelf:
+			if str(o.get("id", "")) == str(k):
+				on_shelf = true
+		if not on_shelf and CKSundries.owned(str(k)) > 0:
+			foreign.append(str(k))
+	if not foreign.is_empty():
+		v.add_child(_line(Locale.t("sundry_bag_head"), UIKit.ACCENT, 13, 800))
+	for k2 in foreign:
+		var r2 := HBoxContainer.new()
+		r2.add_theme_constant_override("separation", 8)
+		r2.custom_minimum_size = Vector2(812, 52)
+		var nm := _line("%s × %d" % [CKSundries.item_name(k2), CKSundries.owned(k2)], UIKit.TEXT, 14, 480)
+		nm.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		r2.add_child(nm)
+		var ub := UIKit.ghost_button(Locale.t("sundry_use"), 120, 48)
+		var can2: Dictionary = CKSundries.usable(k2)
+		ub.disabled = not bool(can2.get("ok", false))
+		ub.pressed.connect(func(): _sundry_result(CKSundries.use(k2, "", city)))
+		r2.add_child(ub)
+		var sb := UIKit.ghost_button(Locale.t("sundry_sell"), 120, 48)
+		sb.pressed.connect(func(): _sundry_result(CKSundries.sell_half(city, k2)))
+		r2.add_child(sb)
+		v.add_child(r2)
+
+
+func _sundry_result(r: Dictionary) -> void:
+	_toast_msg(str(r.get("msg", "")), UIKit.OK if bool(r.get("ok", false)) else UIKit.DANGER)
+	_refresh_all()
