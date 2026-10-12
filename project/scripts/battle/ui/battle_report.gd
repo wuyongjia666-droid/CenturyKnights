@@ -145,7 +145,7 @@ static func present(host, win: bool, purse: int, sp_gain: int, exp_before: Dicti
 	keys.add_theme_constant_override("separation", 6)
 	root.add_child(keys)
 	var back_word := Locale.t("shell_7c9e016b") if host._world_enc else Locale.t("shell_1e62632d")
-	for kh in ([["A", Locale.t("shell_22841003")], ["ESC", back_word]] if win else ([["A", back_word]] if host._world_enc else [["A", Locale.t("shell_55cfd979")], ["ESC", Locale.t("shell_1e62632d")]])):
+	for kh in ([["A", Locale.t("shell_22841003")], ["ESC", back_word]] if win else ([["A", back_word]] if host._world_enc else [["A", Locale.t("shell_55cfd979")], ["ESC", Locale.t("defeat_back_castle")]])):
 		keys.add_child(UIKit.keycap(str(kh[0])))
 		var kl := UIKit.body_label(str(kh[1]), UIKit.TEXT_DIM, 11)
 		kl.autowrap_mode = TextServer.AUTOWRAP_OFF
@@ -153,7 +153,7 @@ static func present(host, win: bool, purse: int, sp_gain: int, exp_before: Dicti
 		var gp := Control.new()
 		gp.custom_minimum_size = Vector2(12, 0)
 		keys.add_child(gp)
-	var back_path := str(GameState.get_meta("battle_return", "res://scenes/story/chapter0.tscn")) if (win or host._world_enc) else "res://scenes/story/chapter0.tscn"
+	var back_path := BattleDefeat.back_path(win, host._world_enc, str(GameState.get_meta("battle_return", "")))
 	host.set_meta("result_back", back_path)
 	if win or host._world_enc:
 		var b := UIKit.cta_button(back_word, "A", 220, 48)
@@ -166,7 +166,7 @@ static func present(host, win: bool, purse: int, sp_gain: int, exp_before: Dicti
 		r.position = Vector2(1038, 620)
 		r.pressed.connect(func(): host.get_tree().reload_current_scene())
 		root.add_child(r)
-		var b2 := UIKit.ghost_button(Locale.t("shell_797d26c9"), 150, 48)
+		var b2 := UIKit.ghost_button(Locale.t("defeat_back_castle"), 150, 48)
 		b2.position = Vector2(874, 620)
 		b2.pressed.connect(func(): host.get_tree().change_scene_to_file(back_path))
 		root.add_child(b2)
