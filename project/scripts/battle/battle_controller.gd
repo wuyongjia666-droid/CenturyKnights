@@ -320,6 +320,10 @@ func _build_ui() -> void:
 	phase_label.add_theme_color_override("font_color", UIKit.TEXT)
 	phase_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	top.add_child(phase_label)
+	if DeviceProfile.is_mobile():
+		_phase_chip.visible = false
+		_round_label.add_theme_font_size_override("font_size", 22)
+		phase_label.add_theme_font_size_override("font_size", 22)
 	var tip_text := Locale.t("shell_8ed10247")
 	if DeviceProfile.is_mobile():
 		tip_text = Locale.t("shell_f4b70638")
@@ -466,6 +470,7 @@ func _command_bar_px() -> float:
 ## Landscape phone: command column on the right edge, side panels slide right
 ## to sit next to it, and the board takes all remaining width and full height.
 const MOBILE_RAIL_W := 176.0
+const MobileSide := preload("res://scripts/battle/ui/battle_mobile_side.gd")
 
 func _mobile_landscape() -> bool:
 	if not DeviceProfile.is_mobile() or not is_inside_tree():
@@ -493,6 +498,7 @@ func _layout_board() -> void:
 	if _mobile_landscape():
 		var dx := _root_w() - MOBILE_RAIL_W - 1280.0 + 8.0
 		_shift_side_panels(dx)
+		MobileSide.attach.call_deferred(self, RAIL_X + dx - 8.0, RAIL_W + 8.0)
 		area = Rect2(12, 64, BOARD_AREA.size.x + 12.0 + dx, 720.0 - 64.0 - 10.0)
 	elif DeviceProfile.is_mobile() and is_inside_tree():
 		var vp := get_viewport().get_visible_rect().size
