@@ -28,7 +28,7 @@ func _ready() -> void:
 	_on_resize()
 
 func _on_back() -> void:
-	get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
+	CKNav.up()
 
 func _on_resize() -> void:
 	_place()

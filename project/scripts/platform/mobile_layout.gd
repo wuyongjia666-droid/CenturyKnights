@@ -6,8 +6,8 @@ extends RefCounted
 const DESIGN := Vector2(1280, 720)
 
 static func fit(viewport: Vector2, insets: Dictionary, design: Vector2 = DESIGN) -> Dictionary:
-	## Portrait: top-align inside the safe area (no centered letterbox bars).
-	## Landscape: keep horizontal centering. Background bleed is painted by MobileChrome.
+	## Full-bleed: the root fills the whole safe area (no centered design column).
+	## Scale keeps the design's short side fitting; the long side expands.
 	var left := float(insets.get("left", 0.0))
 	var top := float(insets.get("top", 0.0))
 	var right := float(insets.get("right", 0.0))
@@ -16,35 +16,27 @@ static func fit(viewport: Vector2, insets: Dictionary, design: Vector2 = DESIGN)
 		maxf(1.0, viewport.x - left - right),
 		maxf(1.0, viewport.y - top - bottom)
 	)
-	var s := minf(usable.x / design.x, usable.y / design.y)
-	s = minf(s, 1.0)
-	var pos := Vector2(left, top)
-	var slack_x := usable.x - design.x * s
-	var slack_y := usable.y - design.y * s
+	var s := minf(minf(usable.x / design.x, usable.y / design.y), 1.0)
 	var portrait := viewport.y > viewport.x + 80.0
-	if slack_x > 0.5:
-		pos.x = left + slack_x * 0.5
-	# Portrait pins to safe top so mid-content can extend into the slack below.
-	# Landscape still centers vertically when there is spare height.
-	if (not portrait) and slack_y > 0.5:
-		pos.y = top + slack_y * 0.5
 	var paint := Rect2(Vector2.ZERO, viewport)
-	return {"scale": s, "position": pos, "usable": usable, "paint_rect": paint, "portrait": portrait}
+	return {"scale": s, "position": Vector2(left, top), "usable": usable, "size": usable / s,
+		"paint_rect": paint, "portrait": portrait}
 
 static func apply_root(root: Control, fit: Dictionary) -> void:
 	var s := float(fit.get("scale", 1.0))
 	var pos: Vector2 = fit.get("position", Vector2.ZERO)
+	var sz: Vector2 = fit.get("size", DESIGN)
 	root.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	root.anchor_right = 0.0
 	root.anchor_bottom = 0.0
 	root.pivot_offset = Vector2.ZERO
 	root.scale = Vector2(s, s)
-	root.size = DESIGN
 	root.position = pos
 	root.offset_left = pos.x
 	root.offset_top = pos.y
-	root.offset_right = pos.x + DESIGN.x
-	root.offset_bottom = pos.y + DESIGN.y
+	root.offset_right = pos.x + sz.x
+	root.offset_bottom = pos.y + sz.y
+	root.size = sz
 
 static func pin_footer(footer: Control) -> void:
 	if footer == null or not footer.is_inside_tree():
@@ -119,8 +111,12 @@ static func _grow_hit(button: BaseButton, need: float) -> void:
 		return
 	var nw := maxf(w, need)
 	var nh := maxf(h, need)
+	var old_size := button.size
 	button.custom_minimum_size = Vector2(nw, nh)
 	button.size = Vector2(maxf(button.size.x, nw), maxf(button.size.y, nh))
+	# Free-positioned buttons grow around their centre so they stay aligned with their row.
+	if not (button.get_parent() is Container):
+		button.position -= (button.size - old_size) * 0.5
 
 static func _grow_codex(root: Control, footer: Control) -> void:
 	var rail := root.find_child("NationRailPanel", true, false) as Control

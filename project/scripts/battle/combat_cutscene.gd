@@ -157,7 +157,14 @@ func _build_stage() -> void:
 	env.ambient_light_energy = 0.55
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	env.tonemap_white = 6.0
-	var biome := CutsceneStage.biome_from_record(rec)
+	var biome := CutsceneStage.biome_for_tile(str(rec.get("tile", "")), CutsceneStage.biome_from_record(rec))
+	var nation_tint = null
+	for side in ["left", "right"]:
+		var npack = rec.get(side, {})
+		if typeof(npack) == TYPE_DICTIONARY and str(npack.get("team", "")) == "enemy" and npack.get("char") != null:
+			var nspec: Dictionary = UnitModel.resolve(npack.char, "enemy", str(npack.get("template", "")))
+			if nspec.get("trim", null) is Color:
+				nation_tint = nspec["trim"]
 	var fog_cfg := CutsceneStage.fog_for(biome)
 	env.fog_enabled = bool(_budget.get("fog", true))
 	env.fog_light_color = fog_cfg.get("color", Color(0.10, 0.13, 0.19))
@@ -169,6 +176,8 @@ func _build_stage() -> void:
 	we.environment = env
 	w.add_child(we)
 	var bb := CKArtPaths.resolve(str(rec.get("backdrop", "")))
+	if CutsceneStage.plate_path(biome) != "":
+		bb = ""  # the stage paints its own biome plate
 	if bb != "" and CKArtPaths.exists(bb):
 		var q := MeshInstance3D.new()
 		var qm := QuadMesh.new()
@@ -195,7 +204,7 @@ func _build_stage() -> void:
 	g.material_override = gm
 	w.add_child(g)
 	var low_tier := float(_budget.get("particles", 1.0)) <= 0.01
-	_stage = CutsceneStage.build(w, biome, low_tier)
+	_stage = CutsceneStage.build(w, biome, low_tier, nation_tint)
 	var key := DirectionalLight3D.new()
 	key.rotation_degrees = Vector3(-42, -28, 0)
 	key.light_color = Color(0.88, 0.94, 1.0)
