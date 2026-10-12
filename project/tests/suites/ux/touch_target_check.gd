@@ -1,10 +1,10 @@
 extends Node
-## UX-08: every hub/ui clickable is at least 44px after MobileLayout.ensure_hit_targets.
+## UX-08: every hub/ui clickable is at least 48px after MobileLayout.ensure_hit_targets.
 ## Exceptions live in ALLOW with a reason. Back/Esc opens CKPauseMenu and does not change scene.
 
-const HIT := 44.0
+const HIT := 48.0
 
-# scene file name + button name -> why it may stay under 44px. Empty means no exceptions.
+# scene file name + button name -> why it may stay under 48px. Empty means no exceptions.
 const ALLOW := {}
 
 var _fails: Array = []

@@ -33,6 +33,8 @@ var units: Array = []
 var turn_team: String = "player"
 var selected: int = -1
 var move_cells: Dictionary = {}
+var preview_move_cell: Vector2i = Vector2i(-1, -1)
+var preview_attack_ui: int = -1
 var attack_mode: bool = false
 var moved_this_select: bool = false
 var log_label: Label
@@ -96,7 +98,6 @@ var _lamp_stack: Array = []
 var _turn_snap: Dictionary = {}
 var _move_undo: Dictionary = {}
 
-
 func _map_theme() -> String:
 	return str(BattleMaps.get_map(map_id).get("theme", ""))
 
@@ -147,7 +148,6 @@ func _theme_banter(kind: String) -> void:
 		_play_banter_sfx(str(pack.get("start_sfx", "")))
 	_banter_played[key] = true
 	_log(line)
-
 
 func _escort_banter(kind: String) -> void:
 	_theme_banter(kind)
@@ -461,7 +461,7 @@ func _build_ui() -> void:
 func _command_bar_px() -> float:
 	if not DeviceProfile.is_mobile():
 		return 0.0
-	return DeviceProfile.hit_px() + 16.0
+	return maxf(DeviceProfile.hit_px(), 48.0) + 20.0
 
 func _layout_board() -> void:
 	var area := BOARD_AREA
@@ -1184,6 +1184,8 @@ func _draw_overlay() -> void:
 					overlay.draw_texture_rect(_tex(chip_path), Rect2(tp, Vector2(csz, csz)), false)
 				else:
 					overlay.draw_rect(Rect2(tp, Vector2(18, 14)), Color(0.05, 0.05, 0.08, 0.75))
+
+		BattleTouchConfirm.draw_preview(self)
 		# 图例：纯图标芯片（无长文字）
 		if not move_cells.is_empty():
 			var lx = ORIGIN.x + 10.0
@@ -1300,7 +1302,6 @@ func _draw_overlay() -> void:
 		overlay.draw_rect(Rect2(tip_pos + Vector2(-8, -15), Vector2(tws + 16, 22)), Color(0.06, 0.08, 0.11, 0.9))
 		overlay.draw_rect(Rect2(tip_pos + Vector2(-8, -15), Vector2(tws + 16, 22)), Color(1, 1, 1, 0.14), false, 1.0)
 		overlay.draw_string(tfont, tip_pos, tip, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, UIKit.TEXT)
-
 
 func _zoc_cell_kind(pos: Vector2i) -> String:
 	## 悬停格的控带代价类型（用于音效电报）
@@ -1439,7 +1440,6 @@ func _on_danger_toggled(on: bool) -> void:
 	if overlay:
 		overlay.queue_redraw()
 
-
 func _set_danger(on: bool, focus: int) -> void:
 	danger_on = on
 	danger_focus = focus
@@ -1447,7 +1447,6 @@ func _set_danger(on: bool, focus: int) -> void:
 		_btn_danger.set_pressed_no_signal(on)
 	if overlay:
 		overlay.queue_redraw()
-
 
 func _draw_danger() -> void:
 	if not danger_on or overlay == null:
@@ -1461,7 +1460,6 @@ func _draw_danger() -> void:
 			overlay.draw_line(r.position, r.position + r.size, Color(UIKit.DANGER, 0.9), 1.5)
 			overlay.draw_line(r.position + Vector2(0, r.size.y), r.position + Vector2(r.size.x, 0), Color(UIKit.DANGER, 0.9), 1.5)
 
-
 func _on_long_press_cell(cell: Vector2i) -> void:
 	if not _in_bounds(cell):
 		return
@@ -1474,7 +1472,6 @@ func _on_long_press_cell(cell: Vector2i) -> void:
 		_refresh_info_for(ui)
 		return
 	_inspect_cell(cell)
-
 
 func _inspect_cell(cell: Vector2i) -> void:
 	if not _in_bounds(cell):
@@ -1519,14 +1516,11 @@ func _apply_board_gesture(g: Dictionary) -> void:
 func _build_mobile_bar() -> void:
 	BattleMobileBar.build(self)
 
-
 func _mobile_cmd(row: HBoxContainer, text: String, h: int, accent: bool, cb: Callable) -> Button:
 	return BattleMobileBar.command(row, text, h, accent, cb)
 
-
 func _place_mobile_bar() -> void:
 	BattleMobileBar.place(self)
-
 
 func _on_viewport_resized() -> void:
 	if not DeviceProfile.is_mobile():
@@ -1552,6 +1546,7 @@ func _cancel_selection() -> void:
 	skill_mode = false
 	active_skill_id = ""
 	moved_this_select = false
+	BattleTouchConfirm.clear(self)
 	_refresh_info()
 	_update_skill_hint()
 	overlay.queue_redraw()
@@ -1581,9 +1576,13 @@ func _select_player(ui: int) -> void:
 	skill_mode = false
 	active_skill_id = ""
 	moved_this_select = false
+	preview_move_cell = Vector2i(-1, -1)
+	preview_attack_ui = -1
 	move_cells = _compute_move_cells(ui)
 	_refresh_info()
 	_update_skill_hint()
+	if DeviceProfile.is_mobile():
+		BattleMobileBar.rebuild(self)
 	overlay.queue_redraw()
 	map_draw.queue_redraw()
 
@@ -1608,6 +1607,14 @@ func _click_cell(cell: Vector2i) -> void:
 						var pv = BattleRules.preview(su.char, units[ui].char, terrain[cell.y][cell.x], extras)
 						_spawn_dmg(cell, "命中%d%%" % int(pv.hit), Color(0.9, 0.92, 1.0))
 						_log("预判：命中 %d%%　伤 %d–%d%s" % [int(pv.hit), int(pv.dmg.x), int(pv.dmg.y), (" · " + "·".join(pv.tags)) if pv.tags else ""])
+						if BattleTouchConfirm.enabled():
+							preview_attack_ui = ui
+							preview_move_cell = Vector2i(-1, -1)
+							ForecastPanel.refresh(self)
+							if DeviceProfile.is_mobile():
+								BattleMobileBar.rebuild(self)
+							overlay.queue_redraw()
+							return
 						_do_attack(selected, ui)
 						return
 					_log("目标超出攻击范围")
@@ -1617,20 +1624,15 @@ func _click_cell(cell: Vector2i) -> void:
 			if ui < 0 and not attack_mode and _try_interact(su, cell):
 				return
 			if ui < 0 and not attack_mode and not moved_this_select and move_cells.has(cell):
-				_move_undo = BattleSnapshot.capture(self)
-				var origin_cell: Vector2i = su.pos
-				su.pos = cell
-				_spend_zoc(su, origin_cell, cell)
-				moved_this_select = true
-				Sfx.play_footstep(str(terrain[cell.y][cell.x]))
-				move_cells.clear()
-				_spawn_move_dust(cell)
-				_refresh_info()
-				map_draw.queue_redraw()
-				overlay.queue_redraw()
-				_log("%s 移动至 (%d,%d)" % [su.char.name, cell.x, cell.y])
-				_sync_objectives()
-				RewindBar.refresh(self)
+				if BattleTouchConfirm.enabled():
+					preview_move_cell = cell
+					preview_attack_ui = -1
+					if DeviceProfile.is_mobile():
+						BattleMobileBar.rebuild(self)
+					overlay.queue_redraw()
+					_log(Locale.t("ux_preview_move_log") % [su.char.name, cell.x, cell.y])
+					return
+				BattleTouchConfirm.commit_move(self, cell)
 				return
 			if ui >= 0 and units[ui].team == "player" and not units[ui].done and ui != selected:
 				_select_player(ui)
@@ -1659,7 +1661,6 @@ func _same_side(a: String, b: String) -> bool:
 	if a == b:
 		return true
 	return (a == "player" and b == "ally") or (a == "ally" and b == "player")
-
 
 func _enemy_positions(for_team: String) -> Array:
 	var out: Array = []
@@ -1705,7 +1706,6 @@ func _compute_move_cells(ui: int) -> Dictionary:
 func _spawn_dmg(cell: Vector2i, text: String, col: Color) -> void:
 	var center = ORIGIN + Vector2(cell) * CELL + Vector2(CELL / 2, CELL / 2)
 	_dmg_fx.append({"pos": center, "text": text, "age": 0.0, "col": col})
-
 
 func _spawn_move_dust(cell: Vector2i) -> void:
 	var center = ORIGIN + Vector2(cell) * CELL + Vector2(CELL / 2, CELL / 2)
@@ -1782,7 +1782,6 @@ func _cut_links() -> Array:
 	if _link_seg.is_empty():
 		return []
 	return [_link_seg]
-
 
 func _queue_cutscene(ai: int, di: int, hp0a: int, hp0d: int) -> void:
 	set_meta("cut_links", _cut_links())
@@ -1867,12 +1866,10 @@ func _combat_extras(ai: int, di: int) -> Dictionary:
 		extras["flat_def"] = int(extras.get("flat_def", 0)) + guard
 	return extras
 
-
 func _battle_night() -> bool:
 	if map_id.to_lower().find("night") >= 0:
 		return true
 	return AtlasArt.biome_for_map(map_id) == "nightcamp"
-
 
 func _spend_zoc(u, origin: Vector2i, dest: Vector2i) -> void:
 	if int(u.get("zoc_used", 0)) >= BattleRules.zoc_charges(u.char):
@@ -1880,7 +1877,6 @@ func _spend_zoc(u, origin: Vector2i, dest: Vector2i) -> void:
 	var foes := _enemy_positions(str(u.team))
 	if BattleRules.in_zoc(origin, foes) or BattleRules.in_zoc(dest, foes):
 		u["zoc_used"] = int(u.get("zoc_used", 0)) + 1
-
 
 func _pulse_heal(team: String) -> void:
 	for u in units:
@@ -1890,7 +1886,6 @@ func _pulse_heal(team: String) -> void:
 		if amt <= 0:
 			continue
 		u.char.hp = mini(u.char.max_hp, u.char.hp + amt)
-
 
 func _sync_faction_marks() -> void:
 	var layer := get_node_or_null("FactionMarks") as Control
@@ -1915,7 +1910,6 @@ func _sync_faction_marks() -> void:
 		var side := 22.0
 		mark.size = Vector2(side, side)
 		mark.position = center + Vector2(-side * 0.5, 8.0)
-
 
 func _apply_combat_lock(ai: int, di: int) -> void:
 	# 双方进入交战锁定（再交战刷新至 2）
@@ -1948,19 +1942,16 @@ func _weapon_for(c: CKCharacter) -> String:
 		return "axe"
 	return "sword"
 
-
 func _bark(c: CKCharacter, kind: String) -> void:
 	if c == null:
 		return
 	Sfx.play_bark(str(c.gender), int(c.age), kind)
-
 
 func _is_boss_map() -> bool:
 	if map_id.to_lower().find("boss") >= 0:
 		return true
 	var obj = BattleMaps.get_map(map_id).get("objective", {})
 	return typeof(obj) == TYPE_DICTIONARY and str(obj.get("type", "")) == "boss"
-
 
 func _tension_value() -> float:
 	var hp := 0
@@ -1974,7 +1965,6 @@ func _tension_value() -> float:
 		return 0.0
 	return clampf(1.0 - float(hp) / float(mx), 0.0, 1.0)
 
-
 func _sync_battle_music() -> void:
 	if battle_over:
 		return
@@ -1985,7 +1975,6 @@ func _sync_battle_music() -> void:
 	else:
 		Music.play_player_turn(Music.era_from_year(int(Calendar.year)))
 	Music.set_tension(_tension_value())
-
 
 func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = false) -> void:
 
@@ -2233,7 +2222,6 @@ func _end_player_turn() -> void:
 	if not battle_over:
 		_start_player_turn()
 
-
 func _show_lock_tip_once() -> void:
 	if has_meta("lock_tip_shown"):
 		return
@@ -2331,8 +2319,6 @@ func _run_lock_tutorial_sequence() -> void:
 		)
 	)
 	_log("教学：交战锁定三拍提示已展开")
-
-
 
 func _is_lock_tutorial_map() -> bool:
 	var md = BattleMaps.get_map(map_id)
@@ -2582,7 +2568,6 @@ func _cast_support_skill_for_team(ui: int, sid: String, team: String) -> void:
 	Sfx.skill()
 	map_draw.queue_redraw()
 
-
 func _enemy_arm_offense(ai: int, di: int) -> void:
 	var u = units[ai]
 	var beh := CKTacticsAI.behavior_for(_unit_theme(u))
@@ -2595,7 +2580,6 @@ func _enemy_arm_offense(ai: int, di: int) -> void:
 		active_skill_id = best_sid
 		_log("%s 蓄力「%s」" % [u.char.name, GameState.get_skill(best_sid).get("name", best_sid)])
 		_spawn_dmg(u.pos, "技", Color(0.95, 0.7, 0.4))
-
 
 func _tick_skill_cds(team: String) -> void:
 	for u in units:
@@ -2634,7 +2618,6 @@ func _planner_board() -> Dictionary:
 		"round": _round_no,
 		"summoned": bool(get_meta("ai_summoned", false)),
 	}
-
 
 func _enemy_ai() -> void:
 	var ecs: Array = []
@@ -2810,7 +2793,6 @@ func _sync_objectives() -> void:
 	ObjectiveHud.refresh(self)
 	_check_end()
 
-
 func _arm_spawned(u: Dictionary) -> void:
 	if str(u.get("team", "")) == "enemy":
 		CKEnemyLoadout.stamp_enemy(u.char, CKEnemyLoadout.mode_of(GameState))
@@ -2821,7 +2803,6 @@ func _arm_spawned(u: Dictionary) -> void:
 		GameState.grant_job_skills(u.char)
 		World.grant_gear_skills(u.char)
 	GameState.reset_battle_skills([u.char])
-
 
 func _check_end() -> void:
 	if battle_over:
@@ -2913,23 +2894,17 @@ func _finish(win: bool) -> void:
 func _show_report(win: bool, purse: int, sp_gain: int, exp_before: Dictionary) -> void:
 	BattleReport.present(self, win, purse, sp_gain, exp_before)
 
-
-
 func _mark_map_victory() -> void:
 	BattleVictory.apply(map_id)
-
 
 func _refresh_info_for(ui: int) -> void:
 	BattleInfoPanel.refresh_for(self, ui)
 
-
 func _fill_info_traits(c: CKCharacter) -> void:
 	BattleInfoPanel.fill_traits(self, c)
 
-
 func _refresh_info() -> void:
 	BattleInfoPanel.refresh(self)
-
 
 func _note_unit_downed(u, killer) -> void:
 	if u == null or u.char == null or int(u.char.hp) > 0:
@@ -2954,22 +2929,17 @@ func _arm_lamps() -> void:
 	_lamp_refill = bool(rule.get("refill", false))
 	set_meta("ai_tier", int(rule.get("ai_tier", 1)))
 
-
 func _seal_turn() -> void:
 	BattleSnapshot.seal_turn(self)
-
 
 func _push_lamp() -> void:
 	BattleSnapshot.push_lamp(self)
 
-
 func _undo_move() -> void:
 	BattleSnapshot.undo_move(self)
 
-
 func _rewind_lamp() -> void:
 	BattleSnapshot.rewind_lamp(self)
-
 
 func _log(t: String) -> void:
 	var line := t
@@ -2979,7 +2949,6 @@ func _log(t: String) -> void:
 			return
 	var lines := (line + "\n" + log_label.text).split("\n")
 	log_label.text = "\n".join(lines.slice(0, mini(lines.size(), 12)))
-
 
 func _restore_heir_clash_hp() -> void:
 	BattleVictory.restore_heir_clash()

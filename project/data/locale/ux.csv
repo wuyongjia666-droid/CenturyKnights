@@ -72,3 +72,70 @@ ux_spouse_line,配偶 %s 已写入家族。,%s is written into the house as spou
 ux_spouse_mark,配偶,spouse
 ux_marriage_posts,%s · 应帖,%s · posts
 ux_marriage_reroll_tip,仍在这一国里另抽三人,Draw three more from this nation only
+ux_confirm_move,确认移动,Confirm move
+ux_confirm_attack,确认攻击,Confirm attack
+ux_more_cmds,更多,More
+ux_touch_confirm,触控确认移动/攻击,Touch confirm move/attack
+ux_banner_diy,旗饰,Banner
+ux_name_title,写下这个姓,Write the surname
+ux_name_blurb,你还没有爵。先写下你要别人不得不念的姓，再雕一枚能远看辨清的旗。,No title yet. Write the surname others must speak, then cut a banner that reads at a distance.
+ux_name_surname,姓氏,Surname
+ux_name_given,名字,Given name
+ux_name_field_color,底布色,Field color
+ux_name_field_split,底布分割,Field split
+ux_name_charge,主纹,Charge
+ux_name_border,镶边,Border
+ux_name_emblem,徽记,Emblem
+ux_name_raise,升起灰旗,Raise the banner
+ux_name_contrast,远看辨不清：徽记与底布对比偏弱,Hard to read at range: emblem contrast is weak
+ux_field_solid,单色,Solid
+ux_field_per_fess,横分,Per fess
+ux_field_per_pale,纵分,Per pale
+ux_charge_none,无分割,None
+ux_charge_fess,横带,Fess
+ux_charge_pale,纵带,Pale
+ux_charge_bend,斜带,Bend
+ux_charge_chevron,山形,Chevron
+ux_charge_pale_thin,中轴,Thin pale
+ux_border_none,无镶边,None
+ux_border_line,细线,Line
+ux_border_double,双线,Double
+ux_border_dentil,霜齿,Dentil
+ux_emblem_ring,霜环,Ring
+ux_emblem_arc,弧,Arc
+ux_emblem_wave,浪,Wave
+ux_emblem_leaf,叶,Leaf
+ux_emblem_chevron,山徽,Chevron
+ux_emblem_spark,火花,Spark
+ux_emblem_filament,丝缕,Filament
+ux_emblem_tide,潮汐,Tide
+ux_emblem_notch,缺口,Notch
+ux_emblem_bars,横杠,Bars
+ux_emblem_bend,对角,Bend
+ux_emblem_hollow,空心圆,Hollow
+ux_color_frost_cyan,霜青,Frost cyan
+ux_color_mint,薄荷,Mint
+ux_color_frost_silver,霜银,Frost silver
+ux_color_river,河蓝,River blue
+ux_color_clear_frost,晴霜,Clear frost
+ux_color_tide_ink,潮墨,Tide ink
+ux_color_ice_river,冰河,Ice river
+ux_color_sky,天光,Sky light
+ux_color_tide_cyan,潮青,Tide cyan
+ux_color_plume,羽蓝,Plume blue
+ux_color_frost_white,霜白,Frost white
+ux_color_iron_frost,铁霜,Iron frost
+ux_color_pine_mist,松雾,Pine mist
+ux_color_coral,珊瑚,Coral
+ux_color_ember_haze,赤霞,Ember haze
+ux_color_silver_gray,银灰,Silver gray
+ux_color_mist_blue,雾蓝,Mist blue
+ux_color_bay,湾青,Bay cyan
+ux_color_haze_gray,岚灰,Haze gray
+ux_color_thin_mist,薄雾,Thin mist
+ux_color_lake,湖青,Lake cyan
+ux_color_shallow_tide,浅潮,Shallow tide
+ux_color_cloud,云灰,Cloud gray
+ux_color_plain,素白,Plain white
+ux_preview_move_log,%s 预览移动 (%d,%d) — 确认后落子,%s preview move (%d,%d) — confirm to commit
+ux_moved_to_log,%s 移动至 (%d,%d),%s moved to (%d,%d)

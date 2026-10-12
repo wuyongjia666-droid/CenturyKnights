@@ -6,6 +6,8 @@ extends RefCounted
 const DESIGN := Vector2(1280, 720)
 
 static func fit(viewport: Vector2, insets: Dictionary, design: Vector2 = DESIGN) -> Dictionary:
+	## Portrait: top-align inside the safe area (no centered letterbox bars).
+	## Landscape: keep horizontal centering. Background bleed is painted by MobileChrome.
 	var left := float(insets.get("left", 0.0))
 	var top := float(insets.get("top", 0.0))
 	var right := float(insets.get("right", 0.0))
@@ -19,11 +21,15 @@ static func fit(viewport: Vector2, insets: Dictionary, design: Vector2 = DESIGN)
 	var pos := Vector2(left, top)
 	var slack_x := usable.x - design.x * s
 	var slack_y := usable.y - design.y * s
+	var portrait := viewport.y > viewport.x + 80.0
 	if slack_x > 0.5:
 		pos.x = left + slack_x * 0.5
-	if slack_y > 0.5:
+	# Portrait pins to safe top so mid-content can extend into the slack below.
+	# Landscape still centers vertically when there is spare height.
+	if (not portrait) and slack_y > 0.5:
 		pos.y = top + slack_y * 0.5
-	return {"scale": s, "position": pos, "usable": usable}
+	var paint := Rect2(Vector2.ZERO, viewport)
+	return {"scale": s, "position": pos, "usable": usable, "paint_rect": paint, "portrait": portrait}
 
 static func apply_root(root: Control, fit: Dictionary) -> void:
 	var s := float(fit.get("scale", 1.0))
@@ -69,13 +75,13 @@ static func fill_scroll(scroll: ScrollContainer, footer: Control, fallback: floa
 		scroll.size.y = maxf(fallback, room)
 
 ## Portrait slack sits below the 720 design. Pull the footer down and let the long
-## lists (roster, codex, lineage) use that room. fit() itself stays letterboxed.
+## lists (roster, codex, lineage) use that room. fit() top-aligns; this fills the slack.
 static func extend_portrait_lists(root: Control) -> void:
 	if root == null or not root.is_inside_tree():
 		return
+	_pin_top(root)
 	var footer := root.find_child("StitchFooter", true, false) as Control
 	if _has_long_list(root):
-		_pin_top(root)
 		if footer:
 			pin_footer(footer)
 	var roster := root.find_child("RosterListScroll", true, false) as ScrollContainer
@@ -141,7 +147,7 @@ static func _grow_lineage(root: Control, footer: Control) -> void:
 		return
 	var bottom := _list_bottom(root, footer)
 	var jump_h := maxf(jumps.size.y, jumps.get_combined_minimum_size().y)
-	jump_h = maxf(jump_h, 44.0)
+	jump_h = maxf(jump_h, 48.0)
 	jumps.position.y = maxf(120.0, bottom - jump_h)
 	for child in root.get_children():
 		if not (child is Control):

@@ -1,6 +1,29 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
-  <rect width="128" height="128" rx="16" fill="#2a3140"/>
-  <path d="M64 18 L90 40 L84 92 L64 110 L44 92 L38 40 Z" fill="#c9a227" stroke="#8b6914" stroke-width="3"/>
-  <path d="M64 36 L74 48 L70 78 L64 88 L58 78 L54 48 Z" fill="#5c2a2a"/>
-  <circle cx="64" cy="52" r="8" fill="#e8d5a3"/>
+  <defs>
+    <linearGradient id="void" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#07080C"/>
+      <stop offset="100%" stop-color="#161B24"/>
+    </linearGradient>
+    <linearGradient id="frost" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#9BE4FF"/>
+      <stop offset="55%" stop-color="#6ED4FF"/>
+      <stop offset="100%" stop-color="#3AADDF"/>
+    </linearGradient>
+    <linearGradient id="mint" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5EE0B5"/>
+      <stop offset="100%" stop-color="#2E6F8F"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="28" fill="url(#void)"/>
+  <rect x="8" y="8" width="112" height="112" rx="22" fill="none" stroke="#FFFFFF" stroke-opacity="0.10" stroke-width="1.5"/>
+  <!-- contemporary kite / chevron banner -->
+  <path d="M64 18 L98 44 L90 96 L64 114 L38 96 L30 44 Z" fill="url(#frost)" opacity="0.95"/>
+  <path d="M64 30 L86 48 L80 88 L64 102 L48 88 L42 48 Z" fill="#10141C" opacity="0.55"/>
+  <path d="M64 36 L78 50 L74 78 L64 88 L54 78 L50 50 Z" fill="url(#mint)" opacity="0.9"/>
+  <!-- emblem ring -->
+  <circle cx="64" cy="58" r="11" fill="none" stroke="#F4F7FB" stroke-width="3"/>
+  <circle cx="64" cy="58" r="4" fill="#F4F7FB"/>
+  <!-- frost spark -->
+  <circle cx="86" cy="36" r="2.2" fill="#9BE4FF"/>
+  <circle cx="42" cy="40" r="1.6" fill="#5EE0B5"/>
 </svg>

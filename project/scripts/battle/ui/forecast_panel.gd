@@ -81,7 +81,11 @@ static func refresh(host) -> void:
 	var show := false
 	var atk_i := int(host.selected)
 	var def_i := -1
-	if host.attack_mode and atk_i >= 0 and atk_i < host.units.size():
+	if int(host.get("preview_attack_ui")) >= 0:
+		def_i = int(host.preview_attack_ui)
+		if atk_i >= 0 and def_i < host.units.size() and str(host.units[def_i].team) == "enemy":
+			show = true
+	elif host.attack_mode and atk_i >= 0 and atk_i < host.units.size():
 		def_i = host._unit_at(host._hover_cell)
 		if def_i >= 0 and str(host.units[def_i].team) == "enemy" and host.units[def_i].char.hp > 0:
 			show = true
