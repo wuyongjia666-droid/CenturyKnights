@@ -24,7 +24,7 @@ static func known_entries() -> Array:
 	var data := load_data()
 	var seen := {}
 	var out: Array = []
-	for id in data.get("year_one", []):
+	for id in data.get("year_one", []) + data.get("always", []):
 		var key := str(id)
 		if key != "" and not seen.has(key):
 			seen[key] = true
@@ -44,7 +44,7 @@ static func allows(entry: String) -> bool:
 	var data := load_data()
 	if not known_entries().has(entry):
 		return false
-	for id in data.get("year_one", []):
+	for id in data.get("year_one", []) + data.get("always", []):
 		if str(id) == entry:
 			return true
 	for row in data.get("unlocks", []):
@@ -59,11 +59,79 @@ static func allows(entry: String) -> bool:
 			continue
 		if bool(row.get("heir", false)) and _heir_present():
 			return true
+		if bool(row.get("death", false)) and _someone_died():
+			return true
 		var flag := str(row.get("flag", ""))
 		if flag != "" and _flag(flag):
 			return true
 	return false
 
+
+## P0-IA-01 contract. Never fails: unknown entries come back locked with an empty reason.
+## {"open": bool, "locked": bool, "reason": String, "link": String}
+## link "mainline" means the lock lifts by playing the main line ("带我去" opens the next chapter).
+static func state(entry: String) -> Dictionary:
+	if allows(entry):
+		return {"open": true, "locked": false, "reason": "", "link": ""}
+	var row := _row_for(entry)
+	if row.is_empty():
+		return {"open": false, "locked": true, "reason": "", "link": ""}
+	if bool(row.get("heir", false)):
+		return {"open": false, "locked": true, "reason": Locale.t("ux_lock_heir"), "link": ""}
+	if bool(row.get("death", false)):
+		return {"open": false, "locked": true, "reason": Locale.t("ux_lock_death"), "link": ""}
+	var flag := str(row.get("flag", ""))
+	return {"open": false, "locked": true, "reason": lock_reason(flag), "link": "mainline" if _is_story_flag(flag) else ""}
+
+static func lock_reason(flag: String) -> String:
+	if flag == "chapter0_done" or flag == "hub_open":
+		return Locale.t("ux_lock_ch0")
+	if flag == "battle_done":
+		return Locale.t("ux_lock_battle")
+	if _is_story_flag(flag):
+		var cid := flag.trim_suffix("_fought")
+		var era := int(cid.substr(1, 1))
+		var num := int(cid.substr(3, 2))
+		var digits := Locale.t("ux_era_digits")
+		var era_txt := digits.substr(clampi(era, 0, 9), 1) if digits.length() >= 10 else str(era)
+		return Locale.t("ux_lock_chapter") % [era_txt, num, _chapter_title(cid)]
+	return Locale.t("ux_lock_generic")
+
+static func _is_story_flag(flag: String) -> bool:
+	return flag == "chapter0_done" or (flag.begins_with("e") and flag.ends_with("_fought") and flag.length() == 12)
+
+static var _titles: Dictionary = {}
+
+static func _chapter_title(cid: String) -> String:
+	if _titles.is_empty():
+		var path := "res://data/story/campaign_v92.json"
+		if FileAccess.file_exists(path):
+			var d = JSON.parse_string(FileAccess.get_file_as_string(path))
+			if typeof(d) == TYPE_DICTIONARY:
+				for ch in d.get("chapters", []):
+					if typeof(ch) == TYPE_DICTIONARY:
+						_titles[str(ch.get("id", ""))] = str(ch.get("title", ""))
+	return str(_titles.get(cid, cid))
+
+static func _row_for(entry: String) -> Dictionary:
+	for row in load_data().get("unlocks", []):
+		if typeof(row) == TYPE_DICTIONARY and entry in row.get("entries", []):
+			return row
+	return {}
+
+## Every flag the table depends on, for the "each flag is set somewhere" test.
+static func flags() -> Array:
+	var out: Array = []
+	for row in load_data().get("unlocks", []):
+		if typeof(row) == TYPE_DICTIONARY and str(row.get("flag", "")) != "":
+			out.append(str(row.get("flag", "")))
+	return out
+
+static func _someone_died() -> bool:
+	for c in GameState.characters.values():
+		if c != null and not c.alive:
+			return true
+	return false
 
 static func open_count() -> int:
 	var n := 0

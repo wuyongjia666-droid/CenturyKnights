@@ -389,9 +389,9 @@ func _step_castle_hub() -> void:
 					if b is BaseButton:
 						labels.append(str(b.text))
 
-	# NAR-05：新游戏第 1 年只开六扇门。联姻、族谱、委任等剧情引出后再出现。
-	var need_substrings := ["出战", "旗塾", "酒馆", "花名册", "岁月", "设置"]
-	var need_alt := ["deploy", "train", "tavern", "roster", "hourglass", "settings"]
+	# ux-navigation §9-1：首年六门（出战、花名册、酒馆、联姻、族谱、结束本月）+ 设置 + 城堡全景；其余灰显不隐藏。
+	var need_substrings := ["出战", "联姻", "酒馆", "花名册", "岁月", "设置"]
+	var need_alt := ["deploy", "marriage", "tavern", "roster", "hourglass", "settings"]
 	var missing: Array = []
 	for i in need_substrings.size():
 		var found := false
@@ -404,8 +404,8 @@ func _step_castle_hub() -> void:
 				break
 		if not found:
 			missing.append(sub)
-	if labels.size() > 6:
-		_err("hub: year-one doors %s want<=6: %s" % [labels.size(), str(labels)])
+	if labels.size() > 8:
+		_err("hub: year-one doors %s want<=8: %s" % [labels.size(), str(labels)])
 	elif labels.size() < 4:
 		_err("hub: too few panel buttons (%s): %s" % [labels.size(), str(labels)])
 	elif missing.size() > 0:

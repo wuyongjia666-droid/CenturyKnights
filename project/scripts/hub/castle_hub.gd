@@ -54,33 +54,40 @@ func _build() -> void:
 	rail.add_theme_constant_override("separation", 4)
 	rail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(rail)
+	## P0-IA: five sections (ux-navigation-v1 §3.1). Locked entries stay visible, greyed, with a reason.
 	var groups: Array = [
+		{"id": "home", "title": Locale.t("ux_hub_home"), "items": [
+			[Locale.t("btn_hourglass"), Locale.t("shell_05820eaa"), "res://scenes/hub/hourglass.tscn", Locale.t("btn_hourglass"), "hourglass"],
+			[Locale.t("ux_entry_castle_view"), Locale.t("ux_entry_castle_view"), "res://scenes/hub/castle_view.tscn", "", "castle_view"],
+			[Locale.t("shell_7debf9cb"), Locale.t("shell_2155ceaf"), "res://scenes/ui/settings.tscn", Locale.t("shell_7debf9cb"), "settings"],
+		]},
 		{"id": "military", "title": Locale.t("ux_hub_military"), "items": [
 			[Locale.t("shell_15c92308"), DeployBrief.cap_line(), "res://scenes/hub/deploy.tscn", Locale.t("btn_deploy"), "deploy"],
+			[Locale.t("btn_roster"), Locale.t("shell_f0ea80bf"), "res://scenes/hub/roster.tscn", Locale.t("btn_roster"), "roster"],
+			[Locale.t("btn_tavern"), Locale.t("shell_74f80552"), "res://scenes/hub/tavern.tscn", Locale.t("btn_tavern"), "tavern"],
 			[Locale.t("btn_train"), Locale.t("shell_0cb33307"), "res://scenes/hub/train.tscn", Locale.t("btn_train"), "train"],
 			[Locale.t("shell_5366fd25"), Locale.t("shell_1f6a2fed"), "res://scenes/hub/skill_tree.tscn", Locale.t("shell_5366fd25"), "skills"],
 		]},
-		{"id": "civil", "title": Locale.t("ux_hub_civil"), "items": [
-			[Locale.t("btn_tavern"), Locale.t("shell_74f80552"), "res://scenes/hub/tavern.tscn", Locale.t("btn_tavern"), "tavern"],
-			[Locale.t("btn_forge"), Locale.t("shell_a07db291"), "res://scenes/hub/forge.tscn", Locale.t("btn_forge"), "forge"],
-			[Locale.t("btn_market"), Locale.t("shell_55dea989"), "res://scenes/hub/market.tscn", Locale.t("btn_market"), "market"],
-			[Locale.t("shell_8d3d6c29"), Locale.t("shell_be28a894"), "res://scenes/hub/estates.tscn", Locale.t("shell_8d3d6c29"), "estates"],
-			[Locale.t("btn_quests"), Locale.t("shell_5d2cf665"), "res://scenes/hub/quests.tscn", Locale.t("btn_quests"), "quests"],
-			[Locale.t("shell_d0d30beb"), Locale.t("shell_7dea5328"), "res://scenes/hub/works.tscn", Locale.t("shell_d0d30beb"), "works"],
-		]},
-		{"id": "family", "title": Locale.t("ux_hub_family"), "items": [
-			[Locale.t("btn_roster"), Locale.t("shell_f0ea80bf"), "res://scenes/hub/roster.tscn", Locale.t("btn_roster"), "roster"],
-			[Locale.t("btn_shrine"), Locale.t("shell_f7881394"), "res://scenes/hub/shrine.tscn", Locale.t("btn_shrine"), "shrine"],
-			[Locale.t("btn_marriage"), Locale.t("shell_f075f209"), "res://scenes/hub/marriage.tscn", Locale.t("btn_marriage"), "marriage"],
-			[Locale.t("btn_lineage"), Locale.t("shell_a675f919"), "res://scenes/hub/lineage_view.tscn", Locale.t("btn_lineage"), "lineage"],
-			[Locale.t("shell_dcb83d03"), Locale.t("shell_92bb4d72"), "res://scenes/hub/lineage_rite.tscn", Locale.t("shell_dcb83d03"), "rite"],
-		]},
-		{"id": "court", "title": Locale.t("ux_hub_court"), "items": [
-			[Locale.t("btn_hourglass"), Locale.t("shell_05820eaa"), "res://scenes/hub/hourglass.tscn", Locale.t("btn_hourglass"), "hourglass"],
-			[Locale.t("shell_7debf9cb"), Locale.t("shell_2155ceaf"), "res://scenes/ui/settings.tscn", Locale.t("shell_7debf9cb"), "settings"],
-		]},
 		{"id": "atlas", "title": Locale.t("ux_hub_atlas"), "items": [
 			[Locale.t("shell_26a377a3"), Locale.t("shell_8a91fe2c"), "res://scenes/hub/atlas_view.tscn", Locale.t("shell_26a377a3"), "atlas"],
+			[Locale.t("btn_quests"), Locale.t("shell_5d2cf665"), "res://scenes/hub/quests.tscn", Locale.t("btn_quests"), "quests"],
+			[Locale.t("ux_entry_court_news"), Locale.t("ux_entry_court_news"), "res://scenes/hub/court_news.tscn", "", "court_news"],
+		]},
+		{"id": "family", "title": Locale.t("ux_hub_family"), "items": [
+			[Locale.t("btn_lineage"), Locale.t("shell_a675f919"), "res://scenes/hub/lineage_view.tscn", Locale.t("btn_lineage"), "lineage"],
+			[Locale.t("btn_marriage"), Locale.t("shell_f075f209"), "res://scenes/hub/marriage.tscn", Locale.t("btn_marriage"), "marriage"],
+			[Locale.t("shell_dcb83d03"), Locale.t("shell_92bb4d72"), "res://scenes/hub/lineage_rite.tscn", Locale.t("shell_dcb83d03"), "rite"],
+			[Locale.t("ux_entry_titles"), Locale.t("ux_entry_titles"), "res://scenes/hub/title_promote.tscn", "", "titles"],
+			[Locale.t("ux_entry_rivals"), Locale.t("ux_entry_rivals"), "res://scenes/hub/rival_houses.tscn", "", "rivals"],
+			[Locale.t("ux_entry_ancestors"), Locale.t("ux_entry_ancestors"), "res://scenes/hub/ancestors.tscn", "", "ancestors"],
+			[Locale.t("ux_entry_bonds"), Locale.t("ux_entry_bonds"), "res://scenes/story/support_viewer.tscn", "", "bonds"],
+		]},
+		{"id": "civil", "title": Locale.t("ux_hub_civil"), "items": [
+			[Locale.t("shell_d0d30beb"), Locale.t("shell_7dea5328"), "res://scenes/hub/works.tscn", Locale.t("shell_d0d30beb"), "works"],
+			[Locale.t("btn_forge"), Locale.t("shell_a07db291"), "res://scenes/hub/forge.tscn", Locale.t("btn_forge"), "forge"],
+			[Locale.t("btn_market"), Locale.t("shell_55dea989"), "res://scenes/hub/market.tscn", Locale.t("btn_market"), "market"],
+			[Locale.t("btn_shrine"), Locale.t("shell_f7881394"), "res://scenes/hub/shrine.tscn", Locale.t("btn_shrine"), "shrine"],
+			[Locale.t("shell_8d3d6c29"), Locale.t("shell_be28a894"), "res://scenes/hub/estates.tscn", Locale.t("shell_8d3d6c29"), "estates"],
 		]},
 	]
 	var n := 0
@@ -98,17 +105,26 @@ func _build() -> void:
 		head.custom_minimum_size = Vector2(134, 14)
 		box.add_child(head)
 		for item in group["items"]:
-			if not HubTodo.is_unlocked(str(item[4])):
-				continue
+			var entry := str(item[4])
+			var st := UnlockSchedule.state(entry)
 			n += 1
-			var b := _nav_item("%02d" % n, str(item[0]), str(item[1]), first, false, true)
-			first = false
-			var legacy := str(item[3]) if str(item[3]) != "" else str(item[0])
-			b.set_meta("legacy_label", legacy)
-			b.set_meta("hub_entry", str(item[4]))
 			var path: String = item[2]
-			b.pressed.connect(_go_nav.bind(b, path))
-			box.add_child(b)
+			if bool(st.open):
+				var b := _nav_item("%02d" % n, str(item[0]), str(item[1]), first, false, true)
+				first = false
+				var legacy := str(item[3]) if str(item[3]) != "" else str(item[0])
+				b.set_meta("legacy_label", legacy)
+				b.set_meta("hub_entry", entry)
+				b.pressed.connect(_go_nav.bind(b, path))
+				box.add_child(b)
+			else:
+				var lb := _nav_item("%02d" % n, "%s · %s" % [str(item[0]), Locale.t("ux_lock_tag")], str(st.reason), false, false, true)
+				lb.name = "Locked_" + entry
+				lb.modulate = Color(1, 1, 1, 0.5)
+				lb.set_meta("hub_entry", entry)
+				lb.set_meta("locked", true)
+				lb.pressed.connect(open_lock_sheet.bind(str(item[0]), st))
+				box.add_child(lb)
 	UIFX.stagger_children(rail, 0.018, 0.2)
 	var gp := UIKit.mono("GAMEPAD", 9, UIKit.TEXT_FAINT)
 	gp.position = Vector2(40, 660)
@@ -309,7 +325,7 @@ func _build() -> void:
 func _go_nav(btn: Button, dest: String) -> void:
 	UIFX.press_feedback(btn)
 	Sfx.click()
-	get_tree().change_scene_to_file(dest)
+	CKNav.go(dest)
 
 func _fit_narrow() -> void:
 	var vp := get_viewport().get_visible_rect().size
@@ -426,6 +442,51 @@ func _continue_mainline() -> void:
 	var scene := StoryCatalog.request_chapter(str(cursor.get("id", "ch0")))
 	get_tree().change_scene_to_file(scene)
 
+## Lock sheet (§4.4): what it is, when it opens, and "take me there" when the main line opens it.
+func open_lock_sheet(title: String, st: Dictionary) -> void:
+	var old := get_node_or_null("LockSheet")
+	if old:
+		old.queue_free()
+	var sheet := Control.new()
+	sheet.name = "LockSheet"
+	sheet.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	sheet.z_index = 40
+	add_child(sheet)
+	CKNav.push_overlay(sheet)
+	sheet.tree_exited.connect(func(): CKNav.pop_overlay(sheet))
+	var dim := ColorRect.new()
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.color = Color(0.02, 0.03, 0.05, 0.6)
+	dim.gui_input.connect(func(e: InputEvent):
+		if e is InputEventMouseButton and e.pressed:
+			sheet.queue_free())
+	sheet.add_child(dim)
+	var p := UIKit.panel_at(sheet, Rect2(390, 470, 500, 210), 14, true)
+	var t := UIKit.title_label(title, 22)
+	t.position = Vector2(24, 20)
+	p.add_child(t)
+	var r := UIKit.body_label(str(st.get("reason", "")), UIKit.TEXT_DIM, 14)
+	r.position = Vector2(24, 64)
+	r.size = Vector2(452, 60)
+	p.add_child(r)
+	var ok := UIKit.ghost_button(Locale.t("ux_lock_ok"), 140, 44)
+	ok.name = "LockOk"
+	ok.position = Vector2(336, 146)
+	ok.pressed.connect(func(): sheet.queue_free())
+	p.add_child(ok)
+	if str(st.get("link", "")) == "mainline":
+		var go := UIKit.cta_button(Locale.t("ux_lock_go"), "A", 200, 44)
+		go.name = "LockGo"
+		go.position = Vector2(24, 146)
+		go.pressed.connect(func():
+			sheet.queue_free()
+			var tgt := HubTodo.mainline_target()
+			CKNav.go(StoryCatalog.request_chapter(str(tgt.get("id", "ch0")))))
+		p.add_child(go)
+		go.call_deferred("grab_focus")
+	else:
+		ok.call_deferred("grab_focus")
+
 func panel_button_labels() -> Array:
 	var out: Array = []
 	var g := get_node_or_null("NavRail")
@@ -435,7 +496,7 @@ func panel_button_labels() -> Array:
 
 func _collect_labels(n: Node, out: Array) -> void:
 	for b in n.get_children():
-		if b is BaseButton:
+		if b is BaseButton and not b.has_meta("locked"):
 			out.append(str(b.get_meta("legacy_label", str(b.text).split("\n")[0])))
 		_collect_labels(b, out)
 

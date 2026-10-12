@@ -23,7 +23,7 @@ func _run() -> String:
 	var open := 0
 	for id in UnlockSchedule.known_entries():
 		var on := Todo.is_unlocked(str(id))
-		if on:
+		if on and not str(id) in UnlockSchedule.load_data().get("always", []):
 			open += 1
 		if on != UnlockSchedule.allows(str(id)):
 			return "interface mismatch " + str(id)
@@ -33,18 +33,19 @@ func _run() -> String:
 		return "year-one doors %d" % open
 	if not Todo.is_unlocked("deploy"):
 		return "deploy locked"
-	if Todo.is_unlocked("marriage"):
-		return "marriage open"
+	if not Todo.is_unlocked("marriage") or not Todo.is_unlocked("lineage"):
+		return "six-door rule: marriage and lineage open in year one"
+	if Todo.is_unlocked("atlas") or Todo.is_unlocked("train"):
+		return "atlas/train open before their flags"
+	GameState.set_flag("e1_01_fought", true)
+	if not Todo.is_unlocked("train") or not Todo.is_unlocked("skills"):
+		return "train/skills ignored e1_01"
+	# every unlock flag must be set somewhere (J7: e2_holdings was never set)
+	for f in UnlockSchedule.flags():
+		if not _flag_is_set_somewhere(str(f)):
+			return "unlock flag %s is never set" % f
 	if Todo.is_unlocked("not_a_real_entry"):
 		return "unknown open"
-	GameState.set_flag("e1_07_fought", true)
-	if not Todo.is_unlocked("marriage"):
-		return "marriage stayed locked"
-	if Todo.is_unlocked("lineage"):
-		return "lineage open without a child"
-	GameState.set_flag("child_born", true)
-	if not Todo.is_unlocked("lineage"):
-		return "lineage ignored child_born"
 	var heir := CharacterFactory.make_ally_tutor()
 	heir.parent_ids = ["p1", "p2"]
 	heir.alive = true
@@ -104,3 +105,15 @@ func _hanzi(text: String) -> int:
 		if code >= 0x4E00 and code <= 0x9FFF:
 			n += 1
 	return n
+
+func _flag_is_set_somewhere(flag: String) -> bool:
+	for path in ["res://scripts/characters/family_state.gd", "res://scripts/story/chapter_player.gd",
+			"res://scripts/battle/battle_controller.gd", "res://scripts/hub/castle_hub.gd", "res://autoload/game_state.gd"]:
+		if FileAccess.get_file_as_string(path).find('"%s"' % flag) >= 0:
+			return true
+	var dir := DirAccess.open("res://data/story/chapters")
+	if dir:
+		for f in dir.get_files():
+			if f.ends_with(".json") and FileAccess.get_file_as_string("res://data/story/chapters/" + f).find('"%s"' % flag) >= 0:
+				return true
+	return false
