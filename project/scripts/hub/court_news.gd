@@ -3,7 +3,10 @@ extends Control
 ## Filters carry a count; an empty filter says what would land there; before the first
 ## new year the page still shows the company's own first entries and when the gazette starts.
 
-const KINDS := [["all", "FilterAll"], ["birth", "FilterBirth"], ["death", "FilterDeath"], ["succession", "FilterSuccession"], ["marriage", "FilterMarriage"], ["recall", "FilterRecall"]]
+const KINDS := [
+	["all", "FilterAll"], ["birth", "FilterBirth"], ["death", "FilterDeath"],
+	["succession", "FilterSuccession"], ["marriage", "FilterMarriage"], ["recall", "FilterRecall"],
+]
 
 var _filter := "all"
 var _list: VBoxContainer
