@@ -348,7 +348,10 @@ func _speaker_portrait(speaker: String, emotion: String = "") -> void:
 	_portrait.texture = UnitArt.speaker_silhouette(speaker, 120)
 
 func _refresh_actions() -> void:
+	# Detach first: a queued-but-attached old button would steal the
+	# "AdvanceLine" name and push the continue button out of the dialogue box.
 	for c in _actions.get_children():
+		_actions.remove_child(c)
 		c.queue_free()
 	var lines: Array = _visible_lines()
 	if _line_idx >= lines.size() - 1:
@@ -386,6 +389,7 @@ func _add_action(text: String, cb: Callable, disabled: bool = false, compact: bo
 	b.size_flags_horizontal = Control.SIZE_SHRINK_END
 	if compact:
 		b.name = "AdvanceLine"
+		b.set_meta("advance_line", true)
 		b.custom_minimum_size = Vector2(148, 36)
 		UIKit.compact(b, 36)
 	if not disabled:
