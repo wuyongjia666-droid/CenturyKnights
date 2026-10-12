@@ -1,0 +1,176 @@
+{
+  "jobs": [
+    {
+      "id": "v92_status_malnourished",
+      "status_id": "malnourished",
+      "source": "/workspace/status_overlays_final/v92_status_malnourished.png",
+      "metrics": {
+        "opaque_ratio": 0.0154266357421875,
+        "mean_alpha_opaque": 0.98890221118927,
+        "size": [
+          768,
+          1024
+        ],
+        "gold_ratio": 0.0,
+        "parchment_ratio": 0.0,
+        "warm_ratio": 0.0,
+        "mean_saturation": 0.2563510239124298,
+        "cool_bias": 0.08859151601791382,
+        "pass": true,
+        "fails": []
+      },
+      "result": "pass",
+      "written": {
+        "png": "project/assets/art/portraits/status/malnourished.png",
+        "webp": "project/assets/art/portraits/status/malnourished.webp",
+        "bytes_png": 218304,
+        "bytes_webp": 28956
+      }
+    },
+    {
+      "id": "v92_status_wound_light",
+      "status_id": "wound_light",
+      "source": "/workspace/status_overlays_final/v92_status_wound_light.png",
+      "metrics": {
+        "opaque_ratio": 0.13187281290690103,
+        "mean_alpha_opaque": 0.9854472875595093,
+        "size": [
+          768,
+          1024
+        ],
+        "gold_ratio": 0.0,
+        "parchment_ratio": 3.8569458774069755e-05,
+        "warm_ratio": 0.006711085826688137,
+        "mean_saturation": 0.17258834838867188,
+        "cool_bias": 0.09757650643587112,
+        "pass": true,
+        "fails": []
+      },
+      "result": "pass",
+      "written": {
+        "png": "project/assets/art/portraits/status/wound_light.png",
+        "webp": "project/assets/art/portraits/status/wound_light.webp",
+        "bytes_png": 1086429,
+        "bytes_webp": 289418
+      }
+    },
+    {
+      "id": "v92_status_wound_lasting",
+      "status_id": "wound_lasting",
+      "source": "/workspace/status_overlays_final/v92_status_wound_lasting.png",
+      "metrics": {
+        "opaque_ratio": 0.21403630574544272,
+        "mean_alpha_opaque": 0.9956486821174622,
+        "size": [
+          768,
+          1024
+        ],
+        "gold_ratio": 0.0,
+        "parchment_ratio": 0.0,
+        "warm_ratio": 0.0,
+        "mean_saturation": 0.38940247893333435,
+        "cool_bias": 0.13283374905586243,
+        "pass": true,
+        "fails": []
+      },
+      "result": "pass",
+      "written": {
+        "png": "project/assets/art/portraits/status/wound_lasting.png",
+        "webp": "project/assets/art/portraits/status/wound_lasting.webp",
+        "bytes_png": 945230,
+        "bytes_webp": 563646
+      }
+    },
+    {
+      "id": "v92_status_wound_grave",
+      "status_id": "wound_grave",
+      "source": "/workspace/status_overlays_final/v92_status_wound_grave.png",
+      "metrics": {
+        "opaque_ratio": 0.24326960245768228,
+        "mean_alpha_opaque": 0.9914104342460632,
+        "size": [
+          768,
+          1024
+        ],
+        "gold_ratio": 0.0,
+        "parchment_ratio": 0.0,
+        "warm_ratio": 0.0,
+        "mean_saturation": 0.3776634633541107,
+        "cool_bias": 0.19328534603118896,
+        "pass": true,
+        "fails": []
+      },
+      "result": "pass",
+      "written": {
+        "png": "project/assets/art/portraits/status/wound_grave.png",
+        "webp": "project/assets/art/portraits/status/wound_grave.webp",
+        "bytes_png": 865776,
+        "bytes_webp": 555500
+      }
+    },
+    {
+      "id": "v92_status_lost_finger",
+      "status_id": "lost_finger",
+      "source": "/workspace/status_overlays_final/v92_status_lost_finger.png",
+      "metrics": {
+        "opaque_ratio": 0.23797734578450522,
+        "mean_alpha_opaque": 0.9929576516151428,
+        "size": [
+          768,
+          1024
+        ],
+        "gold_ratio": 0.0,
+        "parchment_ratio": 0.0,
+        "warm_ratio": 5.34322185591468e-06,
+        "mean_saturation": 0.12877458333969116,
+        "cool_bias": 0.0743977427482605,
+        "pass": true,
+        "fails": []
+      },
+      "result": "pass",
+      "written": {
+        "png": "project/assets/art/portraits/status/lost_finger.png",
+        "webp": "project/assets/art/portraits/status/lost_finger.webp",
+        "bytes_png": 1085665,
+        "bytes_webp": 661640
+      }
+    },
+    {
+      "id": "v92_status_limp",
+      "status_id": "limp",
+      "source": "/workspace/status_overlays_final/v92_status_limp.png",
+      "metrics": {
+        "opaque_ratio": 0.2660929361979167,
+        "mean_alpha_opaque": 0.9917569160461426,
+        "size": [
+          768,
+          1024
+        ],
+        "gold_ratio": 0.0,
+        "parchment_ratio": 0.0,
+        "warm_ratio": 0.0,
+        "mean_saturation": 0.34379127621650696,
+        "cool_bias": 0.15638281404972076,
+        "pass": true,
+        "fails": []
+      },
+      "result": "pass",
+      "written": {
+        "png": "project/assets/art/portraits/status/limp.png",
+        "webp": "project/assets/art/portraits/status/limp.webp",
+        "bytes_png": 1059413,
+        "bytes_webp": 646174
+      }
+    }
+  ],
+  "passed": [
+    "malnourished",
+    "wound_light",
+    "wound_lasting",
+    "wound_grave",
+    "lost_finger",
+    "limp"
+  ],
+  "rejected": [],
+  "missing": []
+}
