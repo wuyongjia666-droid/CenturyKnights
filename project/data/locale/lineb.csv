@@ -320,3 +320,16 @@ lb_heir_zh_support,挺了 %s,backed %s
 lb_heir_zh_duel,上校场比过了,dueled
 lb_heir_mediate_ok,调解成了，校场先安静下来。,Mediated.
 lb_heir_support_ok,挺了 %s。战技点 +1，学会 %d 个道路战技。,"Backed %s. +1 point, %d path skills."
+lb_close,关闭,Close
+lb_codex_legend,带「?」的灰块是还没见过的血脉特征，点一下看怎么解锁。,Grey ? blocks are unseen traits; tap one to see how to unlock.
+lb_codex_unknown,还没见过这个特征：团里或敌人里有人显出它，或者在祠堂验血验到，图鉴就会写上名字。,"Unseen: meet someone showing it, or reveal it at the shrine."
+lb_dos_nobody,没有这个人,No one
+lb_dos_ctx,骑士档案 · %s,Dossier · %s
+lb_dos_desc,生平、属性、血脉和家人。血脉要祠堂验过才看得到携带的部分。,"Life, stats, bloodline and family."
+lb_dos_lock,血脉这一栏还没开放：%s,Bloodline locked: %s
+lb_dos_crest,看团徽大图,View crest
+lb_dos_codex,打开血脉图鉴,Open codex
+lb_dos_line,%s · %d 岁 · 生命 %d/%d,%s · age %d · HP %d/%d
+lb_dos_ok,状态正常，可以出战。,Fit to deploy.
+lb_dos_blocked,现在不能出战：%s,Cannot deploy: %s
+lb_dos_home,不在团里，留在家中。,Not in the company; at home.
