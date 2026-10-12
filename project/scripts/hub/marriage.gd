@@ -127,7 +127,7 @@ func _build() -> void:
 		_msg.text = str(r.get("msg"))
 		_show_toast(str(r.get("msg")), bool(r.get("ok")))
 		if r.get("ok"):
-			UIFX.confirm_burst(duty_btn)
+			UIFX.confirm(duty_btn)
 			Sfx.lineage_chime()
 			GameState.save_game()
 			_refresh_chips())

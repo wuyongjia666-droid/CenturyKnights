@@ -171,12 +171,15 @@ static func wire_button(btn: BaseButton) -> void:
 	if btn.has_meta("uifx_wired"): return
 	btn.set_meta("uifx_wired", true)
 	btn.focus_mode = Control.FOCUS_ALL
+	# §6.2: press = scale + light, no haptic. Disabled buttons never emit button_down, so the
+	# deny layer listens to raw input and says why underneath the button.
 	btn.button_down.connect(func():
-		if btn.disabled:
-			soft_deny(btn)
-		else:
+		if not btn.disabled:
 			press_feedback(btn)
-			haptic(12)
+	)
+	btn.gui_input.connect(func(e: InputEvent):
+		if btn.disabled and _is_press(e):
+			deny(btn)
 	)
 	btn.mouse_entered.connect(func():
 		_sync_disabled_modulate(btn)
@@ -273,6 +276,44 @@ static func panel_rise(node: Control, dist: float = 18.0, dur: float = 0.30) -> 
 	tw.set_parallel(true)
 	tw.tween_property(node, "position", target, dur).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_CUBIC)
 	tw.tween_property(node, "modulate:a", 1.0, dur * 0.85)
+
+static func _is_press(e: InputEvent) -> bool:
+	if e is InputEventMouseButton:
+		return (e as InputEventMouseButton).pressed and (e as InputEventMouseButton).button_index == MOUSE_BUTTON_LEFT
+	if e is InputEventScreenTouch:
+		return (e as InputEventScreenTouch).pressed
+	return false
+
+## §6.2 reject: shake, 8ms, and one line of reason under the button (meta "deny_reason", else tooltip).
+## No reason -> shake only; never an empty label.
+static func deny(btn: Control) -> Label:
+	if btn == null: return null
+	soft_deny(btn)
+	haptic(8)
+	var reason := str(btn.get_meta("deny_reason", btn.tooltip_text)).strip_edges()
+	var old := btn.get_node_or_null("DenyReason")
+	if old != null:
+		old.free()
+	if reason == "":
+		return null
+	var lab := Label.new()
+	lab.name = "DenyReason"
+	lab.text = reason
+	lab.add_theme_font_size_override("font_size", 12)
+	lab.add_theme_color_override("font_color", UIKit.TEXT_DIM)
+	lab.position = Vector2(0, btn.size.y + 2)
+	lab.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	btn.add_child(lab)
+	if btn.is_inside_tree():
+		btn.get_tree().create_timer(1.8).timeout.connect(func():
+			if is_instance_valid(lab):
+				lab.queue_free())
+	return lab
+
+## §6.2 confirm (spend, pledge, sortie, end month): burst + 12ms.
+static func confirm(btn: Control) -> void:
+	confirm_burst(btn)
+	haptic(12)
 
 static func soft_deny(node: Control) -> void:
 	## 拒绝反馈：轻抖 + 冷色闪（比 confirm 弱）

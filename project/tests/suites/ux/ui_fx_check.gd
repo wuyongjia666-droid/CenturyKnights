@@ -28,6 +28,31 @@ func _ready() -> void:
 	_ok(CKTransition.total_seconds() <= 0.36, "page transition %.3f > 0.36" % CKTransition.total_seconds())
 	GameState.settings["reduced_motion"] = true
 	_ok(CKTransition.total_seconds() <= 0.1, "reduced page transition %.3f > 0.1" % CKTransition.total_seconds())
+	# §6.2 feedback layers
+	var b := Button.new()
+	b.size = Vector2(120, 40)
+	add_child(b)
+	UIFX.wire_button(b)
+	var n0 := UIFX.vibrate_calls
+	b.button_down.emit()
+	_ok(UIFX.vibrate_calls == n0, "plain press must not vibrate")
+	b.disabled = true
+	b.set_meta("deny_reason", "not enough silver")
+	var ev := InputEventMouseButton.new()
+	ev.button_index = MOUSE_BUTTON_LEFT
+	ev.pressed = true
+	b.gui_input.emit(ev)
+	var lab := b.get_node_or_null("DenyReason") as Label
+	_ok(lab != null and lab.text == "not enough silver", "disabled press must show its reason")
+	_ok(UIFX.vibrate_calls == n0 + 1 and _hook_ms.back() == 8, "deny must buzz 8ms")
+	b.gui_input.emit(ev)
+	_ok(b.get_children().filter(func(c): return c.name == "DenyReason").size() == 1, "repeat deny stacked labels")
+	b.remove_meta("deny_reason")
+	b.gui_input.emit(ev)
+	_ok(b.get_node_or_null("DenyReason") == null, "no reason must not leave an empty label")
+	UIFX.confirm(b)
+	_ok(_hook_ms.back() == 12, "confirm must buzz 12ms")
+	b.free()
 	GameState.settings["reduced_motion"] = saved_motion
 	GameState.settings["haptics"] = saved_haptics
 	UIFX.vibrate_hook = Callable()
