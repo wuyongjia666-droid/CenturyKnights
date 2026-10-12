@@ -67,6 +67,7 @@ class_path,%s / %s / %s,%s / %s / %s
 rewind_undo,撤回,Undo move
 rewind_lamp,回灯,Turn the lamp back
 rewind_wicks,灯芯 %d,Wicks %d
+obj_reinf_warn,下回合有 %d 名增援抵达（红色「!」处）,%d reinforcements arrive next round (red !)
 defeat_back_castle,回灰旗堡养伤,Back to the castle
 defeat_head,败退回堡，伤病结算,Defeat: injuries settled at the castle
 defeat_retreat_head,主动撤退，伤病结算,Retreat: injuries settled at the castle
