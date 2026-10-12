@@ -9,13 +9,26 @@ static var _mainline_cache: Array = []
 static func reset_for_tests() -> void:
 	_extra.clear()
 
-static func register(category: String, group: String, label: String, count: int) -> void:
+static func register(category: String, group: String, label: String, count: int, link: String = "") -> void:
 	_extra.append({
 		"category": category,
 		"group": group,
 		"label": label,
 		"count": count,
+		"link": link,
 	})
+
+## UX T4: each chip opens the thing itself. Rows without a link (or a missing scene) stay plain chips.
+const LINKS := {
+	"quests": "res://scenes/hub/quests.tscn",
+	"injured": "res://scenes/hub/roster.tscn",
+}
+
+static func link_for(item: Dictionary) -> String:
+	var link := str(item.get("link", ""))
+	if link == "" or not ResourceLoader.exists(link):
+		return ""
+	return link
 
 static func is_unlocked(entry: String) -> bool:
 	# NAR-05 的日程。未知入口仍是锁上的。
@@ -49,7 +62,7 @@ static func snapshot() -> Array:
 	return rows
 
 static func _row(category: String, group: String, label: String, count: int) -> Dictionary:
-	return {"category": category, "group": group, "label": label, "count": count}
+	return {"category": category, "group": group, "label": label, "count": count, "link": str(LINKS.get(category, ""))}
 
 ## A battle contract already taken and still waiting for its fight.
 static func _quest_count() -> int:

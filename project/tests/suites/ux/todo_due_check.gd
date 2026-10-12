@@ -33,6 +33,21 @@ func _run() -> String:
 			hurt = int(item.get("count", 0))
 	if hurt != 1:
 		return "real wound not counted (%d)" % hurt
+	for item in Todo.snapshot():
+		if str(item.get("category", "")) == "injured" and Todo.link_for(item) != "res://scenes/hub/roster.tscn":
+			return "injured chip has no roster link"
+		if str(item.get("category", "")) == "festival" and Todo.link_for(item) != "":
+			return "festival chip links somewhere"
+	if Todo.link_for({"link": "res://scenes/hub/nope.tscn"}) != "":
+		return "missing scene accepted as link"
+	Todo.register("x", "home", "x", 1, "res://scenes/hub/roster.tscn")
+	var found := false
+	for item in Todo.snapshot():
+		if str(item.get("category", "")) == "x" and Todo.link_for(item) != "":
+			found = true
+	Todo.reset_for_tests()
+	if not found:
+		return "registered link dropped"
 	GameState.remove_meta("active_quest_id")
 	print("OK todo due")
 	return ""

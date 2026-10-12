@@ -224,7 +224,19 @@ func _build() -> void:
 	for todo in HubTodo.snapshot():
 		if int(todo.get("count", 0)) <= 0:
 			continue
-		todo_row.add_child(UIKit.tag_chip("%s %d" % [str(todo.get("label", "")), int(todo.get("count", 0))], UIKit.ACCENT))
+		var chip_text := "%s %d" % [str(todo.get("label", "")), int(todo.get("count", 0))]
+		var link := HubTodo.link_for(todo)
+		if link == "":
+			todo_row.add_child(UIKit.tag_chip(chip_text, UIKit.ACCENT))
+			continue
+		var chip := Button.new()
+		chip.name = "Todo_%s" % str(todo.get("category", ""))
+		chip.text = chip_text + " ›"
+		chip.flat = true
+		chip.add_theme_font_size_override("font_size", 11)
+		chip.add_theme_color_override("font_color", UIKit.ACCENT)
+		chip.pressed.connect(func(): get_tree().change_scene_to_file(link))
+		todo_row.add_child(chip)
 	if not HubTodo.any_due():
 		todo_row.add_child(UIKit.mono(Locale.t("ux_todo_none"), 10, UIKit.TEXT_FAINT, false))
 	var ih := UIKit.hairline(Color(1, 1, 1, 0.07))
