@@ -4,6 +4,7 @@ extends Control
 
 const DEFAULT_PATH := "res://data/story/chapters/ch0.json"
 const BATTLE_SCENE := "res://scenes/battle/battle.tscn"
+const HUB_SCENE := "res://scenes/hub/castle_hub.tscn"
 
 @export var chapter_path: String = DEFAULT_PATH
 @export var lock_path: bool = false
@@ -39,10 +40,14 @@ func _resolve_path() -> String:
 	if not lock_path:
 		var requested := str(GameState.get_meta("story_chapter_id", ""))
 		if requested != "":
-			var pointed := "res://data/story/chapters/%s.json" % requested
-			if FileAccess.file_exists(pointed):
-				GameState.set_meta("story_chapter_id", "")
-				return pointed
+			GameState.set_meta("story_chapter_id", "")
+			var pointed := StoryCatalog.path_for(requested)
+			if pointed == "":
+				# Never fall back to ch0: that replays the prologue's last beat forever.
+				push_error("chapter_player: unknown chapter id %s" % requested)
+				test_capture["missing_chapter"] = requested
+				return ""
+			return pointed
 	if chapter_path != "":
 		return chapter_path
 	return DEFAULT_PATH
@@ -154,6 +159,9 @@ func _load_beat(beat_id: String) -> void:
 		_hint.text = "章节结束"
 		_speaker.text = ""
 		_set_body("")
+		for c in _actions.get_children():
+			c.queue_free()
+		_add_action(Locale.t("story_back_to_hub"), func(): _go_scene(HUB_SCENE))
 		return
 	if not StoryConditions.met(_beat.get("when", {})):
 		var skipped = _beat.get("next")
@@ -321,6 +329,10 @@ func _refresh_actions() -> void:
 		_add_action(str(row.get("label", "")), _on_action.bind(steps), disabled)
 	if shown == 0 and _beat.get("next") != null and str(_beat.get("next", "")) != "":
 		_add_action("继续", func(): _goto_next(), false, true)
+	elif shown == 0:
+		# Chapter end protocol: a last beat with no actions still has a way out.
+		# The beat is already remembered, so the mainline cursor moves on.
+		_add_action(Locale.t("story_back_to_hub"), func(): _go_scene(HUB_SCENE))
 
 func _add_action(text: String, cb: Callable, disabled: bool = false, compact: bool = false) -> void:
 	var w := 148 if compact else 320
