@@ -456,6 +456,34 @@ static func expression_plate_path(slot: String, emotion: String) -> String:
 	return "%s/v92_expr_%s_%s.png" % [EXPRESSION_DIR, slot, expression_key(emotion)]
 
 ## Missing expression plates fall back to the speaker's base portrait. Farm output is not required.
+## Placeholder bust for a speaker without art: head-and-shoulders silhouette on a hue seeded by the name.
+static func speaker_silhouette(speaker: String, size: int = 120) -> Texture2D:
+	var key := "sil|%s|%d" % [speaker, size]
+	if _cache.has(key):
+		return _cache[key]
+	var hue := float(hash(speaker) & 0xffff) / 65535.0
+	var bg_top := Color.from_hsv(hue, 0.35, 0.30)
+	var bg_bot := Color.from_hsv(hue, 0.45, 0.14)
+	var ink := Color(0.04, 0.04, 0.06, 0.92)
+	var img := Image.create(size, size, false, Image.FORMAT_RGBA8)
+	var head_c := Vector2(size * 0.5, size * 0.40)
+	var head_r := size * 0.17
+	var sh_c := Vector2(size * 0.5, size * 1.02)
+	var sh_r := Vector2(size * 0.40, size * 0.36)
+	for y in size:
+		var t := float(y) / float(size - 1)
+		var bg := bg_top.lerp(bg_bot, t)
+		for x in size:
+			var p := Vector2(x + 0.5, y + 0.5)
+			var col := bg
+			var d := (p - sh_c) / sh_r
+			if p.distance_to(head_c) <= head_r or d.length() <= 1.0:
+				col = ink
+			img.set_pixel(x, y, col)
+	var tex := ImageTexture.create_from_image(img)
+	_cache[key] = tex
+	return tex
+
 static func dialogue_portrait(speaker: String, emotion: String, who: CKCharacter, size: int = 120) -> Texture2D:
 	var slot := companion_slot(speaker)
 	if slot != "":
@@ -1257,3 +1285,15 @@ static func _proc_banner(w: int, h: int, _with_name: bool) -> Texture2D:
 	var tex := ImageTexture.create_from_image(img)
 	_cache[ck] = tex
 	return tex
+
+## A tavern candidate who walked away gives the farm face slot back (audit P1-4).
+static func release_face(cid: String) -> void:
+	if not _face_assign.has(cid):
+		return
+	var slot = _face_assign[cid]
+	if str(_face_owner.get(slot, "")) == cid:
+		_face_owner.erase(slot)
+	_face_assign.erase(cid)
+	for k in _cache.keys():
+		if str(k).find(cid) >= 0:
+			_cache.erase(k)
