@@ -18,16 +18,13 @@ func _ready() -> void:
 	_body.mouse_filter = Control.MOUSE_FILTER_PASS
 	add_child(_body)
 	_render()
-	UIKit.footer_bar(self, [["A", "升级"], ["↑↓", "切换工事"], ["ESC", "返回城堡"]], "FORTIFICATION WORKS · v8.6")
+	if not DeviceProfile.is_mobile():
+		UIKit.footer_bar(self, [["A", "升级"], ["↑↓", "切换工事"], ["ESC", "返回城堡"]], "FORTIFICATION WORKS · v8.6")
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 
 func _back() -> void:
-	get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
-
-func _unhandled_input(e: InputEvent) -> void:
-	if e.is_action_pressed("ui_cancel"):
-		_back()
+	CKNav.up()
 
 func _render() -> void:
 	if _bar:
@@ -37,9 +34,9 @@ func _render() -> void:
 		_body.remove_child(n)
 		n.queue_free()
 	UIKit.page_head(_body, 42, 70, "FORTIFICATION // CASTLE WORKS", "城堡工事", "FORTIFICATION MATRIX", "工事至 Lv%d；升级扩编、降价、增产。全部工事 Lv3 / Lv5 达成堡志。" % GameState.BUILDING_MAX)
-	var view_b := UIKit.ghost_button(Locale.t("castle_view_open"), 160, 36)
-	view_b.position = Vector2(480, 118)
-	view_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/castle_view.tscn"))
+	var view_b := UIKit.ghost_button(Locale.t("castle_view_open"), 160, 48)
+	view_b.position = Vector2(560, 92)
+	view_b.pressed.connect(func(): CKNav.go("res://scenes/hub/castle_view.tscn"))
 	_body.add_child(view_b)
 	var total := 0
 	for id in ["hall", "barracks", "market", "forge", "shrine"]:
@@ -168,26 +165,33 @@ func _row(id: String, r: Rect2, desc: String) -> Button:
 	_body.add_child(d)
 	var b: Button
 	if lv < mx:
-		var cost: Dictionary = GameState.BUILDING_COST.get(lv + 1, {})
+		var cost: Dictionary = CKEconomyState.building_cost(GameState, id, lv + 1)
 		var need_s := int(cost.get("silver", 0))
-		if bool(GameState.house_mods.get("hall_discount", false)) and id == "hall":
-			need_s = int(need_s * 0.75)
 		var ni := int(cost.get("iron", 0))
 		var nf := int(cost.get("food", 0))
 		var ok := GameState.silver >= need_s and GameState.iron >= ni and GameState.food >= nf
 		var cl := UIKit.mono("COST", 8, UIKit.TEXT_FAINT, false)
-		cl.position = r.position + Vector2(470, 18)
+		cl.position = r.position + Vector2(470, 14)
 		_body.add_child(cl)
 		var cv := UIKit.body_label("%d 银 · %d 铁 · %d 粮" % [need_s, ni, nf], UIKit.TEXT if ok else UIKit.DANGER, 12)
 		cv.autowrap_mode = TextServer.AUTOWRAP_OFF
-		cv.position = r.position + Vector2(470, 34)
+		cv.position = r.position + Vector2(470, 28)
 		_body.add_child(cv)
-		b = UIKit.cta_button("升级", "A", 128, 40)
-		b.tooltip_text = "" if ok else "资源不足"
+		var nx := UIKit.body_label(Locale.t("a1_works_next_%s" % id), UIKit.ACCENT, 11)
+		nx.name = "next_%s" % id
+		nx.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		nx.position = r.position + Vector2(470, 48)
+		nx.size = Vector2(212, 36)
+		_body.add_child(nx)
+		b = UIKit.make_accent_button(Locale.t("a1_upgrade"), 96)
+		b.tooltip_text = "" if ok else Locale.t("a1_works_short")
 	else:
-		b = UIKit.ghost_button("已满级", 128, 40)
+		b = UIKit.ghost_button(Locale.t("a1_maxed"), 96, 48)
 		b.disabled = true
-	b.position = r.position + Vector2(r.size.x - 142, 24)
+	b.name = "up_%s" % id
+	b.custom_minimum_size = Vector2(96, 48)
+	b.size = Vector2(96, 48)
+	b.position = r.position + Vector2(r.size.x - 108, (r.size.y - 48.0) / 2.0)
 	var bid := id
 	b.pressed.connect(func(): _upgrade(bid))
 	_body.add_child(b)

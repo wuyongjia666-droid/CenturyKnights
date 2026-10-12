@@ -29,6 +29,26 @@ const BUILDING_COST := {
 	5: {"silver": 450, "iron": 16, "food": 55},
 }
 
+## Audit #18: each building costs differently (silver / iron / food multipliers on BUILDING_COST).
+const BUILDING_COST_MUL := {
+	# hall / market / shrine sum to the old price per level, so the century sim keeps its curve
+	"hall": [1.25, 1.33, 1.2],
+	"barracks": [1.0, 1.35, 1.2],
+	"market": [0.75, 0.67, 0.8],
+	"forge": [0.9, 1.65, 0.6],
+	"shrine": [1.0, 1.0, 1.0],
+}
+
+static func building_cost(host, id: String, next_lv: int) -> Dictionary:
+	var base: Dictionary = BUILDING_COST.get(next_lv, {})
+	var m: Array = BUILDING_COST_MUL.get(id, [1.0, 1.0, 1.0])
+	var s := int(round(float(base.get("silver", 0)) * float(m[0]) / 5.0) * 5)
+	var i := maxi(1, int(round(float(base.get("iron", 0)) * float(m[1])))) if int(base.get("iron", 0)) > 0 else 0
+	var f := int(round(float(base.get("food", 0)) * float(m[2])))
+	if host != null and bool(host.house_mods.get("hall_discount", false)) and id == "hall":
+		s = int(s * 0.75)
+	return {"silver": s, "iron": i, "food": f}
+
 static func _init_quests(host) -> void:
 	host.quests = [
 		{"id": "q_escort", "name": "护商·苇原道", "stars": 1, "months": 1, "silver": 30, "rep": 6, "battle": false,
@@ -677,12 +697,10 @@ static func upgrade_building(host, id: String) -> Dictionary:
 	if lv >= BUILDING_MAX:
 		return {"ok": false, "msg": "%s 已至满级" % BUILDING_NAMES[id]}
 	var next_lv = lv + 1
-	var cost: Dictionary = BUILDING_COST.get(next_lv, {})
+	var cost: Dictionary = building_cost(host, id, next_lv)
 	var need_s = int(cost.get("silver", 0))
 	var need_i = int(cost.get("iron", 0))
 	var need_f = int(cost.get("food", 0))
-	if bool(host.house_mods.get("hall_discount", false)) and id == "hall":
-		need_s = int(need_s * 0.75)
 	if host.silver < need_s or host.iron < need_i or host.food < need_f:
 		return {"ok": false, "msg": "不足：需 %d银/%d铁/%d粮" % [need_s, need_i, need_f]}
 	host.silver -= need_s
