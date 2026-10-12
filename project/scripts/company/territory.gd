@@ -142,17 +142,17 @@ static func req_rep(id: String) -> int:
 static func capture_block(id: String, need_presence: bool = true) -> String:
 	var s := site(id)
 	if s.is_empty() or is_home(id):
-		return "无此领地"
+		return Locale.t("terr_01")
 	if owned(id):
-		return "已是我方领地"
+		return Locale.t("terr_02")
 	if World.nation_rep(str(s.nation)) < req_rep(id):
-		return "邦交声望不足（需 %d）" % req_rep(id)
+		return Locale.t("terr_03") % req_rep(id)
 	if owned_ids().size() >= int(rule("max_sites", 8)):
-		return "领地已达上限 %d" % int(rule("max_sites", 8))
+		return Locale.t("terr_04") % int(rule("max_sites", 8))
 	if need_presence and World.pos != str(s.anchor):
-		return "需身处%s" % World.node(str(s.anchor)).get("name", "")
+		return Locale.t("terr_05") % World.node(str(s.anchor)).get("name", "")
 	if not World.encounter.is_empty():
-		return "战事未了"
+		return Locale.t("terr_06")
 	return ""
 
 static func assault_danger(id: String) -> int:
@@ -171,29 +171,29 @@ static func assault(id: String) -> Dictionary:
 
 static func capture(id: String, how: String) -> Dictionary:
 	if is_home(id) or site(id).is_empty():
-		return {"ok": false, "msg": "无此领地"}
+		return {"ok": false, "msg": Locale.t("terr_01")}
 	var st := state(id)
 	st.owner = OWN
 	st.threat = {}
 	st.garrison = maxi(1, int(st.garrison)) if how == "chain" else 0
 	st.unrest = int(rule("unrest_months", 2)) if how == "assault" else 0
 	_put(id, st)
-	_log("团旗升起：占领%s%s" % [site(id).name, "（民心未附）" if how == "assault" else "（寨民归附）"])
+	_log(Locale.t("terr_07") % [site(id).name, Locale.t("terr_08") if how == "assault" else Locale.t("terr_09")])
 	GameState.mark_dirty()
 	World.world_changed.emit()
-	return {"ok": true, "msg": "占领%s" % site(id).name}
+	return {"ok": true, "msg": Locale.t("terr_10") % site(id).name}
 
 static func lose(id: String, to: String) -> Dictionary:
 	if is_home(id) or site(id).is_empty():
-		return {"ok": false, "msg": "本堡永不失守"}
+		return {"ok": false, "msg": Locale.t("terr_11")}
 	var st := state(id)
 	st.owner = to
 	st.garrison = 0
 	st.unrest = 0
 	st.threat = {}
 	_put(id, st)
-	var who := "匪帮" if to == NEUTRAL else _rival_name(to.trim_prefix("rival:"))
-	_log("%s失守，落入%s之手" % [site(id).name, who])
+	var who := Locale.t("terr_12") if to == NEUTRAL else _rival_name(to.trim_prefix("rival:"))
+	_log(Locale.t("terr_13") % [site(id).name, who])
 	GameState.mark_dirty()
 	World.world_changed.emit()
 	return {"ok": true}
@@ -205,13 +205,13 @@ static func post_chain(id: String) -> Dictionary:
 		return {"ok": false, "msg": why}
 	for q in World.active:
 		if str(q.get("territory", "")) == id:
-			return {"ok": false, "msg": "归附委托已在进行"}
+			return {"ok": false, "msg": Locale.t("terr_14")}
 	var q := _chain_step(id, 0)
 	if q.is_empty():
-		return {"ok": false, "msg": "此地无人发委托"}
+		return {"ok": false, "msg": Locale.t("terr_15")}
 	World._post_chain_offer(q)
 	World.world_changed.emit()
-	return {"ok": true, "quest": q, "msg": "%s的委托榜贴出「%s」" % [World.node(str(site(id).anchor)).get("name", ""), q.title]}
+	return {"ok": true, "quest": q, "msg": Locale.t("terr_16") % [World.node(str(site(id).anchor)).get("name", ""), q.title]}
 
 static func _chain_step(id: String, step: int) -> Dictionary:
 	var s := site(id)
@@ -223,18 +223,18 @@ static func _chain_step(id: String, step: int) -> Dictionary:
 		var dem: Array = n.get("demand", [])
 		var g := str(dem[0]) if not dem.is_empty() else "grain"
 		q.merge({"kind": "gather", "target": anchor, "good": g, "qty": 10 if g == "grain" else 4,
-			"title": "%s的口粮与药" % s.name, "battle": false, "danger": 1, "days_budget": 40, "route_days": 0,
+			"title": Locale.t("terr_17") % s.name, "battle": false, "danger": 1, "days_budget": 40, "route_days": 0,
 			"reward_silver": 20,
-			"desc": "%s的人不信刀，信东西。带 %s ×%d 来%s交付，他们才肯听我们说话。（领地归附 1/2）" % [s.name, World.good_name(g), 10 if g == "grain" else 4, n.get("name", "")]})
+			"desc": Locale.t("terr_18") % [s.name, World.good_name(g), 10 if g == "grain" else 4, n.get("name", "")]})
 	else:
 		var target := World._near(anchor, 1, 1, rng)
 		if target == "":
 			target = anchor
 		var rt := World.route(anchor, target)
-		q.merge({"kind": "hunt", "target": target, "title": "清掉%s外的匪窝" % World.node(target).get("name", ""),
-			"battle": true, "danger": int(s.danger), "route_days": int(rt.get("days", 1)), "foe_name": "盘踞的匪帮",
+		q.merge({"kind": "hunt", "target": target, "title": Locale.t("terr_19") % World.node(target).get("name", ""),
+			"battle": true, "danger": int(s.danger), "route_days": int(rt.get("days", 1)), "foe_name": Locale.t("terr_20"),
 			"days_budget": int(rt.get("days", 1)) * 2 + 10, "reward_silver": 30,
-			"desc": "匪帮在%s一带勒索%s。赶到即开战，得胜后回%s交付，团旗就能挂上去。（领地归附 2/2）" % [World.node(target).get("name", ""), s.name, n.get("name", "")]})
+			"desc": Locale.t("terr_21") % [World.node(target).get("name", ""), s.name, n.get("name", "")]})
 	return q
 
 ## Called by World.turn_in for quests that carry a territory field.
@@ -245,12 +245,12 @@ static func on_quest_done(q: Dictionary) -> String:
 	if int(q.get("territory_step", 0)) == 0:
 		var nq := _chain_step(id, 1)
 		World._post_chain_offer(nq)
-		return "；%s贴出下一步「%s」" % [World.node(str(nq.issuer)).get("name", ""), nq.title]
+		return Locale.t("terr_22") % [World.node(str(nq.issuer)).get("name", ""), nq.title]
 	if capture_block(id, false) != "" and not owned(id):
-		return "；%s暂不能归附：%s" % [site(id).name, capture_block(id, false)]
+		return Locale.t("terr_23") % [site(id).name, capture_block(id, false)]
 	capture(id, "chain")
 	World.add_city_rep(str(site(id).anchor), 4)
-	return "；%s归附，团旗升起" % site(id).name
+	return Locale.t("terr_24") % site(id).name
 
 # ── garrison ──────────────────────────────────────────
 static func garrison_cost(id: String) -> int:
@@ -258,19 +258,19 @@ static func garrison_cost(id: String) -> int:
 
 static func reinforce(id: String) -> Dictionary:
 	if not owned(id):
-		return {"ok": false, "msg": "不是我方领地"}
+		return {"ok": false, "msg": Locale.t("terr_25")}
 	var st := state(id)
 	if int(st.garrison) >= int(rule("garrison_max", 3)):
-		return {"ok": false, "msg": "驻军已满"}
+		return {"ok": false, "msg": Locale.t("terr_26")}
 	var cost := garrison_cost(id)
 	if GameState.silver < cost:
-		return {"ok": false, "msg": "银不足（需 %d）" % cost}
+		return {"ok": false, "msg": Locale.t("terr_27") % cost}
 	GameState.silver -= cost
 	st.garrison = int(st.garrison) + 1
 	_put(id, st)
 	GameState.mark_dirty()
 	World.world_changed.emit()
-	return {"ok": true, "msg": "%s驻军升至 %d 级（-%d 银）" % [site(id).name, int(st.garrison), cost]}
+	return {"ok": true, "msg": Locale.t("terr_28") % [site(id).name, int(st.garrison), cost]}
 
 static func upkeep(id: String) -> int:
 	return int(site(id).get("upkeep", 0)) + int(state(id).garrison) * int(rule("garrison_upkeep", 4))
@@ -347,14 +347,14 @@ static func apply_month(force_roll: float = -1.0) -> String:
 			if owned(id) and int(st2.garrison) > 0:
 				st2.garrison = int(st2.garrison) - 1
 				_put(id, st2)
-				notes.append("%s欠饷，驻军降至 %d 级" % [site(id).name, int(st2.garrison)])
+				notes.append(Locale.t("terr_29") % [site(id).name, int(st2.garrison)])
 	for id in owned_ids():
 		var st3 := state(id)
 		if (st3.threat as Dictionary).is_empty():
 			var roll := rng.randf() if force_roll < 0.0 else force_roll
 			if roll < contest_chance(id):
 				start_threat(id)
-	var line := "领地月结：%+d 银（%d 处）" % [silver, owned_ids().size()]
+	var line := Locale.t("terr_30") % [silver, owned_ids().size()]
 	for n in notes:
 		line += "；" + str(n)
 	return line
@@ -372,11 +372,11 @@ static func start_threat(id: String) -> Dictionary:
 	var s := site(id)
 	var rv := _rival_in(str(s.nation))
 	var by := NEUTRAL if rv.is_empty() else "rival:%s" % rv.id
-	var by_name := "%s匪帮" % World.nations.get(str(s.nation), {}).get("name", "") if rv.is_empty() else str(rv.name)
+	var by_name := Locale.t("terr_31") % World.nations.get(str(s.nation), {}).get("name", "") if rv.is_empty() else str(rv.name)
 	var st := state(id)
 	st.threat = {"by": by, "name": by_name, "day": World.days_total, "months": 0}
 	_put(id, st)
-	_log("%s来犯%s！一月内赶到%s守卫，否则只能靠驻军" % [by_name, s.name, World.node(str(s.anchor)).get("name", "")])
+	_log(Locale.t("terr_32") % [by_name, s.name, World.node(str(s.anchor)).get("name", "")])
 	World.world_changed.emit()
 	return st.threat
 
@@ -388,7 +388,7 @@ static func _resolve_unanswered(id: String, force_roll: float) -> void:
 		st.threat = {}
 		st.garrison = maxi(0, int(st.garrison) - 1)
 		_put(id, st)
-		_log("%s驻军独力守住，折损一级" % site(id).name)
+		_log(Locale.t("terr_33") % site(id).name)
 	else:
 		lose(id, by)
 
@@ -401,12 +401,12 @@ static func threatened_at(anchor: String) -> Array:
 
 static func defend(id: String) -> Dictionary:
 	if not owned(id) or (state(id).threat as Dictionary).is_empty():
-		return {"ok": false, "msg": "此地无战事"}
+		return {"ok": false, "msg": Locale.t("terr_34")}
 	var s := site(id)
 	if World.pos != str(s.anchor):
-		return {"ok": false, "msg": "需身处%s" % World.node(str(s.anchor)).get("name", "")}
+		return {"ok": false, "msg": Locale.t("terr_05") % World.node(str(s.anchor)).get("name", "")}
 	if not World.encounter.is_empty():
-		return {"ok": false, "msg": "战事未了"}
+		return {"ok": false, "msg": Locale.t("terr_06")}
 	var enc := World.start_encounter("territory_defend", {"node": str(s.anchor), "from": str(s.anchor), "site": id, "danger": int(s.danger) + 1})
 	return {"ok": true, "encounter": enc}
 
@@ -419,18 +419,18 @@ static func on_battle(enc: Dictionary, win: bool) -> String:
 		"territory_assault":
 			if win:
 				capture(id, "assault")
-				return "；团旗升起：%s" % site(id).name
+				return Locale.t("terr_35") % site(id).name
 		"territory_defend":
 			if win:
 				var st := state(id)
 				st.threat = {}
 				_put(id, st)
 				World.add_city_rep(str(site(id).anchor), 3)
-				_log("守住%s" % site(id).name)
-				return "；守住%s" % site(id).name
+				_log(Locale.t("terr_36") % site(id).name)
+				return Locale.t("terr_37") % site(id).name
 			var by := str(state(id).threat.get("by", NEUTRAL))
 			lose(id, by)
-			return "；%s失守" % site(id).name
+			return Locale.t("terr_38") % site(id).name
 	return ""
 
 ## Arrival at an anchor with a pending threat opens the defend battle.
@@ -461,17 +461,17 @@ static func map_markers(nation: String) -> Array:
 static func summary(id: String) -> String:
 	var s := site(id)
 	var st := state(id)
-	var own := "中立"
+	var own := Locale.t("terr_39")
 	if owned(id):
-		own = "我方 · 驻军 %d" % int(st.garrison)
+		own = Locale.t("terr_40") % int(st.garrison)
 	elif str(st.owner).begins_with("rival:"):
 		own = _rival_name(str(st.owner).trim_prefix("rival:"))
-	var prod := "%d 银" % int(s.yield_silver)
+	var prod := Locale.t("terr_41") % int(s.yield_silver)
 	if str(s.good) != "":
 		prod += " + %s ×%d" % [World.good_name(str(s.good)), int(s.yield_qty)]
-	var t := "%s · %s · %s\n月产 %s · 维护 %d 银" % [s.name, kind_zh(str(s.kind)), own, prod, upkeep(id)]
+	var t := "%s · %s · %s" % [s.name, kind_zh(str(s.kind)), own] + "\n" + Locale.t("terr_42") % [prod, upkeep(id)]
 	if int(st.unrest) > 0:
-		t += " · 民心未附 %d 月" % int(st.unrest)
+		t += Locale.t("terr_43") % int(st.unrest)
 	if not (st.threat as Dictionary).is_empty():
-		t += "\n⚠ %s来犯" % st.threat.get("name", "")
+		t += "\n⚠ " + Locale.t("terr_44") % st.threat.get("name", "")
 	return t

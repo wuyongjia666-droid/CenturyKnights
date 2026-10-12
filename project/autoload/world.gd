@@ -1896,7 +1896,7 @@ func start_encounter(kind: String, ctx: Dictionary) -> Dictionary:
 	if not q.is_empty():
 		label = str(q.title)
 	elif str(ctx.get("site", "")) != "":
-		label = "%s·%s" % [CKTerritory.site(str(ctx.site)).get("name", ""), "守卫战" if kind == "territory_defend" else "攻占战"]
+		label = "%s·%s" % [CKTerritory.site(str(ctx.site)).get("name", ""), Locale.t("terr_45") if kind == "territory_defend" else Locale.t("terr_46")]
 	else:
 		label = "%s·遭遇战" % n.get("name", "")
 	base.name = label
