@@ -305,8 +305,10 @@ func _node_card(c: CKCharacter, at: Vector2) -> void:
 	var stage := str(CKGenomePortrait.STAGE_ZH.get(CKGenomePortrait.stage_for_age(c.age), ""))
 	var st := UIKit.body_label(("● " if c.alive else "○ ") + "%d岁·%s" % [c.age, stage], UIKit.OK if c.alive else UIKit.TEXT_FAINT, 11)
 	st.autowrap_mode = TextServer.AUTOWRAP_OFF
-	st.position = Vector2(150, 10)
-	st.size = Vector2(58, 16)
+	# Audit P2-1: the badge grows left inside the 220px card instead of spilling into the next one.
+	st.clip_text = true
+	st.position = Vector2(84, 10)
+	st.size = Vector2(124, 16)
 	st.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	b.add_child(st)
 	var th := Control.new()
