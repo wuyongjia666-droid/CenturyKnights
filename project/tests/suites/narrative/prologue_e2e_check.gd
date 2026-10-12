@@ -208,7 +208,15 @@ func _full_f() -> String:
 		return e10
 	if not GameState.flag("harvest_done"):
 		return "harvest not settled"
-	var e11: String = await _press("0.6", "写下这一年")
+	for step in [["0.6", "回石垒坡"], ["0.65", "回灰旗堡"]]:
+		var eh: String = await _press(step[0], step[1])
+		if eh != "":
+			return eh
+	var home: Array = _texts("0.65")
+	if not _has(home, "界桩") or not _has(home, "也打了三天"):
+		return "homecoming lost the lease echo or the iron hoop line %s" % str(home)
+	_player.simulate_goto_beat("0.7")
+	var e11: String = await _press("0.7", "写下这一年")
 	if e11 != "":
 		return e11
 	if not GameState.flag("chapter0_done"):
@@ -258,7 +266,7 @@ func _brief_c() -> String:
 			return e
 	if not GameState.flag("married"):
 		return "auto marry"
-	for step in [["0.4", "去参加婚礼"], ["0.45", "等待初啼"], ["0.5", "让月份走到孩子落地"], ["0.5", "去听那一声哭"], ["0.55", "粮饷结清"], ["0.6", "把月份推到丰收"], ["0.6", "踏上第一卷"]]:
+	for step in [["0.4", "去参加婚礼"], ["0.45", "等待初啼"], ["0.5", "让月份走到孩子落地"], ["0.5", "去听那一声哭"], ["0.55", "粮饷结清"], ["0.6", "把月份推到丰收"], ["0.6", "回石垒坡"], ["0.65", "回灰旗堡"], ["0.7", "踏上第一卷"]]:
 		var e: String = await _press(step[0], step[1])
 		if e != "":
 			return e
