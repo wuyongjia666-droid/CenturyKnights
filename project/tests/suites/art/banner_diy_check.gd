@@ -54,4 +54,7 @@ func _run() -> String:
 		return "naming still offers warm gold"
 	if FileAccess.get_file_as_string("res://icon.svg").find("#" + "c9a227") >= 0:
 		return "icon still warm gold"
+	var migrated := BannerSpec.normalize({"field": "solid", "field_a": "#" + UIKit.ACCENT.to_html(false), "emblem": "ring"})
+	if int(migrated.get("schema", 0)) != 2:
+		return "banner schema not v2"
 	return ""

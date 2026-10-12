@@ -201,6 +201,9 @@ func birth_child(mother: CKCharacter) -> CKCharacter:
 	mother.children_ids.append(child.id)
 	if father:
 		father.children_ids.append(child.id)
+	# Heraldry v2: cadency / bastardy stamp on personal arms.
+	var house_arms = GameState.banner_spec if typeof(GameState.banner_spec) == TYPE_DICTIONARY else {}
+	CKHeraldry.stamp_child_heraldry(child, house_arms)
 	GameState.chapter0_flags["child_born"] = true
 	GameState.log_event("初啼入谱：%s。血胤 %s。族谱新页已开，旅馆闲话会传『灰旗有后』。" % [child.name, child.bloodline_display()])
 	GameState.mark_dirty()
