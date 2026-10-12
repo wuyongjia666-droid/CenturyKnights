@@ -473,5 +473,5 @@ static func summary(id: String) -> String:
 	if int(st.unrest) > 0:
 		t += Locale.t("terr_43") % int(st.unrest)
 	if not (st.threat as Dictionary).is_empty():
-		t += "\n⚠ " + Locale.t("terr_44") % st.threat.get("name", "")
+		t += "\n！" + Locale.t("terr_44") % st.threat.get("name", "")
 	return t
