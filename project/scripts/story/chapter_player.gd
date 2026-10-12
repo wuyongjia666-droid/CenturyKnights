@@ -290,23 +290,21 @@ func _character_named(speaker: String) -> CKCharacter:
 	return null
 
 func _speaker_portrait(speaker: String, emotion: String = "") -> void:
+	# Audit P1-12: no speaker ever borrows the leader's face. Only the leader's own lines show it.
 	var who := _character_named(speaker)
-	if who == null and UnitArt.companion_slot(speaker) != "":
-		who = GameState.get_leader()
+	test_capture["portrait_who"] = who.id if who != null else ""
 	var plate := UnitArt.dialogue_portrait(speaker, emotion, who, 120)
 	if plate != null:
+		test_capture["portrait_kind"] = "plate"
 		_portrait.texture = plate
 		return
-	var leader = GameState.get_leader()
-	match speaker:
-		"旁白", "掌柜", "管事", "稳婆", "春令使者", "老旗手", "斥候", "盟友亲属":
-			if leader and speaker in ["老旗手", "斥候"]:
-				_portrait.texture = UnitArt.portrait(leader, 120, CKArtPaths.TIER_MEDIUM)
-			else:
-				_portrait.texture = UnitArt.banner(120, 120, false)
-		_:
-			# A named voice without a roster body (patron, rival, family) must not borrow the leader's face.
-			_portrait.texture = UnitArt.banner(120, 120, false)
+	if speaker == "" or speaker == "旁白":
+		test_capture["portrait_kind"] = "banner"
+		_portrait.texture = UnitArt.banner(120, 120, false)
+		return
+	# Old flag-bearer, scout, villains, supporting cast: a per-speaker silhouette until the farm paints them.
+	test_capture["portrait_kind"] = "silhouette"
+	_portrait.texture = UnitArt.speaker_silhouette(speaker, 120)
 
 func _refresh_actions() -> void:
 	for c in _actions.get_children():
@@ -391,6 +389,12 @@ func _run_op(step) -> String:
 			return "stop"
 		"scene":
 			_go_scene(str(row.get("path", "")))
+			return "stop"
+		"open_chapter":
+			# Leave this chapter for another one by id (ch0 -> e1_01). Audit P1-5.
+			var target_id := str(row.get("id", ""))
+			test_capture["open_chapter"] = target_id
+			_go_scene(StoryCatalog.request_chapter(target_id))
 			return "stop"
 		"advance":
 			var until := str(row.get("until_flag", ""))

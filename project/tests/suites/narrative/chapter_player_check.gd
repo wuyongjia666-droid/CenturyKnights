@@ -44,6 +44,12 @@ func _run() -> String:
 	if cond_err != "":
 		return cond_err
 	GameState.new_game("烬行", "灰旗", GameState.crest_color)
+	var face_err := await _no_borrowed_faces()
+	if face_err != "":
+		return face_err
+	var exit_err := _ch0_exit()
+	if exit_err != "":
+		return exit_err
 	var route_err := await _mainline_routing()
 	if route_err != "":
 		return route_err
@@ -131,7 +137,7 @@ func _run() -> String:
 	ch0.simulate_goto_beat("0.4")
 	ch0.simulate_finish_dialogue()
 	await get_tree().process_frame
-	if ch0.action_labels().find("前往联姻廷") < 0:
+	if ch0.action_labels().find("去联姻廷选人结婚") < 0:
 		return "ch0 marriage gate %s" % str(ch0.action_labels())
 	if int(GameState.reputation.get("ashland", 0)) < 30:
 		return "spring reputation was not prepared"
@@ -276,6 +282,49 @@ func _conditions() -> String:
 	print("OK conditions")
 	return ""
 
+## Audit P1-12: every speaker in every chapter resolves to its own art or a placeholder, never the leader.
+func _no_borrowed_faces() -> String:
+	var leader: CKCharacter = GameState.get_leader()
+	var player = (load(Catalog.player_scene()) as PackedScene).instantiate()
+	player.chapter_path = CH0
+	player.lock_path = true
+	player.suppress_scene_change = true
+	add_child(player)
+	await get_tree().process_frame
+	var seen := {}
+	for row in Catalog.mainline_entries():
+		var data = JSON.parse_string(FileAccess.get_file_as_string(str(row["path"])))
+		for b in data.get("beats", []):
+			for line in b.get("lines", []):
+				if typeof(line) == TYPE_DICTIONARY:
+					seen[str(line.get("speaker", ""))] = true
+	var bad: Array = []
+	for sp in seen.keys():
+		if sp == leader.name or sp == "leader":
+			continue
+		player._speaker_portrait(sp)
+		if str(player.test_capture.get("portrait_who", "")) == leader.id or player._portrait.texture == null:
+			bad.append(sp)
+	player.queue_free()
+	if not bad.is_empty():
+		return "speakers borrow the leader or have no portrait: %s" % str(bad)
+	print("OK speakers=", seen.size())
+	return ""
+
+## Audit P1-5: the prologue's departure button opens e1_01, not a dead archive notice.
+func _ch0_exit() -> String:
+	var data = JSON.parse_string(FileAccess.get_file_as_string(CH0))
+	for b in data.get("beats", []):
+		for a in b.get("actions", []):
+			if str(a.get("id", "")) != "old_volume":
+				continue
+			for step in a.get("do", []):
+				if str(step.get("op", "")) == "archive_notice":
+					return "old_volume still shows the archive notice"
+				if str(step.get("op", "")) == "open_chapter" and str(step.get("id", "")) == "e1_01":
+					print("OK ch0 departs to e1_01")
+					return ""
+	return "old_volume does not open e1_01"
 ## Audit P0-1 / P0-2 / P1-6: every volume chapter opens by id, has a way out of its last beat,
 ## and its beat survives CKStoryState.
 func _mainline_routing() -> String:
