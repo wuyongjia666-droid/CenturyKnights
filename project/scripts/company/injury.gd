@@ -99,10 +99,16 @@ static func resolve(c: CKCharacter, difficulty: int, overflow: int, seed_i: int,
 	return wound
 
 
+const MONTHLY_REGEN := 0.25
+
+
 static func tick_month(host) -> String:
 	var notes: PackedStringArray = []
 	for c in host.roster():
 		var rec := record(c)
+		# Between battles: anyone without a current wound gets a quarter of max hp back each month.
+		if not c.injured and (rec.is_empty() or str(rec.get("tier", "")) == "lasting") and c.hp < c.max_hp:
+			c.hp = mini(c.max_hp, c.hp + ceili(c.max_hp * MONTHLY_REGEN))
 		if rec.is_empty() or str(rec.get("tier", "")) == "lasting":
 			continue
 		var left := int(rec.get("months_left", 0)) - 1
