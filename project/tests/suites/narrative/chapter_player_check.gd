@@ -279,7 +279,7 @@ func _conditions() -> String:
 ## Audit P0-1 / P0-2 / P1-6: every volume chapter opens by id, has a way out of its last beat,
 ## and its beat survives CKStoryState.
 func _mainline_routing() -> String:
-	var packed: PackedScene = load("res://scenes/story/chapter_player.tscn")
+	var packed: PackedScene = load(Catalog.player_scene())
 	var count := 0
 	for row in Catalog.mainline_entries():
 		var id := str(row.get("id", ""))
