@@ -46,6 +46,8 @@ var characters: Dictionary = {}  # id -> CKCharacter
 var tavern_candidates: Array = []
 var marriage_candidates: Array = []
 var marriage_nation: String = ""
+## Calendar month (year*12+month) whose castle sortie already paid out. Audit P1-3.
+var sortie_month: int = -1
 var quests: Array = []
 var event_log: Array = []
 var settings: Dictionary = {
@@ -770,6 +772,7 @@ func build_save_data() -> Dictionary:
 		"tavern": [],
 		"marriage": [],
 		"marriage_nation": marriage_nation,
+		"sortie_month": sortie_month,
 		"quests": quests,
 		"started": started,
 		"world_v87": CKSaveService.compact_world(World.to_save(), _court_derived),
@@ -873,6 +876,7 @@ func apply_save_data(data: Dictionary) -> bool:
 	for d in data.get("marriage", []):
 		marriage_candidates.append(CKCharacter.from_dict(d))
 	marriage_nation = str(data.get("marriage_nation", ""))
+	sortie_month = int(data.get("sortie_month", -1))
 	var _wd = data.get("world_v87", {})
 	var _world: Dictionary = _wd if typeof(_wd) == TYPE_DICTIONARY else {}
 	var _derived := str(_world.get("court_genomes", "")) == "derived"
