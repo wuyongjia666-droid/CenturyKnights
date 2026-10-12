@@ -8,6 +8,23 @@ static func next_id(prefix: String = "c") -> String:
 	# Sequence only. A wall-clock suffix made births and the century sim depend on the minute.
 	return "%s_%d" % [prefix, _id_seq]
 
+## Largest numeric suffix among ids such as "hire_4" (0 when none).
+static func max_seq(ids: Array) -> int:
+	var top := 0
+	for raw in ids:
+		var s := str(raw)
+		var cut := s.rfind("_")
+		if cut < 0:
+			continue
+		var tail := s.substr(cut + 1)
+		if tail.is_valid_int():
+			top = maxi(top, int(tail))
+	return top
+
+## After a load: never hand out an id that a saved person already holds (audit P0-3).
+static func restore_seq(saved: int, ids: Array) -> void:
+	_id_seq = maxi(saved, max_seq(ids))
+
 static func make_leader(given: String, surname: String, crest_color: String) -> CKCharacter:
 	var c := CKCharacter.new()
 	c.id = next_id("leader")

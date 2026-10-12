@@ -44,6 +44,9 @@ func _run() -> String:
 	if cond_err != "":
 		return cond_err
 	GameState.new_game("烬行", "灰旗", GameState.crest_color)
+	var exit_err := _ch0_exit()
+	if exit_err != "":
+		return exit_err
 	var route_err := await _mainline_routing()
 	if route_err != "":
 		return route_err
@@ -120,10 +123,10 @@ func _run() -> String:
 	add_child(ch0)
 	await get_tree().process_frame
 	var ch0_lines := [
-		"石垒坡的麦要到月底才黄。你把石担卸在田埂上，麻绳在肩上勒出两道暗红的沟。",
-		"东边是朔澜陆桥。北隘那个缺口上立着一根烟，细，直，风吹不弯。",
-		"又在看烟。去年你说要挣一个称呼，说了三遍。第三遍你没看我，看的是桥。",
-		"坡下，弟弟小粟赶着驴车往北走。车上是交给槐里家的粮，要过隘口那条窄路。",
+		"你是石垒坡的佃户，没有姓，也没有爵位。刚挑完一担石头，肩膀还疼。",
+		"你看向北边的隘口。那里冒起一股烟，不是做饭的烟，是出事了。",
+		"又在看烟？你说过好几回，想出去闯，挣个自己的姓。我都记着。",
+		"你弟弟小粟今天赶着粮车往北走，要过隘口那条窄路。",
 	]
 	var ch0_open := await _advance_lines(ch0, ch0_lines)
 	if ch0_open != "":
@@ -276,6 +279,20 @@ func _conditions() -> String:
 	print("OK conditions")
 	return ""
 
+## Audit P1-5: the prologue's departure button opens e1_01, not a dead archive notice.
+func _ch0_exit() -> String:
+	var data = JSON.parse_string(FileAccess.get_file_as_string(CH0))
+	for b in data.get("beats", []):
+		for a in b.get("actions", []):
+			if str(a.get("id", "")) != "old_volume":
+				continue
+			for step in a.get("do", []):
+				if str(step.get("op", "")) == "archive_notice":
+					return "old_volume still shows the archive notice"
+				if str(step.get("op", "")) == "open_chapter" and str(step.get("id", "")) == "e1_01":
+					print("OK ch0 departs to e1_01")
+					return ""
+	return "old_volume does not open e1_01"
 ## Audit P0-1 / P0-2 / P1-6: every volume chapter opens by id, has a way out of its last beat,
 ## and its beat survives CKStoryState.
 func _mainline_routing() -> String:

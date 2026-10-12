@@ -332,6 +332,19 @@ func set_flag(key: String, val: bool = true) -> void:
 	story.flags[key] = val
 	mark_dirty()
 
+## Give c a fresh id if someone else in the save already holds it (audit P0-3).
+func claim_id(c: CKCharacter) -> void:
+	if c == null:
+		return
+	var held = characters.get(c.id, null)
+	if held == null or held == c:
+		return
+	var cut := c.id.rfind("_")
+	var prefix := c.id.substr(0, cut) if cut > 0 else "c"
+	push_warning("id collision %s, reassigned" % c.id)
+	while characters.has(c.id):
+		c.id = CharacterFactory.next_id(prefix)
+
 func refresh_tavern() -> void:
 	tavern_candidates.clear()
 	for i in 3:
@@ -344,6 +357,7 @@ func recruit(candidate: CKCharacter, cost: int = -1) -> Dictionary:
 		return {"ok": false, "msg": Locale.t("not_enough_silver")}
 	silver -= cost
 	candidate.in_roster = true
+	claim_id(candidate)
 	characters[candidate.id] = candidate
 	tavern_candidates.erase(candidate)
 	set_flag("recruited")
@@ -773,6 +787,7 @@ func build_save_data() -> Dictionary:
 		"patrol_cooldown": patrol_cooldown,
 		"patrol_boost_months": patrol_boost_months,
 		"characters": {},
+		"id_seq": CharacterFactory._id_seq,
 		"tavern": [],
 		"marriage": [],
 		"marriage_nation": marriage_nation,
@@ -882,10 +897,17 @@ func apply_save_data(data: Dictionary) -> bool:
 	_load_families(data)
 	marriage_nation = str(data.get("marriage_nation", ""))
 	sortie_month = int(data.get("sortie_month", -1))
+	var _known_ids: Array = characters.keys()
+	for c in tavern_candidates:
+		_known_ids.append(c.id)
+	for c in marriage_candidates:
+		_known_ids.append(c.id)
+	CharacterFactory.restore_seq(int(data.get("id_seq", 0)), _known_ids)
 	var _wd = data.get("world_v87", {})
 	var _world: Dictionary = _wd if typeof(_wd) == TYPE_DICTIONARY else {}
 	var _derived := str(_world.get("court_genomes", "")) == "derived"
 	World.from_save(_world)
+	CKTerritory.migrate_second_seat(self)
 	CKSaveService.restore_market()
 	if _derived:
 		_court_derived = CKSaveService.restore_court_genomes()

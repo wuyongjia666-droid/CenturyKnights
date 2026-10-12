@@ -21,7 +21,7 @@ func _run() -> String:
 	World.rivals_enabled = false
 	for nid in World.nations.keys():
 		World.rep_nation[str(nid)] = 40
-	for f in [_assault, _chain, _month, _contest, _home, _save]:
+	for f in [_seat_migration, _assault, _chain, _month, _contest, _home, _save, _stockade]:
 		err = f.call()
 		if err != "":
 			return err
@@ -204,4 +204,72 @@ func _save() -> String:
 	var junk := CKTerritory.from_save({"sites": {"hq": {"owner": "company"}, "nope": {}, "t_ash_beacon": {"owner": "company", "garrison": 99}}})
 	if junk.sites.has("hq") or junk.sites.has("nope") or int(junk.sites.t_ash_beacon.garrison) != 3:
 		return "migration did not sanitise"
+	return ""
+
+## Old saves with holdings.second_seat load as an owned site near the same settlement,
+## with stockade + contract floor, and never net less than the seat did (+6 silver, +6 food).
+func _seat_migration() -> String:
+	var data := GameState.build_save_data()
+	var hold: Dictionary = data.get("holdings", {}).duplicate(true)
+	hold["second_seat"] = {"owned": true, "city": "reed_ford", "reason": "chain", "garrison_home": 2,
+		"garrison_away": 4, "yield_silver": 18, "yield_food": 6, "upkeep": 12}
+	data["holdings"] = hold
+	var w: Dictionary = data.get("world_v87", {}).duplicate(true)
+	w.erase("territory")
+	w["second_hold_offer"] = "chain_ash"
+	data["world_v87"] = w
+	if not GameState.apply_save_data(data):
+		return "old save did not load"
+	World.events_enabled = false
+	World.rivals_enabled = false
+	if GameState.holdings.has("second_seat"):
+		return "second_seat survived migration"
+	var ids := CKTerritory.owned_ids()
+	if ids.size() != 1 or str(CKTerritory.site(ids[0]).anchor) != "reed_ford":
+		return "seat not moved next to reed_ford: %s" % str(ids)
+	var st := CKTerritory.state(ids[0])
+	if not bool(st.stockade) or not bool(st.contract) or int(st.garrison) != 4:
+		return "migrated site missing stockade/contract/garrison: %s" % str(st)
+	if CKTerritory.garrison_max(ids[0]) != 4:
+		return "stockade did not raise garrison cap"
+	var s0 := GameState.silver
+	var f0 := GameState.food
+	CKTerritory.apply_month(0.99)
+	if GameState.silver - s0 < 6 or GameState.food - f0 < 6:
+		return "migrated seat lost value: silver %+d food %+d" % [GameState.silver - s0, GameState.food - f0]
+	var blob := World.to_save()
+	World.from_save(blob)
+	if not bool(CKTerritory.state(ids[0]).contract):
+		return "contract lost on round trip"
+	# reset for the rest of the suite
+	GameState.new_game("领地", "灰旗", GameState.crest_color)
+	World.events_enabled = false
+	World.rivals_enabled = false
+	for nid in World.nations.keys():
+		World.rep_nation[str(nid)] = 40
+	if not CKTerritory.owned_ids().is_empty():
+		return "new game kept territory"
+	return ""
+
+func _stockade() -> String:
+	var id := "t_ash_beacon"
+	CKTerritory.capture(id, "chain")
+	GameState.silver = 0
+	if CKTerritory.build_stockade(id).get("ok", false):
+		return "stockade built without silver"
+	CKTerritory.grant_stockade_credit("chain_ash")
+	if CKTerritory.stockade_cost() != 0:
+		return "chain credit not applied"
+	if not CKTerritory.build_stockade(id).get("ok", false):
+		return "free stockade failed"
+	if CKTerritory.build_stockade(id).get("ok", false):
+		return "stockade built twice"
+	var f0 := GameState.food
+	CKTerritory.state(id)  # sanity
+	var st := CKTerritory.state(id)
+	st.threat = {}
+	World.territory.sites[id] = st
+	CKTerritory.apply_month(0.99)
+	if GameState.food - f0 < 6:
+		return "stockade food missing"
 	return ""
