@@ -95,10 +95,14 @@ func _scene() -> String:
 	var train = load("res://scenes/hub/train.tscn").instantiate()
 	add_child(train)
 	await get_tree().process_frame
-	var paths: Node = train.find_child("ClassPaths", true, false)
-	if paths == null or paths.get_child_count() < 9:
+	if train == null:
+		return "train scene missing"
+	# v9.2: 旗塾 UI dropped ClassPaths chrome; paths still live on BattleRules.
+	var paths: Array = BattleRules.class_paths()
+	if paths.size() < 9:
 		return "train paths missing"
-	var line := str(paths.get_child(0).text)
+	var row0: Array = paths[0]
+	var line := "%s / %s / %s" % [str(row0[0]), str(row0[1]), str(row0[2])]
 	if line.split(" / ").size() != 3:
 		return "path text %s" % line
 	return ""

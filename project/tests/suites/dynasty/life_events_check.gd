@@ -121,6 +121,15 @@ func _cohort() -> void:
 	var kin := _make("kin", 12, "ash_chart")
 	kin.parent_ids = [parent.id]
 	var elder := _make("elder", 64, "ash_chart")
+	# v9.2：家中 1–15 岁走岁课，退出 life_events 月卡。另加外门子嗣，保住 childhood/education/succession 覆盖。
+	var wander_child := _make("wander_child", 4, "ash_chart")
+	wander_child.is_child = false
+	var wander_student := _make("wander_student", 10, "ash_chart")
+	wander_student.is_child = false
+	var sib_a := _make("sib_a", 18, "ash_chart")
+	sib_a.parent_ids = ["outsider_parent"]
+	var sib_b := _make("sib_b", 20, "ash_chart")
+	sib_b.parent_ids = ["outsider_parent"]
 
 
 func _make(id: String, age: int, line: String) -> CKCharacter:

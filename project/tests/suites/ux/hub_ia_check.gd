@@ -90,7 +90,7 @@ func _hub() -> void:
 	var labels: Array = hub.panel_button_labels()
 	_ok(labels.size() <= 6, "year-one buttons %s" % str(labels))
 	_ok(labels.size() >= 4, "buttons %s" % str(labels))
-	for sub in ["出战", "演武", "酒馆", "花名册", "岁月", "设置"]:
+	for sub in ["出战", "旗塾", "酒馆", "花名册", "岁月", "设置"]:
 		var found := false
 		for lb in labels:
 			if str(lb).find(sub) >= 0:

@@ -386,10 +386,28 @@ static func _draw_grand(c: CKCharacter, other: CKCharacter, rng: RandomNumberGen
 		"title": _c("grand_title") % role, "speaker": other.name,
 		"body": _c("grand_body") % role,
 		"options": [
-			{"id": "left", "label": _c(str(left.get("act_key", ""))), "stat": str(left.get("stat", "")), "mark": str(left.get("mark", "")), "gain": 1 if str(left.get("stat", "")) != "" or str(left.get("mark", "")) != "" else 0, "care": bool(left.get("care", false)), "morale": int(left.get("morale", 0))},
-			{"id": "right", "label": _c(str(right.get("act_key", ""))), "stat": str(right.get("stat", "")), "mark": str(right.get("mark", "")), "gain": 1 if str(right.get("stat", "")) != "" else 0, "care": bool(right.get("care", false)), "morale": int(right.get("morale", 0))},
+			_side_option("left", left),
+			_side_option("right", right),
 		],
 		"death_immune": false,
+	}
+
+
+
+static func _side_option(oid: String, side: Dictionary) -> Dictionary:
+	var stat := str(side.get("stat", ""))
+	var mark := str(side.get("mark", ""))
+	var gain := 1 if stat != "" or (oid == "left" and mark != "") else 0
+	if oid == "right":
+		gain = 1 if stat != "" else 0
+	return {
+		"id": oid,
+		"label": _c(str(side.get("act_key", ""))),
+		"stat": stat,
+		"mark": mark,
+		"gain": gain,
+		"care": bool(side.get("care", false)),
+		"morale": int(side.get("morale", 0)),
 	}
 
 
