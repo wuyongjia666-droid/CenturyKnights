@@ -96,6 +96,15 @@ class SubmitV92Test(unittest.TestCase):
         last_smith = max(i for i, role in enumerate(farm03) if role == "smith")
         self.assertLess(last_smith, farm03.index("item"))
 
+    def test_kinds_filter_status_overlay(self) -> None:
+        filtered = submit.filter_jobs_by_kind(self.jobs, {"status_overlay"})
+        self.assertEqual(len(filtered), 6)
+        shots = submit.build_shots(filtered, {"FARM-04"})
+        self.assertEqual(len(shots), 6)
+        self.assertTrue(all(shot["role"] == "status_overlay" for shot in shots))
+        self.assertTrue(all(shot["edit"] == "overlay" for shot in shots))
+        self.assertEqual(shots[0]["label"], "v92_status_malnourished")
+
     def test_farm_filter(self) -> None:
         cities = submit.build_shots(self.jobs, {"FARM-02"})
         self.assertTrue(cities)

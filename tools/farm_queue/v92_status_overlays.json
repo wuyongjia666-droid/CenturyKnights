@@ -1,7 +1,7 @@
 {
   "version": "v92",
   "kind": "status_overlay",
-  "note": "FARM-04 status reads. Six transparent overlays, not a face times status matrix. Original paint; do not copy another game's wound icons. m173 submit is the same v92 stills path. Do not invent stand-in PNGs.",
+  "note": "FARM-04 status reads. Six transparent overlays shared across all ages/sexes/bloodlines (compose on any 768x1024 plate — not a face×status matrix). Original paint; do not copy another game's wound icons. Submit via submit_status_overlays_on_m173.ps1 or submit_v92_stills.py --kinds status_overlay. Gate+ingest: ingest_status_overlays.py. Do not invent stand-in PNGs.",
   "style_lock": "docs/art/style-lock-v89.json",
   "jobs": [
     {
@@ -22,7 +22,10 @@
         "max_warm_ratio": 0.22,
         "max_mean_saturation": 0.42,
         "min_cool_bias": -0.02,
-        "max_lab_hist_distance": 0.62
+        "max_lab_hist_distance": 0.62,
+        "min_opaque_ratio": 0.008,
+        "max_opaque_ratio": 0.4,
+        "min_mean_alpha_opaque": 0.35
       },
       "out_path": "project/assets/art/portraits/status/malnourished.png",
       "status_id": "malnourished",
@@ -47,7 +50,10 @@
         "max_warm_ratio": 0.22,
         "max_mean_saturation": 0.42,
         "min_cool_bias": -0.02,
-        "max_lab_hist_distance": 0.62
+        "max_lab_hist_distance": 0.62,
+        "min_opaque_ratio": 0.008,
+        "max_opaque_ratio": 0.4,
+        "min_mean_alpha_opaque": 0.35
       },
       "out_path": "project/assets/art/portraits/status/wound_light.png",
       "status_id": "wound_light",
@@ -72,7 +78,10 @@
         "max_warm_ratio": 0.22,
         "max_mean_saturation": 0.42,
         "min_cool_bias": -0.02,
-        "max_lab_hist_distance": 0.62
+        "max_lab_hist_distance": 0.62,
+        "min_opaque_ratio": 0.008,
+        "max_opaque_ratio": 0.4,
+        "min_mean_alpha_opaque": 0.35
       },
       "out_path": "project/assets/art/portraits/status/wound_lasting.png",
       "status_id": "wound_lasting",
@@ -97,7 +106,10 @@
         "max_warm_ratio": 0.22,
         "max_mean_saturation": 0.42,
         "min_cool_bias": -0.02,
-        "max_lab_hist_distance": 0.62
+        "max_lab_hist_distance": 0.62,
+        "min_opaque_ratio": 0.008,
+        "max_opaque_ratio": 0.4,
+        "min_mean_alpha_opaque": 0.35
       },
       "out_path": "project/assets/art/portraits/status/wound_grave.png",
       "status_id": "wound_grave",
@@ -122,7 +134,10 @@
         "max_warm_ratio": 0.22,
         "max_mean_saturation": 0.42,
         "min_cool_bias": -0.02,
-        "max_lab_hist_distance": 0.62
+        "max_lab_hist_distance": 0.62,
+        "min_opaque_ratio": 0.008,
+        "max_opaque_ratio": 0.4,
+        "min_mean_alpha_opaque": 0.35
       },
       "out_path": "project/assets/art/portraits/status/lost_finger.png",
       "status_id": "lost_finger",
@@ -147,12 +162,23 @@
         "max_warm_ratio": 0.22,
         "max_mean_saturation": 0.42,
         "min_cool_bias": -0.02,
-        "max_lab_hist_distance": 0.62
+        "max_lab_hist_distance": 0.62,
+        "min_opaque_ratio": 0.008,
+        "max_opaque_ratio": 0.4,
+        "min_mean_alpha_opaque": 0.35
       },
       "out_path": "project/assets/art/portraits/status/limp.png",
       "status_id": "limp",
       "edit": "overlay",
       "note": "RGBA overlay only. Do not replace the identity plate. Missing file means the game draws the base portrait."
     }
+  ],
+  "expected_ids": [
+    "malnourished",
+    "wound_light",
+    "wound_lasting",
+    "wound_grave",
+    "lost_finger",
+    "limp"
   ]
 }
