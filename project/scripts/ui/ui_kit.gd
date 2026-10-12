@@ -872,7 +872,8 @@ static func compact(b: Button, h: int) -> void:
 			b.add_theme_stylebox_override(st, d)
 
 static func cta_button(text: String, key: String = "A", w: int = 200, h: int = 44) -> Button:
-	var b := make_accent_button("%s   [%s]" % [text, key] if key != "" else text, w)
+	var show_key := key != "" and not DeviceProfile.is_mobile()
+	var b := make_accent_button("%s   [%s]" % [text, key] if show_key else text, w)
 	b.custom_minimum_size = Vector2(w, h)
 	b.add_theme_font_size_override("font_size", 15 if h >= 40 else 13)
 	compact(b, h)
@@ -997,7 +998,7 @@ static func top_bar(parent: Control, context: String, chips: Array = [], back_te
 		if DeviceProfile.is_mobile():
 			back_h = int(clampf(DeviceProfile.hit_px(), 44.0, 48.0))
 			back_w = 120
-		var b := ghost_button("%s  ESC" % back_text, back_w, back_h)
+		var b := ghost_button(back_text if DeviceProfile.is_mobile() else "%s  ESC" % back_text, back_w, back_h)
 		b.name = "BackButton"
 		b.pressed.connect(back_cb)
 		right.add_child(b)
@@ -1049,6 +1050,7 @@ static func footer_bar(parent: Control, hints: Array, meta: String = "FROST_TACT
 	var h := HBoxContainer.new()
 	h.position = Vector2(26, 5)
 	h.add_theme_constant_override("separation", 6)
+	h.visible = not DeviceProfile.is_mobile()  # keyboard hints are meaningless on touch
 	bar.add_child(h)
 	for it in hints:
 		h.add_child(keycap(str(it[0])))
@@ -1274,7 +1276,7 @@ static func stitch_dialogue(scene: Control) -> void:
 			if not is_instance_valid(c) or c.is_queued_for_deletion():
 				continue
 			live.append(c)
-			if str(c.name) != "AdvanceLine":
+			if str(c.name) != "AdvanceLine" and not bool(c.get_meta("advance_line", false)):
 				advance_only = false
 		if live.is_empty():
 			return
