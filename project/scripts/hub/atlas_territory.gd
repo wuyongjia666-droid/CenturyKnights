@@ -109,11 +109,17 @@ static func _actions(id: String) -> Array:
 	if CKTerritory.owned(id):
 		var st := CKTerritory.state(id)
 		var why := ""
-		if int(st.garrison) >= int(CKTerritory.rule("garrison_max", 3)):
+		if int(st.garrison) >= CKTerritory.garrison_max(id):
 			why = Locale.t("terr_ui_full")
 		elif GameState.silver < CKTerritory.garrison_cost(id):
 			why = Locale.t("terr_ui_silver") % CKTerritory.garrison_cost(id)
 		out.append({"kind": "reinforce", "label": Locale.t("terr_ui_reinforce") % CKTerritory.garrison_cost(id), "why": why})
+		var swhy := ""
+		if bool(st.stockade):
+			swhy = Locale.t("terr_st_have")
+		elif GameState.silver < CKTerritory.stockade_cost():
+			swhy = Locale.t("terr_ui_silver") % CKTerritory.stockade_cost()
+		out.append({"kind": "stockade", "label": Locale.t("terr_st_up") % CKTerritory.stockade_cost(), "why": swhy})
 		if not (st.threat as Dictionary).is_empty():
 			var dwhy := "" if World.pos == str(CKTerritory.site(id).anchor) else Locale.t("terr_ui_go")
 			out.append({"kind": "defend", "label": Locale.t("terr_ui_defend"), "why": dwhy})
@@ -132,6 +138,8 @@ static func run(kind: String, id: String) -> Dictionary:
 			return CKTerritory.post_chain(id)
 		"reinforce":
 			return CKTerritory.reinforce(id)
+		"stockade":
+			return CKTerritory.build_stockade(id)
 		"defend":
 			return CKTerritory.defend(id)
 	return {"ok": false, "msg": ""}
