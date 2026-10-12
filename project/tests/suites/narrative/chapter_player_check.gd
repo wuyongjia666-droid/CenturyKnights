@@ -47,6 +47,9 @@ func _run() -> String:
 	var exit_err := _ch0_exit()
 	if exit_err != "":
 		return exit_err
+	var route_err := await _mainline_routing()
+	if route_err != "":
+		return route_err
 	var packed: PackedScene = load("res://scenes/story/chapter_player.tscn")
 	if packed == null:
 		return "player scene missing"
@@ -290,3 +293,63 @@ func _ch0_exit() -> String:
 					print("OK ch0 departs to e1_01")
 					return ""
 	return "old_volume does not open e1_01"
+## Audit P0-1 / P0-2 / P1-6: every volume chapter opens by id, has a way out of its last beat,
+## and its beat survives CKStoryState.
+func _mainline_routing() -> String:
+	var packed: PackedScene = load(Catalog.player_scene())
+	var count := 0
+	for row in Catalog.mainline_entries():
+		var id := str(row.get("id", ""))
+		if id == "ch0":
+			continue
+		count += 1
+		var data = JSON.parse_string(FileAccess.get_file_as_string(str(row["path"])))
+		var idx := int(data.get("legacy_index", 0))
+		if idx <= 0 or idx >= CKStoryState.CHAPTER_COUNT:
+			return "%s legacy_index %d outside story_state" % [id, idx]
+		GameState.story.set_beat(idx, "probe")
+		if GameState.story.beat(idx) != "probe":
+			return "%s beat not stored" % id
+		GameState.story.set_beat(idx, GameState.story.default_beat(idx))
+		var last := ""
+		for b in data.get("beats", []):
+			if b.get("next") == null or str(b.get("next", "")) == "":
+				last = str(b.get("id", ""))
+		if last == "":
+			return "%s has no last beat" % id
+		if Catalog.request_chapter(id) != Catalog.player_scene():
+			return "%s scene" % id
+		var player = packed.instantiate()
+		player.suppress_scene_change = true
+		add_child(player)
+		await get_tree().process_frame
+		var loaded := str(player._chapter.get("id", ""))
+		if loaded != id:
+			player.queue_free()
+			return "requested %s but player opened %s" % [id, loaded]
+		player._load_beat(last)
+		player._line_idx = 1 << 20
+		player._refresh_actions()
+		await get_tree().process_frame
+		var live := 0
+		for c in player._actions.get_children():
+			if c is Button and not c.is_queued_for_deletion() and not (c as Button).disabled:
+				live += 1
+		if live == 0:
+			player.queue_free()
+			return "%s last beat %s has no exit" % [id, last]
+		player.queue_free()
+		GameState.story.set_beat(idx, GameState.story.default_beat(idx))
+	if count < 40:
+		return "only %d volume chapters" % count
+	Catalog.request_chapter("e9_99")
+	var lost = packed.instantiate()
+	lost.suppress_scene_change = true
+	add_child(lost)
+	await get_tree().process_frame
+	var bad := str(lost._chapter.get("id", ""))
+	lost.queue_free()
+	if bad == "ch0":
+		return "unknown id fell back to ch0"
+	print("OK mainline routing chapters=", count)
+	return ""

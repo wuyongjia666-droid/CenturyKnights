@@ -14,6 +14,7 @@
 
 - `mainline_entries()`：当前可播章节，含 id、标题、JSON 路径、场景。
 - `request_chapter(id)`：写入 `story_chapter_id`，返回要打开的场景。`ch0` 返回 `chapter0.tscn`。
+- `path_for(id)`：章节 id 对应的 JSON 路径（`e1_01` → `era1_01.json`）。播放器只按这个路径加载，**不拿 id 拼文件名**。id 不在目录里时报错、显示「章节结束」和回城按钮，**不回落 `ch0.json`**（v9.2.1，审查 P0-1）。
 - `archive_replay_enabled()`：恒为 false。
 
 城堡梯子、`World.mainline_marker()` 里的 `chapter%d.tscn` 不在本流。见文末交接。
@@ -45,6 +46,23 @@
 `battle` 把 `objective` 记在 meta `battle_objective`。真正结算的是地图 JSON 里的 `objective`（BTL-02）。第一纪元八场在 `data/maps/story_era1.json`，章节在 `data/story/chapters/era1_*.json`。第二、三纪元十六章在 `era2_*.json`、`era3_*.json`，地图在 `story_era2.json`、`story_era3.json`。
 
 台词里的 `{heir}` 在显示时换成族谱上还活着、且 `parent_ids` 含当前旗主 id 的那个人的名字。没有这样的人时，换成 `narrative.csv` 的 `nar06_no_heir`。授旗章 `e3_05` 的 `rite` 节拍用这一处，不把孩子的名字写死。
+
+## 章节结束协议（v9.2.1，审查 P0-2）
+
+- 每一拍都要有出路。末拍（`next` 为空）没有可见动作时，播放器补一个「回到灰旗堡」（`story_back_to_hub`），回城堡枢纽。
+- 进入末拍时这一拍已写进 `CKStoryState`，主线游标（`HubTodo.mainline_target()`）以「存的拍 == 目录里的 `last_beat`」判定本章完成，回城后「继续主线」打开下一章。
+- 返回键 / ESC 仍打开暂停菜单；暂停菜单有「回到灰旗堡」（`pause_hub`），任何场景都能离开，不必回标题再读档。
+- 测试：`chapter_player_check` 断言 e1–e5 每一章的末拍至少有一个可见动作。
+
+## legacy_index 取值（审查 P1-6）
+
+| 范围 | 用途 |
+|---|---|
+| 0 | 第零章（另存在 `chapter0_beat`） |
+| 1–234 | 封存旧卷，只读兼容 |
+| 101–399 | 卷章（现用：第一卷 101–108，第二、三卷 201–216，第四、五卷 301–316） |
+
+`CKStoryState.CHAPTER_COUNT = 400`。旧存档只有 0–234 键，缺的键按默认拍载入（`LEGACY_COUNT = 235` 仅用于旧档兼容测试）。新卷的 `legacy_index` 必须小于 `CHAPTER_COUNT`，`chapter_player_check` 会验证每章 `set_beat` 后能读回。
 
 ## 第零章
 

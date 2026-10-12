@@ -181,6 +181,12 @@ func _walk(path: String, seed_n: int) -> String:
 		for child in player._actions.get_children():
 			if child is BaseButton and is_instance_valid(child) and not child.is_queued_for_deletion() and not child.disabled:
 				enabled.append(child)
+		if str(player.current_beat_id()) == "end" and str(player._beat.get("next", "")) == "":
+			# Chapter end protocol: the last beat must offer a way out (back to the castle).
+			var has_exit := not enabled.is_empty()
+			player.queue_free()
+			await get_tree().process_frame
+			return "" if has_exit else "end beat has no exit"
 		if enabled.is_empty():
 			var stopped := str(player.current_beat_id())
 			player.queue_free()
