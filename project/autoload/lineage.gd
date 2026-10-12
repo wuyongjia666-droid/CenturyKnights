@@ -141,6 +141,11 @@ func birth_child(mother: CKCharacter) -> CKCharacter:
 	child.in_roster = false
 	child.birthday_month = Calendar.month
 	child.parent_ids = [father.id if father else "", mother.id]
+	# Family arms: child joins its own family line (father's if he has one, else mother's). Families never merge.
+	if father and str(father.family_id) != "":
+		child.family_id = str(father.family_id)
+	else:
+		child.family_id = str(mother.family_id)
 	child.blood_mix = _mix_blood(
 		father.blood_mix if father else {"common_ash": 1.0},
 		mother.blood_mix
@@ -201,9 +206,6 @@ func birth_child(mother: CKCharacter) -> CKCharacter:
 	mother.children_ids.append(child.id)
 	if father:
 		father.children_ids.append(child.id)
-	# Heraldry v2: cadency / bastardy stamp on personal arms.
-	var house_arms = GameState.banner_spec if typeof(GameState.banner_spec) == TYPE_DICTIONARY else {}
-	CKHeraldry.stamp_child_heraldry(child, house_arms)
 	GameState.chapter0_flags["child_born"] = true
 	GameState.log_event("初啼入谱：%s。血胤 %s。族谱新页已开，旅馆闲话会传『灰旗有后』。" % [child.name, child.bloodline_display()])
 	GameState.mark_dirty()

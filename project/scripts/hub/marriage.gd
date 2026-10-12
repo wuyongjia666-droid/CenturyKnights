@@ -801,7 +801,6 @@ func _finish_marry() -> void:
 			"banner":
 				GameState.add_rep("ashland", 4)
 				GameState.house_mods["vow_banner"] = true
-				_apply_heraldry_marshal()
 				GameState.add_lineage_event("嫁妆旁注：旗饰——丰收月永续声望")
 			"prayer":
 				GameState.add_skill_point(1)
@@ -915,29 +914,3 @@ func _back() -> void:
 	else:
 		get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
 
-func _apply_heraldry_marshal() -> void:
-	## Impale house arms with spouse nation style when the banner dowry is chosen.
-	var partner_nation := "qinghe"
-	if _selected != null:
-		var mix = _selected.get("blood_mix")
-		if typeof(mix) == TYPE_DICTIONARY and not (mix as Dictionary).is_empty():
-			var best := ""
-			var best_w := -1.0
-			for k in (mix as Dictionary).keys():
-				var w := float((mix as Dictionary)[k])
-				if w > best_w:
-					best_w = w
-					best = str(k)
-			if best != "" and best in CKHeraldry.table().get("nations", {}):
-				partner_nation = best
-			elif best.begins_with("sig_"):
-				var nid := best.trim_prefix("sig_")
-				if nid in CKHeraldry.table().get("nations", {}):
-					partner_nation = nid
-	var partner := CKHeraldry.from_nation(partner_nation)
-	var mode := "impale"
-	if _selected != null and int(_selected.rank_index()) >= 3:
-		mode = "quarter"
-	GameState.banner_spec = CKHeraldry.marshal(GameState.banner_spec, partner, mode)
-	GameState.crest_color = str(GameState.banner_spec.get("field_a", GameState.crest_color))
-	UnitArt.clear_cache()

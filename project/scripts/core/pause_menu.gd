@@ -1,6 +1,6 @@
 class_name CKPauseMenu
 extends CanvasLayer
-## Continue, save, load, settings, title. Esc and the Android back key toggle it.
+## Continue, save, load, settings, back to castle, title. Esc and the Android back key toggle it.
 ## While it is open, board gestures are swallowed so the tactics map does not move.
 
 static var current: CKPauseMenu = null
@@ -10,6 +10,7 @@ const BUTTONS := [
 	["PauseSave", "pause_save"],
 	["PauseLoad", "pause_load"],
 	["PauseSettings", "pause_settings"],
+	["PauseHub", "pause_hub"],
 	["PauseTitle", "pause_title"],
 ]
 
@@ -40,7 +41,7 @@ func _ready() -> void:
 	add_child(dim)
 	var panel := UIKit.make_glass(16, 0.88)
 	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.custom_minimum_size = Vector2(360, hit * 5 + 96)
+	panel.custom_minimum_size = Vector2(360, hit * 6 + 96)
 	panel.position = Vector2(460, 80)
 	add_child(panel)
 	var box := VBoxContainer.new()
@@ -66,6 +67,7 @@ func _wire(box: VBoxContainer) -> void:
 	box.get_node("PauseSave").pressed.connect(func(): GameState.save_game())
 	box.get_node("PauseLoad").pressed.connect(func(): GameState.load_game())
 	box.get_node("PauseSettings").pressed.connect(func(): _go("res://scenes/ui/settings.tscn"))
+	box.get_node("PauseHub").pressed.connect(func(): _go("res://scenes/hub/castle_hub.tscn"))
 	box.get_node("PauseTitle").pressed.connect(func(): _go("res://scenes/ui/main_menu.tscn"))
 
 func _go(path: String) -> void:

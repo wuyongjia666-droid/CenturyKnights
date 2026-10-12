@@ -138,12 +138,12 @@ func _mainline() -> void:
 		if str(row.get("id", "")) == "ch0" or idx >= CKStoryState.CHAPTER_COUNT:
 			continue
 		story.set_beat(idx, str(row.get("last_beat", "")))
+	# Audit P1-6: e4/e5 (legacy 301–316) fit in CKStoryState, so every chapter can finish.
 	var parked: Dictionary = Todo.mainline_target()
-	_ok(str(parked.get("id", "")) == "e4_01", "past stored beats %s" % str(parked.get("id", "")))
+	_ok(bool(parked.get("done", false)), "past stored beats %s" % str(parked.get("id", "")))
 	_ok(story.current_chapter() < CKStoryState.CHAPTER_COUNT, "current out of range")
 	story.set_beat(301, "end")
-	_ok(story.beat(301) == story.default_beat(301), "overflow beat was stored")
-	_ok(str(Todo.mainline_target().get("id", "")) == "e4_01", "overflow skipped the chapter")
+	_ok(story.beat(301) == "end", "e4_01 beat not stored")
 
 func _group_id(title: String) -> String:
 	match title:

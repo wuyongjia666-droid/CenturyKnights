@@ -24,7 +24,15 @@ var apt_max: Dictionary = {}
 var job_id: String = "light_inf"
 var level: int = 1
 var exp: int = 0
-var rank: String = "knight"  # knight/baron/count/duke
+signal rank_changed(new_rank: String)
+
+var rank: String = "knight":  # knight/baron/viscount/count/duke — setter keeps genealogy badges live
+	set(value):
+		if value == rank:
+			return
+		rank = value
+		rank_changed.emit(value)
+var family_id: String = ""  # "" = no family → displays the castle banner (旗徽)
 
 # 血胤：{bloodline_id: weight}
 var blood_mix: Dictionary = {"common_ash": 1.0}
@@ -154,7 +162,7 @@ func to_dict() -> Dictionary:
 		"job_id": job_id, "level": level, "exp": exp, "rank": rank,
 		"blood_mix": blood_mix.duplicate(), "traits": traits.duplicate(),
 		"appearance": appearance.duplicate(), "hp": hp, "max_hp": max_hp,
-		"injured": injured, "salary": salary, "spouse_id": spouse_id,
+		"injured": injured, "salary": salary, "spouse_id": spouse_id, "family_id": family_id,
 		"parent_ids": parent_ids.duplicate(), "children_ids": children_ids.duplicate(),
 		"pregnant_months": pregnant_months, "birthday_month": birthday_month,
 		"weapon_id": weapon_id, "faction": faction, "cast_key": cast_key, "skills": skills.duplicate(), "unlocked_skills": unlocked_skills.duplicate(),
@@ -221,6 +229,7 @@ static func from_dict(d: Dictionary) -> CKCharacter:
 	c.injured = bool(d.get("injured", false))
 	c.salary = int(d.get("salary", 8))
 	c.spouse_id = str(d.get("spouse_id", ""))
+	c.family_id = str(d.get("family_id", ""))
 	c.parent_ids = d.get("parent_ids", []).duplicate()
 	c.children_ids = d.get("children_ids", []).duplicate()
 	c.pregnant_months = int(d.get("pregnant_months", -1))

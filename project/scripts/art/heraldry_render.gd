@@ -82,18 +82,11 @@ static func _compose_cloth(s: Dictionary, w: int, h: int) -> Image:
 	mask.resize(sw * sh)
 	for i in range(sw * sh):
 		mask[i] = 1
-	var marsh: Dictionary = s.get("marshalling", {})
-	var mode := str(marsh.get("mode", "none"))
-	if mode in ["impale", "quarter"] and typeof(marsh.get("partner")) == TYPE_DICTIONARY:
-		_paint_marshalled(hi, mask, s, marsh["partner"] as Dictionary, mode)
-	else:
-		_paint_field(hi, mask, s)
-		_paint_ordinary(hi, mask, s)
-		_paint_charges(hi, mask, s)
-		_paint_cadency(hi, mask, s)
-		if bool(s.get("bastardy", false)):
-			_paint_bastardy(hi, mask, s)
-		_paint_border_ornament(hi, mask, s)
+	_paint_field(hi, mask, s)
+	_paint_ordinary(hi, mask, s)
+	_paint_charges(hi, mask, s)
+	_paint_border_ornament(hi, mask, s)
+	_paint_castle_mark(hi, mask, s)
 	_apply_material(hi, mask, s)
 	# Thin frost rim on cloth edges.
 	var ink := Color(str(CKHeraldry.table().get("outline", CKHeraldry.tincture_hex("sable"))))
@@ -142,57 +135,16 @@ static func _compose_shield(s: Dictionary, w: int, h: int, with_outline: bool) -
 	hi.fill(Color(0, 0, 0, 0))
 	var shape := str(s.get("shield_shape", "heater"))
 	var mask := _shield_mask(sw, sh, shape)
-	# Marshalling: composite partner.
-	var marsh: Dictionary = s.get("marshalling", {})
-	var mode := str(marsh.get("mode", "none"))
-	if mode in ["impale", "quarter"] and typeof(marsh.get("partner")) == TYPE_DICTIONARY:
-		_paint_marshalled(hi, mask, s, marsh["partner"] as Dictionary, mode)
-	else:
-		_paint_field(hi, mask, s)
-		_paint_ordinary(hi, mask, s)
-		_paint_charges(hi, mask, s)
-		_paint_cadency(hi, mask, s)
-		if bool(s.get("bastardy", false)):
-			_paint_bastardy(hi, mask, s)
-		_paint_border_ornament(hi, mask, s)
+	_paint_field(hi, mask, s)
+	_paint_ordinary(hi, mask, s)
+	_paint_charges(hi, mask, s)
+	_paint_border_ornament(hi, mask, s)
+	_paint_castle_mark(hi, mask, s)
 	_apply_material(hi, mask, s)
 	if with_outline:
 		_paint_outline(hi, mask)
 	# Downsample.
 	return _downsample(hi, w, h)
-
-static func _paint_marshalled(img: Image, mask: PackedByteArray, primary: Dictionary, partner: Dictionary, mode: String) -> void:
-	var w := img.get_width()
-	var h := img.get_height()
-	var a := CKHeraldry.normalize(primary)
-	var b := CKHeraldry.normalize(partner)
-	# Clear marshalling on halves to avoid recursion.
-	a["marshalling"] = {"mode": "none", "partner": {}}
-	b["marshalling"] = {"mode": "none", "partner": {}}
-	var left := _compose_shield(a, w / SS, h / SS, false)
-	var right := _compose_shield(b, w / SS, h / SS, false)
-	# Upscale halves crudely by nearest for mask paint.
-	for y in range(h):
-		for x in range(w):
-			if mask[y * w + x] == 0:
-				continue
-			var use_b := false
-			if mode == "impale":
-				use_b = x >= w / 2
-			else:
-				var q := (1 if x >= w / 2 else 0) + (2 if y >= h / 2 else 0)
-				# quarter: 1+4 primary, 2+3 partner
-				use_b = q == 1 or q == 2
-			var src_img := right if use_b else left
-			var sx := mini(src_img.get_width() - 1, int(float(x) / float(SS)))
-			var sy := mini(src_img.get_height() - 1, int(float(y) / float(SS)))
-			# For impale, sample from corresponding half of each.
-			if mode == "impale":
-				if use_b:
-					sx = mini(src_img.get_width() - 1, int(float(x - w / 2) / float(SS) * 2.0))
-				else:
-					sx = mini(src_img.get_width() - 1, int(float(x) / float(SS) * 2.0))
-			img.set_pixel(x, y, src_img.get_pixel(sx, sy))
 
 static func _shield_mask(w: int, h: int, shape: String) -> PackedByteArray:
 	var mask := PackedByteArray()
@@ -382,12 +334,11 @@ static func _paint_charges(img: Image, mask: PackedByteArray, s: Dictionary) -> 
 				cx = 0.28
 			"sinister":
 				cx = 0.72
-		_stamp_charge(img, mask, id, cx, cy, col, mini(w, h))
+		_stamp_charge(img, mask, id, cx, cy, col, mini(w, h), 0.22 if charges.size() <= 1 else 0.13)
 
-static func _stamp_charge(img: Image, mask: PackedByteArray, id: String, cx: float, cy: float, col: Color, scale_px: int) -> void:
+static func _stamp_charge(img: Image, mask: PackedByteArray, id: String, cx: float, cy: float, col: Color, scale_px: int, r: float = 0.22) -> void:
 	var w := img.get_width()
 	var h := img.get_height()
-	var r := 0.22
 	var shape := id
 	# Resolve shape from catalog if possible.
 	for row in CKHeraldry.table().get("charges", []):
@@ -505,39 +456,6 @@ static func _charge_hit(shape: String, dx: float, dy: float) -> bool:
 			return sqrt(d2) < 0.5 + 0.4 * absf(cos(ang3 * 4.0))
 		_:
 			return d2 <= 0.85 and d2 >= 0.4
-
-static func _paint_cadency(img: Image, mask: PackedByteArray, s: Dictionary) -> void:
-	var cad := str(s.get("cadency", "none"))
-	if cad == "" or cad == "none":
-		return
-	var shape := cad
-	for row in CKHeraldry.table().get("cadency", []):
-		if str((row as Dictionary).get("id", "")) == cad:
-			shape = str((row as Dictionary).get("shape", cad))
-			break
-	# Place small mark in chief-dexter; pick contrasting tincture.
-	var field := str(s.get("field_a", ""))
-	var mark_col := Color(CKHeraldry.tincture_hex("argent"))
-	if CKHeraldry.tincture_class(field) == "metal":
-		mark_col = Color(CKHeraldry.tincture_hex("sable"))
-	_stamp_charge(img, mask, shape, 0.28, 0.22, mark_col, mini(img.get_width(), img.get_height()))
-
-static func _paint_bastardy(img: Image, mask: PackedByteArray, s: Dictionary) -> void:
-	var field := str(s.get("field_a", ""))
-	var col := Color(CKHeraldry.tincture_hex("argent"))
-	if CKHeraldry.tincture_class(field) == "metal":
-		col = Color(CKHeraldry.tincture_hex("gules"))
-	col.a = 0.92
-	var w := img.get_width()
-	var h := img.get_height()
-	for y in range(h):
-		for x in range(w):
-			if mask[y * w + x] == 0:
-				continue
-			var u := float(x) / float(maxi(1, w - 1))
-			var v := float(y) / float(maxi(1, h - 1))
-			if absf(v - u) < 0.045:
-				img.set_pixel(x, y, col)
 
 static func _paint_border_ornament(img: Image, mask: PackedByteArray, s: Dictionary) -> void:
 	var kind := str(s.get("border", "none"))
@@ -764,3 +682,46 @@ static func _fill_ellipse(img: Image, cx: int, cy: int, rx: int, ry: int, col: C
 			var dy := float(yy - cy) / float(maxi(1, ry))
 			if dx * dx + dy * dy <= 1.0:
 				img.set_pixel(xx, yy, col)
+
+static var _rank_badge_cache: Dictionary = {}
+
+static func rank_badge(rank: String, size: int = 28) -> Texture2D:
+	## Genealogy title badge (coronet / pin per noble tier). Not cadency: title only.
+	var badges: Dictionary = CKHeraldry.table().get("rank_badges", {})
+	var key := "%s@%d" % [rank, size]
+	if _rank_badge_cache.has(key):
+		return _rank_badge_cache[key]
+	if not badges.has(rank):
+		return null
+	var img := Image.new()
+	if img.load_svg_from_string(str(badges[rank]), float(size) / 64.0) != OK:
+		return null
+	var tex := ImageTexture.create_from_image(img)
+	_rank_badge_cache[key] = tex
+	return tex
+
+static func _paint_castle_mark(img: Image, mask: PackedByteArray, s: Dictionary) -> void:
+	## Family arms: small dexter-chief canton carrying the host castle's field + charge.
+	var mark = s.get("castle_mark", {})
+	if typeof(mark) != TYPE_DICTIONARY or str((mark as Dictionary).get("field", "")) == "":
+		return
+	var md: Dictionary = mark
+	var fill := Color(str(md.get("field", "")))
+	var ink := Color(str(CKHeraldry.table().get("outline", CKHeraldry.tincture_hex("sable"))))
+	var w := img.get_width()
+	var h := img.get_height()
+	var cw := 0.30
+	var ch := 0.25
+	for y in range(h):
+		for x in range(w):
+			if mask[y * w + x] == 0:
+				continue
+			var u := float(x) / float(maxi(1, w - 1))
+			var v := float(y) / float(maxi(1, h - 1))
+			if u > cw or v > ch:
+				continue
+			var edge := (cw - u) < 0.012 or (ch - v) < 0.012
+			img.set_pixel(x, y, ink if edge else fill)
+	var cid := str(md.get("charge", ""))
+	if cid != "":
+		_stamp_charge(img, mask, cid, cw * 0.5 + 0.02, ch * 0.5 + 0.03, Color(str(md.get("tincture", CKHeraldry.tincture_hex("argent")))), mini(w, h), 0.085)
