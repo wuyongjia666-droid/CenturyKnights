@@ -60,27 +60,27 @@ func _build() -> void:
 			[Locale.t("btn_train"), Locale.t("shell_0cb33307"), "res://scenes/hub/train.tscn", Locale.t("btn_train"), "train"],
 			[Locale.t("shell_5366fd25"), Locale.t("shell_1f6a2fed"), "res://scenes/hub/skill_tree.tscn", Locale.t("shell_5366fd25"), "skills"],
 		]},
+		{"id": "atlas", "title": Locale.t("ux_hub_atlas"), "items": [
+			[Locale.t("ux_hub_atlas_btn"), Locale.t("ux_hub_atlas_sub"), "res://scenes/hub/atlas_view.tscn", Locale.t("ux_hub_atlas_btn"), "atlas"],
+		]},
 		{"id": "civil", "title": Locale.t("ux_hub_civil"), "items": [
 			[Locale.t("btn_tavern"), Locale.t("shell_74f80552"), "res://scenes/hub/tavern.tscn", Locale.t("btn_tavern"), "tavern"],
 			[Locale.t("btn_forge"), Locale.t("shell_a07db291"), "res://scenes/hub/forge.tscn", Locale.t("btn_forge"), "forge"],
 			[Locale.t("btn_market"), Locale.t("shell_55dea989"), "res://scenes/hub/market.tscn", Locale.t("btn_market"), "market"],
 			[Locale.t("shell_8d3d6c29"), Locale.t("shell_be28a894"), "res://scenes/hub/estates.tscn", Locale.t("shell_8d3d6c29"), "estates"],
-			[Locale.t("btn_quests"), Locale.t("shell_5d2cf665"), "res://scenes/hub/quests.tscn", Locale.t("btn_quests"), "quests"],
+			[Locale.t("btn_quests"), Locale.t("ux_hub_quests_sub"), "res://scenes/hub/quests.tscn", Locale.t("btn_quests"), "quests"],
 			[Locale.t("shell_d0d30beb"), Locale.t("shell_7dea5328"), "res://scenes/hub/works.tscn", Locale.t("shell_d0d30beb"), "works"],
 		]},
 		{"id": "family", "title": Locale.t("ux_hub_family"), "items": [
 			[Locale.t("btn_roster"), Locale.t("shell_f0ea80bf"), "res://scenes/hub/roster.tscn", Locale.t("btn_roster"), "roster"],
 			[Locale.t("btn_shrine"), Locale.t("shell_f7881394"), "res://scenes/hub/shrine.tscn", Locale.t("btn_shrine"), "shrine"],
 			[Locale.t("btn_marriage"), Locale.t("shell_f075f209"), "res://scenes/hub/marriage.tscn", Locale.t("btn_marriage"), "marriage"],
-			[Locale.t("btn_lineage"), Locale.t("shell_a675f919"), "res://scenes/hub/lineage_view.tscn", Locale.t("btn_lineage"), "lineage"],
+			[Locale.t("btn_lineage"), Locale.t("ux_hub_lineage_sub"), "res://scenes/hub/lineage_view.tscn", Locale.t("btn_lineage"), "lineage"],
 			[Locale.t("shell_dcb83d03"), Locale.t("shell_92bb4d72"), "res://scenes/hub/lineage_rite.tscn", Locale.t("shell_dcb83d03"), "rite"],
 		]},
 		{"id": "court", "title": Locale.t("ux_hub_court"), "items": [
 			[Locale.t("btn_hourglass"), Locale.t("shell_05820eaa"), "res://scenes/hub/hourglass.tscn", Locale.t("btn_hourglass"), "hourglass"],
 			[Locale.t("shell_7debf9cb"), Locale.t("shell_2155ceaf"), "res://scenes/ui/settings.tscn", Locale.t("shell_7debf9cb"), "settings"],
-		]},
-		{"id": "atlas", "title": Locale.t("ux_hub_atlas"), "items": [
-			[Locale.t("shell_26a377a3"), Locale.t("shell_8a91fe2c"), "res://scenes/hub/atlas_view.tscn", Locale.t("shell_26a377a3"), "atlas"],
 		]},
 	]
 	var n := 0
@@ -207,7 +207,11 @@ func _build() -> void:
 	now.position = Vector2(26, 428)
 	now.size = Vector2(500, 32)
 	cp.add_child(now)
-	var cont_b := UIKit.cta_button(Locale.t("shell_e4492ae0"), "A", 220, 40)
+	var cont_label := Locale.t("shell_e4492ae0")
+	var cur_title := str(_cursor().get("title", ""))
+	if cur_title != "":
+		cont_label = "%s·%s" % [Locale.t("shell_e4492ae0"), Locale.latin(cur_title, str(_cursor().get("id", "")))]
+	var cont_b := UIKit.cta_button(cont_label, "A", 260, 40)
 	cont_b.name = "ContinueMainline"
 	cont_b.position = Vector2(794 - 220, 424)
 	cont_b.pressed.connect(_continue_mainline)
@@ -221,10 +225,14 @@ func _build() -> void:
 	todo_row.add_theme_constant_override("separation", 6)
 	cp.add_child(todo_row)
 	todo_row.add_child(UIKit.mono(Locale.t("ux_hub_todo"), 10, UIKit.ACCENT, false))
-	for todo in HubTodo.snapshot():
-		if int(todo.get("count", 0)) <= 0:
-			continue
-		todo_row.add_child(UIKit.tag_chip("%s %d" % [str(todo.get("label", "")), int(todo.get("count", 0))], UIKit.ACCENT))
+	var todos := HubTodo.snapshot()
+	if todos.is_empty():
+		todo_row.add_child(UIKit.body_label(Locale.t("ux_todo_none"), UIKit.TEXT_FAINT, 12))
+	else:
+		for todo in todos:
+			if int(todo.get("count", 0)) <= 0:
+				continue
+			todo_row.add_child(UIKit.tag_chip("%s %d" % [str(todo.get("label", "")), int(todo.get("count", 0))], UIKit.ACCENT))
 	var ih := UIKit.hairline(Color(1, 1, 1, 0.07))
 	ih.position = Vector2(26, 512)
 	ih.size = Vector2(768, 1)

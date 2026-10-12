@@ -107,10 +107,10 @@ func _build() -> void:
 	_punnett.name = "PunnettBoard"
 	_msg = UIKit.body_label("选定婚仪后，这里写明子女会怎样入谱。", UIKit.TEXT_DIM, 12)
 	_msg.name = "RiteExplain"
-	_msg.autowrap_mode = TextServer.AUTOWRAP_OFF
-	_msg.clip_text = true
-	_msg.position = Vector2(12, 80)
-	_msg.size = Vector2(576, 22)
+	_msg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_msg.clip_text = false
+	_msg.position = Vector2(12, 72)
+	_msg.size = Vector2(576, 64)
 	_rite_board.add_child(_msg)
 	var row := HBoxContainer.new()
 	row.name = "MarriageActions"
@@ -159,9 +159,10 @@ func _build() -> void:
 	_toast.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_toast.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_toast.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_toast.position = Vector2(340, 292)
-	_toast.size = Vector2(600, 84)
-	_toast.z_index = 30
+	## Above RiteBoard/Punnett so 誓约完成 lines are not clipped under the green panels.
+	_toast.position = Vector2(200, 300)
+	_toast.size = Vector2(880, 168)
+	_toast.z_index = 40
 	_toast.visible = false
 	var tst := UIKit.flat_box(Color(0.03, 0.045, 0.07, 0.94), Color(UIKit.ACCENT, 0.55), 8)
 	tst.content_margin_left = 16
@@ -182,7 +183,7 @@ func _build() -> void:
 	dim.color = Color(UIKit.BG, 0.72)
 	dim.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 	_vow_panel.add_child(dim)
-	var vp := UIKit.panel_at(_vow_panel, Rect2(260, 190, 760, 320), 12, true)
+	var vp := UIKit.panel_at(_vow_panel, Rect2(220, 120, 840, 420), 12, true)
 	var ve := UIKit.mono("VOW RITUAL // 誓约仪式", 10, UIKit.ACCENT)
 	ve.position = Vector2(28, 22)
 	vp.add_child(ve)
@@ -190,13 +191,13 @@ func _build() -> void:
 	_vow_body.bbcode_enabled = true
 	_vow_body.fit_content = false
 	_vow_body.position = Vector2(28, 48)
-	_vow_body.size = Vector2(704, 190)
+	_vow_body.size = Vector2(784, 280)
 	_vow_body.add_theme_color_override("default_color", UIKit.TEXT)
 	_vow_body.add_theme_font_size_override("normal_font_size", 14)
 	_vow_body.add_theme_font_size_override("bold_font_size", 18)
 	vp.add_child(_vow_body)
 	_vow_actions = HBoxContainer.new()
-	_vow_actions.position = Vector2(28, 256)
+	_vow_actions.position = Vector2(28, 350)
 	_vow_actions.add_theme_constant_override("separation", 10)
 	vp.add_child(_vow_actions)
 	UIFX.page_enter(self)
@@ -800,7 +801,6 @@ func _finish_marry() -> void:
 			"banner":
 				GameState.add_rep("ashland", 4)
 				GameState.house_mods["vow_banner"] = true
-				_apply_heraldry_marshal()
 				GameState.add_lineage_event("嫁妆旁注：旗饰——丰收月永续声望")
 			"prayer":
 				GameState.add_skill_point(1)
@@ -818,15 +818,27 @@ func _finish_marry() -> void:
 		GameState.add_rep("ashland", 2)
 		Sfx.confirm()
 		Sfx.lineage_chime()
-		play_seal_fx()
+		GameState.house_mods["last_vow_gift"] = _vow_gift
+		play_seal_fx(true)
 		_present_wed(_msg.text, true)
+		_show_wedding_seal(_selected)
 		_refresh()
 
 func _ensure_posts() -> void:
-	var nid := CKFamilyState.active_marriage_nation(GameState)
-	if str(GameState.marriage_nation) != nid or not CKFamilyState.posts_match_nation(GameState, nid):
-		GameState.refresh_marriage_candidates(nid)
-	_post_nation = nid
+	var open := CKFamilyState.atlas_open(GameState)
+	var nid := ""
+	if open:
+		nid = CKFamilyState.active_marriage_nation(GameState)
+		if str(GameState.marriage_nation) != nid or not CKFamilyState.posts_match_nation(GameState, nid):
+			# stash one current candidate as retinue before refresh
+			if not GameState.marriage_candidates.is_empty() and str(GameState.marriage_nation) != "" and str(GameState.marriage_nation) != nid:
+				CKFamilyState.stash_retinue(GameState, GameState.marriage_candidates[0])
+			GameState.refresh_marriage_candidates(nid)
+	else:
+		if GameState.marriage_candidates.is_empty():
+			GameState.refresh_marriage_candidates("")
+		nid = str(GameState.marriage_nation)
+	_post_nation = nid if nid != "" else CKFamilyState.active_marriage_nation(GameState)
 
 func _nation_name(nid: String) -> String:
 	return str(CKBloodline.nation(nid).get("name", nid))
@@ -877,6 +889,9 @@ func _show_toast(text: String, ok: bool) -> void:
 		return
 	_toast.text = text
 	_toast.add_theme_color_override("font_color", UIKit.OK if ok else UIKit.DANGER)
+	## Tall centered toast: multi-line 婚仪/誓约完成 must not sit under the green boards.
+	_toast.position = Vector2(200, 300)
+	_toast.size = Vector2(880, 168 if text.length() > 40 else 110)
 	_toast.visible = true
 	_toast.modulate.a = 1.0
 	if _toast_tw:
@@ -899,36 +914,73 @@ func _present_wed(text: String, ok: bool) -> void:
 		_msg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_msg.clip_text = false
 		_msg.add_theme_color_override("font_color", UIKit.OK if ok else UIKit.DANGER)
+		## Expand the rite explain slot so the full vow log stays readable under the toast.
+		if _rite_board != null:
+			_rite_board.clip_contents = false
+			_msg.position = Vector2(12, 36)
+			_msg.size = Vector2(maxf(40.0, _rite_board.size.x - 24.0), maxf(64.0, _rite_board.size.y - 44.0))
+
+
+func _doctrine_name(doctrine: String) -> String:
+	match doctrine:
+		"strict":
+			return Locale.t("doctrine_strict")
+		"mercy":
+			return Locale.t("doctrine_mercy")
+		"commerce":
+			return Locale.t("doctrine_commerce")
+		_:
+			return doctrine if doctrine != "" else "—"
+
+
+func _show_wedding_seal(spouse: CKCharacter) -> void:
+	if spouse == null:
+		return
+	var layer := ColorRect.new()
+	layer.color = Color(0.05, 0.08, 0.12, 0.82)
+	layer.set_anchors_preset(Control.PRESET_FULL_RECT)
+	layer.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(layer)
+	var panel := PanelContainer.new()
+	panel.position = Vector2(340, 120)
+	panel.size = Vector2(600, 420)
+	layer.add_child(panel)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 10)
+	panel.add_child(v)
+	var title := UIKit.make_label(Locale.t("ux_wedding_seal"), true)
+	v.add_child(title)
+	var leader = GameState.get_leader()
+	var nation := CKFamilyState.candidate_nation(spouse)
+	var law := str(CKBloodline.nation(nation).get("law", CKBloodline.nation(nation).get("name", nation)))
+	var term := CKFamilyState.term_months(GameState)
+	var doctrine := str(GameState.house_mods.get("doctrine", ""))
+	var dn := _doctrine_name(doctrine)
+	var gift := str(GameState.house_mods.get("last_vow_gift", ""))
+	var lines := [
+		"%s · %s" % [_nation_name(nation), law],
+		Locale.t("ux_seal_pair") % [leader.name if leader else "—", spouse.name],
+		Locale.t("ux_seal_paid"),
+		Locale.t("ux_seal_doctrine") % [dn if dn else "—", gift if gift else "—"],
+		Locale.t("ux_seal_term") % int(term),
+	]
+	for line in lines:
+		v.add_child(UIKit.body_label(line, UIKit.TEXT, 14))
+	var btn_l := Locale.t("ux_back_ch0")
+	var to_ch0 := str(GameState.chapter0_beat) in ["0.4", "0.45", "0.5"] and not GameState.flag("chapter0_done")
+	if not to_ch0:
+		btn_l = Locale.t("ux_seal_stow")
+	var b := UIKit.make_accent_button(btn_l, 200)
+	b.pressed.connect(func():
+		layer.queue_free()
+		if to_ch0:
+			get_tree().change_scene_to_file("res://scenes/story/chapter0.tscn")
+	)
+	v.add_child(b)
+
 
 func _back() -> void:
 	if str(GameState.chapter0_beat) in ["0.4", "0.45", "0.5"] and not GameState.flag("chapter0_done"):
 		get_tree().change_scene_to_file("res://scenes/story/chapter0.tscn")
 	else:
 		get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
-
-func _apply_heraldry_marshal() -> void:
-	## Impale house arms with spouse nation style when the banner dowry is chosen.
-	var partner_nation := "qinghe"
-	if _selected != null:
-		var mix = _selected.get("blood_mix")
-		if typeof(mix) == TYPE_DICTIONARY and not (mix as Dictionary).is_empty():
-			var best := ""
-			var best_w := -1.0
-			for k in (mix as Dictionary).keys():
-				var w := float((mix as Dictionary)[k])
-				if w > best_w:
-					best_w = w
-					best = str(k)
-			if best != "" and best in CKHeraldry.table().get("nations", {}):
-				partner_nation = best
-			elif best.begins_with("sig_"):
-				var nid := best.trim_prefix("sig_")
-				if nid in CKHeraldry.table().get("nations", {}):
-					partner_nation = nid
-	var partner := CKHeraldry.from_nation(partner_nation)
-	var mode := "impale"
-	if _selected != null and int(_selected.rank_index()) >= 3:
-		mode = "quarter"
-	GameState.banner_spec = CKHeraldry.marshal(GameState.banner_spec, partner, mode)
-	GameState.crest_color = str(GameState.banner_spec.get("field_a", GameState.crest_color))
-	UnitArt.clear_cache()

@@ -1,5 +1,5 @@
 extends Node
-## DYN-05: gestation is 3 month-ticks, fast family is 1, fertility falls with age.
+## DYN-05: gestation is 9–11 month-ticks (random), fast family is 1, fertility falls with age.
 
 func _ready() -> void:
 	await get_tree().process_frame
@@ -44,19 +44,30 @@ func _term(fails: Array) -> void:
 	GameState.add_rep("ashland", 80)
 	CKFamilyState.set_fast_family(GameState, false)
 	var slow := _couple("slow", 22)
-	if not Lineage.marry(slow[0], slow[1], 0, [], true).get("ok", false):
+	var wed: Dictionary = Lineage.marry(slow[0], slow[1], 0, [], true)
+	if not wed.get("ok", false):
 		fails.append("young wedding refused")
 		return
-	if slow[1].pregnant_months != 2:
-		fails.append("default countdown %d, want 2 (3 ticks)" % slow[1].pregnant_months)
+	if slow[1].pregnant_months < 0:
+		# Peak chance is not 100%; force one conception for term band check.
+		if not CKFamilyState.begin_pregnancy(GameState, slow[1]):
+			GameState.rng.seed = 7
+			CKFamilyState.begin_pregnancy(GameState, slow[1])
+	var term := int(slow[1].blood_meta.get("gestation_term", -1))
+	if term < CKFamilyState.TERM_MONTHS_MIN or term > CKFamilyState.TERM_MONTHS_MAX:
+		fails.append("term %d out of 9–11" % term)
+	if slow[1].pregnant_months != term - 1:
+		fails.append("countdown %d want %d" % [slow[1].pregnant_months, term - 1])
 	var born := _ticks_until_birth(slow[1])
-	if born != 3:
-		fails.append("default birth took %d ticks, want 3" % born)
+	if born != term:
+		fails.append("birth took %d ticks, want %d" % [born, term])
 	CKFamilyState.set_fast_family(GameState, true)
 	var fast := _couple("fast", 24)
 	if not Lineage.marry(fast[0], fast[1], 0, [], true).get("ok", false):
 		fails.append("fast wedding refused")
 		return
+	if fast[1].pregnant_months < 0:
+		CKFamilyState.begin_pregnancy(GameState, fast[1])
 	if _ticks_until_birth(fast[1]) != 1:
 		fails.append("fast family did not deliver on the next month")
 
@@ -89,12 +100,14 @@ func _couple(tag: String, age: int) -> Array:
 	mo.age = age
 	mo.rank = "knight"
 	mo.blood_mix = {"common_ash": 1.0}
+	GameState.characters[fa.id] = fa
+	GameState.characters[mo.id] = mo
 	return [fa, mo]
 
 
 func _ticks_until_birth(mother: CKCharacter) -> int:
 	var before := mother.children_ids.size()
-	for n in range(1, 8):
+	for n in range(1, 14):
 		Calendar.advance(1)
 		if mother.children_ids.size() > before:
 			return n

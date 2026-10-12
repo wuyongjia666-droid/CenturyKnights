@@ -57,14 +57,64 @@ static func posts_match_nation(host, nid: String) -> bool:
 				return false
 	return true
 
+
+static func atlas_open(host) -> bool:
+	## 舆图在 e1_04 之后开放；第零章春令仍走邦交加权。
+	if host == null:
+		return false
+	if bool(host.flag("chapter0_done")) and bool(host.house_mods.get("atlas_unlocked", false)):
+		return true
+	if bool(host.flag("e1_04_done")) or bool(host.house_mods.get("atlas_unlocked", false)):
+		return true
+	# World travel already left ash keep
+	var world = Engine.get_main_loop().root.get_node_or_null("World") if Engine.get_main_loop() else null
+	if world != null and str(world.pos) != "" and str(world.pos) not in ["ash_keep", "ashbanner_keep", ""]:
+		var kind := str(world.node(str(world.pos)).get("kind", ""))
+		if kind != "castle" or str(world.pos) != "ash_keep":
+			# Once player has traveled, treat atlas as open for marriage board
+			if bool(host.flag("chapter0_done")):
+				return true
+	return false
+
+
 static func refresh_marriage_candidates(host, nation_id: String = "") -> void:
-	## A blank nation keeps the diplomacy-weighted draw. The marriage screen passes the
-	## court it is standing in. Calendar, new game, and the century sim pass nothing,
-	## so their shared RNG and the portrait bank stay on the previous sequence.
-	host.marriage_nation = nation_id
+	## 舆图开放后三人皆本国；另留一席随行（上月未拒的一名）。第零章春令仍邦交加权。
+	var open := atlas_open(host)
+	var nid := nation_id
+	if open:
+		if nid == "":
+			nid = active_marriage_nation(host)
+	else:
+		# 春令 / 舆图未开：空白 = 邦交加权
+		nid = nation_id
+	host.marriage_nation = nid
+	# Keep retinue seat across refresh
+	var kept = null
+	var ret = host.house_mods.get("marriage_retinue", null)
+	if typeof(ret) == TYPE_DICTIONARY and ret.get("cand") != null and not bool(ret.get("rejected", false)):
+		kept = ret.get("cand")
+		var months := int(ret.get("months", 0)) + 1
+		if months >= 2:
+			host.house_mods["marriage_retinue"] = {"cand": kept, "months": months, "leave_next": true, "rejected": false}
+		else:
+			host.house_mods["marriage_retinue"] = {"cand": kept, "months": months, "leave_next": false, "rejected": false}
+	elif typeof(ret) == TYPE_DICTIONARY and bool(ret.get("leave_next", false)):
+		host.house_mods.erase("marriage_retinue")
+		kept = null
 	host.marriage_candidates.clear()
-	for i in 3:
-		host.marriage_candidates.append(CharacterFactory.make_marriage_candidate(host.rng, "baron", nation_id))
+	if open:
+		# 2 fresh local + optional retinue
+		var local_n := 2 if kept != null else 3
+		for i in local_n:
+			host.marriage_candidates.append(CharacterFactory.make_marriage_candidate(host.rng, "baron", nid))
+		if kept != null:
+			host.marriage_candidates.append(kept)
+			# mark retinue
+			if typeof(kept) == TYPE_OBJECT and kept.get("blood_meta") != null:
+				kept.blood_meta["marriage_retinue"] = true
+	else:
+		for i in 3:
+			host.marriage_candidates.append(CharacterFactory.make_marriage_candidate(host.rng, "baron", nid))
 
 static func tick_doctrine_and_marriage_month(host) -> Array:
 	var msgs: Array = []
@@ -164,8 +214,13 @@ static func _tier_zh(tier: int) -> String:
 
 ## Player-facing gestation, in month ticks. The stored counter is one less,
 ## because Calendar births on the tick that steps below zero.
-const TERM_MONTHS := 3
+## Peak term ~10 months (random 9–11). Fast-family debug stays at 1.
+const TERM_MONTHS_MIN := 9
+const TERM_MONTHS_MAX := 11
+const TERM_MONTHS := 10  ## display default / mid-band
 const FAST_TERM_MONTHS := 1
+## Even at peak fertility, marriage/conception is not certain.
+const PEAK_CONCEPTION_CHANCE := 0.72
 
 
 ## Unborn child: aptitude band, tactical-trait odds, royal-skill tier odds.
@@ -283,7 +338,12 @@ static func set_fast_family(host, on: bool) -> void:
 
 
 static func term_months(host) -> int:
-	return FAST_TERM_MONTHS if fast_family(host) else TERM_MONTHS
+	if fast_family(host):
+		return FAST_TERM_MONTHS
+	var rng = host.rng if host != null else null
+	if rng != null:
+		return rng.randi_range(TERM_MONTHS_MIN, TERM_MONTHS_MAX)
+	return TERM_MONTHS
 
 
 ## 16–32 peak, then a decline, none before 16 or after 48.
@@ -313,12 +373,18 @@ static func begin_pregnancy(host, mother) -> bool:
 	if rate <= 0.0:
 		mother.pregnant_months = -1
 		return false
-	if rate < 1.0:
-		var rng = host.rng if host != null else null
-		if rng != null and rng.randf() >= rate:
-			mother.pregnant_months = -1
-			return false
-	mother.pregnant_months = maxi(0, term_months(host) - 1)
+	var rng = host.rng if host != null else null
+	## Peak fertility used to skip the roll (rate==1); still roll PEAK_CONCEPTION_CHANCE.
+	var chance := rate if rate < 1.0 else PEAK_CONCEPTION_CHANCE
+	if rng != null and rng.randf() >= chance:
+		mother.pregnant_months = -1
+		return false
+	if rng == null and chance < 1.0:
+		mother.pregnant_months = -1
+		return false
+	var term := term_months(host)
+	mother.pregnant_months = maxi(0, term - 1)
+	mother.blood_meta["gestation_term"] = term
 	return true
 
 
@@ -330,3 +396,16 @@ static func _mods_zh(mods: Dictionary) -> String:
 		bits.append("%s +%s" % [str(k), str(mods[k])])
 	return _zh("archive_tactic_list", ["、".join(bits)])
 
+
+
+static func stash_retinue(host, cand) -> void:
+	if cand == null:
+		return
+	host.house_mods["marriage_retinue"] = {"cand": cand, "months": 0, "leave_next": false, "rejected": false}
+
+
+static func reject_retinue(host) -> void:
+	var ret = host.house_mods.get("marriage_retinue", null)
+	if typeof(ret) == TYPE_DICTIONARY:
+		ret["rejected"] = true
+		host.house_mods["marriage_retinue"] = ret
