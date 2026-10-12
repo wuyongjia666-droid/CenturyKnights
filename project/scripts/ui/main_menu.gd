@@ -72,6 +72,20 @@ func _build() -> void:
 		["07", "MenuQuit", Locale.t("menu_quit"), func(): get_tree().quit(), false],
 	]
 	var first: Button = null
+	# Phones: 48dp buttons do not fit 7 rows in 720 logical px, so use a two-column grid,
+	# drop Quit (Android leaves via Home) and the keyboard hint line.
+	var mobile := DeviceProfile.is_mobile()
+	var host: Container = col
+	if mobile:
+		col.position = Vector2(72, 28)
+		items.pop_back()
+		var grid := GridContainer.new()
+		grid.name = "MenuGrid"
+		grid.columns = 2
+		grid.add_theme_constant_override("h_separation", 12)
+		grid.add_theme_constant_override("v_separation", 10)
+		col.add_child(grid)
+		host = grid
 	for it in items:
 		var b := UIKit.index_button(it[0], it[2], 360)
 		b.name = it[1]
@@ -79,14 +93,18 @@ func _build() -> void:
 		b.pressed.connect(it[3])
 		if it[0] == "01":
 			b.add_theme_color_override("font_color", UIKit.ACCENT)
-		col.add_child(b)
-		if it[1] == "MenuContinue":
+		host.add_child(b)
+		if it[1] == "MenuContinue" and not mobile:
 			var summary := UIKit.body_label(CKSaveSlots.continue_line(latest), UIKit.TEXT_DIM, 13)
 			summary.name = "ContinueSummary"
 			summary.custom_minimum_size = Vector2(360, 0)
 			col.add_child(summary)
 		if first == null and not b.disabled:
 			first = b
+	if mobile and latest != "":
+		var msum := UIKit.body_label(CKSaveSlots.continue_line(latest), UIKit.TEXT_DIM, 13)
+		msum.name = "ContinueSummary"
+		col.add_child(msum)
 	if first:
 		first.call_deferred("grab_focus")
 
@@ -103,7 +121,10 @@ func _build() -> void:
 	keys.position = Vector2(984, 664)
 	keys.size = Vector2(200, 20)
 	keys.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	keys.visible = not mobile
 	add_child(keys)
+	if mobile:
+		foot.position = Vector2(72, 690)
 
 func _on_new() -> void:
 	get_tree().change_scene_to_file("res://scenes/story/naming.tscn")

@@ -12,6 +12,8 @@ const SCREENS := [
 	["city", "res://scenes/hub/city.tscn"],
 	["battle", "res://scenes/battle/battle.tscn"],
 	["settings", "res://scenes/ui/settings.tscn"],
+	["founding", "res://scenes/story/naming.tscn"],
+	["dialogue", "res://scenes/story/chapter0.tscn"],
 ]
 const RES := [Vector2i(2400, 1080), Vector2i(2340, 1080), Vector2i(1920, 1080), Vector2i(2560, 1600)]
 var _out := "/tmp/ck_mobile"
@@ -53,7 +55,7 @@ func _shoot(path: String, name: String) -> void:
 	get_tree().root.add_child(node)
 	get_tree().current_scene = node
 	MobileChrome.call_deferred("_apply")
-	await get_tree().create_timer(0.6).timeout
+	await get_tree().create_timer(3.0 if name.begins_with("dialogue") else 0.6).timeout
 	await RenderingServer.frame_post_draw
 	get_viewport().get_texture().get_image().save_png("%s/%s.png" % [_out, name])
 	var vr := get_viewport().get_visible_rect()
@@ -74,6 +76,14 @@ func _collect(n: Node, items: Array, vr: Rect2) -> void:
 				txt = str(c.text)
 			items.append({"type": c.get_class(), "path": str(c.get_path()), "text": txt.left(30),
 				"rect": [r.position.x, r.position.y, r.size.x, r.size.y],
-				"font": c.get_theme_font_size("font_size")})
+				"font": c.get_theme_font_size("font_size"), "in_scroll": _in_scroll(c)})
 	for ch in n.get_children():
 		_collect(ch, items, vr)
+
+func _in_scroll(c: Node) -> bool:
+	var p := c.get_parent()
+	while p != null:
+		if p is ScrollContainer:
+			return true
+		p = p.get_parent()
+	return false
