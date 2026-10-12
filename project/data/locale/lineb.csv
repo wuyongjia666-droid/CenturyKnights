@@ -71,3 +71,52 @@ lb_sk_req,要先学会：%s,Requires: %s
 lb_sk_owned_long,已经学会了，出战时可以用。,Learned; usable in battle.
 lb_sk_no_points,战技点不够，打赢仗能拿到,Not enough points; win battles
 lb_train_tutor_none,还没有学生,No pupil yet
+lb_people,%d 人,%d
+lb_month,%d 月,Month %d
+lb_title_ctx,请爵,Titles
+lb_title_title,请爵：勋士到侯爵,Titles: knight to marquis
+lb_title_desc,团长的爵位一级一级往上请，要看功勋、封地、婚约和邦交。升到伯爵时，烬图携因的人身上的河图纹会醒。,"Request the next title once merit, fiefs, marriage and relations are enough."
+lb_title_now,现在,Now
+lb_title_done,已得,Held
+lb_title_next,下一阶,Next
+lb_title_top,已经是侯爵了,Already a marquis
+lb_title_top_why,爵位到顶了，不用再请。,The ladder ends here.
+lb_title_miss_head,还差这些,Still missing
+lb_title_ready_head,条件都够了,All set
+lb_title_ready,四项都达标，可以去请下一阶爵位。,All four met; request the next title.
+lb_title_go,请爵,Request title
+lb_title_block,还不能请：%s,Not yet: %s
+lb_title_miss_merit,功勋还差 %d：打仗、完成委托能攒功勋。,Merit short by %d: battles and quests.
+lb_title_miss_fiefs,封地还差 %d 块：去舆图上拿下城池或属地。,Fiefs short by %d: take holdings on the atlas.
+lb_title_miss_married,团长还没成婚：去联姻页订一门亲。,Captain is unmarried: arrange a match.
+lb_title_miss_rep,邦交还差 %d：送礼、帮邻国办事能涨。,Relations short by %d: gifts and favours.
+lb_title_met,已达成,Met
+lb_title_unmet,未达成,Not met
+lb_title_not_needed,不需要,Not needed
+lb_title_over,实际有 %d，已超过要求,"You have %d, above the bar"
+lb_shrine_ctx,祠堂,Shrine
+lb_shrine_title,祠堂,Shrine
+lb_shrine_desc,在这里给受伤的人祈愈、给族人验血，一年五个节庆也在这里看。祠堂等级在「工事」里升。,"Heal, test blood and see the year's festivals."
+lb_shrine_heal,祈愈,Healing
+lb_shrine_hurt,要治的人,Hurt
+lb_shrine_cost,花费,Cost
+lb_shrine_free,免费,Free
+lb_shrine_heal_go,焚香祈愈,Heal
+lb_shrine_heal_none,大家都好好的，现在不用祈愈,Everyone is well
+lb_shrine_heal_done,刚祈愈过，大家都好了,Just healed; everyone is well
+lb_shrine_all_well,团里没人受伤，生命都是满的。,No one is hurt.
+lb_shrine_hurt_one,%s %d/%d,%s %d/%d
+lb_shrine_injured,（重伤）, (wounded)
+lb_shrine_blood,验血,Blood test
+lb_shrine_per_head,每人 %d 银,%d silver each
+lb_shrine_blood_body,验过血才知道一个人身上藏着什么血脉、是不是亲生的。验过的人才能凭血契议婚、进锻场。,Reveal hidden bloodlines and false heirs.
+lb_shrine_blood_go,去验血,Go test
+lb_shrine_fix,修缮,Restore
+lb_shrine_level,祠堂等级,Shrine level
+lb_shrine_fix_body,升一级：秋收多产一点，祈愈对重伤更有用，验血也更便宜。,"Next level: more harvest, better healing, cheaper tests."
+lb_shrine_fix_max,祠堂已经修到最高级了。,The shrine is at max level.
+lb_shrine_fix_max_short,已经满级,Max level
+lb_shrine_fix_go,去工事升级,Upgrade in works
+lb_shrine_fest_head,一年五个节庆,Five festivals
+lb_shrine_fest_today,这个月是「%s」,This month: %s
+lb_shrine_fest_next,下一个节庆「%s」，还有 %d 个月,Next: %s in %d months

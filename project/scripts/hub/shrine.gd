@@ -1,139 +1,114 @@
 extends Control
-## v8.6 — layout-matched to Stitch 15_temple.png: top bar · editorial head (FACILITY // SANCTUARY RITE) with
-## purity/tier KPIs right · three service cards (blessing · healing [focused] · restoration) · info strip · footer.
+## Shrine (line B, audit #22). Three service cards (heal / blood test / restore) with real
+## state: who is hurt, the per-head test price, what the next shrine level adds. Below, the
+## year's five festivals with this month marked and how long until the next one.
 
 var _msg: Label
+var _heal_btn: Button
 
 func _ready() -> void:
-	UIKit.void_bg(self)
 	var lv := GameState.building_level("shrine")
-	UIKit.top_bar(self, "祠堂 · SANCTUARY", [["银币", str(GameState.silver), UIKit.ACCENT], ["士气", str(GameState.morale), UIKit.OK if GameState.morale >= 50 else UIKit.DANGER], ["历", Calendar.label(), UIKit.TEXT_DIM]], "返回城堡", _back)
-	UIKit.page_head(self, 42, 76, "FACILITY // SANCTUARY RITE", "祠堂 · 霜月祭", "SANCTUARY // FROST MOON RITE", "香灰里有旧旗的味。祠堂等级来自「工事」，丰收产出与祈愈随等级增强。")
-	var injured := 0
-	var hurt := 0
-	var roster: Array = GameState.roster()
-	for c in roster:
-		if c.injured:
-			injured += 1
-		if c.injured or c.hp < c.max_hp:
-			hurt += 1
-	# KPIs right
-	_kpi(Vector2(930, 92), "SANCTUARY TIER", "LV %d / 3" % lv, UIKit.ACCENT)
-	_kpi(Vector2(1090, 92), "待祈愈", "%d 人" % hurt, UIKit.DANGER if hurt > 0 else UIKit.OK)
-	var hl := UIKit.hairline(Color(1, 1, 1, 0.08))
-	hl.position = Vector2(42, 172)
-	hl.size = Vector2(1196, 1)
-	add_child(hl)
-	# three service cards
-	var w := 380.0
-	var y := 200.0
-	_card(Rect2(42, y + 16, w, 380), "SERVICE // 01 · 丰收加护", "常驻 · PASSIVE", "加护", "HARVEST BLESSING",
-		"祠堂等级提升秋收产出",
-		"祠堂每升一级，秋收时额外产出增加；无需主动操作，月结自动生效。",
-		[["当前等级", "LV %d" % lv, UIKit.ACCENT], ["加护对象", "全部属地", UIKit.TEXT], ["生效时机", "秋收月结", UIKit.TEXT_DIM]],
-		"CONSUMPTION", "无消耗", false, "", Callable())
-	_card(Rect2(450, y, w, 412), "SERVICE // 02 · 祈愈之水", "TARGET FOCUSED", "祈愈", "PURIFICATION & HEALING",
-		"清除临时伤 · 回满全队生命",
-		"在祠堂焚香祈愈：轻伤清除，重伤缩短休养，生命回满。永久伤要药材，或靠传家兵器缓解。重伤期间不能出战。",
-		[["负伤骑士", "%d 人" % injured, UIKit.DANGER if injured > 0 else UIKit.OK], ["未满生命", "%d / %d 人" % [hurt, roster.size()], UIKit.TEXT], ["回复量", "100% 生命", UIKit.OK]],
-		"COST REQUIREMENT", "免费 · 祠堂恩典", true, "祈愈", Callable(self, "_heal"))
-	_card(Rect2(858, y + 16, w, 380), "SERVICE // 03 · 祠堂修缮", "工事 · WORKS", "修缮", "SANCTUARY RESTORATION",
-		"在「工事」中升级祠堂",
-		"祠堂上限 3 级。升级需要银币与工期，由工事统一调度。",
-		[["当前等级", "LV %d" % lv, UIKit.ACCENT], ["等级上限", "LV 3", UIKit.TEXT], ["状态", "已满级" if lv >= 3 else "可升级", UIKit.OK if lv >= 3 else UIKit.TEXT]],
-		"ROUTE", "前往工事", false, "前往工事", func(): get_tree().change_scene_to_file("res://scenes/hub/works.tscn"))
-	# info strip
-	var strip := UIKit.panel_at(self, Rect2(42, 628, 1196, 48), 8)
-	strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_msg = UIKit.body_label("ⓘ 祈愈不耗银、不耗时；临时伤会降低出征表现，开战前务必清除。", UIKit.TEXT_DIM, 12)
-	_msg.autowrap_mode = TextServer.AUTOWRAP_OFF
-	_msg.position = Vector2(62, 643)
-	add_child(_msg)
-	# v8.9 祠堂验血：携因、伪胤、潜征都在这里见分晓
-	var vb := UIKit.ghost_button("祠堂验血 · 每人 %d 银  [V]" % CKBloodline.verify_cost(lv), 210, 36)
+	CKPageKit.shell(self, Locale.t("lb_shrine_ctx"), "SANCTUARY", Locale.t("lb_shrine_title"), Locale.t("lb_shrine_desc"))
+	var hurt := _hurt()
+	var heal := CKPageKit.card(self, Rect2(42, CKPageKit.TOP + 8, 388, 300), "HealCard", true)
+	CKPageKit.card_head(heal, Locale.t("lb_shrine_heal"), "HEALING")
+	CKPageKit.stat(heal, Vector2(18, 64), Locale.t("lb_shrine_hurt"), Locale.t("lb_people", [hurt.size()]), UIKit.DANGER if not hurt.is_empty() else UIKit.OK)
+	CKPageKit.stat(heal, Vector2(200, 64), Locale.t("lb_shrine_cost"), Locale.t("lb_shrine_free"), UIKit.OK)
+	var names := CKPageKit.text(_hurt_text(hurt), UIKit.TEXT_DIM, 13, 352)
+	names.name = "HurtList"
+	names.position = Vector2(18, 124)
+	names.size = Vector2(352, 90)
+	heal.add_child(names)
+	_heal_btn = CKPageKit.button(Locale.t("lb_shrine_heal_go"), true, 352)
+	_heal_btn.name = "HealButton"
+	_heal_btn.position = Vector2(18, 232)
+	CKPageKit.lock(_heal_btn, "" if not hurt.is_empty() else Locale.t("lb_shrine_heal_none"))
+	_heal_btn.pressed.connect(_heal)
+	heal.add_child(_heal_btn)
+	var blood := CKPageKit.card(self, Rect2(446, CKPageKit.TOP + 8, 388, 300), "BloodCard")
+	CKPageKit.card_head(blood, Locale.t("lb_shrine_blood"), "BLOOD TEST")
+	CKPageKit.stat(blood, Vector2(18, 64), Locale.t("lb_shrine_cost"), Locale.t("lb_shrine_per_head", [CKBloodline.verify_cost(lv)]), UIKit.ACCENT)
+	var bt := CKPageKit.text(Locale.t("lb_shrine_blood_body"), UIKit.TEXT_DIM, 13, 352)
+	bt.position = Vector2(18, 124)
+	bt.size = Vector2(352, 90)
+	blood.add_child(bt)
+	var vb := CKPageKit.button(Locale.t("lb_shrine_blood_go"), false, 352)
 	vb.name = "VerifyBlood"
-	vb.position = Vector2(1016, 634)
-	vb.tooltip_text = "为家族与编制中尚未验血者验明血谱：揭出潜征携因、拆穿伪胤，验过者可凭血契议婚、入锻场。"
-	vb.pressed.connect(func():
-		Sfx.click()
-		get_tree().change_scene_to_file("res://scenes/hub/blood_test.tscn"))
-	add_child(vb)
-	UIKit.footer_bar(self, [["A", "祈愈"], ["V", "验血"], ["W", "前往工事"], ["ESC", "返回城堡"]], "SANCTUARY // LV %d · v8.9" % lv)
+	vb.position = Vector2(18, 232)
+	vb.pressed.connect(func(): Sfx.click(); CKNav.go("res://scenes/hub/blood_test.tscn"))
+	blood.add_child(vb)
+	var fix := CKPageKit.card(self, Rect2(850, CKPageKit.TOP + 8, 388, 300), "RestoreCard")
+	CKPageKit.card_head(fix, Locale.t("lb_shrine_fix"), "RESTORATION")
+	CKPageKit.stat(fix, Vector2(18, 64), Locale.t("lb_shrine_level"), "LV %d / 3" % lv, UIKit.ACCENT)
+	var ft := CKPageKit.text(Locale.t("lb_shrine_fix_max") if lv >= 3 else Locale.t("lb_shrine_fix_body"), UIKit.TEXT_DIM, 13, 352)
+	ft.position = Vector2(18, 124)
+	ft.size = Vector2(352, 90)
+	fix.add_child(ft)
+	var wb := CKPageKit.button(Locale.t("lb_shrine_fix_go"), false, 352)
+	wb.name = "GoWorks"
+	wb.position = Vector2(18, 232)
+	CKPageKit.lock(wb, Locale.t("lb_shrine_fix_max_short") if lv >= 3 else "")
+	wb.pressed.connect(func(): Sfx.click(); CKNav.go("res://scenes/hub/works.tscn"))
+	fix.add_child(wb)
+	_festivals()
+	_msg = CKPageKit.feedback(self)
+	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "SANCTUARY · LV %d" % lv)
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 
-func _back() -> void:
-	get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
+func _hurt() -> Array:
+	return GameState.roster().filter(func(c): return c.injured or c.hp < c.max_hp or not CKInjury.record(c).is_empty())
 
-func _unhandled_input(e: InputEvent) -> void:
-	if e.is_action_pressed("ui_cancel"):
-		_back()
-	elif e is InputEventKey and e.pressed and not e.echo and (e as InputEventKey).keycode == KEY_W:
-		get_tree().change_scene_to_file("res://scenes/hub/works.tscn")
-	elif e is InputEventKey and e.pressed and not e.echo and (e as InputEventKey).keycode == KEY_V:
-		get_tree().change_scene_to_file("res://scenes/hub/blood_test.tscn")
+func _hurt_text(hurt: Array) -> String:
+	if hurt.is_empty():
+		return Locale.t("lb_shrine_all_well")
+	var bits: Array = []
+	for c in hurt:
+		bits.append(Locale.t("lb_shrine_hurt_one", [c.name, c.hp, c.max_hp]) + (Locale.t("lb_shrine_injured") if c.injured else ""))
+	return "　".join(bits)
 
-func _verify() -> void:
-	var r: Dictionary = GameState.verify_bloodlines_at_shrine()
-	_msg.text = ("✓ " if r.get("ok", false) else "ⓘ ") + str(r.get("msg", ""))
-	_msg.add_theme_color_override("font_color", UIKit.OK if r.get("ok", false) else UIKit.TEXT_DIM)
+func _festivals() -> void:
+	var card := CKPageKit.card(self, Rect2(42, CKPageKit.TOP + 322, 1196, 214), "FestivalCard")
+	var rows: Array = CKFestivals.rows().duplicate()
+	rows.sort_custom(func(a, b): return int(a.get("month", 0)) < int(b.get("month", 0)))
+	var m := Calendar.month
+	var next: Dictionary = {}
+	var gap := 99
+	for r in rows:
+		var d := (int(r.get("month", 0)) - m + 12) % 12
+		if d > 0 and d < gap:
+			gap = d
+			next = r
+	var today := CKFestivals.row_for_month(m)
+	var head := Locale.t("lb_shrine_fest_today", [Locale.t(str(today.get("name_key", "")))]) if not today.is_empty() else (Locale.t("lb_shrine_fest_next", [Locale.t(str(next.get("name_key", ""))), gap]) if not next.is_empty() else Locale.t("lb_shrine_fest_head"))
+	CKPageKit.card_head(card, head, "FESTIVALS")
+	var h := HBoxContainer.new()
+	h.position = Vector2(16, 58)
+	h.add_theme_constant_override("separation", 10)
+	card.add_child(h)
+	for r in rows:
+		var on := int(r.get("month", 0)) == m
+		var col: Color = UIKit.OK if on else (UIKit.ACCENT if r == next else UIKit.TEXT_FAINT)
+		var p := PanelContainer.new()
+		p.custom_minimum_size = Vector2(224, 140)
+		var sb := UIKit.flat_box(Color(col, 0.08), Color(col, 0.5), 10, 2 if on else 1)
+		sb.content_margin_left = 12
+		sb.content_margin_right = 12
+		sb.content_margin_top = 10
+		p.add_theme_stylebox_override("panel", sb)
+		var v := VBoxContainer.new()
+		v.add_theme_constant_override("separation", 6)
+		p.add_child(v)
+		v.add_child(UIKit.mono(Locale.t("lb_month", [int(r.get("month", 0))]), 12, col, false))
+		v.add_child(UIKit.title_label(Locale.t(str(r.get("name_key", ""))), 16, UIKit.TEXT))
+		v.add_child(CKPageKit.text(Locale.t(str(r.get("blurb_key", ""))), UIKit.TEXT_DIM, 12, 198))
+		h.add_child(p)
 
 func _heal() -> void:
-	_msg.text = "✓ " + GameState.heal_at_shrine() + "　· 祠堂 LV%d" % GameState.building_level("shrine")
-	_msg.add_theme_color_override("font_color", UIKit.OK)
-
-func _kpi(pos: Vector2, label: String, value: String, col: Color) -> void:
-	var l := UIKit.mono(label, 9, UIKit.TEXT_FAINT, false)
-	l.position = pos
-	add_child(l)
-	var v := UIKit.mono(value, 18, col, false)
-	v.position = pos + Vector2(0, 18)
-	add_child(v)
-
-func _card(r: Rect2, eyebrow: String, chip: String, title: String, en: String, head: String, body: String, rows: Array, cost_k: String, cost_v: String, focus: bool, act: String, cb: Callable) -> void:
-	UIKit.panel_at(self, r, 10, focus)
-	var x := r.position.x + 22
-	var cw := r.size.x - 44
-	var e := UIKit.mono(eyebrow, 9, UIKit.ACCENT if focus else UIKit.TEXT_FAINT, false)
-	e.position = Vector2(x, r.position.y + 20)
-	add_child(e)
-	var ch := UIKit.tag_chip(chip, UIKit.ACCENT if focus else UIKit.TEXT_DIM)
-	ch.position = Vector2(r.end.x - 22 - ch.get_minimum_size().x, r.position.y + 17)
-	add_child(ch)
-	var t := UIKit.title_label(title, 28, UIKit.TEXT)
-	t.position = Vector2(x, r.position.y + 48)
-	add_child(t)
-	var en_l := UIKit.mono(en, 9, UIKit.ACCENT if focus else UIKit.TEXT_FAINT, false)
-	en_l.position = Vector2(x, r.position.y + 92)
-	add_child(en_l)
-	var hd := UIKit.title_label(head, 15, UIKit.TEXT)
-	hd.position = Vector2(x, r.position.y + 122)
-	add_child(hd)
-	var bd := UIKit.body_label(body, UIKit.TEXT_DIM, 12)
-	bd.position = Vector2(x, r.position.y + 150)
-	bd.size = Vector2(cw, 48)
-	bd.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	add_child(bd)
-	var kv := VBoxContainer.new()
-	kv.position = Vector2(x, r.position.y + 212)
-	kv.add_theme_constant_override("separation", 8)
-	add_child(kv)
-	for row in rows:
-		kv.add_child(UIKit.kv_row(str(row[0]), str(row[1]), row[2], cw))
-	var sep := UIKit.hairline(Color(1, 1, 1, 0.08))
-	sep.position = Vector2(x, r.end.y - 78)
-	sep.size = Vector2(cw, 1)
-	add_child(sep)
-	var ck := UIKit.mono(cost_k, 8, UIKit.TEXT_FAINT, false)
-	ck.position = Vector2(x, r.end.y - 62)
-	add_child(ck)
-	var cv := UIKit.title_label(cost_v, 14, UIKit.ACCENT if focus else UIKit.TEXT)
-	cv.position = Vector2(x, r.end.y - 44)
-	add_child(cv)
-	if act != "" and cb.is_valid():
-		var b: Button = UIKit.cta_button(act, "A", 150, 40) if focus else UIKit.ghost_button("%s  [W]" % act, 130, 36)
-		b.position = Vector2(r.end.x - 22 - b.custom_minimum_size.x, r.end.y - 58)
-		b.pressed.connect(cb)
-		add_child(b)
-		if focus:
-			b.call_deferred("grab_focus")
+	var msg := GameState.heal_at_shrine()
+	CKPageKit.say(_msg, msg, true)
+	UIFX.confirm(_heal_btn)
+	var names := find_child("HurtList", true, false) as Label
+	if names:
+		names.text = _hurt_text(_hurt())
+	CKPageKit.lock(_heal_btn, "" if not _hurt().is_empty() else Locale.t("lb_shrine_heal_done"))

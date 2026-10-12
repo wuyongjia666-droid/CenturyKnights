@@ -13,7 +13,21 @@ const PAD := 42.0
 static func shell(page: Control, context: String, eyebrow: String, title: String, desc: String = "") -> void:
 	UIKit.void_bg(page)
 	UIKit.top_bar(page, context, [[Locale.t("lb_chip_date"), Calendar.label(), UIKit.TEXT_DIM]], Locale.t("btn_back"), func(): back(page))
-	UIKit.page_head(page, PAD, 64, eyebrow, title, "", desc, "", 22)
+	var head := UIKit.page_head(page, PAD, 50, eyebrow, title, "", "", "", 22)
+	head.name = "PageHead"
+	if desc != "":
+		var tl := head.get_child(1).get_child(0) as Label
+		var x := PAD + (tl.get_minimum_size().x if tl != null else 160.0) + 24.0
+		var d := UIKit.body_label(desc, UIKit.TEXT_DIM, 12)
+		d.name = "PageDesc"
+		d.autowrap_mode = TextServer.AUTOWRAP_OFF
+		d.clip_text = true
+		d.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		d.position = Vector2(x, 100)
+		d.size = Vector2(1280.0 - PAD - x, 18)
+		d.tooltip_text = desc
+		d.mouse_filter = Control.MOUSE_FILTER_PASS
+		page.add_child(d)
 	if touch():
 		var bb := page.find_child("BackButton", true, false) as Button
 		if bb != null:
