@@ -48,6 +48,16 @@ func _build() -> void:
 		var g := Control.new()
 		g.custom_minimum_size = Vector2(8, 0)
 		lh.add_child(g)
+	# Castle arms: the banner belongs to the castle (shared by every family it hosts) — shown once here.
+	var castle_arms := TextureRect.new()
+	castle_arms.name = "CastleArms"
+	castle_arms.texture = UnitArt.shield_arms(GameState.banner_spec if typeof(GameState.banner_spec) == TYPE_DICTIONARY else {}, 44, 52)
+	castle_arms.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	castle_arms.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	castle_arms.position = Vector2(466, 62)
+	castle_arms.size = Vector2(44, 52)
+	castle_arms.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(castle_arms)
 	_tree = Control.new()
 	_tree.position = TREE.position
 	_tree.size = TREE.size
@@ -321,21 +331,31 @@ func _node_card(c: CKCharacter, at: Vector2) -> void:
 	ring.add_theme_stylebox_override("panel", rs)
 	ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(ring)
-	var arms_spec = {}
-	var meta = c.blood_meta if typeof(c.blood_meta) == TYPE_DICTIONARY else {}
-	if typeof(meta.get("heraldry")) == TYPE_DICTIONARY and typeof((meta["heraldry"] as Dictionary).get("spec")) == TYPE_DICTIONARY:
-		arms_spec = (meta["heraldry"] as Dictionary)["spec"]
-	else:
-		arms_spec = GameState.banner_spec
-	var sh := TextureRect.new()
-	sh.name = "HeraldryShield"
-	sh.texture = UnitArt.shield_arms(arms_spec, 36, 42)
-	sh.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	sh.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	sh.position = Vector2(12, 102)
-	sh.size = Vector2(36, 42)
-	sh.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	b.add_child(sh)
+	# Person arms: family arms (族徽) if in a family, else the castle banner (旗徽); title badge overlays it.
+	var arms := TextureRect.new()
+	arms.name = "PersonArms"
+	arms.texture = UnitArt.shield_arms(GameState.arms_for_character(c), 36, 42)
+	arms.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	arms.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	arms.position = Vector2(10, 100)
+	arms.size = Vector2(36, 42)
+	arms.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	b.add_child(arms)
+	var badge := TextureRect.new()
+	badge.name = "RankBadge"
+	badge.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	badge.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	badge.position = Vector2(30, 124)
+	badge.size = Vector2(22, 22)
+	badge.mouse_filter = Control.MOUSE_FILTER_PASS
+	b.add_child(badge)
+	_apply_rank_badge(badge, arms, c)
+	# Live: gaining / losing a title swaps the badge (and family tier ornament) immediately.
+	var on_rank := func(_r: String) -> void: _apply_rank_badge(badge, arms, c)
+	c.rank_changed.connect(on_rank)
+	badge.tree_exiting.connect(func() -> void:
+		if c.rank_changed.is_connected(on_rank):
+			c.rank_changed.disconnect(on_rank))
 	var nm := UIKit.title_label(c.name, 16)
 	nm.add_theme_font_override("font", UIKit.font("bold"))
 	nm.position = Vector2(70, 36)
@@ -543,3 +563,12 @@ func _render_dossier() -> void:
 	rite.position = Vector2(228, 564)
 	rite.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/lineage_rite.tscn"))
 	p.add_child(rite)
+
+
+func _apply_rank_badge(badge: TextureRect, arms: TextureRect, c) -> void:
+	if not is_instance_valid(badge):
+		return
+	badge.texture = CKHeraldryRender.rank_badge(str(c.rank), 22)
+	badge.tooltip_text = c.rank_name()
+	if is_instance_valid(arms):
+		arms.texture = UnitArt.shield_arms(GameState.arms_for_character(c), 36, 42)
