@@ -95,6 +95,9 @@ func _route_full() -> String:
 			return e
 	if not GameState.flag("pro_survivor_kept") or not GameState.flag("pro_merit_own") or not GameState.flag("pro_lease_pawned"):
 		return "branch flags A %s" % str(GameState.story.flags)
+	return await _full_b()
+
+func _full_b() -> String:
 	# Hiring and wages: the tavern screen.
 	var e2: String = await _press("0.2", "进烽火酒馆")
 	if e2 != "":
@@ -113,6 +116,9 @@ func _route_full() -> String:
 			return e
 	if not GameState.flag("hub_open") or not GameState.flag("pro_roster_wantan"):
 		return "keep flags"
+	return await _full_c()
+
+func _full_c() -> String:
 	# Commissions board, then back to the same beat.
 	var e3: String = await _press("0.32", "委托板")
 	if e3 != "":
@@ -144,6 +150,9 @@ func _route_full() -> String:
 		var e: String = await _press(step[0], step[1])
 		if e != "":
 			return e
+	return await _full_d()
+
+func _full_d() -> String:
 	var climax: Array = _texts("0.38")
 	if not _has(climax, "灰马是他的") or _has(climax, "押进哨堡第三天"):
 		return "climax ignored the survivor choice %s" % str(climax)
@@ -151,6 +160,9 @@ func _route_full() -> String:
 		var e: String = await _press(step[0], step[1])
 		if e != "":
 			return e
+	return await _full_e()
+
+func _full_e() -> String:
 	# Marriage.
 	var e6: String = await _press("0.4", "前往联姻廷")
 	if e6 != "":
@@ -174,6 +186,9 @@ func _route_full() -> String:
 	if e7 != "":
 		return e7
 	# Lineage page.
+	return await _full_f()
+
+func _full_f() -> String:
 	var e8: String = await _press("0.55", "族谱")
 	if e8 != "":
 		return e8
@@ -219,6 +234,9 @@ func _route_brief() -> String:
 	# The lease beat only exists when the merit was kept.
 	if _player.current_beat_id() != "0.2":
 		return "lease beat not skipped: " + _player.current_beat_id()
+	return await _brief_b()
+
+func _brief_b() -> String:
 	var e1: String = await _press("0.2", "直接进列")
 	if e1 != "":
 		return e1
@@ -228,6 +246,9 @@ func _route_brief() -> String:
 		var e: String = await _press(step[0], step[1])
 		if e != "":
 			return e
+	return await _brief_c()
+
+func _brief_c() -> String:
 	var climax: Array = _texts("0.38")
 	if not _has(climax, "押进哨堡第三天") or _has(climax, "灰马是他的"):
 		return "climax ignored handed survivor"
@@ -243,6 +264,9 @@ func _route_brief() -> String:
 			return e
 	if not GameState.flag("chapter0_done"):
 		return "brief route did not finish"
+	return await _brief_d()
+
+func _brief_d() -> String:
 	for f in ["pro_survivor_handed", "pro_merit_patron", "pro_roster_blank", "pro_rival_exposed"]:
 		if not GameState.flag(f):
 			return "missing " + f
