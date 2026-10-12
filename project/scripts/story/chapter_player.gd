@@ -31,6 +31,10 @@ func _ready() -> void:
 	auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	_build()
 	UIKit.stitch_dialogue(self)
+	# Audit P2-1: the beat caption sits where the decorative speaker tag was drawn.
+	var deco := find_child("SpeakerActiveTag", true, false)
+	if deco:
+		deco.visible = false
 	# Back from a side screen the story opened with "visit": the trip is over.
 	if GameState.has_meta("story_return"):
 		GameState.set_meta("story_return", "")

@@ -149,9 +149,6 @@ func _card(c: CKCharacter, r: Rect2, focus: bool, idx: int) -> void:
 	var tag := UIKit.tag_chip("TARGET FOCUSED" if focus else "STANDBY", UIKit.ACCENT, focus)
 	tag.position = Vector2(18, 18)
 	p.add_child(tag)
-	var idl := UIKit.mono("ID #%s" % str(c.id).right(6).to_upper(), 9, UIKit.TEXT_FAINT, false)
-	idl.position = Vector2(30 + tag.get_combined_minimum_size().x, 22)
-	p.add_child(idl)
 	var fee := HBoxContainer.new()
 	fee.position = Vector2(220, 14)
 	fee.size = Vector2(150, 26)
@@ -202,6 +199,10 @@ func _card(c: CKCharacter, r: Rect2, focus: bool, idx: int) -> void:
 	ds.position = Vector2(154, 172)
 	ds.size = Vector2(216, 32)
 	ds.custom_minimum_size = Vector2(216, 0)
+	# Audit P2-1: two lines at most; the rest is cut instead of running into the stat grid.
+	ds.clip_contents = true
+	ds.max_lines_visible = 2
+	ds.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	p.add_child(ds)
 	# attributes
 	var ab := UIKit.panel_at(p, Rect2(18, 218, 352, 148), 8)
