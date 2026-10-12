@@ -35,6 +35,8 @@ var _map_content: Control
 var _map_router := InputRouter.new()
 var _map_zoom := 1.0
 var _map_pan := Vector2.ZERO
+var _list_btn: Dictionary = {}  # nation id -> left-list Button (WS-C #41)
+var _hilit := ""
 
 func _ready() -> void:
 	UIKit.void_bg(self)
@@ -230,6 +232,8 @@ func _add_region_button(nid: String) -> void:
 		tip += " · 朝报：%s" % str(marker.get("text", ""))
 	b.tooltip_text = tip
 	_bind_press(b, func(): _on_region_pressed(nid), func(): _info_region(nid))
+	b.mouse_entered.connect(func(): hilite(nid))
+	b.mouse_exited.connect(func(): hilite(""))
 	_layer.add_child(b)
 	_node_btn[nid] = b
 	_stamp_court_mark(b, marker)
@@ -517,6 +521,7 @@ func _render_left() -> void:
 	var eh := UIKit.mono("REGIONS 11", 9, UIKit.ACCENT)
 	eh.position = Vector2(14, 10)
 	lp.add_child(eh)
+	_list_btn.clear()
 	var v := VBoxContainer.new()
 	v.position = Vector2(6, 28)
 	v.add_theme_constant_override("separation", 1)
@@ -544,6 +549,10 @@ func _render_left() -> void:
 		b.tooltip_text = "声望 %d · %s" % [rep, World.rep_tier_name(rep)]
 		var nid_s := str(nid)
 		b.pressed.connect(func(): _show_view(nid_s))
+		b.mouse_entered.connect(func(): hilite(nid_s))
+		b.focus_entered.connect(func(): hilite(nid_s))
+		b.mouse_exited.connect(func(): hilite(""))
+		_list_btn[nid_s] = b
 		if _view == str(nid):
 			b.add_theme_color_override("font_color", UIKit.ACCENT)
 		v.add_child(b)
@@ -583,7 +592,8 @@ func _render_left() -> void:
 		ql.add_child(el)
 	var ab := UIKit.ghost_button("出战编成", 140, 26)
 	ab.position = Vector2(10, 196)
-	ab.pressed.connect(func(): _goto("res://scenes/hub/deploy.tscn"))
+	ab.name = "AtlasDeploy"
+	ab.pressed.connect(_open_deploy)
 	pb.add_child(ab)
 
 # ── right column: profile ─────────────────────────────
@@ -1009,7 +1019,9 @@ func _run_travel() -> void:
 		var path: Array = World.travel.get("route", [])
 		var li := int(World.travel.get("leg", 0))
 		var nxt := str(path[li + 1]) if li + 1 < path.size() else World.pos
+		var cal0 := Calendar.label()
 		var info: Dictionary = World.step_travel()
+		_month_feedback(cal0)
 		var arrived_at := str(info.get("pos", World.pos))
 		if not info.get("event", {}).is_empty():
 			_animate_leg_half(nxt)
@@ -1029,6 +1041,21 @@ func _run_travel() -> void:
 			break
 	_set_busy(false)
 	_after_arrival()
+
+## WS-C #42: crossing a month on the road says so (date, rations, territory income) instead of passing silently.
+func _month_feedback(before: String) -> void:
+	if Calendar.label() == before or World.month_reports.is_empty():
+		return
+	var rep: Dictionary = World.month_reports[World.month_reports.size() - 1]
+	var bits: Array = []
+	for e in rep.get("events", []):
+		var tx := str(e.get("text", "")) if typeof(e) == TYPE_DICTIONARY else str(e)
+		if tx != "" and bits.size() < 2:
+			bits.append(tx)
+	var line := Locale.t("wsc_t_month") % [str(rep.get("label", Calendar.label())), GameState.food]
+	if not bits.is_empty():
+		line += " · " + " · ".join(bits)
+	_show_toast(line, UIKit.ACCENT)
 
 func _animate_leg(to_id: String) -> void:
 	if _view != "" and World.nation_of(to_id) != _view:
@@ -1054,10 +1081,14 @@ func _after_arrival() -> void:
 	for q in World.active:
 		if str(q.state) == "ready" and World.can_turn_in(q, World.pos):
 			readies += 1
+	if _check_losses():
+		return
 	_show_toast("抵达 %s%s" % [n.get("name", ""), "  ·  %d 件委托可交付" % readies if readies > 0 else ""], UIKit.OK)
 
 func _resume_state() -> void:
 	## returning from a battle / load: re-open pending modal or continue a journey
+	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_losses():
+		return
 	if not World.pending_event.is_empty():
 		_show_event_modal(World.pending_event)
 	elif not World.encounter.is_empty():
@@ -1256,6 +1287,72 @@ func _on_world_changed() -> void:
 	if not is_inside_tree() or _busy:
 		return
 	_refresh_top()
+
+## WS-C #41: left list <-> map. World view lights the region button; nation view lights that nation's settlements.
+func hilite(nid: String) -> void:
+	_hilit = nid
+	for k in _list_btn.keys():
+		var lb: Button = _list_btn[k]
+		if is_instance_valid(lb):
+			lb.modulate = Color(1.25, 1.25, 1.35) if k == nid else Color(1, 1, 1)
+	for id in _node_btn.keys():
+		var nb: Button = _node_btn[id]
+		if not is_instance_valid(nb):
+			continue
+		var on: bool = nid != "" and (id == nid or World.nation_of(str(id)) == nid)
+		nb.modulate = Color(1.4, 1.4, 1.5) if on else Color(1, 1, 1)
+		nb.pivot_offset = nb.size * 0.5
+		nb.scale = Vector2(1.12, 1.12) if on else Vector2.ONE
+
+func _open_deploy() -> void:
+	GameState.set_meta("deploy_return", "res://scenes/hub/atlas_view.tscn")
+	GameState.set_meta("atlas_view", _view)
+	_goto("res://scenes/hub/deploy.tscn")
+
+## WS-C #45: a lost site shows up as a modal the next time the atlas is on screen.
+func _check_losses() -> bool:
+	if not _modal.get_children().is_empty():
+		return false
+	var news: Array = CKTerritory.take_news()
+	var lines: Array = []
+	var first_id := ""
+	for e in news:
+		var s := CKTerritory.site(str(e.get("id", "")))
+		if s.is_empty():
+			continue
+		if first_id == "":
+			first_id = str(e.id)
+		lines.append(Locale.t("wsc_t_lost_line") % [str(e.get("date", "")), str(s.get("name", "")), str(e.get("who", ""))])
+	if lines.is_empty():
+		return false
+	var p := _modal_panel(230 + 22 * lines.size())
+	p.name = "LossModal"
+	var t := UIKit.title_label(Locale.t("wsc_t_lost_title"), 24, UIKit.DANGER)
+	t.position = Vector2(24, 24)
+	p.add_child(t)
+	var body := UIKit.body_label("\n".join(lines) + "\n" + Locale.t("wsc_t_lost_hint"), UIKit.TEXT, 14)
+	body.position = Vector2(24, 70)
+	body.size = Vector2(452, 60 + 22 * lines.size())
+	p.add_child(body)
+	var go := UIKit.ghost_button(Locale.t("wsc_t_lost_go"), 200, 44)
+	go.name = "LossGo"
+	go.position = Vector2(24, p.size.y - 64)
+	go.pressed.connect(_retake.bind(first_id))
+	p.add_child(go)
+	var ok := UIKit.ghost_button(Locale.t("wsc_t_lost_ok"), 200, 44)
+	ok.name = "LossOk"
+	ok.position = Vector2(276, p.size.y - 64)
+	ok.pressed.connect(_clear_modal)
+	p.add_child(ok)
+	go.call_deferred("grab_focus")
+	return true
+
+func _retake(site_id: String) -> void:
+	_clear_modal()
+	var nat := str(CKTerritory.site(site_id).get("nation", ""))
+	if nat != "" and nat != _view:
+		_show_view(nat)
+	_open_territory_site(site_id)
 
 func _goto(path: String) -> void:
 	UIFX.page_exit(self)

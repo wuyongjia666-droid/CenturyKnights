@@ -158,3 +158,12 @@ wsc_q_5a9e3347,接下,
 wsc_q_ac8fdce0,没接上：%s,
 wsc_q_416876df,这份委托已经不在了,
 wsc_q_04480f1a,办完了：%s。%s,
+wsc_t_own,我方·驻%d,ours · %d held
+wsc_t_rival,对手占着,rival
+wsc_t_free,无主·可夺,unclaimed
+wsc_t_lost_title,领地丢了,Territory lost
+wsc_t_lost_line,%s：%s 被%s夺走了,%s: %s was taken by %s
+wsc_t_lost_hint,地还在原处，打回来就是你的。驻军多留几个人、修个木栅，下次没那么容易丢。,Retake it any time. More garrison and a stockade make it harder to lose.
+wsc_t_lost_go,去夺回来,Retake
+wsc_t_lost_ok,知道了,OK
+wsc_t_month,路上过了一个月：%s，粮还剩 %d,A month passed on the road: %s · food %d

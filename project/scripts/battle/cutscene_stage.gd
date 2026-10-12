@@ -1,7 +1,13 @@
 class_name CutsceneStage
 extends RefCounted
-## Procedural foreground / midground / background for the 14 battle biomes.
+## Foreground / midground / background for the 14 battle biomes.
+## WS-D #49: layers are painted art, not grey blocks. Far = the biome plate, mid = nation banners
+## on poles (parallax), near = darkened side framing from the same plate. Nation banners
+## (assets/art/banners, colour matched to the enemy trim) stand in the mid layer.
 ## Low tier keeps a single far layer so the prop count stays small.
+
+const PLATE := "res://assets/art/battle/v8_battle_biome_%s.png"
+const BANNER_DIR := "res://assets/art/banners"
 
 const BIOMES := [
 	"fog", "ford", "harbor", "snow", "marsh", "forge",
@@ -57,11 +63,12 @@ static func fog_for(biome: String) -> Dictionary:
 		"density": float(look.get("density", 0.035)),
 	}
 
-static func build(parent: Node, biome: String, low_tier: bool) -> Node3D:
+static func build(parent: Node, biome: String, low_tier: bool, nation_tint = null) -> Node3D:
 	var id := biome if has_biome(biome) else "plain"
 	var root := Node3D.new()
 	root.name = "CutsceneStage"
 	root.set_meta("biome", id)
+	root.set_meta("nation_tint", nation_tint)
 	parent.add_child(root)
 	var layers: Array = ["far"] if low_tier else ["far", "mid", "near"]
 	for layer in layers:
@@ -83,8 +90,110 @@ static func build(parent: Node, biome: String, low_tier: bool) -> Node3D:
 		holder.set_meta("parallax", factor)
 		holder.set_meta("base_x", 0.0)
 		root.add_child(holder)
-		_fill(holder, id, str(layer), count)
+		if not _paint(holder, id, str(layer), nation_tint):
+			_fill(holder, id, str(layer), count)
 	return root
+
+
+## Biome from the defender's tile when it is distinctive, else the map biome.
+static func biome_for_tile(tile_id: String, map_biome: String) -> String:
+	match tile_id:
+		"forest":
+			return "marsh" if map_biome == "marsh" else ("fog" if map_biome == "fog" else "hill")
+		"hill", "mountain":
+			return "pass" if map_biome == "pass" else "hill"
+		"fort", "wall", "gate":
+			return "fort"
+		"water", "river", "bridge", "shallows":
+			return "harbor" if map_biome == "harbor" else "ford"
+		"snow", "ice":
+			return "snow"
+	return map_biome if has_biome(map_biome) else "plain"
+
+
+static func plate_path(biome: String) -> String:
+	var p := CKArtPaths.resolve(PLATE % (biome if has_biome(biome) else "plain"))
+	return p if CKArtPaths.exists(p) else ""
+
+
+static func _card(parent: Node3D, tex: Texture2D, size: Vector2, pos: Vector3, uv_off: Vector2, uv_scale: Vector2, tint: Color, name: String) -> MeshInstance3D:
+	var mi := MeshInstance3D.new()
+	mi.name = name
+	var q := QuadMesh.new()
+	q.size = size
+	mi.mesh = q
+	var m := StandardMaterial3D.new()
+	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	m.albedo_texture = tex
+	m.albedo_color = tint
+	m.uv1_offset = Vector3(uv_off.x, uv_off.y, 0)
+	m.uv1_scale = Vector3(uv_scale.x, uv_scale.y, 1)
+	if tint.a < 0.999:
+		m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mi.material_override = m
+	mi.position = pos
+	parent.add_child(mi)
+	return mi
+
+
+static func _paint(holder: Node3D, biome: String, layer: String, nation_tint) -> bool:
+	var path := plate_path(biome)
+	if path == "":
+		return false
+	var tex: Texture2D = CKArtPaths.load_texture(path)
+	if tex == null:
+		return false
+	match layer:
+		"far":
+			_card(holder, tex, Vector2(96, 54), Vector3(0, 16.0, -10), Vector2.ZERO, Vector2.ONE, Color(0.86, 0.9, 0.96), "plate").material_override.disable_fog = true
+		"mid":
+			var banner := nation_banner(nation_tint)
+			if banner != "":
+				var btex: Texture2D = CKArtPaths.load_texture(banner)
+				if btex != null:
+					for x in [-4.6, 4.6]:
+						_card(holder, btex, Vector2(0.9, 1.8), Vector3(x + 0.47, 2.3, 0.2), Vector2.ZERO, Vector2.ONE, Color(1, 1, 1, 0.95), "banner")
+						var pole := MeshInstance3D.new()
+						var pm := CylinderMesh.new()
+						pm.top_radius = 0.035
+						pm.bottom_radius = 0.045
+						pm.height = 3.4
+						pole.mesh = pm
+						var pmat := StandardMaterial3D.new()
+						pmat.albedo_color = INK
+						pmat.roughness = 0.8
+						pole.material_override = pmat
+						pole.position = Vector3(x, 1.7, 0.2)
+						holder.add_child(pole)
+		"near":
+			# out-of-focus framing at both edges, kept clear of the fighters in the middle
+			for side in [-1.0, 1.0]:
+				_card(holder, tex, Vector2(3.4, 3.0), Vector3(side * 5.4, 1.1, 0.0), Vector2(0.0 if side < 0 else 0.8, 0.7), Vector2(0.2, 0.3), Color(0.28, 0.31, 0.36, 0.95), "frame")
+	return true
+
+
+## Banner art whose colour (encoded in the file name) is nearest to the nation tint.
+static func nation_banner(tint) -> String:
+	if not (tint is Color):
+		return ""
+	var best := ""
+	var best_d := INF
+	var d := DirAccess.open(BANNER_DIR)
+	if d == null:
+		return ""
+	for f in d.get_files():
+		var name := f.trim_suffix(".import").trim_suffix(".remap")
+		if not name.begins_with("banner_") or not name.ends_with("_w0.png"):
+			continue
+		var hex := name.get_slice("_", 1)
+		if hex.length() != 6:
+			continue
+		var c := Color("#" + hex)
+		var dist := Vector3(c.r - tint.r, c.g - tint.g, c.b - tint.b).length()
+		if dist < best_d:
+			best_d = dist
+			best = "%s/%s" % [BANNER_DIR, name]
+	return best
 
 static func prop_count(root: Node) -> int:
 	return _meshes(root)

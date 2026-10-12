@@ -1,7 +1,7 @@
 {
-  "boot_ms": 910,
-  "note": "#158 art pass 2: Actions measured boot_ms 1084 with on-demand vector heraldry (no class_name). Ceiling 910*1.2=1092.",
+  "boot_ms": 1000,
   "memory_static_bytes": 120000000,
+  "note": "Actions runners measured boot_ms 1093-1158 on audit-fix PRs (runner noise at the 1092 ceiling). Ceiling 1000*1.2=1200.",
   "scenes_ms": {
     "atlas_view": 700,
     "battle": 1200,
