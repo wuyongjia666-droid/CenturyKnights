@@ -138,7 +138,6 @@ static func _era_of(id: String) -> int:
 
 static func _finished(row: Dictionary, story: CKStoryState) -> bool:
 	# 第零章看旗标。其余章看 CKStoryState 里记下的最后一拍。
-	# 序号超出 CHAPTER_COUNT 时 set_beat 不会写入，这一章就留在游标上。
 	if str(row.get("id", "")) == "ch0":
 		return GameState.flag("chapter0_done")
 	if story == null:
