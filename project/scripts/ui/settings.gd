@@ -136,6 +136,10 @@ func _ready() -> void:
 	))
 	box.add_child(_check(Locale.t("fertility_setting"), CKFamilyState.fast_family(GameState), func(on):
 		CKFamilyState.set_fast_family(GameState, on)))
+	if not DeviceProfile.is_mobile():
+		box.add_child(_check(Locale.t("ux_nav_right_back"), bool(GameState.settings.get("nav_right_back", true)), func(on):
+			GameState.settings["nav_right_back"] = on
+		))
 	box.add_child(_check(Locale.t("ux_touch_confirm"), bool(GameState.settings.get("touch_confirm", DeviceProfile.is_mobile())), func(on):
 		GameState.settings["touch_confirm"] = on
 	))

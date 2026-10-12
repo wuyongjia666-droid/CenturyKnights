@@ -218,7 +218,6 @@ ux_todo_sui_ke,未读岁课,Unread year-cards
 ux_todo_life,未读重卡,Unread life cards
 ux_todo_tutor,待指定专师,Tutors to assign
 ux_todo_field,田册空位,Open field posts
-ux_todo_none,本月无待办,No todos this month
 btn_forge,铁匠铺,Smithy
 ux_forge_castle,灰旗自己的炉,Ash banner forge
 ux_wedding_seal,婚后印,Wedding seal
@@ -295,3 +294,4 @@ ux_hub_quests_sub,城堡委任 · 也可从舆图进城看委托榜,Castle quest
 ux_hub_atlas_btn,十国舆图 / 跑图,Atlas / travel
 ux_hub_atlas_sub,跑图进城 · 城镇里有委托榜,Travel to cities · commission board inside
 ux_city_tab_sundry,杂货,Sundries
+ux_nav_right_back,右键返回上一层,Right click goes back
