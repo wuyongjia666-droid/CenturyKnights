@@ -69,12 +69,20 @@ func _collect(n: Node, items: Array, vr: Rect2) -> void:
 		var c: Control = n
 		if c is BaseButton or c is Label or c is LineEdit:
 			var r := c.get_global_rect()
+			var clip := _scroll_clip(c)
+			var clipped := false
+			if clip.size.x > 0.0:
+				clipped = not clip.grow(1.0).encloses(r)
+				if not clip.intersects(r):
+					for ch0 in n.get_children():
+						_collect(ch0, items, vr)
+					return
 			var txt := ""
 			if c is Label or c is Button:
 				txt = str(c.text)
 			items.append({"type": c.get_class(), "path": str(c.get_path()), "text": txt.left(30),
 				"rect": [r.position.x, r.position.y, r.size.x, r.size.y],
-				"font": roundi(c.get_theme_font_size("font_size") * c.get_global_transform().get_scale().y / _root_scale), "in_scroll": _in_scroll(c)})
+				"font": roundi(c.get_theme_font_size("font_size") * c.get_global_transform().get_scale().y / _root_scale), "in_scroll": _in_scroll(c), "clipped": clipped})
 	for ch in n.get_children():
 		_collect(ch, items, vr)
 
@@ -85,3 +93,13 @@ func _in_scroll(c: Node) -> bool:
 			return true
 		p = p.get_parent()
 	return false
+
+
+## What a scroll view actually shows: items scrolled out of it are not on screen.
+func _scroll_clip(c: Node) -> Rect2:
+	var p := c.get_parent()
+	while p != null:
+		if p is ScrollContainer:
+			return (p as Control).get_global_rect()
+		p = p.get_parent()
+	return Rect2()
