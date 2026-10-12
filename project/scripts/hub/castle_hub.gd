@@ -623,7 +623,9 @@ func _mobile_top_bar() -> void:
 	var ctx := _m_label(Locale.t("shell_c84f88cd") % house, UIKit.TEXT, 24, false)
 	ctx.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	bar.add_child(ctx)
-	var res := _m_label("%s %d · %s %d · %s %d · %s" % [Locale.t("shell_946c7148"), GameState.silver, "粮", GameState.food, "铁", GameState.iron, Calendar.label()], UIKit.ACCENT, M_FONT, false)
+	var res_txt := "%s %d · %s %d · %s %d · %s" % [Locale.t("shell_946c7148"), GameState.silver,
+		"粮", GameState.food, "铁", GameState.iron, Calendar.label()]
+	var res := _m_label(res_txt, UIKit.ACCENT, M_FONT, false)
 	res.name = "MobileRes"
 	res.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	bar.add_child(res)
@@ -716,7 +718,10 @@ func _mobile_dossier() -> void:
 			continue
 		due += 1
 		var link := HubTodo.link_for(todo)
-		var chip := _m_button("%s %d" % [str(todo.get("label", "")), int(todo.get("count", 0))], false, func(): CKNav.go(link) if link != "" else null)
+		var go_todo := func():
+			if link != "":
+				CKNav.go(link)
+		var chip := _m_button("%s %d" % [str(todo.get("label", "")), int(todo.get("count", 0))], false, go_todo)
 		chip.name = "Todo_%s" % str(todo.get("category", ""))
 		chip.size_flags_horizontal = Control.SIZE_FILL
 		todo_row.add_child(chip)
