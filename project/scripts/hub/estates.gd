@@ -176,7 +176,7 @@ func _focus_tile(fk: String, current: bool, hid: String) -> Button:
 		var rr = GameState.set_holding_focus(capt_h, fk)
 		_msg.text = str(rr.get("msg"))
 		if rr.get("ok"):
-			UIFX.confirm_burst(b)
+			UIFX.confirm(b)
 			Sfx.confirm()
 			GameState.save_game()
 			_after_change()
