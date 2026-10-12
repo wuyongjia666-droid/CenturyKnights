@@ -848,6 +848,24 @@ static func banner_layers(spec: Dictionary = {}, w: int = 160, h: int = 220) -> 
 	_cache[ck] = tex
 	return tex
 
+static func shield_arms(spec: Dictionary = {}, w: int = 128, h: int = 148) -> Texture2D:
+	var s := BannerSpec.normalize(spec if not spec.is_empty() else banner_spec_current())
+	var ck := "sh|" + BannerSpec.cache_key(s) + "|%d|%d" % [w, h]
+	if _cache.has(ck):
+		return _cache[ck]
+	var tex := ImageTexture.create_from_image(BannerSpec.compose_shield(s, w, h))
+	_cache[ck] = tex
+	return tex
+
+static func achievement_arms(spec: Dictionary = {}, w: int = 180, h: int = 220) -> Texture2D:
+	var s := BannerSpec.normalize(spec if not spec.is_empty() else banner_spec_current())
+	var ck := "ach|" + BannerSpec.cache_key(s) + "|%d|%d" % [w, h]
+	if _cache.has(ck):
+		return _cache[ck]
+	var tex := ImageTexture.create_from_image(BannerSpec.compose_arms(s, w, h))
+	_cache[ck] = tex
+	return tex
+
 static func banner(w: int = 160, h: int = 220, with_name: bool = true) -> Texture2D:
 	## Layered DIY banner (field/charge/border/emblem). Legacy PNG path kept as fallback only.
 	var spec := banner_spec_current()

@@ -321,6 +321,21 @@ func _node_card(c: CKCharacter, at: Vector2) -> void:
 	ring.add_theme_stylebox_override("panel", rs)
 	ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(ring)
+	var arms_spec = {}
+	var meta = c.blood_meta if typeof(c.blood_meta) == TYPE_DICTIONARY else {}
+	if typeof(meta.get("heraldry")) == TYPE_DICTIONARY and typeof((meta["heraldry"] as Dictionary).get("spec")) == TYPE_DICTIONARY:
+		arms_spec = (meta["heraldry"] as Dictionary)["spec"]
+	else:
+		arms_spec = GameState.banner_spec
+	var sh := TextureRect.new()
+	sh.name = "HeraldryShield"
+	sh.texture = UnitArt.shield_arms(arms_spec, 36, 42)
+	sh.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	sh.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	sh.position = Vector2(12, 102)
+	sh.size = Vector2(36, 42)
+	sh.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	b.add_child(sh)
 	var nm := UIKit.title_label(c.name, 16)
 	nm.add_theme_font_override("font", UIKit.font("bold"))
 	nm.position = Vector2(70, 36)

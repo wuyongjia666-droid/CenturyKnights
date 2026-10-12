@@ -4,29 +4,81 @@ var _given: LineEdit
 var _surname: LineEdit
 var _color_idx: int = 0
 var _field_idx: int = 0
+var _partition_idx: int = 0
 var _charge_idx: int = 0
 var _border_idx: int = 0
 var _emblem_idx: int = 0
+var _nation_idx: int = 0
 var _colors: Array = []
 var _color_names: Array = []
+var _divisions: PackedStringArray = []
+var _partitions: PackedStringArray = []
+var _ordinaries: PackedStringArray = []
+var _nations: PackedStringArray = []
 var _preview: ColorRect
 var _banner: TextureRect
+var _shield: TextureRect
 var _portrait: TextureRect
 var _color_name_label: Label
 var _field_label: Label
+var _partition_label: Label
 var _charge_label: Label
 var _border_label: Label
 var _emblem_label: Label
+var _nation_label: Label
 var _warn: Label
 var _scroll: ScrollContainer
 
-const FIELD_KEYS := ["ux_field_solid", "ux_field_per_fess", "ux_field_per_pale"]
-const CHARGE_KEYS := ["ux_charge_none", "ux_charge_fess", "ux_charge_pale", "ux_charge_bend", "ux_charge_chevron", "ux_charge_pale_thin"]
+const FIELD_KEYS := {
+	"solid": "ux_field_solid",
+	"per_fess": "ux_field_per_fess",
+	"per_pale": "ux_field_per_pale",
+	"per_bend": "ux_div_per_bend",
+	"per_bend_sinister": "ux_div_per_bend_sinister",
+	"quarterly": "ux_div_quarterly",
+	"per_chevron": "ux_div_per_chevron",
+	"per_saltire": "ux_div_per_saltire",
+	"gyronny": "ux_div_gyronny",
+}
+const PART_KEYS := {
+	"straight": "ux_part_straight",
+	"wavy": "ux_part_wavy",
+	"engrailed": "ux_part_engrailed",
+	"embattled": "ux_part_embattled",
+	"invected": "ux_part_invected",
+	"nebuly": "ux_part_nebuly",
+}
+const CHARGE_KEYS := {
+	"none": "ux_charge_none",
+	"fess": "ux_charge_fess",
+	"pale": "ux_charge_pale",
+	"bend": "ux_charge_bend",
+	"bend_sinister": "ux_ord_bend_sinister",
+	"chevron": "ux_charge_chevron",
+	"pale_thin": "ux_charge_pale_thin",
+	"cross": "ux_ord_cross",
+	"saltire": "ux_ord_saltire",
+	"chief": "ux_ord_chief",
+	"bordure": "ux_ord_bordure",
+	"orle": "ux_ord_orle",
+	"pile": "ux_ord_pile",
+	"pall": "ux_ord_pall",
+}
 const BORDER_KEYS := ["ux_border_none", "ux_border_line", "ux_border_double", "ux_border_dentil"]
-const EMBLEM_KEYS := [
-	"ux_emblem_ring", "ux_emblem_arc", "ux_emblem_wave", "ux_emblem_leaf", "ux_emblem_chevron", "ux_emblem_spark",
-	"ux_emblem_filament", "ux_emblem_tide", "ux_emblem_notch", "ux_emblem_bars", "ux_emblem_bend", "ux_emblem_hollow",
-]
+const EMBLEM_KEYS := {
+	"ring": "ux_emblem_ring", "arc": "ux_emblem_arc", "wave": "ux_emblem_wave", "leaf": "ux_emblem_leaf",
+	"chevron": "ux_emblem_chevron", "chevron_mark": "ux_emblem_chevron", "spark": "ux_emblem_spark",
+	"filament": "ux_emblem_filament", "tide": "ux_emblem_tide", "notch": "ux_emblem_notch",
+	"bars": "ux_emblem_bars", "bend": "ux_emblem_bend", "bend_mark": "ux_emblem_bend", "hollow": "ux_emblem_hollow",
+	"mullet": "ux_emblem_spark", "crescent": "ux_emblem_arc", "annulet": "ux_emblem_ring",
+	"ash_plume": "ux_emblem_bars", "shadow_arc": "ux_emblem_arc", "jade_wave": "ux_emblem_wave",
+	"glass_lantern": "ux_emblem_filament", "ice_crown": "ux_emblem_ring", "ember_notch": "ux_emblem_notch",
+	"salt_crystal": "ux_emblem_spark", "iron_chevron": "ux_emblem_chevron", "constellation": "ux_emblem_spark",
+	"fog_leaf": "ux_emblem_leaf", "lantern": "ux_emblem_filament", "flake": "ux_emblem_spark",
+	"reed": "ux_emblem_wave", "anvil": "ux_emblem_notch", "starbridge": "ux_emblem_spark",
+	"zephyr": "ux_emblem_leaf", "tower": "ux_emblem_bars", "bridge": "ux_emblem_bend",
+	"lozenge": "ux_emblem_leaf", "plume": "ux_emblem_bars",
+}
 const COLOR_KEYS := [
 	"ux_color_frost_cyan", "ux_color_mint", "ux_color_frost_silver", "ux_color_river", "ux_color_clear_frost", "ux_color_tide_ink",
 	"ux_color_ice_river", "ux_color_sky", "ux_color_tide_cyan", "ux_color_plume", "ux_color_frost_white", "ux_color_iron_frost",
@@ -39,22 +91,44 @@ func _ready() -> void:
 	_color_names = []
 	for k in COLOR_KEYS:
 		_color_names.append(Locale.t(k))
+	_divisions = CKHeraldry.division_ids()
+	_partitions = CKHeraldry.partition_line_ids()
+	_ordinaries = CKHeraldry.ordinary_ids()
+	_nations = PackedStringArray(CKHeraldry.table().get("nations", {}).keys())
+	if _nations.is_empty():
+		_nations = PackedStringArray(["ashbanner"])
 	_build()
 	_refresh_preview_art()
 
 func _current_spec() -> Dictionary:
 	var field := str(_colors[_color_idx])
 	var pair := str(_colors[(_color_idx + 6) % _colors.size()])
+	var division := str(_divisions[_field_idx]) if _divisions.size() > 0 else "solid"
+	var ordinary := str(_ordinaries[_charge_idx]) if _ordinaries.size() > 0 else "none"
+	var emblem_id: String = str(BannerSpec.EMBLEMS[_emblem_idx])
+	var nation := str(_nations[_nation_idx])
+	var charge_col := "#" + UIKit.TEXT.to_html(false)
+	# Prefer a legal tincture for ordinary / emblem against field.
+	if not CKHeraldry.tincture_ok(field, charge_col):
+		charge_col = CKHeraldry.tincture_hex("argent") if CKHeraldry.tincture_class(field) == "colour" else CKHeraldry.tincture_hex("sable")
 	return BannerSpec.normalize({
-		"field": BannerSpec.FIELDS[_field_idx],
+		"schema": 2,
+		"field": division if division in BannerSpec.FIELDS else "solid",
+		"division": division,
+		"partition_line": str(_partitions[_partition_idx]) if _partitions.size() > 0 else "straight",
 		"field_a": field,
 		"field_b": pair,
-		"charge": BannerSpec.CHARGES[_charge_idx],
-		"charge_color": "#" + UIKit.TEXT.to_html(false),
+		"charge": ordinary if ordinary in BannerSpec.CHARGES else "none",
+		"ordinary": ordinary,
+		"ordinary_tincture": charge_col,
+		"charge_color": charge_col,
 		"border": BannerSpec.BORDERS[_border_idx],
 		"border_color": "#" + UIKit.ACCENT_HOVER.to_html(false),
-		"emblem": BannerSpec.EMBLEMS[_emblem_idx],
-		"emblem_color": "#" + UIKit.TEXT.to_html(false),
+		"emblem": emblem_id,
+		"emblem_color": charge_col,
+		"charges": [{"id": emblem_id, "tincture": charge_col, "placement": "center"}],
+		"nation": nation,
+		"shield_shape": str(CKHeraldry.nation_style(nation).get("shield", "heater")),
 	})
 
 func _build() -> void:
@@ -83,8 +157,13 @@ func _build() -> void:
 
 	var art_row := HBoxContainer.new()
 	art_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	art_row.add_theme_constant_override("separation", 24)
+	art_row.add_theme_constant_override("separation", 20)
 	box.add_child(art_row)
+	_shield = TextureRect.new()
+	_shield.custom_minimum_size = Vector2(120, 140)
+	_shield.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_shield.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	art_row.add_child(_shield)
 	_banner = TextureRect.new()
 	_banner.custom_minimum_size = Vector2(140, 200)
 	_banner.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -99,14 +178,14 @@ func _build() -> void:
 	box.add_child(UIKit.make_label(Locale.t("ux_name_surname")))
 	_surname = LineEdit.new()
 	_surname.text = "灰旗"
-	_surname.custom_minimum_size = Vector2(280, 40)
+	_surname.custom_minimum_size = Vector2(280, 48)
 	_surname.text_changed.connect(func(_t): _refresh_preview_art())
 	box.add_child(_surname)
 
 	box.add_child(UIKit.make_label(Locale.t("ux_name_given")))
 	_given = LineEdit.new()
 	_given.text = "烬行"
-	_given.custom_minimum_size = Vector2(280, 40)
+	_given.custom_minimum_size = Vector2(280, 48)
 	_given.text_changed.connect(func(_t): _refresh_preview_art())
 	box.add_child(_given)
 
@@ -118,7 +197,7 @@ func _build() -> void:
 	prev_btn.pressed.connect(func(): _shift_color(-1))
 	row.add_child(prev_btn)
 	_preview = ColorRect.new()
-	_preview.custom_minimum_size = Vector2(72, 40)
+	_preview.custom_minimum_size = Vector2(72, 48)
 	_preview.color = Color(str(_colors[_color_idx]))
 	row.add_child(_preview)
 	var next_btn = UIKit.make_button("▶", 48)
@@ -128,10 +207,18 @@ func _build() -> void:
 	_color_name_label.add_theme_color_override("font_color", UIKit.ACCENT)
 	row.add_child(_color_name_label)
 
+	_nation_label = _layer_row(box, Locale.t("ux_name_nation_rand"), func(d): _shift_enum("nation", d))
 	_field_label = _layer_row(box, Locale.t("ux_name_field_split"), func(d): _shift_enum("field", d))
-	_charge_label = _layer_row(box, Locale.t("ux_name_charge"), func(d): _shift_enum("charge", d))
+	_partition_label = _layer_row(box, Locale.t("ux_name_partition"), func(d): _shift_enum("partition", d))
+	_charge_label = _layer_row(box, Locale.t("ux_name_ordinary"), func(d): _shift_enum("charge", d))
 	_border_label = _layer_row(box, Locale.t("ux_name_border"), func(d): _shift_enum("border", d))
 	_emblem_label = _layer_row(box, Locale.t("ux_name_emblem"), func(d): _shift_enum("emblem", d))
+
+	var rand_btn = UIKit.make_button(Locale.t("ux_name_nation_rand"), 240)
+	rand_btn.custom_minimum_size = Vector2(240, 48)
+	rand_btn.pressed.connect(_on_randomize_nation)
+	box.add_child(rand_btn)
+
 	_warn = UIKit.make_dim_label("")
 	_warn.add_theme_color_override("font_color", UIKit.DANGER)
 	box.add_child(_warn)
@@ -156,7 +243,7 @@ func _layer_row(box: VBoxContainer, title: String, cb: Callable) -> Label:
 	row.add_child(prev_btn)
 	var lab := UIKit.make_label("")
 	lab.add_theme_color_override("font_color", UIKit.ACCENT)
-	lab.custom_minimum_size = Vector2(120, 0)
+	lab.custom_minimum_size = Vector2(140, 0)
 	row.add_child(lab)
 	var next_btn = UIKit.make_button("▶", 48)
 	next_btn.pressed.connect(func(): cb.call(1))
@@ -172,24 +259,64 @@ func _shift_color(d: int) -> void:
 func _shift_enum(which: String, d: int) -> void:
 	match which:
 		"field":
-			_field_idx = (_field_idx + d + BannerSpec.FIELDS.size()) % BannerSpec.FIELDS.size()
+			_field_idx = (_field_idx + d + _divisions.size()) % maxi(1, _divisions.size())
+		"partition":
+			_partition_idx = (_partition_idx + d + _partitions.size()) % maxi(1, _partitions.size())
 		"charge":
-			_charge_idx = (_charge_idx + d + BannerSpec.CHARGES.size()) % BannerSpec.CHARGES.size()
+			_charge_idx = (_charge_idx + d + _ordinaries.size()) % maxi(1, _ordinaries.size())
 		"border":
 			_border_idx = (_border_idx + d + BannerSpec.BORDERS.size()) % BannerSpec.BORDERS.size()
 		"emblem":
 			_emblem_idx = (_emblem_idx + d + BannerSpec.EMBLEMS.size()) % BannerSpec.EMBLEMS.size()
+		"nation":
+			_nation_idx = (_nation_idx + d + _nations.size()) % maxi(1, _nations.size())
+	_refresh_preview_art()
+
+func _on_randomize_nation() -> void:
+	var nid := str(_nations[_nation_idx])
+	var spec := CKHeraldry.randomize_for_nation(nid, GameState.rng if GameState.get("rng") else null)
+	# Sync UI indices from randomized spec.
+	var div := str(spec.get("division", "solid"))
+	_field_idx = maxi(0, _divisions.find(div))
+	var part := str(spec.get("partition_line", "straight"))
+	_partition_idx = maxi(0, _partitions.find(part))
+	var ord := str(spec.get("ordinary", "none"))
+	_charge_idx = maxi(0, _ordinaries.find(ord))
+	var fa := str(spec.get("field_a", "")).to_lower()
+	for i in _colors.size():
+		if str(_colors[i]).to_lower() == fa:
+			_color_idx = i
+			break
+	var chs: Array = spec.get("charges", [])
+	if not chs.is_empty() and typeof(chs[0]) == TYPE_DICTIONARY:
+		var eid := str((chs[0] as Dictionary).get("id", "ring"))
+		var ix := BannerSpec.EMBLEMS.find(eid)
+		if ix < 0:
+			# Map nation charge to closest emblem slot.
+			ix = BannerSpec.EMBLEMS.find("ring")
+		_emblem_idx = maxi(0, ix)
+	_preview.color = Color(str(_colors[_color_idx]))
+	_color_name_label.text = str(_color_names[_color_idx])
 	_refresh_preview_art()
 
 func _sync_layer_labels() -> void:
-	if _field_label:
-		_field_label.text = Locale.t(FIELD_KEYS[_field_idx])
-	if _charge_label:
-		_charge_label.text = Locale.t(CHARGE_KEYS[_charge_idx])
+	if _field_label and _divisions.size() > 0:
+		var d := str(_divisions[_field_idx])
+		_field_label.text = Locale.t(str(FIELD_KEYS.get(d, "ux_field_solid")))
+	if _partition_label and _partitions.size() > 0:
+		var p := str(_partitions[_partition_idx])
+		_partition_label.text = Locale.t(str(PART_KEYS.get(p, "ux_part_straight")))
+	if _charge_label and _ordinaries.size() > 0:
+		var o := str(_ordinaries[_charge_idx])
+		_charge_label.text = Locale.t(str(CHARGE_KEYS.get(o, "ux_charge_none")))
 	if _border_label:
 		_border_label.text = Locale.t(BORDER_KEYS[_border_idx])
 	if _emblem_label:
-		_emblem_label.text = Locale.t(EMBLEM_KEYS[_emblem_idx])
+		var e: String = str(BannerSpec.EMBLEMS[_emblem_idx])
+		_emblem_label.text = Locale.t(str(EMBLEM_KEYS.get(e, "ux_emblem_ring")))
+	if _nation_label and _nations.size() > 0:
+		var st := CKHeraldry.nation_style(str(_nations[_nation_idx]))
+		_nation_label.text = str(st.get("zh", _nations[_nation_idx]))
 
 func _refresh_preview_art() -> void:
 	_sync_layer_labels()
@@ -202,6 +329,8 @@ func _refresh_preview_art() -> void:
 	GameState.surname = _surname.text.strip_edges() if _surname else "灰旗"
 	UnitArt.clear_cache()
 	_banner.texture = UnitArt.banner_layers(spec, 140, 200)
+	if _shield:
+		_shield.texture = ImageTexture.create_from_image(BannerSpec.compose_shield(spec, 120, 140))
 	var tmp := CKCharacter.new()
 	tmp.name = GameState.surname + (_given.text.strip_edges() if _given else "烬行")
 	tmp.is_leader = true
@@ -210,7 +339,15 @@ func _refresh_preview_art() -> void:
 	tmp.appearance = {"hair": "ash_brown", "eyes": "river_blue", "brow": "thick", "scar": "none"}
 	_portrait.texture = UnitArt.portrait(tmp, 140, CKArtPaths.TIER_MEDIUM)
 	if _warn:
-		_warn.text = "" if BannerSpec.contrast_ok(spec) else Locale.t("ux_name_contrast")
+		var bits: PackedStringArray = []
+		if not BannerSpec.contrast_ok(spec):
+			bits.append(Locale.t("ux_name_contrast"))
+		if not BannerSpec.tincture_ok(spec):
+			bits.append(Locale.t("ux_heraldry_tincture_warn"))
+		_warn.text = " · ".join(bits)
+		_warn.add_theme_color_override("font_color", UIKit.DANGER if not bits.is_empty() else UIKit.OK)
+		if bits.is_empty():
+			_warn.text = Locale.t("ux_heraldry_ok")
 	GameState.crest_color = prev_c
 	GameState.surname = prev_s
 	GameState.banner_spec = prev_b
