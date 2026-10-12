@@ -44,8 +44,11 @@ func _run() -> String:
 	if CKCastleServices.educate(GameState, child) != 0:
 		return "academy should be dark"
 	GameState.buildings["academy"] = 2
-	if CKCastleServices.educate(GameState, child) != 2 or int(child.stats.wil) != 10:
-		return "academy tutor"
+	# v9.2：学舍只加专师名额，不再直接加意
+	if CKCastleServices.educate(GameState, child) != 2 or int(child.stats.wil) != 8:
+		return "academy slots"
+	if CKCastleServices.tutor_pair_cap(GameState) != 3:
+		return "pair cap"
 	if CKCastleServices.treasury_slots(GameState) != 0:
 		return "treasury empty"
 	GameState.buildings["treasury"] = 3

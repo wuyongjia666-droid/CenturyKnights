@@ -166,6 +166,16 @@ func birth_child(mother: CKCharacter) -> CKCharacter:
 			mut += 1
 		child.stats[k] = clampi(mid + mut, child.apt_min[k], child.apt_max[k])
 	child.traits = _inherit_traits(father, mother, rng)
+	child.blood_meta["birth_ym"] = "%d-%d" % [Calendar.year, Calendar.month]
+	# v9.2 出生习痕（可为 0）；用孩子 id 种子，读档复现
+	var marks := CKLifeMarks.roll_birth(child)
+	if marks.is_empty():
+		GameState.log_event(Locale.t("ux_mark_birth_empty") % child.name)
+	else:
+		var zhmarks: Array = []
+		for mid in marks:
+			zhmarks.append(CKLifeMarks.zh(str(mid)))
+		GameState.log_event(Locale.t("ux_mark_birth") % [child.name, " / ".join(zhmarks)])
 	# 粮饷不足负面
 	if GameState.morale < 40 or GameState.food < 5:
 		if rng.randf() < 0.55 and "malnourished" not in child.traits:

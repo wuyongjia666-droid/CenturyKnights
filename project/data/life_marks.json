@@ -1,0 +1,23 @@
+{
+  "marks": {
+    "copy": "抄谱",
+    "watch": "盯梢",
+    "ledger": "算账",
+    "hone": "磨刃",
+    "slip": "溜门",
+    "seize": "抢旗",
+    "lie_age": "谎岁",
+    "furnace": "闯炉",
+    "bridge": "桥上",
+    "lamp": "灯下",
+    "tide": "潮边",
+    "frost": "霜里"
+  },
+  "meet": ["bridge", "lamp", "tide", "frost"],
+  "mischief": ["slip", "seize", "lie_age", "furnace"],
+  "lesson": ["copy", "watch", "ledger", "hone"],
+  "meet_w": 16,
+  "mischief_w": 12,
+  "lesson_w": 6,
+  "count_w": [180, 240, 220, 160, 100, 60, 25, 10, 4, 1]
+}

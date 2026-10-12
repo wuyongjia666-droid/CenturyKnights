@@ -388,7 +388,7 @@ func _step_castle_hub() -> void:
 						labels.append(str(b.text))
 
 	# NAR-05：新游戏第 1 年只开六扇门。联姻、族谱、委任等剧情引出后再出现。
-	var need_substrings := ["出战", "演武", "酒馆", "花名册", "岁月", "设置"]
+	var need_substrings := ["出战", "旗塾", "酒馆", "花名册", "岁月", "设置"]
 	var need_alt := ["deploy", "train", "tavern", "roster", "hourglass", "settings"]
 	var missing: Array = []
 	for i in need_substrings.size():

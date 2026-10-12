@@ -27,6 +27,15 @@ func _run() -> String:
 		return "hall3 %s" % GameState.max_deploy()
 	if DeployBrief.cap_line() != BattleObjectives.text("deploy_cap") % 6:
 		return "cap6 %s" % DeployBrief.cap_line()
+	GameState.buildings["hall"] = 5
+	if GameState.max_deploy() != 6:
+		return "hall5 clamp %s" % GameState.max_deploy()
+	var kept_deploy: Array = GameState.deploy_ids.duplicate()
+	GameState.deploy_ids = ["a", "b", "c", "d", "e", "f", "g"]
+	CKEconomyState.clamp_deploy(GameState)
+	if GameState.deploy_ids.size() != 6:
+		return "clamp size %s" % GameState.deploy_ids.size()
+	GameState.deploy_ids = kept_deploy
 	GameState.buildings["hall"] = 1
 	var m: Dictionary = BattleMaps.get_map("quest_bandit")
 	var suggest := DeployBrief.suggest_line(m)

@@ -838,6 +838,7 @@ func apply_save_data(data: Dictionary) -> bool:
 	reputation = data.get("reputation", {"ashland": 0, "riverland": 0})
 	settings = data.get("settings", settings)
 	deploy_ids = data.get("deploy_ids", [])
+	CKEconomyState.clamp_deploy(self)
 	dynasty_journal = str(data.get("dynasty_journal", ""))
 	lineage_log = data.get("lineage_log", []).duplicate(true)
 	lineage_path = data.get("lineage_path", {}).duplicate(true)
