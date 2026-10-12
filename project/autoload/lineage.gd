@@ -67,6 +67,7 @@ func marry(suitor: CKCharacter, target: CKCharacter, bride_price: int = 40, acce
 	GameState.add_rep("ashland", 8)
 	GameState.add_rep("riverland", 4)
 	# 配偶入家族（不入战花名册除非已招募）
+	GameState.claim_id(target)
 	if not GameState.characters.has(target.id):
 		target.in_roster = false
 		GameState.characters[target.id] = target
@@ -197,6 +198,7 @@ func birth_child(mother: CKCharacter) -> CKCharacter:
 	child.rank = _child_rank(father if father else mother, mother)
 	child.job_id = "light_inf"
 	child.recalc_hp()
+	GameState.claim_id(child)
 	GameState.characters[child.id] = child
 	mother.children_ids.append(child.id)
 	if father:
