@@ -62,7 +62,7 @@ func _ready() -> void:
 	apply_mobile_layout()
 
 func _back() -> void:
-	get_tree().change_scene_to_file("res://scenes/hub/lineage_view.tscn")
+	CKNav.up("res://scenes/hub/lineage_view.tscn")
 
 func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("ui_cancel"):
@@ -168,10 +168,10 @@ func _line_card(parent: Node, line_id: String, tier_zh: String, known: Dictionar
 	traits.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	traits.custom_minimum_size = Vector2(_panel_w - 8.0, 0)
 	inner.add_child(traits)
-	var set: Array = ln.get("trait_set", [])
-	if set.is_empty():
+	var trait_ids: Array = ln.get("trait_set", [])
+	if trait_ids.is_empty():
 		traits.add_child(UIKit.body_label("此脉未列特征组。", UIKit.TEXT_FAINT, 12))
-	for state_id in set:
+	for state_id in trait_ids:
 		var meta := CKCourtChrome.state_meta(str(state_id))
 		var seen: bool = known.has(str(state_id))
 		if seen:

@@ -448,7 +448,7 @@ func _tab_overview() -> void:
 		var mb := UIKit.cta_button("★ %s" % mm.label, "", 380, 38)
 		mb.position = Vector2(18, 520)
 		mb.disabled = not bool(mm.get("exists", false))
-		mb.pressed.connect(func(): get_tree().change_scene_to_file(str(mm.path)))
+		mb.pressed.connect(func(): CKNav.go(str(mm.path)))
 		p2.add_child(mb)
 
 # ── 铁匠铺 ────────────────────────────────────────────
@@ -1019,7 +1019,7 @@ func _toast_msg(text: String, col: Color) -> void:
 
 func _back() -> void:
 	UIFX.page_exit(self)
-	get_tree().change_scene_to_file(ATLAS)
+	CKNav.up(ATLAS)
 
 func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("ui_cancel"):
