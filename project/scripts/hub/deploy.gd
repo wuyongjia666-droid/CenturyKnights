@@ -119,7 +119,11 @@ func _fit_chrome() -> void:
 				ch.position.x = v.x - right - ch.get_minimum_size().x
 
 func _back() -> void:
-	get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
+	var back := "res://scenes/hub/castle_hub.tscn"
+	if GameState.has_meta("deploy_return"):
+		back = str(GameState.get_meta("deploy_return"))
+		GameState.remove_meta("deploy_return")
+	get_tree().change_scene_to_file(back)
 
 func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("ui_cancel"):
