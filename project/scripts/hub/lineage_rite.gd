@@ -1,6 +1,7 @@
 extends Control
 ## 族谱授旗礼：选子嗣 → 分支道路（武/文/商）→ 三步授旗入队
 
+const EARLY_MIN_AGE := 6
 var _list: VBoxContainer
 var _body: RichTextLabel
 var _actions: VBoxContainer
@@ -102,7 +103,7 @@ func _refresh_list() -> void:
 		any = true
 	if not any:
 		_list.add_child(UIKit.empty_state("尚无子嗣。联姻后岁月推进可诞育。"))
-	_body.text = "点选子嗣：未成年可「早教择路」（生日加属性）；成年未入队可完成授旗三步。"
+	_body.text = Locale.t("lin_rite_hint") % EARLY_MIN_AGE
 	for c in _actions.get_children():
 		c.queue_free()
 
@@ -121,8 +122,13 @@ func _show_early_tutor() -> void:
 		c.queue_free()
 	if _selected == null:
 		return
+	if _selected.age < EARLY_MIN_AGE:
+		# Audit P2-6: matches the tutor's 6-year floor; infants are not pushed.
+		_body.text = Locale.t("lin_too_young") % [_selected.name, _selected.age, EARLY_MIN_AGE]
+		return
 	var cur = {"martial": "偏武", "scholar": "偏文", "merchant": "偏商"}.get(_path, "未定")
-	_body.text = "[b]早教·择路[/b]\n\n%s 尚年幼（%d岁）。\n今日择路将写入族谱：之后每个生日按道路倾向加维。\n当前：【%s】\n\n[color=#c9a227]偏武[/color] 力/体　[color=#8ecae6]偏文[/color] 意/感　[color=#e9c46a]偏商[/color] 敏/技" % [_selected.name, _selected.age, cur]
+	var head := "[b]早教·择路[/b]\n\n%s 尚年幼（%d岁）。\n今日择路将写入族谱：此后岁课的习痕按道路倾向生长。\n" % [_selected.name, _selected.age]
+	_body.text = head + "当前：【%s】\n\n[color=#c9a227]偏武[/color] 力/体　[color=#8ecae6]偏文[/color] 意/感　[color=#e9c46a]偏商[/color] 敏/技" % cur
 	_add("早教·偏武", func(): _set_early("martial"))
 	_add("早教·偏文", func(): _set_early("scholar"))
 	_add("早教·偏商", func(): _set_early("merchant"))
@@ -131,14 +137,9 @@ func _set_early(path: String) -> void:
 	_path = path
 	GameState.lineage_path[_selected.id] = path
 	var pn = {"martial": "偏武", "scholar": "偏文", "merchant": "偏商"}[path]
-	GameState.add_lineage_event("早教：%s → %s（生日加维）" % [_selected.name, pn])
-	# 立刻小幅加维，让选择有即时反馈
-	var keys = {"martial": ["str", "vit"], "scholar": ["wil", "per"], "merchant": ["agi", "skl"]}[path]
-	if str(GameState.house_mods.get("doctrine", "")) == "strict" and path == "martial":
-		keys = ["str", "vit", "str"]
-	var k = keys[GameState.rng.randi() % keys.size()]
-	_selected.stats[k] = mini(int(_selected.apt_max.get(k, 20)), int(_selected.stats.get(k, 8)) + 1)
-	_msg.text = "早教已定：%s。%s 立刻 +1，此后生日持续偏向。" % [pn, Locale.t("stat_" + k)]
+	GameState.add_lineage_event("早教：%s → %s" % [_selected.name, pn])
+	# Audit P2-6 / proposal: no instant +1 and no birthday stat; growth comes from the yearly lessons.
+	_msg.text = "早教已定：%s。此后岁课按这条路成长。" % pn
 	Sfx.lineage_chime()
 	GameState.save_game()
 	_refresh_list()

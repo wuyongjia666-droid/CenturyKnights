@@ -364,7 +364,9 @@ func _node_card(c: CKCharacter, at: Vector2) -> void:
 	nm.clip_text = true
 	b.add_child(nm)
 	var pb := str(c.primary_bloodline())
-	var sub := UIKit.body_label("%s · %s" % [GameState.get_job(c.job_id).get("name", ""), c.rank_name()], UIKit.TEXT_DIM, 11)
+	# Audit P2-6: minors show "年幼", not an adult unit class and rank.
+	var sub_txt := Locale.t("lin_minor") if c.age < Calendar.ADULT_AGE else "%s · %s" % [GameState.get_job(c.job_id).get("name", ""), c.rank_name()]
+	var sub := UIKit.body_label(sub_txt, UIKit.TEXT_DIM, 11)
 	sub.autowrap_mode = TextServer.AUTOWRAP_OFF
 	sub.position = Vector2(70, 60)
 	sub.size = Vector2(140, 16)
@@ -563,6 +565,8 @@ func _render_dossier() -> void:
 	var rite := UIKit.cta_button("授旗礼", "Y", 132, 36)
 	rite.position = Vector2(228, 564)
 	rite.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/lineage_rite.tscn"))
+	# Audit P2-6: the rite button only lights up for an heir who has come of age.
+	rite.disabled = not adult
 	p.add_child(rite)
 
 
