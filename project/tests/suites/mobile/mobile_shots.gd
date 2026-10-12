@@ -16,11 +16,14 @@ const SCREENS := [
 const RES := [Vector2i(2400, 1080), Vector2i(2340, 1080), Vector2i(1920, 1080), Vector2i(2560, 1600)]
 var _out := "/tmp/ck_mobile"
 var _report := []
+var _only: PackedStringArray = []
 
 func _ready() -> void:
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--out="):
 			_out = arg.substr(6)
+		if arg.begins_with("--only="):
+			_only = arg.substr(7).split(",")
 	if DisplayServer.get_name() == "headless":
 		print("MOBILE PASS headless-skip")
 		get_tree().quit(0)
@@ -33,6 +36,8 @@ func _ready() -> void:
 		await get_tree().process_frame
 		await get_tree().process_frame
 		for pair in SCREENS:
+			if not _only.is_empty() and not _only.has(str(pair[0])):
+				continue
 			await _shoot(str(pair[1]), "%s_%dx%d" % [pair[0], r.x, r.y])
 	var f := FileAccess.open(_out + "/layout.json", FileAccess.WRITE)
 	f.store_string(JSON.stringify(_report, " "))

@@ -70,7 +70,10 @@ func _build() -> void:
 	add_child(_portrait)
 	_cards = Control.new()
 	_cards.mouse_filter = Control.MOUSE_FILTER_PASS
-	if DeviceProfile.is_mobile():
+	# Landscape phones get the side-by-side row (all candidates + hire buttons visible);
+	# only portrait falls back to the vertical scroll.
+	var vp := get_viewport().get_visible_rect().size if is_inside_tree() else Vector2(1280, 720)
+	if DeviceProfile.is_mobile() and vp.y > vp.x:
 		_card_scroll = ScrollContainer.new()
 		_card_scroll.name = "TavernCardScroll"
 		_card_scroll.position = Vector2(24, 108)
@@ -98,6 +101,7 @@ func _payroll() -> int:
 
 func apply_mobile_layout() -> void:
 	if _card_scroll == null:
+		_refresh()
 		return
 	var foot := find_child("StitchFooter", true, false) as Control
 	MobileLayout.fill_scroll(_card_scroll, foot, 560)
@@ -138,7 +142,8 @@ func _refresh() -> void:
 			_card(cand, Rect2(0, y, 1196, card_h), cand == _selected, i)
 			y += card_h + 12.0
 		else:
-			_card(cand, Rect2(42 + i * 404, 112, 388, 570), cand == _selected, i)
+			var cw := maxf(388.0, (maxf(size.x, 1280.0) - 84.0 - 32.0) / 3.0)
+			_card(cand, Rect2(42 + i * (cw + 16.0), 112, cw, 570), cand == _selected, i)
 		i += 1
 	if mobile:
 		_cards.custom_minimum_size = Vector2(1196, y)

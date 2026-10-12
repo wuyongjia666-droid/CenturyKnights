@@ -463,9 +463,38 @@ func _command_bar_px() -> float:
 		return 0.0
 	return maxf(DeviceProfile.hit_px(), 48.0) + 20.0
 
+## Landscape phone: command column on the right edge, side panels slide right
+## to sit next to it, and the board takes all remaining width and full height.
+const MOBILE_RAIL_W := 176.0
+
+func _mobile_landscape() -> bool:
+	if not DeviceProfile.is_mobile() or not is_inside_tree():
+		return false
+	var vp := get_viewport().get_visible_rect().size
+	return vp.x > vp.y * 1.2
+
+func _root_w() -> float:
+	var sx := scale.x if scale.x > 0.01 else 1.0
+	return maxf(1280.0, size.x if size.x > 1.0 else get_viewport().get_visible_rect().size.x / sx)
+
+func _shift_side_panels(dx: float) -> void:
+	for c in get_children():
+		if not (c is Control):
+			continue
+		var ctrl := c as Control
+		if not ctrl.has_meta("m_base_x"):
+			if ctrl.position.x < 880.0 or ctrl.size.x > 700.0:
+				continue
+			ctrl.set_meta("m_base_x", ctrl.position.x)
+		ctrl.position.x = float(ctrl.get_meta("m_base_x")) + dx
+
 func _layout_board() -> void:
 	var area := BOARD_AREA
-	if DeviceProfile.is_mobile() and is_inside_tree():
+	if _mobile_landscape():
+		var dx := _root_w() - MOBILE_RAIL_W - 1280.0 + 8.0
+		_shift_side_panels(dx)
+		area = Rect2(12, 64, BOARD_AREA.size.x + 12.0 + dx, 720.0 - 64.0 - 10.0)
+	elif DeviceProfile.is_mobile() and is_inside_tree():
 		var vp := get_viewport().get_visible_rect().size
 		var sy := scale.y if scale.y > 0.01 else 1.0
 		var bottom_inset := 0.0
