@@ -1151,6 +1151,19 @@ static func portrait_plate(parent: Control, rect: Rect2, c, caption: String = ""
 		p.add_child(cap)
 	return p
 
+## Wide screens: stretch the transcript box to the scene width (portrait plate stays left).
+static func widen_dialogue(scene: Control) -> void:
+	var panel = scene.get_meta("dlg_panel", null)
+	if not (panel is Control) or not is_instance_valid(panel):
+		return
+	var w := maxf(scene.size.x, 1280.0)
+	var pw := w - 180.0 - 180.0
+	(panel as Control).custom_minimum_size = Vector2(pw, 176)
+	(panel as Control).size = Vector2(pw, 176)
+	var tag = scene.get_meta("dlg_tag", null)
+	if tag is Control and is_instance_valid(tag):
+		(tag as Control).position.x = 180.0 + pw - 120.0
+
 static func stitch_dialogue(scene: Control) -> void:
 	## v8.6 — Stitch 21_dialogue skin for every story chapter (scripts share _banner/_title/_portrait/_speaker/
 	## _body/_actions). Re-lays the built nodes: ink void + grid, brand line, large speaker plate left,
@@ -1243,6 +1256,8 @@ static func stitch_dialogue(scene: Control) -> void:
 		var tr := mono("TRANSCRIPT // LOG", 8, TEXT_FAINT, false)
 		tr.position = Vector2(1090 - 110, 472)
 		scene.add_child(tr)
+		scene.set_meta("dlg_panel", panel)
+		scene.set_meta("dlg_tag", tr)
 	var sp := speaker as Label
 	var chip := flat_box(Color(ACCENT, 0.10), Color(ACCENT, 0.55), 4)
 	chip.content_margin_left = 10
