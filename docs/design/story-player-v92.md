@@ -6,7 +6,7 @@
 
 1–234 章的 `chapterN.gd` / `chapterN.tscn` 删除，不再作为主线，也不提供重玩入口。模板对白留在 `data/chapterN.json`：`CKStoryState` 按这个路径懒加载，核心套件会读第 11 章。播放器忽略这些文件，也忽略 `chapters/lint_*.json`。
 
-第零章末拍「踏上第一章·陆桥烽火」仍在，按下后由老旗手说明旧卷已封存，不切到已删除的场景。
+第零章末拍按钮改为「踏上第一卷·过路银的收据」：写 `chapter0_done`，用 `open_chapter` 进入 `e1_01`（v9.2.1，审查 P1-5）。不再弹旧卷封存提示，也不再 `set_beat` 旧卷第 1 章。
 
 ## 入口 API（UX-06 / 舆图）
 
@@ -33,7 +33,8 @@
 | `advance` / `fast_harvest` | 第零章的月份与丰收 |
 | `journal` | 王朝手记，并标记第零章完成 |
 | `ensure_reputation` | 春令试婚前把灰烬邦声望补到友善 |
-| `archive_notice` | 旧卷封存说明 |
+| `archive_notice` | 旧卷封存说明（保留兼容，主线不再使用） |
+| `open_chapter` | `id`：经 `StoryCatalog.request_chapter(id)` 打开另一章（第零章 → `e1_01`） |
 | `visit` | 打开委托板、舆图、沙漏等侧屏；侧屏的「返回」回到本章当前拍（`StoryCatalog.take_story_return`） |
 | `adjust` | 按差值改银、粮、士气、各邦声望，并可写一条日志 |
 | `skip_battle` / `auto_recruit` / `auto_marry` | 序章「教学从简」：战斗按胜结算、按银招一人、择一席入座 |

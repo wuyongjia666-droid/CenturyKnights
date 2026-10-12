@@ -1,5 +1,5 @@
 extends Node
-## Renders 10 sample arms PNGs into user://heraldry_samples/ then copies note to stdout.
+## Renders 12 sample arms PNGs into user://heraldry_samples/ then copies note to stdout.
 
 func _ready() -> void:
 	var out_dir := "user://heraldry_samples"
@@ -15,19 +15,28 @@ func _ready() -> void:
 		{"id": "08_irongorge_baron", "nation": "irongorge", "rank": "baron", "mode": "shield"},
 		{"id": "09_starriver_count", "nation": "starriver", "rank": "count", "mode": "shield"},
 		{"id": "10_southzephyr_knight", "nation": "southzephyr", "rank": "knight", "mode": "shield"},
+		{"id": "11_family_noble", "nation": "qinghe", "rank": "baron", "mode": "shield", "family_tier": "noble"},
+		{"id": "12_family_royal", "nation": "frostcrown", "rank": "duke", "mode": "arms", "family_tier": "royal"},
 	]
 	var written: Array = []
 	for s in samples:
 		var spec := CKHeraldry.from_nation(str(s.nation), str(s.rank))
 		spec = CKHeraldry.apply_rank(spec, str(s.rank))
+		if s.has("family_tier"):
+			# Family arms (族徽): unique core + fixed company-banner canton + tier ornament.
+			var company := CKHeraldry.from_nation("ashbanner")
+			var core := CKHeraldry.generate_unique_arms(str(s.nation), str(s.id), {CKHeraldry.core_key(company): "company"})
+			var fam := CKHeraldry.family_display_arms(core, company, str(s.family_tier))
+			fam["achievement"] = spec.get("achievement", {})
+			spec = fam
 		var img: Image
 		match str(s.mode):
 			"banner":
-				img = CKHeraldryRender.compose(spec, 200, 280, 0.15, "banner")
+				img = CKHeraldryRender.compose(spec, 384, 560, 0.15, "banner")
 			"arms":
-				img = CKHeraldryRender.compose(spec, 220, 280, 0.0, "arms")
+				img = CKHeraldryRender.compose(spec, 512, 600, 0.0, "arms")
 			_:
-				img = CKHeraldryRender.compose(spec, 200, 240, 0.0, "shield")
+				img = CKHeraldryRender.compose(spec, 512, 600, 0.0, "shield")
 		var path := out_dir.path_join(str(s.id) + ".png")
 		img.save_png(path)
 		written.append(ProjectSettings.globalize_path(path))

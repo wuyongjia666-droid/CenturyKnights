@@ -1,7 +1,7 @@
 extends Node
 ## 序章端到端：两条路线从田埂走到上路。
 ## 路线甲：完整引导（战斗、酒馆、委托板、舆图、联姻廷、族谱、沙漏都由故事拍送进去）。
-## 路线乙：教学从简（战斗、招募、入席可直接结算），并走另一半分支。
+## 路线乙：跳过教学（战斗、招募、入席可直接结算），并走另一半分支。
 ## 断言：每个机制门都由某一拍打开；分支旗标写入存档旗标；第一纪元读得到它们。
 
 const CH0 := "res://data/story/chapters/ch0.json"
@@ -164,7 +164,7 @@ func _full_d() -> String:
 
 func _full_e() -> String:
 	# Marriage.
-	var e6: String = await _press("0.4", "前往联姻廷")
+	var e6: String = await _press("0.4", "去联姻廷选人结婚")
 	if e6 != "":
 		return e6
 	if int(GameState.reputation.get("ashland", 0)) < 30:
@@ -176,7 +176,7 @@ func _full_e() -> String:
 	if wed != "":
 		return wed
 	await _resume("0.4")
-	for step in [["0.4", "赴双姓共席"], ["0.45", "等待初啼"], ["0.5", "让月份走到孩子落地"]]:
+	for step in [["0.4", "去参加婚礼"], ["0.45", "等待初啼"], ["0.5", "让月份走到孩子落地"]]:
 		var e: String = await _press(step[0], step[1])
 		if e != "":
 			return e
@@ -252,18 +252,21 @@ func _brief_c() -> String:
 	var climax: Array = _texts("0.38")
 	if not _has(climax, "押进哨所第三天") or _has(climax, "灰马是他的"):
 		return "climax ignored handed survivor"
-	for step in [["0.38", "带走衡舟"], ["0.39", "入席"], ["0.4", "直接入席"]]:
+	for step in [["0.38", "带走衡舟"], ["0.39", "入席"], ["0.4", "直接结婚"]]:
 		var e: String = await _press(step[0], step[1])
 		if e != "":
 			return e
 	if not GameState.flag("married"):
 		return "auto marry"
-	for step in [["0.4", "赴双姓共席"], ["0.45", "等待初啼"], ["0.5", "让月份走到孩子落地"], ["0.5", "去听那一声哭"], ["0.55", "粮饷结清"], ["0.6", "把月份推到丰收"], ["0.6", "踏上第一章"]]:
+	for step in [["0.4", "去参加婚礼"], ["0.45", "等待初啼"], ["0.5", "让月份走到孩子落地"], ["0.5", "去听那一声哭"], ["0.55", "粮饷结清"], ["0.6", "把月份推到丰收"], ["0.6", "踏上第一卷"]]:
 		var e: String = await _press(step[0], step[1])
 		if e != "":
 			return e
 	if not GameState.flag("chapter0_done"):
 		return "brief route did not finish"
+	if str(GameState.get_meta("story_chapter_id", "")) != "e1_01":
+		return "departure did not request e1_01"
+	GameState.set_meta("story_chapter_id", "")
 	return await _brief_d()
 
 func _brief_d() -> String:

@@ -106,7 +106,8 @@ func _build() -> void:
 	UIFX.page_enter(self)
 
 func _pace_label() -> String:
-	return Locale.t("fertility_fast") if CKFamilyState.fast_family(GameState) else Locale.t("fertility_term")
+	# Audit P2-4: the button names the action, not the current state.
+	return Locale.t("fertility_to_term") if CKFamilyState.fast_family(GameState) else Locale.t("fertility_to_fast")
 
 
 func apply_mobile_layout() -> void:
