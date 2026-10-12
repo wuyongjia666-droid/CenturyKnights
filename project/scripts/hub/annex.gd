@@ -93,7 +93,8 @@ func render() -> void:
 	t.autowrap_mode = TextServer.AUTOWRAP_OFF
 
 	_body.add_child(t)
-	var lvl := UIKit.body_label(Locale.t("a1_unbuilt") if lv <= 0 else "%s / %d" % [Locale.t("a1_level") % lv, CKCastleServices.ANNEX_MAX], UIKit.ACCENT if lv > 0 else UIKit.TEXT_FAINT, 15)
+	var lv_text := Locale.t("a1_unbuilt") if lv <= 0 else "%s / %d" % [Locale.t("a1_level") % lv, CKCastleServices.ANNEX_MAX]
+	var lvl := UIKit.body_label(lv_text, UIKit.ACCENT if lv > 0 else UIKit.TEXT_FAINT, 15)
 	lvl.name = "Level"
 	lvl.position = Vector2(40, 474)
 	lvl.size = Vector2(588, 22)

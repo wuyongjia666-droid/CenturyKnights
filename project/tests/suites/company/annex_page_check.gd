@@ -1,4 +1,6 @@
 extends Node
+
+const ANNEX := preload("res://scenes/hub/annex.tscn")
 ## Audit #1/#2: overview cards route to each building's own page; annex pages show
 ## unbuilt / built / maxed / failure / empty states.
 
@@ -37,7 +39,7 @@ func _run() -> String:
 	view.queue_free()
 	for id in ["infirmary", "academy", "treasury", "embassy"]:
 		GameState.buildings.erase(id)
-		var page = (load("res://scenes/hub/annex.tscn") as PackedScene).instantiate()
+		var page = ANNEX.instantiate()
 		page.set_meta("annex", id)
 		add_child(page)
 		await get_tree().process_frame
@@ -59,7 +61,7 @@ func _run() -> String:
 		if page.level() != 3 or not (page.find_child("Upgrade", true, false) as Button).disabled:
 			return "%s maxed state" % id
 		page.queue_free()
-	var acad = (load("res://scenes/hub/annex.tscn") as PackedScene).instantiate()
+	var acad = ANNEX.instantiate()
 	acad.set_meta("annex", "academy")
 	for c in GameState.characters.values():
 		if c.is_child:
