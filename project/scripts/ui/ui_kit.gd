@@ -872,7 +872,7 @@ static func compact(b: Button, h: int) -> void:
 			b.add_theme_stylebox_override(st, d)
 
 static func cta_button(text: String, key: String = "A", w: int = 200, h: int = 44) -> Button:
-	var show_key := key != "" and not DeviceProfile.is_mobile()
+	var show_key := key != "" and not DeviceProfile.is_mobile()   # no pad/key hints on touch
 	var b := make_accent_button("%s   [%s]" % [text, key] if show_key else text, w)
 	b.custom_minimum_size = Vector2(w, h)
 	b.add_theme_font_size_override("font_size", 15 if h >= 40 else 13)
