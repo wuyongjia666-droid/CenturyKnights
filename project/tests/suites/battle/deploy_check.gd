@@ -79,6 +79,16 @@ func _run() -> String:
 	_deploy._nudge_slot(1)
 	if GameState.deploy_ids[0] != before[1] or GameState.deploy_ids[1] != before[0]:
 		return "nudge %s" % GameState.deploy_ids
+	var vac: Control = _deploy.find_child("Vacant*", true, false)
+	if vac == null or vac.mouse_filter != Control.MOUSE_FILTER_STOP:
+		return "vacant slot not clickable"
+	_deploy.set_meta("no_nav", true)
+	var tap := InputEventMouseButton.new()
+	tap.pressed = true
+	tap.button_index = MOUSE_BUTTON_LEFT
+	_deploy._vacant_input(tap)
+	if str(_deploy.get_meta("vacant_go", "")) != "res://scenes/hub/tavern.tscn":
+		return "vacant slot tap did nothing"
 	return await _narrow()
 
 
