@@ -99,6 +99,20 @@ static func available() -> Array:
 	return out
 
 
+## Audit #24: points still missing before a locked talk opens (0 when it is open).
+static func missing(convo: Dictionary) -> int:
+	var need := int(NEED.get(str(convo.get("rank", "C")), 2))
+	return maxi(0, need - points(str(convo.get("a", "")), str(convo.get("b", ""))))
+
+
+static func locked() -> Array:
+	var out: Array = []
+	for convo in conversations():
+		if missing(convo) > 0:
+			out.append(convo)
+	return out
+
+
 static func conversations() -> Array:
 	if not _convos.is_empty():
 		return _convos
