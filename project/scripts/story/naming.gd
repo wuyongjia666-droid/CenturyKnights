@@ -360,6 +360,7 @@ func _on_start() -> void:
 	var spec := _current_spec()
 	GameState.new_game(g, s, str(spec.field_a))
 	GameState.banner_spec = spec
+	GameState.ensure_unique_arms()  # company banner is set once here; a colliding family core re-rolls
 	GameState.crest_color = str(spec.field_a)
 	UnitArt.clear_cache()
 	GameState.save_game()
