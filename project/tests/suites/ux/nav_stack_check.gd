@@ -48,8 +48,12 @@ func _run() -> void:
 	await get_tree().process_frame
 	# this test node is not a scene; drive real scenes through CKNav
 	CKNav.home()
+	_ok(CKNav.go("res://scenes/hub/roster.tscn") == false, "second change in the same frame must be swallowed")
+	_ok(CKNav.fx.blocking(), "curtain must block input during the change")
 	await _settle()
 	_ok(_scene() == CKNav.HOME, "home did not load")
+	await get_tree().create_timer(CKTransition.total_seconds() + 0.15).timeout
+	_ok(not CKNav.fx.curtain.visible and not CKNav.fx.blocking(), "curtain never lifted")
 	# home: back opens then closes the system menu, never leaves
 	_ok(CKNav.back() == "menu" and CKPauseMenu.current != null, "back at home must open the system menu")
 	_ok(CKNav.back() == "menu", "second back must close the menu")
