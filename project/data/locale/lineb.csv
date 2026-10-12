@@ -5,7 +5,6 @@ lb_anc_honor_head,家族荣誉,Family honor
 lb_anc_how,"每立一块碑，家族荣誉加 1，最多加 3。
 
 荣誉高了，联姻、请爵时别人更看得起你。
-
 战死的碑是红色的，寿终的是蓝色的。","Each stone adds 1 honor, up to 3."
 lb_anc_count,已立 %d 块碑，荣誉最多算 %d 块,"%d stones, honor counts up to %d"
 lb_anc_wall_head,碑林,Stele wall
