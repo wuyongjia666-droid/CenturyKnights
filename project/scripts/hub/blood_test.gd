@@ -43,7 +43,8 @@ func _ready() -> void:
 		var pr := UIKit.make_portrait_rect(c, 36)
 		pr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		h.add_child(pr)
-		h.add_child(CKPageKit.text(Locale.t("lb_bt_row", [c.name, c.rank_name(), c.age]) + ("" if i < can else Locale.t("lb_bt_wait_money")), UIKit.TEXT if i < can else UIKit.TEXT_DIM, 14, 300))
+		var said := Locale.t("lb_bt_row", [c.name, c.rank_name(), c.age]) + ("" if i < can else Locale.t("lb_bt_wait_money"))
+		h.add_child(CKPageKit.text(said, UIKit.TEXT if i < can else UIKit.TEXT_DIM, 14, 300))
 		list.add_child(r[0])
 	CKPageKit.drag_through(list)
 	var right := CKPageKit.card(self, Rect2(478, CKPageKit.TOP + 8, 760, 512), "RevealStage", true)
