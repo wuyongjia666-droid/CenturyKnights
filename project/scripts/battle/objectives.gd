@@ -146,6 +146,45 @@ static func spawn_due(host, map_data: Dictionary, round_no: int) -> Array:
 	return spawned
 
 
+## WS-D #51: waves due next round (turn-based ones only), so the board can warn a round early.
+static func incoming(host, map_data: Dictionary, round_no: int) -> Array:
+	var waves = map_data.get("reinforcements", [])
+	if typeof(waves) != TYPE_ARRAY:
+		return []
+	var done = host.get_meta("reinf_done", {})
+	var out: Array = []
+	for wave in waves:
+		if typeof(wave) != TYPE_DICTIONARY or not wave.has("turn"):
+			continue
+		var wid := str(wave.get("id", ""))
+		if wid == "" or (typeof(done) == TYPE_DICTIONARY and done.has(wid)):
+			continue
+		if int(wave.get("turn", -1)) == round_no + 1:
+			out.append(wave)
+	return out
+
+
+## Logs and marks each upcoming wave once. Returns the warned cells.
+static func warn_incoming(host, map_data: Dictionary, round_no: int) -> Array:
+	var warned = host.get_meta("reinf_warned", {})
+	if typeof(warned) != TYPE_DICTIONARY:
+		warned = {}
+	var cells: Array = []
+	for wave in incoming(host, map_data, round_no):
+		var wid := str(wave.get("id", ""))
+		if warned.has(wid):
+			continue
+		warned[wid] = true
+		var spots: Array = wave.get("spots", [])
+		for raw in spots:
+			cells.append(_cell(raw))
+		if host.has_method("_log"):
+			host._log(text("obj_reinf_warn") % spots.size())
+	host.set_meta("reinf_warned", warned)
+	host.set_meta("reinf_warning", cells)
+	return cells
+
+
 static func _make_unit(team: String, tmpl: String, tag: String, cell: Vector2i, rng: RandomNumberGenerator) -> Dictionary:
 	var who: CKCharacter
 	if team == "enemy":

@@ -323,6 +323,8 @@ func _reinf() -> String:
 			blocked = true
 	if not blocked:
 		return "player is not standing on the reinforcement tile"
+	if (_battle.get_meta("reinf_warning", []) as Array).size() != 2:
+		return "no reinforcement warning a round early: %s" % [_battle.get_meta("reinf_warning", [])]
 	_battle._start_player_turn()
 	if _battle.battle_over:
 		return "reinf battle ended on the reinforcement turn"
