@@ -1334,7 +1334,9 @@ func open_affairs(msg: String = "", ok: bool = true) -> void:
 		v.add_child(UIKit.body_label("这座城不盖职印。", UIKit.TEXT_DIM, 13))
 	for r in rows:
 		var jid := str(r.get("job", ""))
-		v.add_child(UIKit.body_label("「%s」印：%s 可以在这里盖，盖了回堡里就能转「%s」。" % [str(r.get("name", jid)), str(GameState.get_job(str(r.get("from", ""))).get("name", "")), str(r.get("name", jid))], UIKit.ACCENT, 14))
+		var seal_nm := str(r.get("name", jid))
+		var from_nm := str(GameState.get_job(str(r.get("from", ""))).get("name", ""))
+		v.add_child(UIKit.body_label("「%s」印：%s 可以在这里盖，盖了回堡里就能转「%s」。" % [seal_nm, from_nm, seal_nm], UIKit.ACCENT, 14))
 		var any := false
 		for c in GameState.roster():
 			if c == null or not c.alive or c.job_id != str(r.get("from", "")):

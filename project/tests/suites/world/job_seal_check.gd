@@ -13,47 +13,48 @@ func _ready() -> void:
 
 
 func _run() -> String:
+	var fails: Array = []
 	GameState.new_game("烬行", "灰旗", "frost")
 	var city := "lt_capital"
 	var c := GameState.get_leader()
 	c.job_id = "priest"
 	if not bool(CKJobSeals.promote_gate(c, "medic").get("ok", false)):
-		return "medic gated"
+		fails.append("medic gated")
 	if "yan_zhan" not in CKTutor.promote_list(c):
-		return "yan_zhan not offered"
+		fails.append("yan_zhan not offered")
 	if bool(GameState.try_promote(c.id, "yan_zhan").get("ok", false)):
-		return "promoted without seal"
+		fails.append("promoted without seal")
 	if World.rep_of(city) >= 10:
 		World.add_city_rep(city, -World.rep_of(city))
 	if str(CKCityAffairs.template_for(city).get("id", "")) != "first_meet":
-		return "first_meet template"
+		fails.append("first_meet template")
 	World.add_city_rep(city, 40)
 	var r0 := CKJobSeals.stamp(c, "yan_zhan", city)
 	if bool(r0.get("ok", false)) or str(r0.get("msg", "")).find("本城之事") < 0:
-		return "stamp w/o affair: %s" % r0
+		fails.append("stamp w/o affair: %s" % r0)
 	GameState.silver = 0
 	if bool(CKCityAffairs.do_affair(city).get("ok", false)):
-		return "affair with no silver"
+		fails.append("affair with no silver")
 	GameState.silver = 100
 	if not bool(CKCityAffairs.do_affair(city).get("ok", false)):
-		return "affair failed"
+		fails.append("affair failed")
 	if int(GameState.silver) != 80:
-		return "affair cost %d" % int(GameState.silver)
+		fails.append("affair cost %d" % int(GameState.silver))
 	if bool(CKCityAffairs.do_affair(city).get("ok", false)):
-		return "affair repeat"
+		fails.append("affair repeat")
 	if bool(CKJobSeals.can_stamp(c, "yan_zhan", "ash_market").get("ok", false)):
-		return "wrong city stamped"
+		fails.append("wrong city stamped")
 	c.job_id = "mage"
 	if bool(CKJobSeals.can_stamp(c, "yan_zhan", city).get("ok", false)):
-		return "wrong job stamped"
+		fails.append("wrong job stamped")
 	c.job_id = "priest"
 	if not bool(CKJobSeals.stamp(c, "yan_zhan", city).get("ok", false)):
-		return "stamp failed"
+		fails.append("stamp failed")
 	if bool(CKJobSeals.stamp(c, "yan_zhan", city).get("ok", false)):
-		return "stamp repeat"
+		fails.append("stamp repeat")
 	var pr := GameState.try_promote(c.id, "yan_zhan")
 	if c.job_id != "yan_zhan":
-		return "promote after seal: %s" % pr
+		fails.append("promote after seal: %s" % pr)
 	var fake := Node.new()
 	add_child(fake)
 	var atk := {"char": c, "team": "player"}
@@ -63,15 +64,15 @@ func _run() -> String:
 	foe2.id = "foe2"; foe2.name = "另一个"; foe2.blood_meta = {}
 	var b1 := CKYanZhan.strike_bonus(fake, atk, {"char": foe, "team": "enemy"})
 	if b1 != CKYanZhan.BLOODLESS_HIT:
-		return "first strike bonus %d" % b1
+		fails.append("first strike bonus %d" % b1)
 	var ally := CKCharacter.new()
 	ally.id = "al"; ally.job_id = "warrior"
 	if CKYanZhan.strike_bonus(fake, {"char": ally, "team": "player"}, {"char": foe, "team": "enemy"}) != CKYanZhan.BLOODLESS_HIT:
-		return "ally bonus on marked"
+		fails.append("ally bonus on marked")
 	if CKYanZhan.strike_bonus(fake, atk, {"char": foe2, "team": "enemy"}) != 0:
-		return "second target got bonus"
+		fails.append("second target got bonus")
 	if CKYanZhan.strike_bonus(fake, {"char": foe, "team": "enemy"}, {"char": c, "team": "player"}) != 0:
-		return "enemy got bonus"
+		fails.append("enemy got bonus")
 	var scene: Node = load("res://scenes/hub/city.tscn").instantiate()
 	scene.set("city", city)
 	add_child(scene)
@@ -81,8 +82,8 @@ func _run() -> String:
 	await get_tree().process_frame
 	var ov: Node = scene.find_child("AffairOverlay", true, false)
 	if ov == null:
-		return "no overlay"
+		fails.append("no overlay")
 	for b in ov.find_children("*", "Button", true, false):
 		if b.get_combined_minimum_size().y < 48:
-			return "small button %s" % b.text
-	return ""
+			fails.append("small button %s" % b.text)
+	return "; ".join(fails)
