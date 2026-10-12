@@ -80,3 +80,7 @@ python3 tools/farm_queue/submit_v92_stills.py --dry-run --farms FARM-04 --kinds 
 python3 tools/farm_queue/test_ingest_status_overlays.py
 python3 tools/farm_queue/test_submit_v92.py
 ```
+
+## 出图备注（2026-10-12）
+
+Qwen 纯 T2I 容易把「透明叠层」画成整脸立绘。`malnourished` 用 void 底板做 I2I（`gen_qwen_image_stills.py --ref void_overlay_plate.png`）后再 flood-fill 抠底，才过 alpha 门禁。其余五条在收紧「禁止画人」提示词后的 T2I 轮次过门禁。入库路径仍是 `portraits/status/<id>.png` + 无损 WebP。
