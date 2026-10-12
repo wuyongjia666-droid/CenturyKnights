@@ -86,7 +86,7 @@ static func _fixture(fails: Array) -> void:
 	if not GameState.apply_save_data(fixture):
 		fails.append("apply v9.1 fixture")
 		return
-	for i in CKStoryState.CHAPTER_COUNT:
+	for i in CKStoryState.LEGACY_COUNT:
 		var want := str(fixture.get("chapter%d_beat" % i, ""))
 		var got := str(GameState.get("chapter%d_beat" % i))
 		if got != want:
@@ -120,7 +120,7 @@ static func _fixture(fails: Array) -> void:
 	if not GameState.load_game():
 		fails.append("reload")
 		return
-	for i in CKStoryState.CHAPTER_COUNT:
+	for i in CKStoryState.LEGACY_COUNT:
 		var want2 := str(fixture.get("chapter%d_beat" % i, ""))
 		var got2 := str(GameState.get("chapter%d_beat" % i))
 		if got2 != want2:
