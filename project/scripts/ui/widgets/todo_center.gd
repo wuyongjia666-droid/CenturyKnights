@@ -40,7 +40,7 @@ static func snapshot() -> Array:
 		_row("quests", "civil", Locale.t("ux_todo_quests"), GameState.quests.size()),
 		_row("marriage", "family", Locale.t("ux_todo_marriage"), GameState.marriage_candidates.size()),
 		_row("injured", "military", Locale.t("ux_todo_injured"), _injured_count()),
-		_row("festival", "court", Locale.t("ux_todo_festival"), _festival_count()),
+		_row("festival", "home", Locale.t("ux_todo_festival"), _festival_count()),
 		_row("train", "military", Locale.t("ux_todo_train"), _train_count()),
 	]
 	for extra in _extra:
