@@ -23,13 +23,7 @@ func _build() -> void:
 	var right_box: HBoxContainer = tb.get_child(tb.get_child_count() - 1)
 	var rb := UIKit.ghost_button(_refresh_label(), 150, 32)
 	rb.name = "TavernRefresh"
-	rb.pressed.connect(func():
-		var res: Dictionary = GameState.manual_refresh_tavern()
-		if _msg:
-			_msg.text = "" if bool(res.get("ok", false)) else str(res.get("msg", ""))
-		rb.text = _refresh_label()
-		rb.disabled = GameState.tavern_refresh_price() < 0
-		_refresh())
+	rb.pressed.connect(_do_refresh.bind(rb))
 	rb.disabled = GameState.tavern_refresh_price() < 0
 	right_box.add_child(rb)
 	right_box.move_child(rb, right_box.get_child_count() - 2)
@@ -85,6 +79,14 @@ func _build() -> void:
 		add_child(_cards)
 	UIKit.footer_bar(self, [["A", "确认招募"], ["X", "刷新名单"], ["←→", "切换候选人"], ["ESC", "返回城堡"]], "TAVERN PROTOCOL · FROST_TACTICAL v8.6")
 
+func _do_refresh(rb: Button) -> void:
+	var res: Dictionary = GameState.manual_refresh_tavern()
+	if _msg:
+		_msg.text = "" if bool(res.get("ok", false)) else str(res.get("msg", ""))
+	rb.text = _refresh_label()
+	rb.disabled = GameState.tavern_refresh_price() < 0
+	_refresh()
+
 func _refresh_label() -> String:
 	var price := GameState.tavern_refresh_price()
 	if price < 0:
@@ -100,6 +102,10 @@ func _payroll() -> int:
 	return s
 
 func apply_mobile_layout() -> void:
+	_mobile_build()
+	if _mob:
+		_refresh()
+		return
 	if _card_scroll == null:
 		_refresh()
 		return
@@ -122,6 +128,13 @@ func _fee(c: CKCharacter) -> int:
 	return 25 + c.rank_index() * 15
 
 func _refresh() -> void:
+	if _mob:
+		if GameState.tavern_candidates.is_empty():
+			_selected = null
+		elif _selected == null or not GameState.tavern_candidates.has(_selected):
+			_selected = GameState.tavern_candidates[0]
+		_refresh_mobile()
+		return
 	for n in _cards.get_children():
 		_cards.remove_child(n)
 		n.queue_free()
@@ -255,7 +268,7 @@ func _card(c: CKCharacter, r: Rect2, focus: bool, idx: int) -> void:
 	dr.position = Vector2(14, 124)
 	dr.add_theme_constant_override("separation", 18)
 	ab.add_child(dr)
-	for it in [["生命", str(c.max_hp)], ["攻击", str(c.derived_atk())], ["防御", str(c.derived_def())], ["移动", str(c.derived_move())]]:
+	for it in _derived(c):
 		dr.add_child(UIKit.stat_chip(it[0], it[1]))
 	# traits
 	var tl := UIKit.body_label("专属特质预览 (TRAITS)", UIKit.TEXT_DIM, 11)
@@ -301,15 +314,107 @@ func _card(c: CKCharacter, r: Rect2, focus: bool, idx: int) -> void:
 	if DeviceProfile.is_mobile():
 		hire_h = int(maxf(46.0, DeviceProfile.hit_px()))
 	if focus:
-		hire = UIKit.cta_button("招募加入军团（%d 银）" % _fee(c), "A", 352, hire_h)
+		hire = UIKit.cta_button(_hire_text(c, true), "A", 352, hire_h)
 		hire.call_deferred("grab_focus")
 	else:
-		hire = UIKit.ghost_button("招募备选（%d 银）" % _fee(c), 352, maxi(42, hire_h - 4))
+		hire = UIKit.ghost_button(_hire_text(c, false), 352, maxi(42, hire_h - 4))
 	hire.position = Vector2(18, r.size.y - 18 - hire.custom_minimum_size.y)
 	hire.pressed.connect(func():
 		_selected = c
 		_hire())
 	p.add_child(hire)
+
+func _derived(c: CKCharacter) -> Array:
+	return [["生命", str(c.max_hp)], ["攻击", str(c.derived_atk())], ["防御", str(c.derived_def())], ["移动", str(c.derived_move())]]
+
+func _hire_text(c: CKCharacter, focus: bool) -> String:
+	return ("招募加入军团（%d 银）" if focus else "招募备选（%d 银）") % _fee(c)
+
+## ── landscape phone: three container-built cards side by side, 22px / 76px ──
+var _mob := false
+var _m_row: HBoxContainer
+
+func _mobile_build() -> void:
+	if _mob or not MobilePage.active(self):
+		return
+	_mob = true
+	for c in get_children():
+		if c is CanvasItem and c.get_index() > 0 and c != _msg:
+			(c as CanvasItem).visible = false
+	var bar := MobilePage.top_bar(self, Locale.t("btn_tavern"), "%s %d" % [Locale.t("shell_946c7148"), GameState.silver], [])
+	var rb := MobilePage.button(_refresh_label(), false, func(): pass, 260)
+	rb.name = "TavernRefresh"
+	rb.pressed.connect(_do_refresh.bind(rb))
+	rb.disabled = GameState.tavern_refresh_price() < 0
+	rb.size_flags_horizontal = Control.SIZE_SHRINK_END
+	bar.add_child(rb)
+	var back := MobilePage.button(Locale.t("btn_back"), false, _back, 180)
+	back.size_flags_horizontal = Control.SIZE_SHRINK_END
+	bar.add_child(back)
+	_msg.position = Vector2(26, 720 - 40)
+	_msg.add_theme_font_size_override("font_size", MobilePage.FONT)
+	_m_row = HBoxContainer.new()
+	_m_row.position = Vector2(26, MobilePage.TOP)
+	_m_row.size = Vector2(MobilePage.width(self) - 50, 720 - MobilePage.TOP - 48)
+	_m_row.add_theme_constant_override("separation", 12)
+	add_child(_m_row)
+
+func _refresh_mobile() -> void:
+	for n in _m_row.get_children():
+		_m_row.remove_child(n)
+		n.queue_free()
+	for cand in GameState.tavern_candidates.slice(0, 3):
+		_card_mobile(cand, cand == _selected)
+
+func _card_mobile(c: CKCharacter, focus: bool) -> void:
+	var pc := PanelContainer.new()
+	var sb := UIKit.flat_box(Color(0.055, 0.067, 0.090, 0.92), Color(UIKit.ACCENT, 0.85) if focus else Color(1, 1, 1, 0.10), 10, 2 if focus else 1)
+	for side in ["left", "right", "top", "bottom"]:
+		sb.set("content_margin_" + side, 12)
+	pc.add_theme_stylebox_override("panel", sb)
+	pc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_m_row.add_child(pc)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 6)
+	pc.add_child(v)
+	var head := HBoxContainer.new()
+	head.add_theme_constant_override("separation", 10)
+	v.add_child(head)
+	var holder := Control.new()
+	holder.custom_minimum_size = Vector2(120, 150)
+	head.add_child(holder)
+	var job: Dictionary = GameState.get_job(c.job_id)
+	UIKit.portrait_plate(holder, Rect2(0, 0, 120, 150), c, "")
+	var hv := VBoxContainer.new()
+	hv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	head.add_child(hv)
+	hv.add_child(MobilePage.label(c.name, UIKit.TEXT, 26, true))
+	hv.add_child(MobilePage.label("%s · %s" % [str(job.get("name", "")), Locale.t("shell_5a0a47eb") % c.age], UIKit.ACCENT))
+	var keys: Array = CKCharacter.STAT_KEYS.duplicate()
+	keys.sort_custom(func(a, b): return int(c.stats[a]) > int(c.stats[b]))
+	var parts: Array = []
+	for sk in keys.slice(0, 3):
+		parts.append("%s %s" % [Locale.t("stat_" + sk), str(c.stats[sk])])
+	hv.add_child(MobilePage.label("  ".join(parts), UIKit.TEXT))
+	var dparts: Array = []
+	for it in _derived(c):
+		dparts.append("%s %s" % [it[0], it[1]])
+	v.add_child(MobilePage.label("  ".join(dparts), UIKit.TEXT_DIM))
+	var shown := 0
+	for tr in c.traits:
+		if shown >= 2:
+			break
+		var td: Dictionary = GameState.get_trait(str(tr))
+		v.add_child(MobilePage.label("「%s」%s" % [str(td.get("name", tr)), str(td.get("desc", ""))], UIKit.TEXT_FAINT))
+		shown += 1
+	MobilePage.spacer(v)
+	var hire := MobilePage.button(_hire_text(c, focus), focus, func():
+		_selected = c
+		_hire())
+	v.add_child(hire)
+	pc.gui_input.connect(func(ev: InputEvent):
+		if ev is InputEventMouseButton and ev.pressed and not focus:
+			_select(c))
 
 func _hire() -> void:
 	if _selected == null:
