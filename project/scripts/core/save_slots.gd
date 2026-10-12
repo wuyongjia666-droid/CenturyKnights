@@ -36,9 +36,9 @@ static func continue_line(slot: String) -> String:
 static func enter_loaded(tree: SceneTree) -> void:
 	UnitArt.clear_cache()
 	if GameState.flag("hub_open") or GameState.chapter0_beat >= "0.3":
-		tree.change_scene_to_file("res://scenes/hub/castle_hub.tscn")
+		CKNav.home()
 	else:
-		tree.change_scene_to_file("res://scenes/story/chapter0.tscn")
+		CKNav.replace("res://scenes/story/chapter0.tscn")
 
 func _ready() -> void:
 	_build()
@@ -86,4 +86,4 @@ func _load(slot: String) -> void:
 		enter_loaded(get_tree())
 
 func _back() -> void:
-	get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn")
+	CKNav.replace(CKNav.TITLE)

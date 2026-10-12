@@ -1356,7 +1356,7 @@ func _retake(site_id: String) -> void:
 
 func _goto(path: String) -> void:
 	UIFX.page_exit(self)
-	get_tree().change_scene_to_file(path)
+	CKNav.go(path)
 
 func _back() -> void:
 	if not _modal.get_children().is_empty() and not World.pending_event.is_empty():

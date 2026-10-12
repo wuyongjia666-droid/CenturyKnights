@@ -107,7 +107,7 @@ func _ready() -> void:
 	row.add_theme_constant_override("separation", 8)
 	add_child(row)
 	var back = UIKit.make_button(Locale.t("btn_back"), 120)
-	back.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
+	back.pressed.connect(func(): CKNav.up())
 	row.add_child(back)
 	var reset = UIKit.make_button("复位视角", 120)
 	reset.pressed.connect(func():

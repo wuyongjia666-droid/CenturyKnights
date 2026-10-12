@@ -318,6 +318,6 @@ func _hire() -> void:
 
 func _back() -> void:
 	if str(GameState.chapter0_beat) == "0.2" and not GameState.flag("hub_open"):
-		get_tree().change_scene_to_file("res://scenes/story/chapter0.tscn")
+		CKNav.replace("res://scenes/story/chapter0.tscn")
 	else:
-		get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
+		CKNav.up()
