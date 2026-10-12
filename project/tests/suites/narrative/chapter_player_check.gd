@@ -134,7 +134,7 @@ func _run() -> String:
 	ch0.simulate_goto_beat("0.4")
 	ch0.simulate_finish_dialogue()
 	await get_tree().process_frame
-	if ch0.action_labels().find("前往联姻廷") < 0:
+	if ch0.action_labels().find("去联姻廷选人结婚") < 0:
 		return "ch0 marriage gate %s" % str(ch0.action_labels())
 	if int(GameState.reputation.get("ashland", 0)) < 30:
 		return "spring reputation was not prepared"
