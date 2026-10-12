@@ -30,3 +30,44 @@ lb_news_when,第 %d 年 · %s,Year %d · %s
 lb_news_own_tag,本团,Ours
 lb_news_own_nobody,团长,The captain
 lb_news_own_text,%s 立起灰旗，带着 %d 个人进了城堡。这是团里的第一条记录。,%s raised the banner with %d people. Our first entry.
+lb_train_desc,给家里的孩子拜个老师，一次传习花一个月，老师不用上阵，也不花银子。现在能同时带 %d 对师徒，每对一年最多教 %d 次。,"Pair children with tutors. %d pairs, %d lessons a year each."
+lb_train_pupils,学生,Pupils
+lb_train_teach,传习一个月,Teach for a month
+lb_train_promo,转职,Class change
+lb_train_no_kids,家里还没有能上学的孩子,No children to teach
+lb_train_no_kids_why,1 到 15 岁、还没入团的家族孩子才能来旗塾。,Children aged 1-15 who have not joined the company.
+lb_train_no_kids_how,成家生子以后，孩子满一岁就能来拜师。,Marry and have children; they can start at one.
+lb_train_has_tutor,老师：%s · 今年已教 %d/%d 次,Tutor: %s · %d/%d lessons this year
+lb_train_no_tutor,还没拜师,No tutor yet
+lb_train_tutor_wait,在左边点一个孩子，这里会列出能教他的人。,Pick a child on the left.
+lb_train_tutor_line,最强：%s · 学生 %d/%d,Best: %s · pupils %d/%d
+lb_train_no_tutor_title,现在没人能当老师,No one can teach
+lb_train_no_tutor_why,老师要是在团里、16 岁以上、没受伤的人。等伤好了再来。,"Tutors must be 16+, in the company and unhurt."
+lb_train_promo_none,暂时没人能转职,No one can change class
+lb_train_promo_none_why,团里现在的职业都还没有下一阶。打仗练级、换了基础职业以后再来看。,No current class has a next tier yet.
+lb_train_promo_go,确认转职,Change class
+lb_train_req_none,没有额外条件,No requirement
+lb_train_req_item,%s %d/%d,%s %d/%d
+lb_train_req_short,%s 还差 %d,%s short by %d
+lb_res_iron,铁,Iron
+lb_res_herb,药,Herb
+lb_sk_ctx,战技树,Skill tree
+lb_sk_title,战技树,Skill tree
+lb_sk_desc,一阶战技跟着职业自动学会，二阶以上要花战技点点亮。打赢仗、过章节能拿到战技点。,Tier 1 comes with the class; higher tiers cost skill points.
+lb_sk_points,战技点：%d,Skill points: %d
+lb_sk_people,团员,Members
+lb_sk_unlock,点亮（花 1 点）,Unlock (1 point)
+lb_sk_nobody,团里没人,No members
+lb_sk_nobody_why,先去酒馆招人。,Recruit at the tavern first.
+lb_sk_no_tree,这个职业没有战技,No skills for this class
+lb_sk_no_tree_why,换个职业或者转职以后再来看。,Change class and come back.
+lb_sk_owned,已学,learned
+lb_sk_ready,可点,ready
+lb_sk_locked,未开,locked
+lb_sk_who,职业：%s · 已学 %d 个战技,Class: %s · %d skills
+lb_sk_hint,点中间任意一个战技看说明。绿色是已学，蓝色是现在就能点，灰色还差条件。,"Tap a skill. Green learned, blue ready, grey locked."
+lb_sk_meta,第 %d 阶 · 冷却 %d 回合 · 每战 %d 次,Tier %d · cooldown %d · %d uses
+lb_sk_req,要先学会：%s,Requires: %s
+lb_sk_owned_long,已经学会了，出战时可以用。,Learned; usable in battle.
+lb_sk_no_points,战技点不够，打赢仗能拿到,Not enough points; win battles
+lb_train_tutor_none,还没有学生,No pupil yet
