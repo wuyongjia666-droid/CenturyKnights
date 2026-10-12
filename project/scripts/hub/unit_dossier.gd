@@ -5,12 +5,10 @@ var _focus: CKCharacter
 
 func _ready() -> void:
 	_focus = _resolve()
-	UIKit.void_bg(self)
-	var who := _focus.name if _focus != null else "无人"
-	UIKit.top_bar(self, "血脉详档 · %s" % who, [["历", Calendar.label(), UIKit.TEXT_DIM]], "返回", _back)
-	UIKit.page_head(self, 42, 72, "UNIT DOSSIER", who, "EXPRESSED / CARRIED", "明征写在脸上。携因要祠堂验过才展开，并注明来自父或母。", "", 18)
+	var who := _focus.name if _focus != null else Locale.t("lb_dos_nobody")
+	CKPageKit.shell(self, Locale.t("lb_dos_ctx", [who]), "UNIT DOSSIER", who, Locale.t("lb_dos_desc"))
 	_build()
-	UIKit.footer_bar(self, [["Y", "血脉图鉴"], ["ESC", "返回"]], "UNIT DOSSIER · FROST")
+	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "UNIT DOSSIER · FROST")
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 
@@ -54,17 +52,10 @@ func _back() -> void:
 		dest = str(GameState.get_meta("dossier_back"))
 	CKNav.up(dest)
 
-func _unhandled_input(e: InputEvent) -> void:
-	if e.is_action_pressed("ui_cancel"):
-		_back()
-	elif e is InputEventKey and e.pressed and not e.echo and (e as InputEventKey).keycode == KEY_Y:
-		if _bloodline_open():
-			CKNav.go("res://scenes/hub/bloodline_codex.tscn")
-
 func _build() -> void:
 	var c := _focus
 	var sheet: Dictionary = CKCourtChrome.unit_sheet(c)
-	var left := UIKit.panel_at(self, Rect2(42, 200, 300, 476), 12, true)
+	var left := UIKit.panel_at(self, Rect2(42, 136, 300, 512), 12, true)
 	left.name = "PortraitColumn"
 	if c != null:
 		UIKit.portrait_plate(left, Rect2(18, 16, 264, 300), c, CKGenomePortrait.STAGE_ZH.get(str(sheet.get("stage", "")), ""), false, CKArtPaths.TIER_LARGE)
@@ -95,22 +86,24 @@ func _build() -> void:
 	note.position = Vector2(18, 446)
 	note.size = Vector2(264, 40)
 	left.add_child(note)
-	var mid := UIKit.panel_at(self, Rect2(358, 200, 440, 476), 12)
+	var mid := UIKit.panel_at(self, Rect2(358, 136, 440, 512), 12)
 	mid.name = "TraitList"
+	_life(mid, c)
 	var sh := UIKit.mono("EXPRESSED", 9, UIKit.ACCENT)
-	sh.position = Vector2(16, 14)
+	sh.position = Vector2(16, 250)
 	mid.add_child(sh)
 	if not _bloodline_open():
-		mid.modulate = Color(1, 1, 1, 0.55)
-		var lock := UIKit.body_label(Locale.t("ux_lock_bloodline"), UIKit.TEXT_DIM, 13)
+		var lock := UIKit.body_label(Locale.t("lb_dos_lock", [Locale.t("ux_lock_bloodline")]), UIKit.TEXT_DIM, 13)
 		lock.name = "BloodlineLock"
-		lock.position = Vector2(16, 48)
-		lock.size = Vector2(408, 80)
+		lock.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		lock.position = Vector2(16, 274)
+		lock.size = Vector2(408, 120)
 		mid.add_child(lock)
 	else:
 		var scroll := ScrollContainer.new()
-		scroll.position = Vector2(12, 36)
-		scroll.size = Vector2(416, 424)
+		scroll.position = Vector2(12, 272)
+		scroll.size = Vector2(416, 226)
+		scroll.scroll_deadzone = 10
 		scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 		mid.add_child(scroll)
 		var col := VBoxContainer.new()
@@ -122,14 +115,15 @@ func _build() -> void:
 		_trait_block(col, carry_title, sheet.get("carried", []) if bool(sheet.get("verified", false)) else [], UIKit.ACCENT)
 		if not bool(sheet.get("verified", false)):
 			col.add_child(UIKit.body_label("祠堂验血之前，潜征保持未识。", UIKit.TEXT_FAINT, 12))
-	var right := UIKit.panel_at(self, Rect2(814, 200, 424, 476), 12)
+	var right := UIKit.panel_at(self, Rect2(814, 136, 424, 512), 12)
 	right.name = "FamilyTree"
 	var fh := UIKit.mono("FAMILY · TRAIT HIGHLIGHT", 9, UIKit.TEXT_FAINT)
 	fh.position = Vector2(16, 14)
 	right.add_child(fh)
 	var tree_scroll := ScrollContainer.new()
 	tree_scroll.position = Vector2(12, 40)
-	tree_scroll.size = Vector2(400, 360)
+	tree_scroll.size = Vector2(400, 396)
+	tree_scroll.scroll_deadzone = 10
 	tree_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	right.add_child(tree_scroll)
 	var tree := VBoxContainer.new()
@@ -138,9 +132,14 @@ func _build() -> void:
 	tree_scroll.add_child(tree)
 	_archive(tree, c)
 	_tree(tree, c, sheet)
-	var codex := UIKit.ghost_button("打开血脉图鉴", 180, 44)
+	var crest := CKPageKit.button(Locale.t("lb_dos_crest"), false, 188)
+	crest.name = "CrestPreview"
+	crest.position = Vector2(16, 448)
+	crest.pressed.connect(_show_crest)
+	right.add_child(crest)
+	var codex := CKPageKit.button(Locale.t("lb_dos_codex"), false, 188)
 	codex.name = "OpenCodex"
-	codex.position = Vector2(220, 416)
+	codex.position = Vector2(220, 448)
 	if _bloodline_open():
 		codex.pressed.connect(func():
 			Sfx.click()
@@ -259,3 +258,75 @@ func _person_chip(p: CKCharacter, focus: CKCharacter, focus_states: Dictionary) 
 		GameState.set_meta("dossier_id", captured.id)
 		CKNav.go("res://scenes/hub/unit_dossier.tscn"))
 	return b
+
+
+## Life panel (audit #16): class, age, HP, six stats and whether they can deploy. Always shown,
+## so the middle column is never empty while the bloodline part is still locked.
+func _life(mid: Control, c: CKCharacter) -> void:
+	var h := UIKit.mono("LIFE", 9, UIKit.ACCENT)
+	h.position = Vector2(16, 14)
+	mid.add_child(h)
+	var box := VBoxContainer.new()
+	box.name = "LifePanel"
+	box.position = Vector2(16, 34)
+	box.size = Vector2(408, 206)
+	box.add_theme_constant_override("separation", 6)
+	mid.add_child(box)
+	if c == null:
+		box.add_child(CKPageKit.text(Locale.t("lb_dos_nobody"), UIKit.TEXT_FAINT, 13, 400))
+		return
+	var job := str(GameState.get_job(c.job_id).get("name", c.job_id))
+	box.add_child(CKPageKit.text(Locale.t("lb_dos_line", [job, c.age, c.hp, c.max_hp]), UIKit.TEXT, 15, 400))
+	var grid := GridContainer.new()
+	grid.columns = 3
+	grid.add_theme_constant_override("h_separation", 10)
+	grid.add_theme_constant_override("v_separation", 6)
+	box.add_child(grid)
+	for k in CKCharacter.STAT_KEYS:
+		var cell := PanelContainer.new()
+		cell.custom_minimum_size = Vector2(128, 40)
+		var sb := UIKit.flat_box(Color(1, 1, 1, 0.03), Color(1, 1, 1, 0.12), 8)
+		sb.content_margin_left = 10
+		cell.add_theme_stylebox_override("panel", sb)
+		var l := UIKit.body_label("%s  %d / %d" % [Locale.t("stat_" + k), int(c.stats.get(k, 0)), int(c.apt_max.get(k, 20))], UIKit.TEXT, 14)
+		l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		cell.add_child(l)
+		grid.add_child(cell)
+	var why := CKInjury.deploy_block_reason(c) if c.in_roster else ""
+	var status := Locale.t("lb_dos_ok") if why == "" else Locale.t("lb_dos_blocked", [why])
+	if not c.in_roster:
+		status = Locale.t("lb_dos_home")
+	box.add_child(CKPageKit.text(status, UIKit.OK if why == "" else UIKit.DANGER, 13, 400))
+
+## Company crest at full size (audit #56). Back / tap outside closes it.
+func _show_crest() -> void:
+	Sfx.click()
+	var layer := Control.new()
+	layer.name = "CrestOverlay"
+	layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	layer.size = Vector2(1280, 720)
+	layer.mouse_filter = Control.MOUSE_FILTER_STOP
+	var dim := ColorRect.new()
+	dim.color = Color(UIKit.BG, 0.88)
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.add_child(dim)
+	var tr := TextureRect.new()
+	tr.texture = CKHeraldryRender.compose_texture(GameState.banner_spec, 320, 440)
+	tr.position = Vector2(480, 96)
+	tr.size = Vector2(320, 440)
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	layer.add_child(tr)
+	var close := CKPageKit.button(Locale.t("lb_close"), true, 200)
+	close.position = Vector2(540, 560)
+	close.pressed.connect(func(): CKNav.pop_overlay(layer); layer.queue_free())
+	layer.add_child(close)
+	layer.gui_input.connect(func(e: InputEvent):
+		if e is InputEventMouseButton and (e as InputEventMouseButton).pressed:
+			CKNav.pop_overlay(layer)
+			layer.queue_free())
+	add_child(layer)
+	CKNav.push_overlay(layer)
+	UIFX.pop_in(tr)
