@@ -8,6 +8,23 @@ static func next_id(prefix: String = "c") -> String:
 	# Sequence only. A wall-clock suffix made births and the century sim depend on the minute.
 	return "%s_%d" % [prefix, _id_seq]
 
+## Largest numeric suffix among ids such as "hire_4" (0 when none).
+static func max_seq(ids: Array) -> int:
+	var top := 0
+	for raw in ids:
+		var s := str(raw)
+		var cut := s.rfind("_")
+		if cut < 0:
+			continue
+		var tail := s.substr(cut + 1)
+		if tail.is_valid_int():
+			top = maxi(top, int(tail))
+	return top
+
+## After a load: never hand out an id that a saved person already holds (audit P0-3).
+static func restore_seq(saved: int, ids: Array) -> void:
+	_id_seq = maxi(saved, max_seq(ids))
+
 static func make_leader(given: String, surname: String, crest_color: String) -> CKCharacter:
 	var c := CKCharacter.new()
 	c.id = next_id("leader")
@@ -26,6 +43,7 @@ static func make_leader(given: String, surname: String, crest_color: String) -> 
 	_roll_stats_from_blood(c)
 	c.salary = 0
 	c.recalc_hp()
+	c.hp = c.max_hp
 	# skills granted by GameState.grant_job_skills after insert
 	GameState.crest_color = crest_color
 	GameState.surname = surname
@@ -49,6 +67,7 @@ static func make_shilei_wantan() -> CKCharacter:
 	# 低于灯影的 6。月饷 4 会把种子 91 的第 30 年银压出 400 的下限。
 	c.salary = 3
 	c.recalc_hp()
+	c.hp = c.max_hp
 	return c
 
 static func _supporting_name(cast_key: String) -> String:
@@ -76,6 +95,7 @@ static func make_ally_tutor() -> CKCharacter:
 	c.stats["skl"] = maxi(c.stats["skl"], 10)
 	c.stats["agi"] = maxi(c.stats["agi"], 10)
 	c.recalc_hp()
+	c.hp = c.max_hp
 	c.salary = 6
 	return c
 
@@ -108,6 +128,7 @@ static func make_tavern_candidate(rng: RandomNumberGenerator, roll: Dictionary =
 	_roll_stats_from_blood(c)
 	c.salary = 6 + c.rank_index() * 3 + c.level + CKBloodline.salary_premium(c)
 	c.recalc_hp()
+	c.hp = c.max_hp
 	return c
 
 static func make_marriage_candidate(rng: RandomNumberGenerator, prefer_rank: String = "baron", nation_id: String = "") -> CKCharacter:
@@ -130,6 +151,7 @@ static func make_marriage_candidate(rng: RandomNumberGenerator, prefer_rank: Str
 	c.rank = str(mr.rank)
 	_roll_stats_from_blood(c)
 	c.recalc_hp()
+	c.hp = c.max_hp
 	var names = GameState.data_names
 	var g = c.gender
 	var given_list = names.get("given_m" if g == "m" else "given_f", ["无名"])

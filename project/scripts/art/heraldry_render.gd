@@ -9,6 +9,12 @@ static func compose_texture(spec: Dictionary, w: int = 160, h: int = 220, wave: 
 	return ImageTexture.create_from_image(compose(spec, w, h, wave, mode))
 
 static func compose(spec: Dictionary, w: int = 160, h: int = 220, wave: float = 0.0, mode: String = "banner") -> Image:
+	# Art pass 2: anti-aliased vector renderer (ThorVG). Lazy-loaded so boot stays lean.
+	var vec_script: GDScript = load("res://scripts/art/heraldry_vector.gd") as GDScript
+	if vec_script != null:
+		var vec: RefCounted = vec_script.new()
+		if not vec.call("lib").is_empty():
+			return vec.call("render", spec, w, h, mode, wave)
 	var s := CKHeraldry.normalize(spec)
 	match mode:
 		"shield":
