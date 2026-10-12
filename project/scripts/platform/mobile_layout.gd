@@ -173,13 +173,9 @@ static func _first_scroll(parent: Node) -> ScrollContainer:
 			return child as ScrollContainer
 	return null
 
-static func hit_exception(button: Node) -> String:
-	# NavRail is a 142px stitch column. 44px rows push the last entry out of the first screen.
-	var node: Node = button
-	while node:
-		if str(node.name) == "NavRail":
-			return "NavRail keeps the stitch row height; the column scrolls"
-		node = node.get_parent()
+static func hit_exception(_button: Node) -> String:
+	# P0-MOB-01 (ux-navigation-v1 §6.3): no exemptions. The NavRail rows grow to hit_px() and the
+	# column scrolls. Kept as a hook so a future exemption must name its reason here.
 	return ""
 
 static func _has_long_list(root: Control) -> bool:
