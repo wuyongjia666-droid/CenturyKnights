@@ -47,11 +47,37 @@ static func add_markers(layer: Control, nation: String, map_size: Vector2, busy:
 			b.add_child(ring)
 			b.move_child(ring, 0)
 			UIFX.breathe(ring, 0.25, 0.9)
+		_owner_chip(b, own, int(mk.get("garrison", 0)))
 		var sid := str(mk.id)
 		b.pressed.connect(func(): on_press.call(sid))
 		layer.add_child(b)
 		n += 1
 	return n
+
+## WS-C #45: owner colour + garrison under each flag, so the plate reads without opening the modal.
+static func owner_color(own: String) -> Color:
+	if own == CKTerritory.OWN:
+		return UIKit.OK
+	if own.begins_with("rival:"):
+		return UIKit.DANGER
+	return UIKit.TEXT_DIM
+
+static func owner_text(own: String, garrison: int) -> String:
+	if own == CKTerritory.OWN:
+		return Locale.t("wsc_t_own") % garrison
+	if own.begins_with("rival:"):
+		return Locale.t("wsc_t_rival")
+	return Locale.t("wsc_t_free")
+
+static func _owner_chip(b: Button, own: String, garrison: int) -> void:
+	var l := UIKit.body_label(owner_text(own, garrison), owner_color(own), 9)
+	l.name = "OwnerChip"
+	l.autowrap_mode = TextServer.AUTOWRAP_OFF
+	l.add_theme_color_override("font_outline_color", Color(0.02, 0.03, 0.05, 0.95))
+	l.add_theme_constant_override("outline_size", 3)
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	l.position = Vector2(-6, FLAG.y + 6)
+	b.add_child(l)
 
 ## Owned-site count for the world-view region chip ("" when none).
 static func region_badge(nation: String) -> String:
