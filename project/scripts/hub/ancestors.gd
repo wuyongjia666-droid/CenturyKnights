@@ -6,7 +6,8 @@ var _list: VBoxContainer
 var _honor: Label
 
 func _ready() -> void:
-	CKPageKit.shell(self, Locale.t("ancestor_title"), "ANCESTOR STELE", Locale.t("ancestor_title"), Locale.t("lb_anc_desc"))
+	UIKit.make_themed_bg(self, "castle")
+	CKPageKit.shell(self, Locale.t("ancestor_title"), "ANCESTOR STELE", Locale.t("ancestor_title"), Locale.t("lb_anc_desc"), "none")
 	var side := CKPageKit.card(self, Rect2(42, CKPageKit.TOP + 8, 360, 520), "HonorCard")
 	CKPageKit.card_head(side, Locale.t("lb_anc_honor_head"), "FAMILY HONOR")
 	_honor = UIKit.title_label("", 40, UIKit.ACCENT)

@@ -10,8 +10,12 @@ const BOTTOM := 676.0   ## last content pixel above the footer / feedback line
 const PAD := 42.0
 
 ## Top bar, page head, optional desktop footer. Back goes through CKNav (one back action).
-static func shell(page: Control, context: String, eyebrow: String, title: String, desc: String = "") -> void:
-	UIKit.void_bg(page)
+static func shell(page: Control, context: String, eyebrow: String, title: String, desc: String = "", theme: String = "") -> void:
+	## theme "none": the page already painted its own backdrop (UIKit.make_themed_bg(self, ...)).
+	if theme == "":
+		UIKit.void_bg(page)
+	elif theme != "none":
+		UIKit.make_themed_bg(page, theme)
 	UIKit.top_bar(page, context, [[Locale.t("lb_chip_date"), Calendar.label(), UIKit.TEXT_DIM]], Locale.t("btn_back"), func(): back(page))
 	var head := UIKit.page_head(page, PAD, 50, eyebrow, title, "", "", "", 22)
 	head.name = "PageHead"

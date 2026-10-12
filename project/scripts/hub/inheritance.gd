@@ -1,171 +1,131 @@
 extends Control
-## 嗣位冲突：互动抉择场景（偏武/偏文/偏商继承人旁注 vs 朔影家）
+## Succession clash with Shuoying (line B, audit #29). Each answer is a card with its
+## consequence written out. One answer per year: after that the page says when they return.
+## Ambition offer (stele honor) still comes first when the leader has to choose one.
 
 const _Amb := preload("res://scripts/characters/ambitions.gd")
+const CHOICES := ["steel", "soft", "delay"]
 
-var _body: RichTextLabel
-var _actions: VBoxContainer
-var _msg: Label
-var _step: int = 0
 var _heir: CKCharacter
-var _choice: String = ""
+var _body: Label
+var _cards: HBoxContainer
+var _msg: Label
 
 func _ready() -> void:
 	UIKit.make_themed_bg(self, "inheritance")
-	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/inheritance_banner.png"):
-		var _bn := TextureRect.new()
-		_bn.texture = load("res://assets/art/ui/inheritance_banner.png")
-		_bn.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		_bn.stretch_mode = TextureRect.STRETCH_SCALE
-		_bn.position = Vector2(0, 0)
-		_bn.size = Vector2(1280, 52)
-		_bn.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(_bn)
-		UIFX.banner_shimmer(_bn, 3.8)
-	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/hub_banner_strip.png"):
-		var strip := TextureRect.new()
-		strip.texture = load("res://assets/art/ui/hub_banner_strip.png")
-		strip.position = Vector2(0, 0)
-		strip.custom_minimum_size = Vector2(1280, 48)
-		strip.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		strip.stretch_mode = TextureRect.STRETCH_SCALE
-		strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(strip)
-
-	UIFX.page_enter(self)
-	UIFX.fade_in(self, 0.3)
-	Music.play_hub()
-	UIFX.wire_tree(self)
-	var t = UIKit.make_label("嗣位冲突 · 继承权旁注", true)
-	t.position = Vector2(40, 16)
-	add_child(t)
-	var panel = UIKit.make_panel()
-	panel.position = Vector2(80, 90)
-	panel.custom_minimum_size = Vector2(1120, 480)
-	add_child(panel)
-	_body = RichTextLabel.new()
-	_body.bbcode_enabled = true
-	_body.custom_minimum_size = Vector2(1080, 300)
-	_body.add_theme_color_override("default_color", UIKit.TEXT)
-	panel.add_child(_body)
-	_actions = VBoxContainer.new()
-	_actions.position = Vector2(20, 320)
-	_actions.add_theme_constant_override("separation", 10)
-	panel.add_child(_actions)
-	_msg = UIKit.make_label("")
-	_msg.position = Vector2(40, 590)
-	add_child(_msg)
-	var back = UIKit.make_button(Locale.t("btn_back"), 120)
-	back.position = Vector2(40, 640)
-	back.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
-	add_child(back)
-	var rivals = UIKit.make_button("回敌宅", 120)
-	rivals.position = Vector2(180, 640)
-	rivals.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/rival_houses.tscn"))
-	add_child(rivals)
+	CKPageKit.shell(self, Locale.t("lb_inh_ctx"), "SUCCESSION", Locale.t("lb_inh_title"), Locale.t("lb_inh_desc"), "none")
+	var board := CKPageKit.card(self, Rect2(42, CKPageKit.TOP + 8, 1196, 512), "InheritBoard")
+	_body = CKPageKit.text("", UIKit.TEXT, 15, 1150)
+	_body.name = "InheritText"
+	_body.position = Vector2(22, 18)
+	_body.size = Vector2(1150, 150)
+	board.add_child(_body)
+	_cards = HBoxContainer.new()
+	_cards.name = "Answers"
+	_cards.position = Vector2(22, 180)
+	_cards.add_theme_constant_override("separation", 14)
+	board.add_child(_cards)
+	_msg = CKPageKit.feedback(self)
 	_pick_heir()
 	_show()
+	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "SUCCESSION · FROST")
+	UIFX.page_enter(self)
 
 func _pick_heir() -> void:
 	_heir = null
 	for ch in GameState.characters.values():
-		if ch.alive and (ch.is_child or GameState.lineage_path.has(ch.id)):
-			if ch.age >= 10:
-				_heir = ch
-				break
+		if ch.alive and (ch.is_child or GameState.lineage_path.has(ch.id)) and ch.age >= 10:
+			_heir = ch
+			break
 	if _heir == null:
 		_heir = GameState.get_leader()
 
-func _show_offer(leader: CKCharacter) -> void:
-	var lines: PackedStringArray = PackedStringArray()
-	lines.append(Locale.t("amb_offer_body", [leader.name]))
-	for id in _Amb.open_offer(leader):
-		var sid := str(id)
-		lines.append(Locale.t("amb_" + sid + "_name") + " — " + Locale.t("amb_" + sid + "_blurb"))
-	if int(_Amb.honor_bonus().get("stele", 0)) > 0:
-		lines.append(Locale.t("amb_honor", [int(_Amb.honor_bonus().get("stele", 0))]))
-	_body.text = "\n".join(lines)
-	var gap := Control.new()
-	gap.custom_minimum_size = Vector2(0, 150)
-	gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_actions.add_child(gap)
-	for id in _Amb.open_offer(leader):
-		_add_offer(str(id))
-
-
-func _add_offer(id: String) -> void:
-	var b = UIKit.make_accent_button(Locale.t("amb_" + id + "_name"), 520)
-	b.name = "Ambition_" + id
-	b.pressed.connect(func(): _pick_ambition(id))
-	_actions.add_child(b)
-
-
-func _pick_ambition(id: String) -> void:
-	if not _Amb.choose(id):
-		return
-	_msg.text = Locale.t("amb_chosen", [Locale.t("amb_" + id + "_name")])
-	_show()
-
-
-func _clear_actions() -> void:
-	for c in _actions.get_children():
-		c.queue_free()
-
-func _add(text: String, cb: Callable) -> void:
-	var b = UIKit.make_accent_button(text, 520)
-	b.pressed.connect(cb)
-	_actions.add_child(b)
+func _done_this_year() -> bool:
+	return int(GameState.house_mods.get("inherit_answer_year", 0)) == Calendar.year
 
 func _show() -> void:
-	_clear_actions()
+	CKPageKit.clear(_cards)
 	var leader := GameState.get_leader()
 	if leader != null and _Amb.needs_choice():
 		_show_offer(leader)
 		return
-	var hname = _heir.name if _heir else "（无嗣）"
-	var path = str(GameState.lineage_path.get(_heir.id, "")) if _heir else ""
-	var pn = {"martial": "偏武", "scholar": "偏文", "merchant": "偏商"}.get(path, "未择路")
-	match _step:
-		0:
-			_body.text = "[b]朔影家来使[/b]\n\n「灰旗既可执宴，就该公开嗣位旁注。」\n当前焦点人物：%s（道路：%s）\n\n他们要你们在三种回应里选一条——都会写入族谱纪事。" % [hname, pn]
-			_add("强硬：以战技与旗印压场", func(): _choice = "steel"; _step = 1; _show())
-			_add("怀柔：承认并席、交换旁注", func(): _choice = "soft"; _step = 1; _show())
-			_add("回避：推迟到第十三章对决", func(): _choice = "delay"; _step = 1; _show())
-		1:
-			match _choice:
-				"steel":
-					_body.text = "[b]强硬回应[/b]\n\n厅上旗印砸案。朔影家退半步，却记下仇恨。\n效果：灰烬声望+3；朔影立场若非并席则趋向对峙；开战准备度上升。"
-					_add("落定强硬旁注", func(): _resolve())
-				"soft":
-					_body.text = "[b]怀柔回应[/b]\n\n双姓共席文书草签。偏商子嗣更易被灯市会接受。\n效果：银-20；朔影→对峙/中立；清河好感。"
-					_add("落定怀柔旁注", func(): _resolve())
-				"delay":
-					_body.text = "[b]回避回应[/b]\n\n「对决书上见。」余波推到旷野。\n效果：战技点+1；建议尽快打第十三章嗣位对决。"
-					_add("落定回避旁注", func(): _resolve())
-			_add("返回重选", func(): _step = 0; _show())
+	var hname := _heir.name if _heir else Locale.t("lb_inh_noheir")
+	var path := str(GameState.lineage_path.get(_heir.id, "")) if _heir else ""
+	var pz := Locale.t("lb_path_" + path) if path != "" else Locale.t("lb_path_none")
+	if _done_this_year():
+		_body.text = Locale.t("lb_inh_done", [str(GameState.house_mods.get("inherit_answer_zh", "")), Calendar.year + 1])
+		_cards.add_child(CKPageKit.button(Locale.t("lb_inh_to_rivals"), false, 260))
+		(_cards.get_child(0) as Button).pressed.connect(func(): CKNav.go("res://scenes/hub/rival_houses.tscn"))
+		UIFX.wire_tree(_cards)
+		return
+	_body.text = Locale.t("lb_inh_envoy", [hname, pz])
+	for k in CHOICES:
+		var r := CKPageKit.row(UIKit.ACCENT, 300)
+		var p: PanelContainer = r[0]
+		p.custom_minimum_size = Vector2(372, 300)
+		p.name = "Answer_" + k
+		var v: VBoxContainer = r[1]
+		v.add_child(UIKit.title_label(Locale.t("lb_inh_%s" % k), 18))
+		v.add_child(CKPageKit.text(Locale.t("lb_inh_%s_story" % k), UIKit.TEXT_DIM, 13, 340))
+		v.add_child(CKPageKit.text(Locale.t("lb_inh_%s_fx" % k), UIKit.OK, 13, 340))
+		var sp := Control.new()
+		sp.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		v.add_child(sp)
+		var b := CKPageKit.button(Locale.t("lb_inh_pick"), k == "steel", 340)
+		b.name = "Pick_" + k
+		if k == "soft" and GameState.silver < 20:
+			CKPageKit.lock(b, Locale.t("lb_short_silver", [20 - GameState.silver]))
+		b.pressed.connect(func(): _resolve(k))
+		v.add_child(b)
+		_cards.add_child(p)
+	UIFX.wire_tree(_cards)
 
-func _resolve() -> void:
-	match _choice:
+func _show_offer(leader: CKCharacter) -> void:
+	var lines: PackedStringArray = PackedStringArray()
+	lines.append(Locale.t("amb_offer_body", [leader.name]))
+	if int(_Amb.honor_bonus().get("stele", 0)) > 0:
+		lines.append(Locale.t("amb_honor", [int(_Amb.honor_bonus().get("stele", 0))]))
+	_body.text = "\n".join(lines)
+	for id in _Amb.open_offer(leader):
+		var sid := str(id)
+		var r := CKPageKit.row(UIKit.ACCENT, 260)
+		var p: PanelContainer = r[0]
+		p.custom_minimum_size = Vector2(372, 260)
+		var v: VBoxContainer = r[1]
+		v.add_child(UIKit.title_label(Locale.t("amb_" + sid + "_name"), 17))
+		v.add_child(CKPageKit.text(Locale.t("amb_" + sid + "_blurb"), UIKit.TEXT_DIM, 13, 340))
+		var sp := Control.new()
+		sp.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		v.add_child(sp)
+		var b := CKPageKit.button(Locale.t("lb_inh_amb_pick"), true, 340)
+		b.name = "Ambition_" + sid
+		b.pressed.connect(func(): _pick_ambition(sid))
+		v.add_child(b)
+		_cards.add_child(p)
+	UIFX.wire_tree(_cards)
+
+func _pick_ambition(id: String) -> void:
+	if not _Amb.choose(id):
+		return
+	CKPageKit.say(_msg, Locale.t("amb_chosen", [Locale.t("amb_" + id + "_name")]), true)
+	_show()
+
+func _resolve(k: String) -> void:
+	match k:
 		"steel":
 			GameState.add_rep("ashland", 3)
 			if GameState.get_rival_stance("shuoying") == "hostile":
 				GameState.set_rival_stance("shuoying", "wary")
-			GameState.add_lineage_event("嗣位冲突：强硬压场（%s）" % (_heir.name if _heir else "?"))
-			_msg.text = "强硬旁注已写。可回主线推进战役。"
 		"soft":
-			if GameState.silver >= 20:
-				GameState.silver -= 20
+			GameState.silver -= 20
 			GameState.set_rival_stance("shuoying", "neutral" if GameState.get_rival_stance("shuoying") != "hostile" else "wary")
 			GameState.set_rival_stance("qinghe", "cordial")
-			GameState.add_lineage_event("嗣位冲突：怀柔并席草签")
-			_msg.text = "怀柔旁注已写。清河宅改为并席。"
 		"delay":
 			GameState.add_skill_point(1)
-			GameState.add_lineage_event("嗣位冲突：推迟至对决")
-			_msg.text = "回避旁注已写。战技点+1。请打第十三章。"
+	GameState.add_lineage_event(Locale.t("lb_inh_log", [Locale.t("lb_inh_%s" % k), _heir.name if _heir else "?"]))
+	GameState.house_mods["inherit_answer_year"] = Calendar.year
+	GameState.house_mods["inherit_answer_zh"] = Locale.t("lb_inh_%s" % k)
 	Sfx.lineage_chime()
 	GameState.save_game()
-	_step = 0
-	_clear_actions()
-	_add("再议一轮", func(): _show())
-	_add("回堡", func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
+	CKPageKit.say(_msg, Locale.t("lb_inh_%s_ok" % k), true)
+	_show()
