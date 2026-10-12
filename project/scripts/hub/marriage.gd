@@ -134,9 +134,12 @@ func _build() -> void:
 	row.add_child(duty_btn)
 	var rite := UIKit.ghost_button("族谱授旗礼", 108, 40)
 	rite.name = "FlagRite"
-	rite.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/lineage_rite.tscn"))
+	rite.pressed.connect(func(): CKNav.go("res://scenes/hub/lineage_rite.tscn"))
 	row.add_child(rite)
-	var refresh := UIKit.ghost_button("再议   [B]", 108, 40)
+	var refresh_text := "再议   [B]"
+	if DeviceProfile.is_mobile():
+		refresh_text = refresh_text.split(" ")[0]
+	var refresh := UIKit.ghost_button(refresh_text, 108, 40)
 	refresh.tooltip_text = Locale.t("ux_marriage_reroll_tip")
 	refresh.pressed.connect(func():
 		var nid := _post_nation if _post_nation != "" else CKFamilyState.active_marriage_nation(GameState)
@@ -910,7 +913,7 @@ func _present_wed(text: String, ok: bool) -> void:
 
 func _back() -> void:
 	if str(GameState.chapter0_beat) in ["0.4", "0.45", "0.5"] and not GameState.flag("chapter0_done"):
-		get_tree().change_scene_to_file("res://scenes/story/chapter0.tscn")
+		CKNav.replace("res://scenes/story/chapter0.tscn")
 	else:
-		get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
+		CKNav.up()
 
