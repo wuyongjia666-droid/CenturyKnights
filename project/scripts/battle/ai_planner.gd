@@ -70,7 +70,7 @@ static func plan(board: Dictionary) -> Array:
 		if tier >= 1:
 			act = _retreat(e, kills, board, threat, blocked, w, h)
 			if act.is_empty():
-				act = _healer_hold(e, enemies, players, kills, board, threat, blocked, w, h)
+				act = _healer_hold(e, enemies, kills, board, threat, blocked, w, h)
 			if act.is_empty():
 				act = _guard(e, enemies, players, kills, guarded, blocked, w, h)
 		if act.is_empty():
@@ -142,7 +142,7 @@ static func _retreat(e: Dictionary, kills: Dictionary, board: Dictionary, threat
 
 
 ## A healer with no kill stays out of reach behind its line, close to the most hurt ally.
-static func _healer_hold(e: Dictionary, enemies: Array, players: Array, kills: Dictionary, board: Dictionary, threat: Dictionary, blocked: Dictionary, w: int, h: int) -> Dictionary:
+static func _healer_hold(e: Dictionary, enemies: Array, kills: Dictionary, board: Dictionary, threat: Dictionary, blocked: Dictionary, w: int, h: int) -> Dictionary:
 	if not bool(e.get("healer", false)) or not (kills.get(str(e.get("id", "")), []) as Array).is_empty():
 		return {}
 	var anchor := {}

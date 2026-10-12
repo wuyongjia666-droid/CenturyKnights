@@ -145,7 +145,8 @@ static func present(host, win: bool, purse: int, sp_gain: int, exp_before: Dicti
 	keys.add_theme_constant_override("separation", 6)
 	root.add_child(keys)
 	var back_word := Locale.t("shell_7c9e016b") if host._world_enc else Locale.t("shell_1e62632d")
-	for kh in ([["A", Locale.t("shell_22841003")], ["ESC", back_word]] if win else ([["A", back_word]] if host._world_enc else [["A", Locale.t("shell_55cfd979")], ["ESC", Locale.t("defeat_back_castle")]])):
+	var lose_keys: Array = [["A", back_word]] if host._world_enc else [["A", Locale.t("shell_55cfd979")], ["ESC", Locale.t("defeat_back_castle")]]
+	for kh in ([["A", Locale.t("shell_22841003")], ["ESC", back_word]] if win else lose_keys):
 		keys.add_child(UIKit.keycap(str(kh[0])))
 		var kl := UIKit.body_label(str(kh[1]), UIKit.TEXT_DIM, 11)
 		kl.autowrap_mode = TextServer.AUTOWRAP_OFF
