@@ -1996,6 +1996,7 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 		if sk.get("ignore_terrain_avo"):
 			tid = "plain"
 		extras["hit_mod"] = int(sk.get("hit_mod", 0))
+	extras["hit_mod"] = int(extras.get("hit_mod", 0)) + CKYanZhan.strike_bonus(self, atk, def)
 	var result = BattleRules.roll_attack(atk.char, def.char, tid, rng, extras)
 	if skill_id != "" and sk.get("type") == "offense":
 		# 战技：撤销普通掷骰伤害后，按技能倍率重掷

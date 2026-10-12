@@ -500,6 +500,13 @@ func _tab_overview() -> void:
 		var sst := UIKit.tag_chip(stxt, UIKit.OK if done else (UIKit.ACCENT if running else UIKit.TEXT_DIM), done)
 		sst.position = Vector2(18, 440)
 		p.add_child(sst)
+	## v9.2 本城之事 / 职印：一个 48 高的按钮，点开浮层
+	var aff := UIKit.ghost_button(CKCityAffairs.label(city), 384, 48)
+	aff.name = "AffairBtn"
+	aff.clip_text = true
+	aff.position = Vector2(18, 510)
+	aff.pressed.connect(open_affairs)
+	p.add_child(aff)
 	var p2 := _panel(Rect2(432, 0, 416, 576))
 	_head(p2, Vector2(18, 14), "可在此交付", "TURN IN HERE")
 	var v2 := _scroll(p2, Rect2(18, 56, 384, 236))
@@ -1270,3 +1277,82 @@ func _tab_sundry() -> void:
 func _sundry_result(r: Dictionary) -> void:
 	_toast_msg(str(r.get("msg", "")), UIKit.OK if bool(r.get("ok", false)) else UIKit.DANGER)
 	_refresh_all()
+
+# ── 本城之事 · 职印 浮层 ─────────────────────────────
+var _aff_overlay: Control
+
+
+func open_affairs(msg: String = "", ok: bool = true) -> void:
+	if _aff_overlay != null and is_instance_valid(_aff_overlay):
+		_aff_overlay.queue_free()
+	var o := ColorRect.new()
+	o.name = "AffairOverlay"
+	o.color = Color(0.04, 0.06, 0.1, 0.92)
+	o.set_anchors_preset(Control.PRESET_FULL_RECT)
+	o.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(o)
+	_aff_overlay = o
+	var m := MarginContainer.new()
+	m.set_anchors_preset(Control.PRESET_FULL_RECT)
+	for side in ["left", "right", "top", "bottom"]:
+		m.add_theme_constant_override("margin_" + side, 32)
+	o.add_child(m)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 10)
+	m.add_child(v)
+	var head := HBoxContainer.new()
+	v.add_child(head)
+	var t := UIKit.title_label("%s · 本城之事" % str(World.node(city).get("name", city)), 18)
+	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	head.add_child(t)
+	var close := UIKit.ghost_button("关上", 120, 48)
+	close.pressed.connect(func():
+		o.queue_free()
+		_aff_overlay = null
+		_refresh_all())
+	head.add_child(close)
+	if msg != "":
+		var ml := UIKit.body_label(msg, UIKit.OK if ok else UIKit.DANGER, 14)
+		ml.name = "AffairMsg"
+		ml.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		v.add_child(ml)
+	var lab := UIKit.body_label(CKCityAffairs.label(city), UIKit.TEXT, 15)
+	lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v.add_child(lab)
+	var chk: Dictionary = CKCityAffairs.can_do(city)
+	var go := UIKit.ghost_button("去办", 160, 48)
+	go.name = "AffairDo"
+	go.disabled = not bool(chk.get("ok", false))
+	v.add_child(go)
+	if not bool(chk.get("ok", false)):
+		v.add_child(UIKit.body_label(str(chk.get("msg", "")), UIKit.TEXT_DIM, 13))
+	go.pressed.connect(func():
+		var r := CKCityAffairs.do_affair(city)
+		open_affairs(str(r.get("msg", "")), bool(r.get("ok", false))))
+	var rows: Array = CKJobSeals.rows_for_city(city)
+	if rows.is_empty():
+		v.add_child(UIKit.body_label("这座城不盖职印。", UIKit.TEXT_DIM, 13))
+	for r in rows:
+		var jid := str(r.get("job", ""))
+		v.add_child(UIKit.body_label("「%s」印：%s 可以在这里盖，盖了回堡里就能转「%s」。" % [str(r.get("name", jid)), str(GameState.get_job(str(r.get("from", ""))).get("name", "")), str(r.get("name", jid))], UIKit.ACCENT, 14))
+		var any := false
+		for c in GameState.roster():
+			if c == null or not c.alive or c.job_id != str(r.get("from", "")):
+				continue
+			any = true
+			var row := HBoxContainer.new()
+			row.add_theme_constant_override("separation", 8)
+			var g: Dictionary = CKJobSeals.can_stamp(c, jid, city)
+			var b := UIKit.ghost_button("给%s盖印" % c.name, 200, 48)
+			b.disabled = not bool(g.get("ok", false))
+			var cid := str(c.id)
+			b.pressed.connect(func():
+				var rr := CKJobSeals.stamp(GameState.characters[cid], jid, city)
+				open_affairs(str(rr.get("msg", "")), bool(rr.get("ok", false))))
+			row.add_child(b)
+			if not bool(g.get("ok", false)):
+				row.add_child(UIKit.body_label(str(g.get("msg", "")), UIKit.TEXT_DIM, 13))
+			v.add_child(row)
+		if not any:
+			v.add_child(UIKit.body_label("队里现在没有%s。" % str(GameState.get_job(str(r.get("from", ""))).get("name", "")), UIKit.TEXT_DIM, 13))
+

@@ -51,3 +51,27 @@ static func hit_bonus(target: Object) -> int:
 		return BLOODLESS_HIT
 	## 有真血谱、无伪造：盏亮但不额外加命中（验明而已）
 	return 0
+
+
+## 战斗接入（最小改动）：验盏每场第一次出手打谁，就给谁点盏；之后我方打它都加命中。
+## battle 用 meta 记本场目标，换场自然清掉。返回本次要加到 hit_mod 上的数。
+const META_TARGET := "yan_zhan_target"
+
+
+static func strike_bonus(battle: Object, atk_unit, def_unit) -> int:
+	if battle == null or atk_unit == null or def_unit == null:
+		return 0
+	var atk = atk_unit.get("char")
+	var dfn = def_unit.get("char")
+	if atk == null or dfn == null:
+		return 0
+	if str(atk_unit.get("team")) != "player":
+		return 0
+	if not battle.has_meta(META_TARGET) and str(atk.get("job_id")) == "yan_zhan":
+		battle.set_meta(META_TARGET, str(dfn.get("id")))
+		var b := hit_bonus(dfn)
+		if battle.has_method("_log"):
+			battle._log("【验盏】%s 点了盏：%s" % [str(atk.get("name")), "伪造的爵位，全队命中 +8" if b == FORGED_HIT else ("没有血谱，全队命中 +4" if b > 0 else "血谱是真的，盏亮了但不加命中")])
+	if battle.has_meta(META_TARGET) and str(battle.get_meta(META_TARGET)) == str(dfn.get("id")):
+		return hit_bonus(dfn)
+	return 0
