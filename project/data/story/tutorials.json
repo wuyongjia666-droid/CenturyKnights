@@ -1,6 +1,7 @@
 {
   "year_one": ["deploy", "roster", "tavern", "hourglass", "settings", "train"],
   "unlocks": [
+    {"flag": "chapter0_done", "entries": ["quests", "atlas"]},
     {"flag": "e1_01_fought", "entries": ["skills"]},
     {"flag": "e1_04_fought", "entries": ["market", "atlas"]},
     {"flag": "e1_05_fought", "entries": ["forge"]},

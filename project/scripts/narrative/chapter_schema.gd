@@ -5,6 +5,7 @@ extends RefCounted
 const OPS := [
 	"goto", "set_flag", "set_beat", "battle", "scene",
 	"advance", "fast_harvest", "journal", "ensure_reputation", "archive_notice",
+	"visit", "adjust", "skip_battle", "auto_recruit", "auto_marry",
 ]
 
 static func validate(data) -> Array:
@@ -101,7 +102,7 @@ static func _op(bid: String, step, errors: Array) -> void:
 		return
 	if op == "battle" and str(row.get("map", "")) == "":
 		errors.append(bid + " battle missing map")
-	if op == "scene" and str(row.get("path", "")) == "":
+	if (op == "scene" or op == "visit") and str(row.get("path", "")) == "":
 		errors.append(bid + " scene missing path")
 	if op == "set_flag" and str(row.get("flag", "")) == "":
 		errors.append(bid + " set_flag missing flag")

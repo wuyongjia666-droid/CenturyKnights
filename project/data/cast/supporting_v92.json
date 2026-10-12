@@ -84,6 +84,44 @@
       "name": "冷窑·收火",
       "cast_key": "shouhuo",
       "role": "循烟灰来要人的窑债主。"
+    },
+    {
+      "id": "huaili_jingbo",
+      "name": "槐里·景伯",
+      "surname": "槐里",
+      "given": "景伯",
+      "cast_key": "jingbo",
+      "role": "第零章的恩主。灰旗堡地契与北隘护路契在他家。年轻时在灰旗站过七天，功被记在旗帅一人名下。要把隘口之功写给孙女。不是反派。"
+    },
+    {
+      "id": "huaili_qinghe",
+      "name": "槐里·青禾",
+      "surname": "槐里",
+      "given": "青禾",
+      "cast_key": "qinghe",
+      "role": "景伯的孙女。颈有河图不亮。不要借来的灯。第零章的配偶候选之一，联姻廷里仍由玩家选人。"
+    },
+    {
+      "id": "yadu_hengzhou",
+      "name": "鸦渡·衡舟",
+      "surname": "鸦渡",
+      "given": "衡舟",
+      "cast_key": "hengzhou",
+      "role": "槐里家骑哨统领。平民出身，十年换一个錾在铜牌上的村名。收过路银，往东送。团长的镜子。"
+    },
+    {
+      "id": "shilei_qiaoniang",
+      "name": "石垒·荞娘",
+      "surname": "石垒",
+      "given": "荞娘",
+      "cast_key": "qiaoniang",
+      "role": "团长的娘。押出采石坡租契的人。"
+    },
+    {
+      "id": "voice_survivor",
+      "name": "活口",
+      "cast_key": "survivor",
+      "role": "隘口活口。左耳缺一块。见过收银的人。"
     }
   ]
 }

@@ -1,5 +1,7 @@
 # 第零章 · 平民立家弧光 v9.2
 
+> **已被取代（逐拍与台词）**：可玩序章按 `docs/story/prologue-novella.md` 改编，对照见 `docs/story/prologue-bible.md`。本稿第 11 节的事实约束仍然有效。
+
 > 状态：设计稿。用户已拍板骨架 A。只写文档，不改 `ch0.json`、测试、命名画面或名册代码。实现对白要等用户再点头。
 >
 > 可玩节拍以 `project/data/story/chapters/ch0.json` 为准。播放器锁的是这个文件。`project/data/chapter0.json` 是旧稿，圣经开头仍写着它的路径；本稿不把它当源。

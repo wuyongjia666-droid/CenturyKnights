@@ -33,6 +33,11 @@
 | `journal` | 王朝手记，并标记第零章完成 |
 | `ensure_reputation` | 春令试婚前把灰烬邦声望补到友善 |
 | `archive_notice` | 旧卷封存说明 |
+| `visit` | 打开委托板、舆图、沙漏等侧屏；侧屏的「返回」回到本章当前拍（`StoryCatalog.take_story_return`） |
+| `adjust` | 按差值改银、粮、士气、各邦声望，并可写一条日志 |
+| `skip_battle` / `auto_recruit` / `auto_marry` | 序章「教学从简」：战斗按胜结算、按银招一人、择一席入座 |
+
+`advance` 可带 `until_flag`（加 `max` 上限）：一直推进月份，直到旗标成立。台词可带 `stage`（`music` / `tension` / `camera` / `pace`）和 `expression`，见 `docs/story/prologue-bible.md` 第 8 节。台词里的 `{surname}` 换成玩家写下的姓。
 
 条件写在 `when`：`flag`、`not_flag`、`any_flag`、`not_any_flag`、`bloodline`、`companion`、`all`、`any`、`not`。节拍和单句台词也可以带 `when`。不满足的节拍顺着 `next` 跳过，不满足的台词不显示。
 

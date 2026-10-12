@@ -29,6 +29,38 @@
           "text": "隘口那个活口说的过路银，签在这里对得上。"
         },
         {
+          "id": "e1_01_echo_kept",
+          "speaker": "苇原·灯影",
+          "text": "隘口那个活口还跟着粮车。他说这种签，他在灰马的鞍袋里见过。",
+          "when": {
+            "flag": "pro_survivor_kept"
+          }
+        },
+        {
+          "id": "e1_01_echo_handed",
+          "speaker": "苇原·灯影",
+          "text": "隘口那个活口死在哨堡里。这支签和他靴筒里那支，是一对。",
+          "when": {
+            "flag": "pro_survivor_handed"
+          }
+        },
+        {
+          "id": "e1_01_echo_exposed",
+          "speaker": "斥候",
+          "text": "衡舟押去了白垣。东边收银的人换了一条线，换到渡口来了。",
+          "when": {
+            "flag": "pro_rival_exposed"
+          }
+        },
+        {
+          "id": "e1_01_echo_spared",
+          "speaker": "斥候",
+          "text": "鸦渡那个骑哨头不见了。有人看见他往东去，没带铜牌。",
+          "when": {
+            "flag": "pro_rival_spared"
+          }
+        },
+        {
           "id": "e1_01_l004",
           "speaker": "斥候",
           "text": "粮队今夜要过桥。桥税他们付过一次了。"

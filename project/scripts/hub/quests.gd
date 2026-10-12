@@ -66,7 +66,7 @@ func _ready() -> void:
 	add_child(_msg)
 	var back = UIKit.make_button(Locale.t("btn_back"))
 	back.position = Vector2(40, 640)
-	back.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
+	back.pressed.connect(func(): get_tree().change_scene_to_file(StoryCatalog.take_story_return("res://scenes/hub/castle_hub.tscn")))
 	add_child(back)
 
 func _accept(qid: String) -> void:
