@@ -1,94 +1,186 @@
 extends Control
-## v9.2 banner school UI. Nav plaque: Locale btn_train (旗塾).
+## Banner school (line B, audit #19). Three cards, left to right:
+## pupils (who can learn, tutor, lessons used this year) -> tutors for the picked pupil with
+## the expected gain -> class change for any roster member with each requirement shown.
+
+var _pupil := ""
+var _promo_id := ""
+var _kids: VBoxContainer
+var _tutors: VBoxContainer
+var _promo: VBoxContainer
+var _plan: Label
+var _teach: Button
 var _msg: Label
-var _pupil: String = ""
+
 func _ready() -> void:
-	UIKit.make_themed_bg(self, "train")
-	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/train_banner.png"):
-		var _bn := TextureRect.new()
-		_bn.texture = load("res://assets/art/ui/train_banner.png")
-		_bn.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		_bn.stretch_mode = TextureRect.STRETCH_SCALE
-		_bn.position = Vector2(0, 0)
-		_bn.size = Vector2(1280, 52)
-		_bn.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(_bn)
-		UIFX.banner_shimmer(_bn, 3.8)
-	UIFX.page_enter(self)
+	CKPageKit.shell(self, Locale.t("ux_qi_shu_title"), "BANNER SCHOOL", Locale.t("ux_qi_shu_title"), Locale.t("lb_train_desc", [CKTutor.pair_cap(), CKTutor.year_limit()]))
+	var a := CKPageKit.card(self, Rect2(42, CKPageKit.TOP + 8, 380, 512), "PupilCard")
+	CKPageKit.card_head(a, Locale.t("lb_train_pupils"), "PUPILS · 1-15")
+	_kids = CKPageKit.list(a, Rect2(14, 58, 352, 440), "DynPupils")
+	var b := CKPageKit.card(self, Rect2(434, CKPageKit.TOP + 8, 400, 512), "TutorCard")
+	CKPageKit.card_head(b, Locale.t("ux_qi_shu_tutors"), "TUTORS")
+	_tutors = CKPageKit.list(b, Rect2(14, 58, 372, 300), "DynTutors")
+	_plan = CKPageKit.text("", UIKit.TEXT, 14, 372)
+	_plan.name = "LessonPlan"
+	_plan.position = Vector2(14, 366)
+	_plan.size = Vector2(372, 74)
+	b.add_child(_plan)
+	_teach = CKPageKit.button(Locale.t("lb_train_teach"), true, 372)
+	_teach.name = "TeachButton"
+	_teach.position = Vector2(14, 448)
+	_teach.pressed.connect(_do_teach)
+	b.add_child(_teach)
+	var c := CKPageKit.card(self, Rect2(846, CKPageKit.TOP + 8, 392, 512), "PromoCard")
+	CKPageKit.card_head(c, Locale.t("lb_train_promo"), "CLASS CHANGE")
+	_promo = CKPageKit.list(c, Rect2(14, 58, 364, 440), "DynPromoList")
+	_msg = CKPageKit.feedback(self)
+	_msg.name = "DynMsg"
 	_rebuild()
+	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "BANNER SCHOOL · FROST")
+	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 
 func _rebuild() -> void:
-	for ch in get_children():
-		if str(ch.name).begins_with("Dyn"):
-			ch.queue_free()
-	var t = UIKit.make_label(Locale.t("ux_qi_shu_title"), true); t.name = "DynTitle"; t.position = Vector2(40, 16); add_child(t)
-	var tip = UIKit.make_dim_label(Locale.t("ux_qi_shu_tip") % CKTutor.pair_cap())
-	tip.name = "DynTip"; tip.position = Vector2(40, 56); tip.custom_minimum_size = Vector2(1100, 40); tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART; add_child(tip)
-	var vb := VBoxContainer.new(); vb.name = "DynPupils"; vb.position = Vector2(40, 100); vb.add_theme_constant_override("separation", 8); add_child(vb)
-	var kids: Array = []
-	for c in GameState.characters.values():
-		if CKTutor.can_be_pupil(c):
-			kids.append(c)
-	kids.sort_custom(func(a, b): return str(a.id) < str(b.id))
+	_fill_kids()
+	_fill_tutors()
+	_fill_promo()
+	UIFX.wire_tree(self)
+
+func _fill_kids() -> void:
+	CKPageKit.clear(_kids)
+	var kids: Array = GameState.characters.values().filter(func(ch): return CKTutor.can_be_pupil(ch))
+	kids.sort_custom(func(x, y): return str(x.id) < str(y.id))
 	if kids.is_empty():
-		vb.add_child(UIKit.make_dim_label(Locale.t("ux_qi_shu_no_kids")))
-	for c in kids:
-		var row := HBoxContainer.new(); row.add_theme_constant_override("separation", 10); vb.add_child(row)
-		row.add_child(UIKit.make_portrait_rect(c, 48))
-		var tid := CKTutor.tutor_of(c.id)
+		_kids.add_child(CKPageKit.empty(Locale.t("lb_train_no_kids"), Locale.t("lb_train_no_kids_why"), Locale.t("lb_train_no_kids_how"), 300))
+		return
+	if _pupil == "" or not kids.any(func(ch): return ch.id == _pupil):
+		_pupil = str(kids[0].id)
+	for ch in kids:
+		var tid := CKTutor.tutor_of(ch.id)
 		var tutor: CKCharacter = GameState.characters.get(tid)
-		var label := Locale.t("ux_qi_shu_age") % [c.name, c.age]
-		if tutor:
-			label += Locale.t("ux_qi_shu_has_tutor") % tutor.name
-		else:
-			label += Locale.t("ux_qi_shu_no_tutor")
-		var b = UIKit.make_button(label, 320)
-		var cid = c.id
-		b.pressed.connect(func(): _pupil = cid; _rebuild())
-		row.add_child(b)
-		if _pupil == c.id and tutor:
-			var teach = UIKit.make_button(Locale.t("ux_qi_shu_teach"), 120)
-			teach.pressed.connect(func():
-				var r = CKTutor.teach(cid)
-				_msg.text = str(r.get("msg"))
-				_rebuild()
-			)
-			row.add_child(teach)
-	var tv := VBoxContainer.new(); tv.name = "DynTutors"; tv.position = Vector2(520, 100); tv.add_theme_constant_override("separation", 8); add_child(tv)
-	tv.add_child(UIKit.make_label(Locale.t("ux_qi_shu_tutors")))
+		var line := Locale.t("ux_qi_shu_age") % [ch.name, ch.age]
+		var sub := Locale.t("lb_train_has_tutor", [tutor.name, CKTutor.year_used(ch.id, tid), CKTutor.year_limit()]) if tutor else Locale.t("lb_train_no_tutor")
+		_kids.add_child(_pick_row(ch, line, sub, ch.id == _pupil, func(): _pupil = ch.id; Sfx.click(); _rebuild()))
+	CKPageKit.drag_through(_kids)
+
+func _fill_tutors() -> void:
+	CKPageKit.clear(_tutors)
+	_teach.visible = _pupil != ""
 	if _pupil == "":
-		tv.add_child(UIKit.make_dim_label(Locale.t("ux_qi_shu_pick_kid")))
-	else:
-		for c in GameState.roster():
-			if not CKTutor.can_be_tutor(c):
-				continue
-			var row2 := HBoxContainer.new(); row2.add_theme_constant_override("separation", 8); tv.add_child(row2)
-			var bl = UIKit.make_button(Locale.t("ux_qi_shu_bow") % c.name, 260)
-			var tid2 = c.id
-			bl.pressed.connect(func():
-				var r = CKTutor.assign(_pupil, tid2)
-				_msg.text = str(r.get("msg"))
-				_rebuild()
-			)
-			row2.add_child(bl)
-	var promo = UIKit.make_label(Locale.t("ux_qi_shu_promo")); promo.name = "DynPromo"; promo.position = Vector2(520, 420)
-	promo.add_theme_color_override("font_color", UIKit.ACCENT); add_child(promo)
-	var pv := VBoxContainer.new(); pv.name = "DynPromoList"; pv.position = Vector2(520, 460); pv.add_theme_constant_override("separation", 8); add_child(pv)
-	var focus: CKCharacter = GameState.get_leader()
-	if focus:
-		for jid in CKTutor.promote_list(focus):
-			var job = GameState.get_job(jid)
-			var b2 = UIKit.make_button(Locale.t("ux_qi_shu_promo_to") % job.get("name", jid), 260)
-			b2.pressed.connect(func():
-				var r = GameState.try_promote(focus.id, jid)
-				_msg.text = str(r.get("msg"))
-				Sfx.confirm()
-			)
-			pv.add_child(b2)
-	_msg = UIKit.make_label(""); _msg.name = "DynMsg"; _msg.position = Vector2(40, 520); add_child(_msg)
-	var prev = CKTutor.preview(_pupil) if _pupil != "" else {}
-	if bool(prev.get("ok", false)):
-		_msg.text = str(prev.get("msg", ""))
-	var back = UIKit.make_button(Locale.t("btn_back")); back.name = "DynBack"; back.position = Vector2(40, 600)
-	back.pressed.connect(func(): CKNav.up()); add_child(back)
+		_plan.text = ""
+		_tutors.add_child(CKPageKit.empty(Locale.t("lb_train_tutor_none"), Locale.t("lb_train_tutor_wait"), "", 320))
+		return
+	var cur := CKTutor.tutor_of(_pupil)
+	var any := false
+	for t in GameState.roster():
+		if not CKTutor.can_be_tutor(t):
+			continue
+		any = true
+		var stat := Locale.t("stat_" + CKTutor.peak_stat(t))
+		var cap := CKTutor.tutor_pupil_cap(t)
+		var sub := Locale.t("lb_train_tutor_line", [stat, CKTutor.pupils_of(t.id).size(), cap])
+		var tid := str(t.id)
+		_tutors.add_child(_pick_row(t, Locale.t("ux_qi_shu_bow") % t.name, sub, tid == cur, func(): _assign(tid)))
+	if not any:
+		_tutors.add_child(CKPageKit.empty(Locale.t("lb_train_no_tutor_title"), Locale.t("lb_train_no_tutor_why"), "", 320))
+	CKPageKit.drag_through(_tutors)
+	var prev: Dictionary = CKTutor.preview(_pupil)
+	_plan.text = str(prev.get("msg", ""))
+	_plan.add_theme_color_override("font_color", UIKit.TEXT if bool(prev.get("ok", false)) else UIKit.TEXT_DIM)
+	CKPageKit.lock(_teach, "" if bool(prev.get("ok", false)) else str(prev.get("msg", "")))
+
+func _fill_promo() -> void:
+	CKPageKit.clear(_promo)
+	var people: Array = GameState.roster().filter(func(ch): return not CKTutor.promote_list(ch).is_empty())
+	if people.is_empty():
+		_promo.add_child(CKPageKit.empty(Locale.t("lb_train_promo_none"), Locale.t("lb_train_promo_none_why"), "", 320))
+		return
+	if _promo_id == "" or not people.any(func(ch): return ch.id == _promo_id):
+		_promo_id = str(people[0].id)
+	for ch in people:
+		var job_name := str(GameState.get_job(ch.job_id).get("name", ch.job_id))
+		_promo.add_child(_pick_row(ch, ch.name, job_name, ch.id == _promo_id, func(): _promo_id = ch.id; Sfx.click(); _fill_promo(); UIFX.wire_tree(self)))
+		if ch.id != _promo_id:
+			continue
+		for jid in CKTutor.promote_list(ch):
+			_promo.add_child(_promo_option(ch, str(jid)))
+	CKPageKit.drag_through(_promo)
+
+func _promo_option(ch: CKCharacter, jid: String) -> Control:
+	var job: Dictionary = GameState.get_job(jid)
+	var r := CKPageKit.row(UIKit.ACCENT, 60)
+	var v: VBoxContainer = r[1]
+	var missing := _missing(ch, job.get("req", {}))
+	v.add_child(UIKit.title_label(Locale.t("ux_qi_shu_promo_to") % job.get("name", jid), 15))
+	v.add_child(CKPageKit.text(_req_text(ch, job.get("req", {})), UIKit.DANGER if missing != "" else UIKit.OK, 13, 320))
+	var go := CKPageKit.button(Locale.t("lb_train_promo_go"), missing == "", 320)
+	go.name = "Promote_%s" % jid
+	CKPageKit.lock(go, missing)
+	go.pressed.connect(func():
+		var res: Dictionary = GameState.try_promote(ch.id, jid)
+		CKPageKit.say(_msg, str(res.get("msg", "")), bool(res.get("ok", false)))
+		if bool(res.get("ok", false)):
+			UIFX.confirm(go)
+		_fill_promo()
+		UIFX.wire_tree(self))
+	v.add_child(go)
+	return r[0]
+
+func _req_text(ch: CKCharacter, req: Dictionary) -> String:
+	if req.is_empty():
+		return Locale.t("lb_train_req_none")
+	var parts: Array = []
+	for k in req.keys():
+		var have := int(ch.stats.get(k, 0)) if k in CKCharacter.STAT_KEYS else (GameState.iron if k == "iron" else GameState.herb)
+		var nm := Locale.t("stat_" + k) if k in CKCharacter.STAT_KEYS else Locale.t("lb_res_" + k)
+		parts.append(Locale.t("lb_train_req_item", [nm, have, int(req[k])]))
+	return "　".join(parts)
+
+func _missing(ch: CKCharacter, req: Dictionary) -> String:
+	for k in req.keys():
+		var have := int(ch.stats.get(k, 0)) if k in CKCharacter.STAT_KEYS else (GameState.iron if k == "iron" else GameState.herb)
+		if have < int(req[k]):
+			var nm := Locale.t("stat_" + k) if k in CKCharacter.STAT_KEYS else Locale.t("lb_res_" + k)
+			return Locale.t("lb_train_req_short", [nm, int(req[k]) - have])
+	return ""
+
+func _pick_row(ch: CKCharacter, title: String, sub: String, on: bool, cb: Callable) -> Control:
+	var b := Button.new()
+	b.custom_minimum_size = Vector2(0, 60)
+	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	b.toggle_mode = true
+	b.button_pressed = on
+	b.pressed.connect(cb)
+	var h := HBoxContainer.new()
+	h.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	h.offset_left = 8
+	h.add_theme_constant_override("separation", 10)
+	h.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	b.add_child(h)
+	var pr := UIKit.make_portrait_rect(ch, 44)
+	pr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	pr.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	h.add_child(pr)
+	var v := VBoxContainer.new()
+	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	v.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	h.add_child(v)
+	var t := UIKit.title_label(title, 15, UIKit.ACCENT if on else UIKit.TEXT)
+	t.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	v.add_child(t)
+	var s := UIKit.body_label(sub, UIKit.TEXT_DIM, 12)
+	s.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	v.add_child(s)
+	return b
+
+func _assign(tid: String) -> void:
+	var res: Dictionary = CKTutor.assign(_pupil, tid)
+	CKPageKit.say(_msg, str(res.get("msg", "")), bool(res.get("ok", false)))
+	_rebuild()
+
+func _do_teach() -> void:
+	var res: Dictionary = CKTutor.teach(_pupil)
+	CKPageKit.say(_msg, str(res.get("msg", "")), bool(res.get("ok", false)))
+	if bool(res.get("ok", false)):
+		UIFX.confirm(_teach)
+	_rebuild()
