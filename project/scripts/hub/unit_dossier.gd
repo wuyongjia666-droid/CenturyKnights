@@ -50,7 +50,7 @@ func _back() -> void:
 	var dest := "res://scenes/hub/roster.tscn"
 	if GameState.has_meta("dossier_back"):
 		dest = str(GameState.get_meta("dossier_back"))
-	get_tree().change_scene_to_file(dest)
+	CKNav.up(dest)
 
 func _build() -> void:
 	var c := _focus
@@ -256,7 +256,7 @@ func _person_chip(p: CKCharacter, focus: CKCharacter, focus_states: Dictionary) 
 		Sfx.click()
 		UIFX.press_feedback(b)
 		GameState.set_meta("dossier_id", captured.id)
-		get_tree().change_scene_to_file("res://scenes/hub/unit_dossier.tscn"))
+		CKNav.go("res://scenes/hub/unit_dossier.tscn"))
 	return b
 
 

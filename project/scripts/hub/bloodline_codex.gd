@@ -70,7 +70,7 @@ func _ready() -> void:
 	apply_mobile_layout()
 
 func _back() -> void:
-	get_tree().change_scene_to_file("res://scenes/hub/lineage_view.tscn")
+	CKNav.up("res://scenes/hub/lineage_view.tscn")
 
 
 func _show(nid: String) -> void:

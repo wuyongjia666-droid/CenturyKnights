@@ -67,3 +67,10 @@ class_path,%s / %s / %s,%s / %s / %s
 rewind_undo,撤回,Undo move
 rewind_lamp,回灯,Turn the lamp back
 rewind_wicks,灯芯 %d,Wicks %d
+defeat_back_castle,回灰旗堡养伤,Back to the castle
+defeat_head,败退回堡，伤病结算,Defeat: injuries settled at the castle
+defeat_retreat_head,主动撤退，伤病结算,Retreat: injuries settled at the castle
+defeat_row_dead,%s · 阵亡,%s · fallen
+defeat_row_tired,疲伤（下月恢复）,worn (recovers next month)
+pause_retreat,撤退回堡,Retreat
+pause_retreat_confirm,再点一次确认撤退（算败北）,Tap again to retreat (counts as defeat)
