@@ -208,3 +208,115 @@ lb_hg_k_food,粮,Food
 lb_hg_k_morale,士气,Morale
 lb_hg_k_people,团员,Members
 lb_hg_debug_harvest,调试：跳到丰收,Debug: to harvest
+lb_path_martial,偏武,Martial
+lb_path_scholar,偏文,Scholar
+lb_path_merchant,偏商,Merchant
+lb_path_none,还没定,Undecided
+lb_path_martial_fx,长力气和体魄。授旗时多给 1 个战技点，并学会这条路的战技。,Strength and vigor. +1 skill point and path skills at the rite.
+lb_path_scholar_fx,长意志和感知。授旗时河卫声望 +3，偏祷言和支援。,Will and perception. Riverland reputation +3 at the rite.
+lb_path_merchant_fx,长敏捷和技巧。授旗时团里拿 40 银。,Agility and skill. +40 silver at the rite.
+lb_rite_ctx,授旗礼,Banner rite
+lb_rite_title,授旗礼,Banner rite
+lb_rite_desc,家里的孩子满 %d 岁、还没入团，就能在这里授旗入团；%d 岁起可以先定一条成长的路。,Children enlist at %d; a path can be chosen from %d.
+lb_rite_kids,家里的孩子,Children
+lb_rite_ready,可以授旗,ready
+lb_rite_in,已入团,enlisted
+lb_rite_age,%d 岁,age %d
+lb_rite_already,已经入团了,Already enlisted
+lb_rite_none,家里还没有孩子,No children yet
+lb_rite_none_why,授旗礼是让自家孩子正式入团的仪式。,The rite enlists your own children.
+lb_rite_none_how,先去联姻，成家以后过几个月就会有孩子。,Arrange a marriage; children follow.
+lb_rite_step_0,1 选路,1 Path
+lb_rite_step_1,2 宣名,2 Name
+lb_rite_step_2,3 按印,3 Seal
+lb_rite_step_3,4 入册,4 Enlist
+lb_rite_pick,选这条路,Choose
+lb_rite_early,%s 才 %d 岁，还不能入团，但可以先定一条路，以后每年的岁课会往这个方向长。现在：%s。,"%s is %d: too young to enlist, but a path can be set now. Current: %s."
+lb_rite_early_ok,定好了：%s。以后岁课往这条路长。,Set: %s.
+lb_rite_log_early,早教：%s → %s,Early path: %s -> %s
+lb_rite_log_path,择路：%s → %s,Path: %s -> %s
+lb_rite_log_done,授旗礼：%s（%s）入花名册。,Banner rite: %s (%s) enlisted.
+lb_rite_s0,%s 要入团了。宴上的人都在问：这孩子以后走哪条路？,%s will enlist. Which path?
+lb_rite_s1,族谱吏高声念：「%s，走%s这条路，年纪够了，可以授旗。」,"The clerk reads: %s, path %s, of age."
+lb_rite_s1_go,念完了，下一步,Next
+lb_rite_repick,换一条路,Change path
+lb_rite_s2,团长把灰旗印按在册子上：「旗下不弃家，家不弃旗。」%s 握着旗杆，指节都白了。,The captain seals the book.
+lb_rite_s2_go,按印,Seal
+lb_rite_s3,确认后就正式入团。走%s：%s 另外团里战技点 +1、灰旗声望 +2。,Confirm to enlist. %s: %s
+lb_rite_s3_go,完成授旗,Enlist
+lb_rite_cancel,先不授,Not now
+lb_rite_skills,，学会了：%s,", learned: %s"
+lb_inh_ctx,嗣位冲突,Succession
+lb_inh_title,嗣位冲突,Succession clash
+lb_inh_desc,朔影家来人，要你们表态谁来继承灰旗。三种回法各有后果，一年只能回一次。,Shuoying demands an answer. One answer a year.
+lb_inh_noheir,（还没有继承人）,(no heir)
+lb_inh_envoy,"朔影家的使者站在厅上：「灰旗既然能摆宴，就该把谁来继承说清楚。」
+现在大家看的是：%s（路：%s）。下面三种回法都会写进族谱。",Shuoying's envoy: name your heir. Focus: %s (%s).
+lb_inh_steel,强硬,Firm
+lb_inh_steel_story,把旗印往桌上一砸。朔影家退了半步，但记下了仇。,Slam the seal; they step back but remember.
+lb_inh_steel_fx,灰旗声望 +3；朔影家如果是敌对，会降成警惕。,Reputation +3; Shuoying hostile -> wary.
+lb_inh_steel_ok,强硬的话放出去了。可以回主线接着打。,Firm answer given.
+lb_inh_soft,怀柔,Gentle
+lb_inh_soft_story,两家草签并席文书，偏商的孩子更容易被灯市会接受。,Sign a shared-seat draft.
+lb_inh_soft_fx,花 20 银；朔影家关系缓和；清河家变成并席。,-20 silver; Shuoying eases; Qinghe seats with you.
+lb_inh_soft_ok,怀柔的话写下了，清河家和我们并席了。,Gentle answer given; Qinghe seated.
+lb_inh_delay,拖着,Delay
+lb_inh_delay_story,「战书上见。」把这事推到第十三章的对决。,Settle it in the chapter 13 duel.
+lb_inh_delay_fx,战技点 +1；记得尽快打第十三章。,+1 skill point; play chapter 13 soon.
+lb_inh_delay_ok,先拖着，战技点 +1。第十三章再见分晓。,Delayed; +1 skill point.
+lb_inh_pick,就这么回,Answer
+lb_inh_done,今年已经回过话了（%s）。朔影家第 %d 年会再派人来。,Answered this year (%s). They return in year %d.
+lb_inh_to_rivals,去敌宅交涉,To rival houses
+lb_inh_log,嗣位冲突：%s（%s）,Succession: %s (%s)
+lb_inh_amb_pick,立下这个志向,Take this ambition
+lb_bt_ctx,验血,Blood test
+lb_bt_title,验血,Blood test
+lb_bt_desc,把还没验过的族人一次验完：藏着的血脉会显出来，冒充的子嗣会被揭穿。,Test everyone not yet verified.
+lb_bt_queue,等着验的人（%d）,Waiting (%d)
+lb_bt_price,价钱,Price
+lb_bt_covers,银子够验,Affordable
+lb_bt_go,开始验血,Start
+lb_bt_all_done,大家都验过了,Everyone is verified
+lb_bt_all_done_why,家里和团里的人都已经验过血。以后有新生的孩子、新成亲的人，会出现在这里。,New births and spouses will appear here.
+lb_bt_row,%s · %s · %d 岁,%s · %s · %d
+lb_bt_wait_money,（银子不够，下次再验）, (not enough silver)
+lb_bt_result,验血结果,Results
+lb_bt_idle,灯还没点。按左边「开始验血」，结果会一张一张翻出来。,Press start; results appear one by one.
+lb_bt_idle_done,这次没有要验的人。,Nobody to test.
+lb_bt_running,正在验，等结果出来,Testing...
+lb_bt_done,验完了。冒充的已经改回真实血脉，详档里可以看到携带的血脉了。,Done. Dossiers now show carried traits.
+lb_bt_fake_mark,伪,false
+lb_bt_fake,揭穿冒充 · ,Impostor · 
+lb_bt_ok,验明 · ,Verified · 
+lb_heir_ctx,双嗣校场,Heir trials
+lb_heir_title,双嗣校场,Heir trials
+lb_heir_desc,家里有两个以上 8 岁以上的孩子时，会争谁排在前面。你可以调解、挺其中一个，或者让他们上校场比一场。,Two heirs aged 8+ quarrel over precedence.
+lb_heir_back_from_battle,校场比完了，两个孩子都回城堡养着了。,The duel is over; both are back.
+lb_heir_meta,%d 岁 · 路：%s,Age %d · path: %s
+lb_heir_elder,长嗣,Elder
+lb_heir_younger,次嗣,Younger
+lb_heir_vs,对,vs
+lb_heir_none,家里还没有能争的孩子,No heirs old enough
+lb_heir_none_why,要有两个 8 岁以上的孩子，校场才会热闹起来。,Needs two children aged 8 or older.
+lb_heir_none_how,先去联姻成家，孩子会在岁月里长大。,Marry; children grow over the years.
+lb_heir_to_marriage,去联姻,To marriage
+lb_heir_one,现在只有 %s 一个孩子够大，没人跟他争。可以先给他定一条路，或者等弟弟妹妹长大。,Only %s is old enough.
+lb_heir_to_rite,去授旗礼定路,To the banner rite
+lb_heir_quarrel,%s 和 %s 在校场吵起来了，都说自己更该排在前面。你怎么处理？,%s and %s quarrel. Your call?
+lb_heir_settled,今年这事已经定了（%s）。第 %d 年他们可能又会吵。,Settled this year (%s). Maybe again in year %d.
+lb_heir_m_mediate,调解,Mediate
+lb_heir_m_mediate_fx,两边各退一步，灰旗声望 +1。谁都不偏。,Both back down; reputation +1.
+lb_heir_m_a,挺 %s,Back %s
+lb_heir_m_a_fx,把长嗣排在前面。战技点 +1，他学会自己那条路的战技。,Elder first. +1 skill point and path skills.
+lb_heir_m_b,挺 %s,Back %s
+lb_heir_m_b_fx,把次嗣排在前面。战技点 +1，他学会自己那条路的战技。,Younger first. +1 skill point and path skills.
+lb_heir_m_duel,校场比一场,Duel
+lb_heir_m_duel_fx,两个孩子真的上场打一场。打完回到这里，生命会补满。,A real battle; both recover after.
+lb_heir_log_mediate,双嗣调解：%s 与 %s 各退一步,Mediated: %s and %s
+lb_heir_log_support,双嗣拥立：支持 %s，压过 %s,Backed %s over %s
+lb_heir_log_duel,双嗣校场开战：%s 对 %s,Heir duel: %s vs %s
+lb_heir_zh_mediate,调解了,mediated
+lb_heir_zh_support,挺了 %s,backed %s
+lb_heir_zh_duel,上校场比过了,dueled
+lb_heir_mediate_ok,调解成了，校场先安静下来。,Mediated.
+lb_heir_support_ok,挺了 %s。战技点 +1，学会 %d 个道路战技。,"Backed %s. +1 point, %d path skills."

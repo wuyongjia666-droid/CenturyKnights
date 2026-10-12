@@ -12,7 +12,8 @@ var _right: Control
 var _selected: Dictionary = {}
 
 func _ready() -> void:
-	CKPageKit.shell(self, Locale.t("lb_rv_ctx"), "RIVAL HOUSES", Locale.t("lb_rv_title"), Locale.t("lb_rv_desc"))
+	UIKit.make_themed_bg(self, "rival")
+	CKPageKit.shell(self, Locale.t("lb_rv_ctx"), "RIVAL HOUSES", Locale.t("lb_rv_title"), Locale.t("lb_rv_desc"), "none")
 	_left = _frost_panel()
 	_left.name = "RivalList"
 	add_child(_left)

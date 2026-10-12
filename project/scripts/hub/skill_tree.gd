@@ -13,7 +13,8 @@ var _pts: Label
 var _msg: Label
 
 func _ready() -> void:
-	CKPageKit.shell(self, Locale.t("lb_sk_ctx"), "SKILL TREE", Locale.t("lb_sk_title"), Locale.t("lb_sk_desc"))
+	UIKit.make_themed_bg(self, "skill")
+	CKPageKit.shell(self, Locale.t("lb_sk_ctx"), "SKILL TREE", Locale.t("lb_sk_title"), Locale.t("lb_sk_desc"), "none")
 	_pts = UIKit.title_label("", 16, UIKit.ACCENT)
 	_pts.name = "SkillPoints"
 	_pts.position = Vector2(938, 96)
