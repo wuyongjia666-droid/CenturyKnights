@@ -372,6 +372,8 @@ static func _v83_elite_for(path: String) -> String:
 
 ## "genome" when a farmed unit_id plate exists; otherwise the legacy named / hireuniq / bust chain.
 static func portrait_kind(c: CKCharacter, size: int = 96) -> String:
+	if display_band(int(c.age)) in ["infant", "child"]:
+		return display_band(int(c.age))
 	if CKGenomePortrait.texture(c) != null:
 		return "genome"
 	var path := _portrait_key(c)
@@ -496,12 +498,55 @@ static func dialogue_portrait(speaker: String, emotion: String, who: CKCharacter
 		return portrait(who, size, CKArtPaths.TIER_MEDIUM)
 	return null
 
+## Age-band display rule (playtest fix): everyone under 12 shares fixed plates so a newborn can
+## never pick up a teen/adult face. 0–2 → one infant plate; 3–11 → one child plate per sex;
+## 12–15 → teen (youth bank band); 16+ → the adult chain. Resolved from c.age on every call,
+## so it re-resolves on each birthday and after save/load (age is the only input).
+const INFANT_PLATE := "res://assets/art/portraits/genome/bank/infant_00647ff1b34ec210.png"
+const CHILD_PLATE := {"f": "res://assets/art/portraits/hireuniq_150.png", "m": "res://assets/art/portraits/hireuniq_170.png"}
+
+static func display_band(age_i: int) -> String:
+	if age_i <= 2:
+		return "infant"
+	if age_i <= 11:
+		return "child"
+	if age_i <= 15:
+		return "teen"
+	return "adult"
+
+static func band_plate_path(c: CKCharacter) -> String:
+	match display_band(int(c.age)):
+		"infant":
+			return INFANT_PLATE
+		"child":
+			return str(CHILD_PLATE.get("f" if str(c.gender) == "f" else "m"))
+	return ""
+
+static func _band_portrait(c: CKCharacter, use_tier: String) -> Texture2D:
+	var band := display_band(int(c.age))
+	var bp := band_plate_path(c)
+	if bp != "":
+		var ck := "band|%s|%s" % [use_tier, bp]
+		if _cache.has(ck):
+			return _cache[ck]
+		var t := CKArtPaths.load_portrait(bp, use_tier)
+		if t != null:
+			_cache[ck] = t
+		return t
+	if band == "teen" and CKGenomePortrait.age_stage_of(c) != "youth":
+		## Age 15 is young_adult in the bank's five stages; still show a youth plate on screen.
+		return CKPortraitBank.stage_texture(c, "youth", use_tier)
+	return null
+
 static func portrait(c: CKCharacter, size: int = 96, tier: String = "") -> Texture2D:
 	# v8.9: paper-doll is retired. One Qwen plate per unit_id when the farm has ingested it.
 	# Checked before the legacy cache so a late ingest still wins. Missing plates fall through
 	# to named cast art, then hireuniq, then the bust/geno chain.
 	# small: lists and chess tokens. medium: dialogue and half-body. large: detail.
 	var use_tier := tier if tier != "" else CKArtPaths.tier_for_display(size)
+	var btex := _band_portrait(c, use_tier)
+	if btex != null:
+		return btex
 	var gtex: Texture2D = CKGenomePortrait.texture(c, use_tier)
 	if gtex != null:
 		## Bank/disk plates paint the face; still reserve a hireuniq slot so tavern walk-aways free it.
