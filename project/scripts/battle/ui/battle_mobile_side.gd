@@ -25,9 +25,13 @@ static func attach(host: Control, x: float, w: float) -> void:
 		sc.size = Vector2(w, 720.0 - 60.0 - 10.0)
 		for c in host.get_children():
 			_adopt(host, c)
-		host.child_entered_tree.connect(func(n): _adopt.call_deferred(host, n))
+		host.child_entered_tree.connect(_defer_adopt.bind(host))
 	sc.position = Vector2(x, 60)
 	sc.size = Vector2(w, 720.0 - 60.0 - 10.0)
+
+
+static func _defer_adopt(n: Node, host: Control) -> void:
+	_adopt.call_deferred(host, n)
 
 
 static func _adopt(host: Control, n: Node) -> void:
@@ -124,10 +128,17 @@ static func _flow_panel(p: Control) -> void:
 
 ## A story bark takes over the side column while it is up.
 static func yield_to(host: Node, bark: Control) -> void:
-	var sync := func():
-		var sc := host.get_node_or_null(COL) as Control
-		if sc != null and is_instance_valid(bark):
-			sc.visible = not bark.is_visible_in_tree()
-	bark.visibility_changed.connect(sync)
-	sync.call_deferred()
-	host.child_entered_tree.connect(func(n): if n.name == COL: sync.call_deferred())
+	bark.visibility_changed.connect(_sync.bind(host, bark))
+	_sync.call_deferred(host, bark)
+	host.child_entered_tree.connect(_on_child.bind(host, bark))
+
+
+static func _on_child(n: Node, host: Node, bark: Control) -> void:
+	if n.name == COL:
+		_sync.call_deferred(host, bark)
+
+
+static func _sync(host: Node, bark: Control) -> void:
+	var sc := host.get_node_or_null(COL) as Control
+	if sc != null and is_instance_valid(bark):
+		sc.visible = not bark.is_visible_in_tree()
