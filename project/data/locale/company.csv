@@ -76,3 +76,49 @@ pressure_late,灯籍、爵位与使馆,Lamp title and embassy
 pressure_spring,春令预付,Spring purse
 pressure_spring_paid,春令预付 +%d 银,Spring purse +%d silver
 pressure_paid,%s -%d 银,%s -%d silver
+terr_01,无此领地,No such site
+terr_02,已是我方领地,Already ours
+terr_03,邦交声望不足（需 %d）,Nation standing too low (need %d)
+terr_04,领地已达上限 %d,Site limit %d reached
+terr_05,需身处%s,Must be at %s
+terr_06,战事未了,A battle is pending
+terr_07,团旗升起：占领%s%s,Company banner raised: took %s%s
+terr_08,（民心未附）, (restless)
+terr_09,（寨民归附）, (locals pledged)
+terr_10,占领%s,Took %s
+terr_11,本堡永不失守,The home castle is never lost
+terr_12,匪帮,bandits
+terr_13,%s失守，落入%s之手,%s fell to %s
+terr_14,归附委托已在进行,Pledge commissions already running
+terr_15,此地无人发委托,Nobody here posts commissions
+terr_16,%s的委托榜贴出「%s」,"%s board posts ""%s"""
+terr_17,%s的口粮与药,Rations for %s
+terr_18,%s的人不信刀，信东西。带 %s ×%d 来%s交付，他们才肯听我们说话。（领地归附 1/2）,"The people of %s trust goods, not blades. Bring %s x%d to %s. (Pledge 1/2)"
+terr_19,清掉%s外的匪窝,Clear the bandit den near %s
+terr_20,盘踞的匪帮,entrenched bandits
+terr_21,匪帮在%s一带勒索%s。赶到即开战，得胜后回%s交付，团旗就能挂上去。（领地归附 2/2）,"Bandits near %s extort %s. Fight on arrival, then report to %s and the banner goes up. (Pledge 2/2)"
+terr_22,；%s贴出下一步「%s」,"; %s posts the next step ""%s"""
+terr_23,；%s暂不能归附：%s,; %s cannot pledge yet: %s
+terr_24,；%s归附，团旗升起,"; %s pledged, banner raised"
+terr_25,不是我方领地,Not our site
+terr_26,驻军已满,Garrison full
+terr_27,银不足（需 %d）,Not enough silver (need %d)
+terr_28,%s驻军升至 %d 级（-%d 银）,%s garrison now %d (-%d silver)
+terr_29,%s欠饷，驻军降至 %d 级,"%s unpaid, garrison down to %d"
+terr_30,领地月结：%+d 银（%d 处）,Territory month: %+d silver (%d sites)
+terr_31,%s匪帮,%s bandits
+terr_32,%s来犯%s！一月内赶到%s守卫，否则只能靠驻军,%s attack %s! Reach %s within a month or the garrison stands alone
+terr_33,%s驻军独力守住，折损一级,%s garrison held alone and lost a level
+terr_34,此地无战事,No fighting here
+terr_35,；团旗升起：%s,; banner raised over %s
+terr_36,守住%s,Held %s
+terr_37,；守住%s,; held %s
+terr_38,；%s失守,; %s lost
+terr_39,中立,Neutral
+terr_40,我方 · 驻军 %d,Ours · garrison %d
+terr_41,%d 银,%d silver
+terr_42,月产 %s · 维护 %d 银,Yield %s · upkeep %d silver
+terr_43, · 民心未附 %d 月, · restless %d mo
+terr_44,%s来犯,%s attacking
+terr_45,守卫战,Defence
+terr_46,攻占战,Assault
