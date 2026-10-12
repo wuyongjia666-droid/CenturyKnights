@@ -90,16 +90,8 @@ func _input(event: InputEvent) -> void:
 		return
 	if CKPauseMenu.current == null and _focus_in_coach(focus):
 		return
-	# Audit P2-7: a sub-page goes back one level; the castle, battle and story open the pause menu.
-	if back_action(get_tree().current_scene) == "back":
-		get_viewport().set_input_as_handled()
-		get_tree().current_scene.call("_back")
-		return
-	CKPauseMenu.toggle()
 	get_viewport().set_input_as_handled()
-	if CKPauseMenu.current != null and is_instance_valid(CKPauseMenu.current):
-		var vp := get_viewport().get_visible_rect().size
-		MobileLayout.place_pause(CKPauseMenu.current, vp)
+	CKNav.back()
 
 ## "back" when Esc / Android back should leave this page via its own _back(), "pause" otherwise.
 func back_action(scene: Node) -> String:
