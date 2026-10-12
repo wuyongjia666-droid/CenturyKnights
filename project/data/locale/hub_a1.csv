@@ -51,6 +51,12 @@ a1_works_next_barracks,升级后：每年多传习一次，每月涨士气,More 
 a1_works_next_market,升级后：买得更便宜、卖得更贵,Better prices
 a1_works_next_forge,升级后：打兵器更省料，Lv4 能打精灰刃,Cheaper crafting; Lv4 fine blade
 a1_works_next_shrine,升级后：丰收多打粮，祈愈回血更多,More harvest and healing
+a1_hub_esc,系统菜单,System menu
+a1_hub_new,新开了：%s，点进去看看,New: %s
+a1_title_q,回标题画面？,Back to title?
+a1_title_body,进度会先自动存好。回到标题画面后，可以从「继续」接着玩。,Progress is saved first.
+a1_title_stay,留在城堡,Stay
+a1_title_go,存档并回标题,Save and leave
 a1_set_view,画面,Display
 a1_set_motion,动效,Motion
 a1_set_sound,声音,Sound
