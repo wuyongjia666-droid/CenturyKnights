@@ -364,7 +364,7 @@ func _node_card(c: CKCharacter, at: Vector2) -> void:
 	b.add_child(nm)
 	var pb := str(c.primary_bloodline())
 	# Audit P2-6: minors show "年幼", not an adult unit class and rank.
-	var sub_txt := "年幼" if c.age < Calendar.ADULT_AGE else "%s · %s" % [GameState.get_job(c.job_id).get("name", ""), c.rank_name()]
+	var sub_txt := Locale.t("lin_minor") if c.age < Calendar.ADULT_AGE else "%s · %s" % [GameState.get_job(c.job_id).get("name", ""), c.rank_name()]
 	var sub := UIKit.body_label(sub_txt, UIKit.TEXT_DIM, 11)
 	sub.autowrap_mode = TextServer.AUTOWRAP_OFF
 	sub.position = Vector2(70, 60)

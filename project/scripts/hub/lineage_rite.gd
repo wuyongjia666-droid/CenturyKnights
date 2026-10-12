@@ -103,7 +103,7 @@ func _refresh_list() -> void:
 		any = true
 	if not any:
 		_list.add_child(UIKit.empty_state("尚无子嗣。联姻后岁月推进可诞育。"))
-	_body.text = "点选子嗣：%d 岁起可「早教择路」（写入族谱，岁课按道路倾向成长）；成年未入队可完成授旗三步。" % EARLY_MIN_AGE
+	_body.text = Locale.t("lin_rite_hint") % EARLY_MIN_AGE
 	for c in _actions.get_children():
 		c.queue_free()
 
@@ -124,10 +124,11 @@ func _show_early_tutor() -> void:
 		return
 	if _selected.age < EARLY_MIN_AGE:
 		# Audit P2-6: matches the tutor's 6-year floor; infants are not pushed.
-		_body.text = "%s 还小（%d岁）。%d 岁起可早教择路。" % [_selected.name, _selected.age, EARLY_MIN_AGE]
+		_body.text = Locale.t("lin_too_young") % [_selected.name, _selected.age, EARLY_MIN_AGE]
 		return
 	var cur = {"martial": "偏武", "scholar": "偏文", "merchant": "偏商"}.get(_path, "未定")
-	_body.text = "[b]早教·择路[/b]\n\n%s 尚年幼（%d岁）。\n今日择路将写入族谱：此后岁课的习痕按道路倾向生长。\n当前：【%s】\n\n[color=#c9a227]偏武[/color] 力/体　[color=#8ecae6]偏文[/color] 意/感　[color=#e9c46a]偏商[/color] 敏/技" % [_selected.name, _selected.age, cur]
+	var head := "[b]早教·择路[/b]\n\n%s 尚年幼（%d岁）。\n今日择路将写入族谱：此后岁课的习痕按道路倾向生长。\n" % [_selected.name, _selected.age]
+	_body.text = head + "当前：【%s】\n\n[color=#c9a227]偏武[/color] 力/体　[color=#8ecae6]偏文[/color] 意/感　[color=#e9c46a]偏商[/color] 敏/技" % cur
 	_add("早教·偏武", func(): _set_early("martial"))
 	_add("早教·偏文", func(): _set_early("scholar"))
 	_add("早教·偏商", func(): _set_early("merchant"))

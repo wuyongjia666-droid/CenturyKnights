@@ -112,3 +112,6 @@ ancestor_no_deed,功绩未记,No deed written
 ancestor_no_title,无志向称号,No ambition title
 ancestor_empty,碑上还没有人。,The stele is empty.
 ancestor_card,%s\n%d – %d · %s\n%s\n%s\n%s,%s\n%d - %d · %s\n%s\n%s\n%s
+lin_minor,年幼,Minor
+lin_too_young,%s 还小（%d岁）。%d 岁起可早教择路。,%s is too young (%d). Early schooling opens at %d.
+lin_rite_hint,点选子嗣：%d 岁起可「早教择路」（写入族谱，岁课按道路倾向成长）；成年未入队可完成授旗三步。,"Pick an heir: early schooling from age %d (written to the genealogy, yearly lessons follow the path); adults not yet enlisted can take the three-step banner rite."
