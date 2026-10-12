@@ -21,6 +21,7 @@ var _portrait: TextureRect
 var _banner: TextureRect
 var _beat_meta: Label
 var test_capture: Dictionary = {}
+var _stage_tween: Tween
 
 func _ready() -> void:
 	# Story lines are authored text. RichTextLabel.set_text runs them through
@@ -29,6 +30,9 @@ func _ready() -> void:
 	auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	_build()
 	UIKit.stitch_dialogue(self)
+	# Back from a side screen the story opened with "visit": the trip is over.
+	if GameState.has_meta("story_return"):
+		GameState.set_meta("story_return", "")
 	_open(_resolve_path())
 
 func _resolve_path() -> String:
@@ -182,8 +186,11 @@ func _show_line() -> void:
 	var line = lines[_line_idx]
 	var sp := str(line.get("speaker", ""))
 	_speaker.text = sp
+	_body.visible_ratio = 1.0
+	_body.modulate.a = 1.0
 	_set_body(_line_text(line))
 	_speaker_portrait(sp, str(line.get("expression", line.get("emotion", ""))))
+	_apply_stage(line.get("stage", {}))
 
 func _set_body(text: String) -> void:
 	_body.text = text
@@ -193,9 +200,61 @@ func _set_body(text: String) -> void:
 
 func _line_text(line) -> String:
 	var body := str(line.get("text", ""))
+	if body.find("{surname}") >= 0:
+		var sn := str(GameState.surname).strip_edges()
+		body = body.replace("{surname}", sn if sn != "" else Locale.t("pro_surname_fallback"))
 	if body.find("{heir}") < 0:
 		return body
 	return body.replace("{heir}", _living_heir_name())
+
+## Staging hooks authored on a line: {"music", "tension", "camera", "pace"}.
+## Every cue is optional and harmless when the asset or autoload is missing.
+func _apply_stage(stage) -> void:
+	if typeof(stage) != TYPE_DICTIONARY or (stage as Dictionary).is_empty():
+		return
+	var s: Dictionary = stage
+	test_capture["stage"] = s.duplicate(true)
+	var trail: Array = test_capture.get("stage_log", [])
+	trail.append(s.duplicate(true))
+	test_capture["stage_log"] = trail
+	var music := str(s.get("music", ""))
+	if music != "" and Music != null:
+		if music.begins_with("dynasty:"):
+			Music.play_dynasty(music.trim_prefix("dynasty:"))
+		else:
+			Music.play_state(music)
+	if s.has("tension") and Music != null:
+		Music.set_tension(float(s.get("tension", 0.0)))
+	if _stage_tween != null and _stage_tween.is_valid():
+		_stage_tween.kill()
+	_stage_tween = null
+	match str(s.get("camera", "")):
+		"close":
+			_portrait.pivot_offset = _portrait.custom_minimum_size * 0.5
+			_tw().tween_property(_portrait, "scale", Vector2(1.18, 1.18), 0.45).set_trans(Tween.TRANS_SINE)
+		"wide":
+			_tw().tween_property(_portrait, "scale", Vector2.ONE, 0.45).set_trans(Tween.TRANS_SINE)
+			_tw().tween_property(_banner, "scale", Vector2.ONE, 0.45)
+		"banner":
+			_banner.pivot_offset = Vector2.ZERO
+			_tw().tween_property(_banner, "scale", Vector2(1.6, 1.6), 0.6).set_trans(Tween.TRANS_SINE)
+		"shake":
+			var base := _portrait.position
+			var seq := create_tween()
+			for dx in [6.0, -5.0, 3.0, 0.0]:
+				seq.tween_property(_portrait, "position", base + Vector2(dx, 0), 0.05)
+	match str(s.get("pace", "")):
+		"slow":
+			_body.visible_ratio = 0.0
+			_tw().tween_property(_body, "visible_ratio", 1.0, 1.4)
+		"beat":
+			_body.modulate.a = 0.0
+			_tw().tween_property(_body, "modulate:a", 1.0, 0.5)
+
+func _tw() -> Tween:
+	if _stage_tween == null or not _stage_tween.is_valid():
+		_stage_tween = create_tween().set_parallel(true)
+	return _stage_tween
 
 ## Living child whose parent_ids include the leader. Locale key holds the unnamed fallback.
 func _living_heir_name() -> String:
@@ -234,10 +293,8 @@ func _speaker_portrait(speaker: String, emotion: String = "") -> void:
 			else:
 				_portrait.texture = UnitArt.banner(120, 120, false)
 		_:
-			if leader:
-				_portrait.texture = UnitArt.portrait(leader, 120, CKArtPaths.TIER_MEDIUM)
-			else:
-				_portrait.texture = UnitArt.banner(120, 120, false)
+			# A named voice without a roster body (patron, rival, family) must not borrow the leader's face.
+			_portrait.texture = UnitArt.banner(120, 120, false)
 
 func _refresh_actions() -> void:
 	for c in _actions.get_children():
@@ -320,10 +377,32 @@ func _run_op(step) -> String:
 			_go_scene(str(row.get("path", "")))
 			return "stop"
 		"advance":
-			var evs = Calendar.advance(int(row.get("months", 1)))
+			var until := str(row.get("until_flag", ""))
+			var evs: Array = []
+			if until != "":
+				var guard := int(row.get("max", 14))
+				while not GameState.flag(until) and guard > 0:
+					evs.append_array(Calendar.advance(1))
+					guard -= 1
+			else:
+				evs = Calendar.advance(int(row.get("months", 1)))
 			_hint.text = "事件：" + _summarize(evs)
 			_refresh_actions()
 			return "stop"
+		"visit":
+			GameState.set_meta("story_return", str(_chapter.get("return_scene", StoryCatalog.chapter0_scene())))
+			_go_scene(str(row.get("path", "")))
+			return "stop"
+		"adjust":
+			_adjust(row)
+		"skip_battle":
+			GameState.set_flag("battle_done")
+			GameState.log_event(str(row.get("log", Locale.t("pro_skip_battle_log"))))
+			test_capture["skipped_battle"] = true
+		"auto_recruit":
+			_auto_recruit()
+		"auto_marry":
+			_auto_marry()
 		"fast_harvest":
 			_fast_to_harvest()
 			return "stop"
@@ -342,6 +421,58 @@ func _run_op(step) -> String:
 			_speaker.text = "老旗手"
 			_hint.text = msg
 	return ""
+
+func _adjust(row: Dictionary) -> void:
+	GameState.silver = maxi(0, GameState.silver + int(row.get("silver", 0)))
+	GameState.food = maxi(0, GameState.food + int(row.get("food", 0)))
+	GameState.morale = clampi(GameState.morale + int(row.get("morale", 0)), 0, 100)
+	var rep = row.get("reputation", {})
+	if typeof(rep) == TYPE_DICTIONARY:
+		for realm in rep.keys():
+			GameState.reputation[str(realm)] = int(GameState.reputation.get(str(realm), 0)) + int(rep[realm])
+	var note := str(row.get("log", ""))
+	if note != "":
+		GameState.log_event(note)
+	GameState.mark_dirty()
+
+## Brief-guide path: hire the cheapest stranger the purse covers, without the tavern screen.
+func _auto_recruit() -> void:
+	if GameState.flag("recruited"):
+		return
+	if GameState.tavern_candidates.is_empty():
+		GameState.refresh_tavern()
+	var best: CKCharacter = null
+	var best_cost := 1 << 30
+	for c in GameState.tavern_candidates:
+		var cost := CKEconomyState.recruit_price(GameState, c)
+		if cost < best_cost:
+			best = c
+			best_cost = cost
+	if best == null:
+		_hint.text = Locale.t("pro_auto_recruit_none")
+		return
+	if GameState.silver < best_cost:
+		GameState.silver = best_cost
+	var r: Dictionary = GameState.recruit(best, best_cost)
+	_hint.text = str(r.get("msg", ""))
+	test_capture["auto_recruit"] = bool(r.get("ok", false))
+
+## Brief-guide path: the first candidate who can accept a trial seat.
+func _auto_marry() -> void:
+	if GameState.flag("married"):
+		return
+	var leader = GameState.get_leader()
+	if leader == null:
+		return
+	GameState.refresh_marriage_candidates()
+	for c in GameState.marriage_candidates:
+		if Lineage.can_propose(leader, c).get("ok", false):
+			GameState.silver = maxi(GameState.silver, 40)
+			var r: Dictionary = Lineage.marry(leader, c, 40)
+			_hint.text = str(r.get("msg", ""))
+			test_capture["auto_marry"] = bool(r.get("ok", false))
+			return
+	_hint.text = Locale.t("pro_auto_marry_none")
 
 func _ensure_reputation(row: Dictionary) -> void:
 	var realm := str(row.get("realm", ""))

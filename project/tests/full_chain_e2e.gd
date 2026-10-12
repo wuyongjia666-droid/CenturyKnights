@@ -285,12 +285,14 @@ func _step_battle() -> void:
 		print("OK story post-battle pressed 烟散")
 	await get_tree().process_frame
 	var bid_after = story2.current_beat_id()
-	if bid_after == "0.15":
+	# Prologue choices between the smoke and the tavern: survivor, merit roll, mother's lease.
+	for pick in [["0.15", "跟着粮车"], ["0.17", "不换"], ["0.18", "押给账房"]]:
+		if bid_after != str(pick[0]):
+			continue
 		story2.simulate_finish_dialogue()
 		await get_tree().process_frame
-		if not story2.simulate_press_action_containing("酒馆"):
-			if not story2.simulate_press_action_containing("前往"):
-				_err("story 0.15: expected 酒馆 action, got %s" % str(story2.action_labels()))
+		if not story2.simulate_press_action_containing(str(pick[1])):
+			_err("story %s: expected %s, got %s" % [pick[0], pick[1], str(story2.action_labels())])
 		await get_tree().process_frame
 		bid_after = story2.current_beat_id()
 	if bid_after != "0.2":
