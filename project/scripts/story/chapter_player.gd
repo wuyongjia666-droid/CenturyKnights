@@ -5,6 +5,7 @@ extends Control
 const DEFAULT_PATH := "res://data/story/chapters/ch0.json"
 const BATTLE_SCENE := "res://scenes/battle/battle.tscn"
 const HUB_SCENE := "res://scenes/hub/castle_hub.tscn"
+const MENU_SCENE := "res://scenes/ui/main_menu.tscn"
 
 @export var chapter_path: String = DEFAULT_PATH
 @export var lock_path: bool = false
@@ -174,6 +175,13 @@ func _build() -> void:
 	skip_btn.custom_minimum_size = Vector2(112, TOUCH)
 	skip_btn.pressed.connect(skip_lines)
 	top.add_child(skip_btn)
+	if GameState.replay_mode:
+		var leave = UIKit.make_button(Locale.t("replay_exit"), 112)
+		leave.name = "LeaveReplay"
+		leave.custom_minimum_size = Vector2(112, TOUCH)
+		leave.pressed.connect(func(): _go_scene(MENU_SCENE))
+		top.add_child(leave)
+		return
 	var save_btn = UIKit.make_button("存档", 100)
 	save_btn.custom_minimum_size = Vector2(100, TOUCH)
 	save_btn.pressed.connect(func():
@@ -439,6 +447,9 @@ func _run_op(step) -> String:
 			# Leave this chapter for another one by id (ch0 -> e1_01). Audit P1-5.
 			var target_id := str(row.get("id", ""))
 			test_capture["open_chapter"] = target_id
+			if GameState.replay_mode:
+				_go_scene(MENU_SCENE)
+				return "stop"
 			_go_scene(StoryCatalog.request_chapter(target_id))
 			return "stop"
 		"advance":
@@ -558,6 +569,11 @@ func _goto_next() -> void:
 	_load_beat(str(n))
 
 func _go_scene(path: String) -> void:
+	# A replay never lands in the castle: leaving the prologue ends it.
+	if GameState.replay_mode and (path == HUB_SCENE or path == MENU_SCENE):
+		test_capture["replay_end"] = true
+		GameState.end_prologue_replay()
+		path = MENU_SCENE
 	test_capture["scene"] = path
 	if suppress_scene_change or path == "":
 		return
