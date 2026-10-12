@@ -6,6 +6,7 @@ config_version=5
 config/name="百年骑士·同型原创"
 config/name_localized={"en":"CenturyKnights"}
 config/description="灰烬旗佣兵团：战棋·城堡·联姻·传代"
+config/version="9.1.0"
 run/main_scene="res://scenes/ui/main_menu.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 config/quit_on_go_back=false

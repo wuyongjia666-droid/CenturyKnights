@@ -311,7 +311,11 @@ func _vacant(i: int, r: Rect2) -> void:
 	p.size = r.size
 	var s := UIKit.flat_box(Color(1, 1, 1, 0.01), Color(1, 1, 1, 0.06), 8)
 	p.add_theme_stylebox_override("panel", s)
-	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# WS-D #46: a vacant slot is a shortcut to the tavern instead of a dead card.
+	p.mouse_filter = Control.MOUSE_FILTER_STOP
+	p.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	p.name = "Vacant%d" % i
+	p.gui_input.connect(func(ev: InputEvent): _vacant_input(ev))
 	_cards.add_child(p)
 	var hd := UIKit.mono("#%02d VACANT" % (i + 1), 8, UIKit.TEXT_FAINT, false)
 	hd.position = r.position + Vector2(10, 12)
@@ -330,6 +334,15 @@ func _vacant(i: int, r: Rect2) -> void:
 	tip.autowrap_mode = TextServer.AUTOWRAP_OFF
 	tip.position = r.position + Vector2((r.size.x - tip.get_minimum_size().x) * 0.5, r.size.y - 30)
 	_cards.add_child(tip)
+
+const TAVERN := "res://scenes/hub/tavern.tscn"
+
+func _vacant_input(ev: InputEvent) -> void:
+	var tap: bool = (ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT) or (ev is InputEventScreenTouch and ev.pressed)
+	if tap:
+		set_meta("vacant_go", TAVERN)
+		if is_inside_tree() and not has_meta("no_nav"):
+			get_tree().change_scene_to_file(TAVERN)
 
 func _render_metrics() -> void:
 	var R := Rect2(880, 112, 376, 568)
