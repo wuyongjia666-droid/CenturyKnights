@@ -80,7 +80,11 @@ func _festivals() -> void:
 			gap = d
 			next = r
 	var today := CKFestivals.row_for_month(m)
-	var head := Locale.t("lb_shrine_fest_today", [Locale.t(str(today.get("name_key", "")))]) if not today.is_empty() else (Locale.t("lb_shrine_fest_next", [Locale.t(str(next.get("name_key", ""))), gap]) if not next.is_empty() else Locale.t("lb_shrine_fest_head"))
+	var head := Locale.t("lb_shrine_fest_head")
+	if not today.is_empty():
+		head = Locale.t("lb_shrine_fest_today", [Locale.t(str(today.get("name_key", "")))])
+	elif not next.is_empty():
+		head = Locale.t("lb_shrine_fest_next", [Locale.t(str(next.get("name_key", ""))), gap])
 	CKPageKit.card_head(card, head, "FESTIVALS")
 	var h := HBoxContainer.new()
 	h.position = Vector2(16, 58)
