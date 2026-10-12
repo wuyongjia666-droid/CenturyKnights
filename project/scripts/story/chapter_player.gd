@@ -28,22 +28,22 @@ var _card: Control
 var _cards_seen: Dictionary = {}
 
 const TOUCH := 48
-## Background tints for stage.bg until painted plates land (res://assets/art/story_bg/<key>.webp wins).
+## Cool style-lock tints (ink-navy/slate/frost) until the farm plates land; res://assets/art/story_bg/<key>.webp wins.
 const BG_TINTS := {
-	"slope": [Color(0.32, 0.26, 0.14), Color(0.07, 0.06, 0.05)],
-	"memory": [Color(0.12, 0.12, 0.14), Color(0.02, 0.02, 0.03)],
-	"yard_night": [Color(0.20, 0.10, 0.06), Color(0.03, 0.03, 0.05)],
-	"tree_moon": [Color(0.16, 0.20, 0.30), Color(0.03, 0.04, 0.07)],
-	"pass_night": [Color(0.30, 0.12, 0.06), Color(0.04, 0.03, 0.04)],
-	"pass_day": [Color(0.30, 0.28, 0.24), Color(0.08, 0.07, 0.06)],
-	"tavern": [Color(0.34, 0.20, 0.08), Color(0.06, 0.04, 0.03)],
-	"hall": [Color(0.22, 0.18, 0.14), Color(0.05, 0.04, 0.04)],
-	"bridge_day": [Color(0.26, 0.30, 0.34), Color(0.06, 0.07, 0.09)],
-	"gate": [Color(0.24, 0.28, 0.22), Color(0.05, 0.06, 0.05)],
-	"gate_night": [Color(0.10, 0.12, 0.20), Color(0.02, 0.03, 0.05)],
-	"hall_feast": [Color(0.34, 0.22, 0.12), Color(0.06, 0.04, 0.03)],
-	"slope_winter": [Color(0.30, 0.32, 0.36), Color(0.07, 0.08, 0.10)],
-	"bridge_night": [Color(0.12, 0.16, 0.30), Color(0.02, 0.03, 0.06)],
+	"slope": [Color(0.30, 0.36, 0.44), Color(0.04, 0.05, 0.07)],
+	"memory": [Color(0.16, 0.17, 0.20), Color(0.04, 0.05, 0.07)],
+	"yard_night": [Color(0.14, 0.17, 0.24), Color(0.04, 0.05, 0.07)],
+	"tree_moon": [Color(0.20, 0.26, 0.36), Color(0.04, 0.05, 0.07)],
+	"pass_night": [Color(0.13, 0.16, 0.23), Color(0.04, 0.05, 0.07)],
+	"pass_day": [Color(0.30, 0.34, 0.40), Color(0.04, 0.05, 0.07)],
+	"tavern": [Color(0.22, 0.25, 0.31), Color(0.04, 0.05, 0.07)],
+	"hall": [Color(0.20, 0.23, 0.29), Color(0.04, 0.05, 0.07)],
+	"bridge_day": [Color(0.32, 0.38, 0.46), Color(0.04, 0.05, 0.07)],
+	"gate": [Color(0.27, 0.32, 0.38), Color(0.04, 0.05, 0.07)],
+	"gate_night": [Color(0.12, 0.15, 0.22), Color(0.04, 0.05, 0.07)],
+	"hall_feast": [Color(0.24, 0.28, 0.35), Color(0.04, 0.05, 0.07)],
+	"slope_winter": [Color(0.40, 0.45, 0.52), Color(0.04, 0.05, 0.07)],
+	"bridge_night": [Color(0.13, 0.18, 0.30), Color(0.04, 0.05, 0.07)],
 }
 
 func _ready() -> void:
