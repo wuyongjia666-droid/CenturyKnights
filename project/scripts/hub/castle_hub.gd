@@ -684,7 +684,7 @@ func _mobile_top_bar() -> void:
 	ctx.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	bar.add_child(ctx)
 	var res_txt := "%s %d · %s %d · %s %d · %s" % [Locale.t("shell_946c7148"), GameState.silver,
-		"粮", GameState.food, "铁", GameState.iron, Calendar.label()]
+		Locale.t("shell_6763b86e"), GameState.food, Locale.t("shell_69e7baef"), GameState.iron, Calendar.label()]
 	var res := _m_label(res_txt, UIKit.ACCENT, M_FONT, false)
 	res.name = "MobileRes"
 	res.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
