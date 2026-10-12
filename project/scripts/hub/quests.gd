@@ -90,7 +90,7 @@ func _card(
 	vb.add_child(UIKit.make_label(title))
 	var meta := HBoxContainer.new()
 	meta.add_theme_constant_override("separation", 10)
-	meta.add_child(UIKit.tag_chip("📍 " + place, UIKit.TEXT))
+	meta.add_child(UIKit.tag_chip("@ " + place, UIKit.TEXT))
 	meta.add_child(UIKit.tag_chip(reward, UIKit.ACCENT))
 	meta.add_child(UIKit.tag_chip(left, UIKit.OK))
 	vb.add_child(meta)

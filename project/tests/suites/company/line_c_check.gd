@@ -50,7 +50,7 @@ func _quests() -> void:
 		return
 	var t := texts(page)
 	_ok(t.find("手上还没接城里的委托") >= 0, "quests: empty world state missing")
-	_ok(t.find("📍 石垒坡") >= 0, "quests: castle card has no place")
+	_ok(t.find("@ 石垒坡") >= 0, "quests: castle card has no place")
 	_ok(t.find("耗时 1 月") >= 0, "quests: castle card has no months")
 	page.call("_accept", "q_drill")
 	await get_tree().process_frame
