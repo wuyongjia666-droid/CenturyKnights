@@ -1,5 +1,5 @@
 extends Node
-## Renders 12 sample arms PNGs into user://heraldry_samples/ then copies note to stdout.
+## Renders 10 sample arms PNGs into user://heraldry_samples/ then copies note to stdout.
 
 func _ready() -> void:
 	var out_dir := "user://heraldry_samples"
@@ -15,16 +15,10 @@ func _ready() -> void:
 		{"id": "08_irongorge_baron", "nation": "irongorge", "rank": "baron", "mode": "shield"},
 		{"id": "09_starriver_count", "nation": "starriver", "rank": "count", "mode": "shield"},
 		{"id": "10_southzephyr_knight", "nation": "southzephyr", "rank": "knight", "mode": "shield"},
-		{"id": "11_impale_ash_qinghe", "nation": "ashbanner", "rank": "baron", "mode": "shield", "marshal": "qinghe", "marshal_mode": "impale"},
-		{"id": "12_quarter_cadency_bastard", "nation": "frostcrown", "rank": "duke", "mode": "arms", "marshal": "lantern", "marshal_mode": "quarter", "cadency": 2, "bastardy": true},
 	]
 	var written: Array = []
 	for s in samples:
 		var spec := CKHeraldry.from_nation(str(s.nation), str(s.rank))
-		if s.has("marshal"):
-			spec = CKHeraldry.marshal(spec, CKHeraldry.from_nation(str(s.marshal)), str(s.get("marshal_mode", "impale")))
-		if s.has("cadency"):
-			spec = CKHeraldry.apply_cadency(spec, int(s.cadency), bool(s.get("bastardy", false)))
 		spec = CKHeraldry.apply_rank(spec, str(s.rank))
 		var img: Image
 		match str(s.mode):

@@ -2,7 +2,10 @@ class_name CKStoryState
 extends RefCounted
 ## Chapter beats and chapter JSON. Beats live in one dictionary; chapter files load on demand.
 
-const CHAPTER_COUNT := 235
+## legacy_index space: 0 = ch0, 1–234 retired chapters, 101–399 volume chapters (eN_MM -> N*100+MM).
+## Saves written before v9.2.1 only carry 0–234; missing keys load as the default beat.
+const CHAPTER_COUNT := 400
+const LEGACY_COUNT := 235
 static var load_count: int = 0
 
 var beats: Dictionary = {}

@@ -36,7 +36,8 @@ var skill_points: int = 0
 var started: bool = false
 var surname: String = "灰旗"
 var crest_color: String = "#6ed4ff"
-var banner_spec: Dictionary = {}
+var banner_spec: Dictionary = {}  # company banner (团徽) — permanent
+var families: Dictionary = {}  # family_id -> {id, name, nation, core}; family arms (族徽)
 var silver: int = 120
 var food: int = 40
 var iron: int = 5
@@ -300,6 +301,8 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	banner_spec = BannerSpec.from_crest(color)
 	var leader = CharacterFactory.make_leader(leader_given, leader_surname, color)
 	characters[leader.id] = leader
+	families.clear()
+	found_family(leader_surname, str(CKHeraldry.table().get("defaults", {}).get("nation", "ashbanner")), [leader.id])
 	var wantan = CharacterFactory.make_shilei_wantan()
 	characters[wantan.id] = wantan
 	var ally = CharacterFactory.make_ally_tutor()
@@ -738,6 +741,7 @@ func build_save_data() -> Dictionary:
 		"surname": surname,
 		"crest_color": crest_color,
 		"banner_spec": banner_spec.duplicate(true),
+		"families": families.duplicate(true),
 		"silver": silver, "food": food, "iron": iron, "herb": herb, "morale": morale,
 		"year": Calendar.year, "month": Calendar.month,
 		"play_seconds": play_seconds,
@@ -879,6 +883,7 @@ func apply_save_data(data: Dictionary) -> bool:
 	marriage_candidates.clear()
 	for d in data.get("marriage", []):
 		marriage_candidates.append(CKCharacter.from_dict(d))
+	_load_families(data)
 	marriage_nation = str(data.get("marriage_nation", ""))
 	var _wd = data.get("world_v87", {})
 	var _world: Dictionary = _wd if typeof(_wd) == TYPE_DICTIONARY else {}
@@ -1075,3 +1080,96 @@ func build_dynasty_journal() -> String:
 
 func has_save() -> bool:
 	return FileAccess.file_exists(SAVE_PATH)
+
+
+# --- Company banner (团徽) & family arms (族徽) --------------------------------------------
+# One mercenary company, one fixed castle: banner_spec is the permanent company banner.
+# Uniqueness scope = company banner + our families only (other companies / AI banners are separate).
+
+func arms_registry(exclude_family: String = "") -> Dictionary:
+	var taken: Dictionary = {}
+	taken[CKHeraldry.core_key(banner_spec)] = "company"
+	for fid in families.keys():
+		if str(fid) != exclude_family:
+			taken[CKHeraldry.core_key((families[fid] as Dictionary).get("core", {}))] = "family:" + str(fid)
+	return taken
+
+func found_family(fam_name: String, nation: String, member_ids: Array = []) -> String:
+	## Family arms are generated once at founding and never change afterwards.
+	var fid := "fam_%d" % (families.size() + 1)
+	while families.has(fid):
+		fid += "_"
+	var core := CKHeraldry.generate_unique_arms(nation, fid + fam_name, arms_registry())
+	families[fid] = {"id": fid, "name": fam_name, "nation": nation, "core": core}
+	for cid in member_ids:
+		if characters.has(cid):
+			characters[cid].family_id = fid
+	mark_dirty()
+	return fid
+
+func family_tier(fid: String) -> String:
+	## Ornament tier from members' titles: duke → royal, baron+ → noble, otherwise commoner.
+	var best := -1
+	for c in characters.values():
+		if c.family_id == fid and c.alive:
+			best = maxi(best, c.rank_index())
+	if best >= CKCharacter.RANK_ORDER.find("duke"):
+		return "royal"
+	if best >= CKCharacter.RANK_ORDER.find("baron"):
+		return "noble"
+	return "commoner"
+
+func arms_for_character(c) -> Dictionary:
+	## Family member → family arms (族徽); familyless → company banner (团徽).
+	if c == null or str(c.family_id) == "" or not families.has(str(c.family_id)):
+		return banner_spec
+	var fam: Dictionary = families[str(c.family_id)]
+	return CKHeraldry.family_display_arms(fam.get("core", {}), banner_spec, family_tier(str(fam.id)))
+
+func ensure_unique_arms() -> void:
+	## Company banner wins; a family core colliding with it or an earlier family re-rolls (setup / legacy saves only).
+	var taken: Dictionary = {}
+	taken[CKHeraldry.core_key(banner_spec)] = true
+	var ids := families.keys()
+	ids.sort()
+	for fid in ids:
+		var fam: Dictionary = families[fid]
+		var key := CKHeraldry.core_key(fam.get("core", {}))
+		if taken.has(key):
+			fam["core"] = CKHeraldry.generate_unique_arms(str(fam.get("nation", "ashbanner")), str(fid) + "#reroll", taken)
+			key = CKHeraldry.core_key(fam["core"])
+		taken[key] = true
+
+func _load_families(data: Dictionary) -> void:
+	families = {}
+	var raw = data.get("families", {})
+	if typeof(raw) == TYPE_DICTIONARY:
+		for fid in (raw as Dictionary).keys():
+			var fam: Dictionary = (raw[fid] as Dictionary).duplicate(true)
+			fam["core"] = CKHeraldry.normalize(fam.get("core", {}))
+			families[str(fid)] = fam
+	for c in characters.values():
+		# Drop legacy per-person cadency stamp (arms no longer encode birth order / legitimacy).
+		if typeof(c.blood_meta) == TYPE_DICTIONARY and c.blood_meta.has("heraldry"):
+			c.blood_meta.erase("heraldry")
+	if families.is_empty():
+		_migrate_found_leader_family()
+	ensure_unique_arms()
+
+func _migrate_found_leader_family() -> void:
+	## Old saves: the leader's bloodline becomes the founding family; recruits keep the castle banner.
+	var leader = get_leader()
+	if leader == null:
+		return
+	var fid := found_family(surname, str(CKHeraldry.table().get("defaults", {}).get("nation", "ashbanner")), [leader.id])
+	var changed := true
+	while changed:
+		changed = false
+		for c in characters.values():
+			if c.family_id != "":
+				continue
+			for pid in c.parent_ids:
+				if characters.has(pid) and characters[pid].family_id == fid:
+					c.family_id = fid
+					changed = true
+					break
