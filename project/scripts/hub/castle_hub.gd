@@ -38,7 +38,8 @@ func _build() -> void:
 	right_box.move_child(save_b, right_box.get_child_count() - 2)
 
 	# ── NAVIGATION ─────────────────────────────────────────
-	UIKit.panel_at(self, Rect2(26, 72, 150, 612), 10)
+	var nav_panel := UIKit.panel_at(self, Rect2(26, 72, 150, 612), 10)
+	nav_panel.name = "NavPanel"
 	var nl := UIKit.mono("NAVIGATION", 9, UIKit.TEXT_FAINT)
 	nl.position = Vector2(40, 86)
 	add_child(nl)
@@ -520,7 +521,48 @@ func _collect_labels(n: Node, out: Array) -> void:
 		_collect_labels(b, out)
 
 
+## Landscape phone: 300px nav rail with 22px text, 76px (48dp) entries; dossier and roster
+## plate slide right into the extra width. Runs once per build (meta guard).
+const M_RAIL_W := 300.0
+func _mobile_relayout() -> void:
+	if has_meta("m_relayout") or size.x < 1400.0:
+		return
+	set_meta("m_relayout", true)
+	var dx := M_RAIL_W - 150.0
+	for c in get_children():
+		if not (c is Control) or c.name in ["NavPanel", "NavRail", "StitchTopBar", "StitchFooter", "HubBannerPreview"]:
+			continue
+		var ctrl := c as Control
+		if ctrl.position.x >= 170.0 and ctrl.size.x < 1000.0:
+			ctrl.position.x += dx
+	var np := get_node_or_null("NavPanel") as Control
+	if np:
+		np.size = Vector2(M_RAIL_W, 640)
+		np.position.y = 64
+	var rail := find_child("NavRail", true, false) as ScrollContainer
+	if rail:
+		rail.position = Vector2(34, 76)
+		rail.size = Vector2(M_RAIL_W - 16.0, 620)
+		for b in rail.find_children("*", "Button", true, false):
+			var nb := b as Button
+			nb.add_theme_font_size_override("font_size", 22)
+			nb.custom_minimum_size = Vector2(M_RAIL_W - 24.0, 76)
+			nb.clip_text = true
+		for l in rail.find_children("*", "Label", true, false):
+			var ll := l as Label
+			ll.add_theme_font_size_override("font_size", 22)
+			ll.custom_minimum_size = Vector2(M_RAIL_W - 24.0, 34)
+	# Rail caption / gamepad status sit where the wider rail now is; touch has no gamepad.
+	for l in find_children("*", "Control", true, false):
+		var lc := l as Control
+		if lc is ScrollContainer or rail and rail.is_ancestor_of(lc):
+			continue
+		var gp := lc.global_position
+		if (lc is Label or lc is HBoxContainer) and gp.x < 200.0 and (gp.y < 100.0 and gp.y > 60.0 or gp.y > 640.0 and gp.y < 700.0):
+			lc.visible = false
+
 func apply_mobile_layout() -> void:
+	_mobile_relayout()
 	## Portrait: top-align, let the nav rail scroll, stretch dossier lists into slack.
 	var rail := find_child("NavRail", true, false) as ScrollContainer
 	if rail:
