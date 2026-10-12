@@ -90,11 +90,8 @@ func _input(event: InputEvent) -> void:
 		return
 	if CKPauseMenu.current == null and _focus_in_coach(focus):
 		return
-	CKPauseMenu.toggle()
 	get_viewport().set_input_as_handled()
-	if CKPauseMenu.current != null and is_instance_valid(CKPauseMenu.current):
-		var vp := get_viewport().get_visible_rect().size
-		MobileLayout.place_pause(CKPauseMenu.current, vp)
+	CKNav.back()
 
 func _focus_in_coach(focus: Control) -> bool:
 	if focus == null:

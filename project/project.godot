@@ -8,6 +8,7 @@ config/name_localized={"en":"CenturyKnights"}
 config/description="灰烬旗佣兵团：战棋·城堡·联姻·传代"
 run/main_scene="res://scenes/ui/main_menu.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
+config/quit_on_go_back=false
 config/icon="res://icon.svg"
 
 [autoload]
@@ -21,6 +22,7 @@ BattleRules="*res://autoload/battle_rules.gd"
 Sfx="*res://autoload/sfx.gd"
 Music="*res://autoload/music.gd"
 World="*res://autoload/world.gd"
+CKNav="*res://autoload/nav.gd"
 MobileChrome="*res://autoload/mobile_chrome.gd"
 
 [display]
@@ -29,7 +31,7 @@ window/size/viewport_width=1280
 window/size/viewport_height=720
 window/stretch/mode="canvas_items"
 window/stretch/aspect="keep"
-window/handheld/orientation="sensor"
+window/handheld/orientation=4
 
 [gui]
 
