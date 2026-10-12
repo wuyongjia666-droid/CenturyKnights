@@ -26,7 +26,7 @@ func _ready() -> void:
 		strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(strip)
 
-	var t = UIKit.make_label("委任榜", true)
+	var t = UIKit.make_label("委托榜", true)
 	t.position = Vector2(40, 16)
 	add_child(t)
 	var tip = UIKit.make_dim_label("陆桥的委托写在木板上：有的要刀，有的只要旗在风里亮一夜。")
