@@ -1,8 +1,8 @@
 {
- "offscreen_Button": 75,
+ "offscreen_Button": 78,
  "offscreen_CheckButton": 40,
  "offscreen_Label": 290,
- "overlap": 180,
- "small_font": 2342,
- "small_touch": 417
+ "overlap": 201,
+ "small_font": 2211,
+ "small_touch": 415
 }

@@ -127,7 +127,7 @@ func _build() -> void:
 		foot.position = Vector2(72, 690)
 
 func _on_new() -> void:
-	get_tree().change_scene_to_file("res://scenes/story/naming.tscn")
+	CKNav.replace("res://scenes/story/naming.tscn")
 
 func _on_replay() -> void:
 	GameState.begin_prologue_replay()
@@ -139,10 +139,10 @@ func _on_continue() -> void:
 		CKSaveSlots.enter_loaded(get_tree())
 
 func _on_load() -> void:
-	get_tree().change_scene_to_file("res://scenes/ui/save_slots.tscn")
+	CKNav.go("res://scenes/ui/save_slots.tscn")
 
 func _on_credits() -> void:
-	get_tree().change_scene_to_file("res://scenes/ui/credits.tscn")
+	CKNav.go("res://scenes/ui/credits.tscn")
 
 func _on_settings() -> void:
-	get_tree().change_scene_to_file("res://scenes/ui/settings.tscn")
+	CKNav.go("res://scenes/ui/settings.tscn")

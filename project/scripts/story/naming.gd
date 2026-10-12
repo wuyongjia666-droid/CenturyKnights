@@ -236,7 +236,7 @@ func _build() -> void:
 
 	var back = UIKit.make_button(Locale.t("btn_back"), 200)
 	back.custom_minimum_size = Vector2(200, 48)
-	back.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn"))
+	back.pressed.connect(func(): CKNav.replace(CKNav.TITLE))
 	box.add_child(back)
 	_back_btn = back
 
@@ -371,7 +371,7 @@ func _on_start() -> void:
 	GameState.crest_color = str(spec.field_a)
 	UnitArt.clear_cache()
 	GameState.save_game()
-	get_tree().change_scene_to_file("res://scenes/story/chapter0.tscn")
+	CKNav.replace("res://scenes/story/chapter0.tscn")
 
 func apply_mobile_layout() -> void:
 	if _scroll == null:

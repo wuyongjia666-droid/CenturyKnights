@@ -89,6 +89,22 @@ func replace(path: String, p: Dictionary = {}) -> bool:
 		return false
 	return _change(path, p)
 
+## Page-level "go up": pop the stack, or the castle when it is empty.
+## For a page's own back button / nav_back (calling back() there would recurse).
+## fallback: where to go when the stack is empty (a page's natural parent); castle by default.
+func up(fallback: String = HOME) -> bool:
+	if _busy:
+		return false
+	while not stack.is_empty():
+		var top: Dictionary = stack.pop_back()
+		if ResourceLoader.exists(str(top.path)):
+			_dir = -1
+			return _change(str(top.path), top.get("params", {}))
+	if fallback == HOME or fallback == "" or not ResourceLoader.exists(fallback):
+		return home()
+	_dir = -1
+	return _change(fallback, {})
+
 func home() -> bool:
 	stack.clear()
 	_dir = -1

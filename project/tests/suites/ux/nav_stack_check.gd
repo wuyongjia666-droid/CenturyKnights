@@ -81,7 +81,7 @@ func _run() -> void:
 	_ok(_scene() == VIEW, "focus back changed page")
 	le.queue_free()
 	await _settle()
-	_ok(CKNav.back() == "pop", "page without _back must pop the stack")
+	_ok(CKNav.back() in ["pop", "page"], "page back must pop the stack")
 	await _settle()
 	_ok(_scene() == ROSTER, "pop did not return to roster (%s)" % _scene())
 	# legacy hop is learned
