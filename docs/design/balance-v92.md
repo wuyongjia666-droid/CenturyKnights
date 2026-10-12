@@ -85,3 +85,9 @@ CMP-05 节庆、CMP-06 第二据点、CMP-08 传家宝已经在 main 上。同�
 - 存档记 `tavern_refresh`（当月序号与已用次数）。
 - 测试：`company/tavern_refresh_check`。
 
+
+## v9.2 补丁：开局首月（WS-D #52）
+
+开局 120 银，二级工事原价 80，第一月只能做一件事。二级工事改为 60 银（铁 3、粮 10 不变），开局可以升一级工事再练一次兵，还剩 45 银。
+种子 91 重测：`CAMPAIGN CENTURY PASS ... silver=1478`（改前 1472），出生 15、世代 5、传旗 4 次、紧年 1、见底年 0 不变；`PORTRAIT BANK PASS buckets=1595` 不变。
+测试：`company/opening_budget_check`。
