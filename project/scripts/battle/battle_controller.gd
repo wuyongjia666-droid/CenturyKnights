@@ -1727,7 +1727,7 @@ func _click_cell(cell: Vector2i) -> void:
 					if DeviceProfile.is_mobile():
 						BattleMobileBar.rebuild(self)
 					overlay.queue_redraw()
-					_log("%s 预览移动 (%d,%d) — 确认后落子" % [su.char.name, cell.x, cell.y])
+					_log(Locale.t("ux_preview_move_log") % [su.char.name, cell.x, cell.y])
 					return
 				_commit_move(cell)
 				return
