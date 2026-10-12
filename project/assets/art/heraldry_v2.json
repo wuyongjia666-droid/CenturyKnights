@@ -1,0 +1,978 @@
+{
+  "version": 2,
+  "style": "contemporary-frost-fantasy-2026",
+  "tinctures": {
+    "argent": {
+      "hex": "#f4f7fb",
+      "zh": "霜白",
+      "en": "argent",
+      "class": "metal"
+    },
+    "or": {
+      "hex": "#c9d3de",
+      "zh": "霜银",
+      "en": "or-silver",
+      "class": "metal"
+    },
+    "azure": {
+      "hex": "#6ed4ff",
+      "zh": "霜青",
+      "en": "azure",
+      "class": "colour"
+    },
+    "azure_deep": {
+      "hex": "#3a6ea5",
+      "zh": "河蓝",
+      "en": "deep azure",
+      "class": "colour"
+    },
+    "azure_ink": {
+      "hex": "#2e6f8f",
+      "zh": "潮墨青",
+      "en": "ink azure",
+      "class": "colour"
+    },
+    "sable": {
+      "hex": "#1c2330",
+      "zh": "潮墨",
+      "en": "sable",
+      "class": "colour"
+    },
+    "vert": {
+      "hex": "#5ee0b5",
+      "zh": "薄荷",
+      "en": "vert",
+      "class": "colour"
+    },
+    "vert_mist": {
+      "hex": "#9dcfb8",
+      "zh": "松雾",
+      "en": "mist vert",
+      "class": "colour"
+    },
+    "gules": {
+      "hex": "#ff7a70",
+      "zh": "珊瑚",
+      "en": "gules",
+      "class": "colour"
+    },
+    "gules_soft": {
+      "hex": "#ff8a80",
+      "zh": "赤霞",
+      "en": "soft gules",
+      "class": "colour"
+    },
+    "purpure": {
+      "hex": "#6b4c7a",
+      "zh": "岚紫",
+      "en": "purpure",
+      "class": "colour"
+    },
+    "bleu_celeste": {
+      "hex": "#9be4ff",
+      "zh": "晴霜",
+      "en": "celeste",
+      "class": "colour"
+    },
+    "sky": {
+      "hex": "#8fd4ff",
+      "zh": "天光",
+      "en": "sky",
+      "class": "colour"
+    },
+    "plume": {
+      "hex": "#9bb4ff",
+      "zh": "羽蓝",
+      "en": "plume",
+      "class": "colour"
+    },
+    "tide": {
+      "hex": "#7ed6c8",
+      "zh": "潮青",
+      "en": "tide",
+      "class": "colour"
+    },
+    "slate": {
+      "hex": "#b7c3d1",
+      "zh": "铁霜",
+      "en": "slate",
+      "class": "colour"
+    },
+    "mist": {
+      "hex": "#a8c5d4",
+      "zh": "薄雾",
+      "en": "mist",
+      "class": "colour"
+    },
+    "lake": {
+      "hex": "#70b8c8",
+      "zh": "湖青",
+      "en": "lake",
+      "class": "colour"
+    },
+    "bay": {
+      "hex": "#4a90a8",
+      "zh": "湾青",
+      "en": "bay",
+      "class": "colour"
+    },
+    "haze": {
+      "hex": "#5c7a9a",
+      "zh": "雾蓝",
+      "en": "haze",
+      "class": "colour"
+    },
+    "ice": {
+      "hex": "#3aaddf",
+      "zh": "冰河",
+      "en": "ice",
+      "class": "colour"
+    },
+    "cloud": {
+      "hex": "#d0dde8",
+      "zh": "云灰",
+      "en": "cloud",
+      "class": "colour"
+    },
+    "ermine": {
+      "hex": "#e8f6ff",
+      "spot": "#1c2330",
+      "zh": "霜皮",
+      "en": "ermine",
+      "class": "fur"
+    },
+    "vair": {
+      "hex": "#6ed4ff",
+      "spot": "#f4f7fb",
+      "zh": "潮斑",
+      "en": "vair",
+      "class": "fur"
+    }
+  },
+  "metal_ids": [
+    "argent",
+    "or"
+  ],
+  "colour_ids": [
+    "azure",
+    "azure_deep",
+    "azure_ink",
+    "sable",
+    "vert",
+    "vert_mist",
+    "gules",
+    "gules_soft",
+    "purpure",
+    "bleu_celeste",
+    "sky",
+    "plume",
+    "tide",
+    "slate",
+    "mist",
+    "lake",
+    "bay",
+    "haze",
+    "ice",
+    "cloud"
+  ],
+  "fur_ids": [
+    "ermine",
+    "vair"
+  ],
+  "divisions": [
+    {
+      "id": "solid",
+      "zh": "单色",
+      "en": "solid"
+    },
+    {
+      "id": "per_pale",
+      "zh": "纵分",
+      "en": "per pale"
+    },
+    {
+      "id": "per_fess",
+      "zh": "横分",
+      "en": "per fess"
+    },
+    {
+      "id": "per_bend",
+      "zh": "左斜分",
+      "en": "per bend"
+    },
+    {
+      "id": "per_bend_sinister",
+      "zh": "右斜分",
+      "en": "per bend sinister"
+    },
+    {
+      "id": "quarterly",
+      "zh": "四分",
+      "en": "quarterly"
+    },
+    {
+      "id": "per_chevron",
+      "zh": "山形分",
+      "en": "per chevron"
+    },
+    {
+      "id": "per_saltire",
+      "zh": "叉分",
+      "en": "per saltire"
+    },
+    {
+      "id": "gyronny",
+      "zh": "辐分",
+      "en": "gyronny"
+    }
+  ],
+  "partition_lines": [
+    {
+      "id": "straight",
+      "zh": "直线",
+      "en": "straight"
+    },
+    {
+      "id": "wavy",
+      "zh": "波纹",
+      "en": "wavy"
+    },
+    {
+      "id": "engrailed",
+      "zh": "内弧齿",
+      "en": "engrailed"
+    },
+    {
+      "id": "embattled",
+      "zh": "雉堞",
+      "en": "embattled"
+    },
+    {
+      "id": "invected",
+      "zh": "外弧齿",
+      "en": "invected"
+    },
+    {
+      "id": "nebuly",
+      "zh": "云纹",
+      "en": "nebuly"
+    }
+  ],
+  "ordinaries": [
+    {
+      "id": "none",
+      "zh": "无",
+      "en": "none"
+    },
+    {
+      "id": "fess",
+      "zh": "横带",
+      "en": "fess"
+    },
+    {
+      "id": "pale",
+      "zh": "纵带",
+      "en": "pale"
+    },
+    {
+      "id": "bend",
+      "zh": "左斜带",
+      "en": "bend"
+    },
+    {
+      "id": "bend_sinister",
+      "zh": "右斜带",
+      "en": "bend sinister"
+    },
+    {
+      "id": "chevron",
+      "zh": "山形",
+      "en": "chevron"
+    },
+    {
+      "id": "cross",
+      "zh": "十字",
+      "en": "cross"
+    },
+    {
+      "id": "saltire",
+      "zh": "叉架",
+      "en": "saltire"
+    },
+    {
+      "id": "chief",
+      "zh": "首席带",
+      "en": "chief"
+    },
+    {
+      "id": "bordure",
+      "zh": "镶边带",
+      "en": "bordure"
+    },
+    {
+      "id": "orle",
+      "zh": "内框",
+      "en": "orle"
+    },
+    {
+      "id": "pile",
+      "zh": "尖楔",
+      "en": "pile"
+    },
+    {
+      "id": "pall",
+      "zh": "丫架",
+      "en": "pall"
+    },
+    {
+      "id": "pale_thin",
+      "zh": "中轴",
+      "en": "thin pale"
+    }
+  ],
+  "borders": [
+    {
+      "id": "none",
+      "zh": "无镶边",
+      "en": "none"
+    },
+    {
+      "id": "line",
+      "zh": "细线",
+      "en": "line"
+    },
+    {
+      "id": "double",
+      "zh": "双线",
+      "en": "double"
+    },
+    {
+      "id": "dentil",
+      "zh": "霜齿",
+      "en": "dentil"
+    }
+  ],
+  "charges": [
+    {
+      "id": "ring",
+      "zh": "霜环",
+      "shape": "ring"
+    },
+    {
+      "id": "hollow",
+      "zh": "空心圆",
+      "shape": "ring_thick"
+    },
+    {
+      "id": "arc",
+      "zh": "弧",
+      "shape": "arc"
+    },
+    {
+      "id": "wave",
+      "zh": "浪",
+      "shape": "wave"
+    },
+    {
+      "id": "leaf",
+      "zh": "叶",
+      "shape": "diamond"
+    },
+    {
+      "id": "chevron_mark",
+      "zh": "山徽",
+      "shape": "chevron"
+    },
+    {
+      "id": "spark",
+      "zh": "火花",
+      "shape": "cross_spark"
+    },
+    {
+      "id": "filament",
+      "zh": "丝缕",
+      "shape": "filament"
+    },
+    {
+      "id": "tide",
+      "zh": "潮汐",
+      "shape": "tide"
+    },
+    {
+      "id": "notch",
+      "zh": "缺口",
+      "shape": "notch"
+    },
+    {
+      "id": "bars",
+      "zh": "横杠",
+      "shape": "bars"
+    },
+    {
+      "id": "bend_mark",
+      "zh": "对角",
+      "shape": "bend"
+    },
+    {
+      "id": "mullet",
+      "zh": "霜星",
+      "shape": "mullet"
+    },
+    {
+      "id": "crescent",
+      "zh": "霜月",
+      "shape": "crescent"
+    },
+    {
+      "id": "annulet",
+      "zh": "细环",
+      "shape": "annulet"
+    },
+    {
+      "id": "lozenge",
+      "zh": "菱",
+      "shape": "lozenge"
+    },
+    {
+      "id": "tower",
+      "zh": "塔影",
+      "shape": "tower"
+    },
+    {
+      "id": "bridge",
+      "zh": "桥脉",
+      "shape": "bridge"
+    },
+    {
+      "id": "lantern",
+      "zh": "灯芯",
+      "shape": "lantern"
+    },
+    {
+      "id": "flake",
+      "zh": "霜晶",
+      "shape": "flake"
+    },
+    {
+      "id": "reed",
+      "zh": "苇",
+      "shape": "reed"
+    },
+    {
+      "id": "anvil",
+      "zh": "砧",
+      "shape": "anvil"
+    },
+    {
+      "id": "starbridge",
+      "zh": "星桥",
+      "shape": "starbridge"
+    },
+    {
+      "id": "zephyr",
+      "zh": "南风",
+      "shape": "zephyr"
+    },
+    {
+      "id": "ash_plume",
+      "zh": "灰羽",
+      "shape": "plume"
+    },
+    {
+      "id": "shadow_arc",
+      "zh": "朔弧",
+      "shape": "arc"
+    },
+    {
+      "id": "jade_wave",
+      "zh": "翠浪",
+      "shape": "wave"
+    },
+    {
+      "id": "glass_lantern",
+      "zh": "玻灯",
+      "shape": "lantern"
+    },
+    {
+      "id": "ice_crown",
+      "zh": "冰冕",
+      "shape": "crownlet"
+    },
+    {
+      "id": "ember_notch",
+      "zh": "烬缺",
+      "shape": "notch"
+    },
+    {
+      "id": "salt_crystal",
+      "zh": "盐晶",
+      "shape": "flake"
+    },
+    {
+      "id": "iron_chevron",
+      "zh": "铁山",
+      "shape": "chevron"
+    },
+    {
+      "id": "constellation",
+      "zh": "星阵",
+      "shape": "mullet"
+    },
+    {
+      "id": "fog_leaf",
+      "zh": "雾叶",
+      "shape": "leaf"
+    }
+  ],
+  "cadency": [
+    {
+      "id": "none",
+      "order": 0,
+      "zh": "无",
+      "shape": "none"
+    },
+    {
+      "id": "label",
+      "order": 1,
+      "zh": "嫡长标",
+      "shape": "label"
+    },
+    {
+      "id": "crescent",
+      "order": 2,
+      "zh": "次子月",
+      "shape": "crescent"
+    },
+    {
+      "id": "mullet",
+      "order": 3,
+      "zh": "三子星",
+      "shape": "mullet"
+    },
+    {
+      "id": "martlet",
+      "order": 4,
+      "zh": "四子燕",
+      "shape": "martlet"
+    },
+    {
+      "id": "annulet",
+      "order": 5,
+      "zh": "五子环",
+      "shape": "annulet"
+    },
+    {
+      "id": "fleur",
+      "order": 6,
+      "zh": "六子花",
+      "shape": "fleur"
+    },
+    {
+      "id": "rose",
+      "order": 7,
+      "zh": "七子蔷",
+      "shape": "rose"
+    },
+    {
+      "id": "cross_moline",
+      "order": 8,
+      "zh": "八子十字",
+      "shape": "cross_moline"
+    },
+    {
+      "id": "octofoil",
+      "order": 9,
+      "zh": "九子瓣",
+      "shape": "octofoil"
+    }
+  ],
+  "helms": [
+    {
+      "id": "none",
+      "rank_min": -1,
+      "zh": "无盔"
+    },
+    {
+      "id": "closed",
+      "rank_min": 0,
+      "zh": "闭盔"
+    },
+    {
+      "id": "grilled",
+      "rank_min": 1,
+      "zh": "栅盔"
+    },
+    {
+      "id": "royal",
+      "rank_min": 4,
+      "zh": "王冠盔"
+    }
+  ],
+  "crowns": [
+    {
+      "id": "none",
+      "rank": "",
+      "zh": "无冠"
+    },
+    {
+      "id": "knight",
+      "rank": "knight",
+      "zh": "勋环"
+    },
+    {
+      "id": "baron",
+      "rank": "baron",
+      "zh": "男爵冠"
+    },
+    {
+      "id": "count",
+      "rank": "count",
+      "zh": "伯爵冠"
+    },
+    {
+      "id": "duke",
+      "rank": "duke",
+      "zh": "侯爵冠"
+    },
+    {
+      "id": "royal",
+      "rank": "royal",
+      "zh": "霜冕"
+    }
+  ],
+  "nations": {
+    "ashbanner": {
+      "zh": "灰烬邦",
+      "shield": "heater",
+      "field_a": "or",
+      "field_b": "sable",
+      "ordinary": "pale",
+      "ordinary_tincture": "azure",
+      "charges": [
+        "ash_plume",
+        "bars",
+        "bridge"
+      ],
+      "partition_bias": [
+        "per_pale",
+        "solid"
+      ],
+      "motto": "灰旗不落",
+      "ink": "slate"
+    },
+    "shuoying": {
+      "zh": "朔影国",
+      "shield": "kite",
+      "field_a": "sable",
+      "field_b": "plume",
+      "ordinary": "bend_sinister",
+      "ordinary_tincture": "argent",
+      "charges": [
+        "shadow_arc",
+        "crescent",
+        "arc"
+      ],
+      "partition_bias": [
+        "per_bend_sinister",
+        "solid"
+      ],
+      "motto": "影中有序",
+      "ink": "plume"
+    },
+    "qinghe": {
+      "zh": "清河国",
+      "shield": "round",
+      "field_a": "vert",
+      "field_b": "argent",
+      "ordinary": "fess",
+      "ordinary_tincture": "azure_deep",
+      "charges": [
+        "jade_wave",
+        "wave",
+        "leaf"
+      ],
+      "partition_bias": [
+        "per_fess",
+        "wavy"
+      ],
+      "motto": "水德常清",
+      "ink": "vert"
+    },
+    "lantern": {
+      "zh": "灯市联",
+      "shield": "banner",
+      "field_a": "azure",
+      "field_b": "bleu_celeste",
+      "ordinary": "chief",
+      "ordinary_tincture": "or",
+      "charges": [
+        "glass_lantern",
+        "lantern",
+        "filament"
+      ],
+      "partition_bias": [
+        "solid",
+        "per_fess"
+      ],
+      "motto": "千灯同市",
+      "ink": "azure"
+    },
+    "frostcrown": {
+      "zh": "霜冕廷",
+      "shield": "heater",
+      "field_a": "argent",
+      "field_b": "azure_deep",
+      "ordinary": "cross",
+      "ordinary_tincture": "azure",
+      "charges": [
+        "ice_crown",
+        "flake",
+        "ring"
+      ],
+      "partition_bias": [
+        "quarterly",
+        "solid"
+      ],
+      "motto": "冕下无喧",
+      "ink": "argent"
+    },
+    "emberold": {
+      "zh": "余烬旧邦",
+      "shield": "heater",
+      "field_a": "sable",
+      "field_b": "gules",
+      "ordinary": "chevron",
+      "ordinary_tincture": "gules_soft",
+      "charges": [
+        "ember_notch",
+        "notch",
+        "spark"
+      ],
+      "partition_bias": [
+        "per_chevron",
+        "solid"
+      ],
+      "motto": "烬中记火",
+      "ink": "gules_soft"
+    },
+    "saltmarsh": {
+      "zh": "盐泽盟",
+      "shield": "round",
+      "field_a": "tide",
+      "field_b": "or",
+      "ordinary": "bordure",
+      "ordinary_tincture": "argent",
+      "charges": [
+        "salt_crystal",
+        "reed",
+        "tide"
+      ],
+      "partition_bias": [
+        "per_fess",
+        "wavy"
+      ],
+      "motto": "潮退盐存",
+      "ink": "tide"
+    },
+    "irongorge": {
+      "zh": "铁峡领",
+      "shield": "heater",
+      "field_a": "slate",
+      "field_b": "sable",
+      "ordinary": "pale",
+      "ordinary_tincture": "cloud",
+      "charges": [
+        "iron_chevron",
+        "anvil",
+        "chevron_mark"
+      ],
+      "partition_bias": [
+        "per_pale",
+        "solid"
+      ],
+      "motto": "峡中生钢",
+      "ink": "slate"
+    },
+    "starriver": {
+      "zh": "星津邦",
+      "shield": "lozenge",
+      "field_a": "sable",
+      "field_b": "sky",
+      "ordinary": "bend",
+      "ordinary_tincture": "bleu_celeste",
+      "charges": [
+        "constellation",
+        "starbridge",
+        "mullet"
+      ],
+      "partition_bias": [
+        "per_bend",
+        "gyronny"
+      ],
+      "motto": "津上见星",
+      "ink": "sky"
+    },
+    "southzephyr": {
+      "zh": "南泽邦",
+      "shield": "round",
+      "field_a": "vert_mist",
+      "field_b": "argent",
+      "ordinary": "pall",
+      "ordinary_tincture": "vert",
+      "charges": [
+        "fog_leaf",
+        "zephyr",
+        "leaf"
+      ],
+      "partition_bias": [
+        "per_chevron",
+        "solid"
+      ],
+      "motto": "泽气南来",
+      "ink": "vert_mist"
+    }
+  },
+  "shield_shapes": [
+    "heater",
+    "kite",
+    "round",
+    "lozenge",
+    "banner"
+  ],
+  "marshalling_modes": [
+    "none",
+    "impale",
+    "quarter"
+  ],
+  "palette": [
+    "#6ed4ff",
+    "#5ee0b5",
+    "#c9d3de",
+    "#3a6ea5",
+    "#9be4ff",
+    "#2e6f8f",
+    "#3aaddf",
+    "#8fd4ff",
+    "#7ed6c8",
+    "#9bb4ff",
+    "#e8f6ff",
+    "#b7c3d1",
+    "#9dcfb8",
+    "#ff7a70",
+    "#ff8a80",
+    "#c5d0dc",
+    "#5c7a9a",
+    "#4a90a8",
+    "#6b8cae",
+    "#a8c5d4",
+    "#70b8c8",
+    "#86c8d8",
+    "#d0dde8",
+    "#f4f7fb"
+  ],
+  "color_names": [
+    "霜青",
+    "薄荷",
+    "霜银",
+    "河蓝",
+    "晴霜",
+    "潮墨",
+    "冰河",
+    "天光",
+    "潮青",
+    "羽蓝",
+    "霜白",
+    "铁霜",
+    "松雾",
+    "珊瑚",
+    "赤霞",
+    "银灰",
+    "雾蓝",
+    "湾青",
+    "岚灰",
+    "薄雾",
+    "湖青",
+    "浅潮",
+    "云灰",
+    "素白"
+  ],
+  "pole": [
+    "#3a4555",
+    "#6b7585"
+  ],
+  "outline": "#0a0e14",
+  "sheen": "#e8f6ff",
+  "defaults": {
+    "schema": 2,
+    "field": "solid",
+    "division": "solid",
+    "partition_line": "straight",
+    "field_a": "#6ed4ff",
+    "field_b": "#2e6f8f",
+    "tincture_a": "azure",
+    "tincture_b": "azure_ink",
+    "charge": "none",
+    "ordinary": "none",
+    "ordinary_tincture": "#e8f6ff",
+    "charge_color": "#e8f6ff",
+    "border": "line",
+    "border_color": "#9be4ff",
+    "emblem": "ring",
+    "emblem_color": "#f4f7fb",
+    "charges": [
+      {
+        "id": "ring",
+        "tincture": "#f4f7fb",
+        "placement": "center"
+      }
+    ],
+    "shield_shape": "heater",
+    "nation": "ashbanner",
+    "cadency": "none",
+    "bastardy": false,
+    "achievement": {
+      "helm": "none",
+      "crown": "none",
+      "mantling_a": "#6ed4ff",
+      "mantling_b": "#c9d3de",
+      "supporters": [
+        "none",
+        "none"
+      ],
+      "motto": ""
+    },
+    "marshalling": {
+      "mode": "none",
+      "partner": {}
+    }
+  },
+  "v1_field_to_division": {
+    "solid": "solid",
+    "per_fess": "per_fess",
+    "per_pale": "per_pale"
+  },
+  "v1_charge_to_ordinary": {
+    "none": "none",
+    "fess": "fess",
+    "pale": "pale",
+    "bend": "bend",
+    "chevron": "chevron",
+    "pale_thin": "pale_thin"
+  },
+  "rank_to_helm": {
+    "knight": "closed",
+    "baron": "grilled",
+    "viscount": "grilled",
+    "count": "grilled",
+    "duke": "royal",
+    "royal": "royal"
+  },
+  "rank_to_crown": {
+    "knight": "knight",
+    "baron": "baron",
+    "viscount": "baron",
+    "count": "count",
+    "duke": "duke",
+    "royal": "royal"
+  }
+}
