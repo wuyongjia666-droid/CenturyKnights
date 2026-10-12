@@ -27,24 +27,16 @@ func _run() -> String:
 			open += 1
 		if on != UnlockSchedule.allows(str(id)):
 			return "interface mismatch " + str(id)
-	if open > 6:
-		return "year-one doors %d" % open
-	if open < 6:
+	## Playtest: atlas / lineage / quests / marriage are reachable from year one.
+	if open != 10:
 		return "year-one doors %d" % open
 	if not Todo.is_unlocked("deploy"):
 		return "deploy locked"
-	if Todo.is_unlocked("marriage"):
-		return "marriage open"
+	for must in ["atlas", "lineage", "quests", "marriage"]:
+		if not Todo.is_unlocked(must):
+			return must + " locked in year one"
 	if Todo.is_unlocked("not_a_real_entry"):
 		return "unknown open"
-	GameState.set_flag("e1_07_fought", true)
-	if not Todo.is_unlocked("marriage"):
-		return "marriage stayed locked"
-	if Todo.is_unlocked("lineage"):
-		return "lineage open without a child"
-	GameState.set_flag("child_born", true)
-	if not Todo.is_unlocked("lineage"):
-		return "lineage ignored child_born"
 	var heir := CharacterFactory.make_ally_tutor()
 	heir.parent_ids = ["p1", "p2"]
 	heir.alive = true

@@ -85,13 +85,13 @@ func marry(suitor: CKCharacter, target: CKCharacter, bride_price: int = 40, acce
 		if rite_cost > 0:
 			dip.append("婚仪 %d 银" % rite_cost)
 	# Seed 91's century sim calls marry() and must keep the old 2-tick countdown
-	# with no extra draw. Player weddings pass paced=true for the 3-month term.
+	# with no extra draw. Player weddings pass paced=true for the 9–11 month term.
 	var mother = target if target.gender == "f" else suitor
 	var conceived := true
 	var due := 2
 	if paced:
 		conceived = CKFamilyState.begin_pregnancy(GameState, mother)
-		due = CKFamilyState.term_months(GameState)
+		due = int(mother.blood_meta.get("gestation_term", CKFamilyState.TERM_MONTHS)) if conceived else 0
 	else:
 		mother.pregnant_months = 1
 	GameState.chapter0_flags["married"] = true

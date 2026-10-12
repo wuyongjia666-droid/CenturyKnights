@@ -446,14 +446,14 @@ static func _load_png(path: String) -> Texture2D:
 	return ImageTexture.create_from_image(img)
 
 static func _stage_names(stage: String) -> Array:
+	## Only the true stage, then at most one adjacent band. Never infant→elder.
 	var names: Array = []
 	var idx := stage_index(stage)
 	names.append(str(STAGES[idx]))
-	for dist in range(1, STAGES.size()):
-		for sign in [-1, 1]:
-			var j: int = idx + sign * dist
-			if j >= 0 and j < STAGES.size():
-				names.append(str(STAGES[j]))
+	for sign in [-1, 1]:
+		var j: int = idx + sign
+		if j >= 0 and j < STAGES.size():
+			names.append(str(STAGES[j]))
 	return names
 
 static func _load_named(stem: String, tier: String = "large") -> Texture2D:
