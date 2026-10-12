@@ -110,13 +110,14 @@
 
 ---
 
-## 4. 渲染
+## 4. 渲染（美术 pass 2：矢量）
 
-- `CKHeraldryRender.compose_arms(spec, w, h, opts)` → `Image`（2× 超采样后降采样，抗锯齿）。
-- `compose_banner(spec, w, h, wave)` → 带旗杆的垂旗（战场 / 城堡）。
-- `compose_shield(spec, w, h)` → 纯盾（族谱 / DIY / 名录）。
-- 材质：统一描边权重、顶部冷光 sheen、边缘 1px 霜线、轻微「珐琅 / 绣面」明度噪声（确定性种子 = cache_key）。
-- 缓存：`UnitArt` 现有 `_cache`；key 含 schema + 爵级。
+- `CKHeraldryVector`（`scripts/art/heraldry_vector.gd`）：每个纹章拼成一份 SVG，由 Godot 内置 ThorVG 光栅化（`Image.load_svg_from_string`），任意尺寸抗锯齿；`CKHeraldryRender.compose` 统一走它，旧像素画笔仅作兜底。
+- 美术库 `assets/art/heraldry_vector.json`（由 `tools/art/build_heraldry_vector.py` 生成，原创手绘矢量）：34 种纹样、3 盔、5 冠、幔叶、6 种扶盾兽（狼 / 鹿 / 鹤 / 鹰 / 熊 / 海龙）及十国扶盾配对、饰带 / 冰台 / 旗杆配色；全部霜系，无金色。
+- 程序部分只负责：底色 / 分区 / 分区线型（波纹、内外弧齿、雉堞、云纹）/ 主纹 / 皮毛纹 / 菱格暗纹 / 珐琅高光 + 斜面 + 霜银边框 + 墨描边。
+- 格言：用项目字体 `NotoSansSC-Bold-ck.otf` 的字形轮廓（`TextServer.font_get_glyph_contours`）转 SVG 路径，在 120px 取样后缩放，避免小字号 hinting 走形。
+- 族徽小方角按盾形内嵌（heater / kite / round / lozenge 各有位置），方角纹样自动做明度对比。
+- 样例：`docs/design/heraldry_samples/01..12`（512px；11/12 为贵族 / 王族档族徽）。
 
 ---
 

@@ -9,6 +9,9 @@ static func compose_texture(spec: Dictionary, w: int = 160, h: int = 220, wave: 
 	return ImageTexture.create_from_image(compose(spec, w, h, wave, mode))
 
 static func compose(spec: Dictionary, w: int = 160, h: int = 220, wave: float = 0.0, mode: String = "banner") -> Image:
+	# Art pass 2: anti-aliased vector renderer (ThorVG). Pixel painter below kept as fallback only.
+	if not CKHeraldryVector.lib().is_empty():
+		return CKHeraldryVector.render(spec, w, h, mode, wave)
 	var s := CKHeraldry.normalize(spec)
 	match mode:
 		"shield":
