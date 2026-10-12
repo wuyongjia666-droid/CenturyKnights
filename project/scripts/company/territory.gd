@@ -61,7 +61,7 @@ static func is_home(id: String) -> bool:
 
 # ── state ─────────────────────────────────────────────
 static func fresh() -> Dictionary:
-	return {"v": SCHEMA, "sites": {}, "log": [], "stockade_credit": 0}
+	return {"v": SCHEMA, "sites": {}, "log": [], "stockade_credit": 0, "news": []}
 
 static func _st() -> Dictionary:
 	if typeof(World.territory) != TYPE_DICTIONARY or not World.territory.has("sites"):
@@ -122,6 +122,11 @@ static func from_save(raw) -> Dictionary:
 				"threat": th if typeof(th) == TYPE_DICTIONARY else {},
 			}
 	out.stockade_credit = maxi(0, int(raw.get("stockade_credit", 0)))
+	var nw = raw.get("news", [])
+	if typeof(nw) == TYPE_ARRAY:
+		for e in nw:
+			if typeof(e) == TYPE_DICTIONARY and not site(str(e.get("id", ""))).is_empty():
+				out.news.append(e)
 	var lg = raw.get("log", [])
 	if typeof(lg) == TYPE_ARRAY:
 		out.log = lg.slice(0, 20)
@@ -199,9 +204,27 @@ static func lose(id: String, to: String) -> Dictionary:
 	_put(id, st)
 	var who := Locale.t("terr_12") if to == NEUTRAL else _rival_name(to.trim_prefix("rival:"))
 	_log(Locale.t("terr_13") % [site(id).name, who])
+	_push_news(id, who)
 	GameState.mark_dirty()
 	World.world_changed.emit()
 	return {"ok": true}
+
+## WS-C #45: losses wait here until the atlas shows them as a modal (survives save/load).
+static func _push_news(id: String, who: String) -> void:
+	var st := _st()
+	if not st.has("news") or typeof(st.news) != TYPE_ARRAY:
+		st.news = []
+	st.news.append({"id": id, "who": who, "date": World.date_label()})
+	if st.news.size() > 6:
+		st.news = st.news.slice(st.news.size() - 6)
+
+
+static func take_news() -> Array:
+	var st := _st()
+	var out: Array = st.get("news", []) if typeof(st.get("news", [])) == TYPE_ARRAY else []
+	st.news = []
+	return out
+
 
 ## Peaceful route: two ordinary commissions on the anchor's board (gather, then hunt).
 static func post_chain(id: String) -> Dictionary:
