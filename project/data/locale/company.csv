@@ -122,3 +122,13 @@ terr_43, · 民心未附 %d 月, · restless %d mo
 terr_44,%s来犯,%s attacking
 terr_45,守卫战,Defence
 terr_46,攻占战,Assault
+terr_ui_title,领地 · 挂团旗,Territory · fly the company banner
+terr_ui_close,关闭,Close
+terr_ui_full,驻军已满,Garrison full
+terr_ui_silver,银不足（需 %d）,Not enough silver (need %d)
+terr_ui_reinforce,增派驻军 %d 银,Reinforce %d silver
+terr_ui_go,需先赶到此地,Travel here first
+terr_ui_defend,守卫,Defend
+terr_ui_assault,强攻,Assault
+terr_ui_chain,贴归附委托,Post pledge commissions
+terr_ui_button,领地,Territory
