@@ -33,6 +33,8 @@ var units: Array = []
 var turn_team: String = "player"
 var selected: int = -1
 var move_cells: Dictionary = {}
+var preview_move_cell: Vector2i = Vector2i(-1, -1)
+var preview_attack_ui: int = -1
 var attack_mode: bool = false
 var moved_this_select: bool = false
 var log_label: Label
@@ -461,7 +463,7 @@ func _build_ui() -> void:
 func _command_bar_px() -> float:
 	if not DeviceProfile.is_mobile():
 		return 0.0
-	return DeviceProfile.hit_px() + 16.0
+	return maxf(DeviceProfile.hit_px(), 48.0) + 20.0
 
 func _layout_board() -> void:
 	var area := BOARD_AREA
@@ -1184,6 +1186,22 @@ func _draw_overlay() -> void:
 					overlay.draw_texture_rect(_tex(chip_path), Rect2(tp, Vector2(csz, csz)), false)
 				else:
 					overlay.draw_rect(Rect2(tp, Vector2(18, 14)), Color(0.05, 0.05, 0.08, 0.75))
+
+		# Touch confirm: ghost preview on the chosen cell (does not move su.pos yet).
+		if preview_move_cell.x >= 0 and selected >= 0 and selected < units.size():
+			var gp = ORIGIN + Vector2(preview_move_cell) * CELL
+			var gr = Rect2(gp, Vector2(CELL - 2, CELL - 2))
+			overlay.draw_rect(gr, Color(UIKit.ACCENT, 0.22))
+			overlay.draw_rect(gr, Color(UIKit.ACCENT, 0.95), false, 3.0)
+			var gsu = units[selected]
+			var gcenter = gp + Vector2(CELL, CELL) * 0.5
+			UnitArt.draw_token_on(overlay, gcenter, gsu.char, "player", float(CELL) * 0.36, false)
+			overlay.draw_circle(gcenter, float(CELL) * 0.40, Color(UIKit.ACCENT, 0.18))
+		if preview_attack_ui >= 0 and preview_attack_ui < units.size():
+			var ap: Vector2i = units[preview_attack_ui].pos
+			var ar = Rect2(ORIGIN + Vector2(ap) * CELL, Vector2(CELL - 2, CELL - 2))
+			overlay.draw_rect(ar, Color(UIKit.DANGER, 0.28))
+			overlay.draw_rect(ar, Color(UIKit.DANGER, 0.95), false, 3.0)
 		# 图例：纯图标芯片（无长文字）
 		if not move_cells.is_empty():
 			var lx = ORIGIN.x + 10.0
@@ -1552,6 +1570,7 @@ func _cancel_selection() -> void:
 	skill_mode = false
 	active_skill_id = ""
 	moved_this_select = false
+	_clear_touch_preview()
 	_refresh_info()
 	_update_skill_hint()
 	overlay.queue_redraw()
@@ -1581,9 +1600,13 @@ func _select_player(ui: int) -> void:
 	skill_mode = false
 	active_skill_id = ""
 	moved_this_select = false
+	preview_move_cell = Vector2i(-1, -1)
+	preview_attack_ui = -1
 	move_cells = _compute_move_cells(ui)
 	_refresh_info()
 	_update_skill_hint()
+	if DeviceProfile.is_mobile():
+		BattleMobileBar.rebuild(self)
 	overlay.queue_redraw()
 	map_draw.queue_redraw()
 
@@ -1595,6 +1618,79 @@ func _can_attack_from(su: Dictionary, cell: Vector2i) -> bool:
 	if _in_bounds(su.pos):
 		tid = str(terrain[su.pos.y][su.pos.x])
 	return BattleRules.in_weapon_range(su.char, d, tid, _height_at(su.pos))
+
+
+func _touch_confirm_enabled() -> bool:
+	if not (GameState.settings is Dictionary):
+		return DeviceProfile.is_mobile()
+	if GameState.settings.has("touch_confirm"):
+		return bool(GameState.settings["touch_confirm"])
+	return DeviceProfile.is_mobile()
+
+func _clear_touch_preview() -> void:
+	preview_move_cell = Vector2i(-1, -1)
+	preview_attack_ui = -1
+	if DeviceProfile.is_mobile():
+		BattleMobileBar.rebuild(self)
+	if overlay:
+		overlay.queue_redraw()
+	ForecastPanel.refresh(self)
+
+func _confirm_preview_move() -> void:
+	if preview_move_cell.x < 0 or selected < 0 or selected >= units.size():
+		_clear_touch_preview()
+		return
+	var cell := preview_move_cell
+	_clear_touch_preview()
+	_commit_move(cell)
+
+func _confirm_preview_attack() -> void:
+	var ui := preview_attack_ui
+	_clear_touch_preview()
+	if selected < 0 or ui < 0 or ui >= units.size():
+		return
+	_do_attack(selected, ui)
+
+func _commit_move(cell: Vector2i) -> void:
+	if selected < 0 or selected >= units.size():
+		return
+	var su = units[selected]
+	if su.team != "player" or su.done or moved_this_select:
+		return
+	if not move_cells.has(cell):
+		return
+	_move_undo = BattleSnapshot.capture(self)
+	var origin_cell: Vector2i = su.pos
+	su.pos = cell
+	_spend_zoc(su, origin_cell, cell)
+	moved_this_select = true
+	Sfx.play_footstep(str(terrain[cell.y][cell.x]))
+	move_cells.clear()
+	_spawn_move_dust(cell)
+	_refresh_info()
+	map_draw.queue_redraw()
+	overlay.queue_redraw()
+	_log("%s 移动至 (%d,%d)" % [su.char.name, cell.x, cell.y])
+	_sync_objectives()
+	RewindBar.refresh(self)
+
+func _mobile_overflow_menu() -> void:
+	var popup := PopupMenu.new()
+	popup.name = "MobileOverflow"
+	popup.add_item(Locale.t("shell_41ec1a25"), 0)  # 战技
+	popup.add_item(Locale.t("shell_4faa58f5"), 1)  # 结束回合
+	add_child(popup)
+	popup.id_pressed.connect(func(id: int):
+		if id == 0:
+			_cycle_skill()
+		elif id == 1:
+			_end_player_turn()
+		popup.queue_free()
+	)
+	popup.popup_hide.connect(func(): popup.queue_free())
+	var vp := get_viewport().get_visible_rect().size
+	popup.position = Vector2i(int(vp.x * 0.5 - 80), int(vp.y - _command_bar_px() - 140))
+	popup.popup()
 
 func _click_cell(cell: Vector2i) -> void:
 	var ui = _unit_at(cell)
@@ -1608,6 +1704,14 @@ func _click_cell(cell: Vector2i) -> void:
 						var pv = BattleRules.preview(su.char, units[ui].char, terrain[cell.y][cell.x], extras)
 						_spawn_dmg(cell, "命中%d%%" % int(pv.hit), Color(0.9, 0.92, 1.0))
 						_log("预判：命中 %d%%　伤 %d–%d%s" % [int(pv.hit), int(pv.dmg.x), int(pv.dmg.y), (" · " + "·".join(pv.tags)) if pv.tags else ""])
+						if _touch_confirm_enabled():
+							preview_attack_ui = ui
+							preview_move_cell = Vector2i(-1, -1)
+							ForecastPanel.refresh(self)
+							if DeviceProfile.is_mobile():
+								BattleMobileBar.rebuild(self)
+							overlay.queue_redraw()
+							return
 						_do_attack(selected, ui)
 						return
 					_log("目标超出攻击范围")
@@ -1617,20 +1721,15 @@ func _click_cell(cell: Vector2i) -> void:
 			if ui < 0 and not attack_mode and _try_interact(su, cell):
 				return
 			if ui < 0 and not attack_mode and not moved_this_select and move_cells.has(cell):
-				_move_undo = BattleSnapshot.capture(self)
-				var origin_cell: Vector2i = su.pos
-				su.pos = cell
-				_spend_zoc(su, origin_cell, cell)
-				moved_this_select = true
-				Sfx.play_footstep(str(terrain[cell.y][cell.x]))
-				move_cells.clear()
-				_spawn_move_dust(cell)
-				_refresh_info()
-				map_draw.queue_redraw()
-				overlay.queue_redraw()
-				_log("%s 移动至 (%d,%d)" % [su.char.name, cell.x, cell.y])
-				_sync_objectives()
-				RewindBar.refresh(self)
+				if _touch_confirm_enabled():
+					preview_move_cell = cell
+					preview_attack_ui = -1
+					if DeviceProfile.is_mobile():
+						BattleMobileBar.rebuild(self)
+					overlay.queue_redraw()
+					_log("%s 预览移动 (%d,%d) — 确认后落子" % [su.char.name, cell.x, cell.y])
+					return
+				_commit_move(cell)
 				return
 			if ui >= 0 and units[ui].team == "player" and not units[ui].done and ui != selected:
 				_select_player(ui)

@@ -90,7 +90,10 @@ static func tick(delta: float) -> void:
 		_banner_frame = (_banner_frame + 1) % 6
 
 static func crest_color() -> Color:
-	return Color(str(GameState.crest_color))
+	var spec_raw = GameState.get("banner_spec")
+	if typeof(spec_raw) == TYPE_DICTIONARY and (spec_raw as Dictionary).has("field_a"):
+		return Color(str((spec_raw as Dictionary).get("field_a")))
+	return Color("#" + migrate_crest_hex(str(GameState.crest_color)))
 
 ## Old saves still store a retired crest key. The map lives in crest_palette_v92.json.
 ## game_state.gd / naming.gd defaults stay with core and narrative.
@@ -829,7 +832,28 @@ static func _bust_token(c: CKCharacter, team: String, done: bool = false) -> Tex
 	_cache[key] = tex
 	return tex
 
+static func banner_spec_current() -> Dictionary:
+	var raw = GameState.get("banner_spec")
+	if typeof(raw) == TYPE_DICTIONARY and not (raw as Dictionary).is_empty():
+		return BannerSpec.normalize(raw)
+	return BannerSpec.from_crest(str(GameState.crest_color))
+
+static func banner_layers(spec: Dictionary = {}, w: int = 160, h: int = 220) -> Texture2D:
+	var s := BannerSpec.normalize(spec if not spec.is_empty() else banner_spec_current())
+	var ck := "bl|" + BannerSpec.cache_key(s) + "|%d|%d|%d" % [w, h, _banner_frame]
+	if _cache.has(ck):
+		return _cache[ck]
+	var wave := float(_banner_frame) / 6.0
+	var tex := BannerSpec.compose_texture(s, w, h, wave)
+	_cache[ck] = tex
+	return tex
+
 static func banner(w: int = 160, h: int = 220, with_name: bool = true) -> Texture2D:
+	## Layered DIY banner (field/charge/border/emblem). Legacy PNG path kept as fallback only.
+	var spec := banner_spec_current()
+	var layered := banner_layers(spec, w, h)
+	if layered != null:
+		return layered
 	var hex = _crest_hex()
 	var path = "res://assets/art/banners/banner_%s_w%d.png" % [hex, _banner_frame]
 	var ck = "b|" + path

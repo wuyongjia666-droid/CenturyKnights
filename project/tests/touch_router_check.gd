@@ -134,13 +134,12 @@ func _fit(errors: Array) -> void:
 		if pos.y + design.y > vp.y - float(insets.bottom) + 0.6:
 			errors.append("fit overflows bottom %s" % window)
 		if window.x < window.y:
-			var usable_h := vp.y - float(insets.top) - float(insets.bottom)
-			var slack_y := usable_h - design.y
-			if slack_y > 1.0 and absf(pos.y - (float(insets.top) + slack_y * 0.5)) > 1.0:
-				errors.append("portrait root should sit in the vertical safe center, got %s" % pos)
+			# Portrait top-aligns into the safe area (no centered letterbox).
+			if absf(pos.y - float(insets.top)) > 1.0:
+				errors.append("portrait root should pin to safe top, got %s" % pos)
 	var hit := DeviceProfile.hit_px_for(480.0, 1280.0, 1080.0)
-	if hit < 44.0 or hit < 150.0:
-		errors.append("44dp at xxhdpi should exceed 150 logical px, got %s" % hit)
+	if hit < 48.0 or hit < 160.0:
+		errors.append("48dp at xxhdpi should exceed 160 logical px, got %s" % hit)
 
 func _budget(errors: Array) -> void:
 	var desk := DeviceProfile.cutscene_budget_for(false, false)

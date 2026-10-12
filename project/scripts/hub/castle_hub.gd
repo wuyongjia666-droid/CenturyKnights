@@ -436,3 +436,25 @@ func _collect_labels(n: Node, out: Array) -> void:
 		if b is BaseButton:
 			out.append(str(b.get_meta("legacy_label", str(b.text).split("\n")[0])))
 		_collect_labels(b, out)
+
+
+func apply_mobile_layout() -> void:
+	## Portrait: top-align, let the nav rail scroll, stretch dossier lists into slack.
+	var rail := find_child("NavRail", true, false) as ScrollContainer
+	if rail:
+		rail.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+		rail.custom_minimum_size = Vector2(rail.size.x, maxf(rail.size.y, 480.0))
+	MobileLayout.fit_top_bar(self, size.x if size.x > 64.0 else 1280.0)
+	# Hang a compact company banner on the top bar area for DIY preview.
+	var existing := get_node_or_null("HubBannerPreview") as TextureRect
+	if existing == null:
+		existing = TextureRect.new()
+		existing.name = "HubBannerPreview"
+		existing.custom_minimum_size = Vector2(56, 78)
+		existing.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		existing.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		existing.position = Vector2(1180, 12)
+		existing.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(existing)
+	UnitArt.clear_cache()
+	existing.texture = UnitArt.banner(56, 78, false)

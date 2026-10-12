@@ -1,7 +1,9 @@
 extends Node
-## On Android/iOS (or CK_FORCE_MOBILE=1), expand the viewport for 16:9–20:9
-## and inset the current Control root by the display safe area.
+## On Android/iOS (or CK_FORCE_MOBILE=1), expand the viewport for tall phones,
+## bleed the void background edge-to-edge, and inset interactive chrome by safe area.
 ## Desktop and headless CI leave the 1280x720 root untouched.
+
+var _bleed: ColorRect
 
 func _ready() -> void:
 	if not DeviceProfile.is_mobile():
@@ -10,8 +12,36 @@ func _ready() -> void:
 	win.content_scale_mode = Window.CONTENT_SCALE_MODE_CANVAS_ITEMS
 	win.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_EXPAND
 	win.content_scale_size = Vector2i(1280, 720)
+	_ensure_immersive()
+	_ensure_bleed()
 	get_tree().node_added.connect(_on_node_added)
 	get_viewport().size_changed.connect(_on_resize)
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_APPLICATION_FOCUS_IN:
+		if DeviceProfile.is_mobile():
+			_ensure_immersive()
+			call_deferred("_apply")
+
+func _ensure_immersive() -> void:
+	# Fullscreen / borderless so system bars do not reserve letterbox strips.
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_FULLSCREEN)
+	if DisplayServer.has_method("window_set_flag"):
+		DisplayServer.window_set_flag(DisplayServer.WINDOW_FLAG_BORDERLESS, true)
+
+func _ensure_bleed() -> void:
+	## Full-window void behind the scaled 1280x720 root so unused portrait slack
+	## is Frost ink, not OS black letterbox bars.
+	if _bleed != null and is_instance_valid(_bleed):
+		return
+	_bleed = ColorRect.new()
+	_bleed.name = "MobileBleedBg"
+	_bleed.color = UIKit.BG
+	_bleed.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_bleed.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_bleed.z_index = -100
+	get_tree().root.add_child(_bleed)
+	get_tree().root.move_child(_bleed, 0)
 
 func _on_node_added(_n: Node) -> void:
 	call_deferred("_apply")
@@ -22,6 +52,11 @@ func _on_resize() -> void:
 func _apply() -> void:
 	if not DeviceProfile.is_mobile():
 		return
+	_ensure_immersive()
+	_ensure_bleed()
+	if _bleed != null and is_instance_valid(_bleed):
+		_bleed.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		_bleed.color = UIKit.BG
 	var scene := get_tree().current_scene
 	if scene == null or not (scene is Control):
 		return
@@ -40,6 +75,7 @@ func _apply() -> void:
 	root.set_meta("mobile_insets", insets)
 	root.set_meta("mobile_origin", fitted.get("position", Vector2.ZERO))
 	root.set_meta("mobile_scale", fitted.get("scale", 1.0))
+	root.set_meta("mobile_paint_rect", fitted.get("paint_rect", Rect2(Vector2.ZERO, vp)))
 	MobileLayout.apply_root(root, fitted)
 	if root.has_method("apply_mobile_layout"):
 		root.apply_mobile_layout()

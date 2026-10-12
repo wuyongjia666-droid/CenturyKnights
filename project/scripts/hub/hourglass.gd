@@ -126,7 +126,7 @@ func _advance(months: int) -> void:
 	for e in evs:
 		var tx = str(e.get("text", ""))
 		if str(e.get("type", "")) == "rival_deal" or tx.find("契约") >= 0:
-			lines.append("· [color=#c9a227]%s[/color]" % tx)
+			lines.append("· [color=#6ED4FF]%s[/color]" % tx)
 		else:
 			lines.append("· " + tx)
 	_log.text = "\n".join(lines)

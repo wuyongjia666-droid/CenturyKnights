@@ -1,0 +1,26 @@
+{
+  "palette": [
+    "#6ed4ff", "#5ee0b5", "#c9d3de", "#3a6ea5", "#9be4ff", "#2e6f8f",
+    "#3aaddf", "#8fd4ff", "#7ed6c8", "#9bb4ff", "#e8f6ff", "#b7c3d1",
+    "#9dcfb8", "#ff7a70", "#ff8a80", "#c5d0dc", "#5c7a9a", "#4a90a8",
+    "#6b8cae", "#a8c5d4", "#70b8c8", "#86c8d8", "#d0dde8", "#f4f7fb"
+  ],
+  "color_names": [
+    "霜青", "薄荷", "霜银", "河蓝", "晴霜", "潮墨",
+    "冰河", "天光", "潮青", "羽蓝", "霜白", "铁霜",
+    "松雾", "珊瑚", "赤霞", "银灰", "雾蓝", "湾青",
+    "岚灰", "薄雾", "湖青", "浅潮", "云灰", "素白"
+  ],
+  "defaults": {
+    "field": "solid",
+    "field_a": "#6ed4ff",
+    "field_b": "#2e6f8f",
+    "charge": "none",
+    "charge_color": "#e8f6ff",
+    "border": "line",
+    "border_color": "#9be4ff",
+    "emblem": "ring",
+    "emblem_color": "#f4f7fb"
+  },
+  "pole": ["#3a4555", "#6b7585"]
+}

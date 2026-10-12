@@ -134,6 +134,9 @@ func _ready() -> void:
 		GameState.settings["rules_preview"] = on
 		BattleRules.preview_enabled = on
 	))
+	box.add_child(_check(Locale.t("ux_touch_confirm"), bool(GameState.settings.get("touch_confirm", DeviceProfile.is_mobile())), func(on):
+		GameState.settings["touch_confirm"] = on
+	))
 	var highlight := _check(Locale.t("shell_73266386"), bool(GameState.settings.get("tutorial_highlight", true)), func(on):
 		GameState.settings["tutorial_highlight"] = on
 	)

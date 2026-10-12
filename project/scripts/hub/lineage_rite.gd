@@ -122,7 +122,7 @@ func _show_early_tutor() -> void:
 	if _selected == null:
 		return
 	var cur = {"martial": "偏武", "scholar": "偏文", "merchant": "偏商"}.get(_path, "未定")
-	_body.text = "[b]早教·择路[/b]\n\n%s 尚年幼（%d岁）。\n今日择路将写入族谱：之后每个生日按道路倾向加维。\n当前：【%s】\n\n[color=#c9a227]偏武[/color] 力/体　[color=#8ecae6]偏文[/color] 意/感　[color=#e9c46a]偏商[/color] 敏/技" % [_selected.name, _selected.age, cur]
+	_body.text = "[b]早教·择路[/b]\n\n%s 尚年幼（%d岁）。\n今日择路将写入族谱：之后每个生日按道路倾向加维。\n当前：【%s】\n\n[color=#6ED4FF]偏武[/color] 力/体　[color=#8ecae6]偏文[/color] 意/感　[color=#e9c46a]偏商[/color] 敏/技" % [_selected.name, _selected.age, cur]
 	_add("早教·偏武", func(): _set_early("martial"))
 	_add("早教·偏文", func(): _set_early("scholar"))
 	_add("早教·偏商", func(): _set_early("merchant"))
@@ -150,7 +150,7 @@ func _show_step() -> void:
 		return
 	match _step:
 		0:
-			_body.text = "[b]分支·择路[/b]\n\n%s 将入花名册。宴上与门阙都会问：此嗣偏武、偏文、还是偏商？\n\n[color=#c9a227]偏武[/color]：开局多近战战技点倾向\n[color=#8ecae6]偏文[/color]：开局多祷言/支援倾向\n[color=#e9c46a]偏商[/color]：银两奖励与声望旁注" % _selected.name
+			_body.text = "[b]分支·择路[/b]\n\n%s 将入花名册。宴上与门阙都会问：此嗣偏武、偏文、还是偏商？\n\n[color=#6ED4FF]偏武[/color]：开局多近战战技点倾向\n[color=#8ecae6]偏文[/color]：开局多祷言/支援倾向\n[color=#e9c46a]偏商[/color]：银两奖励与声望旁注" % _selected.name
 			_add("择·偏武", func(): _choose_path("martial"))
 			_add("择·偏文", func(): _choose_path("scholar"))
 			_add("择·偏商", func(): _choose_path("merchant"))

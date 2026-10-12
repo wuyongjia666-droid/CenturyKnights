@@ -35,7 +35,8 @@ var skill_points: int = 0
 # 游戏状态
 var started: bool = false
 var surname: String = "灰旗"
-var crest_color: String = "#c9a227"
+var crest_color: String = "#6ed4ff"
+var banner_spec: Dictionary = {}
 var silver: int = 120
 var food: int = 40
 var iron: int = 5
@@ -52,6 +53,7 @@ var settings: Dictionary = {
 	"text_speed": 1.0,
 	"tutorial_highlight": true,
 	"reduced_motion": false,
+	"touch_confirm": true,
 }
 # 诸邦声望 0-100；档位由数值映射
 var reputation: Dictionary = {"ashland": 0, "riverland": 0}
@@ -296,6 +298,7 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	patrol_boost_months = 0
 	surname = leader_surname
 	crest_color = color
+	banner_spec = BannerSpec.from_crest(color)
 	var leader = CharacterFactory.make_leader(leader_given, leader_surname, color)
 	characters[leader.id] = leader
 	var wantan = CharacterFactory.make_shilei_wantan()
@@ -735,6 +738,7 @@ func build_save_data() -> Dictionary:
 		"schema": SAVE_SCHEMA,
 		"surname": surname,
 		"crest_color": crest_color,
+		"banner_spec": banner_spec.duplicate(true),
 		"silver": silver, "food": food, "iron": iron, "herb": herb, "morale": morale,
 		"year": Calendar.year, "month": Calendar.month,
 		"play_seconds": play_seconds,
@@ -813,7 +817,13 @@ func apply_save_data(data: Dictionary) -> bool:
 	data = migrate_save_data(data)
 	started = bool(data.get("started", true))
 	surname = str(data.get("surname", "灰旗"))
-	crest_color = str(data.get("crest_color", "#c9a227"))
+	crest_color = str(data.get("crest_color", "#6ed4ff"))
+	var raw_banner = data.get("banner_spec", {})
+	if typeof(raw_banner) == TYPE_DICTIONARY and not (raw_banner as Dictionary).is_empty():
+		banner_spec = BannerSpec.normalize(raw_banner)
+	else:
+		banner_spec = BannerSpec.from_crest(crest_color)
+	crest_color = str(banner_spec.get("field_a", crest_color))
 	silver = int(data.get("silver", 0))
 	food = int(data.get("food", 0))
 	iron = int(data.get("iron", 0))
