@@ -154,7 +154,7 @@ func _full_c() -> String:
 
 func _full_d() -> String:
 	var climax: Array = _texts("0.38")
-	if not _has(climax, "灰马是他的") or _has(climax, "押进哨堡第三天"):
+	if not _has(climax, "灰马是他的") or _has(climax, "押进哨所第三天"):
 		return "climax ignored the survivor choice %s" % str(climax)
 	for step in [["0.38", "给衡舟留一行"], ["0.39", "入席"]]:
 		var e: String = await _press(step[0], step[1])
@@ -200,7 +200,7 @@ func _full_f() -> String:
 	if e9 != "":
 		return e9
 	var harvest: Array = _texts("0.6")
-	if not _has(harvest, "赎不回来") or _has(harvest, "一张一张揭下来"):
+	if not _has(harvest, "赎不回来") or _has(harvest, "一张一张挣来"):
 		return "harvest ignored the lease choice"
 	# Economy: wages settle at harvest.
 	var e10: String = await _press("0.6", "把月份推到丰收")
@@ -219,7 +219,7 @@ func _route_brief() -> String:
 	GameState.new_game("岑", "试旗", GameState.crest_color)
 	await _open()
 	var silver0 := int(GameState.silver)
-	for step in [["0.0", "教学从简"], ["0.05", "走向已经亮起的烽"], ["0.1", "直接听烟散"]]:
+	for step in [["0.0", "跳过教学"], ["0.05", "走向已经亮起的烽"], ["0.1", "直接听烟散"]]:
 		var e: String = await _press(step[0], step[1])
 		if e != "":
 			return e
@@ -250,7 +250,7 @@ func _brief_b() -> String:
 
 func _brief_c() -> String:
 	var climax: Array = _texts("0.38")
-	if not _has(climax, "押进哨堡第三天") or _has(climax, "灰马是他的"):
+	if not _has(climax, "押进哨所第三天") or _has(climax, "灰马是他的"):
 		return "climax ignored handed survivor"
 	for step in [["0.38", "带走衡舟"], ["0.39", "入席"], ["0.4", "直接入席"]]:
 		var e: String = await _press(step[0], step[1])
@@ -258,12 +258,15 @@ func _brief_c() -> String:
 			return e
 	if not GameState.flag("married"):
 		return "auto marry"
-	for step in [["0.4", "赴双姓共席"], ["0.45", "等待初啼"], ["0.5", "让月份走到孩子落地"], ["0.5", "去听那一声哭"], ["0.55", "粮饷结清"], ["0.6", "把月份推到丰收"], ["0.6", "踏上第一章"]]:
+	for step in [["0.4", "赴双姓共席"], ["0.45", "等待初啼"], ["0.5", "让月份走到孩子落地"], ["0.5", "去听那一声哭"], ["0.55", "粮饷结清"], ["0.6", "把月份推到丰收"], ["0.6", "踏上第一卷"]]:
 		var e: String = await _press(step[0], step[1])
 		if e != "":
 			return e
 	if not GameState.flag("chapter0_done"):
 		return "brief route did not finish"
+	if str(GameState.get_meta("story_chapter_id", "")) != "e1_01":
+		return "departure did not request e1_01"
+	GameState.set_meta("story_chapter_id", "")
 	return await _brief_d()
 
 func _brief_d() -> String:

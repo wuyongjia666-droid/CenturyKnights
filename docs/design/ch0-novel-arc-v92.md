@@ -140,7 +140,7 @@
 | 灰旗堡名册空席 | 空椅子还不是家 | `0.3` | 灰旗堡灯火 → 名册空席 | `hub_open`。场景 `castle_hub.tscn`。进枢纽时 `set_beat` 到 `0.35` |
 | 春令政治试婚 | 人入席，爱不在这一季结算 | `0.35`、`0.4`、`0.45` | 陆桥耳语、春令试婚、双姓共席可留 | `married` 才赴席。场景 `marriage.tscn`。`prepare.ensure_reputation`：灰烬邦低于 30 时补到 35。按钮全文留「前往联姻廷」 |
 | 初啼与结清粮饷 | 哭声在前，账清了人还在 | `0.5`、`0.55`、`0.6` 前段 | 初啼、族谱新页可留；秋收簿 → 结清与上路 | `child_born`、`advance` 一月、`lineage_view.tscn`、`fast_harvest`、`hourglass.tscn`、`harvest_done`、`journal` |
-| 上路陆桥 | 陆桥会重复这个姓，你得在场 | `0.6` 后段 | 同上 | 按钮全文留「踏上第一章·陆桥烽火」。`chapter0_done`、`archive_notice`、`set_beat` 到第 1 章 `1.0` |
+| 上路陆桥 | 陆桥会重复这个姓，你得在场 | `0.6` 后段 | 同上 | 按钮「踏上第一卷·过路银的收据」。`chapter0_done`，`open_chapter` 进 `e1_01`（v9.2.1，审查 P1-5） |
 
 `0.3` 的两条路都留：进枢纽，或先听陆桥耳语。`0.35` 的「先回灰旗堡」也留。少一条，玩家会在门外观望时无路可走。
 
@@ -383,7 +383,7 @@
 - `open_hub` 在切场景前写 `hub_open`，并把第 0 章节拍拨到 `0.35`。
 - `0.4` 的 `prepare`：`ensure_reputation`，`realm` = `ashland`，低于 30 时设为 35，`also_if_tier` = `none`。
 - `advance_birth` 仍是 `advance` 一个月。`write_journal` 仍是 `journal`。`fast_harvest` 仍是 `fast_harvest`。
-- `old_volume` 仍写 `chapter0_done`，把第 1 章节拍拨到 `1.0`，并 `archive_notice`。
+- `old_volume` 写 `chapter0_done`，并 `open_chapter` 进入第一卷 `e1_01`。
 - 按钮全文两处不动：「前往联姻廷」「踏上第一章·陆桥烽火」。
 - 灯影那句原句，整句保留在 `0.0`。
 
@@ -419,7 +419,7 @@
 | `write_journal` | 生成王朝手记 | 写下这一年 |
 | `free_play` | 返回灰旗堡（自由游玩） | 先回堡里 |
 | `open_marriage` | 前往联姻廷 | 原样 |
-| `old_volume` | 踏上第一章·陆桥烽火 | 原样 |
+| `old_volume` | 踏上第一卷·过路银的收据 | 改：进入 `e1_01` |
 
 其余按钮（听烟散、赴席、等待初啼、再看族谱、先听耳语、先回堡）意思已经清楚，实现时可以只改措辞，不必改去向。
 
