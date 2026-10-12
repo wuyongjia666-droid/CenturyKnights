@@ -23,13 +23,11 @@ static func _table() -> Dictionary:
 			_data = parsed
 	return _data
 
-static var PALETTE: Array:
-	get:
-		return _table().get("palette", [])
+static func palette() -> Array:
+	return _table().get("palette", [])
 
-static var COLOR_NAMES: Array:
-	get:
-		return _table().get("color_names", [])
+static func color_names() -> Array:
+	return _table().get("color_names", [])
 
 static var _migration: Dictionary = {}
 static var _migration_ready := false

@@ -35,7 +35,7 @@ const COLOR_KEYS := [
 ]
 
 func _ready() -> void:
-	_colors = BannerSpec.PALETTE.duplicate()
+	_colors = BannerSpec.palette().duplicate()
 	_color_names = []
 	for k in COLOR_KEYS:
 		_color_names.append(Locale.t(k))

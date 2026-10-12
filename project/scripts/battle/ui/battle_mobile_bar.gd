@@ -41,16 +41,16 @@ static func rebuild(host) -> void:
 		c.queue_free()
 	var h := int(maxi(48, int(DeviceProfile.hit_px())))
 	if host.preview_move_cell.x >= 0:
-		command(row, Locale.t("ux_confirm_move"), h, true, host._confirm_preview_move)
-		command(row, Locale.t("shell_4d0b4688"), h, false, host._clear_touch_preview)
+		command(row, Locale.t("ux_confirm_move"), h, true, func(): BattleTouchConfirm.confirm_move(host))
+		command(row, Locale.t("shell_4d0b4688"), h, false, func(): BattleTouchConfirm.clear(host))
 	elif int(host.preview_attack_ui) >= 0:
-		command(row, Locale.t("ux_confirm_attack"), h, true, host._confirm_preview_attack)
-		command(row, Locale.t("shell_4d0b4688"), h, false, host._clear_touch_preview)
+		command(row, Locale.t("ux_confirm_attack"), h, true, func(): BattleTouchConfirm.confirm_attack(host))
+		command(row, Locale.t("shell_4d0b4688"), h, false, func(): BattleTouchConfirm.clear(host))
 	else:
 		command(row, Locale.t("shell_8669d292"), h, false, host._enter_attack_mode)
 		command(row, Locale.t("shell_1a0db8dc"), h, false, host._wait_selected)
 		command(row, Locale.t("shell_4d0b4688"), h, false, host._cancel_selection)
-		command(row, Locale.t("ux_more_cmds"), h, true, host._mobile_overflow_menu)
+		command(row, Locale.t("ux_more_cmds"), h, true, func(): BattleTouchConfirm.overflow_menu(host))
 	place(host)
 
 static func command(row: HBoxContainer, text: String, h: int, accent: bool, cb: Callable) -> Button:

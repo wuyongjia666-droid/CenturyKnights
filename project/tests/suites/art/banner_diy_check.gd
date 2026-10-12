@@ -10,9 +10,9 @@ func _ready() -> void:
 	get_tree().quit(0)
 
 func _run() -> String:
-	if BannerSpec.PALETTE.size() < 24:
+	if BannerSpec.palette().size() < 24:
 		return "palette size"
-	for c in BannerSpec.PALETTE:
+	for c in BannerSpec.palette():
 		if str(c).to_lower().find("c9a227") >= 0:
 			return "warm gold in palette"
 	if BannerSpec.CHARGES.size() < 6 or BannerSpec.BORDERS.size() < 4 or BannerSpec.EMBLEMS.size() < 12:

@@ -1,0 +1,94 @@
+class_name BattleTouchConfirm
+extends RefCounted
+## Mobile touch-confirm helpers. Kept out of battle_controller to stay under the line cap.
+
+static func enabled() -> bool:
+	if not (GameState.settings is Dictionary):
+		return DeviceProfile.is_mobile()
+	if GameState.settings.has("touch_confirm"):
+		return bool(GameState.settings["touch_confirm"])
+	return DeviceProfile.is_mobile()
+
+static func clear(host) -> void:
+	host.preview_move_cell = Vector2i(-1, -1)
+	host.preview_attack_ui = -1
+	if DeviceProfile.is_mobile():
+		BattleMobileBar.rebuild(host)
+	if host.overlay:
+		host.overlay.queue_redraw()
+	ForecastPanel.refresh(host)
+
+static func confirm_move(host) -> void:
+	if host.preview_move_cell.x < 0 or host.selected < 0 or host.selected >= host.units.size():
+		clear(host)
+		return
+	var cell: Vector2i = host.preview_move_cell
+	clear(host)
+	commit_move(host, cell)
+
+static func confirm_attack(host) -> void:
+	var ui: int = int(host.preview_attack_ui)
+	clear(host)
+	if host.selected < 0 or ui < 0 or ui >= host.units.size():
+		return
+	host._do_attack(host.selected, ui)
+
+static func overflow_menu(host) -> void:
+	var popup := PopupMenu.new()
+	popup.name = "MobileOverflow"
+	popup.add_item(Locale.t("shell_41ec1a25"), 0)
+	popup.add_item(Locale.t("shell_4faa58f5"), 1)
+	host.add_child(popup)
+	popup.id_pressed.connect(func(id: int):
+		if id == 0:
+			host._cycle_skill()
+		elif id == 1:
+			host._end_player_turn()
+		popup.queue_free()
+	)
+	popup.popup_hide.connect(func(): popup.queue_free())
+	var vp := host.get_viewport().get_visible_rect().size
+	popup.position = Vector2i(int(vp.x * 0.5 - 80), int(vp.y - host._command_bar_px() - 140))
+	popup.popup()
+
+static func commit_move(host, cell: Vector2i) -> void:
+	if host.selected < 0 or host.selected >= host.units.size():
+		return
+	var su = host.units[host.selected]
+	if su.team != "player" or su.done or host.moved_this_select:
+		return
+	if not host.move_cells.has(cell):
+		return
+	host._move_undo = BattleSnapshot.capture(host)
+	var origin_cell: Vector2i = su.pos
+	su.pos = cell
+	host._spend_zoc(su, origin_cell, cell)
+	host.moved_this_select = true
+	Sfx.play_footstep(str(host.terrain[cell.y][cell.x]))
+	host.move_cells.clear()
+	host._spawn_move_dust(cell)
+	host._refresh_info()
+	host.map_draw.queue_redraw()
+	host.overlay.queue_redraw()
+	host._log("%s 移动至 (%d,%d)" % [su.char.name, cell.x, cell.y])
+	host._sync_objectives()
+	RewindBar.refresh(host)
+
+static func draw_preview(host) -> void:
+	var overlay = host.overlay
+	var ORIGIN = host.ORIGIN
+	var CELL = host.CELL
+	if host.preview_move_cell.x >= 0 and host.selected >= 0 and host.selected < host.units.size():
+		var gp = ORIGIN + Vector2(host.preview_move_cell) * CELL
+		var gr = Rect2(gp, Vector2(CELL - 2, CELL - 2))
+		overlay.draw_rect(gr, Color(UIKit.ACCENT, 0.22))
+		overlay.draw_rect(gr, Color(UIKit.ACCENT, 0.95), false, 3.0)
+		var gsu = host.units[host.selected]
+		var gcenter = gp + Vector2(CELL, CELL) * 0.5
+		UnitArt.draw_token_on(overlay, gcenter, gsu.char, "player", float(CELL) * 0.36, false)
+		overlay.draw_circle(gcenter, float(CELL) * 0.40, Color(UIKit.ACCENT, 0.18))
+	if int(host.preview_attack_ui) >= 0 and int(host.preview_attack_ui) < host.units.size():
+		var ap: Vector2i = host.units[host.preview_attack_ui].pos
+		var ar = Rect2(ORIGIN + Vector2(ap) * CELL, Vector2(CELL - 2, CELL - 2))
+		overlay.draw_rect(ar, Color(UIKit.DANGER, 0.28))
+		overlay.draw_rect(ar, Color(UIKit.DANGER, 0.95), false, 3.0)

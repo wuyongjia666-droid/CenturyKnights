@@ -53,7 +53,6 @@ var settings: Dictionary = {
 	"text_speed": 1.0,
 	"tutorial_highlight": true,
 	"reduced_motion": false,
-	"touch_confirm": true,
 }
 # 诸邦声望 0-100；档位由数值映射
 var reputation: Dictionary = {"ashland": 0, "riverland": 0}

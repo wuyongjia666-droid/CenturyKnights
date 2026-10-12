@@ -373,7 +373,7 @@ func _on_node(sid: String, sk: Dictionary) -> void:
 		""
 	]
 	if owned:
-		lines.append("[color=#6ED4FF]已掌握[/color]")
+		lines.append("[color=#c9a227]已掌握[/color]")
 	elif check.get("ok"):
 		lines.append("[color=#8ecae6]解锁中…[/color]")
 		var r = GameState.unlock_skill(_selected, sid)
