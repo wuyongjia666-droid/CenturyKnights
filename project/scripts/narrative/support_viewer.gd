@@ -131,4 +131,4 @@ func _advance() -> void:
 func _back() -> void:
 	if suppress_scene_change:
 		return
-	get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
+	CKNav.up()

@@ -12,6 +12,7 @@ const _CSV_FILES: Array[String] = [
 	"core.csv",
 	"cutscene.csv",
 	"dynasty.csv",
+	"hub_a1.csv",
 	"narrative.csv",
 	"strings.csv",
 	"ux.csv",
