@@ -21,10 +21,16 @@ func _build() -> void:
 	UIKit.void_bg(self)
 	var tb := UIKit.top_bar(self, "烽火酒馆 · 本旬候选人", [["银币", str(GameState.silver), UIKit.ACCENT], ["月薪支出", "%d" % _payroll(), UIKit.DANGER], ["历", Calendar.label(), UIKit.TEXT_DIM]], "返回城堡", _back)
 	var right_box: HBoxContainer = tb.get_child(tb.get_child_count() - 1)
-	var rb := UIKit.ghost_button("刷新候选  ↻", 108, 32)
+	var rb := UIKit.ghost_button(_refresh_label(), 150, 32)
+	rb.name = "TavernRefresh"
 	rb.pressed.connect(func():
-		GameState.refresh_tavern()
+		var res: Dictionary = GameState.manual_refresh_tavern()
+		if _msg:
+			_msg.text = "" if bool(res.get("ok", false)) else str(res.get("msg", ""))
+		rb.text = _refresh_label()
+		rb.disabled = GameState.tavern_refresh_price() < 0
 		_refresh())
+	rb.disabled = GameState.tavern_refresh_price() < 0
 	right_box.add_child(rb)
 	right_box.move_child(rb, right_box.get_child_count() - 2)
 	var hh := HBoxContainer.new()
@@ -75,6 +81,14 @@ func _build() -> void:
 	else:
 		add_child(_cards)
 	UIKit.footer_bar(self, [["A", "确认招募"], ["X", "刷新名单"], ["←→", "切换候选人"], ["ESC", "返回城堡"]], "TAVERN PROTOCOL · FROST_TACTICAL v8.6")
+
+func _refresh_label() -> String:
+	var price := GameState.tavern_refresh_price()
+	if price < 0:
+		return Locale.t("tavern_refresh_spent_short")
+	if price == 0:
+		return Locale.t("tavern_refresh_free") % GameState.tavern_refreshes_left()
+	return Locale.t("tavern_refresh_paid") % [price, GameState.tavern_refreshes_left()]
 
 func _payroll() -> int:
 	var s := 0

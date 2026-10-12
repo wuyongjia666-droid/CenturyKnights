@@ -1250,3 +1250,15 @@ static func _proc_banner(w: int, h: int, _with_name: bool) -> Texture2D:
 	var tex := ImageTexture.create_from_image(img)
 	_cache[ck] = tex
 	return tex
+
+## A tavern candidate who walked away gives the farm face slot back (audit P1-4).
+static func release_face(cid: String) -> void:
+	if not _face_assign.has(cid):
+		return
+	var slot = _face_assign[cid]
+	if str(_face_owner.get(slot, "")) == cid:
+		_face_owner.erase(slot)
+	_face_assign.erase(cid)
+	for k in _cache.keys():
+		if str(k).find(cid) >= 0:
+			_cache.erase(k)
