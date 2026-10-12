@@ -386,6 +386,12 @@ func _run_op(step) -> String:
 		"scene":
 			_go_scene(str(row.get("path", "")))
 			return "stop"
+		"open_chapter":
+			# Leave this chapter for another one by id (ch0 -> e1_01). Audit P1-5.
+			var target_id := str(row.get("id", ""))
+			test_capture["open_chapter"] = target_id
+			_go_scene(StoryCatalog.request_chapter(target_id))
+			return "stop"
 		"advance":
 			var until := str(row.get("until_flag", ""))
 			var evs: Array = []

@@ -61,7 +61,7 @@ static func is_home(id: String) -> bool:
 
 # ── state ─────────────────────────────────────────────
 static func fresh() -> Dictionary:
-	return {"v": SCHEMA, "sites": {}, "log": []}
+	return {"v": SCHEMA, "sites": {}, "log": [], "stockade_credit": 0}
 
 static func _st() -> Dictionary:
 	if typeof(World.territory) != TYPE_DICTIONARY or not World.territory.has("sites"):
@@ -73,11 +73,12 @@ static func state(id: String) -> Dictionary:
 	var d: Dictionary = row if typeof(row) == TYPE_DICTIONARY else {}
 	return {
 		"owner": str(d.get("owner", NEUTRAL)), "garrison": int(d.get("garrison", 0)),
-		"unrest": int(d.get("unrest", 0)), "threat": d.get("threat", {}) if typeof(d.get("threat", {})) == TYPE_DICTIONARY else {},
+		"unrest": int(d.get("unrest", 0)), "stockade": bool(d.get("stockade", false)), "contract": bool(d.get("contract", false)),
+		"threat": d.get("threat", {}) if typeof(d.get("threat", {})) == TYPE_DICTIONARY else {},
 	}
 
 static func _put(id: String, s: Dictionary) -> void:
-	if str(s.owner) == NEUTRAL and int(s.garrison) == 0 and int(s.unrest) == 0 and (s.threat as Dictionary).is_empty():
+	if str(s.owner) == NEUTRAL and int(s.garrison) == 0 and int(s.unrest) == 0 and (s.threat as Dictionary).is_empty() and not bool(s.get("stockade", false)):
 		_st().sites.erase(id)
 	else:
 		_st().sites[id] = s
@@ -112,12 +113,15 @@ static func from_save(raw) -> Dictionary:
 				continue
 			var r: Dictionary = rows[id]
 			var th = r.get("threat", {})
+			var stockade := bool(r.get("stockade", false))
 			out.sites[sid] = {
 				"owner": str(r.get("owner", NEUTRAL)),
-				"garrison": clampi(int(r.get("garrison", 0)), 0, int(rule("garrison_max", 3))),
+				"garrison": clampi(int(r.get("garrison", 0)), 0, int(rule("garrison_max", 3)) + (1 if stockade else 0)),
+				"stockade": stockade, "contract": bool(r.get("contract", false)),
 				"unrest": maxi(0, int(r.get("unrest", 0))),
 				"threat": th if typeof(th) == TYPE_DICTIONARY else {},
 			}
+	out.stockade_credit = maxi(0, int(raw.get("stockade_credit", 0)))
 	var lg = raw.get("log", [])
 	if typeof(lg) == TYPE_ARRAY:
 		out.log = lg.slice(0, 20)
@@ -189,6 +193,7 @@ static func lose(id: String, to: String) -> Dictionary:
 	var st := state(id)
 	st.owner = to
 	st.garrison = 0
+	st.contract = false
 	st.unrest = 0
 	st.threat = {}
 	_put(id, st)
@@ -260,7 +265,7 @@ static func reinforce(id: String) -> Dictionary:
 	if not owned(id):
 		return {"ok": false, "msg": Locale.t("terr_25")}
 	var st := state(id)
-	if int(st.garrison) >= int(rule("garrison_max", 3)):
+	if int(st.garrison) >= garrison_max(id):
 		return {"ok": false, "msg": Locale.t("terr_26")}
 	var cost := garrison_cost(id)
 	if GameState.silver < cost:
@@ -271,6 +276,82 @@ static func reinforce(id: String) -> Dictionary:
 	GameState.mark_dirty()
 	World.world_changed.emit()
 	return {"ok": true, "msg": Locale.t("terr_28") % [site(id).name, int(st.garrison), cost]}
+
+static func garrison_max(id: String) -> int:
+	return int(rule("garrison_max", 3)) + (1 if bool(state(id).stockade) else 0)
+
+static func stockade_cost() -> int:
+	return 0 if int(_st().get("stockade_credit", 0)) > 0 else int(rule("stockade_cost", 120))
+
+## Stockade (屯营): the second seat's value as a site upgrade. +12 silver, +6 food, garrison cap +1.
+static func build_stockade(id: String) -> Dictionary:
+	if not owned(id):
+		return {"ok": false, "msg": Locale.t("terr_st_owned")}
+	var st := state(id)
+	if bool(st.stockade):
+		return {"ok": false, "msg": Locale.t("terr_st_have")}
+	var cost := stockade_cost()
+	if GameState.silver < cost:
+		return {"ok": false, "msg": Locale.t("terr_27") % cost}
+	GameState.silver -= cost
+	if cost == 0:
+		_st().stockade_credit = int(_st().stockade_credit) - 1
+	st.stockade = true
+	_put(id, st)
+	_log(Locale.t("terr_st_done") % [site(id).name, cost])
+	GameState.mark_dirty()
+	World.world_changed.emit()
+	return {"ok": true, "msg": Locale.t("terr_st_done") % [site(id).name, cost]}
+
+## A finished scripted nation chain used to offer a second seat. Now it pays for one stockade.
+static func grant_stockade_credit(chain_id: String) -> void:
+	if chain_id == "":
+		return
+	_st().stockade_credit = int(_st().get("stockade_credit", 0)) + 1
+	_log(Locale.t("terr_st_credit"))
+
+## Save migration: holdings.second_seat -> owned site next to the same settlement,
+## with a stockade, the seat's garrison, and a contract floor so its value never drops.
+static func migrate_second_seat(host) -> String:
+	var row = host.holdings.get("second_seat", null)
+	if row == null:
+		return ""
+	host.holdings.erase("second_seat")
+	if typeof(row) != TYPE_DICTIONARY or not bool(row.get("owned", false)):
+		return ""
+	var city := str(row.get("city", ""))
+	var id := _seat_site(city)
+	if id == "":
+		return ""
+	var st := state(id)
+	st.owner = OWN
+	st.threat = {}
+	st.unrest = 0
+	st.stockade = true
+	st.contract = true
+	st.garrison = clampi(int(row.get("garrison_away", 2)), 1, int(rule("garrison_max", 3)) + 1)
+	_put(id, st)
+	_log(Locale.t("terr_seat_moved") % site(id).name)
+	return id
+
+static func _seat_site(city: String) -> String:
+	var best := ""
+	var best_d := 1 << 30
+	var nat := World.nation_of(city) if World.nodes.has(city) else ""
+	for id in site_ids():
+		if owned(id):
+			continue
+		var s := site(id)
+		var d := 0
+		if str(s.anchor) != city:
+			var rt: Dictionary = World.route(city, str(s.anchor)) if World.nodes.has(city) else {}
+			d = 10 + int(rt.get("days", 999))
+			if str(s.nation) != nat:
+				d += 1000
+		if d < best_d:
+			best_d = d
+			best = id
+	return best
 
 static func upkeep(id: String) -> int:
 	return int(site(id).get("upkeep", 0)) + int(state(id).garrison) * int(rule("garrison_upkeep", 4))
@@ -328,14 +409,23 @@ static func apply_month(force_roll: float = -1.0) -> String:
 		var half := int(st.unrest) > 0 or not (st.threat as Dictionary).is_empty()
 		var ys := int(s.yield_silver)
 		var yq := int(s.yield_qty)
+		var yf := 0
+		if bool(st.stockade):
+			ys += int(rule("stockade_silver", 12))
+			yf = int(rule("stockade_food", 6))
 		if half:
 			ys /= 2
 			yq /= 2
-		silver += ys
+			yf /= 2
+		var net := ys - upkeep(id)
 		if yq > 0 and str(s.good) != "":
-			silver += _deliver_good(str(s.good), yq)
-		var up := upkeep(id)
-		silver -= up
+			net += _deliver_good(str(s.good), yq)
+		if bool(st.contract):
+			# old second-seat contract: never worse than the seat's net +6 silver / +6 food
+			net = maxi(net, int(rule("contract_silver", 6)))
+			yf = maxi(yf, int(rule("contract_food", 6)))
+		silver += net
+		GameState.food += yf
 		if int(st.unrest) > 0:
 			st.unrest = int(st.unrest) - 1
 		_put(id, st)
@@ -464,6 +554,8 @@ static func summary(id: String) -> String:
 	var own := Locale.t("terr_39")
 	if owned(id):
 		own = Locale.t("terr_40") % int(st.garrison)
+		if bool(st.stockade):
+			own += " · " + Locale.t("terr_st_label")
 	elif str(st.owner).begins_with("rival:"):
 		own = _rival_name(str(st.owner).trim_prefix("rival:"))
 	var prod := Locale.t("terr_41") % int(s.yield_silver)

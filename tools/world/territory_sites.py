@@ -89,6 +89,8 @@ def main() -> None:
             "threat_days": 30, "hold_per_garrison": 0.25, "hold_base": 0.1,
             "unrest_months": 2, "req_nation_rep": 10, "req_nation_rep_hostile": 30,
             "max_sites": 8, "sell_rate": 0.7,
+            "stockade_cost": 120, "stockade_silver": 12, "stockade_food": 6,
+            "contract_silver": 6, "contract_food": 6,
         },
         "sites": sites,
     }

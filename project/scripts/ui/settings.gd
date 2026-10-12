@@ -134,6 +134,8 @@ func _ready() -> void:
 		GameState.settings["rules_preview"] = on
 		BattleRules.preview_enabled = on
 	))
+	box.add_child(_check(Locale.t("fertility_setting"), CKFamilyState.fast_family(GameState), func(on):
+		CKFamilyState.set_fast_family(GameState, on)))
 	box.add_child(_check(Locale.t("ux_touch_confirm"), bool(GameState.settings.get("touch_confirm", DeviceProfile.is_mobile())), func(on):
 		GameState.settings["touch_confirm"] = on
 	))
