@@ -83,3 +83,6 @@ a1_cr_story,主线改编自项目原创小说《那个字》，人物和世界�
 a1_cr_engine_h,引擎,Engine
 a1_cr_engine,Godot Engine %s（MIT 许可）· © Juan Linietsky、Ariel Manzur 与 Godot 贡献者,"Godot Engine %s (MIT) · © Juan Linietsky, Ariel Manzur and contributors"
 a1_menu_load_fail,这个存档读不出来。去「读档」换一个试试。,This save could not be loaded. Try another in Load.
+a1_bond_why,同伴在战场上挨着作战会慢慢熟起来，攒够点数就能在这里看他们的对话。,Companions who fight side by side grow close; their talks appear here.
+a1_bond_locked_head,还没解锁的,Not yet unlocked
+a1_bond_need,还差 %d 点 · 两人相邻作战一场 +1,%d more · +1 per battle fought side by side

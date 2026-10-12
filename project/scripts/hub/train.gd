@@ -13,7 +13,8 @@ var _teach: Button
 var _msg: Label
 
 func _ready() -> void:
-	CKPageKit.shell(self, Locale.t("ux_qi_shu_title"), "BANNER SCHOOL", Locale.t("ux_qi_shu_title"), Locale.t("lb_train_desc", [CKTutor.pair_cap(), CKTutor.year_limit()]))
+	UIKit.make_themed_bg(self, "train")
+	CKPageKit.shell(self, Locale.t("ux_qi_shu_title"), "BANNER SCHOOL", Locale.t("ux_qi_shu_title"), Locale.t("lb_train_desc", [CKTutor.pair_cap(), CKTutor.year_limit()]), "none")
 	var a := CKPageKit.card(self, Rect2(42, CKPageKit.TOP + 8, 380, 512), "PupilCard")
 	CKPageKit.card_head(a, Locale.t("lb_train_pupils"), "PUPILS · 1-15")
 	_kids = CKPageKit.list(a, Rect2(14, 58, 352, 440), "DynPupils")

@@ -10,7 +10,8 @@ var _msg: Label
 var _busy := false
 
 func _ready() -> void:
-	CKPageKit.shell(self, Locale.t("lb_hg_ctx"), "HOURGLASS", Locale.t("lb_hg_title"), Locale.t("lb_hg_desc"))
+	UIKit.make_themed_bg(self, "hourglass")
+	CKPageKit.shell(self, Locale.t("lb_hg_ctx"), "HOURGLASS", Locale.t("lb_hg_title"), Locale.t("lb_hg_desc"), "none")
 	_kpi = HBoxContainer.new()
 	_kpi.name = "Kpis"
 	_kpi.position = Vector2(42, CKPageKit.TOP + 8)
