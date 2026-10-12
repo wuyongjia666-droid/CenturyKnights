@@ -2036,7 +2036,7 @@ func launch_encounter(tree: SceneTree) -> void:
 	GameState.set_meta("world_encounter", true)
 	if GameState.has_meta("active_quest_id"):
 		GameState.remove_meta("active_quest_id")
-	tree.change_scene_to_file("res://scenes/battle/battle.tscn")
+	CKNav.replace("res://scenes/battle/battle.tscn")
 
 ## Called by battle_controller._finish when GameState has meta "world_encounter".
 func on_battle_end(win: bool) -> Dictionary:

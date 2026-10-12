@@ -141,7 +141,7 @@ func _on_new() -> void:
 
 func _on_replay() -> void:
 	GameState.begin_prologue_replay()
-	get_tree().change_scene_to_file("res://scenes/story/chapter0.tscn")
+	CKNav.replace("res://scenes/story/chapter0.tscn")
 
 ## Audit #9: a failed load says so; a second tap while loading does nothing.
 func _on_continue() -> void:

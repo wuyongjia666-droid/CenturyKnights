@@ -160,7 +160,7 @@ static func present(host, win: bool, purse: int, sp_gain: int, exp_before: Dicti
 	if win or host._world_enc:
 		var b := UIKit.cta_button(back_word, "A", 220, 48)
 		b.position = Vector2(1018, 620)
-		b.pressed.connect(func(): host.get_tree().change_scene_to_file(back_path))
+		b.pressed.connect(func(): CKNav.replace(back_path))
 		root.add_child(b)
 		b.call_deferred("grab_focus")
 	else:
@@ -170,7 +170,7 @@ static func present(host, win: bool, purse: int, sp_gain: int, exp_before: Dicti
 		root.add_child(r)
 		var b2 := UIKit.ghost_button(Locale.t("defeat_back_castle"), 150, 48)
 		b2.position = Vector2(874, 620)
-		b2.pressed.connect(func(): host.get_tree().change_scene_to_file(back_path))
+		b2.pressed.connect(func(): CKNav.replace(back_path))
 		root.add_child(b2)
 		r.call_deferred("grab_focus")
 	UIFX.page_enter(root)

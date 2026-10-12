@@ -52,11 +52,11 @@ func _ready() -> void:
 func _back() -> void:
 	var ret := StoryCatalog.take_story_return("")
 	if ret != "":
-		get_tree().change_scene_to_file(ret)
+		CKNav.replace(ret)
 	elif str(GameState.chapter0_beat) == "0.6":
-		get_tree().change_scene_to_file("res://scenes/story/chapter0.tscn")
+		CKNav.replace("res://scenes/story/chapter0.tscn")
 	else:
-		get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
+		CKNav.up()
 
 func _paint_kpis() -> void:
 	CKPageKit.clear(_kpi)
