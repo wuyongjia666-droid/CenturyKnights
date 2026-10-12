@@ -108,6 +108,7 @@ func _scan_scenes() -> void:
 		if not seen.has(key):
 			_fails.append("whitelist unused: %s" % key)
 	print("TOUCH scenes=%d buttons=%d violations=%d whitelist=%d" % [scenes.size(), buttons, violations, seen.size()])
+	_ok(seen.is_empty(), "P0-MOB-01: no touch exemptions allowed, got %s" % str(seen.keys()))
 
 func _scene_paths() -> Array:
 	var scenes: Array = []
