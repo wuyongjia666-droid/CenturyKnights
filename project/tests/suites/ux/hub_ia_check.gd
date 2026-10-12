@@ -50,7 +50,12 @@ func _ladder() -> void:
 
 func _unlock_and_scale() -> void:
 	_ok(Todo.is_unlocked("deploy"), "deploy locked")
-	_ok(Todo.is_unlocked("marriage"), "marriage reachable in year one")
+	_ok(Todo.is_unlocked("marriage"), "marriage is a year-one door (#148)")
+	_ok(Todo.is_unlocked("atlas"), "atlas is a year-one door (#148)")
+	var st := UnlockSchedule.state("forge")
+	_ok(bool(st.locked) and str(st.reason).find("第一卷第 5 章") >= 0 and str(st.link) == "mainline", "forge lock reason %s" % str(st))
+	_ok(str(UnlockSchedule.state("rite").reason) != "" and str(UnlockSchedule.state("rite").link) == "", "rite lock reason")
+	_ok(bool(UnlockSchedule.state("not_a_real_entry").locked), "unknown entry state")
 	_ok(not Todo.is_unlocked("not_a_real_entry"), "unknown entry unlocked")
 	_ok(is_equal_approx(Todo.narrow_scale(1280.0), 1.0), "desktop scale")
 	_ok(is_equal_approx(Todo.narrow_scale(1080.0), 1080.0 / 1280.0), "phone scale")
@@ -91,16 +96,27 @@ func _hub() -> void:
 		hub.queue_free()
 		return
 	var labels: Array = hub.panel_button_labels()
-	_ok(labels.size() <= 10, "year-one buttons %s" % str(labels))
-	_ok(labels.size() >= 4, "buttons %s" % str(labels))
-	for sub in ["出战", "旗塾", "酒馆", "花名册", "岁月", "设置"]:
+	# #148 ten doors + castle view; everything else is shown locked, never hidden
+	_ok(labels.size() <= 11, "year-one buttons %s" % str(labels))
+	_ok(labels.size() >= 6, "buttons %s" % str(labels))
+	_ok(hub.find_child("Locked_forge", true, false) != null, "locked forge hidden")
+	_ok(hub.find_child("Locked_estates", true, false) != null, "locked estates hidden")
+	_ok(hub.find_child("Locked_ancestors", true, false) != null, "orphan ancestors not wired")
+	var lk := hub.find_child("Locked_forge", true, false) as BaseButton
+	if lk:
+		lk.pressed.emit()
+		await get_tree().process_frame
+		_ok(hub.find_child("LockSheet", true, false) != null and hub.find_child("LockGo", true, false) != null, "lock sheet / take-me-there missing")
+		_ok(CKNav.back() == "overlay", "back must close the lock sheet first")
+		await get_tree().process_frame
+	for sub in [Locale.t("btn_marriage"), Locale.t("btn_lineage"), "酒馆", "花名册", "岁月", "设置"]:
 		var found := false
 		for lb in labels:
 			if str(lb).find(sub) >= 0:
 				found = true
 				break
 		_ok(found, "missing %s in %s" % [sub, str(labels)])
-	for title in ["军务", "内政", "家族", "朝堂", "舆图"]:
+	for title in ["主堡", "军务", "舆图", "家族", "内政"]:
 		var node := hub.find_child("NavGroup_%s" % _group_id(title), true, false)
 		_ok(node != null, "group %s" % title)
 	var row := hub.find_child("TodoRow", true, false)
@@ -156,7 +172,7 @@ func _group_id(title: String) -> String:
 			return "civil"
 		"家族":
 			return "family"
-		"朝堂":
-			return "court"
+		"主堡":
+			return "home"
 		_:
 			return "atlas"

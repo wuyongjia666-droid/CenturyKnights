@@ -55,7 +55,7 @@ static func snapshot() -> Array:
 	if is_unlocked("quests"):
 		rows.append(_row("quests", "civil", Locale.t("ux_todo_quests"), _quest_count()))
 	rows.append(_row("injured", "military", Locale.t("ux_todo_injured"), _injured_count()))
-	rows.append(_row("festival", "court", Locale.t("ux_todo_festival"), _festival_count()))
+	rows.append(_row("festival", "home", Locale.t("ux_todo_festival"), _festival_count()))
 	for extra in _extra:
 		if extra is Dictionary:
 			rows.append((extra as Dictionary).duplicate())

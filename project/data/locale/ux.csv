@@ -218,7 +218,6 @@ ux_todo_sui_ke,未读岁课,Unread year-cards
 ux_todo_life,未读重卡,Unread life cards
 ux_todo_tutor,待指定专师,Tutors to assign
 ux_todo_field,田册空位,Open field posts
-ux_todo_none,本月无待办,No todos this month
 btn_forge,铁匠铺,Smithy
 ux_forge_castle,灰旗自己的炉,Ash banner forge
 ux_wedding_seal,婚后印,Wedding seal
@@ -295,3 +294,21 @@ ux_hub_quests_sub,城堡委任 · 也可从舆图进城看委托榜,Castle quest
 ux_hub_atlas_btn,十国舆图 / 跑图,Atlas / travel
 ux_hub_atlas_sub,跑图进城 · 城镇里有委托榜,Travel to cities · commission board inside
 ux_city_tab_sundry,杂货,Sundries
+ux_nav_right_back,右键返回上一层,Right click goes back
+ux_lock_heir,家中有继承人后开放,Opens once the house has an heir
+ux_lock_death,家中第一位先人辞世后立碑,The first ancestor's stone goes up when someone dies
+ux_lock_ch0,第零章结束后开放,Opens after the prologue
+ux_lock_battle,与同伴并肩作战后解锁,Unlocks after fighting beside companions
+ux_lock_chapter,第%s卷第 %d 章《%s》后开放,Opens after volume %s chapter %d: %s
+ux_lock_generic,剧情推进后开放,Opens as the story moves on
+ux_lock_tag,未开,locked
+ux_lock_go,带我去,Take me there
+ux_lock_ok,知道了,Got it
+ux_hub_home,主堡,Keep
+ux_entry_castle_view,城堡全景,Castle view
+ux_entry_court_news,朝报,Court news
+ux_entry_titles,请爵,Seek a title
+ux_entry_rivals,列家,Rival houses
+ux_entry_ancestors,先祖碑,Ancestors
+ux_entry_bonds,同袍,Bonds
+ux_era_digits,零一二三四五六七八九,0123456789
