@@ -28,10 +28,7 @@ var _emblem_label: Label
 var _nation_label: Label
 var _warn: Label
 var _scroll: ScrollContainer
-var _art_row: HBoxContainer
-var _start_btn: Button
-var _back_btn: Button
-var _last_edit_ms := 0
+var _starting := false
 
 const FIELD_KEYS := {
 	"solid": "ux_field_solid",
@@ -136,73 +133,65 @@ func _current_spec() -> Dictionary:
 	})
 
 func _build() -> void:
-	UIKit.make_screen_bg(self)
+	## Audit #8: two columns inside the 1280x720 design frame. Form scrolls on the left,
+	## preview and the start button stay on the right, so nothing leaves the screen.
+	UIKit.void_bg(self)
+	UIKit.top_bar(self, Locale.t("ux_name_title"), [], Locale.t("btn_back"), func(): CKNav.replace(CKNav.TITLE))
+	var head := UIKit.page_head(self, 42, 50, "FOUNDING // NAME & BANNER", Locale.t("ux_name_title"), "", "", "", 22)
+	head.name = "PageHead"
+	var blurb := CKPageKit.text(Locale.t("ux_name_blurb"), UIKit.TEXT_DIM, 13, 700)
+	blurb.position = Vector2(42, 104)
+	add_child(blurb)
+
+	var form_card := CKPageKit.card(self, Rect2(42, 132, 760, 556), "FormCard")
 	_scroll = ScrollContainer.new()
-	_scroll.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+	_scroll.name = "FormScroll"
+	_scroll.position = Vector2(16, 12)
+	_scroll.size = Vector2(728, 532)
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	add_child(_scroll)
-	var center := MarginContainer.new()
-	center.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	center.add_theme_constant_override("margin_left", 24)
-	center.add_theme_constant_override("margin_right", 24)
-	center.add_theme_constant_override("margin_top", 24)
-	center.add_theme_constant_override("margin_bottom", 24)
-	_scroll.add_child(center)
-
+	form_card.add_child(_scroll)
 	var box := VBoxContainer.new()
-	box.custom_minimum_size = Vector2(640, 0)
 	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	box.add_theme_constant_override("separation", 10)
-	box.alignment = BoxContainer.ALIGNMENT_CENTER
-	center.add_child(box)
+	box.add_theme_constant_override("separation", 8)
+	_scroll.add_child(box)
 
-	box.add_child(UIKit.make_label(Locale.t("ux_name_title"), true))
-	box.add_child(UIKit.make_dim_label(Locale.t("ux_name_blurb")))
-
-	var art_row := HBoxContainer.new()
-	_art_row = art_row
-	art_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	art_row.add_theme_constant_override("separation", 20)
-	box.add_child(art_row)
-	_shield = TextureRect.new()
-	_shield.custom_minimum_size = Vector2(120, 140)
-	_shield.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_shield.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	art_row.add_child(_shield)
-	_banner = TextureRect.new()
-	_banner.custom_minimum_size = Vector2(140, 200)
-	_banner.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_banner.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	art_row.add_child(_banner)
-	_portrait = TextureRect.new()
-	_portrait.custom_minimum_size = Vector2(140, 140)
-	_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	art_row.add_child(_portrait)
-
-	box.add_child(UIKit.make_label(Locale.t("ux_name_surname")))
+	var names := GridContainer.new()
+	names.columns = 2
+	names.add_theme_constant_override("h_separation", 16)
+	box.add_child(names)
 	_surname = LineEdit.new()
 	_surname.text = "灰旗"
-	_surname.custom_minimum_size = Vector2(280, 48)
+	_surname.max_length = 6
+	_surname.custom_minimum_size = Vector2(340, 48)
 	_surname.text_changed.connect(func(_t): _refresh_preview_art())
-	box.add_child(_surname)
-
-	box.add_child(UIKit.make_label(Locale.t("ux_name_given")))
 	_given = LineEdit.new()
 	_given.text = "烬行"
-	_given.custom_minimum_size = Vector2(280, 48)
+	_given.max_length = 6
+	_given.custom_minimum_size = Vector2(340, 48)
 	_given.text_changed.connect(func(_t): _refresh_preview_art())
-	box.add_child(_given)
+	names.add_child(UIKit.make_label(Locale.t("ux_name_surname")))
+	names.add_child(UIKit.make_label(Locale.t("ux_name_given")))
+	names.add_child(_surname)
+	names.add_child(_given)
 
-	box.add_child(UIKit.make_label(Locale.t("ux_name_field_color")))
+	var grid := GridContainer.new()
+	grid.name = "LayerGrid"
+	grid.columns = 2
+	grid.add_theme_constant_override("h_separation", 16)
+	grid.add_theme_constant_override("v_separation", 6)
+	box.add_child(grid)
+	var color_cell := VBoxContainer.new()
+	color_cell.custom_minimum_size = Vector2(340, 0)
+	grid.add_child(color_cell)
+	color_cell.add_child(UIKit.make_label(Locale.t("ux_name_field_color")))
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 8)
-	box.add_child(row)
+	color_cell.add_child(row)
 	var prev_btn = UIKit.make_button("◀", 48)
 	prev_btn.pressed.connect(func(): _shift_color(-1))
 	row.add_child(prev_btn)
 	_preview = ColorRect.new()
-	_preview.custom_minimum_size = Vector2(72, 48)
+	_preview.custom_minimum_size = Vector2(56, 44)
 	_preview.color = Color(str(_colors[_color_idx]))
 	row.add_child(_preview)
 	var next_btn = UIKit.make_button("▶", 48)
@@ -212,35 +201,61 @@ func _build() -> void:
 	_color_name_label.add_theme_color_override("font_color", UIKit.ACCENT)
 	row.add_child(_color_name_label)
 
-	_nation_label = _layer_row(box, Locale.t("ux_name_nation_rand"), func(d): _shift_enum("nation", d))
-	_field_label = _layer_row(box, Locale.t("ux_name_field_split"), func(d): _shift_enum("field", d))
-	_partition_label = _layer_row(box, Locale.t("ux_name_partition"), func(d): _shift_enum("partition", d))
-	_charge_label = _layer_row(box, Locale.t("ux_name_ordinary"), func(d): _shift_enum("charge", d))
-	_border_label = _layer_row(box, Locale.t("ux_name_border"), func(d): _shift_enum("border", d))
-	_emblem_label = _layer_row(box, Locale.t("ux_name_emblem"), func(d): _shift_enum("emblem", d))
+	_nation_label = _layer_row(grid, Locale.t("ux_name_nation_rand"), func(d): _shift_enum("nation", d))
+	_field_label = _layer_row(grid, Locale.t("ux_name_field_split"), func(d): _shift_enum("field", d))
+	_partition_label = _layer_row(grid, Locale.t("ux_name_partition"), func(d): _shift_enum("partition", d))
+	_charge_label = _layer_row(grid, Locale.t("ux_name_ordinary"), func(d): _shift_enum("charge", d))
+	_border_label = _layer_row(grid, Locale.t("ux_name_border"), func(d): _shift_enum("border", d))
+	_emblem_label = _layer_row(grid, Locale.t("ux_name_emblem"), func(d): _shift_enum("emblem", d))
+	CKPageKit.drag_through(box)
 
-	var rand_btn = UIKit.make_button(Locale.t("ux_name_nation_rand"), 240)
-	rand_btn.custom_minimum_size = Vector2(240, 48)
+	var side := CKPageKit.card(self, Rect2(818, 132, 420, 556), "PreviewCard")
+	CKPageKit.card_head(side, Locale.t("ux_name_preview"), "BANNER PREVIEW")
+	var art_row := HBoxContainer.new()
+	art_row.name = "ArtRow"
+	art_row.position = Vector2(16, 56)
+	art_row.size = Vector2(388, 220)
+	art_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	art_row.add_theme_constant_override("separation", 10)
+	side.add_child(art_row)
+	_shield = TextureRect.new()
+	_shield.custom_minimum_size = Vector2(110, 130)
+	_shield.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_shield.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	art_row.add_child(_shield)
+	_banner = TextureRect.new()
+	_banner.custom_minimum_size = Vector2(120, 200)
+	_banner.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_banner.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	art_row.add_child(_banner)
+	_portrait = TextureRect.new()
+	_portrait.custom_minimum_size = Vector2(130, 160)
+	_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	art_row.add_child(_portrait)
+
+	var rand_btn := CKPageKit.button(Locale.t("ux_name_nation_rand"), false, 388)
+	rand_btn.name = "RandomNation"
+	rand_btn.position = Vector2(16, 300)
 	rand_btn.pressed.connect(_on_randomize_nation)
-	box.add_child(rand_btn)
-
+	side.add_child(rand_btn)
 	_warn = UIKit.make_dim_label("")
+	_warn.name = "NameWarn"
 	_warn.add_theme_color_override("font_color", UIKit.DANGER)
-	box.add_child(_warn)
-
-	var start = UIKit.make_accent_button(Locale.t("ux_name_raise"), 240)
-	start.custom_minimum_size = Vector2(240, 48)
+	_warn.position = Vector2(16, 372)
+	_warn.size = Vector2(388, 40)
+	_warn.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	side.add_child(_warn)
+	var start := CKPageKit.button(Locale.t("ux_name_raise"), true, 388)
+	start.name = "StartButton"
+	start.position = Vector2(16, 480)
 	start.pressed.connect(_on_start)
-	box.add_child(start)
-	_start_btn = start
+	side.add_child(start)
 
-	var back = UIKit.make_button(Locale.t("btn_back"), 200)
-	back.custom_minimum_size = Vector2(200, 48)
-	back.pressed.connect(func(): CKNav.replace(CKNav.TITLE))
-	box.add_child(back)
-	_back_btn = back
-
-func _layer_row(box: VBoxContainer, title: String, cb: Callable) -> Label:
+func _layer_row(grid: Container, title: String, cb: Callable) -> Label:
+	var box := VBoxContainer.new()
+	box.custom_minimum_size = Vector2(340, 0)
+	grid.add_child(box)
 	box.add_child(UIKit.make_label(title))
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 8)
@@ -363,7 +378,12 @@ func _on_start() -> void:
 	var g = _given.text.strip_edges()
 	var s = _surname.text.strip_edges()
 	if g == "" or s == "":
+		_warn.text = Locale.t("ux_name_empty")
+		Sfx.miss()
 		return
+	if _starting:
+		return
+	_starting = true
 	var spec := _current_spec()
 	GameState.new_game(g, s, str(spec.field_a))
 	GameState.banner_spec = spec
@@ -374,33 +394,4 @@ func _on_start() -> void:
 	CKNav.replace("res://scenes/story/chapter0.tscn")
 
 func apply_mobile_layout() -> void:
-	if _scroll == null:
-		return
-	_scroll.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
-	var w := maxf(size.x, 1280.0)
-	if w <= size.y * 1.2 or _art_row == null:
-		return
-	# Landscape phone: preview art + start/back pinned on the left, form scrolls on the right.
-	var left_w := clampf(w * 0.36, 420.0, 620.0)
-	if _art_row.get_parent() != self:
-		_art_row.reparent(self)
-		_start_btn.reparent(self)
-		_back_btn.reparent(self)
-	_art_row.position = Vector2(24, 40)
-	_art_row.size = Vector2(left_w - 48, 300)
-	_start_btn.position = Vector2(24, size.y - 140)
-	_start_btn.size = Vector2(left_w - 48, 56)
-	_back_btn.position = Vector2(24, size.y - 72)
-	_back_btn.size = Vector2(left_w - 48, 52)
-	_scroll.offset_left = left_w
-
-func _process(_d: float) -> void:
-	var f := get_viewport().gui_get_focus_owner()
-	if f is LineEdit:
-		_last_edit_ms = Time.get_ticks_msec()
-
-## Android back: closing the soft keyboard also sends back; never pop the pause menu here.
-func nav_back() -> void:
-	if Time.get_ticks_msec() - _last_edit_ms < 800:
-		return
-	get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn")
+	pass   # layout already fits the 1280x720 frame on every aspect
