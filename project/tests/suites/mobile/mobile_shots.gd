@@ -18,18 +18,20 @@ const SCREENS := [
 	["city_armory", "res://scenes/hub/city.tscn", "armory"],
 	["battle", "res://scenes/battle/battle.tscn"],
 	["settings", "res://scenes/ui/settings.tscn"],
+	["founding", "res://scenes/story/naming.tscn"],
+	["dialogue", "res://scenes/story/chapter0.tscn"],
 ]
 const RES := [Vector2i(2400, 1080), Vector2i(2340, 1080), Vector2i(1920, 1080), Vector2i(2560, 1600)]
 var _out := "/tmp/ck_mobile"
 var _report := []
-var _only := ""
+var _only: PackedStringArray = []
 
 func _ready() -> void:
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--out="):
 			_out = arg.substr(6)
 		if arg.begins_with("--only="):
-			_only = arg.substr(7)
+			_only = arg.substr(7).split(",")
 	if DisplayServer.get_name() == "headless":
 		print("MOBILE PASS headless-skip")
 		get_tree().quit(0)
@@ -42,7 +44,7 @@ func _ready() -> void:
 		await get_tree().process_frame
 		await get_tree().process_frame
 		for pair in SCREENS:
-			if _only != "" and not str(pair[0]).begins_with(_only):
+			if not _only.is_empty() and not Array(_only).any(func(o): return str(pair[0]).begins_with(o)):
 				continue
 			if pair.size() > 2:
 				GameState.set_meta(str(pair[3]) if pair.size() > 3 else "city_tab", pair[2])
@@ -61,7 +63,7 @@ func _shoot(path: String, name: String) -> void:
 	get_tree().root.add_child(node)
 	get_tree().current_scene = node
 	MobileChrome.call_deferred("_apply")
-	await get_tree().create_timer(0.6).timeout
+	await get_tree().create_timer(3.0 if name.begins_with("dialogue") else 0.6).timeout
 	await RenderingServer.frame_post_draw
 	get_viewport().get_texture().get_image().save_png("%s/%s.png" % [_out, name])
 	var vr := get_viewport().get_visible_rect()
