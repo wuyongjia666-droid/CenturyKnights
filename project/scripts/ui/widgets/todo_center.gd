@@ -34,15 +34,15 @@ static func count_for(group_id: String) -> int:
 			n += maxi(0, int(item.get("count", 0)))
 	return n
 
+## Proposal §4.9 (audit P1-1): count only what has a deadline, is unread, or blocks the way.
+## Catalog length, unfinished works, suitor count and hp below max are not to-dos.
+## Locked entries never count. Works and pledges finish on the spot in this build, so they have no row.
 static func snapshot() -> Array:
-	var rows: Array = [
-		_row("buildings", "civil", Locale.t("ux_todo_buildings"), _building_count()),
-		_row("quests", "civil", Locale.t("ux_todo_quests"), GameState.quests.size()),
-		_row("marriage", "family", Locale.t("ux_todo_marriage"), GameState.marriage_candidates.size()),
-		_row("injured", "military", Locale.t("ux_todo_injured"), _injured_count()),
-		_row("festival", "court", Locale.t("ux_todo_festival"), _festival_count()),
-		_row("train", "military", Locale.t("ux_todo_train"), _train_count()),
-	]
+	var rows: Array = []
+	if is_unlocked("quests"):
+		rows.append(_row("quests", "civil", Locale.t("ux_todo_quests"), _quest_count()))
+	rows.append(_row("injured", "military", Locale.t("ux_todo_injured"), _injured_count()))
+	rows.append(_row("festival", "court", Locale.t("ux_todo_festival"), _festival_count()))
 	for extra in _extra:
 		if extra is Dictionary:
 			rows.append((extra as Dictionary).duplicate())
@@ -51,17 +51,20 @@ static func snapshot() -> Array:
 static func _row(category: String, group: String, label: String, count: int) -> Dictionary:
 	return {"category": category, "group": group, "label": label, "count": count}
 
-static func _building_count() -> int:
-	var n := 0
-	for id in GameState.BUILDING_NAMES.keys():
-		if GameState.building_level(str(id)) < int(GameState.BUILDING_MAX):
-			n += 1
-	return n
+## A battle contract already taken and still waiting for its fight.
+static func _quest_count() -> int:
+	return 1 if str(GameState.get_meta("active_quest_id", "")) != "" else 0
+
+static func any_due() -> bool:
+	for item in snapshot():
+		if int(item.get("count", 0)) > 0:
+			return true
+	return false
 
 static func _injured_count() -> int:
 	var n := 0
 	for c in GameState.roster():
-		if c.injured or int(c.hp) < int(c.max_hp):
+		if c.injured or not CKInjury.record(c).is_empty():
 			n += 1
 	return n
 
@@ -70,13 +73,6 @@ static func _festival_count() -> int:
 	if m == 3 or m == Calendar.SPRING_MONTH or m == Calendar.HARVEST_MONTH or m == 9:
 		return 1
 	return 0
-
-static func _train_count() -> int:
-	if GameState.roster().is_empty():
-		return 0
-	if int(GameState.silver) < int(GameState.train_cost()):
-		return 0
-	return 1
 
 static func mainline_rows() -> Array:
 	if not _mainline_cache.is_empty():

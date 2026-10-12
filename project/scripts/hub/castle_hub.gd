@@ -225,6 +225,8 @@ func _build() -> void:
 		if int(todo.get("count", 0)) <= 0:
 			continue
 		todo_row.add_child(UIKit.tag_chip("%s %d" % [str(todo.get("label", "")), int(todo.get("count", 0))], UIKit.ACCENT))
+	if not HubTodo.any_due():
+		todo_row.add_child(UIKit.mono(Locale.t("ux_todo_none"), 10, UIKit.TEXT_FAINT, false))
 	var ih := UIKit.hairline(Color(1, 1, 1, 0.07))
 	ih.position = Vector2(26, 512)
 	ih.size = Vector2(768, 1)
