@@ -30,6 +30,15 @@ static func take_story_return(fallback: String) -> String:
 static func archive_replay_enabled() -> bool:
 	return false
 
+## JSON path of a chapter id ("e1_01" lives in era1_01.json). "" when the id is unknown.
+static func path_for(chapter_id: String) -> String:
+	if chapter_id == "":
+		return ""
+	for row in mainline_entries():
+		if str(row.get("id", "")) == chapter_id:
+			return str(row.get("path", ""))
+	return ""
+
 static func request_chapter(chapter_id: String) -> String:
 	GameState.set_meta("story_chapter_id", chapter_id)
 	if chapter_id == "ch0":
