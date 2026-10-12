@@ -107,10 +107,10 @@ func _build() -> void:
 	_punnett.name = "PunnettBoard"
 	_msg = UIKit.body_label("选定婚仪后，这里写明子女会怎样入谱。", UIKit.TEXT_DIM, 12)
 	_msg.name = "RiteExplain"
-	_msg.autowrap_mode = TextServer.AUTOWRAP_OFF
-	_msg.clip_text = true
-	_msg.position = Vector2(12, 80)
-	_msg.size = Vector2(576, 22)
+	_msg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_msg.clip_text = false
+	_msg.position = Vector2(12, 72)
+	_msg.size = Vector2(576, 64)
 	_rite_board.add_child(_msg)
 	var row := HBoxContainer.new()
 	row.name = "MarriageActions"
@@ -159,9 +159,10 @@ func _build() -> void:
 	_toast.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_toast.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_toast.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_toast.position = Vector2(340, 292)
-	_toast.size = Vector2(600, 84)
-	_toast.z_index = 30
+	## Above RiteBoard/Punnett so 誓约完成 lines are not clipped under the green panels.
+	_toast.position = Vector2(200, 300)
+	_toast.size = Vector2(880, 168)
+	_toast.z_index = 40
 	_toast.visible = false
 	var tst := UIKit.flat_box(Color(0.03, 0.045, 0.07, 0.94), Color(UIKit.ACCENT, 0.55), 8)
 	tst.content_margin_left = 16
@@ -182,7 +183,7 @@ func _build() -> void:
 	dim.color = Color(UIKit.BG, 0.72)
 	dim.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 	_vow_panel.add_child(dim)
-	var vp := UIKit.panel_at(_vow_panel, Rect2(260, 190, 760, 320), 12, true)
+	var vp := UIKit.panel_at(_vow_panel, Rect2(220, 120, 840, 420), 12, true)
 	var ve := UIKit.mono("VOW RITUAL // 誓约仪式", 10, UIKit.ACCENT)
 	ve.position = Vector2(28, 22)
 	vp.add_child(ve)
@@ -190,13 +191,13 @@ func _build() -> void:
 	_vow_body.bbcode_enabled = true
 	_vow_body.fit_content = false
 	_vow_body.position = Vector2(28, 48)
-	_vow_body.size = Vector2(704, 190)
+	_vow_body.size = Vector2(784, 280)
 	_vow_body.add_theme_color_override("default_color", UIKit.TEXT)
 	_vow_body.add_theme_font_size_override("normal_font_size", 14)
 	_vow_body.add_theme_font_size_override("bold_font_size", 18)
 	vp.add_child(_vow_body)
 	_vow_actions = HBoxContainer.new()
-	_vow_actions.position = Vector2(28, 256)
+	_vow_actions.position = Vector2(28, 350)
 	_vow_actions.add_theme_constant_override("separation", 10)
 	vp.add_child(_vow_actions)
 	UIFX.page_enter(self)
@@ -876,6 +877,9 @@ func _show_toast(text: String, ok: bool) -> void:
 		return
 	_toast.text = text
 	_toast.add_theme_color_override("font_color", UIKit.OK if ok else UIKit.DANGER)
+	## Tall centered toast: multi-line 婚仪/誓约完成 must not sit under the green boards.
+	_toast.position = Vector2(200, 300)
+	_toast.size = Vector2(880, 168 if text.length() > 40 else 110)
 	_toast.visible = true
 	_toast.modulate.a = 1.0
 	if _toast_tw:
@@ -898,6 +902,11 @@ func _present_wed(text: String, ok: bool) -> void:
 		_msg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_msg.clip_text = false
 		_msg.add_theme_color_override("font_color", UIKit.OK if ok else UIKit.DANGER)
+		## Expand the rite explain slot so the full vow log stays readable.
+		if _rite_board != null:
+			_rite_board.clip_contents = false
+			_msg.position = Vector2(12, 36)
+			_msg.size = Vector2(maxf(40.0, _rite_board.size.x - 24.0), maxf(64.0, _rite_board.size.y - 44.0))
 
 func _back() -> void:
 	if str(GameState.chapter0_beat) in ["0.4", "0.45", "0.5"] and not GameState.flag("chapter0_done"):

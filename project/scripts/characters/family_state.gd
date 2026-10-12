@@ -57,6 +57,7 @@ static func posts_match_nation(host, nid: String) -> bool:
 				return false
 	return true
 
+
 static func refresh_marriage_candidates(host, nation_id: String = "") -> void:
 	## A blank nation keeps the diplomacy-weighted draw. The marriage screen passes the
 	## court it is standing in. Calendar, new game, and the century sim pass nothing,
@@ -164,8 +165,13 @@ static func _tier_zh(tier: int) -> String:
 
 ## Player-facing gestation, in month ticks. The stored counter is one less,
 ## because Calendar births on the tick that steps below zero.
-const TERM_MONTHS := 3
+## Peak term ~10 months (random 9–11). Fast-family debug stays at 1.
+const TERM_MONTHS_MIN := 9
+const TERM_MONTHS_MAX := 11
+const TERM_MONTHS := 10  ## display default / mid-band
 const FAST_TERM_MONTHS := 1
+## Even at peak fertility, marriage/conception is not certain.
+const PEAK_CONCEPTION_CHANCE := 0.72
 
 
 ## Unborn child: aptitude band, tactical-trait odds, royal-skill tier odds.
@@ -283,7 +289,12 @@ static func set_fast_family(host, on: bool) -> void:
 
 
 static func term_months(host) -> int:
-	return FAST_TERM_MONTHS if fast_family(host) else TERM_MONTHS
+	if fast_family(host):
+		return FAST_TERM_MONTHS
+	var rng = host.rng if host != null else null
+	if rng != null:
+		return rng.randi_range(TERM_MONTHS_MIN, TERM_MONTHS_MAX)
+	return TERM_MONTHS
 
 
 ## 16–32 peak, then a decline, none before 16 or after 48.
@@ -313,12 +324,18 @@ static func begin_pregnancy(host, mother) -> bool:
 	if rate <= 0.0:
 		mother.pregnant_months = -1
 		return false
-	if rate < 1.0:
-		var rng = host.rng if host != null else null
-		if rng != null and rng.randf() >= rate:
-			mother.pregnant_months = -1
-			return false
-	mother.pregnant_months = maxi(0, term_months(host) - 1)
+	var rng = host.rng if host != null else null
+	## Peak fertility used to skip the roll (rate==1); still roll PEAK_CONCEPTION_CHANCE.
+	var chance := rate if rate < 1.0 else PEAK_CONCEPTION_CHANCE
+	if rng != null and rng.randf() >= chance:
+		mother.pregnant_months = -1
+		return false
+	if rng == null and chance < 1.0:
+		mother.pregnant_months = -1
+		return false
+	var term := term_months(host)
+	mother.pregnant_months = maxi(0, term - 1)
+	mother.blood_meta["gestation_term"] = term
 	return true
 
 
@@ -329,4 +346,3 @@ static func _mods_zh(mods: Dictionary) -> String:
 	for k in mods.keys():
 		bits.append("%s +%s" % [str(k), str(mods[k])])
 	return _zh("archive_tactic_list", ["、".join(bits)])
-

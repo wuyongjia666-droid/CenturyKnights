@@ -94,7 +94,7 @@ amb_marked_heir_title,承印,Marked
 amb_three_friends_name,三邦友善,Three friends
 amb_three_friends_blurb,三个邦的声望至少到友善,Three realms are at least friendly
 amb_three_friends_title,三邦,Three realms
-fertility_term,孕期三月,
+fertility_term,孕期约十月,About ten months gestation
 fertility_fast,快速家族,
 fertility_to_fast,改为快速家族,Switch to fast family
 fertility_to_term,恢复常速孕期,Back to normal pregnancy
@@ -115,6 +115,32 @@ ancestor_no_deed,功绩未记,No deed written
 ancestor_no_title,无志向称号,No ambition title
 ancestor_empty,碑上还没有人。,The stele is empty.
 ancestor_card,%s\n%d – %d · %s\n%s\n%s\n%s,%s\n%d - %d · %s\n%s\n%s\n%s
+purse_absent_pay,人不在，钱在他身上。旗库不读。现有可见 %d，需 %d,Away; purse on them. Flag treasury unread. Have %d, need %d
+purse_short,私囊不足（旗库不读）。现有 %d，需 %d,Purse short (treasury unread). Have %d, need %d
+purse_nobody,无此人,No such person
+purse_sui_open,岁课未合，不能交还,Year-card open; cannot remit
+purse_empty,私囊为空,Purse empty
+purse_remit_log,%s 交还私囊 %d 银入旗库,%s remits purse %d silver to the flag
+purse_remit_ok,交还 %d 银,Remitted %d silver
+purse_care_lock,看护锁占用,Under care lock
+purse_follow_block,已随旗，不能上工,On the banner; cannot work fields
+purse_retinue_block,随行不能上工,Retinue cannot work fields
+purse_too_young,岁数不够,Too young
+purse_hire_no_field,雇佣兵不上田,Hirelings do not till
+purse_left_field,已离田,Left the field
+purse_holding_locked,属地未开垦,Holding not opened
+purse_slots_full,工位已满（Lv%d 共 %d）,Posts full (Lv%d / %d)
+purse_assigned,%s 上工于属地,%s assigned to a holding
+purse_field_paid,田俸入私囊 %d,Field wages into purses %d
+purse_flag_paid,出战/留旗俸入私囊 %d,Combat/retain wages into purses %d
+purse_month,月结：%s，粮 -%d,Month settle: %s, food -%d
+purse_month_none,无俸银流转,No wage flow
+purse_red,；银币见红，士气下降,; silver gone red, morale drops
+purse_starve,；缺粮，士气大降,; food short, morale sinks
+purse_mal,%s 因缺粮获得「营养不良」,%s gains Malnourished from hunger
+purse_barracks,；校场鼓点士气+%d,; drill yard morale +%d
+purse_advisor,；顾问指点 %s+1,; advisor tips %s+1
+sui_infirmary_pay,私囊付 6 + 旗库药 1（医舍）,Purse 6 + flag herb 1 (clinic)
 lin_minor,年幼,Minor
 lin_too_young,%s 还小（%d岁）。%d 岁起可早教择路。,%s is too young (%d). Early schooling opens at %d.
 lin_rite_hint,点选子嗣：%d 岁起可「早教择路」（写入族谱，岁课按道路倾向成长）；成年未入队可完成授旗三步。,"Pick an heir: early schooling from age %d (written to the genealogy, yearly lessons follow the path); adults not yet enlisted can take the three-step banner rite."

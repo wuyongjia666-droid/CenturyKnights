@@ -1,5 +1,5 @@
 {
-  "year_one": ["deploy", "roster", "tavern", "hourglass", "settings", "train"],
+  "year_one": ["deploy", "roster", "tavern", "hourglass", "settings", "train", "atlas", "lineage", "quests", "marriage"],
   "unlocks": [
     {"flag": "chapter0_done", "entries": ["quests", "atlas"]},
     {"flag": "e1_01_fought", "entries": ["skills"]},
