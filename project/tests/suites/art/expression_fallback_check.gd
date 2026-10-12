@@ -60,14 +60,14 @@ func _run() -> String:
 	var leader = GameState.get_leader()
 	if leader == null:
 		return "no leader"
-	var base := UnitArt.portrait(leader, 120)
-	var plate := CKArtPaths.load_texture(path)
+	var base := UnitArt.portrait(leader, 120, CKArtPaths.TIER_MEDIUM)
+	var plate := CKArtPaths.load_portrait(path, CKArtPaths.TIER_MEDIUM)
 	if not (plate is Texture2D):
 		return "plate load"
 	var shown := UnitArt.dialogue_portrait(str(people[0].get("name", "")), "惊", leader, 120)
 	if not _same_plate(shown, plate):
 		return "ingested plate not used"
-	var anger_plate := CKArtPaths.load_texture(anger)
+	var anger_plate := CKArtPaths.load_portrait(anger, CKArtPaths.TIER_MEDIUM)
 	if not (anger_plate is Texture2D):
 		return "anger plate load"
 	var shown_anger := UnitArt.dialogue_portrait(str(people[0].get("name", "")), "怒", leader, 120)

@@ -16,8 +16,8 @@ dest_files=["res://.godot/imported/hire_mage_m_plate.webp-43bc4070faa3782528cd46
 [params]
 
 compress/mode=1
-compress/high_quality=false
-compress/lossy_quality=0.78
+compress/high_quality=true
+compress/lossy_quality=0.92
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

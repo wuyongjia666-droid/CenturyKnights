@@ -16,8 +16,8 @@ dest_files=["res://.godot/imported/v87_city_sz_harbor.webp-bd01d0e9c5cba3382a0b0
 [params]
 
 compress/mode=1
-compress/high_quality=false
-compress/lossy_quality=0.76
+compress/high_quality=true
+compress/lossy_quality=0.92
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

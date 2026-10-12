@@ -16,8 +16,8 @@ dest_files=["res://.godot/imported/shadow_archer.webp-952e38a3f544c139f3d5548e68
 [params]
 
 compress/mode=1
-compress/high_quality=false
-compress/lossy_quality=0.78
+compress/high_quality=true
+compress/lossy_quality=0.92
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

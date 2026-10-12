@@ -8,6 +8,12 @@ extends RefCounted
 
 const LONG_MS := 480
 const SLOP := 22.0
+
+func _slop() -> float:
+	## ~0.5× hit target on phones; keep a desktop floor of 22.
+	if DeviceProfile.is_mobile():
+		return clampf(DeviceProfile.hit_px() * 0.5, 22.0, 56.0)
+	return SLOP
 const WHEEL_FACTOR := 1.12
 
 var _pts: Dictionary = {}
@@ -89,7 +95,7 @@ func _screen_drag(e: InputEventScreenDrag, now_ms: int) -> Array:
 	var prev: Vector2 = p.get("pos", e.position)
 	p["pos"] = e.position
 	var origin: Vector2 = p.get("origin", e.position)
-	if origin.distance_to(e.position) > SLOP:
+	if origin.distance_to(e.position) > _slop():
 		p["moved"] = true
 	_pts[e.index] = p
 	if _pts.size() >= 2:

@@ -35,7 +35,8 @@ var skill_points: int = 0
 # 游戏状态
 var started: bool = false
 var surname: String = "灰旗"
-var crest_color: String = "#c9a227"
+var crest_color: String = "#6ed4ff"
+var banner_spec: Dictionary = {}
 var silver: int = 120
 var food: int = 40
 var iron: int = 5
@@ -44,6 +45,7 @@ var morale: int = 70
 var characters: Dictionary = {}  # id -> CKCharacter
 var tavern_candidates: Array = []
 var marriage_candidates: Array = []
+var marriage_nation: String = ""
 var quests: Array = []
 var event_log: Array = []
 var settings: Dictionary = {
@@ -295,14 +297,19 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	patrol_boost_months = 0
 	surname = leader_surname
 	crest_color = color
+	banner_spec = BannerSpec.from_crest(color)
 	var leader = CharacterFactory.make_leader(leader_given, leader_surname, color)
 	characters[leader.id] = leader
+	var wantan = CharacterFactory.make_shilei_wantan()
+	characters[wantan.id] = wantan
 	var ally = CharacterFactory.make_ally_tutor()
 	characters[ally.id] = ally
-	deploy_ids = [leader.id, ally.id]
+	deploy_ids = [leader.id, wantan.id, ally.id]
 	grant_job_skills(leader)
+	grant_job_skills(wantan)
 	grant_job_skills(ally)
 	refresh_tavern()
+	marriage_nation = ""
 	refresh_marriage_candidates()
 	_init_quests()
 	World.reset()  # v8.7 playable atlas: position, reputation, markets, boards
@@ -730,6 +737,7 @@ func build_save_data() -> Dictionary:
 		"schema": SAVE_SCHEMA,
 		"surname": surname,
 		"crest_color": crest_color,
+		"banner_spec": banner_spec.duplicate(true),
 		"silver": silver, "food": food, "iron": iron, "herb": herb, "morale": morale,
 		"year": Calendar.year, "month": Calendar.month,
 		"play_seconds": play_seconds,
@@ -761,6 +769,7 @@ func build_save_data() -> Dictionary:
 		"characters": {},
 		"tavern": [],
 		"marriage": [],
+		"marriage_nation": marriage_nation,
 		"quests": quests,
 		"started": started,
 		"world_v87": CKSaveService.compact_world(World.to_save(), _court_derived),
@@ -807,7 +816,13 @@ func apply_save_data(data: Dictionary) -> bool:
 	data = migrate_save_data(data)
 	started = bool(data.get("started", true))
 	surname = str(data.get("surname", "灰旗"))
-	crest_color = str(data.get("crest_color", "#c9a227"))
+	crest_color = str(data.get("crest_color", "#6ed4ff"))
+	var raw_banner = data.get("banner_spec", {})
+	if typeof(raw_banner) == TYPE_DICTIONARY and not (raw_banner as Dictionary).is_empty():
+		banner_spec = BannerSpec.normalize(raw_banner)
+	else:
+		banner_spec = BannerSpec.from_crest(crest_color)
+	crest_color = str(banner_spec.get("field_a", crest_color))
 	silver = int(data.get("silver", 0))
 	food = int(data.get("food", 0))
 	iron = int(data.get("iron", 0))
@@ -856,6 +871,7 @@ func apply_save_data(data: Dictionary) -> bool:
 	marriage_candidates.clear()
 	for d in data.get("marriage", []):
 		marriage_candidates.append(CKCharacter.from_dict(d))
+	marriage_nation = str(data.get("marriage_nation", ""))
 	var _wd = data.get("world_v87", {})
 	var _world: Dictionary = _wd if typeof(_wd) == TYPE_DICTIONARY else {}
 	var _derived := str(_world.get("court_genomes", "")) == "derived"
@@ -872,8 +888,8 @@ func apply_save_data(data: Dictionary) -> bool:
 func family_members() -> Array:
 	return CKFamilyState.family_members(self)
 
-func refresh_marriage_candidates() -> void:
-	CKFamilyState.refresh_marriage_candidates(self)
+func refresh_marriage_candidates(nation_id: String = "") -> void:
+	CKFamilyState.refresh_marriage_candidates(self, nation_id)
 
 func _init_quests() -> void:
 	CKEconomyState._init_quests(self)

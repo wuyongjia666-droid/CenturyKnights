@@ -16,8 +16,8 @@ dest_files=["res://.godot/imported/v8_battle_biome_fort.webp-6ef98cf973b39de8715
 [params]
 
 compress/mode=1
-compress/high_quality=false
-compress/lossy_quality=0.74
+compress/high_quality=true
+compress/lossy_quality=0.92
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

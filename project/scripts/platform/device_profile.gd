@@ -3,7 +3,7 @@ extends RefCounted
 ## Phone vs desktop. Headless CI stays on the desktop path unless CK_FORCE_MOBILE=1.
 
 const DESIGN := Vector2(1280, 720)
-const HIT_DP := 44.0
+const HIT_DP := 48.0
 
 static func is_mobile() -> bool:
 	var force := OS.get_environment("CK_FORCE_MOBILE")
@@ -52,10 +52,10 @@ static func insets_from_safe(viewport: Vector2, window: Vector2, safe: Rect2) ->
 	}
 
 static func hit_px_for(dpi: float, viewport_w: float, window_w: float) -> float:
-	## 44dp converted into viewport pixels. Floor at 44 so a low reported dpi still taps.
+	## 48dp converted into viewport pixels. Floor at 48 so a low reported dpi still taps.
 	var phys := HIT_DP * maxf(dpi, 1.0) / 160.0
 	var logical := phys * (viewport_w / maxf(window_w, 1.0))
-	return maxf(44.0, logical)
+	return maxf(48.0, logical)
 
 static func hit_px() -> float:
 	var win := Vector2(DisplayServer.window_get_size())

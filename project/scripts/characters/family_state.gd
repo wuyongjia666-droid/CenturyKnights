@@ -12,10 +12,59 @@ static func family_members(host) -> Array:
 			out.append(c)
 	return out
 
-static func refresh_marriage_candidates(host) -> void:
+static func active_marriage_nation(host) -> String:
+	## The court posts whoever lives where the party is standing: castle, city, or that nation's keep.
+	var world = Engine.get_main_loop().root.get_node_or_null("World") if Engine.get_main_loop() else null
+	if world != null:
+		var at := str(world.nation_of(str(world.pos)))
+		if _nation_ok(at):
+			return at
+	if host != null and host.has_meta("marriage_nation"):
+		var forced := str(host.get_meta("marriage_nation"))
+		if _nation_ok(forced):
+			return forced
+	return "ashbanner"
+
+static func _nation_ok(nid: String) -> bool:
+	return nid != "" and not CKBloodline.nation(nid).is_empty()
+
+static func candidate_nation(c) -> String:
+	if c == null:
+		return ""
+	var mix = c.get("blood_mix") if c.get("blood_mix") != null else {}
+	if typeof(mix) != TYPE_DICTIONARY or mix.is_empty():
+		return ""
+	var best := ""
+	var best_w := -1.0
+	for k in mix.keys():
+		if float(mix[k]) > best_w:
+			best_w = float(mix[k])
+			best = str(k)
+	return CKBloodline.nation_of_line(best)
+
+static func posts_match_nation(host, nid: String) -> bool:
+	if nid == "" or host.marriage_candidates.is_empty():
+		return false
+	for c in host.marriage_candidates:
+		if candidate_nation(c) != nid:
+			return false
+		var mix = c.get("blood_mix")
+		if typeof(mix) != TYPE_DICTIONARY:
+			continue
+		for k in mix.keys():
+			var home := CKBloodline.nation_of_line(str(k))
+			if home != "" and home != nid:
+				return false
+	return true
+
+static func refresh_marriage_candidates(host, nation_id: String = "") -> void:
+	## A blank nation keeps the diplomacy-weighted draw. The marriage screen passes the
+	## court it is standing in. Calendar, new game, and the century sim pass nothing,
+	## so their shared RNG and the portrait bank stay on the previous sequence.
+	host.marriage_nation = nation_id
 	host.marriage_candidates.clear()
 	for i in 3:
-		host.marriage_candidates.append(CharacterFactory.make_marriage_candidate(host.rng))
+		host.marriage_candidates.append(CharacterFactory.make_marriage_candidate(host.rng, "baron", nation_id))
 
 static func tick_doctrine_and_marriage_month(host) -> Array:
 	var msgs: Array = []
@@ -90,7 +139,7 @@ static func build_dynasty_journal(host) -> String:
 			kids.append("%s〔%s〕" % [c.name, c.bloodline_display()])
 	if kids.size() > 0:
 		child_summary = "、".join(kids)
-	host.dynasty_journal = "【王朝手记·第零章】\n团长：%s\n配偶：%s\n子嗣：%s\n岁时：%s\n声望：灰烬邦 %s / 河卫邦 %s\n\n破旗立团，隘口一战，酒馆添人，春令成婚，初啼入谱，秋收簿清。灰烬旗的第一页，已用血与粮写就。" % [
+	host.dynasty_journal = "【王朝手记·第零章】\n团长：%s\n配偶：%s\n子嗣：%s\n岁时：%s\n声望：灰烬邦 %s / 河卫邦 %s\n\n石垒坡出来的平民把自己做成了一个姓。同乡先跟，烽火把姓打进传闻，酒馆添了认银的人，春令是一场不谈爱的试婚，初啼入谱，粮饷结清。" % [
 		leader.name if leader else "?",
 		spouse_name,
 		child_summary,

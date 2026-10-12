@@ -947,19 +947,25 @@ static func rank_for(roll: Dictionary, rng: RandomNumberGenerator) -> String:
 			return "baron" if rng.randf() < 0.45 else "knight"
 	return "knight"
 
-## Marriage offer: nation by diplomacy, tier by data. ctx: {"rep": {nid: int}, "stance": {nid: str}}.
+## Marriage offer. ctx.nation locks the list to one country (the court the player is standing in).
+## Without it, nation follows diplomacy. ctx: {"nation", "rep": {nid: int}, "stance": {nid: str}}.
 static func roll_marriage(rng: RandomNumberGenerator, prefer_rank: String, ctx: Dictionary = {}) -> Dictionary:
 	var m: Dictionary = data().get("marriage", {})
-	var w := {}
-	for nid in nation_ids():
-		var v := 1.0 + float(ctx.get("rep", {}).get(nid, 0)) / maxf(1.0, float(m.get("rep_weight_per", 20)))
-		var stance := str(ctx.get("stance", {}).get(nid, "neutral"))
-		if stance == "home":
-			v *= float(m.get("home_weight", 1.5))
-		elif stance == "hostile":
-			v *= float(m.get("hostile_weight", 0.4))
-		w[str(nid)] = v
-	var nid2 := _pick_weighted(w, rng)
+	var locked := str(ctx.get("nation", ""))
+	var nid2 := ""
+	if locked != "" and not nation(locked).is_empty():
+		nid2 = locked
+	else:
+		var w := {}
+		for nid in nation_ids():
+			var v := 1.0 + float(ctx.get("rep", {}).get(nid, 0)) / maxf(1.0, float(m.get("rep_weight_per", 20)))
+			var stance := str(ctx.get("stance", {}).get(nid, "neutral"))
+			if stance == "home":
+				v *= float(m.get("home_weight", 1.5))
+			elif stance == "hostile":
+				v *= float(m.get("hostile_weight", 0.4))
+			w[str(nid)] = v
+		nid2 = _pick_weighted(w, rng)
 	var tier := _pick_weighted(m.get("tier_p", {"folk": 1.0}), rng)
 	var nat := nation(nid2)
 	var nb: Array = nobles_of(nid2)

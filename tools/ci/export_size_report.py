@@ -6,11 +6,17 @@ when any preset pattern matches its relative path. Godot's String.match treats
 '*' as any run of characters, including slashes. Fails when the total is above
 tools/ci/ratchet.json export_budget_bytes.
 
-Shipping photographs are lossy WebP (gene plates stay 768x1024; 1920
-backdrops and battle plates are capped at 1280). Doll parts are lossless
-WebP. The active budget sits just above the measured total and under the
-400MiB cap. If docs/art/retired-assets-v92.json grows an exclude_globs
-list, those patterns are applied on top.
+Shipping photographs are WebP quality 92 at native resolution. Doll parts
+are lossless WebP. The gene-portrait bank ships inside the base Windows
+and Android exports, with small and medium siblings beside each large
+plate. The active budget sits just above the measured total. If
+docs/art/retired-assets-v92.json grows an exclude_globs list, those
+patterns are applied on top.
+
+The budget is derived, not a literal: export_base_budget_bytes covers everything
+outside the gene bank, and each bank plate (large + medium + small) earns
+export_bank_bytes_per_plate. Adding plates grows the budget by itself; a plate
+over export_bank_plate_max_bytes fails on its own.
 """
 from __future__ import annotations
 
@@ -24,6 +30,7 @@ PROJECT = ROOT / "project"
 PRESETS = PROJECT / "export_presets.cfg"
 RATCHET = ROOT / "tools" / "ci" / "ratchet.json"
 RETIRED = ROOT / "docs" / "art" / "retired-assets-v92.json"
+BANK_PREFIX = "assets/art/portraits/genome/bank/"
 CAP_BYTES = 400 * 1024 * 1024
 TARGET_BYTES = 250 * 1024 * 1024
 
@@ -68,10 +75,11 @@ def _matches(rel: str, compiled: list[re.Pattern[str]]) -> bool:
     return any(pattern.match(rel) for pattern in compiled)
 
 
-def _scan(compiled: list[re.Pattern[str]]) -> tuple[int, dict[str, int], int]:
+def _scan(compiled: list[re.Pattern[str]]) -> tuple[int, dict[str, int], int, dict[str, int]]:
     included = 0
     excluded = 0
     by_dir: dict[str, int] = {}
+    plates: dict[str, int] = {}
     for path in PROJECT.rglob("*"):
         if not path.is_file():
             continue
@@ -83,30 +91,43 @@ def _scan(compiled: list[re.Pattern[str]]) -> tuple[int, dict[str, int], int]:
             excluded += size
             continue
         included += size
+        if rel.startswith(BANK_PREFIX):
+            stem = rel[len(BANK_PREFIX):].split(".", 1)[0]
+            plates[stem] = plates.get(stem, 0) + size
         parts = rel.split("/")
         if parts[0] == "assets" and len(parts) >= 3:
             key = "/".join(parts[:3])
         else:
             key = parts[0]
         by_dir[key] = by_dir.get(key, 0) + size
-    return included, by_dir, excluded
+    return included, by_dir, excluded, plates
 
 
 def main() -> int:
     patterns = _patterns_from_presets() + _retired_patterns()
     compiled = [_glob_to_re(pattern) for pattern in patterns]
-    included, by_dir, excluded = _scan(compiled)
+    included, by_dir, excluded, plates = _scan(compiled)
     data = json.loads(RATCHET.read_text(encoding="utf-8")) if RATCHET.is_file() else {}
-    budget = int(data.get("export_budget_bytes", 0))
+    base = int(data.get("export_base_budget_bytes", 0))
+    per_plate = int(data.get("export_bank_bytes_per_plate", 0))
+    plate_max = int(data.get("export_bank_plate_max_bytes", 0))
+    bank_bytes = sum(plates.values())
+    budget = base + per_plate * len(plates)
     print(f"EXPORT EXCLUDED {excluded}")
     for key, size in sorted(by_dir.items(), key=lambda item: (-item[1], item[0])):
         print(f"EXPORT DIR {key} {size}")
     print(f"EXPORT SIZE {included}")
+    print(f"EXPORT BANK plates={len(plates)} bytes={bank_bytes} per_plate={per_plate} plate_max={plate_max}")
+    print(f"EXPORT NONBANK {included - bank_bytes} base={base}")
     print(f"EXPORT BUDGET {budget}")
     print(f"EXPORT CAP {CAP_BYTES}")
     print(f"EXPORT TARGET {TARGET_BYTES}")
-    if budget <= 0:
-        print("EXPORT SIZE FAIL missing export_budget_bytes")
+    if base <= 0 or per_plate <= 0 or plate_max <= 0:
+        print("EXPORT SIZE FAIL ratchet.json needs export_base_budget_bytes, export_bank_bytes_per_plate, export_bank_plate_max_bytes")
+        return 1
+    fat = sorted((size, stem) for stem, size in plates.items() if size > plate_max)
+    if fat:
+        print(f"EXPORT SIZE FAIL {len(fat)} bank plates over {plate_max} bytes, largest {fat[-1][1]} {fat[-1][0]}")
         return 1
     if included > budget:
         print(f"EXPORT SIZE FAIL {included} > {budget}")

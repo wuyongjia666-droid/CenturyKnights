@@ -90,7 +90,10 @@ static func tick(delta: float) -> void:
 		_banner_frame = (_banner_frame + 1) % 6
 
 static func crest_color() -> Color:
-	return Color(str(GameState.crest_color))
+	var spec_raw = GameState.get("banner_spec")
+	if typeof(spec_raw) == TYPE_DICTIONARY and (spec_raw as Dictionary).has("field_a"):
+		return Color(str((spec_raw as Dictionary).get("field_a")))
+	return Color("#" + migrate_crest_hex(str(GameState.crest_color)))
 
 ## Old saves still store a retired crest key. The map lives in crest_palette_v92.json.
 ## game_state.gd / naming.gd defaults stay with core and narrative.
@@ -138,8 +141,11 @@ static func _art_exists(path: String) -> bool:
 	return CKArtPaths.exists(path)
 
 
-static func _try_load(path: String) -> Texture2D:
-	path = CKArtPaths.resolve(path)
+static func _try_load(path: String, tier: String = "") -> Texture2D:
+	if tier == "":
+		path = CKArtPaths.resolve(path)
+	else:
+		path = CKArtPaths.resolve_portrait(path, tier)
 	if _cache.has(path):
 		return _cache[path]
 	if _art_exists(path):
@@ -453,37 +459,39 @@ static func dialogue_portrait(speaker: String, emotion: String, who: CKCharacter
 	if slot != "":
 		var path := expression_plate_path(slot, emotion)
 		if _art_exists(path):
-			var tex = CKArtPaths.load_texture(path)
+			var tex = _try_load(path, CKArtPaths.TIER_MEDIUM)
 			if tex is Texture2D:
 				return tex
 	if who != null:
-		return portrait(who, size)
+		return portrait(who, size, CKArtPaths.TIER_MEDIUM)
 	return null
 
-static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
+static func portrait(c: CKCharacter, size: int = 96, tier: String = "") -> Texture2D:
 	# v8.9: paper-doll is retired. One Qwen plate per unit_id when the farm has ingested it.
 	# Checked before the legacy cache so a late ingest still wins. Missing plates fall through
 	# to named cast art, then hireuniq, then the bust/geno chain.
-	var gtex: Texture2D = CKGenomePortrait.texture(c)
+	# small: lists and chess tokens. medium: dialogue and half-body. large: detail.
+	var use_tier := tier if tier != "" else CKArtPaths.tier_for_display(size)
+	var gtex: Texture2D = CKGenomePortrait.texture(c, use_tier)
 	if gtex != null:
 		return gtex
 	var path = _portrait_key(c)
 	var _elite := _v83_elite_for(path)
 	if _elite != "":
 		path = _elite
-	var ck = "p|" + path + "|" + str(c.id)
+	var ck = "p|" + use_tier + "|" + path + "|" + str(c.id)
 	if _cache.has(ck):
 		return _cache[ck]
 	# v8.5: pre-v8 cartoon keys (allele-combo plates, hire_/role plates, old *_face_plate) must not
 	# shadow the 781 farmed hireuniq faces — renders showed every recruit/candidate as a cartoon.
-	var tex2 = null if _is_cartoon_key(path) else _try_load(path)
+	var tex2 = null if _is_cartoon_key(path) else _try_load(path, use_tier)
 	if tex2 != null:
 		_cache[ck] = tex2
 		return tex2
 	# 个人脸优先：hireuniq 为手绘感唯一底，再轻染等位色
 	var uid = _face_uid(c)
 	var uniq_p = "res://assets/art/portraits/hireuniq_%03d.png" % uid
-	var utex = _try_load(uniq_p)
+	var utex = _try_load(uniq_p, use_tier)
 	if utex != null:
 		return _fingerprint_portrait(utex, c)
 	# 回退：等位组合板
@@ -507,7 +515,7 @@ static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
 	# v8.5: role-matched v8 bust before geno/procedural
 	var v8b = {"skirmisher": "spear", "tank": "guard", "ranger": "archer", "mage": "scholar", "cavalry": "cavalry", "healer": "medic", "support": "medic"}.get(role, "duelist")
 	var v8bp = "res://assets/art/portraits/thumb_v8_bust_%s_%s.png" % [g, v8b]
-	var v8bt = _try_load(v8bp)
+	var v8bt = _try_load(v8bp, use_tier)
 	if v8bt != null:
 		return _fingerprint_portrait(v8bt, c)
 	if ht != null:
@@ -547,9 +555,9 @@ static func portrait(c: CKCharacter, size: int = 96) -> Texture2D:
 	if size <= 240 and _art_exists(_thumb):
 		_gp = _thumb
 	if _art_exists(_gp):
-		var _gt = _try_load(_gp)
+		var _gt = _try_load(_gp, use_tier)
 		if _gt != null:
-			_cache["geno|" + _geno + "|" + str(size)] = _gt
+			_cache["geno|" + use_tier + "|" + _geno + "|" + str(size)] = _gt
 			return _gt
 	return _proc_portrait(c, size)
 
@@ -779,7 +787,7 @@ static func _bust_token(c: CKCharacter, team: String, done: bool = false) -> Tex
 	var key = "bust|%s|%s|%s" % [str(c.id) if c.id != "" else c.name, team, str(done)]
 	if _cache.has(key):
 		return _cache[key]
-	var pt = portrait(c, 220)
+	var pt = portrait(c, 128, CKArtPaths.TIER_SMALL)
 	if pt == null:
 		return null
 	var img: Image = pt.get_image()
@@ -824,7 +832,28 @@ static func _bust_token(c: CKCharacter, team: String, done: bool = false) -> Tex
 	_cache[key] = tex
 	return tex
 
+static func banner_spec_current() -> Dictionary:
+	var raw = GameState.get("banner_spec")
+	if typeof(raw) == TYPE_DICTIONARY and not (raw as Dictionary).is_empty():
+		return BannerSpec.normalize(raw)
+	return BannerSpec.from_crest(str(GameState.crest_color))
+
+static func banner_layers(spec: Dictionary = {}, w: int = 160, h: int = 220) -> Texture2D:
+	var s := BannerSpec.normalize(spec if not spec.is_empty() else banner_spec_current())
+	var ck := "bl|" + BannerSpec.cache_key(s) + "|%d|%d|%d" % [w, h, _banner_frame]
+	if _cache.has(ck):
+		return _cache[ck]
+	var wave := float(_banner_frame) / 6.0
+	var tex := BannerSpec.compose_texture(s, w, h, wave)
+	_cache[ck] = tex
+	return tex
+
 static func banner(w: int = 160, h: int = 220, with_name: bool = true) -> Texture2D:
+	## Layered DIY banner (field/charge/border/emblem). Legacy PNG path kept as fallback only.
+	var spec := banner_spec_current()
+	var layered := banner_layers(spec, w, h)
+	if layered != null:
+		return layered
 	var hex = _crest_hex()
 	var path = "res://assets/art/banners/banner_%s_w%d.png" % [hex, _banner_frame]
 	var ck = "b|" + path

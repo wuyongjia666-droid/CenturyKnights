@@ -16,8 +16,8 @@ dest_files=["res://.godot/imported/v87_item_qh_capital_sig2.webp-c3b8d60d76d7de8
 [params]
 
 compress/mode=1
-compress/high_quality=false
-compress/lossy_quality=0.78
+compress/high_quality=true
+compress/lossy_quality=0.92
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0

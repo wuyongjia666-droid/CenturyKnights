@@ -554,12 +554,12 @@ static func char_card_text(c: CKCharacter) -> String:
 		lines.append(Locale.t("shell_484a9984"))
 	return "\n".join(lines)
 
-static func make_portrait_rect(c: CKCharacter, size: int = 72) -> TextureRect:
+static func make_portrait_rect(c: CKCharacter, size: int = 72, tier: String = "") -> TextureRect:
 	var tr := TextureRect.new()
 	tr.custom_minimum_size = Vector2(size, size)
 	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	tr.texture = UnitArt.portrait(c, size)
+	tr.texture = UnitArt.portrait(c, size, tier)
 	return tr
 
 static func make_banner_rect(w: int = 72, h: int = 100) -> TextureRect:
@@ -1085,7 +1085,7 @@ static func section_head(parent: Control, pos: Vector2, title_zh: String, en: St
 		r.position = pos + Vector2(w - r.get_minimum_size().x, 1)
 		parent.add_child(r)
 
-static func portrait_plate(parent: Control, rect: Rect2, c, caption: String = "", focus: bool = false) -> Panel:
+static func portrait_plate(parent: Control, rect: Rect2, c, caption: String = "", focus: bool = false, tier: String = "") -> Panel:
 	## blueprint plate: thin frame + corner ticks + clipped portrait + mono caption
 	var p := panel_at(parent, rect, 8, focus)
 	var inner := Control.new()
@@ -1096,7 +1096,7 @@ static func portrait_plate(parent: Control, rect: Rect2, c, caption: String = ""
 	p.add_child(inner)
 	if c != null:
 		var tex: Texture2D = null
-		var pr: TextureRect = make_portrait_rect(c, int(rect.size.y))
+		var pr: TextureRect = make_portrait_rect(c, int(rect.size.y), tier)
 		tex = pr.texture
 		pr.queue_free()
 		if tex:
@@ -1107,6 +1107,7 @@ static func portrait_plate(parent: Control, rect: Rect2, c, caption: String = ""
 			t.size = inner.size
 			t.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			inner.add_child(t)
+		CKPortraitStatus.attach(inner, c, inner.size)
 	var shade := TextureRect.new()
 	var g := Gradient.new()
 	g.set_color(0, Color(0, 0, 0, 0))
@@ -1255,20 +1256,52 @@ static func stitch_dialogue(scene: Control) -> void:
 	bd.scroll_following = false
 	bd.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	bd.add_theme_font_override("normal_font", font("regular"))
-	bd.custom_minimum_size = Vector2(820, 96)
+	bd.custom_minimum_size = Vector2(0, 64)
+	bd.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	bd.add_theme_font_size_override("normal_font_size", 17)
 	bd.add_theme_constant_override("line_separation", 6)
-	# choice branch cards: right-aligned, bottom pinned above the transcript box
+	# One continue control sits under the line. Choice cards sit above the box.
+	var column := bd.get_parent() as Control
 	var act := actions as Control
-	var relayout := func():
-		if not is_instance_valid(act):
+	var busy := [false]
+	var place := func():
+		if busy[0] or not is_instance_valid(act) or column == null or panel == null:
 			return
-		var sz := act.get_combined_minimum_size()
-		act.position = Vector2(1100 - maxf(sz.x, 240.0), 462 - sz.y)
+		var live: Array = []
+		var advance_only := true
+		for c in act.get_children():
+			if not is_instance_valid(c) or c.is_queued_for_deletion():
+				continue
+			live.append(c)
+			if str(c.name) != "AdvanceLine":
+				advance_only = false
+		if live.is_empty():
+			return
+		busy[0] = true
+		if live.size() == 1 and advance_only:
+			if act.get_parent() != column:
+				act.reparent(column)
+			# Container owns the position. Pinning it to zero covers the line.
+			act.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			act.size_flags_vertical = Control.SIZE_SHRINK_END
+			column.size_flags_vertical = Control.SIZE_EXPAND_FILL
+			if column is BoxContainer:
+				column.add_theme_constant_override("separation", 8)
+		else:
+			if act.get_parent() != scene:
+				act.reparent(scene)
+			var sz := act.get_combined_minimum_size()
+			if sz.y < 8.0:
+				sz.y = 40.0 * float(live.size())
+			if sz.x < 8.0:
+				sz.x = 320.0
+			act.size = sz
+			act.custom_minimum_size = sz
+			act.position = Vector2(panel.position.x + panel.size.x - sz.x - 16.0, panel.position.y - sz.y - 12.0)
+		busy[0] = false
 	if act is BoxContainer:
-		(act as BoxContainer).alignment = BoxContainer.ALIGNMENT_END
-		act.sort_children.connect(relayout)
-	relayout.call()
+		act.sort_children.connect(place)
+	place.call()
 	# narrator / crest banner → hide plate; keep caption in sync with speaker
 	var tm := Timer.new()
 	tm.wait_time = 0.1

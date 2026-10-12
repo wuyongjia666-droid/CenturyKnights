@@ -31,6 +31,35 @@ static func make_leader(given: String, surname: String, crest_color: String) -> 
 	GameState.surname = surname
 	return c
 
+## 石垒坡同乡。因人而留，排在灯影前面。不上十二同伴。六维写死，避免打乱 new_game 的随机序列。
+static func make_shilei_wantan() -> CKCharacter:
+	var c := CKCharacter.new()
+	c.id = next_id("ally")
+	c.cast_key = "wantan"
+	c.name = _supporting_name("wantan")
+	c.gender = "m"
+	c.age = 22
+	c.job_id = "light_inf"
+	c.rank = "knight"
+	c.blood_mix = {"common_ash": 1.0}
+	c.traits = ["sturdy"]
+	c.appearance = {"hair": "ash_brown", "eyes": "slate", "brow": "straight", "scar": "none"}
+	c.stats = {"str": 8, "vit": 9, "skl": 6, "agi": 7, "per": 5, "wil": 7}
+	c.birthday_month = 8
+	# 低于灯影的 6。月饷 4 会把种子 91 的第 30 年银压出 400 的下限。
+	c.salary = 3
+	c.recalc_hp()
+	return c
+
+static func _supporting_name(cast_key: String) -> String:
+	var data = JSON.parse_string(FileAccess.get_file_as_string("res://data/cast/supporting_v92.json"))
+	if typeof(data) != TYPE_DICTIONARY:
+		return ""
+	for person in data.get("people", []):
+		if typeof(person) == TYPE_DICTIONARY and str(person.get("cast_key", "")) == cast_key:
+			return str(person.get("name", ""))
+	return ""
+
 static func make_ally_tutor() -> CKCharacter:
 	var c := CKCharacter.new()
 	c.id = next_id("ally")
@@ -81,7 +110,7 @@ static func make_tavern_candidate(rng: RandomNumberGenerator, roll: Dictionary =
 	c.recalc_hp()
 	return c
 
-static func make_marriage_candidate(rng: RandomNumberGenerator, prefer_rank: String = "baron") -> CKCharacter:
+static func make_marriage_candidate(rng: RandomNumberGenerator, prefer_rank: String = "baron", nation_id: String = "") -> CKCharacter:
 	var c := make_tavern_candidate(rng)
 	c.gender = "f" if GameState.get_leader() and GameState.get_leader().gender == "m" else "m"
 	c.in_roster = false
@@ -94,6 +123,8 @@ static func make_marriage_candidate(rng: RandomNumberGenerator, prefer_rank: Str
 		for nid in world.nation_ids():
 			stance[nid] = world.nation_stance(nid)
 		ctx = {"rep": world.rep_nation, "stance": stance}
+	if nation_id != "":
+		ctx["nation"] = nation_id
 	var mr := CKBloodline.roll_marriage(rng, prefer_rank, ctx)
 	CKBloodline.apply_recruit(c, {"blood_mix": mr.blood_mix, "tier": mr.tier, "line": mr.line}, rng)
 	c.rank = str(mr.rank)

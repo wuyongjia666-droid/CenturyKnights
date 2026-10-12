@@ -22,6 +22,14 @@ func _ready() -> void:
 	_msg.position = Vector2(180, 28)
 	_msg.size = Vector2(700, 28)
 	add_child(_msg)
+	var banner := TextureRect.new()
+	banner.name = "CompanyBanner"
+	banner.custom_minimum_size = Vector2(96, 136)
+	banner.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	banner.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	banner.position = Vector2(1120, 80)
+	banner.texture = UnitArt.banner(96, 136, true)
+	add_child(banner)
 	_annex_buttons()
 
 func _annex_buttons() -> void:
@@ -87,6 +95,11 @@ func level_of(id: String) -> int:
 	return GameState.building_level(id)
 
 func refresh() -> void:
+	var b := get_node_or_null("CompanyBanner") as TextureRect
+	if b:
+		UnitArt.clear_cache()
+		b.texture = UnitArt.banner(96, 136, true)
+
 	for id in SLOTS:
 		var show_tier := CKCastleServices.tier_of(level_of(str(id)))
 		for tier in [1, 2, 3]:

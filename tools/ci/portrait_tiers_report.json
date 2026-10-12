@@ -1,0 +1,30 @@
+{
+  "quality": 92,
+  "method": 6,
+  "scales": {
+    "small": 0.5,
+    "medium": 0.6666666666666666,
+    "large": 1.0
+  },
+  "min_long_side": 640,
+  "masters": 1673,
+  "skipped_already_small": 1517,
+  "wrote": 3346,
+  "kept": 0,
+  "errors": 0,
+  "bytes": {
+    "small": 64840388,
+    "medium": 113120898
+  },
+  "sample": {
+    "status": "wrote",
+    "tier": "small",
+    "bytes": 51636,
+    "size": [
+      384,
+      512
+    ],
+    "path": "project/assets/art/portraits/expressions/v92_expr_c01_anger.small.webp"
+  },
+  "policy": "Gene bank and other sharp plates ship inside the base export. Large stays native WebP quality 92. Small and medium are Lanczos siblings at quality 92."
+}

@@ -1,6 +1,6 @@
 class_name BattleMobileBar
 extends RefCounted
-## Phone command bar. Extracted from the battle controller in BTL-01.
+## Phone command bar. ≤4 primary keys ≥48dp; confirm flow swaps the row.
 
 static func build(host) -> void:
 	if not DeviceProfile.is_mobile():
@@ -21,26 +21,47 @@ static func build(host) -> void:
 	host._mobile_bar.add_theme_stylebox_override("panel", st)
 	host._mobile_layer.add_child(host._mobile_bar)
 	var row := HBoxContainer.new()
+	row.name = "CmdRow"
 	row.add_theme_constant_override("separation", 8)
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	host._mobile_bar.add_child(row)
-	var h := int(DeviceProfile.hit_px())
-	command(row, Locale.t("shell_8669d292"), h, false, host._enter_attack_mode)
-	command(row, Locale.t("shell_41ec1a25"), h, false, host._cycle_skill)
-	command(row, Locale.t("shell_1a0db8dc"), h, false, host._wait_selected)
-	command(row, Locale.t("shell_4d0b4688"), h, false, host._cancel_selection)
-	command(row, Locale.t("shell_4faa58f5"), h, true, host._end_player_turn)
+	rebuild(host)
 	place(host)
 	if not host.get_viewport().size_changed.is_connected(host._on_viewport_resized):
 		host.get_viewport().size_changed.connect(host._on_viewport_resized)
+
+static func rebuild(host) -> void:
+	if host._mobile_bar == null:
+		return
+	var row := host._mobile_bar.get_node_or_null("CmdRow") as HBoxContainer
+	if row == null:
+		return
+	for c in row.get_children():
+		row.remove_child(c)
+		c.queue_free()
+	var h := int(maxi(48, int(DeviceProfile.hit_px())))
+	if host.preview_move_cell.x >= 0:
+		command(row, Locale.t("ux_confirm_move"), h, true, func(): BattleTouchConfirm.confirm_move(host))
+		command(row, Locale.t("shell_4d0b4688"), h, false, func(): BattleTouchConfirm.clear(host))
+	elif int(host.preview_attack_ui) >= 0:
+		command(row, Locale.t("ux_confirm_attack"), h, true, func(): BattleTouchConfirm.confirm_attack(host))
+		command(row, Locale.t("shell_4d0b4688"), h, false, func(): BattleTouchConfirm.clear(host))
+	else:
+		command(row, Locale.t("shell_8669d292"), h, false, host._enter_attack_mode)
+		command(row, Locale.t("shell_1a0db8dc"), h, false, host._wait_selected)
+		command(row, Locale.t("shell_4d0b4688"), h, false, host._cancel_selection)
+		command(row, Locale.t("ux_more_cmds"), h, true, func(): BattleTouchConfirm.overflow_menu(host))
+	place(host)
+
 static func command(row: HBoxContainer, text: String, h: int, accent: bool, cb: Callable) -> Button:
 	var b := UIKit.make_accent_button(text, 120) if accent else UIKit.make_button(text, 96)
 	b.custom_minimum_size = Vector2(0, h)
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	b.add_theme_font_size_override("font_size", 16)
+	b.add_theme_font_size_override("font_size", 15)
 	b.pressed.connect(cb)
 	row.add_child(b)
 	return b
+
 static func place(host) -> void:
 	if host._mobile_bar == null:
 		return
@@ -51,6 +72,7 @@ static func place(host) -> void:
 	var h: float = float(host._command_bar_px())
 	var left := float(insets.get("left", 0.0))
 	var right := float(insets.get("right", 0.0))
-	var bottom := float(insets.get("bottom", 0.0))
+	var bottom := maxf(float(insets.get("bottom", 0.0)), 8.0)
+	# Dead zone: keep bar a few dp above the board so pans don't mis-tap.
 	host._mobile_bar.position = Vector2(left, vp.y - bottom - h)
 	host._mobile_bar.size = Vector2(maxf(240.0, vp.x - left - right), h)

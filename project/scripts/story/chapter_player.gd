@@ -230,12 +230,12 @@ func _speaker_portrait(speaker: String, emotion: String = "") -> void:
 	match speaker:
 		"旁白", "掌柜", "管事", "稳婆", "春令使者", "老旗手", "斥候", "盟友亲属":
 			if leader and speaker in ["老旗手", "斥候"]:
-				_portrait.texture = UnitArt.portrait(leader, 120)
+				_portrait.texture = UnitArt.portrait(leader, 120, CKArtPaths.TIER_MEDIUM)
 			else:
 				_portrait.texture = UnitArt.banner(120, 120, false)
 		_:
 			if leader:
-				_portrait.texture = UnitArt.portrait(leader, 120)
+				_portrait.texture = UnitArt.portrait(leader, 120, CKArtPaths.TIER_MEDIUM)
 			else:
 				_portrait.texture = UnitArt.banner(120, 120, false)
 
@@ -251,7 +251,7 @@ func _refresh_actions() -> void:
 			_line_idx += 1
 			_show_line()
 			_refresh_actions()
-		)
+		, false, true)
 		return
 	var shown := 0
 	for action in _beat.get("actions", []):
@@ -265,11 +265,17 @@ func _refresh_actions() -> void:
 		var disabled := bool(row.get("disabled", false))
 		_add_action(str(row.get("label", "")), _on_action.bind(steps), disabled)
 	if shown == 0 and _beat.get("next") != null and str(_beat.get("next", "")) != "":
-		_add_action("继续", func(): _goto_next())
+		_add_action("继续", func(): _goto_next(), false, true)
 
-func _add_action(text: String, cb: Callable, disabled: bool = false) -> void:
-	var b = UIKit.make_button(text, 460) if disabled else UIKit.make_accent_button(text, 460)
+func _add_action(text: String, cb: Callable, disabled: bool = false, compact: bool = false) -> void:
+	var w := 148 if compact else 320
+	var b = UIKit.make_button(text, w) if disabled else UIKit.make_accent_button(text, w)
 	b.disabled = disabled
+	b.size_flags_horizontal = Control.SIZE_SHRINK_END
+	if compact:
+		b.name = "AdvanceLine"
+		b.custom_minimum_size = Vector2(148, 36)
+		UIKit.compact(b, 36)
 	if not disabled:
 		b.pressed.connect(cb)
 	_actions.add_child(b)

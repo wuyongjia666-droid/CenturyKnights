@@ -32,6 +32,19 @@ static func bank_dir() -> String:
 		return dir_override
 	return ProjectSettings.globalize_path("res://assets/art/portraits/genome/bank")
 
+
+static func _dir_has_plate(dir: String) -> bool:
+	if not DirAccess.dir_exists_absolute(dir):
+		return false
+	var da := DirAccess.open(dir)
+	if da == null:
+		return false
+	for fn in da.get_files():
+		var low := str(fn).to_lower()
+		if low.ends_with(".webp") or low.ends_with(".png"):
+			return true
+	return false
+
 static func clear_cache() -> void:
 	_plates_known = false
 	_plates = false
@@ -42,26 +55,17 @@ static func clear_cache() -> void:
 static func has_plates() -> bool:
 	if _plates_known:
 		return _plates
-	_plates = false
-	var dir := bank_dir()
-	if DirAccess.dir_exists_absolute(dir):
-		var da := DirAccess.open(dir)
-		if da != null:
-			for fn in da.get_files():
-				var low := str(fn).to_lower()
-				if low.ends_with(".webp") or low.ends_with(".png"):
-					_plates = true
-					break
+	_plates = _dir_has_plate(bank_dir())
 	_plates_known = true
 	return _plates
 
-static func try_texture(c: Object) -> Texture2D:
+static func try_texture(c: Object, tier: String = "large") -> Texture2D:
 	if not has_plates():
 		return null
 	var m := best_match(c)
 	if not bool(m.get("hit", false)):
 		return null
-	return _load_plate(str(m.get("bucket_key", "")))
+	return _load_plate(str(m.get("bucket_key", "")), tier)
 
 static func best_match(c: Object) -> Dictionary:
 	_ensure_index()
@@ -393,19 +397,7 @@ static func _has_term(text: String, term: String) -> bool:
 static func _is_word(ch: int) -> bool:
 	return (ch >= 48 and ch <= 57) or (ch >= 65 and ch <= 90) or (ch >= 97 and ch <= 122) or ch == 95
 
-static func _load_plate(key: String) -> Texture2D:
+static func _load_plate(key: String, tier: String = "large") -> Texture2D:
 	if dir_override != "":
-		var webp := dir_override.path_join(key + ".webp")
-		if FileAccess.file_exists(webp):
-			return _load_png(webp)
-		return _load_png(dir_override.path_join(key + ".png"))
-	return CKArtPaths.load_texture("res://assets/art/portraits/genome/bank/%s.png" % key)
-
-
-static func _load_png(path: String) -> Texture2D:
-	if not FileAccess.file_exists(path):
-		return null
-	var img := Image.load_from_file(path)
-	if img == null:
-		return null
-	return ImageTexture.create_from_image(img)
+		return CKArtPaths.load_portrait(dir_override.path_join(key + ".png"), tier)
+	return CKArtPaths.load_portrait("res://assets/art/portraits/genome/bank/%s.png" % key, tier)

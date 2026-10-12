@@ -105,6 +105,8 @@ func _hub() -> void:
 	var now := hub.find_child("MainlineNow", true, false)
 	_ok(now != null and str(now.text) != "", "mainline label missing")
 	_ok(hub.find_child("ContinueMainline", true, false) != null, "continue missing")
+	var guide := hub.find_child("OpenGuide", true, false) as BaseButton
+	_ok(guide != null and str(guide.text).find(Locale.t("ux_help_open")) >= 0, "castle guide")
 	hub.queue_free()
 	await get_tree().process_frame
 

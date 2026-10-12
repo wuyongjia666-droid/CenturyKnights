@@ -134,6 +134,9 @@ func _ready() -> void:
 		GameState.settings["rules_preview"] = on
 		BattleRules.preview_enabled = on
 	))
+	box.add_child(_check(Locale.t("ux_touch_confirm"), bool(GameState.settings.get("touch_confirm", DeviceProfile.is_mobile())), func(on):
+		GameState.settings["touch_confirm"] = on
+	))
 	var highlight := _check(Locale.t("shell_73266386"), bool(GameState.settings.get("tutorial_highlight", true)), func(on):
 		GameState.settings["tutorial_highlight"] = on
 	)
@@ -145,6 +148,12 @@ func _ready() -> void:
 	codex.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	codex.pressed.connect(func(): CKHelpCodex.open(self))
 	box.add_child(codex)
+	var guide := UIKit.make_button(Locale.t("ux_help_open"), 220)
+	guide.name = "OpenGuide"
+	guide.custom_minimum_size = Vector2(220, 44)
+	guide.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	guide.pressed.connect(func(): CKHelpCodex.open(self, true))
+	box.add_child(guide)
 
 	box.add_child(UIKit.make_label(Locale.t("shell_0511f605")))
 	var speed = HSlider.new()
