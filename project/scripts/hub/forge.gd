@@ -32,13 +32,13 @@ func apply_mobile_layout() -> void:
 	MobileLayout.fill_scroll(scroll, foot, 346)
 
 func _back() -> void:
-	get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
+	CKNav.up()
 
 func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("ui_cancel"):
 		_back()
 	elif e is InputEventKey and e.pressed and not e.echo and (e as InputEventKey).keycode == KEY_W:
-		get_tree().change_scene_to_file("res://scenes/hub/works.tscn")
+		CKNav.go("res://scenes/hub/works.tscn")
 
 func _clear(n: Control) -> void:
 	for ch in n.get_children():
@@ -210,7 +210,7 @@ func _render_mid() -> void:
 	_mid.add_child(_msg)
 	var works := UIKit.ghost_button("升级工坊  [W]", 150, 44)
 	works.position = Vector2(414, 620)
-	works.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/works.tscn"))
+	works.pressed.connect(func(): CKNav.go("res://scenes/hub/works.tscn"))
 	_mid.add_child(works)
 	var go := UIKit.cta_button("确认打造", "A", 220, 44)
 	go.position = Vector2(646, 620)

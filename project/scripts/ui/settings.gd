@@ -8,9 +8,9 @@ var _scale_readout: Label
 
 func _back() -> void:
 	if GameState.started:
-		get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
+		CKNav.up()
 	else:
-		get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn")
+		CKNav.replace(CKNav.TITLE)
 
 func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("ui_cancel"):
