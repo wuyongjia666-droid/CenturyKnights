@@ -785,6 +785,7 @@ func build_save_data() -> Dictionary:
 		"patrol_cooldown": patrol_cooldown,
 		"patrol_boost_months": patrol_boost_months,
 		"characters": {},
+		"hp_fill_v921": true,
 		"id_seq": CharacterFactory._id_seq,
 		"tavern": [],
 		"marriage": [],
@@ -885,6 +886,12 @@ func apply_save_data(data: Dictionary) -> bool:
 	for id in data.get("characters", {}).keys():
 		characters[id] = CKCharacter.from_dict(data["characters"][id])
 		characters[id].ensure_genome()
+	if not bool(data.get("hp_fill_v921", false)):
+		# Saves before v9.2.1 started everyone below max hp (audit P1-2). Top up the unwounded once.
+		for cid in characters.keys():
+			var ch: CKCharacter = characters[cid]
+			if not ch.injured and CKInjury.record(ch).is_empty():
+				ch.hp = ch.max_hp
 	tavern_candidates.clear()
 	for d in data.get("tavern", []):
 		tavern_candidates.append(CKCharacter.from_dict(d))
