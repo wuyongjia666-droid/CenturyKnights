@@ -109,6 +109,9 @@ def build_argv(python: str, dual: str, root: str, shots: str, plan: Plan) -> lis
     if plan.spread:
         argv.append("--spread")
     argv.extend(["--sn-backend", "local", "--only", plan.only])
+    # dual_submit_stills refuses --only qwen/sn unless --allow-single is set.
+    if plan.only != "both":
+        argv.append("--allow-single")
     return argv
 
 

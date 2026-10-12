@@ -141,6 +141,7 @@ class SubmitV92Test(unittest.TestCase):
                 "local",
                 "--only",
                 "qwen",
+                "--allow-single",
             ],
         )
 
@@ -162,6 +163,7 @@ class SubmitV92Test(unittest.TestCase):
         self.assertIn("--spread", argv)
         self.assertEqual(argv[argv.index("--sn-backend") + 1], "local")
         self.assertEqual(argv[argv.index("--only") + 1], "both")
+        self.assertNotIn("--allow-single", argv)
         blocked = submit.decide_plan(True, False, True)
         self.assertEqual(blocked.code, 3)
         self.assertEqual(blocked.only, "")
