@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "note": "Story interrupts inside battles (docs/design/tutorial-story-v2.md §2 四). Triggers: start, turn:N (player turn N, 1-based), first_lock, first_kill. Each plays once per save (flag bs_<map>_<trigger>).",
+  "note": "Story interrupts inside battles (docs/design/tutorial-story-v2.md 第2节「四 窄路」). Triggers: start, turn:N (player turn N, 1-based), first_lock, first_kill. Each plays once per save (flag bs_<map>_<trigger>).",
   "maps": {
     "ch0_pass": {
       "start": [

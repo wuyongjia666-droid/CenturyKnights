@@ -300,7 +300,7 @@ func _no_borrowed_faces() -> String:
 					seen[str(line.get("speaker", ""))] = true
 	var bad: Array = []
 	for sp in seen.keys():
-		if sp == leader.name or sp == "leader" or sp == "你":
+		if sp == leader.name or sp == "leader":
 			continue
 		player._speaker_portrait(sp)
 		if str(player.test_capture.get("portrait_who", "")) == leader.id or player._portrait.texture == null:

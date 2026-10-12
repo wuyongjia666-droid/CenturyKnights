@@ -46,7 +46,7 @@ func _data() -> String:
 			var st = l.get("stage", {})
 			if typeof(st) == TYPE_DICTIONARY and st.has("card") and not order.has(str(st["card"])):
 				order.append(str(st["card"]))
-			if str(l.get("speaker", "")) == "你" and str(l.get("text", "")).find("身后站着谁") >= 0 and str(b.get("id", "")) == "0.39":
+			if str(l.get("speaker", "")) == "leader" and str(l.get("text", "")).find("身后站着谁") >= 0 and str(b.get("id", "")) == "0.39":
 				fulfil = true
 	if order != CARDS:
 		return "title cards %s want %s" % [str(order), str(CARDS)]
@@ -97,8 +97,8 @@ func _player_flow() -> String:
 		return "skip button missing or under 48px"
 	# The leader speaks under their own name.
 	_player.simulate_goto_beat("0.39")
-	if _player._speaker_label("你") != str(GameState.get_leader().name):
-		return "leader label %s" % _player._speaker_label("你")
+	if _player._speaker_label("leader") != str(GameState.get_leader().name):
+		return "leader label %s" % _player._speaker_label("leader")
 	return ""
 
 func _resume_mid() -> String:

@@ -2,7 +2,7 @@
   "version": 1,
   "max_hanzi": 60,
   "cast_dir": "res://data/cast",
-  "allowed_speakers": ["旁白", "你", "新来的人"],
+  "allowed_speakers": ["旁白", "leader", "新来的人"],
   "forbidden_speakers": ["系统"],
   "patterns": [
     {"id": "volume_ordinal", "pattern": "第[0-9０-９一二三四五六七八九十百千]+卷"},

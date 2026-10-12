@@ -142,7 +142,7 @@
         },
         {
           "id": "ch0_0_0_l20",
-          "speaker": "你",
+          "speaker": "leader",
           "text": "我没有姓。"
         },
         {
@@ -428,7 +428,7 @@
         },
         {
           "id": "ch0_0_15_l5",
-          "speaker": "你",
+          "speaker": "leader",
           "text": "我知道。"
         },
         {
@@ -533,7 +533,7 @@
         },
         {
           "id": "ch0_0_17_l9",
-          "speaker": "你",
+          "speaker": "leader",
           "text": "我问她一句。记在你名下，你的河图就亮了？"
         },
         {
@@ -543,7 +543,7 @@
         },
         {
           "id": "ch0_0_17_l11",
-          "speaker": "你",
+          "speaker": "leader",
           "text": "那是真亮吗？"
         },
         {
@@ -654,7 +654,7 @@
         },
         {
           "id": "ch0_0_18_l4",
-          "speaker": "你",
+          "speaker": "leader",
           "text": "我等了十三年。从我爹被划掉那天起。"
         },
         {
@@ -898,7 +898,7 @@
         },
         {
           "id": "ch0_0_25_l4",
-          "speaker": "你",
+          "speaker": "leader",
           "text": "要是我给不出呢？"
         },
         {
@@ -1365,7 +1365,7 @@
         },
         {
           "id": "ch0_0_38_l8",
-          "speaker": "你",
+          "speaker": "leader",
           "text": "衡舟，你也是没有姓的人。你收过路钱，是想要一个比村名更大的字。",
           "stage": {
             "camera": "close"
@@ -1373,7 +1373,7 @@
         },
         {
           "id": "ch0_0_38_l9",
-          "speaker": "你",
+          "speaker": "leader",
           "text": "我知道。因为我也想要。"
         }
       ],
@@ -1445,7 +1445,7 @@
         },
         {
           "id": "ch0_0_39_l2",
-          "speaker": "你",
+          "speaker": "leader",
           "text": "过路钱的事，我写进护路呈报交给陆桥驿。今天这桌上，只说灰旗的事。",
           "when": {
             "flag": "pro_rival_spared"
@@ -1463,12 +1463,12 @@
         },
         {
           "id": "ch0_0_39_l4",
-          "speaker": "你",
+          "speaker": "leader",
           "text": "灰旗不拿这件事换东西。地契、功劳，都不换。"
         },
         {
           "id": "ch0_0_39_l5",
-          "speaker": "你",
+          "speaker": "leader",
           "text": "灰旗从今天起是一个家。城堡是租的，契是押的，饷只够三个月。",
           "when": {
             "flag": "pro_merit_own"
@@ -1476,7 +1476,7 @@
         },
         {
           "id": "ch0_0_39_l6",
-          "speaker": "你",
+          "speaker": "leader",
           "text": "灰旗从今天起是一个家。城堡是借来的，功劳记在别人名下。",
           "when": {
             "flag": "pro_merit_patron"
@@ -1484,7 +1484,7 @@
         },
         {
           "id": "ch0_0_39_l7",
-          "speaker": "你",
+          "speaker": "leader",
           "text": "我一直想要一个划不掉的字。今天我知道了：字是划得掉的。",
           "stage": {
             "pace": "slow"
@@ -1492,7 +1492,7 @@
         },
         {
           "id": "ch0_0_39_l8",
-          "speaker": "你",
+          "speaker": "leader",
           "text": "划不掉的，是写字的时候，身后站着谁。",
           "stage": {
             "pace": "beat"
@@ -1505,7 +1505,7 @@
         },
         {
           "id": "ch0_0_39_l10",
-          "speaker": "你",
+          "speaker": "leader",
           "text": "衡舟。那晚你说错了一件事。两个没姓的人，不是只能活一个。",
           "when": {
             "flag": "pro_rival_spared"
@@ -1513,7 +1513,7 @@
         },
         {
           "id": "ch0_0_39_l11",
-          "speaker": "你",
+          "speaker": "leader",
           "text": "名册上还有空席，从最后一行写起。哪天不想往东边送银了，你可以来。",
           "when": {
             "flag": "pro_rival_spared"
@@ -1966,7 +1966,7 @@
         },
         {
           "id": "ch0_0_65_l5",
-          "speaker": "你",
+          "speaker": "leader",
           "text": "不好听。稳婆说，肺是孩子自己的。"
         },
         {
@@ -2051,7 +2051,7 @@
         },
         {
           "id": "ch0_0_7_l4",
-          "speaker": "你",
+          "speaker": "leader",
           "text": "石垒坡出来一个平民，在北隘把自己做成了一个姓。有战，有跟着的人。",
           "stage": {
             "pace": "slow"
@@ -2059,7 +2059,7 @@
         },
         {
           "id": "ch0_0_7_l5",
-          "speaker": "你",
+          "speaker": "leader",
           "text": "有试过的婚，有孩子，有一本结清的簿。陆桥会重复这个姓。我得在场。"
         },
         {

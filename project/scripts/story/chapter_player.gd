@@ -323,15 +323,15 @@ func _character_named(speaker: String) -> CKCharacter:
 	return null
 
 func _speaker_label(sp: String) -> String:
-	if sp != "你":
+	if sp != "leader":
 		return sp
 	var lead = GameState.get_leader()
-	return str(lead.name) if lead != null and str(lead.name) != "" else "你"
+	return str(lead.name) if lead != null and str(lead.name) != "" else sp
 
 func _speaker_portrait(speaker: String, emotion: String = "") -> void:
 	# Audit P1-12: no speaker ever borrows the leader's face. Only the leader's own lines show it.
 	var who := _character_named(speaker)
-	if speaker == "你":
+	if speaker == "leader":
 		who = GameState.get_leader()
 	test_capture["portrait_who"] = who.id if who != null else ""
 	var plate := UnitArt.dialogue_portrait(speaker, emotion, who, 120)
