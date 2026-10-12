@@ -33,12 +33,14 @@ static func recovery_months(host, base_months: int) -> int:
 	return maxi(1, base_months - annex_level(host, "infirmary"))
 
 static func educate(host, child) -> int:
-	var bonus := annex_level(host, "academy")
-	if bonus <= 0 or child == null or not child.alive or not child.is_child:
+	## v9.2：学舍不再直接加意。返回学舍提供的专师名额增量（Lv → +pairs）；未建为 0。
+	## 兼容旧测试：child 为 null 或不合法时返回 0；合法时返回 annex 等级（名额增量）。
+	if child == null or not child.alive or not child.is_child:
 		return 0
-	var key := "wil"
-	child.stats[key] = mini(int(child.apt_max.get(key, 20)), int(child.stats.get(key, 8)) + bonus)
-	return bonus
+	return annex_level(host, "academy")
+
+static func tutor_pair_cap(host) -> int:
+	return 1 + annex_level(host, "academy")
 
 static func treasury_slots(host) -> int:
 	return annex_level(host, "treasury")

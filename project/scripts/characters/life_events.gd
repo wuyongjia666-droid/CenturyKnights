@@ -28,6 +28,9 @@ static func on_month(_ctx: Dictionary) -> void:
 	for c in people:
 		if not c.alive or _has_pending(c.id):
 			continue
+		# v9.2：1–15 岁家中子嗣走岁课，退出每月重卡队列
+		if CKSuiKe.is_house_child_for_life_queue(c):
+			continue
 		var pool := eligible(c)
 		if pool.is_empty():
 			continue

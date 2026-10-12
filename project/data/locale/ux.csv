@@ -38,7 +38,7 @@ ux_todo_quests,可交付委托,Contracts ready
 ux_todo_marriage,可议婚事,Marriages to discuss
 ux_todo_injured,伤病,Wounded
 ux_todo_festival,节庆,Festival
-ux_todo_train,可演武,Drill is open
+ux_todo_train,可传习,Tutor open
 ux_hub_now,眼下：%s,Now: %s
 ux_hub_era0,卷零,Volume 0
 ux_hub_era,第 %d 纪元,Era %d
@@ -139,3 +139,50 @@ ux_color_cloud,云灰,Cloud gray
 ux_color_plain,素白,Plain white
 ux_preview_move_log,%s 预览移动 (%d,%d) — 确认后落子,%s preview move (%d,%d) — confirm to commit
 ux_moved_to_log,%s 移动至 (%d,%d),%s moved to (%d,%d)
+ux_mark_none,无此习痕,No such mark
+ux_mark_has,已有「%s」,Already has "%s"
+ux_mark_full,习痕已满,Marks full
+ux_mark_write,写下「%s」,Wrote "%s"
+ux_mark_birth_empty,初啼：%s。名册边上是空的。,First cry: %s. The margin is blank.
+ux_mark_birth,初啼习痕：%s · %s,First-cry marks: %s · %s
+ux_tutor_bad_pupil,此人不能拜师,Cannot take this pupil
+ux_tutor_bad_tutor,此人不能任专师,Cannot be a tutor
+ux_tutor_self,不能自教,Cannot teach self
+ux_tutor_same,已是此师,Already this tutor
+ux_tutor_pairs_full,专师名额已满（学舍可加）,Tutor slots full
+ux_tutor_full,已带满徒弟,Tutor at pupil cap
+ux_tutor_assign,%s 拜 %s 为专师,%s takes %s as tutor
+ux_tutor_no_tutor,未指定专师,No tutor assigned
+ux_tutor_year_full,这一对今年课次已满,Yearly lessons full
+ux_tutor_hurt,老师本月不能授课,Tutor cannot teach this month
+ux_tutor_preview,将加 %s +%d%s，习痕「%s」,Will add %s +%d%s, mark "%s"
+ux_tutor_shi_extra,，师性再加 %s +1,", mastery +1 %s"
+ux_tutor_teach,%s 受 %s 传习：%s +%d,%s learns from %s: %s +%d
+ux_tutor_shi_gain,，师性 %s +1,", mastery %s +1"
+ux_tutor_evict,（挤掉「%s」）,(dropped "%s")
+ux_tutor_self_drill,%s 自习：%s +1%s,%s self-drill: %s +1%s
+ux_tutor_need_tutor,先在旗塾指定专师,Assign a tutor in the school first
+ux_tutor_shi_got,%s 得师性「%s」,%s gained mastery "%s"
+ux_tutor_trait,%s 学会可授禀性「%s」,%s learned teachable trait "%s"
+ux_qi_shu_title,旗塾 · 传习,Banner school · tutoring
+ux_qi_shu_tip,指定专师，花一个月传习。老师不必上这一仗。银子不参与。学舍加名额：现 %d 对。,Assign a tutor for one month. Tutors need not deploy. Silver unused. School slots: %d pairs.
+ux_qi_shu_no_kids,尚无 1–15 岁、未授旗的家中子嗣。,No unbannered house children aged 1–15.
+ux_qi_shu_pick_kid,先点左侧一个孩子。,Pick a child on the left first.
+ux_qi_shu_tutors,可选专师（不必在出战席）,Available tutors (need not be deployed)
+ux_qi_shu_age,%s（%d 岁）,%s (%d)
+ux_qi_shu_has_tutor, · 师：%s, · tutor: %s
+ux_qi_shu_no_tutor, · 未拜师, · no tutor
+ux_qi_shu_teach,传习,Tutor
+ux_qi_shu_bow,拜 %s 为师,Take %s as tutor
+ux_qi_shu_promo,二阶转正（对着花名册上的人）,2nd-tier class change (selected roster member)
+ux_qi_shu_promo_to,转职→%s,Class → %s
+ux_shi_shoulder,肩骨未老,Shoulder still young
+ux_shi_lamp,灯芯长明,Lamp wick long
+ux_shi_market,市口不惑,Market unconfused
+ux_shi_tide,潮气在骨,Tide in the bone
+ux_shi_alley,夜巷先觉,Alley foresight
+ux_shi_road,路比人熟,Road known well
+ux_teach_diligent,勤录,Diligent copy
+ux_teach_gut,饭量稳,Steady gut
+ux_teach_wound,先看伤口,Wound first
+ux_teach_stand,站得住,Stand firm

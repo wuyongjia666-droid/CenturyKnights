@@ -53,8 +53,8 @@ func _render() -> void:
 	UIKit.panel_at(_body, Rect2(24, 160, 828, 520), 10)
 	UIKit.section_head(_body, Vector2(42, 174), "工事矩阵", "BUILDINGS", 792, "LV MAX %d" % GameState.BUILDING_MAX)
 	var descs := {
-		"hall": "扩编队上限（现 %d 人）。Lv2→5人，Lv3→6人。" % GameState.max_deploy(),
-		"barracks": "演武花费现 %d 银；Lv2+ 月结士气，Lv3 有概率双加。" % GameState.train_cost(),
+		"hall": "扩编队上限（现 %d 人）。Lv2→5人，Lv3+→6人。" % GameState.max_deploy(),
+		"barracks": "传习每年 %d 次；Lv2+ 月结士气。" % CKTutor.year_limit(),
 		"market": "买价更低、卖价更高。商路旁注可再叠加。",
 		"forge": "打造更省铁银；Lv4 产出精灰刃（+3攻）。",
 		"shrine": "丰收粮产与祈愈强度随等级上升。",

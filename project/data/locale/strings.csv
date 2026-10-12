@@ -9,7 +9,7 @@ hub_title,灰旗堡,Ash Keep
 btn_roster,花名册,Roster
 btn_tavern,烽火酒馆,Beacon Tavern
 btn_quests,委任榜,Contracts
-btn_train,演武场,Drill yard
+btn_train,旗塾,Banner school
 btn_forge,炉火工坊,Forge
 btn_shrine,祠堂,Shrine
 btn_lineage,族谱,Lineage
@@ -122,7 +122,7 @@ shell_0c545bed,第六十七章·盐船,Chapter 67 · salt boat
 shell_0c5cbf76,战斗规则透视（命中/伤害区间）,Combat readout (hit and damage range)
 shell_0c82786d,二十五卷已执。可继续第二十六卷或经营。,Volume 25 is done. Continue Volume 26 or run the keep.
 shell_0ca7f8f4,二十八卷中段已执。可继续后半或经营。,Volume 28 midpoint is done. Continue second half or run the keep.
-shell_0cb33307,六维与转职,Six stats and class change
+shell_0cb33307,专师传习,Tutor drill
 shell_0ccbf4c2,二卷已执。可继续第三卷或经营。,Volume 2 is done. Continue Volume 3 or run the keep.
 shell_0d23bdc0,可继续第一百五十八章·篁祠。,Continue Chapter 158 · bamboo shrine.
 shell_0d711744,返回城堡,Back to keep
@@ -483,7 +483,7 @@ shell_8112901e,主菜单,Main menu
 shell_8157054c,可继续第二百一十六章·鼓印（三十五卷中段）。,Continue Chapter 216 · drum seal (Volume 35 midpoint).
 shell_8169362a,可继续第二百三十章·独潮。,Continue Chapter 230 · lone tide.
 shell_81df3e5d,可继续第二百零六章·独晒。,Continue Chapter 206 · lone sun.
-shell_82106f23,出战编成 · 最多四人,Field company · four at most
+shell_82106f23,出战编成 · 随厅堂上限,Field company · by hall cap
 shell_824394d7,第九十三章·席终,Chapter 93 · closing
 shell_8297e3d4,第三十九章·席终,Chapter 39 · closing
 shell_82a2150f,第一百二十四章·纸坊,Chapter 124 · paper workshop

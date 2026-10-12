@@ -124,6 +124,7 @@ static func tick_doctrine_and_marriage_month(host) -> Array:
 	for m2 in host.tick_alliance_duty_month():
 		msgs.append(m2)
 	LifeEvents.ensure()
+	CKSuiKe.ensure()
 	host.mark_dirty()
 	return msgs
 

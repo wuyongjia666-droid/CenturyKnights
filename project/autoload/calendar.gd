@@ -116,14 +116,7 @@ func _tick_life(ctx: Dictionary) -> void:
 		if c.birthday_month == month:
 			c.age += 1
 			var btxt = "%s 现年 %d 岁" % [c.name, c.age]
-			if c.is_child and c.alive:
-				var path = str(GameState.lineage_path.get(c.id, ""))
-				if path != "":
-					var keys = {"martial": ["str", "vit"], "scholar": ["wil", "per"], "merchant": ["agi", "skl"]}.get(path, [])
-					if keys:
-						var k2 = keys[GameState.rng.randi() % keys.size()]
-						c.stats[k2] = mini(int(c.apt_max.get(k2, 20)), int(c.stats.get(k2, 8)) + 1)
-						btxt += "（早教·%s +1）" % Locale.t("stat_" + k2)
+			# v9.2：生日静默 +1 并进岁课；孩子不再另加早教点。
 			evs.append({"type": "birthday", "text": btxt, "cid": c.id})
 			if c.age >= RETIRE_AGE and not c.retired and c.in_roster:
 				c.retired = true

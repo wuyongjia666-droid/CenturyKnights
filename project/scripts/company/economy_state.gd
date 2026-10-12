@@ -62,8 +62,16 @@ static func upgrade_annex(host, id: String) -> Dictionary:
 	return CKCastleServices.upgrade_annex(host, id)
 
 static func max_deploy(host) -> int:
-	# 厅堂 Lv1–5 → 4–8 人
-	return 3 + CKEconomyState.building_level(host, "hall")
+	# v9.2 P0：厅堂 Lv1→4、Lv2→5、Lv3+→6。预备换人是 P2（默认从地图边缘进）。
+	return mini(6, 3 + CKEconomyState.building_level(host, "hall"))
+
+static func clamp_deploy(host) -> void:
+	## 超出上限的人回到花名册，不掉属性。
+	var cap := CKEconomyState.max_deploy(host)
+	if host.deploy_ids.size() <= cap:
+		return
+	host.deploy_ids = host.deploy_ids.slice(0, cap)
+	host.mark_dirty()
 
 static func train_cost(host) -> int:
 	var base = 15
@@ -687,13 +695,14 @@ static func upgrade_building(host, id: String) -> Dictionary:
 	var fx = ""
 	match id:
 		"hall":
+			CKEconomyState.clamp_deploy(host)
 			fx = "出战编队上限 → %d" % CKEconomyState.max_deploy(host)
 			if next_lv >= 4:
 				fx += "；月结厅堂津贴"
 		"barracks":
-			fx = "演武花费 → %d 银；月结士气" % CKEconomyState.train_cost(host)
+			fx = "传习次数 → %d；月结士气" % CKTutor.year_limit(host)
 			if next_lv >= 4:
-				fx += "；演武双加更易"
+				fx += "；课次提高"
 		"market":
 			fx = "市集买卖价改善"
 			if next_lv >= 4:
@@ -903,31 +912,27 @@ static func heal_at_shrine(host) -> String:
 	return "已清临时伤并回满生命（%d 人）" % n
 
 static func train(host, cid: String) -> Dictionary:
+	## v9.2：银币演武井停掉。成人无专师时走一次峰维传习（不占孩子专师栏）；孩子必须先有专师。
 	var c: CKCharacter = host.characters.get(cid)
 	if c == null:
 		return {"ok": false, "msg": "无此人"}
-	var cost = CKEconomyState.train_cost(host)
-	if host.silver < cost:
-		return {"ok": false, "msg": Locale.t("not_enough_silver")}
-	host.silver -= cost
+	if CKTutor.can_be_pupil(c):
+		return CKTutor.teach(cid)
+	## 成人学徒：花名册上、不需要专师
+	if not c.in_roster or not c.alive or c.age < 16:
+		return {"ok": false, "msg": Locale.t("ux_tutor_need_tutor")}
 	Calendar.advance(1)
-	var key = CKCharacter.STAT_KEYS[host.rng.randi() % CKCharacter.STAT_KEYS.size()]
-	# 顾问偏向
-	if not host.advisor_bonus.is_empty() and host.rng.randf() < 0.35:
-		key = str(host.advisor_bonus.keys()[0])
-	var gain = 1
-	if CKEconomyState.building_level(host, "barracks") >= 3 and host.rng.randf() < (0.5 if CKEconomyState.building_level(host, "barracks") >= 4 else 0.35):
-		gain = 2
-	c.stats[key] = mini(int(c.apt_max.get(key, 20)), int(c.stats[key]) + gain)
-	if host.rng.randf() < 0.25:
-		var all_t = host.data_traits.get("traits", [])
-		var t = all_t[host.rng.randi() % all_t.size()]
-		if t["id"] not in c.traits and t.get("polarity") == "pos":
-			c.traits.append(t["id"])
-			host.log_event("%s 训练领悟禀性「%s」" % [c.name, t["name"]])
+	var key := CKTutor.peak_stat(c)
+	## 成人补习：自练峰维 +1，写职能习痕
+	c.stats[key] = mini(int(c.apt_max.get(key, 20)), int(c.stats.get(key, 8)) + 1)
+	var mark := CKLifeMarks.job_mark(c.job_id)
+	var mr := CKLifeMarks.add(c, mark, "tutor")
 	c.recalc_hp()
 	host.mark_dirty()
-	return {"ok": true, "msg": "%s 的%s +%d（花费 %d 银）" % [c.name, Locale.t("stat_" + key), gain, cost]}
+	var extra := ""
+	if bool(mr.get("ok", false)):
+		extra = "；" + str(mr.get("msg", ""))
+	return {"ok": true, "msg": Locale.t("ux_tutor_self_drill") % [c.name, Locale.t("stat_" + key), extra]}
 
 static func craft_weapon(host, cid: String) -> Dictionary:
 	var cost = CKEconomyState.forge_craft_cost(host)
