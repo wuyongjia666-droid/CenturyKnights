@@ -138,3 +138,4 @@ ux_color_shallow_tide,浅潮,Shallow tide
 ux_color_cloud,云灰,Cloud gray
 ux_color_plain,素白,Plain white
 ux_preview_move_log,%s 预览移动 (%d,%d) — 确认后落子,%s preview move (%d,%d) — confirm to commit
+ux_moved_to_log,%s 移动至 (%d,%d),%s moved to (%d,%d)

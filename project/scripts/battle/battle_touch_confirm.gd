@@ -47,7 +47,7 @@ static func overflow_menu(host) -> void:
 		popup.queue_free()
 	)
 	popup.popup_hide.connect(func(): popup.queue_free())
-	var vp := host.get_viewport().get_visible_rect().size
+	var vp: Vector2 = host.get_viewport().get_visible_rect().size
 	popup.position = Vector2i(int(vp.x * 0.5 - 80), int(vp.y - host._command_bar_px() - 140))
 	popup.popup()
 
@@ -70,25 +70,25 @@ static func commit_move(host, cell: Vector2i) -> void:
 	host._refresh_info()
 	host.map_draw.queue_redraw()
 	host.overlay.queue_redraw()
-	host._log("%s 移动至 (%d,%d)" % [su.char.name, cell.x, cell.y])
+	host._log(Locale.t("ux_moved_to_log") % [su.char.name, cell.x, cell.y])
 	host._sync_objectives()
 	RewindBar.refresh(host)
 
 static func draw_preview(host) -> void:
 	var overlay = host.overlay
-	var ORIGIN = host.ORIGIN
-	var CELL = host.CELL
+	var origin: Vector2 = host.ORIGIN
+	var cell: int = int(host.CELL)
 	if host.preview_move_cell.x >= 0 and host.selected >= 0 and host.selected < host.units.size():
-		var gp = ORIGIN + Vector2(host.preview_move_cell) * CELL
-		var gr = Rect2(gp, Vector2(CELL - 2, CELL - 2))
+		var gp: Vector2 = origin + Vector2(host.preview_move_cell) * cell
+		var gr := Rect2(gp, Vector2(cell - 2, cell - 2))
 		overlay.draw_rect(gr, Color(UIKit.ACCENT, 0.22))
 		overlay.draw_rect(gr, Color(UIKit.ACCENT, 0.95), false, 3.0)
 		var gsu = host.units[host.selected]
-		var gcenter = gp + Vector2(CELL, CELL) * 0.5
-		UnitArt.draw_token_on(overlay, gcenter, gsu.char, "player", float(CELL) * 0.36, false)
-		overlay.draw_circle(gcenter, float(CELL) * 0.40, Color(UIKit.ACCENT, 0.18))
+		var gcenter: Vector2 = gp + Vector2(cell, cell) * 0.5
+		UnitArt.draw_token_on(overlay, gcenter, gsu.char, "player", float(cell) * 0.36, false)
+		overlay.draw_circle(gcenter, float(cell) * 0.40, Color(UIKit.ACCENT, 0.18))
 	if int(host.preview_attack_ui) >= 0 and int(host.preview_attack_ui) < host.units.size():
 		var ap: Vector2i = host.units[host.preview_attack_ui].pos
-		var ar = Rect2(ORIGIN + Vector2(ap) * CELL, Vector2(CELL - 2, CELL - 2))
+		var ar := Rect2(origin + Vector2(ap) * cell, Vector2(cell - 2, cell - 2))
 		overlay.draw_rect(ar, Color(UIKit.DANGER, 0.28))
 		overlay.draw_rect(ar, Color(UIKit.DANGER, 0.95), false, 3.0)
