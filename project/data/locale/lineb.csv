@@ -270,3 +270,54 @@ lb_inh_done,今年已经回过话了（%s）。朔影家第 %d 年会再派人�
 lb_inh_to_rivals,去敌宅交涉,To rival houses
 lb_inh_log,嗣位冲突：%s（%s）,Succession: %s (%s)
 lb_inh_amb_pick,立下这个志向,Take this ambition
+lb_bt_ctx,验血,Blood test
+lb_bt_title,验血,Blood test
+lb_bt_desc,把还没验过的族人一次验完：藏着的血脉会显出来，冒充的子嗣会被揭穿。,Test everyone not yet verified.
+lb_bt_queue,等着验的人（%d）,Waiting (%d)
+lb_bt_price,价钱,Price
+lb_bt_covers,银子够验,Affordable
+lb_bt_go,开始验血,Start
+lb_bt_all_done,大家都验过了,Everyone is verified
+lb_bt_all_done_why,家里和团里的人都已经验过血。以后有新生的孩子、新成亲的人，会出现在这里。,New births and spouses will appear here.
+lb_bt_row,%s · %s · %d 岁,%s · %s · %d
+lb_bt_wait_money,（银子不够，下次再验）, (not enough silver)
+lb_bt_result,验血结果,Results
+lb_bt_idle,灯还没点。按左边「开始验血」，结果会一张一张翻出来。,Press start; results appear one by one.
+lb_bt_idle_done,这次没有要验的人。,Nobody to test.
+lb_bt_running,正在验，等结果出来,Testing...
+lb_bt_done,验完了。冒充的已经改回真实血脉，详档里可以看到携带的血脉了。,Done. Dossiers now show carried traits.
+lb_bt_fake_mark,伪,false
+lb_bt_fake,揭穿冒充 · ,Impostor · 
+lb_bt_ok,验明 · ,Verified · 
+lb_heir_ctx,双嗣校场,Heir trials
+lb_heir_title,双嗣校场,Heir trials
+lb_heir_desc,家里有两个以上 8 岁以上的孩子时，会争谁排在前面。你可以调解、挺其中一个，或者让他们上校场比一场。,Two heirs aged 8+ quarrel over precedence.
+lb_heir_back_from_battle,校场比完了，两个孩子都回城堡养着了。,The duel is over; both are back.
+lb_heir_meta,%d 岁 · 路：%s,Age %d · path: %s
+lb_heir_elder,长嗣,Elder
+lb_heir_younger,次嗣,Younger
+lb_heir_vs,对,vs
+lb_heir_none,家里还没有能争的孩子,No heirs old enough
+lb_heir_none_why,要有两个 8 岁以上的孩子，校场才会热闹起来。,Needs two children aged 8 or older.
+lb_heir_none_how,先去联姻成家，孩子会在岁月里长大。,Marry; children grow over the years.
+lb_heir_to_marriage,去联姻,To marriage
+lb_heir_one,现在只有 %s 一个孩子够大，没人跟他争。可以先给他定一条路，或者等弟弟妹妹长大。,Only %s is old enough.
+lb_heir_to_rite,去授旗礼定路,To the banner rite
+lb_heir_quarrel,%s 和 %s 在校场吵起来了，都说自己更该排在前面。你怎么处理？,%s and %s quarrel. Your call?
+lb_heir_settled,今年这事已经定了（%s）。第 %d 年他们可能又会吵。,Settled this year (%s). Maybe again in year %d.
+lb_heir_m_mediate,调解,Mediate
+lb_heir_m_mediate_fx,两边各退一步，灰旗声望 +1。谁都不偏。,Both back down; reputation +1.
+lb_heir_m_a,挺 %s,Back %s
+lb_heir_m_a_fx,把长嗣排在前面。战技点 +1，他学会自己那条路的战技。,Elder first. +1 skill point and path skills.
+lb_heir_m_b,挺 %s,Back %s
+lb_heir_m_b_fx,把次嗣排在前面。战技点 +1，他学会自己那条路的战技。,Younger first. +1 skill point and path skills.
+lb_heir_m_duel,校场比一场,Duel
+lb_heir_m_duel_fx,两个孩子真的上场打一场。打完回到这里，生命会补满。,A real battle; both recover after.
+lb_heir_log_mediate,双嗣调解：%s 与 %s 各退一步,Mediated: %s and %s
+lb_heir_log_support,双嗣拥立：支持 %s，压过 %s,Backed %s over %s
+lb_heir_log_duel,双嗣校场开战：%s 对 %s,Heir duel: %s vs %s
+lb_heir_zh_mediate,调解了,mediated
+lb_heir_zh_support,挺了 %s,backed %s
+lb_heir_zh_duel,上校场比过了,dueled
+lb_heir_mediate_ok,调解成了，校场先安静下来。,Mediated.
+lb_heir_support_ok,挺了 %s。战技点 +1，学会 %d 个道路战技。,"Backed %s. +1 point, %d path skills."
