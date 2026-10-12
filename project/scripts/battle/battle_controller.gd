@@ -1810,7 +1810,7 @@ func _queue_cutscene(ai: int, di: int, hp0a: int, hp0d: int) -> void:
 			"hit": fc[a_side].get("hit", "—"), "dmg": fc[a_side].get("dmg", "—"), "crit": atk.char.derived_crit()},
 		d_side: {"char": def.char, "team": def.team, "template": str(def.get("template", "")), "hp0": hp0d,
 			"hit": fc[d_side].get("hit", "—"), "dmg": fc[d_side].get("dmg", "—"), "crit": def.char.derived_crit()},
-		"strikes": strikes, "ground": ground, "grade": Color(gv.x, gv.y, gv.z),
+		"strikes": strikes, "ground": ground, "grade": Color(gv.x, gv.y, gv.z), "tile": tid,
 		"backdrop": str(_AtlasArt.battle_backdrop_for_map(map_id)),
 		"title": "%s · %s" % [map_name, str(BattleRules.terrain_info(tid).get("name", tid))],
 		"links": _cut_links(),
