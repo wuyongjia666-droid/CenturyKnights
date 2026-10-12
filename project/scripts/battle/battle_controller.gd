@@ -996,6 +996,7 @@ func _deploy() -> void:
 	BattleObjectives.deploy_npcs(m, units)
 	_log(Locale.t("shell_battle_deploy") % [map_name, i, ei])
 	_theme_banter("start")
+	BattleStory.fire(self, map_id, "start")
 	if _is_escort_map():
 		Sfx.cart_rattle()
 	elif _is_harbor_map():
@@ -1922,6 +1923,7 @@ func _apply_combat_lock(ai: int, di: int) -> void:
 		u.char.temp_combat_lock = maxi(u.char.temp_combat_lock, 3)  # 再交战刷新锁定（三回合感）
 		_spawn_dmg(u.pos, "锁定", Color(1.0, 0.4, 0.35))
 		_spawn_slash(u.pos, "lock")
+	BattleStory.fire(self, map_id, "first_lock")
 	if not has_meta("lock_beat_fired") and _is_lock_tutorial_map():
 		set_meta("lock_beat_fired", true)
 		_log("〔教学拍〕锁定已触发——看棋子外圈红环；脱离将更贵，反击更准。练习完成，可以结束回合。")
@@ -2055,6 +2057,7 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 			_spawn_dmg(def.pos, "击破", Color(1.0, 0.9, 0.5))
 			if def.team == "enemy":
 				_theme_banter("kill")
+				BattleStory.fire(self, map_id, "first_kill")
 			if def.team == "player":
 				def.char.injured = true
 			_bark(def.char, "shout")
@@ -2184,6 +2187,7 @@ func _start_player_turn() -> void:
 	active_skill_id = ""
 	moved_this_select = false
 	_theme_banter("turn")
+	BattleStory.on_player_turn(self, map_id)
 	map_draw.queue_redraw()
 	overlay.queue_redraw()
 	_update_skill_hint()
