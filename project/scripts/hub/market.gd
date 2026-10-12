@@ -121,6 +121,12 @@ func _render_left() -> void:
 		var pr := UIKit.mono("%d" % int(bp[it]), 16, UIKit.ACCENT if on else UIKit.TEXT, false)
 		pr.position = Vector2(280 - pr.get_minimum_size().x, 18)
 		b.add_child(pr)
+		var sd := int(CKEconomyState.season_delta(int(Calendar.month)).get(it, 0))
+		if sd != 0:
+			var ar := UIKit.mono("▲" if sd > 0 else "▼", 10, UIKit.DANGER if sd > 0 else UIKit.OK, false)
+			ar.name = "Swing_" + it
+			ar.position = Vector2(244 - pr.get_minimum_size().x, 22)
+			b.add_child(ar)
 		var u := UIKit.mono("银", 8, UIKit.TEXT_FAINT, false)
 		u.position = Vector2(286, 26)
 		b.add_child(u)
@@ -131,7 +137,10 @@ func _render_left() -> void:
 	var nt := UIKit.title_label("ⓘ 陆桥商行情报", 12, UIKit.ACCENT)
 	nt.position = Vector2(50, 572)
 	_left.add_child(nt)
-	var nb := UIKit.body_label("工事升市集、委任守桥首通、联姻商契都会改价%s。" % ("；商路已通，价更优" if bool(GameState.house_mods.get("trade_route", false)) else ""), UIKit.TEXT_DIM, 11)
+	var sk := str(CKEconomyState.season_delta(int(Calendar.month)).get("key", ""))
+	var season_txt := Locale.t(sk) if sk != "" else Locale.t("wsc_m_flat")
+	var nb := UIKit.body_label(season_txt + "\n" + "工事升市集、委任守桥首通、联姻商契都会改价%s。" % ("；商路已通，价更优" if bool(GameState.house_mods.get("trade_route", false)) else ""), UIKit.TEXT_DIM, 11)
+	nb.name = "SeasonNote"
 	nb.position = Vector2(50, 596)
 	nb.size = Vector2(284, 60)
 	nb.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

@@ -3,8 +3,18 @@ extends RefCounted
 ## Company economy: holdings, castle tasks, upkeep, harvest, recruit price, building upgrades.
 ## Every function takes the GameState host so the singleton keeps the same numbers.
 
+## WS-C #14: price follows rank and how far the six stats sit above/below the 48-point baseline,
+## so three candidates no longer all cost 25. Bands: cheap < 25, fair 25..39, sought-after >= 40.
 static func recruit_price(_host, candidate) -> int:
-	return 25 + candidate.rank_index() * 15
+	var total := 0
+	for v in candidate.stats.values():
+		total += int(v)
+	return maxi(15, 25 + candidate.rank_index() * 15 + clampi((total - 48) * 2, -10, 20))
+
+static func recruit_band(price: int) -> String:
+	if price < 25:
+		return "cheap"
+	return "fair" if price < 40 else "prime"
 
 
 const HOLDING_DEFS := {
@@ -108,6 +118,23 @@ static func forge_craft_cost(host) -> Dictionary:
 		iron = maxi(1, iron - 1)
 	return {"iron": iron, "silver": maxi(8, 24 - lv * 4)}
 
+## WS-C #38: month-by-month swing for the castle market. Month 1 (new game) is flat.
+## Returns {"food": d, "iron": d, "herb": d, "key": locale key of the reason or ""}.
+static func season_delta(month: int) -> Dictionary:
+	match month:
+		3, 4:
+			return {"food": 1, "iron": 0, "herb": 0, "key": "wsc_m_spring"}
+		6, 7:
+			return {"food": 0, "iron": 0, "herb": -1, "key": "wsc_m_summer"}
+		9, 10:
+			return {"food": -1, "iron": 0, "herb": 0, "key": "wsc_m_autumn"}
+		12:
+			return {"food": 0, "iron": 1, "herb": 1, "key": "wsc_m_winter"}
+	return {"food": 0, "iron": 0, "herb": 0, "key": ""}
+
+static func _month() -> int:
+	return int(Calendar.month) if Calendar != null else 1
+
 static func market_buy_prices(host) -> Dictionary:
 	var lv = CKEconomyState.building_level(host, "market")
 	var cut = lv - 1
@@ -115,14 +142,20 @@ static func market_buy_prices(host) -> Dictionary:
 		cut += 1
 	if bool(host.house_mods.get("market_edge", false)):
 		cut += 1
-	return {"food": maxi(1, 2 - cut), "iron": maxi(5, 8 - cut), "herb": maxi(4, 6 - cut)}
+	var d := season_delta(_month())
+	return {"food": maxi(1, 2 - cut + int(d.food)), "iron": maxi(5, 8 - cut + int(d.iron)), "herb": maxi(4 + mini(0, int(d.herb)), 6 - cut + int(d.herb))}
 
 static func market_sell_prices(host) -> Dictionary:
 	var lv = CKEconomyState.building_level(host, "market")
 	var bump = lv - 1
 	if bool(host.house_mods.get("trade_route", false)):
 		bump += 1
-	return {"food": 1 + bump, "iron": 5 + bump, "herb": 4 + bump}
+	var d := season_delta(_month())
+	var buy := market_buy_prices(host)
+	var out := {"food": 1 + bump + int(d.food), "iron": 5 + bump + int(d.iron), "herb": 4 + bump + int(d.herb)}
+	for k in out.keys():
+		out[k] = clampi(int(out[k]), 1, maxi(1, int(buy[k]) - 1))
+	return out
 
 static func _all_buildings_at_least(host, lv: int) -> bool:
 	for id in BUILDING_NAMES.keys():

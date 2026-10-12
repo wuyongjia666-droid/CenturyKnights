@@ -157,6 +157,12 @@ func _render_mid() -> void:
 	UIKit.panel_at(_mid, Rect2(396, 72, 488, 608), 10)
 	UIKit.section_head(_mid, Vector2(414, 86), "武器锻造推演", "ARMAMENT REFORGING MATRIX", 452, "FORGE LV %d" % GameState.building_level("forge"))
 	if _sel == null:
+		var el := UIKit.body_label(Locale.t("wsc_f_empty"), UIKit.TEXT_DIM, 14)
+		el.name = "ForgeEmpty"
+		el.position = Vector2(414, 140)
+		el.size = Vector2(452, 80)
+		el.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_mid.add_child(el)
 		return
 	var cur := _sel.weapon_id
 	var nxt := _next_wid()
@@ -208,11 +214,18 @@ func _render_mid() -> void:
 	_msg.position = Vector2(414, 540)
 	_msg.size = Vector2(452, 20)
 	_mid.add_child(_msg)
-	var works := UIKit.ghost_button("升级工坊  [W]", 150, 44)
+	# WS-C #39: upgrade the forge right here instead of bouncing to 工事
+	var flv := GameState.building_level("forge")
+	var fcost: Dictionary = CKEconomyState.BUILDING_COST.get(flv + 1, {})
+	var wlabel := Locale.t("wsc_f_maxed") if flv >= CKEconomyState.BUILDING_MAX else Locale.t("wsc_f_up") % [flv + 1, int(fcost.get("silver", 0)), int(fcost.get("iron", 0))]
+	var works := UIKit.ghost_button(wlabel, 220, 44)
+	works.name = "ForgeUpgrade"
 	works.position = Vector2(414, 620)
-	works.pressed.connect(func(): CKNav.go("res://scenes/hub/works.tscn"))
+	works.disabled = flv >= CKEconomyState.BUILDING_MAX
+	works.pressed.connect(upgrade_forge)
 	_mid.add_child(works)
 	var go := UIKit.cta_button("确认打造", "A", 220, 44)
+	go.name = "ForgeCraft"
 	go.position = Vector2(646, 620)
 	go.disabled = not (ok_iron and ok_silver) or same
 	go.tooltip_text = "已装备同阶武器" if same else ("材料不足" if go.disabled else "为 %s 打造 %s" % [_sel.name, _weapon_name(nxt)])
@@ -226,6 +239,15 @@ func _render_mid() -> void:
 	_mid.add_child(go)
 	if not go.disabled:
 		go.call_deferred("grab_focus")
+
+func upgrade_forge() -> void:
+	var r: Dictionary = GameState.upgrade_building("forge")
+	_render_all()
+	var ok := bool(r.get("ok", false))
+	_msg.text = (Locale.t("wsc_f_up_ok") % GameState.building_level("forge")) if ok else str(r.get("msg", ""))
+	_msg.add_theme_color_override("font_color", UIKit.OK if ok else UIKit.DANGER)
+	if ok:
+		GameState.save_game()
 
 func _tier_card(r: Rect2, eyebrow: String, big: String, wname: String, stat: String, focus: bool) -> void:
 	UIKit.panel_at(_mid, r, 8, focus)
