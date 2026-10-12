@@ -7,6 +7,36 @@
       "from": "priest",
       "city": "lt_capital",
       "name": "验盏"
+    },
+    {
+      "job": "bridge_tax",
+      "from": "light_cavalry",
+      "city": "lb_west",
+      "name": "桥税骑"
+    },
+    {
+      "job": "lu_wai",
+      "from": "mage",
+      "city": "qh_upper",
+      "name": "录外生"
+    },
+    {
+      "job": "frost_wait",
+      "from": "cantor",
+      "city": "fc_capital",
+      "name": "霜候"
+    },
+    {
+      "job": "salt_yin",
+      "from": "standard",
+      "city": "sm_capital",
+      "name": "盐引"
+    },
+    {
+      "job": "forge_brow",
+      "from": "warrior",
+      "city": "ig_bottom",
+      "name": "锻眉"
     }
   ]
 }

@@ -651,7 +651,7 @@ func _consume_skill(c: CKCharacter, sid: String) -> void:
 	var left = int(c.skill_uses.get(sid, 0))
 	c.skill_uses[sid] = maxi(0, left - 1)
 	var sk = GameState.get_skill(sid)
-	c.skill_cd[sid] = int(sk.get("cooldown", 1))
+	c.skill_cd[sid] = 0 if CKSpecialJobs.skip_cooldown(c, self) else int(sk.get("cooldown", 1))
 	skill_mode = false
 	active_skill_id = ""
 	_update_skill_hint()
@@ -1996,7 +1996,7 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 		if sk.get("ignore_terrain_avo"):
 			tid = "plain"
 		extras["hit_mod"] = int(sk.get("hit_mod", 0))
-	extras["hit_mod"] = int(extras.get("hit_mod", 0)) + CKYanZhan.strike_bonus(self, atk, def); var result = BattleRules.roll_attack(atk.char, def.char, tid, rng, extras)
+	CKSpecialJobs.strike_mods(self, atk, def, extras); var result = BattleRules.roll_attack(atk.char, def.char, tid, rng, extras)
 	if skill_id != "" and sk.get("type") == "offense":
 		# 战技：撤销普通掷骰伤害后，按技能倍率重掷
 		if result.hit:
@@ -2029,7 +2029,7 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 			atk.char.temp_def_buff = -int(sk.get("self_def_penalty", 0))
 	if atk.char.temp_hit_bonus != 0:
 		atk.char.temp_hit_bonus = 0
-	var tags: Array = []
+	var tags: Array = []; CKSpecialJobs.after_strike(self, atk, def, result)
 	if result.get("flank", false):
 		tags.append("夹击")
 		_spawn_dmg(def.pos, "夹击", Color(1.0, 0.55, 0.2))
@@ -2152,7 +2152,7 @@ func _wait_selected() -> void:
 func _start_player_turn() -> void:
 	_arm_lamps()
 	turn_team = "player"
-	_round_no += 1
+	_round_no += 1; CKSpecialJobs.on_player_turn(self)
 	if _round_label:
 		_round_label.text = Locale.t("shell_4b1b8d2e") % _round_no
 	if _phase_chip:

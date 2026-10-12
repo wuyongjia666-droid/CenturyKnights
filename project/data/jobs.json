@@ -81,7 +81,8 @@
         "iron": 2
       },
       "promote_to": [
-        "outrider"
+        "outrider",
+        "bridge_tax"
       ],
       "promote_from": "squire"
     },
@@ -99,7 +100,8 @@
         "iron": 3
       },
       "promote_to": [
-        "veteran"
+        "veteran",
+        "forge_brow"
       ],
       "promote_from": "light_inf"
     },
@@ -164,7 +166,8 @@
       "move": 4,
       "req": {},
       "promote_to": [
-        "warlock"
+        "warlock",
+        "lu_wai"
       ],
       "promote_from": "apprentice"
     },
@@ -192,7 +195,8 @@
       "move": 4,
       "req": {},
       "promote_to": [
-        "captain"
+        "captain",
+        "salt_yin"
       ],
       "promote_from": "banner"
     },
@@ -206,7 +210,8 @@
       "move": 4,
       "req": {},
       "promote_to": [
-        "chorister"
+        "chorister",
+        "frost_wait"
       ],
       "promote_from": "acolyte"
     },
@@ -333,6 +338,81 @@
       "mechanic": "yan_zhan",
       "branch": "special",
       "desc": "每场第一次出手打中谁，就给谁点盏：全队打它命中 +8（伪造爵位）或 +4（没血谱的杂兵）。要先在灯都·琉光盖「验盏」印。"
+    },
+    {
+      "id": "forge_brow",
+      "name": "锻眉",
+      "tier": 3,
+      "atk_type": "melee",
+      "base_atk": 6,
+      "base_def": 4,
+      "move": 4,
+      "req": {},
+      "promote_to": [],
+      "promote_from": "warrior",
+      "mechanic": "forge_brow",
+      "branch": "special",
+      "desc": "本场第一次挨打时，反震对方 2 点，自己防御 +2 到打完。要先在谷底市盖「锻眉」印。"
+    },
+    {
+      "id": "salt_yin",
+      "name": "盐引",
+      "tier": 3,
+      "atk_type": "melee",
+      "base_atk": 6,
+      "base_def": 4,
+      "move": 4,
+      "req": {},
+      "promote_to": [],
+      "promote_from": "standard",
+      "mechanic": "salt_yin",
+      "branch": "special",
+      "desc": "开战时粮够当天吃，挨着自己的友军整场防御 +1；粮不够就不开。要先在盐都·晶垣盖「盐引」印。"
+    },
+    {
+      "id": "frost_wait",
+      "name": "霜候",
+      "tier": 3,
+      "atk_type": "magic",
+      "base_atk": 6,
+      "base_def": 4,
+      "move": 4,
+      "req": {},
+      "promote_to": [],
+      "promote_from": "cantor",
+      "mechanic": "frost_wait",
+      "branch": "special",
+      "desc": "每回合开始，挨着的一名站在丘或垒上的敌人防御 −1，直到它挪窝。要先在冕都·霜阙盖「霜候」印。"
+    },
+    {
+      "id": "lu_wai",
+      "name": "录外生",
+      "tier": 3,
+      "atk_type": "magic",
+      "base_atk": 6,
+      "base_def": 4,
+      "move": 4,
+      "req": {},
+      "promote_to": [],
+      "promote_from": "mage",
+      "mechanic": "lu_wai",
+      "branch": "special",
+      "desc": "每场第一次用战技不进冷却，之后照旧。要先在上河书院盖「录外生」印。"
+    },
+    {
+      "id": "bridge_tax",
+      "name": "桥税骑",
+      "tier": 3,
+      "atk_type": "melee",
+      "base_atk": 6,
+      "base_def": 4,
+      "move": 4,
+      "req": {},
+      "promote_to": [],
+      "promote_from": "light_cavalry",
+      "mechanic": "bridge_tax",
+      "branch": "special",
+      "desc": "每场一次：站在桥上挨着敌人时，回合开始自动拦下它收税——它下回合少走 2 格，自己这回合多走 1 格。要先在西桥头堡盖「桥税骑」印。"
     },
     {
       "id": "warlock",
