@@ -1254,7 +1254,7 @@ func _goto(path: String) -> void:
 func _back() -> void:
 	if not _modal.get_children().is_empty() and not World.pending_event.is_empty():
 		return
-	_goto(CASTLE_SCENE)
+	_goto(StoryCatalog.take_story_return(CASTLE_SCENE))
 
 func _input(e: InputEvent) -> void:
 	if not (e is InputEventMouse or e is InputEventScreenTouch or e is InputEventScreenDrag):
