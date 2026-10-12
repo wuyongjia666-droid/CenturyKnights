@@ -1,4 +1,5 @@
 extends Control
+const _SpecialJobsScript := preload("res://scripts/battle/special_jobs.gd")
 
 signal unit_downed(char, info)
 signal battle_finished(result)
@@ -597,6 +598,9 @@ func _cycle_skill() -> void:
 		# instant heal adjacent
 		_cast_support_skill(selected, active_skill_id)
 		return
+	if typ == "mark" or active_skill_id == CKYanZhan.SKILL_ID:
+		_cast_mark_skill(selected, active_skill_id)
+		return
 	if typ == "buff":
 		_cast_buff_skill(selected, active_skill_id)
 		return
@@ -643,7 +647,9 @@ func _consume_skill(c: CKCharacter, sid: String) -> void:
 	var left = int(c.skill_uses.get(sid, 0))
 	c.skill_uses[sid] = maxi(0, left - 1)
 	var sk = GameState.get_skill(sid)
-	c.skill_cd[sid] = int(sk.get("cooldown", 1))
+		c.skill_cd[sid] = 0
+	else:
+		c.skill_cd[sid] = int(sk.get("cooldown", 1))
 	skill_mode = false
 	active_skill_id = ""
 	_update_skill_hint()
@@ -680,6 +686,27 @@ func _cast_support_skill(ui: int, sid: String) -> void:
 	map_draw.queue_redraw()
 	_refresh_info()
 	_check_end()
+
+func _cast_mark_skill(ui: int, sid: String) -> void:
+	var u = units[ui]
+	var sk = GameState.get_skill(sid)
+	# need a selected enemy target — use aimed tile if any
+	var target = null
+	for ou2 in units:
+		if ou2 != null and ou2.team != u.team and ou2.char != null and int(ou2.char.hp) > 0:
+			target = ou2
+			break
+		_log(str(br.get("msg", "")))
+		if bool(br.get("ok", false)):
+			_consume_skill(u.char, sid)
+		return
+	if sid == CKYanZhan.SKILL_ID or str(sk.get("mark_id", "")) == "yan_zhan_mark":
+		var r = CKYanZhan.cast(self, u, target)
+		_log(str(r.get("msg", "")))
+		_consume_skill(u.char, sid)
+		return
+	_cast_buff_skill(ui, sid)
+
 
 func _cast_buff_skill(ui: int, sid: String) -> void:
 	_push_lamp()
@@ -2001,6 +2028,7 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 		if result.hit:
 			def.char.hp = mini(def.char.max_hp, def.char.hp + int(result.damage))
 		var hit_chance = BattleRules.calc_hit(atk.char, def.char, tid, extras) + int(sk.get("hit_mod", 0))
+		hit_chance += CKYanZhan.battle_hit_bonus(self, def.char)
 		hit_chance = clampi(hit_chance, 5, 99)
 		var hit = rng.randi_range(1, 100) <= hit_chance
 		var dmg_range = BattleRules.calc_damage_range(atk.char, def.char, tid, extras)
@@ -2021,6 +2049,8 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 					UIFX.shake_control(_unit_panel, 5.0 * UIKit.shake_gain(), 0.2)
 				dmg = int(dmg * 1.5)
 			def.char.hp = maxi(0, def.char.hp - dmg)
+			if bool(brow.get("ok", false)) and atk.char != null:
+				_log(str(brow.get("msg", "")))
 		result = {"hit": hit, "crit": crit, "damage": dmg, "hit_chance": hit_chance, "dmg_range": dmg_range, "killed": def.char.hp <= 0, "flank": extras.get("flank", false), "role_label": str(BattleRules.role_mods(atk.char, def.char).get("label", "")), "terrain_def": int(BattleRules.terrain_info(tid).get("def_bonus", 0))}
 		_consume_skill(atk.char, skill_id)
 		_log("战技「%s」！" % sk.get("name", skill_id))
@@ -2952,4 +2982,3 @@ func _log(t: String) -> void:
 
 func _restore_heir_clash_hp() -> void:
 	BattleVictory.restore_heir_clash()
-

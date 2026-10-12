@@ -60,7 +60,13 @@
       "warlock",
       "pathfinder",
       "captain",
-      "chorister"
+      "chorister",
+      "bridge_tax",
+      "yan_zhan",
+      "lu_wai",
+      "frost_wait",
+      "salt_yin",
+      "forge_brow"
     ],
     "note": "Copy a smoke job and change id, clause, and paths. Leave these ids out until a later batch."
   },

@@ -6,7 +6,7 @@ ux_coach_continue,点击继续,Tap to continue
 ux_codex_board_title,战棋,Tactics
 ux_codex_board_body,墨蓝棋盘上轮流行动。薄荷标记是自己人，珊瑚标记是对手，危险区用半透明珊瑚铺开。,"Sides act in turns on the ink-blue board. Mint marks your own people, coral marks the opponent, and danger is laid down in translucent coral."
 ux_codex_castle_title,城堡,Castle
-ux_codex_castle_body,灰旗堡按月推进。名册、酒馆、工坊、商路和祠堂都从这里进出。,"Ash Keep advances by the month. The roster, tavern, workshop, trade road, and shrine are all entered from here."
+ux_codex_castle_body,灰旗堡按月推进。名册、酒馆、铁匠铺、商路和祠堂都从这里进出。,"Ash Keep advances by the month. The roster, tavern, workshop, trade road, and shrine are all entered from here."
 ux_codex_company_title,佣兵团,Company
 ux_codex_company_body,银币、粮食、铁料和药材是这个月过不过得去的账。出战前先看伤病和士气。,"Silver, grain, iron, and herbs are the books for this month. Check wounds and morale before you march."
 ux_codex_marriage_title,联姻,Marriage
@@ -186,3 +186,84 @@ ux_teach_diligent,勤录,Diligent copy
 ux_teach_gut,饭量稳,Steady gut
 ux_teach_wound,先看伤口,Wound first
 ux_teach_stand,站得住,Stand firm
+ux_todo_sui_ke,未读岁课,Unread year-cards
+ux_todo_life,未读重卡,Unread life cards
+ux_todo_tutor,待指定专师,Tutors to assign
+ux_todo_field,田册空位,Open field posts
+ux_todo_none,本月无待办,No todos this month
+btn_forge,铁匠铺,Smithy
+ux_forge_castle,灰旗自己的炉,Ash banner forge
+ux_wedding_seal,婚后印,Wedding seal
+ux_back_ch0,带回第零章,Return to Chapter 0
+ux_seal_stow,收起,Put away
+ux_next_line,下一句,Next line
+ux_return_chapter,回到这一章,Back to chapter
+ux_estates_field,属事处,Field office
+ux_estates_sub,四野租佃。田册记谁上工。,Tenancy. The field book names who works.
+ux_estates_title,属地 · 属事处,Holdings · Field office
+ux_field_idle,未上工,Not working
+ux_field_on,上工:%s,On field:%s
+ux_field_follow,随旗,With banner
+ux_field_young,岁数不够,Too young
+ux_field_row,%s · %d岁 · 私囊 %d · %s,%s · age %d · purse %d · %s
+ux_field_leave,离田,Leave field
+ux_field_remit,交还,Remit
+ux_field_close,合上,Close
+ux_seal_paid,聘银 40 已付,Bride-price 40 paid
+ux_seal_doctrine,家训 %s · 嫁妆 %s,Doctrine %s · dowry %s
+ux_seal_term,妊娠 %d 月,Term %d months
+ux_seal_pair,%s 与 %s,%s and %s
+doctrine_strict,严教,Strict
+doctrine_mercy,仁恤,Mercy
+doctrine_commerce,商本,Commerce
+sundry_title,杂货铺,Sundries
+sundry_note,本国日用品只在此国买得到。别国半价清舱，不是进货。,Local sundries only. Half-price dump abroad.
+sundry_buy,买入,Buy
+sundry_use,使用,Use
+sundry_sell_half,半价清舱 · %s,Dump half · %s
+sundry_bag_head,行李里的日用品,Bag sundries
+sundry_not_here,此城不卖这件,Not sold here
+sundry_stack_cap,随身最多五份,Stack cap 5
+sundry_cargo_full,货舱已满,Cargo full
+sundry_no_silver,银两不足,Not enough silver
+sundry_bought,买入%s · −%d 银,Bought %s · −%d
+sundry_none,没有这件,None owned
+sundry_sell_home,本国不收清舱,No dump at home
+sundry_sold,半价清舱 +%d 银,Dumped +%d
+sundry_no_effect,没有效果,No effect
+sundry_food_morale,士气 +1，口粮记为已付,Morale +1; ration paid
+sundry_food_only,口粮记为已付（本月士气已计）,Ration only
+sundry_no_wounded,没有轻伤者,No wounded
+sundry_healed,%s 生命 +4,%s HP +4
+sundry_intel_ok,夜谈记上一笔,Intel logged
+sundry_half_ok,夜市剩券已生效,Coupon armed
+sundry_salt_ok,下次海路船资 −4,Next sea fare −4
+sundry_forge_ok,下次堡内打刃铁耗 −1,Next forge iron −1
+sundry_pepper_ok,南椒他国加价已备,Pepper bonus armed
+affair_done,本城之事已了,Affair done
+affair_supply,本城之事：补货,Affair: supply
+affair_honor,本城之事：名誉,Affair: honour
+affair_forge,本城之事：开炉,Affair: forge
+affair_gossip,本城之事：夜谈,Affair: gossip
+affair_rest,本城之事：过夜,Affair: rest
+affair_first_meet,本城之事：留名,Affair: first meet
+affair_notice,告示 · 声望%s · %s,Notice · %s · %s
+inn_stay,客栈歇一夜（4 银）,Inn (4 silver)
+inn_ok,歇了一夜，士气 +2,Rested; morale +2
+smith_home_only,这炉不打别国的刃。行李里的别国兵器仍可装备。,This forge will not make foreign blades.
+seal_no_person,无人,No person
+seal_wrong_job,当前职业不符,Wrong job
+seal_wrong_city,须在%s领取职印,Seal city: %s
+seal_rep,城声望须达友善（%d）,Need friendly (%d)
+seal_affair,须先了却本城之事,City affair required
+seal_battles,该职业下至少打过一场,Need one battle in job
+seal_mark_or_duty,须有习痕「%s」或完成本城差事,Need mark %s or duty
+life_inbox_empty,没有未读的人生卡,Inbox empty
+life_inbox_bad,卡片损坏已丢弃,Bad card dropped
+life_inbox_ok,已处理,Resolved
+reserve_no_hall,厅堂未开预备,Hall lacks reserve
+ux_hub_lineage_sub,打开族谱 · 查血脉与子嗣,Open the family tree
+ux_hub_quests_sub,城堡委任 · 也可从舆图进城看委托榜,Castle quests · city board via atlas
+ux_hub_atlas_btn,十国舆图 / 跑图,Atlas / travel
+ux_hub_atlas_sub,跑图进城 · 城镇里有委托榜,Travel to cities · commission board inside
+ux_city_tab_sundry,杂货,Sundries

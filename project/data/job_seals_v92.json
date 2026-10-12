@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "tier3": [
+    {
+      "job": "outrider",
+      "from": "light_cavalry",
+      "city": "sy_coast",
+      "name": "游骑"
+    },
+    {
+      "job": "veteran",
+      "from": "warrior",
+      "city": "ash_market",
+      "name": "老兵"
+    },
+    {
+      "job": "bulwark",
+      "from": "sentinel",
+      "city": "ig_capital",
+      "name": "壁垒"
+    },
+    {
+      "job": "marksman",
+      "from": "archer",
+      "city": "fc_peak",
+      "name": "神射"
+    },
+    {
+      "job": "medic",
+      "from": "priest",
+      "city": "fog_vale",
+      "name": "医官"
+    },
+    {
+      "job": "warlock",
+      "from": "mage",
+      "city": "fc_tower",
+      "name": "破咒师"
+    },
+    {
+      "job": "pathfinder",
+      "from": "skirmisher",
+      "city": "sy_ridge",
+      "name": "寻路人"
+    },
+    {
+      "job": "captain",
+      "from": "standard",
+      "city": "lb_mid",
+      "name": "队长"
+    },
+    {
+      "job": "chorister",
+      "from": "cantor",
+      "city": "eo_shrine",
+      "name": "唱诗"
+    }
+  ],
+  "special": [
+    {
+      "job": "bridge_tax",
+      "from": "light_cavalry",
+      "city": "lb_west",
+      "name": "桥税骑",
+      "mark": "bridge",
+      "skill": "bridge_tax"
+    },
+    {
+      "job": "yan_zhan",
+      "from": "priest",
+      "city": "lt_capital",
+      "name": "验盏",
+      "mark": "lamp",
+      "skill": "yan_zhan"
+    },
+    {
+      "job": "lu_wai",
+      "from": "mage",
+      "city": "qh_upper",
+      "name": "录外生",
+      "mark": "lie_age",
+      "skill": "lu_wai"
+    },
+    {
+      "job": "frost_wait",
+      "from": "cantor",
+      "city": "fc_capital",
+      "name": "霜候",
+      "mark": "frost",
+      "skill": "frost_wait"
+    },
+    {
+      "job": "salt_yin",
+      "from": "standard",
+      "city": "sm_capital",
+      "name": "盐引",
+      "mark": "tide",
+      "skill": "salt_yin"
+    },
+    {
+      "job": "forge_brow",
+      "from": "warrior",
+      "city": "ig_bottom",
+      "name": "锻眉",
+      "mark": "furnace",
+      "skill": "forge_brow"
+    }
+  ],
+  "rep_friendly": 30,
+  "job_battles_min": 1
+}

@@ -10,6 +10,7 @@ var story = _StoryStateScript.new()
 
 const _EconomyScript = preload("res://scripts/company/economy_state.gd")
 const _LoadoutScript = preload("res://scripts/battle/enemy_loadout.gd")
+const _JobSealsScript := preload("res://scripts/characters/job_seals.gd")
 const _FamilyScript = preload("res://scripts/characters/family_state.gd")
 const _SaveService = preload("res://scripts/core/save_service.gd")
 const HOLDING_DEFS = _EconomyScript.HOLDING_DEFS
@@ -410,6 +411,10 @@ func try_promote(cid: String, job_id: String) -> Dictionary:
 	var job = get_job(job_id)
 	if c == null or job.is_empty():
 		return {"ok": false, "msg": "无效"}
+	var seal_city := str(house_mods.get("current_city", ""))
+	var gate: Dictionary = _JobSealsScript.can_take(c, job_id, seal_city)
+	if not bool(gate.get("ok", true)):
+		return {"ok": false, "msg": str(gate.get("msg", ""))}
 	var req: Dictionary = job.get("req", {})
 	for k in req.keys():
 		if k in CKCharacter.STAT_KEYS:
@@ -426,6 +431,7 @@ func try_promote(cid: String, job_id: String) -> Dictionary:
 	if req.has("herb"):
 		herb -= int(req["herb"])
 	c.job_id = job_id
+	_JobSealsScript.grant_seal(c, job_id)
 	c.recalc_hp()
 	grant_job_skills(c)
 	log_event("%s 转职为 %s，战技已更新" % [c.name, job.get("name", job_id)])

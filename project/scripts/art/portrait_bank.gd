@@ -20,6 +20,8 @@ static var _plates := false
 static var _indexed := false
 static var _exact: Dictionary = {}
 static var _by_stage: Dictionary = {}
+static var _disk_by_stage: Dictionary = {}
+static var _disk_indexed := false
 
 static func manifest_path() -> String:
 	var proj := ProjectSettings.globalize_path("res://")
@@ -48,6 +50,8 @@ static func _dir_has_plate(dir: String) -> bool:
 static func clear_cache() -> void:
 	_plates_known = false
 	_plates = false
+	_disk_indexed = false
+	_disk_by_stage.clear()
 	_indexed = false
 	_exact.clear()
 	_by_stage.clear()
@@ -62,10 +66,14 @@ static func has_plates() -> bool:
 static func try_texture(c: Object, tier: String = "large") -> Texture2D:
 	if not has_plates():
 		return null
+	var stage := CKGenomePortrait.age_stage_of(c)
 	var m := best_match(c)
-	if not bool(m.get("hit", false)):
-		return null
-	return _load_plate(str(m.get("bucket_key", "")), tier)
+	if bool(m.get("hit", false)):
+		var tex := _load_plate(str(m.get("bucket_key", "")), tier)
+		if tex != null and str(m.get("stage", "")) == stage:
+			return tex
+	## Manifest may drift from farm files; fall back to an on-disk plate of the SAME stage only.
+	return _disk_stage_plate(c, stage, tier)
 
 static func best_match(c: Object) -> Dictionary:
 	_ensure_index()
@@ -396,6 +404,50 @@ static func _has_term(text: String, term: String) -> bool:
 
 static func _is_word(ch: int) -> bool:
 	return (ch >= 48 and ch <= 57) or (ch >= 65 and ch <= 90) or (ch >= 97 and ch <= 122) or ch == 95
+
+
+static func _ensure_disk_index() -> void:
+	if _disk_indexed:
+		return
+	_disk_by_stage.clear()
+	var dir := bank_dir()
+	if not DirAccess.dir_exists_absolute(dir):
+		_disk_indexed = true
+		return
+	var da := DirAccess.open(dir)
+	if da == null:
+		_disk_indexed = true
+		return
+	for fn in da.get_files():
+		var low := str(fn).to_lower()
+		if low.find(".small.") >= 0 or low.find(".medium.") >= 0 or low.find(".large.") >= 0:
+			continue
+		if not (low.ends_with(".webp") or low.ends_with(".png")):
+			continue
+		var stem := str(fn).get_basename()
+		for st in CKGenomePortrait.STAGES:
+			var prefix := str(st) + "_"
+			if stem.begins_with(prefix):
+				if not _disk_by_stage.has(str(st)):
+					_disk_by_stage[str(st)] = []
+				(_disk_by_stage[str(st)] as Array).append(stem)
+				break
+	for st2 in _disk_by_stage.keys():
+		(_disk_by_stage[st2] as Array).sort()
+	_disk_indexed = true
+
+
+static func _disk_stage_plate(c: Object, stage: String, tier: String) -> Texture2D:
+	_ensure_disk_index()
+	var keys: Array = _disk_by_stage.get(stage, [])
+	if keys.is_empty():
+		return null
+	var seed := 1
+	if c != null:
+		seed = CKGenomePortrait.identity_seed(c)
+	var idx: int = absi(seed) % keys.size()
+	return _load_plate(str(keys[idx]), tier)
+
 
 static func _load_plate(key: String, tier: String = "large") -> Texture2D:
 	if dir_override != "":

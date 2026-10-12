@@ -1,4 +1,6 @@
 extends Node
+
+const FAST_YEARS := 30
 ## ART-01: 20 campaign_sim seeds, bucket hit rate, empty-bank fallback, unit plate before bucket.
 
 func _ready() -> void:
@@ -27,7 +29,9 @@ func _run() -> String:
 		return fb
 	var full := _full_run()
 	var seeds: Array = CKPortraitBank.COVERAGE_SEEDS if full else [CKPortraitBank.COVERAGE_SEEDS[0]]
-	var built: Dictionary = CKPortraitBank.build_from_campaigns(seeds)
+	## Fast mode: first 30 years of seed 1101 (deterministic prefix of the 100-year run).
+	var years: int = CKPortraitBank.COVERAGE_YEARS if full else FAST_YEARS
+	var built: Dictionary = CKPortraitBank.build_from_campaigns(seeds, years)
 	var rows: Array = built.get("rows", [])
 	var observed: Array = built.get("observed", [])
 	if _wants_write():
@@ -116,8 +120,10 @@ func _nearest(rows: Array) -> String:
 func _fallback_chain() -> String:
 	var c := _person("bank_fallback")
 	CKGenomePortrait.dir_override = ""
-	CKPortraitBank.dir_override = ""
+	CKPortraitBank.dir_override = "/tmp/ck_bank_empty_missing"
 	CKGenomePortrait.clear_mem()
+	CKPortraitBank.clear_cache()
+	## Empty override: no bank plates → texture must be null, UnitArt falls back.
 	if CKGenomePortrait.texture(c) != null:
 		return "texture before any plate"
 	var kind := UnitArt.portrait_kind(c)
@@ -127,6 +133,8 @@ func _fallback_chain() -> String:
 		return "bad fallback kind " + kind
 	if UnitArt.portrait(c, 96) == null:
 		return "fallback portrait null"
+	CKPortraitBank.dir_override = ""
+	CKPortraitBank.clear_cache()
 	return ""
 
 func _plate_priority() -> String:

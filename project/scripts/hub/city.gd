@@ -1,4 +1,7 @@
 extends Control
+
+const _SundriesScript := preload("res://scripts/company/sundries.gd")
+const _CityAffairsScript := preload("res://scripts/hub/city_affairs.gd")
 ## v8.7 城镇 — every settlement on the atlas opens here. Tabs:
 ## 概览 (rep ladder · turn-ins · intel) · 铁匠铺 (regional line + signature arms, buy / forge with materials)
 ## 市集 (regional goods, supply-driven prices, known best sell elsewhere) · 委托榜 (city board, accept / turn in)
@@ -6,7 +9,7 @@ extends Control
 
 const _Atlas = preload("res://scripts/art/atlas_art.gd")
 const ATLAS := "res://scenes/hub/atlas_view.tscn"
-const TABS := [["overview", "概览"], ["smith", "铁匠铺"], ["market", "市集"], ["board", "委托榜"], ["tavern", "酒馆"], ["armory", "军械库"], ["lamp", "灯籍"]]
+const TABS := [["overview", "概览"], ["smith", "铁匠铺"], ["market", "市集"], ["sundry", "ux_city_tab_sundry"], ["board", "委托榜"], ["tavern", "酒馆"], ["armory", "军械库"], ["lamp", "灯籍"]]
 const TYPE_GLYPH := {"sword": "剑", "blade": "刀", "spear": "枪", "lance": "骑", "axe": "斧", "bow": "弓", "crossbow": "弩", "staff": "杖", "focus": "器", "armor": "甲", "shield": "盾", "charm": "符"}
 const TIER_COL := [Color("#9AA6B8"), Color("#9AA6B8"), Color("#5EE0B5"), Color("#6ED4FF"), Color("#C9B8FF")]
 const CONTENT := Rect2(416, 108, 848, 576)
@@ -43,7 +46,7 @@ func _ready() -> void:
 	_tabbar.add_theme_constant_override("separation", 6)
 	add_child(_tabbar)
 	for t in TABS:
-		var b := UIKit.ghost_button(str(t[1]), 108, 34)
+		var b := UIKit.ghost_button(Locale.t(str(t[1])) if str(t[1]).begins_with("ux_") else str(t[1]), 108, 34)
 		b.name = "Tab_" + str(t[0])
 		var tid := str(t[0])
 		b.pressed.connect(func(): _set_tab(tid))
@@ -249,6 +252,7 @@ func _render_tab() -> void:
 		"overview": _tab_overview()
 		"smith": _tab_smith()
 		"market": _tab_market()
+		"sundry": _tab_sundry()
 		"board": _tab_board()
 		"tavern": _tab_tavern()
 		"armory": _tab_armory()
@@ -450,6 +454,20 @@ func _tab_overview() -> void:
 		mb.disabled = not bool(mm.get("exists", false))
 		mb.pressed.connect(func(): get_tree().change_scene_to_file(str(mm.path)))
 		p2.add_child(mb)
+	## 告示：邦交 · 本城之事
+	var notice := UIKit.mono(Locale.t("affair_notice") % [World.rep_tier_name(rep), _CityAffairsScript.label(city)], 9, UIKit.TEXT_DIM)
+	notice.position = Vector2(18, 500)
+	p.add_child(notice)
+	## 客栈：每城每 30 日一次，士气 +2，占 1 日
+	var inn_key := "inn_%s" % city
+	var inn_cd := int(GameState.house_mods.get(inn_key, -999))
+	var inn_ok := Calendar.year * 12 + Calendar.month - inn_cd >= 1 or inn_cd < 0
+	## 以月近似 30 日
+	var inn := UIKit.ghost_button(Locale.t("inn_stay"), 180, 32)
+	inn.position = Vector2(220, 528)
+	inn.disabled = not inn_ok or GameState.silver < 4
+	inn.pressed.connect(_do_inn)
+	p2.add_child(inn)
 
 # ── 铁匠铺 ────────────────────────────────────────────
 func _tab_smith() -> void:
@@ -467,7 +485,11 @@ func _tab_smith() -> void:
 	var nat: Dictionary = World.nations.get(World.nation_of(city), {})
 	var p := _panel(Rect2(0, 0, 420, 576))
 	_head(p, Vector2(18, 14), str(nat.get("smith", "铁匠铺")), "SMITHY · TIER %d" % World.smith_tier(city))
-	var v := _scroll(p, Rect2(12, 58, 400, 508))
+	var sn := UIKit.body_label(Locale.t("smith_home_only"), UIKit.TEXT_DIM, 11)
+	sn.position = Vector2(18, 44)
+	sn.size = Vector2(380, 20)
+	p.add_child(sn)
+	var v := _scroll(p, Rect2(12, 68, 400, 498))
 	if _sel_item == "" or not World.items.has(_sel_item):
 		_sel_item = str(st[0].item.id) if not st.is_empty() else ""
 	for e in st:
@@ -1102,3 +1124,16 @@ func selftest() -> Dictionary:
 	_set_tab("armory")
 	await get_tree().process_frame
 	return {"ok": true, "msg": ", ".join(msgs)}
+
+
+func _do_inn() -> void:
+	if GameState.silver < 4:
+		_toast_msg(Locale.t("sundry_no_silver"), UIKit.DANGER)
+		return
+	var inn_key := "inn_%s" % city
+	GameState.silver -= 4
+	GameState.morale = mini(100, int(GameState.morale) + 2)
+	GameState.house_mods[inn_key] = Calendar.year * 12 + Calendar.month
+	GameState.mark_dirty()
+	_toast_msg(Locale.t("inn_ok"), UIKit.OK)
+	_render_tab()

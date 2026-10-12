@@ -8,11 +8,11 @@ subtitle,灰烬旗 · 朔澜陆桥,Ash Banner · Shuo Lan Bridge
 hub_title,灰旗堡,Ash Keep
 btn_roster,花名册,Roster
 btn_tavern,烽火酒馆,Beacon Tavern
-btn_quests,委任榜,Contracts
+btn_quests,委任榜 / 委托,Contracts / board
 btn_train,旗塾,Banner school
-btn_forge,炉火工坊,Forge
+btn_forge,铁匠铺,Smithy
 btn_shrine,祠堂,Shrine
-btn_lineage,族谱,Lineage
+btn_lineage,族谱（家谱）,Family tree
 btn_marriage,联姻廷,Marriage court
 btn_hourglass,岁月沙漏,Hourglass
 btn_market,陆桥商路,Bridge market
@@ -780,7 +780,7 @@ shell_e2ceca2d,第五十一章·席终,Chapter 51 · closing
 shell_e2d53a6d,重试,Retry
 shell_e3d14011,可继续第二百一十八章·独擂。,Continue Chapter 218 · lone beat.
 shell_e3db61a6,第一百六十八章·钟印,Chapter 168 · bell seal
-shell_e4492ae0,继续主线,Continue story
+shell_e4492ae0,回到这一章,Back to this chapter
 shell_e4daf17b,移动 MOV,MOV
 shell_e4e0bbeb,二十六卷已执。可继续第二十七卷或经营。,Volume 26 is done. Continue Volume 27 or run the keep.
 shell_e4e3c70c,第二百一十三章·席终,Chapter 213 · closing

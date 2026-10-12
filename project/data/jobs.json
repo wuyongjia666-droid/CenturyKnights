@@ -81,7 +81,8 @@
         "iron": 2
       },
       "promote_to": [
-        "outrider"
+        "outrider",
+        "bridge_tax"
       ],
       "promote_from": "squire"
     },
@@ -99,7 +100,8 @@
         "iron": 3
       },
       "promote_to": [
-        "veteran"
+        "veteran",
+        "forge_brow"
       ],
       "promote_from": "light_inf"
     },
@@ -135,7 +137,8 @@
         "herb": 2
       },
       "promote_to": [
-        "medic"
+        "medic",
+        "yan_zhan"
       ],
       "promote_from": "apprentice"
     },
@@ -163,7 +166,8 @@
       "move": 4,
       "req": {},
       "promote_to": [
-        "warlock"
+        "warlock",
+        "lu_wai"
       ],
       "promote_from": "apprentice"
     },
@@ -191,7 +195,8 @@
       "move": 4,
       "req": {},
       "promote_to": [
-        "captain"
+        "captain",
+        "salt_yin"
       ],
       "promote_from": "banner"
     },
@@ -205,7 +210,8 @@
       "move": 4,
       "req": {},
       "promote_to": [
-        "chorister"
+        "chorister",
+        "frost_wait"
       ],
       "promote_from": "acolyte"
     },
@@ -373,6 +379,84 @@
       "promote_from": "cantor",
       "mechanic": "hymn",
       "mastery_skill": "chorister_oath"
+    },
+    {
+      "id": "bridge_tax",
+      "name": "桥税骑",
+      "tier": 3,
+      "promote_from": "light_cavalry",
+      "promote_to": [],
+      "move": 6,
+      "desc": "每场一次：桥或道路上指定相邻敌人，其下回合移动 −2，自己立刻获得 1 点移动。",
+      "skills": [
+        "bridge_tax"
+      ],
+      "branch": "special"
+    },
+    {
+      "id": "yan_zhan",
+      "name": "验盏",
+      "tier": 3,
+      "promote_from": "priest",
+      "promote_to": [],
+      "move": 4,
+      "desc": "每场一次：指定敌人。伪造命中 +8；无血谱杂兵命中 +4。",
+      "skills": [
+        "yan_zhan"
+      ],
+      "branch": "special"
+    },
+    {
+      "id": "lu_wai",
+      "name": "录外生",
+      "tier": 3,
+      "promote_from": "mage",
+      "promote_to": [],
+      "move": 4,
+      "desc": "本场第一次战技不进入冷却。",
+      "skills": [
+        "lu_wai"
+      ],
+      "branch": "special"
+    },
+    {
+      "id": "frost_wait",
+      "name": "霜候",
+      "tier": 3,
+      "promote_from": "cantor",
+      "promote_to": [],
+      "move": 4,
+      "desc": "回合开始时，一名相邻丘/垒敌人防御 −1 直至其移动。",
+      "skills": [
+        "frost_wait"
+      ],
+      "branch": "special"
+    },
+    {
+      "id": "salt_yin",
+      "name": "盐引",
+      "tier": 3,
+      "promote_from": "standard",
+      "promote_to": [],
+      "move": 5,
+      "desc": "开战粮够时，相邻友军防御 +1 整场。",
+      "skills": [
+        "salt_yin"
+      ],
+      "branch": "special"
+    },
+    {
+      "id": "forge_brow",
+      "name": "锻眉",
+      "tier": 3,
+      "promote_from": "warrior",
+      "promote_to": [],
+      "move": 4,
+      "desc": "本场第一次受伤时，攻击者受 2 点，自己防御 +2 至战斗结束。",
+      "skills": [
+        "forge_brow"
+      ],
+      "branch": "special"
     }
   ]
 }

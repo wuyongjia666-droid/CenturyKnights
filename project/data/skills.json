@@ -1405,6 +1405,63 @@
       "dmg_mul": 1.1,
       "hit_mod": 0,
       "tree": "faith"
+    },
+    {
+      "id": "yan_zhan",
+      "name": "验盏",
+      "type": "mark",
+      "uses": 1,
+      "once_per_battle": true,
+      "range": 3,
+      "target": "enemy",
+      "desc": "指定一名敌人。伪造命中+8；无血谱杂兵命中+4；真血谱验明不加。",
+      "mark_id": "yan_zhan_mark"
+    },
+    {
+      "id": "bridge_tax",
+      "name": "桥税",
+      "desc": "站在桥或道路上，指定相邻敌人：其下回合移动 −2，自己立刻获得 1 点移动。每场一次。",
+      "kind": "active",
+      "uses": 1,
+      "cooldown": 99,
+      "range": 1,
+      "mark_id": "bridge_tax"
+    },
+    {
+      "id": "lu_wai",
+      "name": "录外",
+      "desc": "本场第一次战技不进入冷却。被动。",
+      "kind": "passive",
+      "uses": 0,
+      "cooldown": 0,
+      "mark_id": "lu_wai"
+    },
+    {
+      "id": "frost_wait",
+      "name": "霜候",
+      "desc": "回合开始：一名相邻丘/垒敌人防御 −1 直至其移动。被动。",
+      "kind": "passive",
+      "uses": 0,
+      "cooldown": 0,
+      "mark_id": "frost_wait"
+    },
+    {
+      "id": "salt_yin",
+      "name": "盐引光环",
+      "desc": "开战粮够时相邻友军防御 +1 整场。被动。",
+      "kind": "passive",
+      "uses": 0,
+      "cooldown": 0,
+      "mark_id": "salt_yin"
+    },
+    {
+      "id": "forge_brow",
+      "name": "锻眉反击",
+      "desc": "本场第一次受伤：攻击者受 2 点，自己防御 +2 至战斗结束。被动。",
+      "kind": "passive",
+      "uses": 0,
+      "cooldown": 0,
+      "mark_id": "forge_brow"
     }
   ],
   "trees": [

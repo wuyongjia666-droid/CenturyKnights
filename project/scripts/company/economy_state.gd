@@ -17,7 +17,7 @@ const BUILDING_NAMES := {
 	"hall": "议事厅",
 	"barracks": "校场",
 	"market": "市集",
-	"forge": "工坊",
+	"forge": "铁匠铺",
 	"shrine": "祠堂",
 }
 const BUILDING_MAX := 5
@@ -82,7 +82,11 @@ static func train_cost(host) -> int:
 
 static func forge_craft_cost(host) -> Dictionary:
 	var lv = CKEconomyState.building_level(host, "forge")
-	return {"iron": maxi(1, 3 - mini(lv, 3)), "silver": maxi(8, 24 - lv * 4)}
+	var iron := maxi(1, 3 - mini(lv, 3))
+	## 冷钢油：下一次堡内打灰刃铁耗 −1
+	if int(host.house_mods.get("sundry_forge_iron", 0)) > 0:
+		iron = maxi(1, iron - 1)
+	return {"iron": iron, "silver": maxi(8, 24 - lv * 4)}
 
 static func market_buy_prices(host) -> Dictionary:
 	var lv = CKEconomyState.building_level(host, "market")
@@ -481,13 +485,15 @@ static func holdings_monthly_yield(host) -> String:
 			raids.append(str(def.get("name", hid)))
 			continue  # 本月无收成
 		sf += int(pv.food)
-		ss += int(pv.silver)
+		var sil_row := int(pv.silver)
+		ss += sil_row
 		sh += int(pv.herb)
 		sr += int(pv.rep)
+		host.house_mods["holding_silver_%s" % hid] = sil_row
 		var tag = "庄" if st else ""
 		names.append("%sLv%d%s" % [def.get("name", hid), CKEconomyState.holding_level(host, hid), tag])
 	host.food += sf
-	host.silver += ss
+	# 银经 CKPurse 发田俸后入旗库
 	host.herb += sh
 	if sr > 0:
 		host.add_rep("ashland", sr)
@@ -813,60 +819,8 @@ static func on_battle_quest_victory(host) -> void:
 	host.remove_meta("active_quest_id")
 
 static func apply_monthly_upkeep(host) -> String:
-	var wage = 0
-	var mouths = 0
-	for c in host.characters.values():
-		if not c.alive:
-			continue
-		if c.in_roster:
-			wage += c.salary
-			mouths += 1
-		elif c.is_child:
-			mouths += 1
-	host.silver -= wage
-	var food_need = maxi(1, mouths)
-	host.food -= food_need
-	# A century of harvests with no sink became a grain ocean. Surplus above two years of rations spoils.
-	var granary := maxi(120, mouths * 24)
-	if host.food > granary:
-		host.food = granary + int(float(host.food - granary) * 0.82)
-	var msg = "月结：工资 -%d 银，粮 -%d" % [wage, food_need]
-	var paid: bool = int(host.silver) >= 0
-	if not paid:
-		host.morale = maxi(0, host.morale - 15)
-		msg += "；银币见红，士气下降"
-		host.silver = 0
-	var pay_note: String = CKMorale.on_payday(host, paid)
-	if pay_note != "":
-		msg += "；" + pay_note
-	if host.food < 0:
-		host.morale = maxi(0, host.morale - 20)
-		host.food = 0
-		msg += "；缺粮，士气大降"
-		# 儿童负面
-		for c in host.characters.values():
-			if c.is_child and c.alive and host.rng.randf() < 0.4:
-				if "malnourished" not in c.traits:
-					c.traits.append("malnourished")
-					host.log_event("%s 因缺粮获得「营养不良」" % c.name)
-	elif host.food >= 10 and host.morale < 90:
-		host.morale = mini(100, host.morale + 2)
-	# 校场常训
-	if CKEconomyState.building_level(host, "barracks") >= 2:
-		host.morale = mini(100, host.morale + CKEconomyState.building_level(host, "barracks") - 1)
-		msg += "；校场鼓点士气+%d" % (CKEconomyState.building_level(host, "barracks") - 1)
-	# 退役顾问暗助
-	for k in host.advisor_bonus.keys():
-		var leader = host.get_leader()
-		if leader and k in CKCharacter.STAT_KEYS and host.rng.randf() < 0.15:
-			leader.stats[k] = mini(int(leader.apt_max.get(k, 20)), int(leader.stats[k]) + 1)
-			msg += "；顾问指点 %s+1" % Locale.t("stat_" + k)
-			leader.recalc_hp()
-			break
-	var healed := CKInjury.tick_month(host)
-	if healed != "":
-		msg += "；" + healed
-	return msg
+	## v9.2：私囊月俸。田俸在属地银账上发放，出战/留旗从旗库发。
+	return CKPurse.apply_monthly_wages(host)
 
 static func apply_harvest(host) -> String:
 	host.shrine_level = CKEconomyState.building_level(host, "shrine")
@@ -943,6 +897,8 @@ static func craft_weapon(host, cid: String) -> Dictionary:
 		return {"ok": false, "msg": "选择角色"}
 	host.iron -= int(cost.iron)
 	host.silver -= int(cost.silver)
+	if int(host.house_mods.get("sundry_forge_iron", 0)) > 0:
+		host.house_mods["sundry_forge_iron"] = 0
 	if World.is_world_item(c.weapon_id):  # v8.7: a world weapon goes back to the armory, not the scrap heap
 		World.armory[c.weapon_id] = int(World.armory.get(c.weapon_id, 0)) + 1
 	c.weapon_id = "ash_blade_fine" if CKEconomyState.building_level(host, "forge") >= 4 else "ash_blade"
@@ -971,11 +927,8 @@ static func market_buy(host, item: String, qty: int = 1) -> Dictionary:
 ## CMP-02. January muster, mid-campaign castle/dowry/heirloom dues, late lamp/title/embassy dues.
 ## Does not draw GameState.rng. The year-1 spring purse is paid back in April so the May wedding still clears.
 static func monthly_wage(host) -> int:
-	var wage := 0
-	for c in host.roster():
-		wage += int(c.salary)
-	return wage
-
+	## 纪元压力用的旗库应付俸（不含田俸/私囊）。
+	return CKPurse.monthly_wage_pressure(host)
 
 static func apply_spring_purse(host) -> Dictionary:
 	var purse := 180

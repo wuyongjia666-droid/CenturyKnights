@@ -22,7 +22,7 @@ func _ready() -> void:
 	if not roster.is_empty():
 		_sel = roster[0]
 	_render_all()
-	UIKit.footer_bar(self, [["A", "确认打造"], ["↑↓", "切换骑士"], ["W", "去工事升级工坊"], ["ESC", "返回城堡"]], "FORGE FACILITY // LV %d · v8.6" % GameState.building_level("forge"))
+	UIKit.footer_bar(self, [["A", "确认打造"], ["↑↓", "切换骑士"], ["W", "去工事升级铁匠铺"], ["ESC", "返回城堡"]], "ASH SMITHY // LV %d · v8.6" % GameState.building_level("forge"))
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 
@@ -48,7 +48,7 @@ func _clear(n: Control) -> void:
 func _render_all() -> void:
 	if _chips:
 		_chips.queue_free()
-	_chips = UIKit.top_bar(self, "炉火工坊 · FORGE", [["银币", str(GameState.silver), UIKit.ACCENT], ["铁", str(GameState.iron), UIKit.TEXT], ["工坊", "LV %d" % GameState.building_level("forge"), UIKit.OK], ["历", Calendar.label(), UIKit.TEXT_DIM]], "返回城堡", _back)
+	_chips = UIKit.top_bar(self, "铁匠铺 · FORGE", [["银币", str(GameState.silver), UIKit.ACCENT], ["铁", str(GameState.iron), UIKit.TEXT], ["工坊", "LV %d" % GameState.building_level("forge"), UIKit.OK], ["历", Calendar.label(), UIKit.TEXT_DIM]], "返回城堡", _back)
 	_render_left()
 	_render_mid()
 	_render_right()

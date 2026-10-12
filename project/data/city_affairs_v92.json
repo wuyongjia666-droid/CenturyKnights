@@ -1,0 +1,57 @@
+{
+  "version": 1,
+  "templates": [
+    {
+      "id": "supply",
+      "action": "deliver_goods",
+      "specialties": [
+        "粮",
+        "盐",
+        "矿",
+        "药田",
+        "市集"
+      ]
+    },
+    {
+      "id": "honor",
+      "action": "city_quest",
+      "specialties": [
+        "都",
+        "要塞",
+        "堡",
+        "王廷"
+      ]
+    },
+    {
+      "id": "forge",
+      "action": "signature_arm",
+      "specialties": [
+        "锻",
+        "军械",
+        "铁"
+      ]
+    },
+    {
+      "id": "gossip",
+      "action": "tavern_talk",
+      "specialties": [
+        "市集",
+        "港",
+        "夜市"
+      ]
+    },
+    {
+      "id": "rest",
+      "action": "overnight",
+      "specialties": [
+        "村",
+        "驿"
+      ]
+    },
+    {
+      "id": "first_meet",
+      "action": "rep_acquainted",
+      "specialties": []
+    }
+  ]
+}

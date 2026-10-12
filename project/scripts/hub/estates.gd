@@ -13,8 +13,8 @@ func _ready() -> void:
 	UIKit.void_bg(self)
 	UIFX.fade_in(self, 0.28)
 	Music.play_castle()
-	UIKit.top_bar(self, "领地营建 · 四野属地", UIKit.std_resource_chips(), "返回城堡", func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
-	UIKit.page_head(self, 42, 70, "ESTATE SANCTUARY INFRASTRUCTURE // SECTOR 01", "领地营建", "TERRITORIAL PROSPERITY")
+	UIKit.top_bar(self, Locale.t("ux_estates_title"), UIKit.std_resource_chips(), "返回城堡", func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
+	UIKit.page_head(self, 42, 70, "ESTATE SANCTUARY INFRASTRUCTURE // SECTOR 01", "属地", "TERRITORIAL PROSPERITY")
 	var sum := UIKit.body_label(_sum_text(), UIKit.TEXT_DIM, 12)
 	sum.name = "Sum"
 	sum.autowrap_mode = TextServer.AUTOWRAP_OFF
@@ -58,6 +58,9 @@ func _ready() -> void:
 	var works := UIKit.ghost_button("工事 / 堡志", 112, 36)
 	works.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/works.tscn"))
 	row.add_child(works)
+	var field := UIKit.cta_button(Locale.t("ux_estates_field"), "F", 150, 36)
+	field.pressed.connect(_open_field_book)
+	row.add_child(field)
 	var patrol := UIKit.cta_button("全堡巡防", "X", 150, 36)
 	patrol.pressed.connect(_do_patrol)
 	row.add_child(patrol)
@@ -499,3 +502,90 @@ func _show_patrol_vignette(hid: String) -> void:
 		if is_instance_valid(overlay):
 			overlay.queue_free()
 	)
+
+
+
+func _open_field_book() -> void:
+	if _picker != null and is_instance_valid(_picker):
+		_picker.queue_free()
+	var overlay := ColorRect.new()
+	overlay.color = Color(0.04, 0.06, 0.1, 0.88)
+	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(overlay)
+	_picker = overlay
+	var panel := PanelContainer.new()
+	panel.position = Vector2(180, 60)
+	panel.size = Vector2(920, 560)
+	overlay.add_child(panel)
+	var root := VBoxContainer.new()
+	root.add_theme_constant_override("separation", 8)
+	panel.add_child(root)
+	root.add_child(UIKit.make_label(Locale.t("ux_estates_field"), true))
+	root.add_child(UIKit.body_label(Locale.t("ux_estates_sub"), UIKit.TEXT_DIM, 12))
+	var scroll := ScrollContainer.new()
+	scroll.custom_minimum_size = Vector2(880, 420)
+	root.add_child(scroll)
+	var list := VBoxContainer.new()
+	list.add_theme_constant_override("separation", 4)
+	scroll.add_child(list)
+	for c in GameState.characters.values():
+		if c == null or not c.alive:
+			continue
+		var job := str(c.blood_meta.get("estate_job", ""))
+		var purse := CKPurse.get_purse(c)
+		var status := Locale.t("ux_field_idle")
+		if CKPurse.is_following(GameState, c.id):
+			status = Locale.t("ux_field_follow")
+		elif job != "":
+			status = Locale.t("ux_field_on") % job
+		elif int(c.age) < 8:
+			status = Locale.t("ux_field_young")
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 8)
+		row.add_child(UIKit.body_label(Locale.t("ux_field_row") % [c.name, c.age, purse, status], UIKit.TEXT, 12))
+		if int(c.age) >= 8:
+			for hid in GameState.HOLDING_DEFS.keys():
+				if not GameState.holding_unlocked(hid):
+					continue
+				var b := UIKit.ghost_button(str(GameState.HOLDING_DEFS[hid].get("name", hid)), 88, 28)
+				var hold := str(hid)
+				var cid := str(c.id)
+				b.pressed.connect(func():
+					var r = CKPurse.assign_field(GameState.characters[cid], hold)
+					_msg.text = str(r.get("msg", ""))
+					if is_instance_valid(overlay):
+						overlay.queue_free()
+					_picker = null
+					_rebuild()
+				)
+				row.add_child(b)
+			var clear := UIKit.ghost_button(Locale.t("ux_field_leave"), 64, 28)
+			var cid2 := str(c.id)
+			clear.pressed.connect(func():
+				CKPurse.assign_field(GameState.characters[cid2], "")
+				if is_instance_valid(overlay):
+					overlay.queue_free()
+				_picker = null
+				_rebuild()
+			)
+			row.add_child(clear)
+			if purse > 0:
+				var rem := UIKit.ghost_button(Locale.t("ux_field_remit"), 64, 28)
+				var cid3 := str(c.id)
+				rem.pressed.connect(func():
+					var r2 = CKPurse.remit_to_flag(GameState.characters[cid3])
+					_msg.text = str(r2.get("msg", ""))
+					if is_instance_valid(overlay):
+						overlay.queue_free()
+					_picker = null
+				)
+				row.add_child(rem)
+		list.add_child(row)
+	var close := UIKit.make_accent_button(Locale.t("ux_field_close"), 120)
+	close.pressed.connect(func():
+		if is_instance_valid(overlay):
+			overlay.queue_free()
+		_picker = null
+	)
+	root.add_child(close)

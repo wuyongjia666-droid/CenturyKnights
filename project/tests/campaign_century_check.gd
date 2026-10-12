@@ -107,19 +107,20 @@ func _silver_curve(r: Dictionary) -> String:
 	if int(r.get("spring_purse", 0)) != 180:
 		return "spring purse %s" % str(r.get("spring_purse", 0))
 	var checkpoints := [
-		[10, 600, 2000],
-		[30, 400, 2000],
-		[60, 400, 2500],
-		[100, 200, 2000],
+		# v9.2 私囊封顶后溢回旗库，中段银高于旧「工资蒸发」曲线
+		[10, 600, 5000],
+		[30, 400, 12000],
+		[60, 400, 12000],
+		[100, 200, 8000],
 	]
 	for row in checkpoints:
 		var why := _band(r, int(row[0]), int(row[1]), int(row[2]))
 		if why != "":
 			return why
 	var silver := int(r.get("silver_end", 0))
-	if silver < 100 or silver > 2000:
+	if silver < 100 or silver > 8000:
 		return "end silver %d" % silver
-	if int(r.get("silver_max", 0)) > 3500:
+	if int(r.get("silver_max", 0)) > 15000:
 		return "silver exploded %s" % str(r.get("silver_max", 0))
 	return ""
 

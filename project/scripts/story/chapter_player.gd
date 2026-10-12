@@ -247,7 +247,7 @@ func _refresh_actions() -> void:
 		for step in _beat.get("prepare", []):
 			_run_op(step)
 	if _line_idx < lines.size() - 1:
-		_add_action("继续 ▶", func():
+		_add_action(Locale.t("ux_next_line"), func():
 			_line_idx += 1
 			_show_line()
 			_refresh_actions()
@@ -265,7 +265,13 @@ func _refresh_actions() -> void:
 		var disabled := bool(row.get("disabled", false))
 		_add_action(str(row.get("label", "")), _on_action.bind(steps), disabled)
 	if shown == 0 and _beat.get("next") != null and str(_beat.get("next", "")) != "":
-		_add_action("继续", func(): _goto_next(), false, true)
+		var nxt := str(_beat.get("next", ""))
+		var nxt_title := nxt
+		for b in _chapter.get("beats", []):
+			if typeof(b) == TYPE_DICTIONARY and str(b.get("id", "")) == nxt:
+				nxt_title = str(b.get("title", b.get("id", nxt)))
+				break
+		_add_action(nxt_title if nxt_title != "" else Locale.t("ux_next_line"), func(): _goto_next(), false, true)
 
 func _add_action(text: String, cb: Callable, disabled: bool = false, compact: bool = false) -> void:
 	var w := 148 if compact else 320

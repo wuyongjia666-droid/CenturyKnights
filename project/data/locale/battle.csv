@@ -67,3 +67,26 @@ class_path,%s / %s / %s,%s / %s / %s
 rewind_undo,撤回,Undo move
 rewind_lamp,回灯,Turn the lamp back
 rewind_wicks,灯芯 %d,Wicks %d
+yan_no_target,无目标,No target
+yan_used,本场验盏已用过,Yan Zhan already used this battle
+yan_out,盏灭,Cup dark
+yan_forged,验盏·伪造 +%d,Yan Zhan · forged +%d
+yan_bloodless,验盏·无谱 +%d,Yan Zhan · no line +%d
+yan_true,验盏·验明真谱（不加命中）,Yan Zhan · true line (no hit bonus)
+reserve_no_hall,厅堂未达预备,Hall not ready for reserve
+reserve_need_roster,须为在册活人,Must be living roster
+reserve_already,已在出战席,Already deployed
+reserve_set,%s 列为预备,%s set as reserve
+reserve_no_battle,无战斗,No battle
+reserve_used,本场预备已进,Reserve already entered
+reserve_no_cap,无预备编制,No reserve slot
+reserve_unset,未指定预备,No reserve appointed
+reserve_dead,预备不可用,Reserve unavailable
+reserve_no_edge,无边缘入口,No edge entry
+reserve_enter,%s 从地图边缘进场,%s enters from the map edge
+skill_bridge_tax,桥税,Bridge Tax
+skill_lu_wai,录外,Archive Outsider
+skill_frost_wait,霜候,Frost Watch
+skill_salt_yin,盐引,Salt Pass
+skill_forge_brow,锻眉,Forge Brow
+bridge_need_road,须站在桥或道路上,Must stand on road/bridge

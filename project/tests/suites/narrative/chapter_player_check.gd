@@ -177,7 +177,7 @@ func _advance_lines(player, expected: Array) -> String:
 			if cover != "":
 				return cover
 		if i + 1 < expected.size():
-			if not player.simulate_press_action_containing("继续"):
+			if not (player.simulate_press_action_containing("下一句") or player.simulate_press_action_containing("继续")):
 				return "could not advance line %d" % i
 			await get_tree().process_frame
 	return ""

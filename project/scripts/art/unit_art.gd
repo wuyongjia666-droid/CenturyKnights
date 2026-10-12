@@ -392,7 +392,9 @@ static func portrait_kind(c: CKCharacter, size: int = 96) -> String:
 		return "bust"
 	var age := int(c.age)
 	var geno := ""
-	if age <= 22:
+	if age < 3:
+		geno = "v84_geno_youth_%s_vow" % g  # no infant geno plate; bank/disk handles infants
+	elif age <= 22:
 		geno = "v84_geno_youth_%s_vow" % g
 	elif age >= 50:
 		geno = "v84_geno_elder_%s_seal" % g
@@ -541,7 +543,9 @@ static func portrait(c: CKCharacter, size: int = 96, tier: String = "") -> Textu
 	var _g := str(c.gender)
 	var _age := int(c.age)
 	var _geno := ""
-	if _age <= 22:
+	if _age < 3:
+		_geno = ""  # force bank/disk infant; do not show teen vow bust on newborns
+	elif _age <= 22:
 		_geno = "v84_geno_youth_%s_vow" % _g
 	elif _age >= 50:
 		_geno = "v84_geno_elder_%s_seal" % _g
@@ -549,16 +553,17 @@ static func portrait(c: CKCharacter, size: int = 96, tier: String = "") -> Textu
 		_geno = "v84_geno_heir_%s_close" % _g
 	else:
 		_geno = "v84_geno_mid_%s_house" % _g
-	var _gp := "res://assets/art/portraits/%s.png" % _geno
-	# v8.5: card/list sizes use the pre-downscaled 220x270 thumb (crisper, lighter)
-	var _thumb := "res://assets/art/portraits/thumb_%s.png" % _geno
-	if size <= 240 and _art_exists(_thumb):
-		_gp = _thumb
-	if _art_exists(_gp):
-		var _gt = _try_load(_gp, use_tier)
-		if _gt != null:
-			_cache["geno|" + use_tier + "|" + _geno + "|" + str(size)] = _gt
-			return _gt
+	if _geno != "":
+		var _gp := "res://assets/art/portraits/%s.png" % _geno
+		# v8.5: card/list sizes use the pre-downscaled 220x270 thumb (crisper, lighter)
+		var _thumb := "res://assets/art/portraits/thumb_%s.png" % _geno
+		if size <= 240 and _art_exists(_thumb):
+			_gp = _thumb
+		if _art_exists(_gp):
+			var _gt = _try_load(_gp, use_tier)
+			if _gt != null:
+				_cache["geno|" + use_tier + "|" + _geno + "|" + str(size)] = _gt
+				return _gt
 	return _proc_portrait(c, size)
 
 static func _token_key(c: CKCharacter, team: String, frame: int) -> String:
@@ -966,27 +971,57 @@ static func _face_uid(c: CKCharacter) -> int:
 		h = int((h ^ ch2.unicode_at(0)) * 16777619) & 0x7fffffff
 	var prefer: Array = []
 	# 0) per-tag farm slots first
-	for tg in _farm_tags_for(c):
+	## Age-band tags first (never wiped). Job tags next. Gender pool last, with wrong-age slots stripped.
+	var age_i := int(c.age)
+	var age_tags: Array = []
+	if age_i < 3:
+		age_tags = ["child", "orphan"]
+	elif age_i <= 14:
+		age_tags = ["child", "youth", "orphan"]
+	elif age_i <= 22:
+		age_tags = ["youth", "recruit_raw", "novice"]
+	elif age_i >= 55:
+		age_tags = ["elder", "monk_old"]
+	else:
+		age_tags = ["mid"]
+	for tg in age_tags:
 		if FARM_FACE_BY_TAG.has(tg):
-			var arr: Array = FARM_FACE_BY_TAG[tg]
-			for s in arr:
+			for s in FARM_FACE_BY_TAG[tg]:
 				prefer.append(int(s))
+	for tg in _farm_tags_for(c):
+		if str(tg) in ["elder", "monk_old"] and age_i < 50:
+			continue
+		if str(tg) in ["child", "orphan"] and age_i > 14:
+			continue
+		if FARM_FACE_BY_TAG.has(tg):
+			for s in FARM_FACE_BY_TAG[tg]:
+				prefer.append(int(s))
+	var gender_pool: Array = FARM_FACE_SLOTS_F if str(c.gender) == "f" else FARM_FACE_SLOTS_M
+	var banned: Dictionary = {}
+	if age_i < 50:
+		for s in FARM_FACE_BY_TAG.get("elder", []):
+			banned[int(s)] = true
+		for s in FARM_FACE_BY_TAG.get("monk_old", []):
+			banned[int(s)] = true
+	if age_i > 14:
+		for s in FARM_FACE_BY_TAG.get("child", []):
+			banned[int(s)] = true
+	for s2 in gender_pool:
+		if banned.has(int(s2)):
+			continue
+		prefer.append(int(s2))
 	if str(c.gender) == "f":
-		prefer.assign(FARM_FACE_SLOTS_F)
-		if int(c.age) <= 14:
+		if age_i <= 14:
 			prefer = [755, 155, 355, 555] + prefer
-		elif int(c.age) <= 22:
+		elif age_i <= 22:
 			prefer = [763, 752, 161, 361, 561] + prefer
 	else:
-		prefer.assign(FARM_FACE_SLOTS_M)
-		if int(c.age) >= 50:
+		if age_i >= 50:
 			prefer = [765, 764, 766] + prefer
-		elif int(c.age) <= 14:
+		elif age_i <= 14:
 			prefer = [754, 154, 354, 554] + prefer
-		elif int(c.age) <= 22:
+		elif age_i <= 22:
 			prefer = [762, 160, 360, 560] + prefer
-		elif str(c.job_id) in ["apprentice", "priest"]:
-			prefer = [766, 166, 366, 566] + prefer
 	# 1) 优先农场槽（空或已属自己）；hash 旋转避免总抢同一张
 	var npref = prefer.size()
 	if npref > 0:

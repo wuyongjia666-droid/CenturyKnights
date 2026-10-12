@@ -33,8 +33,8 @@ func _install_month_bus() -> void:
 		return
 	_bus_ready = true
 	register("pre", Callable(self, "_tick_life"), 10)
-	register("economy", Callable(self, "_tick_payroll"), 10)
-	register("economy", Callable(self, "_tick_holdings"), 20)
+	register("economy", Callable(self, "_tick_holdings"), 10)
+	register("economy", Callable(self, "_tick_payroll"), 20)
 	register("family", Callable(self, "_tick_doctrine"), 10)
 	register("family", Callable(self, "_tick_spring"), 20)
 	register("post", Callable(self, "_tick_harvest"), 10)

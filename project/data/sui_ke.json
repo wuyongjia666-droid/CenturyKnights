@@ -1,10 +1,43 @@
 {
-  "grand_roles": {"gf0": "爷爷", "gf1": "奶奶", "gm0": "外公", "gm1": "外婆"},
+  "grand_roles": {
+    "gf0": "爷爷",
+    "gf1": "奶奶",
+    "gm0": "外公",
+    "gm1": "外婆"
+  },
   "daily_pairs": [
-    {"lesson": "copy", "stat_l": "wil", "play": "slip", "stat_p": "agi", "meet": "bridge", "stat_m": "agi"},
-    {"lesson": "watch", "stat_l": "per", "play": "seize", "stat_p": "vit", "meet": "lamp", "stat_m": "wil"},
-    {"lesson": "ledger", "stat_l": "skl", "play": "lie_age", "stat_p": "per", "meet": "tide", "stat_m": "vit"},
-    {"lesson": "hone", "stat_l": "str", "play": "furnace", "stat_p": "str", "meet": "frost", "stat_m": "wil"}
+    {
+      "lesson": "copy",
+      "stat_l": "wil",
+      "play": "slip",
+      "stat_p": "agi",
+      "meet": "bridge",
+      "stat_m": "agi"
+    },
+    {
+      "lesson": "watch",
+      "stat_l": "per",
+      "play": "seize",
+      "stat_p": "vit",
+      "meet": "lamp",
+      "stat_m": "wil"
+    },
+    {
+      "lesson": "ledger",
+      "stat_l": "skl",
+      "play": "lie_age",
+      "stat_p": "per",
+      "meet": "tide",
+      "stat_m": "vit"
+    },
+    {
+      "lesson": "hone",
+      "stat_l": "str",
+      "play": "furnace",
+      "stat_p": "str",
+      "meet": "frost",
+      "stat_m": "wil"
+    }
   ],
   "copy": {
     "daily_title": "灶边一年",
@@ -44,21 +77,1556 @@
     "no_person": "无此人",
     "no_opt": "无此选项",
     "purse_short": "私囊不足（旗库不读）。现有 %d，需 %d",
-    "g_bowl_l": "递碗", "g_bowl_r": "碗仍在手",
-    "g_genealogy_l": "看谱", "g_genealogy_r": "合上",
-    "g_door_l": "看护进门", "g_door_r": "人已在门内",
-    "g_well_l": "井沿拽住", "g_well_r": "回灶边",
-    "g_blade_l": "擦刃", "g_blade_r": "不让摸",
-    "g_field_l": "看田账", "g_field_r": "合账",
-    "g_guest_l": "先答孩子", "g_guest_r": "先答祖辈"
+    "g_bowl_l": "递碗",
+    "g_bowl_r": "碗仍在手",
+    "g_genealogy_l": "看谱",
+    "g_genealogy_r": "合上",
+    "g_door_l": "看护进门",
+    "g_door_r": "人已在门内",
+    "g_well_l": "井沿拽住",
+    "g_well_r": "回灶边",
+    "g_blade_l": "擦刃",
+    "g_blade_r": "不让摸",
+    "g_field_l": "看田账",
+    "g_field_r": "合账",
+    "g_guest_l": "先答孩子",
+    "g_guest_r": "先答祖辈",
+    "ill_speaker": "稳婆",
+    "mishap_speaker": "老旗手",
+    "seen_speaker": "老旗手",
+    "shame_speaker": "掌柜",
+    "near_speaker": "稳婆",
+    "band_fallback": "今年没有新的字。",
+    "care_lock": "看护锁到下一次发工资。",
+    "purse_absent": "人不在，钱在他身上。旗库不读。",
+    "no_care_adult": "没有可看护的成人。",
+    "survivor_prefix": "回执："
   },
   "grand_cards": [
-    {"id": "g_bowl", "age_min": 4, "age_max": 15, "need": "home", "left": {"act_key": "g_bowl_l", "mark": "ledger", "stat": "skl", "care": false}, "right": {"act_key": "g_bowl_r", "mark": "", "stat": "", "care": false}},
-    {"id": "g_genealogy", "age_min": 8, "age_max": 15, "need": "home", "left": {"act_key": "g_genealogy_l", "mark": "copy", "stat": "wil", "care": false}, "right": {"act_key": "g_genealogy_r", "mark": "", "stat": "", "care": false}},
-    {"id": "g_door", "age_min": 6, "age_max": 15, "need": "same", "left": {"act_key": "g_door_l", "mark": "slip", "stat": "agi", "care": true}, "right": {"act_key": "g_door_r", "mark": "", "stat": "", "care": false}},
-    {"id": "g_well", "age_min": 4, "age_max": 10, "need": "home_or_reed", "left": {"act_key": "g_well_l", "mark": "bridge", "stat": "agi", "care": true}, "right": {"act_key": "g_well_r", "mark": "", "stat": "", "care": false}},
-    {"id": "g_blade", "age_min": 8, "age_max": 15, "need": "roster_weapon", "left": {"act_key": "g_blade_l", "mark": "hone", "stat": "str", "care": false}, "right": {"act_key": "g_blade_r", "mark": "", "stat": "", "care": false}},
-    {"id": "g_field", "age_min": 8, "age_max": 15, "need": "field", "left": {"act_key": "g_field_l", "mark": "ledger", "stat": "skl", "care": false}, "right": {"act_key": "g_field_r", "mark": "", "stat": "", "care": false}},
-    {"id": "g_guest", "age_min": 8, "age_max": 15, "need": "parent_present", "left": {"act_key": "g_guest_l", "mark": "copy", "stat": "", "morale": -1, "care": false}, "right": {"act_key": "g_guest_r", "mark": "seize", "stat": "", "care": false}}
+    {
+      "id": "g_bowl",
+      "age_min": 4,
+      "age_max": 15,
+      "need": "home",
+      "left": {
+        "act_key": "g_bowl_l",
+        "mark": "ledger",
+        "stat": "skl",
+        "care": false
+      },
+      "right": {
+        "act_key": "g_bowl_r",
+        "mark": "",
+        "stat": "",
+        "care": false
+      }
+    },
+    {
+      "id": "g_genealogy",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "home",
+      "left": {
+        "act_key": "g_genealogy_l",
+        "mark": "copy",
+        "stat": "wil",
+        "care": false
+      },
+      "right": {
+        "act_key": "g_genealogy_r",
+        "mark": "",
+        "stat": "",
+        "care": false
+      }
+    },
+    {
+      "id": "g_door",
+      "age_min": 6,
+      "age_max": 15,
+      "need": "same",
+      "left": {
+        "act_key": "g_door_l",
+        "mark": "slip",
+        "stat": "agi",
+        "care": true
+      },
+      "right": {
+        "act_key": "g_door_r",
+        "mark": "",
+        "stat": "",
+        "care": false
+      }
+    },
+    {
+      "id": "g_well",
+      "age_min": 4,
+      "age_max": 10,
+      "need": "home_or_reed",
+      "left": {
+        "act_key": "g_well_l",
+        "mark": "bridge",
+        "stat": "agi",
+        "care": true
+      },
+      "right": {
+        "act_key": "g_well_r",
+        "mark": "",
+        "stat": "",
+        "care": false
+      }
+    },
+    {
+      "id": "g_blade",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "roster_weapon",
+      "left": {
+        "act_key": "g_blade_l",
+        "mark": "hone",
+        "stat": "str",
+        "care": false
+      },
+      "right": {
+        "act_key": "g_blade_r",
+        "mark": "",
+        "stat": "",
+        "care": false
+      }
+    },
+    {
+      "id": "g_field",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "field",
+      "left": {
+        "act_key": "g_field_l",
+        "mark": "ledger",
+        "stat": "skl",
+        "care": false
+      },
+      "right": {
+        "act_key": "g_field_r",
+        "mark": "",
+        "stat": "",
+        "care": false
+      }
+    },
+    {
+      "id": "g_guest",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "parent_present",
+      "left": {
+        "act_key": "g_guest_l",
+        "mark": "copy",
+        "stat": "",
+        "morale": -1,
+        "care": false
+      },
+      "right": {
+        "act_key": "g_guest_r",
+        "mark": "seize",
+        "stat": "",
+        "care": false
+      }
+    }
+  ],
+  "speakers": {
+    "ill": "稳婆",
+    "mishap": "老旗手",
+    "seen": "老旗手",
+    "shame": "掌柜",
+    "near": "稳婆",
+    "yao": "稳婆",
+    "daily": "稳婆"
+  },
+  "ill": [
+    {
+      "id": "ill_cough",
+      "age_min": 4,
+      "age_max": 12,
+      "need": "winter",
+      "title": "咳过一冬",
+      "body": "嗓子过了一冬。人还在。",
+      "left": {
+        "act": "灶边养着",
+        "trait": "scarred"
+      },
+      "right": {
+        "act": "窗边盯梢",
+        "mark": "watch",
+        "stat": "per",
+        "gain": 1,
+        "care": true
+      }
+    },
+    {
+      "id": "ill_appetite",
+      "age_min": 2,
+      "age_max": 10,
+      "need": "",
+      "title": "不肯吃饭",
+      "body": "这一顿他不肯动筷。",
+      "left": {
+        "act": "按着吃完",
+        "morale": -1
+      },
+      "right": {
+        "act": "随他",
+        "trait": "malnourished"
+      }
+    },
+    {
+      "id": "ill_plague_gate",
+      "age_min": 6,
+      "age_max": 15,
+      "need": "city_herb",
+      "title": "疫过城门",
+      "body": "城门说有疫。药材柜上还开着。",
+      "left": {
+        "act": "留在堡里不见客",
+        "rep": -1
+      },
+      "right": {
+        "act": "去城门照面",
+        "stat": "wil",
+        "gain": 1,
+        "morale": -1
+      }
+    },
+    {
+      "id": "ill_tooth",
+      "age_min": 6,
+      "age_max": 12,
+      "need": "",
+      "title": "牙",
+      "body": "那颗牙肿着。",
+      "left": {
+        "act": "请人拔",
+        "pay": 4,
+        "trait": "scarred"
+      },
+      "right": {
+        "act": "不拔",
+        "trait": "malnourished"
+      }
+    },
+    {
+      "id": "ill_heat",
+      "age_min": 2,
+      "age_max": 10,
+      "need": "summer_not_frost",
+      "title": "暑",
+      "body": "暑气压在头顶。",
+      "left": {
+        "act": "留在荫下"
+      },
+      "right": {
+        "act": "仍跟着上路",
+        "stat": "vit",
+        "gain": -1
+      }
+    },
+    {
+      "id": "ill_rash",
+      "age_min": 1,
+      "age_max": 6,
+      "need": "",
+      "title": "疹",
+      "body": "疹子爬上了胳膊。",
+      "left": {
+        "act": "与别的孩子隔开"
+      },
+      "right": {
+        "act": "不隔",
+        "trait": "scarred",
+        "morale": -1
+      }
+    },
+    {
+      "id": "ill_eyes",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "has_copy",
+      "title": "眼涩",
+      "body": "夜里抄谱抄得眼涩。",
+      "left": {
+        "act": "夜里停抄"
+      },
+      "right": {
+        "act": "继续抄",
+        "stat": "wil",
+        "gain": 1,
+        "morale": -1
+      }
+    },
+    {
+      "id": "ill_frostbite",
+      "age_min": 3,
+      "age_max": 12,
+      "need": "winter_or_frost",
+      "title": "冻疮",
+      "body": "指节裂开了。",
+      "left": {
+        "act": "擦油留在屋里",
+        "pay": 2
+      },
+      "right": {
+        "act": "仍去打水",
+        "stat": "vit",
+        "gain": -1
+      }
+    }
+  ],
+  "mishap": [
+    {
+      "id": "m_ember",
+      "age_min": 6,
+      "age_max": 14,
+      "need": "forge_place",
+      "title": "炉边火星",
+      "body": "炉边迸出一粒火星。",
+      "left": {
+        "act": "去拿钳",
+        "mark": "furnace",
+        "stat": "str",
+        "gain": 1
+      },
+      "right": {
+        "act": "被烫到",
+        "trait": "scarred"
+      }
+    },
+    {
+      "id": "m_horse",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "on_road",
+      "title": "马惊",
+      "body": "马惊了一下。",
+      "left": {
+        "act": "还在马上",
+        "mark": "bridge",
+        "stat": "agi",
+        "gain": 1,
+        "survivor": "人还在马上"
+      },
+      "right": {
+        "act": "摔下",
+        "stat": "vit",
+        "gain": -1
+      }
+    },
+    {
+      "id": "m_ice",
+      "age_min": 4,
+      "age_max": 12,
+      "need": "winter_or_frost",
+      "title": "冰上的沟",
+      "body": "冰面上有一道沟。",
+      "left": {
+        "act": "绕远路",
+        "mark": "bridge"
+      },
+      "right": {
+        "act": "踩裂",
+        "stat": "vit",
+        "gain": -1
+      }
+    },
+    {
+      "id": "m_plank",
+      "age_min": 6,
+      "age_max": 15,
+      "need": "bridge_node",
+      "title": "松了的桥板",
+      "body": "桥板松了一块。",
+      "left": {
+        "act": "孩子跳开",
+        "mark": "bridge",
+        "stat": "agi",
+        "gain": 1
+      },
+      "right": {
+        "act": "成人先踩",
+        "mark": "bridge",
+        "morale": -1
+      }
+    },
+    {
+      "id": "m_well",
+      "age_min": 4,
+      "age_max": 12,
+      "need": "home_or_reed",
+      "title": "井绳断",
+      "body": "井绳断了。",
+      "left": {
+        "act": "桶掉下去"
+      },
+      "right": {
+        "act": "把人拉住",
+        "stat": "vit",
+        "gain": 1
+      }
+    },
+    {
+      "id": "m_beam",
+      "age_min": 6,
+      "age_max": 15,
+      "need": "holding_lv2",
+      "title": "仓梁响",
+      "body": "仓梁响了一声。",
+      "left": {
+        "act": "喊人",
+        "food": -2
+      },
+      "right": {
+        "act": "自己去托",
+        "stat": "str",
+        "gain": 1,
+        "trait": "scarred"
+      }
+    },
+    {
+      "id": "m_scale",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "herb_place",
+      "title": "药秤",
+      "body": "药秤上的数对不上。",
+      "left": {
+        "act": "倒掉这批",
+        "herb": -1
+      },
+      "right": {
+        "act": "重数一遍",
+        "mark": "ledger",
+        "stat": "skl",
+        "gain": 1
+      }
+    },
+    {
+      "id": "m_cable",
+      "age_min": 6,
+      "age_max": 15,
+      "need": "ferry_place",
+      "title": "缆松了",
+      "body": "渡口的缆松了。",
+      "left": {
+        "act": "松手",
+        "mark": "bridge",
+        "stat": "agi",
+        "gain": 1
+      },
+      "right": {
+        "act": "成人去收缆",
+        "mark": "tide",
+        "morale": -1
+      }
+    }
+  ],
+  "seen": [
+    {
+      "id": "s_face",
+      "age_min": 6,
+      "age_max": 15,
+      "need": "visible_blood",
+      "title": "脸上已经有的征",
+      "body": "有人盯着他脸上已经有的那一道。",
+      "left": {
+        "act": "让他们看",
+        "rep": 1,
+        "mark": "lamp"
+      },
+      "right": {
+        "act": "把脸挡住",
+        "mark": "lie_age"
+      }
+    },
+    {
+      "id": "s_page",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "",
+      "title": "不该留的一页",
+      "body": "名册或俸银抄件落在灶边。",
+      "left": {
+        "act": "抄下来",
+        "mark": "copy",
+        "stat": "wil",
+        "gain": 1
+      },
+      "right": {
+        "act": "烧掉",
+        "morale": 1
+      }
+    },
+    {
+      "id": "s_mother_word",
+      "age_min": 4,
+      "age_max": 15,
+      "need": "mother_nation",
+      "title": "说出母亲那一国的词",
+      "body": "他在学舌，说出了母亲那一国的词。",
+      "left": {
+        "act": "应声",
+        "mother_rep": 1,
+        "mark": "bridge"
+      },
+      "right": {
+        "act": "把人拉开",
+        "stat": "agi",
+        "gain": 1
+      }
+    },
+    {
+      "id": "s_banner_blood",
+      "age_min": 4,
+      "age_max": 10,
+      "need": "ch0_banner",
+      "title": "旗布上的血",
+      "body": "第零章那块带血的旗布还在堡里。",
+      "left": {
+        "act": "问是谁的",
+        "mark": "seize",
+        "stat": "vit",
+        "gain": 1
+      },
+      "right": {
+        "act": "让他别问",
+        "mark": "copy",
+        "stat": "wil",
+        "gain": 1
+      }
+    },
+    {
+      "id": "s_receipt",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "blood_verified",
+      "title": "验血收据",
+      "body": "祠堂的验血收据还在。",
+      "left": {
+        "act": "念出收据上的字",
+        "mark": "lamp",
+        "stat": "wil",
+        "gain": 1
+      },
+      "right": {
+        "act": "扣过来",
+        "mark": "lie_age"
+      }
+    },
+    {
+      "id": "s_bridge_tax",
+      "age_min": 6,
+      "age_max": 15,
+      "need": "bridge_node",
+      "title": "桥税册上的名字",
+      "body": "桥税册上写错了名字。",
+      "left": {
+        "act": "改对",
+        "pay": 4,
+        "stat": "wil",
+        "gain": 1
+      },
+      "right": {
+        "act": "将错就错",
+        "mark": "lie_age"
+      }
+    }
+  ],
+  "shame": [
+    {
+      "id": "sh_wrong_blood",
+      "age_min": 6,
+      "age_max": 15,
+      "need": "",
+      "title": "当众叫错血",
+      "body": "有人当众叫错了他的血。",
+      "left": {
+        "act": "纠正",
+        "rep_or_morale": -1,
+        "stat": "wil",
+        "gain": 1
+      },
+      "right": {
+        "act": "忍下",
+        "mark": "lie_age",
+        "morale": -1
+      }
+    },
+    {
+      "id": "sh_cake",
+      "age_min": 4,
+      "age_max": 12,
+      "need": "",
+      "title": "饼被抓住",
+      "body": "偷饼被抓住了。",
+      "left": {
+        "act": "不赔",
+        "mark": "slip",
+        "morale": -2
+      },
+      "right": {
+        "act": "赔",
+        "pay": 6,
+        "mark": "slip"
+      }
+    },
+    {
+      "id": "sh_doctrine",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "",
+      "title": "家训说反了",
+      "body": "家训被他说反了。",
+      "left": {
+        "act": "再当众说对",
+        "mark": "copy",
+        "morale": -1
+      },
+      "right": {
+        "act": "随它去",
+        "mark": "lie_age"
+      }
+    },
+    {
+      "id": "sh_steward",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "on_field",
+      "title": "庄头当众说他数错",
+      "body": "庄头当众说他数错。",
+      "left": {
+        "act": "父母当众改口",
+        "morale": -1,
+        "mark": "ledger"
+      },
+      "right": {
+        "act": "孩子认下",
+        "mark": "lie_age",
+        "morale": -1
+      }
+    },
+    {
+      "id": "sh_hire",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "hire_and_soft",
+      "title": "雇来的人笑他握不了刀",
+      "body": "雇来的人笑他握不了刀。",
+      "left": {
+        "act": "回田里",
+        "mark_soft": true
+      },
+      "right": {
+        "act": "硬去校场",
+        "morale": -2
+      }
+    },
+    {
+      "id": "sh_invite",
+      "age_min": 12,
+      "age_max": 15,
+      "need": "other_kids",
+      "title": "帖上没有他",
+      "body": "帖上没有他的名字。",
+      "left": {
+        "act": "把名字补上",
+        "mark": "copy",
+        "morale": -1
+      },
+      "right": {
+        "act": "不补",
+        "mark": "lie_age"
+      }
+    }
+  ],
+  "near": [
+    {
+      "id": "n_fever_gone",
+      "age_min": 1,
+      "age_max": 8,
+      "need": "",
+      "title": "热退了",
+      "body": "热退了。额终于凉下来。",
+      "left": {
+        "act": "抱到天亮",
+        "trait": "malnourished"
+      },
+      "right": {
+        "act": "放下"
+      },
+      "survivor": "额是凉的"
+    },
+    {
+      "id": "n_bridge_hand",
+      "age_min": 6,
+      "age_max": 15,
+      "need": "bridge_node",
+      "title": "手从桥沿收回来",
+      "body": "手伸过了桥沿，又收回来。",
+      "left": {
+        "act": "桥上",
+        "mark": "bridge",
+        "stat": "agi",
+        "gain": 1
+      },
+      "right": {
+        "act": "成人当月士气 −1",
+        "morale": -1
+      },
+      "survivor": "手指还在袖子里"
+    },
+    {
+      "id": "n_furnace_door",
+      "age_min": 6,
+      "age_max": 14,
+      "need": "forge_place",
+      "title": "炉门先关上",
+      "body": "炉门先关上了。",
+      "left": {
+        "act": "闯炉",
+        "mark": "furnace",
+        "stat": "str",
+        "gain": 1
+      },
+      "right": {
+        "act": "旧疤",
+        "trait": "scarred"
+      },
+      "survivor": "门是热的，人在门这边"
+    },
+    {
+      "id": "n_hoof",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "on_road",
+      "title": "马蹄停在外面",
+      "body": "马蹄停在外面。",
+      "left": {
+        "act": "躲开",
+        "stat": "agi",
+        "gain": 1
+      },
+      "right": {
+        "act": "挨了一下",
+        "stat": "vit",
+        "gain": -1
+      },
+      "survivor": "袖子破了，胳膊还在"
+    },
+    {
+      "id": "n_pulled",
+      "age_min": 4,
+      "age_max": 15,
+      "need": "sibling_at_water",
+      "title": "被拽上来",
+      "body": "有人把他从水边拽上来。",
+      "left": {
+        "act": "被拽的写桥上",
+        "mark": "bridge",
+        "other_mark": "seize"
+      },
+      "right": {
+        "act": "谁先松手",
+        "mark": "bridge",
+        "other_mark": "seize"
+      },
+      "survivor": "两只手都还在"
+    },
+    {
+      "id": "n_shoe",
+      "age_min": 4,
+      "age_max": 12,
+      "need": "ferry_or_winter_water",
+      "title": "鞋还在岸上",
+      "body": "鞋还在岸上。",
+      "left": {
+        "act": "绕"
+      },
+      "right": {
+        "act": "湿了",
+        "stat": "vit",
+        "gain": -1
+      },
+      "survivor": "鞋还在，人在岸上"
+    },
+    {
+      "id": "n_well",
+      "age_min": 3,
+      "age_max": 8,
+      "need": "home_or_reed",
+      "title": "井沿",
+      "body": "人弯在井沿上。",
+      "left": {
+        "act": "被拉开"
+      },
+      "right": {
+        "act": "成人当月士气 −1",
+        "morale": -1
+      },
+      "survivor": "膝盖在井外"
+    },
+    {
+      "id": "n_latch",
+      "age_min": 10,
+      "age_max": 15,
+      "need": "in_city",
+      "title": "门闩从里面打开",
+      "body": "门闩从里面打开。",
+      "left": {
+        "act": "有人守到他回来",
+        "mark": "slip"
+      },
+      "right": {
+        "act": "睡在厩里"
+      },
+      "survivor": "人在门这边"
+    }
+  ],
+  "rival_sibling": [
+    {
+      "id": "sib_flag",
+      "age_min": 4,
+      "age_max": 15,
+      "need": "",
+      "title": "同一面旗",
+      "body": "同一面旗，只能有一个人先拿。",
+      "left": {
+        "act": "旗给这个孩子",
+        "mark": "seize",
+        "other_mark": "slip"
+      },
+      "right": {
+        "act": "旗给另一个",
+        "mark": "lie_age",
+        "other_mark": "seize"
+      }
+    },
+    {
+      "id": "sib_midwife",
+      "age_min": 6,
+      "age_max": 15,
+      "need": "",
+      "title": "告到稳婆面前",
+      "body": "告到稳婆面前。",
+      "left": {
+        "act": "信这个孩子",
+        "stat": "wil",
+        "gain": 1
+      },
+      "right": {
+        "act": "信另一个"
+      }
+    },
+    {
+      "id": "sib_sick_night",
+      "age_min": 4,
+      "age_max": 12,
+      "need": "",
+      "title": "病的那夜",
+      "body": "病的那夜，谁醒着。",
+      "left": {
+        "act": "这个孩子盯梢",
+        "mark": "watch",
+        "stat": "per",
+        "gain": 1,
+        "other_mark": "lamp"
+      },
+      "right": {
+        "act": "各自睡"
+      }
+    },
+    {
+      "id": "sib_guest",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "",
+      "title": "客人先问谁",
+      "body": "客人先问谁的名字。",
+      "left": {
+        "act": "先答这个孩子",
+        "mark": "copy",
+        "morale": -1
+      },
+      "right": {
+        "act": "先答另一个",
+        "mark": "seize"
+      }
+    },
+    {
+      "id": "sib_sickle",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "both_work_age",
+      "title": "一把镰",
+      "body": "田上只有一把镰。",
+      "left": {
+        "act": "镰给这个",
+        "mark": "hone",
+        "other_mark": "slip"
+      },
+      "right": {
+        "act": "镰给另一个",
+        "mark": "slip"
+      }
+    },
+    {
+      "id": "sib_ledger",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "both_home_or_field",
+      "title": "账是谁算错的",
+      "body": "账是谁算错的。",
+      "left": {
+        "act": "信这个",
+        "mark": "ledger",
+        "stat": "skl",
+        "gain": 1
+      },
+      "right": {
+        "act": "信另一个",
+        "mark": "lie_age"
+      }
+    },
+    {
+      "id": "sib_half",
+      "age_min": 4,
+      "age_max": 12,
+      "need": "half_sibling_gate",
+      "title": "半亲的夜",
+      "body": "共有的那一名父母在场。",
+      "left": {
+        "act": "共有的父母留下",
+        "mark": "lamp",
+        "stat": "wil",
+        "gain": 1
+      },
+      "right": {
+        "act": "活着的另一名去另一边"
+      }
+    },
+    {
+      "id": "sib_stele",
+      "age_min": 6,
+      "age_max": 15,
+      "need": "dead_sibling_stele",
+      "title": "碑前谁开口",
+      "body": "碑上已经有一名同胞的名字。",
+      "left": {
+        "act": "这个孩子说出那个名字",
+        "mark": "lamp",
+        "stat": "wil",
+        "gain": 1
+      },
+      "right": {
+        "act": "让对方说",
+        "mark": "lie_age"
+      }
+    },
+    {
+      "id": "sib_seat",
+      "age_min": 6,
+      "age_max": 15,
+      "need": "parent_present",
+      "title": "谁挨着父母坐",
+      "body": "谁挨着父母坐。",
+      "left": {
+        "act": "这个孩子挨着坐",
+        "mark": "copy",
+        "stat": "wil",
+        "gain": 1,
+        "morale": -1
+      },
+      "right": {
+        "act": "对方挨着"
+      }
+    },
+    {
+      "id": "sib_well",
+      "age_min": 4,
+      "age_max": 10,
+      "need": "other_older2_home_reed",
+      "title": "井沿是他拽的",
+      "body": "井沿上是他拽的。",
+      "left": {
+        "act": "对方写下抢旗",
+        "mark": "bridge",
+        "stat": "agi",
+        "gain": 1,
+        "other_mark": "seize",
+        "other_leave_work": true
+      },
+      "right": {
+        "act": "两人都回到灶边"
+      }
+    },
+    {
+      "id": "sib_hot_night",
+      "age_min": 4,
+      "age_max": 12,
+      "need": "has_mal_or_scar",
+      "title": "热夜谁醒着",
+      "body": "热夜谁醒着。",
+      "left": {
+        "act": "对方写下灯下",
+        "mark": "watch",
+        "stat": "per",
+        "gain": 1,
+        "other_mark": "lamp",
+        "other_leave_work": true
+      },
+      "right": {
+        "act": "都睡"
+      }
+    },
+    {
+      "id": "sib_not_yet",
+      "age_min": 12,
+      "age_max": 15,
+      "need": "parent_present",
+      "title": "还没到说的年纪",
+      "body": "还没到说的年纪。",
+      "left": {
+        "act": "父母说出这个孩子的名字",
+        "mark": "seize",
+        "stat": "vit",
+        "gain": 1,
+        "morale": -1,
+        "other_mark": "lie_age"
+      },
+      "right": {
+        "act": "父母说还没到年纪"
+      }
+    }
+  ],
+  "rival_cousin": [
+    {
+      "id": "cou_guest",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "home_both_parents",
+      "title": "客先问哪一房",
+      "body": "客先问哪一房。",
+      "left": {
+        "act": "答这一房",
+        "mark": "copy",
+        "morale": -1
+      },
+      "right": {
+        "act": "答对方那一房",
+        "mark": "lie_age"
+      }
+    },
+    {
+      "id": "cou_sickle",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "same_field",
+      "title": "借来的镰",
+      "body": "借来的镰。",
+      "left": {
+        "act": "镰归这个孩子",
+        "mark": "hone",
+        "other_mark": "slip"
+      },
+      "right": {
+        "act": "镰归对方",
+        "mark": "slip"
+      }
+    },
+    {
+      "id": "cou_line",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "home",
+      "title": "谱上的另一行",
+      "body": "谱上有对方那一行。",
+      "left": {
+        "act": "抄进家里的名册",
+        "mark": "copy",
+        "stat": "wil",
+        "gain": 1
+      },
+      "right": {
+        "act": "不抄"
+      }
+    },
+    {
+      "id": "cou_ridge",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "same_field",
+      "title": "田埂谁先走",
+      "body": "田埂谁先走。",
+      "left": {
+        "act": "这个孩子走前面",
+        "mark": "hone",
+        "stat": "str",
+        "gain": 1
+      },
+      "right": {
+        "act": "对方走前面",
+        "mark": "bridge"
+      }
+    },
+    {
+      "id": "cou_page",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "home_other_has_copy",
+      "title": "已经抄过的一页",
+      "body": "对方身上已有抄谱。",
+      "left": {
+        "act": "接过来",
+        "mark": "copy",
+        "stat": "wil",
+        "gain": 1
+      },
+      "right": {
+        "act": "不接"
+      }
+    },
+    {
+      "id": "cou_stove",
+      "age_min": 6,
+      "age_max": 15,
+      "need": "home_both_parents",
+      "title": "分灶",
+      "body": "对方父母的灶开着。",
+      "left": {
+        "act": "在对方灶上吃这一顿",
+        "mark": "ledger",
+        "stat": "skl",
+        "gain": 1
+      },
+      "right": {
+        "act": "留在自己灶上"
+      }
+    }
+  ],
+  "rival_sibling_adult": [
+    {
+      "id": "sa_roster",
+      "age_min": 12,
+      "age_max": 15,
+      "need": "other_enlisted",
+      "title": "名册上先有他",
+      "body": "名册上先有他。",
+      "left": {
+        "act": "把名字写在对方下面",
+        "mark": "copy",
+        "stat": "wil",
+        "gain": 1,
+        "morale": -1
+      },
+      "right": {
+        "act": "不写",
+        "mark": "lie_age"
+      }
+    },
+    {
+      "id": "sa_banner",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "other_enlisted",
+      "title": "旗还在他肩上",
+      "body": "旗还在他肩上。",
+      "left": {
+        "act": "捧一下午",
+        "mark": "seize",
+        "stat": "vit",
+        "gain": 1
+      },
+      "right": {
+        "act": "不捧",
+        "mark": "slip"
+      }
+    },
+    {
+      "id": "sa_heir",
+      "age_min": 12,
+      "age_max": 15,
+      "need": "heir_present_other",
+      "title": "客人问的是承旗的人",
+      "body": "客人问的是承旗的人。",
+      "left": {
+        "act": "仍答这个孩子",
+        "mark": "lie_age",
+        "morale": -1
+      },
+      "right": {
+        "act": "答那个名字",
+        "mark": "copy",
+        "stat": "wil",
+        "gain": 1
+      }
+    },
+    {
+      "id": "sa_door",
+      "age_min": 10,
+      "age_max": 15,
+      "need": "other_roster_same_place",
+      "title": "守到门开",
+      "body": "守到门开。",
+      "left": {
+        "act": "对方看护",
+        "mark": "slip",
+        "stat": "agi",
+        "gain": 1,
+        "care": true
+      },
+      "right": {
+        "act": "不锁",
+        "mark": "lie_age"
+      }
+    }
+  ],
+  "rival_uncle": [
+    {
+      "id": "un_wall",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "home_or_same_road",
+      "title": "墙头那一拽",
+      "body": "墙头那一拽。",
+      "left": {
+        "act": "看护",
+        "mark": "bridge",
+        "stat": "agi",
+        "gain": 1,
+        "care": true
+      },
+      "right": {
+        "act": "回到名册上的事里",
+        "mark": "lie_age"
+      }
+    },
+    {
+      "id": "un_door",
+      "age_min": 10,
+      "age_max": 15,
+      "need": "same_city_or_home",
+      "title": "送到门这边",
+      "body": "送到门这边。",
+      "left": {
+        "act": "守到人进门",
+        "mark": "slip",
+        "stat": "agi",
+        "gain": 1,
+        "care": true
+      },
+      "right": {
+        "act": "人已经在门内"
+      }
+    },
+    {
+      "id": "un_furnace",
+      "age_min": 6,
+      "age_max": 14,
+      "need": "forge_place",
+      "title": "炉前按住",
+      "body": "炉前按住。",
+      "left": {
+        "act": "按住",
+        "mark": "watch",
+        "stat": "per",
+        "gain": 1,
+        "care": true
+      },
+      "right": {
+        "act": "没按住",
+        "mark": "furnace",
+        "stat": "str",
+        "gain": 1
+      }
+    },
+    {
+      "id": "un_blade",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "other_roster_weapon",
+      "title": "旧刃只许擦",
+      "body": "旧刃只许擦。",
+      "left": {
+        "act": "让孩子擦",
+        "mark": "hone",
+        "stat": "str",
+        "gain": 1
+      },
+      "right": {
+        "act": "不让摸"
+      }
+    },
+    {
+      "id": "un_ledger",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "other_field_same",
+      "title": "账页",
+      "body": "账页摊开。",
+      "left": {
+        "act": "把账页给他看",
+        "mark": "ledger",
+        "stat": "skl",
+        "gain": 1
+      },
+      "right": {
+        "act": "把账页合上"
+      }
+    },
+    {
+      "id": "un_guest",
+      "age_min": 8,
+      "age_max": 15,
+      "need": "older_sib_alive",
+      "title": "客人面前的名字",
+      "body": "客人面前的名字。",
+      "left": {
+        "act": "先说这个孩子",
+        "mark": "copy",
+        "morale": -1
+      },
+      "right": {
+        "act": "先说更年长的那个",
+        "mark": "seize"
+      }
+    },
+    {
+      "id": "un_seat",
+      "age_min": 6,
+      "age_max": 15,
+      "need": "other_still_child_parent",
+      "title": "让开这个位子",
+      "body": "让开这个位子。",
+      "left": {
+        "act": "对方让开",
+        "mark": "copy",
+        "stat": "wil",
+        "gain": 1,
+        "other_mark": "lie_age"
+      },
+      "right": {
+        "act": "位子仍是对方的"
+      }
+    }
+  ],
+  "yao": [
+    {
+      "id": "yao_dawn",
+      "age_min": 1,
+      "age_max": 4,
+      "w": 18,
+      "kind": "end",
+      "need": "",
+      "title": "没到天亮",
+      "body": "发热或没了呼吸，是在有人去请郎中之前结束的。",
+      "options": [
+        {
+          "id": "epitaph_a",
+          "label": "碑词·没哭完",
+          "kill": true,
+          "morale": -3,
+          "epitaph": "没哭完"
+        },
+        {
+          "id": "epitaph_b",
+          "label": "碑词·天亮才发现",
+          "kill": true,
+          "morale": -3,
+          "epitaph": "天亮才发现"
+        }
+      ]
+    },
+    {
+      "id": "yao_water",
+      "age_min": 3,
+      "age_max": 10,
+      "w": 14,
+      "kind": "end",
+      "need": "water_place",
+      "title": "台阶上的水",
+      "body": "人是在水已经没过台阶之后被找到的。",
+      "options": [
+        {
+          "id": "stay",
+          "label": "这个月旗停在堡里",
+          "kill": true,
+          "morale": -2,
+          "epitaph": "台阶上的水",
+          "halt_march": true
+        },
+        {
+          "id": "go",
+          "label": "照常出门",
+          "kill": true,
+          "morale": -3,
+          "epitaph": "台阶上的水"
+        }
+      ]
+    },
+    {
+      "id": "yao_beam",
+      "age_min": 8,
+      "age_max": 15,
+      "w": 8,
+      "kind": "end",
+      "need": "",
+      "title": "梁",
+      "body": "人是从梁上或坡上掉下来之后才被发现的。",
+      "options": [
+        {
+          "id": "epitaph_a",
+          "label": "碑词·路还在",
+          "kill": true,
+          "morale": -3,
+          "epitaph": "路还在"
+        },
+        {
+          "id": "epitaph_b",
+          "label": "碑词·不要再走这条",
+          "kill": true,
+          "morale": -3,
+          "epitaph": "不要再走这条"
+        }
+      ]
+    },
+    {
+      "id": "yao_fever",
+      "age_min": 1,
+      "age_max": 8,
+      "w": 15,
+      "kind": "contest",
+      "need": "",
+      "title": "热还没退",
+      "body": "热到后半夜还没退。灶上的水换了三次。",
+      "options": [
+        {
+          "id": "pay",
+          "label": "私囊付 12（旗库不读）",
+          "pay": 12,
+          "trait": "malnourished",
+          "survive": true
+        },
+        {
+          "id": "leave",
+          "label": "离开·碑词热退之前",
+          "kill": true,
+          "morale": -3,
+          "epitaph": "热退之前"
+        }
+      ]
+    },
+    {
+      "id": "yao_furnace",
+      "age_min": 6,
+      "age_max": 14,
+      "w": 15,
+      "kind": "contest",
+      "need": "forge_place",
+      "title": "炉门还开着",
+      "body": "炉开着，人还在门这边。",
+      "options": [
+        {
+          "id": "care",
+          "label": "成人看护",
+          "care": true,
+          "trait": "scarred",
+          "mark": "furnace",
+          "survive": true
+        },
+        {
+          "id": "leave",
+          "label": "离开",
+          "kill": true,
+          "morale": -3,
+          "epitaph": "炉门还开着"
+        }
+      ]
+    },
+    {
+      "id": "yao_wall",
+      "age_min": 8,
+      "age_max": 15,
+      "w": 15,
+      "kind": "contest",
+      "need": "",
+      "title": "院墙",
+      "body": "人还在墙内或坡上。",
+      "options": [
+        {
+          "id": "care",
+          "label": "成人看护背回来",
+          "care": true,
+          "stat": "vit",
+          "gain": -1,
+          "mark": "bridge",
+          "survive": true
+        },
+        {
+          "id": "leave",
+          "label": "离开",
+          "kill": true,
+          "morale": -3,
+          "epitaph": "院墙"
+        }
+      ]
+    },
+    {
+      "id": "yao_night",
+      "age_min": 10,
+      "age_max": 15,
+      "w": 15,
+      "kind": "contest",
+      "need": "",
+      "title": "堡门外的夜路",
+      "body": "人出门还没回来。",
+      "options": [
+        {
+          "id": "care",
+          "label": "成人守到人回来",
+          "care": true,
+          "mark": "slip",
+          "survive": true
+        },
+        {
+          "id": "leave",
+          "label": "不等",
+          "kill": true,
+          "morale": -3,
+          "epitaph": "夜路没等到"
+        }
+      ]
+    },
+    {
+      "id": "yao_ridge",
+      "age_min": 8,
+      "age_max": 15,
+      "w": 8,
+      "kind": "contest",
+      "need": "on_field",
+      "title": "田埂",
+      "body": "沟还在。田埂上的人滑了一跤。",
+      "options": [
+        {
+          "id": "care",
+          "label": "成人从田里背回来",
+          "care": true,
+          "stat": "vit",
+          "gain": -1,
+          "mark": "hone",
+          "survive": true
+        },
+        {
+          "id": "leave",
+          "label": "没人去",
+          "kill": true,
+          "morale": -3,
+          "epitaph": "沟还在"
+        }
+      ]
+    }
   ]
 }

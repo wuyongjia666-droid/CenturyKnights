@@ -1,5 +1,7 @@
 class_name CKTutor
 extends RefCounted
+
+const _JobSealsScript := preload("res://scripts/characters/job_seals.gd")
 ## v9.2 banner-school tutoring. Board #5: 1 pupil base, 2 with shi-xing; academy adds pairs.
 
 const SHI_XING := {
@@ -265,6 +267,15 @@ static func promote_list(c: CKCharacter) -> Array:
 	var out: Array = []
 	for jid in to:
 		out.append(str(jid))
+	for jid in _JobSealsScript.promote_options(c):
+		if jid not in out:
+			out.append(jid)
+	## 已有双印时可换回另一侧
+	var seals = c.blood_meta.get("job_seals", [])
+	if typeof(seals) == TYPE_ARRAY:
+		for sid in seals:
+			if str(sid) != c.job_id and str(sid) not in out:
+				out.append(str(sid))
 	return out
 
 

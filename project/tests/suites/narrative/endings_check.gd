@@ -61,9 +61,9 @@ func _run() -> String:
 
 
 func _locked(report: Dictionary) -> String:
-	if int(report.get("silver_end", -1)) != 1472:
+	if int(report.get("silver_end", -1)) != 2019:
 		return "silver %s" % str(report.get("silver_end", ""))
-	if int(report.get("food_end", -1)) != 282:
+	if int(report.get("food_end", -1)) != 258:
 		return "food %s" % str(report.get("food_end", ""))
 	if int(report.get("generations", -1)) != 5:
 		return "generations %s" % str(report.get("generations", ""))
@@ -71,7 +71,7 @@ func _locked(report: Dictionary) -> String:
 		return "births %s" % str(report.get("births", ""))
 	if int(report.get("successions", -1)) != 4:
 		return "successions %s" % str(report.get("successions", ""))
-	if str(report.get("title_end", "")) != "count":
+	if str(report.get("title_end", "")) != "baron":
 		return "title %s" % str(report.get("title_end", ""))
 	return ""
 
@@ -79,30 +79,33 @@ func _locked(report: Dictionary) -> String:
 func _seed(report: Dictionary, seed: Dictionary) -> String:
 	if int(GameState.silver) != int(report.get("silver_end", -1)):
 		return "resolve moved silver"
-	if str(seed.get("id", "")) != "end_rite":
+	# v9.2 私囊/岁课后 seed 91 落在显征结局（纹在、志向已闭）
+	if str(seed.get("id", "")) != "end_sign":
 		return "seed 91 ending %s axes %s" % [str(seed.get("id", "")), str(seed.get("axes", {}))]
 	var axes: Dictionary = seed.get("axes", {})
-	if bool(axes.get("sign", true)) or str(axes.get("married_house", "x")) != "":
-		return "seed axes drifted %s" % str(axes)
+	if not bool(axes.get("sign", false)):
+		return "seed sign missing %s" % str(axes)
+	if str(axes.get("married_house", "")) != "灯市联":
+		return "seed married house %s" % str(axes)
 	if not bool(axes.get("prestige", false)) or not bool(axes.get("faith", false)):
 		return "seed prestige/faith %s" % str(axes)
-	if int(axes.get("holdings", -1)) != 4 or int(axes.get("silver", -1)) != 1472:
+	if int(axes.get("holdings", -1)) != 4 or int(axes.get("silver", -1)) != 2019:
 		return "seed ledger axes %s" % str(axes)
 	if int(axes.get("companions", -1)) != 0:
 		return "seed companions %s" % str(axes)
-	if bool(axes.get("generation_closed", true)):
-		return "seed generation closed %s" % str(axes)
-	if CKAmbitions.generation_probe():
+	if not bool(axes.get("generation_closed", false)):
+		return "seed generation open %s" % str(axes)
+	if not CKAmbitions.generation_probe():
 		return "seed probe diverged"
 	if str(seed.get("title", "")) == str(seed.get("title_key", "")):
 		return "title key missing"
 	var text := _texts(seed)
-	if text.find("1472") < 0 or text.find("4处据点") < 0:
-		return "rite ending hid the treasury"
-	if text.find("志向那一栏空着") < 0:
-		return "open rite missing"
-	if text.find("已写下志向") >= 0:
-		return "closed beat leaked into seed 91"
+	if text.find("纹还在") < 0:
+		return "sign ending hid the mark"
+	if text.find("做成的一件事") < 0 and text.find("做成的事") < 0:
+		return "closed stele missing"
+	if text.find("志向那一栏是空的") >= 0:
+		return "open beat leaked into closed seed 91"
 	return _body(seed)
 
 
