@@ -306,6 +306,8 @@ func _no_borrowed_faces() -> String:
 	if not bad.is_empty():
 		return "speakers borrow the leader or have no portrait: %s" % str(bad)
 	print("OK speakers=", seen.size())
+	return ""
+
 ## Audit P0-1 / P0-2 / P1-6: every volume chapter opens by id, has a way out of its last beat,
 ## and its beat survives CKStoryState.
 func _mainline_routing() -> String:
