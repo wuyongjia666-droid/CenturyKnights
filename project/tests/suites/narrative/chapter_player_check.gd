@@ -44,6 +44,9 @@ func _run() -> String:
 	if cond_err != "":
 		return cond_err
 	GameState.new_game("烬行", "灰旗", GameState.crest_color)
+	var face_err := await _no_borrowed_faces()
+	if face_err != "":
+		return face_err
 	var packed: PackedScene = load("res://scenes/story/chapter_player.tscn")
 	if packed == null:
 		return "player scene missing"
@@ -271,4 +274,33 @@ func _conditions() -> String:
 	if Cond.met({"companion": "dengying"}, [stranger]):
 		return "roster override still saw dengying"
 	print("OK conditions")
+	return ""
+
+## Audit P1-12: every speaker in every chapter resolves to its own art or a placeholder, never the leader.
+func _no_borrowed_faces() -> String:
+	var leader: CKCharacter = GameState.get_leader()
+	var player = (load(Catalog.player_scene()) as PackedScene).instantiate()
+	player.chapter_path = CH0
+	player.lock_path = true
+	player.suppress_scene_change = true
+	add_child(player)
+	await get_tree().process_frame
+	var seen := {}
+	for row in Catalog.mainline_entries():
+		var data = JSON.parse_string(FileAccess.get_file_as_string(str(row["path"])))
+		for b in data.get("beats", []):
+			for line in b.get("lines", []):
+				if typeof(line) == TYPE_DICTIONARY:
+					seen[str(line.get("speaker", ""))] = true
+	var bad: Array = []
+	for sp in seen.keys():
+		if sp == leader.name or sp == "leader":
+			continue
+		player._speaker_portrait(sp)
+		if str(player.test_capture.get("portrait_who", "")) == leader.id or player._portrait.texture == null:
+			bad.append(sp)
+	player.queue_free()
+	if not bad.is_empty():
+		return "speakers borrow the leader or have no portrait: %s" % str(bad)
+	print("OK speakers=", seen.size())
 	return ""
