@@ -53,11 +53,16 @@ func _shoot(path: String, name: String) -> void:
 	get_viewport().get_texture().get_image().save_png("%s/%s.png" % [_out, name])
 	var vr := get_viewport().get_visible_rect()
 	var items := []
+	_root_scale = maxf(0.001, (node as CanvasItem).get_global_transform().get_scale().y) if node is CanvasItem else 1.0
 	_collect(node, items, vr)
 	_report.append({"shot": name, "viewport": [vr.size.x, vr.size.y], "items": items})
 	get_tree().current_scene = self
 	node.queue_free()
 	await get_tree().process_frame
+
+## Fonts are measured as drawn: a label inside a zoomed map counts at its on-screen size.
+var _root_scale := 1.0
+
 
 func _collect(n: Node, items: Array, vr: Rect2) -> void:
 	if n is Control and n.is_visible_in_tree():
@@ -69,6 +74,14 @@ func _collect(n: Node, items: Array, vr: Rect2) -> void:
 				txt = str(c.text)
 			items.append({"type": c.get_class(), "path": str(c.get_path()), "text": txt.left(30),
 				"rect": [r.position.x, r.position.y, r.size.x, r.size.y],
-				"font": c.get_theme_font_size("font_size")})
+				"font": roundi(c.get_theme_font_size("font_size") * c.get_global_transform().get_scale().y / _root_scale), "in_scroll": _in_scroll(c)})
 	for ch in n.get_children():
 		_collect(ch, items, vr)
+
+func _in_scroll(c: Node) -> bool:
+	var p := c.get_parent()
+	while p != null:
+		if p is ScrollContainer:
+			return true
+		p = p.get_parent()
+	return false
