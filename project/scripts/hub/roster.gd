@@ -313,7 +313,9 @@ func _status_text(c: CKCharacter) -> String:
 	return "● 驻地战备良好"
 
 func _derived_rows(c: CKCharacter, move_now: int) -> Array:
-	return [["生命值", "%d/%d" % [c.hp, c.max_hp], UIKit.OK if not c.injured else UIKit.DANGER], ["攻击", str(c.derived_atk()), UIKit.TEXT], ["防御", str(c.derived_def()), UIKit.TEXT], ["命中", str(c.derived_hit()), UIKit.TEXT], ["回避", str(c.derived_avo()), UIKit.TEXT], ["移动", str(move_now), UIKit.ACCENT]]
+	return [["生命值", "%d/%d" % [c.hp, c.max_hp], UIKit.OK if not c.injured else UIKit.DANGER],
+		["攻击", str(c.derived_atk()), UIKit.TEXT], ["防御", str(c.derived_def()), UIKit.TEXT],
+		["命中", str(c.derived_hit()), UIKit.TEXT], ["回避", str(c.derived_avo()), UIKit.TEXT], ["移动", str(move_now), UIKit.ACCENT]]
 
 func _actions(c: CKCharacter) -> Array:
 	var x_key := "" if DeviceProfile.is_mobile() else "  (X)"
@@ -344,7 +346,8 @@ func _mobile_build() -> void:
 	var pay := 0
 	for c in roster:
 		pay += int(c.salary)
-	MobilePage.top_bar(self, Locale.t("btn_roster"), "%s %d · %s" % [Locale.t("shell_946c7148"), GameState.silver, Locale.t("shell_445ffb2d") % roster.size()], [[Locale.t("btn_back"), _back]])
+	var info := "%s %d · %s" % [Locale.t("shell_946c7148"), GameState.silver, Locale.t("shell_445ffb2d") % roster.size()]
+	MobilePage.top_bar(self, Locale.t("btn_roster"), info, [[Locale.t("btn_back"), _back]])
 	var w := MobilePage.width(self)
 	var lv := MobilePage.panel(self, Rect2(26, MobilePage.TOP, 400, 720 - MobilePage.TOP - 8), 10)
 	var sc := ScrollContainer.new()
