@@ -1,5 +1,6 @@
 {
- "overlap": 152,
- "small_font": 1240,
- "small_touch": 334
+ "offscreen_Label": 4,
+ "overlap": 130,
+ "small_font": 661,
+ "small_touch": 160
 }

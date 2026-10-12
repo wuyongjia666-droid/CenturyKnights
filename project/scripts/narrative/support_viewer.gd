@@ -17,15 +17,18 @@ var _actions: VBoxContainer
 func _ready() -> void:
 	auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	Bonds.conversations()
-	UIKit.make_screen_bg(self)
-	var title := UIKit.make_label(Locale.t("nar04_title"), true)
-	title.position = Vector2(48, 28)
-	add_child(title)
+	UIKit.void_bg(self)
+	UIKit.top_bar(self, Locale.t("nar04_title"), [], Locale.t("nar04_back"), _back)
+	var scroll := ScrollContainer.new()
+	scroll.name = "BondScroll"
+	scroll.position = Vector2(48, 80)
+	scroll.size = Vector2(430, 600)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	add_child(scroll)
 	_list = VBoxContainer.new()
-	_list.position = Vector2(48, 80)
-	_list.custom_minimum_size = Vector2(420, 520)
+	_list.custom_minimum_size = Vector2(420, 0)
 	_list.add_theme_constant_override("separation", 8)
-	add_child(_list)
+	scroll.add_child(_list)
 	_speaker = UIKit.make_label("")
 	_speaker.position = Vector2(500, 80)
 	add_child(_speaker)
@@ -45,10 +48,6 @@ func _ready() -> void:
 	_actions = VBoxContainer.new()
 	_actions.position = Vector2(500, 440)
 	add_child(_actions)
-	var back := UIKit.make_button(Locale.t("nar04_back"), 160)
-	back.position = Vector2(1060, 28)
-	back.pressed.connect(_back)
-	add_child(back)
 	_refresh_list()
 
 
@@ -83,16 +82,25 @@ func _refresh_list() -> void:
 	for child in _list.get_children():
 		child.queue_free()
 	var rows: Array = Bonds.available()
+	var shut: Array = Bonds.locked()
 	if rows.is_empty():
-		var empty := UIKit.make_label(Locale.t("nar04_empty"))
-		_list.add_child(empty)
-		return
+		_list.add_child(CKPageKit.empty(Locale.t("nar04_empty"), Locale.t("a1_bond_why"), "", 420))
 	for convo in rows:
 		var label := "%s  %s" % [Bonds.pair_names(convo), str(convo.get("title", ""))]
 		var button := UIKit.make_accent_button(label, 460)
 		var row: Dictionary = convo
 		button.pressed.connect(_open.bind(row))
 		_list.add_child(button)
+	if not shut.is_empty():
+		_list.add_child(CKPageKit.text(Locale.t("a1_bond_locked_head"), UIKit.TEXT_DIM, 13, 420))
+	for convo in shut:
+		var r := CKPageKit.row(UIKit.TEXT_FAINT, 52)
+		r[0].name = "LockedBond"
+		var v: VBoxContainer = r[1]
+		v.add_child(CKPageKit.text("%s  %s" % [Bonds.pair_names(convo), str(convo.get("title", ""))], UIKit.TEXT_DIM, 14, 390))
+		v.add_child(CKPageKit.text(Locale.t("a1_bond_need") % Bonds.missing(convo), UIKit.TEXT_FAINT, 12, 390))
+		_list.add_child(r[0])
+	CKPageKit.drag_through(_list)
 
 
 func _open(convo: Dictionary) -> void:
