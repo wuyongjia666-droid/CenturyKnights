@@ -47,7 +47,11 @@ func _unhandled_input(e: InputEvent) -> void:
 
 
 func _back() -> void:
-	get_tree().change_scene_to_file(StoryCatalog.take_story_return("res://scenes/hub/castle_hub.tscn"))
+	var ret := StoryCatalog.take_story_return("")
+	if ret != "":
+		CKNav.replace(ret)
+	else:
+		CKNav.up()
 
 
 static func months_left(q: Dictionary) -> int:
@@ -152,7 +156,7 @@ func _render() -> void:
 
 
 func _goto_atlas() -> void:
-	get_tree().change_scene_to_file("res://scenes/hub/atlas_view.tscn")
+	CKNav.go("res://scenes/hub/atlas_view.tscn")
 
 
 func _accept(qid: String) -> void:
@@ -168,7 +172,7 @@ func _accept(qid: String) -> void:
 		GameState.set_meta("battle_return", "res://scenes/hub/quests.tscn")
 		var mid = str(r.quest.get("map", GameState.get_meta("battle_map", "quest_bandit")))
 		GameState.set_meta("battle_map", mid)
-		get_tree().change_scene_to_file("res://scenes/battle/battle.tscn")
+		CKNav.replace("res://scenes/battle/battle.tscn")
 		return
 	var extra = str(r.get("first_clear", ""))
 	_say(Locale.t("wsc_q_04480f1a") % [r.quest.name, extra], true)

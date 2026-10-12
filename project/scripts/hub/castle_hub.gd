@@ -21,7 +21,7 @@ func _build() -> void:
 	var house := Locale.latin(str(GameState.surname), "House")
 	var tb := UIKit.top_bar(self, Locale.t("shell_c84f88cd") % house, UIKit.std_resource_chips(), Locale.t("shell_8112901e"), func():
 		GameState.save_game()
-		get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn"))
+		CKNav.replace(CKNav.TITLE))
 	_res_bar = HBoxContainer.new()   # kept for _refresh compatibility (resource tick)
 	_res_bar.visible = false
 	add_child(_res_bar)
@@ -165,14 +165,14 @@ func _build() -> void:
 		kids += ch.children_ids.size()
 	var cards := [
 		{"tag": Locale.t("shell_1c7432f9"), "col": UIKit.DANGER, "id": "# 01", "title": Locale.t("shell_830b485d"), "desc": _story_hint.text,
-		 "kv": [[Locale.t("shell_a21ba281"), _era_text(), UIKit.TEXT], [Locale.t("shell_e6247ac7"), Locale.t("shell_71e987bf") % _open_count(), UIKit.ACCENT]],
-		 "act": Locale.t("shell_e4492ae0"), "cb": Callable(self, "_continue_mainline")},
+			"kv": [[Locale.t("shell_a21ba281"), _era_text(), UIKit.TEXT], [Locale.t("shell_e6247ac7"), Locale.t("shell_71e987bf") % _open_count(), UIKit.ACCENT]],
+			"act": Locale.t("shell_e4492ae0"), "cb": Callable(self, "_continue_mainline")},
 		{"tag": Locale.t("shell_0295ed30"), "col": UIKit.ACCENT, "id": "# 02", "title": Locale.t("shell_d50391de"), "desc": Locale.t("shell_bd1759e1"),
-		 "kv": [[Locale.t("shell_5cda5bb8"), Locale.t("shell_445ffb2d") % roster_n, UIKit.TEXT], [Locale.t("shell_946c7148"), str(GameState.silver), UIKit.ACCENT]],
-		 "act": Locale.t("shell_4f21c510"), "cb": func(): get_tree().change_scene_to_file("res://scenes/hub/tavern.tscn")},
+			"kv": [[Locale.t("shell_5cda5bb8"), Locale.t("shell_445ffb2d") % roster_n, UIKit.TEXT], [Locale.t("shell_946c7148"), str(GameState.silver), UIKit.ACCENT]],
+			"act": Locale.t("shell_4f21c510"), "cb": func(): CKNav.go("res://scenes/hub/tavern.tscn")},
 		{"tag": Locale.t("shell_0ea8299b"), "col": UIKit.OK, "id": "# 03", "title": Locale.t("shell_994ca053"), "desc": Locale.t("shell_ccb1cfc4"),
-		 "kv": [[Locale.t("shell_9466cac8"), Locale.t("shell_9219bb7b") % wed, UIKit.TEXT], [Locale.t("shell_bd657d70"), Locale.t("shell_445ffb2d") % kids, UIKit.OK]],
-		 "act": Locale.t("shell_b74f3aed"), "cb": func(): get_tree().change_scene_to_file("res://scenes/hub/marriage.tscn")},
+			"kv": [[Locale.t("shell_9466cac8"), Locale.t("shell_9219bb7b") % wed, UIKit.TEXT], [Locale.t("shell_bd657d70"), Locale.t("shell_445ffb2d") % kids, UIKit.OK]],
+			"act": Locale.t("shell_b74f3aed"), "cb": func(): CKNav.go("res://scenes/hub/marriage.tscn")},
 	]
 	var first_link: Button = null
 	for i in cards.size():
@@ -250,7 +250,7 @@ func _build() -> void:
 		chip.flat = true
 		chip.add_theme_font_size_override("font_size", 11)
 		chip.add_theme_color_override("font_color", UIKit.ACCENT)
-		chip.pressed.connect(func(): get_tree().change_scene_to_file(link))
+		chip.pressed.connect(func(): CKNav.go(link))
 		todo_row.add_child(chip)
 	if not HubTodo.any_due():
 		todo_row.add_child(UIKit.mono(Locale.t("ux_todo_none"), 10, UIKit.TEXT_FAINT, false))
@@ -326,14 +326,14 @@ func _build() -> void:
 		rp.add_child(fl)
 		var vb := UIKit.ghost_button(Locale.t("shell_108b5beb"), 200, 32)
 		vb.position = Vector2(16, 522)
-		vb.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/roster.tscn"))
+		vb.pressed.connect(func(): CKNav.go("res://scenes/hub/roster.tscn"))
 		rp.add_child(vb)
 		var pb := UIKit.ghost_button(Locale.t("shell_9639cd7e"), 200, 32)
 		pb.name = "PromoteOpen"
 		pb.position = Vector2(16, 560)
 		pb.pressed.connect(func():
 			Sfx.click()
-			get_tree().change_scene_to_file("res://scenes/hub/title_promote.tscn"))
+			CKNav.go("res://scenes/hub/title_promote.tscn"))
 		rp.add_child(pb)
 
 	UIKit.footer_bar(self, [["A", Locale.t("shell_b56d9ac6")], ["B", Locale.t("shell_11d02415")], ["LB/RB", Locale.t("shell_6e89d3a3")], ["ESC", Locale.t("shell_8112901e")]], "CENTURYKNIGHTS · FROST_TACTICAL v8.6")
@@ -389,7 +389,7 @@ func _do_promote() -> void:
 func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("ui_cancel"):
 		GameState.save_game()
-		get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn")
+		CKNav.replace(CKNav.TITLE)
 
 func _nav_item(idx: String, title_t: String, sub_t: String, active: bool = false, minor: bool = false, compact: bool = false) -> Button:
 	## Stitch nav item: mono index (icon slot) + label; active = boxed frost; five states
@@ -459,7 +459,7 @@ func _update_story_hint() -> void:
 func _continue_mainline() -> void:
 	var cursor := _cursor()
 	var scene := StoryCatalog.request_chapter(str(cursor.get("id", "ch0")))
-	get_tree().change_scene_to_file(scene)
+	CKNav.replace(scene)
 
 ## Lock sheet (§4.4): what it is, when it opens, and "take me there" when the main line opens it.
 func open_lock_sheet(title: String, st: Dictionary) -> void:

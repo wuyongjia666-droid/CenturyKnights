@@ -41,7 +41,7 @@ func _ready() -> void:
 		"在「工事」中升级祠堂",
 		"祠堂上限 3 级。升级需要银币与工期，由工事统一调度。",
 		[["当前等级", "LV %d" % lv, UIKit.ACCENT], ["等级上限", "LV 3", UIKit.TEXT], ["状态", "已满级" if lv >= 3 else "可升级", UIKit.OK if lv >= 3 else UIKit.TEXT]],
-		"ROUTE", "前往工事", false, "前往工事", func(): get_tree().change_scene_to_file("res://scenes/hub/works.tscn"))
+		"ROUTE", "前往工事", false, "前往工事", func(): CKNav.go("res://scenes/hub/works.tscn"))
 	# info strip
 	var strip := UIKit.panel_at(self, Rect2(42, 628, 1196, 48), 8)
 	strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -56,22 +56,22 @@ func _ready() -> void:
 	vb.tooltip_text = "为家族与编制中尚未验血者验明血谱：揭出潜征携因、拆穿伪胤，验过者可凭血契议婚、入锻场。"
 	vb.pressed.connect(func():
 		Sfx.click()
-		get_tree().change_scene_to_file("res://scenes/hub/blood_test.tscn"))
+		CKNav.go("res://scenes/hub/blood_test.tscn"))
 	add_child(vb)
 	UIKit.footer_bar(self, [["A", "祈愈"], ["V", "验血"], ["W", "前往工事"], ["ESC", "返回城堡"]], "SANCTUARY // LV %d · v8.9" % lv)
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 
 func _back() -> void:
-	get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
+	CKNav.up()
 
 func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("ui_cancel"):
 		_back()
 	elif e is InputEventKey and e.pressed and not e.echo and (e as InputEventKey).keycode == KEY_W:
-		get_tree().change_scene_to_file("res://scenes/hub/works.tscn")
+		CKNav.go("res://scenes/hub/works.tscn")
 	elif e is InputEventKey and e.pressed and not e.echo and (e as InputEventKey).keycode == KEY_V:
-		get_tree().change_scene_to_file("res://scenes/hub/blood_test.tscn")
+		CKNav.go("res://scenes/hub/blood_test.tscn")
 
 func _verify() -> void:
 	var r: Dictionary = GameState.verify_bloodlines_at_shrine()

@@ -26,6 +26,10 @@ func _ready() -> void:
 func _back() -> void:
 	CKNav.up()
 
+func _unhandled_input(e: InputEvent) -> void:
+	if e.is_action_pressed("ui_cancel"):
+		_back()
+
 func _render() -> void:
 	if _bar:
 		_bar.queue_free()

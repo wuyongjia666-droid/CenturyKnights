@@ -88,13 +88,13 @@ func _ready() -> void:
 	back.name = "RivalBack"
 	back.position = Vector2(40, 640)
 	_back = back
-	back.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
+	back.pressed.connect(func(): CKNav.up())
 	add_child(back)
 	var inh = UIKit.make_accent_button("嗣位冲突", 140)
 	inh.name = "RivalInherit"
 	inh.position = Vector2(180, 640)
 	_inh = inh
-	inh.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/inheritance.tscn"))
+	inh.pressed.connect(func(): CKNav.go("res://scenes/hub/inheritance.tscn"))
 	add_child(inh)
 	_refresh()
 	UIFX.stagger_children(_list, 0.05, 0.22)
@@ -236,8 +236,8 @@ func _select(h: Dictionary) -> void:
 	_add("送礼交涉（30银）", func(): _gift(hid))
 	_add("示威施压", func(): _pressure(hid))
 	if hid == "shuoying" and stance in ["hostile", "wary"]:
-		_add("开启嗣位冲突场景", func(): get_tree().change_scene_to_file("res://scenes/hub/inheritance.tscn"))
-	_add("双嗣校场", func(): get_tree().change_scene_to_file("res://scenes/hub/heir_rivalry.tscn"))
+		_add("开启嗣位冲突场景", func(): CKNav.go("res://scenes/hub/inheritance.tscn"))
+	_add("双嗣校场", func(): CKNav.go("res://scenes/hub/heir_rivalry.tscn"))
 
 func _add(text: String, cb: Callable) -> void:
 	var b = UIKit.make_accent_button(text, 360)
