@@ -111,6 +111,9 @@ func _run() -> String:
 	if typeof(parsed) != TYPE_ARRAY or (parsed as Array).size() != 3:
 		return "exported json"
 	CKGenomePortrait.dir_override = ""
+	## Isolate from the shared bank: its same-stage disk fallback would answer for any person.
+	CKPortraitBank.dir_override = "/tmp/ck_bank_empty_missing"
+	CKPortraitBank.clear_cache()
 	CKGenomePortrait.clear_mem()
 	UnitArt.clear_cache()
 	if CKGenomePortrait.texture(a) != null:

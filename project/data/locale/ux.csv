@@ -186,6 +186,34 @@ ux_teach_diligent,勤录,Diligent copy
 ux_teach_gut,饭量稳,Steady gut
 ux_teach_wound,先看伤口,Wound first
 ux_teach_stand,站得住,Stand firm
+ux_name_partition,分区线型,Partition line
+ux_name_ordinary,普通图记,Ordinary
+ux_name_nation_rand,按国随机,Randomize by nation
+ux_name_shield_preview,盾徽预览,Shield preview
+ux_heraldry_tincture_warn,染色违规：金属不可叠金属，色料不可叠色料,Tincture rule: metal on metal / colour on colour is forbidden
+ux_heraldry_ok,染色合法,Tincture rule OK
+ux_div_per_bend,左斜分,Per bend
+ux_div_per_bend_sinister,右斜分,Per bend sinister
+ux_div_quarterly,四分,Quarterly
+ux_div_per_chevron,山形分,Per chevron
+ux_div_per_saltire,叉分,Per saltire
+ux_div_gyronny,辐分,Gyronny
+ux_part_straight,直线,Straight
+ux_part_wavy,波纹,Wavy
+ux_part_engrailed,内弧齿,Engrailed
+ux_part_embattled,雉堞,Embattled
+ux_part_invected,外弧齿,Invected
+ux_part_nebuly,云纹,Nebuly
+ux_ord_cross,十字,Cross
+ux_ord_saltire,叉架,Saltire
+ux_ord_chief,首席带,Chief
+ux_ord_bordure,镶边带,Bordure
+ux_ord_orle,内框,Orle
+ux_ord_pile,尖楔,Pile
+ux_ord_pall,丫架,Pall
+ux_ord_bend_sinister,右斜带,Bend sinister
+ux_cadency_label,嫡长标,Label
+ux_btn_heraldry_diy,雕旗,Heraldry
 ux_todo_sui_ke,未读岁课,Unread year-cards
 ux_todo_life,未读重卡,Unread life cards
 ux_todo_tutor,待指定专师,Tutors to assign

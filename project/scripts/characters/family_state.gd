@@ -58,63 +58,14 @@ static func posts_match_nation(host, nid: String) -> bool:
 	return true
 
 
-static func atlas_open(host) -> bool:
-	## 舆图在 e1_04 之后开放；第零章春令仍走邦交加权。
-	if host == null:
-		return false
-	if bool(host.flag("chapter0_done")) and bool(host.house_mods.get("atlas_unlocked", false)):
-		return true
-	if bool(host.flag("e1_04_done")) or bool(host.house_mods.get("atlas_unlocked", false)):
-		return true
-	# World travel already left ash keep
-	var world = Engine.get_main_loop().root.get_node_or_null("World") if Engine.get_main_loop() else null
-	if world != null and str(world.pos) != "" and str(world.pos) not in ["ash_keep", "ashbanner_keep", ""]:
-		var kind := str(world.node(str(world.pos)).get("kind", ""))
-		if kind != "castle" or str(world.pos) != "ash_keep":
-			# Once player has traveled, treat atlas as open for marriage board
-			if bool(host.flag("chapter0_done")):
-				return true
-	return false
-
-
 static func refresh_marriage_candidates(host, nation_id: String = "") -> void:
-	## 舆图开放后三人皆本国；另留一席随行（上月未拒的一名）。第零章春令仍邦交加权。
-	var open := atlas_open(host)
-	var nid := nation_id
-	if open:
-		if nid == "":
-			nid = active_marriage_nation(host)
-	else:
-		# 春令 / 舆图未开：空白 = 邦交加权
-		nid = nation_id
-	host.marriage_nation = nid
-	# Keep retinue seat across refresh
-	var kept = null
-	var ret = host.house_mods.get("marriage_retinue", null)
-	if typeof(ret) == TYPE_DICTIONARY and ret.get("cand") != null and not bool(ret.get("rejected", false)):
-		kept = ret.get("cand")
-		var months := int(ret.get("months", 0)) + 1
-		if months >= 2:
-			host.house_mods["marriage_retinue"] = {"cand": kept, "months": months, "leave_next": true, "rejected": false}
-		else:
-			host.house_mods["marriage_retinue"] = {"cand": kept, "months": months, "leave_next": false, "rejected": false}
-	elif typeof(ret) == TYPE_DICTIONARY and bool(ret.get("leave_next", false)):
-		host.house_mods.erase("marriage_retinue")
-		kept = null
+	## A blank nation keeps the diplomacy-weighted draw. The marriage screen passes the
+	## court it is standing in. Calendar, new game, and the century sim pass nothing,
+	## so their shared RNG and the portrait bank stay on the previous sequence.
+	host.marriage_nation = nation_id
 	host.marriage_candidates.clear()
-	if open:
-		# 2 fresh local + optional retinue
-		var local_n := 2 if kept != null else 3
-		for i in local_n:
-			host.marriage_candidates.append(CharacterFactory.make_marriage_candidate(host.rng, "baron", nid))
-		if kept != null:
-			host.marriage_candidates.append(kept)
-			# mark retinue
-			if typeof(kept) == TYPE_OBJECT and kept.get("blood_meta") != null:
-				kept.blood_meta["marriage_retinue"] = true
-	else:
-		for i in 3:
-			host.marriage_candidates.append(CharacterFactory.make_marriage_candidate(host.rng, "baron", nid))
+	for i in 3:
+		host.marriage_candidates.append(CharacterFactory.make_marriage_candidate(host.rng, "baron", nation_id))
 
 static func tick_doctrine_and_marriage_month(host) -> Array:
 	var msgs: Array = []
@@ -395,17 +346,3 @@ static func _mods_zh(mods: Dictionary) -> String:
 	for k in mods.keys():
 		bits.append("%s +%s" % [str(k), str(mods[k])])
 	return _zh("archive_tactic_list", ["、".join(bits)])
-
-
-
-static func stash_retinue(host, cand) -> void:
-	if cand == null:
-		return
-	host.house_mods["marriage_retinue"] = {"cand": cand, "months": 0, "leave_next": false, "rejected": false}
-
-
-static func reject_retinue(host) -> void:
-	var ret = host.house_mods.get("marriage_retinue", null)
-	if typeof(ret) == TYPE_DICTIONARY:
-		ret["rejected"] = true
-		host.house_mods["marriage_retinue"] = ret

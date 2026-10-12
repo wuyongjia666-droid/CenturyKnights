@@ -207,11 +207,7 @@ func _build() -> void:
 	now.position = Vector2(26, 428)
 	now.size = Vector2(500, 32)
 	cp.add_child(now)
-	var cont_label := Locale.t("shell_e4492ae0")
-	var cur_title := str(_cursor().get("title", ""))
-	if cur_title != "":
-		cont_label = "%s·%s" % [Locale.t("shell_e4492ae0"), Locale.latin(cur_title, str(_cursor().get("id", "")))]
-	var cont_b := UIKit.cta_button(cont_label, "A", 260, 40)
+	var cont_b := UIKit.cta_button(Locale.t("shell_e4492ae0"), "A", 220, 40)
 	cont_b.name = "ContinueMainline"
 	cont_b.position = Vector2(794 - 220, 424)
 	cont_b.pressed.connect(_continue_mainline)
@@ -225,14 +221,10 @@ func _build() -> void:
 	todo_row.add_theme_constant_override("separation", 6)
 	cp.add_child(todo_row)
 	todo_row.add_child(UIKit.mono(Locale.t("ux_hub_todo"), 10, UIKit.ACCENT, false))
-	var todos := HubTodo.snapshot()
-	if todos.is_empty():
-		todo_row.add_child(UIKit.body_label(Locale.t("ux_todo_none"), UIKit.TEXT_FAINT, 12))
-	else:
-		for todo in todos:
-			if int(todo.get("count", 0)) <= 0:
-				continue
-			todo_row.add_child(UIKit.tag_chip("%s %d" % [str(todo.get("label", "")), int(todo.get("count", 0))], UIKit.ACCENT))
+	for todo in HubTodo.snapshot():
+		if int(todo.get("count", 0)) <= 0:
+			continue
+		todo_row.add_child(UIKit.tag_chip("%s %d" % [str(todo.get("label", "")), int(todo.get("count", 0))], UIKit.ACCENT))
 	var ih := UIKit.hairline(Color(1, 1, 1, 0.07))
 	ih.position = Vector2(26, 512)
 	ih.size = Vector2(768, 1)
