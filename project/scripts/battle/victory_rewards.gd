@@ -28,6 +28,19 @@ static func spec(map_id: String) -> Dictionary:
 	}
 
 
+## Audit P1-3: the castle "出战" sortie pays once a calendar month. Repeats are drills: no silver,
+## reputation, exp or skill point. Returns true when this win is a drill (and claims the month otherwise).
+static func sortie_is_drill(host) -> bool:
+	if not host.has_meta("battle_sortie") or not bool(host.get_meta("battle_sortie", false)):
+		return false
+	host.set_meta("battle_sortie", false)
+	var now := Calendar.year * 12 + Calendar.month
+	if int(host.sortie_month) == now:
+		return true
+	host.sortie_month = now
+	return false
+
+
 static func base_purse(mods: Dictionary) -> int:
 	var purse := 35
 	if bool(mods.get("warlord_purse", false)):
