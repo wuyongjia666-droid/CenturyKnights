@@ -1469,7 +1469,7 @@
       "title": "第二据点 / 城堡占领",
       "priority": "P2",
       "why": "系统目录 F05 还没做；后期需要扩张目标。",
-      "scope": "通过委托链或攻城可以获得第二座据点，有独立的驻军、产出和维护费；舆图上可以在两座据点之间调兵。",
+      "scope": "通过委托链或攻城可以获得第二座据点，有独立的驻军、产出和维护费；舆图上可以在两座据点之间调兵。【v9.3 已并入领地系统：屯营 + 旧档迁移，见 docs/design/territory.md；second_hold_check 删除，迁移测试在 territory_check】",
       "files": [
         "project/autoload/world.gd",
         "project/scripts/company/holdings.gd",
