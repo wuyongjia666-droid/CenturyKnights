@@ -258,12 +258,15 @@ func _brief_c() -> String:
 			return e
 	if not GameState.flag("married"):
 		return "auto marry"
-	for step in [["0.4", "去参加婚礼"], ["0.45", "等待初啼"], ["0.5", "让月份走到孩子落地"], ["0.5", "去听那一声哭"], ["0.55", "粮饷结清"], ["0.6", "把月份推到丰收"], ["0.6", "踏上第一章"]]:
+	for step in [["0.4", "去参加婚礼"], ["0.45", "等待初啼"], ["0.5", "让月份走到孩子落地"], ["0.5", "去听那一声哭"], ["0.55", "粮饷结清"], ["0.6", "把月份推到丰收"], ["0.6", "踏上第一卷"]]:
 		var e: String = await _press(step[0], step[1])
 		if e != "":
 			return e
 	if not GameState.flag("chapter0_done"):
 		return "brief route did not finish"
+	if str(GameState.get_meta("story_chapter_id", "")) != "e1_01":
+		return "departure did not request e1_01"
+	GameState.set_meta("story_chapter_id", "")
 	return await _brief_d()
 
 func _brief_d() -> String:

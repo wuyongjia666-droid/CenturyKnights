@@ -397,7 +397,7 @@ BEATS = [
         "actions": [
             A("write_journal", "写下这一年", [{"op": "journal"}], {"any_flag": ["harvest_done", "chapter0_done"]}),
             A("free_play", "先回堡里", [setf("chapter0_done"), {"op": "scene", "path": "res://scenes/hub/castle_hub.tscn"}], {"any_flag": ["harvest_done", "chapter0_done"]}),
-            A("old_volume", "踏上第一章·陆桥烽火", [setf("chapter0_done"), {"op": "set_beat", "chapter": 1, "beat": "1.0"}, {"op": "archive_notice"}], {"any_flag": ["harvest_done", "chapter0_done"]}),
+            A("old_volume", "踏上第一卷·过路银的收据", [setf("chapter0_done"), {"op": "open_chapter", "id": "e1_01"}], {"any_flag": ["harvest_done", "chapter0_done"]}),
             A("fast_harvest", "把月份推到丰收，结清这一笔", [{"op": "fast_harvest"}], {"not_any_flag": ["harvest_done", "chapter0_done"]}),
             A("open_hourglass", "去看月份怎么往前走", [{"op": "visit", "path": "res://scenes/hub/hourglass.tscn"}], {"not_any_flag": ["harvest_done", "chapter0_done"]}),
         ],

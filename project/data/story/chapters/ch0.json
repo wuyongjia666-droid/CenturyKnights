@@ -1642,7 +1642,7 @@
         },
         {
           "id": "old_volume",
-          "label": "踏上第一章·陆桥烽火",
+          "label": "踏上第一卷·过路银的收据",
           "do": [
             {
               "op": "set_flag",
@@ -1650,12 +1650,8 @@
               "value": true
             },
             {
-              "op": "set_beat",
-              "chapter": 1,
-              "beat": "1.0"
-            },
-            {
-              "op": "archive_notice"
+              "op": "open_chapter",
+              "id": "e1_01"
             }
           ],
           "when": {
