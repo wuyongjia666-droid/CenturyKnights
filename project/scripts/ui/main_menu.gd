@@ -5,6 +5,8 @@ var _msg: Label
 var _loading := false
 
 func _ready() -> void:
+	# Any way back from a prologue replay (back key, menu) puts the real game back.
+	GameState.end_prologue_replay()
 	_build()
 	UIFX.fade_in(self, 0.4)
 	UIFX.page_enter(self)
@@ -66,10 +68,11 @@ func _build() -> void:
 	var items := [
 		["01", "MenuNew", Locale.t("menu_new"), Callable(self, "_on_new"), false],
 		["02", "MenuContinue", Locale.t("menu_continue"), Callable(self, "_on_continue"), latest == ""],
-		["03", "MenuLoad", Locale.t("menu_load"), Callable(self, "_on_load"), false],
-		["04", "MenuSettings", Locale.t("menu_settings"), Callable(self, "_on_settings"), false],
-		["05", "MenuCredits", Locale.t("menu_credits"), Callable(self, "_on_credits"), false],
-		["06", "MenuQuit", Locale.t("menu_quit"), func(): get_tree().quit(), false],
+		["03", "MenuReplay", Locale.t("menu_replay"), Callable(self, "_on_replay"), false],
+		["04", "MenuLoad", Locale.t("menu_load"), Callable(self, "_on_load"), false],
+		["05", "MenuSettings", Locale.t("menu_settings"), Callable(self, "_on_settings"), false],
+		["06", "MenuCredits", Locale.t("menu_credits"), Callable(self, "_on_credits"), false],
+		["07", "MenuQuit", Locale.t("menu_quit"), func(): get_tree().quit(), false],
 	]
 	var first: Button = null
 	for it in items:
@@ -114,6 +117,10 @@ func _build() -> void:
 
 func _on_new() -> void:
 	CKNav.replace("res://scenes/story/naming.tscn")
+
+func _on_replay() -> void:
+	GameState.begin_prologue_replay()
+	get_tree().change_scene_to_file("res://scenes/story/chapter0.tscn")
 
 ## Audit #9: a failed load says so; a second tap while loading does nothing.
 func _on_continue() -> void:
