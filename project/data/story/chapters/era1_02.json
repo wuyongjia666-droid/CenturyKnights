@@ -29,6 +29,22 @@
           "text": "清的是这一哨，不是整条河。别把仗打成游行。"
         },
         {
+          "id": "e1_02_echo_blank",
+          "speaker": "老旗手",
+          "text": "名册第一行还空着。旧人那一行，我天天看。",
+          "when": {
+            "flag": "pro_roster_blank"
+          }
+        },
+        {
+          "id": "e1_02_echo_wantan",
+          "speaker": "石垒·晚担",
+          "text": "名册第一行是我。那我就得活得像第一行。",
+          "when": {
+            "flag": "pro_roster_wantan"
+          }
+        },
+        {
           "id": "e1_02_l004",
           "speaker": "旁白",
           "text": "棚里有一本薄册，纸页薄得能看见下一页的名字。"
@@ -129,6 +145,22 @@
           "id": "e1_02_l020",
           "speaker": "旁白",
           "text": "折杆的旗布上有一道新缝。缝是他自己补的，线还是白的。"
+        },
+        {
+          "id": "e1_02_echo_patron",
+          "speaker": "白垣·折杆",
+          "text": "槐里家那本簿子我在白垣见过。隘口那一夜，写的是骑哨。",
+          "when": {
+            "flag": "pro_merit_patron"
+          }
+        },
+        {
+          "id": "e1_02_echo_own",
+          "speaker": "白垣·折杆",
+          "text": "隘口那一夜，议会收到两份呈报，到今天没唱票。我来之前翻过。",
+          "when": {
+            "flag": "pro_merit_own"
+          }
         },
         {
           "id": "e1_02_l021",

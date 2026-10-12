@@ -103,7 +103,10 @@ func _build() -> void:
 	row.add_child(harvest)
 	var back = UIKit.make_button(Locale.t("btn_back"), 100)
 	back.pressed.connect(func():
-		if str(GameState.chapter0_beat) == "0.6":
+		var ret := StoryCatalog.take_story_return("")
+		if ret != "":
+			get_tree().change_scene_to_file(ret)
+		elif str(GameState.chapter0_beat) == "0.6":
 			get_tree().change_scene_to_file("res://scenes/story/chapter0.tscn")
 		else:
 			get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")

@@ -18,6 +18,15 @@ static func player_scene() -> String:
 static func chapter0_scene() -> String:
 	return CHAPTER0_SCENE
 
+## Side screens the story opened with "visit" (quests, atlas, hourglass) go back to the chapter once.
+static func take_story_return(fallback: String) -> String:
+	if GameState.has_meta("story_return"):
+		var ret := str(GameState.get_meta("story_return", ""))
+		GameState.set_meta("story_return", "")
+		if ret != "":
+			return ret
+	return fallback
+
 static func archive_replay_enabled() -> bool:
 	return false
 
