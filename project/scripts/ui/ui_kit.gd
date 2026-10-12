@@ -872,7 +872,8 @@ static func compact(b: Button, h: int) -> void:
 			b.add_theme_stylebox_override(st, d)
 
 static func cta_button(text: String, key: String = "A", w: int = 200, h: int = 44) -> Button:
-	var b := make_accent_button("%s   [%s]" % [text, key] if key != "" else text, w)
+	var show_key := key != "" and not DeviceProfile.is_mobile()   # no pad/key hints on touch
+	var b := make_accent_button("%s   [%s]" % [text, key] if show_key else text, w)
 	b.custom_minimum_size = Vector2(w, h)
 	b.add_theme_font_size_override("font_size", 15 if h >= 40 else 13)
 	compact(b, h)
@@ -997,7 +998,7 @@ static func top_bar(parent: Control, context: String, chips: Array = [], back_te
 		if DeviceProfile.is_mobile():
 			back_h = int(clampf(DeviceProfile.hit_px(), 44.0, 48.0))
 			back_w = 120
-		var b := ghost_button("%s  ESC" % back_text, back_w, back_h)
+		var b := ghost_button(back_text if DeviceProfile.is_mobile() else "%s  ESC" % back_text, back_w, back_h)
 		b.name = "BackButton"
 		b.pressed.connect(back_cb)
 		right.add_child(b)
