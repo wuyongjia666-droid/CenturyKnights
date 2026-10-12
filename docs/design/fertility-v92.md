@@ -33,3 +33,9 @@
 
 - **S05-company**：`campaign_sim.gd` 的后续怀孕请改调 `CKFamilyState.begin_pregnancy`，或至少用 `CKFamilyState.term_months`。然后按实测更新 `balance-v91.md` 的观测列。
 - **S08-ux**：设置页加「快速家族」。旗标是 `house_mods.fast_family`。文案键在 `data/locale/dynasty.csv` 的 `fertility_term` / `fertility_fast`。
+
+## 快速家族开关（v9.2.1，审查 P2-4）
+
+- 族谱页按钮写**动作**：常速时写「改为快速家族」，快速时写「恢复常速孕期」，不再把当前状态当按钮名。
+- 设置页加同一个开关「快速家族」，两处读写同一个 `house_mods.fast_family`。
+
