@@ -98,8 +98,66 @@ def _hsv(rgb: np.ndarray):
     return h, s, mx
 
 
+
+def key_void_to_alpha(im: Image.Image) -> Image.Image:
+    """Turn void / plate / near-black mattes into transparency for overlay plates.
+
+    Qwen SaveImage often paints RGB on a filled plate even when the prompt asks
+    for RGBA. Flood from the border when the border is near-void, near-black, or
+    the style-lock plate_bg #D9DEE3.
+    """
+    rgba = im.convert("RGBA")
+    arr = np.asarray(rgba).copy()
+    h, w = arr.shape[:2]
+    rgb = arr[..., :3].astype(np.float32)
+    # sample border median
+    border = np.concatenate([rgb[0], rgb[-1], rgb[:, 0], rgb[:, -1]], axis=0)
+    bg = np.median(border, axis=0)
+    # only key if border looks like void/black/plate
+    plate = np.array([217.0, 222.0, 227.0])  # #D9DEE3
+    is_dark = float(bg.mean()) < 40.0
+    is_plate = float(np.linalg.norm(bg - plate)) < 28.0
+    is_white = float(bg.mean()) > 240.0 and float(bg.std()) < 8.0
+    if not (is_dark or is_plate or is_white):
+        return rgba
+    # flood-fill from corners/edges where close to bg
+    from collections import deque
+    diff = np.abs(rgb - bg).sum(-1)
+    near = diff < (55.0 if is_dark or is_white else 40.0)
+    visited = np.zeros((h, w), dtype=bool)
+    q: deque[tuple[int, int]] = deque()
+    for y, x in [(0, 0), (0, w - 1), (h - 1, 0), (h - 1, w - 1)]:
+        if near[y, x]:
+            visited[y, x] = True
+            q.append((y, x))
+    for x in range(w):
+        for y in (0, h - 1):
+            if near[y, x] and not visited[y, x]:
+                visited[y, x] = True
+                q.append((y, x))
+    for y in range(h):
+        for x in (0, w - 1):
+            if near[y, x] and not visited[y, x]:
+                visited[y, x] = True
+                q.append((y, x))
+    while q:
+        y, x = q.popleft()
+        for ny, nx in ((y - 1, x), (y + 1, x), (y, x - 1), (y, x + 1)):
+            if 0 <= ny < h and 0 <= nx < w and not visited[ny, nx] and near[ny, nx]:
+                visited[ny, nx] = True
+                q.append((ny, nx))
+    # soft edge: alpha falls with distance-to-bg among near pixels
+    alpha = arr[..., 3].astype(np.float32)
+    alpha[visited] = 0.0
+    # also knock down residual near-bg fringe
+    fringe = (~visited) & (diff < (70.0 if is_dark or is_white else 50.0))
+    alpha[fringe] = np.minimum(alpha[fringe], (diff[fringe] / 70.0) * 255.0)
+    arr[..., 3] = np.clip(alpha, 0, 255).astype(np.uint8)
+    return Image.fromarray(arr, "RGBA")
+
+
 def gate_plate(path: Path, job: dict, style: dict) -> tuple[bool, dict]:
-    im = Image.open(path).convert("RGBA")
+    im = key_void_to_alpha(Image.open(path).convert("RGBA"))
     if im.size != SIZE:
         return False, {"fail": f"size {im.size} want {SIZE}"}
     arr = np.asarray(im).astype(np.float32) / 255.0
@@ -232,7 +290,7 @@ def write_shipping(src: Path, status_id: str) -> dict:
     DEST.mkdir(parents=True, exist_ok=True)
     png_dest = DEST / f"{status_id}.png"
     webp_dest = DEST / f"{status_id}.webp"
-    im = Image.open(src).convert("RGBA")
+    im = key_void_to_alpha(Image.open(src).convert("RGBA"))
     if im.size != SIZE:
         im = im.resize(SIZE, Image.Resampling.LANCZOS)
     im.save(png_dest, "PNG")
