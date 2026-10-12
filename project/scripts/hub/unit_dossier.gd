@@ -44,6 +44,10 @@ func _resolve() -> CKCharacter:
 		return GameState.characters[want]
 	return GameState.get_leader()
 
+## §9: dossier always opens; the bloodline trait panel + codex stay locked until e2_06.
+func _bloodline_open() -> bool:
+	return GameState.flag("e2_06_fought")
+
 func _back() -> void:
 	var dest := "res://scenes/hub/roster.tscn"
 	if GameState.has_meta("dossier_back"):
@@ -54,7 +58,8 @@ func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("ui_cancel"):
 		_back()
 	elif e is InputEventKey and e.pressed and not e.echo and (e as InputEventKey).keycode == KEY_Y:
-		get_tree().change_scene_to_file("res://scenes/hub/bloodline_codex.tscn")
+		if _bloodline_open():
+			get_tree().change_scene_to_file("res://scenes/hub/bloodline_codex.tscn")
 
 func _build() -> void:
 	var c := _focus
@@ -95,20 +100,28 @@ func _build() -> void:
 	var sh := UIKit.mono("EXPRESSED", 9, UIKit.ACCENT)
 	sh.position = Vector2(16, 14)
 	mid.add_child(sh)
-	var scroll := ScrollContainer.new()
-	scroll.position = Vector2(12, 36)
-	scroll.size = Vector2(416, 424)
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	mid.add_child(scroll)
-	var col := VBoxContainer.new()
-	col.custom_minimum_size = Vector2(400, 0)
-	col.add_theme_constant_override("separation", 8)
-	scroll.add_child(col)
-	_trait_block(col, "显出", sheet.get("shown", []), UIKit.OK)
-	var carry_title := "携因" if bool(sheet.get("verified", false)) else "携因 · 验血后可见"
-	_trait_block(col, carry_title, sheet.get("carried", []) if bool(sheet.get("verified", false)) else [], UIKit.ACCENT)
-	if not bool(sheet.get("verified", false)):
-		col.add_child(UIKit.body_label("祠堂验血之前，潜征保持未识。", UIKit.TEXT_FAINT, 12))
+	if not _bloodline_open():
+		mid.modulate = Color(1, 1, 1, 0.55)
+		var lock := UIKit.body_label(Locale.t("ux_lock_bloodline"), UIKit.TEXT_DIM, 13)
+		lock.name = "BloodlineLock"
+		lock.position = Vector2(16, 48)
+		lock.size = Vector2(408, 80)
+		mid.add_child(lock)
+	else:
+		var scroll := ScrollContainer.new()
+		scroll.position = Vector2(12, 36)
+		scroll.size = Vector2(416, 424)
+		scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		mid.add_child(scroll)
+		var col := VBoxContainer.new()
+		col.custom_minimum_size = Vector2(400, 0)
+		col.add_theme_constant_override("separation", 8)
+		scroll.add_child(col)
+		_trait_block(col, "显出", sheet.get("shown", []), UIKit.OK)
+		var carry_title := "携因" if bool(sheet.get("verified", false)) else "携因 · 验血后可见"
+		_trait_block(col, carry_title, sheet.get("carried", []) if bool(sheet.get("verified", false)) else [], UIKit.ACCENT)
+		if not bool(sheet.get("verified", false)):
+			col.add_child(UIKit.body_label("祠堂验血之前，潜征保持未识。", UIKit.TEXT_FAINT, 12))
 	var right := UIKit.panel_at(self, Rect2(814, 200, 424, 476), 12)
 	right.name = "FamilyTree"
 	var fh := UIKit.mono("FAMILY · TRAIT HIGHLIGHT", 9, UIKit.TEXT_FAINT)
@@ -128,9 +141,14 @@ func _build() -> void:
 	var codex := UIKit.ghost_button("打开血脉图鉴", 180, 44)
 	codex.name = "OpenCodex"
 	codex.position = Vector2(220, 416)
-	codex.pressed.connect(func():
-		Sfx.click()
-		get_tree().change_scene_to_file("res://scenes/hub/bloodline_codex.tscn"))
+	if _bloodline_open():
+		codex.pressed.connect(func():
+			Sfx.click()
+			get_tree().change_scene_to_file("res://scenes/hub/bloodline_codex.tscn"))
+	else:
+		codex.disabled = true
+		codex.set_meta("deny_reason", Locale.t("ux_lock_bloodline"))
+		codex.modulate = Color(1, 1, 1, 0.5)
 	right.add_child(codex)
 
 func _trait_block(parent: Node, title: String, rows: Array, col: Color) -> void:
