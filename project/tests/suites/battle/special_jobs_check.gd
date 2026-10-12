@@ -38,14 +38,15 @@ func _battle(tiles: Dictionary) -> FakeBattle:
 
 
 func _run() -> String:
+	var fails: Array = []
 	GameState.new_game("烬行", "灰旗", "frost")
 	# seals exist for all six, gate blocks without seal
 	for jid in ["bridge_tax", "lu_wai", "frost_wait", "salt_yin", "forge_brow", "yan_zhan"]:
 		if CKJobSeals.seal_row(jid).is_empty() or GameState.get_job(jid).is_empty():
-			return "missing %s" % jid
+			fails.append("missing %s" % jid)
 		var c0 := _ch("g_" + jid, str(CKJobSeals.seal_row(jid).from))
 		if bool(CKJobSeals.promote_gate(c0, jid).get("ok", true)):
-			return "no gate %s" % jid
+			fails.append("no gate %s" % jid)
 	# 桥税骑
 	var b := _battle({Vector2i(1, 1): "bridge"})
 	var bt := _ch("bt", "bridge_tax")
@@ -55,20 +56,20 @@ func _run() -> String:
 	b.units = [{"char": bt, "pos": Vector2i(1, 1), "team": "player"}, {"char": e1, "pos": Vector2i(2, 1), "team": "enemy"}]
 	CKSpecialJobs.on_player_turn(b)
 	if bt.derived_move() != base_bt + 1 or e1.derived_move() != maxi(1, base_e - 2):
-		return "toll move %d/%d" % [bt.derived_move(), e1.derived_move()]
+		fails.append("toll move %d/%d" % [bt.derived_move(), e1.derived_move()])
 	CKSpecialJobs.on_player_turn(b)
 	if bt.derived_move() != base_bt or e1.derived_move() != base_e:
-		return "toll not cleared"
+		fails.append("toll not cleared")
 	CKSpecialJobs.on_player_turn(b)
 	if bt.derived_move() != base_bt:
-		return "toll repeated"
+		fails.append("toll repeated")
 	# off-bridge: nothing
 	var b2 := _battle({})
 	var bt2 := _ch("bt2", "bridge_tax")
 	b2.units = [{"char": bt2, "pos": Vector2i(1, 1), "team": "player"}, {"char": _ch("e2", "warrior"), "pos": Vector2i(2, 1), "team": "enemy"}]
 	CKSpecialJobs.on_player_turn(b2)
 	if bt2.derived_move() != base_bt:
-		return "toll off bridge"
+		fails.append("toll off bridge")
 	# 霜候
 	var b3 := _battle({Vector2i(2, 2): "hill"})
 	var fw := _ch("fw", "frost_wait")
@@ -80,12 +81,12 @@ func _run() -> String:
 	var ex := {}
 	CKSpecialJobs.strike_mods(b3, pu, eu, ex)
 	if int(ex.get("flat_def", 0)) != -1:
-		return "frost def %s" % ex
+		fails.append("frost def %s" % ex)
 	eu["pos"] = Vector2i(3, 3)
 	ex = {}
 	CKSpecialJobs.strike_mods(b3, pu, eu, ex)
 	if int(ex.get("flat_def", 0)) != 0:
-		return "frost after move"
+		fails.append("frost after move")
 	# 盐引
 	var b4 := _battle({})
 	var sy := _ch("sy", "salt_yin")
@@ -98,11 +99,11 @@ func _run() -> String:
 	ex = {}
 	CKSpecialJobs.strike_mods(b4, foe, ally, ex)
 	if int(ex.get("flat_def", 0)) != 1:
-		return "salt ally %s" % ex
+		fails.append("salt ally %s" % ex)
 	ex = {}
 	CKSpecialJobs.strike_mods(b4, foe, far, ex)
 	if int(ex.get("flat_def", 0)) != 0:
-		return "salt far"
+		fails.append("salt far")
 	var b5 := _battle({})
 	b5.units = [{"char": _ch("sy2", "salt_yin"), "pos": Vector2i(1, 1), "team": "player"}, ally, foe]
 	GameState.food = 0
@@ -111,7 +112,7 @@ func _run() -> String:
 	ex = {}
 	CKSpecialJobs.strike_mods(b5, foe, ally, ex)
 	if int(ex.get("flat_def", 0)) != 0 or int(GameState.morale) != m0:
-		return "salt hungry"
+		fails.append("salt hungry")
 	# 锻眉
 	var b6 := _battle({})
 	var fb := {"char": _ch("fb", "forge_brow"), "pos": Vector2i(1, 1), "team": "player"}
@@ -120,23 +121,23 @@ func _run() -> String:
 	CKSpecialJobs.on_player_turn(b6)
 	CKSpecialJobs.after_strike(b6, at, fb, {"hit": false, "damage": 0})
 	if int(at["char"].hp) != 20:
-		return "brow on miss"
+		fails.append("brow on miss")
 	CKSpecialJobs.after_strike(b6, at, fb, {"hit": true, "damage": 5})
 	if int(at["char"].hp) != 18:
-		return "brow reflect %d" % int(at["char"].hp)
+		fails.append("brow reflect %d" % int(at["char"].hp))
 	CKSpecialJobs.after_strike(b6, at, fb, {"hit": true, "damage": 5})
 	if int(at["char"].hp) != 18:
-		return "brow repeat"
+		fails.append("brow repeat")
 	ex = {}
 	CKSpecialJobs.strike_mods(b6, at, fb, ex)
 	if int(ex.get("flat_def", 0)) != 2:
-		return "brow def"
+		fails.append("brow def")
 	# 录外生
 	var lw := _ch("lw", "lu_wai")
 	if not CKSpecialJobs.skip_cooldown(lw, b6) or CKSpecialJobs.skip_cooldown(lw, b6):
-		return "lu_wai once"
+		fails.append("lu_wai once")
 	if CKSpecialJobs.skip_cooldown(_ch("x", "mage"), b6):
-		return "lu_wai other job"
+		fails.append("lu_wai other job")
 	if not CKSpecialJobs.skip_cooldown(lw, b5):
-		return "lu_wai new battle"
-	return ""
+		fails.append("lu_wai new battle")
+	return "; ".join(fails)
