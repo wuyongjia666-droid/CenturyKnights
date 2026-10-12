@@ -67,3 +67,4 @@ class_path,%s / %s / %s,%s / %s / %s
 rewind_undo,撤回,Undo move
 rewind_lamp,回灯,Turn the lamp back
 rewind_wicks,灯芯 %d,Wicks %d
+obj_reinf_warn,下回合有 %d 名增援抵达（红色「!」处）,%d reinforcements arrive next round (red !)
