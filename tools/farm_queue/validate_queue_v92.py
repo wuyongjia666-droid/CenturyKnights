@@ -27,6 +27,7 @@ SIZES = {
     "smith": (1280, 720),
     "item": (512, 512),
     "scene": (1280, 720),
+    "story_bg": (1280, 720),
     "expression": (768, 1024),
     "status_overlay": (768, 1024),
     "castle": (1280, 720),
