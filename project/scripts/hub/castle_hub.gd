@@ -165,14 +165,14 @@ func _build() -> void:
 		kids += ch.children_ids.size()
 	var cards := [
 		{"tag": Locale.t("shell_1c7432f9"), "col": UIKit.DANGER, "id": "# 01", "title": Locale.t("shell_830b485d"), "desc": _story_hint.text,
-		 "kv": [[Locale.t("shell_a21ba281"), _era_text(), UIKit.TEXT], [Locale.t("shell_e6247ac7"), Locale.t("shell_71e987bf") % _open_count(), UIKit.ACCENT]],
-		 "act": Locale.t("shell_e4492ae0"), "cb": Callable(self, "_continue_mainline")},
+			"kv": [[Locale.t("shell_a21ba281"), _era_text(), UIKit.TEXT], [Locale.t("shell_e6247ac7"), Locale.t("shell_71e987bf") % _open_count(), UIKit.ACCENT]],
+			"act": Locale.t("shell_e4492ae0"), "cb": Callable(self, "_continue_mainline")},
 		{"tag": Locale.t("shell_0295ed30"), "col": UIKit.ACCENT, "id": "# 02", "title": Locale.t("shell_d50391de"), "desc": Locale.t("shell_bd1759e1"),
-		 "kv": [[Locale.t("shell_5cda5bb8"), Locale.t("shell_445ffb2d") % roster_n, UIKit.TEXT], [Locale.t("shell_946c7148"), str(GameState.silver), UIKit.ACCENT]],
-		 "act": Locale.t("shell_4f21c510"), "cb": func(): CKNav.go("res://scenes/hub/tavern.tscn")},
+			"kv": [[Locale.t("shell_5cda5bb8"), Locale.t("shell_445ffb2d") % roster_n, UIKit.TEXT], [Locale.t("shell_946c7148"), str(GameState.silver), UIKit.ACCENT]],
+			"act": Locale.t("shell_4f21c510"), "cb": func(): CKNav.go("res://scenes/hub/tavern.tscn")},
 		{"tag": Locale.t("shell_0ea8299b"), "col": UIKit.OK, "id": "# 03", "title": Locale.t("shell_994ca053"), "desc": Locale.t("shell_ccb1cfc4"),
-		 "kv": [[Locale.t("shell_9466cac8"), Locale.t("shell_9219bb7b") % wed, UIKit.TEXT], [Locale.t("shell_bd657d70"), Locale.t("shell_445ffb2d") % kids, UIKit.OK]],
-		 "act": Locale.t("shell_b74f3aed"), "cb": func(): CKNav.go("res://scenes/hub/marriage.tscn")},
+			"kv": [[Locale.t("shell_9466cac8"), Locale.t("shell_9219bb7b") % wed, UIKit.TEXT], [Locale.t("shell_bd657d70"), Locale.t("shell_445ffb2d") % kids, UIKit.OK]],
+			"act": Locale.t("shell_b74f3aed"), "cb": func(): CKNav.go("res://scenes/hub/marriage.tscn")},
 	]
 	var first_link: Button = null
 	for i in cards.size():
