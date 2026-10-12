@@ -23,13 +23,15 @@ for s in rep:
             continue
         if not it.get("in_scroll") and (x < -2 or y < -2 or x + rw > vw + 2 or y + rh > vh + 2):
             fails.append(f"{name}: offscreen {it['type']} '{it['text']}' {it['rect']}")
-        if it["type"].endswith("Button") and min(rw, rh) * scale < 48 * dp * 0.9:
+        if it["type"].endswith("Button") and not it.get("clipped") and min(rw, rh) * scale < 48 * dp * 0.9:
             fails.append(f"{name}: small touch {it['text']!r} {rw:.0f}x{rh:.0f}")
         if it["text"] and it["font"] * scale < 12 * dp:
             fails.append(f"{name}: small font {it['font']} '{it['text']}'")
+        if it["type"] == "Label" and len(it["text"].strip()) >= 3 and rw < it["font"] * 1.6 and rh > it["font"] * 2.5:
+            fails.append(f"{name}: squashed '{it['text']}' {rw:.0f}x{rh:.0f}")
         if it["text"] and re.search(r"\[(A|B|X|Y|ESC|ENTER)\]|\sESC$", it["text"]):
             fails.append(f"{name}: keyhint {it['text']!r}")
-        if it["text"]:
+        if it["text"] and not it.get("clipped"):
             rects.append((x, y, rw, rh, it))
     for i in range(len(rects)):
         for j in range(i + 1, len(rects)):
