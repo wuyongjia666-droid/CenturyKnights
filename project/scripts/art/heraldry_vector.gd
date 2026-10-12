@@ -1,4 +1,3 @@
-class_name CKHeraldryVector
 extends RefCounted
 ## Vector heraldry renderer (art pass 2). Builds one SVG per achievement and rasterises it with
 ## ThorVG (Image.load_svg_from_string): anti-aliased at any size. Art fragments live in
