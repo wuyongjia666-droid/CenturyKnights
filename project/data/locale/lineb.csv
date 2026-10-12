@@ -1,0 +1,32 @@
+keys,zh_CN,en
+lb_chip_date,历,Date
+lb_anc_desc,家里去世的人都会在这里立一块碑，写上生卒年、怎么走的和留下的话。,Every family member who dies gets a stone here.
+lb_anc_honor_head,家族荣誉,Family honor
+lb_anc_how,"每立一块碑，家族荣誉加 1，最多加 3。
+
+荣誉高了，联姻、请爵时别人更看得起你。
+
+战死的碑是红色的，寿终的是蓝色的。","Each stone adds 1 honor, up to 3."
+lb_anc_count,已立 %d 块碑，荣誉最多算 %d 块,"%d stones, honor counts up to %d"
+lb_anc_wall_head,碑林,Stele wall
+lb_anc_empty_why,家里还没有人去世。族人战死或者老死以后，会在这里立碑。,No one in the family has died yet.
+lb_anc_empty_how,下面是碑的样子：名字、生卒年、死因、遗言和这辈子的功绩。,Below is what a stone looks like.
+lb_anc_years,第 %d 年生 · 第 %d 年卒,Born year %d · died year %d
+lb_anc_words,「%s」,"""%s"""
+lb_anc_deeds,功绩：%s　称号：%s,Deeds: %s  Titles: %s
+lb_anc_ghost_name,某某某　战死,Name  Fell in battle
+lb_anc_ghost_line,第 ? 年生 · 第 ? 年卒　「留下的一句话」,"Born ? · died ?  ""last words"""
+lb_news_ctx,朝报,Gazette
+lb_news_title,十邦朝报,Ten courts gazette
+lb_news_desc,邻国王室生了谁、走了谁、谁接了位，都记在这里。舆图上的标记和这里是同一份记录。,"Royal births, deaths and successions."
+lb_news_all,全部,All
+lb_news_empty_title,第一期朝报还没出,No gazette yet
+lb_news_empty_why,朝报每年正月出一期。到第 %d 年正月，邻国王室这一年的事会一起写进来。,The gazette comes out every first month; next in year %d.
+lb_news_empty_how,在城堡里过月就能推进到正月。,End months in the castle to get there.
+lb_news_kind_empty,还没有「%s」的消息,No %s news yet
+lb_news_kind_why,这一类今年还没发生。换一个分类看看，或者等下一期朝报。,Nothing of this kind yet. Try another filter.
+lb_news_crisis,危机　%s：%s,Crisis  %s: %s
+lb_news_when,第 %d 年 · %s,Year %d · %s
+lb_news_own_tag,本团,Ours
+lb_news_own_nobody,团长,The captain
+lb_news_own_text,%s 立起灰旗，带着 %d 个人进了城堡。这是团里的第一条记录。,%s raised the banner with %d people. Our first entry.
