@@ -31,7 +31,7 @@ static func add_markers(layer: Control, nation: String, map_size: Vector2, busy:
 			b.add_child(tr)
 		else:
 			var col: Color = UIKit.DANGER if own.begins_with("rival:") else UIKit.TEXT_DIM
-			var gl := UIKit.title_label("⚑", 18, col)
+			var gl := UIKit.title_label(Locale.t("terr_ui_flag"), 15, col)
 			gl.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			gl.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 			gl.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -59,7 +59,7 @@ static func region_badge(nation: String) -> String:
 	for id in CKTerritory.sites_in(nation):
 		if CKTerritory.owned(id):
 			k += 1
-	return "" if k == 0 else " · ⚑%d" % k
+	return "" if k == 0 else " · " + Locale.t("terr_ui_flag") + "%d" % k
 
 ## Fills a modal panel (500 wide) with every site hung on the anchor. act(kind, site_id) runs an action.
 static func fill_modal(p: Panel, anchor: String, act: Callable) -> void:
