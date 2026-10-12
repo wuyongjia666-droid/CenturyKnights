@@ -25,3 +25,7 @@ slot_auto,自动存档,Autosave
 slot_quick,快速存档,Quick save
 slot_back,返回,Back
 sortie_drill,本月巡防已领过赏，这一场只算操练：不得银、声望、经验与战技点。,
+tavern_refresh_spent,本月刷新次数已用完，下月再来,
+tavern_refresh_spent_short,本月已无刷新,
+tavern_refresh_free,免费刷新 ↻（余 %d）,
+tavern_refresh_paid,刷新 %d 银 ↻（余 %d）,

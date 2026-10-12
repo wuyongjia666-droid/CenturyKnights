@@ -49,6 +49,11 @@ var marriage_candidates: Array = []
 var marriage_nation: String = ""
 ## Calendar month (year*12+month) whose castle sortie already paid out. Audit P1-3.
 var sortie_month: int = -1
+## Tavern refreshes used this month: {"month": year*12+month, "used": n}. Audit P1-4.
+var tavern_refresh: Dictionary = {}
+const TAVERN_FREE_PER_MONTH := 1
+const TAVERN_PAID_COST := 15
+const TAVERN_MAX_PER_MONTH := 3
 var quests: Array = []
 var event_log: Array = []
 var settings: Dictionary = {
@@ -346,9 +351,41 @@ func claim_id(c: CKCharacter) -> void:
 		c.id = CharacterFactory.next_id(prefix)
 
 func refresh_tavern() -> void:
+	for old in tavern_candidates:
+		if not characters.has(old.id):
+			UnitArt.release_face(old.id)
 	tavern_candidates.clear()
 	for i in 3:
 		tavern_candidates.append(CharacterFactory.make_tavern_candidate(rng))
+
+func _tavern_month_used() -> int:
+	var now := Calendar.year * 12 + Calendar.month
+	if int(tavern_refresh.get("month", -1)) != now:
+		return 0
+	return int(tavern_refresh.get("used", 0))
+
+## Price of the next manual refresh this month; -1 when the month's refreshes are spent.
+func tavern_refresh_price() -> int:
+	var used := _tavern_month_used()
+	if used >= TAVERN_MAX_PER_MONTH:
+		return -1
+	return 0 if used < TAVERN_FREE_PER_MONTH else TAVERN_PAID_COST
+
+func tavern_refreshes_left() -> int:
+	return maxi(0, TAVERN_MAX_PER_MONTH - _tavern_month_used())
+
+## Player-pressed refresh: first one each month free, then paid, capped per month.
+func manual_refresh_tavern() -> Dictionary:
+	var price := tavern_refresh_price()
+	if price < 0:
+		return {"ok": false, "msg": Locale.t("tavern_refresh_spent")}
+	if silver < price:
+		return {"ok": false, "msg": Locale.t("not_enough_silver")}
+	silver -= price
+	tavern_refresh = {"month": Calendar.year * 12 + Calendar.month, "used": _tavern_month_used() + 1}
+	refresh_tavern()
+	mark_dirty()
+	return {"ok": true, "price": price}
 
 func recruit(candidate: CKCharacter, cost: int = -1) -> Dictionary:
 	if cost < 0:
@@ -793,6 +830,7 @@ func build_save_data() -> Dictionary:
 		"marriage": [],
 		"marriage_nation": marriage_nation,
 		"sortie_month": sortie_month,
+		"tavern_refresh": tavern_refresh.duplicate(),
 		"quests": quests,
 		"started": started,
 		"world_v87": CKSaveService.compact_world(World.to_save(), _court_derived),
@@ -904,6 +942,8 @@ func apply_save_data(data: Dictionary) -> bool:
 	_load_families(data)
 	marriage_nation = str(data.get("marriage_nation", ""))
 	sortie_month = int(data.get("sortie_month", -1))
+	var raw_tr = data.get("tavern_refresh", {})
+	tavern_refresh = (raw_tr as Dictionary).duplicate() if typeof(raw_tr) == TYPE_DICTIONARY else {}
 	var _known_ids: Array = characters.keys()
 	for c in tavern_candidates:
 		_known_ids.append(c.id)
