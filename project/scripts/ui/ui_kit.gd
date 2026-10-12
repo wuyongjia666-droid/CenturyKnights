@@ -1179,6 +1179,7 @@ static func stitch_dialogue(scene: Control) -> void:
 	hl.size = Vector2(1280, 1)
 	scene.add_child(hl)
 	var eb := mono("● SPEAKER ACTIVE // 01", 9, ACCENT, false)
+	eb.name = "SpeakerActiveTag"
 	eb.position = Vector2(56, 74)
 	scene.add_child(eb)
 	# speaker plate (left)
