@@ -1,6 +1,6 @@
 class_name CKSuiKe
 extends RefCounted
-## v9.2 yearly lesson. Rival seats include grandparents. Board #6: no death immunity.
+## v9.2 yearly lesson — full catalogues for ill/mishap/seen/shame/near/yao and five rival seats.
 
 const DATA_PATH := "res://data/sui_ke.json"
 const BANDS := ["daily", "ill", "mishap", "rival", "seen", "shame", "near", "yao"]
@@ -15,6 +15,13 @@ const DAILY_W_BY_AGE := {
 	"13-15": {"daily": 652, "yao": 6},
 }
 const SEAT_W := {"sibling": 50, "cousin": 18, "sibling_adult": 16, "uncle": 16, "grand": 16}
+const SEAT_DOC := {
+	"sibling": "rival_sibling",
+	"cousin": "rival_cousin",
+	"sibling_adult": "rival_sibling_adult",
+	"uncle": "rival_uncle",
+}
+const CATALOG_BANDS := ["ill", "mishap", "seen", "shame", "near"]
 
 static var _doc: Dictionary = {}
 
@@ -27,6 +34,11 @@ static func _load() -> void:
 		return
 	var parsed = JSON.parse_string(FileAccess.get_file_as_string(DATA_PATH))
 	_doc = parsed if typeof(parsed) == TYPE_DICTIONARY else {"copy": {}, "grand_cards": [], "daily_pairs": []}
+
+
+static func reload_for_tests() -> void:
+	_doc = {}
+	_load()
 
 
 static func _c(key: String) -> String:
@@ -79,9 +91,9 @@ static func _born_this_month(c: CKCharacter) -> bool:
 static func _eligible(c: CKCharacter) -> bool:
 	if c == null or not c.alive:
 		return false
-	if c.age < 1 or c.age > 15:
-		return false
 	if c.in_roster:
+		return false
+	if int(c.age) < 1 or int(c.age) > 15:
 		return false
 	if c.is_child:
 		return true
@@ -92,11 +104,10 @@ static func _is_house_kin(c: CKCharacter) -> bool:
 	var leader := GameState.get_leader()
 	if leader == null:
 		return false
-	if leader.id in c.parent_ids:
-		return true
+	if c.id == leader.id or c.id == leader.spouse_id:
+		return false
 	for pid in c.parent_ids:
-		var p: CKCharacter = GameState.characters.get(str(pid))
-		if p != null and (leader.id in p.parent_ids or p.id == leader.id or leader.id in p.children_ids):
+		if str(pid) == leader.id or str(pid) == leader.spouse_id:
 			return true
 	return false
 
@@ -119,10 +130,11 @@ static func draw_card(c: CKCharacter) -> Dictionary:
 		return _draw_yao(c, rng)
 	if band == "daily":
 		return _draw_daily(c, rng)
-	var daily := _draw_daily(c, rng)
-	daily["band"] = band
-	daily["id"] = "%s_fallback_%d" % [band, c.age]
-	return daily
+	if band in CATALOG_BANDS:
+		var got := _draw_catalog(c, band, rng)
+		if not got.is_empty():
+			return got
+	return _draw_daily(c, rng)
 
 
 static func _pick_band(c: CKCharacter, rng: RandomNumberGenerator) -> String:
@@ -194,46 +206,154 @@ static func _path_stat(c: CKCharacter, fallback: String = "wil") -> String:
 			return fallback
 
 
-static func _draw_yao(c: CKCharacter, rng: RandomNumberGenerator) -> Dictionary:
-	var age := int(c.age)
+static func _speaker(band: String) -> String:
+	_load()
+	var sp = _doc.get("speakers", {})
+	if typeof(sp) == TYPE_DICTIONARY and sp.has(band):
+		return str(sp[band])
+	return _c("daily_speaker")
+
+
+static func _draw_catalog(c: CKCharacter, band: String, rng: RandomNumberGenerator) -> Dictionary:
+	_load()
+	var rows: Array = _doc.get(band, [])
 	var pool: Array = []
-	if age >= 1 and age <= 4:
-		pool.append({"id": "yao_dawn", "kind": "end", "w": 18, "title": _c("yao_dawn_title"), "body": _c("yao_dawn_body"),
-			"options": [
-				{"id": "epitaph_a", "label": _c("epitaph_dawn_a"), "kill": true, "morale": -3, "epitaph": _c("epitaph_dawn_a_word")},
-				{"id": "epitaph_b", "label": _c("epitaph_dawn_b"), "kill": true, "morale": -3, "epitaph": _c("epitaph_dawn_b_word")},
-			]})
-	if age >= 1 and age <= 8:
-		pool.append({"id": "yao_fever", "kind": "contest", "w": 15, "title": _c("yao_fever_title"), "body": _c("yao_fever_body"),
-			"options": [
-				{"id": "pay", "label": _c("pay12"), "pay": 12, "mark": "", "trait": "malnourished", "survive": true},
-				{"id": "leave", "label": _c("leave_fever"), "kill": true, "morale": -3, "epitaph": _c("epitaph_fever")},
-			]})
-	if age >= 8 and age <= 15:
-		pool.append({"id": "yao_beam", "kind": "end", "w": 8, "title": _c("yao_beam_title"), "body": _c("yao_beam_body"),
-			"options": [
-				{"id": "epitaph_a", "label": _c("epitaph_beam_a"), "kill": true, "morale": -3, "epitaph": _c("epitaph_beam_a_word")},
-				{"id": "epitaph_b", "label": _c("epitaph_beam_b"), "kill": true, "morale": -3, "epitaph": _c("epitaph_beam_b_word")},
-			]})
+	for row in rows:
+		if typeof(row) != TYPE_DICTIONARY:
+			continue
+		var cid := "%s_%s" % [band, str(row.get("id", ""))]
+		if cid in _fired_ids(c.id):
+			continue
+		if int(c.age) < int(row.get("age_min", 1)) or int(c.age) > int(row.get("age_max", 15)):
+			continue
+		if not _need_ok(c, null, str(row.get("need", "")), {}):
+			continue
+		pool.append(row)
 	if pool.is_empty():
+		return {}
+	var chosen: Dictionary = pool[rng.randi() % pool.size()]
+	var oid := str(chosen.get("id", ""))
+	return {
+		"cid": c.id, "band": band, "id": "%s_%s" % [band, oid],
+		"title": str(chosen.get("title", oid)), "speaker": _speaker(band),
+		"body": str(chosen.get("body", "")),
+		"survivor": str(chosen.get("survivor", "")),
+		"options": [
+			_opt_from_side("left", chosen.get("left", {})),
+			_opt_from_side("right", chosen.get("right", {})),
+		],
+		"death_immune": false,
+	}
+
+
+static func _opt_from_side(oid: String, side: Dictionary) -> Dictionary:
+	var out := {
+		"id": oid,
+		"label": str(side.get("act", oid)),
+		"stat": str(side.get("stat", "")),
+		"mark": str(side.get("mark", "")),
+		"gain": int(side.get("gain", 0)),
+		"care": bool(side.get("care", false)),
+		"morale": int(side.get("morale", 0)),
+		"pay": int(side.get("pay", 0)),
+		"trait": str(side.get("trait", "")),
+		"food": int(side.get("food", 0)),
+		"herb": int(side.get("herb", 0)),
+		"rep": int(side.get("rep", 0)),
+		"mother_rep": int(side.get("mother_rep", 0)),
+		"rep_or_morale": int(side.get("rep_or_morale", 0)),
+		"other_mark": str(side.get("other_mark", "")),
+		"other_leave_work": bool(side.get("other_leave_work", false)),
+		"mark_soft": bool(side.get("mark_soft", false)),
+		"survivor": str(side.get("survivor", "")),
+		"halt_march": bool(side.get("halt_march", false)),
+		"survive": bool(side.get("survive", false)),
+		"kill": bool(side.get("kill", false)),
+		"epitaph": str(side.get("epitaph", "")),
+	}
+	if out["gain"] == 0 and (out["stat"] != "" or (oid == "left" and out["mark"] != "")):
+		if out["stat"] != "" and int(side.get("gain", 0)) == 0 and not side.has("gain"):
+			out["gain"] = 1
+	return out
+
+
+static func _draw_yao(c: CKCharacter, rng: RandomNumberGenerator) -> Dictionary:
+	_load()
+	var age := int(c.age)
+	var rows: Array = _doc.get("yao", [])
+	var pool: Array = []
+	var water_open := false
+	var furnace_open := false
+	for row in rows:
+		if typeof(row) != TYPE_DICTIONARY:
+			continue
+		if age < int(row.get("age_min", 1)) or age > int(row.get("age_max", 15)):
+			continue
+		var need := str(row.get("need", ""))
+		var ok := _need_ok(c, null, need, {})
+		var id := str(row.get("id", ""))
+		if id == "yao_water":
+			water_open = ok
+		if id == "yao_furnace":
+			furnace_open = ok
+		if not ok and need != "":
+			continue
+		pool.append(row)
+	# Weight merge when gates closed (design §夭)
+	var merged: Array = []
+	for row in pool:
+		var id := str(row.get("id", ""))
+		var w := int(row.get("w", 1))
+		if id == "yao_dawn" and not water_open:
+			# water weight 14 folds into night-death style; dawn already absorbs via separate card
+			pass
+		merged.append({"row": row, "w": w})
+	# Fold closed water into a synthetic "夜里没了" by boosting dawn if present, else fever
+	if not water_open:
+		for i in range(merged.size()):
+			var id2 := str(merged[i]["row"].get("id", ""))
+			if id2 == "yao_dawn":
+				merged[i]["w"] = int(merged[i]["w"]) + 14
+				break
+	if not furnace_open:
+		for i in range(merged.size()):
+			var id3 := str(merged[i]["row"].get("id", ""))
+			if age >= 8 and id3 == "yao_wall":
+				merged[i]["w"] = int(merged[i]["w"]) + 15
+				break
+			elif id3 == "yao_fever":
+				merged[i]["w"] = int(merged[i]["w"]) + 15
+				break
+	if merged.is_empty():
 		return _draw_daily(c, rng)
 	var total := 0
-	for row in pool:
-		total += int(row.get("w", 1))
-	var roll := rng.randi() % total
+	for m in merged:
+		total += int(m["w"])
+	var roll := rng.randi() % maxi(1, total)
 	var acc := 0
-	var chosen: Dictionary = pool[0]
-	for row in pool:
-		acc += int(row.get("w", 1))
+	var chosen: Dictionary = merged[0]["row"]
+	for m in merged:
+		acc += int(m["w"])
 		if roll < acc:
-			chosen = row
+			chosen = m["row"]
 			break
+	var opts: Array = []
+	for o in chosen.get("options", []):
+		if typeof(o) != TYPE_DICTIONARY:
+			continue
+		var opt: Dictionary = (o as Dictionary).duplicate(true)
+		# Infirmary discount on fever pay
+		if int(opt.get("pay", 0)) == 12 and CKEconomyState.building_level(GameState, "infirmary") >= 1 and int(GameState.herb) >= 1:
+			opt["pay"] = 6
+			opt["herb_cost"] = 1
+			opt["label"] = Locale.t("sui_infirmary_pay")
+		opts.append(opt)
 	return {
 		"cid": c.id, "band": "yao", "id": str(chosen.get("id", "")),
 		"kind": str(chosen.get("kind", "end")),
-		"title": str(chosen.get("title", "")), "speaker": _c("daily_speaker"),
+		"title": str(chosen.get("title", "")), "speaker": _speaker("yao"),
 		"body": str(chosen.get("body", "")),
-		"options": chosen.get("options", []),
+		"options": opts,
 		"death_immune": false,
 	}
 
@@ -251,9 +371,23 @@ static func open_seats(c: CKCharacter) -> Dictionary:
 		var seat := _seat_of(c, other, chars)
 		if seat != "" and out.has(seat):
 			out[seat].append(other.id)
+	# Seat only counts open if at least one card gate opens for someone in it
 	var cleaned := {}
 	for k in out.keys():
-		if not out[k].is_empty():
+		if out[k].is_empty():
+			continue
+		if k == "grand":
+			cleaned[k] = out[k]
+			continue
+		var any_card := false
+		for oid in out[k]:
+			var other2: CKCharacter = chars.get(oid)
+			if other2 == null:
+				continue
+			if not _seat_cards_open(c, other2, k).is_empty():
+				any_card = true
+				break
+		if any_card:
 			cleaned[k] = out[k]
 	return cleaned
 
@@ -274,11 +408,16 @@ static func _same_node(a: CKCharacter, b: CKCharacter) -> bool:
 
 
 static func _node_of(c: CKCharacter) -> String:
-	if c.in_roster and c.id in GameState.deploy_ids:
+	var follow = GameState.house_mods.get("follow_banner", [])
+	if typeof(follow) == TYPE_ARRAY and c.id in follow:
+		return "field"
+	if bool(c.blood_meta.get("follow_banner", false)) or (c.in_roster and c.id in GameState.deploy_ids):
 		return "field"
 	var job := str(c.blood_meta.get("estate_job", ""))
 	if job != "":
 		return "estate:%s" % job
+	if bool(c.blood_meta.get("retinue", false)):
+		return "field"
 	return "home"
 
 
@@ -347,14 +486,44 @@ static func _draw_rival(c: CKCharacter, seats: Dictionary, rng: RandomNumberGene
 	var other: CKCharacter = GameState.characters.get(oid)
 	if seat == "grand":
 		return _draw_grand(c, other, rng)
+	return _draw_seat_card(c, other, seat, rng)
+
+
+static func _seat_cards_open(c: CKCharacter, other: CKCharacter, seat: String) -> Array:
+	_load()
+	var key := str(SEAT_DOC.get(seat, ""))
+	if key == "":
+		return []
+	var rows: Array = _doc.get(key, [])
+	var pool: Array = []
+	for row in rows:
+		if typeof(row) != TYPE_DICTIONARY:
+			continue
+		var cid := "rival_%s_%s" % [seat, str(row.get("id", ""))]
+		if cid in _fired_ids(c.id):
+			continue
+		if int(c.age) < int(row.get("age_min", 1)) or int(c.age) > int(row.get("age_max", 15)):
+			continue
+		if not _need_ok(c, other, str(row.get("need", "")), {"seat": seat}):
+			continue
+		pool.append(row)
+	return pool
+
+
+static func _draw_seat_card(c: CKCharacter, other: CKCharacter, seat: String, rng: RandomNumberGenerator) -> Dictionary:
+	var pool := _seat_cards_open(c, other, seat)
+	if pool.is_empty():
+		return _draw_daily(c, rng)
+	var chosen: Dictionary = pool[rng.randi() % pool.size()]
 	var role := other.name if other else seat
 	return {
-		"cid": c.id, "band": "rival", "id": "rival_%s_bowl" % seat, "seat": seat, "other_id": oid,
-		"title": _c("rival_title"), "speaker": role,
-		"body": _c("rival_body") % role,
+		"cid": c.id, "band": "rival", "id": "rival_%s_%s" % [seat, str(chosen.get("id", ""))],
+		"seat": seat, "other_id": other.id if other else "",
+		"title": str(chosen.get("title", "")), "speaker": role,
+		"body": str(chosen.get("body", "")),
 		"options": [
-			{"id": "take", "label": _c("rival_take"), "stat": "skl", "mark": "ledger", "gain": 1},
-			{"id": "leave", "label": _c("rival_leave"), "stat": "", "mark": "", "gain": 0},
+			_opt_from_side("left", chosen.get("left", {})),
+			_opt_from_side("right", chosen.get("right", {})),
 		],
 		"death_immune": false,
 	}
@@ -393,7 +562,6 @@ static func _draw_grand(c: CKCharacter, other: CKCharacter, rng: RandomNumberGen
 	}
 
 
-
 static func _side_option(oid: String, side: Dictionary) -> Dictionary:
 	var stat := str(side.get("stat", ""))
 	var mark := str(side.get("mark", ""))
@@ -412,26 +580,303 @@ static func _side_option(oid: String, side: Dictionary) -> Dictionary:
 
 
 static func _grand_need_ok(child: CKCharacter, grand: CKCharacter, need: String) -> bool:
+	return _need_ok(child, grand, need, {"seat": "grand"})
+
+
+static func _need_ok(child: CKCharacter, other: CKCharacter, need: String, ctx: Dictionary) -> bool:
+	if need == "":
+		return true
+	var node := _node_of(child)
+	var month := int(Calendar.month)
+	var world = Engine.get_main_loop().root.get_node_or_null("World") if Engine.get_main_loop() else null
+	var pos := str(world.pos) if world != null else "ash_keep"
+	var nation := str(world.nation_of(pos)) if world != null else "ashbanner"
 	match need:
 		"home":
-			return _node_of(child) == "home" and _node_of(grand) == "home"
+			return node == "home" and (other == null or _node_of(other) == "home")
 		"same":
-			return _same_node(child, grand)
+			return other != null and _same_node(child, other)
 		"home_or_reed":
-			var n := _node_of(child)
-			return n == "home" or n.begins_with("estate:")
-		"roster_weapon":
-			return grand.in_roster and str(grand.weapon_id) != ""
-		"field":
-			return str(grand.blood_meta.get("estate_job", "")) != "" and _same_node(child, grand)
+			return node == "home" or node.begins_with("estate:")
+		"roster_weapon", "other_roster_weapon":
+			return other != null and other.in_roster and str(other.weapon_id) != ""
+		"field", "on_field":
+			return str(child.blood_meta.get("estate_job", "")) != ""
 		"parent_present":
 			for pid in child.parent_ids:
 				var p: CKCharacter = GameState.characters.get(str(pid))
 				if p != null and p.alive and _same_node(child, p):
 					return true
 			return false
+		"winter":
+			return month in [11, 12, 1, 2]
+		"winter_or_frost":
+			return month in [11, 12, 1, 2] or nation in ["frostcrown", "ironpass", "frost"]
+		"summer_not_frost":
+			return month in [6, 7, 8] and nation not in ["frostcrown", "frost"]
+		"city_herb":
+			return _in_city() and (int(GameState.herb) > 0 or _city_sells_herb())
+		"has_copy":
+			return CKLifeMarks.has(child, "copy")
+		"forge_place":
+			return node == "home" or _city_has_forge()
+		"on_road":
+			return node == "field" or _node_links_road()
+		"bridge_node":
+			return _at_bridge_or_ferry() or _node_links_bridge()
+		"holding_lv2":
+			for hid in GameState.holdings.keys():
+				if CKEconomyState.holding_level(GameState, str(hid)) >= 2:
+					return true
+			return false
+		"herb_place":
+			return _holding_unlocked("fog_herb") or _city_sells_herb()
+		"ferry_place":
+			return _holding_unlocked("tide_ferry") or _at_bridge_or_ferry()
+		"visible_blood":
+			return _has_visible_blood(child)
+		"mother_nation":
+			return _mother_nation(child) != ""
+		"ch0_banner":
+			return bool(GameState.chapter0_flags.get("banner_kept", true)) or bool(GameState.house_mods.get("ch0_banner", true))
+		"blood_verified":
+			return bool(child.blood_meta.get("verified", false))
+		"in_city":
+			return _in_city()
+		"hire_and_soft":
+			return _has_hireling() and _soft_peak(child)
+		"other_kids":
+			return _other_house_kids(child) > 0
+		"sibling_at_water":
+			return other != null and other.alive and _same_node(child, other) and (_at_bridge_or_ferry() or node.begins_with("estate:"))
+		"ferry_or_winter_water":
+			return _at_bridge_or_ferry() or (month in [11, 12, 1, 2] and _near_water())
+		"water_place":
+			return node == "home" or _at_bridge_or_ferry() or node.begins_with("estate:")
+		"both_work_age":
+			return other != null and int(child.age) >= 8 and int(other.age) >= 8 and _has_any_holding()
+		"both_home_or_field":
+			return other != null and _has_any_holding() and (_same_node(child, other))
+		"half_sibling_gate":
+			return _half_sibling_gate(child, other)
+		"dead_sibling_stele":
+			return _has_dead_sibling_stele(child)
+		"other_older2_home_reed":
+			return other != null and int(other.age) >= int(child.age) + 2 and (node == "home" or node.begins_with("estate:"))
+		"has_mal_or_scar":
+			return "malnourished" in child.traits or "scarred" in child.traits
+		"home_both_parents":
+			return node == "home" and _both_sides_parent_home(child, other)
+		"same_field":
+			return other != null and str(child.blood_meta.get("estate_job", "")) != "" and str(child.blood_meta.get("estate_job", "")) == str(other.blood_meta.get("estate_job", ""))
+		"home_other_has_copy":
+			return node == "home" and other != null and CKLifeMarks.has(other, "copy") and not CKLifeMarks.has(child, "copy")
+		"other_enlisted":
+			return other != null and other.in_roster
+		"heir_present_other":
+			return _heir_present_other(child)
+		"other_roster_same_place":
+			return other != null and other.in_roster and _same_node(child, other)
+		"home_or_same_road":
+			return node == "home" or (other != null and _same_node(child, other))
+		"same_city_or_home":
+			return node == "home" or _in_city()
+		"other_field_same":
+			return other != null and str(other.blood_meta.get("estate_job", "")) != "" and str(other.blood_meta.get("estate_job", "")) == str(child.blood_meta.get("estate_job", ""))
+		"older_sib_alive":
+			return _older_sib_alive(child)
+		"other_still_child_parent":
+			return other != null and int(other.age) <= 15 and not other.in_roster and _parent_present_bool(child)
 		_:
 			return true
+
+
+static func _in_city() -> bool:
+	var world = Engine.get_main_loop().root.get_node_or_null("World") if Engine.get_main_loop() else null
+	if world == null:
+		return false
+	var kind := str(world.node(str(world.pos)).get("kind", ""))
+	return kind in ["city", "town", "capital", "port"]
+
+
+static func _city_sells_herb() -> bool:
+	return int(GameState.herb) > 0 or _in_city()
+
+
+static func _city_has_forge() -> bool:
+	return _in_city()
+
+
+static func _node_links_road() -> bool:
+	return true  # overworld edges are roads; field node already covers march
+
+
+static func _node_links_bridge() -> bool:
+	return _at_bridge_or_ferry()
+
+
+static func _at_bridge_or_ferry() -> bool:
+	var world = Engine.get_main_loop().root.get_node_or_null("World") if Engine.get_main_loop() else null
+	if world == null:
+		return false
+	var kind := str(world.node(str(world.pos)).get("kind", ""))
+	return kind in ["bridge", "ferry", "pass", "port", "ford"]
+
+
+static func _near_water() -> bool:
+	return _at_bridge_or_ferry() or _node_of(GameState.get_leader() if GameState.get_leader() else CKCharacter.new()) == "home"
+
+
+static func _holding_unlocked(hid: String) -> bool:
+	return CKEconomyState.holding_unlocked(GameState, hid)
+
+
+static func _has_any_holding() -> bool:
+	for hid in GameState.holdings.keys():
+		if CKEconomyState.holding_unlocked(GameState, str(hid)):
+			return true
+	return false
+
+
+static func _has_visible_blood(c: CKCharacter) -> bool:
+	var signs := ["lamp_thread", "firefly", "frost_lash", "river_chart", "lamp"]
+	for s in signs:
+		if bool(c.blood_meta.get(s, false)):
+			return true
+	for tr in c.traits:
+		if str(tr) in ["heir_mark", "lamp_thread"]:
+			return true
+	# genome visible flags
+	var g = c.genome if typeof(c.genome) == TYPE_DICTIONARY else {}
+	if typeof(g) == TYPE_DICTIONARY and bool(g.get("visible_sign", false)):
+		return true
+	return false
+
+
+static func _mother_nation(c: CKCharacter) -> String:
+	if c.parent_ids.size() < 2:
+		return ""
+	var mo: CKCharacter = GameState.characters.get(str(c.parent_ids[1]))
+	if mo == null:
+		return ""
+	return CKFamilyState.candidate_nation(mo)
+
+
+static func _has_hireling() -> bool:
+	for x in GameState.characters.values():
+		if x == null or not x.alive or not x.in_roster:
+			continue
+		if x.is_leader or x.is_child:
+			continue
+		if x.parent_ids.is_empty() and str(x.spouse_id) == "":
+			return true
+	return false
+
+
+static func _soft_peak(c: CKCharacter) -> bool:
+	var best := ""
+	var best_v := -1
+	for k in ["str", "vit", "skl", "agi", "per", "wil"]:
+		var v := int(c.stats.get(k, 0))
+		if v > best_v:
+			best_v = v
+			best = k
+	return best in ["skl", "wil", "per"]
+
+
+static func _other_house_kids(c: CKCharacter) -> int:
+	var n := 0
+	for x in GameState.characters.values():
+		if x == null or x.id == c.id or not x.alive:
+			continue
+		if _eligible(x):
+			n += 1
+	return n
+
+
+static func _half_sibling_gate(child: CKCharacter, other: CKCharacter) -> bool:
+	if other == null:
+		return false
+	var shared := 0
+	var shared_pid := ""
+	for pid in child.parent_ids:
+		if str(pid) in other.parent_ids:
+			shared += 1
+			shared_pid = str(pid)
+	if shared != 1:
+		return false
+	var shared_p: CKCharacter = GameState.characters.get(shared_pid)
+	if shared_p == null or not shared_p.alive or not _same_node(child, shared_p):
+		return false
+	for pid2 in child.parent_ids:
+		if str(pid2) == shared_pid:
+			continue
+		var other_p: CKCharacter = GameState.characters.get(str(pid2))
+		if other_p == null or not other_p.alive:
+			return false
+		if _same_node(child, other_p):
+			return false
+	return true
+
+
+static func _has_dead_sibling_stele(child: CKCharacter) -> bool:
+	for x in GameState.characters.values():
+		if x == null or x.alive or x.id == child.id:
+			continue
+		if CKBloodline.kinship_degree(child, x, GameState.characters) == 2:
+			if str(x.blood_meta.get("stele_cause", "")) != "":
+				return true
+	return false
+
+
+static func _both_sides_parent_home(child: CKCharacter, other: CKCharacter) -> bool:
+	if other == null:
+		return false
+	var a := false
+	var b := false
+	for pid in child.parent_ids:
+		var p: CKCharacter = GameState.characters.get(str(pid))
+		if p != null and p.alive and _node_of(p) == "home":
+			a = true
+	for pid2 in other.parent_ids:
+		var p2: CKCharacter = GameState.characters.get(str(pid2))
+		if p2 != null and p2.alive and _node_of(p2) == "home":
+			b = true
+	return a and b
+
+
+static func _heir_present_other(child: CKCharacter) -> bool:
+	var heir_id := str(GameState.house_mods.get("named_heir", ""))
+	if heir_id == "" or heir_id == child.id:
+		# fallback: first living house adult child of leader
+		var leader := GameState.get_leader()
+		if leader == null:
+			return false
+		for x in GameState.characters.values():
+			if x == null or not x.alive or x.id == child.id:
+				continue
+			if leader.id in x.parent_ids and x.age >= 15:
+				return _same_node(child, x)
+		return false
+	var h: CKCharacter = GameState.characters.get(heir_id)
+	return h != null and h.alive and h.id != child.id and _same_node(child, h)
+
+
+static func _older_sib_alive(child: CKCharacter) -> bool:
+	for x in GameState.characters.values():
+		if x == null or not x.alive or x.id == child.id:
+			continue
+		if CKBloodline.kinship_degree(child, x, GameState.characters) == 2 and int(x.age) > int(child.age):
+			return true
+	return false
+
+
+static func _parent_present_bool(child: CKCharacter) -> bool:
+	for pid in child.parent_ids:
+		var p: CKCharacter = GameState.characters.get(str(pid))
+		if p != null and p.alive and _same_node(child, p):
+			return true
+	return false
 
 
 static func resolve(cid: String, card_id: String, option_id: String) -> Dictionary:
@@ -455,33 +900,47 @@ static func resolve(cid: String, card_id: String, option_id: String) -> Dictiona
 		var epitaph := str(opt.get("epitaph", ""))
 		c.blood_meta["stele_cause"] = "yao"
 		c.blood_meta["stele_epitaph"] = epitaph
+		# dead purse → spouse then flag treasury
+		CKPurse.on_death(c)
 		GameState.morale = maxi(0, int(GameState.morale) + int(opt.get("morale", -3)))
+		if bool(opt.get("halt_march", false)):
+			GameState.house_mods["halt_march_month"] = "%d-%d" % [Calendar.year, Calendar.month]
 		GameState.log_event(_c("yao_log") % [c.name, epitaph])
 		_drop_pending(cid, card_id)
 		_mark_fired(cid, card_id)
 		GameState.mark_dirty()
 		return {"ok": true, "msg": _c("yao_dead_msg"), "dead": true}
-	if bool(opt.get("survive", false)) and int(opt.get("pay", 0)) > 0:
+	# Pay from present self or parent purse
+	if int(opt.get("pay", 0)) > 0:
 		var pay := int(opt.get("pay", 0))
-		var purse := int(c.blood_meta.get("purse", 0))
-		var payer := c
-		if purse < pay:
-			for pid in c.parent_ids:
-				var p: CKCharacter = GameState.characters.get(str(pid))
-				if p != null and p.alive and _same_node(c, p) and int(p.blood_meta.get("purse", 0)) >= pay:
-					payer = p
-					purse = int(p.blood_meta.get("purse", 0))
-					break
-		if purse < pay:
-			return {"ok": false, "msg": _c("purse_short") % [purse, pay]}
-		payer.blood_meta["purse"] = purse - pay
-	if str(opt.get("trait", "")) != "" and str(opt.get("trait", "")) not in c.traits and c.traits.size() < 6:
-		c.traits.append(str(opt.get("trait", "")))
+		var paid := CKPurse.pay_for_child(c, pay)
+		if not bool(paid.get("ok", false)):
+			return {"ok": false, "msg": str(paid.get("msg", _c("purse_short") % [0, pay]))}
+		if int(opt.get("herb_cost", 0)) > 0:
+			GameState.herb = maxi(0, int(GameState.herb) - int(opt.get("herb_cost", 0)))
+	if bool(opt.get("care", false)):
+		var care_id := str(card.get("other_id", ""))
+		if care_id == "":
+			care_id = _pick_care_adult(c)
+		if care_id == "":
+			return {"ok": false, "msg": _c("no_care_adult")}
+		var carer: CKCharacter = GameState.characters.get(care_id)
+		if carer == null or not carer.alive or not carer.in_roster:
+			return {"ok": false, "msg": _c("no_care_adult")}
+		GameState.house_mods["care_lock_%s" % care_id] = "%d-%d" % [Calendar.year, Calendar.month]
+		carer.blood_meta["care_lock"] = true
+	if str(opt.get("trait", "")) != "":
+		_add_trait(c, str(opt.get("trait", "")))
 	var stat := str(opt.get("stat", ""))
 	var gain := int(opt.get("gain", 0))
-	if stat != "" and gain > 0:
-		c.stats[stat] = mini(int(c.apt_max.get(stat, 20)), int(c.stats.get(stat, 8)) + gain)
+	if stat != "" and gain != 0:
+		if gain > 0:
+			c.stats[stat] = mini(int(c.apt_max.get(stat, 20)), int(c.stats.get(stat, 8)) + gain)
+		else:
+			c.stats[stat] = maxi(1, int(c.stats.get(stat, 8)) + gain)
 	var mark := str(opt.get("mark", ""))
+	if bool(opt.get("mark_soft", false)):
+		mark = "ledger" if not CKLifeMarks.has(c, "ledger") else "hone"
 	var mark_msg := ""
 	if mark != "":
 		var mr := CKLifeMarks.add(c, mark, "sui")
@@ -489,14 +948,36 @@ static func resolve(cid: String, card_id: String, option_id: String) -> Dictiona
 			mark_msg = str(mr.get("msg", ""))
 			if str(mr.get("evicted", "")) != "":
 				mark_msg += Locale.t("ux_tutor_evict") % CKLifeMarks.zh(str(mr.get("evicted", "")))
+	var other_id := str(card.get("other_id", ""))
+	if other_id != "" and str(opt.get("other_mark", "")) != "":
+		var oth: CKCharacter = GameState.characters.get(other_id)
+		if oth != null and oth.alive and int(oth.age) <= 15 and not oth.in_roster:
+			CKLifeMarks.add(oth, str(opt.get("other_mark", "")), "sui")
+	if bool(opt.get("other_leave_work", false)) and other_id != "":
+		var o2: CKCharacter = GameState.characters.get(other_id)
+		if o2 != null and int(o2.age) >= 8 and int(o2.age) <= 15 and str(o2.blood_meta.get("estate_job", "")) != "":
+			o2.blood_meta["estate_job"] = ""
+			o2.blood_meta["care_lock"] = true
+			GameState.house_mods["care_lock_%s" % other_id] = "%d-%d" % [Calendar.year, Calendar.month]
+	if int(opt.get("food", 0)) != 0:
+		GameState.food = maxi(0, int(GameState.food) + int(opt.get("food", 0)))
+	if int(opt.get("herb", 0)) != 0:
+		GameState.herb = maxi(0, int(GameState.herb) + int(opt.get("herb", 0)))
+	if int(opt.get("rep", 0)) != 0:
+		GameState.add_rep("ashland", int(opt.get("rep", 0)))
+	if int(opt.get("mother_rep", 0)) != 0:
+		var mn := _mother_nation(c)
+		if mn != "":
+			GameState.add_rep(mn, int(opt.get("mother_rep", 0)))
+	if int(opt.get("rep_or_morale", 0)) != 0:
+		if _in_city():
+			GameState.add_rep(str(Engine.get_main_loop().root.get_node("World").nation_of(Engine.get_main_loop().root.get_node("World").pos)), int(opt.get("rep_or_morale", 0)))
+		else:
+			GameState.morale = clampi(int(GameState.morale) + int(opt.get("rep_or_morale", 0)), 0, 100)
 	if int(opt.get("morale", 0)) != 0:
 		GameState.morale = clampi(int(GameState.morale) + int(opt.get("morale", 0)), 0, 100)
 	if bool(opt.get("strict_morale", false)) and str(GameState.house_mods.get("doctrine", "")) == "strict":
 		GameState.morale = maxi(0, int(GameState.morale) - 1)
-	if bool(opt.get("care", false)):
-		var oid := str(card.get("other_id", ""))
-		if oid != "":
-			GameState.house_mods["care_lock_%s" % oid] = "%d-%d" % [Calendar.year, Calendar.month]
 	_drop_pending(cid, card_id)
 	_mark_fired(cid, card_id)
 	c.recalc_hp()
@@ -504,7 +985,65 @@ static func resolve(cid: String, card_id: String, option_id: String) -> Dictiona
 	var msg := _c("resolve_ok")
 	if mark_msg != "":
 		msg += mark_msg
+	var surv := str(opt.get("survivor", card.get("survivor", "")))
+	if surv != "":
+		msg += " " + _c("survivor_prefix") + surv
 	return {"ok": true, "msg": msg, "dead": false}
+
+
+static func _add_trait(c: CKCharacter, tid: String) -> void:
+	if tid == "":
+		return
+	if tid in c.traits:
+		# design: malnourished already → vit-1; scarred already → skip to mark side (handled by caller)
+		if tid == "malnourished":
+			c.stats["vit"] = maxi(1, int(c.stats.get("vit", 8)) - 1)
+		return
+	if c.traits.size() >= 6:
+		return
+	c.traits.append(tid)
+
+
+static func _pick_care_adult(c: CKCharacter) -> String:
+	# parents → grandparents → adult siblings → uncle → other roster adults
+	var chars: Dictionary = GameState.characters
+	var ordered: Array = []
+	for pid in c.parent_ids:
+		ordered.append(str(pid))
+	for other in chars.values():
+		if grandparent_role(c, other, chars) != "":
+			ordered.append(other.id)
+	for other2 in chars.values():
+		if other2 == null or other2.id == c.id:
+			continue
+		if CKBloodline.kinship_degree(c, other2, chars) == 2 and int(other2.age) >= 16:
+			ordered.append(other2.id)
+	for other3 in chars.values():
+		if other3 == null:
+			continue
+		if _is_uncle_aunt(c, other3, chars) and int(other3.age) >= 16:
+			ordered.append(other3.id)
+	for other4 in chars.values():
+		if other4 != null and other4.in_roster:
+			ordered.append(other4.id)
+	var seen := {}
+	for id in ordered:
+		if seen.has(id):
+			continue
+		seen[id] = true
+		var p: CKCharacter = chars.get(id)
+		if p == null or not p.alive or p.id == c.id:
+			continue
+		if int(p.age) < 16:
+			continue
+		if not _same_node(c, p):
+			continue
+		if not p.in_roster and not _is_house_person(p):
+			continue
+		if bool(p.blood_meta.get("care_lock", false)):
+			continue
+		return p.id
+	return ""
 
 
 static func pending_for(cid: String) -> Dictionary:
@@ -512,6 +1051,10 @@ static func pending_for(cid: String) -> Dictionary:
 		if str(item.get("cid", "")) == cid:
 			return item
 	return {}
+
+
+static func pending_count() -> int:
+	return _pending().size()
 
 
 static func _find_pending(cid: String, card_id: String) -> Dictionary:
