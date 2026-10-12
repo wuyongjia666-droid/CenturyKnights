@@ -13,7 +13,8 @@ func _ready() -> void:
 	win.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_EXPAND
 	win.content_scale_size = Vector2i(1280, 720)
 	_ensure_immersive()
-	_ensure_bleed()
+	# root is still setting up autoloads/main scene here; add the bleed next frame
+	_ensure_bleed.call_deferred()
 	get_tree().node_added.connect(_on_node_added)
 	get_viewport().size_changed.connect(_on_resize)
 
@@ -40,8 +41,9 @@ func _ensure_bleed() -> void:
 	_bleed.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_bleed.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_bleed.z_index = -100
-	get_tree().root.add_child(_bleed)
-	get_tree().root.move_child(_bleed, 0)
+	var root := get_tree().root
+	root.add_child(_bleed)
+	root.move_child(_bleed, 0)
 
 func _on_node_added(_n: Node) -> void:
 	call_deferred("_apply")
