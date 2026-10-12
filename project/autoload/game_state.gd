@@ -856,6 +856,9 @@ func save_meta(slot: String) -> Dictionary:
 		"play_seconds": play_seconds,
 		"version": str(ProjectSettings.get_setting("application/config/version", "")),
 		"schema": SAVE_SCHEMA,
+		"surname": str(surname),
+		"banner_spec": get("banner_spec") if get("banner_spec") is Dictionary else {},
+		"saved_unix": int(Time.get_unix_time_from_system()),
 	}
 
 func save_game() -> bool:
