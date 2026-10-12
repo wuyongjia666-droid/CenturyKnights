@@ -69,9 +69,12 @@ func _todos() -> void:
 	var cats := {}
 	for item in Todo.snapshot():
 		cats[str(item.get("category", ""))] = int(item.get("count", 0))
-	for id in ["buildings", "quests", "marriage", "injured", "festival", "train"]:
+	# Audit P1-1: only real to-dos; catalog length, works, suitors and the tutor are not counted.
+	for id in ["injured", "festival"]:
 		_ok(int(cats.get(id, 0)) > 0, "todo %s count %s" % [id, str(cats.get(id, 0))])
-	_ok(cats.size() >= 6, "categories %d" % cats.size())
+	for id in ["buildings", "marriage", "train"]:
+		_ok(not cats.has(id), "fake todo %s still listed" % id)
+	_ok(cats.has("quests") == Todo.is_unlocked("quests"), "quests row ignores the lock")
 	_ok(int(cats.get("probe", 0)) == 1, "register missing")
 
 func _hub() -> void:
@@ -101,7 +104,7 @@ func _hub() -> void:
 		var node := hub.find_child("NavGroup_%s" % _group_id(title), true, false)
 		_ok(node != null, "group %s" % title)
 	var row := hub.find_child("TodoRow", true, false)
-	_ok(row != null and row.get_child_count() >= 6, "todo row %s" % str(row))
+	_ok(row != null and row.get_child_count() >= 3, "todo row %s" % str(row))
 	var now := hub.find_child("MainlineNow", true, false)
 	_ok(now != null and str(now.text) != "", "mainline label missing")
 	_ok(hub.find_child("ContinueMainline", true, false) != null, "continue missing")
