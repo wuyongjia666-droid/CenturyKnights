@@ -39,6 +39,24 @@ func _run() -> String:
 		if near_x <= far_x + 0.05:
 			return "%s parallax near %.3f far %.3f" % [str(id), near_x, far_x]
 		full.queue_free()
+	# WS-D #49: painted plates instead of grey blocks, tile- and nation-aware
+	var painted := CutsceneStage.build(host, "fort", false, Color8(58, 110, 165))
+	if painted.get_node("far").get_node_or_null("plate") == null:
+		return "fort far layer is not the painted plate"
+	for n in painted.find_children("*", "MeshInstance3D", true, false):
+		if (n as MeshInstance3D).mesh is BoxMesh:
+			return "grey block left in painted stage"
+	if painted.get_node("mid").get_node_or_null("banner") == null:
+		return "no nation banner"
+	var blue := CutsceneStage.nation_banner(Color8(58, 110, 165))
+	var mint := CutsceneStage.nation_banner(Color8(94, 224, 181))
+	if blue == "" or mint == "" or blue == mint:
+		return "banner match %s / %s" % [blue, mint]
+	painted.queue_free()
+	if CutsceneStage.biome_for_tile("forest", "plain") != "hill" or CutsceneStage.biome_for_tile("water", "plain") != "ford":
+		return "tile biome"
+	if CutsceneStage.biome_for_tile("plain", "urban") != "urban":
+		return "plain tile kept map biome"
 	var guessed := CutsceneStage.biome_from_record({"backdrop": "res://assets/art/battle/v8_battle_biome_snow.png"})
 	if guessed != "snow":
 		return "backdrop guess " + guessed

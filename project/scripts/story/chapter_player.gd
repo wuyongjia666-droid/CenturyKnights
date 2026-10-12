@@ -5,6 +5,7 @@ extends Control
 const DEFAULT_PATH := "res://data/story/chapters/ch0.json"
 const BATTLE_SCENE := "res://scenes/battle/battle.tscn"
 const HUB_SCENE := "res://scenes/hub/castle_hub.tscn"
+const MENU_SCENE := "res://scenes/ui/main_menu.tscn"
 
 @export var chapter_path: String = DEFAULT_PATH
 @export var lock_path: bool = false
@@ -28,22 +29,22 @@ var _card: Control
 var _cards_seen: Dictionary = {}
 
 const TOUCH := 48
-## Background tints for stage.bg until painted plates land (res://assets/art/story_bg/<key>.webp wins).
+## Cool style-lock tints (ink-navy/slate/frost) until the farm plates land; res://assets/art/story_bg/<key>.webp wins.
 const BG_TINTS := {
-	"slope": [Color(0.32, 0.26, 0.14), Color(0.07, 0.06, 0.05)],
-	"memory": [Color(0.12, 0.12, 0.14), Color(0.02, 0.02, 0.03)],
-	"yard_night": [Color(0.20, 0.10, 0.06), Color(0.03, 0.03, 0.05)],
-	"tree_moon": [Color(0.16, 0.20, 0.30), Color(0.03, 0.04, 0.07)],
-	"pass_night": [Color(0.30, 0.12, 0.06), Color(0.04, 0.03, 0.04)],
-	"pass_day": [Color(0.30, 0.28, 0.24), Color(0.08, 0.07, 0.06)],
-	"tavern": [Color(0.34, 0.20, 0.08), Color(0.06, 0.04, 0.03)],
-	"hall": [Color(0.22, 0.18, 0.14), Color(0.05, 0.04, 0.04)],
-	"bridge_day": [Color(0.26, 0.30, 0.34), Color(0.06, 0.07, 0.09)],
-	"gate": [Color(0.24, 0.28, 0.22), Color(0.05, 0.06, 0.05)],
-	"gate_night": [Color(0.10, 0.12, 0.20), Color(0.02, 0.03, 0.05)],
-	"hall_feast": [Color(0.34, 0.22, 0.12), Color(0.06, 0.04, 0.03)],
-	"slope_winter": [Color(0.30, 0.32, 0.36), Color(0.07, 0.08, 0.10)],
-	"bridge_night": [Color(0.12, 0.16, 0.30), Color(0.02, 0.03, 0.06)],
+	"slope": [Color(0.30, 0.36, 0.44), Color(0.04, 0.05, 0.07)],
+	"memory": [Color(0.16, 0.17, 0.20), Color(0.04, 0.05, 0.07)],
+	"yard_night": [Color(0.14, 0.17, 0.24), Color(0.04, 0.05, 0.07)],
+	"tree_moon": [Color(0.20, 0.26, 0.36), Color(0.04, 0.05, 0.07)],
+	"pass_night": [Color(0.13, 0.16, 0.23), Color(0.04, 0.05, 0.07)],
+	"pass_day": [Color(0.30, 0.34, 0.40), Color(0.04, 0.05, 0.07)],
+	"tavern": [Color(0.22, 0.25, 0.31), Color(0.04, 0.05, 0.07)],
+	"hall": [Color(0.20, 0.23, 0.29), Color(0.04, 0.05, 0.07)],
+	"bridge_day": [Color(0.32, 0.38, 0.46), Color(0.04, 0.05, 0.07)],
+	"gate": [Color(0.27, 0.32, 0.38), Color(0.04, 0.05, 0.07)],
+	"gate_night": [Color(0.12, 0.15, 0.22), Color(0.04, 0.05, 0.07)],
+	"hall_feast": [Color(0.24, 0.28, 0.35), Color(0.04, 0.05, 0.07)],
+	"slope_winter": [Color(0.40, 0.45, 0.52), Color(0.04, 0.05, 0.07)],
+	"bridge_night": [Color(0.13, 0.18, 0.30), Color(0.04, 0.05, 0.07)],
 }
 
 func _ready() -> void:
@@ -174,6 +175,13 @@ func _build() -> void:
 	skip_btn.custom_minimum_size = Vector2(112, TOUCH)
 	skip_btn.pressed.connect(skip_lines)
 	top.add_child(skip_btn)
+	if GameState.replay_mode:
+		var leave = UIKit.make_button(Locale.t("replay_exit"), 112)
+		leave.name = "LeaveReplay"
+		leave.custom_minimum_size = Vector2(112, TOUCH)
+		leave.pressed.connect(func(): _go_scene(MENU_SCENE))
+		top.add_child(leave)
+		return
 	var save_btn = UIKit.make_button("存档", 100)
 	save_btn.custom_minimum_size = Vector2(100, TOUCH)
 	save_btn.pressed.connect(func():
@@ -348,7 +356,10 @@ func _speaker_portrait(speaker: String, emotion: String = "") -> void:
 	_portrait.texture = UnitArt.speaker_silhouette(speaker, 120)
 
 func _refresh_actions() -> void:
+	# Detach first: a queued-but-attached old button would steal the
+	# "AdvanceLine" name and push the continue button out of the dialogue box.
 	for c in _actions.get_children():
+		_actions.remove_child(c)
 		c.queue_free()
 	var lines: Array = _visible_lines()
 	if _line_idx >= lines.size() - 1:
@@ -386,6 +397,7 @@ func _add_action(text: String, cb: Callable, disabled: bool = false, compact: bo
 	b.size_flags_horizontal = Control.SIZE_SHRINK_END
 	if compact:
 		b.name = "AdvanceLine"
+		b.set_meta("advance_line", true)
 		b.custom_minimum_size = Vector2(148, 36)
 		UIKit.compact(b, 36)
 	if not disabled:
@@ -435,6 +447,9 @@ func _run_op(step) -> String:
 			# Leave this chapter for another one by id (ch0 -> e1_01). Audit P1-5.
 			var target_id := str(row.get("id", ""))
 			test_capture["open_chapter"] = target_id
+			if GameState.replay_mode:
+				_go_scene(MENU_SCENE)
+				return "stop"
 			_go_scene(StoryCatalog.request_chapter(target_id))
 			return "stop"
 		"advance":
@@ -554,6 +569,11 @@ func _goto_next() -> void:
 	_load_beat(str(n))
 
 func _go_scene(path: String) -> void:
+	# A replay never lands in the castle: leaving the prologue ends it.
+	if GameState.replay_mode and (path == HUB_SCENE or path == MENU_SCENE):
+		test_capture["replay_end"] = true
+		GameState.end_prologue_replay()
+		path = MENU_SCENE
 	test_capture["scene"] = path
 	if suppress_scene_change or path == "":
 		return
