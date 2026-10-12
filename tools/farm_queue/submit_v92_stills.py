@@ -109,6 +109,9 @@ def build_argv(python: str, dual: str, root: str, shots: str, plan: Plan) -> lis
     if plan.spread:
         argv.append("--spread")
     argv.extend(["--sn-backend", "local", "--only", plan.only])
+    # dual_submit_stills refuses --only qwen/sn unless --allow-single is set.
+    if plan.only != "both":
+        argv.append("--allow-single")
     return argv
 
 
@@ -271,6 +274,25 @@ def find_dual(scripts: str) -> Path | None:
     return None
 
 
+def parse_kinds(text: str) -> set[str] | None:
+    """Optional role filter. Empty / omitted means every kind in the farm set."""
+    text = (text or "").strip()
+    if not text:
+        return None
+    kinds = {part.strip() for part in text.split(",") if part.strip()}
+    known = set(KIND_FARM)
+    unknown = kinds - known
+    if unknown:
+        raise ValueError(f"unknown kinds {sorted(unknown)}; expected {','.join(sorted(known))}")
+    return kinds
+
+
+def filter_jobs_by_kind(jobs: list[dict], kinds: set[str] | None) -> list[dict]:
+    if kinds is None:
+        return jobs
+    return [job for job in jobs if str(job.get("kind", "")) in kinds]
+
+
 def parse_farms(text: str) -> set[str]:
     farms = {part.strip() for part in text.split(",") if part.strip()}
     if not farms:
@@ -297,6 +319,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--scripts", default="", help="directory that contains dual_submit_stills.py")
     parser.add_argument("--shots-out", default="", help="where to write the shots JSON (submit default: <root>/shots_v92_farm.json)")
     parser.add_argument("--farms", default=",".join(FARM_ORDER), help="comma list, default FARM-01..05")
+    parser.add_argument("--kinds", default="", help="optional comma list of job kinds (e.g. status_overlay)")
     parser.add_argument("--qwen", default=os.environ.get("COMFYUI_QWEN", QWEN_DEFAULT))
     parser.add_argument("--sn", default=os.environ.get("COMFYUI_SN", SN_DEFAULT))
     parser.add_argument("--dual", action="store_true", help="also submit SenseNova local and spread across both hosts")
@@ -321,6 +344,14 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     jobs, names = gate.collect_jobs()
+    try:
+        kinds = parse_kinds(args.kinds)
+    except ValueError as exc:
+        print(f"FAIL {exc}")
+        return 1
+    jobs = filter_jobs_by_kind(jobs, kinds)
+    if kinds is not None:
+        print(f"[v92-farm] kind filter={','.join(sorted(kinds))} remaining_jobs={len(jobs)}")
     try:
         shots = build_shots(jobs, farms)
     except (ValueError, KeyError, TypeError) as exc:

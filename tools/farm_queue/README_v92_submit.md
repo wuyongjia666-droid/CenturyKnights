@@ -9,7 +9,7 @@
 | FARM-01 | `genome_bank_v92.json` | 基因桶，五年龄，≤6000 |
 | FARM-02 | `v92_cities.json` | 城市图 |
 | FARM-03 | `v92_smiths.json` + `v92_items.json` | 铁匠铺 + 物品图标 |
-| FARM-04 | `v92_scenes.json` + `v92_expressions.json` | 场景 + 同伴表情 |
+| FARM-04 | `v92_scenes.json` + `v92_expressions.json` + `v92_status_overlays.json` | 场景 + 同伴表情 + 状态叠层（6） |
 | FARM-05 | `v92_castle.json` + `v92_estates.json` | 城堡分层 + 庄园 |
 
 FARM-06（Hunyuan）和 FARM-07（职业棋子）不在这一枪里，见 `FARM-06-07.md`。
@@ -107,6 +107,18 @@ powershell -File tools\farm_queue\submit_v92_on_m173.ps1
 ```
 
 这才会执行 `--spread --sn-backend local --only both`。此时 SenseNova `:8329` 不通就退出（码 3），不会悄悄退回只投 Qwen。没有命令行 `--only` 开关。
+
+## 状态叠层（FARM-04 status_overlay）
+
+六张共享透明叠层，不是「脸 × 状态」矩阵。专用入口：
+
+```powershell
+powershell -File tools\farm_queue\submit_status_overlays_on_m173.ps1
+powershell -File tools\farm_queue\submit_status_overlays_on_m173.ps1 -OnlyStatus
+python tools\farm_queue\ingest_status_overlays.py --inbox <farm-out>
+```
+
+详见 `docs/art/status-portraits-v92.md`。
 
 ## 表情局部重绘
 

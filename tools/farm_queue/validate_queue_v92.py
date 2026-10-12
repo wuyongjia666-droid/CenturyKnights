@@ -261,6 +261,21 @@ def check() -> list[str]:
     queued = sorted(str(r.get("item_id", "")) for r in by_kind.get("item", []))
     if queued != sorted(item_ids):
         errors.append(f"items {len(queued)}")
+    status = by_kind.get("status_overlay", [])
+    want_status = ["malnourished", "wound_light", "wound_lasting", "wound_grave", "lost_finger", "limp"]
+    got_status = [str(r.get("status_id", "")) for r in status]
+    if got_status != want_status:
+        errors.append(f"status_overlays {got_status}")
+    for row in status:
+        if str(row.get("edit", "")) != "overlay":
+            errors.append(f"{row.get('id')}: edit")
+        path_s = str(row.get("out_path", ""))
+        if "/portraits/status/" not in path_s:
+            errors.append(f"{row.get('id')}: status path")
+        gate = row.get("gate") or {}
+        for key in ("min_opaque_ratio", "max_opaque_ratio"):
+            if key not in gate:
+                errors.append(f"{row.get('id')}: gate.{key}")
     if len(by_kind.get("scene", [])) != 50:
         errors.append(f"scenes {len(by_kind.get('scene', []))}")
     expr = by_kind.get("expression", [])
