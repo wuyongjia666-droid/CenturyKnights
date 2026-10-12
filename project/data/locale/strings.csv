@@ -866,3 +866,7 @@ shell_fff5a58f,十三卷已执。可继续第十四卷或经营。,Volume 13 is 
 shell_turn_player,—— 玩家回合 ——,—— Your turn ——
 shell_turn_enemy,—— 敌方回合 ——,—— Enemy turn ——
 shell_terrain_tip,%s　回避+%d　防+%d　移耗%d,%s  avoid +%d  def +%d  move %d
+tavern_refresh_spent,本月刷新次数已用完，下月再来,No more refreshes this month
+tavern_refresh_spent_short,本月已无刷新,No refresh left
+tavern_refresh_free,免费刷新 ↻（余 %d）,Free refresh ↻ (%d left)
+tavern_refresh_paid,刷新 %d 银 ↻（余 %d）,Refresh %d silver ↻ (%d left)
