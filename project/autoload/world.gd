@@ -89,6 +89,7 @@ var rivals: Array = []           # {id, name, pos, home, stolen, price_mul}
 var rival_thefts: Array = []
 var chain_progress: Dictionary = {}  # chain id -> {step, status}
 var second_hold_offer: String = ""
+var territory: Dictionary = {}  # v9.3 CKTerritory state (docs/design/territory.md)
 var rng := RandomNumberGenerator.new()
 
 func _ready() -> void:
@@ -97,6 +98,7 @@ func _ready() -> void:
 	if not Calendar.month_advanced.is_connected(_on_month):
 		Calendar.month_advanced.connect(_on_month)
 	CKFestivals.install()
+	Calendar.register("world", Callable(self, "_territory_month"), 20)
 	if not get_tree().node_added.is_connected(_bind_battle_casualty):
 		get_tree().node_added.connect(_bind_battle_casualty)
 
@@ -184,6 +186,7 @@ func reset() -> void:
 	_enc_seq = 0
 	chain_progress = {}
 	second_hold_offer = ""
+	territory = CKTerritory.fresh()
 	_init_rivals()
 	world_changed.emit()
 
@@ -198,6 +201,7 @@ func to_save() -> Dictionary:
 		"travel": travel, "pending_event": pending_event, "road_flags": road_flags, "encounter": encounter, "travel_log": travel_log, "qseq": _qseq, "enc_seq": _enc_seq,
 		"royal_courts": royal_courts, "rivals": rivals, "rival_thefts": rival_thefts, "chain_progress": chain_progress,
 		"second_hold_offer": second_hold_offer,
+		"territory": CKTerritory.to_save(),
 	}
 
 func from_save(d: Dictionary) -> void:
@@ -245,6 +249,7 @@ func from_save(d: Dictionary) -> void:
 	_enc_seq = int(d.get("enc_seq", 0))
 	chain_progress = d.get("chain_progress", {}) if typeof(d.get("chain_progress", {})) == TYPE_DICTIONARY else {}
 	second_hold_offer = str(d.get("second_hold_offer", ""))
+	territory = CKTerritory.from_save(d.get("territory", {}))
 	_restore_rivals(d.get("rivals", []))
 	rival_thefts = d.get("rival_thefts", []) if typeof(d.get("rival_thefts", [])) == TYPE_ARRAY else []
 	world_changed.emit()
@@ -586,8 +591,17 @@ func arrive(id: String) -> Dictionary:
 		elif _arrives_in_battle(k) and str(q.target) == id and encounter.is_empty():
 			out["encounter"] = start_encounter("quest", {"quest": str(q.id), "node": id, "from": _last_from if _last_from != "" else id})
 			break
+	if out.get("encounter", {}).is_empty() and encounter.is_empty():
+		var tenc := CKTerritory.on_arrive(id)
+		if not tenc.is_empty():
+			out["encounter"] = tenc
 	_check_gather_ready()
 	return out
+
+func _territory_month(ctx: Dictionary) -> void:
+	var line := CKTerritory.apply_month()
+	if line != "":
+		ctx["events"].append({"type": "territory", "text": line})
 
 # ── days / calendar ───────────────────────────────────
 func advance_days(n: int) -> Array:
@@ -1330,7 +1344,8 @@ func turn_in(qid: String) -> Dictionary:
 		GameState.add_lineage_event("灰旗完成%s名誉委托「%s」" % [node(str(q.issuer)).get("name", ""), q.title])
 	q.state = "done"
 	active.erase(q)
-	var follow := _spawn_follow_up(q)
+	extra += CKTerritory.on_quest_done(q)
+	var follow := {} if q.has("territory") else _spawn_follow_up(q)
 	if not follow.is_empty():
 		extra += "；%s 有后续委托「%s」" % [node(str(follow.issuer)).get("name", ""), follow.title]
 	stats_done[str(q.kind)] = int(stats_done.get(str(q.kind), 0)) + 1
@@ -1445,7 +1460,7 @@ func _stealable_index(city: String) -> int:
 	var offers: Array = boards.get(city, {}).get("offers", [])
 	for i in offers.size():
 		var q: Dictionary = offers[i]
-		if bool(q.get("sig", false)) or str(q.get("scripted_chain", "")) != "":
+		if bool(q.get("sig", false)) or str(q.get("scripted_chain", "")) != "" or q.has("territory"):
 			continue
 		return i
 	return -1
@@ -1850,6 +1865,8 @@ func start_encounter(kind: String, ctx: Dictionary) -> Dictionary:
 	var biome := str(n.get("biome", "plain"))
 	var q := quest_by_id(str(ctx.get("quest", "")))
 	var danger := int(q.get("danger", 0)) if not q.is_empty() else int(road_between(str(ctx.get("from", at)), at).get("danger", 1))
+	if ctx.has("danger"):
+		danger = int(ctx.danger)
 	danger = clampi(danger, 1, 4)
 	var pool: Array = _biome_maps.get(biome, [])
 	if pool.is_empty():
@@ -1878,6 +1895,8 @@ func start_encounter(kind: String, ctx: Dictionary) -> Dictionary:
 	var label := ""
 	if not q.is_empty():
 		label = str(q.title)
+	elif str(ctx.get("site", "")) != "":
+		label = "%s·%s" % [CKTerritory.site(str(ctx.site)).get("name", ""), Locale.t("terr_45") if kind == "territory_defend" else Locale.t("terr_46")]
 	else:
 		label = "%s·遭遇战" % n.get("name", "")
 	base.name = label
@@ -1887,7 +1906,7 @@ func start_encounter(kind: String, ctx: Dictionary) -> Dictionary:
 	BattleMaps.register_map(mid, base)
 	encounter = {"id": mid, "kind": kind, "node": at, "from": str(ctx.get("from", at)), "quest": str(ctx.get("quest", "")),
 		"label": label, "base": base_id, "nation": nid, "danger": danger, "event": str(ctx.get("event", "")), "rep_win": int(ctx.get("rep_win", 0)),
-		"map": base}
+		"site": str(ctx.get("site", "")), "map": base}
 	_tlog("遭遇战：%s" % label)
 	world_changed.emit()
 	return encounter
@@ -2070,6 +2089,7 @@ func on_battle_end(win: bool) -> Dictionary:
 				msg += "；护送委托失败"
 			else:
 				msg += Locale.t("quest_objective_failed")
+	msg += CKTerritory.on_battle(enc, win)
 	_tlog(msg)
 	GameState.mark_dirty()
 	world_changed.emit()
