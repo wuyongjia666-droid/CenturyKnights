@@ -67,8 +67,24 @@ func _wire(box: VBoxContainer) -> void:
 	box.get_node("PauseSave").pressed.connect(func(): GameState.save_game())
 	box.get_node("PauseLoad").pressed.connect(func(): GameState.load_game())
 	box.get_node("PauseSettings").pressed.connect(func(): _go("res://scenes/ui/settings.tscn"))
-	box.get_node("PauseHub").pressed.connect(func(): _go("res://scenes/hub/castle_hub.tscn"))
+	var hub: Button = box.get_node("PauseHub")
+	if BattleDefeat.find_battle(get_tree()) != null:
+		hub.text = Locale.t("pause_retreat")
+	hub.pressed.connect(func(): _on_hub(hub))
 	box.get_node("PauseTitle").pressed.connect(func(): _go("res://scenes/ui/main_menu.tscn"))
+
+func _on_hub(hub: Button) -> void:
+	## In battle this is a retreat (a defeat with injury settlement) and needs a second tap to confirm.
+	var battle := BattleDefeat.find_battle(get_tree())
+	if battle == null:
+		_go(BattleDefeat.CASTLE)
+		return
+	if not hub.has_meta("armed"):
+		hub.set_meta("armed", true)
+		hub.text = Locale.t("pause_retreat_confirm")
+		return
+	queue_free()
+	BattleDefeat.retreat(battle)
 
 func _go(path: String) -> void:
 	queue_free()
