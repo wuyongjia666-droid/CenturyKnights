@@ -32,7 +32,8 @@ static func manifest_path() -> String:
 static func bank_dir() -> String:
 	if dir_override != "":
 		return dir_override
-	return ProjectSettings.globalize_path("res://assets/art/portraits/genome/bank")
+	## res:// (not a globalized OS path): exported APK/PCK has no real directory on disk.
+	return "res://assets/art/portraits/genome/bank"
 
 
 static func _dir_has_plate(dir: String) -> bool:
@@ -42,7 +43,7 @@ static func _dir_has_plate(dir: String) -> bool:
 	if da == null:
 		return false
 	for fn in da.get_files():
-		var low := str(fn).to_lower()
+		var low := _strip_export_suffix(str(fn)).to_lower()
 		if low.ends_with(".webp") or low.ends_with(".png"):
 			return true
 	return false
@@ -418,8 +419,9 @@ static func _ensure_disk_index() -> void:
 	if da == null:
 		_disk_indexed = true
 		return
-	for fn in da.get_files():
-		var low := str(fn).to_lower()
+	for fn0 in da.get_files():
+		var fn := _strip_export_suffix(str(fn0))
+		var low := fn.to_lower()
 		if low.find(".small.") >= 0 or low.find(".medium.") >= 0 or low.find(".large.") >= 0:
 			continue
 		if not (low.ends_with(".webp") or low.ends_with(".png")):
@@ -430,7 +432,8 @@ static func _ensure_disk_index() -> void:
 			if stem.begins_with(prefix):
 				if not _disk_by_stage.has(str(st)):
 					_disk_by_stage[str(st)] = []
-				(_disk_by_stage[str(st)] as Array).append(stem)
+				if not (_disk_by_stage[str(st)] as Array).has(stem):
+					(_disk_by_stage[str(st)] as Array).append(stem)
 				break
 	for st2 in _disk_by_stage.keys():
 		(_disk_by_stage[st2] as Array).sort()
@@ -447,6 +450,20 @@ static func _disk_stage_plate(c: Object, stage: String, tier: String) -> Texture
 		seed = CKGenomePortrait.identity_seed(c)
 	var idx: int = absi(seed) % keys.size()
 	return _load_plate(str(keys[idx]), tier)
+
+
+## Exported packs list "x.webp.import" / "x.webp.remap" instead of "x.webp".
+static func _strip_export_suffix(fn: String) -> String:
+	for suf in [".import", ".remap"]:
+		if fn.ends_with(suf):
+			return fn.substr(0, fn.length() - suf.length())
+	return fn
+
+## Same-stage plate by identity seed, ignoring the age-derived stage (UnitArt teen band at 15).
+static func stage_texture(c: Object, stage: String, tier: String = "large") -> Texture2D:
+	if not has_plates():
+		return null
+	return _disk_stage_plate(c, stage, tier)
 
 
 static func _load_plate(key: String, tier: String = "large") -> Texture2D:

@@ -9,7 +9,13 @@ const SCREENS := [
 	["marriage", "res://scenes/hub/marriage.tscn"],
 	["lineage", "res://scenes/hub/lineage_view.tscn"],
 	["atlas", "res://scenes/hub/atlas_view.tscn"],
+	["atlas_side", "res://scenes/hub/atlas_view.tscn", true, "atlas_open_side"],
 	["city", "res://scenes/hub/city.tscn"],
+	["city_smith", "res://scenes/hub/city.tscn", "smith"],
+	["city_market", "res://scenes/hub/city.tscn", "market"],
+	["city_board", "res://scenes/hub/city.tscn", "board"],
+	["city_tavern", "res://scenes/hub/city.tscn", "tavern"],
+	["city_armory", "res://scenes/hub/city.tscn", "armory"],
 	["battle", "res://scenes/battle/battle.tscn"],
 	["settings", "res://scenes/ui/settings.tscn"],
 	["founding", "res://scenes/story/naming.tscn"],
@@ -38,8 +44,10 @@ func _ready() -> void:
 		await get_tree().process_frame
 		await get_tree().process_frame
 		for pair in SCREENS:
-			if not _only.is_empty() and not _only.has(str(pair[0])):
+			if not _only.is_empty() and not Array(_only).any(func(o): return str(pair[0]).begins_with(o)):
 				continue
+			if pair.size() > 2:
+				GameState.set_meta(str(pair[3]) if pair.size() > 3 else "city_tab", pair[2])
 			await _shoot(str(pair[1]), "%s_%dx%d" % [pair[0], r.x, r.y])
 	var f := FileAccess.open(_out + "/layout.json", FileAccess.WRITE)
 	f.store_string(JSON.stringify(_report, " "))
@@ -76,12 +84,20 @@ func _collect(n: Node, items: Array, vr: Rect2) -> void:
 		var c: Control = n
 		if c is BaseButton or c is Label or c is LineEdit:
 			var r := c.get_global_rect()
+			var clip := _scroll_clip(c)
+			var clipped := false
+			if clip.size.x > 0.0:
+				clipped = not clip.grow(1.0).encloses(r)
+				if not clip.intersects(r):
+					for ch0 in n.get_children():
+						_collect(ch0, items, vr)
+					return
 			var txt := ""
 			if c is Label or c is Button:
 				txt = str(c.text)
 			items.append({"type": c.get_class(), "path": str(c.get_path()), "text": txt.left(30),
 				"rect": [r.position.x, r.position.y, r.size.x, r.size.y],
-				"font": roundi(c.get_theme_font_size("font_size") * c.get_global_transform().get_scale().y / _root_scale), "in_scroll": _in_scroll(c)})
+				"font": roundi(c.get_theme_font_size("font_size") * c.get_global_transform().get_scale().y / _root_scale), "in_scroll": _in_scroll(c), "clipped": clipped})
 	for ch in n.get_children():
 		_collect(ch, items, vr)
 
@@ -92,3 +108,13 @@ func _in_scroll(c: Node) -> bool:
 			return true
 		p = p.get_parent()
 	return false
+
+
+## What a scroll view actually shows: items scrolled out of it are not on screen.
+func _scroll_clip(c: Node) -> Rect2:
+	var p := c.get_parent()
+	while p != null:
+		if p is ScrollContainer:
+			return (p as Control).get_global_rect()
+		p = p.get_parent()
+	return Rect2()
