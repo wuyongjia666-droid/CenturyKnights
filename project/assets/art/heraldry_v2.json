@@ -524,68 +524,6 @@
       "shape": "leaf"
     }
   ],
-  "cadency": [
-    {
-      "id": "none",
-      "order": 0,
-      "zh": "无",
-      "shape": "none"
-    },
-    {
-      "id": "label",
-      "order": 1,
-      "zh": "嫡长标",
-      "shape": "label"
-    },
-    {
-      "id": "crescent",
-      "order": 2,
-      "zh": "次子月",
-      "shape": "crescent"
-    },
-    {
-      "id": "mullet",
-      "order": 3,
-      "zh": "三子星",
-      "shape": "mullet"
-    },
-    {
-      "id": "martlet",
-      "order": 4,
-      "zh": "四子燕",
-      "shape": "martlet"
-    },
-    {
-      "id": "annulet",
-      "order": 5,
-      "zh": "五子环",
-      "shape": "annulet"
-    },
-    {
-      "id": "fleur",
-      "order": 6,
-      "zh": "六子花",
-      "shape": "fleur"
-    },
-    {
-      "id": "rose",
-      "order": 7,
-      "zh": "七子蔷",
-      "shape": "rose"
-    },
-    {
-      "id": "cross_moline",
-      "order": 8,
-      "zh": "八子十字",
-      "shape": "cross_moline"
-    },
-    {
-      "id": "octofoil",
-      "order": 9,
-      "zh": "九子瓣",
-      "shape": "octofoil"
-    }
-  ],
   "helms": [
     {
       "id": "none",
@@ -839,11 +777,6 @@
     "lozenge",
     "banner"
   ],
-  "marshalling_modes": [
-    "none",
-    "impale",
-    "quarter"
-  ],
   "palette": [
     "#6ed4ff",
     "#5ee0b5",
@@ -928,8 +861,6 @@
     ],
     "shield_shape": "heater",
     "nation": "ashbanner",
-    "cadency": "none",
-    "bastardy": false,
     "achievement": {
       "helm": "none",
       "crown": "none",
@@ -940,10 +871,6 @@
         "none"
       ],
       "motto": ""
-    },
-    "marshalling": {
-      "mode": "none",
-      "partner": {}
     }
   },
   "v1_field_to_division": {
@@ -974,5 +901,37 @@
     "count": "count",
     "duke": "duke",
     "royal": "royal"
+  },
+  "rank_badges": {
+    "knight": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"64\" height=\"64\" viewBox=\"0 0 64 64\"><defs><linearGradient id=\"rk_rim\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0\" stop-color=\"#e8f6ff\"/><stop offset=\"1\" stop-color=\"#5c7a9a\"/></linearGradient><linearGradient id=\"rk_met\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#f4f9ff\"/><stop offset=\"0.55\" stop-color=\"#c5d0dc\"/><stop offset=\"1\" stop-color=\"#6f8296\"/></linearGradient><radialGradient id=\"rk_disc\" cx=\"0.35\" cy=\"0.3\" r=\"0.8\"><stop offset=\"0\" stop-color=\"#2e3a4c\"/><stop offset=\"1\" stop-color=\"#1c2330\"/></radialGradient></defs><circle cx=\"32\" cy=\"32\" r=\"29\" fill=\"url(#rk_disc)\" stroke=\"url(#rk_rim)\" stroke-width=\"3\"/><path d=\"M32,12 L37,30 L32,52 L27,30 Z\" fill=\"url(#rk_met)\" stroke=\"#0a0e14\" stroke-width=\"1.6\" stroke-linejoin=\"round\"/><path d=\"M32,14 L32,50\" stroke=\"#f4f9ff\" stroke-width=\"1\"/><path d=\"M22,30 L42,30\" stroke=\"#0a0e14\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M22,30 L42,30\" stroke=\"#c5d0dc\" stroke-width=\"2.6\" stroke-linecap=\"round\"/><path d=\"M32,26.6 L35.4,30 L32,33.4 L28.6,30 Z\" fill=\"#6ed4ff\" stroke=\"#0a0e14\" stroke-width=\"1\"/></svg>",
+    "baron": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"64\" height=\"64\" viewBox=\"0 0 64 64\"><defs><linearGradient id=\"rk_rim\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0\" stop-color=\"#e8f6ff\"/><stop offset=\"1\" stop-color=\"#5c7a9a\"/></linearGradient><linearGradient id=\"rk_met\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#f4f9ff\"/><stop offset=\"0.55\" stop-color=\"#c5d0dc\"/><stop offset=\"1\" stop-color=\"#6f8296\"/></linearGradient><radialGradient id=\"rk_disc\" cx=\"0.35\" cy=\"0.3\" r=\"0.8\"><stop offset=\"0\" stop-color=\"#2e3a4c\"/><stop offset=\"1\" stop-color=\"#1c2330\"/></radialGradient></defs><circle cx=\"32\" cy=\"32\" r=\"29\" fill=\"url(#rk_disc)\" stroke=\"url(#rk_rim)\" stroke-width=\"3\"/><path d=\"M16,36 L48,36 L47,44 L17,44 Z\" fill=\"url(#rk_met)\" stroke=\"#0a0e14\" stroke-width=\"1.6\" stroke-linejoin=\"round\"/><path d=\"M18,37.6 L46,37.6\" stroke=\"#f4f9ff\" stroke-width=\"1\" opacity=\"0.9\"/><circle cx=\"19\" cy=\"32\" r=\"3\" fill=\"#f4f9ff\" stroke=\"#0a0e14\" stroke-width=\"1.2\"/><circle cx=\"28\" cy=\"32\" r=\"3\" fill=\"#f4f9ff\" stroke=\"#0a0e14\" stroke-width=\"1.2\"/><circle cx=\"36\" cy=\"32\" r=\"3\" fill=\"#f4f9ff\" stroke=\"#0a0e14\" stroke-width=\"1.2\"/><circle cx=\"45\" cy=\"32\" r=\"3\" fill=\"#f4f9ff\" stroke=\"#0a0e14\" stroke-width=\"1.2\"/><path d=\"M32,37.6 L34.4,40 L32,42.4 L29.6,40 Z\" fill=\"#6ed4ff\" stroke=\"#0a0e14\" stroke-width=\"1\"/></svg>",
+    "viscount": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"64\" height=\"64\" viewBox=\"0 0 64 64\"><defs><linearGradient id=\"rk_rim\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0\" stop-color=\"#e8f6ff\"/><stop offset=\"1\" stop-color=\"#5c7a9a\"/></linearGradient><linearGradient id=\"rk_met\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#f4f9ff\"/><stop offset=\"0.55\" stop-color=\"#c5d0dc\"/><stop offset=\"1\" stop-color=\"#6f8296\"/></linearGradient><radialGradient id=\"rk_disc\" cx=\"0.35\" cy=\"0.3\" r=\"0.8\"><stop offset=\"0\" stop-color=\"#2e3a4c\"/><stop offset=\"1\" stop-color=\"#1c2330\"/></radialGradient></defs><circle cx=\"32\" cy=\"32\" r=\"29\" fill=\"url(#rk_disc)\" stroke=\"url(#rk_rim)\" stroke-width=\"3\"/><circle cx=\"32\" cy=\"32\" r=\"24.5\" fill=\"none\" stroke=\"#6ed4ff\" stroke-width=\"1\" opacity=\"0.55\"/><path d=\"M16,38 L48,38 L47,46 L17,46 Z\" fill=\"url(#rk_met)\" stroke=\"#0a0e14\" stroke-width=\"1.6\" stroke-linejoin=\"round\"/><path d=\"M18,39.6 L46,39.6\" stroke=\"#f4f9ff\" stroke-width=\"1\" opacity=\"0.9\"/><path d=\"M18,38 L18,30\" stroke=\"#0a0e14\" stroke-width=\"2.6\"/><path d=\"M18,38 L18,30\" stroke=\"#c5d0dc\" stroke-width=\"1.2\"/><circle cx=\"18\" cy=\"28\" r=\"2.4\" fill=\"#f4f9ff\" stroke=\"#0a0e14\" stroke-width=\"1.2\"/><path d=\"M24,38 L24,30\" stroke=\"#0a0e14\" stroke-width=\"2.6\"/><path d=\"M24,38 L24,30\" stroke=\"#c5d0dc\" stroke-width=\"1.2\"/><circle cx=\"24\" cy=\"28\" r=\"2.4\" fill=\"#f4f9ff\" stroke=\"#0a0e14\" stroke-width=\"1.2\"/><path d=\"M30,38 L30,30\" stroke=\"#0a0e14\" stroke-width=\"2.6\"/><path d=\"M30,38 L30,30\" stroke=\"#c5d0dc\" stroke-width=\"1.2\"/><circle cx=\"30\" cy=\"28\" r=\"2.4\" fill=\"#f4f9ff\" stroke=\"#0a0e14\" stroke-width=\"1.2\"/><path d=\"M34,38 L34,30\" stroke=\"#0a0e14\" stroke-width=\"2.6\"/><path d=\"M34,38 L34,30\" stroke=\"#c5d0dc\" stroke-width=\"1.2\"/><circle cx=\"34\" cy=\"28\" r=\"2.4\" fill=\"#f4f9ff\" stroke=\"#0a0e14\" stroke-width=\"1.2\"/><path d=\"M40,38 L40,30\" stroke=\"#0a0e14\" stroke-width=\"2.6\"/><path d=\"M40,38 L40,30\" stroke=\"#c5d0dc\" stroke-width=\"1.2\"/><circle cx=\"40\" cy=\"28\" r=\"2.4\" fill=\"#f4f9ff\" stroke=\"#0a0e14\" stroke-width=\"1.2\"/><path d=\"M46,38 L46,30\" stroke=\"#0a0e14\" stroke-width=\"2.6\"/><path d=\"M46,38 L46,30\" stroke=\"#c5d0dc\" stroke-width=\"1.2\"/><circle cx=\"46\" cy=\"28\" r=\"2.4\" fill=\"#f4f9ff\" stroke=\"#0a0e14\" stroke-width=\"1.2\"/><path d=\"M32,39.8 L34.2,42 L32,44.2 L29.8,42 Z\" fill=\"#6ed4ff\" stroke=\"#0a0e14\" stroke-width=\"1\"/></svg>",
+    "count": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"64\" height=\"64\" viewBox=\"0 0 64 64\"><defs><linearGradient id=\"rk_rim\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0\" stop-color=\"#e8f6ff\"/><stop offset=\"1\" stop-color=\"#5c7a9a\"/></linearGradient><linearGradient id=\"rk_met\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#f4f9ff\"/><stop offset=\"0.55\" stop-color=\"#c5d0dc\"/><stop offset=\"1\" stop-color=\"#6f8296\"/></linearGradient><radialGradient id=\"rk_disc\" cx=\"0.35\" cy=\"0.3\" r=\"0.8\"><stop offset=\"0\" stop-color=\"#2e3a4c\"/><stop offset=\"1\" stop-color=\"#1c2330\"/></radialGradient></defs><circle cx=\"32\" cy=\"32\" r=\"29\" fill=\"url(#rk_disc)\" stroke=\"url(#rk_rim)\" stroke-width=\"3\"/><circle cx=\"32\" cy=\"32\" r=\"24.5\" fill=\"none\" stroke=\"#6ed4ff\" stroke-width=\"1\" opacity=\"0.55\"/><path d=\"M16,40 L17,24 L22,33 L27,20 L32,31 L37,20 L42,33 L47,24 L48,40 Z\" fill=\"url(#rk_met)\" stroke=\"#0a0e14\" stroke-width=\"1.6\" stroke-linejoin=\"round\"/><path d=\"M16,40 L48,40 L47,47 L17,47 Z\" fill=\"url(#rk_met)\" stroke=\"#0a0e14\" stroke-width=\"1.6\" stroke-linejoin=\"round\"/><path d=\"M18,41.6 L46,41.6\" stroke=\"#f4f9ff\" stroke-width=\"1\" opacity=\"0.9\"/><circle cx=\"17\" cy=\"22\" r=\"2.4\" fill=\"#f4f9ff\" stroke=\"#0a0e14\" stroke-width=\"1.2\"/><circle cx=\"27\" cy=\"18\" r=\"2.4\" fill=\"#f4f9ff\" stroke=\"#0a0e14\" stroke-width=\"1.2\"/><circle cx=\"37\" cy=\"18\" r=\"2.4\" fill=\"#f4f9ff\" stroke=\"#0a0e14\" stroke-width=\"1.2\"/><circle cx=\"47\" cy=\"22\" r=\"2.4\" fill=\"#f4f9ff\" stroke=\"#0a0e14\" stroke-width=\"1.2\"/><path d=\"M32,25 L35,28 L32,31 L29,28 Z\" fill=\"#6ed4ff\" stroke=\"#0a0e14\" stroke-width=\"1\"/><path d=\"M24,41.7 L25.8,43.5 L24,45.3 L22.2,43.5 Z\" fill=\"#6ed4ff\" stroke=\"#0a0e14\" stroke-width=\"1\"/><path d=\"M40,41.7 L41.8,43.5 L40,45.3 L38.2,43.5 Z\" fill=\"#6ed4ff\" stroke=\"#0a0e14\" stroke-width=\"1\"/></svg>",
+    "duke": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"64\" height=\"64\" viewBox=\"0 0 64 64\"><defs><linearGradient id=\"rk_rim\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0\" stop-color=\"#e8f6ff\"/><stop offset=\"1\" stop-color=\"#5c7a9a\"/></linearGradient><linearGradient id=\"rk_met\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#f4f9ff\"/><stop offset=\"0.55\" stop-color=\"#c5d0dc\"/><stop offset=\"1\" stop-color=\"#6f8296\"/></linearGradient><radialGradient id=\"rk_disc\" cx=\"0.35\" cy=\"0.3\" r=\"0.8\"><stop offset=\"0\" stop-color=\"#2e3a4c\"/><stop offset=\"1\" stop-color=\"#1c2330\"/></radialGradient></defs><circle cx=\"32\" cy=\"32\" r=\"29\" fill=\"url(#rk_disc)\" stroke=\"url(#rk_rim)\" stroke-width=\"3\"/><circle cx=\"32\" cy=\"32\" r=\"24.5\" fill=\"none\" stroke=\"#6ed4ff\" stroke-width=\"1\" opacity=\"0.55\"/><path d=\"M16,40 L16,26 C19,30 21,30 22,26 L25,32 L27,18 C29,22 31,22 32,12 C33,22 35,22 37,18 L39,32 L42,26 C43,30 45,30 48,26 L48,40 Z\" fill=\"url(#rk_met)\" stroke=\"#0a0e14\" stroke-width=\"1.6\" stroke-linejoin=\"round\"/><path d=\"M16,40 L48,40 L47,47 L17,47 Z\" fill=\"url(#rk_met)\" stroke=\"#0a0e14\" stroke-width=\"1.6\" stroke-linejoin=\"round\"/><path d=\"M18,41.6 L46,41.6\" stroke=\"#f4f9ff\" stroke-width=\"1\" opacity=\"0.9\"/><path d=\"M32,18.8 L35.2,22 L32,25.2 L28.8,22 Z\" fill=\"#6ed4ff\" stroke=\"#0a0e14\" stroke-width=\"1\"/><path d=\"M22,31.8 L24.2,34 L22,36.2 L19.8,34 Z\" fill=\"#6ed4ff\" stroke=\"#0a0e14\" stroke-width=\"1\"/><path d=\"M42,31.8 L44.2,34 L42,36.2 L39.8,34 Z\" fill=\"#6ed4ff\" stroke=\"#0a0e14\" stroke-width=\"1\"/><path d=\"M32,41.5 L34,43.5 L32,45.5 L30,43.5 Z\" fill=\"#6ed4ff\" stroke=\"#0a0e14\" stroke-width=\"1\"/><circle cx=\"32\" cy=\"11\" r=\"2.2\" fill=\"#f4f9ff\" stroke=\"#0a0e14\" stroke-width=\"1.2\"/></svg>",
+    "royal": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"64\" height=\"64\" viewBox=\"0 0 64 64\"><defs><linearGradient id=\"rk_rim\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0\" stop-color=\"#e8f6ff\"/><stop offset=\"1\" stop-color=\"#5c7a9a\"/></linearGradient><linearGradient id=\"rk_met\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#f4f9ff\"/><stop offset=\"0.55\" stop-color=\"#c5d0dc\"/><stop offset=\"1\" stop-color=\"#6f8296\"/></linearGradient><radialGradient id=\"rk_disc\" cx=\"0.35\" cy=\"0.3\" r=\"0.8\"><stop offset=\"0\" stop-color=\"#2e3a4c\"/><stop offset=\"1\" stop-color=\"#1c2330\"/></radialGradient></defs><circle cx=\"32\" cy=\"32\" r=\"29\" fill=\"url(#rk_disc)\" stroke=\"url(#rk_rim)\" stroke-width=\"3\"/><circle cx=\"32\" cy=\"32\" r=\"24.5\" fill=\"none\" stroke=\"#6ed4ff\" stroke-width=\"1\" opacity=\"0.55\"/><path d=\"M18,40 C18,22 30,18 32,20 C34,18 46,22 46,40\" fill=\"none\" stroke=\"#0a0e14\" stroke-width=\"4.6\"/><path d=\"M18,40 C18,22 30,18 32,20 C34,18 46,22 46,40\" fill=\"none\" stroke=\"#c5d0dc\" stroke-width=\"2.4\"/><path d=\"M32,20 L32,40\" stroke=\"#0a0e14\" stroke-width=\"4.6\"/><path d=\"M32,20 L32,40\" stroke=\"#c5d0dc\" stroke-width=\"2.4\"/><path d=\"M16,40 L48,40 L47,47 L17,47 Z\" fill=\"url(#rk_met)\" stroke=\"#0a0e14\" stroke-width=\"1.6\" stroke-linejoin=\"round\"/><path d=\"M18,41.6 L46,41.6\" stroke=\"#f4f9ff\" stroke-width=\"1\" opacity=\"0.9\"/><circle cx=\"32\" cy=\"14\" r=\"4.6\" fill=\"#6ed4ff\" stroke=\"#0a0e14\" stroke-width=\"1.4\"/><circle cx=\"30.6\" cy=\"12.6\" r=\"1.4\" fill=\"#e8f6ff\"/><path d=\"M24,41.7 L25.8,43.5 L24,45.3 L22.2,43.5 Z\" fill=\"#6ed4ff\" stroke=\"#0a0e14\" stroke-width=\"1\"/><path d=\"M32,41.3 L34.2,43.5 L32,45.7 L29.8,43.5 Z\" fill=\"#6ed4ff\" stroke=\"#0a0e14\" stroke-width=\"1\"/><path d=\"M40,41.7 L41.8,43.5 L40,45.3 L38.2,43.5 Z\" fill=\"#6ed4ff\" stroke=\"#0a0e14\" stroke-width=\"1\"/></svg>"
+  },
+  "rank_badge_order": [
+    "knight",
+    "baron",
+    "viscount",
+    "count",
+    "duke",
+    "royal"
+  ],
+  "family_tier_ornament": {
+    "commoner": {
+      "border": "none",
+      "max_charges": 1
+    },
+    "noble": {
+      "border": "line",
+      "border_tincture": "or",
+      "max_charges": 2
+    },
+    "royal": {
+      "border": "double",
+      "border_tincture": "argent",
+      "max_charges": 3
+    }
   }
 }

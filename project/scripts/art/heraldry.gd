@@ -1,6 +1,7 @@
 class_name CKHeraldry
 extends RefCounted
-## Deep heraldry API: tinctures, marshalling, cadency, nation styles, v1 migrate.
+## Castle heraldry API: tinctures, nation styles, rank-tiered achievement, v1 migrate.
+## Arms belong to the castle (shared by all families it hosts); no per-person or marriage marks.
 ## Colors live in heraldry_v2.json (style ratchet: no hex in this file).
 
 const DATA_PATH := "res://assets/art/heraldry_v2.json"
@@ -127,18 +128,6 @@ static func border_ids() -> PackedStringArray:
 		out.append(str((d as Dictionary).get("id", "")))
 	return out
 
-static func cadency_for_birth_order(order: int) -> String:
-	## 1-based birth order among living full siblings; 0 / negative → none.
-	if order <= 0:
-		return "none"
-	var best := "none"
-	for row in table().get("cadency", []):
-		var r: Dictionary = row
-		if int(r.get("order", 0)) == mini(order, 9):
-			return str(r.get("id", "none"))
-		best = str(r.get("id", best))
-	return best
-
 static func achievement_for_rank(rank: String) -> Dictionary:
 	var helm_map: Dictionary = table().get("rank_to_helm", {})
 	var crown_map: Dictionary = table().get("rank_to_crown", {})
@@ -222,10 +211,9 @@ static func migrate_v1(raw: Dictionary) -> Dictionary:
 			if not ach.has(ak):
 				ach[ak] = def_ach[ak]
 		base["achievement"] = ach
-	if not base.has("marshalling") or typeof(base["marshalling"]) != TYPE_DICTIONARY:
-		base["marshalling"] = {"mode": "none", "partner": {}}
-	base["cadency"] = str(base.get("cadency", "none"))
-	base["bastardy"] = bool(base.get("bastardy", false))
+	# Arms belong to the castle, not a person/marriage: drop legacy marshalling / cadency / bastardy.
+	for legacy_key in ["marshalling", "cadency", "bastardy"]:
+		base.erase(legacy_key)
 	base["nation"] = str(base.get("nation", "ashbanner"))
 	base["shield_shape"] = str(base.get("shield_shape", nation_style(str(base["nation"])).get("shield", "heater")))
 	# Keep v1 aliases in sync.
@@ -307,9 +295,6 @@ static func from_nation(nid: String, rank: String = "knight") -> Dictionary:
 		"border": "line",
 		"border_color": tincture_hex("bleu_celeste"),
 		"achievement": ach,
-		"marshalling": {"mode": "none", "partner": {}},
-		"cadency": "none",
-		"bastardy": false,
 	})
 
 static func randomize_for_nation(nid: String, rng: RandomNumberGenerator = null) -> Dictionary:
@@ -342,26 +327,6 @@ static func randomize_for_nation(nid: String, rng: RandomNumberGenerator = null)
 	base["emblem_color"] = ct
 	return normalize(base)
 
-static func marshal(primary: Dictionary, partner: Dictionary, mode: String = "impale") -> Dictionary:
-	var a := normalize(primary)
-	var b := normalize(partner)
-	var m := str(mode)
-	if m not in ["impale", "quarter"]:
-		m = "impale"
-	a["marshalling"] = {"mode": m, "partner": b}
-	# Visual field becomes a marker; renderer composites both arms.
-	if m == "impale":
-		a["division"] = "per_pale"
-	elif m == "quarter":
-		a["division"] = "quarterly"
-	return normalize(a)
-
-static func apply_cadency(spec: Dictionary, birth_order: int, bastardy: bool = false) -> Dictionary:
-	var s := normalize(spec)
-	s["cadency"] = cadency_for_birth_order(birth_order)
-	s["bastardy"] = bastardy
-	return normalize(s)
-
 static func apply_rank(spec: Dictionary, rank: String) -> Dictionary:
 	var s := normalize(spec)
 	var ach: Dictionary = (s.get("achievement", {}) as Dictionary).duplicate(true)
@@ -385,10 +350,6 @@ static func cache_key(spec: Dictionary) -> String:
 			var cd: Dictionary = c
 			chs.append("%s:%s:%s" % [cd.get("id", ""), cd.get("tincture", ""), cd.get("placement", "")])
 	var ach: Dictionary = s.get("achievement", {})
-	var marsh: Dictionary = s.get("marshalling", {})
-	var partner_key := ""
-	if str(marsh.get("mode", "none")) != "none" and typeof(marsh.get("partner")) == TYPE_DICTIONARY:
-		partner_key = cache_key(marsh["partner"] as Dictionary)
 	return "|".join([
 		str(s.get("schema", 2)),
 		str(s.get("division", "")), str(s.get("partition_line", "")),
@@ -397,9 +358,9 @@ static func cache_key(spec: Dictionary) -> String:
 		str(s.get("border", "")), str(s.get("border_color", "")),
 		",".join(chs),
 		str(s.get("shield_shape", "")), str(s.get("nation", "")),
-		str(s.get("cadency", "")), str(int(bool(s.get("bastardy", false)))),
 		str(ach.get("helm", "")), str(ach.get("crown", "")),
-		str(ach.get("motto", "")), str(marsh.get("mode", "")), partner_key,
+		str(ach.get("motto", "")),
+		str(s.get("castle_mark", {})), str(s.get("family_tier", "")),
 	])
 
 static func contrast_ok(spec: Dictionary) -> bool:
@@ -415,71 +376,74 @@ static func contrast_ok(spec: Dictionary) -> bool:
 	var e := Color(e_col)
 	return absf(a.get_luminance() - e.get_luminance()) >= 0.22
 
-static func birth_order_among_siblings(child: Object) -> int:
-	## 1-based order by age descending (oldest = 1) among shared parent_ids.
-	if child == null:
-		return 0
-	var pids: Array = child.get("parent_ids") if typeof(child.get("parent_ids")) == TYPE_ARRAY else []
-	if pids.is_empty():
-		return 1
-	var gs = Engine.get_main_loop().root.get_node_or_null("GameState") if Engine.get_main_loop() else null
-	if gs == null:
-		return 1
-	var chars: Dictionary = gs.characters if gs.get("characters") != null else {}
-	var sibs: Array = []
-	for cid in chars.keys():
-		var o = chars[cid]
-		if o == null or not bool(o.get("alive")):
-			continue
-		var op: Array = o.get("parent_ids") if typeof(o.get("parent_ids")) == TYPE_ARRAY else []
-		if op.size() < 1:
-			continue
-		var share := false
-		for p in pids:
-			if str(p) != "" and str(p) in op:
-				share = true
-				break
-		if share:
-			sibs.append(o)
-	sibs.sort_custom(func(a, b): return int(a.get("age")) > int(b.get("age")) or (int(a.get("age")) == int(b.get("age")) and str(a.get("id")) < str(b.get("id"))))
-	for i in sibs.size():
-		if str(sibs[i].get("id")) == str(child.get("id")):
-			return i + 1
-	return sibs.size() + 1
 
-static func is_bastard(child: Object) -> bool:
-	if child == null:
-		return false
-	var meta = child.get("blood_meta")
-	if typeof(meta) == TYPE_DICTIONARY and bool((meta as Dictionary).get("bastard", false)):
-		return true
-	if typeof(meta) == TYPE_DICTIONARY and bool((meta as Dictionary).get("bastardy", false)):
-		return true
-	var honors = child.get("honors")
-	if typeof(honors) == TYPE_ARRAY and ("bastard" in honors or "natural_child" in honors):
-		return true
-	return false
+# --- Company banner (团徽) vs family arms (族徽) ------------------------------------------
+## Family arms = own core design + small fixed canton echoing the company banner + tier ornament.
+## Uniqueness is judged on the core design only (vs company banner and other families).
 
-static func stamp_child_heraldry(child: Object, house_spec: Dictionary = {}) -> Dictionary:
-	## Writes blood_meta.heraldry and returns the personal arms.
-	var base := normalize(house_spec if not house_spec.is_empty() else {})
-	if house_spec.is_empty():
-		var gs = Engine.get_main_loop().root.get_node_or_null("GameState") if Engine.get_main_loop() else null
-		if gs != null and typeof(gs.get("banner_spec")) == TYPE_DICTIONARY:
-			base = normalize(gs.banner_spec)
-	var order := birth_order_among_siblings(child)
-	var bast := is_bastard(child)
-	var personal := apply_cadency(base, order, bast)
-	var rank := str(child.get("rank")) if child != null else "knight"
-	personal = apply_rank(personal, rank)
-	if child != null:
-		var meta: Dictionary = child.get("blood_meta") if typeof(child.get("blood_meta")) == TYPE_DICTIONARY else {}
-		meta = meta.duplicate(true)
-		meta["heraldry"] = {
-			"cadency": personal.get("cadency", "none"),
-			"bastardy": bast,
-			"birth_order": order,
-			"spec": personal,
-		}
-		child.set("blood_meta", meta)
-	return personal
+const FAMILY_TIERS := ["commoner", "noble", "royal"]
+
+static func core_key(spec: Dictionary) -> String:
+	var s := normalize(spec)
+	var chs: Array = []
+	for c in s.get("charges", []):
+		if typeof(c) == TYPE_DICTIONARY:
+			chs.append("%s:%s" % [(c as Dictionary).get("id", ""), str((c as Dictionary).get("tincture", "")).to_lower()])
+	return "|".join([
+		str(s.get("division", "")), str(s.get("partition_line", "")),
+		str(s.get("field_a", "")).to_lower(), str(s.get("field_b", "")).to_lower(),
+		str(s.get("ordinary", "")), str(s.get("ordinary_tincture", "")).to_lower(),
+		",".join(chs), str(s.get("shield_shape", "")),
+	])
+
+static func generate_unique_arms(nation: String, seed_text: String, taken: Dictionary) -> Dictionary:
+	## Deterministic per seed; re-rolls until the core design is not in `taken` (core_key -> owner).
+	var rng := RandomNumberGenerator.new()
+	for attempt in range(256):
+		rng.seed = hash("%s#%s#%d" % [nation, seed_text, attempt])
+		var spec := randomize_for_nation(nation, rng)
+		for legacy_key in ["castle_mark", "family_tier"]:
+			spec.erase(legacy_key)
+		if not taken.has(core_key(spec)):
+			return spec
+	# Exhaustive fallback: walk tinctures until free (never returns a duplicate core).
+	var base := randomize_for_nation(nation, rng)
+	for tid in (table().get("tinctures", {}) as Dictionary).keys():
+		for oid in ["fess", "pale", "bend", "chevron", "cross", "saltire", "chief", "pile", "pall"]:
+			var cand := base.duplicate(true)
+			cand["ordinary"] = oid
+			cand["ordinary_tincture"] = tincture_hex(str(tid))
+			cand = normalize(cand)
+			if not taken.has(core_key(cand)):
+				return cand
+	return base
+
+static func family_display_arms(core: Dictionary, castle_spec: Dictionary, tier: String) -> Dictionary:
+	## Core design + fixed company-banner canton + tier ornament.
+	var s := normalize(core)
+	var castle := normalize(castle_spec)
+	var chs: Array = castle.get("charges", [])
+	var mark_charge := ""
+	var mark_tint := str(castle.get("emblem_color", castle.get("ordinary_tincture", "")))
+	if not chs.is_empty() and typeof(chs[0]) == TYPE_DICTIONARY:
+		mark_charge = str((chs[0] as Dictionary).get("id", ""))
+		mark_tint = str((chs[0] as Dictionary).get("tincture", mark_tint))
+	s["castle_mark"] = {"kind": "canton", "field": str(castle.get("field_a", "")), "charge": mark_charge, "tincture": mark_tint}
+	var t := tier if tier in FAMILY_TIERS else "commoner"
+	s["family_tier"] = t
+	var orn: Dictionary = (table().get("family_tier_ornament", {}) as Dictionary).get(t, {})
+	s["border"] = str(orn.get("border", "none"))
+	if orn.has("border_tincture"):
+		s["border_color"] = tincture_hex(str(orn["border_tincture"]))
+	var max_charges := int(orn.get("max_charges", 1))
+	var cur: Array = s.get("charges", [])
+	var style := nation_style(str(s.get("nation", "")))
+	var pool: Array = style.get("charges", [])
+	var tint := str(s.get("emblem_color", tincture_hex("argent")))
+	var placements := ["center", "chief", "base"]
+	while cur.size() < max_charges and cur.size() < placements.size() and pool.size() > cur.size():
+		cur.append({"id": str(pool[cur.size()]), "tincture": tint, "placement": placements[cur.size()]})
+	if cur.size() > max_charges:
+		cur = cur.slice(0, max_charges)
+	s["charges"] = cur
+	return s
