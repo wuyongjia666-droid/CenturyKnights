@@ -36,6 +36,16 @@ func _run() -> void:
 	_ok(ProjectSettings.get_setting("application/config/quit_on_go_back", true) == false, "quit_on_go_back must be false")
 	_ok(int(ProjectSettings.get_setting("display/window/handheld/orientation", 6)) == 4, "android must lock sensor_landscape")
 	GameState.new_game("导航", "灰旗", GameState.crest_color)
+	# failure path: back on a scene outside hub/ui with an empty stack must not change scene
+	var stray := Node.new()
+	stray.scene_file_path = "res://tests/stray_runner.tscn"
+	get_tree().root.add_child(stray)
+	get_tree().current_scene = stray
+	CKNav.stack.clear()
+	_ok(CKNav.back() == "menu" and get_tree().current_scene == stray, "back on a non-page scene must open the menu, not go home")
+	if CKPauseMenu.current != null and is_instance_valid(CKPauseMenu.current):
+		CKPauseMenu.toggle()
+	await get_tree().process_frame
 	# this test node is not a scene; drive real scenes through CKNav
 	CKNav.home()
 	await _settle()

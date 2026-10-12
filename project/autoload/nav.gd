@@ -156,6 +156,11 @@ func back() -> String:
 		var top: Dictionary = stack.pop_back()
 		_change(str(top.path), top.get("params", {}))
 		return "pop"
+	# Only hub/ui pages fall back to the castle. Anything else (story, tests, tools) gets the
+	# system menu, so back never frees a scene it knows nothing about.
+	if not (path.begins_with("res://scenes/hub/") or path.begins_with("res://scenes/ui/")):
+		_open_menu()
+		return "menu"
 	home()
 	return "home"
 
