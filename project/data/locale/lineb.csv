@@ -227,10 +227,10 @@ lb_rite_already,已经入团了,Already enlisted
 lb_rite_none,家里还没有孩子,No children yet
 lb_rite_none_why,授旗礼是让自家孩子正式入团的仪式。,The rite enlists your own children.
 lb_rite_none_how,先去联姻，成家以后过几个月就会有孩子。,Arrange a marriage; children follow.
-lb_rite_step_0,① 选路,1 Path
-lb_rite_step_1,② 宣名,2 Name
-lb_rite_step_2,③ 按印,3 Seal
-lb_rite_step_3,④ 入册,4 Enlist
+lb_rite_step_0,1 选路,1 Path
+lb_rite_step_1,2 宣名,2 Name
+lb_rite_step_2,3 按印,3 Seal
+lb_rite_step_3,4 入册,4 Enlist
 lb_rite_pick,选这条路,Choose
 lb_rite_early,%s 才 %d 岁，还不能入团，但可以先定一条路，以后每年的岁课会往这个方向长。现在：%s。,"%s is %d: too young to enlist, but a path can be set now. Current: %s."
 lb_rite_early_ok,定好了：%s。以后岁课往这条路长。,Set: %s.
