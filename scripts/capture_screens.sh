@@ -19,3 +19,5 @@ xvfb-run -a -s "-screen 0 1200x2500x24" \
 	godot --path project --rendering-driver opengl3 \
 	--scene res://tests/suites/infra/capture_check.tscn -- --out="$OUT"
 python3 "$ROOT/tools/ci/shot_style.py" "$OUT"
+# Mobile landscape gate (docs/design/mobile-landscape.md): runs inside the CI shots job.
+bash "$ROOT/scripts/mobile_gate.sh" "${OUT}_mobile" "${OUT}/mobile_sheets"
