@@ -11,6 +11,7 @@ func _ready() -> void:
 	## v8.6 — layout-matched to Stitch 16_estates.png: top bar · header · 3 KPI cards (粮仓/金库/工事) ·
 	## HOLDING MATRIX rows (icon · name/chips · yield delta · focus segmented · steward · actions) · footer
 	UIKit.void_bg(self)
+	var first_note := grant_first_holding()
 	UIFX.fade_in(self, 0.28)
 	Music.play_castle()
 	UIKit.top_bar(self, "领地营建 · 四野属地", UIKit.std_resource_chips(), "返回城堡", func(): CKNav.up())
@@ -65,6 +66,8 @@ func _ready() -> void:
 	var patrol := UIKit.cta_button("全堡巡防", "X", 150, 36)
 	patrol.pressed.connect(_do_patrol)
 	row.add_child(patrol)
+	if first_note != "":
+		_msg.text = first_note
 	UIKit.footer_bar(self, [["A", "执行升级"], ["X", "全堡巡防"], ["Y", "委任庄头"], ["ESC", "返回城堡"]], "ESTATE PROTOCOL · FROST_TACTICAL v8.6")
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
@@ -254,7 +257,7 @@ func _rebuild() -> void:
 		elif unlocked:
 			nh.add_child(UIKit.tag_chip("✓ 已满级", UIKit.ACCENT))
 		var st = GameState.steward_of(hid) if unlocked else null
-		var dsc := str(def.desc) + ("　庄头：%s" % st.name if st != null else ("　庄头空缺 · 易遭劫掠" if unlocked else "　完成委任「%s」首通后开垦" % str(def.get("quest", ""))))
+		var dsc := str(def.desc) + ("　庄头：%s" % st.name if st != null else ("　庄头空缺 · 易遭劫掠" if unlocked else Locale.t("wsc_e_how") % _quest_name(str(def.get("quest", "")))))
 		var dl := UIKit.body_label(dsc, UIKit.TEXT_FAINT, 12)
 		dl.autowrap_mode = TextServer.AUTOWRAP_OFF
 		dl.clip_text = true
@@ -423,6 +426,21 @@ func _do_assign(cid: String) -> void:
 	else:
 		Sfx.miss()
 
+## WS-C #37: the first holding is open from day one (new games and old saves with none), so the page is never all grey.
+static func grant_first_holding() -> String:
+	if not GameState.holdings.is_empty():
+		return ""
+	var hid: String = str(GameState.HOLDING_DEFS.keys()[0])
+	GameState.unlock_holding(hid)
+	GameState.save_game()
+	return Locale.t("wsc_e_first") % str(GameState.HOLDING_DEFS[hid].get("name", hid))
+
+static func _quest_name(qid: String) -> String:
+	for q in GameState.quests:
+		if str(q.get("id", "")) == qid:
+			return str(q.get("name", qid))
+	return qid
+
 func _do_patrol() -> void:
 	var r = GameState.patrol_holdings()
 	_msg.text = str(r.get("msg", ""))
@@ -430,9 +448,10 @@ func _do_patrol() -> void:
 		Sfx.confirm()
 		GameState.save_game()
 		_after_change()
-		_show_patrol_vignette("")
+		_show_patrol_vignette("", str(r.get("msg", "")))
 	else:
 		Sfx.miss()
+		_show_result(Locale.t("wsc_e_fail_title"), str(r.get("msg", "")))
 
 func _do_patrol_one(hid: String) -> void:
 	var r = GameState.patrol_holding(hid)
@@ -441,11 +460,34 @@ func _do_patrol_one(hid: String) -> void:
 		Sfx.confirm()
 		GameState.save_game()
 		_after_change()
-		_show_patrol_vignette(hid)
+		_show_patrol_vignette(hid, str(r.get("msg", "")))
 	else:
 		Sfx.miss()
+		_show_result(Locale.t("wsc_e_fail_title"), str(r.get("msg", "")))
 
-func _show_patrol_vignette(hid: String) -> void:
+## WS-C #37: failure (no silver, cooldown, nothing unlocked) gets a box with the reason, not just a beep.
+func _show_result(title: String, body: String) -> void:
+	var overlay := ColorRect.new()
+	overlay.name = "PatrolResult"
+	overlay.color = Color(0, 0, 0, 0.55)
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.z_index = 30
+	add_child(overlay)
+	var p := UIKit.panel_at(overlay, Rect2(390, 240, 500, 220), 14, true)
+	var t := UIKit.title_label(title, 20, UIKit.DANGER)
+	t.position = Vector2(24, 20)
+	p.add_child(t)
+	var b := UIKit.body_label(body + "\n" + Locale.t("wsc_e_fail_hint"), UIKit.TEXT, 14)
+	b.position = Vector2(24, 64)
+	b.size = Vector2(452, 90)
+	p.add_child(b)
+	var ok := UIKit.ghost_button(Locale.t("wsc_t_lost_ok"), 160, 48)
+	ok.position = Vector2(316, 156)
+	ok.pressed.connect(overlay.queue_free)
+	p.add_child(ok)
+	ok.call_deferred("grab_focus")
+
+func _show_patrol_vignette(hid: String, result: String = "") -> void:
 	var overlay = ColorRect.new()
 	overlay.color = Color(0, 0, 0, 0.55)
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -492,7 +534,8 @@ func _show_patrol_vignette(hid: String) -> void:
 		var mp: Vector2 = pos_map.get(hid, Vector2(300, 180))
 		mark.position = Vector2(16, 48) + mp - Vector2(24, 24)
 		panel.add_child(mark)
-	var tip = UIKit.make_dim_label("旗丁已走完路线。本属地劫掠风险大降。")
+	var tip = UIKit.make_dim_label((result + "。" if result != "" else "") + "旗丁已走完路线。本属地劫掠风险大降。")
+	tip.name = "PatrolTip"
 	tip.position = Vector2(16, 340)
 	panel.add_child(tip)
 	var close = UIKit.make_accent_button("收起沙盘", 140)
