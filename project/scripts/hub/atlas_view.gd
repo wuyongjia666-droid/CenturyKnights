@@ -201,6 +201,7 @@ func _build_nodes() -> void:
 		return
 	for n in World.nodes_in(_view):
 		_add_node_button(n, markers, mm)
+	CKAtlasTerritory.add_markers(_layer, _view, MAP.size, _busy, _open_territory_site)
 	# border gateways: roads leaving this region
 	for n in World.nodes_in(_view):
 		for r in World.roads_from(str(n.id)):
@@ -232,7 +233,7 @@ func _add_region_button(nid: String) -> void:
 	_layer.add_child(b)
 	_node_btn[nid] = b
 	_stamp_court_mark(b, marker)
-	var sub := UIKit.mono("%s · %d" % [World.rep_tier_name(rep), World.nodes_in(nid).size()], 8, UIKit.TEXT_DIM, false)
+	var sub := UIKit.mono("%s · %d" % [World.rep_tier_name(rep), World.nodes_in(nid).size()] + CKAtlasTerritory.region_badge(nid), 8, UIKit.TEXT_DIM, false)
 	sub.position = b.position + Vector2(4, 33)
 	sub.add_theme_color_override("font_outline_color", Color(0.02, 0.03, 0.05, 0.95))
 	sub.add_theme_constant_override("outline_size", 3)
@@ -682,7 +683,7 @@ func _render_right() -> void:
 	ch.tooltip_text = "主线在 ★ 标记处展开"
 	ch.pressed.connect(func(): _goto(str(mm.path)))
 	p.add_child(ch)
-	var eng := UIKit.ghost_button("进剿目标", 224, 28)
+	var eng := UIKit.ghost_button("进剿目标", 108, 28)
 	eng.name = "EngageButton"
 	eng.position = Vector2(16, 556)
 	var engage_q := ""
@@ -695,6 +696,13 @@ func _render_right() -> void:
 		if not e.is_empty():
 			_show_encounter_modal(e))
 	p.add_child(eng)
+	var terr := UIKit.ghost_button(Locale.t("terr_ui_button") + " %d" % CKTerritory.sites_at(_sel).size(), 108, 28)
+	terr.name = "TerritoryButton"
+	terr.position = Vector2(132, 556)
+	terr.disabled = _busy or CKTerritory.sites_at(_sel).is_empty()
+	var anchor_id := _sel
+	terr.pressed.connect(func(): _open_territory(anchor_id))
+	p.add_child(terr)
 	var ap := UIKit.mono("关税 %d 银 · %s" % [World.toll_for(str(n.nation)), str(nat.get("smith", ""))], 8, UIKit.TEXT_FAINT, false)
 	ap.position = Vector2(16, 596)
 	p.add_child(ap)
@@ -1218,6 +1226,34 @@ func _show_encounter_modal(enc: Dictionary) -> void:
 	p.add_child(rb)
 	fb.call_deferred("grab_focus")
 
+func _open_territory_site(site_id: String) -> void:
+	var anchor := str(CKTerritory.site(site_id).get("anchor", ""))
+	if anchor == "":
+		return
+	_select_node(anchor)
+	_open_territory(anchor)
+
+func _open_territory(anchor: String) -> void:
+	if CKTerritory.sites_at(anchor).is_empty():
+		return
+	var p := _modal_panel(CKAtlasTerritory.modal_height(anchor))
+	p.name = "TerritoryModal"
+	CKAtlasTerritory.fill_modal(p, anchor, func(kind: String, sid: String): _territory_act(kind, sid, anchor))
+
+func _territory_act(kind: String, site_id: String, anchor: String) -> void:
+	if kind == "close":
+		_clear_modal()
+		return
+	var r: Dictionary = CKAtlasTerritory.run(kind, site_id)
+	_refresh_top()
+	_build_nodes()
+	_render_right()
+	if not r.get("encounter", {}).is_empty():
+		_show_encounter_modal(r.encounter)
+		return
+	_open_territory(anchor)
+	_show_toast(str(r.get("msg", "")), UIKit.OK if bool(r.get("ok", false)) else UIKit.DANGER)
+
 func _launch_battle() -> void:
 	GameState.set_meta("atlas_after_battle", true)
 	GameState.save_game()
@@ -1404,4 +1440,16 @@ func selftest() -> Dictionary:
 	msgs.append("world view %d regions" % _node_btn.size())
 	_show_view(World.nation_of(World.pos))
 	_select_node(World.pos)
+	var flags := 0
+	for c in _layer.get_children():
+		if str(c.name).begins_with("Site_"):
+			flags += 1
+	if flags != CKTerritory.sites_in(_view).size():
+		return {"ok": false, "msg": "territory flags %d != %d" % [flags, CKTerritory.sites_in(_view).size()]}
+	if flags > 0:
+		_open_territory_site(str(CKTerritory.sites_in(_view)[0]))
+		if _modal.get_node_or_null("TerritoryModal") == null:
+			return {"ok": false, "msg": "territory modal missing"}
+		_clear_modal()
+	msgs.append("%d territory flags" % flags)
 	return {"ok": true, "msg": ", ".join(msgs)}
