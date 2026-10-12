@@ -445,7 +445,6 @@ static func holding_yield_preview(host, hid: String) -> Dictionary:
 static func holdings_monthly_yield(host) -> String:
 	if host.holdings.is_empty():
 		return ""
-	var seat_note := CKHoldings.apply_month(host)
 	var sf = 0
 	var ss = 0
 	var sh = 0
@@ -493,8 +492,6 @@ static func holdings_monthly_yield(host) -> String:
 		host.add_rep("ashland", sr)
 		host.add_rep("riverland", maxi(0, sr - 1))
 	var msg = "属地收成：%s → 粮+%d 银+%d%s" % ["、".join(names) if names else "无", sf, ss, (" 药+%d" % sh) if sh else ""]
-	if seat_note != "":
-		msg += "；" + seat_note
 	if raids:
 		msg += "；劫掠：%s（无庄头/士气不稳）" % "、".join(raids)
 		host.morale = maxi(0, host.morale - 3 * raids.size())

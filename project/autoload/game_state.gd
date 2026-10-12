@@ -903,6 +903,7 @@ func apply_save_data(data: Dictionary) -> bool:
 	var _world: Dictionary = _wd if typeof(_wd) == TYPE_DICTIONARY else {}
 	var _derived := str(_world.get("court_genomes", "")) == "derived"
 	World.from_save(_world)
+	CKTerritory.migrate_second_seat(self)
 	CKSaveService.restore_market()
 	if _derived:
 		_court_derived = CKSaveService.restore_court_genomes()

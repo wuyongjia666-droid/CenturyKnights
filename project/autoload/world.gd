@@ -88,7 +88,6 @@ var rivals_enabled := true       # CMP-04: rival companies move, steal offers, r
 var rivals: Array = []           # {id, name, pos, home, stolen, price_mul}
 var rival_thefts: Array = []
 var chain_progress: Dictionary = {}  # chain id -> {step, status}
-var second_hold_offer: String = ""
 var territory: Dictionary = {}  # v9.3 CKTerritory state (docs/design/territory.md)
 var rng := RandomNumberGenerator.new()
 
@@ -185,7 +184,6 @@ func reset() -> void:
 	_qseq = 0
 	_enc_seq = 0
 	chain_progress = {}
-	second_hold_offer = ""
 	territory = CKTerritory.fresh()
 	_init_rivals()
 	world_changed.emit()
@@ -200,7 +198,6 @@ func to_save() -> Dictionary:
 		"done_sig": done_sig, "quest_log": quest_log, "stats_done": stats_done, "armory": armory, "gear": gear, "recruits": rc,
 		"travel": travel, "pending_event": pending_event, "road_flags": road_flags, "encounter": encounter, "travel_log": travel_log, "qseq": _qseq, "enc_seq": _enc_seq,
 		"royal_courts": royal_courts, "rivals": rivals, "rival_thefts": rival_thefts, "chain_progress": chain_progress,
-		"second_hold_offer": second_hold_offer,
 		"territory": CKTerritory.to_save(),
 	}
 
@@ -248,7 +245,6 @@ func from_save(d: Dictionary) -> void:
 	_qseq = int(d.get("qseq", 0))
 	_enc_seq = int(d.get("enc_seq", 0))
 	chain_progress = d.get("chain_progress", {}) if typeof(d.get("chain_progress", {})) == TYPE_DICTIONARY else {}
-	second_hold_offer = str(d.get("second_hold_offer", ""))
 	territory = CKTerritory.from_save(d.get("territory", {}))
 	_restore_rivals(d.get("rivals", []))
 	rival_thefts = d.get("rival_thefts", []) if typeof(d.get("rival_thefts", [])) == TYPE_ARRAY else []
@@ -1588,7 +1584,7 @@ func _advance_scripted_chain(q: Dictionary) -> Dictionary:
 	var nxt := int(q.get("scripted_step", 0)) + 1
 	if chain.is_empty() or nxt >= steps.size():
 		chain_progress[chain_id] = {"step": nxt, "status": "done"}
-		CKHoldings.note_chain(chain_id)
+		CKTerritory.grant_stockade_credit(chain_id)
 		_tlog("委托链「%s」走完" % str(chain.get("title", chain_id)))
 		return {}
 	chain_progress[chain_id] = {"step": nxt, "status": "active"}
