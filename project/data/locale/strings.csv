@@ -8,7 +8,7 @@ subtitle,灰烬旗 · 朔澜陆桥,Ash Banner · Shuo Lan Bridge
 hub_title,灰旗堡,Ash Keep
 btn_roster,花名册,Roster
 btn_tavern,烽火酒馆,Beacon Tavern
-btn_quests,委任榜 / 委托,Contracts / board
+btn_quests,委托榜,Contracts
 btn_train,旗塾,Banner school
 btn_forge,炉火工坊,Forge
 btn_shrine,祠堂,Shrine
@@ -782,7 +782,7 @@ shell_e2ceca2d,第五十一章·席终,Chapter 51 · closing
 shell_e2d53a6d,重试,Retry
 shell_e3d14011,可继续第二百一十八章·独擂。,Continue Chapter 218 · lone beat.
 shell_e3db61a6,第一百六十八章·钟印,Chapter 168 · bell seal
-shell_e4492ae0,继续主线,Continue story
+shell_e4492ae0,回到这一章,Back to the chapter
 shell_e4daf17b,移动 MOV,MOV
 shell_e4e0bbeb,二十六卷已执。可继续第二十七卷或经营。,Volume 26 is done. Continue Volume 27 or run the keep.
 shell_e4e3c70c,第二百一十三章·席终,Chapter 213 · closing
@@ -868,6 +868,7 @@ shell_fff5a58f,十三卷已执。可继续第十四卷或经营。,Volume 13 is 
 shell_turn_player,—— 玩家回合 ——,—— Your turn ——
 shell_turn_enemy,—— 敌方回合 ——,—— Enemy turn ——
 shell_terrain_tip,%s　回避+%d　防+%d　移耗%d,%s  avoid +%d  def +%d  move %d
+sortie_drill,本月巡防已领过赏，这一场只算操练：不得银、声望、经验与战技点。,This month's patrol already paid. This one is a drill: no silver, reputation, exp or skill point.
 tavern_refresh_spent,本月刷新次数已用完，下月再来,No more refreshes this month
 tavern_refresh_spent_short,本月已无刷新,No refresh left
 tavern_refresh_free,免费刷新 ↻（余 %d）,Free refresh ↻ (%d left)

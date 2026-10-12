@@ -2830,14 +2830,18 @@ func _finish(win: bool) -> void:
 	for u in units:
 		if u.team == "player":
 			exp_before[u.char.id] = [int(u.char.exp), int(u.char.hp) <= 0]
+	var drill := win and BattleVictory.sortie_is_drill(GameState)
 	if win:
 		GameState.set_flag("battle_done")
-		purse = BattleVictory.base_purse(GameState.house_mods)
+		purse = 0 if drill else BattleVictory.base_purse(GameState.house_mods)
 		GameState.silver += purse
-		GameState.add_rep("ashland", 8)
+		if drill:
+			_log(Locale.t("sortie_drill"))
+		else:
+			GameState.add_rep("ashland", 8)
 		for u in units:
 			if u.team == "player" and u.char.hp > 0:
-				u.char.exp += 15
+				u.char.exp += 0 if drill else 15
 				BattleRules.note_class_mastery(u.char)
 				_bark(u.char, "shout")
 			elif u.team == "player":
@@ -2850,12 +2854,12 @@ func _finish(win: bool) -> void:
 		_log("【胜利】%s肃清。+%d 银。" % [map_name, purse])
 		_mark_map_victory()
 		GameState.on_battle_quest_victory()
-		sp_gain = BattleVictory.skill_points(bool(BattleMaps.get_map(map_id).get("tutorial_militia", false)))
+		sp_gain = 0 if drill else BattleVictory.skill_points(bool(BattleMaps.get_map(map_id).get("tutorial_militia", false)))
 		if sp_gain > 0:
 			GameState.add_skill_point(sp_gain)
 			_log("获得战技点 +1（当前 %d）" % GameState.skill_points)
 		# 战勋旁注微奖
-		var memory_bonus := BattleVictory.memory_bonus(GameState.house_mods)
+		var memory_bonus := 0 if drill else BattleVictory.memory_bonus(GameState.house_mods)
 		if memory_bonus > 0:
 			GameState.silver += memory_bonus
 		phase_label.text = "★ " + Locale.t("battle_win") + " ★"

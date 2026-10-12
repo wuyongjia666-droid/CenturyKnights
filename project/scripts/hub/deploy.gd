@@ -134,6 +134,7 @@ func _unhandled_input(e: InputEvent) -> void:
 func _fight() -> void:
 	GameState.set_meta("battle_return", "res://scenes/hub/castle_hub.tscn")
 	GameState.set_meta("battle_map", "quest_bandit")
+	GameState.set_meta("battle_sortie", true)
 	get_tree().change_scene_to_file("res://scenes/battle/battle.tscn")
 
 func _nudge_slot(dir: int) -> void:

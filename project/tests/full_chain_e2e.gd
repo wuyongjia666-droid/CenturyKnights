@@ -671,8 +671,8 @@ func _step_beyond_ch0() -> void:
 	var now := hub.find_child("MainlineNow", true, false)
 	if cont == null or not (cont is BaseButton):
 		_err("hub2: ContinueMainline missing")
-	elif str((cont as BaseButton).text).find("继续主线") < 0:
-		_err("hub2: 继续主线 button missing")
+	elif str((cont as BaseButton).text).find("回到这一章") < 0:
+		_err("hub2: 回到这一章 button missing")
 	elif not _continue_wired(cont as BaseButton):
 		_err("hub2: ContinueMainline is not wired to _continue_mainline")
 	else:
