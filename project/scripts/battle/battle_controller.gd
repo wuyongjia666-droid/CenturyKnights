@@ -1810,7 +1810,7 @@ func _queue_cutscene(ai: int, di: int, hp0a: int, hp0d: int) -> void:
 			"hit": fc[a_side].get("hit", "—"), "dmg": fc[a_side].get("dmg", "—"), "crit": atk.char.derived_crit()},
 		d_side: {"char": def.char, "team": def.team, "template": str(def.get("template", "")), "hp0": hp0d,
 			"hit": fc[d_side].get("hit", "—"), "dmg": fc[d_side].get("dmg", "—"), "crit": def.char.derived_crit()},
-		"strikes": strikes, "ground": ground, "grade": Color(gv.x, gv.y, gv.z),
+		"strikes": strikes, "ground": ground, "grade": Color(gv.x, gv.y, gv.z), "tile": tid,
 		"backdrop": str(_AtlasArt.battle_backdrop_for_map(map_id)),
 		"title": "%s · %s" % [map_name, str(BattleRules.terrain_info(tid).get("name", tid))],
 		"links": _cut_links(),
@@ -2594,6 +2594,13 @@ func _tick_skill_cds(team: String) -> void:
 			if v > 0:
 				u.char.skill_cd[sid] = v - 1
 
+func _is_healer(c: CKCharacter) -> bool:
+	for sid in _enemy_known_skills(c):
+		var sk: Dictionary = GameState.get_skill(str(sid))
+		if str(sk.get("type", "")) == "support" and int(sk.get("heal_max", 0)) > 0:
+			return true
+	return false
+
 func _planner_board() -> Dictionary:
 	var rows: Array = []
 	for u in units:
@@ -2612,8 +2619,17 @@ func _planner_board() -> Dictionary:
 			"power": int(u.char.derived_atk()),
 			"boss": bool(u.get("boss", false)),
 			"tag": str(u.get("tag", "")),
+			"healer": _is_healer(u.char),
 		})
+	var cover := {}
+	for y in MAP_H:
+		for x in MAP_W:
+			var ti: Dictionary = BattleRules.terrain_info(str(terrain[y][x]))
+			var cv := float(ti.get("def_bonus", 0)) + float(ti.get("avo_bonus", 0)) * 0.1
+			if cv > 0.0:
+				cover["%d,%d" % [x, y]] = cv
 	return {
+		"cover": cover,
 		"w": MAP_W,
 		"h": MAP_H,
 		"tier": AIPlanner.tier_of(GameState),
@@ -2757,6 +2773,20 @@ func _enemy_ai() -> void:
 					best_score = expect
 					best_pos = pos
 					best_target = j
+		var p_kind := str(planned.get("action", ""))
+		if p_kind in ["retreat", "guard"] or (p_kind == "move" and _is_healer(u.char)):
+			var want_cell: Vector2i = planned.get("cell", u.pos)
+			if mv.has(want_cell):
+				best_pos = want_cell
+				best_target = -1
+				if p_kind == "guard":
+					var low_hp := 1 << 30
+					for j3 in units.size():
+						var t3 = units[j3]
+						if _same_side("player", str(t3.team)) and t3.char.hp > 0 and t3.char.hp < low_hp \
+								and BattleRules.in_weapon_range(u.char, _manhattan(want_cell, t3.pos), str(terrain[want_cell.y][want_cell.x]), _height_at(want_cell)):
+							low_hp = t3.char.hp
+							best_target = j3
 		if best_pos != u.pos:
 			var origin_ai: Vector2i = u.pos
 			u.pos = best_pos
@@ -2880,6 +2910,8 @@ func _finish(win: bool) -> void:
 		phase_label.text = Locale.t("battle_lose")
 		phase_label.add_theme_color_override("font_color", UIKit.DANGER)
 		CKEnemyLoadout.apply_defeat(units, CKEnemyLoadout.mode_of(GameState))
+		if str(get_meta("battle_verdict", {}).get("reason", "")) == "retreat":
+			_log(Locale.t("defeat_retreat_head"))
 	if _world_enc:
 		var wr: Dictionary = World.on_battle_end(win)  # v8.7 overworld encounter → loot / quest objective / retreat
 		if not wr.is_empty():
@@ -2899,6 +2931,8 @@ func _finish(win: bool) -> void:
 		"reason": str(get_meta("battle_verdict", {}).get("reason", "")),
 	}
 	battle_finished.emit(finished)
+	if not win and not _world_enc:
+		BattleDefeat.record(units, str(finished["reason"]))
 	_show_report(win, purse, sp_gain, exp_before)
 
 func _show_report(win: bool, purse: int, sp_gain: int, exp_before: Dictionary) -> void:

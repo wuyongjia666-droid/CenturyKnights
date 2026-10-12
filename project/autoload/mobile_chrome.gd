@@ -82,7 +82,62 @@ func _apply() -> void:
 	MobileLayout.extend_portrait_lists(root)
 	MobileLayout.ensure_hit_targets(root)
 
+## App-wide touch drag-to-scroll: any ScrollContainer scrolls when a finger
+## drags over it, even when the drag starts on a button inside it.
+var _touch_start := Vector2.ZERO
+var _touch_scroll: ScrollContainer = null
+var _dragging := false
+var _swallow_release := false
+const DRAG_SLOP := 14.0
+
+func _handle_touch_scroll(event: InputEvent) -> bool:
+	if event is InputEventScreenTouch:
+		if event.index != 0:
+			return false
+		if event.pressed:
+			_touch_start = event.position
+			_touch_scroll = _scroll_at(event.position)
+			_dragging = false
+		else:
+			_swallow_release = _dragging
+			_dragging = false
+			_touch_scroll = null
+		return false
+	if event is InputEventScreenDrag and event.index == 0 and _touch_scroll != null and is_instance_valid(_touch_scroll):
+		if not _dragging and event.position.distance_to(_touch_start) < DRAG_SLOP:
+			return false
+		_dragging = true
+		var sc := _touch_scroll
+		var k := 1.0 / maxf(0.01, sc.get_global_transform_with_canvas().get_scale().y)
+		sc.scroll_vertical -= int(event.relative.y * k)
+		sc.scroll_horizontal -= int(event.relative.x * k)
+		get_viewport().set_input_as_handled()
+		return true
+	if event is InputEventMouseButton and not event.pressed and _swallow_release and event.button_index == MOUSE_BUTTON_LEFT:
+		_swallow_release = false
+		get_viewport().set_input_as_handled()
+		return true
+	if (event is InputEventMouseMotion) and _dragging:
+		get_viewport().set_input_as_handled()
+		return true
+	return false
+
+func _scroll_at(pos: Vector2) -> ScrollContainer:
+	var best: ScrollContainer = null
+	var stack: Array = [get_tree().root]
+	while not stack.is_empty():
+		var n: Node = stack.pop_back()
+		if n is CanvasItem and not (n as CanvasItem).is_visible_in_tree():
+			continue
+		if n is ScrollContainer and (n as Control).get_global_rect().has_point(pos):
+			best = n
+		for c in n.get_children():
+			stack.append(c)
+	return best
+
 func _input(event: InputEvent) -> void:
+	if DeviceProfile.is_mobile() and _handle_touch_scroll(event):
+		return
 	if not event.is_action_pressed("ui_cancel"):
 		return
 	var focus := get_viewport().gui_get_focus_owner()

@@ -13,7 +13,7 @@ func _ready() -> void:
 	UIKit.void_bg(self)
 	UIFX.fade_in(self, 0.28)
 	Music.play_castle()
-	UIKit.top_bar(self, "领地营建 · 四野属地", UIKit.std_resource_chips(), "返回城堡", func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
+	UIKit.top_bar(self, "领地营建 · 四野属地", UIKit.std_resource_chips(), "返回城堡", func(): CKNav.up())
 	UIKit.page_head(self, 42, 70, "ESTATE SANCTUARY INFRASTRUCTURE // SECTOR 01", "领地营建", "TERRITORIAL PROSPERITY")
 	var sum := UIKit.body_label(_sum_text(), UIKit.TEXT_DIM, 12)
 	sum.name = "Sum"
@@ -56,7 +56,7 @@ func _ready() -> void:
 	row.add_theme_constant_override("separation", 10)
 	add_child(row)
 	var works := UIKit.ghost_button("工事 / 堡志", 112, 36)
-	works.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/works.tscn"))
+	works.pressed.connect(func(): CKNav.go("res://scenes/hub/works.tscn"))
 	row.add_child(works)
 	var patrol := UIKit.cta_button("全堡巡防", "X", 150, 36)
 	patrol.pressed.connect(_do_patrol)
@@ -71,7 +71,7 @@ func _unhandled_input(e: InputEvent) -> void:
 			_picker.queue_free()
 			_picker = null
 		else:
-			get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
+			CKNav.up()
 
 func _yield_totals() -> Dictionary:
 	var t := {"food": 0, "silver": 0, "herb": 0, "fort": 0, "stewards": 0, "open": 0}

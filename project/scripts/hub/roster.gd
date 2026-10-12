@@ -55,7 +55,7 @@ func apply_mobile_layout() -> void:
 	MobileLayout.fill_scroll(scroll, foot, 508)
 
 func _back() -> void:
-	get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
+	CKNav.up()
 
 func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("ui_cancel"):
@@ -293,14 +293,14 @@ func _render() -> void:
 		Sfx.click()
 		GameState.set_meta("dossier_id", c.id)
 		GameState.set_meta("dossier_back", "res://scenes/hub/roster.tscn")
-		get_tree().change_scene_to_file("res://scenes/hub/unit_dossier.tscn"))
+		CKNav.go("res://scenes/hub/unit_dossier.tscn"))
 	br.add_child(b1)
 	var b1b := UIKit.ghost_button("族谱", 88, 44)
-	b1b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/lineage_view.tscn"))
+	b1b.pressed.connect(func(): CKNav.go("res://scenes/hub/lineage_view.tscn"))
 	br.add_child(b1b)
 	var b2 := UIKit.ghost_button("锻造装备  (X)", 128, 38)
-	b2.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/forge.tscn"))
+	b2.pressed.connect(func(): CKNav.go("res://scenes/hub/forge.tscn"))
 	br.add_child(b2)
 	var b3 := UIKit.cta_button("委派出战", "A", 150, 38)
-	b3.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/deploy.tscn"))
+	b3.pressed.connect(func(): CKNav.go("res://scenes/hub/deploy.tscn"))
 	br.add_child(b3)
