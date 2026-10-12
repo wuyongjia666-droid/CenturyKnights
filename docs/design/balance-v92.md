@@ -65,3 +65,14 @@ CMP-05 节庆、CMP-06 第二据点、CMP-08 传家宝已经在 main 上。同�
 种子 91 的出生数仍是 15，婚约没有错过。`GENOME PASS silver=0.237 midparent_width=0.064`，`KINSHIP PASS mean=0.839 silver_skip=0.156`。
 
 覆盖种子 1101–1120 的库银变了，有的婚期跟着动。立绘桶从 1595 变成 1605。`tools/farm_queue/genome_bank_v92.json` 已按这次模拟重写，`PORTRAIT BANK PASS births=322 hit_rate=1.000 buckets=1605`。请美术流按新清单出图，不要沿用旧桶。
+
+## 酒馆刷新（v9.2.1，审查 P1-4）
+
+此前酒馆「刷新候选」免费、不限次数：可以无限刷血统和特质，每刷一次还占 3 个立绘槽且不回收。
+
+- 每月第 1 次手动刷新免费，之后每次 15 银，每月最多 3 次（`GameState.manual_refresh_tavern()`；按钮上写价格和余次）。
+- 没被招走的候选人在刷新时释放立绘槽（`UnitArt.release_face`）。
+- 不加月结自动换人：月结不消耗共享随机流，种子 91 门禁不变。
+- 存档记 `tavern_refresh`（当月序号与已用次数）。
+- 测试：`company/tavern_refresh_check`。
+

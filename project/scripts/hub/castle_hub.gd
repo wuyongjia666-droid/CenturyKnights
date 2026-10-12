@@ -280,7 +280,14 @@ func _build() -> void:
 		sg.add_theme_constant_override("h_separation", 8)
 		sg.add_theme_constant_override("v_separation", 8)
 		rp.add_child(sg)
-		for st in [[Locale.t("shell_70f83a5e"), "%d" % leader.max_hp, UIKit.OK], [Locale.t("shell_705f477a"), "%d" % leader.derived_atk(), UIKit.TEXT], [Locale.t("shell_92cc6bc7"), "%d" % leader.derived_def(), UIKit.TEXT], [Locale.t("shell_e4daf17b"), "%d" % leader.derived_move(), UIKit.ACCENT]]:
+		var hp_txt := "%d/%d" % [leader.hp, leader.max_hp]
+		var stat_rows := [
+			[Locale.t("shell_70f83a5e"), hp_txt, UIKit.OK],
+			[Locale.t("shell_705f477a"), "%d" % leader.derived_atk(), UIKit.TEXT],
+			[Locale.t("shell_92cc6bc7"), "%d" % leader.derived_def(), UIKit.TEXT],
+			[Locale.t("shell_e4daf17b"), "%d" % leader.derived_move(), UIKit.ACCENT],
+		]
+		for st in stat_rows:
 			var bx := UIKit.stat_box(st[0], st[1], st[2])
 			bx.custom_minimum_size = Vector2(96, 0)
 			sg.add_child(bx)
