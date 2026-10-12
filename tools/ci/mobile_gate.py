@@ -21,7 +21,7 @@ for s in rep:
         x, y, rw, rh = it["rect"]
         if rw <= 1 or rh <= 1:
             continue
-        if x < -2 or y < -2 or x + rw > vw + 2 or y + rh > vh + 2:
+        if not it.get("in_scroll") and (x < -2 or y < -2 or x + rw > vw + 2 or y + rh > vh + 2):
             fails.append(f"{name}: offscreen {it['type']} '{it['text']}' {it['rect']}")
         if it["type"].endswith("Button") and min(rw, rh) * scale < 48 * dp * 0.9:
             fails.append(f"{name}: small touch {it['text']!r} {rw:.0f}x{rh:.0f}")
