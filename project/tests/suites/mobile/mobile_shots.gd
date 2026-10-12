@@ -10,17 +10,25 @@ const SCREENS := [
 	["lineage", "res://scenes/hub/lineage_view.tscn"],
 	["atlas", "res://scenes/hub/atlas_view.tscn"],
 	["city", "res://scenes/hub/city.tscn"],
+	["city_smith", "res://scenes/hub/city.tscn", "smith"],
+	["city_market", "res://scenes/hub/city.tscn", "market"],
+	["city_board", "res://scenes/hub/city.tscn", "board"],
+	["city_tavern", "res://scenes/hub/city.tscn", "tavern"],
+	["city_armory", "res://scenes/hub/city.tscn", "armory"],
 	["battle", "res://scenes/battle/battle.tscn"],
 	["settings", "res://scenes/ui/settings.tscn"],
 ]
 const RES := [Vector2i(2400, 1080), Vector2i(2340, 1080), Vector2i(1920, 1080), Vector2i(2560, 1600)]
 var _out := "/tmp/ck_mobile"
 var _report := []
+var _only := ""
 
 func _ready() -> void:
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--out="):
 			_out = arg.substr(6)
+		if arg.begins_with("--only="):
+			_only = arg.substr(7)
 	if DisplayServer.get_name() == "headless":
 		print("MOBILE PASS headless-skip")
 		get_tree().quit(0)
@@ -33,6 +41,10 @@ func _ready() -> void:
 		await get_tree().process_frame
 		await get_tree().process_frame
 		for pair in SCREENS:
+			if _only != "" and not str(pair[0]).begins_with(_only):
+				continue
+			if pair.size() > 2:
+				GameState.set_meta("city_tab", str(pair[2]))
 			await _shoot(str(pair[1]), "%s_%dx%d" % [pair[0], r.x, r.y])
 	var f := FileAccess.open(_out + "/layout.json", FileAccess.WRITE)
 	f.store_string(JSON.stringify(_report, " "))

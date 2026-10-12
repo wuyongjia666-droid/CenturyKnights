@@ -393,6 +393,15 @@ func _row_button(text: String, sub: String, w: float, on: bool, locked: bool) ->
 	s.size = Vector2(w - 64, 16)
 	s.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(s)
+	if _mob:
+		# phone: two 22px lines need a taller row
+		b.custom_minimum_size.y = maxf(b.custom_minimum_size.y, 84.0)
+		l.position.y = 6.0
+		l.size.y = 30.0
+		s.position.y = 44.0
+		s.size.y = 30.0
+		for lab in [l, s]:
+			(lab as Label).add_theme_font_size_override("font_size", MobilePage.FONT)
 	return b
 
 func _icon(it: Dictionary, sz: float) -> Control:
@@ -740,8 +749,17 @@ func _tab_market() -> void:
 				b.tooltip_text = "共 %d 银" % World.quote_sell(city, gs, maxi(1, q2))
 				b.pressed.connect(func(): _do(World.market_sell(city, gs, q2)))
 			acts.add_child(b)
-		row.add_child(acts)
-		v.add_child(row)
+		if _mob:
+			# phone: trade buttons get their own line under the price row
+			var cell := VBoxContainer.new()
+			cell.add_theme_constant_override("separation", 4)
+			row.custom_minimum_size = Vector2(0, 34)
+			cell.add_child(row)
+			cell.add_child(acts)
+			v.add_child(cell)
+		else:
+			row.add_child(acts)
+			v.add_child(row)
 
 # ── 委托榜 ────────────────────────────────────────────
 func _tab_board() -> void:
