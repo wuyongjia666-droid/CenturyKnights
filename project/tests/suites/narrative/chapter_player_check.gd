@@ -163,6 +163,16 @@ func _continue_clears_text(player) -> String:
 		var hit := br.intersection(ar)
 		if hit.size.x > 2.0 and hit.size.y > 2.0:
 			return "continue covers dialogue %s" % hit
+	# Regression: refreshing must keep the continue named AdvanceLine, else the skin floats it above the box.
+	for _k in 2:
+		player.call("_refresh_actions")
+		for live in actions.get_children():
+			if not live.is_queued_for_deletion() and str(live.name) != "AdvanceLine":
+				return "continue lost its AdvanceLine name after refresh (%s): skin floats it above the box" % live.name
+		await get_tree().process_frame
+		await get_tree().process_frame
+		if actions.get_parent() == player:
+			return "continue floats above the dialogue box after refresh"
 	return ""
 
 func _advance_lines(player, expected: Array) -> String:
