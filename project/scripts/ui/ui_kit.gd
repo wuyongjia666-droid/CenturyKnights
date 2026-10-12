@@ -1276,7 +1276,7 @@ static func stitch_dialogue(scene: Control) -> void:
 			if not is_instance_valid(c) or c.is_queued_for_deletion():
 				continue
 			live.append(c)
-			if str(c.name) != "AdvanceLine":
+			if str(c.name) != "AdvanceLine" and not bool(c.get_meta("advance_line", false)):
 				advance_only = false
 		if live.is_empty():
 			return
