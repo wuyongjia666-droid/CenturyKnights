@@ -44,6 +44,9 @@ func _run() -> String:
 	if cond_err != "":
 		return cond_err
 	GameState.new_game("烬行", "灰旗", GameState.crest_color)
+	var exit_err := _ch0_exit()
+	if exit_err != "":
+		return exit_err
 	var packed: PackedScene = load("res://scenes/story/chapter_player.tscn")
 	if packed == null:
 		return "player scene missing"
@@ -272,3 +275,18 @@ func _conditions() -> String:
 		return "roster override still saw dengying"
 	print("OK conditions")
 	return ""
+
+## Audit P1-5: the prologue's departure button opens e1_01, not a dead archive notice.
+func _ch0_exit() -> String:
+	var data = JSON.parse_string(FileAccess.get_file_as_string(CH0))
+	for b in data.get("beats", []):
+		for a in b.get("actions", []):
+			if str(a.get("id", "")) != "old_volume":
+				continue
+			for step in a.get("do", []):
+				if str(step.get("op", "")) == "archive_notice":
+					return "old_volume still shows the archive notice"
+				if str(step.get("op", "")) == "open_chapter" and str(step.get("id", "")) == "e1_01":
+					print("OK ch0 departs to e1_01")
+					return ""
+	return "old_volume does not open e1_01"
