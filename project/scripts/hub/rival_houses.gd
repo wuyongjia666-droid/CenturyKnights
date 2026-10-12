@@ -144,7 +144,8 @@ func _select(h: Dictionary) -> void:
 	var s := GameState.silver
 	if int(deal.get("turns_left", 0)) > 0:
 		var mid := str(deal.get("last_event", ""))
-		_head.add_child(CKPageKit.text(Locale.t("lb_rv_deal_now", [_kind_zh(str(deal.get("kind"))), int(deal.get("turns_left")), mid if mid != "" else Locale.t("lb_rv_deal_quiet")]), UIKit.OK, 13, 800))
+		var said := Locale.t("lb_rv_deal_now", [_kind_zh(str(deal.get("kind"))), int(deal.get("turns_left")), mid if mid != "" else Locale.t("lb_rv_deal_quiet")])
+		_head.add_child(CKPageKit.text(said, UIKit.OK, 13, 800))
 		_card("lb_rv_a_tick", "", Func.new(func(): _tick_month(hid)), "")
 		for k in ["trade", "intel", "truce"]:
 			if k == str(deal.get("kind")):
