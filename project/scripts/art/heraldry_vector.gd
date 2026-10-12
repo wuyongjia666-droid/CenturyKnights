@@ -303,8 +303,14 @@ static func _canton_svg(s: Dictionary) -> String:
 		"lozenge":
 			r = Rect2(62, 60, 40, 38)
 	var rim := CKHeraldry.tincture_hex("argent")
-	var out := '<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="3" fill="%s" stroke="%s" stroke-width="5"/>' % [r.position.x, r.position.y, r.size.x, r.size.y, _ink(), _ink()]
-	out += '<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="2" fill="%s" stroke="%s" stroke-width="1.6"/>' % [r.position.x + 2.5, r.position.y + 2.5, r.size.x - 5, r.size.y - 5, str(md.field), rim]
+	var out := (
+		'<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="3" fill="%s" stroke="%s" stroke-width="5"/>'
+		% [r.position.x, r.position.y, r.size.x, r.size.y, _ink(), _ink()]
+	)
+	out += (
+		'<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" rx="2" fill="%s" stroke="%s" stroke-width="1.6"/>'
+		% [r.position.x + 2.5, r.position.y + 2.5, r.size.x - 5, r.size.y - 5, str(md.field), rim]
+	)
 	if str(md.get("charge", "")) != "":
 		var tint := str(md.get("tincture", rim))
 		if absf(Color(tint).get_luminance() - Color(str(md.field)).get_luminance()) < 0.22:
@@ -325,7 +331,10 @@ static func _material(shape_d: String, border: String, border_hex: String) -> St
 		match border:
 			"double":
 				out += '<path d="%s" fill="none" stroke="%s" stroke-width="3" %s/>' % [shape_d, border_hex, t]
-				out += '<path d="%s" fill="none" stroke="%s" stroke-width="1.6" transform="translate(100,120) scale(0.84) translate(-100,-120)"/>' % [shape_d, border_hex]
+				out += (
+					'<path d="%s" fill="none" stroke="%s" stroke-width="1.6" '
+					+ 'transform="translate(100,120) scale(0.84) translate(-100,-120)"/>'
+				) % [shape_d, border_hex]
 			"dentil":
 				out += '<path d="%s" fill="none" stroke="%s" stroke-width="5" stroke-dasharray="5 5" %s/>' % [shape_d, border_hex, t]
 			_:
@@ -333,7 +342,10 @@ static func _material(shape_d: String, border: String, border_hex: String) -> St
 	out += "</g>"
 	out += '<path d="%s" fill="none" stroke="%s" stroke-width="9" stroke-linejoin="round"/>' % [shape_d, _ink()]
 	out += '<path d="%s" fill="none" stroke="url(#gr_rim)" stroke-width="5" stroke-linejoin="round"/>' % shape_d
-	out += '<path d="%s" fill="none" stroke="%s" stroke-width="1" stroke-linejoin="round" opacity="0.8" transform="translate(100,120) scale(0.955) translate(-100,-120)"/>' % [shape_d, _ink()]
+	out += (
+		'<path d="%s" fill="none" stroke="%s" stroke-width="1" stroke-linejoin="round" opacity="0.8" '
+		+ 'transform="translate(100,120) scale(0.955) translate(-100,-120)"/>'
+	) % [shape_d, _ink()]
 	return out
 
 static func _defs(s: Dictionary) -> String:
@@ -350,16 +362,48 @@ static func _defs(s: Dictionary) -> String:
 	if mb == "":
 		mb = str(s.get("field_b", argent))
 	var out := "<defs>"
-	out += '<linearGradient id="gr_sheen" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="%s" stop-opacity="0.30"/><stop offset="0.45" stop-color="%s" stop-opacity="0"/><stop offset="1" stop-color="%s" stop-opacity="0.32"/></linearGradient>' % [argent, argent, _ink()]
-	out += '<radialGradient id="gr_spec" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="%s" stop-opacity="0.35"/><stop offset="1" stop-color="%s" stop-opacity="0"/></radialGradient>' % [argent, argent]
-	out += '<linearGradient id="gr_bevel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="%s"/><stop offset="1" stop-color="%s" stop-opacity="0"/></linearGradient>' % [argent, argent]
-	out += '<linearGradient id="gr_rim" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="%s"/><stop offset="0.35" stop-color="%s"/><stop offset="0.7" stop-color="%s"/><stop offset="1" stop-color="%s"/></linearGradient>' % [m.call(4), m.call(2), m.call(1), m.call(3)]
-	out += '<linearGradient id="hm_metal" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="%s"/><stop offset="0.3" stop-color="%s"/><stop offset="0.55" stop-color="%s"/><stop offset="1" stop-color="%s"/></linearGradient>' % [m.call(1), m.call(4), m.call(2), m.call(0)]
-	out += '<linearGradient id="cr_metal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="%s"/><stop offset="0.5" stop-color="%s"/><stop offset="1" stop-color="%s"/></linearGradient>' % [m.call(4), m.call(2), m.call(1)]
+	out += (
+		'<linearGradient id="gr_sheen" x1="0" y1="0" x2="1" y2="1">'
+		+ '<stop offset="0" stop-color="%s" stop-opacity="0.30"/>'
+		+ '<stop offset="0.45" stop-color="%s" stop-opacity="0"/>'
+		+ '<stop offset="1" stop-color="%s" stop-opacity="0.32"/></linearGradient>'
+	) % [argent, argent, _ink()]
+	out += (
+		'<radialGradient id="gr_spec" cx="0.5" cy="0.5" r="0.5">'
+		+ '<stop offset="0" stop-color="%s" stop-opacity="0.35"/>'
+		+ '<stop offset="1" stop-color="%s" stop-opacity="0"/></radialGradient>'
+	) % [argent, argent]
+	out += (
+		'<linearGradient id="gr_bevel" x1="0" y1="0" x2="1" y2="1">'
+		+ '<stop offset="0" stop-color="%s"/>'
+		+ '<stop offset="1" stop-color="%s" stop-opacity="0"/></linearGradient>'
+	) % [argent, argent]
+	out += (
+		'<linearGradient id="gr_rim" x1="0" y1="0" x2="1" y2="1">'
+		+ '<stop offset="0" stop-color="%s"/><stop offset="0.35" stop-color="%s"/>'
+		+ '<stop offset="0.7" stop-color="%s"/><stop offset="1" stop-color="%s"/></linearGradient>'
+	) % [m.call(4), m.call(2), m.call(1), m.call(3)]
+	out += (
+		'<linearGradient id="hm_metal" x1="0" y1="0" x2="1" y2="0">'
+		+ '<stop offset="0" stop-color="%s"/><stop offset="0.3" stop-color="%s"/>'
+		+ '<stop offset="0.55" stop-color="%s"/><stop offset="1" stop-color="%s"/></linearGradient>'
+	) % [m.call(1), m.call(4), m.call(2), m.call(0)]
+	out += (
+		'<linearGradient id="cr_metal" x1="0" y1="0" x2="0" y2="1">'
+		+ '<stop offset="0" stop-color="%s"/><stop offset="0.5" stop-color="%s"/>'
+		+ '<stop offset="1" stop-color="%s"/></linearGradient>'
+	) % [m.call(4), m.call(2), m.call(1)]
 	out += '<linearGradient id="cr_band" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="%s"/><stop offset="1" stop-color="%s"/></linearGradient>' % [m.call(3), m.call(1)]
 	out += '<radialGradient id="cr_pearl" cx="0.35" cy="0.35" r="0.7"><stop offset="0" stop-color="%s"/><stop offset="1" stop-color="%s"/></radialGradient>' % [argent, m.call(2)]
-	out += '<linearGradient id="mt_outer" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="%s"/><stop offset="1" stop-color="%s"/></linearGradient>' % [_hx(Color(ma).lightened(0.12)), _hx(Color(ma).darkened(0.35))]
-	out += '<linearGradient id="sp_body" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="%s"/><stop offset="0.5" stop-color="%s"/><stop offset="1" stop-color="%s"/></linearGradient>' % [str(sup.get("light", argent)), str(sup.get("body", argent)), str(sup.get("deep", _ink()))]
+	out += (
+		'<linearGradient id="mt_outer" x1="0" y1="0" x2="1" y2="1">'
+		+ '<stop offset="0" stop-color="%s"/><stop offset="1" stop-color="%s"/></linearGradient>'
+	) % [_hx(Color(ma).lightened(0.12)), _hx(Color(ma).darkened(0.35))]
+	out += (
+		'<linearGradient id="sp_body" x1="0" y1="0" x2="1" y2="1">'
+		+ '<stop offset="0" stop-color="%s"/><stop offset="0.5" stop-color="%s"/>'
+		+ '<stop offset="1" stop-color="%s"/></linearGradient>'
+	) % [str(sup.get("light", argent)), str(sup.get("body", argent)), str(sup.get("deep", _ink()))]
 	out += "</defs>"
 	return out.replace("{B}", mb)
 
@@ -440,8 +484,14 @@ static func _supporters_for(s: Dictionary) -> Array:
 
 static func _compartment() -> String:
 	var c: Dictionary = lib().get("compartment", {})
-	var out := '<path d="M40,580 C90,556 170,560 230,566 L370,566 C430,560 510,556 560,580 L548,612 C470,626 130,626 52,612 Z" fill="%s" stroke="%s" stroke-width="3.4" stroke-linejoin="round"/>' % [str(c.get("side", "")), _ink()]
-	out += '<path d="M40,580 C90,556 170,560 230,566 L370,566 C430,560 510,556 560,580 C500,574 420,578 300,580 C180,578 100,574 40,580 Z" fill="%s" stroke="%s" stroke-width="2" stroke-linejoin="round"/>' % [str(c.get("top", "")), _ink()]
+	var out := (
+		'<path d="M40,580 C90,556 170,560 230,566 L370,566 C430,560 510,556 560,580 '
+		+ 'L548,612 C470,626 130,626 52,612 Z" fill="%s" stroke="%s" stroke-width="3.4" stroke-linejoin="round"/>'
+	) % [str(c.get("side", "")), _ink()]
+	out += (
+		'<path d="M40,580 C90,556 170,560 230,566 L370,566 C430,560 510,556 560,580 '
+		+ 'C500,574 420,578 300,580 C180,578 100,574 40,580 Z" fill="%s" stroke="%s" stroke-width="2" stroke-linejoin="round"/>'
+	) % [str(c.get("top", "")), _ink()]
 	for x in [96, 168, 262, 344, 432, 506]:
 		out += '<path d="M%d,586 l10,-14 l8,16 Z" fill="%s" stroke="%s" stroke-width="1.6" opacity="0.9"/>' % [x, str(c.get("ice", "")), _ink()]
 	return out
