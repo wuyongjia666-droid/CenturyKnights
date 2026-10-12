@@ -144,3 +144,39 @@ sui_infirmary_pay,私囊付 6 + 旗库药 1（医舍）,Purse 6 + flag herb 1 (c
 lin_minor,年幼,Minor
 lin_too_young,%s 还小（%d岁）。%d 岁起可早教择路。,%s is too young (%d). Early schooling opens at %d.
 lin_rite_hint,点选子嗣：%d 岁起可「早教择路」（写入族谱，岁课按道路倾向成长）；成年未入队可完成授旗三步。,"Pick an heir: early schooling from age %d (written to the genealogy, yearly lessons follow the path); adults not yet enlisted can take the three-step banner rite."
+gen2_01,族人档案,Kin record
+gen2_02,尚无族人。成婚、生子后，族人会出现在左侧。,No kin yet. Marry and have children and they appear on the left.
+gen2_03,%d岁 · %s,%d · %s
+gen2_04,已故 · 享年%d岁,Deceased · died at %d
+gen2_05,职业：%s,Class: %s
+gen2_06,族徽,Family arms
+gen2_07,禀性,Traits
+gen2_08,%d 项,%d
+gen2_09,（禀性未显）,(no traits yet)
+gen2_10,血胤：%s %d%%,Blood: %s %d%%
+gen2_11,%s氏家族谱系 · 详情,House %s · Details
+gen2_12,返回族谱,Back to genealogy
+gen2_13,拖动,Drag
+gen2_14,平移,Pan
+gen2_15,滚轮,Wheel
+gen2_16,缩放,Zoom
+gen2_17,尚无族人。,No kin yet.
+gen2_18,以「%s」为中心 · 父母 / 配偶 / 子女,Centred on %s · parents / spouses / children
+gen2_19,父母未录,Parents unrecorded
+gen2_20,尚无子女,No children yet
+gen2_21,%d岁,%d
+gen2_22,故,Dec.
+gen2_23,以此为中心,Centre here
+gen2_24,%s氏家族谱系,House %s
+gen2_25,在世族人,Living kin
+gen2_26,历,Date
+gen2_27,返回城堡,Back to castle
+gen2_28,血脉图鉴,Bloodline codex
+gen2_29,血脉详档,Blood dossier
+gen2_30,朝报,Court news
+gen2_31,查看族人,View kin
+gen2_32,"尚无族人。
+成婚、生子之后，这里会一人一格列出全族。","No kin yet.
+After marriages and births, every member gets a tile here."
+gen2_33,家主,Head
+gen2_34,详情,Details
