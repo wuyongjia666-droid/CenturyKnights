@@ -504,6 +504,8 @@ static func portrait(c: CKCharacter, size: int = 96, tier: String = "") -> Textu
 	var use_tier := tier if tier != "" else CKArtPaths.tier_for_display(size)
 	var gtex: Texture2D = CKGenomePortrait.texture(c, use_tier)
 	if gtex != null:
+		## Bank/disk plates paint the face; still reserve a hireuniq slot so tavern walk-aways free it.
+		_face_uid(c)
 		return gtex
 	var path = _portrait_key(c)
 	var _elite := _v83_elite_for(path)
