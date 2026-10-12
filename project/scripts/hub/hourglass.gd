@@ -1,181 +1,124 @@
 extends Control
+## Hourglass (line B, audit #27). KPIs on top, "what next month brings" on the left, the last
+## result on the right (empty until the first advance), two advance buttons. The tutorial
+## jump to harvest only shows with CK_DEBUG_TOOLS=1.
 
-var _forecast: RichTextLabel
-var _log: RichTextLabel
+var _forecast: VBoxContainer
+var _log: VBoxContainer
+var _kpi: HBoxContainer
+var _msg: Label
+var _busy := false
 
 func _ready() -> void:
-	_build()
+	CKPageKit.shell(self, Locale.t("lb_hg_ctx"), "HOURGLASS", Locale.t("lb_hg_title"), Locale.t("lb_hg_desc"))
+	_kpi = HBoxContainer.new()
+	_kpi.name = "Kpis"
+	_kpi.position = Vector2(42, CKPageKit.TOP + 8)
+	_kpi.add_theme_constant_override("separation", 12)
+	add_child(_kpi)
+	var fc := CKPageKit.card(self, Rect2(42, CKPageKit.TOP + 92, 590, 360), "ForecastCard")
+	CKPageKit.card_head(fc, Locale.t("lb_hg_next"), "FORECAST")
+	_forecast = CKPageKit.list(fc, Rect2(14, 58, 562, 290), "Forecast")
+	var lc := CKPageKit.card(self, Rect2(648, CKPageKit.TOP + 92, 590, 360), "ResultCard")
+	CKPageKit.card_head(lc, Locale.t("lb_hg_last"), "RESULT")
+	_log = CKPageKit.list(lc, Rect2(14, 58, 562, 290), "Result")
+	_log.add_child(CKPageKit.empty(Locale.t("lb_hg_empty"), Locale.t("lb_hg_empty_why"), "", 520))
+	var row := HBoxContainer.new()
+	row.name = "AdvanceRow"
+	row.position = Vector2(42, CKPageKit.TOP + 466)
+	row.add_theme_constant_override("separation", 12)
+	add_child(row)
+	var m1 := CKPageKit.button(Locale.t("advance_month"), true, 220)
+	m1.name = "AdvanceMonth"
+	m1.pressed.connect(func(): _advance(1, m1))
+	row.add_child(m1)
+	var m3 := CKPageKit.button(Locale.t("advance_season"), false, 220)
+	m3.name = "AdvanceSeason"
+	m3.pressed.connect(func(): _advance(3, m3))
+	row.add_child(m3)
+	if OS.get_environment("CK_DEBUG_TOOLS") == "1":
+		var hv := CKPageKit.button(Locale.t("lb_hg_debug_harvest"), false, 220)
+		hv.pressed.connect(_to_harvest)
+		row.add_child(hv)
+	_msg = CKPageKit.feedback(self)
+	_paint_kpis()
 	_show_forecast(1)
-
-func _build() -> void:
-	UIKit.make_themed_bg(self, "hourglass")
-	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/hourglass_banner.png"):
-		var _bn := TextureRect.new()
-		_bn.texture = load("res://assets/art/ui/hourglass_banner.png")
-		_bn.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		_bn.stretch_mode = TextureRect.STRETCH_SCALE
-		_bn.position = Vector2(0, 0)
-		_bn.size = Vector2(1280, 52)
-		_bn.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(_bn)
-		UIFX.banner_shimmer(_bn, 3.8)
+	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "HOURGLASS · FROST")
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
-	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/hub_banner_strip.png"):
-		var strip := TextureRect.new()
-		strip.texture = load("res://assets/art/ui/hub_banner_strip.png")
-		strip.position = Vector2(0, 0)
-		strip.custom_minimum_size = Vector2(1280, 48)
-		strip.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		strip.stretch_mode = TextureRect.STRETCH_SCALE
-		strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(strip)
 
-	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/monthly_banner.png"):
-		var mb := TextureRect.new()
-		mb.texture = load("res://assets/art/ui/monthly_banner.png")
-		mb.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		mb.stretch_mode = TextureRect.STRETCH_SCALE
-		mb.position = Vector2(320, 8)
-		mb.size = Vector2(640, 48)
-		mb.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(mb)
-	var t = UIKit.make_label("岁月沙漏", true)
-	t.position = Vector2(40, 16)
-	add_child(t)
-	# 月结图腾条
-	var chip_row := HBoxContainer.new()
-	chip_row.name = "MonthChips"
-	chip_row.position = Vector2(40, 430)
-	chip_row.add_theme_constant_override("separation", 8)
-	add_child(chip_row)
-	var cal = UIKit.make_label(Calendar.label())
-	cal.position = Vector2(40, 56)
-	cal.name = "CalLabel"
-	cal.add_theme_color_override("font_color", UIKit.ACCENT)
-	add_child(cal)
-	var fl = UIKit.make_dim_label("先看预告，再倾沙漏。人会老，旗还在——儿童口粮也计入月结。")
-	fl.position = Vector2(200, 56)
-	add_child(fl)
+## Story screens opened from a chapter go back to it once (StoryCatalog).
+func _back() -> void:
+	var ret := StoryCatalog.take_story_return("")
+	if ret != "":
+		get_tree().change_scene_to_file(ret)
+	elif str(GameState.chapter0_beat) == "0.6":
+		get_tree().change_scene_to_file("res://scenes/story/chapter0.tscn")
+	else:
+		get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
 
-	var fp = UIKit.make_panel()
-	fp.position = Vector2(40, 100)
-	fp.custom_minimum_size = Vector2(600, 320)
-	add_child(fp)
-	var ftitle = UIKit.make_label("推进预告")
-	ftitle.add_theme_color_override("font_color", UIKit.ACCENT)
-	fp.add_child(VBoxContainer.new())
-	var fv = fp.get_child(0) as VBoxContainer
-	fv.add_child(ftitle)
-	_forecast = RichTextLabel.new()
-	_forecast.custom_minimum_size = Vector2(560, 260)
-	_forecast.bbcode_enabled = true
-	_forecast.add_theme_color_override("default_color", UIKit.TEXT)
-	fv.add_child(_forecast)
-
-	var lp = UIKit.make_panel()
-	lp.position = Vector2(680, 100)
-	lp.custom_minimum_size = Vector2(560, 320)
-	add_child(lp)
-	var lv := VBoxContainer.new()
-	lp.add_child(lv)
-	var ltitle = UIKit.make_label("推进结果")
-	ltitle.add_theme_color_override("font_color", UIKit.ACCENT)
-	lv.add_child(ltitle)
-	_log = RichTextLabel.new()
-	_log.custom_minimum_size = Vector2(520, 260)
-	_log.bbcode_enabled = true
-	_log.add_theme_color_override("default_color", UIKit.TEXT)
-	lv.add_child(_log)
-
-	var row := HBoxContainer.new()
-	row.position = Vector2(40, 460)
-	row.add_theme_constant_override("separation", 10)
-	add_child(row)
-	var m1 = UIKit.make_accent_button(Locale.t("advance_month"), 140)
-	m1.pressed.connect(func(): _advance(1))
-	row.add_child(m1)
-	var m3 = UIKit.make_button(Locale.t("advance_season"), 140)
-	m3.pressed.connect(func(): _advance(3))
-	row.add_child(m3)
-	var harvest = UIKit.make_button("教程：跳至丰收月", 180)
-	harvest.pressed.connect(_to_harvest)
-	row.add_child(harvest)
-	var back = UIKit.make_button(Locale.t("btn_back"), 100)
-	back.pressed.connect(func():
-		var ret := StoryCatalog.take_story_return("")
-		if ret != "":
-			get_tree().change_scene_to_file(ret)
-		elif str(GameState.chapter0_beat) == "0.6":
-			get_tree().change_scene_to_file("res://scenes/story/chapter0.tscn")
-		else:
-			get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
-	)
-	row.add_child(back)
+func _paint_kpis() -> void:
+	CKPageKit.clear(_kpi)
+	var items := [
+		[Locale.t("lb_hg_k_date"), Calendar.label(), UIKit.ACCENT],
+		[Locale.t("lb_hg_k_silver"), str(GameState.silver), UIKit.TEXT],
+		[Locale.t("lb_hg_k_food"), str(GameState.food), UIKit.TEXT],
+		[Locale.t("lb_hg_k_morale"), str(GameState.morale), UIKit.OK if GameState.morale >= 50 else UIKit.DANGER],
+		[Locale.t("lb_hg_k_people"), str(GameState.roster().size()), UIKit.TEXT],
+	]
+	for it in items:
+		var p := PanelContainer.new()
+		p.custom_minimum_size = Vector2(228, 72)
+		var sb := UIKit.flat_box(Color(1, 1, 1, 0.03), Color(1, 1, 1, 0.12), 10)
+		sb.content_margin_left = 14
+		sb.content_margin_top = 8
+		p.add_theme_stylebox_override("panel", sb)
+		var v := VBoxContainer.new()
+		p.add_child(v)
+		v.add_child(UIKit.mono(str(it[0]), 11, UIKit.TEXT_FAINT, false))
+		v.add_child(UIKit.title_label(str(it[1]), 20, it[2]))
+		_kpi.add_child(p)
 
 func _show_forecast(months: int) -> void:
-	var evs = Calendar.forecast(months)
-	var lines: Array = ["将推进 [b]%d[/b] 月，预计发生：" % months]
+	CKPageKit.clear(_forecast)
+	var evs: Array = Calendar.forecast(months)
 	if evs.is_empty():
-		lines.append("（无特殊事件，仍有军饷与口粮结算）")
+		_forecast.add_child(CKPageKit.text(Locale.t("lb_hg_quiet"), UIKit.TEXT_DIM, 14, 520))
 	for e in evs:
-		lines.append("· " + str(e.get("text", "")))
-	_forecast.text = "\n".join(lines)
+		_forecast.add_child(_line(str(e.get("text", "")), UIKit.TEXT))
 
-func _advance(months: int) -> void:
-	_show_forecast(months)
-	var evs = Calendar.advance(months)
-	var lines: Array = ["[b]%s[/b] 推进结果：" % Calendar.label()]
+func _line(t: String, col: Color) -> Control:
+	var r := CKPageKit.row(col, 40)
+	(r[1] as VBoxContainer).add_child(CKPageKit.text(t, col, 14, 520))
+	return r[0]
+
+func _advance(months: int, btn: Control) -> void:
+	if _busy:
+		return
+	_busy = true
+	var evs: Array = Calendar.advance(months)
+	CKPageKit.clear(_log)
+	_log.add_child(UIKit.title_label(Locale.t("lb_hg_after", [Calendar.label(), months]), 15, UIKit.ACCENT))
+	if evs.is_empty():
+		_log.add_child(CKPageKit.text(Locale.t("lb_hg_after_quiet"), UIKit.TEXT_DIM, 14, 520))
 	for e in evs:
-		var tx = str(e.get("text", ""))
-		if str(e.get("type", "")) == "rival_deal" or tx.find("契约") >= 0:
-			lines.append("· [color=#c9a227]%s[/color]" % tx)
-		else:
-			lines.append("· " + tx)
-	_log.text = "\n".join(lines)
-	_refresh_month_chips("\n".join(lines))
-	get_node("CalLabel").text = Calendar.label()
+		var deal := str(e.get("type", "")) == "rival_deal"
+		_log.add_child(_line(str(e.get("text", "")), UIKit.ACCENT if deal else UIKit.TEXT))
+	CKPageKit.drag_through(_log)
+	UIFX.stagger_children(_log, 0.03, 0.2)
+	_paint_kpis()
 	_show_forecast(1)
 	GameState.save_game()
+	CKPageKit.say(_msg, Locale.t("lb_hg_done", [months, evs.size()]), true)
+	UIFX.confirm(btn)
+	_busy = false
 
 func _to_harvest() -> void:
-	var guard = 0
+	var guard := 0
 	while not GameState.flag("harvest_done") and guard < 24:
 		Calendar.advance(1)
 		guard += 1
-	_log.text = "已抵达丰收结算。当前 [b]%s[/b]。沙漏旁的人，又老了一点。" % Calendar.label()
-	get_node("CalLabel").text = Calendar.label()
+	_paint_kpis()
+	_show_forecast(1)
+	CKPageKit.say(_msg, Calendar.label(), true)
 	GameState.save_game()
-
-func _refresh_month_chips(log_text: String) -> void:
-	var row = get_node_or_null("MonthChips")
-	if row == null:
-		return
-	for c in row.get_children():
-		c.queue_free()
-	var keys: Array = []
-	if log_text.find("粮") >= 0 or log_text.find("属地") >= 0:
-		keys.append("grain")
-	if log_text.find("银") >= 0:
-		keys.append("silver")
-	if log_text.find("士气") >= 0:
-		keys.append("morale")
-	if log_text.find("联姻") >= 0:
-		keys.append("marriage")
-	if log_text.find("血胤") >= 0 or log_text.find("月泽") >= 0:
-		keys.append("blood")
-	if log_text.find("堡志") >= 0:
-		keys.append("ambition")
-	if keys.is_empty():
-		keys = ["grain", "silver"]
-	for k in keys:
-		var path = "res://assets/art/ui/month_chip_%s.png" % k
-		if ResourceLoader.exists(path):
-			var tr := TextureRect.new()
-			tr.texture = load(path)
-			tr.custom_minimum_size = Vector2(40, 40)
-			tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-			tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-			row.add_child(tr)
-	var tip = UIKit.make_dim_label("月结图腾：粮 / 银 / 士气 / 联姻 / 血胤 / 堡志")
-	row.add_child(tip)
