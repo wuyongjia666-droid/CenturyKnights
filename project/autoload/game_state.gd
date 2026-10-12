@@ -107,16 +107,11 @@ func _ready() -> void:
 	Calendar.register("post", Callable(self, "_court_before"), 39)
 	Calendar.register("post", Callable(self, "_court_after"), 50)
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel"):
-		CKPauseMenu.toggle()
-		get_viewport().set_input_as_handled()
-
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_WM_CLOSE_REQUEST:
 		CKAutosave.on_background()
 	elif what == NOTIFICATION_WM_GO_BACK_REQUEST:
-		CKPauseMenu.toggle()
+		CKNav.back()
 
 func _exit_tree() -> void:
 	# static hooks must not outlive the engine's script teardown
