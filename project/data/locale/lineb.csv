@@ -5,7 +5,6 @@ lb_anc_honor_head,家族荣誉,Family honor
 lb_anc_how,"每立一块碑，家族荣誉加 1，最多加 3。
 
 荣誉高了，联姻、请爵时别人更看得起你。
-
 战死的碑是红色的，寿终的是蓝色的。","Each stone adds 1 honor, up to 3."
 lb_anc_count,已立 %d 块碑，荣誉最多算 %d 块,"%d stones, honor counts up to %d"
 lb_anc_wall_head,碑林,Stele wall
@@ -71,3 +70,141 @@ lb_sk_req,要先学会：%s,Requires: %s
 lb_sk_owned_long,已经学会了，出战时可以用。,Learned; usable in battle.
 lb_sk_no_points,战技点不够，打赢仗能拿到,Not enough points; win battles
 lb_train_tutor_none,还没有学生,No pupil yet
+lb_people,%d 人,%d
+lb_month,%d 月,Month %d
+lb_title_ctx,请爵,Titles
+lb_title_title,请爵：勋士到侯爵,Titles: knight to marquis
+lb_title_desc,团长的爵位一级一级往上请，要看功勋、封地、婚约和邦交。升到伯爵时，烬图携因的人身上的河图纹会醒。,"Request the next title once merit, fiefs, marriage and relations are enough."
+lb_title_now,现在,Now
+lb_title_done,已得,Held
+lb_title_next,下一阶,Next
+lb_title_top,已经是侯爵了,Already a marquis
+lb_title_top_why,爵位到顶了，不用再请。,The ladder ends here.
+lb_title_miss_head,还差这些,Still missing
+lb_title_ready_head,条件都够了,All set
+lb_title_ready,四项都达标，可以去请下一阶爵位。,All four met; request the next title.
+lb_title_go,请爵,Request title
+lb_title_block,还不能请：%s,Not yet: %s
+lb_title_miss_merit,功勋还差 %d：打仗、完成委托能攒功勋。,Merit short by %d: battles and quests.
+lb_title_miss_fiefs,封地还差 %d 块：去舆图上拿下城池或属地。,Fiefs short by %d: take holdings on the atlas.
+lb_title_miss_married,团长还没成婚：去联姻页订一门亲。,Captain is unmarried: arrange a match.
+lb_title_miss_rep,邦交还差 %d：送礼、帮邻国办事能涨。,Relations short by %d: gifts and favours.
+lb_title_met,已达成,Met
+lb_title_unmet,未达成,Not met
+lb_title_not_needed,不需要,Not needed
+lb_title_over,实际有 %d，已超过要求,"You have %d, above the bar"
+lb_shrine_ctx,祠堂,Shrine
+lb_shrine_title,祠堂,Shrine
+lb_shrine_desc,在这里给受伤的人祈愈、给族人验血，一年五个节庆也在这里看。祠堂等级在「工事」里升。,"Heal, test blood and see the year's festivals."
+lb_shrine_heal,祈愈,Healing
+lb_shrine_hurt,要治的人,Hurt
+lb_shrine_cost,花费,Cost
+lb_shrine_free,免费,Free
+lb_shrine_heal_go,焚香祈愈,Heal
+lb_shrine_heal_none,大家都好好的，现在不用祈愈,Everyone is well
+lb_shrine_heal_done,刚祈愈过，大家都好了,Just healed; everyone is well
+lb_shrine_all_well,团里没人受伤，生命都是满的。,No one is hurt.
+lb_shrine_hurt_one,%s %d/%d,%s %d/%d
+lb_shrine_injured,（重伤）, (wounded)
+lb_shrine_blood,验血,Blood test
+lb_shrine_per_head,每人 %d 银,%d silver each
+lb_shrine_blood_body,验过血才知道一个人身上藏着什么血脉、是不是亲生的。验过的人才能凭血契议婚、进锻场。,Reveal hidden bloodlines and false heirs.
+lb_shrine_blood_go,去验血,Go test
+lb_shrine_fix,修缮,Restore
+lb_shrine_level,祠堂等级,Shrine level
+lb_shrine_fix_body,升一级：秋收多产一点，祈愈对重伤更有用，验血也更便宜。,"Next level: more harvest, better healing, cheaper tests."
+lb_shrine_fix_max,祠堂已经修到最高级了。,The shrine is at max level.
+lb_shrine_fix_max_short,已经满级,Max level
+lb_shrine_fix_go,去工事升级,Upgrade in works
+lb_shrine_fest_head,一年五个节庆,Five festivals
+lb_shrine_fest_today,这个月是「%s」,This month: %s
+lb_shrine_fest_next,下一个节庆「%s」，还有 %d 个月,Next: %s in %d months
+lb_short_silver,银子还差 %d,Short %d silver
+lb_rv_ctx,敌宅交涉,Rival houses
+lb_rv_title,敌宅交涉,Rival houses
+lb_rv_desc,十国各有一家对头。他们的图谋写在朝堂年历上，你可以立约、送礼、施压，建了使馆还能反制。,"Ten rival houses. Deal, gift, press, or counter with an embassy."
+lb_rv_none,还没有对头,No rivals
+lb_rv_none_why,这一局还没生成敌宅。,No rival houses this run.
+lb_rv_dealing,· 有约,· deal
+lb_rv_rel,%s %d,%s %d
+lb_rv_creed,家风：%s。%s,Creed: %s. %s
+lb_rv_scheme,最近的图谋：%s,Latest scheme: %s
+lb_rv_no_scheme,今年还没有新的图谋,None this year
+lb_rv_deal_now,正在履约：%s，还剩 %d 个月。最近一次月中：%s,"Deal: %s, %d months left. Last check: %s"
+lb_rv_deal_quiet,还没出事,quiet so far
+lb_rv_cost,%s 银,%s silver
+lb_rv_free,免费,Free
+lb_rv_do,就这么办,Do it
+lb_rv_kind_trade,商路,Trade
+lb_rv_kind_intel,情报,Intel
+lb_rv_kind_truce,停战,Truce
+lb_rv_a_trade,立约：商路,Deal: trade
+lb_rv_a_trade_fx,3 个月。期满拿回 50 银。,3 months. 50 silver at the end.
+lb_rv_a_trade_risk,期间每月可能出月中事件；毁约会让关系变差。,Mid-month events may happen; breaking it hurts relations.
+lb_rv_a_intel,立约：情报,Deal: intel
+lb_rv_a_intel_fx,3 个月。期满给团里一个战技点。,3 months. One skill point at the end.
+lb_rv_a_intel_risk,期间每月可能出月中事件；毁约会让关系变差。,Mid-month events may happen; breaking it hurts relations.
+lb_rv_a_truce,立约：停战,Deal: truce
+lb_rv_a_truce_fx,2 个月。期满两家并席，关系升到最好。,2 months. Ends with seats at one table.
+lb_rv_a_truce_risk,比较贵；毁约会让关系变差。,Costly; breaking it hurts relations.
+lb_rv_a_tick,过一个月看看,Wait a month
+lb_rv_a_tick_fx,推进一个月，看契约这个月出了什么事。,Advance a month and see the deal's mid check.
+lb_rv_a_tick_risk,城堡里的其他事情也会跟着过一个月。,Everything else advances too.
+lb_rv_a_reneg_trade,改约成商路,Switch to trade
+lb_rv_a_reneg_trade_fx,把现在的契约改成商路，期满拿银子。,Turn the deal into trade.
+lb_rv_a_reneg_trade_risk,要多付 15 银。,Costs 15 more silver.
+lb_rv_a_reneg_intel,改约成情报,Switch to intel
+lb_rv_a_reneg_intel_fx,把现在的契约改成情报，期满拿战技点。,Turn the deal into intel.
+lb_rv_a_reneg_intel_risk,要多付 15 银。,Costs 15 more silver.
+lb_rv_a_reneg_truce,改约成停战,Switch to truce
+lb_rv_a_reneg_truce_fx,把现在的契约改成停战，期满两家并席。,Turn the deal into a truce.
+lb_rv_a_reneg_truce_risk,要多付 15 银。,Costs 15 more silver.
+lb_rv_a_breach,毁约,Break the deal
+lb_rv_a_breach_fx,马上终止契约，拿回一部分银子。,End it now and get some silver back.
+lb_rv_a_breach_risk,对方会记仇，关系变差。,They remember; relations drop.
+lb_rv_a_counter,使馆反制,Embassy counter
+lb_rv_a_counter_fx,挡下这家最近的一次图谋。,Foil their latest scheme.
+lb_rv_a_counter_risk,要先建使馆；每次图谋只能挡一次。,Needs an embassy; once per scheme.
+lb_rv_counter_none,这家今年没有能反制的图谋,No scheme to counter this year
+lb_rv_counter_noemb,还没建使馆，去工事里建,Build an embassy first
+lb_rv_counter_ok,使馆挡下了%s的%s。,The embassy foiled %s's %s.
+lb_rv_a_gift,送礼,Send a gift
+lb_rv_a_gift_fx,关系往好里升一档。,Relations improve one step.
+lb_rv_a_gift_risk,已经并席就不用再送了。,No effect once seated together.
+lb_rv_gift_max,关系已经最好了,Relations are already best
+lb_rv_gift_ok,礼送到了，关系变成「%s」。,Gift accepted; now %s.
+lb_rv_a_press,示威施压,Show of force
+lb_rv_a_press_fx,灰旗声望 +1，记入族谱。,Banner reputation +1.
+lb_rv_a_press_risk,对方立场不会变好，可能更警惕。,Their stance will not improve.
+lb_rv_press_ok,示威记下了。真要改关系，还得靠打赢仗。,Noted. Battles change minds more.
+lb_rv_press_shuoying,朔影家更警惕了，不过灰旗声望涨了点。想解决还得打仗或者争嗣位。,Shuoying is warier; your name rose a little.
+lb_rv_press_cordial,两家已经并席，不该再压了。,Already seated together; don't press.
+lb_rv_a_inherit,嗣位冲突,Succession clash
+lb_rv_a_inherit_fx,和朔影家争继承权。,Contest the succession with Shuoying.
+lb_rv_a_inherit_risk,只在两家关系紧张时开放。,Only while relations are tense.
+lb_rv_a_heirs,双嗣校场,Heir trials
+lb_rv_a_heirs_fx,让家里的继承人比一场。,Let your heirs compete.
+lb_rv_a_heirs_risk,没有两个以上继承人时只能看说明。,Needs two or more heirs.
+lb_rv_log_counter,使馆反制：%s,Embassy counter: %s
+lb_rv_log_gift,敌宅送礼：%s → %s,Gift: %s -> %s
+lb_rv_log_press,敌宅示威：%s,Show of force: %s
+lb_rv_deal_word,契约,deal
+lb_rv_tick_quiet,过了一个月，契约这个月没出事（也可能已经到期）。,A month passed; the deal was quiet.
+lb_rv_tick_mid,月中：%s,Mid-month: %s
+lb_hg_ctx,岁月沙漏,Hourglass
+lb_hg_title,岁月沙漏,Hourglass
+lb_hg_desc,先看下个月会发生什么，再决定过一个月还是一季。人会老，孩子的口粮也算在月结里。,"Check the forecast, then advance."
+lb_hg_next,下个月会发生,Next month
+lb_hg_last,上次推进的结果,Last result
+lb_hg_empty,还没推进过,Nothing yet
+lb_hg_empty_why,点下面的「度过一月」，这段时间发生的事会一条条列在这里。,Advance a month and the results appear here.
+lb_hg_quiet,没有特别的事，照常发军饷、扣口粮。,Nothing special: wages and rations as usual.
+lb_hg_after,到了 %s（过了 %d 个月）,Now %s (%d months)
+lb_hg_after_quiet,这段时间风平浪静。,A quiet stretch.
+lb_hg_done,过了 %d 个月，发生了 %d 件事。,"%d months passed, %d events."
+lb_hg_k_date,今天,Today
+lb_hg_k_silver,银,Silver
+lb_hg_k_food,粮,Food
+lb_hg_k_morale,士气,Morale
+lb_hg_k_people,团员,Members
+lb_hg_debug_harvest,调试：跳到丰收,Debug: to harvest
