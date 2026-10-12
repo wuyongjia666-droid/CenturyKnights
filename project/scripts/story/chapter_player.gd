@@ -758,3 +758,6 @@ func skip_lines() -> void:
 	_refresh_actions()
 	_body.visible_ratio = 1.0
 	_body.modulate.a = 1.0
+
+func apply_mobile_layout() -> void:
+	UIKit.widen_dialogue(self)

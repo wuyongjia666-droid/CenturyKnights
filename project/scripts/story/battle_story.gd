@@ -91,6 +91,16 @@ static func _layer(host: Node) -> CanvasLayer:
 	bar.offset_top = -168
 	bar.offset_bottom = -20
 	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if host.has_method("_mobile_landscape") and host._mobile_landscape():
+		# Landscape phone: the bark sits over the side panel, right of the board, never over it.
+		var vpw: float = maxf(1.0, host.get_viewport().get_visible_rect().size.x)
+		var board_end: float = (12.0 + 856.0 + 12.0 + host._root_w() - host.MOBILE_RAIL_W - 1280.0 + 8.0 + 12.0) * host.scale.x
+		bar.anchor_left = clampf(board_end / vpw, 0.4, 0.8)
+		bar.anchor_right = 1.0 - (host.MOBILE_RAIL_W + 6.0) * host.scale.x / vpw
+		bar.anchor_top = 0.42
+		bar.offset_top = 0
+		bar.offset_bottom = -12
+		dim.color = Color(0, 0, 0, 0.0)
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(0.035, 0.045, 0.065, 0.93)
 	sb.border_color = Color(UIKit.ACCENT, 0.45)

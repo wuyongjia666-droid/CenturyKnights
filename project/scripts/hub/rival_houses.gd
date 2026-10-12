@@ -1,103 +1,50 @@
 extends Control
+## Rival houses (line B, audit #26). Left: ten houses with stance and relation. Right: the
+## picked house, its latest scheme, and one action card per move (cost / effect / risk).
+## Cards say why they cannot be used. Deal logic is unchanged (GameState / CKSchemes).
 
 var _list: VBoxContainer
-var _body: RichTextLabel
-var _actions: VBoxContainer
+var _head: VBoxContainer
+var _grid: GridContainer
 var _msg: Label
 var _left: Control
 var _right: Control
-var _back: Button
-var _inh: Button
 var _selected: Dictionary = {}
 
 func _ready() -> void:
 	UIKit.make_themed_bg(self, "rival")
-	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/rival_banner.png"):
-		var _bn := TextureRect.new()
-		_bn.texture = load("res://assets/art/ui/rival_banner.png")
-		_bn.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		_bn.stretch_mode = TextureRect.STRETCH_SCALE
-		_bn.position = Vector2(0, 0)
-		_bn.size = Vector2(1280, 52)
-		_bn.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(_bn)
-		UIFX.banner_shimmer(_bn, 3.8)
-	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/hub_banner_strip.png"):
-		var strip := TextureRect.new()
-		strip.texture = load("res://assets/art/ui/hub_banner_strip.png")
-		strip.position = Vector2(0, 0)
-		strip.custom_minimum_size = Vector2(1280, 48)
-		strip.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		strip.stretch_mode = TextureRect.STRETCH_SCALE
-		strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(strip)
-
-	UIFX.page_enter(self)
-	UIFX.fade_in(self, 0.3)
-	Music.play_hub()
-	var t = UIKit.make_label("敌宅交涉", true)
-	t.position = Vector2(40, 16)
-	add_child(t)
-	var tip = UIKit.make_dim_label("十国各有一家。图谋写在朝堂年历上，使馆可以反制。")
-	tip.position = Vector2(40, 56)
-	add_child(tip)
-	var left = _frost_panel()
-	left.name = "RivalList"
-	left.position = Vector2(40, 100)
-	left.size = Vector2(360, 500)
-	add_child(left)
-	_left = left
-	var scroll := ScrollContainer.new()
-	scroll.position = Vector2(12, 12)
-	scroll.size = Vector2(336, 476)
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	left.add_child(scroll)
-	_list = VBoxContainer.new()
-	_list.add_theme_constant_override("separation", 8)
-	_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_list.custom_minimum_size = Vector2(320, 0)
-	scroll.add_child(_list)
-	var right = _frost_panel()
-	right.name = "RivalDetail"
-	right.position = Vector2(420, 100)
-	right.size = Vector2(820, 500)
-	right.z_index = 2
-	add_child(right)
-	_right = right
-	var detail := VBoxContainer.new()
-	detail.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	detail.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	detail.add_theme_constant_override("separation", 8)
-	right.add_child(detail)
-	_body = RichTextLabel.new()
-	_body.bbcode_enabled = true
-	_body.fit_content = true
-	_body.scroll_active = false
-	_body.custom_minimum_size = Vector2(0, 96)
-	_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_body.add_theme_color_override("default_color", UIKit.TEXT)
-	detail.add_child(_body)
-	_actions = VBoxContainer.new()
-	_actions.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_actions.add_theme_constant_override("separation", 8)
-	detail.add_child(_actions)
-	_msg = UIKit.make_label("")
-	_msg.position = Vector2(40, 540)
-	add_child(_msg)
-	var back = UIKit.make_button(Locale.t("btn_back"), 120)
-	back.name = "RivalBack"
-	back.position = Vector2(40, 640)
-	_back = back
-	back.pressed.connect(func(): CKNav.up())
-	add_child(back)
-	var inh = UIKit.make_accent_button("嗣位冲突", 140)
-	inh.name = "RivalInherit"
-	inh.position = Vector2(180, 640)
-	_inh = inh
-	inh.pressed.connect(func(): CKNav.go("res://scenes/hub/inheritance.tscn"))
-	add_child(inh)
+	CKPageKit.shell(self, Locale.t("lb_rv_ctx"), "RIVAL HOUSES", Locale.t("lb_rv_title"), Locale.t("lb_rv_desc"), "none")
+	_left = _frost_panel()
+	_left.name = "RivalList"
+	add_child(_left)
+	_list = CKPageKit.list(_left, Rect2(12, 12, 316, 476), "Houses")
+	_right = _frost_panel()
+	_right.name = "RivalDetail"
+	add_child(_right)
+	var inner := VBoxContainer.new()
+	inner.name = "DetailInner"
+	inner.add_theme_constant_override("separation", 10)
+	_right.add_child(inner)
+	_head = VBoxContainer.new()
+	_head.add_theme_constant_override("separation", 4)
+	inner.add_child(_head)
+	var s := ScrollContainer.new()
+	s.name = "ActionScroll"
+	s.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	s.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	s.scroll_deadzone = 10
+	inner.add_child(s)
+	_grid = GridContainer.new()
+	_grid.name = "Actions"
+	_grid.columns = 2
+	_grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_grid.add_theme_constant_override("h_separation", 10)
+	_grid.add_theme_constant_override("v_separation", 10)
+	s.add_child(_grid)
+	_msg = CKPageKit.feedback(self)
 	_refresh()
-	UIFX.stagger_children(_list, 0.05, 0.22)
+	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "RIVAL HOUSES · FROST")
+	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 	apply_mobile_layout()
 
@@ -107,21 +54,7 @@ func _frost_panel() -> Panel:
 	p.clip_contents = true
 	var sb := UIKit.glass(12, 0.98, true)
 	sb.shadow_size = 8
-	sb.content_margin_left = 0
-	sb.content_margin_right = 0
-	sb.content_margin_top = 0
-	sb.content_margin_bottom = 0
 	p.add_theme_stylebox_override("panel", sb)
-	var mask := ColorRect.new()
-	mask.name = "FrostMask"
-	mask.mouse_filter = Control.MOUSE_FILTER_STOP
-	mask.color = Color(UIKit.BG, 0.82)
-	var shader_path := "res://shaders/frost_mask.gdshader"
-	if ResourceLoader.exists(shader_path):
-		var mat := ShaderMaterial.new()
-		mat.shader = load(shader_path)
-		mask.material = mat
-	p.add_child(mask)
 	var fill := ColorRect.new()
 	fill.name = "FrostFill"
 	fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -129,120 +62,143 @@ func _frost_panel() -> Panel:
 	p.add_child(fill)
 	return p
 
-func _sync_frost(p: Control) -> void:
-	if p == null:
-		return
-	for nm in ["FrostMask", "FrostFill"]:
-		var c := p.get_node_or_null(nm) as Control
-		if c == null:
-			continue
-		c.position = Vector2.ZERO
-		c.size = p.size
-
+## Fixed 1280x720 design. On a bare small window (no CKMobileChrome fit) scale the page down.
 func apply_mobile_layout() -> void:
 	if _left == null or _right == null:
 		return
+	_left.position = Vector2(42, CKPageKit.TOP + 8)
+	_left.size = Vector2(340, 500)
+	_right.position = Vector2(394, CKPageKit.TOP + 8)
+	_right.size = Vector2(844, 500)
+	for p in [_left, _right]:
+		var fill := (p as Control).get_node_or_null("FrostFill") as Control
+		if fill:
+			fill.position = Vector2.ZERO
+			fill.size = (p as Control).size
+	var inner := _right.get_node_or_null("DetailInner") as Control
+	if inner:
+		inner.position = Vector2(16, 14)
+		inner.size = Vector2(812, 472)
+	if has_meta("mobile_fit_key"):
+		return
 	var vp := get_viewport_rect().size
-	var wide := vp.x >= 1100.0 and vp.y >= 680.0
-	if wide:
-		_left.position = Vector2(40, 100)
-		_left.size = Vector2(360, 500)
-		_right.position = Vector2(420, 100)
-		_right.size = Vector2(820, 500)
-		if _back:
-			_back.position = Vector2(40, 640)
-		if _inh:
-			_inh.position = Vector2(180, 640)
-		_msg.position = Vector2(40, 612)
-		_msg.size = Vector2(780, 22)
+	var k := minf(vp.x / 1280.0, vp.y / 720.0)
+	if k < 0.999:
+		scale = Vector2(k, k)
+		size = Vector2(1280, 720)
 	else:
-		var margin := 12.0
-		var list_h := 132.0
-		_left.position = Vector2(margin, 88)
-		_left.size = Vector2(vp.x - margin * 2.0, list_h)
-		var btn_y := vp.y - 52.0
-		_right.position = Vector2(margin, 88.0 + list_h + 8.0)
-		_right.size = Vector2(_left.size.x, maxf(96.0, btn_y - 8.0 - _right.position.y))
-		if _back:
-			_back.position = Vector2(margin, btn_y)
-		if _inh:
-			_inh.position = Vector2(margin + 132.0, btn_y)
-		_msg.position = Vector2(margin, btn_y - 22.0)
-		_msg.size = Vector2(maxf(80.0, vp.x - margin * 2.0), 20)
-		_msg.clip_text = true
-	_place_inner(_left, 12.0)
-	_place_inner(_right, 12.0)
-	_sync_frost(_left)
-	_sync_frost(_right)
-
-func _place_inner(panel: Control, pad: float) -> void:
-	var inner := Vector2(maxf(40.0, panel.size.x - pad * 2.0), maxf(40.0, panel.size.y - pad * 2.0))
-	for ch in panel.get_children():
-		if str(ch.name) == "FrostMask" or str(ch.name) == "FrostFill":
-			continue
-		if ch is Control:
-			(ch as Control).position = Vector2(pad, pad)
-			(ch as Control).size = inner
+		scale = Vector2.ONE
 
 func _refresh() -> void:
-	for c in _list.get_children():
-		c.queue_free()
-	for h in GameState.data_rivals.get("houses", []):
-		var hid = str(h.get("id"))
-		var stance = GameState.get_rival_stance(hid)
-		var b = UIKit.make_button("%s　[%s]" % [h.get("name"), _stance_cn(stance)], 300)
-		var captured = h
-		b.pressed.connect(func(): _select(captured))
+	CKPageKit.clear(_list)
+	var houses: Array = GameState.data_rivals.get("houses", [])
+	if houses.is_empty():
+		_list.add_child(CKPageKit.empty(Locale.t("lb_rv_none"), Locale.t("lb_rv_none_why"), "", 280))
+		return
+	for h in houses:
+		var hid := str(h.get("id"))
+		var rel := _relation(hid)
+		var band := CKSchemes.band_of(rel)
+		var b := Button.new()
+		b.name = "House_%s" % hid
+		b.custom_minimum_size = Vector2(0, 56)
+		b.toggle_mode = true
+		b.button_pressed = str(_selected.get("id", "")) == hid
+		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.text = "  %s　·　%s %d" % [str(h.get("name")), CKSchemes.band_zh(band), rel]
+		b.add_theme_font_size_override("font_size", 15)
+		if int(GameState.rival_deals.get(hid, {}).get("turns_left", 0)) > 0:
+			b.text += "　" + Locale.t("lb_rv_dealing")
+		b.pressed.connect(func(): Sfx.click(); _select(h); _refresh_marks())
 		_list.add_child(b)
-	if GameState.data_rivals.get("houses", []).size() > 0:
-		_select(GameState.data_rivals.get("houses", [])[0])
+	CKPageKit.drag_through(_list)
+	if _selected.is_empty():
+		_selected = houses[0]
+	_select(_selected)
+	_refresh_marks()
 
-func _stance_cn(s: String) -> String:
-	return CKSchemes.band_zh(s)
+func _refresh_marks() -> void:
+	for b in _list.get_children():
+		if b is Button:
+			(b as Button).set_pressed_no_signal(str(b.name) == "House_%s" % str(_selected.get("id", "")))
+
+func _relation(hid: String) -> int:
+	var court := _court_house(hid)
+	return int(court.get("relation", CKSchemes.opening_relation(hid))) if not court.is_empty() else CKSchemes.opening_relation(hid)
 
 func _select(h: Dictionary) -> void:
 	_selected = h
-	for c in _actions.get_children():
-		c.queue_free()
-	var hid = str(h.get("id"))
-	var stance = GameState.get_rival_stance(hid)
-	var court := _court_house(hid)
-	var rel := int(court.get("relation", CKSchemes.opening_relation(hid))) if not court.is_empty() else CKSchemes.opening_relation(hid)
-	var band := str(court.get("relation_band", "")) if court.has("relation_band") else CKSchemes.band_of(rel)
-	var last := CKSchemes.latest(court)
-	var scheme_line := str(last.get("text", "今年还没有新的图谋。"))
-	_body.text = "[b]%s[/b]\n家风：%s\n关系：%s（%d）\n%s\n\n最近图谋：%s\n\n交涉会写入族谱纪事，并可能改变立场。" % [h.get("name"), h.get("creed", ""), _stance_cn(band if band != "" else stance), rel, h.get("desc", ""), scheme_line]
-	var deal = GameState.rival_deals.get(hid, {})
+	CKPageKit.clear(_head)
+	CKPageKit.clear(_grid)
+	var hid := str(h.get("id"))
+	var rel := _relation(hid)
+	var band := CKSchemes.band_of(rel)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 10)
+	_head.add_child(row)
+	row.add_child(UIKit.title_label(str(h.get("name")), 22))
+	row.add_child(UIKit.tag_chip(Locale.t("lb_rv_rel", [CKSchemes.band_zh(band), rel]), UIKit.OK if rel >= 0 else UIKit.DANGER))
+	_head.add_child(CKPageKit.text(Locale.t("lb_rv_creed", [str(h.get("creed", "")), str(h.get("desc", ""))]), UIKit.TEXT_DIM, 13, 800))
+	var last := CKSchemes.latest(_court_house(hid))
+	_head.add_child(CKPageKit.text(Locale.t("lb_rv_scheme", [str(last.get("text", Locale.t("lb_rv_no_scheme")))]), UIKit.ACCENT, 13, 800))
+	var deal: Dictionary = GameState.rival_deals.get(hid, {})
+	var s := GameState.silver
 	if int(deal.get("turns_left", 0)) > 0:
-		var mid = str(deal.get("last_event", ""))
-		var mid_n = int(deal.get("mid_ticks", 0))
-		var accent := UIKit.ACCENT.to_html(false)
-		var dim := UIKit.TEXT_DIM.to_html(false)
-		_body.text += "\n\n[color=#%s]进行中契约：%s（余%d月 · 已过%d月中检）[/color]" % [accent, deal.get("kind"), deal.get("turns_left"), mid_n]
-		if mid != "":
-			_body.text += "\n[color=#%s]最近月中：%s[/color]" % [dim, mid]
-		elif GameState.last_deal_events.size() > 0:
-			_body.text += "\n[color=#%s]最近月中纪事：%s[/color]" % [dim, str(GameState.last_deal_events[0])]
-		_add("推进一月（看契约中期）", func(): _tick_month(hid))
-		_add("改约→商路（+15银）", func(): _renego(hid, "trade"))
-		_add("改约→情报（+15银）", func(): _renego(hid, "intel"))
-		_add("改约→停战（+15银）", func(): _renego(hid, "truce"))
-		_add("毁约（收回部分银，恶化立场）", func(): _breach(hid))
+		var mid := str(deal.get("last_event", ""))
+		var said := Locale.t("lb_rv_deal_now", [_kind_zh(str(deal.get("kind"))), int(deal.get("turns_left")), mid if mid != "" else Locale.t("lb_rv_deal_quiet")])
+		_head.add_child(CKPageKit.text(said, UIKit.OK, 13, 800))
+		_card("lb_rv_a_tick", "", Func.new(func(): _tick_month(hid)), "")
+		for k in ["trade", "intel", "truce"]:
+			if k == str(deal.get("kind")):
+				continue
+			_card("lb_rv_a_reneg_" + k, "15", Func.new(func(): _renego(hid, k)), Locale.t("lb_short_silver", [15 - s]) if s < 15 else "")
+		_card("lb_rv_a_breach", "", Func.new(func(): _breach(hid)), "")
 	else:
-		_add("立约·商路（25银/3月→银+50）", func(): _deal(hid, "trade"))
-		_add("立约·情报（25银/3月→战技点）", func(): _deal(hid, "intel"))
-		_add("立约·停战（40银/2月→并席）", func(): _deal(hid, "truce", 2, 40))
-	_add("使馆反制最近图谋", func(): _counter(hid))
-	_add("送礼交涉（30银）", func(): _gift(hid))
-	_add("示威施压", func(): _pressure(hid))
-	if hid == "shuoying" and stance in ["hostile", "wary"]:
-		_add("开启嗣位冲突场景", func(): CKNav.go("res://scenes/hub/inheritance.tscn"))
-	_add("双嗣校场", func(): CKNav.go("res://scenes/hub/heir_rivalry.tscn"))
+		_card("lb_rv_a_trade", "25", Func.new(func(): _deal(hid, "trade")), Locale.t("lb_short_silver", [25 - s]) if s < 25 else "")
+		_card("lb_rv_a_intel", "25", Func.new(func(): _deal(hid, "intel")), Locale.t("lb_short_silver", [25 - s]) if s < 25 else "")
+		_card("lb_rv_a_truce", "40", Func.new(func(): _deal(hid, "truce", 2, 40)), Locale.t("lb_short_silver", [40 - s]) if s < 40 else "")
+	var counter_why := ""
+	if last.is_empty() or bool(last.get("foiled", false)):
+		counter_why = Locale.t("lb_rv_counter_none")
+	elif not (GameState.buildings.has("embassy") and int(GameState.buildings.get("embassy", 0)) >= 1):
+		counter_why = Locale.t("lb_rv_counter_noemb")
+	_card("lb_rv_a_counter", "", Func.new(func(): _counter(hid)), counter_why)
+	_card("lb_rv_a_gift", "30", Func.new(func(): _gift(hid)), Locale.t("lb_short_silver", [30 - s]) if s < 30 else ("" if band != "cordial" else Locale.t("lb_rv_gift_max")))
+	_card("lb_rv_a_press", "", Func.new(func(): _pressure(hid)), "")
+	if hid == "shuoying" and GameState.get_rival_stance(hid) in ["hostile", "wary"]:
+		_card("lb_rv_a_inherit", "", Func.new(func(): CKNav.go("res://scenes/hub/inheritance.tscn")), "")
+	_card("lb_rv_a_heirs", "", Func.new(func(): CKNav.go("res://scenes/hub/heir_rivalry.tscn")), "")
+	CKPageKit.drag_through(_grid)
+	UIFX.wire_tree(_grid)
 
-func _add(text: String, cb: Callable) -> void:
-	var b = UIKit.make_accent_button(text, 360)
-	b.pressed.connect(cb)
-	_actions.add_child(b)
+## Tiny holder so each card keeps its own callable.
+class Func:
+	var cb: Callable
+	func _init(c: Callable) -> void:
+		cb = c
+
+## key -> locale key prefix: <key> title, <key>_fx effect, <key>_risk risk.
+func _card(key: String, cost: String, f: Func, why: String) -> void:
+	var r := CKPageKit.row(UIKit.ACCENT, 150)
+	var p: PanelContainer = r[0]
+	p.custom_minimum_size = Vector2(396, 150)
+	p.name = "Act_" + key.trim_prefix("lb_rv_a_")
+	var v: VBoxContainer = r[1]
+	var top := HBoxContainer.new()
+	top.add_theme_constant_override("separation", 8)
+	v.add_child(top)
+	top.add_child(UIKit.title_label(Locale.t(key), 16))
+	top.add_child(UIKit.tag_chip(Locale.t("lb_rv_cost", [cost]) if cost != "" else Locale.t("lb_rv_free"), UIKit.ACCENT if cost != "" else UIKit.OK))
+	v.add_child(CKPageKit.text(Locale.t(key + "_fx"), UIKit.TEXT, 13, 360))
+	v.add_child(CKPageKit.text(Locale.t(key + "_risk"), UIKit.TEXT_DIM, 12, 360))
+	var b := CKPageKit.button(Locale.t("lb_rv_do"), why == "", 360)
+	CKPageKit.lock(b, why)
+	b.pressed.connect(f.cb)
+	v.add_child(b)
+	_grid.add_child(p)
+
+func _kind_zh(k: String) -> String:
+	return Locale.t("lb_rv_kind_" + k)
 
 func _court_house(hid: String) -> Dictionary:
 	if typeof(World.royal_courts) != TYPE_DICTIONARY:
@@ -251,93 +207,60 @@ func _court_house(hid: String) -> Dictionary:
 	var row = nations.get(hid, {})
 	return row if typeof(row) == TYPE_DICTIONARY else {}
 
+func _done(msg: String, ok: bool) -> void:
+	CKPageKit.say(_msg, msg, ok)
+	if ok:
+		GameState.save_game()
+	_refresh()
+
 func _counter(hid: String) -> void:
 	var court := _court_house(hid)
 	var last := CKSchemes.latest(court)
-	if last.is_empty() or bool(last.get("foiled", false)):
-		_msg.text = "这家今年没有可反制的图谋。"
-		return
-	var built := GameState.buildings.has("embassy") and int(GameState.buildings.get("embassy", 0)) >= 1
-	if not built:
-		_msg.text = "使馆还没建。反制接口已留给使馆，建好之后才能挡下图谋。"
-		return
 	CKSchemes.apply_counter(court, last)
 	var nations: Dictionary = World.royal_courts.get("nations", {})
 	nations[hid] = court
 	World.royal_courts["nations"] = nations
-	GameState.add_lineage_event("使馆反制：%s" % hid)
-	_msg.text = "使馆挡下了%s的%s。" % [str(_selected.get("name", hid)), str(last.get("kind_zh", ""))]
-	Sfx.confirm()
-	GameState.save_game()
-	_refresh()
+	GameState.add_lineage_event(Locale.t("lb_rv_log_counter", [hid]))
+	_done(Locale.t("lb_rv_counter_ok", [str(_selected.get("name", hid)), str(last.get("kind_zh", ""))]), true)
 
 func _gift(hid: String) -> void:
-	if GameState.silver < 30:
-		_msg.text = "银两不足"
-		return
 	GameState.silver -= 30
-	var cur = GameState.get_rival_stance(hid)
-	var nxt = {"hostile": "wary", "wary": "neutral", "neutral": "cordial", "cordial": "cordial"}.get(cur, "neutral")
+	var cur := GameState.get_rival_stance(hid)
+	var nxt: String = {"hostile": "wary", "wary": "neutral", "neutral": "cordial", "cordial": "cordial"}.get(cur, "neutral")
 	GameState.set_rival_stance(hid, nxt)
-	GameState.add_lineage_event("敌宅送礼：%s → %s" % [hid, nxt])
-	_msg.text = "送礼成功，立场变为「%s」" % _stance_cn(nxt)
-	Sfx.confirm()
-	GameState.save_game()
-	_refresh()
+	GameState.add_lineage_event(Locale.t("lb_rv_log_gift", [hid, nxt]))
+	_done(Locale.t("lb_rv_gift_ok", [CKSchemes.band_zh(nxt)]), true)
 
 func _renego(hid: String, kind: String) -> void:
-	var r = GameState.renegotiate_rival_deal(hid, kind, 15)
-	_msg.text = str(r.get("msg"))
-	if r.get("ok"):
-		Sfx.confirm(); GameState.save_game(); _refresh()
+	var r: Dictionary = GameState.renegotiate_rival_deal(hid, kind, 15)
+	_done(str(r.get("msg")), bool(r.get("ok", false)))
 
 func _breach(hid: String) -> void:
-	var r = GameState.breach_rival_deal(hid)
-	_msg.text = str(r.get("msg"))
-	if r.get("ok"):
-		Sfx.confirm(); GameState.save_game(); _refresh()
+	var r: Dictionary = GameState.breach_rival_deal(hid)
+	_done(str(r.get("msg")), bool(r.get("ok", false)))
 
 func _deal(hid: String, kind: String, turns: int = 3, price: int = 25) -> void:
 	Sfx.deal()
-	var r = GameState.start_rival_deal(hid, kind, turns, price)
-	_msg.text = str(r.get("msg"))
-	if r.get("ok"):
-		Sfx.confirm()
-		GameState.save_game()
-		_refresh()
+	var r: Dictionary = GameState.start_rival_deal(hid, kind, turns, price)
+	_done(str(r.get("msg")), bool(r.get("ok", false)))
 
 func _pressure(hid: String) -> void:
 	GameState.add_rep("ashland", 1)
+	var msg := Locale.t("lb_rv_press_ok")
 	if hid == "shuoying" and GameState.get_rival_stance(hid) == "hostile":
-		_msg.text = "示威让朔影家更警惕，但灰旗声望微升。建议用战役或嗣位冲突解决。"
-	else:
-		var cur = GameState.get_rival_stance(hid)
-		if cur == "cordial":
-			_msg.text = "已并席，不宜再压。"
-		else:
-			_msg.text = "示威记录在案。战场胜利更能改写立场。"
-	GameState.add_lineage_event("敌宅示威：%s" % hid)
-	Sfx.confirm()
-	_select(_selected)
+		msg = Locale.t("lb_rv_press_shuoying")
+	elif GameState.get_rival_stance(hid) == "cordial":
+		msg = Locale.t("lb_rv_press_cordial")
+	GameState.add_lineage_event(Locale.t("lb_rv_log_press", [hid]))
+	_done(msg, true)
 
 func _tick_month(hid: String) -> void:
 	var evs = Calendar.advance(1)
-	var deal_lines: Array = []
+	var lines: Array = []
 	for e in evs:
-		var tx = str(e.get("text", ""))
-		if tx.find("契约") >= 0 or tx.find(hid) >= 0:
-			deal_lines.append(tx)
-	if deal_lines.is_empty() and GameState.last_deal_events.size() > 0:
-		deal_lines = GameState.last_deal_events.duplicate()
-	if deal_lines.is_empty():
-		_msg.text = "推进一月。本月无契约中期事件（或契约已到期）。"
-	else:
-		_msg.text = "月中：\n" + "\n".join(deal_lines)
-		Sfx.deal()
-	GameState.save_game()
-	_refresh()
-	# reselect house
-	for h in GameState.data_rivals.get("houses", []):
-		if str(h.get("id")) == hid:
-			_select(h)
-			break
+		var tx := str(e.get("text", ""))
+		if tx.find(Locale.t("lb_rv_deal_word")) >= 0 or tx.find(hid) >= 0:
+			lines.append(tx)
+	if lines.is_empty() and GameState.last_deal_events.size() > 0:
+		lines = GameState.last_deal_events.duplicate()
+	_done(Locale.t("lb_rv_tick_quiet") if lines.is_empty() else Locale.t("lb_rv_tick_mid", [" / ".join(lines)]), true)
