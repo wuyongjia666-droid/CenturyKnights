@@ -4,11 +4,12 @@ extends Control
 var _body: Control
 var _nation := ""
 var _panel_w := 920.0
+var _hint: Label
 
 func _ready() -> void:
 	UIKit.void_bg(self)
 	UIKit.top_bar(self, "血脉图鉴", [["历", Calendar.label(), UIKit.TEXT_DIM]], "返回族谱", _back)
-	UIKit.page_head(self, 42, 72, "CODEX // TEN NATIONS", "十邦血脉", "BLOODLINE CODEX", "血是所携，冕是所显。谱系公开，单条特征要见过或验过才写进图鉴。", "", 18)
+	UIKit.page_head(self, 42, 72, "CODEX // TEN NATIONS", "十邦血脉", "BLOODLINE CODEX", Locale.t("lb_codex_legend"), "", 18)
 	var rail := UIKit.panel_at(self, Rect2(42, 220, 236, 456), 12)
 	rail.name = "NationRailPanel"
 	var cap := UIKit.mono("NATIONS", 9, UIKit.TEXT_FAINT)
@@ -52,9 +53,16 @@ func _ready() -> void:
 	_body = Control.new()
 	_body.name = "CodexBody"
 	_body.position = Vector2(294, 220)
-	_body.size = Vector2(944, 456)
+	_body.size = Vector2(944, 436)
 	add_child(_body)
-	UIKit.footer_bar(self, [["ESC", "返回族谱"]], "BLOODLINE CODEX · FROST")
+	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "BLOODLINE CODEX · FROST")
+	_hint = CKPageKit.feedback(self)
+	_hint.position = Vector2(294, 662)
+	_hint.size = Vector2(944, 20)
+	_hint.autowrap_mode = TextServer.AUTOWRAP_OFF
+	_hint.clip_text = true
+	_hint.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_hint.add_theme_color_override("font_color", UIKit.TEXT_DIM)
 	if not ids.is_empty():
 		_show(str(ids[0]))
 	UIFX.page_enter(self)
@@ -64,9 +72,6 @@ func _ready() -> void:
 func _back() -> void:
 	get_tree().change_scene_to_file("res://scenes/hub/lineage_view.tscn")
 
-func _unhandled_input(e: InputEvent) -> void:
-	if e.is_action_pressed("ui_cancel"):
-		_back()
 
 func _show(nid: String) -> void:
 	_nation = nid
@@ -177,7 +182,25 @@ func _line_card(parent: Node, line_id: String, tier_zh: String, known: Dictionar
 		if seen:
 			traits.add_child(CKCourtChrome.trait_known(meta))
 		else:
-			traits.add_child(CKCourtChrome.trait_silhouette(str(meta.get("law", ""))))
+			traits.add_child(_unknown(str(meta.get("law", ""))))
+
+## Audit #58: an unseen trait reads as "?" and tapping it says how to unlock it (no hover on touch).
+func _unknown(law: String) -> Control:
+	var sil := CKCourtChrome.trait_silhouette(law)
+	var wrap := Control.new()
+	wrap.name = "UnknownTrait"
+	wrap.custom_minimum_size = sil.custom_minimum_size
+	wrap.mouse_filter = Control.MOUSE_FILTER_PASS
+	wrap.add_child(sil)
+	var q := UIKit.title_label("?", 18, UIKit.ACCENT)
+	q.name = "UnknownMark"
+	q.position = Vector2(124, 4)
+	q.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	wrap.add_child(q)
+	sil.gui_input.connect(func(e: InputEvent):
+		if e is InputEventMouseButton and (e as InputEventMouseButton).pressed:
+			CKPageKit.say(_hint, Locale.t("lb_codex_unknown"), true))
+	return wrap
 
 func _royal_skill(nid: String) -> Dictionary:
 	var gs = Engine.get_main_loop().root.get_node_or_null("GameState") if Engine.get_main_loop() else null
