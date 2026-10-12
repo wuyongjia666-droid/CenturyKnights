@@ -2851,6 +2851,8 @@ func _sync_objectives() -> void:
 	var fresh: Array = BattleObjectives.spawn_due(self, BattleMaps.get_map(map_id), _round_no)
 	for u in fresh:
 		_arm_spawned(u)
+	for cell in BattleObjectives.warn_incoming(self, BattleMaps.get_map(map_id), _round_no):
+		_spawn_dmg(cell, "!", UIKit.DANGER)
 	if not fresh.is_empty() and map_draw:
 		map_draw.queue_redraw()
 	ObjectiveHud.refresh(self)
