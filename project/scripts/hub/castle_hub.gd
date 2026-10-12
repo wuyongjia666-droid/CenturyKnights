@@ -3,6 +3,7 @@ const HubTodo := preload("res://scripts/ui/widgets/todo_center.gd")
 var _res_bar: HBoxContainer
 var _hint: Label
 var _story_hint: Label
+var _new_line := ""
 
 func _ready() -> void:
 	if not GameState.flag("hub_open"):
@@ -19,9 +20,7 @@ func _build() -> void:
 		c.queue_free()
 	UIKit.void_bg(self)
 	var house := Locale.latin(str(GameState.surname), "House")
-	var tb := UIKit.top_bar(self, Locale.t("shell_c84f88cd") % house, UIKit.std_resource_chips(), Locale.t("shell_8112901e"), func():
-		GameState.save_game()
-		CKNav.replace(CKNav.TITLE))
+	var tb := UIKit.top_bar(self, Locale.t("shell_c84f88cd") % house, UIKit.std_resource_chips(), Locale.t("shell_8112901e"), confirm_title)
 	_res_bar = HBoxContainer.new()   # kept for _refresh compatibility (resource tick)
 	_res_bar.visible = false
 	add_child(_res_bar)
@@ -125,12 +124,7 @@ func _build() -> void:
 				lb.pressed.connect(open_lock_sheet.bind(str(item[0]), st))
 				box.add_child(lb)
 	UIFX.stagger_children(rail, 0.018, 0.2)
-	var gp := UIKit.mono("GAMEPAD", 9, UIKit.TEXT_FAINT)
-	gp.position = Vector2(40, 660)
-	add_child(gp)
-	var gpc := UIKit.mono("● READY", 9, UIKit.OK)
-	gpc.position = Vector2(112, 660)
-	add_child(gpc)
+	_announce_new()
 
 	# ── SEASONAL DOSSIER ───────────────────────────────────
 	var cp := UIKit.panel_at(self, Rect2(188, 72, 820, 612), 10)
@@ -258,25 +252,15 @@ func _build() -> void:
 	ih.position = Vector2(26, 512)
 	ih.size = Vector2(768, 1)
 	cp.add_child(ih)
-	var hints := HBoxContainer.new()
-	hints.position = Vector2(26, 528)
-	hints.add_theme_constant_override("separation", 6)
-	hints.visible = not DeviceProfile.is_mobile()
-	cp.add_child(hints)
-	for hk in [["A", Locale.t("shell_cbde0e46")], ["B", Locale.t("shell_5e5f966c")], ["X", Locale.t("shell_40e191bd")], ["Y", Locale.t("shell_afa16e78")]]:
-		hints.add_child(UIKit.keycap(hk[0]))
-		var hl2 := UIKit.body_label(hk[1], UIKit.TEXT_DIM, 11)
-		hl2.autowrap_mode = TextServer.AUTOWRAP_OFF
-		hints.add_child(hl2)
-		var g2 := Control.new()
-		g2.custom_minimum_size = Vector2(14, 0)
-		hints.add_child(g2)
 	_hint = UIKit.body_label("", UIKit.OK, 11)
 	_hint.position = Vector2(494, 528)
 	_hint.size = Vector2(300, 18)
 	_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	cp.add_child(_hint)
 	_hint.text = Locale.t("shell_216a69b5") % GameState.morale
+	if _new_line != "":
+		_hint.text = _new_line
+		_hint.add_theme_color_override("font_color", UIKit.EMBER)
 
 	# ── KNIGHT ROSTER plate ────────────────────────────────
 	var rp := UIKit.panel_at(self, Rect2(1024, 72, 232, 612), 10)
@@ -336,12 +320,15 @@ func _build() -> void:
 			CKNav.go("res://scenes/hub/title_promote.tscn"))
 		rp.add_child(pb)
 
-	UIKit.footer_bar(self, [["A", Locale.t("shell_b56d9ac6")], ["B", Locale.t("shell_11d02415")], ["LB/RB", Locale.t("shell_6e89d3a3")], ["ESC", Locale.t("shell_8112901e")]], "CENTURYKNIGHTS · FROST_TACTICAL v8.6")
+	if not DeviceProfile.is_mobile():   # only keys that really do something (audit #6)
+		UIKit.footer_bar(self, [["A", Locale.t("shell_b56d9ac6")], ["ESC", Locale.t("a1_hub_esc")]], "CENTURYKNIGHTS · FROST_TACTICAL v8.6")
 	_fit_narrow()
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 
 func _go_nav(btn: Button, dest: String) -> void:
+	if btn.has_meta("hub_entry"):
+		mark_seen(str(btn.get_meta("hub_entry")))
 	UIFX.press_feedback(btn)
 	Sfx.click()
 	CKNav.go(dest)
@@ -386,10 +373,83 @@ func _do_promote() -> void:
 	if modal:
 		modal.queue_free()
 
-func _unhandled_input(e: InputEvent) -> void:
-	if e.is_action_pressed("ui_cancel"):
+## Audit #6: leaving to the title asks first (ESC / back opens the system menu via CKNav instead).
+func confirm_title() -> void:
+	if get_node_or_null("TitleConfirm") != null:
+		return
+	var sheet := Control.new()
+	sheet.name = "TitleConfirm"
+	sheet.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	sheet.z_index = 40
+	add_child(sheet)
+	CKNav.push_overlay(sheet)
+	sheet.tree_exited.connect(func(): CKNav.pop_overlay(sheet))
+	var dim := ColorRect.new()
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.color = Color(0.02, 0.03, 0.05, 0.6)
+	sheet.add_child(dim)
+	var p := UIKit.panel_at(sheet, Rect2(390, 250, 500, 220), 14, true)
+	var t := UIKit.title_label(Locale.t("a1_title_q"), 22)
+	t.position = Vector2(24, 20)
+	p.add_child(t)
+	var r := UIKit.body_label(Locale.t("a1_title_body"), UIKit.TEXT_DIM, 14)
+	r.position = Vector2(24, 64)
+	r.size = Vector2(452, 60)
+	r.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	p.add_child(r)
+	var stay := UIKit.ghost_button(Locale.t("a1_title_stay"), 160, 48)
+	stay.name = "TitleStay"
+	stay.position = Vector2(24, 148)
+	stay.pressed.connect(func(): sheet.queue_free())
+	p.add_child(stay)
+	stay.call_deferred("grab_focus")
+	var go := UIKit.make_accent_button(Locale.t("a1_title_go"), 200)
+	go.name = "TitleGo"
+	go.custom_minimum_size = Vector2(200, 48)
+	go.position = Vector2(276, 148)
+	go.pressed.connect(func():
 		GameState.save_game()
-		CKNav.replace(CKNav.TITLE)
+		sheet.queue_free()
+		CKNav.replace(CKNav.TITLE))
+	p.add_child(go)
+
+## Audit #7: an entry that opened since the last visit gets a dot until it is tapped,
+## plus one line telling the player what opened. First visit seeds everything as seen.
+static func seen_entries() -> Array:
+	var v = GameState.settings.get("hub_seen", null)
+	return v if v is Array else []
+
+static func is_new_entry(entry: String) -> bool:
+	return GameState.settings.has("hub_seen") and not seen_entries().has(entry)
+
+static func mark_seen(entry: String) -> void:
+	var a := seen_entries().duplicate()
+	if not a.has(entry):
+		a.append(entry)
+	GameState.settings["hub_seen"] = a
+
+func _announce_new() -> void:
+	var opened: Array = []
+	var fresh: Array = []
+	for b in find_children("*", "Button", true, false):
+		if b.has_meta("hub_entry") and not b.has_meta("locked"):
+			var entry := str(b.get_meta("hub_entry"))
+			opened.append(entry)
+			if is_new_entry(entry):
+				fresh.append(str(b.get_meta("legacy_label", entry)))
+				b.text = "● " + b.text
+				b.add_theme_color_override("font_color", UIKit.EMBER)
+				b.set_meta("new_entry", true)
+	if not GameState.settings.has("hub_seen"):
+		GameState.settings["hub_seen"] = opened
+		return
+	if fresh.is_empty():
+		return
+	var told: Array = GameState.settings.get("hub_told", [])
+	var tell: Array = fresh.filter(func(x): return not told.has(x))
+	if not tell.is_empty():
+		_new_line = Locale.t("a1_hub_new") % "、".join(tell)
+		GameState.settings["hub_told"] = told + tell
 
 func _nav_item(idx: String, title_t: String, sub_t: String, active: bool = false, minor: bool = false, compact: bool = false) -> Button:
 	## Stitch nav item: mono index (icon slot) + label; active = boxed frost; five states
