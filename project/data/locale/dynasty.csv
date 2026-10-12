@@ -141,3 +141,6 @@ purse_mal,%s 因缺粮获得「营养不良」,%s gains Malnourished from hunger
 purse_barracks,；校场鼓点士气+%d,; drill yard morale +%d
 purse_advisor,；顾问指点 %s+1,; advisor tips %s+1
 sui_infirmary_pay,私囊付 6 + 旗库药 1（医舍）,Purse 6 + flag herb 1 (clinic)
+lin_minor,年幼,Minor
+lin_too_young,%s 还小（%d岁）。%d 岁起可早教择路。,%s is too young (%d). Early schooling opens at %d.
+lin_rite_hint,点选子嗣：%d 岁起可「早教择路」（写入族谱，岁课按道路倾向成长）；成年未入队可完成授旗三步。,"Pick an heir: early schooling from age %d (written to the genealogy, yearly lessons follow the path); adults not yet enlisted can take the three-step banner rite."
