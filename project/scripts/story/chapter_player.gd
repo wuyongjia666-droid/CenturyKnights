@@ -23,6 +23,28 @@ var _banner: TextureRect
 var _beat_meta: Label
 var test_capture: Dictionary = {}
 var _stage_tween: Tween
+var _bg: TextureRect
+var _card: Control
+var _cards_seen: Dictionary = {}
+
+const TOUCH := 48
+## Background tints for stage.bg until painted plates land (res://assets/art/story_bg/<key>.webp wins).
+const BG_TINTS := {
+	"slope": [Color(0.32, 0.26, 0.14), Color(0.07, 0.06, 0.05)],
+	"memory": [Color(0.12, 0.12, 0.14), Color(0.02, 0.02, 0.03)],
+	"yard_night": [Color(0.20, 0.10, 0.06), Color(0.03, 0.03, 0.05)],
+	"tree_moon": [Color(0.16, 0.20, 0.30), Color(0.03, 0.04, 0.07)],
+	"pass_night": [Color(0.30, 0.12, 0.06), Color(0.04, 0.03, 0.04)],
+	"pass_day": [Color(0.30, 0.28, 0.24), Color(0.08, 0.07, 0.06)],
+	"tavern": [Color(0.34, 0.20, 0.08), Color(0.06, 0.04, 0.03)],
+	"hall": [Color(0.22, 0.18, 0.14), Color(0.05, 0.04, 0.04)],
+	"bridge_day": [Color(0.26, 0.30, 0.34), Color(0.06, 0.07, 0.09)],
+	"gate": [Color(0.24, 0.28, 0.22), Color(0.05, 0.06, 0.05)],
+	"gate_night": [Color(0.10, 0.12, 0.20), Color(0.02, 0.03, 0.05)],
+	"hall_feast": [Color(0.34, 0.22, 0.12), Color(0.06, 0.04, 0.03)],
+	"slope_winter": [Color(0.30, 0.32, 0.36), Color(0.07, 0.08, 0.10)],
+	"bridge_night": [Color(0.12, 0.16, 0.30), Color(0.02, 0.03, 0.06)],
+}
 
 func _ready() -> void:
 	# Story lines are authored text. RichTextLabel.set_text runs them through
@@ -35,6 +57,7 @@ func _ready() -> void:
 	var deco := find_child("SpeakerActiveTag", true, false)
 	if deco:
 		deco.visible = false
+	_build_story_chrome()
 	# Back from a side screen the story opened with "visit": the trip is over.
 	if GameState.has_meta("story_return"):
 		GameState.set_meta("story_return", "")
@@ -143,10 +166,16 @@ func _build() -> void:
 	_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(_hint)
 	var top := HBoxContainer.new()
-	top.position = Vector2(900, 36)
+	top.position = Vector2(1280 - 48 - 112 - 100 - 8, 12)
 	top.add_theme_constant_override("separation", 8)
 	add_child(top)
+	var skip_btn = UIKit.make_button(Locale.t("story_skip_lines"), 112)
+	skip_btn.name = "SkipLines"
+	skip_btn.custom_minimum_size = Vector2(112, TOUCH)
+	skip_btn.pressed.connect(skip_lines)
+	top.add_child(skip_btn)
 	var save_btn = UIKit.make_button("存档", 100)
+	save_btn.custom_minimum_size = Vector2(100, TOUCH)
 	save_btn.pressed.connect(func():
 		GameState.save_game()
 		_hint.text = Locale.t("save_ok")
@@ -197,7 +226,7 @@ func _show_line() -> void:
 		return
 	var line = lines[_line_idx]
 	var sp := str(line.get("speaker", ""))
-	_speaker.text = sp
+	_speaker.text = _speaker_label(sp)
 	_body.visible_ratio = 1.0
 	_body.modulate.a = 1.0
 	_set_body(_line_text(line))
@@ -229,6 +258,10 @@ func _apply_stage(stage) -> void:
 	var trail: Array = test_capture.get("stage_log", [])
 	trail.append(s.duplicate(true))
 	test_capture["stage_log"] = trail
+	if s.has("bg"):
+		_set_bg(str(s.get("bg", "")))
+	if s.has("card"):
+		_show_card(str(s.get("card", "")))
 	var music := str(s.get("music", ""))
 	if music != "" and Music != null:
 		if music.begins_with("dynasty:"):
@@ -289,9 +322,17 @@ func _character_named(speaker: String) -> CKCharacter:
 			return c
 	return null
 
+func _speaker_label(sp: String) -> String:
+	if sp != "leader":
+		return sp
+	var lead = GameState.get_leader()
+	return str(lead.name) if lead != null and str(lead.name) != "" else sp
+
 func _speaker_portrait(speaker: String, emotion: String = "") -> void:
 	# Audit P1-12: no speaker ever borrows the leader's face. Only the leader's own lines show it.
 	var who := _character_named(speaker)
+	if speaker == "leader":
+		who = GameState.get_leader()
 	test_capture["portrait_who"] = who.id if who != null else ""
 	var plate := UnitArt.dialogue_portrait(speaker, emotion, who, 120)
 	if plate != null:
@@ -559,3 +600,141 @@ func simulate_press_action_containing(substr: String) -> bool:
 
 func simulate_goto_beat(beat_id: String) -> void:
 	_load_beat(beat_id)
+
+
+# --- tutorial-story v2: backgrounds, title cards, tap-to-advance, skip -------------------------
+
+func _build_story_chrome() -> void:
+	_bg = TextureRect.new()
+	_bg.name = "StoryBg"
+	_bg.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_bg.modulate.a = 0.0
+	add_child(_bg)
+	move_child(_bg, mini(2, get_child_count() - 1))
+
+func _set_bg(key: String) -> void:
+	if _bg == null or key == "":
+		return
+	test_capture["bg"] = key
+	var tex: Texture2D = null
+	var path := "res://assets/art/story_bg/%s.webp" % key
+	if ResourceLoader.exists(path):
+		tex = load(path)
+	if tex == null:
+		var pair: Array = BG_TINTS.get(key, [Color(0.1, 0.1, 0.12), Color(0.02, 0.02, 0.03)])
+		var g := Gradient.new()
+		g.set_color(0, pair[0])
+		g.set_color(1, pair[1])
+		var gt := GradientTexture2D.new()
+		gt.gradient = g
+		gt.width = 64
+		gt.height = 64
+		gt.fill = GradientTexture2D.FILL_RADIAL
+		gt.fill_from = Vector2(0.5, 0.35)
+		gt.fill_to = Vector2(1.1, 1.1)
+		tex = gt
+	_bg.texture = tex
+	var tw := create_tween()
+	tw.tween_property(_bg, "modulate:a", 0.0, 0.15)
+	tw.tween_property(_bg, "modulate:a", 0.55, 0.45)
+
+func _show_card(text: String) -> void:
+	if text == "" or _cards_seen.has(text):
+		return
+	_cards_seen[text] = true
+	var cards: Array = test_capture.get("cards", [])
+	cards.append(text)
+	test_capture["cards"] = cards
+	_hide_card()
+	var root := ColorRect.new()
+	root.name = "TitleCard"
+	root.color = Color(0, 0, 0, 0.92)
+	root.set_anchors_preset(Control.PRESET_FULL_RECT)
+	root.mouse_filter = Control.MOUSE_FILTER_STOP
+	root.z_index = 50
+	var lab := Label.new()
+	lab.text = text
+	lab.set_anchors_preset(Control.PRESET_FULL_RECT)
+	lab.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lab.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	lab.add_theme_font_size_override("font_size", 44)
+	lab.add_theme_color_override("font_color", UIKit.ACCENT)
+	lab.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
+	root.add_child(lab)
+	add_child(root)
+	_card = root
+	root.modulate.a = 0.0
+	var tw := root.create_tween()
+	tw.tween_property(root, "modulate:a", 1.0, 0.4)
+	tw.tween_interval(1.2)
+	tw.tween_property(root, "modulate:a", 0.0, 0.5)
+	tw.tween_callback(_hide_card)
+	root.gui_input.connect(func(ev: InputEvent):
+		if _is_tap(ev):
+			root.accept_event()
+			_hide_card()
+	)
+
+func _hide_card() -> void:
+	if _card != null and is_instance_valid(_card):
+		_card.queue_free()
+	_card = null
+
+func _is_tap(ev: InputEvent) -> bool:
+	if ev is InputEventMouseButton:
+		return ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT
+	if ev is InputEventScreenTouch:
+		return ev.pressed
+	return false
+
+## Tap anywhere that is not a button: first tap finishes a typing line, the next goes on.
+func _input(ev: InputEvent) -> void:
+	if not _is_tap(ev) or not is_visible_in_tree():
+		return
+	if ev is InputEventMouseButton and DisplayServer.is_touchscreen_available() and ev.device == -1:
+		return  # emulated mouse from a touch; the touch already counted
+	if _card != null and is_instance_valid(_card):
+		return
+	var pos: Vector2 = ev.position
+	if _over_button(self, pos):
+		return
+	tap_advance()
+
+func _over_button(node: Node, pos: Vector2) -> bool:
+	for c in node.get_children():
+		if c is BaseButton and (c as Control).is_visible_in_tree() and (c as Control).get_global_rect().has_point(pos):
+			return true
+		if _over_button(c, pos):
+			return true
+	return false
+
+func tap_advance() -> bool:
+	if _body != null and _body.visible_ratio < 1.0:
+		if _stage_tween != null and _stage_tween.is_valid():
+			_stage_tween.kill()
+		_body.visible_ratio = 1.0
+		_body.modulate.a = 1.0
+		return true
+	var lines: Array = _visible_lines()
+	if _line_idx < lines.size() - 1:
+		_line_idx += 1
+		_show_line()
+		_refresh_actions()
+		get_viewport().set_input_as_handled()
+		return true
+	return false
+
+## Skip to the beat's last line and show its choices. Choices are story, never skipped.
+func skip_lines() -> void:
+	_hide_card()
+	var lines: Array = _visible_lines()
+	if lines.is_empty():
+		return
+	_line_idx = lines.size() - 1
+	_show_line()
+	_refresh_actions()
+	_body.visible_ratio = 1.0
+	_body.modulate.a = 1.0
