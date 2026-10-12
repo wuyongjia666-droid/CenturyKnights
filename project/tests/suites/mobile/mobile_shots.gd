@@ -9,6 +9,7 @@ const SCREENS := [
 	["marriage", "res://scenes/hub/marriage.tscn"],
 	["lineage", "res://scenes/hub/lineage_view.tscn"],
 	["atlas", "res://scenes/hub/atlas_view.tscn"],
+	["atlas_side", "res://scenes/hub/atlas_view.tscn", true, "atlas_open_side"],
 	["city", "res://scenes/hub/city.tscn"],
 	["city_smith", "res://scenes/hub/city.tscn", "smith"],
 	["city_market", "res://scenes/hub/city.tscn", "market"],
@@ -44,7 +45,7 @@ func _ready() -> void:
 			if _only != "" and not str(pair[0]).begins_with(_only):
 				continue
 			if pair.size() > 2:
-				GameState.set_meta("city_tab", str(pair[2]))
+				GameState.set_meta(str(pair[3]) if pair.size() > 3 else "city_tab", pair[2])
 			await _shoot(str(pair[1]), "%s_%dx%d" % [pair[0], r.x, r.y])
 	var f := FileAccess.open(_out + "/layout.json", FileAccess.WRITE)
 	f.store_string(JSON.stringify(_report, " "))
