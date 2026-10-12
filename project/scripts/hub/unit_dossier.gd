@@ -52,14 +52,14 @@ func _back() -> void:
 	var dest := "res://scenes/hub/roster.tscn"
 	if GameState.has_meta("dossier_back"):
 		dest = str(GameState.get_meta("dossier_back"))
-	get_tree().change_scene_to_file(dest)
+	CKNav.up(dest)
 
 func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("ui_cancel"):
 		_back()
 	elif e is InputEventKey and e.pressed and not e.echo and (e as InputEventKey).keycode == KEY_Y:
 		if _bloodline_open():
-			get_tree().change_scene_to_file("res://scenes/hub/bloodline_codex.tscn")
+			CKNav.go("res://scenes/hub/bloodline_codex.tscn")
 
 func _build() -> void:
 	var c := _focus
@@ -144,7 +144,7 @@ func _build() -> void:
 	if _bloodline_open():
 		codex.pressed.connect(func():
 			Sfx.click()
-			get_tree().change_scene_to_file("res://scenes/hub/bloodline_codex.tscn"))
+			CKNav.go("res://scenes/hub/bloodline_codex.tscn"))
 	else:
 		codex.disabled = true
 		codex.set_meta("deny_reason", Locale.t("ux_lock_bloodline"))
@@ -257,5 +257,5 @@ func _person_chip(p: CKCharacter, focus: CKCharacter, focus_states: Dictionary) 
 		Sfx.click()
 		UIFX.press_feedback(b)
 		GameState.set_meta("dossier_id", captured.id)
-		get_tree().change_scene_to_file("res://scenes/hub/unit_dossier.tscn"))
+		CKNav.go("res://scenes/hub/unit_dossier.tscn"))
 	return b

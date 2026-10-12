@@ -91,4 +91,4 @@ func _rebuild() -> void:
 	if bool(prev.get("ok", false)):
 		_msg.text = str(prev.get("msg", ""))
 	var back = UIKit.make_button(Locale.t("btn_back")); back.name = "DynBack"; back.position = Vector2(40, 600)
-	back.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")); add_child(back)
+	back.pressed.connect(func(): CKNav.up()); add_child(back)

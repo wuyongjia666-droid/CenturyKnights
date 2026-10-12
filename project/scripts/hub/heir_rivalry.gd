@@ -58,7 +58,7 @@ func _ready() -> void:
 	add_child(_msg)
 	var back = UIKit.make_button(Locale.t("btn_back"), 120)
 	back.position = Vector2(40, 640)
-	back.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
+	back.pressed.connect(func(): CKNav.up())
 	add_child(back)
 	_pick()
 	if GameState.flag("ch_heir_clash_done"):
@@ -100,12 +100,12 @@ func _show() -> void:
 		return
 	if _a == null:
 		_body.text = "族谱中尚无足够年长的子嗣。联姻传代后再来校场。"
-		_add("回堡", func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
+		_add("回堡", func(): CKNav.home())
 		return
 	if _b == null:
 		_body.text = "[b]校场静悄悄[/b]\n\n目前只有 %s（%s，%d岁）。需要至少两名子嗣才会爆发道路争执。\n可为现有子嗣授旗择路，或等待更多诞育。" % [_a.name, _path_cn(_a), _a.age]
-		_add("去授旗礼", func(): get_tree().change_scene_to_file("res://scenes/hub/lineage_rite.tscn"))
-		_add("回堡", func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
+		_add("去授旗礼", func(): CKNav.go("res://scenes/hub/lineage_rite.tscn"))
+		_add("回堡", func(): CKNav.home())
 		return
 	match _step:
 		0:
@@ -125,7 +125,7 @@ func _show() -> void:
 				_add(Locale.t("life_succession_btn"), func(): _life = card; _show())
 		1:
 			_add("再议", func(): _step = 0; _show())
-			_add("回堡", func(): get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn"))
+			_add("回堡", func(): CKNav.home())
 
 func _succession_card() -> Dictionary:
 	for who in [_a, _b]:
@@ -206,4 +206,4 @@ func _battle() -> void:
 	_b.hp = _b.max_hp
 	_a.alive = true
 	_b.alive = true
-	get_tree().change_scene_to_file("res://scenes/battle/battle.tscn")
+	CKNav.replace("res://scenes/battle/battle.tscn")
