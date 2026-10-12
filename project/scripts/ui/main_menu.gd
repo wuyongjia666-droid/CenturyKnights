@@ -103,7 +103,7 @@ func _build() -> void:
 	add_child(keys)
 
 func _on_new() -> void:
-	get_tree().change_scene_to_file("res://scenes/story/naming.tscn")
+	CKNav.replace("res://scenes/story/naming.tscn")
 
 func _on_continue() -> void:
 	var slot := CKSaveSlots.latest_slot()
@@ -111,10 +111,10 @@ func _on_continue() -> void:
 		CKSaveSlots.enter_loaded(get_tree())
 
 func _on_load() -> void:
-	get_tree().change_scene_to_file("res://scenes/ui/save_slots.tscn")
+	CKNav.go("res://scenes/ui/save_slots.tscn")
 
 func _on_credits() -> void:
-	get_tree().change_scene_to_file("res://scenes/ui/credits.tscn")
+	CKNav.go("res://scenes/ui/credits.tscn")
 
 func _on_settings() -> void:
-	get_tree().change_scene_to_file("res://scenes/ui/settings.tscn")
+	CKNav.go("res://scenes/ui/settings.tscn")

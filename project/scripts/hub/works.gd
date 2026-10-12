@@ -23,7 +23,7 @@ func _ready() -> void:
 	UIFX.wire_tree(self)
 
 func _back() -> void:
-	get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
+	CKNav.up()
 
 func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("ui_cancel"):
@@ -39,7 +39,7 @@ func _render() -> void:
 	UIKit.page_head(_body, 42, 70, "FORTIFICATION // CASTLE WORKS", "城堡工事", "FORTIFICATION MATRIX", "工事至 Lv%d；升级扩编、降价、增产。全部工事 Lv3 / Lv5 达成堡志。" % GameState.BUILDING_MAX)
 	var view_b := UIKit.ghost_button(Locale.t("castle_view_open"), 160, 36)
 	view_b.position = Vector2(480, 118)
-	view_b.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/castle_view.tscn"))
+	view_b.pressed.connect(func(): CKNav.go("res://scenes/hub/castle_view.tscn"))
 	_body.add_child(view_b)
 	var total := 0
 	for id in ["hall", "barracks", "market", "forge", "shrine"]:

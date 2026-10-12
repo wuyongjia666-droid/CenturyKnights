@@ -32,7 +32,7 @@ func _ready() -> void:
 	UIFX.wire_tree(self)
 
 func _back() -> void:
-	get_tree().change_scene_to_file("res://scenes/hub/castle_hub.tscn")
+	CKNav.up()
 
 func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("ui_cancel"):

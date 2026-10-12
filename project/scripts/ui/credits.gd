@@ -24,7 +24,7 @@ static func _fonts() -> Array:
 ]
 
 func _back() -> void:
-	get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn")
+	CKNav.replace(CKNav.TITLE)
 
 func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("ui_cancel"):
