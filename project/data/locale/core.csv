@@ -15,6 +15,10 @@ menu_no_save,尚无存档，无法继续,No save to continue
 menu_continue_summary,%s · %d年%d月 · 第%d章,%s · Y%d M%d · Ch %d
 menu_load,读档,Load
 menu_credits,制作人员,Credits
+menu_replay,序章回顾,Prologue replay
+replay_exit,退出回顾,Leave replay
+replay_given,岑,Cen
+replay_surname,灰旗,Greyflag
 menu_footer,原创 IP · %s,Original IP · %s
 menu_footer_plain,原创 IP,Original IP
 menu_slot_empty,空槽,Empty
