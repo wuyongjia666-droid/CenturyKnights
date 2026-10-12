@@ -22,7 +22,9 @@ func _ready() -> void:
 func _catalog_sizes(fails: Array) -> void:
 	CKSuiKe.reload_for_tests()
 	var doc = JSON.parse_string(FileAccess.get_file_as_string("res://data/sui_ke.json"))
-	for pair in [["ill", 8], ["mishap", 8], ["seen", 6], ["shame", 6], ["near", 8], ["yao", 8], ["rival_sibling", 12], ["rival_cousin", 6], ["rival_sibling_adult", 4], ["rival_uncle", 7]]:
+	var bands: Array = [["ill", 8], ["mishap", 8], ["seen", 6], ["shame", 6], ["near", 8], ["yao", 8]]
+	bands.append_array([["rival_sibling", 12], ["rival_cousin", 6], ["rival_sibling_adult", 4], ["rival_uncle", 7]])
+	for pair in bands:
 		var n = doc.get(pair[0], [])
 		if typeof(n) != TYPE_ARRAY or n.size() != pair[1]:
 			fails.append("%s size %s" % [pair[0], str(n.size() if typeof(n)==TYPE_ARRAY else n)])
