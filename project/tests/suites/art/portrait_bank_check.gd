@@ -1,6 +1,6 @@
 extends Node
 
-const FAST_YEARS := 30
+const FAST_YEARS := 100  ## prompts depend on end-of-run state; shorter runs drift
 ## ART-01: 20 campaign_sim seeds, bucket hit rate, empty-bank fallback, unit plate before bucket.
 
 func _ready() -> void:
