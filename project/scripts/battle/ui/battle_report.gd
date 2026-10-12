@@ -143,6 +143,7 @@ static func present(host, win: bool, purse: int, sp_gain: int, exp_before: Dicti
 	var keys := HBoxContainer.new()
 	keys.position = Vector2(42, 634)
 	keys.add_theme_constant_override("separation", 6)
+	keys.visible = not DeviceProfile.is_mobile()
 	root.add_child(keys)
 	var back_word := Locale.t("shell_7c9e016b") if host._world_enc else Locale.t("shell_1e62632d")
 	for kh in ([["A", Locale.t("shell_22841003")], ["ESC", back_word]] if win else ([["A", back_word]] if host._world_enc else [["A", Locale.t("shell_55cfd979")], ["ESC", Locale.t("shell_1e62632d")]])):

@@ -261,6 +261,7 @@ func _build() -> void:
 	var hints := HBoxContainer.new()
 	hints.position = Vector2(26, 528)
 	hints.add_theme_constant_override("separation", 6)
+	hints.visible = not DeviceProfile.is_mobile()
 	cp.add_child(hints)
 	for hk in [["A", Locale.t("shell_cbde0e46")], ["B", Locale.t("shell_5e5f966c")], ["X", Locale.t("shell_40e191bd")], ["Y", Locale.t("shell_afa16e78")]]:
 		hints.add_child(UIKit.keycap(hk[0]))

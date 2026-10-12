@@ -136,7 +136,7 @@ func _build() -> void:
 	rite.name = "FlagRite"
 	rite.pressed.connect(func(): get_tree().change_scene_to_file("res://scenes/hub/lineage_rite.tscn"))
 	row.add_child(rite)
-	var refresh := UIKit.ghost_button("再议   [B]", 108, 40)
+	var refresh := UIKit.ghost_button("再议" if DeviceProfile.is_mobile() else "再议   [B]", 108, 40)
 	refresh.tooltip_text = Locale.t("ux_marriage_reroll_tip")
 	refresh.pressed.connect(func():
 		var nid := _post_nation if _post_nation != "" else CKFamilyState.active_marriage_nation(GameState)

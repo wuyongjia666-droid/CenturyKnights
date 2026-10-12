@@ -111,8 +111,12 @@ static func _grow_hit(button: BaseButton, need: float) -> void:
 		return
 	var nw := maxf(w, need)
 	var nh := maxf(h, need)
+	var old_size := button.size
 	button.custom_minimum_size = Vector2(nw, nh)
 	button.size = Vector2(maxf(button.size.x, nw), maxf(button.size.y, nh))
+	# Free-positioned buttons grow around their centre so they stay aligned with their row.
+	if not (button.get_parent() is Container):
+		button.position -= (button.size - old_size) * 0.5
 
 static func _grow_codex(root: Control, footer: Control) -> void:
 	var rail := root.find_child("NationRailPanel", true, false) as Control

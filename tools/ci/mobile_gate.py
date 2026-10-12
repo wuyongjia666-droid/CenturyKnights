@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Mobile gate: letterbox bars, offscreen clipping, text overlap, touch size, font size. Writes contact sheets."""
-import json, sys, os, glob
+import json, sys, os, glob, re
 from PIL import Image, ImageDraw
 import numpy as np
 out = sys.argv[1]; sheet_dir = sys.argv[2] if len(sys.argv) > 2 else out
@@ -27,6 +27,8 @@ for s in rep:
             fails.append(f"{name}: small touch {it['text']!r} {rw:.0f}x{rh:.0f}")
         if it["text"] and it["font"] * scale < 12 * dp:
             fails.append(f"{name}: small font {it['font']} '{it['text']}'")
+        if it["text"] and re.search(r"\[(A|B|X|Y|ESC|ENTER)\]|\sESC$", it["text"]):
+            fails.append(f"{name}: keyhint {it['text']!r}")
         if it["text"]:
             rects.append((x, y, rw, rh, it))
     for i in range(len(rects)):
