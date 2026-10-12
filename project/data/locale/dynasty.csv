@@ -115,31 +115,6 @@ ancestor_no_deed,功绩未记,No deed written
 ancestor_no_title,无志向称号,No ambition title
 ancestor_empty,碑上还没有人。,The stele is empty.
 ancestor_card,%s\n%d – %d · %s\n%s\n%s\n%s,%s\n%d - %d · %s\n%s\n%s\n%s
-purse_absent_pay,人不在，钱在他身上。旗库不读。现有可见 %d，需 %d,Away; purse on them. Flag treasury unread. Have %d, need %d
-purse_short,私囊不足（旗库不读）。现有 %d，需 %d,Purse short (treasury unread). Have %d, need %d
-purse_nobody,无此人,No such person
-purse_sui_open,岁课未合，不能交还,Year-card open; cannot remit
-purse_empty,私囊为空,Purse empty
-purse_remit_log,%s 交还私囊 %d 银入旗库,%s remits purse %d silver to the flag
-purse_remit_ok,交还 %d 银,Remitted %d silver
-purse_care_lock,看护锁占用,Under care lock
-purse_follow_block,已随旗，不能上工,On the banner; cannot work fields
-purse_retinue_block,随行不能上工,Retinue cannot work fields
-purse_too_young,岁数不够,Too young
-purse_hire_no_field,雇佣兵不上田,Hirelings do not till
-purse_left_field,已离田,Left the field
-purse_holding_locked,属地未开垦,Holding not opened
-purse_slots_full,工位已满（Lv%d 共 %d）,Posts full (Lv%d / %d)
-purse_assigned,%s 上工于属地,%s assigned to a holding
-purse_field_paid,田俸入私囊 %d,Field wages into purses %d
-purse_flag_paid,出战/留旗俸入私囊 %d,Combat/retain wages into purses %d
-purse_month,月结：%s，粮 -%d,Month settle: %s, food -%d
-purse_month_none,无俸银流转,No wage flow
-purse_red,；银币见红，士气下降,; silver gone red, morale drops
-purse_starve,；缺粮，士气大降,; food short, morale sinks
-purse_mal,%s 因缺粮获得「营养不良」,%s gains Malnourished from hunger
-purse_barracks,；校场鼓点士气+%d,; drill yard morale +%d
-purse_advisor,；顾问指点 %s+1,; advisor tips %s+1
 sui_infirmary_pay,私囊付 6 + 旗库药 1（医舍）,Purse 6 + flag herb 1 (clinic)
 lin_minor,年幼,Minor
 lin_too_young,%s 还小（%d岁）。%d 岁起可早教择路。,%s is too young (%d). Early schooling opens at %d.
@@ -180,3 +155,28 @@ gen2_32,"尚无族人。
 After marriages and births, every member gets a tile here."
 gen2_33,家主,Head
 gen2_34,详情,Details
+purse_absent_pay,人不在，钱在他身上，这会儿付不了。他口袋里有 %d，要 %d（旗库的钱不能拿来垫）,Away; the money is on them. Has %d, needs %d (treasury can't cover)
+purse_short,口袋里的钱不够：现在 %d，要 %d（旗库的钱不能拿来垫）,Not enough in the purse: %d of %d (treasury can't cover)
+purse_nobody,找不到这个人,No such person
+purse_sui_open,孩子的岁课还没处理完，先别交钱,Year-card still open; can't remit now
+purse_empty,口袋是空的,Purse is empty
+purse_remit_log,%s 把私囊里的 %d 银交回了旗库,%s remits %d silver to the treasury
+purse_remit_ok,交回旗库 %d 银,Remitted %d silver
+purse_care_lock,这个月要照看人，抽不开身,Busy caring for someone this month
+purse_follow_block,已经跟着队伍出门了，不能下地,Marching with the banner; can't work fields
+purse_retinue_block,跟着队伍随行，不能下地,In the retinue; can't work fields
+purse_too_young,年纪太小，还不能干活,Too young to work
+purse_hire_no_field,雇来的兵不下地,Hirelings don't till
+purse_left_field,已经不在地里干了,Left the field
+purse_holding_locked,这块地还没开垦,Holding not opened yet
+purse_slots_full,活儿满了（%d 级地只有 %d 个位置）,No posts left (Lv%d has %d)
+purse_assigned,%s 去地里干活了,%s now works the fields
+purse_field_paid,地里的工钱发了 %d 银到个人口袋,Field wages paid %d into purses
+purse_flag_paid,出战和留营的工钱发了 %d 银到个人口袋,Combat/retain wages paid %d into purses
+purse_month,月底结账：%s，吃掉粮 %d,Month end: %s, food -%d
+purse_month_none,这个月没发工钱,No wages this month
+purse_red,；银子见底了，大家士气往下掉,; silver ran dry, morale drops
+purse_starve,；粮不够吃，士气大跌,; food short, morale sinks
+purse_mal,%s 饿着了，落下「营养不良」,%s is now Malnourished
+purse_barracks,；校场练得起劲，士气 +%d,; drill yard morale +%d
+purse_advisor,；顾问点拨了一下，%s +1,; advisor tip %s+1

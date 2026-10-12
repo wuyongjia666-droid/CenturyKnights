@@ -480,13 +480,15 @@ static func holdings_monthly_yield(host) -> String:
 			raids.append(str(def.get("name", hid)))
 			continue  # 本月无收成
 		sf += int(pv.food)
-		ss += int(pv.silver)
+		var sil_row := int(pv.silver)
+		ss += sil_row
 		sh += int(pv.herb)
 		sr += int(pv.rep)
+		host.house_mods["holding_silver_%s" % hid] = sil_row
 		var tag = "庄" if st else ""
 		names.append("%sLv%d%s" % [def.get("name", hid), CKEconomyState.holding_level(host, hid), tag])
 	host.food += sf
-	host.silver += ss
+	# 银先留在各地账上，月结时 CKPurse 发完田俸，余银进旗库
 	host.herb += sh
 	if sr > 0:
 		host.add_rep("ashland", sr)
@@ -810,60 +812,8 @@ static func on_battle_quest_victory(host) -> void:
 	host.remove_meta("active_quest_id")
 
 static func apply_monthly_upkeep(host) -> String:
-	var wage = 0
-	var mouths = 0
-	for c in host.characters.values():
-		if not c.alive:
-			continue
-		if c.in_roster:
-			wage += c.salary
-			mouths += 1
-		elif c.is_child:
-			mouths += 1
-	host.silver -= wage
-	var food_need = maxi(1, mouths)
-	host.food -= food_need
-	# A century of harvests with no sink became a grain ocean. Surplus above two years of rations spoils.
-	var granary := maxi(120, mouths * 24)
-	if host.food > granary:
-		host.food = granary + int(float(host.food - granary) * 0.82)
-	var msg = "月结：工资 -%d 银，粮 -%d" % [wage, food_need]
-	var paid: bool = int(host.silver) >= 0
-	if not paid:
-		host.morale = maxi(0, host.morale - 15)
-		msg += "；银币见红，士气下降"
-		host.silver = 0
-	var pay_note: String = CKMorale.on_payday(host, paid)
-	if pay_note != "":
-		msg += "；" + pay_note
-	if host.food < 0:
-		host.morale = maxi(0, host.morale - 20)
-		host.food = 0
-		msg += "；缺粮，士气大降"
-		# 儿童负面
-		for c in host.characters.values():
-			if c.is_child and c.alive and host.rng.randf() < 0.4:
-				if "malnourished" not in c.traits:
-					c.traits.append("malnourished")
-					host.log_event("%s 因缺粮获得「营养不良」" % c.name)
-	elif host.food >= 10 and host.morale < 90:
-		host.morale = mini(100, host.morale + 2)
-	# 校场常训
-	if CKEconomyState.building_level(host, "barracks") >= 2:
-		host.morale = mini(100, host.morale + CKEconomyState.building_level(host, "barracks") - 1)
-		msg += "；校场鼓点士气+%d" % (CKEconomyState.building_level(host, "barracks") - 1)
-	# 退役顾问暗助
-	for k in host.advisor_bonus.keys():
-		var leader = host.get_leader()
-		if leader and k in CKCharacter.STAT_KEYS and host.rng.randf() < 0.15:
-			leader.stats[k] = mini(int(leader.apt_max.get(k, 20)), int(leader.stats[k]) + 1)
-			msg += "；顾问指点 %s+1" % Locale.t("stat_" + k)
-			leader.recalc_hp()
-			break
-	var healed := CKInjury.tick_month(host)
-	if healed != "":
-		msg += "；" + healed
-	return msg
+	## v9.2 §4.10：田俸从属地银账发，出战/留旗从旗库发，进个人私囊。
+	return CKPurse.apply_monthly_wages(host)
 
 static func apply_harvest(host) -> String:
 	host.shrine_level = CKEconomyState.building_level(host, "shrine")
