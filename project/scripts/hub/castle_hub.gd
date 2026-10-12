@@ -8,7 +8,6 @@ func _ready() -> void:
 	if not GameState.flag("hub_open"):
 		GameState.set_flag("hub_open")
 	_build()
-	UIFX.fade_in(self, 0.32)
 	Music.play_hub()
 	GameState.state_changed.connect(_refresh)
 

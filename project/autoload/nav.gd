@@ -25,10 +25,14 @@ var _params: Dictionary = {}
 var _cur := ""
 var _busy := false
 var _via_nav := false
+var _dir := 1
+var fx: CKTransition
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	get_tree().set_auto_accept_quit(true)
+	fx = CKTransition.new()
+	add_child(fx)
 
 func _process(_dt: float) -> void:
 	var sc := get_tree().current_scene
@@ -40,6 +44,8 @@ func _process(_dt: float) -> void:
 
 func _on_scene_changed(old: String, new: String) -> void:
 	_busy = false
+	if fx != null and fx.curtain.visible:
+		fx.reveal(get_tree().current_scene, _dir)
 	overlays = overlays.filter(func(n): return is_instance_valid(n))
 	if _via_nav:
 		_via_nav = false
@@ -75,6 +81,7 @@ func go(path: String, p: Dictionary = {}) -> bool:
 		return false
 	_note(_cur)
 	_truncate_to(path)
+	_dir = 1
 	return _change(path, p)
 
 func replace(path: String, p: Dictionary = {}) -> bool:
@@ -84,6 +91,7 @@ func replace(path: String, p: Dictionary = {}) -> bool:
 
 func home() -> bool:
 	stack.clear()
+	_dir = -1
 	return _change(HOME, {})
 
 func _change(path: String, p: Dictionary) -> bool:
@@ -93,6 +101,8 @@ func _change(path: String, p: Dictionary) -> bool:
 	_busy = true
 	_via_nav = true
 	_params = p.duplicate()
+	if fx != null:
+		fx.cover()
 	get_tree().change_scene_to_file.call_deferred(path)
 	return true
 
@@ -154,6 +164,7 @@ func back() -> String:
 		return "page"
 	if not stack.is_empty():
 		var top: Dictionary = stack.pop_back()
+		_dir = -1
 		_change(str(top.path), top.get("params", {}))
 		return "pop"
 	# Only hub/ui pages fall back to the castle. Anything else (story, tests, tools) gets the

@@ -23,6 +23,11 @@ func _ready() -> void:
 	GameState.settings["haptics"] = true
 	UIFX.haptic(18)
 	_ok(UIFX.vibrate_calls == before + 1 and _hook_ms == [18], "haptics on did not stub")
+	# P0-FX-01: page transition budget
+	GameState.settings["reduced_motion"] = false
+	_ok(CKTransition.total_seconds() <= 0.36, "page transition %.3f > 0.36" % CKTransition.total_seconds())
+	GameState.settings["reduced_motion"] = true
+	_ok(CKTransition.total_seconds() <= 0.1, "reduced page transition %.3f > 0.1" % CKTransition.total_seconds())
 	GameState.settings["reduced_motion"] = saved_motion
 	GameState.settings["haptics"] = saved_haptics
 	UIFX.vibrate_hook = Callable()
