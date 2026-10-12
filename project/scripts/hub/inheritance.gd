@@ -3,7 +3,7 @@ extends Control
 ## consequence written out. One answer per year: after that the page says when they return.
 ## Ambition offer (stele honor) still comes first when the leader has to choose one.
 
-const _Amb := preload("res://scripts/characters/ambitions.gd")
+const _AMB := preload("res://scripts/characters/ambitions.gd")
 const CHOICES := ["steel", "soft", "delay"]
 
 var _heir: CKCharacter
@@ -46,7 +46,7 @@ func _done_this_year() -> bool:
 func _show() -> void:
 	CKPageKit.clear(_cards)
 	var leader := GameState.get_leader()
-	if leader != null and _Amb.needs_choice():
+	if leader != null and _AMB.needs_choice():
 		_show_offer(leader)
 		return
 	var hname := _heir.name if _heir else Locale.t("lb_inh_noheir")
@@ -83,10 +83,10 @@ func _show() -> void:
 func _show_offer(leader: CKCharacter) -> void:
 	var lines: PackedStringArray = PackedStringArray()
 	lines.append(Locale.t("amb_offer_body", [leader.name]))
-	if int(_Amb.honor_bonus().get("stele", 0)) > 0:
-		lines.append(Locale.t("amb_honor", [int(_Amb.honor_bonus().get("stele", 0))]))
+	if int(_AMB.honor_bonus().get("stele", 0)) > 0:
+		lines.append(Locale.t("amb_honor", [int(_AMB.honor_bonus().get("stele", 0))]))
 	_body.text = "\n".join(lines)
-	for id in _Amb.open_offer(leader):
+	for id in _AMB.open_offer(leader):
 		var sid := str(id)
 		var r := CKPageKit.row(UIKit.ACCENT, 260)
 		var p: PanelContainer = r[0]
@@ -105,7 +105,7 @@ func _show_offer(leader: CKCharacter) -> void:
 	UIFX.wire_tree(_cards)
 
 func _pick_ambition(id: String) -> void:
-	if not _Amb.choose(id):
+	if not _AMB.choose(id):
 		return
 	CKPageKit.say(_msg, Locale.t("amb_chosen", [Locale.t("amb_" + id + "_name")]), true)
 	_show()
