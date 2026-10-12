@@ -1050,6 +1050,7 @@ static func footer_bar(parent: Control, hints: Array, meta: String = "FROST_TACT
 	var h := HBoxContainer.new()
 	h.position = Vector2(26, 5)
 	h.add_theme_constant_override("separation", 6)
+	h.visible = not DeviceProfile.is_mobile()  # keyboard hints are meaningless on touch
 	bar.add_child(h)
 	for it in hints:
 		h.add_child(keycap(str(it[0])))
