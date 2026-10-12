@@ -84,6 +84,10 @@ var patrol_cooldown: int = 0  # 全堡巡防冷却（月）
 var patrol_boost_months: int = 0  # 主动巡防抗劫剩余月
 var deploy_ids: Array = []
 var dirty: bool = false
+## Prologue replay (main menu 序章回顾): a sandbox run. Nothing is written to disk, and the
+## game that was loaded before comes back when the replay ends.
+var replay_mode: bool = false
+var _replay_backup: Dictionary = {}
 var play_seconds: float = 0.0
 var save_notice: String = ""
 var save_backup_used: String = ""
@@ -855,10 +859,29 @@ func save_game() -> bool:
 	return save_to_slot("manual_0")
 
 func save_to_slot(slot: String) -> bool:
+	if replay_mode:
+		return false
 	if not CKSaveService.save_slot(self, slot):
 		return false
 	dirty = false
 	return true
+
+func begin_prologue_replay() -> void:
+	if replay_mode:
+		return
+	_replay_backup = build_save_data() if not characters.is_empty() else {}
+	replay_mode = true
+	new_game(Locale.t("replay_given"), Locale.t("replay_surname"), crest_color)
+
+func end_prologue_replay() -> void:
+	if not replay_mode:
+		return
+	replay_mode = false
+	var backup := _replay_backup
+	_replay_backup = {}
+	if not backup.is_empty():
+		apply_save_data(backup)
+	dirty = false
 
 func load_game() -> bool:
 	return load_from_slot("manual_0")
