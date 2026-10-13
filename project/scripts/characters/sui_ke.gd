@@ -1,6 +1,14 @@
 class_name CKSuiKe
 extends RefCounted
 ## v9.2 yearly lesson — full catalogues for ill/mishap/seen/shame/near/yao and five rival seats.
+##
+## Personality auto-pick (no player left/right):
+##   Left / follow ≈ 稳妥照料（care、pay、wil/per、watch/copy/ledger）
+##   Right / let   ≈ 大胆冒险（scarred/malnourished、str/agi、seize/slip、survivor）
+##   Child boldness from traits/marks/stats/bloodline/path; carefulness likewise.
+##   Prefer the option whose risk score matches the child; near-ties use seeded RNG
+##   (child id + year + card id) so reloads stay stable.
+##   Birthday fire auto-resolves into sui_inbox (read-only result card).
 
 const DATA_PATH := "res://data/sui_ke.json"
 const BANDS := ["daily", "ill", "mishap", "rival", "seen", "shame", "near", "yao"]
@@ -51,12 +59,15 @@ static func _c(key: String) -> String:
 
 static func ensure() -> void:
 	if bool(GameState.get_meta("sui_ke_hooked", false)):
+		_drain_legacy_pending()
 		return
 	GameState.set_meta("sui_ke_hooked", true)
 	Calendar.register("family", Callable(CKSuiKe, "on_month"), 45)
+	_drain_legacy_pending()
 
 
 static func on_month(_ctx: Dictionary) -> void:
+	_drain_legacy_pending()
 	if _ch0_open():
 		return
 	var people: Array = GameState.characters.values()
@@ -75,7 +86,7 @@ static func on_month(_ctx: Dictionary) -> void:
 		var card := draw_card(c)
 		if card.is_empty():
 			continue
-		_pending().append(card)
+		fire_and_resolve_card(card)
 
 
 static func _ch0_open() -> bool:
@@ -877,6 +888,299 @@ static func _parent_present_bool(child: CKCharacter) -> bool:
 		if p != null and p.alive and _same_node(child, p):
 			return true
 	return false
+
+
+## --- Personality auto-pick -------------------------------------------------
+## Scoring rule (also docs/design/sui-ke-auto-v92.md):
+## 1) Child axes: bold vs careful from traits / 习痕 / six stats / lineage_path / blood signs.
+## 2) Option risk: kill/scar/survivor/str·agi up → bold; care/pay/wil·per/soft marks → careful.
+## 3) Side labels nudge: left/follow careful (−1), right/let bold (+1).
+## 4) Prefer matching extreme; |bold−careful| < 0.75 → seeded RNG (id|year|card).
+## 5) If preferred side needs care/pay and resolve fails, try next by preference.
+
+const BOLD_TRAITS := ["brave", "temper", "scarred", "iron_gut", "sturdy", "night_owl", "lucky"]
+const CARE_TRAITS := ["scholar", "keen_eye", "charmer", "heir_mark", "malnourished"]
+const BOLD_MARKS := ["seize", "slip", "furnace", "hone", "bridge"]
+const CARE_MARKS := ["watch", "copy", "ledger", "lamp", "lie_age", "tide"]
+
+
+## bold − careful bias for this child (can be negative).
+static func personality_bias(c: CKCharacter) -> float:
+	return _boldness(c) - _carefulness(c)
+
+
+static func _boldness(c: CKCharacter) -> float:
+	if c == null:
+		return 0.0
+	var v := 0.0
+	for t in c.traits:
+		if str(t) in BOLD_TRAITS:
+			v += 2.0
+	for mid in CKLifeMarks.ids(c):
+		if str(mid) in BOLD_MARKS:
+			v += 1.0
+	v += (float(c.stats.get("str", 8)) - 8.0) * 0.5
+	v += (float(c.stats.get("agi", 8)) - 8.0) * 0.4
+	v += (float(c.stats.get("vit", 8)) - 8.0) * 0.3
+	var path := str(GameState.lineage_path.get(c.id, ""))
+	if path == "martial":
+		v += 2.0
+	elif path == "merchant":
+		v += 0.5
+	if _has_visible_blood(c):
+		v += 0.5
+	return v
+
+
+static func _carefulness(c: CKCharacter) -> float:
+	if c == null:
+		return 0.0
+	var v := 0.0
+	for t in c.traits:
+		if str(t) in CARE_TRAITS:
+			v += 2.0
+	for mid in CKLifeMarks.ids(c):
+		if str(mid) in CARE_MARKS:
+			v += 1.0
+	v += (float(c.stats.get("wil", 8)) - 8.0) * 0.5
+	v += (float(c.stats.get("per", 8)) - 8.0) * 0.4
+	v += (float(c.stats.get("skl", 8)) - 8.0) * 0.3
+	var path := str(GameState.lineage_path.get(c.id, ""))
+	if path == "scholar":
+		v += 2.0
+	elif path == "merchant":
+		v += 0.5
+	return v
+
+
+## Higher = bolder / riskier option (left/care usually lower).
+static func option_risk(opt: Dictionary) -> float:
+	var score := 0.0
+	var oid := str(opt.get("id", ""))
+	if bool(opt.get("kill", false)):
+		score += 8.0
+	var trait_id := str(opt.get("trait", ""))
+	if trait_id in ["scarred", "malnourished"]:
+		score += 4.0
+	if bool(opt.get("survive", false)):
+		score += 3.0
+	if str(opt.get("survivor", "")) != "":
+		score += 2.0
+	if bool(opt.get("care", false)):
+		score -= 4.0
+	if int(opt.get("pay", 0)) > 0:
+		score -= 2.0
+	if bool(opt.get("halt_march", false)):
+		score -= 1.5
+	var stat := str(opt.get("stat", ""))
+	var gain := int(opt.get("gain", 0))
+	if gain > 0 and stat in ["str", "agi", "vit"]:
+		score += 2.0
+	if gain > 0 and stat in ["wil", "per", "skl"]:
+		score -= 2.0
+	if gain < 0:
+		score += 2.0
+	var mark := str(opt.get("mark", ""))
+	if mark in BOLD_MARKS:
+		score += 2.0
+	if mark in CARE_MARKS:
+		score -= 2.0
+	if oid in ["left", "follow"]:
+		score -= 1.0
+	elif oid in ["right", "let"]:
+		score += 1.0
+	if int(opt.get("morale", 0)) <= -2:
+		score += 1.0
+	return score
+
+
+## Stable pick of option id for this child + card. year defaults to Calendar.year.
+static func pick_option_id(c: CKCharacter, card: Dictionary, year: int = -1) -> String:
+	var opts: Array = card.get("options", [])
+	if opts.is_empty():
+		return ""
+	if opts.size() == 1:
+		return str(opts[0].get("id", ""))
+	var ordered := _options_by_preference(c, card, year)
+	if ordered.is_empty():
+		return str(opts[0].get("id", ""))
+	return str(ordered[0])
+
+
+static func _options_by_preference(c: CKCharacter, card: Dictionary, year: int = -1) -> Array:
+	var y := Calendar.year if year < 0 else year
+	var opts: Array = card.get("options", [])
+	var scored: Array = []
+	for o in opts:
+		if typeof(o) != TYPE_DICTIONARY:
+			continue
+		scored.append({
+			"id": str(o.get("id", "")),
+			"risk": option_risk(o),
+		})
+	if scored.is_empty():
+		return []
+	var bias := personality_bias(c)
+	var prefer_bold := bias > 0.75
+	var prefer_care := bias < -0.75
+	if prefer_bold:
+		scored.sort_custom(func(a, b): return float(a["risk"]) > float(b["risk"]))
+	elif prefer_care:
+		scored.sort_custom(func(a, b): return float(a["risk"]) < float(b["risk"]))
+	else:
+		# Tie: seeded order so reloads match (not player choice).
+		var rng := RandomNumberGenerator.new()
+		rng.seed = hash("%s|%d|%s|sui_pick" % [c.id if c else "", y, str(card.get("id", ""))])
+		for row in scored:
+			row["jitter"] = rng.randf()
+		scored.sort_custom(func(a, b): return float(a["jitter"]) < float(b["jitter"]))
+	var out: Array = []
+	for row in scored:
+		out.append(str(row["id"]))
+	return out
+
+
+## Human-readable effect hint for inbox / UI (no buttons).
+static func effect_hint(opt: Dictionary) -> String:
+	var bits: PackedStringArray = PackedStringArray()
+	var trait_id := str(opt.get("trait", ""))
+	if trait_id != "":
+		bits.append(Locale.t("sui_hint_trait", [trait_id]))
+	var mark := str(opt.get("mark", ""))
+	if mark != "":
+		bits.append(Locale.t("sui_hint_mark", [CKLifeMarks.zh(mark)]))
+	var stat := str(opt.get("stat", ""))
+	var gain := int(opt.get("gain", 0))
+	if stat != "" and gain != 0:
+		var signed := ("+" if gain > 0 else "") + str(gain)
+		bits.append(Locale.t("sui_hint_stat", [stat, signed]))
+	if bool(opt.get("care", false)):
+		bits.append(Locale.t("sui_hint_care"))
+	if int(opt.get("pay", 0)) > 0:
+		bits.append(Locale.t("sui_hint_pay", [int(opt.get("pay", 0))]))
+	if bool(opt.get("kill", false)):
+		bits.append(Locale.t("sui_hint_kill"))
+	if int(opt.get("morale", 0)) != 0:
+		bits.append(Locale.t("sui_hint_morale", [int(opt.get("morale", 0))]))
+	return " · ".join(bits)
+
+
+## Apply personality pick, drop pending, append read-only inbox row.
+## Tries preferred options in order when care/pay blocks the first.
+static func fire_and_resolve_card(card: Dictionary, year: int = -1) -> Dictionary:
+	var cid := str(card.get("cid", ""))
+	var card_id := str(card.get("id", ""))
+	if cid == "" or card_id == "":
+		return {}
+	var c: CKCharacter = GameState.characters.get(cid)
+	if c == null:
+		return {}
+	var y := Calendar.year if year < 0 else year
+	if _find_pending(cid, card_id).is_empty():
+		_pending().append(card)
+	var order := _options_by_preference(c, card, y)
+	if order.is_empty():
+		_drop_pending(cid, card_id)
+		return {}
+	var applied := {}
+	var picked := ""
+	for oid in order:
+		var r: Dictionary = resolve(cid, card_id, str(oid))
+		if bool(r.get("ok", false)):
+			applied = r
+			picked = str(oid)
+			break
+	if picked == "":
+		# Last resort: drop so the month does not soft-lock remittance.
+		_drop_pending(cid, card_id)
+		_mark_fired(cid, card_id)
+		return {}
+	var opt := {}
+	for o in card.get("options", []):
+		if str(o.get("id", "")) == picked:
+			opt = o
+			break
+	var outcome := str(opt.get("label", picked))
+	var hint := effect_hint(opt)
+	if hint != "":
+		outcome = "%s（%s）" % [outcome, hint] if outcome != "" else hint
+	var side := picked
+	if picked == "follow":
+		side = "left"
+	elif picked == "let":
+		side = "right"
+	elif picked.begins_with("epitaph") or picked in ["stay", "go"]:
+		side = picked
+	var row := {
+		"cid": cid,
+		"id": card_id,
+		"side": side,
+		"option_id": picked,
+		"outcome": outcome,
+		"title": str(card.get("title", "")),
+		"body": str(card.get("body", "")),
+		"band": str(card.get("band", "")),
+		"year": y,
+		"month": Calendar.month,
+		"dead": bool(applied.get("dead", false)),
+		"hint": hint,
+	}
+	_inbox_rows().append(row)
+	if GameState.has_method("add_lineage_event"):
+		GameState.add_lineage_event(Locale.t("sui_auto_log", [str(card.get("title", card_id)), c.name, outcome]))
+	return row
+
+
+static func inbox() -> Array:
+	return _inbox_rows().duplicate()
+
+
+static func inbox_for(cid: String) -> Array:
+	var out: Array = []
+	for item in _inbox_rows():
+		if str(item.get("cid", "")) == cid:
+			out.append(item)
+	return out
+
+
+static func inbox_count() -> int:
+	return _inbox_rows().size()
+
+
+static func ack(cid: String, card_id: String) -> void:
+	var kept: Array = []
+	var dropped := false
+	for item in _inbox_rows():
+		if not dropped and str(item.get("cid", "")) == cid and str(item.get("id", "")) == card_id:
+			dropped = true
+			continue
+		kept.append(item)
+	GameState.house_mods["sui_inbox"] = kept
+
+
+static func _inbox_rows() -> Array:
+	var raw = GameState.house_mods.get("sui_inbox", null)
+	if typeof(raw) != TYPE_ARRAY:
+		raw = []
+		GameState.house_mods["sui_inbox"] = raw
+	return raw
+
+
+## Old saves may still hold unresolved left/right rows — settle with personality pick.
+static func _drain_legacy_pending() -> void:
+	var rows: Array = _pending().duplicate()
+	if rows.is_empty():
+		return
+	for item in rows:
+		if typeof(item) != TYPE_DICTIONARY:
+			continue
+		var cid := str(item.get("cid", ""))
+		var eid := str(item.get("id", ""))
+		if cid == "" or eid == "":
+			_drop_pending(cid, eid)
+			continue
+		# Still in pending — fire_and_resolve_card will find it.
+		fire_and_resolve_card(item)
 
 
 static func resolve(cid: String, card_id: String, option_id: String) -> Dictionary:
