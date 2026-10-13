@@ -100,7 +100,7 @@ func _build() -> void:
 	_stats = Label.new()
 	_stats.position = Vector2(x0, 92)
 	_stats.add_theme_font_override("font", UIKit.font("mono"))
-	_stats.add_theme_font_size_override("font_size", 11)
+	_stats.add_theme_font_size_override("font_size", UIKit.desk_sz(11))
 	_stats.add_theme_color_override("font_color", UIKit.TEXT_DIM)
 	add_child(_stats)
 

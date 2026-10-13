@@ -535,11 +535,19 @@ func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 	if _punnett.size.y >= 140.0:
 		cast.autowrap_mode = TextServer.AUTOWRAP_OFF
 		cast.position = Vector2(12, 108)
-		cast.size = Vector2(560, 28)
+		cast.size = Vector2(minf(560.0, hold_w), 28)
+		cast.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		cast.tooltip_text = cast.text
 	else:
 		cast.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		cast.position = Vector2(8, holder.position.y + holder.size.y + 2.0)
 		cast.size = Vector2(hold_w, maxf(16.0, _punnett.size.y - cast.position.y - 4.0))
+		if not DeviceProfile.is_mobile():
+			# Desktop: one line, ellipsis at the panel edge, full text on hover.
+			cast.autowrap_mode = TextServer.AUTOWRAP_OFF
+			cast.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+			cast.tooltip_text = cast.text
+			cast.mouse_filter = Control.MOUSE_FILTER_PASS
 	_punnett.add_child(cast)
 	UIFX.wire_tree(_rite_board)
 	_mobile_after_render.call_deferred()

@@ -123,7 +123,7 @@ func _build() -> void:
 	_title.position = Vector2(140, 28)
 	add_child(_title)
 	_beat_meta = UIKit.make_dim_label("")
-	_beat_meta.position = Vector2(140, 68)
+	_beat_meta.position = Vector2(212, 68)  # right of the SPEAKER ACTIVE tag (was overlapping on desktop)
 	add_child(_beat_meta)
 	var panel = UIKit.make_panel()
 	panel.position = Vector2(48, 110)

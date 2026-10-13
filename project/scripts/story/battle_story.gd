@@ -149,6 +149,10 @@ static func _layer(host: Node) -> CanvasLayer:
 	skip.offset_right = -24
 	skip.offset_top = 16
 	skip.offset_bottom = 16 + TOUCH
+	if not DeviceProfile.is_mobile():
+		# Desktop: sit in the empty header strip left of the rail, not on top of the drill banner.
+		skip.offset_left = -504
+		skip.offset_right = -392
 	root.add_child(skip)
 	skip.pressed.connect(func(): skip_all(host))
 	if DeviceProfile.is_mobile():

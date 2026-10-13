@@ -27,7 +27,7 @@ static func shell(page: Control, context: String, eyebrow: String, title: String
 		d.autowrap_mode = TextServer.AUTOWRAP_OFF
 		d.clip_text = true
 		d.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		d.position = Vector2(x, 100)
+		d.position = Vector2(x, 104)
 		d.size = Vector2(1280.0 - PAD - x, 18)
 		d.tooltip_text = desc
 		d.mouse_filter = Control.MOUSE_FILTER_PASS

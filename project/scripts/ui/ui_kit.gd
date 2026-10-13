@@ -36,6 +36,14 @@ const SZ_HEADLINE := 19
 const SZ_BODY := 15
 const SZ_LABEL := 12
 
+## Desktop readable floor: decorative 9–11px labels stay small on mobile reflow pages;
+## on mouse/desktop bump them to ≥12 so the desktop gate's small_font class can go down.
+static func desk_sz(px: int) -> int:
+	if DeviceProfile.is_mobile():
+		return px
+	return maxi(px, 12)
+
+
 static var _fonts: Dictionary = {}
 static var _theme: Theme
 
@@ -700,14 +708,16 @@ static func body_label(text: String, col: Color = TEXT_DIM, size: int = 13) -> L
 	var t := Label.new()
 	t.text = text
 	t.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	t.add_theme_font_size_override("font_size", size)
+	t.add_theme_font_size_override("font_size", desk_sz(size))
 	t.add_theme_color_override("font_color", col)
 	return t
 
 # --- v8.6 Stitch kit: shared scaffold matching docs/art/stitch_skeletons_v8/*.png --------------------
 const MONO_TRACK := "\u2009"
 
-static func mono(text: String, size: int = 11, col: Color = TEXT_FAINT, tracked: bool = true) -> Label:
+static func mono(text: String, size: int = 11, col: Color = TEXT_FAINT, tracked: bool = true, desk_floor: bool = true) -> Label:
+	if desk_floor:
+		size = desk_sz(size)
 	var l := Label.new()
 	if tracked:
 		var s := ""
@@ -765,7 +775,7 @@ static func keycap(t: String) -> Label:
 	var l := Label.new()
 	l.text = t
 	l.add_theme_font_override("font", font("mono"))
-	l.add_theme_font_size_override("font_size", 10)
+	l.add_theme_font_size_override("font_size", desk_sz(10))
 	l.add_theme_color_override("font_color", TEXT_DIM)
 	var s := flat_box(Color(1, 1, 1, 0.04), Color(1, 1, 1, 0.22), 4)
 	s.content_margin_left = 5
@@ -780,7 +790,7 @@ static func tag_chip(text: String, col: Color = ACCENT, filled: bool = false) ->
 	var l := Label.new()
 	l.text = text
 	l.add_theme_font_override("font", font("bold"))
-	l.add_theme_font_size_override("font_size", 11)
+	l.add_theme_font_size_override("font_size", desk_sz(11))
 	l.add_theme_color_override("font_color", ON_ACCENT if filled else col)
 	var s := flat_box(col if filled else Color(col, 0.10), Color(col, 0.55), 4)
 	s.content_margin_left = 7
@@ -922,7 +932,7 @@ static func res_chip(label: String, value: String, col: Color = TEXT) -> PanelCo
 	p.add_child(h)
 	var k := Label.new()
 	k.text = label
-	k.add_theme_font_size_override("font_size", 11)
+	k.add_theme_font_size_override("font_size", desk_sz(11))
 	k.add_theme_color_override("font_color", TEXT_FAINT)
 	k.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	h.add_child(k)
@@ -1028,6 +1038,7 @@ static func page_head(parent: Control, x: float, y: float, eyebrow_en: String, t
 		var e := mono(en_title, 11, TEXT_FAINT)
 		e.size_flags_vertical = Control.SIZE_SHRINK_END
 		e.custom_minimum_size = Vector2(0, 30)
+		e.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM  # sit on the title baseline, not up against the eyebrow
 		th.add_child(e)
 	if desc != "":
 		var d := Label.new()
@@ -1056,7 +1067,7 @@ static func footer_bar(parent: Control, hints: Array, meta: String = "FROST_TACT
 		h.add_child(keycap(str(it[0])))
 		var l := Label.new()
 		l.text = str(it[1])
-		l.add_theme_font_size_override("font_size", 11)
+		l.add_theme_font_size_override("font_size", desk_sz(11))
 		l.add_theme_color_override("font_color", TEXT_DIM)
 		l.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		h.add_child(l)
@@ -1082,7 +1093,7 @@ static func section_head(parent: Control, pos: Vector2, title_zh: String, en: St
 	if right_text != "":
 		var r := Label.new()
 		r.text = right_text
-		r.add_theme_font_size_override("font_size", 11)
+		r.add_theme_font_size_override("font_size", desk_sz(11))
 		r.add_theme_color_override("font_color", TEXT_FAINT)
 		r.position = pos + Vector2(w - r.get_minimum_size().x, 1)
 		parent.add_child(r)
@@ -1146,8 +1157,11 @@ static func portrait_plate(parent: Control, rect: Rect2, c, caption: String = ""
 		tick.add_child(b)
 		p.add_child(tick)
 	if caption != "":
-		var cap := mono(caption, 9, ACCENT)
+		var cap := mono(caption, 9, ACCENT, false)  # no letter-spacing: long captions must fit the plate
+		cap.clip_text = true
+		cap.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		cap.position = Vector2(12, rect.size.y - 22)
+		cap.size = Vector2(rect.size.x - 24, 18)
 		p.add_child(cap)
 	return p
 
