@@ -190,16 +190,17 @@ func _line_card(parent: Node, line_id: String, tier_zh: String, known: Dictionar
 ## Audit #58: an unseen trait reads as "?" and tapping it says how to unlock it (no hover on touch).
 func _unknown(law: String) -> Control:
 	var sil := CKCourtChrome.trait_silhouette(law)
-	var wrap := Control.new()
+	# A container sized by its content: the phone type floor widens the law chip, and a fixed-size
+	# wrapper let the chip spill onto its neighbour in the flow (mobile polish: codex chip crowding).
+	var wrap := MarginContainer.new()
 	wrap.name = "UnknownTrait"
-	wrap.custom_minimum_size = sil.custom_minimum_size
 	wrap.mouse_filter = Control.MOUSE_FILTER_PASS
 	wrap.add_child(sil)
 	var q := UIKit.title_label("?", 18, UIKit.ACCENT)
 	q.name = "UnknownMark"
-	q.position = Vector2(124, 4)
+	q.position = Vector2(80, 0)
 	q.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	wrap.add_child(q)
+	sil.get_child(sil.get_child_count() - 1).add_child(q)
 	sil.gui_input.connect(func(e: InputEvent):
 		if e is InputEventMouseButton and (e as InputEventMouseButton).pressed:
 			CKPageKit.say(_hint, Locale.t("lb_codex_unknown"), true))

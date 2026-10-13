@@ -126,6 +126,14 @@ func _node(sk: Dictionary) -> Button:
 	var state := Locale.t("lb_sk_owned") if owned else (Locale.t("lb_sk_ready") if ok else Locale.t("lb_sk_locked"))
 	b.text = "T%d  %s · %s" % [int(sk.get("tier", 1)), str(sk.get("name", sid)), state]
 	b.add_theme_font_size_override("font_size", 13)
+	if DeviceProfile.is_mobile():
+		# Phone (22px type): name on line one, state on line two, so names are never cut.
+		b.text = "T%d %s\n%s" % [int(sk.get("tier", 1)), str(sk.get("name", sid)), state]
+		b.clip_text = false
+		b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		b.text_overrun_behavior = TextServer.OVERRUN_NO_TRIMMING
+		b.custom_minimum_size = Vector2(196, 84)
+		b.add_theme_font_size_override("font_size", MobileLayout.FONT_FLOOR)
 	var col: Color = UIKit.OK if owned else (UIKit.ACCENT if ok else UIKit.TEXT_FAINT)
 	b.add_theme_stylebox_override("normal", UIKit.flat_box(Color(col, 0.10), Color(col, 0.55), 8))
 	b.add_theme_color_override("font_color", UIKit.TEXT if owned or ok else UIKit.TEXT_DIM)
