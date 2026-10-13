@@ -1,72 +1,72 @@
 keys,zh_CN,en
-road_flag_noted,记下了旗标,
-rival_stolen,对手佣兵团截走了一单委托,
-rival_clash,对手佣兵团拦住了去路,
+annex_academy,书院,Academy
+annex_embassy,使馆,Embassy
+annex_infirmary,医所,Infirmary
+annex_max,这栋附楼已到第三阶,Annex is at tier 3
+annex_short,还缺 %d 银 / %d 铁 / %d 粮,Need %d silver / %d iron / %d food
+annex_treasury,宝库,Treasury
+annex_unknown,没有这栋附楼,Unknown annex
+annex_up,%s 升至第 %d 阶,%s rose to tier %d
+castle_view_back,回城堡,Back to castle
+castle_view_open,看城堡全景,Castle layers
 chain_done,委托链走完了,
-quest_siege_aid,攻城协防,Siege relief
+festival_barter,易货启航,Barter launch
+festival_barter_blurb,陆桥开埠，粮可以换成一小笔银,Grain crosses the bridge for silver
+festival_barter_done,易货启航：8 粮换成 6 银,Barter: 8 grain for 6 silver
+festival_barter_short,粮不够开埠,Not enough grain
+festival_harvest,丰收,Harvest
+festival_harvest_blurb,城堡把这个月的粮和银记上一笔,Castle books the month
+festival_memorial,追思,Memorial lamps
+festival_memorial_blurb,祠前点一盏灯，养伤的人少一个月,A lamp shortens a month of rest
+festival_memorial_done,追思灯前，伤月少了一截,The lamp shortens the rest
+festival_memorial_stele,追思把名字记上了先祖碑,Names go on the stele
+festival_spring,春令节,Spring rite
+festival_spring_blurb,联姻的帖子在这个月换一轮,Marriage letters refresh
+festival_tourney,比武,Muster of arms
+festival_tourney_blurb,旗下较技，奖的是声望。竞技场规则战还没接上,Reputation only until the arena rules land
+festival_tourney_purse,比武散场，灰烬邦记下了旗,The muster is noted
+forge_modify,改造装备,Modify gear
+forge_plus_fail,改造 +%d 没成，材料已经入炉,Plus %d failed and the materials are spent
+forge_plus_max,已经加到三成,Already at plus 3
+forge_plus_ok,改造成了 +%d,Forged to plus %d
+forge_plus_short,铁或银不够,Short on iron or silver
+heirloom_none,手里没有传家宝,No heirloom
+heirloom_not_vaulted,宝库里没有这件,Not in the treasury
+heirloom_store,收入宝库,Store heirloom
+heirloom_vault_full,宝库槽位已满,Treasury is full
+heirloom_vaulted,传家宝入了宝库,Heirloom stored
+heirloom_withdrawn,传家宝取回了,Heirloom withdrawn
+injury.death_last_words,%s 阵亡。遗言：%s,%s fell. Last words: %s
+injury.eased,%s 的永久伤缓解了（%s）,%s lasting wound eased (%s)
+injury.grave_months,重伤休养，还要 %d 个月,Grave rest for %d more months
+injury.healed,%s 的伤好了,%s recovered
+injury.wound_label,%s · %d月,%s · %d mo
+injury_dead,已阵亡,
+injury_grave,重伤休养,
+injury_light,轻伤,
+injury_words,遗言,
+morale.deserted,%s 因连续欠饷离队,%s left after months unpaid
+morale.unpaid_months,欠饷 %d 个月,Unpaid for %d months
+morale_desert,因连续欠饷离队,
+morale_held,挽留下了要走的人,
+morale_high,士气高昂,
+morale_low,士气低落,
+pressure_drill,开年操练,Opening drill
+pressure_late,灯籍、爵位与使馆,Lamp title and embassy
+pressure_mid,城堡、嫁妆与传家,Castle dowry and heirlooms
+pressure_muster,立旗旗饷,Muster pay
+pressure_paid,%s -%d 银,%s -%d silver
+pressure_spring,春令预付,Spring purse
+pressure_spring_paid,春令预付 +%d 银,Spring purse +%d silver
 quest_bounty,赏金决斗,Bounty duel
-quest_rescue,营救,Rescue
 quest_convoy,商队护航,Caravan escort
 quest_intel_race,情报争夺,Intel race
 quest_objective_failed,；目标委托失败,Objective failed
-castle_view_open,看城堡全景,Castle layers
-castle_view_back,回城堡,Back to castle
-annex_infirmary,医所,Infirmary
-annex_academy,书院,Academy
-annex_treasury,宝库,Treasury
-annex_embassy,使馆,Embassy
-annex_unknown,没有这栋附楼,Unknown annex
-annex_max,这栋附楼已到第三阶,Annex is at tier 3
-annex_short,还缺 %d 银 / %d 铁 / %d 粮,Need %d silver / %d iron / %d food
-annex_up,%s 升至第 %d 阶,%s rose to tier %d
-festival_spring,春令节,Spring rite
-festival_spring_blurb,联姻的帖子在这个月换一轮,Marriage letters refresh
-festival_harvest,丰收,Harvest
-festival_harvest_blurb,城堡把这个月的粮和银记上一笔,Castle books the month
-festival_barter,易货启航,Barter launch
-festival_barter_blurb,陆桥开埠，粮可以换成一小笔银,Grain crosses the bridge for silver
-festival_tourney,比武,Muster of arms
-festival_tourney_blurb,旗下较技，奖的是声望。竞技场规则战还没接上,Reputation only until the arena rules land
-festival_memorial,追思,Memorial lamps
-festival_memorial_blurb,祠前点一盏灯，养伤的人少一个月,A lamp shortens a month of rest
-festival_barter_short,粮不够开埠,Not enough grain
-festival_barter_done,易货启航：8 粮换成 6 银,Barter: 8 grain for 6 silver
-festival_tourney_purse,比武散场，灰烬邦记下了旗,The muster is noted
-festival_memorial_done,追思灯前，伤月少了一截,The lamp shortens the rest
-festival_memorial_stele,追思把名字记上了先祖碑,Names go on the stele
-injury_light,轻伤,
-injury_grave,重伤休养,
-injury_dead,已阵亡,
-injury_words,遗言,
-morale_high,士气高昂,
-morale_low,士气低落,
-morale_desert,因连续欠饷离队,
-morale_held,挽留下了要走的人,
-forge_modify,改造装备,Modify gear
-forge_plus_max,已经加到三成,Already at plus 3
-forge_plus_short,铁或银不够,Short on iron or silver
-forge_plus_fail,改造 +%d 没成，材料已经入炉,Plus %d failed and the materials are spent
-forge_plus_ok,改造成了 +%d,Forged to plus %d
-heirloom_none,手里没有传家宝,No heirloom
-heirloom_vault_full,宝库槽位已满,Treasury is full
-heirloom_vaulted,传家宝入了宝库,Heirloom stored
-heirloom_not_vaulted,宝库里没有这件,Not in the treasury
-heirloom_withdrawn,传家宝取回了,Heirloom withdrawn
-heirloom_store,收入宝库,Store heirloom
-injury.grave_months,重伤休养，还要 %d 个月,Grave rest for %d more months
-injury.wound_label,%s · %d月,%s · %d mo
-injury.healed,%s 的伤好了,%s recovered
-injury.eased,%s 的永久伤缓解了（%s）,%s lasting wound eased (%s)
-injury.death_last_words,%s 阵亡。遗言：%s,%s fell. Last words: %s
-morale.unpaid_months,欠饷 %d 个月,Unpaid for %d months
-morale.deserted,%s 因连续欠饷离队,%s left after months unpaid
-pressure_muster,立旗旗饷,Muster pay
-pressure_drill,开年操练,Opening drill
-pressure_mid,城堡、嫁妆与传家,Castle dowry and heirlooms
-pressure_late,灯籍、爵位与使馆,Lamp title and embassy
-pressure_spring,春令预付,Spring purse
-pressure_spring_paid,春令预付 +%d 银,Spring purse +%d silver
-pressure_paid,%s -%d 银,%s -%d silver
+quest_rescue,营救,Rescue
+quest_siege_aid,攻城协防,Siege relief
+rival_clash,对手佣兵团拦住了去路,
+rival_stolen,对手佣兵团截走了一单委托,
+road_flag_noted,记下了旗标,
 terr_01,无此领地,No such site
 terr_02,已是我方领地,Already ours
 terr_03,邦交声望不足（需 %d）,Nation standing too low (need %d)
@@ -113,57 +113,73 @@ terr_43, · 民心未附 %d 月, · restless %d mo
 terr_44,%s来犯,%s attacking
 terr_45,守卫战,Defence
 terr_46,攻占战,Assault
-terr_ui_title,领地 · 挂团旗,Territory · fly the company banner
-terr_ui_close,关闭,Close
-terr_ui_full,驻军已满,Garrison full
-terr_ui_silver,银不足（需 %d）,Not enough silver (need %d)
-terr_ui_reinforce,增派驻军 %d 银,Reinforce %d silver
-terr_ui_go,需先赶到此地,Travel here first
-terr_ui_defend,守卫,Defend
-terr_ui_assault,强攻,Assault
-terr_ui_chain,贴归附委托,Post pledge commissions
-terr_ui_button,领地,Territory
-terr_ui_flag,旗,F
-terr_st_label,屯营,Stockade
-terr_st_up,修屯营 %d 银,Build stockade %d silver
-terr_st_have,已修屯营,Stockade built
-terr_st_done,%s修起屯营（-%d 银）,Stockade built at %s (-%d silver)
-terr_st_credit,委托链走完：下一座屯营免费,Chain done: next stockade is free
 terr_seat_moved,旧第二据点改为领地：%s（屯营 · 契约保底）,Old second seat became territory: %s (stockade, contract floor)
+terr_st_credit,委托链走完：下一座屯营免费,Chain done: next stockade is free
+terr_st_done,%s修起屯营（-%d 银）,Stockade built at %s (-%d silver)
+terr_st_have,已修屯营,Stockade built
+terr_st_label,屯营,Stockade
 terr_st_owned,不是我方领地,Not our site
-wsc_q_77d6cc16,委托榜 · QUESTS,
-wsc_q_cac5dd12,银币,
-wsc_q_ab9ac691,在途,
-wsc_q_5f411223,返回,
-wsc_q_b35bb92a,城里接的委托要回指定的城交；本堡木板上的活儿在堡里就能接，接了就去办。,
-wsc_q_259e5d9b,灰旗堡,
-wsc_q_237f513f,在途委托（舆图上接的）,
-wsc_q_6af2d7f3,手上还没接城里的委托。去舆图上任意一座城，在「委托」页签里挑一份。,
-wsc_q_698e1de6,%d 银 · 声望 +%d,
-wsc_q_ea883343,可以交了,
-wsc_q_8a110754,剩不到 1 月,
-wsc_q_2a74a2d2,还剩 %d 月,
-wsc_q_f6b0bbbb,委托,
-wsc_q_733a33e4,到%s交,
-wsc_q_40f0ff09,去舆图,
-wsc_q_657f636f,本堡委托（在灰旗堡接）,
-wsc_q_928374db,木板上暂时空着，下个月再来看看。,
-wsc_q_59f56eb6,%d 银 · 声望 +%d%s,
-wsc_q_6072033e, · 首通有赏,
-wsc_q_d9de6252,要打一仗,
-wsc_q_f91ef435,派人去办，自动结算,
-wsc_q_7ec42c54,耗时 %d 月,
-wsc_q_145290c3,再接一次,
-wsc_q_5a9e3347,接下,
-wsc_q_ac8fdce0,没接上：%s,
-wsc_q_416876df,这份委托已经不在了,
+terr_st_up,修屯营 %d 银,Build stockade %d silver
+terr_ui_assault,强攻,Assault
+terr_ui_button,领地,Territory
+terr_ui_chain,贴归附委托,Post pledge commissions
+terr_ui_close,关闭,Close
+terr_ui_defend,守卫,Defend
+terr_ui_flag,旗,F
+terr_ui_full,驻军已满,Garrison full
+terr_ui_go,需先赶到此地,Travel here first
+terr_ui_reinforce,增派驻军 %d 银,Reinforce %d silver
+terr_ui_silver,银不足（需 %d）,Not enough silver (need %d)
+terr_ui_title,领地 · 挂团旗,Territory · fly the company banner
+wsc_c_noturnin,这里暂时没有能交的委托。,Nothing to turn in here yet.
+wsc_c_r_demand,%s最近缺%s，拉一车来能卖个好价。,%s is short of %s.
+wsc_c_r_produce,本地%s多，%d 银就能买一份。,Local %s sells for %d.
+wsc_c_r_quiet,城里这阵子挺太平，没什么新鲜事。,All quiet in town.
+wsc_c_r_rival,%s的人也在城里转，委托榜上的好单子可能被他们抢走。,%s are in town and may take the best offers.
+wsc_c_r_road,往%s那条路不太平，带够人再走。,The road to %s is dangerous.
+wsc_c_r_site_free,附近的%s没人管，打下来每个月都有进项。,%s nearby is unclaimed. Take it for monthly income.
+wsc_c_r_site_own,%s挂着咱们的旗，按月给团里交东西。,%s flies our banner and pays monthly.
+wsc_c_r_site_rival,%s被别家占了，想要就得打回来。,%s is held by a rival.
+wsc_c_r_smith,铁匠铺的招牌货是「%s」，别处打不出来。,"The smith's signature piece: ""%s""."
+wsc_c_rumor_title,城里在传,Word on the street
+wsc_c_turnat,「%s」要去%s交,"""%s"" turns in at %s"
+wsc_e_fail_hint,攒够银粮、等冷却过了再来；没开垦的地也巡不了。,"Save up silver and food, wait out the cooldown."
+wsc_e_fail_title,这次巡不了,Patrol not possible
+wsc_e_first,第一块田庄「%s」交给你了，先派个庄头去管着。,"Your first holding, %s, is ready. Assign a steward."
+wsc_e_how,　去委托榜办完「%s」就能开垦,"　Finish ""%s"" on the quest board to open it"
 wsc_q_04480f1a,办完了：%s。%s,
+wsc_q_145290c3,再接一次,
+wsc_q_237f513f,在途委托（舆图上接的）,
+wsc_q_259e5d9b,灰旗堡,
+wsc_q_2a74a2d2,还剩 %d 月,
+wsc_q_40f0ff09,去舆图,
+wsc_q_416876df,这份委托已经不在了,
+wsc_q_59f56eb6,%d 银 · 声望 +%d%s,
+wsc_q_5a9e3347,接下,
+wsc_q_5f411223,返回,
+wsc_q_6072033e, · 首通有赏,
+wsc_q_657f636f,本堡委托（在灰旗堡接）,
+wsc_q_698e1de6,%d 银 · 声望 +%d,
+wsc_q_6af2d7f3,手上还没接城里的委托。去舆图上任意一座城，在「委托」页签里挑一份。,
+wsc_q_733a33e4,到%s交,
+wsc_q_77d6cc16,委托榜 · QUESTS,
+wsc_q_7ec42c54,耗时 %d 月,
+wsc_q_8a110754,剩不到 1 月,
+wsc_q_928374db,木板上暂时空着，下个月再来看看。,
+wsc_q_ab9ac691,在途,
+wsc_q_ac8fdce0,没接上：%s,
+wsc_q_b35bb92a,城里接的委托要回指定的城交；本堡木板上的活儿在堡里就能接，接了就去办。,
+wsc_q_cac5dd12,银币,
+wsc_q_d9de6252,要打一仗,
+wsc_q_ea883343,可以交了,
+wsc_q_f6b0bbbb,委托,
+wsc_q_f91ef435,派人去办，自动结算,
+wsc_t_free,无主·可夺,unclaimed
+wsc_t_lost_go,去夺回来,Retake
+wsc_t_lost_hint,地还在原处，打回来就是你的。驻军多留几个人、修个木栅，下次没那么容易丢。,Retake it any time. More garrison and a stockade make it harder to lose.
+wsc_t_lost_line,%s：%s 被%s夺走了,%s: %s was taken by %s
+wsc_t_lost_ok,知道了,OK
+wsc_t_lost_title,领地丢了,Territory lost
+wsc_t_month,路上过了一个月：%s，粮还剩 %d,A month passed on the road: %s · food %d
 wsc_t_own,我方·驻%d,ours · %d held
 wsc_t_rival,对手占着,rival
-wsc_t_free,无主·可夺,unclaimed
-wsc_t_lost_title,领地丢了,Territory lost
-wsc_t_lost_line,%s：%s 被%s夺走了,%s: %s was taken by %s
-wsc_t_lost_hint,地还在原处，打回来就是你的。驻军多留几个人、修个木栅，下次没那么容易丢。,Retake it any time. More garrison and a stockade make it harder to lose.
-wsc_t_lost_go,去夺回来,Retake
-wsc_t_lost_ok,知道了,OK
-wsc_t_month,路上过了一个月：%s，粮还剩 %d,A month passed on the road: %s · food %d

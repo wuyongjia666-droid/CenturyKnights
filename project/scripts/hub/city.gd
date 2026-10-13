@@ -322,6 +322,11 @@ func _render_tab() -> void:
 	(_tab_btn["smith"] as Button).tooltip_text = "此地没有铁匠铺" if World.smith_tier(city) <= 0 else ""
 	(_tab_btn["tavern"] as Button).tooltip_text = "此地没有酒馆" if int(n.get("tavern_slots", 0)) <= 0 else ""
 	(_tab_btn["lamp"] as Button).tooltip_text = "灯籍只在灯市联开拍" if World.nation_of(city) != "lantern" else ""
+	# WS-C #44: a door that does not exist here is hidden, not an empty page behind a grey button
+	for k in ["smith", "tavern", "lamp"]:
+		(_tab_btn[k] as Button).visible = not (_tab_btn[k] as Button).disabled
+	if (_tab_btn.get(tab) as Button) != null and (_tab_btn[tab] as Button).disabled:
+		tab = "overview"
 	for c in _body.get_children():
 		_body.remove_child(c)
 		c.queue_free()
@@ -484,6 +489,8 @@ func _tab_overview() -> void:
 	nx.position = Vector2(18, 250)
 	p.add_child(nx)
 	var sq: Dictionary = n.get("sig_quest", {})
+	if sq.is_empty():
+		_rumor_box(p, Rect2(18, 330, 384, 230))
 	if not sq.is_empty():
 		var sl := UIKit.mono("HONOUR COMMISSION", 9, UIKit.EMBER)
 		sl.position = Vector2(18, 330)
@@ -521,7 +528,14 @@ func _tab_overview() -> void:
 		b.pressed.connect(func(): _do(World.turn_in(qid)))
 		v2.add_child(b)
 	if not any:
-		v2.add_child(_para("没有可在此交付的委托。递送 / 护送 / 防守在目标地交付；追缉 / 清剿 / 收购 / 探查回发布城复命。", UIKit.TEXT_FAINT, 12, 370))
+		v2.add_child(_para(Locale.t("wsc_c_noturnin"), UIKit.TEXT_FAINT, 12, 370))
+		for q in World.active:
+			var where := str(World.node(World.turn_in_city(q)).get("name", ""))
+			v2.add_child(_line(Locale.t("wsc_c_turnat") % [str(q.get("title", "")), where], UIKit.TEXT_DIM, 11, 370))
+		v2.name = "Rumors"
+		v2.add_child(_line(Locale.t("wsc_c_rumor_title"), UIKit.ACCENT, 12, 370))
+		for line in rumors(city).slice(0, 5):
+			v2.add_child(_para("· " + str(line), UIKit.TEXT_DIM, 12, 370))
 	var il := UIKit.mono("TRADE INTEL", 9, UIKit.ACCENT)
 	il.position = Vector2(18, 304)
 	p2.add_child(il)
@@ -547,6 +561,46 @@ func _tab_overview() -> void:
 		mb.disabled = not bool(mm.get("exists", false))
 		mb.pressed.connect(func(): CKNav.go(str(mm.path)))
 		p2.add_child(mb)
+
+## WS-C #43: 城内传闻 / 街上的人——拿现有的城市数据拼几句口语，填满概览页的空栏。
+static func rumors(cid: String) -> Array:
+	var n: Dictionary = World.node(cid)
+	var out: Array = []
+	var nm := str(n.get("name", ""))
+	for g in n.get("demand", []):
+		out.append(Locale.t("wsc_c_r_demand") % [nm, World.good_name(str(g))])
+	for g in n.get("produce", []):
+		out.append(Locale.t("wsc_c_r_produce") % [World.good_name(str(g)), World.price(cid, str(g), "buy")])
+	var sig: Array = n.get("sig_items", [])
+	if not sig.is_empty():
+		out.append(Locale.t("wsc_c_r_smith") % str(World.item(str(sig[0])).get("name", sig[0])))
+	for rv in World.rivals:
+		if str(rv.get("pos", "")) == cid:
+			out.append(Locale.t("wsc_c_r_rival") % str(rv.get("name", "")))
+	for sid in CKTerritory.sites_at(cid):
+		var site := CKTerritory.site(sid)
+		var own := CKTerritory.owner(sid)
+		var key := "wsc_c_r_site_own" if own == CKTerritory.OWN else ("wsc_c_r_site_rival" if own.begins_with("rival:") else "wsc_c_r_site_free")
+		out.append(Locale.t(key) % str(site.get("name", "")))
+	for r in World.roads_from(cid):
+		if int(r.get("danger", 0)) >= 3:
+			out.append(Locale.t("wsc_c_r_road") % str(World.node(World.other_end(r, cid)).get("name", "")))
+			break
+	if out.is_empty():
+		out.append(Locale.t("wsc_c_r_quiet"))
+	return out
+
+func _rumor_box(p: Control, r: Rect2) -> void:
+	var hl := UIKit.mono("RUMOURS", 9, UIKit.ACCENT)
+	hl.position = r.position
+	p.add_child(hl)
+	var t := UIKit.title_label(Locale.t("wsc_c_rumor_title"), 15, UIKit.TEXT)
+	t.position = r.position + Vector2(0, 16)
+	p.add_child(t)
+	var v := _scroll(p, Rect2(r.position + Vector2(0, 44), r.size - Vector2(0, 44)))
+	v.name = "RumorsBox"
+	for line in rumors(city).slice(0, 6):
+		v.add_child(_para("· " + str(line), UIKit.TEXT_DIM, 12, r.size.x - 8))
 
 # ── 铁匠铺 ────────────────────────────────────────────
 func _tab_smith() -> void:
