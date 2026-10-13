@@ -147,6 +147,18 @@
       "zh": "潮斑",
       "en": "vair",
       "class": "fur"
+    },
+    "ash": {
+      "hex": "#6E7276",
+      "zh": "灰烬",
+      "en": "ash",
+      "class": "colour"
+    },
+    "ash_deep": {
+      "hex": "#4A4E52",
+      "zh": "深灰",
+      "en": "ash deep",
+      "class": "colour"
     }
   },
   "metal_ids": [
@@ -801,7 +813,9 @@
     "#70b8c8",
     "#86c8d8",
     "#d0dde8",
-    "#f4f7fb"
+    "#f4f7fb",
+    "ash",
+    "ash_deep"
   ],
   "color_names": [
     "霜青",

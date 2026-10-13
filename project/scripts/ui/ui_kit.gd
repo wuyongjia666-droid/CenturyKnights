@@ -576,6 +576,7 @@ static func make_banner_rect(w: int = 72, h: int = 100) -> TextureRect:
 	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	tr.texture = UnitArt.banner(w, h, true)
+	BannerName.attach(tr)
 	return tr
 
 static func make_hub_nav_button(text: String, subtitle: String, min_w: int = 210) -> Button:

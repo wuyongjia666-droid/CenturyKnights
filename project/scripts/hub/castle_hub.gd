@@ -662,6 +662,7 @@ func apply_mobile_layout() -> void:
 		add_child(existing)
 	UnitArt.clear_cache()
 	existing.texture = UnitArt.banner(56, 78, false)
+	BannerName.attach(existing)
 
 
 ## ── Phone dossier / plate: container-built so 22px text wraps instead of overlapping ──
