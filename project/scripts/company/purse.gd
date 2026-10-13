@@ -367,6 +367,10 @@ static func apply_monthly_wages(host) -> String:
 		if c3 != null and c3.alive and (c3.in_roster or c3.is_child):
 			mouths += 1
 	var food_need := maxi(1, mouths)
+	## 杂货铺的口粮：这个月用过一份，月结少吃 1 粮。
+	if bool(host.house_mods.get("sundry_ration_pending", false)):
+		food_need = maxi(0, food_need - 1)
+		host.house_mods.erase("sundry_ration_pending")
 	host.food -= food_need
 	var granary := maxi(120, mouths * 24)
 	if host.food > granary:

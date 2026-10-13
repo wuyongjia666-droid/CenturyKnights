@@ -1,0 +1,153 @@
+{
+  "version": 1,
+  "base_price": 6,
+  "max_stack": 5,
+  "morale_month_key": "sundry_morale_ym",
+  "nations": {
+    "ashbanner": {
+      "food": {
+        "id": "sundry_ash_cake",
+        "name": "烬麦饼",
+        "kind": "food_morale_only",
+        "desc": "士气 +1；不重复省粮。"
+      },
+      "other": {
+        "id": "sundry_ash_salt",
+        "name": "炉边灰盐",
+        "kind": "food_morale_only",
+        "desc": "士气 +1；不重复省粮。"
+      }
+    },
+    "shuoying": {
+      "food": {
+        "id": "sundry_sy_candy",
+        "name": "夜蜜饯",
+        "kind": "food",
+        "desc": "口粮记为已付，士气 +1。"
+      },
+      "other": {
+        "id": "sundry_sy_mask",
+        "name": "黑绒眼罩",
+        "kind": "intel",
+        "desc": "若本城夜谈未做，当作完成一次。"
+      }
+    },
+    "qinghe": {
+      "food": {
+        "id": "sundry_qh_tea",
+        "name": "花坞茶砖",
+        "kind": "food",
+        "desc": "口粮记为已付，士气 +1。"
+      },
+      "other": {
+        "id": "sundry_qh_cloth",
+        "name": "染坊小布",
+        "kind": "intel",
+        "desc": "若本城夜谈未做，当作完成一次。"
+      }
+    },
+    "lantern": {
+      "food": {
+        "id": "sundry_lt_sugar",
+        "name": "琉璃碎糖",
+        "kind": "food",
+        "desc": "口粮记为已付，士气 +1。"
+      },
+      "other": {
+        "id": "sundry_lt_coupon",
+        "name": "夜市剩券",
+        "kind": "lantern_half",
+        "desc": "本城杂货第二件半价，只这一城这一日。"
+      }
+    },
+    "frostcrown": {
+      "food": {
+        "id": "sundry_fc_sugar",
+        "name": "霜晶糖",
+        "kind": "food",
+        "desc": "口粮记为已付，士气 +1。"
+      },
+      "other": {
+        "id": "sundry_fc_note",
+        "name": "冰钟纸条",
+        "kind": "intel",
+        "desc": "若本城夜谈未做，当作完成一次。"
+      }
+    },
+    "emberold": {
+      "food": {
+        "id": "sundry_eo_cake",
+        "name": "温窑饼",
+        "kind": "food",
+        "desc": "口粮记为已付，士气 +1。"
+      },
+      "other": {
+        "id": "sundry_eo_stone",
+        "name": "余温石",
+        "kind": "medicine",
+        "desc": "一名轻伤者生命 +4。"
+      }
+    },
+    "saltmarsh": {
+      "food": {
+        "id": "sundry_sm_candy",
+        "name": "潮盐糖",
+        "kind": "food",
+        "desc": "口粮记为已付，士气 +1。"
+      },
+      "other": {
+        "id": "sundry_sm_pass",
+        "name": "小包盐引",
+        "kind": "salt_fare",
+        "desc": "下一次海路船资减 4 银。"
+      }
+    },
+    "irongorge": {
+      "food": {
+        "id": "sundry_ig_biscuit",
+        "name": "峡口干饼",
+        "kind": "food",
+        "desc": "口粮记为已付，士气 +1。"
+      },
+      "other": {
+        "id": "sundry_ig_oil",
+        "name": "冷钢油",
+        "kind": "forge_iron",
+        "desc": "下一次堡内打灰刃，铁耗 −1（最低 1）。"
+      }
+    },
+    "starriver": {
+      "food": {
+        "id": "sundry_sr_sugar",
+        "name": "星砂糖",
+        "kind": "food",
+        "desc": "口粮记为已付，士气 +1。"
+      },
+      "other": {
+        "id": "sundry_sr_note",
+        "name": "观象短笺",
+        "kind": "intel_route",
+        "desc": "讯，并在下一次行军预览写出最高危险路段。"
+      }
+    },
+    "southzephyr": {
+      "food": {
+        "id": "sundry_sz_candy",
+        "name": "蜂蜡糖",
+        "kind": "food",
+        "desc": "口粮记为已付，士气 +1。"
+      },
+      "other": {
+        "id": "sundry_sz_pepper",
+        "name": "南椒小包",
+        "kind": "pepper_bonus",
+        "desc": "下一次在他国卖出南椒时每件 +2 银，最多 5 件。"
+      }
+    }
+  },
+  "bridge": {
+    "node_prefix": "lb_",
+    "markup": 1.4,
+    "note": "过路货：两侧国度各一件食，+40%，不能买第三国。"
+  }
+}
