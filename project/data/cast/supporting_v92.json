@@ -192,6 +192,16 @@
       "sex": "m",
       "look": "newly hired mercenary, unshaven, holds a worn pay booklet with circled pages, dented gorget, wary eyes",
       "portrait": "res://assets/art/portraits/speakers/newcomer.png"
+    },
+    {
+      "id": "voice_old_steward",
+      "name": "老管事",
+      "cast_key": "old_steward",
+      "role": "灰旗堡老管事（与管事同脸，G-10 区分账房）",
+      "age": 42,
+      "sex": "m",
+      "look": "a hunchbacked man in his seventies, thin white hair, kind tired eyes, patched slate coat and fingerless knitted gloves, a small frost lantern in one hand and a thick moth-eaten cloth-bound roster book under the arm",
+      "portrait": "res://assets/art/portraits/speakers/steward.png"
     }
   ]
 }
