@@ -24,6 +24,10 @@ var _tabbar: HBoxContainer
 var _body: Control
 var _toast: Label
 var _tab_btn: Dictionary = {}
+const MobileReflow := preload("res://scripts/platform/mobile_reflow.gd")
+const M_SIDE_W := 420.0
+var _mob := false
+var _m_body_w := 800.0
 
 func _ready() -> void:
 	city = str(GameState.get_meta("city_id", World.pos)) if GameState.has_meta("city_id") else World.pos
@@ -54,6 +58,7 @@ func _ready() -> void:
 	_body.position = CONTENT.position
 	_body.size = CONTENT.size
 	add_child(_body)
+	_mobile_frame()
 	_toast = UIKit.body_label("", UIKit.TEXT, 12)
 	_toast.autowrap_mode = TextServer.AUTOWRAP_OFF
 	_toast.position = Vector2(416, 652)
@@ -69,9 +74,63 @@ func _ready() -> void:
 	if GameState.has_meta("city_tab"):
 		_set_tab(str(GameState.get_meta("city_tab")))
 		GameState.remove_meta("city_tab")
-	UIKit.footer_bar(self, [["Q/E", "切换页签"], ["A", "选择 / 确认"], ["ESC", "返回舆图"]], "SETTLEMENT · FROST_TACTICAL v8.7")
+	if _mob:
+		_toast.position = Vector2(M_SIDE_W + 36.0, 720.0 - 60.0)
+		_toast.add_theme_font_size_override("font_size", MobilePage.FONT)
+	else:
+		UIKit.footer_bar(self, [["Q/E", "切换页签"], ["A", "选择 / 确认"], ["ESC", "返回舆图"]], "SETTLEMENT · FROST_TACTICAL v8.7")
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
+
+## Landscape phone: 76px top bar; city card scrolls on the left; tabs and the tab body
+## (desktop panels reflowed into one scrolling column) on the right.
+func _mobile_frame() -> void:
+	if not MobilePage.active(self):
+		return
+	_mob = true
+	var vp := get_viewport().get_visible_rect().size
+	var w := maxf(1280.0, vp.x * 720.0 / maxf(1.0, vp.y))
+	var top := MobilePage.TOP + 4.0
+	var side_stack := MobileReflow.column(self, "MobileSide", Rect2(16, top, M_SIDE_W, 720.0 - top - 12.0))
+	remove_child(_side)
+	side_stack.add_child(_side)
+	_swap_box(_side, side_stack, func(b): _side = b)
+	var bx := M_SIDE_W + 36.0
+	_tabbar.position = Vector2(bx, top)
+	_tabbar.add_theme_constant_override("separation", 8)
+	for b in _tabbar.get_children():
+		(b as Control).custom_minimum_size = Vector2(96, MobilePage.HIT)
+		(b as Control).add_theme_font_size_override("font_size", MobilePage.FONT)
+	_m_body_w = w - bx - 16.0
+	var by := top + MobilePage.HIT + 10.0
+	var body_stack := MobileReflow.column(self, "MobileBody", Rect2(bx, by, _m_body_w, 720.0 - by - 12.0))
+	remove_child(_body)
+	body_stack.add_child(_body)
+	_swap_box(_body, body_stack, func(b): _body = b)
+
+
+func _swap_box(old: Control, stack: Control, assign: Callable) -> void:
+	var box := VBoxContainer.new()
+	box.name = old.name
+	box.add_theme_constant_override("separation", 10)
+	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	stack.remove_child(old)
+	old.queue_free()
+	stack.add_child(box)
+	assign.call(box)
+	box.child_entered_tree.connect(func(_n): _queue_reflow(box))
+
+
+func _queue_reflow(box: Control) -> void:
+	if box.has_meta("m_pending"):
+		return
+	box.set_meta("m_pending", true)
+	(func():
+		if is_instance_valid(box):
+			box.remove_meta("m_pending")
+			var bw := (box.get_parent() as Control).size.x if box.get_parent() else _m_body_w
+			MobileReflow.reflow_children(box, maxf(200.0, bw - 24.0))).call_deferred()
+
 
 func _add_backdrop() -> void:
 	var tr := TextureRect.new()
@@ -100,13 +159,24 @@ func _refresh_top() -> void:
 	for c in _top.get_children():
 		c.queue_free()
 	var n: Dictionary = World.node(city)
-	UIKit.top_bar(_top, "%s · %s" % [World.kind_zh(city), n.get("name", city)], [
+	var title := "%s · %s" % [World.kind_zh(city), n.get("name", city)]
+	var chips := [
 		["银", str(GameState.silver), UIKit.ACCENT],
 		["粮", str(GameState.food), UIKit.TEXT],
 		["铁", str(GameState.iron), UIKit.TEXT],
 		["货舱", "%d/%d" % [World.cargo_used(), World.cargo_cap()], UIKit.TEXT],
 		["历", World.date_label(), UIKit.TEXT_DIM],
-	], "返回舆图", _back)
+	]
+	var back_t := "返回舆图"
+	if _mob:
+		var parts := PackedStringArray()
+		for ch in chips:
+			parts.append("%s %s" % [ch[0], ch[1]])
+		var vp := get_viewport().get_visible_rect().size
+		_top.size = Vector2(maxf(1280.0, vp.x * 720.0 / maxf(1.0, vp.y)), MobilePage.TOP)
+		MobilePage.top_bar(_top, title, " · ".join(parts), [[back_t, _back]])
+		return
+	UIKit.top_bar(_top, title, chips, back_t, _back)
 
 # ── side card ─────────────────────────────────────────
 func _render_side() -> void:
@@ -323,6 +393,15 @@ func _row_button(text: String, sub: String, w: float, on: bool, locked: bool) ->
 	s.size = Vector2(w - 64, 16)
 	s.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(s)
+	if _mob:
+		# phone: two 22px lines need a taller row
+		b.custom_minimum_size.y = maxf(b.custom_minimum_size.y, 84.0)
+		l.position.y = 6.0
+		l.size.y = 30.0
+		s.position.y = 44.0
+		s.size.y = 30.0
+		for lab in [l, s]:
+			(lab as Label).add_theme_font_size_override("font_size", MobilePage.FONT)
 	return b
 
 func _icon(it: Dictionary, sz: float) -> Control:
@@ -670,8 +749,17 @@ func _tab_market() -> void:
 				b.tooltip_text = "共 %d 银" % World.quote_sell(city, gs, maxi(1, q2))
 				b.pressed.connect(func(): _do(World.market_sell(city, gs, q2)))
 			acts.add_child(b)
-		row.add_child(acts)
-		v.add_child(row)
+		if _mob:
+			# phone: trade buttons get their own line under the price row
+			var cell := VBoxContainer.new()
+			cell.add_theme_constant_override("separation", 4)
+			row.custom_minimum_size = Vector2(0, 34)
+			cell.add_child(row)
+			cell.add_child(acts)
+			v.add_child(cell)
+		else:
+			row.add_child(acts)
+			v.add_child(row)
 
 # ── 委托榜 ────────────────────────────────────────────
 func _tab_board() -> void:

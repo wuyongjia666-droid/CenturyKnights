@@ -23,7 +23,7 @@ const BUILDING_NAMES := {
 const BUILDING_MAX := 5
 const BUILDING_COST := {
 	# level -> cost to upgrade TO that level
-	2: {"silver": 80, "iron": 3, "food": 10},
+	2: {"silver": 60, "iron": 3, "food": 10},
 	3: {"silver": 160, "iron": 6, "food": 20},
 	4: {"silver": 280, "iron": 10, "food": 35},
 	5: {"silver": 450, "iron": 16, "food": 55},

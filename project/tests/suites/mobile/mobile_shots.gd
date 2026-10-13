@@ -9,18 +9,29 @@ const SCREENS := [
 	["marriage", "res://scenes/hub/marriage.tscn"],
 	["lineage", "res://scenes/hub/lineage_view.tscn"],
 	["atlas", "res://scenes/hub/atlas_view.tscn"],
+	["atlas_side", "res://scenes/hub/atlas_view.tscn", true, "atlas_open_side"],
 	["city", "res://scenes/hub/city.tscn"],
+	["city_smith", "res://scenes/hub/city.tscn", "smith"],
+	["city_market", "res://scenes/hub/city.tscn", "market"],
+	["city_board", "res://scenes/hub/city.tscn", "board"],
+	["city_tavern", "res://scenes/hub/city.tscn", "tavern"],
+	["city_armory", "res://scenes/hub/city.tscn", "armory"],
 	["battle", "res://scenes/battle/battle.tscn"],
 	["settings", "res://scenes/ui/settings.tscn"],
+	["founding", "res://scenes/story/naming.tscn"],
+	["dialogue", "res://scenes/story/chapter0.tscn"],
 ]
 const RES := [Vector2i(2400, 1080), Vector2i(2340, 1080), Vector2i(1920, 1080), Vector2i(2560, 1600)]
 var _out := "/tmp/ck_mobile"
 var _report := []
+var _only: PackedStringArray = []
 
 func _ready() -> void:
 	for arg in OS.get_cmdline_user_args():
 		if arg.begins_with("--out="):
 			_out = arg.substr(6)
+		if arg.begins_with("--only="):
+			_only = arg.substr(7).split(",")
 	if DisplayServer.get_name() == "headless":
 		print("MOBILE PASS headless-skip")
 		get_tree().quit(0)
@@ -33,6 +44,10 @@ func _ready() -> void:
 		await get_tree().process_frame
 		await get_tree().process_frame
 		for pair in SCREENS:
+			if not _only.is_empty() and not Array(_only).any(func(o): return str(pair[0]).begins_with(o)):
+				continue
+			if pair.size() > 2:
+				GameState.set_meta(str(pair[3]) if pair.size() > 3 else "city_tab", pair[2])
 			await _shoot(str(pair[1]), "%s_%dx%d" % [pair[0], r.x, r.y])
 	var f := FileAccess.open(_out + "/layout.json", FileAccess.WRITE)
 	f.store_string(JSON.stringify(_report, " "))
@@ -48,27 +63,58 @@ func _shoot(path: String, name: String) -> void:
 	get_tree().root.add_child(node)
 	get_tree().current_scene = node
 	MobileChrome.call_deferred("_apply")
-	await get_tree().create_timer(0.6).timeout
+	await get_tree().create_timer(3.0 if name.begins_with("dialogue") else 0.6).timeout
 	await RenderingServer.frame_post_draw
 	get_viewport().get_texture().get_image().save_png("%s/%s.png" % [_out, name])
 	var vr := get_viewport().get_visible_rect()
 	var items := []
+	_root_scale = maxf(0.001, (node as CanvasItem).get_global_transform().get_scale().y) if node is CanvasItem else 1.0
 	_collect(node, items, vr)
 	_report.append({"shot": name, "viewport": [vr.size.x, vr.size.y], "items": items})
 	get_tree().current_scene = self
 	node.queue_free()
 	await get_tree().process_frame
 
+## Fonts are measured as drawn: a label inside a zoomed map counts at its on-screen size.
+var _root_scale := 1.0
+
+
 func _collect(n: Node, items: Array, vr: Rect2) -> void:
 	if n is Control and n.is_visible_in_tree():
 		var c: Control = n
 		if c is BaseButton or c is Label or c is LineEdit:
 			var r := c.get_global_rect()
+			var clip := _scroll_clip(c)
+			var clipped := false
+			if clip.size.x > 0.0:
+				clipped = not clip.grow(1.0).encloses(r)
+				if not clip.intersects(r):
+					for ch0 in n.get_children():
+						_collect(ch0, items, vr)
+					return
 			var txt := ""
 			if c is Label or c is Button:
 				txt = str(c.text)
 			items.append({"type": c.get_class(), "path": str(c.get_path()), "text": txt.left(30),
 				"rect": [r.position.x, r.position.y, r.size.x, r.size.y],
-				"font": c.get_theme_font_size("font_size")})
+				"font": roundi(c.get_theme_font_size("font_size") * c.get_global_transform().get_scale().y / _root_scale), "in_scroll": _in_scroll(c), "clipped": clipped})
 	for ch in n.get_children():
 		_collect(ch, items, vr)
+
+func _in_scroll(c: Node) -> bool:
+	var p := c.get_parent()
+	while p != null:
+		if p is ScrollContainer:
+			return true
+		p = p.get_parent()
+	return false
+
+
+## What a scroll view actually shows: items scrolled out of it are not on screen.
+func _scroll_clip(c: Node) -> Rect2:
+	var p := c.get_parent()
+	while p != null:
+		if p is ScrollContainer:
+			return (p as Control).get_global_rect()
+		p = p.get_parent()
+	return Rect2()
