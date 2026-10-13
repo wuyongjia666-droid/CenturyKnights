@@ -715,8 +715,9 @@ static func body_label(text: String, col: Color = TEXT_DIM, size: int = 13) -> L
 # --- v8.6 Stitch kit: shared scaffold matching docs/art/stitch_skeletons_v8/*.png --------------------
 const MONO_TRACK := "\u2009"
 
-static func mono(text: String, size: int = 11, col: Color = TEXT_FAINT, tracked: bool = true) -> Label:
-	size = desk_sz(size)
+static func mono(text: String, size: int = 11, col: Color = TEXT_FAINT, tracked: bool = true, desk_floor: bool = true) -> Label:
+	if desk_floor:
+		size = desk_sz(size)
 	var l := Label.new()
 	if tracked:
 		var s := ""
@@ -1156,8 +1157,11 @@ static func portrait_plate(parent: Control, rect: Rect2, c, caption: String = ""
 		tick.add_child(b)
 		p.add_child(tick)
 	if caption != "":
-		var cap := mono(caption, 9, ACCENT)
+		var cap := mono(caption, 9, ACCENT, false)  # no letter-spacing: long captions must fit the plate
+		cap.clip_text = true
+		cap.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		cap.position = Vector2(12, rect.size.y - 22)
+		cap.size = Vector2(rect.size.x - 24, 18)
 		p.add_child(cap)
 	return p
 
