@@ -12,6 +12,7 @@ const PAD := 42.0
 ## Top bar, page head, optional desktop footer. Back goes through CKNav (one back action).
 static func shell(page: Control, context: String, eyebrow: String, title: String, desc: String = "", theme: String = "") -> void:
 	## theme "none": the page already painted its own backdrop (UIKit.make_themed_bg(self, ...)).
+	page.set_meta("ck_page_kit", true)  # MobileLayout.center_kit_page centres the 1280 grid on wide phones
 	if theme == "":
 		UIKit.void_bg(page)
 	elif theme != "none":
@@ -184,5 +185,12 @@ static func stat(parent: Control, pos: Vector2, label: String, value: String, co
 	parent.add_child(a)
 	var b := UIKit.title_label(value, 20, col)
 	b.position = pos + Vector2(0, 14)
+	if DeviceProfile.is_mobile():
+		# Phone type floor (22px) would stack the caption onto the value: put them on one line.
+		var fa := MobileLayout.FONT_FLOOR
+		a.add_theme_font_size_override("font_size", fa)
+		b.add_theme_font_size_override("font_size", maxi(fa, 24))
+		a.position = pos + Vector2(0, 6)
+		b.position = pos + Vector2(a.get_minimum_size().x + 8.0, 2)
 	b.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	parent.add_child(b)

@@ -51,6 +51,9 @@ func _build() -> void:
 	bg.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 	bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(bg)
+	if DeviceProfile.is_mobile():
+		_build_mobile()
+		return
 	var col := VBoxContainer.new()
 	col.name = "SlotColumn"
 	col.position = Vector2(96, 96)
@@ -80,6 +83,61 @@ func _row(slot: String) -> HBoxContainer:
 	load.pressed.connect(_load.bind(slot))
 	row.add_child(load)
 	return row
+
+## Phone: Frost cards in two columns (name + summary left, 76px load button right), back on top.
+func _build_mobile() -> void:
+	var w := maxf(get_viewport().get_visible_rect().size.x, 1280.0)
+	var head := HBoxContainer.new()
+	head.name = "SlotHead"
+	head.position = Vector2(40, 16)
+	head.size = Vector2(w - 80, MobilePage.HIT)
+	add_child(head)
+	var t := MobilePage.label(Locale.t("menu_load"), UIKit.TEXT, 32, false)
+	head.add_child(t)
+	var back := MobilePage.button(Locale.t("slot_back"), false, _back, 200)
+	back.name = "SlotBack"
+	back.size_flags_horizontal = Control.SIZE_SHRINK_END
+	head.add_child(back)
+	var scroll := ScrollContainer.new()
+	scroll.name = "SlotScroll"
+	scroll.position = Vector2(40, 108)
+	scroll.size = Vector2(w - 80, 720 - 108 - 20)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	add_child(scroll)
+	var grid := GridContainer.new()
+	grid.name = "SlotColumn"
+	grid.columns = 2
+	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	grid.add_theme_constant_override("h_separation", 16)
+	grid.add_theme_constant_override("v_separation", 14)
+	scroll.add_child(grid)
+	for slot in CKSaveService.SLOTS:
+		grid.add_child(_card(slot))
+
+func _card(slot: String) -> PanelContainer:
+	var has := FileAccess.file_exists(CKSaveService.body_path(slot))
+	var card := PanelContainer.new()
+	card.name = "SlotRow_%s" % slot
+	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var sb := UIKit.flat_box(Color(0.055, 0.067, 0.090, 0.92), UIKit.ACCENT_DIM if has else Color(1, 1, 1, 0.08), 10)
+	for side in [SIDE_LEFT, SIDE_RIGHT, SIDE_TOP, SIDE_BOTTOM]:
+		sb.set_content_margin(side, 16)
+	card.add_theme_stylebox_override("panel", sb)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 14)
+	card.add_child(row)
+	var v := VBoxContainer.new()
+	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(v)
+	v.add_child(MobilePage.label(Locale.t("slot_%s" % slot), UIKit.TEXT, 24, false))
+	v.add_child(MobilePage.label(continue_line(slot), UIKit.TEXT_DIM if has else UIKit.TEXT_FAINT, 22))
+	var load := MobilePage.button(Locale.t("menu_load"), has, _load.bind(slot), 150)
+	load.name = "Load_%s" % slot
+	load.size_flags_horizontal = Control.SIZE_SHRINK_END
+	load.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	load.disabled = not has
+	row.add_child(load)
+	return card
 
 func _load(slot: String) -> void:
 	if GameState.load_from_slot(slot):

@@ -107,10 +107,6 @@ const FONT_FLOOR_PENDING := [
 	"res://scenes/hub/castle_view.tscn", "res://scenes/hub/market.tscn",
 	"res://scenes/hub/estates.tscn", "res://scenes/hub/works.tscn",
 	"res://scenes/hub/forge.tscn", "res://scenes/hub/annex.tscn",
-	"res://scenes/hub/deploy.tscn", "res://scenes/hub/skill_tree.tscn",
-	"res://scenes/hub/rival_houses.tscn", "res://scenes/hub/shrine.tscn",
-	"res://scenes/hub/train.tscn", "res://scenes/hub/blood_test.tscn",
-	"res://scenes/hub/lineage_tree.tscn",
 ]
 
 static func font_floor_applies(root: Node) -> bool:
@@ -173,7 +169,8 @@ static func _grow_buttons(node: Node, need: float) -> void:
 static func _grow_hit(button: BaseButton, need: float) -> void:
 	if not button.visible or not button.is_visible_in_tree():
 		return
-	if button.mouse_filter != Control.MOUSE_FILTER_STOP:
+	# PASS buttons (rows inside drag-scroll lists) are still tap targets; only IGNORE is decoration.
+	if button.mouse_filter == Control.MOUSE_FILTER_IGNORE:
 		return
 	if bool(button.get_meta("touch_exempt", false)):
 		return
@@ -321,3 +318,34 @@ static func fit_top_bar(root: Control, width: float) -> void:
 			var box_w := minf(maxf(box.size.x, 280.0), width - 32.0)
 			box.size.x = box_w
 			box.position.x = maxf(120.0, width - box_w - 16.0)
+
+## Long-tail CKPageKit pages are a fixed 1280 grid. On a 20:9 phone the root is ~1600 wide and the
+## grid hugged the left edge with a dead strip on the right; centre it instead. Full-rect children
+## (backdrops) already stretch and are left alone. Idempotent: re-runs shift by the difference only.
+static func center_kit_page(root: Control) -> void:
+	if root == null or not bool(root.get_meta("ck_page_kit", false)) or root.has_method("apply_mobile_layout"):
+		return
+	var dx := floorf(maxf(0.0, root.size.x - DESIGN.x) * 0.5)
+	var old := float(root.get_meta("m_center_dx", 0.0))
+	if is_equal_approx(dx, old):
+		return
+	root.set_meta("m_center_dx", dx)
+	for child in root.get_children():
+		if not (child is Control):
+			continue
+		var c := child as Control
+		if c.anchor_right > 0.5 or c.anchor_left > 0.5:
+			continue
+		if c.name == "StitchTopBar":
+			# The bar spans the screen: title stays left, the right cluster moves to the right edge.
+			c.size.x += 2.0 * (dx - old)
+			for bc in c.get_children():
+				if not (bc is Control):
+					continue
+				var b := bc as Control
+				if b.size.x >= 800.0:
+					b.size.x += 2.0 * (dx - old)
+				elif b.position.x > 640.0:
+					b.position.x += 2.0 * (dx - old)
+			continue
+		c.position.x += dx - old

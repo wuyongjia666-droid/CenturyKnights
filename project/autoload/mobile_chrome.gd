@@ -99,6 +99,7 @@ func _apply() -> void:
 	if root.has_method("apply_mobile_layout"):
 		root.apply_mobile_layout()
 	MobileLayout.extend_portrait_lists(root)
+	MobileLayout.center_kit_page(root)
 	MobileLayout.ensure_min_fonts(root)
 	MobileLayout.ensure_hit_targets(root)
 

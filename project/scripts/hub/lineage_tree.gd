@@ -116,13 +116,9 @@ func refocus(id: String) -> void:
 			_canvas.add_child(_node(person, Vector2(x, ROW_Y[ri]), person == c))
 			x += NODE.x + GAP
 	if rows[0].is_empty():
-		var g := UIKit.body_label(Locale.t("gen2_19"), UIKit.TEXT_FAINT, 12)
-		g.position = Vector2(w * 0.5 - 30, ROW_Y[0] + 60)
-		_canvas.add_child(g)
+		_canvas.add_child(_gap_label(Locale.t("gen2_19"), w, ROW_Y[0] + 60))
 	if rows[2].is_empty():
-		var g2 := UIKit.body_label(Locale.t("gen2_20"), UIKit.TEXT_FAINT, 12)
-		g2.position = Vector2(w * 0.5 - 30, ROW_Y[2] + 60)
-		_canvas.add_child(g2)
+		_canvas.add_child(_gap_label(Locale.t("gen2_20"), w, ROW_Y[2] + 60))
 	var me: Vector2 = pos[c.id]
 	for sp in rows[1]:
 		if sp != c:
@@ -139,6 +135,18 @@ func refocus(id: String) -> void:
 	_canvas.position = Vector2(VIEW.size.x * 0.5 - (me.x + NODE.x * 0.5), 0)
 	_clamp()
 	_render_info()
+
+## "父母未录" / "尚无子女": one horizontal line centred over the empty row (it used to have no
+## width, so autowrap stacked it one glyph per line).
+func _gap_label(text: String, w: float, y: float) -> Label:
+	var g := UIKit.body_label(text, UIKit.TEXT_FAINT, 12)
+	g.name = "GapLabel"
+	g.autowrap_mode = TextServer.AUTOWRAP_OFF
+	g.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	g.position = Vector2(0, y)
+	g.size = Vector2(w, 32)
+	g.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return g
 
 func _line(pts: Array, col: Color) -> void:
 	var l := Line2D.new()
@@ -163,21 +171,22 @@ func _node(c: CKCharacter, at: Vector2, is_focus: bool) -> Button:
 	b.add_theme_stylebox_override("normal", UIKit.flat_box(bg, bd, 8, 2 if is_focus else 1))
 	b.add_theme_stylebox_override("hover", UIKit.flat_box(Color(0.07, 0.09, 0.12, 0.95), Color(UIKit.ACCENT, 0.45), 8))
 	b.add_theme_stylebox_override("focus", UIKit._focus_ring(UIKit.FOCUS_RING, 10))
-	var por := CKLineageInfo.portrait_rect(c, Vector2(84, 96))
-	por.position = Vector2(24, 8)
+	var mob := DeviceProfile.is_mobile()
+	var por := CKLineageInfo.portrait_rect(c, Vector2(66, 76) if mob else Vector2(84, 96))
+	por.position = Vector2(33, 6) if mob else Vector2(24, 8)
 	b.add_child(por)
 	var nm := UIKit.body_label(c.name, UIKit.TEXT if c.alive else UIKit.TEXT_FAINT, 13)
 	nm.autowrap_mode = TextServer.AUTOWRAP_OFF
 	nm.clip_text = true
 	nm.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	nm.position = Vector2(4, 108)
-	nm.size = Vector2(NODE.x - 8, 18)
+	nm.position = Vector2(4, 84 if mob else 108)
+	nm.size = Vector2(NODE.x - 8, 30 if mob else 18)
 	nm.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(nm)
 	var sub := UIKit.body_label((Locale.t("gen2_21") % c.age) if c.alive else Locale.t("gen2_22"), UIKit.OK if c.alive else UIKit.TEXT_FAINT, 11)
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	sub.position = Vector2(4, 128)
-	sub.size = Vector2(NODE.x - 8, 16)
+	sub.position = Vector2(4, 116 if mob else 128)
+	sub.size = Vector2(NODE.x - 8, 30 if mob else 16)
 	sub.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(sub)
 	b.pressed.connect(func():
@@ -193,6 +202,14 @@ func select(c: CKCharacter) -> void:
 
 func _render_info() -> void:
 	var can_refocus := _selected != null and str(_selected.id) != focus_id
+	if DeviceProfile.is_mobile():
+		var vw := maxf(get_viewport().get_visible_rect().size.x, 1280.0)
+		var x0 := VIEW.end.x + 16.0
+		var rect := Rect2(x0, VIEW.position.y + 24.0, maxf(380.0, vw - x0 - 24.0), VIEW.size.y - 24.0)
+		CKLineageInfo.render_mobile(_info, _selected, Locale.t("gen2_23") if can_refocus else "", func():
+			Sfx.click()
+			refocus(str(_selected.id)), rect)
+		return
 	CKLineageInfo.render(_info, _selected, Locale.t("gen2_23") if can_refocus else "", func():
 		Sfx.click()
 		refocus(str(_selected.id)))

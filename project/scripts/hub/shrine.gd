@@ -5,48 +5,67 @@ extends Control
 
 var _msg: Label
 var _heal_btn: Button
+var _mob := false
+var _cw := 388.0
+var _ch := 300.0
+var _th := 90.0
+
+## Desktop keeps the 1280 grid. Phone (22px type, 76px buttons): cards share the full width and grow.
+func _geo() -> void:
+	_mob = DeviceProfile.is_mobile()
+	if not _mob:
+		return
+	set_meta("ck_page_kit", false)  # this page spans the full phone width itself
+	var w := maxf(get_viewport().get_visible_rect().size.x, 1280.0)
+	_cw = floorf((w - 84.0 - 32.0) / 3.0)
+	_ch = 320.0
+	_th = 110.0
 
 func _ready() -> void:
 	var lv := GameState.building_level("shrine")
 	CKPageKit.shell(self, Locale.t("lb_shrine_ctx"), "SANCTUARY", Locale.t("lb_shrine_title"), Locale.t("lb_shrine_desc"))
 	var hurt := _hurt()
-	var heal := CKPageKit.card(self, Rect2(42, CKPageKit.TOP + 8, 388, 300), "HealCard", true)
+	_geo()
+	var heal := CKPageKit.card(self, Rect2(42, CKPageKit.TOP + 8, _cw, _ch), "HealCard", true)
 	CKPageKit.card_head(heal, Locale.t("lb_shrine_heal"), "HEALING")
 	CKPageKit.stat(heal, Vector2(18, 64), Locale.t("lb_shrine_hurt"), Locale.t("lb_people", [hurt.size()]), UIKit.DANGER if not hurt.is_empty() else UIKit.OK)
-	CKPageKit.stat(heal, Vector2(200, 64), Locale.t("lb_shrine_cost"), Locale.t("lb_shrine_free"), UIKit.OK)
+	CKPageKit.stat(heal, Vector2(_cw * 0.5, 64), Locale.t("lb_shrine_cost"), Locale.t("lb_shrine_free"), UIKit.OK)
 	var names := CKPageKit.text(_hurt_text(hurt), UIKit.TEXT_DIM, 13, 352)
 	names.name = "HurtList"
-	names.position = Vector2(18, 124)
-	names.size = Vector2(352, 90)
+	names.position = Vector2(18, 112 if _mob else 124)
+	names.size = Vector2(_cw - 36, _th)
 	heal.add_child(names)
 	_heal_btn = CKPageKit.button(Locale.t("lb_shrine_heal_go"), true, 352)
 	_heal_btn.name = "HealButton"
-	_heal_btn.position = Vector2(18, 232)
+	_heal_btn.position = Vector2(18, _ch - 20 - (MobilePage.HIT if _mob else CKPageKit.HIT))
+	_heal_btn.size = Vector2(_cw - 36, MobilePage.HIT if _mob else _heal_btn.size.y)
 	CKPageKit.lock(_heal_btn, "" if not hurt.is_empty() else Locale.t("lb_shrine_heal_none"))
 	_heal_btn.pressed.connect(_heal)
 	heal.add_child(_heal_btn)
-	var blood := CKPageKit.card(self, Rect2(446, CKPageKit.TOP + 8, 388, 300), "BloodCard")
+	var blood := CKPageKit.card(self, Rect2(42 + (_cw + 16) * 1, CKPageKit.TOP + 8, _cw, _ch), "BloodCard")
 	CKPageKit.card_head(blood, Locale.t("lb_shrine_blood"), "BLOOD TEST")
 	CKPageKit.stat(blood, Vector2(18, 64), Locale.t("lb_shrine_cost"), Locale.t("lb_shrine_per_head", [CKBloodline.verify_cost(lv)]), UIKit.ACCENT)
 	var bt := CKPageKit.text(Locale.t("lb_shrine_blood_body"), UIKit.TEXT_DIM, 13, 352)
-	bt.position = Vector2(18, 124)
-	bt.size = Vector2(352, 90)
+	bt.position = Vector2(18, 112 if _mob else 124)
+	bt.size = Vector2(_cw - 36, _th)
 	blood.add_child(bt)
 	var vb := CKPageKit.button(Locale.t("lb_shrine_blood_go"), false, 352)
 	vb.name = "VerifyBlood"
-	vb.position = Vector2(18, 232)
+	vb.position = Vector2(18, _ch - 20 - (MobilePage.HIT if _mob else CKPageKit.HIT))
+	vb.size = Vector2(_cw - 36, MobilePage.HIT if _mob else vb.size.y)
 	vb.pressed.connect(func(): Sfx.click(); CKNav.go("res://scenes/hub/blood_test.tscn"))
 	blood.add_child(vb)
-	var fix := CKPageKit.card(self, Rect2(850, CKPageKit.TOP + 8, 388, 300), "RestoreCard")
+	var fix := CKPageKit.card(self, Rect2(42 + (_cw + 16) * 2, CKPageKit.TOP + 8, _cw, _ch), "RestoreCard")
 	CKPageKit.card_head(fix, Locale.t("lb_shrine_fix"), "RESTORATION")
 	CKPageKit.stat(fix, Vector2(18, 64), Locale.t("lb_shrine_level"), "LV %d / 3" % lv, UIKit.ACCENT)
 	var ft := CKPageKit.text(Locale.t("lb_shrine_fix_max") if lv >= 3 else Locale.t("lb_shrine_fix_body"), UIKit.TEXT_DIM, 13, 352)
-	ft.position = Vector2(18, 124)
-	ft.size = Vector2(352, 90)
+	ft.position = Vector2(18, 112 if _mob else 124)
+	ft.size = Vector2(_cw - 36, _th)
 	fix.add_child(ft)
 	var wb := CKPageKit.button(Locale.t("lb_shrine_fix_go"), false, 352)
 	wb.name = "GoWorks"
-	wb.position = Vector2(18, 232)
+	wb.position = Vector2(18, _ch - 20 - (MobilePage.HIT if _mob else CKPageKit.HIT))
+	wb.size = Vector2(_cw - 36, MobilePage.HIT if _mob else wb.size.y)
 	CKPageKit.lock(wb, Locale.t("lb_shrine_fix_max_short") if lv >= 3 else "")
 	wb.pressed.connect(func(): Sfx.click(); CKNav.go("res://scenes/hub/works.tscn"))
 	fix.add_child(wb)
@@ -68,7 +87,9 @@ func _hurt_text(hurt: Array) -> String:
 	return "　".join(bits)
 
 func _festivals() -> void:
-	var card := CKPageKit.card(self, Rect2(42, CKPageKit.TOP + 322, 1196, 214), "FestivalCard")
+	var full := _cw * 3 + 32
+	var fy := CKPageKit.TOP + 8 + _ch + 14
+	var card := CKPageKit.card(self, Rect2(42, fy, full, maxf(214.0, 712.0 - fy) if _mob else 214.0), "FestivalCard")
 	var rows: Array = CKFestivals.rows().duplicate()
 	rows.sort_custom(func(a, b): return int(a.get("month", 0)) < int(b.get("month", 0)))
 	var m := Calendar.month
@@ -94,7 +115,8 @@ func _festivals() -> void:
 		var on := int(r.get("month", 0)) == m
 		var col: Color = UIKit.OK if on else (UIKit.ACCENT if r == next else UIKit.TEXT_FAINT)
 		var p := PanelContainer.new()
-		p.custom_minimum_size = Vector2(224, 140)
+		var pw := floorf((full - 32 - 40) / 5.0) if _mob else 224.0
+		p.custom_minimum_size = Vector2(pw, 140)
 		var sb := UIKit.flat_box(Color(col, 0.08), Color(col, 0.5), 10, 2 if on else 1)
 		sb.content_margin_left = 12
 		sb.content_margin_right = 12
@@ -105,7 +127,7 @@ func _festivals() -> void:
 		p.add_child(v)
 		v.add_child(UIKit.mono(Locale.t("lb_month", [int(r.get("month", 0))]), 12, col, false))
 		v.add_child(UIKit.title_label(Locale.t(str(r.get("name_key", ""))), 16, UIKit.TEXT))
-		v.add_child(CKPageKit.text(Locale.t(str(r.get("blurb_key", ""))), UIKit.TEXT_DIM, 12, 198))
+		v.add_child(CKPageKit.text(Locale.t(str(r.get("blurb_key", ""))), UIKit.TEXT_DIM, 12, pw - 26))
 		h.add_child(p)
 
 func _heal() -> void:
