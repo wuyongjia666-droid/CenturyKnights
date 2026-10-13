@@ -8,8 +8,9 @@ log="/tmp/ck_${name}.log"
 export XDG_DATA_HOME="/tmp/ck_xdg/${name}"
 mkdir -p "$XDG_DATA_HOME"
 start=$SECONDS
-godot --headless --path "$project" "$flag" "$res" >"$log" 2>&1
+timeout --kill-after=30 "${CK_TEST_TIMEOUT:-600}" godot --headless --path "$project" "$flag" "$res" >"$log" 2>&1
 code=$?
+[[ $code -eq 124 || $code -eq 137 ]] && echo "TIMEOUT after ${CK_TEST_TIMEOUT:-600}s (script failed to load or never quit?)" >>"$log"
 ok=1
 if [[ $code -ne 0 ]]; then
 	ok=0
