@@ -105,3 +105,70 @@ static func spacer(v: Control) -> void:
 	var sp := Control.new()
 	sp.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	v.add_child(sp)
+
+## Centred phone sheet over a dim layer: returns [overlay, content VBox]. Width ~62% of the
+## screen, height follows content up to the screen minus margins. Text 22-30px, buttons 76px.
+static func sheet(host: Control, nm: String, title: String, z: int = 40, title_col: Color = UIKit.TEXT) -> Array:
+	var w := width(host)
+	var h := host.size.y if host.size.y > 400.0 else 720.0
+	var overlay := ColorRect.new()
+	overlay.name = nm
+	overlay.color = Color(0.02, 0.03, 0.05, 0.72)
+	overlay.position = Vector2.ZERO
+	overlay.size = Vector2(w, h)
+	overlay.z_index = z
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	host.add_child(overlay)
+	var center := CenterContainer.new()
+	center.size = Vector2(w, h)
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.add_child(center)
+	var p := PanelContainer.new()
+	p.name = "SheetCard"
+	p.custom_minimum_size = Vector2(clampf(w * 0.62, 760.0, 1040.0), 0)
+	var sb := UIKit.flat_box(Color(0.06, 0.075, 0.10, 0.98), Color(UIKit.ACCENT, 0.55), 14, 2)
+	for side in ["left", "right"]:
+		sb.set("content_margin_" + side, 28)
+	for side in ["top", "bottom"]:
+		sb.set("content_margin_" + side, 22)
+	p.add_theme_stylebox_override("panel", sb)
+	center.add_child(p)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 14)
+	p.add_child(v)
+	var t := label(title, title_col, 30, true)
+	t.add_theme_font_override("font", UIKit.font("bold"))
+	v.add_child(t)
+	v.set_meta("max_h", h - 60.0)
+	return [overlay, v]
+
+## Scroll area inside a sheet that grows with its content up to the space left on screen.
+static func sheet_scroll(v: VBoxContainer, reserve: float) -> VBoxContainer:
+	var sc := ScrollContainer.new()
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	v.add_child(sc)
+	var list := VBoxContainer.new()
+	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	list.add_theme_constant_override("separation", 10)
+	sc.add_child(list)
+	var cap := maxf(160.0, float(v.get_meta("max_h", 660.0)) - reserve)
+	list.minimum_size_changed.connect(func():
+		sc.custom_minimum_size.y = minf(cap, list.get_combined_minimum_size().y))
+	sc.custom_minimum_size.y = cap * 0.5
+	return list
+
+## Raise every Label/Button/RichText under root to phone sizes (22px text, 76px buttons).
+static func upsize(root: Node, fs: int = FONT) -> void:
+	for n in root.find_children("*", "Control", true, false):
+		if n is Button:
+			var b := n as Button
+			b.add_theme_font_size_override("font_size", maxi(fs, b.get_theme_font_size("font_size")))
+			b.custom_minimum_size.y = maxf(HIT, b.custom_minimum_size.y)
+			b.custom_minimum_size.x = maxf(b.custom_minimum_size.x, 120.0)
+		elif n is Label:
+			var l := n as Label
+			l.add_theme_font_size_override("font_size", maxi(fs, l.get_theme_font_size("font_size")))
+		elif n is RichTextLabel:
+			var r := n as RichTextLabel
+			r.add_theme_font_size_override("normal_font_size", maxi(fs, r.get_theme_font_size("normal_font_size")))
+			r.add_theme_font_size_override("bold_font_size", maxi(fs + 4, r.get_theme_font_size("bold_font_size")))

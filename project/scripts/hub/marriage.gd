@@ -601,21 +601,32 @@ func _mobile_relayout() -> bool:
 		(b as Control).add_theme_font_size_override("font_size", MobilePage.FONT)
 	var top := MobilePage.TOP + 4.0 + MobilePage.HIT + 10.0
 	var stack := MobileReflow.column(self, "MobileBody", Rect2(16, top, w - 32.0, jy - top - 10.0))
+	# One row at 720 logical height: three house/harmony cards + a rites-over-odds column, so the
+	# combat forecast sits above the action row without scrolling.
+	var mrow := HBoxContainer.new()
+	mrow.name = "MobileRow"
+	mrow.add_theme_constant_override("separation", 10)
+	stack.add_child(mrow)
 	var cards := HBoxContainer.new()
 	cards.name = "MobileCards"
 	cards.add_theme_constant_override("separation", 10)
-	stack.add_child(cards)
+	cards.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	mrow.add_child(cards)
 	remove_child(_cards)
 	_cards.queue_free()
 	_cards = cards
-	_m_card_w = (w - 32.0 - 24.0 - 20.0) / 3.0
-	var boards := HBoxContainer.new()
+	var inner := w - 32.0 - 24.0
+	var side_w := clampf(inner * 0.29, 340.0, 520.0)
+	_m_card_w = (inner - side_w - 30.0) / 3.0
+	var boards := VBoxContainer.new()
+	boards.name = "MobileBoards"
 	boards.add_theme_constant_override("separation", 10)
-	stack.add_child(boards)
+	boards.custom_minimum_size.x = side_w
+	mrow.add_child(boards)
 	for bd in [_rite_board, _punnett]:
 		(bd as Control).reparent(boards, false)
 		(bd as Control).size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		(bd as Control).size = Vector2((w - 32.0 - 24.0 - 10.0) * 0.5, 0)
+		(bd as Control).size = Vector2(side_w, 0)
 	if _wed_line:
 		_wed_line.reparent(stack, false)
 		_wed_line.add_theme_font_size_override("font_size", MobilePage.FONT)
@@ -623,9 +634,26 @@ func _mobile_relayout() -> bool:
 	_rect_harmony = Rect2(0, 0, _m_card_w, 300)
 	_rect_spouse = Rect2(0, 0, _m_card_w, 300)
 	_narrow = true
+	_m_vow_panel(w)
 	if _selected != null:
 		_render_cards()
 	return true
+
+
+## Phone: the vow ritual card fills most of the screen with 24px text and 76px choices.
+func _m_vow_panel(w: float) -> void:
+	var vp := _vow_body.get_parent() as Control
+	vp.position = Vector2(maxf(40.0, (w - 1100.0) * 0.5), 40)
+	vp.size = Vector2(minf(1100.0, w - 80.0), 640)
+	for ch in vp.get_children():
+		if ch is Label:
+			(ch as Label).add_theme_font_size_override("font_size", MobilePage.FONT)
+	_vow_body.position = Vector2(32, 64)
+	_vow_body.size = Vector2(vp.size.x - 64.0, 640.0 - 64.0 - MobilePage.HIT - 48.0)
+	_vow_body.add_theme_font_size_override("normal_font_size", 24)
+	_vow_body.add_theme_font_size_override("bold_font_size", 30)
+	_vow_actions.position = Vector2(32, 640.0 - MobilePage.HIT - 28.0)
+	_vow_actions.add_theme_constant_override("separation", 16)
 
 
 func _mobile_after_render() -> void:
@@ -835,6 +863,16 @@ func show_details() -> void:
 	var old := find_child("MarriageDetails", false, false)
 	if old:
 		old.queue_free()
+	if _mob:
+		var sh := MobilePage.sheet(self, "MarriageDetails", Locale.t("wsc_mr_detail"), 40, UIKit.ACCENT)
+		var sv: VBoxContainer = sh[1]
+		var list := MobilePage.sheet_scroll(sv, 200.0)
+		var line := str(CKFamilyState.combat_expectation(GameState.get_leader(), _selected).get("line", ""))
+		list.add_child(MobilePage.label(_full_terms + "\n\n" + line, UIKit.TEXT, 24, true))
+		var okb := MobilePage.button(Locale.t("wsc_t_lost_ok"), true, (sh[0] as Node).queue_free)
+		sv.add_child(okb)
+		okb.call_deferred("grab_focus")
+		return
 	var overlay := ColorRect.new()
 	overlay.name = "MarriageDetails"
 	overlay.color = Color(0, 0, 0, 0.6)
@@ -948,6 +986,9 @@ func _show_vow() -> void:
 
 func _vow_btn(text: String, cb: Callable) -> void:
 	var b: Button = UIKit.ghost_button(text, 132, 40) if text == "取消" else UIKit.make_accent_button(text, 150)
+	if _mob:
+		b.custom_minimum_size = Vector2(220, MobilePage.HIT)
+		b.add_theme_font_size_override("font_size", MobilePage.FONT)
 	b.pressed.connect(cb)
 	_vow_actions.add_child(b)
 	if _vow_actions.get_child_count() == 1:
@@ -1105,10 +1146,10 @@ func _m_house_card(c: CKCharacter, side_tag: String, col: Color) -> Control:
 	if c == null:
 		return pv[0]
 	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 12)
+	row.add_theme_constant_override("separation", 10)
 	v.add_child(row)
 	var pr := UIKit.make_portrait_rect(c, 132)
-	pr.custom_minimum_size = Vector2(112, 140)
+	pr.custom_minimum_size = Vector2(84, 112)
 	pr.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	row.add_child(pr)
 	var info := VBoxContainer.new()
