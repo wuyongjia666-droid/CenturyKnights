@@ -1215,7 +1215,7 @@ func _tab_sundry() -> void:
 		var info := VBoxContainer.new()
 		info.custom_minimum_size = Vector2(480, 0)
 		info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-				var offer_line := Locale.t("sundry_offer_line") % [str(offer.get("name", iid)), int(offer.get("price", 0)), CKSundries.owned(iid), CKSundries.max_stack()]
+		var offer_line := Locale.t("sundry_offer_line") % [str(offer.get("name", iid)), int(offer.get("price", 0)), CKSundries.owned(iid), CKSundries.max_stack()]
 		info.add_child(_line(offer_line, UIKit.TEXT, 14, 480))
 		info.add_child(_line(str(offer.get("desc", "")), UIKit.TEXT_DIM, 12, 480))
 		row.add_child(info)
