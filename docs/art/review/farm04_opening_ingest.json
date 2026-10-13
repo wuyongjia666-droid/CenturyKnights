@@ -1,0 +1,966 @@
+{
+ "batch": "farm04-opening-ingest",
+ "gate": {
+  "checked": 85,
+  "pass": 68,
+  "reject": 17,
+  "by_role": {
+   "speaker": 25,
+   "cg": 6,
+   "expression": 39,
+   "story_bg": 15
+  },
+  "by_role_pass": {
+   "speaker": 21,
+   "cg": 4,
+   "expression": 33,
+   "story_bg": 10
+  },
+  "fail_reasons": {
+   "style:saturation": 14,
+   "anatomy:multi_person": 3
+  },
+  "elapsed_s": 34.1
+ },
+ "ingested": 68,
+ "missing": 0,
+ "rejects": [
+  {
+   "id": "v92_speaker_newcomer",
+   "role": "speaker",
+   "fails": [
+    "style:saturation"
+   ]
+  },
+  {
+   "id": "v92_speaker_spring_envoy",
+   "role": "speaker",
+   "fails": [
+    "anatomy:multi_person"
+   ]
+  },
+  {
+   "id": "v92_cg_cg3_boy_donkey",
+   "role": "cg",
+   "fails": [
+    "style:saturation"
+   ]
+  },
+  {
+   "id": "v92_cg_cg5_new_banner_wall",
+   "role": "cg",
+   "fails": [
+    "style:saturation"
+   ]
+  },
+  {
+   "id": "v92_expr_c01_joy_r2",
+   "role": "expression",
+   "fails": [
+    "style:saturation"
+   ]
+  },
+  {
+   "id": "v92_expr_c01_surprise_r2",
+   "role": "expression",
+   "fails": [
+    "style:saturation"
+   ]
+  },
+  {
+   "id": "v92_expr_s06_anger",
+   "role": "expression",
+   "fails": [
+    "style:saturation"
+   ]
+  },
+  {
+   "id": "v92_expr_s06_joy",
+   "role": "expression",
+   "fails": [
+    "style:saturation"
+   ]
+  },
+  {
+   "id": "v92_expr_s06_sorrow",
+   "role": "expression",
+   "fails": [
+    "style:saturation"
+   ]
+  },
+  {
+   "id": "v92_expr_s06_surprise",
+   "role": "expression",
+   "fails": [
+    "style:saturation"
+   ]
+  },
+  {
+   "id": "v92_leader_m3",
+   "role": "speaker",
+   "fails": [
+    "anatomy:multi_person"
+   ]
+  },
+  {
+   "id": "v92_speaker_qiaoniang_rake",
+   "role": "speaker",
+   "fails": [
+    "anatomy:multi_person"
+   ]
+  },
+  {
+   "id": "v92_story_bg_birth_corridor",
+   "role": "story_bg",
+   "fails": [
+    "style:saturation"
+   ]
+  },
+  {
+   "id": "v92_story_bg_bridge_night_r2",
+   "role": "story_bg",
+   "fails": [
+    "style:saturation"
+   ]
+  },
+  {
+   "id": "v92_story_bg_hall_feast_dark_r2",
+   "role": "story_bg",
+   "fails": [
+    "style:saturation"
+   ]
+  },
+  {
+   "id": "v92_story_bg_tavern_r2",
+   "role": "story_bg",
+   "fails": [
+    "style:saturation"
+   ]
+  },
+  {
+   "id": "v92_story_bg_yard_night_r2",
+   "role": "story_bg",
+   "fails": [
+    "style:saturation"
+   ]
+  }
+ ],
+ "plates": [
+  {
+   "id": "v92_cg_cg1_ledger_strike",
+   "status": "pass",
+   "src": "v92_cg_cg1_ledger_strike.png",
+   "webp": "project/assets/art/story_cg/cg1_ledger_strike.webp",
+   "bytes": 229100,
+   "size": [
+    1280,
+    768
+   ],
+   "role": "story_bg"
+  },
+  {
+   "id": "v92_cg_cg2_banner_charcoal",
+   "status": "pass",
+   "src": "v92_cg_cg2_banner_charcoal.png",
+   "webp": "project/assets/art/story_cg/cg2_banner_charcoal.webp",
+   "bytes": 285632,
+   "size": [
+    1280,
+    768
+   ],
+   "role": "story_bg"
+  },
+  {
+   "id": "v92_cg_cg4_tiny_shoes",
+   "status": "pass",
+   "src": "v92_cg_cg4_tiny_shoes.png",
+   "webp": "project/assets/art/story_cg/cg4_tiny_shoes.webp",
+   "bytes": 258372,
+   "size": [
+    1280,
+    768
+   ],
+   "role": "story_bg"
+  },
+  {
+   "id": "v92_cg_cg6_burnt_tokens",
+   "status": "pass",
+   "src": "v92_cg_cg6_burnt_tokens.png",
+   "webp": "project/assets/art/story_cg/cg6_burnt_tokens.webp",
+   "bytes": 198788,
+   "size": [
+    1280,
+    768
+   ],
+   "role": "story_bg"
+  },
+  {
+   "id": "v92_expr_c01_anger_r2",
+   "status": "pass",
+   "src": "v92_expr_c01_anger_r2.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_c01_anger.webp",
+   "bytes": 115612,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_c01_neutral_r2",
+   "status": "pass",
+   "src": "v92_expr_c01_neutral_r2.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_c01_neutral.webp",
+   "bytes": 106928,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_c01_sorrow_r2",
+   "status": "pass",
+   "src": "v92_expr_c01_sorrow_r2.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_c01_sorrow.webp",
+   "bytes": 108582,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s01_anger",
+   "status": "pass",
+   "src": "v92_expr_s01_anger.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s01_anger.webp",
+   "bytes": 125226,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s01_joy",
+   "status": "pass",
+   "src": "v92_expr_s01_joy.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s01_joy.webp",
+   "bytes": 153522,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s01_neutral",
+   "status": "pass",
+   "src": "v92_expr_s01_neutral.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s01_neutral.webp",
+   "bytes": 144272,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s01_sorrow",
+   "status": "pass",
+   "src": "v92_expr_s01_sorrow.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s01_sorrow.webp",
+   "bytes": 155548,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s01_surprise",
+   "status": "pass",
+   "src": "v92_expr_s01_surprise.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s01_surprise.webp",
+   "bytes": 144868,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s02_anger",
+   "status": "pass",
+   "src": "v92_expr_s02_anger.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s02_anger.webp",
+   "bytes": 152674,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s02_joy",
+   "status": "pass",
+   "src": "v92_expr_s02_joy.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s02_joy.webp",
+   "bytes": 117398,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s02_neutral",
+   "status": "pass",
+   "src": "v92_expr_s02_neutral.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s02_neutral.webp",
+   "bytes": 117572,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s02_sorrow",
+   "status": "pass",
+   "src": "v92_expr_s02_sorrow.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s02_sorrow.webp",
+   "bytes": 141728,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s02_surprise",
+   "status": "pass",
+   "src": "v92_expr_s02_surprise.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s02_surprise.webp",
+   "bytes": 135476,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s03_anger",
+   "status": "pass",
+   "src": "v92_expr_s03_anger.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s03_anger.webp",
+   "bytes": 151500,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s03_joy",
+   "status": "pass",
+   "src": "v92_expr_s03_joy.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s03_joy.webp",
+   "bytes": 160746,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s03_neutral",
+   "status": "pass",
+   "src": "v92_expr_s03_neutral.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s03_neutral.webp",
+   "bytes": 176798,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s03_sorrow",
+   "status": "pass",
+   "src": "v92_expr_s03_sorrow.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s03_sorrow.webp",
+   "bytes": 164330,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s03_surprise",
+   "status": "pass",
+   "src": "v92_expr_s03_surprise.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s03_surprise.webp",
+   "bytes": 153372,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s04_anger",
+   "status": "pass",
+   "src": "v92_expr_s04_anger.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s04_anger.webp",
+   "bytes": 87474,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s04_joy",
+   "status": "pass",
+   "src": "v92_expr_s04_joy.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s04_joy.webp",
+   "bytes": 97790,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s04_sorrow",
+   "status": "pass",
+   "src": "v92_expr_s04_sorrow.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s04_sorrow.webp",
+   "bytes": 98670,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s04_surprise",
+   "status": "pass",
+   "src": "v92_expr_s04_surprise.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s04_surprise.webp",
+   "bytes": 91352,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s05_anger",
+   "status": "pass",
+   "src": "v92_expr_s05_anger.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s05_anger.webp",
+   "bytes": 105888,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s05_joy",
+   "status": "pass",
+   "src": "v92_expr_s05_joy.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s05_joy.webp",
+   "bytes": 103726,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s05_sorrow",
+   "status": "pass",
+   "src": "v92_expr_s05_sorrow.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s05_sorrow.webp",
+   "bytes": 114398,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s05_surprise",
+   "status": "pass",
+   "src": "v92_expr_s05_surprise.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s05_surprise.webp",
+   "bytes": 109248,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s07_anger",
+   "status": "pass",
+   "src": "v92_expr_s07_anger.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s07_anger.webp",
+   "bytes": 124322,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s07_joy",
+   "status": "pass",
+   "src": "v92_expr_s07_joy.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s07_joy.webp",
+   "bytes": 111848,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s07_sorrow",
+   "status": "pass",
+   "src": "v92_expr_s07_sorrow.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s07_sorrow.webp",
+   "bytes": 86134,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s07_surprise",
+   "status": "pass",
+   "src": "v92_expr_s07_surprise.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s07_surprise.webp",
+   "bytes": 100130,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s15_joy",
+   "status": "pass",
+   "src": "v92_expr_s15_joy.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s15_joy.webp",
+   "bytes": 96086,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s15_neutral",
+   "status": "pass",
+   "src": "v92_expr_s15_neutral.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s15_neutral.webp",
+   "bytes": 117014,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_expr_s15_surprise",
+   "status": "pass",
+   "src": "v92_expr_s15_surprise.png",
+   "webp": "project/assets/art/portraits/expressions/v92_expr_s15_surprise.webp",
+   "bytes": 102534,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "expression"
+  },
+  {
+   "id": "v92_leader_f1",
+   "status": "pass",
+   "src": "v92_leader_f1.png",
+   "webp": "project/assets/art/portraits/speakers/leader_f1.webp",
+   "bytes": 113414,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "speaker"
+  },
+  {
+   "id": "v92_leader_f2",
+   "status": "pass",
+   "src": "v92_leader_f2.png",
+   "webp": "project/assets/art/portraits/speakers/leader_f2.webp",
+   "bytes": 138634,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "speaker"
+  },
+  {
+   "id": "v92_leader_f3",
+   "status": "pass",
+   "src": "v92_leader_f3.png",
+   "webp": "project/assets/art/portraits/speakers/leader_f3.webp",
+   "bytes": 139844,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "speaker"
+  },
+  {
+   "id": "v92_leader_m1",
+   "status": "pass",
+   "src": "v92_leader_m1.png",
+   "webp": "project/assets/art/portraits/speakers/leader_m1.webp",
+   "bytes": 108730,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "speaker"
+  },
+  {
+   "id": "v92_leader_m2",
+   "status": "pass",
+   "src": "v92_leader_m2.png",
+   "webp": "project/assets/art/portraits/speakers/leader_m2.webp",
+   "bytes": 149878,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "speaker"
+  },
+  {
+   "id": "v92_speaker_ally_kin",
+   "status": "pass",
+   "src": "v92_speaker_ally_kin.png",
+   "webp": "project/assets/art/portraits/speakers/ally_kin.webp",
+   "bytes": 137554,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "speaker"
+  },
+  {
+   "id": "v92_speaker_barkeep",
+   "status": "pass",
+   "src": "v92_speaker_barkeep.png",
+   "webp": "project/assets/art/portraits/speakers/barkeep.webp",
+   "bytes": 108356,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "speaker"
+  },
+  {
+   "id": "v92_speaker_batou",
+   "status": "pass",
+   "src": "v92_speaker_batou.png",
+   "webp": "project/assets/art/portraits/speakers/batou.webp",
+   "bytes": 118506,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "speaker"
+  },
+  {
+   "id": "v92_speaker_hengzhou",
+   "status": "pass",
+   "src": "v92_speaker_hengzhou.png",
+   "webp": "project/assets/art/portraits/speakers/hengzhou.webp",
+   "bytes": 135988,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "speaker"
+  },
+  {
+   "id": "v92_speaker_jingbo",
+   "status": "pass",
+   "src": "v92_speaker_jingbo.png",
+   "webp": "project/assets/art/portraits/speakers/jingbo.webp",
+   "bytes": 96538,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "speaker"
+  },
+  {
+   "id": "v92_speaker_midwife",
+   "status": "pass",
+   "src": "v92_speaker_midwife.png",
+   "webp": "project/assets/art/portraits/speakers/midwife.webp",
+   "bytes": 109720,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "speaker"
+  },
+  {
+   "id": "v92_speaker_old_standard",
+   "status": "pass",
+   "src": "v92_speaker_old_standard.png",
+   "webp": "project/assets/art/portraits/speakers/old_standard.webp",
+   "bytes": 136818,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "speaker"
+  },
+  {
+   "id": "v92_speaker_qiaoniang",
+   "status": "pass",
+   "src": "v92_speaker_qiaoniang.png",
+   "webp": "project/assets/art/portraits/speakers/qiaoniang.webp",
+   "bytes": 108604,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "speaker"
+  },
+  {
+   "id": "v92_speaker_qiaoniang_lease",
+   "status": "pass",
+   "src": "v92_speaker_qiaoniang_lease.png",
+   "webp": "project/assets/art/portraits/speakers/qiaoniang_lease.webp",
+   "bytes": 151206,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "speaker"
+  },
+  {
+   "id": "v92_speaker_qiaoniang_needle",
+   "status": "pass",
+   "src": "v92_speaker_qiaoniang_needle.png",
+   "webp": "project/assets/art/portraits/speakers/qiaoniang_needle.webp",
+   "bytes": 156490,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "speaker"
+  },
+  {
+   "id": "v92_speaker_qiaoniang_shoes",
+   "status": "pass",
+   "src": "v92_speaker_qiaoniang_shoes.png",
+   "webp": "project/assets/art/portraits/speakers/qiaoniang_shoes.webp",
+   "bytes": 155106,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "speaker"
+  },
+  {
+   "id": "v92_speaker_qinghe",
+   "status": "pass",
+   "src": "v92_speaker_qinghe.png",
+   "webp": "project/assets/art/portraits/speakers/qinghe.webp",
+   "bytes": 110600,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "speaker"
+  },
+  {
+   "id": "v92_speaker_scout",
+   "status": "pass",
+   "src": "v92_speaker_scout.png",
+   "webp": "project/assets/art/portraits/speakers/scout.webp",
+   "bytes": 125140,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "speaker"
+  },
+  {
+   "id": "v92_speaker_steward",
+   "status": "pass",
+   "src": "v92_speaker_steward.png",
+   "webp": "project/assets/art/portraits/speakers/steward.webp",
+   "bytes": 99698,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "speaker"
+  },
+  {
+   "id": "v92_speaker_survivor",
+   "status": "pass",
+   "src": "v92_speaker_survivor.png",
+   "webp": "project/assets/art/portraits/speakers/survivor.webp",
+   "bytes": 119216,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "speaker"
+  },
+  {
+   "id": "v92_speaker_wantan",
+   "status": "pass",
+   "src": "v92_speaker_wantan.png",
+   "webp": "project/assets/art/portraits/speakers/wantan.webp",
+   "bytes": 142668,
+   "size": [
+    768,
+    1024
+   ],
+   "role": "speaker"
+  },
+  {
+   "id": "v92_story_bg_bridge_lamp_night",
+   "status": "pass",
+   "src": "v92_story_bg_bridge_lamp_night.png",
+   "webp": "project/assets/art/story_bg/bridge_lamp_night.webp",
+   "bytes": 319294,
+   "size": [
+    1280,
+    768
+   ],
+   "role": "story_bg"
+  },
+  {
+   "id": "v92_story_bg_bridge_post_dusk",
+   "status": "pass",
+   "src": "v92_story_bg_bridge_post_dusk.png",
+   "webp": "project/assets/art/story_bg/bridge_post_dusk.webp",
+   "bytes": 292986,
+   "size": [
+    1280,
+    768
+   ],
+   "role": "story_bg"
+  },
+  {
+   "id": "v92_story_bg_ferry_dawn",
+   "status": "pass",
+   "src": "v92_story_bg_ferry_dawn.png",
+   "webp": "project/assets/art/story_bg/ferry_dawn.webp",
+   "bytes": 233046,
+   "size": [
+    1280,
+    768
+   ],
+   "role": "story_bg"
+  },
+  {
+   "id": "v92_story_bg_gatehouse_board",
+   "status": "pass",
+   "src": "v92_story_bg_gatehouse_board.png",
+   "webp": "project/assets/art/story_bg/gatehouse_board.webp",
+   "bytes": 282356,
+   "size": [
+    1280,
+    768
+   ],
+   "role": "story_bg"
+  },
+  {
+   "id": "v92_story_bg_hall_feast_bright_r2",
+   "status": "pass",
+   "src": "v92_story_bg_hall_feast_bright_r2.png",
+   "webp": "project/assets/art/story_bg/hall_feast_bright.webp",
+   "bytes": 301254,
+   "size": [
+    1280,
+    768
+   ],
+   "role": "story_bg"
+  },
+  {
+   "id": "v92_story_bg_north_bank_fog",
+   "status": "pass",
+   "src": "v92_story_bg_north_bank_fog.png",
+   "webp": "project/assets/art/story_bg/north_bank_fog.webp",
+   "bytes": 256208,
+   "size": [
+    1280,
+    768
+   ],
+   "role": "story_bg"
+  },
+  {
+   "id": "v92_story_bg_pass_day_r2",
+   "status": "pass",
+   "src": "v92_story_bg_pass_day_r2.png",
+   "webp": "project/assets/art/story_bg/pass_day.webp",
+   "bytes": 331418,
+   "size": [
+    1280,
+    768
+   ],
+   "role": "story_bg"
+  },
+  {
+   "id": "v92_story_bg_ridge_road",
+   "status": "pass",
+   "src": "v92_story_bg_ridge_road.png",
+   "webp": "project/assets/art/story_bg/ridge_road.webp",
+   "bytes": 222880,
+   "size": [
+    1280,
+    768
+   ],
+   "role": "story_bg"
+  },
+  {
+   "id": "v92_story_bg_slope_dusk",
+   "status": "pass",
+   "src": "v92_story_bg_slope_dusk.png",
+   "webp": "project/assets/art/story_bg/slope_dusk.webp",
+   "bytes": 350568,
+   "size": [
+    1280,
+    768
+   ],
+   "role": "story_bg"
+  },
+  {
+   "id": "v92_story_bg_slope_winter_r2",
+   "status": "pass",
+   "src": "v92_story_bg_slope_winter_r2.png",
+   "webp": "project/assets/art/story_bg/slope_winter.webp",
+   "bytes": 301378,
+   "size": [
+    1280,
+    768
+   ],
+   "role": "story_bg"
+  }
+ ]
+}
