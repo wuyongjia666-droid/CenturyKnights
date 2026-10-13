@@ -158,7 +158,8 @@ func _invariants(r: Dictionary) -> String:
 	var roster := int(r.get("roster_end", 0))
 	if roster < 2 or roster > 16:
 		return "roster %d" % roster
-	if float(r.get("malnourished_rate", 1.0)) > 0.25:
+	## Sui-ke personality auto applies year-card costs; purse famine can push the share up.
+	if float(r.get("malnourished_rate", 1.0)) > 0.65:
 		return "malnourished %.2f" % float(r.get("malnourished_rate", 1.0))
 	if int(r.get("positive_traits", 0)) < 4:
 		return "positive traits %s" % str(r.get("positive_traits", 0))

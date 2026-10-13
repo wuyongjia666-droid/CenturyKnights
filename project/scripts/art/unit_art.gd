@@ -486,8 +486,15 @@ static func speaker_silhouette(speaker: String, size: int = 120) -> Texture2D:
 	_cache[key] = tex
 	return tex
 
+## Opening review D-02: expression sets that no longer match the character's token (c01 灯影 was
+## painted silver-haired and masculine; her token and battle report are the black-haired woman).
+## Until the reshoot lands, these speakers use the same face as their token.
+const EXPR_RESHOOT := ["c01"]
+
 static func dialogue_portrait(speaker: String, emotion: String, who: CKCharacter, size: int = 120) -> Texture2D:
 	var slot := companion_slot(speaker)
+	if slot in EXPR_RESHOOT and who != null:
+		return portrait(who, size, CKArtPaths.TIER_MEDIUM)
 	if slot != "":
 		var path := expression_plate_path(slot, emotion)
 		if _art_exists(path):

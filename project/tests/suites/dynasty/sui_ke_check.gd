@@ -9,6 +9,7 @@ func _ready() -> void:
 	_yao_no_immunity(fails)
 	_yan_zhan(fails)
 	_deploy_cap(fails)
+	_auto_personality(fails)
 	if fails.is_empty():
 		print("SUI KE PASS")
 		get_tree().quit(0)
@@ -150,3 +151,121 @@ func _deploy_cap(fails: Array) -> void:
 	GameState.buildings["hall"] = 5
 	if GameState.max_deploy() != 6:
 		fails.append("h5")
+
+
+func _auto_personality(fails: Array) -> void:
+	## Bold scarred kid prefers riskier side; careful scholar prefers care; seed stable.
+	GameState.new_game("灰", "旗", "frost")
+	CKSuiKe.ensure()
+	GameState.house_mods["sui_inbox"] = []
+	GameState.house_mods["sui_pending"] = []
+	var bold := CKCharacter.new()
+	bold.id = "kid_bold"
+	bold.name = "莽"
+	bold.alive = true
+	bold.is_child = true
+	bold.age = 8
+	bold.birthday_month = Calendar.month
+	bold.traits = ["brave", "scarred"]
+	bold.apt_max = {"str": 20, "vit": 20, "skl": 20, "agi": 20, "per": 20, "wil": 20}
+	bold.stats = {"str": 14, "vit": 12, "skl": 6, "agi": 12, "per": 5, "wil": 5}
+	bold.blood_meta = {}
+	bold.parent_ids = [GameState.get_leader().id]
+	var care := CKCharacter.new()
+	care.id = "kid_care"
+	care.name = "稳"
+	care.alive = true
+	care.is_child = true
+	care.age = 8
+	care.birthday_month = Calendar.month
+	care.traits = ["scholar", "keen_eye"]
+	care.apt_max = {"str": 20, "vit": 20, "skl": 20, "agi": 20, "per": 20, "wil": 20}
+	care.stats = {"str": 5, "vit": 6, "skl": 12, "agi": 5, "per": 14, "wil": 14}
+	care.blood_meta = {}
+	care.parent_ids = [GameState.get_leader().id]
+	GameState.characters[bold.id] = bold
+	GameState.characters[care.id] = care
+	GameState.lineage_path[bold.id] = "martial"
+	GameState.lineage_path[care.id] = "scholar"
+	# Synthetic catalog card: left = care/watch, right = scar risk
+	var card_l := {
+		"cid": bold.id, "band": "ill", "id": "ill_auto_test",
+		"title": "试咳", "body": "试。", "speaker": "旁白",
+		"options": [
+			{"id": "left", "label": "灶边养着", "trait": "", "mark": "watch", "stat": "per", "gain": 1, "care": true},
+			{"id": "right", "label": "硬扛", "trait": "scarred", "mark": "", "stat": "str", "gain": 1},
+		],
+	}
+	# Bold should pick right (scar already present — trait add may no-op, still ok)
+	var pick_b := CKSuiKe.pick_option_id(bold, card_l, 3)
+	if pick_b != "right":
+		fails.append("bold pick %s bias=%s" % [pick_b, CKSuiKe.personality_bias(bold)])
+	var pick_b2 := CKSuiKe.pick_option_id(bold, card_l, 3)
+	if pick_b2 != pick_b:
+		fails.append("bold pick unstable")
+	var card_c := card_l.duplicate(true)
+	card_c["cid"] = care.id
+	var pick_c := CKSuiKe.pick_option_id(care, card_c, 3)
+	if pick_c != "left":
+		fails.append("care pick %s bias=%s" % [pick_c, CKSuiKe.personality_bias(care)])
+	# Put a roster adult same node so care:true can resolve
+	var leader := GameState.get_leader()
+	leader.in_roster = true
+	leader.age = 30
+	# Fire bold card → inbox, no pending
+	GameState.house_mods["sui_inbox"] = []
+	GameState.house_mods["sui_pending"] = []
+	var row := CKSuiKe.fire_and_resolve_card(card_l, 3)
+	if row.is_empty():
+		fails.append("fire empty bold")
+	elif str(row.get("side", "")) != "right" and str(row.get("option_id", "")) != "right":
+		fails.append("fire side %s" % str(row.get("side", "")))
+	if not (GameState.house_mods.get("sui_pending", []) as Array).is_empty():
+		fails.append("pending after fire")
+	if CKSuiKe.inbox().is_empty():
+		fails.append("inbox empty after fire")
+	# Ack clears
+	CKSuiKe.ack(bold.id, "ill_auto_test")
+	if not CKSuiKe.inbox().is_empty():
+		fails.append("inbox after ack")
+	# Legacy pending drain
+	var legacy := {
+		"cid": care.id, "band": "ill", "id": "ill_legacy",
+		"title": "旧卡", "body": "旧。",
+		"options": [
+			{"id": "left", "label": "养", "mark": "watch", "stat": "per", "gain": 1, "care": true},
+			{"id": "right", "label": "扛", "trait": "scarred"},
+		],
+	}
+	GameState.house_mods["sui_pending"] = [legacy]
+	GameState.house_mods["sui_inbox"] = []
+	CKSuiKe._drain_legacy_pending()
+	if not (GameState.house_mods.get("sui_pending", []) as Array).is_empty():
+		fails.append("legacy pending stuck")
+	if CKSuiKe.inbox().is_empty():
+		fails.append("legacy no inbox")
+	# Yao still kills when auto-picked
+	var yao_kid := CKCharacter.new()
+	yao_kid.id = "kid_yao2"
+	yao_kid.name = "夭"
+	yao_kid.alive = true
+	yao_kid.is_child = true
+	yao_kid.age = 2
+	yao_kid.apt_max = {"str": 20, "vit": 20, "skl": 20, "agi": 20, "per": 20, "wil": 20}
+	yao_kid.stats = {"str": 8, "vit": 8, "skl": 8, "agi": 8, "per": 8, "wil": 8}
+	yao_kid.blood_meta = {"purse": 0}
+	GameState.characters[yao_kid.id] = yao_kid
+	var yao_card := {
+		"cid": yao_kid.id, "band": "yao", "id": "yao_auto",
+		"title": "没到天亮", "body": "没了。",
+		"options": [
+			{"id": "epitaph_a", "label": "碑甲", "kill": true, "morale": -3, "epitaph": "甲"},
+			{"id": "epitaph_b", "label": "碑乙", "kill": true, "morale": -2, "epitaph": "乙", "halt_march": true},
+		],
+	}
+	GameState.house_mods["sui_pending"] = []
+	GameState.house_mods["sui_inbox"] = []
+	var yrow := CKSuiKe.fire_and_resolve_card(yao_card, 1)
+	if not bool(yrow.get("dead", false)) or yao_kid.alive:
+		fails.append("yao auto did not kill")
+
