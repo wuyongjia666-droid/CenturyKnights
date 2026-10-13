@@ -1357,7 +1357,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	## v8.6 Stitch 06 keycaps: Q 攻击 · W 战技 · E 待命 · Enter 结束回合 (08/09 report: ESC 返回章节)
 	if battle_over and has_meta("result_back") and event is InputEventKey and event.pressed and (event as InputEventKey).keycode == KEY_ESCAPE:
 		get_viewport().set_input_as_handled()
-		get_tree().change_scene_to_file(str(get_meta("result_back")))
+		CKNav.replace(str(get_meta("result_back")))
 		return
 	if battle_over or turn_team != "player" or _cut_playing:
 		return

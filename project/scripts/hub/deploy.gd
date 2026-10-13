@@ -342,7 +342,7 @@ func _vacant_input(ev: InputEvent) -> void:
 	if tap:
 		set_meta("vacant_go", TAVERN)
 		if is_inside_tree() and not has_meta("no_nav"):
-			get_tree().change_scene_to_file(TAVERN)
+			CKNav.go(TAVERN)
 
 func _render_metrics() -> void:
 	var R := Rect2(880, 112, 376, 568)

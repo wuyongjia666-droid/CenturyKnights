@@ -90,4 +90,4 @@ func _go(path: String) -> void:
 	queue_free()
 	var tree := get_tree()
 	if tree:
-		tree.change_scene_to_file(path)
+		CKNav.replace(path)
