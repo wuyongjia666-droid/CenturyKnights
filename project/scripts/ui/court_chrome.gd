@@ -147,7 +147,7 @@ static func unit_sheet(c: Object) -> Dictionary:
 		"line_zh": str(CKBloodline.line(line).get("name", line)),
 		"stage": stage,
 		"stage_zh": str(CKGenomePortrait.STAGE_ZH.get(stage, stage)),
-		"title": CKCourt.ladder_zh(CKCourt.current_title(c)),
+		"title": CKCourt.ladder_zh(CKCourt.current_title(c), CKCourt._sex(c)),
 		"title_id": CKCourt.current_title(c),
 	}
 

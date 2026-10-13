@@ -37,7 +37,7 @@ func _paint() -> void:
 		var v := VBoxContainer.new()
 		v.alignment = BoxContainer.ALIGNMENT_CENTER
 		p.add_child(v)
-		var t := UIKit.title_label(CKCourt.ladder_zh(id), 18, UIKit.TEXT)
+		var t := UIKit.title_label(CKCourt.ladder_zh(id, CKCourt._sex(_leader)), 18, UIKit.TEXT)
 		t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		v.add_child(t)
 		var tag := Locale.t("lb_title_now") if i == ni else (Locale.t("lb_title_done") if i < ni else (Locale.t("lb_title_next") if i == ni + 1 else ""))

@@ -240,6 +240,7 @@ func _refresh() -> void:
 	var sp := _spouse()
 	if reroll:
 		reroll.visible = sp == null
+	_sync_footer_hints(sp != null)
 	if sp != null:
 		## Married: no candidate tabs — one clear banner, and the right card is the spouse.
 		var banner := UIKit.body_label(married_banner_text(sp), UIKit.OK, MobilePage.FONT if _mob else 14)
@@ -267,6 +268,22 @@ func _refresh() -> void:
 		b.pressed.connect(func(): _select(captured))
 		_tabs.add_child(b)
 	_select(GameState.marriage_candidates[0])
+
+## Desktop footer: once wed, the 缔约 / 再议 / 切换候选 key hints no longer apply.
+const _WED_HIDDEN_HINTS := ["缔约", "再议", "切换候选"]
+func _sync_footer_hints(wed: bool) -> void:
+	var foot := get_node_or_null("StitchFooter")
+	if foot == null:
+		return
+	for h in foot.get_children():
+		if not (h is HBoxContainer):
+			continue
+		var kids := h.get_children()
+		for i in kids.size():
+			if kids[i] is Label and str((kids[i] as Label).text) in _WED_HIDDEN_HINTS:
+				for j in [i - 1, i, i + 1]:
+					if j >= 0 and j < kids.size():
+						(kids[j] as Control).visible = not wed
 
 ## The leader's spouse, or null while unmarried.
 func _spouse() -> CKCharacter:
@@ -411,7 +428,7 @@ func _harmony_card(rect: Rect2, a: CKCharacter, b: CKCharacter) -> void:
 	var pct := clampi(int(round(mids / CKCharacter.STAT_KEYS.size() / maxf(hi, 12.0) * 100.0)), 1, 99)
 	var grade := "S" if pct >= 85 else ("A" if pct >= 70 else ("B" if pct >= 55 else "C"))
 	# WS-C #34: three numbers that decide the match; everything else lives behind 「详情」
-	_grade.text = Locale.t("wsc_mr_key") % [grade, pct, _rite_cost(a, b), CKCharacter.RANK_NAMES.get(ex.rank_hint, ex.rank_hint)]
+	_grade.text = Locale.t("wsc_mr_key") % [grade, pct, _rite_cost(a, b), CKCharacter.rank_label(str(ex.rank_hint))]
 	_grade.name = "KeyFacts"
 	var compact := rect.size.y < 230.0
 	var lab := UIKit.body_label("子嗣期望 · 资质共鸣指标", UIKit.TEXT_DIM, 12)
@@ -443,7 +460,7 @@ func _harmony_card(rect: Rect2, a: CKCharacter, b: CKCharacter) -> void:
 		var bar := UIKit.slim_bar(pct, 100, UIKit.ACCENT, 160, 3)
 		bar.position = Vector2((rect.size.x - 160) * 0.5, 168)
 		p.add_child(bar)
-		var rk := UIKit.mono("RANK // %s" % CKCharacter.RANK_NAMES.get(ex.rank_hint, ex.rank_hint), 9, UIKit.TEXT_FAINT, false)
+		var rk := UIKit.mono("RANK // %s" % CKCharacter.rank_label(str(ex.rank_hint)), 9, UIKit.TEXT_FAINT, false)
 		rk.clip_text = true
 		rk.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		rk.position = Vector2(8, 176)
@@ -1226,12 +1243,12 @@ func _m_harmony(a: CKCharacter, b: CKCharacter) -> Control:
 		hi = maxf(hi, float(ex.apt_max[sk]))
 	var pct := clampi(int(round(mids / CKCharacter.STAT_KEYS.size() / maxf(hi, 12.0) * 100.0)), 1, 99)
 	var grade := "S" if pct >= 85 else ("A" if pct >= 70 else ("B" if pct >= 55 else "C"))
-	_grade.text = Locale.t("wsc_mr_key") % [grade, pct, _rite_cost(a, b), CKCharacter.RANK_NAMES.get(ex.rank_hint, ex.rank_hint)]
+	_grade.text = Locale.t("wsc_mr_key") % [grade, pct, _rite_cost(a, b), CKCharacter.rank_label(str(ex.rank_hint))]
 	_grade.name = "KeyFacts"
 	var big := MobilePage.label("%s  %d%%" % [grade, pct], UIKit.ACCENT, 40, false)
 	big.add_theme_font_override("font", UIKit.font("mono"))
 	v.add_child(big)
-	v.add_child(MobilePage.label(Locale.t("mw_c4a0ef09") % str(CKCharacter.RANK_NAMES.get(ex.rank_hint, ex.rank_hint)), UIKit.TEXT, MobilePage.FONT, true))
+	v.add_child(MobilePage.label(Locale.t("mw_c4a0ef09") % str(CKCharacter.rank_label(str(ex.rank_hint))), UIKit.TEXT, MobilePage.FONT, true))
 	var hp := VBoxContainer.new()
 	hp.name = "HeirPreview"
 	hp.add_theme_constant_override("separation", 2)
@@ -1281,6 +1298,7 @@ func _m_fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 			btn.size_flags_horizontal = Control.SIZE_FILL
 			btn.tooltip_text = Locale.t("mw_6c9a2d8d") % [str(r.get("desc", "")), str(r.get("block", ""))]
 			fl.add_child(btn)
+	(rp[0] as Control).visible = not is_married_view()
 	_msg.reparent(rv, false)
 	_msg.add_theme_font_size_override("font_size", MobilePage.FONT)
 	_msg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -1294,10 +1312,15 @@ func _m_fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 	var fv: VBoxContainer = fp[1]
 	fv.add_child(MobilePage.label(Locale.t("mw_085d21a4"), UIKit.TEXT_DIM, MobilePage.FONT, false))
 	if a != null and b != null:
+		## Odds share one wrapping line so the combat forecast fits a 16:9 phone without scrolling.
+		var odds := PackedStringArray()
 		for r in CKBloodline.forecast(a, b).slice(0, 2):
-			fv.add_child(MobilePage.label("%s  %d%%" % [str(r.get("royal_zh", "")), int(round(float(r.get("royal", 0.0)) * 100.0))], UIKit.TEXT, MobilePage.FONT, true))
+			odds.append("%s %d%%" % [str(r.get("royal_zh", "")), int(round(float(r.get("royal", 0.0)) * 100.0))])
 		for r2 in CKBloodline.trait_odds(a, b).slice(0, 2):
-			fv.add_child(MobilePage.label("%s  %d%%" % [str(r2.get("zh", "")), int(round(float(r2.get("shown", 0.0)) * 100.0))], UIKit.TEXT, MobilePage.FONT, true))
+			odds.append("%s %d%%" % [str(r2.get("zh", "")), int(round(float(r2.get("shown", 0.0)) * 100.0))])
+		var ol := MobilePage.label(" · ".join(odds), UIKit.TEXT, MobilePage.FONT, true)
+		ol.name = "HeirOdds"
+		fv.add_child(ol)
 		var cast := MobilePage.label(str(CKFamilyState.combat_expectation(a, b).get("line", "")), UIKit.ACCENT, MobilePage.FONT, true)
 		cast.name = "CombatForecast"
 		fv.add_child(cast)
