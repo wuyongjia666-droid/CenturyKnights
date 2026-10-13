@@ -416,11 +416,24 @@ func _speaker_portrait(speaker: String, emotion: String = "") -> void:
 	if speaker == "leader":
 		who = GameState.get_leader()
 	var narr := _is_narrator(speaker)
-	_portrait.set_meta("story_narrator", narr)
-	test_capture["portrait_who"] = who.id if who != null else ""
+	# P0 playtest: the prologue narrates in second person ("你…"), so the captain is on stage.
+	# Hiding every plate on narration (#248 C-03) left the first 20 lines of ch0 with no
+	# character at all. Narration now shows the captain; only a missing captain hides it.
+	var narr_lead: CKCharacter = GameState.get_leader() if narr else null
+	_portrait.set_meta("story_narrator", narr and narr_lead == null)
+	_portrait.set_meta("story_narrator_lead", narr and narr_lead != null)
 	test_capture["portrait_narrator"] = narr
+	if narr and narr_lead != null:
+		test_capture["portrait_who"] = narr_lead.id
+		var lead_plate := UnitArt.dialogue_portrait("leader", "", narr_lead, PORTRAIT_PX)
+		if lead_plate != null:
+			test_capture["portrait_kind"] = "narrator_leader"
+			_portrait.texture = lead_plate
+			return
+	test_capture["portrait_who"] = who.id if who != null else ""
 	if narr:
 		test_capture["portrait_kind"] = "narrator"
+		_portrait.set_meta("story_narrator", true)
 		_portrait.texture = null
 		return
 	var plate := UnitArt.dialogue_portrait(speaker, emotion, who, PORTRAIT_PX)

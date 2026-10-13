@@ -74,8 +74,11 @@ func _check_narrator(ch0) -> String:
 	ch0._speaker_portrait("旁白")
 	if not bool(ch0.test_capture.get("portrait_narrator", false)):
 		return "C-03 narrator meta not set"
-	if str(ch0.test_capture.get("portrait_kind", "")) != "narrator":
-		return "C-03 narrator kind %s" % str(ch0.test_capture)
+	# P0: second-person narration keeps the captain on stage (no empty first frame).
+	if str(ch0.test_capture.get("portrait_kind", "")) != "narrator_leader":
+		return "P0 narrator should show captain, got %s" % str(ch0.test_capture)
+	if ch0.get("_portrait").texture == null:
+		return "P0 narrator captain plate empty"
 	return ""
 
 func _check_recruit(ch0) -> String:
