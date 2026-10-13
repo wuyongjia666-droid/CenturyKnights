@@ -144,18 +144,17 @@ func _succession_card() -> Dictionary:
 	return {}
 
 func _show_life() -> void:
-	var lines: PackedStringArray = PackedStringArray()
-	for row in _life.get("lines", []):
-		lines.append(str(row.get("text", "")))
-	_body.text = "\n".join(lines)
+	var title := LifeEvents.card_title(_life)
+	var body := LifeEvents.card_body(_life)
+	if title != "":
+		_body.text = "%s\n\n%s" % [title, body]
+	else:
+		_body.text = body
 	var cid := str(_life.get("cid", ""))
 	var eid := str(_life.get("id", ""))
-	for opt in _life.get("options", []):
-		var label := ""
-		for row in opt.get("lines", []):
-			label = str(row.get("text", ""))
-			break
-		var oid := str(opt.get("id", ""))
+	for choice in LifeEvents.choices(_life):
+		var oid := str(choice.get("id", ""))
+		var label := LifeEvents.choice_label(choice)
 		_move_btn(label, true, func(): _resolve_life(cid, eid, oid))
 	_move_btn(Locale.t("btn_back"), false, func(): _life = {}; _show())
 
