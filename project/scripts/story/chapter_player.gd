@@ -296,10 +296,10 @@ func _line_text(line) -> String:
 func _spouse_display_name() -> String:
 	var leader = GameState.get_leader()
 	if leader == null or str(leader.spouse_id) == "":
-		return "屋里的人"
+		return Locale.t("pro_spouse_fallback")
 	var sp = GameState.characters.get(str(leader.spouse_id))
 	if sp == null or str(sp.name).strip_edges() == "":
-		return "屋里的人"
+		return Locale.t("pro_spouse_fallback")
 	return str(sp.name)
 
 ## Staging hooks authored on a line: {"music", "tension", "camera", "pace"}.
