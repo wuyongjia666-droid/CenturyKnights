@@ -26,7 +26,9 @@ for s in rep:
         if it["type"].endswith("Button"):
             btns[it["path"].rsplit("/", 1)[0]].append((x, y, rw, rh, t))
         if t and not it.get("clipped"):
-            rects.append((x, y, rw, rh, it))
+            # compare ink boxes, not padded min-size boxes: a 12px label in a 23px slot only inks ~17px
+            ink = min(rh, it["font"] * 1.4 * (t.count("\n") + 1)) if it["type"] == "Label" else rh
+            rects.append((x, y + (rh - ink) / 2, rw, ink, it))
     for par, bs in btns.items():
         for i in range(len(bs)):
             for j in range(i + 1, len(bs)):
