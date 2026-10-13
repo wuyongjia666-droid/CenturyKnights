@@ -149,7 +149,7 @@ func _step_battle() -> void:
 		battle.queue_free()
 		return
 
-	# Tutorial balance gate: must not be 2-vs-many (player-favored ~3–4 vs ≤3)
+	# Tutorial balance gate: player-favored (~3 vs ≤3 on redesigned ch0_pass)
 	var pc0 := 0
 	var ec0 := 0
 	for u0 in battle.units:
@@ -181,10 +181,10 @@ func _step_battle() -> void:
 			u.pos = Vector2i(4, 2)
 			u.char.hp = u.char.max_hp
 		elif u.team == "player":
-			u.pos = Vector2i(0, 5)
+			u.pos = Vector2i(1, 5)
 			u.done = true
 		else:
-			u.pos = Vector2i(7, 0)
+			u.pos = Vector2i(8, 5)
 			u.char.hp = 0
 	if player_i < 0 or enemy_i < 0:
 		_err("battle: missing player/enemy")
@@ -235,10 +235,11 @@ func _step_battle() -> void:
 	else:
 		print("OK battle combat hp %s -> %s" % [enemy_hp_before, enemy_hp_after])
 
-	# Resolve remaining enemies via real win path (_check_end → _finish)
+	# Resolve via seize objective (E-01): stand on the second wagon tile
 	for u in battle.units:
-		if u.team == "enemy":
-			u.char.hp = 0
+		if u.team == "player" and u.char.hp > 0:
+			u.pos = Vector2i(7, 3)
+			break
 	battle._check_end()
 	await get_tree().process_frame
 	if not GameState.flag("battle_done"):

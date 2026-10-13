@@ -19,8 +19,6 @@ static func run_sequence(host: Node) -> void:
 	host.set_meta("lock_tut_steps", steps)
 	host.set_meta("lock_tut_i", 0)
 	show_step(host)
-	if host.has_method("_log"):
-		host.call("_log", "教学：交战锁定三拍提示已展开")
 
 
 static func show_step(host: Node) -> void:

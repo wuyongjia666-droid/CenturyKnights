@@ -8,7 +8,7 @@ const TERRAIN := {
 	"water": {"name": "水", "move_cost": 3, "avo_bonus": 5, "def_bonus": 0, "color": Color(0.28, 0.45, 0.62)},
 	"bridge": {"name": "桥", "move_cost": 1, "avo_bonus": 0, "def_bonus": 0, "color": Color(0.58, 0.48, 0.36)},
 	"fort": {"name": "垒", "move_cost": 2, "avo_bonus": 20, "def_bonus": 3, "color": Color(0.50, 0.42, 0.40)},
-	"wall": {"name": "崖", "move_cost": 99, "avo_bonus": 0, "def_bonus": 0, "color": Color(0.22, 0.22, 0.26)},
+	"wall": {"name": "Cliff", "move_cost": 99, "avo_bonus": 0, "def_bonus": 0, "color": Color(0.22, 0.22, 0.26)},
 }
 
 ## Single source for numbers the battle HUD prints. Changing these changes the panel copy.

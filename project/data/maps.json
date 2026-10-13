@@ -34,10 +34,6 @@
           2
         ],
         [
-          5,
-          4
-        ],
-        [
           7,
           2
         ]
@@ -45,11 +41,9 @@
       "enemy_templates": [
         "bandit_weak",
         "bandit_weak",
-        "bandit_weak",
         "bandit_archer"
       ],
       "enemy_names": [
-        "隘口流匪",
         "隘口流匪",
         "隘口流匪",
         "匪弓手"

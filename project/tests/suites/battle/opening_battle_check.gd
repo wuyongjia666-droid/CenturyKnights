@@ -54,8 +54,8 @@ func _run() -> String:
 			foes += 1
 	if militia > 0:
 		return "militia deployed"
-	if foes < 4:
-		return "expected 4 foes got %d" % foes
+	if foes < 3:
+		return "expected 3 foes got %d" % foes
 	# Idle panel follows objective type.
 	battle.selected = -1
 	BattleInfoPanel.refresh(battle)
