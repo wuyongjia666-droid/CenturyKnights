@@ -351,10 +351,10 @@ func _head(p: Control, pos: Vector2, zh: String, en: String) -> void:
 	e.clip_text = true
 	e.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	e.position = pos
-	e.size = Vector2(220, 16)
+	e.size = Vector2(220, 14)
 	p.add_child(e)
 	var t := UIKit.title_label(zh, 17)
-	t.position = pos + Vector2(0, 14)
+	t.position = pos + Vector2(0, 18 if not DeviceProfile.is_mobile() else 14)
 	p.add_child(t)
 
 func _para(text: String, col: Color, size: int, w: float) -> Label:
