@@ -3,7 +3,9 @@ extends Node
 ## project's real stretch settings and writes PNG + layout report JSON.
 const SCREENS := [
 	["title", "res://scenes/ui/main_menu.tscn"],
-	["castle", "res://scenes/hub/castle_hub.tscn"],
+	["castle", "res://scenes/hub/castle_hub.tscn", "military", "hub_tab"],
+	["castle_family", "res://scenes/hub/castle_hub.tscn", "family", "hub_tab"],
+	["castle_civil", "res://scenes/hub/castle_hub.tscn", "civil", "hub_tab"],
 	["roster", "res://scenes/hub/roster.tscn"],
 	["tavern", "res://scenes/hub/tavern.tscn"],
 	["marriage", "res://scenes/hub/marriage.tscn"],

@@ -45,8 +45,25 @@ func _ensure_bleed() -> void:
 	root.add_child(_bleed)
 	root.move_child(_bleed, 0)
 
+var _floor_pending := false
+
 func _on_node_added(_n: Node) -> void:
 	call_deferred("_apply")
+	if not _floor_pending:
+		_floor_pending = true
+		call_deferred("_refloor")
+
+## Pages rebuild their lists after _apply; keep the type/touch floor on whatever was added.
+func _refloor() -> void:
+	_floor_pending = false
+	if not DeviceProfile.is_mobile():
+		return
+	var root := get_tree().root
+	for child in root.get_children():
+		if child == _bleed or not (child is CanvasItem or child is CanvasLayer):
+			continue
+		MobileLayout.ensure_min_fonts(child)
+		MobileLayout.ensure_hit_targets(child)
 
 func _on_resize() -> void:
 	call_deferred("_apply")
@@ -82,6 +99,7 @@ func _apply() -> void:
 	if root.has_method("apply_mobile_layout"):
 		root.apply_mobile_layout()
 	MobileLayout.extend_portrait_lists(root)
+	MobileLayout.ensure_min_fonts(root)
 	MobileLayout.ensure_hit_targets(root)
 
 ## App-wide touch drag-to-scroll: any ScrollContainer scrolls when a finger
