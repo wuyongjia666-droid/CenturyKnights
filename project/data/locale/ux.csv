@@ -318,3 +318,4 @@ sundry_forge_ok,下次在堡里打刀少用 1 块铁,Next castle forge uses 1 le
 sundry_not_yet,这件现在还用不上（相关玩法还没开）,Not usable yet
 sundry_need_city,得在城里才能用,Use it in a town
 sundry_intel_done,这座城的消息已经打听过了,Already asked around here
+sundry_offer_line,%s  ·  %d 银  ·  有 %d/%d,%s · %d silver · have %d/%d

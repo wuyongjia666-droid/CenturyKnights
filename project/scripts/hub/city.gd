@@ -6,7 +6,7 @@ extends Control
 
 const _Atlas = preload("res://scripts/art/atlas_art.gd")
 const ATLAS := "res://scenes/hub/atlas_view.tscn"
-const TABS := [["overview", "概览"], ["smith", "铁匠铺"], ["market", "市集"], ["sundry", "杂货铺"], ["board", "委托榜"], ["tavern", "酒馆"], ["armory", "军械库"], ["lamp", "灯籍"]]
+const TABS := [["overview", "概览"], ["smith", "铁匠铺"], ["market", "市集"], ["sundry", Locale.t("sundry_title")], ["board", "委托榜"], ["tavern", "酒馆"], ["armory", "军械库"], ["lamp", "灯籍"]]
 const TYPE_GLYPH := {"sword": "剑", "blade": "刀", "spear": "枪", "lance": "骑", "axe": "斧", "bow": "弓", "crossbow": "弩", "staff": "杖", "focus": "器", "armor": "甲", "shield": "盾", "charm": "符"}
 const TIER_COL := [Color("#9AA6B8"), Color("#9AA6B8"), Color("#5EE0B5"), Color("#6ED4FF"), Color("#C9B8FF")]
 const CONTENT := Rect2(416, 108, 848, 576)
@@ -1199,7 +1199,7 @@ func selftest() -> Dictionary:
 # ── 杂货铺（v9.2 §4.2）：本国日用品只在本国卖，陆桥卖两侧过路货 ──────────
 func _tab_sundry() -> void:
 	var p := _panel(Rect2(0, 0, 848, 576))
-	_head(p, Vector2(18, 14), "杂货铺", "SUNDRIES · LOCAL GOODS")
+	_head(p, Vector2(18, 14), Locale.t("sundry_title"), "SUNDRIES · LOCAL GOODS")
 	var note := _para(Locale.t("sundry_note"), UIKit.TEXT_DIM, 13, 812)
 	note.position = Vector2(18, 52)
 	p.add_child(note)
@@ -1215,7 +1215,8 @@ func _tab_sundry() -> void:
 		var info := VBoxContainer.new()
 		info.custom_minimum_size = Vector2(480, 0)
 		info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		info.add_child(_line("%s  ·  %d 银  ·  有 %d/%d" % [str(offer.get("name", iid)), int(offer.get("price", 0)), CKSundries.owned(iid), CKSundries.max_stack()], UIKit.TEXT, 14, 480))
+				var offer_line := Locale.t("sundry_offer_line") % [str(offer.get("name", iid)), int(offer.get("price", 0)), CKSundries.owned(iid), CKSundries.max_stack()]
+		info.add_child(_line(offer_line, UIKit.TEXT, 14, 480))
 		info.add_child(_line(str(offer.get("desc", "")), UIKit.TEXT_DIM, 12, 480))
 		row.add_child(info)
 		var buy := UIKit.ghost_button(Locale.t("sundry_buy"), 120, 48)
