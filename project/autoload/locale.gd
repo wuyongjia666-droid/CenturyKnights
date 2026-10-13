@@ -16,6 +16,7 @@ const _CSV_FILES: Array[String] = [
 	"narrative.csv",
 	"strings.csv",
 	"ux.csv",
+	"lineb.csv",
 ]
 
 var lang: String = "zh_CN"

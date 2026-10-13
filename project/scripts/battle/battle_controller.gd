@@ -1,19 +1,15 @@
 extends Control
-
 signal unit_downed(char, info)
 signal battle_finished(result)
-## 灰旗战棋：8x6 教程图，移动/攻击/待命，敌 AI，规则透视
-## 输入 FSM：IDLE → SELECTED → (MOVE) → ATTACK_AIM → 单位 done
+## 灰旗战棋：8x6 教程图，移动/攻击/待命，敌 AI，规则透视 输入 FSM：IDLE → SELECTED → (MOVE) → ATTACK_AIM → 单位 done
 
 var CELL: int = 56
 var ORIGIN: Vector2 = Vector2(40, 80)
-## v8.6: the board is the hero — cell size fits the map into the left stage (max 104px)
-const BOARD_AREA := Rect2(24, 76, 856, 620)
+const BOARD_AREA := Rect2(24, 76, 856, 620)  ## v8.6: the board is the hero — cell size fits the map into the left stage (max 104px)
 const RAIL_X := 904.0
 const RAIL_W := 352.0
 var _ground: ColorRect
-## v8.6 3D combat cutscenes: pure recorder (tactics logic untouched) -> queued overlay playback
-const CombatCutsceneScript = preload("res://scripts/battle/combat_cutscene.gd")
+const CombatCutsceneScript = preload("res://scripts/battle/combat_cutscene.gd")  ## v8.6 3D combat cutscenes: pure recorder (tactics logic untouched) -> queued overlay playback
 var _combat_rec: Array = []
 var _cut_queue: Array = []
 var _cut_playing := false
@@ -22,7 +18,6 @@ var MAP_W: int = 8
 var MAP_H: int = 6
 var map_id: String = "ch0_pass"
 var map_name: String = "隘口之夜"
-
 var terrain: Array = []
 var height_grid: Array = []
 var weather: String = "clear"
@@ -273,9 +268,7 @@ func _build_ui() -> void:
 	_bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_bg)
 	add_child(UIKit._vignette())
-
-	# v8.6 Stitch 06 turn pill: ◉ 第 N 回合 │ PHASE 01 │ map · 我方行动 — then controls hint
-	var pill := PanelContainer.new()
+	var pill := PanelContainer.new()  # v8.6 Stitch 06 turn pill: ◉ 第 N 回合 │ PHASE 01 │ map · 我方行动 — then controls hint
 	var pst := UIKit.flat_box(Color(0.04, 0.05, 0.07, 0.88), Color(1, 1, 1, 0.14), 20)
 	pst.content_margin_left = 14
 	pst.content_margin_right = 18
@@ -322,8 +315,7 @@ func _build_ui() -> void:
 	top.add_child(phase_label)
 	if DeviceProfile.is_mobile():
 		_phase_chip.visible = false
-		_round_label.add_theme_font_size_override("font_size", 22)
-		phase_label.add_theme_font_size_override("font_size", 22)
+		for l in [_round_label, phase_label]: l.add_theme_font_size_override("font_size", 22)
 	var tip_text := Locale.t("shell_8ed10247")
 	if DeviceProfile.is_mobile():
 		tip_text = Locale.t("shell_f4b70638")
@@ -331,24 +323,19 @@ func _build_ui() -> void:
 	tip.position = Vector2(26, 58)
 	tip.name = "ControlsTip"
 	add_child(tip)
-
 	_board_xform = Node2D.new()
 	_board_xform.name = "BoardXform"
 	add_child(_board_xform)
 	_ground = ColorRect.new()
 	_ground.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_board_xform.add_child(_ground)
-
 	map_draw = Node2D.new()
 	map_draw.draw.connect(_draw_map)
 	_board_xform.add_child(map_draw)
-
 	overlay = Node2D.new()
 	overlay.draw.connect(_draw_overlay)
 	_board_xform.add_child(overlay)
-
-	# --- right rail
-	_unit_panel = UIKit.make_panel()
+	_unit_panel = UIKit.make_panel()  # --- right rail
 	_unit_panel.position = Vector2(RAIL_X, 76)
 	_unit_panel.custom_minimum_size = Vector2(RAIL_W, 0)
 	_unit_panel.size = Vector2(RAIL_W, 0)
@@ -373,7 +360,6 @@ func _build_ui() -> void:
 	info_label.add_theme_font_size_override("normal_font_size", 12)
 	info_label.add_theme_font_size_override("bold_font_size", 13)
 	left_info.add_child(info_label)
-
 	var log_panel = UIKit.make_glass(12, 0.55)
 	log_panel.name = "LogPanel"
 	log_panel.position = Vector2(RAIL_X, 470)
@@ -393,9 +379,7 @@ func _build_ui() -> void:
 	log_label.add_theme_font_size_override("font_size", 12)
 	log_label.add_theme_color_override("font_color", UIKit.TEXT_DIM)
 	lv.add_child(log_label)
-
-	# command console
-	_skill_hint = UIKit.make_dim_label("")
+	_skill_hint = UIKit.make_dim_label("")  # command console
 	_skill_hint.position = Vector2(RAIL_X + 2, 578)
 	_skill_hint.custom_minimum_size = Vector2(RAIL_W, 18)
 	_skill_hint.size = Vector2(RAIL_W, 18)
@@ -467,31 +451,22 @@ func _command_bar_px() -> float:
 		return 0.0
 	return maxf(DeviceProfile.hit_px(), 48.0) + 20.0
 
-## Landscape phone: command column on the right edge, side panels slide right
-## to sit next to it, and the board takes all remaining width and full height.
-const MOBILE_RAIL_W := 176.0
+const MOBILE_RAIL_W := 176.0  ## landscape phone: command rail right, side panels beside it, board fills the rest
 const MobileSide := preload("res://scripts/battle/ui/battle_mobile_side.gd")
 
 func _mobile_landscape() -> bool:
-	if not DeviceProfile.is_mobile() or not is_inside_tree():
-		return false
-	var vp := get_viewport().get_visible_rect().size
-	return vp.x > vp.y * 1.2
+	var vp := get_viewport().get_visible_rect().size if is_inside_tree() else Vector2.ZERO
+	return DeviceProfile.is_mobile() and is_inside_tree() and vp.x > vp.y * 1.2
 
 func _root_w() -> float:
-	var sx := scale.x if scale.x > 0.01 else 1.0
-	return maxf(1280.0, size.x if size.x > 1.0 else get_viewport().get_visible_rect().size.x / sx)
+	return maxf(1280.0, size.x if size.x > 1.0 else get_viewport().get_visible_rect().size.x / (scale.x if scale.x > 0.01 else 1.0))
 
 func _shift_side_panels(dx: float) -> void:
 	for c in get_children():
-		if not (c is Control):
-			continue
-		var ctrl := c as Control
-		if not ctrl.has_meta("m_base_x"):
-			if ctrl.position.x < 880.0 or ctrl.size.x > 700.0:
-				continue
-			ctrl.set_meta("m_base_x", ctrl.position.x)
-		ctrl.position.x = float(ctrl.get_meta("m_base_x")) + dx
+		if c is Control and (c.has_meta("m_base_x") or (c.position.x >= 880.0 and c.size.x <= 700.0)):
+			if not c.has_meta("m_base_x"):
+				c.set_meta("m_base_x", c.position.x)
+			c.position.x = float(c.get_meta("m_base_x")) + dx
 
 func _layout_board() -> void:
 	var area := BOARD_AREA
@@ -629,14 +604,12 @@ func _cycle_skill() -> void:
 	var sk = GameState.get_skill(active_skill_id)
 	var typ = str(sk.get("type", "offense"))
 	if typ == "support":
-		# instant heal adjacent
-		_cast_support_skill(selected, active_skill_id)
+		_cast_support_skill(selected, active_skill_id)  # instant heal adjacent
 		return
 	if typ == "buff":
 		_cast_buff_skill(selected, active_skill_id)
 		return
-	# offense: arm for next attack
-	skill_mode = true
+	skill_mode = true  # offense: arm for next attack
 	attack_mode = true
 	if sk.get("ignore_zoc"):
 		su.char.temp_ignore_zoc = true
@@ -926,14 +899,12 @@ func _deploy() -> void:
 			ids.append(c.id)
 			if ids.size() >= GameState.max_deploy():
 				break
-	# 双嗣校场：真人子嗣分列双方
-	var heir_a_id = str(GameState.get_meta("heir_clash_a", ""))
+	var heir_a_id = str(GameState.get_meta("heir_clash_a", ""))  # 双嗣校场：真人子嗣分列双方
 	var heir_b_id = str(GameState.get_meta("heir_clash_b", ""))
 	var is_heir_clash = bool(m.get("heir_clash", false))
 	if is_heir_clash and heir_a_id != "":
 		ids = [heir_a_id]
-		# 团长 + 花名册支援（最多凑满 player_spots）
-		var leader = GameState.get_leader()
+		var leader = GameState.get_leader()  # 团长 + 花名册支援（最多凑满 player_spots）
 		if leader and leader.id != heir_a_id and leader.id != heir_b_id:
 			ids.append(leader.id)
 		for c in GameState.roster():
@@ -996,8 +967,7 @@ func _deploy() -> void:
 			hb.hp = hb.max_hp
 			units.append({"char": hb, "pos": enemy_spots[ei], "team": "enemy", "done": false})
 			ei += 1
-		# 敌方支援：敌意/戒备敌宅膀臂优先，否则匪军
-		var hostile_houses: Array = []
+		var hostile_houses: Array = []  # 敌方支援：敌意/戒备敌宅膀臂优先，否则匪军
 		for hid in ["shuoying", "qinghe", "lantern"]:
 			var st = GameState.get_rival_stance(hid)
 			if st in ["hostile", "wary"]:
@@ -1091,8 +1061,7 @@ func _draw_map() -> void:
 		UnitArt.draw_token_on(map_draw, center, u.char, u.team, tr, u.done)
 		if int(u.char.temp_combat_lock) > 0:
 			UnitArt.draw_lock_ring(map_draw, center, 22.0 * k)
-		# HP bar (slim token bar)
-		var hp_ratio = float(u.char.hp) / float(maxi(1, u.char.max_hp))
+		var hp_ratio = float(u.char.hp) / float(maxi(1, u.char.max_hp))  # HP bar (slim token bar)
 		var bar_w = 36.0 * k
 		var bar_pos = center + Vector2(-bar_w * 0.5, tr + 6.0 * k)
 		map_draw.draw_rect(Rect2(bar_pos - Vector2(1, 1), Vector2(bar_w + 2, 6)), Color(0.02, 0.03, 0.05, 0.85))
@@ -1220,7 +1189,6 @@ func _draw_overlay() -> void:
 					overlay.draw_texture_rect(_tex(chip_path), Rect2(tp, Vector2(csz, csz)), false)
 				else:
 					overlay.draw_rect(Rect2(tp, Vector2(18, 14)), Color(0.05, 0.05, 0.08, 0.75))
-
 		BattleTouchConfirm.draw_preview(self)
 		# 图例：纯图标芯片（无长文字）
 		if not move_cells.is_empty():
@@ -1262,8 +1230,7 @@ func _draw_overlay() -> void:
 	for s in _slash_fx:
 		var fi = mini(5, int(s.age / 0.08))
 		var kind = str(s.get("kind", "slash"))
-		# v8.4 dense 128px frames first, then legacy 64px
-		var path = "res://assets/art/fx/%s_dense_%d.png" % [kind, fi]
+		var path = "res://assets/art/fx/%s_dense_%d.png" % [kind, fi]  # v8.4 dense 128px frames first, then legacy 64px
 		if not ResourceLoader.exists(path):
 			path = "res://assets/art/fx/%s_%d.png" % [kind, fi]
 		if not ResourceLoader.exists(path):
@@ -1370,8 +1337,7 @@ func _zoc_hover_audio(cell: Vector2i) -> void:
 	_zoc_hover_kind = kind
 	if kind == "":
 		return
-	# 空间感：距选中单位越远音量越低（前端式距离衰减，非短 tick 一律）
-	var dist := 1.0
+	var dist := 1.0  # 空间感：距选中单位越远音量越低（前端式距离衰减，非短 tick 一律）
 	if selected >= 0 and selected < units.size():
 		dist = float(_manhattan(units[selected].pos, cell))
 	var vol = clampf(-3.0 - dist * 2.2, -18.0, -2.0)
@@ -1709,8 +1675,7 @@ func _enemy_positions(for_team: String) -> Array:
 	return out
 
 func _ally_zoc_extra(for_team: String) -> int:
-	# 方阵锁喉：己方单位提供的控带额外耗
-	var extra = 0
+	var extra = 0  # 方阵锁喉：己方单位提供的控带额外耗
 	for u in units:
 		if u.team == for_team and u.char.hp > 0:
 			extra = maxi(extra, int(u.char.temp_zoc_aura))
@@ -1770,8 +1735,7 @@ func _do_attack(ai: int, di: int) -> void:
 		_resolve_strike(int(_link_seg.get("index", ai)), di, false)
 	var atk = units[ai]
 	var def = units[di]
-	# 交战锁定：攻/受击双方咬住（脱离代价加重，反击优先）
-	_apply_combat_lock(ai, di)
+	_apply_combat_lock(ai, di)  # 交战锁定：攻/受击双方咬住（脱离代价加重，反击优先）
 	_spawn_lock_burst(atk.pos)
 	_spawn_lock_burst(def.pos)
 	# 连击：敏差足够且目标仍存活
@@ -2857,6 +2821,8 @@ func _sync_objectives() -> void:
 	var fresh: Array = BattleObjectives.spawn_due(self, BattleMaps.get_map(map_id), _round_no)
 	for u in fresh:
 		_arm_spawned(u)
+	for cell in BattleObjectives.warn_incoming(self, BattleMaps.get_map(map_id), _round_no):
+		_spawn_dmg(cell, "!", UIKit.DANGER)
 	if not fresh.is_empty() and map_draw:
 		map_draw.queue_redraw()
 	ObjectiveHud.refresh(self)

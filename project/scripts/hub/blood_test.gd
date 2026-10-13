@@ -1,8 +1,11 @@
 extends Control
-## Shrine blood test: queue, staggered reveal, impostor exposure. The verify call is unchanged.
+## Shrine blood test (line B, audit #31). Left: who is waiting, the price and how many the
+## purse covers, and the start button right under that. Right: results card by card.
+## Done / nobody left / short of silver each say so. The verify call is unchanged.
 
-var _stage: Control
+var _stage: VBoxContainer
 var _status: Label
+var _begin_btn: Button
 var _pending: Array = []
 var _lines: Array = []
 var _reveal_i := 0
@@ -10,68 +13,51 @@ var _busy := false
 
 func _ready() -> void:
 	_pending = _queue()
-	UIKit.void_bg(self)
 	var cost := CKBloodline.verify_cost(GameState.building_level("shrine"))
-	UIKit.top_bar(self, "祠堂验血", [["银币", str(GameState.silver), UIKit.ACCENT], ["每人", "%d 银" % cost, UIKit.TEXT_DIM]], "返回祠堂", _back)
-	UIKit.page_head(self, 42, 72, "SANCTUARY // BLOOD ASSAY", "验血", "REVEAL", "一次验明尚未入册的族人。潜征展开，伪胤在灯下现形。", "", 18)
-	var left := UIKit.panel_at(self, Rect2(42, 200, 420, 476), 12)
-	left.name = "AssayQueue"
-	var cap := UIKit.mono("QUEUE · %d" % _pending.size(), 9, UIKit.TEXT_FAINT)
-	cap.position = Vector2(16, 14)
-	left.add_child(cap)
-	var queue_scroll := ScrollContainer.new()
-	queue_scroll.position = Vector2(16, 40)
-	queue_scroll.size = Vector2(388, 360)
-	queue_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	left.add_child(queue_scroll)
-	var list := VBoxContainer.new()
-	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	list.custom_minimum_size = Vector2(360, 0)
-	list.add_theme_constant_override("separation", 8)
-	queue_scroll.add_child(list)
+	CKPageKit.shell(self, Locale.t("lb_bt_ctx"), "BLOOD ASSAY", Locale.t("lb_bt_title"), Locale.t("lb_bt_desc"))
+	var left := CKPageKit.card(self, Rect2(42, CKPageKit.TOP + 8, 420, 512), "AssayQueue")
+	CKPageKit.card_head(left, Locale.t("lb_bt_queue", [_pending.size()]), "QUEUE")
+	var can := mini(_pending.size(), GameState.silver / maxi(1, cost))
+	CKPageKit.stat(left, Vector2(18, 64), Locale.t("lb_bt_price"), Locale.t("lb_shrine_per_head", [cost]), UIKit.ACCENT)
+	CKPageKit.stat(left, Vector2(210, 64), Locale.t("lb_bt_covers"), Locale.t("lb_people", [can]), UIKit.OK if can >= _pending.size() else UIKit.DANGER)
+	_begin_btn = CKPageKit.button(Locale.t("lb_bt_go"), true, 384)
+	_begin_btn.name = "BeginReveal"
+	_begin_btn.position = Vector2(18, 118)
+	var why := ""
 	if _pending.is_empty():
-		list.add_child(UIKit.empty_state("族中人人都已验过血。"))
-	for c in _pending:
-		var row := UIKit.body_label("%s · %s · %d岁" % [c.name, c.rank_name(), c.age], UIKit.TEXT, 14)
-		row.custom_minimum_size = Vector2(360, 28)
-		list.add_child(row)
-	var begin := UIKit.cta_button("开始验血", "A", 220, 44)
-	begin.name = "BeginReveal"
-	begin.position = Vector2(16, 416)
-	var affordable := not _pending.is_empty() and GameState.silver >= cost
-	begin.disabled = not affordable
-	begin.tooltip_text = "银币不足" if not _pending.is_empty() and not affordable else ""
-	begin.pressed.connect(_begin)
-	left.add_child(begin)
-	var right := UIKit.panel_at(self, Rect2(478, 200, 760, 476), 12, true)
-	right.name = "RevealStage"
-	var rh := UIKit.mono("REVEAL", 9, UIKit.ACCENT)
-	rh.position = Vector2(18, 14)
-	right.add_child(rh)
-	_status = UIKit.body_label("灯还没点。按下开始之后，结果会一张一张掀开。", UIKit.TEXT_DIM, 14)
-	_status.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_status.position = Vector2(18, 40)
+		why = Locale.t("lb_bt_all_done")
+	elif can <= 0:
+		why = Locale.t("lb_short_silver", [cost - GameState.silver])
+	CKPageKit.lock(_begin_btn, why)
+	_begin_btn.pressed.connect(_begin)
+	left.add_child(_begin_btn)
+	var list := CKPageKit.list(left, Rect2(14, 178, 392, 320), "QueueList")
+	if _pending.is_empty():
+		list.add_child(CKPageKit.empty(Locale.t("lb_bt_all_done"), Locale.t("lb_bt_all_done_why"), "", 360))
+	for i in _pending.size():
+		var c: CKCharacter = _pending[i]
+		var r := CKPageKit.row(UIKit.OK if i < can else UIKit.TEXT_FAINT, 52)
+		var h := HBoxContainer.new()
+		h.add_theme_constant_override("separation", 10)
+		(r[1] as VBoxContainer).add_child(h)
+		var pr := UIKit.make_portrait_rect(c, 36)
+		pr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		h.add_child(pr)
+		var said := Locale.t("lb_bt_row", [c.name, c.rank_name(), c.age]) + ("" if i < can else Locale.t("lb_bt_wait_money"))
+		h.add_child(CKPageKit.text(said, UIKit.TEXT if i < can else UIKit.TEXT_DIM, 14, 300))
+		list.add_child(r[0])
+	CKPageKit.drag_through(list)
+	var right := CKPageKit.card(self, Rect2(478, CKPageKit.TOP + 8, 760, 512), "RevealStage", true)
+	CKPageKit.card_head(right, Locale.t("lb_bt_result"), "REVEAL")
+	_status = CKPageKit.text(Locale.t("lb_bt_idle") if not _pending.is_empty() else Locale.t("lb_bt_idle_done"), UIKit.TEXT_DIM, 14, 720)
+	_status.name = "RevealStatus"
+	_status.position = Vector2(18, 58)
 	_status.size = Vector2(720, 40)
 	right.add_child(_status)
-	_stage = VBoxContainer.new()
-	_stage.name = "RevealCards"
-	_stage.position = Vector2(18, 88)
-	_stage.size = Vector2(724, 400)
-	_stage.add_theme_constant_override("separation", 8)
-	right.add_child(_stage)
-	UIKit.footer_bar(self, [["A", "开始验血"], ["ESC", "返回祠堂"]], "SANCTUARY ASSAY · FROST")
+	_stage = CKPageKit.list(right, Rect2(14, 104, 732, 394), "RevealCards")
+	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "SANCTUARY ASSAY · FROST")
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
-
-func apply_mobile_layout() -> void:
-	MobileLayout.pin_footer(get_node_or_null("StitchFooter"))
-
-func _back() -> void:
-	CKNav.up("res://scenes/hub/shrine.tscn")
-
-func _unhandled_input(e: InputEvent) -> void:
-	if e.is_action_pressed("ui_cancel"):
-		_back()
 
 func _queue() -> Array:
 	var out: Array = []
@@ -86,33 +72,38 @@ func _begin() -> void:
 	var r: Dictionary = GameState.verify_bloodlines_at_shrine()
 	_status.text = str(r.get("msg", ""))
 	if not bool(r.get("ok", false)):
-		Sfx.play("ui_click")
+		_status.add_theme_color_override("font_color", UIKit.DANGER)
 		UIFX.soft_deny(_status)
+		UIFX.haptic(8)
 		return
 	_busy = true
+	CKPageKit.clear(_stage)
+	CKPageKit.lock(_begin_btn, Locale.t("lb_bt_running"))
 	_lines = r.get("lines", [])
 	_reveal_i = 0
 	Sfx.play("incense_hiss")
+	UIFX.confirm(_begin_btn)
 	_next_card()
 
 func _next_card() -> void:
 	if _reveal_i >= _lines.size():
-		_status.text = "验血结束。伪胤已改回真实血脉，详档可以打开携因。"
+		_status.text = Locale.t("lb_bt_done")
+		_status.add_theme_color_override("font_color", UIKit.OK)
 		Sfx.confirm()
 		_busy = false
+		var left := _queue().size()
+		CKPageKit.lock(_begin_btn, "" if left > 0 else Locale.t("lb_bt_all_done"))
 		return
 	var text := str(_lines[_reveal_i])
 	_reveal_i += 1
-	var impostor := text.find("伪") >= 0
-	var card := PanelContainer.new()
-	card.custom_minimum_size = Vector2(700, 56)
+	var impostor := text.find(Locale.t("lb_bt_fake_mark")) >= 0
+	var r := CKPageKit.row(UIKit.DANGER if impostor else UIKit.OK, 56)
+	var card: PanelContainer = r[0]
 	card.modulate.a = 0.0
 	if impostor:
 		card.name = "ImpostorReveal"
-	card.add_theme_stylebox_override("panel", UIKit.flat_box(Color(UIKit.DANGER, 0.16) if impostor else Color(UIKit.OK, 0.08), UIKit.DANGER if impostor else Color(UIKit.OK, 0.45), 10, 2 if impostor else 1))
-	var lab := UIKit.body_label(("伪胤揭穿 · " if impostor else "验明 · ") + text, UIKit.DANGER if impostor else UIKit.TEXT, 14)
-	lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	card.add_child(lab)
+	var head := Locale.t("lb_bt_fake") if impostor else Locale.t("lb_bt_ok")
+	(r[1] as VBoxContainer).add_child(CKPageKit.text(head + text, UIKit.DANGER if impostor else UIKit.TEXT, 14, 690))
 	_stage.add_child(card)
 	UIFX.fade_in(card, 0.22)
 	if impostor:

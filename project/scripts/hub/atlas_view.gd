@@ -37,6 +37,11 @@ var _map_zoom := 1.0
 var _map_pan := Vector2.ZERO
 var _list_btn: Dictionary = {}  # nation id -> left-list Button (WS-C #41)
 var _hilit := ""
+const MobileReflow := preload("res://scripts/platform/mobile_reflow.gd")
+var _col_w := 480.0
+var _mob := false
+var _mbase := 1.0
+var _lift := 24.0
 
 func _ready() -> void:
 	UIKit.void_bg(self)
@@ -48,7 +53,8 @@ func _ready() -> void:
 		GameState.remove_meta("atlas_view")
 	_show_view(start_view if start_view != "" else "ashbanner")
 	_select_node(World.pos)
-	UIKit.footer_bar(self, [["A", "选定 / 启程"], ["Y", "进入城镇"], ["X", "世界 / 疆域"], ["ESC", "返回"]], "OVERWORLD · FROST_TACTICAL v8.7")
+	if not _mob:
+		UIKit.footer_bar(self, [["A", "选定 / 启程"], ["Y", "进入城镇"], ["X", "世界 / 疆域"], ["ESC", "返回"]], "OVERWORLD · FROST_TACTICAL v8.7")
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 	call_deferred("_resume_state")
@@ -150,6 +156,112 @@ func _build_frame() -> void:
 	_modal.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_modal.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_modal)
+	_mobile_frame(mp)
+
+## Landscape phone: the map fills the left, one scrolling column on the right holds
+## the place profile, travel log and region list, all reflowed to touch size.
+func _mobile_frame(mp: Control) -> void:
+	if not MobilePage.active(self):
+		return
+	_mob = true
+	var vp := get_viewport().get_visible_rect().size
+	var w := maxf(1280.0, vp.x * 720.0 / maxf(1.0, vp.y))
+	_col_w = clampf(w * 0.3, 400.0, 480.0)
+	var area := Rect2(16, MobilePage.TOP + 4.0, w - _col_w - 48.0, 720.0 - MobilePage.TOP - 16.0)
+	_mbase = minf(area.size.x / MAP.size.x, area.size.y / MAP.size.y)
+	var shown := MAP.size * _mbase
+	_clip.position = (area.position + (area.size - shown) * 0.5).floor()
+	_clip.size = shown
+	mp.position = _clip.position - Vector2(2, 2)
+	mp.size = shown + Vector2(4, 4)
+	_toast.position = _clip.position + Vector2(14, shown.y - 48)
+	_toast.add_theme_font_size_override("font_size", MobilePage.FONT)
+	var stack := MobileReflow.column(self, "MobileSideCol", Rect2(w - _col_w - 16.0, MobilePage.TOP + 4.0, _col_w, 720.0 - MobilePage.TOP - 16.0))
+	for nm in ["RightColumn", "TravelHUD", "LeftColumn"]:
+		var old := get_node(nm) as Control
+		var box := VBoxContainer.new()
+		box.add_theme_constant_override("separation", 10)
+		box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		remove_child(old)
+		old.queue_free()
+		box.name = nm
+		stack.add_child(box)
+		box.child_entered_tree.connect(func(_n): _queue_reflow(box))
+		match nm:
+			"RightColumn":
+				_right = box
+			"TravelHUD":
+				_hud = box
+			_:
+				_left = box
+	var ts := ceilf(40.0 / _mbase)
+	_token.size = Vector2(ts, ts)
+	_token.pivot_offset = _token.size * 0.5
+	var tg := _token.get_child(0) as Label
+	tg.size = _token.size
+	_lift = ceilf(MobilePage.HIT / _mbase) * 0.5 + ts * 0.5 + 2.0
+	tg.add_theme_font_size_override("font_size", ceili(MobilePage.FONT / _mbase))
+	_refresh_top()
+	_apply_map_xform()
+
+
+func _queue_reflow(box: Control) -> void:
+	if box.has_meta("m_pending"):
+		return
+	box.set_meta("m_pending", true)
+	(func():
+		if is_instance_valid(box):
+			box.remove_meta("m_pending")
+			MobileReflow.reflow_children(box, _col_w - 40.0)).call_deferred()
+
+
+## Map labels and buttons are scaled with the map: size them so they land at 22px / 76px on screen.
+func _mobile_nodes() -> void:
+	if not _mob:
+		return
+	var fs := ceili(MobilePage.FONT / _mbase)
+	var hit := ceilf(MobilePage.HIT / _mbase)
+	for c in _layer.find_children("*", "Control", true, false):
+		if c is Label:
+			var l := c as Label
+			if l.get_theme_font_size("font_size") < fs:
+				var before := l.get_minimum_size().x
+				l.add_theme_font_size_override("font_size", fs)
+				if l.get_parent() == _layer:
+					l.position.x -= (l.get_minimum_size().x - before) * 0.5
+		elif c is BaseButton and c.get_parent() == _layer:
+			var b := c as Control
+			var sz := b.size
+			if sz.x < hit or sz.y < hit:
+				var ns := Vector2(maxf(sz.x, hit), maxf(sz.y, hit))
+				b.custom_minimum_size = ns
+				b.position -= (ns - sz) * 0.5
+				b.size = ns
+				for k in b.get_children():
+					if k is Label and (k as Label).anchor_right < 0.5:
+						var kl := k as Label
+						kl.add_theme_font_size_override("font_size", fs)
+						kl.size = kl.get_minimum_size()
+						kl.position = Vector2((ns.x - kl.size.x) * 0.5, ns.y + 1.0)
+			b.add_theme_font_size_override("font_size", maxi(fs, b.get_theme_font_size("font_size")))
+	# Bigger nodes: push captions clear of every button, badges sit just above it.
+	var btns: Array = []
+	for c in _layer.get_children():
+		if c is BaseButton:
+			btns.append(c)
+	for c in _layer.get_children():
+		if not (c is Label):
+			continue
+		var l := c as Label
+		l.size = l.get_minimum_size()
+		for b in btns:
+			var br := Rect2((b as Control).position, (b as Control).size)
+			if br.intersects(Rect2(l.position, l.size)):
+				if l.text.length() <= 1:
+					l.position = Vector2(br.end.x - 2.0, br.position.y - l.size.y * 0.6)
+				else:
+					l.position.y = br.end.y + 1.0
+
 
 func _refresh_top() -> void:
 	for c in _top.get_children():
@@ -157,13 +269,23 @@ func _refresh_top() -> void:
 	var here: Dictionary = World.node(World.pos)
 	var fpd := World.food_per_day()
 	var food_days := GameState.food / maxi(1, fpd)
-	UIKit.top_bar(_top, "世界舆图 · 跑图", [
+	var title := "世界舆图 · 跑图"
+	var chips := [
 		["位置", str(here.get("name", "—"))],
 		["历", World.date_label(), UIKit.TEXT_DIM],
 		["银", str(GameState.silver), UIKit.ACCENT],
 		["粮", "%d（%d 日）" % [GameState.food, food_days], UIKit.OK if food_days >= 6 else UIKit.DANGER],
 		["士气", str(GameState.morale), UIKit.OK if GameState.morale >= 50 else UIKit.DANGER],
-	], "返回城堡", _back)
+	]
+	var back_t := "返回城堡"
+	if _mob:
+		var parts := PackedStringArray()
+		for ch in chips:
+			parts.append("%s %s" % [ch[0], ch[1]])
+		_top.size = Vector2(maxf(1280.0, get_viewport().get_visible_rect().size.x * 720.0 / maxf(1.0, get_viewport().get_visible_rect().size.y)), MobilePage.TOP)
+		MobilePage.top_bar(_top, title, " · ".join(parts), [[back_t, _back]])
+		return
+	UIKit.top_bar(_top, title, chips, back_t, _back)
 
 # ── views ─────────────────────────────────────────────
 func _show_view(v: String) -> void:
@@ -200,6 +322,7 @@ func _build_nodes() -> void:
 	if _view == "":
 		for nid in World.nation_ids():
 			_add_region_button(str(nid))
+		_mobile_nodes()
 		return
 	for n in World.nodes_in(_view):
 		_add_node_button(n, markers, mm)
@@ -210,6 +333,7 @@ func _build_nodes() -> void:
 			var o := World.other_end(r, str(n.id))
 			if World.nation_of(o) != _view:
 				_add_gateway(str(n.id), o, r)
+	_mobile_nodes()
 
 func _add_region_button(nid: String) -> void:
 	var nat: Dictionary = World.nations.get(nid, {})
@@ -506,7 +630,7 @@ func _place_token(anim: bool, to_id: String = "") -> void:
 	_token.visible = vis
 	if not vis:
 		return
-	var p := _np(id) - _token.size * 0.5 + (Vector2(0, -24) if _view != "" else Vector2(0, -30))
+	var p := _np(id) - _token.size * 0.5 + (Vector2(0, -_lift) if _view != "" else Vector2(0, -_lift - 6.0))
 	if anim:
 		var tw := create_tween()
 		tw.tween_property(_token, "position", p, STEP_SEC).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
@@ -902,6 +1026,8 @@ func _render_hud() -> void:
 func _fit_hit(visual: float) -> float:
 	if not DeviceProfile.is_mobile():
 		return visual
+	if _mob:
+		return maxf(visual, ceilf(MobilePage.HIT / _mbase))
 	return maxf(visual, minf(64.0, DeviceProfile.hit_px()))
 
 func _bind_press(b: Button, on_tap: Callable, on_info: Callable) -> void:
@@ -1066,7 +1192,7 @@ func _animate_leg(to_id: String) -> void:
 func _animate_leg_half(to_id: String) -> void:
 	if not _token.visible or _view == "" or World.nation_of(to_id) != _view:
 		return
-	var p := (_np(World.pos) + _np(to_id)) * 0.5 - _token.size * 0.5 + Vector2(0, -24)
+	var p := (_np(World.pos) + _np(to_id)) * 0.5 - _token.size * 0.5 + Vector2(0, -_lift)
 	var tw := create_tween()
 	tw.tween_property(_token, "position", p, STEP_SEC).set_trans(Tween.TRANS_SINE)
 
@@ -1399,12 +1525,13 @@ func _clip_local(vp: Vector2) -> Vector2:
 func _apply_map_xform() -> void:
 	_clamp_map()
 	_map_content.position = _map_pan
-	_map_content.scale = Vector2(_map_zoom, _map_zoom)
+	_map_content.scale = Vector2(_map_zoom, _map_zoom) * _mbase
 
 func _clamp_map() -> void:
-	var shown := MAP.size * _map_zoom
-	_map_pan.x = clampf(_map_pan.x, 40.0 - shown.x, MAP.size.x - 40.0)
-	_map_pan.y = clampf(_map_pan.y, 40.0 - shown.y, MAP.size.y - 40.0)
+	var shown := MAP.size * _map_zoom * _mbase
+	var frame := _clip.size if _clip != null else MAP.size
+	_map_pan.x = clampf(_map_pan.x, 40.0 - shown.x, frame.x - 40.0)
+	_map_pan.y = clampf(_map_pan.y, 40.0 - shown.y, frame.y - 40.0)
 
 func _zoom_map(factor: float, focal: Vector2) -> void:
 	var old := _map_zoom
