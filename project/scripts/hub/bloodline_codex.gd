@@ -190,17 +190,22 @@ func _line_card(parent: Node, line_id: String, tier_zh: String, known: Dictionar
 ## Audit #58: an unseen trait reads as "?" and tapping it says how to unlock it (no hover on touch).
 func _unknown(law: String) -> Control:
 	var sil := CKCourtChrome.trait_silhouette(law)
-	# A container sized by its content: the phone type floor widens the law chip, and a fixed-size
-	# wrapper let the chip spill onto its neighbour in the flow (mobile polish: codex chip crowding).
-	var wrap := MarginContainer.new()
+	# Track the silhouette's real width: the phone type floor widens the law chip after build, and a
+	# fixed wrapper let the chip spill onto its neighbour in the flow (mobile polish: chip crowding).
+	var wrap := Control.new()
 	wrap.name = "UnknownTrait"
+	wrap.custom_minimum_size = sil.custom_minimum_size
 	wrap.mouse_filter = Control.MOUSE_FILTER_PASS
 	wrap.add_child(sil)
 	var q := UIKit.title_label("?", 18, UIKit.ACCENT)
 	q.name = "UnknownMark"
-	q.position = Vector2(80, 0)
+	q.position = Vector2(124, 4)
 	q.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	sil.get_child(sil.get_child_count() - 1).add_child(q)
+	wrap.add_child(q)
+	if DeviceProfile.is_mobile():
+		sil.resized.connect(func():
+			wrap.custom_minimum_size = Vector2(maxf(sil.custom_minimum_size.x, sil.size.x), sil.custom_minimum_size.y)
+			q.position.x = sil.size.x - 24.0)
 	sil.gui_input.connect(func(e: InputEvent):
 		if e is InputEventMouseButton and (e as InputEventMouseButton).pressed:
 			CKPageKit.say(_hint, Locale.t("lb_codex_unknown"), true))
