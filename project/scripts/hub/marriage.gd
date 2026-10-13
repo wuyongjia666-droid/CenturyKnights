@@ -45,15 +45,26 @@ func _ready() -> void:
 	_refresh()
 	UIFX.slide_from_bottom(self, 24.0, 0.32)
 
+const MobileReflow := preload("res://scripts/platform/mobile_reflow.gd")
+var _mob := false
+var _top_title := ""
+var _top_back := ""
+var _top_chips: Array = []
+var _m_card_w := 400.0
+
+
 func _build() -> void:
 	## v8.6 — layout-matched to Stitch 17_marriage.png: protocol header · candidate tabs ·
 	## CLAN PRINCIPAL | GENOMIC HARMONY | ALLIED SPOUSE · forecast + 再议/缔约 · footer
 	UIKit.void_bg(self)
-	var tb := UIKit.top_bar(self, "宗族谱系枢纽 · 联姻盟誓", [
+	_top_title = "宗族谱系枢纽 · 联姻盟誓"
+	_top_back = "返回城堡"
+	_top_chips = [
 		["灰烬邦", GameState.get_rep_name("ashland"), UIKit.ACCENT],
 		["河卫邦", GameState.get_rep_name("riverland"), UIKit.TEXT],
 		["银币", str(GameState.silver), UIKit.ACCENT],
-		["历", Calendar.label(), UIKit.TEXT_DIM]], "返回城堡", _back)
+		["历", Calendar.label(), UIKit.TEXT_DIM]]
+	var tb := UIKit.top_bar(self, _top_title, _top_chips, _top_back, _back)
 	_bind_chips(tb)
 	UIKit.page_head(self, 42, 72, "HARMONIC RATIO EVALUATION", "联姻契约", "MARRIAGE PROTOCOL", "宗族双源结合研判与血脉特质推演 —— 声望是门，子嗣期望是窗。", "PROTOCOL NO.07", 18)
 	var rd := UIKit.mono("RATING DISCIPLINE", 9, UIKit.TEXT_FAINT)
@@ -455,6 +466,8 @@ func _render_cards() -> void:
 func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 	if _rite_board == null or _punnett == null:
 		return
+	if _msg and _msg.get_parent() != _rite_board:
+		_msg.reparent(_rite_board, false)
 	for ch in _rite_board.get_children():
 		if ch == _msg:
 			continue
@@ -537,8 +550,94 @@ func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 			cast.mouse_filter = Control.MOUSE_FILTER_PASS
 	_punnett.add_child(cast)
 	UIFX.wire_tree(_rite_board)
+	_mobile_after_render.call_deferred()
+
+## Landscape phone: one 76px top bar, candidate tabs, a scrolling body (three house cards,
+## then rites + punnett) and a full-width action row, all at 22px / 76px.
+func _mobile_relayout() -> bool:
+	if _mob:
+		return true
+	if not MobilePage.active(self) or _punnett == null:
+		return false
+	_mob = true
+	var vp := get_viewport().get_visible_rect().size
+	var w := maxf(1280.0, vp.x * 720.0 / maxf(1.0, vp.y))
+	var parts := PackedStringArray()
+	for ch in _top_chips:
+		parts.append("%s %s" % [ch[0], ch[1]])
+	var help := get_node_or_null("OpenGuide") as Button
+	var btns: Array = []
+	if help:
+		help.visible = false
+		btns.append([help.text, func(): CKHelpCodex.open(self, true)])
+	btns.append([_top_back, _back])
+	MobilePage.top_bar(self, _top_title, " · ".join(parts), btns)
+	for ch in get_children():
+		if not (ch is Control) or ch == _cards or ch == _tabs or ch == _vow_panel or ch == _toast:
+			continue
+		var c := ch as Control
+		if c.name in ["MobileTopBar", "MarriageActions", "RiteBoard", "PunnettBoard"] or c is TextureRect:
+			continue
+		if c.position.y > 40.0 and c.position.y < 240.0:
+			c.visible = false
+	_tabs.position = Vector2(16, MobilePage.TOP + 4.0)
+	var jy := 720.0 - MobilePage.HIT - 12.0
+	var row := get_node("MarriageActions") as HBoxContainer
+	row.position = Vector2(16, jy)
+	row.size = Vector2(w - 32.0, MobilePage.HIT)
+	row.alignment = BoxContainer.ALIGNMENT_BEGIN
+	for b in row.get_children():
+		(b as Control).custom_minimum_size = Vector2(0, MobilePage.HIT)
+		(b as Control).size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		(b as Control).add_theme_font_size_override("font_size", MobilePage.FONT)
+	var top := MobilePage.TOP + 4.0 + MobilePage.HIT + 10.0
+	var stack := MobileReflow.column(self, "MobileBody", Rect2(16, top, w - 32.0, jy - top - 10.0))
+	var cards := HBoxContainer.new()
+	cards.name = "MobileCards"
+	cards.add_theme_constant_override("separation", 10)
+	stack.add_child(cards)
+	remove_child(_cards)
+	_cards.queue_free()
+	_cards = cards
+	_m_card_w = (w - 32.0 - 24.0 - 20.0) / 3.0
+	var boards := HBoxContainer.new()
+	boards.add_theme_constant_override("separation", 10)
+	stack.add_child(boards)
+	for bd in [_rite_board, _punnett]:
+		(bd as Control).reparent(boards, false)
+		(bd as Control).size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		(bd as Control).size = Vector2((w - 32.0 - 24.0 - 10.0) * 0.5, 0)
+	if _wed_line:
+		_wed_line.reparent(stack, false)
+		_wed_line.add_theme_font_size_override("font_size", MobilePage.FONT)
+	_rect_principal = Rect2(0, 0, _m_card_w, 300)
+	_rect_harmony = Rect2(0, 0, _m_card_w, 300)
+	_rect_spouse = Rect2(0, 0, _m_card_w, 300)
+	_narrow = true
+	if _selected != null:
+		_render_cards()
+	return true
+
+
+func _mobile_after_render() -> void:
+	if not _mob:
+		return
+	MobileReflow.reflow_children(_cards, _m_card_w)
+	for c in _cards.get_children():
+		(c as Control).size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		(c as Control).custom_minimum_size.x = _m_card_w
+		(c as Control).clip_contents = true
+	for bd in [_rite_board, _punnett]:
+		MobileReflow.reflow_inplace(bd, (bd as Control).size.x)
+	for b in _tabs.get_children():
+		if b is Button:
+			(b as Button).custom_minimum_size = Vector2(0, MobilePage.HIT)
+			(b as Button).add_theme_font_size_override("font_size", MobilePage.FONT)
+
 
 func apply_mobile_layout() -> void:
+	if _mobile_relayout():
+		return
 	var vp := get_viewport_rect().size
 	_fit_chrome(vp)
 	if _punnett == null or _rite_board == null:
