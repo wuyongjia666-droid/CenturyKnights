@@ -828,6 +828,7 @@ func _rebuild_fx_marks() -> void:
 			_fx_marks.append({"cell": cell, "h": h, "kind": kind, "state": state})
 
 func _paint_terrain_fx() -> void:
+	BattleEscort.paint(self, map_draw, ORIGIN, CELL)
 	for mark in _fx_marks:
 		var cell: Vector2i = mark["cell"]
 		var h := int(mark.get("h", 0))
@@ -2212,7 +2213,8 @@ func _end_player_turn() -> void:
 	moved_this_select = false
 	overlay.queue_redraw()
 	await get_tree().create_timer(0.35).timeout
-	_enemy_ai()
+	if BattleEscort.step(self) > 0: map_draw.queue_redraw(); _check_end()
+	if not battle_over: _enemy_ai()
 	if not battle_over:
 		_start_player_turn()
 

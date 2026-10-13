@@ -161,7 +161,8 @@
         "exit_tile": [
           11,
           1
-        ]
+        ],
+        "escort_ai": true
       },
       "npcs": [
         {
@@ -173,7 +174,14 @@
           ],
           "team": "ally"
         }
-      ]
+      ],
+      "on_victory": {
+        "flags": [
+          "e1_01_won",
+          "e1_01_fought"
+        ],
+        "actions": []
+      }
     },
     "e1_ford_rout": {
       "name": "断潮渡哨",
