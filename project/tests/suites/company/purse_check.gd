@@ -10,6 +10,7 @@ func _ready() -> void:
 	_death_purse(fails)
 	_empty_treasury(fails)
 	_remit_repeat(fails)
+	_death_flow(fails)
 	if fails.is_empty():
 		print("PURSE PASS")
 		get_tree().quit(0)
@@ -127,3 +128,35 @@ func _remit_repeat(fails: Array) -> void:
 	var r2 := CKPurse.remit_to_flag(lead)
 	if bool(r2.get("ok", false)) or int(GameState.silver) != s0 + 10:
 		fails.append("remit repeat should fail on empty purse")
+
+
+## 死亡流程：伤亡 _kill 走 CKPurse.on_death；配偶收到上限，余数进旗库；没配偶整笔进旗库；子女不继承。
+func _death_flow(fails: Array) -> void:
+	GameState.new_game("灰", "旗", "frost")
+	var a := CKCharacter.new()
+	a.id = "da"; a.name = "甲"; a.alive = true; a.blood_meta = {"purse": 30}
+	var b := CKCharacter.new()
+	b.id = "db"; b.name = "乙"; b.alive = true; b.blood_meta = {"purse": 25}
+	var kid := CKCharacter.new()
+	kid.id = "dk"; kid.alive = true; kid.is_child = true; kid.age = 6; kid.blood_meta = {"purse": 0}
+	kid.parent_ids = ["da", "db"]
+	a.spouse_id = "db"; b.spouse_id = "da"
+	for c in [a, b, kid]:
+		GameState.characters[c.id] = c
+	var s0 := int(GameState.silver)
+	var rng := RandomNumberGenerator.new()
+	CKInjury._kill(a, rng, "")
+	if CKPurse.get_purse(a) != 0:
+		fails.append("dead purse not emptied")
+	if CKPurse.get_purse(b) != 40 or int(GameState.silver) != s0 + 15:
+		fails.append("spouse cap split b=%d silver+%d" % [CKPurse.get_purse(b), int(GameState.silver) - s0])
+	if CKPurse.get_purse(kid) != 0:
+		fails.append("child inherited")
+	# repeat: dying again moves nothing
+	CKPurse.on_death(a)
+	if int(GameState.silver) != s0 + 15:
+		fails.append("repeat death moved silver")
+	# widow dies: no living spouse → all to treasury
+	CKInjury._kill(b, rng, "")
+	if int(GameState.silver) != s0 + 55:
+		fails.append("no-spouse to treasury %d" % (int(GameState.silver) - s0))
