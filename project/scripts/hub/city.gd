@@ -28,6 +28,8 @@ const MobileReflow := preload("res://scripts/platform/mobile_reflow.gd")
 const M_SIDE_W := 420.0
 var _mob := false
 var _m_body_w := 800.0
+var _m_w := 1280.0
+var _m_top := 180.0
 
 func _ready() -> void:
 	city = str(GameState.get_meta("city_id", World.pos)) if GameState.has_meta("city_id") else World.pos
@@ -77,46 +79,70 @@ func _ready() -> void:
 		_set_tab(str(GameState.get_meta("city_tab")))
 		GameState.remove_meta("city_tab")
 	if _mob:
-		_toast.position = Vector2(M_SIDE_W + 36.0, 720.0 - 60.0)
+		_toast.position = Vector2(32.0, 720.0 - 72.0)
+		_toast.z_index = 20
 		_toast.add_theme_font_size_override("font_size", MobilePage.FONT)
 	else:
 		UIKit.footer_bar(self, [["Q/E", "切换页签"], ["A", "选择 / 确认"], ["ESC", "返回舆图"]], "SETTLEMENT · FROST_TACTICAL v8.7")
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 
-## Landscape phone: 76px top bar; city card scrolls on the left; tabs and the tab body
-## (desktop panels reflowed into one scrolling column) on the right.
+## Landscape phone (docs/design/mobile-landscape.md): 76px top bar; every tab visible in one
+## full-width tab row; below it the tab's panels sit side by side as content cards (desktop
+## width ratios kept). The city card is the left column of 概览 only, so the shop, board and
+## tavern tabs get the whole width.
 func _mobile_frame() -> void:
 	if not MobilePage.active(self):
 		return
 	_mob = true
 	var vp := get_viewport().get_visible_rect().size
 	var w := maxf(1280.0, vp.x * 720.0 / maxf(1.0, vp.y))
+	_m_w = w
 	var top := MobilePage.TOP + 4.0
-	var side_stack := MobileReflow.column(self, "MobileSide", Rect2(16, top, M_SIDE_W, 720.0 - top - 12.0))
+	_tabbar.position = Vector2(16, top)
+	_tabbar.size = Vector2(w - 32.0, MobilePage.HIT)
+	_tabbar.add_theme_constant_override("separation", 8)
+	for b in _tabbar.get_children():
+		var bc := b as Button
+		bc.custom_minimum_size = Vector2(0, MobilePage.HIT)
+		bc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		bc.add_theme_font_size_override("font_size", MobilePage.FONT)
+		bc.clip_text = false
+	_m_top = top + MobilePage.HIT + 12.0
+	var h := 720.0 - _m_top - 12.0
+	var side_stack := MobileReflow.column(self, "MobileSide", Rect2(16, _m_top, M_SIDE_W, h))
 	remove_child(_side)
 	side_stack.add_child(_side)
 	_swap_box(_side, side_stack, func(b): _side = b)
-	var bx := M_SIDE_W + 36.0
-	_m_body_w = w - bx - 16.0
-	_tabbar.add_theme_constant_override("separation", 8)
-	for b in _tabbar.get_children():
-		(b as Control).custom_minimum_size = Vector2(96, MobilePage.HIT)
-		(b as Control).add_theme_font_size_override("font_size", MobilePage.FONT)
-	var tab_sc := ScrollContainer.new()
-	tab_sc.name = "TabScroll"
-	tab_sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
-	tab_sc.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	tab_sc.position = Vector2(bx, top)
-	tab_sc.size = Vector2(_m_body_w, MobilePage.HIT + 4.0)
-	remove_child(_tabbar)
-	tab_sc.add_child(_tabbar)
-	add_child(tab_sc)
-	var by := top + MobilePage.HIT + 10.0
-	var body_stack := MobileReflow.column(self, "MobileBody", Rect2(bx, by, _m_body_w, 720.0 - by - 12.0))
+	var body_stack := MobileReflow.column(self, "MobileBody", Rect2(16, _m_top, w - 32.0, h))
 	remove_child(_body)
 	body_stack.add_child(_body)
-	_swap_box(_body, body_stack, func(b): _body = b)
+	var row := HBoxContainer.new()
+	row.name = "Body"
+	row.add_theme_constant_override("separation", 12)
+	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	body_stack.remove_child(_body)
+	_body.queue_free()
+	body_stack.add_child(row)
+	_body = row
+	row.child_entered_tree.connect(func(_n): _queue_reflow(row))
+
+
+## 概览 keeps the city card on the left; other tabs use the full width.
+func _m_layout() -> void:
+	if not _mob:
+		return
+	var side_sc := get_node_or_null("MobileSide") as Control
+	var body_sc := get_node_or_null("MobileBody") as Control
+	if side_sc == null or body_sc == null:
+		return
+	var with_card := tab == "overview"
+	side_sc.visible = with_card
+	var x := 16.0 + (M_SIDE_W + 16.0 if with_card else 0.0)
+	body_sc.position = Vector2(x, _m_top)
+	body_sc.size = Vector2(_m_w - x - 16.0, 720.0 - _m_top - 12.0)
+	_m_body_w = body_sc.size.x
+	(body_sc as ScrollContainer).scroll_vertical = 0
 
 
 func _swap_box(old: Control, stack: Control, assign: Callable) -> void:
@@ -138,8 +164,81 @@ func _queue_reflow(box: Control) -> void:
 	(func():
 		if is_instance_valid(box):
 			box.remove_meta("m_pending")
+			if box == _body:
+				_m_reflow_body()
+				return
 			var bw := (box.get_parent() as Control).size.x if box.get_parent() else _m_body_w
 			MobileReflow.reflow_children(box, maxf(200.0, bw - 24.0))).call_deferred()
+
+
+## Body panels become side-by-side cards; each keeps its desktop share of the width.
+func _m_reflow_body() -> void:
+	var kids: Array = []
+	var total := 0.0
+	for c in _body.get_children():
+		if c is Control and not c.is_queued_for_deletion() and (c as Control).visible:
+			var dw := maxf(120.0, maxf((c as Control).size.x, (c as Control).custom_minimum_size.x))
+			kids.append([c.get_index(), dw])
+			total += dw
+	if kids.is_empty():
+		return
+	var avail := _m_body_w - 12.0 * (kids.size() - 1) - 8.0
+	var narrow := false
+	for k in kids:
+		if avail * float(k[1]) / total < 400.0:
+			narrow = true
+	if narrow and kids.size() > 1:
+		# too tight for side-by-side cards: stack them full width instead
+		avail = _m_body_w - 8.0
+		for k in kids:
+			k[1] = total
+	for k in kids:
+		var c := _body.get_child(int(k[0])) as Control
+		var cw := floorf(avail * float(k[1]) / total)
+		if c.has_meta("m_reflowed"):
+			continue
+		MobileReflow.reflow(c, cw)
+	for k in kids:
+		var c := _body.get_child(int(k[0])) as Control
+		c.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		c.size_flags_stretch_ratio = float(k[1])
+		c.custom_minimum_size.x = 0
+	if narrow and kids.size() > 1:
+		var col := VBoxContainer.new()
+		col.set_meta("m_reflowed", true)
+		col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		col.add_theme_constant_override("separation", 12)
+		var moving: Array = []
+		for k in kids:
+			moving.append(_body.get_child(int(k[0])))
+		for c in moving:
+			_body.remove_child(c)
+			col.add_child(c)
+		_body.add_child(col)
+	_m_fix_rows(_body)
+	for l in _body.find_children("*", "Label", true, false):
+		var lab := l as Label
+		if lab.text.length() <= 6 and not lab.text.contains("\n") and not (lab.get_parent() is HBoxContainer):
+			lab.autowrap_mode = TextServer.AUTOWRAP_OFF
+			lab.custom_minimum_size.x = 0
+
+
+## List rows: text spans the row; the left badge column stacks glyph over tier.
+func _m_fix_rows(root: Node) -> void:
+	for b in root.find_children("*", "Button", true, false):
+		if not (b as Node).has_meta("m_row"):
+			continue
+		var left: Array = []
+		for k in (b as Node).get_children():
+			if k is Label and (k as Label).position.x < 50.0:
+				left.append(k)
+		left.sort_custom(func(x, y): return x.position.y < y.position.y)
+		var y := 6.0
+		for l in left:
+			var lab := l as Label
+			lab.size = lab.get_minimum_size()
+			lab.position = Vector2(12, y)
+			y += 38.0
 
 
 func _add_backdrop() -> void:
@@ -307,6 +406,7 @@ func _set_tab(t: String) -> void:
 	_render_tab()
 
 func _render_tab() -> void:
+	_m_layout()
 	for k in _tab_btn.keys():
 		var b: Button = _tab_btn[k]
 		var on := str(k) == tab
@@ -379,6 +479,10 @@ func _scroll(p: Control, r: Rect2) -> VBoxContainer:
 	var v := VBoxContainer.new()
 	v.custom_minimum_size = Vector2(r.size.x - 10, 0)
 	v.add_theme_constant_override("separation", 4)
+	if _mob:
+		v.custom_minimum_size.x = 0
+		v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		v.add_theme_constant_override("separation", 8)
 	sc.add_child(v)
 	return v
 
@@ -413,7 +517,14 @@ func _row_button(text: String, sub: String, w: float, on: bool, locked: bool) ->
 	s.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(s)
 	if _mob:
-		# phone: two 22px lines need a taller row
+		# phone: two 22px lines need a taller row; the row spans its card
+		b.set_meta("m_row", true)
+		b.custom_minimum_size.x = 0
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		for lab in [l, s]:
+			(lab as Label).anchor_right = 1.0
+			(lab as Label).offset_left = 60.0
+			(lab as Label).offset_right = -10.0
 		b.custom_minimum_size.y = maxf(b.custom_minimum_size.y, 84.0)
 		l.position.y = 6.0
 		l.size.y = 30.0
@@ -608,7 +719,7 @@ func _rumor_box(p: Control, r: Rect2) -> void:
 # ── 铁匠铺 ────────────────────────────────────────────
 func _tab_smith() -> void:
 	var sp := AtlasArt.smith_plate(World.nation_of(city))
-	if sp != "":
+	if sp != "" and not _mob:
 		var bg := TextureRect.new()
 		bg.texture = load(sp)
 		bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -764,9 +875,10 @@ func _tab_market() -> void:
 	hdr.position = Vector2(18, 56)
 	hdr.add_theme_constant_override("separation", 0)
 	p.add_child(hdr)
+	var k := 1.4 if _mob else 1.0  # phone: columns sized for 22px text
 	for h in [["货物", 130], ["存货", 54], ["买价", 60], ["卖价", 60], ["持有", 54], ["已知最佳卖处", 230], ["", 230]]:
 		var l := UIKit.mono(str(h[0]), 9, UIKit.TEXT_FAINT, false)
-		l.custom_minimum_size = Vector2(int(h[1]), 0)
+		l.custom_minimum_size = Vector2(int(h[1] * k), 0)
 		hdr.add_child(l)
 	var v := _scroll(p, Rect2(12, 76, 830, 490))
 	var n: Dictionary = World.node(city)
@@ -790,15 +902,15 @@ func _tab_market() -> void:
 		elif gs in n.get("demand", []):
 			tag = " 缺"
 			col = UIKit.EMBER
-		var nm := _line(World.good_name(gs) + tag, col, 13, 130)
+		var nm := _line(World.good_name(gs) + tag, col, 13, 130 * k)
 		row.add_child(nm)
-		row.add_child(_line(str(World.stock(city, gs)), UIKit.TEXT_DIM, 12, 54))
+		row.add_child(_line(str(World.stock(city, gs)), UIKit.TEXT_DIM, 12, 54 * k))
 		var bp := World.price(city, gs, "buy")
 		var sp := World.price(city, gs, "sell")
-		row.add_child(_line(str(bp), UIKit.TEXT, 13, 60))
-		row.add_child(_line(str(sp), UIKit.TEXT, 13, 60))
+		row.add_child(_line(str(bp), UIKit.TEXT, 13, 60 * k))
+		row.add_child(_line(str(sp), UIKit.TEXT, 13, 60 * k))
 		var have := World.have_good(gs)
-		row.add_child(_line(str(have), UIKit.ACCENT if have > 0 else UIKit.TEXT_FAINT, 13, 54))
+		row.add_child(_line(str(have), UIKit.ACCENT if have > 0 else UIKit.TEXT_FAINT, 13, 54 * k))
 		var best: Dictionary = World.best_known_sell(gs, city)
 		var bt := "—"
 		var bcol := UIKit.TEXT_FAINT
@@ -806,7 +918,7 @@ func _tab_market() -> void:
 			var margin := int(best.price) - bp
 			bt = "%s %d（%+d）" % [World.node(str(best.city)).get("name", ""), int(best.price), margin]
 			bcol = UIKit.OK if margin > 0 else UIKit.TEXT_DIM
-		row.add_child(_line(bt, bcol, 12, 230))
+		row.add_child(_line(bt, bcol, 12, 230 * k))
 		var acts := HBoxContainer.new()
 		acts.add_theme_constant_override("separation", 4)
 		for a in [["买1", 1, true], ["买5", 5, true], ["卖1", 1, false], ["卖全", -1, false]]:
@@ -824,7 +936,15 @@ func _tab_market() -> void:
 				b.tooltip_text = "共 %d 银" % World.quote_sell(city, gs, maxi(1, q2))
 				b.pressed.connect(func(): _do(World.market_sell(city, gs, q2)))
 			acts.add_child(b)
-		if _mob:
+		if _mob and _m_body_w >= 1200.0:
+			# wide phone: trade buttons stay on the price row, pushed to the right
+			row.custom_minimum_size = Vector2(0, 76)
+			var gap := Control.new()
+			gap.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			row.add_child(gap)
+			row.add_child(acts)
+			v.add_child(row)
+		elif _mob:
 			# phone: trade buttons get their own line under the price row
 			var cell := VBoxContainer.new()
 			cell.add_theme_constant_override("separation", 4)
@@ -890,6 +1010,14 @@ func _tab_board() -> void:
 		v.add_child(_para("此筛选下没有委托。", UIKit.TEXT_FAINT, 12, 380))
 	if offers.is_empty():
 		v.add_child(_para("榜上暂无委托——%d 日后刷新。" % (int(World.rules.get("board_refresh_days", 30)) - World.days_total % int(World.rules.get("board_refresh_days", 30))), UIKit.TEXT_FAINT, 12, 380))
+		# empty state: point a new player at the capital, whose board always has work
+		var cap := str(World.nations.get(World.nation_of(city), {}).get("capital", ""))
+		if cap != "" and cap != city:
+			v.add_child(_para("新到此地？去%s看看——都城的委托榜总有活计。回舆图选中它即可启程。" % str(World.node(cap).get("name", cap)), UIKit.ACCENT, 12, 380))
+			var gb := UIKit.ghost_button("回舆图 · 前往%s" % str(World.node(cap).get("name", cap)), 300, 40)
+			gb.name = "BoardGoCapital"
+			gb.pressed.connect(func(): GameState.set_meta("atlas_view", World.nation_of(cap)); _back())
+			v.add_child(gb)
 	var al := UIKit.mono("ACTIVE %d/%d" % [World.active.size(), int(World.rules.get("active_limit", 5))], 9, UIKit.ACCENT)
 	al.position = Vector2(18, 366)
 	p.add_child(al)
@@ -1042,6 +1170,13 @@ func _tab_tavern() -> void:
 		var idx := i
 		hb.pressed.connect(func(): _do(World.hire(city, idx)))
 		card.add_child(hb)
+		if _mob:
+			# phone: the card becomes a column so 22px rows stack instead of overlapping
+			var cw := clampf((_m_body_w - 80.0) / maxf(1.0, float(lst.size())) - 12.0, 280.0, 460.0)
+			card.custom_minimum_size = Vector2(cw, 0)
+			var out := MobileReflow.reflow(card, cw)
+			out.custom_minimum_size.x = cw
+			out.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
 func _tab_lamp() -> void:
 	var leader = GameState.get_leader()
@@ -1119,9 +1254,10 @@ func _tab_armory() -> void:
 		row.add_child(ub)
 		slots.add_child(row)
 	var al := UIKit.mono("ARMORY · 世界装备 %d 件" % _armory_count(), 9, UIKit.ACCENT)
-	al.position = Vector2(18, 236)
+	al.position = Vector2(18, 236 if not _mob else 420)
 	d.add_child(al)
-	var v2 := _scroll(d, Rect2(12, 254, 518, 314))
+	# phone: rows are regrouped by y, so keep the armory list clearly below the slot rows
+	var v2 := _scroll(d, Rect2(12, 254, 518, 314) if not _mob else Rect2(12, 460, 518, 314))
 	var ids: Array = World.armory.keys()
 	ids.sort()
 	for iid in ids:

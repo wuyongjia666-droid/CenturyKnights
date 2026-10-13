@@ -44,6 +44,16 @@ var _mbase := 1.0
 var _lift := 24.0
 var _drawer := false  # narrow phones: side column slides over the map
 var _side: Control
+const M_SHEET_MIN := 420.0
+const M_SHEET_W := 470.0
+var _sheet_tab := "place"
+var _sheet_btn: Dictionary = {}
+var _sheet_scroll: ScrollContainer
+var _actions: VBoxContainer
+var _side_toggle: Button
+var _map_frame: Control
+var _map_full := Rect2()
+var _map_side := Rect2()
 
 func _ready() -> void:
 	UIKit.void_bg(self)
@@ -160,53 +170,91 @@ func _build_frame() -> void:
 	add_child(_modal)
 	_mobile_frame(mp)
 
-## Landscape phone: the map fills the left, one scrolling column on the right holds
-## the place profile, travel log and region list, all reflowed to touch size.
+## Landscape phone (docs/design/mobile-landscape.md): the map takes the whole height and
+## as much width as its 16:9 plate allows; one side sheet with three tabs (地点 / 日志 / 列国)
+## holds the place profile, route, road log and region list, with the main action pinned
+## at the bottom. When the phone is too narrow for map + sheet side by side, the sheet is a
+## drawer over the right of the map (the map stays visible) toggled from the top bar.
 func _mobile_frame(mp: Control) -> void:
 	if not MobilePage.active(self):
 		return
 	_mob = true
 	var vp := get_viewport().get_visible_rect().size
 	var w := maxf(1280.0, vp.x * 720.0 / maxf(1.0, vp.y))
-	_col_w = clampf(w * 0.3, 400.0, 480.0)
-	_drawer = w < 1500.0
-	var map_w := w - 32.0 if _drawer else w - _col_w - 48.0
-	var area := Rect2(16, MobilePage.TOP + 4.0, map_w, 720.0 - MobilePage.TOP - 16.0)
+	var top := MobilePage.TOP + 4.0
+	var h := 720.0 - top - 12.0
+	var map_w := floorf(h * MAP.size.x / MAP.size.y)
+	_col_w = w - map_w - 48.0
+	_drawer = _col_w < M_SHEET_MIN
+	if _drawer:
+		_col_w = minf(M_SHEET_W, w - 64.0)
+		map_w = minf(map_w, w - 32.0)
+	var area := Rect2(16, top, map_w, h) if not _drawer else Rect2((w - map_w) * 0.5, top, map_w, h)
 	_mbase = minf(area.size.x / MAP.size.x, area.size.y / MAP.size.y)
 	var shown := MAP.size * _mbase
 	_clip.position = (area.position + (area.size - shown) * 0.5).floor()
 	_clip.size = shown
 	mp.position = _clip.position - Vector2(2, 2)
 	mp.size = shown + Vector2(4, 4)
-	_toast.position = _clip.position + Vector2(14, shown.y - 48)
+	_map_frame = mp
+	_map_full = Rect2(_clip.position, shown)
+	_toast.position = _clip.position + Vector2(16, shown.y - 60)
 	_toast.add_theme_font_size_override("font_size", MobilePage.FONT)
+	_toast.z_index = 20
+	var col_rect := Rect2(w - _col_w - 16.0, top, _col_w, h)
+	var left_w := col_rect.position.x - 32.0
+	_map_side = Rect2(Vector2(16, _clip.position.y), Vector2(minf(left_w, shown.x), shown.y))
+	var sheet := PanelContainer.new()
+	sheet.name = "MobileSheet"
+	sheet.position = col_rect.position
+	sheet.size = col_rect.size
+	var sb := UIKit.flat_box(Color(0.035, 0.045, 0.065, 0.97 if _drawer else 0.92), Color(UIKit.ACCENT, 0.30), 12)
+	sb.content_margin_left = 14
+	sb.content_margin_right = 14
+	sb.content_margin_top = 10
+	sb.content_margin_bottom = 12
 	if _drawer:
-		_col_w = minf(w - 48.0, 720.0)
-	var col_rect := Rect2(w - _col_w - 16.0, MobilePage.TOP + 4.0, _col_w, 720.0 - MobilePage.TOP - 16.0)
+		sb.shadow_color = Color(0, 0, 0, 0.55)
+		sb.shadow_size = 18
+	sheet.add_theme_stylebox_override("panel", sb)
+	add_child(sheet)
 	if _drawer:
-		col_rect.position.x = (w - _col_w) * 0.5
-		var back := Panel.new()
-		back.name = "MobileSideBack"
-		back.position = col_rect.position - Vector2(8, 4)
-		back.size = col_rect.size + Vector2(16, 8)
-		back.add_theme_stylebox_override("panel", UIKit.flat_box(Color(0.035, 0.045, 0.065, 0.96), Color(UIKit.ACCENT, 0.35), 10))
-		back.z_index = 10
-		back.visible = false
-		add_child(back)
-		_side = back
-	var stack := MobileReflow.column(self, "MobileSideCol", col_rect)
-	if _drawer:
-		stack.get_parent().reparent(_side, true)
+		sheet.z_index = 10
+		sheet.visible = false
+		_side = sheet
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 10)
+	sheet.add_child(v)
+	var tabs := HBoxContainer.new()
+	tabs.name = "SheetTabs"
+	tabs.add_theme_constant_override("separation", 8)
+	v.add_child(tabs)
+	for spec in [["place", "地点"], ["log", "行军日志"], ["regions", "列国"]]:
+		var key := str(spec[0])
+		var tb := MobilePage.button(str(spec[1]), false, func(): _set_sheet_tab(key))
+		tb.name = "SheetTab_" + key
+		tb.toggle_mode = true
+		tabs.add_child(tb)
+		_sheet_btn[key] = tb
+	var sc := ScrollContainer.new()
+	sc.name = "MobileSideCol"
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	sc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	v.add_child(sc)
+	var stack := VBoxContainer.new()
+	stack.name = "Stack"
+	stack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	sc.add_child(stack)
+	_sheet_scroll = sc
 	for nm in ["RightColumn", "TravelHUD", "LeftColumn"]:
 		var old := get_node(nm) as Control
-		var box := VBoxContainer.new()
-		box.add_theme_constant_override("separation", 10)
-		box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		remove_child(old)
 		old.queue_free()
+		var box := VBoxContainer.new()
 		box.name = nm
+		box.add_theme_constant_override("separation", 12)
+		box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		stack.add_child(box)
-		box.child_entered_tree.connect(func(_n): _queue_reflow(box))
 		match nm:
 			"RightColumn":
 				_right = box
@@ -214,6 +262,10 @@ func _mobile_frame(mp: Control) -> void:
 				_hud = box
 			_:
 				_left = box
+	_actions = VBoxContainer.new()
+	_actions.name = "SheetActions"
+	_actions.add_theme_constant_override("separation", 8)
+	v.add_child(_actions)
 	var ts := ceilf(40.0 / _mbase)
 	_token.size = Vector2(ts, ts)
 	_token.pivot_offset = _token.size * 0.5
@@ -221,32 +273,61 @@ func _mobile_frame(mp: Control) -> void:
 	tg.size = _token.size
 	_lift = ceilf(MobilePage.HIT / _mbase) * 0.5 + ts * 0.5 + 10.0
 	tg.add_theme_font_size_override("font_size", ceili(MobilePage.FONT / _mbase))
+	_set_sheet_tab("place")
 	_refresh_top()
 	_apply_map_xform()
 	if GameState.has_meta("atlas_open_side"):
 		GameState.remove_meta("atlas_open_side")
 		_show_side.call_deferred(true)
+	if GameState.has_meta("atlas_sheet_tab"):
+		var st := str(GameState.get_meta("atlas_sheet_tab"))
+		GameState.remove_meta("atlas_sheet_tab")
+		(func(): _set_sheet_tab(st); _show_side(true)).call_deferred()
 
 
-## Narrow phones: the details sheet replaces the map while it is open (tap 详情 again for the map).
+func _set_sheet_tab(key: String) -> void:
+	_sheet_tab = key
+	for k in _sheet_btn.keys():
+		var b: Button = _sheet_btn[k]
+		b.set_pressed_no_signal(str(k) == key)
+		b.add_theme_color_override("font_color", UIKit.ACCENT if str(k) == key else UIKit.TEXT_DIM)
+	if _right:
+		_right.visible = key == "place"
+		_hud.visible = key == "log"
+		_left.visible = key == "regions"
+	if _sheet_scroll:
+		_sheet_scroll.scroll_vertical = 0
+
+
+## Narrow phones: the sheet slides over the right of the map; the map stays visible and pannable.
 func _show_side(on: bool) -> void:
 	if _side == null:
 		return
 	_side.visible = on
-	_clip.visible = not on
-	var mf := get_node_or_null("MapFrame") as CanvasItem
-	if mf:
-		mf.visible = not on
-
-
-func _queue_reflow(box: Control) -> void:
-	if box.has_meta("m_pending"):
-		return
-	box.set_meta("m_pending", true)
-	(func():
-		if is_instance_valid(box):
-			box.remove_meta("m_pending")
-			MobileReflow.reflow_children(box, _col_w - 40.0)).call_deferred()
+	if _side_toggle:
+		_side_toggle.text = "收起" if on else Locale.t("gen2_34")
+	# the map moves to the strip left of the sheet and keeps the selection in view
+	var r := _map_side if on else _map_full
+	_clip.position = r.position
+	_clip.size = r.size
+	if _map_frame:
+		_map_frame.position = r.position - Vector2(2, 2)
+		_map_frame.size = r.size + Vector2(4, 4)
+	_toast.position = r.position + Vector2(16, r.size.y - 60)
+	if on:
+		var focus := World.pos
+		if _view == "" and World.nations.has(_sel):
+			focus = ""
+		elif World.nodes.has(_sel):
+			focus = _sel
+		var fp := _region_pos(_sel) if focus == "" else _np(focus)
+		_map_pan = r.size * 0.5 - fp * _mbase * _map_zoom
+		var shown := MAP.size * _mbase * _map_zoom
+		_map_pan.x = clampf(_map_pan.x, minf(0.0, r.size.x - shown.x), 0.0)
+		_map_pan.y = clampf(_map_pan.y, minf(0.0, r.size.y - shown.y), 0.0)
+	else:
+		_map_pan = Vector2.ZERO
+	_apply_map_xform()
 
 
 ## Map labels and buttons are scaled with the map: size them so they land at 22px / 76px on screen.
@@ -283,25 +364,64 @@ func _mobile_nodes() -> void:
 								kl.position.y = -kl.size.y - 1.0
 								break
 			b.add_theme_font_size_override("font_size", maxi(fs, b.get_theme_font_size("font_size")))
-	# Bigger nodes: push captions clear of every button, badges sit just above it.
+	# Captions: try below / above / right / left of the node they belong to and keep the
+	# first spot that hits no button and no caption already placed; badges sit on the node's corner.
 	var btns: Array = []
 	for c in _layer.get_children():
-		if c is BaseButton:
+		if c is BaseButton and not c.is_queued_for_deletion():
 			btns.append(c)
+	var taken: Array = []
+	for b in btns:
+		taken.append(Rect2((b as Control).position, (b as Control).size).grow(2.0))
+	var bounds := Rect2(Vector2(2, 2), MAP.size - Vector2(4, 4))
 	for c in _layer.get_children():
-		if not (c is Label):
+		if not (c is Label) or c.is_queued_for_deletion():
 			continue
 		var l := c as Label
 		l.size = l.get_minimum_size()
+		var own: Control = null
+		var best := 1e9
+		var lc := l.position + l.size * 0.5
+		var single := l.text.length() <= 1
 		for b in btns:
-			var br := Rect2((b as Control).position, (b as Control).size)
-			if br.intersects(Rect2(l.position, l.size)):
-				if l.text.length() <= 1:
-					l.position = Vector2(br.end.x - 2.0, br.position.y - l.size.y * 0.6)
-				else:
-					l.position.y = br.end.y + 1.0
-					if l.position.y + l.size.y > MAP.size.y - 2.0:
-						l.position = Vector2(br.end.x + 4.0, br.position.y + (br.size.y - l.size.y) * 0.5)
+			if single and not (str(b.name).begins_with("Node_") or str(b.name).begins_with("Region_")):
+				continue
+			var bc := (b as Control).position + (b as Control).size * 0.5
+			var d := bc.distance_to(lc)
+			if d < best:
+				best = d
+				own = b
+		if own == null:
+			continue
+		var br := Rect2(own.position, own.size)
+		if l.text.length() <= 1:
+			l.position = Vector2(br.end.x + br.size.x * 0.09 - 2.0, br.position.y - br.size.y * 0.09 - l.size.y + 2.0)  # clear of the 1.18x selected scale
+			continue
+		var cands := [
+			Vector2(br.get_center().x - l.size.x * 0.5, br.end.y + 1.0),
+			Vector2(br.get_center().x - l.size.x * 0.5, br.position.y - l.size.y - 1.0),
+			Vector2(br.end.x + 4.0, br.get_center().y - l.size.y * 0.5),
+			Vector2(br.position.x - l.size.x - 4.0, br.get_center().y - l.size.y * 0.5),
+			Vector2(br.get_center().x - l.size.x * 0.5, br.end.y + l.size.y + 2.0),
+		]
+		var pick: Vector2 = cands[0]
+		for cand in cands:
+			var cp: Vector2 = cand
+			cp.x = clampf(cp.x, bounds.position.x, bounds.end.x - l.size.x)
+			cp.y = clampf(cp.y, bounds.position.y, bounds.end.y - l.size.y)
+			var r := Rect2(cp, l.size)
+			var free := true
+			for t in taken:
+				if (t as Rect2).intersects(r):
+					free = false
+					break
+			if free:
+				pick = cp
+				break
+		pick.x = clampf(pick.x, bounds.position.x, bounds.end.x - l.size.x)
+		pick.y = clampf(pick.y, bounds.position.y, bounds.end.y - l.size.y)
+		l.position = pick
+		taken.append(Rect2(pick, l.size).grow(1.0))
 
 
 func _refresh_top() -> void:
@@ -327,7 +447,12 @@ func _refresh_top() -> void:
 		var bar_btns: Array = [[back_t, _back]]
 		if _drawer:
 			bar_btns.push_front([Locale.t("gen2_34"), func(): _show_side(not _side.visible)])
-		MobilePage.top_bar(_top, title, " · ".join(parts), bar_btns)
+		var bar := MobilePage.top_bar(_top, title, " · ".join(parts), bar_btns)
+		if _drawer:
+			_side_toggle = bar.get_child(2) as Button
+			_side_toggle.name = "SheetToggle"
+			if _side and _side.visible:
+				_side_toggle.text = "收起"
 		return
 	UIKit.top_bar(_top, title, chips, back_t, _back)
 
@@ -676,10 +801,22 @@ func _place_token(anim: bool, to_id: String = "") -> void:
 		return
 	var p := _np(id) - _token.size * 0.5 + (Vector2(0, -_lift) if _view != "" else Vector2(0, -_lift - 6.0))
 	if _mob:
-		# phone: if the flag would sit on another marker, hang it to the node's right instead
-		for c in _layer.get_children():
-			if c is BaseButton and c.name != "Node_" + id and Rect2(p, _token.size).intersects(Rect2(c.position, c.size)):
-				p = _np(id) + Vector2(_lift - _token.size.x * 0.5, -_token.size.y * 0.5)
+		# phone: the flag takes the first spot around its node that covers no marker or caption
+		var c0 := _np(id)
+		var half := _token.size * 0.5
+		var cands := [p, c0 + Vector2(_lift, 0) - half, c0 + Vector2(-_lift, 0) - half,
+			c0 + Vector2(_lift * 0.75, -_lift * 0.75) - half, c0 + Vector2(-_lift * 0.75, -_lift * 0.75) - half, c0 + Vector2(0, _lift) - half]
+		for cand in cands:
+			var tr := Rect2(cand, _token.size)
+			var hit := false
+			for c in _layer.get_children():
+				if c.is_queued_for_deletion() or not (c is Control) or c.name == "Node_" + id:
+					continue
+				if (c is BaseButton or c is Label) and tr.intersects(Rect2(c.position, (c as Control).size)):
+					hit = true
+					break
+			if not hit:
+				p = cand
 				break
 	if anim:
 		var tw := create_tween()
@@ -691,6 +828,9 @@ func _place_token(anim: bool, to_id: String = "") -> void:
 func _render_left() -> void:
 	for c in _left.get_children():
 		c.queue_free()
+	if _mob:
+		_m_regions()
+		return
 	var lp := UIKit.panel_at(_left, Rect2(16, 64, 176, 620), 10)
 	var eh := UIKit.mono("REGIONS 11", 9, UIKit.ACCENT)
 	eh.position = Vector2(14, 10)
@@ -774,6 +914,10 @@ func _render_left() -> void:
 func _render_right() -> void:
 	for c in _right.get_children():
 		c.queue_free()
+	if _mob:
+		_m_place()
+		_m_actions()
+		return
 	var p := UIKit.panel_at(_right, Rect2(1008, 64, 256, 620), 10)
 	var top := ColorRect.new()
 	top.color = UIKit.ACCENT
@@ -968,6 +1112,10 @@ func _fill_vignette(th: Control, id: String) -> void:
 func _render_hud() -> void:
 	for c in _hud.get_children():
 		c.queue_free()
+	if _mob:
+		_m_log()
+		_m_actions()
+		return
 	var p := UIKit.panel_at(_hud, Rect2(200, 522, 800, 162), 10)
 	var eh := UIKit.mono("TRAVEL // 行军推演", 9, UIKit.ACCENT)
 	eh.position = Vector2(16, 10)
@@ -1146,6 +1294,8 @@ func _on_gateway(to_id: String) -> void:
 	_select_node(to_id)
 
 func _select_node(id: String) -> void:
+	if _mob and _sheet_tab != "place":
+		_set_sheet_tab("place")
 	if _view == "":
 		_sel = World.nation_of(id)
 		_preview = {}
@@ -1707,3 +1857,265 @@ func selftest() -> Dictionary:
 		_clear_modal()
 	msgs.append("%d territory flags" % flags)
 	return {"ok": true, "msg": ", ".join(msgs)}
+
+# ── phone side sheet (container layout only; no reflow of desktop panels) ──
+func _m_inner_w() -> float:
+	return _col_w - 28.0 - 14.0
+
+func _m_label(t: String, col: Color, fs: int = MobilePage.FONT) -> Label:
+	var l := MobilePage.label(t, col, fs, true)
+	l.custom_minimum_size.x = 0
+	return l
+
+func _m_section(parent: Control, en: String) -> void:
+	var hl := UIKit.mono(en, MobilePage.FONT, UIKit.ACCENT, true, false)
+	parent.add_child(hl)
+
+func _m_kv(grid: GridContainer, k: String, v: String, col: Color) -> void:
+	var kl := _m_label(k, UIKit.TEXT_DIM)
+	kl.autowrap_mode = TextServer.AUTOWRAP_OFF
+	kl.size_flags_horizontal = Control.SIZE_FILL
+	grid.add_child(kl)
+	var vl := _m_label(v, col)
+	vl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	grid.add_child(vl)
+
+func _m_grid(parent: Control, cols: int = 2) -> GridContainer:
+	var g := GridContainer.new()
+	g.columns = cols
+	g.add_theme_constant_override("h_separation", 12)
+	g.add_theme_constant_override("v_separation", 6)
+	g.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	parent.add_child(g)
+	return g
+
+func _m_chips(parent: Control, chips: Array) -> void:
+	var f := HFlowContainer.new()
+	f.add_theme_constant_override("h_separation", 8)
+	f.add_theme_constant_override("v_separation", 6)
+	parent.add_child(f)
+	for c in chips:
+		var chip := UIKit.tag_chip(str(c[0]), c[1], c.size() > 2 and bool(c[2]))
+		chip.add_theme_font_size_override("font_size", MobilePage.FONT)
+		f.add_child(chip)
+
+func _m_picture(parent: Control, path: String, sel: String) -> void:
+	var th := Control.new()
+	th.clip_contents = true
+	th.custom_minimum_size = Vector2(_m_inner_w(), 170)
+	th.size = th.custom_minimum_size
+	th.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(th)
+	if sel != "":
+		_fill_vignette(th, sel)
+	elif path != "":
+		var tr := TextureRect.new()
+		tr.texture = load(path)
+		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		tr.size = th.size
+		tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		th.add_child(tr)
+
+func _m_button_grid(parent: Control, specs: Array) -> void:
+	if specs.is_empty():
+		return
+	var g := _m_grid(parent, 2)
+	for sp in specs:
+		var b := MobilePage.button(str(sp[1]), false, sp[2])
+		b.name = str(sp[0])
+		b.disabled = _busy or (sp.size() > 3 and bool(sp[3]))
+		g.add_child(b)
+
+func _m_place() -> void:
+	var box := _right
+	if _view == "" and World.nations.has(_sel):
+		_m_region_profile(box, _sel)
+		return
+	if not World.nodes.has(_sel):
+		box.add_child(_m_label("在地图上点一处聚落，查看路线与详情。", UIKit.TEXT_DIM))
+		return
+	var n: Dictionary = World.node(_sel)
+	var nat: Dictionary = World.nations.get(str(n.nation), {})
+	box.add_child(UIKit.mono("%s // %s" % [str(nat.get("en", "")), World.kind_zh(_sel)], MobilePage.FONT, UIKit.TEXT_FAINT, false, false))
+	box.add_child(UIKit.title_label(str(n.get("name", _sel)), 32))
+	var chips := [[str(nat.get("name", "")), UIKit.ACCENT], ["规模 %s" % "▮".repeat(int(n.get("size", 1))), UIKit.TEXT_DIM]]
+	if _sel == World.pos:
+		chips.append(["驻扎", UIKit.OK, true])
+	elif World.visited.has(_sel):
+		chips.append(["到访", UIKit.TEXT_DIM])
+	_m_chips(box, chips)
+	if not World.encounter.is_empty():
+		var et := UIKit.title_label("⚔ %s" % World.encounter.label, 26, UIKit.DANGER)
+		et.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		box.add_child(et)
+		box.add_child(_m_label("敌军拦路，必须迎战或败退。", UIKit.TEXT_DIM))
+	elif not _preview.is_empty() and bool(_preview.get("ok", false)):
+		_m_route(box)
+	var g := _m_grid(box)
+	var rep := World.rep_of(_sel)
+	_m_kv(g, "城声望", "%d · %s" % [rep, World.rep_tier_name(rep)], UIKit.ACCENT)
+	_m_kv(g, "特产", str(n.get("specialty", "")), UIKit.TEXT)
+	var prod: Array = []
+	for gd in n.get("produce", []):
+		prod.append(World.good_name(str(gd)))
+	var dem: Array = []
+	for gd in n.get("demand", []):
+		dem.append(World.good_name(str(gd)))
+	_m_kv(g, "出产", "、".join(prod) if not prod.is_empty() else "—", UIKit.OK)
+	_m_kv(g, "求购", "、".join(dem) if not dem.is_empty() else "—", UIKit.EMBER)
+	_m_kv(g, "关税", "%d 银" % World.toll_for(str(n.nation)), UIKit.TEXT)
+	_m_picture(box, "", _sel)
+	var lore := str(n.get("lore", ""))
+	if lore != "":
+		box.add_child(_m_label(lore, UIKit.TEXT_DIM))
+	for mk in World.quest_markers().get(_sel, []):
+		var q: Dictionary = mk.quest
+		box.add_child(_m_label("%s %s" % ["✓ 交付" if str(mk.kind) == "turnin" else "◆ 目标", q.title], UIKit.OK if str(mk.kind) == "turnin" else UIKit.DANGER))
+	var mm: Dictionary = World.mainline_marker()
+	if str(mm.get("node", "")) == _sel:
+		box.add_child(_m_label("★ %s（在此展开）" % mm.label, UIKit.EMBER))
+	# secondary actions: only the ones that apply here
+	var specs: Array = []
+	var here := _sel == World.pos
+	if here and str(mm.get("node", "")) == _sel and bool(mm.get("exists", false)):
+		specs.append(["ChapterButton", "主线章节", func(): _goto(str(mm.path))])
+	var engage_q := ""
+	for q2 in World.active:
+		if str(q2.state) == "active" and str(q2.kind) in ["hunt", "defend"] and str(q2.target) == _sel:
+			engage_q = str(q2.id)
+	if here and engage_q != "":
+		specs.append(["EngageButton", "进剿目标", func():
+			var e: Dictionary = World.quest_engage(engage_q)
+			if not e.is_empty():
+				_show_encounter_modal(e)])
+	var sites := CKTerritory.sites_at(_sel).size()
+	if sites > 0:
+		var anchor_id := _sel
+		specs.append(["TerritoryButton", Locale.t("terr_ui_button") + " %d" % sites, func(): _open_territory(anchor_id)])
+	_m_button_grid(box, specs)
+
+func _m_route(box: Control) -> void:
+	var pv := _preview
+	var pth: Array = pv.get("path", [])
+	var dest: Dictionary = World.node(str(pth[pth.size() - 1]) if not pth.is_empty() else _sel)
+	_m_section(box, "ROUTE // 行军推演")
+	var names: Array = []
+	for id in pth:
+		names.append(str(World.node(str(id)).get("name", id)))
+	box.add_child(_m_label("→ " + " › ".join(names) if not names.is_empty() else "→ %s" % dest.get("name", ""), UIKit.TEXT))
+	var g := _m_grid(box, 4)
+	var cost := int(pv.tolls) + int(pv.fare)
+	for kv in [["日程", "%d 日" % int(pv.days), UIKit.TEXT], ["耗粮", str(pv.food), UIKit.DANGER if bool(pv.short_food) else UIKit.TEXT],
+			["关税/船资", "%d 银" % cost, UIKit.DANGER if GameState.silver < cost else UIKit.TEXT],
+			["险", "▮".repeat(int(pv.danger)) + "▯".repeat(maxi(0, 4 - int(pv.danger))), UIKit.DANGER if int(pv.danger) >= 3 else UIKit.ACCENT]]:
+		var cell := VBoxContainer.new()
+		cell.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		cell.add_theme_constant_override("separation", 0)
+		var k := _m_label(str(kv[0]), UIKit.TEXT_FAINT)
+		k.autowrap_mode = TextServer.AUTOWRAP_OFF
+		cell.add_child(k)
+		var v := _m_label(str(kv[1]), kv[2])
+		v.autowrap_mode = TextServer.AUTOWRAP_OFF
+		cell.add_child(v)
+		g.add_child(cell)
+	if bool(pv.short_food):
+		box.add_child(_m_label("粮草不足以走完全程——断粮会每日损失士气。", UIKit.EMBER))
+	elif not (pv.borders as Array).is_empty():
+		box.add_child(_m_label("过境：%s" % "、".join(pv.borders), UIKit.TEXT_DIM))
+
+func _m_region_profile(box: Control, nid: String) -> void:
+	var nat: Dictionary = World.nations.get(nid, {})
+	box.add_child(UIKit.mono("NATION // %s" % str(nat.get("en", "")), MobilePage.FONT, UIKit.TEXT_FAINT, false, false))
+	box.add_child(UIKit.title_label(str(nat.get("name", nid)), 32))
+	if not _preview.is_empty() and bool(_preview.get("ok", false)):
+		_m_route(box)
+	_m_picture(box, _Atlas.plate_path(str(nat.get("plate", ""))), "")
+	var g := _m_grid(box)
+	var rep := World.nation_rep(nid)
+	_m_kv(g, "邦交声望", "%d · %s" % [rep, World.rep_tier_name(rep)], UIKit.ACCENT)
+	_m_kv(g, "聚落", "%d 处" % World.nodes_in(nid).size(), UIKit.TEXT)
+	_m_kv(g, "都城", str(World.node(str(nat.get("capital", ""))).get("name", "—")), UIKit.TEXT)
+	_m_kv(g, "过境关税", "%d 银" % World.toll_for(nid), UIKit.TEXT)
+	_m_kv(g, "名匠", str(nat.get("smith", "")), UIKit.TEXT)
+	var cul := str(nat.get("culture", ""))
+	if cul != "":
+		box.add_child(_m_label(cul, UIKit.TEXT_DIM))
+
+## Primary action pinned under the sheet: one obvious next step for the selection.
+func _m_actions() -> void:
+	if _actions == null:
+		return
+	for c in _actions.get_children():
+		c.queue_free()
+	var b: Button
+	if not World.encounter.is_empty():
+		b = MobilePage.button("⚔ 迎战", true, func(): _show_encounter_modal(World.encounter))
+		b.name = "FightButton"
+	elif _view == "" and World.nations.has(_sel):
+		var nid := _sel
+		var nat: Dictionary = World.nations.get(nid, {})
+		b = MobilePage.button("进入疆域 · %s" % str(nat.get("name", nid)), true, func(): _show_view(nid); _select_node(str(nat.get("capital", "")) if World.nation_of(World.pos) != nid else World.pos))
+		b.name = "EnterRegion"
+	elif _sel != "" and _sel == World.pos and World.nodes.has(_sel):
+		var n: Dictionary = World.node(_sel)
+		b = MobilePage.button("进入%s · %s" % ["城堡" if str(n.kind) == "castle" else World.kind_zh(_sel), str(n.get("name", ""))], true, _enter_here)
+		b.name = "EnterButton"
+	elif not _preview.is_empty() and bool(_preview.get("ok", false)):
+		b = MobilePage.button("启程前往 · %d 日" % int(_preview.days), true, _start_travel)
+		b.name = "GoButton"
+		b.disabled = GameState.silver < int(_preview.get("fare", 0))
+	else:
+		b = MobilePage.button("选择目的地", true, func(): pass)
+		b.name = "GoButton"
+		b.disabled = true
+	if _busy:
+		b.disabled = true
+	_actions.add_child(b)
+
+func _m_log() -> void:
+	var box := _hud
+	var here: Dictionary = World.node(World.pos)
+	box.add_child(UIKit.title_label("驻扎于 %s" % here.get("name", ""), 28))
+	box.add_child(_m_label("在地图上选择一处聚落查看路线；跨国经陆桥关隘，海港可走海路。", UIKit.TEXT_DIM))
+	for tp in World.tips.slice(0, 3):
+		box.add_child(_m_label("情报：%s" % str(tp), UIKit.ACCENT))
+	_m_button_grid(box, [["CourtNewsOpen", "朝报", func():
+		Sfx.click()
+		_goto("res://scenes/hub/court_news.tscn")], ["AtlasDeploy", "出战编成", _open_deploy]])
+	_m_section(box, "ROAD LOG // 行军日志")
+	if World.travel_log.is_empty():
+		box.add_child(_m_label("尚无行程记录。", UIKit.TEXT_FAINT))
+	for i in mini(10, World.travel_log.size()):
+		box.add_child(_m_label(str(World.travel_log[i]), UIKit.TEXT if i == 0 else UIKit.TEXT_DIM))
+
+func _m_regions() -> void:
+	var box := _left
+	_m_section(box, "REGIONS // 列国")
+	_list_btn.clear()
+	var g := _m_grid(box, 2)
+	var wb := MobilePage.button("世界全图", _view == "", func(): _show_view(""))
+	wb.name = "ViewWorld"
+	g.add_child(wb)
+	for nid in World.nation_ids():
+		var nat: Dictionary = World.nations.get(nid, {})
+		var here := World.nation_of(World.pos) == str(nid)
+		var nid_s := str(nid)
+		var b := MobilePage.button("%s%s" % [nat.get("name", nid), " ◉" if here else ""], _view == nid_s, func(): _show_view(nid_s); _set_sheet_tab("place"))
+		b.name = "View_" + nid_s
+		var rep := World.nation_rep(nid_s)
+		b.tooltip_text = "声望 %d · %s" % [rep, World.rep_tier_name(rep)]
+		_list_btn[nid_s] = b
+		g.add_child(b)
+	_m_section(box, "PARTY // 编成")
+	var kv := _m_grid(box)
+	_m_kv(kv, "编制", "%d 人" % World.party_size(), UIKit.TEXT)
+	_m_kv(kv, "日耗粮", "%d" % World.food_per_day(), UIKit.TEXT)
+	_m_kv(kv, "货舱", "%d / %d" % [World.cargo_used(), World.cargo_cap()], UIKit.TEXT)
+	_m_kv(kv, "委托", "%d / %d" % [World.active.size(), int(World.rules.get("active_limit", 5))], UIKit.ACCENT)
+	_m_kv(kv, "战力层级", "T%d" % World.world_tier(), UIKit.TEXT)
+	for q in World.active.slice(0, 6):
+		var ready := str(q.state) == "ready"
+		box.add_child(_m_label("%s %s" % ["✓" if ready else "◆", q.title], UIKit.OK if ready else UIKit.TEXT_DIM))
+	if World.active.is_empty():
+		box.add_child(_m_label("暂无委托 · 进城看委托榜", UIKit.TEXT_FAINT))
