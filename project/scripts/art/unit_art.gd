@@ -516,6 +516,11 @@ const SUPPORTING_TABLE := "res://data/cast/supporting_v92.json"
 static var _speaker_plates: Dictionary = {}
 static var _speaker_plates_ready := false
 
+const SPEAKER_NAME_ALIASES := {
+	"老管事": "管事",
+	"槐里家账房": "管事",
+}
+
 static func speaker_plate_path(speaker: String) -> String:
 	if not _speaker_plates_ready:
 		_speaker_plates_ready = true
@@ -526,7 +531,8 @@ static func speaker_plate_path(speaker: String) -> String:
 				if typeof(row) == TYPE_DICTIONARY and str(row.get("portrait", "")) != "":
 					for k in ["name", "cast_key", "id"]:
 						_speaker_plates[str(row.get(k, ""))] = str(row.portrait)
-	return str(_speaker_plates.get(speaker, ""))
+	var key := str(SPEAKER_NAME_ALIASES.get(speaker, speaker))
+	return str(_speaker_plates.get(key, _speaker_plates.get(speaker, "")))
 
 ## Age-band display rule (playtest fix): everyone under 12 shares fixed plates so a newborn can
 ## never pick up a teen/adult face. 0–2 → one infant plate; 3–11 → one child plate per sex;

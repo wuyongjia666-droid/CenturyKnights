@@ -29,6 +29,10 @@ var _card: Control
 var _cards_seen: Dictionary = {}
 
 const TOUCH := 48
+const PORTRAIT_PX := 420
+const RECRUIT_SPEAKERS := ["新来的人", "recruit", "{recruit}"]
+const OPENING_CAST_KEYS := ["leader", "wantan", "dengying", "militia_a", "militia_b"]
+
 ## Cool style-lock tints (ink-navy/slate/frost) until the farm plates land; res://assets/art/story_bg/<key>.webp wins.
 const BG_TINTS := {
 	"slope": [Color(0.30, 0.36, 0.44), Color(0.04, 0.05, 0.07)],
@@ -54,10 +58,11 @@ func _ready() -> void:
 	auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	_build()
 	UIKit.stitch_dialogue(self)
-	# Audit P2-1: the beat caption sits where the decorative speaker tag was drawn.
+	# C-02: stitch_dialogue no longer spawns SPEAKER ACTIVE; keep a defensive hide.
 	var deco := find_child("SpeakerActiveTag", true, false)
 	if deco:
 		deco.visible = false
+		deco.queue_free()
 	_build_story_chrome()
 	# Back from a side screen the story opened with "visit": the trip is over.
 	if GameState.has_meta("story_return"):
@@ -217,7 +222,7 @@ func _load_beat(beat_id: String) -> void:
 	_remember_beat(beat_id)
 	_line_idx = 0
 	_title.text = "%s · %s" % [str(_chapter.get("title", "")), str(_beat.get("title", ""))]
-	_beat_meta.text = "节拍 %s　灰烬旗 · %s" % [beat_id, GameState.surname]
+	_beat_meta.text = _beat_progress_caption(beat_id)
 	_banner.texture = UnitArt.banner(70, 100, true)
 	BannerName.attach(_banner)
 	_show_line()
@@ -232,17 +237,40 @@ func _visible_lines() -> Array:
 			out.append(line)
 	return out
 
+func _beat_progress_caption(beat_id: String) -> String:
+	## C-01: player-facing chapter progress, never the internal beat id.
+	var beats: Array = _chapter.get("beats", [])
+	var total := beats.size()
+	var idx := 0
+	for i in total:
+		if str(beats[i].get("id", "")) == beat_id:
+			idx = i + 1
+			break
+	var beat_title := str(_beat.get("title", "")).strip_edges()
+	if beat_title == "":
+		beat_title = str(_chapter.get("title", ""))
+	if total <= 0 or idx <= 0:
+		return beat_title
+	return "%s · %d/%d" % [beat_title, idx, total]
+
 func _show_line() -> void:
+	# C-09: end previous pace/camera tweens before the next line (incl. empty stage).
+	if _stage_tween != null and _stage_tween.is_valid():
+		_stage_tween.kill()
+	_stage_tween = null
+	_body.visible_ratio = 1.0
+	_body.modulate.a = 1.0
+	if _portrait != null:
+		_portrait.scale = Vector2.ONE
 	var lines: Array = _visible_lines()
 	if _line_idx >= lines.size():
 		_speaker.text = ""
 		_set_body("（本节对白结束——请选择下方行动）")
+		_speaker_portrait("旁白")
 		return
 	var line = lines[_line_idx]
 	var sp := str(line.get("speaker", ""))
 	_speaker.text = _speaker_label(sp)
-	_body.visible_ratio = 1.0
-	_body.modulate.a = 1.0
 	_set_body(_line_text(line))
 	_speaker_portrait(sp, str(line.get("expression", line.get("emotion", ""))))
 	_apply_stage(line.get("stage", {}))
@@ -336,11 +364,29 @@ func _character_named(speaker: String) -> CKCharacter:
 			return c
 	return null
 
+func _story_recruit() -> CKCharacter:
+	## G-05: the tavern hire, not the fixed opening cast.
+	for c in GameState.roster():
+		if c == null or c.is_leader or c.is_child:
+			continue
+		if str(c.cast_key) in OPENING_CAST_KEYS:
+			continue
+		return c
+	return null
+
 func _speaker_label(sp: String) -> String:
+	if sp in RECRUIT_SPEAKERS:
+		var hire := _story_recruit()
+		if hire != null and str(hire.name).strip_edges() != "":
+			return str(hire.name)
+		return "新来的人"
 	if sp != "leader":
 		return sp
 	var lead = GameState.get_leader()
 	return str(lead.name) if lead != null and str(lead.name) != "" else sp
+
+func _is_narrator(speaker: String) -> bool:
+	return speaker == "" or speaker == "旁白"
 
 func _speaker_portrait(speaker: String, emotion: String = "") -> void:
 	# Audit P1-12: no speaker ever borrows the leader's face. Only the leader's own lines show it.
@@ -348,22 +394,28 @@ func _speaker_portrait(speaker: String, emotion: String = "") -> void:
 	var name_tag := _portrait.get_node_or_null(BannerName.NODE)
 	if name_tag:
 		name_tag.visible = false
+	if speaker in RECRUIT_SPEAKERS:
+		who = _story_recruit()
+		if who != null:
+			speaker = str(who.name)
 	if speaker == "leader":
 		who = GameState.get_leader()
+	var narr := _is_narrator(speaker)
+	_portrait.set_meta("story_narrator", narr)
 	test_capture["portrait_who"] = who.id if who != null else ""
-	var plate := UnitArt.dialogue_portrait(speaker, emotion, who, 120)
+	test_capture["portrait_narrator"] = narr
+	if narr:
+		test_capture["portrait_kind"] = "narrator"
+		_portrait.texture = null
+		return
+	var plate := UnitArt.dialogue_portrait(speaker, emotion, who, PORTRAIT_PX)
 	if plate != null:
 		test_capture["portrait_kind"] = "plate"
 		_portrait.texture = plate
 		return
-	if speaker == "" or speaker == "旁白":
-		test_capture["portrait_kind"] = "banner"
-		_portrait.texture = UnitArt.banner(120, 120, false)
-		BannerName.attach(_portrait)
-		return
-	# Old flag-bearer, scout, villains, supporting cast: a per-speaker silhouette until the farm paints them.
+	# Supporting cast / villains: silhouette at display size until a plate lands (C-04).
 	test_capture["portrait_kind"] = "silhouette"
-	_portrait.texture = UnitArt.speaker_silhouette(speaker, 120)
+	_portrait.texture = UnitArt.speaker_silhouette(speaker, PORTRAIT_PX)
 
 func _refresh_actions() -> void:
 	# Detach first: a queued-but-attached old button would steal the
@@ -392,7 +444,8 @@ func _refresh_actions() -> void:
 		var row: Dictionary = action
 		var steps: Array = (row.get("do", []) as Array).duplicate(true)
 		var disabled := bool(row.get("disabled", false))
-		_add_action(str(row.get("label", "")), _on_action.bind(steps), disabled)
+		var cost_hint := str(row.get("cost_hint", row.get("hint", "")))
+		_add_action(str(row.get("label", "")), _on_action.bind(steps), disabled, false, cost_hint)
 	if shown == 0 and _beat.get("next") != null and str(_beat.get("next", "")) != "":
 		_add_action("继续", func(): _goto_next(), false, true)
 	elif shown == 0:
@@ -400,10 +453,21 @@ func _refresh_actions() -> void:
 		# The beat is already remembered, so the mainline cursor moves on.
 		_add_action(Locale.t("story_back_to_hub"), func(): _go_scene(HUB_SCENE))
 
-func _add_action(text: String, cb: Callable, disabled: bool = false, compact: bool = false) -> void:
+func _add_action(text: String, cb: Callable, disabled: bool = false, compact: bool = false, cost_hint: String = "") -> void:
 	var w := 148 if compact else 320
-	var b = UIKit.make_button(text, w) if disabled else UIKit.make_accent_button(text, w)
-	b.disabled = disabled
+	var b: Button
+	if (not compact) and cost_hint.strip_edges() != "":
+		# C-10: second line shows the trade-off before the player commits.
+		b = UIKit.make_hub_nav_button(text, cost_hint.strip_edges(), w)
+		if disabled:
+			b.disabled = true
+		else:
+			# Accent the choice cards so they still read as story decisions.
+			b.add_theme_color_override("font_color", UIKit.ACCENT)
+	else:
+		b = UIKit.make_button(text, w) if disabled else UIKit.make_accent_button(text, w)
+		b.disabled = disabled
+	b.set_meta("action_label", text)
 	b.size_flags_horizontal = Control.SIZE_SHRINK_END
 	if compact:
 		b.name = "AdvanceLine"
@@ -612,9 +676,11 @@ func current_beat_id() -> String:
 func action_labels() -> Array:
 	var out: Array = []
 	for c in _actions.get_children():
-		if c is BaseButton and is_instance_valid(c) and not c.is_queued_for_deletion():
-			out.append(str(c.text))
+		if c is BaseButton:
+			var raw := str(c.get_meta("action_label", (c as BaseButton).text))
+			out.append(raw.get_slice("\n", 0) if raw.find("\n") >= 0 else raw)
 	return out
+
 
 func simulate_finish_dialogue() -> void:
 	for c in _actions.get_children():

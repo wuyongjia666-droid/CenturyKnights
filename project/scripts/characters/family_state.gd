@@ -130,24 +130,52 @@ static func tick_doctrine_and_marriage_month(host) -> Array:
 	return msgs
 
 static func build_dynasty_journal(host) -> String:
+	## G-06: closing hand-note assembled from prologue pro_* flags (opening-chain-review §示例 C).
 	var leader = host.get_leader()
 	var spouse_name = "（未成婚）"
 	var child_summary = "（无子嗣）"
+	var heir_name := ""
 	if leader and leader.spouse_id != "" and host.characters.has(leader.spouse_id):
 		spouse_name = host.characters[leader.spouse_id].name
 	var kids: Array = []
 	for c in host.characters.values():
 		if c.is_child or (leader and c.id in leader.children_ids):
 			kids.append("%s〔%s〕" % [c.name, c.bloodline_display()])
+			if heir_name == "" and str(c.name).strip_edges() != "":
+				heir_name = str(c.name)
 	if kids.size() > 0:
 		child_summary = "、".join(kids)
-	host.dynasty_journal = "【王朝手记·第零章】\n团长：%s\n配偶：%s\n子嗣：%s\n岁时：%s\n声望：灰烬邦 %s / 河卫邦 %s\n\n石垒坡出来的平民把自己做成了一个姓。同乡先跟，烽火把姓打进传闻，酒馆添了认银的人，春令是一场不谈爱的试婚，初啼入谱，粮饷结清。" % [
+	var arcs: PackedStringArray = PackedStringArray()
+	if host.flag("pro_merit_own"):
+		arcs.append("隘口那一仗，我没让。")
+	elif host.flag("pro_merit_patron"):
+		arcs.append("隘口那一仗记在了槐里家，堡是借来的。")
+	if host.flag("pro_lease_pawned"):
+		arcs.append("娘押掉了采石坡那块地。")
+	elif host.flag("pro_lease_kept"):
+		arcs.append("娘的地还在，饷是一张张委托挣来的。")
+	if host.flag("pro_roster_wantan"):
+		arcs.append("名册第一行是石垒·晚担。")
+	elif host.flag("pro_roster_blank"):
+		arcs.append("名册第一行空着，留给旧人。")
+	if host.flag("pro_rival_spared") or host.flag("pro_survivor_kept"):
+		arcs.append("名册最后一行，给衡舟留着。")
+	elif host.flag("pro_rival_exposed") or host.flag("pro_survivor_handed"):
+		arcs.append("衡舟被带去了白垣。")
+	var arc_block := "\n".join(arcs)
+	if arc_block != "":
+		arc_block = "\n" + arc_block
+	var heir_bit := heir_name if heir_name != "" else "还没有名字"
+	var closing := "有试过的婚，有孩子%s，有一本结清的簿。陆桥会重复这个姓。我得在场。" % heir_bit
+	host.dynasty_journal = "【王朝手记·第零章】\n团长：%s\n配偶：%s\n子嗣：%s\n岁时：%s\n声望：灰烬邦 %s / 河卫邦 %s\n\n石垒坡出来一个平民，在北隘把自己做成了一个姓。%s\n%s" % [
 		leader.name if leader else "?",
 		spouse_name,
 		child_summary,
 		Calendar.label(),
 		host.get_rep_name("ashland"),
 		host.get_rep_name("riverland"),
+		arc_block,
+		closing,
 	]
 	host.set_flag("chapter0_done")
 	host.mark_dirty()

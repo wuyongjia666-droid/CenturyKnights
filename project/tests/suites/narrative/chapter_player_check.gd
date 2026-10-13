@@ -142,6 +142,72 @@ func _run() -> String:
 	if int(GameState.reputation.get("ashland", 0)) < 30:
 		return "spring reputation was not prepared"
 	print("OK ch0 marriage gate")
+	var polish := await _opening_player_polish(ch0, packed)
+	if polish != "":
+		return polish
+	return ""
+
+func _opening_player_polish(ch0, packed: PackedScene) -> String:
+	## Track A: C-01/02/03/08/10 + G-05/G-06 verified against the live player.
+	var meta: Label = ch0.get("_beat_meta")
+	if meta == null:
+		return "beat_meta missing"
+	if str(meta.text).find("节拍") >= 0:
+		return "C-01 beat debug still shown: %s" % meta.text
+	if str(meta.text).find("/") < 0:
+		return "C-01 progress caption missing: %s" % meta.text
+	if ch0.find_child("SpeakerActiveTag", true, false) != null:
+		return "C-02 SPEAKER ACTIVE tag still present"
+	var footer = ch0.find_child("StitchFooter", true, false)
+	if footer != null:
+		for c in footer.get_children():
+			if c is Label and str(c.text).find("v8.") >= 0:
+				return "C-08 versioned footer: %s" % c.text
+	ch0.simulate_goto_beat("0.17")
+	ch0.simulate_finish_dialogue()
+	await get_tree().process_frame
+	var labels: Array = ch0.action_labels()
+	if labels.find("收下地契和饷银，让这一仗记在槐里家") < 0:
+		return "C-10 0.17 choice missing %s" % str(labels)
+	var saw_hint := false
+	for c in ch0.get("_actions").get_children():
+		if c is BaseButton and str(c.text).find("+80") >= 0:
+			saw_hint = true
+			break
+	if not saw_hint:
+		return "C-10 cost hint missing on 0.17 accept"
+	ch0.simulate_goto_beat("0.0")
+	await get_tree().process_frame
+	# First visible line on 0.0 is narrator after title cards may vary; force a旁白 portrait.
+	ch0._speaker_portrait("旁白")
+	if not bool(ch0.test_capture.get("portrait_narrator", false)):
+		return "C-03 narrator meta not set"
+	if str(ch0.test_capture.get("portrait_kind", "")) != "narrator":
+		return "C-03 narrator kind %s" % str(ch0.test_capture)
+	# G-05: hired roster member replaces「新来的人」nameplate.
+	GameState.silver = maxi(GameState.silver, 999)
+	if GameState.tavern_candidates.is_empty():
+		GameState.refresh_tavern()
+	if GameState.tavern_candidates.is_empty():
+		return "G-05 tavern empty"
+	var hire = GameState.tavern_candidates[0]
+	hire.name = "测·募兵"
+	var hired: Dictionary = GameState.recruit(hire, 0)
+	if not bool(hired.get("ok", false)):
+		return "G-05 could not recruit test hire: %s" % str(hired)
+	if ch0._speaker_label("新来的人") != "测·募兵":
+		return "G-05 recruit label %s" % ch0._speaker_label("新来的人")
+	GameState.set_flag("pro_merit_own")
+	GameState.set_flag("pro_lease_kept")
+	GameState.set_flag("pro_roster_wantan")
+	var journal := str(GameState.build_dynasty_journal())
+	if journal.find("隘口那一仗，我没让") < 0:
+		return "G-06 journal missing merit_own arc"
+	if journal.find("娘的地还在") < 0:
+		return "G-06 journal missing lease_kept arc"
+	if journal.find("名册第一行是石垒·晚担") < 0:
+		return "G-06 journal missing roster arc"
+	print("OK opening player polish C/G")
 	return ""
 
 func _continue_clears_text(player) -> String:
@@ -311,6 +377,9 @@ func _no_borrowed_faces() -> String:
 	var bad: Array = []
 	for sp in seen.keys():
 		if sp == leader.name or sp == "leader":
+			continue
+		# C-03: narrator lines hide the plate on purpose.
+		if sp == "" or sp == "旁白":
 			continue
 		player._speaker_portrait(sp)
 		if str(player.test_capture.get("portrait_who", "")) == leader.id or player._portrait.texture == null:

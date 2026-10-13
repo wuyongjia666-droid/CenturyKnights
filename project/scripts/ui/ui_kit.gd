@@ -1196,7 +1196,7 @@ static func stitch_dialogue(scene: Control) -> void:
 	if banner is CanvasItem:
 		(banner as CanvasItem).visible = false
 	# brand line + chapter title
-	var brand := mono("CENTURY KNIGHTS //", 10, TEXT_DIM)
+	var brand := mono("CENTURY KNIGHTS", 12, TEXT_DIM)
 	brand.position = Vector2(42, 22)
 	scene.add_child(brand)
 	if title is Label:
@@ -1208,10 +1208,6 @@ static func stitch_dialogue(scene: Control) -> void:
 	hl.position = Vector2(0, 52)
 	hl.size = Vector2(1280, 1)
 	scene.add_child(hl)
-	var eb := mono("● SPEAKER ACTIVE // 01", 9, ACCENT, false)
-	eb.name = "SpeakerActiveTag"
-	eb.position = Vector2(56, 74)
-	scene.add_child(eb)
 	# speaker plate (left)
 	var plate := Panel.new()
 	plate.name = "SpeakerPlate"
@@ -1268,8 +1264,9 @@ static func stitch_dialogue(scene: Control) -> void:
 		bs.content_margin_top = 16
 		bs.content_margin_bottom = 14
 		panel.add_theme_stylebox_override("panel", bs)
-		var tr := mono("TRANSCRIPT // LOG", 8, TEXT_FAINT, false)
-		tr.position = Vector2(1090 - 110, 472)
+		# C-08: one decorative English label max, ≥12px, no version numbers.
+		var tr := mono("TRANSCRIPT", 12, TEXT_FAINT, false)
+		tr.position = Vector2(1090 - 110, 470)
 		scene.add_child(tr)
 		scene.set_meta("dlg_panel", panel)
 		scene.set_meta("dlg_tag", tr)
@@ -1335,7 +1332,14 @@ static func stitch_dialogue(scene: Control) -> void:
 	if act is BoxContainer:
 		act.sort_children.connect(place)
 	place.call()
-	# narrator / crest banner → hide plate; keep caption in sync with speaker
+	# C-03: narrator uses an explicit meta from chapter_player (not texture heuristics).
+	var panel_default_pos := Vector2(180, 486)
+	var panel_default_size := Vector2(920, 176)
+	var panel_narr_pos := Vector2(56, 486)
+	var panel_narr_size := Vector2(1168, 176)
+	if panel:
+		panel_default_pos = panel.position
+		panel_default_size = panel.size
 	var tm := Timer.new()
 	tm.wait_time = 0.1
 	tm.autostart = true
@@ -1343,11 +1347,28 @@ static func stitch_dialogue(scene: Control) -> void:
 	var sync := func():
 		if not is_instance_valid(pr):
 			return
+		var narr := bool(pr.get_meta("story_narrator", false))
 		var tex: Texture2D = pr.texture
-		var is_banner := tex == null or (tex.resource_path.find("/banners/") >= 0) or (tex.get_width() < 200 and tex.get_height() > tex.get_width() * 1.2)
-		plate.visible = not is_banner
-		eb.visible = plate.visible
-		cap.text = ("SPEAKER // " + sp.text) if sp.text != "" else ""
+		var is_banner := (not narr) and (tex == null or (tex.resource_path.find("/banners/") >= 0) or (tex.get_width() < 200 and tex.get_height() > tex.get_width() * 1.2))
+		var hide_plate := narr or is_banner
+		plate.visible = not hide_plate
+		if panel and is_instance_valid(panel):
+			if hide_plate:
+				panel.position = panel_narr_pos
+				panel.custom_minimum_size = panel_narr_size
+				panel.size = panel_narr_size
+				panel.set_deferred("size", panel_narr_size)
+			else:
+				panel.position = panel_default_pos
+				panel.custom_minimum_size = panel_default_size
+				panel.size = panel_default_size
+				panel.set_deferred("size", panel_default_size)
+		if bd:
+			bd.add_theme_color_override("default_color", TEXT_DIM if narr else TEXT)
+		var tag = scene.get_meta("dlg_tag", null)
+		if tag is CanvasItem and is_instance_valid(tag):
+			(tag as CanvasItem).visible = not narr
+		cap.text = "" if hide_plate else (("SPEAKER // " + sp.text) if sp.text != "" else "")
 	tm.timeout.connect(sync)
 	sync.call()
 	# chapter-level buttons (存档 / 返回灰旗堡) sit in the brand bar, right-aligned
@@ -1357,7 +1378,7 @@ static func stitch_dialogue(scene: Control) -> void:
 			cb.custom_minimum_size = Vector2(maxf(cb.custom_minimum_size.x, 112), 32)
 			compact(cb, 32)
 			cb.position = Vector2(1238 - maxf(cb.size.x, cb.custom_minimum_size.x), 10)
-	footer_bar(scene, [["A", Locale.t("shell_13023d2e")]], "STORY // TRANSCRIPT v8.6")
+	footer_bar(scene, [["A", Locale.t("shell_13023d2e")]], "STORY")
 
 const _FactionMark := preload("res://scripts/ui/widgets/faction_mark.gd")
 
