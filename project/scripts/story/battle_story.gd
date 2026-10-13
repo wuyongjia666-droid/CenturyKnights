@@ -161,6 +161,14 @@ static func _layer(host: Node) -> CanvasLayer:
 		skip.custom_minimum_size = Vector2(150, 76)
 		skip.offset_left = -174
 		skip.offset_bottom = 16 + 76
+	if not DeviceProfile.is_mobile():
+		# Desktop: the bark bar is modal and sits on the command rows; hide them while it shows so
+		# "点屏幕继续" never lands on the danger toggle or the end-turn button.
+		root.visibility_changed.connect(func():
+			for rn in ["CommandRow", "CommandRow2"]:
+				var r := host.get_node_or_null(rn) as CanvasItem
+				if r:
+					r.visible = not root.visible)
 	root.gui_input.connect(func(ev: InputEvent):
 		var tap: bool = (ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT) or (ev is InputEventScreenTouch and ev.pressed)
 		if tap:
