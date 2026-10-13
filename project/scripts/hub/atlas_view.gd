@@ -521,7 +521,7 @@ func _add_gateway(from_id: String, to_id: String, r: Dictionary) -> void:
 	b.name = "Gate_%s_%s" % [from_id, to_id]
 	b.text = ("⛵ " if str(r.kind) == "sea" else "⇢ ") + str(nat.get("name", ""))
 	b.focus_mode = Control.FOCUS_ALL
-	b.add_theme_font_size_override("font_size", 10)
+	b.add_theme_font_size_override("font_size", UIKit.desk_sz(10))
 	_style_node(b, Color("#B8C6FF"), false, 6)
 	var gh := _fit_hit(22.0)
 	b.custom_minimum_size = Vector2(maxf(b.get_minimum_size().x, gh), gh)

@@ -347,8 +347,11 @@ func _panel(r: Rect2) -> Panel:
 	return p
 
 func _head(p: Control, pos: Vector2, zh: String, en: String) -> void:
-	var e := UIKit.mono(en, 9, UIKit.ACCENT)
+	var e := UIKit.mono(en, 9, UIKit.ACCENT, false)
+	e.clip_text = true
+	e.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	e.position = pos
+	e.size = Vector2(220, 16)
 	p.add_child(e)
 	var t := UIKit.title_label(zh, 17)
 	t.position = pos + Vector2(0, 14)
@@ -839,7 +842,7 @@ func _tab_board() -> void:
 	var p := _panel(Rect2(0, 0, 420, 576))
 	_head(p, Vector2(18, 14), "委托榜", "COMMISSION BOARD · REFRESH %d 日" % int(World.rules.get("board_refresh_days", 30)))
 	var fh := HBoxContainer.new()
-	fh.position = Vector2(250, 14)
+	fh.position = Vector2(250, 14) if DeviceProfile.is_mobile() else Vector2(248, 36)  # desktop: below EN line after desk floor
 	fh.add_theme_constant_override("separation", 4)
 	p.add_child(fh)
 	for f in BOARD_FILTERS:
