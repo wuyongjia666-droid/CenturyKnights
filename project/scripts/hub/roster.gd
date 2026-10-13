@@ -50,6 +50,9 @@ func _ready() -> void:
 	UIFX.wire_tree(self)
 
 func apply_mobile_layout() -> void:
+	_mobile_build()
+	if _mob:
+		return
 	var scroll := find_child("RosterListScroll", true, false) as ScrollContainer
 	var foot := find_child("StitchFooter", true, false) as Control
 	MobileLayout.fill_scroll(scroll, foot, 508)
@@ -139,6 +142,9 @@ func _select(c: CKCharacter) -> void:
 	_render()
 
 func _render() -> void:
+	if _mob:
+		_render_mobile()
+		return
 	for n in _dossier.get_children():
 		_dossier.remove_child(n)
 		n.queue_free()
@@ -151,12 +157,7 @@ func _render() -> void:
 	idl.position = Vector2(140, 22)
 	p.add_child(idl)
 	var hurt := c.injured or CKInjury.label(c) != ""
-	var block := CKInjury.deploy_block_reason(c)
-	var status := "● 驻地战备良好"
-	if block != "":
-		status = "● " + block
-	elif hurt:
-		status = "● 伤病休整中"
+	var status := _status_text(c)
 	var st := UIKit.body_label(status, UIKit.OK if not hurt else UIKit.DANGER, 11)
 	st.autowrap_mode = TextServer.AUTOWRAP_OFF
 	st.position = Vector2(600, 20)
@@ -258,7 +259,7 @@ func _render() -> void:
 	dr.add_theme_constant_override("separation", 22)
 	p.add_child(dr)
 	var move_now := c.derived_move() + CKInjury.move_mod(c)
-	for it in [["生命值", "%d/%d" % [c.hp, c.max_hp], UIKit.OK if not c.injured else UIKit.DANGER], ["攻击", str(c.derived_atk()), UIKit.TEXT], ["防御", str(c.derived_def()), UIKit.TEXT], ["命中", str(c.derived_hit()), UIKit.TEXT], ["回避", str(c.derived_avo()), UIKit.TEXT], ["移动", str(move_now), UIKit.ACCENT]]:
+	for it in _derived_rows(c, move_now):
 		var v := VBoxContainer.new()
 		v.add_theme_constant_override("separation", 0)
 		var k := UIKit.body_label(str(it[0]), UIKit.TEXT_FAINT, 11)
@@ -287,20 +288,143 @@ func _render() -> void:
 	br.alignment = BoxContainer.ALIGNMENT_END
 	br.add_theme_constant_override("separation", 10)
 	p.add_child(br)
-	var b1 := UIKit.ghost_button("血脉详档", 128, 44)
+	var acts := _actions(c)
+	var b1 := UIKit.ghost_button(acts[0][0], 128, 44)
 	b1.name = "OpenDossier"
-	b1.pressed.connect(func():
-		Sfx.click()
-		GameState.set_meta("dossier_id", c.id)
-		GameState.set_meta("dossier_back", "res://scenes/hub/roster.tscn")
-		CKNav.go("res://scenes/hub/unit_dossier.tscn"))
+	b1.pressed.connect(acts[0][2])
 	br.add_child(b1)
-	var b1b := UIKit.ghost_button("族谱", 88, 44)
-	b1b.pressed.connect(func(): CKNav.go("res://scenes/hub/lineage_view.tscn"))
+	var b1b := UIKit.ghost_button(acts[1][0], 88, 44)
+	b1b.pressed.connect(acts[1][2])
 	br.add_child(b1b)
-	var b2 := UIKit.ghost_button("锻造装备  (X)", 128, 38)
-	b2.pressed.connect(func(): CKNav.go("res://scenes/hub/forge.tscn"))
+	var b2 := UIKit.ghost_button(acts[2][0], 128, 38)
+	b2.pressed.connect(acts[2][2])
 	br.add_child(b2)
-	var b3 := UIKit.cta_button("委派出战", "A", 150, 38)
-	b3.pressed.connect(func(): CKNav.go("res://scenes/hub/deploy.tscn"))
+	var b3 := UIKit.cta_button(acts[3][0], "A", 150, 38)
+	b3.pressed.connect(acts[3][2])
 	br.add_child(b3)
+
+func _status_text(c: CKCharacter) -> String:
+	var hurt := c.injured or CKInjury.label(c) != ""
+	var block := CKInjury.deploy_block_reason(c)
+	if block != "":
+		return "● " + block
+	if hurt:
+		return "● 伤病休整中"
+	return "● 驻地战备良好"
+
+func _derived_rows(c: CKCharacter, move_now: int) -> Array:
+	return [["生命值", "%d/%d" % [c.hp, c.max_hp], UIKit.OK if not c.injured else UIKit.DANGER],
+		["攻击", str(c.derived_atk()), UIKit.TEXT], ["防御", str(c.derived_def()), UIKit.TEXT],
+		["命中", str(c.derived_hit()), UIKit.TEXT], ["回避", str(c.derived_avo()), UIKit.TEXT], ["移动", str(move_now), UIKit.ACCENT]]
+
+func _actions(c: CKCharacter) -> Array:
+	var x_key := "" if DeviceProfile.is_mobile() else "  (X)"
+	return [
+		["血脉详档", false, func():
+			Sfx.click()
+			GameState.set_meta("dossier_id", c.id)
+			GameState.set_meta("dossier_back", "res://scenes/hub/roster.tscn")
+			CKNav.go("res://scenes/hub/unit_dossier.tscn")],
+		["族谱", false, func(): CKNav.go("res://scenes/hub/lineage_view.tscn")],
+		["锻造装备" + x_key, false, func(): CKNav.go("res://scenes/hub/forge.tscn")],
+		["委派出战", true, func(): CKNav.go("res://scenes/hub/deploy.tscn")],
+	]
+
+## ── landscape phone ───────────────────────────────────────
+var _mob := false
+var _m_list: VBoxContainer
+var _m_dossier: VBoxContainer
+
+func _mobile_build() -> void:
+	if _mob or not MobilePage.active(self):
+		return
+	_mob = true
+	for c in get_children():
+		if c is CanvasItem and c.get_index() > 0:
+			(c as CanvasItem).visible = false
+	var roster: Array = GameState.roster()
+	var pay := 0
+	for c in roster:
+		pay += int(c.salary)
+	var info := "%s %d · %s" % [Locale.t("shell_946c7148"), GameState.silver, Locale.t("shell_445ffb2d") % roster.size()]
+	MobilePage.top_bar(self, Locale.t("btn_roster"), info, [[Locale.t("btn_back"), _back]])
+	var w := MobilePage.width(self)
+	var lv := MobilePage.panel(self, Rect2(26, MobilePage.TOP, 400, 720 - MobilePage.TOP - 8), 10)
+	var sc := ScrollContainer.new()
+	sc.name = "RosterListScroll"
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	sc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	lv.add_child(sc)
+	_m_list = VBoxContainer.new()
+	_m_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_m_list.add_theme_constant_override("separation", 8)
+	sc.add_child(_m_list)
+	_rows.clear()
+	var i := 0
+	for c in roster:
+		i += 1
+		var b := MobilePage.button("%02d  %s\n%s · LV %d" % [i, c.name, str(GameState.get_job(c.job_id).get("name", "")), c.level], false, _select.bind(c))
+		b.custom_minimum_size = Vector2(0, 96)
+		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.set_meta("cid", c.id)
+		if c.injured:
+			b.add_theme_color_override("font_color", UIKit.DANGER)
+		_m_list.add_child(b)
+		_rows.append(b)
+	_m_dossier = MobilePage.panel(self, Rect2(438, MobilePage.TOP, w - 438 - 24, 720 - MobilePage.TOP - 8), 14)
+	if _selected:
+		var c0 := _selected
+		_selected = null
+		_select(c0)
+
+func _render_mobile() -> void:
+	for n in _m_dossier.get_children():
+		_m_dossier.remove_child(n)
+		n.queue_free()
+	var c := _selected
+	var top := HBoxContainer.new()
+	top.add_theme_constant_override("separation", 16)
+	top.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_m_dossier.add_child(top)
+	var holder := Control.new()
+	holder.custom_minimum_size = Vector2(220, 300)
+	top.add_child(holder)
+	UIKit.portrait_plate(holder, Rect2(0, 0, 220, 300), c, "", false, CKArtPaths.TIER_MEDIUM)
+	var info := VBoxContainer.new()
+	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	info.add_theme_constant_override("separation", 6)
+	top.add_child(info)
+	info.add_child(MobilePage.label("%s   LV %d" % [c.name, c.level], UIKit.TEXT, 30, false))
+	var job: Dictionary = GameState.get_job(c.job_id)
+	info.add_child(MobilePage.label("%s · %s · %s" % [job.get("name", ""), c.rank_name(), Locale.t("shell_5a0a47eb") % c.age], UIKit.ACCENT))
+	var hurt := c.injured or CKInjury.label(c) != ""
+	info.add_child(MobilePage.label(_status_text(c), UIKit.DANGER if hurt else UIKit.OK))
+	var shown := 0
+	for tr in c.traits:
+		if shown >= 2:
+			break
+		var td: Dictionary = GameState.get_trait(str(tr))
+		info.add_child(MobilePage.label("「%s」%s" % [str(td.get("name", tr)), str(td.get("desc", ""))], UIKit.TEXT_DIM))
+		shown += 1
+	var sg := GridContainer.new()
+	sg.columns = 6
+	sg.add_theme_constant_override("h_separation", 14)
+	info.add_child(sg)
+	for sk in CKCharacter.STAT_KEYS:
+		sg.add_child(MobilePage.label("%s %s" % [Locale.t("stat_" + sk), str(c.stats[sk])], UIKit.TEXT, MobilePage.FONT, false))
+	var dg := GridContainer.new()
+	dg.columns = 6
+	dg.add_theme_constant_override("h_separation", 14)
+	info.add_child(dg)
+	for it in _derived_rows(c, c.derived_move() + CKInjury.move_mod(c)):
+		dg.add_child(MobilePage.label("%s %s" % [it[0], it[1]], it[2], MobilePage.FONT, false))
+	var br := HBoxContainer.new()
+	br.add_theme_constant_override("separation", 10)
+	_m_dossier.add_child(br)
+	var acts := _actions(c)
+	for ai in acts.size():
+		var a: Array = acts[ai]
+		var b := MobilePage.button(str(a[0]), bool(a[1]), a[2])
+		if ai == 0:
+			b.name = "OpenDossier"
+		br.add_child(b)

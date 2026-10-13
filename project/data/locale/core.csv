@@ -12,7 +12,7 @@ pause_title,回到标题,
 playstats_title,游玩统计,Play stats
 playstats_export,导出游玩统计,Export play stats
 menu_no_save,尚无存档，无法继续,No save to continue
-menu_continue_summary,%s · %d年%d月 · 第%d章,%s · Y%d M%d · Ch %d
+menu_continue_summary,上次玩到：%s，第 %d 年 %d 月，第 %d 章,%s · Y%d M%d · Ch %d
 menu_load,读档,Load
 menu_credits,制作人员,Credits
 menu_replay,序章回顾,Prologue replay

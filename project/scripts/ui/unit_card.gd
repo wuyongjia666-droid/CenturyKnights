@@ -12,7 +12,8 @@ var _hp: ProgressBar
 var _hp_fill: StyleBoxFlat
 var _hp_txt: Label
 var _stats: Label
-var _chips: HBoxContainer
+var _chips: Container
+var _mob := false
 var _last_uid: String = ""
 const PW := 84.0
 const PH := 108.0
@@ -147,9 +148,11 @@ func set_unit(c, team: String = "player") -> void:
 			break
 		_chips.add_child(_make_chip(c, str(sid), enemy))
 		n += 1
+	if _mob:
+		_fit_mobile()
 
 func _make_chip(c, sid: String, enemy: bool) -> Control:
-	var sz := 22.0
+	var sz := 76.0 if _mob else 22.0
 	var sk: Dictionary = GameState.get_skill(sid)
 	var nm := str(sk.get("name", sid))
 	var left := int(c.skill_uses.get(sid, 0)) if "skill_uses" in c else 1
@@ -162,7 +165,7 @@ func _make_chip(c, sid: String, enemy: bool) -> Control:
 	b.text = chip.substr(0, 1)
 	b.custom_minimum_size = Vector2(sz, sz)
 	b.focus_mode = Control.FOCUS_NONE
-	b.add_theme_font_size_override("font_size", 12)
+	b.add_theme_font_size_override("font_size", 24 if _mob else 12)
 	var col: Color = (UIKit.DANGER if enemy else UIKit.ACCENT)
 	var n := StyleBoxFlat.new()
 	n.bg_color = Color(col, 0.10) if ready else Color(1, 1, 1, 0.03)
@@ -192,3 +195,54 @@ func _make_chip(c, sid: String, enemy: bool) -> Control:
 	b.mouse_entered.connect(func(): b.create_tween().tween_property(b, "scale", Vector2(1.1, 1.1), 0.08))
 	b.mouse_exited.connect(func(): b.create_tween().tween_property(b, "scale", Vector2.ONE, 0.1))
 	return b
+
+
+## Phone landscape: bigger type, chips wrap below the portrait at full touch size.
+func mobile_layout(width: float) -> void:
+	_mob = true
+	_w = width
+	set_meta("m_custom", true)
+	var x0 := PW + 14.0
+	_sub.position = Vector2(x0, 0)
+	_sub.add_theme_font_size_override("font_size", 22)
+	_name.position = Vector2(x0, 30)
+	_name.add_theme_font_size_override("font_size", 26)
+	_hp.position = Vector2(x0, 70)
+	_hp.custom_minimum_size = Vector2(_w - x0, 8)
+	_hp.size = _hp.custom_minimum_size
+	_hp_txt.position = Vector2(x0, 78)
+	_hp_txt.size = Vector2(_w - x0, 28)
+	_hp_txt.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_hp_txt.add_theme_font_size_override("font_size", 22)
+	var flow := HFlowContainer.new()
+	flow.add_theme_constant_override("h_separation", 8)
+	flow.add_theme_constant_override("v_separation", 8)
+	flow.position = Vector2(0, PH + 10.0)
+	flow.size = Vector2(_w, 76)
+	flow.custom_minimum_size = Vector2(_w, 0)
+	flow.mouse_filter = Control.MOUSE_FILTER_PASS
+	for ch in _chips.get_children():
+		ch.reparent(flow, false)
+		(ch as Control).custom_minimum_size = Vector2(76, 76)
+		(ch as Control).add_theme_font_size_override("font_size", 24)
+	_chips.replace_by(flow)
+	_chips.queue_free()
+	_chips = flow
+	_stats.add_theme_font_size_override("font_size", 22)
+	_stats.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_fit_mobile()
+
+
+func _fit_mobile() -> void:
+	var n := 0
+	for ch in _chips.get_children():
+		if not ch.is_queued_for_deletion():
+			n += 1
+	var per := maxi(1, int((_w + 8.0) / 84.0))
+	var rows := 0 if n == 0 else int(ceil(float(n) / float(per)))
+	_chips.size = Vector2(_w, maxf(0.0, rows * 84.0 - 8.0))
+	var sy := PH + 10.0 + (rows * 84.0 if rows > 0 else 0.0)
+	_stats.position = Vector2(0, sy)
+	_stats.size = Vector2(_w, 56)
+	custom_minimum_size = Vector2(_w, sy + 60.0)
+	size = custom_minimum_size

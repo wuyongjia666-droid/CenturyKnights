@@ -28,6 +28,10 @@ var _emblem_label: Label
 var _nation_label: Label
 var _warn: Label
 var _scroll: ScrollContainer
+var _art_row: HBoxContainer
+var _start_btn: Button
+var _back_btn: Button
+var _last_edit_ms := 0
 
 const FIELD_KEYS := {
 	"solid": "ux_field_solid",
@@ -156,6 +160,7 @@ func _build() -> void:
 	box.add_child(UIKit.make_dim_label(Locale.t("ux_name_blurb")))
 
 	var art_row := HBoxContainer.new()
+	_art_row = art_row
 	art_row.alignment = BoxContainer.ALIGNMENT_CENTER
 	art_row.add_theme_constant_override("separation", 20)
 	box.add_child(art_row)
@@ -227,11 +232,13 @@ func _build() -> void:
 	start.custom_minimum_size = Vector2(240, 48)
 	start.pressed.connect(_on_start)
 	box.add_child(start)
+	_start_btn = start
 
 	var back = UIKit.make_button(Locale.t("btn_back"), 200)
 	back.custom_minimum_size = Vector2(200, 48)
 	back.pressed.connect(func(): CKNav.replace(CKNav.TITLE))
 	box.add_child(back)
+	_back_btn = back
 
 func _layer_row(box: VBoxContainer, title: String, cb: Callable) -> Label:
 	box.add_child(UIKit.make_label(title))
@@ -367,5 +374,33 @@ func _on_start() -> void:
 	CKNav.replace("res://scenes/story/chapter0.tscn")
 
 func apply_mobile_layout() -> void:
-	if _scroll:
-		_scroll.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+	if _scroll == null:
+		return
+	_scroll.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+	var w := maxf(size.x, 1280.0)
+	if w <= size.y * 1.2 or _art_row == null:
+		return
+	# Landscape phone: preview art + start/back pinned on the left, form scrolls on the right.
+	var left_w := clampf(w * 0.36, 420.0, 620.0)
+	if _art_row.get_parent() != self:
+		_art_row.reparent(self)
+		_start_btn.reparent(self)
+		_back_btn.reparent(self)
+	_art_row.position = Vector2(24, 40)
+	_art_row.size = Vector2(left_w - 48, 300)
+	_start_btn.position = Vector2(24, size.y - 140)
+	_start_btn.size = Vector2(left_w - 48, 56)
+	_back_btn.position = Vector2(24, size.y - 72)
+	_back_btn.size = Vector2(left_w - 48, 52)
+	_scroll.offset_left = left_w
+
+func _process(_d: float) -> void:
+	var f := get_viewport().gui_get_focus_owner()
+	if f is LineEdit:
+		_last_edit_ms = Time.get_ticks_msec()
+
+## Android back: closing the soft keyboard also sends back; never pop the pause menu here.
+func nav_back() -> void:
+	if Time.get_ticks_msec() - _last_edit_ms < 800:
+		return
+	get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn")
