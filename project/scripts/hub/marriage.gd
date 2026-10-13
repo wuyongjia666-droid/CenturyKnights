@@ -458,6 +458,12 @@ func _render_cards() -> void:
 		_cards.remove_child(c)
 		c.queue_free()
 	var leader = GameState.get_leader()
+	if _mob:
+		_cards.add_child(_m_house_card(leader, Locale.t("mw_fc94ece4"), UIKit.ACCENT))
+		_cards.add_child(_m_harmony(leader, _selected))
+		_cards.add_child(_m_house_card(_selected, Locale.t("mw_d382e424"), UIKit.OK))
+		_fill_forecast(leader, _selected)
+		return
 	_house_card(_rect_principal, leader, "宗主一方", "CLAN PRINCIPAL", UIKit.ACCENT, "SERIES: VII-01")
 	_harmony_card(_rect_harmony, leader, _selected)
 	_house_card(_rect_spouse, _selected, "应帖一方", "ALLIED SPOUSE", UIKit.OK, "SERIES: IV-02")
@@ -465,6 +471,9 @@ func _render_cards() -> void:
 
 func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 	if _rite_board == null or _punnett == null:
+		return
+	if _mob:
+		_m_fill_forecast(a, b)
 		return
 	if _msg and _msg.get_parent() != _rite_board:
 		_msg.reparent(_rite_board, false)
@@ -495,7 +504,7 @@ func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 				x = 12.0
 				row_y += 44.0
 			btn.position = Vector2(x, row_y)
-			btn.tooltip_text = "%s\n若不接受：%s" % [str(r.get("desc", "")), str(r.get("block", ""))]
+			btn.tooltip_text = Locale.t("mw_6c9a2d8d") % [str(r.get("desc", "")), str(r.get("block", ""))]
 			var captured := id
 			btn.pressed.connect(func():
 				_rite_on[captured] = not bool(_rite_on.get(captured, true))
@@ -622,11 +631,6 @@ func _mobile_relayout() -> bool:
 func _mobile_after_render() -> void:
 	if not _mob:
 		return
-	MobileReflow.reflow_children(_cards, _m_card_w)
-	for c in _cards.get_children():
-		(c as Control).size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		(c as Control).custom_minimum_size.x = _m_card_w
-		(c as Control).clip_contents = true
 	for bd in [_rite_board, _punnett]:
 		MobileReflow.reflow_inplace(bd, (bd as Control).size.x)
 	for b in _tabs.get_children():
@@ -1078,3 +1082,146 @@ func _back() -> void:
 	else:
 		CKNav.up()
 
+
+
+## ── Phone cards: container-built so every line wraps inside its column; no empty stat plates ──
+func _m_card_box(col: Color) -> Array:
+	var p := PanelContainer.new()
+	var sb := UIKit.flat_box(Color(0.055, 0.067, 0.090, 0.92), Color(col, 0.35), 10)
+	for side in ["left", "right", "top", "bottom"]:
+		sb.set("content_margin_" + side, 12)
+	p.add_theme_stylebox_override("panel", sb)
+	p.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	p.custom_minimum_size.x = _m_card_w
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 4)
+	p.add_child(v)
+	return [p, v]
+
+func _m_house_card(c: CKCharacter, side_tag: String, col: Color) -> Control:
+	var pv := _m_card_box(col)
+	var v: VBoxContainer = pv[1]
+	v.add_child(MobilePage.label(side_tag, col, MobilePage.FONT, false))
+	if c == null:
+		return pv[0]
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 12)
+	v.add_child(row)
+	var pr := UIKit.make_portrait_rect(c, 132)
+	pr.custom_minimum_size = Vector2(112, 140)
+	pr.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	row.add_child(pr)
+	var info := VBoxContainer.new()
+	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	info.add_theme_constant_override("separation", 2)
+	row.add_child(info)
+	var nm := MobilePage.label(c.name, UIKit.TEXT, 24, true)
+	nm.name = "CardName"
+	nm.add_theme_font_override("font", UIKit.font("bold"))
+	info.add_child(nm)
+	var age := MobilePage.label(Locale.t("mw_0ea48000") % [c.age, GameState.get_job(c.job_id).get("name", "")], col, MobilePage.FONT, true)
+	age.name = "AgeLine"
+	info.add_child(age)
+	info.add_child(MobilePage.label("%s · LV %d" % [c.rank_name(), c.level], UIKit.TEXT, MobilePage.FONT, true))
+	info.add_child(MobilePage.label(Locale.t("mw_6e124674") % [c.derived_atk(), c.derived_def()], UIKit.TEXT_DIM, MobilePage.FONT, true))
+	var pb := str(c.primary_bloodline())
+	var bl: Dictionary = GameState.get_bloodline(pb)
+	var pct := int(round(float(c.blood_mix.get(pb, 1.0)) * 100))
+	v.add_child(MobilePage.label(Locale.t("mw_4b9d1a53") % [str(bl.get("name", pb)), pct], col, MobilePage.FONT, true))
+	var tr_names: Array = []
+	for tid in c.traits.slice(0, 3):
+		tr_names.append(str(GameState.get_trait(str(tid)).get("name", tid)))
+	v.add_child(MobilePage.label(Locale.t("mw_b88be11b") % ("、".join(tr_names) if not tr_names.is_empty() else Locale.t("mw_47f87f27")), UIKit.TEXT_FAINT, MobilePage.FONT, true))
+	return pv[0]
+
+func _m_harmony(a: CKCharacter, b: CKCharacter) -> Control:
+	var pv := _m_card_box(UIKit.TEXT_DIM)
+	var v: VBoxContainer = pv[1]
+	v.add_child(MobilePage.label(Locale.t("mw_9090426e"), UIKit.TEXT_DIM, MobilePage.FONT, false))
+	if a == null or b == null:
+		return pv[0]
+	var ex: Dictionary = Lineage.heir_expectation(a, b)
+	var mids := 0.0
+	var hi := 1.0
+	for sk in CKCharacter.STAT_KEYS:
+		mids += (float(ex.apt_min[sk]) + float(ex.apt_max[sk])) * 0.5
+		hi = maxf(hi, float(ex.apt_max[sk]))
+	var pct := clampi(int(round(mids / CKCharacter.STAT_KEYS.size() / maxf(hi, 12.0) * 100.0)), 1, 99)
+	var grade := "S" if pct >= 85 else ("A" if pct >= 70 else ("B" if pct >= 55 else "C"))
+	_grade.text = Locale.t("wsc_mr_key") % [grade, pct, _rite_cost(a, b), CKCharacter.RANK_NAMES.get(ex.rank_hint, ex.rank_hint)]
+	_grade.name = "KeyFacts"
+	var big := MobilePage.label("%s  %d%%" % [grade, pct], UIKit.ACCENT, 40, false)
+	big.add_theme_font_override("font", UIKit.font("mono"))
+	v.add_child(big)
+	v.add_child(MobilePage.label(Locale.t("mw_c4a0ef09") % str(CKCharacter.RANK_NAMES.get(ex.rank_hint, ex.rank_hint)), UIKit.TEXT, MobilePage.FONT, true))
+	var hp := VBoxContainer.new()
+	hp.name = "HeirPreview"
+	hp.add_theme_constant_override("separation", 2)
+	v.add_child(hp)
+	hp.add_child(MobilePage.label(Locale.t("mw_87646fa0"), UIKit.TEXT_FAINT, MobilePage.FONT, false))
+	for t in ex.trait_probs.slice(0, 3):
+		hp.add_child(MobilePage.label("%s  %d%%" % [str(t.name), int(round(float(t.prob) * 100))], UIKit.OK, MobilePage.FONT, true))
+	return pv[0]
+
+
+## Phone: rites and child forecast as two auto-height cards (the fixed-size boards squashed text).
+func _m_fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
+	var boards := _rite_board.get_parent() as Control
+	_rite_board.visible = false
+	_punnett.visible = false
+	for nm in ["MRites", "MForecast"]:
+		var old := boards.get_node_or_null(nm)
+		if old:
+			if _msg and old.is_ancestor_of(_msg):
+				_msg.reparent(self, false)
+			boards.remove_child(old)
+			old.queue_free()
+	var rp := _m_card_box(UIKit.ACCENT)
+	(rp[0] as Control).name = "MRites"
+	(rp[0] as Control).custom_minimum_size.x = 0
+	boards.add_child(rp[0])
+	var rv: VBoxContainer = rp[1]
+	rv.add_child(MobilePage.label(Locale.t("mw_127f0d3b"), UIKit.ACCENT, MobilePage.FONT, false))
+	_sync_rite_flags(a, b)
+	var rites: Array = CKCourt.required_rites(a, b) if a != null and b != null else []
+	if not rites.is_empty():
+		var fl := HFlowContainer.new()
+		fl.add_theme_constant_override("h_separation", 8)
+		fl.add_theme_constant_override("v_separation", 8)
+		rv.add_child(fl)
+		for r in rites:
+			var id := str(r.get("id", ""))
+			var on := bool(_rite_on.get(id, true))
+			var captured := id
+			var btn := MobilePage.button("%s %s" % ["✓" if on else "○", str(r.get("name", id))], on, func():
+				_rite_on[captured] = not bool(_rite_on.get(captured, true))
+				Sfx.click()
+				if str(captured) == "frost":
+					Sfx.play("frost_crackle")
+				_m_fill_forecast(GameState.get_leader(), _selected), 180)
+			btn.name = "Rite_" + id
+			btn.size_flags_horizontal = Control.SIZE_FILL
+			btn.tooltip_text = Locale.t("mw_6c9a2d8d") % [str(r.get("desc", "")), str(r.get("block", ""))]
+			fl.add_child(btn)
+	_msg.reparent(rv, false)
+	_msg.add_theme_font_size_override("font_size", MobilePage.FONT)
+	_msg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_msg.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_msg.custom_minimum_size = Vector2(0, 0)
+	_consequence_line(a, b)
+	var fp := _m_card_box(UIKit.TEXT_DIM)
+	(fp[0] as Control).name = "MForecast"
+	(fp[0] as Control).custom_minimum_size.x = 0
+	boards.add_child(fp[0])
+	var fv: VBoxContainer = fp[1]
+	fv.add_child(MobilePage.label(Locale.t("mw_085d21a4"), UIKit.TEXT_DIM, MobilePage.FONT, false))
+	if a != null and b != null:
+		for r in CKBloodline.forecast(a, b).slice(0, 2):
+			fv.add_child(MobilePage.label("%s  %d%%" % [str(r.get("royal_zh", "")), int(round(float(r.get("royal", 0.0)) * 100.0))], UIKit.TEXT, MobilePage.FONT, true))
+		for r2 in CKBloodline.trait_odds(a, b).slice(0, 2):
+			fv.add_child(MobilePage.label("%s  %d%%" % [str(r2.get("zh", "")), int(round(float(r2.get("shown", 0.0)) * 100.0))], UIKit.TEXT, MobilePage.FONT, true))
+		var cast := MobilePage.label(str(CKFamilyState.combat_expectation(a, b).get("line", "")), UIKit.ACCENT, MobilePage.FONT, true)
+		cast.name = "CombatForecast"
+		fv.add_child(cast)
+	UIFX.wire_tree(boards)
+	_mobile_after_render.call_deferred()

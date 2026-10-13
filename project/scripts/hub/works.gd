@@ -23,6 +23,10 @@ func _ready() -> void:
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 
+func apply_mobile_layout() -> void:
+	if MobilePage.active(self):
+		_m_render()
+
 func _back() -> void:
 	CKNav.up()
 
@@ -31,6 +35,9 @@ func _unhandled_input(e: InputEvent) -> void:
 		_back()
 
 func _render() -> void:
+	if MobilePage.active(self):
+		_m_render()
+		return
 	if _bar:
 		_bar.queue_free()
 	_bar = UIKit.top_bar(self, "城堡工事 · WORKS", [["银币", str(GameState.silver), UIKit.ACCENT], ["铁", str(GameState.iron), UIKit.TEXT], ["粮", str(GameState.food), UIKit.TEXT], ["历", Calendar.label(), UIKit.TEXT_DIM]], "返回城堡", _back)
@@ -231,3 +238,121 @@ func _upgrade(id: String) -> void:
 	else:
 		Sfx.miss()
 	_render()
+
+
+## ── Phone landscape: full-width building cards (left) + 堡志 / 家族旁注 (right) ──
+func _m_render() -> void:
+	for n in get_children():
+		if n is ColorRect and n.get_index() == 0:
+			continue
+		if n == _body:
+			continue
+		if n.name in ["MobileTopBar", "StitchTopBar", "StitchFooter"]:
+			remove_child(n)
+			n.queue_free()
+	_bar = null
+	for n in _body.get_children():
+		_body.remove_child(n)
+		n.queue_free()
+	var w := MobilePage.width(self)
+	var h := size.y if size.y > 400.0 else 720.0
+	var total := 0
+	for id in ["hall", "barracks", "market", "forge", "shrine"]:
+		total += GameState.building_level(id)
+	var info := Locale.t("mw_dbf7fc40") % [GameState.silver, GameState.iron, GameState.food, total, 5 * GameState.BUILDING_MAX, GameState.max_deploy()]
+	MobilePage.top_bar(self, Locale.t("mw_aee11ebd"), info, [[Locale.t("castle_view_open"), func(): CKNav.go("res://scenes/hub/castle_view.tscn")], [Locale.t("btn_back"), _back]])
+	var right_w := clampf(w * 0.30, 380.0, 470.0)
+	var lw := w - 40.0 - right_w - 12.0
+	var lv := MobilePage.panel(_body, Rect2(20, MobilePage.TOP, lw, h - MobilePage.TOP - 16), 12)
+	if _msg != "":
+		lv.add_child(MobilePage.label(_msg, UIKit.OK if _msg_ok else UIKit.DANGER, MobilePage.FONT, true))
+	var sc := ScrollContainer.new()
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	sc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	lv.add_child(sc)
+	var list := VBoxContainer.new()
+	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	list.add_theme_constant_override("separation", 10)
+	sc.add_child(list)
+	var descs := {
+		"hall": Locale.t("mw_75b58bf9") % GameState.max_deploy(),
+		"barracks": Locale.t("mw_08a7e913") % CKTutor.year_limit(),
+		"market": Locale.t("mw_5ccb2361"),
+		"forge": Locale.t("mw_ae9ddedb"),
+		"shrine": Locale.t("mw_df752a99"),
+	}
+	var first: Button = null
+	for id in ["hall", "barracks", "market", "forge", "shrine"]:
+		var b := _m_card(list, id, str(descs[id]))
+		if first == null and not b.disabled:
+			first = b
+	if first:
+		first.call_deferred("grab_focus")
+	var rv := MobilePage.panel(_body, Rect2(w - 20 - right_w, MobilePage.TOP, right_w, h - MobilePage.TOP - 16), 12)
+	var amb: Array = GameState.ambition_list()
+	var done := 0
+	for a in amb:
+		if a.get("done"):
+			done += 1
+	rv.add_child(MobilePage.label(Locale.t("mw_487923d4") % [done, amb.size()], UIKit.ACCENT, 24, false))
+	var sc2 := ScrollContainer.new()
+	sc2.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	sc2.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	rv.add_child(sc2)
+	var al := VBoxContainer.new()
+	al.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	al.add_theme_constant_override("separation", 10)
+	sc2.add_child(al)
+	for a in amb:
+		var ok: bool = bool(a.get("done"))
+		al.add_child(MobilePage.label("%s %s" % ["✓" if ok else "·", str(a.name)], UIKit.OK if ok else UIKit.TEXT, MobilePage.FONT, true))
+		var d := MobilePage.label(Locale.t("mw_84350bb5") % [a.desc, a.reward], UIKit.TEXT_FAINT, MobilePage.FONT, true)
+		al.add_child(d)
+	rv.add_child(MobilePage.label(Locale.t("mw_48b73335") + _house_mod_text(), UIKit.TEXT_DIM, MobilePage.FONT, true))
+	UIFX.wire_tree(self)
+
+func _m_card(list: VBoxContainer, id: String, desc: String) -> Button:
+	var lv := GameState.building_level(id)
+	var mx: int = GameState.BUILDING_MAX
+	var card := PanelContainer.new()
+	var sb := UIKit.flat_box(Color(1, 1, 1, 0.03), Color(1, 1, 1, 0.10), 10)
+	for side in ["left", "right", "top", "bottom"]:
+		sb.set("content_margin_" + side, 12)
+	card.add_theme_stylebox_override("panel", sb)
+	list.add_child(card)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 14)
+	card.add_child(row)
+	var ic := TextureRect.new()
+	if ResourceLoader.exists(ICON[id]):
+		ic.texture = load(ICON[id])
+	ic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	ic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	ic.custom_minimum_size = Vector2(64, 64)
+	ic.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(ic)
+	var v := VBoxContainer.new()
+	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	v.add_theme_constant_override("separation", 2)
+	row.add_child(v)
+	var t := MobilePage.label("%s   Lv %d / %d" % [str(GameState.BUILDING_NAMES[id]), lv, mx], UIKit.TEXT, 26, false)
+	t.add_theme_font_override("font", UIKit.font("bold"))
+	v.add_child(t)
+	v.add_child(MobilePage.label(desc, UIKit.TEXT_DIM, MobilePage.FONT, true))
+	var b: Button
+	if lv < mx:
+		var cost: Dictionary = CKEconomyState.building_cost(GameState, id, lv + 1)
+		var need_s := int(cost.get("silver", 0))
+		var ni := int(cost.get("iron", 0))
+		var nf := int(cost.get("food", 0))
+		var ok := GameState.silver >= need_s and GameState.iron >= ni and GameState.food >= nf
+		v.add_child(MobilePage.label(Locale.t("mw_bc2f4fde") % [need_s, ni, nf, Locale.t("a1_works_next_%s" % id)], UIKit.ACCENT if ok else UIKit.DANGER, MobilePage.FONT, true))
+		b = MobilePage.button(Locale.t("a1_upgrade"), ok, func(): _upgrade(id), 150)
+	else:
+		b = MobilePage.button(Locale.t("a1_maxed"), false, func(): pass, 150)
+		b.disabled = true
+	b.name = "up_%s" % id
+	b.size_flags_horizontal = Control.SIZE_SHRINK_END
+	b.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	row.add_child(b)
+	return b
