@@ -6,7 +6,7 @@ extends Control
 
 const _Atlas = preload("res://scripts/art/atlas_art.gd")
 const ATLAS := "res://scenes/hub/atlas_view.tscn"
-var TABS := [["overview", "概览"], ["smith", "铁匠铺"], ["market", "市集"], ["sundry", Locale.t("sundry_title")], ["board", "委托榜"], ["tavern", "酒馆"], ["armory", "军械库"], ["lamp", "灯籍"]]
+var tabs := [["overview", "概览"], ["smith", "铁匠铺"], ["market", "市集"], ["sundry", Locale.t("sundry_title")], ["board", "委托榜"], ["tavern", "酒馆"], ["armory", "军械库"], ["lamp", "灯籍"]]
 const TYPE_GLYPH := {"sword": "剑", "blade": "刀", "spear": "枪", "lance": "骑", "axe": "斧", "bow": "弓", "crossbow": "弩", "staff": "杖", "focus": "器", "armor": "甲", "shield": "盾", "charm": "符"}
 const TIER_COL := [Color("#9AA6B8"), Color("#9AA6B8"), Color("#5EE0B5"), Color("#6ED4FF"), Color("#C9B8FF")]
 const CONTENT := Rect2(416, 108, 848, 576)
@@ -47,8 +47,8 @@ func _ready() -> void:
 	_tabbar.add_theme_constant_override("separation", 6)
 	add_child(_tabbar)
 	## 八个页签要挤进内容区 848 宽，不能超出屏幕右边。
-	var tab_w := int(floor((CONTENT.size.x - 6.0 * (TABS.size() - 1)) / TABS.size()))
-	for t in TABS:
+	var tab_w := int(floor((CONTENT.size.x - 6.0 * (tabs.size() - 1)) / tabs.size()))
+	for t in tabs:
 		var b := UIKit.ghost_button(str(t[1]), tab_w, 34)
 		b.name = "Tab_" + str(t[0])
 		var tid := str(t[0])
@@ -1120,7 +1120,7 @@ func _unhandled_input(e: InputEvent) -> void:
 		var k := (e as InputEventKey).keycode
 		if k == KEY_Q or k == KEY_E:
 			var ids: Array = []
-			for t in TABS:
+			for t in tabs:
 				if not (_tab_btn[str(t[0])] as Button).disabled:
 					ids.append(str(t[0]))
 			var i := ids.find(tab)
@@ -1129,7 +1129,7 @@ func _unhandled_input(e: InputEvent) -> void:
 # ── e2e hook ──────────────────────────────────────────
 func selftest() -> Dictionary:
 	var msgs: Array = []
-	for t in TABS:
+	for t in tabs:
 		if (_tab_btn[str(t[0])] as Button).disabled:
 			continue
 		_set_tab(str(t[0]))
