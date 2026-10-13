@@ -1153,6 +1153,10 @@ static func _face_uid(c: CKCharacter) -> int:
 			prefer = [754, 154, 354, 554] + prefer
 		elif age_i <= 22:
 			prefer = [762, 160, 360, 560] + prefer
+	# P0 playtest: age/job tag slots and the hard-coded youth lists ignored sex, so a female
+	# spouse candidate drew male farm faces. Drop every slot that belongs to the other sex.
+	var wrong_pool: Array = FARM_FACE_SLOTS_M if str(c.gender) == "f" else FARM_FACE_SLOTS_F
+	prefer = prefer.filter(func(s3): return not wrong_pool.has(int(s3)))
 	# 1) 优先农场槽（空或已属自己）；hash 旋转避免总抢同一张
 	var npref = prefer.size()
 	if npref > 0:
@@ -1168,6 +1172,8 @@ static func _face_uid(c: CKCharacter) -> int:
 	var start = h % FACE_SLOTS
 	for i in range(FACE_SLOTS):
 		var slot2 = (start + i) % FACE_SLOTS
+		if wrong_pool.has(slot2):
+			continue
 		var owner2 = str(_face_owner.get(slot2, ""))
 		if owner2 == "" or owner2 == cid:
 			_face_owner[slot2] = cid

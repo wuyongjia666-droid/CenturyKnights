@@ -101,7 +101,7 @@ static func make_ally_tutor() -> CKCharacter:
 
 ## v8.9: blood comes from a CKBloodline pool roll (home castle tavern = 灰烬邦 folk/nobles + wanderers).
 ## City taverns pass their own roll; the genome is rolled from the TRUE blood (pretenders keep a folk genome).
-static func make_tavern_candidate(rng: RandomNumberGenerator, roll: Dictionary = {}) -> CKCharacter:
+static func make_tavern_candidate(rng: RandomNumberGenerator, roll: Dictionary = {}, force_gender: String = "") -> CKCharacter:
 	var names = GameState.data_names
 	var c := CKCharacter.new()
 	c.id = next_id("hire")
@@ -109,6 +109,10 @@ static func make_tavern_candidate(rng: RandomNumberGenerator, roll: Dictionary =
 	c.gender = g
 	if roll.is_empty():
 		roll = CKBloodline.roll_recruit("ashbanner", "castle", rng)
+	if force_gender == "m" or force_gender == "f":
+		# Sex must be fixed before the genome/face are rolled, or the look stays the old sex.
+		roll = roll.duplicate()
+		roll["sex"] = force_gender
 	if str(roll.get("sex", "")) != "":
 		c.gender = str(roll.sex)
 	var given_list = names.get("given_m" if c.gender == "m" else "given_f", ["无名"])
@@ -131,9 +135,12 @@ static func make_tavern_candidate(rng: RandomNumberGenerator, roll: Dictionary =
 	c.hp = c.max_hp
 	return c
 
+## Opposite sex of the captain; a missing captain defaults to a male captain's match.
+static func spouse_gender_for(leader: CKCharacter) -> String:
+	return "m" if leader != null and str(leader.gender) == "f" else "f"
+
 static func make_marriage_candidate(rng: RandomNumberGenerator, prefer_rank: String = "baron", nation_id: String = "") -> CKCharacter:
-	var c := make_tavern_candidate(rng)
-	c.gender = "f" if GameState.get_leader() and GameState.get_leader().gender == "m" else "m"
+	var c := make_tavern_candidate(rng, {}, spouse_gender_for(GameState.get_leader()))
 	c.in_roster = false
 	c.salary = 0
 	# v8.9：联姻对象按邦交挑国家，再按王 / 贵 / 民胤分档（CKBloodline.roll_marriage）
