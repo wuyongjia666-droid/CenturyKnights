@@ -1,8 +1,9 @@
 extends Node
-## Opening review batch 0: the chapter-1 path can be finished headless.
+## Opening review: the chapter-1 path can be finished headless.
 ## A-01 escort walks and wins; A-02 the way back reopens e1_01 with an exit past the brief;
 ## A-03 pause buttons are on screen at 1280x720 and 1600x720; A-04 prologue defeat returns to
 ## the story; A-05 prologue companions do not desert on unpaid wages.
+## Batch 3: e1_01 has stage backgrounds on every beat, a home beat, and no aphorism leftovers.
 
 const PLAYER := "res://scenes/story/chapter_player.tscn"
 const BATTLE := "res://scenes/battle/battle.tscn"
@@ -20,7 +21,7 @@ func _ready() -> void:
 
 
 func _run() -> String:
-	for step in [_escort, _return_to_chapter, _pause_layout, _defeat_route, _wages]:
+	for step in [_e1_presentation, _escort, _return_to_chapter, _pause_layout, _defeat_route, _wages]:
 		var err: String = await step.call()
 		if err != "":
 			return err
@@ -121,6 +122,68 @@ func _return_to_chapter() -> String:
 		return "lamp button went to %s" % p.current_beat_id()
 	p.queue_free()
 	await get_tree().process_frame
+	return ""
+
+
+func _e1_presentation() -> String:
+	var d = JSON.parse_string(FileAccess.get_file_as_string("res://data/story/chapters/era1_01.json"))
+	if typeof(d) != TYPE_DICTIONARY:
+		return "era1_01 unreadable"
+	var beats: Array = d.get("beats", [])
+	var ids: Array = []
+	var leader_n := 0
+	var wantan_n := 0
+	var scout_n := 0
+	var banned := ["滴声比哨音老实", "安静不是和解", "去向就是立场", "句子后面还有人", "半环不是纹章", "功绩单会先于"]
+	var saw_birth := false
+	var saw_home := false
+	for beat in beats:
+		var bid := str(beat.get("id", ""))
+		ids.append(bid)
+		var has_bg := false
+		for line in beat.get("lines", []):
+			var sp := str(line.get("speaker", ""))
+			var text := str(line.get("text", ""))
+			if sp == "leader":
+				leader_n += 1
+			if sp == "石垒·晚担":
+				wantan_n += 1
+			if sp == "斥候":
+				scout_n += 1
+			if text.find("出生的地方") >= 0:
+				saw_birth = true
+			for bad in banned:
+				if text.find(bad) >= 0:
+					return "aphorism leftover in %s: %s" % [line.get("id", ""), bad]
+			var stage = line.get("stage", {})
+			if typeof(stage) == TYPE_DICTIONARY and str(stage.get("bg", "")) != "":
+				has_bg = true
+		if not has_bg:
+			return "beat %s has no stage.bg" % bid
+		if bid == "end":
+			var acts: Array = beat.get("actions", [])
+			if acts.is_empty():
+				return "end beat needs a hub exit"
+			for line in beat.get("lines", []):
+				var text := str(line.get("text", ""))
+				var stage = line.get("stage", {})
+				if text.find("两套账") >= 0:
+					saw_home = true
+				if typeof(stage) == TYPE_DICTIONARY and str(stage.get("bg", "")) == "hall":
+					saw_home = true
+	if not saw_home:
+		return "end beat missing home return (hall / 两套账)"
+	if not saw_birth:
+		return "dengying birth beat missing"
+	if leader_n < 4:
+		return "leader lines %d (want >=4)" % leader_n
+	if wantan_n < 4:
+		return "wantan lines %d (want >=4)" % wantan_n
+	if scout_n > 0:
+		return "scout lines should be reassigned (%d left)" % scout_n
+	for beat in beats:
+		if str(beat.get("id", "")) == "end" and str(beat.get("next", "")) != "":
+			return "end.next must be empty so mainline advances"
 	return ""
 
 
