@@ -1368,7 +1368,8 @@ static func stitch_dialogue(scene: Control) -> void:
 		var tag = scene.get_meta("dlg_tag", null)
 		if tag is CanvasItem and is_instance_valid(tag):
 			(tag as CanvasItem).visible = not narr
-		cap.text = "" if hide_plate else (("SPEAKER // " + sp.text) if sp.text != "" else "")
+		# P0: narration now shows the captain; the "SPEAKER // 旁白" caption would sit on the name tag.
+		cap.text = "" if hide_plate or sp.text == "旁白" or sp.text == "" else ("SPEAKER // " + sp.text)
 	tm.timeout.connect(sync)
 	sync.call()
 	# chapter-level buttons (存档 / 返回灰旗堡) sit in the brand bar, right-aligned
