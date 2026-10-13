@@ -457,7 +457,8 @@ func _render_phone() -> void:
 		for n in [_head, _matrix, _count]:
 			if n:
 				(n as CanvasItem).visible = false
-		_phone_bar = MobilePage.top_bar(self, Locale.t("ux_dep_title"), Locale.t("ux_dep_info") % [DeployBrief.cap_line(), GameState.deploy_ids.size()], [[Locale.t("ux_dep_back"), _back]])
+		var info0 := Locale.t("ux_dep_info") % [DeployBrief.cap_line(), GameState.deploy_ids.size()]
+		_phone_bar = MobilePage.top_bar(self, Locale.t("ux_dep_title"), info0, [[Locale.t("ux_dep_back"), _back]])
 	var roster: Array = GameState.roster()
 	var kept: Array = []
 	for cid in GameState.deploy_ids:
@@ -534,9 +535,12 @@ func _phone_card(c: CKCharacter, i: int, card_h: float) -> Button:
 	head.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	col.add_child(head)
 	var slot := GameState.deploy_ids.find(c.id)
-	var hd := MobilePage.label(BattleObjectives.text("deploy_slot") % (slot + 1) if slot >= 0 else Locale.t("ux_dep_idle"), UIKit.ACCENT if on else UIKit.TEXT_FAINT, MobilePage.FONT, false)
+	var hd_txt := BattleObjectives.text("deploy_slot") % (slot + 1) if slot >= 0 else Locale.t("ux_dep_idle")
+	var hd := MobilePage.label(hd_txt, UIKit.ACCENT if on else UIKit.TEXT_FAINT, MobilePage.FONT, false)
 	head.add_child(hd)
-	var chip := UIKit.tag_chip(hurt if hurt != "" else (Locale.t("ux_dep_on") if on else Locale.t("ux_dep_tap")), UIKit.DANGER if hurt != "" else (UIKit.ACCENT if on else UIKit.TEXT_DIM), on and hurt == "")
+	var chip_txt := hurt if hurt != "" else (Locale.t("ux_dep_on") if on else Locale.t("ux_dep_tap"))
+	var chip_col := UIKit.DANGER if hurt != "" else (UIKit.ACCENT if on else UIKit.TEXT_DIM)
+	var chip := UIKit.tag_chip(chip_txt, chip_col, on and hurt == "")
 	head.add_child(chip)
 	var pr := UIKit.make_portrait_rect(c, 220)
 	pr.custom_minimum_size = Vector2(0, maxf(180.0, card_h - 300.0))
@@ -594,7 +598,8 @@ func _phone_metrics(r: Rect2) -> void:
 	v.add_child(head)
 	var nm := MobilePage.label(c.name, UIKit.TEXT, 28, false)
 	head.add_child(nm)
-	head.add_child(UIKit.tag_chip(Locale.t("ux_dep_leader") if c.is_leader else (Locale.t("ux_dep_fielded") if on else Locale.t("ux_dep_idle")), UIKit.ACCENT if on else UIKit.TEXT_DIM))
+	var tag_txt := Locale.t("ux_dep_leader") if c.is_leader else (Locale.t("ux_dep_fielded") if on else Locale.t("ux_dep_idle"))
+	head.add_child(UIKit.tag_chip(tag_txt, UIKit.ACCENT if on else UIKit.TEXT_DIM))
 	v.add_child(MobilePage.label(Locale.t("ux_dep_stats2", [str(GameState.get_job(c.job_id).get("name", "")), c.hp, c.max_hp, c.derived_atk(), c.derived_move()]), UIKit.ACCENT))
 	var board := DeployMinimap.new()
 	board.map_id = DeployBrief.practice_map_id()
