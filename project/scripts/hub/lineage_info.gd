@@ -215,3 +215,81 @@ static func render(host: Control, c, action_text: String, action_cb: Callable) -
 		btn.pressed.connect(action_cb)
 		p.add_child(btn)
 	return p
+
+
+## Phone landscape: same content in containers, 22px text, 76px action.
+static func render_mobile(host: Control, c, action_text: String, action_cb: Callable, rect: Rect2) -> Control:
+	for n in host.get_children():
+		host.remove_child(n)
+		n.queue_free()
+	var v := MobilePage.panel(host, rect, 18)
+	(v.get_parent() as Control).name = "InfoPanel"
+	var h1 := MobilePage.label(Locale.t("gen2_01"), UIKit.TEXT, 24, false)
+	v.add_child(h1)
+	if c == null:
+		var none := MobilePage.label(Locale.t("gen2_02"), UIKit.TEXT_FAINT)
+		none.name = "InfoEmpty"
+		v.add_child(none)
+		return v
+	var top := HBoxContainer.new()
+	top.add_theme_constant_override("separation", 16)
+	v.add_child(top)
+	top.add_child(portrait_rect(c, Vector2(132, 166)))
+	var col := VBoxContainer.new()
+	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	col.add_theme_constant_override("separation", 4)
+	top.add_child(col)
+	var nm := MobilePage.label(c.name, UIKit.TEXT, 28)
+	nm.name = "InfoName"
+	col.add_child(nm)
+	var life := (Locale.t("gen2_03") % [c.age, stage_text(c)]) if c.alive else (Locale.t("gen2_04") % c.age)
+	col.add_child(MobilePage.label(life, UIKit.OK if c.alive else UIKit.TEXT_FAINT))
+	col.add_child(MobilePage.label(Locale.t("gen2_05") % job_text(c), UIKit.TEXT))
+	var rr := HBoxContainer.new()
+	rr.add_theme_constant_override("separation", 8)
+	col.add_child(rr)
+	var arms := TextureRect.new()
+	arms.name = "PersonArms"
+	arms.texture = UnitArt.shield_arms(GameState.arms_for_character(c), 40, 48)
+	arms.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	arms.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	arms.custom_minimum_size = Vector2(40, 48)
+	rr.add_child(arms)
+	var badge := TextureRect.new()
+	badge.texture = CKHeraldryRender.rank_badge(str(c.rank), 32)
+	badge.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	badge.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	badge.custom_minimum_size = Vector2(36, 48)
+	rr.add_child(badge)
+	var rk := MobilePage.label(c.rank_name(), UIKit.ACCENT)
+	rk.name = "InfoRank"
+	rk.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	rr.add_child(rk)
+	var head := Locale.t("gen2_07") + "  " + Locale.t("gen2_08") % c.traits.size()
+	v.add_child(MobilePage.label(head, UIKit.ACCENT))
+	var flow := HFlowContainer.new()
+	flow.add_theme_constant_override("h_separation", 18)
+	flow.add_theme_constant_override("v_separation", 6)
+	v.add_child(flow)
+	var shown := 0
+	for tr in c.traits:
+		if shown >= 5:
+			break
+		var td: Dictionary = GameState.get_trait(str(tr))
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 6)
+		row.add_child(UIKit.trait_icon_rect(str(tr), 28.0))
+		row.add_child(MobilePage.label(str(td.get("name", tr)), UIKit.TEXT, MobilePage.FONT, false))
+		flow.add_child(row)
+		shown += 1
+	if c.traits.is_empty():
+		v.add_child(MobilePage.label(Locale.t("gen2_09"), UIKit.TEXT_FAINT))
+	var pb := str(c.primary_bloodline())
+	var mix := int(round(float(c.blood_mix.get(pb, 1.0)) * 100))
+	v.add_child(MobilePage.label(Locale.t("gen2_10") % [GameState.get_bloodline(pb).get("name", pb), mix], UIKit.TEXT_DIM))
+	MobilePage.spacer(v)
+	if action_text != "":
+		var btn := MobilePage.button(action_text, true, func(): action_cb.call())
+		btn.name = "InfoAction"
+		v.add_child(btn)
+	return v
