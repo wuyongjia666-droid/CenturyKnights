@@ -225,17 +225,17 @@ ux_back_ch0,带回第零章,Return to Chapter 0
 ux_seal_stow,收起,Put away
 ux_next_line,下一句,Next line
 ux_return_chapter,回到这一章,Back to chapter
-ux_estates_field,属事处,Field office
-ux_estates_sub,四野租佃。田册记谁上工。,Tenancy. The field book names who works.
+ux_estates_field,田册（谁下地）,Field book
+ux_estates_sub,家里不出战的人可以在这儿派去地里干活，每月领一点工钱进自己口袋。口袋里的钱随时能整笔交回旗库，但旗库的钱不能反过来塞进口袋。,Family who stay home can work the fields here for a small wage into their own purse. A purse can be handed back to the treasury; never the other way.
 ux_estates_title,属地 · 属事处,Holdings · Field office
-ux_field_idle,未上工,Not working
-ux_field_on,上工:%s,On field:%s
-ux_field_follow,随旗,With banner
-ux_field_young,岁数不够,Too young
-ux_field_row,%s · %d岁 · 私囊 %d · %s,%s · age %d · purse %d · %s
-ux_field_leave,离田,Leave field
-ux_field_remit,交还,Remit
-ux_field_close,合上,Close
+ux_field_idle,在家闲着,Idle at home
+ux_field_on,在%s干活,Working %s
+ux_field_follow,跟队出战,With the banner
+ux_field_young,太小，还不能干活,Too young
+ux_field_row,%s · %d岁 · 口袋 %d 银 · %s,%s · age %d · purse %d · %s
+ux_field_leave,不干了,Stop work
+ux_field_remit,交回旗库 %d,Remit %d
+ux_field_close,关上,Close
 ux_seal_paid,聘银 40 已付,Bride-price 40 paid
 ux_seal_doctrine,家训 %s · 嫁妆 %s,Doctrine %s · dowry %s
 ux_seal_term,妊娠 %d 月,Term %d months
@@ -319,3 +319,6 @@ sundry_not_yet,这件现在还用不上（相关玩法还没开）,Not usable ye
 sundry_need_city,得在城里才能用,Use it in a town
 sundry_intel_done,这座城的消息已经打听过了,Already asked around here
 sundry_offer_line,%s  ·  %d 银  ·  有 %d/%d,%s · %d silver · have %d/%d
+ux_field_plaque,属事处 · 田册,Field office · Field book
+ux_field_no_land,还没有开垦的属地，先回属地页开一块地，才有活干。,No holding opened yet. Open one first.
+ux_field_nobody,家里还没有能下地的人。,Nobody at home can work the fields yet.
