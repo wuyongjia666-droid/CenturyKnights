@@ -18,6 +18,8 @@ for s in rep:
     dp = h / 411.0 if w / h > 1.7 else h / 800.0  # approx dp for landscape phone/tablet
     rects = []
     for it in s["items"]:
+        if it["type"] == "Placeholder":
+            continue
         x, y, rw, rh = it["rect"]
         if rw <= 1 or rh <= 1:
             continue
