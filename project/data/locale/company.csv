@@ -157,7 +157,7 @@ wsc_m_spring,本月行情：青黄不接，粮贵 1 银。秋收时再囤粮更�
 wsc_m_summer,本月行情：药草正旺，伤药便宜 1 银，趁现在多备点。,Herb season: salve -1.
 wsc_m_winter,本月行情：冬天炉火紧、病号多，铁和伤药各贵 1 银。,Winter: iron and salve +1.
 wsc_mr_detail,婚约详情,Marriage details
-wsc_mr_key,子嗣 %s·%d%% ｜ 礼银 %d ｜ 多半是%s,Heir %s·%d%% | rites %d | likely %s
+wsc_mr_key,子嗣 %s·%d%% · 礼银 %d · 多半是%s,Heir %s·%d%% | rites %d | likely %s
 wsc_mr_more,……（点开看全部）,… (tap for all)
 wsc_q_04480f1a,办完了：%s。%s,
 wsc_q_145290c3,再接一次,
