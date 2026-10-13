@@ -78,6 +78,13 @@ func _card(id: String, i: int) -> void:
 	hot.position = pos + Vector2(8, 8)
 	hot.size = Vector2(196, 180)
 	hot.focus_mode = Control.FOCUS_NONE
+	hot.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	hot.tooltip_text = name_of(id)
+	# visible tap feedback on the art: frost frame on hover, brighter on press
+	hot.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+	hot.add_theme_stylebox_override("hover", UIKit.flat_box(Color(UIKit.ACCENT, 0.06), Color(UIKit.ACCENT, 0.55), 6))
+	hot.add_theme_stylebox_override("pressed", UIKit.flat_box(Color(UIKit.ACCENT, 0.14), Color(UIKit.ACCENT, 0.9), 6))
+	hot.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	hot.pressed.connect(func(): _open(id))
 	add_child(hot)
 	var x := pos.x + 216
