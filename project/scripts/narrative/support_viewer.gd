@@ -59,6 +59,9 @@ func apply_mobile_layout() -> void:
 	if not MobilePage.active(self):
 		return
 	var w := MobilePage.width(self)
+	var bar := get_node_or_null("StitchTopBar") as Control
+	if bar:
+		MobileLayout.stretch_top_bar(bar, w - bar.size.x)
 	var scroll := get_node_or_null("BondScroll") as ScrollContainer
 	var lw := clampf(w * 0.38, 440.0, 600.0)
 	if scroll:

@@ -41,6 +41,13 @@ func _ready() -> void:
 		var hv := CKPageKit.button(Locale.t("lb_hg_debug_harvest"), false, 220)
 		hv.pressed.connect(_to_harvest)
 		row.add_child(hv)
+	if DeviceProfile.is_mobile():
+		# Phone: the primary advance sits bottom-right under the thumb, season to its left.
+		row.size = Vector2(1196, MobilePage.HIT)
+		row.alignment = BoxContainer.ALIGNMENT_END
+		row.move_child(m1, row.get_child_count() - 1)
+		for b in row.get_children():
+			(b as Control).custom_minimum_size = Vector2(260, MobilePage.HIT)
 	_msg = CKPageKit.feedback(self)
 	_paint_kpis()
 	_show_forecast(1)
