@@ -160,15 +160,19 @@ func _e1_presentation() -> String:
 				has_bg = true
 		if not has_bg:
 			return "beat %s has no stage.bg" % bid
-		if bid == "home":
-			saw_home = true
+			if bid == "end":
 			var acts: Array = beat.get("actions", [])
 			if acts.is_empty():
-				return "home beat needs a hub exit"
-	if not ids.has("home"):
-		return "missing home beat"
+				return "end beat needs a hub exit"
+			for line in beat.get("lines", []):
+				var text := str(line.get("text", ""))
+				var stage = line.get("stage", {})
+				if text.find("两套账") >= 0:
+					saw_home = true
+				if typeof(stage) == TYPE_DICTIONARY and str(stage.get("bg", "")) == "hall":
+					saw_home = true
 	if not saw_home:
-		return "home beat empty"
+		return "end beat missing home return (hall / 两套账)"
 	if not saw_birth:
 		return "dengying birth beat missing"
 	if leader_n < 4:
@@ -177,10 +181,9 @@ func _e1_presentation() -> String:
 		return "wantan lines %d (want >=4)" % wantan_n
 	if scout_n > 0:
 		return "scout lines should be reassigned (%d left)" % scout_n
-	# end must lead into home so the chapter closes with a return.
 	for beat in beats:
-		if str(beat.get("id", "")) == "end" and str(beat.get("next", "")) != "home":
-			return "end.next should be home"
+		if str(beat.get("id", "")) == "end" and str(beat.get("next", "")) != "":
+			return "end.next must be empty so mainline advances"
 	return ""
 
 

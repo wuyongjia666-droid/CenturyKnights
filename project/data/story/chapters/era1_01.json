@@ -597,8 +597,7 @@
     },
     {
       "id": "end",
-      "title": "签离手",
-      "next": "home",
+      "title": "签离手·回堡",
       "lines": [
         {
           "id": "e1_01_l073",
@@ -642,25 +641,7 @@
           "id": "e1_01_l080",
           "speaker": "石垒·晚担",
           "text": "回吧。孩子该醒了。"
-        }
-      ]
-    },
-    {
-      "id": "home",
-      "title": "回堡",
-      "actions": [
-        {
-          "id": "to_hub",
-          "label": "回到灰旗堡",
-          "do": [
-            {
-              "op": "scene",
-              "path": "res://scenes/hub/castle_hub.tscn"
-            }
-          ]
-        }
-      ],
-      "lines": [
+        },
         {
           "id": "e1_01_l081",
           "speaker": "旁白",
@@ -694,6 +675,18 @@
           "stage": {
             "pace": "slow"
           }
+        }
+      ],
+      "actions": [
+        {
+          "id": "to_hub",
+          "label": "回到灰旗堡",
+          "do": [
+            {
+              "op": "scene",
+              "path": "res://scenes/hub/castle_hub.tscn"
+            }
+          ]
         }
       ]
     }
