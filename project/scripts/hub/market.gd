@@ -54,10 +54,18 @@ func _clear(n: Control) -> void:
 		n.remove_child(ch)
 		ch.queue_free()
 
+func apply_mobile_layout() -> void:
+	if MobilePage.active(self):
+		_render()
+
 func _render() -> void:
+	if MobilePage.active(self):
+		_m_render()
+		return
 	if _bar:
 		_bar.queue_free()
-	_bar = UIKit.top_bar(self, "陆桥商路 · MARKET", [["银币", str(GameState.silver), UIKit.ACCENT], ["粮", str(GameState.food), UIKit.TEXT], ["铁", str(GameState.iron), UIKit.TEXT], ["药", str(GameState.herb), UIKit.TEXT], ["市集", "LV %d" % GameState.building_level("market"), UIKit.OK]], "返回城堡", _back)
+	_bar = UIKit.top_bar(self, "陆桥商路 · MARKET", [["银币", str(GameState.silver), UIKit.ACCENT], ["粮", str(GameState.food), UIKit.TEXT], ["铁", str(GameState.iron),
+			UIKit.TEXT], ["药", str(GameState.herb), UIKit.TEXT], ["市集", "LV %d" % GameState.building_level("market"), UIKit.OK]], "返回城堡", _back)
 	_clear(_left)
 	_clear(_mid)
 	_clear(_right)
@@ -178,7 +186,8 @@ func _render_mid() -> void:
 	g.position = Vector2(390, 238)
 	g.add_theme_constant_override("separation", 10)
 	_mid.add_child(g)
-	for sb in [UIKit.stat_box("买入单价 BUY", "%d 银" % price, UIKit.ACCENT), UIKit.stat_box("卖出回收 SELL", "%d 银" % int(sp[_sel]), UIKit.TEXT), UIKit.stat_box("库存 STOCK", "%d" % int(GameState.get(_sel)), UIKit.TEXT)]:
+	for sb in [UIKit.stat_box("买入单价 BUY", "%d 银" % price, UIKit.ACCENT), UIKit.stat_box("卖出回收 SELL", "%d 银" % int(sp[_sel]), UIKit.TEXT), UIKit.stat_box("库存 STOCK",
+			"%d" % int(GameState.get(_sel)), UIKit.TEXT)]:
 		sb.custom_minimum_size = Vector2(152, 0)
 		g.add_child(sb)
 	# quantity selector
@@ -313,7 +322,7 @@ func _render_right() -> void:
 	var busy := int(GameState.caravan.get("turns_left", 0)) > 0
 	var cx := 912.0
 	for kind in ["grain", "iron", "spice"]:
-		var cn: String = {"grain": "粮运\n35 银", "iron": "铁运\n45 银", "spice": "香料\n55 银"}[kind]
+		var cn: String = {"grain": Locale.t("mw_e9fc492e"), "iron": Locale.t("mw_6daec399"), "spice": Locale.t("mw_b1f6bec9")}[kind]
 		var b := UIKit.ghost_button(cn, 104, 70)
 		b.position = Vector2(cx, 470)
 		b.disabled = busy
@@ -358,3 +367,123 @@ func _caravan_status() -> String:
 		var cn = {"grain": "粮运", "iron": "铁运", "spice": "香料"}.get(k, k)
 		return "在途：%s · 余 %d 月 · 投资 %d 银" % [cn, int(GameState.caravan.turns_left), int(GameState.caravan.get("invested", 0))]
 	return "暂无商队在途——选一条航线投资上路。"
+
+
+## ── Phone landscape: goods cards (left) · quantity stepper + buy/sell (centre) · caravan desk (right) ──
+func _m_render() -> void:
+	for nm in ["MobileTopBar", "StitchTopBar", "StitchFooter"]:
+		var n := get_node_or_null(nm)
+		if n:
+			remove_child(n)
+			n.queue_free()
+	if _bar and is_instance_valid(_bar):
+		_bar.queue_free()
+	_bar = null
+	for n in [_left, _mid, _right]:
+		_clear(n)
+	var w := MobilePage.width(self)
+	var h := size.y if size.y > 400.0 else 720.0
+	var top := MobilePage.TOP
+	var bh := h - top - 16.0
+	MobilePage.top_bar(self, Locale.t("mw_f8f18ffd"), Locale.t("mw_72393112") % [GameState.silver, GameState.food, GameState.iron, GameState.herb,
+			GameState.building_level("market")], [[Locale.t("btn_back"), _back]])
+	var lw := clampf(w * 0.27, 330.0, 420.0)
+	var rw := clampf(w * 0.27, 330.0, 420.0)
+	var mw := w - 40.0 - lw - rw - 24.0
+	var bp: Dictionary = GameState.market_buy_prices()
+	var sp: Dictionary = GameState.market_sell_prices()
+	var lv := MobilePage.panel(_left, Rect2(20, top, lw, bh), 10)
+	lv.add_child(MobilePage.label(Locale.t("mw_729c413f"), UIKit.ACCENT, 24, false))
+	for it in ITEMS:
+		var on: bool = it == _sel
+		var b := MobilePage.button(Locale.t("mw_0e5acd74") % [Locale.t(it), int(GameState.get(it)), int(bp[it]), int(sp[it])], on, func():
+			_sel = it
+			_qty = 1
+			_render())
+		b.name = "Item_" + it
+		b.custom_minimum_size = Vector2(0, 104)
+		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		b.icon = _icon(it, 56).texture
+		b.expand_icon = true
+		b.add_theme_constant_override("icon_max_width", 56)
+		lv.add_child(b)
+	MobilePage.spacer(lv)
+	var mv := MobilePage.panel(_mid, Rect2(20 + lw + 12, top, mw, bh), 14)
+	mv.add_theme_constant_override("separation", 12)
+	var price := int(bp[_sel])
+	mv.add_child(MobilePage.label(Locale.t(_sel), UIKit.TEXT, 30, false))
+	mv.add_child(MobilePage.label(str(DESC[_sel]), UIKit.TEXT_DIM, MobilePage.FONT, true))
+	var mx := maxi(1, mini(99, int(GameState.silver / maxi(1, price))))
+	var step := HBoxContainer.new()
+	step.add_theme_constant_override("separation", 10)
+	mv.add_child(step)
+	var minus := MobilePage.button("－", false, func(): _set_qty(_qty - 1), 96)
+	minus.name = "QtyMinus"
+	minus.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	step.add_child(minus)
+	var q := MobilePage.label(Locale.t("mw_0b4b3f1d") % _qty, UIKit.TEXT, 30, false)
+	q.name = "QtyLabel"
+	q.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	q.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	step.add_child(q)
+	var plus := MobilePage.button("＋", false, func(): _set_qty(_qty + 1), 96)
+	plus.name = "QtyPlus"
+	plus.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	step.add_child(plus)
+	var mxb := MobilePage.button(Locale.t("mw_758ec925"), false, func(): _set_qty(mx), 110)
+	mxb.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	step.add_child(mxb)
+	var left := GameState.silver - price * _qty
+	mv.add_child(MobilePage.label(Locale.t("mw_819f9bc8") % [price, _qty, price * _qty, left], UIKit.TEXT if left >= 0 else UIKit.DANGER, MobilePage.FONT, true))
+	if _msg != "":
+		mv.add_child(MobilePage.label(_msg, UIKit.OK if _msg_ok else UIKit.DANGER, MobilePage.FONT, true))
+	MobilePage.spacer(mv)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 10)
+	mv.add_child(row)
+	var sell := MobilePage.button(Locale.t("mw_36dad83f") % (int(sp[_sel]) * _qty), false, _sell)
+	sell.name = "MarketSell"
+	sell.disabled = int(GameState.get(_sel)) < _qty
+	row.add_child(sell)
+	var buy := MobilePage.button(Locale.t("mw_0d0aa127") % (price * _qty), true, _buy)
+	buy.name = "MarketBuy"
+	buy.disabled = left < 0
+	row.add_child(buy)
+	if not buy.disabled:
+		buy.call_deferred("grab_focus")
+	# caravan
+	var rv := MobilePage.panel(_right, Rect2(w - 20 - rw, top, rw, bh), 12)
+	rv.add_child(MobilePage.label(Locale.t("mw_1773df3e"), UIKit.ACCENT, 24, false))
+	rv.add_child(MobilePage.label(Locale.t("mw_fed61ef2"), UIKit.TEXT_DIM, MobilePage.FONT, true))
+	var busy := int(GameState.caravan.get("turns_left", 0)) > 0
+	var cg := HBoxContainer.new()
+	cg.add_theme_constant_override("separation", 8)
+	rv.add_child(cg)
+	for kind in ["grain", "iron", "spice"]:
+		var cn: String = {"grain": Locale.t("mw_e9fc492e"), "iron": Locale.t("mw_6daec399"), "spice": Locale.t("mw_b1f6bec9")}[kind]
+		var k: String = kind
+		var cb := MobilePage.button(cn, false, func():
+			var r: Dictionary = GameState.start_caravan(k)
+			_msg = str(r.get("msg"))
+			_msg_ok = bool(r.get("ok"))
+			if _msg_ok:
+				Sfx.deal()
+				GameState.save_game()
+			_render())
+		cb.custom_minimum_size = Vector2(0, 96)
+		cb.disabled = busy
+		cg.add_child(cb)
+	var st := MobilePage.label(_caravan_status(), UIKit.ACCENT if busy else UIKit.TEXT_FAINT, MobilePage.FONT, true)
+	st.name = "CaravanStatus"
+	rv.add_child(st)
+	MobilePage.spacer(rv)
+	var esc := MobilePage.button(Locale.t("mw_76a53873"), false, func():
+		var r: Dictionary = GameState.escort_caravan()
+		_msg = str(r.get("msg"))
+		_msg_ok = bool(r.get("ok"))
+		if _msg_ok:
+			Sfx.confirm()
+			GameState.save_game()
+		_render())
+	esc.disabled = not busy
+	rv.add_child(esc)
