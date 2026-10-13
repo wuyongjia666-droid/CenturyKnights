@@ -217,6 +217,7 @@ static func card_title(event: Dictionary) -> String:
 	var t := str(event.get("title", ""))
 	if t != "":
 		return t
+	# Legacy: first setup line
 	for row in event.get("lines", []):
 		return str(row.get("text", ""))
 	return ""
@@ -343,6 +344,7 @@ static func _apply(c: CKCharacter, fx: Dictionary) -> bool:
 
 static func _option(event: Dictionary, option_id: String) -> Dictionary:
 	var oid := str(option_id)
+	# Map a/b <-> left/right
 	var side := ""
 	match oid:
 		"a", "left":

@@ -44,6 +44,7 @@ func _catalog(fails: Array) -> void:
 			fails.append("%s title" % str(event.get("id", "")))
 		if str(event.get("body", "")) == "":
 			fails.append("%s body" % str(event.get("id", "")))
+		# No literary multi-speaker chains
 		if event.has("lines") or event.has("options"):
 			fails.append("%s legacy lines/options" % str(event.get("id", "")))
 		if not event.has("left") or not event.has("right"):
@@ -54,6 +55,7 @@ func _catalog(fails: Array) -> void:
 
 
 func _tone(fails: Array) -> void:
+	# Body one sentence-ish; acts short; no 旁白 speaker chains.
 	for event in Life.events():
 		var eid := str(event.get("id", ""))
 		var body := str(event.get("body", ""))
@@ -67,6 +69,7 @@ func _tone(fails: Array) -> void:
 				fails.append("%s %s act long" % [eid, side])
 			if act.contains("旁白"):
 				fails.append("%s %s 旁白" % [eid, side])
+			# Visible cost: non-flag mechanical effects should expose a hint
 			var has_mech := false
 			for fx in event.get(side, {}).get("effects", []):
 				if typeof(fx) == TYPE_DICTIONARY and str(fx.get("op", "")) != "flag":
@@ -219,6 +222,7 @@ func _years(fails: Array) -> void:
 
 
 func _text_lint(fails: Array) -> void:
+	# Card pool is no longer multi-speaker dialogue; scan title/body/act for tropes & length.
 	var anti: Array = []
 	var rules_path := "res://data/story/lint_rules.json"
 	if FileAccess.file_exists(rules_path):
