@@ -421,6 +421,7 @@ func _speaker_portrait(speaker: String, emotion: String = "") -> void:
 	# character at all. Narration now shows the captain; only a missing captain hides it.
 	var narr_lead: CKCharacter = GameState.get_leader() if narr else null
 	_portrait.set_meta("story_narrator", narr and narr_lead == null)
+	_portrait.set_meta("story_narrator_lead", narr and narr_lead != null)
 	test_capture["portrait_narrator"] = narr
 	if narr and narr_lead != null:
 		test_capture["portrait_who"] = narr_lead.id
