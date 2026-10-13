@@ -116,18 +116,21 @@ func _resume_mid() -> String:
 func _battle_story() -> String:
 	var host := Node.new()
 	add_child(host)
-	for k in ["start", "turn_2", "first_lock", "first_kill"]:
+	for k in ["start", "turn_1", "turn_2", "turn_3", "first_lock", "first_kill", "victory"]:
 		GameState.set_flag("bs_ch0_pass_" + k, false)
-	if BattleStory.fire(host, "ch0_pass", "start") != 2:
+	if BattleStory.fire(host, "ch0_pass", "start") != 3:
 		return "start lines"
 	if not BattleStory.is_showing(host):
 		return "bar not showing"
 	if BattleStory.fire(host, "ch0_pass", "start") != 0:
 		return "start replayed"
 	BattleStory.on_player_turn(host, "ch0_pass")
+	if not (host.get_meta("bs_log", []) as Array).has("turn:1"):
+		return "turn:1 did not fire %s" % str(host.get_meta("bs_log", []))
 	BattleStory.on_player_turn(host, "ch0_pass")
-	if not (host.get_meta("bs_log", []) as Array).has("turn:2"):
-		return "turn:2 did not fire %s" % str(host.get_meta("bs_log", []))
+	BattleStory.on_player_turn(host, "ch0_pass")
+	if not (host.get_meta("bs_log", []) as Array).has("turn:3"):
+		return "turn:3 did not fire %s" % str(host.get_meta("bs_log", []))
 	BattleStory.skip_all(host)
 	if BattleStory.is_showing(host):
 		return "skip left the bar up"
@@ -137,5 +140,11 @@ func _battle_story() -> String:
 		return "played flag not saved"
 	if BattleStory.fire(Node.new(), "no_such_map", "start") != 0:
 		return "unknown map fired"
+	for k2 in ["start", "turn_2", "first_lock", "first_kill", "victory"]:
+		GameState.set_flag("bs_e1_reed_escort_" + k2, false)
+	host.set_meta("bs_skipped", false)
+	host.set_meta("bs_log", [])
+	if BattleStory.fire(host, "e1_reed_escort", "start") != 3:
+		return "e1 start lines"
 	host.queue_free()
 	return ""

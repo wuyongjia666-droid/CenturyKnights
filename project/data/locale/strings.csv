@@ -63,12 +63,13 @@ shell_battle_deploy,%s：我军 %d · 敌军 %d,%s: allies %d · enemies %d
 shell_atk_q,攻击   Q,Attack   Q
 shell_art_w,战技   W,Art   W
 shell_lock_1t,① 交战锁定·咬住,1. Lock · the bite
-shell_lock_1b,攻或受击后，双方棋子外圈出现锁定环——这就是「咬住」。,"After a strike or a hit, a lock ring appears around both pieces. That is the bite."
+shell_lock_1b,打中或挨打之后，双方外圈会出现红环——这就是「咬住」。,"After a strike or a hit, a red ring appears around both pieces. That is the bite."
 shell_lock_2t,② 脱离更贵,2. Leaving costs more
-shell_lock_2b,锁定中离开交战格额外消耗 +%d 移力（高于普通交战 +%d）。想走，先算步数。,Leaving a locked fight costs +%d move (a normal fight is +%d). Count the steps before you go.
+shell_lock_2b,缠上以后想走，要多花 +%d 步（普通交战是 +%d）。先数清楚再挪。,Leaving a locked fight costs +%d move (a normal fight is +%d). Count the steps before you go.
 shell_lock_3t,③ 锁反与拆锁,3. Counter and break
-shell_lock_3b,锁定单位反击命中+10。用战技「抽身一步 / 拆锁突围」可解除锁定。,A locked unit counters at +10 hit. The arts Step Out and Break the Lock clear it.
+shell_lock_3b,被缠住的人反击更准（命中+10）。想脱身，用战技「抽身一步」或「拆锁突围」。,A locked unit counters at +10 hit. The arts Step Out and Break the Lock clear it.
 shell_lock_start,开始隘口教学,Start the pass lesson
+shell_lock_next,下一条,Next
 shell_lock_drill,【强制练习】交战锁定,[Drill] Engagement lock
 shell_lock_drill_tip,先选中单位 → 攻击模式 → 攻击一名敌人，触发锁定后才能结束回合。,"Select a unit, enter attack mode, and strike an enemy. End the turn after the lock triggers."
 shell_lock_final,【终局演练】交战锁定决战复习,[Final drill] Lock review
@@ -495,6 +496,11 @@ shell_82b986d8,"[b]选择己方单位开始行动[/b]
 目标：歼灭全部敌人。
 蓝格可移动 · 红格为可攻目标 · 攻击模式后点敌。","[b]Choose one of yours to act[/b]
 Goal: defeat every enemy.
+Blue cells are movement · red cells can be attacked · enter attack mode, then tap a foe."
+shell_obj_idle,"[b]选择己方单位开始行动[/b]
+目标：%s。
+蓝格可移动 · 红格为可攻目标 · 攻击模式后点敌。","[b]Choose one of yours to act[/b]
+Goal: %s.
 Blue cells are movement · red cells can be attacked · enter attack mode, then tap a foe."
 shell_82f362f5,可继续第四十七章·冠火。,Continue Chapter 47 · crown fire.
 shell_830b485d,战役推进,Campaign

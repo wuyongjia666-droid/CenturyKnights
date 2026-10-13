@@ -8,103 +8,165 @@
         "actions": []
       },
       "name": "隘口之夜",
-      "w": 8,
-      "h": 6,
+      "w": 10,
+      "h": 7,
       "player_spots": [
         [
           1,
+          3
+        ],
+        [
+          2,
           4
         ],
         [
           2,
-          5
-        ],
-        [
-          0,
-          5
-        ],
-        [
-          3,
-          4
+          2
         ]
       ],
       "enemy_spots": [
         [
           6,
-          1
+          3
         ],
         [
           5,
+          2
+        ],
+        [
+          7,
           2
         ]
       ],
       "enemy_templates": [
         "bandit_weak",
-        "bandit_weak"
+        "bandit_weak",
+        "bandit_archer"
       ],
-      "tutorial_militia": true,
+      "enemy_names": [
+        "隘口流匪",
+        "隘口流匪",
+        "匪弓手"
+      ],
+      "objective": {
+        "type": "seize",
+        "tile": [
+          7,
+          3
+        ]
+      },
+      "reinforcements": [
+        {
+          "id": "pass_dark",
+          "turn": 3,
+          "team": "enemy",
+          "spots": [
+            [
+              8,
+              3
+            ],
+            [
+              8,
+              2
+            ]
+          ],
+          "templates": [
+            "bandit_weak",
+            "bandit_weak"
+          ],
+          "tags": [
+            "",
+            ""
+          ]
+        }
+      ],
       "terrain": [
         [
-          "plain",
-          "plain",
-          "plain",
-          "plain",
+          "wall",
+          "wall",
+          "wall",
+          "wall",
+          "wall",
+          "wall",
+          "wall",
+          "wall",
+          "wall",
+          "wall"
+        ],
+        [
+          "wall",
           "plain",
           "hill",
           "hill",
-          "hill"
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
+          "wall"
         ],
         [
+          "wall",
           "plain",
           "plain",
           "plain",
           "plain",
           "plain",
-          "hill",
-          "hill",
-          "plain"
+          "forest",
+          "plain",
+          "plain",
+          "wall"
         ],
         [
-          "forest",
-          "forest",
+          "wall",
           "plain",
           "plain",
           "plain",
+          "fort",
           "plain",
           "plain",
-          "plain"
+          "fort",
+          "plain",
+          "wall"
         ],
         [
-          "forest",
-          "forest",
+          "wall",
+          "plain",
+          "plain",
+          "plain",
+          "plain",
           "plain",
           "forest",
           "plain",
           "plain",
-          "plain",
-          "plain"
+          "wall"
         ],
         [
-          "forest",
+          "wall",
           "plain",
           "plain",
           "plain",
           "plain",
           "plain",
           "plain",
-          "plain"
+          "plain",
+          "plain",
+          "wall"
         ],
         [
-          "plain",
-          "plain",
-          "plain",
-          "plain",
-          "plain",
-          "plain",
-          "plain",
-          "plain"
+          "wall",
+          "wall",
+          "wall",
+          "wall",
+          "wall",
+          "wall",
+          "wall",
+          "wall",
+          "wall",
+          "wall"
         ]
-      ]
+      ],
+      "tutorial": true
     },
     "ch1_hill": {
       "on_victory": {

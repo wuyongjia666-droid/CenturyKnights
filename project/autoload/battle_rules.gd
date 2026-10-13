@@ -8,6 +8,7 @@ const TERRAIN := {
 	"water": {"name": "水", "move_cost": 3, "avo_bonus": 5, "def_bonus": 0, "color": Color(0.28, 0.45, 0.62)},
 	"bridge": {"name": "桥", "move_cost": 1, "avo_bonus": 0, "def_bonus": 0, "color": Color(0.58, 0.48, 0.36)},
 	"fort": {"name": "垒", "move_cost": 2, "avo_bonus": 20, "def_bonus": 3, "color": Color(0.50, 0.42, 0.40)},
+	"wall": {"name": "Cliff", "move_cost": 99, "avo_bonus": 0, "def_bonus": 0, "color": Color(0.22, 0.22, 0.26)},
 }
 
 ## Single source for numbers the battle HUD prints. Changing these changes the panel copy.
@@ -318,6 +319,8 @@ func move_costs(map_terrain: Array, start: Vector2i, move_pts: int, blocked: Arr
 			if block_set.has(np):
 				continue
 			var tid = map_terrain[np.y][np.x]
+			if tid in ["wall", "void"]:
+				continue
 			var step = int(terrain_info(tid).get("move_cost", 1)) + maxi(0, move_extra)
 			if not ignore_zoc:
 				var from_z = in_zoc(pos, zoc_sources) or (pos == start and start_engaged)
