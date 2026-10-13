@@ -30,7 +30,7 @@ var _cards_seen: Dictionary = {}
 
 const TOUCH := 48
 const PORTRAIT_PX := 420
-const RECRUIT_SPEAKERS := ["新来的人", "recruit", "{recruit}"]
+const RECRUIT_SPEAKERS := ["recruit", "{recruit}"]
 const OPENING_CAST_KEYS := ["leader", "wantan", "dengying", "militia_a", "militia_b"]
 
 ## Cool style-lock tints (ink-navy/slate/frost) until the farm plates land; res://assets/art/story_bg/<key>.webp wins.
@@ -374,12 +374,15 @@ func _story_recruit() -> CKCharacter:
 		return c
 	return null
 
+func _is_recruit_speaker(sp: String) -> bool:
+	return sp in RECRUIT_SPEAKERS or sp == Locale.t("pro_speaker_newcomer")
+
 func _speaker_label(sp: String) -> String:
-	if sp in RECRUIT_SPEAKERS:
+	if _is_recruit_speaker(sp):
 		var hire := _story_recruit()
 		if hire != null and str(hire.name).strip_edges() != "":
 			return str(hire.name)
-		return "新来的人"
+		return Locale.t("pro_speaker_newcomer")
 	if sp != "leader":
 		return sp
 	var lead = GameState.get_leader()
@@ -394,7 +397,7 @@ func _speaker_portrait(speaker: String, emotion: String = "") -> void:
 	var name_tag := _portrait.get_node_or_null(BannerName.NODE)
 	if name_tag:
 		name_tag.visible = false
-	if speaker in RECRUIT_SPEAKERS:
+	if _is_recruit_speaker(speaker):
 		who = _story_recruit()
 		if who != null:
 			speaker = str(who.name)
