@@ -42,6 +42,8 @@ var _col_w := 480.0
 var _mob := false
 var _mbase := 1.0
 var _lift := 24.0
+var _drawer := false  # narrow phones: side column slides over the map
+var _side: Control
 
 func _ready() -> void:
 	UIKit.void_bg(self)
@@ -167,7 +169,9 @@ func _mobile_frame(mp: Control) -> void:
 	var vp := get_viewport().get_visible_rect().size
 	var w := maxf(1280.0, vp.x * 720.0 / maxf(1.0, vp.y))
 	_col_w = clampf(w * 0.3, 400.0, 480.0)
-	var area := Rect2(16, MobilePage.TOP + 4.0, w - _col_w - 48.0, 720.0 - MobilePage.TOP - 16.0)
+	_drawer = w < 1500.0
+	var map_w := w - 32.0 if _drawer else w - _col_w - 48.0
+	var area := Rect2(16, MobilePage.TOP + 4.0, map_w, 720.0 - MobilePage.TOP - 16.0)
 	_mbase = minf(area.size.x / MAP.size.x, area.size.y / MAP.size.y)
 	var shown := MAP.size * _mbase
 	_clip.position = (area.position + (area.size - shown) * 0.5).floor()
@@ -176,7 +180,23 @@ func _mobile_frame(mp: Control) -> void:
 	mp.size = shown + Vector2(4, 4)
 	_toast.position = _clip.position + Vector2(14, shown.y - 48)
 	_toast.add_theme_font_size_override("font_size", MobilePage.FONT)
-	var stack := MobileReflow.column(self, "MobileSideCol", Rect2(w - _col_w - 16.0, MobilePage.TOP + 4.0, _col_w, 720.0 - MobilePage.TOP - 16.0))
+	if _drawer:
+		_col_w = minf(w - 48.0, 720.0)
+	var col_rect := Rect2(w - _col_w - 16.0, MobilePage.TOP + 4.0, _col_w, 720.0 - MobilePage.TOP - 16.0)
+	if _drawer:
+		col_rect.position.x = (w - _col_w) * 0.5
+		var back := Panel.new()
+		back.name = "MobileSideBack"
+		back.position = col_rect.position - Vector2(8, 4)
+		back.size = col_rect.size + Vector2(16, 8)
+		back.add_theme_stylebox_override("panel", UIKit.flat_box(Color(0.035, 0.045, 0.065, 0.96), Color(UIKit.ACCENT, 0.35), 10))
+		back.z_index = 10
+		back.visible = false
+		add_child(back)
+		_side = back
+	var stack := MobileReflow.column(self, "MobileSideCol", col_rect)
+	if _drawer:
+		stack.get_parent().reparent(_side, true)
 	for nm in ["RightColumn", "TravelHUD", "LeftColumn"]:
 		var old := get_node(nm) as Control
 		var box := VBoxContainer.new()
@@ -199,10 +219,24 @@ func _mobile_frame(mp: Control) -> void:
 	_token.pivot_offset = _token.size * 0.5
 	var tg := _token.get_child(0) as Label
 	tg.size = _token.size
-	_lift = ceilf(MobilePage.HIT / _mbase) * 0.5 + ts * 0.5 + 2.0
+	_lift = ceilf(MobilePage.HIT / _mbase) * 0.5 + ts * 0.5 + 10.0
 	tg.add_theme_font_size_override("font_size", ceili(MobilePage.FONT / _mbase))
 	_refresh_top()
 	_apply_map_xform()
+	if GameState.has_meta("atlas_open_side"):
+		GameState.remove_meta("atlas_open_side")
+		_show_side.call_deferred(true)
+
+
+## Narrow phones: the details sheet replaces the map while it is open (tap 详情 again for the map).
+func _show_side(on: bool) -> void:
+	if _side == null:
+		return
+	_side.visible = on
+	_clip.visible = not on
+	var mf := get_node_or_null("MapFrame") as CanvasItem
+	if mf:
+		mf.visible = not on
 
 
 func _queue_reflow(box: Control) -> void:
@@ -243,6 +277,11 @@ func _mobile_nodes() -> void:
 						kl.add_theme_font_size_override("font_size", fs)
 						kl.size = kl.get_minimum_size()
 						kl.position = Vector2((ns.x - kl.size.x) * 0.5, ns.y + 1.0)
+						var below := Rect2(b.position + kl.position, kl.size)
+						for o in _layer.get_children():
+							if o != b and o is BaseButton and below.intersects(Rect2(o.position, o.size)):
+								kl.position.y = -kl.size.y - 1.0
+								break
 			b.add_theme_font_size_override("font_size", maxi(fs, b.get_theme_font_size("font_size")))
 	# Bigger nodes: push captions clear of every button, badges sit just above it.
 	var btns: Array = []
@@ -261,6 +300,8 @@ func _mobile_nodes() -> void:
 					l.position = Vector2(br.end.x - 2.0, br.position.y - l.size.y * 0.6)
 				else:
 					l.position.y = br.end.y + 1.0
+					if l.position.y + l.size.y > MAP.size.y - 2.0:
+						l.position = Vector2(br.end.x + 4.0, br.position.y + (br.size.y - l.size.y) * 0.5)
 
 
 func _refresh_top() -> void:
@@ -283,7 +324,10 @@ func _refresh_top() -> void:
 		for ch in chips:
 			parts.append("%s %s" % [ch[0], ch[1]])
 		_top.size = Vector2(maxf(1280.0, get_viewport().get_visible_rect().size.x * 720.0 / maxf(1.0, get_viewport().get_visible_rect().size.y)), MobilePage.TOP)
-		MobilePage.top_bar(_top, title, " · ".join(parts), [[back_t, _back]])
+		var bar_btns: Array = [[back_t, _back]]
+		if _drawer:
+			bar_btns.push_front([Locale.t("gen2_34"), func(): _show_side(not _side.visible)])
+		MobilePage.top_bar(_top, title, " · ".join(parts), bar_btns)
 		return
 	UIKit.top_bar(_top, title, chips, back_t, _back)
 
@@ -631,6 +675,12 @@ func _place_token(anim: bool, to_id: String = "") -> void:
 	if not vis:
 		return
 	var p := _np(id) - _token.size * 0.5 + (Vector2(0, -_lift) if _view != "" else Vector2(0, -_lift - 6.0))
+	if _mob:
+		# phone: if the flag would sit on another marker, hang it to the node's right instead
+		for c in _layer.get_children():
+			if c is BaseButton and c.name != "Node_" + id and Rect2(p, _token.size).intersects(Rect2(c.position, c.size)):
+				p = _np(id) + Vector2(_lift - _token.size.x * 0.5, -_token.size.y * 0.5)
+				break
 	if anim:
 		var tw := create_tween()
 		tw.tween_property(_token, "position", p, STEP_SEC).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
@@ -1061,6 +1111,8 @@ func _info_gateway(to_id: String) -> void:
 	_show_toast("关口通往 %s" % str(World.node(to_id).get("name", to_id)), UIKit.ACCENT)
 
 func _on_region_pressed(nid: String) -> void:
+	if _drawer:
+		_show_side(true)
 	if _sel == nid:
 		_show_view(nid)
 		_select_node(World.pos if World.nation_of(World.pos) == nid else str(World.nations.get(nid, {}).get("capital", "")))
@@ -1075,6 +1127,8 @@ func _on_region_pressed(nid: String) -> void:
 	_roads.queue_redraw()
 
 func _on_node_pressed(id: String) -> void:
+	if _drawer:
+		_show_side(true)
 	if _busy:
 		return
 	if _sel == id and id != World.pos and not _preview.is_empty() and bool(_preview.get("ok", false)):
@@ -1116,6 +1170,8 @@ func _enter_here() -> void:
 	_goto(CITY_SCENE)
 
 func _start_travel() -> void:
+	if _drawer:
+		_show_side(false)
 	var target := _sel
 	if _view == "" and World.nations.has(_sel):
 		target = str(World.nations.get(_sel, {}).get("capital", ""))
