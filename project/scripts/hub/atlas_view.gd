@@ -100,6 +100,9 @@ func _build_frame() -> void:
 	add_child(_clip)
 	_map_content = Control.new()
 	_map_content.name = "MapContent"
+	# map captions are sized for on-screen 22px through the map scale (see _mobile_nodes)
+	_map_content.set_meta("font_floor_exempt", true)
+	_map_content.set_meta("touch_exempt", true)
 	_map_content.size = MAP.size
 	_map_content.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_clip.add_child(_map_content)

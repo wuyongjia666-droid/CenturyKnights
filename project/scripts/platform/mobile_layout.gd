@@ -103,7 +103,7 @@ const HIT_FLOOR := 76.0
 ## would push their absolute rows into each other, so they keep desktop sizes until their own
 ## apply_mobile_layout lands; that change removes the page from this list.
 const FONT_FLOOR_PENDING := [
-	"res://scenes/hub/atlas_view.tscn", "res://scenes/hub/city.tscn",
+	"res://scenes/hub/city.tscn",
 	"res://scenes/hub/castle_view.tscn", "res://scenes/hub/market.tscn",
 	"res://scenes/hub/estates.tscn", "res://scenes/hub/works.tscn",
 	"res://scenes/hub/forge.tscn", "res://scenes/hub/annex.tscn",
@@ -162,6 +162,9 @@ static func _floor_one(c: Control, floor_px: int) -> void:
 
 static func _grow_buttons(node: Node, need: float) -> void:
 	for child in node.get_children():
+		# a scaled layer (e.g. the atlas map) sizes its own targets in on-screen px
+		if not (child is BaseButton) and bool(child.get_meta("touch_exempt", false)):
+			continue
 		if child is BaseButton:
 			_grow_hit(child as BaseButton, need)
 		_grow_buttons(child, need)
