@@ -2355,6 +2355,9 @@ func _show_lock_practice_banner() -> void:
 		ct.visible = false
 	panel.name = "LockPracticeBanner"
 	add_child(panel)
+	var oh := get_node_or_null("ObjectiveHud") as CanvasItem
+	if oh and not DeviceProfile.is_mobile():
+		oh.visible = false  # desktop: banner sits in the same rail slot; restore when it clears
 	var vb := VBoxContainer.new()
 	vb.add_theme_constant_override("separation", 0)
 	panel.add_child(vb)
@@ -2385,6 +2388,9 @@ func _clear_lock_practice_banner() -> void:
 	var p = get_node_or_null("LockPracticeBanner")
 	if p:
 		p.queue_free()
+	var oh := get_node_or_null("ObjectiveHud") as CanvasItem
+	if oh and not DeviceProfile.is_mobile():
+		oh.visible = true
 	var ct := find_child("ControlsTip", true, false)
 	if ct:
 		ct.visible = true
