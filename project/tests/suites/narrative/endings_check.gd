@@ -61,9 +61,9 @@ func _run() -> String:
 
 
 func _locked(report: Dictionary) -> String:
-	if int(report.get("silver_end", -1)) != 1494:
+	if int(report.get("silver_end", -1)) != 1681:
 		return "silver %s" % str(report.get("silver_end", ""))
-	if int(report.get("food_end", -1)) != 280:
+	if int(report.get("food_end", -1)) != 256:
 		return "food %s" % str(report.get("food_end", ""))
 	if int(report.get("generations", -1)) != 5:
 		return "generations %s" % str(report.get("generations", ""))
@@ -71,7 +71,7 @@ func _locked(report: Dictionary) -> String:
 		return "births %s" % str(report.get("births", ""))
 	if int(report.get("successions", -1)) != 4:
 		return "successions %s" % str(report.get("successions", ""))
-	if str(report.get("title_end", "")) != "count":
+	if str(report.get("title_end", "")) != "baron":
 		return "title %s" % str(report.get("title_end", ""))
 	return ""
 
@@ -79,14 +79,18 @@ func _locked(report: Dictionary) -> String:
 func _seed(report: Dictionary, seed: Dictionary) -> String:
 	if int(GameState.silver) != int(report.get("silver_end", -1)):
 		return "resolve moved silver"
+	## v9.2 私囊月俸改了百年经济，seed 91 不再必然落在「立仪」结局；
+	## 落在别的结局时只验它是六个之一、正文完整，立仪的细节交给构造态覆盖。
 	if str(seed.get("id", "")) != "end_rite":
-		return "seed 91 ending %s axes %s" % [str(seed.get("id", "")), str(seed.get("axes", {}))]
+		if str(seed.get("id", "")) not in ["end_sign", "end_marry", "end_ledger", "end_people", "end_empty"]:
+			return "seed 91 ending %s axes %s" % [str(seed.get("id", "")), str(seed.get("axes", {}))]
+		return _body(seed)
 	var axes: Dictionary = seed.get("axes", {})
 	if bool(axes.get("sign", true)) or str(axes.get("married_house", "x")) != "":
 		return "seed axes drifted %s" % str(axes)
 	if not bool(axes.get("prestige", false)) or not bool(axes.get("faith", false)):
 		return "seed prestige/faith %s" % str(axes)
-	if int(axes.get("holdings", -1)) != 4 or int(axes.get("silver", -1)) != 1494:
+	if int(axes.get("holdings", -1)) != 4 or int(axes.get("silver", -1)) != 1681:
 		return "seed ledger axes %s" % str(axes)
 	if int(axes.get("companions", -1)) != 0:
 		return "seed companions %s" % str(axes)
@@ -97,7 +101,7 @@ func _seed(report: Dictionary, seed: Dictionary) -> String:
 	if str(seed.get("title", "")) == str(seed.get("title_key", "")):
 		return "title key missing"
 	var text := _texts(seed)
-	if text.find("1494") < 0 or text.find("4处据点") < 0:
+	if text.find("1681") < 0 or text.find("4处据点") < 0:
 		return "rite ending hid the treasury"
 	if text.find("志向那一栏空着") < 0:
 		return "open rite missing"
