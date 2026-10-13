@@ -107,18 +107,16 @@ func _ready() -> void:
 	_build()
 	_refresh_preview_art()
 
-const GREY_A := "#6E7276"
-const GREY_B := "#4A4E52"
-
 func _heart() -> String:
 	return str(_colors[_color_idx])
 
 func _current_spec() -> Dictionary:
 	# Opening review B-09: the cloth is ash grey for every company ("灰底是灰烬邦给的");
 	# the colour the player picks is the heart of the banner (charges and emblem).
+	# Greys come from the heraldry table (no raw hex — style_lint ratchet).
 	var heart := str(_colors[_color_idx])
-	var field := GREY_A
-	var pair := GREY_B
+	var field := CKHeraldry.tincture_hex("ash")
+	var pair := CKHeraldry.tincture_hex("ash_deep")
 	var division := str(_divisions[_field_idx]) if _divisions.size() > 0 else "solid"
 	var ordinary := str(_ordinaries[_charge_idx]) if _ordinaries.size() > 0 else "none"
 	var emblem_id: String = str(BannerSpec.EMBLEMS[_emblem_idx])
