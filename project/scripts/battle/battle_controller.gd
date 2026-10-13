@@ -419,7 +419,7 @@ func _build_ui() -> void:
 	b_prev.text = Locale.t("rules_preview")
 	b_prev.clip_text = true
 	b_prev.custom_minimum_size = Vector2(112, 24)
-	b_prev.add_theme_font_size_override("font_size", 11)
+	b_prev.add_theme_font_size_override("font_size", UIKit.desk_sz(11))
 	b_prev.add_theme_color_override("font_color", UIKit.TEXT_DIM)
 	b_prev.button_pressed = BattleRules.preview_enabled
 	b_prev.toggled.connect(func(on): BattleRules.preview_enabled = on)
@@ -428,7 +428,7 @@ func _build_ui() -> void:
 	_btn_danger.text = BattleObjectives.text("danger_toggle")
 	_btn_danger.clip_text = true
 	_btn_danger.custom_minimum_size = Vector2(112, 24)
-	_btn_danger.add_theme_font_size_override("font_size", 11)
+	_btn_danger.add_theme_font_size_override("font_size", UIKit.desk_sz(11))
 	_btn_danger.add_theme_color_override("font_color", UIKit.DANGER)
 	_btn_danger.toggled.connect(_on_danger_toggled)
 	toggles.add_child(_btn_danger)
@@ -2369,7 +2369,7 @@ func _show_lock_practice_banner() -> void:
 	t.add_theme_color_override("font_color", UIKit.DANGER)
 	vb.add_child(t)
 	var tl = UIKit.make_dim_label(tip)
-	tl.add_theme_font_size_override("font_size", 10)
+	tl.add_theme_font_size_override("font_size", UIKit.desk_sz(10))
 	tl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	tl.custom_minimum_size = Vector2(RAIL_W - 28, 0)
 	vb.add_child(tl)

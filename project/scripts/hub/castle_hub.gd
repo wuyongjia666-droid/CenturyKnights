@@ -41,7 +41,7 @@ func _build() -> void:
 	# ── NAVIGATION ─────────────────────────────────────────
 	var nav_panel := UIKit.panel_at(self, Rect2(26, 72, 150, 612), 10)
 	nav_panel.name = "NavPanel"
-	var nl := UIKit.mono("NAVIGATION", 9, UIKit.TEXT_FAINT)
+	var nl := UIKit.mono("NAVIGATION", UIKit.desk_sz(9), UIKit.TEXT_FAINT)
 	nl.position = Vector2(40, 86)
 	add_child(nl)
 	var scroll := ScrollContainer.new()
@@ -102,7 +102,7 @@ func _build() -> void:
 		var head_txt := str(group["title"])
 		if badge > 0:
 			head_txt = "%s %d" % [head_txt, badge]
-		var head := UIKit.mono(head_txt, 9, UIKit.ACCENT, false)
+		var head := UIKit.mono(head_txt, UIKit.desk_sz(9), UIKit.ACCENT, false)
 		head.custom_minimum_size = Vector2(134, 14)
 		box.add_child(head)
 		for item in group["items"]:
@@ -131,7 +131,7 @@ func _build() -> void:
 
 	# ── SEASONAL DOSSIER ───────────────────────────────────
 	var cp := UIKit.panel_at(self, Rect2(188, 72, 820, 612), 10)
-	var ce := UIKit.mono("SEASONAL DOSSIER", 10, UIKit.ACCENT)
+	var ce := UIKit.mono("SEASONAL DOSSIER", UIKit.desk_sz(10), UIKit.ACCENT)
 	ce.position = Vector2(26, 22)
 	cp.add_child(ce)
 	var ceh := UIKit.hairline(Color(UIKit.ACCENT, 0.35))
@@ -141,10 +141,10 @@ func _build() -> void:
 	var ct := UIKit.title_label(Locale.t("shell_b69fd89f"), 28)
 	ct.position = Vector2(26, 38)
 	cp.add_child(ct)
-	var meta := UIKit.mono("ENTRY 01-03 / 03 PENDING", 10, UIKit.TEXT_DIM)
+	var meta := UIKit.mono("ENTRY 01-03 / 03 PENDING", UIKit.desk_sz(10), UIKit.TEXT_DIM)
 	meta.position = Vector2(794 - meta.get_minimum_size().x, 24)
 	cp.add_child(meta)
-	var meta2 := UIKit.body_label(Locale.t("shell_d9f64f13") % [Calendar.label(), Locale.latin(str(GameState.surname), "House")], UIKit.TEXT_FAINT, 11)
+	var meta2 := UIKit.body_label(Locale.t("shell_d9f64f13") % [Calendar.label(), Locale.latin(str(GameState.surname), "House")], UIKit.TEXT_FAINT, UIKit.desk_sz(11))
 	meta2.position = Vector2(494, 50)
 	meta2.size = Vector2(300, 16)
 	meta2.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -180,7 +180,7 @@ func _build() -> void:
 		var tg := UIKit.tag_chip(str(cd.tag), cd.col)
 		tg.position = Vector2(16, 18)
 		card.add_child(tg)
-		var idl := UIKit.mono(str(cd.id), 10, UIKit.TEXT_FAINT, false)
+		var idl := UIKit.mono(str(cd.id), UIKit.desk_sz(10), UIKit.TEXT_FAINT, false)
 		idl.position = Vector2(200, 20)
 		card.add_child(idl)
 		var tt := UIKit.title_label(str(cd.title), 18)
@@ -202,7 +202,7 @@ func _build() -> void:
 		fh.position = Vector2(16, 258)
 		fh.size = Vector2(214, 1)
 		card.add_child(fh)
-		var al := UIKit.mono("ACTION", 9, UIKit.TEXT_FAINT)
+		var al := UIKit.mono("ACTION", UIKit.desk_sz(9), UIKit.TEXT_FAINT)
 		al.position = Vector2(16, 274)
 		card.add_child(al)
 		var lb := UIKit.link_button(str(cd.act))
@@ -213,7 +213,7 @@ func _build() -> void:
 			first_link = lb
 
 	# mainline caption. Progress comes from CKStoryState; the scene comes from StoryCatalog.
-	var crl := UIKit.mono(Locale.t("shell_4e4b2279"), 9, UIKit.TEXT_FAINT)
+	var crl := UIKit.mono(Locale.t("shell_4e4b2279"), UIKit.desk_sz(9), UIKit.TEXT_FAINT)
 	crl.position = Vector2(26, 408)
 	cp.add_child(crl)
 	var now := UIKit.body_label(_mainline_caption(), UIKit.TEXT, 13)
@@ -234,7 +234,7 @@ func _build() -> void:
 	todo_row.clip_contents = true
 	todo_row.add_theme_constant_override("separation", 6)
 	cp.add_child(todo_row)
-	todo_row.add_child(UIKit.mono(Locale.t("ux_hub_todo"), 10, UIKit.ACCENT, false))
+	todo_row.add_child(UIKit.mono(Locale.t("ux_hub_todo"), UIKit.desk_sz(10), UIKit.ACCENT, false))
 	for todo in HubTodo.snapshot():
 		if int(todo.get("count", 0)) <= 0:
 			continue
@@ -247,17 +247,17 @@ func _build() -> void:
 		chip.name = "Todo_%s" % str(todo.get("category", ""))
 		chip.text = chip_text + " ›"
 		chip.flat = true
-		chip.add_theme_font_size_override("font_size", 11)
+		chip.add_theme_font_size_override("font_size", UIKit.desk_sz(11))
 		chip.add_theme_color_override("font_color", UIKit.ACCENT)
 		chip.pressed.connect(func(): CKNav.go(link))
 		todo_row.add_child(chip)
 	if not HubTodo.any_due():
-		todo_row.add_child(UIKit.mono(Locale.t("ux_todo_none"), 10, UIKit.TEXT_FAINT, false))
+		todo_row.add_child(UIKit.mono(Locale.t("ux_todo_none"), UIKit.desk_sz(10), UIKit.TEXT_FAINT, false))
 	var ih := UIKit.hairline(Color(1, 1, 1, 0.07))
 	ih.position = Vector2(26, 512)
 	ih.size = Vector2(768, 1)
 	cp.add_child(ih)
-	_hint = UIKit.body_label("", UIKit.OK, 11)
+	_hint = UIKit.body_label("", UIKit.OK, UIKit.desk_sz(11))
 	_hint.position = Vector2(494, 528)
 	_hint.size = Vector2(300, 18)
 	_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
@@ -270,10 +270,10 @@ func _build() -> void:
 	# ── KNIGHT ROSTER plate ────────────────────────────────
 	var rp := UIKit.panel_at(self, Rect2(1024, 72, 232, 612), 10)
 	rp.name = "RosterPlate"
-	var rl := UIKit.mono("KNIGHT ROSTER", 9, UIKit.ACCENT)
+	var rl := UIKit.mono("KNIGHT ROSTER", UIKit.desk_sz(9), UIKit.ACCENT)
 	rl.position = Vector2(16, 18)
 	rp.add_child(rl)
-	var rl2 := UIKit.mono("PLATE #01", 9, UIKit.TEXT_FAINT)
+	var rl2 := UIKit.mono("PLATE #01", UIKit.desk_sz(9), UIKit.TEXT_FAINT, false)  # no track: fits beside title at ≥12px
 	rl2.position = Vector2(216 - rl2.get_minimum_size().x, 18)
 	rp.add_child(rl2)
 	if leader:
@@ -311,7 +311,7 @@ func _build() -> void:
 			var bx := UIKit.stat_box(st[0], st[1], st[2])
 			bx.custom_minimum_size = Vector2(96, 0)
 			sg.add_child(bx)
-		var fl := UIKit.body_label(Locale.t("shell_c5922dc9") % [Locale.latin(str(GameState.surname), "House"), roster_n], UIKit.TEXT_FAINT, 11)
+		var fl := UIKit.body_label(Locale.t("shell_c5922dc9") % [Locale.latin(str(GameState.surname), "House"), roster_n], UIKit.TEXT_FAINT, UIKit.desk_sz(11))
 		fl.position = Vector2(16, 468)
 		if dy != 0:
 			fl.position.y = maxf(468.0, sg.position.y + sg.get_combined_minimum_size().y + 6.0)
@@ -468,7 +468,7 @@ func _nav_item(idx: String, title_t: String, sub_t: String, active: bool = false
 	b.tooltip_text = sub_t
 	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	b.custom_minimum_size = Vector2(134, 20 if compact else (25 if minor else 30))
-	b.add_theme_font_size_override("font_size", 11 if compact else (12 if minor else 13))
+	b.add_theme_font_size_override("font_size", UIKit.desk_sz(11) if compact else (12 if minor else 13))
 	b.focus_mode = Control.FOCUS_ALL
 	var mk := func(bg: Color, bd: Color, bw: int) -> StyleBoxFlat:
 		var s := UIKit._btn_box(bg, bd, bw, 6)
