@@ -55,9 +55,9 @@ static func rebuild(host) -> void:
 
 static func command(row: BoxContainer, text: String, h: int, accent: bool, cb: Callable) -> Button:
 	var b := UIKit.make_accent_button(text, 120) if accent else UIKit.make_button(text, 96)
-	b.custom_minimum_size = Vector2(0, h)
+	b.custom_minimum_size = Vector2(0, maxi(h, 76) if row is VBoxContainer else h)
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	b.add_theme_font_size_override("font_size", 17 if row is VBoxContainer else 15)
+	b.add_theme_font_size_override("font_size", 22 if row is VBoxContainer else 15)
 	b.pressed.connect(cb)
 	row.add_child(b)
 	return b

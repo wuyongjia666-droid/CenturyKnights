@@ -101,6 +101,8 @@ static func _layer(host: Node) -> CanvasLayer:
 		bar.offset_top = 0
 		bar.offset_bottom = -12
 		dim.color = Color(0, 0, 0, 0.0)
+		bar.anchor_top = 0.1
+		preload("res://scripts/battle/ui/battle_mobile_side.gd").yield_to(host, root)
 	var sb := StyleBoxFlat.new()
 	sb.bg_color = Color(0.035, 0.045, 0.065, 0.93)
 	sb.border_color = Color(UIKit.ACCENT, 0.45)
@@ -149,6 +151,12 @@ static func _layer(host: Node) -> CanvasLayer:
 	skip.offset_bottom = 16 + TOUCH
 	root.add_child(skip)
 	skip.pressed.connect(func(): skip_all(host))
+	if DeviceProfile.is_mobile():
+		for pair in [[sp, 22], [body, 24], [hint, 22], [skip, 22]]:
+			(pair[0] as Control).add_theme_font_size_override("font_size", pair[1])
+		skip.custom_minimum_size = Vector2(150, 76)
+		skip.offset_left = -174
+		skip.offset_bottom = 16 + 76
 	root.gui_input.connect(func(ev: InputEvent):
 		var tap: bool = (ev is InputEventMouseButton and ev.pressed and ev.button_index == MOUSE_BUTTON_LEFT) or (ev is InputEventScreenTouch and ev.pressed)
 		if tap:
