@@ -180,3 +180,6 @@ purse_starve,；粮不够吃，士气大跌,; food short, morale sinks
 purse_mal,%s 饿着了，落下「营养不良」,%s is now Malnourished
 purse_barracks,；校场练得起劲，士气 +%d,; drill yard morale +%d
 purse_advisor,；顾问点拨了一下，%s +1,; advisor tip %s+1
+life_ack,知道了,Understood
+life_outcome_prefix,结果：%s,Outcome: %s
+life_auto_log,%s · %s：%s,%s · %s: %s

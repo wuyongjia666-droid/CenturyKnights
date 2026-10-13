@@ -144,24 +144,31 @@ func _succession_card() -> Dictionary:
 	return {}
 
 func _show_life() -> void:
+	## Auto-resolved life card: title / body / outcome only. No A/B buttons.
 	var title := LifeEvents.card_title(_life)
 	var body := LifeEvents.card_body(_life)
-	if title != "":
-		_body.text = "%s\n\n%s" % [title, body]
+	var outcome := str(_life.get("outcome", ""))
+	if outcome == "":
+		var side := str(_life.get("side", ""))
+		if side != "":
+			outcome = LifeEvents.choice_label({
+				"act": str(_life.get(side, {}).get("act", "")),
+				"hint": str(_life.get(side, {}).get("hint", "")),
+			})
+	var head := ("%s\n\n%s" % [title, body]) if title != "" else body
+	if outcome != "":
+		_body.text = "%s\n\n%s" % [head, Locale.t("life_outcome_prefix", [outcome])]
 	else:
-		_body.text = body
+		_body.text = head
 	var cid := str(_life.get("cid", ""))
 	var eid := str(_life.get("id", ""))
-	for choice in LifeEvents.choices(_life):
-		var oid := str(choice.get("id", ""))
-		var label := LifeEvents.choice_label(choice)
-		_move_btn(label, true, func(): _resolve_life(cid, eid, oid))
+	_move_btn(Locale.t("life_ack"), true, func(): _ack_life(cid, eid))
 	_move_btn(Locale.t("btn_back"), false, func(): _life = {}; _show())
 
-func _resolve_life(cid: String, event_id: String, option_id: String) -> void:
-	LifeEvents.resolve(cid, event_id, option_id)
+func _ack_life(cid: String, event_id: String) -> void:
+	LifeEvents.ack(cid, event_id)
 	_life = {}
-	CKPageKit.say(_msg, Locale.t("life_resolved"), true)
+	CKPageKit.say(_msg, Locale.t("life_inbox_ok"), true)
 	_show()
 
 func _settle(zh: String) -> void:

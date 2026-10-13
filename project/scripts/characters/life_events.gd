@@ -1,9 +1,9 @@
 class_name CKLifeEvents
 extends RefCounted
 ## DYN-04: life-event cards (岁课口吻：title / body / left / right).
-## The month hook only queues a card.
-## Choices apply traits, stats, regard, paths, or the academy note when resolved.
-## Queuing does not touch GameState.rng, silver, or food.
+## Month hook fires a card, auto-picks left/right with a stable seed
+## (character id + year + month + event id), applies effects, and
+## queues a read-only inbox row. No player A/B choice. 岁课 keeps choices.
 
 const DATA_PATH := "res://data/life_events.json"
 
@@ -16,6 +16,7 @@ static func ensure() -> void:
 		return
 	_installed = true
 	Calendar.register("family", Callable(CKLifeEvents, "on_month"), 40)
+	_drain_legacy_pending()
 
 
 static func events() -> Array:
@@ -24,10 +25,11 @@ static func events() -> Array:
 
 
 static func on_month(_ctx: Dictionary) -> void:
+	_drain_legacy_pending()
 	var people: Array = GameState.characters.values()
 	people.sort_custom(func(a, b): return str(a.id) < str(b.id))
 	for c in people:
-		if not c.alive or _has_pending(c.id):
+		if not c.alive:
 			continue
 		# v9.2：1–15 岁家中子嗣走岁课，退出每月重卡队列
 		if CKSuiKe.is_house_child_for_life_queue(c):
@@ -37,8 +39,9 @@ static func on_month(_ctx: Dictionary) -> void:
 			continue
 		var idx := absi(hash("%s|%d|%d" % [c.id, Calendar.year, Calendar.month])) % pool.size()
 		var event: Dictionary = pool[idx]
-		_mark(c.id, str(event.get("id", "")))
-		_pending_rows().append({"cid": c.id, "id": str(event.get("id", ""))})
+		var eid := str(event.get("id", ""))
+		_mark(c.id, eid)
+		fire_and_resolve(c.id, eid)
 
 
 static func eligible(c: CKCharacter) -> Array:
@@ -54,13 +57,117 @@ static func eligible(c: CKCharacter) -> Array:
 	return out
 
 
+## Stable left/right pick for a fired card. Reload yields the same side.
+static func pick_side(cid: String, event_id: String, year: int = -1, month: int = -1) -> String:
+	var y := Calendar.year if year < 0 else year
+	var m := Calendar.month if month < 0 else month
+	var h := absi(hash("%s|%d|%d|%s" % [cid, y, m, event_id]))
+	return "left" if (h % 2) == 0 else "right"
+
+
+## Apply the seeded side, append a read-only inbox row, log lineage.
+## Returns the inbox row (empty on failure).
+static func fire_and_resolve(cid: String, event_id: String, year: int = -1, month: int = -1) -> Dictionary:
+	var y := Calendar.year if year < 0 else year
+	var m := Calendar.month if month < 0 else month
+	var event := find(event_id)
+	if event.is_empty():
+		return {}
+	var c: CKCharacter = GameState.characters.get(cid)
+	if c == null:
+		return {}
+	var side := pick_side(cid, event_id, y, m)
+	var opt := _option(event, side)
+	if opt.is_empty():
+		# Prefer the other side if the seeded one is missing.
+		side = "right" if side == "left" else "left"
+		opt = _option(event, side)
+	if opt.is_empty():
+		return {}
+	apply_option(c, opt)
+	_drop_pending(cid, event_id)
+	var side_row: Dictionary = event.get(side, {})
+	if typeof(side_row) != TYPE_DICTIONARY:
+		side_row = {}
+	var outcome := choice_label({
+		"act": str(side_row.get("act", opt.get("act", ""))),
+		"hint": str(side_row.get("hint", "")),
+	})
+	var row := {
+		"cid": cid,
+		"id": event_id,
+		"side": side,
+		"outcome": outcome,
+		"year": y,
+		"month": m,
+		"band": str(event.get("band", "")),
+	}
+	_inbox_rows().append(row)
+	var title := card_title(event)
+	var who := str(c.name)
+	if GameState.has_method("add_lineage_event"):
+		GameState.add_lineage_event(Locale.t("life_auto_log", [title, who, outcome]))
+	return row
+
+
+## Unread auto-resolved results (read-only cards).
+static func inbox() -> Array:
+	return _inbox_rows().duplicate()
+
+
+static func inbox_for(cid: String) -> Array:
+	var out: Array = []
+	for item in _inbox_rows():
+		if str(item.get("cid", "")) == cid:
+			out.append(item)
+	return out
+
+
+static func ack(cid: String, event_id: String) -> void:
+	var kept: Array = []
+	var dropped := false
+	for item in _inbox_rows():
+		if not dropped and str(item.get("cid", "")) == cid and str(item.get("id", "")) == event_id:
+			dropped = true
+			continue
+		kept.append(item)
+	GameState.house_mods["life_inbox"] = kept
+
+
+## First unread inbox result for this person in a band (heir rivalry succession).
 static func pending_band(cid: String, band: String) -> Dictionary:
+	for item in _inbox_rows():
+		if str(item.get("cid", "")) != cid:
+			continue
+		var eid := str(item.get("id", ""))
+		var event := find(eid)
+		var b := str(item.get("band", ""))
+		if b == "":
+			b = str(event.get("band", ""))
+		if b != band:
+			continue
+		var out := event.duplicate(true)
+		out["cid"] = cid
+		out["outcome"] = str(item.get("outcome", ""))
+		out["side"] = str(item.get("side", ""))
+		out["resolved"] = true
+		return out
+	# Legacy: unfinished choice still in life_pending — auto-resolve then return.
 	for item in _pending_rows():
 		if str(item.get("cid", "")) != cid:
 			continue
-		var event := find(str(item.get("id", "")))
-		if str(event.get("band", "")) == band:
-			return event
+		var event2 := find(str(item.get("id", "")))
+		if str(event2.get("band", "")) != band:
+			continue
+		var row := fire_and_resolve(cid, str(item.get("id", "")))
+		if row.is_empty():
+			continue
+		var out2 := event2.duplicate(true)
+		out2["cid"] = cid
+		out2["outcome"] = str(row.get("outcome", ""))
+		out2["side"] = str(row.get("side", ""))
+		out2["resolved"] = true
+		return out2
 	return {}
 
 
@@ -72,6 +179,7 @@ static func find(id: String) -> Dictionary:
 
 
 ## Normalized choices: id a/left and b/right, with act + effects (+ optional hint).
+## Still used by catalog tests / tooling; player UI no longer presents them.
 static func choices(event: Dictionary) -> Array:
 	var out: Array = []
 	if event.has("left") or event.has("right"):
@@ -109,7 +217,6 @@ static func card_title(event: Dictionary) -> String:
 	var t := str(event.get("title", ""))
 	if t != "":
 		return t
-	# Legacy: first setup line
 	for row in event.get("lines", []):
 		return str(row.get("text", ""))
 	return ""
@@ -133,6 +240,7 @@ static func choice_label(choice: Dictionary) -> String:
 	return "%s（%s）" % [act, hint]
 
 
+## Manual resolve (tests / legacy). Prefer fire_and_resolve for gameplay.
 static func resolve(cid: String, event_id: String, option_id: String) -> bool:
 	var event := find(event_id)
 	var opt := _option(event, option_id)
@@ -235,7 +343,6 @@ static func _apply(c: CKCharacter, fx: Dictionary) -> bool:
 
 static func _option(event: Dictionary, option_id: String) -> Dictionary:
 	var oid := str(option_id)
-	# Map a/b <-> left/right
 	var side := ""
 	match oid:
 		"a", "left":
@@ -277,6 +384,28 @@ static func _pending_rows() -> Array:
 		raw = []
 		GameState.house_mods["life_pending"] = raw
 	return raw
+
+
+static func _inbox_rows() -> Array:
+	var raw = GameState.house_mods.get("life_inbox", null)
+	if typeof(raw) != TYPE_ARRAY:
+		raw = []
+		GameState.house_mods["life_inbox"] = raw
+	return raw
+
+
+## Old saves may still hold unresolved A/B rows — settle them with the seed.
+static func _drain_legacy_pending() -> void:
+	var rows: Array = _pending_rows().duplicate()
+	if rows.is_empty():
+		return
+	for item in rows:
+		var cid := str(item.get("cid", ""))
+		var eid := str(item.get("id", ""))
+		if cid == "" or eid == "":
+			_drop_pending(cid, eid)
+			continue
+		fire_and_resolve(cid, eid)
 
 
 static func _fired(cid: String) -> Array:
