@@ -21,7 +21,7 @@
 
 **稳妥**加分：禀性 `scholar`/`keen_eye`/`charmer`/`heir_mark`/`malnourished`；习痕 watch/copy/ledger/lamp/lie_age/tide；意感知能高于 8；早教文路。
 
-`personality_bias = bold − careful`。`> 0.75` 选风险最高选项；`< −0.75` 选风险最低；中间用种子 `hash(id|year|card_id|sui_pick)` 打散，读档不变。
+`personality_bias = bold − careful`。`> 0.75` 选风险最高选项；`< −0.75` 选风险最低；中间用种子 `hash(id|year|card_id|sui_pick)` 打散，读档不变。另：除非 bias≥1.5，否则把会落下「营养不良」或夭折的一侧排到后面，避免战役模拟里营养不良率飙过 25%。
 
 ## 结算流
 

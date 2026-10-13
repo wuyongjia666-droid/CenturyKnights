@@ -1010,12 +1010,15 @@ static func pick_option_id(c: CKCharacter, card: Dictionary, year: int = -1) -> 
 static func _options_by_preference(c: CKCharacter, card: Dictionary, year: int = -1) -> Array:
 	var y := Calendar.year if year < 0 else year
 	var opts: Array = card.get("options", [])
+	var by_id := {}
 	var scored: Array = []
 	for o in opts:
 		if typeof(o) != TYPE_DICTIONARY:
 			continue
+		var oid := str(o.get("id", ""))
+		by_id[oid] = o
 		scored.append({
-			"id": str(o.get("id", "")),
+			"id": oid,
 			"risk": option_risk(o),
 		})
 	if scored.is_empty():
@@ -1034,9 +1037,20 @@ static func _options_by_preference(c: CKCharacter, card: Dictionary, year: int =
 		for row in scored:
 			row["jitter"] = rng.randf()
 		scored.sort_custom(func(a, b): return float(a["jitter"]) < float(b["jitter"]))
+	## Soft-avoid famine / death unless the child is clearly bold.
+	## Campaign sims fire every birthday; without this, malnourished climbs past 25%.
 	var out: Array = []
+	var deferred: Array = []
 	for row in scored:
-		out.append(str(row["id"]))
+		var oid2 := str(row["id"])
+		var opt: Dictionary = by_id.get(oid2, {})
+		var harsh := str(opt.get("trait", "")) == "malnourished" or bool(opt.get("kill", false))
+		if harsh and bias < 1.5:
+			deferred.append(oid2)
+		else:
+			out.append(oid2)
+	for oid3 in deferred:
+		out.append(oid3)
 	return out
 
 
