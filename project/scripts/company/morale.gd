@@ -53,11 +53,11 @@ static func on_payday(host, paid: bool) -> String:
 		return Locale.t("morale.unpaid_months") % n
 	if bool(host.house_mods.get("morale_hold", false)):
 		host.house_mods.erase("morale_hold")
-		host.log_event(Locale.t("欠饷已两月，挽留下了要走的人"))
-		return Locale.t("欠饷已两月，挽留下了要走的人")
+		host.log_event(Locale.t("morale.held_back"))
+		return Locale.t("morale.held_back")
 	var who := _lowest(host)
 	if who == null:
-		return Locale.t("欠饷已两月，没有可走的人")
+		return Locale.t("morale.nobody_left")
 	who.in_roster = false
 	if typeof(who.blood_meta) != TYPE_DICTIONARY:
 		who.blood_meta = {}
@@ -77,8 +77,16 @@ static func _lowest(host) -> CKCharacter:
 	var best: CKCharacter = null
 	var best_wil := 999
 	var best_id := ""
+	var prologue: bool = host.has_method("flag") and not host.flag("chapter0_done")
+	var leader_spouse := ""
 	for c in host.roster():
 		if c.is_leader:
+			leader_spouse = str(c.spouse_id)
+	for c in host.roster():
+		if c.is_leader:
+			continue
+		# Opening review A-05: in the prologue the story companions and the spouse stay put.
+		if prologue and (str(c.cast_key) in ["wantan", "dengying"] or str(c.id) == leader_spouse):
 			continue
 		var wil := int(c.stats.get("wil", 0))
 		var cid := str(c.id)

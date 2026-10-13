@@ -207,10 +207,12 @@ static func _pin_top(root: Control) -> void:
 	root.offset_bottom = top + root.size.y
 
 static func place_pause(layer: Node, viewport: Vector2) -> void:
-	if layer == null or viewport.y < viewport.x:
+	if layer == null:
 		return
 	var panel: Control = null
 	for child in layer.get_children():
+		if child is CenterContainer:
+			return  # A-03: the pause menu centres itself in every orientation.
 		if child is Control and not (child is ColorRect):
 			panel = child as Control
 			break

@@ -48,6 +48,8 @@ func _non_leader() -> CKCharacter:
 
 func _desert() -> String:
 	GameState.new_game("士气", "灰旗", GameState.crest_color)
+	# Opening review A-05: story companions stay through the prologue; desertion starts after it.
+	GameState.set_flag("chapter0_done")
 	var ally := _non_leader()
 	if ally == null:
 		return "no ally"
@@ -81,6 +83,7 @@ func _desert() -> String:
 
 func _hold() -> String:
 	GameState.new_game("士气", "灰旗", GameState.crest_color)
+	GameState.set_flag("chapter0_done")
 	var ally := _non_leader()
 	GameState.silver = 0
 	GameState.food = 40

@@ -366,21 +366,32 @@
       "next": "after",
       "actions": [
         {
+          "id": "after_lamp",
+          "label": "听桥灯下的动静",
+          "do": [
+            {
+              "op": "goto",
+              "beat": "after"
+            }
+          ],
+          "when": {
+            "flag": "e1_01_won"
+          }
+        },
+        {
           "id": "fight",
           "label": "护送粮队到桥灯下",
           "do": [
-            {
-              "op": "set_flag",
-              "flag": "e1_01_fought",
-              "value": true
-            },
             {
               "op": "battle",
               "map": "e1_reed_escort",
               "objective": "escort",
               "return": "res://scenes/story/chapter_player.tscn"
             }
-          ]
+          ],
+          "when": {
+            "not_flag": "e1_01_won"
+          }
         }
       ]
     },
