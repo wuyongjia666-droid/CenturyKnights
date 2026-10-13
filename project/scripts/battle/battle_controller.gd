@@ -2959,7 +2959,7 @@ func _note_unit_downed(u, killer) -> void:
 		"pos": [int(u.pos.x), int(u.pos.y)],
 		"killer": str(killer.name) if killer != null else "",
 	}
-	unit_downed.emit(u.char, info)
+	unit_downed.emit(u.char, info); CKDeployReserve.swap_into(self, u)  # 预备换人
 
 func _arm_lamps() -> void:
 	if _lamps_armed:

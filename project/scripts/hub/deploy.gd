@@ -417,6 +417,15 @@ func _render_metrics() -> void:
 	note.size = Vector2(w, 40)
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_metrics.add_child(note)
+	var rb := UIKit.ghost_button(CKDeployReserve.button_text(), int(w), 48)
+	rb.name = "ReserveBtn"
+	rb.clip_text = true
+	rb.position = Vector2(x, R.end.y - 132)
+	rb.pressed.connect(func():
+		var rr := CKDeployReserve.cycle()
+		rb.text = CKDeployReserve.button_text()
+		rb.tooltip_text = str(rr.get("msg", "")))
+	_metrics.add_child(rb)
 	var go := UIKit.cta_button("出战 · 练习战（清匪）", "ENTER", int(w), 52)
 	go.name = "Fight"
 	go.position = Vector2(x, R.end.y - 76)

@@ -75,3 +75,11 @@ defeat_row_dead,%s · 阵亡,%s · fallen
 defeat_row_tired,疲伤（下月恢复）,worn (recovers next month)
 pause_retreat,撤退回堡,Retreat
 pause_retreat_confirm,再点一次确认撤退（算败北）,Tap again to retreat (counts as defeat)
+rs_3aee9149,预备：议事厅 %d 级开放,预备：议事厅 %d 级开放
+rs_5cb38929,不留预备,不留预备
+rs_68565d5b,预备：%s（有人倒下时从地图边上补进来，一场一次）,预备：%s（有人倒下时从地图边上补进来，一场一次）
+rs_8c3d6edd,议事厅到 %d 级才能留预备,议事厅到 %d 级才能留预备
+rs_8e7438ad,不留（点一下换人）,不留（点一下换人）
+rs_da90800a,没有没出战的人可以当预备,没有没出战的人可以当预备
+rs_e287c5ce,【预备】%s 从地图边上补进来了,【预备】%s 从地图边上补进来了
+rs_ef01b731,预备：%s,预备：%s
