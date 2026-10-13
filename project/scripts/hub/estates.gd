@@ -378,6 +378,9 @@ func _open_picker(hid: String) -> void:
 	_picker_hid = hid
 	if _picker != null and is_instance_valid(_picker):
 		_picker.queue_free()
+	if has_meta("m_on"):
+		_m_picker(hid)
+		return
 	_picker = UIKit.panel_at(self, Rect2(320, 120, 640, 480), 12, true)
 	_picker.z_index = 20
 	var title = UIKit.make_label("选择庄头 — %s" % GameState.HOLDING_DEFS[hid].name, true)
@@ -483,6 +486,15 @@ func _show_result(title: String, body: String) -> void:
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	overlay.z_index = 30
 	add_child(overlay)
+	if has_meta("m_on"):
+		overlay.queue_free()
+		var sh := MobilePage.sheet(self, "PatrolResult", title, 30, UIKit.DANGER)
+		var sv: VBoxContainer = sh[1]
+		sv.add_child(MobilePage.label(body + "\n" + Locale.t("wsc_e_fail_hint"), UIKit.TEXT, 24, true))
+		var okb := MobilePage.button(Locale.t("wsc_t_lost_ok"), true, (sh[0] as Node).queue_free)
+		sv.add_child(okb)
+		okb.call_deferred("grab_focus")
+		return
 	var p := UIKit.panel_at(overlay, Rect2(390, 240, 500, 220), 14, true)
 	var t := UIKit.title_label(title, 20, UIKit.DANGER)
 	t.position = Vector2(24, 20)
@@ -498,6 +510,9 @@ func _show_result(title: String, body: String) -> void:
 	ok.call_deferred("grab_focus")
 
 func _show_patrol_vignette(hid: String, result: String = "") -> void:
+	if has_meta("m_on"):
+		_m_vignette(hid, result)
+		return
 	var overlay = ColorRect.new()
 	overlay.color = Color(0, 0, 0, 0.55)
 	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -609,12 +624,21 @@ func open_field_book() -> void:
 	_field_list.add_theme_constant_override("separation", 6)
 	scroll.add_child(_field_list)
 	_fill_field_list()
+	if has_meta("m_on"):
+		overlay.size = Vector2(MobilePage.width(self), size.y if size.y > 400.0 else 720.0)
+		overlay.z_index = 30
+		scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		MobilePage.upsize(overlay)
+		title.add_theme_font_size_override("font_size", 30)
 
 
 func close_field_book() -> void:
 	if _field_overlay != null and is_instance_valid(_field_overlay):
 		_field_overlay.queue_free()
 	_field_overlay = null
+	if has_meta("m_on"):
+		_m_build()
+		return
 	_rebuild()
 
 
@@ -670,8 +694,12 @@ func _fill_field_list() -> void:
 			rem.pressed.connect(func(): _field_do(CKPurse.remit_to_flag(GameState.characters[cid])))
 			row.add_child(rem)
 		_field_list.add_child(row)
+		if has_meta("m_on"):
+			_m_field_row(row, lab)
 	if shown == 0:
 		_field_list.add_child(UIKit.body_label(Locale.t("ux_field_nobody"), UIKit.TEXT_DIM, 14))
+	if has_meta("m_on"):
+		MobilePage.upsize(_field_list)
 
 
 func _field_do(r: Dictionary) -> void:
@@ -810,3 +838,94 @@ func _m_holding(hid: String) -> Control:
 	pb.disabled = GameState.holding_patrol_cd(bid) > 0 or GameState.holding_patrol_boost(bid) > 0
 	ar.add_child(pb)
 	return card
+
+
+## ── Phone popups: steward picker, patrol sand-table, field book rows ──
+func _m_picker(hid: String) -> void:
+	var sh := MobilePage.sheet(self, "StewardPicker", Locale.t("mw_pick_steward") % str(GameState.HOLDING_DEFS[hid].name), 30)
+	_picker = sh[0]
+	var v: VBoxContainer = sh[1]
+	v.add_child(MobilePage.label(Locale.t("mw_pick_tip"), UIKit.TEXT_DIM, MobilePage.FONT, true))
+	var list := MobilePage.sheet_scroll(v, 260.0)
+	for c in GameState.roster():
+		if c == null or not c.alive:
+			continue
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 14)
+		list.add_child(row)
+		var tr := TextureRect.new()
+		tr.custom_minimum_size = Vector2(72, 72)
+		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		var tex = UnitArt.portrait(c, 72)
+		if tex != null:
+			tr.texture = tex
+		row.add_child(tr)
+		var job := str(GameState.get_job(c.job_id).get("name", c.job_id))
+		var lab := MobilePage.label("%s · %s · Lv%d" % [c.name, job, c.level], UIKit.TEXT, MobilePage.FONT, true)
+		lab.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		row.add_child(lab)
+		var cid := str(c.id)
+		var bb := MobilePage.button(Locale.t("mw_assign"), true, func(): _do_assign(cid), 150)
+		bb.size_flags_horizontal = Control.SIZE_SHRINK_END
+		row.add_child(bb)
+	v.add_child(MobilePage.button(Locale.t("ux_field_close"), false, func():
+		if _picker != null and is_instance_valid(_picker):
+			_picker.queue_free()
+			_picker = null))
+
+func _m_vignette(hid: String, result: String) -> void:
+	var where := str(GameState.HOLDING_DEFS.get(hid, {}).get("name", "")) if hid != "" else Locale.t("mw_patrol_all")
+	var title := Locale.t("mw_patrol_title") + " · " + where
+	var sh := MobilePage.sheet(self, "PatrolVignette", title, 30)
+	var overlay: Control = sh[0]
+	var v: VBoxContainer = sh[1]
+	var map := TextureRect.new()
+	map.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	map.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	map.custom_minimum_size = Vector2(0, clampf(float(v.get_meta("max_h", 660.0)) - 300.0, 220.0, 380.0))
+	v.add_child(map)
+	var frames: Array = []
+	for fi in range(12):
+		var fp := "res://assets/art/ui/patrol_vignette_f%d.png" % fi
+		if ResourceLoader.exists(fp):
+			frames.append(load(fp))
+	var still := "res://assets/art/ui/patrol_vignette.png"
+	if frames.is_empty() and ResourceLoader.exists(still):
+		frames.append(load(still))
+	if not frames.is_empty():
+		map.texture = frames[0]
+		for step in range(1, frames.size()):
+			var k := step
+			get_tree().create_timer(0.12 * k).timeout.connect(func():
+				if is_instance_valid(map):
+					map.texture = frames[k])
+	var tip := MobilePage.label((result + "。" if result != "" else "") + Locale.t("mw_patrol_done"), UIKit.TEXT_DIM, MobilePage.FONT, true)
+	tip.name = "PatrolTip"
+	v.add_child(tip)
+	v.add_child(MobilePage.button(Locale.t("mw_patrol_close"), true, func(): overlay.queue_free()))
+	get_tree().create_timer(6.0).timeout.connect(func():
+		if is_instance_valid(overlay):
+			overlay.queue_free())
+
+## Field-book row on phone: name/status on top, holding buttons wrap underneath.
+func _m_field_row(row: HBoxContainer, lab: Label) -> void:
+	var box := VBoxContainer.new()
+	box.add_theme_constant_override("separation", 8)
+	var idx := row.get_index()
+	_field_list.add_child(box)
+	_field_list.move_child(box, idx)
+	_field_list.remove_child(row)
+	row.remove_child(lab)
+	lab.custom_minimum_size.x = 0
+	lab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	box.add_child(lab)
+	var flow := HFlowContainer.new()
+	flow.add_theme_constant_override("h_separation", 8)
+	flow.add_theme_constant_override("v_separation", 8)
+	box.add_child(flow)
+	for b in row.get_children():
+		row.remove_child(b)
+		(b as Control).custom_minimum_size = Vector2(maxf(160.0, (b as Control).custom_minimum_size.x), MobilePage.HIT)
+		flow.add_child(b)
+	row.queue_free()

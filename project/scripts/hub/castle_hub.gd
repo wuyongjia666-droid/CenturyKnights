@@ -777,7 +777,7 @@ func _m_entry_grid(groups: Array, rect: Rect2) -> void:
 	stack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(stack)
 	var inner_w := rect.size.x - 28.0
-	var cols := clampi(int(floor((inner_w + M_GAP) / (260.0 + M_GAP))), 2, 3)
+	var cols := clampi(int(floor((inner_w + M_GAP) / (320.0 + M_GAP))), 2, 3)
 	var tile_w := floorf((inner_w - M_GAP * (cols - 1)) / cols) - 2.0
 	var avail := rect.size.y - 28.0 - 48.0
 	for g in groups:
