@@ -21,3 +21,5 @@ xvfb-run -a -s "-screen 0 1200x2500x24" \
 python3 "$ROOT/tools/ci/shot_style.py" "$OUT"
 # Mobile landscape gate (docs/design/mobile-landscape.md): runs inside the CI shots job.
 bash "$ROOT/scripts/mobile_gate.sh" "${OUT}_mobile" "${OUT}/mobile_sheets"
+# Desktop gate (docs/design/desktop-gate.md): 1280×720 / 1920×1080 / 2560×1440, mouse, no mobile reflow.
+bash "$ROOT/scripts/desktop_gate.sh" "${OUT}_desktop" "${OUT}/desktop_sheets"
