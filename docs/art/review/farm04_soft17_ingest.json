@@ -1,0 +1,284 @@
+{
+  "batch": "farm04-soft17-reshoot-ingest",
+  "parent": "PR#245 rejects",
+  "ingested": 17,
+  "plates": [
+    {
+      "id": "v92_expr_c01_joy_r2",
+      "soft_label": "v92_expr_c01_joy_r2_soft",
+      "status": "pass",
+      "src": "v92_expr_c01_joy_r2_soft.png",
+      "staged": "project/assets/art/portraits/expressions/v92_expr_c01_joy.png",
+      "out_path": "project/assets/art/portraits/expressions/v92_expr_c01_joy.png",
+      "role": "expression",
+      "mean_saturation": 0.3325478434562683,
+      "webp": "project/assets/art/portraits/expressions/v92_expr_c01_joy.webp",
+      "bytes": 54360,
+      "size": [
+        768,
+        1024
+      ]
+    },
+    {
+      "id": "v92_expr_c01_surprise_r2",
+      "soft_label": "v92_expr_c01_surprise_r2_soft",
+      "status": "pass",
+      "src": "v92_expr_c01_surprise_r2_soft.png",
+      "staged": "project/assets/art/portraits/expressions/v92_expr_c01_surprise.png",
+      "out_path": "project/assets/art/portraits/expressions/v92_expr_c01_surprise.png",
+      "role": "expression",
+      "mean_saturation": 0.257539302110672,
+      "webp": "project/assets/art/portraits/expressions/v92_expr_c01_surprise.webp",
+      "bytes": 54018,
+      "size": [
+        768,
+        1024
+      ]
+    },
+    {
+      "id": "v92_speaker_qiaoniang_rake",
+      "soft_label": "v92_speaker_qiaoniang_rake_soft",
+      "status": "pass",
+      "src": "v92_speaker_qiaoniang_rake_soft.png",
+      "staged": "project/assets/art/portraits/speakers/qiaoniang_rake.png",
+      "out_path": "project/assets/art/portraits/speakers/qiaoniang_rake.png",
+      "role": "speaker",
+      "mean_saturation": 0.2292972058057785,
+      "webp": "project/assets/art/portraits/speakers/qiaoniang_rake.webp",
+      "bytes": 81328,
+      "size": [
+        768,
+        1024
+      ]
+    },
+    {
+      "id": "v92_expr_s06_anger",
+      "soft_label": "v92_expr_s06_anger_soft",
+      "status": "pass",
+      "src": "v92_expr_s06_anger_soft.png",
+      "staged": "project/assets/art/portraits/expressions/v92_expr_s06_anger.png",
+      "out_path": "project/assets/art/portraits/expressions/v92_expr_s06_anger.png",
+      "role": "expression",
+      "mean_saturation": 0.3570779263973236,
+      "webp": "project/assets/art/portraits/expressions/v92_expr_s06_anger.webp",
+      "bytes": 41620,
+      "size": [
+        768,
+        1024
+      ]
+    },
+    {
+      "id": "v92_expr_s06_sorrow",
+      "soft_label": "v92_expr_s06_sorrow_soft",
+      "status": "pass",
+      "src": "v92_expr_s06_sorrow_soft.png",
+      "staged": "project/assets/art/portraits/expressions/v92_expr_s06_sorrow.png",
+      "out_path": "project/assets/art/portraits/expressions/v92_expr_s06_sorrow.png",
+      "role": "expression",
+      "mean_saturation": 0.3091695308685303,
+      "webp": "project/assets/art/portraits/expressions/v92_expr_s06_sorrow.webp",
+      "bytes": 40038,
+      "size": [
+        768,
+        1024
+      ]
+    },
+    {
+      "id": "v92_expr_s06_joy",
+      "soft_label": "v92_expr_s06_joy_soft",
+      "status": "pass",
+      "src": "v92_expr_s06_joy_soft.png",
+      "staged": "project/assets/art/portraits/expressions/v92_expr_s06_joy.png",
+      "out_path": "project/assets/art/portraits/expressions/v92_expr_s06_joy.png",
+      "role": "expression",
+      "mean_saturation": 0.31810757517814636,
+      "webp": "project/assets/art/portraits/expressions/v92_expr_s06_joy.webp",
+      "bytes": 42160,
+      "size": [
+        768,
+        1024
+      ]
+    },
+    {
+      "id": "v92_expr_s06_surprise",
+      "soft_label": "v92_expr_s06_surprise_soft",
+      "status": "pass",
+      "src": "v92_expr_s06_surprise_soft.png",
+      "staged": "project/assets/art/portraits/expressions/v92_expr_s06_surprise.png",
+      "out_path": "project/assets/art/portraits/expressions/v92_expr_s06_surprise.png",
+      "role": "expression",
+      "mean_saturation": 0.3728920519351959,
+      "webp": "project/assets/art/portraits/expressions/v92_expr_s06_surprise.webp",
+      "bytes": 42576,
+      "size": [
+        768,
+        1024
+      ]
+    },
+    {
+      "id": "v92_leader_m3",
+      "soft_label": "v92_leader_m3_soft",
+      "status": "pass",
+      "src": "v92_leader_m3_soft.png",
+      "staged": "project/assets/art/portraits/speakers/leader_m3.png",
+      "out_path": "project/assets/art/portraits/speakers/leader_m3.png",
+      "role": "speaker",
+      "mean_saturation": 0.16714313626289368,
+      "webp": "project/assets/art/portraits/speakers/leader_m3.webp",
+      "bytes": 56136,
+      "size": [
+        768,
+        1024
+      ]
+    },
+    {
+      "id": "v92_cg_cg3_boy_donkey",
+      "soft_label": "v92_cg_cg3_boy_donkey_soft",
+      "status": "pass",
+      "src": "v92_cg_cg3_boy_donkey_soft.png",
+      "staged": "project/assets/art/story_cg/cg3_boy_donkey.png",
+      "out_path": "project/assets/art/story_cg/cg3_boy_donkey.png",
+      "role": "story_bg",
+      "mean_saturation": 0.3997906446456909,
+      "webp": "project/assets/art/story_cg/cg3_boy_donkey.webp",
+      "bytes": 86910,
+      "size": [
+        1280,
+        768
+      ]
+    },
+    {
+      "id": "v92_cg_cg5_new_banner_wall",
+      "soft_label": "v92_cg_cg5_new_banner_wall_soft",
+      "status": "pass",
+      "src": "v92_cg_cg5_new_banner_wall_soft.png",
+      "staged": "project/assets/art/story_cg/cg5_new_banner_wall.png",
+      "out_path": "project/assets/art/story_cg/cg5_new_banner_wall.png",
+      "role": "story_bg",
+      "mean_saturation": 0.24813511967658997,
+      "webp": "project/assets/art/story_cg/cg5_new_banner_wall.webp",
+      "bytes": 88634,
+      "size": [
+        1280,
+        768
+      ]
+    },
+    {
+      "id": "v92_story_bg_yard_night_r2",
+      "soft_label": "v92_story_bg_yard_night_r2_soft",
+      "status": "pass",
+      "src": "v92_story_bg_yard_night_r2_soft.png",
+      "staged": "project/assets/art/story_bg/yard_night.png",
+      "out_path": "project/assets/art/story_bg/yard_night.png",
+      "role": "story_bg",
+      "mean_saturation": 0.23709429800510406,
+      "webp": "project/assets/art/story_bg/yard_night.webp",
+      "bytes": 101260,
+      "size": [
+        1280,
+        768
+      ]
+    },
+    {
+      "id": "v92_story_bg_bridge_night_r2",
+      "soft_label": "v92_story_bg_bridge_night_r2_soft",
+      "status": "pass",
+      "src": "v92_story_bg_bridge_night_r2_soft.png",
+      "staged": "project/assets/art/story_bg/bridge_night.png",
+      "out_path": "project/assets/art/story_bg/bridge_night.png",
+      "role": "story_bg",
+      "mean_saturation": 0.1766667515039444,
+      "webp": "project/assets/art/story_bg/bridge_night.webp",
+      "bytes": 100798,
+      "size": [
+        1280,
+        768
+      ]
+    },
+    {
+      "id": "v92_story_bg_tavern_r2",
+      "soft_label": "v92_story_bg_tavern_r2_soft",
+      "status": "pass",
+      "src": "v92_story_bg_tavern_r2_soft.png",
+      "staged": "project/assets/art/story_bg/tavern.png",
+      "out_path": "project/assets/art/story_bg/tavern.png",
+      "role": "story_bg",
+      "mean_saturation": 0.2742527425289154,
+      "webp": "project/assets/art/story_bg/tavern.webp",
+      "bytes": 94806,
+      "size": [
+        1280,
+        768
+      ]
+    },
+    {
+      "id": "v92_story_bg_birth_corridor",
+      "soft_label": "v92_story_bg_birth_corridor_soft",
+      "status": "pass",
+      "src": "v92_story_bg_birth_corridor_soft.png",
+      "staged": "project/assets/art/story_bg/birth_corridor.png",
+      "out_path": "project/assets/art/story_bg/birth_corridor.png",
+      "role": "story_bg",
+      "mean_saturation": 0.2764345705509186,
+      "webp": "project/assets/art/story_bg/birth_corridor.webp",
+      "bytes": 79210,
+      "size": [
+        1280,
+        768
+      ]
+    },
+    {
+      "id": "v92_story_bg_hall_feast_dark_r2",
+      "soft_label": "v92_story_bg_hall_feast_dark_r2_soft",
+      "status": "pass",
+      "src": "v92_story_bg_hall_feast_dark_r2_soft.png",
+      "staged": "project/assets/art/story_bg/hall_feast_dark.png",
+      "out_path": "project/assets/art/story_bg/hall_feast_dark.png",
+      "role": "story_bg",
+      "mean_saturation": 0.30396801233291626,
+      "webp": "project/assets/art/story_bg/hall_feast_dark.webp",
+      "bytes": 104918,
+      "size": [
+        1280,
+        768
+      ]
+    },
+    {
+      "id": "v92_speaker_newcomer",
+      "soft_label": "v92_speaker_newcomer_soft",
+      "status": "pass",
+      "src": "v92_speaker_newcomer_soft.png",
+      "staged": "project/assets/art/portraits/speakers/newcomer.png",
+      "out_path": "project/assets/art/portraits/speakers/newcomer.png",
+      "role": "speaker",
+      "mean_saturation": 0.2900187075138092,
+      "webp": "project/assets/art/portraits/speakers/newcomer.webp",
+      "bytes": 66738,
+      "size": [
+        768,
+        1024
+      ]
+    },
+    {
+      "id": "v92_speaker_spring_envoy",
+      "soft_label": "v92_speaker_spring_envoy_soft",
+      "status": "pass",
+      "src": "v92_speaker_spring_envoy_soft.png",
+      "staged": "project/assets/art/portraits/speakers/spring_envoy.png",
+      "out_path": "project/assets/art/portraits/speakers/spring_envoy.png",
+      "role": "speaker",
+      "mean_saturation": 0.2570685148239136,
+      "webp": "project/assets/art/portraits/speakers/spring_envoy.webp",
+      "bytes": 43084,
+      "size": [
+        768,
+        1024
+      ]
+    }
+  ],
+  "gate": {
+    "final_pass": 17,
+    "style_rejects": [],
+    "anatomy_rejects": []
+  }
+}
