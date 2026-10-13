@@ -6,6 +6,9 @@ const BattleSwatchScript = preload("res://scripts/ui/widgets/battle_swatch.gd")
 var _swatch: Control
 var _scale_readout: Label
 
+const MobileReflow := preload("res://scripts/platform/mobile_reflow.gd")
+
+
 func _back() -> void:
 	if GameState.started:
 		CKNav.up()
@@ -185,7 +188,25 @@ func _ready() -> void:
 	help.add_child(note)
 	if not DeviceProfile.is_mobile():
 		UIKit.footer_bar(self, [["A", Locale.t("shell_2f116b7d")], ["ESC", Locale.t("shell_11d02415")]], "SETTINGS · FROST")
+	_mobile_layout(scroll, cols)
 	UIFX.wire_tree(self)
+
+
+## Landscape phone: 76px top bar, the two columns fill the width, 22px text, 76px controls.
+func _mobile_layout(scroll: ScrollContainer, cols: HBoxContainer) -> void:
+	if not MobilePage.active(self):
+		return
+	var vp := get_viewport().get_visible_rect().size
+	var w := maxf(1280.0, vp.x * 720.0 / maxf(1.0, vp.y))
+	MobilePage.top_bar(self, Locale.t("shell_57ea9dbf"), "", [[Locale.t("shell_11d02415"), _back]])
+	scroll.position = Vector2(24, MobilePage.TOP + 4.0)
+	scroll.size = Vector2(w - 48.0, 720.0 - MobilePage.TOP - 16.0)
+	var cw := (w - 48.0 - 32.0 - 16.0) * 0.5
+	for c in cols.get_children():
+		(c as Control).custom_minimum_size = Vector2(cw, 0)
+		MobileReflow.grow(c, cw - 32.0)
+	for sl in cols.find_children("*", "HSlider", true, false):
+		(sl as Control).custom_minimum_size.y = MobilePage.HIT
 
 static func anim_mode() -> String:
 	var m := str(GameState.settings.get("cutscene_mode", ""))
