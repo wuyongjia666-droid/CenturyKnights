@@ -20,7 +20,10 @@ func _build() -> void:
 	for c in get_children():
 		remove_child(c)
 		c.queue_free()
+	if has_meta("m_relayout"):
+		remove_meta("m_relayout")
 	UIKit.void_bg(self)
+	set_meta("m_bg_count", get_child_count())
 	var house := Locale.latin(str(GameState.surname), "House")
 	var tb := UIKit.top_bar(self, Locale.t("shell_c84f88cd") % house, UIKit.std_resource_chips(), Locale.t("shell_8112901e"), confirm_title)
 	_res_bar = HBoxContainer.new()   # kept for _refresh compatibility (resource tick)
@@ -335,6 +338,8 @@ func _build() -> void:
 	_fit_narrow()
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
+	if DeviceProfile.is_mobile() and is_inside_tree():
+		call_deferred("apply_mobile_layout")
 
 func _go_nav(btn: Button, dest: String) -> void:
 	if btn.has_meta("hub_entry"):
@@ -398,7 +403,7 @@ func confirm_title() -> void:
 	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	dim.color = Color(0.02, 0.03, 0.05, 0.6)
 	sheet.add_child(dim)
-	var p := UIKit.panel_at(sheet, Rect2(390, 250, 500, 220), 14, true)
+	var p := UIKit.panel_at(sheet, Rect2(_sheet_x(500.0), 250, 500, 220), 14, true)
 	var t := UIKit.title_label(Locale.t("a1_title_q"), 22)
 	t.position = Vector2(24, 20)
 	p.add_child(t)
@@ -550,7 +555,7 @@ func open_lock_sheet(title: String, st: Dictionary) -> void:
 		if e is InputEventMouseButton and e.pressed:
 			sheet.queue_free())
 	sheet.add_child(dim)
-	var p := UIKit.panel_at(sheet, Rect2(390, 470, 500, 210), 14, true)
+	var p := UIKit.panel_at(sheet, Rect2(_sheet_x(500.0), 470 if not has_meta("m_relayout") else 255, 500, 210), 14, true)
 	var t := UIKit.title_label(title, 22)
 	t.position = Vector2(24, 20)
 	p.add_child(t)
@@ -590,252 +595,326 @@ func _collect_labels(n: Node, out: Array) -> void:
 		_collect_labels(b, out)
 
 
-## Landscape phone: 300px nav rail with 22px text, 76px (48dp) entries; dossier and roster
-## plate slide right into the extra width. Runs once per build (meta guard).
-const M_RAIL_W := 300.0
-func _mobile_relayout() -> void:
-	if has_meta("m_relayout") or not DeviceProfile.is_mobile():
+func _sheet_x(w: float) -> float:
+	return (maxf(size.x, 1280.0) - w) * 0.5
+
+
+## ── Landscape phone hub (docs/design/mobile-landscape.md, ux-navigation-v1 §3.1) ──
+## One 76px top bar · left column of the five section tabs · centre grid of big entry tiles for
+## the chosen section · right column: main line (continue CTA + to-dos) and the leader card.
+## Every target is ≥76 logical px (48dp), text ≥22px, nothing is positioned for 1280 only.
+const M_FONT := 22
+const M_HIT := 76.0
+const M_TOP := 96.0
+const M_PAD := 20.0
+const M_GAP := 12.0
+const M_TAB_W := 196.0
+const M_TILE_H := 112.0
+var _m_tab := ""
+var _m_tabs: Dictionary = {}
+var _m_grids: Dictionary = {}
+
+func apply_mobile_layout() -> void:
+	if has_meta("m_relayout") or not DeviceProfile.is_mobile() or not is_inside_tree():
 		return
 	var vps := get_viewport().get_visible_rect().size
 	if vps.x < vps.y * 1.2:
 		return
 	set_meta("m_relayout", true)
-	var dx := M_RAIL_W - 150.0
-	for c in get_children():
-		if not (c is Control) or c.name in ["NavPanel", "NavRail", "StitchTopBar", "StitchFooter", "HubBannerPreview"]:
-			continue
-		var ctrl := c as Control
-		if ctrl.position.x >= 170.0 and ctrl.size.x < 1000.0:
-			ctrl.position.x += dx
-	var np := get_node_or_null("NavPanel") as Control
-	if np:
-		np.size = Vector2(M_RAIL_W, 720 - M_TOP - 8)
-		np.position.y = M_TOP
-	var rail := find_child("NavRail", true, false) as ScrollContainer
-	if rail:
-		rail.position = Vector2(34, M_TOP + 8)
-		rail.size = Vector2(M_RAIL_W - 16.0, 720 - M_TOP - 24)
-		for b in rail.find_children("*", "Button", true, false):
-			var nb := b as Button
-			nb.add_theme_font_size_override("font_size", 22)
-			nb.custom_minimum_size = Vector2(M_RAIL_W - 24.0, 76)
-			nb.clip_text = true
-		for l in rail.find_children("*", "Label", true, false):
-			var ll := l as Label
-			ll.add_theme_font_size_override("font_size", 22)
-			ll.custom_minimum_size = Vector2(M_RAIL_W - 24.0, 34)
-	var foot := get_node_or_null("StitchFooter") as Control
-	if foot:
-		foot.visible = false
-	_mobile_top_bar()
-	_mobile_dossier()
-	_mobile_plate()
-	# Rail caption / gamepad status sit where the wider rail now is; touch has no gamepad.
-	for l in find_children("*", "Control", true, false):
-		var lc := l as Control
-		if lc is ScrollContainer or rail and rail.is_ancestor_of(lc):
-			continue
-		var gp := lc.global_position
-		if (lc is Label or lc is HBoxContainer) and gp.x < 200.0 and (gp.y < 100.0 and gp.y > 60.0 or gp.y > 640.0 and gp.y < 700.0):
-			lc.visible = false
-
-func apply_mobile_layout() -> void:
-	_mobile_relayout()
-	## Portrait: top-align, let the nav rail scroll, stretch dossier lists into slack.
-	var rail := find_child("NavRail", true, false) as ScrollContainer
-	if rail:
-		rail.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
-		rail.custom_minimum_size = Vector2(rail.size.x, maxf(rail.size.y, 480.0))
-	MobileLayout.fit_top_bar(self, size.x if size.x > 64.0 else 1280.0)
-	# Hang a compact company banner on the top bar area for DIY preview.
-	if has_meta("m_relayout"):
-		return
-	var existing := get_node_or_null("HubBannerPreview") as TextureRect
-	if existing == null:
-		existing = TextureRect.new()
-		existing.name = "HubBannerPreview"
-		existing.custom_minimum_size = Vector2(56, 78)
-		existing.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		existing.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		existing.position = Vector2(1180, 12)
-		existing.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(existing)
-	UnitArt.clear_cache()
-	existing.texture = UnitArt.banner(56, 78, false)
-	BannerName.attach(existing)
-
-
-## ── Phone dossier / plate: container-built so 22px text wraps instead of overlapping ──
-const M_FONT := 22
-const M_HIT := 76.0
-const M_PLATE_W := 280.0
-const M_TOP := 92.0
-
-func _mobile_top_bar() -> void:
-	var tb := get_node_or_null("StitchTopBar") as Control
-	if tb:
-		tb.visible = false
-	var bp := get_node_or_null("HubBannerPreview")
-	if bp:
-		bp.queue_free()
-	var bar := HBoxContainer.new()
-	bar.name = "MobileTopBar"
-	bar.position = Vector2(26, 8)
-	bar.size = Vector2(maxf(size.x, 1280.0) - 50, M_HIT)
-	bar.add_theme_constant_override("separation", 10)
-	add_child(bar)
-	var house := Locale.latin(str(GameState.surname), "House")
-	var ctx := _m_label(Locale.t("shell_c84f88cd") % house, UIKit.TEXT, 24, false)
-	ctx.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	bar.add_child(ctx)
-	var res_txt := "%s %d · %s %d · %s %d · %s" % [Locale.t("shell_946c7148"), GameState.silver,
-		Locale.t("shell_6763b86e"), GameState.food, Locale.t("shell_69e7baef"), GameState.iron, Calendar.label()]
-	var res := _m_label(res_txt, UIKit.ACCENT, M_FONT, false)
-	res.name = "MobileRes"
-	res.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	bar.add_child(res)
-	for spec in [[Locale.t("ux_help_open"), func(): CKHelpCodex.open(self, true)],
-			[Locale.t("shell_40e191bd"), func():
-				GameState.save_game()
-				if _hint:
-					_hint.text = Locale.t("save_ok")],
-			[Locale.t("shell_8112901e"), func():
-				GameState.save_game()
-				CKNav.replace(CKNav.TITLE)]]:
-		var b := _m_button(str(spec[0]), false, spec[1])
-		b.custom_minimum_size = Vector2(180, M_HIT)
-		b.size_flags_horizontal = Control.SIZE_SHRINK_END
-		bar.add_child(b)
-
-func _m_label(t: String, col: Color, fs: int = M_FONT, wrap: bool = true) -> Label:
-	var l := UIKit.body_label(t, col, fs)
-	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART if wrap else TextServer.AUTOWRAP_OFF
-	l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	return l
-
-func _m_button(t: String, accent: bool, cb: Callable) -> Button:
-	var b := UIKit.make_accent_button(t, 120) if accent else UIKit.make_button(t, 120)
-	b.custom_minimum_size = Vector2(0, M_HIT)
-	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	b.add_theme_font_size_override("font_size", M_FONT)
-	b.clip_text = true
-	b.pressed.connect(cb)
-	return b
-
-func _m_clear(panel: Control) -> void:
-	for c in panel.get_children():
-		panel.remove_child(c)
-		c.queue_free()
-
-func _mobile_dossier() -> void:
-	var cp := get_node_or_null("DossierPanel") as Control
-	if cp == null:
-		return
 	var w := maxf(size.x, 1280.0)
-	cp.position = Vector2(26 + M_RAIL_W + 12, M_TOP)
-	cp.size = Vector2(w - cp.position.x - M_PLATE_W - 36, 720 - M_TOP - 8)
-	_m_clear(cp)
-	var mg := MarginContainer.new()
-	mg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	for side in ["left", "right", "top", "bottom"]:
-		mg.add_theme_constant_override("margin_" + side, 16)
-	cp.add_child(mg)
-	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 12)
-	mg.add_child(col)
-	col.add_child(_m_label(Locale.t("shell_b69fd89f"), UIKit.TEXT, 28, false))
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 10)
-	row.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	col.add_child(row)
-	for cd in _m_cards:
-		var card := PanelContainer.new()
-		card.add_theme_stylebox_override("panel", UIKit.flat_box(Color(0.055, 0.067, 0.090, 0.9), Color(1, 1, 1, 0.10), 8))
-		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		card.size_flags_stretch_ratio = 1.0
-		row.add_child(card)
-		var v := VBoxContainer.new()
-		v.add_theme_constant_override("separation", 8)
-		card.add_child(v)
-		var tt := _m_label(str(cd.title), cd.col, 24, true)
-		tt.add_theme_font_override("font", UIKit.font("bold"))
-		v.add_child(tt)
-		for kvr in cd.kv:
-			v.add_child(_m_label("%s  %s" % [str(kvr[0]), str(kvr[1])], kvr[2]))
-		var sp := Control.new()
-		sp.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		v.add_child(sp)
-		v.add_child(_m_button(str(cd.act), false, cd.cb))
-	var now := _m_label(_mainline_caption(), UIKit.TEXT)
+	var h := size.y if size.y > 400.0 else 720.0
+	# Keep the live nav buttons (signals, lock metas, "new" dots) and rebuild everything around them.
+	var groups: Array = []
+	var rail := find_child("NavRail", true, false)
+	if rail:
+		for box in rail.find_children("NavGroup_*", "VBoxContainer", true, false):
+			var btns: Array = []
+			for b in box.get_children():
+				if b is Button:
+					btns.append(b)
+			for b in btns:
+				box.remove_child(b)
+			groups.append({"id": str(box.name).trim_prefix("NavGroup_"), "btns": btns})
+	var bg_n := int(get_meta("m_bg_count", 1))
+	var kids := get_children()
+	for idx in range(kids.size()):
+		var c: Node = kids[idx]
+		if idx < bg_n or c == _res_bar:
+			continue
+		remove_child(c)
+		c.queue_free()
+	_m_top_bar(w)
+	var right_w := 400.0 if w >= 1500.0 else 372.0
+	var body_h := h - M_TOP - 16.0
+	_m_tabs_column(groups, Rect2(M_PAD, M_TOP, M_TAB_W, body_h))
+	var gx := M_PAD + M_TAB_W + M_GAP
+	_m_entry_grid(groups, Rect2(gx, M_TOP, w - gx - right_w - M_GAP - M_PAD, body_h))
+	_m_right_column(Rect2(w - right_w - M_PAD, M_TOP, right_w, body_h))
+	var pick := str(GameState.get_meta("hub_tab", "")) if GameState.has_meta("hub_tab") else ""
+	if not _m_tabs.has(pick):
+		pick = "military" if _m_tabs.has("military") else str(_m_tabs.keys()[0]) if not _m_tabs.is_empty() else ""
+	_m_select(pick)
+
+func _m_top_bar(w: float) -> void:
+	var house := Locale.latin(str(GameState.surname), "House")
+	var info := "%s %d · %s %d · %s %d · %s" % [Locale.t("shell_946c7148"), GameState.silver,
+		Locale.t("shell_6763b86e"), GameState.food, Locale.t("shell_69e7baef"), GameState.iron, Calendar.label()]
+	var bar := MobilePage.top_bar(self, Locale.t("shell_c84f88cd") % house, info, [
+		[Locale.t("ux_help_open"), func(): CKHelpCodex.open(self, true)],
+		[Locale.t("shell_40e191bd"), func():
+			GameState.save_game()
+			if _hint:
+				_hint.text = Locale.t("save_ok")],
+		[Locale.t("shell_8112901e"), confirm_title],
+	])
+	bar.size = Vector2(w - 2.0 * M_PAD, M_HIT)
+	bar.position = Vector2(M_PAD, 10)
+	var info_l := bar.get_child(1) as Label
+	if info_l:
+		info_l.name = "MobileRes"
+	var help := bar.get_child(2) as Button
+	if help:
+		help.name = "OpenGuide"
+	for i in range(2, bar.get_child_count()):
+		(bar.get_child(i) as Control).custom_minimum_size.x = 150.0
+
+func _m_box(rect: Rect2, nm: String, margin: int = 12) -> VBoxContainer:
+	var v := MobilePage.panel(self, rect, margin)
+	v.get_parent().name = nm
+	return v
+
+func _m_tabs_column(groups: Array, rect: Rect2) -> void:
+	var v := _m_box(rect, "SectionTabs", 10)
+	v.add_theme_constant_override("separation", 8)
+	for g in groups:
+		var id := str(g.id)
+		var title := Locale.t("ux_hub_%s" % id)
+		var badge := HubTodo.count_for(id)
+		var fresh := false
+		for b in g.btns:
+			if (b as Button).has_meta("new_entry"):
+				fresh = true
+		var t := Button.new()
+		t.name = "Tab_" + id
+		t.text = title + ("  %d" % badge if badge > 0 else "") + ("  ●" if fresh and badge == 0 else "")
+		t.toggle_mode = true
+		t.focus_mode = Control.FOCUS_ALL
+		t.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		t.custom_minimum_size = Vector2(0, M_HIT)
+		t.add_theme_font_size_override("font_size", 26)
+		t.add_theme_font_override("font", UIKit.font("bold"))
+		var mk := func(bg: Color, bd: Color, bw: int) -> StyleBoxFlat:
+			var sb := UIKit._btn_box(bg, bd, bw, 8)
+			sb.content_margin_left = 18
+			return sb
+		UIKit._apply_states(t, {
+			"normal": mk.call(Color(1, 1, 1, 0.03), Color(1, 1, 1, 0.08), 1),
+			"hover": mk.call(Color(UIKit.ACCENT, 0.08), Color(UIKit.ACCENT, 0.35), 1),
+			"pressed": mk.call(Color(UIKit.ACCENT, 0.20), Color(UIKit.ACCENT, 0.9), 2),
+			"hover_pressed": mk.call(Color(UIKit.ACCENT, 0.22), Color(UIKit.ACCENT, 0.9), 2),
+			"focus": UIKit._focus_ring(UIKit.FOCUS_RING, 8),
+		})
+		t.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		t.add_theme_color_override("font_color", UIKit.TEXT_DIM)
+		t.add_theme_color_override("font_pressed_color", UIKit.ACCENT)
+		t.add_theme_color_override("font_hover_pressed_color", UIKit.ACCENT)
+		t.add_theme_color_override("font_hover_color", Color.WHITE)
+		if badge > 0 or fresh:
+			t.add_theme_color_override("font_color", UIKit.EMBER)
+		t.pressed.connect(func():
+			Sfx.click()
+			_m_select(id))
+		v.add_child(t)
+		_m_tabs[id] = t
+
+func _m_entry_grid(groups: Array, rect: Rect2) -> void:
+	var v := _m_box(rect, "EntryPanel", 14)
+	v.add_theme_constant_override("separation", 10)
+	var head := MobilePage.label("", UIKit.TEXT, 28, false)
+	head.name = "SectionTitle"
+	head.add_theme_font_override("font", UIKit.font("bold"))
+	v.add_child(head)
+	var scroll := ScrollContainer.new()
+	scroll.name = "NavRail"
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	v.add_child(scroll)
+	var stack := VBoxContainer.new()
+	stack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(stack)
+	var inner_w := rect.size.x - 28.0
+	var cols := clampi(int(floor((inner_w + M_GAP) / (260.0 + M_GAP))), 2, 3)
+	var tile_w := floorf((inner_w - M_GAP * (cols - 1)) / cols) - 2.0
+	var avail := rect.size.y - 28.0 - 48.0
+	for g in groups:
+		var rows := int(ceil(float(g.btns.size()) / cols))
+		var r := maxi(rows, 3)
+		var th := clampf(floorf((avail - M_GAP * (r - 1)) / r) - 1.0, M_TILE_H, 150.0)
+		var grid := GridContainer.new()
+		grid.name = "NavGroup_" + str(g.id)
+		grid.columns = cols
+		grid.add_theme_constant_override("h_separation", int(M_GAP))
+		grid.add_theme_constant_override("v_separation", int(M_GAP))
+		grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		stack.add_child(grid)
+		for b in g.btns:
+			_m_tile(b as Button, tile_w, th)
+			grid.add_child(b)
+		_m_grids[str(g.id)] = grid
+
+## Turns a desktop rail row into a phone tile: big title on top, one-line purpose / lock reason below.
+func _m_tile(b: Button, w: float, th: float = M_TILE_H) -> void:
+	var locked := b.has_meta("locked")
+	var raw := str(b.text)
+	var fresh := raw.begins_with("● ")
+	raw = raw.trim_prefix("● ")
+	var parts := raw.split("   ", false, 1)
+	var title := parts[1] if parts.size() > 1 else raw
+	var sub := str(b.tooltip_text)
+	b.text = ("● " if fresh else "") + title
+	b.tooltip_text = sub
+	b.custom_minimum_size = Vector2(w, th)
+	b.clip_text = true
+	b.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	b.add_theme_font_size_override("font_size", 26)
+	var mk := func(bg: Color, bd: Color, bw: int) -> StyleBoxFlat:
+		var sb := UIKit._btn_box(bg, bd, bw, 10)
+		sb.content_margin_left = 18
+		sb.content_margin_right = 14
+		sb.content_margin_top = 10
+		sb.content_margin_bottom = 46
+		return sb
+	var base := Color(1, 1, 1, 0.025) if locked else Color(UIKit.ACCENT, 0.06)
+	UIKit._apply_states(b, {
+		"normal": mk.call(base, Color(1, 1, 1, 0.10) if locked else Color(UIKit.ACCENT, 0.30), 1),
+		"hover": mk.call(Color(UIKit.ACCENT, 0.12), Color(UIKit.ACCENT, 0.6), 1),
+		"pressed": mk.call(Color(UIKit.ACCENT, 0.22), Color(UIKit.ACCENT, 0.9), 2),
+		"focus": UIKit._focus_ring(UIKit.FOCUS_RING, 10),
+		"disabled": mk.call(base, Color(1, 1, 1, 0.06), 1),
+	})
+	if not fresh:
+		b.add_theme_color_override("font_color", UIKit.TEXT_DIM if locked else UIKit.TEXT)
+	var sl := UIKit.body_label(sub, UIKit.TEXT_FAINT if locked else UIKit.ACCENT, M_FONT)
+	sl.name = "Sub"
+	sl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	sl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	sl.clip_text = true
+	sl.anchor_left = 0.0
+	sl.anchor_right = 1.0
+	sl.anchor_top = 1.0
+	sl.anchor_bottom = 1.0
+	sl.offset_left = 18
+	sl.offset_right = -14
+	sl.offset_top = -46
+	sl.offset_bottom = -12
+	b.add_child(sl)
+	if locked:
+		b.modulate = Color(1, 1, 1, 0.62)
+
+func _m_select(id: String) -> void:
+	if not _m_grids.has(id):
+		return
+	_m_tab = id
+	GameState.set_meta("hub_tab", id)
+	for k in _m_grids:
+		(_m_grids[k] as Control).visible = (k == id)
+		(_m_tabs[k] as Button).set_pressed_no_signal(k == id)
+	var head := find_child("SectionTitle", true, false) as Label
+	if head:
+		head.text = Locale.t("ux_hub_%s" % id)
+	var scroll := find_child("NavRail", true, false) as ScrollContainer
+	if scroll:
+		scroll.scroll_vertical = 0
+
+func _m_right_column(rect: Rect2) -> void:
+	# Main line first: it is the one thing the player should do next.
+	var main_h := 296.0
+	var v := _m_box(Rect2(rect.position, Vector2(rect.size.x, main_h)), "DossierPanel", 14)
+	v.add_theme_constant_override("separation", 8)
+	v.add_child(MobilePage.label(Locale.t("ux_hub_mainline_cap"), UIKit.TEXT_FAINT, M_FONT, false))
+	var now := MobilePage.label(_mainline_caption(), UIKit.TEXT, 24, true)
 	now.name = "MainlineNow"
-	col.add_child(now)
-	var bottom := HBoxContainer.new()
-	bottom.add_theme_constant_override("separation", 10)
-	col.add_child(bottom)
-	var todo_row := HBoxContainer.new()
+	now.max_lines_visible = 2
+	now.add_theme_font_override("font", UIKit.font("bold"))
+	v.add_child(now)
+	var cont_b := MobilePage.button(Locale.t("shell_e4492ae0"), true, _continue_mainline)
+	cont_b.name = "ContinueMainline"
+	cont_b.custom_minimum_size = Vector2(0, 84)
+	cont_b.add_theme_font_size_override("font_size", 26)
+	v.add_child(cont_b)
+	cont_b.call_deferred("grab_focus")
+	var todo_row := HFlowContainer.new()
 	todo_row.name = "TodoRow"
-	todo_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	todo_row.clip_contents = true
-	bottom.add_child(todo_row)
+	todo_row.add_theme_constant_override("h_separation", 8)
+	todo_row.add_theme_constant_override("v_separation", 8)
+	v.add_child(todo_row)
 	var due := 0
 	for todo in HubTodo.snapshot():
 		if int(todo.get("count", 0)) <= 0:
 			continue
 		due += 1
 		var link := HubTodo.link_for(todo)
-		var go_todo := func():
+		var chip := MobilePage.button("%s %d" % [str(todo.get("label", "")), int(todo.get("count", 0))], false, func():
 			if link != "":
-				CKNav.go(link)
-		var chip := _m_button("%s %d" % [str(todo.get("label", "")), int(todo.get("count", 0))], false, go_todo)
+				CKNav.go(link))
 		chip.name = "Todo_%s" % str(todo.get("category", ""))
-		chip.size_flags_horizontal = Control.SIZE_FILL
+		chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		chip.custom_minimum_size = Vector2(150, M_HIT)
+		chip.add_theme_color_override("font_color", UIKit.EMBER)
 		todo_row.add_child(chip)
 	if due == 0:
-		todo_row.add_child(_m_label(Locale.t("ux_todo_none"), UIKit.TEXT_FAINT, M_FONT, false))
-	var cont_b := _m_button(Locale.t("shell_e4492ae0"), true, _continue_mainline)
-	cont_b.name = "ContinueMainline"
-	cont_b.custom_minimum_size = Vector2(260, M_HIT)
-	cont_b.size_flags_horizontal = Control.SIZE_SHRINK_END
-	bottom.add_child(cont_b)
-	_hint = _m_label(Locale.t("shell_216a69b5") % GameState.morale, UIKit.OK, M_FONT, false)
-	col.add_child(_hint)
-
-func _mobile_plate() -> void:
-	var rp := get_node_or_null("RosterPlate") as Control
+		todo_row.add_child(MobilePage.label(Locale.t("ux_todo_none"), UIKit.TEXT_FAINT, M_FONT, false))
+	MobilePage.spacer(v)
+	_hint = MobilePage.label((Locale.t("shell_216a69b5") % GameState.morale).replace("  ●", ""), UIKit.OK, M_FONT, false)
+	_hint.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	if _new_line != "":
+		_hint.text = _new_line
+		_hint.add_theme_color_override("font_color", UIKit.EMBER)
+	v.add_child(_hint)
 	var leader = GameState.get_leader()
-	if rp == null or leader == null:
+	if leader == null:
 		return
-	var w := maxf(size.x, 1280.0)
-	rp.position = Vector2(w - M_PLATE_W - 24, M_TOP)
-	rp.size = Vector2(M_PLATE_W, 720 - M_TOP - 8)
-	_m_clear(rp)
-	var mg := MarginContainer.new()
-	mg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	for side in ["left", "right", "top", "bottom"]:
-		mg.add_theme_constant_override("margin_" + side, 12)
-	rp.add_child(mg)
-	var v := VBoxContainer.new()
-	v.add_theme_constant_override("separation", 8)
-	mg.add_child(v)
+	var lr := Rect2(rect.position + Vector2(0, main_h + M_GAP), Vector2(rect.size.x, rect.size.y - main_h - M_GAP))
+	var lv := _m_box(lr, "RosterPlate", 12)
+	lv.add_theme_constant_override("separation", 8)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 12)
+	row.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	lv.add_child(row)
+	var ph := clampf(lr.size.y - 24.0 - M_HIT - 8.0, 120.0, 200.0)
 	var holder := Control.new()
-	holder.custom_minimum_size = Vector2(M_PLATE_W - 24, 220)
-	v.add_child(holder)
-	UIKit.portrait_plate(holder, Rect2(0, 0, M_PLATE_W - 24, 220), leader, "")
-	v.add_child(_m_label("%s · %s" % [Locale.latin(str(leader.name), str(leader.id)), Locale.t("shell_5a0a47eb") % leader.age], UIKit.TEXT, 24, false))
+	holder.custom_minimum_size = Vector2(roundf(ph * 0.8), ph)
+	holder.clip_contents = true
+	row.add_child(holder)
+	UIKit.portrait_plate(holder, Rect2(0, 0, roundf(ph * 0.8), ph), leader, "")
+	var info := VBoxContainer.new()
+	info.add_theme_constant_override("separation", 2)
+	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(info)
+	var nm := MobilePage.label(Locale.latin(str(leader.name), str(leader.id)), UIKit.TEXT, 24, false)
+	nm.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	nm.add_theme_font_override("font", UIKit.font("bold"))
+	info.add_child(nm)
+	var job_name := Locale.latin(str(GameState.get_job(leader.job_id).get("name", leader.job_id)), str(leader.job_id))
+	var sub := MobilePage.label("%s · %s" % [Locale.t("shell_5a0a47eb") % leader.age, job_name], UIKit.ACCENT, M_FONT, false)
+	sub.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	info.add_child(sub)
 	var sg := GridContainer.new()
 	sg.columns = 2
-	v.add_child(sg)
+	sg.add_theme_constant_override("h_separation", 10)
+	info.add_child(sg)
 	for st in [[Locale.t("shell_70f83a5e"), "%d/%d" % [leader.hp, leader.max_hp], UIKit.OK], [Locale.t("shell_705f477a"), str(leader.derived_atk()), UIKit.TEXT],
 			[Locale.t("shell_92cc6bc7"), str(leader.derived_def()), UIKit.TEXT], [Locale.t("shell_e4daf17b"), str(leader.derived_move()), UIKit.ACCENT]]:
-		var cell := _m_label("%s %s" % [str(st[0]).split(" ")[0], st[1]], st[2], M_FONT, false)
-		cell.custom_minimum_size = Vector2((M_PLATE_W - 32) / 2.0, 0)
+		var cell := MobilePage.label("%s %s" % [str(st[0]).split(" ")[0], st[1]], st[2], M_FONT, false)
 		sg.add_child(cell)
-	var sp := Control.new()
-	sp.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	v.add_child(sp)
-	v.add_child(_m_button(Locale.t("shell_108b5beb"), false, func(): CKNav.go("res://scenes/hub/roster.tscn")))
-	var pb := _m_button(Locale.t("shell_9639cd7e"), false, func():
+	var btns := HBoxContainer.new()
+	btns.add_theme_constant_override("separation", 8)
+	lv.add_child(btns)
+	btns.add_child(MobilePage.button(Locale.t("ux_hub_file_short"), false, func(): CKNav.go("res://scenes/hub/roster.tscn")))
+	var pb := MobilePage.button(Locale.t("shell_9639cd7e"), false, func():
 		Sfx.click()
 		CKNav.go("res://scenes/hub/title_promote.tscn"))
 	pb.name = "PromoteOpen"
-	v.add_child(pb)
+	btns.add_child(pb)
