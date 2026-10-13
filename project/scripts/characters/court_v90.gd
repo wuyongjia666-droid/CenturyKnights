@@ -16,8 +16,13 @@ const STEP_NEED := {
 }
 const RIVAL_NAMES := ["琉商·澄", "夜市·未", "港栈·石"]
 
-static func ladder_zh(rank_id: String) -> String:
-	return str(LADDER_ZH.get(rank_id, rank_id))
+static func ladder_zh(rank_id: String, sex: String = "") -> String:
+	if not LADDER_ZH.has(rank_id):
+		return rank_id
+	return CKCharacter.rank_label(rank_id, sex)
+
+static func _sex(c: Object) -> String:
+	return str(c.get("gender")) if c != null and c.get("gender") != null else ""
 
 static func current_title(c: Object) -> String:
 	if c == null:
@@ -78,7 +83,7 @@ static func promotion_block(c: Object, ctx: Dictionary = {}) -> String:
 		bits.append("邦交 %d/%d" % [int(got["rep"]), int(need.get("rep", 0))])
 	if bits.is_empty():
 		return ""
-	return "升%s还差：%s" % [ladder_zh(nxt), "、".join(bits)]
+	return "升%s还差：%s" % [ladder_zh(nxt, _sex(c)), "、".join(bits)]
 
 ## Display rows for the promotion screen. Same gates as promotion_block.
 static func requirement_rows(c: Object, ctx: Dictionary = {}) -> Array:
@@ -146,7 +151,7 @@ static func promote(c: Object, ctx: Dictionary = {}) -> Dictionary:
 	(c.get("blood_meta") as Dictionary)["title"] = nxt
 	if nxt in CKCharacter.RANK_ORDER:
 		c.set("rank", nxt)
-	return {"ok": true, "msg": "爵位升为%s" % ladder_zh(nxt), "title": nxt}
+	return {"ok": true, "msg": "爵位升为%s" % ladder_zh(nxt, _sex(c)), "title": nxt}
 
 # ── lamp seat ─────────────────────────────────────────
 static func _purity(c: Object) -> float:
@@ -204,7 +209,7 @@ static func place_bid(c: Object, amount: int, nation_rep: int, year: int) -> Dic
 		c.set("blood_meta", {})
 	(c.get("blood_meta") as Dictionary)["title"] = tier
 	(c.get("blood_meta") as Dictionary)["lamp_seat"] = tier
-	return {"ok": true, "msg": "灯籍落槌：%s，没有灯丝" % ladder_zh(tier), "tier": tier, "board": board}
+	return {"ok": true, "msg": "灯籍落槌：%s，没有灯丝" % ladder_zh(tier, _sex(c)), "tier": tier, "board": board}
 
 # ── marriage rites ────────────────────────────────────
 static func _line_nation(c: Object) -> String:
@@ -736,7 +741,7 @@ static func build_promote_ui(host: Control, c: Object, ctx: Dictionary, on_promo
 	p.add_child(en)
 	var now := current_title(c)
 	var nxt := next_title(c)
-	var title := UIKit.title_label("%s → %s" % [ladder_zh(now), ladder_zh(nxt) if nxt != "" else "—"], 18)
+	var title := UIKit.title_label("%s → %s" % [ladder_zh(now, _sex(c)), ladder_zh(nxt, _sex(c)) if nxt != "" else "—"], 18)
 	title.position = Vector2(16, 28)
 	p.add_child(title)
 	var y := 68.0

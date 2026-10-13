@@ -53,4 +53,21 @@ func _run() -> String:
 		return "spouse card missing (cards: %s)" % [names]
 	if page.find_children("HeirPreview", "", true, false).is_empty():
 		return "heir outlook missing"
+	var foot = page.get_node_or_null("StitchFooter")
+	if foot != null:
+		for n in foot.find_children("*", "Label", true, false):
+			if str(n.text) in ["缔约", "再议", "切换候选"] and n.is_visible_in_tree():
+				return "footer hint %s still shown when married" % n.text
+	## Gendered titles: a female noble reads 女男爵 etc., male/neutral keeps 男爵.
+	var want := {"knight": "女勋士", "baron": "女男爵", "viscount": "女子爵", "count": "女伯爵", "duke": "女侯爵"}
+	for rid in want:
+		if CKCharacter.rank_label(rid, "f") != want[rid]:
+			return "female %s reads %s" % [rid, CKCharacter.rank_label(rid, "f")]
+		if CKCharacter.rank_label(rid, "m") != CKCharacter.RANK_NAMES[rid]:
+			return "male %s reads %s" % [rid, CKCharacter.rank_label(rid, "m")]
+	sp.rank = "baron"
+	if sp.gender == "f" and sp.rank_name() != "女男爵":
+		return "spouse rank_name %s" % sp.rank_name()
+	if CKCourt.ladder_zh("count", "f") != "女伯爵":
+		return "court ladder not gendered"
 	return ""

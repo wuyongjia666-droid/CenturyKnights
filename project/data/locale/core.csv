@@ -33,3 +33,13 @@ tavern_refresh_spent,本月刷新次数已用完，下月再来,
 tavern_refresh_spent_short,本月已无刷新,
 tavern_refresh_free,免费刷新 ↻（余 %d）,
 tavern_refresh_paid,刷新 %d 银 ↻（余 %d）,
+rank_knight,勋士,Knight
+rank_knight_f,女勋士,Dame
+rank_baron,男爵,Baron
+rank_baron_f,女男爵,Baroness
+rank_viscount,子爵,Viscount
+rank_viscount_f,女子爵,Viscountess
+rank_count,伯爵,Count
+rank_count_f,女伯爵,Countess
+rank_duke,侯爵,Marquess
+rank_duke_f,女侯爵,Marchioness

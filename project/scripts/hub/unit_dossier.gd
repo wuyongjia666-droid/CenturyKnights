@@ -240,7 +240,7 @@ func _person_chip(p: CKCharacter, focus: CKCharacter, focus_states: Dictionary) 
 	var b := Button.new()
 	b.custom_minimum_size = Vector2(120, 64)
 	b.focus_mode = Control.FOCUS_ALL
-	b.text = "%s\n%s · %s" % [p.name, CKGenomePortrait.STAGE_ZH.get(CKGenomePortrait.stage_for_age(p.age), ""), CKCourt.ladder_zh(CKCourt.current_title(p))]
+	b.text = "%s\n%s · %s" % [p.name, CKGenomePortrait.STAGE_ZH.get(CKGenomePortrait.stage_for_age(p.age), ""), CKCourt.ladder_zh(CKCourt.current_title(p), str(p.gender))]
 	if share != "" and p != focus:
 		b.text += "\n同征 " + share
 	var on := p == focus

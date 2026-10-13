@@ -135,8 +135,17 @@ func _job() -> Dictionary:
 func rank_index() -> int:
 	return RANK_ORDER.find(rank)
 
+## Rank label from the locale tables (rank_<id> / rank_<id>_f): a female noble gets the
+## female form (男爵 → 女男爵, Baron → Baroness). gender "" = neutral (e.g. an unborn heir).
 func rank_name() -> String:
-	return RANK_NAMES.get(rank, rank)
+	return rank_label(rank, gender)
+
+static func rank_label(rank_id: String, sex: String = "") -> String:
+	var key := "rank_%s%s" % [rank_id, "_f" if sex == "f" else ""]
+	var v := Locale.t(key)
+	if v == "" or v == "..." or v == Locale.t("locale_missing"):
+		return str(RANK_NAMES.get(rank_id, rank_id))
+	return v
 
 func primary_bloodline() -> String:
 	var best := ""
