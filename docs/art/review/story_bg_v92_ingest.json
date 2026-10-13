@@ -1,0 +1,104 @@
+{
+  "kind": "story_bg",
+  "count": 14,
+  "plates": [
+    {
+      "key": "slope",
+      "webp": "project/assets/art/story_bg/slope.webp",
+      "bytes": 322798,
+      "size": "1280x720",
+      "farm_src": "story_bg_slope.png"
+    },
+    {
+      "key": "memory",
+      "webp": "project/assets/art/story_bg/memory.webp",
+      "bytes": 125562,
+      "size": "1280x720",
+      "farm_src": "story_bg_memory.png"
+    },
+    {
+      "key": "yard_night",
+      "webp": "project/assets/art/story_bg/yard_night.webp",
+      "bytes": 189720,
+      "size": "1280x720",
+      "farm_src": "story_bg_yard_night.png"
+    },
+    {
+      "key": "tree_moon",
+      "webp": "project/assets/art/story_bg/tree_moon.webp",
+      "bytes": 257350,
+      "size": "1280x720",
+      "farm_src": "story_bg_tree_moon.png"
+    },
+    {
+      "key": "pass_night",
+      "webp": "project/assets/art/story_bg/pass_night.webp",
+      "bytes": 217416,
+      "size": "1280x720",
+      "farm_src": "story_bg_pass_night.png"
+    },
+    {
+      "key": "pass_day",
+      "webp": "project/assets/art/story_bg/pass_day.webp",
+      "bytes": 290168,
+      "size": "1280x720",
+      "farm_src": "story_bg_pass_day.png"
+    },
+    {
+      "key": "tavern",
+      "webp": "project/assets/art/story_bg/tavern.webp",
+      "bytes": 250208,
+      "size": "1280x720",
+      "farm_src": "story_bg_tavern.png"
+    },
+    {
+      "key": "hall",
+      "webp": "project/assets/art/story_bg/hall.webp",
+      "bytes": 262882,
+      "size": "1280x720",
+      "farm_src": "story_bg_hall.png"
+    },
+    {
+      "key": "bridge_day",
+      "webp": "project/assets/art/story_bg/bridge_day.webp",
+      "bytes": 152386,
+      "size": "1280x720",
+      "farm_src": "story_bg_bridge_day.png"
+    },
+    {
+      "key": "gate",
+      "webp": "project/assets/art/story_bg/gate.webp",
+      "bytes": 293626,
+      "size": "1280x720",
+      "farm_src": "story_bg_gate.png"
+    },
+    {
+      "key": "gate_night",
+      "webp": "project/assets/art/story_bg/gate_night.webp",
+      "bytes": 206848,
+      "size": "1280x720",
+      "farm_src": "story_bg_gate_night.png"
+    },
+    {
+      "key": "hall_feast",
+      "webp": "project/assets/art/story_bg/hall_feast.webp",
+      "bytes": 154538,
+      "size": "1280x720",
+      "farm_src": "story_bg_hall_feast.png"
+    },
+    {
+      "key": "slope_winter",
+      "webp": "project/assets/art/story_bg/slope_winter.webp",
+      "bytes": 198184,
+      "size": "1280x720",
+      "farm_src": "story_bg_slope_winter.png"
+    },
+    {
+      "key": "bridge_night",
+      "webp": "project/assets/art/story_bg/bridge_night.webp",
+      "bytes": 205750,
+      "size": "1280x720",
+      "farm_src": "story_bg_bridge_night.png"
+    }
+  ]
+}
