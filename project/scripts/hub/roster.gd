@@ -93,11 +93,13 @@ func _row(c: CKCharacter, idx: int) -> Button:
 	nb.add_theme_stylebox_override("panel", UIKit.flat_box(Color(1, 1, 1, 0.03), Color(1, 1, 1, 0.16), 4))
 	nb.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(nb)
-	var no := UIKit.mono("NO", 7, UIKit.TEXT_FAINT, false, false)  # index badge micro-label
-	no.position = Vector2(12, 4)
-	nb.add_child(no)
 	var nn := UIKit.mono("%02d" % idx, 14, UIKit.TEXT, false)
-	nn.position = Vector2(7, 14)
+	# Desktop: drop the "NO" micro-label (was 7px); center the index in the badge.
+	nn.position = Vector2(7, 8 if not DeviceProfile.is_mobile() else 14)
+	if DeviceProfile.is_mobile():
+		var no := UIKit.mono("NO", 7, UIKit.TEXT_FAINT, false, false)
+		no.position = Vector2(12, 4)
+		nb.add_child(no)
 	nb.add_child(nn)
 	var nh := HBoxContainer.new()
 	nh.position = Vector2(58, 10)
