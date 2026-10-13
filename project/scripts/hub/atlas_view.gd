@@ -1971,7 +1971,9 @@ func _m_place() -> void:
 		box.add_child(_m_label(lore, UIKit.TEXT_DIM))
 	for mk in World.quest_markers().get(_sel, []):
 		var q: Dictionary = mk.quest
-		box.add_child(_m_label("%s %s" % [Locale.t("mob_ui_016") if str(mk.kind) == "turnin" else Locale.t("mob_ui_017"), q.title], UIKit.OK if str(mk.kind) == "turnin" else UIKit.DANGER))
+		var turnin := str(mk.kind) == "turnin"
+		var qt := "%s %s" % [Locale.t("mob_ui_016") if turnin else Locale.t("mob_ui_017"), q.title]
+		box.add_child(_m_label(qt, UIKit.OK if turnin else UIKit.DANGER))
 	var mm: Dictionary = World.mainline_marker()
 	if str(mm.get("node", "")) == _sel:
 		box.add_child(_m_label(Locale.t("mob_ui_018") % mm.label, UIKit.EMBER))
@@ -2006,7 +2008,8 @@ func _m_route(box: Control) -> void:
 	box.add_child(_m_label("→ " + " › ".join(names) if not names.is_empty() else "→ %s" % dest.get("name", ""), UIKit.TEXT))
 	var g := _m_grid(box, 4)
 	var cost := int(pv.tolls) + int(pv.fare)
-	for kv in [[Locale.t("mob_ui_022"), Locale.t("mob_ui_023") % int(pv.days), UIKit.TEXT], [Locale.t("mob_ui_024"), str(pv.food), UIKit.DANGER if bool(pv.short_food) else UIKit.TEXT],
+	for kv in [[Locale.t("mob_ui_022"), Locale.t("mob_ui_023") % int(pv.days), UIKit.TEXT],
+			[Locale.t("mob_ui_024"), str(pv.food), UIKit.DANGER if bool(pv.short_food) else UIKit.TEXT],
 			[Locale.t("mob_ui_025"), Locale.t("mob_ui_015") % cost, UIKit.DANGER if GameState.silver < cost else UIKit.TEXT],
 			[Locale.t("mob_ui_026"), "▮".repeat(int(pv.danger)) + "▯".repeat(maxi(0, 4 - int(pv.danger))), UIKit.DANGER if int(pv.danger) >= 3 else UIKit.ACCENT]]:
 		var cell := VBoxContainer.new()
@@ -2055,7 +2058,8 @@ func _m_actions() -> void:
 	elif _view == "" and World.nations.has(_sel):
 		var nid := _sel
 		var nat: Dictionary = World.nations.get(nid, {})
-		b = MobilePage.button(Locale.t("mob_ui_036") % str(nat.get("name", nid)), true, func(): _show_view(nid); _select_node(str(nat.get("capital", "")) if World.nation_of(World.pos) != nid else World.pos))
+		var dest := str(nat.get("capital", "")) if World.nation_of(World.pos) != nid else World.pos
+		b = MobilePage.button(Locale.t("mob_ui_036") % str(nat.get("name", nid)), true, func(): _show_view(nid); _select_node(dest))
 		b.name = "EnterRegion"
 	elif _sel != "" and _sel == World.pos and World.nodes.has(_sel):
 		var n: Dictionary = World.node(_sel)
