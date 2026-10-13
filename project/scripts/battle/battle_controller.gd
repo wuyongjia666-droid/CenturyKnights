@@ -13,7 +13,7 @@ const CombatCutsceneScript = preload("res://scripts/battle/combat_cutscene.gd") 
 var _combat_rec: Array = []
 var _cut_queue: Array = []
 var _cut_playing := false
-const TERRAIN_IDS := {"plain": 0, "forest": 1, "hill": 2, "water": 3, "fort": 4, "bridge": 5}
+const TERRAIN_IDS := {"plain": 0, "forest": 1, "hill": 2, "water": 3, "fort": 4, "bridge": 5, "wall": 6}
 var MAP_W: int = 8
 var MAP_H: int = 6
 var map_id: String = "ch0_pass"
@@ -985,6 +985,9 @@ func _deploy() -> void:
 				break
 			var tmpl = str(templates[ti])
 			var e = CharacterFactory.make_enemy(tmpl, rng)
+			var name_list: Array = m.get("enemy_names", [])
+			if ti < name_list.size() and str(name_list[ti]) != "":
+				e.name = str(name_list[ti])
 			if e.appearance.get("hair","") == "" or e.faction == "enemy":
 				e.appearance = {"hair": "ink_black", "eyes": "dusk", "brow": "thick", "scar": "cheek"}
 			var tag := ""
@@ -1920,7 +1923,7 @@ func _apply_combat_lock(ai: int, di: int) -> void:
 		_log("〔教学拍〕锁定已触发——看棋子外圈红环；脱离将更贵，反击更准。练习完成，可以结束回合。")
 		_spawn_dmg(units[ai].pos if ai >= 0 else units[di].pos, "教学·锁定", Color(1.0, 0.7, 0.4))
 		_clear_lock_practice_banner()
-		_show_lock_tip_panel("练习完成", "交战锁定已体验。之后正式对局也会出现此效果。", 2, 4.0)
+		BattleLockTutorial.queue_after_story(self)
 
 func _weapon_for(c: CKCharacter) -> String:
 	var at := str(GameState.get_job(c.job_id).get("atk_type", "melee"))
@@ -2222,16 +2225,15 @@ func _show_lock_tip_once() -> void:
 	if has_meta("lock_tip_shown"):
 		return
 	set_meta("lock_tip_shown", true)
-	var tutorial = bool(BattleMaps.get_map(map_id).get("tutorial_militia", false)) or map_id.begins_with("ch0")
-	if tutorial:
-		_run_lock_tutorial_sequence()
-	else:
-		_show_lock_tip_panel(
-			"交战锁定",
-			"攻/受击后双方进入锁定：脱离+%d移，锁定反击命中+10。抽身/拆锁可解。" % BattleRules.LEAVE_COST_LOCK,
-			0,
-			8.0
-		)
+	# E-02: tutorial maps wait for first_lock (and story bar) before teaching cards.
+	if _is_lock_tutorial_map():
+		return
+	_show_lock_tip_panel(
+		"交战锁定",
+		"跟人缠上以后，想走要多花 %d 步；被缠住的人反击更准。想脱身，用战技『抽身一步』。" % BattleRules.LEAVE_COST_LOCK,
+		0,
+		8.0
+	)
 
 func _show_lock_tip_panel(title: String, body: String, step: int, auto_sec: float) -> Control:
 	var panel = UIKit.make_panel()
@@ -2282,43 +2284,9 @@ func _show_lock_tip_panel(title: String, body: String, step: int, auto_sec: floa
 		)
 	return panel
 
-func _run_lock_tutorial_sequence() -> void:
-	## 教学三拍：咬住 → 脱离代价 → 拆锁/反击
-	var steps: Array = [
-		{"t": Locale.t("shell_lock_1t"), "b": Locale.t("shell_lock_1b")},
-		{"t": Locale.t("shell_lock_2t"), "b": Locale.t("shell_lock_2b") % [BattleRules.LEAVE_COST_LOCK, BattleRules.LEAVE_COST_ENGAGED]},
-		{"t": Locale.t("shell_lock_3t"), "b": Locale.t("shell_lock_3b")},
-	]
-	_show_lock_tip_panel(str(steps[0].t), str(steps[0].b), 0, 0.0)
-	get_tree().create_timer(3.2).timeout.connect(func():
-		var old = get_node_or_null("LockTipPanel")
-		if old: old.queue_free()
-		_show_lock_tip_panel(str(steps[1].t), str(steps[1].b), 1, 0.0)
-	)
-	get_tree().create_timer(6.4).timeout.connect(func():
-		var old2 = get_node_or_null("LockTipPanel")
-		if old2: old2.queue_free()
-		var p = _show_lock_tip_panel(str(steps[2].t), str(steps[2].b), 2, 0.0)
-		var row := HBoxContainer.new()
-		row.add_theme_constant_override("separation", 8)
-		var host: Node = p.get_child(0).get_child(1) if p.get_child_count() > 0 and p.get_child(0).get_child_count() > 1 else p
-		host.add_child(row)
-		var dismiss = UIKit.make_accent_button(Locale.t("shell_lock_start"), 140)
-		dismiss.pressed.connect(func():
-			if is_instance_valid(p):
-				p.queue_free()
-		)
-		row.add_child(dismiss)
-		get_tree().create_timer(10.0).timeout.connect(func():
-			if is_instance_valid(p):
-				p.queue_free()
-		)
-	)
-	_log("教学：交战锁定三拍提示已展开")
-
 func _is_lock_tutorial_map() -> bool:
 	var md = BattleMaps.get_map(map_id)
-	if bool(md.get("tutorial_militia", false)) or map_id.begins_with("ch0"):
+	if bool(md.get("tutorial_militia", false)) or bool(md.get("tutorial", false)) or map_id.begins_with("ch0"):
 		return true
 	# 中盘二次强制锁定演练（如 ch2_night）
 	return bool(md.get("lock_drill", false))
@@ -2340,7 +2308,7 @@ func _show_lock_practice_banner() -> void:
 	pst.content_margin_right = 14
 	pst.shadow_size = 0
 	panel.add_theme_stylebox_override("panel", pst)
-	panel.position = Vector2(RAIL_X, 4)
+	panel.position = Vector2(RAIL_X, 48)  # below ObjectiveHud; leaves room for story skip
 	panel.custom_minimum_size = Vector2(RAIL_W, 0)
 	panel.z_index = 18
 	var ct := find_child("ControlsTip", true, false)
@@ -2849,6 +2817,8 @@ func _check_end() -> void:
 	if result == "win" and BattleStages.advance(self):
 		return
 	set_meta("battle_verdict", verdict)
+	if result == "win":
+		BattleStory.fire(self, map_id, "victory")
 	_finish(result == "win")
 
 var _world_enc := false
@@ -2883,12 +2853,13 @@ func _finish(win: bool) -> void:
 				u.char.injured = true
 		Music.play_victory()
 		Sfx.win()
-		if not bool(BattleMaps.get_map(map_id).get("tutorial_militia", false)):
+		var _tut := bool(BattleVictory.spec(map_id).get("tutorial", false))
+		if not _tut:
 			Sfx.fanfare()
 		_log("【胜利】%s肃清。+%d 银。" % [map_name, purse])
 		_mark_map_victory()
 		GameState.on_battle_quest_victory()
-		sp_gain = 0 if drill else BattleVictory.skill_points(bool(BattleMaps.get_map(map_id).get("tutorial_militia", false)))
+		sp_gain = 0 if drill else BattleVictory.skill_points(_tut)
 		if sp_gain > 0:
 			GameState.add_skill_point(sp_gain)
 			_log("获得战技点 +1（当前 %d）" % GameState.skill_points)

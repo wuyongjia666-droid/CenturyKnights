@@ -43,7 +43,7 @@ static func fill_traits(host, c: CKCharacter) -> void:
 
 static func refresh(host) -> void:
 	if host.selected < 0 or host.selected >= host.units.size():
-		host.info_label.text = Locale.t("shell_82b986d8")
+		host.info_label.text = _idle_objective(host)
 		if GameState.get_leader():
 			host._portrait.texture = UnitArt.portrait(GameState.get_leader(), 96)
 			_sync_status(host, GameState.get_leader())
@@ -96,6 +96,21 @@ static func refresh(host) -> void:
 					(" 〔" + tagjoin + "〕") if tagjoin else "",
 				]
 	host.info_label.text = txt
+
+
+
+static func _idle_objective(host) -> String:
+	## E-03: blank-state goal line follows BattleObjectives, not a hard-coded rout string.
+	var map_id := str(host.get("map_id") if host.get("map_id") != null else "")
+	var units = host.get("units") if host.get("units") != null else []
+	var round_no := int(host.get("_round_no") if host.get("_round_no") != null else 1)
+	var info := BattleObjectives.summary(BattleMaps.get_map(map_id), units, maxi(1, round_no))
+	var goal := str(info.get("title", BattleObjectives.text("obj_rout")))
+	var remain := str(info.get("remain", ""))
+	var body := Locale.t("shell_obj_idle") % goal
+	if remain != "":
+		body += "\n" + remain
+	return body
 
 
 static func _sync_status(host, c) -> void:

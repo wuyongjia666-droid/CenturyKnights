@@ -24,7 +24,7 @@ static func spec(map_id: String) -> Dictionary:
 	return {
 		"flags": flags,
 		"actions": actions,
-		"tutorial": bool(m.get("tutorial_militia", false)),
+		"tutorial": bool(m.get("tutorial_militia", false)) or bool(m.get("tutorial", false)),
 	}
 
 
