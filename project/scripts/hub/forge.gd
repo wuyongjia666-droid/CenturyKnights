@@ -54,7 +54,8 @@ func _render_all() -> void:
 		return
 	if _chips:
 		_chips.queue_free()
-	_chips = UIKit.top_bar(self, "炉火工坊 · FORGE", [["银币", str(GameState.silver), UIKit.ACCENT], ["铁", str(GameState.iron), UIKit.TEXT], ["工坊", "LV %d" % GameState.building_level("forge"), UIKit.OK], ["历", Calendar.label(), UIKit.TEXT_DIM]], "返回城堡", _back)
+	_chips = UIKit.top_bar(self, "炉火工坊 · FORGE", [["银币", str(GameState.silver), UIKit.ACCENT], ["铁", str(GameState.iron), UIKit.TEXT], ["工坊",
+			"LV %d" % GameState.building_level("forge"), UIKit.OK], ["历", Calendar.label(), UIKit.TEXT_DIM]], "返回城堡", _back)
 	_render_left()
 	_render_mid()
 	_render_right()
@@ -308,7 +309,8 @@ func _render_right() -> void:
 	g.add_theme_constant_override("h_separation", 8)
 	g.add_theme_constant_override("v_separation", 8)
 	_right.add_child(g)
-	var items := [["铁", "IRON · 锻造主料", GameState.iron, UIKit.ACCENT], ["银币", "SILVER · 工钱", GameState.silver, UIKit.ACCENT], ["粮", "FOOD · 军需", GameState.food, UIKit.TEXT], ["士气", "MORALE · 炉火映旗", GameState.morale, UIKit.OK]]
+	var items := [["铁", "IRON · 锻造主料", GameState.iron, UIKit.ACCENT], ["银币", "SILVER · 工钱", GameState.silver, UIKit.ACCENT], ["粮", "FOOD · 军需", GameState.food,
+			UIKit.TEXT], ["士气", "MORALE · 炉火映旗", GameState.morale, UIKit.OK]]
 	for it in items:
 		var p := PanelContainer.new()
 		p.custom_minimum_size = Vector2(160, 64)
@@ -439,10 +441,12 @@ func _m_render_all() -> void:
 	var tiers := HBoxContainer.new()
 	tiers.add_theme_constant_override("separation", 12)
 	mv.add_child(tiers)
-	for spec in [[Locale.t("mw_48ac4797"), "+%d" % cb, _weapon_name(cur), Locale.t("mw_c7b9ef3a") % atk0, false], [Locale.t("mw_199dfef6"), "+%d" % nb, _weapon_name(nxt), Locale.t("mw_c7b9ef3a") % atk1, true]]:
+	for spec in [[Locale.t("mw_48ac4797"), "+%d" % cb, _weapon_name(cur), Locale.t("mw_c7b9ef3a") % atk0, false], [Locale.t("mw_199dfef6"), "+%d" % nb, _weapon_name(nxt),
+			Locale.t("mw_c7b9ef3a") % atk1, true]]:
 		var p := PanelContainer.new()
 		p.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		var sb := UIKit.flat_box(Color(UIKit.ACCENT, 0.08) if spec[4] else Color(1, 1, 1, 0.03), Color(UIKit.ACCENT, 0.8) if spec[4] else Color(1, 1, 1, 0.10), 10, 2 if spec[4] else 1)
+		var sb := UIKit.flat_box(Color(UIKit.ACCENT, 0.08) if spec[4] else Color(1, 1, 1, 0.03), Color(UIKit.ACCENT, 0.8) if spec[4] else Color(1, 1, 1, 0.10), 10,
+				2 if spec[4] else 1)
 		for side in ["left", "right", "top", "bottom"]:
 			sb.set("content_margin_" + side, 12)
 		p.add_theme_stylebox_override("panel", sb)
@@ -456,8 +460,10 @@ func _m_render_all() -> void:
 	var cost: Dictionary = GameState.forge_craft_cost()
 	var ok_iron := GameState.iron >= int(cost.iron)
 	var ok_silver := GameState.silver >= int(cost.silver)
-	mv.add_child(MobilePage.label(Locale.t("mw_382b1167") % [atk0, atk1, _sel.derived_hit(), _sel.derived_crit()], UIKit.OK if atk1 > atk0 else UIKit.TEXT_DIM, MobilePage.FONT, true))
-	mv.add_child(MobilePage.label(Locale.t("mw_e0de40ca") % [cost.iron, GameState.iron, "✓" if ok_iron else "✗", cost.silver, GameState.silver, "✓" if ok_silver else "✗"], UIKit.TEXT if ok_iron and ok_silver else UIKit.DANGER, MobilePage.FONT, true))
+	mv.add_child(MobilePage.label(Locale.t("mw_382b1167") % [atk0, atk1, _sel.derived_hit(), _sel.derived_crit()], UIKit.OK if atk1 > atk0 else UIKit.TEXT_DIM,
+			MobilePage.FONT, true))
+	mv.add_child(MobilePage.label(Locale.t("mw_e0de40ca") % [cost.iron, GameState.iron, "✓" if ok_iron else "!", cost.silver, GameState.silver,
+			"✓" if ok_silver else "!"], UIKit.TEXT if ok_iron and ok_silver else UIKit.DANGER, MobilePage.FONT, true))
 	mv.add_child(MobilePage.label(Locale.t("mw_0ddf557e") if flv < 4 else Locale.t("mw_2f47eea1"), UIKit.TEXT_FAINT, MobilePage.FONT, true))
 	_msg = MobilePage.label("", UIKit.OK, MobilePage.FONT, true)
 	mv.add_child(_msg)
@@ -492,7 +498,8 @@ func _m_right(rw: float, w: float, top: float, bh: float) -> void:
 	g.columns = 2
 	g.add_theme_constant_override("h_separation", 16)
 	rv.add_child(g)
-	for it in [[Locale.t("mw_81b70668"), GameState.iron], [Locale.t("mw_cac5dd12"), GameState.silver], [Locale.t("mw_b7d19b56"), GameState.food], [Locale.t("mw_4791c45f"), GameState.morale]]:
+	for it in [[Locale.t("mw_81b70668"), GameState.iron], [Locale.t("mw_cac5dd12"), GameState.silver], [Locale.t("mw_b7d19b56"), GameState.food],
+			[Locale.t("mw_4791c45f"), GameState.morale]]:
 		g.add_child(MobilePage.label("%s %d" % [it[0], int(it[1])], UIKit.TEXT, MobilePage.FONT, false))
 	var eq := 0
 	for c in GameState.roster():

@@ -64,7 +64,8 @@ func _render() -> void:
 		return
 	if _bar:
 		_bar.queue_free()
-	_bar = UIKit.top_bar(self, "陆桥商路 · MARKET", [["银币", str(GameState.silver), UIKit.ACCENT], ["粮", str(GameState.food), UIKit.TEXT], ["铁", str(GameState.iron), UIKit.TEXT], ["药", str(GameState.herb), UIKit.TEXT], ["市集", "LV %d" % GameState.building_level("market"), UIKit.OK]], "返回城堡", _back)
+	_bar = UIKit.top_bar(self, "陆桥商路 · MARKET", [["银币", str(GameState.silver), UIKit.ACCENT], ["粮", str(GameState.food), UIKit.TEXT], ["铁", str(GameState.iron),
+			UIKit.TEXT], ["药", str(GameState.herb), UIKit.TEXT], ["市集", "LV %d" % GameState.building_level("market"), UIKit.OK]], "返回城堡", _back)
 	_clear(_left)
 	_clear(_mid)
 	_clear(_right)
@@ -185,7 +186,8 @@ func _render_mid() -> void:
 	g.position = Vector2(390, 238)
 	g.add_theme_constant_override("separation", 10)
 	_mid.add_child(g)
-	for sb in [UIKit.stat_box("买入单价 BUY", "%d 银" % price, UIKit.ACCENT), UIKit.stat_box("卖出回收 SELL", "%d 银" % int(sp[_sel]), UIKit.TEXT), UIKit.stat_box("库存 STOCK", "%d" % int(GameState.get(_sel)), UIKit.TEXT)]:
+	for sb in [UIKit.stat_box("买入单价 BUY", "%d 银" % price, UIKit.ACCENT), UIKit.stat_box("卖出回收 SELL", "%d 银" % int(sp[_sel]), UIKit.TEXT), UIKit.stat_box("库存 STOCK",
+			"%d" % int(GameState.get(_sel)), UIKit.TEXT)]:
 		sb.custom_minimum_size = Vector2(152, 0)
 		g.add_child(sb)
 	# quantity selector
@@ -383,7 +385,8 @@ func _m_render() -> void:
 	var h := size.y if size.y > 400.0 else 720.0
 	var top := MobilePage.TOP
 	var bh := h - top - 16.0
-	MobilePage.top_bar(self, Locale.t("mw_f8f18ffd"), Locale.t("mw_72393112") % [GameState.silver, GameState.food, GameState.iron, GameState.herb, GameState.building_level("market")], [[Locale.t("btn_back"), _back]])
+	MobilePage.top_bar(self, Locale.t("mw_f8f18ffd"), Locale.t("mw_72393112") % [GameState.silver, GameState.food, GameState.iron, GameState.herb,
+			GameState.building_level("market")], [[Locale.t("btn_back"), _back]])
 	var lw := clampf(w * 0.27, 330.0, 420.0)
 	var rw := clampf(w * 0.27, 330.0, 420.0)
 	var mw := w - 40.0 - lw - rw - 24.0

@@ -103,9 +103,12 @@ func _build_kpis() -> void:
 	var t := _yield_totals()
 	var patrol_txt := "巡防中 %d 月" % int(GameState.patrol_boost_months) if int(GameState.patrol_boost_months) > 0 else ("冷却 %d" % int(GameState.patrol_cooldown) if int(GameState.patrol_cooldown) > 0 else "可巡防")
 	var cards := [
-		{"icon": "grain", "en": "GRANARY DEPOT", "zh": "粮仓", "chip": "OPEN %d / 4" % t.open, "lab": "月结净产 // MONTHLY YIELD", "big": "+%d" % t.food, "unit": "粮 / 月结", "col": UIKit.TEXT, "foot": "已开垦属地", "v": t.open, "max": 4, "bar": UIKit.ACCENT},
-		{"icon": "cash", "en": "IMPERIAL TREASURY", "zh": "金库", "chip": "STEWARDS %d" % t.stewards, "lab": "月结岁入 // MONTHLY REVENUE", "big": "+%d" % t.silver, "unit": "银 / 月结", "col": UIKit.ACCENT, "foot": "庄头委任", "v": t.stewards, "max": max(1, t.open), "bar": UIKit.OK},
-		{"icon": "fortify", "en": "DEFENSE FORTIFICATIONS", "zh": "工事", "chip": patrol_txt, "lab": "戍卫属地 // BULWARK", "big": "%d 处" % t.fort, "unit": "戍卫偏向", "col": UIKit.TEXT, "foot": "总等级", "v": GameState.total_holding_levels(), "max": 12, "bar": UIKit.ACCENT},
+		{"icon": "grain", "en": "GRANARY DEPOT", "zh": "粮仓", "chip": "OPEN %d / 4" % t.open, "lab": "月结净产 // MONTHLY YIELD", "big": "+%d" % t.food, "unit": "粮 / 月结",
+				"col": UIKit.TEXT, "foot": "已开垦属地", "v": t.open, "max": 4, "bar": UIKit.ACCENT},
+		{"icon": "cash", "en": "IMPERIAL TREASURY", "zh": "金库", "chip": "STEWARDS %d" % t.stewards, "lab": "月结岁入 // MONTHLY REVENUE", "big": "+%d" % t.silver,
+				"unit": "银 / 月结", "col": UIKit.ACCENT, "foot": "庄头委任", "v": t.stewards, "max": max(1, t.open), "bar": UIKit.OK},
+		{"icon": "fortify", "en": "DEFENSE FORTIFICATIONS", "zh": "工事", "chip": patrol_txt, "lab": "戍卫属地 // BULWARK", "big": "%d 处" % t.fort, "unit": "戍卫偏向",
+				"col": UIKit.TEXT, "foot": "总等级", "v": GameState.total_holding_levels(), "max": 12, "bar": UIKit.ACCENT},
 	]
 	for i in cards.size():
 		var cd: Dictionary = cards[i]
@@ -702,7 +705,8 @@ func _m_build() -> void:
 	if old:
 		remove_child(old)
 		old.queue_free()
-	var bar := MobilePage.top_bar(self, Locale.t("mw_39662991"), Locale.t("mw_41e31e6c") % [GameState.silver, GameState.food, GameState.iron, Calendar.label()], [[Locale.t("btn_back"), func(): CKNav.up()]])
+	var bar := MobilePage.top_bar(self, Locale.t("mw_39662991"), Locale.t("mw_41e31e6c") % [GameState.silver, GameState.food, GameState.iron, Calendar.label()],
+			[[Locale.t("btn_back"), func(): CKNav.up()]])
 	bar.visible = true
 	var rw := clampf(w * 0.27, 340.0, 420.0)
 	var lw := w - 40.0 - rw - 12.0
@@ -761,7 +765,9 @@ func _m_holding(hid: String) -> Control:
 	t.add_theme_font_override("font", UIKit.font("bold"))
 	v.add_child(t)
 	var st = GameState.steward_of(hid) if unlocked else null
-	var dsc := str(def.desc) + (Locale.t("mw_4d0e475f") % st.name if st != null else (Locale.t("mw_4e8abd0f") if unlocked else "；" + (Locale.t("wsc_e_how") % _quest_name(str(def.get("quest", "")))).replace("\u3000", "").strip_edges()))
+	var how := "；" + (Locale.t("wsc_e_how") % _quest_name(str(def.get("quest", "")))).replace("\u3000", "").strip_edges()
+	var tail := (Locale.t("mw_4d0e475f") % st.name) if st != null else (Locale.t("mw_4e8abd0f") if unlocked else how)
+	var dsc := str(def.desc) + tail
 	v.add_child(MobilePage.label(dsc, UIKit.TEXT_DIM, MobilePage.FONT, true))
 	if not unlocked:
 		return card
