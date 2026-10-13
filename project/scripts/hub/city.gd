@@ -6,7 +6,7 @@ extends Control
 
 const _Atlas = preload("res://scripts/art/atlas_art.gd")
 const ATLAS := "res://scenes/hub/atlas_view.tscn"
-const TABS := [["overview", "概览"], ["smith", "铁匠铺"], ["market", "市集"], ["board", "委托榜"], ["tavern", "酒馆"], ["armory", "军械库"], ["lamp", "灯籍"]]
+var tabs := [["overview", "概览"], ["smith", "铁匠铺"], ["market", "市集"], ["sundry", Locale.t("sundry_title")], ["board", "委托榜"], ["tavern", "酒馆"], ["armory", "军械库"], ["lamp", "灯籍"]]
 const TYPE_GLYPH := {"sword": "剑", "blade": "刀", "spear": "枪", "lance": "骑", "axe": "斧", "bow": "弓", "crossbow": "弩", "staff": "杖", "focus": "器", "armor": "甲", "shield": "盾", "charm": "符"}
 const TIER_COL := [Color("#9AA6B8"), Color("#9AA6B8"), Color("#5EE0B5"), Color("#6ED4FF"), Color("#C9B8FF")]
 const CONTENT := Rect2(416, 108, 848, 576)
@@ -46,8 +46,10 @@ func _ready() -> void:
 	_tabbar.position = Vector2(416, 64)
 	_tabbar.add_theme_constant_override("separation", 6)
 	add_child(_tabbar)
-	for t in TABS:
-		var b := UIKit.ghost_button(str(t[1]), 108, 34)
+	## 八个页签要挤进内容区 848 宽，不能超出屏幕右边。
+	var tab_w := int(floor((CONTENT.size.x - 6.0 * (tabs.size() - 1)) / tabs.size()))
+	for t in tabs:
+		var b := UIKit.ghost_button(str(t[1]), tab_w, 34)
 		b.name = "Tab_" + str(t[0])
 		var tid := str(t[0])
 		b.pressed.connect(func(): _set_tab(tid))
@@ -96,12 +98,20 @@ func _mobile_frame() -> void:
 	side_stack.add_child(_side)
 	_swap_box(_side, side_stack, func(b): _side = b)
 	var bx := M_SIDE_W + 36.0
-	_tabbar.position = Vector2(bx, top)
+	_m_body_w = w - bx - 16.0
 	_tabbar.add_theme_constant_override("separation", 8)
 	for b in _tabbar.get_children():
 		(b as Control).custom_minimum_size = Vector2(96, MobilePage.HIT)
 		(b as Control).add_theme_font_size_override("font_size", MobilePage.FONT)
-	_m_body_w = w - bx - 16.0
+	var tab_sc := ScrollContainer.new()
+	tab_sc.name = "TabScroll"
+	tab_sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	tab_sc.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	tab_sc.position = Vector2(bx, top)
+	tab_sc.size = Vector2(_m_body_w, MobilePage.HIT + 4.0)
+	remove_child(_tabbar)
+	tab_sc.add_child(_tabbar)
+	add_child(tab_sc)
 	var by := top + MobilePage.HIT + 10.0
 	var body_stack := MobileReflow.column(self, "MobileBody", Rect2(bx, by, _m_body_w, 720.0 - by - 12.0))
 	remove_child(_body)
@@ -312,6 +322,11 @@ func _render_tab() -> void:
 	(_tab_btn["smith"] as Button).tooltip_text = "此地没有铁匠铺" if World.smith_tier(city) <= 0 else ""
 	(_tab_btn["tavern"] as Button).tooltip_text = "此地没有酒馆" if int(n.get("tavern_slots", 0)) <= 0 else ""
 	(_tab_btn["lamp"] as Button).tooltip_text = "灯籍只在灯市联开拍" if World.nation_of(city) != "lantern" else ""
+	# WS-C #44: a door that does not exist here is hidden, not an empty page behind a grey button
+	for k in ["smith", "tavern", "lamp"]:
+		(_tab_btn[k] as Button).visible = not (_tab_btn[k] as Button).disabled
+	if (_tab_btn.get(tab) as Button) != null and (_tab_btn[tab] as Button).disabled:
+		tab = "overview"
 	for c in _body.get_children():
 		_body.remove_child(c)
 		c.queue_free()
@@ -319,6 +334,7 @@ func _render_tab() -> void:
 		"overview": _tab_overview()
 		"smith": _tab_smith()
 		"market": _tab_market()
+		"sundry": _tab_sundry()
 		"board": _tab_board()
 		"tavern": _tab_tavern()
 		"armory": _tab_armory()
@@ -360,8 +376,6 @@ func _scroll(p: Control, r: Rect2) -> VBoxContainer:
 	var v := VBoxContainer.new()
 	v.custom_minimum_size = Vector2(r.size.x - 10, 0)
 	v.add_theme_constant_override("separation", 4)
-	if _mob:
-		v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	sc.add_child(v)
 	return v
 
@@ -402,12 +416,8 @@ func _row_button(text: String, sub: String, w: float, on: bool, locked: bool) ->
 		l.size.y = 30.0
 		s.position.y = 44.0
 		s.size.y = 30.0
-		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		for lab in [l, s]:
 			(lab as Label).add_theme_font_size_override("font_size", MobilePage.FONT)
-			(lab as Label).anchor_right = 1.0
-			(lab as Label).offset_right = -10.0
-			(lab as Label).text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	return b
 
 func _icon(it: Dictionary, sz: float) -> Control:
@@ -479,6 +489,8 @@ func _tab_overview() -> void:
 	nx.position = Vector2(18, 250)
 	p.add_child(nx)
 	var sq: Dictionary = n.get("sig_quest", {})
+	if sq.is_empty():
+		_rumor_box(p, Rect2(18, 330, 384, 230))
 	if not sq.is_empty():
 		var sl := UIKit.mono("HONOUR COMMISSION", 9, UIKit.EMBER)
 		sl.position = Vector2(18, 330)
@@ -495,6 +507,13 @@ func _tab_overview() -> void:
 		var sst := UIKit.tag_chip(stxt, UIKit.OK if done else (UIKit.ACCENT if running else UIKit.TEXT_DIM), done)
 		sst.position = Vector2(18, 440)
 		p.add_child(sst)
+	## v9.2 本城之事 / 职印：一个 48 高的按钮，点开浮层
+	var aff := UIKit.ghost_button(CKCityAffairs.label(city), 384, 48)
+	aff.name = "AffairBtn"
+	aff.clip_text = true
+	aff.position = Vector2(18, 510)
+	aff.pressed.connect(open_affairs)
+	p.add_child(aff)
 	var p2 := _panel(Rect2(432, 0, 416, 576))
 	_head(p2, Vector2(18, 14), "可在此交付", "TURN IN HERE")
 	var v2 := _scroll(p2, Rect2(18, 56, 384, 236))
@@ -509,7 +528,14 @@ func _tab_overview() -> void:
 		b.pressed.connect(func(): _do(World.turn_in(qid)))
 		v2.add_child(b)
 	if not any:
-		v2.add_child(_para("没有可在此交付的委托。递送 / 护送 / 防守在目标地交付；追缉 / 清剿 / 收购 / 探查回发布城复命。", UIKit.TEXT_FAINT, 12, 370))
+		v2.add_child(_para(Locale.t("wsc_c_noturnin"), UIKit.TEXT_FAINT, 12, 370))
+		for q in World.active:
+			var where := str(World.node(World.turn_in_city(q)).get("name", ""))
+			v2.add_child(_line(Locale.t("wsc_c_turnat") % [str(q.get("title", "")), where], UIKit.TEXT_DIM, 11, 370))
+		v2.name = "Rumors"
+		v2.add_child(_line(Locale.t("wsc_c_rumor_title"), UIKit.ACCENT, 12, 370))
+		for line in rumors(city).slice(0, 5):
+			v2.add_child(_para("· " + str(line), UIKit.TEXT_DIM, 12, 370))
 	var il := UIKit.mono("TRADE INTEL", 9, UIKit.ACCENT)
 	il.position = Vector2(18, 304)
 	p2.add_child(il)
@@ -535,6 +561,46 @@ func _tab_overview() -> void:
 		mb.disabled = not bool(mm.get("exists", false))
 		mb.pressed.connect(func(): CKNav.go(str(mm.path)))
 		p2.add_child(mb)
+
+## WS-C #43: 城内传闻 / 街上的人——拿现有的城市数据拼几句口语，填满概览页的空栏。
+static func rumors(cid: String) -> Array:
+	var n: Dictionary = World.node(cid)
+	var out: Array = []
+	var nm := str(n.get("name", ""))
+	for g in n.get("demand", []):
+		out.append(Locale.t("wsc_c_r_demand") % [nm, World.good_name(str(g))])
+	for g in n.get("produce", []):
+		out.append(Locale.t("wsc_c_r_produce") % [World.good_name(str(g)), World.price(cid, str(g), "buy")])
+	var sig: Array = n.get("sig_items", [])
+	if not sig.is_empty():
+		out.append(Locale.t("wsc_c_r_smith") % str(World.item(str(sig[0])).get("name", sig[0])))
+	for rv in World.rivals:
+		if str(rv.get("pos", "")) == cid:
+			out.append(Locale.t("wsc_c_r_rival") % str(rv.get("name", "")))
+	for sid in CKTerritory.sites_at(cid):
+		var site := CKTerritory.site(sid)
+		var own := CKTerritory.owner(sid)
+		var key := "wsc_c_r_site_own" if own == CKTerritory.OWN else ("wsc_c_r_site_rival" if own.begins_with("rival:") else "wsc_c_r_site_free")
+		out.append(Locale.t(key) % str(site.get("name", "")))
+	for r in World.roads_from(cid):
+		if int(r.get("danger", 0)) >= 3:
+			out.append(Locale.t("wsc_c_r_road") % str(World.node(World.other_end(r, cid)).get("name", "")))
+			break
+	if out.is_empty():
+		out.append(Locale.t("wsc_c_r_quiet"))
+	return out
+
+func _rumor_box(p: Control, r: Rect2) -> void:
+	var hl := UIKit.mono("RUMOURS", 9, UIKit.ACCENT)
+	hl.position = r.position
+	p.add_child(hl)
+	var t := UIKit.title_label(Locale.t("wsc_c_rumor_title"), 15, UIKit.TEXT)
+	t.position = r.position + Vector2(0, 16)
+	p.add_child(t)
+	var v := _scroll(p, Rect2(r.position + Vector2(0, 44), r.size - Vector2(0, 44)))
+	v.name = "RumorsBox"
+	for line in rumors(city).slice(0, 6):
+		v.add_child(_para("· " + str(line), UIKit.TEXT_DIM, 12, r.size.x - 8))
 
 # ── 铁匠铺 ────────────────────────────────────────────
 func _tab_smith() -> void:
@@ -1123,7 +1189,7 @@ func _unhandled_input(e: InputEvent) -> void:
 		var k := (e as InputEventKey).keycode
 		if k == KEY_Q or k == KEY_E:
 			var ids: Array = []
-			for t in TABS:
+			for t in tabs:
 				if not (_tab_btn[str(t[0])] as Button).disabled:
 					ids.append(str(t[0]))
 			var i := ids.find(tab)
@@ -1132,7 +1198,7 @@ func _unhandled_input(e: InputEvent) -> void:
 # ── e2e hook ──────────────────────────────────────────
 func selftest() -> Dictionary:
 	var msgs: Array = []
-	for t in TABS:
+	for t in tabs:
 		if (_tab_btn[str(t[0])] as Button).disabled:
 			continue
 		_set_tab(str(t[0]))
@@ -1196,3 +1262,153 @@ func selftest() -> Dictionary:
 	_set_tab("armory")
 	await get_tree().process_frame
 	return {"ok": true, "msg": ", ".join(msgs)}
+
+
+
+# ── 杂货铺（v9.2 §4.2）：本国日用品只在本国卖，陆桥卖两侧过路货 ──────────
+func _tab_sundry() -> void:
+	var p := _panel(Rect2(0, 0, 848, 576))
+	_head(p, Vector2(18, 14), Locale.t("sundry_title"), "SUNDRIES · LOCAL GOODS")
+	var note := _para(Locale.t("sundry_note"), UIKit.TEXT_DIM, 13, 812)
+	note.position = Vector2(18, 52)
+	p.add_child(note)
+	var v := _scroll(p, Rect2(12, 92, 830, 474))
+	var shelf: Array = CKSundries.shelf_for_city(city)
+	if shelf.is_empty():
+		v.add_child(_para(Locale.t("sundry_empty_shelf"), UIKit.TEXT_DIM, 14, 800))
+	for offer in shelf:
+		var iid := str(offer.get("id", ""))
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 8)
+		row.custom_minimum_size = Vector2(812, 52)
+		var info := VBoxContainer.new()
+		info.custom_minimum_size = Vector2(480, 0)
+		info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var offer_line := Locale.t("sundry_offer_line") % [str(offer.get("name", iid)), int(offer.get("price", 0)), CKSundries.owned(iid), CKSundries.max_stack()]
+		info.add_child(_line(offer_line, UIKit.TEXT, 14, 480))
+		info.add_child(_line(str(offer.get("desc", "")), UIKit.TEXT_DIM, 12, 480))
+		row.add_child(info)
+		var buy := UIKit.ghost_button(Locale.t("sundry_buy"), 120, 48)
+		buy.name = "SundryBuy_" + iid
+		buy.pressed.connect(func(): _sundry_result(CKSundries.buy(city, iid)))
+		row.add_child(buy)
+		var use := UIKit.ghost_button(Locale.t("sundry_use"), 120, 48)
+		var can: Dictionary = CKSundries.usable(iid)
+		use.disabled = not bool(can.get("ok", false))
+		use.tooltip_text = str(can.get("msg", ""))
+		use.pressed.connect(func(): _sundry_result(CKSundries.use(iid, "", city)))
+		row.add_child(use)
+		v.add_child(row)
+	## 行李里别国带来的：只能半价清掉
+	var foreign: Array = []
+	for k in CKSundries.bag().keys():
+		var on_shelf := false
+		for o in shelf:
+			if str(o.get("id", "")) == str(k):
+				on_shelf = true
+		if not on_shelf and CKSundries.owned(str(k)) > 0:
+			foreign.append(str(k))
+	if not foreign.is_empty():
+		v.add_child(_line(Locale.t("sundry_bag_head"), UIKit.ACCENT, 13, 800))
+	for k2 in foreign:
+		var r2 := HBoxContainer.new()
+		r2.add_theme_constant_override("separation", 8)
+		r2.custom_minimum_size = Vector2(812, 52)
+		var nm := _line("%s × %d" % [CKSundries.item_name(k2), CKSundries.owned(k2)], UIKit.TEXT, 14, 480)
+		nm.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		r2.add_child(nm)
+		var ub := UIKit.ghost_button(Locale.t("sundry_use"), 120, 48)
+		var can2: Dictionary = CKSundries.usable(k2)
+		ub.disabled = not bool(can2.get("ok", false))
+		ub.pressed.connect(func(): _sundry_result(CKSundries.use(k2, "", city)))
+		r2.add_child(ub)
+		var sb := UIKit.ghost_button(Locale.t("sundry_sell"), 120, 48)
+		sb.pressed.connect(func(): _sundry_result(CKSundries.sell_half(city, k2)))
+		r2.add_child(sb)
+		v.add_child(r2)
+
+
+func _sundry_result(r: Dictionary) -> void:
+	_toast_msg(str(r.get("msg", "")), UIKit.OK if bool(r.get("ok", false)) else UIKit.DANGER)
+	_refresh_all()
+
+# ── 本城之事 · 职印 浮层 ─────────────────────────────
+var _aff_overlay: Control
+
+
+func open_affairs(msg: String = "", ok: bool = true) -> void:
+	if _aff_overlay != null and is_instance_valid(_aff_overlay):
+		_aff_overlay.queue_free()
+	var o := ColorRect.new()
+	o.name = "AffairOverlay"
+	o.color = Color(0.04, 0.06, 0.1, 0.92)
+	o.set_anchors_preset(Control.PRESET_FULL_RECT)
+	o.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(o)
+	_aff_overlay = o
+	var m := MarginContainer.new()
+	m.set_anchors_preset(Control.PRESET_FULL_RECT)
+	for side in ["left", "right", "top", "bottom"]:
+		m.add_theme_constant_override("margin_" + side, 32)
+	o.add_child(m)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 10)
+	m.add_child(v)
+	var head := HBoxContainer.new()
+	v.add_child(head)
+	var t := UIKit.title_label(Locale.t("js_76d637f6") % str(World.node(city).get("name", city)), 18)
+	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	head.add_child(t)
+	var close := UIKit.ghost_button(Locale.t("js_4782a703"), 120, 48)
+	close.pressed.connect(func():
+		o.queue_free()
+		_aff_overlay = null
+		_refresh_all())
+	head.add_child(close)
+	if msg != "":
+		var ml := UIKit.body_label(msg, UIKit.OK if ok else UIKit.DANGER, 14)
+		ml.name = "AffairMsg"
+		ml.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		v.add_child(ml)
+	var lab := UIKit.body_label(CKCityAffairs.label(city), UIKit.TEXT, 15)
+	lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	v.add_child(lab)
+	var chk: Dictionary = CKCityAffairs.can_do(city)
+	var go := UIKit.ghost_button(Locale.t("js_f05ab037"), 160, 48)
+	go.name = "AffairDo"
+	go.disabled = not bool(chk.get("ok", false))
+	v.add_child(go)
+	if not bool(chk.get("ok", false)):
+		v.add_child(UIKit.body_label(str(chk.get("msg", "")), UIKit.TEXT_DIM, 13))
+	go.pressed.connect(func():
+		var r := CKCityAffairs.do_affair(city)
+		open_affairs(str(r.get("msg", "")), bool(r.get("ok", false))))
+	var rows: Array = CKJobSeals.rows_for_city(city)
+	if rows.is_empty():
+		v.add_child(UIKit.body_label(Locale.t("js_76942d49"), UIKit.TEXT_DIM, 13))
+	for r in rows:
+		var jid := str(r.get("job", ""))
+		var seal_nm := str(r.get("name", jid))
+		var from_nm := str(GameState.get_job(str(r.get("from", ""))).get("name", ""))
+		v.add_child(UIKit.body_label(Locale.t("js_76fd6d83") % [seal_nm, from_nm, seal_nm], UIKit.ACCENT, 14))
+		var any := false
+		for c in GameState.roster():
+			if c == null or not c.alive or c.job_id != str(r.get("from", "")):
+				continue
+			any = true
+			var row := HBoxContainer.new()
+			row.add_theme_constant_override("separation", 8)
+			var g: Dictionary = CKJobSeals.can_stamp(c, jid, city)
+			var b := UIKit.ghost_button(Locale.t("js_f6db50d5") % c.name, 200, 48)
+			b.disabled = not bool(g.get("ok", false))
+			var cid := str(c.id)
+			b.pressed.connect(func():
+				var rr := CKJobSeals.stamp(GameState.characters[cid], jid, city)
+				open_affairs(str(rr.get("msg", "")), bool(rr.get("ok", false))))
+			row.add_child(b)
+			if not bool(g.get("ok", false)):
+				row.add_child(UIKit.body_label(str(g.get("msg", "")), UIKit.TEXT_DIM, 13))
+			v.add_child(row)
+		if not any:
+			v.add_child(UIKit.body_label(Locale.t("js_7a4485ae") % str(GameState.get_job(str(r.get("from", ""))).get("name", "")), UIKit.TEXT_DIM, 13))
+
