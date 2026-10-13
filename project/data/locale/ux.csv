@@ -244,28 +244,8 @@ doctrine_strict,严教,Strict
 doctrine_mercy,仁恤,Mercy
 doctrine_commerce,商本,Commerce
 sundry_title,杂货铺,Sundries
-sundry_note,本国日用品只在此国买得到。别国半价清舱，不是进货。,Local sundries only. Half-price dump abroad.
-sundry_buy,买入,Buy
-sundry_use,使用,Use
 sundry_sell_half,半价清舱 · %s,Dump half · %s
-sundry_bag_head,行李里的日用品,Bag sundries
-sundry_not_here,此城不卖这件,Not sold here
-sundry_stack_cap,随身最多五份,Stack cap 5
-sundry_cargo_full,货舱已满,Cargo full
-sundry_no_silver,银两不足,Not enough silver
-sundry_bought,买入%s · −%d 银,Bought %s · −%d
-sundry_none,没有这件,None owned
-sundry_sell_home,本国不收清舱,No dump at home
-sundry_sold,半价清舱 +%d 银,Dumped +%d
-sundry_no_effect,没有效果,No effect
-sundry_food_morale,士气 +1，口粮记为已付,Morale +1; ration paid
-sundry_food_only,口粮记为已付（本月士气已计）,Ration only
-sundry_no_wounded,没有轻伤者,No wounded
-sundry_healed,%s 生命 +4,%s HP +4
-sundry_intel_ok,夜谈记上一笔,Intel logged
-sundry_half_ok,夜市剩券已生效,Coupon armed
 sundry_salt_ok,下次海路船资 −4,Next sea fare −4
-sundry_forge_ok,下次堡内打刃铁耗 −1,Next forge iron −1
 sundry_pepper_ok,南椒他国加价已备,Pepper bonus armed
 affair_done,本城之事已了,Affair done
 affair_supply,本城之事：补货,Affair: supply
@@ -313,6 +293,32 @@ ux_entry_ancestors,先祖碑,Ancestors
 ux_entry_bonds,同袍,Bonds
 ux_era_digits,零一二三四五六七八九,0123456789
 ux_lock_bloodline,第二卷第 6 章后开放血脉详档,Bloodline detail opens after Era 2 Ch.6
+sundry_note,这里卖的是本国的日用小东西，别国买不到。别国带来的只能半价处理掉。,Local sundries only; foreign ones can only be sold at half price.
+sundry_empty_shelf,这地方没有杂货卖。,Nothing for sale here.
+sundry_buy,买一份,Buy
+sundry_use,用一份,Use
+sundry_sell,半价卖掉,Sell half
+sundry_bag_head,行李里别处带来的,From elsewhere in your bag
+sundry_not_here,这家不卖这个,Not sold here
+sundry_stack_cap,一样东西最多带五份,Max 5 of each
+sundry_cargo_full,货舱满了，装不下,Cargo full
+sundry_no_silver,银子不够,Not enough silver
+sundry_bought,买了%s，花了 %d 银,Bought %s for %d
+sundry_none,你没有这个,You have none
+sundry_sell_home,本国的东西在本国卖不掉,Can't sell it in its home country
+sundry_sold,半价卖掉了，拿回 %d 银,Sold for %d
+sundry_no_effect,用了也没用,No effect
+sundry_food_morale,大家吃得开心，士气 +1；下次月底少吃 1 粮,Morale +1; 1 less food next month
+sundry_food_only,下次月底少吃 1 粮（这个月士气已经加过了）,1 less food next month (morale already given)
+sundry_no_wounded,现在没有受伤的人,No one is hurt
+sundry_healed,%s 回了 4 点血,%s heals 4
+sundry_intel_ok,在城里打听到一些消息，声望 +1,Picked up some news
+sundry_half_ok,夜市券用上了，今天在这儿买下一件半价,Coupon on: next buy here half price
+sundry_forge_ok,下次在堡里打刀少用 1 块铁,Next castle forge uses 1 less iron
+sundry_not_yet,这件现在还用不上（相关玩法还没开）,Not usable yet
+sundry_need_city,得在城里才能用,Use it in a town
+sundry_intel_done,这座城的消息已经打听过了,Already asked around here
+sundry_offer_line,%s  ·  %d 银  ·  有 %d/%d,%s · %d silver · have %d/%d
 ux_field_plaque,属事处 · 田册,Field office · Field book
 ux_field_no_land,还没有开垦的属地，先回属地页开一块地，才有活干。,No holding opened yet. Open one first.
 ux_field_nobody,家里还没有能下地的人。,Nobody at home can work the fields yet.
