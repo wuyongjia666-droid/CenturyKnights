@@ -17,6 +17,9 @@ var _ordinaries: PackedStringArray = []
 var _nations: PackedStringArray = []
 var _preview: ColorRect
 var _banner: TextureRect
+## Opening review B-03: the preview face is a real leader built once; on start its genome is
+## carried onto the in-game captain so the face on screen is the face you get.
+var _face: CKCharacter = null
 var _shield: TextureRect
 var _portrait: TextureRect
 var _color_name_label: Label
@@ -104,17 +107,21 @@ func _ready() -> void:
 	_build()
 	_refresh_preview_art()
 
+func _heart() -> String:
+	return str(_colors[_color_idx])
+
 func _current_spec() -> Dictionary:
-	var field := str(_colors[_color_idx])
-	var pair := str(_colors[(_color_idx + 6) % _colors.size()])
+	# Opening review B-09: the cloth is ash grey for every company ("灰底是灰烬邦给的");
+	# the colour the player picks is the heart of the banner (charges and emblem).
+	# Greys come from the heraldry table (no raw hex — style_lint ratchet).
+	var heart := str(_colors[_color_idx])
+	var field := CKHeraldry.tincture_hex("ash")
+	var pair := CKHeraldry.tincture_hex("ash_deep")
 	var division := str(_divisions[_field_idx]) if _divisions.size() > 0 else "solid"
 	var ordinary := str(_ordinaries[_charge_idx]) if _ordinaries.size() > 0 else "none"
 	var emblem_id: String = str(BannerSpec.EMBLEMS[_emblem_idx])
 	var nation := str(_nations[_nation_idx])
-	var charge_col := "#" + UIKit.TEXT.to_html(false)
-	# Prefer a legal tincture for ordinary / emblem against field.
-	if not CKHeraldry.tincture_ok(field, charge_col):
-		charge_col = CKHeraldry.tincture_hex("argent") if CKHeraldry.tincture_class(field) == "colour" else CKHeraldry.tincture_hex("sable")
+	var charge_col := heart
 	return BannerSpec.normalize({
 		"schema": 2,
 		"field": division if division in BannerSpec.FIELDS else "solid",
@@ -183,8 +190,12 @@ func _build() -> void:
 	var names := HBoxContainer.new()
 	names.add_theme_constant_override("separation", 12)
 	_pane.add_child(names)
-	_surname = _name_field(names, Locale.t("ux_name_surname"), "灰旗")
+	_surname = _name_field(names, Locale.t("ux_name_surname"), "")
+	_surname.max_length = 2
+	_surname.placeholder_text = Locale.t("ux_name_surname_hint")
 	_given = _name_field(names, Locale.t("ux_name_given"), "烬行")
+	_given.max_length = 4
+
 
 	var actions := HBoxContainer.new()
 	actions.add_theme_constant_override("separation", 12)
@@ -200,6 +211,13 @@ func _build() -> void:
 	back.pressed.connect(func(): CKNav.replace(CKNav.TITLE))
 	actions.add_child(back)
 	_back_btn = back
+	var face_btn = UIKit.make_button(Locale.t("ux_name_face_reroll"), 140)
+	face_btn.name = "FaceReroll"
+	face_btn.custom_minimum_size = Vector2(140, 52)
+	face_btn.pressed.connect(func():
+		_face = null
+		_refresh_preview_art())
+	actions.add_child(face_btn)
 
 	_scroll = ScrollContainer.new()
 	_scroll.name = "OptionsScroll"
@@ -371,26 +389,25 @@ func _refresh_preview_art() -> void:
 	var prev_c = GameState.crest_color
 	var prev_s = GameState.surname
 	var prev_b = GameState.banner_spec.duplicate(true)
-	GameState.crest_color = str(spec.field_a)
+	GameState.crest_color = _heart()
 	GameState.banner_spec = spec
-	GameState.surname = _surname.text.strip_edges() if _surname else "灰旗"
+	GameState.surname = _surname.text.strip_edges() if _surname else ""
 	UnitArt.clear_cache()
 	_banner.texture = UnitArt.banner_layers(spec, 280, 400)
+	BannerName.attach(_banner, GameState.surname)
 	if _shield:
 		_shield.texture = ImageTexture.create_from_image(BannerSpec.compose_shield(spec, 240, 280))
-	var tmp := CKCharacter.new()
-	tmp.name = GameState.surname + (_given.text.strip_edges() if _given else "烬行")
-	tmp.is_leader = true
-	tmp.job_id = "squire"
-	tmp.gender = "m"
-	tmp.appearance = {"hair": "ash_brown", "eyes": "river_blue", "brow": "thick", "scar": "none"}
-	_portrait.texture = UnitArt.portrait(tmp, 280, CKArtPaths.TIER_MEDIUM)
+	if _face == null:
+		_face = CharacterFactory.make_leader("烬行", "", _heart())
+		_face.ensure_genome()
+	_face.name = GameState.surname + (_given.text.strip_edges() if _given else "烬行")
+	CKGenomePortrait.clear_mem()
+	_portrait.texture = UnitArt.portrait(_face, 280, CKArtPaths.TIER_MEDIUM)
 	if _warn:
 		var bits: PackedStringArray = []
 		if not BannerSpec.contrast_ok(spec):
 			bits.append(Locale.t("ux_name_contrast"))
-		if not BannerSpec.tincture_ok(spec):
-			bits.append(Locale.t("ux_heraldry_tincture_warn"))
+		# B-07: the grey cloth is outside the metal/colour rule; only far-sight contrast is flagged.
 		_warn.text = " · ".join(bits)
 		_warn.add_theme_color_override("font_color", UIKit.DANGER if not bits.is_empty() else UIKit.OK)
 		if bits.is_empty():
@@ -398,17 +415,37 @@ func _refresh_preview_art() -> void:
 	GameState.crest_color = prev_c
 	GameState.surname = prev_s
 	GameState.banner_spec = prev_b
+	_sync_start()
+
+func _sync_start() -> void:
+	if _start_btn == null or _surname == null or _given == null:
+		return
+	var missing := ""
+	if _surname.text.strip_edges() == "":
+		missing = Locale.t("ux_name_need_surname")
+	elif _given.text.strip_edges() == "":
+		missing = Locale.t("ux_name_need_given")
+	_start_btn.disabled = missing != ""
+	if missing != "" and _warn:
+		_warn.text = missing
+		_warn.add_theme_color_override("font_color", UIKit.DANGER)
 
 func _on_start() -> void:
 	var g = _given.text.strip_edges()
 	var s = _surname.text.strip_edges()
 	if g == "" or s == "":
+		_sync_start()
 		return
 	var spec := _current_spec()
-	GameState.new_game(g, s, str(spec.field_a))
+	GameState.new_game(g, s, _heart())
 	GameState.banner_spec = spec
 	GameState.ensure_unique_arms()  # company banner is set once here; a colliding family core re-rolls
-	GameState.crest_color = str(spec.field_a)
+	GameState.crest_color = _heart()
+	var lead: CKCharacter = GameState.get_leader()
+	if lead != null and _face != null:
+		lead.genome = _face.genome.duplicate(true)
+		lead.appearance = _face.appearance.duplicate(true)
+		CKGenomePortrait.clear_mem()
 	UnitArt.clear_cache()
 	GameState.save_game()
 	CKNav.replace("res://scenes/story/chapter0.tscn")
@@ -425,4 +462,4 @@ func _process(_d: float) -> void:
 func nav_back() -> void:
 	if Time.get_ticks_msec() - _last_edit_ms < 800:
 		return
-	get_tree().change_scene_to_file("res://scenes/ui/main_menu.tscn")
+	CKNav.replace(CKNav.TITLE)
