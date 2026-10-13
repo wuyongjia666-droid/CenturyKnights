@@ -312,6 +312,9 @@ func _no_borrowed_faces() -> String:
 	for sp in seen.keys():
 		if sp == leader.name or sp == "leader":
 			continue
+		# C-03: narrator lines hide the plate on purpose.
+		if sp == "" or sp == "旁白":
+			continue
 		player._speaker_portrait(sp)
 		if str(player.test_capture.get("portrait_who", "")) == leader.id or player._portrait.texture == null:
 			bad.append(sp)

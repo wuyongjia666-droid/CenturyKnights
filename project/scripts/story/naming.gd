@@ -20,6 +20,14 @@ var _banner: TextureRect
 ## Opening review B-03: the preview face is a real leader built once; on start its genome is
 ## carried onto the in-game captain so the face on screen is the face you get.
 var _face: CKCharacter = null
+## Opening review B-04: gender + four face presets the player picks (preview == result).
+var _gender: String = "m"
+var _face_idx: int = 0
+var _face_gen: int = 0  # bumped on reroll so fixed seed slots still change
+var _faces: Array = []  # four CKCharacter presets for the current gender
+var _face_btns: Array = []  # Button thumbnails with face icons
+var _gender_m_btn: Button = null
+var _gender_f_btn: Button = null
 var _shield: TextureRect
 var _portrait: TextureRect
 var _color_name_label: Label
@@ -177,7 +185,7 @@ func _build() -> void:
 	_pane.add_child(art_row)
 	_shield = _art_rect(Vector2(110, 130))
 	art_row.add_child(_shield)
-	_banner = _art_rect(Vector2(130, 186))
+	_banner = _art_rect(Vector2(160, 230))  # B-10: larger flag in the fixed preview pane
 	art_row.add_child(_banner)
 	_portrait = _art_rect(Vector2(130, 130))
 	art_row.add_child(_portrait)
@@ -196,7 +204,6 @@ func _build() -> void:
 	_given = _name_field(names, Locale.t("ux_name_given"), "烬行")
 	_given.max_length = 4
 
-
 	var actions := HBoxContainer.new()
 	actions.add_theme_constant_override("separation", 12)
 	_pane.add_child(actions)
@@ -211,13 +218,6 @@ func _build() -> void:
 	back.pressed.connect(func(): CKNav.replace(CKNav.TITLE))
 	actions.add_child(back)
 	_back_btn = back
-	var face_btn = UIKit.make_button(Locale.t("ux_name_face_reroll"), 140)
-	face_btn.name = "FaceReroll"
-	face_btn.custom_minimum_size = Vector2(140, 52)
-	face_btn.pressed.connect(func():
-		_face = null
-		_refresh_preview_art())
-	actions.add_child(face_btn)
 
 	_scroll = ScrollContainer.new()
 	_scroll.name = "OptionsScroll"
@@ -230,6 +230,46 @@ func _build() -> void:
 	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	box.add_theme_constant_override("separation", 8)
 	_scroll.add_child(box)
+
+	# B-04: gender + four face cards live in the scrolling options so the
+	# fixed preview pane (raise button) still fits 1280×720.
+	box.add_child(UIKit.make_label(Locale.t("ux_name_gender")))
+	var gender_row := HBoxContainer.new()
+	gender_row.name = "GenderRow"
+	gender_row.add_theme_constant_override("separation", 8)
+	box.add_child(gender_row)
+	_gender_m_btn = UIKit.make_button(Locale.t("ux_name_gender_m"), 72)
+	_gender_m_btn.name = "GenderM"
+	_gender_m_btn.custom_minimum_size = Vector2(72, 44)
+	_gender_m_btn.pressed.connect(func(): _set_gender("m"))
+	gender_row.add_child(_gender_m_btn)
+	_gender_f_btn = UIKit.make_button(Locale.t("ux_name_gender_f"), 72)
+	_gender_f_btn.name = "GenderF"
+	_gender_f_btn.custom_minimum_size = Vector2(72, 44)
+	_gender_f_btn.pressed.connect(func(): _set_gender("f"))
+	gender_row.add_child(_gender_f_btn)
+	var face_reroll = UIKit.make_button(Locale.t("ux_name_face_reroll"), 140)
+	face_reroll.name = "FaceReroll"
+	face_reroll.custom_minimum_size = Vector2(140, 44)
+	face_reroll.pressed.connect(_reroll_faces)
+	gender_row.add_child(face_reroll)
+
+	box.add_child(UIKit.make_label(Locale.t("ux_name_face")))
+	var face_row := HBoxContainer.new()
+	face_row.name = "FaceRow"
+	face_row.add_theme_constant_override("separation", 8)
+	box.add_child(face_row)
+	_face_btns.clear()
+	for i in 4:
+		var tb := Button.new()
+		tb.name = "FacePick%d" % i
+		tb.custom_minimum_size = Vector2(72, 72)
+		tb.expand_icon = true
+		tb.focus_mode = Control.FOCUS_ALL
+		var idx := i
+		tb.pressed.connect(func(): _pick_face(idx))
+		face_row.add_child(tb)
+		_face_btns.append(tb)
 
 	box.add_child(UIKit.make_label(Locale.t("ux_name_field_color")))
 	var row := HBoxContainer.new()
@@ -249,14 +289,14 @@ func _build() -> void:
 	_color_name_label.add_theme_color_override("font_color", UIKit.ACCENT)
 	row.add_child(_color_name_label)
 
-	_nation_label = _layer_row(box, Locale.t("ux_name_nation_rand"), func(d): _shift_enum("nation", d))
+	_nation_label = _layer_row(box, Locale.t("ux_name_nation_style"), func(d): _shift_enum("nation", d))
 	_field_label = _layer_row(box, Locale.t("ux_name_field_split"), func(d): _shift_enum("field", d))
 	_partition_label = _layer_row(box, Locale.t("ux_name_partition"), func(d): _shift_enum("partition", d))
 	_charge_label = _layer_row(box, Locale.t("ux_name_ordinary"), func(d): _shift_enum("charge", d))
 	_border_label = _layer_row(box, Locale.t("ux_name_border"), func(d): _shift_enum("border", d))
 	_emblem_label = _layer_row(box, Locale.t("ux_name_emblem"), func(d): _shift_enum("emblem", d))
 
-	var rand_btn = UIKit.make_button(Locale.t("ux_name_nation_rand"), 240)
+	var rand_btn = UIKit.make_button(Locale.t("ux_name_nation_rand_btn"), 280)
 	rand_btn.custom_minimum_size = Vector2(240, 48)
 	rand_btn.pressed.connect(_on_randomize_nation)
 	box.add_child(rand_btn)
@@ -397,12 +437,16 @@ func _refresh_preview_art() -> void:
 	BannerName.attach(_banner, GameState.surname)
 	if _shield:
 		_shield.texture = ImageTexture.create_from_image(BannerSpec.compose_shield(spec, 240, 280))
-	if _face == null:
-		_face = CharacterFactory.make_leader("烬行", "", _heart())
-		_face.ensure_genome()
-	_face.name = GameState.surname + (_given.text.strip_edges() if _given else "烬行")
+	_ensure_faces()
+	if _face == null and not _faces.is_empty():
+		_face = _faces[_face_idx]
+	if _face != null:
+		_face.name = GameState.surname + (_given.text.strip_edges() if _given else "烬行")
+		_face.gender = _gender
 	CKGenomePortrait.clear_mem()
-	_portrait.texture = UnitArt.portrait(_face, 280, CKArtPaths.TIER_MEDIUM)
+	_portrait.texture = UnitArt.portrait(_face, 280, CKArtPaths.TIER_MEDIUM) if _face else null
+	_paint_face_thumbs()
+	_sync_gender_btns()
 	if _warn:
 		var bits: PackedStringArray = []
 		if not BannerSpec.contrast_ok(spec):
@@ -443,12 +487,95 @@ func _on_start() -> void:
 	GameState.crest_color = _heart()
 	var lead: CKCharacter = GameState.get_leader()
 	if lead != null and _face != null:
+		lead.gender = _gender
 		lead.genome = _face.genome.duplicate(true)
 		lead.appearance = _face.appearance.duplicate(true)
 		CKGenomePortrait.clear_mem()
+		# Marriage candidates flip to the opposite sex of the captain (character_factory).
+		GameState.refresh_marriage_candidates()
 	UnitArt.clear_cache()
 	GameState.save_game()
 	CKNav.replace("res://scenes/story/chapter0.tscn")
+
+
+func _set_gender(g: String) -> void:
+	if g != "m" and g != "f":
+		return
+	if _gender == g and not _faces.is_empty():
+		_sync_gender_btns()
+		return
+	_gender = g
+	_faces.clear()
+	_face = null
+	_face_idx = 0
+	_refresh_preview_art()
+
+func _reroll_faces() -> void:
+	_face_gen += 1
+	_faces.clear()
+	_face = null
+	_refresh_preview_art()
+
+func _pick_face(idx: int) -> void:
+	_ensure_faces()
+	if idx < 0 or idx >= _faces.size():
+		return
+	_face_idx = idx
+	_face = _faces[idx]
+	_refresh_preview_art()
+
+func _ensure_faces() -> void:
+	if _faces.size() == 4:
+		return
+	_faces.clear()
+	# Fixed ids so the four presets stay distinct across refreshes of the same gender.
+	var seeds: Array
+	if _gender == "m":
+		seeds = ["founding_m0", "founding_m1", "founding_m2", "founding_m3"]
+	else:
+		seeds = ["founding_f0", "founding_f1", "founding_f2", "founding_f3"]
+	var looks := [
+		{"hair": "ash_brown", "eyes": "river_blue", "brow": "thick", "scar": "none"},
+		{"hair": "ink_black", "eyes": "slate", "brow": "straight", "scar": "none"},
+		{"hair": "wheat", "eyes": "pine", "brow": "arch", "scar": "none"},
+		{"hair": "frost_silver", "eyes": "dusk", "brow": "thick", "scar": "none"},
+	]
+	for i in 4:
+		# Build locally — do not call make_leader (it bumps id seq and writes GameState).
+		var c := CKCharacter.new()
+		c.id = "%s_g%d" % [str(seeds[i]), _face_gen]
+		c.cast_key = "leader"
+		c.name = "烬行"
+		c.gender = _gender
+		c.age = 22
+		c.is_leader = true
+		c.job_id = "squire"
+		c.rank = "knight"
+		c.blood_mix = {"common_ash": 0.6, "river_ward": 0.4}
+		c.traits = ["brave", "heir_mark"]
+		c.appearance = looks[i].duplicate()
+		c.birthday_month = 3
+		c.ensure_genome()
+		_faces.append(c)
+	_face_idx = clampi(_face_idx, 0, 3)
+	_face = _faces[_face_idx]
+
+func _paint_face_thumbs() -> void:
+	if _face_btns.is_empty() or _faces.size() != 4:
+		return
+	CKGenomePortrait.clear_mem()
+	for i in 4:
+		var tb: Button = _face_btns[i]
+		var tex: Texture2D = UnitArt.portrait(_faces[i], 96, CKArtPaths.TIER_MEDIUM)
+		tb.icon = tex
+		# Selected card gets a brighter modulate; others stay dimmer.
+		tb.modulate = Color(1, 1, 1, 1) if i == _face_idx else Color(0.72, 0.72, 0.78, 1)
+
+func _sync_gender_btns() -> void:
+	if _gender_m_btn:
+		_gender_m_btn.disabled = (_gender == "m")
+	if _gender_f_btn:
+		_gender_f_btn.disabled = (_gender == "f")
 
 func apply_mobile_layout() -> void:
 	_apply_layout()

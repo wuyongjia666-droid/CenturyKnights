@@ -69,3 +69,31 @@ pro_surname_fallback,那个字,that name
 pro_skip_battle_log,教学从简：隘口一仗按胜结算,Brief guide: the pass is counted as won
 pro_auto_recruit_none,柜上今天没人。去酒馆看看。,Nobody at the counter today. Try the tavern.
 pro_auto_marry_none,今天没有能入席的人。去联姻廷看看。,No one can take the seat today. Try the marriage court.
+pro_journal_merit_own,隘口那一仗，我没让。,I did not yield that pass fight.
+pro_journal_merit_patron,隘口那一仗记在了槐里家，堡是借来的。,The pass fight went under Huaili's name; the keep is borrowed.
+pro_journal_lease_pawned,娘押掉了采石坡那块地。,Mother pawned the quarry slope plot.
+pro_journal_lease_kept,娘的地还在，饷是一张张委托挣来的。,Mother's land stays; pay comes board by board.
+pro_journal_roster_wantan,名册第一行是石垒·晚担。,Roster line one is Shilei Wantan.
+pro_journal_roster_blank,名册第一行空着，留给旧人。,Roster line one stays blank for the old hands.
+pro_journal_rival_spared,名册最后一行，给衡舟留着。,The last roster line is held for Hengzhou.
+pro_journal_rival_exposed,衡舟被带去了白垣。,Hengzhou was taken to Baiyuan.
+pro_journal_heir_none,还没有名字,still unnamed
+pro_journal_closing,有试过的婚，有孩子%s，有一本结清的簿。陆桥会重复这个姓。我得在场。,"A trial marriage, a child %s, a settled ledger. Lubridge will repeat this surname. I must be there."
+pro_journal_body,"【王朝手记·第零章】
+团长：%s
+配偶：%s
+子嗣：%s
+岁时：%s
+声望：灰烬邦 %s / 河卫邦 %s
+
+石垒坡出来一个平民，在北隘把自己做成了一个姓。%s
+%s","[Dynasty journal · Ch.0]
+Captain: %s
+Spouse: %s
+Heirs: %s
+Date: %s
+Standing: Ash %s / River %s
+
+A commoner from Shilei Slope made a surname at the north pass.%s
+%s"
+pro_speaker_newcomer,新来的人,Newcomer
