@@ -62,15 +62,44 @@ static func top_bar(scene: Control, title: String, info: String, buttons: Array)
 	var t := label(title, UIKit.TEXT, 24, false)
 	t.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	bar.add_child(t)
-	var inf := label(info, UIKit.ACCENT, FONT, false)
+	# resources wrap to a second line instead of being cut off on narrow phones
+	var inf := label(info, UIKit.ACCENT, FONT, true)
 	inf.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	inf.clip_text = true
+	inf.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	inf.max_lines_visible = 2
+	inf.custom_minimum_size = Vector2(160, 0)
+	inf.add_theme_constant_override("line_spacing", -4)
 	bar.add_child(inf)
+	inf.set_meta("m_raw", info)
+	inf.resized.connect(_wrap_segments.bind(inf))
 	for spec in buttons:
 		var b := button(str(spec[0]), false, spec[1], 180)
 		b.size_flags_horizontal = Control.SIZE_SHRINK_END
 		bar.add_child(b)
 	return bar
+
+## Breaks the info line only between " · " segments so a value like 士气 70 never splits.
+static func _wrap_segments(inf: Label) -> void:
+	var raw := str(inf.get_meta("m_raw", inf.text))
+	var segs := raw.split(" · ")
+	var font := inf.get_theme_font("font")
+	var fs := inf.get_theme_font_size("font_size")
+	var w := inf.size.x
+	if font == null or w <= 0 or segs.size() < 2:
+		return
+	var lines: Array[String] = []
+	var cur := ""
+	for sg in segs:
+		var cand := sg if cur == "" else cur + " · " + sg
+		if cur != "" and font.get_string_size(cand, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x > w:
+			lines.append(cur)
+			cur = sg
+		else:
+			cur = cand
+	lines.append(cur)
+	var txt := "\n".join(lines)
+	if inf.text != txt:
+		inf.text = txt
 
 static func spacer(v: Control) -> void:
 	var sp := Control.new()
