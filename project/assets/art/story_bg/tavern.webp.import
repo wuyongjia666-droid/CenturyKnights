@@ -2,16 +2,18 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://qgkr62vgcuvge"
-path="res://.godot/imported/tavern.webp-c837c2b3ae6c99b200b078caca21a79b.ctex"
+uid="uid://yxbtt7f22efc"
+path.bptc="res://.godot/imported/tavern.webp-363c986df68019e523cce775c9b16dc0.bptc.ctex"
+path.astc="res://.godot/imported/tavern.webp-363c986df68019e523cce775c9b16dc0.astc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/art/story_bg/tavern.webp"
-dest_files=["res://.godot/imported/tavern.webp-c837c2b3ae6c99b200b078caca21a79b.ctex"]
+dest_files=["res://.godot/imported/tavern.webp-363c986df68019e523cce775c9b16dc0.bptc.ctex", "res://.godot/imported/tavern.webp-363c986df68019e523cce775c9b16dc0.astc.ctex"]
 
 [params]
 
@@ -25,7 +27,9 @@ mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
-process/fix_transparent_borders=false
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0

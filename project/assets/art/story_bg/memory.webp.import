@@ -2,16 +2,18 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://gq6urunc8eznq"
-path="res://.godot/imported/memory.webp-d987e5c1585e2027edabcbdb3d132640.ctex"
+uid="uid://cvry6sp3n64vy"
+path.bptc="res://.godot/imported/memory.webp-d9562836152e705e676e5cad2b3c927b.bptc.ctex"
+path.astc="res://.godot/imported/memory.webp-d9562836152e705e676e5cad2b3c927b.astc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/art/story_bg/memory.webp"
-dest_files=["res://.godot/imported/memory.webp-d987e5c1585e2027edabcbdb3d132640.ctex"]
+dest_files=["res://.godot/imported/memory.webp-d9562836152e705e676e5cad2b3c927b.bptc.ctex", "res://.godot/imported/memory.webp-d9562836152e705e676e5cad2b3c927b.astc.ctex"]
 
 [params]
 
@@ -25,7 +27,9 @@ mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
-process/fix_transparent_borders=false
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0

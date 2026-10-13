@@ -2,16 +2,18 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6m6ux47n487vc"
-path="res://.godot/imported/gate.webp-493fab60376de8d26b1d8f97e4307f96.ctex"
+uid="uid://pwv8ounmm7s7"
+path.bptc="res://.godot/imported/gate.webp-95d336fcfc2475d1f7af40aa83e5b6d6.bptc.ctex"
+path.astc="res://.godot/imported/gate.webp-95d336fcfc2475d1f7af40aa83e5b6d6.astc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc", "etc2_astc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://assets/art/story_bg/gate.webp"
-dest_files=["res://.godot/imported/gate.webp-493fab60376de8d26b1d8f97e4307f96.ctex"]
+dest_files=["res://.godot/imported/gate.webp-95d336fcfc2475d1f7af40aa83e5b6d6.bptc.ctex", "res://.godot/imported/gate.webp-95d336fcfc2475d1f7af40aa83e5b6d6.astc.ctex"]
 
 [params]
 
@@ -25,7 +27,9 @@ mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0
 roughness/src_normal=""
-process/fix_transparent_borders=false
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
