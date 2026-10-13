@@ -280,6 +280,7 @@ static func _kill(c: CKCharacter, rng: RandomNumberGenerator, killer: String) ->
 	c.in_roster = false
 	c.injured = false
 	c.hp = 0
+	CKPurse.on_death(c)  # §4.10 私囊给活着的配偶，超上限和没配偶的进旗库
 	var words: Array = table().get("words", [])
 	var line := str(words[rng.randi() % words.size()]) if not words.is_empty() else Locale.t("旗还在。")
 	if typeof(c.blood_meta) != TYPE_DICTIONARY:
