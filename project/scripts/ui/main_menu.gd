@@ -133,7 +133,8 @@ func _build() -> void:
 	_msg.size = Vector2(600, 20)
 	add_child(_msg)
 	if mobile:
-		foot.position = Vector2(72, 690)
+		foot.position = Vector2(72, 672)
+		foot.size.y = 34.0
 		foot.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 
 func _on_new() -> void:

@@ -10,6 +10,10 @@ const SCREENS := [
 	["tavern", "res://scenes/hub/tavern.tscn"],
 	["marriage", "res://scenes/hub/marriage.tscn"],
 	["lineage", "res://scenes/hub/lineage_view.tscn"],
+	["wing_works", "res://scenes/hub/works.tscn"],
+	["wing_forge", "res://scenes/hub/forge.tscn"],
+	["wing_estates", "res://scenes/hub/estates.tscn"],
+	["wing_market", "res://scenes/hub/market.tscn"],
 	["atlas", "res://scenes/hub/atlas_view.tscn"],
 	["atlas_side", "res://scenes/hub/atlas_view.tscn", true, "atlas_open_side"],
 	["city", "res://scenes/hub/city.tscn"],
@@ -63,6 +67,8 @@ func _ready() -> void:
 		await get_tree().process_frame
 		await get_tree().process_frame
 		for pair in screens:
+			if _desktop and str(pair[0]).begins_with("wing_"):
+				continue  # phone-only rebuilds; desktop wings are covered by DESKTOP_EXTRA "works" etc.
 			if not _only.is_empty() and not Array(_only).any(func(o): return str(pair[0]).begins_with(o)):
 				continue
 			if pair.size() > 2 and pair[2] != null:
