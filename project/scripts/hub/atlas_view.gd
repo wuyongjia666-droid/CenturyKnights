@@ -100,9 +100,6 @@ func _build_frame() -> void:
 	add_child(_clip)
 	_map_content = Control.new()
 	_map_content.name = "MapContent"
-	# map captions are sized for on-screen 22px through the map scale (see _mobile_nodes)
-	_map_content.set_meta("font_floor_exempt", true)
-	_map_content.set_meta("touch_exempt", true)
 	_map_content.size = MAP.size
 	_map_content.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_clip.add_child(_map_content)
@@ -182,6 +179,9 @@ func _mobile_frame(mp: Control) -> void:
 	if not MobilePage.active(self):
 		return
 	_mob = true
+	# map captions/targets are sized to on-screen 22px / 76px through the map scale (_mobile_nodes)
+	_map_content.set_meta("font_floor_exempt", true)
+	_map_content.set_meta("touch_exempt", true)
 	var vp := get_viewport().get_visible_rect().size
 	var w := maxf(1280.0, vp.x * 720.0 / maxf(1.0, vp.y))
 	var top := MobilePage.TOP + 4.0
