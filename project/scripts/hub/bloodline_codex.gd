@@ -83,6 +83,9 @@ func _show(nid: String) -> void:
 	var narrow := bw < 700.0
 	_panel_w = maxf(240.0, bw - 24.0)
 	var head_h := 176.0 if narrow else 96.0
+	var phone := DeviceProfile.is_mobile() and not narrow
+	if phone:
+		head_h = 168.0  # 22px phone type: skill + effects + legend need ~4 lines
 	var head := UIKit.panel_at(_body, Rect2(0, 0, bw, head_h), 12, true)
 	var law := str(nat.get("law", ""))
 	var mark := CKCourtChrome.nation_mark(nid)
@@ -108,7 +111,7 @@ func _show(nid: String) -> void:
 		side.size = Vector2(bw - 24, 92)
 	else:
 		side.position = Vector2(500, 8)
-		side.size = Vector2(bw - 516, 80)
+		side.size = Vector2(bw - 516, (head_h - 16.0) if phone else 80.0)
 	head.add_child(side)
 	var sk := UIKit.body_label(str(skill.get("line", "")).split("\n")[0], UIKit.ACCENT, 12)
 	sk.name = "RoyalSkill"
@@ -129,7 +132,7 @@ func _show(nid: String) -> void:
 	side.add_child(legend)
 	var scroll := ScrollContainer.new()
 	scroll.name = "LineScroll"
-	scroll.position = Vector2(0, (head_h + 12.0) if narrow else 108.0)
+	scroll.position = Vector2(0, (head_h + 12.0) if (narrow or phone) else 108.0)
 	scroll.size = Vector2(bw, maxf(160.0, _body.size.y - scroll.position.y))
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_body.add_child(scroll)

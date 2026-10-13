@@ -323,7 +323,10 @@ static func fit_top_bar(root: Control, width: float) -> void:
 ## grid hugged the left edge with a dead strip on the right; centre it instead. Full-rect children
 ## (backdrops) already stretch and are left alone. Idempotent: re-runs shift by the difference only.
 static func center_kit_page(root: Control) -> void:
-	if root == null or not bool(root.get_meta("ck_page_kit", false)) or root.has_method("apply_mobile_layout"):
+	if root == null or not bool(root.get_meta("ck_page_kit", false)):
+		return
+	# A page with its own phone layout opts in only when that layout never re-places its columns.
+	if root.has_method("apply_mobile_layout") and not bool(root.get_meta("m_center_ok", false)):
 		return
 	var dx := floorf(maxf(0.0, root.size.x - DESIGN.x) * 0.5)
 	var old := float(root.get_meta("m_center_dx", 0.0))

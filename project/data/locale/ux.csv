@@ -449,3 +449,7 @@ mw_b1f6bec9,"香料
 55 silver"
 mw_4e8abd0f,；庄头空缺，易遭劫掠,"; no steward, easy to raid"
 mw_4d0e475f,；庄头：%s,; steward: %s
+ux_lin_empty_title,家里眼下只有你一个人,Your house is just you for now
+ux_lin_empty_body,先去联姻成家，生下孩子，族谱才会一代代长出来；孩子长大能继承家业、带上血脉特征。,Marry and raise children to grow the tree; heirs carry the bloodline and inherit the house.
+ux_lin_empty_go,去联姻,Go to marriage
+ux_bond_pick,点左边一段羁绊，两人的对话会在这里一句句显示。,Pick a bond on the left; the conversation plays here line by line.

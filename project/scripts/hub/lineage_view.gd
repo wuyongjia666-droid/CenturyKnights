@@ -131,6 +131,21 @@ func apply_mobile_layout() -> void:
 		bt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		bt.add_theme_font_size_override("font_size", MobilePage.FONT)
 	_refresh()
+	_mobile_empty_hint(Rect2(24, MobilePage.TOP + 4.0 + CELL_M.y + 20.0, gw, jy - (MobilePage.TOP + CELL_M.y + 44.0)))
+
+## Mobile audit v1: a one-person family left the whole tree area blank. Say what grows it.
+func _mobile_empty_hint(r: Rect2) -> void:
+	if _members.size() > 1 or r.size.y < 120.0:
+		return
+	var v := MobilePage.panel(self, r, 18)
+	(v.get_parent() as Control).name = "LineageEmptyHint"
+	v.add_child(MobilePage.label(Locale.t("ux_lin_empty_title"), UIKit.TEXT, 26, false))
+	v.add_child(MobilePage.label(Locale.t("ux_lin_empty_body"), UIKit.TEXT_DIM))
+	MobilePage.spacer(v)
+	var go := MobilePage.button(Locale.t("ux_lin_empty_go"), true, func(): CKNav.go("res://scenes/hub/marriage.tscn"), 260)
+	go.name = "LineageGoMarry"
+	go.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	v.add_child(go)
 
 func members() -> Array:
 	return _members
