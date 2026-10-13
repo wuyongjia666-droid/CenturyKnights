@@ -51,6 +51,12 @@ a1_works_next_barracks,升级后：每年多传习一次，每月涨士气,More 
 a1_works_next_market,升级后：买得更便宜、卖得更贵,Better prices
 a1_works_next_forge,升级后：打兵器更省料，Lv4 能打精灰刃,Cheaper crafting; Lv4 fine blade
 a1_works_next_shrine,升级后：丰收多打粮，祈愈回血更多,More harvest and healing
+a1_hub_esc,系统菜单,System menu
+a1_hub_new,新开了：%s，点进去看看,New: %s
+a1_title_q,回标题画面？,Back to title?
+a1_title_body,进度会先自动存好。回到标题画面后，可以从「继续」接着玩。,Progress is saved first.
+a1_title_stay,留在城堡,Stay
+a1_title_go,存档并回标题,Save and leave
 a1_set_view,画面,Display
 a1_set_motion,动效,Motion
 a1_set_sound,声音,Sound
@@ -77,3 +83,6 @@ a1_cr_story,主线改编自项目原创小说《那个字》，人物和世界�
 a1_cr_engine_h,引擎,Engine
 a1_cr_engine,Godot Engine %s（MIT 许可）· © Juan Linietsky、Ariel Manzur 与 Godot 贡献者,"Godot Engine %s (MIT) · © Juan Linietsky, Ariel Manzur and contributors"
 a1_menu_load_fail,这个存档读不出来。去「读档」换一个试试。,This save could not be loaded. Try another in Load.
+a1_bond_why,同伴在战场上挨着作战会慢慢熟起来，攒够点数就能在这里看他们的对话。,Companions who fight side by side grow close; their talks appear here.
+a1_bond_locked_head,还没解锁的,Not yet unlocked
+a1_bond_need,还差 %d 点 · 两人相邻作战一场 +1,%d more · +1 per battle fought side by side
