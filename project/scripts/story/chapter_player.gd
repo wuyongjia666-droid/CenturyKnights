@@ -67,6 +67,11 @@ func _ready() -> void:
 func _resolve_path() -> String:
 	if not lock_path:
 		var requested := str(GameState.get_meta("story_chapter_id", ""))
+		var back_from := str(GameState.get_meta("battle_return_chapter", ""))
+		if back_from != "":
+			GameState.set_meta("battle_return_chapter", "")
+			if requested == "" and back_from != "ch0":
+				requested = back_from
 		if requested != "":
 			GameState.set_meta("story_chapter_id", "")
 			var pointed := StoryCatalog.path_for(requested)
@@ -123,7 +128,7 @@ func _build() -> void:
 	_title.position = Vector2(140, 28)
 	add_child(_title)
 	_beat_meta = UIKit.make_dim_label("")
-	_beat_meta.position = Vector2(140, 68)
+	_beat_meta.position = Vector2(212, 68)  # right of the SPEAKER ACTIVE tag (was overlapping on desktop)
 	add_child(_beat_meta)
 	var panel = UIKit.make_panel()
 	panel.position = Vector2(48, 110)
@@ -214,6 +219,7 @@ func _load_beat(beat_id: String) -> void:
 	_title.text = "%s · %s" % [str(_chapter.get("title", "")), str(_beat.get("title", ""))]
 	_beat_meta.text = "节拍 %s　灰烬旗 · %s" % [beat_id, GameState.surname]
 	_banner.texture = UnitArt.banner(70, 100, true)
+	BannerName.attach(_banner)
 	_show_line()
 	_refresh_actions()
 
@@ -339,6 +345,9 @@ func _speaker_label(sp: String) -> String:
 func _speaker_portrait(speaker: String, emotion: String = "") -> void:
 	# Audit P1-12: no speaker ever borrows the leader's face. Only the leader's own lines show it.
 	var who := _character_named(speaker)
+	var name_tag := _portrait.get_node_or_null(BannerName.NODE)
+	if name_tag:
+		name_tag.visible = false
 	if speaker == "leader":
 		who = GameState.get_leader()
 	test_capture["portrait_who"] = who.id if who != null else ""
@@ -350,6 +359,7 @@ func _speaker_portrait(speaker: String, emotion: String = "") -> void:
 	if speaker == "" or speaker == "旁白":
 		test_capture["portrait_kind"] = "banner"
 		_portrait.texture = UnitArt.banner(120, 120, false)
+		BannerName.attach(_portrait)
 		return
 	# Old flag-bearer, scout, villains, supporting cast: a per-speaker silhouette until the farm paints them.
 	test_capture["portrait_kind"] = "silhouette"
@@ -434,6 +444,9 @@ func _run_op(step) -> String:
 		"battle":
 			var ret := str(row.get("return", _chapter.get("return_scene", "res://scenes/story/chapter0.tscn")))
 			GameState.set_meta("battle_return", ret)
+			# Opening review A-02: remember which chapter launched the fight so the way back
+			# reopens it instead of falling through to ch0.
+			GameState.set_meta("battle_return_chapter", str(_chapter.get("id", "")))
 			GameState.set_meta("battle_map", str(row.get("map", "")))
 			GameState.set_meta("battle_objective", str(row.get("objective", "")))
 			test_capture["battle_map"] = str(row.get("map", ""))

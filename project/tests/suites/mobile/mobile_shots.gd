@@ -21,7 +21,19 @@ const SCREENS := [
 	["founding", "res://scenes/story/naming.tscn"],
 	["dialogue", "res://scenes/story/chapter0.tscn"],
 ]
+## Desktop gate (--desktop): mouse input, no mobile reflow, PC resolutions.
+const DESKTOP_EXTRA := [
+	["panorama", "res://scenes/hub/castle_view.tscn"],
+	["annex_infirmary", "res://scenes/hub/annex.tscn", null, "", {"annex": "infirmary"}],
+	["annex_academy", "res://scenes/hub/annex.tscn", null, "", {"annex": "academy"}],
+	["annex_treasury", "res://scenes/hub/annex.tscn", null, "", {"annex": "treasury"}],
+	["annex_embassy", "res://scenes/hub/annex.tscn", null, "", {"annex": "embassy"}],
+	["works", "res://scenes/hub/works.tscn"],
+	["load", "res://scenes/ui/save_slots.tscn"],
+]
 const RES := [Vector2i(2400, 1080), Vector2i(2340, 1080), Vector2i(1920, 1080), Vector2i(2560, 1600)]
+const RES_DESKTOP := [Vector2i(1280, 720), Vector2i(1920, 1080), Vector2i(2560, 1440)]
+var _desktop := false
 var _out := "/tmp/ck_mobile"
 var _report := []
 var _only: PackedStringArray = []
@@ -32,6 +44,8 @@ func _ready() -> void:
 			_out = arg.substr(6)
 		if arg.begins_with("--only="):
 			_only = arg.substr(7).split(",")
+		if arg == "--desktop":
+			_desktop = true
 	if DisplayServer.get_name() == "headless":
 		print("MOBILE PASS headless-skip")
 		get_tree().quit(0)
@@ -39,30 +53,36 @@ func _ready() -> void:
 	DirAccess.make_dir_recursive_absolute(_out)
 
 	GameState.new_game("Ash", "Banner", "#%02x%02x%02x" % [110, 212, 255])
-	for r in RES:
+	var screens: Array = SCREENS.duplicate()
+	if _desktop:
+		screens.append_array(DESKTOP_EXTRA)
+	for r in (RES_DESKTOP if _desktop else RES):
 		get_window().size = r
 		await get_tree().process_frame
 		await get_tree().process_frame
-		for pair in SCREENS:
+		for pair in screens:
 			if not _only.is_empty() and not Array(_only).any(func(o): return str(pair[0]).begins_with(o)):
 				continue
-			if pair.size() > 2:
+			if pair.size() > 2 and pair[2] != null:
 				GameState.set_meta(str(pair[3]) if pair.size() > 3 else "city_tab", pair[2])
-			await _shoot(str(pair[1]), "%s_%dx%d" % [pair[0], r.x, r.y])
+			await _shoot(str(pair[1]), "%s_%dx%d" % [pair[0], r.x, r.y], pair[4] if pair.size() > 4 else {})
 	var f := FileAccess.open(_out + "/layout.json", FileAccess.WRITE)
 	f.store_string(JSON.stringify(_report, " "))
 	print("MOBILE DONE")
 	get_tree().quit(0)
 
-func _shoot(path: String, name: String) -> void:
+func _shoot(path: String, name: String, node_meta: Dictionary = {}) -> void:
 	var packed = load(path)
 	if packed == null:
 		push_error("missing " + path)
 		return
 	var node = packed.instantiate()
+	for k in node_meta:
+		node.set_meta(k, node_meta[k])
 	get_tree().root.add_child(node)
 	get_tree().current_scene = node
-	MobileChrome.call_deferred("_apply")
+	if not _desktop:
+		MobileChrome.call_deferred("_apply")
 	await get_tree().create_timer(3.0 if name.begins_with("dialogue") else 0.6).timeout
 	await RenderingServer.frame_post_draw
 	get_viewport().get_texture().get_image().save_png("%s/%s.png" % [_out, name])
@@ -70,6 +90,7 @@ func _shoot(path: String, name: String) -> void:
 	var items := []
 	_root_scale = maxf(0.001, (node as CanvasItem).get_global_transform().get_scale().y) if node is CanvasItem else 1.0
 	_collect(node, items, vr)
+	_report_placeholders(node, items)
 	_report.append({"shot": name, "viewport": [vr.size.x, vr.size.y], "items": items})
 	get_tree().current_scene = self
 	node.queue_free()
@@ -93,11 +114,18 @@ func _collect(n: Node, items: Array, vr: Rect2) -> void:
 						_collect(ch0, items, vr)
 					return
 			var txt := ""
+			var need_w := 0.0
 			if c is Label or c is Button:
 				txt = str(c.text)
+				var trims: bool = (c is Label and ((c as Label).text_overrun_behavior != TextServer.OVERRUN_NO_TRIMMING or (c as Label).autowrap_mode != TextServer.AUTOWRAP_OFF)) \
+					or (c is Button and (c as Button).text_overrun_behavior != TextServer.OVERRUN_NO_TRIMMING)
+				if txt != "" and not trims:
+					var fnt: Font = c.get_theme_font("font")
+					if fnt:
+						need_w = fnt.get_string_size(txt.split("\n")[0], HORIZONTAL_ALIGNMENT_LEFT, -1, c.get_theme_font_size("font_size")).x * c.get_global_transform().get_scale().x
 			items.append({"type": c.get_class(), "path": str(c.get_path()), "text": txt.left(30),
 				"rect": [r.position.x, r.position.y, r.size.x, r.size.y],
-				"font": roundi(c.get_theme_font_size("font_size") * c.get_global_transform().get_scale().y / _root_scale), "in_scroll": _in_scroll(c), "clipped": clipped})
+				"font": roundi(c.get_theme_font_size("font_size") * c.get_global_transform().get_scale().y / _root_scale), "in_scroll": _in_scroll(c), "clipped": clipped, "need_w": need_w})
 	for ch in n.get_children():
 		_collect(ch, items, vr)
 
@@ -118,3 +146,15 @@ func _scroll_clip(c: Node) -> Rect2:
 			return (p as Control).get_global_rect()
 		p = p.get_parent()
 	return Rect2()
+
+
+func _report_placeholders(n: Node, items: Array) -> void:
+	if n is TextureRect and (n as Control).is_visible_in_tree():
+		var t: Texture2D = (n as TextureRect).texture
+		var tp := t.resource_path if t else ""
+		if t is PlaceholderTexture2D or tp.contains("placeholder") or tp.ends_with("icon.svg"):
+			var r := (n as Control).get_global_rect()
+			items.append({"type": "Placeholder", "path": str(n.get_path()), "text": tp.get_file(),
+				"rect": [r.position.x, r.position.y, r.size.x, r.size.y], "font": 0, "in_scroll": true, "clipped": true, "need_w": 0.0})
+	for ch in n.get_children():
+		_report_placeholders(ch, items)

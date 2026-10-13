@@ -486,8 +486,15 @@ static func speaker_silhouette(speaker: String, size: int = 120) -> Texture2D:
 	_cache[key] = tex
 	return tex
 
+## Opening review D-02: expression sets that no longer match the character's token (c01 灯影 was
+## painted silver-haired and masculine; her token and battle report are the black-haired woman).
+## Until the reshoot lands, these speakers use the same face as their token.
+const EXPR_RESHOOT := ["c01"]
+
 static func dialogue_portrait(speaker: String, emotion: String, who: CKCharacter, size: int = 120) -> Texture2D:
 	var slot := companion_slot(speaker)
+	if slot in EXPR_RESHOOT and who != null:
+		return portrait(who, size, CKArtPaths.TIER_MEDIUM)
 	if slot != "":
 		var path := expression_plate_path(slot, emotion)
 		if _art_exists(path):
@@ -496,7 +503,30 @@ static func dialogue_portrait(speaker: String, emotion: String, who: CKCharacter
 				return tex
 	if who != null:
 		return portrait(who, size, CKArtPaths.TIER_MEDIUM)
+	var sp_path := speaker_plate_path(speaker)
+	if sp_path != "" and _art_exists(sp_path):
+		var sp_tex = _try_load(sp_path, CKArtPaths.TIER_MEDIUM)
+		if sp_tex is Texture2D:
+			return sp_tex
 	return null
+
+## Story voices outside the roster (mother, midwife, steward...): supporting_v92.json "portrait".
+## Empty when the speaker has no row or no plate path; the caller keeps its silhouette.
+const SUPPORTING_TABLE := "res://data/cast/supporting_v92.json"
+static var _speaker_plates: Dictionary = {}
+static var _speaker_plates_ready := false
+
+static func speaker_plate_path(speaker: String) -> String:
+	if not _speaker_plates_ready:
+		_speaker_plates_ready = true
+		var f := FileAccess.open(SUPPORTING_TABLE, FileAccess.READ)
+		var parsed = JSON.parse_string(f.get_as_text()) if f != null else null
+		if typeof(parsed) == TYPE_DICTIONARY:
+			for row in parsed.get("people", []):
+				if typeof(row) == TYPE_DICTIONARY and str(row.get("portrait", "")) != "":
+					for k in ["name", "cast_key", "id"]:
+						_speaker_plates[str(row.get(k, ""))] = str(row.portrait)
+	return str(_speaker_plates.get(speaker, ""))
 
 ## Age-band display rule (playtest fix): everyone under 12 shares fixed plates so a newborn can
 ## never pick up a teen/adult face. 0–2 → one infant plate; 3–11 → one child plate per sex;

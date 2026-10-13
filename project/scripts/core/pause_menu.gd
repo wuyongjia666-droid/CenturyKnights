@@ -39,11 +39,17 @@ func _ready() -> void:
 	dim.color = Color(UIKit.BG, 0.72)
 	dim.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(dim)
+	# Opening review A-03: a full-rect CenterContainer keeps the panel centred at any size
+	# (the old fixed (460,80) offset on a centre anchor pushed it off-screen at 1280x720).
+	var center := CenterContainer.new()
+	center.name = "PauseCenter"
+	center.set_anchors_preset(Control.PRESET_FULL_RECT)
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(center)
 	var panel := UIKit.make_glass(16, 0.88)
-	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.custom_minimum_size = Vector2(360, hit * 6 + 96)
-	panel.position = Vector2(460, 80)
-	add_child(panel)
+	panel.name = "PausePanel"
+	panel.custom_minimum_size = Vector2(360, 0)
+	center.add_child(panel)
 	var box := VBoxContainer.new()
 	box.add_theme_constant_override("separation", 12)
 	panel.add_child(box)

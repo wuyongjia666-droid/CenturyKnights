@@ -41,7 +41,7 @@ func _build() -> void:
 
 	var col := VBoxContainer.new()
 	col.name = "MenuColumn"
-	col.position = Vector2(96, 132)
+	col.position = Vector2(96, 76)  # desktop: 7 rows + summary must end above 720
 	col.custom_minimum_size = Vector2(440, 0)
 	col.add_theme_constant_override("separation", 4)
 	add_child(col)
@@ -129,7 +129,7 @@ func _build() -> void:
 		add_child(keys)
 	_msg = UIKit.body_label("", UIKit.DANGER, 13)
 	_msg.name = "MenuMsg"
-	_msg.position = Vector2(96, 100)
+	_msg.position = Vector2(96, 48)
 	_msg.size = Vector2(600, 20)
 	add_child(_msg)
 	if mobile:
