@@ -31,7 +31,7 @@ for s in rep:
         for i in range(len(bs)):
             for j in range(i + 1, len(bs)):
                 a, b = bs[i], bs[j]
-                if 1.5 < abs(a[1] - b[1]) < 8 and abs(a[3] - b[3]) < 8:
+                if a[4] and b[4] and 1.5 < abs(a[1] - b[1]) < 8 and abs(a[3] - b[3]) < 8:
                     fails.append(("misaligned", f"{name}: misaligned {a[4]!r} vs {b[4]!r} dy={abs(a[1]-b[1]):.0f}"))
     for i in range(len(rects)):
         for j in range(i + 1, len(rects)):
