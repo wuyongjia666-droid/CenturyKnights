@@ -9,6 +9,7 @@ const SCREENS := [
 	["roster", "res://scenes/hub/roster.tscn"],
 	["tavern", "res://scenes/hub/tavern.tscn"],
 	["marriage", "res://scenes/hub/marriage.tscn"],
+	["marriage_wed", "res://scenes/hub/marriage.tscn", null, "", {"wed": true}],
 	["lineage", "res://scenes/hub/lineage_view.tscn"],
 	["wing_works", "res://scenes/hub/works.tscn"],
 	["wing_annex_academy", "res://scenes/hub/annex.tscn", null, "", {"annex": "academy"}],
@@ -92,7 +93,24 @@ func _ready() -> void:
 				World.pos = wp
 				World.visited[wp] = true
 				World._tlog("抵达 %s（初次踏足）" % str(World.node(wp).get("name", wp)))
+			var wed := bool(meta.get("wed", false))
+			meta.erase("wed")
+			var lead: CKCharacter = GameState.get_leader()
+			var cand: CKCharacter = null
+			var had := false
+			if wed and lead != null and not GameState.marriage_candidates.is_empty():
+				## married-state shot: wed the first candidate for this one shot, then undo
+				cand = GameState.marriage_candidates[0]
+				had = GameState.characters.has(str(cand.id))
+				GameState.characters[str(cand.id)] = cand
+				lead.spouse_id = str(cand.id)
+				cand.spouse_id = str(lead.id)
 			await _shoot(str(pair[1]), "%s_%dx%d" % [pair[0], r.x, r.y], meta)
+			if cand != null:
+				lead.spouse_id = ""
+				cand.spouse_id = ""
+				if not had:
+					GameState.characters.erase(str(cand.id))
 			World.pos = home
 	var f := FileAccess.open(_out + "/layout.json", FileAccess.WRITE)
 	f.store_string(JSON.stringify(_report, " "))

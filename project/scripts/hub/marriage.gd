@@ -151,6 +151,7 @@ func _build() -> void:
 	if DeviceProfile.is_mobile():
 		refresh_text = refresh_text.split(" ")[0]
 	var refresh := UIKit.ghost_button(refresh_text, 108, 40)
+	refresh.name = "Reroll"
 	refresh.tooltip_text = Locale.t("ux_marriage_reroll_tip")
 	refresh.pressed.connect(func():
 		var nid := _post_nation if _post_nation != "" else CKFamilyState.active_marriage_nation(GameState)
@@ -224,7 +225,7 @@ func _unhandled_input(e: InputEvent) -> void:
 		else:
 			_back()
 	elif e.is_action_pressed("ui_left") or e.is_action_pressed("ui_right"):
-		if GameState.marriage_candidates.is_empty() or _selected == null:
+		if GameState.marriage_candidates.is_empty() or _selected == null or _spouse() != null:
 			return
 		var i := GameState.marriage_candidates.find(_selected)
 		i = (i + (1 if e.is_action_pressed("ui_right") else -1) + GameState.marriage_candidates.size()) % GameState.marriage_candidates.size()
@@ -235,6 +236,18 @@ func _refresh() -> void:
 		c.queue_free()
 	if _posts_label:
 		_posts_label.text = Locale.t("ux_marriage_posts", [_nation_name(_post_nation)])
+	var reroll := get_node_or_null("MarriageActions/Reroll") as Control
+	var sp := _spouse()
+	if reroll:
+		reroll.visible = sp == null
+	if sp != null:
+		## Married: no candidate tabs — one clear banner, and the right card is the spouse.
+		var banner := UIKit.body_label(married_banner_text(sp), UIKit.OK, MobilePage.FONT if _mob else 14)
+		banner.name = "MarriedBanner"
+		banner.autowrap_mode = TextServer.AUTOWRAP_OFF
+		_tabs.add_child(banner)
+		_select(sp)
+		return
 	if GameState.marriage_candidates.is_empty():
 		_tabs.add_child(UIKit.empty_state("春令无人应帖。再议或提高声望。"))
 		return
@@ -254,6 +267,19 @@ func _refresh() -> void:
 		b.pressed.connect(func(): _select(captured))
 		_tabs.add_child(b)
 	_select(GameState.marriage_candidates[0])
+
+## The leader's spouse, or null while unmarried.
+func _spouse() -> CKCharacter:
+	var leader = GameState.get_leader()
+	if leader == null or str(leader.spouse_id) == "":
+		return null
+	return GameState.characters.get(str(leader.spouse_id)) as CKCharacter
+
+func married_banner_text(sp: CKCharacter) -> String:
+	return Locale.t("ux_married_banner", [sp.name])
+
+func is_married_view() -> bool:
+	return _spouse() != null and _selected == _spouse()
 
 func _house_card(rect: Rect2, c: CKCharacter, side_tag: String, side_en: String, col: Color, series: String) -> void:
 	var p := UIKit.panel_at(_cards, rect, 10)
@@ -323,7 +349,8 @@ func _house_card(rect: Rect2, c: CKCharacter, side_tag: String, side_en: String,
 		age.clip_text = true
 		age.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		v.add_child(age)
-	var ln := UIKit.body_label("%s旗 · %s" % [GameState.surname if c.is_leader else str(c.name).substr(0, 1), "家主" if c.is_leader else "应帖者"], UIKit.TEXT, 13)
+	var role_tag: String = Locale.t("ux_spouse_side") if is_married_view() else "应帖者"
+	var ln := UIKit.body_label("%s旗 · %s" % [GameState.surname if c.is_leader else str(c.name).substr(0, 1), "家主" if c.is_leader else role_tag], UIKit.TEXT, 13)
 	ln.autowrap_mode = TextServer.AUTOWRAP_OFF
 	ln.clip_text = true
 	v.add_child(ln)
@@ -461,12 +488,12 @@ func _render_cards() -> void:
 	if _mob:
 		_cards.add_child(_m_house_card(leader, Locale.t("mw_fc94ece4"), UIKit.ACCENT))
 		_cards.add_child(_m_harmony(leader, _selected))
-		_cards.add_child(_m_house_card(_selected, Locale.t("mw_d382e424"), UIKit.OK))
+		_cards.add_child(_m_house_card(_selected, Locale.t("ux_spouse_side") if is_married_view() else Locale.t("mw_d382e424"), UIKit.OK))
 		_fill_forecast(leader, _selected)
 		return
 	_house_card(_rect_principal, leader, "宗主一方", "CLAN PRINCIPAL", UIKit.ACCENT, "SERIES: VII-01")
 	_harmony_card(_rect_harmony, leader, _selected)
-	_house_card(_rect_spouse, _selected, "应帖一方", "ALLIED SPOUSE", UIKit.OK, "SERIES: IV-02")
+	_house_card(_rect_spouse, _selected, Locale.t("ux_spouse_side") if is_married_view() else "应帖一方", "SPOUSE" if is_married_view() else "ALLIED SPOUSE", UIKit.OK, "SERIES: IV-02")
 	_fill_forecast(leader, _selected)
 
 func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
@@ -489,7 +516,7 @@ func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 	cap.size = Vector2(280, 16)
 	_rite_board.add_child(cap)
 	_sync_rite_flags(a, b)
-	var rites: Array = CKCourt.required_rites(a, b) if a != null and b != null else []
+	var rites: Array = CKCourt.required_rites(a, b) if a != null and b != null and not is_married_view() else []
 	var row_y := 32.0
 	if not rites.is_empty():
 		var x := 12.0
@@ -829,6 +856,10 @@ func _consequence_line(a: CKCharacter, b: CKCharacter) -> void:
 	if a == null or b == null:
 		_msg.text = "选定双方后，这里写明婚仪会把子女写成什么样。"
 		return
+	if is_married_view():
+		_msg.text = Locale.t("ux_married_note", [b.name])
+		_msg.add_theme_color_override("font_color", UIKit.OK)
+		return
 	var bits: Array = []
 	for r in CKCourt.required_rites(a, b):
 		var id := str(r.get("id", ""))
@@ -932,6 +963,9 @@ func _select(c: CKCharacter) -> void:
 	if not check.get("ok"):
 		_msg.text = "门槛：%s" % str(check.get("msg", ""))
 		_msg.add_theme_color_override("font_color", UIKit.DANGER)
+	if is_married_view():
+		_msg.text = Locale.t("ux_married_note", [c.name])
+		_msg.add_theme_color_override("font_color", UIKit.OK)
 	_sync_contract_button()
 	if _result_hold != "":
 		_msg.text = _result_hold
@@ -1075,8 +1109,11 @@ func _sync_contract_button() -> void:
 		return
 	if wed and GameState.characters.has(str(leader.spouse_id)):
 		var sp: CKCharacter = GameState.characters[str(leader.spouse_id)]
-		_wed_line.text = Locale.t("ux_spouse_line", [sp.name])
-		_wed_line.visible = true
+		## The top MarriedBanner already names the spouse; on phones this line fell under the cards
+		## (and mobile reflow can re-show it), so keep it empty as well as hidden.
+		_wed_line.text = ""
+		_wed_line.tooltip_text = Locale.t("ux_spouse_line", [sp.name])
+		_wed_line.visible = false
 	else:
 		_wed_line.visible = false
 		_wed_line.text = ""
@@ -1224,7 +1261,7 @@ func _m_fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 	var rv: VBoxContainer = rp[1]
 	rv.add_child(MobilePage.label(Locale.t("mw_127f0d3b"), UIKit.ACCENT, MobilePage.FONT, false))
 	_sync_rite_flags(a, b)
-	var rites: Array = CKCourt.required_rites(a, b) if a != null and b != null else []
+	var rites: Array = CKCourt.required_rites(a, b) if a != null and b != null and not is_married_view() else []
 	if not rites.is_empty():
 		var fl := HFlowContainer.new()
 		fl.add_theme_constant_override("h_separation", 8)

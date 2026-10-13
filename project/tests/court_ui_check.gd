@@ -187,7 +187,10 @@ func _marriage_posts_and_wed(scene: Node) -> void:
 	_ok(btn != null and btn.disabled and btn.text == Locale.t("ux_married_cta"), "contract locked %s" % (btn.text if btn else ""))
 	var toast := scene.find_child("MarriageToast", true, false) as Label
 	_ok(toast != null and toast.visible and str(toast.text).find(str(wed.get("msg", ""))) >= 0, "wedding toast")
-	var line := scene.find_child("SpouseLine", true, false) as Label
+	## Married view: the candidate tabs give way to one banner naming the spouse.
+	if scene.has_method("_refresh"):
+		scene._refresh()
+	var line := scene.find_child("MarriedBanner", true, false) as Label
 	_ok(line != null and line.visible and str(line.text).find(str(picked.name)) >= 0, "spouse line")
 	var silver := ""
 	if scene.get("_chip_value") is Array and (scene.get("_chip_value") as Array).size() >= 3:
