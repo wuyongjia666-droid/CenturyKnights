@@ -1,4 +1,6 @@
 extends Node
+
+const SAVE_SCENE := preload("res://scenes/ui/save_slots.tscn")
 ## Audit #10/#57: slot cards (empty disabled, real info), failed load says so, autosave flashes.
 
 func _ready() -> void:
@@ -15,7 +17,7 @@ func _run() -> String:
 		for p in [CKSaveService.body_path(slot), CKSaveService.meta_path(slot)]:
 			if FileAccess.file_exists(p):
 				DirAccess.remove_absolute(ProjectSettings.globalize_path(p))
-	var page = load("res://scenes/ui/save_slots.tscn").instantiate()
+	var page = SAVE_SCENE.instantiate()
 	add_child(page)
 	await get_tree().process_frame
 	if (page.find_child("SlotMsg", true, false) as Label).text == "":
@@ -40,7 +42,7 @@ func _run() -> String:
 	var f := FileAccess.open(CKSaveService.body_path("quick"), FileAccess.WRITE)
 	f.store_string("{broken")
 	f.close()
-	page = load("res://scenes/ui/save_slots.tscn").instantiate()
+	page = SAVE_SCENE.instantiate()
 	add_child(page)
 	await get_tree().process_frame
 	if (page.find_child("Load_manual_1", true, false) as Button).disabled:
