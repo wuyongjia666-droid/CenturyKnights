@@ -135,7 +135,8 @@
         "herb": 2
       },
       "promote_to": [
-        "medic"
+        "medic",
+        "yan_zhan"
       ],
       "promote_from": "apprentice"
     },
@@ -317,6 +318,21 @@
       "promote_from": "priest",
       "mechanic": "overheal",
       "mastery_skill": "medic_oath"
+    },
+    {
+      "id": "yan_zhan",
+      "name": "验盏",
+      "tier": 3,
+      "atk_type": "magic",
+      "base_atk": 6,
+      "base_def": 4,
+      "move": 4,
+      "req": {},
+      "promote_to": [],
+      "promote_from": "priest",
+      "mechanic": "yan_zhan",
+      "branch": "special",
+      "desc": "每场第一次出手打中谁，就给谁点盏：全队打它命中 +8（伪造爵位）或 +4（没血谱的杂兵）。要先在灯都·琉光盖「验盏」印。"
     },
     {
       "id": "warlock",

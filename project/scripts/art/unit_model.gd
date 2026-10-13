@@ -30,6 +30,7 @@ const JOB_ANIM := {
 	"marksman": "bow",
 	"apprentice": "staff",
 	"priest": "staff",
+	"yan_zhan": "staff",
 	"medic": "staff",
 	"mage": "staff",
 	"warlock": "staff",

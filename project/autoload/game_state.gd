@@ -465,6 +465,9 @@ func try_promote(cid: String, job_id: String) -> Dictionary:
 	var job = get_job(job_id)
 	if c == null or job.is_empty():
 		return {"ok": false, "msg": "无效"}
+	var seal_gate: Dictionary = CKJobSeals.promote_gate(c, job_id)
+	if not bool(seal_gate.get("ok", true)):
+		return seal_gate
 	var req: Dictionary = job.get("req", {})
 	for k in req.keys():
 		if k in CKCharacter.STAT_KEYS:

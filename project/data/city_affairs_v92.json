@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "templates": [
+    {
+      "id": "first_meet",
+      "label": "头一回来，去城里报个名",
+      "cost": {},
+      "need_rep": 0
+    },
+    {
+      "id": "supply",
+      "label": "给城里送一批粮",
+      "cost": {
+        "food": 6
+      },
+      "specialties": [
+        "粮",
+        "盐",
+        "矿",
+        "药田",
+        "市集"
+      ]
+    },
+    {
+      "id": "honor",
+      "label": "给城防捐一笔钱",
+      "cost": {
+        "silver": 20
+      },
+      "specialties": [
+        "都",
+        "要塞",
+        "堡",
+        "王廷"
+      ]
+    },
+    {
+      "id": "forge",
+      "label": "给铁匠送两块铁",
+      "cost": {
+        "iron": 2
+      },
+      "specialties": [
+        "锻",
+        "军械",
+        "铁"
+      ]
+    },
+    {
+      "id": "gossip",
+      "label": "请酒馆的人喝一轮",
+      "cost": {
+        "silver": 6
+      },
+      "specialties": [
+        "港",
+        "夜市"
+      ]
+    },
+    {
+      "id": "rest",
+      "label": "在驿站住一晚，帮着守夜",
+      "cost": {
+        "silver": 4
+      },
+      "specialties": [
+        "村",
+        "驿"
+      ]
+    }
+  ]
+}

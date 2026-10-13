@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "rep_friendly": 30,
+  "special": [
+    {
+      "job": "yan_zhan",
+      "from": "priest",
+      "city": "lt_capital",
+      "name": "验盏"
+    }
+  ]
+}
