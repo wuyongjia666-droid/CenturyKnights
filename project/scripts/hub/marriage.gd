@@ -269,21 +269,18 @@ func _refresh() -> void:
 		_tabs.add_child(b)
 	_select(GameState.marriage_candidates[0])
 
-## Desktop footer: once wed, the 缔约 / 再议 / 切换候选 key hints no longer apply.
-const _WED_HIDDEN_HINTS := ["缔约", "再议", "切换候选"]
+## Desktop footer: once wed, the first three key hints (contract / re-roll / switch candidate)
+## no longer apply. footer_bar lays each hint out as keycap, label, gap.
+const _WED_HIDDEN_HINT_COUNT := 3
 func _sync_footer_hints(wed: bool) -> void:
 	var foot := get_node_or_null("StitchFooter")
 	if foot == null:
 		return
 	for h in foot.get_children():
-		if not (h is HBoxContainer):
-			continue
-		var kids := h.get_children()
-		for i in kids.size():
-			if kids[i] is Label and str((kids[i] as Label).text) in _WED_HIDDEN_HINTS:
-				for j in [i - 1, i, i + 1]:
-					if j >= 0 and j < kids.size():
-						(kids[j] as Control).visible = not wed
+		if h is HBoxContainer:
+			var kids := h.get_children()
+			for i in mini(kids.size(), _WED_HIDDEN_HINT_COUNT * 3):
+				(kids[i] as Control).visible = not wed
 
 ## The leader's spouse, or null while unmarried.
 func _spouse() -> CKCharacter:
