@@ -931,7 +931,7 @@ static func res_chip(label: String, value: String, col: Color = TEXT) -> PanelCo
 	p.add_child(h)
 	var k := Label.new()
 	k.text = label
-	k.add_theme_font_size_override("font_size", 11)
+	k.add_theme_font_size_override("font_size", desk_sz(11))
 	k.add_theme_color_override("font_color", TEXT_FAINT)
 	k.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	h.add_child(k)

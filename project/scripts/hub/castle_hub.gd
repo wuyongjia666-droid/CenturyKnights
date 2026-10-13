@@ -273,7 +273,7 @@ func _build() -> void:
 	var rl := UIKit.mono("KNIGHT ROSTER", UIKit.desk_sz(9), UIKit.ACCENT)
 	rl.position = Vector2(16, 18)
 	rp.add_child(rl)
-	var rl2 := UIKit.mono("PLATE #01", UIKit.desk_sz(9), UIKit.TEXT_FAINT)
+	var rl2 := UIKit.mono("PLATE #01", UIKit.desk_sz(9), UIKit.TEXT_FAINT, false)  # no track: fits beside title at ≥12px
 	rl2.position = Vector2(216 - rl2.get_minimum_size().x, 18)
 	rp.add_child(rl2)
 	if leader:
