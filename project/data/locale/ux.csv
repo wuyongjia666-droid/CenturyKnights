@@ -331,6 +331,24 @@ ux_name_nation_rand_btn,照这国的风格随机一面,Randomize in this nation 
 ux_name_gender,性别,Gender
 ux_name_gender_m,男,Male
 ux_name_gender_f,女,Female
+ux_name_more_hint,▼ 往下滑，还有更多选项,▼ Scroll for more options
 ux_name_face,面孔,Face
 ux_hub_file_short,档案,File
 ux_hub_mainline_cap,主线,Main line
+ux_dep_title,出战编成,Deployment
+ux_dep_info,%s · 已上阵 %d,%s · Fielded %d
+ux_dep_back,返回城堡,Back to castle
+ux_dep_idle,待命,Standby
+ux_dep_tap,点选上阵,Tap to field
+ux_dep_on,出战,Fielded
+ux_dep_stats,HP %d · 攻 %d · 移 %d,HP %d · ATK %d · MOV %d
+ux_dep_vacant,空位,Open slot
+ux_dep_recruit,点这里去酒馆招募,Tap to recruit at the tavern
+ux_dep_empty,花名册是空的，先去酒馆招人。,No one on the roster yet. Recruit at the tavern.
+ux_dep_leader,主力队长,Captain
+ux_dep_fielded,已上阵,Fielded
+ux_dep_traits,特质：,Traits: 
+ux_dep_none,无,None
+ux_dep_go,出战 · 练习战（清匪）,Sortie · Practice (bandits)
+ux_dep_need,至少点选一名骑士上阵,Field at least one knight
+ux_dep_stats2,%s · HP %d/%d · 攻 %d · 移 %d,%s · HP %d/%d · ATK %d · MOV %d

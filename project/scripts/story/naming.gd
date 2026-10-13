@@ -224,7 +224,23 @@ func _build() -> void:
 	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_split.add_child(_scroll)
+	if DeviceProfile.is_mobile():
+		# Phone: the scroll hint sits under the options column, never over an option.
+		var col := VBoxContainer.new()
+		col.name = "OptionsColumn"
+		col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		col.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		col.add_theme_constant_override("separation", 4)
+		_split.add_child(col)
+		col.add_child(_scroll)
+		_more_hint = UIKit.body_label(Locale.t("ux_name_more_hint"), UIKit.ACCENT, 22)
+		_more_hint.name = "OptionsMoreHint"
+		_more_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		_more_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_more_hint.custom_minimum_size = Vector2(0, 32)
+		col.add_child(_more_hint)
+	else:
+		_split.add_child(_scroll)
 	var box := VBoxContainer.new()
 	_opts = box
 	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -572,15 +588,24 @@ func _paint_face_thumbs() -> void:
 		tb.modulate = Color(1, 1, 1, 1) if i == _face_idx else Color(0.72, 0.72, 0.78, 1)
 
 func _sync_gender_btns() -> void:
-	if _gender_m_btn:
-		_gender_m_btn.disabled = (_gender == "m")
-	if _gender_f_btn:
-		_gender_f_btn.disabled = (_gender == "f")
+	UIKit.mark_choice(_gender_m_btn, _gender == "m")
+	UIKit.mark_choice(_gender_f_btn, _gender == "f")
 
 func apply_mobile_layout() -> void:
 	_apply_layout()
 
+var _more_hint: Label = null
+
+## Phone: the options column scrolls; the hint under it stays lit until the player reaches the end.
+func _sync_more_hint() -> void:
+	if _more_hint == null or _scroll == null:
+		return
+	var bar := _scroll.get_v_scroll_bar()
+	var more := bar != null and bar.max_value - bar.page > 4.0 and _scroll.scroll_vertical < bar.max_value - bar.page - 4.0
+	_more_hint.text = Locale.t("ux_name_more_hint") if more else ""
+
 func _process(_d: float) -> void:
+	_sync_more_hint()
 	var f := get_viewport().gui_get_focus_owner()
 	if f is LineEdit:
 		_last_edit_ms = Time.get_ticks_msec()

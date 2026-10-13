@@ -46,12 +46,18 @@ func _ready() -> void:
 	var en_b := UIKit.make_button(Locale.t("shell_lang_en"), 140)
 	for b in [zh_b, en_b]:
 		b.custom_minimum_size = Vector2(140, 48)
-	zh_b.disabled = Locale.lang == "zh_CN"
-	en_b.disabled = Locale.lang.begins_with("en")
+	UIKit.mark_choice(zh_b, Locale.lang == "zh_CN")
+	UIKit.mark_choice(en_b, Locale.lang.begins_with("en"))
 	zh_b.pressed.connect(func():
+		if Locale.lang == "zh_CN":
+			UIKit.mark_choice(zh_b, true)
+			return
 		Locale.set_lang("zh_CN")
 		get_tree().reload_current_scene())
 	en_b.pressed.connect(func():
+		if Locale.lang.begins_with("en"):
+			UIKit.mark_choice(en_b, true)
+			return
 		Locale.set_lang("en")
 		get_tree().reload_current_scene())
 	lang_row.add_child(zh_b)

@@ -351,6 +351,22 @@ static func tab_bar(labels: PackedStringArray, selected: int = 0) -> HBoxContain
 		bar.add_child(tab)
 	return bar
 
+## A pick-one option (gender, tab-like choice). The current pick is lit in accent instead of being
+## disabled, so it never reads as "unavailable" (mobile audit v1: founding '女' looked disabled).
+static func mark_choice(b: Button, on: bool) -> void:
+	if b == null:
+		return
+	b.disabled = false
+	b.toggle_mode = true
+	b.set_pressed_no_signal(on)
+	b.set_meta("choice_on", on)
+	b.add_theme_color_override("font_color", ON_ACCENT if on else TEXT)
+	b.add_theme_color_override("font_pressed_color", ON_ACCENT)
+	b.add_theme_color_override("font_hover_pressed_color", ON_ACCENT)
+	var box := _btn_box(ACCENT if on else Color(0, 0, 0, 0.25), ACCENT if on else STROKE_HI, 1, 8)
+	for st in ["normal", "pressed", "hover_pressed"]:
+		b.add_theme_stylebox_override(st, box)
+
 static func dialog_panel(title: String, body: String) -> PanelContainer:
 	var panel := PanelContainer.new()
 	panel.add_theme_stylebox_override("panel", glass(16, 0.92, true))

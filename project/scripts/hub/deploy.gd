@@ -175,6 +175,9 @@ func _clear(n: Control) -> void:
 func _render() -> void:
 	_clear(_cards)
 	_clear(_metrics)
+	if _phone_land():
+		_render_phone()
+		return
 	var roster: Array = GameState.roster()
 	var kept: Array = []
 	for cid in GameState.deploy_ids:
@@ -436,3 +439,186 @@ func _render_metrics() -> void:
 	var hint := UIKit.mono("START CRUSADE →", 8, UIKit.TEXT_FAINT, false)
 	hint.position = Vector2(x, R.end.y - 18)
 	_metrics.add_child(hint)
+
+
+# ── landscape phone (mobile audit v1: deploy) ──────────────────────────────
+# Container layout in the roster/tavern style: one 76px top bar, a horizontally scrolling strip of
+# big unit cards on the left, the focused unit + 出战 on the right. Text 22px (≈12dp), buttons 76px.
+const PHONE_SIDE := 470.0
+var _phone_bar: Control = null
+
+func _phone_land() -> bool:
+	return MobilePage.active(self) and not _portrait()
+
+func _render_phone() -> void:
+	var v := _view()
+	var w := maxf(v.x, 1280.0)
+	if _phone_bar == null:
+		for n in [_head, _matrix, _count]:
+			if n:
+				(n as CanvasItem).visible = false
+		_phone_bar = MobilePage.top_bar(self, Locale.t("ux_dep_title"), Locale.t("ux_dep_info") % [DeployBrief.cap_line(), GameState.deploy_ids.size()], [[Locale.t("ux_dep_back"), _back]])
+	var roster: Array = GameState.roster()
+	var kept: Array = []
+	for cid in GameState.deploy_ids:
+		var who: CKCharacter = GameState.characters.get(cid)
+		if who != null and DeployBrief.bench_reason(who) == "":
+			kept.append(cid)
+	GameState.deploy_ids = kept
+	_count.text = "%s · %d" % [DeployBrief.cap_line(), GameState.deploy_ids.size()]
+	var info := _phone_bar.get_child(1) as Label
+	if info:
+		info.set_meta("m_raw", Locale.t("ux_dep_info") % [DeployBrief.cap_line(), GameState.deploy_ids.size()])
+		info.text = str(info.get_meta("m_raw"))
+	var top := MobilePage.TOP
+	var h := 720.0 - top - 16.0
+	var side_x := w - 26.0 - PHONE_SIDE
+	var scroll := ScrollContainer.new()
+	scroll.name = "PhoneCardStrip"
+	scroll.position = Vector2(26, top)
+	scroll.size = Vector2(side_x - 26.0 - 16.0, h)
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_cards.add_child(scroll)
+	var strip := HBoxContainer.new()
+	strip.add_theme_constant_override("separation", 14)
+	strip.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.add_child(strip)
+	var slots := mini(maxi(roster.size(), GameState.max_deploy()), 6)
+	var card_h := h - 12.0
+	var focus_btn: Button = null
+	for i in range(slots):
+		if i < roster.size():
+			var b := _phone_card(roster[i], i, card_h)
+			strip.add_child(b)
+			if roster[i] == _focus:
+				focus_btn = b
+		else:
+			strip.add_child(_phone_vacant(i, card_h))
+	if focus_btn:
+		focus_btn.call_deferred("grab_focus")
+	_phone_metrics(Rect2(side_x, top, PHONE_SIDE, h))
+
+func _phone_card(c: CKCharacter, i: int, card_h: float) -> Button:
+	var on: bool = c.id in GameState.deploy_ids
+	var hurt := DeployBrief.bench_reason(c)
+	var b := Button.new()
+	b.name = "Card%d" % i
+	b.custom_minimum_size = Vector2(250, card_h)
+	b.focus_mode = Control.FOCUS_ALL
+	var n := UIKit.flat_box(Color(UIKit.ACCENT, 0.08) if on else Color(0.055, 0.067, 0.090, 0.92), Color(UIKit.ACCENT, 0.9) if on else Color(1, 1, 1, 0.12), 10, 2 if on else 1)
+	UIKit._apply_states(b, {
+		"normal": n,
+		"hover": UIKit.flat_box(Color(0.07, 0.09, 0.12, 0.95), Color(UIKit.ACCENT, 0.5), 10),
+		"pressed": UIKit.flat_box(Color(UIKit.ACCENT, 0.12), Color(UIKit.ACCENT, 0.9), 10, 2),
+		"focus": UIKit._focus_ring(UIKit.FOCUS_RING, 12),
+		"disabled": UIKit.flat_box(Color(0, 0, 0, 0.3), Color(1, 1, 1, 0.05), 10),
+	})
+	b.disabled = hurt != ""
+	b.pressed.connect(func(): _toggle(c))
+	b.focus_entered.connect(func():
+		if _focus != c:
+			_focus = c
+			_clear(_metrics)
+			_phone_metrics(Rect2(maxf(_view().x, 1280.0) - 26.0 - PHONE_SIDE, MobilePage.TOP, PHONE_SIDE, 720.0 - MobilePage.TOP - 16.0)))
+	var m := MarginContainer.new()
+	m.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	m.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for side in ["left", "right", "top", "bottom"]:
+		m.add_theme_constant_override("margin_" + side, 12)
+	b.add_child(m)
+	var col := VBoxContainer.new()
+	col.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	col.add_theme_constant_override("separation", 4)
+	m.add_child(col)
+	var head := HBoxContainer.new()
+	head.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	col.add_child(head)
+	var slot := GameState.deploy_ids.find(c.id)
+	var hd := MobilePage.label(BattleObjectives.text("deploy_slot") % (slot + 1) if slot >= 0 else Locale.t("ux_dep_idle"), UIKit.ACCENT if on else UIKit.TEXT_FAINT, MobilePage.FONT, false)
+	head.add_child(hd)
+	var chip := UIKit.tag_chip(hurt if hurt != "" else (Locale.t("ux_dep_on") if on else Locale.t("ux_dep_tap")), UIKit.DANGER if hurt != "" else (UIKit.ACCENT if on else UIKit.TEXT_DIM), on and hurt == "")
+	head.add_child(chip)
+	var pr := UIKit.make_portrait_rect(c, 220)
+	pr.custom_minimum_size = Vector2(0, maxf(180.0, card_h - 300.0))
+	pr.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	pr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	pr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	pr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if not on:
+		pr.modulate = Color(0.7, 0.74, 0.82)
+	col.add_child(pr)
+	var nm := MobilePage.label(c.name, UIKit.TEXT, 26, false)
+	nm.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	nm.clip_text = true
+	col.add_child(nm)
+	var jb := MobilePage.label("%s · LV %d" % [str(GameState.get_job(c.job_id).get("name", "")), c.level], UIKit.ACCENT if on else UIKit.TEXT_DIM, MobilePage.FONT, false)
+	jb.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	jb.clip_text = true
+	col.add_child(jb)
+	var st := MobilePage.label(Locale.t("ux_dep_stats") % [c.hp, c.derived_atk(), c.derived_move()], UIKit.DANGER if c.injured else UIKit.TEXT, MobilePage.FONT, false)
+	st.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	st.clip_text = true
+	col.add_child(st)
+	for l in [hd, nm, jb, st]:
+		(l as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return b
+
+func _phone_vacant(i: int, card_h: float) -> Control:
+	var p := PanelContainer.new()
+	p.name = "Vacant%d" % i
+	p.custom_minimum_size = Vector2(250, card_h)
+	p.add_theme_stylebox_override("panel", UIKit.flat_box(Color(1, 1, 1, 0.015), Color(1, 1, 1, 0.10), 10))
+	p.mouse_filter = Control.MOUSE_FILTER_STOP
+	p.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	p.gui_input.connect(func(ev: InputEvent): _vacant_input(ev))
+	var col := VBoxContainer.new()
+	col.alignment = BoxContainer.ALIGNMENT_CENTER
+	col.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	p.add_child(col)
+	for spec in [["+", 64, UIKit.ACCENT], [Locale.t("ux_dep_vacant"), 26, UIKit.TEXT_DIM], [Locale.t("ux_dep_recruit"), MobilePage.FONT, UIKit.TEXT_FAINT]]:
+		var l := MobilePage.label(str(spec[0]), spec[2], int(spec[1]), true)
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		col.add_child(l)
+	return p
+
+func _phone_metrics(r: Rect2) -> void:
+	var v := MobilePage.panel(_metrics, r, 18)
+	(v.get_parent() as Control).name = "PhoneMetrics"
+	if _focus == null:
+		v.add_child(MobilePage.label(Locale.t("ux_dep_empty"), UIKit.TEXT_DIM))
+		return
+	var c := _focus
+	var on: bool = c.id in GameState.deploy_ids
+	var head := HBoxContainer.new()
+	v.add_child(head)
+	var nm := MobilePage.label(c.name, UIKit.TEXT, 28, false)
+	head.add_child(nm)
+	head.add_child(UIKit.tag_chip(Locale.t("ux_dep_leader") if c.is_leader else (Locale.t("ux_dep_fielded") if on else Locale.t("ux_dep_idle")), UIKit.ACCENT if on else UIKit.TEXT_DIM))
+	v.add_child(MobilePage.label(Locale.t("ux_dep_stats2", [str(GameState.get_job(c.job_id).get("name", "")), c.hp, c.max_hp, c.derived_atk(), c.derived_move()]), UIKit.ACCENT))
+	var board := DeployMinimap.new()
+	board.map_id = DeployBrief.practice_map_id()
+	board.custom_minimum_size = Vector2(0, 96)
+	board.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	v.add_child(board)
+	var m := BattleMaps.get_map(DeployBrief.practice_map_id())
+	for line in [DeployBrief.objective_line(m), DeployBrief.enemy_line(m), DeployBrief.suggest_line(m)]:
+		v.add_child(MobilePage.label(str(line), UIKit.TEXT_DIM))
+	var tr := ""
+	for t in c.traits:
+		tr += str(GameState.get_trait(str(t)).get("name", t)) + " · "
+	v.add_child(MobilePage.label(Locale.t("ux_dep_traits") + (tr.trim_suffix(" · ") if tr != "" else Locale.t("ux_dep_none")), UIKit.TEXT_DIM))
+	MobilePage.spacer(v)
+	var rb := MobilePage.button(CKDeployReserve.button_text(), false, func(): pass)
+	rb.name = "ReserveBtn"
+	rb.pressed.connect(func():
+		var rr := CKDeployReserve.cycle()
+		rb.text = CKDeployReserve.button_text()
+		rb.tooltip_text = str(rr.get("msg", "")))
+	v.add_child(rb)
+	var go := MobilePage.button(Locale.t("ux_dep_go"), true, _fight)
+	go.name = "Fight"
+	go.disabled = GameState.deploy_ids.is_empty()
+	v.add_child(go)
+	if go.disabled:
+		v.add_child(MobilePage.label(Locale.t("ux_dep_need"), UIKit.DANGER))

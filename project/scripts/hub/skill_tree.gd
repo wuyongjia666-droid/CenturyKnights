@@ -47,6 +47,16 @@ func _ready() -> void:
 	_unlock.position = Vector2(16, 448)
 	_unlock.pressed.connect(_do_unlock)
 	right.add_child(_unlock)
+	if DeviceProfile.is_mobile():
+		# Phone: the 22px points line would sit on the page description; it heads the detail card.
+		remove_child(_pts)
+		_pts.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		right.add_child(_pts)
+		_pts.position = Vector2(16, 12)
+		_pts.size = Vector2(280, 34)
+		_detail.position.y = 52.0
+		_detail.size.y = 350.0
+		_unlock.position.y = 512 - 16 - MobilePage.HIT
 	_msg = CKPageKit.feedback(self)
 	var roster: Array = GameState.roster()
 	if not roster.is_empty():
