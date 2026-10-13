@@ -88,7 +88,81 @@ static func ensure_hit_targets(root: Node, min_px: float = -1.0) -> void:
 	var need := min_px
 	if need < 0.0:
 		need = DeviceProfile.hit_px()
+		if DeviceProfile.is_mobile() and font_floor_applies(root):
+			need = maxf(need, HIT_FLOOR)
 	_grow_buttons(root, need)
+
+## Mobile type floor (docs/design/mobile-landscape.md): 1 dp ≈ 1.75 logical px on a 720-tall
+## landscape root, so 12dp = 21px. Every text node under `root` is raised to FONT_FLOOR unless the
+## node (or the scene root) sets meta "font_floor_exempt". Pure-Latin spaced-caps kickers
+## ("C E N T U R Y", "— Q U E U E") are decoration on desktop; on a phone they are hidden.
+const FONT_FLOOR := 22
+const HIT_FLOOR := 76.0
+
+## Hand-placed pages whose phone redesign is owned by another line (or not done yet). The floor
+## would push their absolute rows into each other, so they keep desktop sizes until their own
+## apply_mobile_layout lands; that change removes the page from this list.
+const FONT_FLOOR_PENDING := [
+	"res://scenes/hub/atlas_view.tscn", "res://scenes/hub/city.tscn",
+	"res://scenes/hub/castle_view.tscn", "res://scenes/hub/market.tscn",
+	"res://scenes/hub/estates.tscn", "res://scenes/hub/works.tscn",
+	"res://scenes/hub/forge.tscn", "res://scenes/hub/annex.tscn",
+	"res://scenes/hub/deploy.tscn", "res://scenes/hub/skill_tree.tscn",
+	"res://scenes/hub/rival_houses.tscn", "res://scenes/hub/shrine.tscn",
+	"res://scenes/hub/train.tscn", "res://scenes/hub/blood_test.tscn",
+	"res://scenes/hub/lineage_tree.tscn",
+]
+
+static func font_floor_applies(root: Node) -> bool:
+	if root == null or bool(root.get_meta("font_floor_exempt", false)):
+		return false
+	return not (root.scene_file_path in FONT_FLOOR_PENDING)
+
+static func ensure_min_fonts(root: Node, floor_px: int = FONT_FLOOR) -> void:
+	if not font_floor_applies(root):
+		return
+	_floor_fonts(root, floor_px)
+
+static func _floor_fonts(node: Node, floor_px: int) -> void:
+	for child in node.get_children():
+		if bool(child.get_meta("font_floor_exempt", false)):
+			continue
+		if child is Control:
+			_floor_one(child as Control, floor_px)
+		_floor_fonts(child, floor_px)
+
+static func is_decor_kicker(text: String) -> bool:
+	var t := text.strip_edges()
+	if t.length() < 2:
+		return t == "/" or t == "//"
+	t = t.replace("\u2009", " ")
+	var re := RegEx.new()
+	re.compile("^[A-Z0-9 ·/\\-—–.:#]+$")
+	if re.search(t) == null:
+		return false
+	return t.contains(" ") or t.contains("/")
+
+static func _floor_one(c: Control, floor_px: int) -> void:
+	var key := "font_size"
+	if c is RichTextLabel:
+		key = "normal_font_size"
+	elif not (c is Label or c is Button or c is LineEdit or c is TextEdit or c is SpinBox):
+		return
+	if c is SpinBox:
+		_floor_one((c as SpinBox).get_line_edit(), floor_px)
+		return
+	var fs := c.get_theme_font_size(key)
+	if fs >= floor_px:
+		return
+	if c is Label and fs <= 12 and c.visible and is_decor_kicker((c as Label).text):
+		c.visible = false
+		c.set_meta("m_kicker_hidden", true)
+		return
+	c.add_theme_font_size_override(key, floor_px)
+	if c is RichTextLabel:
+		for k in ["bold_font_size", "italics_font_size", "mono_font_size", "bold_italics_font_size"]:
+			if c.get_theme_font_size(k) < floor_px:
+				c.add_theme_font_size_override(k, floor_px)
 
 static func _grow_buttons(node: Node, need: float) -> void:
 	for child in node.get_children():
