@@ -117,7 +117,9 @@ func _collect(n: Node, items: Array, vr: Rect2) -> void:
 			var need_w := 0.0
 			if c is Label or c is Button:
 				txt = str(c.text)
-				if txt != "" and not (c is Label and (c as Label).autowrap_mode != TextServer.AUTOWRAP_OFF):
+				var trims: bool = (c is Label and ((c as Label).text_overrun_behavior != TextServer.OVERRUN_NO_TRIMMING or (c as Label).autowrap_mode != TextServer.AUTOWRAP_OFF)) \
+					or (c is Button and (c as Button).text_overrun_behavior != TextServer.OVERRUN_NO_TRIMMING)
+				if txt != "" and not trims:
 					var fnt: Font = c.get_theme_font("font")
 					if fnt:
 						need_w = fnt.get_string_size(txt.split("\n")[0], HORIZONTAL_ALIGNMENT_LEFT, -1, c.get_theme_font_size("font_size")).x * c.get_global_transform().get_scale().x
