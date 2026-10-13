@@ -89,7 +89,7 @@ static func _bridge_tax(battle, u, units: Array) -> void:
 			_set_move(o["char"], -2)
 			o["char"].set_meta("sj_toll_spent", true)
 			_set_move(c, 1)
-			_say(battle, "【桥税骑】%s 拦下 %s 收过桥税：它下回合少走 2 格，%s 这回合多走 1 格" % [c.name, o["char"].name, c.name])
+			_say(battle, Locale.t("sj_c07cf476") % [c.name, o["char"].name, c.name])
 			return
 
 
@@ -100,7 +100,7 @@ static func _frost_wait(battle, u, units: Array) -> void:
 			if o["char"].has_meta("sj_frost_pos") and o["char"].get_meta("sj_frost_pos") == o["pos"]:
 				continue
 			o["char"].set_meta("sj_frost_pos", o["pos"])
-			_say(battle, "【霜候】%s 盯住了 %s：它不挪窝就防御 −1" % [u["char"].name, o["char"].name])
+			_say(battle, Locale.t("sj_3bf5abd8") % [u["char"].name, o["char"].name])
 			return
 
 
@@ -118,7 +118,7 @@ static func _salt_check(battle) -> void:
 			mouths += 1
 	var ok := int(GameState.food) >= maxi(1, mouths)
 	battle.set_meta("sj_salt_on", ok)
-	_say(battle, "【盐引】粮够今天吃，挨着盐引的人防御 +1" if ok else "【盐引】粮不够今天吃，盐引的光环没开")
+	_say(battle, Locale.t("sj_2e8451ff") if ok else Locale.t("sj_d46a3984"))
 
 
 static func _salt_bonus(battle, def_u) -> int:
@@ -157,7 +157,7 @@ static func after_strike(battle, atk_u, def_u, result: Dictionary) -> void:
 	var ac = atk_u.get("char")
 	if ac != null and int(ac.hp) > 0:
 		ac.hp = maxi(0, int(ac.hp) - 2)
-	_say(battle, "【锻眉】%s 硬吃一下，反震 %s 2 点，之后防御 +2" % [dc.name, ac.name if ac != null else "对手"])
+	_say(battle, Locale.t("sj_76cd2baf") % [dc.name, ac.name if ac != null else Locale.t("sj_4f76b088")])
 
 
 ## 录外生：本场第一次用战技不进冷却。
