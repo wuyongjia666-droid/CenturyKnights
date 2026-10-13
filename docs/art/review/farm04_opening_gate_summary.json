@@ -1,0 +1,22 @@
+{
+  "checked": 85,
+  "pass": 68,
+  "reject": 17,
+  "by_role": {
+    "speaker": 25,
+    "cg": 6,
+    "expression": 39,
+    "story_bg": 15
+  },
+  "by_role_pass": {
+    "speaker": 21,
+    "cg": 4,
+    "expression": 33,
+    "story_bg": 10
+  },
+  "fail_reasons": {
+    "style:saturation": 14,
+    "anatomy:multi_person": 3
+  },
+  "elapsed_s": 34.1
+}

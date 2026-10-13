@@ -1,0 +1,121 @@
+[
+ {
+  "id": "v92_speaker_newcomer",
+  "role": "speaker",
+  "fails": [
+   "style:saturation"
+  ]
+ },
+ {
+  "id": "v92_speaker_spring_envoy",
+  "role": "speaker",
+  "fails": [
+   "anatomy:multi_person"
+  ]
+ },
+ {
+  "id": "v92_cg_cg3_boy_donkey",
+  "role": "cg",
+  "fails": [
+   "style:saturation"
+  ]
+ },
+ {
+  "id": "v92_cg_cg5_new_banner_wall",
+  "role": "cg",
+  "fails": [
+   "style:saturation"
+  ]
+ },
+ {
+  "id": "v92_expr_c01_joy_r2",
+  "role": "expression",
+  "fails": [
+   "style:saturation"
+  ]
+ },
+ {
+  "id": "v92_expr_c01_surprise_r2",
+  "role": "expression",
+  "fails": [
+   "style:saturation"
+  ]
+ },
+ {
+  "id": "v92_expr_s06_anger",
+  "role": "expression",
+  "fails": [
+   "style:saturation"
+  ]
+ },
+ {
+  "id": "v92_expr_s06_joy",
+  "role": "expression",
+  "fails": [
+   "style:saturation"
+  ]
+ },
+ {
+  "id": "v92_expr_s06_sorrow",
+  "role": "expression",
+  "fails": [
+   "style:saturation"
+  ]
+ },
+ {
+  "id": "v92_expr_s06_surprise",
+  "role": "expression",
+  "fails": [
+   "style:saturation"
+  ]
+ },
+ {
+  "id": "v92_leader_m3",
+  "role": "speaker",
+  "fails": [
+   "anatomy:multi_person"
+  ]
+ },
+ {
+  "id": "v92_speaker_qiaoniang_rake",
+  "role": "speaker",
+  "fails": [
+   "anatomy:multi_person"
+  ]
+ },
+ {
+  "id": "v92_story_bg_birth_corridor",
+  "role": "story_bg",
+  "fails": [
+   "style:saturation"
+  ]
+ },
+ {
+  "id": "v92_story_bg_bridge_night_r2",
+  "role": "story_bg",
+  "fails": [
+   "style:saturation"
+  ]
+ },
+ {
+  "id": "v92_story_bg_hall_feast_dark_r2",
+  "role": "story_bg",
+  "fails": [
+   "style:saturation"
+  ]
+ },
+ {
+  "id": "v92_story_bg_tavern_r2",
+  "role": "story_bg",
+  "fails": [
+   "style:saturation"
+  ]
+ },
+ {
+  "id": "v92_story_bg_yard_night_r2",
+  "role": "story_bg",
+  "fails": [
+   "style:saturation"
+  ]
+ }
+]

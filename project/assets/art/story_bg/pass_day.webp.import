@@ -2,22 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://iseh5clrcoc5"
-path.bptc="res://.godot/imported/pass_day.webp-6d11971ef740fd34af54a032ad346b8f.bptc.ctex"
-path.astc="res://.godot/imported/pass_day.webp-6d11971ef740fd34af54a032ad346b8f.astc.ctex"
+uid="uid://3q5aiawismai"
+path="res://.godot/imported/pass_day.webp-6d11971ef740fd34af54a032ad346b8f.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc", "etc2_astc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://assets/art/story_bg/pass_day.webp"
-dest_files=["res://.godot/imported/pass_day.webp-6d11971ef740fd34af54a032ad346b8f.bptc.ctex", "res://.godot/imported/pass_day.webp-6d11971ef740fd34af54a032ad346b8f.astc.ctex"]
+dest_files=["res://.godot/imported/pass_day.webp-6d11971ef740fd34af54a032ad346b8f.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=1
 compress/high_quality=true
 compress/lossy_quality=0.92
 compress/hdr_compression=1
