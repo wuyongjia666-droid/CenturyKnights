@@ -39,11 +39,11 @@ static func candidates(host = null) -> Array:
 static func cycle(host = null) -> Dictionary:
 	var h = host if host != null else GameState
 	if not unlocked(h):
-		return {"ok": false, "msg": "议事厅到 %d 级才能留预备" % HALL_MIN}
+		return {"ok": false, "msg": Locale.t("rs_8c3d6edd") % HALL_MIN}
 	var cs := candidates(h)
 	if cs.is_empty():
 		h.house_mods.erase(KEY)
-		return {"ok": false, "msg": "没有没出战的人可以当预备"}
+		return {"ok": false, "msg": Locale.t("rs_da90800a")}
 	var cur := appointed_id(h)
 	var idx := -1
 	for i in cs.size():
@@ -51,18 +51,18 @@ static func cycle(host = null) -> Dictionary:
 			idx = i
 	if idx + 1 >= cs.size():
 		h.house_mods.erase(KEY)
-		return {"ok": true, "msg": "不留预备"}
+		return {"ok": true, "msg": Locale.t("rs_5cb38929")}
 	var nxt = cs[idx + 1]
 	h.house_mods[KEY] = str(nxt.id)
-	return {"ok": true, "msg": "预备：%s（有人倒下时从地图边上补进来，一场一次）" % nxt.name}
+	return {"ok": true, "msg": Locale.t("rs_68565d5b") % nxt.name}
 
 
 static func button_text(host = null) -> String:
 	var h = host if host != null else GameState
 	if not unlocked(h):
-		return "预备：议事厅 %d 级开放" % HALL_MIN
+		return Locale.t("rs_3aee9149") % HALL_MIN
 	var rid := appointed_id(h)
-	return "预备：%s" % (h.characters[rid].name if rid != "" else "不留（点一下换人）")
+	return Locale.t("rs_ef01b731") % (h.characters[rid].name if rid != "" else Locale.t("rs_8e7438ad"))
 
 
 ## 我方有人倒下时调用。成功返回一个可以直接 append 进 battle.units 的单位；否则返回空字典。
@@ -130,4 +130,4 @@ static func swap_into(battle, fallen) -> void:
 	if battle.has_method("_arm_spawned"):
 		battle._arm_spawned(sub)
 	if battle.has_method("_log"):
-		battle._log("【预备】%s 从地图边上补进来了" % sub.char.name)
+		battle._log(Locale.t("rs_e287c5ce") % sub.char.name)
