@@ -116,6 +116,8 @@ func _build() -> void:
 		_trait_block(col, carry_title, sheet.get("carried", []) if bool(sheet.get("verified", false)) else [], UIKit.ACCENT)
 		if not bool(sheet.get("verified", false)):
 			col.add_child(UIKit.body_label("祠堂验血之前，潜征保持未识。", UIKit.TEXT_FAINT, 12))
+	if DeviceProfile.is_mobile():
+		_follow_life(mid, sh)
 	var right := UIKit.panel_at(self, Rect2(814, 136, 424, 512), 12)
 	right.name = "FamilyTree"
 	var fh := UIKit.mono("FAMILY · TRAIT HIGHLIGHT", 9, UIKit.TEXT_FAINT)
@@ -298,6 +300,28 @@ func _life(mid: Control, c: CKCharacter) -> void:
 	if not c.in_roster:
 		status = Locale.t("lb_dos_home")
 	box.add_child(CKPageKit.text(status, UIKit.OK if why == "" else UIKit.DANGER, 13, 400))
+
+## Mobile only: the 22px font floor makes LifePanel taller than its 206px slot, so the
+## EXPRESSED header, bloodline lock and trait scroll move down to sit under it.
+func _follow_life(mid: Control, sh: Control) -> void:
+	var box := mid.get_node_or_null("LifePanel") as Control
+	if box == null:
+		return
+	var base_y := sh.position.y
+	var movers: Array = []
+	for n in mid.get_children():
+		if n is Control and n != box and (n as Control).position.y >= base_y - 1.0:
+			movers.append([n, (n as Control).position.y])
+	box.resized.connect(func():
+		var dy := maxf(0.0, box.position.y + box.size.y + 8.0 - base_y)
+		for m in movers:
+			var cn := m[0] as Control
+			cn.position.y = float(m[1]) + dy
+			if cn is ScrollContainer:
+				cn.size.y = maxf(80.0, mid.size.y - cn.position.y - 12.0)
+			elif cn is Label and (cn as Label).autowrap_mode != TextServer.AUTOWRAP_OFF:
+				cn.size.y = maxf(cn.get_minimum_size().y, mid.size.y - cn.position.y - 12.0)
+	)
 
 ## Company crest at full size (audit #56). Back / tap outside closes it.
 func _show_crest() -> void:

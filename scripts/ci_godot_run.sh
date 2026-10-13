@@ -7,6 +7,8 @@ IFS=$'\t' read -r name flag res marker <<<"$2"
 log="/tmp/ck_${name}.log"
 export XDG_DATA_HOME="/tmp/ck_xdg/${name}"
 mkdir -p "$XDG_DATA_HOME"
+# mobile_* runs replay a suite in forced phone mode (DeviceProfile reads CK_FORCE_MOBILE).
+[[ "$name" == mobile_* ]] && export CK_FORCE_MOBILE=1
 start=$SECONDS
 # FULL bank replays 20×100y campaigns; 600s (default) always kills it. Allow 40m when FULL=1.
 limit="${CK_TEST_TIMEOUT:-600}"

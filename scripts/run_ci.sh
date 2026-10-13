@@ -90,6 +90,7 @@ godot_tasks() {
 		genome_check --script res://tests/genome_check.gd "GENOME PASS" \
 		court_v90 --scene res://tests/court_v90_check.tscn "COURT V90 PASS" \
 		court_ui --scene res://tests/court_ui_check.tscn "COURT UI PASS" \
+		mobile_court_ui --scene res://tests/court_ui_check.tscn "COURT UI PASS" \
 		portrait_manifest --scene res://tests/portrait_manifest_check.tscn "PORTRAIT PASS" \
 		kinship_portrait --scene res://tests/kinship_portrait_check.tscn "KINSHIP PASS" \
 		enemy_themes --scene res://tests/enemy_theme_check.tscn "ENEMY THEME PASS" \
