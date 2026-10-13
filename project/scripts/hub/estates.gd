@@ -101,7 +101,8 @@ func _build_kpis() -> void:
 		_kpis.remove_child(c)
 		c.queue_free()
 	var t := _yield_totals()
-	var patrol_txt := "巡防中 %d 月" % int(GameState.patrol_boost_months) if int(GameState.patrol_boost_months) > 0 else ("冷却 %d" % int(GameState.patrol_cooldown) if int(GameState.patrol_cooldown) > 0 else "可巡防")
+	var cool_txt := ("冷却 %d" % int(GameState.patrol_cooldown)) if int(GameState.patrol_cooldown) > 0 else "可巡防"
+	var patrol_txt := ("巡防中 %d 月" % int(GameState.patrol_boost_months)) if int(GameState.patrol_boost_months) > 0 else cool_txt
 	var cards := [
 		{"icon": "grain", "en": "GRANARY DEPOT", "zh": "粮仓", "chip": "OPEN %d / 4" % t.open, "lab": "月结净产 // MONTHLY YIELD", "big": "+%d" % t.food, "unit": "粮 / 月结",
 				"col": UIKit.TEXT, "foot": "已开垦属地", "v": t.open, "max": 4, "bar": UIKit.ACCENT},
