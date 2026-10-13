@@ -1,22 +1,107 @@
 {
   "version": 1,
-  "note": "Story interrupts inside battles (docs/design/tutorial-story-v2.md 第2节「四 窄路」). Triggers: start, turn:N (player turn N, 1-based), first_lock, first_kill. Each plays once per save (flag bs_<map>_<trigger>).",
+  "note": "Story interrupts inside battles (docs/design/tutorial-story-v2.md + opening-chain-review §5.5). Triggers: start, turn:N (player turn N, 1-based), first_lock, first_kill, victory. Each plays once per save (flag bs_<map>_<trigger>).",
   "maps": {
     "ch0_pass": {
       "start": [
-        {"speaker": "苇原·灯影", "text": "先挪到好位置再动手。每人一回合能走一次、打一次。"},
-        {"speaker": "石垒·晚担", "text": "小粟在第二辆车后面。稳住，别慌。"}
+        {
+          "speaker": "苇原·灯影",
+          "text": "路窄，别散开。先挪到好位置再动手。每人一回合能走一次、打一次。"
+        },
+        {
+          "speaker": "老旗手",
+          "text": "旗我插在这块石头上了。往前推，推到第二辆车就停。"
+        },
+        {
+          "speaker": "石垒·晚担",
+          "text": "小粟在第二辆车后头。……稳住。"
+        }
       ],
-      "turn:2": [
-        {"speaker": "老旗手", "text": "旗插在这儿了。打退他们就行，别追远。"}
+      "turn:1": [
+        {
+          "speaker": "旁白",
+          "text": "你第一次发现刀有分量。石担压肩，刀压手腕。"
+        }
+      ],
+      "turn:3": [
+        {
+          "speaker": "苇原·灯影",
+          "text": "火堆后面还有人！别追进黑处，那是他们的地形。"
+        }
       ],
       "first_lock": [
-        {"speaker": "旁白", "text": "短弓拉开了，声音像有人在撕布。你愣在原地。"},
-        {"speaker": "石垒·晚担", "text": "别愣！咬上了就别乱跑。现在抽身，要多花步数。"},
-        {"speaker": "苇原·灯影", "text": "落点！你选的落点，就站在那！"}
+        {
+          "speaker": "旁白",
+          "text": "车后有人举起短弓。弓弦拉开的声音，像有人在撕布。你愣住了。"
+        },
+        {
+          "speaker": "石垒·晚担",
+          "text": "趴下！"
+        },
+        {
+          "speaker": "石垒·晚担",
+          "text": "跟人缠上了就别乱跑。这时候想走，要多花步数。"
+        },
+        {
+          "speaker": "苇原·灯影",
+          "text": "落点！你选的落点，就站在那！"
+        }
       ],
       "first_kill": [
-        {"speaker": "石垒·晚担", "text": "倒了一个。别停，往第二辆车推。"}
+        {
+          "speaker": "旁白",
+          "text": "那人脸很年轻，比小粟大不了几岁。他倒下去，又爬起来。"
+        },
+        {
+          "speaker": "石垒·晚担",
+          "text": "别看了！往第二辆车推！"
+        }
+      ],
+      "victory": [
+        {
+          "speaker": "旁白",
+          "text": "你们推到了第二辆车。车后，小粟抱着驴脖子在发抖。"
+        }
+      ]
+    },
+    "e1_reed_escort": {
+      "start": [
+        {
+          "speaker": "渡口·把头",
+          "text": "我走前头。你们护着袋子，别让人伸手。"
+        },
+        {
+          "speaker": "苇原·灯影",
+          "text": "把头到对岸桥灯下才算数。桥灯在右上。"
+        },
+        {
+          "speaker": "老旗手",
+          "text": "旗别倒。旗倒了，他们会当这单成交了。"
+        }
+      ],
+      "turn:2": [
+        {
+          "speaker": "苇原·灯影",
+          "text": "左边林子里有人换脚……来了。"
+        }
+      ],
+      "first_kill": [
+        {
+          "speaker": "渡口·把头",
+          "text": "他们不抢粮！他们要抽签！"
+        }
+      ],
+      "first_lock": [
+        {
+          "speaker": "石垒·晚担",
+          "text": "缠住了就别松。抽身要多花步数——护着把头走。"
+        }
+      ],
+      "victory": [
+        {
+          "speaker": "旁白",
+          "text": "桥灯照见袋角的蓝戳。人在，粮在，桥在。"
+        }
       ]
     }
   }

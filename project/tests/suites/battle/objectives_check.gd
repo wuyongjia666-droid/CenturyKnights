@@ -26,10 +26,10 @@ func _run() -> String:
 	if leader == null or not leader.is_leader:
 		return "roster has no leader"
 	var old := BattleMaps.get_map("ch0_pass")
-	if str(BattleObjectives.spec(old).get("type", "")) != "rout":
-		return "ch0_pass is not rout"
-	if old.has("objective"):
-		return "ch0_pass gained an objective field"
+	if str(BattleObjectives.spec(old).get("type", "")) != "seize":
+		return "ch0_pass is not seize"
+	if not old.has("objective"):
+		return "ch0_pass missing objective field"
 	GameState.set_meta("battle_map", "obj_rout")
 	var packed: PackedScene = load("res://scenes/battle/battle.tscn")
 	_battle = packed.instantiate()
@@ -127,13 +127,20 @@ func _run() -> String:
 		return err
 
 	_restart("ch0_pass")
-	if str(BattleObjectives.spec(BattleMaps.get_map("ch0_pass")).get("type", "")) != "rout":
-		return "restarted ch0 is not rout"
+	if str(BattleObjectives.spec(BattleMaps.get_map("ch0_pass")).get("type", "")) != "seize":
+		return "restarted ch0 is not seize"
 	if _battle.battle_over:
 		return "ch0 ended at deploy"
-	_kill_team("enemy")
+	var stepped := false
+	for u in _battle.units:
+		if str(u.team) == "player" and u.char.hp > 0:
+			u.pos = Vector2i(7, 3)
+			stepped = true
+			break
+	if not stepped:
+		return "ch0 has no player"
 	_battle._check_end()
-	err = _verdict(true, "rout")
+	err = _verdict(true, "seize")
 	if err != "":
 		return "ch0 " + err
 
