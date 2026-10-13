@@ -60,6 +60,8 @@ static func clear_cache() -> void:
 	_indexed = false
 	_exact.clear()
 	_by_stage.clear()
+	_sex_ready = false
+	_sex_by_key.clear()
 
 static func has_plates() -> bool:
 	if _plates_known:
