@@ -1,17 +1,18 @@
 extends Node
-## DYN-04: sixty life cards, one consequence per option, no repeat for the same person.
+## DYN-04: sixty life cards in 岁课 tone (title/body/left/right), one consequence per side, no repeat.
 
 const Life := preload("res://scripts/characters/life_events.gd")
-const LintScript := preload("res://scripts/narrative/dialogue_lint.gd")
 const BANDS := ["birth", "childhood", "education", "adulthood", "marriage", "deathbed", "succession"]
 
 func _ready() -> void:
 	await get_tree().process_frame
+	Life.reload_for_tests()
 	var fails: Array = []
 	_catalog(fails)
+	_tone(fails)
 	_options(fails)
 	_years(fails)
-	_lint(fails)
+	_text_lint(fails)
 	if fails.is_empty():
 		print("LIFE EVENTS PASS cards=%d" % Life.events().size())
 		get_tree().quit(0)
@@ -29,27 +30,64 @@ func _catalog(fails: Array) -> void:
 	for event in rows:
 		var band := str(event.get("band", ""))
 		bands[band] = int(bands.get(band, 0)) + 1
-		var options: Array = event.get("options", [])
-		if options.size() < 2:
-			fails.append("%s options" % str(event.get("id", "")))
-		for opt in options:
-			if typeof(opt) != TYPE_DICTIONARY or (opt.get("effects", []) as Array).is_empty():
+		var choices: Array = Life.choices(event)
+		if choices.size() < 2:
+			fails.append("%s choices" % str(event.get("id", "")))
+		for ch in choices:
+			if typeof(ch) != TYPE_DICTIONARY or (ch.get("effects", []) as Array).is_empty():
 				fails.append("%s effect" % str(event.get("id", "")))
+			if str(ch.get("act", "")) == "":
+				fails.append("%s empty act" % str(event.get("id", "")))
+		if str(event.get("title", "")) == "":
+			fails.append("%s title" % str(event.get("id", "")))
+		if str(event.get("body", "")) == "":
+			fails.append("%s body" % str(event.get("id", "")))
+		# No literary multi-speaker chains
+		if event.has("lines") or event.has("options"):
+			fails.append("%s legacy lines/options" % str(event.get("id", "")))
+		if not event.has("left") or not event.has("right"):
+			fails.append("%s missing left/right" % str(event.get("id", "")))
 	for band in BANDS:
 		if int(bands.get(band, 0)) < 8:
 			fails.append("band %s = %s" % [band, str(bands.get(band, 0))])
 
 
+func _tone(fails: Array) -> void:
+	# Body one sentence-ish; acts short; no 旁白 speaker chains.
+	for event in Life.events():
+		var eid := str(event.get("id", ""))
+		var body := str(event.get("body", ""))
+		if body.contains("旁白"):
+			fails.append("%s body 旁白" % eid)
+		if body.count("。") > 2:
+			fails.append("%s body too many sentences" % eid)
+		for side in ["left", "right"]:
+			var act := str(event.get(side, {}).get("act", ""))
+			if act.length() > 24:
+				fails.append("%s %s act long" % [eid, side])
+			if act.contains("旁白"):
+				fails.append("%s %s 旁白" % [eid, side])
+			# Visible cost: non-flag mechanical effects should expose a hint
+			var has_mech := false
+			for fx in event.get(side, {}).get("effects", []):
+				if typeof(fx) == TYPE_DICTIONARY and str(fx.get("op", "")) != "flag":
+					has_mech = true
+					break
+			if has_mech and str(event.get(side, {}).get("hint", "")) == "":
+				fails.append("%s %s missing hint" % [eid, side])
+
+
 func _options(fails: Array) -> void:
 	for event in Life.events():
-		for opt in event.get("options", []):
+		for ch in Life.choices(event):
 			GameState.new_game("Ash", "Banner", "frost")
 			var leader := GameState.get_leader()
 			leader.traits.clear()
 			var silver := GameState.silver
 			var food := GameState.food
+			var opt := {"effects": ch.get("effects", [])}
 			if not Life.apply_option(leader, opt):
-				fails.append("%s/%s no delta" % [str(event.get("id", "")), str(opt.get("id", ""))])
+				fails.append("%s/%s no delta" % [str(event.get("id", "")), str(ch.get("id", ""))])
 			if GameState.silver != silver or GameState.food != food:
 				fails.append("%s moved resources" % str(event.get("id", "")))
 
@@ -77,7 +115,6 @@ func _years(fails: Array) -> void:
 	Life.on_month({})
 	var extra: Array = GameState.house_mods.get("life_pending", [])
 	if not extra.is_empty() or seen.size() != before:
-		# A new card after the pools are dry would be a repeat or an overflow.
 		for item in extra:
 			var key2 := str(item.get("cid", "")) + "|" + str(item.get("id", ""))
 			if seen.has(key2):
@@ -92,18 +129,37 @@ func _years(fails: Array) -> void:
 			fails.append("20y band %s = %s" % [band, str(hit.get(band, 0))])
 
 
-func _lint(fails: Array) -> void:
-	var lint = LintScript.new()
-	var err := str(lint.load_rules())
-	if err != "":
-		fails.append(err)
-		return
-	var report: Dictionary = lint.scan_file("res://data/life_events.json")
-	var bad: Array = report.get("violations", [])
-	if bad.size() != 0:
-		fails.append("lint %s %s" % [str(bad[0].get("rule", "")), str(bad[0].get("detail", ""))])
-	if int(report.get("lines", 0)) < 60:
-		fails.append("lint lines %s" % str(report.get("lines", 0)))
+func _text_lint(fails: Array) -> void:
+	# Card pool is no longer multi-speaker dialogue; scan title/body/act for tropes & length.
+	var anti: Array = []
+	var rules_path := "res://data/story/lint_rules.json"
+	if FileAccess.file_exists(rules_path):
+		var rules = JSON.parse_string(FileAccess.get_file_as_string(rules_path))
+		if typeof(rules) == TYPE_DICTIONARY:
+			anti = rules.get("anti_trope", [])
+	var texts := 0
+	for event in Life.events():
+		for piece in [str(event.get("title", "")), str(event.get("body", "")),
+				str(event.get("left", {}).get("act", "")), str(event.get("right", {}).get("act", ""))]:
+			texts += 1
+			if _hanzi(piece) > 60:
+				fails.append("long %s" % piece.substr(0, 12))
+				return
+			for term in anti:
+				if str(term) != "" and piece.contains(str(term)):
+					fails.append("trope %s in %s" % [str(term), str(event.get("id", ""))])
+					return
+	if texts < 60:
+		fails.append("texts %d" % texts)
+
+
+func _hanzi(text: String) -> int:
+	var n := 0
+	for i in text.length():
+		var c := text.unicode_at(i)
+		if c >= 0x4E00 and c <= 0x9FFF:
+			n += 1
+	return n
 
 
 func _cohort() -> void:

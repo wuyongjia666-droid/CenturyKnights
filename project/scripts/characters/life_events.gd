@@ -1,6 +1,7 @@
 class_name CKLifeEvents
 extends RefCounted
-## DYN-04: life-event cards. The month hook only queues a card.
+## DYN-04: life-event cards (岁课口吻：title / body / left / right).
+## The month hook only queues a card.
 ## Choices apply traits, stats, regard, paths, or the academy note when resolved.
 ## Queuing does not touch GameState.rng, silver, or food.
 
@@ -68,6 +69,68 @@ static func find(id: String) -> Dictionary:
 		if str(event.get("id", "")) == id:
 			return event
 	return {}
+
+
+## Normalized choices: id a/left and b/right, with act + effects (+ optional hint).
+static func choices(event: Dictionary) -> Array:
+	var out: Array = []
+	if event.has("left") or event.has("right"):
+		for pair in [["a", "left"], ["b", "right"]]:
+			var side: Dictionary = event.get(pair[1], {})
+			if typeof(side) != TYPE_DICTIONARY or side.is_empty():
+				continue
+			out.append({
+				"id": pair[0],
+				"side": pair[1],
+				"act": str(side.get("act", "")),
+				"hint": str(side.get("hint", "")),
+				"effects": side.get("effects", []),
+			})
+		return out
+	# Legacy lines/options schema
+	for opt in event.get("options", []):
+		if typeof(opt) != TYPE_DICTIONARY:
+			continue
+		var label := ""
+		for row in opt.get("lines", []):
+			label = str(row.get("text", ""))
+			break
+		out.append({
+			"id": str(opt.get("id", "")),
+			"side": str(opt.get("id", "")),
+			"act": label,
+			"hint": "",
+			"effects": opt.get("effects", []),
+		})
+	return out
+
+
+static func card_title(event: Dictionary) -> String:
+	var t := str(event.get("title", ""))
+	if t != "":
+		return t
+	# Legacy: first setup line
+	for row in event.get("lines", []):
+		return str(row.get("text", ""))
+	return ""
+
+
+static func card_body(event: Dictionary) -> String:
+	var b := str(event.get("body", ""))
+	if b != "":
+		return b
+	var lines: PackedStringArray = PackedStringArray()
+	for row in event.get("lines", []):
+		lines.append(str(row.get("text", "")))
+	return "\n".join(lines)
+
+
+static func choice_label(choice: Dictionary) -> String:
+	var act := str(choice.get("act", ""))
+	var hint := str(choice.get("hint", ""))
+	if hint == "":
+		return act
+	return "%s（%s）" % [act, hint]
 
 
 static func resolve(cid: String, event_id: String, option_id: String) -> bool:
@@ -171,8 +234,23 @@ static func _apply(c: CKCharacter, fx: Dictionary) -> bool:
 
 
 static func _option(event: Dictionary, option_id: String) -> Dictionary:
+	var oid := str(option_id)
+	# Map a/b <-> left/right
+	var side := ""
+	match oid:
+		"a", "left":
+			side = "left"
+		"b", "right":
+			side = "right"
+		_:
+			side = oid
+	if event.has("left") or event.has("right"):
+		var row: Dictionary = event.get(side, {})
+		if typeof(row) == TYPE_DICTIONARY and not row.is_empty():
+			return {"id": oid, "effects": row.get("effects", []), "act": str(row.get("act", ""))}
+		return {}
 	for opt in event.get("options", []):
-		if str(opt.get("id", "")) == option_id:
+		if str(opt.get("id", "")) == oid:
 			return opt
 	return {}
 
@@ -225,3 +303,9 @@ static func _load() -> void:
 		return
 	var parsed = JSON.parse_string(FileAccess.get_file_as_string(DATA_PATH))
 	_doc = parsed if typeof(parsed) == TYPE_DICTIONARY else {"events": []}
+
+
+## Test helper: clear cached JSON so suite reloads after rewrites.
+static func reload_for_tests() -> void:
+	_doc = {}
+	_load()
