@@ -106,7 +106,7 @@ const FONT_FLOOR_PENDING := [
 	"res://scenes/hub/city.tscn",
 	"res://scenes/hub/castle_view.tscn", "res://scenes/hub/market.tscn",
 	"res://scenes/hub/estates.tscn", "res://scenes/hub/works.tscn",
-	"res://scenes/hub/forge.tscn", "res://scenes/hub/annex.tscn",
+	"res://scenes/hub/forge.tscn",
 ]
 
 static func font_floor_applies(root: Node) -> bool:
