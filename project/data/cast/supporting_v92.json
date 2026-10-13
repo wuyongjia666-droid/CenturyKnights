@@ -41,7 +41,11 @@
       "age": 42,
       "sex": "m",
       "look": "a hunchbacked man in his seventies, thin white hair, kind tired eyes, patched slate coat and fingerless knitted gloves, a small frost lantern in one hand and a thick moth-eaten cloth-bound roster book under the arm",
-      "portrait": "res://assets/art/portraits/speakers/steward.png"
+      "portrait": "res://assets/art/portraits/speakers/steward.png",
+      "aliases": [
+        "老管事",
+        "槐里家账房"
+      ]
     },
     {
       "id": "voice_midwife",

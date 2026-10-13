@@ -462,7 +462,8 @@
               "op": "goto",
               "beat": "next"
             }
-          ]
+          ],
+          "cost_hint": "（活口留下；衡舟会记你一笔）"
         },
         {
           "id": "hand_survivor",
@@ -477,7 +478,8 @@
               "op": "goto",
               "beat": "next"
             }
-          ]
+          ],
+          "cost_hint": "（交给槐里家；干净，但少了一条线）"
         }
       ],
       "next": "0.17"
@@ -600,7 +602,8 @@
               "op": "goto",
               "beat": "next"
             }
-          ]
+          ],
+          "cost_hint": "（不拿钱；陆桥商队会传灰旗的名）"
         },
         {
           "id": "merit_patron",
@@ -620,7 +623,8 @@
               "op": "goto",
               "beat": "next"
             }
-          ]
+          ],
+          "cost_hint": "（+80 银；这一仗记在槐里家）"
         }
       ],
       "next": "0.18"

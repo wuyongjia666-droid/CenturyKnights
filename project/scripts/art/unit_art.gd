@@ -523,9 +523,17 @@ static func speaker_plate_path(speaker: String) -> String:
 		var parsed = JSON.parse_string(f.get_as_text()) if f != null else null
 		if typeof(parsed) == TYPE_DICTIONARY:
 			for row in parsed.get("people", []):
-				if typeof(row) == TYPE_DICTIONARY and str(row.get("portrait", "")) != "":
-					for k in ["name", "cast_key", "id"]:
-						_speaker_plates[str(row.get(k, ""))] = str(row.portrait)
+				if typeof(row) != TYPE_DICTIONARY:
+					continue
+				var plate := str(row.get("portrait", ""))
+				if plate == "":
+					continue
+				for k in ["name", "cast_key", "id"]:
+					_speaker_plates[str(row.get(k, ""))] = plate
+				var aliases = row.get("aliases", [])
+				if typeof(aliases) == TYPE_ARRAY:
+					for alias in aliases:
+						_speaker_plates[str(alias)] = plate
 	return str(_speaker_plates.get(speaker, ""))
 
 ## Age-band display rule (playtest fix): everyone under 12 shares fixed plates so a newborn can
