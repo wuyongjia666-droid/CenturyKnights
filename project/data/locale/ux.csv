@@ -83,16 +83,16 @@ ux_name_blurb,你还没有爵。先写下你要别人不得不念的姓，再雕
 ux_name_surname,姓氏,Surname
 ux_name_given,名字,Given name
 ux_name_field_color,旗心色（底布是灰的）,Heart colour (the cloth stays grey)
-ux_name_field_split,底布分割,Field split
+ux_name_field_split,底布图样,Field pattern
 ux_name_charge,主纹,Charge
-ux_name_border,镶边,Border
-ux_name_emblem,徽记,Emblem
+ux_name_border,缘,Border
+ux_name_emblem,徽,Emblem
 ux_name_raise,升起灰旗,Raise the banner
 ux_name_contrast,远处看不清：图案和底色太接近，换深一点或浅一点的颜色,"Hard to see from afar: pick a lighter or darker colour"
 ux_field_solid,单色,Solid
 ux_field_per_fess,横分,Per fess
 ux_field_per_pale,纵分,Per pale
-ux_charge_none,无分割,None
+ux_charge_none,无图记,None
 ux_charge_fess,横带,Fess
 ux_charge_pale,纵带,Pale
 ux_charge_bend,斜带,Bend
@@ -187,8 +187,8 @@ ux_teach_diligent,勤录,Diligent copy
 ux_teach_gut,饭量稳,Steady gut
 ux_teach_wound,先看伤口,Wound first
 ux_teach_stand,站得住,Stand firm
-ux_name_partition,分区线型,Partition line
-ux_name_ordinary,普通图记,Ordinary
+ux_name_partition,分界线,Partition line
+ux_name_ordinary,带,Ordinary band
 ux_name_nation_rand,按国随机,Randomize by nation
 ux_name_shield_preview,盾徽预览,Shield preview
 ux_heraldry_tincture_warn,染色违规：金属不可叠金属，色料不可叠色料,Tincture rule: metal on metal / colour on colour is forbidden
@@ -206,12 +206,12 @@ ux_part_embattled,雉堞,Embattled
 ux_part_invected,外弧齿,Invected
 ux_part_nebuly,云纹,Nebuly
 ux_ord_cross,十字,Cross
-ux_ord_saltire,叉架,Saltire
-ux_ord_chief,首席带,Chief
-ux_ord_bordure,镶边带,Bordure
+ux_ord_saltire,交叉带,Saltire
+ux_ord_chief,旗头横带,Chief
+ux_ord_bordure,缘带,Bordure
 ux_ord_orle,内框,Orle
 ux_ord_pile,尖楔,Pile
-ux_ord_pall,丫架,Pall
+ux_ord_pall,分叉带,Pall
 ux_ord_bend_sinister,右斜带,Bend sinister
 ux_btn_heraldry_diy,雕旗,Heraldry
 ux_todo_sui_ke,未读岁课,Unread year-cards
@@ -326,3 +326,9 @@ ux_name_surname_hint,写一个字（最多两个）,One character (two at most)
 ux_name_need_surname,先写下你的姓,Write your surname first
 ux_name_need_given,再写下你的名,Write your given name
 ux_name_face_reroll,换一张脸,Another face
+ux_name_nation_style,参照哪国的风格,Nation style to follow
+ux_name_nation_rand_btn,照这国的风格随机一面,Randomize in this nation style
+ux_name_gender,性别,Gender
+ux_name_gender_m,男,Male
+ux_name_gender_f,女,Female
+ux_name_face,面孔,Face
