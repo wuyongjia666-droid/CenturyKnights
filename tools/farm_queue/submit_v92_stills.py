@@ -49,6 +49,7 @@ KIND_FARM = {
     "story_bg": "FARM-04",
     "expression": "FARM-04",
     "status_overlay": "FARM-04",
+    "speaker": "FARM-04",
     "castle": "FARM-05",
     "estate": "FARM-05",
 }
@@ -56,7 +57,7 @@ KIND_ORDER = {
     "FARM-01": ("genome",),
     "FARM-02": ("city",),
     "FARM-03": ("smith", "item"),
-    "FARM-04": ("scene", "story_bg", "expression", "status_overlay"),
+    "FARM-04": ("scene", "story_bg", "expression", "status_overlay", "speaker"),
     "FARM-05": ("castle", "estate"),
 }
 ROOT_CANDIDATES = (
