@@ -232,7 +232,7 @@ static func combat_expectation(a: Object, b: Object) -> Dictionary:
 		"tactics_zh": tactics_zh,
 		"royal_tiers": tiers,
 		"royal_zh": royal_zh,
-		"line": _zh("expect_line", [apt_zh, tactics_zh, royal_zh]),
+		"line": _zh("expect_line", _clauses([apt_zh, tactics_zh, royal_zh])),
 	}
 
 
@@ -275,7 +275,7 @@ static func child_archive(host, child: Object) -> Dictionary:
 		"royal_tier": tier,
 		"royal_zh": royal_zh,
 		"forecast": forecast,
-		"line": _zh("archive_line", [apt_zh, tactics_zh, royal_zh]),
+		"line": _zh("archive_line", _clauses([apt_zh, tactics_zh, royal_zh])),
 	}
 
 
@@ -374,3 +374,11 @@ static func _mods_zh(mods: Dictionary) -> String:
 	for k in mods.keys():
 		bits.append("%s +%s" % [str(k), str(mods[k])])
 	return _zh("archive_tactic_list", ["、".join(bits)])
+
+
+## Each clause is joined with "。" by the template; drop a clause's own trailing stop so lines never read "。。".
+static func _clauses(parts: Array) -> Array:
+	var out: Array = []
+	for p in parts:
+		out.append(str(p).strip_edges().rstrip("。."))
+	return out
