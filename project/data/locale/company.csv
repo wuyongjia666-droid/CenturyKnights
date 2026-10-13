@@ -147,6 +147,18 @@ wsc_e_fail_hint,攒够银粮、等冷却过了再来；没开垦的地也巡不�
 wsc_e_fail_title,这次巡不了,Patrol not possible
 wsc_e_first,第一块田庄「%s」交给你了，先派个庄头去管着。,"Your first holding, %s, is ready. Assign a steward."
 wsc_e_how,　去委托榜办完「%s」就能开垦,"　Finish ""%s"" on the quest board to open it"
+wsc_f_empty,团里还没有能拿刀的人。先去酒馆招个骑士，再回来打兵器。,No knights yet. Recruit at the tavern first.
+wsc_f_maxed,工坊已经满级,Forge maxed
+wsc_f_up,升到 %d 级（%d 银 / %d 铁）,Upgrade to %d (%d silver / %d iron)
+wsc_f_up_ok,工坊升到 %d 级了，打造更便宜。,Forge is now level %d.
+wsc_m_autumn,本月行情：秋收了，粮便宜 1 银，正好囤一冬的口粮。,Harvest: food -1.
+wsc_m_flat,本月行情：价钱平稳。春天粮贵、夏天药贱、秋天粮贱、腊月铁药贵。,Prices steady this month.
+wsc_m_spring,本月行情：青黄不接，粮贵 1 银。秋收时再囤粮更划算。,Spring shortage: food +1.
+wsc_m_summer,本月行情：药草正旺，伤药便宜 1 银，趁现在多备点。,Herb season: salve -1.
+wsc_m_winter,本月行情：冬天炉火紧、病号多，铁和伤药各贵 1 银。,Winter: iron and salve +1.
+wsc_mr_detail,婚约详情,Marriage details
+wsc_mr_key,子嗣 %s·%d%% · 礼银 %d · 多半是%s,Heir %s·%d%% | rites %d | likely %s
+wsc_mr_more,……（点开看全部）,… (tap for all)
 wsc_q_04480f1a,办完了：%s。%s,
 wsc_q_145290c3,再接一次,
 wsc_q_237f513f,在途委托（舆图上接的）,
@@ -183,3 +195,4 @@ wsc_t_lost_title,领地丢了,Territory lost
 wsc_t_month,路上过了一个月：%s，粮还剩 %d,A month passed on the road: %s · food %d
 wsc_t_own,我方·驻%d,ours · %d held
 wsc_t_rival,对手占着,rival
+wsc_tv_rule,每月头 %d 次刷新不要钱，一个月最多刷 %d 次，之后每次 %d 银。下个月自动换一批人。,"First %d refresh(es) each month are free, up to %d per month, then %d silver each."

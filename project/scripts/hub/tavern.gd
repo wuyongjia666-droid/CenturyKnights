@@ -25,6 +25,7 @@ func _build() -> void:
 	rb.name = "TavernRefresh"
 	rb.pressed.connect(_do_refresh.bind(rb))
 	rb.disabled = GameState.tavern_refresh_price() < 0
+	rb.tooltip_text = Locale.t("wsc_tv_rule") % [GameState.TAVERN_FREE_PER_MONTH, GameState.TAVERN_MAX_PER_MONTH, GameState.TAVERN_PAID_COST]
 	right_box.add_child(rb)
 	right_box.move_child(rb, right_box.get_child_count() - 2)
 	var hh := HBoxContainer.new()
@@ -125,7 +126,7 @@ func _unhandled_input(e: InputEvent) -> void:
 		_select(arr[i])
 
 func _fee(c: CKCharacter) -> int:
-	return 25 + c.rank_index() * 15
+	return CKEconomyState.recruit_price(GameState, c)
 
 func _refresh() -> void:
 	if _mob:

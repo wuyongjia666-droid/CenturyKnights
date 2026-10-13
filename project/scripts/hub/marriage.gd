@@ -371,7 +371,10 @@ func _harmony_card(rect: Rect2, a: CKCharacter, b: CKCharacter) -> void:
 		mids += (float(ex.apt_min[sk]) + float(ex.apt_max[sk])) * 0.5
 		hi = maxf(hi, float(ex.apt_max[sk]))
 	var pct := clampi(int(round(mids / CKCharacter.STAT_KEYS.size() / maxf(hi, 12.0) * 100.0)), 1, 99)
-	_grade.text = "●  子嗣资质评级  %s" % ("S" if pct >= 85 else ("A" if pct >= 70 else ("B" if pct >= 55 else "C")))
+	var grade := "S" if pct >= 85 else ("A" if pct >= 70 else ("B" if pct >= 55 else "C"))
+	# WS-C #34: three numbers that decide the match; everything else lives behind 「详情」
+	_grade.text = Locale.t("wsc_mr_key") % [grade, pct, _rite_cost(a, b), CKCharacter.RANK_NAMES.get(ex.rank_hint, ex.rank_hint)]
+	_grade.name = "KeyFacts"
 	var compact := rect.size.y < 230.0
 	var lab := UIKit.body_label("子嗣期望 · 资质共鸣指标", UIKit.TEXT_DIM, 12)
 	lab.autowrap_mode = TextServer.AUTOWRAP_OFF
@@ -691,9 +694,60 @@ func _consequence_line(a: CKCharacter, b: CKCharacter) -> void:
 	for r in CKCourt.required_rites(a, b):
 		var id := str(r.get("id", ""))
 		bits.append(str(r.get("desc", "")) if bool(_rite_on.get(id, false)) else str(r.get("block", "")))
-	_msg.text = " ".join(bits) if not bits.is_empty() else "无特殊婚仪。子女按常例入谱。"
+	_full_terms = " ".join(bits) if not bits.is_empty() else "无特殊婚仪。子女按常例入谱。"
+	_msg.text = _full_terms if _full_terms.length() <= 40 else _full_terms.substr(0, 38) + Locale.t("wsc_mr_more")
+	_msg.tooltip_text = _full_terms
+	_msg.mouse_filter = Control.MOUSE_FILTER_STOP
+	if not _msg.gui_input.is_connected(_on_msg_input):
+		_msg.gui_input.connect(_on_msg_input)
 	var blocked := CKCourt.rite_block(a, b, _accepted_ids()) != ""
 	_msg.add_theme_color_override("font_color", UIKit.DANGER if blocked else UIKit.TEXT_DIM)
+
+var _full_terms := ""
+
+func _rite_cost(a: CKCharacter, b: CKCharacter) -> int:
+	var cost := 0
+	if a == null or b == null:
+		return 0
+	for r in CKCourt.required_rites(a, b):
+		if bool(_rite_on.get(str(r.get("id", "")), true)):
+			cost += int(r.get("cost", 0))
+	return cost
+
+func _on_msg_input(e: InputEvent) -> void:
+	var tap: bool = (e is InputEventMouseButton and e.pressed and e.button_index == MOUSE_BUTTON_LEFT) or (e is InputEventScreenTouch and e.pressed)
+	if tap and _full_terms.length() > 40:
+		show_details()
+
+## Full terms + child forecast in one readable box (the old bottom strip of small print).
+func show_details() -> void:
+	var old := find_child("MarriageDetails", false, false)
+	if old:
+		old.queue_free()
+	var overlay := ColorRect.new()
+	overlay.name = "MarriageDetails"
+	overlay.color = Color(0, 0, 0, 0.6)
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.z_index = 40
+	add_child(overlay)
+	var p := UIKit.panel_at(overlay, Rect2(240, 120, 800, 480), 14, true)
+	var t := UIKit.title_label(Locale.t("wsc_mr_detail"), 20, UIKit.ACCENT)
+	t.position = Vector2(24, 18)
+	p.add_child(t)
+	var sc := ScrollContainer.new()
+	sc.position = Vector2(24, 60)
+	sc.size = Vector2(752, 340)
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	p.add_child(sc)
+	var body := UIKit.body_label(_full_terms + "\n\n" + str(CKFamilyState.combat_expectation(GameState.get_leader(), _selected).get("line", "")), UIKit.TEXT, 15)
+	body.custom_minimum_size = Vector2(740, 0)
+	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	sc.add_child(body)
+	var ok := UIKit.ghost_button(Locale.t("wsc_t_lost_ok"), 180, 48)
+	ok.position = Vector2(596, 416)
+	ok.pressed.connect(overlay.queue_free)
+	p.add_child(ok)
+	ok.call_deferred("grab_focus")
 
 func play_seal_fx(hold: bool = false) -> void:
 	if _seal_fx == null:
