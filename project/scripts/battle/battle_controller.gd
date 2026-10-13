@@ -1,18 +1,15 @@
 extends Control
-
 signal unit_downed(char, info)
 signal battle_finished(result)
 ## 灰旗战棋：8x6 教程图，移动/攻击/待命，敌 AI，规则透视 输入 FSM：IDLE → SELECTED → (MOVE) → ATTACK_AIM → 单位 done
 
 var CELL: int = 56
 var ORIGIN: Vector2 = Vector2(40, 80)
-## v8.6: the board is the hero — cell size fits the map into the left stage (max 104px)
-const BOARD_AREA := Rect2(24, 76, 856, 620)
+const BOARD_AREA := Rect2(24, 76, 856, 620)  ## v8.6: the board is the hero — cell size fits the map into the left stage (max 104px)
 const RAIL_X := 904.0
 const RAIL_W := 352.0
 var _ground: ColorRect
-## v8.6 3D combat cutscenes: pure recorder (tactics logic untouched) -> queued overlay playback
-const CombatCutsceneScript = preload("res://scripts/battle/combat_cutscene.gd")
+const CombatCutsceneScript = preload("res://scripts/battle/combat_cutscene.gd")  ## v8.6 3D combat cutscenes: pure recorder (tactics logic untouched) -> queued overlay playback
 var _combat_rec: Array = []
 var _cut_queue: Array = []
 var _cut_playing := false
@@ -21,7 +18,6 @@ var MAP_W: int = 8
 var MAP_H: int = 6
 var map_id: String = "ch0_pass"
 var map_name: String = "隘口之夜"
-
 var terrain: Array = []
 var height_grid: Array = []
 var weather: String = "clear"
@@ -317,6 +313,9 @@ func _build_ui() -> void:
 	phase_label.add_theme_color_override("font_color", UIKit.TEXT)
 	phase_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	top.add_child(phase_label)
+	if DeviceProfile.is_mobile():
+		_phase_chip.visible = false
+		for l in [_round_label, phase_label]: l.add_theme_font_size_override("font_size", 22)
 	var tip_text := Locale.t("shell_8ed10247")
 	if DeviceProfile.is_mobile():
 		tip_text = Locale.t("shell_f4b70638")
@@ -453,6 +452,7 @@ func _command_bar_px() -> float:
 	return maxf(DeviceProfile.hit_px(), 48.0) + 20.0
 
 const MOBILE_RAIL_W := 176.0  ## landscape phone: command rail right, side panels beside it, board fills the rest
+const MobileSide := preload("res://scripts/battle/ui/battle_mobile_side.gd")
 
 func _mobile_landscape() -> bool:
 	var vp := get_viewport().get_visible_rect().size if is_inside_tree() else Vector2.ZERO
@@ -473,6 +473,7 @@ func _layout_board() -> void:
 	if _mobile_landscape():
 		var dx := _root_w() - MOBILE_RAIL_W - 1280.0 + 8.0
 		_shift_side_panels(dx)
+		MobileSide.attach.call_deferred(self, RAIL_X + dx - 8.0, RAIL_W + 8.0)
 		area = Rect2(12, 64, BOARD_AREA.size.x + 12.0 + dx, 720.0 - 64.0 - 10.0)
 	elif DeviceProfile.is_mobile() and is_inside_tree():
 		var vp := get_viewport().get_visible_rect().size
