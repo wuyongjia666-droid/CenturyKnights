@@ -27,6 +27,9 @@ func _ready() -> void:
 	UIFX.wire_tree(self)
 
 func apply_mobile_layout() -> void:
+	if MobilePage.active(self):
+		_m_render_all()
+		return
 	var scroll := find_child("SmithListScroll", true, false) as ScrollContainer
 	var foot := find_child("StitchFooter", true, false) as Control
 	MobileLayout.fill_scroll(scroll, foot, 346)
@@ -46,9 +49,13 @@ func _clear(n: Control) -> void:
 		ch.queue_free()
 
 func _render_all() -> void:
+	if MobilePage.active(self):
+		_m_render_all()
+		return
 	if _chips:
 		_chips.queue_free()
-	_chips = UIKit.top_bar(self, "炉火工坊 · FORGE", [["银币", str(GameState.silver), UIKit.ACCENT], ["铁", str(GameState.iron), UIKit.TEXT], ["工坊", "LV %d" % GameState.building_level("forge"), UIKit.OK], ["历", Calendar.label(), UIKit.TEXT_DIM]], "返回城堡", _back)
+	_chips = UIKit.top_bar(self, "炉火工坊 · FORGE", [["银币", str(GameState.silver), UIKit.ACCENT], ["铁", str(GameState.iron), UIKit.TEXT], ["工坊",
+			"LV %d" % GameState.building_level("forge"), UIKit.OK], ["历", Calendar.label(), UIKit.TEXT_DIM]], "返回城堡", _back)
 	_render_left()
 	_render_mid()
 	_render_right()
@@ -302,7 +309,8 @@ func _render_right() -> void:
 	g.add_theme_constant_override("h_separation", 8)
 	g.add_theme_constant_override("v_separation", 8)
 	_right.add_child(g)
-	var items := [["铁", "IRON · 锻造主料", GameState.iron, UIKit.ACCENT], ["银币", "SILVER · 工钱", GameState.silver, UIKit.ACCENT], ["粮", "FOOD · 军需", GameState.food, UIKit.TEXT], ["士气", "MORALE · 炉火映旗", GameState.morale, UIKit.OK]]
+	var items := [["铁", "IRON · 锻造主料", GameState.iron, UIKit.ACCENT], ["银币", "SILVER · 工钱", GameState.silver, UIKit.ACCENT], ["粮", "FOOD · 军需", GameState.food,
+			UIKit.TEXT], ["士气", "MORALE · 炉火映旗", GameState.morale, UIKit.OK]]
 	for it in items:
 		var p := PanelContainer.new()
 		p.custom_minimum_size = Vector2(160, 64)
@@ -357,3 +365,159 @@ func _render_right() -> void:
 	var foot := UIKit.mono("工坊等级 LV %d · 上限随议事厅" % GameState.building_level("forge"), 9, UIKit.TEXT_FAINT, false)
 	foot.position = Vector2(912, 644)
 	_right.add_child(foot)
+
+
+## ── Phone landscape: knights (left) · reforge preview + craft (centre) · depot + heirloom (right) ──
+func _m_render_all() -> void:
+	for nm in ["MobileTopBar", "StitchTopBar", "StitchFooter"]:
+		var n := get_node_or_null(nm)
+		if n:
+			remove_child(n)
+			n.queue_free()
+	if _chips and is_instance_valid(_chips):
+		_chips.queue_free()
+	_chips = null
+	for n in [_left, _mid, _right]:
+		_clear(n)
+	var w := MobilePage.width(self)
+	var h := size.y if size.y > 400.0 else 720.0
+	var flv := GameState.building_level("forge")
+	MobilePage.top_bar(self, Locale.t("mw_897be971"), Locale.t("mw_ac33f494") % [GameState.silver, GameState.iron, flv, Calendar.label()], [[Locale.t("btn_back"), _back]])
+	var top := MobilePage.TOP
+	var bh := h - top - 16.0
+	var lw := clampf(w * 0.24, 300.0, 380.0)
+	var rw := clampf(w * 0.26, 320.0, 400.0)
+	var mw := w - 40.0 - lw - rw - 24.0
+	# knights
+	var lv := MobilePage.panel(_left, Rect2(20, top, lw, bh), 10)
+	lv.add_child(MobilePage.label(Locale.t("mw_fe82b96f") % GameState.roster().size(), UIKit.ACCENT, 24, false))
+	var sc := ScrollContainer.new()
+	sc.name = "SmithListScroll"
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	sc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	lv.add_child(sc)
+	var vb := VBoxContainer.new()
+	vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	vb.add_theme_constant_override("separation", 8)
+	sc.add_child(vb)
+	for c in GameState.roster():
+		var on: bool = _sel == c
+		var b := MobilePage.button(Locale.t("mw_5cda7737") % [c.name, _weapon_name(c.weapon_id), c.derived_atk()], on, func():
+			_sel = c
+			_m_render_all())
+		b.custom_minimum_size = Vector2(0, 100)
+		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		var pr := UIKit.make_portrait_rect(c, 72)
+		pr.position = Vector2(12, 14)
+		pr.size = Vector2(72, 72)
+		pr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		b.add_child(pr)
+		for st in ["normal", "hover", "pressed", "focus", "disabled"]:
+			var sb := b.get_theme_stylebox(st)
+			if sb:
+				var d := sb.duplicate()
+				d.content_margin_left = 96
+				b.add_theme_stylebox_override(st, d)
+		vb.add_child(b)
+	# centre
+	var mv := MobilePage.panel(_mid, Rect2(20 + lw + 12, top, mw, bh), 14)
+	mv.add_theme_constant_override("separation", 12)
+	if _sel == null:
+		var el := MobilePage.label(Locale.t("wsc_f_empty"), UIKit.TEXT_DIM, MobilePage.FONT, true)
+		el.name = "ForgeEmpty"
+		mv.add_child(el)
+		_msg = MobilePage.label("", UIKit.OK, MobilePage.FONT, true)
+		mv.add_child(_msg)
+		_m_right(rw, w, top, bh)
+		return
+	var cur := _sel.weapon_id
+	var nxt := _next_wid()
+	var cb := _wbonus(cur)
+	var nb := _wbonus(nxt)
+	var same := cur == nxt
+	var atk0 := _sel.derived_atk()
+	var atk1 := atk0 - cb + nb
+	mv.add_child(MobilePage.label(Locale.t("mw_35c262dc") % _sel.name, UIKit.TEXT, 26, false))
+	var tiers := HBoxContainer.new()
+	tiers.add_theme_constant_override("separation", 12)
+	mv.add_child(tiers)
+	for spec in [[Locale.t("mw_48ac4797"), "+%d" % cb, _weapon_name(cur), Locale.t("mw_c7b9ef3a") % atk0, false], [Locale.t("mw_199dfef6"), "+%d" % nb, _weapon_name(nxt),
+			Locale.t("mw_c7b9ef3a") % atk1, true]]:
+		var p := PanelContainer.new()
+		p.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var sb := UIKit.flat_box(Color(UIKit.ACCENT, 0.08) if spec[4] else Color(1, 1, 1, 0.03), Color(UIKit.ACCENT, 0.8) if spec[4] else Color(1, 1, 1, 0.10), 10,
+				2 if spec[4] else 1)
+		for side in ["left", "right", "top", "bottom"]:
+			sb.set("content_margin_" + side, 12)
+		p.add_theme_stylebox_override("panel", sb)
+		tiers.add_child(p)
+		var tv := VBoxContainer.new()
+		p.add_child(tv)
+		var col: Color = UIKit.ACCENT if spec[4] else UIKit.TEXT
+		tv.add_child(MobilePage.label(str(spec[0]), UIKit.TEXT_FAINT, MobilePage.FONT, false))
+		tv.add_child(MobilePage.label("%s  %s" % [spec[1], spec[2]], col, 30, false))
+		tv.add_child(MobilePage.label(str(spec[3]), UIKit.TEXT_DIM, MobilePage.FONT, false))
+	var cost: Dictionary = GameState.forge_craft_cost()
+	var ok_iron := GameState.iron >= int(cost.iron)
+	var ok_silver := GameState.silver >= int(cost.silver)
+	mv.add_child(MobilePage.label(Locale.t("mw_382b1167") % [atk0, atk1, _sel.derived_hit(), _sel.derived_crit()], UIKit.OK if atk1 > atk0 else UIKit.TEXT_DIM,
+			MobilePage.FONT, true))
+	mv.add_child(MobilePage.label(Locale.t("mw_e0de40ca") % [cost.iron, GameState.iron, "✓" if ok_iron else "!", cost.silver, GameState.silver,
+			"✓" if ok_silver else "!"], UIKit.TEXT if ok_iron and ok_silver else UIKit.DANGER, MobilePage.FONT, true))
+	mv.add_child(MobilePage.label(Locale.t("mw_0ddf557e") if flv < 4 else Locale.t("mw_2f47eea1"), UIKit.TEXT_FAINT, MobilePage.FONT, true))
+	_msg = MobilePage.label("", UIKit.OK, MobilePage.FONT, true)
+	mv.add_child(_msg)
+	MobilePage.spacer(mv)
+	var row := VBoxContainer.new()
+	row.add_theme_constant_override("separation", 10)
+	mv.add_child(row)
+	var fcost: Dictionary = CKEconomyState.BUILDING_COST.get(flv + 1, {})
+	var wlabel := Locale.t("wsc_f_maxed") if flv >= CKEconomyState.BUILDING_MAX else Locale.t("wsc_f_up") % [flv + 1, int(fcost.get("silver", 0)), int(fcost.get("iron", 0))]
+	var works := MobilePage.button(wlabel, false, upgrade_forge)
+	works.name = "ForgeUpgrade"
+	works.disabled = flv >= CKEconomyState.BUILDING_MAX
+	row.add_child(works)
+	var cid := _sel.id
+	var go := MobilePage.button(Locale.t("mw_e536313c"), true, func():
+		var r: Dictionary = GameState.craft_weapon(cid)
+		var m := str(r.get("msg"))
+		_m_render_all()
+		_msg.text = m
+		_msg.add_theme_color_override("font_color", UIKit.OK if bool(r.get("ok")) else UIKit.DANGER))
+	go.name = "ForgeCraft"
+	go.disabled = not (ok_iron and ok_silver) or same
+	row.add_child(go)
+	if not go.disabled:
+		go.call_deferred("grab_focus")
+	_m_right(rw, w, top, bh)
+
+func _m_right(rw: float, w: float, top: float, bh: float) -> void:
+	var rv := MobilePage.panel(_right, Rect2(w - 20 - rw, top, rw, bh), 12)
+	rv.add_child(MobilePage.label(Locale.t("mw_874f9d31"), UIKit.ACCENT, 24, false))
+	var g := GridContainer.new()
+	g.columns = 2
+	g.add_theme_constant_override("h_separation", 16)
+	rv.add_child(g)
+	for it in [[Locale.t("mw_81b70668"), GameState.iron], [Locale.t("mw_cac5dd12"), GameState.silver], [Locale.t("mw_b7d19b56"), GameState.food],
+			[Locale.t("mw_4791c45f"), GameState.morale]]:
+		g.add_child(MobilePage.label("%s %d" % [it[0], int(it[1])], UIKit.TEXT, MobilePage.FONT, false))
+	var eq := 0
+	for c in GameState.roster():
+		if c.weapon_id != "":
+			eq += 1
+	rv.add_child(MobilePage.label(Locale.t("mw_bebd7f61") % [eq, GameState.roster().size()], UIKit.TEXT_DIM, MobilePage.FONT, false))
+	rv.add_child(MobilePage.label(Locale.t("mw_d9999300"), UIKit.ACCENT, 24, false))
+	rv.add_child(MobilePage.label(Locale.t("heirloom_preview"), UIKit.TEXT_DIM, MobilePage.FONT, true))
+	MobilePage.spacer(rv)
+	rv.add_child(MobilePage.button(Locale.t("forge_modify"), false, func():
+		if _sel == null:
+			return
+		var r: Dictionary = CKHeirloom.try_modify(GameState, _sel.id)
+		_m_render_all()
+		_msg.text = str(r.get("msg", ""))))
+	rv.add_child(MobilePage.button(Locale.t("heirloom_store"), false, func():
+		if _sel == null:
+			return
+		var r: Dictionary = CKHeirloom.store(GameState, _sel.id)
+		_m_render_all()
+		_msg.text = str(r.get("msg", ""))))

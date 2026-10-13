@@ -352,3 +352,100 @@ ux_dep_none,无,None
 ux_dep_go,出战 · 练习战（清匪）,Sortie · Practice (bandits)
 ux_dep_need,至少点选一名骑士上阵,Field at least one knight
 ux_dep_stats2,%s · HP %d/%d · 攻 %d · 移 %d,%s · HP %d/%d · ATK %d · MOV %d
+ux_hub_sum_home,%s · 中枢士气 %d%%,%s · hub morale %d%%
+ux_hub_sum_military,麾下 %d 人 · 出战上限 %d 人 · 银币 %d,%d knights · deploy cap %d · %d silver
+ux_hub_sum_atlas,%s。舆图上赶路、接委托都从这里出发。,%s. Travel and commissions start from the atlas.
+ux_hub_sum_family,在册 %d 人 · 已缔约 %d 对 · 子嗣 %d 人,%d on the roll · %d marriages · %d heirs
+ux_hub_sum_civil,银币 %d · 粮 %d · 铁 %d,%d silver · %d grain · %d iron
+ux_hub_sum_locked,%d 个入口随主线开放，点灰卡看条件,%d doors open with the main line; tap a grey card
+ux_hub_sum_open,本分区入口已全部开放。,Every door in this section is open.
+mw_d908bc9d,    升级 %d 银 · %d 粮,    upgrade %d silver · %d grain
+mw_30b4a962,    巡防中 %d 月,    patrolling %d mo
+mw_0296c7bc,    巡防冷却 %d 月,    patrol cooldown %d mo
+mw_afd9fc74, · 药 +%d, · herb +%d
+mw_0b4b3f1d,%d 份,%d units
+mw_819f9bc8,%d 银 × %d = %d 银   余 %d 银,%d × %d = %d silver   left %d
+mw_0ea48000,%d岁 · %s,age %d · %s
+mw_0e5acd74,"%s   库存 %d
+买 %d · 卖 %d 银","%s   stock %d
+buy %d · sell %d"
+mw_84350bb5,%s · 奖：%s,%s · reward: %s
+mw_5cda7737,"%s
+%s · 攻 %d","%s
+%s · ATK %d"
+mw_6c9a2d8d,"%s
+若不接受：%s","%s
+If refused: %s"
+mw_bc2f4fde,下一级：%d 银 · %d 铁 · %d 粮  —  %s,Next: %d silver · %d iron · %d grain  —  %s
+mw_df752a99,丰收粮产与祈愈随等级上升,Harvest and healing grow with level
+mw_35c262dc,为 %s 打造,Forge for %s
+mw_5ccb2361,买价更低、卖价更高,"Cheaper buys, better sells"
+mw_0d0aa127,买入 · %d 银,Buy · %d silver
+mw_874f9d31,仓储,Depot
+mw_08a7e913,传习每年 %d 次；Lv2+ 月结士气,%d drills a year; Lv2+ monthly morale
+mw_d9999300,传家器,Heirloom
+mw_69668f1a,全堡巡防,Patrol all
+mw_91c7146a,升级属地,Upgrade holding
+mw_36dad83f,卖出 · %d 银,Sell · %d silver
+mw_87646fa0,后代可能遗传,Heirs may inherit
+mw_aee11ebd,城堡工事,Castle works
+mw_487923d4,堡志  %d / %d,Ambitions  %d / %d
+mw_4791c45f,士气,Morale
+mw_23073274,委任庄头,Appoint steward
+mw_127f0d3b,婚仪,Rites
+mw_085d21a4,子嗣性状概率,Heir trait odds
+mw_9090426e,子嗣期望,Heir outlook
+mw_c4a0ef09,子嗣阶位约 %s,Heir rank about %s
+mw_fc94ece4,宗主一方,House head
+mw_48b73335,家族旁注：,House notes: 
+mw_c9e01e67,属地概况,Holdings
+mw_4f279682,巡此路线,Patrol here
+mw_e3e092a7,工事 / 堡志,Works / ambitions
+mw_0ddf557e,工坊 Lv4 起打造「灰刃·精」(+3)。,Forge Lv4 makes Fine Ash Blades (+3).
+mw_2f47eea1,工坊已达 Lv4：打造「灰刃·精」(+3)。,Forge is Lv4: making Fine Ash Blades (+3).
+mw_8fde9e92,已满级,Maxed
+mw_bebd7f61,已配灰刃 %d / %d,Ash blades issued %d / %d
+mw_d382e424,应帖一方,Suitor
+mw_48ac4797,当前,Now
+mw_199dfef6,打造后,After
+mw_ae9ddedb,打造更省铁银；Lv4 出精灰刃,Cheaper forging; Lv4 makes fine blades
+mw_75b58bf9,扩编队上限（现 %d 人）,Raises squad cap (now %d)
+mw_14f8cc32,撤庄头,Remove steward
+mw_6e124674,攻 %d · 防 %d,ATK %d · DEF %d
+mw_382b1167,攻 %d → %d   命中 %d   暴击 %d,ATK %d → %d   HIT %d   CRIT %d
+mw_c7b9ef3a,攻 %d,ATK %d
+mw_758ec925,最多,Max
+mw_c7eee1dc,月产 粮 +%d · 银 +%d,Monthly grain +%d · silver +%d
+mw_c9190e80,未开垦,Unclaimed
+mw_47f87f27,未显,hidden
+mw_897be971,炉火工坊,Forge
+mw_e536313c,确认打造,Forge it
+mw_b88be11b,禀性 %s,Traits %s
+mw_b7d19b56,粮,Grain
+mw_e9fc492e,"粮运
+35 银","Grain run
+35 silver"
+mw_fed61ef2,粮运稳、铁运厚、香料险而利。,"Grain is safe, iron pays, spice is risky and rich."
+mw_99f92210,经营偏向,Focus
+mw_e0de40ca,耗材：铁 %d / %d %s   银 %d / %d %s,Cost: iron %d / %d %s   silver %d / %d %s
+mw_4b9d1a53,血脉 %s %d%%,Blood %s %d%%
+mw_729c413f,货品,Goods
+mw_fe82b96f,选择骑士（%d 名）,Pick a knight (%d)
+mw_81b70668,铁,Iron
+mw_6daec399,"铁运
+45 银","Iron run
+45 silver"
+mw_41e31e6c,银币 %d · 粮 %d · 铁 %d · %s,Silver %d · grain %d · iron %d · %s
+mw_72393112,银币 %d · 粮 %d · 铁 %d · 药 %d · 市集 Lv %d,Silver %d · grain %d · iron %d · herb %d · market Lv %d
+mw_ac33f494,银币 %d · 铁 %d · 工坊 Lv %d · %s,Silver %d · iron %d · forge Lv %d · %s
+mw_dbf7fc40,银币 %d · 铁 %d · 粮 %d · 工事 %d/%d · 出战 %d 人,Silver %d · iron %d · grain %d · works %d/%d · deploy %d
+mw_cac5dd12,银币,Silver
+mw_f8f18ffd,陆桥商路,Landbridge market
+mw_1773df3e,陆桥商队 · 三月交割,Landbridge caravan · 3-month run
+mw_76a53873,雇护运（12 银）,Hire escort (12 silver)
+mw_39662991,领地营建,Estates
+mw_b1f6bec9,"香料
+55 银","Spice run
+55 silver"
+mw_4e8abd0f,；庄头空缺，易遭劫掠,"; no steward, easy to raid"
+mw_4d0e475f,；庄头：%s,; steward: %s
