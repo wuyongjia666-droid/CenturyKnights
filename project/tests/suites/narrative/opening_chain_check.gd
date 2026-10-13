@@ -160,7 +160,7 @@ func _e1_presentation() -> String:
 				has_bg = true
 		if not has_bg:
 			return "beat %s has no stage.bg" % bid
-			if bid == "end":
+		if bid == "end":
 			var acts: Array = beat.get("actions", [])
 			if acts.is_empty():
 				return "end beat needs a hub exit"
