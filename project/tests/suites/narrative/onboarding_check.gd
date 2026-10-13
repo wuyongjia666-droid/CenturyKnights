@@ -112,6 +112,12 @@ func _flag_is_set_somewhere(flag: String) -> bool:
 			"res://scripts/battle/battle_controller.gd", "res://scripts/hub/castle_hub.gd", "res://autoload/game_state.gd"]:
 		if FileAccess.get_file_as_string(path).find('"%s"' % flag) >= 0:
 			return true
+	# Map on_victory flags (A-02: e1_01_fought is written when the escort is won).
+	var maps := DirAccess.open("res://data/maps")
+	if maps:
+		for f in maps.get_files():
+			if f.ends_with(".json") and FileAccess.get_file_as_string("res://data/maps/" + f).find('"%s"' % flag) >= 0:
+				return true
 	var dir := DirAccess.open("res://data/story/chapters")
 	if dir:
 		for f in dir.get_files():

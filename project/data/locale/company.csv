@@ -196,3 +196,5 @@ wsc_t_month,路上过了一个月：%s，粮还剩 %d,A month passed on the road
 wsc_t_own,我方·驻%d,ours · %d held
 wsc_t_rival,对手占着,rival
 wsc_tv_rule,每月头 %d 次刷新不要钱，一个月最多刷 %d 次，之后每次 %d 银。下个月自动换一批人。,"First %d refresh(es) each month are free, up to %d per month, then %d silver each."
+morale.held_back,欠饷已两月，挽留下了要走的人,Two months unpaid; you talked the leaver into staying
+morale.nobody_left,欠饷已两月，好在没有人要走,Two months unpaid; nobody left

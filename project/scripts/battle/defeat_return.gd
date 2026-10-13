@@ -10,6 +10,13 @@ const META := "defeat_settlement"
 static func back_path(win: bool, world_enc: bool, battle_return: String) -> String:
 	if win or world_enc:
 		return battle_return if battle_return != "" else CASTLE
+	# Opening review A-04: before the castle opens (story beat 0.25), a lost story fight goes
+	# back into the story; the map writes <map>_lost so the beat can say "this fight can be retried".
+	if battle_return.begins_with("res://scenes/story/") and not GameState.flag("hub_open"):
+		var map_id := str(GameState.get_meta("battle_map", ""))
+		if map_id != "":
+			GameState.set_flag(map_id + "_lost")
+		return battle_return
 	return CASTLE
 
 
