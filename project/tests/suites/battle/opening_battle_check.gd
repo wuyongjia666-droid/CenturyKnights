@@ -14,6 +14,13 @@ func _ready() -> void:
 
 func _run() -> String:
 	GameState.new_game("烬行", "岑", "#" + "6ED4FF")
+	var err := _check_data()
+	if err != "":
+		return err
+	return await _check_battle()
+
+
+func _check_data() -> String:
 	var m: Dictionary = BattleMaps.get_map("ch0_pass")
 	if str(BattleObjectives.spec(m).get("type", "")) != "seize":
 		return "ch0_pass objective"
@@ -34,7 +41,10 @@ func _run() -> String:
 	var desc := BattleVictory.describe("ch0_pass", {})
 	if int(desc.get("skill_points", -1)) != 0:
 		return "tutorial skill points %s" % desc.get("skill_points")
+	return ""
 
+
+func _check_battle() -> String:
 	GameState.set_meta("battle_map", "ch0_pass")
 	var packed: PackedScene = load("res://scenes/battle/battle.tscn")
 	var battle = packed.instantiate()
@@ -43,6 +53,12 @@ func _run() -> String:
 	battle.size = Vector2(1280, 720)
 	await get_tree().process_frame
 	await get_tree().process_frame
+	var err := _battle_assertions(battle)
+	battle.queue_free()
+	return err
+
+
+func _battle_assertions(battle) -> String:
 	if str(battle.map_id) != "ch0_pass":
 		return "map id %s" % battle.map_id
 	var militia := 0
@@ -56,7 +72,6 @@ func _run() -> String:
 		return "militia deployed"
 	if foes < 3:
 		return "expected 3 foes got %d" % foes
-	# Idle panel follows objective type.
 	battle.selected = -1
 	BattleInfoPanel.refresh(battle)
 	var idle := str(battle.info_label.text)
@@ -65,15 +80,11 @@ func _run() -> String:
 	var seize_label := BattleObjectives.text("obj_seize")
 	if idle.find(seize_label) < 0:
 		return "idle missing seize (%s): %s" % [seize_label, idle]
-	# Lock tip cards must not appear at deploy for tutorial maps (E-02).
 	if battle.get_node_or_null("LockTipPanel") != null:
 		return "lock tip at deploy"
-	# Player-driven lock pages open without auto-timer (call sequence directly).
 	BattleLockTutorial.run_sequence(battle)
-	await get_tree().process_frame
 	if battle.get_node_or_null("LockTipPanel") == null:
 		return "lock tip missing after sequence"
-	# Seize win.
 	for u in battle.units:
 		if str(u.team) == "player" and u.char.hp > 0:
 			u.pos = Vector2i(7, 3)
@@ -82,5 +93,4 @@ func _run() -> String:
 	var got = battle.get_meta("battle_verdict", {})
 	if str(got.get("result", "")) != "win" or str(got.get("reason", "")) != "seize":
 		return "seize win %s" % got
-	battle.queue_free()
 	return ""
