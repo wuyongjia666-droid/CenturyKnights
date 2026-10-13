@@ -59,6 +59,13 @@ func _ready() -> void:
 	box.add_child(UIKit.make_label(_line("ux_credits_original_h", Locale.t("shell_355c3e55"))))
 	box.add_child(_body(_line("ux_credits_original", Locale.t("shell_acd80e41"))))
 
+	## Audit #12: who made what, and where every kind of asset comes from.
+	box.add_child(UIKit.eyebrow("MAKING"))
+	box.add_child(UIKit.make_label(Locale.t("a1_cr_making_h")))
+	for k in ["a1_cr_design", "a1_cr_art", "a1_cr_music", "a1_cr_sfx", "a1_cr_story"]:
+		box.add_child(_credit_row(Locale.t(k + "_h"), Locale.t(k)))
+	box.add_child(UIKit.eyebrow("ENGINE"))
+	box.add_child(_credit_row(Locale.t("a1_cr_engine_h"), Locale.t("a1_cr_engine") % Engine.get_version_info().get("string", "4")))
 	box.add_child(UIKit.eyebrow("FONTS"))
 	box.add_child(UIKit.make_label(_line("ux_credits_fonts_h", Locale.t("shell_450a0438"))))
 	for spec in _fonts():
@@ -73,9 +80,13 @@ func _ready() -> void:
 	back.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	back.pressed.connect(_back)
 	back_row.add_child(back)
-	UIKit.footer_bar(self, [["ESC", Locale.t("shell_11d02415")]], "CREDITS · FROST")
+	if not DeviceProfile.is_mobile():
+		UIKit.footer_bar(self, [["ESC", Locale.t("shell_11d02415")]], "CREDITS · FROST")
 
-func _font_row(spec: Dictionary) -> PanelContainer:
+func _credit_row(head: String, body: String) -> PanelContainer:
+	return _font_row({"file": head, "name": body, "copy": "", "note": ""}, false)
+
+func _font_row(spec: Dictionary, mono: bool = true) -> PanelContainer:
 	var panel := PanelContainer.new()
 	var plate := UIKit.glass(12, 0.9, false)
 	plate.content_margin_left = 14
@@ -93,19 +104,20 @@ func _font_row(spec: Dictionary) -> PanelContainer:
 	file.text = str(spec["file"])
 	file.autowrap_mode = TextServer.AUTOWRAP_OFF
 	file.clip_text = false
-	file.add_theme_font_override("font", UIKit.font("mono"))
+	file.add_theme_font_override("font", UIKit.font("mono" if mono else "bold"))
 	file.add_theme_font_size_override("font_size", 14)
 	file.add_theme_color_override("font_color", UIKit.ACCENT)
 	col.add_child(file)
 	var meta := Label.new()
-	meta.text = "%s · %s" % [str(spec["name"]), str(spec["copy"])]
+	meta.text = "%s · %s" % [str(spec["name"]), str(spec["copy"])] if str(spec["copy"]) != "" else str(spec["name"])
 	meta.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	meta.add_theme_font_size_override("font_size", 13)
 	meta.add_theme_color_override("font_color", UIKit.TEXT)
 	col.add_child(meta)
-	var note := _body(str(spec["note"]))
-	note.add_theme_font_size_override("font_size", 12)
-	col.add_child(note)
+	if str(spec["note"]) != "":
+		var note := _body(str(spec["note"]))
+		note.add_theme_font_size_override("font_size", 12)
+		col.add_child(note)
 	return panel
 
 func _body(text: String) -> Label:

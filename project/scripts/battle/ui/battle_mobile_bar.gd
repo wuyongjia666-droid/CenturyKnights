@@ -20,7 +20,7 @@ static func build(host) -> void:
 	st.content_margin_bottom = 8
 	host._mobile_bar.add_theme_stylebox_override("panel", st)
 	host._mobile_layer.add_child(host._mobile_bar)
-	var row := HBoxContainer.new()
+	var row: BoxContainer = VBoxContainer.new() if host._mobile_landscape() else HBoxContainer.new()
 	row.name = "CmdRow"
 	row.add_theme_constant_override("separation", 8)
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -33,7 +33,7 @@ static func build(host) -> void:
 static func rebuild(host) -> void:
 	if host._mobile_bar == null:
 		return
-	var row := host._mobile_bar.get_node_or_null("CmdRow") as HBoxContainer
+	var row := host._mobile_bar.get_node_or_null("CmdRow") as BoxContainer
 	if row == null:
 		return
 	for c in row.get_children():
@@ -53,11 +53,11 @@ static func rebuild(host) -> void:
 		command(row, Locale.t("ux_more_cmds"), h, true, func(): BattleTouchConfirm.overflow_menu(host))
 	place(host)
 
-static func command(row: HBoxContainer, text: String, h: int, accent: bool, cb: Callable) -> Button:
+static func command(row: BoxContainer, text: String, h: int, accent: bool, cb: Callable) -> Button:
 	var b := UIKit.make_accent_button(text, 120) if accent else UIKit.make_button(text, 96)
-	b.custom_minimum_size = Vector2(0, h)
+	b.custom_minimum_size = Vector2(0, maxi(h, 76) if row is VBoxContainer else h)
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	b.add_theme_font_size_override("font_size", 15)
+	b.add_theme_font_size_override("font_size", 22 if row is VBoxContainer else 15)
 	b.pressed.connect(cb)
 	row.add_child(b)
 	return b
@@ -73,6 +73,14 @@ static func place(host) -> void:
 	var left := float(insets.get("left", 0.0))
 	var right := float(insets.get("right", 0.0))
 	var bottom := maxf(float(insets.get("bottom", 0.0)), 8.0)
+	if host._mobile_landscape():
+		# Right-edge thumb column: board keeps the full height.
+		var top := maxf(float(insets.get("top", 0.0)), 8.0)
+		var sx: float = host.scale.x if host.scale.x > 0.01 else 1.0
+		var w: float = (host.MOBILE_RAIL_W - 8.0) * sx
+		host._mobile_bar.position = Vector2(vp.x - right - w - 6.0, top + vp.y * 0.30)
+		host._mobile_bar.size = Vector2(w, vp.y * 0.70 - top - bottom)
+		return
 	# Dead zone: keep bar a few dp above the board so pans don't mis-tap.
 	host._mobile_bar.position = Vector2(left, vp.y - bottom - h)
 	host._mobile_bar.size = Vector2(maxf(240.0, vp.x - left - right), h)

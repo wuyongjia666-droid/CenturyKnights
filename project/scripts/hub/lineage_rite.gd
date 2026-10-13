@@ -1,215 +1,200 @@
 extends Control
-## 族谱授旗礼：选子嗣 → 分支道路（武/文/商）→ 三步授旗入队
+## Banner rite (line B, audit #28). Left: the family's children with age and state.
+## Right: a four-step strip (choose path, name, seal, enlist), the step text, and the path
+## choices as cards with their real effect. Children under 15 can pick an early path from 6.
 
 const EARLY_MIN_AGE := 6
+const PATHS := ["martial", "scholar", "merchant"]
+
 var _list: VBoxContainer
-var _body: RichTextLabel
-var _actions: VBoxContainer
+var _steps: HBoxContainer
+var _body: Label
+var _actions: HBoxContainer
 var _selected: CKCharacter
-var _step: int = 0
-var _path: String = ""  # martial | scholar | merchant
+var _step := 0
+var _path := ""
 var _msg: Label
 
 func _ready() -> void:
 	UIKit.make_themed_bg(self, "rite")
-	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/lineage_rite_banner.png"):
-		var _bn := TextureRect.new()
-		_bn.texture = load("res://assets/art/ui/lineage_rite_banner.png")
-		_bn.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		_bn.stretch_mode = TextureRect.STRETCH_SCALE
-		_bn.position = Vector2(0, 0)
-		_bn.size = Vector2(1280, 52)
-		_bn.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(_bn)
-		UIFX.banner_shimmer(_bn, 3.8)
-	if not UIKit.RETIRE_CHROME and ResourceLoader.exists("res://assets/art/ui/hub_banner_strip.png"):
-		var strip := TextureRect.new()
-		strip.texture = load("res://assets/art/ui/hub_banner_strip.png")
-		strip.position = Vector2(0, 0)
-		strip.custom_minimum_size = Vector2(1280, 48)
-		strip.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		strip.stretch_mode = TextureRect.STRETCH_SCALE
-		strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(strip)
-
-	UIFX.page_enter(self)
-	UIFX.fade_in(self, 0.3)
-	Music.play_hub()
-	UIFX.wire_tree(self)
-	var t = UIKit.make_label("族谱 · 授旗礼（分支）", true)
-	t.position = Vector2(40, 16)
-	add_child(t)
-	var tip = UIKit.make_dim_label("未成年可早教择路（生日加维）；成年授旗：择路→宣名→按印→入册。选择有真实机械后果。")
-	tip.position = Vector2(40, 56)
-	add_child(tip)
-
-	var left = UIKit.make_panel()
-	left.position = Vector2(40, 100)
-	left.custom_minimum_size = Vector2(360, 420)
-	add_child(left)
-	_list = VBoxContainer.new()
-	_list.add_theme_constant_override("separation", 8)
-	left.add_child(_list)
-
-	var right = UIKit.make_panel()
-	right.position = Vector2(420, 100)
-	right.custom_minimum_size = Vector2(820, 420)
-	add_child(right)
-	_body = RichTextLabel.new()
-	_body.bbcode_enabled = true
-	_body.custom_minimum_size = Vector2(780, 280)
-	_body.add_theme_color_override("default_color", UIKit.TEXT)
+	CKPageKit.shell(self, Locale.t("lb_rite_ctx"), "BANNER RITE", Locale.t("lb_rite_title"), Locale.t("lb_rite_desc", [Calendar.ADULT_AGE, EARLY_MIN_AGE]), "none")
+	var left := CKPageKit.card(self, Rect2(42, CKPageKit.TOP + 8, 360, 512), "HeirList")
+	CKPageKit.card_head(left, Locale.t("lb_rite_kids"), "CHILDREN")
+	_list = CKPageKit.list(left, Rect2(12, 58, 336, 440), "Kids")
+	var right := CKPageKit.card(self, Rect2(414, CKPageKit.TOP + 8, 824, 512), "RiteBoard")
+	_steps = HBoxContainer.new()
+	_steps.name = "Steps"
+	_steps.position = Vector2(18, 16)
+	_steps.add_theme_constant_override("separation", 8)
+	right.add_child(_steps)
+	_body = CKPageKit.text("", UIKit.TEXT, 15, 788)
+	_body.name = "RiteText"
+	_body.position = Vector2(18, 80)
+	_body.size = Vector2(788, 150)
 	right.add_child(_body)
-	_actions = VBoxContainer.new()
-	_actions.position = Vector2(16, 300)
-	_actions.add_theme_constant_override("separation", 8)
+	_actions = HBoxContainer.new()
+	_actions.name = "RiteActions"
+	_actions.position = Vector2(18, 250)
+	_actions.size = Vector2(788, 246)
+	_actions.add_theme_constant_override("separation", 12)
 	right.add_child(_actions)
-
-	_msg = UIKit.make_label("")
-	_msg.position = Vector2(40, 540)
-	add_child(_msg)
-	var back = UIKit.make_button(Locale.t("btn_back"), 120)
-	back.position = Vector2(40, 640)
-	back.pressed.connect(func(): CKNav.up())
-	add_child(back)
-	var mar = UIKit.make_button("回联姻廷", 120)
-	mar.position = Vector2(180, 640)
-	mar.pressed.connect(func(): CKNav.go("res://scenes/hub/marriage.tscn"))
-	add_child(mar)
-	var lin = UIKit.make_button("回族谱", 120)
-	lin.position = Vector2(320, 640)
-	lin.pressed.connect(func(): CKNav.go("res://scenes/hub/lineage_view.tscn"))
-	add_child(lin)
+	_msg = CKPageKit.feedback(self)
 	_refresh_list()
+	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "BANNER RITE · FROST")
+	UIFX.page_enter(self)
+
+func _path_zh(p: String) -> String:
+	return Locale.t("lb_path_" + p) if p != "" else Locale.t("lb_path_none")
 
 func _refresh_list() -> void:
-	for c in _list.get_children():
-		c.queue_free()
-	var any := false
-	for ch in GameState.characters.values():
-		if not ch.alive or not ch.is_child:
-			continue
-		var ready = ch.age >= Calendar.ADULT_AGE and not ch.in_roster
-		var path = str(GameState.lineage_path.get(ch.id, ""))
-		var path_tag = {"martial": "武", "scholar": "文", "merchant": "商"}.get(path, "")
-		var tag = "可授旗" if ready else ("已入队" if ch.in_roster else "%d岁·可早教" % ch.age)
-		if path_tag != "":
-			tag += "·" + path_tag
-		var b = UIKit.make_button("%s　%s" % [ch.name, tag], 320)
-		b.disabled = ch.in_roster
-		var captured = ch
-		b.pressed.connect(func(): _select(captured))
+	CKPageKit.clear(_list)
+	var kids: Array = GameState.characters.values().filter(func(ch): return ch.alive and ch.is_child)
+	kids.sort_custom(func(a, b): return int(a.age) > int(b.age))
+	for ch in kids:
+		var ready: bool = ch.age >= Calendar.ADULT_AGE and not ch.in_roster
+		var tag := Locale.t("lb_rite_ready") if ready else (Locale.t("lb_rite_in") if ch.in_roster else Locale.t("lb_rite_age", [ch.age]))
+		var p := str(GameState.lineage_path.get(ch.id, ""))
+		if p != "":
+			tag += " · " + _path_zh(p)
+		var b := CKPageKit.button("%s　%s" % [ch.name, tag], _selected == ch, 320, 52)
+		b.toggle_mode = true
+		b.button_pressed = _selected == ch
+		CKPageKit.lock(b, Locale.t("lb_rite_already") if ch.in_roster else "")
+		b.pressed.connect(func(): Sfx.click(); _select(ch))
 		_list.add_child(b)
-		any = true
-	if not any:
-		_list.add_child(UIKit.empty_state("尚无子嗣。联姻后岁月推进可诞育。"))
-	_body.text = Locale.t("lin_rite_hint") % EARLY_MIN_AGE
-	for c in _actions.get_children():
-		c.queue_free()
+	if kids.is_empty():
+		_list.add_child(CKPageKit.empty(Locale.t("lb_rite_none"), Locale.t("lb_rite_none_why"), Locale.t("lb_rite_none_how"), 300))
+	CKPageKit.drag_through(_list)
+	UIFX.wire_tree(_list)
+	if _selected == null:
+		_paint_steps(-1)
+		_body.text = Locale.t("lin_rite_hint") % EARLY_MIN_AGE
+		CKPageKit.clear(_actions)
+
+func _paint_steps(cur: int) -> void:
+	CKPageKit.clear(_steps)
+	for i in 4:
+		var col: Color = UIKit.ACCENT if i == cur else (UIKit.OK if i < cur else UIKit.TEXT_FAINT)
+		var chip := PanelContainer.new()
+		chip.custom_minimum_size = Vector2(190, 48)
+		chip.add_theme_stylebox_override("panel", UIKit.flat_box(Color(col, 0.10), col, 8, 2 if i == cur else 1))
+		var l := UIKit.title_label(Locale.t("lb_rite_step_%d" % i), 15, UIKit.TEXT if i <= cur else UIKit.TEXT_DIM)
+		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		l.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		chip.add_child(l)
+		_steps.add_child(chip)
 
 func _select(c: CKCharacter) -> void:
 	_selected = c
 	_path = str(GameState.lineage_path.get(c.id, ""))
-	if c.age < Calendar.ADULT_AGE:
-		_step = 0
-		_show_early_tutor()
-		return
 	_step = 0 if _path == "" else 1
-	_show_step()
+	_refresh_list()
+	if c.age < Calendar.ADULT_AGE:
+		_show_early()
+	else:
+		_show_step()
 
-func _show_early_tutor() -> void:
-	for c in _actions.get_children():
-		c.queue_free()
-	if _selected == null:
-		return
+func _path_cards(cb: Callable) -> void:
+	for p in PATHS:
+		var r := CKPageKit.row(UIKit.ACCENT if p == _path else UIKit.TEXT_FAINT, 230)
+		var pc: PanelContainer = r[0]
+		pc.custom_minimum_size = Vector2(254, 230)
+		pc.name = "Path_" + p
+		var v: VBoxContainer = r[1]
+		v.add_child(UIKit.title_label(_path_zh(p), 18))
+		v.add_child(CKPageKit.text(Locale.t("lb_path_%s_fx" % p), UIKit.TEXT_DIM, 13, 226))
+		var sp := Control.new()
+		sp.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		v.add_child(sp)
+		var b := CKPageKit.button(Locale.t("lb_rite_pick"), p == _path, 226)
+		b.pressed.connect(func(): cb.call(p))
+		v.add_child(b)
+		_actions.add_child(pc)
+	UIFX.wire_tree(_actions)
+
+func _show_early() -> void:
+	CKPageKit.clear(_actions)
+	_paint_steps(-1)
 	if _selected.age < EARLY_MIN_AGE:
-		# Audit P2-6: matches the tutor's 6-year floor; infants are not pushed.
 		_body.text = Locale.t("lin_too_young") % [_selected.name, _selected.age, EARLY_MIN_AGE]
 		return
-	var cur = {"martial": "偏武", "scholar": "偏文", "merchant": "偏商"}.get(_path, "未定")
-	var head := "[b]早教·择路[/b]\n\n%s 尚年幼（%d岁）。\n今日择路将写入族谱：此后岁课的习痕按道路倾向生长。\n" % [_selected.name, _selected.age]
-	_body.text = head + "当前：【%s】\n\n[color=#c9a227]偏武[/color] 力/体　[color=#8ecae6]偏文[/color] 意/感　[color=#e9c46a]偏商[/color] 敏/技" % cur
-	_add("早教·偏武", func(): _set_early("martial"))
-	_add("早教·偏文", func(): _set_early("scholar"))
-	_add("早教·偏商", func(): _set_early("merchant"))
+	_body.text = Locale.t("lb_rite_early", [_selected.name, _selected.age, _path_zh(_path)])
+	_path_cards(Callable(self, "_set_early"))
 
 func _set_early(path: String) -> void:
 	_path = path
 	GameState.lineage_path[_selected.id] = path
-	var pn = {"martial": "偏武", "scholar": "偏文", "merchant": "偏商"}[path]
-	GameState.add_lineage_event("早教：%s → %s" % [_selected.name, pn])
-	# Audit P2-6 / proposal: no instant +1 and no birthday stat; growth comes from the yearly lessons.
-	_msg.text = "早教已定：%s。此后岁课按这条路成长。" % pn
+	GameState.add_lineage_event(Locale.t("lb_rite_log_early", [_selected.name, _path_zh(path)]))
+	CKPageKit.say(_msg, Locale.t("lb_rite_early_ok", [_path_zh(path)]), true)
 	Sfx.lineage_chime()
 	GameState.save_game()
 	_refresh_list()
+	_show_early()
 
 func _show_step() -> void:
-	for c in _actions.get_children():
-		c.queue_free()
+	CKPageKit.clear(_actions)
 	if _selected == null:
 		return
+	_paint_steps(_step)
 	match _step:
 		0:
-			_body.text = "[b]分支·择路[/b]\n\n%s 将入花名册。宴上与门阙都会问：此嗣偏武、偏文、还是偏商？\n\n[color=#c9a227]偏武[/color]：开局多近战战技点倾向\n[color=#8ecae6]偏文[/color]：开局多祷言/支援倾向\n[color=#e9c46a]偏商[/color]：银两奖励与声望旁注" % _selected.name
-			_add("择·偏武", func(): _choose_path("martial"))
-			_add("择·偏文", func(): _choose_path("scholar"))
-			_add("择·偏商", func(): _choose_path("merchant"))
+			_body.text = Locale.t("lb_rite_s0", [_selected.name])
+			_path_cards(Callable(self, "_choose_path"))
 		1:
-			var pn = {"martial": "偏武", "scholar": "偏文", "merchant": "偏商"}.get(_path, _path)
-			_body.text = "[b]授旗·宣名[/b]\n\n族谱吏高声：\n「%s，道路【%s】已录，年满可授。」\n厅上众人看向混合条与禀性。" % [_selected.name, pn]
-			_add("宣名完毕", func(): _step = 2; _show_step())
-			_add("重选道路", func(): _step = 0; _show_step())
+			_body.text = Locale.t("lb_rite_s1", [_selected.name, _path_zh(_path)])
+			_act(Locale.t("lb_rite_s1_go"), true, func(): _step = 2; _show_step())
+			_act(Locale.t("lb_rite_repick"), false, func(): _step = 0; _show_step())
 		2:
-			_body.text = "[b]授旗·按印[/b]\n\n团长按灰旗印于册。\n「旗下不弃家，家不弃旗。」\n%s 握旗杆，指节发白。" % _selected.name
-			_add("按印入册", func(): _step = 3; _show_step())
+			_body.text = Locale.t("lb_rite_s2", [_selected.name])
+			_act(Locale.t("lb_rite_s2_go"), true, func(): _step = 3; _show_step())
 		3:
-			_body.text = "[b]授旗·入花名册[/b]\n\n确认后授旗入队，并依道路给予倾向加成。"
-			_add("完成授旗", func(): _do_enlist())
-			_add("取消", func(): _refresh_list())
+			_body.text = Locale.t("lb_rite_s3", [_path_zh(_path), Locale.t("lb_path_%s_fx" % _path)])
+			_act(Locale.t("lb_rite_s3_go"), true, func(): _do_enlist())
+			_act(Locale.t("lb_rite_cancel"), false, func(): _selected = null; _refresh_list())
+
+func _act(t: String, primary: bool, cb: Callable) -> void:
+	var b := CKPageKit.button(t, primary, 240)
+	b.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	b.pressed.connect(cb)
+	_actions.add_child(b)
+	UIFX.wire_button(b)
 
 func _choose_path(path: String) -> void:
 	_path = path
 	GameState.lineage_path[_selected.id] = path
-	var pn = {"martial": "偏武", "scholar": "偏文", "merchant": "偏商"}[path]
-	GameState.add_lineage_event("择路：%s → %s" % [_selected.name, pn])
+	GameState.add_lineage_event(Locale.t("lb_rite_log_path", [_selected.name, _path_zh(path)]))
 	Sfx.confirm()
 	_step = 1
 	_show_step()
 
-func _add(text: String, cb: Callable) -> void:
-	var b = UIKit.make_accent_button(text, 320)
-	b.pressed.connect(cb)
-	_actions.add_child(b)
-
 func _do_enlist() -> void:
 	if _selected == null:
 		return
-	var r = Lineage.enlist_adult(_selected)
-	_msg.text = str(r.get("msg", ""))
-	if r.get("ok"):
-		var granted = GameState.grant_path_skills(_selected, _path)
+	var r: Dictionary = Lineage.enlist_adult(_selected)
+	var msg := str(r.get("msg", ""))
+	if bool(r.get("ok", false)):
+		var granted: Array = GameState.grant_path_skills(_selected, _path)
 		if granted.size() > 0:
 			var names: Array = []
 			for sid in granted:
 				names.append(str(GameState.get_skill(sid).get("name", sid)))
-			_msg.text += "　道路战技（含可能的二阶）：" + "、".join(names)
+			msg += Locale.t("lb_rite_skills", [" / ".join(names)])
 		match _path:
 			"martial":
 				GameState.add_skill_point(1)
-				_msg.text += "　偏武：战技点 +1"
 			"scholar":
 				GameState.add_rep("riverland", 3)
-				_msg.text += "　偏文：河卫声望 +3"
 			"merchant":
 				GameState.silver += 40
-				_msg.text += "　偏商：银 +40"
-		GameState.add_lineage_event("授旗礼：%s（%s）入花名册。" % [_selected.name, _path])
+		msg += " " + Locale.t("lb_path_%s_fx" % _path)
+		GameState.add_lineage_event(Locale.t("lb_rite_log_done", [_selected.name, _path_zh(_path)]))
 		GameState.add_skill_point(1)
 		GameState.add_rep("ashland", 2)
 		Sfx.lineage_chime()
 		Sfx.fanfare()
 		for am in GameState.check_ambitions():
-			_msg.text += "　" + am
+			msg += " " + str(am)
 		GameState.save_game()
+	CKPageKit.say(_msg, msg, bool(r.get("ok", false)))
+	_selected = null
 	_refresh_list()

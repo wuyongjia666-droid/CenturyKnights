@@ -51,6 +51,8 @@ static func place(host: Node) -> void:
 	var hud := host.get_node_or_null("ObjectiveHud") as Control
 	if hud == null:
 		return
+	if hud.get_parent() != host:
+		return
 	var insets := _insets(host)
 	var top := float(insets.get("top", 0.0))
 	var left := float(insets.get("left", 0.0))

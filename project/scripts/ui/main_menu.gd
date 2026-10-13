@@ -1,6 +1,9 @@
 extends Control
 ## v8.6 — Stitch 01_menu: full-bleed key art, editorial left column, indexed menu list, no banner/parchment.
 
+var _msg: Label
+var _loading := false
+
 func _ready() -> void:
 	# Any way back from a prologue replay (back key, menu) puts the real game back.
 	GameState.end_prologue_replay()
@@ -72,6 +75,20 @@ func _build() -> void:
 		["07", "MenuQuit", Locale.t("menu_quit"), func(): get_tree().quit(), false],
 	]
 	var first: Button = null
+	# Phones: 48dp buttons do not fit 7 rows in 720 logical px, so use a two-column grid,
+	# drop Quit (Android leaves via Home) and the keyboard hint line.
+	var mobile := DeviceProfile.is_mobile()
+	var host: Container = col
+	if mobile:
+		col.position = Vector2(72, 28)
+		items.pop_back()
+		var grid := GridContainer.new()
+		grid.name = "MenuGrid"
+		grid.columns = 2
+		grid.add_theme_constant_override("h_separation", 12)
+		grid.add_theme_constant_override("v_separation", 10)
+		col.add_child(grid)
+		host = grid
 	for it in items:
 		var b := UIKit.index_button(it[0], it[2], 360)
 		b.name = it[1]
@@ -79,14 +96,18 @@ func _build() -> void:
 		b.pressed.connect(it[3])
 		if it[0] == "01":
 			b.add_theme_color_override("font_color", UIKit.ACCENT)
-		col.add_child(b)
-		if it[1] == "MenuContinue":
+		host.add_child(b)
+		if it[1] == "MenuContinue" and not mobile:
 			var summary := UIKit.body_label(CKSaveSlots.continue_line(latest), UIKit.TEXT_DIM, 13)
 			summary.name = "ContinueSummary"
 			summary.custom_minimum_size = Vector2(360, 0)
 			col.add_child(summary)
 		if first == null and not b.disabled:
 			first = b
+	if mobile and latest != "":
+		var msum := UIKit.body_label(CKSaveSlots.continue_line(latest), UIKit.TEXT_DIM, 13)
+		msum.name = "ContinueSummary"
+		col.add_child(msum)
 	if first:
 		first.call_deferred("grab_focus")
 
@@ -96,14 +117,24 @@ func _build() -> void:
 		foot_text = Locale.t("menu_footer", [version])
 	var foot := UIKit.body_label(foot_text, UIKit.TEXT_FAINT, 12)
 	foot.name = "VersionLabel"
-	foot.position = Vector2(96, 664)
-	foot.size = Vector2(400, 20)
+	foot.position = Vector2(880, 664)
+	foot.size = Vector2(304, 20)
+	foot.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	add_child(foot)
-	var keys := UIKit.body_label(Locale.t("shell_7af5bdc2"), UIKit.TEXT_FAINT, 12)
-	keys.position = Vector2(984, 664)
-	keys.size = Vector2(200, 20)
-	keys.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	add_child(keys)
+	if not DeviceProfile.is_mobile():   # no keyboard hint on touch
+		var keys := UIKit.body_label(Locale.t("shell_7af5bdc2"), UIKit.TEXT_FAINT, 12)
+		keys.position = Vector2(984, 640)
+		keys.size = Vector2(200, 20)
+		keys.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+		add_child(keys)
+	_msg = UIKit.body_label("", UIKit.DANGER, 13)
+	_msg.name = "MenuMsg"
+	_msg.position = Vector2(96, 100)
+	_msg.size = Vector2(600, 20)
+	add_child(_msg)
+	if mobile:
+		foot.position = Vector2(72, 690)
+		foot.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
 
 func _on_new() -> void:
 	CKNav.replace("res://scenes/story/naming.tscn")
@@ -112,10 +143,21 @@ func _on_replay() -> void:
 	GameState.begin_prologue_replay()
 	get_tree().change_scene_to_file("res://scenes/story/chapter0.tscn")
 
+## Audit #9: a failed load says so; a second tap while loading does nothing.
 func _on_continue() -> void:
+	if _loading:
+		return
 	var slot := CKSaveSlots.latest_slot()
-	if slot != "" and GameState.load_from_slot(slot):
+	if slot == "":
+		_msg.text = Locale.t("menu_no_save")
+		return
+	_loading = true
+	if GameState.load_from_slot(slot):
 		CKSaveSlots.enter_loaded(get_tree())
+		return
+	_loading = false
+	_msg.text = Locale.t("a1_menu_load_fail")
+	Sfx.miss()
 
 func _on_load() -> void:
 	CKNav.go("res://scenes/ui/save_slots.tscn")

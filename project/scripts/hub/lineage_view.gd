@@ -11,6 +11,9 @@ var _grid: GridContainer
 var _info: Control
 var _selected: CKCharacter
 var _members: Array = []
+var _mob := false
+var _info_rect := Rect2()
+const CELL_M := Vector2(160, 204)
 
 func _ready() -> void:
 	_build()
@@ -99,6 +102,35 @@ func _pace_label() -> String:
 
 func apply_mobile_layout() -> void:
 	MobileLayout.pin_footer(get_node_or_null("StitchFooter"))
+	if _mob or not MobilePage.active(self):
+		return
+	_mob = true
+	var w := MobilePage.width(self)
+	var alive_n := 0
+	for ch in GameState.characters.values():
+		if ch.alive:
+			alive_n += 1
+	var info := "%s %d · %s" % [Locale.t("gen2_25"), alive_n, Calendar.label()]
+	MobilePage.top_bar(self, Locale.t("gen2_24") % GameState.surname, info, [[Locale.t("gen2_27"), _back]])
+	(get_node("CastleArms") as Control).visible = false
+	var iw := 470.0
+	_info_rect = Rect2(w - iw - 24.0, MobilePage.TOP + 4.0, iw, 720.0 - MobilePage.TOP - 16.0)
+	var gw := _info_rect.position.x - 48.0
+	var jy := 720.0 - MobilePage.HIT - 12.0
+	_scroll.position = Vector2(24, MobilePage.TOP + 4.0)
+	_scroll.size = Vector2(gw, jy - MobilePage.TOP - 16.0)
+	_grid.columns = maxi(1, int((gw + 10.0) / (CELL_M.x + 10.0)))
+	_grid.add_theme_constant_override("h_separation", 10)
+	_grid.add_theme_constant_override("v_separation", 10)
+	var jumps := get_node("LineageJumps") as HBoxContainer
+	jumps.position = Vector2(24, jy)
+	jumps.size = Vector2(gw, MobilePage.HIT)
+	for b in jumps.get_children():
+		var bt := b as Button
+		bt.custom_minimum_size = Vector2(0, MobilePage.HIT)
+		bt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		bt.add_theme_font_size_override("font_size", MobilePage.FONT)
+	_refresh()
 
 func members() -> Array:
 	return _members
@@ -162,6 +194,18 @@ func _cell(c: CKCharacter) -> Button:
 	b.pressed.connect(func():
 		UIFX.press_feedback(b)
 		select(c))
+	if _mob:
+		b.custom_minimum_size = CELL_M
+		por.position = Vector2(20, 8)
+		por.scale = Vector2(1.5, 1.5)
+		for pair in [[nm, 142.0], [sub, 172.0]]:
+			var l := pair[0] as Label
+			l.add_theme_font_size_override("font_size", MobilePage.FONT)
+			l.position = Vector2(4, pair[1])
+			l.size = Vector2(CELL_M.x - 8, 30)
+		for l in b.find_children("*", "Label", true, false):
+			if (l as Label).get_theme_font_size("font_size") < MobilePage.FONT:
+				(l as Label).add_theme_font_size_override("font_size", MobilePage.FONT)
 	return b
 
 func select(c: CKCharacter) -> void:
@@ -169,7 +213,10 @@ func select(c: CKCharacter) -> void:
 	_render_info()
 
 func _render_info() -> void:
-	CKLineageInfo.render(_info, _selected, Locale.t("gen2_34"), open_details)
+	if _mob:
+		CKLineageInfo.render_mobile(_info, _selected, Locale.t("gen2_34"), open_details, _info_rect)
+	else:
+		CKLineageInfo.render(_info, _selected, Locale.t("gen2_34"), open_details)
 	for n in _grid.get_children():
 		var on: bool = _selected != null and str(n.get_meta("cid", "")) == str(_selected.id)
 		var bg := Color(UIKit.ACCENT, 0.08) if on else Color(0.055, 0.067, 0.090, 0.92)
