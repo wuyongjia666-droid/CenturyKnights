@@ -82,13 +82,13 @@ ux_name_title,写下这个姓,Write the surname
 ux_name_blurb,你还没有爵。先写下你要别人不得不念的姓，再雕一枚能远看辨清的旗。,No title yet. Write the surname others must speak, then cut a banner that reads at a distance.
 ux_name_surname,姓氏,Surname
 ux_name_given,名字,Given name
-ux_name_field_color,底布色,Field color
+ux_name_field_color,旗心色（底布是灰的）,Heart colour (the cloth stays grey)
 ux_name_field_split,底布分割,Field split
 ux_name_charge,主纹,Charge
 ux_name_border,镶边,Border
 ux_name_emblem,徽记,Emblem
 ux_name_raise,升起灰旗,Raise the banner
-ux_name_contrast,远看辨不清：徽记与底布对比偏弱,Hard to read at range: emblem contrast is weak
+ux_name_contrast,远处看不清：图案和底色太接近，换深一点或浅一点的颜色,"Hard to see from afar: pick a lighter or darker colour"
 ux_field_solid,单色,Solid
 ux_field_per_fess,横分,Per fess
 ux_field_per_pale,纵分,Per pale
@@ -322,3 +322,7 @@ sundry_offer_line,%s  ·  %d 银  ·  有 %d/%d,%s · %d silver · have %d/%d
 ux_field_plaque,属事处 · 田册,Field office · Field book
 ux_field_no_land,还没有开垦的属地，先回属地页开一块地，才有活干。,No holding opened yet. Open one first.
 ux_field_nobody,家里还没有能下地的人。,Nobody at home can work the fields yet.
+ux_name_surname_hint,写一个字（最多两个）,One character (two at most)
+ux_name_need_surname,先写下你的姓,Write your surname first
+ux_name_need_given,再写下你的名,Write your given name
+ux_name_face_reroll,换一张脸,Another face

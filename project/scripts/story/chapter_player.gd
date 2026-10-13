@@ -214,6 +214,7 @@ func _load_beat(beat_id: String) -> void:
 	_title.text = "%s · %s" % [str(_chapter.get("title", "")), str(_beat.get("title", ""))]
 	_beat_meta.text = "节拍 %s　灰烬旗 · %s" % [beat_id, GameState.surname]
 	_banner.texture = UnitArt.banner(70, 100, true)
+	BannerName.attach(_banner)
 	_show_line()
 	_refresh_actions()
 
@@ -339,6 +340,9 @@ func _speaker_label(sp: String) -> String:
 func _speaker_portrait(speaker: String, emotion: String = "") -> void:
 	# Audit P1-12: no speaker ever borrows the leader's face. Only the leader's own lines show it.
 	var who := _character_named(speaker)
+	var name_tag := _portrait.get_node_or_null(BannerName.NODE)
+	if name_tag:
+		name_tag.visible = false
 	if speaker == "leader":
 		who = GameState.get_leader()
 	test_capture["portrait_who"] = who.id if who != null else ""
@@ -350,6 +354,7 @@ func _speaker_portrait(speaker: String, emotion: String = "") -> void:
 	if speaker == "" or speaker == "旁白":
 		test_capture["portrait_kind"] = "banner"
 		_portrait.texture = UnitArt.banner(120, 120, false)
+		BannerName.attach(_portrait)
 		return
 	# Old flag-bearer, scout, villains, supporting cast: a per-speaker silhouette until the farm paints them.
 	test_capture["portrait_kind"] = "silhouette"
