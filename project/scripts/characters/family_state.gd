@@ -147,27 +147,27 @@ static func build_dynasty_journal(host) -> String:
 		child_summary = "、".join(kids)
 	var arcs: PackedStringArray = PackedStringArray()
 	if host.flag("pro_merit_own"):
-		arcs.append("隘口那一仗，我没让。")
+		arcs.append(Locale.t("pro_journal_merit_own"))
 	elif host.flag("pro_merit_patron"):
-		arcs.append("隘口那一仗记在了槐里家，堡是借来的。")
+		arcs.append(Locale.t("pro_journal_merit_patron"))
 	if host.flag("pro_lease_pawned"):
-		arcs.append("娘押掉了采石坡那块地。")
+		arcs.append(Locale.t("pro_journal_lease_pawned"))
 	elif host.flag("pro_lease_kept"):
-		arcs.append("娘的地还在，饷是一张张委托挣来的。")
+		arcs.append(Locale.t("pro_journal_lease_kept"))
 	if host.flag("pro_roster_wantan"):
-		arcs.append("名册第一行是石垒·晚担。")
+		arcs.append(Locale.t("pro_journal_roster_wantan"))
 	elif host.flag("pro_roster_blank"):
-		arcs.append("名册第一行空着，留给旧人。")
+		arcs.append(Locale.t("pro_journal_roster_blank"))
 	if host.flag("pro_rival_spared") or host.flag("pro_survivor_kept"):
-		arcs.append("名册最后一行，给衡舟留着。")
+		arcs.append(Locale.t("pro_journal_rival_spared"))
 	elif host.flag("pro_rival_exposed") or host.flag("pro_survivor_handed"):
-		arcs.append("衡舟被带去了白垣。")
+		arcs.append(Locale.t("pro_journal_rival_exposed"))
 	var arc_block := "\n".join(arcs)
 	if arc_block != "":
 		arc_block = "\n" + arc_block
-	var heir_bit := heir_name if heir_name != "" else "还没有名字"
-	var closing := "有试过的婚，有孩子%s，有一本结清的簿。陆桥会重复这个姓。我得在场。" % heir_bit
-	host.dynasty_journal = "【王朝手记·第零章】\n团长：%s\n配偶：%s\n子嗣：%s\n岁时：%s\n声望：灰烬邦 %s / 河卫邦 %s\n\n石垒坡出来一个平民，在北隘把自己做成了一个姓。%s\n%s" % [
+	var heir_bit := heir_name if heir_name != "" else Locale.t("pro_journal_heir_none")
+	var closing := Locale.t("pro_journal_closing", [heir_bit])
+	host.dynasty_journal = Locale.t("pro_journal_body", [
 		leader.name if leader else "?",
 		spouse_name,
 		child_summary,
@@ -176,7 +176,7 @@ static func build_dynasty_journal(host) -> String:
 		host.get_rep_name("riverland"),
 		arc_block,
 		closing,
-	]
+	])
 	host.set_flag("chapter0_done")
 	host.mark_dirty()
 	return host.dynasty_journal
