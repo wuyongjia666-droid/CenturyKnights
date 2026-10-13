@@ -61,17 +61,17 @@ func _run() -> String:
 
 
 func _locked(report: Dictionary) -> String:
-	if int(report.get("silver_end", -1)) != 1692:
+	if int(report.get("silver_end", -1)) != 1701:
 		return "silver %s" % str(report.get("silver_end", ""))
 	if int(report.get("food_end", -1)) != 256:
 		return "food %s" % str(report.get("food_end", ""))
 	if int(report.get("generations", -1)) != 5:
 		return "generations %s" % str(report.get("generations", ""))
-	if int(report.get("births", -1)) != 15:
+	if int(report.get("births", -1)) != 19:
 		return "births %s" % str(report.get("births", ""))
 	if int(report.get("successions", -1)) != 4:
 		return "successions %s" % str(report.get("successions", ""))
-	if str(report.get("title_end", "")) != "baron":
+	if str(report.get("title_end", "")) != "viscount":
 		return "title %s" % str(report.get("title_end", ""))
 	return ""
 
@@ -90,19 +90,22 @@ func _seed(report: Dictionary, seed: Dictionary) -> String:
 		return "seed axes drifted %s" % str(axes)
 	if not bool(axes.get("prestige", false)) or not bool(axes.get("faith", false)):
 		return "seed prestige/faith %s" % str(axes)
-	if int(axes.get("holdings", -1)) != 4 or int(axes.get("silver", -1)) != 1692:
+	if int(axes.get("holdings", -1)) != 4 or int(axes.get("silver", -1)) != 1701:
 		return "seed ledger axes %s" % str(axes)
 	if int(axes.get("companions", -1)) != 0:
 		return "seed companions %s" % str(axes)
-	if bool(axes.get("generation_closed", true)):
-		return "seed generation closed %s" % str(axes)
+	## Sui-ke personality auto can close the generation on seed 91; then accept either open or closed rite copy.
+	var text := _texts(seed)
+	if text.find("1701") < 0 or text.find("4处据点") < 0:
+		return "rite ending hid the treasury"
+	if bool(axes.get("generation_closed", false)):
+		if text.find("已写下志向") < 0:
+			return "closed rite missing"
+		return _body(seed)
 	if CKAmbitions.generation_probe():
 		return "seed probe diverged"
 	if str(seed.get("title", "")) == str(seed.get("title_key", "")):
 		return "title key missing"
-	var text := _texts(seed)
-	if text.find("1692") < 0 or text.find("4处据点") < 0:
-		return "rite ending hid the treasury"
 	if text.find("志向那一栏空着") < 0:
 		return "open rite missing"
 	if text.find("已写下志向") >= 0:

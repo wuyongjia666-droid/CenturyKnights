@@ -22,6 +22,7 @@ static func register(category: String, group: String, label: String, count: int,
 const LINKS := {
 	"quests": "res://scenes/hub/quests.tscn",
 	"injured": "res://scenes/hub/roster.tscn",
+	"sui_ke": "res://scenes/hub/sui_yearcard.tscn",
 }
 
 static func link_for(item: Dictionary) -> String:
@@ -56,6 +57,7 @@ static func snapshot() -> Array:
 		rows.append(_row("quests", "civil", Locale.t("ux_todo_quests"), _quest_count()))
 	rows.append(_row("injured", "military", Locale.t("ux_todo_injured"), _injured_count()))
 	rows.append(_row("festival", "home", Locale.t("ux_todo_festival"), _festival_count()))
+	rows.append(_row("sui_ke", "home", Locale.t("ux_todo_sui_ke"), CKSuiKe.inbox_count()))
 	for extra in _extra:
 		if extra is Dictionary:
 			rows.append((extra as Dictionary).duplicate())
