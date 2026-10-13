@@ -1028,6 +1028,7 @@ static func page_head(parent: Control, x: float, y: float, eyebrow_en: String, t
 		var e := mono(en_title, 11, TEXT_FAINT)
 		e.size_flags_vertical = Control.SIZE_SHRINK_END
 		e.custom_minimum_size = Vector2(0, 30)
+		e.vertical_alignment = VERTICAL_ALIGNMENT_BOTTOM  # sit on the title baseline, not up against the eyebrow
 		th.add_child(e)
 	if desc != "":
 		var d := Label.new()

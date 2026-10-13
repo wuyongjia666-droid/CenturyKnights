@@ -277,24 +277,26 @@ func _build() -> void:
 	rl2.position = Vector2(216 - rl2.get_minimum_size().x, 18)
 	rp.add_child(rl2)
 	if leader:
-		UIKit.portrait_plate(rp, Rect2(16, 44, 200, 250), leader, "ACTIVE GUARD")
+		# Desktop: the house note overlapped the stat boxes; lift the stack 20px (mobile reflows separately).
+		var dy := 0 if DeviceProfile.is_mobile() else -20
+		UIKit.portrait_plate(rp, Rect2(16, 44, 200, 250 + dy), leader, "ACTIVE GUARD")
 		var nm := UIKit.title_label(Locale.latin(str(leader.name), str(leader.id)), 22)
-		nm.position = Vector2(16, 308)
+		nm.position = Vector2(16, 308 + dy)
 		rp.add_child(nm)
 		var ag := UIKit.body_label(Locale.t("shell_5a0a47eb") % leader.age, UIKit.TEXT_FAINT, 12)
-		ag.position = Vector2(172, 316)
+		ag.position = Vector2(172, 316 + dy)
 		ag.size = Vector2(44, 16)
 		ag.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		rp.add_child(ag)
 		var job_name := Locale.latin(str(GameState.get_job(leader.job_id).get("name", leader.job_id)), str(leader.job_id))
 		var rank_label := Locale.latin(str(leader.rank_name()), str(leader.rank))
 		var jb := UIKit.body_label("%s · %s" % [job_name, rank_label], UIKit.ACCENT, 12)
-		jb.position = Vector2(16, 342)
+		jb.position = Vector2(16, 342 + dy)
 		jb.size = Vector2(200, 16)
 		rp.add_child(jb)
 		var sg := GridContainer.new()
 		sg.columns = 2
-		sg.position = Vector2(16, 370)
+		sg.position = Vector2(16, 370 + dy)
 		sg.add_theme_constant_override("h_separation", 8)
 		sg.add_theme_constant_override("v_separation", 8)
 		rp.add_child(sg)
@@ -311,6 +313,8 @@ func _build() -> void:
 			sg.add_child(bx)
 		var fl := UIKit.body_label(Locale.t("shell_c5922dc9") % [Locale.latin(str(GameState.surname), "House"), roster_n], UIKit.TEXT_FAINT, 11)
 		fl.position = Vector2(16, 468)
+		if dy != 0:
+			fl.position.y = maxf(468.0, sg.position.y + sg.get_combined_minimum_size().y + 6.0)
 		fl.size = Vector2(200, 48)
 		fl.custom_minimum_size = Vector2(200, 0)
 		rp.add_child(fl)

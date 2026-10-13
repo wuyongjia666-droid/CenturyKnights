@@ -47,7 +47,6 @@ var _unit_panel: PanelContainer
 var _portrait: TextureRect
 const UnitCardScript = preload("res://scripts/ui/unit_card.gd")
 var _unit_card: Control
-## v8.5 authored FX draw sizes (px) — 56px cells; 128px sources downsampled for crisp reads
 const FX_SIZE := {"slash": 80.0, "heal": 84.0, "crit": 108.0, "lock": 80.0, "shield": 80.0, "spark": 76.0}
 var _info_traits: HBoxContainer
 var _dmg_fx: Array = []  # {pos, text, age, col}
@@ -230,8 +229,6 @@ func _process(delta: float) -> void:
 		map_draw.queue_redraw()
 	_sync_faction_marks()
 
-## v8.5: texture cache. A texture load()ed for the first time inside _draw records as a
-## white placeholder on the GL renderer (seen in real renders) — warm FX here, cache everything.
 var _tex_cache: Dictionary = {}
 
 func _tex(path: String) -> Texture2D:
@@ -259,8 +256,6 @@ func _k() -> float:
 	return float(CELL) / 56.0
 
 func _build_ui() -> void:
-	## v8.6 layout (Stitch 06 战棋战斗 HUD): board stage left (hero), thin turn bar on top,
-	## right rail = selected-unit card · intel · compact log · command console. Nothing floats on the board.
 	_warm_fx_cache()
 	_bg = ColorRect.new()
 	_bg.color = Color(UIKit.BG, 0.72)
@@ -490,7 +485,6 @@ func _layout_board() -> void:
 	_build_ground()
 
 func _biome_ground() -> Array:
-	## [base texture id, grade]
 	var _AtlasArt = preload("res://scripts/art/atlas_art.gd")
 	var bio := str(_AtlasArt.biome_for_map(map_id))
 	match bio:
@@ -1031,7 +1025,6 @@ func _deploy() -> void:
 	_refresh_info()
 
 func _draw_map() -> void:
-	## v8.6: ground is the shader (_ground). Here: hover cell outline, token shadows, tokens, HP, CD pips, names.
 	_paint_terrain_fx()
 	var k := _k()
 	if _in_bounds(_hover_cell):
@@ -1307,7 +1300,6 @@ func _draw_overlay() -> void:
 		overlay.draw_string(tfont, tip_pos, tip, HORIZONTAL_ALIGNMENT_LEFT, -1, 12, UIKit.TEXT)
 
 func _zoc_cell_kind(pos: Vector2i) -> String:
-	## 悬停格的控带代价类型（用于音效电报）
 	if attack_mode or move_cells.is_empty():
 		return ""
 	if not move_cells.has(pos):
@@ -1354,7 +1346,6 @@ func _zoc_hover_audio(cell: Vector2i) -> void:
 		Sfx.play_spatial("zoc_leave", world, vol - 1.5)
 
 func _unhandled_key_input(event: InputEvent) -> void:
-	## v8.6 Stitch 06 keycaps: Q 攻击 · W 战技 · E 待命 · Enter 结束回合 (08/09 report: ESC 返回章节)
 	if battle_over and has_meta("result_back") and event is InputEventKey and event.pressed and (event as InputEventKey).keycode == KEY_ESCAPE:
 		get_viewport().set_input_as_handled()
 		CKNav.replace(str(get_meta("result_back")))
@@ -2355,6 +2346,9 @@ func _show_lock_practice_banner() -> void:
 		ct.visible = false
 	panel.name = "LockPracticeBanner"
 	add_child(panel)
+	var oh := get_node_or_null("ObjectiveHud") as CanvasItem
+	if oh and not DeviceProfile.is_mobile():
+		oh.visible = false  # desktop: banner sits in the same rail slot; restore when it clears
 	var vb := VBoxContainer.new()
 	vb.add_theme_constant_override("separation", 0)
 	panel.add_child(vb)
@@ -2385,6 +2379,9 @@ func _clear_lock_practice_banner() -> void:
 	var p = get_node_or_null("LockPracticeBanner")
 	if p:
 		p.queue_free()
+	var oh := get_node_or_null("ObjectiveHud") as CanvasItem
+	if oh and not DeviceProfile.is_mobile():
+		oh.visible = true
 	var ct := find_child("ControlsTip", true, false)
 	if ct:
 		ct.visible = true
