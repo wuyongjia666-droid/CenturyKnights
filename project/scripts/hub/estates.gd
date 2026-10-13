@@ -58,6 +58,10 @@ func _ready() -> void:
 	var works := UIKit.ghost_button("工事 / 堡志", 112, 36)
 	works.pressed.connect(func(): CKNav.go("res://scenes/hub/works.tscn"))
 	row.add_child(works)
+	var field := UIKit.cta_button(Locale.t("ux_estates_field"), "F", 160, 48)
+	field.name = "FieldBookBtn"
+	field.pressed.connect(open_field_book)
+	row.add_child(field)
 	var patrol := UIKit.cta_button("全堡巡防", "X", 150, 36)
 	patrol.pressed.connect(_do_patrol)
 	row.add_child(patrol)
@@ -499,3 +503,125 @@ func _show_patrol_vignette(hid: String) -> void:
 		if is_instance_valid(overlay):
 			overlay.queue_free()
 	)
+
+
+## §4.10 田册（属事处）：谁下地、口袋里有多少、交回旗库。横屏手机：按钮高 48，整页可滚。
+var _field_overlay: Control
+var _field_list: VBoxContainer
+var _field_msg: Label
+
+
+func open_field_book() -> void:
+	if _field_overlay != null and is_instance_valid(_field_overlay):
+		_field_overlay.queue_free()
+	var overlay := ColorRect.new()
+	overlay.name = "FieldBook"
+	overlay.color = Color(0.04, 0.06, 0.1, 0.92)
+	overlay.set_anchors_preset(Control.PRESET_FULL_RECT)
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(overlay)
+	_field_overlay = overlay
+	var margin := MarginContainer.new()
+	margin.set_anchors_preset(Control.PRESET_FULL_RECT)
+	for side in ["left", "right", "top", "bottom"]:
+		margin.add_theme_constant_override("margin_" + side, 24)
+	overlay.add_child(margin)
+	var root := VBoxContainer.new()
+	root.add_theme_constant_override("separation", 8)
+	margin.add_child(root)
+	var head := HBoxContainer.new()
+	head.add_theme_constant_override("separation", 12)
+	root.add_child(head)
+	var title := UIKit.make_label(Locale.t("ux_field_plaque"), true)
+	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	head.add_child(title)
+	var close := UIKit.make_accent_button(Locale.t("ux_field_close"), 120)
+	close.custom_minimum_size.y = 48
+	close.pressed.connect(close_field_book)
+	head.add_child(close)
+	var sub := UIKit.body_label(Locale.t("ux_estates_sub"), UIKit.TEXT_DIM, 14)
+	sub.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	root.add_child(sub)
+	_field_msg = UIKit.body_label("", UIKit.OK, 14)
+	_field_msg.name = "FieldMsg"
+	_field_msg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	root.add_child(_field_msg)
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	root.add_child(scroll)
+	_field_list = VBoxContainer.new()
+	_field_list.name = "FieldList"
+	_field_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_field_list.add_theme_constant_override("separation", 6)
+	scroll.add_child(_field_list)
+	_fill_field_list()
+
+
+func close_field_book() -> void:
+	if _field_overlay != null and is_instance_valid(_field_overlay):
+		_field_overlay.queue_free()
+	_field_overlay = null
+	_rebuild()
+
+
+func _field_status(c: CKCharacter) -> String:
+	if CKPurse.is_following(GameState, c.id):
+		return Locale.t("ux_field_follow")
+	var job := str(c.blood_meta.get("estate_job", ""))
+	if job != "":
+		return Locale.t("ux_field_on") % str(GameState.HOLDING_DEFS.get(job, {}).get("name", job))
+	if int(c.age) < 8:
+		return Locale.t("ux_field_young")
+	return Locale.t("ux_field_idle")
+
+
+func _fill_field_list() -> void:
+	for ch in _field_list.get_children():
+		ch.queue_free()
+	var open_holdings: Array = []
+	for hid in GameState.HOLDING_DEFS.keys():
+		if GameState.holding_unlocked(hid):
+			open_holdings.append(str(hid))
+	if open_holdings.is_empty():
+		_field_list.add_child(UIKit.body_label(Locale.t("ux_field_no_land"), UIKit.TEXT_DIM, 14))
+	var shown := 0
+	for c in GameState.characters.values():
+		if c == null or not c.alive:
+			continue
+		if c.in_roster and CKPurse._is_hireling(c):
+			continue
+		shown += 1
+		var purse := CKPurse.get_purse(c)
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 8)
+		row.custom_minimum_size.y = 48
+		var lab := UIKit.body_label(Locale.t("ux_field_row") % [c.name, c.age, purse, _field_status(c)], UIKit.TEXT, 14)
+		lab.custom_minimum_size.x = 340
+		lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		row.add_child(lab)
+		var cid := str(c.id)
+		if int(c.age) >= 8:
+			for hid in open_holdings:
+				var b := UIKit.ghost_button(str(GameState.HOLDING_DEFS[hid].get("name", hid)), 96, 48)
+				var hold: String = hid
+				b.disabled = str(c.blood_meta.get("estate_job", "")) == hold
+				b.pressed.connect(func(): _field_do(CKPurse.assign_field(GameState.characters[cid], hold)))
+				row.add_child(b)
+			if str(c.blood_meta.get("estate_job", "")) != "":
+				var leave := UIKit.ghost_button(Locale.t("ux_field_leave"), 96, 48)
+				leave.pressed.connect(func(): _field_do(CKPurse.assign_field(GameState.characters[cid], "")))
+				row.add_child(leave)
+		if purse > 0:
+			var rem := UIKit.ghost_button(Locale.t("ux_field_remit") % purse, 128, 48)
+			rem.pressed.connect(func(): _field_do(CKPurse.remit_to_flag(GameState.characters[cid])))
+			row.add_child(rem)
+		_field_list.add_child(row)
+	if shown == 0:
+		_field_list.add_child(UIKit.body_label(Locale.t("ux_field_nobody"), UIKit.TEXT_DIM, 14))
+
+
+func _field_do(r: Dictionary) -> void:
+	_field_msg.text = str(r.get("msg", ""))
+	_field_msg.add_theme_color_override("font_color", UIKit.OK if bool(r.get("ok", false)) else UIKit.DANGER)
+	_fill_field_list()
