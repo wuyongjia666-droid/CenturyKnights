@@ -286,9 +286,21 @@ func _line_text(line) -> String:
 	if body.find("{surname}") >= 0:
 		var sn := str(GameState.surname).strip_edges()
 		body = body.replace("{surname}", sn if sn != "" else Locale.t("pro_surname_fallback"))
+	if body.find("{spouse}") >= 0:
+		body = body.replace("{spouse}", _spouse_display_name())
 	if body.find("{heir}") < 0:
 		return body
 	return body.replace("{heir}", _living_heir_name())
+
+## Married partner's name for chapter copy. Falls back when the seat is empty.
+func _spouse_display_name() -> String:
+	var leader = GameState.get_leader()
+	if leader == null or str(leader.spouse_id) == "":
+		return Locale.t("pro_spouse_fallback")
+	var sp = GameState.characters.get(str(leader.spouse_id))
+	if sp == null or str(sp.name).strip_edges() == "":
+		return Locale.t("pro_spouse_fallback")
+	return str(sp.name)
 
 ## Staging hooks authored on a line: {"music", "tension", "camera", "pace"}.
 ## Every cue is optional and harmless when the asset or autoload is missing.
