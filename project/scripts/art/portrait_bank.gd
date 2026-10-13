@@ -22,6 +22,10 @@ static var _exact: Dictionary = {}
 static var _by_stage: Dictionary = {}
 static var _disk_by_stage: Dictionary = {}
 static var _disk_indexed := false
+## bucket_key -> "m"/"f". Packed in res:// so the device (no farm manifest) still filters by sex.
+const SEX_INDEX := "res://data/art/genome_bank_sex.json"
+static var _sex_by_key: Dictionary = {}
+static var _sex_ready := false
 
 static func manifest_path() -> String:
 	var proj := ProjectSettings.globalize_path("res://")
@@ -56,6 +60,8 @@ static func clear_cache() -> void:
 	_indexed = false
 	_exact.clear()
 	_by_stage.clear()
+	_sex_ready = false
+	_sex_by_key.clear()
 
 static func has_plates() -> bool:
 	if _plates_known:
@@ -87,6 +93,11 @@ static func match_identity(ident: Array, stage: String, blood: String = "") -> D
 	_ensure_index()
 	var empty := {"hit": false, "overlap": 0.0, "bucket_key": "", "stage": stage, "bloodline": ""}
 	var sig := _sig(ident)
+	var want_sex := ""
+	for t in ident:
+		var ts := str(t)
+		if ts.begins_with("gender:") or ts.begins_with("sex:"):
+			want_sex = ts.get_slice(":", 1)
 	var cands: Array = _exact.get("%s|%s" % [stage, sig], [])
 	if not cands.is_empty():
 		var chosen: Dictionary = cands[0]
@@ -106,6 +117,9 @@ static func match_identity(ident: Array, stage: String, blood: String = "") -> D
 	var best_ov := -1.0
 	var best: Dictionary = {}
 	for row in _by_stage.get(stage, []):
+		var rsex := plate_sex(str(row.get("bucket_key", "")))
+		if want_sex != "" and rsex != "" and rsex != want_sex:
+			continue
 		var ov2 := token_overlap(ident, row.get("identity", []))
 		var key := str(row.get("bucket_key", ""))
 		var better := ov2 > best_ov + 0.0000001
@@ -440,9 +454,35 @@ static func _ensure_disk_index() -> void:
 	_disk_indexed = true
 
 
+static func plate_sex(bucket_key: String) -> String:
+	if not _sex_ready:
+		_sex_ready = true
+		var parsed = JSON.parse_string(FileAccess.get_file_as_string(SEX_INDEX)) if FileAccess.file_exists(SEX_INDEX) else null
+		if typeof(parsed) == TYPE_DICTIONARY:
+			_sex_by_key = parsed.get("sex", {})
+	return str(_sex_by_key.get(bucket_key, ""))
+
+static func _sex_of(c: Object) -> String:
+	if c == null:
+		return ""
+	var g := str(c.get("gender"))
+	return g if g == "m" or g == "f" else ""
+
+## P0 playtest: plates of the other sex never stand in (a male captain got male "brides").
+static func _same_sex(keys: Array, sex: String) -> Array:
+	if sex == "":
+		return keys
+	var out: Array = []
+	for k in keys:
+		var ps := plate_sex(str(k))
+		if ps == sex:
+			out.append(k)
+	# Only stages with labelled plates are filtered; elsewhere keep the old full set.
+	return out if not out.is_empty() else keys
+
 static func _disk_stage_plate(c: Object, stage: String, tier: String) -> Texture2D:
 	_ensure_disk_index()
-	var keys: Array = _disk_by_stage.get(stage, [])
+	var keys: Array = _same_sex(_disk_by_stage.get(stage, []), _sex_of(c))
 	if keys.is_empty():
 		return null
 	var seed := 1
