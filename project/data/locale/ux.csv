@@ -460,3 +460,6 @@ mw_patrol_title,巡防沙盘,Patrol sand-table
 mw_patrol_all,四野全线,all four fields
 mw_patrol_done,旗丁已走完路线，本属地劫掠风险大降。,The patrol walked the route; raid risk is much lower.
 mw_patrol_close,收起沙盘,Close
+ux_married_banner,✓ 已婚 · 配偶 %s · 联姻帖已撤下，下面是子嗣展望,"✓ Married · spouse %s · offers withdrawn, heir outlook below"
+ux_married_note,已与 %s 成婚。家门已定，子嗣在岁月中降生；中栏是子嗣展望。,"Wed to %s. The house is settled; heirs come with the years. Heir outlook is in the middle."
+ux_spouse_side,配偶,Spouse

@@ -276,7 +276,7 @@ func _spouse() -> CKCharacter:
 	return GameState.characters.get(str(leader.spouse_id)) as CKCharacter
 
 func married_banner_text(sp: CKCharacter) -> String:
-	return "✓ 已婚 · 配偶 %s · 联姻帖已撤下，下面是子嗣展望" % sp.name
+	return Locale.t("ux_married_banner", [sp.name])
 
 func is_married_view() -> bool:
 	return _spouse() != null and _selected == _spouse()
@@ -349,7 +349,8 @@ func _house_card(rect: Rect2, c: CKCharacter, side_tag: String, side_en: String,
 		age.clip_text = true
 		age.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		v.add_child(age)
-	var ln := UIKit.body_label("%s旗 · %s" % [GameState.surname if c.is_leader else str(c.name).substr(0, 1), "家主" if c.is_leader else ("配偶" if is_married_view() else "应帖者")], UIKit.TEXT, 13)
+	var role_tag: String = Locale.t("ux_spouse_side") if is_married_view() else "应帖者"
+	var ln := UIKit.body_label("%s旗 · %s" % [GameState.surname if c.is_leader else str(c.name).substr(0, 1), "家主" if c.is_leader else role_tag], UIKit.TEXT, 13)
 	ln.autowrap_mode = TextServer.AUTOWRAP_OFF
 	ln.clip_text = true
 	v.add_child(ln)
@@ -487,12 +488,12 @@ func _render_cards() -> void:
 	if _mob:
 		_cards.add_child(_m_house_card(leader, Locale.t("mw_fc94ece4"), UIKit.ACCENT))
 		_cards.add_child(_m_harmony(leader, _selected))
-		_cards.add_child(_m_house_card(_selected, "配偶" if is_married_view() else Locale.t("mw_d382e424"), UIKit.OK))
+		_cards.add_child(_m_house_card(_selected, Locale.t("ux_spouse_side") if is_married_view() else Locale.t("mw_d382e424"), UIKit.OK))
 		_fill_forecast(leader, _selected)
 		return
 	_house_card(_rect_principal, leader, "宗主一方", "CLAN PRINCIPAL", UIKit.ACCENT, "SERIES: VII-01")
 	_harmony_card(_rect_harmony, leader, _selected)
-	_house_card(_rect_spouse, _selected, "配偶" if is_married_view() else "应帖一方", "SPOUSE" if is_married_view() else "ALLIED SPOUSE", UIKit.OK, "SERIES: IV-02")
+	_house_card(_rect_spouse, _selected, Locale.t("ux_spouse_side") if is_married_view() else "应帖一方", "SPOUSE" if is_married_view() else "ALLIED SPOUSE", UIKit.OK, "SERIES: IV-02")
 	_fill_forecast(leader, _selected)
 
 func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
@@ -856,7 +857,7 @@ func _consequence_line(a: CKCharacter, b: CKCharacter) -> void:
 		_msg.text = "选定双方后，这里写明婚仪会把子女写成什么样。"
 		return
 	if is_married_view():
-		_msg.text = "已与 %s 成婚。家门已定，子嗣在岁月中降生；中栏是子嗣展望。" % b.name
+		_msg.text = Locale.t("ux_married_note", [b.name])
 		_msg.add_theme_color_override("font_color", UIKit.OK)
 		return
 	var bits: Array = []
@@ -963,7 +964,7 @@ func _select(c: CKCharacter) -> void:
 		_msg.text = "门槛：%s" % str(check.get("msg", ""))
 		_msg.add_theme_color_override("font_color", UIKit.DANGER)
 	if is_married_view():
-		_msg.text = "已与 %s 成婚。家门已定，子嗣在岁月中降生；中栏是子嗣展望。" % c.name
+		_msg.text = Locale.t("ux_married_note", [c.name])
 		_msg.add_theme_color_override("font_color", UIKit.OK)
 	_sync_contract_button()
 	if _result_hold != "":
