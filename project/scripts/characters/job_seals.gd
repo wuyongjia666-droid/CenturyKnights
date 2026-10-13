@@ -39,22 +39,22 @@ static func has_seal(c: CKCharacter, job_id: String) -> bool:
 static func can_stamp(c: CKCharacter, job_id: String, city: String) -> Dictionary:
 	var r := seal_row(job_id)
 	if r.is_empty():
-		return {"ok": false, "msg": "没有这门印"}
+		return {"ok": false, "msg": Locale.t("js_4b8f35c4")}
 	if c == null or not c.alive:
-		return {"ok": false, "msg": "没有这个人"}
+		return {"ok": false, "msg": Locale.t("js_858ac10f")}
 	if has_seal(c, job_id):
-		return {"ok": false, "msg": "%s 已经有这枚印了" % c.name}
+		return {"ok": false, "msg": Locale.t("js_36ebe4cd") % c.name}
 	var nm := str(r.get("name", job_id))
 	if str(r.get("city", "")) != city:
-		return {"ok": false, "msg": "「%s」印只在%s盖" % [nm, str(World.node(str(r.get("city", ""))).get("name", r.get("city", "")))]}
+		return {"ok": false, "msg": Locale.t("js_747937cc") % [nm, str(World.node(str(r.get("city", ""))).get("name", r.get("city", "")))]}
 	var from_name := str(GameState.get_job(str(r.get("from", ""))).get("name", r.get("from", "")))
 	if c.job_id != str(r.get("from", "")):
-		return {"ok": false, "msg": "得先是%s才能盖「%s」印" % [from_name, nm]}
+		return {"ok": false, "msg": Locale.t("js_16f4d3d9") % [from_name, nm]}
 	var need := int(_load().get("rep_friendly", 30))
 	if World.rep_of(city) < need:
-		return {"ok": false, "msg": "这城声望还不够：要 %d，现在 %d" % [need, World.rep_of(city)]}
+		return {"ok": false, "msg": Locale.t("js_a6b0b659") % [need, World.rep_of(city)]}
 	if not CKCityAffairs.done(city):
-		return {"ok": false, "msg": "先把本城之事办了"}
+		return {"ok": false, "msg": Locale.t("js_80a18b3b")}
 	return {"ok": true, "msg": ""}
 
 
@@ -68,7 +68,7 @@ static func stamp(c: CKCharacter, job_id: String, city: String) -> Dictionary:
 	seals.append(job_id)
 	c.blood_meta["job_seals"] = seals
 	GameState.mark_dirty()
-	return {"ok": true, "msg": "%s 盖了「%s」印，回堡里就能转职" % [c.name, str(seal_row(job_id).get("name", job_id))]}
+	return {"ok": true, "msg": Locale.t("js_820fde2c") % [c.name, str(seal_row(job_id).get("name", job_id))]}
 
 
 ## try_promote 用：特殊职业没印不让转；其它职业不管。
@@ -76,4 +76,4 @@ static func promote_gate(c: CKCharacter, job_id: String) -> Dictionary:
 	var r := seal_row(job_id)
 	if r.is_empty() or has_seal(c, job_id):
 		return {"ok": true, "msg": ""}
-	return {"ok": false, "msg": "还没有「%s」印：去%s盖" % [str(r.get("name", job_id)), str(World.node(str(r.get("city", ""))).get("name", r.get("city", "")))]}
+	return {"ok": false, "msg": Locale.t("js_e4c54013") % [str(r.get("name", job_id)), str(World.node(str(r.get("city", ""))).get("name", r.get("city", "")))]}

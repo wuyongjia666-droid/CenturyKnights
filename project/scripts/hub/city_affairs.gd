@@ -46,33 +46,33 @@ static func template_for(city: String) -> Dictionary:
 
 static func cost_text(cost: Dictionary) -> String:
 	if cost.is_empty():
-		return "不花钱"
+		return Locale.t("js_d435cf96")
 	var parts: Array = []
-	var names := {"silver": "银", "food": "粮", "iron": "铁"}
+	var names := {"silver": Locale.t("js_75f5e3ba"), "food": Locale.t("js_6763b86e"), "iron": Locale.t("js_69e7baef")}
 	for k in cost.keys():
 		parts.append("%d %s" % [int(cost[k]), names.get(k, k)])
-	return "花 " + "、".join(parts)
+	return Locale.t("js_07347b10") + "、".join(parts)
 
 
 static func label(city: String) -> String:
 	if done(city):
-		return "本城之事：已办完"
+		return Locale.t("js_2a484a92")
 	var r := template_for(city)
-	return "本城之事：%s（%s）" % [str(r.get("label", "")), cost_text(r.get("cost", {}))]
+	return Locale.t("js_565e131f") % [str(r.get("label", "")), cost_text(r.get("cost", {}))]
 
 
 ## 能不能办；不能办就给一句原因。
 static func can_do(city: String) -> Dictionary:
 	if city == "" or World.node(city).is_empty():
-		return {"ok": false, "msg": "这里不是城镇"}
+		return {"ok": false, "msg": Locale.t("js_63a2654e")}
 	if done(city):
-		return {"ok": false, "msg": "这座城的事已经办过了"}
+		return {"ok": false, "msg": Locale.t("js_1c89f298")}
 	var cost: Dictionary = template_for(city).get("cost", {})
 	var have := {"silver": int(GameState.silver), "food": int(GameState.food), "iron": int(GameState.iron)}
-	var names := {"silver": "银", "food": "粮", "iron": "铁"}
+	var names := {"silver": Locale.t("js_75f5e3ba"), "food": Locale.t("js_6763b86e"), "iron": Locale.t("js_69e7baef")}
 	for k in cost.keys():
 		if int(have.get(k, 0)) < int(cost[k]):
-			return {"ok": false, "msg": "%s不够：要 %d，现在 %d" % [names.get(k, k), int(cost[k]), int(have.get(k, 0))]}
+			return {"ok": false, "msg": Locale.t("js_2a708e4c") % [names.get(k, k), int(cost[k]), int(have.get(k, 0))]}
 	return {"ok": true, "msg": ""}
 
 
@@ -88,4 +88,4 @@ static func do_affair(city: String) -> Dictionary:
 	GameState.set_flag(flag_key(city), true)
 	World.add_city_rep(city, 2)
 	GameState.mark_dirty()
-	return {"ok": true, "msg": "办好了：%s。城里人记住你们了，声望 +2" % str(r.get("label", ""))}
+	return {"ok": true, "msg": Locale.t("js_6aca8049") % str(r.get("label", ""))}

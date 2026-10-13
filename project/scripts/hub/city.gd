@@ -1302,10 +1302,10 @@ func open_affairs(msg: String = "", ok: bool = true) -> void:
 	m.add_child(v)
 	var head := HBoxContainer.new()
 	v.add_child(head)
-	var t := UIKit.title_label("%s · 本城之事" % str(World.node(city).get("name", city)), 18)
+	var t := UIKit.title_label(Locale.t("js_76d637f6") % str(World.node(city).get("name", city)), 18)
 	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(t)
-	var close := UIKit.ghost_button("关上", 120, 48)
+	var close := UIKit.ghost_button(Locale.t("js_4782a703"), 120, 48)
 	close.pressed.connect(func():
 		o.queue_free()
 		_aff_overlay = null
@@ -1320,7 +1320,7 @@ func open_affairs(msg: String = "", ok: bool = true) -> void:
 	lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	v.add_child(lab)
 	var chk: Dictionary = CKCityAffairs.can_do(city)
-	var go := UIKit.ghost_button("去办", 160, 48)
+	var go := UIKit.ghost_button(Locale.t("js_f05ab037"), 160, 48)
 	go.name = "AffairDo"
 	go.disabled = not bool(chk.get("ok", false))
 	v.add_child(go)
@@ -1331,12 +1331,12 @@ func open_affairs(msg: String = "", ok: bool = true) -> void:
 		open_affairs(str(r.get("msg", "")), bool(r.get("ok", false))))
 	var rows: Array = CKJobSeals.rows_for_city(city)
 	if rows.is_empty():
-		v.add_child(UIKit.body_label("这座城不盖职印。", UIKit.TEXT_DIM, 13))
+		v.add_child(UIKit.body_label(Locale.t("js_76942d49"), UIKit.TEXT_DIM, 13))
 	for r in rows:
 		var jid := str(r.get("job", ""))
 		var seal_nm := str(r.get("name", jid))
 		var from_nm := str(GameState.get_job(str(r.get("from", ""))).get("name", ""))
-		v.add_child(UIKit.body_label("「%s」印：%s 可以在这里盖，盖了回堡里就能转「%s」。" % [seal_nm, from_nm, seal_nm], UIKit.ACCENT, 14))
+		v.add_child(UIKit.body_label(Locale.t("js_76fd6d83") % [seal_nm, from_nm, seal_nm], UIKit.ACCENT, 14))
 		var any := false
 		for c in GameState.roster():
 			if c == null or not c.alive or c.job_id != str(r.get("from", "")):
@@ -1345,7 +1345,7 @@ func open_affairs(msg: String = "", ok: bool = true) -> void:
 			var row := HBoxContainer.new()
 			row.add_theme_constant_override("separation", 8)
 			var g: Dictionary = CKJobSeals.can_stamp(c, jid, city)
-			var b := UIKit.ghost_button("给%s盖印" % c.name, 200, 48)
+			var b := UIKit.ghost_button(Locale.t("js_f6db50d5") % c.name, 200, 48)
 			b.disabled = not bool(g.get("ok", false))
 			var cid := str(c.id)
 			b.pressed.connect(func():
@@ -1356,5 +1356,5 @@ func open_affairs(msg: String = "", ok: bool = true) -> void:
 				row.add_child(UIKit.body_label(str(g.get("msg", "")), UIKit.TEXT_DIM, 13))
 			v.add_child(row)
 		if not any:
-			v.add_child(UIKit.body_label("队里现在没有%s。" % str(GameState.get_job(str(r.get("from", ""))).get("name", "")), UIKit.TEXT_DIM, 13))
+			v.add_child(UIKit.body_label(Locale.t("js_7a4485ae") % str(GameState.get_job(str(r.get("from", ""))).get("name", "")), UIKit.TEXT_DIM, 13))
 

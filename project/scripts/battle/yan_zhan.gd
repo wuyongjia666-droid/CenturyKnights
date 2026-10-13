@@ -71,7 +71,7 @@ static func strike_bonus(battle: Object, atk_unit, def_unit) -> int:
 		battle.set_meta(META_TARGET, str(dfn.get("id")))
 		var b := hit_bonus(dfn)
 		if battle.has_method("_log"):
-			battle._log("【验盏】%s 点了盏：%s" % [str(atk.get("name")), "伪造的爵位，全队命中 +8" if b == FORGED_HIT else ("没有血谱，全队命中 +4" if b > 0 else "血谱是真的，盏亮了但不加命中")])
+			battle._log(Locale.t("js_1c847c15") % [str(atk.get("name")), Locale.t("js_7c2cb456") if b == FORGED_HIT else (Locale.t("js_22ff4577") if b > 0 else Locale.t("js_4e0a27c9"))])
 	if battle.has_meta(META_TARGET) and str(battle.get_meta(META_TARGET)) == str(dfn.get("id")):
 		return hit_bonus(dfn)
 	return 0
