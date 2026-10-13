@@ -98,12 +98,20 @@ func _mobile_frame() -> void:
 	side_stack.add_child(_side)
 	_swap_box(_side, side_stack, func(b): _side = b)
 	var bx := M_SIDE_W + 36.0
-	_tabbar.position = Vector2(bx, top)
+	_m_body_w = w - bx - 16.0
 	_tabbar.add_theme_constant_override("separation", 8)
 	for b in _tabbar.get_children():
 		(b as Control).custom_minimum_size = Vector2(96, MobilePage.HIT)
 		(b as Control).add_theme_font_size_override("font_size", MobilePage.FONT)
-	_m_body_w = w - bx - 16.0
+	var tab_sc := ScrollContainer.new()
+	tab_sc.name = "TabScroll"
+	tab_sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	tab_sc.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	tab_sc.position = Vector2(bx, top)
+	tab_sc.size = Vector2(_m_body_w, MobilePage.HIT + 4.0)
+	remove_child(_tabbar)
+	tab_sc.add_child(_tabbar)
+	add_child(tab_sc)
 	var by := top + MobilePage.HIT + 10.0
 	var body_stack := MobileReflow.column(self, "MobileBody", Rect2(bx, by, _m_body_w, 720.0 - by - 12.0))
 	remove_child(_body)
