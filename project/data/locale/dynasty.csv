@@ -198,3 +198,6 @@ sui_year_side_left,稳妥一侧,Careful side
 sui_year_side_right,大胆一侧,Bold side
 sui_year_who,%s · %d 岁,%s · age %d
 sui_year_outcome,这一年：%s,This year: %s
+life_ack,知道了,Understood
+life_outcome_prefix,结果：%s,Outcome: %s
+life_auto_log,%s · %s：%s,%s · %s: %s

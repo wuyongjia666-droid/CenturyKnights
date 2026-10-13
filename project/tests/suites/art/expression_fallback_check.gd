@@ -64,13 +64,22 @@ func _run() -> String:
 	var plate := CKArtPaths.load_portrait(path, CKArtPaths.TIER_MEDIUM)
 	if not (plate is Texture2D):
 		return "plate load"
-	var shown := UnitArt.dialogue_portrait(str(people[0].get("name", "")), "惊", leader, 120)
+	# D-02: c01 (灯影) uses her token face until the expression reshoot lands; plate wiring is
+	# checked on c02 with the same files below.
+	if UnitArt.dialogue_portrait(str(people[0].get("name", "")), "惊", leader, 120) != base:
+		return "c01 did not fall back to the token face"
+	path = UnitArt.expression_plate_path("c02", "惊")
+	anger = UnitArt.expression_plate_path("c02", "怒")
+	plate = CKArtPaths.load_portrait(path, CKArtPaths.TIER_MEDIUM)
+	if not (plate is Texture2D):
+		return "c02 plate load"
+	var shown := UnitArt.dialogue_portrait(str(people[1].get("name", "")), "惊", leader, 120)
 	if not _same_plate(shown, plate):
 		return "ingested plate not used"
 	var anger_plate := CKArtPaths.load_portrait(anger, CKArtPaths.TIER_MEDIUM)
 	if not (anger_plate is Texture2D):
 		return "anger plate load"
-	var shown_anger := UnitArt.dialogue_portrait(str(people[0].get("name", "")), "怒", leader, 120)
+	var shown_anger := UnitArt.dialogue_portrait(str(people[1].get("name", "")), "怒", leader, 120)
 	if not _same_plate(shown_anger, anger_plate):
 		return "anger plate not used"
 	var fallback := UnitArt.dialogue_portrait("not-a-companion", "怒", leader, 120)
