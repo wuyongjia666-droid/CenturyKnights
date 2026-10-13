@@ -16,6 +16,7 @@ func apply_mobile_layout() -> void:
 	MobileLayout.pin_footer(get_node_or_null("StitchFooter"))
 	var w := get_viewport_rect().size.x
 	if w >= 1000.0:
+		set_meta("m_center_ok", true)  # landscape keeps the 1280 grid; MobileLayout centres it
 		return
 	var left := get_node_or_null("PortraitColumn") as Control
 	var mid := get_node_or_null("TraitList") as Control

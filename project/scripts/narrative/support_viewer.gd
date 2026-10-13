@@ -51,6 +51,43 @@ func _ready() -> void:
 	_refresh_list()
 
 
+## Landscape phone: wider list on the left, a framed reading pane on the right with a prompt
+## until a bond is opened (mobile audit v1: the right half was blank).
+var _pane: Control = null
+
+func apply_mobile_layout() -> void:
+	if not MobilePage.active(self):
+		return
+	var w := MobilePage.width(self)
+	var scroll := get_node_or_null("BondScroll") as ScrollContainer
+	var lw := clampf(w * 0.38, 440.0, 600.0)
+	if scroll:
+		scroll.position = Vector2(32, 72)
+		scroll.size = Vector2(lw, 720.0 - 72.0 - 16.0)
+		_list.custom_minimum_size = Vector2(lw - 14.0, 0)
+	var x := 32.0 + lw + 20.0
+	var pw := w - x - 32.0
+	if _pane == null:
+		_pane = Panel.new()
+		_pane.name = "ReadPane"
+		_pane.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_pane.add_theme_stylebox_override("panel", UIKit.flat_box(Color(0.055, 0.067, 0.090, 0.92), Color(1, 1, 1, 0.10), 10))
+		add_child(_pane)
+		move_child(_pane, _speaker.get_index())
+	_pane.position = Vector2(x, 72)
+	_pane.size = Vector2(pw, 720.0 - 72.0 - 16.0)
+	_speaker.position = Vector2(x + 20.0, 88)
+	_speaker.size = Vector2(pw - 40.0, 34)
+	_body.position = Vector2(x + 20.0, 132)
+	_body.custom_minimum_size = Vector2(pw - 40.0, 340)
+	_body.size = Vector2(pw - 40.0, 340)
+	_body.add_theme_font_size_override("normal_font_size", 24)
+	_actions.position = Vector2(x + 20.0, 720.0 - 16.0 - 20.0 - MobilePage.HIT)
+	_actions.custom_minimum_size = Vector2(pw - 40.0, 0)
+	if _open_id == "" and _body.text == "":
+		_body.text = Locale.t("ux_bond_pick")
+
+
 func titles() -> Array:
 	var out: Array = []
 	for child in _list.get_children():

@@ -69,7 +69,9 @@ func apply_mobile_layout() -> void:
 	_left.position = Vector2(42, CKPageKit.TOP + 8)
 	_left.size = Vector2(340, 500)
 	_right.position = Vector2(394, CKPageKit.TOP + 8)
-	_right.size = Vector2(844, 500)
+	# 20:9 phones: the detail column takes the extra width instead of leaving a dead strip.
+	var extra := maxf(0.0, size.x - 1280.0) if has_meta("mobile_fit_key") else 0.0
+	_right.size = Vector2(844 + extra, 500)
 	for p in [_left, _right]:
 		var fill := (p as Control).get_node_or_null("FrostFill") as Control
 		if fill:
@@ -78,7 +80,7 @@ func apply_mobile_layout() -> void:
 	var inner := _right.get_node_or_null("DetailInner") as Control
 	if inner:
 		inner.position = Vector2(16, 14)
-		inner.size = Vector2(812, 472)
+		inner.size = Vector2(812 + extra, 472)
 	if has_meta("mobile_fit_key"):
 		return
 	var vp := get_viewport_rect().size
@@ -182,6 +184,7 @@ func _card(key: String, cost: String, f: Func, why: String) -> void:
 	var r := CKPageKit.row(UIKit.ACCENT, 150)
 	var p: PanelContainer = r[0]
 	p.custom_minimum_size = Vector2(396, 150)
+	p.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	p.name = "Act_" + key.trim_prefix("lb_rv_a_")
 	var v: VBoxContainer = r[1]
 	var top := HBoxContainer.new()
