@@ -141,8 +141,10 @@ func _measure(node: Node, path: String, seen: Dictionary) -> Array:
 		if bool(button.get_meta("touch_exempt", false)):
 			continue
 		buttons += 1
-		var w := maxf(button.size.x, button.custom_minimum_size.x)
-		var h := maxf(button.size.y, button.custom_minimum_size.y)
+		# measured as drawn: a target inside a scaled layer (atlas map) counts at its on-screen size
+		var sc := button.get_global_transform().get_scale() if button.is_inside_tree() else Vector2.ONE
+		var w := maxf(button.size.x, button.custom_minimum_size.x) * sc.x
+		var h := maxf(button.size.y, button.custom_minimum_size.y) * sc.y
 		var reason := MobileLayout.hit_exception(button)
 		if reason != "":
 			if not seen.has(reason):

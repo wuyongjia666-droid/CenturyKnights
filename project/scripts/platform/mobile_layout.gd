@@ -103,10 +103,10 @@ const HIT_FLOOR := 76.0
 ## would push their absolute rows into each other, so they keep desktop sizes until their own
 ## apply_mobile_layout lands; that change removes the page from this list.
 const FONT_FLOOR_PENDING := [
-	"res://scenes/hub/atlas_view.tscn", "res://scenes/hub/city.tscn",
+	"res://scenes/hub/city.tscn",
 	"res://scenes/hub/castle_view.tscn", "res://scenes/hub/market.tscn",
 	"res://scenes/hub/estates.tscn", "res://scenes/hub/works.tscn",
-	"res://scenes/hub/forge.tscn", "res://scenes/hub/annex.tscn",
+	"res://scenes/hub/forge.tscn",
 ]
 
 static func font_floor_applies(root: Node) -> bool:
@@ -162,6 +162,9 @@ static func _floor_one(c: Control, floor_px: int) -> void:
 
 static func _grow_buttons(node: Node, need: float) -> void:
 	for child in node.get_children():
+		# a scaled layer (e.g. the atlas map) sizes its own targets in on-screen px
+		if not (child is BaseButton) and bool(child.get_meta("touch_exempt", false)):
+			continue
 		if child is BaseButton:
 			_grow_hit(child as BaseButton, need)
 		_grow_buttons(child, need)
@@ -340,15 +343,20 @@ static func center_kit_page(root: Control) -> void:
 		if c.anchor_right > 0.5 or c.anchor_left > 0.5:
 			continue
 		if c.name == "StitchTopBar":
-			# The bar spans the screen: title stays left, the right cluster moves to the right edge.
-			c.size.x += 2.0 * (dx - old)
-			for bc in c.get_children():
-				if not (bc is Control):
-					continue
-				var b := bc as Control
-				if b.size.x >= 800.0:
-					b.size.x += 2.0 * (dx - old)
-				elif b.position.x > 640.0:
-					b.position.x += 2.0 * (dx - old)
+			stretch_top_bar(c, 2.0 * (dx - old))
 			continue
 		c.position.x += dx - old
+
+## Widen a 1280 StitchTopBar by `extra` px: title stays left, the right cluster moves to the edge.
+static func stretch_top_bar(bar: Control, extra: float) -> void:
+	if bar == null or absf(extra) < 0.5:
+		return
+	bar.size.x += extra
+	for bc in bar.get_children():
+		if not (bc is Control):
+			continue
+		var b := bc as Control
+		if b.size.x >= 800.0:
+			b.size.x += extra
+		elif b.position.x > 640.0:
+			b.position.x += extra

@@ -20,12 +20,18 @@ const SCREENS := [
 	["wing_market", "res://scenes/hub/market.tscn"],
 	["atlas", "res://scenes/hub/atlas_view.tscn"],
 	["atlas_side", "res://scenes/hub/atlas_view.tscn", true, "atlas_open_side"],
-	["city", "res://scenes/hub/city.tscn"],
-	["city_smith", "res://scenes/hub/city.tscn", "smith"],
-	["city_market", "res://scenes/hub/city.tscn", "market"],
-	["city_board", "res://scenes/hub/city.tscn", "board"],
-	["city_tavern", "res://scenes/hub/city.tscn", "tavern"],
-	["city_armory", "res://scenes/hub/city.tscn", "armory"],
+	["atlas_capital", "res://scenes/hub/atlas_view.tscn", true, "atlas_open_side", {"world_pos": "ash_capital"}],
+	["atlas_log", "res://scenes/hub/atlas_view.tscn", "log", "atlas_sheet_tab", {"world_pos": "ash_capital"}],
+	["atlas_regions", "res://scenes/hub/atlas_view.tscn", "regions", "atlas_sheet_tab", {"world_pos": "ash_capital"}],
+	["city", "res://scenes/hub/city.tscn", null, "", {"world_pos": "ash_capital"}],
+	["city_smith", "res://scenes/hub/city.tscn", "smith", "city_tab", {"world_pos": "ash_capital"}],
+	["city_market", "res://scenes/hub/city.tscn", "market", "city_tab", {"world_pos": "ash_capital"}],
+	["city_board", "res://scenes/hub/city.tscn", "board", "city_tab", {"world_pos": "ash_capital"}],
+	["city_tavern", "res://scenes/hub/city.tscn", "tavern", "city_tab", {"world_pos": "ash_capital"}],
+	["city_armory", "res://scenes/hub/city.tscn", "armory", "city_tab", {"world_pos": "ash_capital"}],
+	["city_sundry", "res://scenes/hub/city.tscn", "sundry", "city_tab", {"world_pos": "ash_capital"}],
+	["city_lamp", "res://scenes/hub/city.tscn", "lamp", "city_tab", {"world_pos": "ash_capital"}],
+	["city_castle", "res://scenes/hub/city.tscn"],
 	["battle", "res://scenes/battle/battle.tscn"],
 	["settings", "res://scenes/ui/settings.tscn"],
 	["founding", "res://scenes/story/naming.tscn"],
@@ -77,7 +83,17 @@ func _ready() -> void:
 				continue
 			if pair.size() > 2 and pair[2] != null:
 				GameState.set_meta(str(pair[3]) if pair.size() > 3 else "city_tab", pair[2])
-			await _shoot(str(pair[1]), "%s_%dx%d" % [pair[0], r.x, r.y], pair[4] if pair.size() > 4 else {})
+			var meta: Dictionary = (pair[4] as Dictionary).duplicate() if pair.size() > 4 else {}
+			var home := World.pos
+			if meta.has("world_pos"):
+				## shoot a settlement the player is standing in (e.g. a capital), with a road log
+				var wp := str(meta["world_pos"])
+				meta.erase("world_pos")
+				World.pos = wp
+				World.visited[wp] = true
+				World._tlog("抵达 %s（初次踏足）" % str(World.node(wp).get("name", wp)))
+			await _shoot(str(pair[1]), "%s_%dx%d" % [pair[0], r.x, r.y], meta)
+			World.pos = home
 	var f := FileAccess.open(_out + "/layout.json", FileAccess.WRITE)
 	f.store_string(JSON.stringify(_report, " "))
 	print("MOBILE DONE")
@@ -152,12 +168,15 @@ func _in_scroll(c: Node) -> bool:
 
 ## What a scroll view actually shows: items scrolled out of it are not on screen.
 func _scroll_clip(c: Node) -> Rect2:
+	## Scroll views and clipping frames (e.g. the atlas map window) hide what lies outside them.
 	var p := c.get_parent()
+	var out := Rect2()
 	while p != null:
-		if p is ScrollContainer:
-			return (p as Control).get_global_rect()
+		if p is ScrollContainer or (p is Control and (p as Control).clip_contents):
+			var r := (p as Control).get_global_rect()
+			out = r if out.size.x <= 0.0 else out.intersection(r)
 		p = p.get_parent()
-	return Rect2()
+	return out
 
 
 func _report_placeholders(n: Node, items: Array) -> void:
