@@ -403,6 +403,15 @@ func confirm_title() -> void:
 	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	dim.color = Color(0.02, 0.03, 0.05, 0.6)
 	sheet.add_child(dim)
+	if has_meta("m_relayout"):
+		_m_sheet(sheet, Locale.t("a1_title_q"), Locale.t("a1_title_body"), [
+			["TitleStay", Locale.t("a1_title_stay"), false, func(): sheet.queue_free()],
+			["TitleGo", Locale.t("a1_title_go"), true, func():
+				GameState.save_game()
+				sheet.queue_free()
+				CKNav.replace(CKNav.TITLE)],
+		], 0)
+		return
 	var p := UIKit.panel_at(sheet, Rect2(_sheet_x(500.0), 250, 500, 220), 14, true)
 	var t := UIKit.title_label(Locale.t("a1_title_q"), 22)
 	t.position = Vector2(24, 20)
@@ -555,7 +564,18 @@ func open_lock_sheet(title: String, st: Dictionary) -> void:
 		if e is InputEventMouseButton and e.pressed:
 			sheet.queue_free())
 	sheet.add_child(dim)
-	var p := UIKit.panel_at(sheet, Rect2(_sheet_x(500.0), 470 if not has_meta("m_relayout") else 255, 500, 210), 14, true)
+	if has_meta("m_relayout"):
+		var btns: Array = []
+		var focus := 0
+		if str(st.get("link", "")) == "mainline":
+			btns.append(["LockGo", Locale.t("ux_lock_go"), true, func():
+				sheet.queue_free()
+				var tgt := HubTodo.mainline_target()
+				CKNav.go(StoryCatalog.request_chapter(str(tgt.get("id", "ch0"))))])
+		btns.append(["LockOk", Locale.t("ux_lock_ok"), false, func(): sheet.queue_free()])
+		_m_sheet(sheet, title, str(st.get("reason", "")), btns, focus)
+		return
+	var p := UIKit.panel_at(sheet, Rect2(_sheet_x(500.0), 470, 500, 210), 14, true)
 	var t := UIKit.title_label(title, 22)
 	t.position = Vector2(24, 20)
 	p.add_child(t)
@@ -609,10 +629,23 @@ const M_TOP := 96.0
 const M_PAD := 20.0
 const M_GAP := 12.0
 const M_TAB_W := 196.0
-const M_TILE_H := 112.0
+const M_TILE_H := 124.0
+const _IC := "res://assets/art/ui/v86/"
+const _IE := "res://assets/art/estates/"
+## Frost line icons (cyan stroke set) per hub entry; reused where the set has no exact glyph.
+const M_ICONS := {
+	"hourglass": _IC + "kpi_grain.png", "castle_view": _IC + "kpi_fortify.png", "settings": _IC + "mk_iron.png",
+	"deploy": _IE + "stone_slope.png", "roster": _IC + "kpi_fortify.png", "tavern": _IC + "mk_herb.png",
+	"train": _IC + "mk_iron.png", "skills": _IE + "stone_slope.png",
+	"atlas": _IE + "tide_bridge.png", "quests": _IE + "stone_slope.png", "court_news": _IE + "reed_ford.png",
+	"lineage": _IE + "fog_vale.png", "marriage": _IE + "fog_vale.png", "rite": _IC + "kpi_fortify.png",
+	"titles": _IC + "kpi_cash.png", "rivals": _IE + "stone_slope.png", "ancestors": _IE + "fog_vale.png", "bonds": _IE + "reed_ford.png",
+	"works": _IC + "kpi_fortify.png", "forge": _IC + "mk_iron.png", "market": _IC + "kpi_cash.png", "shrine": _IC + "mk_herb.png", "estates": _IC + "kpi_grain.png",
+}
 var _m_tab := ""
 var _m_tabs: Dictionary = {}
 var _m_grids: Dictionary = {}
+var _m_summaries: Dictionary = {}
 
 func apply_mobile_layout() -> void:
 	if has_meta("m_relayout") or not DeviceProfile.is_mobile() or not is_inside_tree():
@@ -749,8 +782,7 @@ func _m_entry_grid(groups: Array, rect: Rect2) -> void:
 	var avail := rect.size.y - 28.0 - 48.0
 	for g in groups:
 		var rows := int(ceil(float(g.btns.size()) / cols))
-		var r := maxi(rows, 3)
-		var th := clampf(floorf((avail - M_GAP * (r - 1)) / r) - 1.0, M_TILE_H, 150.0)
+		var th := clampf(floorf((avail - M_GAP * 3.0) / 4.0) - 1.0, M_TILE_H, 140.0)
 		var grid := GridContainer.new()
 		grid.name = "NavGroup_" + str(g.id)
 		grid.columns = cols
@@ -762,6 +794,12 @@ func _m_entry_grid(groups: Array, rect: Rect2) -> void:
 			_m_tile(b as Button, tile_w, th)
 			grid.add_child(b)
 		_m_grids[str(g.id)] = grid
+		var free_h := avail - rows * th - M_GAP * maxi(0, rows - 1) - M_GAP
+		var summ := _m_summary(str(g.id), g.btns)
+		summ.visible = false
+		summ.set_meta("fits", free_h >= 100.0)
+		stack.add_child(summ)
+		_m_summaries[str(g.id)] = summ
 
 ## Turns a desktop rail row into a phone tile: big title on top, one-line purpose / lock reason below.
 func _m_tile(b: Button, w: float, th: float = M_TILE_H) -> void:
@@ -771,6 +809,8 @@ func _m_tile(b: Button, w: float, th: float = M_TILE_H) -> void:
 	raw = raw.trim_prefix("● ")
 	var parts := raw.split("   ", false, 1)
 	var title := parts[1] if parts.size() > 1 else raw
+	if locked:
+		title = title.trim_suffix(" · " + Locale.t("ux_lock_tag"))
 	var sub := str(b.tooltip_text)
 	b.text = ("● " if fresh else "") + title
 	b.tooltip_text = sub
@@ -781,10 +821,10 @@ func _m_tile(b: Button, w: float, th: float = M_TILE_H) -> void:
 	b.add_theme_font_size_override("font_size", 26)
 	var mk := func(bg: Color, bd: Color, bw: int) -> StyleBoxFlat:
 		var sb := UIKit._btn_box(bg, bd, bw, 10)
-		sb.content_margin_left = 18
+		sb.content_margin_left = 94
 		sb.content_margin_right = 14
 		sb.content_margin_top = 10
-		sb.content_margin_bottom = 46
+		sb.content_margin_bottom = 74 if locked else 46
 		return sb
 	var base := Color(1, 1, 1, 0.025) if locked else Color(UIKit.ACCENT, 0.06)
 	UIKit._apply_states(b, {
@@ -796,19 +836,39 @@ func _m_tile(b: Button, w: float, th: float = M_TILE_H) -> void:
 	})
 	if not fresh:
 		b.add_theme_color_override("font_color", UIKit.TEXT_DIM if locked else UIKit.TEXT)
+	var ic := TextureRect.new()
+	ic.name = "Icon"
+	var ip := str(M_ICONS.get(str(b.get_meta("hub_entry", "")), "res://assets/art/ui/v86/kpi_fortify.png"))
+	if ResourceLoader.exists(ip):
+		ic.texture = load(ip)
+	ic.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	ic.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	ic.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ic.self_modulate = Color(0.55, 0.62, 0.70) if locked else Color(1, 1, 1)
+	ic.anchor_top = 0.5
+	ic.anchor_bottom = 0.5
+	ic.offset_left = 18
+	ic.offset_right = 78
+	ic.offset_top = -30
+	ic.offset_bottom = 30
+	b.add_child(ic)
 	var sl := UIKit.body_label(sub, UIKit.TEXT_FAINT if locked else UIKit.ACCENT, M_FONT)
 	sl.name = "Sub"
 	sl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	sl.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	sl.clip_text = true
+	if locked:
+		sl.autowrap_mode = TextServer.AUTOWRAP_ARBITRARY
+		sl.max_lines_visible = 2
+		sl.add_theme_constant_override("line_spacing", -2)
 	sl.anchor_left = 0.0
 	sl.anchor_right = 1.0
 	sl.anchor_top = 1.0
 	sl.anchor_bottom = 1.0
-	sl.offset_left = 18
+	sl.offset_left = 94
 	sl.offset_right = -14
-	sl.offset_top = -46
-	sl.offset_bottom = -12
+	sl.offset_top = -74 if locked else -46
+	sl.offset_bottom = -10
 	b.add_child(sl)
 	if locked:
 		b.modulate = Color(1, 1, 1, 0.62)
@@ -820,6 +880,9 @@ func _m_select(id: String) -> void:
 	GameState.set_meta("hub_tab", id)
 	for k in _m_grids:
 		(_m_grids[k] as Control).visible = (k == id)
+		if _m_summaries.has(k):
+			var sm := _m_summaries[k] as Control
+			sm.visible = (k == id) and bool(sm.get_meta("fits", false))
 		(_m_tabs[k] as Button).set_pressed_no_signal(k == id)
 	var head := find_child("SectionTitle", true, false) as Label
 	if head:
@@ -918,3 +981,85 @@ func _m_right_column(rect: Rect2) -> void:
 		CKNav.go("res://scenes/hub/title_promote.tscn"))
 	pb.name = "PromoteOpen"
 	btns.add_child(pb)
+
+
+## Phone sheet: centred card sized for touch (title 30px, body 24px, 80px buttons), height follows the text.
+func _m_sheet(sheet: Control, title: String, body: String, buttons: Array, focus: int) -> void:
+	var w := maxf(size.x, 1280.0)
+	var h := size.y if size.y > 400.0 else 720.0
+	var pw := clampf(w * 0.5, 680.0, 820.0)
+	var center := CenterContainer.new()
+	center.position = Vector2.ZERO
+	center.size = Vector2(w, h)
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	sheet.add_child(center)
+	var p := PanelContainer.new()
+	p.name = "SheetCard"
+	p.custom_minimum_size = Vector2(pw, 0)
+	var sb := UIKit.flat_box(Color(0.06, 0.075, 0.10, 0.98), Color(UIKit.ACCENT, 0.55), 14, 2)
+	for side in ["left", "right"]:
+		sb.set("content_margin_" + side, 32)
+	for side in ["top", "bottom"]:
+		sb.set("content_margin_" + side, 26)
+	p.add_theme_stylebox_override("panel", sb)
+	center.add_child(p)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 18)
+	p.add_child(v)
+	var t := MobilePage.label(title, UIKit.TEXT, 30, true)
+	t.add_theme_font_override("font", UIKit.font("bold"))
+	v.add_child(t)
+	v.add_child(MobilePage.label(body, UIKit.TEXT_DIM, 24, true))
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 14)
+	v.add_child(row)
+	for i in buttons.size():
+		var spec: Array = buttons[i]
+		var b := MobilePage.button(str(spec[1]), bool(spec[2]), spec[3])
+		b.name = str(spec[0])
+		b.custom_minimum_size = Vector2(0, 80)
+		b.add_theme_font_size_override("font_size", 24)
+		row.add_child(b)
+		if i == focus:
+			b.call_deferred("grab_focus")
+
+
+## Section summary card under short grids: live numbers for the section + what opens the rest.
+func _m_summary(id: String, btns: Array) -> Control:
+	var p := PanelContainer.new()
+	p.name = "Summary_" + id
+	var sb := UIKit.flat_box(Color(1, 1, 1, 0.02), Color(1, 1, 1, 0.06), 10)
+	for side in ["left", "right", "top", "bottom"]:
+		sb.set("content_margin_" + side, 16)
+	p.add_theme_stylebox_override("panel", sb)
+	p.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 6)
+	p.add_child(v)
+	var locked := 0
+	for b in btns:
+		if (b as Button).has_meta("locked"):
+			locked += 1
+	var roster: Array = GameState.roster()
+	var wed := 0
+	var kids := 0
+	for ch in roster:
+		if str(ch.spouse_id) != "":
+			wed += 1
+		kids += ch.children_ids.size()
+	var line := ""
+	match id:
+		"home":
+			line = Locale.t("ux_hub_sum_home") % [Calendar.label(), GameState.morale]
+		"military":
+			line = Locale.t("ux_hub_sum_military") % [roster.size(), GameState.max_deploy(), GameState.silver]
+		"atlas":
+			line = Locale.t("ux_hub_sum_atlas") % [_mainline_caption()]
+		"family":
+			line = Locale.t("ux_hub_sum_family") % [roster.size(), wed, kids]
+		"civil":
+			line = Locale.t("ux_hub_sum_civil") % [GameState.silver, GameState.food, GameState.iron]
+	v.add_child(MobilePage.label(line, UIKit.TEXT, M_FONT, true))
+	var hint := Locale.t("ux_hub_sum_locked") % locked if locked > 0 else Locale.t("ux_hub_sum_open")
+	v.add_child(MobilePage.label(hint, UIKit.TEXT_FAINT, M_FONT, true))
+	return p

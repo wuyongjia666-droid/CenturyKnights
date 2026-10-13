@@ -192,7 +192,14 @@ func _focus_tile(fk: String, current: bool, hid: String) -> Button:
 	)
 	return b
 
+func apply_mobile_layout() -> void:
+	if MobilePage.active(self):
+		_m_build()
+
 func _after_change() -> void:
+	if has_meta("m_on"):
+		_m_build()
+		return
 	_rebuild()
 	_refresh_focus_counts()
 	_build_kpis()
@@ -668,3 +675,132 @@ func _field_do(r: Dictionary) -> void:
 	_field_msg.text = str(r.get("msg", ""))
 	_field_msg.add_theme_color_override("font_color", UIKit.OK if bool(r.get("ok", false)) else UIKit.DANGER)
 	_fill_field_list()
+
+
+## ── Phone landscape: holding cards fill the width (left); summary + page actions in their own column ──
+var _m_root: Control
+
+func _m_build() -> void:
+	set_meta("m_on", true)
+	var keep := _msg.text if _msg != null and is_instance_valid(_msg) else ""
+	for c in get_children():
+		if c is CanvasItem and c.get_index() > 0 and c != _m_root and c != _picker:
+			(c as CanvasItem).visible = false
+	if _m_root and is_instance_valid(_m_root):
+		remove_child(_m_root)
+		_m_root.queue_free()
+	_m_root = Control.new()
+	_m_root.name = "MobileEstates"
+	_m_root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_m_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(_m_root)
+	var w := MobilePage.width(self)
+	var h := size.y if size.y > 400.0 else 720.0
+	var top := MobilePage.TOP
+	var bh := h - top - 16.0
+	var old := get_node_or_null("MobileTopBar")
+	if old:
+		remove_child(old)
+		old.queue_free()
+	var bar := MobilePage.top_bar(self, Locale.t("mw_39662991"), Locale.t("mw_41e31e6c") % [GameState.silver, GameState.food, GameState.iron, Calendar.label()], [[Locale.t("btn_back"), func(): CKNav.up()]])
+	bar.visible = true
+	var rw := clampf(w * 0.27, 340.0, 420.0)
+	var lw := w - 40.0 - rw - 12.0
+	var lv := MobilePage.panel(_m_root, Rect2(20, top, lw, bh), 12)
+	var sc := ScrollContainer.new()
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	sc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	lv.add_child(sc)
+	var list := VBoxContainer.new()
+	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	list.add_theme_constant_override("separation", 10)
+	sc.add_child(list)
+	for hid in GameState.HOLDING_DEFS.keys():
+		list.add_child(_m_holding(str(hid)))
+	var rv := MobilePage.panel(_m_root, Rect2(w - 20 - rw, top, rw, bh), 12)
+	rv.add_child(MobilePage.label(Locale.t("mw_c9e01e67"), UIKit.ACCENT, 24, false))
+	rv.add_child(MobilePage.label(_sum_text().replace("　", " · "), UIKit.TEXT_DIM, MobilePage.FONT, true))
+	rv.add_child(MobilePage.label(_focus_counts_text().replace("　", ""), UIKit.TEXT_FAINT, MobilePage.FONT, true))
+	_msg = MobilePage.label(keep, UIKit.OK, MobilePage.FONT, true)
+	rv.add_child(_msg)
+	MobilePage.spacer(rv)
+	var field := MobilePage.button(Locale.t("ux_estates_field"), true, open_field_book)
+	field.name = "FieldBookBtn"
+	rv.add_child(field)
+	rv.add_child(MobilePage.button(Locale.t("mw_69668f1a"), false, _do_patrol))
+	rv.add_child(MobilePage.button(Locale.t("mw_e3e092a7"), false, func(): CKNav.go("res://scenes/hub/works.tscn")))
+
+func _m_holding(hid: String) -> Control:
+	var def: Dictionary = GameState.HOLDING_DEFS[hid]
+	var unlocked: bool = GameState.holding_unlocked(hid)
+	var lv: int = GameState.holding_level(hid)
+	var card := PanelContainer.new()
+	var sb := UIKit.flat_box(Color(1, 1, 1, 0.03), Color(1, 1, 1, 0.10), 10)
+	for side in ["left", "right", "top", "bottom"]:
+		sb.set("content_margin_" + side, 12)
+	card.add_theme_stylebox_override("panel", sb)
+	if not unlocked:
+		card.modulate = Color(1, 1, 1, 0.62)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 14)
+	card.add_child(row)
+	var icon := TextureRect.new()
+	icon.custom_minimum_size = Vector2(72, 72)
+	icon.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	var ip := "res://assets/art/estates/%s.png" % hid
+	if ResourceLoader.exists(ip):
+		icon.texture = load(ip)
+	row.add_child(icon)
+	var v := VBoxContainer.new()
+	v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	v.add_theme_constant_override("separation", 6)
+	row.add_child(v)
+	var t := MobilePage.label("%s   %s" % [str(def.name), ("Lv %d / 3" % lv) if unlocked else Locale.t("mw_c9190e80")], UIKit.TEXT, 26, false)
+	t.add_theme_font_override("font", UIKit.font("bold"))
+	v.add_child(t)
+	var st = GameState.steward_of(hid) if unlocked else null
+	var dsc := str(def.desc) + (Locale.t("mw_4d0e475f") % st.name if st != null else (Locale.t("mw_4e8abd0f") if unlocked else "；" + (Locale.t("wsc_e_how") % _quest_name(str(def.get("quest", "")))).replace("\u3000", "").strip_edges()))
+	v.add_child(MobilePage.label(dsc, UIKit.TEXT_DIM, MobilePage.FONT, true))
+	if not unlocked:
+		return card
+	var pv = GameState.holding_yield_preview(hid)
+	var ytxt := Locale.t("mw_c7eee1dc") % [int(pv.food), int(pv.silver)]
+	if int(pv.get("herb", 0)) > 0:
+		ytxt += Locale.t("mw_afd9fc74") % int(pv.herb)
+	if lv < 3:
+		ytxt += Locale.t("mw_d908bc9d") % [40 * lv, 8 * lv]
+	if GameState.holding_patrol_cd(hid) > 0:
+		ytxt += Locale.t("mw_0296c7bc") % GameState.holding_patrol_cd(hid)
+	elif GameState.holding_patrol_boost(hid) > 0:
+		ytxt += Locale.t("mw_30b4a962") % GameState.holding_patrol_boost(hid)
+	v.add_child(MobilePage.label(ytxt, UIKit.ACCENT, MobilePage.FONT, true))
+	var fr := HBoxContainer.new()
+	fr.add_theme_constant_override("separation", 8)
+	v.add_child(fr)
+	var fl := MobilePage.label(Locale.t("mw_99f92210"), UIKit.TEXT_FAINT, MobilePage.FONT, false)
+	fl.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	fr.add_child(fl)
+	var foc = GameState.holding_focus(hid)
+	for fk in ["grain", "cash", "fortify"]:
+		var fb := _focus_tile(fk, fk == foc, hid)
+		fb.custom_minimum_size = Vector2(0, MobilePage.HIT)
+		fb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		fb.add_theme_font_size_override("font_size", MobilePage.FONT)
+		fr.add_child(fb)
+	var ar := HBoxContainer.new()
+	ar.add_theme_constant_override("separation", 8)
+	v.add_child(ar)
+	var bid := hid
+	var up := MobilePage.button(Locale.t("mw_91c7146a") if lv < 3 else Locale.t("mw_8fde9e92"), lv < 3, func(): _upgrade(bid))
+	up.disabled = lv >= 3
+	ar.add_child(up)
+	if st != null:
+		ar.add_child(MobilePage.button(Locale.t("mw_14f8cc32"), false, func(): _clear_steward(bid)))
+	else:
+		ar.add_child(MobilePage.button(Locale.t("mw_23073274"), false, func(): _open_picker(bid)))
+	var pb := MobilePage.button(Locale.t("mw_4f279682"), false, func(): _do_patrol_one(bid))
+	pb.disabled = GameState.holding_patrol_cd(bid) > 0 or GameState.holding_patrol_boost(bid) > 0
+	ar.add_child(pb)
+	return card
