@@ -67,6 +67,11 @@ func _ready() -> void:
 func _resolve_path() -> String:
 	if not lock_path:
 		var requested := str(GameState.get_meta("story_chapter_id", ""))
+		var back_from := str(GameState.get_meta("battle_return_chapter", ""))
+		if back_from != "":
+			GameState.set_meta("battle_return_chapter", "")
+			if requested == "" and back_from != "ch0":
+				requested = back_from
 		if requested != "":
 			GameState.set_meta("story_chapter_id", "")
 			var pointed := StoryCatalog.path_for(requested)
@@ -434,6 +439,9 @@ func _run_op(step) -> String:
 		"battle":
 			var ret := str(row.get("return", _chapter.get("return_scene", "res://scenes/story/chapter0.tscn")))
 			GameState.set_meta("battle_return", ret)
+			# Opening review A-02: remember which chapter launched the fight so the way back
+			# reopens it instead of falling through to ch0.
+			GameState.set_meta("battle_return_chapter", str(_chapter.get("id", "")))
 			GameState.set_meta("battle_map", str(row.get("map", "")))
 			GameState.set_meta("battle_objective", str(row.get("objective", "")))
 			test_capture["battle_map"] = str(row.get("map", ""))

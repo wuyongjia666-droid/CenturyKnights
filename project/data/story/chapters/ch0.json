@@ -325,6 +325,21 @@
           "id": "ch0_0_1_l6",
           "speaker": "苇原·灯影",
           "text": "落点，你来定。"
+        },
+        {
+          "id": "ch0_0_1_retry",
+          "speaker": "老旗手",
+          "text": "这一仗可以再打。旗还在。",
+          "when": {
+            "all": [
+              {
+                "flag": "ch0_pass_lost"
+              },
+              {
+                "not_flag": "battle_done"
+              }
+            ]
+          }
         }
       ],
       "actions": [
@@ -378,15 +393,6 @@
               }
             ]
           }
-        },
-        {
-          "id": "retry_note",
-          "label": "这一仗可以再打。旗还在。",
-          "do": [],
-          "when": {
-            "not_flag": "battle_done"
-          },
-          "disabled": true
         }
       ],
       "next": "0.15"
