@@ -3,12 +3,14 @@ extends RefCounted
 ## DYN-04: life-event cards (岁课口吻：title / body / left / right).
 ## Month hook fires a card, auto-picks left/right with a stable seed
 ## (character id + year + month + event id), applies effects, and
-## queues a read-only inbox row. No player A/B choice. 岁课 keeps choices.
+## queues a read-only inbox row (one unread per person until ack). No A/B choice. 岁课 keeps choices.
 
 const DATA_PATH := "res://data/life_events.json"
 
 static var _doc: Dictionary = {}
 static var _installed := false
+## CKCampaignSim turns this on so headless centuries keep golden economy/traits.
+static var suppress_auto := false
 
 
 static func ensure() -> void:
@@ -25,11 +27,16 @@ static func events() -> Array:
 
 
 static func on_month(_ctx: Dictionary) -> void:
+	if suppress_auto:
+		return
 	_drain_legacy_pending()
 	var people: Array = GameState.characters.values()
 	people.sort_custom(func(a, b): return str(a.id) < str(b.id))
 	for c in people:
 		if not c.alive:
+			continue
+		# One unread result at a time — ack before the next card fires.
+		if _has_pending(c.id) or not inbox_for(c.id).is_empty():
 			continue
 		# v9.2：1–15 岁家中子嗣走岁课，退出每月重卡队列
 		if CKSuiKe.is_house_child_for_life_queue(c):
