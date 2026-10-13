@@ -42,6 +42,11 @@ const JOB_ANIM := {
 	"bulwark": "shield",
 	"warrior": "heavy",
 	"veteran": "heavy",
+	"bridge_tax": "spear",
+	"lu_wai": "staff",
+	"frost_wait": "staff",
+	"salt_yin": "sword",
+	"forge_brow": "heavy",
 }
 
 static func anim_archetype(job_id: String) -> String:

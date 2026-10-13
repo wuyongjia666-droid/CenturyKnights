@@ -103,7 +103,9 @@ func derived_crit() -> int:
 	return c + temp_crit_bonus + World.gear_bonus(self, "crit")
 
 func derived_move() -> int:
-	return int(_job().get("move", 4)) + World.gear_bonus(self, "move")
+	## 特殊职业（桥税骑）的本场临时移动增减记在对象 meta 上，不进存档。
+	var tmp := int(get_meta("battle_move_mod", 0)) if has_meta("battle_move_mod") else 0
+	return maxi(1, int(_job().get("move", 4)) + World.gear_bonus(self, "move") + tmp)
 
 ## Blood combat payoff. Amounts only — battle_rules.gd owns the formulas.
 func tactical_mods() -> Dictionary:
