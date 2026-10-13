@@ -404,11 +404,23 @@ func _speaker_portrait(speaker: String, emotion: String = "") -> void:
 	if speaker == "leader":
 		who = GameState.get_leader()
 	var narr := _is_narrator(speaker)
-	_portrait.set_meta("story_narrator", narr)
-	test_capture["portrait_who"] = who.id if who != null else ""
+	# P0 playtest: the prologue narrates in second person ("你…"), so the captain is on stage.
+	# Hiding every plate on narration (#248 C-03) left the first 20 lines of ch0 with no
+	# character at all. Narration now shows the captain; only a missing captain hides it.
+	var narr_lead: CKCharacter = GameState.get_leader() if narr else null
+	_portrait.set_meta("story_narrator", narr and narr_lead == null)
 	test_capture["portrait_narrator"] = narr
+	if narr and narr_lead != null:
+		test_capture["portrait_who"] = narr_lead.id
+		var lead_plate := UnitArt.dialogue_portrait("leader", "", narr_lead, PORTRAIT_PX)
+		if lead_plate != null:
+			test_capture["portrait_kind"] = "narrator_leader"
+			_portrait.texture = lead_plate
+			return
+	test_capture["portrait_who"] = who.id if who != null else ""
 	if narr:
 		test_capture["portrait_kind"] = "narrator"
+		_portrait.set_meta("story_narrator", true)
 		_portrait.texture = null
 		return
 	var plate := UnitArt.dialogue_portrait(speaker, emotion, who, PORTRAIT_PX)
@@ -621,14 +633,31 @@ func _auto_marry() -> void:
 	if leader == null:
 		return
 	GameState.refresh_marriage_candidates()
-	for c in GameState.marriage_candidates:
-		if Lineage.can_propose(leader, c).get("ok", false):
-			GameState.silver = maxi(GameState.silver, 40)
-			var r: Dictionary = Lineage.marry(leader, c, 40)
+	# P0 playtest: the skip did nothing because every baron/knight candidate failed the
+	# reputation gate this early (rep "none"), so no one was ever picked. The tutorial skip
+	# is the player's "just give me a spouse": lift rep to the cheapest candidate's bar.
+	var want := CharacterFactory.spouse_gender_for(leader)
+	var pool: Array = GameState.marriage_candidates.filter(func(x): return str(x.gender) == want)
+	pool.sort_custom(func(x, y): return _rep_need_i(x) < _rep_need_i(y))
+	for c in pool:
+		var need_tier := str(Lineage.REP_ORDER[maxi(_rep_need_i(c), 0)])
+		for t in GameState.REP_TIERS:
+			if str(t["id"]) == need_tier:
+				GameState.reputation["ashland"] = maxi(int(GameState.reputation.get("ashland", 0)), int(t["min"]))
+		if not bool(Lineage.can_propose(leader, c).get("ok", false)):
+			continue
+		GameState.silver = maxi(GameState.silver, 40)
+		var r: Dictionary = Lineage.marry(leader, c, 40)
+		if bool(r.get("ok", false)):
 			_hint.text = str(r.get("msg", ""))
-			test_capture["auto_marry"] = bool(r.get("ok", false))
+			test_capture["auto_marry"] = true
+			test_capture["auto_marry_spouse_gender"] = str(c.gender)
 			return
 	_hint.text = Locale.t("pro_auto_marry_none")
+	test_capture["auto_marry"] = false
+
+func _rep_need_i(c: CKCharacter) -> int:
+	return Lineage.REP_ORDER.find(str(Lineage.REP_RANK_NEED.get(c.rank, "known")))
 
 func _ensure_reputation(row: Dictionary) -> void:
 	var realm := str(row.get("realm", ""))
