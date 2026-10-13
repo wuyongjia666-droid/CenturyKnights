@@ -1,7 +1,7 @@
 {
-  "boot_ms": 1050,
+  "boot_ms": 1100,
   "memory_static_bytes": 120000000,
-  "note": "Actions runners measured boot_ms 1093-1204 on audit-fix PRs (runner noise). Ceiling 1050*1.2=1260.",
+  "note": "Actions runners measured boot_ms up to 1295 (runner noise). Ceiling 1100*1.2=1320.",
   "scenes_ms": {
     "atlas_view": 700,
     "battle": 1200,
