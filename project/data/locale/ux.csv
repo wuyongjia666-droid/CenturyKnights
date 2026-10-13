@@ -453,3 +453,10 @@ ux_lin_empty_title,家里眼下只有你一个人,Your house is just you for now
 ux_lin_empty_body,先去联姻成家，生下孩子，族谱才会一代代长出来；孩子长大能继承家业、带上血脉特征。,Marry and raise children to grow the tree; heirs carry the bloodline and inherit the house.
 ux_lin_empty_go,去联姻,Go to marriage
 ux_bond_pick,点左边一段羁绊，两人的对话会在这里一句句显示。,Pick a bond on the left; the conversation plays here line by line.
+mw_pick_steward,选择庄头 — %s,Pick a steward — %s
+mw_pick_tip,花名册存活成员；一人只能管一处属地。,Living roster members; one holding each.
+mw_assign,委任,Appoint
+mw_patrol_title,巡防沙盘,Patrol sand-table
+mw_patrol_all,四野全线,all four fields
+mw_patrol_done,旗丁已走完路线，本属地劫掠风险大降。,The patrol walked the route; raid risk is much lower.
+mw_patrol_close,收起沙盘,Close
