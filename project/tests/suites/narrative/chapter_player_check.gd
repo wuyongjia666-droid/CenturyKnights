@@ -129,7 +129,7 @@ func _run() -> String:
 		"你是石垒坡的佃户，没有姓。刚卸下一担石头，肩膀勒出两道红印。",
 		"你先看向北边的隘口。那里立着一股烟，细细的，直的。不是做饭的烟。",
 		"又在看烟。想出去挣个姓的话，你说了三遍了。第三遍你没看我，看的是桥。",
-		"弟弟小粟今天赶着驴车往北送粮，要过隘口那条窄路。",
+		"坡下，娘在院里晾麸皮。小粟赶着驴车往北走，后脑勺那撮头发怎么压都压不平。",
 	]
 	var ch0_open := await _advance_lines(ch0, ch0_lines)
 	if ch0_open != "":
@@ -257,6 +257,40 @@ func _ch0_novel_arc() -> String:
 	if wantan_at < 0 or dengying_at < 0 or wantan_at > dengying_at:
 		return "ch0 0.0 wantan %d dengying %d" % [wantan_at, dengying_at]
 	print("OK ch0 novel arc")
+	var setup_err := _ch0_callback_setups()
+	if setup_err != "":
+		return setup_err
+	return ""
+
+## Opening review §5.1: payoff lines must have earlier setup in the same chapter.
+func _ch0_callback_setups() -> String:
+	var raw := FileAccess.get_file_as_string(CH0)
+	var pairs := [
+		["白垣", "白垣"],
+		["竹耙", "竹耙"],
+		["晾麸皮", "晾麸皮"],
+		["打了三天", "打了三天"],
+		["虎口裂了", "虎口"],
+		["石垒·丰年", "丰年"],
+	]
+	for pair in pairs:
+		var setup: String = pair[0]
+		if raw.find(setup) < 0:
+			return "callback setup missing: %s" % setup
+		# payoff+setup → at least two hits for the first four
+	if raw.count("白垣") < 2:
+		return "白垣 needs setup+payoff"
+	if raw.count("竹耙") < 2:
+		return "竹耙 needs setup+payoff"
+	if raw.count("晾麸皮") < 2:
+		return "晾麸皮 needs setup+payoff"
+	if raw.count("打了三天") < 2:
+		return "打了三天 needs setup+payoff"
+	if raw.find("老管事") < 0:
+		return "G-10 old steward rename missing"
+	if raw.find("槐里家账房") < 0 and raw.find("账房") < 0:
+		return "G-10 accountant wording missing"
+	print("OK ch0 callback setups")
 	return ""
 
 func _conditions() -> String:
