@@ -1013,8 +1013,8 @@ func _tab_board() -> void:
 		# empty state: point a new player at the capital, whose board always has work
 		var cap := str(World.nations.get(World.nation_of(city), {}).get("capital", ""))
 		if cap != "" and cap != city:
-			v.add_child(_para("新到此地？去%s看看——都城的委托榜总有活计。回舆图选中它即可启程。" % str(World.node(cap).get("name", cap)), UIKit.ACCENT, 12, 380))
-			var gb := UIKit.ghost_button("回舆图 · 前往%s" % str(World.node(cap).get("name", cap)), 300, 40)
+			v.add_child(_para(Locale.t("mob_ui_059") % str(World.node(cap).get("name", cap)), UIKit.ACCENT, 12, 380))
+			var gb := UIKit.ghost_button(Locale.t("mob_ui_060") % str(World.node(cap).get("name", cap)), 300, 40)
 			gb.name = "BoardGoCapital"
 			gb.pressed.connect(func(): GameState.set_meta("atlas_view", World.nation_of(cap)); _back())
 			v.add_child(gb)
