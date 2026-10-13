@@ -17,55 +17,91 @@
       "surname": "石垒",
       "given": "晚担",
       "cast_key": "wantan",
-      "role": "石垒坡同乡。因人而留的第一人。不是十二同伴。"
+      "role": "石垒坡同乡。因人而留的第一人。不是十二同伴。",
+      "age": 24,
+      "sex": "m",
+      "look": "broad-shouldered young quarry carrier from the stone slope, sun-darkened skin, short black hair, rope-padded shoulder strap, plain work jacket",
+      "portrait": "res://assets/art/portraits/speakers/wantan.png"
     },
     {
       "id": "voice_old_standard",
       "name": "老旗手",
       "cast_key": "old_standard",
-      "role": "第零章已有的声音"
+      "role": "第零章已有的声音",
+      "age": 64,
+      "sex": "m",
+      "look": "weathered retired standard-bearer, short cropped grey beard, a broken flagpole iron ferrule on a cord at his neck, patched slate coat",
+      "portrait": "res://assets/art/portraits/speakers/old_standard.png"
     },
     {
       "id": "voice_steward",
       "name": "管事",
       "cast_key": "steward",
-      "role": "第零章已有的声音"
+      "role": "第零章已有的声音",
+      "age": 42,
+      "sex": "m",
+      "look": "castle steward with a ledger tucked under one arm, neat short hair, rolled sleeves, practical waistcoat",
+      "portrait": "res://assets/art/portraits/speakers/steward.png"
     },
     {
       "id": "voice_midwife",
       "name": "稳婆",
       "cast_key": "midwife",
-      "role": "第零章已有的声音"
+      "role": "第零章已有的声音",
+      "age": 62,
+      "sex": "f",
+      "look": "village midwife, grey hair under a head scarf, kind firm face, sleeves tied up, clean linen over the shoulder",
+      "portrait": "res://assets/art/portraits/speakers/midwife.png"
     },
     {
       "id": "voice_barkeep",
       "name": "掌柜",
       "cast_key": "barkeep",
-      "role": "第零章已有的声音"
+      "role": "第零章已有的声音",
+      "age": 50,
+      "sex": "m",
+      "look": "tavern keeper, stocky, short greying beard, apron over a dark shirt, cloth over one shoulder",
+      "portrait": "res://assets/art/portraits/speakers/barkeep.png"
     },
     {
       "id": "voice_spring_envoy",
       "name": "春令使者",
       "cast_key": "spring_envoy",
-      "role": "第零章已有的声音"
+      "role": "第零章已有的声音",
+      "age": 34,
+      "sex": "f",
+      "look": "envoy of the spring council, hair in a tidy braid, formal slate travelling cloak with a sealed letter case, poised expression",
+      "portrait": "res://assets/art/portraits/speakers/spring_envoy.png"
     },
     {
       "id": "voice_scout",
       "name": "斥候",
       "cast_key": "scout",
-      "role": "第零章已有的声音"
+      "role": "第零章已有的声音",
+      "age": 26,
+      "sex": "f",
+      "look": "company scout, short practical hair, hood down, light leather and cloth gear, keen alert eyes",
+      "portrait": "res://assets/art/portraits/speakers/scout.png"
     },
     {
       "id": "voice_kin",
       "name": "盟友亲属",
       "cast_key": "ally_kin",
-      "role": "第零章已有的声音"
+      "role": "第零章已有的声音",
+      "age": 52,
+      "sex": "f",
+      "look": "senior relative of an allied house giving a bride away, composed and formal, hair pinned up with a plain pin, layered formal robe",
+      "portrait": "res://assets/art/portraits/speakers/ally_kin.png"
     },
     {
       "id": "dukou_batou",
       "name": "渡口·把头",
       "cast_key": "batou",
-      "role": "苇原渡粮队的把头。不是同伴。"
+      "role": "苇原渡粮队的把头。不是同伴。",
+      "age": 45,
+      "sex": "m",
+      "look": "ferry grain-convoy foreman, thick forearms, headband, sleeveless padded vest, weathered face",
+      "portrait": "res://assets/art/portraits/speakers/batou.png"
     },
     {
       "id": "dukou_ahe",
@@ -91,7 +127,11 @@
       "surname": "槐里",
       "given": "景伯",
       "cast_key": "jingbo",
-      "role": "第零章的恩主。灰旗堡地契与北隘护路契在他家。年轻时在灰旗站过七天，功被记在旗帅一人名下。要把隘口之功写给孙女。不是反派。"
+      "role": "第零章的恩主。灰旗堡地契与北隘护路契在他家。年轻时在灰旗站过七天，功被记在旗帅一人名下。要把隘口之功写给孙女。不是反派。",
+      "age": 68,
+      "sex": "m",
+      "look": "elderly landed patron of the Huaili house, white hair combed back, trimmed white beard, dignified high-collared long coat, holds a folded deed",
+      "portrait": "res://assets/art/portraits/speakers/jingbo.png"
     },
     {
       "id": "huaili_qinghe",
@@ -99,7 +139,11 @@
       "surname": "槐里",
       "given": "青禾",
       "cast_key": "qinghe",
-      "role": "景伯的孙女。颈有河图不亮。不要借来的灯。第零章的配偶候选之一，联姻廷里仍由玩家选人。"
+      "role": "景伯的孙女。颈有河图不亮。不要借来的灯。第零章的配偶候选之一，联姻廷里仍由玩家选人。",
+      "age": 20,
+      "sex": "f",
+      "look": "granddaughter of the old patron, a composed young woman with long dark hair half tied up, high collar hiding the neck, steady direct gaze, slim riding jacket",
+      "portrait": "res://assets/art/portraits/speakers/qinghe.png"
     },
     {
       "id": "yadu_hengzhou",
@@ -107,7 +151,11 @@
       "surname": "鸦渡",
       "given": "衡舟",
       "cast_key": "hengzhou",
-      "role": "槐里家骑哨统领。平民出身，十年换一个錾在铜牌上的村名。收过路银，往东送。团长的镜子。"
+      "role": "槐里家骑哨统领。平民出身，十年换一个錾在铜牌上的村名。收过路银，往东送。团长的镜子。",
+      "age": 36,
+      "sex": "m",
+      "look": "commoner-born captain of mounted scouts, lean face, short dark hair, small engraved metal tag on his chest strap, light scout armour",
+      "portrait": "res://assets/art/portraits/speakers/hengzhou.png"
     },
     {
       "id": "shilei_qiaoniang",
@@ -115,13 +163,31 @@
       "surname": "石垒",
       "given": "荞娘",
       "cast_key": "qiaoniang",
-      "role": "团长的娘。押出采石坡租契的人。"
+      "role": "团长的娘。押出采石坡租契的人。",
+      "age": 48,
+      "sex": "f",
+      "look": "the leader's mother, a quarry-village widow, hair tied back in a low bun with grey strands, calm tired eyes, plain wrapped shawl over a work dress",
+      "portrait": "res://assets/art/portraits/speakers/qiaoniang.png"
     },
     {
       "id": "voice_survivor",
       "name": "活口",
       "cast_key": "survivor",
-      "role": "隘口活口。左耳缺一块。见过收银的人。"
+      "role": "隘口活口。左耳缺一块。见过收银的人。",
+      "age": 32,
+      "sex": "m",
+      "look": "captured pass bandit survivor, part of his left ear missing, bruised cheek, rope-bound wrists, ragged dark clothes",
+      "portrait": "res://assets/art/portraits/speakers/survivor.png"
+    },
+    {
+      "id": "voice_newcomer",
+      "name": "新来的人",
+      "cast_key": "newcomer",
+      "role": "第零章已有的声音：上个老板欠饷的新雇佣兵",
+      "age": 30,
+      "sex": "m",
+      "look": "newly hired mercenary, unshaven, holds a worn pay booklet with circled pages, dented gorget, wary eyes",
+      "portrait": "res://assets/art/portraits/speakers/newcomer.png"
     }
   ]
 }

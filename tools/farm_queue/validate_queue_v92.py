@@ -30,6 +30,7 @@ SIZES = {
     "story_bg": (1280, 720),
     "expression": (768, 1024),
     "status_overlay": (768, 1024),
+    "speaker": (768, 1024),
     "castle": (1280, 720),
     "estate": (1280, 720),
     "genome": (768, 1024),
@@ -283,6 +284,14 @@ def check() -> list[str]:
     if len(expr) != 60:
         errors.append(f"expressions {len(expr)}")
     errors.extend(_expression_identity(expr, forbid))
+    speakers = by_kind.get("speaker", [])
+    bands = {"infant": (0, 2), "child": (3, 11), "teen": (12, 15), "adult": (16, 200)}
+    for row in speakers:
+        lo, hi = bands.get(str(row.get("age_band")), (1, 0))
+        if not lo <= int(row.get("age", -1)) <= hi:
+            errors.append(f"{row.get('id')}: age band {row.get('age_band')} vs age {row.get('age')}")
+        if "/portraits/speakers/" not in str(row.get("out_path", "")):
+            errors.append(f"{row.get('id')}: speaker path")
     if len(by_kind.get("castle", [])) != 28:
         errors.append(f"castle {len(by_kind.get('castle', []))}")
     if len(by_kind.get("estate", [])) != 55:
