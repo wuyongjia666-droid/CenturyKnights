@@ -135,64 +135,83 @@ func _current_spec() -> Dictionary:
 		"shield_shape": str(CKHeraldry.nation_style(nation).get("shield", "heater")),
 	})
 
+## Founding page: the preview pane (shield, banner, portrait, name fields, raise/back) never scrolls.
+## Only the heraldry options scroll, beside the pane when wide, below it when tall.
+var _split: BoxContainer
+var _pane: VBoxContainer
+var _opts: VBoxContainer
+
 func _build() -> void:
 	UIKit.make_screen_bg(self)
-	_scroll = ScrollContainer.new()
-	_scroll.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
-	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	add_child(_scroll)
-	var center := MarginContainer.new()
-	center.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	center.add_theme_constant_override("margin_left", 24)
-	center.add_theme_constant_override("margin_right", 24)
-	center.add_theme_constant_override("margin_top", 24)
-	center.add_theme_constant_override("margin_bottom", 24)
-	_scroll.add_child(center)
+	var margin := MarginContainer.new()
+	margin.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
+	for side in ["left", "right", "top", "bottom"]:
+		margin.add_theme_constant_override("margin_" + side, 20)
+	add_child(margin)
+	_split = BoxContainer.new()
+	_split.add_theme_constant_override("separation", 24)
+	margin.add_child(_split)
 
-	var box := VBoxContainer.new()
-	box.custom_minimum_size = Vector2(640, 0)
-	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	box.add_theme_constant_override("separation", 10)
-	box.alignment = BoxContainer.ALIGNMENT_CENTER
-	center.add_child(box)
-
-	box.add_child(UIKit.make_label(Locale.t("ux_name_title"), true))
-	box.add_child(UIKit.make_dim_label(Locale.t("ux_name_blurb")))
+	_pane = VBoxContainer.new()
+	_pane.name = "PreviewPane"
+	_pane.add_theme_constant_override("separation", 8)
+	_split.add_child(_pane)
+	_pane.add_child(UIKit.make_label(Locale.t("ux_name_title"), true))
+	var blurb := UIKit.make_dim_label(Locale.t("ux_name_blurb"))
+	blurb.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_pane.add_child(blurb)
 
 	var art_row := HBoxContainer.new()
 	_art_row = art_row
+	art_row.name = "ArtRow"
 	art_row.alignment = BoxContainer.ALIGNMENT_CENTER
-	art_row.add_theme_constant_override("separation", 20)
-	box.add_child(art_row)
-	_shield = TextureRect.new()
-	_shield.custom_minimum_size = Vector2(120, 140)
-	_shield.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_shield.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	art_row.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	art_row.add_theme_constant_override("separation", 16)
+	_pane.add_child(art_row)
+	_shield = _art_rect(Vector2(110, 130))
 	art_row.add_child(_shield)
-	_banner = TextureRect.new()
-	_banner.custom_minimum_size = Vector2(140, 200)
-	_banner.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_banner.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_banner = _art_rect(Vector2(130, 186))
 	art_row.add_child(_banner)
-	_portrait = TextureRect.new()
-	_portrait.custom_minimum_size = Vector2(140, 140)
-	_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_portrait.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_portrait = _art_rect(Vector2(130, 130))
 	art_row.add_child(_portrait)
 
-	box.add_child(UIKit.make_label(Locale.t("ux_name_surname")))
-	_surname = LineEdit.new()
-	_surname.text = "灰旗"
-	_surname.custom_minimum_size = Vector2(280, 48)
-	_surname.text_changed.connect(func(_t): _refresh_preview_art())
-	box.add_child(_surname)
+	_warn = UIKit.make_dim_label("")
+	_warn.add_theme_color_override("font_color", UIKit.DANGER)
+	_warn.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_pane.add_child(_warn)
 
-	box.add_child(UIKit.make_label(Locale.t("ux_name_given")))
-	_given = LineEdit.new()
-	_given.text = "烬行"
-	_given.custom_minimum_size = Vector2(280, 48)
-	_given.text_changed.connect(func(_t): _refresh_preview_art())
-	box.add_child(_given)
+	var names := HBoxContainer.new()
+	names.add_theme_constant_override("separation", 12)
+	_pane.add_child(names)
+	_surname = _name_field(names, Locale.t("ux_name_surname"), "灰旗")
+	_given = _name_field(names, Locale.t("ux_name_given"), "烬行")
+
+	var actions := HBoxContainer.new()
+	actions.add_theme_constant_override("separation", 12)
+	_pane.add_child(actions)
+	var start = UIKit.make_accent_button(Locale.t("ux_name_raise"), 200)
+	start.custom_minimum_size = Vector2(200, 52)
+	start.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	start.pressed.connect(_on_start)
+	actions.add_child(start)
+	_start_btn = start
+	var back = UIKit.make_button(Locale.t("btn_back"), 140)
+	back.custom_minimum_size = Vector2(140, 52)
+	back.pressed.connect(func(): CKNav.replace(CKNav.TITLE))
+	actions.add_child(back)
+	_back_btn = back
+
+	_scroll = ScrollContainer.new()
+	_scroll.name = "OptionsScroll"
+	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_split.add_child(_scroll)
+	var box := VBoxContainer.new()
+	_opts = box
+	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	box.add_theme_constant_override("separation", 8)
+	_scroll.add_child(box)
 
 	box.add_child(UIKit.make_label(Locale.t("ux_name_field_color")))
 	var row := HBoxContainer.new()
@@ -223,22 +242,43 @@ func _build() -> void:
 	rand_btn.custom_minimum_size = Vector2(240, 48)
 	rand_btn.pressed.connect(_on_randomize_nation)
 	box.add_child(rand_btn)
+	resized.connect(_apply_layout)
+	_apply_layout.call_deferred()
 
-	_warn = UIKit.make_dim_label("")
-	_warn.add_theme_color_override("font_color", UIKit.DANGER)
-	box.add_child(_warn)
+func _art_rect(min_size: Vector2) -> TextureRect:
+	var t := TextureRect.new()
+	t.custom_minimum_size = min_size
+	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	t.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	return t
 
-	var start = UIKit.make_accent_button(Locale.t("ux_name_raise"), 240)
-	start.custom_minimum_size = Vector2(240, 48)
-	start.pressed.connect(_on_start)
-	box.add_child(start)
-	_start_btn = start
+func _name_field(parent: Container, title: String, value: String) -> LineEdit:
+	var col := VBoxContainer.new()
+	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	parent.add_child(col)
+	col.add_child(UIKit.make_label(title))
+	var e := LineEdit.new()
+	e.text = value
+	e.custom_minimum_size = Vector2(140, 48)
+	e.text_changed.connect(func(_t): _refresh_preview_art())
+	col.add_child(e)
+	return e
 
-	var back = UIKit.make_button(Locale.t("btn_back"), 200)
-	back.custom_minimum_size = Vector2(200, 48)
-	back.pressed.connect(func(): CKNav.replace(CKNav.TITLE))
-	box.add_child(back)
-	_back_btn = back
+## Wide (desktop, landscape phone): pane left, options right. Tall: pane on top, options below.
+func _apply_layout() -> void:
+	if _split == null:
+		return
+	var wide := size.x >= size.y * 1.05
+	_split.vertical = not wide
+	if wide:
+		_pane.custom_minimum_size = Vector2(clampf(size.x * 0.42, 460.0, 820.0), 0)
+		_pane.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	else:
+		_pane.custom_minimum_size = Vector2(0, 0)
+		_pane.size_flags_vertical = Control.SIZE_FILL
+		_art_row.custom_minimum_size = Vector2(0, clampf(size.y * 0.28, 160.0, 360.0))
 
 func _layer_row(box: VBoxContainer, title: String, cb: Callable) -> Label:
 	box.add_child(UIKit.make_label(title))
@@ -335,16 +375,16 @@ func _refresh_preview_art() -> void:
 	GameState.banner_spec = spec
 	GameState.surname = _surname.text.strip_edges() if _surname else "灰旗"
 	UnitArt.clear_cache()
-	_banner.texture = UnitArt.banner_layers(spec, 140, 200)
+	_banner.texture = UnitArt.banner_layers(spec, 280, 400)
 	if _shield:
-		_shield.texture = ImageTexture.create_from_image(BannerSpec.compose_shield(spec, 120, 140))
+		_shield.texture = ImageTexture.create_from_image(BannerSpec.compose_shield(spec, 240, 280))
 	var tmp := CKCharacter.new()
 	tmp.name = GameState.surname + (_given.text.strip_edges() if _given else "烬行")
 	tmp.is_leader = true
 	tmp.job_id = "squire"
 	tmp.gender = "m"
 	tmp.appearance = {"hair": "ash_brown", "eyes": "river_blue", "brow": "thick", "scar": "none"}
-	_portrait.texture = UnitArt.portrait(tmp, 140, CKArtPaths.TIER_MEDIUM)
+	_portrait.texture = UnitArt.portrait(tmp, 280, CKArtPaths.TIER_MEDIUM)
 	if _warn:
 		var bits: PackedStringArray = []
 		if not BannerSpec.contrast_ok(spec):
@@ -374,25 +414,7 @@ func _on_start() -> void:
 	CKNav.replace("res://scenes/story/chapter0.tscn")
 
 func apply_mobile_layout() -> void:
-	if _scroll == null:
-		return
-	_scroll.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
-	var w := maxf(size.x, 1280.0)
-	if w <= size.y * 1.2 or _art_row == null:
-		return
-	# Landscape phone: preview art + start/back pinned on the left, form scrolls on the right.
-	var left_w := clampf(w * 0.36, 420.0, 620.0)
-	if _art_row.get_parent() != self:
-		_art_row.reparent(self)
-		_start_btn.reparent(self)
-		_back_btn.reparent(self)
-	_art_row.position = Vector2(24, 40)
-	_art_row.size = Vector2(left_w - 48, 300)
-	_start_btn.position = Vector2(24, size.y - 140)
-	_start_btn.size = Vector2(left_w - 48, 56)
-	_back_btn.position = Vector2(24, size.y - 72)
-	_back_btn.size = Vector2(left_w - 48, 52)
-	_scroll.offset_left = left_w
+	_apply_layout()
 
 func _process(_d: float) -> void:
 	var f := get_viewport().gui_get_focus_owner()
