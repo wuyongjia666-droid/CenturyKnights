@@ -2793,6 +2793,7 @@ func _sync_objectives() -> void:
 	if not fresh.is_empty() and map_draw:
 		map_draw.queue_redraw()
 	ObjectiveHud.refresh(self)
+	BattleStory.scan_board(self, map_id, BattleMaps.get_map(map_id))
 	_check_end()
 
 func _arm_spawned(u: Dictionary) -> void:

@@ -63,6 +63,57 @@ static func fire(host: Node, map_id: String, trigger: String) -> int:
 		_next(layer)
 	return rows.size()
 
+## Board-state triggers (opening-chain review E-01/E-04), checked whenever objectives sync:
+##   npc_threatened  a living foe is close enough (2) that the escort NPC stops
+##   npc_near_goal   the escort NPC is within 2 steps of its exit tile (the bridge lamp)
+##   past_seize      on a seize map, a player unit has gone beyond the seize column ("别追")
+static func scan_board(host: Node, map_id: String, map_data: Dictionary) -> Array:
+	var hits: Array = []
+	if host == null or not is_instance_valid(host):
+		return hits
+	var obj = map_data.get("objective", {})
+	if typeof(obj) != TYPE_DICTIONARY:
+		return hits
+	for trig in board_triggers(host.get("units"), obj):
+		if fire(host, map_id, trig) > 0:
+			hits.append(trig)
+	return hits
+
+## Pure check, testable without a scene: which board triggers hold for these units.
+static func board_triggers(units, obj: Dictionary) -> Array:
+	var out: Array = []
+	if typeof(units) != TYPE_ARRAY:
+		return out
+	var kind := str(obj.get("type", ""))
+	if kind == "escort":
+		var tag := str(obj.get("npc", ""))
+		var goal := _cell(obj.get("exit_tile", [-99, -99]))
+		for u in units:
+			if str(u.get("tag", "")) != tag or u.char.hp <= 0:
+				continue
+			if _dist(u.pos, goal) <= 2:
+				out.append("npc_near_goal")
+			for o in units:
+				if str(o.team) == "enemy" and o.char.hp > 0 and _dist(o.pos, u.pos) <= 2:
+					out.append("npc_threatened")
+					break
+			break
+	elif kind == "seize":
+		var tile := _cell(obj.get("tile", [99, 99]))
+		for u in units:
+			if str(u.team) == "player" and u.char.hp > 0 and u.pos.x > tile.x:
+				out.append("past_seize")
+				break
+	return out
+
+static func _cell(v) -> Vector2i:
+	if typeof(v) == TYPE_ARRAY and (v as Array).size() >= 2:
+		return Vector2i(int(v[0]), int(v[1]))
+	return Vector2i(-99, -99)
+
+static func _dist(a: Vector2i, b: Vector2i) -> int:
+	return absi(a.x - b.x) + absi(a.y - b.y)
+
 static func _layer(host: Node) -> CanvasLayer:
 	var existing := host.get_node_or_null(LAYER_NAME)
 	if existing is CanvasLayer:
