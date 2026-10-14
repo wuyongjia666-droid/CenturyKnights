@@ -147,6 +147,7 @@ func _escort_banter(kind: String) -> void:
 	_theme_banter(kind)
 
 var _unit_layer: CKUnitLayer3D = null  # route C live 3D units (CKBoardUnits); null = 2D tokens
+var _fx_delay := 0.0  # P2: hit fx wait for the 3D impact frame
 func _ready() -> void:
 	CKAutosave.before_battle()
 	rng.randomize()
@@ -1249,6 +1250,7 @@ func _draw_overlay() -> void:
 			overlay.draw_texture_rect(_tex(sp), Rect2(cpos - Vector2(rs, rs) * 0.5, Vector2(rs, rs)), false, scol)
 	# slash + hit_spark 分层（game-feel）
 	for s in _slash_fx:
+		if s.age < 0.0: continue
 		var fi = mini(5, int(s.age / 0.08))
 		var kind = str(s.get("kind", "slash"))
 		var path = "res://assets/art/fx/%s_dense_%d.png" % [kind, fi]  # v8.4 dense 128px frames first, then legacy 64px
@@ -1279,6 +1281,7 @@ func _draw_overlay() -> void:
 			overlay.draw_texture_rect(_tex(lp), Rect2(lb.pos - Vector2(40, 40) * _k(), Vector2(80, 80) * _k()), false, Color(1, 1, 1, a3))
 	# 伤害飘字 + dmg_pop 底板
 	for fx in _dmg_fx:
+		if fx.age < 0.0: continue
 		var a = clampf(1.0 - fx.age / 1.1, 0.0, 1.0)
 		var yoff = -fx.age * 36.0
 		var col: Color = fx.col
@@ -1289,7 +1292,7 @@ func _draw_overlay() -> void:
 			pop = "res://assets/art/fx/dmg_pop_%d.png" % fi2
 		if ResourceLoader.exists(pop):
 			overlay.draw_texture_rect(_tex(pop), Rect2(fx.pos + Vector2(-24, yoff - 32) * _k(), Vector2(48, 48) * _k()), false, Color(1, 1, 1, a * 0.9))
-		overlay.draw_string(UIKit.font("bold"), fx.pos + Vector2(-12, yoff) * _k(), fx.text, HORIZONTAL_ALIGNMENT_LEFT, -1, int(18 * sqrt(_k())), col)
+		CKBoardUnits.draw_dmg_text(self, fx, yoff, col, a)
 	# 回合横幅
 	if _turn_flash > 0.0:
 		var a2 = clampf(_turn_flash / 0.9, 0.0, 1.0)
@@ -1726,7 +1729,7 @@ func _compute_move_cells(ui: int) -> Dictionary:
 
 func _spawn_dmg(cell: Vector2i, text: String, col: Color) -> void:
 	var center = ORIGIN + Vector2(cell) * CELL + Vector2(CELL / 2, CELL / 2)
-	_dmg_fx.append({"pos": center, "text": text, "age": 0.0, "col": col})
+	_dmg_fx.append({"pos": center + CKBoardUnits.fx_lift(self, 0.85), "text": text, "age": -_fx_delay, "col": col})
 
 func _spawn_move_dust(cell: Vector2i) -> void:
 	var center = ORIGIN + Vector2(cell) * CELL + Vector2(CELL / 2, CELL / 2)
@@ -1739,7 +1742,7 @@ func _spawn_lock_burst(cell: Vector2i) -> void:
 
 func _spawn_slash(cell: Vector2i, kind: String = "slash") -> void:
 	var center = ORIGIN + Vector2(cell) * CELL + Vector2(CELL / 2, CELL / 2)
-	_slash_fx.append({"pos": center, "age": 0.0, "kind": kind})
+	_slash_fx.append({"pos": center + CKBoardUnits.fx_lift(self, 0.35), "age": -_fx_delay, "kind": kind})
 	_shake = 3.5
 
 func _do_attack(ai: int, di: int) -> void:

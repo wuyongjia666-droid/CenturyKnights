@@ -57,13 +57,17 @@ func _sequence(b, out: String) -> void:
 		if pl == null and str(u.team) == "player": pl = u
 		if en == null and str(u.team) == "enemy": en = u
 	var n := 0
-	pl.pos = en.pos + Vector2i(-1, 0)
+	pl.pos = en.pos + Vector2i(-1, 1)
 	b.selected = b.units.find(pl)
 	for f in 14:
 		await _snap(b, dir, n); n += 1
 	if b._unit_layer:
+		var dl: float = b._unit_layer.impact_delay(pl)
+		b._fx_delay = dl
 		b._unit_layer.act(pl, "attack", CKBoardUnits.cell_px(b, en.pos), CKBoardUnits.cell_px(b, pl.pos))
-		b._unit_layer.act(en, "hit", CKBoardUnits.cell_px(b, pl.pos), CKBoardUnits.cell_px(b, en.pos))
+		b._unit_layer.act(en, "hit", CKBoardUnits.cell_px(b, pl.pos), CKBoardUnits.cell_px(b, en.pos), dl)
+		b._spawn_slash(en.pos, "slash")
+		b._spawn_dmg(en.pos, "-12", Color(1.0, 0.45, 0.35))
 	for f in 14:
 		await _snap(b, dir, n); n += 1
 	en.char.hp = 0
