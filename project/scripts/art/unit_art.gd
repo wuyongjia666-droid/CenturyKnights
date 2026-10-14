@@ -1026,7 +1026,24 @@ static func banner_wide(w: int = 320, h: int = 72) -> Texture2D:
 	_cache[ck] = out
 	return out
 
-static func draw_token_on(ci: CanvasItem, center: Vector2, c: CKCharacter, team: String, radius: float = 20.0, done: bool = false) -> void:
+static func draw_token_on(ci: CanvasItem, center: Vector2, c: CKCharacter, team: String, radius: float = 20.0, done: bool = false, tmpl: String = "") -> void:
+	# v2 board pieces: the cutscene 3D model, pre-rendered small (CKBoardFigures).
+	if c != null and board_pawns_enabled() and CKBoardFigures.active != null:
+		var fig: Texture2D = CKBoardFigures.active.figure(c, team, tmpl)
+		if fig != null:
+			var side := Color(0.36, 0.90, 0.78) if team != "enemy" else Color(0.95, 0.36, 0.32)
+			var feet := center + Vector2(0, radius * 0.95)
+			var base := PackedVector2Array()
+			for i in 29:
+				var a := TAU * i / 28.0
+				base.append(feet + Vector2(cos(a) * radius * 0.95, sin(a) * radius * 0.34))
+			ci.draw_colored_polygon(base, Color(side, 0.28 if not done else 0.12))
+			ci.draw_polyline(base, Color(side, 0.95 if not done else 0.45), maxf(1.5, radius * 0.09), true)
+			var h := radius * 3.6
+			var w := h * float(fig.get_width()) / float(fig.get_height())
+			var mod := Color(0.62, 0.62, 0.66) if done else Color.WHITE
+			ci.draw_texture_rect(fig, Rect2(Vector2(center.x - w * 0.5, feet.y - h * 0.97), Vector2(w, h)), false, mod)
+			return
 	var tex = token(c, team, int(radius * 2.4), done)
 	var sz = Vector2(radius * 2.2, radius * 2.2)
 	ci.draw_texture_rect(tex, Rect2(center - sz * 0.5, sz), false)

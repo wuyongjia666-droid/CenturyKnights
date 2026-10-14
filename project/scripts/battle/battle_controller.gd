@@ -148,6 +148,9 @@ func _escort_banter(kind: String) -> void:
 
 func _ready() -> void:
 	CKAutosave.before_battle()
+	var _figs := CKBoardFigures.new()
+	_figs.name = "BoardFigures"
+	add_child(_figs)
 	rng.randomize()
 	Music.play_battle()
 	# v8 biome battle plate (fallback legacy backdrop)
@@ -1076,7 +1079,7 @@ func _draw_map() -> void:
 				var ang := TAU * a / 20.0
 				pts.append(center + Vector2(cos(ang) * sr, sin(ang) * sr * 0.42 + tr * 0.78))
 			map_draw.draw_colored_polygon(pts, Color(0, 0, 0, 0.20 - 0.05 * si))
-		UnitArt.draw_token_on(map_draw, center, u.char, u.team, tr, u.done)
+		UnitArt.draw_token_on(map_draw, center, u.char, u.team, tr, u.done, str(u.get("template", "")))
 		if int(u.char.temp_combat_lock) > 0:
 			UnitArt.draw_lock_ring(map_draw, center, 22.0 * k)
 		var hp_ratio = float(u.char.hp) / float(maxi(1, u.char.max_hp))  # HP bar (slim token bar)
@@ -1904,6 +1907,10 @@ func _pulse_heal(team: String) -> void:
 			continue
 		u.char.hp = mini(u.char.max_hp, u.char.hp + amt)
 
+func _board_figures_ready() -> void:
+	if map_draw:
+		map_draw.queue_redraw()
+
 func _sync_faction_marks() -> void:
 	var layer := get_node_or_null("FactionMarks") as Control
 	if layer == null:
@@ -1924,9 +1931,12 @@ func _sync_faction_marks() -> void:
 		mark.team = "enemy" if str(u.team) == "enemy" else "player"
 		mark.queue_redraw()
 		var center := ORIGIN + Vector2(u.pos) * CELL + Vector2(CELL * 0.5, CELL * 0.5)
-		var side := 22.0
+		# v2 pieces: small shape badge tucked into the cell corner so it never covers the figure
+		var side := 12.0
 		mark.size = Vector2(side, side)
-		mark.position = center + Vector2(-side * 0.5, 8.0)
+		mark.custom_minimum_size = Vector2(side, side)
+		mark.modulate.a = 0.85
+		mark.position = center + Vector2(CELL * 0.5 - side - 3.0, CELL * 0.5 - side - 3.0)
 
 func _apply_combat_lock(ai: int, di: int) -> void:
 	# 双方进入交战锁定（再交战刷新至 2）
@@ -2331,6 +2341,8 @@ func _show_lock_practice_banner() -> void:
 	pst.shadow_size = 0
 	panel.add_theme_stylebox_override("panel", pst)
 	panel.position = Vector2(RAIL_X, 48)  # below ObjectiveHud; leaves room for story skip
+	if not DeviceProfile.is_mobile():
+		panel.position.y = 2.0  # desktop: sit above the unit panel (y=76) instead of covering its top
 	panel.custom_minimum_size = Vector2(RAIL_W, 0)
 	panel.z_index = 18
 	var ct := find_child("ControlsTip", true, false)
