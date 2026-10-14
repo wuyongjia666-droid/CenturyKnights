@@ -86,6 +86,8 @@ func sync(entries: Array, delta: float) -> void:
 			if n == null:
 				continue
 			_world.add_child(n)
+			CKUnitSilhouette.apply(n, u.char, str(u.team))
+			n.set_meta("ck_base_scale", n.scale)
 			var ap := UnitModel.find_anim(n)
 			var f0 := 1.0 if str(u.team) != "enemy" else -1.0
 			st = {"node": n, "anim": ap, "face": f0, "yaw": 62.0 * f0, "dead_t": -1.0, "cur": "", "lock_t": 0.0, "pending": []}
@@ -96,7 +98,7 @@ func sync(entries: Array, delta: float) -> void:
 		var target := _to_world(e.px)
 		var cell_px: float = e.cell_px
 		var s := FIG_CELLS * cell_px / PX / (MODEL_H * cos(deg_to_rad(PITCH)))
-		n2.scale = Vector3.ONE * s
+		n2.scale = (n2.get_meta("ck_base_scale", Vector3.ONE) as Vector3) * s
 		if u.char.hp <= 0:
 			if float(st.dead_t) < 0.0:
 				st.dead_t = 0.0
