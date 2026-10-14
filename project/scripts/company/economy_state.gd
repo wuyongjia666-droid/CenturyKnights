@@ -861,6 +861,12 @@ static func on_battle_quest_victory(host) -> void:
 	var qid = str(host.get_meta("active_quest_id", ""))
 	if qid == "":
 		return
+	# The board card promises silver/rep; the battle purse is loot on top.
+	for item in host.quests:
+		if str(item.get("id", "")) == qid:
+			host.silver += int(item.get("silver", 0))
+			host.add_rep("ashland", int(item.get("rep", 0)))
+			break
 	var first = CKEconomyState.apply_quest_first_clear(host, qid)
 	if first:
 		host.log_event(first)

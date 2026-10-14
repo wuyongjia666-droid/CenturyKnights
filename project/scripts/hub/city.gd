@@ -1174,11 +1174,22 @@ func _tab_board() -> void:
 			wl.position = Vector2(18, 524)
 			d.add_child(wl)
 	else:
-		var tb := UIKit.cta_button("交付", "A", 240, 44)
-		tb.name = "TurnInQuest"
-		tb.position = Vector2(18, 470)
-		tb.disabled = not World.can_turn_in(sel, city)
 		var sid2 := str(sel.id)
+		var here := World.can_turn_in(sel, city)
+		var guide := World.quest_guide_node(sel)
+		# Not deliverable here: the primary slot points at the atlas (phones clip the lower row).
+		var to_atlas := guide != "" and not here
+		if to_atlas:
+			var gb := UIKit.cta_button(Locale.t("wq_goto_atlas"), "A", 240, 44)
+			gb.name = "GotoAtlasQuest"
+			gb.position = Vector2(18, 470)
+			gb.pressed.connect(func(): _open_atlas_for_quest(World.quest_by_id(sid2)))
+			d.add_child(gb)
+		var ti_text := "交付"
+		var tb := UIKit.cta_button(ti_text, "A", 240, 44) if not to_atlas else UIKit.ghost_button(ti_text, 240, 36)
+		tb.name = "TurnInQuest"
+		tb.position = Vector2(18, 470 if not to_atlas else 524)
+		tb.disabled = not here
 		tb.pressed.connect(func(): _do(World.turn_in(sid2)); _sel_quest = "")
 		d.add_child(tb)
 		var xb := UIKit.ghost_button("放弃（声望 -4）", 130, 44)
@@ -1186,15 +1197,6 @@ func _tab_board() -> void:
 		xb.position = Vector2(268, 470)
 		xb.pressed.connect(func(): _do(World.abandon(sid2)); _sel_quest = "")
 		d.add_child(xb)
-		var guide := World.quest_guide_node(sel)
-		# Show whenever the job is not deliverable here: travel, engage, or gather.
-		if guide != "" and not World.can_turn_in(sel, city):
-			var gb := UIKit.ghost_button(Locale.t("wq_goto_atlas"), 380, 40)
-			gb.name = "GotoAtlasQuest"
-			gb.position = Vector2(18, 524)
-			var sid_g := str(sel.id)
-			gb.pressed.connect(func(): _open_atlas_for_quest(World.quest_by_id(sid_g)))
-			d.add_child(gb)
 
 # ── 酒馆 ──────────────────────────────────────────────
 func _tab_tavern() -> void:
