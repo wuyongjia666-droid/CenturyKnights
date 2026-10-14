@@ -235,3 +235,12 @@ opening_herb_escort_client,药师,Herbalist
 opening_herb_escort_foe,劫道匪帮,Road bandits
 opening_herb_escort_missing,开局药材护送未就绪,Opening herb escort not ready
 opening_herb_escort_active,已在护送药材,Already escorting the herbs
+wq_accept_ok,接下委托「%s」——期限 %d 日。下一步：%s,Accepted「%s」— %d days left. Next: %s
+wq_hint_travel,打开舆图，启程前往「%s」（图上有 ◆ 标记）,Open the atlas and travel to 「%s」(◆ on the map)
+wq_hint_fight,打开舆图前往「%s」，抵达后点「进剿目标」,Open the atlas, reach 「%s」, then Engage
+wq_hint_clear,打开舆图，沿「%s」一带的危险路段行军清剿,Open the atlas and clear the danger roads near 「%s」
+wq_hint_gather,凑齐「%s」×%d 后，到「%s」交付（市集可买）,Gather 「%s」×%d, then turn in at 「%s」(markets sell them)
+wq_hint_turnin,打开舆图前往「%s」交付（图上有 ✓ 标记）,Open the atlas and turn in at 「%s」(✓ on the map)
+wq_goto_atlas,去舆图看目标,See objective on atlas
+wq_atlas_focus,委托「%s」目标：%s —— 选中后点「启程前往」,Commission 「%s」 → %s — select it, then Travel
+wq_atlas_focus_plain,已为你定位到「%s」——选中后点「启程前往」,Focused on 「%s」— select it, then Travel

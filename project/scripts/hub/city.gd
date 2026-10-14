@@ -1167,7 +1167,7 @@ func _tab_board() -> void:
 		ab.disabled = why != ""
 		ab.tooltip_text = why
 		var sid := str(sel.id)
-		ab.pressed.connect(func(): _do(World.accept_quest(city, sid)); _sel_quest = sid)
+		ab.pressed.connect(func(): _accept_offer(sid))
 		d.add_child(ab)
 		if why != "":
 			var wl := _para("🔒 " + why, UIKit.EMBER, 12, 380)
@@ -1186,6 +1186,15 @@ func _tab_board() -> void:
 		xb.position = Vector2(268, 470)
 		xb.pressed.connect(func(): _do(World.abandon(sid2)); _sel_quest = "")
 		d.add_child(xb)
+		var guide := World.quest_guide_node(sel)
+		# Show whenever the job is not deliverable here: travel, engage, or gather.
+		if guide != "" and not World.can_turn_in(sel, city):
+			var gb := UIKit.ghost_button(Locale.t("wq_goto_atlas"), 380, 40)
+			gb.name = "GotoAtlasQuest"
+			gb.position = Vector2(18, 524)
+			var sid_g := str(sel.id)
+			gb.pressed.connect(func(): _open_atlas_for_quest(World.quest_by_id(sid_g)))
+			d.add_child(gb)
 
 # ── 酒馆 ──────────────────────────────────────────────
 func _tab_tavern() -> void:
@@ -1376,6 +1385,25 @@ func _armory_count() -> int:
 	return n
 
 # ── shared ────────────────────────────────────────────
+
+func _accept_offer(qid: String) -> void:
+	var r: Dictionary = World.accept_quest(city, qid)
+	_sel_quest = qid
+	_do(r)
+
+
+func _open_atlas_for_quest(q: Dictionary) -> void:
+	var guide := World.quest_guide_node(q)
+	if guide == "":
+		guide = str(q.get("target", ""))
+	if guide != "" and World.nodes.has(guide):
+		GameState.set_meta("atlas_select", guide)
+		var nv := World.nation_of(guide)
+		if nv != "":
+			GameState.set_meta("atlas_view", nv)
+	_back()
+
+
 func _do(r: Dictionary) -> void:
 	var ok := bool(r.get("ok", false))
 	var msg := str(r.get("msg", ""))
