@@ -67,3 +67,7 @@ func _ack(cid: String, eid: String) -> void:
 
 func nav_back() -> void:
 	CKNav.up()
+
+func apply_mobile_layout() -> void:
+	CKPageKit.phone_fill(self)
+

@@ -466,11 +466,20 @@ func _shift_side_panels(dx: float) -> void:
 
 func _layout_board() -> void:
 	var area := BOARD_AREA
+	var cell_cap := 104.0
 	if _mobile_landscape():
 		var dx := _root_w() - MOBILE_RAIL_W - 1280.0 + 8.0
 		_shift_side_panels(dx)
-		MobileSide.attach.call_deferred(self, RAIL_X + dx - 8.0, RAIL_W + 8.0)
-		area = Rect2(12, 64, BOARD_AREA.size.x + 12.0 + dx, 720.0 - 64.0 - 10.0)
+		# Side column left of the thumb rail; board owns everything to its left.
+		var side_x := RAIL_X + dx - 8.0
+		MobileSide.attach.call_deferred(self, side_x, RAIL_W + 8.0)
+		# Audit P2: fill the left stage (no black letterbox). Top pill ~48, bottom margin 8.
+		var left := 8.0
+		var top := 52.0
+		var right := side_x - 10.0
+		var bottom := 720.0 - 8.0
+		area = Rect2(left, top, maxf(320.0, right - left), maxf(280.0, bottom - top))
+		cell_cap = 168.0  # was 104 — phone needs taller cells to 铺满高度
 	elif DeviceProfile.is_mobile() and is_inside_tree():
 		var vp := get_viewport().get_visible_rect().size
 		var sy := scale.y if scale.y > 0.01 else 1.0
@@ -480,9 +489,20 @@ func _layout_board() -> void:
 		var bar_top_local := (vp.y - bottom_inset - _command_bar_px() - global_position.y) / sy
 		if bar_top_local < area.end.y:
 			area.size.y = maxf(280.0, bar_top_local - area.position.y - 8.0)
-	CELL = int(clampf(floorf(minf(area.size.x / float(MAP_W), area.size.y / float(MAP_H))), 44.0, 104.0))
+		cell_cap = 140.0
+	# Phone landscape: cover the stage (no void letterbox). Elsewhere: contain.
+	var cell_w := area.size.x / float(MAP_W)
+	var cell_h := area.size.y / float(MAP_H)
+	var target := maxf(cell_w, cell_h) if _mobile_landscape() else minf(cell_w, cell_h)
+	CELL = int(clampf(floorf(target), 44.0, cell_cap))
 	var bs := Vector2(MAP_W, MAP_H) * CELL
-	ORIGIN = (area.position + (area.size - bs) * 0.5).floor()
+	# Cover: center on the axis that overflows so crop is even; top-align when only height spills.
+	var ox := area.position.x + (area.size.x - bs.x) * 0.5
+	var oy := area.position.y
+	if bs.y <= area.size.y:
+		oy = area.position.y + (area.size.y - bs.y) * 0.5
+	ORIGIN = Vector2(ox, oy).floor()
+	set_meta("m_board_area", area)
 	_build_ground()
 
 func _biome_ground() -> Array:
@@ -1406,8 +1426,9 @@ func _clamp_board_pan() -> void:
 	var board := Vector2(MAP_W, MAP_H) * float(CELL) * z
 	var origin := ORIGIN * z
 	var min_keep := 64.0
-	_board_pan.x = clampf(_board_pan.x, BOARD_AREA.position.x + min_keep - origin.x - board.x, BOARD_AREA.end.x - min_keep - origin.x)
-	_board_pan.y = clampf(_board_pan.y, BOARD_AREA.position.y + min_keep - origin.y - board.y, BOARD_AREA.end.y - min_keep - origin.y)
+	var stage: Rect2 = get_meta("m_board_area", BOARD_AREA)
+	_board_pan.x = clampf(_board_pan.x, stage.position.x + min_keep - origin.x - board.x, stage.end.x - min_keep - origin.x)
+	_board_pan.y = clampf(_board_pan.y, stage.position.y + min_keep - origin.y - board.y, stage.end.y - min_keep - origin.y)
 
 func _zoom_board_at(focal: Vector2, factor: float) -> void:
 	var old := _board_zoom

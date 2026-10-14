@@ -220,3 +220,108 @@ static func stat(parent: Control, pos: Vector2, label: String, value: String, co
 		b.position = pos + Vector2(a.get_minimum_size().x + 8.0, 2)
 	b.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	parent.add_child(b)
+
+## Phone: stretch kit cards across the full root width and raise empty-state type.
+## Call from apply_mobile_layout; sets m_center_ok so MobileLayout.center_kit_page leaves us alone.
+static func phone_fill(page: Control) -> void:
+	if page == null or not MobilePage.active(page):
+		return
+	page.set_meta("m_center_ok", true)
+	var w := MobilePage.width(page)
+	var bar := page.find_child("StitchTopBar", true, false) as Control
+	if bar != null and bar.size.x < w - 8.0:
+		MobileLayout.stretch_top_bar(bar, w - bar.size.x)
+	var desc := page.find_child("PageDesc", true, false) as Label
+	if desc != null:
+		desc.size.x = maxf(200.0, w - desc.position.x - PAD)
+		desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		desc.max_lines_visible = 2
+	var fb := page.find_child("Feedback", true, false) as Control
+	if fb != null:
+		fb.position.x = PAD
+		fb.size.x = w - PAD * 2.0
+	var cards: Array[Control] = []
+	for c in page.get_children():
+		if not (c is Panel or c is PanelContainer):
+			continue
+		var cc := c as Control
+		if cc.position.y < TOP - 8.0 or cc.size.x < 180.0:
+			continue
+		cards.append(cc)
+	# Filter bar (court news) stretches full width above the list card.
+	var filters := page.find_child("FilterBar", true, false) as HBoxContainer
+	if filters != null:
+		filters.position = Vector2(PAD, TOP + 6.0)
+		filters.size = Vector2(w - PAD * 2.0, MobilePage.HIT)
+		for b in filters.get_children():
+			if b is BaseButton:
+				(b as BaseButton).custom_minimum_size = Vector2(0, MobilePage.HIT)
+				(b as BaseButton).size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				(b as BaseButton).add_theme_font_size_override("font_size", MobilePage.FONT)
+	if cards.is_empty():
+		MobilePage.upsize(page)
+		_boost_empty(page, w - PAD * 2.0)
+		return
+	cards.sort_custom(func(a, b): return a.position.x < b.position.x)
+	var gap := 12.0
+	var n := cards.size()
+	var top_y := TOP + (66.0 if filters != null else 8.0)
+	var bottom := BOTTOM - 8.0
+	var cw := (w - PAD * 2.0 - gap * float(maxi(0, n - 1))) / float(n)
+	var x := PAD
+	for card in cards:
+		var old := Rect2(card.position, card.size)
+		card.position = Vector2(x, top_y)
+		card.size = Vector2(cw, bottom - top_y)
+		_resize_card_inners(card, old, card.size)
+		x += cw + gap
+	MobilePage.upsize(page)
+	_boost_empty(page, cw - 28.0 if n > 1 else w - PAD * 2.0 - 40.0)
+
+
+static func _resize_card_inners(card: Control, old: Rect2, neu: Vector2) -> void:
+	var sx := neu.x / maxf(1.0, old.size.x)
+	var sy := neu.y / maxf(1.0, old.size.y)
+	for ch in card.get_children():
+		if not (ch is Control):
+			continue
+		var c := ch as Control
+		# Keep header labels near the top-left; stretch scroll/lists and free-placed blocks.
+		if c is ScrollContainer:
+			c.position = Vector2(c.position.x, c.position.y)
+			c.size = Vector2(maxf(120.0, neu.x - c.position.x - 12.0), maxf(80.0, neu.y - c.position.y - 12.0))
+		elif c is BoxContainer and c.position.y > 40.0:
+			c.position.x = 18.0
+			c.size.x = maxf(120.0, neu.x - 36.0)
+			if c.size.y > 1.0:
+				c.size.y = maxf(c.size.y * sy, c.size.y)
+		elif c is Label or c is RichTextLabel:
+			c.size.x = maxf(c.size.x * sx, neu.x - c.position.x - 24.0)
+		elif c is BaseButton:
+			c.position.x = minf(c.position.x, neu.x - maxf(c.custom_minimum_size.x, 120.0) - 14.0)
+			c.custom_minimum_size.y = maxf(c.custom_minimum_size.y, MobilePage.HIT)
+
+
+static func _boost_empty(page: Control, text_w: float) -> void:
+	for empty in page.find_children("EmptyState", "PanelContainer", true, false):
+		var p := empty as PanelContainer
+		# Prefer filling the host card so empty pages do not look like a postage stamp.
+		var host_w := text_w
+		var host_h := 180.0
+		var par := p.get_parent()
+		if par is Control:
+			host_w = maxf(host_w, (par as Control).size.x - 36.0)
+			host_h = maxf(host_h, (par as Control).size.y - 72.0)
+		elif p.get_parent() != null and p.get_parent().get_parent() is Control:
+			var sc := p.get_parent().get_parent() as Control  # ScrollContainer under card
+			host_w = maxf(host_w, sc.size.x - 28.0)
+			host_h = maxf(host_h, sc.size.y - 24.0)
+		p.custom_minimum_size = Vector2(maxf(p.custom_minimum_size.x, host_w), maxf(p.custom_minimum_size.y, mini(host_h, 280.0)))
+		p.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		for lab in p.find_children("*", "Label", true, false):
+			var l := lab as Label
+			var fs := l.get_theme_font_size("font_size")
+			l.add_theme_font_size_override("font_size", maxi(fs, 22))
+			l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			l.custom_minimum_size.x = maxf(text_w - 24.0, host_w - 48.0)
+
