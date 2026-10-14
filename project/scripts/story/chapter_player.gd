@@ -64,6 +64,7 @@ func _ready() -> void:
 		deco.visible = false
 		deco.queue_free()
 	_build_story_chrome()
+	_add_portrait_vignette()
 	# Back from a side screen the story opened with "visit": the trip is over.
 	if GameState.has_meta("story_return"):
 		GameState.set_meta("story_return", "")
@@ -100,7 +101,9 @@ func _open(path: String) -> void:
 	if not _has_beat(beat_id):
 		var beats: Array = _chapter.get("beats", [])
 		beat_id = str(beats[0].get("id", "")) if not beats.is_empty() else ""
+	_resuming = true
 	_load_beat(beat_id)
+	_resuming = false
 
 func _has_beat(beat_id: String) -> bool:
 	if beat_id == "":
@@ -177,6 +180,7 @@ func _build() -> void:
 	_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(_hint)
 	var top := HBoxContainer.new()
+	top.name = "StoryTopButtons"
 	top.position = Vector2(1280 - 48 - 112 - 100 - 8, 12)
 	top.add_theme_constant_override("separation", 8)
 	add_child(top)
@@ -220,7 +224,7 @@ func _load_beat(beat_id: String) -> void:
 			_load_beat(str(skipped))
 		return
 	_remember_beat(beat_id)
-	_line_idx = 0
+	_line_idx = _resume_line(beat_id) if _resuming else 0
 	_title.text = "%s · %s" % [str(_chapter.get("title", "")), str(_beat.get("title", ""))]
 	_beat_meta.text = _beat_progress_caption(beat_id)
 	_banner.texture = UnitArt.banner(70, 100, true)
@@ -253,7 +257,26 @@ func _beat_progress_caption(beat_id: String) -> String:
 		return beat_title
 	return "%s · %d/%d" % [beat_title, idx, total]
 
+## C-11: a mid-beat save resumes on the line it was made on, not the beat's first line.
+var _resuming := false
+
+func _resume_line(beat_id: String) -> int:
+	var mark = GameState.house_mods.get("story_line", {})
+	if typeof(mark) != TYPE_DICTIONARY:
+		return 0
+	if str(mark.get("chapter", "")) != str(_chapter.get("id", "")) or str(mark.get("beat", "")) != beat_id:
+		return 0
+	return clampi(int(mark.get("line", 0)), 0, maxi(0, _visible_lines().size() - 1))
+
+func _mark_line() -> void:
+	GameState.house_mods["story_line"] = {
+		"chapter": str(_chapter.get("id", "")),
+		"beat": str(_beat.get("id", "")),
+		"line": _line_idx,
+	}
+
 func _show_line() -> void:
+	_mark_line()
 	# C-09: end previous pace/camera tweens before the next line (incl. empty stage).
 	if _stage_tween != null and _stage_tween.is_valid():
 		_stage_tween.kill()
@@ -885,3 +908,45 @@ func skip_lines() -> void:
 
 func apply_mobile_layout() -> void:
 	UIKit.widen_dialogue(self)
+	call_deferred("_pin_top_right")
+
+## C-07: on wide phone viewports the skip/save pair hugs the right edge instead of the 1280 column.
+func _pin_top_right() -> void:
+	var top := get_node_or_null("StoryTopButtons") as Control
+	if top == null:
+		return
+	var w := maxf(size.x, 1280.0)
+	top.position.x = w - 24.0 - top.get_combined_minimum_size().x
+	test_capture["top_right_gap"] = w - (top.position.x + top.get_combined_minimum_size().x)
+
+## C-05: the portrait plate has a pale studio backdrop; a dark vignette keeps it from glaring
+## in night scenes without touching the face in the middle.
+func _add_portrait_vignette() -> void:
+	if _portrait == null or _portrait.get_parent() == null:
+		return
+	var holder := _portrait.get_parent()
+	if holder.get_node_or_null("PortraitVignette") != null:
+		return
+	var g := Gradient.new()
+	g.offsets = PackedFloat32Array([0.0, 0.55, 1.0])
+	g.colors = PackedColorArray([Color(0.035, 0.05, 0.08, 0.12), Color(0.035, 0.05, 0.08, 0.5), Color(0.035, 0.05, 0.08, 0.95)])
+	var gt := GradientTexture2D.new()
+	gt.gradient = g
+	gt.width = 128
+	gt.height = 128
+	gt.fill = GradientTexture2D.FILL_RADIAL
+	gt.fill_from = Vector2(0.5, 0.38)
+	gt.fill_to = Vector2(1.05, 1.05)
+	var v := TextureRect.new()
+	v.name = "PortraitVignette"
+	v.texture = gt
+	v.stretch_mode = TextureRect.STRETCH_SCALE
+	v.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	holder.add_child(v)
+	v.position = _portrait.position
+	v.size = _portrait.size
+	_portrait.resized.connect(func():
+		v.position = _portrait.position
+		v.size = _portrait.size)
+	_portrait.visibility_changed.connect(func(): v.visible = _portrait.visible)
