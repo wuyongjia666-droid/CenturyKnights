@@ -325,7 +325,20 @@ static func recolor(n: Node, c, team: String, tmpl: String = "", spec: Dictionar
 				pal[slot][0] = tp[slot]
 	var tint: Color = spec.get("body_tint", Color.WHITE) if enemy else Color.WHITE
 	var rim: Color = trim if enemy else Color("#6ED4FF")
+	_fill = fill_color_for(c, enemy, pal, trim)
 	_walk_recolor(n, pal, trim, tint, rim)
+	_fill = Color(0, 0, 0, 0)
+
+## P0 albedo white-patch repaint colour (see toon_body_v87 fill_color).
+static var _fill := Color(0, 0, 0, 0)
+static func fill_color_for(c, enemy: bool, pal: Dictionary, trim: Color = Color(1, 0.48, 0.44)) -> Color:
+	if enemy:
+		# faction dye: theme trim hue as deep wool (bandit rust, cult violet, …)
+		return Color(Color.from_hsv(trim.h, 0.62, 0.34), 1.0)
+	# allies: house crest hue as dyed cloth, nudged by the genome cloth/hair tint
+	var dye: Color = pal["cloth"][0]
+	var crest: Color = UnitArt.crest_color() if Engine.get_main_loop() else Color(0.2, 0.3, 0.5)
+	return Color(Color.from_hsv(crest.h, 0.55, 0.34).lerp(dye, 0.25), 1.0)
 
 const MOD_DIR := "res://assets/models/modules/"
 const HEAD_LEN := 0.249  # canonical head bone length (rig_mesh_v87 rest)
@@ -476,6 +489,7 @@ static func _walk_recolor(n: Node, pal: Dictionary, trim: Color, body_tint: Colo
 				tm.set_shader_parameter("albedo_tex", (m as BaseMaterial3D).albedo_texture)
 				tm.set_shader_parameter("tint", body_tint)
 				tm.set_shader_parameter("rim_color", rim_color)
+				tm.set_shader_parameter("fill_color", _fill)
 				tm.next_pass = _outline_mat()
 				mi.set_surface_override_material(si, tm)
 				continue
@@ -503,6 +517,7 @@ static func _walk_recolor(n: Node, pal: Dictionary, trim: Color, body_tint: Colo
 				tm2.set_shader_parameter("albedo_tex", (m as BaseMaterial3D).albedo_texture)
 				tm2.set_shader_parameter("tint", body_tint)
 				tm2.set_shader_parameter("rim_color", rim_color)
+				tm2.set_shader_parameter("fill_color", _fill)
 				tm2.next_pass = _outline_mat()
 				mi.set_surface_override_material(si, tm2)
 				continue
