@@ -33,6 +33,9 @@ func _ready() -> void:
 	vp.own_world_3d = true
 	vp.msaa_3d = Viewport.MSAA_4X
 	add_child(vp)
+	var premul := CanvasItemMaterial.new()
+	premul.blend_mode = CanvasItemMaterial.BLEND_MODE_PREMULT_ALPHA
+	material = premul
 	var w := Node3D.new()
 	vp.add_child(w)
 	var env := Environment.new()
@@ -52,6 +55,7 @@ func _ready() -> void:
 	var n := UnitModel.instantiate(character, team, "")
 	if n:
 		_pivot.add_child(n)
+		_compact(n)
 		CKUnitSilhouette.apply(n, character, team)
 		var ap := UnitModel.find_anim(n)
 		if ap and ap.has_animation("idle"):
@@ -92,3 +96,15 @@ func _gui_input(e: InputEvent) -> void:
 		var dx: float = e.relative.x
 		_pivot.rotation_degrees.y += dx * 0.8
 		accept_event()
+
+func _compact(n: Node) -> void:
+	if n is MeshInstance3D:
+		var mi := n as MeshInstance3D
+		if mi.mesh:
+			for si in mi.mesh.get_surface_count():
+				var m = mi.get_surface_override_material(si)
+				if m is ShaderMaterial:
+					(m as ShaderMaterial).set_shader_parameter("board_compact", 1.0)
+					(m as ShaderMaterial).set_shader_parameter("rim_strength", 0.12)
+	for c in n.get_children():
+		_compact(c)
