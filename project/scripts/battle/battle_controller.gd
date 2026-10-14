@@ -9,7 +9,8 @@ const BOARD_AREA := Rect2(24, 76, 856, 620)  ## v8.6: the board is the hero — 
 const RAIL_X := 904.0
 const RAIL_W := 352.0
 var _ground: ColorRect
-const CombatCutsceneScript = preload("res://scripts/battle/combat_cutscene.gd")  ## v8.6 3D combat cutscenes: pure recorder (tactics logic untouched) -> queued overlay playback
+const CombatCutsceneScript = preload("res://scripts/battle/combat_cutscene.gd")
+const FactionMarksSync = preload("res://scripts/battle/ui/faction_marks_sync.gd")
 var _combat_rec: Array = []
 var _cut_queue: Array = []
 var _cut_playing := false
@@ -1928,35 +1929,8 @@ func _pulse_heal(team: String) -> void:
 		u.char.hp = mini(u.char.max_hp, u.char.hp + amt)
 
 func _sync_faction_marks() -> void:
-	var sig := "%d|" % units.size()
-	for u in units:
-		sig += "%s:%d,%d:%d|" % [str(u.team), int(u.pos.x), int(u.pos.y), int(u.char.hp)]
-	if sig == _marks_sig:
-		return
-	_marks_sig = sig
-	var layer := get_node_or_null("FactionMarks") as Control
-	if layer == null:
-		layer = Control.new()
-		layer.name = "FactionMarks"
-		layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		add_child(layer)
-	while layer.get_child_count() < units.size():
-		layer.add_child(UIKit.faction_mark("player"))
-	for i in layer.get_child_count():
-		var mark := layer.get_child(i) as Control
-		if i >= units.size() or units[i].char.hp <= 0:
-			mark.visible = false
-			continue
-		var u = units[i]
-		mark.visible = true
-		mark.team = "enemy" if str(u.team) == "enemy" else "player"
-		mark.queue_redraw()
-		var center := ORIGIN + Vector2(u.pos) * CELL + Vector2(CELL * 0.5, CELL * 0.5)
-		var side := 12.0  # small colour-blind shape badge tucked into the cell corner
-		mark.custom_minimum_size = Vector2(side, side)
-		mark.size = Vector2(side, side)
-		mark.position = center + Vector2(CELL * 0.5 - side - 3.0, CELL * 0.5 - side - 3.0)
+	_marks_sig = FactionMarksSync.sync(self, units, ORIGIN, float(CELL), _marks_sig)
+
 
 func _apply_combat_lock(ai: int, di: int) -> void:
 	# 双方进入交战锁定（再交战刷新至 2）
