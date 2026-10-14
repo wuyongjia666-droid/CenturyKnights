@@ -20,8 +20,12 @@ var path_fn: Callable         # (u, from: Vector2i, to: Vector2i) -> Array[Vecto
 var cell_px_fn: Callable      # (cell) -> container-local feet point
 var _sparks: Array = []
 
-static func enabled() -> bool:
+const MAX_UNITS := 16  # P4: beyond this the board falls back to 2D tokens
+
+static func enabled(unit_count: int = 0) -> bool:
 	if DisplayServer.get_name() == "headless":
+		return false
+	if unit_count > MAX_UNITS:
 		return false
 	return bool(GameState.settings.get("board_units_3d", true))
 
@@ -32,7 +36,10 @@ func _ready() -> void:
 	_vp = SubViewport.new()
 	_vp.transparent_bg = true
 	_vp.own_world_3d = true
+	# P4 mobile budget: 2× MSAA, 3D at 80% res (bilinear up), no shadows/glow, one light
 	_vp.msaa_3d = Viewport.MSAA_2X if DeviceProfile.is_mobile() else Viewport.MSAA_4X
+	if DeviceProfile.is_mobile():
+		_vp.scaling_3d_scale = 0.8
 	_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	add_child(_vp)
 	_world = Node3D.new()
@@ -105,8 +112,13 @@ func sync(entries: Array, delta: float) -> void:
 				_play(st, "death", true)
 			st.dead_t = float(st.dead_t) + delta
 			n2.visible = float(st.dead_t) < 1.4
+			if not n2.visible and st.anim:
+				(st.anim as AnimationPlayer).active = false
 			continue
 		n2.visible = bool(e.visible)
+		var apv: AnimationPlayer = st.anim
+		if apv:  # P4: rigs hidden by fog do not tick
+			apv.active = n2.visible
 		# P2: walk the real path cell by cell (host BFS), turning on every corner
 		var cell: Vector2i = e.cell
 		if not st.has("cell"):

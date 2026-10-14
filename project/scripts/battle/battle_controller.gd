@@ -1934,6 +1934,11 @@ func _pulse_heal(team: String) -> void:
 		u.char.hp = mini(u.char.max_hp, u.char.hp + amt)
 
 func _sync_unit_layer(delta: float) -> void:
+	if units.size() > CKUnitLayer3D.MAX_UNITS:  # P4 perf budget: big fights use 2D tokens
+		_unit_layer.queue_free()
+		_unit_layer = null
+		map_draw.queue_redraw()
+		return
 	var inv := _unit_layer.get_global_transform().affine_inverse()
 	var mx := map_draw.get_global_transform()
 	var cell_px := float(CELL) * mx.get_scale().x
