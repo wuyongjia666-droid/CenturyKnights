@@ -43,7 +43,7 @@ func _ready() -> void:
 	_ok(big.get_theme_font_size("font_size") == 30, "big untouched")
 	_ok(skip.get_theme_font_size("font_size") == 10, "exempt untouched")
 	var pend := Control.new()
-	pend.scene_file_path = "res://scenes/hub/castle_view.tscn"
+	pend.scene_file_path = "res://scenes/hub/forge.tscn"
 	var pl := Label.new()
 	pl.add_theme_font_size_override("font_size", 10)
 	pend.add_child(pl)
