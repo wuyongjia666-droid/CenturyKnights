@@ -754,6 +754,85 @@ func _tab_smith() -> void:
 		v.add_child(_para("此地没有铁匠铺。", UIKit.TEXT_FAINT, 12, 380))
 		return
 	_item_detail(Rect2(432, 0, 416, 576), _sel_item, true)
+	call_deferred("_maybe_smith_reveal")
+
+func _maybe_smith_reveal() -> void:
+	if find_child("SmithReveal", true, false) != null:
+		return
+	var it: Dictionary = World.next_smith_reveal(city)
+	if it.is_empty():
+		return
+	_show_smith_reveal(it)
+
+func _show_smith_reveal(it: Dictionary) -> void:
+	var overlay := Control.new()
+	overlay.name = "SmithReveal"
+	overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	overlay.mouse_filter = Control.MOUSE_FILTER_STOP
+	overlay.z_index = 80
+	add_child(overlay)
+	var dim := ColorRect.new()
+	dim.color = Color(0.02, 0.03, 0.05, 0.72)
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.mouse_filter = Control.MOUSE_FILTER_STOP
+	overlay.add_child(dim)
+	var card := Panel.new()
+	var cw := 520.0 if not _mob else minf(size.x - 48.0, 640.0)
+	var ch := 360.0 if not _mob else 400.0
+	card.position = Vector2((size.x - cw) * 0.5, (size.y - ch) * 0.5)
+	card.size = Vector2(cw, ch)
+	card.add_theme_stylebox_override("panel", UIKit.glass(16, 0.94, true))
+	overlay.add_child(card)
+	var nid := World.nation_of(city)
+	var sp := AtlasArt.smith_plate(nid)
+	if sp != "":
+		var bg := TextureRect.new()
+		bg.texture = load(sp)
+		bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		bg.modulate = Color(1, 1, 1, 0.28)
+		bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		card.add_child(bg)
+	var mono := UIKit.mono(Locale.t("smith_reveal_tag"), 10, UIKit.ACCENT)
+	mono.position = Vector2(24, 18)
+	card.add_child(mono)
+	var ic := _icon(it, 110.0)
+	ic.position = Vector2(24, 56)
+	card.add_child(ic)
+	var title := UIKit.title_label(str(it.get("name", "")), 28 if not _mob else 26)
+	title.position = Vector2(152, 56)
+	title.size = Vector2(cw - 176, 40)
+	card.add_child(title)
+	var sub := UIKit.body_label("%s · %s" % [str(it.get("type_name", "")), World.nations.get(str(it.get("nation", "")), {}).get("name", "")], UIKit.TEXT_DIM, 14)
+	sub.position = Vector2(152, 100)
+	card.add_child(sub)
+	var lore := UIKit.body_label(str(it.get("lore", "")), UIKit.TEXT, 15 if not _mob else 16)
+	lore.position = Vector2(24, 190)
+	lore.size = Vector2(cw - 48, 110)
+	lore.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	card.add_child(lore)
+	var skip := UIKit.ghost_button(Locale.t("smith_reveal_skip"), int(cw - 48), 44 if not _mob else 76)
+	skip.position = Vector2(24, ch - 60)
+	skip.name = "SmithRevealSkip"
+	var iid := str(it.get("id", ""))
+	var closed := {"v": false}
+	var close := func():
+		if bool(closed.v):
+			return
+		closed.v = true
+		World.mark_smith_revealed(iid)
+		if is_instance_valid(overlay):
+			overlay.queue_free()
+	skip.pressed.connect(close)
+	dim.gui_input.connect(func(e: InputEvent):
+		if e is InputEventMouseButton and e.pressed:
+			close.call())
+	card.add_child(skip)
+	UIFX.pop_in(card)
+	var tw := create_tween()
+	tw.tween_interval(1.5)
+	tw.tween_callback(close)
 
 func _item_detail(r: Rect2, iid: String, shop: bool) -> void:
 	var it: Dictionary = World.item(iid)
@@ -1348,6 +1427,10 @@ func selftest() -> Dictionary:
 	# smith: buy the first available item through the detail button
 	_set_tab("smith")
 	await get_tree().process_frame
+	var reveal := find_child("SmithRevealSkip", true, false) as Button
+	if reveal:
+		reveal.pressed.emit()
+		await get_tree().process_frame
 	var buy := _body.find_child("BuyItem", true, false) as Button
 	if buy == null:
 		return {"ok": false, "msg": "no BuyItem"}
