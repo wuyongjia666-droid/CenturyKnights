@@ -214,3 +214,4 @@ terr_ui_bribe,收买 %d,Bribe %d
 terr_ui_scout,斥候 %d,Scout %d
 terr_ui_scouted,已探明,Scouted
 terr_ui_intercept,截击,Intercept
+morale.companion_waives,"%s：「这个月的饷我先不要了。下个月，你得给。」","%s: ""Keep this month's pay. Next month, you owe me."""

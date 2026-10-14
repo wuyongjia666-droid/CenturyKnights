@@ -586,10 +586,22 @@ func _run_op(step) -> String:
 			if until != "":
 				var guard := int(row.get("max", 14))
 				while not GameState.flag(until) and guard > 0:
+					if _pay_short():
+						break
 					evs.append_array(Calendar.advance(1))
 					guard -= 1
 			else:
-				evs = Calendar.advance(int(row.get("months", 1)))
+				for _m in int(row.get("months", 1)):
+					if _pay_short():
+						break
+					evs.append_array(Calendar.advance(1))
+			if bool(test_capture.get("pay_stop", false)):
+				_show_pay_warning()
+				if not evs.is_empty():
+					_hint.text += "\n" + _summarize(evs)
+				_refresh_actions()
+				return "stop"
+			_hint.remove_theme_color_override("font_color")
 			_hint.text = "事件：" + _summarize(evs)
 			_refresh_actions()
 			return "stop"
@@ -726,11 +738,37 @@ func _go_scene(path: String) -> void:
 
 func _fast_to_harvest() -> void:
 	while not (Calendar.month == Calendar.HARVEST_MONTH and GameState.flag("harvest_done")):
+		if _pay_short():
+			_show_pay_warning()
+			_refresh_actions()
+			return
 		Calendar.advance(1)
 		if Calendar.year > 3:
 			break
 	_hint.text = "已至 %s，丰收已结算。年龄可见变化。" % Calendar.label()
 	_refresh_actions()
+
+## Opening review A-05: a month fast-forward stops once before a payday the purse cannot cover.
+## Pressing the same button again goes ahead anyway (the warning is spent for that month).
+func _pay_short() -> bool:
+	var wage := CKEconomyState.monthly_wage(GameState)
+	var cash := int(GameState.silver)
+	if wage <= cash:
+		return false
+	var key := "pay_warn_%d_%d" % [Calendar.year, Calendar.month]
+	if GameState.flag(key):
+		return false
+	GameState.set_flag(key, true)
+	test_capture["pay_short"] = [wage, cash]
+	test_capture["pay_stop"] = true
+	return true
+
+func _show_pay_warning() -> void:
+	test_capture["pay_stop"] = false
+	_hint.text = Locale.t("pro_pay_short") % test_capture["pay_short"]
+	_hint.add_theme_color_override("font_color", UIKit.DANGER)
+	_hint.add_theme_constant_override("outline_size", 4)
+	_hint.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.85))
 
 func _summarize(evs: Array) -> String:
 	var parts: Array = []

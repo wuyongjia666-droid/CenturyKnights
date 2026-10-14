@@ -57,6 +57,14 @@ static func on_payday(host, paid: bool) -> String:
 		return Locale.t("morale.held_back")
 	var who := _lowest(host)
 	if who == null:
+		var stayer := _shielded_name(host)
+		if stayer != "":
+			# A-05: a prologue companion stays, but the purse still costs morale and a spoken line.
+			host.morale = maxi(0, int(host.morale) - 10)
+			host.house_mods["unpaid_months"] = 1
+			var line: String = Locale.t("morale.companion_waives") % stayer
+			host.log_event(line)
+			return line
 		return Locale.t("morale.nobody_left")
 	who.in_roster = false
 	if typeof(who.blood_meta) != TYPE_DICTIONARY:
@@ -95,3 +103,19 @@ static func _lowest(host) -> CKCharacter:
 			best_wil = wil
 			best_id = cid
 	return best
+
+
+## The story companion who waives a month's pay in the prologue (晚担 first), or "".
+static func _shielded_name(host) -> String:
+	if not host.has_method("flag") or host.flag("chapter0_done"):
+		return ""
+	var pick := ""
+	for c in host.roster():
+		if c.is_leader:
+			continue
+		var key := str(c.cast_key)
+		if key == "wantan":
+			return str(c.name)
+		if key == "dengying" and pick == "":
+			pick = str(c.name)
+	return pick
