@@ -56,6 +56,45 @@ func _press(beat: String, label: String) -> String:
 		await get_tree().process_frame
 	return ""
 
+## Playtest: the pregnancy wait is one month per press, with a way back to the castle.
+func _wait_birth() -> String:
+	_player.simulate_finish_dialogue()
+	await get_tree().process_frame
+	var labels: Array = _player.action_labels()
+	if not labels.has("先回城堡揭委托、看账"):
+		return "0.5: no back-to-castle action in %s" % str(labels)
+	# One month, then leave for the castle and resume — story must not strand.
+	var e0: String = await _press("0.5", "过一个月")
+	if e0 != "":
+		return e0
+	if str(_player.test_capture.get("month_report", "")) == "":
+		return "0.5: month report empty"
+	if not _player.simulate_press_action_containing("先回城堡揭委托、看账"):
+		return "0.5: could not press back-to-castle"
+	await get_tree().process_frame
+	var hub := _scene_was("res://scenes/hub/castle_hub.tscn")
+	if hub != "":
+		return hub
+	if GameState.chapter0_beat != "0.5":
+		return "0.5: left castle stranded beat=%s" % GameState.chapter0_beat
+	await _resume("0.5")
+	_player.simulate_finish_dialogue()
+	await get_tree().process_frame
+	labels = _player.action_labels()
+	if not labels.has("过一个月") and not GameState.flag("child_born"):
+		return "0.5: resume lost month actions %s" % str(labels)
+	for _i in 16:
+		if GameState.flag("child_born"):
+			break
+		var e: String = await _press("0.5", "过一个月")
+		if e != "":
+			return e
+		if str(_player.test_capture.get("month_report", "")) == "":
+			return "0.5: month report empty"
+	if not GameState.flag("child_born"):
+		return "month-by-month wait never delivered the child"
+	return ""
+
 func _scene_was(path: String) -> String:
 	var got := str(_player.test_capture.get("scene", ""))
 	_player.test_capture["scene"] = ""
@@ -183,10 +222,13 @@ func _full_e() -> String:
 	if wed != "":
 		return wed
 	await _resume("0.4")
-	for step in [["0.4", "去参加婚礼"], ["0.45", "等待初啼"], ["0.5", "让月份走到孩子落地"]]:
+	for step in [["0.4", "去参加婚礼"], ["0.45", "等待初啼"]]:
 		var e: String = await _press(step[0], step[1])
 		if e != "":
 			return e
+	var eb: String = await _wait_birth()
+	if eb != "":
+		return eb
 	if not GameState.flag("child_born"):
 		return "advance until child_born did not deliver"
 	var e7: String = await _press("0.5", "去听那一声哭")
@@ -274,11 +316,15 @@ func _brief_c() -> String:
 	if not GameState.flag("married"):
 		return "auto marry"
 	var tail := [
-		["0.4", "去参加婚礼"], ["0.45", "等待初啼"], ["0.5", "让月份走到孩子落地"], ["0.5", "去听那一声哭"],
+		["0.4", "去参加婚礼"], ["0.45", "等待初啼"], ["0.5", "WAIT_BIRTH"], ["0.5", "去听那一声哭"],
 		["0.55", "粮饷结清"], ["0.6", "把月份推到丰收"], ["0.6", "回石垒坡"], ["0.65", "回灰旗堡"], ["0.7", "踏上第一卷"],
 	]
 	for step in tail:
-		var e: String = await _press(step[0], step[1])
+		var e := ""
+		if step[1] == "WAIT_BIRTH":
+			e = await _wait_birth()
+		else:
+			e = await _press(step[0], step[1])
 		if e != "":
 			return e
 	if not GameState.flag("chapter0_done"):

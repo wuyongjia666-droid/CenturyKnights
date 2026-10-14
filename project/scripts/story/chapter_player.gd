@@ -179,6 +179,7 @@ func _build() -> void:
 	_hint.custom_minimum_size = Vector2(900, 40)
 	_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(_hint)
+	_build_month_report()
 	var top := HBoxContainer.new()
 	top.name = "StoryTopButtons"
 	top.position = Vector2(1280 - 48 - 112 - 100 - 8, 12)
@@ -599,14 +600,15 @@ func _run_op(step) -> String:
 					if _pay_short():
 						break
 					evs.append_array(Calendar.advance(1))
+			if not evs.is_empty():
+				_pay_ack = false
+				GameState.save_game()
+			var warn := ""
 			if bool(test_capture.get("pay_stop", false)):
-				_show_pay_warning()
-				if not evs.is_empty():
-					_hint.text += "\n" + _summarize(evs)
-				_refresh_actions()
-				return "stop"
-			_hint.remove_theme_color_override("font_color")
-			_hint.text = "事件：" + _summarize(evs)
+				test_capture["pay_stop"] = false
+				warn = Locale.t("pro_pay_short") % test_capture["pay_short"]
+			_show_month_report(evs, warn)
+			_hint.text = ""
 			_refresh_actions()
 			return "stop"
 		"visit":
@@ -778,10 +780,84 @@ func _pay_short() -> bool:
 
 func _show_pay_warning() -> void:
 	test_capture["pay_stop"] = false
-	_hint.text = Locale.t("pro_pay_short") % test_capture["pay_short"]
-	_hint.add_theme_color_override("font_color", UIKit.DANGER)
-	_hint.add_theme_constant_override("outline_size", 4)
-	_hint.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.85))
+	_show_month_report([], Locale.t("pro_pay_short") % test_capture["pay_short"])
+
+## Month report (playtest): the month log used to be a red label under the dialogue box that
+## ran off screen. It now lives in a collapsible panel in the empty upper stage, wraps, scrolls.
+var _report: PanelContainer
+var _report_body: RichTextLabel
+var _report_toggle: Button
+var _report_open := true
+
+func _build_month_report() -> void:
+	_report = PanelContainer.new()
+	_report.name = "MonthReport"
+	_report.position = Vector2(330, 84)
+	_report.custom_minimum_size = Vector2(560, 0)
+	_report.size = Vector2(560, 0)
+	_report.visible = false
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.05, 0.06, 0.09, 0.9)
+	sb.border_color = UIKit.ACCENT
+	sb.set_border_width_all(1)
+	sb.set_corner_radius_all(8)
+	sb.set_content_margin_all(12)
+	_report.add_theme_stylebox_override("panel", sb)
+	add_child(_report)
+	var vb := VBoxContainer.new()
+	vb.add_theme_constant_override("separation", 6)
+	_report.add_child(vb)
+	_report_toggle = UIKit.make_button("", 536)
+	_report_toggle.name = "MonthReportToggle"
+	_report_toggle.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_report_toggle.pressed.connect(func():
+		_report_open = not _report_open
+		_sync_report())
+	vb.add_child(_report_toggle)
+	_report_body = RichTextLabel.new()
+	_report_body.name = "MonthReportBody"
+	_report_body.bbcode_enabled = true
+	_report_body.scroll_active = true
+	_report_body.fit_content = false
+	_report_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_report_body.custom_minimum_size = Vector2(536, 200)
+	_report_body.add_theme_font_override("normal_font", UIKit.font("regular"))
+	_report_body.add_theme_font_size_override("normal_font_size", 22)
+	_report_body.add_theme_color_override("default_color", UIKit.TEXT)
+	vb.add_child(_report_body)
+
+func _sync_report() -> void:
+	_report_body.visible = _report_open
+	var key := "pro_month_report_open" if _report_open else "pro_month_report_closed"
+	_report_toggle.text = ("▼ " if _report_open else "▶ ") + (Locale.t(key) % Calendar.label())
+	_report.reset_size()
+
+func _show_month_report(evs: Array, warn: String) -> void:
+	var rows: Array = []
+	if warn != "":
+		rows.append("[color=#%s]%s[/color]" % [UIKit.DANGER.to_html(false), warn])
+	var due := _birth_months_left()
+	if due >= 0 and not GameState.flag("child_born"):
+		rows.append("[color=#%s]%s[/color]" % [UIKit.ACCENT.to_html(false),
+			(Locale.t("pro_birth_soon") if due <= 1 else Locale.t("pro_birth_months") % due)])
+	for e in evs:
+		var t := str(e.get("text", "")).strip_edges()
+		if t != "":
+			rows.append("· " + t)
+	if rows.is_empty():
+		rows.append(Locale.t("pro_month_quiet"))
+	test_capture["month_report"] = "\n".join(rows)
+	_report_body.text = "\n".join(rows)
+	_report.visible = true
+	_report_open = true
+	_sync_report()
+
+func _birth_months_left() -> int:
+	var best := -1
+	for c in GameState.characters.values():
+		if c != null and c.alive and int(c.pregnant_months) >= 0:
+			best = int(c.pregnant_months) if best < 0 else mini(best, int(c.pregnant_months))
+	return best
 
 func _summarize(evs: Array) -> String:
 	var parts: Array = []
