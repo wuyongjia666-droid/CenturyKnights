@@ -15,6 +15,12 @@ func _run() -> String:
 	GameState.new_game("铁匠", "灰旗", GameState.crest_color)
 	GameState.settings.erase("smith_revealed")
 	World.pos = "ash_capital"
+	var err := _logic()
+	if err != "":
+		return err
+	return await _ui()
+
+func _logic() -> String:
 	var first: Dictionary = World.next_smith_reveal("ash_capital")
 	if first.is_empty():
 		return "ash_capital has no signature to reveal"
@@ -27,7 +33,9 @@ func _run() -> String:
 	var again: Dictionary = World.next_smith_reveal("ash_capital")
 	if not again.is_empty() and str(again.id) == iid:
 		return "same signature offered again"
-	# UI path
+	return ""
+
+func _ui() -> String:
 	GameState.settings.erase("smith_revealed")
 	var city_sc = load("res://scenes/hub/city.tscn")
 	var c = city_sc.instantiate()
@@ -58,8 +66,8 @@ func _run() -> String:
 	c.call("_set_tab", "smith")
 	await get_tree().process_frame
 	await get_tree().process_frame
-	if c.find_child("SmithReveal", true, false) != null:
-		c.queue_free()
-		return "reveal still shown after all signatures marked"
+	var still = c.find_child("SmithReveal", true, false)
 	c.queue_free()
+	if still != null:
+		return "reveal still shown after all signatures marked"
 	return ""
