@@ -19,6 +19,30 @@ static func dismiss(host: Node, panel: Control = null) -> void:
 		target.queue_free()
 
 
+static func attach_dismiss(host: Node, panel: Control) -> void:
+	if panel == null or not is_instance_valid(panel):
+		return
+	if panel.find_child("LockTipDismiss", true, false) != null:
+		return
+	var close := UIKit.make_button("×", 36)
+	close.name = "LockTipDismiss"
+	close.custom_minimum_size = Vector2(36, 32)
+	close.tooltip_text = Locale.t("shell_lock_dismiss")
+	close.focus_mode = Control.FOCUS_NONE
+	close.pressed.connect(func(): dismiss(host, panel))
+	# Prefer the pip row (first child of content VBox); else top of panel tree.
+	var hrow: Node = panel.get_child(0) if panel.get_child_count() > 0 else null
+	var vb: Node = hrow.get_child(1) if hrow != null and hrow.get_child_count() > 1 else null
+	var pips: Node = vb.get_child(0) if vb != null and vb.get_child_count() > 0 else null
+	if pips is HBoxContainer:
+		var spacer := Control.new()
+		spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		pips.add_child(spacer)
+		pips.add_child(close)
+	else:
+		panel.add_child(close)
+
+
 static func queue_after_story(host: Node) -> void:
 	if _dismissed(host):
 		return
@@ -58,6 +82,7 @@ static func show_step(host: Node) -> void:
 		return
 	var last := i >= steps.size() - 1
 	var p: Control = host.call("_show_lock_tip_panel", str(steps[i].t), str(steps[i].b), i, 0.0)
+	attach_dismiss(host, p)
 	var row := HBoxContainer.new()
 	row.name = "LockTipActions"
 	row.add_theme_constant_override("separation", 8)
