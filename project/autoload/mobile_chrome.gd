@@ -13,6 +13,7 @@ func _ready() -> void:
 	win.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_EXPAND
 	win.content_scale_size = Vector2i(1280, 720)
 	_ensure_immersive()
+	_immersive_ok = true
 	# root is still setting up autoloads/main scene here; add the bleed next frame
 	_ensure_bleed.call_deferred()
 	get_tree().node_added.connect(_on_node_added)
@@ -21,8 +22,10 @@ func _ready() -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_IN:
 		if DeviceProfile.is_mobile():
+			_immersive_ok = false
 			_ensure_immersive()
-			call_deferred("_apply")
+			_immersive_ok = true
+			_schedule_apply()
 
 func _ensure_immersive() -> void:
 	# Fullscreen / borderless so system bars do not reserve letterbox strips.
@@ -46,9 +49,18 @@ func _ensure_bleed() -> void:
 	root.move_child(_bleed, 0)
 
 var _floor_pending := false
+var _apply_pending := false
+var _immersive_ok := false
+
+func _schedule_apply() -> void:
+	if _apply_pending:
+		return
+	_apply_pending = true
+	call_deferred("_apply")
 
 func _on_node_added(_n: Node) -> void:
-	call_deferred("_apply")
+	## Coalesce: a scene build adds hundreds of nodes; one deferred apply/refloor per frame.
+	_schedule_apply()
 	if not _floor_pending:
 		_floor_pending = true
 		call_deferred("_refloor")
@@ -58,20 +70,23 @@ func _refloor() -> void:
 	_floor_pending = false
 	if not DeviceProfile.is_mobile():
 		return
-	var root := get_tree().root
-	for child in root.get_children():
-		if child == _bleed or not (child is CanvasItem or child is CanvasLayer):
-			continue
-		MobileLayout.ensure_min_fonts(child)
-		MobileLayout.ensure_hit_targets(child)
+	var scene := get_tree().current_scene
+	if scene == null:
+		return
+	## Only the live page — walking every autoload/CanvasLayer on each add was a main-thread storm.
+	MobileLayout.ensure_min_fonts(scene)
+	MobileLayout.ensure_hit_targets(scene)
 
 func _on_resize() -> void:
-	call_deferred("_apply")
+	_schedule_apply()
 
 func _apply() -> void:
+	_apply_pending = false
 	if not DeviceProfile.is_mobile():
 		return
-	_ensure_immersive()
+	if not _immersive_ok:
+		_ensure_immersive()
+		_immersive_ok = true
 	_ensure_bleed()
 	if _bleed != null and is_instance_valid(_bleed):
 		_bleed.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -144,8 +159,22 @@ func _handle_touch_scroll(event: InputEvent) -> bool:
 	return false
 
 func _scroll_at(pos: Vector2) -> ScrollContainer:
+	## Walk up from the control under the finger — O(depth), not O(whole tree).
+	var vp := get_viewport()
+	if vp == null:
+		return null
+	var under: Control = vp.gui_get_hovered_control()
+	var cursor: Node = under
+	while cursor != null:
+		if cursor is ScrollContainer and (cursor as Control).is_visible_in_tree():
+			return cursor as ScrollContainer
+		cursor = cursor.get_parent()
+	## Fallback: only the current scene (not autoloads / bleed), deepest match.
+	var scene := get_tree().current_scene
+	if scene == null:
+		return null
 	var best: ScrollContainer = null
-	var stack: Array = [get_tree().root]
+	var stack: Array = [scene]
 	while not stack.is_empty():
 		var n: Node = stack.pop_back()
 		if n is CanvasItem and not (n as CanvasItem).is_visible_in_tree():

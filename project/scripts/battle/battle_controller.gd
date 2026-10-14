@@ -181,6 +181,10 @@ func _ui_origin() -> Vector2:
 		return get_meta("mobile_origin")
 	return Vector2.ZERO
 
+var _redraw_accum := 0.0
+var _marks_sig := ""
+const _REDRAW_HZ := 12.0
+
 func _process(delta: float) -> void:
 	if _board_router:
 		for g in _board_router.poll(Time.get_ticks_msec()):
@@ -226,10 +230,21 @@ func _process(delta: float) -> void:
 		position = origin + Vector2(10.0 * shake * sin(_shake_t * 1.7), 7.0 * shake * sin(_shake_t * 2.3))
 	else:
 		position = origin
-	if overlay:
-		overlay.queue_redraw()
-	if map_draw and _sel_pulse:
-		map_draw.queue_redraw()
+	## Mobile/desktop: do not full-redraw the board every frame. Pulse FX at ~12 Hz;
+	## keep full rate only while slash/dmg/dust/shake are live.
+	var fx_live := (
+		not _dmg_fx.is_empty() or not _slash_fx.is_empty()
+		or not _lock_burst_fx.is_empty() or not _move_dust_fx.is_empty()
+		or _trauma > 0.0 or _turn_flash > 0.0
+	)
+	_redraw_accum += delta
+	var pulse := fx_live or _redraw_accum >= (1.0 / _REDRAW_HZ)
+	if pulse:
+		_redraw_accum = 0.0
+		if overlay:
+			overlay.queue_redraw()
+		if map_draw:
+			map_draw.queue_redraw()
 	_sync_faction_marks()
 
 var _tex_cache: Dictionary = {}
@@ -1072,15 +1087,17 @@ func _draw_map() -> void:
 			continue
 		var center = ORIGIN + Vector2(p) * CELL + Vector2(CELL / 2, CELL / 2)
 		var tr := 20.0 * k
-		# soft contact shadow (3 stacked ellipses)
-		for si in range(3):
-			var sr := tr * (1.05 + 0.16 * si)
-			var pts := PackedVector2Array()
-			for a in range(20):
-				var ang := TAU * a / 20.0
-				pts.append(center + Vector2(cos(ang) * sr, sin(ang) * sr * 0.42 + tr * 0.78))
-			map_draw.draw_colored_polygon(pts, Color(0, 0, 0, 0.20 - 0.05 * si))
-		if not CKBoardUnits.draw_base(self, center, tr, u): UnitArt.draw_token_on(map_draw, center, u.char, u.team, tr, u.done)
+		# soft contact shadow — desktop only (3×20 polys per unit every redraw stalls phones)
+		if not DeviceProfile.is_mobile():
+			for si in range(3):
+				var sr := tr * (1.05 + 0.16 * si)
+				var pts := PackedVector2Array()
+				for a in range(20):
+					var ang := TAU * a / 20.0
+					pts.append(center + Vector2(cos(ang) * sr, sin(ang) * sr * 0.42 + tr * 0.78))
+				map_draw.draw_colored_polygon(pts, Color(0, 0, 0, 0.20 - 0.05 * si))
+		if not CKBoardUnits.draw_base(self, center, tr, u):
+			UnitArt.draw_token_on(map_draw, center, u.char, u.team, tr, u.done)
 		if int(u.char.temp_combat_lock) > 0:
 			UnitArt.draw_lock_ring(map_draw, center, 22.0 * k)
 		var hp_ratio = float(u.char.hp) / float(maxi(1, u.char.max_hp))  # HP bar (slim token bar)
@@ -1911,6 +1928,12 @@ func _pulse_heal(team: String) -> void:
 		u.char.hp = mini(u.char.max_hp, u.char.hp + amt)
 
 func _sync_faction_marks() -> void:
+	var sig := "%d|" % units.size()
+	for u in units:
+		sig += "%s:%d,%d:%d|" % [str(u.team), int(u.pos.x), int(u.pos.y), int(u.char.hp)]
+	if sig == _marks_sig:
+		return
+	_marks_sig = sig
 	var layer := get_node_or_null("FactionMarks") as Control
 	if layer == null:
 		layer = Control.new()

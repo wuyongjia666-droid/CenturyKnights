@@ -509,11 +509,11 @@ static func _bank_plate(c: Object, tier: String = "large") -> Texture2D:
 	return tex if tex is Texture2D else null
 
 static func clear_mem() -> void:
+	## Drop in-memory plates only. Do NOT call CKPortraitBank.clear_cache() —
+	## that resets the on-disk bank index and the next portrait re-lists ~9k
+	## files on the main thread (founding preview + hub taps stall on Android).
 	_mem.clear()
 	_miss.clear()
-	var scr = load("res://scripts/art/portrait_bank.gd")
-	if scr != null:
-		scr.clear_cache()
 
 static func cache_key(c: Object) -> String:
 	_ensure(c)
