@@ -828,7 +828,8 @@ func _build_month_report() -> void:
 
 func _sync_report() -> void:
 	_report_body.visible = _report_open
-	_report_toggle.text = ("▼ " if _report_open else "▶ ") + (Locale.t("pro_month_report_open") % Calendar.label() if _report_open else Locale.t("pro_month_report_closed") % Calendar.label())
+	var key := "pro_month_report_open" if _report_open else "pro_month_report_closed"
+	_report_toggle.text = ("▼ " if _report_open else "▶ ") + (Locale.t(key) % Calendar.label())
 	_report.reset_size()
 
 func _show_month_report(evs: Array, warn: String) -> void:
