@@ -867,6 +867,9 @@ static func _token_key(c: CKCharacter, team: String, frame: int) -> String:
 	return "res://assets/art/tokens/%s_%s_%s_%s_%s_f%d.png" % [hair, eyes, g, job, team, frame]
 
 static func token(c: CKCharacter, team: String, size: int = 48, done: bool = false) -> Texture2D:
+	# Improve: low-fi genome-tinted board pawns (opt-out via settings.board_pawns_3d = false).
+	if board_pawns_enabled():
+		return board_pawn_texture(c, team, maxi(size, 48), done)
 	var frame = 0 if done else int((_token_phase / 0.12)) % 4
 	var path = _token_key(c, team, frame)
 	var ck = "t|" + path + "|" + str(done)
@@ -1332,6 +1335,75 @@ static func role_color(job_id: String) -> Color:
 		"mage": Color(0.55, 0.40, 0.75),
 		"skirmisher": Color(0.70, 0.45, 0.35),
 	}.get(role, Color(0.6, 0.6, 0.6))
+
+static func board_pawns_enabled() -> bool:
+	if not GameState.settings.has("board_pawns_3d"):
+		return true
+	return bool(GameState.settings.get("board_pawns_3d", true))
+
+static func board_pawn_texture(c: CKCharacter, team: String, size: int = 64, done: bool = false) -> Texture2D:
+	var ph: Dictionary = CKGenome.phenotype(c) if c != null else {}
+	var hair: Color = ph.get("hair_color", Color(0.106, 0.114, 0.141))
+	var skin: Color = ph.get("skin_color", Color(0.886, 0.757, 0.675))
+	var eye: Color = ph.get("eye_color", Color(0.353, 0.396, 0.439))
+	var crest := crest_color() if team == "player" else Color(0.72, 0.28, 0.24)
+	var key := "bp3|%s|%s|%d|%s|%s|%s|%s" % [
+		str(c.id) if c else "?", team, size, str(done),
+		hair.to_html(false), skin.to_html(false), eye.to_html(false),
+	]
+	if _cache.has(key):
+		return _cache[key]
+	var img := Image.create(size, size, false, Image.FORMAT_RGBA8)
+	img.fill(Color(0, 0, 0, 0))
+	_paint_board_pawn(img, size, hair, skin, eye, crest, team, done, c != null and bool(c.is_leader))
+	var tex := ImageTexture.create_from_image(img)
+	_cache[key] = tex
+	return tex
+
+static func _paint_board_pawn(img: Image, size: int, hair: Color, skin: Color, eye: Color, crest: Color, team: String, done: bool, leader: bool) -> void:
+	var s := float(size)
+	var shade := 0.28 if done else 0.0
+	var body := crest.darkened(0.08 + shade)
+	var body_lit := crest.lightened(0.18).darkened(shade)
+	var rim := Color(0.45, 0.95, 0.82) if team == "player" else Color(1.0, 0.48, 0.45)
+	_fill_ellipse(img, s * 0.50, s * 0.88, s * 0.28, s * 0.08, Color(0, 0, 0, 0.35))
+	_pawn_capsule(img, s * 0.50, s * 0.58, s * 0.20, s * 0.34, body, body_lit)
+	var head_y := s * 0.30
+	_fill_ellipse(img, s * 0.50, head_y, s * 0.16, s * 0.16, skin.darkened(shade))
+	_fill_ellipse(img, s * 0.46, head_y - s * 0.03, s * 0.10, s * 0.09, skin.lightened(0.12).darkened(shade))
+	_fill_ellipse(img, s * 0.50, head_y - s * 0.08, s * 0.15, s * 0.09, hair.darkened(shade))
+	_fill_ellipse(img, s * 0.45, head_y + s * 0.01, s * 0.025, s * 0.03, eye)
+	_fill_ellipse(img, s * 0.55, head_y + s * 0.01, s * 0.025, s * 0.03, eye)
+	_pawn_ring(img, s * 0.50, s * 0.58, s * 0.42, rim, 2.0 if size >= 48 else 1.0)
+	if leader:
+		_fill_ellipse(img, s * 0.50, head_y - s * 0.18, s * 0.06, s * 0.035, crest.lightened(0.25))
+
+static func _pawn_capsule(img: Image, cx: float, cy: float, rx: float, half_h: float, col: Color, lit: Color) -> void:
+	_fill_ellipse(img, cx, cy - half_h + rx, rx, rx, lit)
+	_fill_ellipse(img, cx, cy + half_h - rx, rx, rx, col.darkened(0.12))
+	var w := img.get_width()
+	var h := img.get_height()
+	var top := int(cy - half_h + rx)
+	var bot := int(cy + half_h - rx)
+	for y in range(clampi(top, 0, h - 1), clampi(bot + 1, 0, h)):
+		for x in range(maxi(0, int(cx - rx)), mini(w, int(cx + rx + 1))):
+			var tt := clampf((x - (cx - rx)) / maxf(rx * 2.0, 0.001), 0.0, 1.0)
+			var shade := col.lerp(lit, 1.0 - absf(tt - 0.35) * 1.4)
+			img.set_pixel(x, y, shade)
+
+static func _pawn_ring(img: Image, cx: float, cy: float, radius: float, col: Color, thickness: float) -> void:
+	var w := img.get_width()
+	var h := img.get_height()
+	for y in range(maxi(0, int(cy - radius - 2)), mini(h, int(cy + radius + 3))):
+		for x in range(maxi(0, int(cx - radius - 2)), mini(w, int(cx + radius + 3))):
+			var d := Vector2(x - cx, y - cy).length()
+			if absf(d - radius) <= thickness:
+				var prev := img.get_pixel(x, y)
+				var a := clampf(1.0 - absf(d - radius) / thickness, 0.0, 1.0) * col.a
+				var out := Color(col.r, col.g, col.b, a)
+				if prev.a > 0.01:
+					out = prev.lerp(out, a)
+				img.set_pixel(x, y, out)
 
 static func _proc_token(c: CKCharacter, team: String, size: int, done: bool) -> Texture2D:
 	var role = BattleRules.job_role(c.job_id)
