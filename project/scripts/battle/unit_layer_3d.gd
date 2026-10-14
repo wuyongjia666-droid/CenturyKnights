@@ -20,11 +20,19 @@ var path_fn: Callable         # (u, from: Vector2i, to: Vector2i) -> Array[Vecto
 var cell_px_fn: Callable      # (cell) -> container-local feet point
 var _sparks: Array = []
 
-static func enabled() -> bool:
+const MAX_UNITS := 16  # P4: beyond this the board falls back to 2D tokens
+
+## User default: on for desktop; off on mobile (opt-in in settings) to protect the mobile frame budget.
+static func default_on() -> bool:
+	return not DeviceProfile.is_mobile()
+
+static func enabled(unit_count: int = 0) -> bool:
 	if DisplayServer.get_name() == "headless":
 		return false
+	if unit_count > MAX_UNITS:
+		return false
 	# mobile: off by default until the P4 perf budget is verified (mobile-lag priority)
-	return bool(GameState.settings.get("board_units_3d", not DeviceProfile.is_mobile()))
+	return bool(GameState.settings.get("board_units_3d", default_on()))
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -33,23 +41,31 @@ func _ready() -> void:
 	_vp = SubViewport.new()
 	_vp.transparent_bg = true
 	_vp.own_world_3d = true
-	_vp.msaa_3d = Viewport.MSAA_2X if DeviceProfile.is_mobile() else Viewport.MSAA_4X
+	# Transparent SubViewport + MSAA yields mid-alpha coverage samples → ghost silhouettes
+	# when composited over the 2D board (Godot MSAA/transparent-bg). Keep MSAA off here.
+	_vp.msaa_3d = Viewport.MSAA_DISABLED
+	if DeviceProfile.is_mobile():
+		_vp.scaling_3d_scale = 0.8
 	_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	add_child(_vp)
+	# Viewport texture is premultiplied; default mix blend washes figures into "ghosts".
+	var premul := CanvasItemMaterial.new()
+	premul.blend_mode = CanvasItemMaterial.BLEND_MODE_PREMULT_ALPHA
+	material = premul
 	_world = Node3D.new()
 	_vp.add_child(_world)
 	var env := Environment.new()
 	env.background_mode = Environment.BG_CLEAR_COLOR
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color = Color(0.72, 0.76, 0.86)
-	env.ambient_light_energy = 0.75
+	env.ambient_light_energy = 0.65
 	var we := WorldEnvironment.new()
 	we.environment = env
 	_world.add_child(we)
 	var sun := DirectionalLight3D.new()
 	sun.rotation_degrees = Vector3(-55, -30, 0)
 	sun.light_color = Color(1.0, 0.95, 0.88)
-	sun.light_energy = 1.35
+	sun.light_energy = 1.15
 	_world.add_child(sun)
 	_cam = Camera3D.new()
 	_cam.projection = Camera3D.PROJECTION_ORTHOGONAL
@@ -58,6 +74,25 @@ func _ready() -> void:
 	_cam.far = 200.0
 	_world.add_child(_cam)
 	_cam.current = true
+
+
+## Board figures are tiny: kill rim glow and lean albedo toward the P0 fill so cloth reads solid.
+func _solidify_board(n: Node) -> void:
+	if n is MeshInstance3D:
+		var mi := n as MeshInstance3D
+		if mi.mesh:
+			for si in mi.mesh.get_surface_count():
+				var m = mi.get_surface_override_material(si)
+				if m is ShaderMaterial:
+					var sm := m as ShaderMaterial
+					# board scale: solid cloth from P0 fill + albedo luminance; soft rim only
+					sm.set_shader_parameter("board_compact", 1.0)
+					sm.set_shader_parameter("rim_strength", 0.06)
+					sm.set_shader_parameter("lit_level", 0.80)
+				elif m is BaseMaterial3D:
+					(m as BaseMaterial3D).rim_enabled = false
+	for c in n.get_children():
+		_solidify_board(c)
 
 ## Screen px (container-local) → world point on the ground plane.
 func _to_world(p: Vector2) -> Vector3:
@@ -88,6 +123,7 @@ func sync(entries: Array, delta: float) -> void:
 				continue
 			_world.add_child(n)
 			CKUnitSilhouette.apply(n, u.char, str(u.team))
+			_solidify_board(n)
 			n.set_meta("ck_base_scale", n.scale)
 			var ap := UnitModel.find_anim(n)
 			var f0 := 1.0 if str(u.team) != "enemy" else -1.0
@@ -106,8 +142,13 @@ func sync(entries: Array, delta: float) -> void:
 				_play(st, "death", true)
 			st.dead_t = float(st.dead_t) + delta
 			n2.visible = float(st.dead_t) < 1.4
+			if not n2.visible and st.anim:
+				(st.anim as AnimationPlayer).active = false
 			continue
 		n2.visible = bool(e.visible)
+		var apv: AnimationPlayer = st.anim
+		if apv:  # P4: rigs hidden by fog do not tick
+			apv.active = n2.visible
 		# P2: walk the real path cell by cell (host BFS), turning on every corner
 		var cell: Vector2i = e.cell
 		if not st.has("cell"):

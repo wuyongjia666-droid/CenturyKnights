@@ -326,19 +326,27 @@ static func recolor(n: Node, c, team: String, tmpl: String = "", spec: Dictionar
 	var tint: Color = spec.get("body_tint", Color.WHITE) if enemy else Color.WHITE
 	var rim: Color = trim if enemy else Color("#6ED4FF")
 	_fill = fill_color_for(c, enemy, pal, trim)
+	_albedo_override = null
+	var mp := str(n.get_meta("ck_model", ""))
+	if mp.ends_with(".glb"):
+		var ap := mp.replace(".glb", "__albedo_v87.jpg")
+		if ResourceLoader.exists(ap):
+			_albedo_override = load(ap) as Texture2D
 	_walk_recolor(n, pal, trim, tint, rim)
+	_albedo_override = null
 	_fill = Color(0, 0, 0, 0)
 
 ## P0 albedo white-patch repaint colour (see toon_body_v87 fill_color).
+static var _albedo_override: Texture2D = null  # P0 repaired external albedo for current recolor()
 static var _fill := Color(0, 0, 0, 0)
 static func fill_color_for(c, enemy: bool, pal: Dictionary, trim: Color = Color(1, 0.48, 0.44)) -> Color:
 	if enemy:
 		# faction dye: theme trim hue as deep wool (bandit rust, cult violet, …)
-		return Color(Color.from_hsv(trim.h, 0.62, 0.34), 1.0)
+		return Color(Color.from_hsv(trim.h, 0.58, 0.55), 1.0)
 	# allies: house crest hue as dyed cloth, nudged by the genome cloth/hair tint
 	var dye: Color = pal["cloth"][0]
 	var crest: Color = UnitArt.crest_color() if Engine.get_main_loop() else Color(0.2, 0.3, 0.5)
-	return Color(Color.from_hsv(crest.h, 0.55, 0.34).lerp(dye, 0.25), 1.0)
+	return Color(Color.from_hsv(crest.h, 0.50, 0.55).lerp(dye, 0.25), 1.0)
 
 const MOD_DIR := "res://assets/models/modules/"
 const HEAD_LEN := 0.249  # canonical head bone length (rig_mesh_v87 rest)
@@ -469,6 +477,7 @@ static func _outline_mat() -> StandardMaterial3D:
 		_outline.albedo_color = Color("#0A0E14")
 	return _outline
 
+
 static func _walk_recolor(n: Node, pal: Dictionary, trim: Color, body_tint: Color = Color.WHITE, rim_color: Color = Color("#6ED4FF")) -> void:
 	if n is MeshInstance3D:
 		var mi := n as MeshInstance3D
@@ -481,15 +490,18 @@ static func _walk_recolor(n: Node, pal: Dictionary, trim: Color, body_tint: Colo
 			var nm := str(m.resource_name) if m else ""
 			var base := nm.split(".")[0]
 			if base == "body" and m is BaseMaterial3D and (m as BaseMaterial3D).albedo_texture != null:
+				var body_tex: Texture2D = _albedo_override if _albedo_override else (m as BaseMaterial3D).albedo_texture
 				if prefer_simple_shading:
-					mi.set_surface_override_material(si, _unshaded_tex((m as BaseMaterial3D).albedo_texture, body_tint))
+					mi.set_surface_override_material(si, _unshaded_tex(body_tex, body_tint))
 					continue
 				var tm := ShaderMaterial.new()
 				tm.shader = TOON_BODY
-				tm.set_shader_parameter("albedo_tex", (m as BaseMaterial3D).albedo_texture)
+				tm.set_shader_parameter("albedo_tex", body_tex)
 				tm.set_shader_parameter("tint", body_tint)
 				tm.set_shader_parameter("rim_color", rim_color)
 				tm.set_shader_parameter("fill_color", _fill)
+				tm.set_shader_parameter("lit_level", 0.78)
+				tm.set_shader_parameter("rim_strength", 0.18)
 				tm.next_pass = _outline_mat()
 				mi.set_surface_override_material(si, tm)
 				continue
@@ -509,15 +521,18 @@ static func _walk_recolor(n: Node, pal: Dictionary, trim: Color, body_tint: Colo
 				sm.emission_energy_multiplier = 2.4 if base == "visor" else 1.6
 				sm.roughness = 0.3
 			elif m is BaseMaterial3D and (m as BaseMaterial3D).albedo_texture != null:
+				var body_tex2: Texture2D = _albedo_override if _albedo_override else (m as BaseMaterial3D).albedo_texture
 				if prefer_simple_shading:
-					mi.set_surface_override_material(si, _unshaded_tex((m as BaseMaterial3D).albedo_texture, body_tint))
+					mi.set_surface_override_material(si, _unshaded_tex(body_tex2, body_tint))
 					continue
 				var tm2 := ShaderMaterial.new()
 				tm2.shader = TOON_BODY
-				tm2.set_shader_parameter("albedo_tex", (m as BaseMaterial3D).albedo_texture)
+				tm2.set_shader_parameter("albedo_tex", body_tex2)
 				tm2.set_shader_parameter("tint", body_tint)
 				tm2.set_shader_parameter("rim_color", rim_color)
 				tm2.set_shader_parameter("fill_color", _fill)
+				tm2.set_shader_parameter("lit_level", 0.78)
+				tm2.set_shader_parameter("rim_strength", 0.18)
 				tm2.next_pass = _outline_mat()
 				mi.set_surface_override_material(si, tm2)
 				continue
