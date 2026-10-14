@@ -117,6 +117,11 @@ func _ready() -> void:
 	CKPlayStats.install(get_tree())
 	Calendar.register("post", Callable(self, "_court_before"), 39)
 	Calendar.register("post", Callable(self, "_court_after"), 50)
+	## Warm the genome bank disk index off the first founding tap (lists ~9k plates once).
+	call_deferred("_warm_portrait_bank")
+
+func _warm_portrait_bank() -> void:
+	CKPortraitBank.warm_disk_index()
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_PAUSED or what == NOTIFICATION_WM_CLOSE_REQUEST:

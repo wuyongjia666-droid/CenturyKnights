@@ -104,12 +104,18 @@ func _show_step() -> void:
 		_step.text = "%d / %d" % [step_index + 1, maxi(step_count, 1)]
 	_sync()
 
+var _last_hole := Rect2()
+
 func _process(_delta: float) -> void:
 	_sync()
 
 func _sync() -> void:
 	if _target != null and is_instance_valid(_target):
 		hole = _target.get_global_rect()
+	## Only redraw when the spotlight moves — continuous redraw was a phone FPS tax.
+	if hole == _last_hole and _card != null:
+		return
+	_last_hole = hole
 	queue_redraw()
 	_place_callout()
 

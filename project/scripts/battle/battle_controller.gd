@@ -9,7 +9,8 @@ const BOARD_AREA := Rect2(24, 76, 856, 620)  ## v8.6: the board is the hero — 
 const RAIL_X := 904.0
 const RAIL_W := 352.0
 var _ground: ColorRect
-const CombatCutsceneScript = preload("res://scripts/battle/combat_cutscene.gd")  ## v8.6 3D combat cutscenes: pure recorder (tactics logic untouched) -> queued overlay playback
+const CombatCutsceneScript = preload("res://scripts/battle/combat_cutscene.gd")
+const FactionMarksSync = preload("res://scripts/battle/ui/faction_marks_sync.gd")
 var _combat_rec: Array = []
 var _cut_queue: Array = []
 var _cut_playing := false
@@ -181,6 +182,10 @@ func _ui_origin() -> Vector2:
 		return get_meta("mobile_origin")
 	return Vector2.ZERO
 
+var _redraw_accum := 0.0
+var _marks_sig := ""
+const _REDRAW_HZ := 12.0
+
 func _process(delta: float) -> void:
 	if _board_router:
 		for g in _board_router.poll(Time.get_ticks_msec()):
@@ -226,10 +231,21 @@ func _process(delta: float) -> void:
 		position = origin + Vector2(10.0 * shake * sin(_shake_t * 1.7), 7.0 * shake * sin(_shake_t * 2.3))
 	else:
 		position = origin
-	if overlay:
-		overlay.queue_redraw()
-	if map_draw and _sel_pulse:
-		map_draw.queue_redraw()
+	## Mobile/desktop: do not full-redraw the board every frame. Pulse FX at ~12 Hz;
+	## keep full rate only while slash/dmg/dust/shake are live.
+	var fx_live := (
+		not _dmg_fx.is_empty() or not _slash_fx.is_empty()
+		or not _lock_burst_fx.is_empty() or not _move_dust_fx.is_empty()
+		or _trauma > 0.0 or _turn_flash > 0.0
+	)
+	_redraw_accum += delta
+	var pulse := fx_live or _redraw_accum >= (1.0 / _REDRAW_HZ)
+	if pulse:
+		_redraw_accum = 0.0
+		if overlay:
+			overlay.queue_redraw()
+		if map_draw:
+			map_draw.queue_redraw()
 	_sync_faction_marks()
 
 var _tex_cache: Dictionary = {}
@@ -1072,15 +1088,17 @@ func _draw_map() -> void:
 			continue
 		var center = ORIGIN + Vector2(p) * CELL + Vector2(CELL / 2, CELL / 2)
 		var tr := 20.0 * k
-		# soft contact shadow (3 stacked ellipses)
-		for si in range(3):
-			var sr := tr * (1.05 + 0.16 * si)
-			var pts := PackedVector2Array()
-			for a in range(20):
-				var ang := TAU * a / 20.0
-				pts.append(center + Vector2(cos(ang) * sr, sin(ang) * sr * 0.42 + tr * 0.78))
-			map_draw.draw_colored_polygon(pts, Color(0, 0, 0, 0.20 - 0.05 * si))
-		if not CKBoardUnits.draw_base(self, center, tr, u): UnitArt.draw_token_on(map_draw, center, u.char, u.team, tr, u.done)
+		# soft contact shadow — desktop only (3×20 polys per unit every redraw stalls phones)
+		if not DeviceProfile.is_mobile():
+			for si in range(3):
+				var sr := tr * (1.05 + 0.16 * si)
+				var pts := PackedVector2Array()
+				for a in range(20):
+					var ang := TAU * a / 20.0
+					pts.append(center + Vector2(cos(ang) * sr, sin(ang) * sr * 0.42 + tr * 0.78))
+				map_draw.draw_colored_polygon(pts, Color(0, 0, 0, 0.20 - 0.05 * si))
+		if not CKBoardUnits.draw_base(self, center, tr, u):
+			UnitArt.draw_token_on(map_draw, center, u.char, u.team, tr, u.done)
 		if int(u.char.temp_combat_lock) > 0:
 			UnitArt.draw_lock_ring(map_draw, center, 22.0 * k)
 		var hp_ratio = float(u.char.hp) / float(maxi(1, u.char.max_hp))  # HP bar (slim token bar)
@@ -1911,29 +1929,8 @@ func _pulse_heal(team: String) -> void:
 		u.char.hp = mini(u.char.max_hp, u.char.hp + amt)
 
 func _sync_faction_marks() -> void:
-	var layer := get_node_or_null("FactionMarks") as Control
-	if layer == null:
-		layer = Control.new()
-		layer.name = "FactionMarks"
-		layer.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		add_child(layer)
-	while layer.get_child_count() < units.size():
-		layer.add_child(UIKit.faction_mark("player"))
-	for i in layer.get_child_count():
-		var mark := layer.get_child(i) as Control
-		if i >= units.size() or units[i].char.hp <= 0:
-			mark.visible = false
-			continue
-		var u = units[i]
-		mark.visible = true
-		mark.team = "enemy" if str(u.team) == "enemy" else "player"
-		mark.queue_redraw()
-		var center := ORIGIN + Vector2(u.pos) * CELL + Vector2(CELL * 0.5, CELL * 0.5)
-		var side := 12.0  # small colour-blind shape badge tucked into the cell corner
-		mark.custom_minimum_size = Vector2(side, side)
-		mark.size = Vector2(side, side)
-		mark.position = center + Vector2(CELL * 0.5 - side - 3.0, CELL * 0.5 - side - 3.0)
+	_marks_sig = FactionMarksSync.sync(self, units, ORIGIN, float(CELL), _marks_sig)
+
 
 func _apply_combat_lock(ai: int, di: int) -> void:
 	# 双方进入交战锁定（再交战刷新至 2）

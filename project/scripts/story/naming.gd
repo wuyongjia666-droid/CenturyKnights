@@ -336,7 +336,7 @@ func _name_field(parent: Container, title: String, value: String) -> LineEdit:
 	var e := LineEdit.new()
 	e.text = value
 	e.custom_minimum_size = Vector2(140, 48)
-	e.text_changed.connect(func(_t): _refresh_preview_art())
+	e.text_changed.connect(func(_t): _on_name_typed())
 	col.add_child(e)
 	return e
 
@@ -439,6 +439,13 @@ func _sync_layer_labels() -> void:
 		var st := CKHeraldry.nation_style(str(_nations[_nation_idx]))
 		_nation_label.text = str(st.get("zh", _nations[_nation_idx]))
 
+func _on_name_typed() -> void:
+	## Typing only needs the banner tag + raise-button state — not a full portrait rebuild.
+	var s := _surname.text.strip_edges() if _surname else ""
+	if _banner:
+		BannerName.attach(_banner, s)
+	_sync_start()
+
 func _refresh_preview_art() -> void:
 	_sync_layer_labels()
 	var spec := _current_spec()
@@ -448,20 +455,22 @@ func _refresh_preview_art() -> void:
 	GameState.crest_color = _heart()
 	GameState.banner_spec = spec
 	GameState.surname = _surname.text.strip_edges() if _surname else ""
-	UnitArt.clear_cache()
+	## Keep portrait mem/caches: wiping them re-lists thousands of bank plates on Android.
 	_banner.texture = UnitArt.banner_layers(spec, 280, 400)
 	BannerName.attach(_banner, GameState.surname)
 	if _shield:
 		_shield.texture = ImageTexture.create_from_image(BannerSpec.compose_shield(spec, 240, 280))
+	var faces_before := _faces.size()
 	_ensure_faces()
 	if _face == null and not _faces.is_empty():
 		_face = _faces[_face_idx]
 	if _face != null:
 		_face.name = GameState.surname + (_given.text.strip_edges() if _given else "烬行")
 		_face.gender = _gender
-	CKGenomePortrait.clear_mem()
 	_portrait.texture = UnitArt.portrait(_face, 280, CKArtPaths.TIER_MEDIUM) if _face else null
-	_paint_face_thumbs()
+	## Thumbs only when the four face seeds changed (gender / reroll), not every colour tick.
+	if faces_before != _faces.size() or _face_btns_need_paint():
+		_paint_face_thumbs()
 	_sync_gender_btns()
 	if _warn:
 		var bits: PackedStringArray = []
@@ -476,6 +485,20 @@ func _refresh_preview_art() -> void:
 	GameState.surname = prev_s
 	GameState.banner_spec = prev_b
 	_sync_start()
+
+func _clear_face_thumb_icons() -> void:
+	for tb in _face_btns:
+		if tb is Button:
+			(tb as Button).icon = null
+
+func _face_btns_need_paint() -> bool:
+	if _face_btns.is_empty() or _faces.size() != 4:
+		return false
+	for i in mini(4, _face_btns.size()):
+		var tb: Button = _face_btns[i]
+		if tb.icon == null:
+			return true
+	return false
 
 func _sync_start() -> void:
 	if _start_btn == null or _surname == null or _given == null:
@@ -524,12 +547,14 @@ func _set_gender(g: String) -> void:
 	_faces.clear()
 	_face = null
 	_face_idx = 0
+	_clear_face_thumb_icons()
 	_refresh_preview_art()
 
 func _reroll_faces() -> void:
 	_face_gen += 1
 	_faces.clear()
 	_face = null
+	_clear_face_thumb_icons()
 	_refresh_preview_art()
 
 func _pick_face(idx: int) -> void:
@@ -579,7 +604,6 @@ func _ensure_faces() -> void:
 func _paint_face_thumbs() -> void:
 	if _face_btns.is_empty() or _faces.size() != 4:
 		return
-	CKGenomePortrait.clear_mem()
 	for i in 4:
 		var tb: Button = _face_btns[i]
 		var tex: Texture2D = UnitArt.portrait(_faces[i], 96, CKArtPaths.TIER_MEDIUM)
