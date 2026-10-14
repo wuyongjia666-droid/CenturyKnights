@@ -1343,9 +1343,9 @@ static func board_pawns_enabled() -> bool:
 
 static func board_pawn_texture(c: CKCharacter, team: String, size: int = 64, done: bool = false) -> Texture2D:
 	var ph: Dictionary = CKGenome.phenotype(c) if c != null else {}
-	var hair: Color = ph.get("hair_color", Color("#1B1D24"))
-	var skin: Color = ph.get("skin_color", Color("#E2C1AC"))
-	var eye: Color = ph.get("eye_color", Color("#5A6570"))
+	var hair: Color = ph.get("hair_color", Color(0.106, 0.114, 0.141))
+	var skin: Color = ph.get("skin_color", Color(0.886, 0.757, 0.675))
+	var eye: Color = ph.get("eye_color", Color(0.353, 0.396, 0.439))
 	var crest := crest_color() if team == "player" else Color(0.72, 0.28, 0.24)
 	var key := "bp3|%s|%s|%d|%s|%s|%s|%s" % [
 		str(c.id) if c else "?", team, size, str(done),
