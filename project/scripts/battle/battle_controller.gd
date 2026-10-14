@@ -146,6 +146,9 @@ func _theme_banter(kind: String) -> void:
 func _escort_banter(kind: String) -> void:
 	_theme_banter(kind)
 
+var _board_anim := CKBoardAnim.new()
+var _fig_redraw := 0.0
+
 func _ready() -> void:
 	CKAutosave.before_battle()
 	var _figs := CKBoardFigures.new()
@@ -187,6 +190,11 @@ func _process(delta: float) -> void:
 		for g in _board_router.poll(Time.get_ticks_msec()):
 			_apply_board_gesture(g)
 	UnitArt.tick(delta)
+	if map_draw and CKBoardFigures.active != null:
+		_fig_redraw += delta
+		if _board_anim.busy() or _fig_redraw >= 0.1:  # idle breathe ~10 fps; full rate while moving
+			_fig_redraw = 0.0
+			map_draw.queue_redraw()
 	_sel_pulse += delta
 	if _turn_flash > 0.0:
 		_turn_flash = maxf(0.0, _turn_flash - delta)
@@ -1065,21 +1073,29 @@ func _draw_map() -> void:
 	for i in units.size():
 		var u = units[i]
 		if u.char.hp <= 0:
+			if UnitArt.board_pawns_enabled():
+				var dc = ORIGIN + Vector2(u.pos) * CELL + Vector2(CELL / 2, CELL / 2)
+				_board_anim.draw_dead(map_draw, CKBoardFigures.active, u, dc, 20.0 * k)
 			continue
 		var p: Vector2i = u.pos
 		if str(u.team) == "enemy" and not _players_see(p):
 			continue
 		var center = ORIGIN + Vector2(p) * CELL + Vector2(CELL / 2, CELL / 2)
 		var tr := 20.0 * k
-		# soft contact shadow (3 stacked ellipses)
-		for si in range(3):
-			var sr := tr * (1.05 + 0.16 * si)
-			var pts := PackedVector2Array()
-			for a in range(20):
-				var ang := TAU * a / 20.0
-				pts.append(center + Vector2(cos(ang) * sr, sin(ang) * sr * 0.42 + tr * 0.78))
-			map_draw.draw_colored_polygon(pts, Color(0, 0, 0, 0.20 - 0.05 * si))
-		UnitArt.draw_token_on(map_draw, center, u.char, u.team, tr, u.done, str(u.get("template", "")))
+		# v2: animated 3D-model figure (walk / attack / hit / idle); falls back to the token
+		var vis: Vector2 = _board_anim.draw(map_draw, CKBoardFigures.active if UnitArt.board_pawns_enabled() else null, u, center, tr, float(CELL), bool(u.done), i == selected)
+		if vis != Vector2.INF:
+			center = vis
+		else:
+			# soft contact shadow (3 stacked ellipses)
+			for si in range(3):
+				var sr := tr * (1.05 + 0.16 * si)
+				var pts := PackedVector2Array()
+				for a in range(20):
+					var ang := TAU * a / 20.0
+					pts.append(center + Vector2(cos(ang) * sr, sin(ang) * sr * 0.42 + tr * 0.78))
+				map_draw.draw_colored_polygon(pts, Color(0, 0, 0, 0.20 - 0.05 * si))
+			UnitArt.draw_token_on(map_draw, center, u.char, u.team, tr, u.done, str(u.get("template", "")))
 		if int(u.char.temp_combat_lock) > 0:
 			UnitArt.draw_lock_ring(map_draw, center, 22.0 * k)
 		var hp_ratio = float(u.char.hp) / float(maxi(1, u.char.max_hp))  # HP bar (slim token bar)
@@ -2066,7 +2082,11 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 		tags.append("垒防" if tid == "fort" else "地形防")
 	var tag_s = ("〔" + "·".join(tags) + "〕") if tags else ""
 	var msg = "%s → %s%s：" % [atk.char.name, def.char.name, tag_s]
+	var _apx = ORIGIN + Vector2(atk.pos) * CELL + Vector2(CELL / 2, CELL / 2)
+	var _dpx = ORIGIN + Vector2(def.pos) * CELL + Vector2(CELL / 2, CELL / 2)
+	_board_anim.note_attack(atk, _dpx, _apx)
 	if result.hit:
+		_board_anim.note_hit(def, _dpx - _apx, _dpx)
 		Sfx.play_weapon(_weapon_for(atk.char))
 		_bark(atk.char, "shout")
 		_spawn_slash(def.pos, "crit" if result.crit else "slash")

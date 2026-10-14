@@ -273,8 +273,8 @@ func _render() -> void:
 	tok.texture = UnitArt.token(c, "player", 64, false)  # placeholder until the 3D figure lands
 	tok.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	tok.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	tok.position = Vector2(694, 404)
-	tok.size = Vector2(84, 112)
+	tok.position = Vector2(680, 390)
+	tok.size = Vector2(110, 140)
 	if UnitArt.board_pawns_enabled():
 		CKBoardFigures.ensure(self).bind(tok, c, "player")
 	tok.tooltip_text = "战棋棋子预览"

@@ -7,11 +7,13 @@ func _ready() -> void:
 	var before := false
 	var map := "ch0_pass"
 	var scene := "battle"
+	var seq := false
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--out="): out = a.substr(6)
 		if a == "--before": before = true
 		if a.begins_with("--map="): map = a.substr(6)
 		if a.begins_with("--scene="): scene = a.substr(8)
+		if a == "--seq": seq = true
 	if DisplayServer.get_name() == "headless":
 		print("PAWN SHOTS headless-skip")
 		get_tree().quit(0)
@@ -39,6 +41,41 @@ func _ready() -> void:
 		await RenderingServer.frame_post_draw
 		get_viewport().get_texture().get_image().save_png("%s/%s_%s_%dx%d.png" % [out, scene, "before" if before else "after", r.x, r.y])
 		print("SHOT ", r)
+		if seq and scene == "battle":
+			await _sequence(node, out)
 		node.queue_free()
 		await get_tree().process_frame
 	get_tree().quit(0)
+
+
+## Frame sequence: walk 2 cells → attack → hit → death fade (drives CKBoardAnim directly).
+func _sequence(b, out: String) -> void:
+	await get_tree().create_timer(2.5).timeout  # let every strip finish rendering
+	var dir := out + "/seq"
+	DirAccess.make_dir_recursive_absolute(dir)
+	var pl = null
+	var en = null
+	for u in b.units:
+		if pl == null and str(u.team) == "player": pl = u
+		if en == null and str(u.team) == "enemy": en = u
+	var n := 0
+	var target: Vector2i = en.pos + Vector2i(-1, 0)
+	pl.pos = target
+	b.selected = b.units.find(pl)
+	for f in 14:
+		await _snap(b, dir, n); n += 1
+	var cpx = func(c: Vector2i) -> Vector2: return b.ORIGIN + Vector2(c) * b.CELL + Vector2(b.CELL / 2, b.CELL / 2)
+	b._board_anim.note_attack(pl, cpx.call(en.pos), cpx.call(pl.pos))
+	b._board_anim.note_hit(en, cpx.call(en.pos) - cpx.call(pl.pos), cpx.call(en.pos))
+	for f in 12:
+		await _snap(b, dir, n); n += 1
+	en.char.hp = 0
+	for f in 12:
+		await _snap(b, dir, n); n += 1
+	print("SEQ ", n)
+
+func _snap(b, dir: String, n: int) -> void:
+	await get_tree().create_timer(0.06).timeout
+	b.map_draw.queue_redraw()
+	await RenderingServer.frame_post_draw
+	get_viewport().get_texture().get_image().save_png("%s/f%03d.png" % [dir, n])
