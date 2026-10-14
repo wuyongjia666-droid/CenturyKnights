@@ -146,6 +146,7 @@ func _theme_banter(kind: String) -> void:
 func _escort_banter(kind: String) -> void:
 	_theme_banter(kind)
 
+var _unit_layer: CKUnitLayer3D = null  # route C live 3D units (CKBoardUnits); null = 2D tokens
 func _ready() -> void:
 	CKAutosave.before_battle()
 	rng.randomize()
@@ -184,6 +185,7 @@ func _process(delta: float) -> void:
 		for g in _board_router.poll(Time.get_ticks_msec()):
 			_apply_board_gesture(g)
 	UnitArt.tick(delta)
+	if _unit_layer != null: CKBoardUnits.sync(self, delta)
 	_sel_pulse += delta
 	if _turn_flash > 0.0:
 		_turn_flash = maxf(0.0, _turn_flash - delta)
@@ -330,6 +332,7 @@ func _build_ui() -> void:
 	overlay = Node2D.new()
 	overlay.draw.connect(_draw_overlay)
 	_board_xform.add_child(overlay)
+	_unit_layer = CKBoardUnits.attach(self)
 	_unit_panel = UIKit.make_panel()  # --- right rail
 	_unit_panel.position = Vector2(RAIL_X, 76)
 	_unit_panel.custom_minimum_size = Vector2(RAIL_W, 0)
@@ -1076,7 +1079,7 @@ func _draw_map() -> void:
 				var ang := TAU * a / 20.0
 				pts.append(center + Vector2(cos(ang) * sr, sin(ang) * sr * 0.42 + tr * 0.78))
 			map_draw.draw_colored_polygon(pts, Color(0, 0, 0, 0.20 - 0.05 * si))
-		UnitArt.draw_token_on(map_draw, center, u.char, u.team, tr, u.done)
+		if not CKBoardUnits.draw_base(self, center, tr, u): UnitArt.draw_token_on(map_draw, center, u.char, u.team, tr, u.done)
 		if int(u.char.temp_combat_lock) > 0:
 			UnitArt.draw_lock_ring(map_draw, center, 22.0 * k)
 		var hp_ratio = float(u.char.hp) / float(maxi(1, u.char.max_hp))  # HP bar (slim token bar)
@@ -1924,9 +1927,10 @@ func _sync_faction_marks() -> void:
 		mark.team = "enemy" if str(u.team) == "enemy" else "player"
 		mark.queue_redraw()
 		var center := ORIGIN + Vector2(u.pos) * CELL + Vector2(CELL * 0.5, CELL * 0.5)
-		var side := 22.0
+		var side := 12.0  # small colour-blind shape badge tucked into the cell corner
+		mark.custom_minimum_size = Vector2(side, side)
 		mark.size = Vector2(side, side)
-		mark.position = center + Vector2(-side * 0.5, 8.0)
+		mark.position = center + Vector2(CELL * 0.5 - side - 3.0, CELL * 0.5 - side - 3.0)
 
 func _apply_combat_lock(ai: int, di: int) -> void:
 	# 双方进入交战锁定（再交战刷新至 2）
@@ -2056,6 +2060,7 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 		tags.append("垒防" if tid == "fort" else "地形防")
 	var tag_s = ("〔" + "·".join(tags) + "〕") if tags else ""
 	var msg = "%s → %s%s：" % [atk.char.name, def.char.name, tag_s]
+	if _unit_layer != null: CKBoardUnits.on_strike(self, atk, def, result)
 	if result.hit:
 		Sfx.play_weapon(_weapon_for(atk.char))
 		_bark(atk.char, "shout")
@@ -2330,7 +2335,7 @@ func _show_lock_practice_banner() -> void:
 	pst.content_margin_right = 14
 	pst.shadow_size = 0
 	panel.add_theme_stylebox_override("panel", pst)
-	panel.position = Vector2(RAIL_X, 48)  # below ObjectiveHud; leaves room for story skip
+	panel.position = Vector2(RAIL_X, 48 if DeviceProfile.is_mobile() else 2)  # desktop: above the unit panel
 	panel.custom_minimum_size = Vector2(RAIL_W, 0)
 	panel.z_index = 18
 	var ct := find_child("ControlsTip", true, false)
