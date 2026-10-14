@@ -146,6 +146,8 @@ func _theme_banter(kind: String) -> void:
 func _escort_banter(kind: String) -> void:
 	_theme_banter(kind)
 
+var _unit_layer: CKUnitLayer3D = null
+
 func _ready() -> void:
 	CKAutosave.before_battle()
 	rng.randomize()
@@ -184,6 +186,8 @@ func _process(delta: float) -> void:
 		for g in _board_router.poll(Time.get_ticks_msec()):
 			_apply_board_gesture(g)
 	UnitArt.tick(delta)
+	if _unit_layer != null:
+		_sync_unit_layer(delta)
 	_sel_pulse += delta
 	if _turn_flash > 0.0:
 		_turn_flash = maxf(0.0, _turn_flash - delta)
@@ -330,6 +334,10 @@ func _build_ui() -> void:
 	overlay = Node2D.new()
 	overlay.draw.connect(_draw_overlay)
 	_board_xform.add_child(overlay)
+	if CKUnitLayer3D.enabled():  # route C: live 3D units over the 2D board (2D token fallback)
+		_unit_layer = CKUnitLayer3D.new()
+		_unit_layer.name = "UnitLayer3D"
+		add_child(_unit_layer)
 	_unit_panel = UIKit.make_panel()  # --- right rail
 	_unit_panel.position = Vector2(RAIL_X, 76)
 	_unit_panel.custom_minimum_size = Vector2(RAIL_W, 0)
@@ -1068,6 +1076,8 @@ func _draw_map() -> void:
 			continue
 		var center = ORIGIN + Vector2(p) * CELL + Vector2(CELL / 2, CELL / 2)
 		var tr := 20.0 * k
+		if _unit_layer != null:
+			_draw_unit_base(center, tr, str(u.team), bool(u.done))
 		# soft contact shadow (3 stacked ellipses)
 		for si in range(3):
 			var sr := tr * (1.05 + 0.16 * si)
@@ -1075,8 +1085,9 @@ func _draw_map() -> void:
 			for a in range(20):
 				var ang := TAU * a / 20.0
 				pts.append(center + Vector2(cos(ang) * sr, sin(ang) * sr * 0.42 + tr * 0.78))
-			map_draw.draw_colored_polygon(pts, Color(0, 0, 0, 0.20 - 0.05 * si))
-		UnitArt.draw_token_on(map_draw, center, u.char, u.team, tr, u.done)
+			map_draw.draw_colored_polygon(pts, Color(0, 0, 0, (0.20 - 0.05 * si) * (1.4 if _unit_layer != null else 1.0)))
+		if _unit_layer == null:
+			UnitArt.draw_token_on(map_draw, center, u.char, u.team, tr, u.done)
 		if int(u.char.temp_combat_lock) > 0:
 			UnitArt.draw_lock_ring(map_draw, center, 22.0 * k)
 		var hp_ratio = float(u.char.hp) / float(maxi(1, u.char.max_hp))  # HP bar (slim token bar)
@@ -1904,6 +1915,31 @@ func _pulse_heal(team: String) -> void:
 			continue
 		u.char.hp = mini(u.char.max_hp, u.char.hp + amt)
 
+func _sync_unit_layer(delta: float) -> void:
+	var inv := _unit_layer.get_global_transform().affine_inverse()
+	var mx := map_draw.get_global_transform()
+	var cell_px := float(CELL) * mx.get_scale().x
+	var entries: Array = []
+	for u in units:
+		var c := ORIGIN + Vector2(u.pos) * CELL + Vector2(CELL / 2, CELL * 0.62)
+		var vis := not (str(u.team) == "enemy" and not _players_see(u.pos))
+		entries.append({"u": u, "px": inv * (mx * c), "cell_px": cell_px, "visible": vis})
+	_unit_layer.sync(entries, delta)
+
+func _unit_px(cell: Vector2i) -> Vector2:
+	return ORIGIN + Vector2(cell) * CELL + Vector2(CELL / 2, CELL / 2)
+
+## Faction disc under a live 3D unit (the figure itself is drawn by the 3D layer).
+func _draw_unit_base(center: Vector2, r: float, team: String, done: bool) -> void:
+	var side := Color(0.36, 0.90, 0.78) if team != "enemy" else Color(0.95, 0.36, 0.32)
+	var feet := center + Vector2(0, CELL * 0.12)
+	var pts := PackedVector2Array()
+	for a in 29:
+		var ang := TAU * a / 28.0
+		pts.append(feet + Vector2(cos(ang) * r * 1.05, sin(ang) * r * 0.42))
+	map_draw.draw_colored_polygon(pts, Color(side, 0.26 if not done else 0.10))
+	map_draw.draw_polyline(pts, Color(side, 0.95 if not done else 0.40), maxf(1.5, r * 0.09), true)
+
 func _sync_faction_marks() -> void:
 	var layer := get_node_or_null("FactionMarks") as Control
 	if layer == null:
@@ -1924,9 +1960,12 @@ func _sync_faction_marks() -> void:
 		mark.team = "enemy" if str(u.team) == "enemy" else "player"
 		mark.queue_redraw()
 		var center := ORIGIN + Vector2(u.pos) * CELL + Vector2(CELL * 0.5, CELL * 0.5)
-		var side := 22.0
+		# small shape badge in the cell corner so it never covers the figure (colour-blind cue)
+		var side := 12.0
+		mark.custom_minimum_size = Vector2(side, side)
 		mark.size = Vector2(side, side)
-		mark.position = center + Vector2(-side * 0.5, 8.0)
+		mark.modulate.a = 0.85
+		mark.position = center + Vector2(CELL * 0.5 - side - 3.0, CELL * 0.5 - side - 3.0)
 
 func _apply_combat_lock(ai: int, di: int) -> void:
 	# 双方进入交战锁定（再交战刷新至 2）
@@ -2056,6 +2095,9 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 		tags.append("垒防" if tid == "fort" else "地形防")
 	var tag_s = ("〔" + "·".join(tags) + "〕") if tags else ""
 	var msg = "%s → %s%s：" % [atk.char.name, def.char.name, tag_s]
+	if _unit_layer != null:
+		_unit_layer.act(atk, "crit" if result.get("crit", false) else "attack", _unit_px(def.pos), _unit_px(atk.pos))
+		_unit_layer.act(def, "hit" if result.hit else "dodge", _unit_px(atk.pos), _unit_px(def.pos))
 	if result.hit:
 		Sfx.play_weapon(_weapon_for(atk.char))
 		_bark(atk.char, "shout")
@@ -2331,6 +2373,8 @@ func _show_lock_practice_banner() -> void:
 	pst.shadow_size = 0
 	panel.add_theme_stylebox_override("panel", pst)
 	panel.position = Vector2(RAIL_X, 48)  # below ObjectiveHud; leaves room for story skip
+	if not DeviceProfile.is_mobile():
+		panel.position.y = 2.0  # desktop: sit above the unit panel (y=76) instead of covering its top
 	panel.custom_minimum_size = Vector2(RAIL_W, 0)
 	panel.z_index = 18
 	var ct := find_child("ControlsTip", true, false)
