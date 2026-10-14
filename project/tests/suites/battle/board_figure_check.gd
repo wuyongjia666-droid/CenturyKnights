@@ -12,6 +12,18 @@ func _ready() -> void:
 	get_tree().quit(0)
 
 func _run() -> String:
+	var err := _check_house_and_fill()
+	if err != "":
+		return err
+	err = _check_palettes()
+	if err != "":
+		return err
+	err = _check_themes_coral()
+	if err != "":
+		return err
+	return _check_build()
+
+func _check_house_and_fill() -> String:
 	GameState.new_game("棋子", "霜旗", UIKit.ACCENT.to_html(false))
 	var ash := CKHeraldry.tincture_hex("ash")
 	var charge := "#" + UIKit.ACCENT.to_html(false)
@@ -24,7 +36,6 @@ func _run() -> String:
 	var house: Color = UnitArt.house_color()
 	if absf(house.h - UIKit.ACCENT.h) > 0.08:
 		return "house_color should follow charge, got %s" % house
-
 	var leader = GameState.get_leader()
 	if leader == null:
 		return "no leader"
@@ -32,10 +43,12 @@ func _run() -> String:
 	if absf(fill_a.h - UIKit.ACCENT.h) > 0.12:
 		return "ally fill should track house hue, got %s" % fill_a
 	var fill_e: Color = UnitModel.fill_color_for(leader, true, {}, Color(0.37, 0.88, 0.71))
-	var coral: Color = UIKit.DANGER
-	if absf(fill_e.h - coral.h) > 0.08:
-		return "enemy fill must lock to coral, got %s vs %s" % [fill_e, coral]
+	if absf(fill_e.h - UIKit.DANGER.h) > 0.08:
+		return "enemy fill must lock to coral, got %s" % fill_e
+	return ""
 
+func _check_palettes() -> String:
+	var leader = GameState.get_leader()
 	var pal_a: Dictionary = CKBoardFigure.palette_for(leader, "player")
 	var err := CKBoardFigure.assert_palette_rules(pal_a, false)
 	if err != "":
@@ -46,10 +59,14 @@ func _run() -> String:
 		return err
 	if CKBoardFigure._in_ally_gamut(pal_e["coat"]):
 		return "enemy coat still in ally gamut"
+	return ""
 
+func _check_themes_coral() -> String:
 	var themes := _load_themes()
 	if themes.is_empty():
 		return "no enemy themes loaded"
+	var leader = GameState.get_leader()
+	var coral: Color = UIKit.DANGER
 	var bad := 0
 	for tid in themes.keys():
 		var row: Dictionary = themes[tid]
@@ -63,20 +80,25 @@ func _run() -> String:
 			bad += 1
 	if bad > 0:
 		return "%d enemy themes still escape coral lock" % bad
+	return ""
 
+func _check_build() -> String:
+	var leader = GameState.get_leader()
 	var fig := CKBoardFigure.build(leader, "player")
 	if fig == null:
 		return "build returned null"
 	var ap := CKBoardFigure.find_anim(fig)
 	if ap == null or not ap.has_animation("idle") or not ap.has_animation("attack"):
+		fig.free()
 		return "missing AnimationPlayer clips"
 	var spec: Dictionary = CKBoardFigure.spec_for(leader, "player")
+	var bad := ""
 	if int(spec.get("tris_est", 99999)) > 7000:
-		return "tris budget"
-	if int(spec.get("textures", 1)) != 0:
-		return "textures must be 0"
+		bad = "tris budget"
+	elif int(spec.get("textures", 1)) != 0:
+		bad = "textures must be 0"
 	fig.free()
-	return ""
+	return bad
 
 func _load_themes() -> Dictionary:
 	var f := FileAccess.open("res://data/enemy_themes.json", FileAccess.READ)
