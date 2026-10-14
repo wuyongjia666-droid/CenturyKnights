@@ -1458,7 +1458,9 @@ func _show_event_modal(ev: Dictionary) -> void:
 	var opts: Array = ev.get("options", [])
 	var p := _modal_panel(210 + 46 * opts.size())
 	p.name = "EventModal"
-	var el := UIKit.mono("ROAD EVENT // %s" % World.node(str(ev.get("b", ""))).get("name", ""), 9, UIKit.ACCENT)
+	var kind := str(ev.get("kind", "road"))
+	var tag := "NIGHT CAMP" if kind == "camp" or str(ev.get("id", "")) == "camp_night" else "ROAD EVENT"
+	var el := UIKit.mono("%s // %s" % [tag, World.node(str(ev.get("b", ""))).get("name", "")], 9, UIKit.ACCENT)
 	el.position = Vector2(24, 18)
 	p.add_child(el)
 	var t := UIKit.title_label(str(ev.get("title", "")), 24)
@@ -1499,6 +1501,12 @@ func _fx_hint(fx: Dictionary) -> String:
 		bits.append("银两变动")
 	if fx.has("food"):
 		bits.append("粮 %+d" % int(fx.food))
+	if fx.has("heal"):
+		bits.append(Locale.t("camp_hint_heal"))
+	if fx.has("morale"):
+		bits.append(Locale.t("camp_hint_morale") % int(fx.morale))
+	if str(fx.get("flag", "")) == "camp_watch":
+		bits.append(Locale.t("camp_hint_watch"))
 	if fx.has("days"):
 		bits.append("耽搁 %d 日" % int(fx.days))
 	if fx.has("risk"):
@@ -1839,7 +1847,10 @@ func selftest() -> Dictionary:
 	_start_travel()
 	for _i in 60:
 		await get_tree().process_frame
-		if not _busy:
+		if not World.pending_event.is_empty() and str(World.pending_event.get("id", "")) == "camp_night":
+			await _choose_event(0)
+			continue
+		if not _busy and World.pending_event.is_empty() and World.encounter.is_empty():
 			break
 		await get_tree().create_timer(0.1).timeout
 	if World.pos != dest:

@@ -215,3 +215,15 @@ terr_ui_scout,斥候 %d,Scout %d
 terr_ui_scouted,已探明,Scouted
 terr_ui_intercept,截击,Intercept
 morale.companion_waives,"%s：「这个月的饷我先不要了。下个月，你得给。」","%s: ""Keep this month's pay. Next month, you owe me."""
+camp_title,夜营扎寨,Night Camp
+camp_body,从%s到%s的路上歇了 %d 夜。营火边，你怎么安排？,On the road from %s to %s you camp %d night(s). How do you spend it?
+camp_opt_rest,休整（疗伤 · 士气+1 · 耗粮1）,Rest (heal · morale +1 · food -1)
+camp_opt_watch,巡哨（下段遇敌减少 · 耗粮1）,Watch (safer next leg · food -1)
+camp_opt_meal,吃饭（士气+3 · 轻疗 · 耗粮3）,Meal (morale +3 · light heal · food -3)
+camp_log,夜营扎寨（%d 夜）,Camped for %d night(s)
+camp_fx_rest,全军歇了一夜,The company rested
+camp_fx_watch,今夜巡哨加严,Extra watches posted
+camp_fx_meal,营里开了顿热饭,A hot meal was served
+camp_hint_heal,疗伤,Heal
+camp_hint_morale,士气 %+d,Morale %+d
+camp_hint_watch,下段遇敌减少,Safer next leg
