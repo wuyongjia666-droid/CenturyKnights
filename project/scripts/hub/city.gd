@@ -772,16 +772,18 @@ func _show_smith_reveal(it: Dictionary) -> void:
 	overlay.z_index = 80
 	add_child(overlay)
 	var dim := ColorRect.new()
-	dim.color = Color(0.02, 0.03, 0.05, 0.72)
+	# Opaque so mobile-gate OCR does not read the smith page underneath.
+	dim.color = Color(0.04, 0.05, 0.08, 1.0)
 	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	dim.mouse_filter = Control.MOUSE_FILTER_STOP
 	overlay.add_child(dim)
+	var phone := DeviceProfile.is_mobile() or _mob
+	var cw := minf(size.x - 48.0, 640.0) if phone else 520.0
+	var ch := minf(size.y - 48.0, 460.0) if phone else 360.0
 	var card := Panel.new()
-	var cw := 520.0 if not _mob else minf(size.x - 48.0, 640.0)
-	var ch := 360.0 if not _mob else 400.0
 	card.position = Vector2((size.x - cw) * 0.5, (size.y - ch) * 0.5)
 	card.size = Vector2(cw, ch)
-	card.add_theme_stylebox_override("panel", UIKit.glass(16, 0.94, true))
+	card.add_theme_stylebox_override("panel", UIKit.glass(16, 0.96, true))
 	overlay.add_child(card)
 	var nid := World.nation_of(city)
 	var sp := AtlasArt.smith_plate(nid)
@@ -791,30 +793,35 @@ func _show_smith_reveal(it: Dictionary) -> void:
 		bg.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		bg.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 		bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		bg.modulate = Color(1, 1, 1, 0.28)
+		bg.modulate = Color(1, 1, 1, 0.22)
 		bg.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		card.add_child(bg)
-	var mono := UIKit.mono(Locale.t("smith_reveal_tag"), 10, UIKit.ACCENT)
+	var tag_sz := 22 if phone else 12
+	var title_sz := 28 if phone else 28
+	var body_sz := 22 if phone else 15
+	var mono := UIKit.mono(Locale.t("smith_reveal_tag"), tag_sz, UIKit.ACCENT)
 	mono.position = Vector2(24, 18)
 	card.add_child(mono)
-	var ic := _icon(it, 110.0)
+	var ic := _icon(it, 110.0 if not phone else 96.0)
 	ic.position = Vector2(24, 56)
 	card.add_child(ic)
-	var title := UIKit.title_label(str(it.get("name", "")), 28 if not _mob else 26)
+	var title := UIKit.title_label(str(it.get("name", "")), title_sz)
 	title.position = Vector2(152, 56)
-	title.size = Vector2(cw - 176, 40)
+	title.size = Vector2(cw - 176, 44)
 	card.add_child(title)
-	var sub := UIKit.body_label("%s · %s" % [str(it.get("type_name", "")), World.nations.get(str(it.get("nation", "")), {}).get("name", "")], UIKit.TEXT_DIM, 14)
-	sub.position = Vector2(152, 100)
+	var sub := UIKit.body_label("%s · %s" % [str(it.get("type_name", "")), World.nations.get(str(it.get("nation", "")), {}).get("name", "")], UIKit.TEXT_DIM, body_sz)
+	sub.position = Vector2(152, 108)
 	card.add_child(sub)
-	var lore := UIKit.body_label(str(it.get("lore", "")), UIKit.TEXT, 15 if not _mob else 16)
-	lore.position = Vector2(24, 190)
-	lore.size = Vector2(cw - 48, 110)
+	var lore := UIKit.body_label(str(it.get("lore", "")), UIKit.TEXT, body_sz)
+	lore.position = Vector2(24, 190 if not phone else 170)
+	lore.size = Vector2(cw - 48, 120 if not phone else 140)
 	lore.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	card.add_child(lore)
-	var skip := UIKit.ghost_button(Locale.t("smith_reveal_skip"), int(cw - 48), 44 if not _mob else 76)
-	skip.position = Vector2(24, ch - 60)
+	var btn_h := 76 if phone else 44
+	var skip := UIKit.ghost_button(Locale.t("smith_reveal_skip"), int(cw - 48), btn_h)
+	skip.position = Vector2(24, ch - btn_h - 16)
 	skip.name = "SmithRevealSkip"
+	skip.add_theme_font_size_override("font_size", body_sz)
 	var iid := str(it.get("id", ""))
 	var closed := {"v": false}
 	var close := func():
@@ -833,6 +840,7 @@ func _show_smith_reveal(it: Dictionary) -> void:
 	var tw := create_tween()
 	tw.tween_interval(1.5)
 	tw.tween_callback(close)
+
 
 func _item_detail(r: Rect2, iid: String, shop: bool) -> void:
 	var it: Dictionary = World.item(iid)
