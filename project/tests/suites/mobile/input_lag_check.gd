@@ -57,3 +57,4 @@ func _run() -> String:
 	if code.find("UnitArt.clear_cache()") >= 0 or code.find("CKGenomePortrait.clear_mem()") >= 0:
 		return "_refresh_preview_art still nukes portrait caches"
 	return ""
+
