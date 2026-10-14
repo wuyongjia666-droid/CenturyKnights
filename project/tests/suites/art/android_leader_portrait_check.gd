@@ -71,7 +71,7 @@ func _run() -> String:
 	UnitArt.clear_cache()
 	GameState.new_game("烬行", "灰旗", GameState.crest_color)
 	GameState.silver = 999
-	GameState.add_rep("ashland", 40)  # the art-free path, not the reputation gate, is under test
+	GameState.add_rep("ashland", 60)  # trusted tier (≥55); art-free path under test, not the rep gate
 	var l2: CKCharacter = GameState.get_leader()
 	if UnitArt.portrait(l2, 280, CKArtPaths.TIER_MEDIUM) == null:
 		return "leader has no fallback face without the bank"
