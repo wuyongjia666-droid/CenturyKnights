@@ -95,6 +95,28 @@ static func crest_color() -> Color:
 		return Color(str((spec_raw as Dictionary).get("field_a")))
 	return Color("#" + migrate_crest_hex(str(GameState.crest_color)))
 
+## Board house dye: player-picked charge when founding wrote ash field_a (ash grey).
+## crest_color() still returns the cloth field for heraldry; house_color() is for board fill.
+static func house_color() -> Color:
+	var spec_raw = GameState.get("banner_spec")
+	if typeof(spec_raw) == TYPE_DICTIONARY:
+		var spec: Dictionary = spec_raw
+		var fa := str(spec.get("field_a", "")).strip_edges()
+		var ash := CKHeraldry.tincture_hex("ash")
+		var fa_n := fa.trim_prefix("#").to_lower()
+		var ash_n := ash.trim_prefix("#").to_lower()
+		if fa_n == ash_n or fa_n == "":
+			for key in ["charge_color", "ordinary_tincture", "emblem_color"]:
+				var raw := str(spec.get(key, "")).strip_edges()
+				if raw != "":
+					return Color(raw if raw.begins_with("#") else ("#" + raw))
+		elif fa != "":
+			return Color(fa if fa.begins_with("#") else ("#" + fa))
+	var legacy := str(GameState.crest_color).strip_edges()
+	if legacy != "":
+		return Color("#" + migrate_crest_hex(legacy) if not legacy.begins_with("#") else legacy)
+	return UIKit.ACCENT
+
 ## Old saves still store a retired crest key. The map lives in crest_palette_v92.json.
 ## game_state.gd / naming.gd defaults stay with core and narrative.
 const CREST_DATA := "res://assets/art/crest_palette_v92.json"

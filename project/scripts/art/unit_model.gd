@@ -341,11 +341,12 @@ static var _albedo_override: Texture2D = null  # P0 repaired external albedo for
 static var _fill := Color(0, 0, 0, 0)
 static func fill_color_for(c, enemy: bool, pal: Dictionary, trim: Color = Color(1, 0.48, 0.44)) -> Color:
 	if enemy:
-		# faction dye: theme trim hue as deep wool (bandit rust, cult violet, …)
-		return Color(Color.from_hsv(trim.h, 0.58, 0.55), 1.0)
-	# allies: house crest hue as dyed cloth, nudged by the genome cloth/hair tint
+		# Faction cloth locked to coral — theme trim often lands in ally cyan/mint (15/22 themes).
+		var coral: Color = UIKit.DANGER
+		return Color(Color.from_hsv(coral.h, 0.58, 0.55), 1.0)
+	# Allies: player-picked house colour (charge when field is ash), not ash field_a.
 	var dye: Color = pal["cloth"][0]
-	var crest: Color = UnitArt.crest_color() if Engine.get_main_loop() else Color(0.2, 0.3, 0.5)
+	var crest: Color = UnitArt.house_color() if Engine.get_main_loop() else Color(0.2, 0.3, 0.5)
 	return Color(Color.from_hsv(crest.h, 0.50, 0.55).lerp(dye, 0.25), 1.0)
 
 const MOD_DIR := "res://assets/models/modules/"
