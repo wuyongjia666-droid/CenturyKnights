@@ -463,3 +463,5 @@ mw_patrol_close,收起沙盘,Close
 ux_married_banner,✓ 已婚 · 配偶 %s · 联姻帖已撤下，下面是子嗣展望,"✓ Married · spouse %s · offers withdrawn, heir outlook below"
 ux_married_note,已与 %s 成婚。家门已定，子嗣在岁月中降生；中栏是子嗣展望。,"Wed to %s. The house is settled; heirs come with the years. Heir outlook is in the middle."
 ux_spouse_side,配偶,Spouse
+ux_todo_birth,孩子快落地了（主线）,Child due soon (main line)
+ux_todo_birth_soon,孩子下个月落地（主线）,Child due next month (main line)

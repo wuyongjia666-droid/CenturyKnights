@@ -58,6 +58,9 @@ static func snapshot() -> Array:
 	rows.append(_row("injured", "military", Locale.t("ux_todo_injured"), _injured_count()))
 	rows.append(_row("festival", "home", Locale.t("ux_todo_festival"), _festival_count()))
 	rows.append(_row("sui_ke", "home", Locale.t("ux_todo_sui_ke"), CKSuiKe.inbox_count()))
+	var birth := _birth_todo()
+	if not birth.is_empty():
+		rows.append(birth)
 	for extra in _extra:
 		if extra is Dictionary:
 			rows.append((extra as Dictionary).duplicate())
@@ -82,6 +85,25 @@ static func _injured_count() -> int:
 		if c.injured or not CKInjury.record(c).is_empty():
 			n += 1
 	return n
+
+## Ch0 pregnancy wait: remind the player the child is coming and that mainline is still open.
+static func _birth_todo() -> Dictionary:
+	if GameState.flag("child_born") or GameState.flag("chapter0_done"):
+		return {}
+	var left := -1
+	for c in GameState.characters.values():
+		if c != null and c.alive and int(c.pregnant_months) >= 0:
+			left = int(c.pregnant_months) if left < 0 else mini(left, int(c.pregnant_months))
+	if left < 0:
+		return {}
+	var label := Locale.t("ux_todo_birth_soon") if left <= 1 else Locale.t("ux_todo_birth")
+	return {
+		"category": "birth",
+		"group": "home",
+		"label": label,
+		"count": 1,
+		"link": StoryCatalog.chapter0_scene(),
+	}
 
 static func _festival_count() -> int:
 	var m := int(Calendar.month)

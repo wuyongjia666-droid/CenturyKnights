@@ -2018,17 +2018,34 @@
           "id": "ch0_0_5_l3b",
           "speaker": "旁白",
           "text": "娘没来。她托小粟带话：堡里的台阶太陡。"
+        },
+        {
+          "id": "ch0_0_5_l4",
+          "speaker": "老管事",
+          "text": "孩子还得几个月才落地。这段日子别干等，回城堡揭几张委托，把工钱攒上。想往下过，就一个月一个月来。"
         }
       ],
       "actions": [
         {
+          "id": "back_to_castle",
+          "label": "先回城堡揭委托、看账",
+          "do": [
+            {
+              "op": "scene",
+              "path": "res://scenes/hub/castle_hub.tscn"
+            }
+          ],
+          "when": {
+            "not_flag": "child_born"
+          }
+        },
+        {
           "id": "advance_birth",
-          "label": "让月份走到孩子落地",
+          "label": "过一个月",
           "do": [
             {
               "op": "advance",
-              "until_flag": "child_born",
-              "max": 14
+              "months": 1
             }
           ],
           "when": {
