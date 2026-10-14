@@ -5,6 +5,7 @@ func _ready() -> void:
 	await get_tree().process_frame
 	var fails: Array = []
 	_background(fails)
+	_flash(fails)
 	_months(fails)
 	await _pause(fails)
 	if fails.is_empty():
@@ -14,6 +15,15 @@ func _ready() -> void:
 	for f in fails:
 		print("FAIL autosave: ", f)
 	get_tree().quit(1)
+
+
+func _flash(fails: Array) -> void:
+	CKAutosave.reset_throttle()
+	CKAutosave._last_flash_ms = 0
+	CKAutosave.flash()
+	var host := get_tree().current_scene
+	if host == null or host.get_node_or_null("AutosaveToast") == null:
+		fails.append("autosave toast missing")
 
 func _background(fails: Array) -> void:
 	GameState.new_game("灯影", "灰旗", GameState.crest_color)
