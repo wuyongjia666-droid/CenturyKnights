@@ -496,8 +496,9 @@ func _harmony_card(rect: Rect2, a: CKCharacter, b: CKCharacter) -> void:
 	if one_line:
 		## tight panel: fold each chip into one line ("骁勇 55%") so nothing spills out
 		chip_h = 0.0
-		for pr in chips:
-			(pr[0] as Label).text = "%s %s" % [(pr[0] as Label).text, (pr[1] as Label).text.replace(" 显性", "")]
+		for ci in chips.size():
+			var pr: Array = chips[ci]
+			(pr[0] as Label).text = "%s %d%%" % [(pr[0] as Label).text, int(round(float(tp[ci].prob) * 100))]
 			(pr[0] as Label).add_theme_font_size_override("font_size", 11)
 			chip_h = maxf(chip_h, (pr[0] as Label).get_minimum_size().y + 4.0)
 		preview_h = 4.0 + title_h + 4.0 + rows * chip_h + (rows - 1) * 4.0 + 4.0
