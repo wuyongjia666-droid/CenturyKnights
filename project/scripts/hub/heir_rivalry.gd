@@ -207,3 +207,7 @@ func _battle() -> void:
 	_b.hp = _b.max_hp
 	_settle(Locale.t("lb_heir_zh_duel"))
 	get_tree().change_scene_to_file("res://scenes/battle/battle.tscn")
+
+func apply_mobile_layout() -> void:
+	CKPageKit.phone_fill(self)
+

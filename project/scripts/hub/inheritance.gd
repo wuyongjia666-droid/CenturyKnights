@@ -129,3 +129,7 @@ func _resolve(k: String) -> void:
 	GameState.save_game()
 	CKPageKit.say(_msg, Locale.t("lb_inh_%s_ok" % k), true)
 	_show()
+
+func apply_mobile_layout() -> void:
+	CKPageKit.phone_fill(self)
+

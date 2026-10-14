@@ -185,3 +185,7 @@ func _do_teach() -> void:
 	if bool(res.get("ok", false)):
 		UIFX.confirm(_teach)
 	_rebuild()
+
+func apply_mobile_layout() -> void:
+	CKPageKit.phone_fill(self)
+

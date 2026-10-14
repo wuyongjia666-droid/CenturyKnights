@@ -198,3 +198,7 @@ func _do_enlist() -> void:
 	CKPageKit.say(_msg, msg, bool(r.get("ok", false)))
 	_selected = null
 	_refresh_list()
+
+func apply_mobile_layout() -> void:
+	CKPageKit.phone_fill(self)
+

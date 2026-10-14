@@ -108,3 +108,7 @@ func _own_entry() -> Control:
 	var who := lead.name if lead != null else Locale.t("lb_news_own_nobody")
 	v.add_child(CKPageKit.text(Locale.t("lb_news_own_text", [who, GameState.roster().size()]), UIKit.TEXT, 15, 1100))
 	return r[0]
+
+func apply_mobile_layout() -> void:
+	CKPageKit.phone_fill(self)
+
