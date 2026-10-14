@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "note": "Story interrupts inside battles (docs/design/tutorial-story-v2.md + opening-chain-review 5.5). Triggers: start, turn:N (player turn N, 1-based), first_lock, first_kill, victory. Each plays once per save (flag bs_<map>_<trigger>).",
+  "note": "Story interrupts inside battles (docs/design/tutorial-story-v2.md + opening-chain-review 5.5). Triggers: start, turn:N (player turn N, 1-based), first_lock, first_kill, victory; board: npc_threatened, npc_near_goal (escort), past_seize (seize). Each plays once per save (flag bs_<map>_<trigger>).",
   "maps": {
     "ch0_pass": {
       "start": [
@@ -62,6 +62,16 @@
           "speaker": "旁白",
           "text": "你们推到了第二辆车。车后，小粟抱着驴脖子在发抖。"
         }
+      ],
+      "past_seize": [
+        {
+          "speaker": "老旗手",
+          "text": "别追！说好推到第二辆车就停。再往前是他们的地盘，黑里全是石头。"
+        },
+        {
+          "speaker": "苇原·灯影",
+          "text": "回来，站到车边上。车拿下就算赢，人不用追。"
+        }
       ]
     },
     "e1_reed_escort": {
@@ -101,6 +111,26 @@
         {
           "speaker": "旁白",
           "text": "桥灯照见袋角的蓝戳。人在，粮在，桥在。"
+        }
+      ],
+      "npc_threatened": [
+        {
+          "speaker": "渡口·把头",
+          "text": "有人贴上来了！我不往前走了，你们先把他弄开。"
+        },
+        {
+          "speaker": "石垒·晚担",
+          "text": "挡到把头前面去，把这人打退。敌人离他太近，他就不敢动。"
+        }
+      ],
+      "npc_near_goal": [
+        {
+          "speaker": "苇原·灯影",
+          "text": "桥灯就在前头。再护两步，到了灯底下就算交了货。"
+        },
+        {
+          "speaker": "老旗手",
+          "text": "旗还立着。走，别回头。"
         }
       ]
     }
