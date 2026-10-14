@@ -1356,7 +1356,7 @@ func _m_fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 			btn.size_flags_horizontal = Control.SIZE_FILL
 			btn.tooltip_text = Locale.t("mw_6c9a2d8d") % [str(r.get("desc", "")), str(r.get("block", ""))]
 			fl.add_child(btn)
-	(rp[0] as Control).visible = not is_married_view()
+	(rp[0] as Control).visible = true  # married: keep the vow log readable (page body scrolls)
 	_msg.reparent(rv, false)
 	_msg.add_theme_font_size_override("font_size", MobilePage.FONT)
 	_msg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
