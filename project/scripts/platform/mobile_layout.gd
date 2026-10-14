@@ -127,14 +127,17 @@ static func _floor_fonts(node: Node, floor_px: int) -> void:
 			_floor_one(child as Control, floor_px)
 		_floor_fonts(child, floor_px)
 
+static var _kicker_re: RegEx
+
 static func is_decor_kicker(text: String) -> bool:
 	var t := text.strip_edges()
 	if t.length() < 2:
 		return t == "/" or t == "//"
 	t = t.replace("\u2009", " ")
-	var re := RegEx.new()
-	re.compile("^[A-Z0-9 ·/\\-—–.:#]+$")
-	if re.search(t) == null:
+	if _kicker_re == null:
+		_kicker_re = RegEx.new()
+		_kicker_re.compile("^[A-Z0-9 ·/\\-—–.:#]+$")
+	if _kicker_re.search(t) == null:
 		return false
 	return t.contains(" ") or t.contains("/")
 

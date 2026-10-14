@@ -78,6 +78,13 @@ static func has_plates() -> bool:
 	_plates_known = true
 	return _plates
 
+## List the bank once up front so the first founding/hub portrait is not a multi-second stall.
+static func warm_disk_index() -> void:
+	has_plates()
+	_ensure_disk_index()
+	if not _sex_ready:
+		plate_sex("")  # load sex index JSON once
+
 static func try_texture(c: Object, tier: String = "large") -> Texture2D:
 	if not has_plates():
 		return null
