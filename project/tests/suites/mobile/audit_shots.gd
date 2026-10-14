@@ -86,6 +86,9 @@ func _ready() -> void:
 	DirAccess.make_dir_recursive_absolute(_out)
 
 	GameState.new_game("Ash", "Banner", "#%02x%02x%02x" % [110, 212, 255])
+	## Shots need a stable smith tab; mark signatures seen so the one-shot reveal overlay stays off.
+	for _sid in World.list_signature_ids():
+		World.mark_smith_revealed(_sid)
 	var screens: Array = SCREENS.duplicate()
 	if _desktop:
 		screens.append_array(DESKTOP_EXTRA)

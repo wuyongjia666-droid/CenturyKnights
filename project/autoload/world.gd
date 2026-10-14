@@ -826,6 +826,47 @@ func _stock_entry(city: String, iid: String) -> Dictionary:
 			return e
 	return {}
 
+func city_signatures(city: String) -> Array:
+	var out: Array = []
+	for e in smith_stock(city):
+		if int(e.get("signature", 0)) >= 1:
+			out.append(str(e.item.id))
+	return out
+
+func smith_revealed() -> Array:
+	var v = GameState.settings.get("smith_revealed", null)
+	return v if v is Array else []
+
+func is_smith_revealed(iid: String) -> bool:
+	return smith_revealed().has(iid)
+
+func mark_smith_revealed(iid: String) -> void:
+	var a := smith_revealed().duplicate()
+	if not a.has(iid):
+		a.append(iid)
+	GameState.settings["smith_revealed"] = a
+
+func list_signature_ids() -> Array:
+	## All signature weapon item ids (for shot seeding / reveal bookkeeping).
+	var out: Array = []
+	for it in items.values():
+		if int(it.get("signature", 0)) >= 1:
+			var iid := str(it.get("id", ""))
+			if iid != "":
+				out.append(iid)
+	return out
+
+
+func next_smith_reveal(city: String) -> Dictionary:
+	## First unrevealed signature arm for this city's smith (empty if none / all seen).
+	for e in smith_stock(city):
+		if int(e.get("signature", 0)) < 1:
+			continue
+		var iid := str(e.item.id)
+		if not is_smith_revealed(iid):
+			return e.item
+	return {}
+
 func smith_price(city: String, iid: String) -> int:
 	var it: Dictionary = items.get(iid, {})
 	var cut := 0.04 * rep_tier_index(rep_of(city))

@@ -13,6 +13,9 @@ func _ready() -> void:
 	DirAccess.make_dir_recursive_absolute(OUT)
 	await get_tree().process_frame
 	GameState.new_game("烬行", "灰旗", "#c9a227")
+	## Shots need a stable smith tab; mark signatures seen so the one-shot reveal overlay stays off.
+	for _sid in World.list_signature_ids():
+		World.mark_smith_revealed(_sid)
 	GameState.silver = 1600
 	GameState.food = 160
 	World.events_enabled = false

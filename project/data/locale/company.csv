@@ -227,3 +227,5 @@ camp_fx_meal,营里开了顿热饭,A hot meal was served
 camp_hint_heal,疗伤,Heal
 camp_hint_morale,士气 %+d,Morale %+d
 camp_hint_watch,下段遇敌减少,Safer next leg
+smith_reveal_tag,招牌兵器 · 首次亮相,SIGNATURE ARM · FIRST LOOK
+smith_reveal_skip,知道了,Got it
