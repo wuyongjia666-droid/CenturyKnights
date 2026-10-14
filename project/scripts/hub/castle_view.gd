@@ -165,7 +165,7 @@ func refresh() -> void:
 		var bar := get_node_or_null("MobileTopBar")
 		if bar and bar.get_child_count() > 1:
 			var inf := bar.get_child(1) as Label
-			var raw := Locale.t("mw_41e31e6c") % [GameState.silver, GameState.food, GameState.iron, Calendar.label()]
+			var raw := _m_info()
 			inf.set_meta("m_raw", raw)
 			inf.text = raw
 
@@ -208,7 +208,7 @@ func apply_mobile_layout() -> void:
 		_m_relayout()
 
 func _m_build() -> void:
-	MobilePage.top_bar(self, Locale.t("a1_view_title"), Locale.t("mw_41e31e6c") % [GameState.silver, GameState.food, GameState.iron, Calendar.label()], [[Locale.t("a1_view_back"), _back]])
+	MobilePage.top_bar(self, Locale.t("a1_view_title"), _m_info(), [[Locale.t("a1_view_back"), _back]])
 	_msg = MobilePage.label(Locale.t("a1_view_head"), UIKit.TEXT_DIM, MobilePage.FONT, false)
 	_msg.name = "Msg"
 	_msg.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
@@ -227,6 +227,9 @@ func _m_build() -> void:
 	for id in SLOTS:
 		_m_card(str(id))
 	_m_relayout()
+
+func _m_info() -> String:
+	return Locale.t("mw_41e31e6c") % [GameState.silver, GameState.food, GameState.iron, Calendar.label()]
 
 func _m_relayout() -> void:
 	if _m_scroll == null:
