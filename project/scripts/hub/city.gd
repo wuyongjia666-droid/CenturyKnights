@@ -1185,7 +1185,8 @@ func _tab_board() -> void:
 			gb.position = Vector2(18, 470)
 			gb.pressed.connect(func(): _open_atlas_for_quest(World.quest_by_id(sid2)))
 			d.add_child(gb)
-		var tb := UIKit.cta_button("交付", "A", 240, 44) if not to_atlas else UIKit.ghost_button("交付", 240, 36)
+		var ti_text := "交付"
+		var tb := UIKit.cta_button(ti_text, "A", 240, 44) if not to_atlas else UIKit.ghost_button(ti_text, 240, 36)
 		tb.name = "TurnInQuest"
 		tb.position = Vector2(18, 470 if not to_atlas else 524)
 		tb.disabled = not here
