@@ -76,7 +76,12 @@ func _run() -> String:
 	if UnitArt.portrait(l2, 280, CKArtPaths.TIER_MEDIUM) == null:
 		return "leader has no fallback face without the bank"
 	var cand2: CKCharacter = GameState.marriage_candidates[0]
-	var r = Lineage.marry(l2, cand2, 40, [], true)
+	# Accept whatever rites this candidate's line requires (从母居 / 入牒礼 …), as the vow
+	# panel lets the player do; candidates are random, so an empty list made this flaky.
+	var rites: Array = []
+	for rt in CKCourt.required_rites(l2, cand2):
+		rites.append(str(rt.get("id", "")))
+	var r = Lineage.marry(l2, cand2, 40, rites, true)
 	if not bool(r.get("ok", false)) or str(l2.spouse_id) != str(cand2.id):
 		return "marriage blocked without art: %s" % str(r.get("msg", ""))
 	CKPortraitBank.dir_override = ""
