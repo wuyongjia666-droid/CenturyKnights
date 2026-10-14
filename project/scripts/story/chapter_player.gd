@@ -224,6 +224,7 @@ func _load_beat(beat_id: String) -> void:
 			_load_beat(str(skipped))
 		return
 	_remember_beat(beat_id)
+	_pay_ack = false
 	_line_idx = _resume_line(beat_id) if _resuming else 0
 	_title.text = "%s · %s" % [str(_chapter.get("title", "")), str(_beat.get("title", ""))]
 	_beat_meta.text = _beat_progress_caption(beat_id)
@@ -749,16 +750,17 @@ func _fast_to_harvest() -> void:
 	_refresh_actions()
 
 ## Opening review A-05: a month fast-forward stops once before a payday the purse cannot cover.
-## Pressing the same button again goes ahead anyway (the warning is spent for that month).
+## Pressing a fast-forward again after the warning goes ahead to the end ("照样往前").
+var _pay_ack := false
+
 func _pay_short() -> bool:
+	if _pay_ack:
+		return false
 	var wage := CKEconomyState.monthly_wage(GameState)
 	var cash := int(GameState.silver)
 	if wage <= cash:
 		return false
-	var key := "pay_warn_%d_%d" % [Calendar.year, Calendar.month]
-	if GameState.flag(key):
-		return false
-	GameState.set_flag(key, true)
+	_pay_ack = true
 	test_capture["pay_short"] = [wage, cash]
 	test_capture["pay_stop"] = true
 	return true
