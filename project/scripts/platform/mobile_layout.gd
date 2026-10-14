@@ -104,7 +104,7 @@ const HIT_FLOOR := 76.0
 ## apply_mobile_layout lands; that change removes the page from this list.
 const FONT_FLOOR_PENDING := [
 	"res://scenes/hub/city.tscn",
-	"res://scenes/hub/castle_view.tscn", "res://scenes/hub/market.tscn",
+	"res://scenes/hub/market.tscn",
 	"res://scenes/hub/estates.tscn", "res://scenes/hub/works.tscn",
 	"res://scenes/hub/forge.tscn",
 ]
