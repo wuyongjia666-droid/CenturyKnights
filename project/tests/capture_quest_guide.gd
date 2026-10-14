@@ -1,13 +1,13 @@
 extends Node
 ## Screenshot: accept commission → toast/hint → atlas focus with ◆ marker.
 
-var OUT := "/workspace/quest_guide_shots"
+var out_dir := "/workspace/quest_guide_shots"
 
 func _ready() -> void:
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--out="):
-			OUT = a.substr(6)
-	DirAccess.make_dir_recursive_absolute(OUT)
+			out_dir = a.substr(6)
+	DirAccess.make_dir_recursive_absolute(out_dir)
 	await get_tree().process_frame
 	GameState.new_game("指引", "灰旗", GameState.crest_color)
 	GameState.set_flag("chapter0_done", true)
@@ -63,7 +63,7 @@ func _ready() -> void:
 	await _wait(0.4)
 	await _snap("03_quests_book_active")
 	quests.queue_free()
-	print("QUEST GUIDE SHOTS DONE ", OUT)
+	print("QUEST GUIDE SHOTS DONE ", out_dir)
 	get_tree().quit(0)
 
 func _wait(sec: float) -> void:
@@ -73,5 +73,5 @@ func _snap(name: String) -> void:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	var img := get_viewport().get_texture().get_image()
-	img.save_png("%s/%s.png" % [OUT, name])
+	img.save_png("%s/%s.png" % [out_dir, name])
 	print("shot ", name, " ", img.get_size())

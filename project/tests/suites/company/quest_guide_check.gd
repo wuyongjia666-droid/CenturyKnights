@@ -24,6 +24,20 @@ func _run() -> String:
 		World.rep_nation[str(nid)] = 40
 	World.active.clear()
 	World.boards.erase("ash_capital")
+	var err := _accept_sample()
+	if err != "":
+		return err
+	var pick_id := str(World.active[0].id)
+	var guide := World.quest_guide_node(World.quest_by_id(pick_id))
+	err = _check_todo_and_ready(pick_id, guide)
+	if err != "":
+		return err
+	err = await _check_city_cta(pick_id)
+	if err != "":
+		return err
+	return await _check_atlas_focus(guide)
+
+func _accept_sample() -> String:
 	var offers: Array = World.board("ash_capital")
 	var pick: Dictionary = {}
 	for q in offers:
@@ -31,7 +45,6 @@ func _run() -> String:
 			continue
 		if str(q.get("kind", "")) == "gather":
 			continue
-		# Prefer a job whose objective is not this city, so atlas focus is visible.
 		var probe: Dictionary = q.duplicate(true)
 		probe["state"] = "active"
 		if World.quest_guide_node(probe) == World.pos:
@@ -58,9 +71,11 @@ func _run() -> String:
 		return "hint not in accept msg"
 	if Locale.t("wq_goto_atlas") == "wq_goto_atlas":
 		return "missing wq_goto_atlas locale"
-	var marks: Dictionary = World.quest_markers()
-	if not marks.has(guide):
+	if not World.quest_markers().has(guide):
 		return "quest_markers missing guide %s for kind %s" % [guide, str(pick.get("kind", ""))]
+	return ""
+
+func _check_todo_and_ready(pick_id: String, guide: String) -> String:
 	GameState.set_flag("chapter0_done", true)
 	UnlockSchedule.install()
 	var n := 0
@@ -69,15 +84,19 @@ func _run() -> String:
 			n = int(item.get("count", 0))
 	if Todo.is_unlocked("quests") and n < 1:
 		return "todo quests count %d after accept" % n
-	var q2: Dictionary = World.quest_by_id(str(pick.id))
+	var q2: Dictionary = World.quest_by_id(pick_id)
 	q2.state = "ready"
 	var turn := World.turn_in_city(q2)
 	if World.quest_guide_node(q2) != turn:
 		return "ready guide should be turn-in"
 	if World.quest_next_hint(q2).find(str(World.node(turn).get("name", ""))) < 0:
 		return "ready hint missing place"
-	# restore active for UI checks
 	q2.state = "active"
+	if guide == "":
+		return "empty guide"
+	return ""
+
+func _check_city_cta(pick_id: String) -> String:
 	GameState.set_meta("city_id", "ash_capital")
 	var packed: PackedScene = load("res://scenes/hub/city.tscn")
 	if packed == null:
@@ -86,14 +105,17 @@ func _run() -> String:
 	add_child(page)
 	await get_tree().process_frame
 	page._set_tab("board")
-	page._sel_quest = str(pick.id)
+	page._sel_quest = pick_id
 	page._render_tab()
 	await get_tree().process_frame
 	var btn := page.find_child("GotoAtlasQuest", true, false)
-	if btn == null:
-		page.queue_free()
-		return "GotoAtlasQuest button missing on active detail"
+	var missing := btn == null
 	page.queue_free()
+	if missing:
+		return "GotoAtlasQuest button missing on active detail"
+	return ""
+
+func _check_atlas_focus(guide: String) -> String:
 	GameState.set_meta("atlas_select", guide)
 	GameState.set_meta("atlas_view", World.nation_of(guide))
 	var ap: PackedScene = load("res://scenes/hub/atlas_view.tscn")
@@ -101,12 +123,11 @@ func _run() -> String:
 	add_child(atlas)
 	await get_tree().process_frame
 	await get_tree().process_frame
-	if str(atlas._sel) != guide:
-		var got := str(atlas._sel)
-		atlas.queue_free()
-		return "atlas _sel=%s want %s" % [got, guide]
-	if GameState.has_meta("atlas_select"):
-		atlas.queue_free()
-		return "atlas_select meta not consumed"
+	var got := str(atlas._sel)
+	var kept := GameState.has_meta("atlas_select")
 	atlas.queue_free()
+	if got != guide:
+		return "atlas _sel=%s want %s" % [got, guide]
+	if kept:
+		return "atlas_select meta not consumed"
 	return ""
