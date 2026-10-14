@@ -269,13 +269,9 @@ func _render() -> void:
 		v.add_child(k)
 		v.add_child(UIKit.mono(str(it[1]), 15, it[2], false))
 		dr.add_child(v)
-	var tok := TextureRect.new()
-	tok.texture = UnitArt.token(c, "player", 64, false)
-	tok.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	tok.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	tok.position = Vector2(716, 430)
-	tok.size = Vector2(56, 56)
-	tok.tooltip_text = "战棋棋子预览"
+	var tok := CKFigureTurntable.make(c, Vector2(120, 150))  # P3: live 3D figure, drag to spin
+	tok.position = Vector2(670, 382)
+	tok.tooltip_text = "战棋棋子预览（拖动旋转）"
 	p.add_child(tok)
 	var fh := UIKit.hairline(Color(1, 1, 1, 0.07))
 	fh.position = Vector2(22, 532)
@@ -420,6 +416,9 @@ func _render_mobile() -> void:
 	info.add_child(dg)
 	for it in _derived_rows(c, c.derived_move() + CKInjury.move_mod(c)):
 		dg.add_child(MobilePage.label("%s %s" % [it[0], it[1]], it[2], MobilePage.FONT, false))
+	var fig := CKFigureTurntable.make(c, Vector2(130, 170))  # P3 board-figure turntable (under the stats)
+	fig.size_flags_horizontal = Control.SIZE_SHRINK_END
+	info.add_child(fig)
 	var br := HBoxContainer.new()
 	br.add_theme_constant_override("separation", 10)
 	_m_dossier.add_child(br)
