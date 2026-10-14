@@ -17,7 +17,18 @@ func _run() -> String:
 	World.rng.seed = 7
 	GameState.food = 40
 	GameState.morale = 50
+	var err := _check_rest()
+	if err != "":
+		return err
+	err = _check_watch()
+	if err != "":
+		return err
+	err = _check_meal()
+	if err != "":
+		return err
+	return _check_watch_consumed()
 
+func _check_rest() -> String:
 	var dest := "stone_slope"
 	var st: Dictionary = World.begin_travel(dest)
 	if not bool(st.get("ok", false)):
@@ -28,10 +39,9 @@ func _run() -> String:
 		return "expected camp_night, got %s" % str(ev.get("id", ev))
 	if int(ev.get("options", []).size()) != 3:
 		return "camp options %d" % int(ev.get("options", []).size())
-
 	var before_food := GameState.food
 	var before_morale := GameState.morale
-	var r: Dictionary = World.choose_event(0)  # 休整
+	var r: Dictionary = World.choose_event(0)
 	if not bool(r.get("ok", false)):
 		return "rest rejected: %s" % str(r.get("msg", ""))
 	if GameState.food >= before_food:
@@ -40,45 +50,46 @@ func _run() -> String:
 		return "rest did not raise morale (%d → %d)" % [before_morale, GameState.morale]
 	if World.pos != dest:
 		return "rest did not arrive at %s (pos=%s)" % [dest, World.pos]
+	return ""
 
-	# 巡哨 on the next overnight leg
+func _check_watch() -> String:
 	GameState.food = maxi(GameState.food, 20)
 	var nxt := _neighbor(World.pos)
 	if nxt == "":
 		return "no neighbor from %s" % World.pos
-	st = World.begin_travel(nxt)
+	var st: Dictionary = World.begin_travel(nxt)
 	if not bool(st.get("ok", false)):
 		return "watch begin failed: %s" % str(st.get("msg", st))
-	info = World.step_travel()
-	ev = info.get("event", {})
-	if str(ev.get("id", "")) != "camp_night":
-		return "watch camp missing: %s" % str(ev)
-	r = World.choose_event(1)
+	var info: Dictionary = World.step_travel()
+	if str(info.get("event", {}).get("id", "")) != "camp_night":
+		return "watch camp missing: %s" % str(info.get("event", {}))
+	var r: Dictionary = World.choose_event(1)
 	if not bool(r.get("ok", false)):
 		return "watch rejected: %s" % str(r.get("msg", ""))
 	if not bool(World.road_flags.get("camp_watch", false)):
 		return "camp_watch flag missing after watch"
+	return ""
 
-	# 吃饭
+func _check_meal() -> String:
 	GameState.food = maxi(GameState.food, 20)
 	var before_m := GameState.morale
 	var nxt2 := _neighbor(World.pos)
 	if nxt2 == "":
 		return "no meal neighbor"
-	st = World.begin_travel(nxt2)
+	var st: Dictionary = World.begin_travel(nxt2)
 	if not bool(st.get("ok", false)):
 		return "meal begin failed: %s" % str(st.get("msg", st))
-	info = World.step_travel()
-	ev = info.get("event", {})
-	if str(ev.get("id", "")) != "camp_night":
-		return "meal camp missing: %s" % str(ev)
-	r = World.choose_event(2)
+	var info: Dictionary = World.step_travel()
+	if str(info.get("event", {}).get("id", "")) != "camp_night":
+		return "meal camp missing: %s" % str(info.get("event", {}))
+	var r: Dictionary = World.choose_event(2)
 	if not bool(r.get("ok", false)):
 		return "meal rejected: %s" % str(r.get("msg", ""))
 	if GameState.morale < before_m + 2:
 		return "meal morale %d → %d" % [before_m, GameState.morale]
+	return ""
 
-	# watch is consumed on the next event roll (even a miss)
+func _check_watch_consumed() -> String:
 	World.events_enabled = true
 	World.road_flags["camp_watch"] = true
 	World.rng.seed = 1
