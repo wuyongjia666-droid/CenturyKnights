@@ -147,6 +147,7 @@ func _escort_banter(kind: String) -> void:
 	_theme_banter(kind)
 
 var _unit_layer: CKUnitLayer3D = null
+var _fx_delay := 0.0  # P2: delay 2D hit fx to the 3D impact frame
 
 func _ready() -> void:
 	CKAutosave.before_battle()
@@ -186,6 +187,7 @@ func _process(delta: float) -> void:
 		for g in _board_router.poll(Time.get_ticks_msec()):
 			_apply_board_gesture(g)
 	UnitArt.tick(delta)
+	_fx_delay = 0.0
 	if _unit_layer != null:
 		_sync_unit_layer(delta)
 	_sel_pulse += delta
@@ -338,6 +340,10 @@ func _build_ui() -> void:
 		_unit_layer = CKUnitLayer3D.new()
 		_unit_layer.name = "UnitLayer3D"
 		add_child(_unit_layer)
+		_unit_layer.path_fn = _unit_path
+		_unit_layer.cell_px_fn = func(cell: Vector2i) -> Vector2:
+			var c2 := ORIGIN + Vector2(cell) * CELL + Vector2(CELL / 2, CELL * 0.62)
+			return _unit_layer.get_global_transform().affine_inverse() * (map_draw.get_global_transform() * c2)
 	_unit_panel = UIKit.make_panel()  # --- right rail
 	_unit_panel.position = Vector2(RAIL_X, 76)
 	_unit_panel.custom_minimum_size = Vector2(RAIL_W, 0)
@@ -1257,6 +1263,8 @@ func _draw_overlay() -> void:
 			overlay.draw_texture_rect(_tex(sp), Rect2(cpos - Vector2(rs, rs) * 0.5, Vector2(rs, rs)), false, scol)
 	# slash + hit_spark 分层（game-feel）
 	for s in _slash_fx:
+		if s.age < 0.0:
+			continue
 		var fi = mini(5, int(s.age / 0.08))
 		var kind = str(s.get("kind", "slash"))
 		var path = "res://assets/art/fx/%s_dense_%d.png" % [kind, fi]  # v8.4 dense 128px frames first, then legacy 64px
@@ -1287,6 +1295,8 @@ func _draw_overlay() -> void:
 			overlay.draw_texture_rect(_tex(lp), Rect2(lb.pos - Vector2(40, 40) * _k(), Vector2(80, 80) * _k()), false, Color(1, 1, 1, a3))
 	# 伤害飘字 + dmg_pop 底板
 	for fx in _dmg_fx:
+		if fx.age < 0.0:
+			continue
 		var a = clampf(1.0 - fx.age / 1.1, 0.0, 1.0)
 		var yoff = -fx.age * 36.0
 		var col: Color = fx.col
@@ -1297,7 +1307,11 @@ func _draw_overlay() -> void:
 			pop = "res://assets/art/fx/dmg_pop_%d.png" % fi2
 		if ResourceLoader.exists(pop):
 			overlay.draw_texture_rect(_tex(pop), Rect2(fx.pos + Vector2(-24, yoff - 32) * _k(), Vector2(48, 48) * _k()), false, Color(1, 1, 1, a * 0.9))
-		overlay.draw_string(UIKit.font("bold"), fx.pos + Vector2(-12, yoff) * _k(), fx.text, HORIZONTAL_ALIGNMENT_LEFT, -1, int(18 * sqrt(_k())), col)
+		var dfs := int((22 if _unit_layer != null else 18) * sqrt(_k()))
+		var pop_s := 1.0 + 0.35 * clampf(1.0 - fx.age / 0.15, 0.0, 1.0)  # punch-in scale
+		dfs = int(dfs * pop_s)
+		overlay.draw_string_outline(UIKit.font("bold"), fx.pos + Vector2(-12, yoff) * _k(), fx.text, HORIZONTAL_ALIGNMENT_LEFT, -1, dfs, 5, Color(0.02, 0.02, 0.04, a * 0.9))
+		overlay.draw_string(UIKit.font("bold"), fx.pos + Vector2(-12, yoff) * _k(), fx.text, HORIZONTAL_ALIGNMENT_LEFT, -1, dfs, col)
 	# 回合横幅
 	if _turn_flash > 0.0:
 		var a2 = clampf(_turn_flash / 0.9, 0.0, 1.0)
@@ -1734,7 +1748,9 @@ func _compute_move_cells(ui: int) -> Dictionary:
 
 func _spawn_dmg(cell: Vector2i, text: String, col: Color) -> void:
 	var center = ORIGIN + Vector2(cell) * CELL + Vector2(CELL / 2, CELL / 2)
-	_dmg_fx.append({"pos": center, "text": text, "age": 0.0, "col": col})
+	if _unit_layer != null:
+		center.y -= CELL * 0.85  # pop above the 3D figure's head
+	_dmg_fx.append({"pos": center, "text": text, "age": -_fx_delay, "col": col})
 
 func _spawn_move_dust(cell: Vector2i) -> void:
 	var center = ORIGIN + Vector2(cell) * CELL + Vector2(CELL / 2, CELL / 2)
@@ -1747,7 +1763,9 @@ func _spawn_lock_burst(cell: Vector2i) -> void:
 
 func _spawn_slash(cell: Vector2i, kind: String = "slash") -> void:
 	var center = ORIGIN + Vector2(cell) * CELL + Vector2(CELL / 2, CELL / 2)
-	_slash_fx.append({"pos": center, "age": 0.0, "kind": kind})
+	if _unit_layer != null:
+		center.y -= CELL * 0.35  # chest height of the 3D figure
+	_slash_fx.append({"pos": center, "age": -_fx_delay, "kind": kind})
 	_shake = 3.5
 
 func _do_attack(ai: int, di: int) -> void:
@@ -1923,8 +1941,42 @@ func _sync_unit_layer(delta: float) -> void:
 	for u in units:
 		var c := ORIGIN + Vector2(u.pos) * CELL + Vector2(CELL / 2, CELL * 0.62)
 		var vis := not (str(u.team) == "enemy" and not _players_see(u.pos))
-		entries.append({"u": u, "px": inv * (mx * c), "cell_px": cell_px, "visible": vis})
+		entries.append({"u": u, "px": inv * (mx * c), "cell_px": cell_px, "visible": vis, "cell": u.pos})
 	_unit_layer.sync(entries, delta)
+
+## Cells walked from a to b (BFS around terrain blocks and foes; allies may be passed). Excludes a.
+func _unit_path(u, a: Vector2i, b: Vector2i) -> Array:
+	if a == b:
+		return []
+	var blocked := {}
+	for cell in _terrain_blocked():
+		blocked[cell] = true
+	for o in units:
+		if o.char.hp > 0 and str(o.team) != str(u.team):
+			blocked[o.pos] = true
+	blocked.erase(b)
+	var prev := {a: a}
+	var q: Array = [a]
+	var guard := 0
+	while not q.is_empty() and guard < 600:
+		guard += 1
+		var cur: Vector2i = q.pop_front()
+		if cur == b:
+			break
+		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			var nx: Vector2i = cur + d
+			if not _in_bounds(nx) or blocked.has(nx) or prev.has(nx):
+				continue
+			prev[nx] = cur
+			q.append(nx)
+	if not prev.has(b):
+		return [Vector2i(b.x, a.y), b] if a.x != b.x and a.y != b.y else [b]  # knockback / teleport: L-step
+	var out: Array = []
+	var c := b
+	while c != a:
+		out.push_front(c)
+		c = prev[c]
+	return out
 
 func _unit_px(cell: Vector2i) -> Vector2:
 	return ORIGIN + Vector2(cell) * CELL + Vector2(CELL / 2, CELL / 2)
@@ -2096,8 +2148,10 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 	var tag_s = ("〔" + "·".join(tags) + "〕") if tags else ""
 	var msg = "%s → %s%s：" % [atk.char.name, def.char.name, tag_s]
 	if _unit_layer != null:
-		_unit_layer.act(atk, "crit" if result.get("crit", false) else "attack", _unit_px(def.pos), _unit_px(atk.pos))
-		_unit_layer.act(def, "hit" if result.hit else "dodge", _unit_px(atk.pos), _unit_px(def.pos))
+		var swing := "crit" if result.get("crit", false) else "attack"
+		_fx_delay = _unit_layer.impact_delay(atk, swing)  # 2D sparks / numbers land on the impact frame
+		_unit_layer.act(atk, swing, _unit_px(def.pos), _unit_px(atk.pos))
+		_unit_layer.act(def, "hit" if result.hit else "dodge", _unit_px(atk.pos), _unit_px(def.pos), maxf(0.01, _fx_delay))
 	if result.hit:
 		Sfx.play_weapon(_weapon_for(atk.char))
 		_bark(atk.char, "shout")
