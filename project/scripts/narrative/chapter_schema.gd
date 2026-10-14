@@ -5,6 +5,7 @@ extends RefCounted
 const OPS := [
 	"goto", "set_flag", "set_beat", "battle", "scene",
 	"advance", "fast_harvest", "journal", "ensure_reputation", "archive_notice", "open_chapter",
+	"ensure_opening_herb_escort",
 	"visit", "adjust", "skip_battle", "auto_recruit", "auto_marry",
 ]
 

@@ -647,7 +647,7 @@ func _run_op(step) -> String:
 				var ar: Dictionary = World.accept_opening_herb_escort()
 				if ar.get("ok", false):
 					_hint.text = str(ar.get("msg", ""))
-					GameState.log_event(str(ar.get("msg", "接下开局药材护送")))
+					GameState.log_event(str(ar.get("msg", Locale.t("opening_herb_escort_active"))))
 	return ""
 
 func _adjust(row: Dictionary) -> void:

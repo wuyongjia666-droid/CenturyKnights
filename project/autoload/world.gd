@@ -1326,67 +1326,36 @@ func quest_locked_reason(q: Dictionary) -> String:
 
 
 func ensure_opening_herb_escort() -> Dictionary:
-	## Opening review A-05: pro_lease_kept at beat 0.32 posts a guaranteed-pay herb escort
-	## (灰旗堡 → 陆桥驿, ~60 银). Idempotent; returns the offer or active copy.
+	## Opening review A-05: pro_lease_kept at beat 0.32 posts a paid herb escort on the
+	## castle quest board (GameState.quests). Auto-settle, ~60 silver. Idempotent.
 	const QID := "q_opening_herb_escort"
-	const HOME := "hq"
-	const DEST := "lb_mid"
 	if not GameState.flag("pro_lease_kept"):
 		return {}
-	for q in active:
+	for q in GameState.quests:
 		if str(q.get("id", "")) == QID:
 			return q
-	_ensure_board(HOME)
-	var offers: Array = boards[HOME].offers
-	for q2 in offers:
-		if str(q2.get("id", "")) == QID:
-			return q2
-	if not nodes.has(HOME) or not nodes.has(DEST):
-		return {}
-	var rt := route(HOME, DEST)
-	var days := int(rt.get("days", 3))
-	var q := {
+	var row := {
 		"id": QID,
-		"kind": "escort",
-		"issuer": HOME,
-		"target": DEST,
-		"tier": 1,
-		"state": "offer",
-		"sig": true,
-		"title": "护送药材过陆桥驿",
-		"desc": "药师的货要在汛前到陆桥驿。路不远，钱也不多——刚好够这一季的饷。到达陆桥驿交付。",
-		"client": "药师",
-		"parcel": "药材",
-		"foe_name": "劫道匪帮",
-		"route_days": days,
-		"days_budget": maxi(12, days * 2 + 8),
-		"reward_silver": 60,
-		"reward_rep": 8,
-		"req_rep": 0,
+		"name": Locale.t("opening_herb_escort_title"),
+		"stars": 1,
+		"months": 1,
+		"silver": 60,
+		"rep": 8,
 		"battle": false,
-		"danger": 1,
+		"desc": Locale.t("opening_herb_escort_desc"),
 	}
-	offers.push_front(q)
-	boards[HOME].offers = offers
+	GameState.quests.push_front(row)
 	GameState.mark_dirty()
-	world_changed.emit()
-	return q
+	return row
 
 func accept_opening_herb_escort() -> Dictionary:
-	## Accept the A-05 board offer if the player is at hq (or move logic is skipped in story).
+	## Accept (auto-settle) the A-05 castle-board herb escort.
 	var q := ensure_opening_herb_escort()
 	if q.is_empty():
-		return {"ok": false, "msg": "开局药材护送未就绪"}
-	if str(q.get("state", "")) == "active":
-		return {"ok": true, "msg": "已在护送药材", "quest": q}
-	var home := "hq"
-	var here := pos
-	if here != home:
-		pos = home  # story beat posts from the gatehouse; stand at the issuer briefly
-	var r := accept_quest(home, "q_opening_herb_escort")
-	if here != home:
-		pos = here
-	return r
+		return {"ok": false, "msg": Locale.t("opening_herb_escort_missing")}
+	if bool(GameState.quest_done.get("q_opening_herb_escort", false)):
+		return {"ok": true, "msg": Locale.t("opening_herb_escort_active"), "quest": q}
+	return GameState.accept_quest("q_opening_herb_escort")
 
 func accept_quest(city: String, qid: String) -> Dictionary:
 	if city != pos:

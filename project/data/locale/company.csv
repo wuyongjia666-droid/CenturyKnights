@@ -229,3 +229,9 @@ camp_hint_morale,士气 %+d,Morale %+d
 camp_hint_watch,下段遇敌减少,Safer next leg
 smith_reveal_tag,招牌兵器 · 首次亮相,SIGNATURE ARM · FIRST LOOK
 smith_reveal_skip,知道了,Got it
+opening_herb_escort_title,护送药材过陆桥驿,Escort herbs to Bridge Post
+opening_herb_escort_desc,药师的货要在汛前到陆桥驿。路不远，钱也不多——刚好够这一季的饷。到达陆桥驿交付。,The herbalist needs the load at Bridge Post before the flood. Short road, thin pay — just enough for this seasons wages. Turn in at Bridge Post.
+opening_herb_escort_client,药师,Herbalist
+opening_herb_escort_foe,劫道匪帮,Road bandits
+opening_herb_escort_missing,开局药材护送未就绪,Opening herb escort not ready
+opening_herb_escort_active,已在护送药材,Already escorting the herbs
