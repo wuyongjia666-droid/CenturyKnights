@@ -31,7 +31,8 @@ static func build(c, team: String, tmpl: String = "") -> Node3D:
 	var body := Node3D.new()
 	body.name = "Body"
 	root.add_child(body)
-	_assemble(body, c, pal, enemy, face)
+	if DisplayServer.get_name() != "headless":
+		_assemble(body, c, pal, enemy, face)
 	var ap := _make_anim(root, face)
 	root.add_child(ap)
 	return root
