@@ -1324,6 +1324,39 @@ func quest_locked_reason(q: Dictionary) -> String:
 		return "货舱不足"
 	return ""
 
+
+func ensure_opening_herb_escort() -> Dictionary:
+	## Opening review A-05: pro_lease_kept at beat 0.32 posts a paid herb escort on the
+	## castle quest board (GameState.quests). Auto-settle, ~60 silver. Idempotent.
+	const QID := "q_opening_herb_escort"
+	if not GameState.flag("pro_lease_kept"):
+		return {}
+	for q in GameState.quests:
+		if str(q.get("id", "")) == QID:
+			return q
+	var row := {
+		"id": QID,
+		"name": Locale.t("opening_herb_escort_title"),
+		"stars": 1,
+		"months": 1,
+		"silver": 60,
+		"rep": 8,
+		"battle": false,
+		"desc": Locale.t("opening_herb_escort_desc"),
+	}
+	GameState.quests.push_front(row)
+	GameState.mark_dirty()
+	return row
+
+func accept_opening_herb_escort() -> Dictionary:
+	## Accept (auto-settle) the A-05 castle-board herb escort.
+	var q := ensure_opening_herb_escort()
+	if q.is_empty():
+		return {"ok": false, "msg": Locale.t("opening_herb_escort_missing")}
+	if bool(GameState.quest_done.get("q_opening_herb_escort", false)):
+		return {"ok": true, "msg": Locale.t("opening_herb_escort_active"), "quest": q}
+	return GameState.accept_quest("q_opening_herb_escort")
+
 func accept_quest(city: String, qid: String) -> Dictionary:
 	if city != pos:
 		return {"ok": false, "msg": "须在发布委托的城中接取"}

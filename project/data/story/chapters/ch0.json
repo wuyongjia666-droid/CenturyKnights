@@ -1329,6 +1329,10 @@
           "label": "揭一张陆桥驿的护送，先看路",
           "do": [
             {
+              "op": "ensure_opening_herb_escort",
+              "accept": true
+            },
+            {
               "op": "goto",
               "beat": "next"
             }
