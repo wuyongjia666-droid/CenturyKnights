@@ -206,3 +206,11 @@ terr_51,反夺·%s,Retake · %s
 terr_52,%s占着%s。赶到%s开战，打赢后回%s交令，团旗就能重新挂上。,"%s holds %s. Fight at %s, then report to %s to raise the banner again."
 terr_53,%s驻军独力守住（战前驻军 %d→%d，自守约 %d%%）,"%s garrison held alone (%d→%d before loss, hold ~%d%%)"
 terr_54,锚点城的委托榜已贴出「反夺」——接了就能去打回来。,The anchor board already posts a retake commission.
+terr_55,这笔收买已经付过了,Already bribed this threat
+terr_56,%s：花 %d 银收买来犯，威胁推迟一月,"%s: paid %d silver — threat delayed a month"
+terr_57,斥候回报：%s来犯，驻军自守约 %d%%,Scout: %s attacking, garrison hold ~%d%%
+terr_58,截击%s的来犯！,Intercept the attack on %s!
+terr_ui_bribe,收买 %d,Bribe %d
+terr_ui_scout,斥候 %d,Scout %d
+terr_ui_scouted,已探明,Scouted
+terr_ui_intercept,截击,Intercept

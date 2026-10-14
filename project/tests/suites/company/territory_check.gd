@@ -21,7 +21,7 @@ func _run() -> String:
 	World.rivals_enabled = false
 	for nid in World.nations.keys():
 		World.rep_nation[str(nid)] = 40
-	for f in [_seat_migration, _assault, _chain, _month, _contest, _reclaim, _home, _save, _stockade]:
+	for f in [_seat_migration, _assault, _chain, _month, _contest, _reclaim, _counter, _home, _save, _stockade]:
 		err = f.call()
 		if err != "":
 			return err
@@ -228,6 +228,48 @@ func _reclaim() -> String:
 			n += 1
 	if n != 1:
 		return "duplicate reclaim offers: %d" % n
+	return ""
+
+
+func _counter() -> String:
+	# Improve-plan #1: bribe delays a month; scout reveals hold %; intercept opens defend.
+	var id := "t_ash_millrun"
+	World.pos = str(CKTerritory.site(id).anchor)
+	CKTerritory.capture(id, "chain")
+	var st := CKTerritory.state(id)
+	st.garrison = 2
+	World.territory.sites[id] = st
+	CKTerritory.start_threat(id)
+	if CKTerritory.state(id).threat.is_empty():
+		return "no threat for counter"
+	GameState.silver = 500
+	var sc := CKTerritory.scout_threat(id)
+	if not sc.get("ok", false):
+		return "scout failed: %s" % sc.get("msg", "")
+	if not bool(CKTerritory.state(id).threat.get("scouted", false)):
+		return "scout flag missing"
+	if int(sc.get("intel", {}).get("hold_pct", -1)) < 0:
+		return "scout intel missing hold_pct"
+	# Advance threat to resolve-next month, then bribe resets months.
+	st = CKTerritory.state(id)
+	st.threat["months"] = 1
+	World.territory.sites[id] = st
+	var br := CKTerritory.bribe_threat(id)
+	if not br.get("ok", false):
+		return "bribe failed: %s" % br.get("msg", "")
+	if int(CKTerritory.state(id).threat.get("months", -1)) != 0:
+		return "bribe did not reset months"
+	if CKTerritory.bribe_threat(id).get("ok", false):
+		return "second bribe should fail"
+	World.encounter = {}
+	var ic := CKTerritory.intercept(id)
+	if not ic.get("ok", false):
+		return "intercept failed: %s" % ic.get("msg", "")
+	if str(World.encounter.get("kind", "")) != "territory_defend":
+		return "intercept did not open defend"
+	World.on_battle_end(true)
+	if not CKTerritory.state(id).threat.is_empty():
+		return "intercept win left threat"
 	return ""
 
 func _home() -> String:

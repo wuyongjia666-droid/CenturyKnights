@@ -119,7 +119,7 @@ static func fill_modal(p: Panel, anchor: String, act: Callable) -> void:
 			var k := str(spec.kind)
 			b.pressed.connect(func(): act.call(k, id))
 			row.add_child(b)
-		y += 122.0
+		y += 150.0
 	var close := UIKit.ghost_button(Locale.t("terr_ui_close"), 140, 36)
 	close.name = "TerrClose"
 	close.position = Vector2(336, p.size.y - 52)
@@ -128,7 +128,7 @@ static func fill_modal(p: Panel, anchor: String, act: Callable) -> void:
 	close.call_deferred("grab_focus")
 
 static func modal_height(anchor: String) -> float:
-	return 150.0 + 122.0 * CKTerritory.sites_at(anchor).size()
+	return 150.0 + 150.0 * CKTerritory.sites_at(anchor).size()
 
 static func _actions(id: String) -> Array:
 	var out: Array = []
@@ -149,6 +149,19 @@ static func _actions(id: String) -> Array:
 		if not (st.threat as Dictionary).is_empty():
 			var dwhy := "" if World.pos == str(CKTerritory.site(id).anchor) else Locale.t("terr_ui_go")
 			out.append({"kind": "defend", "label": Locale.t("terr_ui_defend"), "why": dwhy})
+			out.append({"kind": "intercept", "label": Locale.t("terr_ui_intercept"), "why": dwhy})
+			var bwhy := ""
+			if bool(st.threat.get("bribed", false)):
+				bwhy = Locale.t("terr_55")
+			elif GameState.silver < CKTerritory.bribe_cost(id):
+				bwhy = Locale.t("terr_ui_silver") % CKTerritory.bribe_cost(id)
+			out.append({"kind": "bribe", "label": Locale.t("terr_ui_bribe") % CKTerritory.bribe_cost(id), "why": bwhy})
+			var scwhy := ""
+			if bool(st.threat.get("scouted", false)):
+				scwhy = Locale.t("terr_ui_scouted")
+			elif GameState.silver < CKTerritory.scout_cost(id):
+				scwhy = Locale.t("terr_ui_silver") % CKTerritory.scout_cost(id)
+			out.append({"kind": "scout", "label": Locale.t("terr_ui_scout") % CKTerritory.scout_cost(id), "why": scwhy})
 		return out
 	var block := CKTerritory.capture_block(id)
 	out.append({"kind": "assault", "label": Locale.t("terr_ui_assault"), "why": block})
@@ -168,4 +181,10 @@ static func run(kind: String, id: String) -> Dictionary:
 			return CKTerritory.build_stockade(id)
 		"defend":
 			return CKTerritory.defend(id)
+		"intercept":
+			return CKTerritory.intercept(id)
+		"bribe":
+			return CKTerritory.bribe_threat(id)
+		"scout":
+			return CKTerritory.scout_threat(id)
 	return {"ok": false, "msg": ""}

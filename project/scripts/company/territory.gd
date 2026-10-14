@@ -587,6 +587,71 @@ static func threatened_at(anchor: String) -> Array:
 			out.append(id)
 	return out
 
+## Improve-plan #1 countermeasures while a threat hangs over an owned site.
+static func bribe_cost(id: String) -> int:
+	return int(rule("bribe_cost", 50)) + int(site(id).get("danger", 1)) * 15
+
+static func scout_cost(_id: String) -> int:
+	return int(rule("scout_cost", 20))
+
+## Pay to push the threat back one month (months → 0). Once per threat.
+static func bribe_threat(id: String) -> Dictionary:
+	if not owned(id) or (state(id).threat as Dictionary).is_empty():
+		return {"ok": false, "msg": Locale.t("terr_34")}
+	var st := state(id)
+	if bool(st.threat.get("bribed", false)):
+		return {"ok": false, "msg": Locale.t("terr_55")}
+	var cost := bribe_cost(id)
+	if GameState.silver < cost:
+		return {"ok": false, "msg": Locale.t("terr_27") % cost}
+	GameState.silver -= cost
+	st.threat["bribed"] = true
+	st.threat["months"] = 0
+	_put(id, st)
+	_log(Locale.t("terr_56") % [site(id).name, cost])
+	GameState.mark_dirty()
+	World.world_changed.emit()
+	return {"ok": true, "msg": Locale.t("terr_56") % [site(id).name, cost]}
+
+## Spend a little silver to learn the exact hold chance and attacker.
+static func scout_threat(id: String) -> Dictionary:
+	if not owned(id) or (state(id).threat as Dictionary).is_empty():
+		return {"ok": false, "msg": Locale.t("terr_34")}
+	var st := state(id)
+	if bool(st.threat.get("scouted", false)):
+		return {"ok": true, "msg": Locale.t("terr_57") % [st.threat.get("name", ""), int(round(hold_chance(id) * 100.0))], "intel": st.threat.get("intel", {})}
+	var cost := scout_cost(id)
+	if GameState.silver < cost:
+		return {"ok": false, "msg": Locale.t("terr_27") % cost}
+	GameState.silver -= cost
+	var hold_pct := int(round(hold_chance(id) * 100.0))
+	var intel := {
+		"hold_pct": hold_pct,
+		"garrison": int(st.garrison),
+		"by": str(st.threat.get("name", "")),
+		"months": int(st.threat.get("months", 0)),
+	}
+	st.threat["scouted"] = true
+	st.threat["intel"] = intel
+	_put(id, st)
+	var msg := Locale.t("terr_57") % [intel["by"], hold_pct]
+	_log(msg)
+	GameState.mark_dirty()
+	World.world_changed.emit()
+	return {"ok": true, "msg": msg, "intel": intel}
+
+## Ambush the attackers from the anchor (small defend battle). Win clears the threat.
+static func intercept(id: String) -> Dictionary:
+	if not owned(id) or (state(id).threat as Dictionary).is_empty():
+		return {"ok": false, "msg": Locale.t("terr_34")}
+	var s := site(id)
+	if World.pos != str(s.anchor):
+		return {"ok": false, "msg": Locale.t("terr_05") % World.node(str(s.anchor)).get("name", "")}
+	if not World.encounter.is_empty():
+		return {"ok": false, "msg": Locale.t("terr_06")}
+	var enc := World.start_encounter("territory_defend", {"node": str(s.anchor), "from": str(s.anchor), "site": id, "danger": int(s.danger) + 1, "intercept": true})
+	return {"ok": true, "encounter": enc, "msg": Locale.t("terr_58") % s.name}
+
 static func defend(id: String) -> Dictionary:
 	if not owned(id) or (state(id).threat as Dictionary).is_empty():
 		return {"ok": false, "msg": Locale.t("terr_34")}
@@ -664,4 +729,7 @@ static func summary(id: String) -> String:
 		t += Locale.t("terr_43") % int(st.unrest)
 	if not (st.threat as Dictionary).is_empty():
 		t += "\n！" + Locale.t("terr_44") % st.threat.get("name", "")
+		if bool(st.threat.get("scouted", false)):
+			var intel: Dictionary = st.threat.get("intel", {}) if typeof(st.threat.get("intel", {})) == TYPE_DICTIONARY else {}
+			t += "\n" + Locale.t("terr_57") % [st.threat.get("name", ""), int(intel.get("hold_pct", int(round(hold_chance(id) * 100.0))))]
 	return t
