@@ -136,6 +136,16 @@ func _build() -> void:
 		foot.position = Vector2(72, 672)
 		foot.size.y = 34.0
 		foot.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+		foot.add_theme_font_size_override("font_size", 22)
+		# Two-column grid buttons must meet the phone hit floor (audit P2 title).
+		var grid := col.get_node_or_null("MenuGrid")
+		if grid:
+			for child in grid.get_children():
+				if child is BaseButton:
+					(child as BaseButton).custom_minimum_size = Vector2(
+						maxf((child as BaseButton).custom_minimum_size.x, 200.0),
+						MobileLayout.HIT_FLOOR)
+					(child as BaseButton).add_theme_font_size_override("font_size", 22)
 
 func _on_new() -> void:
 	CKNav.replace("res://scenes/story/naming.tscn")

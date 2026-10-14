@@ -31,7 +31,12 @@ func _ready() -> void:
 	CKPageKit.lock(_begin_btn, why)
 	_begin_btn.pressed.connect(_begin)
 	left.add_child(_begin_btn)
-	var list := CKPageKit.list(left, Rect2(14, 178, 392, 320), "QueueList")
+	# Phone hit floor makes the start button taller; keep the queue clear below it.
+	var list_y := 178.0
+	if DeviceProfile.is_mobile():
+		list_y = 118.0 + MobileLayout.HIT_FLOOR + 14.0
+	var list_h := maxf(120.0, 498.0 - list_y)
+	var list := CKPageKit.list(left, Rect2(14, list_y, 392, list_h), "QueueList")
 	if _pending.is_empty():
 		list.add_child(CKPageKit.empty(Locale.t("lb_bt_all_done"), Locale.t("lb_bt_all_done_why"), "", 360))
 	for i in _pending.size():
@@ -55,6 +60,11 @@ func _ready() -> void:
 	_status.size = Vector2(720, 40)
 	right.add_child(_status)
 	_stage = CKPageKit.list(right, Rect2(14, 104, 732, 394), "RevealCards")
+	# Idle right pane was a blank card (audit P2). One empty-state is enough; drop the status echo.
+	if _lines.is_empty():
+		var idle_why := Locale.t("lb_bt_idle") if not _pending.is_empty() else Locale.t("lb_bt_idle_done")
+		_status.text = ""
+		_stage.add_child(CKPageKit.empty(Locale.t("lb_bt_result"), idle_why, "", 690))
 	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "SANCTUARY ASSAY · FROST")
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
