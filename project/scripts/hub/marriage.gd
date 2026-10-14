@@ -463,36 +463,61 @@ func _harmony_card(rect: Rect2, a: CKCharacter, b: CKCharacter) -> void:
 		rk.position = Vector2(8, 176)
 		rk.size = Vector2(rect.size.x - 16, 20)
 		p.add_child(rk)
-	var ib := UIKit.panel_at(p, Rect2(8, preview_y, rect.size.x - 16, preview_h), 6)
-	ib.name = "HeirPreview"
-	ib.clip_contents = true
+	## Heir preview: chips size to their two text lines and wrap into extra rows.
+	var tp: Array = ex.trait_probs.slice(0, 3)
+	var inner_w := rect.size.x - 16.0
 	var it := UIKit.body_label("后代遗传特质推演", UIKit.TEXT_DIM, 11)
 	it.autowrap_mode = TextServer.AUTOWRAP_OFF
 	it.clip_text = true
-	it.position = Vector2(4, 6)
-	it.size = Vector2(rect.size.x - 40, 16)
 	it.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	var title_h := maxf(16.0, it.get_minimum_size().y)
+	var chips: Array = []
+	var chip_h := 0.0
+	var min_cw := 28.0
+	for tq in tp:
+		var cn := UIKit.body_label(str(tq.name), UIKit.OK, 12)
+		cn.autowrap_mode = TextServer.AUTOWRAP_OFF
+		cn.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		var cp := UIKit.mono("%d%% 显性" % int(round(float(tq.prob) * 100)), 9, UIKit.TEXT_FAINT, false)
+		cp.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		chip_h = maxf(chip_h, cn.get_minimum_size().y + cp.get_minimum_size().y + 8.0)
+		min_cw = maxf(min_cw, maxf(cn.get_minimum_size().x, cp.get_minimum_size().x) + 8.0)
+		chips.append([cn, cp])
+	var per_row := clampi(int((inner_w - 16.0 + 8.0) / (min_cw + 8.0)), 1, 3)
+	var rows := int(ceil(float(maxi(1, chips.size())) / float(per_row)))
+	var cw := maxf(min_cw, (inner_w - 16.0 - 8.0 * (per_row - 1)) / float(per_row))
+	cw = minf(cw, inner_w - 16.0)
+	var need_h := 4.0 + title_h + 4.0 + rows * chip_h + (rows - 1) * 4.0 + 6.0
+	preview_h = maxf(preview_h, need_h)
+	preview_y = minf(preview_y, rect.size.y - preview_h - 6.0)
+	var ib := UIKit.panel_at(p, Rect2(8, preview_y, inner_w, preview_h), 6)
+	ib.name = "HeirPreview"
+	ib.clip_contents = true
+	it.position = Vector2(4, 4)
+	it.size = Vector2(inner_w - 8.0, title_h)
 	ib.add_child(it)
-	var tp: Array = ex.trait_probs.slice(0, 3)
-	var cw := maxf(28.0, (ib.size.x - 36.0) / 3.0)
-	for i in tp.size():
-		var chip := UIKit.panel_at(ib, Rect2(12 + i * (cw + 8), 24, cw, 32), 4)
+	for i in chips.size():
+		var r := i / per_row
+		var col := i % per_row
+		var in_row := mini(per_row, chips.size() - r * per_row)
+		var row_w := in_row * cw + (in_row - 1) * 8.0
+		var x0 := (inner_w - row_w) * 0.5
+		var chip := UIKit.panel_at(ib, Rect2(x0 + col * (cw + 8.0), 8.0 + title_h + r * (chip_h + 4.0), cw, chip_h), 4)
+		chip.name = "TraitChip%d" % i
 		var cs: StyleBoxFlat = chip.get_theme_stylebox("panel").duplicate()
 		cs.bg_color = Color(UIKit.OK, 0.06)
 		cs.border_color = Color(UIKit.OK, 0.45)
 		chip.add_theme_stylebox_override("panel", cs)
-		var cn := UIKit.body_label(str(tp[i].name), UIKit.OK, 12)
-		cn.autowrap_mode = TextServer.AUTOWRAP_OFF
+		var cn: Label = chips[i][0]
+		var cp: Label = chips[i][1]
+		var h1 := cn.get_minimum_size().y
 		cn.clip_text = true
-		cn.position = Vector2(2, 2)
-		cn.size = Vector2(cw - 4, 16)
-		cn.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		cn.position = Vector2(2, 4)
+		cn.size = Vector2(cw - 4, h1)
 		chip.add_child(cn)
-		var cp := UIKit.mono("%d%% 显性" % int(round(float(tp[i].prob) * 100)), 9, UIKit.TEXT_FAINT, false)
 		cp.clip_text = true
-		cp.position = Vector2(2, 20)
-		cp.size = Vector2(cw - 4, 14)
-		cp.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		cp.position = Vector2(2, 4 + h1)
+		cp.size = Vector2(cw - 4, cp.get_minimum_size().y)
 		chip.add_child(cp)
 func _render_cards() -> void:
 	for c in _cards.get_children():
@@ -516,10 +541,10 @@ func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 	if _mob:
 		_m_fill_forecast(a, b)
 		return
-	if _msg and _msg.get_parent() != _rite_board:
+	if _msg and _msg.get_parent() != _rite_board and (_msg_scroll == null or _msg.get_parent() != _msg_scroll):
 		_msg.reparent(_rite_board, false)
 	for ch in _rite_board.get_children():
-		if ch == _msg:
+		if ch == _msg or ch == _msg_scroll:
 			continue
 		ch.queue_free()
 	for ch in _punnett.get_children():
@@ -556,14 +581,7 @@ func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 			_rite_board.add_child(btn)
 			x += step
 	_consequence_line(a, b)
-	if _narrow:
-		_msg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		_msg.position = Vector2(8, row_y + 44.0)
-		_msg.size = Vector2(maxf(40.0, _rite_board.size.x - 16.0), maxf(16.0, _rite_board.size.y - _msg.position.y - 6.0))
-	else:
-		_msg.autowrap_mode = TextServer.AUTOWRAP_OFF
-		_msg.position = Vector2(12, 80)
-		_msg.size = Vector2(minf(576.0, _rite_board.size.x - 24.0), 22)
+	_desk_msg_layout(row_y + 44.0 if not rites.is_empty() else row_y)
 	var ph := UIKit.mono("PUNNETT // 每项性状", 9, UIKit.TEXT_FAINT)
 	ph.clip_text = true
 	ph.position = Vector2(12, 6)
@@ -579,25 +597,27 @@ func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 	holder.clip_contents = true
 	_punnett.add_child(holder)
 	CKCourtChrome.fill_punnett(holder, a, b, 2)
+	holder.size.y = minf(holder.size.y, maxf(18.0, holder.get_combined_minimum_size().y))
 	var cast := UIKit.body_label(str(CKFamilyState.combat_expectation(a, b).get("line", "")), UIKit.ACCENT, 12)
 	cast.name = "CombatForecast"
-	cast.clip_text = true
-	if _punnett.size.y >= 140.0:
-		cast.autowrap_mode = TextServer.AUTOWRAP_OFF
-		cast.position = Vector2(12, 108)
-		cast.size = Vector2(minf(560.0, hold_w), 28)
-		cast.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		cast.tooltip_text = cast.text
-	else:
-		cast.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		cast.position = Vector2(8, holder.position.y + holder.size.y + 2.0)
-		cast.size = Vector2(hold_w, maxf(16.0, _punnett.size.y - cast.position.y - 4.0))
-		if not DeviceProfile.is_mobile():
-			# Desktop: one line, ellipsis at the panel edge, full text on hover.
-			cast.autowrap_mode = TextServer.AUTOWRAP_OFF
-			cast.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-			cast.tooltip_text = cast.text
-			cast.mouse_filter = Control.MOUSE_FILTER_PASS
+	cast.tooltip_text = cast.text
+	cast.mouse_filter = Control.MOUSE_FILTER_PASS
+	cast.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	cast.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	cast.position = Vector2(12, holder.position.y + holder.size.y + 2.0)
+	cast.size = Vector2(hold_w, maxf(16.0, _punnett.size.y - cast.position.y - 4.0))
+	## Wrap; if the panel still can't hold it, step the font down, then let the
+	## punnett rows above give way so the forecast is never cut off.
+	var fs := 12
+	while fs > 11 and _label_text_h(cast, hold_w) > cast.size.y:
+		fs -= 1
+		cast.add_theme_font_size_override("font_size", fs)
+	var need := _label_text_h(cast, hold_w)
+	if need > cast.size.y:
+		var bottom := _punnett.size.y - 4.0
+		cast.position.y = maxf(22.0 + 18.0, bottom - need)
+		cast.size.y = bottom - cast.position.y
+		holder.size.y = maxf(18.0, cast.position.y - 2.0 - holder.position.y)
 	_punnett.add_child(cast)
 	UIFX.wire_tree(_rite_board)
 	_mobile_after_render.call_deferred()
@@ -888,6 +908,37 @@ func _consequence_line(a: CKCharacter, b: CKCharacter) -> void:
 	_msg.add_theme_color_override("font_color", UIKit.DANGER if blocked else UIKit.TEXT_DIM)
 
 var _full_terms := ""
+var _msg_scroll: ScrollContainer
+
+func _label_text_h(l: Label, w: float) -> float:
+	var f: Font = l.get_theme_font("font")
+	var fs: int = l.get_theme_font_size("font_size")
+	return f.get_multiline_string_size(l.text, HORIZONTAL_ALIGNMENT_LEFT, w, fs, -1, TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND | TextServer.BREAK_ADAPTIVE).y + 2.0
+
+## Desktop rite log: top-aligned, wrapped, scrolls when longer than the board.
+func _desk_msg_layout(top_y: float) -> void:
+	if _msg == null or _rite_board == null:
+		return
+	if _msg_scroll == null or not is_instance_valid(_msg_scroll):
+		_msg_scroll = ScrollContainer.new()
+		_msg_scroll.name = "RiteLogScroll"
+		_msg_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		_rite_board.add_child(_msg_scroll)
+	if _msg_scroll.get_parent() != _rite_board:
+		_msg_scroll.reparent(_rite_board, false)
+	if _msg.get_parent() != _msg_scroll:
+		_msg.reparent(_msg_scroll, false)
+	_rite_board.clip_contents = true
+	var w := maxf(40.0, _rite_board.size.x - 24.0)
+	_msg_scroll.position = Vector2(12, top_y)
+	_msg_scroll.size = Vector2(w, maxf(20.0, _rite_board.size.y - top_y - 6.0))
+	_msg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_msg.clip_text = false
+	_msg.vertical_alignment = VERTICAL_ALIGNMENT_TOP
+	_msg.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_msg.custom_minimum_size = Vector2(w - 12.0, 0)
+	if _full_terms != "" and not is_married_view() and _msg.text.ends_with(Locale.t("wsc_mr_more")):
+		_msg.text = _full_terms
 
 func _rite_cost(a: CKCharacter, b: CKCharacter) -> int:
 	var cost := 0
@@ -1162,11 +1213,8 @@ func _present_wed(text: String, ok: bool) -> void:
 		_msg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		_msg.clip_text = false
 		_msg.add_theme_color_override("font_color", UIKit.OK if ok else UIKit.DANGER)
-		## Expand the rite explain slot so the full vow log stays readable.
-		if _rite_board != null:
-			_rite_board.clip_contents = false
-			_msg.position = Vector2(12, 36)
-			_msg.size = Vector2(maxf(40.0, _rite_board.size.x - 24.0), maxf(64.0, _rite_board.size.y - 44.0))
+		if _rite_board != null and not _mob:
+			_desk_msg_layout(32.0 if is_married_view() else _msg.position.y)
 
 func _back() -> void:
 	if str(GameState.chapter0_beat) in ["0.4", "0.45", "0.5"] and not GameState.flag("chapter0_done"):

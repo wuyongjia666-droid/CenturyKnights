@@ -55,6 +55,7 @@ var _desktop := false
 var _out := "/tmp/ck_mobile"
 var _report := []
 var _only: PackedStringArray = []
+var _res_override: Array = []
 
 func _ready() -> void:
 	for arg in OS.get_cmdline_user_args():
@@ -64,6 +65,12 @@ func _ready() -> void:
 			_only = arg.substr(7).split(",")
 		if arg == "--desktop":
 			_desktop = true
+		if arg.begins_with("--res="):
+			## e.g. --res=1024x600,1280x720 (ad-hoc screenshot sizes)
+			for tok in arg.substr(6).split(","):
+				var wh := tok.split("x")
+				if wh.size() == 2:
+					_res_override.append(Vector2i(int(wh[0]), int(wh[1])))
 	if DisplayServer.get_name() == "headless":
 		print("MOBILE PASS headless-skip")
 		get_tree().quit(0)
@@ -77,7 +84,7 @@ func _ready() -> void:
 	var screens: Array = SCREENS.duplicate()
 	if _desktop:
 		screens.append_array(DESKTOP_EXTRA)
-	for r in (RES_DESKTOP if _desktop else RES):
+	for r in (_res_override if not _res_override.is_empty() else (RES_DESKTOP if _desktop else RES)):
 		get_window().size = r
 		await get_tree().process_frame
 		await get_tree().process_frame
