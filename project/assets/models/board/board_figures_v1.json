@@ -1,0 +1,815 @@
+{
+  "version": 1,
+  "schema": "board_figures_v1",
+  "model_h": 1.85,
+  "heads": 5.45,
+  "slots": {
+    "hair": 0,
+    "skin": 1,
+    "eye": 2,
+    "coat": 3,
+    "coat_dark": 4,
+    "apron": 5,
+    "sash": 6,
+    "metal": 7,
+    "blade": 8,
+    "house": 9,
+    "crest": 10,
+    "cape": 11,
+    "trousers": 12,
+    "boots": 13,
+    "leather": 14,
+    "wood": 15,
+    "accent": 16
+  },
+  "bones": [
+    "root",
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm.L",
+    "forearm.L",
+    "hand.L",
+    "thigh.L",
+    "shin.L",
+    "foot.L",
+    "upper_arm.R",
+    "forearm.R",
+    "hand.R",
+    "thigh.R",
+    "shin.R",
+    "foot.R"
+  ],
+  "parts": [
+    {
+      "id": "body_m_pelvis",
+      "object": "body_m_pelvis",
+      "slot": "trousers",
+      "bone": "hips",
+      "kind": "body",
+      "tris": 108
+    },
+    {
+      "id": "body_m_torso",
+      "object": "body_m_torso",
+      "slot": "coat",
+      "bone": "chest",
+      "kind": "body",
+      "tris": 108
+    },
+    {
+      "id": "body_m_waist",
+      "object": "body_m_waist",
+      "slot": "coat_dark",
+      "bone": "spine",
+      "kind": "body",
+      "tris": 108
+    },
+    {
+      "id": "body_m_thigh_R",
+      "object": "body_m_thigh_R",
+      "slot": "trousers",
+      "bone": "thigh.R",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_m_shin_R",
+      "object": "body_m_shin_R",
+      "slot": "boots",
+      "bone": "shin.R",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_m_foot_R",
+      "object": "body_m_foot_R",
+      "slot": "boots",
+      "bone": "foot.R",
+      "kind": "body",
+      "tris": 108
+    },
+    {
+      "id": "body_m_uarm_R",
+      "object": "body_m_uarm_R",
+      "slot": "coat",
+      "bone": "upper_arm.R",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_m_farm_R",
+      "object": "body_m_farm_R",
+      "slot": "coat",
+      "bone": "forearm.R",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_m_hand_R",
+      "object": "body_m_hand_R",
+      "slot": "skin",
+      "bone": "hand.R",
+      "kind": "body",
+      "tris": 100
+    },
+    {
+      "id": "body_m_thigh_L",
+      "object": "body_m_thigh_L",
+      "slot": "trousers",
+      "bone": "thigh.L",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_m_shin_L",
+      "object": "body_m_shin_L",
+      "slot": "boots",
+      "bone": "shin.L",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_m_foot_L",
+      "object": "body_m_foot_L",
+      "slot": "boots",
+      "bone": "foot.L",
+      "kind": "body",
+      "tris": 108
+    },
+    {
+      "id": "body_m_uarm_L",
+      "object": "body_m_uarm_L",
+      "slot": "coat",
+      "bone": "upper_arm.L",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_m_farm_L",
+      "object": "body_m_farm_L",
+      "slot": "coat",
+      "bone": "forearm.L",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_m_hand_L",
+      "object": "body_m_hand_L",
+      "slot": "skin",
+      "bone": "hand.L",
+      "kind": "body",
+      "tris": 100
+    },
+    {
+      "id": "body_f_pelvis",
+      "object": "body_f_pelvis",
+      "slot": "trousers",
+      "bone": "hips",
+      "kind": "body",
+      "tris": 108
+    },
+    {
+      "id": "body_f_torso",
+      "object": "body_f_torso",
+      "slot": "coat",
+      "bone": "chest",
+      "kind": "body",
+      "tris": 108
+    },
+    {
+      "id": "body_f_waist",
+      "object": "body_f_waist",
+      "slot": "coat_dark",
+      "bone": "spine",
+      "kind": "body",
+      "tris": 108
+    },
+    {
+      "id": "body_f_thigh_R",
+      "object": "body_f_thigh_R",
+      "slot": "trousers",
+      "bone": "thigh.R",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_f_shin_R",
+      "object": "body_f_shin_R",
+      "slot": "boots",
+      "bone": "shin.R",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_f_foot_R",
+      "object": "body_f_foot_R",
+      "slot": "boots",
+      "bone": "foot.R",
+      "kind": "body",
+      "tris": 108
+    },
+    {
+      "id": "body_f_uarm_R",
+      "object": "body_f_uarm_R",
+      "slot": "coat",
+      "bone": "upper_arm.R",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_f_farm_R",
+      "object": "body_f_farm_R",
+      "slot": "coat",
+      "bone": "forearm.R",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_f_hand_R",
+      "object": "body_f_hand_R",
+      "slot": "skin",
+      "bone": "hand.R",
+      "kind": "body",
+      "tris": 100
+    },
+    {
+      "id": "body_f_thigh_L",
+      "object": "body_f_thigh_L",
+      "slot": "trousers",
+      "bone": "thigh.L",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_f_shin_L",
+      "object": "body_f_shin_L",
+      "slot": "boots",
+      "bone": "shin.L",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_f_foot_L",
+      "object": "body_f_foot_L",
+      "slot": "boots",
+      "bone": "foot.L",
+      "kind": "body",
+      "tris": 108
+    },
+    {
+      "id": "body_f_uarm_L",
+      "object": "body_f_uarm_L",
+      "slot": "coat",
+      "bone": "upper_arm.L",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_f_farm_L",
+      "object": "body_f_farm_L",
+      "slot": "coat",
+      "bone": "forearm.L",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_f_hand_L",
+      "object": "body_f_hand_L",
+      "slot": "skin",
+      "bone": "hand.L",
+      "kind": "body",
+      "tris": 100
+    },
+    {
+      "id": "body_heavy_pelvis",
+      "object": "body_heavy_pelvis",
+      "slot": "trousers",
+      "bone": "hips",
+      "kind": "body",
+      "tris": 108
+    },
+    {
+      "id": "body_heavy_torso",
+      "object": "body_heavy_torso",
+      "slot": "coat",
+      "bone": "chest",
+      "kind": "body",
+      "tris": 108
+    },
+    {
+      "id": "body_heavy_waist",
+      "object": "body_heavy_waist",
+      "slot": "coat_dark",
+      "bone": "spine",
+      "kind": "body",
+      "tris": 108
+    },
+    {
+      "id": "body_heavy_thigh_R",
+      "object": "body_heavy_thigh_R",
+      "slot": "trousers",
+      "bone": "thigh.R",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_heavy_shin_R",
+      "object": "body_heavy_shin_R",
+      "slot": "boots",
+      "bone": "shin.R",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_heavy_foot_R",
+      "object": "body_heavy_foot_R",
+      "slot": "boots",
+      "bone": "foot.R",
+      "kind": "body",
+      "tris": 108
+    },
+    {
+      "id": "body_heavy_uarm_R",
+      "object": "body_heavy_uarm_R",
+      "slot": "coat",
+      "bone": "upper_arm.R",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_heavy_farm_R",
+      "object": "body_heavy_farm_R",
+      "slot": "coat",
+      "bone": "forearm.R",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_heavy_hand_R",
+      "object": "body_heavy_hand_R",
+      "slot": "skin",
+      "bone": "hand.R",
+      "kind": "body",
+      "tris": 100
+    },
+    {
+      "id": "body_heavy_thigh_L",
+      "object": "body_heavy_thigh_L",
+      "slot": "trousers",
+      "bone": "thigh.L",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_heavy_shin_L",
+      "object": "body_heavy_shin_L",
+      "slot": "boots",
+      "bone": "shin.L",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_heavy_foot_L",
+      "object": "body_heavy_foot_L",
+      "slot": "boots",
+      "bone": "foot.L",
+      "kind": "body",
+      "tris": 108
+    },
+    {
+      "id": "body_heavy_uarm_L",
+      "object": "body_heavy_uarm_L",
+      "slot": "coat",
+      "bone": "upper_arm.L",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_heavy_farm_L",
+      "object": "body_heavy_farm_L",
+      "slot": "coat",
+      "bone": "forearm.L",
+      "kind": "body",
+      "tris": 28
+    },
+    {
+      "id": "body_heavy_hand_L",
+      "object": "body_heavy_hand_L",
+      "slot": "skin",
+      "bone": "hand.L",
+      "kind": "body",
+      "tris": 100
+    },
+    {
+      "id": "head_m_skull",
+      "object": "head_m_skull",
+      "slot": "skin",
+      "bone": "head",
+      "kind": "head",
+      "tris": 168
+    },
+    {
+      "id": "head_m_jaw",
+      "object": "head_m_jaw",
+      "slot": "skin",
+      "bone": "head",
+      "kind": "head",
+      "tris": 100
+    },
+    {
+      "id": "head_m_nose",
+      "object": "head_m_nose",
+      "slot": "skin",
+      "bone": "head",
+      "kind": "head",
+      "tris": 80
+    },
+    {
+      "id": "head_m_eye_R",
+      "object": "head_m_eye_R",
+      "slot": "eye",
+      "bone": "head",
+      "kind": "head",
+      "tris": 60
+    },
+    {
+      "id": "head_m_eye_L",
+      "object": "head_m_eye_L",
+      "slot": "eye",
+      "bone": "head",
+      "kind": "head",
+      "tris": 60
+    },
+    {
+      "id": "head_f_skull",
+      "object": "head_f_skull",
+      "slot": "skin",
+      "bone": "head",
+      "kind": "head",
+      "tris": 168
+    },
+    {
+      "id": "head_f_jaw",
+      "object": "head_f_jaw",
+      "slot": "skin",
+      "bone": "head",
+      "kind": "head",
+      "tris": 100
+    },
+    {
+      "id": "head_f_nose",
+      "object": "head_f_nose",
+      "slot": "skin",
+      "bone": "head",
+      "kind": "head",
+      "tris": 80
+    },
+    {
+      "id": "head_f_eye_R",
+      "object": "head_f_eye_R",
+      "slot": "eye",
+      "bone": "head",
+      "kind": "head",
+      "tris": 60
+    },
+    {
+      "id": "head_f_eye_L",
+      "object": "head_f_eye_L",
+      "slot": "eye",
+      "bone": "head",
+      "kind": "head",
+      "tris": 60
+    },
+    {
+      "id": "hair_bob_ends",
+      "object": "hair_bob_ends",
+      "slot": "hair",
+      "bone": "head",
+      "kind": "hair",
+      "tris": 108
+    },
+    {
+      "id": "hair_bob",
+      "object": "hair_bob",
+      "slot": "hair",
+      "bone": "head",
+      "kind": "hair",
+      "tris": 120
+    },
+    {
+      "id": "hair_crop",
+      "object": "hair_crop",
+      "slot": "hair",
+      "bone": "head",
+      "kind": "hair",
+      "tris": 120
+    },
+    {
+      "id": "hair_crown_braid",
+      "object": "hair_crown_braid",
+      "slot": "hair",
+      "bone": "head",
+      "kind": "hair",
+      "tris": 108
+    },
+    {
+      "id": "hair_crown",
+      "object": "hair_crown",
+      "slot": "hair",
+      "bone": "head",
+      "kind": "hair",
+      "tris": 120
+    },
+    {
+      "id": "hair_long_fall",
+      "object": "hair_long_fall",
+      "slot": "hair",
+      "bone": "head",
+      "kind": "hair",
+      "tris": 108
+    },
+    {
+      "id": "hair_long",
+      "object": "hair_long",
+      "slot": "hair",
+      "bone": "head",
+      "kind": "hair",
+      "tris": 120
+    },
+    {
+      "id": "hair_messy_tuft",
+      "object": "hair_messy_tuft",
+      "slot": "hair",
+      "bone": "head",
+      "kind": "hair",
+      "tris": 60
+    },
+    {
+      "id": "hair_messy",
+      "object": "hair_messy",
+      "slot": "hair",
+      "bone": "head",
+      "kind": "hair",
+      "tris": 120
+    },
+    {
+      "id": "hair_pony_tail",
+      "object": "hair_pony_tail",
+      "slot": "hair",
+      "bone": "head",
+      "kind": "hair",
+      "tris": 28
+    },
+    {
+      "id": "hair_pony",
+      "object": "hair_pony",
+      "slot": "hair",
+      "bone": "head",
+      "kind": "hair",
+      "tris": 100
+    },
+    {
+      "id": "hair_swept",
+      "object": "hair_swept",
+      "slot": "hair",
+      "bone": "head",
+      "kind": "hair",
+      "tris": 120
+    },
+    {
+      "id": "hair_tied_bun",
+      "object": "hair_tied_bun",
+      "slot": "hair",
+      "bone": "head",
+      "kind": "hair",
+      "tris": 80
+    },
+    {
+      "id": "hair_tied",
+      "object": "hair_tied",
+      "slot": "hair",
+      "bone": "head",
+      "kind": "hair",
+      "tris": 100
+    },
+    {
+      "id": "hem_short",
+      "object": "hem_short",
+      "slot": "coat",
+      "bone": "hips",
+      "kind": "gear",
+      "tris": 108
+    },
+    {
+      "id": "hem_mid",
+      "object": "hem_mid",
+      "slot": "coat",
+      "bone": "hips",
+      "kind": "gear",
+      "tris": 108
+    },
+    {
+      "id": "hem_long",
+      "object": "hem_long",
+      "slot": "coat",
+      "bone": "hips",
+      "kind": "gear",
+      "tris": 108
+    },
+    {
+      "id": "apron",
+      "object": "apron",
+      "slot": "apron",
+      "bone": "spine",
+      "kind": "gear",
+      "tris": 108
+    },
+    {
+      "id": "cape_short",
+      "object": "cape_short",
+      "slot": "cape",
+      "bone": "chest",
+      "kind": "gear",
+      "tris": 108
+    },
+    {
+      "id": "cape_long",
+      "object": "cape_long",
+      "slot": "cape",
+      "bone": "chest",
+      "kind": "gear",
+      "tris": 108
+    },
+    {
+      "id": "house_tab",
+      "object": "house_tab",
+      "slot": "house",
+      "bone": "hips",
+      "kind": "gear",
+      "tris": 108
+    },
+    {
+      "id": "pauldron_L",
+      "object": "pauldron_L",
+      "slot": "metal",
+      "bone": "chest",
+      "kind": "gear",
+      "tris": 108
+    },
+    {
+      "id": "pauldron_R",
+      "object": "pauldron_R",
+      "slot": "metal",
+      "bone": "chest",
+      "kind": "gear",
+      "tris": 108
+    },
+    {
+      "id": "scarf",
+      "object": "scarf",
+      "slot": "sash",
+      "bone": "neck",
+      "kind": "gear",
+      "tris": 108
+    },
+    {
+      "id": "bandit_vest",
+      "object": "bandit_vest",
+      "slot": "coat",
+      "bone": "chest",
+      "kind": "gear",
+      "tris": 108
+    },
+    {
+      "id": "wpn_sword_blade",
+      "object": "wpn_sword_blade",
+      "slot": "blade",
+      "bone": "hand.R",
+      "kind": "weapon",
+      "tris": 108
+    },
+    {
+      "id": "wpn_sword_guard",
+      "object": "wpn_sword_guard",
+      "slot": "metal",
+      "bone": "hand.R",
+      "kind": "weapon",
+      "tris": 108
+    },
+    {
+      "id": "wpn_sword_grip",
+      "object": "wpn_sword_grip",
+      "slot": "leather",
+      "bone": "hand.R",
+      "kind": "weapon",
+      "tris": 12
+    },
+    {
+      "id": "wpn_greatsword_blade",
+      "object": "wpn_greatsword_blade",
+      "slot": "blade",
+      "bone": "hand.R",
+      "kind": "weapon",
+      "tris": 108
+    },
+    {
+      "id": "wpn_axe_haft",
+      "object": "wpn_axe_haft",
+      "slot": "wood",
+      "bone": "hand.R",
+      "kind": "weapon",
+      "tris": 12
+    },
+    {
+      "id": "wpn_axe_head",
+      "object": "wpn_axe_head",
+      "slot": "blade",
+      "bone": "hand.R",
+      "kind": "weapon",
+      "tris": 108
+    },
+    {
+      "id": "wpn_spear_shaft",
+      "object": "wpn_spear_shaft",
+      "slot": "wood",
+      "bone": "hand.R",
+      "kind": "weapon",
+      "tris": 28
+    },
+    {
+      "id": "wpn_spear_tip",
+      "object": "wpn_spear_tip",
+      "slot": "blade",
+      "bone": "hand.R",
+      "kind": "weapon",
+      "tris": 108
+    },
+    {
+      "id": "wpn_bow_limb",
+      "object": "wpn_bow_limb",
+      "slot": "wood",
+      "bone": "hand.L",
+      "kind": "weapon",
+      "tris": 28
+    },
+    {
+      "id": "wpn_quiver",
+      "object": "wpn_quiver",
+      "slot": "leather",
+      "bone": "chest",
+      "kind": "weapon",
+      "tris": 28
+    },
+    {
+      "id": "wpn_staff",
+      "object": "wpn_staff",
+      "slot": "wood",
+      "bone": "hand.R",
+      "kind": "weapon",
+      "tris": 28
+    },
+    {
+      "id": "wpn_staff_orb",
+      "object": "wpn_staff_orb",
+      "slot": "accent",
+      "bone": "hand.R",
+      "kind": "weapon",
+      "tris": 80
+    },
+    {
+      "id": "wpn_shield",
+      "object": "wpn_shield",
+      "slot": "metal",
+      "bone": "forearm.L",
+      "kind": "weapon",
+      "tris": 108
+    },
+    {
+      "id": "wpn_club",
+      "object": "wpn_club",
+      "slot": "wood",
+      "bone": "hand.R",
+      "kind": "weapon",
+      "tris": 28
+    }
+  ],
+  "part_count": 94,
+  "total_part_tris": 7320,
+  "assembled_estimates": {
+    "ally_sword": 2104,
+    "ally_bow": 1824,
+    "enemy_bandit": 1948
+  },
+  "glb": "board_figures_v1.glb",
+  "notes": "Blender-authored modular kit on box. Hunyuan farm polish pending (m173 offline at authoring). Drop .blend overrides in tools/models/board_parts/.",
+  "budget": {
+    "per_unit_tris_target": [
+      4000,
+      6000
+    ],
+    "per_unit_tris_max": 7000
+  }
+}

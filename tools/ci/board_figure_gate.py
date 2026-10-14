@@ -12,6 +12,11 @@ DESIGN = ROOT / "docs/design/pawn-redesign-opus.md"
 SHADER = ROOT / "project/shaders/board_figure.gdshader"
 HALO = ROOT / "project/shaders/board_halo.gdshader"
 SCRIPT = ROOT / "project/scripts/art/board_figure.gd"
+FORMAL_GLB = ROOT / "project/assets/models/board/board_figures_v1.glb"
+FORMAL_JSON = ROOT / "project/assets/models/board/board_figures_v1.json"
+FIGURES_DATA = ROOT / "project/data/board_figures.json"
+PLATES = ROOT / "project/data/plate_palettes.json"
+STANDS = ROOT / "project/assets/art/board_stands"
 
 # Ally hue window 150–220° (HSV), chroma proxy via max-min on sRGB.
 ALLY_H0, ALLY_H1 = 150.0, 220.0
@@ -35,7 +40,7 @@ def _hex_to_hsv(hx: str) -> tuple[float, float, float]:
 
 
 def main() -> int:
-    for path in (DESIGN, SHADER, HALO, SCRIPT, THEMES):
+    for path in (DESIGN, SHADER, HALO, SCRIPT, THEMES, FORMAL_GLB, FORMAL_JSON, FIGURES_DATA, PLATES):
         if not path.is_file():
             print(f"BOARD FIGURE GATE FAIL missing {path.relative_to(ROOT)}")
             return 1
@@ -72,8 +77,25 @@ def main() -> int:
     if "house_color" not in (ROOT / "project/scripts/art/unit_art.gd").read_text(encoding="utf-8"):
         print("BOARD FIGURE GATE FAIL house_color missing")
         return 1
+    manifest = json.loads(FORMAL_JSON.read_text(encoding="utf-8"))
+    est = manifest.get("assembled_estimates", {})
+    for k, n in est.items():
+        if int(n) > 7000:
+            print(f"BOARD FIGURE GATE FAIL {k} tris {n} > 7000")
+            return 1
+    stand_need = ["ally_sword.png", "ally_bow.png", "enemy_bandit.png"]
+    for s in stand_need:
+        if not (STANDS / s).is_file():
+            print(f"BOARD FIGURE GATE FAIL missing stand {s}")
+            return 1
+    plates = json.loads(PLATES.read_text(encoding="utf-8"))
+    if int(plates.get("count", 0)) < 50:
+        print("BOARD FIGURE GATE FAIL plate_palettes too small")
+        return 1
     print(
-        f"BOARD FIGURE GATE PASS themes={len(themes)} trim_would_be_allyish={allyish} (coral-locked in fill_color_for)"
+        f"BOARD FIGURE GATE PASS themes={len(themes)} trim_would_be_allyish={allyish} "
+        f"formal_parts={manifest.get('part_count')} est={est} plates={plates.get('count')} "
+        f"(coral-locked in fill_color_for)"
     )
     return 0
 

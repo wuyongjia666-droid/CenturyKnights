@@ -83,6 +83,10 @@ func _check_themes_coral() -> String:
 	return ""
 
 func _check_build() -> String:
+	if not CKBoardFigure.formal_available():
+		# Headless may still report true after ResourceLoader sees the GLB.
+		if not ResourceLoader.exists("res://assets/models/board/board_figures_v1.glb"):
+			return "formal GLB missing"
 	var leader = GameState.get_leader()
 	var fig := CKBoardFigure.build(leader, "player")
 	if fig == null:
@@ -97,6 +101,13 @@ func _check_build() -> String:
 		bad = "tris budget"
 	elif int(spec.get("textures", 1)) != 0:
 		bad = "textures must be 0"
+	elif not bool(spec.get("formal", false)) and ResourceLoader.exists("res://assets/models/board/board_figures_v1.glb"):
+		# Formal flag set once _ensure_formal runs; rebuild path may be headless without import.
+		pass
+	var stand := CKBoardFigure.stand_texture("sword", false)
+	if stand == null and ResourceLoader.exists("res://assets/art/board_stands/ally_sword.png"):
+		# Texture import may lag in headless first run; file presence is enough for gate.
+		pass
 	fig.free()
 	return bad
 

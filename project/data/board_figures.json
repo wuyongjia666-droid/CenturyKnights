@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "schema": "board_figures_v1",
+  "default_body": "body_m",
+  "roles": {
+    "leader": {"body": "body_m", "head": "head_m", "hem": "hem_mid", "cape": "cape_short", "weapon": ["wpn_sword_blade", "wpn_sword_guard", "wpn_sword_grip"], "house": true},
+    "skirmisher": {"body": "body_m", "head": "head_m", "hem": "hem_mid", "weapon": ["wpn_sword_blade", "wpn_sword_guard", "wpn_sword_grip"], "house": true},
+    "ranger": {"body": "body_f", "head": "head_f", "hem": "hem_short", "weapon": ["wpn_bow_limb", "wpn_quiver"], "house": true},
+    "mage": {"body": "body_m", "head": "head_m", "hem": "hem_long", "weapon": ["wpn_staff", "wpn_staff_orb"], "house": true},
+    "tank": {"body": "body_heavy", "head": "head_m", "hem": "hem_mid", "weapon": ["wpn_sword_blade", "wpn_sword_guard", "wpn_sword_grip", "wpn_shield"], "house": true},
+    "cavalry": {"body": "body_m", "head": "head_m", "hem": "hem_short", "cape": "cape_short", "weapon": ["wpn_spear_shaft", "wpn_spear_tip"], "house": true},
+    "support": {"body": "body_m", "head": "head_m", "hem": "hem_long", "weapon": ["wpn_staff", "wpn_staff_orb"], "house": true}
+  },
+  "enemy_templates": {
+    "bandit_weak": {"body": "body_m", "head": "head_m", "hem": "hem_short", "gear": ["bandit_vest"], "weapon": ["wpn_club"]},
+    "bandit": {"body": "body_m", "head": "head_m", "hem": "hem_short", "gear": ["bandit_vest"], "weapon": ["wpn_axe_haft", "wpn_axe_head"]},
+    "bandit_archer": {"body": "body_m", "head": "head_m", "hem": "hem_short", "gear": ["bandit_vest"], "weapon": ["wpn_bow_limb", "wpn_quiver"]},
+    "bandit_chief": {"body": "body_m", "head": "head_m", "hem": "hem_mid", "cape": "cape_long", "gear": ["bandit_vest"], "weapon": ["wpn_greatsword_blade", "wpn_sword_guard", "wpn_sword_grip"], "scale": 1.06}
+  },
+  "job_role_fallback": {
+    "squire": "cavalry",
+    "light_cavalry": "cavalry",
+    "outrider": "cavalry",
+    "light_inf": "skirmisher",
+    "warrior": "skirmisher",
+    "veteran": "skirmisher",
+    "heavy_inf": "tank",
+    "sentinel": "tank",
+    "bulwark": "tank",
+    "hunter": "ranger",
+    "archer": "ranger",
+    "marksman": "ranger",
+    "apprentice": "mage",
+    "mage": "mage",
+    "priest": "support",
+    "medic": "support",
+    "militia": "skirmisher",
+    "banner": "skirmisher",
+    "captain": "leader"
+  },
+  "formal_glb": "res://assets/models/board/board_figures_v1.glb",
+  "formal_manifest": "res://assets/models/board/board_figures_v1.json",
+  "plate_palettes": "res://data/plate_palettes.json"
+}

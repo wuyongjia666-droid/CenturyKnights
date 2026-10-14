@@ -2,7 +2,7 @@ class_name CKUnitLayer3D
 extends SubViewportContainer
 ## Route C (docs: /workspace/pawn_upgrade/plan.md): live 3D unit layer over the 2D board.
 ## The 2D board keeps terrain, overlays and input; this transparent layer only draws the
-## units — portrait-matched CKBoardFigure prototypes (pawn-redesign-opus), with lightweight clips.
+## units — portrait-matched CKBoardFigure formal kit (board_figures_v1) with primitive fallback.
 ## Orthographic camera pitched PITCH°; ground Z is stretched by 1/sin(pitch) so a 3D foot
 ## position lands exactly on its 2D cell centre. 2D token fallback: CI / headless / setting off.
 

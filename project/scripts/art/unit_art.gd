@@ -1049,9 +1049,24 @@ static func banner_wide(w: int = 320, h: int = 72) -> Texture2D:
 	return out
 
 static func draw_token_on(ci: CanvasItem, center: Vector2, c: CKCharacter, team: String, radius: float = 20.0, done: bool = false) -> void:
-	var tex = token(c, team, int(radius * 2.4), done)
-	var sz = Vector2(radius * 2.2, radius * 2.2)
+	# Prefer baked board-figure stand-ins (formal kit) over capsule tokens when available.
+	var enemy := str(team) == "enemy"
+	var role := "bandit" if enemy else BattleRules.job_role(str(c.job_id))
+	if role in ["leader", "skirmisher", "tank", "cavalry", "support", "mage"]:
+		role = "sword" if not enemy else "bandit"
+	elif role == "ranger":
+		role = "bow" if not enemy else "bandit"
+	else:
+		role = "bandit" if enemy else "sword"
+	var stand: Texture2D = CKBoardFigure.stand_texture(role, enemy)
+	var tex: Texture2D = stand if stand != null else token(c, team, int(radius * 2.4), done)
+	var aspect := 1.0
+	if stand != null:
+		aspect = 200.0 / 160.0  # baked stand canvas
+	var sz = Vector2(radius * 2.2, radius * 2.2 * aspect)
 	ci.draw_texture_rect(tex, Rect2(center - sz * 0.5, sz), false)
+	if done:
+		ci.draw_circle(center, radius * 0.35, Color(0, 0, 0, 0.35))
 
 # ---- procedural fallbacks (simplified) ----
 static func _fill_ellipse(img: Image, cx: float, cy: float, rx: float, ry: float, col: Color) -> void:

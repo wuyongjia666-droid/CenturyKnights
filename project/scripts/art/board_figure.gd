@@ -1,11 +1,16 @@
 class_name CKBoardFigure
 extends RefCounted
 ## Portrait-matched board figures (docs/design/pawn-redesign-opus.md).
-## Prototype-quality: Godot primitives + shared hair modules. Formal Blender GLB is later.
+## Formal Blender modular GLB (board_figures_v1) when present; Godot-primitive fallback.
 ## ~5.45 head ratio, soft portrait lighting (board_figure.gdshader), 0 textures on body.
 
 const SHADER_PATH := "res://shaders/board_figure.gdshader"
 const MOD_DIR := "res://assets/models/modules/"
+const FORMAL_GLB := "res://assets/models/board/board_figures_v1.glb"
+const FORMAL_MANIFEST := "res://assets/models/board/board_figures_v1.json"
+const FIGURES_DATA := "res://data/board_figures.json"
+const PLATE_PALETTES := "res://data/plate_palettes.json"
+const STAND_DIR := "res://assets/art/board_stands/"
 const MODEL_H := 1.85
 const HEAD_RATIO := 5.45
 const CACHE_CAP := 64
@@ -13,6 +18,13 @@ const CACHE_CAP := 64
 static var _shader: Shader
 static var _cache: Dictionary = {}  # hash -> Node3D packed scene? we cache built roots weakly by rebuilding cheaply
 static var _pal_cache: Dictionary = {}  # identity -> palette dict
+static var _formal_root: Node3D = null
+static var _formal_parts: Dictionary = {}  # part id / object name -> Mesh
+static var _formal_ok := false
+static var _formal_tried := false
+static var _figures_data: Dictionary = {}
+static var _plate_table: Dictionary = {}
+static var _plate_loaded := false
 
 static func _sh() -> Shader:
 	if _shader == null:
@@ -28,14 +40,205 @@ static func build(c, team: String, tmpl: String = "") -> Node3D:
 	root.name = "BoardFigure"
 	root.set_meta("ck_board_figure", true)
 	root.set_meta("ck_face", face)
+	root.set_meta("ck_formal", false)
 	var body := Node3D.new()
 	body.name = "Body"
 	root.add_child(body)
 	if DisplayServer.get_name() != "headless":
-		_assemble(body, c, pal, enemy, face)
+		var used := _assemble_formal(body, c, pal, enemy, face, tmpl)
+		root.set_meta("ck_formal", used)
+		if not used:
+			_assemble(body, c, pal, enemy, face)
 	var ap := _make_anim(root, face)
 	root.add_child(ap)
 	return root
+
+static func formal_available() -> bool:
+	_ensure_formal()
+	return _formal_ok
+
+static func _ensure_formal() -> void:
+	if _formal_tried:
+		return
+	_formal_tried = true
+	if not ResourceLoader.exists(FORMAL_GLB):
+		return
+	var packed = load(FORMAL_GLB)
+	if packed == null:
+		return
+	var inst: Node = packed.instantiate() if packed is PackedScene else null
+	if inst == null:
+		return
+	_formal_root = inst as Node3D
+	_index_formal_meshes(inst)
+	_formal_ok = not _formal_parts.is_empty()
+	if ResourceLoader.exists(FIGURES_DATA):
+		var f := FileAccess.open(FIGURES_DATA, FileAccess.READ)
+		if f:
+			var parsed = JSON.parse_string(f.get_as_text())
+			if typeof(parsed) == TYPE_DICTIONARY:
+				_figures_data = parsed
+
+static func _index_formal_meshes(n: Node) -> void:
+	if n is MeshInstance3D:
+		var mi := n as MeshInstance3D
+		if mi.mesh != null:
+			var key := str(mi.name)
+			_formal_parts[key] = mi.mesh
+			# Also index without Blender numeric suffixes
+			var base := key
+			if "." in base:
+				base = base.split(".")[0]
+			if not _formal_parts.has(base):
+				_formal_parts[base] = mi.mesh
+	for ch in n.get_children():
+		_index_formal_meshes(ch)
+
+static func _role_key(c, enemy: bool, tmpl: String) -> String:
+	if enemy:
+		var t := tmpl if tmpl != "" else "bandit"
+		var et: Dictionary = _figures_data.get("enemy_templates", {})
+		if et.has(t):
+			return t
+		if t.begins_with("bandit"):
+			return t
+		return "bandit"
+	if c != null:
+		var jid := str(c.job_id)
+		var fb: Dictionary = _figures_data.get("job_role_fallback", {})
+		if fb.has(jid):
+			return str(fb[jid])
+		return BattleRules.job_role(jid)
+	return "skirmisher"
+
+static func _kit_for(c, enemy: bool, tmpl: String) -> Dictionary:
+	_ensure_formal()
+	var role := _role_key(c, enemy, tmpl)
+	if enemy:
+		var et: Dictionary = _figures_data.get("enemy_templates", {})
+		if et.has(role):
+			return et[role]
+		return et.get("bandit", {})
+	var roles: Dictionary = _figures_data.get("roles", {})
+	if roles.has(role):
+		return roles[role]
+	return roles.get("skirmisher", {})
+
+static func _assemble_formal(body: Node3D, c, pal: Dictionary, enemy: bool, face: float, tmpl: String) -> bool:
+	_ensure_formal()
+	if not _formal_ok:
+		return false
+	var kit: Dictionary = _kit_for(c, enemy, tmpl)
+	if kit.is_empty():
+		return false
+	var style := str(pal.get("style", "crop"))
+	if style not in ["bob", "crop", "crown", "long", "messy", "pony", "swept", "tied"]:
+		style = "crop"
+	var body_id := str(kit.get("body", "body_m"))
+	var head_id := str(kit.get("head", "head_m"))
+	var parts: Array = []
+	# Body limbs / torso
+	for suffix in ["pelvis", "torso", "waist", "thigh_L", "thigh_R", "shin_L", "shin_R", "foot_L", "foot_R", "uarm_L", "uarm_R", "farm_L", "farm_R", "hand_L", "hand_R"]:
+		parts.append("%s_%s" % [body_id, suffix])
+	for suffix in ["skull", "jaw", "nose", "eye_L", "eye_R"]:
+		parts.append("%s_%s" % [head_id, suffix])
+	parts.append("hair_%s" % style)
+	if style == "bob":
+		parts.append("hair_bob_ends")
+	elif style == "long":
+		parts.append("hair_long_fall")
+	elif style == "pony":
+		parts.append("hair_pony_tail")
+	elif style == "tied":
+		parts.append("hair_tied_bun")
+	elif style == "crown":
+		parts.append("hair_crown_braid")
+	elif style == "messy":
+		parts.append("hair_messy_tuft")
+	var hem := str(kit.get("hem", "hem_mid"))
+	parts.append(hem)
+	if kit.has("cape"):
+		parts.append(str(kit["cape"]))
+	if bool(kit.get("house", false)) and not enemy:
+		parts.append("house_tab")
+	if kit.has("gear"):
+		for g in kit["gear"]:
+			parts.append(str(g))
+	if kit.has("weapon"):
+		for w in kit["weapon"]:
+			parts.append(str(w))
+	var sm := _palette_mat(pal, face, enemy)
+	var attached := 0
+	for pid in parts:
+		var mesh: Mesh = _formal_parts.get(pid) as Mesh
+		if mesh == null:
+			# Blender may have renamed cones
+			continue
+		var mi := MeshInstance3D.new()
+		mi.name = pid
+		mi.mesh = mesh
+		mi.material_override = sm
+		body.add_child(mi)
+		attached += 1
+	if attached < 8:
+		# Too incomplete — tear down and fall back
+		for ch in body.get_children():
+			ch.queue_free()
+		return false
+	var sc := float(kit.get("scale", 1.0))
+	if sc != 1.0:
+		body.scale = Vector3.ONE * sc
+	# Chin tilt ~8° via slight body pitch toward camera readability is on head parts already in mesh
+	return true
+
+static func _palette_mat(pal: Dictionary, face: float, enemy: bool) -> ShaderMaterial:
+	var sm := ShaderMaterial.new()
+	sm.shader = _sh()
+	sm.set_shader_parameter("use_palette", 1)
+	sm.set_shader_parameter("face", face)
+	sm.set_shader_parameter("rim_col", UIKit.DANGER if enemy else UIKit.ACCENT)
+	var coat: Color = pal.get("coat", Color(0.5, 0.5, 0.55))
+	var rim := 0.85 if enemy or (0.2126 * coat.r + 0.7152 * coat.g + 0.0722 * coat.b) < 0.36 else 0.55
+	sm.set_shader_parameter("rim_amt", rim)
+	var slots := [
+		pal.get("hair", Color(0.25, 0.2, 0.18)),
+		pal.get("skin", Color(0.78, 0.62, 0.52)),
+		Color(0.16, 0.18, 0.22),  # eye
+		coat,
+		pal.get("lining", Color(0.18, 0.16, 0.18)),
+		pal.get("apron", coat.darkened(0.1)),
+		pal.get("scarf", pal.get("house", coat)),
+		pal.get("metal", Color(0.78, 0.82, 0.88)),
+		pal.get("blade", Color(0.86, 0.90, 0.95)),
+		pal.get("house", coat),
+		pal.get("house", coat),
+		pal.get("house", coat) if not enemy else UIKit.DANGER.darkened(0.2),
+		pal.get("pants", Color(0.16, 0.16, 0.18)),
+		pal.get("boots", Color(0.12, 0.11, 0.11)),
+		Color(0.18, 0.15, 0.13),
+		Color(0.48, 0.43, 0.38),
+		UIKit.DANGER if enemy else UIKit.ACCENT,
+		coat, coat, coat,
+	]
+	# Godot uniform array: set as PackedColorArray
+	var arr := PackedColorArray()
+	for i in range(20):
+		var c: Color = slots[i] if i < slots.size() else coat
+		arr.append(c)
+	sm.set_shader_parameter("palette", arr)
+	return sm
+
+## Baked 2D stand-in path for low-end / 3D-off. Prefers pre-baked PNG, else null (caller keeps capsule flow).
+static func stand_texture(role: String, enemy: bool) -> Texture2D:
+	var name := ("enemy_%s" % role) if enemy else ("ally_%s" % role)
+	var path := STAND_DIR + name + ".png"
+	if ResourceLoader.exists(path):
+		return load(path) as Texture2D
+	# Generic fallbacks
+	var fb := STAND_DIR + ("enemy_bandit.png" if enemy else "ally_sword.png")
+	if ResourceLoader.exists(fb):
+		return load(fb) as Texture2D
+	return null
 
 static func find_anim(n: Node) -> AnimationPlayer:
 	if n == null:
@@ -53,14 +256,16 @@ static func find_anim(n: Node) -> AnimationPlayer:
 static func spec_for(c, team: String, tmpl: String = "") -> Dictionary:
 	var pal := palette_for(c, team, tmpl)
 	var role := BattleRules.job_role(str(c.job_id)) if c != null else "skirmisher"
+	var tris := 2100 if formal_available() else 4200
 	return {
 		"palette": pal,
 		"role": role,
 		"enemy": str(team) == "enemy",
-		"tris_est": 4200,
+		"tris_est": tris,
 		"meshes": 1,
 		"materials": 1,
 		"textures": 0,
+		"formal": formal_available(),
 	}
 
 static func palette_for(c, team: String, tmpl: String = "") -> Dictionary:
@@ -117,6 +322,11 @@ static func _sample_portrait(c) -> Dictionary:
 		if ph.has("skin_color"):
 			out["skin"] = ph["skin_color"]
 		out["style"] = CKPortraitDoll._style(c)
+	_ensure_plates()
+	if c is CKCharacter and c.get("plate_stem") != null and str(c.plate_stem) != "":
+		var hit := _plate_lookup(str(c.plate_stem))
+		if not hit.is_empty():
+			_apply_plate(out, hit)
 	# Prefer colours from the portrait that UnitArt actually shows.
 	if DisplayServer.get_name() == "headless":
 		return out
@@ -506,6 +716,46 @@ static func _clip_death() -> Animation:
 	a.rotation_track_insert_key(r, 0.0, Quaternion.IDENTITY)
 	a.rotation_track_insert_key(r, 1.0, Quaternion.from_euler(Vector3(deg_to_rad(70), 0, deg_to_rad(20))))
 	return a
+
+static func _ensure_plates() -> void:
+	if _plate_loaded:
+		return
+	_plate_loaded = true
+	if not ResourceLoader.exists(PLATE_PALETTES):
+		return
+	var f := FileAccess.open(PLATE_PALETTES, FileAccess.READ)
+	if f == null:
+		return
+	var parsed = JSON.parse_string(f.get_as_text())
+	if typeof(parsed) == TYPE_DICTIONARY:
+		var plates = parsed.get("plates", {})
+		if typeof(plates) == TYPE_DICTIONARY:
+			_plate_table = plates
+
+static func _plate_lookup(stem: String) -> Dictionary:
+	if _plate_table.has(stem):
+		return _plate_table[stem]
+	return {}
+
+static func _apply_plate(out: Dictionary, hit: Dictionary) -> void:
+	if hit.has("hair") and typeof(hit["hair"]) == TYPE_ARRAY:
+		var h: Array = hit["hair"]
+		if h.size() >= 3:
+			out["hair"] = Color(float(h[0]), float(h[1]), float(h[2]))
+	if hit.has("skin") and typeof(hit["skin"]) == TYPE_ARRAY:
+		var s: Array = hit["skin"]
+		if s.size() >= 3:
+			out["skin"] = Color(float(s[0]), float(s[1]), float(s[2]))
+	if hit.has("coat") and typeof(hit["coat"]) == TYPE_ARRAY:
+		var c: Array = hit["coat"]
+		if c.size() >= 3:
+			out["coat"] = Color(float(c[0]), float(c[1]), float(c[2]))
+	if hit.has("lining") and typeof(hit["lining"]) == TYPE_ARRAY:
+		var l: Array = hit["lining"]
+		if l.size() >= 3:
+			out["lining"] = Color(float(l[0]), float(l[1]), float(l[2]))
+	if hit.has("style"):
+		out["style"] = str(hit["style"])
 
 ## Static colour-slot checks for CI (no GPU).
 static func assert_palette_rules(pal: Dictionary, enemy: bool) -> String:
