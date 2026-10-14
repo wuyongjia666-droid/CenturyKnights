@@ -49,5 +49,16 @@ func _run() -> String:
 	if not found:
 		return "registered link dropped"
 	GameState.remove_meta("active_quest_id")
+	GameState.set_flag("chapter0_done", true)
+	UnlockSchedule.install()
+	World.active = [{"id": "wq_probe", "title": "probe", "state": "active", "kind": "deliver", "target": "ash_capital", "issuer": "ash_capital"}]
+	if Todo.is_unlocked("quests"):
+		var wq := 0
+		for item in Todo.snapshot():
+			if str(item.get("category", "")) == "quests":
+				wq = int(item.get("count", 0))
+		if wq < 1:
+			return "world active not counted (%d)" % wq
+	World.active.clear()
 	print("OK todo due")
 	return ""

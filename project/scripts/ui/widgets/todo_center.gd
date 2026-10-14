@@ -69,9 +69,12 @@ static func snapshot() -> Array:
 static func _row(category: String, group: String, label: String, count: int) -> Dictionary:
 	return {"category": category, "group": group, "label": label, "count": count, "link": str(LINKS.get(category, ""))}
 
-## A battle contract already taken and still waiting for its fight.
+## Castle battle contracts waiting to fight, plus in-hand world commissions on the atlas.
 static func _quest_count() -> int:
-	return 1 if str(GameState.get_meta("active_quest_id", "")) != "" else 0
+	var n := World.active.size()
+	if str(GameState.get_meta("active_quest_id", "")) != "":
+		n += 1
+	return n
 
 static func any_due() -> bool:
 	for item in snapshot():

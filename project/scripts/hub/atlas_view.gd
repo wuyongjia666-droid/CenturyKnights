@@ -63,8 +63,22 @@ func _ready() -> void:
 	if GameState.has_meta("atlas_view"):
 		start_view = str(GameState.get_meta("atlas_view"))
 		GameState.remove_meta("atlas_view")
+	var focus := World.pos
+	var guided := false
+	if GameState.has_meta("atlas_select"):
+		var want := str(GameState.get_meta("atlas_select"))
+		GameState.remove_meta("atlas_select")
+		if World.nodes.has(want):
+			focus = want
+			guided = true
+			var nv := World.nation_of(want)
+			if nv != "":
+				start_view = nv
 	_show_view(start_view if start_view != "" else "ashbanner")
-	_select_node(World.pos)
+	_select_node(focus)
+	if guided:
+		hilite(focus)
+		call_deferred("_toast_quest_guide", focus)
 	if not _mob:
 		UIKit.footer_bar(self, [["A", "选定 / 启程"], ["Y", "进入城镇"], ["X", "世界 / 疆域"], ["ESC", "返回"]], "OVERWORLD · FROST_TACTICAL v8.7")
 	UIFX.page_enter(self)
@@ -656,14 +670,14 @@ func _add_node_button(n: Dictionary, markers: Dictionary, mm: Dictionary) -> voi
 			badges.append([_court_glyph(str(marker.get("kind", ""))), _court_color(str(marker.get("kind", "")))])
 	var bx := _np(id).x + px * 0.5 - 4
 	for bd in badges:
-		var bl := UIKit.title_label(str(bd[0]), 12, bd[1])
+		var bl := UIKit.title_label(str(bd[0]), 16, bd[1])
 		bl.add_theme_color_override("font_outline_color", Color(0.02, 0.03, 0.05, 1))
-		bl.add_theme_constant_override("outline_size", 4)
-		bl.position = Vector2(bx, _np(id).y - px * 0.5 - 12)
+		bl.add_theme_constant_override("outline_size", 5)
+		bl.position = Vector2(bx, _np(id).y - px * 0.5 - 16)
 		bl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		_layer.add_child(bl)
-		UIFX.breathe(bl, 0.08, 1.4)
-		bx += 12
+		UIFX.breathe(bl, 0.1, 1.2)
+		bx += 14
 
 func _gate_dir(from_id: String, to_id: String) -> Vector2:
 	var a := _region_pos(World.nation_of(from_id))
@@ -1607,6 +1621,21 @@ func _launch_battle() -> void:
 	GameState.save_game()
 	UIFX.page_exit(self)
 	World.launch_encounter(get_tree())
+
+func _toast_quest_guide(nid: String) -> void:
+	var place := str(World.node(nid).get("name", nid))
+	for mk in World.quest_markers().get(nid, []):
+		var q: Dictionary = mk.quest
+		var col := UIKit.OK if str(mk.kind) == "turnin" else UIKit.DANGER
+		_show_toast(Locale.t("wq_atlas_focus") % [str(q.get("title", "")), place], col)
+		return
+	# gather (no map marker) or deep-link without an active marker
+	for q2 in World.active:
+		if World.quest_guide_node(q2) == nid:
+			_show_toast(Locale.t("wq_atlas_focus") % [str(q2.get("title", "")), place], UIKit.ACCENT)
+			return
+	_show_toast(Locale.t("wq_atlas_focus_plain") % place, UIKit.ACCENT)
+
 
 func _show_toast(text: String, col: Color) -> void:
 	if not World.milestones.is_empty():

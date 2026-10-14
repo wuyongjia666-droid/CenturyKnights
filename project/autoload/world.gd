@@ -1377,7 +1377,10 @@ func accept_quest(city: String, qid: String) -> Dictionary:
 		_check_gather_ready()
 		GameState.mark_dirty()
 		world_changed.emit()
-		return {"ok": true, "msg": "接下委托「%s」——期限 %d 日" % [q.title, int(q.days_budget)], "quest": q}
+		var hint := quest_next_hint(q)
+		var guide := quest_guide_node(q)
+		var msg := Locale.t("wq_accept_ok") % [q.title, int(q.days_budget), hint]
+		return {"ok": true, "msg": msg, "quest": q, "guide_node": guide, "hint": hint}
 	return {"ok": false, "msg": "委托已不在榜上"}
 
 func quest_by_id(qid: String) -> Dictionary:
@@ -1706,6 +1709,40 @@ func quest_engage(qid: String) -> Dictionary:
 	if q.is_empty() or str(q.state) != "active" or not _arrives_in_battle(str(q.kind)) or str(q.target) != pos:
 		return {}
 	return start_encounter("quest", {"quest": qid, "node": pos, "from": pos})
+
+
+## Atlas / todo guidance: where the player should look next for an accepted commission.
+func quest_guide_node(q: Dictionary) -> String:
+	if q.is_empty():
+		return ""
+	if str(q.get("state", "")) == "ready":
+		return turn_in_city(q)
+	var kind := str(q.get("kind", ""))
+	if kind == "gather":
+		return turn_in_city(q)
+	if kind == "clear" and q.has("edge"):
+		var e: Array = q.edge
+		if e.is_empty():
+			return str(q.get("target", ""))
+		if str(e[0]) != pos:
+			return str(e[0])
+		return str(e[1]) if e.size() > 1 else str(e[0])
+	return str(q.get("target", ""))
+
+func quest_next_hint(q: Dictionary) -> String:
+	var nid := quest_guide_node(q)
+	var place := str(node(nid).get("name", nid if nid != "" else "?"))
+	if str(q.get("state", "")) == "ready":
+		return Locale.t("wq_hint_turnin") % place
+	match str(q.get("kind", "")):
+		"gather":
+			return Locale.t("wq_hint_gather") % [good_name(str(q.get("good", ""))), int(q.get("qty", 0)), place]
+		"hunt", "defend", "siege_aid", "bounty", "rescue":
+			return Locale.t("wq_hint_fight") % place
+		"clear":
+			return Locale.t("wq_hint_clear") % place
+		_:
+			return Locale.t("wq_hint_travel") % place
 
 func quest_markers() -> Dictionary:
 	## node id -> [{"kind": "objective"|"turnin", "quest": q}] for map overlays
