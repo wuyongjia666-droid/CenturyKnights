@@ -1,0 +1,91 @@
+extends Node
+## Board figure P0: colour rules, house_color, enemy coral lock, build smoke.
+
+func _ready() -> void:
+	await get_tree().process_frame
+	var err := _run()
+	if err != "":
+		print("FAIL board figure: ", err)
+		get_tree().quit(1)
+		return
+	print("BOARD FIGURE PASS")
+	get_tree().quit(0)
+
+func _run() -> String:
+	GameState.new_game("棋子", "霜旗", UIKit.ACCENT.to_html(false))
+	var ash := CKHeraldry.tincture_hex("ash")
+	var charge := "#" + UIKit.ACCENT.to_html(false)
+	GameState.banner_spec = {
+		"field_a": ash,
+		"charge_color": charge,
+		"ordinary_tincture": charge,
+		"emblem_color": charge,
+	}
+	var house: Color = UnitArt.house_color()
+	if absf(house.h - UIKit.ACCENT.h) > 0.08:
+		return "house_color should follow charge, got %s" % house
+
+	var leader = GameState.get_leader()
+	if leader == null:
+		return "no leader"
+	var fill_a: Color = UnitModel.fill_color_for(leader, false, {"cloth": [Color(0.2, 0.2, 0.25)]}, UIKit.OK)
+	if absf(fill_a.h - UIKit.ACCENT.h) > 0.12:
+		return "ally fill should track house hue, got %s" % fill_a
+	var fill_e: Color = UnitModel.fill_color_for(leader, true, {}, Color(0.37, 0.88, 0.71))
+	var coral: Color = UIKit.DANGER
+	if absf(fill_e.h - coral.h) > 0.08:
+		return "enemy fill must lock to coral, got %s vs %s" % [fill_e, coral]
+
+	var pal_a: Dictionary = CKBoardFigure.palette_for(leader, "player")
+	var err := CKBoardFigure.assert_palette_rules(pal_a, false)
+	if err != "":
+		return err
+	var pal_e: Dictionary = CKBoardFigure.palette_for(leader, "enemy", "bandit")
+	err = CKBoardFigure.assert_palette_rules(pal_e, true)
+	if err != "":
+		return err
+	if CKBoardFigure._in_ally_gamut(pal_e["coat"]):
+		return "enemy coat still in ally gamut"
+
+	var themes := _load_themes()
+	if themes.is_empty():
+		return "no enemy themes loaded"
+	var bad := 0
+	for tid in themes.keys():
+		var row: Dictionary = themes[tid]
+		var pal: Dictionary = row.get("palette", {}) if typeof(row.get("palette")) == TYPE_DICTIONARY else {}
+		var raw := str(pal.get("trim", row.get("trim", "")))
+		if raw == "":
+			continue
+		var trim := Color(raw if raw.begins_with("#") else ("#" + raw))
+		var f: Color = UnitModel.fill_color_for(leader, true, {}, trim)
+		if absf(f.h - coral.h) > 0.08:
+			bad += 1
+	if bad > 0:
+		return "%d enemy themes still escape coral lock" % bad
+
+	var fig := CKBoardFigure.build(leader, "player")
+	if fig == null:
+		return "build returned null"
+	var ap := CKBoardFigure.find_anim(fig)
+	if ap == null or not ap.has_animation("idle") or not ap.has_animation("attack"):
+		return "missing AnimationPlayer clips"
+	var spec: Dictionary = CKBoardFigure.spec_for(leader, "player")
+	if int(spec.get("tris_est", 99999)) > 7000:
+		return "tris budget"
+	if int(spec.get("textures", 1)) != 0:
+		return "textures must be 0"
+	fig.free()
+	return ""
+
+func _load_themes() -> Dictionary:
+	var f := FileAccess.open("res://data/enemy_themes.json", FileAccess.READ)
+	if f == null:
+		return {}
+	var parsed = JSON.parse_string(f.get_as_text())
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return {}
+	var root: Dictionary = parsed
+	if typeof(root.get("themes")) == TYPE_DICTIONARY:
+		return root["themes"]
+	return {}

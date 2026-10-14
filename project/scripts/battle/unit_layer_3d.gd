@@ -2,7 +2,7 @@ class_name CKUnitLayer3D
 extends SubViewportContainer
 ## Route C (docs: /workspace/pawn_upgrade/plan.md): live 3D unit layer over the 2D board.
 ## The 2D board keeps terrain, overlays and input; this transparent layer only draws the
-## units — the SAME UnitModel rigs as the combat cutscene, with real-time animation.
+## units — portrait-matched CKBoardFigure prototypes (pawn-redesign-opus), with lightweight clips.
 ## Orthographic camera pitched PITCH°; ground Z is stretched by 1/sin(pitch) so a 3D foot
 ## position lands exactly on its 2D cell centre. 2D token fallback: CI / headless / setting off.
 
@@ -48,24 +48,27 @@ func _ready() -> void:
 		_vp.scaling_3d_scale = 0.8
 	_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	add_child(_vp)
-	# Viewport texture is premultiplied; default mix blend washes figures into "ghosts".
-	var premul := CanvasItemMaterial.new()
-	premul.blend_mode = CanvasItemMaterial.BLEND_MODE_PREMULT_ALPHA
-	material = premul
+	# 1px dark outline halo + premul alpha (board_halo.gdshader).
+	var halo := ShaderMaterial.new()
+	halo.shader = load("res://shaders/board_halo.gdshader") as Shader
+	halo.set_shader_parameter("px", 1.0)
+	halo.set_shader_parameter("halo_a", 0.95)
+	material = halo
 	_world = Node3D.new()
 	_vp.add_child(_world)
 	var env := Environment.new()
 	env.background_mode = Environment.BG_CLEAR_COLOR
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color = Color(0.72, 0.76, 0.86)
-	env.ambient_light_energy = 0.65
+	env.ambient_light_energy = 0.55
 	var we := WorldEnvironment.new()
 	we.environment = env
 	_world.add_child(we)
 	var sun := DirectionalLight3D.new()
 	sun.rotation_degrees = Vector3(-55, -30, 0)
-	sun.light_color = Color(1.0, 0.95, 0.88)
-	sun.light_energy = 1.15
+	# Cool white key (style lock); figure shader also mirrors key with facing.
+	sun.light_color = Color(0.92, 0.95, 1.0)
+	sun.light_energy = 0.85
 	_world.add_child(sun)
 	_cam = Camera3D.new()
 	_cam.projection = Camera3D.PROJECTION_ORTHOGONAL
@@ -118,17 +121,16 @@ func sync(entries: Array, delta: float) -> void:
 		seen[id] = true
 		var st: Dictionary = _nodes.get(id, {})
 		if st.is_empty():
-			var n := UnitModel.instantiate(u.char, str(u.team), str(u.get("template", "")))
+			var n := CKBoardFigure.build(u.char, str(u.team), str(u.get("template", "")))
 			if n == null:
 				continue
 			_world.add_child(n)
-			CKUnitSilhouette.apply(n, u.char, str(u.team))
-			_solidify_board(n)
-			n.set_meta("ck_base_scale", n.scale)
-			var ap := UnitModel.find_anim(n)
+			n.set_meta("ck_base_scale", Vector3.ONE)
+			var ap := CKBoardFigure.find_anim(n)
 			var f0 := 1.0 if str(u.team) != "enemy" else -1.0
-			st = {"node": n, "anim": ap, "face": f0, "yaw": 62.0 * f0, "dead_t": -1.0, "cur": "", "lock_t": 0.0, "pending": []}
-			n.rotation_degrees.y = 62.0 * f0
+			# Idle yaw ±35° toward camera (design §3.2); was 62° on cutscene rigs.
+			st = {"node": n, "anim": ap, "face": f0, "yaw": 35.0 * f0, "dead_t": -1.0, "cur": "", "lock_t": 0.0, "pending": []}
+			n.rotation_degrees.y = 35.0 * f0
 			_nodes[id] = st
 			_play(st, "idle")
 		var n2: Node3D = st.node
@@ -184,7 +186,7 @@ func sync(entries: Array, delta: float) -> void:
 		st.lock_t = maxf(0.0, float(st.lock_t) - delta)
 		if float(st.lock_t) <= 0.0 and str(st.cur) in ["attack", "hit", "skill", "crit", "dodge"]:
 			_play(st, "idle")
-		var want: float = float(st.get("yaw", 62.0 * float(st.face)))
+		var want: float = float(st.get("yaw", 35.0 * float(st.face)))
 		n2.rotation_degrees.y = rad_to_deg(lerp_angle(deg_to_rad(n2.rotation_degrees.y), deg_to_rad(want), minf(1.0, delta * 14.0)))
 		_tick_pending(st, delta)
 		n2.set_meta("ck_dim", bool(u.done))
