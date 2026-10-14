@@ -224,6 +224,9 @@ func _load_beat(beat_id: String) -> void:
 			_load_beat(str(skipped))
 		return
 	_remember_beat(beat_id)
+	# Opening review A-05: kept-lease path posts a paid herb escort on the gatehouse board.
+	if beat_id == "0.32" and GameState.flag("pro_lease_kept"):
+		World.ensure_opening_herb_escort()
 	_pay_ack = false
 	_line_idx = _resume_line(beat_id) if _resuming else 0
 	_title.text = "%s · %s" % [str(_chapter.get("title", "")), str(_beat.get("title", ""))]
@@ -637,6 +640,14 @@ func _run_op(step) -> String:
 			_set_body(msg)
 			_speaker.text = "老旗手"
 			_hint.text = msg
+		"ensure_opening_herb_escort":
+			# Opening review A-05: post (and optionally accept) the paid herb escort.
+			var posted: Dictionary = World.ensure_opening_herb_escort()
+			if bool(row.get("accept", false)) and not posted.is_empty():
+				var ar: Dictionary = World.accept_opening_herb_escort()
+				if ar.get("ok", false):
+					_hint.text = str(ar.get("msg", ""))
+					GameState.log_event(str(ar.get("msg", "接下开局药材护送")))
 	return ""
 
 func _adjust(row: Dictionary) -> void:
