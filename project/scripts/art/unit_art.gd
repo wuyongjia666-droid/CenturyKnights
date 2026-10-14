@@ -1054,6 +1054,10 @@ static func _boss_portrait(key: String) -> String:
 static func _farm_tags_for(c: CKCharacter) -> Array:
 	## 职事/年龄 → 农场标签（可多选，靠前优先）
 	var tags: Array = []
+	# Improve #4: continental commoners prefer civilian farm faces already on disk.
+	if c.has_meta("continental_commoner") and bool(c.get_meta("continental_commoner")):
+		for tg in ["fisher", "merchant", "orphan", "mid", "youth", "recruit_raw"]:
+			tags.append(tg)
 	var job = str(c.job_id)
 	var age = int(c.age)
 	if age <= 14:

@@ -133,6 +133,9 @@ static func make_tavern_candidate(rng: RandomNumberGenerator, roll: Dictionary =
 	c.salary = 6 + c.rank_index() * 3 + c.level + CKBloodline.salary_premium(c)
 	c.recalc_hp()
 	c.hp = c.max_hp
+	# Improve #4: continental commoners share the on-disk civilian face pool.
+	if str(roll.get("tier", "")) == "folk":
+		c.set_meta("continental_commoner", true)
 	return c
 
 ## Opposite sex of the captain; a missing captain defaults to a male captain's match.
