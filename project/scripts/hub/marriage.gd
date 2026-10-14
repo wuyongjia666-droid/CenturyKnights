@@ -490,6 +490,12 @@ func _harmony_card(rect: Rect2, a: CKCharacter, b: CKCharacter) -> void:
 	var need_h := 4.0 + title_h + 4.0 + rows * chip_h + (rows - 1) * 4.0 + 6.0
 	preview_h = maxf(preview_h, need_h)
 	preview_y = minf(preview_y, rect.size.y - preview_h - 6.0)
+	## never ride up over the big harmony number
+	preview_y = maxf(preview_y, big.position.y + bw.y + 2.0)
+	preview_h = minf(preview_h, rect.size.y - preview_y - 4.0)
+	for n in p.get_children():
+		if n is Control and n != big and n != pc and (n as Control).position.y >= 160.0 and (n as Control).position.y + (n as Control).size.y > preview_y:
+			(n as Control).visible = false  # rank/bar yield to the preview when space is short
 	var ib := UIKit.panel_at(p, Rect2(8, preview_y, inner_w, preview_h), 6)
 	ib.name = "HeirPreview"
 	ib.clip_contents = true
@@ -597,7 +603,6 @@ func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 	holder.clip_contents = true
 	_punnett.add_child(holder)
 	CKCourtChrome.fill_punnett(holder, a, b, 2)
-	holder.size.y = minf(holder.size.y, maxf(18.0, holder.get_combined_minimum_size().y))
 	var cast := UIKit.body_label(str(CKFamilyState.combat_expectation(a, b).get("line", "")), UIKit.ACCENT, 12)
 	cast.name = "CombatForecast"
 	cast.tooltip_text = cast.text
@@ -609,15 +614,9 @@ func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 	## Wrap; if the panel still can't hold it, step the font down, then let the
 	## punnett rows above give way so the forecast is never cut off.
 	var fs := 12
-	while fs > 11 and _label_text_h(cast, hold_w) > cast.size.y:
+	while fs > 10 and _label_text_h(cast, hold_w) > cast.size.y:
 		fs -= 1
 		cast.add_theme_font_size_override("font_size", fs)
-	var need := _label_text_h(cast, hold_w)
-	if need > cast.size.y:
-		var bottom := _punnett.size.y - 4.0
-		cast.position.y = maxf(22.0 + 18.0, bottom - need)
-		cast.size.y = bottom - cast.position.y
-		holder.size.y = maxf(18.0, cast.position.y - 2.0 - holder.position.y)
 	_punnett.add_child(cast)
 	UIFX.wire_tree(_rite_board)
 	_mobile_after_render.call_deferred()
