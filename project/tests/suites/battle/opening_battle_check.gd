@@ -109,6 +109,13 @@ func _battle_assertions(battle) -> String:
 	var seize_label := BattleObjectives.text("obj_seize")
 	if idle.find(seize_label) < 0:
 		return "idle missing seize (%s): %s" % [seize_label, idle]
+	# Desktop bark covers the rail: SkillHint must hide with the command rows (audit leftover overlap).
+	var hint: CanvasItem = battle.get_node_or_null("SkillHint") as CanvasItem
+	var layer: Node = battle.get_node_or_null("BattleStoryLayer")
+	if hint != null and layer != null:
+		var root: CanvasItem = layer.get_node_or_null("Root") as CanvasItem
+		if root != null and root.visible and hint.visible:
+			return "SkillHint still visible under bark"
 	if battle.get_node_or_null("LockTipPanel") != null:
 		return "lock tip at deploy"
 	BattleLockTutorial.run_sequence(battle)
