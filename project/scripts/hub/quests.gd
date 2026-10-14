@@ -125,6 +125,7 @@ func _render() -> void:
 		var ready := str(q.get("state", "")) == "ready"
 		var rw := Locale.t("wsc_q_698e1de6") % [int(q.get("reward_silver", 0)), int(q.get("reward_rep", 0))]
 		var lt := Locale.t("wsc_q_ea883343") if ready else (Locale.t("wsc_q_8a110754") if ml <= 1 else Locale.t("wsc_q_2a74a2d2") % ml)
+		var qid_w := str(q.get("id", ""))
 		_card(
 			str(q.get("title", Locale.t("wsc_q_f6b0bbbb"))),
 			int(q.get("danger", 1)),
@@ -133,7 +134,7 @@ func _render() -> void:
 			lt,
 			str(q.get("desc", "")),
 			Locale.t("wsc_q_40f0ff09"),
-			func(): _goto_atlas()
+			func(): _goto_atlas_for(World.quest_by_id(qid_w))
 		)
 	_section(Locale.t("wsc_q_657f636f"))
 	if GameState.quests.is_empty():
@@ -156,6 +157,16 @@ func _render() -> void:
 
 
 func _goto_atlas() -> void:
+	CKNav.go("res://scenes/hub/atlas_view.tscn")
+
+
+func _goto_atlas_for(q: Dictionary) -> void:
+	var guide := World.quest_guide_node(q)
+	if guide != "" and World.nodes.has(guide):
+		GameState.set_meta("atlas_select", guide)
+		var nv := World.nation_of(guide)
+		if nv != "":
+			GameState.set_meta("atlas_view", nv)
 	CKNav.go("res://scenes/hub/atlas_view.tscn")
 
 
