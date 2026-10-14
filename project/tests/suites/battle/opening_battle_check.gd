@@ -82,7 +82,7 @@ func _check_battle() -> String:
 	battle.size = Vector2(1280, 720)
 	await get_tree().process_frame
 	await get_tree().process_frame
-	var err := _battle_assertions(battle)
+	var err := await _battle_assertions(battle)
 	battle.queue_free()
 	return err
 
@@ -119,8 +119,34 @@ func _battle_assertions(battle) -> String:
 	if battle.get_node_or_null("LockTipPanel") != null:
 		return "lock tip at deploy"
 	BattleLockTutorial.run_sequence(battle)
-	if battle.get_node_or_null("LockTipPanel") == null:
+	var tip: Control = battle.get_node_or_null("LockTipPanel") as Control
+	if tip == null:
 		return "lock tip missing after sequence"
+	var next_btn: Button = tip.find_child("LockTipNext", true, false) as Button
+	if next_btn == null:
+		return "lock tip next missing"
+	next_btn.pressed.emit()
+	await battle.get_tree().process_frame
+	tip = battle.get_node_or_null("LockTipPanel") as Control
+	if tip == null:
+		return "lock tip missing after next"
+	if int(battle.get_meta("lock_tut_i", -1)) != 1:
+		return "lock tip did not advance"
+	var dismiss_btn: Button = tip.find_child("LockTipDismiss", true, false) as Button
+	if dismiss_btn == null:
+		return "lock tip dismiss missing"
+	dismiss_btn.pressed.emit()
+	await battle.get_tree().process_frame
+	if battle.get_node_or_null("LockTipPanel") != null:
+		return "lock tip still visible after dismiss"
+	if not battle.has_meta("lock_tut_dismissed"):
+		return "lock tip dismiss not remembered"
+	BattleLockTutorial.show_step(battle)
+	if battle.get_node_or_null("LockTipPanel") != null:
+		return "lock tip returned after dismiss"
+	BattleLockTutorial.queue_after_story(battle)
+	if battle.get_node_or_null("LockTipPanel") != null:
+		return "lock tip queued after dismiss"
 	for u in battle.units:
 		if str(u.team) == "player" and u.char.hp > 0:
 			u.pos = Vector2i(7, 3)
