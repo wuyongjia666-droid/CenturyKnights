@@ -143,16 +143,42 @@ static func empty(title: String, why: String, how: String = "", w: float = 520.0
 
 ## Button with no key hint, at least HIT tall. primary = frost fill.
 static func button(label: String, primary: bool = false, w: float = 160.0, h: float = HIT) -> Button:
+	var tall := maxf(h, HIT)
+	if DeviceProfile.is_mobile():
+		tall = maxf(tall, MobileLayout.HIT_FLOOR)
 	var b: Button = UIKit.make_accent_button(label, int(w)) if primary else UIKit.make_button(label, int(w))
-	b.custom_minimum_size = Vector2(w, maxf(h, HIT))
-	b.add_theme_font_size_override("font_size", 15)
+	b.custom_minimum_size = Vector2(w, tall)
+	b.add_theme_font_size_override("font_size", 22 if DeviceProfile.is_mobile() else 15)
 	return b
 
 ## Disable with a reason the player sees when they tap it anyway (UIFX.deny).
-static func lock(b: BaseButton, reason: String) -> void:
+## Pass show_under=true for a persistent red line under the button (请爵 P2).
+static func lock(b: BaseButton, reason: String, show_under: bool = false) -> void:
 	b.disabled = reason != ""
 	b.set_meta("deny_reason", reason)
 	b.tooltip_text = reason
+	var old_hint := b.get_node_or_null("LockHint")
+	if old_hint != null:
+		old_hint.queue_free()
+	if reason == "" or not show_under:
+		return
+	var lab := Label.new()
+	lab.name = "LockHint"
+	lab.text = reason
+	var fs := 22 if DeviceProfile.is_mobile() else 13
+	lab.add_theme_font_size_override("font_size", fs)
+	lab.add_theme_color_override("font_color", UIKit.DANGER)
+	lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var bw := maxf(b.custom_minimum_size.x, maxf(b.size.x, 200.0))
+	var bh := maxf(b.custom_minimum_size.y, maxf(b.size.y, HIT))
+	lab.position = Vector2(0, bh + 4.0)
+	lab.size = Vector2(bw, float(fs * 2 + 8))
+	lab.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	b.add_child(lab)
+	b.resized.connect(func():
+		if is_instance_valid(lab):
+			lab.position.y = b.size.y + 4.0
+			lab.size.x = maxf(b.size.x, 200.0))
 
 ## One-line feedback strip above the bottom edge. ok=false paints it as a failure.
 static func feedback(page: Control) -> Label:

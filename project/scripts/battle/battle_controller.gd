@@ -375,6 +375,7 @@ func _build_ui() -> void:
 	log_label.add_theme_color_override("font_color", UIKit.TEXT_DIM)
 	lv.add_child(log_label)
 	_skill_hint = UIKit.make_dim_label("")  # command console
+	_skill_hint.name = "SkillHint"
 	_skill_hint.position = Vector2(RAIL_X + 2, 578)
 	_skill_hint.custom_minimum_size = Vector2(RAIL_W, 18)
 	_skill_hint.size = Vector2(RAIL_W, 18)

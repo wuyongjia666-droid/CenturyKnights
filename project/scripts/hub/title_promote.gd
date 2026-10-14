@@ -70,8 +70,9 @@ func _paint() -> void:
 	var block := CKCourt.promotion_block(_leader, {})
 	var go := CKPageKit.button(Locale.t("lb_title_go"), true, 260)
 	go.name = "PromoteTitle"
-	go.position = Vector2(42, CKPageKit.TOP + 426)
-	CKPageKit.lock(go, Locale.t("lb_title_block", [block]) if block != "" else "")
+	# Sit above the feedback strip so LockHint (why the button is grey) stays on-screen.
+	go.position = Vector2(42, CKPageKit.TOP + (400 if DeviceProfile.is_mobile() else 418))
+	CKPageKit.lock(go, Locale.t("lb_title_block", [block]) if block != "" else "", true)
 	go.pressed.connect(_promote)
 	_host.add_child(go)
 	UIFX.wire_tree(_host)

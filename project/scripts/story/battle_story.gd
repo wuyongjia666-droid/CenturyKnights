@@ -213,10 +213,11 @@ static func _layer(host: Node) -> CanvasLayer:
 		skip.offset_left = -174
 		skip.offset_bottom = 16 + 76
 	if not DeviceProfile.is_mobile():
-		# Desktop: the bark bar is modal and sits on the command rows; hide them while it shows so
-		# "点屏幕继续" never lands on the danger toggle or the end-turn button.
+		# Desktop: the bark bar is modal and sits on the command rail; hide the command rows,
+		# skill tip ("选中单位后点「战技」…"), and battle log so they never bleed through the
+		# speaker line or "点屏幕继续".
 		root.visibility_changed.connect(func():
-			for rn in ["CommandRow", "CommandRow2"]:
+			for rn in ["CommandRow", "CommandRow2", "SkillHint", "LogPanel"]:
 				var r := host.get_node_or_null(rn) as CanvasItem
 				if r:
 					r.visible = not root.visible)
