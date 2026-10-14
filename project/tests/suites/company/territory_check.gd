@@ -21,7 +21,7 @@ func _run() -> String:
 	World.rivals_enabled = false
 	for nid in World.nations.keys():
 		World.rep_nation[str(nid)] = 40
-	for f in [_seat_migration, _assault, _chain, _month, _contest, _home, _save, _stockade]:
+	for f in [_seat_migration, _assault, _chain, _month, _contest, _reclaim, _home, _save, _stockade]:
 		err = f.call()
 		if err != "":
 			return err
@@ -176,6 +176,58 @@ func _contest() -> String:
 	CKTerritory.apply_month(0.5)
 	if not CKTerritory.owned(id) or int(CKTerritory.state(id).garrison) != 2:
 		return "garrison self-defence failed"
+	return ""
+
+
+func _reclaim() -> String:
+	# Improve-plan #1: lose() posts a retake commission and a report card in news.
+	var id := "t_ash_millrun"
+	World.pos = str(CKTerritory.site(id).anchor)
+	CKTerritory.capture(id, "chain")
+	var st := CKTerritory.state(id)
+	st.garrison = 2
+	World.territory.sites[id] = st
+	var r := CKTerritory.lose(id, "rival:salt_crow")
+	if not r.get("ok", false):
+		return "lose failed"
+	if CKTerritory.owned(id):
+		return "still owned after lose"
+	var news: Array = CKTerritory.take_news()
+	if news.is_empty() or str(news[0].get("report", "")) == "":
+		return "no contest report on loss"
+	var anchor := str(CKTerritory.site(id).anchor)
+	var offer := {}
+	for q in World.board(anchor):
+		if bool(q.get("territory_reclaim", false)) and str(q.get("territory", "")) == id:
+			offer = q
+			break
+	if offer.is_empty():
+		return "reclaim not posted on %s board" % anchor
+	# Accept and turn in as a ready hunt → site returns
+	if not World.accept_quest(anchor, str(offer.id)).get("ok", false):
+		return "reclaim not acceptable"
+	var q := World.quest_by_id(str(offer.id))
+	q.state = "ready"
+	var t := World.turn_in(str(offer.id))
+	if not bool(t.get("ok", false)):
+		return "reclaim turn_in: %s" % t.get("msg", "")
+	if not CKTerritory.owned(id):
+		return "reclaim did not recapture"
+	if int(CKTerritory.state(id).unrest) != 1:
+		return "reclaim unrest %d != 1" % int(CKTerritory.state(id).unrest)
+	# Second loss does not stack a duplicate reclaim while one sits on the board
+	CKTerritory.lose(id, "")
+	CKTerritory.capture(id, "chain")
+	CKTerritory.lose(id, "")
+	var n := 0
+	for q2 in World.board(anchor):
+		if bool(q2.get("territory_reclaim", false)) and str(q2.get("territory", "")) == id:
+			n += 1
+	for q2 in World.active:
+		if bool(q2.get("territory_reclaim", false)) and str(q2.get("territory", "")) == id:
+			n += 1
+	if n != 1:
+		return "duplicate reclaim offers: %d" % n
 	return ""
 
 func _home() -> String:

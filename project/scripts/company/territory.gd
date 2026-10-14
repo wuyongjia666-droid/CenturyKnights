@@ -184,8 +184,13 @@ static func capture(id: String, how: String) -> Dictionary:
 	var st := state(id)
 	st.owner = OWN
 	st.threat = {}
-	st.garrison = maxi(1, int(st.garrison)) if how == "chain" else 0
-	st.unrest = int(rule("unrest_months", 2)) if how == "assault" else 0
+	st.garrison = maxi(1, int(st.garrison)) if how == "chain" or how == "reclaim" else 0
+	if how == "assault":
+		st.unrest = int(rule("unrest_months", 2))
+	elif how == "reclaim":
+		st.unrest = 1
+	else:
+		st.unrest = 0
 	_put(id, st)
 	_log(Locale.t("terr_07") % [site(id).name, Locale.t("terr_08") if how == "assault" else Locale.t("terr_09")])
 	GameState.mark_dirty()
@@ -196,25 +201,35 @@ static func lose(id: String, to: String) -> Dictionary:
 	if is_home(id) or site(id).is_empty():
 		return {"ok": false, "msg": Locale.t("terr_11")}
 	var st := state(id)
+	var gar := int(st.garrison)
+	var hold_pct := int(round(hold_chance(id) * 100.0))
+	var ys := int(site(id).yield_silver)
+	var who := Locale.t("terr_12") if to == NEUTRAL else _rival_name(to.trim_prefix("rival:"))
 	st.owner = to
 	st.garrison = 0
 	st.contract = false
 	st.unrest = 0
 	st.threat = {}
 	_put(id, st)
-	var who := Locale.t("terr_12") if to == NEUTRAL else _rival_name(to.trim_prefix("rival:"))
 	_log(Locale.t("terr_13") % [site(id).name, who])
-	_push_news(id, who)
+	# Improve-plan #1: contest report card + auto「反夺」commission on the anchor board.
+	var report := Locale.t("terr_47") % [gar, hold_pct, who, ys]
+	_push_news(id, who, {"garrison": gar, "hold_pct": hold_pct, "yield_silver": ys, "report": report})
+	_post_reclaim(id, who)
 	GameState.mark_dirty()
 	World.world_changed.emit()
 	return {"ok": true}
 
 ## WS-C #45: losses wait here until the atlas shows them as a modal (survives save/load).
-static func _push_news(id: String, who: String) -> void:
+## Improve-plan #1: optional report fields ride along for the loss card.
+static func _push_news(id: String, who: String, extra: Dictionary = {}) -> void:
 	var st := _st()
 	if not st.has("news") or typeof(st.news) != TYPE_ARRAY:
 		st.news = []
-	st.news.append({"id": id, "who": who, "date": World.date_label()})
+	var row := {"id": id, "who": who, "date": World.date_label()}
+	for k in extra.keys():
+		row[k] = extra[k]
+	st.news.append(row)
 	if st.news.size() > 6:
 		st.news = st.news.slice(st.news.size() - 6)
 
@@ -270,6 +285,8 @@ static func on_quest_done(q: Dictionary) -> String:
 	var id := str(q.get("territory", ""))
 	if id == "" or site(id).is_empty():
 		return ""
+	if bool(q.get("territory_reclaim", false)):
+		return _finish_reclaim(id)
 	if int(q.get("territory_step", 0)) == 0:
 		var nq := _chain_step(id, 1)
 		World._post_chain_offer(nq)
@@ -279,6 +296,62 @@ static func on_quest_done(q: Dictionary) -> String:
 	capture(id, "chain")
 	World.add_city_rep(str(site(id).anchor), 4)
 	return Locale.t("terr_24") % site(id).name
+
+static func _finish_reclaim(id: String) -> String:
+	if owned(id):
+		return Locale.t("terr_49") % site(id).name
+	var block := capture_block(id, false)
+	if block != "":
+		return Locale.t("terr_23") % [site(id).name, block]
+	capture(id, "reclaim")
+	World.add_city_rep(str(site(id).anchor), 4)
+	return Locale.t("terr_50") % site(id).name
+
+## Improve-plan #1: after a loss, post a one-shot「反夺」hunt on the anchor board.
+static func _post_reclaim(id: String, who: String) -> void:
+	if site(id).is_empty():
+		return
+	if _has_reclaim(id):
+		return
+	var q := _reclaim_quest(id, who)
+	if q.is_empty():
+		return
+	World._post_chain_offer(q)
+	_log(Locale.t("terr_48") % [World.node(str(q.issuer)).get("name", ""), q.title])
+
+static func _has_reclaim(id: String) -> bool:
+	for q in World.active:
+		if str(q.get("territory", "")) == id and bool(q.get("territory_reclaim", false)):
+			return true
+	var anchor := str(site(id).anchor)
+	for q in World.board(anchor):
+		if str(q.get("territory", "")) == id and bool(q.get("territory_reclaim", false)):
+			return true
+	return false
+
+static func _reclaim_quest(id: String, who: String) -> Dictionary:
+	var s := site(id)
+	var anchor := str(s.anchor)
+	var n := World.node(anchor)
+	if n.is_empty():
+		return {}
+	var target := World._near(anchor, 1, 1, rng)
+	if target == "":
+		target = anchor
+	var rt := World.route(anchor, target)
+	var days := int(rt.get("days", 1))
+	return {
+		"id": "terr_reclaim_%s_%d" % [id, World.days_total],
+		"issuer": anchor, "tier": 2, "state": "offer", "sig": false,
+		"kind": "hunt", "target": target, "battle": true,
+		"danger": clampi(int(s.danger) + 1, 1, 4),
+		"route_days": days, "days_budget": days * 2 + 14,
+		"reward_silver": 40, "reward_rep": 6, "req_rep": 0,
+		"foe_name": who, "chain": false,
+		"territory": id, "territory_reclaim": true,
+		"title": Locale.t("terr_51") % s.name,
+		"desc": Locale.t("terr_52") % [who, s.name, World.node(target).get("name", ""), n.get("name", "")],
+	}
 
 # ── garrison ──────────────────────────────────────────
 static func garrison_cost(id: String) -> int:
@@ -497,11 +570,13 @@ static func _resolve_unanswered(id: String, force_roll: float) -> void:
 	var st := state(id)
 	var by := str(st.threat.get("by", NEUTRAL))
 	var roll := rng.randf() if force_roll < 0.0 else force_roll
+	var hold_pct := int(round(hold_chance(id) * 100.0))
 	if roll < hold_chance(id):
+		var before := int(st.garrison)
 		st.threat = {}
-		st.garrison = maxi(0, int(st.garrison) - 1)
+		st.garrison = maxi(0, before - 1)
 		_put(id, st)
-		_log(Locale.t("terr_33") % site(id).name)
+		_log(Locale.t("terr_53") % [site(id).name, before, int(st.garrison), hold_pct])
 	else:
 		lose(id, by)
 
