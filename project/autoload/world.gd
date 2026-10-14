@@ -524,6 +524,10 @@ func step_travel() -> Dictionary:
 	if not ev.is_empty():
 		travel["pending_arrive"] = b
 		return _emit_step({"event": ev, "pos": pos})
+	# Improve #2: overnight camp when the leg costs at least a day and nothing else interrupted.
+	if int(r.get("days", 0)) >= 1:
+		travel["pending_arrive"] = b
+		return _emit_step({"event": make_camp_event(a, b, int(r.get("days", 1))), "pos": pos})
 	return _emit_step(_arrive_leg(b))
 
 func _emit_step(info: Dictionary) -> Dictionary:
@@ -550,6 +554,7 @@ func _arrive_leg(b: String) -> Dictionary:
 	return info
 
 ## Runs legs until arrival / event / encounter (UI animates one leg at a time; tests use this).
+## Overnight camp auto-picks 休整 so headless travel_to still reaches the destination.
 func travel_to(to_id: String) -> Dictionary:
 	var st := begin_travel(to_id)
 	if not st.ok:
@@ -557,6 +562,17 @@ func travel_to(to_id: String) -> Dictionary:
 	var info := {}
 	for _i in 64:
 		info = step_travel()
+		while not info.get("event", {}).is_empty() and str(info.event.get("id", "")) == "camp_night":
+			# Headless batch travel skips camp costs so preview rations stay accurate.
+			pending_event = {}
+			if travel.has("pending_arrive"):
+				info = _arrive_leg(str(travel.pending_arrive))
+				info["ok"] = true
+			else:
+				info = {"ok": true, "arrived": travel.is_empty(), "pos": pos}
+			if not info.get("event", {}).is_empty() or not info.get("encounter", {}).is_empty() or bool(info.get("arrived", false)) or travel.is_empty():
+				break
+			info = step_travel()
 		if not info.get("event", {}).is_empty() or not info.get("encounter", {}).is_empty() or bool(info.get("arrived", false)):
 			break
 	info["ok"] = true
@@ -1652,6 +1668,10 @@ func _roll_event(r: Dictionary, a: String, b: String) -> Dictionary:
 	for q in active:
 		if str(q.kind) == "escort" and str(q.state) == "active":
 			chance += 0.15
+	var watched := bool(road_flags.get("camp_watch", false))
+	if watched:
+		chance *= 0.45
+		road_flags.erase("camp_watch")
 	if rng.randf() > chance:
 		return {}
 	var biome := str(node(b).get("biome", "plain"))
@@ -1669,7 +1689,7 @@ func _roll_event(r: Dictionary, a: String, b: String) -> Dictionary:
 			continue
 		var w := float(ev.get("weight", 1))
 		if str(ev.id) == "ambush":
-			w *= 0.6 + 0.5 * danger
+			w *= (0.25 if watched else (0.6 + 0.5 * danger))
 		pool.append([ev, w])
 		total += w
 	if pool.is_empty():
@@ -1682,6 +1702,30 @@ func _roll_event(r: Dictionary, a: String, b: String) -> Dictionary:
 			pick = p[0]
 			break
 	return _instantiate_event(pick, r, a, b)
+
+func make_camp_event(a: String, b: String, nights: int = 1) -> Dictionary:
+	## Improve #2 — nightly camp between road legs (休整 / 巡哨 / 吃饭).
+	var nights_i := maxi(1, nights)
+	var from_n := str(node(a).get("name", a))
+	var to_n := str(node(b).get("name", b))
+	var text := Locale.t("camp_body") % [from_n, to_n, nights_i]
+	var opts := [
+		{"label": Locale.t("camp_opt_rest"), "fx": {"heal": 0.18, "morale": 1, "food": -1, "flag": "camp_rested"}},
+		{"label": Locale.t("camp_opt_watch"), "fx": {"flag": "camp_watch", "food": -1}},
+		{"label": Locale.t("camp_opt_meal"), "fx": {"food": -3, "morale": 3, "heal": 0.08, "flag": "camp_fed"}},
+	]
+	pending_event = {
+		"id": "camp_night",
+		"kind": "camp",
+		"title": Locale.t("camp_title"),
+		"text": text,
+		"options": opts,
+		"a": a,
+		"b": b,
+		"ctx": {"nights": nights_i, "toll": 0, "good": "grain", "tip": {}, "hire": 0, "danger": 0},
+	}
+	_tlog(Locale.t("camp_log") % nights_i)
+	return pending_event
 
 func make_event(ev_id: String, a: String = "", b: String = "") -> Dictionary:
 	## deterministic event injection (tests / scripted beats)
@@ -1835,7 +1879,15 @@ func choose_event(idx: int) -> Dictionary:
 				lines.append("铁 %+d" % int(v))
 			"flag":
 				road_flags[str(v)] = true
-				lines.append("记下了旗标")
+				match str(v):
+					"camp_watch":
+						lines.append(Locale.t("camp_fx_watch"))
+					"camp_rested":
+						lines.append(Locale.t("camp_fx_rest"))
+					"camp_fed":
+						lines.append(Locale.t("camp_fx_meal"))
+					_:
+						lines.append("记下了旗标")
 	if fx.has("battle"):
 		var enc := start_encounter("road", {"node": str(ev.b), "from": str(ev.a), "event": str(ev.id), "rep_win": int(fx.get("rep_nation_win", 0))})
 		return {"ok": true, "msg": "，".join(lines), "encounter": enc}
