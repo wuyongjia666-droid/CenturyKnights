@@ -36,6 +36,11 @@ static func name_of(id: String) -> String:
 
 func _ready() -> void:
 	UIKit.void_bg(self)
+	if MobilePage.active(self):
+		_m_build()
+		resized.connect(_m_relayout)
+		refresh()
+		return
 	UIKit.top_bar(self, Locale.t("a1_view_title"), UIKit.std_resource_chips(), Locale.t("a1_view_back"), _back)
 	_msg = UIKit.body_label(Locale.t("a1_view_head"), UIKit.TEXT_DIM, 13)
 	_msg.name = "Msg"
@@ -156,6 +161,13 @@ func refresh() -> void:
 		up.disabled = lv >= mx
 		up.text = Locale.t("a1_maxed") if lv >= mx else (Locale.t("a1_build") if lv <= 0 else Locale.t("a1_upgrade"))
 		(e.go as Button).disabled = lv <= 0
+	if _m_scroll != null:
+		var bar := get_node_or_null("MobileTopBar")
+		if bar and bar.get_child_count() > 1:
+			var inf := bar.get_child(1) as Label
+			var raw := _m_info()
+			inf.set_meta("m_raw", raw)
+			inf.text = raw
 
 func layer_visible(id: String, tier: int) -> bool:
 	var e: Dictionary = _cards.get(id, {})
@@ -183,6 +195,140 @@ func _upgrade(id: String) -> void:
 	else:
 		Sfx.miss()
 	refresh()
+
+## ── Phone landscape (docs/design/mobile-landscape.md): one 76px top bar, a status line, then a
+## scrolling 3-column grid of building cards built from containers so text wraps instead of
+## running into the buttons. Tapping the art or 「进入」 opens the building; only the accent
+## 「升级」 button on the far right upgrades (2026-10-12: every tap used to land on upgrade).
+var _m_scroll: ScrollContainer
+var _m_grid: GridContainer
+
+func apply_mobile_layout() -> void:
+	if MobilePage.active(self):
+		_m_relayout()
+
+func _m_build() -> void:
+	MobilePage.top_bar(self, Locale.t("a1_view_title"), _m_info(), [[Locale.t("a1_view_back"), _back]])
+	_msg = MobilePage.label(Locale.t("a1_view_head"), UIKit.TEXT_DIM, MobilePage.FONT, false)
+	_msg.name = "Msg"
+	_msg.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	_msg.clip_text = true
+	add_child(_msg)
+	_m_scroll = ScrollContainer.new()
+	_m_scroll.name = "MobileGrid"
+	_m_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	add_child(_m_scroll)
+	_m_grid = GridContainer.new()
+	_m_grid.columns = 3
+	_m_grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_m_grid.add_theme_constant_override("h_separation", 14)
+	_m_grid.add_theme_constant_override("v_separation", 14)
+	_m_scroll.add_child(_m_grid)
+	for id in SLOTS:
+		_m_card(str(id))
+	_m_relayout()
+
+func _m_info() -> String:
+	return Locale.t("mw_41e31e6c") % [GameState.silver, GameState.food, GameState.iron, Calendar.label()]
+
+func _m_relayout() -> void:
+	if _m_scroll == null:
+		return
+	var w := MobilePage.width(self)
+	var h := size.y if size.y > 400.0 else 720.0
+	var bar := get_node_or_null("MobileTopBar") as Control
+	if bar:
+		bar.size.x = w - 50.0
+	_msg.position = Vector2(26, MobilePage.TOP)
+	_msg.size = Vector2(w - 52.0, 30)
+	var top := MobilePage.TOP + 40.0
+	_m_scroll.position = Vector2(20, top)
+	_m_scroll.size = Vector2(w - 40.0, h - top - 12.0)
+
+func _m_card(id: String) -> void:
+	var p := PanelContainer.new()
+	p.name = "card_%s" % id
+	p.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var sb := UIKit.flat_box(Color(0.055, 0.067, 0.090, 0.92), Color(1, 1, 1, 0.10), 10)
+	for side in ["left", "right", "top", "bottom"]:
+		sb.set("content_margin_" + side, 12)
+	p.add_theme_stylebox_override("panel", sb)
+	_m_grid.add_child(p)
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 12)
+	p.add_child(row)
+	var art := Control.new()
+	art.custom_minimum_size = Vector2(150, 150)
+	art.clip_contents = true
+	art.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	row.add_child(art)
+	var entry := {"art": {}}
+	var ghost := _m_art(id, 1)
+	ghost.name = "ghost_%s" % id
+	ghost.modulate = Color(1, 1, 1, 0.22)
+	art.add_child(ghost)
+	entry.ghost = ghost
+	for tier in [1, 2, 3]:
+		var t := _m_art(id, tier)
+		t.name = "sil_%s_%d" % [id, tier]
+		t.visible = false
+		art.add_child(t)
+		entry.art[tier] = t
+	var hot := Button.new()   # art = enter, never upgrade
+	hot.flat = true
+	hot.name = "hot_%s" % id
+	hot.set_anchors_preset(Control.PRESET_FULL_RECT)
+	hot.focus_mode = Control.FOCUS_NONE
+	hot.add_theme_stylebox_override("normal", StyleBoxEmpty.new())
+	hot.add_theme_stylebox_override("hover", StyleBoxEmpty.new())
+	hot.add_theme_stylebox_override("pressed", UIKit.flat_box(Color(UIKit.ACCENT, 0.14), Color(UIKit.ACCENT, 0.9), 6))
+	hot.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	hot.pressed.connect(func(): _open(id))
+	art.add_child(hot)
+	var col := VBoxContainer.new()
+	col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	col.add_theme_constant_override("separation", 4)
+	row.add_child(col)
+	var title := MobilePage.label(name_of(id), UIKit.TEXT, 26, false)
+	title.clip_text = true
+	title.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	col.add_child(title)
+	var lv := MobilePage.label("", UIKit.ACCENT, MobilePage.FONT, false)
+	lv.clip_text = true
+	col.add_child(lv)
+	entry.lv = lv
+	var d := MobilePage.label(Locale.t("a1_desc_%s" % id), UIKit.TEXT_DIM, MobilePage.FONT, true)
+	d.max_lines_visible = 2
+	d.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	d.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	col.add_child(d)
+	var btns := HBoxContainer.new()
+	btns.add_theme_constant_override("separation", 18)
+	p.set_meta("m_btns", btns)
+	var go := MobilePage.button(Locale.t("a1_enter"), false, func(): _open(id))
+	go.name = "go_%s" % id
+	btns.add_child(go)
+	var up := MobilePage.button(Locale.t("a1_upgrade"), true, func(): _upgrade(id))
+	up.name = "up_%s" % id
+	btns.add_child(up)
+	var outer := VBoxContainer.new()
+	outer.add_theme_constant_override("separation", 10)
+	p.remove_child(row)
+	p.add_child(outer)
+	outer.add_child(row)
+	outer.add_child(btns)
+	entry.go = go
+	entry.up = up
+	_cards[id] = entry
+
+func _m_art(id: String, tier: int) -> TextureRect:
+	var t := TextureRect.new()
+	t.set_anchors_preset(Control.PRESET_FULL_RECT)
+	t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	t.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	t.texture = _tex(id, tier)
+	return t
 
 func _say(t: String, ok: bool) -> void:
 	_msg.text = t

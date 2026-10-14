@@ -12,6 +12,7 @@ const SCREENS := [
 	["marriage_wed", "res://scenes/hub/marriage.tscn", null, "", {"wed": true}],
 	["lineage", "res://scenes/hub/lineage_view.tscn"],
 	["wing_works", "res://scenes/hub/works.tscn"],
+	["wing_panorama", "res://scenes/hub/castle_view.tscn"],
 	["wing_annex_academy", "res://scenes/hub/annex.tscn", null, "", {"annex": "academy"}],
 	["wing_annex_embassy", "res://scenes/hub/annex.tscn", null, "", {"annex": "embassy"}],
 	["wing_annex_infirmary", "res://scenes/hub/annex.tscn", null, "", {"annex": "infirmary"}],
