@@ -244,7 +244,7 @@ func _card(c: CKCharacter, r: Rect2, focus: bool, idx: int) -> void:
 	at.autowrap_mode = TextServer.AUTOWRAP_OFF
 	at.position = Vector2(14, 10)
 	ab.add_child(at)
-	var gl := UIKit.body_label("综合评级：%s" % _grade_of(c), UIKit.OK, 11)
+	var gl := UIKit.body_label(_grade_of(c), UIKit.OK, 11)
 	gl.name = "OverallGrade"
 	gl.autowrap_mode = TextServer.AUTOWRAP_OFF
 	gl.position = Vector2(250, 10)
@@ -327,7 +327,8 @@ func _grade_of(c: CKCharacter) -> String:
 	var tot := 0
 	for sk in CKCharacter.STAT_KEYS:
 		tot += int(c.stats[sk])
-	return "S" if tot >= 66 else ("A" if tot >= 56 else ("B" if tot >= 46 else "C"))
+	var letter := "S" if tot >= 66 else ("A" if tot >= 56 else ("B" if tot >= 46 else "C"))
+	return "综合评级：%s" % letter
 
 func _derived(c: CKCharacter) -> Array:
 	return [["生命", str(c.max_hp)], ["攻击", str(c.derived_atk())], ["防御", str(c.derived_def())], ["移动", str(c.derived_move())]]
@@ -395,7 +396,7 @@ func _card_mobile(c: CKCharacter, focus: bool) -> void:
 	head.add_child(hv)
 	hv.add_child(MobilePage.label(c.name, UIKit.TEXT, 26, true))
 	hv.add_child(MobilePage.label("%s · %s" % [str(job.get("name", "")), Locale.t("shell_5a0a47eb") % c.age], UIKit.ACCENT))
-	var grade_l := MobilePage.label("综合评级：%s" % _grade_of(c), UIKit.OK)
+	var grade_l := MobilePage.label(_grade_of(c), UIKit.OK)
 	grade_l.name = "OverallGrade"
 	hv.add_child(grade_l)
 	var keys: Array = CKCharacter.STAT_KEYS.duplicate()
