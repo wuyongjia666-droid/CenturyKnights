@@ -2289,15 +2289,29 @@ func _show_lock_tip_panel(title: String, body: String, step: int, auto_sec: floa
 	var vb := VBoxContainer.new()
 	vb.add_theme_constant_override("separation", 4)
 	hrow.add_child(vb)
+	var head := HBoxContainer.new()
+	head.add_theme_constant_override("separation", 6)
 	var pips := HBoxContainer.new()
 	pips.add_theme_constant_override("separation", 6)
+	pips.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	pips.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	for pi in range(3):
 		var pip := ColorRect.new()
 		pip.custom_minimum_size = Vector2(22 if pi == step else 10, 4)
 		pip.color = UIKit.DANGER if pi == step else Color(UIKit.TEXT_DIM, 0.5)
 		pip.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		pips.add_child(pip)
-	vb.add_child(pips)
+	head.add_child(pips)
+	var close := UIKit.make_button("×", 36)
+	close.name = "LockTipDismiss"
+	close.custom_minimum_size = Vector2(36, 32)
+	close.tooltip_text = Locale.t("shell_lock_dismiss")
+	close.focus_mode = Control.FOCUS_NONE
+	close.pressed.connect(func():
+		BattleLockTutorial.dismiss(self, panel)
+	)
+	head.add_child(close)
+	vb.add_child(head)
 	var t = UIKit.make_label(title, true)
 	t.add_theme_font_size_override("font_size", 16)
 	t.add_theme_color_override("font_color", UIKit.DANGER)
