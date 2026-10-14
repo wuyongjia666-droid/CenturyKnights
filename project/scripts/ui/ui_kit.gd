@@ -1191,6 +1191,8 @@ static func widen_dialogue(scene: Control) -> void:
 	var pw := w - 180.0 - 180.0
 	(panel as Control).custom_minimum_size = Vector2(pw, 176)
 	(panel as Control).size = Vector2(pw, 176)
+	scene.set_meta("dlg_size", Vector2(pw, 176))
+	scene.set_meta("dlg_narr_size", Vector2(w - 56.0 - 56.0, 176))
 	var tag = scene.get_meta("dlg_tag", null)
 	if tag is Control and is_instance_valid(tag):
 		(tag as Control).position.x = 180.0 + pw - 120.0
@@ -1369,6 +1371,9 @@ static func stitch_dialogue(scene: Control) -> void:
 		var hide_plate := narr or is_banner
 		plate.visible = not hide_plate
 		if panel and is_instance_valid(panel):
+			# C-07: widen_dialogue stores wider sizes for phone viewports; prefer them.
+			panel_default_size = scene.get_meta("dlg_size", panel_default_size)
+			panel_narr_size = scene.get_meta("dlg_narr_size", panel_narr_size)
 			if hide_plate:
 				panel.position = panel_narr_pos
 				panel.custom_minimum_size = panel_narr_size

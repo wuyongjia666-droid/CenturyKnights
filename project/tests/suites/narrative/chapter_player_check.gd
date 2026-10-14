@@ -18,6 +18,32 @@ func _ready() -> void:
 		get_tree().quit(0)
 
 func _run() -> String:
+	var err := _preflight()
+	if err != "":
+		return err
+	GameState.new_game("烬行", "灰旗", GameState.crest_color)
+	err = await _no_borrowed_faces()
+	if err != "":
+		return err
+	err = _ch0_exit()
+	if err != "":
+		return err
+	err = await _mainline_routing()
+	if err != "":
+		return err
+	var packed: PackedScene = load("res://scenes/story/chapter_player.tscn")
+	if packed == null:
+		return "player scene missing"
+	err = await _sample_flow(packed)
+	if err != "":
+		return err
+	err = await _ch0_marriage_gate(packed)
+	if err != "":
+		return err
+	return await _player_polish(packed)
+
+
+func _preflight() -> String:
 	var story_scripts := 0
 	var dir := DirAccess.open("res://scripts/story")
 	if dir == null:
@@ -34,28 +60,16 @@ func _run() -> String:
 	print("OK story scripts=", story_scripts)
 	if ResourceLoader.exists("res://scenes/story/chapter1.tscn"):
 		return "chapter1.tscn still on the mainline"
-	var schema_err := _schemas()
-	if schema_err != "":
-		return schema_err
-	var ch0_err := _ch0_covers_four()
-	if ch0_err != "":
-		return ch0_err
-	var cond_err := _conditions()
-	if cond_err != "":
-		return cond_err
-	GameState.new_game("烬行", "灰旗", GameState.crest_color)
-	var face_err := await _no_borrowed_faces()
-	if face_err != "":
-		return face_err
-	var exit_err := _ch0_exit()
-	if exit_err != "":
-		return exit_err
-	var route_err := await _mainline_routing()
-	if route_err != "":
-		return route_err
-	var packed: PackedScene = load("res://scenes/story/chapter_player.tscn")
-	if packed == null:
-		return "player scene missing"
+	var err := _schemas()
+	if err != "":
+		return err
+	err = _ch0_covers_four()
+	if err != "":
+		return err
+	return _conditions()
+
+
+func _sample_flow(packed: PackedScene) -> String:
 	var player = packed.instantiate()
 	player.chapter_path = SAMPLE
 	player.lock_path = true
@@ -92,6 +106,10 @@ func _run() -> String:
 	if labels.find("把灯吹灭") >= 0:
 		return "not_flag failed to hide blow after sample_kept"
 	print("OK condition hides choice")
+	return _sample_battle_and_catalog(player)
+
+
+func _sample_battle_and_catalog(player) -> String:
 	GameState.set_flag("sample_kept", false)
 	player.simulate_goto_beat("s0")
 	player.simulate_finish_dialogue()
@@ -119,6 +137,10 @@ func _run() -> String:
 	if Catalog.archive_replay_enabled():
 		return "archive replay should stay closed"
 	print("OK catalog")
+	return ""
+
+
+func _ch0_marriage_gate(packed: PackedScene) -> String:
 	var ch0 = packed.instantiate()
 	ch0.chapter_path = CH0
 	ch0.lock_path = true
@@ -142,6 +164,33 @@ func _run() -> String:
 	if int(GameState.reputation.get("ashland", 0)) < 30:
 		return "spring reputation was not prepared"
 	print("OK ch0 marriage gate")
+	return ""
+
+
+## Opening review C-05 vignette, C-11 mid-beat resume.
+func _player_polish(packed: PackedScene) -> String:
+	GameState.house_mods["story_line"] = {"chapter": "sample", "beat": "s0", "line": 1}
+	GameState.story.set_beat(int(JSON.parse_string(FileAccess.get_file_as_string(SAMPLE)).get("legacy_index", 0)), "s0")
+	var p = packed.instantiate()
+	p.chapter_path = SAMPLE
+	p.lock_path = true
+	p.suppress_scene_change = true
+	add_child(p)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var at: int = p._line_idx
+	var vig: bool = p.find_child("PortraitVignette", true, false) != null
+	p.simulate_goto_beat("s1")
+	p.simulate_goto_beat("s0")
+	var replay: int = p._line_idx
+	p.queue_free()
+	if p.current_beat_id() != "s0" or at != 1:
+		return "C-11 resume line %d" % at
+	if replay != 0:
+		return "C-11 re-entering a beat should start at line 0, got %d" % replay
+	if not vig:
+		return "C-05 portrait vignette missing"
+	print("OK player polish C-05/C-11")
 	return ""
 
 func _continue_clears_text(player) -> String:
