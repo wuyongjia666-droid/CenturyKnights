@@ -23,7 +23,8 @@ var _sparks: Array = []
 static func enabled() -> bool:
 	if DisplayServer.get_name() == "headless":
 		return false
-	return bool(GameState.settings.get("board_units_3d", true))
+	# mobile: off by default until the P4 perf budget is verified (mobile-lag priority)
+	return bool(GameState.settings.get("board_units_3d", not DeviceProfile.is_mobile()))
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
