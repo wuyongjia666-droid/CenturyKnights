@@ -846,6 +846,17 @@ func mark_smith_revealed(iid: String) -> void:
 		a.append(iid)
 	GameState.settings["smith_revealed"] = a
 
+func list_signature_ids() -> Array:
+	## All signature weapon item ids (for shot seeding / reveal bookkeeping).
+	var out: Array = []
+	for it in items.values():
+		if int(it.get("signature", 0)) >= 1:
+			var iid := str(it.get("id", ""))
+			if iid != "":
+				out.append(iid)
+	return out
+
+
 func next_smith_reveal(city: String) -> Dictionary:
 	## First unrevealed signature arm for this city's smith (empty if none / all seen).
 	for e in smith_stock(city):
