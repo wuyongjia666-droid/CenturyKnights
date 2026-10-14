@@ -44,9 +44,16 @@ func _press(beat: String, label: String) -> String:
 		return "at %s want %s before %s" % [_player.current_beat_id(), beat, label]
 	_player.simulate_finish_dialogue()
 	await get_tree().process_frame
+	_player.test_capture["pay_stop"] = false
+	_player.test_capture.erase("pay_short")
 	if not _player.simulate_press_action_containing(label):
 		return "%s: no action %s in %s" % [beat, label, str(_player.action_labels())]
 	await get_tree().process_frame
+	if _player.test_capture.has("pay_short") and _player.current_beat_id() == beat:
+		# A-05: the fast-forward stopped on a short purse; press again to go ahead anyway.
+		if not _player.simulate_press_action_containing(label):
+			return "%s: no action %s after pay warning" % [beat, label]
+		await get_tree().process_frame
 	return ""
 
 func _scene_was(path: String) -> String:

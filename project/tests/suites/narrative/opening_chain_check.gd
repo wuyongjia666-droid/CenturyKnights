@@ -245,4 +245,32 @@ func _wages() -> String:
 			return "prologue companion %s deserted on unpaid wages" % k
 	if not names.has("wantan"):
 		return "new game roster has no wantan: %s" % str(names)
+	var morale_before := int(GameState.morale)
+	GameState.house_mods["unpaid_months"] = 1
+	GameState.house_mods.erase("morale_hold")
+	var note := CKMorale.on_payday(GameState, false)
+	var hired_left := note.find(Locale.t("morale.deserted").replace("%s", "")) >= 0
+	if not hired_left and note.find("下个月") < 0:
+		return "companion waive line missing: %s" % note
+	if not hired_left and int(GameState.morale) >= morale_before:
+		return "companion waive cost no morale"
+	return _pay_check()
+
+
+func _pay_check() -> String:
+	_fresh()
+	GameState.silver = 0
+	if CKEconomyState.monthly_wage(GameState) <= 0:
+		return "no wages to check against"
+	var player = load(PLAYER).instantiate()
+	var first: bool = player._pay_short()
+	var second: bool = player._pay_short()
+	var cap: Dictionary = player.test_capture
+	player.free()
+	if not first:
+		return "fast-forward did not stop on a short purse"
+	if second:
+		return "second press should go ahead anyway"
+	if int((cap.get("pay_short", [0, 0]) as Array)[1]) != 0:
+		return "pay_short capture %s" % cap
 	return ""
