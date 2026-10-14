@@ -1645,11 +1645,13 @@ func _open_deploy() -> void:
 	_goto("res://scenes/hub/deploy.tscn")
 
 ## WS-C #45: a lost site shows up as a modal the next time the atlas is on screen.
+## Improve-plan #1: show the contest report card and point at the auto「反夺」commission.
 func _check_losses() -> bool:
 	if not _modal.get_children().is_empty():
 		return false
 	var news: Array = CKTerritory.take_news()
 	var lines: Array = []
+	var reports: Array = []
 	var first_id := ""
 	for e in news:
 		var s := CKTerritory.site(str(e.get("id", "")))
@@ -1658,16 +1660,20 @@ func _check_losses() -> bool:
 		if first_id == "":
 			first_id = str(e.id)
 		lines.append(Locale.t("wsc_t_lost_line") % [str(e.get("date", "")), str(s.get("name", "")), str(e.get("who", ""))])
+		var rep := str(e.get("report", ""))
+		if rep != "":
+			reports.append(rep)
 	if lines.is_empty():
 		return false
-	var p := _modal_panel(230 + 22 * lines.size())
+	var extra := ("\n" + "\n".join(reports)) if not reports.is_empty() else ""
+	var p := _modal_panel(250 + 28 * lines.size() + 22 * reports.size())
 	p.name = "LossModal"
 	var t := UIKit.title_label(Locale.t("wsc_t_lost_title"), 24, UIKit.DANGER)
 	t.position = Vector2(24, 24)
 	p.add_child(t)
-	var body := UIKit.body_label("\n".join(lines) + "\n" + Locale.t("wsc_t_lost_hint"), UIKit.TEXT, 14)
+	var body := UIKit.body_label("\n".join(lines) + extra + "\n" + Locale.t("wsc_t_lost_hint") + "\n" + Locale.t("terr_54"), UIKit.TEXT, 14)
 	body.position = Vector2(24, 70)
-	body.size = Vector2(452, 60 + 22 * lines.size())
+	body.size = Vector2(452, 80 + 28 * lines.size() + 22 * reports.size())
 	p.add_child(body)
 	var go := UIKit.ghost_button(Locale.t("wsc_t_lost_go"), 200, 44)
 	go.name = "LossGo"

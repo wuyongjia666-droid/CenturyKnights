@@ -198,3 +198,11 @@ wsc_t_rival,对手占着,rival
 wsc_tv_rule,每月头 %d 次刷新不要钱，一个月最多刷 %d 次，之后每次 %d 银。下个月自动换一批人。,"First %d refresh(es) each month are free, up to %d per month, then %d silver each."
 morale.held_back,欠饷已两月，挽留下了要走的人,Two months unpaid; you talked the leaver into staying
 morale.nobody_left,欠饷已两月，好在没有人要走,Two months unpaid; nobody left
+terr_47,战报：驻军 %d · 自守约 %d%% · 来犯 %s · 月银 %d 停产,Report: garrison %d · hold ~%d%% · foe %s · monthly silver %d lost
+terr_48,%s委托榜贴出「%s」——去夺回来,"%s board posts ""%s"" — go retake it"
+terr_49,；%s已在我方手上,; %s is already ours
+terr_50,；反夺成功，%s重挂团旗,; retaken — banner over %s again
+terr_51,反夺·%s,Retake · %s
+terr_52,%s占着%s。赶到%s开战，打赢后回%s交令，团旗就能重新挂上。,"%s holds %s. Fight at %s, then report to %s to raise the banner again."
+terr_53,%s驻军独力守住（战前驻军 %d→%d，自守约 %d%%）,"%s garrison held alone (%d→%d before loss, hold ~%d%%)"
+terr_54,锚点城的委托榜已贴出「反夺」——接了就能去打回来。,The anchor board already posts a retake commission.
