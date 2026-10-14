@@ -38,9 +38,38 @@ func _check_data() -> String:
 	var names: Array = era.get("enemy_names", [])
 	if names.is_empty() or str(names[0]).find("林缘") < 0:
 		return "e1 enemy names"
+	var err := _check_board_triggers()
+	if err != "":
+		return err
 	var desc := BattleVictory.describe("ch0_pass", {})
 	if int(desc.get("skill_points", -1)) != 0:
 		return "tutorial skill points %s" % desc.get("skill_points")
+	return ""
+
+
+func _u(team: String, pos: Vector2i, tag := "") -> Dictionary:
+	return {"team": team, "pos": pos, "tag": tag, "char": {"hp": 10}}
+
+
+func _check_board_triggers() -> String:
+	var seize := {"type": "seize", "tile": [7, 3]}
+	if not BattleStory.board_triggers([_u("player", Vector2i(7, 3))], seize).is_empty():
+		return "past_seize fired on the seize tile"
+	if not BattleStory.board_triggers([_u("player", Vector2i(8, 3))], seize).has("past_seize"):
+		return "past_seize missing"
+	var esc := {"type": "escort", "npc": "grain", "exit_tile": [11, 1]}
+	var far := [_u("ally", Vector2i(1, 5), "grain"), _u("enemy", Vector2i(8, 2))]
+	if not BattleStory.board_triggers(far, esc).is_empty():
+		return "escort triggers fired early"
+	var near := [_u("ally", Vector2i(10, 2), "grain"), _u("enemy", Vector2i(9, 3))]
+	var got := BattleStory.board_triggers(near, esc)
+	if not got.has("npc_near_goal") or not got.has("npc_threatened"):
+		return "escort triggers %s" % [got]
+	for trig in ["npc_threatened", "npc_near_goal"]:
+		if BattleStory.lines_for("e1_reed_escort", trig).is_empty():
+			return "e1 %s lines missing" % trig
+	if BattleStory.lines_for("ch0_pass", "past_seize").is_empty():
+		return "ch0 past_seize lines missing"
 	return ""
 
 
