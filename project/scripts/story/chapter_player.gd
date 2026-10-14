@@ -828,7 +828,7 @@ func _build_month_report() -> void:
 
 func _sync_report() -> void:
 	_report_body.visible = _report_open
-	_report_toggle.text = ("▼ " if _report_open else "▶ ") + "月报 · " + Calendar.label() + ("" if _report_open else "（点开看）")
+	_report_toggle.text = ("▼ " if _report_open else "▶ ") + (Locale.t("pro_month_report_open") % Calendar.label() if _report_open else Locale.t("pro_month_report_closed") % Calendar.label())
 	_report.reset_size()
 
 func _show_month_report(evs: Array, warn: String) -> void:
@@ -838,13 +838,13 @@ func _show_month_report(evs: Array, warn: String) -> void:
 	var due := _birth_months_left()
 	if due >= 0 and not GameState.flag("child_born"):
 		rows.append("[color=#%s]%s[/color]" % [UIKit.ACCENT.to_html(false),
-			("孩子快落地了，下个月就该生了。" if due <= 1 else "离孩子落地还有大约 %d 个月。" % due)])
+			(Locale.t("pro_birth_soon") if due <= 1 else Locale.t("pro_birth_months") % due)])
 	for e in evs:
 		var t := str(e.get("text", "")).strip_edges()
 		if t != "":
 			rows.append("· " + t)
 	if rows.is_empty():
-		rows.append("这个月没出什么事。")
+		rows.append(Locale.t("pro_month_quiet"))
 	test_capture["month_report"] = "\n".join(rows)
 	_report_body.text = "\n".join(rows)
 	_report.visible = true
