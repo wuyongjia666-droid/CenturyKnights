@@ -62,8 +62,8 @@ func _sequence(b, out: String) -> void:
 	for f in 14:
 		await _snap(b, dir, n); n += 1
 	if b._unit_layer:
-		b._unit_layer.act(pl, "attack", b._unit_px(en.pos), b._unit_px(pl.pos))
-		b._unit_layer.act(en, "hit", b._unit_px(pl.pos), b._unit_px(en.pos))
+		b._unit_layer.act(pl, "attack", CKBoardUnits.cell_px(b, en.pos), CKBoardUnits.cell_px(b, pl.pos))
+		b._unit_layer.act(en, "hit", CKBoardUnits.cell_px(b, pl.pos), CKBoardUnits.cell_px(b, en.pos))
 	for f in 14:
 		await _snap(b, dir, n); n += 1
 	en.char.hp = 0
