@@ -2258,12 +2258,12 @@ func _show_lock_tip_once() -> void:
 	# E-02: tutorial maps wait for first_lock (and story bar) before teaching cards.
 	if _is_lock_tutorial_map():
 		return
-	_show_lock_tip_panel(
+	BattleLockTutorial.attach_dismiss(self, _show_lock_tip_panel(
 		"交战锁定",
 		"跟人缠上以后，想走要多花 %d 步；被缠住的人反击更准。想脱身，用战技『抽身一步』。" % BattleRules.LEAVE_COST_LOCK,
 		0,
 		8.0
-	)
+	))
 
 func _show_lock_tip_panel(title: String, body: String, step: int, auto_sec: float) -> Control:
 	var panel = UIKit.make_panel()

@@ -70,6 +70,7 @@ shell_lock_3t,③ 锁反与拆锁,3. Counter and break
 shell_lock_3b,被缠住的人反击更准（命中+10）。想脱身，用战技「抽身一步」或「拆锁突围」。,A locked unit counters at +10 hit. The arts Step Out and Break the Lock clear it.
 shell_lock_start,开始隘口教学,Start the pass lesson
 shell_lock_next,下一条,Next
+shell_lock_dismiss,关闭提示,Dismiss tip
 shell_lock_drill,【强制练习】交战锁定,[Drill] Engagement lock
 shell_lock_drill_tip,先选中单位 → 攻击模式 → 攻击一名敌人，触发锁定后才能结束回合。,"Select a unit, enter attack mode, and strike an enemy. End the turn after the lock triggers."
 shell_lock_final,【终局演练】交战锁定决战复习,[Final drill] Lock review
