@@ -121,6 +121,9 @@ func _ready() -> void:
 	motion.add_child(_check(_line("ux_haptics", Locale.t("shell_d678bca7")), Frost.haptics_enabled(), func(on):
 		GameState.settings["haptics"] = on
 	))
+	motion.add_child(_check(Locale.t("set_board_3d"), bool(GameState.settings.get("board_units_3d", true)), func(on):
+		GameState.settings["board_units_3d"] = on
+	))
 
 	var sound := _group(right, "a1_set_sound")
 	for bus in [["Master", "a1_vol_master"], ["Music", "a1_vol_music"], ["SFX", "a1_vol_sfx"]]:
