@@ -492,6 +492,15 @@ func _harmony_card(rect: Rect2, a: CKCharacter, b: CKCharacter) -> void:
 	preview_y = minf(preview_y, rect.size.y - preview_h - 6.0)
 	## never ride up over the big harmony number
 	preview_y = maxf(preview_y, big.position.y + bw.y + 2.0)
+	var one_line := need_h > rect.size.y - preview_y - 4.0
+	if one_line:
+		## tight panel: fold each chip into one line ("骁勇 55%") so nothing spills out
+		chip_h = 0.0
+		for pr in chips:
+			(pr[0] as Label).text = "%s %s" % [(pr[0] as Label).text, (pr[1] as Label).text.replace(" 显性", "")]
+			(pr[0] as Label).add_theme_font_size_override("font_size", 11)
+			chip_h = maxf(chip_h, (pr[0] as Label).get_minimum_size().y + 4.0)
+		preview_h = 4.0 + title_h + 4.0 + rows * chip_h + (rows - 1) * 4.0 + 4.0
 	preview_h = minf(preview_h, rect.size.y - preview_y - 4.0)
 	for n in p.get_children():
 		if n is Control and n != big and n != pc and (n as Control).position.y >= 160.0 and (n as Control).position.y + (n as Control).size.y > preview_y:
@@ -521,6 +530,10 @@ func _harmony_card(rect: Rect2, a: CKCharacter, b: CKCharacter) -> void:
 		cn.position = Vector2(2, 4)
 		cn.size = Vector2(cw - 4, h1)
 		chip.add_child(cn)
+		if one_line:
+			cn.position.y = 2
+			cp.free()
+			continue
 		cp.clip_text = true
 		cp.position = Vector2(2, 4 + h1)
 		cp.size = Vector2(cw - 4, cp.get_minimum_size().y)
