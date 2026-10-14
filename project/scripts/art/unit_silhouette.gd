@@ -20,7 +20,7 @@ static func apply(n: Node3D, c, team: String) -> void:
 	_to_sk = _rel(n, sk).affine_inverse()
 	var enemy := team == "enemy"
 	var role := BattleRules.job_role(str(c.job_id))
-	var crest: Color = UnitArt.crest_color()
+	var crest: Color = UnitArt.house_color()
 	var side_col := Color.from_hsv(crest.h, 0.55, 0.42) if not enemy else Color(0.42, 0.14, 0.10)
 	var head := _att(sk, "head")
 	if head and enemy:
