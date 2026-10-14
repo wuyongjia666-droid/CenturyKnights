@@ -270,11 +270,13 @@ func _render() -> void:
 		v.add_child(UIKit.mono(str(it[1]), 15, it[2], false))
 		dr.add_child(v)
 	var tok := TextureRect.new()
-	tok.texture = UnitArt.token(c, "player", 64, false)
+	tok.texture = UnitArt.token(c, "player", 64, false)  # placeholder until the 3D figure lands
 	tok.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	tok.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	tok.position = Vector2(716, 430)
-	tok.size = Vector2(56, 56)
+	tok.position = Vector2(694, 404)
+	tok.size = Vector2(84, 112)
+	if UnitArt.board_pawns_enabled():
+		CKBoardFigures.ensure(self).bind(tok, c, "player")
 	tok.tooltip_text = "战棋棋子预览"
 	p.add_child(tok)
 	var fh := UIKit.hairline(Color(1, 1, 1, 0.07))
@@ -420,6 +422,14 @@ func _render_mobile() -> void:
 	info.add_child(dg)
 	for it in _derived_rows(c, c.derived_move() + CKInjury.move_mod(c)):
 		dg.add_child(MobilePage.label("%s %s" % [it[0], it[1]], it[2], MobilePage.FONT, false))
+	if UnitArt.board_pawns_enabled():  # board-piece preview: same 3D figure as the battle grid
+		var fig := TextureRect.new()
+		fig.custom_minimum_size = Vector2(170, 240)
+		fig.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		fig.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		fig.tooltip_text = "战棋棋子预览"
+		top.add_child(fig)
+		CKBoardFigures.ensure(self).bind(fig, c, "player")
 	var br := HBoxContainer.new()
 	br.add_theme_constant_override("separation", 10)
 	_m_dossier.add_child(br)
