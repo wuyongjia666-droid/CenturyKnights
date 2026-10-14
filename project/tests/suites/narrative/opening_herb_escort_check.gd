@@ -43,9 +43,9 @@ func _run() -> String:
 	var ar: Dictionary = World.accept_opening_herb_escort()
 	if not bool(ar.get("ok", false)):
 		return "accept failed: %s" % ar.get("msg")
-	if GameState.silver < before + 60:
-		return "silver %d → %d, expected +60" % [before, GameState.silver]
+	# accept_quest advances one month first (upkeep), then pays +60.
 	if not bool(GameState.quest_done.get("q_opening_herb_escort", false)):
-		# accept_quest may mark via first_clear; check silver gain is enough
-		pass
+		return "quest_done not set"
+	if GameState.silver < before + 20:
+		return "silver %d → %d, expected net gain after monthly upkeep" % [before, GameState.silver]
 	return ""
