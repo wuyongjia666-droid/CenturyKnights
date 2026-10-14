@@ -42,7 +42,9 @@
   "stockade_silver": 12,
   "stockade_food": 6,
   "contract_silver": 6,
-  "contract_food": 6
+  "contract_food": 6,
+  "bribe_cost": 50,
+  "scout_cost": 20
  },
  "sites": [
   {
