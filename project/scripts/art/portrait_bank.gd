@@ -25,6 +25,10 @@ static var _disk_indexed := false
 ## bucket_key -> "m"/"f". Packed in res:// so the device (no farm manifest) still filters by sex.
 const SEX_INDEX := "res://data/art/genome_bank_sex.json"
 static var _sex_by_key: Dictionary = {}
+## stage -> sorted plate stems, written by tools/art/write_bank_stems.py. Exports read this
+## instead of listing the bank: Android serves res:// from APK assets, where listing ~4.8k
+## .import sidecars is one JNI AssetManager.list() per entry and the leader/candidates came up blank.
+const STEMS_INDEX := "res://data/art/genome_bank_stems.json"
 static var _sex_ready := false
 
 static func manifest_path() -> String:
@@ -65,6 +69,10 @@ static func clear_cache() -> void:
 
 static func has_plates() -> bool:
 	if _plates_known:
+		return _plates
+	if dir_override == "" and _load_stems_index():
+		_plates = not _disk_by_stage.is_empty()
+		_plates_known = true
 		return _plates
 	_plates = _dir_has_plate(bank_dir())
 	_plates_known = true
@@ -432,6 +440,8 @@ static func _ensure_disk_index() -> void:
 	if _disk_indexed:
 		return
 	_disk_by_stage.clear()
+	if dir_override == "" and _load_stems_index():
+		return
 	var dir := bank_dir()
 	if not DirAccess.dir_exists_absolute(dir):
 		_disk_indexed = true
@@ -460,6 +470,25 @@ static func _ensure_disk_index() -> void:
 		(_disk_by_stage[st2] as Array).sort()
 	_disk_indexed = true
 
+
+## Fill _disk_by_stage from the packed index. False when the index is absent or empty.
+static func _load_stems_index() -> bool:
+	if _disk_indexed:
+		return not _disk_by_stage.is_empty()
+	if not FileAccess.file_exists(STEMS_INDEX):
+		return false
+	var parsed = JSON.parse_string(FileAccess.get_file_as_string(STEMS_INDEX))
+	if typeof(parsed) != TYPE_DICTIONARY or typeof(parsed.get("stems")) != TYPE_DICTIONARY:
+		return false
+	_disk_by_stage.clear()
+	for st in (parsed["stems"] as Dictionary).keys():
+		var arr: Array = []
+		for k in parsed["stems"][st]:
+			arr.append(str(k))
+		if not arr.is_empty():
+			_disk_by_stage[str(st)] = arr
+	_disk_indexed = true
+	return not _disk_by_stage.is_empty()
 
 static func plate_sex(bucket_key: String) -> String:
 	if not _sex_ready:
@@ -496,7 +525,12 @@ static func _disk_stage_plate(c: Object, stage: String, tier: String) -> Texture
 	if c != null:
 		seed = CKGenomePortrait.identity_seed(c)
 	var idx: int = absi(seed) % keys.size()
-	return _load_plate(str(keys[idx]), tier)
+	## A stale index entry must not blank a face: walk on to the next plate of the stage.
+	for step in mini(keys.size(), 8):
+		var tex := _load_plate(str(keys[(idx + step) % keys.size()]), tier)
+		if tex != null:
+			return tex
+	return null
 
 
 ## Exported packs list "x.webp.import" / "x.webp.remap" instead of "x.webp".
