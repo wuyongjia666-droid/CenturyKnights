@@ -1,6 +1,7 @@
 class_name BattleMobileBar
 extends RefCounted
-## Phone command bar. ≤4 primary keys ≥48dp; confirm flow swaps the row.
+## Phone command bar. Matches desktop: Attack / Art / Wait / End-turn.
+## Confirm flow swaps the row; end-turn always asks once more.
 
 static func build(host) -> void:
 	if not DeviceProfile.is_mobile():
@@ -14,8 +15,8 @@ static func build(host) -> void:
 	st.border_width_left = 0
 	st.border_width_right = 0
 	st.border_width_bottom = 0
-	st.content_margin_left = 12
-	st.content_margin_right = 12
+	st.content_margin_left = 10
+	st.content_margin_right = 10
 	st.content_margin_top = 8
 	st.content_margin_bottom = 8
 	host._mobile_bar.add_theme_stylebox_override("panel", st)
@@ -47,10 +48,11 @@ static func rebuild(host) -> void:
 		command(row, Locale.t("ux_confirm_attack"), h, true, func(): BattleTouchConfirm.confirm_attack(host))
 		command(row, Locale.t("shell_4d0b4688"), h, false, func(): BattleTouchConfirm.clear(host))
 	else:
+		# Match desktop order: Attack / Art / Wait / End turn.
 		command(row, Locale.t("shell_8669d292"), h, false, host._enter_attack_mode)
+		command(row, Locale.t("shell_41ec1a25"), h, false, host._cycle_skill)
 		command(row, Locale.t("shell_1a0db8dc"), h, false, host._wait_selected)
-		command(row, Locale.t("shell_4d0b4688"), h, false, host._cancel_selection)
-		command(row, Locale.t("ux_more_cmds"), h, true, func(): BattleTouchConfirm.overflow_menu(host))
+		command(row, Locale.t("shell_4faa58f5"), h, true, func(): BattleTouchConfirm.request_end_turn(host))
 	place(host)
 
 static func command(row: BoxContainer, text: String, h: int, accent: bool, cb: Callable) -> Button:
@@ -58,6 +60,8 @@ static func command(row: BoxContainer, text: String, h: int, accent: bool, cb: C
 	b.custom_minimum_size = Vector2(0, maxi(h, 76) if row is VBoxContainer else h)
 	b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	b.add_theme_font_size_override("font_size", 22 if row is VBoxContainer else 15)
+	b.clip_text = false
+	b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	b.pressed.connect(cb)
 	row.add_child(b)
 	return b
@@ -77,10 +81,9 @@ static func place(host) -> void:
 		# Right-edge thumb column: board keeps the full height.
 		var top := maxf(float(insets.get("top", 0.0)), 8.0)
 		var sx: float = host.scale.x if host.scale.x > 0.01 else 1.0
-		var w: float = (host.MOBILE_RAIL_W - 8.0) * sx
-		host._mobile_bar.position = Vector2(vp.x - right - w - 6.0, top + vp.y * 0.30)
-		host._mobile_bar.size = Vector2(w, vp.y * 0.70 - top - bottom)
+		var w: float = (host.MOBILE_RAIL_W - 4.0) * sx
+		host._mobile_bar.position = Vector2(vp.x - right - w - 4.0, top + vp.y * 0.22)
+		host._mobile_bar.size = Vector2(w, vp.y * 0.78 - top - bottom)
 		return
-	# Dead zone: keep bar a few dp above the board so pans don't mis-tap.
 	host._mobile_bar.position = Vector2(left, vp.y - bottom - h)
 	host._mobile_bar.size = Vector2(maxf(240.0, vp.x - left - right), h)

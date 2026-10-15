@@ -360,6 +360,7 @@ func _build_ui() -> void:
 	_unit_panel.add_child(left_info)
 	_unit_card = UnitCardScript.new(RAIL_W - 44.0)
 	left_info.add_child(_unit_card)
+	_unit_card.skill_pressed.connect(_arm_skill)
 	_portrait = _unit_card.portrait
 	_info_traits = HBoxContainer.new()
 	_info_traits.add_theme_constant_override("separation", 4)
@@ -601,86 +602,16 @@ func _build_ground() -> void:
 	host.move_child(frame, _ground.get_index())
 
 func _player_skills(ui: int) -> Array:
-	if ui < 0 or ui >= units.size():
-		return []
-	if not BattleObjectives.skills_allowed(BattleMaps.get_map(map_id)):
-		return []
-	var c: CKCharacter = units[ui].char
-	var out: Array = []
-	for sid in c.skills:
-		var left = int(c.skill_uses.get(sid, 0))
-		var cd = int(c.skill_cd.get(sid, 0))
-		if left > 0 and cd <= 0:
-			out.append(sid)
-	return out
+	return BattleSkillsUi.player_skills(self, ui)
 
 func _cycle_skill() -> void:
-	if selected < 0 or selected >= units.size():
-		_log("请先选中己方单位再选战技")
-		return
-	var su = units[selected]
-	if su.team != "player" or su.done:
-		_log("当前单位无法使用战技")
-		return
-	var avail = _player_skills(selected)
-	if avail.is_empty():
-		_log("本场战技已用尽或未学会——去演武场转职可解锁")
-		skill_mode = false
-		active_skill_id = ""
-		_update_skill_hint()
-		return
-	# cycle
-	if active_skill_id == "" or active_skill_id not in avail:
-		active_skill_id = avail[0]
-	else:
-		var idx = avail.find(active_skill_id)
-		idx = (idx + 1) % avail.size()
-		active_skill_id = avail[idx]
-	var sk = GameState.get_skill(active_skill_id)
-	var typ = str(sk.get("type", "offense"))
-	if typ == "support":
-		_cast_support_skill(selected, active_skill_id)  # instant heal adjacent
-		return
-	if typ == "buff":
-		_cast_buff_skill(selected, active_skill_id)
-		return
-	skill_mode = true  # offense: arm for next attack
-	attack_mode = true
-	if sk.get("ignore_zoc"):
-		su.char.temp_ignore_zoc = true
-		if not moved_this_select:
-			move_cells = _compute_move_cells(selected)
-			attack_mode = false
-			_log("破控冲锋就绪：可无视控制地带移动后再攻击 — %s" % sk.get("desc", ""))
-		else:
-			move_cells.clear()
-			_log("战技已就绪：%s — %s" % [sk.get("name", ""), sk.get("desc", "")])
-	else:
-		move_cells.clear()
-		_log("战技已就绪：%s — %s" % [sk.get("name", ""), sk.get("desc", "")])
-	_update_skill_hint()
-	overlay.queue_redraw()
-	_refresh_info()
+	BattleSkillsUi.cycle(self)
+
+func _arm_skill(sid: String) -> void:
+	BattleSkillsUi.arm(self, sid)
 
 func _update_skill_hint() -> void:
-	if _skill_hint == null:
-		return
-	if selected >= 0 and selected < units.size() and units[selected].team == "player":
-		var parts: Array = []
-		for sid in units[selected].char.skills:
-			var sk = GameState.get_skill(sid)
-			var left = int(units[selected].char.skill_uses.get(sid, 0))
-			var cd = int(units[selected].char.skill_cd.get(sid, 0))
-			if cd > 0:
-				parts.append("%sCD%d" % [sk.get("name", sid), cd])
-			else:
-				parts.append("%s×%d" % [sk.get("name", sid), left])
-		var armed = ""
-		if active_skill_id != "":
-			armed = "　【将释放：%s】" % GameState.get_skill(active_skill_id).get("name", active_skill_id)
-		_skill_hint.text = ("战技：" + " · ".join(parts) if parts else "战技：无") + armed
-	else:
-		_skill_hint.text = Locale.t("shell_94db6f97")
+	BattleSkillsUi.update_hint(self)
 
 func _consume_skill(c: CKCharacter, sid: String) -> void:
 	var left = int(c.skill_uses.get(sid, 0))
@@ -1539,7 +1470,7 @@ func _apply_board_gesture(g: Dictionary) -> void:
 		"tap":
 			if turn_team != "player" or _cut_playing:
 				return
-			var cell := _pointer_to_cell(pos)
+			var cell := BattlePick.resolve(self, pos)
 			if cell.x < 0:
 				return
 			_click_cell(cell)
@@ -1558,9 +1489,6 @@ func _apply_board_gesture(g: Dictionary) -> void:
 
 func _build_mobile_bar() -> void:
 	BattleMobileBar.build(self)
-
-func _mobile_cmd(row: HBoxContainer, text: String, h: int, accent: bool, cb: Callable) -> Button:
-	return BattleMobileBar.command(row, text, h, accent, cb)
 
 func _place_mobile_bar() -> void:
 	BattleMobileBar.place(self)
@@ -1624,6 +1552,7 @@ func _select_player(ui: int) -> void:
 	move_cells = _compute_move_cells(ui)
 	_refresh_info()
 	_update_skill_hint()
+	BattlePick.focus_selected(self)
 	if DeviceProfile.is_mobile():
 		BattleMobileBar.rebuild(self)
 	overlay.queue_redraw()
