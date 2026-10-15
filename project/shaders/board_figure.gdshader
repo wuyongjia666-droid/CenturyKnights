@@ -27,6 +27,8 @@ uniform float face_yaw = 0.0;
 uniform float use_face = 0.0;
 uniform float exposure = 1.0;
 uniform float head_raw = 0.0;
+uniform float face_clear = 0.0;
+uniform float collar_dark = 0.0;
 uniform float force_metal = 0.0;
 uniform float force_slot = -1.0;
 uniform float model_h = 1.85;
@@ -137,6 +139,9 @@ vec3 grade_albedo(vec4 t4, vec4 tc, float h01, vec3 mn) {
 	// enemy hooded faces: keep the model's own painted head (hood shadow, stubble, eyes)
 	vec3 raw = t * vec3(1.06, 1.0, 0.96);
 	col = mix(col, raw, head_raw * head * (1.0 - plain));
+	// captain: standing collar band under the jaw = black high-neck shirt (no grey blob)
+	float collar_band = smoothstep(head_h - 0.055, head_h - 0.03, h01) * (1.0 - smoothstep(head_h + 0.005, head_h + 0.03, h01));
+	col = mix(col, palette[4].rgb, collar_dark * collar_band * (1.0 - skin_w));
 	return mix(col, palette[2].rgb, eye_w);
 }
 
@@ -195,6 +200,11 @@ void fragment() {
 			vec3 fc = fd.rgb * mix(vec3(1.0), palette[1].rgb / max(vec3(0.2), vec3(dot(fd.rgb, vec3(0.333)))) * 0.55, 0.25);
 			fc = mix(fc * 1.08, simple, lodw);
 			float fw = mix(fd.a, max(fd.a, fl.a), lodw) * inb * fr;
+			// hunter: clear the model's dark hair card inside the face oval
+			vec2 oc = (fuv - vec2(0.5, 0.55)) / vec2(0.36, 0.40);
+			float oval = 1.0 - smoothstep(0.75, 1.0, length(oc));
+			base = mix(base, palette[1].rgb, face_clear * oval * fr * (1.0 - fw));
+			fw = max(fw, face_clear * oval * fr * 0.9 * step(0.05, fd.a));
 			base = mix(base, fc, fw);
 			v_face_w = fw;
 		}

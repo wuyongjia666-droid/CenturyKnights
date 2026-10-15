@@ -283,7 +283,14 @@ static func _board_lift(n: Node, ally: bool) -> void:
 					mats.append(m)
 		for m2 in mats:
 			var sm := m2 as ShaderMaterial
-			sm.set_shader_parameter("exposure", 1.15 if ally else 1.10)
+			# bright coats (hunter's ice/fur) bleach on the dark board — scale exposure by coat luma
+			var pal_arr = sm.get_shader_parameter("palette")
+			var coat_l := 0.3
+			if pal_arr is Array and (pal_arr as Array).size() > 3:
+				var cc: Color = pal_arr[3]
+				coat_l = cc.get_luminance()
+			var ex := clampf(1.15 - maxf(0.0, coat_l - 0.32) * 1.2, 0.92, 1.15)
+			sm.set_shader_parameter("exposure", ex if ally else 1.10)
 			# top-down camera puts most of the figure in the wrap shadow: lift shadow floor
 			sm.set_shader_parameter("shadow_mul", Vector3(0.66, 0.66, 0.68) if ally else Vector3(0.55, 0.57, 0.64))
 			var r = sm.get_shader_parameter("rim_amt")

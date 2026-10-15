@@ -826,6 +826,7 @@ static func _sample_from_image(out: Dictionary, img: Image) -> void:
 	var dark := Color(0, 0, 0)
 	var nd := 0
 	var skin_w := 0.0
+	var skin_list: Array[Color] = []
 	for y in 60:
 		for x in range(6, 42):
 			var col := sm.get_pixel(x, y)
@@ -836,6 +837,7 @@ static func _sample_from_image(out: Dictionary, img: Image) -> void:
 				skin += col * w
 				ns += 1
 				skin_w += w
+				skin_list.append(col)
 			elif y < 22 and lum < 0.32:
 				hair += col
 				nh += 1
@@ -848,6 +850,13 @@ static func _sample_from_image(out: Dictionary, img: Image) -> void:
 					nc += 1
 	if ns > 0 and skin_w > 0.0:
 		out["skin"] = skin / skin_w
+	if skin_list.size() > 6:
+		skin_list.sort_custom(func(a, b): return a.get_luminance() > b.get_luminance())
+		var acc := Color(0, 0, 0)
+		var m := maxi(1, int(skin_list.size() * 0.3))
+		for i in m:
+			acc += skin_list[i]
+		out["skin"] = acc / m
 	if nh > 0:
 		out["hair"] = hair / nh
 	if nc > 0:
@@ -1340,6 +1349,13 @@ static func _apply_face_decal(unit: Node3D, c, team: String, tmpl: String) -> vo
 	var hh := 0.125 * H
 	var box := Vector4(float(hb["cx"]), float(hb["ytop"]) - 0.16 * hh, float(hb["ytop"]) - 1.02 * hh, 0.088 * H)
 	_bake_bind_custom0(mi, mp)
+	var clear := 1.0 if (c != null and str(c.cast_key) == "dengying") else 0.0
+	var collar := 1.0 if (c != null and bool(c.is_leader)) else 0.0
+	for si1 in mi.mesh.get_surface_count():
+		var m1 = mi.get_surface_override_material(si1)
+		if m1 is ShaderMaterial:
+			(m1 as ShaderMaterial).set_shader_parameter("face_clear", clear)
+			(m1 as ShaderMaterial).set_shader_parameter("collar_dark", collar)
 	for si in mi.mesh.get_surface_count():
 		var m = mi.get_surface_override_material(si)
 		if m is ShaderMaterial:
@@ -1435,6 +1451,50 @@ static func _add_ring(st: SurfaceTool, c: Vector3, rx: float, rz: float, tube: f
 
 
 ## Flattened dome (armour plate), opening downward-outward.
+## Angular ice-armour shard: kite-shaped plate with a raised keel, flat-shaded facets,
+## tipped outward/down over the shoulder.
+static func _add_shard(st: SurfaceTool, c: Vector3, w: float, h: float, keel: float, side: float, seed_i: int) -> void:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed_i
+	var tilt := Basis(Vector3(0, 0, 1), -side * 0.55)
+	var rim: Array[Vector3] = []
+	var n := 7
+	for i in n:
+		var a := TAU * i / n
+		var rr := 1.0 + 0.22 * (rng.randf() * 2.0 - 1.0)
+		# pointed outer tip
+		if i == 0:
+			rr = 1.45
+		rim.append(Vector3(cos(a) * w * 0.5 * rr * side, sin(a) * h * 0.30 * rr, sin(a) * h * 0.5 * rr))
+	var top := Vector3(0, keel, 0)
+	var bot := Vector3(0, -keel * 0.35, 0)
+	for i in n:
+		var a0: Vector3 = tilt * rim[i] + c
+		var a1: Vector3 = tilt * rim[(i + 1) % n] + c
+		for tri in [[tilt * top + c, a0, a1], [tilt * bot + c, a1, a0]]:
+			var nrm: Vector3 = (tri[1] - tri[0]).cross(tri[2] - tri[0]).normalized()
+			for v in [tri[0], tri[1], tri[2], tri[0], tri[2], tri[1]]:
+				st.set_normal(nrm)
+				st.add_vertex(v)
+
+
+## Tapered flat-ish ribbon lock through 3 points, thickness for volume.
+static func _add_lock(st: SurfaceTool, pts: Array, w0: float, w1: float, outw: Vector3) -> void:
+	var side := outw.cross(Vector3.UP).normalized()
+	for k in pts.size() - 1:
+		var a: Vector3 = pts[k]
+		var b: Vector3 = pts[k + 1]
+		var wa := lerpf(w0, w1, float(k) / (pts.size() - 1))
+		var wb := lerpf(w0, w1, float(k + 1) / (pts.size() - 1))
+		var th := outw * 0.008 * (1.0 - float(k) / pts.size())
+		var q := [a - side * wa, a + side * wa, b + side * wb, b - side * wb]
+		for off in [Vector3.ZERO, -outw * 0.01]:
+			var nrm := outw if off == Vector3.ZERO else -outw
+			for idx in [0, 1, 2, 0, 2, 3, 0, 2, 1, 0, 3, 2]:
+				st.set_normal(nrm)
+				st.add_vertex(q[idx] + off + th)
+
+
 static func _add_dome(st: SurfaceTool, c: Vector3, r: float, ry: float, segs: int) -> void:
 	for i in segs:
 		for j in segs / 2:
@@ -1491,19 +1551,60 @@ static func _attach_hunter_extras(unit: Node3D, mi: MeshInstance3D, pal: Diction
 		var sxe := sx_max if side > 0.0 else sx_min
 		var st3 := SurfaceTool.new()
 		st3.begin(Mesh.PRIMITIVE_TRIANGLES)
-		var pc := Vector3(sxe - side * 0.035 * H, y0 + 0.795 * H, hzc)
-		_add_dome(st3, pc, 0.056 * H, 0.046 * H, 14)
-		_add_dome(st3, pc + Vector3(side * 0.016 * H, -0.034 * H, 0), 0.050 * H, 0.036 * H, 14)
+		var pc := Vector3(sxe - side * 0.030 * H, y0 + 0.800 * H, hzc)
+		# three overlapping faceted shards stepping down the shoulder (ice lamellae)
+		for k in 3:
+			var c3 := pc + Vector3(side * (0.012 * k) * H, -0.026 * k * H, 0.004 * H * k)
+			_add_shard(st3, c3, 0.060 * H - 0.006 * k * H, 0.040 * H, 0.016 * H, side, 310 + k + (0 if side > 0.0 else 7))
 		var pm := MeshInstance3D.new()
 		pm.name = "IcePauldronExtra"
 		pm.mesh = st3.commit()
-		pm.material_override = _slot_mat(pal, Color8(168, 192, 222), 1.0, 0.45)
+		pm.material_override = _slot_mat(pal, Color8(176, 200, 226), 1.0, 0.30)
 		plates.append([pm, "upper_arm.L" if side > 0.0 else "upper_arm.R"])
+	# long voluminous hair (portrait: blue-black, past the shoulders, side locks framing face)
+	var st4 := SurfaceTool.new()
+	st4.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var hcx := cx
+	var hcy := float(hb["ytop"]) - 0.060 * H
+	var hrad: float = float(hb["head_w"]) * 0.40
+	var rng2 := RandomNumberGenerator.new()
+	rng2.seed = 3101
+	# crown volume shell (low, so the circlet sits on top of it)
+	_add_dome(st4, Vector3(hcx, hcy + 0.010 * H, hzc - 0.010 * H), hrad * 1.04, 0.058 * H, 14)
+	var locks := 22
+	for i in locks:
+		var ang := deg_to_rad(lerpf(78.0, 282.0, float(i) / (locks - 1)) + (rng2.randf() - 0.5) * 8.0)
+		var root := Vector3(hcx + sin(ang) * hrad, hcy + (0.022 + 0.02 * rng2.randf()) * H, hzc - 0.008 * H + cos(ang) * hrad)
+		var outw := Vector3(sin(ang), 0, cos(ang))
+		var len := 0.22 * H * (0.75 + 0.4 * rng2.randf())
+		var sway := Vector3(rng2.randf() - 0.5, 0, rng2.randf() - 0.5) * 0.03 * H
+		var p1 := root + outw * 0.030 * H + Vector3(0, -len * 0.25, 0)
+		var p2 := root + outw * 0.045 * H + Vector3(0, -len * 0.55, 0) + sway
+		var p3 := root + outw * (0.040 + 0.03 * rng2.randf()) * H + Vector3(0, -len, 0) + sway * 1.8
+		_add_lock(st4, [root, p1, p2, p3], (0.016 + 0.010 * rng2.randf()) * H, 0.002 * H, outw)
+	# side locks framing the face (thin, behind cheek line)
+	for sgn3 in [-1.0, 1.0]:
+		for j in 2:
+			var ang2 := deg_to_rad(sgn3 * (64.0 + j * 7.0))
+			var r0 := Vector3(hcx + sin(ang2) * hrad * 1.02, hcy + 0.028 * H, hzc + cos(ang2) * hrad * 0.95)
+			var ow := Vector3(sin(ang2), 0, cos(ang2) * 0.4).normalized()
+			_add_lock(st4, [r0, r0 + ow * 0.012 * H + Vector3(0, -0.06 * H, 0), r0 + ow * 0.02 * H + Vector3(0, -0.13 * H, 0.004 * H)], 0.010 * H, 0.002 * H, ow)
+	# messy fringe: short pointed strands over the brow (portrait)
+	for f in 5:
+		var fa := deg_to_rad(lerpf(-32.0, 32.0, f / 4.0))
+		var fr0 := Vector3(hcx + sin(fa) * hrad * 0.9, hcy + 0.052 * H, hzc + cos(fa) * hrad * 0.85)
+		var fw := Vector3(sin(fa) * 0.5, 0, 1).normalized()
+		_add_lock(st4, [fr0, fr0 + fw * 0.020 * H + Vector3(0, -0.020 * H, 0), fr0 + fw * 0.024 * H + Vector3(sin(fa) * 0.01 * H, -0.040 * H, 0)], 0.010 * H, 0.0015 * H, fw)
+	var hair := MeshInstance3D.new()
+	hair.name = "LongHairExtra"
+	hair.mesh = st4.commit()
+	var hp := pal.get("hair", Color8(39, 50, 75)) as Color
+	hair.material_override = _slot_mat(pal, hp.lightened(0.06), 0.0, 0.35)
 	_bone_attach(mi, "chest", [fur])
-	_bone_attach(mi, "head", [circ])
+	_bone_attach(mi, "head", [circ, hair])
 	for pr in plates:
 		_bone_attach(mi, str(pr[1]), [pr[0]])
-	unit.set_meta("ck_outfit_extras", ["fur_collar", "circlet", "ice_pauldrons"])
+	unit.set_meta("ck_outfit_extras", ["fur_collar", "circlet", "ice_pauldrons", "long_hair"])
 
 
 ## Bake bind-pose position + normal.z into CUSTOM0 so the face decal projects in bind
@@ -1571,7 +1672,9 @@ static func _attach_outfit_extras(unit: Node3D, c, team: String, pal: Dictionary
 		]
 		for pi in pts.size():
 			var pp: Vector3 = pts[pi]
-			pts[pi] = Vector3(pp.x, pp.y, _front_z(mi, pp.x, pp.y, 0.03 * H, pp.z) + 0.010 * H)
+			# roll line (inner edge 0-5-6) stands proud; outer edge lies on the coat → real fold
+			var lift := 0.020 * H if pi in [0, 5, 6] else 0.006 * H
+			pts[pi] = Vector3(pp.x, pp.y, _front_z(mi, pp.x, pp.y, 0.03 * H, pp.z) + lift)
 		var tris := [[0, 5, 1], [1, 5, 2], [2, 5, 3], [3, 5, 4], [5, 6, 4]]
 		for t in tris:
 			var a: Vector3 = pts[t[0]]
@@ -1637,45 +1740,40 @@ static func _attach_outfit_extras(unit: Node3D, c, team: String, pal: Dictionary
 	_add_bar(st2, pend + Vector3(0, 0.014 * H, 0), pend - Vector3(0, 0.026 * H, 0), 0.0040 * H)  # key shaft
 	_add_bar(st2, pend + Vector3(-0.007 * H, 0.008 * H, 0), pend + Vector3(0.007 * H, 0.008 * H, 0), 0.0045 * H)  # bow
 	_add_bar(st2, pend - Vector3(0, 0.022 * H, 0), pend - Vector3(-0.008 * H, 0.022 * H, 0), 0.0028 * H)  # bit
-	# Sleeve emblem (portrait: silver compass-star patch on his left upper arm).
-	var arm_x := -1e9
-	var arm_z := 0.0
+	# Sleeve emblem (portrait: silver compass-star on his left upper arm), front-outer face.
+	var best_v := Vector3(-1e9, 0, 0)
 	for v in _verts_of(mi):
 		var hy := (v.y - y0) / H
-		if hy > 0.68 and hy < 0.73 and v.x > arm_x:
-			arm_x = v.x
-			arm_z = v.z
-	if arm_x > -1e8:
-		var ac := Vector3(arm_x - 0.045 * H + 0.049 * H, y0 + 0.700 * H, arm_z)
-		var rr := 0.014 * H
-		for k in 4:
-			var ang := k * PI * 0.5
-			var tip := ac + Vector3(0, cos(ang), -sin(ang)) * rr
-			var ang2 := ang + PI * 0.25
-			var l := ac + Vector3(0, cos(ang2 - PI * 0.5), -sin(ang2 - PI * 0.5)) * rr * 0.35
-			var r2 := ac + Vector3(0, cos(ang2), -sin(ang2)) * rr * 0.35
-			for vv in [ac, tip, r2, ac, r2, tip, ac, l, tip, ac, tip, l]:
-				st2.set_normal(Vector3(1, 0, 0))
-				st2.set_color(Color(8.0 / 255.0, 1.0, 0.0))
-				st2.add_vertex(vv)
-		# band ring (darker coat) round the sleeve
-		for k2 in 12:
-			var a0 := k2 * TAU / 12.0
-			var a1 := (k2 + 1) * TAU / 12.0
-			var ctr := Vector3(arm_x - 0.045 * H, 0, arm_z)
-			var rad := 0.047 * H
-			var q0 := ctr + Vector3(cos(a0) * rad, 0, sin(a0) * rad)
-			var q1 := ctr + Vector3(cos(a1) * rad, 0, sin(a1) * rad)
-			var ya := y0 + 0.672 * H
-			var yb := y0 + 0.684 * H
-			var A := Vector3(q0.x, ya, q0.z)
-			var B := Vector3(q1.x, ya, q1.z)
-			var C := Vector3(q1.x, yb, q1.z)
-			var D := Vector3(q0.x, yb, q0.z)
-			for vb in [A, B, C, A, C, D, A, C, B, A, D, C]:
-				st2.set_normal(Vector3(cos(a0), 0, sin(a0)))
+		if hy > 0.68 and hy < 0.74 and v.x > cx + 0.10 * H:
+			if v.z + 0.5 * v.x > best_v.z + 0.5 * best_v.x:
+				best_v = v
+	if best_v.x > -1e8:
+		var nrm2 := Vector3(0.55, 0, 0.83).normalized()
+		var up := Vector3.UP
+		var rt := up.cross(nrm2).normalized()
+		var ac := best_v + nrm2 * 0.006 * H
+		var rr := 0.024 * H
+		# dark round backing
+		for k3 in 14:
+			var b0 := k3 * TAU / 14.0
+			var b1 := (k3 + 1) * TAU / 14.0
+			var p0 := ac - nrm2 * 0.001 * H + (rt * cos(b0) + up * sin(b0)) * rr * 1.05
+			var p1 := ac - nrm2 * 0.001 * H + (rt * cos(b1) + up * sin(b1)) * rr * 1.05
+			for vv in [ac - nrm2 * 0.001 * H, p0, p1, ac - nrm2 * 0.001 * H, p1, p0]:
+				st2.set_normal(nrm2)
 				st2.set_color(Color(4.0 / 255.0, 1.0, 0.0))
-				st2.add_vertex(vb)
+				st2.add_vertex(vv)
+		# 8-point compass star (4 long + 4 short)
+		for k in 8:
+			var ang := k * PI * 0.25
+			var ln := rr * (0.95 if k % 2 == 0 else 0.55)
+			var tip := ac + (rt * cos(ang) + up * sin(ang)) * ln
+			var l := ac + (rt * cos(ang - 0.30) + up * sin(ang - 0.30)) * rr * 0.22
+			var r2 := ac + (rt * cos(ang + 0.30) + up * sin(ang + 0.30)) * rr * 0.22
+			for vv in [ac, tip, r2, ac, r2, tip, ac, l, tip, ac, tip, l]:
+				st2.set_normal(nrm2)
+				st2.set_color(Color(8.0 / 255.0, 1.0, 0.0, 0.6))
+				st2.add_vertex(vv)
 	var neck := MeshInstance3D.new()
 	neck.name = "KeyNecklaceExtra"
 	neck.mesh = st2.commit()
