@@ -176,7 +176,7 @@ static func build(c, team: String, tmpl: String = "") -> Node3D:
 	root.set_meta("ck_appearance_hash", h)
 	root.set_meta("ck_plate_stem", str(pal.get("plate_stem", "")))
 	# 演出整模优先
-	var unit: Node3D = UnitModel.instantiate(c, team, tmpl)
+	var unit: Node3D = UnitModel.instantiate(c, team, tmpl, true)
 	if unit != null:
 		unit.name = "Unit"
 		root.add_child(unit)
@@ -1495,6 +1495,25 @@ static func _add_lock(st: SurfaceTool, pts: Array, w0: float, w1: float, outw: V
 				st.add_vertex(q[idx] + off + th)
 
 
+## Hair card ribbon with UVs (u across, v root→tip); twist rotates the card plane.
+static func _add_card(st: SurfaceTool, pts: Array, w: float, outw: Vector3, twist: float) -> void:
+	var side := outw.cross(Vector3.UP).normalized()
+	side = (side * cos(twist) + outw * sin(twist)).normalized()
+	var nrm := side.cross(Vector3.DOWN).normalized()
+	var n := pts.size()
+	for k in n - 1:
+		var a: Vector3 = pts[k]
+		var b: Vector3 = pts[k + 1]
+		var va := float(k) / (n - 1)
+		var vb := float(k + 1) / (n - 1)
+		var q := [[a - side * w * 0.5, Vector2(0, va)], [a + side * w * 0.5, Vector2(1, va)],
+			[b + side * w * 0.5, Vector2(1, vb)], [b - side * w * 0.5, Vector2(0, vb)]]
+		for idx in [0, 1, 2, 0, 2, 3]:
+			st.set_normal(nrm)
+			st.set_uv(q[idx][1])
+			st.add_vertex(q[idx][0])
+
+
 static func _add_dome(st: SurfaceTool, c: Vector3, r: float, ry: float, segs: int) -> void:
 	for i in segs:
 		for j in segs / 2:
@@ -1551,11 +1570,12 @@ static func _attach_hunter_extras(unit: Node3D, mi: MeshInstance3D, pal: Diction
 		var sxe := sx_max if side > 0.0 else sx_min
 		var st3 := SurfaceTool.new()
 		st3.begin(Mesh.PRIMITIVE_TRIANGLES)
-		var pc := Vector3(sxe - side * 0.030 * H, y0 + 0.800 * H, hzc)
+		# outside the fur roll (outer radius ≈0.12H): sit on the shoulder cap, proud of the fur
+		var pc := Vector3(cx + side * maxf(absf(sxe - cx) - 0.004 * H, 0.128 * H), y0 + 0.792 * H, hzc + 0.012 * H)
 		# three overlapping faceted shards stepping down the shoulder (ice lamellae)
 		for k in 3:
 			var c3 := pc + Vector3(side * (0.012 * k) * H, -0.026 * k * H, 0.004 * H * k)
-			_add_shard(st3, c3, 0.060 * H - 0.006 * k * H, 0.040 * H, 0.016 * H, side, 310 + k + (0 if side > 0.0 else 7))
+			_add_shard(st3, c3, 0.072 * H - 0.006 * k * H, 0.050 * H, 0.020 * H, side, 310 + k + (0 if side > 0.0 else 7))
 		var pm := MeshInstance3D.new()
 		pm.name = "IcePauldronExtra"
 		pm.mesh = st3.commit()
@@ -1571,37 +1591,51 @@ static func _attach_hunter_extras(unit: Node3D, mi: MeshInstance3D, pal: Diction
 	rng2.seed = 3101
 	# crown volume shell (low, so the circlet sits on top of it)
 	_add_dome(st4, Vector3(hcx, hcy + 0.010 * H, hzc - 0.010 * H), hrad * 1.04, 0.058 * H, 14)
-	var locks := 22
-	for i in locks:
-		var ang := deg_to_rad(lerpf(78.0, 282.0, float(i) / (locks - 1)) + (rng2.randf() - 0.5) * 8.0)
-		var root := Vector3(hcx + sin(ang) * hrad, hcy + (0.022 + 0.02 * rng2.randf()) * H, hzc - 0.008 * H + cos(ang) * hrad)
+	# clumped hair cards (soft-alpha strands) — commit shell first, cards in their own mesh
+	var stc := SurfaceTool.new()
+	stc.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var clumps := 15
+	for i in clumps:
+		var ang := deg_to_rad(lerpf(74.0, 286.0, float(i) / (clumps - 1)) + (rng2.randf() - 0.5) * 10.0)
+		var root := Vector3(hcx + sin(ang) * hrad * 0.95, hcy + (0.030 + 0.02 * rng2.randf()) * H, hzc - 0.008 * H + cos(ang) * hrad * 0.95)
 		var outw := Vector3(sin(ang), 0, cos(ang))
-		var len := 0.22 * H * (0.75 + 0.4 * rng2.randf())
-		var sway := Vector3(rng2.randf() - 0.5, 0, rng2.randf() - 0.5) * 0.03 * H
-		var p1 := root + outw * 0.030 * H + Vector3(0, -len * 0.25, 0)
-		var p2 := root + outw * 0.045 * H + Vector3(0, -len * 0.55, 0) + sway
-		var p3 := root + outw * (0.040 + 0.03 * rng2.randf()) * H + Vector3(0, -len, 0) + sway * 1.8
-		_add_lock(st4, [root, p1, p2, p3], (0.016 + 0.010 * rng2.randf()) * H, 0.002 * H, outw)
-	# side locks framing the face (thin, behind cheek line)
+		var len := 0.24 * H * (0.8 + 0.35 * rng2.randf())
+		var sway := Vector3(rng2.randf() - 0.5, 0, rng2.randf() - 0.5) * 0.035 * H
+		var pts := [root, root + outw * 0.034 * H + Vector3(0, -len * 0.22, 0),
+			root + outw * 0.052 * H + Vector3(0, -len * 0.55, 0) + sway,
+			root + outw * (0.050 + 0.03 * rng2.randf()) * H + Vector3(0, -len, 0) + sway * 2.0]
+		var wid := (0.040 + 0.016 * rng2.randf()) * H
+		_add_card(stc, pts, wid, outw, 0.0)
+		_add_card(stc, pts, wid * 0.8, outw, 0.55)  # crossed second card = volume
+	# side locks framing the face
 	for sgn3 in [-1.0, 1.0]:
-		for j in 2:
-			var ang2 := deg_to_rad(sgn3 * (64.0 + j * 7.0))
-			var r0 := Vector3(hcx + sin(ang2) * hrad * 1.02, hcy + 0.028 * H, hzc + cos(ang2) * hrad * 0.95)
-			var ow := Vector3(sin(ang2), 0, cos(ang2) * 0.4).normalized()
-			_add_lock(st4, [r0, r0 + ow * 0.012 * H + Vector3(0, -0.06 * H, 0), r0 + ow * 0.02 * H + Vector3(0, -0.13 * H, 0.004 * H)], 0.010 * H, 0.002 * H, ow)
-	# messy fringe: short pointed strands over the brow (portrait)
-	for f in 5:
-		var fa := deg_to_rad(lerpf(-32.0, 32.0, f / 4.0))
-		var fr0 := Vector3(hcx + sin(fa) * hrad * 0.9, hcy + 0.052 * H, hzc + cos(fa) * hrad * 0.85)
-		var fw := Vector3(sin(fa) * 0.5, 0, 1).normalized()
-		_add_lock(st4, [fr0, fr0 + fw * 0.020 * H + Vector3(0, -0.020 * H, 0), fr0 + fw * 0.024 * H + Vector3(sin(fa) * 0.01 * H, -0.040 * H, 0)], 0.010 * H, 0.0015 * H, fw)
+		var ang2 := deg_to_rad(sgn3 * 66.0)
+		var r0 := Vector3(hcx + sin(ang2) * hrad * 1.0, hcy + 0.030 * H, hzc + cos(ang2) * hrad * 0.92)
+		var ow := Vector3(sin(ang2), 0, cos(ang2) * 0.35).normalized()
+		_add_card(stc, [r0, r0 + ow * 0.012 * H + Vector3(0, -0.07 * H, 0), r0 + ow * 0.022 * H + Vector3(0, -0.15 * H, 0.004 * H)], 0.026 * H, ow, 0.0)
+	# clump bangs swept to his right (portrait), wide roots
+	for f in 4:
+		var fa := deg_to_rad(lerpf(-30.0, 26.0, f / 3.0))
+		var fr0 := Vector3(hcx + sin(fa) * hrad * 0.85, hcy + 0.058 * H, hzc + cos(fa) * hrad * 0.88)
+		var fw := Vector3(sin(fa) * 0.4, 0.15, 1).normalized()
+		var sweep := Vector3(-0.022 * H, 0, 0)
+		_add_card(stc, [fr0, fr0 + fw * 0.024 * H + Vector3(0, -0.022 * H, 0) + sweep * 0.5, fr0 + fw * 0.030 * H + Vector3(0, -0.050 * H, 0) + sweep], 0.034 * H, fw, 0.0)
+	var cards := MeshInstance3D.new()
+	cards.name = "HairCardsExtra"
+	cards.mesh = stc.commit()
+	var hm := ShaderMaterial.new()
+	hm.shader = load("res://shaders/board_hair.gdshader") as Shader
+	hm.set_shader_parameter("hair_col", (pal.get("hair", Color8(39, 50, 75)) as Color).lightened(0.08))
+	hm.set_shader_parameter("rim_col", UIKit.ACCENT)
+	cards.material_override = hm
+	cards.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	var hair := MeshInstance3D.new()
 	hair.name = "LongHairExtra"
 	hair.mesh = st4.commit()
 	var hp := pal.get("hair", Color8(39, 50, 75)) as Color
 	hair.material_override = _slot_mat(pal, hp.lightened(0.06), 0.0, 0.35)
 	_bone_attach(mi, "chest", [fur])
-	_bone_attach(mi, "head", [circ, hair])
+	_bone_attach(mi, "head", [circ, hair, cards])
 	for pr in plates:
 		_bone_attach(mi, str(pr[1]), [pr[0]])
 	unit.set_meta("ck_outfit_extras", ["fur_collar", "circlet", "ice_pauldrons", "long_hair"])
@@ -1700,12 +1734,12 @@ static func _attach_outfit_extras(unit: Node3D, c, team: String, pal: Dictionary
 			var wn: Vector3 = (p1 - p0).cross(Vector3(0, 0, 1)).normalized() * -float(sgn)
 			for v3 in [p0, p1, p1 + th, p0, p1 + th, p0 + th, p0, p1 + th, p1, p0, p0 + th, p1 + th]:
 				st.set_normal(wn)
-				st.set_color(Color(4.0 / 255.0, 0.85, 0.0))
+				st.set_color(Color(5.0 / 255.0, 0.85, 0.0))
 				st.add_vertex(v3)
 		# edge line (stitched roll edge) along the inner + notch edges
 		var lip := Vector3(0, 0, 0.0012 * H)
 		for e in [[0, 5], [5, 6], [2, 3], [3, 4], [1, 2]]:
-			_add_bar(st, pts[e[0]] + lip, pts[e[1]] + lip, 0.0013 * H, 4)
+			_add_bar(st, pts[e[0]] + lip, pts[e[1]] + lip, 0.0008 * H, 5)
 	# dark inner shirt V between lapels (portrait: black high-neck shirt)
 	var sv := [Vector3(cx - 0.036 * H, y0 + 0.850 * H, 0), Vector3(cx + 0.036 * H, y0 + 0.850 * H, 0), Vector3(cx, y0 + 0.612 * H, 0)]
 	for qi in 3:
@@ -1725,6 +1759,9 @@ static func _attach_outfit_extras(unit: Node3D, c, team: String, pal: Dictionary
 	lm = _palette_mat(lpal, float(unit.get_parent().get_meta("ck_face", 1.0)) if unit.get_parent() else 1.0, false)
 	lm.set_shader_parameter("force_slot", -1.0)
 	lm.set_shader_parameter("use_albedo", 0.0)
+	var larr: Array = lm.get_shader_parameter("palette")
+	larr[5] = coat.darkened(0.28)  # lapel roll-edge: a shade under the coat, not black
+	lm.set_shader_parameter("palette", larr)
 	lm.set_shader_parameter("rim_amt", 0.35)
 	lapel.material_override = lm
 	lapel.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF

@@ -262,12 +262,16 @@ static func _hair_tint(c) -> Color:
 	return {"ash_brown": Color(0.22, 0.18, 0.16), "ink_black": Color(0.08, 0.09, 0.12), "silver": Color(0.55, 0.58, 0.64),
 		"auburn": Color(0.30, 0.14, 0.10), "flax": Color(0.45, 0.38, 0.24)}.get(h, Color(0.12, 0.15, 0.20))
 
-static func instantiate(c, team: String, tmpl: String = "") -> Node3D:
+static func instantiate(c, team: String, tmpl: String = "", board: bool = false) -> Node3D:
 	var spec := resolve(c, team, tmpl)
 	var p := str(spec.get("path", ""))
 	if p == "":
 		return null
-	var ps: PackedScene = load(p)
+	# Board pieces may use a Blender-cleaned variant (<stem>__board.glb); meta keeps p.
+	var lp := p
+	if board and ResourceLoader.exists(p.replace(".glb", "__board.glb")):
+		lp = p.replace(".glb", "__board.glb")
+	var ps: PackedScene = load(lp)
 	if ps == null:
 		return null
 	var n: Node3D = ps.instantiate()

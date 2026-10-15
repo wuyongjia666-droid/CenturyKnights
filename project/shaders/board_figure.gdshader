@@ -140,7 +140,9 @@ vec3 grade_albedo(vec4 t4, vec4 tc, float h01, vec3 mn) {
 	vec3 raw = t * vec3(1.06, 1.0, 0.96);
 	col = mix(col, raw, head_raw * head * (1.0 - plain));
 	// captain: standing collar band under the jaw = black high-neck shirt (no grey blob)
-	float collar_band = smoothstep(head_h - 0.055, head_h - 0.03, h01) * (1.0 - smoothstep(head_h + 0.005, head_h + 0.03, h01));
+	// narrow, front-only band (no shoulder/back spill)
+	float collar_band = smoothstep(head_h - 0.035, head_h - 0.022, h01) * (1.0 - smoothstep(head_h - 0.002, head_h + 0.012, h01))
+		* smoothstep(0.15, 0.55, mn.z);
 	col = mix(col, palette[4].rgb, collar_dark * collar_band * (1.0 - skin_w));
 	return mix(col, palette[2].rgb, eye_w);
 }
