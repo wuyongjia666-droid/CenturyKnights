@@ -7,5 +7,3635 @@
     "coat": "#8A93A0",
     "reviewed": true,
     "note": "manual hair style correction"
+  },
+  "_review_meta": {
+    "source": "manual review of NR focus sheets 01–31 (722 heuristic needs_review plates)",
+    "reviewed_count": 721,
+    "still_needs_review": [
+      {
+        "stem": "middle_c46e7c2152521a18",
+        "guess": "swept",
+        "reason": "asymmetric / half-shaved; no clean module match"
+      }
+    ],
+    "style_counts": {
+      "swept": 314,
+      "crop": 264,
+      "bob": 46,
+      "messy": 72,
+      "long": 6,
+      "tied": 20
+    },
+    "crown_note": "No plate in the NR set showed a crown/halo-braid silhouette matching hair_crown; count=0."
+  },
+  "elder_02727eba5d6b7c35": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_02d6b8d4ccb3832f": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_04620cc06fa92445": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_097a33e08ea6c693": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_0b4e14d58b85aa24": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_167fdcdd1dc1ff2a": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_16a14ee1a05564ba": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_1808940d683001f0": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_1efe6cc14b620a14": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_1fef909a12e7b20b": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_2348af6884c39735": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_252cc650338c5ec9": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_2533e9771787108a": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_28baa5af349206dc": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_290b66fd7bd76b40": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_29a815797f56c12e": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_2b3a08e4809941a3": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_2bbe5cb88bdde239": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_2c8b9d080755af9d": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_2d79fa06b0606623": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_300c65de737be8ed": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_3390dfad83baf322": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_357e585056d9aa5d": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_35a7c09834f31969": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_35cd44624f1aa4df": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_361091bedbbfab8f": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_380fcc9b98ffd0e8": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_3d4161f5435df210": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_3da3216723aff442": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_401af5138ce3634e": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_4169016bf3796d54": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_41cbe2265959f6bd": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_42e47b519dfdfd72": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_42f225478735e50c": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_54b13cffb69abc82": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_55e36dbe1e0beecb": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_56878b585342d1ef": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_592ac2f0374d2fc3": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_5d967770bf356cbb": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_61b0e535257239fe": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_63b4e48f41022f86": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_64aa74f524c8aabc": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_67aedf3355fc5a92": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_6c0fc0bdbe766456": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_6dc5f4541ed4b2b3": {
+    "style": "long",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_6e4d3189baee2556": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_749ef0e01198f3b7": {
+    "style": "tied",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_76de9206bc9759e1": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_79ab7e3df7b25ad4": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_7bb067a8e2c60347": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_7ea9fbe254be52fd": {
+    "style": "tied",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_7f2a4a568471f51f": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_7f4a0737a0927416": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_80e3fd0cc732a235": {
+    "style": "tied",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_8374f3b5f771ca66": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_84c32ae8a80ad119": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_8543b7c8b5294469": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_8628b7e293e80cf5": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_8856b2fbf2a754f4": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_89d702755cf5b75e": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_89ff4b829729c83b": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_8ae23e820e0c2521": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_8bbe52f1ddd2a336": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_8dc4cd001b854615": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_935f60146a002ce1": {
+    "style": "tied",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_9d105e05aec8ad26": {
+    "style": "tied",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_9e3492bf8234e8d0": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_9eb3797a996a0f35": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_9f281a05ff8511ee": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_a2183bcf667d470a": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_a3e4a05f1bbb89fe": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_a70ff6c5b50f98dc": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_a729e14915cbb952": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_a86a61bc52043a4f": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_a916ef356c8495c2": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_aa750fc770425ce4": {
+    "style": "tied",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_ab01d6c5d1c054aa": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_ab2f620895d007a1": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_ac5a1543a076b008": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_aee29977d9b70774": {
+    "style": "tied",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_af409a28bdeff081": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_b1bdf981b1316f06": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_b3f8987b55fc225a": {
+    "style": "tied",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_b6a35601751f8b16": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_b9e200bf4ba50900": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_bc120949a7116162": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_bc459a32d3b71ba3": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_bd3268e188b382ce": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_bee5464476e3da8d": {
+    "style": "tied",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_c0dc7e13eecd3b7a": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_c39654908a6da529": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_c4245dea7a24730b": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_c8577524514225eb": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_c98bcfe534ff9fb0": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_ca9f4fd3c50679ea": {
+    "style": "tied",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_d43c6e464fe2d801": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_d7a41364b4ad30d9": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_d93a90c27b884c55": {
+    "style": "tied",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_da132c3bb6ec7426": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_db9330d9c53fa18c": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_dd61210536859566": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_ddcf126c28124891": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_ded4e44c600300db": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_dedd470cfd07728d": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_e61a9972e30c16b7": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_e95828f5affb51a6": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_ea790c1aeb8f4771": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_eb375a5fb4500762": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_edb56bd7bed1d0de": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_ee3f84e394197c86": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_ee4900643e9225a5": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_ee6faafcc5949d87": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_f8e467d3dd86118c": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_fba3ac49f7644f3a": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_fbd64eddba0c2910": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_fd9cd718f7e8ad89": {
+    "style": "tied",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "elder_fe7e2fcb1265d788": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_0133cd4f080bf504": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_016eadc65391fdd7": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_02d6b8d4ccb3832f": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_04163d910d3bfdd4": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_04620cc06fa92445": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_04eff77ff54f87d4": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_0d432a6bf4cfce44": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_123776c442bcf445": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_167fdcdd1dc1ff2a": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_1fef909a12e7b20b": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_24de0cd8424dd56b": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_252cc650338c5ec9": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_28baa5af349206dc": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_29a815797f56c12e": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_2bbe5cb88bdde239": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_2db395394b42f4e8": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_300c65de737be8ed": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_35a7c09834f31969": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_361091bedbbfab8f": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_3f980fbffbc18446": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_401af5138ce3634e": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_41cbe2265959f6bd": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_4f3344e48e30a041": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_5115b0bda9f387e2": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_5208d8e1f06b6c66": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_540270085b2fb6b9": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_55e36dbe1e0beecb": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_58d81fda82def06d": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_592ac2f0374d2fc3": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_5bd056bfaa51d62a": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_6612ba78ae9d149b": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_684a47f012d45dad": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_690a793347db5b8c": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_6debee51d0461fa6": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_72a9676089db51df": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_7bb067a8e2c60347": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_7e8a2aa21018d5ef": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_7f4a0737a0927416": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_80e3fd0cc732a235": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_827953c84063fbfd": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_8374f3b5f771ca66": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_8543b7c8b5294469": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_86cb70b0abfc0eeb": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_8a7ffeb599e97f88": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_9353d14d4a5b8414": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_935f60146a002ce1": {
+    "style": "tied",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_94656866dbfbf9a9": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_95b231173d99b75e": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_9e3492bf8234e8d0": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_9f281a05ff8511ee": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_a70ff6c5b50f98dc": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_a86a61bc52043a4f": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_ab9c6bf297f97e27": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_af408db9395947a8": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_af409a28bdeff081": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_b6a35601751f8b16": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_b7d8d6dd6fb4a464": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_bbc792f60941c7a1": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_c4245dea7a24730b": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_c46e7c2152521a18": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_c5216af72d8c1bb2": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_c53ceecb33e6f05c": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_c8577524514225eb": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_c98bcfe534ff9fb0": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_ca9f4fd3c50679ea": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_caabd87c0920e505": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_cd4e97e3f56dc8ba": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_d4375e151d457be8": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_d43c6e464fe2d801": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_d6c8c4eddd59686c": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_d7a41364b4ad30d9": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_da132c3bb6ec7426": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_ddcf126c28124891": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_e8a80d085e2d88ed": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_ea790c1aeb8f4771": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_eacff2650beb891c": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_ee3f84e394197c86": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_f5de737b20e533dc": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_fb3e9a61020169e0": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_fba3ac49f7644f3a": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "infant_fbd64eddba0c2910": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_00647ff1b34ec210": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_016eadc65391fdd7": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_02727eba5d6b7c35": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_04163d910d3bfdd4": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_0720bf6e3f64d1bb": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_081d99db7f160a2e": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_097a33e08ea6c693": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_09aebb1b9f4f897e": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_0f3a2e200819e0ff": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_1284214afc000313": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_2338433803b203cd": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_240212d32c0289b6": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_252cc650338c5ec9": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_272d984447ea8cd3": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_28452e4b71975402": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_2846acd8c7620309": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_2b3a08e4809941a3": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_2bbe5cb88bdde239": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_3390dfad83baf322": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_357e585056d9aa5d": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_35cd44624f1aa4df": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_36d37d04e783d0e7": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_3da3216723aff442": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_3f980fbffbc18446": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_4b3a1dbbc9cbdf3a": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_4cdce236a4fb6a91": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_5115b0bda9f387e2": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_51c4a0eebb0d80a1": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_52083c00aca61607": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_54b47944eb91eabd": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_5563b8b652593257": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_593febf567687706": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_5d78d4e42ee519b3": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_61976255c335007e": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_62666ac31132acda": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_6612ba78ae9d149b": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_6c0fc0bdbe766456": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_6c8837a85b1cd08d": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_6eb3b3809cd6841d": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_79ab7e3df7b25ad4": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_7f2a4a568471f51f": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_7f4a0737a0927416": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_7f91e5d8d4f7b709": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_80e3fd0cc732a235": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_8374f3b5f771ca66": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_8628b7e293e80cf5": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_86cb70b0abfc0eeb": {
+    "style": "long",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_8856b2fbf2a754f4": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_89ff4b829729c83b": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_8ae23e820e0c2521": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_8dc4cd001b854615": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_92e322ce95a3f8e9": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_935f60146a002ce1": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_95b231173d99b75e": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_9b6d123433f6e3a5": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_9e3492bf8234e8d0": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_a2183bcf667d470a": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_a3c71c04335fe79d": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_a729e14915cbb952": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_ab01d6c5d1c054aa": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_b1bdf981b1316f06": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_b406dd92ee482b57": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_bc120949a7116162": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_c18f537bba365638": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_c46e7c2152521a18": {
+    "style": "messy",
+    "reviewed": false,
+    "note": "ambiguous silhouette; best-effort style, keep needs_review"
+  },
+  "middle_c82d838010432cd1": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_c8577524514225eb": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_c98bcfe534ff9fb0": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_c9f9a303a0548a5e": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_caabd87c0920e505": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_ce73edd4fc87205b": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_d43c6e464fe2d801": {
+    "style": "tied",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_dd61210536859566": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_e2b67eade7aa6114": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_e61a9972e30c16b7": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_f69577ec510d9561": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_f78f9c5256907105": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "middle_fba3ac49f7644f3a": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_00647ff1b34ec210": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_0133cd4f080bf504": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_016eadc65391fdd7": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_02727eba5d6b7c35": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_04163d910d3bfdd4": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_04eff77ff54f87d4": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_07d8226b0633f46c": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_097a33e08ea6c693": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_0d432a6bf4cfce44": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_0d7fbe93e1169508": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_0e7ae45a73539c15": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_0f3a2e200819e0ff": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_10d48edf27b5aec0": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_167fdcdd1dc1ff2a": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_16a14ee1a05564ba": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_17465ef206aef28d": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_1808940d683001f0": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_19b7dadefd60aacd": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_1cff6483ab7de9f8": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_1efe6cc14b620a14": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_1fef909a12e7b20b": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_241cc169884d9e64": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_2533e9771787108a": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_272d984447ea8cd3": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_28452e4b71975402": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_2846acd8c7620309": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_28baa5af349206dc": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_290b66fd7bd76b40": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_295cdeff719e2f04": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_2b5a4753ea92843e": {
+    "style": "tied",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_2c8b9d080755af9d": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_2db395394b42f4e8": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_300c65de737be8ed": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_315bdccc04537ab9": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_3390dfad83baf322": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_3473b7393ed3def8": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_357e585056d9aa5d": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_35a7c09834f31969": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_35cd44624f1aa4df": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_361091bedbbfab8f": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_36d37d04e783d0e7": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_37f5f49ae0ec7635": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_380fcc9b98ffd0e8": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_3a8bdbb7cb06e142": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_3b3723e69aa4fa09": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_3b808acf3a1cc8e0": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_3bc7fdaf2cf49fd8": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_3d4161f5435df210": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_3da3216723aff442": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_3f0020b27a654183": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_3ff5f98e4a7b9791": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_401af5138ce3634e": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_4169016bf3796d54": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_41cbe2265959f6bd": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_44459784433761a3": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_4ac59b2c3562c2f1": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_4be9880050a19deb": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_4eff2fce4d5ab227": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_4f0eb2e18661bda4": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_4f3344e48e30a041": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_4f6cac92e10a1029": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_5115b0bda9f387e2": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_51af0b9c6a5c1245": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_51c4a0eebb0d80a1": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_51f3c4793bf8ed78": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_5208d8e1f06b6c66": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_535f94abe8fa63a4": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_53609d21cf211494": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_54885b4e8e1e3835": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_54b47944eb91eabd": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_5563b8b652593257": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_55e36dbe1e0beecb": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_592ac2f0374d2fc3": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_5bd056bfaa51d62a": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_5bf4a1a78103a010": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_5d78d4e42ee519b3": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_5d967770bf356cbb": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_5ec6ba086eb09753": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_5fa9afea93258793": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_614340165434dadd": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_61976255c335007e": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_61b0e535257239fe": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_62666ac31132acda": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_6344d75216d0d447": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_63b4e48f41022f86": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_65eb2d9b959d11d6": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_6612ba78ae9d149b": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_66854c4834bd8291": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_674bf84f61508d26": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_690a793347db5b8c": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_6941cdc9dbe27bce": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_6bb6876aa3619ccb": {
+    "style": "long",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_6c0fc0bdbe766456": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_6cf0be839cd058c4": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_6dc5f4541ed4b2b3": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_6debee51d0461fa6": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_6eb3b3809cd6841d": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_7025be6a6cd9276d": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_72a9676089db51df": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_749ef0e01198f3b7": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_76de9206bc9759e1": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_7bb067a8e2c60347": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_7c7034fee510113f": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_7d5f6f9a4c51b18f": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_7ea9fbe254be52fd": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_7f2a4a568471f51f": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_7f4a0737a0927416": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_7f91e5d8d4f7b709": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_80860c49b7578b04": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_80e3fd0cc732a235": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_813a4726cb2cd7fb": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_827953c84063fbfd": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_8374f3b5f771ca66": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_849e620c315c96f3": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_85220b580e06f1b3": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_85a94ce982dff4ce": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_8628b7e293e80cf5": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_86cb70b0abfc0eeb": {
+    "style": "long",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_8856b2fbf2a754f4": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_89d702755cf5b75e": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_89ff4b829729c83b": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_8a7ffeb599e97f88": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_8ae23e820e0c2521": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_8f3c30cb9b25fa48": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_9009d551f46e8b5a": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_90d9def8bbbc997f": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_92e322ce95a3f8e9": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_94656866dbfbf9a9": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_967de9c0020b8db7": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_9790fb43c44d6698": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_98c04dff28bfdc1a": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_9b6d123433f6e3a5": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_9d105e05aec8ad26": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_9e3492bf8234e8d0": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_9eb3797a996a0f35": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_9f281a05ff8511ee": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_a2183bcf667d470a": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_a3c71c04335fe79d": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_a3e4a05f1bbb89fe": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_a86a61bc52043a4f": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_a8b1aa12fb582b5b": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_a958d54acace259f": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_aa750fc770425ce4": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_ab01d6c5d1c054aa": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_ac5a1543a076b008": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_ae646f0187aaf872": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_aee29977d9b70774": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_af409a28bdeff081": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_b1bdf981b1316f06": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_b406dd92ee482b57": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_b6a35601751f8b16": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_b70da01b87cd4e4c": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_b9e200bf4ba50900": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_bc120949a7116162": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_bc459a32d3b71ba3": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_bd3268e188b382ce": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_c0dc7e13eecd3b7a": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_c18f537bba365638": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_c39654908a6da529": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_c4245dea7a24730b": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_c46e7c2152521a18": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_c5216af72d8c1bb2": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_c53ceecb33e6f05c": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_c82d838010432cd1": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_c8577524514225eb": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_c98bcfe534ff9fb0": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_c9f9a303a0548a5e": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_ca9f4fd3c50679ea": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_caabd87c0920e505": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_ce73edd4fc87205b": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_d046fb28556ca23d": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_d4375e151d457be8": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_d46e455c785a4f13": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_d55b2ac5011f858e": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_d69937af197f597e": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_d6c8c4eddd59686c": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_d7a41364b4ad30d9": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_d93a90c27b884c55": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_db9330d9c53fa18c": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_dcbecd5f266cbb40": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_dd61210536859566": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_ddcf126c28124891": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_ded4e44c600300db": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_dedd470cfd07728d": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_e3dcdb9274ff8c6b": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_e604ac9cb6944411": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_e61a9972e30c16b7": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_e95828f5affb51a6": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_e97010574a7fa9ae": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_ea790c1aeb8f4771": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_eb375a5fb4500762": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_edb56bd7bed1d0de": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_edc1231c8f34db8b": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_edc563b686a17c89": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_eddf81ac53cf33eb": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_ee4900643e9225a5": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_ee6faafcc5949d87": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_f1ebe42242205ccd": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_f40485e0a0736139": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_f5de737b20e533dc": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_f6ea87a689b45c7b": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_f7a23472283b053f": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_f8e467d3dd86118c": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_fb5445c3dc17bda4": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_fba3ac49f7644f3a": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_fbd64eddba0c2910": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "young_adult_fe7e2fcb1265d788": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_00647ff1b34ec210": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_00abfda26cf4f0a1": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_0133cd4f080bf504": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_016eadc65391fdd7": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_02727eba5d6b7c35": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_04163d910d3bfdd4": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_044d29473b4bdf4a": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_04620cc06fa92445": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_04eff77ff54f87d4": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_05e7c841269fe638": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_0720bf6e3f64d1bb": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_07d8226b0633f46c": {
+    "style": "tied",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_081d99db7f160a2e": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_097a33e08ea6c693": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_09aebb1b9f4f897e": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_09d7a2f2ac3591cb": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_0d432a6bf4cfce44": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_0d7fbe93e1169508": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_0e7ae45a73539c15": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_0f3a2e200819e0ff": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_1284214afc000313": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_167fdcdd1dc1ff2a": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_16a14ee1a05564ba": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_1746441f8a47cfc6": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_17465ef206aef28d": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_1808940d683001f0": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_19b7dadefd60aacd": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_1efe6cc14b620a14": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_1f388dbc14e038f5": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_1fef909a12e7b20b": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_211da799e5b981a6": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_2338433803b203cd": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_240212d32c0289b6": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_241cc169884d9e64": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_24de0cd8424dd56b": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_2533e9771787108a": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_272d984447ea8cd3": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_28452e4b71975402": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_2846acd8c7620309": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_28baa5af349206dc": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_295cdeff719e2f04": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_29a815797f56c12e": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_2a2c92d3e1e84ab2": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_2b3a08e4809941a3": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_2b5a4753ea92843e": {
+    "style": "tied",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_2bbe5cb88bdde239": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_2c8b9d080755af9d": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_2d7548b5436a1c02": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_300c65de737be8ed": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_315bdccc04537ab9": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_3390dfad83baf322": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_3473b7393ed3def8": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_357e585056d9aa5d": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_35a7c09834f31969": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_35cd44624f1aa4df": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_361091bedbbfab8f": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_36d37d04e783d0e7": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_37f5f49ae0ec7635": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_380fcc9b98ffd0e8": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_3a8bdbb7cb06e142": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_3b3723e69aa4fa09": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_3b808acf3a1cc8e0": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_3c75dcb3d6bd80e4": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_3d448c1540fae01c": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_3da3216723aff442": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_3f980fbffbc18446": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_401af5138ce3634e": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_41cbe2265959f6bd": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_42f225478735e50c": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_44459784433761a3": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_4ac59b2c3562c2f1": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_4b3a1dbbc9cbdf3a": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_4be9880050a19deb": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_4cdce236a4fb6a91": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_4d377d3542c2b490": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_4eff2fce4d5ab227": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_4f3344e48e30a041": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_4f6cac92e10a1029": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_5115b0bda9f387e2": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_51af0b9c6a5c1245": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_51c4a0eebb0d80a1": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_51f3c4793bf8ed78": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_52083c00aca61607": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_5208d8e1f06b6c66": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_535f94abe8fa63a4": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_540270085b2fb6b9": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_54885b4e8e1e3835": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_54b13cffb69abc82": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_54d908dae01ee64d": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_55e36dbe1e0beecb": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_56878b585342d1ef": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_592ac2f0374d2fc3": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_5946ffea81dc534b": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_5bd056bfaa51d62a": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_5ccc0bf243f18f51": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_5d78d4e42ee519b3": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_5ec6ba086eb09753": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_5fa9afea93258793": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_614340165434dadd": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_61976255c335007e": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_61b0e535257239fe": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_62666ac31132acda": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_62c010a650ff711b": {
+    "style": "tied",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_6344d75216d0d447": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_63b4e48f41022f86": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_65eb2d9b959d11d6": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_6612ba78ae9d149b": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_66854c4834bd8291": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_674bf84f61508d26": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_67aedf3355fc5a92": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_690a793347db5b8c": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_6941cdc9dbe27bce": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_6bb6876aa3619ccb": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_6c0fc0bdbe766456": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_6cf0be839cd058c4": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_6dc5f4541ed4b2b3": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_6debee51d0461fa6": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_6e4d3189baee2556": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_6eb3b3809cd6841d": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_7025be6a6cd9276d": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_72a9676089db51df": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_749ef0e01198f3b7": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_7a5a063a438b9311": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_7bb067a8e2c60347": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_7c7034fee510113f": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_7d5f6f9a4c51b18f": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_7ea9fbe254be52fd": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_7f2a4a568471f51f": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_7f4a0737a0927416": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_80e3fd0cc732a235": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_82080b1414ddaffd": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_827953c84063fbfd": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_8374f3b5f771ca66": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_849e620c315c96f3": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_84c32ae8a80ad119": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_85220b580e06f1b3": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_8543b7c8b5294469": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_85a94ce982dff4ce": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_8816171b76babda4": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_8856b2fbf2a754f4": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_89d702755cf5b75e": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_89ff4b829729c83b": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_8a4a59f65bcbacd7": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_8a7ffeb599e97f88": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_8ae23e820e0c2521": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_8bbe52f1ddd2a336": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_8dc4cd001b854615": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_9009d551f46e8b5a": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_92e322ce95a3f8e9": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_93766a7814fecdbf": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_941fdc14f9063645": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_94656866dbfbf9a9": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_95b231173d99b75e": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_9790fb43c44d6698": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_98c04dff28bfdc1a": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_9b6d123433f6e3a5": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_9cb90542d3005bdf": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_9e3492bf8234e8d0": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_9f281a05ff8511ee": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_a1b40c26c4b986c3": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_a2183bcf667d470a": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_a3357c182e87c689": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_a3c71c04335fe79d": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_a3e4a05f1bbb89fe": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_a70ff6c5b50f98dc": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_a86a61bc52043a4f": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_a8b1aa12fb582b5b": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_a958d54acace259f": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_aa750fc770425ce4": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_ab01d6c5d1c054aa": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_ab2f620895d007a1": {
+    "style": "long",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_ab9c6bf297f97e27": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_ac5a1543a076b008": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_ac9f23f55c77ad3a": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_af409a28bdeff081": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_b0038c3ea98116ed": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_b3f8987b55fc225a": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_b406dd92ee482b57": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_b6a35601751f8b16": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_b7d8d6dd6fb4a464": {
+    "style": "tied",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_b9e200bf4ba50900": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_bbc792f60941c7a1": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_bc120949a7116162": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_bc459a32d3b71ba3": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_bd3268e188b382ce": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_bee5464476e3da8d": {
+    "style": "long",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_bfa0f39c4abe3c2d": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_c0dc7e13eecd3b7a": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_c18f537bba365638": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_c39654908a6da529": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_c4245dea7a24730b": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_c5216af72d8c1bb2": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_c53ceecb33e6f05c": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_c82d838010432cd1": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_c8577524514225eb": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_c98bcfe534ff9fb0": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_c9f9a303a0548a5e": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_ca9f4fd3c50679ea": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_caabd87c0920e505": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_cd4e97e3f56dc8ba": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_ce73edd4fc87205b": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_d046fb28556ca23d": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_d24aa392841d54c1": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_d4375e151d457be8": {
+    "style": "tied",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_d43c6e464fe2d801": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_d46e455c785a4f13": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_d55b2ac5011f858e": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_d5be297a7171a2f7": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_d6c8c4eddd59686c": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_d7a41364b4ad30d9": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_db9330d9c53fa18c": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_dcbecd5f266cbb40": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_dd61210536859566": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_ddcf126c28124891": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_ded4e44c600300db": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_e2b67eade7aa6114": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_e3dcdb9274ff8c6b": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_e61a9972e30c16b7": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_e621088c9e91ed4b": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_e97010574a7fa9ae": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_ea790c1aeb8f4771": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_eb375a5fb4500762": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_edb56bd7bed1d0de": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_edc1231c8f34db8b": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_edc563b686a17c89": {
+    "style": "bob",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_eddf81ac53cf33eb": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_ee3f84e394197c86": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_ee4900643e9225a5": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_f1ebe42242205ccd": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_f40485e0a0736139": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_f5de737b20e533dc": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_f69577ec510d9561": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_f78f9c5256907105": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_f7a23472283b053f": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_f8e467d3dd86118c": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_fb5445c3dc17bda4": {
+    "style": "crop",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_fba3ac49f7644f3a": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_fbd64eddba0c2910": {
+    "style": "swept",
+    "reviewed": true,
+    "note": "manual NR sheet review"
+  },
+  "youth_fe7e2fcb1265d788": {
+    "style": "messy",
+    "reviewed": true,
+    "note": "manual NR sheet review"
   }
 }
