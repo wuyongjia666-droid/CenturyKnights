@@ -197,8 +197,9 @@ void fragment() {
 			vec4 fl = textureLod(face_tex, clamp(fuv, 0.0, 1.0), 2.0);
 			float fl_l = dot(fl.rgb, vec3(0.299, 0.587, 0.114));
 			float sk_l = dot(palette[1].rgb, vec3(0.299, 0.587, 0.114));
-			float dark = smoothstep(sk_l * 0.92, sk_l * 0.55, fl_l);
-			vec3 simple = mix(palette[1].rgb, palette[0].rgb * 0.55, dark);
+			float dark = smoothstep(sk_l * 0.80, sk_l * 0.45, fl_l);
+			// soft brow/eye shading (half strength, warm-dark not hair-black) — avoids a mask
+			vec3 simple = mix(palette[1].rgb, palette[1].rgb * vec3(0.55, 0.48, 0.46), dark * 0.6);
 			vec3 fc = fd.rgb * mix(vec3(1.0), palette[1].rgb / max(vec3(0.2), vec3(dot(fd.rgb, vec3(0.333)))) * 0.55, 0.25);
 			fc = mix(fc * 1.08, simple, lodw);
 			float fw = mix(fd.a, max(fd.a, fl.a), lodw) * inb * fr;

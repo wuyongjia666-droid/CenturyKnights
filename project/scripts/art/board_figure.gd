@@ -1350,7 +1350,7 @@ static func _apply_face_decal(unit: Node3D, c, team: String, tmpl: String) -> vo
 	var box := Vector4(float(hb["cx"]), float(hb["ytop"]) - 0.16 * hh, float(hb["ytop"]) - 1.02 * hh, 0.088 * H)
 	_bake_bind_custom0(mi, mp)
 	var clear := 1.0 if (c != null and str(c.cast_key) == "dengying") else 0.0
-	var collar := 1.0 if (c != null and bool(c.is_leader)) else 0.0
+	var collar := 0.0  # leader collar now cleaned in mesh (cast_leader__board.glb)
 	for si1 in mi.mesh.get_surface_count():
 		var m1 = mi.get_surface_override_material(si1)
 		if m1 is ShaderMaterial:
@@ -1579,7 +1579,10 @@ static func _attach_hunter_extras(unit: Node3D, mi: MeshInstance3D, pal: Diction
 		var pm := MeshInstance3D.new()
 		pm.name = "IcePauldronExtra"
 		pm.mesh = st3.commit()
-		pm.material_override = _slot_mat(pal, Color8(176, 200, 226), 1.0, 0.30)
+		var im := _slot_mat(pal, Color8(196, 220, 240), 1.0, 0.70)
+		im.set_shader_parameter("rim_col", Color(0.92, 0.97, 1.0))  # frosty fresnel edge
+		im.set_shader_parameter("shadow_mul", Vector3(0.50, 0.62, 0.80))  # cold blue in shade
+		pm.material_override = im
 		plates.append([pm, "upper_arm.L" if side > 0.0 else "upper_arm.R"])
 	# long voluminous hair (portrait: blue-black, past the shoulders, side locks framing face)
 	var st4 := SurfaceTool.new()
@@ -1594,19 +1597,32 @@ static func _attach_hunter_extras(unit: Node3D, mi: MeshInstance3D, pal: Diction
 	# clumped hair cards (soft-alpha strands) — commit shell first, cards in their own mesh
 	var stc := SurfaceTool.new()
 	stc.begin(Mesh.PRIMITIVE_TRIANGLES)
-	var clumps := 15
+	var clumps := 20
 	for i in clumps:
-		var ang := deg_to_rad(lerpf(74.0, 286.0, float(i) / (clumps - 1)) + (rng2.randf() - 0.5) * 10.0)
-		var root := Vector3(hcx + sin(ang) * hrad * 0.95, hcy + (0.030 + 0.02 * rng2.randf()) * H, hzc - 0.008 * H + cos(ang) * hrad * 0.95)
+		var ang := deg_to_rad(lerpf(72.0, 288.0, float(i) / (clumps - 1)) + (rng2.randf() - 0.5) * 16.0)
+		var root := Vector3(hcx + sin(ang) * hrad * 0.95, hcy + (0.026 + 0.03 * rng2.randf()) * H, hzc - 0.008 * H + cos(ang) * hrad * 0.95)
 		var outw := Vector3(sin(ang), 0, cos(ang))
-		var len := 0.24 * H * (0.8 + 0.35 * rng2.randf())
-		var sway := Vector3(rng2.randf() - 0.5, 0, rng2.randf() - 0.5) * 0.035 * H
-		var pts := [root, root + outw * 0.034 * H + Vector3(0, -len * 0.22, 0),
-			root + outw * 0.052 * H + Vector3(0, -len * 0.55, 0) + sway,
-			root + outw * (0.050 + 0.03 * rng2.randf()) * H + Vector3(0, -len, 0) + sway * 2.0]
-		var wid := (0.040 + 0.016 * rng2.randf()) * H
-		_add_card(stc, pts, wid, outw, 0.0)
-		_add_card(stc, pts, wid * 0.8, outw, 0.55)  # crossed second card = volume
+		var len := 0.25 * H * (0.55 + 0.75 * rng2.randf())  # strong length variation
+		var side_v := outw.cross(Vector3.UP).normalized()
+		var phase := rng2.randf() * TAU
+		var amp := (0.010 + 0.012 * rng2.randf()) * H
+		var pts: Array = []
+		for k in 6:
+			var t := float(k) / 5.0
+			var bulge := sin(t * PI) * (0.050 + 0.02 * rng2.randf()) * H  # puff out then fall
+			var wave := side_v * sin(t * 3.2 * PI + phase) * amp * t  # light waves toward the tips
+			pts.append(root + outw * (0.010 * H + bulge) + Vector3(0, -len * t, 0) + wave)
+		var wid := (0.030 + 0.026 * rng2.randf()) * H
+		_add_card(stc, pts, wid, outw, (rng2.randf() - 0.5) * 0.5)
+		_add_card(stc, pts, wid * 0.75, outw, 0.5 + rng2.randf() * 0.4)
+	# crown volume: short lifted clumps on top, swept back
+	for i2 in 9:
+		var ca := rng2.randf() * TAU
+		var cr := hrad * (0.25 + 0.55 * rng2.randf())
+		var r1 := Vector3(hcx + sin(ca) * cr, hcy + 0.060 * H, hzc + cos(ca) * cr * 0.8)
+		var bw := Vector3(sin(ca) * 0.6, 0.0, -0.8).normalized()
+		# lie on the crown: small lift, then roll back/down over the skull
+		_add_card(stc, [r1, r1 + Vector3(0, 0.008 * H, 0) + bw * 0.022 * H, r1 + Vector3(0, -0.006 * H, 0) + bw * 0.050 * H], 0.040 * H, Vector3.UP, 0.0)
 	# side locks framing the face
 	for sgn3 in [-1.0, 1.0]:
 		var ang2 := deg_to_rad(sgn3 * 66.0)
@@ -1734,7 +1750,7 @@ static func _attach_outfit_extras(unit: Node3D, c, team: String, pal: Dictionary
 			var wn: Vector3 = (p1 - p0).cross(Vector3(0, 0, 1)).normalized() * -float(sgn)
 			for v3 in [p0, p1, p1 + th, p0, p1 + th, p0 + th, p0, p1 + th, p1, p0, p0 + th, p1 + th]:
 				st.set_normal(wn)
-				st.set_color(Color(5.0 / 255.0, 0.85, 0.0))
+				st.set_color(Color(3.0 / 255.0, 0.92, 0.0))  # walls = coat (were the dark "edge")
 				st.add_vertex(v3)
 		# edge line (stitched roll edge) along the inner + notch edges
 		var lip := Vector3(0, 0, 0.0012 * H)
@@ -1760,7 +1776,7 @@ static func _attach_outfit_extras(unit: Node3D, c, team: String, pal: Dictionary
 	lm.set_shader_parameter("force_slot", -1.0)
 	lm.set_shader_parameter("use_albedo", 0.0)
 	var larr: Array = lm.get_shader_parameter("palette")
-	larr[5] = coat.darkened(0.28)  # lapel roll-edge: a shade under the coat, not black
+	larr[5] = coat.darkened(0.12)  # lapel roll-edge: a shade under the coat, not black
 	lm.set_shader_parameter("palette", larr)
 	lm.set_shader_parameter("rim_amt", 0.35)
 	lapel.material_override = lm
