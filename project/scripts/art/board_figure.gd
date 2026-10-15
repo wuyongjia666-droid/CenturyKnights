@@ -7,6 +7,9 @@ extends RefCounted
 const SHADER_PATH := "res://shaders/board_figure.gdshader"
 const MOD_DIR := "res://assets/models/modules/"
 const FARM_CAST_DIR := "res://assets/models/board/farm_cast/"
+## P0 offline plate palettes (tools/art/plate_palette.py). Lookup by try_texture stem only.
+const PLATE_PALETTES := "res://data/plate_palettes.json"
+const PLATE_OVERRIDES := "res://data/plate_palette_overrides.json"
 const MODEL_H := 1.85
 const HEAD_RATIO := 5.45
 const CACHE_CAP := 64
@@ -14,6 +17,9 @@ const CACHE_CAP := 64
 static var _shader: Shader
 static var _cache: Dictionary = {}  # hash -> Node3D packed scene? we cache built roots weakly by rebuilding cheaply
 static var _pal_cache: Dictionary = {}  # identity -> palette dict
+static var _plate_table: Dictionary = {}  # stem -> row
+static var _plate_ovr: Dictionary = {}
+static var _plate_ready := false
 
 static func _sh() -> Shader:
 	if _shader == null:
@@ -95,6 +101,69 @@ static func _pal_key(c, team: String, tmpl: String) -> String:
 	var id := str(c.id) if c != null and "id" in c else "x"
 	return "%s|%s|%s" % [id, team, tmpl]
 
+static func _ensure_plate_table() -> void:
+	if _plate_ready:
+		return
+	_plate_ready = true
+	if ResourceLoader.exists(PLATE_PALETTES):
+		var raw = _load_json(PLATE_PALETTES)
+		if typeof(raw) == TYPE_DICTIONARY:
+			var plates = raw.get("plates", raw)
+			if typeof(plates) == TYPE_DICTIONARY:
+				_plate_table = plates
+	if ResourceLoader.exists(PLATE_OVERRIDES):
+		var ovr = _load_json(PLATE_OVERRIDES)
+		if typeof(ovr) == TYPE_DICTIONARY:
+			_plate_ovr = ovr
+
+
+static func _load_json(path: String) -> Variant:
+	var f := FileAccess.open(path, FileAccess.READ)
+	if f == null:
+		return {}
+	var parsed: Variant = JSON.parse_string(f.get_as_text())
+	return parsed if parsed != null else {}
+
+
+static func _hex_color(hx: Variant, fallback: Color) -> Color:
+	var s := str(hx)
+	if s.begins_with("#") and s.length() >= 7:
+		return Color.html(s)
+	return fallback
+
+
+## Resolve palette row for the plate stem try_texture actually loaded (no rematch).
+static func palette_row_for_stem(stem: String) -> Dictionary:
+	_ensure_plate_table()
+	if stem == "" or not _plate_table.has(stem):
+		return {}
+	var row: Dictionary = (_plate_table[stem] as Dictionary).duplicate(true)
+	if _plate_ovr.has(stem) and typeof(_plate_ovr[stem]) == TYPE_DICTIONARY:
+		var o: Dictionary = _plate_ovr[stem]
+		for k in o.keys():
+			if str(k).begins_with("_"):
+				continue
+			row[k] = o[k]
+	return row
+
+
+static func _apply_plate_row(out: Dictionary, row: Dictionary) -> void:
+	if row.is_empty():
+		return
+	out["hair"] = _hex_color(row.get("hair"), out["hair"])
+	out["skin"] = _hex_color(row.get("skin"), out["skin"])
+	out["coat"] = _hex_color(row.get("coat"), out["coat"])
+	out["lining"] = _hex_color(row.get("coat_dark"), out["lining"])
+	if row.get("sash") != null:
+		out["scarf"] = _hex_color(row.get("sash"), out["scarf"])
+	if row.get("metal") != null:
+		out["metal"] = _hex_color(row.get("metal"), out["metal"])
+	var st := str(row.get("style", out.get("style", "crop")))
+	if st in ["bob", "crop", "crown", "long", "messy", "pony", "swept", "tied"]:
+		out["style"] = st
+	out["plate_stem"] = str(row.get("stem", out.get("plate_stem", "")))
+
+
 static func _sample_portrait(c) -> Dictionary:
 	var out := {
 		"hair": Color(0.25, 0.20, 0.18),
@@ -106,6 +175,7 @@ static func _sample_portrait(c) -> Dictionary:
 		"boots": Color(0.12, 0.11, 0.11),
 		"metal": Color(0.78, 0.82, 0.88),
 		"style": "crop",
+		"plate_stem": "",
 	}
 	if c == null:
 		return out
@@ -119,7 +189,21 @@ static func _sample_portrait(c) -> Dictionary:
 		if ph.has("skin_color"):
 			out["skin"] = ph["skin_color"]
 		out["style"] = CKPortraitDoll._style(c)
-	# Prefer colours from the portrait that UnitArt actually shows.
+	# P0 entry: prefer offline plate_palettes keyed by the stem try_texture loaded.
+	var stem := ""
+	if c != null and c.has_meta("ck_plate_stem"):
+		stem = str(c.get_meta("ck_plate_stem"))
+	if stem == "":
+		var pack: Dictionary = CKPortraitBank.try_texture(c, "small")
+		stem = str(pack.get("stem", ""))
+		if c != null and stem != "":
+			c.set_meta("ck_plate_stem", stem)
+	out["plate_stem"] = stem
+	var row := palette_row_for_stem(stem)
+	if not row.is_empty():
+		_apply_plate_row(out, row)
+		return out
+	# Prefer colours from the portrait that UnitArt actually shows (runtime sample).
 	if DisplayServer.get_name() == "headless":
 		return out
 	var tex: Texture2D = UnitArt.portrait(c, 128, "large") if c is CKCharacter else null

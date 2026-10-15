@@ -37,6 +37,7 @@ run_lint() {
 	check gdlint "GDLINT PASS" python3 "$ROOT/tools/ci/gdlint_changed.py"
 	check export_size "EXPORT SIZE PASS" python3 "$ROOT/tools/ci/export_size_report.py"
 	check board_figure_gate "BOARD FIGURE GATE PASS" python3 "$ROOT/tools/ci/board_figure_gate.py"
+	check plate_palette "TEST PLATE PALETTE PASS" python3 "$ROOT/tools/art/test_plate_palette.py"
 	if [[ "${CK_PORTRAIT_BANK_FULL:-}" == "1" ]]; then
 		check portrait_bank_index "BANK INDEX PASS" python3 "$ROOT/tools/ci/portrait_bank_index.py" --all \
 			--verified-cache "${CK_BANK_VERIFIED:-${HOME}/.cache/ck/bank_verified.txt}"

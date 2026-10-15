@@ -35,9 +35,12 @@ func _run() -> String:
 		var tex: Texture2D = UnitArt.portrait(c, 128)
 		if tex == null:
 			return "null portrait age %d" % age
-		var bank: Texture2D = CKPortraitBank.try_texture(c, "small")
+		var bank_pack: Dictionary = CKPortraitBank.try_texture(c, "small")
+		var bank: Texture2D = bank_pack.get("texture") as Texture2D
 		if age < 3 and bank == null and CKPortraitBank.has_plates():
 			return "infant bank miss age %d" % age
+		if bank != null and str(bank_pack.get("stem", "")) == "":
+			return "try_texture missing stem age %d" % age
 	var mom := GameState.get_leader()
 	if mom == null:
 		return "no leader"
