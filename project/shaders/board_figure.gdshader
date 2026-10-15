@@ -182,13 +182,13 @@ void fragment() {
 			vec2 rr = vec2(cy * rel.x - sy * rel.y, sy * rel.x + cy * rel.y);
 			float ang = atan(rr.x, max(1e-4, rr.y) + 0.0) ;
 			ang = atan(rr.x, rr.y);
-			float rad = face_box.w * 0.62;
+			float rad = face_box.w * mix(0.62, 0.50, face_clear);  // hunter: decal reaches the cheeks
 			float u = 0.5 + (ang * rad) / face_box.w;
 			float vv = (face_box.y - v_mp.y) / max(0.001, face_box.y - face_box.z);
 			vec2 fuv = vec2(u, vv);
 			float inb = step(0.0, fuv.x) * step(fuv.x, 1.0) * step(0.0, fuv.y) * step(fuv.y, 1.0);
 			// angle-based front mask (mesh normals on the remeshed head are noisy)
-			float fr = 1.0 - smoothstep(1.05, 1.45, abs(ang));
+			float fr = 1.0 - smoothstep(mix(1.05, 1.25, face_clear), mix(1.45, 1.60, face_clear), abs(ang));
 			vec4 fd = texture(face_tex, clamp(fuv, 0.0, 1.0));
 			// Board LOD: when a face texel covers many screen px→ few, push a
 			// simplified, high-contrast face (brows/eyes/hair shapes) from a coarse mip.
@@ -204,9 +204,12 @@ void fragment() {
 			fc = mix(fc * 1.08, simple, lodw);
 			float fw = mix(fd.a, max(fd.a, fl.a), lodw) * inb * fr;
 			// hunter: clear the model's dark hair card inside the face oval
-			vec2 oc = (fuv - vec2(0.5, 0.55)) / vec2(0.36, 0.40);
+			vec2 oc = (fuv - vec2(0.5, 0.55)) / vec2(0.46, 0.42);  // wider: reach both cheeks
 			float oval = 1.0 - smoothstep(0.75, 1.0, length(oc));
-			base = mix(base, palette[1].rgb, face_clear * oval * fr * (1.0 - fw));
+			// hunter: whole front hemisphere of the head below the hairline = clean skin base
+			// (kills the model's leftover painted cheek/hair strokes beside the decal)
+			float hemi = (1.0 - smoothstep(1.35, 1.6, abs(ang))) * smoothstep(-0.02, 0.06, vv) * (1.0 - smoothstep(1.0, 1.12, vv));
+			base = mix(base, palette[1].rgb, face_clear * max(oval * fr, hemi) * (1.0 - fw));
 			fw = max(fw, face_clear * oval * fr * 0.9 * step(0.05, fd.a));
 			base = mix(base, fc, fw);
 			v_face_w = fw;

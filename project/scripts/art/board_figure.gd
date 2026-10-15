@@ -1311,6 +1311,11 @@ static func face_decal_image(img: Image) -> Image:
 			var lum := 0.2126 * col.r + 0.7152 * col.g + 0.0722 * col.b
 			if y < 20 and not _is_skin(col) and lum < 0.30:
 				a *= 0.25  # fringe over forehead: let shader hair show
+			# portrait hair falling beside the cheek (hunter crop: dark locks on his left):
+			# drop it so the 3D hair / skin base shows instead of a painted dark patch
+			var sidex := absf(x - 47.5) / 48.0
+			if y >= 20 and sidex > 0.40 and not _is_skin(col) and lum < 0.42:
+				a *= clampf((0.40 - (sidex - 0.40) * 4.0), 0.0, 0.4)
 			col.a = a
 			crop.set_pixel(x, y, col)
 	crop.generate_mipmaps()
