@@ -590,19 +590,35 @@ def _import_hair_lod(style: str):
     zs = [v.z for v in co]
     zmin, zmax = min(zs), max(zs)
     span = max(0.05, zmax - zmin)
-    scale = (HEAD_H * 0.95) / span
-    ob.scale = (scale, scale, scale)
+    # Board-readable silhouette — keep hair TOP ≤ ~2.05 (card ortho clips above).
+    # Lateral inflate for swept fringe; vertical span ~0.28m sitting on crown.
+    target_span = 0.30
+    scale = target_span / span
+    ob.scale = (scale * 1.45, scale * 1.35, scale)
     bpy.ops.object.transform_apply(scale=True)
     zs = [v.co.z for v in ob.data.vertices]
-    zmin = min(zs)
-    # Sit on mid-skull / face plane so hair hugs scalp, not floating
-    dz = (CHIN_Y + HEAD_H * 0.38) - zmin
+    xs = [v.co.x for v in ob.data.vertices]
+    ys = [v.co.y for v in ob.data.vertices]
+    zmin, zmax = min(zs), max(zs)
+    cx = sum(xs) / len(xs)
+    cy = sum(ys) / len(ys)
+    # Crown of procedural/organic head ≈ MODEL_H - 0.02
+    head_top = MODEL_H - 0.02
+    # Place so hair top sits just above skull (~0.12m)
+    hair_top_target = head_top + 0.12
+    dz = hair_top_target - zmax
     ob.location.z += dz
     bpy.ops.object.transform_apply(location=True)
-    # Pull hair slightly toward −Y so fringe reads on face
     for v in ob.data.vertices:
-        v.co.y -= 0.01
+        v.co.x = cx + (v.co.x - cx) * 1.15
+        v.co.y = cy + (v.co.y - cy) * 1.12 - 0.04
     ob.data.update()
+    bpy.context.view_layer.objects.active = ob
+    bpy.ops.object.mode_set(mode="EDIT")
+    bpy.ops.mesh.select_all(action="SELECT")
+    bpy.ops.mesh.normals_make_consistent(inside=False)
+    bpy.ops.object.mode_set(mode="OBJECT")
+    bpy.ops.object.shade_smooth()
     _decimate_to(ob, 1200)
     ob.name = f"hair_{style}"
     paint_slots(ob, "hair")
@@ -672,20 +688,24 @@ def _mesh_is_ok(ob) -> bool:
 
 
 def build_hair(style: str):
-    # Board LOD: procedural sculptural caps. Farmed hair_* modules are performance /
-    # stage assets — too dense and often non-manifold after decimate for this kit.
-    ob = _proc_hair(style)
-    ob.name = f"hair_{style}"
-    if tris(ob) > 1200:
-        _decimate_to(ob, 1200)
-    if not _mesh_is_ok(ob):
-        log("hair rebuild", style)
-        bpy.data.objects.remove(ob, do_unlink=True)
+    # Prefer farmed hair_* modules (silhouette LOD ≤1.2k). Procedural only as fallback.
+    ob = _import_hair_lod(style)
+    if ob is None or not _mesh_is_ok(ob):
+        if ob is not None:
+            bpy.data.objects.remove(ob, do_unlink=True)
+        log("hair module missing/bad, procedural", style)
         ob = _proc_hair(style)
         ob.name = f"hair_{style}"
+        if tris(ob) > 1200:
+            _decimate_to(ob, 1200)
+    else:
+        log("hair module LOD", style, tris(ob))
     if ob.data:
         ob.data.name = ob.name
-    register_part(ob, "hair", [style, "proc"])
+    # Ensure hair slot paint
+    if not ob.data.color_attributes:
+        paint_slots(ob, "hair")
+    register_part(ob, "hair", [style, "module"])
     return ob
 
 

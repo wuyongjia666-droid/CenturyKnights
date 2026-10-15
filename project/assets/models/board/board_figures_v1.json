@@ -28,82 +28,82 @@
     },
     "head_m": {
       "category": "head",
-      "tris": 982,
+      "tris": 1800,
       "tags": [
-        "m",
-        "planes"
+        "override",
+        "organic"
       ]
     },
     "head_f": {
       "category": "head",
-      "tris": 982,
+      "tris": 1800,
       "tags": [
-        "f",
-        "planes"
+        "override",
+        "organic"
       ]
     },
     "hair_bob": {
       "category": "hair",
-      "tris": 588,
+      "tris": 1104,
       "tags": [
         "bob",
-        "proc"
+        "module"
       ]
     },
     "hair_crop": {
       "category": "hair",
-      "tris": 588,
+      "tris": 1103,
       "tags": [
         "crop",
-        "proc"
+        "module"
       ]
     },
     "hair_crown": {
       "category": "hair",
-      "tris": 528,
+      "tris": 1104,
       "tags": [
         "crown",
-        "proc"
+        "module"
       ]
     },
     "hair_long": {
       "category": "hair",
-      "tris": 588,
+      "tris": 1104,
       "tags": [
         "long",
-        "proc"
+        "module"
       ]
     },
     "hair_messy": {
       "category": "hair",
-      "tris": 924,
+      "tris": 1104,
       "tags": [
         "messy",
-        "proc"
+        "module"
       ]
     },
     "hair_pony": {
       "category": "hair",
-      "tris": 568,
+      "tris": 1169,
       "tags": [
         "pony",
-        "proc"
+        "module"
       ]
     },
     "hair_swept": {
       "category": "hair",
-      "tris": 700,
+      "tris": 1104,
       "tags": [
         "swept",
-        "proc"
+        "module"
       ]
     },
     "hair_tied": {
       "category": "hair",
-      "tris": 560,
+      "tris": 1104,
       "tags": [
         "tied",
-        "proc"
+        "module"
       ]
     },
     "outfit_captain": {
@@ -283,7 +283,7 @@
     },
     "compose_bandit": {
       "category": "compose",
-      "tris": 6000,
+      "tris": 3602,
       "tags": [
         "override",
         "organic"
@@ -291,7 +291,7 @@
     },
     "compose_bandit_archer": {
       "category": "compose",
-      "tris": 6000,
+      "tris": 3523,
       "tags": [
         "override",
         "organic"
@@ -299,7 +299,7 @@
     },
     "compose_bandit_chief": {
       "category": "compose",
-      "tris": 6000,
+      "tris": 3517,
       "tags": [
         "override",
         "organic"
@@ -307,7 +307,7 @@
     },
     "compose_bandit_weak": {
       "category": "compose",
-      "tris": 6000,
+      "tris": 3564,
       "tags": [
         "override",
         "organic"
@@ -315,7 +315,7 @@
     },
     "compose_captain": {
       "category": "compose",
-      "tris": 5472,
+      "tris": 3546,
       "tags": [
         "override",
         "organic"
@@ -323,7 +323,7 @@
     },
     "compose_hunter": {
       "category": "compose",
-      "tris": 6000,
+      "tris": 3548,
       "tags": [
         "override",
         "organic"
@@ -371,6 +371,6 @@
   },
   "quality": "organic_compose_v3",
   "glb": "board_figures_v1.glb",
-  "total_tris": 68860,
+  "total_tris": 60176,
   "part_count": 43
 }

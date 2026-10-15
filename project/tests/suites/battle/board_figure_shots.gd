@@ -79,7 +79,7 @@ func _unit_cards(out: String) -> void:
 func _render_card(c, team: String, tmpl: String) -> Texture2D:
 	var vp := SubViewport.new()
 	vp.size = Vector2i(320, 400)
-	vp.transparent_bg = true
+	vp.transparent_bg = false
 	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	vp.own_world_3d = true
 	add_child(vp)
@@ -90,17 +90,18 @@ func _render_card(c, team: String, tmpl: String) -> Texture2D:
 	world.add_child(fig)
 	var cam := Camera3D.new()
 	cam.projection = Camera3D.PROJECTION_ORTHOGONAL
-	cam.size = 2.15
+	cam.size = 2.45
 	cam.current = true
 	world.add_child(cam)
-	cam.global_position = Vector3(0, 1.55, 2.35)
-	cam.look_at(Vector3(0, 0.92, 0), Vector3.UP)
+	cam.global_position = Vector3(0, 1.65, 2.45)
+	cam.look_at(Vector3(0, 1.05, 0), Vector3.UP)
 	var we := WorldEnvironment.new()
 	var e := Environment.new()
-	e.background_mode = Environment.BG_CLEAR_COLOR
+	e.background_mode = Environment.BG_COLOR
+	e.background_color = Color(0.78, 0.80, 0.84)
 	e.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	e.ambient_light_color = Color(0.72, 0.76, 0.86)
-	e.ambient_light_energy = 0.55
+	e.ambient_light_color = Color(0.85, 0.87, 0.92)
+	e.ambient_light_energy = 0.75
 	we.environment = e
 	world.add_child(we)
 	for i in 5:

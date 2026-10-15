@@ -242,13 +242,13 @@ static func _parts_for(c, team: String, tmpl: String, pal: Dictionary) -> Dictio
 			compose = str(row2.get("compose", ""))
 			if str(row2.get("body", "")) == "heavy":
 				body = "body_heavy"
-	# Organic compose replaces body/head/hair/outfit (keeps weapon + signs).
+	# Organic compose = body/clothes LOD only. Head + hair_* modules always attached.
 	if compose != "":
 		return {
 			"compose": compose,
 			"body": "",
-			"head": "",
-			"hair": "",
+			"head": head,
+			"hair": hair,
 			"outfit": "",
 			"weapon": weapon,
 			"signs": signs,
@@ -276,12 +276,13 @@ static func _estimate_tris(parts: Dictionary) -> int:
 	if str(parts.get("compose", "")) != "":
 		var cn := str(parts.get("compose"))
 		if plist.has(cn):
-			total += int((plist[cn] as Dictionary).get("tris", 5500))
+			total += int((plist[cn] as Dictionary).get("tris", 3500))
 		else:
-			total += 5500
-		var wn := str(parts.get("weapon", ""))
-		if wn != "" and plist.has(wn):
-			total += int((plist[wn] as Dictionary).get("tris", 200))
+			total += 3500
+		for k3 in ["head", "hair", "weapon"]:
+			var pn := str(parts.get(k3, ""))
+			if pn != "" and plist.has(pn):
+				total += int((plist[pn] as Dictionary).get("tris", 400))
 		for s in parts.get("signs", []):
 			if plist.has(str(s)):
 				total += int((plist[str(s)] as Dictionary).get("tris", 100))
@@ -306,9 +307,10 @@ static func _assemble_kit(body: Node3D, parts: Dictionary, pal: Dictionary, face
 	var compose_n := str(parts.get("compose", ""))
 	if compose_n != "":
 		names.append(compose_n)
-		var wn := str(parts.get("weapon", ""))
-		if wn != "":
-			names.append(wn)
+		for k2 in ["head", "hair", "weapon"]:
+			var n2 := str(parts.get(k2, ""))
+			if n2 != "":
+				names.append(n2)
 		for s in parts.get("signs", []):
 			names.append(str(s))
 	else:
@@ -595,6 +597,13 @@ static func _lift_lum(c: Color, floor_v: float) -> Color:
 
 ## §3.5 faction gamut guards.
 static func _protect(pal: Dictionary, enemy: bool) -> void:
+	# Board hair lift: near-black hair vanishes on board/cards — raise luma floor.
+	var hc: Color = pal.get("hair", Color(0.2, 0.15, 0.12))
+	var hluma := 0.2126 * hc.r + 0.7152 * hc.g + 0.0722 * hc.b
+	if hluma < 0.14:
+		var scale: float = 0.22 / maxf(0.001, hluma)
+		pal["hair"] = Color(min(1.0, hc.r * scale), min(1.0, hc.g * scale), min(1.0, hc.b * scale))
+	# board hair lift end
 	# Rule 1: head/torso separation — if hair/skin vs coat ΔE < 5, deepen coat_dark as collar.
 	if not enemy:
 		var head_c: Color = pal.get("hair", pal.get("skin", Color.WHITE))
