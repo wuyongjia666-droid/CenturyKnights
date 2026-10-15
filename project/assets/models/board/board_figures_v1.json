@@ -283,7 +283,7 @@
     },
     "compose_bandit": {
       "category": "compose",
-      "tris": 5600,
+      "tris": 6000,
       "tags": [
         "override",
         "organic"
@@ -291,7 +291,7 @@
     },
     "compose_bandit_archer": {
       "category": "compose",
-      "tris": 5595,
+      "tris": 6000,
       "tags": [
         "override",
         "organic"
@@ -299,7 +299,7 @@
     },
     "compose_bandit_chief": {
       "category": "compose",
-      "tris": 5600,
+      "tris": 6000,
       "tags": [
         "override",
         "organic"
@@ -307,7 +307,7 @@
     },
     "compose_bandit_weak": {
       "category": "compose",
-      "tris": 5600,
+      "tris": 6000,
       "tags": [
         "override",
         "organic"
@@ -315,7 +315,7 @@
     },
     "compose_captain": {
       "category": "compose",
-      "tris": 5553,
+      "tris": 5472,
       "tags": [
         "override",
         "organic"
@@ -323,7 +323,7 @@
     },
     "compose_hunter": {
       "category": "compose",
-      "tris": 5600,
+      "tris": 6000,
       "tags": [
         "override",
         "organic"
@@ -371,6 +371,6 @@
   },
   "quality": "organic_compose_v3",
   "glb": "board_figures_v1.glb",
-  "total_tris": 66936,
+  "total_tris": 68860,
   "part_count": 43
 }

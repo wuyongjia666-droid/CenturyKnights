@@ -72,6 +72,8 @@ func _unit_cards(out: String) -> void:
 			if img:
 				img.save_png("%s/cards/%s.png" % [out, row.name])
 				print("CARD ", row.name)
+				if str(row.name) == "captain":
+					await _captain_vs_portrait(out, c, img)
 
 
 func _render_card(c, team: String, tmpl: String) -> Texture2D:
@@ -108,3 +110,49 @@ func _render_card(c, team: String, tmpl: String) -> Texture2D:
 	if img == null:
 		return null
 	return ImageTexture.create_from_image(img)
+
+
+func _captain_vs_portrait(out: String, c, fig_img: Image) -> void:
+	## Figure + portrait + hair/skin/coat swatches (plate-sampled palette).
+	DirAccess.make_dir_recursive_absolute(out + "/vs_portrait")
+	var pal: Dictionary = CKBoardFigure.palette_for(c, "player")
+	var portrait: Texture2D = UnitArt.portrait(c) if c != null else null
+	var pw := 280
+	var ph := 360
+	var strip_h := 72
+	var canvas := Image.create(pw * 2 + 24, ph + strip_h + 16, false, Image.FORMAT_RGBA8)
+	canvas.fill(Color(0.05, 0.06, 0.09, 1))
+	var fig := fig_img.duplicate()
+	fig.resize(pw, ph, Image.INTERPOLATE_NEAREST)
+	canvas.blit_rect(fig, Rect2i(0, 0, pw, ph), Vector2i(8, 8))
+	if portrait != null:
+		var pimg: Image = portrait.get_image()
+		if pimg:
+			pimg = pimg.duplicate()
+			pimg.resize(pw, ph, Image.INTERPOLATE_BILINEAR)
+			canvas.blit_rect(pimg, Rect2i(0, 0, pw, ph), Vector2i(pw + 16, 8))
+	var keys = ["hair", "skin", "coat", "coat_dark"]
+	var sw = int((pw * 2 + 8) / keys.size())
+	var y0 = ph + 12
+	for i in keys.size():
+		var col: Color = pal.get(keys[i], Color(0.5, 0.5, 0.5)) as Color
+		var x0 = 8 + i * sw
+		for yy in range(y0, y0 + 44):
+			for xx in range(x0, x0 + sw - 6):
+				canvas.set_pixel(xx, yy, col)
+		var edge := Color(0.08, 0.09, 0.11, 1)
+		for xx in range(x0, x0 + sw - 6):
+			canvas.set_pixel(xx, y0, edge)
+			canvas.set_pixel(xx, y0 + 43, edge)
+	canvas.save_png("%s/vs_portrait/captain_vs_plate.png" % out)
+	var f := FileAccess.open("%s/vs_portrait/captain_palette.json" % out, FileAccess.WRITE)
+	if f:
+		var row := {}
+		for k in keys:
+			var cc: Color = pal.get(k, Color.WHITE) as Color
+			row[k] = "#%s" % cc.to_html(false)
+		row["plate_stem"] = str(pal.get("plate_stem", ""))
+		row["style"] = str(pal.get("style", ""))
+		f.store_string(JSON.stringify(row, "\t"))
+		f.close()
+	print("CARD captain_vs_portrait")

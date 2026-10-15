@@ -1,25 +1,23 @@
 #!/usr/bin/env python3
-"""Build organic formal board-figure overrides from Hunyuan / farm_cast.
+"""Build organic formal board-figure overrides (face-safe + clean slot borders).
 
-NO cube/cylinder face stacks. Pipeline:
-  1. Prefer high-res hy_* in farm_inbox; else farm_cast retopo.
-  2. Collapse-decimate (preserves organic silhouette vs voxel).
-  3. Shade smooth + light Laplacian smooth.
-  4. Board head enlarge (~1.28× above neck) for 38° readability.
-  5. Spatial vertex-colour slots (R=slot G=AO B=flags).
-  6. Write compose_*.glb into tools/models/board_parts/ for generator override.
-
-Also writes organic body_m / head_m / outfit_* region splits when possible.
+Fixes vs rejected round:
+  - Face default = skin (never whole-face hair/eye black mask)
+  - Eyes = tiny dark patches only
+  - Nose / brow / cheek / jaw via vertex displace (no boolean melt)
+  - Head density protected during decimate
+  - Face-label paint → majority smooth → split edges at borders → POINT colours
 
   blender -b -P tools/models/build_organic_board_overrides.py
 """
 from __future__ import annotations
 
 import math
-import os
 import sys
+from collections import Counter, defaultdict
 from pathlib import Path
 
+import bmesh
 import bpy
 from mathutils import Vector
 
@@ -29,8 +27,14 @@ FARM = ROOT / "project/assets/models/board/farm_cast"
 OUT = ROOT / "tools/models/board_parts"
 PREVIEW = ROOT / "docs/art/review/board_figure_p1/organic_preview"
 MODEL_H = 1.85
-TARGET = 5600
-NECK_Z = 1.48  # around chin/neck for 5.45 heads @ 1.85m
+TARGET = 5600  # compose+weapon must stay ≤7k
+NECK_Z = 1.48  # fallback; prefer neck_z_of(ob) after normalize
+
+def neck_z_of(ob) -> float:
+    """Chin/neck plane after normalize — 80% of figure height (5.45 heads)."""
+    zs = [v.co.z for v in ob.data.vertices]
+    return min(zs) + (max(zs) - min(zs)) * 0.80
+
 
 SLOT = {
     "hair": 0, "skin": 1, "eye": 2, "coat": 3, "coat_dark": 4, "apron": 5,
@@ -38,9 +42,7 @@ SLOT = {
     "trousers": 12, "boots": 13, "leather": 14, "wood": 15, "accent": 16,
 }
 
-# (compose_name, preferred_sources in order, outfit_override_name, notes)
 FIGURES = [
-    # Prefer high-res hy when present (proper manifold remesh). Else farm_cast.
     ("compose_captain", ["hy_leader_m.glb", "leader_m.glb"], "outfit_captain", "ally"),
     ("compose_hunter", ["hunter_m.glb"], "outfit_hunter", "ally"),
     ("compose_bandit_weak", ["bandit_weak.glb", "bandit.glb"], "outfit_bandit_weak", "enemy"),
@@ -116,19 +118,40 @@ def normalize_height(ob):
     bpy.ops.object.transform_apply(location=True, rotation=False, scale=False)
 
 
-def collapse_to(ob, target: int):
-    """Always produce a welded manifold. farm_cast exports were nearly unwelded tris."""
-    t0 = tris(ob)
-    log("start tris", t0, "verts", len(ob.data.vertices))
-    # 1) Weld whatever we have
+def _weld(ob, thr=0.0015):
     bpy.context.view_layer.objects.active = ob
     bpy.ops.object.mode_set(mode="EDIT")
     bpy.ops.mesh.select_all(action="SELECT")
-    bpy.ops.mesh.remove_doubles(threshold=0.002)
+    bpy.ops.mesh.remove_doubles(threshold=thr)
+    bpy.ops.mesh.normals_make_consistent(inside=False)
     bpy.ops.object.mode_set(mode="OBJECT")
+
+
+def _ensure_head_vg(ob) -> str:
+    name = "ck_head"
+    vg = ob.vertex_groups.get(name) or ob.vertex_groups.new(name=name)
+    zs = [v.co.z for v in ob.data.vertices]
+    zmax = max(zs)
+    neck = neck_z_of(ob)
+    for i, v in enumerate(ob.data.vertices):
+        if v.co.z >= neck - 0.04:
+            w = (v.co.z - (neck - 0.04)) / max(1e-4, zmax - (neck - 0.04))
+            w = max(0.35, min(1.0, 0.35 + 0.65 * w))
+            vg.add([i], w, "REPLACE")
+        else:
+            vg.add([i], 0.0, "REPLACE")
+    return name
+
+
+def collapse_to(ob, target: int):
+    """Weld → fine voxel (keep face detail) → head-protected decimate."""
+    t0 = tris(ob)
+    log("start tris", t0, "verts", len(ob.data.vertices))
+    _weld(ob, 0.002)
     log("after weld", tris(ob), "verts", len(ob.data.vertices))
-    # 2) Voxel remesh → guaranteed manifold (even if farm_cast was broken)
-    for vs in (0.014, 0.018, 0.022, 0.028, 0.035):
+
+    # Finer voxels first so nose/brow survive; stop around 18–35k then protect-head collapse.
+    for vs in (0.010, 0.012, 0.014, 0.016, 0.020, 0.024):
         md = ob.modifiers.new("VR", "REMESH")
         md.mode = "VOXEL"
         md.voxel_size = vs
@@ -136,39 +159,42 @@ def collapse_to(ob, target: int):
         apply_mod(ob, md.name)
         t = tris(ob)
         log(f"voxel {vs}", t, "verts", len(ob.data.vertices))
-        if 2000 <= t <= target * 3.5:
+        if 12000 <= t <= 40000:
             break
-        if t < 2000:
-            # too coarse — undo by stopping; last pass may be coarse
+        if t < 8000 and vs >= 0.016:
             break
+
+    vg_name = _ensure_head_vg(ob)
     t = tris(ob)
     if t > target:
         md = ob.modifiers.new("D", "DECIMATE")
         md.decimate_type = "COLLAPSE"
-        md.ratio = max(0.05, min(0.95, target / float(max(1, t))))
+        md.ratio = max(0.08, min(0.95, target / float(max(1, t))))
         md.use_collapse_triangulate = True
+        md.vertex_group = vg_name
+        md.invert_vertex_group = True  # high head weight = protected
+        md.vertex_group_factor = 1.0
         apply_mod(ob, md.name)
-        log("collapse", tris(ob))
+        log("collapse(protect head)", tris(ob), "verts", len(ob.data.vertices))
+
     if tris(ob) > 7000:
         md = ob.modifiers.new("Dcap", "DECIMATE")
         md.decimate_type = "COLLAPSE"
-        md.ratio = max(0.05, 6500 / float(tris(ob)))
+        md.ratio = max(0.05, 6900 / float(tris(ob)))
+        md.vertex_group = vg_name
+        md.invert_vertex_group = True
+        md.vertex_group_factor = 0.85
         apply_mod(ob, md.name)
         log("cap", tris(ob))
+
     bpy.ops.object.shade_smooth()
-    # Very light smooth only — heavy Lap melted holes in the solid.
     md = ob.modifiers.new("Lap", "LAPLACIANSMOOTH")
     md.iterations = 2
-    md.lambda_factor = 0.15
+    md.lambda_factor = 0.12
     md.use_volume_preserve = True
     apply_mod(ob, md.name)
+    _weld(ob, 0.001)
     bpy.ops.object.shade_smooth()
-    # Weld again after smooth
-    bpy.ops.object.mode_set(mode="EDIT")
-    bpy.ops.mesh.select_all(action="SELECT")
-    bpy.ops.mesh.remove_doubles(threshold=0.001)
-    bpy.ops.mesh.normals_make_consistent(inside=False)
-    bpy.ops.object.mode_set(mode="OBJECT")
     log("final geometry", tris(ob), "verts", len(ob.data.vertices))
 
 
@@ -187,65 +213,11 @@ def fill_holes(ob, sides: int = 200):
     bpy.ops.object.shade_smooth()
 
 
-
-def enhance_face(ob):
-    """Boolean-union small organic face masses (nose/brow/chin) — not cubes."""
-    me = ob.data
-    zs = [v.co.z for v in me.vertices]
-    zmax = max(zs)
-    # Head front center
-    head = [v for v in me.vertices if v.co.z >= NECK_Z]
-    if len(head) < 30:
-        return
-    cx = sum(v.co.x for v in head) / len(head)
-    # Face looks -Y
-    face_y = min(v.co.y for v in head) - 0.01
-    cz_face = NECK_Z + 0.14
-    # Build metaball face kit then boolean
-    bpy.ops.object.metaball_add(type="ELLIPSOID", radius=0.028, location=(cx, face_y, cz_face + 0.02))
-    mb = bpy.context.active_object
-    mb.data.resolution = 0.02
-    el = mb.data.elements
-    el[0].size_x, el[0].size_y, el[0].size_z = 0.7, 1.6, 1.0  # nose
-    e = el.new(); e.type = "ELLIPSOID"; e.radius = 0.04; e.co = (cx, face_y + 0.02, cz_face + 0.08)
-    e.size_x, e.size_y, e.size_z = 1.8, 0.55, 0.4  # brow
-    e = el.new(); e.type = "BALL"; e.radius = 0.035; e.co = (cx, face_y + 0.01, cz_face - 0.06)  # chin tip
-    e = el.new(); e.type = "BALL"; e.radius = 0.03; e.co = (cx + 0.045, face_y + 0.02, cz_face)
-    e = el.new(); e.type = "BALL"; e.radius = 0.03; e.co = (cx - 0.045, face_y + 0.02, cz_face)
-    bpy.ops.object.convert(target="MESH")
-    face = bpy.context.active_object
-    face.name = "FaceBoost"
-    # Boolean union onto body
-    bpy.context.view_layer.objects.active = ob
-    ob.select_set(True)
-    md = ob.modifiers.new("FaceBool", "BOOLEAN")
-    md.operation = "UNION"
-    md.solver = "FAST"
-    md.object = face
-    try:
-        apply_mod(ob, md.name)
-    except Exception as e:
-        log("face bool", e)
-        if md.name in ob.modifiers:
-            ob.modifiers.remove(md)
-    bpy.data.objects.remove(face, do_unlink=True)
-    # Keep tris budget
-    if tris(ob) > 7000:
-        md = ob.modifiers.new("Df", "DECIMATE")
-        md.decimate_type = "COLLAPSE"
-        md.ratio = 6500 / float(tris(ob))
-        apply_mod(ob, md.name)
-    bpy.ops.object.shade_smooth()
-    log("face enhance", tris(ob))
-
-
 def enlarge_head(ob, factor: float = 1.28):
-    """Scale vertices above neck radially from head center (board readability)."""
     me = ob.data
     zs = [v.co.z for v in me.vertices]
     zmax = max(zs)
-    neck = NECK_Z
-    # Head center approx
+    neck = neck_z_of(ob)
     head_vs = [v for v in me.vertices if v.co.z >= neck]
     if len(head_vs) < 20:
         return
@@ -255,85 +227,346 @@ def enlarge_head(ob, factor: float = 1.28):
     for v in me.vertices:
         if v.co.z < neck:
             continue
-        # Smooth blend from neck to crown
         w = (v.co.z - neck) / max(1e-4, zmax - neck)
         w = max(0.0, min(1.0, w))
-        w = w * w * (3 - 2 * w)  # smoothstep
+        w = w * w * (3 - 2 * w)
         f = 1.0 + (factor - 1.0) * w
         v.co.x = cx + (v.co.x - cx) * f
         v.co.y = cy + (v.co.y - cy) * f
         v.co.z = cz + (v.co.z - cz) * f
     me.update()
-    # Re-seat feet after head growth may shift bbox slightly
     normalize_height(ob)
 
 
-def paint_slots(ob, kind: str):
-    """Spatial slot paint on POINT domain (keeps manifold through glTF)."""
+def sculpt_face(ob):
+    """Displace verts for nose / brow / cheeks / jaw — readable volumes, no boolean."""
     me = ob.data
+    neck = neck_z_of(ob)
+    zs = [v.co.z for v in me.vertices]
+    zmax = max(zs)
+    head_h = max(0.05, zmax - neck)
+    head = [v for v in me.vertices if v.co.z >= neck - 0.02]
+    if len(head) < 40:
+        return
+    cx = sum(v.co.x for v in head) / len(head)
+    cy = sum(v.co.y for v in head) / len(head)
+    nose_z = neck + 0.40 * head_h
+    brow_z = neck + 0.55 * head_h
+    cheek_z = neck + 0.38 * head_h
+    jaw_z = neck + 0.18 * head_h
+    chin_z = neck + 0.06 * head_h
+
+    for v in me.vertices:
+        if v.co.z < neck - 0.02:
+            continue
+        dx = v.co.x - cx
+        dy = v.co.y - cy
+        # Front hemisphere weight
+        front = max(0.0, -(v.co.y - cy))  # more positive when more forward (−Y)
+        front_w = max(0.0, min(1.0, (front - 0.01) / 0.10))
+        if front_w <= 0.0 and v.co.y > cy:
+            # back of head — skip facial sculpt
+            continue
+
+        # Nose ridge: center front, push −Y and slight +Z toward tip
+        nd = math.sqrt(dx * dx + (v.co.z - nose_z) ** 2)
+        if nd < 0.055 and front_w > 0.25:
+            k = (1.0 - nd / 0.055) ** 2 * front_w
+            v.co.y -= 0.042 * k
+            v.co.z += 0.006 * k * (1.0 if v.co.z >= nose_z - 0.02 else -0.3)
+
+        # Brow ridge
+        bd = math.sqrt((abs(dx) - 0.03) ** 2 + (v.co.z - brow_z) ** 2) if abs(dx) > 0.02 else abs(v.co.z - brow_z)
+        if abs(dx) < 0.10 and abs(v.co.z - brow_z) < 0.04 and front_w > 0.15:
+            k = (1.0 - abs(v.co.z - brow_z) / 0.04) * front_w
+            v.co.y -= 0.018 * k
+            v.co.z += 0.014 * k
+
+        # Cheeks outward
+        if 0.04 < abs(dx) < 0.10 and abs(v.co.z - cheek_z) < 0.05 and front_w > 0.15:
+            k = (1.0 - abs(v.co.z - cheek_z) / 0.05) * front_w
+            v.co.x += math.copysign(0.018 * k, dx)
+            v.co.y -= 0.006 * k
+
+        # Jaw widen + chin forward
+        if v.co.z < NECK_Z + 0.10 and front_w > 0.1:
+            k = max(0.0, 1.0 - abs(v.co.z - jaw_z) / 0.08) * front_w
+            if abs(dx) > 0.02:
+                v.co.x += math.copysign(0.016 * k, dx)
+            if abs(dx) < 0.04 and abs(v.co.z - chin_z) < 0.045:
+                v.co.y -= 0.022 * (1.0 - abs(v.co.z - chin_z) / 0.045) * front_w
+
+        # Eye sockets: slight recess (not paint — geometry)
+        for sx in (-1, 1):
+            ex, ez = cx + sx * 0.038, neck + 0.45 * head_h
+            ed = math.sqrt((v.co.x - ex) ** 2 + (v.co.z - ez) ** 2)
+            if ed < 0.028 and front_w > 0.35:
+                k = (1.0 - ed / 0.028) ** 2 * front_w
+                v.co.y += 0.010 * k  # recess toward +Y (into head)
+
+    me.update()
+    log("sculpt_face", tris(ob))
+
+
+def _classify_face(poly, me, kind: str, zmin: float, zmax: float, cx0: float, cy0: float, neck: float) -> str:
+    """Per-face slot. Face front defaults to skin — never whole-face hair/eye."""
+    idxs = list(poly.vertices)
+    cz = sum(me.vertices[i].co.z for i in idxs) / len(idxs)
+    cx = sum(me.vertices[i].co.x for i in idxs) / len(idxs)
+    cy = sum(me.vertices[i].co.y for i in idxs) / len(idxs)
+    n = poly.normal
+    t = (cz - zmin) / max(1e-6, zmax - zmin)
+    front = -n.y
+    up = n.z
+    head_h = max(0.05, zmax - neck)
+
+    if t < 0.10:
+        return "boots"
+    if t < 0.38:
+        return "trousers"
+
+    # --- Head (relative to dynamic neck) ---
+    if cz >= neck - 0.02:
+        for sx in (-1.0, 1.0):
+            ex, ez = cx0 + sx * 0.038, neck + 0.42 * head_h
+            if (cx - ex) ** 2 + (cz - ez) ** 2 < (0.016 * head_h / 0.35) ** 2 and front > 0.50 and cy < cy0 + 0.02:
+                return "eye"
+        # Hair ONLY: top of head / rear. Front half of head is always skin (+tiny eyes).
+        crown = up > 0.30 and cz > neck + 0.55 * head_h
+        rear = cy >= cy0  # back half of head in Y
+        side_hair = abs(cx - cx0) > 0.11 and cz > neck + 0.55 * head_h and rear
+        if (crown and rear) or (rear and cz > neck + 0.25 * head_h and front < 0.20) or side_hair:
+            return "hair"
+        return "skin"
+
+    # --- Torso clothing (tight bands — house must NOT flood limbs) ---
+    if n.y > 0.55 and cz > neck - 0.35 and cz < neck - 0.02 and abs(cx - cx0) > 0.06:
+        return "cape" if kind == "ally" else "coat_dark"
+    # Collar only: back/side of neck, not jaw front
+    if neck - 0.10 < cz < neck + 0.01 and front < 0.15:
+        return "coat_dark"
+    # Thin waist belt only
+    if 0.98 < cz < 1.06 and abs(cy - cy0) < 0.10 and abs(cx - cx0) < 0.20:
+        return "house" if kind == "ally" else "sash"
+    if abs(cx - cx0) > 0.32 and 0.88 < cz < 1.20 and front > -0.10:
+        return "skin"  # hands
+    if abs(cx - cx0) > 0.24 and 1.10 < cz < 1.36 and front < 0.25:
+        return "leather"
+    if t > 0.58 and abs(cx - cx0) > 0.20 and cz > 1.25 and math.sqrt(n.x * n.x + n.y * n.y) > 0.85:
+        return "metal"
+    if up < -0.45 and t > 0.42 and cz < NECK_Z - 0.05:
+        return "coat_dark"
+    return "coat"
+
+
+def _smooth_face_labels(labels: list[str], me, rounds: int = 3) -> list[str]:
+    """Majority filter on face adjacency — kills speckles that cause jagged borders."""
+    # Build face adjacency via shared edges
+    edge_faces: dict[tuple[int, int], list[int]] = defaultdict(list)
+    for fi, poly in enumerate(me.polygons):
+        vs = list(poly.vertices)
+        for a, b in zip(vs, vs[1:] + vs[:1]):
+            e = (min(a, b), max(a, b))
+            edge_faces[e].append(fi)
+    neigh = [set() for _ in me.polygons]
+    for fis in edge_faces.values():
+        if len(fis) == 2:
+            a, b = fis
+            neigh[a].add(b)
+            neigh[b].add(a)
+        elif len(fis) > 2:
+            for i in fis:
+                for j in fis:
+                    if i != j:
+                        neigh[i].add(j)
+
+    cur = list(labels)
+    for _ in range(rounds):
+        nxt = list(cur)
+        for fi in range(len(cur)):
+            # Never majority-away tiny eye islands aggressively — protect eyes
+            if cur[fi] == "eye":
+                eye_n = sum(1 for j in neigh[fi] if cur[j] == "eye")
+                if eye_n >= 1 or len(neigh[fi]) <= 2:
+                    continue
+            votes = Counter(cur[j] for j in neigh[fi])
+            if not votes:
+                continue
+            # Prefer keeping skin on head boundary vs hair bleed
+            top, cnt = votes.most_common(1)[0]
+            if top != cur[fi] and cnt >= max(2, (len(neigh[fi]) + 1) // 2):
+                # Don't let hair flood into front skin in one step unless strong majority
+                if cur[fi] == "skin" and top == "hair" and cnt < len(neigh[fi]) * 0.75:
+                    continue
+                nxt[fi] = top
+        cur = nxt
+    return cur
+
+
+def bisect_bands(ob):
+    """Insert clean horizontal loops at boot/trouser cuts for hard colour borders."""
+    zs = [v.co.z for v in ob.data.vertices]
+    zmin, zmax = min(zs), max(zs)
+    h = max(1e-6, zmax - zmin)
+    cuts = [zmin + 0.11 * h, zmin + 0.40 * h]
+    bpy.context.view_layer.objects.active = ob
+    for zc in cuts:
+        bpy.ops.object.mode_set(mode="EDIT")
+        bpy.ops.mesh.select_all(action="SELECT")
+        bpy.ops.mesh.bisect(
+            plane_co=(0.0, 0.0, zc),
+            plane_no=(0.0, 0.0, 1.0),
+            clear_inner=False,
+            clear_outer=False,
+            use_fill=False,
+        )
+        bpy.ops.object.mode_set(mode="OBJECT")
+    log("bisect bands", tris(ob))
+
+
+def paint_slots_clean(ob, kind: str):
+    """Face labels → smooth → split borders → POINT colours (clean islands)."""
+    me = ob.data
+    zs = [v.co.z for v in me.vertices]
+    zmin, zmax = min(zs), max(zs)
+    neck = neck_z_of(ob)
+    log("dynamic neck", round(neck, 3), "h", round(zmax - zmin, 3))
+    head = [v for v in me.vertices if v.co.z >= neck]
+    cx0 = sum(v.co.x for v in head) / max(1, len(head))
+    cy0 = sum(v.co.y for v in head) / max(1, len(head)) if head else 0.0
+
+    labels = [_classify_face(p, me, kind, zmin, zmax, cx0, cy0, neck) for p in me.polygons]
+    labels = _smooth_face_labels(labels, me, rounds=4)
+    hist = Counter(labels)
+    log("face labels", dict(hist))
+
+    # Store labels on faces via freestyle mark / material index — use attribute
+    # Split edges between different labels
+    bm = bmesh.new()
+    bm.from_mesh(me)
+    bm.faces.ensure_lookup_table()
+    bm.edges.ensure_lookup_table()
+    # Map face index → label (bmesh face.index matches after from_mesh)
+    to_split = []
+    for e in bm.edges:
+        fs = e.link_faces
+        if len(fs) == 2:
+            if labels[fs[0].index] != labels[fs[1].index]:
+                to_split.append(e)
+    if to_split:
+        bmesh.ops.split_edges(bm, edges=to_split)
+    bm.to_mesh(me)
+    bm.free()
+    me.update()
+
+    # Recompute labels after split (topology changed — reclassify is safer)
+    labels = [_classify_face(p, me, kind, zmin, zmax, cx0, cy0, neck) for p in me.polygons]
+    labels = _smooth_face_labels(labels, me, rounds=2)
+
     while me.color_attributes:
         me.color_attributes.remove(me.color_attributes[0])
     attr = me.color_attributes.new(name="Color", type="FLOAT_COLOR", domain="POINT")
-    me.update()
-    zs = [v.co.z for v in me.vertices]
-    zmin, zmax = min(zs), max(zs)
-    # Average normals per vertex from adjacent polys
-    vnorm = [Vector((0, 0, 0)) for _ in me.vertices]
-    vcount = [0] * len(me.vertices)
-    for poly in me.polygons:
+
+    # Accumulate per-vertex slot votes from adjacent faces
+    votes = [Counter() for _ in me.vertices]
+    for fi, poly in enumerate(me.polygons):
+        lab = labels[fi]
         for vi in poly.vertices:
-            vnorm[vi] += poly.normal
-            vcount[vi] += 1
-    for i in range(len(me.vertices)):
-        if vcount[i]:
-            vnorm[i] = (vnorm[i] / vcount[i]).normalized()
-        v = me.vertices[i]
-        cz = v.co.z
-        cx = v.co.x
-        cy = v.co.y
-        n = vnorm[i]
-        t = (cz - zmin) / max(1e-6, zmax - zmin)
-        ao = 0.78 + 0.22 * max(0.0, min(1.0, cz / 1.25))
-        front = -n.y
-        up = n.z
-        out = math.sqrt(n.x * n.x + n.y * n.y)
-        slot = "coat"
-        flags = 0.0
-        if t < 0.10:
-            slot = "boots"; ao *= 0.92
-        elif t < 0.38:
-            slot = "trousers"; ao *= 0.90
-        elif cz >= NECK_Z - 0.02:
-            face_band = NECK_Z + 0.08 < cz < NECK_Z + 0.22
-            if face_band and front > 0.35 and abs(cx) < 0.09:
-                slot = "eye" if (up < 0.15 and front > 0.55) else "skin"
-            elif cz > NECK_Z + 0.22 and (up > 0.25 or front < 0.15 or cy > 0.02):
-                slot = "hair"
-            elif front > 0.25 and cz < NECK_Z + 0.28:
-                slot = "skin"
-            else:
-                slot = "hair"
+            votes[vi][lab] += 1
+
+    # Resolve slots, then FORCE front face = skin (tiny eyes + crown hair only).
+    slots = ["coat"] * len(me.vertices)
+    for i, v in enumerate(me.vertices):
+        if votes[i]:
+            common = votes[i].most_common()
+            slot = common[0][0]
+            if len(common) > 1 and common[0][1] == common[1][1]:
+                for cand, _ in common:
+                    if cand == "skin":
+                        slot = "skin"
+                        break
+            slots[i] = slot
         else:
-            if n.y > 0.45 and t > 0.40 and abs(cx) > 0.05:
-                slot = "cape" if kind == "ally" else "coat_dark"
-            elif cz > NECK_Z - 0.12 and cz < NECK_Z + 0.05:
-                slot = "coat_dark"
-            elif 0.95 < cz < 1.08 and abs(cy) < 0.12:
-                slot = "house" if kind == "ally" else "sash"
-            elif abs(cx) > 0.22 and 1.05 < cz < 1.35:
-                slot = "leather"
-            elif t > 0.55 and out > 0.85 and abs(cx) > 0.18 and cz > 1.25:
-                slot = "metal"; flags = 0.25
-            elif abs(cx) > 0.28 and 0.85 < cz < 1.25 and front > -0.2:
-                slot = "skin"
-            elif up < -0.35 and t > 0.40:
-                slot = "coat_dark"
-            else:
-                slot = "coat"
-        sid = SLOT[slot]
-        attr.data[i].color = (sid / 255.0, max(0.55, min(1.0, ao)), flags, 1.0)
+            slots[i] = "coat"
+
+    # HARD head paint (ignore votes): face plate = skin, tiny eyes, hair only upper-rear cap.
+    head_h = max(0.05, zmax - neck)
+    head_vs = [v for v in me.vertices if v.co.z >= neck - 0.02]
+    y_front = min(v.co.y for v in head_vs) if head_vs else cy0
+    y_back = max(v.co.y for v in head_vs) if head_vs else cy0
+    y_span = max(0.05, y_back - y_front)
+    y_mid = y_front + 0.60 * y_span
+    eye_r = 0.012 * head_h / 0.35
+    eye_centers = [(cx0 - 0.036, neck + 0.42 * head_h), (cx0 + 0.036, neck + 0.42 * head_h)]
+    log("face Y", round(y_front, 3), "→", round(y_back, 3), "cut", round(y_mid, 3), "head_verts", len(head_vs))
+    n_skin = n_hair = n_eye = 0
+    for i, v in enumerate(me.vertices):
+        if v.co.z < neck - 0.02:
+            if slots[i] in ("hair", "eye"):
+                slots[i] = "coat" if slots[i] == "hair" else "skin"
+            continue
+        frontish = v.co.y <= y_mid
+        upper = v.co.z > neck + 0.50 * head_h
+        rear = v.co.y > y_mid
+        in_eye = False
+        if frontish:
+            for ex, ez in eye_centers:
+                if (v.co.x - ex) ** 2 + (v.co.z - ez) ** 2 <= eye_r * eye_r:
+                    in_eye = True
+                    break
+        if in_eye:
+            slots[i] = "eye"; n_eye += 1
+        elif rear and upper:
+            slots[i] = "hair"; n_hair += 1
+        else:
+            slots[i] = "skin"; n_skin += 1
+    log("head hard", "skin", n_skin, "hair", n_hair, "eye", n_eye)
+
+    # HARD body bands (clean horizontal borders — kills sawtooth coat/trousers).
+    h = max(1e-6, zmax - zmin)
+    for i, v in enumerate(me.vertices):
+        if v.co.z >= neck - 0.02:
+            continue
+        tz = (v.co.z - zmin) / h
+        ax = abs(v.co.x - cx0)
+        if tz < 0.11:
+            slots[i] = "boots"
+        elif tz < 0.40:
+            slots[i] = "trousers"
+        elif ax > 0.30 and 0.45 < tz < 0.72:
+            slots[i] = "skin"  # hands/forearms
+        elif neck - 0.12 < v.co.z < neck - 0.02 and v.co.y > cy0:
+            slots[i] = "coat_dark"  # back collar only
+        else:
+            slots[i] = "coat"
+
+    from collections import Counter as _C
+    log("POINT slots", dict(_C(slots)))
+
+    for i, v in enumerate(me.vertices):
+        slot = slots[i]
+        ao = 0.80 + 0.20 * max(0.0, min(1.0, v.co.z / 1.25))
+        if slot in ("trousers", "boots"):
+            ao *= 0.92
+        flags = 0.25 if slot == "metal" else 0.0
+        attr.data[i].color = (SLOT[slot] / 255.0, max(0.55, min(1.0, ao)), flags, 1.0)
+
     me.update()
     bpy.ops.object.shade_smooth()
+    # Soft edge: one pass average AO only among same-slot neighbours (keep R hard)
+    # (skip — hard R is what kills jagged paint bleed)
+
+    # Cap tris after split
+    if tris(ob) > 6500:
+        vg_name = _ensure_head_vg(ob)
+        md = ob.modifiers.new("Dsplit", "DECIMATE")
+        md.decimate_type = "COLLAPSE"
+        md.ratio = 6000 / float(tris(ob))
+        md.vertex_group = vg_name
+        md.invert_vertex_group = True
+        apply_mod(ob, md.name)
+        log("after-split cap", tris(ob))
+    log("paint clean", tris(ob), "verts", len(me.vertices))
 
 
 def strip_extras(ob):
@@ -344,7 +577,6 @@ def strip_extras(ob):
 
 def export_glb(ob, path: Path):
     path.parent.mkdir(parents=True, exist_ok=True)
-    # solo scene objects except this
     for o in list(bpy.context.scene.objects):
         if o != ob:
             bpy.data.objects.remove(o, do_unlink=True)
@@ -371,15 +603,36 @@ def export_glb(ob, path: Path):
 
 def render_preview(ob, path: Path, title: str):
     path.parent.mkdir(parents=True, exist_ok=True)
-    # simple clay+slot viz: use vertex color as base via attribute
     mat = bpy.data.materials.new("prev")
     mat.use_nodes = True
     nt = mat.node_tree
     nt.nodes.clear()
     out = nt.nodes.new("ShaderNodeOutputMaterial")
     bsdf = nt.nodes.new("ShaderNodeBsdfPrincipled")
-    bsdf.inputs["Base Color"].default_value = (0.78, 0.74, 0.68, 1)
-    bsdf.inputs["Roughness"].default_value = 0.48
+    # Visualize slots: Attribute Color.R → hue bands
+    attr = nt.nodes.new("ShaderNodeAttribute")
+    attr.attribute_name = "Color"
+    sep = nt.nodes.new("ShaderNodeSeparateColor")
+    ramp = nt.nodes.new("ShaderNodeValToRGB")
+    # Map slot id/255 into distinct preview colours
+    ramp.color_ramp.elements[0].position = 0.0
+    ramp.color_ramp.elements[0].color = (0.15, 0.10, 0.08, 1)  # hair
+    ramp.color_ramp.elements[1].position = 1.0
+    ramp.color_ramp.elements[1].color = (0.55, 0.58, 0.62, 1)
+    e = ramp.color_ramp.elements.new(1.0 / 255.0)
+    e.color = (0.85, 0.68, 0.55, 1)  # skin
+    e = ramp.color_ramp.elements.new(2.0 / 255.0)
+    e.color = (0.12, 0.12, 0.14, 1)  # eye
+    e = ramp.color_ramp.elements.new(3.0 / 255.0)
+    e.color = (0.45, 0.50, 0.58, 1)  # coat
+    e = ramp.color_ramp.elements.new(12.0 / 255.0)
+    e.color = (0.20, 0.24, 0.32, 1)  # trousers
+    e = ramp.color_ramp.elements.new(13.0 / 255.0)
+    e.color = (0.10, 0.11, 0.13, 1)  # boots
+    nt.links.new(attr.outputs["Color"], sep.inputs["Color"])
+    nt.links.new(sep.outputs["Red"], ramp.inputs["Fac"])
+    nt.links.new(ramp.outputs["Color"], bsdf.inputs["Base Color"])
+    bsdf.inputs["Roughness"].default_value = 0.5
     nt.links.new(bsdf.outputs["BSDF"], out.inputs["Surface"])
     ob.data.materials.clear()
     ob.data.materials.append(mat)
@@ -388,26 +641,25 @@ def render_preview(ob, path: Path, title: str):
     cam = bpy.data.objects.new("C", cam_data)
     bpy.context.collection.objects.link(cam)
     bpy.context.scene.camera = cam
-    # Frame full figure including crown.
     zs = [v.co.z for v in ob.data.vertices]
     zc = 0.5 * (min(zs) + max(zs))
-    cam.location = (2.05, -3.6, zc + 0.15)
-    direction = Vector((0.0, 0.0, zc)) - cam.location
+    cam.location = (1.55, -2.85, zc + 0.25)
+    direction = Vector((0.0, 0.0, zc + 0.1)) - cam.location
     cam.rotation_euler = direction.to_track_quat("-Z", "Y").to_euler()
-    cam_data.lens = 50
+    cam_data.lens = 55
     light = bpy.data.objects.new("L", bpy.data.lights.new("L", "SUN"))
-    light.data.energy = 2.6
+    light.data.energy = 2.8
     light.rotation_euler = (math.radians(48), 0, math.radians(-35))
     bpy.context.collection.objects.link(light)
     fill = bpy.data.objects.new("F", bpy.data.lights.new("F", "AREA"))
-    fill.data.energy = 55
+    fill.data.energy = 60
     fill.data.size = 2.5
     fill.location = (-1.4, 1.2, 2.2)
     bpy.context.collection.objects.link(fill)
     sc = bpy.context.scene
     sc.render.engine = "CYCLES"
     sc.cycles.device = "CPU"
-    sc.cycles.samples = 28
+    sc.cycles.samples = 32
     sc.cycles.use_denoising = True
     sc.render.resolution_x = 420
     sc.render.resolution_y = 560
@@ -429,188 +681,35 @@ def build_one(compose_name: str, sources: list[str], outfit_name: str, kind: str
     collapse_to(ob, TARGET)
     fill_holes(ob)
     normalize_height(ob)
-    enlarge_head(ob, 1.30 if kind == "ally" else 1.24)
-    # Face metaball boolean disabled: FAST boolean left overlapping faces → Godot z-fight.
-    # Rely on farm_cast face planes + head enlarge + slot paint for readability.
+    enlarge_head(ob, 1.28 if kind == "ally" else 1.22)
+    sculpt_face(ob)
     fill_holes(ob)
-    # Force smooth consistent normals
-    bpy.context.view_layer.objects.active = ob
-    bpy.ops.object.mode_set(mode="EDIT")
-    bpy.ops.mesh.select_all(action="SELECT")
-    bpy.ops.mesh.normals_make_consistent(inside=False)
-    bpy.ops.mesh.remove_doubles(threshold=0.0015)
-    bpy.ops.object.mode_set(mode="OBJECT")
-    bpy.ops.object.shade_smooth()
-    paint_slots(ob, kind)
+    bisect_bands(ob)
+    # One subdiv for denser slot borders, then head-protected collapse back ≤7k
+    if tris(ob) < 9000:
+        md = ob.modifiers.new("SubC", "SUBSURF")
+        md.levels = 1
+        apply_mod(ob, md.name)
+        vg = _ensure_head_vg(ob)
+        if tris(ob) > 6200:
+            md = ob.modifiers.new("Dsub", "DECIMATE")
+            md.decimate_type = "COLLAPSE"
+            md.ratio = max(0.1, 6000 / float(tris(ob)))
+            md.vertex_group = vg
+            md.invert_vertex_group = True
+            apply_mod(ob, md.name)
+        log("border densify", tris(ob))
+    paint_slots_clean(ob, kind)
     strip_extras(ob)
-    # duplicate for outfit override name (same mesh — assemble uses compose only)
     compose_path = OUT / f"{compose_name}.glb"
     export_glb(ob, compose_path)
-    # preview
     reset()
     bpy.ops.import_scene.gltf(filepath=str(compose_path))
     ob3 = [o for o in bpy.data.objects if o.type == "MESH"][0]
+    # weld after import (glTF may corner-split)
+    _weld(ob3, 0.0012)
     render_preview(ob3, PREVIEW / f"{compose_name}.png", compose_name)
     return compose_path
-
-
-def build_organic_body_head():
-    """Metaball organic body_m + head_m for modular fallback (not cubes)."""
-    reset()
-    # ---- head via metaballs ----
-    bpy.ops.object.metaball_add(type="BALL", radius=0.14, location=(0, -0.02, 1.68))
-    mb = bpy.context.active_object
-    mb.data.resolution = 0.04
-    mb.data.render_resolution = 0.04
-    # jaw
-    bpy.ops.object.metaball_add(type="ELLIPSOID", radius=0.10, location=(0, -0.04, 1.58))
-    bpy.context.active_object.data.elements[0].size_x = 1.15
-    bpy.context.active_object.data.elements[0].size_y = 0.95
-    bpy.context.active_object.data.elements[0].size_z = 0.75
-    # nose
-    bpy.ops.object.metaball_add(type="ELLIPSOID", radius=0.035, location=(0, -0.145, 1.64))
-    bpy.context.active_object.data.elements[0].size_y = 1.4
-    bpy.context.active_object.data.elements[0].size_z = 0.9
-    # brow
-    bpy.ops.object.metaball_add(type="ELLIPSOID", radius=0.06, location=(0, -0.10, 1.70))
-    bpy.context.active_object.data.elements[0].size_x = 1.6
-    bpy.context.active_object.data.elements[0].size_y = 0.7
-    bpy.context.active_object.data.elements[0].size_z = 0.45
-    # convert all metaballs — join by converting family
-    # Blender metaballs of same family: set family on first
-    # Simpler: convert each to mesh then boolean union
-    metas = [o for o in bpy.data.objects if o.type == "META"]
-    # Use one metaball object with multiple elements instead
-    reset()
-    bpy.ops.object.metaball_add(type="BALL", radius=0.145, location=(0, -0.02, 1.68))
-    mobj = bpy.context.active_object
-    mobj.data.resolution = 0.035
-    mobj.data.render_resolution = 0.035
-    el = mobj.data.elements
-    # jaw
-    e = el.new()
-    e.type = "ELLIPSOID"
-    e.radius = 0.11
-    e.co = (0, -0.035, 1.575)
-    e.size_x, e.size_y, e.size_z = 1.2, 1.0, 0.8
-    # chin
-    e = el.new(); e.type = "BALL"; e.radius = 0.045; e.co = (0, -0.08, 1.52)
-    # nose
-    e = el.new(); e.type = "ELLIPSOID"; e.radius = 0.032; e.co = (0, -0.15, 1.635)
-    e.size_x, e.size_y, e.size_z = 0.7, 1.5, 0.95
-    # brow
-    e = el.new(); e.type = "ELLIPSOID"; e.radius = 0.055; e.co = (0, -0.11, 1.705)
-    e.size_x, e.size_y, e.size_z = 1.7, 0.65, 0.4
-    # cheeks
-    e = el.new(); e.type = "BALL"; e.radius = 0.05; e.co = (0.07, -0.08, 1.60)
-    e = el.new(); e.type = "BALL"; e.radius = 0.05; e.co = (-0.07, -0.08, 1.60)
-    # convert
-    bpy.ops.object.convert(target="MESH")
-    head = bpy.context.active_object
-    head.name = "head_m"
-    # decimate if needed
-    if tris(head) > 900:
-        md = head.modifiers.new("D", "DECIMATE")
-        md.decimate_type = "COLLAPSE"
-        md.ratio = 800 / float(tris(head))
-        apply_mod(head, md.name)
-    bpy.ops.object.shade_smooth()
-    # paint skin + eye recesses
-    me = head.data
-    me.color_attributes.new(name="Color", type="BYTE_COLOR", domain="CORNER")
-    attr = me.color_attributes[0]
-    for poly in me.polygons:
-        n = poly.normal
-        cz = sum(me.vertices[me.loops[li].vertex_index].co.z for li in poly.loop_indices) / len(poly.loop_indices)
-        cy = sum(me.vertices[me.loops[li].vertex_index].co.y for li in poly.loop_indices) / len(poly.loop_indices)
-        slot = "skin"
-        if -n.y > 0.55 and 1.62 < cz < 1.70 and cy < -0.05:
-            slot = "eye"
-        ao = 0.88 + 0.1 * (cz - 1.5)
-        col = (SLOT[slot] / 255.0, max(0.7, min(1.0, ao)), 0.0, 1.0)
-        for li in poly.loop_indices:
-            attr.data[li].color = col
-    export_glb(head, OUT / "head_m.glb")
-
-    # ---- body via metaballs ----
-    reset()
-    bpy.ops.object.metaball_add(type="ELLIPSOID", radius=0.22, location=(0, 0, 1.22))
-    mobj = bpy.context.active_object
-    mobj.data.resolution = 0.045
-    mobj.data.render_resolution = 0.045
-    el = mobj.data.elements
-    el[0].size_x, el[0].size_y, el[0].size_z = 1.15, 0.7, 1.35  # torso
-    # pelvis
-    e = el.new(); e.type = "ELLIPSOID"; e.radius = 0.18; e.co = (0, 0, 0.95)
-    e.size_x, e.size_y, e.size_z = 1.2, 0.75, 0.7
-    # legs
-    for sx in (-1, 1):
-        e = el.new(); e.type = "CAPSULE"; e.radius = 0.09; e.co = (sx * 0.11, 0, 0.55)
-        e.size_z = 2.2
-        e = el.new(); e.type = "CAPSULE"; e.radius = 0.075; e.co = (sx * 0.12, 0.02, 0.22)
-        e.size_z = 1.6
-        e = el.new(); e.type = "BALL"; e.radius = 0.07; e.co = (sx * 0.12, 0.06, 0.04)  # feet
-    # arms
-    for sx in (-1, 1):
-        e = el.new(); e.type = "CAPSULE"; e.radius = 0.065; e.co = (sx * 0.32, 0, 1.28)
-        e.size_x = 2.0; e.size_z = 0.7
-        e = el.new(); e.type = "CAPSULE"; e.radius = 0.055; e.co = (sx * 0.42, -0.02, 1.05)
-        e.size_z = 1.5
-        e = el.new(); e.type = "BALL"; e.radius = 0.055; e.co = (sx * 0.45, -0.04, 0.88)  # hands
-    # shoulders
-    e = el.new(); e.type = "ELLIPSOID"; e.radius = 0.16; e.co = (0, 0, 1.40)
-    e.size_x, e.size_y, e.size_z = 1.6, 0.7, 0.55
-    bpy.ops.object.convert(target="MESH")
-    body = bpy.context.active_object
-    body.name = "body_m"
-    normalize_height(body)
-    # scale body to leave head room — body alone feet to shoulder ~1.45
-    if tris(body) > 2200:
-        md = body.modifiers.new("D", "DECIMATE")
-        md.decimate_type = "COLLAPSE"
-        md.ratio = 2000 / float(tris(body))
-        apply_mod(body, md.name)
-    bpy.ops.object.shade_smooth()
-    me = body.data
-    me.color_attributes.new(name="Color", type="BYTE_COLOR", domain="CORNER")
-    attr = me.color_attributes[0]
-    for poly in me.polygons:
-        idxs = [me.loops[li].vertex_index for li in poly.loop_indices]
-        cz = sum(me.vertices[i].co.z for i in idxs) / len(idxs)
-        cx = abs(sum(me.vertices[i].co.x for i in idxs) / len(idxs))
-        if cz < 0.12:
-            slot = "boots"
-        elif cz < 0.95:
-            slot = "trousers"
-        elif cx > 0.35 and cz < 1.15:
-            slot = "skin"  # hands
-        else:
-            slot = "skin"
-        ao = 0.80 + 0.18 * min(1.0, cz / 1.3)
-        col = (SLOT[slot] / 255.0, ao, 0.0, 1.0)
-        for li in poly.loop_indices:
-            attr.data[li].color = col
-    export_glb(body, OUT / "body_m.glb")
-    # body_f: slightly narrower copy
-    reset()
-    bpy.ops.import_scene.gltf(filepath=str(OUT / "body_m.glb"))
-    bf = [o for o in bpy.data.objects if o.type == "MESH"][0]
-    for v in bf.data.vertices:
-        v.co.x *= 0.92
-        if 0.9 < v.co.z < 1.35:
-            v.co.x *= 0.95
-    bf.name = "body_f"
-    export_glb(bf, OUT / "body_f.glb")
-    # head_f copy
-    reset()
-    bpy.ops.import_scene.gltf(filepath=str(OUT / "head_m.glb"))
-    hf = [o for o in bpy.data.objects if o.type == "MESH"][0]
-    for v in hf.data.vertices:
-        v.co.x *= 0.94
-        v.co.z = 1.55 + (v.co.z - 1.55) * 0.98
-    hf.name = "head_f"
-    export_glb(hf, OUT / "head_f.glb")
-    log("organic body/head done")
 
 
 def main():
@@ -621,8 +720,6 @@ def main():
         p = build_one(compose, sources, outfit, kind)
         if p:
             built.append(p.name)
-    # body/head metaball fallback deferred — compose_* is the P1 deliverable
-    # build_organic_body_head()
     log("DONE overrides", built)
     return 0
 
