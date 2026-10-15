@@ -98,7 +98,38 @@ func _check_build() -> String:
 	elif int(spec.get("textures", 1)) != 0:
 		bad = "textures must be 0"
 	fig.free()
-	return bad
+	if bad != "":
+		return bad
+	return _check_farm_cast_wiring()
+
+func _check_farm_cast_wiring() -> String:
+	var leader = GameState.get_leader()
+	var lp := CKBoardFigure._farm_cast_path(leader, false, "")
+	if not str(lp).ends_with("leader_m.glb") and not str(lp).ends_with("leader_f.glb"):
+		return "leader must map to leader_*.glb, got %s" % lp
+	var wantan = null
+	for c in GameState.characters.values():
+		if str(c.cast_key) == "wantan" or str(c.job_id) == "light_inf":
+			wantan = c
+			break
+	if wantan == null:
+		wantan = CharacterFactory.make_shilei_wantan()
+	var hp := CKBoardFigure._farm_cast_path(wantan, false, "")
+	if not str(hp).contains("hunter_"):
+		return "light_inf must remap to hunter_*.glb, got %s" % hp
+	var bp := CKBoardFigure._farm_cast_path(leader, true, "bandit")
+	if not str(bp).ends_with("bandit.glb"):
+		return "enemy bandit path broken: %s" % bp
+	var pal: Dictionary = CKBoardFigure.palette_for(leader, "enemy", "bandit")
+	var mat: ShaderMaterial = CKBoardFigure._farm_mat(pal, -1.0, true)
+	if float(mat.get_shader_parameter("use_bands")) < 0.5:
+		return "farm mat must enable height bands"
+	if float(mat.get_shader_parameter("board_compact")) < 0.5:
+		return "farm mat must set board_compact"
+	var coat: Color = mat.get_shader_parameter("coat")
+	if CKBoardFigure._in_ally_gamut(coat):
+		return "enemy farm coat still ally-gamut"
+	return ""
 
 func _load_themes() -> Dictionary:
 	var f := FileAccess.open("res://data/enemy_themes.json", FileAccess.READ)
