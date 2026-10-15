@@ -61,7 +61,7 @@ static func request_end_turn(host) -> void:
 	if not DeviceProfile.is_mobile():
 		host._end_player_turn()
 		return
-	var old := host.get_node_or_null("EndTurnConfirm")
+	var old: Node = host.get_node_or_null("EndTurnConfirm")
 	if old:
 		old.queue_free()
 	var dlg := ConfirmationDialog.new()
