@@ -290,8 +290,12 @@ static func _farm_cast_path(c, enemy: bool, tmpl: String) -> String:
 		if c != null:
 			jid = str(c.job_id)
 			role = BattleRules.job_role(jid)
-		var is_leader := role == "leader" or jid in ["captain", "banner"]
-		if is_leader:
+		# Opening leader is squire + is_leader; also captain/banner / cast_key leader.
+		var lead := false
+		if c != null:
+			lead = bool(c.is_leader) or str(c.cast_key) == "leader"
+		lead = lead or role == "leader" or jid in ["captain", "banner"]
+		if lead:
 			return _farm_cast_gendered("leader", c)
 		# Ally hunters / archers (job_role ranger covers hunter ranged jobs)
 		var is_hunter := jid in ["hunter", "archer"] or role == "ranger"

@@ -22,16 +22,16 @@ var _sparks: Array = []
 
 const MAX_UNITS := 16  # P4: beyond this the board falls back to 2D tokens
 
-## User default: on for desktop; off on mobile (opt-in in settings) to protect the mobile frame budget.
+## Default on for desktop and mobile. Settings toggle can still turn off (saves battery on phone).
+## Missing key → default_on(); only an explicit saved false keeps 2D tokens.
 static func default_on() -> bool:
-	return not DeviceProfile.is_mobile()
+	return true
 
 static func enabled(unit_count: int = 0) -> bool:
 	if DisplayServer.get_name() == "headless":
 		return false
 	if unit_count > MAX_UNITS:
 		return false
-	# mobile: off by default until the P4 perf budget is verified (mobile-lag priority)
 	return bool(GameState.settings.get("board_units_3d", default_on()))
 
 func _ready() -> void:
