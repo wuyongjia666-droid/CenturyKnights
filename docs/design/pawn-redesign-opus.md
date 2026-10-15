@@ -702,3 +702,9 @@ void fragment() {
 - 渲染环境：Xvfb 加 `--rendering-driver opengl3`。桌面 1280×720；手机用 `CK_FORCE_MOBILE=1`、2400×1080，Xvfb 屏幕开到 2600×1700，否则窗口会被限制在屏幕尺寸内。
 - 指标：Python（PIL 加 numpy）对 1× 渲染计算，定义见 §4.1。
 - 图 7 中排是第 1 版 board_mini 的原型渲染，保留作对照。
+
+### #310 P1 偏离记录（0 贴图规则）
+- 棋盘棋子现直接使用演出 UnitModel 的烘焙 albedo 清洗版 `units/*__albedo_board.png`（`tools/art/board_albedo_clean.py`：去掉 UV 间黑边并外扩、把“未填充”键色标为 alpha=0 素布）。这偏离 §0-texture 规则：每个棋子 1 张已存在的模型贴图，不新增立绘投影贴花。
+- 理由：用户三次否决“脸不像/糊+锯齿/配色不对”。纯色槽无法保留五官与衣褶；硬阈值分槽在 mip 上产生锯齿色块。现改为 `grade_mode`：贴图只提供明暗细节，颜色仍全部来自立绘采样调色槽（头部按几何正面=脸、顶/后=发；衣物按亮度在 coat_dark→coat 之间软过渡）。
+- 抗锯齿：桌面 3D 层 2× 双线性超采样（不用 MSAA，避免透明层半透明鬼影）；审图卡 2× 渲染 + MSAA4 + Lanczos 缩小。
+- 山贼：按 `art/portraits/bandit.webp` 采用棕色兜帽/外套（色相≈20°，在友军色域外），红色边光保持阵营识别。

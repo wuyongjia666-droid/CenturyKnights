@@ -48,6 +48,11 @@ func _ready() -> void:
 	_vp.msaa_3d = Viewport.MSAA_DISABLED
 	if DeviceProfile.is_mobile():
 		_vp.scaling_3d_scale = 0.8
+	else:
+		# #310 P1: 2× supersample (bilinear SSAA) instead of MSAA — anti-aliases
+		# figure edges without MSAA's mid-alpha ghosting on the transparent layer.
+		_vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
+		_vp.scaling_3d_scale = 2.0
 	_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	add_child(_vp)
 	# 1px dark outline halo + premul alpha (board_halo.gdshader).

@@ -275,13 +275,17 @@ static func _apply_board_palette(n: Node, pal: Dictionary, face: float, enemy: b
 			var y_span := maxf(0.05, aabb.size.y)
 			var nlow := str(mi.name).to_lower()
 			var hair_mesh := ("hair" in nlow) or nlow.begins_with("hair_")
+			var board_tex: Texture2D = _board_albedo(mi)
 			for si in mi.mesh.get_surface_count():
 				var tex: Texture2D = _extract_albedo(mi, si)
 				var sm := _palette_mat(pal, face, enemy)
 				sm.set_shader_parameter("force_slot", -1.0)
 				var mat_name := _surface_mat_name(mi, si)
 				var named_slot := _force_slot_for(nlow, mat_name)
-				if hair_mesh or "hair" in mat_name:
+				if "weapon" in nlow or mat_name.begins_with("weapon"):
+					sm.set_shader_parameter("use_albedo", 0.0)
+					sm.set_shader_parameter("force_slot", 8.0)
+				elif hair_mesh or "hair" in mat_name:
 					sm.set_shader_parameter("use_albedo", 0.0)
 					sm.set_shader_parameter("force_slot", 0.0)
 				elif outfit_mode:
@@ -304,6 +308,12 @@ static func _apply_board_palette(n: Node, pal: Dictionary, face: float, enemy: b
 				else:
 					sm.set_shader_parameter("use_albedo", 0.0)
 					sm.set_shader_parameter("force_slot", named_slot)
+				# P1: cleaned atlas + soft portrait grade (keeps painted face detail,
+				# kills mip-bleed blotches and hard slot edges).
+				if board_tex != null and float(sm.get_shader_parameter("force_slot")) < 0.0:
+					sm.set_shader_parameter("use_albedo", 1.0)
+					sm.set_shader_parameter("albedo_tex", board_tex)
+					sm.set_shader_parameter("grade_mode", 1.0)
 				sm.set_shader_parameter("y_min", y_min)
 				sm.set_shader_parameter("y_span", y_span)
 				sm.set_shader_parameter("model_h", y_span)
@@ -354,6 +364,16 @@ static func _extract_albedo(mi: MeshInstance3D, si: int) -> Texture2D:
 			var ap := mp.replace(".glb", "__albedo_v87.jpg")
 			if ResourceLoader.exists(ap):
 				return load(ap) as Texture2D
+	return null
+
+
+static func _board_albedo(mi: MeshInstance3D) -> Texture2D:
+	var mp := _model_filename(mi)
+	if mp == "" or not mp.ends_with(".glb"):
+		return null
+	var ap := "res://assets/models/units/" + mp.replace(".glb", "__albedo_board.png")
+	if ResourceLoader.exists(ap):
+		return load(ap) as Texture2D
 	return null
 
 
@@ -671,6 +691,14 @@ static func palette_for(c, team: String, tmpl: String = "") -> Dictionary:
 		pal["cape"] = Color(0.784, 0.337, 0.306)
 		pal["accent"] = UIKit.DANGER
 		pal["sash"] = UIKit.DANGER.darkened(0.15)
+		# #310 P1: bandit portrait (art/portraits/bandit.webp) wears a brown hood/coat
+		# over dark leather — match it instead of generic slate. Hue ~20° stays outside
+		# ally gamut; red rim keeps faction read.
+		if tmpl.begins_with("bandit") or tmpl == "":
+			pal["coat"] = Color8(118, 80, 58)
+			pal["coat_dark"] = Color8(52, 34, 26)
+			pal["hair"] = Color8(64, 40, 28)
+			pal["skin"] = Color8(178, 137, 111)
 		_lift_enemy(pal)
 	else:
 		var house: Color = UnitArt.house_color() if Engine.get_main_loop() else UIKit.ACCENT

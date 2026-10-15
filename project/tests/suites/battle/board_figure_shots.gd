@@ -79,13 +79,14 @@ func _unit_cards(out: String) -> void:
 			if img:
 				img.save_png("%s/cards/%s.png" % [out, row.name])
 				print("CARD ", row.name)
-				if str(row.name) == "captain":
-					await _captain_vs_portrait(out, c, img)
+				if str(row.name) in ["captain", "hunter", "bandit"]:
+					await _captain_vs_portrait(out, c, img, str(row.name), str(row.team), str(row.tmpl))
 
 
 func _render_card(c, team: String, tmpl: String) -> Texture2D:
 	var vp := SubViewport.new()
-	vp.size = Vector2i(320, 400)
+	vp.size = Vector2i(640, 800)  # 2× SSAA, downsampled below
+	vp.msaa_3d = Viewport.MSAA_4X
 	vp.transparent_bg = false
 	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	vp.own_world_3d = true
@@ -97,7 +98,7 @@ func _render_card(c, team: String, tmpl: String) -> Texture2D:
 	world.add_child(fig)
 	var cam := Camera3D.new()
 	cam.projection = Camera3D.PROJECTION_ORTHOGONAL
-	cam.size = 2.45
+	cam.size = 2.2
 	cam.current = true
 	world.add_child(cam)
 	cam.global_position = Vector3(0, 1.65, 2.45)
@@ -117,27 +118,28 @@ func _render_card(c, team: String, tmpl: String) -> Texture2D:
 	vp.queue_free()
 	if img == null:
 		return null
+	img.resize(320, 400, Image.INTERPOLATE_LANCZOS)
 	return ImageTexture.create_from_image(img)
 
 
-func _captain_vs_portrait(out: String, c, fig_img: Image) -> void:
+func _captain_vs_portrait(out: String, c, fig_img: Image, nm: String = "captain", team: String = "player", tmpl: String = "") -> void:
 	## Figure + portrait + hair/skin/coat swatches (plate-sampled palette).
 	DirAccess.make_dir_recursive_absolute(out + "/vs_portrait")
-	var pal: Dictionary = CKBoardFigure.palette_for(c, "player")
-	var portrait: Texture2D = UnitArt.portrait(c) if c != null else null
+	var pal: Dictionary = CKBoardFigure.palette_for(c, team, tmpl)
+	var portrait: Texture2D = _portrait_for(c, team, tmpl)
 	var pw := 280
 	var ph := 360
 	var strip_h := 72
 	var canvas := Image.create(pw * 2 + 24, ph + strip_h + 16, false, Image.FORMAT_RGBA8)
 	canvas.fill(Color(0.05, 0.06, 0.09, 1))
 	var fig := fig_img.duplicate()
-	fig.resize(pw, ph, Image.INTERPOLATE_NEAREST)
+	fig.resize(pw, ph, Image.INTERPOLATE_LANCZOS)
 	canvas.blit_rect(fig, Rect2i(0, 0, pw, ph), Vector2i(8, 8))
 	if portrait != null:
 		var pimg: Image = portrait.get_image()
 		if pimg:
 			pimg = pimg.duplicate()
-			pimg.resize(pw, ph, Image.INTERPOLATE_BILINEAR)
+			pimg.resize(pw, ph, Image.INTERPOLATE_LANCZOS)
 			canvas.blit_rect(pimg, Rect2i(0, 0, pw, ph), Vector2i(pw + 16, 8))
 	var keys = ["hair", "skin", "coat", "coat_dark"]
 	var sw = int((pw * 2 + 8) / keys.size())
@@ -152,8 +154,8 @@ func _captain_vs_portrait(out: String, c, fig_img: Image) -> void:
 		for xx in range(x0, x0 + sw - 6):
 			canvas.set_pixel(xx, y0, edge)
 			canvas.set_pixel(xx, y0 + 43, edge)
-	canvas.save_png("%s/vs_portrait/captain_vs_plate.png" % out)
-	var f := FileAccess.open("%s/vs_portrait/captain_palette.json" % out, FileAccess.WRITE)
+	canvas.save_png("%s/vs_portrait/%s_vs_portrait.png" % [out, nm])
+	var f := FileAccess.open("%s/vs_portrait/%s_palette.json" % [out, nm], FileAccess.WRITE)
 	if f:
 		var row := {}
 		for k in keys:
@@ -164,3 +166,12 @@ func _captain_vs_portrait(out: String, c, fig_img: Image) -> void:
 		f.store_string(JSON.stringify(row, "\t"))
 		f.close()
 	print("CARD captain_vs_portrait")
+
+
+func _portrait_for(c, team: String, tmpl: String) -> Texture2D:
+	if team == "enemy":
+		for p in ["res://assets/art/portraits/%s.webp" % tmpl, "res://assets/art/portraits/bandit.webp"]:
+			if ResourceLoader.exists(p):
+				return load(p) as Texture2D
+		return null
+	return UnitArt.portrait(c) if c != null else null
