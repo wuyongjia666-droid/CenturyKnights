@@ -1,10 +1,10 @@
 {
-  "version": 1,
+  "version": 2,
   "model_h": 1.85,
   "parts": {
     "body_m": {
       "category": "body",
-      "tris": 960,
+      "tris": 2652,
       "tags": [
         "m",
         "std"
@@ -12,7 +12,7 @@
     },
     "body_f": {
       "category": "body",
-      "tris": 960,
+      "tris": 2592,
       "tags": [
         "f",
         "std"
@@ -20,7 +20,7 @@
     },
     "body_heavy": {
       "category": "body",
-      "tris": 960,
+      "tris": 2652,
       "tags": [
         "m",
         "heavy"
@@ -28,133 +28,143 @@
     },
     "head_m": {
       "category": "head",
-      "tris": 616,
+      "tris": 982,
       "tags": [
-        "m"
+        "m",
+        "planes"
       ]
     },
     "head_f": {
       "category": "head",
-      "tris": 616,
+      "tris": 982,
       "tags": [
-        "f"
+        "f",
+        "planes"
       ]
     },
     "hair_bob": {
       "category": "hair",
-      "tris": 1103,
+      "tris": 588,
       "tags": [
-        "bob"
+        "bob",
+        "proc"
       ]
     },
     "hair_crop": {
       "category": "hair",
-      "tris": 1103,
+      "tris": 588,
       "tags": [
-        "crop"
+        "crop",
+        "proc"
       ]
     },
     "hair_crown": {
       "category": "hair",
-      "tris": 1104,
+      "tris": 528,
       "tags": [
-        "crown"
+        "crown",
+        "proc"
       ]
     },
     "hair_long": {
       "category": "hair",
-      "tris": 1188,
+      "tris": 588,
       "tags": [
-        "long"
+        "long",
+        "proc"
       ]
     },
     "hair_messy": {
       "category": "hair",
-      "tris": 1103,
+      "tris": 924,
       "tags": [
-        "messy"
+        "messy",
+        "proc"
       ]
     },
     "hair_pony": {
       "category": "hair",
-      "tris": 1178,
+      "tris": 568,
       "tags": [
-        "pony"
+        "pony",
+        "proc"
       ]
     },
     "hair_swept": {
       "category": "hair",
-      "tris": 1103,
+      "tris": 700,
       "tags": [
-        "swept"
+        "swept",
+        "proc"
       ]
     },
     "hair_tied": {
       "category": "hair",
-      "tris": 1088,
+      "tris": 560,
       "tags": [
-        "tied"
+        "tied",
+        "proc"
       ]
     },
     "outfit_captain": {
       "category": "outfit",
-      "tris": 804,
+      "tris": 1946,
       "tags": [
         "mid"
       ]
     },
     "outfit_squire": {
       "category": "outfit",
-      "tris": 804,
+      "tris": 1794,
       "tags": [
         "short"
       ]
     },
     "outfit_hunter": {
       "category": "outfit",
-      "tris": 640,
+      "tris": 1326,
       "tags": [
         "short"
       ]
     },
     "outfit_light_inf": {
       "category": "outfit",
-      "tris": 640,
+      "tris": 1326,
       "tags": [
         "mid"
       ]
     },
     "outfit_heavy_inf": {
       "category": "outfit",
-      "tris": 640,
+      "tris": 1606,
       "tags": [
         "armor"
       ]
     },
     "outfit_apprentice": {
       "category": "outfit",
-      "tris": 640,
+      "tris": 1326,
       "tags": [
         "long"
       ]
     },
     "outfit_militia": {
       "category": "outfit",
-      "tris": 640,
+      "tris": 1326,
       "tags": [
         "short"
       ]
     },
     "outfit_banner": {
       "category": "outfit",
-      "tris": 640,
+      "tris": 1326,
       "tags": [
         "mid"
       ]
     },
     "outfit_bandit_weak": {
       "category": "outfit",
-      "tris": 120,
+      "tris": 964,
       "tags": [
         "bandit",
         "weak"
@@ -162,7 +172,7 @@
     },
     "outfit_bandit_bandit": {
       "category": "outfit",
-      "tris": 240,
+      "tris": 976,
       "tags": [
         "bandit",
         "bandit"
@@ -170,7 +180,7 @@
     },
     "outfit_bandit_archer": {
       "category": "outfit",
-      "tris": 336,
+      "tris": 1072,
       "tags": [
         "bandit",
         "archer"
@@ -178,7 +188,7 @@
     },
     "outfit_bandit_chief": {
       "category": "outfit",
-      "tris": 356,
+      "tris": 1140,
       "tags": [
         "bandit",
         "chief"
@@ -186,7 +196,7 @@
     },
     "weapon_sword": {
       "category": "weapon",
-      "tris": 228,
+      "tris": 340,
       "tags": [
         "sword"
       ]
@@ -207,14 +217,14 @@
     },
     "weapon_bow": {
       "category": "weapon",
-      "tris": 412,
+      "tris": 496,
       "tags": [
         "bow"
       ]
     },
     "weapon_staff": {
       "category": "weapon",
-      "tris": 128,
+      "tris": 168,
       "tags": [
         "staff"
       ]
@@ -228,7 +238,7 @@
     },
     "weapon_club": {
       "category": "weapon",
-      "tris": 28,
+      "tris": 36,
       "tags": [
         "club"
       ]
@@ -242,14 +252,14 @@
     },
     "weapon_dagger": {
       "category": "weapon",
-      "tris": 108,
+      "tris": 120,
       "tags": [
         "dagger"
       ]
     },
     "sign_pauldron_both": {
       "category": "sign",
-      "tris": 200,
+      "tris": 336,
       "tags": [
         "pauldron",
         "both"
@@ -257,7 +267,7 @@
     },
     "sign_pauldron_L": {
       "category": "sign",
-      "tris": 100,
+      "tris": 168,
       "tags": [
         "pauldron",
         "L"
@@ -265,7 +275,7 @@
     },
     "sign_pauldron_R": {
       "category": "sign",
-      "tris": 100,
+      "tris": 168,
       "tags": [
         "pauldron",
         "R"
@@ -311,7 +321,8 @@
     "wood": 15,
     "accent": 16
   },
+  "quality": "sculptural_blocks_v2",
   "glb": "board_figures_v1.glb",
-  "total_tris": 21410,
+  "total_tris": 33388,
   "part_count": 37
 }
