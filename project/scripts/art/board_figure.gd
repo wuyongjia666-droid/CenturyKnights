@@ -6,6 +6,7 @@ extends RefCounted
 
 const SHADER_PATH := "res://shaders/board_figure.gdshader"
 const MOD_DIR := "res://assets/models/modules/"
+const FARM_CAST_DIR := "res://assets/models/board/farm_cast/"
 const MODEL_H := 1.85
 const HEAD_RATIO := 5.45
 const CACHE_CAP := 64
@@ -32,7 +33,8 @@ static func build(c, team: String, tmpl: String = "") -> Node3D:
 	body.name = "Body"
 	root.add_child(body)
 	if DisplayServer.get_name() != "headless":
-		_assemble(body, c, pal, enemy, face)
+		if not _assemble_farm_cast(body, c, pal, enemy, face, tmpl):
+			_assemble(body, c, pal, enemy, face)
 	var ap := _make_anim(root, face)
 	root.add_child(ap)
 	return root
@@ -57,7 +59,7 @@ static func spec_for(c, team: String, tmpl: String = "") -> Dictionary:
 		"palette": pal,
 		"role": role,
 		"enemy": str(team) == "enemy",
-		"tris_est": 4200,
+		"tris_est": (5500 if _farm_cast_path(c, str(team) == "enemy", tmpl) != "" else 4200),
 		"meshes": 1,
 		"materials": 1,
 		"textures": 0,
@@ -272,6 +274,71 @@ static func _mesh(parent: Node3D, mesh: Mesh, pos: Vector3, rot_deg: Vector3, sc
 	mi.scale = scale
 	parent.add_child(mi)
 	return mi
+
+
+## Whole-mesh farm Hunyuan casts (leader / bandit*). Prefer over Godot primitives.
+## Not the rejected #301 modular kit — single MeshInstance3D + board_figure shader.
+static func _farm_cast_path(c, enemy: bool, tmpl: String) -> String:
+	var name := ""
+	if enemy:
+		var t := tmpl if tmpl != "" else "bandit"
+		if t in ["bandit", "bandit_archer", "bandit_chief", "bandit_weak"]:
+			name = t if ResourceLoader.exists(FARM_CAST_DIR + t + ".glb") else "bandit"
+	else:
+		var role := "skirmisher"
+		if c != null:
+			role = BattleRules.job_role(str(c.job_id))
+		var is_leader := role == "leader" or (c != null and str(c.job_id) in ["captain", "banner"])
+		if is_leader:
+			var g := "f" if c != null and str(c.gender) == "f" else "m"
+			var cand := FARM_CAST_DIR + "leader_%s.glb" % g
+			if ResourceLoader.exists(cand):
+				return cand
+			var alt := FARM_CAST_DIR + ("leader_m.glb" if g == "f" else "leader_f.glb")
+			if ResourceLoader.exists(alt):
+				return alt
+			return ""
+	if name == "":
+		return ""
+	var path := FARM_CAST_DIR + name + ".glb"
+	return path if ResourceLoader.exists(path) else ""
+
+static func _assemble_farm_cast(body: Node3D, c, pal: Dictionary, enemy: bool, face: float, tmpl: String) -> bool:
+	var path := _farm_cast_path(c, enemy, tmpl)
+	if path == "":
+		return false
+	var packed = load(path)
+	if packed == null:
+		return false
+	var inst: Node = packed.instantiate() if packed is PackedScene else null
+	if inst == null:
+		return false
+	var coat: Color = pal.get("coat", Color(0.55, 0.58, 0.62))
+	var mat := _mat(coat, face, enemy, 0.15, 0.12)
+	var added := 0
+	for n in _gather_meshes(inst):
+		var mi := n as MeshInstance3D
+		if mi == null or mi.mesh == null:
+			continue
+		var clone := MeshInstance3D.new()
+		clone.mesh = mi.mesh
+		clone.material_override = mat
+		clone.name = "FarmCast%d" % added
+		body.add_child(clone)
+		added += 1
+	inst.free()
+	if added == 0:
+		return false
+	body.set_meta("ck_farm_cast", path)
+	return true
+
+static func _gather_meshes(n: Node) -> Array:
+	var out: Array = []
+	if n is MeshInstance3D:
+		out.append(n)
+	for ch in n.get_children():
+		out.append_array(_gather_meshes(ch))
+	return out
 
 static func _assemble(body: Node3D, c, pal: Dictionary, enemy: bool, face: float) -> void:
 	var head_h := MODEL_H / HEAD_RATIO
