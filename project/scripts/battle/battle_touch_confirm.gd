@@ -25,6 +25,7 @@ static func confirm_move(host) -> void:
 	var cell: Vector2i = host.preview_move_cell
 	clear(host)
 	commit_move(host, cell)
+	BattlePick.focus_cell(host, cell)
 
 static func confirm_attack(host) -> void:
 	var ui: int = int(host.preview_attack_ui)
@@ -32,24 +33,51 @@ static func confirm_attack(host) -> void:
 	if host.selected < 0 or ui < 0 or ui >= host.units.size():
 		return
 	host._do_attack(host.selected, ui)
+	if ui < host.units.size() and host.units[ui].char.hp > 0:
+		BattlePick.focus_cell(host, host.units[ui].pos)
 
 static func overflow_menu(host) -> void:
 	var popup := PopupMenu.new()
 	popup.name = "MobileOverflow"
-	popup.add_item(Locale.t("shell_41ec1a25"), 0)
-	popup.add_item(Locale.t("shell_4faa58f5"), 1)
+	popup.add_item(Locale.t("shell_4d0b4688"), 0)  # cancel
+	popup.add_item(Locale.t("ux_end_turn_ask"), 1)
 	host.add_child(popup)
 	popup.id_pressed.connect(func(id: int):
 		if id == 0:
-			host._cycle_skill()
+			host._cancel_selection()
 		elif id == 1:
-			host._end_player_turn()
+			request_end_turn(host)
 		popup.queue_free()
 	)
 	popup.popup_hide.connect(func(): popup.queue_free())
 	var vp: Vector2 = host.get_viewport().get_visible_rect().size
 	popup.position = Vector2i(int(vp.x * 0.5 - 80), int(vp.y - host._command_bar_px() - 140))
 	popup.popup()
+
+static func request_end_turn(host) -> void:
+	## Two-step end-turn so a fat-finger tap cannot skip the player phase.
+	if host.battle_over:
+		return
+	if not DeviceProfile.is_mobile():
+		host._end_player_turn()
+		return
+	var old: Node = host.get_node_or_null("EndTurnConfirm")
+	if old:
+		old.queue_free()
+	var dlg := ConfirmationDialog.new()
+	dlg.name = "EndTurnConfirm"
+	dlg.title = Locale.t("ux_end_turn_title")
+	dlg.dialog_text = Locale.t("ux_end_turn_body")
+	dlg.ok_button_text = Locale.t("ux_end_turn_yes")
+	dlg.get_cancel_button().text = Locale.t("shell_4d0b4688")
+	host.add_child(dlg)
+	dlg.confirmed.connect(func():
+		dlg.queue_free()
+		host._end_player_turn()
+	)
+	dlg.canceled.connect(func(): dlg.queue_free())
+	dlg.close_requested.connect(func(): dlg.queue_free())
+	dlg.popup_centered()
 
 static func commit_move(host, cell: Vector2i) -> void:
 	if host.selected < 0 or host.selected >= host.units.size():
@@ -73,6 +101,8 @@ static func commit_move(host, cell: Vector2i) -> void:
 	host._log(Locale.t("ux_moved_to_log") % [su.char.name, cell.x, cell.y])
 	host._sync_objectives()
 	RewindBar.refresh(host)
+	if DeviceProfile.is_mobile():
+		BattleMobileBar.rebuild(host)
 
 static func draw_preview(host) -> void:
 	var overlay = host.overlay

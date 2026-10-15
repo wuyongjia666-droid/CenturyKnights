@@ -1,4 +1,5 @@
 extends Control
+signal skill_pressed(sid: String)
 ## v8.6 battle unit card — Frost design system (Stitch "06 战棋战斗 HUD" selected-unit card):
 ## rounded portrait w/ 1px stroke · team eyebrow · headline name · slim token HP bar (mint ally /
 ## coral enemy, mono numerals, tween) · rounded skill chips (hover/press/disabled/tooltip) · mono stats.
@@ -152,31 +153,46 @@ func set_unit(c, team: String = "player") -> void:
 		_fit_mobile()
 
 func _make_chip(c, sid: String, enemy: bool) -> Control:
-	var sz := 76.0 if _mob else 22.0
 	var sk: Dictionary = GameState.get_skill(sid)
 	var nm := str(sk.get("name", sid))
+	var desc := str(sk.get("desc", "")).strip_edges()
+	if desc.find("。") >= 0:
+		desc = desc.split("。")[0]
+	elif desc.find(".") >= 0:
+		desc = desc.split(".")[0]
+	if desc.length() > 18:
+		desc = desc.substr(0, 18) + "…"
 	var left := int(c.skill_uses.get(sid, 0)) if "skill_uses" in c else 1
 	var cd := int(c.skill_cd.get(sid, 0)) if "skill_cd" in c else 0
 	var ready := left > 0 and cd <= 0
-	var b := Button.new()
 	var chip := nm
 	if Locale.is_en() and Locale.has_cjk(nm):
 		chip = sid
-	b.text = chip.substr(0, 1)
-	b.custom_minimum_size = Vector2(sz, sz)
+	var b := Button.new()
 	b.focus_mode = Control.FOCUS_NONE
-	b.add_theme_font_size_override("font_size", 24 if _mob else 12)
+	b.clip_text = false
+	b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	var col: Color = (UIKit.DANGER if enemy else UIKit.ACCENT)
+	if _mob:
+		# Full name + short desc so phones match the desktop Art label / hint.
+		b.text = "%s\n%s" % [chip, desc] if desc != "" else chip
+		b.custom_minimum_size = Vector2(maxf(148.0, (_w - 16.0) * 0.48), 76.0)
+		b.add_theme_font_size_override("font_size", 18)
+		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	else:
+		b.text = chip.substr(0, 1)
+		b.custom_minimum_size = Vector2(22.0, 22.0)
+		b.add_theme_font_size_override("font_size", 12)
 	var n := StyleBoxFlat.new()
 	n.bg_color = Color(col, 0.10) if ready else Color(1, 1, 1, 0.03)
 	n.border_color = Color(col, 0.55) if ready else Color(1, 1, 1, 0.08)
 	n.set_border_width_all(1)
 	n.set_corner_radius_all(6)
 	n.anti_aliasing = true
-	n.content_margin_left = 2
-	n.content_margin_right = 2
-	n.content_margin_top = 0
-	n.content_margin_bottom = 0
+	n.content_margin_left = 8 if _mob else 2
+	n.content_margin_right = 8 if _mob else 2
+	n.content_margin_top = 6 if _mob else 0
+	n.content_margin_bottom = 6 if _mob else 0
 	var h: StyleBoxFlat = n.duplicate()
 	h.bg_color = Color(col, 0.22)
 	h.border_color = col
@@ -191,9 +207,14 @@ func _make_chip(c, sid: String, enemy: bool) -> Control:
 	b.add_theme_color_override("font_hover_color", Color.WHITE)
 	b.add_theme_color_override("font_disabled_color", UIKit.TEXT_FAINT)
 	b.tooltip_text = Locale.t("shell_77586a60") % [Locale.latin(nm, sid), left, (Locale.t("shell_4140eed2") % cd) if cd > 0 else ""]
-	b.pivot_offset = Vector2(sz, sz) * 0.5
-	b.mouse_entered.connect(func(): b.create_tween().tween_property(b, "scale", Vector2(1.1, 1.1), 0.08))
+	b.disabled = enemy or not ready
+	var sz: Vector2 = b.custom_minimum_size
+	b.pivot_offset = sz * 0.5
+	b.mouse_entered.connect(func(): b.create_tween().tween_property(b, "scale", Vector2(1.06, 1.06), 0.08))
 	b.mouse_exited.connect(func(): b.create_tween().tween_property(b, "scale", Vector2.ONE, 0.1))
+	if not enemy:
+		var skill_id := str(sid)
+		b.pressed.connect(func(): skill_pressed.emit(skill_id))
 	return b
 
 
@@ -223,8 +244,6 @@ func mobile_layout(width: float) -> void:
 	flow.mouse_filter = Control.MOUSE_FILTER_PASS
 	for ch in _chips.get_children():
 		ch.reparent(flow, false)
-		(ch as Control).custom_minimum_size = Vector2(76, 76)
-		(ch as Control).add_theme_font_size_override("font_size", 24)
 	_chips.replace_by(flow)
 	_chips.queue_free()
 	_chips = flow
@@ -238,7 +257,8 @@ func _fit_mobile() -> void:
 	for ch in _chips.get_children():
 		if not ch.is_queued_for_deletion():
 			n += 1
-	var per := maxi(1, int((_w + 8.0) / 84.0))
+	var chip_w := maxf(148.0, (_w - 16.0) * 0.48)
+	var per := maxi(1, int((_w + 8.0) / (chip_w + 8.0)))
 	var rows := 0 if n == 0 else int(ceil(float(n) / float(per)))
 	_chips.size = Vector2(_w, maxf(0.0, rows * 84.0 - 8.0))
 	var sy := PH + 10.0 + (rows * 84.0 if rows > 0 else 0.0)
