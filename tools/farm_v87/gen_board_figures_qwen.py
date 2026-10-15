@@ -75,23 +75,51 @@ sheet("bf_bandit_weak",
       "Lean male mountain-pass bandit, ragged charcoal hooded technical jacket (hood down), wrapped forearms, "
       "patched trousers, worn boots; cloth clothes, no heavy armour.",
       side="enemy")
-
-# ---- modular body bases (bald, for outfit/part swaps after Hunyuan) ----
+# ---- modular body bases (short neutral hair; documented mannequin, not bald) ----
+# Used for part swaps after Hunyuan. Keep face readable so sheets do not look like scrap.
 for g, who in (("m", "athletic young man of average build"),
                ("f", "athletic young woman of average build")):
     sheet("bf_base_body_" + g,
-          who + ", wearing a seamless fitted ink-navy technical undersuit bodysuit with thin frost seam lines, "
-          "simple soft boots, bald smooth head (no hair), neutral expression.")
+          who + ", short neat neutral dark hair (NOT bald), clear facial features with visible eyes "
+          "eyebrows nose and lips, neutral expression, wearing a seamless fitted ink-navy technical "
+          "undersuit bodysuit with thin frost seam lines, simple soft boots.")
 
-# ---- t1 outfits on bald mannequin (ally jobs used in opening battle) ----
-OUTFITS = {
-    "leader_coat": "knight-commander outfit: high-collared frost-chrome armoured coat over ink-navy tunic, one articulated pauldron, fitted trousers, armoured boots, short back cape",
-    "hunter": "hunter outfit: hooded asymmetric slate cloak worn down around the neck, bracers, quiver harness, soft boots, short hem, wrapped calves",
-    "light_inf": "light infantry outfit: layered ink-navy padded technical coat, single light shoulder guard, belt kit, mid-length hem, boots",
+# ---- t1 outfits: full hair + clear face matching class (NOT bald mannequin) ----
+# Must read as the same profession as bf_leader / bf_hunter / light_inf cast sheets.
+OUTFIT_WHO = {
+    "leader_coat": {
+        "m": ("Young male knight-commander with short dark tousled hair and a clear readable face "
+              "(defined eyes, brows, nose, lips — NOT bald, NOT featureless), wearing a "
+              "knight-commander outfit: high-collared frost-chrome armoured coat over ink-navy tunic, "
+              "one articulated pauldron, fitted trousers, armoured boots, short back cape."),
+        "f": ("Young female knight-commander with dark shoulder-length hair and a clear readable face "
+              "(defined eyes, brows, nose, lips — NOT bald, NOT featureless), wearing a "
+              "knight-commander outfit: high-collared frost-chrome armoured long coat, navy undersuit, "
+              "armoured boots, short back cape."),
+    },
+    "hunter": {
+        "m": ("Young male hunter with short dark messy hair and a clear readable face "
+              "(defined eyes, brows, nose, lips — NOT bald, NOT featureless), wearing a "
+              "hunter outfit: hooded asymmetric slate cloak worn down around the neck, bracers, "
+              "quiver harness, soft boots, short hem, wrapped calves."),
+        "f": ("Young female reed-marsh hunter with long dark hair and a clear readable face "
+              "(defined eyes, brows, nose, lips — NOT bald, NOT featureless), wearing a "
+              "hunter outfit: layered pale frost-white and navy hooded wrap coat with fur-trimmed "
+              "collar (hood down), fitted leggings, soft tall boots, quiver strap."),
+    },
+    "light_inf": {
+        "m": ("Young male light infantryman with short neat dark hair and a clear readable face "
+              "(defined eyes, brows, nose, lips — NOT bald, NOT featureless), wearing a "
+              "light infantry outfit: layered ink-navy padded technical coat, single light shoulder "
+              "guard, belt kit, mid-length hem, boots."),
+        "f": ("Young female light infantry soldier with tied-back dark hair and a clear readable face "
+              "(defined eyes, brows, nose, lips — NOT bald, NOT featureless), wearing a "
+              "light infantry outfit: layered ink-navy padded technical coat, single light shoulder "
+              "guard, belt kit, mid-length hem, boots."),
+    },
 }
-for job, outfit in OUTFITS.items():
-    for g, who in (("m", "young man of average build"), ("f", "young woman of average build")):
-        sheet(f"bf_outfit_{job}_t1_{g}",
-              f"A {who} with a bald smooth head wearing a {outfit}.")
+for job, by_g in OUTFIT_WHO.items():
+    for g, who in by_g.items():
+        sheet(f"bf_outfit_{job}_t1_{g}", who)
 
 print("board_figure qwen jobs", b.n, "->", root)

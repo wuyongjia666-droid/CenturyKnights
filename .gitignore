@@ -15,3 +15,7 @@ exports/*.aab
 project/android/signing.local.env
 project/assets/art/farm_inbox/*.zip
 project/assets/art/farm_inbox/qwen_v800_partial.zip
+
+# Farm Hunyuan raw drops (processed under project/assets/models/board/farm_cast/)
+tools/models/board_parts/farm_inbox/**
+!tools/models/board_parts/farm_inbox/.gitkeep
