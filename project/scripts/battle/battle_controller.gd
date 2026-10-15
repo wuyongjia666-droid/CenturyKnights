@@ -1045,12 +1045,13 @@ func _draw_map() -> void:
 				var cdv = int(u.char.skill_cd.get(sid, 0))
 				var sk = GameState.get_skill(sid)
 				var nm = str(sk.get("name", sid))
-				var initial = nm.substr(0, 1) if nm.length() > 0 else "?"
+				# 两字短标，避免「破/突/骑/抽」单字认不出战技
+				var initial = nm.substr(0, mini(2, nm.length())) if nm.length() > 0 else "?"
 				var max_cd = maxf(1.0, float(sk.get("cooldown", 3)))
 				cd_items.append({"cd": cdv, "max": max_cd, "ch": initial, "ready": cdv <= 0})
 			if cd_items.size() > 0:
 				var cd_y = bar_pos.y + 7.0
-				var pip_w = 12.0
+				var pip_w = 18.0
 				var gap = 2.0
 				var total_w = cd_items.size() * (pip_w + gap) - gap
 				var sx0 = center.x - total_w * 0.5
@@ -1063,7 +1064,7 @@ func _draw_map() -> void:
 					var col = Color(UIKit.OK, 0.9) if ready else Color(UIKit.ACCENT, 0.75)
 					map_draw.draw_rect(Rect2(Vector2(sx, cd_y + 12 * (1.0 - fill)), Vector2(pip_w, 12 * fill)), Color(col, 0.35))
 					var tcol = UIKit.TEXT if ready else UIKit.TEXT_DIM
-					map_draw.draw_string(fnt, Vector2(sx + 1, cd_y + 10), str(it["ch"]), HORIZONTAL_ALIGNMENT_CENTER, pip_w - 2, 9, tcol)
+					map_draw.draw_string(fnt, Vector2(sx + 1, cd_y + 10), str(it["ch"]), HORIZONTAL_ALIGNMENT_CENTER, pip_w - 2, 8, tcol)
 		# name pill above token — only for selected / hovered (unit card carries the rest; keeps the board clean)
 		if i != selected and p != _hover_cell:
 			continue

@@ -31,6 +31,8 @@ func _ready() -> void:
 	_body.name = "RiteText"
 	_body.position = Vector2(18, 80)
 	_body.size = Vector2(788, 150)
+	_body.clip_text = false
+	_body.max_lines_visible = -1
 	right.add_child(_body)
 	_actions = HBoxContainer.new()
 	_actions.name = "RiteActions"
@@ -68,7 +70,9 @@ func _refresh_list() -> void:
 	UIFX.wire_tree(_list)
 	if _selected == null:
 		_paint_steps(-1)
-		_body.text = Locale.t("lin_rite_hint") % EARLY_MIN_AGE
+		_body.text = Locale.t("lin_rite_hint", [kids.size(), EARLY_MIN_AGE])
+		_body.clip_text = false
+		_body.max_lines_visible = -1
 		CKPageKit.clear(_actions)
 
 func _paint_steps(cur: int) -> void:
@@ -201,4 +205,9 @@ func _do_enlist() -> void:
 
 func apply_mobile_layout() -> void:
 	CKPageKit.phone_fill(self)
+	if _body != null:
+		_body.clip_text = false
+		_body.max_lines_visible = -1
+		_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_body.size.y = maxf(_body.size.y, 160.0)
 
