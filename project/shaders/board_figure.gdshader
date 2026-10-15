@@ -26,6 +26,8 @@ uniform float face_zc = 0.0;
 uniform float face_yaw = 0.0;
 uniform float use_face = 0.0;
 uniform float exposure = 1.0;
+uniform float head_raw = 0.0;
+uniform float force_metal = 0.0;
 uniform float force_slot = -1.0;
 uniform float model_h = 1.85;
 uniform float y_min = 0.0;
@@ -132,10 +134,14 @@ vec3 grade_albedo(vec4 t4, vec4 tc, float h01, vec3 mn) {
 	float eye_w = head * skin_w * 0.0;
 	vec3 col = mix(cloth, skin, skin_w);
 	col = mix(col, hair, hair_w);
+	// enemy hooded faces: keep the model's own painted head (hood shadow, stubble, eyes)
+	vec3 raw = t * vec3(1.06, 1.0, 0.96);
+	col = mix(col, raw, head_raw * head * (1.0 - plain));
 	return mix(col, palette[2].rgb, eye_w);
 }
 
 void fragment() {
+	float v_face_w = 0.0;
 	int slot = 3;
 	float ao = 0.92;
 	float metal = 0.0;
@@ -143,6 +149,7 @@ void fragment() {
 	if (force_slot >= 0.0) {
 		slot = int(force_slot);
 		ao = 0.92;
+		metal = force_metal;
 	} else if (use_albedo > 0.5) {
 		// LOD for stable region classify (mip 2); fine sample only for AO.
 		vec3 t = textureLod(albedo_tex, UV, 2.0).rgb;
@@ -160,21 +167,36 @@ void fragment() {
 	if (grade_mode > 0.5 && force_slot < 0.0) {
 		base = grade_albedo(textureLod(albedo_tex, UV, 1.0), textureLod(albedo_tex, UV, 3.0), v_h01, normalize(v_mn));
 		if (use_face > 0.5) {
-			// undo baked head yaw around the head centre, then planar-project
+			// Cylindrical wrap around the (de-yawed) head axis: 3/4 views read the
+			// cheek side of the portrait instead of a stretched planar smear.
 			float cy = cos(face_yaw);
 			float sy = sin(face_yaw);
 			vec2 rel = vec2(v_mp.x - face_box.x, v_mp.z - face_zc);
 			vec2 rr = vec2(cy * rel.x - sy * rel.y, sy * rel.x + cy * rel.y);
-			vec2 fuv = vec2(0.5 + rr.x / face_box.w,
-				(face_box.y - v_mp.y) / max(0.001, face_box.y - face_box.z));
-			vec3 mn2 = vec3(0.0, 0.0, v_bnz);
+			float ang = atan(rr.x, max(1e-4, rr.y) + 0.0) ;
+			ang = atan(rr.x, rr.y);
+			float rad = face_box.w * 0.62;
+			float u = 0.5 + (ang * rad) / face_box.w;
+			float vv = (face_box.y - v_mp.y) / max(0.001, face_box.y - face_box.z);
+			vec2 fuv = vec2(u, vv);
 			float inb = step(0.0, fuv.x) * step(fuv.x, 1.0) * step(0.0, fuv.y) * step(fuv.y, 1.0);
-			float fr = smoothstep(0.15, 0.55, mn2.z) * step(0.0, rr.y);
+			// angle-based front mask (mesh normals on the remeshed head are noisy)
+			float fr = 1.0 - smoothstep(1.05, 1.45, abs(ang));
 			vec4 fd = texture(face_tex, clamp(fuv, 0.0, 1.0));
-			float fw = fd.a * inb * fr;
-			// keep portrait features, pull overall tone to the board skin slot
+			// Board LOD: when a face texel covers many screen px→ few, push a
+			// simplified, high-contrast face (brows/eyes/hair shapes) from a coarse mip.
+			float px = length(fwidth(fuv)) * 96.0;
+			float lodw = smoothstep(2.0, 6.0, px);
+			vec4 fl = textureLod(face_tex, clamp(fuv, 0.0, 1.0), 2.0);
+			float fl_l = dot(fl.rgb, vec3(0.299, 0.587, 0.114));
+			float sk_l = dot(palette[1].rgb, vec3(0.299, 0.587, 0.114));
+			float dark = smoothstep(sk_l * 0.92, sk_l * 0.55, fl_l);
+			vec3 simple = mix(palette[1].rgb, palette[0].rgb * 0.55, dark);
 			vec3 fc = fd.rgb * mix(vec3(1.0), palette[1].rgb / max(vec3(0.2), vec3(dot(fd.rgb, vec3(0.333)))) * 0.55, 0.25);
-			base = mix(base, fc * 1.08, fw);
+			fc = mix(fc * 1.08, simple, lodw);
+			float fw = mix(fd.a, max(fd.a, fl.a), lodw) * inb * fr;
+			base = mix(base, fc, fw);
+			v_face_w = fw;
 		}
 		ao = 0.96;
 	}
@@ -184,6 +206,8 @@ void fragment() {
 	vec3 L = normalize((VIEW_MATRIX * vec4(0.55 * face, 0.65, 0.52, 0.0)).xyz);
 	float wrap = clamp((dot(N, L) + 0.50) / 1.50, 0.0, 1.0);
 	float d = smoothstep(0.0, 1.0, wrap);
+	// smooth head front: flatten noisy remesh shading under the face decal
+	d = mix(d, 0.82, v_face_w * 0.85);
 	vec3 col = base * mix(shadow_mul, vec3(key_gain, key_gain, key_gain * 1.02), d);
 	if (!FRONT_FACING) { col *= 0.55; }
 	vec3 U = normalize((VIEW_MATRIX * vec4(0.0, 1.0, 0.0, 0.0)).xyz);

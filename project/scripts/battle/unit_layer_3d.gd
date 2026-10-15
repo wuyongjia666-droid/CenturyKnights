@@ -283,9 +283,9 @@ static func _board_lift(n: Node, ally: bool) -> void:
 					mats.append(m)
 		for m2 in mats:
 			var sm := m2 as ShaderMaterial
-			sm.set_shader_parameter("exposure", 1.22 if ally else 1.12)
+			sm.set_shader_parameter("exposure", 1.15 if ally else 1.10)
 			# top-down camera puts most of the figure in the wrap shadow: lift shadow floor
-			sm.set_shader_parameter("shadow_mul", Vector3(0.64, 0.66, 0.74) if ally else Vector3(0.55, 0.57, 0.64))
+			sm.set_shader_parameter("shadow_mul", Vector3(0.66, 0.66, 0.68) if ally else Vector3(0.55, 0.57, 0.64))
 			var r = sm.get_shader_parameter("rim_amt")
 			sm.set_shader_parameter("rim_amt", minf(0.9, (float(r) if r != null else 0.55) + (0.15 if ally else 0.05)))
 	for ch in n.get_children():

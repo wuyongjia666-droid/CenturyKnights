@@ -713,7 +713,7 @@ static func palette_for(c, team: String, tmpl: String = "") -> Dictionary:
 		pal["trousers"] = Color(0.133, 0.161, 0.212)
 		if not pal.has("metal") or _chroma(pal["metal"]) < 0.02:
 			pal["metal"] = Color(0.788, 0.827, 0.871)
-		if not pal.has("coat") or _chroma(pal["coat"]) < 0.05:
+		if not pal.has("coat") or (_chroma(pal["coat"]) < 0.05 and not bool(pal.get("coat_from_portrait", false))):
 			pal["coat"] = Color.from_hsv(house.h, 0.35, 0.55)
 	_protect(pal, enemy)
 	if _pal_cache.size() > CACHE_CAP:
@@ -801,7 +801,13 @@ static func _sample_portrait(c) -> Dictionary:
 			_sample_from_image(tmp, limg)
 			for k in ["coat", "coat_dark"]:
 				if tmp.has(k):
-					out[k] = tmp[k]
+					var cc: Color = tmp[k]
+					# portrait grey reads cool under the board's cyan rim: halve chroma
+					var g := (cc.r + cc.g + cc.b) / 3.0
+					# neutral grey coat (portrait suit is a true mid grey; any hue here came
+					# from background/necklace bleed and reads teal under the cyan rim)
+					out[k] = Color(g * 1.01, g, g * 0.99)
+			out["coat_from_portrait"] = true
 		return out
 	if not row.is_empty():
 		return out
@@ -819,13 +825,17 @@ static func _sample_from_image(out: Dictionary, img: Image) -> void:
 	var nc := 0
 	var dark := Color(0, 0, 0)
 	var nd := 0
+	var skin_w := 0.0
 	for y in 60:
 		for x in range(6, 42):
 			var col := sm.get_pixel(x, y)
 			var lum := 0.2126 * col.r + 0.7152 * col.g + 0.0722 * col.b
 			if y < 33 and _is_skin(col):
-				skin += col
+				# lit-side weighting: shadowed cheeks/neck dragged pale skins to mauve-grey
+				var w := lum * lum * 4.0
+				skin += col * w
 				ns += 1
+				skin_w += w
 			elif y < 22 and lum < 0.32:
 				hair += col
 				nh += 1
@@ -836,8 +846,8 @@ static func _sample_from_image(out: Dictionary, img: Image) -> void:
 				else:
 					coat += col
 					nc += 1
-	if ns > 0:
-		out["skin"] = skin / ns
+	if ns > 0 and skin_w > 0.0:
+		out["skin"] = skin / skin_w
 	if nh > 0:
 		out["hair"] = hair / nh
 	if nc > 0:
@@ -1302,6 +1312,15 @@ static func _apply_face_decal(unit: Node3D, c, team: String, tmpl: String) -> vo
 	var mi := _find_body_mesh(unit)
 	if mi == null or mi.mesh == null:
 		return
+	_enlarge_head(unit)
+	if str(team) == "enemy":
+		# Bandits: no portrait decal (placeholder cartoon) — keep the model's own painted,
+		# hood-shadowed face.
+		for si0 in mi.mesh.get_surface_count():
+			var m0 = mi.get_surface_override_material(si0)
+			if m0 is ShaderMaterial:
+				(m0 as ShaderMaterial).set_shader_parameter("head_raw", 1.0)
+		return
 	var mp := str(unit.get_meta("ck_model", ""))
 	var hb := head_box(mi, mp)
 	var pimg := decal_portrait_image(c, team, tmpl)
@@ -1334,6 +1353,157 @@ static func _apply_face_decal(unit: Node3D, c, team: String, tmpl: String) -> vo
 
 ## Captain: suit-style lapels + key necklace (portrait `v8_hero_leader` / leader genome plate).
 static var _bind_mesh_cache: Dictionary = {}
+
+const HEAD_SCALE := 1.10  # board read: +10 % head, still within realistic 7.5-head budget
+
+
+static func _find_skel(n: Node) -> Skeleton3D:
+	if n is Skeleton3D:
+		return n as Skeleton3D
+	for ch in n.get_children():
+		var f := _find_skel(ch)
+		if f != null:
+			return f
+	return null
+
+
+static func _enlarge_head(unit: Node3D) -> void:
+	var sk := _find_skel(unit)
+	if sk == null:
+		return
+	var hi := sk.find_bone("head")
+	if hi < 0:
+		return
+	var rest := sk.get_bone_rest(hi)
+	rest.basis = rest.basis.scaled(Vector3.ONE * HEAD_SCALE)
+	sk.set_bone_rest(hi, rest)
+	sk.set_bone_pose_scale(hi, Vector3.ONE * HEAD_SCALE)
+	unit.set_meta("ck_head_scale", HEAD_SCALE)
+
+
+static func _bone_attach(mi: MeshInstance3D, bone: String, nodes: Array) -> void:
+	var parent := mi.get_parent()
+	var skel := parent as Skeleton3D
+	if skel != null and skel.find_bone(bone) >= 0:
+		var ba := BoneAttachment3D.new()
+		ba.bone_name = bone
+		skel.add_child(ba)
+		var bg: Transform3D = skel.get_bone_global_rest(skel.find_bone(bone))
+		var off: Transform3D = bg.affine_inverse() * mi.transform
+		for m2 in nodes:
+			(m2 as Node3D).transform = off
+			ba.add_child(m2)
+	else:
+		for m3 in nodes:
+			(m3 as Node3D).transform = mi.transform
+			parent.add_child(m3)
+
+
+static func _slot_mat(pal: Dictionary, col: Color, metal: float, rim: float = 0.3) -> ShaderMaterial:
+	var p2 := pal.duplicate()
+	p2["coat"] = col
+	var m := _palette_mat(p2, 1.0, false)
+	m.set_shader_parameter("force_slot", 3.0)
+	m.set_shader_parameter("force_metal", metal)
+	m.set_shader_parameter("rim_amt", rim)
+	return m
+
+
+## Lumpy ellipse tube (fur roll / circlet). tilt_y: front-back height offset.
+static func _add_ring(st: SurfaceTool, c: Vector3, rx: float, rz: float, tube: float, segs: int, tsegs: int, lump: float, front_dy: float = 0.0) -> void:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 310
+	var bumps: Array[float] = []
+	for i in segs * tsegs:
+		bumps.append(1.0 + lump * (rng.randf() * 2.0 - 1.0))
+	for i in segs:
+		for j in tsegs:
+			var quad := []
+			for di in [[0, 0], [1, 0], [1, 1], [0, 1]]:
+				var ii: int = (i + int(di[0])) % segs
+				var jj: int = (j + int(di[1])) % tsegs
+				var a: float = ii * TAU / segs
+				var b: float = jj * TAU / tsegs
+				var rr := tube * bumps[ii * tsegs + jj]
+				var ctr := c + Vector3(sin(a) * rx, front_dy * cos(a), cos(a) * rz)
+				var outw := Vector3(sin(a), 0, cos(a))
+				var nrm := (outw * cos(b) + Vector3.UP * sin(b)).normalized()
+				quad.append([ctr + nrm * rr, nrm])
+			for idx in [0, 1, 2, 0, 2, 3, 0, 2, 1, 0, 3, 2]:
+				st.set_normal(quad[idx][1])
+				st.add_vertex(quad[idx][0])
+
+
+## Flattened dome (armour plate), opening downward-outward.
+static func _add_dome(st: SurfaceTool, c: Vector3, r: float, ry: float, segs: int) -> void:
+	for i in segs:
+		for j in segs / 2:
+			var quad := []
+			for di in [[0, 0], [1, 0], [1, 1], [0, 1]]:
+				var a: float = (i + int(di[0])) * TAU / segs
+				var b: float = (j + int(di[1])) * (PI * 0.5) / (segs / 2)
+				var nrm := Vector3(cos(a) * cos(b), sin(b), sin(a) * cos(b))
+				quad.append([c + Vector3(nrm.x * r, nrm.y * ry, nrm.z * r), nrm])
+			for idx in [0, 1, 2, 0, 2, 3, 0, 2, 1, 0, 3, 2]:
+				st.set_normal(quad[idx][1])
+				st.add_vertex(quad[idx][0])
+
+
+## Hunter (v8_bust_m_hunter): white fur collar, silver circlet w/ brow jewel, ice-armour pauldrons.
+static func _attach_hunter_extras(unit: Node3D, mi: MeshInstance3D, pal: Dictionary) -> void:
+	var hb := head_box(mi, str(unit.get_meta("ck_model", "")))
+	var H: float = hb["H"]
+	var y0: float = hb["ymin"]
+	var cx: float = hb["cx"]
+	var nz: float = hb["neck_z"]
+	var hzc: float = hb["head_zc"]
+	# fur collar
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	_add_ring(st, Vector3(cx, y0 + 0.830 * H, hzc), 0.082 * H, 0.070 * H, 0.024 * H, 26, 7, 0.45, -0.010 * H)
+	_add_ring(st, Vector3(cx, y0 + 0.808 * H, hzc), 0.100 * H, 0.084 * H, 0.020 * H, 26, 6, 0.45, -0.012 * H)
+	var fur := MeshInstance3D.new()
+	fur.name = "FurCollarExtra"
+	fur.mesh = st.commit()
+	fur.material_override = _slot_mat(pal, Color8(232, 236, 242), 0.0, 0.15)
+	# circlet (head bone)
+	var st2 := SurfaceTool.new()
+	st2.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var hr: float = float(hb["head_w"]) * 0.36
+	var cy := float(hb["ytop"]) - 0.024 * H
+	_add_ring(st2, Vector3(cx, cy, hzc + 0.004 * H), hr, hr * 1.08, 0.0035 * H, 28, 4, 0.0, -0.012 * H)
+	var gem_c := Vector3(cx, cy - 0.010 * H, hzc + hr * 1.08 + 0.002 * H)
+	_add_dome(st2, gem_c, 0.006 * H, 0.009 * H, 8)
+	var circ := MeshInstance3D.new()
+	circ.name = "CircletExtra"
+	circ.mesh = st2.commit()
+	circ.material_override = _slot_mat(pal, Color8(214, 222, 235), 1.0, 0.25)
+	# ice pauldrons (two stacked plates each side)
+	var sx_max := -1e9
+	var sx_min := 1e9
+	for v in _verts_of(mi):
+		var hy := (v.y - y0) / H
+		if hy > 0.78 and hy < 0.81:
+			sx_max = maxf(sx_max, v.x)
+			sx_min = minf(sx_min, v.x)
+	var plates: Array = []
+	for side in [1.0, -1.0]:
+		var sxe := sx_max if side > 0.0 else sx_min
+		var st3 := SurfaceTool.new()
+		st3.begin(Mesh.PRIMITIVE_TRIANGLES)
+		var pc := Vector3(sxe - side * 0.035 * H, y0 + 0.795 * H, hzc)
+		_add_dome(st3, pc, 0.056 * H, 0.046 * H, 14)
+		_add_dome(st3, pc + Vector3(side * 0.016 * H, -0.034 * H, 0), 0.050 * H, 0.036 * H, 14)
+		var pm := MeshInstance3D.new()
+		pm.name = "IcePauldronExtra"
+		pm.mesh = st3.commit()
+		pm.material_override = _slot_mat(pal, Color8(168, 192, 222), 1.0, 0.45)
+		plates.append([pm, "upper_arm.L" if side > 0.0 else "upper_arm.R"])
+	_bone_attach(mi, "chest", [fur])
+	_bone_attach(mi, "head", [circ])
+	for pr in plates:
+		_bone_attach(mi, str(pr[1]), [pr[0]])
+	unit.set_meta("ck_outfit_extras", ["fur_collar", "circlet", "ice_pauldrons"])
 
 
 ## Bake bind-pose position + normal.z into CUSTOM0 so the face decal projects in bind
@@ -1369,6 +1539,11 @@ static func _bake_bind_custom0(mi: MeshInstance3D, key: String) -> void:
 
 
 static func _attach_outfit_extras(unit: Node3D, c, team: String, pal: Dictionary) -> void:
+	if c != null and str(team) != "enemy" and not bool(c.is_leader) and str(c.cast_key) == "dengying":
+		var hmi := _find_body_mesh(unit)
+		if hmi != null:
+			_attach_hunter_extras(unit, hmi, pal)
+		return
 	if c == null or str(team) == "enemy" or not bool(c.is_leader):
 		return
 	var mi := _find_body_mesh(unit)
@@ -1413,6 +1588,21 @@ static func _attach_outfit_extras(unit: Node3D, c, team: String, pal: Dictionary
 				st.set_normal(nrm)
 				st.set_color(Color(3.0 / 255.0, 1.0, 0.0))
 				st.add_vertex(v)
+		# thickness: side walls down to the coat along the lapel outline
+		var ring := [0, 1, 2, 3, 4, 6, 5]
+		var th := Vector3(0, 0, -0.010 * H)
+		for ri in ring.size():
+			var p0: Vector3 = pts[ring[ri]]
+			var p1: Vector3 = pts[ring[(ri + 1) % ring.size()]]
+			var wn: Vector3 = (p1 - p0).cross(Vector3(0, 0, 1)).normalized() * -float(sgn)
+			for v3 in [p0, p1, p1 + th, p0, p1 + th, p0 + th, p0, p1 + th, p1, p0, p0 + th, p1 + th]:
+				st.set_normal(wn)
+				st.set_color(Color(4.0 / 255.0, 0.85, 0.0))
+				st.add_vertex(v3)
+		# edge line (stitched roll edge) along the inner + notch edges
+		var lip := Vector3(0, 0, 0.0012 * H)
+		for e in [[0, 5], [5, 6], [2, 3], [3, 4], [1, 2]]:
+			_add_bar(st, pts[e[0]] + lip, pts[e[1]] + lip, 0.0013 * H, 4)
 	# dark inner shirt V between lapels (portrait: black high-neck shirt)
 	var sv := [Vector3(cx - 0.036 * H, y0 + 0.850 * H, 0), Vector3(cx + 0.036 * H, y0 + 0.850 * H, 0), Vector3(cx, y0 + 0.612 * H, 0)]
 	for qi in 3:
@@ -1427,7 +1617,7 @@ static func _attach_outfit_extras(unit: Node3D, c, team: String, pal: Dictionary
 	lapel.mesh = st.commit()
 	var lm := ShaderMaterial.new()
 	lm.shader = _sh()
-	var lpal := pal.duplicate()
+	var lpal := pal.duplicate()  # (unused: lapels use vertex slots)
 	lpal["coat"] = coat.lightened(0.10)
 	lm = _palette_mat(lpal, float(unit.get_parent().get_meta("ck_face", 1.0)) if unit.get_parent() else 1.0, false)
 	lm.set_shader_parameter("force_slot", -1.0)
@@ -1447,11 +1637,50 @@ static func _attach_outfit_extras(unit: Node3D, c, team: String, pal: Dictionary
 	_add_bar(st2, pend + Vector3(0, 0.014 * H, 0), pend - Vector3(0, 0.026 * H, 0), 0.0040 * H)  # key shaft
 	_add_bar(st2, pend + Vector3(-0.007 * H, 0.008 * H, 0), pend + Vector3(0.007 * H, 0.008 * H, 0), 0.0045 * H)  # bow
 	_add_bar(st2, pend - Vector3(0, 0.022 * H, 0), pend - Vector3(-0.008 * H, 0.022 * H, 0), 0.0028 * H)  # bit
+	# Sleeve emblem (portrait: silver compass-star patch on his left upper arm).
+	var arm_x := -1e9
+	var arm_z := 0.0
+	for v in _verts_of(mi):
+		var hy := (v.y - y0) / H
+		if hy > 0.68 and hy < 0.73 and v.x > arm_x:
+			arm_x = v.x
+			arm_z = v.z
+	if arm_x > -1e8:
+		var ac := Vector3(arm_x - 0.045 * H + 0.049 * H, y0 + 0.700 * H, arm_z)
+		var rr := 0.014 * H
+		for k in 4:
+			var ang := k * PI * 0.5
+			var tip := ac + Vector3(0, cos(ang), -sin(ang)) * rr
+			var ang2 := ang + PI * 0.25
+			var l := ac + Vector3(0, cos(ang2 - PI * 0.5), -sin(ang2 - PI * 0.5)) * rr * 0.35
+			var r2 := ac + Vector3(0, cos(ang2), -sin(ang2)) * rr * 0.35
+			for vv in [ac, tip, r2, ac, r2, tip, ac, l, tip, ac, tip, l]:
+				st2.set_normal(Vector3(1, 0, 0))
+				st2.set_color(Color(8.0 / 255.0, 1.0, 0.0))
+				st2.add_vertex(vv)
+		# band ring (darker coat) round the sleeve
+		for k2 in 12:
+			var a0 := k2 * TAU / 12.0
+			var a1 := (k2 + 1) * TAU / 12.0
+			var ctr := Vector3(arm_x - 0.045 * H, 0, arm_z)
+			var rad := 0.047 * H
+			var q0 := ctr + Vector3(cos(a0) * rad, 0, sin(a0) * rad)
+			var q1 := ctr + Vector3(cos(a1) * rad, 0, sin(a1) * rad)
+			var ya := y0 + 0.672 * H
+			var yb := y0 + 0.684 * H
+			var A := Vector3(q0.x, ya, q0.z)
+			var B := Vector3(q1.x, ya, q1.z)
+			var C := Vector3(q1.x, yb, q1.z)
+			var D := Vector3(q0.x, yb, q0.z)
+			for vb in [A, B, C, A, C, D, A, C, B, A, D, C]:
+				st2.set_normal(Vector3(cos(a0), 0, sin(a0)))
+				st2.set_color(Color(4.0 / 255.0, 1.0, 0.0))
+				st2.add_vertex(vb)
 	var neck := MeshInstance3D.new()
 	neck.name = "KeyNecklaceExtra"
 	neck.mesh = st2.commit()
 	var nmm := _palette_mat(pal, 1.0, false)
-	nmm.set_shader_parameter("force_slot", 8.0)
+	nmm.set_shader_parameter("force_slot", -1.0)  # vertex slots: 8 silver, 4 band
 	nmm.set_shader_parameter("rim_amt", 0.2)
 	neck.material_override = nmm
 	var parent := mi.get_parent()
@@ -1475,6 +1704,11 @@ static func _attach_outfit_extras(unit: Node3D, c, team: String, pal: Dictionary
 static var _vert_cache: Dictionary = {}
 
 
+static func _verts_of(mi: MeshInstance3D) -> PackedVector3Array:
+	_front_z(mi, 0.0, 0.0, 0.0, 0.0)
+	return _vert_cache.get(str(mi.mesh.get_instance_id()), PackedVector3Array())
+
+
 static func _front_z(mi: MeshInstance3D, x: float, y: float, r: float, fallback: float) -> float:
 	var key := str(mi.mesh.get_instance_id())
 	var verts: PackedVector3Array = _vert_cache.get(key, PackedVector3Array())
@@ -1494,7 +1728,7 @@ static func _front_z(mi: MeshInstance3D, x: float, y: float, r: float, fallback:
 	return best if best > -1e8 else fallback
 
 
-static func _add_bar(st: SurfaceTool, a: Vector3, b: Vector3, r: float) -> void:
+static func _add_bar(st: SurfaceTool, a: Vector3, b: Vector3, r: float, slot: int = 8) -> void:
 	var d := (b - a)
 	var side := d.cross(Vector3(0, 0, 1)).normalized() * r
 	var fwd := Vector3(0, 0, r * 0.8)
@@ -1503,5 +1737,5 @@ static func _add_bar(st: SurfaceTool, a: Vector3, b: Vector3, r: float) -> void:
 		var n := Vector3(0, 0, 1)
 		for idx in [0, 1, 2, 0, 2, 3, 0, 2, 1, 0, 3, 2]:
 			st.set_normal(n)
-			st.set_color(Color(8.0 / 255.0, 1.0, 0.0))
+			st.set_color(Color(float(slot) / 255.0, 1.0, 0.0))
 			st.add_vertex(q[idx])
