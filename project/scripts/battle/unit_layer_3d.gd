@@ -79,21 +79,27 @@ func _ready() -> void:
 	_cam.current = true
 
 
-## Board figures are tiny: kill rim glow and lean albedo toward the P0 fill so cloth reads solid.
+## Board figures are tiny: flatten farm-cast lighting; also touch material_override (farm path).
 func _solidify_board(n: Node) -> void:
 	if n is MeshInstance3D:
 		var mi := n as MeshInstance3D
+		var mats: Array = []
+		if mi.material_override != null:
+			mats.append(mi.material_override)
 		if mi.mesh:
 			for si in mi.mesh.get_surface_count():
 				var m = mi.get_surface_override_material(si)
-				if m is ShaderMaterial:
-					var sm := m as ShaderMaterial
-					# board scale: solid cloth from P0 fill + albedo luminance; soft rim only
-					sm.set_shader_parameter("board_compact", 1.0)
-					sm.set_shader_parameter("rim_strength", 0.06)
-					sm.set_shader_parameter("lit_level", 0.80)
-				elif m is BaseMaterial3D:
-					(m as BaseMaterial3D).rim_enabled = false
+				if m != null:
+					mats.append(m)
+		for m in mats:
+			if m is ShaderMaterial:
+				var sm := m as ShaderMaterial
+				sm.set_shader_parameter("board_compact", 1.0)
+				sm.set_shader_parameter("rim_strength", 0.06)
+				sm.set_shader_parameter("lit_level", 0.80)
+				sm.set_shader_parameter("rim_amt", 0.22)
+			elif m is BaseMaterial3D:
+				(m as BaseMaterial3D).rim_enabled = false
 	for c in n.get_children():
 		_solidify_board(c)
 
@@ -125,6 +131,7 @@ func sync(entries: Array, delta: float) -> void:
 			if n == null:
 				continue
 			_world.add_child(n)
+			_solidify_board(n)
 			n.set_meta("ck_base_scale", Vector3.ONE)
 			var ap := CKBoardFigure.find_anim(n)
 			var f0 := 1.0 if str(u.team) != "enemy" else -1.0

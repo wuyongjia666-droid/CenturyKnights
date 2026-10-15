@@ -263,6 +263,28 @@ static func _mat(base: Color, face: float, enemy: bool, metal: float = 0.0, shee
 	sm.set_shader_parameter("rim_col", UIKit.DANGER if enemy else UIKit.ACCENT)
 	var rim := 0.85 if enemy or (0.2126 * base.r + 0.7152 * base.g + 0.0722 * base.b) < 0.36 else 0.55
 	sm.set_shader_parameter("rim_amt", rim)
+	sm.set_shader_parameter("use_bands", 0.0)
+	sm.set_shader_parameter("board_compact", 0.0)
+	return sm
+
+## Whole-mesh farm cast: height bands (skin/coat/pants/hair) + board_compact so pieces are not grey clay.
+static func _farm_mat(pal: Dictionary, face: float, enemy: bool) -> ShaderMaterial:
+	var coat: Color = _lift_lum(pal.get("coat", Color(0.55, 0.58, 0.62)), 0.42)
+	var skin: Color = _lift_lum(pal.get("skin", Color(0.78, 0.62, 0.52)), 0.55)
+	var pants: Color = _lift_lum(pal.get("pants", Color(0.16, 0.16, 0.18)), 0.22)
+	var boots: Color = pal.get("boots", Color(0.12, 0.11, 0.11))
+	var hair: Color = pal.get("hair", Color(0.25, 0.20, 0.18))
+	var sm := _mat(coat, face, enemy, 0.04, 0.08)
+	sm.set_shader_parameter("use_bands", 1.0)
+	sm.set_shader_parameter("board_compact", 1.0)
+	sm.set_shader_parameter("model_h", MODEL_H)
+	sm.set_shader_parameter("skin", skin)
+	sm.set_shader_parameter("coat", coat)
+	sm.set_shader_parameter("pants", pants)
+	sm.set_shader_parameter("boots", boots)
+	sm.set_shader_parameter("hair", hair)
+	sm.set_shader_parameter("base", coat)
+	sm.set_shader_parameter("rim_amt", 0.22)
 	return sm
 
 static func _mesh(parent: Node3D, mesh: Mesh, pos: Vector3, rot_deg: Vector3, scale: Vector3, mat: Material) -> MeshInstance3D:
@@ -279,32 +301,33 @@ static func _mesh(parent: Node3D, mesh: Mesh, pos: Vector3, rot_deg: Vector3, sc
 ## Whole-mesh farm Hunyuan casts (leader / hunter / bandit*). Prefer over Godot primitives.
 ## Not the rejected #301 modular kit — single MeshInstance3D + board_figure shader.
 static func _farm_cast_path(c, enemy: bool, tmpl: String) -> String:
-	var name := ""
+	## Temporary remap (until dedicated farm_cast GLBs): any 3D unit uses an existing cast
+	## so opening/tutorial fights never mix Godot capsules with Hunyuan meshes.
+	## leader_* ← is_leader / cast_key leader / captain / banner / tank|heavy_inf
+	## hunter_* ← hunter|archer|ranger|light_inf|squire|apprentice|cavalry|mage|other ally
+	## bandit*  ← enemy templates; unknown enemy → bandit
 	if enemy:
 		var t := tmpl if tmpl != "" else "bandit"
 		if t in ["bandit", "bandit_archer", "bandit_chief", "bandit_weak"]:
-			name = t if ResourceLoader.exists(FARM_CAST_DIR + t + ".glb") else "bandit"
-	else:
-		var role := "skirmisher"
-		var jid := ""
-		if c != null:
-			jid = str(c.job_id)
-			role = BattleRules.job_role(jid)
-		# Opening leader is squire + is_leader; also captain/banner / cast_key leader.
-		var lead := false
-		if c != null:
-			lead = bool(c.is_leader) or str(c.cast_key) == "leader"
-		lead = lead or role == "leader" or jid in ["captain", "banner"]
-		if lead:
-			return _farm_cast_gendered("leader", c)
-		# Ally hunters / archers (job_role ranger covers hunter ranged jobs)
-		var is_hunter := jid in ["hunter", "archer"] or role == "ranger"
-		if is_hunter:
-			return _farm_cast_gendered("hunter", c)
-	if name == "":
-		return ""
-	var path := FARM_CAST_DIR + name + ".glb"
-	return path if ResourceLoader.exists(path) else ""
+			var own := FARM_CAST_DIR + t + ".glb"
+			if ResourceLoader.exists(own):
+				return own
+		var fallback := FARM_CAST_DIR + "bandit.glb"
+		return fallback if ResourceLoader.exists(fallback) else ""
+	var role := "skirmisher"
+	var jid := ""
+	if c != null:
+		jid = str(c.job_id)
+		role = BattleRules.job_role(jid)
+	var lead := false
+	if c != null:
+		lead = bool(c.is_leader) or str(c.cast_key) == "leader"
+	lead = lead or role == "leader" or jid in ["captain", "banner"]
+	# Bulkier ally jobs share leader silhouette until heavy_inf farm cast ships.
+	if lead or role == "tank" or jid in ["heavy_inf", "warrior"]:
+		return _farm_cast_gendered("leader", c)
+	# Everyone else (incl. opening light_inf / squire non-leader / mage / cavalry) → hunter_*.
+	return _farm_cast_gendered("hunter", c)
 
 static func _farm_cast_gendered(stem: String, c) -> String:
 	var g := "f" if c != null and str(c.gender) == "f" else "m"
@@ -326,8 +349,7 @@ static func _assemble_farm_cast(body: Node3D, c, pal: Dictionary, enemy: bool, f
 	var inst: Node = packed.instantiate() if packed is PackedScene else null
 	if inst == null:
 		return false
-	var coat: Color = pal.get("coat", Color(0.55, 0.58, 0.62))
-	var mat := _mat(coat, face, enemy, 0.15, 0.12)
+	var mat := _farm_mat(pal, face, enemy)
 	var added := 0
 	for n in _gather_meshes(inst):
 		var mi := n as MeshInstance3D
@@ -335,8 +357,14 @@ static func _assemble_farm_cast(body: Node3D, c, pal: Dictionary, enemy: bool, f
 			continue
 		var clone := MeshInstance3D.new()
 		clone.mesh = mi.mesh
+		# Drop imported StandardMaterial; banded board_figure shader owns albedo.
 		clone.material_override = mat
+		if mi.mesh.get_surface_count() > 0:
+			for si in range(mi.mesh.get_surface_count()):
+				clone.set_surface_override_material(si, mat)
 		clone.name = "FarmCast%d" % added
+		# Keep authoring transform (retopo root may carry scale/offset).
+		clone.transform = mi.transform
 		body.add_child(clone)
 		added += 1
 	inst.free()

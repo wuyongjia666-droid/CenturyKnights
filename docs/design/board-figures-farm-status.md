@@ -21,3 +21,12 @@
 
 ## Optional not wired
 - `base_body_*`, `outfit_*` stay inbox-only (modular rejected with #301)
+
+## Fix: farm colour + no capsule mix (post-d2c48b58 screenshot)
+- **Grey clay root cause:** farm path painted one muted `coat` with strong wrap shadows; whole-mesh looked like unpainted clay. `_solidify_board` never ran and only looked at surface overrides (not `material_override`).
+- **Fix:** `board_figure.gdshader` height bands (hair/skin/coat/pants/boots) + `board_compact` flatten; `_farm_mat` lifts luminance; assemble sets override + surface materials; unit layer calls `_solidify_board` after build.
+- **Temporary job remap (until dedicated GLBs):**
+  - `leader_*` ← `is_leader` / `cast_key=leader` / captain / banner / tank|heavy_inf|warrior
+  - `hunter_*` ← all other allies (light_inf, squire non-leader, apprentice, cavalry, mage, ranger, …)
+  - `bandit*` ← enemy templates; unknown enemy → `bandit`
+- Goal: opening/tutorial 3D fight shows **only** farm_cast silhouettes (no Godot capsules).
