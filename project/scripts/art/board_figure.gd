@@ -1625,8 +1625,9 @@ static func _attach_hunter_extras(unit: Node3D, mi: MeshInstance3D, pal: Diction
 		_add_card(stc, [r1, r1 + Vector3(0, 0.008 * H, 0) + bw * 0.022 * H, r1 + Vector3(0, -0.006 * H, 0) + bw * 0.050 * H], 0.040 * H, Vector3.UP, 0.0)
 	# side locks framing the face
 	for sgn3 in [-1.0, 1.0]:
-		var ang2 := deg_to_rad(sgn3 * 66.0)
-		var r0 := Vector3(hcx + sin(ang2) * hrad * 1.0, hcy + 0.030 * H, hzc + cos(ang2) * hrad * 0.92)
+		# sit behind the cheek line (was 66°, crossed his left cheek in 3/4 view)
+		var ang2 := deg_to_rad(sgn3 * 88.0)
+		var r0 := Vector3(hcx + sin(ang2) * hrad * 1.04, hcy + 0.030 * H, hzc + cos(ang2) * hrad * 0.92 - 0.010 * H)
 		var ow := Vector3(sin(ang2), 0, cos(ang2) * 0.35).normalized()
 		_add_card(stc, [r0, r0 + ow * 0.012 * H + Vector3(0, -0.07 * H, 0), r0 + ow * 0.022 * H + Vector3(0, -0.15 * H, 0.004 * H)], 0.026 * H, ow, 0.0)
 	# clump bangs swept to his right (portrait), wide roots

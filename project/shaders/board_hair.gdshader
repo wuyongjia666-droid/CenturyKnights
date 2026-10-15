@@ -16,15 +16,15 @@ void fragment() {
 	// card silhouette: soft sides, tapering + feathered tip
 	float half_w = mix(0.5, 0.18, smoothstep(0.2, 1.0, v));
 	float d = abs(u - 0.5) / max(0.01, half_w);
-	float edge = 1.0 - smoothstep(0.55, 1.0, d);
+	float edge = 1.0 - smoothstep(0.25, 1.0, d);  // wide soft feather
 	float strand = 0.0;
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 11; i++) {
 		float fi = float(i);
 		float c = 0.5 + (h1(fi) - 0.5) * half_w * 1.6 + sin(v * 5.0 + fi) * 0.03;
-		strand = max(strand, 1.0 - smoothstep(0.02, 0.09, abs(u - c)));
+		strand = max(strand, 1.0 - smoothstep(0.008, 0.05, abs(u - c)));
 	}
 	float tip = 1.0 - smoothstep(0.72, 1.0, v) * (1.0 - strand * 0.7);
-	float a = edge * tip * mix(0.78, 1.0, strand);
+	float a = edge * tip * mix(0.35, 1.0, strand);  // gaps between strands read as separate hairs
 	vec3 N = normalize(NORMAL);
 	if (!FRONT_FACING) { N = -N; }
 	vec3 L = normalize((VIEW_MATRIX * vec4(0.55 * face, 0.65, 0.52, 0.0)).xyz);
