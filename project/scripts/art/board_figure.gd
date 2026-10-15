@@ -276,7 +276,7 @@ static func _mesh(parent: Node3D, mesh: Mesh, pos: Vector3, rot_deg: Vector3, sc
 	return mi
 
 
-## Whole-mesh farm Hunyuan casts (leader / bandit*). Prefer over Godot primitives.
+## Whole-mesh farm Hunyuan casts (leader / hunter / bandit*). Prefer over Godot primitives.
 ## Not the rejected #301 modular kit — single MeshInstance3D + board_figure shader.
 static func _farm_cast_path(c, enemy: bool, tmpl: String) -> String:
 	var name := ""
@@ -286,22 +286,31 @@ static func _farm_cast_path(c, enemy: bool, tmpl: String) -> String:
 			name = t if ResourceLoader.exists(FARM_CAST_DIR + t + ".glb") else "bandit"
 	else:
 		var role := "skirmisher"
+		var jid := ""
 		if c != null:
-			role = BattleRules.job_role(str(c.job_id))
-		var is_leader := role == "leader" or (c != null and str(c.job_id) in ["captain", "banner"])
+			jid = str(c.job_id)
+			role = BattleRules.job_role(jid)
+		var is_leader := role == "leader" or jid in ["captain", "banner"]
 		if is_leader:
-			var g := "f" if c != null and str(c.gender) == "f" else "m"
-			var cand := FARM_CAST_DIR + "leader_%s.glb" % g
-			if ResourceLoader.exists(cand):
-				return cand
-			var alt := FARM_CAST_DIR + ("leader_m.glb" if g == "f" else "leader_f.glb")
-			if ResourceLoader.exists(alt):
-				return alt
-			return ""
+			return _farm_cast_gendered("leader", c)
+		# Ally hunters / archers (job_role ranger covers hunter ranged jobs)
+		var is_hunter := jid in ["hunter", "archer"] or role == "ranger"
+		if is_hunter:
+			return _farm_cast_gendered("hunter", c)
 	if name == "":
 		return ""
 	var path := FARM_CAST_DIR + name + ".glb"
 	return path if ResourceLoader.exists(path) else ""
+
+static func _farm_cast_gendered(stem: String, c) -> String:
+	var g := "f" if c != null and str(c.gender) == "f" else "m"
+	var cand := FARM_CAST_DIR + "%s_%s.glb" % [stem, g]
+	if ResourceLoader.exists(cand):
+		return cand
+	var alt := FARM_CAST_DIR + ("%s_m.glb" % stem if g == "f" else "%s_f.glb" % stem)
+	if ResourceLoader.exists(alt):
+		return alt
+	return ""
 
 static func _assemble_farm_cast(body: Node3D, c, pal: Dictionary, enemy: bool, face: float, tmpl: String) -> bool:
 	var path := _farm_cast_path(c, enemy, tmpl)

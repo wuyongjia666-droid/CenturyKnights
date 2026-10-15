@@ -1,15 +1,23 @@
-# Board figures farm status (2026-10-15 Asia/Shanghai ~11:30)
+# Board figures farm status (2026-10-15 Asia/Shanghai ~12:15)
 
-## Shipped this PR (farm cast t1)
-- Hunyuan ready: `leader_m/f`, `bandit`, `bandit_archer` → retopo ≤5500 tris → `project/assets/models/board/farm_cast/*.glb`
-- `CKBoardFigure` loads farm casts for captain/leader + bandit templates (else Godot primitives)
-- Raw hy drops in `tools/models/board_parts/farm_inbox/` (gitignored); retopo: `tools/models/retopo_farm_hunyuan.py`
-- **Not** PR #301
+## Shipped farm cast t1 (#306 / main-bbd10400)
+- `leader_m/f`, `bandit`, `bandit_archer` → retopo ≤5500 tris → `project/assets/models/board/farm_cast/`
+- `CKBoardFigure` loads farm casts for captain/leader + bandit templates
 
-## Pipeline still running on m173
-- hy_batch: remaining hunter / bandit_chief / base…
-- hy_outfit_r2: haired outfits on :8327
+## Shipped farm cast t1b (this PR)
+- `hunter_m/f`, `bandit_chief`, `bandit_weak` → same retopo pipeline (`tools/models/retopo_farm_hunyuan.py`)
+- Ally hunters: `job_id` in `hunter`/`archer` or `job_role == ranger` → gendered `hunter_*.glb` (cross-gender fallback, else primitives)
+- Enemy: `bandit_chief` / `bandit_weak` use own GLB when present (else `bandit`)
+- Raw hy in `tools/models/board_parts/farm_inbox/` (gitignored)
+- **Not** PR #301 modular kit
 
-## Keep vs reshoot (Qwen)
-- Keep: cast leader/hunter/bandit sheets
-- Reshot: outfit_r2 (haired)
+## Tris (FINAL)
+| file | tris | h |
+|------|------|---|
+| hunter_m | 5500 | 1.85 |
+| hunter_f | 5500 | 1.85 |
+| bandit_chief | 5500 | 1.85 |
+| bandit_weak | 5498 | 1.85 |
+
+## Optional not wired
+- `base_body_*`, `outfit_*` stay inbox-only (modular rejected with #301)
