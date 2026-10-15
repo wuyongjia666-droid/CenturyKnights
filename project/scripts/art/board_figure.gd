@@ -1,105 +1,79 @@
 class_name CKBoardFigure
 extends RefCounted
-## Portrait-matched board figures (docs/design/pawn-redesign-opus.md).
-## Prototype-quality: Godot primitives + shared hair modules. Formal Blender GLB is later.
-## ~5.45 head ratio, soft portrait lighting (board_figure.gdshader), 0 textures on body.
+## Formal modular board figures (docs/design/pawn-redesign-opus.md §3 / §5 / 附录 A/B).
+## Assembles parts from board_figures_v1.glb + data/board_figures.json.
+## Vertex-colour palette slots; 0 textures; LRU 64 by appearance hash (incl. plate stem).
+## Does NOT use farm_cast whole meshes as the formal kit.
 
 const SHADER_PATH := "res://shaders/board_figure.gdshader"
-const MOD_DIR := "res://assets/models/modules/"
-const FARM_CAST_DIR := "res://assets/models/board/farm_cast/"
-## P0 offline plate palettes (tools/art/plate_palette.py). Lookup by try_texture stem only.
+const MAP_PATH := "res://data/board_figures.json"
 const PLATE_PALETTES := "res://data/plate_palettes.json"
 const PLATE_OVERRIDES := "res://data/plate_palette_overrides.json"
 const MODEL_H := 1.85
-const HEAD_RATIO := 5.45
 const CACHE_CAP := 64
+const STANDIN_W := 160
+const STANDIN_H := 200
+
+const PALETTE_KEYS: Array[String] = [
+	"hair", "skin", "eye", "coat", "coat_dark", "apron", "sash", "metal",
+	"blade", "house", "crest", "cape", "trousers", "boots", "leather", "wood", "accent",
+]
 
 static var _shader: Shader
-static var _cache: Dictionary = {}  # hash -> Node3D packed scene? we cache built roots weakly by rebuilding cheaply
-static var _pal_cache: Dictionary = {}  # identity -> palette dict
-static var _plate_table: Dictionary = {}  # stem -> row
+static var _map: Dictionary = {}
+static var _map_ready := false
+static var _kit: PackedScene
+static var _kit_meshes: Dictionary = {}  # name -> ArrayMesh
+static var _kit_ready := false
+static var _plate_table: Dictionary = {}
 static var _plate_ovr: Dictionary = {}
 static var _plate_ready := false
+static var _lru: Dictionary = {}  # hash -> {mesh, mat_params...}  (built roots cloned)
+static var _lru_order: Array[String] = []
+static var _standin_mem: Dictionary = {}  # hash -> ImageTexture
+static var _pal_cache: Dictionary = {}
+
 
 static func _sh() -> Shader:
 	if _shader == null:
 		_shader = load(SHADER_PATH) as Shader
 	return _shader
 
-## Build a board figure for character c on team. Returns a Node3D with AnimationPlayer child "Anim".
-static func build(c, team: String, tmpl: String = "") -> Node3D:
-	var enemy := str(team) == "enemy"
-	var face := -1.0 if enemy else 1.0
-	var pal: Dictionary = palette_for(c, team, tmpl)
-	var root := Node3D.new()
-	root.name = "BoardFigure"
-	root.set_meta("ck_board_figure", true)
-	root.set_meta("ck_face", face)
-	var body := Node3D.new()
-	body.name = "Body"
-	root.add_child(body)
-	if DisplayServer.get_name() != "headless":
-		if not _assemble_farm_cast(body, c, pal, enemy, face, tmpl):
-			_assemble(body, c, pal, enemy, face)
-	var ap := _make_anim(root, face)
-	root.add_child(ap)
-	return root
 
-static func find_anim(n: Node) -> AnimationPlayer:
-	if n == null:
-		return null
-	var a := n.get_node_or_null("Anim") as AnimationPlayer
-	if a:
-		return a
+static func _ensure_map() -> void:
+	if _map_ready:
+		return
+	_map_ready = true
+	var raw = _load_json(MAP_PATH)
+	_map = raw if typeof(raw) == TYPE_DICTIONARY else {}
+
+
+static func _ensure_kit() -> void:
+	if _kit_ready:
+		return
+	_kit_ready = true
+	_ensure_map()
+	var path := str(_map.get("kit_glb", "res://assets/models/board/board_figures_v1.glb"))
+	if not ResourceLoader.exists(path):
+		push_warning("CKBoardFigure: missing kit %s" % path)
+		return
+	_kit = load(path) as PackedScene
+	if _kit == null:
+		return
+	var inst: Node = _kit.instantiate()
+	_collect_kit_meshes(inst)
+	inst.free()
+
+
+static func _collect_kit_meshes(n: Node) -> void:
+	if n is MeshInstance3D:
+		var mi := n as MeshInstance3D
+		if mi.mesh != null:
+			# Duplicate so meshes survive after the kit instance is freed.
+			_kit_meshes[str(mi.name)] = mi.mesh.duplicate()
 	for ch in n.get_children():
-		var f := find_anim(ch)
-		if f:
-			return f
-	return null
+		_collect_kit_meshes(ch)
 
-## Spec used by gate tests: palette + role + triangle estimate.
-static func spec_for(c, team: String, tmpl: String = "") -> Dictionary:
-	var pal := palette_for(c, team, tmpl)
-	var role := BattleRules.job_role(str(c.job_id)) if c != null else "skirmisher"
-	return {
-		"palette": pal,
-		"role": role,
-		"enemy": str(team) == "enemy",
-		"tris_est": (5500 if _farm_cast_path(c, str(team) == "enemy", tmpl) != "" else 4200),
-		"meshes": 1,
-		"materials": 1,
-		"textures": 0,
-	}
-
-static func palette_for(c, team: String, tmpl: String = "") -> Dictionary:
-	var enemy := str(team) == "enemy"
-	var key := _pal_key(c, team, tmpl)
-	if _pal_cache.has(key):
-		return (_pal_cache[key] as Dictionary).duplicate(true)
-	var pal := _sample_portrait(c)
-	if enemy:
-		# Head/hair from portrait; cloth recolored by faction (coral), not portrait coat.
-		pal["coat"] = _enemy_coat()
-		pal["lining"] = Color(0.12, 0.10, 0.11)
-		pal["scarf"] = UIKit.DANGER.darkened(0.15)
-		pal["pants"] = Color(0.18, 0.15, 0.14)
-		pal["boots"] = Color(0.14, 0.11, 0.10)
-		_lift_enemy(pal)
-	else:
-		var house: Color = UnitArt.house_color() if Engine.get_main_loop() else UIKit.ACCENT
-		# Soft house accent on cape/trim; coat stays portrait-sampled.
-		pal["house"] = house
-		if not pal.has("coat") or _chroma(pal["coat"]) < 0.05:
-			pal["coat"] = Color.from_hsv(house.h, 0.35, 0.55)
-	_protect(pal, enemy)
-	if _pal_cache.size() > CACHE_CAP:
-		_pal_cache.clear()
-	_pal_cache[key] = pal.duplicate(true)
-	return pal
-
-static func _pal_key(c, team: String, tmpl: String) -> String:
-	var id := str(c.id) if c != null and "id" in c else "x"
-	return "%s|%s|%s" % [id, team, tmpl]
 
 static func _ensure_plate_table() -> void:
 	if _plate_ready:
@@ -147,17 +121,361 @@ static func palette_row_for_stem(stem: String) -> Dictionary:
 	return row
 
 
+## Spec: parts + palette + budgets (for gate / stand-in hash).
+static func spec_for(c, team: String, tmpl: String = "") -> Dictionary:
+	_ensure_map()
+	var enemy := str(team) == "enemy"
+	var pal := palette_for(c, team, tmpl)
+	var parts := _parts_for(c, team, tmpl, pal)
+	var tris := _estimate_tris(parts)
+	return {
+		"palette": pal,
+		"parts": parts,
+		"enemy": enemy,
+		"role": BattleRules.job_role(str(c.job_id)) if c != null else "skirmisher",
+		"tris_est": tris,
+		"meshes": 1,
+		"materials": 1,
+		"textures": 0,
+		"appearance_hash": appearance_hash(c, team, tmpl, pal, parts),
+		"plate_stem": str(pal.get("plate_stem", "")),
+		"scale": float(parts.get("scale", 1.0)),
+	}
+
+
+static func appearance_hash(c, team: String, tmpl: String, pal: Dictionary = {}, parts: Dictionary = {}) -> String:
+	if pal.is_empty():
+		pal = palette_for(c, team, tmpl)
+	if parts.is_empty():
+		parts = _parts_for(c, team, tmpl, pal)
+	var id := str(c.id) if c != null and "id" in c else "x"
+	var stem := str(pal.get("plate_stem", ""))
+	var house := _color_key(pal.get("house", Color.WHITE))
+	return "%s|%s|%s|%s|%s|%s|%s|%s" % [
+		id, team, tmpl, stem,
+		str(parts.get("body", "")), str(parts.get("outfit", "")),
+		str(parts.get("weapon", "")), house,
+	]
+
+
+static func _color_key(c) -> String:
+	if c is Color:
+		return (c as Color).to_html(false)
+	return str(c)
+
+
+static func build(c, team: String, tmpl: String = "") -> Node3D:
+	var enemy := str(team) == "enemy"
+	var face := -1.0 if enemy else 1.0
+	var pal: Dictionary = palette_for(c, team, tmpl)
+	var parts: Dictionary = _parts_for(c, team, tmpl, pal)
+	var h := appearance_hash(c, team, tmpl, pal, parts)
+	var root := Node3D.new()
+	root.name = "BoardFigure"
+	root.set_meta("ck_board_figure", true)
+	root.set_meta("ck_face", face)
+	root.set_meta("ck_appearance_hash", h)
+	root.set_meta("ck_plate_stem", str(pal.get("plate_stem", "")))
+	var body := Node3D.new()
+	body.name = "Body"
+	root.add_child(body)
+	var scl := float(parts.get("scale", 1.0))
+	if scl != 1.0:
+		body.scale = Vector3.ONE * scl
+	_assemble_kit(body, parts, pal, face, enemy)
+	var ap := _make_anim(root)
+	root.add_child(ap)
+	_lru_put(h, true)
+	return root
+
+
+static func find_anim(n: Node) -> AnimationPlayer:
+	if n == null:
+		return null
+	var a := n.get_node_or_null("Anim") as AnimationPlayer
+	if a:
+		return a
+	for ch in n.get_children():
+		var f := find_anim(ch)
+		if f:
+			return f
+	return null
+
+
+static func _parts_for(c, team: String, tmpl: String, pal: Dictionary) -> Dictionary:
+	_ensure_map()
+	var enemy := str(team) == "enemy"
+	var gender := "f" if c != null and str(c.gender) == "f" else "m"
+	var body := "body_%s" % gender
+	var head := "head_%s" % gender
+	var style := str(pal.get("style", "crop"))
+	if style not in (_map.get("hair_styles", ["crop"]) as Array):
+		style = "crop"
+	var hair := "hair_%s" % style
+	var outfit := str((_map.get("defaults", {}) as Dictionary).get("outfit", "outfit_light_inf"))
+	var weapon := str((_map.get("defaults", {}) as Dictionary).get("weapon", "weapon_sword"))
+	var signs: Array = []
+	var scale := 1.0
+	if enemy:
+		var et: Dictionary = _map.get("enemy_templates", {})
+		var key := tmpl if tmpl != "" else "bandit"
+		if not et.has(key):
+			key = "bandit"
+		var row: Dictionary = et.get(key, {})
+		outfit = str(row.get("outfit", "outfit_bandit_bandit"))
+		weapon = str(row.get("weapon", "weapon_axe"))
+		signs = row.get("signs", []) if typeof(row.get("signs")) == TYPE_ARRAY else []
+		scale = float(row.get("scale", 1.0))
+	else:
+		var jid := str(c.job_id) if c != null else "light_inf"
+		var jobs: Dictionary = _map.get("jobs", {})
+		var row2: Dictionary = jobs.get(jid, {}) if jobs.has(jid) else {}
+		if c != null and bool(c.is_leader):
+			row2 = _map.get("leader_job_override", row2)
+		if not row2.is_empty():
+			outfit = str(row2.get("outfit", outfit))
+			weapon = str(row2.get("weapon", weapon))
+			signs = row2.get("signs", []) if typeof(row2.get("signs")) == TYPE_ARRAY else []
+			scale = float(row2.get("scale", 1.0))
+			if str(row2.get("body", "")) == "heavy":
+				body = "body_heavy"
+	return {
+		"body": body,
+		"head": head,
+		"hair": hair,
+		"outfit": outfit,
+		"weapon": weapon,
+		"signs": signs,
+		"scale": scale,
+		"gender": gender,
+	}
+
+
+static func _estimate_tris(parts: Dictionary) -> int:
+	_ensure_map()
+	var man_path := str(_map.get("kit_manifest", "res://assets/models/board/board_figures_v1.json"))
+	var man = _load_json(man_path) if ResourceLoader.exists(man_path) else {}
+	var plist: Dictionary = man.get("parts", {}) if typeof(man) == TYPE_DICTIONARY else {}
+	var total := 0
+	for k in ["body", "head", "hair", "outfit", "weapon"]:
+		var pname := str(parts.get(k, ""))
+		if plist.has(pname):
+			total += int((plist[pname] as Dictionary).get("tris", 400))
+		else:
+			total += 400
+	for s in parts.get("signs", []):
+		if plist.has(str(s)):
+			total += int((plist[str(s)] as Dictionary).get("tris", 100))
+	return total
+
+
+static func _assemble_kit(body: Node3D, parts: Dictionary, pal: Dictionary, face: float, enemy: bool) -> void:
+	_ensure_kit()
+	var names: Array[String] = []
+	for k in ["body", "head", "hair", "outfit", "weapon"]:
+		var n := str(parts.get(k, ""))
+		if n != "":
+			names.append(n)
+	for s in parts.get("signs", []):
+		names.append(str(s))
+	var merged := _merge_parts(names)
+	if merged == null:
+		push_warning("CKBoardFigure: merge failed for %s" % str(names))
+		return
+	var mi := MeshInstance3D.new()
+	mi.name = "Figure"
+	mi.mesh = merged
+	mi.material_override = _palette_mat(pal, face, enemy)
+	# Chin +8° for board camera (§3.2) — tilt whole figure slightly; head already in mesh.
+	mi.rotation_degrees = Vector3(-8.0, 0, 0)
+	body.add_child(mi)
+	body.set_meta("ck_kit_parts", names)
+	body.set_meta("ck_tris", _estimate_tris(parts))
+
+
+static func _merge_parts(names: Array) -> ArrayMesh:
+	_ensure_kit()
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var any := false
+	for n in names:
+		var mesh: Mesh = _kit_meshes.get(str(n)) as Mesh
+		if mesh == null:
+			continue
+		var sc := 0
+		# Headless dummy renderer can yield null RID briefly; guard surface queries.
+		if mesh is ArrayMesh:
+			sc = (mesh as ArrayMesh).get_surface_count()
+		else:
+			sc = mesh.get_surface_count()
+		if sc <= 0:
+			continue
+		for si in range(sc):
+			var arr := mesh.surface_get_arrays(si)
+			if arr.is_empty() or arr[Mesh.ARRAY_VERTEX] == null:
+				continue
+			var verts: PackedVector3Array = arr[Mesh.ARRAY_VERTEX]
+			var norms: PackedVector3Array = arr[Mesh.ARRAY_NORMAL] if arr[Mesh.ARRAY_NORMAL] != null else PackedVector3Array()
+			var cols: PackedColorArray = arr[Mesh.ARRAY_COLOR] if arr[Mesh.ARRAY_COLOR] != null else PackedColorArray()
+			var idx: PackedInt32Array = arr[Mesh.ARRAY_INDEX] if arr[Mesh.ARRAY_INDEX] != null else PackedInt32Array()
+			if idx.is_empty():
+				# Non-indexed: emit sequential tris
+				var i := 0
+				while i + 2 < verts.size():
+					for k in 3:
+						var vi := i + k
+						if norms.size() > vi:
+							st.set_normal(norms[vi])
+						if cols.size() > vi:
+							st.set_color(cols[vi])
+						else:
+							st.set_color(Color(3.0 / 255.0, 1.0, 0.0, 1.0))
+						st.add_vertex(verts[vi])
+					i += 3
+					any = true
+			else:
+				for ii in idx:
+					var vi2 := int(ii)
+					if norms.size() > vi2:
+						st.set_normal(norms[vi2])
+					if cols.size() > vi2:
+						st.set_color(cols[vi2])
+					else:
+						st.set_color(Color(3.0 / 255.0, 1.0, 0.0, 1.0))
+					st.add_vertex(verts[vi2])
+					any = true
+	if not any:
+		return null
+	st.generate_normals()
+	return st.commit()
+
+
+static func _palette_mat(pal: Dictionary, face: float, enemy: bool) -> ShaderMaterial:
+	var sm := ShaderMaterial.new()
+	sm.shader = _sh()
+	var arr: Array = []
+	arr.resize(20)
+	for i in 20:
+		arr[i] = Color(0.5, 0.5, 0.5, 1.0)
+	for i in PALETTE_KEYS.size():
+		var k: String = PALETTE_KEYS[i]
+		var col: Color = pal.get(k, _default_slot(k, enemy)) as Color
+		if not (col is Color):
+			col = _hex_color(col, _default_slot(k, enemy))
+		arr[i] = col
+	sm.set_shader_parameter("palette", arr)
+	sm.set_shader_parameter("face", face)
+	sm.set_shader_parameter("rim_col", UIKit.DANGER if enemy else UIKit.ACCENT)
+	var coat: Color = pal.get("coat", Color(0.5, 0.5, 0.5)) as Color
+	var lum := 0.2126 * coat.r + 0.7152 * coat.g + 0.0722 * coat.b
+	var rim := 0.85 if enemy or lum < 0.36 else 0.55
+	sm.set_shader_parameter("rim_amt", rim)
+	return sm
+
+
+static func _default_slot(k: String, enemy: bool) -> Color:
+	match k:
+		"hair":
+			return Color(0.25, 0.20, 0.18)
+		"skin":
+			return Color(0.78, 0.62, 0.52)
+		"eye":
+			return Color(0.165, 0.184, 0.220)  # #2A2F38
+		"coat":
+			return Color(0.376, 0.416, 0.467) if enemy else Color(0.55, 0.58, 0.62)  # enemy #606A77
+		"coat_dark":
+			return Color(0.110, 0.137, 0.188)  # #1C2330
+		"apron":
+			return Color(0.216, 0.267, 0.337) if enemy else Color(0.45, 0.42, 0.40)
+		"sash":
+			return Color(0.45, 0.40, 0.55)
+		"metal":
+			return Color(0.604, 0.643, 0.698) if enemy else Color(0.788, 0.827, 0.871)  # gun / frost
+		"blade":
+			return Color(0.863, 0.898, 0.933)
+		"house", "crest":
+			return UIKit.DANGER if enemy else UIKit.ACCENT
+		"cape":
+			return Color(0.784, 0.337, 0.306) if enemy else UIKit.ACCENT  # #C8564E
+		"trousers":
+			return Color(0.125, 0.145, 0.176) if enemy else Color(0.133, 0.161, 0.212)
+		"boots":
+			return Color(0.125, 0.145, 0.176)
+		"leather":
+			return Color(0.180, 0.192, 0.220)
+		"wood":
+			return Color(0.478, 0.435, 0.400)
+		"accent":
+			return UIKit.DANGER if enemy else Color(0.369, 0.878, 0.710)  # mint
+		_:
+			return Color(0.5, 0.5, 0.5)
+
+
+# ----- palette / protection (§3.5) -----
+
+static func palette_for(c, team: String, tmpl: String = "") -> Dictionary:
+	var enemy := str(team) == "enemy"
+	var key := _pal_key(c, team, tmpl)
+	if _pal_cache.has(key):
+		return (_pal_cache[key] as Dictionary).duplicate(true)
+	var pal := _sample_portrait(c)
+	# Fill fixed slots
+	pal["eye"] = Color(0.165, 0.184, 0.220)
+	pal["blade"] = Color(0.863, 0.898, 0.933)
+	pal["wood"] = Color(0.478, 0.435, 0.400)
+	pal["leather"] = Color(0.180, 0.192, 0.220)
+	pal["boots"] = Color(0.125, 0.145, 0.176)
+	if enemy:
+		pal["coat"] = _enemy_coat()
+		pal["coat_dark"] = Color(0.110, 0.137, 0.188)
+		pal["apron"] = Color(0.216, 0.267, 0.337)
+		pal["trousers"] = Color(0.125, 0.145, 0.176)
+		pal["metal"] = Color(0.604, 0.643, 0.698)
+		pal["house"] = UIKit.DANGER
+		pal["crest"] = UIKit.DANGER
+		pal["cape"] = Color(0.784, 0.337, 0.306)
+		pal["accent"] = UIKit.DANGER
+		pal["sash"] = UIKit.DANGER.darkened(0.15)
+		_lift_enemy(pal)
+	else:
+		var house: Color = UnitArt.house_color() if Engine.get_main_loop() else UIKit.ACCENT
+		# Soft house: sat×0.80, value×0.92 (§3.5)
+		var soft := Color.from_hsv(house.h, house.s * 0.80, house.v * 0.92)
+		pal["house"] = soft
+		pal["crest"] = house
+		pal["cape"] = soft
+		pal["accent"] = Color(0.369, 0.878, 0.710)
+		pal["trousers"] = Color(0.133, 0.161, 0.212)
+		if not pal.has("metal") or _chroma(pal["metal"]) < 0.02:
+			pal["metal"] = Color(0.788, 0.827, 0.871)
+		if not pal.has("coat") or _chroma(pal["coat"]) < 0.05:
+			pal["coat"] = Color.from_hsv(house.h, 0.35, 0.55)
+	_protect(pal, enemy)
+	if _pal_cache.size() > CACHE_CAP:
+		_pal_cache.clear()
+	_pal_cache[key] = pal.duplicate(true)
+	return pal
+
+
+static func _pal_key(c, team: String, tmpl: String) -> String:
+	var id := str(c.id) if c != null and "id" in c else "x"
+	return "%s|%s|%s" % [id, team, tmpl]
+
+
 static func _apply_plate_row(out: Dictionary, row: Dictionary) -> void:
 	if row.is_empty():
 		return
 	out["hair"] = _hex_color(row.get("hair"), out["hair"])
 	out["skin"] = _hex_color(row.get("skin"), out["skin"])
 	out["coat"] = _hex_color(row.get("coat"), out["coat"])
-	out["lining"] = _hex_color(row.get("coat_dark"), out["lining"])
+	out["coat_dark"] = _hex_color(row.get("coat_dark"), out.get("coat_dark", Color(0.11, 0.14, 0.19)))
+	out["lining"] = out["coat_dark"]  # alias
 	if row.get("sash") != null:
-		out["scarf"] = _hex_color(row.get("sash"), out["scarf"])
+		out["sash"] = _hex_color(row.get("sash"), out.get("sash", Color(0.45, 0.4, 0.55)))
+	if row.get("apron") != null:
+		out["apron"] = _hex_color(row.get("apron"), out.get("apron", Color(0.45, 0.42, 0.40)))
 	if row.get("metal") != null:
-		out["metal"] = _hex_color(row.get("metal"), out["metal"])
+		out["metal"] = _hex_color(row.get("metal"), out.get("metal", Color(0.79, 0.83, 0.87)))
 	var st := str(row.get("style", out.get("style", "crop")))
 	if st in ["bob", "crop", "crown", "long", "messy", "pony", "swept", "tied"]:
 		out["style"] = st
@@ -169,9 +487,11 @@ static func _sample_portrait(c) -> Dictionary:
 		"hair": Color(0.25, 0.20, 0.18),
 		"skin": Color(0.78, 0.62, 0.52),
 		"coat": Color(0.55, 0.58, 0.62),
+		"coat_dark": Color(0.18, 0.16, 0.18),
 		"lining": Color(0.18, 0.16, 0.18),
-		"scarf": Color(0.45, 0.48, 0.58),
-		"pants": Color(0.16, 0.16, 0.18),
+		"sash": Color(0.45, 0.48, 0.58),
+		"apron": Color(0.45, 0.42, 0.40),
+		"trousers": Color(0.16, 0.16, 0.18),
 		"boots": Color(0.12, 0.11, 0.11),
 		"metal": Color(0.78, 0.82, 0.88),
 		"style": "crop",
@@ -179,7 +499,6 @@ static func _sample_portrait(c) -> Dictionary:
 	}
 	if c == null:
 		return out
-	# Genome fallback first (works headless).
 	if c.has_method("ensure_genome"):
 		c.ensure_genome()
 	if Engine.get_main_loop() != null and c.has_method("ensure_genome"):
@@ -189,7 +508,6 @@ static func _sample_portrait(c) -> Dictionary:
 		if ph.has("skin_color"):
 			out["skin"] = ph["skin_color"]
 		out["style"] = CKPortraitDoll._style(c)
-	# P0 entry: prefer offline plate_palettes keyed by the stem try_texture loaded.
 	var stem := ""
 	if c != null and c.has_meta("ck_plate_stem"):
 		stem = str(c.get_meta("ck_plate_stem"))
@@ -203,98 +521,24 @@ static func _sample_portrait(c) -> Dictionary:
 	if not row.is_empty():
 		_apply_plate_row(out, row)
 		return out
-	# Prefer colours from the portrait that UnitArt actually shows (runtime sample).
-	if DisplayServer.get_name() == "headless":
-		return out
-	var tex: Texture2D = UnitArt.portrait(c, 128, "large") if c is CKCharacter else null
-	if tex == null:
-		return out
-	var img: Image = tex.get_image()
-	if img == null or img.is_empty():
-		return out
-	if img.is_compressed():
-		img.decompress()
-	_sample_image(img, out)
 	return out
 
-static func _sample_image(img: Image, out: Dictionary) -> void:
-	var w := img.get_width()
-	var h := img.get_height()
-	if w < 8 or h < 8:
-		return
-	# Skin: mid face band.
-	var skin_acc := Vector3.ZERO
-	var skin_n := 0
-	var y0 := int(h * 0.28)
-	var y1 := int(h * 0.48)
-	var x0 := int(w * 0.35)
-	var x1 := int(w * 0.65)
-	for y in range(y0, y1, maxi(1, (y1 - y0) / 12)):
-		for x in range(x0, x1, maxi(1, (x1 - x0) / 12)):
-			var px := img.get_pixel(x, y)
-			if _looks_skin(px):
-				skin_acc += Vector3(px.r, px.g, px.b)
-				skin_n += 1
-	if skin_n > 0:
-		var s := skin_acc / float(skin_n)
-		out["skin"] = Color(s.x, s.y, s.z).lightened(0.04)
-	# Hair: top band, non-skin foreground-ish dark/mid.
-	var hair_acc := Vector3.ZERO
-	var hair_n := 0
-	var hy1 := int(h * 0.22)
-	for y in range(int(h * 0.04), hy1, maxi(1, hy1 / 10)):
-		for x in range(int(w * 0.25), int(w * 0.75), maxi(1, w / 20)):
-			var px2 := img.get_pixel(x, y)
-			if px2.a < 0.4 or _looks_skin(px2) or _looks_bg(px2):
-				continue
-			hair_acc += Vector3(px2.r, px2.g, px2.b)
-			hair_n += 1
-	if hair_n > 0:
-		var hv := hair_acc / float(hair_n)
-		out["hair"] = Color(hv.x, hv.y, hv.z).lightened(0.08)
-	# Coat: torso band below chin.
-	var coat_acc := Vector3.ZERO
-	var coat_n := 0
-	var cy0 := int(h * 0.55)
-	var cy1 := int(h * 0.82)
-	for y in range(cy0, cy1, maxi(1, (cy1 - cy0) / 14)):
-		for x in range(int(w * 0.28), int(w * 0.72), maxi(1, w / 18)):
-			var px3 := img.get_pixel(x, y)
-			if px3.a < 0.4 or _looks_skin(px3) or _looks_bg(px3):
-				continue
-			coat_acc += Vector3(px3.r, px3.g, px3.b)
-			coat_n += 1
-	if coat_n > 0:
-		var cv := coat_acc / float(coat_n)
-		out["coat"] = Color(cv.x, cv.y, cv.z).lightened(0.10)
-		# Darker lining from darkest coat samples approximation.
-		out["lining"] = Color(cv.x, cv.y, cv.z).darkened(0.45)
-
-static func _looks_skin(px: Color) -> bool:
-	var mx := maxf(px.r, maxf(px.g, px.b))
-	var mn := minf(px.r, minf(px.g, px.b))
-	var chroma := mx - mn
-	return px.r > 0.35 and px.g > 0.25 and px.b > 0.18 and px.r >= px.g and chroma > 0.04 and chroma < 0.35 and mx < 0.95
-
-static func _looks_bg(px: Color) -> bool:
-	# Soft vignette / grey studio backs common in plates.
-	var mx := maxf(px.r, maxf(px.g, px.b))
-	var mn := minf(px.r, minf(px.g, px.b))
-	return (mx - mn) < 0.06 and mx > 0.55
 
 static func _chroma(c: Color) -> float:
 	return maxf(c.r, maxf(c.g, c.b)) - minf(c.r, minf(c.g, c.b))
 
+
 static func _enemy_coat() -> Color:
-	# Coral faction wool, luminance floor ~0.40.
-	return Color.from_hsv(UIKit.DANGER.h, 0.42, 0.48)
+	return Color(0.376, 0.416, 0.467)  # #606A77 prototype
+
 
 static func _lift_enemy(pal: Dictionary) -> void:
-	for k in ["coat"]:
-		pal[k] = _lift_lum(pal[k], 0.40)
-	for k in ["pants", "boots"]:
-		pal[k] = _lift_lum(pal[k], 0.26)
-	pal["lining"] = _lift_lum(pal["lining"], 0.12)
+	pal["coat"] = _lift_lum(pal["coat"], 0.40)
+	for k in ["apron", "trousers", "boots", "leather"]:
+		if pal.has(k):
+			pal[k] = _lift_lum(pal[k], 0.26)
+	pal["coat_dark"] = _lift_lum(pal["coat_dark"], 0.12)
+
 
 static func _lift_lum(c: Color, floor_v: float) -> Color:
 	var lum := 0.2126 * c.r + 0.7152 * c.g + 0.0722 * c.b
@@ -308,22 +552,46 @@ static func _lift_lum(c: Color, floor_v: float) -> Color:
 			break
 	return out
 
-## §3.5 faction gamut guards (hue windows in degrees).
+
+## §3.5 faction gamut guards.
 static func _protect(pal: Dictionary, enemy: bool) -> void:
+	# Rule 1: head/torso separation — if hair/skin vs coat ΔE < 5, deepen coat_dark as collar.
+	if not enemy:
+		var head_c: Color = pal.get("hair", pal.get("skin", Color.WHITE))
+		var torso: Color = pal.get("coat", Color.GRAY)
+		if _approx_de(head_c, torso) < 5.0:
+			pal["coat_dark"] = pal.get("coat_dark", Color(0.11, 0.14, 0.19)).darkened(0.15)
+	# Rule 2: house rim if luminance gap to coat < 0.15 — handled by darker house soft already;
+	# keep flag for shader consumers via meta not needed at palette level.
 	if enemy:
-		for k in ["coat", "lining", "scarf", "pants", "boots", "house"]:
+		for k in ["coat", "coat_dark", "apron", "sash", "trousers", "boots", "cape", "house", "crest", "accent", "metal"]:
 			if not pal.has(k):
 				continue
 			var col: Color = pal[k]
+			if k in ["hair", "skin"]:
+				continue
 			if _in_ally_gamut(col):
 				pal[k] = Color(0.16, 0.14, 0.15) if k != "coat" else _enemy_coat()
 	else:
-		for k in ["house", "scarf"]:
+		for k in ["house", "cape", "accent"]:
 			if not pal.has(k):
 				continue
 			var col2: Color = pal[k]
 			if _in_enemy_gamut(col2):
-				pal[k] = Color(0.78, 0.82, 0.87)  # frost silver stand-in
+				# frost silver; crest keeps small player colour
+				if k == "accent":
+					pal[k] = Color(0.369, 0.878, 0.710)
+				else:
+					pal[k] = Color(0.788, 0.827, 0.871)
+
+
+static func _approx_de(a: Color, b: Color) -> float:
+	# Cheap RGB distance scaled toward ΔE2000 magnitude for gate thresholds.
+	var dr := a.r - b.r
+	var dg := a.g - b.g
+	var db := a.b - b.b
+	return sqrt(dr * dr + dg * dg + db * db) * 100.0
+
 
 static func _in_ally_gamut(c: Color) -> bool:
 	if _chroma(c) <= 0.15:
@@ -331,302 +599,41 @@ static func _in_ally_gamut(c: Color) -> bool:
 	var deg := c.h * 360.0
 	return deg >= 150.0 and deg <= 220.0
 
+
 static func _in_enemy_gamut(c: Color) -> bool:
 	if _chroma(c) <= 0.15:
 		return false
 	var deg := c.h * 360.0
 	return deg <= 30.0 or deg >= 340.0
 
-static func _mat(base: Color, face: float, enemy: bool, metal: float = 0.0, sheen: float = 0.0) -> ShaderMaterial:
-	var sm := ShaderMaterial.new()
-	sm.shader = _sh()
-	sm.set_shader_parameter("base", base)
-	sm.set_shader_parameter("face", face)
-	sm.set_shader_parameter("metal", metal)
-	sm.set_shader_parameter("sheen", sheen)
-	sm.set_shader_parameter("rim_col", UIKit.DANGER if enemy else UIKit.ACCENT)
-	var rim := 0.85 if enemy or (0.2126 * base.r + 0.7152 * base.g + 0.0722 * base.b) < 0.36 else 0.55
-	sm.set_shader_parameter("rim_amt", rim)
-	sm.set_shader_parameter("use_bands", 0.0)
-	sm.set_shader_parameter("board_compact", 0.0)
-	return sm
 
-## Whole-mesh farm cast: height bands (skin/coat/pants/hair) + board_compact so pieces are not grey clay.
-static func _farm_mat(pal: Dictionary, face: float, enemy: bool) -> ShaderMaterial:
-	var coat: Color = _lift_lum(pal.get("coat", Color(0.55, 0.58, 0.62)), 0.42)
-	var skin: Color = _lift_lum(pal.get("skin", Color(0.78, 0.62, 0.52)), 0.55)
-	var pants: Color = _lift_lum(pal.get("pants", Color(0.16, 0.16, 0.18)), 0.22)
-	var boots: Color = pal.get("boots", Color(0.12, 0.11, 0.11))
-	var hair: Color = pal.get("hair", Color(0.25, 0.20, 0.18))
-	var sm := _mat(coat, face, enemy, 0.04, 0.08)
-	sm.set_shader_parameter("use_bands", 1.0)
-	sm.set_shader_parameter("board_compact", 1.0)
-	sm.set_shader_parameter("model_h", MODEL_H)
-	sm.set_shader_parameter("skin", skin)
-	sm.set_shader_parameter("coat", coat)
-	sm.set_shader_parameter("pants", pants)
-	sm.set_shader_parameter("boots", boots)
-	sm.set_shader_parameter("hair", hair)
-	sm.set_shader_parameter("base", coat)
-	sm.set_shader_parameter("rim_amt", 0.22)
-	return sm
-
-static func _mesh(parent: Node3D, mesh: Mesh, pos: Vector3, rot_deg: Vector3, scale: Vector3, mat: Material) -> MeshInstance3D:
-	var mi := MeshInstance3D.new()
-	mi.mesh = mesh
-	mi.material_override = mat
-	mi.position = pos
-	mi.rotation_degrees = rot_deg
-	mi.scale = scale
-	parent.add_child(mi)
-	return mi
-
-
-## Whole-mesh farm Hunyuan casts (leader / hunter / bandit*). Prefer over Godot primitives.
-## Not the rejected #301 modular kit — single MeshInstance3D + board_figure shader.
-static func _farm_cast_path(c, enemy: bool, tmpl: String) -> String:
-	## Temporary remap (until dedicated farm_cast GLBs): any 3D unit uses an existing cast
-	## so opening/tutorial fights never mix Godot capsules with Hunyuan meshes.
-	## leader_* ← is_leader / cast_key leader / captain / banner / tank|heavy_inf
-	## hunter_* ← hunter|archer|ranger|light_inf|squire|apprentice|cavalry|mage|other ally
-	## bandit*  ← enemy templates; unknown enemy → bandit
+static func assert_palette_rules(pal: Dictionary, enemy: bool) -> String:
 	if enemy:
-		var t := tmpl if tmpl != "" else "bandit"
-		if t in ["bandit", "bandit_archer", "bandit_chief", "bandit_weak"]:
-			var own := FARM_CAST_DIR + t + ".glb"
-			if ResourceLoader.exists(own):
-				return own
-		var fallback := FARM_CAST_DIR + "bandit.glb"
-		return fallback if ResourceLoader.exists(fallback) else ""
-	var role := "skirmisher"
-	var jid := ""
-	if c != null:
-		jid = str(c.job_id)
-		role = BattleRules.job_role(jid)
-	var lead := false
-	if c != null:
-		lead = bool(c.is_leader) or str(c.cast_key) == "leader"
-	lead = lead or role == "leader" or jid in ["captain", "banner"]
-	# Bulkier ally jobs share leader silhouette until heavy_inf farm cast ships.
-	if lead or role == "tank" or jid in ["heavy_inf", "warrior"]:
-		return _farm_cast_gendered("leader", c)
-	# Everyone else (incl. opening light_inf / squire non-leader / mage / cavalry) → hunter_*.
-	return _farm_cast_gendered("hunter", c)
-
-static func _farm_cast_gendered(stem: String, c) -> String:
-	var g := "f" if c != null and str(c.gender) == "f" else "m"
-	var cand := FARM_CAST_DIR + "%s_%s.glb" % [stem, g]
-	if ResourceLoader.exists(cand):
-		return cand
-	var alt := FARM_CAST_DIR + ("%s_m.glb" % stem if g == "f" else "%s_f.glb" % stem)
-	if ResourceLoader.exists(alt):
-		return alt
+		for k in ["coat", "coat_dark", "apron", "sash", "trousers", "boots", "cape", "house", "accent"]:
+			if pal.has(k) and _in_ally_gamut(pal[k]):
+				return "enemy slot %s in ally gamut" % k
+	else:
+		for k in ["house", "cape", "accent"]:
+			if pal.has(k) and _in_enemy_gamut(pal[k]):
+				return "ally slot %s in enemy gamut" % k
 	return ""
 
-static func _assemble_farm_cast(body: Node3D, c, pal: Dictionary, enemy: bool, face: float, tmpl: String) -> bool:
-	var path := _farm_cast_path(c, enemy, tmpl)
-	if path == "":
-		return false
-	var packed = load(path)
-	if packed == null:
-		return false
-	var inst: Node = packed.instantiate() if packed is PackedScene else null
-	if inst == null:
-		return false
-	var mat := _farm_mat(pal, face, enemy)
-	var added := 0
-	for n in _gather_meshes(inst):
-		var mi := n as MeshInstance3D
-		if mi == null or mi.mesh == null:
-			continue
-		var clone := MeshInstance3D.new()
-		clone.mesh = mi.mesh
-		# Drop imported StandardMaterial; banded board_figure shader owns albedo.
-		clone.material_override = mat
-		if mi.mesh.get_surface_count() > 0:
-			for si in range(mi.mesh.get_surface_count()):
-				clone.set_surface_override_material(si, mat)
-		clone.name = "FarmCast%d" % added
-		# Keep authoring transform (retopo root may carry scale/offset).
-		clone.transform = mi.transform
-		body.add_child(clone)
-		added += 1
-	inst.free()
-	if added == 0:
-		return false
-	body.set_meta("ck_farm_cast", path)
-	return true
 
-static func _gather_meshes(n: Node) -> Array:
-	var out: Array = []
-	if n is MeshInstance3D:
-		out.append(n)
-	for ch in n.get_children():
-		out.append_array(_gather_meshes(ch))
-	return out
+# ----- LRU -----
 
-static func _assemble(body: Node3D, c, pal: Dictionary, enemy: bool, face: float) -> void:
-	var head_h := MODEL_H / HEAD_RATIO
-	# Relative to real adult, head is enlarged ~1.35x inside the 5.45 ratio.
-	var hip_y := 0.92
-	var shoulder_y := 1.28
-	var chin_y := MODEL_H - head_h * 0.95
-	var crown_y := MODEL_H - head_h * 0.05
-	var skin: Color = pal["skin"]
-	var coat: Color = pal["coat"]
-	var lining: Color = pal["lining"]
-	var pants: Color = pal["pants"]
-	var boots: Color = pal["boots"]
-	var hair: Color = pal["hair"]
-	var metal: Color = pal.get("metal", Color(0.78, 0.82, 0.88))
-	var house: Color = pal.get("house", coat)
-	var role := "skirmisher"
-	if c != null:
-		role = BattleRules.job_role(str(c.job_id))
-	# Legs
-	for side in [-1.0, 1.0]:
-		var thigh := CylinderMesh.new()
-		thigh.top_radius = 0.07
-		thigh.bottom_radius = 0.08
-		thigh.height = 0.42
-		thigh.radial_segments = 8
-		_mesh(body, thigh, Vector3(0.09 * side, hip_y - 0.22, 0.02), Vector3(6, 0, 4 * side), Vector3.ONE, _mat(pants, face, enemy))
-		var shin := CylinderMesh.new()
-		shin.top_radius = 0.055
-		shin.bottom_radius = 0.06
-		shin.height = 0.40
-		shin.radial_segments = 8
-		_mesh(body, shin, Vector3(0.10 * side, 0.28, 0.04), Vector3(4, 0, 2 * side), Vector3.ONE, _mat(boots, face, enemy))
-	# Torso coat
-	var torso := SphereMesh.new()
-	torso.radius = 0.20
-	torso.height = 0.55
-	_mesh(body, torso, Vector3(0, shoulder_y - 0.12, 0.02), Vector3.ZERO, Vector3(1.15, 1.35, 0.85), _mat(coat, face, enemy))
-	# Waist / lining peek
-	var waist := CylinderMesh.new()
-	waist.top_radius = 0.14
-	waist.bottom_radius = 0.16
-	waist.height = 0.18
-	waist.radial_segments = 10
-	_mesh(body, waist, Vector3(0, hip_y + 0.05, 0.02), Vector3.ZERO, Vector3.ONE, _mat(lining, face, enemy))
-	# Arms
-	for side in [-1.0, 1.0]:
-		var upper := CylinderMesh.new()
-		upper.top_radius = 0.045
-		upper.bottom_radius = 0.05
-		upper.height = 0.32
-		upper.radial_segments = 7
-		_mesh(body, upper, Vector3(0.24 * side, shoulder_y - 0.05, 0.02), Vector3(0, 0, 18 * side), Vector3.ONE, _mat(coat, face, enemy))
-		var fore := CylinderMesh.new()
-		fore.top_radius = 0.04
-		fore.bottom_radius = 0.042
-		fore.height = 0.30
-		fore.radial_segments = 7
-		_mesh(body, fore, Vector3(0.34 * side, shoulder_y - 0.32, 0.06), Vector3(12, 0, 8 * side), Vector3.ONE, _mat(coat.darkened(0.08), face, enemy))
-		var hand := SphereMesh.new()
-		hand.radius = 0.045
-		hand.height = 0.09
-		_mesh(body, hand, Vector3(0.38 * side, shoulder_y - 0.48, 0.08), Vector3.ZERO, Vector3.ONE, _mat(skin, face, enemy))
-	# Head (chin tilt ~8°)
-	var head := Node3D.new()
-	head.name = "Head"
-	head.position = Vector3(0, chin_y + head_h * 0.35, 0.04)
-	head.rotation_degrees = Vector3(-8.0, 0, 0)
-	body.add_child(head)
-	var skull := SphereMesh.new()
-	skull.radius = head_h * 0.42
-	skull.height = head_h * 0.78
-	_mesh(head, skull, Vector3(0, head_h * 0.08, 0), Vector3.ZERO, Vector3(1.0, 1.05, 0.95), _mat(skin, face, enemy))
-	var jaw := SphereMesh.new()
-	jaw.radius = head_h * 0.28
-	jaw.height = head_h * 0.36
-	_mesh(head, jaw, Vector3(0, -head_h * 0.18, 0.04), Vector3.ZERO, Vector3(0.95, 0.7, 0.85), _mat(skin.darkened(0.04), face, enemy))
-	# Hair module (shared LOD) — scaled to board head.
-	_attach_hair(head, str(pal.get("style", "crop")), hair, face, enemy, head_h)
-	# Ally cape flash in house colour (small, readable).
-	if not enemy:
-		var cape := BoxMesh.new()
-		cape.size = Vector3(0.28, 0.42, 0.04)
-		_mesh(body, cape, Vector3(0, shoulder_y - 0.15, -0.12), Vector3(12, 0, 0), Vector3.ONE, _mat(house, face, enemy, 0.0, 0.15))
-	# Weapon by role (slightly oversized swords ~1.15).
-	_weapon(body, role, enemy, face, metal, shoulder_y)
-	# Soft AO bake into darker lower parts already via colors; done.
+static func _lru_put(h: String, _built: bool) -> void:
+	if _lru.has(h):
+		_lru_order.erase(h)
+	_lru[h] = true
+	_lru_order.append(h)
+	while _lru_order.size() > CACHE_CAP:
+		var old: String = _lru_order.pop_front()
+		_lru.erase(old)
 
-static func _attach_hair(head: Node3D, style: String, col: Color, face: float, enemy: bool, head_h: float) -> void:
-	var sid := style if style in ["bob", "crop", "crown", "long", "messy", "pony", "swept", "tied"] else "crop"
-	var path := MOD_DIR + "hair_%s.glb" % sid
-	if DisplayServer.get_name() == "headless" or not ResourceLoader.exists(path):
-		var bun := SphereMesh.new()
-		bun.radius = head_h * 0.38
-		bun.height = head_h * 0.55
-		_mesh(head, bun, Vector3(0, head_h * 0.22, -0.02), Vector3.ZERO, Vector3(1.05, 0.7, 1.0), _mat(col, face, enemy))
-		return
-	var packed := load(path)
-	if packed == null:
-		return
-	var inst: Node = packed.instantiate() if packed is PackedScene else null
-	if inst == null:
-		return
-	inst.name = "Hair"
-	inst.scale = Vector3.ONE * (head_h / 0.28)
-	inst.position = Vector3(0, head_h * 0.05, 0)
-	head.add_child(inst)
-	_recolor_hair(inst, col, face, enemy)
 
-static func _recolor_hair(n: Node, col: Color, face: float, enemy: bool) -> void:
-	if n is MeshInstance3D:
-		(n as MeshInstance3D).material_override = _mat(col, face, enemy, 0.0, 0.2)
-	for ch in n.get_children():
-		_recolor_hair(ch, col, face, enemy)
+# ----- Anim (lightweight P1; P2 re-poses skeleton) -----
 
-static func _weapon(body: Node3D, role: String, enemy: bool, face: float, metal: Color, shoulder_y: float) -> void:
-	var hand_x := 0.42 * face  # camera-side; enemies face left so weapon on their left visually via face sign on yaw
-	# Prefer right-hand screen side: +X for allies facing +yaw.
-	hand_x = 0.40
-	var blade_col := metal if not enemy else metal.darkened(0.1)
-	match role:
-		"ranger":
-			var bow := TorusMesh.new()
-			bow.inner_radius = 0.02
-			bow.outer_radius = 0.22
-			_mesh(body, bow, Vector3(-0.28, shoulder_y - 0.05, 0.05), Vector3(0, 0, 90), Vector3(0.35, 1.0, 1.0), _mat(Color(0.35, 0.22, 0.14), face, enemy))
-		"mage":
-			var staff := CylinderMesh.new()
-			staff.top_radius = 0.018
-			staff.bottom_radius = 0.022
-			staff.height = 1.15
-			staff.radial_segments = 6
-			_mesh(body, staff, Vector3(hand_x, 0.85, 0.12), Vector3(8, 0, 0), Vector3.ONE, _mat(Color(0.30, 0.22, 0.16), face, enemy))
-			var tip := SphereMesh.new()
-			tip.radius = 0.05
-			_mesh(body, tip, Vector3(hand_x, 1.42, 0.14), Vector3.ZERO, Vector3.ONE, _mat(UIKit.ACCENT if not enemy else UIKit.DANGER, face, enemy, 0.2, 0.4))
-		"tank", "cavalry":
-			var spear := CylinderMesh.new()
-			spear.top_radius = 0.015
-			spear.bottom_radius = 0.02
-			spear.height = 1.25
-			spear.radial_segments = 6
-			_mesh(body, spear, Vector3(hand_x, 0.90, 0.10), Vector3(10, 0, 0), Vector3.ONE, _mat(Color(0.32, 0.24, 0.18), face, enemy))
-			var tip2 := CylinderMesh.new()
-			tip2.top_radius = 0.0
-			tip2.bottom_radius = 0.04
-			tip2.height = 0.14
-			_mesh(body, tip2, Vector3(hand_x, 1.52, 0.16), Vector3(10, 0, 0), Vector3.ONE, _mat(blade_col, face, enemy, 1.0, 0.2))
-		_:
-			# Sword ~1.15 oversized.
-			var blade := BoxMesh.new()
-			blade.size = Vector3(0.045, 0.72, 0.012)
-			_mesh(body, blade, Vector3(hand_x, 0.95, 0.12), Vector3(8, 0, 0), Vector3.ONE, _mat(blade_col, face, enemy, 1.0, 0.15))
-			var guard := BoxMesh.new()
-			guard.size = Vector3(0.14, 0.03, 0.04)
-			_mesh(body, guard, Vector3(hand_x, 0.60, 0.10), Vector3.ZERO, Vector3.ONE, _mat(metal.darkened(0.15), face, enemy, 0.8, 0.1))
-			var hilt := CylinderMesh.new()
-			hilt.top_radius = 0.02
-			hilt.bottom_radius = 0.02
-			hilt.height = 0.16
-			_mesh(body, hilt, Vector3(hand_x, 0.50, 0.10), Vector3.ZERO, Vector3.ONE, _mat(Color(0.25, 0.18, 0.14), face, enemy))
-
-static func _make_anim(root: Node3D, _face: float) -> AnimationPlayer:
+static func _make_anim(_root: Node3D) -> AnimationPlayer:
 	var ap := AnimationPlayer.new()
 	ap.name = "Anim"
 	var lib := AnimationLibrary.new()
@@ -641,6 +648,7 @@ static func _make_anim(root: Node3D, _face: float) -> AnimationPlayer:
 	ap.add_animation_library("", lib)
 	return ap
 
+
 static func _clip_idle() -> Animation:
 	var a := Animation.new()
 	a.length = 1.2
@@ -651,6 +659,7 @@ static func _clip_idle() -> Animation:
 	a.position_track_insert_key(t, 0.6, Vector3(0, 0.02, 0))
 	a.position_track_insert_key(t, 1.2, Vector3(0, 0, 0))
 	return a
+
 
 static func _clip_advance() -> Animation:
 	var a := Animation.new()
@@ -663,6 +672,7 @@ static func _clip_advance() -> Animation:
 	a.position_track_insert_key(t, 0.5, Vector3(0, 0, 0))
 	return a
 
+
 static func _clip_attack() -> Animation:
 	var a := Animation.new()
 	a.length = 0.55
@@ -674,6 +684,7 @@ static func _clip_attack() -> Animation:
 	a.rotation_track_insert_key(t, 0.55, Quaternion.IDENTITY)
 	return a
 
+
 static func _clip_hit() -> Animation:
 	var a := Animation.new()
 	a.length = 0.35
@@ -684,6 +695,7 @@ static func _clip_hit() -> Animation:
 	a.position_track_insert_key(t, 0.12, Vector3(0, 0.02, -0.06))
 	a.position_track_insert_key(t, 0.35, Vector3(0, 0, 0))
 	return a
+
 
 static func _clip_death() -> Animation:
 	var a := Animation.new()
@@ -699,14 +711,73 @@ static func _clip_death() -> Animation:
 	a.rotation_track_insert_key(r, 1.0, Quaternion.from_euler(Vector3(deg_to_rad(70), 0, deg_to_rad(20))))
 	return a
 
-## Static colour-slot checks for CI (no GPU).
-static func assert_palette_rules(pal: Dictionary, enemy: bool) -> String:
-	if enemy:
-		for k in ["coat", "lining", "scarf", "pants", "boots"]:
-			if pal.has(k) and _in_ally_gamut(pal[k]):
-				return "enemy slot %s in ally gamut" % k
-	else:
-		for k in ["house", "scarf"]:
-			if pal.has(k) and _in_enemy_gamut(pal[k]):
-				return "ally slot %s in enemy gamut" % k
-	return ""
+
+# ----- Baked stand-in (replaces capsules when 3D off / low-end) -----
+
+## Facing-right idle stand-in. Uses memory/user cache, else painted humanoid (not capsule).
+## Battle boot should call bake_standin_async on a node to upgrade to SubViewport captures.
+static func standin_texture(c, team: String, tmpl: String = "") -> Texture2D:
+	var pal := palette_for(c, team, tmpl)
+	var parts := _parts_for(c, team, tmpl, pal)
+	var h := appearance_hash(c, team, tmpl, pal, parts) + "|standin"
+	if _standin_mem.has(h):
+		return _standin_mem[h]
+	var path := "user://board_standin/%s.png" % h.sha256_text().substr(0, 24)
+	if FileAccess.file_exists(path):
+		var img := Image.load_from_file(path)
+		if img != null and not img.is_empty():
+			var tex := ImageTexture.create_from_image(img)
+			_standin_mem[h] = tex
+			return tex
+	var fb := _standin_fallback(pal, team)
+	_standin_mem[h] = fb
+	return fb
+
+
+static func standin_hash(c, team: String, tmpl: String = "") -> String:
+	var pal := palette_for(c, team, tmpl)
+	var parts := _parts_for(c, team, tmpl, pal)
+	return appearance_hash(c, team, tmpl, pal, parts) + "|standin"
+
+
+## Store a baked ImageTexture under the stand-in hash (from async SubViewport bake).
+static func store_standin(h: String, tex: Texture2D) -> void:
+	if tex == null or h == "":
+		return
+	_standin_mem[h] = tex
+	DirAccess.make_dir_recursive_absolute("user://board_standin")
+	var img: Image = tex.get_image() if tex is ImageTexture else null
+	if img != null:
+		img.save_png("user://board_standin/%s.png" % h.sha256_text().substr(0, 24))
+
+
+static func _standin_fallback(pal: Dictionary, team: String) -> ImageTexture:
+	var img := Image.create(STANDIN_W, STANDIN_H, false, Image.FORMAT_RGBA8)
+	img.fill(Color(0, 0, 0, 0))
+	var coat: Color = pal.get("coat", Color(0.5, 0.5, 0.5))
+	var skin: Color = pal.get("skin", Color(0.78, 0.62, 0.52))
+	var hair: Color = pal.get("hair", Color(0.25, 0.2, 0.18))
+	var cx := STANDIN_W * 0.5
+	# Body capsule replaced by soft silhouette blocks (not the old grey pill).
+	_fill_ellipse(img, cx, STANDIN_H * 0.62, STANDIN_W * 0.22, STANDIN_H * 0.28, coat)
+	_fill_ellipse(img, cx, STANDIN_H * 0.28, STANDIN_W * 0.16, STANDIN_H * 0.14, skin)
+	_fill_ellipse(img, cx, STANDIN_H * 0.18, STANDIN_W * 0.17, STANDIN_H * 0.10, hair)
+	var rim := UIKit.ACCENT if team != "enemy" else UIKit.DANGER
+	# simple feet
+	_fill_ellipse(img, cx - 10, STANDIN_H * 0.90, 10, 6, pal.get("boots", Color(0.12, 0.11, 0.11)))
+	_fill_ellipse(img, cx + 10, STANDIN_H * 0.90, 10, 6, pal.get("boots", Color(0.12, 0.11, 0.11)))
+	# rim pixels
+	for x in range(STANDIN_W):
+		img.set_pixel(x, STANDIN_H - 1, Color(rim.r, rim.g, rim.b, 0.6))
+	return ImageTexture.create_from_image(img)
+
+
+static func _fill_ellipse(img: Image, cx: float, cy: float, rx: float, ry: float, col: Color) -> void:
+	var w := img.get_width()
+	var h := img.get_height()
+	for y in range(maxi(0, int(cy - ry - 1)), mini(h, int(cy + ry + 2))):
+		for x in range(maxi(0, int(cx - rx - 1)), mini(w, int(cx + rx + 2))):
+			var nx := (x - cx) / rx
+			var ny := (y - cy) / ry
+			if nx * nx + ny * ny <= 1.0:
+				img.set_pixel(x, y, col)

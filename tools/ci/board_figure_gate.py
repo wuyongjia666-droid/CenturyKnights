@@ -3,7 +3,7 @@
 
 P0: verify style-lock board_figure (§3.4), plate_palettes coverage, overrides skeleton,
 §4.2 current baseline JSON, and existing coral / house_color locks on main.
-Does not require modular Blender GLB (P1).
+P1: also require board_figures_v1.glb/json + data/board_figures.json mapping.
 """
 from __future__ import annotations
 
@@ -189,11 +189,65 @@ def check_coral_locks() -> tuple[str | None, int, int]:
     return None, len(themes), allyish
 
 
+
+KIT_GLB = ROOT / "project/assets/models/board/board_figures_v1.glb"
+KIT_MAN = ROOT / "project/assets/models/board/board_figures_v1.json"
+MAP = ROOT / "project/data/board_figures.json"
+BOARD_FIG_GD = ROOT / "project/scripts/art/board_figure.gd"
+SHADER = ROOT / "project/shaders/board_figure.gdshader"
+
+
+def check_p1_kit() -> str | None:
+    if not KIT_GLB.is_file():
+        return f"missing {KIT_GLB.relative_to(ROOT)}"
+    if KIT_GLB.stat().st_size < 100_000:
+        return "board_figures_v1.glb too small"
+    if not KIT_MAN.is_file():
+        return f"missing {KIT_MAN.relative_to(ROOT)}"
+    man = json.loads(KIT_MAN.read_text(encoding="utf-8"))
+    parts = man.get("parts", {})
+    if not isinstance(parts, dict) or len(parts) < 20:
+        return "manifest parts incomplete"
+    for need in ("body_m", "body_f", "head_m", "outfit_captain", "outfit_hunter",
+                 "outfit_bandit_bandit", "outfit_bandit_chief", "weapon_sword", "weapon_bow",
+                 "hair_crop", "hair_tied"):
+        if need not in parts:
+            return f"manifest missing {need}"
+        if need.startswith("hair_") and int(parts[need].get("tris", 99999)) > 1200:
+            return f"{need} hair LOD over 1.2k tris"
+    if not MAP.is_file():
+        return f"missing {MAP.relative_to(ROOT)}"
+    mp = json.loads(MAP.read_text(encoding="utf-8"))
+    for tmpl in ("bandit_weak", "bandit", "bandit_archer", "bandit_chief"):
+        if tmpl not in (mp.get("enemy_templates") or {}):
+            return f"board_figures.json missing enemy template {tmpl}"
+    for jid in ("captain", "hunter", "squire"):
+        if jid not in (mp.get("jobs") or {}):
+            return f"board_figures.json missing job {jid}"
+    gd = BOARD_FIG_GD.read_text(encoding="utf-8") if BOARD_FIG_GD.is_file() else ""
+    if "farm_cast" in gd and "_assemble_farm_cast" in gd:
+        return "CKBoardFigure still has farm_cast formal assemble path"
+    if "appearance_hash" not in gd or "spec_for" not in gd:
+        return "CKBoardFigure missing appearance_hash/spec_for"
+    if not SHADER.is_file():
+        return "missing board_figure.gdshader"
+    sh = SHADER.read_text(encoding="utf-8")
+    if "palette[20]" not in sh and "palette[" not in sh:
+        return "shader missing palette[20]"
+    if "board_compact" in sh:
+        return "formal shader must not use board_compact"
+    # Budget bump present
+    ratchet = json.loads((ROOT / "tools/ci/ratchet.json").read_text(encoding="utf-8"))
+    if int(ratchet.get("export_base_budget_bytes", 0)) < 296000000:
+        return "export_base_budget_bytes should include P1 +3MB"
+    return None
+
+
 def main() -> int:
     if not DESIGN.is_file():
         return _fail(f"missing {DESIGN.relative_to(ROOT)}")
 
-    for checker in (check_style_lock, check_baseline, check_palettes, check_try_texture_stem):
+    for checker in (check_style_lock, check_baseline, check_palettes, check_try_texture_stem, check_p1_kit):
         err = checker()
         if err:
             return _fail(err)
@@ -209,7 +263,7 @@ def main() -> int:
     print(
         "BOARD FIGURE GATE PASS "
         f"style_lock=ok baseline=§4.2 palettes={n_plat} gap={gap} needs_review={needs} "
-        f"themes={n_themes} trim_would_be_allyish={allyish} try_texture_stem=ok"
+        f"themes={n_themes} trim_would_be_allyish={allyish} try_texture_stem=ok p1_kit=ok"
     )
     return 0
 

@@ -1364,20 +1364,36 @@ static func board_pawns_enabled() -> bool:
 	return bool(GameState.settings.get("board_pawns_3d", true))
 
 static func board_pawn_texture(c: CKCharacter, team: String, size: int = 64, done: bool = false) -> Texture2D:
-	var ph: Dictionary = CKGenome.phenotype(c) if c != null else {}
-	var hair: Color = ph.get("hair_color", Color(0.106, 0.114, 0.141))
-	var skin: Color = ph.get("skin_color", Color(0.886, 0.757, 0.675))
-	var eye: Color = ph.get("eye_color", Color(0.353, 0.396, 0.439))
-	var crest := crest_color() if team == "player" else Color(0.72, 0.28, 0.24)
-	var key := "bp3|%s|%s|%d|%s|%s|%s|%s" % [
-		str(c.id) if c else "?", team, size, str(done),
-		hair.to_html(false), skin.to_html(false), eye.to_html(false),
+	## P1: formal-figure stand-in (replaces capsule). Enemy tokens are flipped horizontally.
+	var tmpl := ""
+	if c != null and c.has_meta("ck_enemy_template"):
+		tmpl = str(c.get_meta("ck_enemy_template"))
+	var key := "standin|%s|%s|%d|%s|%s" % [
+		str(c.id) if c else "?", team, size, str(done), tmpl,
 	]
 	if _cache.has(key):
 		return _cache[key]
-	var img := Image.create(size, size, false, Image.FORMAT_RGBA8)
-	img.fill(Color(0, 0, 0, 0))
-	_paint_board_pawn(img, size, hair, skin, eye, crest, team, done, c != null and bool(c.is_leader))
+	var src: Texture2D = CKBoardFigure.standin_texture(c, team, tmpl)
+	if src == null:
+		return _proc_token(c, team, size, done)
+	var img: Image = src.get_image()
+	if img == null or img.is_empty():
+		return _proc_token(c, team, size, done)
+	if img.is_compressed():
+		img.decompress()
+	img = img.duplicate()
+	if str(team) == "enemy":
+		img.flip_x()
+	if done:
+		for y in img.get_height():
+			for x in img.get_width():
+				var px := img.get_pixel(x, y)
+				if px.a < 0.05:
+					continue
+				var g := px.get_luminance()
+				img.set_pixel(x, y, Color(g, g, g).lerp(px, 0.25).darkened(0.25))
+	if size > 0 and (img.get_width() != size or img.get_height() != size):
+		img.resize(size, size, Image.INTERPOLATE_LANCZOS)
 	var tex := ImageTexture.create_from_image(img)
 	_cache[key] = tex
 	return tex

@@ -32,6 +32,8 @@ static func enabled(unit_count: int = 0) -> bool:
 		return false
 	if unit_count > MAX_UNITS:
 		return false
+	if DeviceProfile.is_low_end():
+		return false  # P1: baked stand-ins via UnitArt; live 3D waits for P3 gate
 	return bool(GameState.settings.get("board_units_3d", default_on()))
 
 func _ready() -> void:
@@ -79,29 +81,9 @@ func _ready() -> void:
 	_cam.current = true
 
 
-## Board figures are tiny: flatten farm-cast lighting; also touch material_override (farm path).
-func _solidify_board(n: Node) -> void:
-	if n is MeshInstance3D:
-		var mi := n as MeshInstance3D
-		var mats: Array = []
-		if mi.material_override != null:
-			mats.append(mi.material_override)
-		if mi.mesh:
-			for si in mi.mesh.get_surface_count():
-				var m = mi.get_surface_override_material(si)
-				if m != null:
-					mats.append(m)
-		for m in mats:
-			if m is ShaderMaterial:
-				var sm := m as ShaderMaterial
-				sm.set_shader_parameter("board_compact", 1.0)
-				sm.set_shader_parameter("rim_strength", 0.06)
-				sm.set_shader_parameter("lit_level", 0.80)
-				sm.set_shader_parameter("rim_amt", 0.22)
-			elif m is BaseMaterial3D:
-				(m as BaseMaterial3D).rim_enabled = false
-	for c in n.get_children():
-		_solidify_board(c)
+## P1 formal kit uses board_figure.gdshader (no board_compact / farm flatten).
+func _solidify_board(_n: Node) -> void:
+	pass
 
 ## Screen px (container-local) → world point on the ground plane.
 func _to_world(p: Vector2) -> Vector3:
@@ -131,7 +113,7 @@ func sync(entries: Array, delta: float) -> void:
 			if n == null:
 				continue
 			_world.add_child(n)
-			_solidify_board(n)
+			# formal kit: no farm solidify
 			n.set_meta("ck_base_scale", Vector3.ONE)
 			var ap := CKBoardFigure.find_anim(n)
 			var f0 := 1.0 if str(u.team) != "enemy" else -1.0

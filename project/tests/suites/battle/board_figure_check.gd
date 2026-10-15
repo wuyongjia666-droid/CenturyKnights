@@ -1,5 +1,5 @@
 extends Node
-## Board figure P0: colour rules, house_color, enemy coral lock, build smoke.
+## Board figure P1: kit mapping, palette guards, assemble smoke (no farm_cast formal path).
 
 func _ready() -> void:
 	await get_tree().process_frame
@@ -15,10 +15,13 @@ func _run() -> String:
 	var err := _check_house_and_fill()
 	if err != "":
 		return err
+	err = _check_map()
+	if err != "":
+		return err
 	err = _check_palettes()
 	if err != "":
 		return err
-	err = _check_themes_coral()
+	err = _check_themes_and_banner_swatches()
 	if err != "":
 		return err
 	return _check_build()
@@ -36,15 +39,26 @@ func _check_house_and_fill() -> String:
 	var house: Color = UnitArt.house_color()
 	if absf(house.h - UIKit.ACCENT.h) > 0.08:
 		return "house_color should follow charge, got %s" % house
-	var leader = GameState.get_leader()
-	if leader == null:
-		return "no leader"
-	var fill_a: Color = UnitModel.fill_color_for(leader, false, {"cloth": [Color(0.2, 0.2, 0.25)]}, UIKit.OK)
-	if absf(fill_a.h - UIKit.ACCENT.h) > 0.12:
-		return "ally fill should track house hue, got %s" % fill_a
-	var fill_e: Color = UnitModel.fill_color_for(leader, true, {}, Color(0.37, 0.88, 0.71))
-	if absf(fill_e.h - UIKit.DANGER.h) > 0.08:
-		return "enemy fill must lock to coral, got %s" % fill_e
+	return ""
+
+func _check_map() -> String:
+	var f := FileAccess.open("res://data/board_figures.json", FileAccess.READ)
+	if f == null:
+		return "missing board_figures.json"
+	var parsed = JSON.parse_string(f.get_as_text())
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return "board_figures.json invalid"
+	var root: Dictionary = parsed
+	var jobs: Dictionary = root.get("jobs", {})
+	for jid in ["captain", "hunter", "squire", "light_inf", "apprentice"]:
+		if not jobs.has(jid):
+			return "jobs missing %s" % jid
+	var et: Dictionary = root.get("enemy_templates", {})
+	for t in ["bandit_weak", "bandit", "bandit_archer", "bandit_chief"]:
+		if not et.has(t):
+			return "enemy_templates missing %s" % t
+	if not ResourceLoader.exists(str(root.get("kit_glb", ""))):
+		return "kit glb missing"
 	return ""
 
 func _check_palettes() -> String:
@@ -61,25 +75,39 @@ func _check_palettes() -> String:
 		return "enemy coat still in ally gamut"
 	return ""
 
-func _check_themes_coral() -> String:
+func _check_themes_and_banner_swatches() -> String:
 	var themes := _load_themes()
 	if themes.is_empty():
 		return "no enemy themes loaded"
 	var leader = GameState.get_leader()
-	var coral: Color = UIKit.DANGER
 	var bad := 0
 	for tid in themes.keys():
-		var row: Dictionary = themes[tid]
-		var pal: Dictionary = row.get("palette", {}) if typeof(row.get("palette")) == TYPE_DICTIONARY else {}
-		var raw := str(pal.get("trim", row.get("trim", "")))
-		if raw == "":
-			continue
-		var trim := Color(raw if raw.begins_with("#") else ("#" + raw))
-		var f: Color = UnitModel.fill_color_for(leader, true, {}, trim)
-		if absf(f.h - coral.h) > 0.08:
-			bad += 1
+		for tmpl in ["bandit_weak", "bandit", "bandit_archer", "bandit_chief"]:
+			var pal: Dictionary = CKBoardFigure.palette_for(leader, "enemy", tmpl)
+			var err := CKBoardFigure.assert_palette_rules(pal, true)
+			if err != "":
+				bad += 1
 	if bad > 0:
-		return "%d enemy themes still escape coral lock" % bad
+		return "%d enemy theme×template palette violations" % bad
+	# Banner swatches (24): house must not enter enemy gamut after protect
+	var swatches := [
+		"#6ED4FF", "#5EE0B5", "#FF7A70", "#FF8A80", "#C9D3DE", "#9AA4B2",
+		"#7A8CA0", "#4A5568", "#E8D5B7", "#B8A090", "#6E7276", "#2A2F38",
+		"#88C0D0", "#A3BE8C", "#D08770", "#B48EAD", "#EBCB8B", "#BF616A",
+		"#81A1C1", "#8FBCBB", "#5E81AC", "#ECEFF4", "#D8DEE9", "#4C566A",
+	]
+	for hx in swatches:
+		GameState.banner_spec = {
+			"field_a": CKHeraldry.tincture_hex("ash"),
+			"charge_color": hx,
+			"ordinary_tincture": hx,
+			"emblem_color": hx,
+		}
+		CKBoardFigure._pal_cache.clear()
+		var pal2: Dictionary = CKBoardFigure.palette_for(leader, "player")
+		var e2 := CKBoardFigure.assert_palette_rules(pal2, false)
+		if e2 != "":
+			return "banner swatch %s: %s" % [hx, e2]
 	return ""
 
 func _check_build() -> String:
@@ -92,43 +120,48 @@ func _check_build() -> String:
 		fig.free()
 		return "missing AnimationPlayer clips"
 	var spec: Dictionary = CKBoardFigure.spec_for(leader, "player")
-	var bad := ""
 	if int(spec.get("tris_est", 99999)) > 7000:
-		bad = "tris budget"
-	elif int(spec.get("textures", 1)) != 0:
-		bad = "textures must be 0"
+		fig.free()
+		return "tris budget %s" % spec.get("tris_est")
+	if int(spec.get("textures", 1)) != 0:
+		fig.free()
+		return "textures must be 0"
+	if str(spec.get("appearance_hash", "")) == "":
+		fig.free()
+		return "appearance_hash empty"
+	# Priority kits
+	for tmpl in ["bandit_weak", "bandit", "bandit_archer", "bandit_chief"]:
+		var ef := CKBoardFigure.build(leader, "enemy", tmpl)
+		if ef == null:
+			fig.free()
+			return "enemy build null %s" % tmpl
+		var es: Dictionary = CKBoardFigure.spec_for(leader, "enemy", tmpl)
+		if int(es.get("tris_est", 99999)) > 7000:
+			ef.free()
+			fig.free()
+			return "enemy tris %s" % tmpl
+		ef.free()
+	# Hunter mapping via temporary job_id on leader clone fields
+	var saved_job := str(leader.job_id)
+	var saved_lead := bool(leader.is_leader)
+	leader.job_id = "hunter"
+	leader.is_leader = false
+	CKBoardFigure._pal_cache.clear()
+	var hs: Dictionary = CKBoardFigure.spec_for(leader, "player")
+	leader.job_id = saved_job
+	leader.is_leader = saved_lead
+	var parts: Dictionary = hs.get("parts", {})
+	if str(parts.get("outfit", "")).find("hunter") < 0:
+		fig.free()
+		return "hunter outfit wrong: %s" % parts
+	if str(parts.get("weapon", "")).find("bow") < 0:
+		fig.free()
+		return "hunter weapon wrong: %s" % parts
 	fig.free()
-	if bad != "":
-		return bad
-	return _check_farm_cast_wiring()
-
-func _check_farm_cast_wiring() -> String:
-	var leader = GameState.get_leader()
-	var lp := CKBoardFigure._farm_cast_path(leader, false, "")
-	if not str(lp).ends_with("leader_m.glb") and not str(lp).ends_with("leader_f.glb"):
-		return "leader must map to leader_*.glb, got %s" % lp
-	var wantan = null
-	for c in GameState.characters.values():
-		if str(c.cast_key) == "wantan" or str(c.job_id) == "light_inf":
-			wantan = c
-			break
-	if wantan == null:
-		wantan = CharacterFactory.make_shilei_wantan()
-	var hp := CKBoardFigure._farm_cast_path(wantan, false, "")
-	if not str(hp).contains("hunter_"):
-		return "light_inf must remap to hunter_*.glb, got %s" % hp
-	var bp := CKBoardFigure._farm_cast_path(leader, true, "bandit")
-	if not str(bp).ends_with("bandit.glb"):
-		return "enemy bandit path broken: %s" % bp
-	var pal: Dictionary = CKBoardFigure.palette_for(leader, "enemy", "bandit")
-	var mat: ShaderMaterial = CKBoardFigure._farm_mat(pal, -1.0, true)
-	if float(mat.get_shader_parameter("use_bands")) < 0.5:
-		return "farm mat must enable height bands"
-	if float(mat.get_shader_parameter("board_compact")) < 0.5:
-		return "farm mat must set board_compact"
-	var coat: Color = mat.get_shader_parameter("coat")
-	if CKBoardFigure._in_ally_gamut(coat):
-		return "enemy farm coat still ally-gamut"
+	# Stand-in replaces capsule path
+	var st: Texture2D = CKBoardFigure.standin_texture(leader, "player")
+	if st == null:
+		return "standin null"
 	return ""
 
 func _load_themes() -> Dictionary:
