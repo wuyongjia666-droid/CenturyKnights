@@ -1,18 +1,17 @@
-# Board figure P1 过目样张（头保留 + hair_* 模块）
+# Board figure P1 过目样张（整模轻量 collapse + 贴图聚类上色）
 
-## 本轮相对「光头两点眼」否决的改动
-1. **头**：禁止头部体素。混元头强 weld + collapse ~1.8k；五官体块位移。compose 只出躯干。
-2. **发**：强制挂 8 款 `hair_*` LOD（farm 模块入库并横向放大）。卡片相机曾裁掉过高发顶，已压到帧内；团长可见深色发块（仍非立绘 swept 轮廓）。
-3. **身**：farm 躯干 LOD；靴/腰/领 bisect + edge_split 后 POINT 上色。
-4. **配色**：plate_palettes；近黑发抬亮度地板。
-5. **对照**：cards / vs_portrait / desktop_after / organic_preview。
+## 硬改路线（相对「扁帽/糊脸/锯齿」否决）
+1. **整模底**：混元优先（无贴图则 NN 从 cast/enemy 贴图取色）；只 weld + 分步 collapse（4–7k），**禁止**粗体素、**禁止**高度 bisect 切槽。
+2. **顶点色**：albedo 采样 → k-means 聚类 → plate 槽；连通域吸收碎岛；服装用软高度先验（只改槽标签，不切网格）。
+3. **发型**：源模发过扁则叠 `hair_*` LOD（≤1k），坐在头顶且略后移；compose 为整模（不再拼 head+扁帽）。
+4. **脸**：前额朝向肤色 + 小眼点；仍偏软。
 
 ## 诚实自评
 | 项 | 状态 |
 |--|--|
-| 光头 | **部分改善** — 卡片上已有发块，轮廓仍扁/不像立绘发型 |
-| 面具糊脸 | **减轻未清** — 非体素头，棋盘尺度五官仍软 |
-| 领口腰锯齿 | **减轻未清** |
+| 有发型轮廓 | **部分** — 团长有深色发块/LOD，仍偏盔帽，不如立绘 swept |
+| 干净色区 | **未过** — 相对 bisect 锯齿减轻，聚色仍有碎边 |
+| 脸可读 | **未过** — 肤色有，五官仍糊 |
 | 过目 | **未通过** — 不宣称完成 |
 
 重建：`build_organic_board_overrides.py` → `board_figures_v1.py` → `godot --import` → `board_figure_shots.tscn`

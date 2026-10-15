@@ -242,13 +242,14 @@ static func _parts_for(c, team: String, tmpl: String, pal: Dictionary) -> Dictio
 			compose = str(row2.get("compose", ""))
 			if str(row2.get("body", "")) == "heavy":
 				body = "body_heavy"
-	# Organic compose = body/clothes LOD only. Head + hair_* modules always attached.
+	# Organic compose_* = full figure (head+hair+body). No extra head/hair modules —
+	# source silhouette already carries hair; layering hair_* caused flat-hat float.
 	if compose != "":
 		return {
 			"compose": compose,
 			"body": "",
-			"head": head,
-			"hair": hair,
+			"head": "",
+			"hair": "",
 			"outfit": "",
 			"weapon": weapon,
 			"signs": signs,
@@ -276,13 +277,12 @@ static func _estimate_tris(parts: Dictionary) -> int:
 	if str(parts.get("compose", "")) != "":
 		var cn := str(parts.get("compose"))
 		if plist.has(cn):
-			total += int((plist[cn] as Dictionary).get("tris", 3500))
+			total += int((plist[cn] as Dictionary).get("tris", 5500))
 		else:
-			total += 3500
-		for k3 in ["head", "hair", "weapon"]:
-			var pn := str(parts.get(k3, ""))
-			if pn != "" and plist.has(pn):
-				total += int((plist[pn] as Dictionary).get("tris", 400))
+			total += 5500
+		var wn2 := str(parts.get("weapon", ""))
+		if wn2 != "" and plist.has(wn2):
+			total += int((plist[wn2] as Dictionary).get("tris", 200))
 		for s in parts.get("signs", []):
 			if plist.has(str(s)):
 				total += int((plist[str(s)] as Dictionary).get("tris", 100))
@@ -307,10 +307,9 @@ static func _assemble_kit(body: Node3D, parts: Dictionary, pal: Dictionary, face
 	var compose_n := str(parts.get("compose", ""))
 	if compose_n != "":
 		names.append(compose_n)
-		for k2 in ["head", "hair", "weapon"]:
-			var n2 := str(parts.get(k2, ""))
-			if n2 != "":
-				names.append(n2)
+		var wn := str(parts.get("weapon", ""))
+		if wn != "":
+			names.append(wn)
 		for s in parts.get("signs", []):
 			names.append(str(s))
 	else:

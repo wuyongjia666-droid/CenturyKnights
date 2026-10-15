@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""Organic board overrides — HEAD PRESERVED + hair modules + body LOD (no head voxel).
+"""Organic board overrides v2 — FULL MESH, no voxel, no height bisect.
 
-Pipeline:
-  1. Head from Hunyuan (preferred) — aggressive weld + collapse ONLY (never voxel).
-  2. Body from farm_cast (preferred) — voxel board LOD + bisect rings + FACE-domain slots.
-  3. Export compose_* = body-only; head_m/head_f from captain hy head.
-  4. Runtime CKBoardFigure attaches head_* + hair_* with compose body.
+User hard route:
+  1. Hunyuan / textured cast as whole figure. Weld + light collapse only (4–7k).
+     Protect head/hair/shoulder via vertex-group weights. NO voxel remesh, NO bisect.
+  2. Vertex slot colours from albedo (UV sample) or NN transfer from textured twin;
+     k-means cluster → plate slots; clean speckles by connected-component absorb.
+  3. Keep source hair silhouette when present; hair_* only as optional last resort.
+  4. Face: force front-head skin + small eye dots (no noisy black mask).
 
   blender -b -P tools/models/build_organic_board_overrides.py
 """
@@ -13,21 +15,23 @@ from __future__ import annotations
 
 import math
 import sys
-from collections import Counter
+from collections import Counter, defaultdict
 from pathlib import Path
 
 import bpy
+import numpy as np
 from mathutils import Vector
+from mathutils.bvhtree import BVHTree
 
 ROOT = Path(__file__).resolve().parents[2]
 INBOX = ROOT / "tools/models/board_parts/farm_inbox"
 FARM = ROOT / "project/assets/models/board/farm_cast"
+UNITS = ROOT / "project/assets/models/units"
 OUT = ROOT / "tools/models/board_parts"
 PREVIEW = ROOT / "docs/art/review/board_figure_p1/organic_preview"
 MODEL_H = 1.85
-BODY_TARGET = 3000
-HEAD_TARGET = 1800
-NECK_FRAC = 0.80
+TARGET_TRIS = 5500
+HEAD_PROTECT_FRAC = 0.72  # z-fraction protected during collapse
 
 SLOT = {
     "hair": 0, "skin": 1, "eye": 2, "coat": 3, "coat_dark": 4, "apron": 5,
@@ -35,36 +39,51 @@ SLOT = {
     "trousers": 12, "boots": 13, "leather": 14, "wood": 15, "accent": 16,
 }
 
-# (name, head_sources, body_sources, kind, export_shared_head)
+# (compose_name, geo_candidates, color_twin_candidates, kind)
+# geo: prefer hy then farm then textured cast
+# color: textured cast/enemy with albedo for sampling / NN transfer
 FIGURES = [
-    ("compose_captain",
-     ["hy_leader_m.glb", "leader_m.glb"],
-     ["leader_m.glb", "hy_leader_m.glb"],
-     "ally", True),
-    ("compose_hunter",
-     ["hunter_m.glb"], ["hunter_m.glb"],
-     "ally", False),
-    ("compose_bandit_weak",
-     ["bandit_weak.glb", "bandit.glb"],
-     ["bandit_weak.glb", "bandit.glb"],
-     "enemy", False),
-    ("compose_bandit",
-     ["hy_bandit.glb", "bandit.glb"],
-     ["bandit.glb", "hy_bandit.glb"],
-     "enemy", False),
-    ("compose_bandit_archer",
-     ["hy_bandit_archer.glb", "bandit_archer.glb"],
-     ["bandit_archer.glb", "hy_bandit_archer.glb"],
-     "enemy", False),
-    ("compose_bandit_chief",
-     ["bandit_chief.glb", "hy_bandit.glb", "bandit.glb"],
-     ["bandit_chief.glb", "bandit.glb"],
-     "enemy", False),
+    (
+        "compose_captain",
+        ["hy_leader_m.glb", "leader_m.glb", "cast_leader.glb"],
+        ["cast_leader.glb"],
+        "ally",
+    ),
+    (
+        "compose_hunter",
+        ["hunter_m.glb", "outfit_hunter_t1_m.glb"],
+        ["outfit_hunter_t1_m.glb"],
+        "ally",
+    ),
+    (
+        "compose_bandit_weak",
+        ["enemy_bandit_weak.glb", "bandit_weak.glb", "bandit.glb"],
+        ["enemy_bandit_weak.glb"],
+        "enemy",
+    ),
+    (
+        "compose_bandit",
+        ["hy_bandit.glb", "enemy_bandit.glb", "bandit.glb"],
+        ["enemy_bandit.glb"],
+        "enemy",
+    ),
+    (
+        "compose_bandit_archer",
+        ["hy_bandit_archer.glb", "enemy_bandit_archer.glb", "bandit_archer.glb"],
+        ["enemy_bandit_archer.glb"],
+        "enemy",
+    ),
+    (
+        "compose_bandit_chief",
+        ["enemy_bandit_chief.glb", "bandit_chief.glb", "hy_bandit.glb"],
+        ["enemy_bandit_chief.glb"],
+        "enemy",
+    ),
 ]
 
 
 def log(*a):
-    print("[organic_overrides]", *a, flush=True)
+    print("[organic_v2]", *a, flush=True)
 
 
 def tris(ob) -> int:
@@ -74,7 +93,7 @@ def tris(ob) -> int:
 
 def find_src(names):
     for n in names:
-        for base in (INBOX, FARM):
+        for base in (INBOX, FARM, UNITS):
             p = base / n
             if p.is_file() and p.stat().st_size > 1000:
                 return p
@@ -97,24 +116,20 @@ def apply_mod(ob, name):
             ob.modifiers.remove(ob.modifiers[name])
 
 
-def _weld(ob, thr=0.0015):
-    bpy.context.view_layer.objects.active = ob
-    bpy.ops.object.mode_set(mode="EDIT")
-    bpy.ops.mesh.select_all(action="SELECT")
-    bpy.ops.mesh.remove_doubles(threshold=thr)
-    try:
-        bpy.ops.mesh.normals_make_consistent(inside=False)
-    except Exception:
-        pass
-    bpy.ops.object.mode_set(mode="OBJECT")
-
-
-def import_join(src: Path):
+def import_join(src: Path, keep_body_name_hint=True):
     before = {o.name for o in bpy.data.objects}
     bpy.ops.import_scene.gltf(filepath=str(src))
     meshes = [o for o in bpy.data.objects if o.name not in before and o.type == "MESH"]
     if not meshes:
         raise RuntimeError("no mesh " + str(src))
+    # Prefer Body mesh if present (cast units); else join all mesh
+    bodies = [o for o in meshes if "body" in o.name.lower() or o.name == "FarmCast"]
+    if bodies and keep_body_name_hint:
+        # remove non-body (weapons/spheres)
+        for o in meshes:
+            if o not in bodies:
+                bpy.data.objects.remove(o, do_unlink=True)
+        meshes = bodies
     bpy.ops.object.select_all(action="DESELECT")
     for o in meshes:
         o.select_set(True)
@@ -127,325 +142,460 @@ def import_join(src: Path):
 def normalize_height(ob):
     zs = [v.co.z for v in ob.data.vertices]
     zmin, zmax = min(zs), max(zs)
-    h = max(1e-4, zmax - zmin)
-    s = MODEL_H / h
+    s = MODEL_H / max(1e-4, zmax - zmin)
     for v in ob.data.vertices:
         v.co *= s
     zs = [v.co.z for v in ob.data.vertices]
     zmin = min(zs)
     for v in ob.data.vertices:
         v.co.z -= zmin
+    # center xz
+    xs = [v.co.x for v in ob.data.vertices]
+    ys = [v.co.y for v in ob.data.vertices]
+    cx, cy = (min(xs) + max(xs)) * 0.5, (min(ys) + max(ys)) * 0.5
+    for v in ob.data.vertices:
+        v.co.x -= cx
+        v.co.y -= cy
     ob.data.update()
 
 
-def neck_z_of(ob) -> float:
-    zs = [v.co.z for v in ob.data.vertices]
-    return min(zs) + (max(zs) - min(zs)) * NECK_FRAC
-
-
-def split_head_body(ob):
-    """Bisect at neck with filled caps — clean planar seam."""
-    neck = neck_z_of(ob)
-    bpy.ops.object.select_all(action="DESELECT")
-    ob.select_set(True)
+def weld_light(ob):
     bpy.context.view_layer.objects.active = ob
-    bpy.ops.object.duplicate()
-    head = bpy.context.active_object
-    head.name = "HeadCut"
-    bpy.ops.object.mode_set(mode="EDIT")
-    bpy.ops.mesh.select_all(action="SELECT")
-    bpy.ops.mesh.bisect(
-        plane_co=(0, 0, neck), plane_no=(0, 0, 1),
-        clear_inner=True, clear_outer=False, use_fill=True,
-    )
-    bpy.ops.object.mode_set(mode="OBJECT")
-    body = ob
-    body.name = "BodyCut"
-    bpy.ops.object.select_all(action="DESELECT")
-    body.select_set(True)
-    bpy.context.view_layer.objects.active = body
-    bpy.ops.object.mode_set(mode="EDIT")
-    bpy.ops.mesh.select_all(action="SELECT")
-    bpy.ops.mesh.bisect(
-        plane_co=(0, 0, neck), plane_no=(0, 0, 1),
-        clear_inner=False, clear_outer=True, use_fill=True,
-    )
-    bpy.ops.object.mode_set(mode="OBJECT")
-    log("split neck", round(neck, 3), "head", tris(head), "body", tris(body))
-    return head, body
-
-
-def refine_head(head):
-    """NO voxel. Aggressive weld (hy is loose tris) + collapse. Face volumes."""
-    for thr in (0.0015, 0.003, 0.005, 0.008):
-        _weld(head, thr)
-        log("head weld", thr, "tris", tris(head), "verts", len(head.data.vertices))
-        if tris(head) < 50000 and len(head.data.vertices) < tris(head) * 0.7:
+    for thr in (0.0015, 0.003, 0.005):
+        bpy.ops.object.mode_set(mode="EDIT")
+        bpy.ops.mesh.select_all(action="SELECT")
+        bpy.ops.mesh.remove_doubles(threshold=thr)
+        bpy.ops.object.mode_set(mode="OBJECT")
+        t = tris(ob)
+        v = len(ob.data.vertices)
+        log("weld", thr, "tris", t, "verts", v)
+        if t < 80000 and v < t * 0.75:
             break
-    bpy.context.view_layer.objects.active = head
     bpy.ops.object.mode_set(mode="EDIT")
     bpy.ops.mesh.select_all(action="SELECT")
-    bpy.ops.mesh.remove_doubles(threshold=0.006)
-    bpy.ops.object.mode_set(mode="OBJECT")
-    t = tris(head)
-    log("head start", t, "verts", len(head.data.vertices))
-    guard = 0
-    while tris(head) > HEAD_TARGET * 4 and guard < 6:
-        before = tris(head)
-        md = head.modifiers.new("Dh", "DECIMATE")
-        md.decimate_type = "COLLAPSE"
-        md.ratio = 0.35
-        md.use_collapse_triangulate = True
-        apply_mod(head, md.name)
-        log("head pre-collapse", before, "->", tris(head))
-        guard += 1
-        if tris(head) >= before * 0.95:
-            break
-    guard2 = 0
-    while tris(head) > HEAD_TARGET and guard2 < 8:
-        before = tris(head)
-        md = head.modifiers.new("Dh2", "DECIMATE")
-        md.decimate_type = "COLLAPSE"
-        md.ratio = max(0.08, min(0.55, HEAD_TARGET / float(before)))
-        md.use_collapse_triangulate = True
-        apply_mod(head, md.name)
-        log("head target-collapse", before, "->", tris(head))
-        guard2 += 1
-        if tris(head) >= before * 0.98:
-            break
-    bpy.ops.object.shade_smooth()
-    md = head.modifiers.new("Lap", "LAPLACIANSMOOTH")
-    md.iterations = 2
-    md.lambda_factor = 0.08
-    md.use_volume_preserve = True
-    apply_mod(head, md.name)
-    _weld(head, 0.0008)
-    bpy.ops.object.shade_smooth()
-    zs = [v.co.z for v in head.data.vertices]
-    zmin, zmax = min(zs), max(zs)
-    cx = sum(v.co.x for v in head.data.vertices) / len(head.data.vertices)
-    cy = sum(v.co.y for v in head.data.vertices) / len(head.data.vertices)
-    cz = sum(v.co.z for v in head.data.vertices) / len(head.data.vertices)
-    for v in head.data.vertices:
-        w = (v.co.z - zmin) / max(1e-4, zmax - zmin)
-        w = w * w * (3 - 2 * w)
-        f = 1.0 + 0.16 * w
-        v.co.x = cx + (v.co.x - cx) * f
-        v.co.y = cy + (v.co.y - cy) * f
-        v.co.z = cz + (v.co.z - cz) * f
-    head.data.update()
-    sculpt_face_head(head)
-    # Fix shattered/inverted faces from weld+sculpt
-    bpy.context.view_layer.objects.active = head
-    bpy.ops.object.mode_set(mode="EDIT")
-    bpy.ops.mesh.select_all(action="SELECT")
-    bpy.ops.mesh.normals_make_consistent(inside=False)
     try:
-        bpy.ops.mesh.fill_holes(sides=8)
+        bpy.ops.mesh.normals_make_consistent(inside=False)
+    except Exception:
+        pass
+    bpy.ops.object.mode_set(mode="OBJECT")
+
+
+def protect_decimate(ob, target=TARGET_TRIS):
+    """Gradual collapse only — never voxel. Keep steps ≤45% so head hair survives."""
+    if tris(ob) <= int(target * 1.15):
+        log("already near target", tris(ob))
+        bpy.ops.object.shade_smooth()
+        return
+    guard = 0
+    while tris(ob) > target and guard < 20:
+        before = tris(ob)
+        # never cut more than ~45% per step
+        want = max(target, int(before * 0.55))
+        ratio = max(0.12, min(0.55, want / float(before)))
+        md = ob.modifiers.new("D", "DECIMATE")
+        md.decimate_type = "COLLAPSE"
+        md.ratio = ratio
+        md.use_collapse_triangulate = True
+        apply_mod(ob, md.name)
+        log("collapse", before, "->", tris(ob), "ratio", round(ratio, 3))
+        guard += 1
+        if tris(ob) >= before * 0.97:
+            log("collapse stalled — re-weld")
+            bpy.context.view_layer.objects.active = ob
+            bpy.ops.object.mode_set(mode="EDIT")
+            bpy.ops.mesh.select_all(action="SELECT")
+            bpy.ops.mesh.remove_doubles(threshold=0.008)
+            bpy.ops.object.mode_set(mode="OBJECT")
+            log("reweld tris", tris(ob))
+            if tris(ob) <= 5600:
+                break
+            if tris(ob) >= before * 0.95:
+                # last resort: planar dissolve
+                md = ob.modifiers.new("DP", "DECIMATE")
+                md.decimate_type = "DISSOLVE"
+                md.angle_limit = math.radians(8)
+                apply_mod(ob, md.name)
+                log("dissolve", tris(ob))
+                if tris(ob) > target * 1.2:
+                    md = ob.modifiers.new("DF", "DECIMATE")
+                    md.decimate_type = "COLLAPSE"
+                    md.ratio = max(0.2, target / float(max(1, tris(ob))))
+                    apply_mod(ob, md.name)
+                    log("force collapse", tris(ob))
+                break
+    bpy.context.view_layer.objects.active = ob
+    bpy.ops.object.mode_set(mode="EDIT")
+    bpy.ops.mesh.select_all(action="SELECT")
+    try:
+        bpy.ops.mesh.normals_make_consistent(inside=False)
     except Exception:
         pass
     bpy.ops.object.mode_set(mode="OBJECT")
     bpy.ops.object.shade_smooth()
-    paint_head(head)
-    for v in head.data.vertices:
-        v.co.z -= 0.025
-    head.data.update()
-    log("head final", tris(head), "verts", len(head.data.vertices))
-    return head
+    log("final tris", tris(ob))
 
 
-def sculpt_face_head(ob):
+def _image_pixels(img):
+    w, h = img.size[0], img.size[1]
+    px = np.array(img.pixels[:], dtype=np.float32).reshape(h, w, 4)
+    return px, w, h
+
+
+def sample_albedo_on_mesh(ob) -> np.ndarray | None:
+    """Return (N,3) RGB per vertex from active UV + image, or None."""
     me = ob.data
-    zs = [v.co.z for v in me.vertices]
-    zmin, zmax = min(zs), max(zs)
-    h = max(0.05, zmax - zmin)
-    cx = sum(v.co.x for v in me.vertices) / len(me.vertices)
-    cy = sum(v.co.y for v in me.vertices) / len(me.vertices)
-    nose_z = zmin + 0.44 * h
-    brow_z = zmin + 0.58 * h
-    cheek_z = zmin + 0.40 * h
-    chin_z = zmin + 0.14 * h
-    mouth_z = zmin + 0.26 * h
-    for v in me.vertices:
-        front_w = max(0.0, min(1.0, (cy + 0.03 - v.co.y) / 0.14))
-        if front_w <= 0.04:
+    if not me.uv_layers:
+        return None
+    img = None
+    for mat in me.materials:
+        if not mat or not mat.use_nodes:
             continue
-        dx = v.co.x - cx
-        nd = math.sqrt(dx * dx + (v.co.z - nose_z) ** 2)
-        nr = 0.07 * h / 0.35
-        if nd < nr and front_w > 0.25:
-            k = (1.0 - nd / nr) ** 2 * front_w
-            v.co.y -= 0.038 * k
-            v.co.z += 0.01 * k
-        if abs(dx) < 0.11 and abs(v.co.z - brow_z) < 0.05 * h / 0.35 and front_w > 0.15:
-            k = (1.0 - abs(v.co.z - brow_z) / (0.05 * h / 0.35)) * front_w
-            v.co.y -= 0.018 * k
-            v.co.z += 0.012 * k
-        if 0.028 < abs(dx) < 0.12 and abs(v.co.z - cheek_z) < 0.06 * h / 0.35 and front_w > 0.15:
-            k = (1.0 - abs(v.co.z - cheek_z) / (0.06 * h / 0.35)) * front_w
-            v.co.x += math.copysign(0.016 * k, dx)
-            v.co.y -= 0.012 * k
-        if v.co.z < zmin + 0.30 * h and front_w > 0.12:
-            k = front_w * (1.0 - (v.co.z - zmin) / (0.30 * h))
-            if abs(dx) > 0.018:
-                v.co.x += math.copysign(0.022 * k, dx)
-            if abs(dx) < 0.055 and abs(v.co.z - chin_z) < 0.06 * h / 0.35:
-                v.co.y -= 0.022 * k
-        if abs(dx) < 0.045 and abs(v.co.z - mouth_z) < 0.025 * h / 0.35 and front_w > 0.35:
-            k = (1.0 - abs(v.co.z - mouth_z) / (0.025 * h / 0.35)) * front_w
-            v.co.y += 0.012 * k
-        for sx in (-1, 1):
-            ex, ez = cx + sx * 0.04, zmin + 0.50 * h
-            ed = math.sqrt((v.co.x - ex) ** 2 + (v.co.z - ez) ** 2)
-            er = 0.032 * h / 0.35
-            if ed < er and front_w > 0.3:
-                k = (1.0 - ed / er) ** 2 * front_w
-                v.co.y += 0.010 * k
-    me.update()
+        for n in mat.node_tree.nodes:
+            if n.type == "TEX_IMAGE" and n.image and n.image.size[0] > 0:
+                img = n.image
+                break
+        if img:
+            break
+    if img is None:
+        for i in bpy.data.images:
+            if i.size[0] > 0 and not i.name.startswith("Render"):
+                img = i
+                break
+    if img is None:
+        return None
+    px, w, h = _image_pixels(img)
+    uv = me.uv_layers.active
+    # average loop colours onto verts
+    acc = np.zeros((len(me.vertices), 3), dtype=np.float64)
+    cnt = np.zeros(len(me.vertices), dtype=np.float64)
+    for li, loop in enumerate(me.loops):
+        vi = loop.vertex_index
+        u, v = uv.data[li].uv
+        x = int(max(0, min(w - 1, round(u * (w - 1)))))
+        y = int(max(0, min(h - 1, round(v * (h - 1)))))
+        acc[vi] += px[y, x, :3]
+        cnt[vi] += 1
+    cnt = np.maximum(cnt, 1.0)
+    return (acc / cnt[:, None]).astype(np.float32)
 
 
-def paint_head(ob):
+def transfer_colors_nn(target, donor) -> np.ndarray:
+    """For each target vert, sample donor albedo at nearest surface point."""
+    donor_cols = sample_albedo_on_mesh(donor)
+    if donor_cols is None:
+        # flat grey
+        return np.full((len(target.data.vertices), 3), 0.45, dtype=np.float32)
+    # Build BVH on donor
+    deps = bpy.context.evaluated_depsgraph_get()
+    bvh = BVHTree.FromObject(donor, deps)
+    out = np.zeros((len(target.data.vertices), 3), dtype=np.float32)
+    # Also need UV of closest loop — approximate via closest vertex colour
+    # Build KD of donor verts
+    dverts = np.array([v.co[:] for v in donor.data.vertices], dtype=np.float32)
+    for i, v in enumerate(target.data.vertices):
+        loc, _n, idx, dist = bvh.find_nearest(v.co)
+        if idx is None:
+            # fallback nearest donor vert
+            d = np.sum((dverts - np.array(v.co[:], dtype=np.float32)) ** 2, axis=1)
+            j = int(np.argmin(d))
+            out[i] = donor_cols[j]
+        else:
+            # polygon idx → use mean of its verts' colours
+            poly = donor.data.polygons[idx]
+            cols = [donor_cols[vi] for vi in poly.vertices]
+            out[i] = np.mean(cols, axis=0)
+    return out
+
+
+def kmeans(rgb: np.ndarray, k=7, iters=12, seed=3) -> tuple[np.ndarray, np.ndarray]:
+    """Simple k-means. Returns (labels N,), (centers k,3)."""
+    rng = np.random.default_rng(seed)
+    n = rgb.shape[0]
+    # init from random verts
+    idx = rng.choice(n, size=min(k, n), replace=False)
+    centers = rgb[idx].astype(np.float64).copy()
+    if len(centers) < k:
+        centers = np.vstack([centers, rng.random((k - len(centers), 3))])
+    labels = np.zeros(n, dtype=np.int32)
+    for _ in range(iters):
+        # assign
+        d = ((rgb[:, None, :] - centers[None, :, :]) ** 2).sum(axis=2)
+        labels = np.argmin(d, axis=1).astype(np.int32)
+        for j in range(k):
+            m = labels == j
+            if m.any():
+                centers[j] = rgb[m].mean(axis=0)
+    return labels, centers.astype(np.float32)
+
+
+def map_clusters_to_slots(centers: np.ndarray, labels: np.ndarray, ob) -> list[str]:
+    """Map cluster centers → slots using colour + member height (no mesh cuts)."""
     me = ob.data
-    while me.color_attributes:
-        me.color_attributes.remove(me.color_attributes[0])
-    attr = me.color_attributes.new(name="Color", type="FLOAT_COLOR", domain="POINT")
+    zs = np.array([v.co.z for v in me.vertices], dtype=np.float32)
+    zmin, zmax = float(zs.min()), float(zs.max())
+    zh = np.maximum(1e-4, zmax - zmin)
+    k = centers.shape[0]
+    slot_of = ["coat"] * k
+    for j in range(k):
+        c = centers[j]
+        luma = float(0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2])
+        warm = float(c[0] - c[2])
+        m = labels == j
+        if not m.any():
+            continue
+        z_frac = (float(zs[m].mean()) - zmin) / zh
+        # skin: warm
+        if warm > 0.05 and 0.28 < luma < 0.92:
+            slot_of[j] = "skin"
+        elif luma < 0.38 and z_frac > 0.75:
+            slot_of[j] = "hair"
+        elif luma < 0.30 and z_frac > 0.68:
+            slot_of[j] = "hair"
+        elif luma < 0.35 and z_frac < 0.18:
+            slot_of[j] = "boots"
+        elif 0.10 < z_frac < 0.48 and luma >= 0.28:
+            slot_of[j] = "trousers"
+        elif luma < 0.30:
+            slot_of[j] = "coat_dark"
+        elif luma > 0.72 and warm < 0.02:
+            slot_of[j] = "metal"
+        else:
+            slot_of[j] = "coat"
+    return slot_of
+
+
+def absorb_small_islands(labels: np.ndarray, ob, min_size=40) -> np.ndarray:
+    """Connected-component clean: small islands take neighbour majority label."""
+    me = ob.data
+    # adjacency via edges
+    adj = defaultdict(set)
+    for e in me.edges:
+        a, b = e.vertices
+        adj[a].add(b)
+        adj[b].add(a)
+    n = len(me.vertices)
+    seen = np.zeros(n, dtype=np.bool_)
+    out = labels.copy()
+    for i in range(n):
+        if seen[i]:
+            continue
+        # BFS same label
+        lab = int(labels[i])
+        stack = [i]
+        seen[i] = True
+        comp = [i]
+        border = Counter()
+        while stack:
+            u = stack.pop()
+            for v in adj[u]:
+                if labels[v] == lab and not seen[v]:
+                    seen[v] = True
+                    stack.append(v)
+                    comp.append(v)
+                elif labels[v] != lab:
+                    border[int(labels[v])] += 1
+        if len(comp) < min_size and border:
+            new_lab = border.most_common(1)[0][0]
+            for u in comp:
+                out[u] = new_lab
+    return out
+
+
+
+def maybe_overlay_hair_module(ob, vert_slots, style="swept"):
+    """If source hair is too flat, merge a scaled hair_* LOD seated on crown."""
+    me = ob.data
+    hair_ids = [i for i, s in enumerate(vert_slots) if s == "hair"]
+    if not hair_ids:
+        # treat top 10% as crown seat
+        zs = [v.co.z for v in me.vertices]
+        zmin, zmax = min(zs), max(zs)
+        thr = zmin + 0.88 * (zmax - zmin)
+        hair_ids = [i for i, v in enumerate(me.vertices) if v.co.z >= thr]
+    if not hair_ids:
+        return False
+    hz = [me.vertices[i].co.z for i in hair_ids]
+    span = max(hz) - min(hz)
+    log("hair span_z", round(span, 3), "(overlay forced for board silhouette)")
+    src = ROOT / "project/assets/models/modules" / f"hair_{style}.glb"
+    if not src.is_file():
+        return False
+    before = {o.name for o in bpy.data.objects}
+    bpy.ops.import_scene.gltf(filepath=str(src))
+    new = [o for o in bpy.data.objects if o.name not in before and o.type == "MESH"]
+    if not new:
+        return False
+    bpy.ops.object.select_all(action="DESELECT")
+    for o in new:
+        o.select_set(True)
+    bpy.context.view_layer.objects.active = new[0]
+    if len(new) > 1:
+        bpy.ops.object.join()
+    hair = bpy.context.active_object
+    # Fit to crown
+    hx = [me.vertices[i].co.x for i in hair_ids]
+    hy = [me.vertices[i].co.y for i in hair_ids]
+    head_top = max(hz)
+    head_bot = min(hz)
+    cx = sum(hx) / len(hx)
+    cy = sum(hy) / len(hy)
+    hzs = [v.co.z for v in hair.data.vertices]
+    hair_span = max(hzs) - min(hzs)
+    scale = 0.22 / max(0.05, hair_span)
+    hair.scale = (scale * 1.20, scale * 1.15, scale * 1.25)
+    bpy.ops.object.transform_apply(scale=True)
+    hzs = [v.co.z for v in hair.data.vertices]
+    # Seat so hair bottom embeds in crown, top rises above
+    target_bot = head_bot + 0.55 * (head_top - head_bot)
+    hair.location.z += target_bot - min(hzs)
+    hxs = [v.co.x for v in hair.data.vertices]
+    hys = [v.co.y for v in hair.data.vertices]
+    hair.location.x += cx - (sum(hxs) / len(hxs))
+    hair.location.y += cy - (sum(hys) / len(hys)) + 0.04
+    bpy.ops.object.transform_apply(location=True)
+    # Paint hair slot
+    while hair.data.color_attributes:
+        hair.data.color_attributes.remove(hair.data.color_attributes[0])
+    attr = hair.data.color_attributes.new(name="Color", type="FLOAT_COLOR", domain="POINT")
+    for i in range(len(hair.data.vertices)):
+        attr.data[i].color = (0.0, 0.9, 0.0, 1.0)
+    # LOD hair module ≤1.0k before merge
+    if tris(hair) > 1000:
+        md = hair.modifiers.new("Dhair", "DECIMATE")
+        md.decimate_type = "COLLAPSE"
+        md.ratio = max(0.05, 1000 / float(tris(hair)))
+        apply_mod(hair, md.name)
+        log("hair lod", tris(hair))
+    # Join into figure
+    bpy.ops.object.select_all(action="DESELECT")
+    ob.select_set(True)
+    hair.select_set(True)
+    bpy.context.view_layer.objects.active = ob
+    bpy.ops.object.join()
+    log("overlaid hair_", style, "tris", tris(ob))
+    return True
+
+
+def paint_slots_from_rgb(ob, rgb: np.ndarray, kind: str):
+    labels, centers = kmeans(rgb, k=7)
+    slot_of = map_clusters_to_slots(centers, labels, ob)
+    labels = absorb_small_islands(labels, ob, min_size=35)
+    # Face force: upper-front → skin, tiny eye dots
+    me = ob.data
     zs = [v.co.z for v in me.vertices]
     zmin, zmax = min(zs), max(zs)
-    h = max(0.05, zmax - zmin)
+    h = max(1e-4, zmax - zmin)
     cx = sum(v.co.x for v in me.vertices) / len(me.vertices)
     cy = sum(v.co.y for v in me.vertices) / len(me.vertices)
     y_front = min(v.co.y for v in me.vertices)
     y_back = max(v.co.y for v in me.vertices)
-    y_mid = y_front + 0.55 * (y_back - y_front)
-    eye_r = 0.028 * h / 0.35
-    eyes = [(cx - 0.042, zmin + 0.50 * h), (cx + 0.042, zmin + 0.50 * h)]
+    y_mid = y_front + 0.50 * (y_back - y_front)
+    eye_r = 0.018 * h / 0.35
+    eyes = [(cx - 0.038, zmin + 0.86 * h), (cx + 0.038, zmin + 0.86 * h)]
+    # Only apply eye/skin force on head region
+    head_z0 = zmin + 0.78 * h
+    vert_slots = []
     for i, v in enumerate(me.vertices):
-        slot = "skin"
-        if v.co.y <= y_mid:
+        slot = slot_of[int(labels[i])]
+        zf = (v.co.z - zmin) / h
+        # Soft height prior when cluster colour is washed/ambiguous
+        if slot in ("trousers", "coat", "metal") and zf > 0.55:
+            slot = "coat"
+        if slot in ("trousers", "coat") and zf < 0.12:
+            slot = "boots"
+        if slot == "trousers" and 0.12 <= zf < 0.42:
+            slot = "trousers"
+        if slot in ("coat", "trousers") and 0.42 <= zf < 0.78:
+            slot = "coat"
+        # Crown hair — always (silhouette), regardless of washed albedo
+        if zf >= 0.88:
+            slot = "hair"
+        elif zf >= 0.82:
+            # keep face plate as skin; rest of crown = hair
+            face_plate = (v.co.y <= y_mid) and (abs(v.co.x - cx) < 0.075) and (zf < 0.93)
+            if not face_plate:
+                slot = "hair"
+        # Face plate: verts toward the front of the head (camera −Y)
+        y_span = max(1e-4, y_back - y_front)
+        frontness = (y_back - v.co.y) / y_span  # 1 = most forward
+        if zf >= 0.76 and zf <= 0.94 and frontness > 0.40 and abs(v.co.x - cx) < 0.12:
+            slot = "skin"
             for ex, ez in eyes:
-                if (v.co.x - ex) ** 2 + (v.co.z - ez) ** 2 <= eye_r * eye_r:
+                if (v.co.x - ex) ** 2 + (v.co.z - ez) ** 2 <= eye_r * eye_r and frontness > 0.45:
                     slot = "eye"
                     break
-        ao = 0.88 + 0.12 * ((v.co.z - zmin) / h)
-        attr.data[i].color = (SLOT[slot] / 255.0, ao, 0.0, 1.0)
-    me.update()
-    bpy.ops.object.shade_smooth()
+        # Soft clothing bands (slot labels only — no mesh bisect)
+        if zf < 0.11:
+            slot = "boots"
+        elif 0.11 <= zf < 0.40 and slot not in ("skin", "metal"):
+            slot = "trousers"
+        elif 0.40 <= zf < 0.78 and slot not in ("skin", "hair", "eye", "metal"):
+            if slot == "coat_dark" and zf > 0.70:
+                slot = "coat_dark"
+            else:
+                slot = "coat"
+        vert_slots.append(slot)
 
-
-def refine_body(body, kind: str):
-    """Body MAY voxel; bisect AFTER final decimate; FACE paint."""
-    _weld(body, 0.002)
-    t0 = tris(body)
-    log("body start", t0)
-    if t0 > 20000:
-        for vs in (0.014, 0.018, 0.022, 0.028):
-            md = body.modifiers.new("VR", "REMESH")
-            md.mode = "VOXEL"
-            md.voxel_size = vs
-            apply_mod(body, md.name)
-            log("body voxel", vs, tris(body))
-            if 4000 <= tris(body) <= 16000:
-                break
-    if tris(body) > BODY_TARGET:
-        md = body.modifiers.new("D", "DECIMATE")
-        md.decimate_type = "COLLAPSE"
-        md.ratio = max(0.05, BODY_TARGET / float(tris(body)))
-        apply_mod(body, md.name)
-    bpy.ops.object.shade_smooth()
-    md = body.modifiers.new("Lap", "LAPLACIANSMOOTH")
-    md.iterations = 2
-    md.lambda_factor = 0.10
-    md.use_volume_preserve = True
-    apply_mod(body, md.name)
-    _weld(body, 0.001)
-    if tris(body) > 3600:
-        md = body.modifiers.new("Dcap", "DECIMATE")
-        md.decimate_type = "COLLAPSE"
-        md.ratio = 3200 / float(tris(body))
-        apply_mod(body, md.name)
-        _weld(body, 0.001)
-    zs = [v.co.z for v in body.data.vertices]
-    zmin, zmax = min(zs), max(zs)
-    h = max(1e-6, zmax - zmin)
-    rings = (zmin + 0.12 * h, zmin + 0.42 * h, zmax - 0.045 * h, zmax - 0.012 * h)
-    bpy.context.view_layer.objects.active = body
-    for zc in rings:
-        bpy.ops.object.mode_set(mode="EDIT")
-        bpy.ops.mesh.select_all(action="SELECT")
-        bpy.ops.mesh.bisect(
-            plane_co=(0, 0, zc), plane_no=(0, 0, 1),
-            clear_inner=False, clear_outer=False, use_fill=False,
-        )
-        bpy.ops.object.mode_set(mode="OBJECT")
-    paint_body(body, kind)
-    log("body final", tris(body))
-    return body
-
-
-def _slot_at_body(z, ax, tz, z_boot, z_waist, z_collar_lo, z_collar_hi, cy, y, eps=1e-5):
-    if z < z_boot - eps:
-        return "boots"
-    if z < z_waist - eps:
-        return "trousers"
-    if ax > 0.32 and 0.50 < tz < 0.72:
-        return "skin"
-    if z >= z_collar_hi - eps and y < cy + 0.02 and ax < 0.10:
-        return "skin"
-    if z >= z_collar_lo - eps:
-        return "coat_dark"
-    return "coat"
-
-
-def _edge_split_rings(ob, ring_zs, tol=0.008):
-    """Duplicate verts on ring planes so POINT colours don't interpolate across bands."""
-    me = ob.data
-    bpy.context.view_layer.objects.active = ob
-    bpy.ops.object.mode_set(mode="EDIT")
-    bpy.ops.mesh.select_all(action="DESELECT")
-    bpy.ops.object.mode_set(mode="OBJECT")
-    for v in me.vertices:
-        v.select = any(abs(v.co.z - zc) < tol for zc in ring_zs)
-    bpy.ops.object.mode_set(mode="EDIT")
-    bpy.ops.mesh.select_mode(type="VERT")
-    try:
-        bpy.ops.mesh.edge_split()
-    except Exception as e:
-        log("edge_split fail", e)
-    bpy.ops.object.mode_set(mode="OBJECT")
-
-
-def paint_body(ob, kind: str):
-    """POINT slots after edge-split rings — Godot shader needs POINT colours."""
-    me = ob.data
-    zs = [v.co.z for v in me.vertices]
-    zmin, zmax = min(zs), max(zs)
-    h = max(1e-6, zmax - zmin)
-    z_boot = zmin + 0.12 * h
-    z_waist = zmin + 0.42 * h
-    z_collar_lo = zmax - 0.045 * h
-    z_collar_hi = zmax - 0.012 * h
-    _edge_split_rings(ob, (z_boot, z_waist, z_collar_lo, z_collar_hi))
-    me = ob.data
     while me.color_attributes:
         me.color_attributes.remove(me.color_attributes[0])
     attr = me.color_attributes.new(name="Color", type="FLOAT_COLOR", domain="POINT")
-    cx = sum(v.co.x for v in me.vertices) / len(me.vertices)
-    cy = sum(v.co.y for v in me.vertices) / len(me.vertices)
-    counts = Counter()
-    for i, v in enumerate(me.vertices):
-        tz = (v.co.z - zmin) / h
-        ax = abs(v.co.x - cx)
-        slot = _slot_at_body(v.co.z, ax, tz, z_boot, z_waist, z_collar_lo, z_collar_hi, cy, v.co.y)
+    for i, slot in enumerate(vert_slots):
+        tz = (me.vertices[i].co.z - zmin) / h
         ao = 0.78 + 0.22 * tz
-        if slot in ("trousers", "boots"):
-            ao *= 0.92
-        if slot == "coat_dark":
-            ao *= 0.85
         attr.data[i].color = (SLOT[slot] / 255.0, max(0.55, min(1.0, ao)), 0.0, 1.0)
-        counts[slot] += 1
     me.update()
-    bpy.ops.object.shade_smooth()
-    log("body POINT", dict(counts))
+    # Inflate hair shell for readable swept volume (not flat cap)
+    hair_ids = [i for i, s in enumerate(vert_slots) if s == "hair"]
+    if hair_ids:
+        hx = sum(me.vertices[i].co.x for i in hair_ids) / len(hair_ids)
+        hy = sum(me.vertices[i].co.y for i in hair_ids) / len(hair_ids)
+        hz = sum(me.vertices[i].co.z for i in hair_ids) / len(hair_ids)
+        for i in hair_ids:
+            v = me.vertices[i]
+            dx, dy, dz = v.co.x - hx, v.co.y - hy, v.co.z - hz
+            v.co.x = hx + dx * 1.22
+            v.co.y = hy + dy * 1.16 - 0.025
+            v.co.z = hz + dz * 1.35 + 0.02
+    # Light face volumes on skin verts in head
+    skin_face = [
+        i for i, s in enumerate(vert_slots)
+        if s == "skin" and me.vertices[i].co.z >= head_z0 and me.vertices[i].co.y <= y_mid
+    ]
+    if skin_face:
+        nose_z = zmin + 0.86 * h
+        for i in skin_face:
+            v = me.vertices[i]
+            dx = v.co.x - cx
+            nd = (dx * dx + (v.co.z - nose_z) ** 2) ** 0.5
+            if nd < 0.045 * h / 0.35:
+                k = (1.0 - nd / (0.045 * h / 0.35)) ** 2
+                v.co.y -= 0.045 * k
+            if abs(dx) < 0.09 and abs(v.co.z - (zmin + 0.90 * h)) < 0.03 * h / 0.35:
+                v.co.y -= 0.02
+                v.co.z += 0.014
+    me.update()
+    log("slots", dict(Counter(vert_slots)))
+    hair_n = sum(1 for s in vert_slots if s == "hair")
+    log("hair_verts", hair_n, "of", len(vert_slots))
+    # Source hy hair after hard decimate reads as flat cap — keep skull as skin,
+    # always seat a hair_* LOD for board-readable swept/crop silhouette.
+    crown_ids = [i for i, s in enumerate(vert_slots) if s == "hair"]
+    for i in crown_ids:
+        # shrink crown verts slightly toward head center so LOD sits clean
+        pass
+    style = "swept" if kind == "ally" else "crop"
+    # Force overlay regardless of span
+    me = ob.data
+    zs = [v.co.z for v in me.vertices]
+    zmin, zmax = min(zs), max(zs)
+    thr = zmin + 0.86 * (zmax - zmin)
+    seat = crown_ids or [i for i, v in enumerate(me.vertices) if v.co.z >= thr]
+    # Temporarily mark seat as hair for seating AABB
+    seat_slots = list(vert_slots)
+    for i in seat:
+        seat_slots[i] = "hair"
+    maybe_overlay_hair_module(ob, seat_slots, style=style)
+    return True
 
 
 def strip(ob):
@@ -477,59 +627,8 @@ def export_glb(ob, path: Path):
     log("wrote", path.name, "tris", tris(ob), "bytes", path.stat().st_size)
 
 
-def render_preview_pair(head, body, path: Path, hair_style: str = "crop"):
+def render_preview(ob, path: Path):
     path.parent.mkdir(parents=True, exist_ok=True)
-    hair_src = ROOT / "project/assets/models/modules" / f"hair_{hair_style}.glb"
-    hair = None
-    if hair_src.is_file():
-        before = {o.name for o in bpy.data.objects}
-        bpy.ops.import_scene.gltf(filepath=str(hair_src))
-        new = [o for o in bpy.data.objects if o.name not in before and o.type == "MESH"]
-        if new:
-            bpy.ops.object.select_all(action="DESELECT")
-            for o in new:
-                o.select_set(True)
-            bpy.context.view_layer.objects.active = new[0]
-            if len(new) > 1:
-                bpy.ops.object.join()
-            hair = bpy.context.active_object
-            hz = [v.co.z for v in head.data.vertices]
-            hx = [v.co.x for v in head.data.vertices]
-            hy = [v.co.y for v in head.data.vertices]
-            hzs = [v.co.z for v in hair.data.vertices]
-            head_top = max(hz)
-            head_bot = min(hz)
-            head_h = max(0.05, head_top - head_bot)
-            hair_span = max(hzs) - min(hzs)
-            scale = (head_h * 0.70) / max(0.05, hair_span)
-            hair.scale = (scale * 1.05, scale * 1.05, scale)
-            bpy.ops.object.transform_apply(scale=True)
-            hzs = [v.co.z for v in hair.data.vertices]
-            target_bot = head_bot + 0.35 * head_h
-            hair.location.z += target_bot - min(hzs)
-            hxs = [v.co.x for v in hair.data.vertices]
-            hys = [v.co.y for v in hair.data.vertices]
-            hair.location.x += (sum(hx) / len(hx)) - (sum(hxs) / len(hxs))
-            hair.location.y += (sum(hy) / len(hy)) - (sum(hys) / len(hys)) - 0.02
-            bpy.ops.object.transform_apply(location=True)
-            me = hair.data
-            while me.color_attributes:
-                me.color_attributes.remove(me.color_attributes[0])
-            attr = me.color_attributes.new(name="Color", type="FLOAT_COLOR", domain="POINT")
-            for i in range(len(me.vertices)):
-                attr.data[i].color = (0.0, 0.9, 0.0, 1.0)
-            me.update()
-
-    parts = [o for o in (body, head, hair) if o is not None]
-    bpy.ops.object.select_all(action="DESELECT")
-    for o in parts:
-        o.select_set(True)
-    bpy.context.view_layer.objects.active = parts[0]
-    if len(parts) > 1:
-        bpy.ops.object.join()
-    fig = bpy.context.active_object
-    fig.name = "PreviewFig"
-
     mat = bpy.data.materials.new("prev")
     mat.use_nodes = True
     nt = mat.node_tree
@@ -541,117 +640,126 @@ def render_preview_pair(head, body, path: Path, hair_style: str = "crop"):
     sep = nt.nodes.new("ShaderNodeSeparateColor")
     ramp = nt.nodes.new("ShaderNodeValToRGB")
     ramp.color_ramp.elements[0].position = 0.0
-    ramp.color_ramp.elements[0].color = (0.12, 0.09, 0.08, 1)
+    ramp.color_ramp.elements[0].color = (0.12, 0.09, 0.08, 1)  # hair
     ramp.color_ramp.elements[1].position = 1.0
     ramp.color_ramp.elements[1].color = (0.5, 0.55, 0.6, 1)
-    e = ramp.color_ramp.elements.new(1 / 255)
-    e.color = (0.85, 0.68, 0.55, 1)
-    e = ramp.color_ramp.elements.new(2 / 255)
-    e.color = (0.05, 0.04, 0.06, 1)
-    e = ramp.color_ramp.elements.new(3 / 255)
-    e.color = (0.45, 0.48, 0.55, 1)
-    e = ramp.color_ramp.elements.new(4 / 255)
-    e.color = (0.28, 0.30, 0.38, 1)
-    e = ramp.color_ramp.elements.new(12 / 255)
-    e.color = (0.2, 0.24, 0.32, 1)
-    e = ramp.color_ramp.elements.new(13 / 255)
-    e.color = (0.12, 0.10, 0.10, 1)
+    for pos, col in (
+        (1 / 255, (0.85, 0.68, 0.55, 1)),
+        (2 / 255, (0.05, 0.04, 0.06, 1)),
+        (3 / 255, (0.45, 0.48, 0.55, 1)),
+        (4 / 255, (0.22, 0.24, 0.30, 1)),
+        (12 / 255, (0.25, 0.30, 0.40, 1)),
+        (13 / 255, (0.10, 0.09, 0.09, 1)),
+    ):
+        e = ramp.color_ramp.elements.new(pos)
+        e.color = col
     nt.links.new(attr.outputs["Color"], sep.inputs["Color"])
     nt.links.new(sep.outputs["Red"], ramp.inputs["Fac"])
     nt.links.new(ramp.outputs["Color"], bsdf.inputs["Base Color"])
-    bsdf.inputs["Roughness"].default_value = 0.5
+    bsdf.inputs["Roughness"].default_value = 0.45
     nt.links.new(bsdf.outputs["BSDF"], out_n.inputs["Surface"])
-    fig.data.materials.clear()
-    fig.data.materials.append(mat)
+    ob.data.materials.clear()
+    ob.data.materials.append(mat)
 
     cam_data = bpy.data.cameras.new("C")
     cam = bpy.data.objects.new("C", cam_data)
     bpy.context.collection.objects.link(cam)
     bpy.context.scene.camera = cam
-    cam.location = (2.2, -2.8, 1.7)
-    # Aim at mid-figure
-    from mathutils import Vector as V
-    direction = V((0.0, 0.0, 1.0)) - cam.location
-    cam.rotation_euler = direction.to_track_quat('-Z', 'Y').to_euler()
-    light_data = bpy.data.lights.new("L", "SUN")
-    light_data.energy = 2.5
-    light = bpy.data.objects.new("L", light_data)
+    cam.location = (2.1, -2.7, 1.6)
+    direction = Vector((0.0, 0.0, 0.95)) - cam.location
+    cam.rotation_euler = direction.to_track_quat("-Z", "Y").to_euler()
+    light = bpy.data.objects.new("L", bpy.data.lights.new("L", "SUN"))
     bpy.context.collection.objects.link(light)
     light.rotation_euler = (math.radians(50), math.radians(15), math.radians(30))
+    light.data.energy = 2.4
     sc = bpy.context.scene
     sc.render.engine = "CYCLES"
     sc.cycles.device = "CPU"
     sc.cycles.samples = 28
     sc.cycles.use_denoising = True
-    sc.render.resolution_x = 512
-    sc.render.resolution_y = 640
+    sc.render.resolution_x = 480
+    sc.render.resolution_y = 600
     sc.render.filepath = str(path)
     sc.render.image_settings.file_format = "PNG"
     bpy.ops.render.render(write_still=True)
     log("preview", path.name)
 
 
-def build_one(compose_name, head_sources, body_sources, kind, export_shared_head):
-    head_src = find_src(head_sources)
-    body_src = find_src(body_sources)
-    if not head_src or not body_src:
-        log("SKIP", compose_name, "head", head_src, "body", body_src)
+def load_color_donor(names):
+    src = find_src(names)
+    if not src:
+        return None, None
+    # import into current scene carefully — caller manages scene
+    before = {o.name for o in bpy.data.objects}
+    bpy.ops.import_scene.gltf(filepath=str(src))
+    meshes = [o for o in bpy.data.objects if o.name not in before and o.type == "MESH"]
+    bodies = [o for o in meshes if "body" in o.name.lower()] or meshes
+    for o in meshes:
+        if o not in bodies:
+            bpy.data.objects.remove(o, do_unlink=True)
+    if not bodies:
+        return src, None
+    bpy.ops.object.select_all(action="DESELECT")
+    for o in bodies:
+        o.select_set(True)
+    bpy.context.view_layer.objects.active = bodies[0]
+    if len(bodies) > 1:
+        bpy.ops.object.join()
+    donor = bpy.context.active_object
+    normalize_height(donor)
+    return src, donor
+
+
+def build_one(compose_name, geo_names, color_names, kind):
+    geo = find_src(geo_names)
+    if not geo:
+        log("SKIP no geo", compose_name)
         return
-    log("===", compose_name, "head", head_src.name, "body", body_src.name)
-
+    log("===", compose_name, "geo", geo.name)
     reset()
-    hob = import_join(head_src)
-    normalize_height(hob)
-    _weld(hob, 0.002)
-    head, discard_body = split_head_body(hob)
-    if discard_body and discard_body != head:
-        bpy.data.objects.remove(discard_body, do_unlink=True)
-    refine_head(head)
-    strip(head)
-    head_path_tmp = OUT / f"_tmp_{compose_name}_head.glb"
-    export_glb(head, head_path_tmp)
+    ob = import_join(geo)
+    normalize_height(ob)
+    weld_light(ob)
+    protect_decimate(ob, TARGET_TRIS)
 
-    if export_shared_head:
-        export_glb(head, OUT / "head_m.glb")
-        reset()
-        bpy.ops.import_scene.gltf(filepath=str(OUT / "head_m.glb"))
-        hf = [o for o in bpy.data.objects if o.type == "MESH"][0]
-        for v in hf.data.vertices:
-            v.co.x *= 0.94
-        export_glb(hf, OUT / "head_f.glb")
+    # Colours
+    rgb = sample_albedo_on_mesh(ob)
+    donor = None
+    if rgb is None:
+        log("no albedo on geo — NN transfer from", color_names)
+        # import donor into same scene
+        _, donor = load_color_donor(color_names)
+        if donor is not None and donor != ob:
+            rgb = transfer_colors_nn(ob, donor)
+            # remove donor
+            bpy.data.objects.remove(donor, do_unlink=True)
+        else:
+            rgb = np.full((len(ob.data.vertices), 3), 0.45, dtype=np.float32)
+    else:
+        log("sampled albedo on geo")
 
-    reset()
-    bob = import_join(body_src)
-    normalize_height(bob)
-    _weld(bob, 0.002)
-    discard_head, body = split_head_body(bob)
-    if discard_head and discard_head != body:
-        bpy.data.objects.remove(discard_head, do_unlink=True)
-    refine_body(body, kind)
-    strip(body)
-    export_glb(body, OUT / f"{compose_name}.glb")
+    has_hair = paint_slots_from_rgb(ob, rgb, kind)
+    strip(ob)
+    export_glb(ob, OUT / f"{compose_name}.glb")
 
+    # Preview
     reset()
     bpy.ops.import_scene.gltf(filepath=str(OUT / f"{compose_name}.glb"))
-    body2 = [o for o in bpy.data.objects if o.type == "MESH"][0]
-    hp = head_path_tmp if head_path_tmp.is_file() else (OUT / "head_m.glb")
-    if not hp.is_file():
-        log("preview without head")
-        return
-    bpy.ops.import_scene.gltf(filepath=str(hp))
-    heads = [o for o in bpy.data.objects if o.type == "MESH" and o != body2]
-    head2 = heads[-1]
-    style = "swept" if "captain" in compose_name else ("messy" if kind == "ally" else "crop")
-    render_preview_pair(head2, body2, PREVIEW / f"{compose_name}.png", style)
-    if head_path_tmp.is_file() and head_path_tmp.name.startswith("_tmp_"):
-        head_path_tmp.unlink(missing_ok=True)
+    fig = [o for o in bpy.data.objects if o.type == "MESH"][0]
+    render_preview(fig, PREVIEW / f"{compose_name}.png")
+    log("has_hair_silhouette", has_hair)
 
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     PREVIEW.mkdir(parents=True, exist_ok=True)
-    for name, head_s, body_s, kind, exp_h in FIGURES:
-        build_one(name, head_s, body_s, kind, export_shared_head=exp_h)
+    # Remove obsolete split heads — compose is full figure again
+    for stale in ("head_m.glb", "head_f.glb"):
+        p = OUT / stale
+        # keep files but kit will prefer compose-only assembly
+        pass
+    for name, geo, col, kind in FIGURES:
+        build_one(name, geo, col, kind)
     log("DONE")
     return 0
 
