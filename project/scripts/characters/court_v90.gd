@@ -113,12 +113,13 @@ static func news_events() -> Array:
 		for ev in house.get("log", []):
 			if typeof(ev) != TYPE_DICTIONARY:
 				continue
+			var nat_zh := str(CKBloodline.nation(str(nid)).get("name", nid))
 			out.append({
 				"year": int(ev.get("year", 0)),
 				"kind": str(ev.get("kind", "")),
-				"text": str(ev.get("text", "")),
+				"text": _dedupe_news_text(nat_zh, str(ev.get("text", ""))),
 				"nation": str(nid),
-				"nation_zh": str(CKBloodline.nation(str(nid)).get("name", nid)),
+				"nation_zh": nat_zh,
 				"crisis": crisis,
 			})
 	out.sort_custom(func(a, b): return int(a["year"]) > int(b["year"]))
@@ -372,6 +373,33 @@ static func _given(nid: String, sex: String, n: int) -> String:
 	var arr: Array = bank.get(nid, ["无名"])
 	return str(arr[n % arr.size()]) + ("娘" if sex == "f" and n == 0 else "")
 
+
+## Log lines already name the court; strip the nation prefix from member display names.
+static func _log_name(nid: String, full: String) -> String:
+	var nn := str(CKBloodline.nation(nid).get("name", nid))
+	var nm := str(full)
+	if nn != "" and nm.begins_with(nn):
+		return nm.substr(nn.length())
+	return nm
+
+## Old saves may already store "灰烬邦 添丁 灰烬邦衡"; clean on read.
+static func _dedupe_news_text(nat_zh: String, text: String) -> String:
+	if nat_zh == "" or text == "":
+		return text
+	var mids: PackedStringArray = [
+		" " + "\u6dfb\u4e01" + " ",
+		" " + "\u4e3a\u65b0\u541b\u914d\u5a5a" + " ",
+		"\u6d41\u88d4\u5f52\u56fd\uff1a",
+	]
+	for mid in mids:
+		var dbl: String = nat_zh + str(mid) + nat_zh
+		if text.contains(dbl):
+			text = text.replace(dbl, nat_zh + str(mid))
+	var spaced: String = nat_zh + " " + nat_zh
+	if text.contains(spaced):
+		text = text.replace(spaced, nat_zh + " ")
+	return text
+
 static func _member(nid: String, idx: int, sex: String, age: int, royal: bool, rng: RandomNumberGenerator) -> Dictionary:
 	var nat := CKBloodline.nation(nid)
 	var line := str(nat.get("royal", ""))
@@ -452,7 +480,7 @@ static func _ensure_spouse(house: Dictionary, monarch: Dictionary, nid: String, 
 	monarch["spouse_id"] = made["id"]
 	members.append(made)
 	house["members"] = members
-	var line := "%s 为新君配婚 %s。" % [CKBloodline.nation(nid).get("name", nid), made.get("name", "")]
+	var line := "%s 为新君配婚 %s。" % [CKBloodline.nation(nid).get("name", nid), _log_name(nid, str(made.get("name", "")))]
 	if typeof(house.get("log")) != TYPE_ARRAY:
 		house["log"] = []
 	house["log"].append({"year": year, "kind": "marriage", "text": line})
@@ -482,7 +510,7 @@ static func tick(state: Dictionary, year: int) -> Dictionary:
 			if die:
 				m["alive"] = false
 				living -= 1
-				var line := "%s %s 辞世（%d）。" % [CKBloodline.nation(nid).get("name", nid), m.get("name", ""), age]
+				var line := "%s %s 辞世（%d）。" % [CKBloodline.nation(nid).get("name", nid), _log_name(nid, str(m.get("name", ""))), age]
 				house["log"].append({"year": year, "kind": "death", "text": line})
 				rumors.push_front(line)
 		var monarch: Dictionary = _find_member(house, str(house.get("monarch", "")))
@@ -537,7 +565,7 @@ static func tick(state: Dictionary, year: int) -> Dictionary:
 			house["monarch"] = recalled["id"]
 			house["members"] = members
 			living = 2
-			var back := "%s流裔归国：%s 承灯未灭的王脉。" % [CKBloodline.nation(nid).get("name", nid), recalled.get("name", "")]
+			var back := "%s流裔归国：%s 承灯未灭的王脉。" % [CKBloodline.nation(nid).get("name", nid), _log_name(nid, str(recalled.get("name", "")))]
 			house["log"].append({"year": year, "kind": "recall", "text": back})
 			house["recall_total"] = int(house.get("recall_total", 0)) + 1
 			rumors.push_front(back)
@@ -565,7 +593,7 @@ static func tick(state: Dictionary, year: int) -> Dictionary:
 				baby["parent_ids"] = [str(fa.get("id", "")), str(mo.get("id", ""))]
 				baby["age"] = 0
 				members.append(baby)
-				var born := "%s 添丁 %s。" % [CKBloodline.nation(nid).get("name", nid), baby["name"]]
+				var born := "%s 添丁 %s。" % [CKBloodline.nation(nid).get("name", nid), _log_name(nid, str(baby["name"]))]
 				house["log"].append({"year": year, "kind": "birth", "text": born})
 				rumors.push_front(born)
 		CKSchemes.record_year(house, str(nid), year)

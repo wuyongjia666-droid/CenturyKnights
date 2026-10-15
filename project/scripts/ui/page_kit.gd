@@ -10,6 +10,9 @@ const BOTTOM := 676.0   ## last content pixel above the footer / feedback line
 const PAD := 42.0
 
 ## Top bar, page head, optional desktop footer. Back goes through CKNav (one back action).
+## HEAD_Y sits below the 56px StitchTopBar so Chinese titles never stack onto CENTURY KNIGHTS.
+const HEAD_Y := 64.0
+
 static func shell(page: Control, context: String, eyebrow: String, title: String, desc: String = "", theme: String = "") -> void:
 	## theme "none": the page already painted its own backdrop (UIKit.make_themed_bg(self, ...)).
 	page.set_meta("ck_page_kit", true)  # MobileLayout.center_kit_page centres the 1280 grid on wide phones
@@ -18,21 +21,26 @@ static func shell(page: Control, context: String, eyebrow: String, title: String
 	elif theme != "none":
 		UIKit.make_themed_bg(page, theme)
 	UIKit.top_bar(page, context, [[Locale.t("lb_chip_date"), Calendar.label(), UIKit.TEXT_DIM]], Locale.t("btn_back"), func(): back(page))
-	var head := UIKit.page_head(page, PAD, 50, eyebrow, title, "", "", "", 22)
+	var head := UIKit.page_head(page, PAD, HEAD_Y, eyebrow, title, "", "", "", 22)
 	head.name = "PageHead"
+	head.set_meta("font_floor_exempt", true)
 	if desc != "":
-		var tl := head.get_child(1).get_child(0) as Label
-		var x := PAD + (tl.get_minimum_size().x if tl != null else 160.0) + 24.0
+		var th := head.get_child(1) as HBoxContainer
 		var d := UIKit.body_label(desc, UIKit.TEXT_DIM, 12)
 		d.name = "PageDesc"
 		d.autowrap_mode = TextServer.AUTOWRAP_OFF
 		d.clip_text = true
 		d.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		d.position = Vector2(x, 104)
-		d.size = Vector2(1280.0 - PAD - x, 18)
 		d.tooltip_text = desc
 		d.mouse_filter = Control.MOUSE_FILTER_PASS
-		page.add_child(d)
+		d.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		d.custom_minimum_size = Vector2(minf(520.0, 1280.0 - PAD * 2.0 - 220.0), 18)
+		if th != null:
+			th.add_child(d)
+		else:
+			d.position = Vector2(PAD + 200.0, HEAD_Y + 40.0)
+			d.size = Vector2(800, 18)
+			page.add_child(d)
 	if touch():
 		var bb := page.find_child("BackButton", true, false) as Button
 		if bb != null:
@@ -231,11 +239,19 @@ static func phone_fill(page: Control) -> void:
 	var bar := page.find_child("StitchTopBar", true, false) as Control
 	if bar != null and bar.size.x < w - 8.0:
 		MobileLayout.stretch_top_bar(bar, w - bar.size.x)
+	# Keep Chinese title clear of the CENTURY KNIGHTS brand line in the top bar.
+	var head := page.find_child("PageHead", true, false) as Control
+	if head != null and bar != null:
+		var clear_y := bar.position.y + bar.size.y + 6.0
+		if head.position.y < clear_y:
+			head.position.y = clear_y
 	var desc := page.find_child("PageDesc", true, false) as Label
 	if desc != null:
-		desc.size.x = maxf(200.0, w - desc.position.x - PAD)
+		# PageDesc lives in the title HBox under PageHead — only widen, do not absolute-reposition.
+		desc.custom_minimum_size.x = maxf(desc.custom_minimum_size.x, minf(520.0, w - PAD * 2.0 - 220.0))
 		desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		desc.max_lines_visible = 2
+		desc.clip_text = false
 	var fb := page.find_child("Feedback", true, false) as Control
 	if fb != null:
 		fb.position.x = PAD

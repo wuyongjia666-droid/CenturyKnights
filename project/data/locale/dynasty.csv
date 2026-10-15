@@ -118,7 +118,7 @@ ancestor_card,%s\n%d – %d · %s\n%s\n%s\n%s,%s\n%d - %d · %s\n%s\n%s\n%s
 sui_infirmary_pay,私囊付 6 + 旗库药 1（医舍）,Purse 6 + flag herb 1 (clinic)
 lin_minor,年幼,Minor
 lin_too_young,%s 还小（%d岁）。%d 岁起可早教择路。,%s is too young (%d). Early schooling opens at %d.
-lin_rite_hint,点选子嗣：%d 岁起可「早教择路」（写入族谱，岁课按道路倾向成长）；成年未入队可完成授旗三步。,"Pick an heir: early schooling from age %d (written to the genealogy, yearly lessons follow the path); adults not yet enlisted can take the three-step banner rite."
+lin_rite_hint,左侧点选子嗣（现有 %d 人）。自 %d 岁起可「早教择路」（写入族谱，岁课按道路倾向成长）；成年未入队可完成授旗三步。,"Pick an heir on the left (%d children). Early schooling from age %d (written to the genealogy, yearly lessons follow the path); adults not yet enlisted can take the three-step banner rite."
 gen2_01,族人档案,Kin record
 gen2_02,尚无族人。成婚、生子后，族人会出现在左侧。,No kin yet. Marry and have children and they appear on the left.
 gen2_03,%d岁 · %s,%d · %s
