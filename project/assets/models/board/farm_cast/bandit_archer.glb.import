@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://c708c07db1941"
-path="res://.godot/imported/bandit_archer.glb-708c07db1941034489595b752d8019cc.scn"
+uid="uid://c708c07db2a41"
+path="res://.godot/imported/bandit_archer.glb-3801bfc9769f1d691630bffc43810303.scn"
 
 [deps]
 
 source_file="res://assets/models/board/farm_cast/bandit_archer.glb"
-dest_files=["res://.godot/imported/bandit_archer.glb-708c07db1941034489595b752d8019cc.scn"]
+dest_files=["res://.godot/imported/bandit_archer.glb-3801bfc9769f1d691630bffc43810303.scn"]
 
 [params]
 

@@ -3,13 +3,13 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://c709421f0be7c"
-path="res://.godot/imported/leader_f.glb-709421f0be7c93eb1df260841126144c.scn"
+uid="uid://c71a421f0be7c"
+path="res://.godot/imported/leader_f.glb-0a449a47fdb1ab48906a9782fc075e37.scn"
 
 [deps]
 
 source_file="res://assets/models/board/farm_cast/leader_f.glb"
-dest_files=["res://.godot/imported/leader_f.glb-709421f0be7c93eb1df260841126144c.scn"]
+dest_files=["res://.godot/imported/leader_f.glb-0a449a47fdb1ab48906a9782fc075e37.scn"]
 
 [params]
 

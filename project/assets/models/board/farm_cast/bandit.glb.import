@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://cd12c6c57bdb5"
-path="res://.godot/imported/bandit.glb-d12c6c57bdb5b9299af0c06f4e7ce7c8.scn"
+path="res://.godot/imported/bandit.glb-f4856e7eabe9846a282bb7a22bc79dcc.scn"
 
 [deps]
 
 source_file="res://assets/models/board/farm_cast/bandit.glb"
-dest_files=["res://.godot/imported/bandit.glb-d12c6c57bdb5b9299af0c06f4e7ce7c8.scn"]
+dest_files=["res://.godot/imported/bandit.glb-f4856e7eabe9846a282bb7a22bc79dcc.scn"]
 
 [params]
 
