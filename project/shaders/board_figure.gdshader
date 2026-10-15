@@ -19,6 +19,13 @@ uniform float use_albedo = 0.0;
 // face/fold detail, no hard slot thresholds → no jagged zone edges).
 uniform float grade_mode = 0.0;
 uniform float head_h = 0.865;
+// P1b portrait face decal: x=cx, y=brow y, z=chin y, w=face width (Body-mesh local).
+uniform sampler2D face_tex : source_color, filter_linear_mipmap, repeat_disable;
+uniform vec4 face_box = vec4(0.0, 1.8, 1.6, 0.15);
+uniform float face_zc = 0.0;
+uniform float face_yaw = 0.0;
+uniform float use_face = 0.0;
+uniform float exposure = 1.0;
 uniform float force_slot = -1.0;
 uniform float model_h = 1.85;
 uniform float y_min = 0.0;
@@ -26,10 +33,14 @@ uniform float y_span = 1.85;
 
 varying float v_h01;
 varying vec3 v_mn;
+varying vec3 v_mp;
+varying float v_bnz;
 
 void vertex() {
 	v_h01 = clamp((VERTEX.y - y_min) / max(0.05, y_span), 0.0, 1.0);
 	v_mn = NORMAL;
+	v_mp = CUSTOM0.xyz;
+	v_bnz = CUSTOM0.w;
 }
 
 int classify_albedo(vec3 t, float h01) {
@@ -82,8 +93,9 @@ int classify_albedo(vec3 t, float h01) {
 	return 3;
 }
 
-vec3 grade_albedo(vec4 t4, float h01, vec3 mn) {
+vec3 grade_albedo(vec4 t4, vec4 tc, float h01, vec3 mn) {
 	vec3 t = t4.rgb;
+	float lum_c = dot(tc.rgb, vec3(0.2126, 0.7152, 0.0722));
 	float plain = 1.0 - t4.a;  // unfilled key → plain cloth
 	float lum = dot(t, vec3(0.2126, 0.7152, 0.0722));
 	float warm = t.r - t.b;
@@ -105,7 +117,9 @@ vec3 grade_albedo(vec4 t4, float h01, vec3 mn) {
 	// cloth: luminance → coat_dark..coat ramp (portrait two-tone: grey coat / dark inner)
 	// Narrow ramp: only genuinely dark garment (inner shirt, trousers) goes coat_dark;
 	// baked seam shadows stay coat → no dark blotches on the grey coat.
-	float tone = mix(mix(0.30, 1.0, smoothstep(0.10, 0.42, lum)), 0.90, plain);
+	// coarse mip for cloth tone (no specks); fine texel only nudges ±6 %
+	float tone = mix(mix(0.38, 1.0, smoothstep(0.08, 0.36, lum_c)), 0.90, 1.0 - tc.a);
+	tone = clamp(tone + (lum - lum_c) * 0.25, 0.0, 1.0);
 	vec3 cloth = mix(palette[4].rgb, palette[3].rgb, tone);
 	float boots_w = (1.0 - smoothstep(0.07, 0.12, h01)) * (1.0 - smoothstep(0.35, 0.55, lum));
 	cloth = mix(cloth, palette[13].rgb, boots_w);
@@ -144,7 +158,24 @@ void fragment() {
 	}
 	vec3 base = palette[slot].rgb;
 	if (grade_mode > 0.5 && force_slot < 0.0) {
-		base = grade_albedo(textureLod(albedo_tex, UV, 1.0), v_h01, normalize(v_mn));
+		base = grade_albedo(textureLod(albedo_tex, UV, 1.0), textureLod(albedo_tex, UV, 3.0), v_h01, normalize(v_mn));
+		if (use_face > 0.5) {
+			// undo baked head yaw around the head centre, then planar-project
+			float cy = cos(face_yaw);
+			float sy = sin(face_yaw);
+			vec2 rel = vec2(v_mp.x - face_box.x, v_mp.z - face_zc);
+			vec2 rr = vec2(cy * rel.x - sy * rel.y, sy * rel.x + cy * rel.y);
+			vec2 fuv = vec2(0.5 + rr.x / face_box.w,
+				(face_box.y - v_mp.y) / max(0.001, face_box.y - face_box.z));
+			vec3 mn2 = vec3(0.0, 0.0, v_bnz);
+			float inb = step(0.0, fuv.x) * step(fuv.x, 1.0) * step(0.0, fuv.y) * step(fuv.y, 1.0);
+			float fr = smoothstep(0.15, 0.55, mn2.z) * step(0.0, rr.y);
+			vec4 fd = texture(face_tex, clamp(fuv, 0.0, 1.0));
+			float fw = fd.a * inb * fr;
+			// keep portrait features, pull overall tone to the board skin slot
+			vec3 fc = fd.rgb * mix(vec3(1.0), palette[1].rgb / max(vec3(0.2), vec3(dot(fd.rgb, vec3(0.333)))) * 0.55, 0.25);
+			base = mix(base, fc * 1.08, fw);
+		}
 		ao = 0.96;
 	}
 	float sheen = metal * 0.35;
@@ -170,5 +201,5 @@ void fragment() {
 		float g = dot(col, vec3(0.2126, 0.7152, 0.0722));
 		col = mix(col, vec3(g), 0.60 * dim_amt) * (1.0 - 0.25 * dim_amt);
 	}
-	ALBEDO = col;
+	ALBEDO = col * exposure;
 }

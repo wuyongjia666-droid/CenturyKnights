@@ -183,6 +183,8 @@ static func build(c, team: String, tmpl: String = "") -> Node3D:
 		_ensure_unit_hair(unit, c, team)
 		_ground_and_fit(unit)
 		_apply_board_palette(unit, pal, face, enemy)
+		_apply_face_decal(unit, c, team, tmpl)
+		_attach_outfit_extras(unit, c, team, pal)
 		# Chin +8° (§3.2)
 		unit.rotation_degrees.x = -8.0
 		root.set_meta("ck_source", "unit_model")
@@ -780,11 +782,75 @@ static func _sample_portrait(c) -> Dictionary:
 		if c != null and stem != "":
 			c.set_meta("ck_plate_stem", stem)
 	out["plate_stem"] = stem
+	# Named cast (non-leader): palette straight from their own v8 bust plate.
+	if not bool(c.is_leader) and str(c.cast_key) != "":
+		var pimg := decal_portrait_image(c, "player", "")
+		if pimg != null:
+			_sample_from_image(out, pimg)
+			out["plate_stem"] = "cast_" + str(c.cast_key)
+			return out
 	var row := palette_row_for_stem(stem)
 	if not row.is_empty():
 		_apply_plate_row(out, row)
+	# Leader: garment colours from the portrait the player actually sees (plate rows can
+	# key on a scarf/background and go navy while the painted coat is grey).
+	if bool(c.is_leader):
+		var limg := decal_portrait_image(c, "player", "")
+		if limg != null:
+			var tmp := out.duplicate()
+			_sample_from_image(tmp, limg)
+			for k in ["coat", "coat_dark"]:
+				if tmp.has(k):
+					out[k] = tmp[k]
+		return out
+	if not row.is_empty():
 		return out
 	return out
+
+
+static func _sample_from_image(out: Dictionary, img: Image) -> void:
+	var sm: Image = img.duplicate()
+	sm.resize(48, 60, Image.INTERPOLATE_BILINEAR)
+	var skin := Color(0, 0, 0)
+	var ns := 0
+	var hair := Color(0, 0, 0)
+	var nh := 0
+	var coat := Color(0, 0, 0)
+	var nc := 0
+	var dark := Color(0, 0, 0)
+	var nd := 0
+	for y in 60:
+		for x in range(6, 42):
+			var col := sm.get_pixel(x, y)
+			var lum := 0.2126 * col.r + 0.7152 * col.g + 0.0722 * col.b
+			if y < 33 and _is_skin(col):
+				skin += col
+				ns += 1
+			elif y < 22 and lum < 0.32:
+				hair += col
+				nh += 1
+			elif y > 40:
+				if lum < 0.22:
+					dark += col
+					nd += 1
+				else:
+					coat += col
+					nc += 1
+	if ns > 0:
+		out["skin"] = skin / ns
+	if nh > 0:
+		out["hair"] = hair / nh
+	if nc > 0:
+		out["coat"] = coat / nc
+	if nd > 4:
+		out["coat_dark"] = dark / nd
+	elif nc > 0:
+		out["coat_dark"] = (coat / nc).darkened(0.45)
+	for k in ["skin", "hair", "coat", "coat_dark"]:
+		if out.has(k):
+			var cc: Color = out[k]
+			cc.a = 1.0
+			out[k] = cc
 
 
 static func _chroma(c: Color) -> float:
@@ -1051,3 +1117,391 @@ static func _fill_ellipse(img: Image, cx: float, cy: float, rx: float, ry: float
 			var ny := (y - cy) / ry
 			if nx * nx + ny * ny <= 1.0:
 				img.set_pixel(x, y, col)
+
+
+# ----- #310 P1b: portrait face decal + outfit extras -----
+
+static var _head_cache: Dictionary = {}  # model path -> head box Dictionary
+static var _decal_cache: Dictionary = {}  # portrait key -> ImageTexture
+
+
+static func _find_body_mesh(n: Node) -> MeshInstance3D:
+	if n is MeshInstance3D and str(n.name).to_lower() == "body":
+		return n as MeshInstance3D
+	for ch in n.get_children():
+		var f := _find_body_mesh(ch)
+		if f != null:
+			return f
+	return null
+
+
+## Head / chest box in Body-mesh local space (bind pose), cached per model.
+static func head_box(mi: MeshInstance3D, key: String) -> Dictionary:
+	if _head_cache.has(key):
+		return _head_cache[key]
+	var out := {}
+	var aabb := mi.mesh.get_aabb()
+	var H := aabb.size.y
+	var ytop := aabb.position.y + H
+	var ymin := aabb.position.y
+	var hx: Array[float] = []
+	var hz_max := -1e9
+	var hz_min := 1e9
+	var xs_min := 1e9
+	var xs_max := -1e9
+	var chest_z := -1e9
+	var neck_z := -1e9
+	var verts_all: Array = []
+	for si in mi.mesh.get_surface_count():
+		var arr := mi.mesh.surface_get_arrays(si)
+		if arr.is_empty() or arr[Mesh.ARRAY_VERTEX] == null:
+			continue
+		verts_all.append(arr[Mesh.ARRAY_VERTEX])
+	var sumx := 0.0
+	var cnt := 0
+	for verts in verts_all:
+		for v in (verts as PackedVector3Array):
+			if v.y > ytop - 0.125 * H:
+				sumx += v.x
+				cnt += 1
+	var cx := sumx / maxf(1.0, cnt)
+	for verts in verts_all:
+		for v in (verts as PackedVector3Array):
+			var hy := (v.y - ymin) / H
+			if hy > 0.885 and hy < 0.97:
+				if v.z > hz_max:
+					out["nose_x"] = v.x
+					out["nose_y"] = v.y
+				xs_min = minf(xs_min, v.x)
+				xs_max = maxf(xs_max, v.x)
+				hz_max = maxf(hz_max, v.z)
+				hz_min = minf(hz_min, v.z)
+			if absf(v.x - cx) < 0.045 * H:
+				if hy > 0.66 and hy < 0.78:
+					chest_z = maxf(chest_z, v.z)
+				if hy > 0.82 and hy < 0.86:
+					neck_z = maxf(neck_z, v.z)
+	out["cx"] = cx
+	out["H"] = H
+	out["ymin"] = ymin
+	out["ytop"] = ytop
+	out["head_w"] = clampf(xs_max - xs_min, 0.06 * H, 0.16 * H)
+	out["head_zmax"] = hz_max
+	out["head_zc"] = 0.5 * (hz_max + hz_min)
+	out["chest_z"] = chest_z if chest_z > -1e8 else 0.08 * H
+	out["neck_z"] = neck_z if neck_z > -1e8 else out["chest_z"]
+	# head yaw from nose tip offset (cast rigs often bake a head turn)
+	var nx := float(out.get("nose_x", cx))
+	var depth := maxf(0.01 * H, hz_max - out["head_zc"])
+	out["yaw"] = clampf(atan2(nx - cx, depth), -0.9, 0.9)
+	_head_cache[key] = out
+	return out
+
+
+## Portrait the player actually sees for this unit (same mapping as the comparison cards).
+static func decal_portrait_image(c, team: String, tmpl: String) -> Image:
+	var tex: Texture2D = null
+	if str(team) == "enemy":
+		for p in ["res://assets/art/portraits/%s.webp" % tmpl, "res://assets/art/portraits/bandit.webp"]:
+			if ResourceLoader.exists(p):
+				tex = load(p) as Texture2D
+				break
+	elif c != null and not bool(c.is_leader) and str(c.cast_key) != "":
+		var g := "f" if str(c.gender) == "f" else "m"
+		var nm: String = {"dengying": "hunter", "militia_a": "spear", "militia_b": "guard"}.get(str(c.cast_key), "")
+		var pth := "res://assets/art/portraits/v8_bust_%s_%s.webp" % [g, nm]
+		if nm != "" and ResourceLoader.exists(pth):
+			tex = load(pth) as Texture2D
+	if tex == null and c != null:
+		tex = UnitArt.portrait(c, 256, "large")
+	if tex == null:
+		return null
+	var img := tex.get_image()
+	if img == null:
+		return null
+	img = img.duplicate()
+	if img.is_compressed():
+		img.decompress()
+	img.convert(Image.FORMAT_RGBA8)
+	return img
+
+
+static func _is_skin(col: Color) -> bool:
+	var lum := 0.2126 * col.r + 0.7152 * col.g + 0.0722 * col.b
+	# warm faces (r>g>b) and pale/cool painted faces (hunter: r≈b>g) both qualify;
+	# blue-grey sky / white fur fail on r-g.
+	return (col.r - col.g) > 0.03 and (col.r - col.b) > -0.04 and (col.r - col.b) < 0.45 \
+		and lum > 0.28 and lum < 0.93
+
+
+## Crop the face (brow line → chin) from a portrait by skin-row histogram, feather to alpha.
+static func face_decal_image(img: Image) -> Image:
+	var sw := 96
+	var sh := int(round(96.0 * img.get_height() / maxf(1.0, img.get_width())))
+	var small: Image = img.duplicate()
+	small.resize(sw, sh, Image.INTERPOLATE_BILINEAR)
+	var rows: Array[int] = []
+	var x0s: Array[int] = []
+	var x1s: Array[int] = []
+	for y in range(int(sh * 0.70)):
+		var n := 0
+		var a := sw
+		var b := -1
+		for x in range(int(sw * 0.12), int(sw * 0.88)):
+			if _is_skin(small.get_pixel(x, y)):
+				n += 1
+				a = mini(a, x)
+				b = maxi(b, x)
+		rows.append(n)
+		x0s.append(a)
+		x1s.append(b)
+	var top := -1
+	for y in rows.size():
+		if rows[y] >= 4:
+			top = y
+			break
+	if top < 0:
+		top = int(sh * 0.16)  # fallback: standard bust framing
+	# widest row in the next ~face height = cheekbones
+	var best := top
+	for y in range(top, mini(rows.size(), top + int(sw * 0.30))):
+		if rows[y] > rows[best]:
+			best = y
+	var fw := float(maxi(8, x1s[best] - x0s[best] + 1))
+	var fcx := 0.5 * (x0s[best] + x1s[best])
+	# forehead often hidden by fringe: extend crop upward a little, chin ≈ 1.30 × width
+	# anchor on the widest skin row (cheekbones, just under the eyes) — robust to
+	# fringes/circlets hiding the forehead
+	var fy0 := float(best) - fw * 0.62
+	var fh := fw * 1.38
+	var sc := float(img.get_width()) / sw
+	var r := Rect2i(int((fcx - fw * 0.55) * sc), int(fy0 * sc), int(fw * 1.10 * sc), int(fh * sc))
+	r = r.intersection(Rect2i(0, 0, img.get_width(), img.get_height()))
+	if r.size.x < 8 or r.size.y < 8:
+		return null
+	var crop := img.get_region(r)
+	crop.resize(96, 120, Image.INTERPOLATE_LANCZOS)
+	# Feathered oval alpha; also fade non-skin (hair) texels so the 3D hair stays the hair.
+	for y in 120:
+		for x in 96:
+			var nx := (x - 47.5) / 48.0
+			var ny := (y - 62.0) / 62.0
+			var d := sqrt(nx * nx + ny * ny)
+			var a := clampf((1.0 - d) / 0.28, 0.0, 1.0)
+			var col := crop.get_pixel(x, y)
+			var lum := 0.2126 * col.r + 0.7152 * col.g + 0.0722 * col.b
+			if y < 20 and not _is_skin(col) and lum < 0.30:
+				a *= 0.25  # fringe over forehead: let shader hair show
+			col.a = a
+			crop.set_pixel(x, y, col)
+	crop.generate_mipmaps()
+	return crop
+
+
+static func _apply_face_decal(unit: Node3D, c, team: String, tmpl: String) -> void:
+	var mi := _find_body_mesh(unit)
+	if mi == null or mi.mesh == null:
+		return
+	var mp := str(unit.get_meta("ck_model", ""))
+	var hb := head_box(mi, mp)
+	var pimg := decal_portrait_image(c, team, tmpl)
+	if pimg == null:
+		return
+	var dk := "%s|%d|%d" % [mp, pimg.get_width(), hash(pimg.get_data().slice(0, 4096))]
+	var dtex: ImageTexture = _decal_cache.get(dk)
+	if dtex == null:
+		var dimg := face_decal_image(pimg)
+		if dimg == null:
+			return
+		dtex = ImageTexture.create_from_image(dimg)
+		if _decal_cache.size() > CACHE_CAP:
+			_decal_cache.clear()
+		_decal_cache[dk] = dtex
+	var H: float = hb["H"]
+	var hh := 0.125 * H
+	var box := Vector4(float(hb["cx"]), float(hb["ytop"]) - 0.16 * hh, float(hb["ytop"]) - 1.02 * hh, 0.088 * H)
+	_bake_bind_custom0(mi, mp)
+	for si in mi.mesh.get_surface_count():
+		var m = mi.get_surface_override_material(si)
+		if m is ShaderMaterial:
+			(m as ShaderMaterial).set_shader_parameter("face_tex", dtex)
+			(m as ShaderMaterial).set_shader_parameter("face_box", box)
+			(m as ShaderMaterial).set_shader_parameter("face_zc", float(hb["head_zc"]))
+			(m as ShaderMaterial).set_shader_parameter("face_yaw", float(hb["yaw"]))
+			(m as ShaderMaterial).set_shader_parameter("use_face", 1.0)
+	unit.set_meta("ck_face_decal", true)
+
+
+## Captain: suit-style lapels + key necklace (portrait `v8_hero_leader` / leader genome plate).
+static var _bind_mesh_cache: Dictionary = {}
+
+
+## Bake bind-pose position + normal.z into CUSTOM0 so the face decal projects in bind
+## space and rides the head through skinning/idle anim (VERTEX is post-skin).
+static func _bake_bind_custom0(mi: MeshInstance3D, key: String) -> void:
+	var overrides: Array = []
+	for si in mi.mesh.get_surface_count():
+		overrides.append(mi.get_surface_override_material(si))
+	var nm: ArrayMesh = _bind_mesh_cache.get(key)
+	if nm == null:
+		var src := mi.mesh
+		nm = ArrayMesh.new()
+		for si in src.get_surface_count():
+			var arr := src.surface_get_arrays(si)
+			var verts: PackedVector3Array = arr[Mesh.ARRAY_VERTEX]
+			var norms: PackedVector3Array = arr[Mesh.ARRAY_NORMAL] if arr[Mesh.ARRAY_NORMAL] != null else PackedVector3Array()
+			var cu := PackedFloat32Array()
+			cu.resize(verts.size() * 4)
+			for i in verts.size():
+				cu[i * 4] = verts[i].x
+				cu[i * 4 + 1] = verts[i].y
+				cu[i * 4 + 2] = verts[i].z
+				cu[i * 4 + 3] = norms[i].z if i < norms.size() else 0.0
+			arr[Mesh.ARRAY_CUSTOM0] = cu
+			var fmt := (Mesh.ARRAY_CUSTOM_RGBA_FLOAT << Mesh.ARRAY_FORMAT_CUSTOM0_SHIFT)
+			var bs: Array = src.surface_get_blend_shape_arrays(si) if src is ArrayMesh else []
+			nm.add_surface_from_arrays(src.surface_get_primitive_type(si), arr, bs, {}, fmt)
+			nm.surface_set_material(si, src.surface_get_material(si))
+		_bind_mesh_cache[key] = nm
+	mi.mesh = nm
+	for si in overrides.size():
+		mi.set_surface_override_material(si, overrides[si])
+
+
+static func _attach_outfit_extras(unit: Node3D, c, team: String, pal: Dictionary) -> void:
+	if c == null or str(team) == "enemy" or not bool(c.is_leader):
+		return
+	var mi := _find_body_mesh(unit)
+	if mi == null:
+		return
+	var hb := head_box(mi, str(unit.get_meta("ck_model", "")))
+	var H: float = hb["H"]
+	var y0: float = hb["ymin"]
+	var cx: float = hb["cx"]
+	var cz: float = float(hb["chest_z"]) + 0.006 * H
+	var nz: float = float(hb["neck_z"]) + 0.004 * H
+	var coat: Color = pal.get("coat", Color(0.55, 0.57, 0.62))
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	# Lapel = notched V panel each side (collar → button point), slightly proud of chest.
+	for sgn in [-1.0, 1.0]:
+		var pts := [
+			Vector3(cx + sgn * 0.034 * H, y0 + 0.848 * H, nz),   # 0 collar inner
+			Vector3(cx + sgn * 0.068 * H, y0 + 0.842 * H, nz),   # 1 collar outer
+			Vector3(cx + sgn * 0.092 * H, y0 + 0.772 * H, cz),   # 2 peak
+			Vector3(cx + sgn * 0.074 * H, y0 + 0.756 * H, cz),   # 3 notch
+			Vector3(cx + sgn * 0.046 * H, y0 + 0.640 * H, cz),   # 4 lower outer
+			Vector3(cx + sgn * 0.040 * H, y0 + 0.790 * H, cz),   # 5 inner edge
+			Vector3(cx + sgn * 0.022 * H, y0 + 0.615 * H, cz),   # 6 button
+		]
+		for pi in pts.size():
+			var pp: Vector3 = pts[pi]
+			pts[pi] = Vector3(pp.x, pp.y, _front_z(mi, pp.x, pp.y, 0.03 * H, pp.z) + 0.010 * H)
+		var tris := [[0, 5, 1], [1, 5, 2], [2, 5, 3], [3, 5, 4], [5, 6, 4]]
+		for t in tris:
+			var a: Vector3 = pts[t[0]]
+			var b: Vector3 = pts[t[1]]
+			var d: Vector3 = pts[t[2]]
+			if sgn < 0.0:
+				var tmp := b
+				b = d
+				d = tmp
+			var nrm := (b - a).cross(d - a).normalized()
+			if nrm.z < 0.0:
+				nrm = -nrm
+			for v in [a, b, d, a, d, b]:  # both windings (shader is cull_back)
+				st.set_normal(nrm)
+				st.set_color(Color(3.0 / 255.0, 1.0, 0.0))
+				st.add_vertex(v)
+	# dark inner shirt V between lapels (portrait: black high-neck shirt)
+	var sv := [Vector3(cx - 0.036 * H, y0 + 0.850 * H, 0), Vector3(cx + 0.036 * H, y0 + 0.850 * H, 0), Vector3(cx, y0 + 0.612 * H, 0)]
+	for qi in 3:
+		var q: Vector3 = sv[qi]
+		sv[qi] = Vector3(q.x, q.y, _front_z(mi, q.x, q.y, 0.03 * H, cz) + 0.006 * H)
+	for v2 in [sv[0], sv[1], sv[2], sv[0], sv[2], sv[1]]:
+		st.set_normal(Vector3(0, 0, 1))
+		st.set_color(Color(4.0 / 255.0, 1.0, 0.0))
+		st.add_vertex(v2)
+	var lapel := MeshInstance3D.new()
+	lapel.name = "LapelExtra"
+	lapel.mesh = st.commit()
+	var lm := ShaderMaterial.new()
+	lm.shader = _sh()
+	var lpal := pal.duplicate()
+	lpal["coat"] = coat.lightened(0.10)
+	lm = _palette_mat(lpal, float(unit.get_parent().get_meta("ck_face", 1.0)) if unit.get_parent() else 1.0, false)
+	lm.set_shader_parameter("force_slot", -1.0)
+	lm.set_shader_parameter("use_albedo", 0.0)
+	lm.set_shader_parameter("rim_amt", 0.35)
+	lapel.material_override = lm
+	lapel.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	# Key necklace: V chain + key pendant (metal slot).
+	var st2 := SurfaceTool.new()
+	st2.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var pend := Vector3(cx + 0.004 * H, y0 + 0.700 * H, 0.0)
+	pend.z = _front_z(mi, pend.x, pend.y, 0.02 * H, cz) + 0.014 * H
+	for sgn2 in [-1.0, 1.0]:
+		var top := Vector3(cx + sgn2 * 0.028 * H, y0 + 0.845 * H, 0.0)
+		top.z = _front_z(mi, top.x, top.y, 0.02 * H, nz) + 0.010 * H
+		_add_bar(st2, top, pend + Vector3(0, 0.014 * H, 0), 0.0018 * H)
+	_add_bar(st2, pend + Vector3(0, 0.014 * H, 0), pend - Vector3(0, 0.026 * H, 0), 0.0040 * H)  # key shaft
+	_add_bar(st2, pend + Vector3(-0.007 * H, 0.008 * H, 0), pend + Vector3(0.007 * H, 0.008 * H, 0), 0.0045 * H)  # bow
+	_add_bar(st2, pend - Vector3(0, 0.022 * H, 0), pend - Vector3(-0.008 * H, 0.022 * H, 0), 0.0028 * H)  # bit
+	var neck := MeshInstance3D.new()
+	neck.name = "KeyNecklaceExtra"
+	neck.mesh = st2.commit()
+	var nmm := _palette_mat(pal, 1.0, false)
+	nmm.set_shader_parameter("force_slot", 8.0)
+	nmm.set_shader_parameter("rim_amt", 0.2)
+	neck.material_override = nmm
+	var parent := mi.get_parent()
+	var skel := parent as Skeleton3D
+	if skel != null and skel.find_bone("chest") >= 0:
+		var ba := BoneAttachment3D.new()
+		ba.bone_name = "chest"
+		skel.add_child(ba)
+		var bg: Transform3D = skel.get_bone_global_rest(skel.find_bone("chest"))
+		var off: Transform3D = bg.affine_inverse() * mi.transform
+		for m2 in [lapel, neck]:
+			(m2 as Node3D).transform = off
+			ba.add_child(m2)
+	else:
+		for m3 in [lapel, neck]:
+			(m3 as Node3D).transform = mi.transform
+			parent.add_child(m3)
+	unit.set_meta("ck_outfit_extras", ["lapels", "key_necklace"])
+
+
+static var _vert_cache: Dictionary = {}
+
+
+static func _front_z(mi: MeshInstance3D, x: float, y: float, r: float, fallback: float) -> float:
+	var key := str(mi.mesh.get_instance_id())
+	var verts: PackedVector3Array = _vert_cache.get(key, PackedVector3Array())
+	if verts.is_empty():
+		for si in mi.mesh.get_surface_count():
+			var arr := mi.mesh.surface_get_arrays(si)
+			if not arr.is_empty() and arr[Mesh.ARRAY_VERTEX] != null:
+				verts.append_array(arr[Mesh.ARRAY_VERTEX])
+		_vert_cache[key] = verts
+	var best := -1e9
+	var r2 := r * r
+	for v in verts:
+		var dx := v.x - x
+		var dy := v.y - y
+		if dx * dx + dy * dy < r2 and v.z > best:
+			best = v.z
+	return best if best > -1e8 else fallback
+
+
+static func _add_bar(st: SurfaceTool, a: Vector3, b: Vector3, r: float) -> void:
+	var d := (b - a)
+	var side := d.cross(Vector3(0, 0, 1)).normalized() * r
+	var fwd := Vector3(0, 0, r * 0.8)
+	var quads := [[a - side, a + side, b + side, b - side], [a - side + fwd, a + side + fwd, b + side + fwd, b - side + fwd]]
+	for q in quads:
+		var n := Vector3(0, 0, 1)
+		for idx in [0, 1, 2, 0, 2, 3, 0, 2, 1, 0, 3, 2]:
+			st.set_normal(n)
+			st.set_color(Color(8.0 / 255.0, 1.0, 0.0))
+			st.add_vertex(q[idx])

@@ -118,6 +118,7 @@ func sync(entries: Array, delta: float) -> void:
 			if n == null:
 				continue
 			_world.add_child(n)
+			_board_lift(n, str(u.team) != "enemy")
 			# formal kit: no farm solidify
 			n.set_meta("ck_base_scale", Vector3.ONE)
 			var ap := CKBoardFigure.find_anim(n)
@@ -264,3 +265,28 @@ func _impact(st: Dictionary) -> void:
 		tw.tween_property(q, "position", chest + dir * 0.9 * n.scale.y * 2.0, 0.28).set_ease(Tween.EASE_OUT)
 		tw.tween_property(m, "albedo_color:a", 0.0, 0.28)
 		tw.chain().tween_callback(q.queue_free)
+
+
+## #310 P1b: top-down board camera sees less of the key light than the cards do, and the
+## battlefield is dark — lift exposure and rim a bit (allies more), clamp so coats don't bleach.
+static func _board_lift(n: Node, ally: bool) -> void:
+	if n is GeometryInstance3D:
+		var gi := n as GeometryInstance3D
+		var mats: Array = []
+		if gi.material_override is ShaderMaterial:
+			mats.append(gi.material_override)
+		if gi is MeshInstance3D and (gi as MeshInstance3D).mesh != null:
+			var mi := gi as MeshInstance3D
+			for si in mi.mesh.get_surface_count():
+				var m = mi.get_surface_override_material(si)
+				if m is ShaderMaterial:
+					mats.append(m)
+		for m2 in mats:
+			var sm := m2 as ShaderMaterial
+			sm.set_shader_parameter("exposure", 1.22 if ally else 1.12)
+			# top-down camera puts most of the figure in the wrap shadow: lift shadow floor
+			sm.set_shader_parameter("shadow_mul", Vector3(0.64, 0.66, 0.74) if ally else Vector3(0.55, 0.57, 0.64))
+			var r = sm.get_shader_parameter("rim_amt")
+			sm.set_shader_parameter("rim_amt", minf(0.9, (float(r) if r != null else 0.55) + (0.15 if ally else 0.05)))
+	for ch in n.get_children():
+		_board_lift(ch, ally)

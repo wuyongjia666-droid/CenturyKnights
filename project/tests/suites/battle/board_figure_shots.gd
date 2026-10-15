@@ -50,7 +50,7 @@ func _unit_cards(out: String) -> void:
 	var leader = GameState.get_leader()
 	var jobs := [
 		{"name": "captain", "team": "player", "tmpl": "", "job": "captain", "leader": true},
-		{"name": "hunter", "team": "player", "tmpl": "", "job": "hunter", "leader": false},
+		{"name": "hunter", "team": "player", "tmpl": "", "job": "hunter", "leader": false, "cast": "dengying"},
 		{"name": "bandit_weak", "team": "enemy", "tmpl": "bandit_weak", "job": "", "leader": false},
 		{"name": "bandit", "team": "enemy", "tmpl": "bandit", "job": "", "leader": false},
 		{"name": "bandit_archer", "team": "enemy", "tmpl": "bandit_archer", "job": "", "leader": false},
@@ -65,15 +65,12 @@ func _unit_cards(out: String) -> void:
 			leader.job_id = str(row.job)
 			leader.is_leader = bool(row.leader)
 			# Job cards must resolve outfit_<job>, not cast_leader.
-			leader.cast_key = "leader" if bool(row.leader) else ""
+			leader.cast_key = "leader" if bool(row.leader) else str(row.get("cast", ""))
 		if str(row.team) == "enemy":
 			leader.cast_key = ""
 			leader.is_leader = false
 		CKBoardFigure._pal_cache.clear()
 		var tex: Texture2D = await _render_card(c, str(row.team), str(row.tmpl))
-		leader.job_id = saved_job
-		leader.is_leader = saved_lead
-		leader.cast_key = saved_ck
 		if tex:
 			var img: Image = tex.get_image()
 			if img:
@@ -81,6 +78,9 @@ func _unit_cards(out: String) -> void:
 				print("CARD ", row.name)
 				if str(row.name) in ["captain", "hunter", "bandit"]:
 					await _captain_vs_portrait(out, c, img, str(row.name), str(row.team), str(row.tmpl))
+		leader.job_id = saved_job
+		leader.is_leader = saved_lead
+		leader.cast_key = saved_ck
 
 
 func _render_card(c, team: String, tmpl: String) -> Texture2D:
@@ -95,6 +95,8 @@ func _render_card(c, team: String, tmpl: String) -> Texture2D:
 	vp.add_child(world)
 	var fig := CKBoardFigure.build(c, team, tmpl)
 	fig.rotation_degrees.y = 35.0 if team != "enemy" else -35.0
+	if OS.get_environment("CK_CARD_YAW") != "":
+		fig.rotation_degrees.y = float(OS.get_environment("CK_CARD_YAW"))
 	world.add_child(fig)
 	var cam := Camera3D.new()
 	cam.projection = Camera3D.PROJECTION_ORTHOGONAL
@@ -154,6 +156,16 @@ func _captain_vs_portrait(out: String, c, fig_img: Image, nm: String = "captain"
 		for xx in range(x0, x0 + sw - 6):
 			canvas.set_pixel(xx, y0, edge)
 			canvas.set_pixel(xx, y0 + 43, edge)
+	# face-decal crop actually projected on the head (inset, bottom-right of figure panel)
+	var pimg2: Image = CKBoardFigure.decal_portrait_image(c, team, tmpl)
+	if pimg2 != null:
+		var crop: Image = CKBoardFigure.face_decal_image(pimg2)
+		if crop != null:
+			crop.save_png("%s/vs_portrait/%s_face_decal.png" % [out, nm])
+			var ins: Image = crop.duplicate()
+			ins.clear_mipmaps()
+			ins.resize(72, 90, Image.INTERPOLATE_LANCZOS)
+			canvas.blend_rect(ins, Rect2i(0, 0, 72, 90), Vector2i(8 + pw - 78, 8 + ph - 96))
 	canvas.save_png("%s/vs_portrait/%s_vs_portrait.png" % [out, nm])
 	var f := FileAccess.open("%s/vs_portrait/%s_palette.json" % [out, nm], FileAccess.WRITE)
 	if f:
@@ -169,9 +181,6 @@ func _captain_vs_portrait(out: String, c, fig_img: Image, nm: String = "captain"
 
 
 func _portrait_for(c, team: String, tmpl: String) -> Texture2D:
-	if team == "enemy":
-		for p in ["res://assets/art/portraits/%s.webp" % tmpl, "res://assets/art/portraits/bandit.webp"]:
-			if ResourceLoader.exists(p):
-				return load(p) as Texture2D
-		return null
-	return UnitArt.portrait(c) if c != null else null
+	## Same source the board face decal uses (hunter → v8_bust_*_hunter, not the leader plate).
+	var img: Image = CKBoardFigure.decal_portrait_image(c, team, tmpl)
+	return ImageTexture.create_from_image(img) if img != null else null
