@@ -5,11 +5,14 @@ extends RefCounted
 ## No key hints on touch; every button is at least HIT tall; lists scroll by finger drag.
 
 const HIT := 48.0
-const TOP := 128.0      ## first content row under top bar + page head
+const TOP := 132.0      ## first content row under top bar + page head (head below 56px bar)
 const BOTTOM := 676.0   ## last content pixel above the footer / feedback line
 const PAD := 42.0
 
 ## Top bar, page head, optional desktop footer. Back goes through CKNav (one back action).
+## HEAD_Y sits below the 56px StitchTopBar so Chinese titles never stack onto CENTURY KNIGHTS.
+const HEAD_Y := 64.0
+
 static func shell(page: Control, context: String, eyebrow: String, title: String, desc: String = "", theme: String = "") -> void:
 	## theme "none": the page already painted its own backdrop (UIKit.make_themed_bg(self, ...)).
 	page.set_meta("ck_page_kit", true)  # MobileLayout.center_kit_page centres the 1280 grid on wide phones
@@ -18,18 +21,20 @@ static func shell(page: Control, context: String, eyebrow: String, title: String
 	elif theme != "none":
 		UIKit.make_themed_bg(page, theme)
 	UIKit.top_bar(page, context, [[Locale.t("lb_chip_date"), Calendar.label(), UIKit.TEXT_DIM]], Locale.t("btn_back"), func(): back(page))
-	var head := UIKit.page_head(page, PAD, 50, eyebrow, title, "", "", "", 22)
+	var head := UIKit.page_head(page, PAD, HEAD_Y, eyebrow, title, "", "", "", 22)
 	head.name = "PageHead"
+	head.set_meta("font_floor_exempt", true)  # keep designed sizes; floor was stacking onto the top bar
 	if desc != "":
+		# Sit to the right of the title (3em Noto line box overlaps vertically if we stack).
 		var tl := head.get_child(1).get_child(0) as Label
 		var x := PAD + (tl.get_minimum_size().x if tl != null else 160.0) + 24.0
 		var d := UIKit.body_label(desc, UIKit.TEXT_DIM, 12)
 		d.name = "PageDesc"
-		d.autowrap_mode = TextServer.AUTOWRAP_OFF
-		d.clip_text = true
-		d.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		d.position = Vector2(x, 104)
-		d.size = Vector2(1280.0 - PAD - x, 18)
+		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		d.clip_text = false
+		d.max_lines_visible = 2
+		d.position = Vector2(x, HEAD_Y + 18.0)
+		d.size = Vector2(maxf(200.0, 1280.0 - PAD - x), 40)
 		d.tooltip_text = desc
 		d.mouse_filter = Control.MOUSE_FILTER_PASS
 		page.add_child(d)
@@ -235,6 +240,7 @@ static func phone_fill(page: Control) -> void:
 	if desc != null:
 		desc.size.x = maxf(200.0, w - desc.position.x - PAD)
 		desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		desc.clip_text = false
 		desc.max_lines_visible = 2
 	var fb := page.find_child("Feedback", true, false) as Control
 	if fb != null:

@@ -200,6 +200,16 @@ func _courts() -> void:
 	_ok(not found.is_empty(), "forty years produce a birth, a death, a crisis and a rumor")
 	if found.is_empty():
 		return
+	# Gazette birth lines must not repeat the nation inside the given name ("灰烬邦 添丁 灰烬邦衡").
+	for nid_chk in found.get("nations", {}).keys():
+		var house_chk: Dictionary = found["nations"][nid_chk]
+		var nat_zh := str(CKBloodline.nation(str(nid_chk)).get("name", nid_chk))
+		for ev_chk in house_chk.get("log", []):
+			if str(ev_chk.get("kind", "")) != "birth":
+				continue
+			var tx := str(ev_chk.get("text", ""))
+			_ok(not tx.contains(nat_zh + " 添丁 " + nat_zh), "birth text has no nation+name double: " + tx)
+			break
 	World.royal_courts = found
 	_ok(CKCourt.recruit_bias(crisis_nid) > 0.0, "a succession crisis fattens that nation's royal pool")
 	_ok(CKCourt.latest_rumor() != "", "the rumor is readable for the tavern")
