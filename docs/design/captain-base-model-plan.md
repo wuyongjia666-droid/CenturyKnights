@@ -157,3 +157,7 @@
 5. 绑骨 + Godot 动作检查（~1–2 小时）
 6. LOD + 棋盘验收 + 对照拼板（~1 小时）
 先只做团长；团长过验收、用户点头后，再按同一流程做猎手和山贼。
+
+## 9. Agent 调 Blender 操作面（CLI-Anything 试用）
+
+科技日报 10-15 已在本机接入 HKUDS/CLI-Anything 的 `cli-anything-blender`（见 `docs/design/cli-anything-blender-trial.md`）。**不替代**本节 §4 的专用 bpy（导入/雕刻/烘焙/绑骨仍用 `blender --background --python` + `tools/models/*` / `tools/art/*_blender.py`）。Harness 适合：对照拼板的灯位/相机/快渲编排；真正出图用 `tools/art/cli_anything_blender_run.sh` 跑生成的 bpy（Blender 4.2 EEVEE 兼容）。上帝引擎侧另装了 `cli-anything-godot`，验收仍以现有 `scripts/ci_godot_run.sh` 为准。
