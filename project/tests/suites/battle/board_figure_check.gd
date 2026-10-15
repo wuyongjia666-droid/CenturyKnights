@@ -151,9 +151,10 @@ func _check_build() -> String:
 	leader.job_id = saved_job
 	leader.is_leader = saved_lead
 	var parts: Dictionary = hs.get("parts", {})
-	if str(parts.get("outfit", "")).find("hunter") < 0:
+	var hunter_ok := str(parts.get("compose", "")).find("hunter") >= 0 or str(parts.get("outfit", "")).find("hunter") >= 0
+	if not hunter_ok:
 		fig.free()
-		return "hunter outfit wrong: %s" % parts
+		return "hunter outfit/compose wrong: %s" % parts
 	if str(parts.get("weapon", "")).find("bow") < 0:
 		fig.free()
 		return "hunter weapon wrong: %s" % parts

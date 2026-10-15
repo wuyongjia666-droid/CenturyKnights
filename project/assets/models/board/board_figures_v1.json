@@ -280,6 +280,54 @@
         "pauldron",
         "R"
       ]
+    },
+    "compose_bandit": {
+      "category": "compose",
+      "tris": 5600,
+      "tags": [
+        "override",
+        "organic"
+      ]
+    },
+    "compose_bandit_archer": {
+      "category": "compose",
+      "tris": 5595,
+      "tags": [
+        "override",
+        "organic"
+      ]
+    },
+    "compose_bandit_chief": {
+      "category": "compose",
+      "tris": 5600,
+      "tags": [
+        "override",
+        "organic"
+      ]
+    },
+    "compose_bandit_weak": {
+      "category": "compose",
+      "tris": 5600,
+      "tags": [
+        "override",
+        "organic"
+      ]
+    },
+    "compose_captain": {
+      "category": "compose",
+      "tris": 5553,
+      "tags": [
+        "override",
+        "organic"
+      ]
+    },
+    "compose_hunter": {
+      "category": "compose",
+      "tris": 5600,
+      "tags": [
+        "override",
+        "organic"
+      ]
     }
   },
   "bones": [
@@ -321,8 +369,8 @@
     "wood": 15,
     "accent": 16
   },
-  "quality": "sculptural_blocks_v2",
+  "quality": "organic_compose_v3",
   "glb": "board_figures_v1.glb",
-  "total_tris": 33388,
-  "part_count": 37
+  "total_tris": 66936,
+  "part_count": 43
 }

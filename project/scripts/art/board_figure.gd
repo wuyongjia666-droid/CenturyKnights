@@ -3,7 +3,7 @@ extends RefCounted
 ## Formal modular board figures (docs/design/pawn-redesign-opus.md §3 / §5 / 附录 A/B).
 ## Assembles parts from board_figures_v1.glb + data/board_figures.json.
 ## Vertex-colour palette slots; 0 textures; LRU 64 by appearance hash (incl. plate stem).
-## Does NOT use farm_cast whole meshes as the formal kit.
+## P1 compose_* parts are organic retopo of farm casts (slot-painted); not cube kits.
 
 const SHADER_PATH := "res://shaders/board_figure.gdshader"
 const MAP_PATH := "res://data/board_figures.json"
@@ -153,7 +153,7 @@ static func appearance_hash(c, team: String, tmpl: String, pal: Dictionary = {},
 	var house := _color_key(pal.get("house", Color.WHITE))
 	return "%s|%s|%s|%s|%s|%s|%s|%s" % [
 		id, team, tmpl, stem,
-		str(parts.get("body", "")), str(parts.get("outfit", "")),
+		str(parts.get("compose", "")), str(parts.get("body", "")), str(parts.get("outfit", "")),
 		str(parts.get("weapon", "")), house,
 	]
 
@@ -216,6 +216,7 @@ static func _parts_for(c, team: String, tmpl: String, pal: Dictionary) -> Dictio
 	var weapon := str((_map.get("defaults", {}) as Dictionary).get("weapon", "weapon_sword"))
 	var signs: Array = []
 	var scale := 1.0
+	var compose := ""
 	if enemy:
 		var et: Dictionary = _map.get("enemy_templates", {})
 		var key := tmpl if tmpl != "" else "bandit"
@@ -226,6 +227,7 @@ static func _parts_for(c, team: String, tmpl: String, pal: Dictionary) -> Dictio
 		weapon = str(row.get("weapon", "weapon_axe"))
 		signs = row.get("signs", []) if typeof(row.get("signs")) == TYPE_ARRAY else []
 		scale = float(row.get("scale", 1.0))
+		compose = str(row.get("compose", ""))
 	else:
 		var jid := str(c.job_id) if c != null else "light_inf"
 		var jobs: Dictionary = _map.get("jobs", {})
@@ -237,8 +239,22 @@ static func _parts_for(c, team: String, tmpl: String, pal: Dictionary) -> Dictio
 			weapon = str(row2.get("weapon", weapon))
 			signs = row2.get("signs", []) if typeof(row2.get("signs")) == TYPE_ARRAY else []
 			scale = float(row2.get("scale", 1.0))
+			compose = str(row2.get("compose", ""))
 			if str(row2.get("body", "")) == "heavy":
 				body = "body_heavy"
+	# Organic compose replaces body/head/hair/outfit (keeps weapon + signs).
+	if compose != "":
+		return {
+			"compose": compose,
+			"body": "",
+			"head": "",
+			"hair": "",
+			"outfit": "",
+			"weapon": weapon,
+			"signs": signs,
+			"scale": scale,
+			"gender": gender,
+		}
 	return {
 		"body": body,
 		"head": head,
@@ -257,8 +273,23 @@ static func _estimate_tris(parts: Dictionary) -> int:
 	var man = _load_json(man_path) if ResourceLoader.exists(man_path) else {}
 	var plist: Dictionary = man.get("parts", {}) if typeof(man) == TYPE_DICTIONARY else {}
 	var total := 0
+	if str(parts.get("compose", "")) != "":
+		var cn := str(parts.get("compose"))
+		if plist.has(cn):
+			total += int((plist[cn] as Dictionary).get("tris", 5500))
+		else:
+			total += 5500
+		var wn := str(parts.get("weapon", ""))
+		if wn != "" and plist.has(wn):
+			total += int((plist[wn] as Dictionary).get("tris", 200))
+		for s in parts.get("signs", []):
+			if plist.has(str(s)):
+				total += int((plist[str(s)] as Dictionary).get("tris", 100))
+		return total
 	for k in ["body", "head", "hair", "outfit", "weapon"]:
 		var pname := str(parts.get(k, ""))
+		if pname == "":
+			continue
 		if plist.has(pname):
 			total += int((plist[pname] as Dictionary).get("tris", 400))
 		else:
@@ -272,12 +303,21 @@ static func _estimate_tris(parts: Dictionary) -> int:
 static func _assemble_kit(body: Node3D, parts: Dictionary, pal: Dictionary, face: float, enemy: bool) -> void:
 	_ensure_kit()
 	var names: Array[String] = []
-	for k in ["body", "head", "hair", "outfit", "weapon"]:
-		var n := str(parts.get(k, ""))
-		if n != "":
-			names.append(n)
-	for s in parts.get("signs", []):
-		names.append(str(s))
+	var compose_n := str(parts.get("compose", ""))
+	if compose_n != "":
+		names.append(compose_n)
+		var wn := str(parts.get("weapon", ""))
+		if wn != "":
+			names.append(wn)
+		for s in parts.get("signs", []):
+			names.append(str(s))
+	else:
+		for k in ["body", "head", "hair", "outfit", "weapon"]:
+			var n := str(parts.get(k, ""))
+			if n != "":
+				names.append(n)
+		for s in parts.get("signs", []):
+			names.append(str(s))
 	var merged := _merge_parts(names)
 	if merged == null:
 		push_warning("CKBoardFigure: merge failed for %s" % str(names))

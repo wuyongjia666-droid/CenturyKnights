@@ -3,8 +3,23 @@
   "kit_glb": "res://assets/models/board/board_figures_v1.glb",
   "kit_manifest": "res://assets/models/board/board_figures_v1.json",
   "palette_keys": [
-    "hair", "skin", "eye", "coat", "coat_dark", "apron", "sash", "metal",
-    "blade", "house", "crest", "cape", "trousers", "boots", "leather", "wood", "accent"
+    "hair",
+    "skin",
+    "eye",
+    "coat",
+    "coat_dark",
+    "apron",
+    "sash",
+    "metal",
+    "blade",
+    "house",
+    "crest",
+    "cape",
+    "trousers",
+    "boots",
+    "leather",
+    "wood",
+    "accent"
   ],
   "defaults": {
     "body_m": "body_m",
@@ -18,49 +33,219 @@
     "scale": 1.0
   },
   "jobs": {
-    "squire": { "outfit": "outfit_squire", "weapon": "weapon_sword", "signs": [] },
-    "light_cavalry": { "outfit": "outfit_squire", "weapon": "weapon_spear", "signs": [] },
-    "outrider": { "outfit": "outfit_squire", "weapon": "weapon_spear", "signs": ["sign_pauldron_both"] },
-    "bridge_tax": { "outfit": "outfit_squire", "weapon": "weapon_spear", "signs": [] },
-    "light_inf": { "outfit": "outfit_light_inf", "weapon": "weapon_sword", "signs": [] },
-    "warrior": { "outfit": "outfit_light_inf", "weapon": "weapon_greatsword", "signs": [] },
-    "veteran": { "outfit": "outfit_light_inf", "weapon": "weapon_greatsword", "signs": [] },
-    "forge_brow": { "outfit": "outfit_militia", "weapon": "weapon_axe", "signs": [], "apron": true },
-    "heavy_inf": { "outfit": "outfit_heavy_inf", "weapon": "weapon_sword", "body": "heavy", "signs": ["sign_pauldron_both"] },
-    "sentinel": { "outfit": "outfit_heavy_inf", "weapon": "weapon_sword", "body": "heavy", "signs": ["sign_pauldron_both"] },
-    "bulwark": { "outfit": "outfit_heavy_inf", "weapon": "weapon_sword", "body": "heavy", "signs": ["sign_pauldron_both"], "scale": 1.06 },
-    "hunter": { "outfit": "outfit_hunter", "weapon": "weapon_bow", "signs": [] },
-    "archer": { "outfit": "outfit_hunter", "weapon": "weapon_bow", "signs": [] },
-    "marksman": { "outfit": "outfit_hunter", "weapon": "weapon_bow", "signs": [] },
-    "apprentice": { "outfit": "outfit_apprentice", "weapon": "weapon_staff", "signs": [] },
-    "mage": { "outfit": "outfit_apprentice", "weapon": "weapon_staff", "signs": [] },
-    "lu_wai": { "outfit": "outfit_apprentice", "weapon": "weapon_staff", "signs": [] },
-    "warlock": { "outfit": "outfit_apprentice", "weapon": "weapon_staff", "signs": [] },
-    "priest": { "outfit": "outfit_apprentice", "weapon": "weapon_staff", "signs": [] },
-    "medic": { "outfit": "outfit_apprentice", "weapon": "weapon_staff", "signs": [] },
-    "yan_zhan": { "outfit": "outfit_apprentice", "weapon": "weapon_staff", "signs": [] },
-    "militia": { "outfit": "outfit_militia", "weapon": "weapon_spear", "signs": [] },
-    "skirmisher": { "outfit": "outfit_militia", "weapon": "weapon_dagger", "signs": [] },
-    "pathfinder": { "outfit": "outfit_militia", "weapon": "weapon_dagger", "signs": [] },
-    "banner": { "outfit": "outfit_banner", "weapon": "weapon_banner", "signs": [] },
-    "standard": { "outfit": "outfit_banner", "weapon": "weapon_banner", "signs": [] },
-    "captain": { "outfit": "outfit_captain", "weapon": "weapon_sword", "signs": [] },
-    "salt_yin": { "outfit": "outfit_banner", "weapon": "weapon_banner", "signs": [] },
-    "acolyte": { "outfit": "outfit_apprentice", "weapon": "weapon_staff", "signs": [] },
-    "cantor": { "outfit": "outfit_apprentice", "weapon": "weapon_staff", "signs": [] },
-    "chorister": { "outfit": "outfit_apprentice", "weapon": "weapon_staff", "signs": [] },
-    "frost_wait": { "outfit": "outfit_apprentice", "weapon": "weapon_staff", "signs": [] }
+    "squire": {
+      "outfit": "outfit_squire",
+      "weapon": "weapon_sword",
+      "signs": []
+    },
+    "light_cavalry": {
+      "outfit": "outfit_squire",
+      "weapon": "weapon_spear",
+      "signs": []
+    },
+    "outrider": {
+      "outfit": "outfit_squire",
+      "weapon": "weapon_spear",
+      "signs": [
+        "sign_pauldron_both"
+      ]
+    },
+    "bridge_tax": {
+      "outfit": "outfit_squire",
+      "weapon": "weapon_spear",
+      "signs": []
+    },
+    "light_inf": {
+      "outfit": "outfit_light_inf",
+      "weapon": "weapon_sword",
+      "signs": []
+    },
+    "warrior": {
+      "outfit": "outfit_light_inf",
+      "weapon": "weapon_greatsword",
+      "signs": []
+    },
+    "veteran": {
+      "outfit": "outfit_light_inf",
+      "weapon": "weapon_greatsword",
+      "signs": []
+    },
+    "forge_brow": {
+      "outfit": "outfit_militia",
+      "weapon": "weapon_axe",
+      "signs": [],
+      "apron": true
+    },
+    "heavy_inf": {
+      "outfit": "outfit_heavy_inf",
+      "weapon": "weapon_sword",
+      "body": "heavy",
+      "signs": [
+        "sign_pauldron_both"
+      ]
+    },
+    "sentinel": {
+      "outfit": "outfit_heavy_inf",
+      "weapon": "weapon_sword",
+      "body": "heavy",
+      "signs": [
+        "sign_pauldron_both"
+      ]
+    },
+    "bulwark": {
+      "outfit": "outfit_heavy_inf",
+      "weapon": "weapon_sword",
+      "body": "heavy",
+      "signs": [
+        "sign_pauldron_both"
+      ],
+      "scale": 1.06
+    },
+    "hunter": {
+      "compose": "compose_hunter",
+      "weapon": "weapon_bow",
+      "signs": []
+    },
+    "archer": {
+      "compose": "compose_hunter",
+      "weapon": "weapon_bow",
+      "signs": []
+    },
+    "marksman": {
+      "compose": "compose_hunter",
+      "weapon": "weapon_bow",
+      "signs": []
+    },
+    "apprentice": {
+      "outfit": "outfit_apprentice",
+      "weapon": "weapon_staff",
+      "signs": []
+    },
+    "mage": {
+      "outfit": "outfit_apprentice",
+      "weapon": "weapon_staff",
+      "signs": []
+    },
+    "lu_wai": {
+      "outfit": "outfit_apprentice",
+      "weapon": "weapon_staff",
+      "signs": []
+    },
+    "warlock": {
+      "outfit": "outfit_apprentice",
+      "weapon": "weapon_staff",
+      "signs": []
+    },
+    "priest": {
+      "outfit": "outfit_apprentice",
+      "weapon": "weapon_staff",
+      "signs": []
+    },
+    "medic": {
+      "outfit": "outfit_apprentice",
+      "weapon": "weapon_staff",
+      "signs": []
+    },
+    "yan_zhan": {
+      "outfit": "outfit_apprentice",
+      "weapon": "weapon_staff",
+      "signs": []
+    },
+    "militia": {
+      "outfit": "outfit_militia",
+      "weapon": "weapon_spear",
+      "signs": []
+    },
+    "skirmisher": {
+      "outfit": "outfit_militia",
+      "weapon": "weapon_dagger",
+      "signs": []
+    },
+    "pathfinder": {
+      "outfit": "outfit_militia",
+      "weapon": "weapon_dagger",
+      "signs": []
+    },
+    "banner": {
+      "outfit": "outfit_banner",
+      "weapon": "weapon_banner",
+      "signs": []
+    },
+    "standard": {
+      "outfit": "outfit_banner",
+      "weapon": "weapon_banner",
+      "signs": []
+    },
+    "captain": {
+      "compose": "compose_captain",
+      "weapon": "weapon_sword",
+      "signs": []
+    },
+    "salt_yin": {
+      "outfit": "outfit_banner",
+      "weapon": "weapon_banner",
+      "signs": []
+    },
+    "acolyte": {
+      "outfit": "outfit_apprentice",
+      "weapon": "weapon_staff",
+      "signs": []
+    },
+    "cantor": {
+      "outfit": "outfit_apprentice",
+      "weapon": "weapon_staff",
+      "signs": []
+    },
+    "chorister": {
+      "outfit": "outfit_apprentice",
+      "weapon": "weapon_staff",
+      "signs": []
+    },
+    "frost_wait": {
+      "outfit": "outfit_apprentice",
+      "weapon": "weapon_staff",
+      "signs": []
+    }
   },
   "enemy_templates": {
-    "bandit_weak": { "outfit": "outfit_bandit_weak", "weapon": "weapon_club", "signs": [], "scale": 1.0 },
-    "bandit": { "outfit": "outfit_bandit_bandit", "weapon": "weapon_axe", "signs": [], "scale": 1.0 },
-    "bandit_archer": { "outfit": "outfit_bandit_archer", "weapon": "weapon_bow", "signs": [], "scale": 1.0 },
-    "bandit_chief": { "outfit": "outfit_bandit_chief", "weapon": "weapon_greatsword", "signs": [], "scale": 1.06 }
+    "bandit_weak": {
+      "compose": "compose_bandit_weak",
+      "weapon": "weapon_club",
+      "signs": [],
+      "scale": 1.0
+    },
+    "bandit": {
+      "compose": "compose_bandit",
+      "weapon": "weapon_axe",
+      "signs": [],
+      "scale": 1.0
+    },
+    "bandit_archer": {
+      "compose": "compose_bandit_archer",
+      "weapon": "weapon_bow",
+      "signs": [],
+      "scale": 1.0
+    },
+    "bandit_chief": {
+      "compose": "compose_bandit_chief",
+      "weapon": "weapon_greatsword",
+      "signs": [],
+      "scale": 1.06
+    }
   },
   "leader_job_override": {
-    "outfit": "outfit_captain",
+    "compose": "compose_captain",
     "weapon": "weapon_sword",
     "signs": []
   },
-  "hair_styles": ["bob", "crop", "crown", "long", "messy", "pony", "swept", "tied"]
+  "hair_styles": [
+    "bob",
+    "crop",
+    "crown",
+    "long",
+    "messy",
+    "pony",
+    "swept",
+    "tied"
+  ]
 }

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Board-figure formal kit generator (Blender 4.2 headless) — sculptural blocks.
+"""Board-figure formal kit generator (Blender 4.2 headless) — organic compose overrides (farm_cast retopo + face enhance).
 
 docs/design/pawn-redesign-opus.md §3.2 / §3.7 / §5 / 附录 A.
 
@@ -53,7 +53,7 @@ NECK_Y = 1.50
 FACE_Y = -1.0
 
 MANIFEST: dict = {"version": 2, "model_h": MODEL_H, "parts": {}, "bones": [], "slots": SLOT,
-                  "quality": "sculptural_blocks_v2"}
+                  "quality": "organic_compose_v3"}
 
 
 def _argv_out() -> Path:
@@ -1023,21 +1023,41 @@ def apply_overrides():
         new = [o for o in bpy.data.objects if o.name not in before and o.type == "MESH"]
         if not new:
             continue
-        old = bpy.data.objects.get(stem)
-        if old:
-            bpy.data.objects.remove(old, do_unlink=True)
+        # Only replace a *pre-existing* scripted part; never delete the just-imported mesh
+        # (compose_*.glb stems match the object name on import).
+        preexisting = bpy.data.objects.get(stem) if stem in before else None
+        if preexisting is not None and preexisting not in new:
+            bpy.data.objects.remove(preexisting, do_unlink=True)
         bpy.ops.object.select_all(action="DESELECT")
-        for o in new:
+        alive = [o for o in new if o.name in bpy.data.objects]
+        for o in alive:
             o.select_set(True)
-        bpy.context.view_layer.objects.active = new[0]
-        if len(new) > 1:
+        bpy.context.view_layer.objects.active = alive[0]
+        if len(alive) > 1:
             bpy.ops.object.join()
         ob = bpy.context.active_object
         ob.name = stem
+        if ob.data:
+            ob.data.name = stem
         if not ob.data.color_attributes:
             paint_slots(ob, "coat")
-        cat = MANIFEST["parts"].get(stem, {}).get("category", "override")
-        register_part(ob, cat, ["override"])
+        # Re-weld after glTF (corner colours / exporters can explode shared verts).
+        bpy.ops.object.mode_set(mode="EDIT")
+        bpy.ops.mesh.select_all(action="SELECT")
+        bpy.ops.mesh.remove_doubles(threshold=0.0012)
+        bpy.ops.mesh.normals_make_consistent(inside=False)
+        bpy.ops.object.mode_set(mode="OBJECT")
+        bpy.ops.object.shade_smooth()
+        if stem.startswith("compose_"):
+            cat = "compose"
+        else:
+            cat = MANIFEST["parts"].get(stem, {}).get("category", "override")
+        register_part(ob, cat, ["override", "organic"])
+        arm_ob = bpy.data.objects.get("BoardRig")
+        if arm_ob and cat in ("compose", "body", "outfit"):
+            skin_rigid(ob, "hips", arm_ob)
+        elif arm_ob and cat in ("head", "hair"):
+            skin_rigid(ob, "head", arm_ob)
 
 
 def export_glb(out_dir: Path, arm_ob):
