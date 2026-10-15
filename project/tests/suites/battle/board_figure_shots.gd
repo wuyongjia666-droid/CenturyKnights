@@ -60,13 +60,20 @@ func _unit_cards(out: String) -> void:
 		var c = leader
 		var saved_job := str(leader.job_id)
 		var saved_lead := bool(leader.is_leader)
+		var saved_ck := str(leader.cast_key)
 		if str(row.job) != "":
 			leader.job_id = str(row.job)
 			leader.is_leader = bool(row.leader)
+			# Job cards must resolve outfit_<job>, not cast_leader.
+			leader.cast_key = "leader" if bool(row.leader) else ""
+		if str(row.team) == "enemy":
+			leader.cast_key = ""
+			leader.is_leader = false
 		CKBoardFigure._pal_cache.clear()
 		var tex: Texture2D = await _render_card(c, str(row.team), str(row.tmpl))
 		leader.job_id = saved_job
 		leader.is_leader = saved_lead
+		leader.cast_key = saved_ck
 		if tex:
 			var img: Image = tex.get_image()
 			if img:

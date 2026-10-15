@@ -1,9 +1,9 @@
 class_name CKBoardFigure
 extends RefCounted
 ## Formal modular board figures (docs/design/pawn-redesign-opus.md §3 / §5 / 附录 A/B).
-## Assembles parts from board_figures_v1.glb + data/board_figures.json.
-## Vertex-colour palette slots; 0 textures; LRU 64 by appearance hash (incl. plate stem).
-## P1 compose_* parts are organic retopo of farm casts (slot-painted); not cube kits.
+## Board figures: scale 演出 UnitModel GLBs onto the board + plate_palette shader.
+## Prefer units/*.glb (UnitModel.resolve). farm_cast / kit compose only if resolve fails.
+## Shader remaps albedo → hair/skin/coat/… slots (no board_compact solid fill).
 
 const SHADER_PATH := "res://shaders/board_figure.gdshader"
 const MAP_PATH := "res://data/board_figures.json"
@@ -151,11 +151,10 @@ static func appearance_hash(c, team: String, tmpl: String, pal: Dictionary = {},
 	var id := str(c.id) if c != null and "id" in c else "x"
 	var stem := str(pal.get("plate_stem", ""))
 	var house := _color_key(pal.get("house", Color.WHITE))
-	return "%s|%s|%s|%s|%s|%s|%s|%s" % [
-		id, team, tmpl, stem,
-		str(parts.get("compose", "")), str(parts.get("body", "")), str(parts.get("outfit", "")),
-		str(parts.get("weapon", "")), house,
-	]
+	var mpath := ""
+	if c != null:
+		mpath = UnitModel.model_path(c, team, tmpl)
+	return "%s|%s|%s|%s|%s|%s" % [id, team, tmpl, stem, mpath, house]
 
 
 static func _color_key(c) -> String:
@@ -176,18 +175,212 @@ static func build(c, team: String, tmpl: String = "") -> Node3D:
 	root.set_meta("ck_face", face)
 	root.set_meta("ck_appearance_hash", h)
 	root.set_meta("ck_plate_stem", str(pal.get("plate_stem", "")))
-	var body := Node3D.new()
-	body.name = "Body"
-	root.add_child(body)
-	var scl := float(parts.get("scale", 1.0))
-	if scl != 1.0:
-		body.scale = Vector3.ONE * scl
-	_assemble_kit(body, parts, pal, face, enemy)
-	var ap := _make_anim(root)
-	root.add_child(ap)
+	# 演出整模优先
+	var unit: Node3D = UnitModel.instantiate(c, team, tmpl)
+	if unit != null:
+		unit.name = "Unit"
+		root.add_child(unit)
+		_ensure_unit_hair(unit, c, team)
+		_ground_and_fit(unit)
+		_apply_board_palette(unit, pal, face, enemy)
+		# Chin +8° (§3.2)
+		unit.rotation_degrees.x = -8.0
+		root.set_meta("ck_source", "unit_model")
+		root.set_meta("ck_model", str(unit.get_meta("ck_model", "")))
+	else:
+		# 兜底：旧 kit compose / modular
+		var body := Node3D.new()
+		body.name = "Body"
+		root.add_child(body)
+		var scl := float(parts.get("scale", 1.0))
+		if scl != 1.0:
+			body.scale = Vector3.ONE * scl
+		_assemble_kit(body, parts, pal, face, enemy)
+		root.set_meta("ck_source", "kit_fallback")
+		var ap := _make_anim(root)
+		root.add_child(ap)
 	_lru_put(h, true)
 	return root
 
+
+
+static func _unit_has_hair_mesh(n: Node) -> bool:
+	if n is MeshInstance3D:
+		var nm := str(n.name).to_lower()
+		if "hair" in nm:
+			return true
+	for ch in n.get_children():
+		if _unit_has_hair_mesh(ch):
+			return true
+	return false
+
+
+static func _ensure_unit_hair(unit: Node3D, c, team: String) -> void:
+	## Cast / enemy GLBs bake hair into the body albedo. Outfit path already attach_modules.
+	## Archetype stand-ins may be bald — seat hair_* on the head bone before ground/fit.
+	if unit == null or c == null:
+		return
+	var mp := str(unit.get_meta("ck_model", ""))
+	var fn := mp.get_file() if mp != "" else ""
+	if fn.begins_with("cast_") or fn.begins_with("enemy_") or fn.begins_with("outfit_"):
+		return
+	if _unit_has_hair_mesh(unit):
+		return
+	UnitModel.attach_modules(unit, c, team)
+
+
+static func _ground_and_fit(n: Node3D) -> void:
+	## Sit feet on y=0 and scale height ≈ MODEL_H (1.85).
+	var aabb := _mesh_aabb_walk(n, Transform3D.IDENTITY)
+	if aabb.size.y < 0.05:
+		return
+	n.position.y -= aabb.position.y
+	var h := aabb.size.y
+	if h > 0.05:
+		n.scale *= (1.85 / h)
+
+
+static func _mesh_aabb_walk(n: Node, xf: Transform3D) -> AABB:
+	var acc := AABB()
+	var any := false
+	var x2 := xf
+	if n is Node3D:
+		x2 = xf * (n as Node3D).transform
+	if n is MeshInstance3D:
+		var mi := n as MeshInstance3D
+		if mi.mesh != null:
+			acc = x2 * mi.mesh.get_aabb()
+			any = true
+	for ch in n.get_children():
+		var ca := _mesh_aabb_walk(ch, x2)
+		if ca.size.length_squared() > 1e-8:
+			if not any:
+				acc = ca
+				any = true
+			else:
+				acc = acc.merge(ca)
+	return acc if any else AABB()
+
+
+static func _apply_board_palette(n: Node, pal: Dictionary, face: float, enemy: bool) -> void:
+	## Replace materials with board_figure.gdshader; albedo → palette slots. Never board_compact.
+	## outfit_* bodies are greyscale fill targets — use material-name slots, not albedo classify.
+	var model_fn := _model_filename(n)
+	var outfit_mode := model_fn.begins_with("outfit_")
+	if n is MeshInstance3D:
+		var mi := n as MeshInstance3D
+		if mi.mesh != null:
+			var aabb := mi.mesh.get_aabb()
+			var y_min := aabb.position.y
+			var y_span := maxf(0.05, aabb.size.y)
+			var nlow := str(mi.name).to_lower()
+			var hair_mesh := ("hair" in nlow) or nlow.begins_with("hair_")
+			for si in mi.mesh.get_surface_count():
+				var tex: Texture2D = _extract_albedo(mi, si)
+				var sm := _palette_mat(pal, face, enemy)
+				sm.set_shader_parameter("force_slot", -1.0)
+				var mat_name := _surface_mat_name(mi, si)
+				var named_slot := _force_slot_for(nlow, mat_name)
+				if hair_mesh or "hair" in mat_name:
+					sm.set_shader_parameter("use_albedo", 0.0)
+					sm.set_shader_parameter("force_slot", 0.0)
+				elif outfit_mode:
+					# Named non-body parts keep solid slots; body uses height+albedo classify
+					# so greyscale head band still reads as skin/hair.
+					var base := mat_name.split(".")[0] if mat_name != "" else ""
+					if base in ["skin", "hair", "weapon", "armor", "leather", "trim", "visor", "metal"] or "weapon" in nlow or "hair" in nlow:
+						sm.set_shader_parameter("use_albedo", 0.0)
+						sm.set_shader_parameter("force_slot", named_slot)
+					elif tex != null:
+						sm.set_shader_parameter("use_albedo", 1.0)
+						sm.set_shader_parameter("albedo_tex", tex)
+					else:
+						sm.set_shader_parameter("use_albedo", 0.0)
+						sm.set_shader_parameter("force_slot", named_slot)
+				elif tex != null:
+					# cast_/enemy_ painted albedo → classify hair/skin/coat zones.
+					sm.set_shader_parameter("use_albedo", 1.0)
+					sm.set_shader_parameter("albedo_tex", tex)
+				else:
+					sm.set_shader_parameter("use_albedo", 0.0)
+					sm.set_shader_parameter("force_slot", named_slot)
+				sm.set_shader_parameter("y_min", y_min)
+				sm.set_shader_parameter("y_span", y_span)
+				sm.set_shader_parameter("model_h", y_span)
+				mi.set_surface_override_material(si, sm)
+	for ch in n.get_children():
+		_apply_board_palette(ch, pal, face, enemy)
+
+
+static func _model_filename(n: Node) -> String:
+	var cur: Node = n
+	while cur != null:
+		if cur.has_meta("ck_model"):
+			return str(cur.get_meta("ck_model")).get_file()
+		cur = cur.get_parent()
+	return ""
+
+
+static func _has_named_slot(nlow: String, mat_name: String) -> bool:
+	var s := mat_name if mat_name != "" else nlow
+	var base := s.split(".")[0]
+	if base in ["armor", "cloth", "leather", "weapon", "skin", "hair", "trim", "visor", "body", "metal"]:
+		return true
+	for k in ["weapon", "blade", "sword", "hair", "skin", "leather", "armor", "cloth", "metal", "trim"]:
+		if k in s:
+			return true
+	return false
+
+
+static func _extract_albedo(mi: MeshInstance3D, si: int) -> Texture2D:
+	var ov = mi.get_surface_override_material(si)
+	var m = ov if ov != null else mi.mesh.surface_get_material(si)
+	if m is ShaderMaterial:
+		var sm := m as ShaderMaterial
+		var t = sm.get_shader_parameter("albedo_tex")
+		if t is Texture2D:
+			return t as Texture2D
+	if m is BaseMaterial3D:
+		var bm := m as BaseMaterial3D
+		if bm.albedo_texture != null:
+			return bm.albedo_texture
+	# External __albedo_v87.jpg next to model
+	var root: Node = mi
+	while root.get_parent() != null and not root.has_meta("ck_model"):
+		root = root.get_parent()
+	if root.has_meta("ck_model"):
+		var mp := str(root.get_meta("ck_model"))
+		if mp.ends_with(".glb"):
+			var ap := mp.replace(".glb", "__albedo_v87.jpg")
+			if ResourceLoader.exists(ap):
+				return load(ap) as Texture2D
+	return null
+
+
+static func _surface_mat_name(mi: MeshInstance3D, si: int) -> String:
+	var ov = mi.get_surface_override_material(si)
+	var m = ov if ov != null else mi.mesh.surface_get_material(si)
+	if m == null:
+		return ""
+	return str(m.resource_name).to_lower()
+
+
+static func _force_slot_for(nlow: String, mat_name: String) -> float:
+	var s := mat_name if mat_name != "" else nlow
+	var base := s.split(".")[0]
+	if "weapon" in s or "blade" in s or "sword" in s or "bow" in s or base == "weapon":
+		return 8.0
+	if base in ["metal", "trim", "visor", "armor"] or "metal" in s or "trim" in s or "armor" in s:
+		return 7.0
+	if "leather" in s or base == "leather":
+		return 14.0
+	if "skin" in s or base == "skin":
+		return 1.0
+	if "hair" in s or base == "hair":
+		return 0.0
+	if "cloth" in s or base == "cloth" or base == "body":
+		return 3.0  # coat
+	return 3.0
 
 static func find_anim(n: Node) -> AnimationPlayer:
 	if n == null:
@@ -406,6 +599,7 @@ static func _palette_mat(pal: Dictionary, face: float, enemy: bool) -> ShaderMat
 		arr[i] = col
 	sm.set_shader_parameter("palette", arr)
 	sm.set_shader_parameter("face", face)
+	sm.set_shader_parameter("use_albedo", 0.0)
 	sm.set_shader_parameter("rim_col", UIKit.DANGER if enemy else UIKit.ACCENT)
 	var coat: Color = pal.get("coat", Color(0.5, 0.5, 0.5)) as Color
 	var lum := 0.2126 * coat.r + 0.7152 * coat.g + 0.0722 * coat.b

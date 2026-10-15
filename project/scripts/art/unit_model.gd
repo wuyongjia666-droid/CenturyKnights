@@ -191,17 +191,21 @@ static func _enemy_spec(c, tmpl: String) -> Dictionary:
 	var gender := "f" if str(c.gender) == "f" else "m"
 	var path := _library_path(slot_key, gender)
 	var weapon := slot_key
+	var dedicated_hit := false
 	if str(tmpl) != "":
 		var dedicated := DIR + "enemy_%s.glb" % str(tmpl)
 		if ResourceLoader.exists(dedicated):
 			path = dedicated
 			weapon = "dedicated:%s" % str(tmpl)
-	var ck := str(c.cast_key) if "cast_key" in c else ""
-	if ck != "":
-		var cp := DIR + "cast_%s.glb" % ck
-		if ResourceLoader.exists(cp):
-			path = cp
-			weapon = "cast:%s" % ck
+			dedicated_hit = true
+	# cast_key only when no dedicated enemy_<tmpl> (board shots reuse leader char).
+	if not dedicated_hit:
+		var ck := str(c.cast_key) if "cast_key" in c else ""
+		if ck != "":
+			var cp := DIR + "cast_%s.glb" % ck
+			if ResourceLoader.exists(cp):
+				path = cp
+				weapon = "cast:%s" % ck
 	if path == "" or not ResourceLoader.exists(path):
 		path = DIR + archetype_for(c, "enemy", tmpl) + ".glb"
 		weapon = "archetype"
