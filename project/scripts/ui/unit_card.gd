@@ -168,6 +168,9 @@ func _make_chip(c, sid: String, enemy: bool) -> Control:
 	if Locale.is_en() and Locale.has_cjk(nm):
 		chip = sid
 	var effect := _skill_effect_line(desc)
+	# EN mode must not paint CJK on the chip (l10n_check); keep effect for zh only.
+	if Locale.is_en() and Locale.has_cjk(effect):
+		effect = ""
 	b.text = ("%s\n%s" % [chip, effect]) if effect != "" else chip
 	b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	b.clip_text = false

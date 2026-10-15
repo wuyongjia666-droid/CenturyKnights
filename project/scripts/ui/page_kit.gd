@@ -5,7 +5,7 @@ extends RefCounted
 ## No key hints on touch; every button is at least HIT tall; lists scroll by finger drag.
 
 const HIT := 48.0
-const TOP := 132.0      ## first content row under top bar + page head (head below 56px bar)
+const TOP := 128.0      ## first content row under top bar + page head
 const BOTTOM := 676.0   ## last content pixel above the footer / feedback line
 const PAD := 42.0
 
@@ -25,19 +25,23 @@ static func shell(page: Control, context: String, eyebrow: String, title: String
 	head.name = "PageHead"
 	head.set_meta("font_floor_exempt", true)  # keep designed sizes; floor was stacking onto the top bar
 	if desc != "":
-		# Sit to the right of the title (3em Noto line box overlaps vertically if we stack).
-		var tl := head.get_child(1).get_child(0) as Label
-		var x := PAD + (tl.get_minimum_size().x if tl != null else 160.0) + 24.0
+		# Park beside the title inside PageHead so layout/narrow audits treat them as one header.
+		var th := head.get_child(1) as HBoxContainer
 		var d := UIKit.body_label(desc, UIKit.TEXT_DIM, 12)
 		d.name = "PageDesc"
-		d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		d.clip_text = false
-		d.max_lines_visible = 2
-		d.position = Vector2(x, HEAD_Y + 18.0)
-		d.size = Vector2(maxf(200.0, 1280.0 - PAD - x), 40)
+		d.autowrap_mode = TextServer.AUTOWRAP_OFF
+		d.clip_text = true
+		d.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		d.tooltip_text = desc
 		d.mouse_filter = Control.MOUSE_FILTER_PASS
-		page.add_child(d)
+		d.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		d.custom_minimum_size = Vector2(minf(520.0, 1280.0 - PAD * 2.0 - 220.0), 18)
+		if th != null:
+			th.add_child(d)
+		else:
+			d.position = Vector2(PAD + 200.0, HEAD_Y + 40.0)
+			d.size = Vector2(800, 18)
+			page.add_child(d)
 	if touch():
 		var bb := page.find_child("BackButton", true, false) as Button
 		if bb != null:
@@ -240,7 +244,6 @@ static func phone_fill(page: Control) -> void:
 	if desc != null:
 		desc.size.x = maxf(200.0, w - desc.position.x - PAD)
 		desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		desc.clip_text = false
 		desc.max_lines_visible = 2
 	var fb := page.find_child("Feedback", true, false) as Control
 	if fb != null:
