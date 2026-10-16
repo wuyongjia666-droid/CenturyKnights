@@ -1,0 +1,8 @@
+mode=normalize-only
+stem=hunter_f
+src=/workspace/board_figure_hunyuan_review/cast3_textured/out/hunter_f_v2/hunter_f_pathc_native.glb
+out=docs/art/review/board_figure_hunyuan_cloud/pathc_native/hunter_f__board.glb
+tris_before=1499600
+tris_after=1499600
+bytes=77633464
+height_target=1.85

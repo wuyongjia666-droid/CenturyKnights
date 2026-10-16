@@ -85,17 +85,27 @@ static func warm_disk_index() -> void:
 	if not _sex_ready:
 		plate_sex("")  # load sex index JSON once
 
-static func try_texture(c: Object, tier: String = "large") -> Texture2D:
+## Returns {texture: Texture2D|null, stem: String}. stem is the plate key actually loaded
+## (hit or fallback). Board figures must look up plate_palettes by this stem — do not rematch.
+static func try_texture(c: Object, tier: String = "large") -> Dictionary:
+	var miss := {"texture": null, "stem": ""}
 	if not has_plates():
-		return null
+		return miss
 	var stage := CKGenomePortrait.age_stage_of(c)
 	var m := best_match(c)
 	if bool(m.get("hit", false)):
-		var tex := _load_plate(str(m.get("bucket_key", "")), tier)
+		var key := str(m.get("bucket_key", ""))
+		var tex := _load_plate(key, tier)
 		if tex != null and str(m.get("stage", "")) == stage:
-			return tex
+			return {"texture": tex, "stem": key}
 	## Manifest may drift from farm files; fall back to an on-disk plate of the SAME stage only.
 	return _disk_stage_plate(c, stage, tier)
+
+
+## Texture only (legacy callers). Prefer try_texture when the plate stem is needed.
+static func try_texture_only(c: Object, tier: String = "large") -> Texture2D:
+	var pack: Dictionary = try_texture(c, tier)
+	return pack.get("texture") as Texture2D
 
 static func best_match(c: Object) -> Dictionary:
 	_ensure_index()
@@ -516,21 +526,23 @@ static func _same_sex(keys: Array, sex: String) -> Array:
 	# Only stages with labelled plates are filtered; elsewhere keep the old full set.
 	return out if not out.is_empty() else keys
 
-static func _disk_stage_plate(c: Object, stage: String, tier: String) -> Texture2D:
+static func _disk_stage_plate(c: Object, stage: String, tier: String) -> Dictionary:
+	var miss := {"texture": null, "stem": ""}
 	_ensure_disk_index()
 	var keys: Array = _same_sex(_disk_by_stage.get(stage, []), _sex_of(c))
 	if keys.is_empty():
-		return null
+		return miss
 	var seed := 1
 	if c != null:
 		seed = CKGenomePortrait.identity_seed(c)
 	var idx: int = absi(seed) % keys.size()
 	## A stale index entry must not blank a face: walk on to the next plate of the stage.
 	for step in mini(keys.size(), 8):
-		var tex := _load_plate(str(keys[(idx + step) % keys.size()]), tier)
+		var key := str(keys[(idx + step) % keys.size()])
+		var tex := _load_plate(key, tier)
 		if tex != null:
-			return tex
-	return null
+			return {"texture": tex, "stem": key}
+	return miss
 
 
 ## Exported packs list "x.webp.import" / "x.webp.remap" instead of "x.webp".
@@ -544,6 +556,14 @@ static func _strip_export_suffix(fn: String) -> String:
 static func stage_texture(c: Object, stage: String, tier: String = "large") -> Texture2D:
 	if not has_plates():
 		return null
+	var pack: Dictionary = _disk_stage_plate(c, stage, tier)
+	return pack.get("texture") as Texture2D
+
+
+## Same as stage_texture but also returns the plate stem (for board-figure palette lookup).
+static func stage_plate(c: Object, stage: String, tier: String = "large") -> Dictionary:
+	if not has_plates():
+		return {"texture": null, "stem": ""}
 	return _disk_stage_plate(c, stage, tier)
 
 

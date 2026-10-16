@@ -1,0 +1,33 @@
+{
+  "stem": "cast_leader",
+  "ship": "project/assets/models/board/pathc_ship/cast_leader.glb",
+  "ship_sha256": "55d695cd66926e7b0df42fbed682dd97e954861f1bf2f39c31255911dee7e66e",
+  "ship_bytes": 452748,
+  "master": {
+    "repo_path": "docs/art/review/board_figure_p1/hunyuan_noreduce/cast_leader__board.glb",
+    "sha256": "bc5e635123e5a9300db70c5d5de10617c42fef8eea4bc3d8931c9a662b640c52",
+    "faces": 1499054,
+    "tex": "4096 albedo+normal+MR",
+    "raw_hunyuan_sha256": "c03dc821fe83d463066f7967c48a9b2fc07a8ce93ce742c692da8952b3be514a",
+    "note": "never modified; ship is rebuilt, not decimated master"
+  },
+  "tris": 12000,
+  "tex": "512x512 albedo JPEG q88, single material",
+  "height_m": 1.85,
+  "feet_z": 0,
+  "facing": "-Y (Blender) / +Z Godot",
+  "bake": {
+    "pipeline": "voxel remesh -> decimate on new UV-less mesh -> smart UV -> selected-to-active DIFFUSE color bake",
+    "voxel_size": 0.004625000000000001,
+    "voxel_tris": 671168,
+    "reduce": "Decimate collapse on remeshed mesh (no master UVs)",
+    "uv": "Smart UV angle 66deg margin 0.004",
+    "cage_extrusion": 0.02,
+    "max_ray_distance": 0.05,
+    "margin_px": 8,
+    "samples": 4,
+    "delighting": "bake uses COLOR pass only (no direct/indirect); residual Hunyuan-painted AO accepted at board scale",
+    "meshopt": "not used: Godot 4 importer has no EXT_meshopt_compression"
+  },
+  "script": "tools/models/bake_pathc_ship.py"
+}

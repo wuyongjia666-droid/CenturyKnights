@@ -1,0 +1,282 @@
+{
+  "version": 1,
+  "kit_glb": "res://assets/models/board/board_figures_v1.glb",
+  "kit_manifest": "res://assets/models/board/board_figures_v1.json",
+  "palette_keys": [
+    "hair",
+    "skin",
+    "eye",
+    "coat",
+    "coat_dark",
+    "apron",
+    "sash",
+    "metal",
+    "blade",
+    "house",
+    "crest",
+    "cape",
+    "trousers",
+    "boots",
+    "leather",
+    "wood",
+    "accent"
+  ],
+  "defaults": {
+    "body_m": "body_m",
+    "body_f": "body_f",
+    "body_heavy": "body_heavy",
+    "head_m": "head_m",
+    "head_f": "head_f",
+    "hair": "hair_swept",
+    "outfit": "outfit_light_inf",
+    "weapon": "weapon_sword",
+    "scale": 1.0,
+    "pathc_body_m": "base_body_m",
+    "pathc_body_f": "base_body_f"
+  },
+  "jobs": {
+    "squire": {
+      "outfit": "outfit_squire",
+      "weapon": "weapon_sword",
+      "signs": []
+    },
+    "light_cavalry": {
+      "outfit": "outfit_squire",
+      "weapon": "weapon_spear",
+      "signs": []
+    },
+    "outrider": {
+      "outfit": "outfit_squire",
+      "weapon": "weapon_spear",
+      "signs": [
+        "sign_pauldron_both"
+      ]
+    },
+    "bridge_tax": {
+      "outfit": "outfit_squire",
+      "weapon": "weapon_spear",
+      "signs": []
+    },
+    "light_inf": {
+      "outfit": "outfit_light_inf",
+      "weapon": "weapon_sword",
+      "signs": [],
+      "pathc_outfit_m": "outfit_light_inf_t1_m",
+      "pathc_outfit_f": "outfit_light_inf_t1_f"
+    },
+    "warrior": {
+      "outfit": "outfit_light_inf",
+      "weapon": "weapon_greatsword",
+      "signs": []
+    },
+    "veteran": {
+      "outfit": "outfit_light_inf",
+      "weapon": "weapon_greatsword",
+      "signs": []
+    },
+    "forge_brow": {
+      "outfit": "outfit_militia",
+      "weapon": "weapon_axe",
+      "signs": [],
+      "apron": true
+    },
+    "heavy_inf": {
+      "outfit": "outfit_heavy_inf",
+      "weapon": "weapon_sword",
+      "body": "heavy",
+      "signs": [
+        "sign_pauldron_both"
+      ]
+    },
+    "sentinel": {
+      "outfit": "outfit_heavy_inf",
+      "weapon": "weapon_sword",
+      "body": "heavy",
+      "signs": [
+        "sign_pauldron_both"
+      ]
+    },
+    "bulwark": {
+      "outfit": "outfit_heavy_inf",
+      "weapon": "weapon_sword",
+      "body": "heavy",
+      "signs": [
+        "sign_pauldron_both"
+      ],
+      "scale": 1.06
+    },
+    "hunter": {
+      "compose": "compose_hunter",
+      "weapon": "weapon_bow",
+      "signs": [],
+      "pathc_outfit_m": "outfit_hunter_t1_m",
+      "pathc_outfit_f": "outfit_hunter_t1_f"
+    },
+    "archer": {
+      "compose": "compose_hunter",
+      "weapon": "weapon_bow",
+      "signs": []
+    },
+    "marksman": {
+      "compose": "compose_hunter",
+      "weapon": "weapon_bow",
+      "signs": []
+    },
+    "apprentice": {
+      "outfit": "outfit_apprentice",
+      "weapon": "weapon_staff",
+      "signs": []
+    },
+    "mage": {
+      "outfit": "outfit_apprentice",
+      "weapon": "weapon_staff",
+      "signs": []
+    },
+    "lu_wai": {
+      "outfit": "outfit_apprentice",
+      "weapon": "weapon_staff",
+      "signs": []
+    },
+    "warlock": {
+      "outfit": "outfit_apprentice",
+      "weapon": "weapon_staff",
+      "signs": []
+    },
+    "priest": {
+      "outfit": "outfit_apprentice",
+      "weapon": "weapon_staff",
+      "signs": []
+    },
+    "medic": {
+      "outfit": "outfit_apprentice",
+      "weapon": "weapon_staff",
+      "signs": []
+    },
+    "yan_zhan": {
+      "outfit": "outfit_apprentice",
+      "weapon": "weapon_staff",
+      "signs": []
+    },
+    "militia": {
+      "outfit": "outfit_militia",
+      "weapon": "weapon_spear",
+      "signs": []
+    },
+    "skirmisher": {
+      "outfit": "outfit_militia",
+      "weapon": "weapon_dagger",
+      "signs": []
+    },
+    "pathfinder": {
+      "outfit": "outfit_militia",
+      "weapon": "weapon_dagger",
+      "signs": []
+    },
+    "banner": {
+      "outfit": "outfit_banner",
+      "weapon": "weapon_banner",
+      "signs": []
+    },
+    "standard": {
+      "outfit": "outfit_banner",
+      "weapon": "weapon_banner",
+      "signs": []
+    },
+    "captain": {
+      "compose": "compose_captain",
+      "weapon": "weapon_sword",
+      "signs": [],
+      "pathc_outfit_m": "outfit_leader_coat_t1_m",
+      "pathc_outfit_f": "outfit_leader_coat_t1_f"
+    },
+    "salt_yin": {
+      "outfit": "outfit_banner",
+      "weapon": "weapon_banner",
+      "signs": []
+    },
+    "acolyte": {
+      "outfit": "outfit_apprentice",
+      "weapon": "weapon_staff",
+      "signs": []
+    },
+    "cantor": {
+      "outfit": "outfit_apprentice",
+      "weapon": "weapon_staff",
+      "signs": []
+    },
+    "chorister": {
+      "outfit": "outfit_apprentice",
+      "weapon": "weapon_staff",
+      "signs": []
+    },
+    "frost_wait": {
+      "outfit": "outfit_apprentice",
+      "weapon": "weapon_staff",
+      "signs": []
+    }
+  },
+  "enemy_templates": {
+    "bandit_weak": {
+      "compose": "compose_bandit_weak",
+      "weapon": "weapon_club",
+      "signs": [],
+      "scale": 1.0
+    },
+    "bandit": {
+      "compose": "compose_bandit",
+      "weapon": "weapon_axe",
+      "signs": [],
+      "scale": 1.0
+    },
+    "bandit_archer": {
+      "compose": "compose_bandit_archer",
+      "weapon": "weapon_bow",
+      "signs": [],
+      "scale": 1.0
+    },
+    "bandit_chief": {
+      "compose": "compose_bandit_chief",
+      "weapon": "weapon_greatsword",
+      "signs": [],
+      "scale": 1.06
+    }
+  },
+  "leader_job_override": {
+    "compose": "compose_captain",
+    "weapon": "weapon_sword",
+    "signs": []
+  },
+  "hair_styles": [
+    "bob",
+    "crop",
+    "crown",
+    "long",
+    "messy",
+    "pony",
+    "swept",
+    "tied"
+  ],
+  "pathc_look": {
+    "registry": "res://data/board_figure_pathc.json",
+    "root": "docs/art/review/board_figure_hunyuan_cloud/pathc_native",
+    "note": "User-approved Path C shared bodies + profession shells + key cast (2026-10-16). LOOK only — not loaded by UnitModel at runtime (export budget). Shipping board still kit_glb / farm_cast until bake.",
+    "shared_bodies": {
+      "body_m": "base_body_m__board.glb",
+      "body_f": "base_body_f__board.glb"
+    },
+    "profession_shells": {
+      "hunter_m": "outfit_hunter_t1_m__board.glb",
+      "hunter_f": "outfit_hunter_t1_f__board.glb",
+      "leader_coat_m": "outfit_leader_coat_t1_m__board.glb",
+      "leader_coat_f": "outfit_leader_coat_t1_f__board.glb",
+      "light_inf_m": "outfit_light_inf_t1_m__board.glb",
+      "light_inf_f": "outfit_light_inf_t1_f__board.glb"
+    },
+    "key_cast": {
+      "hunter_m": "hunter_m__board.glb",
+      "hunter_f": "hunter_f__board.glb",
+      "bandit_chief": "bandit_chief__board.glb",
+      "leader_m": "docs/art/review/board_figure_p1/hunyuan_noreduce/cast_leader__board.glb"
+    }
+  }
+}

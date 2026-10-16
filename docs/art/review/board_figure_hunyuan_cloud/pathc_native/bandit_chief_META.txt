@@ -1,0 +1,8 @@
+mode=normalize-only
+stem=bandit_chief
+src=/workspace/board_figure_hunyuan_review/cast3_textured/out/bandit_chief_v2/bandit_chief_pathc_native.glb
+out=docs/art/review/board_figure_hunyuan_cloud/pathc_native/bandit_chief__board.glb
+tris_before=1498644
+tris_after=1498644
+bytes=90878812
+height_target=1.85

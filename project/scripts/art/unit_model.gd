@@ -191,17 +191,21 @@ static func _enemy_spec(c, tmpl: String) -> Dictionary:
 	var gender := "f" if str(c.gender) == "f" else "m"
 	var path := _library_path(slot_key, gender)
 	var weapon := slot_key
+	var dedicated_hit := false
 	if str(tmpl) != "":
 		var dedicated := DIR + "enemy_%s.glb" % str(tmpl)
 		if ResourceLoader.exists(dedicated):
 			path = dedicated
 			weapon = "dedicated:%s" % str(tmpl)
-	var ck := str(c.cast_key) if "cast_key" in c else ""
-	if ck != "":
-		var cp := DIR + "cast_%s.glb" % ck
-		if ResourceLoader.exists(cp):
-			path = cp
-			weapon = "cast:%s" % ck
+			dedicated_hit = true
+	# cast_key only when no dedicated enemy_<tmpl> (board shots reuse leader char).
+	if not dedicated_hit:
+		var ck := str(c.cast_key) if "cast_key" in c else ""
+		if ck != "":
+			var cp := DIR + "cast_%s.glb" % ck
+			if ResourceLoader.exists(cp):
+				path = cp
+				weapon = "cast:%s" % ck
 	if path == "" or not ResourceLoader.exists(path):
 		path = DIR + archetype_for(c, "enemy", tmpl) + ".glb"
 		weapon = "archetype"
@@ -258,16 +262,38 @@ static func _hair_tint(c) -> Color:
 	return {"ash_brown": Color(0.22, 0.18, 0.16), "ink_black": Color(0.08, 0.09, 0.12), "silver": Color(0.55, 0.58, 0.64),
 		"auburn": Color(0.30, 0.14, 0.10), "flax": Color(0.45, 0.38, 0.24)}.get(h, Color(0.12, 0.15, 0.20))
 
-static func instantiate(c, team: String, tmpl: String = "") -> Node3D:
+const PATHC_SHIP_DIR := "res://assets/models/board/pathc_ship/"
+
+## Board load order: pathc_ship/<stem>.glb (baked from Path C master) → units/<stem>__board.glb → units/<stem>.glb.
+## units/<stem>.glb stays the cutscene model; farm_cast is the kit fallback when resolve fails.
+static func board_load_path(p: String) -> String:
+	var stem := p.get_file().get_basename()
+	var ship := PATHC_SHIP_DIR + stem + ".glb"
+	if ResourceLoader.exists(ship):
+		return ship
+	if ResourceLoader.exists(p.replace(".glb", "__board.glb")):
+		return p.replace(".glb", "__board.glb")
+	return p
+
+static func instantiate(c, team: String, tmpl: String = "", board: bool = false) -> Node3D:
 	var spec := resolve(c, team, tmpl)
 	var p := str(spec.get("path", ""))
 	if p == "":
 		return null
-	var ps: PackedScene = load(p)
+	# Board pieces may use a Blender-cleaned variant (<stem>__board.glb); meta keeps p.
+	var lp := p
+	if board:
+		lp = board_load_path(p)
+	var ps: PackedScene = load(lp)
 	if ps == null:
 		return null
 	var n: Node3D = ps.instantiate()
-	recolor(n, c, team, tmpl, spec)
+	var ship := lp.begins_with(PATHC_SHIP_DIR)
+	n.set_meta("ck_pathc_ship", ship)
+	n.set_meta("ck_load_path", lp)
+	# pathc_ship carries its own baked Path C albedo: no slot recolor.
+	if not ship:
+		recolor(n, c, team, tmpl, spec)
 	if p.get_file().begins_with("outfit_"):
 		attach_modules(n, c, team)
 	n.set_meta("ck_theme", str(spec.get("theme", "")))

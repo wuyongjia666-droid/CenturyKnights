@@ -1,0 +1,376 @@
+{
+  "version": 2,
+  "model_h": 1.85,
+  "parts": {
+    "body_m": {
+      "category": "body",
+      "tris": 2652,
+      "tags": [
+        "m",
+        "std"
+      ]
+    },
+    "body_f": {
+      "category": "body",
+      "tris": 2592,
+      "tags": [
+        "f",
+        "std"
+      ]
+    },
+    "body_heavy": {
+      "category": "body",
+      "tris": 2652,
+      "tags": [
+        "m",
+        "heavy"
+      ]
+    },
+    "head_m": {
+      "category": "head",
+      "tris": 982,
+      "tags": [
+        "m",
+        "planes"
+      ]
+    },
+    "head_f": {
+      "category": "head",
+      "tris": 982,
+      "tags": [
+        "f",
+        "planes"
+      ]
+    },
+    "hair_bob": {
+      "category": "hair",
+      "tris": 1104,
+      "tags": [
+        "bob",
+        "module"
+      ]
+    },
+    "hair_crop": {
+      "category": "hair",
+      "tris": 1103,
+      "tags": [
+        "crop",
+        "module"
+      ]
+    },
+    "hair_crown": {
+      "category": "hair",
+      "tris": 1104,
+      "tags": [
+        "crown",
+        "module"
+      ]
+    },
+    "hair_long": {
+      "category": "hair",
+      "tris": 1104,
+      "tags": [
+        "long",
+        "module"
+      ]
+    },
+    "hair_messy": {
+      "category": "hair",
+      "tris": 1104,
+      "tags": [
+        "messy",
+        "module"
+      ]
+    },
+    "hair_pony": {
+      "category": "hair",
+      "tris": 1169,
+      "tags": [
+        "pony",
+        "module"
+      ]
+    },
+    "hair_swept": {
+      "category": "hair",
+      "tris": 1104,
+      "tags": [
+        "swept",
+        "module"
+      ]
+    },
+    "hair_tied": {
+      "category": "hair",
+      "tris": 1104,
+      "tags": [
+        "tied",
+        "module"
+      ]
+    },
+    "outfit_captain": {
+      "category": "outfit",
+      "tris": 1946,
+      "tags": [
+        "mid"
+      ]
+    },
+    "outfit_squire": {
+      "category": "outfit",
+      "tris": 1794,
+      "tags": [
+        "short"
+      ]
+    },
+    "outfit_hunter": {
+      "category": "outfit",
+      "tris": 1326,
+      "tags": [
+        "short"
+      ]
+    },
+    "outfit_light_inf": {
+      "category": "outfit",
+      "tris": 1326,
+      "tags": [
+        "mid"
+      ]
+    },
+    "outfit_heavy_inf": {
+      "category": "outfit",
+      "tris": 1606,
+      "tags": [
+        "armor"
+      ]
+    },
+    "outfit_apprentice": {
+      "category": "outfit",
+      "tris": 1326,
+      "tags": [
+        "long"
+      ]
+    },
+    "outfit_militia": {
+      "category": "outfit",
+      "tris": 1326,
+      "tags": [
+        "short"
+      ]
+    },
+    "outfit_banner": {
+      "category": "outfit",
+      "tris": 1326,
+      "tags": [
+        "mid"
+      ]
+    },
+    "outfit_bandit_weak": {
+      "category": "outfit",
+      "tris": 964,
+      "tags": [
+        "bandit",
+        "weak"
+      ]
+    },
+    "outfit_bandit_bandit": {
+      "category": "outfit",
+      "tris": 976,
+      "tags": [
+        "bandit",
+        "bandit"
+      ]
+    },
+    "outfit_bandit_archer": {
+      "category": "outfit",
+      "tris": 1072,
+      "tags": [
+        "bandit",
+        "archer"
+      ]
+    },
+    "outfit_bandit_chief": {
+      "category": "outfit",
+      "tris": 1140,
+      "tags": [
+        "bandit",
+        "chief"
+      ]
+    },
+    "weapon_sword": {
+      "category": "weapon",
+      "tris": 340,
+      "tags": [
+        "sword"
+      ]
+    },
+    "weapon_greatsword": {
+      "category": "weapon",
+      "tris": 228,
+      "tags": [
+        "greatsword"
+      ]
+    },
+    "weapon_axe": {
+      "category": "weapon",
+      "tris": 120,
+      "tags": [
+        "axe"
+      ]
+    },
+    "weapon_bow": {
+      "category": "weapon",
+      "tris": 496,
+      "tags": [
+        "bow"
+      ]
+    },
+    "weapon_staff": {
+      "category": "weapon",
+      "tris": 168,
+      "tags": [
+        "staff"
+      ]
+    },
+    "weapon_spear": {
+      "category": "weapon",
+      "tris": 136,
+      "tags": [
+        "spear"
+      ]
+    },
+    "weapon_club": {
+      "category": "weapon",
+      "tris": 36,
+      "tags": [
+        "club"
+      ]
+    },
+    "weapon_banner": {
+      "category": "weapon",
+      "tris": 40,
+      "tags": [
+        "banner"
+      ]
+    },
+    "weapon_dagger": {
+      "category": "weapon",
+      "tris": 120,
+      "tags": [
+        "dagger"
+      ]
+    },
+    "sign_pauldron_both": {
+      "category": "sign",
+      "tris": 336,
+      "tags": [
+        "pauldron",
+        "both"
+      ]
+    },
+    "sign_pauldron_L": {
+      "category": "sign",
+      "tris": 168,
+      "tags": [
+        "pauldron",
+        "L"
+      ]
+    },
+    "sign_pauldron_R": {
+      "category": "sign",
+      "tris": 168,
+      "tags": [
+        "pauldron",
+        "R"
+      ]
+    },
+    "compose_bandit": {
+      "category": "compose",
+      "tris": 4863,
+      "tags": [
+        "override",
+        "organic"
+      ]
+    },
+    "compose_bandit_archer": {
+      "category": "compose",
+      "tris": 4554,
+      "tags": [
+        "override",
+        "organic"
+      ]
+    },
+    "compose_bandit_chief": {
+      "category": "compose",
+      "tris": 4322,
+      "tags": [
+        "override",
+        "organic"
+      ]
+    },
+    "compose_bandit_weak": {
+      "category": "compose",
+      "tris": 4322,
+      "tags": [
+        "override",
+        "organic"
+      ]
+    },
+    "compose_captain": {
+      "category": "compose",
+      "tris": 4816,
+      "tags": [
+        "override",
+        "organic"
+      ]
+    },
+    "compose_hunter": {
+      "category": "compose",
+      "tris": 6489,
+      "tags": [
+        "override",
+        "organic"
+      ]
+    }
+  },
+  "bones": [
+    "root",
+    "hips",
+    "spine",
+    "chest",
+    "neck",
+    "head",
+    "upper_arm.L",
+    "forearm.L",
+    "hand.L",
+    "thigh.L",
+    "shin.L",
+    "foot.L",
+    "upper_arm.R",
+    "forearm.R",
+    "hand.R",
+    "thigh.R",
+    "shin.R",
+    "foot.R"
+  ],
+  "slots": {
+    "hair": 0,
+    "skin": 1,
+    "eye": 2,
+    "coat": 3,
+    "coat_dark": 4,
+    "apron": 5,
+    "sash": 6,
+    "metal": 7,
+    "blade": 8,
+    "house": 9,
+    "crest": 10,
+    "cape": 11,
+    "trousers": 12,
+    "boots": 13,
+    "leather": 14,
+    "wood": 15,
+    "accent": 16
+  },
+  "quality": "organic_compose_v3",
+  "glb": "board_figures_v1.glb",
+  "total_tris": 66606,
+  "part_count": 43
+}

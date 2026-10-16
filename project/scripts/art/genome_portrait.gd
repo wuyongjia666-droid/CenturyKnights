@@ -505,8 +505,17 @@ static func _bank_plate(c: Object, tier: String = "large") -> Texture2D:
 	var scr = load("res://scripts/art/portrait_bank.gd")
 	if scr == null:
 		return null
-	var tex = scr.try_texture(c, tier)
-	return tex if tex is Texture2D else null
+	var pack = scr.try_texture(c, tier)
+	var tex: Texture2D = null
+	var stem := ""
+	if typeof(pack) == TYPE_DICTIONARY:
+		tex = pack.get("texture") as Texture2D
+		stem = str(pack.get("stem", ""))
+	elif pack is Texture2D:
+		tex = pack
+	if c != null and stem != "":
+		c.set_meta("ck_plate_stem", stem)
+	return tex
 
 static func clear_mem() -> void:
 	## Drop in-memory plates only. Do NOT call CKPortraitBank.clear_cache() —
