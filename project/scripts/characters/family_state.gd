@@ -131,8 +131,14 @@ static func refresh_marriage_candidates(host, nation_id: String = "", suitor = n
 	host.marriage_candidates.clear()
 	for i in 3:
 		host.marriage_candidates.append(CharacterFactory.make_marriage_candidate(host.rng, "baron", nation_id, who))
+	if who != null and can_reroll_court(who):
+		stamp_court_posts_month(host)
+	elif who != null and uses_court_posts(who):
+		## Captain teaching snapshot: stamp so we do not treat it as "merc stale".
+		stamp_court_posts_month(host)
 
-## Fill only when empty / wrong nation / wrong sex — does not spend silver.
+## Fill only when empty / wrong nation / wrong sex / (non-hero) new calendar month.
+## Does not spend silver or monthly 再议 quota.
 static func ensure_marriage_candidates(host, nation_id: String = "", suitor = null) -> void:
 	var who = _resolve_suitor(host, suitor)
 	if who != null and is_hero_party(who) and not uses_court_posts(who):
@@ -150,6 +156,9 @@ static func ensure_marriage_candidates(host, nation_id: String = "", suitor = nu
 			if str(c.gender) != want:
 				need = true
 				break
+	## 后招：上个月三人到了下个月自动作废换新。
+	if not need and who != null and can_reroll_court(who) and court_posts_stale(host):
+		need = true
 	if need:
 		refresh_marriage_candidates(host, nation_id, who)
 
@@ -163,6 +172,34 @@ static func reset_court_rerolls_month(host) -> void:
 	if host == null:
 		return
 	host.marriage_rerolls_used = 0
+
+static func court_month_key() -> int:
+	return int(Calendar.year) * 12 + int(Calendar.month)
+
+static func stamp_court_posts_month(host) -> void:
+	if host == null:
+		return
+	host.marriage_posts_month = court_month_key()
+
+static func court_posts_stale(host) -> bool:
+	if host == null:
+		return true
+	return int(host.get("marriage_posts_month") if host.get("marriage_posts_month") != null else -1) != court_month_key()
+
+## 历月推进：后招三人廷帖整批换新（不占再议次数、不扣银）；主角团不动。
+static func rotate_court_posts_for_new_month(host) -> String:
+	if host == null:
+		return ""
+	reset_court_rerolls_month(host)
+	var who = _resolve_suitor(host, null)
+	## Invalidate stamp so a later switch to a merc still gets a fresh draw this month.
+	host.marriage_posts_month = -1
+	if who != null and can_reroll_court(who):
+		var nid := str(host.marriage_nation) if str(host.marriage_nation) != "" else active_marriage_nation(host)
+		refresh_marriage_candidates(host, nid, who)
+		stamp_court_posts_month(host)
+		return "廷帖换季：后招相亲三人已换新"
+	return ""
 
 ## Paid court reroll for non-hero suiters only (silver + monthly cap).
 static func reroll_marriage_candidates(host, nation_id: String = "", suitor = null) -> Dictionary:
@@ -216,8 +253,11 @@ static func marriage_suitors(host) -> Array:
 
 static func tick_doctrine_and_marriage_month(host) -> Array:
 	var msgs: Array = []
-	## 后招廷帖再议次数按历月重置（与银价叠加，防无限刷高配）。
-	reset_court_rerolls_month(host)
+	## 后招：再议次数清零 + 上月三人廷帖整批换新（不占再议额度）。
+	var rotate_msg := rotate_court_posts_for_new_month(host)
+	if rotate_msg != "":
+		msgs.append(rotate_msg)
+		host.add_lineage_event(rotate_msg)
 	host.tick_patrol_month()
 	if host.patrol_boost_months > 0:
 		msgs.append("巡防仍在：抗劫剩余 %d 月" % host.patrol_boost_months)

@@ -27,6 +27,9 @@ func _run() -> String:
 	e = _a14_monthly_reroll_cap()
 	if e != "":
 		return e
+	e = _a15_month_rotates_posts()
+	if e != "":
+		return e
 	e = await _a10_page_after_leader_wed()
 	if e != "":
 		return e
@@ -236,4 +239,43 @@ func _a14_monthly_reroll_cap() -> String:
 		return "A14 post-reset reroll failed: %s" % str(again.get("msg"))
 	if GameState.marriage_rerolls_used != 1:
 		return "A14 used should be 1 after reset+reroll"
+	return ""
+
+func _a15_month_rotates_posts() -> String:
+	GameState.new_game("烬行", "灰旗", GameState.crest_color)
+	var merc := _add_merc("merc_rotate", "m")
+	GameState.marriage_focus_id = merc.id
+	GameState.refresh_marriage_candidates("", merc)
+	if GameState.marriage_candidates.size() != 3:
+		return "A15 expected 3 posts"
+	var before: Array = []
+	for c in GameState.marriage_candidates:
+		before.append(str(c.id))
+	## Month tick while merc is focus → free rotate, discard last month's three
+	var msgs: Array = CKFamilyState.tick_doctrine_and_marriage_month(GameState)
+	if GameState.marriage_candidates.size() != 3:
+		return "A15 after tick expected 3 posts"
+	var after: Array = []
+	for c2 in GameState.marriage_candidates:
+		after.append(str(c2.id))
+	var same := 0
+	for id in before:
+		if id in after:
+			same += 1
+	if same == 3:
+		return "A15 posts not rotated (all ids identical)"
+	if GameState.marriage_rerolls_used != 0:
+		return "A15 rotate must not consume reroll quota"
+	## Hero captain: month tick must not wipe teaching snapshot into empty / force-farm
+	GameState.marriage_focus_id = str(GameState.get_leader().id)
+	GameState.refresh_marriage_candidates("", GameState.get_leader())
+	var hero_ids: Array = []
+	for c3 in GameState.marriage_candidates:
+		hero_ids.append(str(c3.id))
+	CKFamilyState.tick_doctrine_and_marriage_month(GameState)
+	var hero_after: Array = []
+	for c4 in GameState.marriage_candidates:
+		hero_after.append(str(c4.id))
+	if hero_ids != hero_after:
+		return "A15 hero captain posts should stay put across month tick"
 	return ""
