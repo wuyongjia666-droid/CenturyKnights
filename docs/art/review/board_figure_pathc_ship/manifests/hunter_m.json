@@ -2,9 +2,9 @@
   "stem": "hunter_m",
   "tier": "key",
   "ship": "project/assets/models/board/pathc_ship/hunter_m.glb",
-  "ship_sha256": "79d61fd6b8472a40cb2d7621a39e560069d8bff3aea995691149ad0a73bbeed4",
-  "ship_bytes": 619108,
-  "tris": 15000,
+  "ship_sha256": "ff1ba5189105b6f49df53ae40d87b6b52c0899f540abc8fe3c48b892229dc600",
+  "ship_bytes": 630672,
+  "tris": 14500,
   "master": {
     "repo_path": "docs/art/review/board_figure_hunyuan_cloud/pathc_native/hunter_m__board.glb",
     "sha256": "f8e1282880bf2020c14c9eb98e07ffc764547710cbd24c34a5b3e65da9308b8a",
@@ -14,16 +14,12 @@
   "height_m": 1.85,
   "feet_z": 0,
   "bake": {
-    "pipeline": "voxel remesh (h/400) -> decimate on new UV-less mesh -> smart UV + head islands x2.2 texel priority + pack_islands(rotate) -> bake at 1024, downsample 512",
-    "albedo": "DIFFUSE color pass (de-lit)",
-    "metal": "where blurred(k=2) master metallic > 0.5..0.8: blend toward COMBINED bake under uniform white sky (metal reads as metal); blend strength chosen per piece by min error vs master renders (front/35/face)",
+    "pipeline": "voxel remesh (h/480) -> decimate -> smart UV island_margin 0.016 + head x2.5 + pack margin 0.018 -> bake 1024 margin 24, downsample 512 + empty dilation",
+    "albedo": "DIFFUSE color + optional COMBINED metal blend",
     "metal_strength": 0.0,
-    "voxel_size": 0.004625000000000001,
-    "voxel_tris": 487292,
-    "cage_extrusion": 0.02,
-    "max_ray_distance": 0.05,
-    "margin_px": 16
+    "uv_black_pad_pct": "~3-9 (was ~0.7)",
+    "godot": "ship albedo import mipmaps/generate=false; shader filter_linear (no mip)"
   },
   "script": "tools/models/bake_pathc_ship.py",
-  "bake_version": 2
+  "bake_version": 3
 }

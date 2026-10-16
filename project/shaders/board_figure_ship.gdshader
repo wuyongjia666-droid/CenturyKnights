@@ -1,7 +1,7 @@
 shader_type spatial;
 // Path C ship piece: keeps its own baked albedo; adds faction rim only (enemy red).
 render_mode cull_back, diffuse_lambert, specular_schlick_ggx;
-uniform sampler2D albedo_tex : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
+uniform sampler2D albedo_tex : source_color, filter_linear, repeat_disable;
 uniform vec4 rim_col : source_color = vec4(1.0, 0.3, 0.3, 1.0);
 uniform float rim_amt = 0.0;
 uniform float rim_pow = 2.4;

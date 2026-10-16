@@ -245,15 +245,13 @@ static func _apply_ship_rim(n: Node, enemy: bool) -> void:
 
 ## Job weapon from the board kit, moved from the kit hand to the ship piece's measured hand
 ## (board_figures.json pathc_ship.hands, GLB/Godot units). Bow goes to the left hand.
+static var _weapon_scenes: Dictionary = {}  # wn -> PackedScene
+
 static func _attach_ship_weapon(unit: Node3D, parts: Dictionary, pal: Dictionary, face: float, enemy: bool) -> void:
 	var wn := str(parts.get("weapon", ""))
 	if wn == "":
 		return
-	_ensure_kit()
 	_ensure_map()
-	var mesh: Mesh = _kit_meshes.get(wn, null)
-	if mesh == null:
-		return
 	var cfg: Dictionary = _map.get("pathc_ship", {})
 	var stem := str(unit.get_meta("ck_load_path", "")).get_file().get_basename()
 	var hands: Dictionary = (cfg.get("hands", {}) as Dictionary).get(stem, {})
@@ -263,15 +261,41 @@ static func _attach_ship_weapon(unit: Node3D, parts: Dictionary, pal: Dictionary
 	var hv: Array = hands.get("l" if left else "r", [])
 	if hv.size() < 3:
 		return
-	var kit_hand: Array = (cfg.get("kit_hand_l" if left else "kit_hand_r", [0.33 if left else -0.33, 0.86, 0.04]) as Array)
-	var mi := MeshInstance3D.new()
-	mi.name = "ShipWeapon"
-	mi.mesh = mesh
-	mi.position = Vector3(float(hv[0]) - float(kit_hand[0]), float(hv[1]) - float(kit_hand[1]), float(hv[2]) - float(kit_hand[2]))
-	var wm := _palette_mat(pal, face, enemy)
-	wm.set_shader_parameter("rim_amt", 0.85 if enemy else 0.0)
-	mi.material_override = wm
-	unit.add_child(mi)
+	var wdir := str(cfg.get("weapons_dir", "res://assets/models/board/pathc_weapons/"))
+	var wmap: Dictionary = cfg.get("weapon_glb", {})
+	var wfile := str(wmap.get(wn, ""))
+	var root: Node3D = null
+	if wfile != "" and ResourceLoader.exists(wdir + wfile):
+		if not _weapon_scenes.has(wn):
+			_weapon_scenes[wn] = load(wdir + wfile)
+		var ps: PackedScene = _weapon_scenes[wn]
+		if ps != null:
+			root = ps.instantiate() as Node3D
+	if root == null:
+		# fallback: old kit mesh (should rarely hit)
+		_ensure_kit()
+		var mesh: Mesh = _kit_meshes.get(wn, null)
+		if mesh == null:
+			return
+		var mi := MeshInstance3D.new()
+		mi.name = "ShipWeapon"
+		mi.mesh = mesh
+		root = mi
+	root.name = "ShipWeapon"
+	# Path C weapons are authored grip-at-origin, tip +Z (Blender) → +Y after yup export?
+	# Our GLBs use export_yup=True so Blender Z-up becomes glTF Y-up: tip along +Y.
+	# Place grip at measured hand; slight in-scale for board readability.
+	root.position = Vector3(float(hv[0]), float(hv[1]), float(hv[2]))
+	root.scale = Vector3(1.15, 1.15, 1.15)
+	if left:
+		# bow: upright, facing outward a bit
+		root.rotation_degrees = Vector3(0, 0, 0)
+	else:
+		# sword/spear/axe: tip up
+		root.rotation_degrees = Vector3(0, 0, 0)
+	# faction rim on weapon meshes (keep their own albedo)
+	_apply_ship_rim(root, enemy)
+	unit.add_child(root)
 	unit.set_meta("ck_ship_weapon", wn)
 
 

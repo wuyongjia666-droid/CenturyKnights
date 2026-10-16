@@ -19,6 +19,11 @@
 - v2：1024 烘再降 512；margin 16；头部 UV 岛 2.2× 纹素优先 + 旋转打包；albedo 用 DIFFUSE 颜色；金属区（浮点金属图，k=2 模糊）混入「均匀白天光」COMBINED 烘焙，强度按与母版渲染误差逐件选 0/0.5/1。
 - 运行时：航运件走 `shaders/board_figure_ship.gdshader`（保留自身 albedo，敌方红色 rim）；职业武器取自套件，按 `pathc_ship.hands` 挂到手位。
 
+## B3. 烘焙 v3（2026-10-17，脏斑根因）
+- 根因（比 v2 更深）：棋盘距离下 Godot 默认 mipmap + 碎 UV 岛几乎无 padding（猎人黑底仅 0.7%）→ 岛间渗色发脏；复杂衣褶母版自带烘死光影，降到 512 后变成 mottling。团长外套颜色更均匀，所以看起来干净。
+- v3：更细体素(h/480)、UV island_margin 0.016 + pack 0.018（黑底垫到 ~4–9%）、1024 烘 margin 24 再降 512 + 空像素 dilation；航运贴图 **关掉 mipmap**（import + shader `filter_linear`）。
+- 武器：弃用套件方块件，改 `pathc_weapons/{sword,spear,axe,bow}.glb` 写实网格（钢/木/皮多材质），按 hands 挂手，棋盘可读加粗。
+
 ## C. 分档 / 门禁（`tools/ci/pathc_ship_gate.py`，已接 run_ci.sh）
 | 项 | 门槛 |
 |---|---|
