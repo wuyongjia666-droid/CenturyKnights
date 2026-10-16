@@ -1,7 +1,7 @@
 {
   "version": 1,
   "source": "tools/art/plate_palette.py",
-  "spec": "docs/design/pawn-redesign-opus.md §3.3 / 附录 C",
+  "spec": "docs/design/pawn-redesign-opus.md sec 3.3 / 附录 C",
   "bank": "project/assets/art/portraits/genome/bank",
   "plate_count_available": 1595,
   "plate_count_extracted": 1595,

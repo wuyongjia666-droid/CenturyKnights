@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "source": "docs/design/pawn-redesign-opus.md §4.2 现状 (desktop 1280×720, CELL 85, ch0_pass 13 units)",
+  "source": "docs/design/pawn-redesign-opus.md sec 4.2 现状 (desktop 1280×720, CELL 85, ch0_pass 13 units)",
   "kind": "current_farm_board_compact",
-  "note": "P0 baseline before modular board_figure rollout. Gate loads this; P1+ must beat thresholds in §7.1.",
+  "note": "P0 baseline before modular board_figure rollout. Gate loads this; P1+ must beat thresholds in sec 7.1.",
   "desktop_cell85": {
     "head_h_px": {"mean": 17.7, "min": 16.8, "max": 18.3},
     "separation": {"mean": 0.275, "min": 0.146, "max": 0.437, "ally_mean": 0.290, "enemy_mean": 0.250},
@@ -49,6 +49,6 @@
     "coat_de_pass": false,
     "house_de_pass": false,
     "id8_top3_pass": false,
-    "note": "Status quo fails §7.1; P1 modular figures must clear these."
+    "note": "Status quo fails sec 7.1; P1 modular figures must clear these."
   }
 }

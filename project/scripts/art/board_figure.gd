@@ -199,8 +199,9 @@ static func build(c, team: String, tmpl: String = "") -> Node3D:
 			body.scale = Vector3.ONE * scl
 		_assemble_kit(body, parts, pal, face, enemy)
 		root.set_meta("ck_source", "kit_fallback")
-		var ap := _make_anim(root)
-		root.add_child(ap)
+	# Board layer always owns idle/attack clips (UnitModel GLBs may lack them).
+	var ap := _make_anim(root)
+	root.add_child(ap)
 	_lru_put(h, true)
 	return root
 

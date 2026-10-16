@@ -1,5 +1,5 @@
 {
-  "_doc": "Human overrides for plate_palettes.json (pawn-redesign-opus §3.3). Key = plate stem. Set reviewed=true after hair-style sign-off.",
+  "_doc": "Human overrides for plate_palettes.json (pawn-redesign-opus sec 3.3). Key = plate stem. Set reviewed=true after hair-style sign-off.",
   "_example": {
     "style": "swept",
     "hair": "#5D4A49",
