@@ -290,16 +290,16 @@ static func _attach_ship_weapon(unit: Node3D, parts: Dictionary, pal: Dictionary
 	if wn == "weapon_axe":
 		outward *= 0.3  # axe bit already extends +X; don't float away
 	root.position = Vector3(float(hv[0]) + outward, float(hv[1]) - 0.02, float(hv[2]) - 0.02)
-	root.scale = Vector3(1.15, 1.15, 1.15)
+	root.scale = Vector3(1.35, 1.35, 1.35)
 	if left:
-		# bow: limbs face camera a bit
-		root.rotation_degrees = Vector3(8, 25, 0)
+		# bow: tip up, limbs open toward board camera
+		root.rotation_degrees = Vector3(20, 35, 15)
 	elif wn == "weapon_axe":
-		# slight pitch so top-down reads the fan blade
-		root.rotation_degrees = Vector3(12, 0, 0)
+		# pitch+yaw so crescent blade reads in top-down
+		root.rotation_degrees = Vector3(25, 40, 0)
 	else:
-		# sword/spear: tip up, lean toward board camera
-		root.rotation_degrees = Vector3(10, 0, 0)
+		# sword/spear: tip up, lean hard toward board camera so blade face shows
+		root.rotation_degrees = Vector3(35, 0, 0)
 	# faction rim on weapon meshes (keep their own albedo)
 	_apply_ship_rim(root, enemy)
 	unit.add_child(root)
