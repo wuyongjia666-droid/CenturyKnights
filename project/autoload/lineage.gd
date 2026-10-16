@@ -40,6 +40,8 @@ func can_propose(suitor: CKCharacter, target: CKCharacter, realm: String = "ashl
 		return {"ok": false, "msg": "已有配偶（MVP 不可重婚）"}
 	if not suitor.alive or not target.alive:
 		return {"ok": false, "msg": "当事人不在"}
+	if int(suitor.age) < Calendar.ADULT_AGE or int(target.age) < Calendar.ADULT_AGE:
+		return {"ok": false, "msg": Locale.t("ux_marry_underage")}
 	var bar := CKBloodline.marriage_barrier(suitor, target, GameState.characters)
 	if bar != "":
 		return {"ok": false, "need": need, "have": have, "msg": bar}
@@ -94,7 +96,11 @@ func marry(suitor: CKCharacter, target: CKCharacter, bride_price: int = 40, acce
 		due = int(mother.blood_meta.get("gestation_term", CKFamilyState.TERM_MONTHS)) if conceived else 0
 	else:
 		mother.pregnant_months = 1
-	GameState.chapter0_flags["married"] = true
+	## Teaching flag stays captain-only; other cast weddings must not trip chapter0 gates.
+	if bool(suitor.is_leader):
+		GameState.chapter0_flags["married"] = true
+	suitor.blood_meta["marriage_phase"] = "wed"
+	target.blood_meta["marriage_phase"] = "wed"
 	GameState.mark_dirty()
 	var dip_s := ("邦交 " + "、".join(dip) + "。") if not dip.is_empty() else ""
 	var joy := Locale.t("fertility_none", [mother.name])

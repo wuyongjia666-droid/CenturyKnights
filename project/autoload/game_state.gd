@@ -47,6 +47,12 @@ var characters: Dictionary = {}  # id -> CKCharacter
 var tavern_candidates: Array = []
 var marriage_candidates: Array = []
 var marriage_nation: String = ""
+## UI 当前提亲方（marriage-all-cast）；不进关键模拟，缺省回落团长。
+var marriage_focus_id: String = ""
+## 本月已用后招廷帖再议次数（每月 cap，见 CKFamilyState.COURT_REROLL_MONTHLY_CAP）。
+var marriage_rerolls_used: int = 0
+## 当前廷帖对应的历月键（year*12+month）；后招跨月自动换三人。
+var marriage_posts_month: int = -1
 ## Calendar month (year*12+month) whose castle sortie already paid out. Audit P1-3.
 var sortie_month: int = -1
 ## Tavern refreshes used this month: {"month": year*12+month, "used": n}. Audit P1-4.
@@ -324,6 +330,9 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	grant_job_skills(ally)
 	refresh_tavern()
 	marriage_nation = ""
+	marriage_focus_id = ""
+	marriage_rerolls_used = 0
+	marriage_posts_month = -1
 	refresh_marriage_candidates()
 	_init_quests()
 	World.reset()  # v8.7 playable atlas: position, reputation, markets, boards
@@ -836,6 +845,8 @@ func build_save_data() -> Dictionary:
 		"tavern": [],
 		"marriage": [],
 		"marriage_nation": marriage_nation,
+		"marriage_rerolls_used": marriage_rerolls_used,
+		"marriage_posts_month": marriage_posts_month,
 		"sortie_month": sortie_month,
 		"tavern_refresh": tavern_refresh.duplicate(),
 		"quests": quests,
@@ -967,6 +978,8 @@ func apply_save_data(data: Dictionary) -> bool:
 		marriage_candidates.append(CKCharacter.from_dict(d))
 	_load_families(data)
 	marriage_nation = str(data.get("marriage_nation", ""))
+	marriage_rerolls_used = int(data.get("marriage_rerolls_used", 0))
+	marriage_posts_month = int(data.get("marriage_posts_month", -1))
 	sortie_month = int(data.get("sortie_month", -1))
 	var raw_tr = data.get("tavern_refresh", {})
 	tavern_refresh = (raw_tr as Dictionary).duplicate() if typeof(raw_tr) == TYPE_DICTIONARY else {}
@@ -993,8 +1006,14 @@ func apply_save_data(data: Dictionary) -> bool:
 func family_members() -> Array:
 	return CKFamilyState.family_members(self)
 
-func refresh_marriage_candidates(nation_id: String = "") -> void:
-	CKFamilyState.refresh_marriage_candidates(self, nation_id)
+func refresh_marriage_candidates(nation_id: String = "", suitor = null) -> void:
+	CKFamilyState.refresh_marriage_candidates(self, nation_id, suitor)
+
+func ensure_marriage_candidates(nation_id: String = "", suitor = null) -> void:
+	CKFamilyState.ensure_marriage_candidates(self, nation_id, suitor)
+
+func reroll_marriage_candidates(nation_id: String = "", suitor = null) -> Dictionary:
+	return CKFamilyState.reroll_marriage_candidates(self, nation_id, suitor)
 
 func _init_quests() -> void:
 	CKEconomyState._init_quests(self)

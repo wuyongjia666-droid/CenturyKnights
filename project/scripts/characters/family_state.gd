@@ -4,6 +4,56 @@ extends RefCounted
 ## Merged ownership moves to the dynasty stream.
 
 const LifeEvents := preload("res://scripts/characters/life_events.gd")
+const COMPANIONS_PATH := "res://data/cast/companions_v92.json"
+## 后招佣兵「再议」廷帖：每次 15 银，每月最多 2 次。主角团禁用再议。
+const COURT_REROLL_SILVER := 15
+const COURT_REROLL_MONTHLY_CAP := 2
+
+static var _hero_cast_keys: Dictionary = {}
+static var _hero_cast_ready := false
+
+static func hero_cast_keys() -> Dictionary:
+	if _hero_cast_ready:
+		return _hero_cast_keys
+	_hero_cast_ready = true
+	_hero_cast_keys = {"leader": true}
+	if not FileAccess.file_exists(COMPANIONS_PATH):
+		return _hero_cast_keys
+	var f := FileAccess.open(COMPANIONS_PATH, FileAccess.READ)
+	if f == null:
+		return _hero_cast_keys
+	var parsed = JSON.parse_string(f.get_as_text())
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return _hero_cast_keys
+	for row in parsed.get("companions", []):
+		if typeof(row) != TYPE_DICTIONARY:
+			continue
+		var ck := str(row.get("cast_key", ""))
+		if ck != "":
+			_hero_cast_keys[ck] = true
+	return _hero_cast_keys
+
+## 主角团：团长 + 十二具名同伴。姻缘对象主线固定，不可当普通廷帖刷。
+static func is_hero_party(c: CKCharacter) -> bool:
+	if c == null:
+		return false
+	if bool(c.is_leader) or str(c.cast_key) == "leader":
+		return true
+	var ck := str(c.cast_key)
+	if ck == "":
+		return false
+	return hero_cast_keys().has(ck)
+
+## 团长可持教学/外交廷帖快照；其他主角团成员不进随机廷帖池。
+static func uses_court_posts(suitor: CKCharacter) -> bool:
+	if suitor == null:
+		return true
+	if not is_hero_party(suitor):
+		return true
+	return bool(suitor.is_leader) or str(suitor.cast_key) == "leader"
+
+static func can_reroll_court(suitor: CKCharacter) -> bool:
+	return suitor != null and not is_hero_party(suitor)
 
 static func family_members(host) -> Array:
 	var out: Array = []
@@ -58,17 +108,156 @@ static func posts_match_nation(host, nid: String) -> bool:
 	return true
 
 
-static func refresh_marriage_candidates(host, nation_id: String = "") -> void:
+static func _resolve_suitor(host, suitor):
+	var who = suitor
+	if who == null and host != null:
+		var fid := str(host.get("marriage_focus_id") if host.get("marriage_focus_id") != null else "")
+		if fid != "" and host.characters.has(fid):
+			who = host.characters[fid]
+	return who
+
+static func refresh_marriage_candidates(host, nation_id: String = "", suitor = null) -> void:
 	## A blank nation keeps the diplomacy-weighted draw. The marriage screen passes the
 	## court it is standing in. Calendar, new game, and the century sim pass nothing,
 	## so their shared RNG and the portrait bank stay on the previous sequence.
+	## suitor (提亲方) drives candidate sex; blank falls back to captain / marriage_focus_id.
+	var who = _resolve_suitor(host, suitor)
+	## Non-captain hero party: no random court posts (story-named only).
+	if who != null and is_hero_party(who) and not uses_court_posts(who):
+		host.marriage_nation = nation_id
+		host.marriage_candidates.clear()
+		return
 	host.marriage_nation = nation_id
 	host.marriage_candidates.clear()
 	for i in 3:
-		host.marriage_candidates.append(CharacterFactory.make_marriage_candidate(host.rng, "baron", nation_id))
+		host.marriage_candidates.append(CharacterFactory.make_marriage_candidate(host.rng, "baron", nation_id, who))
+	if who != null and can_reroll_court(who):
+		stamp_court_posts_month(host)
+	elif who != null and uses_court_posts(who):
+		## Captain teaching snapshot: stamp so we do not treat it as "merc stale".
+		stamp_court_posts_month(host)
+
+## Fill only when empty / wrong nation / wrong sex / (non-hero) new calendar month.
+## Does not spend silver or monthly 再议 quota.
+static func ensure_marriage_candidates(host, nation_id: String = "", suitor = null) -> void:
+	var who = _resolve_suitor(host, suitor)
+	if who != null and is_hero_party(who) and not uses_court_posts(who):
+		host.marriage_nation = nation_id
+		host.marriage_candidates.clear()
+		return
+	var need: bool = host.marriage_candidates.is_empty()
+	if not need and nation_id != "" and str(host.marriage_nation) != nation_id:
+		need = true
+	if not need and nation_id != "" and not posts_match_nation(host, nation_id):
+		need = true
+	if not need and who != null:
+		var want := CharacterFactory.spouse_gender_for(who)
+		for c in host.marriage_candidates:
+			if str(c.gender) != want:
+				need = true
+				break
+	## 后招：上个月三人到了下个月自动作废换新。
+	if not need and who != null and can_reroll_court(who) and court_posts_stale(host):
+		need = true
+	if need:
+		refresh_marriage_candidates(host, nation_id, who)
+
+static func court_rerolls_used(host) -> int:
+	return int(host.get("marriage_rerolls_used") if host.get("marriage_rerolls_used") != null else 0)
+
+static func court_rerolls_left(host) -> int:
+	return maxi(0, COURT_REROLL_MONTHLY_CAP - court_rerolls_used(host))
+
+static func reset_court_rerolls_month(host) -> void:
+	if host == null:
+		return
+	host.marriage_rerolls_used = 0
+
+static func court_month_key() -> int:
+	return int(Calendar.year) * 12 + int(Calendar.month)
+
+static func stamp_court_posts_month(host) -> void:
+	if host == null:
+		return
+	host.marriage_posts_month = court_month_key()
+
+static func court_posts_stale(host) -> bool:
+	if host == null:
+		return true
+	return int(host.get("marriage_posts_month") if host.get("marriage_posts_month") != null else -1) != court_month_key()
+
+## 历月推进：后招三人廷帖整批换新（不占再议次数、不扣银）；主角团不动。
+static func rotate_court_posts_for_new_month(host) -> String:
+	if host == null:
+		return ""
+	reset_court_rerolls_month(host)
+	var who = _resolve_suitor(host, null)
+	## Invalidate stamp so a later switch to a merc still gets a fresh draw this month.
+	host.marriage_posts_month = -1
+	if who != null and can_reroll_court(who):
+		var nid := str(host.marriage_nation) if str(host.marriage_nation) != "" else active_marriage_nation(host)
+		refresh_marriage_candidates(host, nid, who)
+		stamp_court_posts_month(host)
+		return Locale.t("ux_court_season_rotate")
+	return ""
+
+## Paid court reroll for non-hero suiters only (silver + monthly cap).
+static func reroll_marriage_candidates(host, nation_id: String = "", suitor = null) -> Dictionary:
+	var who = _resolve_suitor(host, suitor)
+	if not can_reroll_court(who):
+		return {"ok": false, "msg": Locale.t("ux_hero_no_reroll")}
+	var used := court_rerolls_used(host)
+	if used >= COURT_REROLL_MONTHLY_CAP:
+		return {"ok": false, "msg": Locale.t("ux_reroll_month_cap", [COURT_REROLL_MONTHLY_CAP])}
+	if int(host.silver) < COURT_REROLL_SILVER:
+		return {"ok": false, "msg": Locale.t("not_enough_silver")}
+	host.silver -= COURT_REROLL_SILVER
+	host.marriage_rerolls_used = used + 1
+	refresh_marriage_candidates(host, nation_id, who)
+	host.mark_dirty()
+	var left := court_rerolls_left(host)
+	return {
+		"ok": true,
+		"msg": Locale.t("ux_reroll_done", [COURT_REROLL_SILVER, left]),
+		"cost": COURT_REROLL_SILVER,
+		"left": left,
+	}
+
+## Adults who may stand as 提亲方: captain, roster mercs, and keep kin.
+static func is_marriage_suitor(c: CKCharacter) -> bool:
+	if c == null or not c.alive or bool(c.retired):
+		return false
+	if int(c.age) < Calendar.ADULT_AGE:
+		return false
+	if c.is_leader or c.in_roster:
+		return true
+	if str(c.spouse_id) != "" or not c.parent_ids.is_empty() or bool(c.is_child) or str(c.family_id) != "":
+		return true
+	return false
+
+static func marriage_suitors(host) -> Array:
+	var out: Array = []
+	if host == null:
+		return out
+	for c in host.characters.values():
+		if is_marriage_suitor(c):
+			out.append(c)
+	out.sort_custom(func(a, b):
+		var sa := 0 if a.is_leader else (1 if a.in_roster else 2)
+		var sb := 0 if b.is_leader else (1 if b.in_roster else 2)
+		if sa != sb:
+			return sa < sb
+		return str(a.name) < str(b.name)
+	)
+	return out
 
 static func tick_doctrine_and_marriage_month(host) -> Array:
 	var msgs: Array = []
+	## 后招：再议次数清零 + 上月三人廷帖整批换新（不占再议额度）。
+	var rotate_msg := rotate_court_posts_for_new_month(host)
+	if rotate_msg != "":
+		msgs.append(rotate_msg)
+		host.add_lineage_event(rotate_msg)
 	host.tick_patrol_month()
 	if host.patrol_boost_months > 0:
 		msgs.append("巡防仍在：抗劫剩余 %d 月" % host.patrol_boost_months)
@@ -92,18 +281,46 @@ static func tick_doctrine_and_marriage_month(host) -> Array:
 		var amb = host.check_ambitions()
 		for a in amb:
 			msgs.append(a)
-	# 联姻月结：配偶在花名册则微升士气/声望
+	# 联姻月结：全员成婚对涨士气（封顶）；银仍只跟团长配偶同席，保住战役经济锁
+	var seen_pairs: Dictionary = {}
+	var morale_gain := 0
+	var names: Array = []
+	for c in host.characters.values():
+		if c == null or not c.alive or str(c.spouse_id) == "":
+			continue
+		var sid := str(c.spouse_id)
+		if not host.characters.has(sid):
+			continue
+		var sp: CKCharacter = host.characters[sid]
+		if sp == null or not sp.alive:
+			continue
+		var a := str(c.id)
+		var b := sid
+		var key := a + "|" + b if a < b else b + "|" + a
+		if seen_pairs.has(key):
+			continue
+		seen_pairs[key] = true
+		morale_gain += 1
+		names.append(sp.name if bool(c.is_leader) else c.name)
+	const MARRIAGE_MONTH_MORALE_CAP := 3
+	var silver_gain := 0
 	var leader = host.get_leader()
-	if leader and leader.spouse_id != "" and host.characters.has(leader.spouse_id):
-		var sp: CKCharacter = host.characters[leader.spouse_id]
-		if sp.alive:
-			host.morale = mini(100, host.morale + 1)
-			if sp.in_roster:
-				host.silver += 1
-				msgs.append("联姻月结：%s 同席 → 士气+1 银+1" % sp.name)
-			else:
-				msgs.append("联姻月结：%s 守堡 → 士气+1" % sp.name)
-			host.add_lineage_event(msgs[-1] if msgs else "联姻月结")
+	if leader != null and str(leader.spouse_id) != "" and host.characters.has(str(leader.spouse_id)):
+		var lsp: CKCharacter = host.characters[str(leader.spouse_id)]
+		if lsp != null and lsp.alive and bool(lsp.in_roster):
+			silver_gain = 1
+	if morale_gain > 0 or silver_gain > 0:
+		var m := mini(MARRIAGE_MONTH_MORALE_CAP, morale_gain)
+		host.morale = mini(100, host.morale + m)
+		host.silver += silver_gain
+		var who := "、".join(names.slice(0, 3)) if not names.is_empty() else ""
+		if names.size() > 3:
+			who += Locale.t("ux_marriage_month_etc")
+		var line := Locale.t("ux_marriage_month_line", [who if who != "" else "—", m])
+		if silver_gain > 0:
+			line += Locale.t("ux_marriage_month_silver", [silver_gain])
+		msgs.append(line)
+		host.add_lineage_event(line)
 	# 血胤月泽：子嗣/配偶血胤浓度带来永久感的微收益
 	var blood_bonus = 0
 	for c in host.characters.values():

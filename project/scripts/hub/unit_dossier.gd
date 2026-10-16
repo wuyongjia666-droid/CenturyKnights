@@ -47,6 +47,9 @@ func _resolve() -> CKCharacter:
 func _bloodline_open() -> bool:
 	return GameState.flag("e2_06_fought")
 
+func _marriage_openable(c: CKCharacter) -> bool:
+	return CKFamilyState.is_marriage_suitor(c)
+
 func _back() -> void:
 	var dest := "res://scenes/hub/roster.tscn"
 	if GameState.has_meta("dossier_back"):
@@ -85,8 +88,19 @@ func _build() -> void:
 	var verified := "已验血" if bool(sheet.get("verified", false)) else "尚未验血 · 携因不公开"
 	var note := UIKit.body_label(verified, UIKit.OK if bool(sheet.get("verified", false)) else UIKit.TEXT_FAINT, 12)
 	note.position = Vector2(18, 446)
-	note.size = Vector2(264, 40)
+	note.size = Vector2(264, 28)
 	left.add_child(note)
+	if _marriage_openable(c):
+		var marry_btn := CKPageKit.button(Locale.t("ux_dossier_propose"), true, 264)
+		marry_btn.name = "OpenMarriage"
+		marry_btn.position = Vector2(18, 478)
+		marry_btn.custom_minimum_size = Vector2(264, 48)
+		var focus_id := str(c.id)
+		marry_btn.pressed.connect(func():
+			Sfx.click()
+			GameState.marriage_focus_id = focus_id
+			CKNav.go("res://scenes/hub/marriage.tscn"))
+		left.add_child(marry_btn)
 	var mid := UIKit.panel_at(self, Rect2(358, 136, 440, 512), 12)
 	mid.name = "TraitList"
 	_life(mid, c)

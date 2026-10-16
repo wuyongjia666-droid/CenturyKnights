@@ -142,8 +142,10 @@ static func make_tavern_candidate(rng: RandomNumberGenerator, roll: Dictionary =
 static func spouse_gender_for(leader: CKCharacter) -> String:
 	return "m" if leader != null and str(leader.gender) == "f" else "f"
 
-static func make_marriage_candidate(rng: RandomNumberGenerator, prefer_rank: String = "baron", nation_id: String = "") -> CKCharacter:
-	var c := make_tavern_candidate(rng, {}, spouse_gender_for(GameState.get_leader()))
+static func make_marriage_candidate(rng: RandomNumberGenerator, prefer_rank: String = "baron", nation_id: String = "", suitor: CKCharacter = null) -> CKCharacter:
+	## Gender follows the current suitor (提亲方), not hardwired to the captain.
+	var who: CKCharacter = suitor if suitor != null else GameState.get_leader()
+	var c := make_tavern_candidate(rng, {}, spouse_gender_for(who))
 	c.in_roster = false
 	c.salary = 0
 	# v8.9：联姻对象按邦交挑国家，再按王 / 贵 / 民胤分档（CKBloodline.roll_marriage）
