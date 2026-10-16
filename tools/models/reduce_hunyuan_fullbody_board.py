@@ -48,8 +48,8 @@ RENDER_DIR = arg(
     "render-dir",
     "/workspace/board_figure_p1_review/captain_v2/hunyuan_fullbody/board_ready",
 )
-LOD0_TRIS = int(arg("lod0-tris", "140000" or "160000")
-BOARD_TRIS = int(arg("board-tris", "38000" or "45000")
+LOD0_TRIS = int(arg("lod0-tris", "140000") or "140000")
+BOARD_TRIS = int(arg("board-tris", "38000") or "38000")
 HEIGHT = float(arg("height", "1.85") or "1.85")
 TEX_BOARD = int(arg("tex-board", "2048") or "2048")
 
