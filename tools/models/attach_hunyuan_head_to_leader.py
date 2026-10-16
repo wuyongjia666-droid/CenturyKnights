@@ -8,7 +8,9 @@ Optional --board-remesh uses voxel remesh + bake (denser voxel); avoid collapsin
 blender --background --python tools/models/attach_hunyuan_head_to_leader.py -- \\
   [--bust PATH] [--body PATH] [--out PATH] [--out-lod0 PATH] [--render-dir DIR]
   [--lod0-tris N] [--board-tris N]
-"""
+
+
+Post-pass: tools/models/polish_captain_board.py (neck/coat/sword; keeps head UV)."""
 from __future__ import annotations
 
 import math
