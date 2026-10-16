@@ -1,0 +1,37 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://cix1x77ctc2eq"
+path="res://.godot/imported/cast_leader__board_texture_pbr_20250901_metallic-texture_pbr_20250901_roughness.png-41d2811355bf89dd4ec7382f5b7f8f68.ctex"
+metadata={
+"vram_texture": false
+}
+generator_parameters={
+"md5": "6a3ed4c378c08f30fdf56aaec4426299"
+}
+
+[deps]
+
+source_file="res://assets/models/units/cast_leader__board_texture_pbr_20250901_metallic-texture_pbr_20250901_roughness.png"
+dest_files=["res://.godot/imported/cast_leader__board_texture_pbr_20250901_metallic-texture_pbr_20250901_roughness.png-41d2811355bf89dd4ec7382f5b7f8f68.ctex"]
+
+[params]
+
+compress/mode=0
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=1
