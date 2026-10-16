@@ -161,7 +161,7 @@ func _build() -> void:
 	rite.name = "FlagRite"
 	rite.pressed.connect(func(): CKNav.go("res://scenes/hub/lineage_rite.tscn"))
 	row.add_child(rite)
-	var refresh := UIKit.ghost_button(_reroll_btn_text(), 148, 40)
+	var refresh := UIKit.ghost_button(_reroll_btn_text(), 168, 40)
 	refresh.name = "Reroll"
 	refresh.tooltip_text = Locale.t("ux_marriage_reroll_tip")
 	refresh.pressed.connect(_on_reroll_pressed)
@@ -1234,7 +1234,8 @@ func _ensure_posts() -> void:
 
 func _reroll_btn_text() -> String:
 	var cost := CKFamilyState.COURT_REROLL_SILVER
-	var text := "再议 · %d银" % cost
+	var left := CKFamilyState.court_rerolls_left(GameState)
+	var text := "再议 · %d银·剩%d" % [cost, left]
 	if not DeviceProfile.is_mobile():
 		text += "  [B]"
 	return text
@@ -1264,9 +1265,15 @@ func _sync_reroll_btn(reroll: Button, unmarried: bool) -> void:
 		reroll.text = "再议 · 主线"
 		reroll.tooltip_text = "主角团走主线姻缘，不可再议抽帖"
 	else:
-		reroll.disabled = not allow
+		var left := CKFamilyState.court_rerolls_left(GameState)
+		var capped := left <= 0
+		reroll.disabled = not allow or capped
 		reroll.text = _reroll_btn_text()
-		reroll.tooltip_text = Locale.t("ux_marriage_reroll_tip") + "（%d 银）" % CKFamilyState.COURT_REROLL_SILVER
+		if capped:
+			reroll.tooltip_text = "本月再议已用尽（每月 %d 次，下月刷新）" % CKFamilyState.COURT_REROLL_MONTHLY_CAP
+		else:
+			reroll.tooltip_text = Locale.t("ux_marriage_reroll_tip") + "（%d 银，本月剩 %d/%d）" % [
+				CKFamilyState.COURT_REROLL_SILVER, left, CKFamilyState.COURT_REROLL_MONTHLY_CAP]
 
 func _nation_name(nid: String) -> String:
 	return str(CKBloodline.nation(nid).get("name", nid))

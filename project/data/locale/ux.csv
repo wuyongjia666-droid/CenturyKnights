@@ -72,7 +72,7 @@ ux_married_block,已经有配偶，不能再缔约。,You already have a spouse.
 ux_spouse_line,配偶 %s 已写入家族。,%s is written into the house as spouse.
 ux_spouse_mark,配偶,spouse
 ux_marriage_posts,%s · 应帖,%s · posts
-ux_marriage_reroll_tip,后招可花银再抽三人；主角团不可再议,Mercs may re-draw for silver; hero party cannot
+ux_marriage_reroll_tip,后招每月最多再议两次（每次15银）；主角团不可再议,Mercs: up to 2 paid redraws/month; hero party cannot
 ux_confirm_move,确认移动,Confirm move
 ux_confirm_attack,确认攻击,Confirm attack
 ux_more_cmds,更多,More

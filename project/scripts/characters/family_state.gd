@@ -5,8 +5,9 @@ extends RefCounted
 
 const LifeEvents := preload("res://scripts/characters/life_events.gd")
 const COMPANIONS_PATH := "res://data/cast/companions_v92.json"
-## 后招佣兵「再议」廷帖花费（银）。主角团禁用再议。
+## 后招佣兵「再议」廷帖：每次 15 银，每月最多 2 次。主角团禁用再议。
 const COURT_REROLL_SILVER := 15
+const COURT_REROLL_MONTHLY_CAP := 2
 
 static var _hero_cast_keys: Dictionary = {}
 static var _hero_cast_ready := false
@@ -152,17 +153,38 @@ static func ensure_marriage_candidates(host, nation_id: String = "", suitor = nu
 	if need:
 		refresh_marriage_candidates(host, nation_id, who)
 
-## Paid court reroll for non-hero suiters only.
+static func court_rerolls_used(host) -> int:
+	return int(host.get("marriage_rerolls_used") if host.get("marriage_rerolls_used") != null else 0)
+
+static func court_rerolls_left(host) -> int:
+	return maxi(0, COURT_REROLL_MONTHLY_CAP - court_rerolls_used(host))
+
+static func reset_court_rerolls_month(host) -> void:
+	if host == null:
+		return
+	host.marriage_rerolls_used = 0
+
+## Paid court reroll for non-hero suiters only (silver + monthly cap).
 static func reroll_marriage_candidates(host, nation_id: String = "", suitor = null) -> Dictionary:
 	var who = _resolve_suitor(host, suitor)
 	if not can_reroll_court(who):
 		return {"ok": false, "msg": "主角团走主线姻缘，不可再议抽帖"}
+	var used := court_rerolls_used(host)
+	if used >= COURT_REROLL_MONTHLY_CAP:
+		return {"ok": false, "msg": "本月再议已用尽（每月 %d 次）" % COURT_REROLL_MONTHLY_CAP}
 	if int(host.silver) < COURT_REROLL_SILVER:
 		return {"ok": false, "msg": Locale.t("not_enough_silver")}
 	host.silver -= COURT_REROLL_SILVER
+	host.marriage_rerolls_used = used + 1
 	refresh_marriage_candidates(host, nation_id, who)
 	host.mark_dirty()
-	return {"ok": true, "msg": "再议完成，另抽三人（-%d 银）" % COURT_REROLL_SILVER, "cost": COURT_REROLL_SILVER}
+	var left := court_rerolls_left(host)
+	return {
+		"ok": true,
+		"msg": "再议完成，另抽三人（-%d 银，本月剩 %d 次）" % [COURT_REROLL_SILVER, left],
+		"cost": COURT_REROLL_SILVER,
+		"left": left,
+	}
 
 ## Adults who may stand as 提亲方: captain, roster mercs, and keep kin.
 static func is_marriage_suitor(c: CKCharacter) -> bool:
@@ -194,6 +216,8 @@ static func marriage_suitors(host) -> Array:
 
 static func tick_doctrine_and_marriage_month(host) -> Array:
 	var msgs: Array = []
+	## 后招廷帖再议次数按历月重置（与银价叠加，防无限刷高配）。
+	reset_court_rerolls_month(host)
 	host.tick_patrol_month()
 	if host.patrol_boost_months > 0:
 		msgs.append("巡防仍在：抗劫剩余 %d 月" % host.patrol_boost_months)

@@ -49,6 +49,8 @@ var marriage_candidates: Array = []
 var marriage_nation: String = ""
 ## UI 当前提亲方（marriage-all-cast）；不进关键模拟，缺省回落团长。
 var marriage_focus_id: String = ""
+## 本月已用后招廷帖再议次数（每月 cap，见 CKFamilyState.COURT_REROLL_MONTHLY_CAP）。
+var marriage_rerolls_used: int = 0
 ## Calendar month (year*12+month) whose castle sortie already paid out. Audit P1-3.
 var sortie_month: int = -1
 ## Tavern refreshes used this month: {"month": year*12+month, "used": n}. Audit P1-4.
@@ -327,6 +329,7 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	refresh_tavern()
 	marriage_nation = ""
 	marriage_focus_id = ""
+	marriage_rerolls_used = 0
 	refresh_marriage_candidates()
 	_init_quests()
 	World.reset()  # v8.7 playable atlas: position, reputation, markets, boards
@@ -839,6 +842,7 @@ func build_save_data() -> Dictionary:
 		"tavern": [],
 		"marriage": [],
 		"marriage_nation": marriage_nation,
+		"marriage_rerolls_used": marriage_rerolls_used,
 		"sortie_month": sortie_month,
 		"tavern_refresh": tavern_refresh.duplicate(),
 		"quests": quests,
@@ -970,6 +974,7 @@ func apply_save_data(data: Dictionary) -> bool:
 		marriage_candidates.append(CKCharacter.from_dict(d))
 	_load_families(data)
 	marriage_nation = str(data.get("marriage_nation", ""))
+	marriage_rerolls_used = int(data.get("marriage_rerolls_used", 0))
 	sortie_month = int(data.get("sortie_month", -1))
 	var raw_tr = data.get("tavern_refresh", {})
 	tavern_refresh = (raw_tr as Dictionary).duplicate() if typeof(raw_tr) == TYPE_DICTIONARY else {}

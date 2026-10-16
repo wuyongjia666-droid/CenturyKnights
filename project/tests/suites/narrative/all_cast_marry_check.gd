@@ -24,6 +24,9 @@ func _run() -> String:
 	e = _a13_hero_vs_merc_reroll()
 	if e != "":
 		return e
+	e = _a14_monthly_reroll_cap()
+	if e != "":
+		return e
 	e = await _a10_page_after_leader_wed()
 	if e != "":
 		return e
@@ -199,4 +202,38 @@ func _a13_hero_vs_merc_reroll() -> String:
 	var r2: Dictionary = GameState.reroll_marriage_candidates("", dy)
 	if bool(r2.get("ok", false)):
 		return "A13 companion reroll should fail"
+	return ""
+
+func _a14_monthly_reroll_cap() -> String:
+	GameState.new_game("烬行", "灰旗", GameState.crest_color)
+	var merc := _add_merc("merc_cap", "m")
+	var cap := CKFamilyState.COURT_REROLL_MONTHLY_CAP
+	var cost := CKFamilyState.COURT_REROLL_SILVER
+	GameState.silver = cost * (cap + 2)
+	GameState.marriage_rerolls_used = 0
+	GameState.refresh_marriage_candidates("", merc)
+	for i in cap:
+		var r: Dictionary = GameState.reroll_marriage_candidates("", merc)
+		if not bool(r.get("ok", false)):
+			return "A14 reroll %d failed: %s" % [i + 1, str(r.get("msg"))]
+	if CKFamilyState.court_rerolls_left(GameState) != 0:
+		return "A14 expected 0 left after cap"
+	var blocked: Dictionary = GameState.reroll_marriage_candidates("", merc)
+	if bool(blocked.get("ok", false)):
+		return "A14 third reroll should hit monthly cap"
+	if not str(blocked.get("msg", "")).contains("本月"):
+		return "A14 cap msg odd: %s" % str(blocked.get("msg"))
+	## Month tick resets (same hook as Calendar family / doctrine month)
+	CKFamilyState.reset_court_rerolls_month(GameState)
+	if CKFamilyState.court_rerolls_used(GameState) != 0:
+		return "A14 month reset did not clear counter"
+	GameState.marriage_rerolls_used = cap
+	var _msgs: Array = CKFamilyState.tick_doctrine_and_marriage_month(GameState)
+	if CKFamilyState.court_rerolls_used(GameState) != 0:
+		return "A14 doctrine/marriage month tick did not reset"
+	var again: Dictionary = GameState.reroll_marriage_candidates("", merc)
+	if not bool(again.get("ok", false)):
+		return "A14 post-reset reroll failed: %s" % str(again.get("msg"))
+	if GameState.marriage_rerolls_used != 1:
+		return "A14 used should be 1 after reset+reroll"
 	return ""
