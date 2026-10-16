@@ -30,6 +30,16 @@
 
 运行时加载：`UnitModel.instantiate(..., board=true)` 已优先 `cast_<key>__board.glb`；团长无需改 GD 即可吃到新头。
 
+## 1.1 头面数预算（2026-10-16 修正）
+
+| LOD | 用途 | 目标 tris | 做法 |
+|---|---|---|---|
+| LOD0 | 演出/特写对照 | **80k–150k**（现 ~120k） | 颈切后软减，**保留混元 UV/贴图** |
+| Board | 棋盘 `__board.glb` | **25k–40k**（现 ~38k） | 从 LOD0 **分步** collapse，禁止 150万→1万一次砸 |
+| 失败教训 | v1 | ~12k | 碎脸；已废弃 |
+
+对照目录：`board_figure_p1_review/captain_v2/attached_v2/`。
+
 ## 2. 团长试点流程（已跑）
 
 1. 混元云端图生 3D（半身，用户认可脸）。资产：  
