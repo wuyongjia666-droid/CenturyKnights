@@ -20,3 +20,5 @@ project/assets/art/farm_inbox/qwen_v800_partial.zip
 tools/models/board_parts/farm_inbox/**
 !tools/models/board_parts/farm_inbox/.gitkeep
 docs/art/review/plate_palette/nr_focus/
+# Path C LOOK masters live outside git (see docs/art/review/PATHC_MASTERS_MANIFEST.json)
+docs/art/review/**/*.glb

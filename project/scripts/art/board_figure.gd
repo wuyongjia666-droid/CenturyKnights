@@ -2,7 +2,7 @@ class_name CKBoardFigure
 extends RefCounted
 ## Formal modular board figures (docs/design/pawn-redesign-opus.md §3 / §5 / 附录 A/B).
 ## Board figures: scale 演出 UnitModel GLBs onto the board + plate_palette shader.
-## Prefer units/*.glb (UnitModel.resolve). farm_cast / kit compose only if resolve fails.
+## Prefer board/pathc_ship/<stem>.glb, then units/*.glb (UnitModel.resolve). farm_cast / kit compose only if resolve fails.
 ## Path C LOOK (user-approved 2026-10-16): data/board_figure_pathc.json → docs/.../pathc_native/ (not loaded at runtime; export budget).
 ## Shader remaps albedo → hair/skin/coat/… slots (no board_compact solid fill).
 
@@ -181,11 +181,17 @@ static func build(c, team: String, tmpl: String = "") -> Node3D:
 	if unit != null:
 		unit.name = "Unit"
 		root.add_child(unit)
-		_ensure_unit_hair(unit, c, team)
+		var ship := bool(unit.get_meta("ck_pathc_ship", false))
+		if not ship:
+			_ensure_unit_hair(unit, c, team)
 		_ground_and_fit(unit)
-		_apply_board_palette(unit, pal, face, enemy)
-		_apply_face_decal(unit, c, team, tmpl)
-		_attach_outfit_extras(unit, c, team, pal)
+		if ship:
+			# Path C ship piece: baked master albedo, keep its own material (no palette/decal/extras).
+			root.set_meta("ck_pathc_ship", true)
+		else:
+			_apply_board_palette(unit, pal, face, enemy)
+			_apply_face_decal(unit, c, team, tmpl)
+			_attach_outfit_extras(unit, c, team, pal)
 		# Chin +8° (§3.2)
 		unit.rotation_degrees.x = -8.0
 		root.set_meta("ck_source", "unit_model")
