@@ -4,6 +4,55 @@ extends RefCounted
 ## Merged ownership moves to the dynasty stream.
 
 const LifeEvents := preload("res://scripts/characters/life_events.gd")
+const COMPANIONS_PATH := "res://data/cast/companions_v92.json"
+## 后招佣兵「再议」廷帖花费（银）。主角团禁用再议。
+const COURT_REROLL_SILVER := 15
+
+static var _hero_cast_keys: Dictionary = {}
+static var _hero_cast_ready := false
+
+static func hero_cast_keys() -> Dictionary:
+	if _hero_cast_ready:
+		return _hero_cast_keys
+	_hero_cast_ready = true
+	_hero_cast_keys = {"leader": true}
+	if not FileAccess.file_exists(COMPANIONS_PATH):
+		return _hero_cast_keys
+	var f := FileAccess.open(COMPANIONS_PATH, FileAccess.READ)
+	if f == null:
+		return _hero_cast_keys
+	var parsed = JSON.parse_string(f.get_as_text())
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return _hero_cast_keys
+	for row in parsed.get("companions", []):
+		if typeof(row) != TYPE_DICTIONARY:
+			continue
+		var ck := str(row.get("cast_key", ""))
+		if ck != "":
+			_hero_cast_keys[ck] = true
+	return _hero_cast_keys
+
+## 主角团：团长 + 十二具名同伴。姻缘对象主线固定，不可当普通廷帖刷。
+static func is_hero_party(c: CKCharacter) -> bool:
+	if c == null:
+		return false
+	if bool(c.is_leader) or str(c.cast_key) == "leader":
+		return true
+	var ck := str(c.cast_key)
+	if ck == "":
+		return false
+	return hero_cast_keys().has(ck)
+
+## 团长可持教学/外交廷帖快照；其他主角团成员不进随机廷帖池。
+static func uses_court_posts(suitor: CKCharacter) -> bool:
+	if suitor == null:
+		return true
+	if not is_hero_party(suitor):
+		return true
+	return bool(suitor.is_leader) or str(suitor.cast_key) == "leader"
+
+static func can_reroll_court(suitor: CKCharacter) -> bool:
+	return suitor != null and not is_hero_party(suitor)
 
 static func family_members(host) -> Array:
 	var out: Array = []
@@ -58,20 +107,62 @@ static func posts_match_nation(host, nid: String) -> bool:
 	return true
 
 
-static func refresh_marriage_candidates(host, nation_id: String = "", suitor = null) -> void:
-	## A blank nation keeps the diplomacy-weighted draw. The marriage screen passes the
-	## court it is standing in. Calendar, new game, and the century sim pass nothing,
-	## so their shared RNG and the portrait bank stay on the previous sequence.
-	## suitor (提亲方) drives candidate sex; blank falls back to captain / marriage_focus_id.
-	host.marriage_nation = nation_id
-	host.marriage_candidates.clear()
+static func _resolve_suitor(host, suitor):
 	var who = suitor
 	if who == null and host != null:
 		var fid := str(host.get("marriage_focus_id") if host.get("marriage_focus_id") != null else "")
 		if fid != "" and host.characters.has(fid):
 			who = host.characters[fid]
+	return who
+
+static func refresh_marriage_candidates(host, nation_id: String = "", suitor = null) -> void:
+	## A blank nation keeps the diplomacy-weighted draw. The marriage screen passes the
+	## court it is standing in. Calendar, new game, and the century sim pass nothing,
+	## so their shared RNG and the portrait bank stay on the previous sequence.
+	## suitor (提亲方) drives candidate sex; blank falls back to captain / marriage_focus_id.
+	var who = _resolve_suitor(host, suitor)
+	## Non-captain hero party: no random court posts (story-named only).
+	if who != null and is_hero_party(who) and not uses_court_posts(who):
+		host.marriage_nation = nation_id
+		host.marriage_candidates.clear()
+		return
+	host.marriage_nation = nation_id
+	host.marriage_candidates.clear()
 	for i in 3:
 		host.marriage_candidates.append(CharacterFactory.make_marriage_candidate(host.rng, "baron", nation_id, who))
+
+## Fill only when empty / wrong nation / wrong sex — does not spend silver.
+static func ensure_marriage_candidates(host, nation_id: String = "", suitor = null) -> void:
+	var who = _resolve_suitor(host, suitor)
+	if who != null and is_hero_party(who) and not uses_court_posts(who):
+		host.marriage_nation = nation_id
+		host.marriage_candidates.clear()
+		return
+	var need: bool = host.marriage_candidates.is_empty()
+	if not need and nation_id != "" and str(host.marriage_nation) != nation_id:
+		need = true
+	if not need and nation_id != "" and not posts_match_nation(host, nation_id):
+		need = true
+	if not need and who != null:
+		var want := CharacterFactory.spouse_gender_for(who)
+		for c in host.marriage_candidates:
+			if str(c.gender) != want:
+				need = true
+				break
+	if need:
+		refresh_marriage_candidates(host, nation_id, who)
+
+## Paid court reroll for non-hero suiters only.
+static func reroll_marriage_candidates(host, nation_id: String = "", suitor = null) -> Dictionary:
+	var who = _resolve_suitor(host, suitor)
+	if not can_reroll_court(who):
+		return {"ok": false, "msg": "主角团走主线姻缘，不可再议抽帖"}
+	if int(host.silver) < COURT_REROLL_SILVER:
+		return {"ok": false, "msg": Locale.t("not_enough_silver")}
+	host.silver -= COURT_REROLL_SILVER
+	refresh_marriage_candidates(host, nation_id, who)
+	host.mark_dirty()
+	return {"ok": true, "msg": "再议完成，另抽三人（-%d 银）" % COURT_REROLL_SILVER, "cost": COURT_REROLL_SILVER}
 
 ## Adults who may stand as 提亲方: captain, roster mercs, and keep kin.
 static func is_marriage_suitor(c: CKCharacter) -> bool:

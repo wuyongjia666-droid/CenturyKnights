@@ -21,6 +21,9 @@ func _run() -> String:
 	e = _a11_flag_not_global_lock()
 	if e != "":
 		return e
+	e = _a13_hero_vs_merc_reroll()
+	if e != "":
+		return e
 	e = await _a10_page_after_leader_wed()
 	if e != "":
 		return e
@@ -160,4 +163,40 @@ func _a5_dossier_propose() -> String:
 		return "A5 dossier missing 议亲 button"
 	page.queue_free()
 	await get_tree().process_frame
+	return ""
+
+func _a13_hero_vs_merc_reroll() -> String:
+	GameState.new_game("烬行", "灰旗", GameState.crest_color)
+	var lead: CKCharacter = GameState.get_leader()
+	if not CKFamilyState.is_hero_party(lead):
+		return "A13 leader not hero_party"
+	if CKFamilyState.can_reroll_court(lead):
+		return "A13 leader must not reroll court"
+	var blocked: Dictionary = GameState.reroll_marriage_candidates("", lead)
+	if bool(blocked.get("ok", false)):
+		return "A13 hero reroll should fail"
+	var merc := _add_merc("merc_reroll", "m")
+	if CKFamilyState.is_hero_party(merc):
+		return "A13 plain merc flagged hero"
+	if not CKFamilyState.can_reroll_court(merc):
+		return "A13 merc should reroll"
+	GameState.silver = CKFamilyState.COURT_REROLL_SILVER
+	GameState.refresh_marriage_candidates("", merc)
+	var r: Dictionary = GameState.reroll_marriage_candidates("", merc)
+	if not bool(r.get("ok", false)):
+		return "A13 merc reroll failed: %s" % str(r.get("msg"))
+	if GameState.silver != 0:
+		return "A13 silver not charged (%d)" % GameState.silver
+	## Companion cast_key: hero, no court posts
+	var dy := _add_merc("dy_story", "f")
+	dy.cast_key = "dengying"
+	dy.name = "苇原·灯影"
+	if not CKFamilyState.is_hero_party(dy):
+		return "A13 dengying cast_key not hero"
+	GameState.refresh_marriage_candidates("", dy)
+	if not GameState.marriage_candidates.is_empty():
+		return "A13 companion should not get court posts"
+	var r2: Dictionary = GameState.reroll_marriage_candidates("", dy)
+	if bool(r2.get("ok", false)):
+		return "A13 companion reroll should fail"
 	return ""

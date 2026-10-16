@@ -999,6 +999,12 @@ func family_members() -> Array:
 func refresh_marriage_candidates(nation_id: String = "", suitor = null) -> void:
 	CKFamilyState.refresh_marriage_candidates(self, nation_id, suitor)
 
+func ensure_marriage_candidates(nation_id: String = "", suitor = null) -> void:
+	CKFamilyState.ensure_marriage_candidates(self, nation_id, suitor)
+
+func reroll_marriage_candidates(nation_id: String = "", suitor = null) -> Dictionary:
+	return CKFamilyState.reroll_marriage_candidates(self, nation_id, suitor)
+
 func _init_quests() -> void:
 	CKEconomyState._init_quests(self)
 

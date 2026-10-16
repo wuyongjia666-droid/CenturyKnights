@@ -161,16 +161,10 @@ func _build() -> void:
 	rite.name = "FlagRite"
 	rite.pressed.connect(func(): CKNav.go("res://scenes/hub/lineage_rite.tscn"))
 	row.add_child(rite)
-	var refresh_text := "再议   [B]"
-	if DeviceProfile.is_mobile():
-		refresh_text = refresh_text.split(" ")[0]
-	var refresh := UIKit.ghost_button(refresh_text, 108, 40)
+	var refresh := UIKit.ghost_button(_reroll_btn_text(), 148, 40)
 	refresh.name = "Reroll"
 	refresh.tooltip_text = Locale.t("ux_marriage_reroll_tip")
-	refresh.pressed.connect(func():
-		var nid := _post_nation if _post_nation != "" else CKFamilyState.active_marriage_nation(GameState)
-		GameState.refresh_marriage_candidates(nid, _get_suitor())
-		_refresh())
+	refresh.pressed.connect(_on_reroll_pressed)
 	row.add_child(refresh)
 	_marry_btn = UIKit.cta_button("✓ 缔约 · 40 银", "A", 196, 44)
 	_marry_idle = _marry_btn.text
@@ -249,11 +243,17 @@ func _refresh() -> void:
 	for c in _tabs.get_children():
 		c.queue_free()
 	if _posts_label:
-		_posts_label.text = Locale.t("ux_marriage_posts", [_nation_name(_post_nation)])
-	var reroll := get_node_or_null("MarriageActions/Reroll") as Control
+		var su_l := _get_suitor()
+		if su_l != null and CKFamilyState.is_hero_party(su_l) and not CKFamilyState.can_reroll_court(su_l):
+			if CKFamilyState.uses_court_posts(su_l):
+				_posts_label.text = "主线/教学廷帖 · %s（不可再议）" % _nation_name(_post_nation)
+			else:
+				_posts_label.text = "主角团主线姻缘（无廷帖刷新）"
+		else:
+			_posts_label.text = Locale.t("ux_marriage_posts", [_nation_name(_post_nation)])
+	var reroll := get_node_or_null("MarriageActions/Reroll") as Button
 	var sp := _spouse()
-	if reroll:
-		reroll.visible = sp == null
+	_sync_reroll_btn(reroll, sp == null)
 	_sync_footer_hints(sp != null)
 	if sp != null:
 		## Married: no candidate tabs — one clear banner, and the right card is the spouse.
@@ -264,7 +264,13 @@ func _refresh() -> void:
 		_select(sp)
 		return
 	if GameState.marriage_candidates.is_empty():
-		_tabs.add_child(UIKit.empty_state("春令无人应帖。再议或提高声望。"))
+		var empty_msg := "春令无人应帖。再议或提高声望。"
+		var su0 := _get_suitor()
+		if su0 != null and CKFamilyState.is_hero_party(su0) and not CKFamilyState.uses_court_posts(su0):
+			empty_msg = "主角团走主线姻缘，不在此刷廷帖。"
+		elif su0 != null and CKFamilyState.is_hero_party(su0):
+			empty_msg = "春令无人应帖。主角团不可再议抽帖。"
+		_tabs.add_child(UIKit.empty_state(empty_msg))
 		return
 	var suitor = _get_suitor()
 	var k := 0
@@ -332,7 +338,7 @@ func _set_suitor(c: CKCharacter) -> void:
 	_suitor = c
 	GameState.marriage_focus_id = str(c.id)
 	var nid := _post_nation if _post_nation != "" else CKFamilyState.active_marriage_nation(GameState)
-	GameState.refresh_marriage_candidates(nid, c)
+	GameState.ensure_marriage_candidates(nid, c)
 	_refresh_suitor_bar()
 	_refresh()
 
@@ -1223,16 +1229,44 @@ func _finish_marry() -> void:
 func _ensure_posts() -> void:
 	var nid := CKFamilyState.active_marriage_nation(GameState)
 	var suitor := _get_suitor()
-	var need := str(GameState.marriage_nation) != nid or not CKFamilyState.posts_match_nation(GameState, nid)
-	if not need and suitor != null and not GameState.marriage_candidates.is_empty():
-		var want := CharacterFactory.spouse_gender_for(suitor)
-		for c in GameState.marriage_candidates:
-			if str(c.gender) != want:
-				need = true
-				break
-	if need:
-		GameState.refresh_marriage_candidates(nid, suitor)
+	GameState.ensure_marriage_candidates(nid, suitor)
 	_post_nation = nid
+
+func _reroll_btn_text() -> String:
+	var cost := CKFamilyState.COURT_REROLL_SILVER
+	var text := "再议 · %d银" % cost
+	if not DeviceProfile.is_mobile():
+		text += "  [B]"
+	return text
+
+func _on_reroll_pressed() -> void:
+	var suitor := _get_suitor()
+	if suitor != null and not CKFamilyState.can_reroll_court(suitor):
+		_show_toast("主角团走主线姻缘，不可再议抽帖", false)
+		return
+	var nid := _post_nation if _post_nation != "" else CKFamilyState.active_marriage_nation(GameState)
+	var r: Dictionary = GameState.reroll_marriage_candidates(nid, suitor)
+	_show_toast(str(r.get("msg", "")), bool(r.get("ok", false)))
+	if bool(r.get("ok", false)):
+		_refresh_chips()
+		_refresh()
+
+func _sync_reroll_btn(reroll: Button, unmarried: bool) -> void:
+	if reroll == null:
+		return
+	var suitor := _get_suitor()
+	var allow := unmarried and suitor != null and CKFamilyState.can_reroll_court(suitor)
+	reroll.visible = unmarried and suitor != null and (CKFamilyState.can_reroll_court(suitor) or CKFamilyState.uses_court_posts(suitor))
+	## Hero captain: show greyed 再议 so the rule is visible; mercs: enabled when unmarried.
+	if suitor != null and CKFamilyState.is_hero_party(suitor):
+		reroll.visible = unmarried
+		reroll.disabled = true
+		reroll.text = "再议 · 主线"
+		reroll.tooltip_text = "主角团走主线姻缘，不可再议抽帖"
+	else:
+		reroll.disabled = not allow
+		reroll.text = _reroll_btn_text()
+		reroll.tooltip_text = Locale.t("ux_marriage_reroll_tip") + "（%d 银）" % CKFamilyState.COURT_REROLL_SILVER
 
 func _nation_name(nid: String) -> String:
 	return str(CKBloodline.nation(nid).get("name", nid))

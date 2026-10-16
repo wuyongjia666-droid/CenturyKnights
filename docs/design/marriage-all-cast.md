@@ -30,9 +30,24 @@
 
 三类，UI 用页签分开：
 
-1. **廷帖候选（Court posts）** — 现行 `marriage_candidates`：随落脚国刷新的外姓贵胄。性别相对**当前选中的提亲方**生成，不再相对团长。
+1. **廷帖候选（Court posts）** — 现行 `marriage_candidates`：随落脚国刷新的外姓贵胄。性别相对**当前选中的提亲方**生成，不再相对团长。**仅后招佣兵等非主角团可「再议」刷帖。**
 2. **同袍内婚（Company internal）** — 公司内另一名可婚主体；双方同意（见 §4 试婚）。
 3. **剧情指名（Story-named）** — 圣经同伴（灯影、小弦等）走各自婚姻闸门；成功后写入同一套 `spouse_id`，不另开一套婚约表。
+
+### 1.2.1 主角团 vs 后招：谁能刷廷帖（用户澄清 2026-10-16）
+
+**硬规则：** 主角团这批人的姻缘对象是**主线固定**的（story-named），**不可**当成普通廷帖反复再议抽脸；后招佣兵等其他人的外姓候选**可以刷新，花银币即可**。
+
+| 提亲方 | 判定 | 联姻廷候选 | 「再议」 |
+|---|---|---|---|
+| **主角团** | `is_leader` / `cast_key == "leader"`，或 `cast_key` 属于 `data/cast/companions_v92.json` 十二同伴 | 走**剧情指名**；团长第零章春令教学仍可持有一版廷帖快照（外交试婚），但**禁止再议刷帖** | **禁用**（提示：主角团走主线姻缘） |
+| **后招佣兵 / 其他可婚主体** | 有花名册、无主角团 `cast_key`（如酒馆后招、属事处亲眷） | 外姓廷帖，性别跟提亲方 | **花银再议**（默认 **15 银** 换三人；`COURT_REROLL_SILVER`） |
+
+补充：
+
+- 随机廷帖生成时不得带上十二同伴 / 具名主角的 `cast_key`（本来就不会；保持）。
+- 十二同伴作提亲方时：廷帖列表可空，文案引导「主线姻缘，不在此刷帖」；具体指名对象随章节闸门解锁后进同一 UI（P2 把闸门接满）。
+- `chapter0_flags["married"]` 仍只标记团长教学婚，与「能不能刷帖」无关。
 
 ### 1.3 硬门槛（`Lineage.can_propose` 扩展）
 
@@ -235,7 +250,8 @@ GameState.marriage_focus_id: String # UI 当前提亲方，不进关键模拟
 3. 花名册「议亲」深链。  
 4. 月结联姻收益泛化（带每月银/士气上限）。  
 5. 测试 A1–A3、A5、A10–A12。  
-6. **不**改誓约演出大结构；试婚字段可先只写 `marriage_phase=wed`。
+6. **不**改誓约演出大结构；试婚字段可先只写 `marriage_phase=wed`。  
+7. **主角团不可再议刷帖；后招花银再议**（§1.2.1）。
 
 ### P1（家事完整）
 
@@ -272,7 +288,7 @@ GameState.marriage_focus_id: String # UI 当前提亲方，不进关键模拟
 
 | 文件 | 角色 |
 |---|---|
-| `project/scripts/hub/marriage.gd` | UI 绑死 leader ← **P0 主改** |
+| `project/scripts/hub/marriage.gd` | 提亲方条 + 主角团禁再议 / 后招花银再议 |
 | `project/autoload/lineage.gd` | `can_propose` / `marry` 已通用 ← 少改 |
 | `project/scripts/characters/family_state.gd` | 候选刷新、月结 ← 改性别源与月结遍历 |
 | `project/scripts/characters/character_factory.gd` | `make_marriage_candidate` / `spouse_gender_for` |
