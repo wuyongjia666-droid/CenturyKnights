@@ -18,7 +18,7 @@
 | 项 | 路径 | 说明 |
 |---|---|---|
 | 源 | `.../hunyuan_fullbody/captain_farm_front_fullbody.glb` | ~1.5M tris |
-| **棋盘 GLB** | `project/assets/models/units/cast_leader__board.glb` | **~1.499M tris / ~75MB**；仅高度≈1.85m、脚底 z=0、脸朝 −Y；**零 COLLAPSE/DECIMATE/remesh** |
+| **LOOK 参考 GLB（不进导出）** | `docs/art/review/board_figure_p1/hunyuan_noreduce/cast_leader__board.glb` | **~1.499M tris / ~75MB** normalize-only。已移出 `project/assets`（防 UnitModel 自动选用 / 导出爆包）。量产棋盘走 Opus。 |
 | 审图 | `.../hunyuan_fullbody/board_ready_noreduce/` | SELF_REVIEW / face 对比 / figure_* |
 | 脚本 | `tools/models/normalize_hunyuan_fullbody_board.py` | normalize + export + render |
 | 旧减面脚本 | `tools/models/reduce_hunyuan_fullbody_board.py` | **勿再用于团长棋盘交付**；仅实验/高 LOD 参考 |
@@ -54,3 +54,6 @@
 2. 用户**不想**每次上云端混元出模；量产不得要求「每角色混元全身」。
 3. 减面若需要：只走重拓扑/烘贴，且须过目过关。
 4. 接头翻车时：修本机接脸流程，不回退「每人混元全身」。
+
+
+> **导出**：2026-10-16 将 Path C GLB+PBR 从 `project/assets/models/units/` 挪到 `docs/art/review/.../hunyuan_noreduce/`，`export_size` 才能过；运行时棋盘用 Opus `board_figures_v1`，不以混元全身当量产件。
