@@ -487,7 +487,7 @@ ux_reroll_done,再议完成，另抽三人（-%d 银，本月剩 %d 次）,Redra
 ux_marriage_month_line,联姻月结：%s → 士气+%d,Marriage month: %s → morale +%d
 ux_marriage_month_silver," 银+%d"," silver +%d"
 ux_marriage_month_etc,等,etc
-ux_suitor_caption,SUITOR // 提亲方,SUITOR // proposer
+ux_suitor_caption,提亲方,Proposer
 ux_posts_hero_teach,主线/教学廷帖 · %s（不可再议）,Story/tutorial posts · %s (no redraw)
 ux_posts_hero_fixed,主角团主线姻缘（无廷帖刷新）,Hero party story marriage (no post refresh)
 ux_empty_hero_fixed,主角团走主线姻缘，不在此刷廷帖。,Hero party story marriage; no court posts here.

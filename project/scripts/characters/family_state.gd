@@ -281,10 +281,9 @@ static func tick_doctrine_and_marriage_month(host) -> Array:
 		var amb = host.check_ambitions()
 		for a in amb:
 			msgs.append(a)
-	# 联姻月结：遍历所有在世成婚对，封顶防刷（marriage-all-cast P0）
+	# 联姻月结：全员成婚对涨士气（封顶）；银仍只跟团长配偶同席，保住战役经济锁
 	var seen_pairs: Dictionary = {}
 	var morale_gain := 0
-	var silver_gain := 0
 	var names: Array = []
 	for c in host.characters.values():
 		if c == null or not c.alive or str(c.spouse_id) == "":
@@ -302,22 +301,24 @@ static func tick_doctrine_and_marriage_month(host) -> Array:
 			continue
 		seen_pairs[key] = true
 		morale_gain += 1
-		if c.in_roster or sp.in_roster:
-			silver_gain += 1
 		names.append(sp.name if bool(c.is_leader) else c.name)
 	const MARRIAGE_MONTH_MORALE_CAP := 3
-	const MARRIAGE_MONTH_SILVER_CAP := 3
-	if morale_gain > 0:
+	var silver_gain := 0
+	var leader = host.get_leader()
+	if leader != null and str(leader.spouse_id) != "" and host.characters.has(str(leader.spouse_id)):
+		var lsp: CKCharacter = host.characters[str(leader.spouse_id)]
+		if lsp != null and lsp.alive and bool(lsp.in_roster):
+			silver_gain = 1
+	if morale_gain > 0 or silver_gain > 0:
 		var m := mini(MARRIAGE_MONTH_MORALE_CAP, morale_gain)
-		var s := mini(MARRIAGE_MONTH_SILVER_CAP, silver_gain)
 		host.morale = mini(100, host.morale + m)
-		host.silver += s
-		var who := "、".join(names.slice(0, 3))
+		host.silver += silver_gain
+		var who := "、".join(names.slice(0, 3)) if not names.is_empty() else ""
 		if names.size() > 3:
 			who += Locale.t("ux_marriage_month_etc")
-		var line := Locale.t("ux_marriage_month_line", [who, m])
-		if s > 0:
-			line += Locale.t("ux_marriage_month_silver", [s])
+		var line := Locale.t("ux_marriage_month_line", [who if who != "" else "—", m])
+		if silver_gain > 0:
+			line += Locale.t("ux_marriage_month_silver", [silver_gain])
 		msgs.append(line)
 		host.add_lineage_event(line)
 	# 血胤月泽：子嗣/配偶血胤浓度带来永久感的微收益

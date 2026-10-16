@@ -80,33 +80,44 @@ func _build() -> void:
 	_grade.size = Vector2(300, 18)
 	_grade.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	add_child(_grade)
+	# Drop page_head desc — frees the band under the title for the suitor strip
+	# (court_ui / shots flag label overlaps with the long protocol line).
+	for ch in get_children():
+		if ch is VBoxContainer and (ch as Control).position.y > 60.0 and (ch as Control).position.y < 100.0:
+			var head := ch as VBoxContainer
+			if head.get_child_count() >= 3:
+				var desc := head.get_child(2) as CanvasItem
+				if desc:
+					desc.visible = false
 	var hl := UIKit.hairline(Color(1, 1, 1, 0.07))
-	hl.position = Vector2(42, 196)
+	hl.position = Vector2(42, 156)
 	hl.size = Vector2(1196, 1)
 	add_child(hl)
-	_posts_label = UIKit.mono(Locale.t("ux_marriage_posts", [_nation_name(_post_nation)]), 9, UIKit.TEXT_FAINT)
-	_posts_label.position = Vector2(42, 228)
-	add_child(_posts_label)
-	var suitor_cap := UIKit.mono(Locale.t("ux_suitor_caption"), 9, UIKit.ACCENT)
+	# Suitor strip under hairline; posts/tabs keep main's y≈200 so they clear cards at 244.
+	var suitor_cap := UIKit.mono(Locale.t("ux_suitor_caption"), 9, UIKit.ACCENT, false)
 	suitor_cap.name = "SuitorCaption"
-	suitor_cap.position = Vector2(42, 168)
+	suitor_cap.position = Vector2(42, 160)
 	add_child(suitor_cap)
 	_suitor_bar = HBoxContainer.new()
 	_suitor_bar.name = "SuitorBar"
-	_suitor_bar.position = Vector2(140, 160)
-	_suitor_bar.size = Vector2(960, 40)
-	_suitor_bar.add_theme_constant_override("separation", 8)
+	_suitor_bar.position = Vector2(160, 158)
+	_suitor_bar.size = Vector2(920, 32)
+	_suitor_bar.clip_contents = true
+	_suitor_bar.add_theme_constant_override("separation", 6)
 	add_child(_suitor_bar)
 	var help := UIKit.ghost_button(Locale.t("ux_help_open"), 132, 32)
 	help.name = "OpenGuide"
 	help.position = Vector2(1106, 158)
 	help.pressed.connect(func(): CKHelpCodex.open(self, true))
 	add_child(help)
+	_posts_label = UIKit.mono(Locale.t("ux_marriage_posts", [_nation_name(_post_nation)]), 9, UIKit.TEXT_FAINT)
+	_posts_label.position = Vector2(42, 204)
+	add_child(_posts_label)
 	_list = VBoxContainer.new()   # legacy handle (unused for layout)
 	_list.visible = false
 	add_child(_list)
 	_tabs = HBoxContainer.new()
-	_tabs.position = Vector2(300, 224)
+	_tabs.position = Vector2(300, 200)
 	_tabs.add_theme_constant_override("separation", 8)
 	add_child(_tabs)
 
@@ -355,11 +366,11 @@ func _refresh_suitor_bar() -> void:
 		var label := "%s%s" % [c.name, mark]
 		if c.is_leader:
 			label = Locale.t("ux_suitor_leader_prefix") + label
-		var b := UIKit.ghost_button(label, 0, 36)
+		var b := UIKit.ghost_button(label, 0, 28)
 		b.toggle_mode = true
 		b.button_pressed = (cur != null and str(c.id) == str(cur.id))
 		b.set_meta("suitor", c)
-		b.custom_minimum_size = Vector2(maxi(96, int(b.get_minimum_size().x)), 36)
+		b.custom_minimum_size = Vector2(maxi(88, int(b.get_minimum_size().x)), 28)
 		var captured = c
 		b.pressed.connect(func(): _set_suitor(captured))
 		_suitor_bar.add_child(b)
@@ -857,9 +868,19 @@ func apply_mobile_layout() -> void:
 		if _wed_line:
 			_wed_line.position = Vector2(margin, actions.position.y - 18.0 if actions else foot_y - 76.0)
 			_wed_line.size = Vector2(maxf(120.0, vp.x * 0.42), 18.0)
+		var suitor_cap_n := get_node_or_null("SuitorCaption") as Control
+		if suitor_cap_n:
+			suitor_cap_n.visible = false
+		if _suitor_bar:
+			# Below page_head title row (~y94–124 on 960-wide).
+			_suitor_bar.position = Vector2(margin, 128)
+			_suitor_bar.size = Vector2(vp.x - margin * 2.0, 24)
+			_suitor_bar.clip_contents = true
+		if _posts_label:
+			_posts_label.visible = false
 		if _tabs:
-			_tabs.position = Vector2(margin, 130)
-			_tabs.size = Vector2(vp.x - margin * 2.0, 32)
+			_tabs.position = Vector2(margin, 154)
+			_tabs.size = Vector2(vp.x - margin * 2.0, 26)
 			_tabs.clip_contents = true
 		for ch in get_children():
 			if ch is VBoxContainer and (ch as Control).position.y > 60.0 and (ch as Control).position.y < 100.0:
@@ -868,7 +889,7 @@ func apply_mobile_layout() -> void:
 					var desc := head.get_child(2) as CanvasItem
 					if desc:
 						desc.visible = false
-		var y0 := 168.0
+		var y0 := 186.0
 		var actions_y := actions.position.y if actions else foot_y - 8.0
 		var gap := 8.0
 		var board_h := 92.0
@@ -892,9 +913,11 @@ func apply_mobile_layout() -> void:
 		_grade.clip_text = true
 		var help := get_node_or_null("OpenGuide") as Control
 		if help:
+			# Keep clear of the suitor strip (y≈96); sit in the title band.
 			var help_w := help.size.x
 			var x := minf(vp.x - 8.0 - help_w, _grade.position.x - 8.0 - help_w)
-			help.position = Vector2(maxf(8.0, x), 72)
+			help.position = Vector2(maxf(8.0, x), 48)
+			help.size = Vector2(help_w, 28)
 	if _selected != null:
 		_render_cards()
 
