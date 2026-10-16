@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Render Opus mass-path samples: generic body, shared grunt face, captain face on body_m.
+"""Render Opus mass-path samples (no Hunyuan, no soft-collapse, no head-attach weld).
 
-No Hunyuan, no soft-collapse. Uses board_figures_v1 kit + compose_captain head slice.
+Recipe: generic body + kit cranial head (generator planes) + job shell.
 Output: docs/art/review/board_figure_opus_mass/
 """
 from __future__ import annotations
@@ -15,7 +15,6 @@ from mathutils import Vector
 
 ROOT = Path(__file__).resolve().parents[2]
 KIT = ROOT / "project/assets/models/board/board_figures_v1.glb"
-COMPOSE_CAPTAIN = ROOT / "tools/models/board_parts/compose_captain.glb"
 OUT = ROOT / "docs/art/review/board_figure_opus_mass"
 SLOT_PALETTE = {
     0: (0.22, 0.16, 0.12, 1),   # hair
@@ -60,7 +59,6 @@ def slot_mat(name: str):
     attr = nt.nodes.new("ShaderNodeAttribute")
     attr.attribute_name = "Color"
     sep = nt.nodes.new("ShaderNodeSeparateColor")
-    # Map slot index (stored in R as i/255) via color ramp
     ramp = nt.nodes.new("ShaderNodeValToRGB")
     ramp.color_ramp.elements[0].position = 0.0
     ramp.color_ramp.elements[0].color = SLOT_PALETTE[0]
@@ -109,7 +107,7 @@ def look_at(cam, target, eye):
     cam.rotation_euler = direction.to_track_quat("-Z", "Y").to_euler()
 
 
-def render_png(path: Path, res=(720, 900), samples=36):
+def render_png(path: Path, res=(720, 900), samples=48):
     path.parent.mkdir(parents=True, exist_ok=True)
     sc = bpy.context.scene
     sc.render.engine = "CYCLES"
@@ -146,50 +144,6 @@ def join_objects(objs, name: str):
     return ob
 
 
-def slice_head_from_compose(compose_ob, chin_y=1.42):
-    """Duplicate compose and delete verts below chin_y (world Z up after glTF)."""
-    bpy.ops.object.select_all(action="DESELECT")
-    compose_ob.select_set(True)
-    bpy.context.view_layer.objects.active = compose_ob
-    bpy.ops.object.duplicate()
-    head = bpy.context.active_object
-    head.name = "captain_head_slice"
-    # Ensure object mode then edit
-    bpy.ops.object.mode_set(mode="EDIT")
-    bpy.ops.mesh.select_all(action="DESELECT")
-    bpy.ops.object.mode_set(mode="OBJECT")
-    mesh = head.data
-    # glTF Y-up: height is +Y in Blender after import typically
-    # Check axis by bbox
-    bbox = [head.matrix_world @ Vector(c) for c in head.bound_box]
-    ys = [v.y for v in bbox]
-    zs = [v.z for v in bbox]
-    # Prefer axis with larger extent near human height
-    use_z = (max(zs) - min(zs)) > (max(ys) - min(ys))
-    axis = 2 if use_z else 1
-    # chin threshold: keep top ~head_h of figure
-    mx = max(v[axis] for v in bbox)
-    mn = min(v[axis] for v in bbox)
-    # head is top ~18% of height
-    cut = mn + (mx - mn) * 0.78
-    log("slice axis", "Z" if use_z else "Y", "cut", round(cut, 3), "range", round(mn, 3), round(mx, 3))
-    import bmesh
-    bm = bmesh.new()
-    bm.from_mesh(mesh)
-    bm.verts.ensure_lookup_table()
-    to_del = []
-    for v in bm.verts:
-        w = head.matrix_world @ v.co
-        if w[axis] < cut:
-            to_del.append(v)
-    bmesh.ops.delete(bm, geom=to_del, context="VERTS")
-    bm.to_mesh(mesh)
-    bm.free()
-    mesh.update()
-    log("captain head tris", len(mesh.polygons))
-    return head
-
-
 def make_camera(eye, target):
     cam_data = bpy.data.cameras.new("C")
     cam = bpy.data.objects.new("C", cam_data)
@@ -216,8 +170,21 @@ def scene_kit_parts(names):
     return found
 
 
+def bbox_center_top(ob):
+    bb = [ob.matrix_world @ Vector(c) for c in ob.bound_box]
+    xs = [v.x for v in bb]
+    ys = [v.y for v in bb]
+    zs = [v.z for v in bb]
+    # glTF often Y-up in Blender after import
+    if (max(zs) - min(zs)) >= (max(ys) - min(ys)):
+        return (0.5 * (min(xs) + max(xs)), 0.5 * (min(ys) + max(ys)), 0.5 * (min(zs) + max(zs))), max(zs)
+    return (0.5 * (min(xs) + max(xs)), 0.5 * (min(ys) + max(ys)), 0.5 * (min(zs) + max(zs))), max(ys)
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
+    if not KIT.is_file():
+        raise SystemExit(f"missing kit {KIT}")
 
     # 1) generic male body
     bodies = scene_kit_parts(["body_m"])
@@ -227,19 +194,22 @@ def main():
     hide_all_except(bodies)
     render_png(OUT / "01_generic_body_m.png")
 
-    # 2) shared grunt face closeup (head_m)
+    # 2) shared grunt face — generator cranial head_m (planes), NOT organic override
     heads = scene_kit_parts(["head_m"])
     if not heads:
         raise SystemExit("head_m missing")
-    make_camera(eye=(0.55, -0.85, 1.62), target=(0.0, 0.0, 1.55))
+    ctr, top = bbox_center_top(heads[0])
+    make_camera(eye=(ctr[0] + 0.55, ctr[1] - 0.85, top - 0.05), target=(ctr[0], ctr[1], top - 0.08))
     hide_all_except(heads)
     render_png(OUT / "02_shared_grunt_face_head_m.png", res=(720, 720))
 
-    # 3) shared grunt on generic body (mass path demo)
-    parts = scene_kit_parts(["body_m", "head_m", "hair_messy", "outfit_bandit_weak"])
-    if len(parts) < 3:
+    # 3) mass path: body + shared head + hair + bandit shell + club
+    parts = scene_kit_parts(
+        ["body_m", "head_m", "hair_messy", "outfit_bandit_weak", "weapon_club"]
+    )
+    if len(parts) < 4:
         raise SystemExit(f"grunt assemble incomplete: {[p.name for p in parts]}")
-    joined = join_objects(parts, "grunt_on_body")
+    joined = join_objects(parts, "grunt_mass")
     apply_mat(joined, slot_mat("grunt"))
     setup_world()
     add_sun()
@@ -247,56 +217,56 @@ def main():
     hide_all_except([joined])
     render_png(OUT / "03_shared_grunt_on_generic_body.png")
 
-    # 4) captain face on generic body: body_m + head slice from compose_captain + outfit_captain
-    reset()
-    kit_meshes = import_gltf(KIT)
-    body = find_mesh("body_m")
-    outfit = find_mesh("outfit_captain")
-    hair = find_mesh("hair_swept") or find_mesh("hair_crop")
-    compose_meshes = import_gltf(COMPOSE_CAPTAIN)
-    compose = compose_meshes[0]
-    for o in compose_meshes[1:]:
-        bpy.data.objects.remove(o, do_unlink=True)
-    head = slice_head_from_compose(compose)
-    # hide full compose
-    compose.hide_render = True
-    compose.hide_viewport = True
-    mat = slot_mat("captain")
-    keep = [body, head]
-    if outfit:
-        keep.append(outfit)
-    if hair:
-        keep.append(hair)
-    for o in keep:
-        if o:
-            apply_mat(o, mat)
-    joined = join_objects([o for o in keep if o], "captain_face_on_body_m")
-    apply_mat(joined, mat)
+    # 3b) same assemble closer on head (shared face readability)
+    make_camera(eye=(0.7, -1.1, 1.55), target=(0.0, 0.05, 1.48))
+    render_png(OUT / "03b_kit_assemble_grunt.png", res=(720, 900))
+
+    # 4) captain shell path (kit): body + shared/unique-slot head + outfit_captain + hair + sword
+    #    No compose head-slice weld. Unique captain face later = replace head_m part.
+    parts = scene_kit_parts(
+        ["body_m", "head_m", "hair_swept", "outfit_captain", "weapon_sword"]
+    )
+    if len(parts) < 4:
+        raise SystemExit(f"captain kit assemble incomplete: {[p.name for p in parts]}")
+    joined = join_objects(parts, "captain_kit_mass")
+    apply_mat(joined, slot_mat("captain"))
     setup_world()
     add_sun()
     make_camera(eye=(1.9, -2.5, 1.4), target=(0.0, 0.0, 0.95))
     hide_all_except([joined])
-    render_png(OUT / "04_captain_face_on_generic_body.png")
+    render_png(OUT / "04_captain_kit_on_generic_body.png")
 
-    # 5) face closeup of that assemble
+    # 5) captain kit head closeup
     make_camera(eye=(0.55, -0.9, 1.62), target=(0.0, 0.0, 1.55))
-    render_png(OUT / "05_captain_face_closeup_on_body.png", res=(720, 720))
+    render_png(OUT / "05_captain_kit_face_closeup.png", res=(720, 720))
 
-    # write README
+    # 6) optional: compose_bandit_weak whole-mesh LOOK (t1 organic, not mass weld)
+    comps = scene_kit_parts(["compose_bandit_weak"])
+    if comps:
+        make_camera(eye=(1.9, -2.5, 1.4), target=(0.0, 0.0, 0.95))
+        hide_all_except(comps)
+        render_png(OUT / "06_compose_bandit_weak_look.png")
+
     readme = OUT / "README.md"
     readme.write_text(
-        """# Opus 量产样板（2026-10-16）
+        """# Opus 量产样板（2026-10-16 夜）
 
-默认量产 = 通用身 + 共享/独特脸 + 职业壳（见 `docs/design/pawn-redesign-opus.md` §5，`captain-base-model-plan.md` §3）。
-**未**跑混元云端；**未** soft COLLAPSE。
+配方见 `docs/design/board-figure-mass-recipe.md`。
 
-| 图 | 内容 |
-|---|---|
-| `01_generic_body_m.png` | 套件 `body_m`（通用男身） |
-| `02_shared_grunt_face_head_m.png` | 共享脸 `head_m` 近景 |
-| `03_shared_grunt_on_generic_body.png` | `body_m` + `head_m` + `hair_messy` + `outfit_bandit_weak` |
-| `04_captain_face_on_generic_body.png` | `body_m` + 从 `compose_captain` 切下的头 + `outfit_captain` |
-| `05_captain_face_closeup_on_body.png` | 上项脸近景 |
+- **未**跑混元云端；**未** soft COLLAPSE；**未**接头焊身。
+- `head_m` = 生成器颅面（`planes`），有机塌脸覆盖已迁入 `board_parts/_qa_fail/`。
+
+| 图 | 内容 | 目视 QA |
+|---|---|---|
+| `01_generic_body_m.png` | 套件 `body_m` | 通用男身（无头） |
+| `02_shared_grunt_face_head_m.png` | 生成器 `head_m` 近景 | 共享脸颅面 |
+| `03_shared_grunt_on_generic_body.png` | body+head+hair+山贼壳+club | 量产组装 |
+| `03b_kit_assemble_grunt.png` | 同上头近景 | 共享脸可读性 |
+| `04_captain_kit_on_generic_body.png` | body+head+hair+captain壳+sword | 团长量产壳（头仍共享颅面；独特脸=整件换 head） |
+| `05_captain_kit_face_closeup.png` | 上项头近景 | 同共享颅面 |
+| `06_compose_bandit_weak_look.png` | t1 有机 compose LOOK | 对照用，非焊身 |
+
+Godot 过目卡（已有）：`docs/art/review/board_figure_p1/cards/`。
 
 生成：`blender --background --python tools/models/preview_opus_mass_sample.py`
 """,

@@ -28,18 +28,18 @@
     },
     "head_m": {
       "category": "head",
-      "tris": 1800,
+      "tris": 982,
       "tags": [
-        "override",
-        "organic"
+        "m",
+        "planes"
       ]
     },
     "head_f": {
       "category": "head",
-      "tris": 1800,
+      "tris": 982,
       "tags": [
-        "override",
-        "organic"
+        "f",
+        "planes"
       ]
     },
     "hair_bob": {
@@ -371,6 +371,6 @@
   },
   "quality": "organic_compose_v3",
   "glb": "board_figures_v1.glb",
-  "total_tris": 68242,
+  "total_tris": 66606,
   "part_count": 43
 }

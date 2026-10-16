@@ -1025,7 +1025,7 @@ def apply_overrides():
     if not PARTS_DIR.is_dir():
         return
     for path in sorted(PARTS_DIR.iterdir()):
-        if path.name.startswith(".") or path.name in ("farm_inbox", "README.md"):
+        if path.name.startswith(".") or path.name in ("farm_inbox", "README.md", "_qa_fail"):
             continue
         stem = path.stem
         if path.suffix.lower() not in (".glb", ".gltf", ".blend"):
