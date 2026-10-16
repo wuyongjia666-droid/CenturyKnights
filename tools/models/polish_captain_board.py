@@ -1,13 +1,20 @@
 #!/usr/bin/env python3
-"""Polish cast_leader__board after Hunyuan head attach — neck / cold-grey coat / thick sword.
+"""SAFE polish for cast_leader__board after Hunyuan head attach.
 
-Does NOT touch head topology, UVs, or Hunyuan albedo/normal textures.
+ONLY:
+  - Remap body albedo frost-white → cold grey (pixel remap / Principled tint)
+  - Modest sword blade thicken (local thin-axis scale ~1.5–1.8x)
+  - Optional tiny head sink into existing collar (transform only)
+
+FORBIDDEN (broke v3):
+  - Remesh / delete verts / raise collar verts destructively
+  - Visible NeckPlug cylinder
+  - Inflating sword into a plank
+  - Touching head UV / topo / Hunyuan textures
 
 blender --background --python tools/models/polish_captain_board.py -- \\
   [--src PATH] [--out PATH] [--render-dir DIR]
-  [--head-scale F] [--head-seat F]
-  [--coat-grey R,G,B] [--frost-hi F]
-  [--sword-thick-y F] [--sword-thick-x F]
+  [--coat-grey R,G,B] [--sword-thick F] [--head-seat F]
 """
 from __future__ import annotations
 
@@ -15,7 +22,6 @@ import math
 import os
 import sys
 
-import bmesh
 import bpy
 from mathutils import Euler, Vector
 
@@ -35,15 +41,12 @@ def arg(name: str, default: str | None = None) -> str | None:
 
 SRC = arg("src", "/workspace/CenturyKnights/project/assets/models/units/cast_leader__board.glb")
 OUT = arg("out", SRC)
-RENDER_DIR = arg("render-dir", "/workspace/board_figure_p1_review/captain_v2/attached_v3")
-HEAD_SCALE = float(arg("head-scale", "1.08") or "1.08")
-HEAD_SEAT = float(arg("head-seat", "0.028") or "0.028")  # lower into collar
-# Portrait cold grey (~lapel/coat): aim mid readable cold grey for board
-COAT = arg("coat-grey", "88,92,104")  # cool grey RGB 0-255
-FROST_HI = float(arg("frost-hi", "155") or "155")  # luminance above this remaps toward coat
-SWORD_Y = float(arg("sword-thick-y", "3.2") or "3.2")  # blade thin axis
-SWORD_X = float(arg("sword-thick-x", "1.45") or "1.45")
-COLLAR_LIFT = float(arg("collar-lift", "0.018") or "0.018")
+RENDER_DIR = arg("render-dir", "/workspace/board_figure_p1_review/captain_v2/attached_v4")
+COAT = arg("coat-grey", "70,74,88")
+SWORD_THICK = float(arg("sword-thick", "1.65") or "1.65")  # modest
+HEAD_SEAT = float(arg("head-seat", "0.012") or "0.012")  # tiny sink only
+SKIP_SWORD = "--no-sword" in ARGV
+SKIP_SEAT = "--no-seat" in ARGV
 
 os.makedirs(RENDER_DIR, exist_ok=True)
 coat_rgb = tuple(int(x) / 255.0 for x in COAT.split(","))
@@ -55,165 +58,100 @@ def select_only(ob):
     bpy.context.view_layer.objects.active = ob
 
 
-def apply_xf(ob):
-    select_only(ob)
-    bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
+def drop_ico():
+    for o in list(bpy.data.objects):
+        if o.type != "MESH":
+            continue
+        name = o.name.lower()
+        if name.startswith("ico") or "plug" in name:
+            print("REMOVING", o.name)
+            bpy.data.objects.remove(o, do_unlink=True)
 
 
-def world_coords(ob):
-    mw = ob.matrix_world
-    return [mw @ v.co for v in ob.data.vertices]
-
-
-def recolor_body_albedo(body, target_rgb, frost_hi_lum: float):
-    """Remap frost-white coat pixels on body albedo toward cold grey; keep darks/skinish."""
+def recolor_body_albedo(body, target_rgb):
+    """Pixel-remap frost whites toward cold grey. No mesh edits."""
     mat = body.data.materials[0] if body.data.materials else None
     if not mat or not mat.use_nodes:
-        print("WARN no body material")
         return
     img = None
-    tex_node = None
     for n in mat.node_tree.nodes:
         if n.type == "TEX_IMAGE" and n.image:
             img = n.image
-            tex_node = n
             break
-    if img is None:
-        print("WARN no body albedo image — tint Principled only")
+    tr, tg, tb = target_rgb
+    if img is None or not img.pixels:
         bsdf = next((n for n in mat.node_tree.nodes if n.type == "BSDF_PRINCIPLED"), None)
         if bsdf:
             bsdf.inputs["Base Color"].default_value = (*target_rgb, 1.0)
+        print("COAT: tinted Principled only (no image)")
         return
-
-    # Ensure pixels loaded
-    if not img.pixels:
-        print("WARN empty pixels")
-        return
-    w, h = img.size[0], img.size[1]
-    px = list(img.pixels)  # RGBA flat
-    tr, tg, tb = target_rgb
+    px = list(img.pixels)
     changed = 0
     for i in range(0, len(px), 4):
-        r, g, b, a = px[i], px[i + 1], px[i + 2], px[i + 3]
+        r, g, b = px[i], px[i + 1], px[i + 2]
         lum = 0.299 * r + 0.587 * g + 0.114 * b
-        # skip near-black (boots/gaps) and strong cyan/mint trim (keep accent)
-        if lum < 0.08:
+        if lum < 0.09:
             continue
-        # mint/frost trim: high B relative — gently cool but don't kill
-        is_bright_coat = lum >= (frost_hi_lum / 255.0)
-        is_mid_coat = 0.35 <= lum < (frost_hi_lum / 255.0) and abs(r - g) < 0.08 and abs(g - b) < 0.12
-        if not (is_bright_coat or is_mid_coat):
+        # keep strong cyan trim, just cool slightly
+        if b > r + 0.15 and b > 0.55:
+            px[i] = r * 0.75 + 0.12
+            px[i + 1] = g * 0.75 + 0.14
+            px[i + 2] = b * 0.55 + 0.28
+            changed += 1
             continue
-        # stronger remap for brighter frost
-        t = 0.0
-        if is_bright_coat:
-            t = min(1.0, (lum - frost_hi_lum / 255.0) / 0.35 + 0.55)
-            t = max(0.55, min(0.92, t))
-        else:
-            t = 0.35
-        # preserve a bit of local variation
-        nr = r * (1 - t) + tr * t
-        ng = g * (1 - t) + tg * t
-        nb = b * (1 - t) + tb * t
-        # keep slight cool bias
-        nb = min(1.0, nb + 0.02)
-        px[i], px[i + 1], px[i + 2] = nr, ng, nb
-        changed += 1
+        if lum >= 0.38:  # frost / mid coat
+            t = min(0.88, 0.45 + (lum - 0.38) * 0.9)
+            px[i] = r * (1 - t) + tr * t
+            px[i + 1] = g * (1 - t) + tg * t
+            px[i + 2] = min(1.0, b * (1 - t) + tb * t + 0.02)
+            changed += 1
     img.pixels = px
     img.update()
-    # save sibling for Godot
-    out_tex = os.path.join(
-        os.path.dirname(OUT) if OUT.endswith(".glb") else RENDER_DIR,
-        "cast_leader__board__albedo_coldgrey.png",
-    )
-    # Prefer next to glb in units/
     units = "/workspace/CenturyKnights/project/assets/models/units"
     out_tex = os.path.join(units, "cast_leader__board__albedo_coldgrey.png")
     img.filepath_raw = out_tex
     img.file_format = "PNG"
     img.save()
-    print(f"COAT recolored pixels={changed} -> {out_tex}")
-    # also set base color multiply slightly cool
     bsdf = next((n for n in mat.node_tree.nodes if n.type == "BSDF_PRINCIPLED"), None)
     if bsdf:
+        # slight cool multiply, not a flat grey wash
         bsdf.inputs["Base Color"].default_value = (0.92, 0.94, 1.0, 1.0)
-        bsdf.inputs["Roughness"].default_value = 0.72
-        bsdf.inputs["Metallic"].default_value = 0.0
+        bsdf.inputs["Roughness"].default_value = 0.70
+    print(f"COAT remapped pixels={changed} -> {out_tex}")
 
 
-def lift_collar(body, z_min: float, z_max: float, lift: float):
-    """Raise upper collar verts a bit to wrap the neck stub."""
-    mw = body.matrix_world
-    inv = mw.inverted()
-    moved = 0
-    for v in body.data.vertices:
-        w = mw @ v.co
-        if z_min <= w.z <= z_max:
-            # more lift at top of band
-            t = (w.z - z_min) / max(1e-6, z_max - z_min)
-            # only outer-ish collar (away from spine center a bit) — all verts in band ok
-            w.z += lift * (0.35 + 0.65 * t)
-            v.co = inv @ w
-            moved += 1
-    body.data.update()
-    print(f"COLLAR lift moved={moved} lift={lift}")
-
-
-def seat_and_scale_head(head, scale: float, seat: float):
-    """Uniform scale about head center XY / bottom Z, then lower into collar. No mesh edit."""
-    coords = world_coords(head)
-    cx = sum(c.x for c in coords) / len(coords)
+def modest_sword_thicken(weapon, factor: float):
+    """Scale only the thin local axis (Y on this asset), modest factor."""
+    if factor <= 1.01:
+        return
+    factor = min(factor, 1.85)  # hard cap — never plank
+    coords = [v.co.copy() for v in weapon.data.vertices]
     cy = sum(c.y for c in coords) / len(coords)
-    zmin = min(c.z for c in coords)
-    # scale in local after moving pivot
-    select_only(head)
-    # apply current transforms first
-    apply_xf(head)
-    coords = world_coords(head)
-    cx = sum(c.x for c in coords) / len(coords)
-    cy = sum(c.y for c in coords) / len(coords)
-    zmin = min(c.z for c in coords)
-    for v in head.data.vertices:
-        # head data is already world-applied
-        v.co.x = cx + (v.co.x - cx) * scale
-        v.co.y = cy + (v.co.y - cy) * scale
-        v.co.z = zmin + (v.co.z - zmin) * scale
-    head.data.update()
-    # seat down
+    yspan0 = max(c.y for c in coords) - min(c.y for c in coords)
+    for v in weapon.data.vertices:
+        v.co.y = cy + (v.co.y - cy) * factor
+    weapon.data.update()
+    coords = [v.co for v in weapon.data.vertices]
+    yspan1 = max(c.y for c in coords) - min(c.y for c in coords)
+    print(f"SWORD thin-axis {yspan0:.4f} -> {yspan1:.4f} (x{factor})")
+
+
+def tiny_head_sink(head, seat: float):
+    if seat <= 0:
+        return
+    seat = min(seat, 0.02)  # hard cap
     for v in head.data.vertices:
         v.co.z -= seat
     head.data.update()
-    print(f"HEAD scale={scale} seat={seat} z=[{min(v.co.z for v in head.data.vertices):.3f},"
-          f"{max(v.co.z for v in head.data.vertices):.3f}]")
+    print(f"HEAD sink {seat}")
 
 
-def thicken_sword(weapon, thick_y: float, thick_x: float):
-    """Scale blade cross-section about local center; keep length (Z) and hands clear."""
-    coords = [v.co.copy() for v in weapon.data.vertices]
-    cx = sum(c.x for c in coords) / len(coords)
-    cy = sum(c.y for c in coords) / len(coords)
-    # Y is the thin axis on this asset
-    for v in weapon.data.vertices:
-        v.co.y = cy + (v.co.y - cy) * thick_y
-        v.co.x = cx + (v.co.x - cx) * thick_x
-    weapon.data.update()
-    print(f"SWORD thick_y={thick_y} thick_x={thick_x} dim={list(weapon.dimensions)}")
-
-
-def drop_ico():
-    for o in list(bpy.data.objects):
-        if o.type == "MESH" and o.name.lower().startswith("ico"):
-            bpy.data.objects.remove(o, do_unlink=True)
-
-
-def export_glb(path, body, head, weapon, arm, plug=None):
+def export_glb(path, body, head, weapon, arm):
     bpy.ops.object.select_all(action="DESELECT")
     for o in (body, head, arm):
         o.select_set(True)
     if weapon:
         weapon.select_set(True)
-    if plug:
-        plug.select_set(True)
     bpy.context.view_layer.objects.active = arm
     bpy.ops.export_scene.gltf(
         filepath=path,
@@ -241,9 +179,9 @@ def setup_world():
         ob.location = loc
         bpy.context.collection.objects.link(ob)
 
-    area("Key", 150, (1.6, -2.2, 2.4), 2.0)
+    area("Key", 145, (1.6, -2.2, 2.4), 2.0)
     area("Fill", 48, (-2.0, -1.0, 1.8), 3.0)
-    area("Rim", 70, (0.2, 2.5, 2.0), 2.0)
+    area("Rim", 65, (0.2, 2.5, 2.0), 2.0)
     world = bpy.data.worlds.new("W")
     bpy.context.scene.world = world
     world.use_nodes = True
@@ -274,114 +212,48 @@ def render_view(path, cam, eye, target, res=(960, 1200), lens=50, samples=48):
 
 
 def main():
-    print("SRC", SRC)
-    print("OUT", OUT)
-    print("COAT", coat_rgb, "HEAD", HEAD_SCALE, HEAD_SEAT, "SWORD", SWORD_Y, SWORD_X)
+    print("SAFE POLISH src=", SRC)
+    print("coat", coat_rgb, "sword", SWORD_THICK, "seat", HEAD_SEAT)
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.ops.import_scene.gltf(filepath=SRC)
     drop_ico()
 
     body = next(o for o in bpy.data.objects if o.type == "MESH" and o.name.lower().startswith("body"))
-    head = next(
-        o
-        for o in bpy.data.objects
-        if o.type == "MESH" and ("head" in o.name.lower() or o.name.startswith("Head"))
-    )
+    head = next(o for o in bpy.data.objects if o.type == "MESH" and "head" in o.name.lower())
     arm = next(o for o in bpy.data.objects if o.type == "ARMATURE")
     weapon = next((o for o in bpy.data.objects if o.type == "MESH" and "weapon" in o.name.lower()), None)
-    print("HEAD tris (untouched topology)", len(head.data.polygons))
+    print("VERIFY body tris", len(body.data.polygons), "head tris", len(head.data.polygons),
+          "weapon tris", len(weapon.data.polygons) if weapon else 0)
 
-    # 1) coat
-    recolor_body_albedo(body, coat_rgb, FROST_HI)
+    recolor_body_albedo(body, coat_rgb)
+    if weapon and not SKIP_SWORD:
+        modest_sword_thicken(weapon, SWORD_THICK)
+    if not SKIP_SEAT:
+        tiny_head_sink(head, HEAD_SEAT)
 
-    # 2) collar lift then seat head
-    lift_collar(body, z_min=1.38, z_max=1.50, lift=COLLAR_LIFT)
-    seat_and_scale_head(head, scale=HEAD_SCALE, seat=HEAD_SEAT)
-
-    # 2b) dark neck plug (hides hollow after optional cap delete; sits in collar)
-    import bmesh
-    # delete downward neck-cap faces if any remain
-    mw = head.matrix_world
-    bm = bmesh.new(); bm.from_mesh(head.data); bm.normal_update()
-    coords = [mw @ v.co for v in head.data.vertices]
-    zmin = min(c.z for c in coords)
-    kill = []
-    for f in bm.faces:
-        n = (mw.to_3x3() @ f.normal).normalized()
-        cz = sum((mw @ v.co).z for v in f.verts) / 3.0
-        if n.z < -0.35 and cz < zmin + 0.04:
-            kill.append(f)
-    if kill:
-        bmesh.ops.delete(bm, geom=kill, context="FACES")
-        bm.to_mesh(head.data); print(f"NECK cap faces removed {len(kill)}")
-    bm.free(); head.data.update()
-    cx = sum((head.matrix_world @ v.co).x for v in head.data.vertices) / len(head.data.vertices)
-    cy = sum((head.matrix_world @ v.co).y for v in head.data.vertices) / len(head.data.vertices)
-    zmin = min((head.matrix_world @ v.co).z for v in head.data.vertices)
-    bpy.ops.mesh.primitive_cylinder_add(vertices=20, radius=0.042, depth=0.055, location=(cx, cy, zmin + 0.005))
-    plug = bpy.context.active_object
-    plug.name = "NeckPlug"
-    pm = bpy.data.materials.new("NeckPlugMat"); pm.use_nodes = True
-    pbsdf = pm.node_tree.nodes["Principled BSDF"]
-    pbsdf.inputs["Base Color"].default_value = (0.08, 0.09, 0.11, 1)
-    pbsdf.inputs["Roughness"].default_value = 0.9
-    plug.data.materials.append(pm)
-    vg = plug.vertex_groups.new(name="head")
-    vg.add(list(range(len(plug.data.vertices))), 1.0, "REPLACE")
-    md = plug.modifiers.new("Armature", "ARMATURE"); md.object = arm; plug.parent = arm
-    for v in plug.data.vertices:
-        v.co.z -= 0.02
-    plug.data.update()
-
-    # 3) sword
-    if weapon:
-        thicken_sword(weapon, SWORD_Y, SWORD_X)
-
-    plug = next((o for o in bpy.data.objects if o.name == "NeckPlug"), None)
-    export_glb(OUT, body, head, weapon, arm, plug)
+    export_glb(OUT, body, head, weapon, arm)
     review = os.path.join(RENDER_DIR, "cast_leader_hunyuan_head__board.glb")
     if os.path.abspath(review) != os.path.abspath(OUT):
-        export_glb(review, body, head, weapon, arm, plug)
+        export_glb(review, body, head, weapon, arm)
 
-    # renders
     cam = setup_world()
-    hc = world_coords(head)
+    hc = [head.matrix_world @ v.co for v in head.data.vertices]
     face_z = min(c.z for c in hc) + 0.45 * (max(c.z for c in hc) - min(c.z for c in hc))
     front_y = min(c.y for c in hc)
-    neck_z = min(c.z for c in hc) + 0.02
     target = Vector((0.0, -0.12, 1.15))
-
     render_view(os.path.join(RENDER_DIR, "figure_front.png"), cam, Vector((0, -2.7, 1.25)), target, samples=40)
     render_view(os.path.join(RENDER_DIR, "figure_35deg.png"), cam, Vector((1.55, -2.2, 1.3)), target, samples=40)
-
-    # face closeup — confirm face still OK
+    # face
     cam.rotation_euler = Euler((math.radians(90), 0, 0), "XYZ")
     cam.location = Vector((0.0, front_y - 0.48, face_z))
     cam.data.lens = 90
     scene = bpy.context.scene
     scene.render.resolution_x = scene.render.resolution_y = 1024
-    scene.cycles.samples = 64
+    scene.cycles.samples = 56
     scene.render.filepath = os.path.join(RENDER_DIR, "face_closeup.png")
     bpy.ops.render.render(write_still=True)
     print("RENDER face_closeup")
-
-    # neck closeup
-    cam.location = Vector((0.05, front_y - 0.42, neck_z + 0.04))
-    cam.data.lens = 85
-    neck_t = Vector((0.0, front_y + 0.02, neck_z + 0.03))
-    cam.rotation_euler = (neck_t - cam.location).to_track_quat("-Z", "Y").to_euler()
-    scene.render.filepath = os.path.join(RENDER_DIR, "neck_closeup.png")
-    bpy.ops.render.render(write_still=True)
-    print("RENDER neck_closeup")
-
-    # coat color check — mid torso framing
-    cam.location = Vector((0.0, -1.6, 1.15))
-    cam.data.lens = 55
-    cam.rotation_euler = (Vector((0, -0.1, 1.15)) - cam.location).to_track_quat("-Z", "Y").to_euler()
-    scene.render.resolution_x, scene.render.resolution_y = 900, 1100
-    scene.render.filepath = os.path.join(RENDER_DIR, "coat_front.png")
-    bpy.ops.render.render(write_still=True)
-    print("DONE polish")
+    print("DONE SAFE POLISH")
 
 
 if __name__ == "__main__":

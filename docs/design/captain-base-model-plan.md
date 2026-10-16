@@ -25,7 +25,9 @@
 1. **外套色/形**与立绘一致（团长 = 冷灰大衣，禁止霜白）；
 2. **武器轮廓加粗**到棋盘俯视可辨（剑/弓/斧 silhouette）。
 
-抛光脚本：`tools/models/polish_captain_board.py`（颈座入、冷灰 remap、剑加粗；**不改**已验收的脸 UV/面数路径）。
+抛光脚本：`tools/models/polish_captain_board.py`（**仅**冷灰 albedo remap + 轻微剑加粗；**不改**已验收脸 UV/面数）。
+
+> **v3 翻车记录**：曾用抬领删面/NeckPlug/剑连乘毁模；已回滚到 fe0c42cc（attached_v2）再安全抛光。禁止再对身体做破坏性几何「修复」。
 
 ## 1. 模块拆分
 
