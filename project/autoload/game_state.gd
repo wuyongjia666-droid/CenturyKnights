@@ -47,6 +47,8 @@ var characters: Dictionary = {}  # id -> CKCharacter
 var tavern_candidates: Array = []
 var marriage_candidates: Array = []
 var marriage_nation: String = ""
+## UI 当前提亲方（marriage-all-cast）；不进关键模拟，缺省回落团长。
+var marriage_focus_id: String = ""
 ## Calendar month (year*12+month) whose castle sortie already paid out. Audit P1-3.
 var sortie_month: int = -1
 ## Tavern refreshes used this month: {"month": year*12+month, "used": n}. Audit P1-4.
@@ -324,6 +326,7 @@ func new_game(leader_given: String, leader_surname: String, color: String) -> vo
 	grant_job_skills(ally)
 	refresh_tavern()
 	marriage_nation = ""
+	marriage_focus_id = ""
 	refresh_marriage_candidates()
 	_init_quests()
 	World.reset()  # v8.7 playable atlas: position, reputation, markets, boards
@@ -993,8 +996,8 @@ func apply_save_data(data: Dictionary) -> bool:
 func family_members() -> Array:
 	return CKFamilyState.family_members(self)
 
-func refresh_marriage_candidates(nation_id: String = "") -> void:
-	CKFamilyState.refresh_marriage_candidates(self, nation_id)
+func refresh_marriage_candidates(nation_id: String = "", suitor = null) -> void:
+	CKFamilyState.refresh_marriage_candidates(self, nation_id, suitor)
 
 func _init_quests() -> void:
 	CKEconomyState._init_quests(self)

@@ -58,14 +58,48 @@ static func posts_match_nation(host, nid: String) -> bool:
 	return true
 
 
-static func refresh_marriage_candidates(host, nation_id: String = "") -> void:
+static func refresh_marriage_candidates(host, nation_id: String = "", suitor = null) -> void:
 	## A blank nation keeps the diplomacy-weighted draw. The marriage screen passes the
 	## court it is standing in. Calendar, new game, and the century sim pass nothing,
 	## so their shared RNG and the portrait bank stay on the previous sequence.
+	## suitor (提亲方) drives candidate sex; blank falls back to captain / marriage_focus_id.
 	host.marriage_nation = nation_id
 	host.marriage_candidates.clear()
+	var who = suitor
+	if who == null and host != null:
+		var fid := str(host.get("marriage_focus_id") if host.get("marriage_focus_id") != null else "")
+		if fid != "" and host.characters.has(fid):
+			who = host.characters[fid]
 	for i in 3:
-		host.marriage_candidates.append(CharacterFactory.make_marriage_candidate(host.rng, "baron", nation_id))
+		host.marriage_candidates.append(CharacterFactory.make_marriage_candidate(host.rng, "baron", nation_id, who))
+
+## Adults who may stand as 提亲方: captain, roster mercs, and keep kin.
+static func is_marriage_suitor(c: CKCharacter) -> bool:
+	if c == null or not c.alive or bool(c.retired):
+		return false
+	if int(c.age) < Calendar.ADULT_AGE:
+		return false
+	if c.is_leader or c.in_roster:
+		return true
+	if str(c.spouse_id) != "" or not c.parent_ids.is_empty() or bool(c.is_child) or str(c.family_id) != "":
+		return true
+	return false
+
+static func marriage_suitors(host) -> Array:
+	var out: Array = []
+	if host == null:
+		return out
+	for c in host.characters.values():
+		if is_marriage_suitor(c):
+			out.append(c)
+	out.sort_custom(func(a, b):
+		var sa := 0 if a.is_leader else (1 if a.in_roster else 2)
+		var sb := 0 if b.is_leader else (1 if b.in_roster else 2)
+		if sa != sb:
+			return sa < sb
+		return str(a.name) < str(b.name)
+	)
+	return out
 
 static func tick_doctrine_and_marriage_month(host) -> Array:
 	var msgs: Array = []
@@ -92,18 +126,45 @@ static func tick_doctrine_and_marriage_month(host) -> Array:
 		var amb = host.check_ambitions()
 		for a in amb:
 			msgs.append(a)
-	# 联姻月结：配偶在花名册则微升士气/声望
-	var leader = host.get_leader()
-	if leader and leader.spouse_id != "" and host.characters.has(leader.spouse_id):
-		var sp: CKCharacter = host.characters[leader.spouse_id]
-		if sp.alive:
-			host.morale = mini(100, host.morale + 1)
-			if sp.in_roster:
-				host.silver += 1
-				msgs.append("联姻月结：%s 同席 → 士气+1 银+1" % sp.name)
-			else:
-				msgs.append("联姻月结：%s 守堡 → 士气+1" % sp.name)
-			host.add_lineage_event(msgs[-1] if msgs else "联姻月结")
+	# 联姻月结：遍历所有在世成婚对，封顶防刷（marriage-all-cast P0）
+	var seen_pairs: Dictionary = {}
+	var morale_gain := 0
+	var silver_gain := 0
+	var names: Array = []
+	for c in host.characters.values():
+		if c == null or not c.alive or str(c.spouse_id) == "":
+			continue
+		var sid := str(c.spouse_id)
+		if not host.characters.has(sid):
+			continue
+		var sp: CKCharacter = host.characters[sid]
+		if sp == null or not sp.alive:
+			continue
+		var a := str(c.id)
+		var b := sid
+		var key := a + "|" + b if a < b else b + "|" + a
+		if seen_pairs.has(key):
+			continue
+		seen_pairs[key] = true
+		morale_gain += 1
+		if c.in_roster or sp.in_roster:
+			silver_gain += 1
+		names.append(sp.name if bool(c.is_leader) else c.name)
+	const MARRIAGE_MONTH_MORALE_CAP := 3
+	const MARRIAGE_MONTH_SILVER_CAP := 3
+	if morale_gain > 0:
+		var m := mini(MARRIAGE_MONTH_MORALE_CAP, morale_gain)
+		var s := mini(MARRIAGE_MONTH_SILVER_CAP, silver_gain)
+		host.morale = mini(100, host.morale + m)
+		host.silver += s
+		var who := "、".join(names.slice(0, 3))
+		if names.size() > 3:
+			who += "等"
+		var line := "联姻月结：%s → 士气+%d" % [who, m]
+		if s > 0:
+			line += " 银+%d" % s
+		msgs.append(line)
+		host.add_lineage_event(line)
 	# 血胤月泽：子嗣/配偶血胤浓度带来永久感的微收益
 	var blood_bonus = 0
 	for c in host.characters.values():
