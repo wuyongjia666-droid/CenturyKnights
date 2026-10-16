@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Soft-reduce Hunyuan FULL-BODY captain for board (keep UV/albedo).
+"""Soft-reduce Hunyuan FULL-BODY captain (keep UV/albedo).
+
+WARNING: Soft COLLAPSE below ~120k on this open-shell Hunyuan mesh SHATTERS
+coat/face. Do NOT ship ~38k collapse as board. Prefer remesh+bake or keep LOD0.
 
 LOD0 ~120–200k, board ~35–50k via multi-step collapse (NOT one-shot crush).
 Normalize height to ~1.85m, feet z=0, face -Y.
