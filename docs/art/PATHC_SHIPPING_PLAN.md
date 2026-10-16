@@ -14,6 +14,11 @@
 4. 去光：只烘颜色（EMIT 烘去光 albedo）；metallic>0.85 的金属件提亮到可感知银色（否则烘出来发黑）。
 5. 单材质 GLB，贴图 JPEG q88；meshopt 不用（Godot 导入器不支持）。身高 1.85、脚底 0。
 
+## B2. 烘焙 v2（2026-10-17，修批量瑕疵）
+- 根因：v1 批量用「金属提亮」在 sRGB 编码的 8bit 金属图上做阈值，噪点金属值→白斑/彩斑（头发、盔甲）；512 直烘 + 碎 UV 岛 + margin 8 让脸糊、边缘渗色。团长母版几乎无金属、外形简单，所以 v1 正好没踩到。
+- v2：1024 烘再降 512；margin 16；头部 UV 岛 2.2× 纹素优先 + 旋转打包；albedo 用 DIFFUSE 颜色；金属区（浮点金属图，k=2 模糊）混入「均匀白天光」COMBINED 烘焙，强度按与母版渲染误差逐件选 0/0.5/1。
+- 运行时：航运件走 `shaders/board_figure_ship.gdshader`（保留自身 albedo，敌方红色 rim）；职业武器取自套件，按 `pathc_ship.hands` 挂到手位。
+
 ## C. 分档 / 门禁（`tools/ci/pathc_ship_gate.py`，已接 run_ci.sh）
 | 项 | 门槛 |
 |---|---|

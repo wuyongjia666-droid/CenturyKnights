@@ -2,9 +2,9 @@
   "stem": "bandit_chief",
   "tier": "key",
   "ship": "project/assets/models/board/pathc_ship/bandit_chief.glb",
-  "ship_sha256": "43f9931f855a40bc1adb09d1c19150d157cebb10aadd93724588e13790d8d7ae",
-  "ship_bytes": 608256,
-  "tris": 13000,
+  "ship_sha256": "aa40c49d02d57b3fc61ba6568e117511e6aa206446cb03ed4776aa95b84d09c7",
+  "ship_bytes": 678224,
+  "tris": 15000,
   "master": {
     "repo_path": "docs/art/review/board_figure_hunyuan_cloud/pathc_native/bandit_chief__board.glb",
     "sha256": "775097b0dc9f6aff28500c277f07b43d92833bd6c8f2687e4e8c27a57a507315",
@@ -14,12 +14,16 @@
   "height_m": 1.85,
   "feet_z": 0,
   "bake": {
-    "pipeline": "voxel remesh -> decimate on new UV-less mesh -> smart UV -> selected-to-active EMIT bake of de-lit albedo (metal lifted to perceived silver where metallic>0.85)",
+    "pipeline": "voxel remesh (h/400) -> decimate on new UV-less mesh -> smart UV + head islands x2.2 texel priority + pack_islands(rotate) -> bake at 1024, downsample 512",
+    "albedo": "DIFFUSE color pass (de-lit)",
+    "metal": "where blurred(k=2) master metallic > 0.5..0.8: blend toward COMBINED bake under uniform white sky (metal reads as metal); blend strength chosen per piece by min error vs master renders (front/35/face)",
+    "metal_strength": 0.5,
     "voxel_size": 0.004625000000000001,
     "voxel_tris": 760460,
     "cage_extrusion": 0.02,
     "max_ray_distance": 0.05,
-    "margin_px": 8
+    "margin_px": 16
   },
-  "script": "tools/models/bake_pathc_ship.py"
+  "script": "tools/models/bake_pathc_ship.py",
+  "bake_version": 2
 }

@@ -2,9 +2,9 @@
   "stem": "base_body_f",
   "tier": "shared",
   "ship": "project/assets/models/board/pathc_ship/base_body_f.glb",
-  "ship_sha256": "14814d1ab1a44b7a577f02db6b365ae7f44cdb65913b6721fc723e2504331f0b",
-  "ship_bytes": 363516,
-  "tris": 11000,
+  "ship_sha256": "78abd4124ad909e1df8e58df6f7e319645e07cb18d13a96955cb25a6cfc530e5",
+  "ship_bytes": 372960,
+  "tris": 11500,
   "master": {
     "repo_path": "docs/art/review/board_figure_hunyuan_cloud/pathc_native/base_body_f__board.glb",
     "sha256": "d8e15ef877a77e01a57d1df4d42f662537d9e5e6195ab4eff192b061961dc2ae",
@@ -14,12 +14,16 @@
   "height_m": 1.85,
   "feet_z": 0,
   "bake": {
-    "pipeline": "voxel remesh -> decimate on new UV-less mesh -> smart UV -> selected-to-active EMIT bake of de-lit albedo (metal lifted to perceived silver where metallic>0.85)",
+    "pipeline": "voxel remesh (h/400) -> decimate on new UV-less mesh -> smart UV + head islands x2.2 texel priority + pack_islands(rotate) -> bake at 1024, downsample 512",
+    "albedo": "DIFFUSE color pass (de-lit)",
+    "metal": "where blurred(k=2) master metallic > 0.5..0.8: blend toward COMBINED bake under uniform white sky (metal reads as metal); blend strength chosen per piece by min error vs master renders (front/35/face)",
+    "metal_strength": 0.0,
     "voxel_size": 0.004625000000000001,
     "voxel_tris": 275596,
     "cage_extrusion": 0.02,
     "max_ray_distance": 0.05,
-    "margin_px": 8
+    "margin_px": 16
   },
-  "script": "tools/models/bake_pathc_ship.py"
+  "script": "tools/models/bake_pathc_ship.py",
+  "bake_version": 2
 }

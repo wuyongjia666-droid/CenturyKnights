@@ -186,8 +186,10 @@ static func build(c, team: String, tmpl: String = "") -> Node3D:
 			_ensure_unit_hair(unit, c, team)
 		_ground_and_fit(unit)
 		if ship:
-			# Path C ship piece: baked master albedo, keep its own material (no palette/decal/extras).
+			# Path C ship piece: baked master albedo (no palette/decal/extras) + faction rim + job weapon.
 			root.set_meta("ck_pathc_ship", true)
+			_apply_ship_rim(unit, enemy)
+			_attach_ship_weapon(unit, parts, pal, face, enemy)
 		else:
 			_apply_board_palette(unit, pal, face, enemy)
 			_apply_face_decal(unit, c, team, tmpl)
@@ -212,6 +214,65 @@ static func build(c, team: String, tmpl: String = "") -> Node3D:
 	_lru_put(h, true)
 	return root
 
+
+
+const SHIP_SHADER_PATH := "res://shaders/board_figure_ship.gdshader"
+static var _ship_shader: Shader
+
+## Ship pieces keep their albedo; enemies get the red faction rim (UIKit.DANGER) like the kit shader.
+static func _apply_ship_rim(n: Node, enemy: bool) -> void:
+	if _ship_shader == null:
+		_ship_shader = load(SHIP_SHADER_PATH) as Shader
+	if n is MeshInstance3D:
+		var mi := n as MeshInstance3D
+		if mi.mesh != null and not str(mi.name).begins_with("ShipWeapon"):
+			for si in mi.mesh.get_surface_count():
+				var m := mi.mesh.surface_get_material(si)
+				var tex: Texture2D = null
+				if m is BaseMaterial3D:
+					tex = (m as BaseMaterial3D).albedo_texture
+				if tex == null:
+					continue
+				var sm := ShaderMaterial.new()
+				sm.shader = _ship_shader
+				sm.set_shader_parameter("albedo_tex", tex)
+				sm.set_shader_parameter("rim_col", UIKit.DANGER if enemy else UIKit.ACCENT)
+				sm.set_shader_parameter("rim_amt", 1.6 if enemy else 0.0)
+				mi.set_surface_override_material(si, sm)
+	for ch in n.get_children():
+		_apply_ship_rim(ch, enemy)
+
+
+## Job weapon from the board kit, moved from the kit hand to the ship piece's measured hand
+## (board_figures.json pathc_ship.hands, GLB/Godot units). Bow goes to the left hand.
+static func _attach_ship_weapon(unit: Node3D, parts: Dictionary, pal: Dictionary, face: float, enemy: bool) -> void:
+	var wn := str(parts.get("weapon", ""))
+	if wn == "":
+		return
+	_ensure_kit()
+	_ensure_map()
+	var mesh: Mesh = _kit_meshes.get(wn, null)
+	if mesh == null:
+		return
+	var cfg: Dictionary = _map.get("pathc_ship", {})
+	var stem := str(unit.get_meta("ck_load_path", "")).get_file().get_basename()
+	var hands: Dictionary = (cfg.get("hands", {}) as Dictionary).get(stem, {})
+	if hands.is_empty():
+		return
+	var left := wn == "weapon_bow"
+	var hv: Array = hands.get("l" if left else "r", [])
+	if hv.size() < 3:
+		return
+	var kit_hand: Array = (cfg.get("kit_hand_l" if left else "kit_hand_r", [0.33 if left else -0.33, 0.86, 0.04]) as Array)
+	var mi := MeshInstance3D.new()
+	mi.name = "ShipWeapon"
+	mi.mesh = mesh
+	mi.position = Vector3(float(hv[0]) - float(kit_hand[0]), float(hv[1]) - float(kit_hand[1]), float(hv[2]) - float(kit_hand[2]))
+	var wm := _palette_mat(pal, face, enemy)
+	wm.set_shader_parameter("rim_amt", 0.85 if enemy else 0.0)
+	mi.material_override = wm
+	unit.add_child(mi)
+	unit.set_meta("ck_ship_weapon", wn)
 
 
 static func _unit_has_hair_mesh(n: Node) -> bool:
