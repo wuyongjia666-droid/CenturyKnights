@@ -1,0 +1,8 @@
+mode=normalize-only
+stem=base_body_f
+src=/workspace/board_figure_hunyuan_review/cast3_textured/out/base_body_f_v2/base_body_f_pathc_native.glb
+out=docs/art/review/board_figure_hunyuan_cloud/pathc_native/base_body_f__board.glb
+tris_before=1500000
+tris_after=1500000
+bytes=75668780
+height_target=1.85

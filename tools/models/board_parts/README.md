@@ -19,3 +19,12 @@ blender -b -P tools/models/retopo_farm_hunyuan.py -- \
   tools/models/board_parts/farm_inbox/hy_leader_m.glb \
   project/assets/models/board/farm_cast/leader_m.glb 5500
 ```
+
+## Path C LOOK（2026-10-16）
+
+用户过目通过的混元云端全身在：
+`docs/art/review/board_figure_hunyuan_cloud/pathc_native/`
+
+登记：`project/data/board_figure_pathc.json`。  
+原始投放可放 `farm_inbox/pathc_native/`（gitignore）。**不要**把 ~80MB Path C 拷进 `project/assets`。
+

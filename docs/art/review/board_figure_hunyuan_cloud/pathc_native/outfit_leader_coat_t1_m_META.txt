@@ -1,0 +1,8 @@
+mode=normalize-only
+stem=outfit_leader_coat_t1_m
+src=/workspace/board_figure_hunyuan_review/cast3_textured/out/outfit_leader_coat_t1_m_v2/outfit_leader_coat_t1_m_pathc_native.glb
+out=docs/art/review/board_figure_hunyuan_cloud/pathc_native/outfit_leader_coat_t1_m__board.glb
+tris_before=1498050
+tris_after=1498050
+bytes=85798660
+height_target=1.85

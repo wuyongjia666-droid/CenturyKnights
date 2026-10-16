@@ -1,0 +1,2 @@
+CANCELLED 2026-10-16T16:00:40+08:00: blocky kit polish stopped per user 去云端/精品 bar
+Follow-up 2026-10-16: user approved Path C generics in board_figure_hunyuan_cloud/pathc_native/; wire LOOK via board_figure_pathc.json (not Opus cubes).

@@ -58,3 +58,9 @@
 
 
 > **导出**：2026-10-16 将 Path C GLB+PBR 从 `project/assets/models/units/` 挪到 `docs/art/review/.../hunyuan_noreduce/`，`export_size` 才能过；运行时棋盘用 Opus `board_figures_v1`，不以混元全身当量产件。
+
+
+## 4. 通用 Path C 批次（2026-10-16）
+
+用户过目通过：`base_body_*`、三套职业壳（猎人/团长外套/轻步兵）男女、`hunter_f`，以及此前的 `hunter_m` / `bandit_chief`。  
+全部 normalize-only 放在 `docs/art/review/board_figure_hunyuan_cloud/pathc_native/`（同团长：不进导出）。登记见 `project/data/board_figure_pathc.json`。

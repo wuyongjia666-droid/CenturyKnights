@@ -27,3 +27,15 @@
 - 本机 box **不能**直连 `192.168.9.244:8327`；提交须在 **m173** 跑 `gen_hunyuan_v87.py` + `farm.ps1`。
 - 上述三件 **已在农场混元出过**（2026-10-15）；本次是 Blender 粘土过目重渲，未再排队云端。
 - 若用户要「更贴当前立绘」重跑：在 m173 用最新 Qwen 转面 → `gen_hunyuan_v87.py` → `:8327`。
+
+
+## Path C 通用 9 件 + 关键猎手/头目（2026-10-16 夜用户过目通过）
+
+目录：[`pathc_native/`](pathc_native/) — normalize-only GLB + 正面/35°/脸过目图。
+
+- 通用身：`base_body_m` / `base_body_f`
+- 职业壳：猎人 / 团长外套 / 轻步兵（各 m+f）
+- 关键角色：`hunter_m` / `hunter_f` / `bandit_chief`（团长 LOOK 仍在 `board_figure_p1/hunyuan_noreduce/`）
+- 登记：`project/data/board_figure_pathc.json`；`board_figures.json` → `pathc_look`
+
+**不进导出包。** 合 #310 前仍须用户对运行时接线目视 OK。

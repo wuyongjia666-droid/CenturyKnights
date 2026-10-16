@@ -3,6 +3,7 @@ extends RefCounted
 ## Formal modular board figures (docs/design/pawn-redesign-opus.md §3 / §5 / 附录 A/B).
 ## Board figures: scale 演出 UnitModel GLBs onto the board + plate_palette shader.
 ## Prefer units/*.glb (UnitModel.resolve). farm_cast / kit compose only if resolve fails.
+## Path C LOOK (user-approved 2026-10-16): data/board_figure_pathc.json → docs/.../pathc_native/ (not loaded at runtime; export budget).
 ## Shader remaps albedo → hair/skin/coat/… slots (no board_compact solid fill).
 
 const SHADER_PATH := "res://shaders/board_figure.gdshader"

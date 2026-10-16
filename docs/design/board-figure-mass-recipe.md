@@ -51,3 +51,14 @@
 
 - P0+P1：本 PR #310（套件接入）；**合入前须用户目视资产**。
 - P2 动作 / P3 手机分档 / P4 全职业标志件 + §7 验收：#310 合入后按 `pawn-redesign-opus.md` **整段做满**。
+
+
+## Path C 通用件已过目（2026-10-16）
+
+用户确认混元云端 Path C 精致款可用。已入库 LOOK：
+
+- `docs/art/review/board_figure_hunyuan_cloud/pathc_native/`（9 通用 + hunter_m/f + bandit_chief）
+- 登记 `project/data/board_figure_pathc.json`
+
+**量产视觉标准 = Path C**；方块 Opus kit 样板已 CANCELLED。  
+运行时包体仍用套件/`farm_cast`，Path C 不进 `project/assets`（导出预算）。航运减面只许重拓扑/烘贴，禁止 soft COLLAPSE。

@@ -30,7 +30,9 @@
     "hair": "hair_swept",
     "outfit": "outfit_light_inf",
     "weapon": "weapon_sword",
-    "scale": 1.0
+    "scale": 1.0,
+    "pathc_body_m": "base_body_m",
+    "pathc_body_f": "base_body_f"
   },
   "jobs": {
     "squire": {
@@ -58,7 +60,9 @@
     "light_inf": {
       "outfit": "outfit_light_inf",
       "weapon": "weapon_sword",
-      "signs": []
+      "signs": [],
+      "pathc_outfit_m": "outfit_light_inf_t1_m",
+      "pathc_outfit_f": "outfit_light_inf_t1_f"
     },
     "warrior": {
       "outfit": "outfit_light_inf",
@@ -104,7 +108,9 @@
     "hunter": {
       "compose": "compose_hunter",
       "weapon": "weapon_bow",
-      "signs": []
+      "signs": [],
+      "pathc_outfit_m": "outfit_hunter_t1_m",
+      "pathc_outfit_f": "outfit_hunter_t1_f"
     },
     "archer": {
       "compose": "compose_hunter",
@@ -179,7 +185,9 @@
     "captain": {
       "compose": "compose_captain",
       "weapon": "weapon_sword",
-      "signs": []
+      "signs": [],
+      "pathc_outfit_m": "outfit_leader_coat_t1_m",
+      "pathc_outfit_f": "outfit_leader_coat_t1_f"
     },
     "salt_yin": {
       "outfit": "outfit_banner",
@@ -247,5 +255,28 @@
     "pony",
     "swept",
     "tied"
-  ]
+  ],
+  "pathc_look": {
+    "registry": "res://data/board_figure_pathc.json",
+    "root": "docs/art/review/board_figure_hunyuan_cloud/pathc_native",
+    "note": "User-approved Path C shared bodies + profession shells + key cast (2026-10-16). LOOK only — not loaded by UnitModel at runtime (export budget). Shipping board still kit_glb / farm_cast until bake.",
+    "shared_bodies": {
+      "body_m": "base_body_m__board.glb",
+      "body_f": "base_body_f__board.glb"
+    },
+    "profession_shells": {
+      "hunter_m": "outfit_hunter_t1_m__board.glb",
+      "hunter_f": "outfit_hunter_t1_f__board.glb",
+      "leader_coat_m": "outfit_leader_coat_t1_m__board.glb",
+      "leader_coat_f": "outfit_leader_coat_t1_f__board.glb",
+      "light_inf_m": "outfit_light_inf_t1_m__board.glb",
+      "light_inf_f": "outfit_light_inf_t1_f__board.glb"
+    },
+    "key_cast": {
+      "hunter_m": "hunter_m__board.glb",
+      "hunter_f": "hunter_f__board.glb",
+      "bandit_chief": "bandit_chief__board.glb",
+      "leader_m": "docs/art/review/board_figure_p1/hunyuan_noreduce/cast_leader__board.glb"
+    }
+  }
 }
