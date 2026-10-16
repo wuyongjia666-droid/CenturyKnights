@@ -479,3 +479,25 @@ ux_end_turn_ask,结束回合…,End turn…
 ux_end_turn_title,结束回合,End turn
 ux_end_turn_body,确认结束我方回合？未行动的单位将跳过本回合。,End your turn? Units that have not acted will skip this round.
 ux_end_turn_yes,确认结束,Confirm end
+ux_marry_underage,未成年不可婚,Too young to marry
+ux_court_season_rotate,廷帖换季：后招相亲三人已换新,Court season: merc match posts refreshed
+ux_hero_no_reroll,主角团走主线姻缘，不可再议抽帖,Hero party follows story marriages; no redraw
+ux_reroll_month_cap,本月再议已用尽（每月 %d 次）,No redraws left this month (%d / month)
+ux_reroll_done,再议完成，另抽三人（-%d 银，本月剩 %d 次）,Redraw done; three new posts (-%d silver, %d left)
+ux_marriage_month_line,联姻月结：%s → 士气+%d,Marriage month: %s → morale +%d
+ux_marriage_month_silver," 银+%d"," silver +%d"
+ux_marriage_month_etc,等,etc
+ux_suitor_caption,SUITOR // 提亲方,SUITOR // proposer
+ux_posts_hero_teach,主线/教学廷帖 · %s（不可再议）,Story/tutorial posts · %s (no redraw)
+ux_posts_hero_fixed,主角团主线姻缘（无廷帖刷新）,Hero party story marriage (no post refresh)
+ux_empty_hero_fixed,主角团走主线姻缘，不在此刷廷帖。,Hero party story marriage; no court posts here.
+ux_empty_hero_no_reroll,春令无人应帖。主角团不可再议抽帖。,No posts this spring. Hero party cannot redraw.
+ux_suitor_married_mark, · 已成婚, · married
+ux_suitor_leader_prefix,团长·,Captain·
+ux_suitor_side,提亲一方,Proposer
+ux_suitor_fallback,提亲方,Proposer
+ux_reroll_btn,再议 · %d银·剩%d,Redraw · %d silver · %d left
+ux_reroll_hero_btn,再议 · 主线,Redraw · story
+ux_reroll_month_cap_tip,本月再议已用尽（每月 %d 次，下月刷新）,No redraws left (%d / month; resets next month)
+ux_reroll_cost_left,（%d 银，本月剩 %d/%d）,(%d silver, %d/%d left this month)
+ux_dossier_propose,议亲,Propose

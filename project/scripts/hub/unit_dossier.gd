@@ -91,7 +91,7 @@ func _build() -> void:
 	note.size = Vector2(264, 28)
 	left.add_child(note)
 	if _marriage_openable(c):
-		var marry_btn := CKPageKit.button("议亲", true, 264)
+		var marry_btn := CKPageKit.button(Locale.t("ux_dossier_propose"), true, 264)
 		marry_btn.name = "OpenMarriage"
 		marry_btn.position = Vector2(18, 478)
 		marry_btn.custom_minimum_size = Vector2(264, 48)

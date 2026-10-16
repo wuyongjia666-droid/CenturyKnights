@@ -198,17 +198,17 @@ static func rotate_court_posts_for_new_month(host) -> String:
 		var nid := str(host.marriage_nation) if str(host.marriage_nation) != "" else active_marriage_nation(host)
 		refresh_marriage_candidates(host, nid, who)
 		stamp_court_posts_month(host)
-		return "廷帖换季：后招相亲三人已换新"
+		return Locale.t("ux_court_season_rotate")
 	return ""
 
 ## Paid court reroll for non-hero suiters only (silver + monthly cap).
 static func reroll_marriage_candidates(host, nation_id: String = "", suitor = null) -> Dictionary:
 	var who = _resolve_suitor(host, suitor)
 	if not can_reroll_court(who):
-		return {"ok": false, "msg": "主角团走主线姻缘，不可再议抽帖"}
+		return {"ok": false, "msg": Locale.t("ux_hero_no_reroll")}
 	var used := court_rerolls_used(host)
 	if used >= COURT_REROLL_MONTHLY_CAP:
-		return {"ok": false, "msg": "本月再议已用尽（每月 %d 次）" % COURT_REROLL_MONTHLY_CAP}
+		return {"ok": false, "msg": Locale.t("ux_reroll_month_cap", [COURT_REROLL_MONTHLY_CAP])}
 	if int(host.silver) < COURT_REROLL_SILVER:
 		return {"ok": false, "msg": Locale.t("not_enough_silver")}
 	host.silver -= COURT_REROLL_SILVER
@@ -218,7 +218,7 @@ static func reroll_marriage_candidates(host, nation_id: String = "", suitor = nu
 	var left := court_rerolls_left(host)
 	return {
 		"ok": true,
-		"msg": "再议完成，另抽三人（-%d 银，本月剩 %d 次）" % [COURT_REROLL_SILVER, left],
+		"msg": Locale.t("ux_reroll_done", [COURT_REROLL_SILVER, left]),
 		"cost": COURT_REROLL_SILVER,
 		"left": left,
 	}
@@ -314,10 +314,10 @@ static func tick_doctrine_and_marriage_month(host) -> Array:
 		host.silver += s
 		var who := "、".join(names.slice(0, 3))
 		if names.size() > 3:
-			who += "等"
-		var line := "联姻月结：%s → 士气+%d" % [who, m]
+			who += Locale.t("ux_marriage_month_etc")
+		var line := Locale.t("ux_marriage_month_line", [who, m])
 		if s > 0:
-			line += " 银+%d" % s
+			line += Locale.t("ux_marriage_month_silver", [s])
 		msgs.append(line)
 		host.add_lineage_event(line)
 	# 血胤月泽：子嗣/配偶血胤浓度带来永久感的微收益

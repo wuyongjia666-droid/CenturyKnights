@@ -41,7 +41,7 @@ func can_propose(suitor: CKCharacter, target: CKCharacter, realm: String = "ashl
 	if not suitor.alive or not target.alive:
 		return {"ok": false, "msg": "当事人不在"}
 	if int(suitor.age) < Calendar.ADULT_AGE or int(target.age) < Calendar.ADULT_AGE:
-		return {"ok": false, "msg": "未成年不可婚"}
+		return {"ok": false, "msg": Locale.t("ux_marry_underage")}
 	var bar := CKBloodline.marriage_barrier(suitor, target, GameState.characters)
 	if bar != "":
 		return {"ok": false, "need": need, "have": have, "msg": bar}
