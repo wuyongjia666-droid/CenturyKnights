@@ -1,0 +1,25 @@
+{
+  "stem": "outfit_hunter_t1_m",
+  "tier": "shared",
+  "ship": "project/assets/models/board/pathc_ship/outfit_hunter_t1_m.glb",
+  "ship_sha256": "fc7b5ca7b90daaeb804e72a0ab3efe37de3f237f09e84c9bc633c89af53a4600",
+  "ship_bytes": 502460,
+  "tris": 11000,
+  "master": {
+    "repo_path": "docs/art/review/board_figure_hunyuan_cloud/pathc_native/outfit_hunter_t1_m__board.glb",
+    "sha256": "c269bc464700f33b49eb05577dafac42c59099746bd62b8b8aee99498e8488e2",
+    "never_modified": true
+  },
+  "tex": "512x512 albedo JPEG q88, single material",
+  "height_m": 1.85,
+  "feet_z": 0,
+  "bake": {
+    "pipeline": "voxel remesh -> decimate on new UV-less mesh -> smart UV -> selected-to-active EMIT bake of de-lit albedo (metal lifted to perceived silver where metallic>0.85)",
+    "voxel_size": 0.004625000000000001,
+    "voxel_tris": 576680,
+    "cage_extrusion": 0.02,
+    "max_ray_distance": 0.05,
+    "margin_px": 8
+  },
+  "script": "tools/models/bake_pathc_ship.py"
+}

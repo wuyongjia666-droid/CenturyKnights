@@ -1,0 +1,25 @@
+{
+  "stem": "outfit_leader_coat_t1_f",
+  "tier": "shared",
+  "ship": "project/assets/models/board/pathc_ship/outfit_leader_coat_t1_f.glb",
+  "ship_sha256": "1d6d252e0d9da6ee15db6c14f91a598433d6bc46ebd1e9ac087466687446e0f7",
+  "ship_bytes": 469208,
+  "tris": 11000,
+  "master": {
+    "repo_path": "docs/art/review/board_figure_hunyuan_cloud/pathc_native/outfit_leader_coat_t1_f__board.glb",
+    "sha256": "c3ff1381097e769df85286f01e4ae063a0364253da42635fd7a78e7bcb25ae79",
+    "never_modified": true
+  },
+  "tex": "512x512 albedo JPEG q88, single material",
+  "height_m": 1.85,
+  "feet_z": 0,
+  "bake": {
+    "pipeline": "voxel remesh -> decimate on new UV-less mesh -> smart UV -> selected-to-active EMIT bake of de-lit albedo (metal lifted to perceived silver where metallic>0.85)",
+    "voxel_size": 0.004625000000000001,
+    "voxel_tris": 580756,
+    "cage_extrusion": 0.02,
+    "max_ray_distance": 0.05,
+    "margin_px": 8
+  },
+  "script": "tools/models/bake_pathc_ship.py"
+}

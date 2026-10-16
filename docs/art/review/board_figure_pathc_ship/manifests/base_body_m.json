@@ -1,0 +1,25 @@
+{
+  "stem": "base_body_m",
+  "tier": "shared",
+  "ship": "project/assets/models/board/pathc_ship/base_body_m.glb",
+  "ship_sha256": "396c53907f511a06a6c64ce32de2aa3a5d5a75439d78c7e78546c528831b4ca6",
+  "ship_bytes": 367208,
+  "tris": 11000,
+  "master": {
+    "repo_path": "docs/art/review/board_figure_hunyuan_cloud/pathc_native/base_body_m__board.glb",
+    "sha256": "e76a0b923f0ce7ad56c6afa7e431142cee6b32a3f8a3f4efd261d13ce78ae2d9",
+    "never_modified": true
+  },
+  "tex": "512x512 albedo JPEG q88, single material",
+  "height_m": 1.85,
+  "feet_z": 0,
+  "bake": {
+    "pipeline": "voxel remesh -> decimate on new UV-less mesh -> smart UV -> selected-to-active EMIT bake of de-lit albedo (metal lifted to perceived silver where metallic>0.85)",
+    "voxel_size": 0.004625000000000001,
+    "voxel_tris": 290428,
+    "cage_extrusion": 0.02,
+    "max_ray_distance": 0.05,
+    "margin_px": 8
+  },
+  "script": "tools/models/bake_pathc_ship.py"
+}

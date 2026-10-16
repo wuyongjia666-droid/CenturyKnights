@@ -256,6 +256,20 @@
     "swept",
     "tied"
   ],
+  "pathc_ship": {
+    "dir": "res://assets/models/board/pathc_ship/",
+    "note": "Board load order (UnitModel.board_load_path): stem_map[resolved units stem] -> job pathc_outfit_<g> shell (generic outfit_/look_/archetype only) -> same stem -> units __board -> units. farm_cast is superseded wherever a ship piece exists.",
+    "stem_map": {
+      "cast_leader": "cast_leader",
+      "cast_dengying": "hunter_m",
+      "enemy_bandit_chief": "bandit_chief",
+      "outfit_hunter_t1_m": "outfit_hunter_t1_m",
+      "outfit_hunter_t1_f": "outfit_hunter_t1_f",
+      "outfit_light_inf_t1_m": "outfit_light_inf_t1_m",
+      "outfit_light_inf_t1_f": "outfit_light_inf_t1_f"
+    },
+    "body_fallback": {"m": "base_body_m", "f": "base_body_f"}
+  },
   "pathc_look": {
     "registry": "res://data/board_figure_pathc.json",
     "root": "docs/art/review/board_figure_hunyuan_cloud/pathc_native",

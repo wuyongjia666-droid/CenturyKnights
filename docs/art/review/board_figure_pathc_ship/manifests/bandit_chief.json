@@ -1,0 +1,25 @@
+{
+  "stem": "bandit_chief",
+  "tier": "key",
+  "ship": "project/assets/models/board/pathc_ship/bandit_chief.glb",
+  "ship_sha256": "43f9931f855a40bc1adb09d1c19150d157cebb10aadd93724588e13790d8d7ae",
+  "ship_bytes": 608256,
+  "tris": 13000,
+  "master": {
+    "repo_path": "docs/art/review/board_figure_hunyuan_cloud/pathc_native/bandit_chief__board.glb",
+    "sha256": "775097b0dc9f6aff28500c277f07b43d92833bd6c8f2687e4e8c27a57a507315",
+    "never_modified": true
+  },
+  "tex": "512x512 albedo JPEG q88, single material",
+  "height_m": 1.85,
+  "feet_z": 0,
+  "bake": {
+    "pipeline": "voxel remesh -> decimate on new UV-less mesh -> smart UV -> selected-to-active EMIT bake of de-lit albedo (metal lifted to perceived silver where metallic>0.85)",
+    "voxel_size": 0.004625000000000001,
+    "voxel_tris": 760460,
+    "cage_extrusion": 0.02,
+    "max_ray_distance": 0.05,
+    "margin_px": 8
+  },
+  "script": "tools/models/bake_pathc_ship.py"
+}

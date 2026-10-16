@@ -264,13 +264,43 @@ static func _hair_tint(c) -> Color:
 
 const PATHC_SHIP_DIR := "res://assets/models/board/pathc_ship/"
 
-## Board load order: pathc_ship/<stem>.glb (baked from Path C master) → units/<stem>__board.glb → units/<stem>.glb.
-## units/<stem>.glb stays the cutscene model; farm_cast is the kit fallback when resolve fails.
-static func board_load_path(p: String) -> String:
+## Board load order (#299 shared body + job shells; data/board_figures.json pathc_ship):
+## stem_map[units stem] → job pathc_outfit_<g> (generic outfit_/look_/archetype only) → same stem
+## → units/<stem>__board.glb → units/<stem>.glb. units/<stem>.glb stays the cutscene model.
+static var _ship_cfg: Dictionary = {}
+static var _ship_jobs: Dictionary = {}
+
+static func _ensure_ship_cfg() -> void:
+	if not _ship_cfg.is_empty():
+		return
+	var f := FileAccess.open("res://data/board_figures.json", FileAccess.READ)
+	var raw: Variant = JSON.parse_string(f.get_as_text()) if f != null else null
+	if typeof(raw) == TYPE_DICTIONARY:
+		_ship_cfg = (raw as Dictionary).get("pathc_ship", {})
+		_ship_jobs = (raw as Dictionary).get("jobs", {})
+	if _ship_cfg.is_empty():
+		_ship_cfg = {"stem_map": {}}
+
+static func ship_stem_for(p: String, c = null) -> String:
+	_ensure_ship_cfg()
 	var stem := p.get_file().get_basename()
-	var ship := PATHC_SHIP_DIR + stem + ".glb"
-	if ResourceLoader.exists(ship):
-		return ship
+	var sm: Dictionary = _ship_cfg.get("stem_map", {})
+	if sm.has(stem) and ResourceLoader.exists(PATHC_SHIP_DIR + str(sm[stem]) + ".glb"):
+		return str(sm[stem])
+	if c != null and not stem.begins_with("cast_") and not stem.begins_with("enemy_"):
+		var job: Dictionary = _ship_jobs.get(str(c.get("job_id")), {})
+		var g := "f" if str(c.get("gender")) == "f" else "m"
+		var shell := str(job.get("pathc_outfit_" + g, ""))
+		if shell != "" and ResourceLoader.exists(PATHC_SHIP_DIR + shell + ".glb"):
+			return shell
+	if ResourceLoader.exists(PATHC_SHIP_DIR + stem + ".glb"):
+		return stem
+	return ""
+
+static func board_load_path(p: String, c = null) -> String:
+	var ship := ship_stem_for(p, c)
+	if ship != "":
+		return PATHC_SHIP_DIR + ship + ".glb"
 	if ResourceLoader.exists(p.replace(".glb", "__board.glb")):
 		return p.replace(".glb", "__board.glb")
 	return p
@@ -283,7 +313,7 @@ static func instantiate(c, team: String, tmpl: String = "", board: bool = false)
 	# Board pieces may use a Blender-cleaned variant (<stem>__board.glb); meta keeps p.
 	var lp := p
 	if board:
-		lp = board_load_path(p)
+		lp = board_load_path(p, c)
 	var ps: PackedScene = load(lp)
 	if ps == null:
 		return null
@@ -294,7 +324,7 @@ static func instantiate(c, team: String, tmpl: String = "", board: bool = false)
 	# pathc_ship carries its own baked Path C albedo: no slot recolor.
 	if not ship:
 		recolor(n, c, team, tmpl, spec)
-	if p.get_file().begins_with("outfit_"):
+	if p.get_file().begins_with("outfit_") and not ship:
 		attach_modules(n, c, team)
 	n.set_meta("ck_theme", str(spec.get("theme", "")))
 	n.set_meta("ck_model", p)
