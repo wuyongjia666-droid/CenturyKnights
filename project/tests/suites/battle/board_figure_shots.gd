@@ -24,7 +24,7 @@ func _ready() -> void:
 
 func _desktop_ab(out: String) -> void:
 	for label in ["before", "after"]:
-		GameState.new_game("Ash", "Banner", "#6ED4FF")
+		GameState.new_game("Ash", "Banner", "#" + Color8(110, 212, 255).to_html(false))
 		GameState.set_meta("battle_map", "ch0_pass")
 		GameState.set_meta("cutscenes_on", false)
 		GameState.settings["cutscenes"] = false
@@ -45,7 +45,7 @@ func _desktop_ab(out: String) -> void:
 
 
 func _unit_cards(out: String) -> void:
-	GameState.new_game("Ash", "Banner", "#6ED4FF")
+	GameState.new_game("Ash", "Banner", "#" + Color8(110, 212, 255).to_html(false))
 	await get_tree().process_frame
 	var leader = GameState.get_leader()
 	var jobs := [

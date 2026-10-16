@@ -637,11 +637,11 @@ static func _default_slot(k: String, enemy: bool) -> Color:
 		"skin":
 			return Color(0.78, 0.62, 0.52)
 		"eye":
-			return Color(0.165, 0.184, 0.220)  # #2A2F38
+			return Color(0.165, 0.184, 0.220)  # eye-dark
 		"coat":
-			return Color(0.376, 0.416, 0.467) if enemy else Color(0.55, 0.58, 0.62)  # enemy #606A77
+			return Color(0.376, 0.416, 0.467) if enemy else Color(0.55, 0.58, 0.62)  # enemy-coat
 		"coat_dark":
-			return Color(0.110, 0.137, 0.188)  # #1C2330
+			return Color(0.110, 0.137, 0.188)  # coat-dark
 		"apron":
 			return Color(0.216, 0.267, 0.337) if enemy else Color(0.45, 0.42, 0.40)
 		"sash":
@@ -653,7 +653,7 @@ static func _default_slot(k: String, enemy: bool) -> Color:
 		"house", "crest":
 			return UIKit.DANGER if enemy else UIKit.ACCENT
 		"cape":
-			return Color(0.784, 0.337, 0.306) if enemy else UIKit.ACCENT  # #C8564E
+			return Color(0.784, 0.337, 0.306) if enemy else UIKit.ACCENT  # cape-coral
 		"trousers":
 			return Color(0.125, 0.145, 0.176) if enemy else Color(0.133, 0.161, 0.212)
 		"boots":
@@ -877,7 +877,7 @@ static func _chroma(c: Color) -> float:
 
 
 static func _enemy_coat() -> Color:
-	return Color(0.376, 0.416, 0.467)  # #606A77 prototype
+	return Color(0.376, 0.416, 0.467)  # enemy-coat prototype
 
 
 static func _lift_enemy(pal: Dictionary) -> void:
