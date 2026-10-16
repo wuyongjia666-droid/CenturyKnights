@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 """Soft-reduce Hunyuan FULL-BODY captain (keep UV/albedo).
 
-WARNING: Soft COLLAPSE below ~120k on this open-shell Hunyuan mesh SHATTERS
-coat/face. Do NOT ship ~38k collapse as board. Prefer remesh+bake or keep LOD0.
+WARNING: Soft COLLAPSE on this open-shell Hunyuan mesh SHATTERS coat/face
+(38k and even ~140k failed near-face QA). Do NOT ship collapse as captain board.
 
-LOD0 ~120–200k, board ~35–50k via multi-step collapse (NOT one-shot crush).
+Captain board delivery (2026-10-16 user): use
+  tools/models/normalize_hunyuan_fullbody_board.py
+(full-tris normalize-only). This reduce script is experimental / non-delivery.
+
+Historical: LOD0 ~120–200k, board ~35–50k multi-step collapse — NOT for ship.
 Normalize height to ~1.85m, feet z=0, face -Y.
 
 blender --background --python tools/models/reduce_hunyuan_fullbody_board.py -- \\
