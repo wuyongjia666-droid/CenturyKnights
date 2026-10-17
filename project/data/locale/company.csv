@@ -244,3 +244,5 @@ wq_hint_turnin,打开舆图前往「%s」交付（图上有 ✓ 标记）,Open t
 wq_goto_atlas,去舆图看目标,See objective on atlas
 wq_atlas_focus,委托「%s」目标：%s —— 选中后点「启程前往」,Commission 「%s」 → %s — select it, then Travel
 wq_atlas_focus_plain,已为你定位到「%s」——选中后点「启程前往」,Focused on 「%s」— select it, then Travel
+pressure_month_report,正月开销：%s -%d 银（库银余 %d）,January dues: %s -%d silver (%d left)
+pressure_forecast,正月开销（预计）：%s 约 %d 银,January dues (estimate): %s about %d silver
