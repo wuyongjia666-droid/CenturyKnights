@@ -1,7 +1,7 @@
 {
   "export_bank_bytes_per_plate": 256000,
   "export_bank_plate_max_bytes": 600000,
-  "export_base_budget_bytes": 293800000,
+  "export_base_budget_bytes": 322500000,
   "i18n": {
     "project/autoload/battle_rules.gd": 26,
     "project/autoload/calendar.gd": 19,

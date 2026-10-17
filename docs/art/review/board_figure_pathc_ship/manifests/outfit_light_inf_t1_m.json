@@ -1,0 +1,25 @@
+{
+  "stem": "outfit_light_inf_t1_m",
+  "tier": "shared",
+  "ship": "project/assets/models/board/pathc_ship/outfit_light_inf_t1_m.glb",
+  "ship_sha256": "b237a2cf126e6bf7e7ad47b1507fede27d9ebe6068440208a5ee8d89dee22f08",
+  "ship_bytes": 511520,
+  "tris": 12000,
+  "master": {
+    "repo_path": "docs/art/review/board_figure_hunyuan_cloud/pathc_native/outfit_light_inf_t1_m__board.glb",
+    "sha256": "940310a090942677a3e2af4d2e596bc27fff6b9a0692d90de0b023ca5e8c2848",
+    "never_modified": true
+  },
+  "tex": "512x512 albedo JPEG q88, single material",
+  "height_m": 1.85,
+  "feet_z": 0,
+  "bake": {
+    "pipeline": "voxel remesh (h/480) -> decimate -> smart UV island_margin 0.016 + head x2.5 + pack margin 0.018 -> bake 1024 margin 24, downsample 512 + empty dilation",
+    "albedo": "DIFFUSE color + optional COMBINED metal blend",
+    "metal_strength": 0.5,
+    "uv_black_pad_pct": "~3-9 (was ~0.7)",
+    "godot": "ship albedo import mipmaps/generate=false; shader filter_linear (no mip)"
+  },
+  "script": "tools/models/bake_pathc_ship.py",
+  "bake_version": 3
+}

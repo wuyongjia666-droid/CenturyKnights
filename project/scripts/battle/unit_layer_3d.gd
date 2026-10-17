@@ -32,6 +32,8 @@ static func enabled(unit_count: int = 0) -> bool:
 		return false
 	if unit_count > MAX_UNITS:
 		return false
+	if DeviceProfile.is_low_end():
+		return false  # P1: baked stand-ins via UnitArt; live 3D waits for P3 gate
 	return bool(GameState.settings.get("board_units_3d", default_on()))
 
 func _ready() -> void:
@@ -46,6 +48,11 @@ func _ready() -> void:
 	_vp.msaa_3d = Viewport.MSAA_DISABLED
 	if DeviceProfile.is_mobile():
 		_vp.scaling_3d_scale = 0.8
+	else:
+		# #310 P1: 2× supersample (bilinear SSAA) instead of MSAA — anti-aliases
+		# figure edges without MSAA's mid-alpha ghosting on the transparent layer.
+		_vp.scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
+		_vp.scaling_3d_scale = 2.0
 	_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	add_child(_vp)
 	# 1px dark outline halo + premul alpha (board_halo.gdshader).
@@ -79,29 +86,9 @@ func _ready() -> void:
 	_cam.current = true
 
 
-## Board figures are tiny: flatten farm-cast lighting; also touch material_override (farm path).
-func _solidify_board(n: Node) -> void:
-	if n is MeshInstance3D:
-		var mi := n as MeshInstance3D
-		var mats: Array = []
-		if mi.material_override != null:
-			mats.append(mi.material_override)
-		if mi.mesh:
-			for si in mi.mesh.get_surface_count():
-				var m = mi.get_surface_override_material(si)
-				if m != null:
-					mats.append(m)
-		for m in mats:
-			if m is ShaderMaterial:
-				var sm := m as ShaderMaterial
-				sm.set_shader_parameter("board_compact", 1.0)
-				sm.set_shader_parameter("rim_strength", 0.06)
-				sm.set_shader_parameter("lit_level", 0.80)
-				sm.set_shader_parameter("rim_amt", 0.22)
-			elif m is BaseMaterial3D:
-				(m as BaseMaterial3D).rim_enabled = false
-	for c in n.get_children():
-		_solidify_board(c)
+## P1 formal kit uses board_figure.gdshader (no board_compact / farm flatten).
+func _solidify_board(_n: Node) -> void:
+	pass
 
 ## Screen px (container-local) → world point on the ground plane.
 func _to_world(p: Vector2) -> Vector3:
@@ -131,7 +118,8 @@ func sync(entries: Array, delta: float) -> void:
 			if n == null:
 				continue
 			_world.add_child(n)
-			_solidify_board(n)
+			_board_lift(n, str(u.team) != "enemy")
+			# formal kit: no farm solidify
 			n.set_meta("ck_base_scale", Vector3.ONE)
 			var ap := CKBoardFigure.find_anim(n)
 			var f0 := 1.0 if str(u.team) != "enemy" else -1.0
@@ -277,3 +265,35 @@ func _impact(st: Dictionary) -> void:
 		tw.tween_property(q, "position", chest + dir * 0.9 * n.scale.y * 2.0, 0.28).set_ease(Tween.EASE_OUT)
 		tw.tween_property(m, "albedo_color:a", 0.0, 0.28)
 		tw.chain().tween_callback(q.queue_free)
+
+
+## #310 P1b: top-down board camera sees less of the key light than the cards do, and the
+## battlefield is dark — lift exposure and rim a bit (allies more), clamp so coats don't bleach.
+static func _board_lift(n: Node, ally: bool) -> void:
+	if n is GeometryInstance3D:
+		var gi := n as GeometryInstance3D
+		var mats: Array = []
+		if gi.material_override is ShaderMaterial:
+			mats.append(gi.material_override)
+		if gi is MeshInstance3D and (gi as MeshInstance3D).mesh != null:
+			var mi := gi as MeshInstance3D
+			for si in mi.mesh.get_surface_count():
+				var m = mi.get_surface_override_material(si)
+				if m is ShaderMaterial:
+					mats.append(m)
+		for m2 in mats:
+			var sm := m2 as ShaderMaterial
+			# bright coats (hunter's ice/fur) bleach on the dark board — scale exposure by coat luma
+			var pal_arr = sm.get_shader_parameter("palette")
+			var coat_l := 0.3
+			if pal_arr is Array and (pal_arr as Array).size() > 3:
+				var cc: Color = pal_arr[3]
+				coat_l = cc.get_luminance()
+			var ex := clampf(1.15 - maxf(0.0, coat_l - 0.32) * 1.2, 0.92, 1.15)
+			sm.set_shader_parameter("exposure", ex if ally else 1.10)
+			# top-down camera puts most of the figure in the wrap shadow: lift shadow floor
+			sm.set_shader_parameter("shadow_mul", Vector3(0.66, 0.66, 0.68) if ally else Vector3(0.55, 0.57, 0.64))
+			var r = sm.get_shader_parameter("rim_amt")
+			sm.set_shader_parameter("rim_amt", minf(0.9, (float(r) if r != null else 0.55) + (0.15 if ally else 0.05)))
+	for ch in n.get_children():
+		_board_lift(ch, ally)

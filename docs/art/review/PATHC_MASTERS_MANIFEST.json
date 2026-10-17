@@ -1,0 +1,83 @@
+{
+  "note": "Path C LOOK masters (1.5M faces) are NOT tracked in git. Bytes live in external storage; repo keeps path + sha256 + review PNGs. Never ship; never modify.",
+  "masters": [
+    {
+      "repo_path": "docs/art/review/board_figure_hunyuan_cloud/pathc_native/bandit_chief__board.glb",
+      "sha256": "775097b0dc9f6aff28500c277f07b43d92833bd6c8f2687e4e8c27a57a507315",
+      "bytes": 90878812,
+      "store": "box:/workspace/pathc_masters_store/docs/art/review/board_figure_hunyuan_cloud/pathc_native/bandit_chief__board.glb"
+    },
+    {
+      "repo_path": "docs/art/review/board_figure_hunyuan_cloud/pathc_native/base_body_f__board.glb",
+      "sha256": "d8e15ef877a77e01a57d1df4d42f662537d9e5e6195ab4eff192b061961dc2ae",
+      "bytes": 75668780,
+      "store": "box:/workspace/pathc_masters_store/docs/art/review/board_figure_hunyuan_cloud/pathc_native/base_body_f__board.glb"
+    },
+    {
+      "repo_path": "docs/art/review/board_figure_hunyuan_cloud/pathc_native/base_body_m__board.glb",
+      "sha256": "e76a0b923f0ce7ad56c6afa7e431142cee6b32a3f8a3f4efd261d13ce78ae2d9",
+      "bytes": 80324636,
+      "store": "box:/workspace/pathc_masters_store/docs/art/review/board_figure_hunyuan_cloud/pathc_native/base_body_m__board.glb"
+    },
+    {
+      "repo_path": "docs/art/review/board_figure_hunyuan_cloud/pathc_native/hunter_f__board.glb",
+      "sha256": "1442cda5074130f3d6e4c73eb1bf5e4bb3350bb33bb7094cedb88e5d37c0b938",
+      "bytes": 77633464,
+      "store": "box:/workspace/pathc_masters_store/docs/art/review/board_figure_hunyuan_cloud/pathc_native/hunter_f__board.glb"
+    },
+    {
+      "repo_path": "docs/art/review/board_figure_hunyuan_cloud/pathc_native/hunter_m__board.glb",
+      "sha256": "f8e1282880bf2020c14c9eb98e07ffc764547710cbd24c34a5b3e65da9308b8a",
+      "bytes": 81963800,
+      "store": "box:/workspace/pathc_masters_store/docs/art/review/board_figure_hunyuan_cloud/pathc_native/hunter_m__board.glb"
+    },
+    {
+      "repo_path": "docs/art/review/board_figure_hunyuan_cloud/pathc_native/outfit_hunter_t1_f__board.glb",
+      "sha256": "1ec484147fb09ad55e868fd7708f3fa555812610c2dc608fb94f2ff6830cde5c",
+      "bytes": 80812892,
+      "store": "box:/workspace/pathc_masters_store/docs/art/review/board_figure_hunyuan_cloud/pathc_native/outfit_hunter_t1_f__board.glb"
+    },
+    {
+      "repo_path": "docs/art/review/board_figure_hunyuan_cloud/pathc_native/outfit_hunter_t1_m__board.glb",
+      "sha256": "c269bc464700f33b49eb05577dafac42c59099746bd62b8b8aee99498e8488e2",
+      "bytes": 79076392,
+      "store": "box:/workspace/pathc_masters_store/docs/art/review/board_figure_hunyuan_cloud/pathc_native/outfit_hunter_t1_m__board.glb"
+    },
+    {
+      "repo_path": "docs/art/review/board_figure_hunyuan_cloud/pathc_native/outfit_leader_coat_t1_f__board.glb",
+      "sha256": "c3ff1381097e769df85286f01e4ae063a0364253da42635fd7a78e7bcb25ae79",
+      "bytes": 78894360,
+      "store": "box:/workspace/pathc_masters_store/docs/art/review/board_figure_hunyuan_cloud/pathc_native/outfit_leader_coat_t1_f__board.glb"
+    },
+    {
+      "repo_path": "docs/art/review/board_figure_hunyuan_cloud/pathc_native/outfit_leader_coat_t1_m__board.glb",
+      "sha256": "5cf4834f719800e9bf98f72d16f0ca4b832ca2bfca0e75725d0ff4367727b870",
+      "bytes": 85798660,
+      "store": "box:/workspace/pathc_masters_store/docs/art/review/board_figure_hunyuan_cloud/pathc_native/outfit_leader_coat_t1_m__board.glb"
+    },
+    {
+      "repo_path": "docs/art/review/board_figure_hunyuan_cloud/pathc_native/outfit_light_inf_t1_f__board.glb",
+      "sha256": "fa1c2cf8ff3deb6746ac43090f7c1fc3ee7bf5620ca469d61bdc6f38d3601837",
+      "bytes": 80642120,
+      "store": "box:/workspace/pathc_masters_store/docs/art/review/board_figure_hunyuan_cloud/pathc_native/outfit_light_inf_t1_f__board.glb"
+    },
+    {
+      "repo_path": "docs/art/review/board_figure_hunyuan_cloud/pathc_native/outfit_light_inf_t1_m__board.glb",
+      "sha256": "940310a090942677a3e2af4d2e596bc27fff6b9a0692d90de0b023ca5e8c2848",
+      "bytes": 86325184,
+      "store": "box:/workspace/pathc_masters_store/docs/art/review/board_figure_hunyuan_cloud/pathc_native/outfit_light_inf_t1_m__board.glb"
+    },
+    {
+      "repo_path": "docs/art/review/board_figure_p1/hunyuan_noreduce/cast_leader__board.glb",
+      "sha256": "bc5e635123e5a9300db70c5d5de10617c42fef8eea4bc3d8931c9a662b640c52",
+      "bytes": 78235108,
+      "store": "box:/workspace/pathc_masters_store/docs/art/review/board_figure_p1/hunyuan_noreduce/cast_leader__board.glb"
+    },
+    {
+      "repo_path": "docs/art/review/board_figure_p1/hunyuan_noreduce/cast_leader__board_texture_pbr_20250901.png",
+      "sha256": "ee64168ebc1da79861938ff8f86ab3d6132fb2882875724fbd728ecce5b0ed32",
+      "bytes": 5004413,
+      "store": "box:/workspace/pathc_masters_store/docs/art/review/board_figure_p1/hunyuan_noreduce/cast_leader__board_texture_pbr_20250901.png"
+    }
+  ]
+}

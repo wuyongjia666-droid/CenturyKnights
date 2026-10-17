@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "quality_bar": "Path C native textured Hunyuan V3.1 ~1.5M tris, normalize-only (no soft COLLAPSE / decimate / retopo)",
+  "locked": "2026-10-16",
+  "user_approved": true,
+  "note": "LOOK / source-of-truth for shared bodies + profession shells + key cast. GLBs live under docs/art/review (excluded from Godot export). Runtime board still uses Opus kit / farm_cast until shipping-size bake exists. Do NOT put these into project/assets/models/units/ — export_size will fail.",
+  "captain_look": "docs/art/review/board_figure_p1/hunyuan_noreduce/cast_leader__board.glb",
+  "root": "docs/art/review/board_figure_hunyuan_cloud/pathc_native",
+  "shared_bodies": {
+    "body_m": {
+      "stem": "base_body_m",
+      "glb": "base_body_m__board.glb",
+      "role": "shared generic male body"
+    },
+    "body_f": {
+      "stem": "base_body_f",
+      "glb": "base_body_f__board.glb",
+      "role": "shared generic female body"
+    }
+  },
+  "profession_shells": {
+    "outfit_hunter_t1_m": {
+      "stem": "outfit_hunter_t1_m",
+      "glb": "outfit_hunter_t1_m__board.glb",
+      "job": "hunter",
+      "gender": "m"
+    },
+    "outfit_hunter_t1_f": {
+      "stem": "outfit_hunter_t1_f",
+      "glb": "outfit_hunter_t1_f__board.glb",
+      "job": "hunter",
+      "gender": "f"
+    },
+    "outfit_leader_coat_t1_m": {
+      "stem": "outfit_leader_coat_t1_m",
+      "glb": "outfit_leader_coat_t1_m__board.glb",
+      "job": "leader_coat",
+      "gender": "m"
+    },
+    "outfit_leader_coat_t1_f": {
+      "stem": "outfit_leader_coat_t1_f",
+      "glb": "outfit_leader_coat_t1_f__board.glb",
+      "job": "leader_coat",
+      "gender": "f"
+    },
+    "outfit_light_inf_t1_m": {
+      "stem": "outfit_light_inf_t1_m",
+      "glb": "outfit_light_inf_t1_m__board.glb",
+      "job": "light_inf",
+      "gender": "m"
+    },
+    "outfit_light_inf_t1_f": {
+      "stem": "outfit_light_inf_t1_f",
+      "glb": "outfit_light_inf_t1_f__board.glb",
+      "job": "light_inf",
+      "gender": "f"
+    }
+  },
+  "key_cast": {
+    "hunter_m": {
+      "stem": "hunter_m",
+      "glb": "hunter_m__board.glb",
+      "maps_to": [
+        "cast_dengying",
+        "outfit_hunter_t1_m",
+        "farm_cast/hunter_m"
+      ]
+    },
+    "hunter_f": {
+      "stem": "hunter_f",
+      "glb": "hunter_f__board.glb",
+      "maps_to": [
+        "farm_cast/hunter_f",
+        "outfit_hunter_t1_f"
+      ]
+    },
+    "bandit_chief": {
+      "stem": "bandit_chief",
+      "glb": "bandit_chief__board.glb",
+      "maps_to": [
+        "enemy_bandit_chief",
+        "farm_cast/bandit_chief"
+      ]
+    },
+    "leader_m": {
+      "stem": "cast_leader",
+      "glb": "../board_figure_p1/hunyuan_noreduce/cast_leader__board.glb",
+      "maps_to": [
+        "cast_leader",
+        "farm_cast/leader_m"
+      ],
+      "note": "already approved Path C LOOK"
+    }
+  },
+  "board_figures_remap": {
+    "defaults.body_m_pathc": "base_body_m",
+    "defaults.body_f_pathc": "base_body_f",
+    "jobs.hunter.outfit_pathc_m": "outfit_hunter_t1_m",
+    "jobs.hunter.outfit_pathc_f": "outfit_hunter_t1_f",
+    "jobs.light_inf.outfit_pathc_m": "outfit_light_inf_t1_m",
+    "jobs.light_inf.outfit_pathc_f": "outfit_light_inf_t1_f",
+    "jobs.captain.outfit_pathc_m": "outfit_leader_coat_t1_m",
+    "jobs.captain.outfit_pathc_f": "outfit_leader_coat_t1_f"
+  }
+}
