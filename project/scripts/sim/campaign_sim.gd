@@ -35,7 +35,6 @@ static func run(years: int = 100, seed_i: int = 91) -> Dictionary:
 	var last_year := -1
 	while _abs() < end_abs and guard < years * 14:
 		guard += 1
-		var advanced := false
 		if Calendar.month == 1 and Calendar.year != last_year:
 			last_year = Calendar.year
 			_january(report, Calendar.year)
@@ -44,11 +43,12 @@ static func run(years: int = 100, seed_i: int = 91) -> Dictionary:
 			_sample_year_one(report)
 		if Calendar.month == 5:
 			_try_marry()
-		if Calendar.month == 6:
-			advanced = _try_child()
 		_buy_food()
-		if not advanced:
-			Calendar.advance(1)
+		var t0 := Time.get_ticks_usec()
+		Calendar.advance(1)
+		report["tick_usec_max"] = maxi(int(report.get("tick_usec_max", 0)), Time.get_ticks_usec() - t0)
+		report["chars_peak"] = maxi(int(report.get("chars_peak", 0)), GameState.characters.size())
+		report["alive_peak"] = maxi(int(report.get("alive_peak", 0)), _alive_count())
 	if _abs() < end_abs:
 		report["stuck"] = "calendar stopped at %s" % Calendar.label()
 	report["spring_purse"] = int(GameState.house_mods.get("spring_purse", 0))
@@ -64,6 +64,8 @@ static func run(years: int = 100, seed_i: int = 91) -> Dictionary:
 		if c.parent_ids.size() > 0:
 			births += 1
 	report["births"] = births
+	report["family_sizes"] = _family_sizes()
+	report["multiples"] = _multiples()
 	report["leader_alive"] = leader != null and leader.alive and not leader.retired
 	report["leader_name"] = leader.name if leader else ""
 	var wage := 0
@@ -194,27 +196,6 @@ static func _try_marry() -> void:
 	if GameState.silver < cost + 20:
 		return
 	Lineage.marry(leader, cand, 40, rites, true)
-
-static func _try_child() -> bool:
-	var leader := GameState.get_leader()
-	if leader == null or leader.spouse_id == "":
-		return false
-	var spouse: CKCharacter = GameState.characters.get(leader.spouse_id)
-	if spouse == null or not spouse.alive:
-		return false
-	var mother: CKCharacter = spouse if spouse.gender == "f" else (leader if leader.gender == "f" else spouse)
-	if mother.pregnant_months >= 0:
-		return false
-	var kids := 0
-	for c in GameState.characters.values():
-		if leader.id in c.parent_ids and c.alive:
-			kids += 1
-	if kids >= 3 or Calendar.year % 4 != 0:
-		return false
-	# Same fertility and term as a player wedding (fertility-v92 handoff). The player has no
-	# later-conception action yet; the script keeps this so the century still has heirs.
-	CKFamilyState.begin_pregnancy(GameState, mother)
-	return false
 
 static func _enlist_ready() -> void:
 	if GameState.roster().size() >= 6:
@@ -550,3 +531,26 @@ static func _royal_snapshot() -> Dictionary:
 		crises += int(house.get("crisis_total", 0))
 		recalls += int(house.get("recall_total", 0))
 	return {"alive": alive, "signed": signed, "crises": crises, "recalls": recalls}
+
+## Children per married mother (every woman who has been wed), for the multi-birth table.
+static func _family_sizes() -> Array:
+	var out: Array = []
+	for c in GameState.characters.values():
+		if str(c.gender) != "f" or str(c.blood_meta.get("marriage_phase", "")) == "":
+			continue
+		out.append({"id": c.id, "children": CKFamilyState.born_to(GameState, c), "alive": c.alive, "age": c.age})
+	return out
+
+## Same mother and same birth month counted as one litter.
+static func _multiples() -> Dictionary:
+	var litters := {}
+	for c in GameState.characters.values():
+		if c.parent_ids.size() < 2:
+			continue
+		var key := "%s@%s" % [str(c.parent_ids[1]), str(c.blood_meta.get("birth_ym", ""))]
+		litters[key] = int(litters.get(key, 0)) + 1
+	var out := {}
+	for k in litters.keys():
+		var n := int(litters[k])
+		out[str(n)] = int(out.get(str(n), 0)) + 1
+	return out

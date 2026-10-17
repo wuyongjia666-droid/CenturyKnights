@@ -41,6 +41,7 @@ func _install_month_bus() -> void:
 	register("economy", Callable(self, "_tick_epoch_dues"), 30)
 	register("family", Callable(self, "_tick_doctrine"), 10)
 	register("family", Callable(self, "_tick_spring"), 20)
+	register("family", Callable(self, "_tick_conception"), 30)
 	register("post", Callable(self, "_tick_harvest"), 10)
 	register("post", Callable(self, "_tick_rival_rumor"), 20)
 	register("post", Callable(self, "_tick_rival_deals"), 30)
@@ -120,9 +121,7 @@ func _tick_life(ctx: Dictionary) -> void:
 		if c.pregnant_months >= 0:
 			c.pregnant_months -= 1
 			if c.pregnant_months < 0:
-				var child = Lineage.birth_child(c)
-				evs.append({"type": "birth", "text": "%s 诞下 %s" % [c.name, child.name], "cid": child.id})
-				GameState.chapter0_flags["child_born"] = true
+				_deliver(c, evs)
 		if c.birthday_month == month:
 			c.age += 1
 			var btxt = "%s 现年 %d 岁" % [c.name, c.age]
@@ -186,6 +185,28 @@ func _tick_epoch_dues(ctx: Dictionary) -> void:
 
 static func _is_dues_month(y: int, m: int) -> bool:
 	return (y == 1 and m == MUSTER_MONTH_Y1) or (y >= 2 and m == 1)
+
+## Births of one term: a litter of 2+ is rare luck rolled at conception (CKFamilyState.roll_litter).
+func _deliver(mother: CKCharacter, evs: Array) -> void:
+	var litter := maxi(1, int(mother.blood_meta.get("litter", 1)))
+	mother.blood_meta.erase("litter")
+	mother.blood_meta["last_birth_abs"] = year * 12 + month
+	var before := CKFamilyState.born_to(GameState, mother)
+	var names: Array = []
+	for _i in litter:
+		var child = Lineage.birth_child(mother)
+		names.append(child.name)
+		evs.append({"type": "birth", "text": "%s 诞下 %s" % [mother.name, child.name], "cid": child.id})
+	mother.blood_meta["children_born"] = before + litter
+	if litter > 1:
+		var line := Locale.t("birth_multi", [mother.name, litter, "、".join(names)])
+		evs.append({"type": "birth", "text": line})
+		GameState.add_lineage_event(line)
+	GameState.chapter0_flags["child_born"] = true
+
+func _tick_conception(ctx: Dictionary) -> void:
+	for mother in CKFamilyState.tick_conception(GameState, year * 12 + month):
+		_events(ctx).append({"type": "pregnancy", "text": Locale.t("conceived_again", [mother.name]), "cid": mother.id})
 
 func _tick_holdings(ctx: Dictionary) -> void:
 	var hy = GameState.holdings_monthly_yield()

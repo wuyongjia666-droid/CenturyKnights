@@ -562,6 +562,99 @@ static func conception_rate(person) -> float:
 	return fertility_of(int(person.age))
 
 
+## ── Repeat natural conception (user decision 2026-10-17) ──
+## A married, fertile couple can conceive again every month after a postpartum rest. The first two
+## children use a fertility floor, so a normal marriage almost always reaches two; later children
+## get rarer by parity but never reach zero (no cap). Multiples are near-real odds, pure luck:
+## no trait, rite, bloodline or vow changes them.
+const BASE_MONTHLY := 0.10
+const POSTPARTUM_MONTHS := 12
+const PARITY := [1.0, 1.0, 0.15, 0.10, 0.05]
+const PARITY_TAIL := 0.7
+const FLOOR_FERTILITY := 0.55
+const FLOOR_AGE := 45
+## Checked rarest first: quadruplets 1/700000, triplets 1/8000, twins 1/85.
+const LITTER_ODDS := [[4, 1.0 / 700000.0], [3, 1.0 / 8000.0], [2, 1.0 / 85.0]]
+
+
+static func parity_factor(born: int) -> float:
+	if born < PARITY.size():
+		return float(PARITY[born])
+	return float(PARITY[PARITY.size() - 1]) * pow(PARITY_TAIL, born - PARITY.size() + 1)
+
+
+## Children this mother has borne (alive or not). Cached in blood_meta.children_born, which
+## Calendar bumps per birth; a save without it is counted from parent_ids once.
+static func born_to(host, mother) -> int:
+	if mother.blood_meta.has("children_born"):
+		return int(mother.blood_meta["children_born"])
+	var n := 0
+	for c in host.characters.values():
+		if mother.id in c.parent_ids:
+			n += 1
+	mother.blood_meta["children_born"] = n
+	return n
+
+
+static func monthly_conception_chance(age: int, born: int) -> float:
+	var fert := fertility_of(age)
+	if born < 2 and age >= 16 and age <= FLOOR_AGE:
+		fert = maxf(fert, FLOOR_FERTILITY)
+	return BASE_MONTHLY * fert * parity_factor(born)
+
+
+static func roll_litter(rng) -> int:
+	if rng == null:
+		return 1
+	var r: float = rng.randf()
+	for row in LITTER_ODDS:
+		if r < float(row[1]):
+			return int(row[0])
+	return 1
+
+
+## The living, linked spouse when `mother` can conceive this month, else null.
+static func conceiving_partner(host, mother, abs_month: int):
+	if mother == null or not mother.alive or str(mother.gender) != "f" or mother.pregnant_months >= 0:
+		return null
+	if str(mother.spouse_id) == "":
+		return null
+	var father = host.characters.get(str(mother.spouse_id))
+	if father == null or not father.alive or str(father.spouse_id) != str(mother.id) or int(father.age) < 16:
+		return null
+	if CKBloodFusion.is_sterile(mother) or CKBloodFusion.is_sterile(father):
+		return null
+	var last := int(mother.blood_meta.get("last_birth_abs", -9999))
+	if abs_month - last < POSTPARTUM_MONTHS:
+		return null
+	return father
+
+
+## One monthly pass over every married woman. Returns the mothers who conceived.
+static func tick_conception(host, abs_month: int) -> Array:
+	var out: Array = []
+	for c in host.characters.values():
+		if conceiving_partner(host, c, abs_month) == null:
+			continue
+		var p := monthly_conception_chance(int(c.age), born_to(host, c))
+		if p <= 0.0 or host.rng.randf() >= p:
+			continue
+		_start_term(host, c)
+		out.append(c)
+	return out
+
+
+static func _start_term(host, mother) -> void:
+	var term := term_months(host)
+	mother.pregnant_months = maxi(0, term - 1)
+	mother.blood_meta["gestation_term"] = term
+	var litter := roll_litter(host.rng if host != null else null)
+	if litter > 1:
+		mother.blood_meta["litter"] = litter
+	else:
+		mother.blood_meta.erase("litter")
+
+
 static func begin_pregnancy(host, mother) -> bool:
 	if mother == null:
 		return false
@@ -578,9 +671,7 @@ static func begin_pregnancy(host, mother) -> bool:
 	if rng == null and chance < 1.0:
 		mother.pregnant_months = -1
 		return false
-	var term := term_months(host)
-	mother.pregnant_months = maxi(0, term - 1)
-	mother.blood_meta["gestation_term"] = term
+	_start_term(host, mother)
 	return true
 
 
