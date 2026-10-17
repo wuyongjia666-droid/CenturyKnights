@@ -1,8 +1,15 @@
 extends Node
-## Review 2026-10-17 P1-1 / P1-2: the century must not stall on an empty line, and a widow may marry again.
+## Review 2026-10-17 P1-1 / P1-2: in-house succession (descendant → roster adult → eldest child under
+## regency, user ruling 2026-10-17, no outside heir) and a widow may marry again.
 
 func _ready() -> void:
-	var err := _no_heir()
+	var err := _descendant_heir()
+	if err == "":
+		err = _roster_heir()
+	if err == "":
+		err = _minor_heir_regency()
+	if err == "":
+		err = _empty_house()
 	if err == "":
 		err = _widow()
 	if err == "":
@@ -14,44 +21,146 @@ func _ready() -> void:
 		print("SUCCESSION WIDOW PASS")
 		get_tree().quit(0)
 
-## The original stall: captain aged 69, nobody else in the roster, run a year.
-func _no_heir() -> String:
+## Fresh game with only the captain alive; everyone else from new_game is gone.
+func _lone_captain() -> CKCharacter:
 	GameState.new_game("烬行", "灰旗", GameState.crest_color)
 	var leader := GameState.get_leader()
 	for c in GameState.characters.values():
 		if c != leader:
+			c.alive = false
 			c.in_roster = false
+	GameState.house_mods.erase("regency")
+	return leader
+
+func _add(age: int, parent: CKCharacter, in_roster: bool, rank: String = "knight", level: int = 1) -> CKCharacter:
+	var c: CKCharacter = CharacterFactory.make_tavern_candidate(GameState.rng)
+	c.age = age
+	c.is_child = age < Calendar.ADULT_AGE
+	c.in_roster = in_roster and not c.is_child
+	c.retired = false
+	c.rank = rank
+	c.level = level
+	c.family_id = ""
+	c.parent_ids = [parent.id] if parent != null else []
+	c.blood_meta = {}
+	GameState.claim_id(c)
+	GameState.characters[c.id] = c
+	return c
+
+## Rule 1: an adult direct descendant beats a higher-titled roster adult.
+func _descendant_heir() -> String:
+	var leader := _lone_captain()
+	var son := _add(22, leader, false)
+	var _baron := _add(40, null, true, "baron", 9)
+	leader.alive = false
+	var r: Dictionary = Lineage.transfer_banner("death")
+	if not bool(r.get("ok", false)) or str(r.get("heir_id", "")) != son.id:
+		return "rule 1: heir %s, want descendant %s" % [str(r.get("heir_id", "")), son.id]
+	if str(r.get("via", "")) != "descendant" or not son.is_leader or not son.in_roster:
+		return "rule 1: descendant not seated (%s)" % str(r)
+	if Lineage.is_regency():
+		return "rule 1: regency set for an adult heir"
+	# Abdication still needs a real descendant.
+	var lone := _lone_captain()
+	_add(30, null, true)
+	if bool(Lineage.transfer_banner("abdicate").get("ok", false)):
+		return "abdicate without descendants succeeded"
+	if not lone.is_leader:
+		return "failed abdication moved the banner"
+	return ""
+
+## Rule 2: no adult descendant; roster adults ranked title → merit → age → id; heir joins the house.
+func _roster_heir() -> String:
+	var leader := _lone_captain()
+	var _kid := _add(8, leader, false)
+	var old_knight := _add(50, null, true, "knight", 9)
+	var baron := _add(25, null, true, "baron", 1)
+	var _young_knight := _add(20, null, true, "knight", 9)
+	var r: Dictionary = Lineage.transfer_banner("retire")
+	if str(r.get("heir_id", "")) != baron.id or str(r.get("via", "")) != "roster":
+		return "rule 2: heir %s via %s, want baron %s" % [str(r.get("heir_id", "")), str(r.get("via", "")), baron.id]
+	if str(baron.family_id) != str(leader.family_id) or not bool(baron.blood_meta.get("joined_house", false)):
+		return "rule 2: roster heir did not join the house"
+	if str(r.get("msg", "")).find(baron.name) < 0:
+		return "rule 2: event does not name the heir"
+	# Same title: merit, then age.
+	var l2 := _lone_captain()
+	var a := _add(30, null, true, "knight", 3)
+	var b := _add(45, null, true, "knight", 3)
+	var _c := _add(60, null, true, "knight", 1)
+	l2.alive = false
+	var r2: Dictionary = Lineage.transfer_banner("death")
+	if str(r2.get("heir_id", "")) != b.id:
+		return "rule 2 order: heir %s, want older equal-merit knight %s (not %s)" % [str(r2.get("heir_id", "")), b.id, a.id]
+	if old_knight.is_leader or a.is_leader:
+		return "rule 2: more than one leader"
+	if Lineage.has_method("_outside_heir"):
+		return "outside-heir path still present"
+	return ""
+
+## Rule 3, the original stall: captain dies of age, nobody adult anywhere. Eldest child inherits
+## under a visible regency, stays off the roster, and gets the banner back on coming of age.
+func _minor_heir_regency() -> String:
+	var leader := _lone_captain()
 	leader.age = Calendar.DEATH_AGE - 1
+	var _young := _add(6, null, false)
+	var other := _add(11, null, false)
+	var heir := _add(11, leader, false)
+	other.birthday_month = heir.birthday_month
 	var evs: Array = []
 	for i in 13:
 		evs.append_array(Calendar.advance(1))
 	if leader.alive:
-		return "captain did not die of age"
+		return "rule 3: captain did not die of age"
 	if leader.is_leader:
-		return "dead captain still holds the banner"
+		return "rule 3: dead captain still holds the banner"
 	var now := GameState.get_leader()
-	if now == null or not now.alive or not now.in_roster:
-		return "no living leader after the death"
-	if int(now.age) < Calendar.ADULT_AGE:
-		return "outside heir is a minor"
-	if not bool(now.blood_meta.get("outside_heir", false)):
-		return "heir not flagged outside_heir"
-	if str(now.family_id) != str(leader.family_id):
-		return "outside heir not under the house family"
-	if not GameState.characters.has(now.id) or GameState.characters[now.id] != now:
-		return "outside heir not stored in characters"
-	if GameState.roster().size() < 1:
-		return "roster empty after succession"
+	if now != heir:
+		return "rule 3: leader %s, want eldest child (descendant on tie) %s" % [str(now.id) if now else "null", heir.id]
+	if not now.alive or not now.is_child or now.in_roster:
+		return "rule 3: minor heir should stay a child off the roster"
+	if not Lineage.is_regency() or str(Lineage.regency().get("ward", "")) != heir.id:
+		return "rule 3: regency not recorded"
+	if Lineage.regency_status().find(heir.name) < 0:
+		return "rule 3: regency status not visible"
 	var saw := false
 	for e in evs:
 		if typeof(e) == TYPE_DICTIONARY and str(e.get("type", "")) == "succession":
 			saw = true
 	if not saw:
-		return "no succession event"
-	# Abdication still needs a real descendant.
-	var r: Dictionary = Lineage.transfer_banner("abdicate")
+		return "rule 3: no succession event"
+	# Coming of age hands the banner back.
+	heir.age = Calendar.ADULT_AGE - 1
+	var back := false
+	for i in 13:
+		for e in Calendar.advance(1):
+			if typeof(e) == TYPE_DICTIONARY and str(e.get("type", "")) == "regency_end":
+				back = true
+	if not back:
+		return "rule 3: no regency_end event at adulthood"
+	if Lineage.is_regency() or Lineage.regency_status() != "":
+		return "rule 3: regency still active after adulthood"
+	if not heir.is_leader or heir.is_child or not heir.in_roster:
+		return "rule 3: adult ward not seated on the roster"
+	# Age comes first: an older non-descendant child beats a younger descendant.
+	var l3 := _lone_captain()
+	var _own := _add(9, l3, false)
+	var elder := _add(12, null, false)
+	l3.alive = false
+	var r3: Dictionary = Lineage.transfer_banner("death")
+	if str(r3.get("heir_id", "")) != elder.id or not bool(r3.get("regency", false)):
+		return "rule 3 order: heir %s, want eldest child %s" % [str(r3.get("heir_id", "")), elder.id]
+	return ""
+
+## Not decided yet (reported, not ruled): nobody alive at all. Current behaviour: no transfer.
+func _empty_house() -> String:
+	var leader := _lone_captain()
+	leader.alive = false
+	var r: Dictionary = Lineage.transfer_banner("death")
 	if bool(r.get("ok", false)):
-		return "abdicate without descendants succeeded"
+		return "empty house: transfer succeeded with nobody alive"
+	if Lineage.is_regency():
+		return "empty house: regency set with no ward"
 	return ""
 
 func _widow() -> String:

@@ -147,9 +147,18 @@ func _build() -> void:
 	var meta := UIKit.mono("ENTRY 01-03 / 03 PENDING", UIKit.desk_sz(10), UIKit.TEXT_DIM)
 	meta.position = Vector2(794 - meta.get_minimum_size().x, 24)
 	cp.add_child(meta)
-	var meta2 := UIKit.body_label(Locale.t("shell_d9f64f13") % [Calendar.label(), Locale.latin(str(GameState.surname), "House")], UIKit.TEXT_FAINT, UIKit.desk_sz(11))
+	var meta2_text: String = Locale.t("shell_d9f64f13") % [Calendar.label(), Locale.latin(str(GameState.surname), "House")]
+	var regency_line: String = Lineage.regency_status()
+	if regency_line != "":
+		meta2_text = regency_line + " · " + meta2_text
+	var meta2 := UIKit.body_label(meta2_text, UIKit.TEXT_FAINT, UIKit.desk_sz(11))
 	meta2.position = Vector2(494, 50)
 	meta2.size = Vector2(300, 16)
+	if regency_line != "":
+		# Regency adds a visible prefix; widen leftward so the right edge stays put.
+		meta2.position = Vector2(294, 50)
+		meta2.size = Vector2(500, 16)
+		meta2.add_theme_color_override("font_color", UIKit.ACCENT)
 	meta2.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	cp.add_child(meta2)
 
