@@ -35,9 +35,11 @@ func _run() -> String:
 		return "muster not recorded: %s" % str(mus)
 	if int(GameState.silver) > 200 - int(mus.get("silver", 0)) + 20:
 		return "muster did not leave the treasury tight: %d" % int(GameState.silver)
-	var before := int(GameState.silver)
-	before = int(GameState.silver)
-	evs = Calendar.advance(1)  # month 4: spring purse
+	return _spring_and_january()
+
+## Year-1 April spring purse, then the January dues of year 2 against the X5 quote.
+func _spring_and_january() -> String:
+	var evs: Array = Calendar.advance(1)  # month 4: spring purse
 	if _has(evs, "epoch_dues") or not _has(evs, "spring_purse"):
 		return "April of year 1 must report the spring purse, not era dues"
 	if int(GameState.house_mods.get("spring_purse", 0)) != 180:
