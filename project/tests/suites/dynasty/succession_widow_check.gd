@@ -11,6 +11,8 @@ func _ready() -> void:
 	if err == "":
 		err = _empty_house()
 	if err == "":
+		err = _legacy_outside_heir()
+	if err == "":
 		err = _widow()
 	if err == "":
 		err = _legacy_widow()
@@ -161,6 +163,24 @@ func _empty_house() -> String:
 		return "empty house: transfer succeeded with nobody alive"
 	if Lineage.is_regency():
 		return "empty house: regency set with no ward"
+	return ""
+
+## Saves from main@b40dce66 may hold a captain flagged outside_heir. They load and keep the banner,
+## and the flag is plain data; succession from them follows the in-house order.
+func _legacy_outside_heir() -> String:
+	var leader := _lone_captain()
+	leader.blood_meta["outside_heir"] = true
+	var son := _add(20, leader, false)
+	var data: Dictionary = GameState.build_save_data()
+	if not GameState.apply_save_data(data):
+		return "legacy outside_heir: reload failed"
+	var back := GameState.get_leader()
+	if back == null or not bool(back.blood_meta.get("outside_heir", false)):
+		return "legacy outside_heir: leader or flag lost on reload"
+	back.alive = false
+	var r: Dictionary = Lineage.transfer_banner("death")
+	if str(r.get("heir_id", "")) != son.id:
+		return "legacy outside_heir: heir %s, want descendant %s" % [str(r.get("heir_id", "")), son.id]
 	return ""
 
 func _widow() -> String:
