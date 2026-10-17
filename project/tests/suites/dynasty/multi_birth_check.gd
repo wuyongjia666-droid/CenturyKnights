@@ -6,6 +6,7 @@ extends Node
 
 const COUPLES := 600
 const LITTER_ROLLS := 300000
+const LATE_COUPLES := 400
 
 class FakeHost extends RefCounted:
 	var characters: Dictionary = {}
@@ -37,13 +38,14 @@ func _person(id: String, gender: String, age: int) -> CKCharacter:
 	c.name = id
 	return c
 
-## Synthetic couples wed at 18–30 and stay alive to 49: births come only from tick_conception.
-func _curve() -> String:
+## Synthetic couples wed at first_age..first_age+span-1 and stay alive to 49: births come only
+## from tick_conception. Returns {children: wives}.
+func _wed_and_run(first_age: int, span: int, couples: int, seed_i: int) -> Dictionary:
 	var host := FakeHost.new()
-	host.rng.seed = 20261017
+	host.rng.seed = seed_i
 	var wives: Array = []
-	for i in COUPLES:
-		var age := 18 + i % 13
+	for i in couples:
+		var age := first_age + i % span
 		var w := _person("w%d" % i, "f", age)
 		var h := _person("h%d" % i, "m", age + 2)
 		w.spouse_id = h.id
@@ -52,7 +54,7 @@ func _curve() -> String:
 		host.characters[w.id] = w
 		host.characters[h.id] = h
 		wives.append(w)
-	for m in range(1, 31 * 12 + 1):
+	for m in range(1, (49 - first_age) * 12 + 1):
 		for w in wives:
 			if w.pregnant_months >= 0:
 				w.pregnant_months -= 1
@@ -68,21 +70,37 @@ func _curve() -> String:
 	for w in wives:
 		var n := int(w.blood_meta["children_born"])
 		dist[n] = int(dist.get(n, 0)) + 1
-	var share := func(lo: int, hi: int) -> float:
-		var t := 0
-		for k in dist.keys():
-			if int(k) >= lo and int(k) <= hi:
-				t += int(dist[k])
-		return float(t) / COUPLES
+	return dist
+
+static func _share(dist: Dictionary, lo: int, hi: int, total: int) -> float:
+	var t := 0
+	for k in dist.keys():
+		if int(k) >= lo and int(k) <= hi:
+			t += int(dist[k])
+	return float(t) / float(total)
+
+func _curve() -> String:
+	var dist := _wed_and_run(18, 13, COUPLES, 20261017)
 	print("MULTI BIRTH dist ", dist)
-	if share.call(2, 99) < 0.97:
-		return "only %.3f of couples reached two children %s" % [share.call(2, 99), str(dist)]
-	if share.call(3, 4) < 0.55:
-		return "three/four children not common: %.3f %s" % [share.call(3, 4), str(dist)]
-	if share.call(5, 99) > 0.15 or share.call(5, 99) <= 0.0:
-		return "five+ should be rare but present: %.3f %s" % [share.call(5, 99), str(dist)]
+	if _share(dist, 2, 99, COUPLES) < 0.97:
+		return "only %.3f of couples reached two children %s" % [_share(dist, 2, 99, COUPLES), str(dist)]
+	if _share(dist, 3, 4, COUPLES) < 0.55:
+		return "three/four children not common: %.3f %s" % [_share(dist, 3, 4, COUPLES), str(dist)]
+	var many := _share(dist, 5, 99, COUPLES)
+	if many > 0.15 or many <= 0.0:
+		return "five+ should be rare but present: %.3f %s" % [many, str(dist)]
 	if CKFamilyState.parity_factor(12) <= 0.0:
 		return "parity factor reached zero (cap)"
+	return _late_brides()
+
+## User decision 2026-10-18: a wedding at 39 or later that ends below two children counts as an
+## accident (like sterility or an early death), not a broken floor. Late brides still conceive.
+func _late_brides() -> String:
+	var dist := _wed_and_run(39, 5, LATE_COUPLES, 3943)
+	var two := _share(dist, 2, 99, LATE_COUPLES)
+	print("MULTI BIRTH late dist ", dist)
+	if two < 0.5 or two > 0.95 or _share(dist, 1, 99, LATE_COUPLES) < 0.85:
+		return "late brides (39-43) out of the accident band: two+ %.3f %s" % [two, str(dist)]
 	return ""
 
 func _litters() -> String:
