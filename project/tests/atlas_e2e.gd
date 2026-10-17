@@ -304,11 +304,12 @@ func _prove_battle_objective(q: Dictionary) -> bool:
 		return false
 	var mp: Dictionary = World.encounter.get("map", {})
 	var spec := BattleObjectives.spec(mp)
-	var want := str(World.OBJECTIVE_VICTORY.get(kind, "rout"))
+	## Unmapped battle kinds (hunt/clear/defend) roll a side objective (review 2026-10-17 P1).
+	var want := str(mp.get("side_objective", World.OBJECTIVE_VICTORY.get(kind, "rout")))
 	if str(spec.get("type", "")) != want:
 		_err("%s objective %s wanted %s" % [kind, str(spec.get("type", "")), want])
 		return false
-	var rnd := 3 if want == "defend" else 1
+	var rnd := int(spec.get("turns", 1)) if want in ["defend", "survive"] else 1
 	var outcome := BattleObjectives.outcome(mp, _units_for_win(mp, spec), rnd)
 	if str(outcome.get("result", "")) != "win":
 		_err("%s BattleObjectives %s" % [kind, str(outcome)])
@@ -339,6 +340,13 @@ func _units_for_win(mp: Dictionary, spec: Dictionary) -> Array:
 			return [_fake_unit("ally", str(spec.get("unit_tag", "")), Vector2i.ZERO, 8)]
 		"escort":
 			return [_fake_unit("player", str(spec.get("npc", "")), _cell(spec.get("exit_tile", [0, 0])), 8)]
+		"survive":
+			return [_fake_unit("player", "", Vector2i.ZERO, 8)]
+		"escape":
+			var out: Array = []
+			for tile in spec.get("exit_tiles", []):
+				out.append(_fake_unit("player", "", _cell(tile), 8))
+			return out
 		_:
 			return []
 
