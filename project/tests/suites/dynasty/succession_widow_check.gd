@@ -38,6 +38,8 @@ func _no_heir() -> String:
 		return "heir not flagged outside_heir"
 	if str(now.family_id) != str(leader.family_id):
 		return "outside heir not under the house family"
+	if not GameState.characters.has(now.id) or GameState.characters[now.id] != now:
+		return "outside heir not stored in characters"
 	if GameState.roster().size() < 1:
 		return "roster empty after succession"
 	var saw := false
@@ -100,4 +102,6 @@ func _legacy_widow() -> String:
 	var back := GameState.get_leader()
 	if back == null or back.spouse_id != "":
 		return "reload did not release the widow"
+	if sp.id not in (back.blood_meta.get("late_spouses", []) as Array):
+		return "reload did not record the late spouse"
 	return ""

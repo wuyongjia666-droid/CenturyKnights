@@ -34,7 +34,7 @@ func widow_partner(dead: CKCharacter) -> void:
 	if dead == null or str(dead.spouse_id) == "":
 		return
 	var sp: CKCharacter = GameState.characters.get(str(dead.spouse_id))
-	if sp == null or str(sp.spouse_id) != dead.id:
+	if sp == null or not sp.alive or str(sp.spouse_id) != dead.id:
 		return
 	_mark_widowed(sp, dead.id)
 	GameState.add_lineage_event(Locale.t("lineage_widowed", [sp.name, dead.name]))
