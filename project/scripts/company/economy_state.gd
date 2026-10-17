@@ -993,7 +993,8 @@ static func apply_spring_purse(host) -> Dictionary:
 	return {"silver": purse, "note": Locale.t("pressure_spring")}
 
 
-static func apply_epoch_pressure(host, year: int) -> Dictionary:
+## Read-only quote for the January dues (forecast / month report). Same numbers apply_epoch_pressure pays.
+static func epoch_pressure_quote(host, year: int) -> Dictionary:
 	var wage := maxi(1, monthly_wage(host))
 	var silver := int(host.silver)
 	var due := 0
@@ -1024,6 +1025,15 @@ static func apply_epoch_pressure(host, year: int) -> Dictionary:
 			want_late += int((silver - 1600) / 2.0)
 		due = mini(want_late, maxi(0, silver - 1100))
 		note = Locale.t("pressure_late")
+	return {"silver": maxi(0, due), "phase": phase, "note": note if due > 0 else ""}
+
+
+static func apply_epoch_pressure(host, year: int) -> Dictionary:
+	var q := epoch_pressure_quote(host, year)
+	var due := int(q.get("silver", 0))
+	var phase := str(q.get("phase", "early"))
+	var note := str(q.get("note", ""))
+	var silver := int(host.silver)
 	if due <= 0:
 		return {"silver": 0, "phase": phase, "note": ""}
 	host.silver = silver - due

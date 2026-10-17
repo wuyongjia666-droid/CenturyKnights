@@ -201,3 +201,5 @@ sui_year_outcome,这一年：%s,This year: %s
 life_ack,知道了,Understood
 life_outcome_prefix,结果：%s,Outcome: %s
 life_auto_log,%s · %s：%s,%s · %s: %s
+lineage_widowed,%s 丧偶（%s 已故），可再议亲。,%s is widowed (%s has died) and may marry again.
+lineage_outside_heir,%s 身后无人可承旗；族老外招 %s 入族承旗，灰旗不倒。,%s left no one to carry the banner. The elders called in %s to take it; the banner stands.
