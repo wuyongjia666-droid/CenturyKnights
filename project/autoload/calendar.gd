@@ -145,6 +145,7 @@ func _tick_life(ctx: Dictionary) -> void:
 				c.alive = false
 				c.in_roster = false
 				CKPurse.on_death(c)
+				Lineage.widow_partner(c)
 				evs.append({"type": "death", "text": "%s 辞世，入族谱碑" % c.name, "cid": c.id})
 			if c.is_child and c.age >= ADULT_AGE:
 				# Adults leave the child ration. They can still be enlisted; they no longer eat as infants for life.
@@ -157,6 +158,8 @@ func _tick_life(ctx: Dictionary) -> void:
 				var handed: Dictionary = Lineage.transfer_banner("death" if not c.alive else "retire")
 				if bool(handed.get("ok", false)):
 					evs.append({"type": "succession", "text": str(handed.get("msg", "")), "cid": str(handed.get("heir_id", ""))})
+				else:
+					push_warning("succession failed: %s" % str(handed.get("msg", "")))
 
 func _tick_payroll(ctx: Dictionary) -> void:
 	var pay = GameState.apply_monthly_upkeep()
