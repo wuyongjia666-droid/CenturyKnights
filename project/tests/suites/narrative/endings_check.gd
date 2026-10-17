@@ -60,14 +60,15 @@ func _run() -> String:
 	return _details()
 
 
+## Snapshot of seed 91 after the 2026-10-17 real-settlement sim (was 1701/256/19).
 func _locked(report: Dictionary) -> String:
-	if int(report.get("silver_end", -1)) != 1701:
+	if int(report.get("silver_end", -1)) != 1102:
 		return "silver %s" % str(report.get("silver_end", ""))
-	if int(report.get("food_end", -1)) != 256:
+	if int(report.get("food_end", -1)) != 247:
 		return "food %s" % str(report.get("food_end", ""))
 	if int(report.get("generations", -1)) != 5:
 		return "generations %s" % str(report.get("generations", ""))
-	if int(report.get("births", -1)) != 19:
+	if int(report.get("births", -1)) != 15:
 		return "births %s" % str(report.get("births", ""))
 	if int(report.get("successions", -1)) != 4:
 		return "successions %s" % str(report.get("successions", ""))
@@ -90,13 +91,13 @@ func _seed(report: Dictionary, seed: Dictionary) -> String:
 		return "seed axes drifted %s" % str(axes)
 	if not bool(axes.get("prestige", false)) or not bool(axes.get("faith", false)):
 		return "seed prestige/faith %s" % str(axes)
-	if int(axes.get("holdings", -1)) != 4 or int(axes.get("silver", -1)) != 1701:
+	if int(axes.get("holdings", -1)) != 4 or int(axes.get("silver", -1)) != 1102:
 		return "seed ledger axes %s" % str(axes)
 	if int(axes.get("companions", -1)) != 0:
 		return "seed companions %s" % str(axes)
 	## Sui-ke personality auto can close the generation on seed 91; then accept either open or closed rite copy.
 	var text := _texts(seed)
-	if text.find("1701") < 0 or text.find("4处据点") < 0:
+	if text.find("1102") < 0 or text.find("4处据点") < 0:
 		return "rite ending hid the treasury"
 	if bool(axes.get("generation_closed", false)):
 		if text.find("已写下志向") < 0:

@@ -21,6 +21,50 @@ const REP_NAMES := {
 	"trusted": "信赖", "respected": "尊敬",
 }
 
+## A spouse that died (or vanished from the save) no longer blocks a new match.
+func has_living_spouse(c: CKCharacter) -> bool:
+	if c == null or str(c.spouse_id) == "":
+		return false
+	var sp: CKCharacter = GameState.characters.get(str(c.spouse_id))
+	return sp != null and sp.alive
+
+## marriage-all-cast A8: when someone dies, the partner is widowed. spouse_id clears so the
+## marriage court treats them as single again; the late spouse is kept in blood_meta.late_spouses.
+func widow_partner(dead: CKCharacter) -> void:
+	if dead == null or str(dead.spouse_id) == "":
+		return
+	var sp: CKCharacter = GameState.characters.get(str(dead.spouse_id))
+	if sp == null or not sp.alive or str(sp.spouse_id) != dead.id:
+		return
+	_mark_widowed(sp, dead.id)
+	GameState.add_lineage_event(Locale.t("lineage_widowed", [sp.name, dead.name]))
+
+## Old saves: anyone whose spouse is dead or missing is widowed on load.
+func release_widowed() -> int:
+	var n := 0
+	for c in GameState.characters.values():
+		if c == null or not c.alive or str(c.spouse_id) == "":
+			continue
+		if has_living_spouse(c):
+			continue
+		_mark_widowed(c, str(c.spouse_id))
+		n += 1
+	return n
+
+func _mark_widowed(c: CKCharacter, late_id: String) -> void:
+	if typeof(c.blood_meta) != TYPE_DICTIONARY:
+		c.blood_meta = {}
+	var late: Array = []
+	var raw = c.blood_meta.get("late_spouses", [])
+	if typeof(raw) == TYPE_ARRAY:
+		late = raw
+	if late_id not in late:
+		late.append(late_id)
+	c.blood_meta["late_spouses"] = late
+	c.blood_meta["marriage_phase"] = "widowed"
+	c.spouse_id = ""
+	GameState.mark_dirty()
+
 func can_propose(suitor: CKCharacter, target: CKCharacter, realm: String = "ashland") -> Dictionary:
 	var need = REP_RANK_NEED.get(target.rank, "known")
 	var have = GameState.get_rep_tier(realm)
@@ -36,7 +80,7 @@ func can_propose(suitor: CKCharacter, target: CKCharacter, realm: String = "ashl
 			"have": have,
 			"msg": Locale.t("not_enough_rep", [" → ".join(missing)]),
 		}
-	if suitor.spouse_id != "" or target.spouse_id != "":
+	if has_living_spouse(suitor) or has_living_spouse(target):
 		return {"ok": false, "msg": "已有配偶（MVP 不可重婚）"}
 	if not suitor.alive or not target.alive:
 		return {"ok": false, "msg": "当事人不在"}
@@ -465,6 +509,12 @@ func transfer_banner(reason: String) -> Dictionary:
 		return {"ok": false, "msg": "无团长"}
 	var descendants_only := reason == "abdicate"
 	var heir := pick_heir(leader, descendants_only)
+	var outside := false
+	if heir == null and not descendants_only:
+		# No living adult descendant and nobody left in the roster: the house elders call in an
+		# outside banner-bearer so the century goes on (minimum playable exit, no design doc yet).
+		heir = _outside_heir(leader)
+		outside = heir != null
 	if heir == null:
 		return {"ok": false, "msg": "无可承旗之人"}
 	leader.is_leader = false
@@ -480,10 +530,28 @@ func transfer_banner(reason: String) -> Dictionary:
 	var verbs := {"abdicate": "传旗", "retire": "退役交旗", "death": "辞世，旗交"}
 	var verb := str(verbs.get(reason, "交旗"))
 	var msg := "%s %s %s。" % [leader.name, verb, heir.name]
+	if outside:
+		msg = Locale.t("lineage_outside_heir", [leader.name, heir.name])
 	GameState.add_lineage_event(msg)
 	_Ambitions.on_banner(heir)
 	GameState.mark_dirty()
-	return {"ok": true, "msg": msg, "heir_id": heir.id, "heir": heir.name, "reason": reason}
+	return {"ok": true, "msg": msg, "heir_id": heir.id, "heir": heir.name, "reason": reason, "outside": outside}
+
+## An adult recruit joins under the house banner and takes the flag. Uses GameState.rng, so it
+## only draws when the line is truly empty (seed 91 never reaches here).
+func _outside_heir(leader: CKCharacter) -> CKCharacter:
+	var c: CKCharacter = CharacterFactory.make_tavern_candidate(GameState.rng)
+	if c == null:
+		return null
+	c.age = maxi(int(c.age), Calendar.ADULT_AGE + 3)
+	c.family_id = str(leader.family_id)
+	if typeof(c.blood_meta) != TYPE_DICTIONARY:
+		c.blood_meta = {}
+	c.blood_meta["outside_heir"] = true
+	GameState.claim_id(c)
+	GameState.characters[c.id] = c
+	GameState.grant_job_skills(c)
+	return c
 
 ## After Calendar ages the living, copy the dead onto the stele. Battle rows already
 ## carry CMP-01 words; old age is filled here. This does not spend silver, food, or morale.
