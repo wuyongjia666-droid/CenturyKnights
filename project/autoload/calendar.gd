@@ -154,6 +154,9 @@ func _tick_life(ctx: Dictionary) -> void:
 				evs.append({"type": "adult", "text": am, "cid": c.id})
 				GameState.add_lineage_event(am)
 				GameState.add_skill_point(1)
+				var back := Lineage.end_regency_if_ward(c)
+				if back != "":
+					evs.append({"type": "regency_end", "text": back, "cid": c.id})
 			if c.is_leader and (not c.alive or c.retired):
 				var handed: Dictionary = Lineage.transfer_banner("death" if not c.alive else "retire")
 				if bool(handed.get("ok", false)):

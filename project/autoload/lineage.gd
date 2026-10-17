@@ -460,7 +460,12 @@ func _is_descendant(c: CKCharacter, ancestor_id: String, guard: int = 0) -> bool
 			return true
 	return false
 
-## Living adult descendant, else any living adult still with the company.
+## Succession order (user ruling 2026-10-17; no outside heirs):
+##   1. living adult direct descendant of the leader (existing _heir_score: merit + age, heir_mark);
+##   2. else a living adult on the roster, ranked by title (rank_index) → merit (CKCourt.merit_of) →
+##      age → id, so the order is readable and deterministic;
+##   3. else (transfer_banner only, not abdication) the eldest living child in the house under a
+##      regency of the house elders until they come of age — see pick_minor_heir.
 func pick_heir(leader: CKCharacter, descendants_only: bool = false) -> CKCharacter:
 	if leader == null:
 		return null
@@ -475,14 +480,87 @@ func pick_heir(leader: CKCharacter, descendants_only: bool = false) -> CKCharact
 			best = c
 	if best != null or descendants_only:
 		return best
+	return pick_roster_heir(leader)
+
+## Rule 2: adult company member. Title, then merit, then age, then id.
+func pick_roster_heir(leader: CKCharacter) -> CKCharacter:
+	var pool: Array = []
 	for c in GameState.characters.values():
-		if c == leader or not c.in_roster:
+		if c == leader or not c.in_roster or _heir_score(c) < 0.0:
 			continue
-		var s2 := _heir_score(c)
-		if s2 > best_s:
-			best_s = s2
-			best = c
-	return best
+		pool.append(c)
+	if pool.is_empty():
+		return null
+	pool.sort_custom(func(a: CKCharacter, b: CKCharacter) -> bool:
+		if a.rank_index() != b.rank_index():
+			return a.rank_index() > b.rank_index()
+		var ma := int(CKCourt.merit_of(a))
+		var mb := int(CKCourt.merit_of(b))
+		if ma != mb:
+			return ma > mb
+		if int(a.age) != int(b.age):
+			return int(a.age) > int(b.age)
+		return str(a.id) < str(b.id))
+	return pool[0]
+
+## Rule 3: nobody adult left. The eldest living child of the house takes the banner; on a tie a
+## direct descendant first, then the earlier birthday month, then id.
+func pick_minor_heir(leader: CKCharacter) -> CKCharacter:
+	var pool: Array = []
+	for c in GameState.characters.values():
+		if c == leader or c == null or not c.alive or c.retired:
+			continue
+		if not c.is_child and int(c.age) >= Calendar.ADULT_AGE:
+			continue
+		var meta: Dictionary = c.blood_meta if typeof(c.blood_meta) == TYPE_DICTIONARY else {}
+		if str(meta.get("succession_bar", "")) == "player" or bool(meta.get("return_grove", false)):
+			continue
+		pool.append(c)
+	if pool.is_empty():
+		return null
+	var lid := str(leader.id) if leader != null else ""
+	pool.sort_custom(func(a: CKCharacter, b: CKCharacter) -> bool:
+		if int(a.age) != int(b.age):
+			return int(a.age) > int(b.age)
+		var da := _is_descendant(a, lid)
+		var db := _is_descendant(b, lid)
+		if da != db:
+			return da
+		if int(a.birthday_month) != int(b.birthday_month):
+			return int(a.birthday_month) < int(b.birthday_month)
+		return str(a.id) < str(b.id))
+	return pool[0]
+
+## Regency state lives in house_mods.regency = {ward, since, until_age}; empty dict = none.
+func regency() -> Dictionary:
+	var r = GameState.house_mods.get("regency", {})
+	return r if typeof(r) == TYPE_DICTIONARY else {}
+
+func is_regency() -> bool:
+	return str(regency().get("ward", "")) != ""
+
+## One-line status for the hall header; "" when no regency.
+func regency_status() -> String:
+	if not is_regency():
+		return ""
+	var ward: CKCharacter = GameState.characters.get(str(regency().get("ward", "")))
+	if ward == null or not ward.alive:
+		return ""
+	return Locale.t("lineage_regency_status", [ward.name, int(ward.age), Calendar.ADULT_AGE])
+
+## Calendar calls this when a child comes of age; hands the banner back if they are the ward.
+func end_regency_if_ward(c: CKCharacter) -> String:
+	if c == null or not c.alive or not is_regency() or str(regency().get("ward", "")) != c.id:
+		return ""
+	GameState.house_mods.erase("regency")
+	c.is_child = false
+	c.in_roster = true
+	c.retired = false
+	c.salary = 0
+	var msg := Locale.t("lineage_regency_end", [c.name])
+	GameState.add_lineage_event(msg)
+	GameState.mark_dirty()
+	return msg
 
 func generation_depth(c: CKCharacter) -> int:
 	return _generation_depth(c, {}, 0)
@@ -502,19 +580,23 @@ func _generation_depth(c: CKCharacter, seen: Dictionary, guard: int) -> int:
 		best = maxi(best, 1 + _generation_depth(p, branch, guard + 1))
 	return best
 
-## Pass the banner. Abdication requires a descendant. Death or retirement may fall back to a captain.
+## Pass the banner. Abdication requires an adult descendant. Death or retirement follows the
+## in-house order in pick_heir; with no adult left, the eldest child inherits under a regency.
+## A roster with no living person at all (not even a child) still returns ok=false.
 func transfer_banner(reason: String) -> Dictionary:
 	var leader := GameState.get_leader()
 	if leader == null:
 		return {"ok": false, "msg": "无团长"}
 	var descendants_only := reason == "abdicate"
 	var heir := pick_heir(leader, descendants_only)
-	var outside := false
+	var via := "descendant"
+	if heir != null and not _is_descendant(heir, leader.id):
+		via = "roster"
+	var minor := false
 	if heir == null and not descendants_only:
-		# No living adult descendant and nobody left in the roster: the house elders call in an
-		# outside banner-bearer so the century goes on (minimum playable exit, no design doc yet).
-		heir = _outside_heir(leader)
-		outside = heir != null
+		heir = pick_minor_heir(leader)
+		minor = heir != null
+		via = "minor"
 	if heir == null:
 		return {"ok": false, "msg": "无可承旗之人"}
 	leader.is_leader = false
@@ -522,36 +604,37 @@ func transfer_banner(reason: String) -> Dictionary:
 		leader.retired = true
 		leader.in_roster = false
 	heir.is_leader = true
-	heir.is_child = false
 	heir.retired = false
-	heir.in_roster = true
 	heir.alive = true
 	heir.salary = 0
+	if minor:
+		# Existing minor rule: under ADULT_AGE nobody is enlisted, so the ward stays off the roster
+		# (cannot deploy) until they come of age; the player still makes the house decisions.
+		heir.is_child = true
+		heir.in_roster = false
+		GameState.house_mods["regency"] = {"ward": heir.id, "since": Calendar.label(), "until_age": Calendar.ADULT_AGE}
+	else:
+		heir.is_child = false
+		heir.in_roster = true
+		if is_regency():
+			GameState.house_mods.erase("regency")
+	if via == "roster":
+		# Joins the house even when the house still flies the plain castle banner (family_id "").
+		heir.family_id = str(leader.family_id)
+		if typeof(heir.blood_meta) != TYPE_DICTIONARY:
+			heir.blood_meta = {}
+		heir.blood_meta["joined_house"] = true
 	var verbs := {"abdicate": "传旗", "retire": "退役交旗", "death": "辞世，旗交"}
 	var verb := str(verbs.get(reason, "交旗"))
 	var msg := "%s %s %s。" % [leader.name, verb, heir.name]
-	if outside:
-		msg = Locale.t("lineage_outside_heir", [leader.name, heir.name])
+	if via == "roster":
+		msg = Locale.t("lineage_roster_heir", [leader.name, heir.name])
+	elif minor:
+		msg = Locale.t("lineage_regency_begin", [leader.name, heir.name, int(heir.age), Calendar.ADULT_AGE])
 	GameState.add_lineage_event(msg)
 	_Ambitions.on_banner(heir)
 	GameState.mark_dirty()
-	return {"ok": true, "msg": msg, "heir_id": heir.id, "heir": heir.name, "reason": reason, "outside": outside}
-
-## An adult recruit joins under the house banner and takes the flag. Uses GameState.rng, so it
-## only draws when the line is truly empty (seed 91 never reaches here).
-func _outside_heir(leader: CKCharacter) -> CKCharacter:
-	var c: CKCharacter = CharacterFactory.make_tavern_candidate(GameState.rng)
-	if c == null:
-		return null
-	c.age = maxi(int(c.age), Calendar.ADULT_AGE + 3)
-	c.family_id = str(leader.family_id)
-	if typeof(c.blood_meta) != TYPE_DICTIONARY:
-		c.blood_meta = {}
-	c.blood_meta["outside_heir"] = true
-	GameState.claim_id(c)
-	GameState.characters[c.id] = c
-	GameState.grant_job_skills(c)
-	return c
+	return {"ok": true, "msg": msg, "heir_id": heir.id, "heir": heir.name, "reason": reason, "via": via, "regency": minor}
 
 ## After Calendar ages the living, copy the dead onto the stele. Battle rows already
 ## carry CMP-01 words; old age is filled here. This does not spend silver, food, or morale.
