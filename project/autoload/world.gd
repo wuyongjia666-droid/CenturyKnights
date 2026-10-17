@@ -21,6 +21,17 @@ const OBJECTIVE_VICTORY := {
 	"convoy": "escort",
 	"intel_race": "seize",
 }
+## Review 2026-10-17 P1: side battles roll one of the eight story objectives instead of always
+## rout. Pools are per encounter (road) or per unmapped battle commission kind; weights are relative.
+const SIDE_OBJECTIVE_WEIGHTS := {
+	"road": [["rout", 40], ["boss", 12], ["seize", 10], ["survive", 10], ["escape", 8], ["defend", 8], ["protect", 6], ["escort", 6]],
+	"hunt": [["rout", 50], ["boss", 50]],
+	"clear": [["rout", 60], ["seize", 20], ["boss", 20]],
+	"defend": [["defend", 60], ["survive", 40]],
+}
+## Objectives that reuse the commission stamper of the same shape.
+const SIDE_STAMP_KIND := {"defend": "siege_aid", "boss": "bounty", "protect": "rescue", "escort": "convoy", "seize": "intel_race"}
+const BLOCK_TERRAIN := ["water", "wall", "void"]
 const STAT_ZH := {"atk": "攻", "def": "防", "hit": "命中", "avo": "回避", "crit": "暴击", "move": "移动", "hp": "生命"}
 const SLOT_ZH := {"weapon": "武器", "armor": "护具", "charm": "饰品"}
 const REP_TIER_ZH := ["陌生", "认识", "友善", "信赖", "盟誓"]
@@ -2051,6 +2062,8 @@ func start_encounter(kind: String, ctx: Dictionary) -> Dictionary:
 	base.enemy_spots = spots.slice(0, count)
 	if not q.is_empty():
 		_stamp_objective(base, q, spots)
+	if not base.has("objective"):
+		_stamp_side_objective(base, kind, q, "%s|%s|%d" % [base_id, at, _enc_seq], spots)
 	var label := ""
 	if not q.is_empty():
 		label = str(q.title)
@@ -2084,6 +2097,11 @@ func _stamp_objective(base: Dictionary, q: Dictionary, full_spots: Array) -> voi
 	var far: Array = [mini(int(home[0]) + 4, width - 1), int(home[1])]
 	if not enemies.is_empty():
 		far = enemies[0]
+	var reach := _reach(base)
+	if not reach.is_empty() and not reach.has(Vector2i(int(far[0]), int(far[1]))):
+		var deep: Array = _farthest(reach, 1, [])
+		if not deep.is_empty():
+			far = [deep[0].x, deep[0].y]
 	var blocked: Array = []
 	for s in players:
 		blocked.append(s)
@@ -2115,22 +2133,24 @@ func _stamp_objective(base: Dictionary, q: Dictionary, full_spots: Array) -> voi
 				tags.append("mark" if i == 0 else "")
 			base.enemy_tags = tags
 		"rescue":
-			var spot := _open_spot(home, far, blocked, width, height)
+			var spot := _open_spot(home, far, blocked, width, height, reach)
 			base.npcs = [{"name": str(q.get("client", "")), "tag": "captive", "spot": spot, "team": "ally"}]
 			base.objective = {"type": "protect", "unit_tag": "captive"}
 			base.failure = {"turn_limit": 12}
 		"convoy":
-			var spot2 := _open_spot(home, far, blocked, width, height)
+			var spot2 := _open_spot(home, far, blocked, width, height, reach)
 			var exit_tile: Array = spot2
 			if not enemies.is_empty():
 				exit_tile = [int(enemies[enemies.size() - 1][0]), int(enemies[enemies.size() - 1][1])]
+			if not reach.is_empty() and not reach.has(Vector2i(int(exit_tile[0]), int(exit_tile[1]))):
+				exit_tile = [int(far[0]), int(far[1])]
 			if int(exit_tile[0]) == int(spot2[0]) and int(exit_tile[1]) == int(spot2[1]):
 				exit_tile = [int(far[0]), int(far[1])]
 			base.npcs = [{"name": str(q.get("client", "")), "tag": "wagon", "spot": spot2, "team": "player"}]
 			base.objective = {"type": "escort", "npc": "wagon", "exit_tile": exit_tile}
 			base.failure = {"turn_limit": 12}
 		"intel_race":
-			var tile := _mid_tile(home, far, players, enemies, width, height)
+			var tile := _mid_tile(home, far, players, enemies, width, height, reach)
 			base.objective = {"type": "seize", "tile": tile}
 			base.failure = {"turn_limit": 10}
 
@@ -2142,7 +2162,7 @@ func _spot_taken(spots: Array, x: int, y: int) -> bool:
 			return true
 	return false
 
-func _open_spot(origin: Array, toward: Array, blocked: Array, width: int, height: int) -> Array:
+func _open_spot(origin: Array, toward: Array, blocked: Array, width: int, height: int, reach: Dictionary = {}) -> Array:
 	var ox := int(origin[0])
 	var oy := int(origin[1])
 	var sx := signi(int(toward[0]) - ox)
@@ -2164,10 +2184,12 @@ func _open_spot(origin: Array, toward: Array, blocked: Array, width: int, height
 			continue
 		if _spot_taken(blocked, x, y):
 			continue
+		if not reach.is_empty() and not reach.has(Vector2i(x, y)):
+			continue
 		return [x, y]
 	return [clampi(ox, 0, width - 1), clampi(oy, 0, height - 1)]
 
-func _mid_tile(home: Array, far: Array, players: Array, enemies: Array, width: int, height: int) -> Array:
+func _mid_tile(home: Array, far: Array, players: Array, enemies: Array, width: int, height: int, reach: Dictionary = {}) -> Array:
 	var x := clampi((int(home[0]) + int(far[0])) / 2, 0, width - 1)
 	var y := clampi((int(home[1]) + int(far[1])) / 2, 0, height - 1)
 	var sx := signi(int(far[0]) - int(home[0]))
@@ -2175,7 +2197,8 @@ func _mid_tile(home: Array, far: Array, players: Array, enemies: Array, width: i
 	if sx == 0 and sy == 0:
 		sx = 1
 	for _i in 8:
-		if not _spot_taken(players, x, y) and not _spot_taken(enemies, x, y):
+		var walk := reach.is_empty() or reach.has(Vector2i(x, y))
+		if walk and not _spot_taken(players, x, y) and not _spot_taken(enemies, x, y):
 			return [x, y]
 		var nx := clampi(x + sx, 0, width - 1)
 		var ny := clampi(y + sy, 0, height - 1)
@@ -2184,6 +2207,88 @@ func _mid_tile(home: Array, far: Array, players: Array, enemies: Array, width: i
 		x = nx
 		y = ny
 	return [x, y]
+
+## Deterministic weighted pick: the salt hash replaces World.rng so other rolls do not shift.
+static func side_objective_roll(pool_key: String, salt: String) -> String:
+	var pool: Array = SIDE_OBJECTIVE_WEIGHTS.get(pool_key, [])
+	var total := 0
+	for row in pool:
+		total += int(row[1])
+	if total <= 0:
+		return "rout"
+	var pick := absi(hash(salt)) % total
+	for row in pool:
+		pick -= int(row[1])
+		if pick < 0:
+			return str(row[0])
+	return "rout"
+
+func _stamp_side_objective(base: Dictionary, enc_kind: String, q: Dictionary, salt: String, spots: Array) -> void:
+	var pool_key := enc_kind if q.is_empty() else str(q.get("kind", ""))
+	if not SIDE_OBJECTIVE_WEIGHTS.has(pool_key):
+		return
+	var players: Array = base.get("player_spots", [])
+	if players.is_empty():
+		return
+	var pick := side_objective_roll(pool_key, salt)
+	match pick:
+		"rout":
+			return
+		"survive":
+			base.objective = {"type": "survive", "turns": 4}
+		"escape":
+			var reach := _reach(base)
+			var taken: Array = players.duplicate()
+			taken.append_array(base.get("enemy_spots", []))
+			var exits := _farthest(reach, 2, taken)
+			if exits.size() < 2:
+				return
+			var tiles: Array = []
+			for c in exits:
+				tiles.append([c.x, c.y])
+			base.objective = {"type": "escape", "n": mini(2, players.size()), "exit_tiles": tiles}
+			base.failure = {"turn_limit": 10}
+		_:
+			var who := Locale.t("side_npc_" + pick) if pick in ["protect", "escort"] else ""
+			_stamp_objective(base, {"kind": str(SIDE_STAMP_KIND[pick]), "client": who}, spots)
+	base.side_objective = pick
+
+## Cells reachable on foot from the first player spot (water, wall and void block).
+func _reach(base: Dictionary) -> Dictionary:
+	var terrain = base.get("terrain", [])
+	var players: Array = base.get("player_spots", [])
+	if typeof(terrain) != TYPE_ARRAY or terrain.is_empty() or players.is_empty():
+		return {}
+	var w := int(base.get("w", 10))
+	var h := int(base.get("h", 8))
+	var start := Vector2i(int(players[0][0]), int(players[0][1]))
+	var dist := {start: 0}
+	var queue: Array = [start]
+	while not queue.is_empty():
+		var cur: Vector2i = queue.pop_front()
+		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			var nxt: Vector2i = cur + d
+			if nxt.x < 0 or nxt.y < 0 or nxt.x >= w or nxt.y >= h or dist.has(nxt):
+				continue
+			if nxt.y >= terrain.size() or nxt.x >= (terrain[nxt.y] as Array).size():
+				continue
+			if str(terrain[nxt.y][nxt.x]) in BLOCK_TERRAIN:
+				continue
+			dist[nxt] = int(dist[cur]) + 1
+			queue.append(nxt)
+	return dist
+
+## The n reachable cells farthest from the player start, skipping taken spots; ties by (y, x).
+func _farthest(reach: Dictionary, n: int, taken: Array) -> Array:
+	var cells: Array = []
+	for c in reach.keys():
+		if not _spot_taken(taken, c.x, c.y):
+			cells.append(c)
+	cells.sort_custom(func(a, b):
+		if int(reach[a]) != int(reach[b]):
+			return int(reach[a]) > int(reach[b])
+		return a.y < b.y if a.y != b.y else a.x < b.x)
+	return cells.slice(0, n)
 
 func ensure_encounter_map() -> void:
 	## after a load, the generated map must be re-registered before the battle scene reads it
