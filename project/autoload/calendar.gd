@@ -10,6 +10,9 @@ const RETIRE_AGE := 55
 const DEATH_AGE := 70
 const HARVEST_MONTH := 8
 const SPRING_MONTH := 5
+## Year 1 has no January settlement (the game opens in month 1), so the founding muster
+## lands on the third month, after the opening errand has paid out.
+const MUSTER_MONTH_Y1 := 3
 
 var year: int = 1
 var month: int = 1
@@ -35,6 +38,7 @@ func _install_month_bus() -> void:
 	register("pre", Callable(self, "_tick_life"), 10)
 	register("economy", Callable(self, "_tick_holdings"), 10)
 	register("economy", Callable(self, "_tick_payroll"), 20)
+	register("economy", Callable(self, "_tick_epoch_dues"), 30)
 	register("family", Callable(self, "_tick_doctrine"), 10)
 	register("family", Callable(self, "_tick_spring"), 20)
 	register("post", Callable(self, "_tick_harvest"), 10)
@@ -72,6 +76,12 @@ func _events_for(y: int, m: int) -> Array:
 				ev.append({"type": "birth", "text": "%s 产期将至" % c.name, "cid": c.id})
 			else:
 				ev.append({"type": "pregnancy", "text": "%s 妊娠中（余约 %d 月）" % [c.name, left], "cid": c.id})
+	if _is_dues_month(y, m):
+		var q: Dictionary = CKEconomyState.epoch_pressure_quote(GameState, y)
+		if int(q.get("silver", 0)) > 0:
+			ev.append({"type": "epoch_dues", "text": Locale.t("pressure_forecast", [str(q.get("note", "")), int(q.get("silver", 0))])})
+	if y == 1 and m == 4:
+		ev.append({"type": "spring_purse", "text": Locale.t("pressure_spring")})
 	if m == SPRING_MONTH:
 		ev.append({"type": "festival", "text": "春令节：联姻池刷新"})
 	if m == HARVEST_MONTH:
@@ -157,6 +167,31 @@ func _tick_life(ctx: Dictionary) -> void:
 func _tick_payroll(ctx: Dictionary) -> void:
 	var pay = GameState.apply_monthly_upkeep()
 	_events(ctx).append({"type": "payroll", "text": pay})
+
+## balance-v92 三截消耗: each January from year 2 the company pays the era dues (drill /
+## castle, dowry and heirlooms / lamp, title and embassy). Shown in the month report and the X5 forecast.
+## Year 1 follows the same doc: the first settlement after founding (month 2) pays the muster
+## down to three months of wages minus one, and April pays the one-time spring purse back.
+func _tick_epoch_dues(ctx: Dictionary) -> void:
+	if year == 1 and month == 4:
+		var purse: Dictionary = CKEconomyState.apply_spring_purse(GameState)
+		GameState.house_mods["spring_purse"] = int(purse.get("silver", 0))
+		_events(ctx).append({"type": "spring_purse", "text": Locale.t("pressure_spring_paid") % int(purse.get("silver", 0))})
+		return
+	if not _is_dues_month(year, month):
+		return
+	var paid: Dictionary = CKEconomyState.apply_epoch_pressure(GameState, year)
+	var due := int(paid.get("silver", 0))
+	GameState.house_mods["epoch_dues"] = {
+		"year": year, "month": month, "silver": due, "left": int(GameState.silver),
+		"wage": CKEconomyState.monthly_wage(GameState),
+		"phase": str(paid.get("phase", "")), "note": str(paid.get("note", "")),
+	}
+	if due > 0:
+		_events(ctx).append({"type": "epoch_dues", "text": Locale.t("pressure_month_report", [str(paid.get("note", "")), due, int(GameState.silver)])})
+
+static func _is_dues_month(y: int, m: int) -> bool:
+	return (y == 1 and m == MUSTER_MONTH_Y1) or (y >= 2 and m == 1)
 
 func _tick_holdings(ctx: Dictionary) -> void:
 	var hy = GameState.holdings_monthly_yield()
