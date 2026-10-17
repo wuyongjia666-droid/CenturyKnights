@@ -55,6 +55,17 @@ def glb_info(p: Path) -> dict:
 def png_jpg_size(b: bytes) -> tuple[int, int]:
     if b[:8] == b"\x89PNG\r\n\x1a\n":
         return struct.unpack(">II", b[16:24])
+    if b[:4] == b"RIFF" and b[8:12] == b"WEBP":
+        kind = b[12:16]
+        if kind == b"VP8X":
+            return 1 + int.from_bytes(b[24:27], "little"), 1 + int.from_bytes(b[27:30], "little")
+        if kind == b"VP8L":
+            v = int.from_bytes(b[21:25], "little")
+            return 1 + (v & 0x3FFF), 1 + ((v >> 14) & 0x3FFF)
+        if kind == b"VP8 ":
+            w, h = struct.unpack("<HH", b[26:30])
+            return w & 0x3FFF, h & 0x3FFF
+        return 0, 0
     i = 2
     while i < len(b):
         if b[i] != 0xFF:
@@ -134,6 +145,10 @@ def main() -> int:
     for d in (SHIP, WEAPONS):
         if d.is_dir():
             total += sum(f.stat().st_size for f in d.iterdir() if f.is_file() and f.suffix != ".import" and f.resolve() in tracked)
+    for d in (SHIP, WEAPONS):
+        if d.is_dir():
+            for g in sorted(d.glob("*.gltf")):
+                errs.append(f"{d.name}/{g.name}: ship pieces must be .glb (embedded), not .gltf")
     for f in pawn_glbs():
         sz = f.stat().st_size
         info = glb_info(f)
@@ -158,6 +173,8 @@ def main() -> int:
                 bv = js["bufferViews"][im["bufferView"]]
                 b = data[bin_off + bv.get("byteOffset", 0): bin_off + bv.get("byteOffset", 0) + bv["byteLength"]]
                 w, h = png_jpg_size(b)
+                if w <= 0 or h <= 0:
+                    errs.append(f"{name}: texture size unreadable ({im.get('mimeType')})")
                 if max(w, h) > TEXTURE_EDGE_MAX:
                     errs.append(f"{name}: texture {w}x{h} > {TEXTURE_EDGE_MAX}")
                 if im.get("mimeType") not in ("image/jpeg", "image/webp"):
