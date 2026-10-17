@@ -17,13 +17,14 @@ static func run(years: int = 100, seed_i: int = 91) -> Dictionary:
 	}
 	GameState.rng.seed = seed_i
 	World.rng.seed = seed_i + 17
-	World.events_enabled = false
-	World.rivals_enabled = false
+	# Review 2026-10-17 P0-2: the century runs the player's rules, road events and rival companies on.
+	World.events_enabled = true
+	World.rivals_enabled = true
 	CKMorale.suppress_desertion = true
 	CKLifeEvents.suppress_auto = true
 	GameState.new_game("烬行", "灰旗", "#c9a227")
-	World.events_enabled = false
-	World.rivals_enabled = false
+	World.events_enabled = true
+	World.rivals_enabled = true
 	# The scripted company has already stood the opening chapter, the way a loaded campaign would.
 	GameState.add_rep("ashland", 16)
 	World.add_nation_rep("ashbanner", 8)
@@ -35,13 +36,12 @@ static func run(years: int = 100, seed_i: int = 91) -> Dictionary:
 	while _abs() < end_abs and guard < years * 14:
 		guard += 1
 		var advanced := false
-		if Calendar.month == 4 and Calendar.year == 1:
-			var purse: Dictionary = CKEconomyState.apply_spring_purse(GameState)
-			report["spring_purse"] = int(purse.get("silver", 0))
 		if Calendar.month == 1 and Calendar.year != last_year:
 			last_year = Calendar.year
 			_january(report, Calendar.year)
 			_sample(report)
+		if Calendar.year == 1 and Calendar.month >= Calendar.MUSTER_MONTH_Y1 and not report.has("silver_y1_after_muster"):
+			_sample_year_one(report)
 		if Calendar.month == 5:
 			_try_marry()
 		if Calendar.month == 6:
@@ -51,6 +51,7 @@ static func run(years: int = 100, seed_i: int = 91) -> Dictionary:
 			Calendar.advance(1)
 	if _abs() < end_abs:
 		report["stuck"] = "calendar stopped at %s" % Calendar.label()
+	report["spring_purse"] = int(GameState.house_mods.get("spring_purse", 0))
 	report["end_year"] = Calendar.year
 	report["end_month"] = Calendar.month
 	report["silver_end"] = GameState.silver
@@ -102,11 +103,26 @@ static func _january(report: Dictionary, year: int) -> void:
 	_upgrade_castle()
 	if GameState.roster().size() < 5 and year % 6 == 0:
 		_recruit(report)
-	var press: Dictionary = CKEconomyState.apply_epoch_pressure(GameState, year)
-	var paid: int = int(press.get("silver", 0))
-	if paid > 0:
-		var phase := str(press.get("phase", "early"))
-		report["pressure_" + phase] = int(report.get("pressure_" + phase, 0)) + paid
+	# Calendar's January tick already paid the era dues (real month settlement); just book them.
+	var press = GameState.house_mods.get("epoch_dues", {})
+	if typeof(press) == TYPE_DICTIONARY and int(press.get("year", -1)) == year:
+		var paid: int = int(press.get("silver", 0))
+		if paid > 0:
+			var phase := str(press.get("phase", "early"))
+			report["pressure_" + phase] = int(report.get("pressure_" + phase, 0)) + paid
+
+## The real calendar pays the year-1 muster in month MUSTER_MONTH_Y1 (3), after the opening errand,
+## so year 1 is judged right after it. The January sample stays in `samples` unchanged.
+## Read from the settlement record because a contract trip may cross that month inside _january.
+static func _sample_year_one(report: Dictionary) -> void:
+	var rec = GameState.house_mods.get("epoch_dues", {})
+	if typeof(rec) != TYPE_DICTIONARY or int(rec.get("year", 0)) != 1:
+		return
+	var silver := int(rec.get("left", 0))
+	report["silver_y1_after_muster"] = silver
+	var wage_now := int(rec.get("wage", 1))
+	if silver < wage_now * 3 and not bool(report.get("y1_tight_jan", false)):
+		report["tight_years"] = int(report.get("tight_years", 0)) + 1
 
 static func _sample(report: Dictionary) -> void:
 	var leader := GameState.get_leader()
@@ -118,6 +134,8 @@ static func _sample(report: Dictionary) -> void:
 	var wage_now := CKEconomyState.monthly_wage(GameState)
 	if Calendar.year >= 1 and Calendar.year <= 10 and silver < wage_now * 3:
 		report["tight_years"] = int(report.get("tight_years", 0)) + 1
+		if Calendar.year == 1:
+			report["y1_tight_jan"] = true
 	if GameState.food <= 0:
 		report["years_starved"] = int(report["years_starved"]) + 1
 	if int(report["samples"].size()) < 12 or Calendar.year % 10 == 0:
@@ -175,7 +193,7 @@ static func _try_marry() -> void:
 		cost += int(r.get("cost", 0))
 	if GameState.silver < cost + 20:
 		return
-	Lineage.marry(leader, cand, 40, rites)
+	Lineage.marry(leader, cand, 40, rites, true)
 
 static func _try_child() -> bool:
 	var leader := GameState.get_leader()
@@ -193,7 +211,9 @@ static func _try_child() -> bool:
 			kids += 1
 	if kids >= 3 or Calendar.year % 4 != 0:
 		return false
-	mother.pregnant_months = 1
+	# Same fertility and term as a player wedding (fertility-v92 handoff). The player has no
+	# later-conception action yet; the script keeps this so the century still has heirs.
+	CKFamilyState.begin_pregnancy(GameState, mother)
 	return false
 
 static func _enlist_ready() -> void:

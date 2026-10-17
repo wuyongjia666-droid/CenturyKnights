@@ -1000,6 +1000,7 @@ func apply_save_data(data: Dictionary) -> bool:
 	else:
 		_court_derived = false
 	BattleRules.preview_enabled = settings.get("rules_preview", true)
+	Lineage.release_widowed()
 	mark_dirty()
 	return true
 
