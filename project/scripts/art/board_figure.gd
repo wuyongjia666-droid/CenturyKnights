@@ -282,28 +282,40 @@ static func _attach_ship_weapon(unit: Node3D, parts: Dictionary, pal: Dictionary
 		mi.mesh = mesh
 		root = mi
 	root.name = "ShipWeapon"
-	# Path C weapons are authored grip-at-origin, tip +Z (Blender) → +Y after yup export?
-	# Our GLBs use export_yup=True so Blender Z-up becomes glTF Y-up: tip along +Y.
-	# Place grip at measured hand; slight in-scale for board readability.
-	# slight outward so blade clears torso; keep grip near measured hand
-	var outward := 0.03 if left else -0.03
-	if wn == "weapon_axe":
-		outward *= 0.3  # axe bit already extends +X; don't float away
-	root.position = Vector3(float(hv[0]) + outward, float(hv[1]) - 0.02, float(hv[2]) - 0.02)
-	root.scale = Vector3(1.35, 1.35, 1.35)
-	if left:
-		# bow: tip up, limbs open toward board camera
-		root.rotation_degrees = Vector3(20, 35, 15)
-	elif wn == "weapon_axe":
-		# pitch+yaw so crescent blade reads in top-down
-		root.rotation_degrees = Vector3(25, 40, 0)
+	# Grip v2 (#313): Path C GLBs are centred on their bbox, not on the handle. Each weapon has a
+	# measured handle point g + local axis a (+ secondary b) in board_figures.json pathc_ship.grip;
+	# we build a basis that sends a->dir and b->side, then put g exactly on the measured hand.
+	var gcfg: Dictionary = (cfg.get("grip", {}) as Dictionary).get(wn, (cfg.get("grip", {}) as Dictionary).get(str(wmap.get(wn, "")).get_basename(), {}))
+	var hand := Vector3(float(hv[0]), float(hv[1]), float(hv[2]))
+	var off: Array = ((cfg.get("grip_body", {}) as Dictionary).get(stem, {}) as Dictionary).get(wn, gcfg.get("off", [0, 0, 0]))
+	hand += _v3(off)
+	if gcfg.is_empty():
+		root.position = hand
+		root.scale = Vector3.ONE
 	else:
-		# sword/spear: tip up, lean hard toward board camera so blade face shows
-		root.rotation_degrees = Vector3(35, 0, 0)
+		var s := float(gcfg.get("scale", 1.0))
+		var ba := _v3(gcfg.get("a", [0, 1, 0])).normalized()
+		var bb := _v3(gcfg.get("b", [1, 0, 0]))
+		bb = (bb - ba * bb.dot(ba)).normalized()
+		var wa := _v3(gcfg.get("dir", [0, 1, 0])).normalized()
+		var wb := _v3(gcfg.get("side", [1, 0, 0]))
+		wb = (wb - wa * wb.dot(wa)).normalized()
+		var src := Basis(ba, bb, ba.cross(bb))
+		var dst := Basis(wa, wb, wa.cross(wb))
+		var rot := dst * src.inverse()
+		root.basis = Basis(rot.x * s, rot.y * s, rot.z * s)
+		root.position = hand - root.basis * _v3(gcfg.get("g", [0, 0, 0]))
+	root.set_meta("ck_grip_hand", hand)
 	# faction rim on weapon meshes (keep their own albedo)
 	_apply_ship_rim(root, enemy)
 	unit.add_child(root)
 	unit.set_meta("ck_ship_weapon", wn)
+
+
+static func _v3(v) -> Vector3:
+	if v is Array and (v as Array).size() >= 3:
+		return Vector3(float(v[0]), float(v[1]), float(v[2]))
+	return Vector3.ZERO
 
 
 static func _unit_has_hair_mesh(n: Node) -> bool:
