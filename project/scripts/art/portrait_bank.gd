@@ -463,11 +463,14 @@ static func _ensure_disk_index() -> void:
 	for fn0 in da.get_files():
 		var fn := _strip_export_suffix(str(fn0))
 		var low := fn.to_lower()
-		if low.find(".small.") >= 0 or low.find(".medium.") >= 0 or low.find(".large.") >= 0:
-			continue
 		if not (low.ends_with(".webp") or low.ends_with(".png")):
 			continue
 		var stem := str(fn).get_basename()
+		## Android ships only .medium/.small (no large tier): list the stem from either sibling.
+		for tier_tag in [".small", ".medium", ".large"]:
+			if stem.to_lower().ends_with(tier_tag):
+				stem = stem.substr(0, stem.length() - tier_tag.length())
+				break
 		for st in CKGenomePortrait.STAGES:
 			var prefix := str(st) + "_"
 			if stem.begins_with(prefix):

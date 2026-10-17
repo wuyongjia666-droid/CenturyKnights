@@ -1220,6 +1220,7 @@ static func resolve(cid: String, card_id: String, option_id: String) -> Dictiona
 		c.blood_meta["stele_epitaph"] = epitaph
 		# dead purse → spouse then flag treasury
 		CKPurse.on_death(c)
+		Lineage.widow_partner(c)
 		GameState.morale = maxi(0, int(GameState.morale) + int(opt.get("morale", -3)))
 		if bool(opt.get("halt_march", false)):
 			GameState.house_mods["halt_march_month"] = "%d-%d" % [Calendar.year, Calendar.month]
