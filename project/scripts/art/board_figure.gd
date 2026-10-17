@@ -282,9 +282,9 @@ static func _attach_ship_weapon(unit: Node3D, parts: Dictionary, pal: Dictionary
 		mi.mesh = mesh
 		root = mi
 	root.name = "ShipWeapon"
-	# Grip v2 (#313): Path C GLBs are centred on their bbox, not on the handle. Each weapon has a
-	# measured handle point g + local axis a (+ secondary b) in board_figures.json pathc_ship.grip;
-	# we build a basis that sends a->dir and b->side, then put g exactly on the measured hand.
+	# Grip v3 (#313): Path C GLBs are centred on their bbox, not on the handle. Each weapon has a
+	# measured HANDLE point g + local axis a (+ secondary b) in board_figures.json pathc_ship.grip;
+	# a points pommel/head-ward; dir/side put tip forward-down (-Z) / head up-forward. Hand sits on g.
 	var gcfg: Dictionary = (cfg.get("grip", {}) as Dictionary).get(wn, (cfg.get("grip", {}) as Dictionary).get(str(wmap.get(wn, "")).get_basename(), {}))
 	var hand := Vector3(float(hv[0]), float(hv[1]), float(hv[2]))
 	var off: Array = ((cfg.get("grip_body", {}) as Dictionary).get(stem, {}) as Dictionary).get(wn, gcfg.get("off", [0, 0, 0]))
