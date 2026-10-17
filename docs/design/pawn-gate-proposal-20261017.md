@@ -1,6 +1,30 @@
-# 棋子 §7 门槛提案：放宽到 Path C 现状 vs 守住原门槛（2026-10-17）
+# 棋子 §7 门槛：定稿方案 A——放宽到 Path C 精致款现状（2026-10-17）
 
-> 只是提案，不改任何资源、代码和门禁。等用户拍板后，再另开 PR 改 `pawn-redesign-opus.md` §7.3/§7.4 和 `tools/ci/pathc_ship_gate.py`。
+> **状态：已定稿。** 用户于 2026-10-17 选择 **方案 A**（放宽到 Path C 现状），不走方案 B（守住 7k / 0 贴图）。
+>
+> 定稿数值（已写入 `pawn-redesign-opus.md` §3.7、§7.3、§7.4、§8，并由门禁执行）：
+>
+> | 项 | 定稿（方案 A） | 原门槛 |
+> |---|---|---|
+> | 每件三角 | ≤ 15k（`pathc_ship`、`pathc_weapons` 每个 GLB） | ≤ 7k |
+> | 单件大小 | ≤ 1.0MB | — |
+> | 材质 | 1 个 | 1 个 |
+> | 贴图 | ≤ 1 张 albedo，边长 ≤ 512，JPG 或 WebP，嵌在 GLB 里 | 0 张 |
+> | draw call | 每人 ≤ 2（身体 + 武器），CI 测不出，发版前实机核对 | 1 个 |
+> | 棋子资源总量 | `pathc_ship` + `pathc_weapons` ≤ 45MB（现状约 8.6MB） | 增量 ≤ 3MB |
+> | 性能 | §7.3 实机帧率门槛不变 | 同 |
+>
+> 门禁：`tools/ci/pathc_ship_gate.py` 按上表逐件检查，并改成只扫 git 跟踪文件（顺带修审阅 P2-2）；`project/tests/suites/battle/board_figure_check.gd` 的模块化棋子上限同步为 15k 三角、≤ 1 张贴图。
+> 铺满 32 职时 APK 约再涨 30MB，届时在铺件的 PR 里同步调 `tools/ci/ratchet.json` 的 `export_base_budget_bytes`。
+> 45MB 总预算沿用本提案 §4 的建议值；用户若要另定，只改 `PAWN_TOTAL_MAX` 和本表。
+>
+> 以下保留原提案正文，作为决策依据。
+
+---
+
+## 原提案：放宽到 Path C 现状 vs 守住原门槛
+
+> （原提案时）只是提案，不改资源、代码和门禁。用户拍板后，本 PR 一并改了 `pawn-redesign-opus.md` §7.3/§7.4 和 `tools/ci/pathc_ship_gate.py`。
 > 来源：2026-10-17 全量审阅 P1-5（`.multiagent/runs/review-20261017/REPORT.md`）。
 
 ## 1. 现状与原门槛的差距

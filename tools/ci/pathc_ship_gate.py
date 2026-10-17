@@ -7,8 +7,10 @@ Fails when:
     path inside project/ means someone copied a master in: pathc_native / hunyuan_noreduce /
     *_texture_pbr_* / any GLB whose sha256 is listed in PATHC_MASTERS_MANIFEST.json);
   * a docs/art/review GLB is tracked by git (masters live in external storage);
-  * pathc_ship pieces break budget: key cast <= 15k tris & <= 1.0 MB, others <= 12k & <= 0.6 MB,
-    1 material, albedo <= 512, dir total <= 12 MB.
+  * pawn §7 option A budget (user chose A on 2026-10-17, docs/design/pawn-redesign-opus.md §7.3/§7.4):
+    every pathc_ship / pathc_weapons GLB <= 15k tris, <= 1.0 MB, 1 material, <= 1 texture,
+    texture edge <= 512, JPG or WebP; pathc_ship + pathc_weapons total <= 45 MB.
+Only git-tracked files are scanned (review P2-2); falls back to a directory walk without git.
 """
 from __future__ import annotations
 import hashlib, json, struct, subprocess, sys
@@ -21,7 +23,13 @@ MANIFEST = ROOT / "docs" / "art" / "review" / "PATHC_MASTERS_MANIFEST.json"
 MB = 1024 * 1024
 FILE_MAX = 5 * MB
 TRIS_MAX = 100_000
-KEY_CAST = {"cast_leader", "hunter_m", "hunter_f", "bandit_chief"}
+WEAPONS = ASSETS / "models" / "board" / "pathc_weapons"
+# §7 option A (2026-10-17): relaxed to the Path C refined look the user approved.
+PIECE_TRIS_MAX = 15_000
+PIECE_BYTES_MAX = 1.0 * MB
+PIECE_TEXTURES_MAX = 1
+TEXTURE_EDGE_MAX = 512
+PAWN_TOTAL_MAX = 45 * MB
 LOOK_MARKERS = ("pathc_native", "hunyuan_noreduce", "_texture_pbr_", "docs/art/review")
 
 
@@ -60,12 +68,46 @@ def png_jpg_size(b: bytes) -> tuple[int, int]:
     return 0, 0
 
 
+_ASSET_FILES: list[Path] | None = None
+
+
+def asset_files() -> list[Path]:
+    global _ASSET_FILES
+    if _ASSET_FILES is None:
+        _ASSET_FILES = _list_asset_files()
+    return _ASSET_FILES
+
+
+def _list_asset_files() -> list[Path]:
+    try:
+        out = subprocess.run(["git", "ls-files", "-z", "project/assets"], cwd=ROOT, capture_output=True, check=True).stdout
+        files = [ROOT / x for x in out.decode("utf-8").split("\0") if x]
+        if files:
+            return files
+    except (OSError, subprocess.CalledProcessError):
+        pass
+    return list(ASSETS.rglob("*"))
+
+
+def tracked_set() -> set[Path]:
+    return {f.resolve() for f in asset_files()}
+
+
+def pawn_glbs() -> list[Path]:
+    tracked = tracked_set()
+    out: list[Path] = []
+    for d in (SHIP, WEAPONS):
+        if d.is_dir():
+            out += [f for f in sorted(d.glob("*.glb")) if f.resolve() in tracked]
+    return out
+
+
 def main() -> int:
     errs: list[str] = []
     look_hashes = set()
     if MANIFEST.is_file():
         look_hashes = {m["sha256"] for m in json.loads(MANIFEST.read_text(encoding="utf-8")).get("masters", [])}
-    for f in ASSETS.rglob("*"):
+    for f in asset_files():
         if not f.is_file() or f.suffix == ".import":
             continue
         rel = f.relative_to(ROOT).as_posix()
@@ -88,33 +130,42 @@ def main() -> int:
     except (OSError, subprocess.CalledProcessError):
         pass
     total = 0
-    if SHIP.is_dir():
-        for f in sorted(SHIP.glob("*.glb")):
-            sz = f.stat().st_size
-            total += sz
-            info = glb_info(f)
-            key = f.stem in KEY_CAST
-            tmax, smax = (15_000, 1.0 * MB) if key else (12_000, 0.6 * MB)
-            if info["tris"] > tmax:
-                errs.append(f"pathc_ship {f.name}: {info['tris']} tris > {tmax}")
-            if sz > smax:
-                errs.append(f"pathc_ship {f.name}: {sz} bytes > {int(smax)}")
-            if info["materials"] != 1:
-                errs.append(f"pathc_ship {f.name}: {info['materials']} materials (want 1)")
-            js, data = info["json"], info["data"]
+    tracked = tracked_set()
+    for d in (SHIP, WEAPONS):
+        if d.is_dir():
+            total += sum(f.stat().st_size for f in d.iterdir() if f.is_file() and f.suffix != ".import" and f.resolve() in tracked)
+    for f in pawn_glbs():
+        sz = f.stat().st_size
+        info = glb_info(f)
+        name = f"{f.parent.name}/{f.name}"
+        if info["tris"] > PIECE_TRIS_MAX:
+            errs.append(f"{name}: {info['tris']} tris > {PIECE_TRIS_MAX}")
+        if sz > PIECE_BYTES_MAX:
+            errs.append(f"{name}: {sz} bytes > {int(PIECE_BYTES_MAX)}")
+        if info["materials"] != 1:
+            errs.append(f"{name}: {info['materials']} materials (want 1)")
+        imgs = info.get("images", [])
+        if len(imgs) > PIECE_TEXTURES_MAX:
+            errs.append(f"{name}: {len(imgs)} textures > {PIECE_TEXTURES_MAX}")
+        js, data = info.get("json", {}), info.get("data", b"")
+        if data:
             n = struct.unpack_from("<I", data, 12)[0]
             bin_off = 20 + n + 8
-            for im in js.get("images", []):
+            for im in imgs:
+                if "bufferView" not in im:
+                    errs.append(f"{name}: external texture uri (embed it)")
+                    continue
                 bv = js["bufferViews"][im["bufferView"]]
                 b = data[bin_off + bv.get("byteOffset", 0): bin_off + bv.get("byteOffset", 0) + bv["byteLength"]]
                 w, h = png_jpg_size(b)
-                if max(w, h) > 512:
-                    errs.append(f"pathc_ship {f.name}: texture {w}x{h} > 512")
+                if max(w, h) > TEXTURE_EDGE_MAX:
+                    errs.append(f"{name}: texture {w}x{h} > {TEXTURE_EDGE_MAX}")
                 if im.get("mimeType") not in ("image/jpeg", "image/webp"):
-                    errs.append(f"pathc_ship {f.name}: texture not compressed ({im.get('mimeType')})")
-            print(f"PATHC SHIP {f.name} tris={info['tris']} bytes={sz}")
-        if total > 12 * MB:
-            errs.append(f"pathc_ship total {total} > 12MB")
+                    errs.append(f"{name}: texture not compressed ({im.get('mimeType')})")
+        print(f"PATHC SHIP {name} tris={info['tris']} bytes={sz} textures={len(imgs)}")
+    print(f"PATHC PAWN TOTAL {total} bytes (budget {PAWN_TOTAL_MAX})")
+    if total > PAWN_TOTAL_MAX:
+        errs.append(f"pathc_ship + pathc_weapons total {total} > {PAWN_TOTAL_MAX}")
     for e in errs:
         print("PATHC SHIP GATE FAIL", e)
     if errs:

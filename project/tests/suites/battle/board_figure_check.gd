@@ -1,6 +1,10 @@
 extends Node
 ## Board figure P1: kit mapping, palette guards, assemble smoke (no farm_cast formal path).
 
+## pawn-redesign-opus.md §7.3, option A (2026-10-17).
+const TRIS_MAX := 15000
+const TEXTURES_MAX := 1
+
 func _ready() -> void:
 	await get_tree().process_frame
 	var err := _run()
@@ -124,12 +128,13 @@ func _check_build() -> String:
 		fig.free()
 		return "missing AnimationPlayer clips"
 	var spec: Dictionary = CKBoardFigure.spec_for(leader, "player")
-	if int(spec.get("tris_est", 99999)) > 7000:
+	# §7 option A (user, 2026-10-17): per-figure <= 15k tris, <= 1 texture.
+	if int(spec.get("tris_est", 99999)) > TRIS_MAX:
 		fig.free()
 		return "tris budget %s" % spec.get("tris_est")
-	if int(spec.get("textures", 1)) != 0:
+	if int(spec.get("textures", 99)) > TEXTURES_MAX:
 		fig.free()
-		return "textures must be 0"
+		return "textures %s > %d" % [spec.get("textures"), TEXTURES_MAX]
 	if str(spec.get("appearance_hash", "")) == "":
 		fig.free()
 		return "appearance_hash empty"
@@ -140,7 +145,7 @@ func _check_build() -> String:
 			fig.free()
 			return "enemy build null %s" % tmpl
 		var es: Dictionary = CKBoardFigure.spec_for(leader, "enemy", tmpl)
-		if int(es.get("tris_est", 99999)) > 7000:
+		if int(es.get("tris_est", 99999)) > TRIS_MAX:
 			ef.free()
 			fig.free()
 			return "enemy tris %s" % tmpl
