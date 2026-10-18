@@ -201,6 +201,8 @@ sui_year_outcome,这一年：%s,This year: %s
 life_ack,知道了,Understood
 life_outcome_prefix,结果：%s,Outcome: %s
 life_auto_log,%s · %s：%s,%s · %s: %s
+birth_multi,%s 一胎诞下 %d 子：%s,%s gave birth to %d at once: %s
+conceived_again,%s 又有了身孕,%s is with child again
 lineage_widowed,%s 丧偶（%s 已故），可再议亲。,%s is widowed (%s has died) and may marry again.
 lineage_roster_heir,%s 身后没有成年直系后裔；团员 %s 接旗，并入本族。,%s left no adult direct heir. Company member %s takes the banner and joins the house.
 lineage_regency_begin,%s 身后团中已无成年人；最年长的孩子 %s（%d 岁）接旗，族老代管旗务至 %d 岁。,%s left no adult in the company. The eldest child %s (age %d) takes the banner; the house elders hold it in regency until age %d.

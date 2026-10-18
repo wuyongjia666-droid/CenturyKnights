@@ -5,6 +5,10 @@ extends RefCounted
 ## as a successful contract (road events off) so a hundred years stays inside CI.
 
 const CASTLE_QUESTS := ["q_escort", "q_herb", "q_bridge", "q_bandit"]
+## Cadet weddings (see _try_marry_cadets).
+const CADET_WEDDINGS_PER_YEAR := 2
+const CADET_RESERVE := 160
+const CADET_MAX_AGE := 40
 
 static func run(years: int = 100, seed_i: int = 91) -> Dictionary:
 	var report := {
@@ -17,6 +21,10 @@ static func run(years: int = 100, seed_i: int = 91) -> Dictionary:
 	}
 	GameState.rng.seed = seed_i
 	World.rng.seed = seed_i + 17
+	# new_game keeps CharacterFactory's id counter, and ids feed hash salts (skirmish foes, side
+	# rolls, portraits). Without this a seed's century depended on the runs before it in the same
+	# process (seed 1113: 1467 silver alone, 7 after seeds 1107-1112).
+	CharacterFactory._id_seq = 0
 	# Review 2026-10-17 P0-2: the century runs the player's rules, road events and rival companies on.
 	World.events_enabled = true
 	World.rivals_enabled = true
@@ -35,20 +43,26 @@ static func run(years: int = 100, seed_i: int = 91) -> Dictionary:
 	var last_year := -1
 	while _abs() < end_abs and guard < years * 14:
 		guard += 1
-		var advanced := false
 		if Calendar.month == 1 and Calendar.year != last_year:
 			last_year = Calendar.year
 			_january(report, Calendar.year)
 			_sample(report)
 		if Calendar.year == 1 and Calendar.month >= Calendar.MUSTER_MONTH_Y1 and not report.has("silver_y1_after_muster"):
 			_sample_year_one(report)
+		var b := GameState.silver
 		if Calendar.month == 5:
 			_try_marry()
-		if Calendar.month == 6:
-			advanced = _try_child()
+			b = _book(report, "wed_leader", b)
+			_try_marry_cadets(report)
+			b = _book(report, "wed_cadets", b)
 		_buy_food()
-		if not advanced:
-			Calendar.advance(1)
+		b = _book(report, "food", b)
+		var t0 := Time.get_ticks_usec()
+		Calendar.advance(1)
+		_book(report, "month", b)
+		report["tick_usec_max"] = maxi(int(report.get("tick_usec_max", 0)), Time.get_ticks_usec() - t0)
+		report["chars_peak"] = maxi(int(report.get("chars_peak", 0)), GameState.characters.size())
+		report["alive_peak"] = maxi(int(report.get("alive_peak", 0)), _alive_count())
 	if _abs() < end_abs:
 		report["stuck"] = "calendar stopped at %s" % Calendar.label()
 	report["spring_purse"] = int(GameState.house_mods.get("spring_purse", 0))
@@ -64,6 +78,8 @@ static func run(years: int = 100, seed_i: int = 91) -> Dictionary:
 		if c.parent_ids.size() > 0:
 			births += 1
 	report["births"] = births
+	report["family_sizes"] = _family_sizes()
+	report["multiples"] = _multiples()
 	report["leader_alive"] = leader != null and leader.alive and not leader.retired
 	report["leader_name"] = leader.name if leader else ""
 	var wage := 0
@@ -84,30 +100,51 @@ static func run(years: int = 100, seed_i: int = 91) -> Dictionary:
 	CKLifeEvents.suppress_auto = false
 	return report
 
+## Per-decade silver ledger by step (report["ledger"]["d<decade>"][step]), for curve forensics.
+static func _book(report: Dictionary, step: String, before: int) -> int:
+	var led: Dictionary = report.get("ledger", {})
+	var key := "d%d" % (Calendar.year / 10)
+	var row: Dictionary = led.get(key, {})
+	row[step] = int(row.get(step, 0)) + GameState.silver - before
+	led[key] = row
+	report["ledger"] = led
+	return GameState.silver
+
 static func _abs() -> int:
 	return Calendar.year * 12 + Calendar.month
 
 static func _january(report: Dictionary, year: int) -> void:
+	var b := GameState.silver
 	_enlist_ready()
 	_abdicate(report)
 	_promote(report)
+	b = _book(report, "promote", b)
 	_castle_quests(report)
+	b = _book(report, "quests", b)
 	_skirmish(report, year)
+	b = _book(report, "skirmish", b)
 	_commission(report, year)
+	b = _book(report, "commission", b)
 	if year % 4 == 0:
 		_smith(report)
 	if year % 5 == 0 and GameState.silver > 80:
 		GameState.verify_bloodlines_at_shrine()
 	if year == 40 or (year > 40 and report.get("lamp", {}).is_empty()):
 		_lamp(report)
+	b = _book(report, "smith_shrine_lamp", b)
 	_upgrade_castle()
+	b = _book(report, "castle", b)
 	if GameState.roster().size() < 5 and year % 6 == 0:
 		_recruit(report)
+	_book(report, "recruit", b)
 	# Calendar's January tick already paid the era dues (real month settlement); just book them.
 	var press = GameState.house_mods.get("epoch_dues", {})
 	if typeof(press) == TYPE_DICTIONARY and int(press.get("year", -1)) == year:
 		var paid: int = int(press.get("silver", 0))
 		if paid > 0:
+			var info: Dictionary = report.get("ledger", {}).get("d%d" % (year / 10), {})
+			info["dues_in_month"] = int(info.get("dues_in_month", 0)) - paid
+			info["wage_jan_sum"] = int(info.get("wage_jan_sum", 0)) + CKEconomyState.monthly_wage(GameState)
 			var phase := str(press.get("phase", "early"))
 			report["pressure_" + phase] = int(report.get("pressure_" + phase, 0)) + paid
 
@@ -138,6 +175,10 @@ static func _sample(report: Dictionary) -> void:
 			report["y1_tight_jan"] = true
 	if GameState.food <= 0:
 		report["years_starved"] = int(report["years_starved"]) + 1
+	if leader != null:
+		var rank := CKCharacter.RANK_ORDER.find(CKCourt.current_title(leader))
+		if rank > CKCharacter.RANK_ORDER.find(str(report.get("title_peak", "knight"))):
+			report["title_peak"] = CKCourt.current_title(leader)
 	if int(report["samples"].size()) < 12 or Calendar.year % 10 == 0:
 		report["samples"].append({
 			"year": Calendar.year, "silver": silver, "food": GameState.food,
@@ -195,25 +236,48 @@ static func _try_marry() -> void:
 		return
 	Lineage.marry(leader, cand, 40, rites, true)
 
-static func _try_child() -> bool:
+## Cadet weddings: the leader's grown children and siblings marry too, so the century counts
+## their children. Nephews and cousins stay unwed in the script (each generation would otherwise
+## multiply the house: every descendant wed gave 120-150 births and 150 alive by year 100).
+## At most CADET_WEDDINGS_PER_YEAR a year, and only while the purse keeps CADET_RESERVE after the
+## bride price and rites (a player does not wed the treasury dry).
+
+static func _try_marry_cadets(report: Dictionary) -> void:
 	var leader := GameState.get_leader()
-	if leader == null or leader.spouse_id == "":
+	var ids: Array = GameState.characters.keys()
+	ids.sort()
+	var wed := 0
+	for id in ids:
+		if wed >= CADET_WEDDINGS_PER_YEAR:
+			return
+		var c: CKCharacter = GameState.characters[id]
+		if c == leader or not c.alive or c.retired or not _near_kin(leader, c):
+			continue
+		if c.age < Calendar.ADULT_AGE or c.age > CADET_MAX_AGE or Lineage.has_living_spouse(c):
+			continue
+		var cand := CharacterFactory.make_marriage_candidate(GameState.rng, "knight", "", c)
+		cand.rank = "knight"
+		if not Lineage.can_propose(c, cand).get("ok", false):
+			continue
+		var rites: Array = []
+		var cost := 40
+		for r in CKCourt.required_rites(c, cand):
+			rites.append(str(r.get("id", "")))
+			cost += int(r.get("cost", 0))
+		if GameState.silver < cost + CADET_RESERVE:
+			continue
+		if bool(Lineage.marry(c, cand, 40, rites, true).get("ok", false)):
+			wed += 1
+			report["cadet_weddings"] = int(report.get("cadet_weddings", 0)) + 1
+
+static func _near_kin(leader: CKCharacter, c: CKCharacter) -> bool:
+	if leader == null or c.parent_ids.is_empty():
 		return false
-	var spouse: CKCharacter = GameState.characters.get(leader.spouse_id)
-	if spouse == null or not spouse.alive:
-		return false
-	var mother: CKCharacter = spouse if spouse.gender == "f" else (leader if leader.gender == "f" else spouse)
-	if mother.pregnant_months >= 0:
-		return false
-	var kids := 0
-	for c in GameState.characters.values():
-		if leader.id in c.parent_ids and c.alive:
-			kids += 1
-	if kids >= 3 or Calendar.year % 4 != 0:
-		return false
-	# Same fertility and term as a player wedding (fertility-v92 handoff). The player has no
-	# later-conception action yet; the script keeps this so the century still has heirs.
-	CKFamilyState.begin_pregnancy(GameState, mother)
+	if leader.id in c.parent_ids:
+		return true
+	for pid in c.parent_ids:
+		if str(pid) != "" and str(pid) in leader.parent_ids:
+			return true
 	return false
 
 static func _enlist_ready() -> void:
@@ -294,8 +358,18 @@ static func _skirmish(report: Dictionary, year: int) -> void:
 		GameState.grant_battle_enemy_skills(foe, tmpl.ends_with("boss"), 2, "", tmpl)
 		GameState.reset_battle_skills([foe])
 		foes.append(foe)
+	# The banner leader and the heir in line take the field first (a player fields the captain and
+	# trains the heir). With wed siblings in the roster, insertion order alone left a young heir on
+	# the bench at level 1 for life. pick_heir is only read here; succession rules are untouched.
 	var party: Array = []
-	for c in GameState.roster():
+	var lead := GameState.get_leader()
+	var order: Array = GameState.roster()
+	var heir: CKCharacter = Lineage.pick_heir(lead, true) if lead != null else null
+	for front in [heir, lead]:
+		if front != null and front in order:
+			order.erase(front)
+			order.push_front(front)
+	for c in order:
 		CKBloodline.sync_signature_skills(c)
 		party.append(c)
 		if party.size() >= 3:
@@ -550,3 +624,26 @@ static func _royal_snapshot() -> Dictionary:
 		crises += int(house.get("crisis_total", 0))
 		recalls += int(house.get("recall_total", 0))
 	return {"alive": alive, "signed": signed, "crises": crises, "recalls": recalls}
+
+## Children per married mother (every woman who has been wed), for the multi-birth table.
+static func _family_sizes() -> Array:
+	var out: Array = []
+	for c in GameState.characters.values():
+		if str(c.gender) != "f" or str(c.blood_meta.get("marriage_phase", "")) == "":
+			continue
+		out.append({"id": c.id, "children": CKFamilyState.born_to(GameState, c), "alive": c.alive, "age": c.age})
+	return out
+
+## Same mother and same birth month counted as one litter.
+static func _multiples() -> Dictionary:
+	var litters := {}
+	for c in GameState.characters.values():
+		if c.parent_ids.size() < 2:
+			continue
+		var key := "%s@%s" % [str(c.parent_ids[1]), str(c.blood_meta.get("birth_ym", ""))]
+		litters[key] = int(litters.get(key, 0)) + 1
+	var out := {}
+	for k in litters.keys():
+		var n := int(litters[k])
+		out[str(n)] = int(out.get(str(n), 0)) + 1
+	return out
