@@ -1,0 +1,3655 @@
+{
+ "manifest": "tools/farm_queue/genome_bank_v92.json",
+ "manifest_buckets": 4200,
+ "method": "person-year weighted greedy cover (same stage+sex, overlap>=0.80) over 20 coverage seeds; 100% person-years at 456",
+ "order": [
+  {
+   "rank": 1,
+   "bucket_key": "young_adult_772c85ed347dc414",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "lt_glass",
+   "gain_person_years": 1785
+  },
+  {
+   "rank": 2,
+   "bucket_key": "young_adult_87646408ca8b2f63",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 1663
+  },
+  {
+   "rank": 3,
+   "bucket_key": "youth_772c85ed347dc414",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "lt_glass",
+   "gain_person_years": 1480
+  },
+  {
+   "rank": 4,
+   "bucket_key": "youth_87646408ca8b2f63",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 1439
+  },
+  {
+   "rank": 5,
+   "bucket_key": "middle_87646408ca8b2f63",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 1021
+  },
+  {
+   "rank": 6,
+   "bucket_key": "middle_772c85ed347dc414",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "lt_glass",
+   "gain_person_years": 1014
+  },
+  {
+   "rank": 7,
+   "bucket_key": "young_adult_99e35b2a7a23b9d5",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "sr_ford",
+   "gain_person_years": 582
+  },
+  {
+   "rank": 8,
+   "bucket_key": "young_adult_b9f456c29df0670d",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "ig_warden",
+   "gain_person_years": 573
+  },
+  {
+   "rank": 9,
+   "bucket_key": "youth_c1ba56a71fc82c8e",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "lt_tide",
+   "gain_person_years": 538
+  },
+  {
+   "rank": 10,
+   "bucket_key": "infant_772c85ed347dc414",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "lt_glass",
+   "gain_person_years": 484
+  },
+  {
+   "rank": 11,
+   "bucket_key": "elder_772c85ed347dc414",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "lt_glass",
+   "gain_person_years": 464
+  },
+  {
+   "rank": 12,
+   "bucket_key": "infant_87646408ca8b2f63",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 460
+  },
+  {
+   "rank": 13,
+   "bucket_key": "youth_d0d6c6de931b50ff",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 432
+  },
+  {
+   "rank": 14,
+   "bucket_key": "elder_b9f456c29df0670d",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "ig_warden",
+   "gain_person_years": 393
+  },
+  {
+   "rank": 15,
+   "bucket_key": "middle_b9f456c29df0670d",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "ig_warden",
+   "gain_person_years": 367
+  },
+  {
+   "rank": 16,
+   "bucket_key": "young_adult_8f8e2a5d6029c436",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "ember_noble",
+   "gain_person_years": 349
+  },
+  {
+   "rank": 17,
+   "bucket_key": "middle_08b1d4034d28c66a",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 348
+  },
+  {
+   "rank": 18,
+   "bucket_key": "youth_e81951b3056701ce",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "sm_reed",
+   "gain_person_years": 280
+  },
+  {
+   "rank": 19,
+   "bucket_key": "young_adult_0f1e3e6502ca1c70",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "sm_reed",
+   "gain_person_years": 268
+  },
+  {
+   "rank": 20,
+   "bucket_key": "youth_0f1e3e6502ca1c70",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "sm_reed",
+   "gain_person_years": 267
+  },
+  {
+   "rank": 21,
+   "bucket_key": "youth_8f8e2a5d6029c436",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "ember_noble",
+   "gain_person_years": 244
+  },
+  {
+   "rank": 22,
+   "bucket_key": "middle_8f8e2a5d6029c436",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "ember_noble",
+   "gain_person_years": 234
+  },
+  {
+   "rank": 23,
+   "bucket_key": "young_adult_08b1d4034d28c66a",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 232
+  },
+  {
+   "rank": 24,
+   "bucket_key": "young_adult_e4c2c96814edf37f",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "ig_warden",
+   "gain_person_years": 228
+  },
+  {
+   "rank": 25,
+   "bucket_key": "elder_8f8e2a5d6029c436",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "ember_noble",
+   "gain_person_years": 221
+  },
+  {
+   "rank": 26,
+   "bucket_key": "middle_0f1e3e6502ca1c70",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "sm_reed",
+   "gain_person_years": 215
+  },
+  {
+   "rank": 27,
+   "bucket_key": "young_adult_00eab3195ac6648e",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 200
+  },
+  {
+   "rank": 28,
+   "bucket_key": "youth_e4c2c96814edf37f",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "ig_warden",
+   "gain_person_years": 187
+  },
+  {
+   "rank": 29,
+   "bucket_key": "middle_74f55615b4765e34",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "sm_ledger",
+   "gain_person_years": 187
+  },
+  {
+   "rank": 30,
+   "bucket_key": "young_adult_fe52a47d5911cf40",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 183
+  },
+  {
+   "rank": 31,
+   "bucket_key": "youth_331ab5585b9eddc5",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "sm_reed",
+   "gain_person_years": 182
+  },
+  {
+   "rank": 32,
+   "bucket_key": "infant_99e35b2a7a23b9d5",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "sr_ford",
+   "gain_person_years": 172
+  },
+  {
+   "rank": 33,
+   "bucket_key": "elder_08b1d4034d28c66a",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 171
+  },
+  {
+   "rank": 34,
+   "bucket_key": "young_adult_59f918c926ea5d8a",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "lt_glass",
+   "gain_person_years": 169
+  },
+  {
+   "rank": 35,
+   "bucket_key": "youth_00eab3195ac6648e",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 168
+  },
+  {
+   "rank": 36,
+   "bucket_key": "young_adult_f5440ad9db30a4a8",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "sm_reed",
+   "gain_person_years": 167
+  },
+  {
+   "rank": 37,
+   "bucket_key": "middle_00eab3195ac6648e",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 165
+  },
+  {
+   "rank": 38,
+   "bucket_key": "young_adult_9046a66f3012888e",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "lt_filament",
+   "gain_person_years": 158
+  },
+  {
+   "rank": 39,
+   "bucket_key": "middle_b975bcbd4f73f61a",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 158
+  },
+  {
+   "rank": 40,
+   "bucket_key": "middle_c1ba56a71fc82c8e",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "lt_tide",
+   "gain_person_years": 151
+  },
+  {
+   "rank": 41,
+   "bucket_key": "middle_fe52a47d5911cf40",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 139
+  },
+  {
+   "rank": 42,
+   "bucket_key": "young_adult_d223ad272c8b2e38",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 138
+  },
+  {
+   "rank": 43,
+   "bucket_key": "youth_1e9772198905ed66",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 137
+  },
+  {
+   "rank": 44,
+   "bucket_key": "infant_d0d6c6de931b50ff",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 136
+  },
+  {
+   "rank": 45,
+   "bucket_key": "elder_0f1e3e6502ca1c70",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "sm_reed",
+   "gain_person_years": 120
+  },
+  {
+   "rank": 46,
+   "bucket_key": "middle_59f918c926ea5d8a",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "lt_glass",
+   "gain_person_years": 119
+  },
+  {
+   "rank": 47,
+   "bucket_key": "youth_ba32da4ec35b4497",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 116
+  },
+  {
+   "rank": 48,
+   "bucket_key": "young_adult_41d62722cd159755",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 113
+  },
+  {
+   "rank": 49,
+   "bucket_key": "elder_41d62722cd159755",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 113
+  },
+  {
+   "rank": 50,
+   "bucket_key": "youth_41d62722cd159755",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 108
+  },
+  {
+   "rank": 51,
+   "bucket_key": "youth_59f918c926ea5d8a",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "lt_glass",
+   "gain_person_years": 103
+  },
+  {
+   "rank": 52,
+   "bucket_key": "young_adult_1e9772198905ed66",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 101
+  },
+  {
+   "rank": 53,
+   "bucket_key": "young_adult_b975bcbd4f73f61a",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 100
+  },
+  {
+   "rank": 54,
+   "bucket_key": "middle_ec53570fcfa4d0ae",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 100
+  },
+  {
+   "rank": 55,
+   "bucket_key": "middle_41d62722cd159755",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 86
+  },
+  {
+   "rank": 56,
+   "bucket_key": "infant_8f8e2a5d6029c436",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "ember_noble",
+   "gain_person_years": 86
+  },
+  {
+   "rank": 57,
+   "bucket_key": "young_adult_76cc0228b7ecac39",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "lt_tide",
+   "gain_person_years": 85
+  },
+  {
+   "rank": 58,
+   "bucket_key": "elder_b2507cec1c94bb87",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 85
+  },
+  {
+   "rank": 59,
+   "bucket_key": "elder_b975bcbd4f73f61a",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 84
+  },
+  {
+   "rank": 60,
+   "bucket_key": "middle_8b17f795e07a4af6",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "sm_reed",
+   "gain_person_years": 83
+  },
+  {
+   "rank": 61,
+   "bucket_key": "infant_d223ad272c8b2e38",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 82
+  },
+  {
+   "rank": 62,
+   "bucket_key": "young_adult_fc2d902fde930420",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 80
+  },
+  {
+   "rank": 63,
+   "bucket_key": "young_adult_ec53570fcfa4d0ae",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 80
+  },
+  {
+   "rank": 64,
+   "bucket_key": "young_adult_b0bd6ef49321aa25",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 80
+  },
+  {
+   "rank": 65,
+   "bucket_key": "young_adult_901520861e76b309",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 80
+  },
+  {
+   "rank": 66,
+   "bucket_key": "young_adult_8b17f795e07a4af6",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "sm_reed",
+   "gain_person_years": 80
+  },
+  {
+   "rank": 67,
+   "bucket_key": "middle_fc2d902fde930420",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 80
+  },
+  {
+   "rank": 68,
+   "bucket_key": "middle_b0bd6ef49321aa25",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 80
+  },
+  {
+   "rank": 69,
+   "bucket_key": "elder_b0bd6ef49321aa25",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 80
+  },
+  {
+   "rank": 70,
+   "bucket_key": "middle_4a53b5096890675c",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 78
+  },
+  {
+   "rank": 71,
+   "bucket_key": "infant_0f1e3e6502ca1c70",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "sm_reed",
+   "gain_person_years": 78
+  },
+  {
+   "rank": 72,
+   "bucket_key": "elder_ec53570fcfa4d0ae",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 77
+  },
+  {
+   "rank": 73,
+   "bucket_key": "youth_7dd53af980d75c26",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "sr_dipper",
+   "gain_person_years": 72
+  },
+  {
+   "rank": 74,
+   "bucket_key": "youth_d96d353b7c756f8e",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "ash_chart",
+   "gain_person_years": 68
+  },
+  {
+   "rank": 75,
+   "bucket_key": "young_adult_89247a04338887d5",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 67
+  },
+  {
+   "rank": 76,
+   "bucket_key": "elder_e2461c1e4e2f6933",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "sm_reed",
+   "gain_person_years": 67
+  },
+  {
+   "rank": 77,
+   "bucket_key": "elder_fe52a47d5911cf40",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 63
+  },
+  {
+   "rank": 78,
+   "bucket_key": "youth_fc2d902fde930420",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 60
+  },
+  {
+   "rank": 79,
+   "bucket_key": "youth_eddc15394889d662",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 60
+  },
+  {
+   "rank": 80,
+   "bucket_key": "youth_b975bcbd4f73f61a",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 60
+  },
+  {
+   "rank": 81,
+   "bucket_key": "young_adult_f9a9d31d43c39122",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 60
+  },
+  {
+   "rank": 82,
+   "bucket_key": "young_adult_cc738a88c8cfdecf",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 60
+  },
+  {
+   "rank": 83,
+   "bucket_key": "young_adult_b3c9171c83a96673",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 60
+  },
+  {
+   "rank": 84,
+   "bucket_key": "young_adult_721c339e23955aa9",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "sm_ledger",
+   "gain_person_years": 60
+  },
+  {
+   "rank": 85,
+   "bucket_key": "middle_d2606602592c0c2f",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 60
+  },
+  {
+   "rank": 86,
+   "bucket_key": "middle_721c339e23955aa9",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "sm_ledger",
+   "gain_person_years": 60
+  },
+  {
+   "rank": 87,
+   "bucket_key": "middle_6dc055f1029251b2",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 60
+  },
+  {
+   "rank": 88,
+   "bucket_key": "infant_331ab5585b9eddc5",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "sm_reed",
+   "gain_person_years": 60
+  },
+  {
+   "rank": 89,
+   "bucket_key": "young_adult_964fac7863afb21d",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "ember_noble",
+   "gain_person_years": 56
+  },
+  {
+   "rank": 90,
+   "bucket_key": "youth_8b17f795e07a4af6",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "sm_reed",
+   "gain_person_years": 55
+  },
+  {
+   "rank": 91,
+   "bucket_key": "youth_05e1e7164c06f91f",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "ember_noble",
+   "gain_person_years": 55
+  },
+  {
+   "rank": 92,
+   "bucket_key": "young_adult_780759c8ebb6f511",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "ash_chart",
+   "gain_person_years": 55
+  },
+  {
+   "rank": 93,
+   "bucket_key": "young_adult_91c9872004ae105f",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 53
+  },
+  {
+   "rank": 94,
+   "bucket_key": "youth_b9f456c29df0670d",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "ig_warden",
+   "gain_person_years": 51
+  },
+  {
+   "rank": 95,
+   "bucket_key": "middle_b3c9171c83a96673",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 50
+  },
+  {
+   "rank": 96,
+   "bucket_key": "elder_00eab3195ac6648e",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 49
+  },
+  {
+   "rank": 97,
+   "bucket_key": "youth_d6d1094a35cb5113",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "lt_filament",
+   "gain_person_years": 48
+  },
+  {
+   "rank": 98,
+   "bucket_key": "youth_1cae2aabbedfbb04",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "sm_ledger",
+   "gain_person_years": 48
+  },
+  {
+   "rank": 99,
+   "bucket_key": "infant_b9f456c29df0670d",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "ig_warden",
+   "gain_person_years": 48
+  },
+  {
+   "rank": 100,
+   "bucket_key": "infant_6345602c3b7cacf7",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 48
+  },
+  {
+   "rank": 101,
+   "bucket_key": "elder_d2606602592c0c2f",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 48
+  },
+  {
+   "rank": 102,
+   "bucket_key": "middle_ba32da4ec35b4497",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 47
+  },
+  {
+   "rank": 103,
+   "bucket_key": "youth_89247a04338887d5",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 46
+  },
+  {
+   "rank": 104,
+   "bucket_key": "youth_87682d4ee1085a33",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "qh_jade",
+   "gain_person_years": 45
+  },
+  {
+   "rank": 105,
+   "bucket_key": "young_adult_5be815ec9a57c0c1",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "qh_delta",
+   "gain_person_years": 45
+  },
+  {
+   "rank": 106,
+   "bucket_key": "middle_1e9772198905ed66",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 45
+  },
+  {
+   "rank": 107,
+   "bucket_key": "youth_964fac7863afb21d",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "ember_noble",
+   "gain_person_years": 44
+  },
+  {
+   "rank": 108,
+   "bucket_key": "young_adult_b6321fff860320f0",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "ash_chart",
+   "gain_person_years": 44
+  },
+  {
+   "rank": 109,
+   "bucket_key": "middle_1913dd7df4e140fe",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 44
+  },
+  {
+   "rank": 110,
+   "bucket_key": "elder_721c339e23955aa9",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "sm_ledger",
+   "gain_person_years": 43
+  },
+  {
+   "rank": 111,
+   "bucket_key": "elder_6dc055f1029251b2",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 43
+  },
+  {
+   "rank": 112,
+   "bucket_key": "middle_67f636a584679516",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 42
+  },
+  {
+   "rank": 113,
+   "bucket_key": "youth_a85ed749fb1ce8bc",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 41
+  },
+  {
+   "rank": 114,
+   "bucket_key": "young_adult_dd7d659d0a3fbf8e",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 40
+  },
+  {
+   "rank": 115,
+   "bucket_key": "young_adult_c8801b42a26e771f",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 40
+  },
+  {
+   "rank": 116,
+   "bucket_key": "young_adult_b2507cec1c94bb87",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 40
+  },
+  {
+   "rank": 117,
+   "bucket_key": "young_adult_909fdccfa30c44e4",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 40
+  },
+  {
+   "rank": 118,
+   "bucket_key": "young_adult_6f422bf0953598d3",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 40
+  },
+  {
+   "rank": 119,
+   "bucket_key": "young_adult_1913dd7df4e140fe",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 40
+  },
+  {
+   "rank": 120,
+   "bucket_key": "middle_b2507cec1c94bb87",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 40
+  },
+  {
+   "rank": 121,
+   "bucket_key": "middle_b2491b50890e1dc9",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 40
+  },
+  {
+   "rank": 122,
+   "bucket_key": "middle_901520861e76b309",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 39
+  },
+  {
+   "rank": 123,
+   "bucket_key": "youth_b836e1a67360fe55",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 38
+  },
+  {
+   "rank": 124,
+   "bucket_key": "infant_f5440ad9db30a4a8",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "sm_reed",
+   "gain_person_years": 38
+  },
+  {
+   "rank": 125,
+   "bucket_key": "youth_fb8fdcf3fb017cc0",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 37
+  },
+  {
+   "rank": 126,
+   "bucket_key": "youth_cc738a88c8cfdecf",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 37
+  },
+  {
+   "rank": 127,
+   "bucket_key": "youth_f9a9d31d43c39122",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 36
+  },
+  {
+   "rank": 128,
+   "bucket_key": "youth_6fbad3c7a73dacd8",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 36
+  },
+  {
+   "rank": 129,
+   "bucket_key": "middle_9046a66f3012888e",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "lt_filament",
+   "gain_person_years": 36
+  },
+  {
+   "rank": 130,
+   "bucket_key": "infant_8b17f795e07a4af6",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "sm_reed",
+   "gain_person_years": 36
+  },
+  {
+   "rank": 131,
+   "bucket_key": "infant_59f918c926ea5d8a",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "lt_glass",
+   "gain_person_years": 36
+  },
+  {
+   "rank": 132,
+   "bucket_key": "youth_d223ad272c8b2e38",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 35
+  },
+  {
+   "rank": 133,
+   "bucket_key": "youth_b3c9171c83a96673",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 35
+  },
+  {
+   "rank": 134,
+   "bucket_key": "elder_777dff2e3c2e96ff",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 35
+  },
+  {
+   "rank": 135,
+   "bucket_key": "middle_f382ec07aa6a3af8",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 34
+  },
+  {
+   "rank": 136,
+   "bucket_key": "middle_964fac7863afb21d",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "ember_noble",
+   "gain_person_years": 34
+  },
+  {
+   "rank": 137,
+   "bucket_key": "young_adult_291e52d9076ab00e",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 33
+  },
+  {
+   "rank": 138,
+   "bucket_key": "middle_928a4db81ee7f7d7",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 33
+  },
+  {
+   "rank": 139,
+   "bucket_key": "middle_5be815ec9a57c0c1",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "qh_delta",
+   "gain_person_years": 33
+  },
+  {
+   "rank": 140,
+   "bucket_key": "infant_00eab3195ac6648e",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 33
+  },
+  {
+   "rank": 141,
+   "bucket_key": "youth_1913dd7df4e140fe",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 32
+  },
+  {
+   "rank": 142,
+   "bucket_key": "young_adult_e4703b2d8f5c9af0",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 32
+  },
+  {
+   "rank": 143,
+   "bucket_key": "young_adult_c69b40d28e6249c9",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "lt_tide",
+   "gain_person_years": 32
+  },
+  {
+   "rank": 144,
+   "bucket_key": "elder_fc2d902fde930420",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 32
+  },
+  {
+   "rank": 145,
+   "bucket_key": "elder_b2491b50890e1dc9",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 32
+  },
+  {
+   "rank": 146,
+   "bucket_key": "elder_964fac7863afb21d",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "ember_noble",
+   "gain_person_years": 32
+  },
+  {
+   "rank": 147,
+   "bucket_key": "youth_7551229836585413",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "ig_warden",
+   "gain_person_years": 30
+  },
+  {
+   "rank": 148,
+   "bucket_key": "middle_6f422bf0953598d3",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 30
+  },
+  {
+   "rank": 149,
+   "bucket_key": "infant_39e8281a6df3109b",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "lt_filament",
+   "gain_person_years": 30
+  },
+  {
+   "rank": 150,
+   "bucket_key": "elder_67f636a584679516",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 30
+  },
+  {
+   "rank": 151,
+   "bucket_key": "youth_aa16e0b305b12698",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 29
+  },
+  {
+   "rank": 152,
+   "bucket_key": "youth_701f1f6f68d9b55e",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "lt_glass",
+   "gain_person_years": 29
+  },
+  {
+   "rank": 153,
+   "bucket_key": "middle_12549433f8688158",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "ig_warden",
+   "gain_person_years": 29
+  },
+  {
+   "rank": 154,
+   "bucket_key": "infant_e81951b3056701ce",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "sm_reed",
+   "gain_person_years": 27
+  },
+  {
+   "rank": 155,
+   "bucket_key": "elder_bbc543806823c4cf",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 27
+  },
+  {
+   "rank": 156,
+   "bucket_key": "young_adult_f049468899ca11ed",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "lt_filament",
+   "gain_person_years": 26
+  },
+  {
+   "rank": 157,
+   "bucket_key": "young_adult_1332de33ca3d346c",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "lt_tide",
+   "gain_person_years": 26
+  },
+  {
+   "rank": 158,
+   "bucket_key": "middle_e2461c1e4e2f6933",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "sm_reed",
+   "gain_person_years": 26
+  },
+  {
+   "rank": 159,
+   "bucket_key": "youth_5be815ec9a57c0c1",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "qh_delta",
+   "gain_person_years": 25
+  },
+  {
+   "rank": 160,
+   "bucket_key": "youth_3f54986b3149c0aa",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "ember_noble",
+   "gain_person_years": 25
+  },
+  {
+   "rank": 161,
+   "bucket_key": "youth_fa869d28890e84b3",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "sm_reed",
+   "gain_person_years": 24
+  },
+  {
+   "rank": 162,
+   "bucket_key": "youth_f049468899ca11ed",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "lt_filament",
+   "gain_person_years": 24
+  },
+  {
+   "rank": 163,
+   "bucket_key": "youth_ee1e8370516040a7",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "sr_dipper",
+   "gain_person_years": 24
+  },
+  {
+   "rank": 164,
+   "bucket_key": "youth_b6321fff860320f0",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "ash_chart",
+   "gain_person_years": 24
+  },
+  {
+   "rank": 165,
+   "bucket_key": "youth_b5b7ba58ca9be7d1",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "ash_chart",
+   "gain_person_years": 24
+  },
+  {
+   "rank": 166,
+   "bucket_key": "youth_b2491b50890e1dc9",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 24
+  },
+  {
+   "rank": 167,
+   "bucket_key": "youth_291e52d9076ab00e",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 24
+  },
+  {
+   "rank": 168,
+   "bucket_key": "youth_1332de33ca3d346c",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "lt_tide",
+   "gain_person_years": 24
+  },
+  {
+   "rank": 169,
+   "bucket_key": "young_adult_b5b7ba58ca9be7d1",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "ash_chart",
+   "gain_person_years": 24
+  },
+  {
+   "rank": 170,
+   "bucket_key": "infant_b836e1a67360fe55",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 24
+  },
+  {
+   "rank": 171,
+   "bucket_key": "youth_84780e2292a2a86b",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 23
+  },
+  {
+   "rank": 172,
+   "bucket_key": "middle_e7a88139eabf6ae6",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 22
+  },
+  {
+   "rank": 173,
+   "bucket_key": "youth_976e20ac1b4cfbf7",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "ember_noble",
+   "gain_person_years": 21
+  },
+  {
+   "rank": 174,
+   "bucket_key": "middle_cc738a88c8cfdecf",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 21
+  },
+  {
+   "rank": 175,
+   "bucket_key": "elder_b3c9171c83a96673",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 21
+  },
+  {
+   "rank": 176,
+   "bucket_key": "elder_701f1f6f68d9b55e",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "lt_glass",
+   "gain_person_years": 21
+  },
+  {
+   "rank": 177,
+   "bucket_key": "youth_1f3c117025389d55",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 178,
+   "bucket_key": "young_adult_ebfcdcff973b8d16",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 179,
+   "bucket_key": "young_adult_e7a88139eabf6ae6",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 180,
+   "bucket_key": "young_adult_e789aa040e36aab9",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "sm_reed",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 181,
+   "bucket_key": "young_adult_e2461c1e4e2f6933",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "sm_reed",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 182,
+   "bucket_key": "young_adult_dbcce85fe4e48dc2",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 183,
+   "bucket_key": "young_adult_d9531345bcb42ef4",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 184,
+   "bucket_key": "young_adult_d73bc0b2cae0c005",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 185,
+   "bucket_key": "young_adult_d1d25ab6701c552b",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "sr_dipper",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 186,
+   "bucket_key": "young_adult_d1c4b28fed56ba14",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "eo_kiln",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 187,
+   "bucket_key": "young_adult_cdc1ecd2a1fef46b",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 188,
+   "bucket_key": "young_adult_c88418e30ffd1078",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 189,
+   "bucket_key": "young_adult_c03d95bded1063ca",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 190,
+   "bucket_key": "young_adult_bbc543806823c4cf",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 191,
+   "bucket_key": "young_adult_ba32da4ec35b4497",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 192,
+   "bucket_key": "young_adult_ae34f1766e13ca09",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 193,
+   "bucket_key": "young_adult_a9ded86fc1d91b50",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 194,
+   "bucket_key": "young_adult_a85ed749fb1ce8bc",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 195,
+   "bucket_key": "young_adult_972a56f1a1bd40b2",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "ember_noble",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 196,
+   "bucket_key": "young_adult_96a89c58592b62e9",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 197,
+   "bucket_key": "young_adult_928a4db81ee7f7d7",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 198,
+   "bucket_key": "young_adult_870e6ab1dda18664",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "sm_ledger",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 199,
+   "bucket_key": "young_adult_86ee722fe3b4fa4c",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "fc_hall",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 200,
+   "bucket_key": "young_adult_84e8602f65d28214",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 201,
+   "bucket_key": "young_adult_7e02890f16682a4e",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 202,
+   "bucket_key": "young_adult_79cecf98d07e7509",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 203,
+   "bucket_key": "young_adult_76ac558b2c5cb0d8",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 204,
+   "bucket_key": "young_adult_72cdc1e24d1ab32d",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "sr_dipper",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 205,
+   "bucket_key": "young_adult_67f636a584679516",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 206,
+   "bucket_key": "young_adult_55ad71dff9c44c5c",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 207,
+   "bucket_key": "young_adult_542a38b72ece7de0",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 208,
+   "bucket_key": "young_adult_53e3e5c3542d6780",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 209,
+   "bucket_key": "young_adult_4a1635cd33c9b490",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 210,
+   "bucket_key": "young_adult_381f7e902b1ab433",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 211,
+   "bucket_key": "young_adult_30c3cf70acd7d469",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "ember_noble",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 212,
+   "bucket_key": "young_adult_2cff0757fee8a354",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "sm_ledger",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 213,
+   "bucket_key": "young_adult_12978ca2550fc323",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 214,
+   "bucket_key": "young_adult_01be118f73ed71dc",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 215,
+   "bucket_key": "middle_d9531345bcb42ef4",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 216,
+   "bucket_key": "middle_d73bc0b2cae0c005",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 217,
+   "bucket_key": "middle_d1d25ab6701c552b",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "sr_dipper",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 218,
+   "bucket_key": "middle_cdc1ecd2a1fef46b",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 219,
+   "bucket_key": "middle_c69b40d28e6249c9",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "lt_tide",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 220,
+   "bucket_key": "middle_bbc543806823c4cf",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 221,
+   "bucket_key": "middle_a85ed749fb1ce8bc",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 222,
+   "bucket_key": "middle_972a56f1a1bd40b2",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "ember_noble",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 223,
+   "bucket_key": "middle_96a89c58592b62e9",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 224,
+   "bucket_key": "middle_870e6ab1dda18664",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "sm_ledger",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 225,
+   "bucket_key": "middle_7e02890f16682a4e",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 226,
+   "bucket_key": "middle_79cecf98d07e7509",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 227,
+   "bucket_key": "middle_76ac558b2c5cb0d8",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 228,
+   "bucket_key": "middle_72cdc1e24d1ab32d",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "sr_dipper",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 229,
+   "bucket_key": "middle_55ad71dff9c44c5c",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 230,
+   "bucket_key": "middle_542a38b72ece7de0",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 231,
+   "bucket_key": "middle_4a1635cd33c9b490",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 232,
+   "bucket_key": "middle_381f7e902b1ab433",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 233,
+   "bucket_key": "middle_12978ca2550fc323",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 234,
+   "bucket_key": "middle_01be118f73ed71dc",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 235,
+   "bucket_key": "infant_e6dca25f480ecd4e",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 20
+  },
+  {
+   "rank": 236,
+   "bucket_key": "youth_96a89c58592b62e9",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 19
+  },
+  {
+   "rank": 237,
+   "bucket_key": "young_adult_976e20ac1b4cfbf7",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "ember_noble",
+   "gain_person_years": 19
+  },
+  {
+   "rank": 238,
+   "bucket_key": "youth_c69b40d28e6249c9",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "lt_tide",
+   "gain_person_years": 18
+  },
+  {
+   "rank": 239,
+   "bucket_key": "young_adult_f4abab7fbd8f5266",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 18
+  },
+  {
+   "rank": 240,
+   "bucket_key": "young_adult_b836e1a67360fe55",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 18
+  },
+  {
+   "rank": 241,
+   "bucket_key": "middle_2cff0757fee8a354",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "sm_ledger",
+   "gain_person_years": 18
+  },
+  {
+   "rank": 242,
+   "bucket_key": "infant_fc2d902fde930420",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 17
+  },
+  {
+   "rank": 243,
+   "bucket_key": "infant_89247a04338887d5",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 17
+  },
+  {
+   "rank": 244,
+   "bucket_key": "young_adult_d08a36d0e360f1cd",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "sz_ferry",
+   "gain_person_years": 16
+  },
+  {
+   "rank": 245,
+   "bucket_key": "middle_a9ded86fc1d91b50",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 16
+  },
+  {
+   "rank": 246,
+   "bucket_key": "middle_a00e84cfdf01e062",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "qh_delta",
+   "gain_person_years": 16
+  },
+  {
+   "rank": 247,
+   "bucket_key": "middle_91c9872004ae105f",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 16
+  },
+  {
+   "rank": 248,
+   "bucket_key": "elder_fb56122ab55e4293",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 16
+  },
+  {
+   "rank": 249,
+   "bucket_key": "elder_f116d9890d1d6f50",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 16
+  },
+  {
+   "rank": 250,
+   "bucket_key": "elder_dd7d659d0a3fbf8e",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 16
+  },
+  {
+   "rank": 251,
+   "bucket_key": "elder_d9531345bcb42ef4",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 16
+  },
+  {
+   "rank": 252,
+   "bucket_key": "elder_d73bc0b2cae0c005",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 16
+  },
+  {
+   "rank": 253,
+   "bucket_key": "elder_cc738a88c8cfdecf",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 16
+  },
+  {
+   "rank": 254,
+   "bucket_key": "elder_96a89c58592b62e9",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 16
+  },
+  {
+   "rank": 255,
+   "bucket_key": "elder_870e6ab1dda18664",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "sm_ledger",
+   "gain_person_years": 16
+  },
+  {
+   "rank": 256,
+   "bucket_key": "elder_7e02890f16682a4e",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 16
+  },
+  {
+   "rank": 257,
+   "bucket_key": "elder_79cecf98d07e7509",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 16
+  },
+  {
+   "rank": 258,
+   "bucket_key": "elder_12978ca2550fc323",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 16
+  },
+  {
+   "rank": 259,
+   "bucket_key": "middle_e6dca25f480ecd4e",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 15
+  },
+  {
+   "rank": 260,
+   "bucket_key": "middle_c88418e30ffd1078",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 15
+  },
+  {
+   "rank": 261,
+   "bucket_key": "infant_eddc15394889d662",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 15
+  },
+  {
+   "rank": 262,
+   "bucket_key": "infant_db0e94c1516b9764",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 15
+  },
+  {
+   "rank": 263,
+   "bucket_key": "infant_05e1e7164c06f91f",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "ember_noble",
+   "gain_person_years": 15
+  },
+  {
+   "rank": 264,
+   "bucket_key": "elder_d1d25ab6701c552b",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "sr_dipper",
+   "gain_person_years": 15
+  },
+  {
+   "rank": 265,
+   "bucket_key": "youth_1d4e18ee72236e9b",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "sz_firefly",
+   "gain_person_years": 14
+  },
+  {
+   "rank": 266,
+   "bucket_key": "elder_542a38b72ece7de0",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 14
+  },
+  {
+   "rank": 267,
+   "bucket_key": "youth_c88418e30ffd1078",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 13
+  },
+  {
+   "rank": 268,
+   "bucket_key": "youth_a598ee0ce04fe6f7",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "ig_warden",
+   "gain_person_years": 13
+  },
+  {
+   "rank": 269,
+   "bucket_key": "youth_928a4db81ee7f7d7",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 13
+  },
+  {
+   "rank": 270,
+   "bucket_key": "youth_109d635e786e49a1",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 13
+  },
+  {
+   "rank": 271,
+   "bucket_key": "young_adult_fcd81e8d9af4b056",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 13
+  },
+  {
+   "rank": 272,
+   "bucket_key": "young_adult_b1968fab4cbc5a7c",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "sr_dipper",
+   "gain_person_years": 13
+  },
+  {
+   "rank": 273,
+   "bucket_key": "youth_fe52a47d5911cf40",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 274,
+   "bucket_key": "youth_f4abab7fbd8f5266",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 275,
+   "bucket_key": "youth_ebfcdcff973b8d16",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 276,
+   "bucket_key": "youth_e7a88139eabf6ae6",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 277,
+   "bucket_key": "youth_dd1dc21e06f722f7",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "sm_reed",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 278,
+   "bucket_key": "youth_d9531345bcb42ef4",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 279,
+   "bucket_key": "youth_d73bc0b2cae0c005",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 280,
+   "bucket_key": "youth_d1d25ab6701c552b",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "sr_dipper",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 281,
+   "bucket_key": "youth_d08a36d0e360f1cd",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "sz_ferry",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 282,
+   "bucket_key": "youth_cdc1ecd2a1fef46b",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 283,
+   "bucket_key": "youth_cd24190dee6ab034",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 284,
+   "bucket_key": "youth_c03d95bded1063ca",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 285,
+   "bucket_key": "youth_bbc543806823c4cf",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 286,
+   "bucket_key": "youth_b6f54b15ceee50dc",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 287,
+   "bucket_key": "youth_b60cd1ad71b08bd4",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "ig_forge",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 288,
+   "bucket_key": "youth_b1968fab4cbc5a7c",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "sr_dipper",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 289,
+   "bucket_key": "youth_ae34f1766e13ca09",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 290,
+   "bucket_key": "youth_a9ded86fc1d91b50",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 291,
+   "bucket_key": "youth_9b386ec145fe1754",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "ember_noble",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 292,
+   "bucket_key": "youth_98295e88186b9351",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 293,
+   "bucket_key": "youth_972a56f1a1bd40b2",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "ember_noble",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 294,
+   "bucket_key": "youth_870e6ab1dda18664",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "sm_ledger",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 295,
+   "bucket_key": "youth_86ee722fe3b4fa4c",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "fc_hall",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 296,
+   "bucket_key": "youth_7e02890f16682a4e",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 297,
+   "bucket_key": "youth_79cecf98d07e7509",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 298,
+   "bucket_key": "youth_787e139e93ee34c7",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "river_ward",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 299,
+   "bucket_key": "youth_76ac558b2c5cb0d8",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 300,
+   "bucket_key": "youth_72cdc1e24d1ab32d",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "sr_dipper",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 301,
+   "bucket_key": "youth_67f636a584679516",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 302,
+   "bucket_key": "youth_55ad71dff9c44c5c",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 303,
+   "bucket_key": "youth_542a38b72ece7de0",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 304,
+   "bucket_key": "youth_53e3e5c3542d6780",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 305,
+   "bucket_key": "youth_4a1635cd33c9b490",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 306,
+   "bucket_key": "youth_381f7e902b1ab433",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 307,
+   "bucket_key": "youth_30c3cf70acd7d469",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "ember_noble",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 308,
+   "bucket_key": "youth_2cff0757fee8a354",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "sm_ledger",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 309,
+   "bucket_key": "youth_2aefe065e38d2ad2",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "lt_glass",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 310,
+   "bucket_key": "youth_12978ca2550fc323",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 311,
+   "bucket_key": "youth_053187a11fcfcd90",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 312,
+   "bucket_key": "youth_047b30512721a5b6",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 313,
+   "bucket_key": "youth_01be118f73ed71dc",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 314,
+   "bucket_key": "infant_fe52a47d5911cf40",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 315,
+   "bucket_key": "infant_f60263dee5952f8d",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 316,
+   "bucket_key": "infant_bf60b2fe42c6a6b7",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 317,
+   "bucket_key": "infant_b6321fff860320f0",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "ash_chart",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 318,
+   "bucket_key": "infant_b0bd6ef49321aa25",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 319,
+   "bucket_key": "infant_84780e2292a2a86b",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 320,
+   "bucket_key": "infant_7e78bbfbc881e6ae",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "ig_warden",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 321,
+   "bucket_key": "infant_77463f5881513e0b",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "sm_ledger",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 322,
+   "bucket_key": "infant_67f636a584679516",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 323,
+   "bucket_key": "infant_5be815ec9a57c0c1",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "qh_delta",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 324,
+   "bucket_key": "infant_1e9772198905ed66",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 325,
+   "bucket_key": "elder_e7a88139eabf6ae6",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 326,
+   "bucket_key": "elder_76ac558b2c5cb0d8",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 12
+  },
+  {
+   "rank": 327,
+   "bucket_key": "young_adult_acd9d4cb4ce7b612",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "lt_tide",
+   "gain_person_years": 11
+  },
+  {
+   "rank": 328,
+   "bucket_key": "youth_46676f5b6678eec0",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 10
+  },
+  {
+   "rank": 329,
+   "bucket_key": "middle_c03d95bded1063ca",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 10
+  },
+  {
+   "rank": 330,
+   "bucket_key": "elder_c3253629a7a9c95a",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "sr_dipper",
+   "gain_person_years": 10
+  },
+  {
+   "rank": 331,
+   "bucket_key": "elder_72cdc1e24d1ab32d",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "sr_dipper",
+   "gain_person_years": 10
+  },
+  {
+   "rank": 332,
+   "bucket_key": "youth_f946a99e196b46dd",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "qh_jade",
+   "gain_person_years": 9
+  },
+  {
+   "rank": 333,
+   "bucket_key": "infant_f9a9d31d43c39122",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 9
+  },
+  {
+   "rank": 334,
+   "bucket_key": "infant_ee1e8370516040a7",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "sr_dipper",
+   "gain_person_years": 9
+  },
+  {
+   "rank": 335,
+   "bucket_key": "infant_ede400862a3a6a4b",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "lt_filament",
+   "gain_person_years": 9
+  },
+  {
+   "rank": 336,
+   "bucket_key": "infant_aa16e0b305b12698",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 9
+  },
+  {
+   "rank": 337,
+   "bucket_key": "infant_92d348a786075378",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "sm_reed",
+   "gain_person_years": 9
+  },
+  {
+   "rank": 338,
+   "bucket_key": "infant_87682d4ee1085a33",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "qh_jade",
+   "gain_person_years": 9
+  },
+  {
+   "rank": 339,
+   "bucket_key": "infant_7551229836585413",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "ig_warden",
+   "gain_person_years": 9
+  },
+  {
+   "rank": 340,
+   "bucket_key": "infant_3f54986b3149c0aa",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "ember_noble",
+   "gain_person_years": 9
+  },
+  {
+   "rank": 341,
+   "bucket_key": "infant_355221559a02f144",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 9
+  },
+  {
+   "rank": 342,
+   "bucket_key": "infant_291e52d9076ab00e",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 9
+  },
+  {
+   "rank": 343,
+   "bucket_key": "infant_1913dd7df4e140fe",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 9
+  },
+  {
+   "rank": 344,
+   "bucket_key": "elder_cdc1ecd2a1fef46b",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 9
+  },
+  {
+   "rank": 345,
+   "bucket_key": "infant_e5d75af47164e193",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 8
+  },
+  {
+   "rank": 346,
+   "bucket_key": "infant_5b8f545cbeaa5939",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "ember_noble",
+   "gain_person_years": 8
+  },
+  {
+   "rank": 347,
+   "bucket_key": "elder_4a1635cd33c9b490",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 8
+  },
+  {
+   "rank": 348,
+   "bucket_key": "young_adult_eddc15394889d662",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 7
+  },
+  {
+   "rank": 349,
+   "bucket_key": "young_adult_9b386ec145fe1754",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "ember_noble",
+   "gain_person_years": 7
+  },
+  {
+   "rank": 350,
+   "bucket_key": "middle_f049468899ca11ed",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "lt_filament",
+   "gain_person_years": 7
+  },
+  {
+   "rank": 351,
+   "bucket_key": "middle_d1c4b28fed56ba14",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "eo_kiln",
+   "gain_person_years": 7
+  },
+  {
+   "rank": 352,
+   "bucket_key": "middle_ae34f1766e13ca09",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 7
+  },
+  {
+   "rank": 353,
+   "bucket_key": "elder_ee3269b6dbb44d2b",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 7
+  },
+  {
+   "rank": 354,
+   "bucket_key": "youth_f8b25f3e9d269b17",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "river_ward",
+   "gain_person_years": 6
+  },
+  {
+   "rank": 355,
+   "bucket_key": "youth_f6c958d01f1e5759",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "ig_warden",
+   "gain_person_years": 6
+  },
+  {
+   "rank": 356,
+   "bucket_key": "youth_bc041c6cfecf2e4b",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 6
+  },
+  {
+   "rank": 357,
+   "bucket_key": "youth_a8e8ad39aaeedade",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 6
+  },
+  {
+   "rank": 358,
+   "bucket_key": "young_adult_98295e88186b9351",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 6
+  },
+  {
+   "rank": 359,
+   "bucket_key": "middle_53e3e5c3542d6780",
+   "stage": "middle",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 6
+  },
+  {
+   "rank": 360,
+   "bucket_key": "middle_30c3cf70acd7d469",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "ember_noble",
+   "gain_person_years": 6
+  },
+  {
+   "rank": 361,
+   "bucket_key": "infant_fa869d28890e84b3",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "sm_reed",
+   "gain_person_years": 6
+  },
+  {
+   "rank": 362,
+   "bucket_key": "infant_f2365acf8cef492c",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 6
+  },
+  {
+   "rank": 363,
+   "bucket_key": "infant_e7a88139eabf6ae6",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 6
+  },
+  {
+   "rank": 364,
+   "bucket_key": "infant_c88418e30ffd1078",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 6
+  },
+  {
+   "rank": 365,
+   "bucket_key": "infant_ba32da4ec35b4497",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 6
+  },
+  {
+   "rank": 366,
+   "bucket_key": "infant_b2491b50890e1dc9",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 6
+  },
+  {
+   "rank": 367,
+   "bucket_key": "infant_b1968fab4cbc5a7c",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "sr_dipper",
+   "gain_person_years": 6
+  },
+  {
+   "rank": 368,
+   "bucket_key": "infant_a8e8ad39aaeedade",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 6
+  },
+  {
+   "rank": 369,
+   "bucket_key": "infant_a598ee0ce04fe6f7",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "ig_warden",
+   "gain_person_years": 6
+  },
+  {
+   "rank": 370,
+   "bucket_key": "infant_976e20ac1b4cfbf7",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "ember_noble",
+   "gain_person_years": 6
+  },
+  {
+   "rank": 371,
+   "bucket_key": "infant_4c8091d10e374a52",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 6
+  },
+  {
+   "rank": 372,
+   "bucket_key": "infant_1d4e18ee72236e9b",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "sz_firefly",
+   "gain_person_years": 6
+  },
+  {
+   "rank": 373,
+   "bucket_key": "infant_109d635e786e49a1",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 6
+  },
+  {
+   "rank": 374,
+   "bucket_key": "elder_55ad71dff9c44c5c",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 6
+  },
+  {
+   "rank": 375,
+   "bucket_key": "middle_fb56122ab55e4293",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 5
+  },
+  {
+   "rank": 376,
+   "bucket_key": "middle_c70893b7b0f06fd6",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 4
+  },
+  {
+   "rank": 377,
+   "bucket_key": "elder_fa7cbd16bb1955f7",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 4
+  },
+  {
+   "rank": 378,
+   "bucket_key": "elder_86ee722fe3b4fa4c",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "fc_hall",
+   "gain_person_years": 4
+  },
+  {
+   "rank": 379,
+   "bucket_key": "elder_5c29c1cbfad8d032",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 4
+  },
+  {
+   "rank": 380,
+   "bucket_key": "elder_01be118f73ed71dc",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 4
+  },
+  {
+   "rank": 381,
+   "bucket_key": "young_adult_f382ec07aa6a3af8",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 382,
+   "bucket_key": "young_adult_cd24190dee6ab034",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 383,
+   "bucket_key": "young_adult_787e139e93ee34c7",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "river_ward",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 384,
+   "bucket_key": "young_adult_2aefe065e38d2ad2",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "lt_glass",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 385,
+   "bucket_key": "young_adult_1d4e18ee72236e9b",
+   "stage": "young_adult",
+   "sex": "f",
+   "bloodline": "sz_firefly",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 386,
+   "bucket_key": "young_adult_053187a11fcfcd90",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 387,
+   "bucket_key": "infant_f946a99e196b46dd",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "qh_jade",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 388,
+   "bucket_key": "infant_f8b25f3e9d269b17",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "river_ward",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 389,
+   "bucket_key": "infant_f4abab7fbd8f5266",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 390,
+   "bucket_key": "infant_efc6a5656294ffca",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 391,
+   "bucket_key": "infant_ec53570fcfa4d0ae",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 392,
+   "bucket_key": "infant_ebfcdcff973b8d16",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 393,
+   "bucket_key": "infant_e5e7a2be46d1c895",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "fc_hall",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 394,
+   "bucket_key": "infant_e5071a68e0f2f299",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 395,
+   "bucket_key": "infant_dd1dc21e06f722f7",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "sm_reed",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 396,
+   "bucket_key": "infant_d9531345bcb42ef4",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 397,
+   "bucket_key": "infant_d1d25ab6701c552b",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "sr_dipper",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 398,
+   "bucket_key": "infant_d08a36d0e360f1cd",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "sz_ferry",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 399,
+   "bucket_key": "infant_cdc1ecd2a1fef46b",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 400,
+   "bucket_key": "infant_cd24190dee6ab034",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 401,
+   "bucket_key": "infant_c69b40d28e6249c9",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "lt_tide",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 402,
+   "bucket_key": "infant_c03d95bded1063ca",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 403,
+   "bucket_key": "infant_bc3e056b0a355442",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "ash_chart",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 404,
+   "bucket_key": "infant_bbc543806823c4cf",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 405,
+   "bucket_key": "infant_bae563a130a1fa7e",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 406,
+   "bucket_key": "infant_ba587dacfd752493",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "qh_jade",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 407,
+   "bucket_key": "infant_b6f54b15ceee50dc",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 408,
+   "bucket_key": "infant_b60cd1ad71b08bd4",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "ig_forge",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 409,
+   "bucket_key": "infant_b5cc322337c08b2c",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 410,
+   "bucket_key": "infant_ae34f1766e13ca09",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 411,
+   "bucket_key": "infant_a9ded86fc1d91b50",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 412,
+   "bucket_key": "infant_a85ed749fb1ce8bc",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 413,
+   "bucket_key": "infant_a00e84cfdf01e062",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "qh_delta",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 414,
+   "bucket_key": "infant_9b386ec145fe1754",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "ember_noble",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 415,
+   "bucket_key": "infant_98295e88186b9351",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 416,
+   "bucket_key": "infant_972a56f1a1bd40b2",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "ember_noble",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 417,
+   "bucket_key": "infant_96a89c58592b62e9",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 418,
+   "bucket_key": "infant_964fac7863afb21d",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "ember_noble",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 419,
+   "bucket_key": "infant_870e6ab1dda18664",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "sm_ledger",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 420,
+   "bucket_key": "infant_7e02890f16682a4e",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 421,
+   "bucket_key": "infant_79cecf98d07e7509",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 422,
+   "bucket_key": "infant_787e139e93ee34c7",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "river_ward",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 423,
+   "bucket_key": "infant_76ac558b2c5cb0d8",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 424,
+   "bucket_key": "infant_72cdc1e24d1ab32d",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "sr_dipper",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 425,
+   "bucket_key": "infant_55ad71dff9c44c5c",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 426,
+   "bucket_key": "infant_542a38b72ece7de0",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 427,
+   "bucket_key": "infant_53e3e5c3542d6780",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 428,
+   "bucket_key": "infant_4a1635cd33c9b490",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 429,
+   "bucket_key": "infant_46676f5b6678eec0",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 430,
+   "bucket_key": "infant_381f7e902b1ab433",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 431,
+   "bucket_key": "infant_30c3cf70acd7d469",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "ember_noble",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 432,
+   "bucket_key": "infant_2cff0757fee8a354",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "sm_ledger",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 433,
+   "bucket_key": "infant_2aefe065e38d2ad2",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "lt_glass",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 434,
+   "bucket_key": "infant_12978ca2550fc323",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 435,
+   "bucket_key": "infant_0a069997ff2deefe",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 436,
+   "bucket_key": "infant_053187a11fcfcd90",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 437,
+   "bucket_key": "infant_047b30512721a5b6",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 438,
+   "bucket_key": "infant_01be118f73ed71dc",
+   "stage": "infant",
+   "sex": "m",
+   "bloodline": "banner_marshal",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 439,
+   "bucket_key": "elder_c69b40d28e6249c9",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "lt_tide",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 440,
+   "bucket_key": "elder_381f7e902b1ab433",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 3
+  },
+  {
+   "rank": 441,
+   "bucket_key": "youth_efc6a5656294ffca",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "eo_ashland",
+   "gain_person_years": 2
+  },
+  {
+   "rank": 442,
+   "bucket_key": "youth_92d348a786075378",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "sm_reed",
+   "gain_person_years": 2
+  },
+  {
+   "rank": 443,
+   "bucket_key": "middle_ee1e8370516040a7",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "sr_dipper",
+   "gain_person_years": 2
+  },
+  {
+   "rank": 444,
+   "bucket_key": "infant_fe9f0eeab5528e1b",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "lt_glass",
+   "gain_person_years": 2
+  },
+  {
+   "rank": 445,
+   "bucket_key": "elder_da18c5cbd0d81e5e",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 2
+  },
+  {
+   "rank": 446,
+   "bucket_key": "elder_a00e84cfdf01e062",
+   "stage": "elder",
+   "sex": "f",
+   "bloodline": "qh_delta",
+   "gain_person_years": 2
+  },
+  {
+   "rank": 447,
+   "bucket_key": "youth_ec53570fcfa4d0ae",
+   "stage": "youth",
+   "sex": "f",
+   "bloodline": "common_ash",
+   "gain_person_years": 1
+  },
+  {
+   "rank": 448,
+   "bucket_key": "youth_e5e7a2be46d1c895",
+   "stage": "youth",
+   "sex": "m",
+   "bloodline": "fc_hall",
+   "gain_person_years": 1
+  },
+  {
+   "rank": 449,
+   "bucket_key": "young_adult_b60cd1ad71b08bd4",
+   "stage": "young_adult",
+   "sex": "m",
+   "bloodline": "ig_forge",
+   "gain_person_years": 1
+  },
+  {
+   "rank": 450,
+   "bucket_key": "middle_f9a9d31d43c39122",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 1
+  },
+  {
+   "rank": 451,
+   "bucket_key": "middle_ebfcdcff973b8d16",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 1
+  },
+  {
+   "rank": 452,
+   "bucket_key": "middle_dbcce85fe4e48dc2",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 1
+  },
+  {
+   "rank": 453,
+   "bucket_key": "middle_84e8602f65d28214",
+   "stage": "middle",
+   "sex": "m",
+   "bloodline": "common_ash",
+   "gain_person_years": 1
+  },
+  {
+   "rank": 454,
+   "bucket_key": "infant_c9650dff475ea22a",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "sz_fogwood",
+   "gain_person_years": 1
+  },
+  {
+   "rank": 455,
+   "bucket_key": "infant_c24aad9807f8e121",
+   "stage": "infant",
+   "sex": "f",
+   "bloodline": "sm_reed",
+   "gain_person_years": 1
+  },
+  {
+   "rank": 456,
+   "bucket_key": "elder_972a56f1a1bd40b2",
+   "stage": "elder",
+   "sex": "m",
+   "bloodline": "ember_noble",
+   "gain_person_years": 1
+  }
+ ]
+}
