@@ -170,9 +170,11 @@ func _invariants(r: Dictionary) -> String:
 			return "trait %s dominates %.2f" % [tid, share]
 	if int(r.get("promotions", 0)) < 2:
 		return "promotions %s" % str(r.get("promotions", 0))
-	# DYN-05 stretches the first gestation to 3 month-ticks. Seed 91 now ends on a
-	# younger heir at baron; the century still promotes 10 times. See fertility-v92.md.
-	var title := str(r.get("title_end", "knight"))
+	# DYN-05 stretches the first gestation to 3 month-ticks. See fertility-v92.md.
+	# 2026-10-18 (#319): titles are per person, and with cadet weddings seed 91 hands the banner
+	# to a 21-year-old in year 97, who is still a knight at year 100. The gate now reads the best
+	# title any leader held in the century (title_peak), with the same baron floor.
+	var title := str(r.get("title_peak", r.get("title_end", "knight")))
 	if CKCharacter.RANK_ORDER.find(title) < 1:
 		return "title stuck at %s" % title
 	if int(r.get("chapters", 0)) < 80:
