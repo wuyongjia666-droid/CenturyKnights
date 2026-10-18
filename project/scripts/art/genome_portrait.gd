@@ -103,6 +103,42 @@ const STAGE_OUTFIT := {
 	"elder": "elder robes in the same cloth and trim",
 }
 
+## #321 (2026-10-18): Qwen-Image paints female youth / young-adult plates as boys when the prose
+## carries masculine structure words. For those two bands only: lead with female wording, swap the
+## masculine phrases for feminine equivalents (genome band still readable), and add a male negative.
+const FEM_YOUNG_STAGES := ["youth", "young_adult"]
+const FEM_YOUNG_LEAD := {
+	"youth": "a teenage girl, female, feminine face and features",
+	"young_adult": "a young adult woman, female, feminine face and features",
+}
+const FEM_YOUNG_NEGATIVE := "male, boy, man, masculine face, masculine jaw, beard, stubble, moustache"
+## Longest phrases first so a clause is swapped whole before its fragments.
+const FEM_YOUNG_SWAPS := [
+	["a broad work-worn jaw and a low brow", "a gently rounded jaw and a soft brow line"],
+	["a square work jaw without the wide cheekbones of the kiln house", "a gently tapered jaw without the wide cheekbones of the kiln house"],
+	["a sun-squint face with a broad nose and shallow cheeks", "a sun-squint face with a softer nose and shallow cheeks"],
+	["coarse ink-black hair cut blunt at the nape", "long ink-black hair gathered at the nape"],
+	["ink-black hair cut blunt at the jaw", "ink-black hair in a blunt jaw-length bob"],
+	["shorter black hair swept back in youth", "long black hair swept back into a tail in youth"],
+	["a soft jaw-length ink crop", "a soft jaw-length ink-black bob"],
+	["black hair cut short for kiln work", "long black hair pinned up for kiln work"],
+	["ash-brown hair cropped by weather", "shoulder-length ash-brown hair tied back against the weather"],
+	["short soft ink-black hair", "soft ink-black hair falling past the ears"],
+	["a square jaw still soft in youth", "a soft tapered jaw in youth"],
+	["a broad jaw still soft", "a soft rounded jaw"],
+	["black hair swept back", "long black hair swept back into a tail"],
+	["cheeks creased by weather", "cheeks lightly touched by weather"],
+	["an even dark crop", "an even dark bob"],
+	["dark hair cut even", "dark hair cut in an even bob"],
+	["short black hair", "long black hair pinned up"],
+	["a broad face", "a wider oval face"],
+	["a square jaw", "a gently defined jaw"],
+	["a defined jaw", "a softly defined jaw"],
+	["a strong nose", "a straight refined nose"],
+	["thick brows", "full natural brows"],
+	["low-set brows", "softly set brows"],
+]
+
 static var _mem: Dictionary = {}
 static var _miss: Dictionary = {}
 static var _lock: Dictionary = {}
@@ -251,7 +287,10 @@ static func describe(c: Object) -> Dictionary:
 	var noun := "woman" if sex == "f" else "man"
 	if stage == "infant" or stage == "youth":
 		noun = "girl" if sex == "f" else "boy"
-	prose.append("%s %s" % [who, noun])
+	if is_fem_young(c):
+		prose.append(str(FEM_YOUNG_LEAD[stage]))
+	else:
+		prose.append("%s %s" % [who, noun])
 	tokens.append("gender:%s" % sex)
 	tokens.append("age:%s" % stage)
 	var hair_e: Dictionary = ph["loci"]["hair"]
@@ -384,10 +423,29 @@ static func positive_prompt(c: Object) -> String:
 	var hook := _bloodline_clause(c)
 	if hook != "":
 		parts.append(hook)
-	return " ".join(parts)
+	var out := " ".join(parts)
+	return feminize_young(out) if is_fem_young(c) else out
 
-static func negative_prompt(_c: Object = null) -> String:
-	return str(style_lock().get("qwen", {}).get("negative", ""))
+static func is_fem_young(c: Object) -> bool:
+	if c == null or str(c.get("gender")) != "f":
+		return false
+	return FEM_YOUNG_STAGES.has(age_stage_of(c))
+
+## Swaps masculine structure phrases; the style-lock prefix holds none of them.
+static func feminize_young(text: String) -> String:
+	## Two passes through placeholders so a replacement is never matched again by a shorter phrase.
+	var out := text
+	for i in FEM_YOUNG_SWAPS.size():
+		out = out.replace(str(FEM_YOUNG_SWAPS[i][0]), "\u0001%d\u0001" % i)
+	for i in FEM_YOUNG_SWAPS.size():
+		out = out.replace("\u0001%d\u0001" % i, str(FEM_YOUNG_SWAPS[i][1]))
+	return out
+
+static func negative_prompt(c: Object = null) -> String:
+	var base := str(style_lock().get("qwen", {}).get("negative", ""))
+	if is_fem_young(c):
+		return base + ", " + FEM_YOUNG_NEGATIVE
+	return base
 
 static func out_rel(unit_id: String, stage: String = "") -> String:
 	var use := stage if stage != "" else "young_adult"

@@ -327,7 +327,8 @@ static func validate_payload(payload: Dictionary) -> String:
 		var pos := str(row.get("positive", ""))
 		if not pos.begins_with(prefix):
 			return "prefix missing on " + str(row.get("bucket_key", ""))
-		if str(row.get("negative", "")) != negative:
+		var neg := str(row.get("negative", ""))
+		if neg != negative and neg != negative + ", " + CKGenomePortrait.FEM_YOUNG_NEGATIVE:
 			return "negative mismatch on " + str(row.get("bucket_key", ""))
 		if int(row.get("seed", 0)) <= 0:
 			return "seed missing on " + str(row.get("bucket_key", ""))
