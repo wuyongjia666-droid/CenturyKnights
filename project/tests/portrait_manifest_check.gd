@@ -273,7 +273,7 @@ func _stages(a: CKCharacter) -> String:
 func _fem_young(base: Object, negative: String) -> String:
 	var saved_g := str(base.get("gender"))
 	var saved_age := int(base.get("age"))
-	var masculine := ["square jaw", "broad face", "thick brows", "a strong nose", "youth boy", "young adult man"]
+	var masculine := ["square jaw", "broad face", "thick brows", "a strong nose", "youth boy", "young adult man", "wide jaw angle", "hair cut short"]
 	for st in ["youth", "young_adult"]:
 		base.set("age", CKGenomePortrait.stage_apex(st))
 		base.set("gender", "f")
