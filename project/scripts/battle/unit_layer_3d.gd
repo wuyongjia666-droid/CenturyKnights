@@ -145,6 +145,8 @@ func _layer_busy() -> bool:
 			return true
 		if float(st.get("lock_t", 0.0)) > 0.0:
 			return true
+		if float(st.get("flash_t", 0.0)) > 0.0:  # P2 hit flash is live FX → full frame
+			return true
 		var cur := str(st.get("cur", ""))
 		if cur in ["advance", "attack", "hit", "skill", "crit", "dodge", "death"]:
 			return true
