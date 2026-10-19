@@ -1,7 +1,8 @@
 extends Node
-## Android packs bank medium only (large + small excluded), and drops expression/
-## speaker large masters (medium kept; CKArtPaths falls back). A medium-only bank
-## must still list stems and serve large/small asks from .medium.
+## Android packs bank medium only (large + small excluded), drops expression/
+## speaker large masters, excludes dead hireface/hire_*_plate (never shown),
+## and drops legacy music_*.wav duplicates. hireuniq stays (bank miss must not
+## fall to cartoon bust). Medium-only bank still lists stems / serves asks.
 
 const BANK := "res://assets/art/portraits/genome/bank"
 
@@ -77,6 +78,12 @@ func _run() -> String:
 	var spk_err := _assert_dir_large_excluded("res://assets/art/portraits/speakers", false)
 	if spk_err != "":
 		return spk_err
+	var hu_err := _assert_dead_portrait_plates()
+	if hu_err != "":
+		return hu_err
+	var au_err := _assert_legacy_music_wav_excluded()
+	if au_err != "":
+		return au_err
 	return _fallback()
 
 
@@ -177,4 +184,58 @@ func _fallback() -> String:
 		return "large ask loaded no texture"
 	if CKPortraitBank._load_plate(stem, "small") == null:
 		return "small ask loaded no texture"
+	return ""
+
+
+## Dead cartoon plates only (hireface / hire_*_plate). hireuniq stays packed.
+## Band child plates must remain (quality-neutral relocate from hireuniq_150/170).
+func _assert_dead_portrait_plates() -> String:
+	var filters := _android_filters()
+	var joined := ",".join(filters)
+	for need in ["hireface_*.webp", "hire_*_plate.webp"]:
+		if not joined.contains(need):
+			return "Android filter missing " + need
+	if joined.contains("hireuniq_*.webp"):
+		return "hireuniq must stay packed (bank miss must not fall to bust)"
+	var por := "res://assets/art/portraits"
+	var da := DirAccess.open(por)
+	if da == null:
+		return "portraits dir missing"
+	var seen_dead := 0
+	var seen_hu := 0
+	for fn in da.get_files():
+		var name := str(fn)
+		if not name.ends_with(".webp"):
+			continue
+		var rel: String = "assets/art/portraits/" + name
+		if name.begins_with("hireface_") or (name.begins_with("hire_") and name.ends_with("_plate.webp")):
+			seen_dead += 1
+			if not _excluded(rel, filters):
+				return "dead plate still packed on Android: " + name
+		elif name.begins_with("hireuniq_"):
+			seen_hu += 1
+			if _excluded(rel, filters):
+				return "hireuniq excluded (quality risk): " + name
+	if seen_dead < 10:
+		return "expected hireface/hire_plate samples, got %d" % seen_dead
+	if seen_hu < 10:
+		return "expected hireuniq kept on disk, got %d" % seen_hu
+	for band_name in ["child_f.webp", "child_m.webp"]:
+		var brel: String = "assets/art/portraits/band/" + str(band_name)
+		if _excluded(brel, filters):
+			return "band child plate excluded: " + band_name
+		if not FileAccess.file_exists("res://assets/art/portraits/band/" + band_name):
+			return "band child plate missing: " + band_name
+	return ""
+
+
+func _assert_legacy_music_wav_excluded() -> String:
+	var filters := _android_filters()
+	var joined := ",".join(filters)
+	for need in ["music_hub.wav", "music_castle.wav", "music_battle.wav"]:
+		if not joined.contains(need):
+			return "Android filter missing " + need
+		var rel: String = "assets/sfx/" + str(need)
+		if not _excluded(rel, filters):
+			return "legacy music wav still packed: " + need
 	return ""
