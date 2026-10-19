@@ -12,16 +12,16 @@ extends RefCounted
 ## Every GLB uses the shared armature + actions: idle advance attack skill hit dodge crit death.
 const DIR := "res://assets/models/units/"
 const IMPACT := {"attack": 0.458, "skill": 0.792, "crit": 0.5}
-## Weapon-archetype clips (CUT-02). Job ids from jobs.json; unknown jobs keep the GLB actions.
-const ANIM_ARCHETYPES := ["sword", "spear", "bow", "staff", "shield", "heavy"]
+## Weapon-archetype clips (CUT-02 + P2 axe/banner/dagger/book). Job ids from jobs.json; unknown jobs keep the GLB actions.
+const ANIM_ARCHETYPES := ["sword", "spear", "bow", "staff", "shield", "heavy", "axe", "banner", "dagger", "book"]
 const JOB_ANIM := {
 	"squire": "sword",
 	"light_inf": "sword",
 	"militia": "sword",
-	"skirmisher": "sword",
-	"pathfinder": "sword",
-	"banner": "sword",
-	"standard": "sword",
+	"skirmisher": "dagger",
+	"pathfinder": "dagger",
+	"banner": "banner",
+	"standard": "banner",
 	"captain": "sword",
 	"light_cavalry": "spear",
 	"outrider": "spear",
@@ -35,8 +35,8 @@ const JOB_ANIM := {
 	"mage": "staff",
 	"warlock": "staff",
 	"acolyte": "staff",
-	"cantor": "staff",
-	"chorister": "staff",
+	"cantor": "book",
+	"chorister": "book",
 	"heavy_inf": "shield",
 	"sentinel": "shield",
 	"bulwark": "shield",
@@ -45,8 +45,8 @@ const JOB_ANIM := {
 	"bridge_tax": "spear",
 	"lu_wai": "staff",
 	"frost_wait": "staff",
-	"salt_yin": "sword",
-	"forge_brow": "heavy",
+	"salt_yin": "banner",
+	"forge_brow": "axe",
 }
 
 static func anim_archetype(job_id: String) -> String:

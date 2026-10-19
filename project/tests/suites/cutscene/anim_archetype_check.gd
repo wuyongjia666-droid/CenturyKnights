@@ -1,7 +1,7 @@
 extends Node
-## CUT-02: six weapon archetypes, eight actions, attack impact matches the timeline.
+## CUT-02 + P2: ten weapon archetypes, eight actions, attack impact matches the timeline.
 
-const ARCHETYPES := ["sword", "spear", "bow", "staff", "shield", "heavy"]
+const ARCHETYPES := ["sword", "spear", "bow", "staff", "shield", "heavy", "axe", "banner", "dagger", "book"]
 
 func _ready() -> void:
 	var err := _run()
@@ -61,6 +61,24 @@ func _run() -> String:
 		return "applied impact"
 	if UnitModel.apply_anim_archetype(ap, "no_such_job") != "":
 		return "unknown job applied"
+	# P2 job remaps
+	if UnitModel.anim_archetype("skirmisher") != "dagger":
+		return "skirmisher not dagger"
+	if UnitModel.anim_archetype("banner") != "banner":
+		return "banner job"
+	if UnitModel.anim_archetype("cantor") != "book":
+		return "cantor not book"
+	if UnitModel.anim_archetype("forge_brow") != "axe":
+		return "forge_brow not axe"
+	# P2 READY chest lean 0°
+	var idle := (load("res://assets/models/anim/sword.res") as AnimationLibrary).get_animation("idle")
+	for i in idle.get_track_count():
+		if str(idle.track_get_path(i)).ends_with(":chest"):
+			var q: Quaternion = idle.rotation_track_interpolate(i, 0.0)
+			var e := q.get_euler()
+			if absf(rad_to_deg(e.x)) > 1.0:
+				return "READY chest lean %.2f (want 0)" % rad_to_deg(e.x)
+			break
 	return ""
 
 func _arm(anim: Animation, t: float) -> Quaternion:
