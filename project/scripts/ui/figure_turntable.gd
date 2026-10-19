@@ -10,7 +10,7 @@ var _drag := false
 var _spin := 0.0
 
 static func make(c: CKCharacter, sz: Vector2) -> Control:
-	if not CKUnitLayer3D.enabled():  # same switch as the board (off on mobile until P4)
+	if not CKUnitLayer3D.enabled():  # same switch as the board (same board_units_3d / DeviceProfile gate as the board)
 		var tr := TextureRect.new()
 		tr.texture = UnitArt.token(c, "player", 64, false)
 		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -52,12 +52,11 @@ func _ready() -> void:
 	w.add_child(sun)
 	_pivot = Node3D.new()
 	w.add_child(_pivot)
-	var n := UnitModel.instantiate(character, team, "")
+	# P4: formal board figure (no board_compact solid fill).
+	var n := CKBoardFigure.build(character, team, "")
 	if n:
 		_pivot.add_child(n)
-		_compact(n)
-		CKUnitSilhouette.apply(n, character, team)
-		var ap := UnitModel.find_anim(n)
+		var ap := CKBoardFigure.find_anim(n)
 		if ap and ap.has_animation("idle"):
 			ap.play("idle")
 	var disc := MeshInstance3D.new()
@@ -97,14 +96,6 @@ func _gui_input(e: InputEvent) -> void:
 		_pivot.rotation_degrees.y += dx * 0.8
 		accept_event()
 
-func _compact(n: Node) -> void:
-	if n is MeshInstance3D:
-		var mi := n as MeshInstance3D
-		if mi.mesh:
-			for si in mi.mesh.get_surface_count():
-				var m = mi.get_surface_override_material(si)
-				if m is ShaderMaterial:
-					(m as ShaderMaterial).set_shader_parameter("board_compact", 1.0)
-					(m as ShaderMaterial).set_shader_parameter("rim_strength", 0.12)
-	for c in n.get_children():
-		_compact(c)
+## P4: board_compact board/roster path retired — CKBoardFigure uses board_figure.gdshader.
+func _compact(_n: Node) -> void:
+	pass

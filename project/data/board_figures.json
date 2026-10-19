@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "kit_glb": "res://assets/models/board/board_figures_v1.glb",
   "kit_manifest": "res://assets/models/board/board_figures_v1.json",
   "palette_keys": [
@@ -38,47 +38,79 @@
     "squire": {
       "outfit": "outfit_squire",
       "weapon": "weapon_sword",
-      "signs": []
+      "signs": [
+        "sign_cape_short"
+      ],
+      "tier": 1,
+      "line": "rider"
     },
     "light_cavalry": {
       "outfit": "outfit_squire",
       "weapon": "weapon_spear",
-      "signs": []
+      "signs": [
+        "sign_cape_short"
+      ],
+      "tier": 2,
+      "line": "rider"
     },
     "outrider": {
       "outfit": "outfit_squire",
       "weapon": "weapon_spear",
       "signs": [
-        "sign_pauldron_both"
-      ]
+        "sign_cape_long",
+        "sign_scarf"
+      ],
+      "tier": 3,
+      "line": "rider"
     },
     "bridge_tax": {
       "outfit": "outfit_squire",
       "weapon": "weapon_spear",
-      "signs": []
+      "signs": [
+        "sign_cape_long",
+        "sign_waist_badge"
+      ],
+      "tier": 3,
+      "line": "rider"
     },
     "light_inf": {
       "outfit": "outfit_light_inf",
       "weapon": "weapon_sword",
       "signs": [],
+      "tier": 1,
+      "line": "light",
       "pathc_outfit_m": "outfit_light_inf_t1_m",
-      "pathc_outfit_f": "outfit_light_inf_t1_f"
+      "pathc_outfit_f": "outfit_light_inf_t1_f",
+      "pathc_status": "shipping"
     },
     "warrior": {
       "outfit": "outfit_light_inf",
       "weapon": "weapon_greatsword",
-      "signs": []
+      "signs": [
+        "sign_pauldron_L"
+      ],
+      "tier": 2,
+      "line": "light"
     },
     "veteran": {
       "outfit": "outfit_light_inf",
       "weapon": "weapon_greatsword",
-      "signs": []
+      "signs": [
+        "sign_waist_cape",
+        "sign_pauldron_both"
+      ],
+      "tier": 3,
+      "line": "light"
     },
     "forge_brow": {
       "outfit": "outfit_militia",
-      "weapon": "weapon_axe",
-      "signs": [],
-      "apron": true
+      "weapon": "weapon_hammer",
+      "signs": [
+        "sign_goggles"
+      ],
+      "apron": true,
+      "tier": 3,
+      "line": "light"
     },
     "heavy_inf": {
       "outfit": "outfit_heavy_inf",
@@ -86,7 +118,9 @@
       "body": "heavy",
       "signs": [
         "sign_pauldron_both"
-      ]
+      ],
+      "tier": 1,
+      "line": "heavy"
     },
     "sentinel": {
       "outfit": "outfit_heavy_inf",
@@ -94,125 +128,206 @@
       "body": "heavy",
       "signs": [
         "sign_pauldron_both"
-      ]
+      ],
+      "tier": 2,
+      "line": "heavy"
     },
     "bulwark": {
       "outfit": "outfit_heavy_inf",
       "weapon": "weapon_sword",
       "body": "heavy",
       "signs": [
-        "sign_pauldron_both"
+        "sign_pauldron_both",
+        "sign_cape_short"
       ],
-      "scale": 1.06
+      "scale": 1.06,
+      "tier": 3,
+      "line": "heavy"
     },
     "hunter": {
       "compose": "compose_hunter",
       "weapon": "weapon_bow",
       "signs": [],
+      "tier": 1,
+      "line": "hunter",
       "pathc_outfit_m": "outfit_hunter_t1_m",
-      "pathc_outfit_f": "outfit_hunter_t1_f"
+      "pathc_outfit_f": "outfit_hunter_t1_f",
+      "pathc_status": "shipping"
     },
     "archer": {
       "compose": "compose_hunter",
       "weapon": "weapon_bow",
-      "signs": []
+      "signs": [
+        "sign_shoulder_strap"
+      ],
+      "tier": 2,
+      "line": "hunter"
     },
     "marksman": {
       "compose": "compose_hunter",
       "weapon": "weapon_bow",
-      "signs": []
+      "signs": [
+        "sign_scarf_long"
+      ],
+      "tier": 3,
+      "line": "hunter"
     },
     "apprentice": {
       "outfit": "outfit_apprentice",
       "weapon": "weapon_staff",
-      "signs": []
+      "signs": [],
+      "tier": 1,
+      "line": "arcane"
     },
     "mage": {
       "outfit": "outfit_apprentice",
       "weapon": "weapon_staff",
-      "signs": []
+      "signs": [
+        "sign_scarf"
+      ],
+      "tier": 2,
+      "line": "arcane"
     },
     "lu_wai": {
       "outfit": "outfit_apprentice",
       "weapon": "weapon_staff",
-      "signs": []
+      "signs": [
+        "sign_bookcase"
+      ],
+      "tier": 3,
+      "line": "arcane"
     },
     "warlock": {
       "outfit": "outfit_apprentice",
       "weapon": "weapon_staff",
-      "signs": []
+      "signs": [
+        "sign_cape_long"
+      ],
+      "tier": 3,
+      "line": "arcane"
     },
     "priest": {
       "outfit": "outfit_apprentice",
       "weapon": "weapon_staff",
-      "signs": []
+      "signs": [
+        "sign_theme_lamp"
+      ],
+      "tier": 2,
+      "line": "priest"
     },
     "medic": {
       "outfit": "outfit_apprentice",
       "weapon": "weapon_staff",
-      "signs": []
+      "signs": [
+        "sign_medkit"
+      ],
+      "tier": 3,
+      "line": "priest"
     },
     "yan_zhan": {
       "outfit": "outfit_apprentice",
       "weapon": "weapon_staff",
-      "signs": []
+      "signs": [
+        "sign_theme_lamp"
+      ],
+      "tier": 3,
+      "line": "priest"
     },
     "militia": {
       "outfit": "outfit_militia",
       "weapon": "weapon_spear",
-      "signs": []
+      "signs": [
+        "sign_back_hat"
+      ],
+      "tier": 1,
+      "line": "militia"
     },
     "skirmisher": {
       "outfit": "outfit_militia",
       "weapon": "weapon_dagger",
-      "signs": []
+      "signs": [],
+      "tier": 2,
+      "line": "militia"
     },
     "pathfinder": {
       "outfit": "outfit_militia",
       "weapon": "weapon_dagger",
-      "signs": []
+      "signs": [
+        "sign_cloak"
+      ],
+      "tier": 3,
+      "line": "militia"
     },
     "banner": {
       "outfit": "outfit_banner",
       "weapon": "weapon_banner",
-      "signs": []
+      "signs": [],
+      "tier": 1,
+      "line": "banner"
     },
     "standard": {
       "outfit": "outfit_banner",
       "weapon": "weapon_banner",
-      "signs": []
+      "signs": [
+        "sign_pauldron_L"
+      ],
+      "tier": 2,
+      "line": "banner"
     },
     "captain": {
       "compose": "compose_captain",
       "weapon": "weapon_sword",
-      "signs": [],
+      "signs": [
+        "sign_cape_long"
+      ],
+      "tier": 3,
+      "line": "banner",
       "pathc_outfit_m": "outfit_leader_coat_t1_m",
-      "pathc_outfit_f": "outfit_leader_coat_t1_f"
+      "pathc_outfit_f": "outfit_leader_coat_t1_f",
+      "pathc_status": "shipping"
     },
     "salt_yin": {
       "outfit": "outfit_banner",
       "weapon": "weapon_banner",
-      "signs": []
+      "signs": [
+        "sign_waist_badge"
+      ],
+      "tier": 3,
+      "line": "banner"
     },
     "acolyte": {
       "outfit": "outfit_apprentice",
       "weapon": "weapon_staff",
-      "signs": []
+      "signs": [],
+      "tier": 1,
+      "line": "cantor"
     },
     "cantor": {
       "outfit": "outfit_apprentice",
-      "weapon": "weapon_staff",
-      "signs": []
+      "weapon": "weapon_book",
+      "signs": [
+        "sign_shoulder_strap"
+      ],
+      "tier": 2,
+      "line": "cantor"
     },
     "chorister": {
       "outfit": "outfit_apprentice",
-      "weapon": "weapon_staff",
-      "signs": []
+      "weapon": "weapon_book",
+      "signs": [
+        "sign_scarf_long"
+      ],
+      "tier": 3,
+      "line": "cantor"
     },
     "frost_wait": {
       "outfit": "outfit_apprentice",
       "weapon": "weapon_staff",
-      "signs": []
+      "signs": [
+        "sign_cape_long"
+      ],
+      "tier": 3,
+      "line": "cantor"
     }
   },
   "enemy_templates": {
@@ -237,14 +352,22 @@
     "bandit_chief": {
       "compose": "compose_bandit_chief",
       "weapon": "weapon_axe",
-      "signs": [],
-      "scale": 1.06
+      "signs": [
+        "sign_cape_long"
+      ],
+      "scale": 1.06,
+      "pathc_status": "shipping",
+      "unique_face": true
     }
   },
   "leader_job_override": {
     "compose": "compose_captain",
     "weapon": "weapon_sword",
-    "signs": []
+    "signs": [
+      "sign_cape_long"
+    ],
+    "pathc_outfit_m": "outfit_leader_coat_t1_m",
+    "pathc_outfit_f": "outfit_leader_coat_t1_f"
   },
   "hair_styles": [
     "bob",
@@ -268,14 +391,441 @@
       "outfit_light_inf_t1_m": "outfit_light_inf_t1_m",
       "outfit_light_inf_t1_f": "outfit_light_inf_t1_f"
     },
-    "body_fallback": {"m": "base_body_m", "f": "base_body_f"},
+    "body_fallback": {
+      "m": "base_body_m",
+      "f": "base_body_f"
+    },
     "weapons_dir": "res://assets/models/board/pathc_weapons/",
-    "weapon_glb": {"weapon_sword":"sword.glb","weapon_spear":"spear.glb","weapon_axe":"axe.glb","weapon_bow":"bow.glb","weapon_greatsword":"sword.glb","weapon_dagger":"sword.glb"},
-    "kit_hand_r": [-0.33, 0.86, 0.04],
-    "kit_hand_l": [0.33, 0.86, 0.04],
-    "grip": {"sword":{"off":[0.014,0.048,0.014],"g":[0.0,0.52,0.0],"a":[0,1,0],"b":[1,0,0],"dir":[0.22,0.4,0.88],"side":[0.1,0.9,-0.42],"scale":0.9},"weapon_greatsword":{"off":[0.014,0.048,0.014],"g":[0.0,0.52,0.0],"a":[0,1,0],"b":[1,0,0],"dir":[0.22,0.4,0.88],"side":[0.1,0.9,-0.42],"scale":0.95},"weapon_dagger":{"off":[0.014,0.048,0.014],"g":[0.0,0.52,0.0],"a":[0,1,0],"b":[1,0,0],"dir":[0.22,0.4,0.88],"side":[0.1,0.9,-0.42],"scale":0.45},"bow":{"off":[-0.014,0.048,0.014],"g":[0.06,0.0,0.04],"a":[0.4,1.0,-0.58],"b":[0.9,-0.15,0.4],"dir":[0.04,1.0,0.06],"side":[0.92,0.0,0.35],"scale":1.15},"axe":{"off":[0.014,0.042,0.014],"g":[0.35,-0.36,0.0],"a":[0.0,1.0,0.0],"b":[-1.0,0.0,0.0],"dir":[-0.22,0.95,-0.22],"side":[-0.5,0.08,-0.86],"scale":0.95},"spear":{"off":[0.014,0.048,-0.006],"g":[0.0,-0.36,0.0],"a":[0,1,0],"b":[1,0,0],"dir":[-0.18,0.9,-0.4],"side":[0.95,0.0,0.28],"scale":1.35}},
-    "grip_body": {"cast_leader":{"weapon_sword":[0.02,0.05,0.018],"weapon_spear":[0.02,0.05,-0.004]},"outfit_light_inf_t1_m":{"weapon_sword":[0.02,0.052,0.018],"weapon_spear":[0.02,0.052,-0.004]},"outfit_light_inf_t1_f":{"weapon_sword":[0.018,0.05,0.014]},"outfit_leader_coat_t1_m":{"weapon_sword":[0.02,0.05,0.018]},"bandit_chief":{"weapon_axe":[0.035,0.048,0.020]},"hunter_m":{"weapon_bow":[-0.02,0.05,0.016]},"outfit_hunter_t1_m":{"weapon_bow":[-0.02,0.05,0.016]}},
-    "hands": {"bandit_chief": {"r": [-0.503, 0.959, 0.103], "l": [0.501, 0.959, 0.106]}, "base_body_f": {"r": [-0.388, 0.879, 0.042], "l": [0.386, 0.886, 0.043]}, "base_body_m": {"r": [-0.409, 0.891, 0.1], "l": [0.402, 0.892, 0.1]}, "cast_leader": {"r": [-0.346, 0.947, 0.045], "l": [0.333, 0.983, 0.068]}, "hunter_f": {"r": [-0.398, 0.974, 0.057], "l": [0.402, 0.971, 0.055]}, "hunter_m": {"r": [-0.352, 0.914, -0.065], "l": [0.299, 1.028, 0.075]}, "outfit_hunter_t1_f": {"r": [-0.391, 0.962, -0.013], "l": [0.395, 0.95, 0.096]}, "outfit_hunter_t1_m": {"r": [-0.417, 0.889, 0.062], "l": [0.379, 0.885, 0.062]}, "outfit_leader_coat_t1_f": {"r": [-0.421, 0.974, 0.071], "l": [0.422, 0.975, 0.067]}, "outfit_leader_coat_t1_m": {"r": [-0.463, 0.942, 0.086], "l": [0.43, 0.948, 0.084]}, "outfit_light_inf_t1_f": {"r": [-0.379, 0.932, -0.068], "l": [0.36, 0.922, 0.102]}, "outfit_light_inf_t1_m": {"r": [-0.388, 0.946, 0.051], "l": [0.375, 0.956, 0.106]}}
+    "weapon_glb": {
+      "weapon_sword": "sword.glb",
+      "weapon_spear": "spear.glb",
+      "weapon_axe": "axe.glb",
+      "weapon_bow": "bow.glb",
+      "weapon_greatsword": "sword.glb",
+      "weapon_dagger": "sword.glb",
+      "weapon_hammer": "axe.glb",
+      "weapon_book": "sword.glb",
+      "weapon_staff": "spear.glb",
+      "weapon_banner": "spear.glb",
+      "weapon_club": "axe.glb"
+    },
+    "kit_hand_r": [
+      -0.33,
+      0.86,
+      0.04
+    ],
+    "kit_hand_l": [
+      0.33,
+      0.86,
+      0.04
+    ],
+    "grip": {
+      "sword": {
+        "off": [
+          0.014,
+          0.048,
+          0.014
+        ],
+        "g": [
+          0.0,
+          0.52,
+          0.0
+        ],
+        "a": [
+          0,
+          1,
+          0
+        ],
+        "b": [
+          1,
+          0,
+          0
+        ],
+        "dir": [
+          0.22,
+          0.4,
+          0.88
+        ],
+        "side": [
+          0.1,
+          0.9,
+          -0.42
+        ],
+        "scale": 0.9
+      },
+      "weapon_greatsword": {
+        "off": [
+          0.014,
+          0.048,
+          0.014
+        ],
+        "g": [
+          0.0,
+          0.52,
+          0.0
+        ],
+        "a": [
+          0,
+          1,
+          0
+        ],
+        "b": [
+          1,
+          0,
+          0
+        ],
+        "dir": [
+          0.22,
+          0.4,
+          0.88
+        ],
+        "side": [
+          0.1,
+          0.9,
+          -0.42
+        ],
+        "scale": 0.95
+      },
+      "weapon_dagger": {
+        "off": [
+          0.014,
+          0.048,
+          0.014
+        ],
+        "g": [
+          0.0,
+          0.52,
+          0.0
+        ],
+        "a": [
+          0,
+          1,
+          0
+        ],
+        "b": [
+          1,
+          0,
+          0
+        ],
+        "dir": [
+          0.22,
+          0.4,
+          0.88
+        ],
+        "side": [
+          0.1,
+          0.9,
+          -0.42
+        ],
+        "scale": 0.45
+      },
+      "bow": {
+        "off": [
+          -0.014,
+          0.048,
+          0.014
+        ],
+        "g": [
+          0.06,
+          0.0,
+          0.04
+        ],
+        "a": [
+          0.4,
+          1.0,
+          -0.58
+        ],
+        "b": [
+          0.9,
+          -0.15,
+          0.4
+        ],
+        "dir": [
+          0.04,
+          1.0,
+          0.06
+        ],
+        "side": [
+          0.92,
+          0.0,
+          0.35
+        ],
+        "scale": 1.15
+      },
+      "axe": {
+        "off": [
+          0.014,
+          0.042,
+          0.014
+        ],
+        "g": [
+          0.35,
+          -0.36,
+          0.0
+        ],
+        "a": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "b": [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        "dir": [
+          -0.22,
+          0.95,
+          -0.22
+        ],
+        "side": [
+          -0.5,
+          0.08,
+          -0.86
+        ],
+        "scale": 0.95
+      },
+      "spear": {
+        "off": [
+          0.014,
+          0.048,
+          -0.006
+        ],
+        "g": [
+          0.0,
+          -0.36,
+          0.0
+        ],
+        "a": [
+          0,
+          1,
+          0
+        ],
+        "b": [
+          1,
+          0,
+          0
+        ],
+        "dir": [
+          -0.18,
+          0.9,
+          -0.4
+        ],
+        "side": [
+          0.95,
+          0.0,
+          0.28
+        ],
+        "scale": 1.35
+      }
+    },
+    "grip_body": {
+      "cast_leader": {
+        "weapon_sword": [
+          0.02,
+          0.05,
+          0.018
+        ],
+        "weapon_spear": [
+          0.02,
+          0.05,
+          -0.004
+        ]
+      },
+      "outfit_light_inf_t1_m": {
+        "weapon_sword": [
+          0.02,
+          0.052,
+          0.018
+        ],
+        "weapon_spear": [
+          0.02,
+          0.052,
+          -0.004
+        ]
+      },
+      "outfit_light_inf_t1_f": {
+        "weapon_sword": [
+          0.018,
+          0.05,
+          0.014
+        ]
+      },
+      "outfit_leader_coat_t1_m": {
+        "weapon_sword": [
+          0.02,
+          0.05,
+          0.018
+        ]
+      },
+      "bandit_chief": {
+        "weapon_axe": [
+          0.035,
+          0.048,
+          0.02
+        ]
+      },
+      "hunter_m": {
+        "weapon_bow": [
+          -0.02,
+          0.05,
+          0.016
+        ]
+      },
+      "outfit_hunter_t1_m": {
+        "weapon_bow": [
+          -0.02,
+          0.05,
+          0.016
+        ]
+      }
+    },
+    "hands": {
+      "bandit_chief": {
+        "r": [
+          -0.503,
+          0.959,
+          0.103
+        ],
+        "l": [
+          0.501,
+          0.959,
+          0.106
+        ]
+      },
+      "base_body_f": {
+        "r": [
+          -0.388,
+          0.879,
+          0.042
+        ],
+        "l": [
+          0.386,
+          0.886,
+          0.043
+        ]
+      },
+      "base_body_m": {
+        "r": [
+          -0.409,
+          0.891,
+          0.1
+        ],
+        "l": [
+          0.402,
+          0.892,
+          0.1
+        ]
+      },
+      "cast_leader": {
+        "r": [
+          -0.346,
+          0.947,
+          0.045
+        ],
+        "l": [
+          0.333,
+          0.983,
+          0.068
+        ]
+      },
+      "hunter_f": {
+        "r": [
+          -0.398,
+          0.974,
+          0.057
+        ],
+        "l": [
+          0.402,
+          0.971,
+          0.055
+        ]
+      },
+      "hunter_m": {
+        "r": [
+          -0.352,
+          0.914,
+          -0.065
+        ],
+        "l": [
+          0.299,
+          1.028,
+          0.075
+        ]
+      },
+      "outfit_hunter_t1_f": {
+        "r": [
+          -0.391,
+          0.962,
+          -0.013
+        ],
+        "l": [
+          0.395,
+          0.95,
+          0.096
+        ]
+      },
+      "outfit_hunter_t1_m": {
+        "r": [
+          -0.417,
+          0.889,
+          0.062
+        ],
+        "l": [
+          0.379,
+          0.885,
+          0.062
+        ]
+      },
+      "outfit_leader_coat_t1_f": {
+        "r": [
+          -0.421,
+          0.974,
+          0.071
+        ],
+        "l": [
+          0.422,
+          0.975,
+          0.067
+        ]
+      },
+      "outfit_leader_coat_t1_m": {
+        "r": [
+          -0.463,
+          0.942,
+          0.086
+        ],
+        "l": [
+          0.43,
+          0.948,
+          0.084
+        ]
+      },
+      "outfit_light_inf_t1_f": {
+        "r": [
+          -0.379,
+          0.932,
+          -0.068
+        ],
+        "l": [
+          0.36,
+          0.922,
+          0.102
+        ]
+      },
+      "outfit_light_inf_t1_m": {
+        "r": [
+          -0.388,
+          0.946,
+          0.051
+        ],
+        "l": [
+          0.375,
+          0.956,
+          0.106
+        ]
+      }
+    }
   },
   "pathc_look": {
     "registry": "res://data/board_figure_pathc.json",
@@ -299,5 +849,439 @@
       "bandit_chief": "bandit_chief__board.glb",
       "leader_m": "docs/art/review/board_figure_p1/hunyuan_noreduce/cast_leader__board.glb"
     }
-  }
+  },
+  "p4": {
+    "note": "P4 coverage: 32 jobs t2/t3 signature parts + 22 theme signs. Path C meshes only where already shipping; rest kit placeholders (docs/art/review/board_figure_p4_deferred.md).",
+    "jobs_expected": 32,
+    "themes_expected": 22,
+    "budget_mib_cap": 45
+  },
+  "role_templates": {
+    "light": "bandit_weak",
+    "melee": "bandit",
+    "ranged": "bandit_archer",
+    "elite": "bandit_chief"
+  },
+  "theme_signs": {
+    "bandit": [],
+    "escort": [
+      "sign_waist_badge"
+    ],
+    "fisher": [
+      "sign_theme_fisher"
+    ],
+    "paper": [
+      "sign_theme_paper"
+    ],
+    "copper": [
+      "sign_waist_badge"
+    ],
+    "lamp": [
+      "sign_theme_lamp"
+    ],
+    "grain": [
+      "sign_back_hat"
+    ],
+    "snow": [
+      "sign_theme_snow"
+    ],
+    "bamboo": [
+      "sign_theme_bamboo"
+    ],
+    "relay": [
+      "sign_theme_bell"
+    ],
+    "bell": [
+      "sign_theme_bell"
+    ],
+    "rain": [
+      "sign_cloak"
+    ],
+    "ink": [
+      "sign_theme_paper"
+    ],
+    "hive": [
+      "sign_theme_bamboo"
+    ],
+    "flute": [
+      "sign_shoulder_strap"
+    ],
+    "shadow": [
+      "sign_theme_shadow"
+    ],
+    "salt": [
+      "sign_theme_salt"
+    ],
+    "dye": [
+      "sign_theme_porcelain"
+    ],
+    "drum": [
+      "sign_theme_drum"
+    ],
+    "incense": [
+      "sign_theme_lamp"
+    ],
+    "tide": [
+      "sign_theme_fisher"
+    ],
+    "porcelain": [
+      "sign_theme_porcelain"
+    ]
+  },
+  "cast_unique": {
+    "leader": {
+      "pathc_stem": "cast_leader",
+      "note": "Path C shipping full figure; kit compose_captain fallback"
+    },
+    "dengying": {
+      "pathc_stem": "hunter_m",
+      "note": "Protagonist cast — Path C hunter_m LOOK as unique body"
+    }
+  },
+  "deferred_pathc_meshes": [
+    {
+      "id": "squire",
+      "tier": 1,
+      "line": "rider",
+      "kit_outfit": "outfit_squire",
+      "kit_weapon": "weapon_sword",
+      "kit_signs": [
+        "sign_cape_short"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "light_cavalry",
+      "tier": 2,
+      "line": "rider",
+      "kit_outfit": "outfit_squire",
+      "kit_weapon": "weapon_spear",
+      "kit_signs": [
+        "sign_cape_short"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "outrider",
+      "tier": 3,
+      "line": "rider",
+      "kit_outfit": "outfit_squire",
+      "kit_weapon": "weapon_spear",
+      "kit_signs": [
+        "sign_cape_long",
+        "sign_scarf"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "bridge_tax",
+      "tier": 3,
+      "line": "rider",
+      "kit_outfit": "outfit_squire",
+      "kit_weapon": "weapon_spear",
+      "kit_signs": [
+        "sign_cape_long",
+        "sign_waist_badge"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "warrior",
+      "tier": 2,
+      "line": "light",
+      "kit_outfit": "outfit_light_inf",
+      "kit_weapon": "weapon_greatsword",
+      "kit_signs": [
+        "sign_pauldron_L"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "veteran",
+      "tier": 3,
+      "line": "light",
+      "kit_outfit": "outfit_light_inf",
+      "kit_weapon": "weapon_greatsword",
+      "kit_signs": [
+        "sign_waist_cape",
+        "sign_pauldron_both"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "forge_brow",
+      "tier": 3,
+      "line": "light",
+      "kit_outfit": "outfit_militia",
+      "kit_weapon": "weapon_hammer",
+      "kit_signs": [
+        "sign_goggles"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "heavy_inf",
+      "tier": 1,
+      "line": "heavy",
+      "kit_outfit": "outfit_heavy_inf",
+      "kit_weapon": "weapon_sword",
+      "kit_signs": [
+        "sign_pauldron_both"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "sentinel",
+      "tier": 2,
+      "line": "heavy",
+      "kit_outfit": "outfit_heavy_inf",
+      "kit_weapon": "weapon_sword",
+      "kit_signs": [
+        "sign_pauldron_both"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "bulwark",
+      "tier": 3,
+      "line": "heavy",
+      "kit_outfit": "outfit_heavy_inf",
+      "kit_weapon": "weapon_sword",
+      "kit_signs": [
+        "sign_pauldron_both",
+        "sign_cape_short"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "archer",
+      "tier": 2,
+      "line": "hunter",
+      "kit_outfit": "compose_hunter",
+      "kit_weapon": "weapon_bow",
+      "kit_signs": [
+        "sign_shoulder_strap"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "marksman",
+      "tier": 3,
+      "line": "hunter",
+      "kit_outfit": "compose_hunter",
+      "kit_weapon": "weapon_bow",
+      "kit_signs": [
+        "sign_scarf_long"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "apprentice",
+      "tier": 1,
+      "line": "arcane",
+      "kit_outfit": "outfit_apprentice",
+      "kit_weapon": "weapon_staff",
+      "kit_signs": [],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "mage",
+      "tier": 2,
+      "line": "arcane",
+      "kit_outfit": "outfit_apprentice",
+      "kit_weapon": "weapon_staff",
+      "kit_signs": [
+        "sign_scarf"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "lu_wai",
+      "tier": 3,
+      "line": "arcane",
+      "kit_outfit": "outfit_apprentice",
+      "kit_weapon": "weapon_staff",
+      "kit_signs": [
+        "sign_bookcase"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "warlock",
+      "tier": 3,
+      "line": "arcane",
+      "kit_outfit": "outfit_apprentice",
+      "kit_weapon": "weapon_staff",
+      "kit_signs": [
+        "sign_cape_long"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "priest",
+      "tier": 2,
+      "line": "priest",
+      "kit_outfit": "outfit_apprentice",
+      "kit_weapon": "weapon_staff",
+      "kit_signs": [
+        "sign_theme_lamp"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "medic",
+      "tier": 3,
+      "line": "priest",
+      "kit_outfit": "outfit_apprentice",
+      "kit_weapon": "weapon_staff",
+      "kit_signs": [
+        "sign_medkit"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "yan_zhan",
+      "tier": 3,
+      "line": "priest",
+      "kit_outfit": "outfit_apprentice",
+      "kit_weapon": "weapon_staff",
+      "kit_signs": [
+        "sign_theme_lamp"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "militia",
+      "tier": 1,
+      "line": "militia",
+      "kit_outfit": "outfit_militia",
+      "kit_weapon": "weapon_spear",
+      "kit_signs": [
+        "sign_back_hat"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "skirmisher",
+      "tier": 2,
+      "line": "militia",
+      "kit_outfit": "outfit_militia",
+      "kit_weapon": "weapon_dagger",
+      "kit_signs": [],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "pathfinder",
+      "tier": 3,
+      "line": "militia",
+      "kit_outfit": "outfit_militia",
+      "kit_weapon": "weapon_dagger",
+      "kit_signs": [
+        "sign_cloak"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "banner",
+      "tier": 1,
+      "line": "banner",
+      "kit_outfit": "outfit_banner",
+      "kit_weapon": "weapon_banner",
+      "kit_signs": [],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "standard",
+      "tier": 2,
+      "line": "banner",
+      "kit_outfit": "outfit_banner",
+      "kit_weapon": "weapon_banner",
+      "kit_signs": [
+        "sign_pauldron_L"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "salt_yin",
+      "tier": 3,
+      "line": "banner",
+      "kit_outfit": "outfit_banner",
+      "kit_weapon": "weapon_banner",
+      "kit_signs": [
+        "sign_waist_badge"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "acolyte",
+      "tier": 1,
+      "line": "cantor",
+      "kit_outfit": "outfit_apprentice",
+      "kit_weapon": "weapon_staff",
+      "kit_signs": [],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "cantor",
+      "tier": 2,
+      "line": "cantor",
+      "kit_outfit": "outfit_apprentice",
+      "kit_weapon": "weapon_book",
+      "kit_signs": [
+        "sign_shoulder_strap"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "chorister",
+      "tier": 3,
+      "line": "cantor",
+      "kit_outfit": "outfit_apprentice",
+      "kit_weapon": "weapon_book",
+      "kit_signs": [
+        "sign_scarf_long"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    },
+    {
+      "id": "frost_wait",
+      "tier": 3,
+      "line": "cantor",
+      "kit_outfit": "outfit_apprentice",
+      "kit_weapon": "weapon_staff",
+      "kit_signs": [
+        "sign_cape_long"
+      ],
+      "status": "placeholder_kit",
+      "note": "Path C shipping LOD not baked; readable via kit/shell + signs"
+    }
+  ]
 }
