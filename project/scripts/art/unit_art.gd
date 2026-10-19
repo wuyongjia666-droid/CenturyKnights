@@ -563,7 +563,7 @@ static func speaker_plate_path(speaker: String) -> String:
 ## 12–15 → teen (youth bank band); 16+ → the adult chain. Resolved from c.age on every call,
 ## so it re-resolves on each birthday and after save/load (age is the only input).
 const INFANT_PLATE := "res://assets/art/portraits/genome/bank/infant_00647ff1b34ec210.png"
-const CHILD_PLATE := {"f": "res://assets/art/portraits/hireuniq_150.png", "m": "res://assets/art/portraits/hireuniq_170.png"}
+const CHILD_PLATE := {"f": "res://assets/art/portraits/band/child_f.png", "m": "res://assets/art/portraits/band/child_m.png"}
 
 static func display_band(age_i: int) -> String:
 	if age_i <= 2:
@@ -625,7 +625,8 @@ static func portrait(c: CKCharacter, size: int = 96, tier: String = "") -> Textu
 	if tex2 != null:
 		_cache[ck] = tex2
 		return tex2
-	# 个人脸优先：hireuniq 为手绘感唯一底，再轻染等位色
+	# hireuniq：个人脸底（Android 仍打包；缺 bank 命中时比 bust 更清晰）。
+	# hireface / hire_*_plate 已在代码里跳过，Android 导出排除。儿童板在 portraits/band/。
 	var uid = _face_uid(c)
 	var uniq_p = "res://assets/art/portraits/hireuniq_%03d.png" % uid
 	var utex = _try_load(uniq_p, use_tier)

@@ -90,3 +90,36 @@
 | + E（expr/speaker 去 large） | 424.7 MiB（源 −16.7） | **487.31 MiB**（510,979,791 B，**−19.05 MiB**） |
 
 距 400 还差约 **87 MiB**；下一切仍见 §2 B–I。
+
+
+## 6. 第三刀（质量优先：只砍死重）
+
+硬规则：不伤画质。不做 D（atlas 半分辨率）、B（bank 只留 small）、F（棋子 albedo）、H/I；不重压立绘。
+
+### 做了什么
+
+1. **死重立绘（C 的窄子集）**：Android 排除 `hireface_*.webp`、`hire_*_plate.webp`。这两类在 `UnitArt.portrait` 里已被强制跳过（`ft = null` / `ht = null`），玩家从未看到；排除不改变回落链。  
+2. **hireuniq 全量排除（原 C）跳过**：bank 未命中时 hireuniq 仍是清晰个人脸；去掉后会落到 v8 bust/卡通，违反「回落必须是 bank medium 或同等质量」。儿童板迁到 `portraits/band/child_{f,m}.webp`（像素与原 hireuniq_150/170 相同，便于以后再动 C）。  
+3. **音频（G，透明）**：去掉仅作 `_play_legacy` 垫乐的 `music_{hub,castle,battle}.wav`；`_play_legacy` 改为加载已有 `mus_*.ogg`，不重编码、不降码率。主路径本来就是 ogg。  
+4. `android_tier_pack_check`：断言死重板与三份 wav 被排除，并断言 **hireuniq 仍打包**。  
+5. 不测全量 APK（本机过重）；源估算用 `export_size_report.py`。
+
+### 体积
+
+| | 源估算 Android | APK |
+|---|---:|---:|
+| #324 后（E） | 424.7 MiB | **487.31 MiB**（实测） |
+| 本刀（死重 + 重复 wav） | **420.23 MiB**（源 −4.47） | **估 ~479–482 MiB**（−5～−8；未本机重打 APK） |
+
+距 400 还差约 **79–82 MiB**。再砍要动 H/I（需拍板）或接受画质风险的 B/D/F——本刀不碰。
+
+### 明确跳过（画质）
+
+| 杠杆 | 原因 |
+|---|---|
+| C 全量 hireuniq | bank 未覆盖时会落到 bust/卡通 |
+| D atlas 半分辨率 | 大地图可读性风险 |
+| B bank small-only | 半身糊 |
+| F 棋子 albedo | 与 Path C 质量锁冲突 |
+| G 重压 ogg | 可能可感音质损失；本刀只删未使用的 wav 副本 |
+| H / I | 需用户拍板 |

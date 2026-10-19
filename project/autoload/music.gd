@@ -355,18 +355,17 @@ func _ensure_buses() -> void:
 		AudioServer.set_bus_send(idx, "Master")
 
 func _play_legacy(state: String) -> void:
-	var path := "res://assets/sfx/music_hub.wav"
+	## 旧 wav 垫乐已从 Android 包排除；缺 ogg 主曲时回落到同名季节/战斗 ogg。
+	var id := "mus_castle_spring"
 	if state in ["player_turn", "enemy_turn", "boss", "tension"]:
-		path = "res://assets/sfx/music_battle.wav"
+		id = "mus_battle_era1"
+	elif state in ["menu"]:
+		id = "mus_title"
 	elif state in ["castle", "hub"]:
-		path = "res://assets/sfx/music_castle.wav"
-	if not ResourceLoader.exists(path):
+		id = "mus_castle_%s" % season_from_month(_month())
+	var stream := _load_track(id)
+	if stream == null:
 		return
-	var stream = load(path)
-	if stream is AudioStreamWAV:
-		stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
-		stream.loop_begin = 0
-		stream.loop_end = -1
 	var nxt: AudioStreamPlayer = _b if _to == _a else _a
 	nxt.stream = stream
 	nxt.play()
@@ -374,5 +373,5 @@ func _play_legacy(state: String) -> void:
 	_from = null
 	_fade = 1.0
 	_state = state
-	_track = path
+	_track = id
 	_apply_gains()
