@@ -4,22 +4,22 @@
   "tip_sha_note": "P4 merge 2bc94c8fd; Path C ship + kit shells; 29 jobs deferred Path C LOD",
   "scheme": "A",
   "scheme_lock": "docs/design/pawn-gate-proposal-20261017.md",
-  "design": "docs/design/pawn-redesign-opus.md §7",
+  "design": "docs/design/pawn-redesign-opus.md sec 7",
   "deferred_pathc": "docs/art/review/board_figure_p4_deferred.md",
   "mobile_head_h_px": {
     "threshold_min": 24,
     "recorded_min": 28.8,
     "recorded_mean": 29.7,
     "recorded_max": 31.6,
-    "source": "docs/design/pawn-redesign-opus.md §4.3 prototype (2400×1080 CELL 103)",
+    "source": "docs/design/pawn-redesign-opus.md sec 4.3 prototype (2400×1080 CELL 103)",
     "ci_status": "RECORDED_NOT_REMEASURED",
-    "note": "CI (llvmpipe) does not re-measure pixel head height. Kit + Path C share base_body head scale with the §4.3 modular prototype; recorded_min 28.8 ≥ 24."
+    "note": "CI (llvmpipe) does not re-measure pixel head height. Kit + Path C share base_body head scale with the sec 4.3 modular prototype; recorded_min 28.8 ≥ 24."
   },
   "desktop_s7_1_pixel_metrics": {
     "ci_status": "PROTOTYPE_RECORDED_NOT_GATED",
-    "reason": "§7.1 contour/separation/ΔE/id tables assumed full modular Path C for every unit. Shipping reality is kit shells + partial Path C (see deferred_pathc). llvmpipe cannot honestly re-score those pixel gates; thresholds stay in project/data/board_figure_baseline.json thresholds_s7_1 for human/playtest reference only.",
+    "reason": "sec 7.1 contour/separation/ΔE/id tables assumed full modular Path C for every unit. Shipping reality is kit shells + partial Path C (see deferred_pathc). llvmpipe cannot honestly re-score those pixel gates; thresholds stay in project/data/board_figure_baseline.json thresholds_s7_1 for human/playtest reference only.",
     "thresholds_ref": "project/data/board_figure_baseline.json#thresholds_s7_1",
-    "prototype_ref": "docs/design/pawn-redesign-opus.md §4.2 / §4.3"
+    "prototype_ref": "docs/design/pawn-redesign-opus.md sec 4.2 / sec 4.3"
   },
   "items": {
     "7.1_pathc_ship_budget": {
@@ -40,11 +40,11 @@
     "7.1_mobile_head_h_ge_24": {
       "status": "DONE",
       "gate": "board_figure_gate check_s7_acceptance",
-      "note": "recorded_min 28.8 from §4.3; not re-measured in CI"
+      "note": "recorded_min 28.8 from sec 4.3; not re-measured in CI"
     },
     "7.1_desktop_pixel_contour_separation_de": {
       "status": "NEED_USER",
-      "note": "Prototype cleared §7.1 under modular Path C; not re-gated for kit-placeholder majority. Human A/B + optional offline metric pass"
+      "note": "Prototype cleared sec 7.1 under modular Path C; not re-gated for kit-placeholder majority. Human A/B + optional offline metric pass"
     },
     "7.2_human_blind_test": {
       "status": "NEED_USER",
@@ -110,5 +110,5 @@
     ],
     "vs_portrait": "vs_portrait/"
   },
-  "qwen_farm": "unreachable @100.127.28.107:8003 during §7 close-out; no farm"
+  "qwen_farm": "unreachable @100.127.28.107:8003 during sec 7 close-out; no farm"
 }
