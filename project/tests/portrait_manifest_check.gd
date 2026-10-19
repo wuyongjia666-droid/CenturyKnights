@@ -69,8 +69,14 @@ func _run() -> String:
 		return "positive does not start with style-lock prefix"
 	if not pos.contains("wheat-blonde hair") or not pos.contains("Waist-up half-body"):
 		return "positive missing half-body descriptors"
-	if CKGenomePortrait.negative_prompt(a) != negative:
-		return "negative is not the style-lock negative"
+	var want_neg := negative
+	if CKGenomePortrait.is_fem_young(a):
+		want_neg = negative + ", " + CKGenomePortrait.FEM_YOUNG_NEGATIVE
+	if CKGenomePortrait.negative_prompt(a) != want_neg:
+		return "negative is not the style-lock negative (+female youth/YA suffix)"
+	var fem_err := _fem_young(a, negative)
+	if fem_err != "":
+		return fem_err
 	CKGenomePortrait.set_bloodline_clause_hook(func(_u): return "BLOODLINE_HOOK_CLAUSE")
 	var hooked := CKGenomePortrait.positive_prompt(a)
 	CKGenomePortrait.set_bloodline_clause_hook(Callable())
@@ -259,4 +265,40 @@ func _stages(a: CKCharacter) -> String:
 		a.age = saved
 		return "age-awakened jaw cast missing at 30"
 	a.age = saved
+	return ""
+
+
+## #321: female youth / young-adult plates lead with female wording, drop masculine structure words,
+## and carry a male negative; male and other bands keep the style-lock text untouched.
+func _fem_young(base: Object, negative: String) -> String:
+	var saved_g := str(base.get("gender"))
+	var saved_age := int(base.get("age"))
+	var masculine := ["square jaw", "broad face", "thick brows", "a strong nose", "youth boy", "young adult man", "wide jaw angle", "hair cut short"]
+	for st in ["youth", "young_adult"]:
+		base.set("age", CKGenomePortrait.stage_apex(st))
+		base.set("gender", "f")
+		base.genome["face"]["jaw"] = 0.9
+		base.genome["face"]["width"] = 0.9
+		var pos := CKGenomePortrait.positive_prompt(base)
+		var lead := str(CKGenomePortrait.FEM_YOUNG_LEAD[st])
+		if not pos.contains(lead):
+			return "female %s lead missing" % st
+		for w in masculine:
+			if pos.contains(w):
+				return "female %s prompt still says '%s'" % [st, w]
+		if not CKGenomePortrait.negative_prompt(base).ends_with(CKGenomePortrait.FEM_YOUNG_NEGATIVE):
+			return "female %s negative lacks male terms" % st
+		base.set("gender", "m")
+		if CKGenomePortrait.negative_prompt(base) != negative:
+			return "male %s negative changed" % st
+		if CKGenomePortrait.positive_prompt(base).contains("female"):
+			return "male %s prompt got female wording" % st
+	base.set("age", CKGenomePortrait.stage_apex("middle"))
+	base.set("gender", "f")
+	if CKGenomePortrait.negative_prompt(base) != negative:
+		return "female middle negative changed"
+	base.genome["face"]["jaw"] = -0.2
+	base.genome["face"]["width"] = -0.42
+	base.set("gender", saved_g)
+	base.set("age", saved_age)
 	return ""
