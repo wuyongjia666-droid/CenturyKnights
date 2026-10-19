@@ -1,10 +1,10 @@
 class_name CKUnitLayer3D
-extends SubViewportContainer
-## Route C (docs: /workspace/pawn_upgrade/plan.md): live 3D unit layer over the 2D board.
-## The 2D board keeps terrain, overlays and input; this transparent layer only draws the
-## units — portrait-matched CKBoardFigure prototypes (pawn-redesign-opus), with lightweight clips.
-## Orthographic camera pitched PITCH°; ground Z is stretched by 1/sin(pitch) so a 3D foot
-## position lands exactly on its 2D cell centre. 2D token fallback: CI / headless / setting off.
+extends Control
+## Route C live 3D unit layer over the 2D board (pawn-redesign-opus §3.8 P3).
+## The 2D board keeps terrain, overlays and input; this transparent layer only draws units.
+## Orthographic camera pitched PITCH°; ground Z stretched by 1/sin(pitch) so a 3D foot
+## lands on its 2D cell centre. 2D token fallback: CI / headless / setting off / over max_units.
+## P3: idle SubViewport refresh 12–15Hz; walk/attack/FX full frame; mobile halo blits with refresh.
 
 const PITCH := 38.0
 const PX := 100.0          # screen px per world unit
@@ -20,29 +20,37 @@ var path_fn: Callable         # (u, from: Vector2i, to: Vector2i) -> Array[Vecto
 var cell_px_fn: Callable      # (cell) -> container-local feet point
 var _sparks: Array = []
 
-const MAX_UNITS := 16  # P4: beyond this the board falls back to 2D tokens
+## Absolute ceiling (desktop). Prefer max_units() — mobile is lower (§3.8 P3).
+const MAX_UNITS := 32
+const IDLE_HZ := 14.0  # mid of 12–15Hz idle refresh (aligns with battle ~12Hz pulse)
 
-## Default on for desktop and mobile. Settings toggle can still turn off (saves battery on phone).
-## Missing key → default_on(); only an explicit saved false keeps 2D tokens.
+var _idle_accum := 0.0
+var _display: TextureRect = null  # shows VP (or halo-blit) texture
+var _blit_vp: SubViewport = null  # mobile: 2D pass applying board_halo at refresh rate
+var _halo_mat: ShaderMaterial = null
+
+## Default: desktop + mid/high Android on; low-end off (baked stand-ins). Settings override.
 static func default_on() -> bool:
-	return true
+	return DeviceProfile.board_3d_default()
+
+static func max_units() -> int:
+	return DeviceProfile.max_board_units_3d()
 
 static func enabled(unit_count: int = 0) -> bool:
 	if DisplayServer.get_name() == "headless":
 		return false
-	if unit_count > MAX_UNITS:
+	if unit_count > max_units():
 		return false
-	if DeviceProfile.is_low_end():
-		return false  # P1: baked stand-ins via UnitArt; live 3D waits for P3 gate
+	# Respect user toggle when set; otherwise device-tier default (low-end → stand-ins).
 	return bool(GameState.settings.get("board_units_3d", default_on()))
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	stretch = true
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_vp = SubViewport.new()
 	_vp.transparent_bg = true
 	_vp.own_world_3d = true
+	_vp.handle_input_locally = false
 	# Transparent SubViewport + MSAA yields mid-alpha coverage samples → ghost silhouettes
 	# when composited over the 2D board (Godot MSAA/transparent-bg). Keep MSAA off here.
 	_vp.msaa_3d = Viewport.MSAA_DISABLED
@@ -55,12 +63,6 @@ func _ready() -> void:
 		_vp.scaling_3d_scale = 2.0
 	_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	add_child(_vp)
-	# 1px dark outline halo + premul alpha (board_halo.gdshader).
-	var halo := ShaderMaterial.new()
-	halo.shader = load("res://shaders/board_halo.gdshader") as Shader
-	halo.set_shader_parameter("px", 1.0)
-	halo.set_shader_parameter("halo_a", 0.95)
-	material = halo
 	_world = Node3D.new()
 	_vp.add_child(_world)
 	var env := Environment.new()
@@ -84,7 +86,89 @@ func _ready() -> void:
 	_cam.far = 200.0
 	_world.add_child(_cam)
 	_cam.current = true
+	_setup_display_and_halo()
+	resized.connect(_sync_vp_size)
+	_sync_vp_size()
 
+
+
+func _halo_material() -> ShaderMaterial:
+	var halo := ShaderMaterial.new()
+	halo.shader = load("res://shaders/board_halo.gdshader") as Shader
+	halo.set_shader_parameter("px", 1.0)
+	halo.set_shader_parameter("halo_a", 0.95)
+	return halo
+
+func _setup_display_and_halo() -> void:
+	## 1px #0A0E14 silhouette (board_halo.gdshader).
+	## Desktop: TextureRect + halo material (composites every frame; cheap on PC).
+	## Mobile P3: 3D VP → blit SubViewport (halo material, updates with idle/busy refresh)
+	## → display TextureRect with no material. Halo 9-tap only runs when the blit updates.
+	_halo_mat = _halo_material()
+	_display = TextureRect.new()
+	_display.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_display.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_display.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_display.stretch_mode = TextureRect.STRETCH_SCALE
+	add_child(_display)
+	if DeviceProfile.prefer_halo_in_viewport():
+		_blit_vp = SubViewport.new()
+		_blit_vp.transparent_bg = true
+		_blit_vp.handle_input_locally = false
+		_blit_vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+		add_child(_blit_vp)
+		var src := TextureRect.new()
+		src.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		src.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		src.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		src.stretch_mode = TextureRect.STRETCH_SCALE
+		src.texture = _vp.get_texture()
+		src.material = _halo_mat
+		_blit_vp.add_child(src)
+		_display.texture = _blit_vp.get_texture()
+		_display.material = null
+	else:
+		_display.texture = _vp.get_texture()
+		_display.material = _halo_mat
+
+func _sync_vp_size() -> void:
+	var px := Vector2i(maxi(2, int(size.x)), maxi(2, int(size.y)))
+	if _vp:
+		_vp.size = px
+	if _blit_vp:
+		_blit_vp.size = px
+
+func _layer_busy() -> bool:
+	for st in _nodes.values():
+		if not (st.get("path", []) as Array).is_empty():
+			return true
+		if float(st.get("lock_t", 0.0)) > 0.0:
+			return true
+		var cur := str(st.get("cur", ""))
+		if cur in ["advance", "attack", "hit", "skill", "crit", "dodge", "death"]:
+			return true
+		if not (st.get("pending", []) as Array).is_empty():
+			return true
+	return false
+
+func _set_vp_mode(mode: int) -> void:
+	_vp.render_target_update_mode = mode
+	if _blit_vp:
+		_blit_vp.render_target_update_mode = mode
+
+func _refresh_update_mode(delta: float) -> void:
+	## Idle: 12–15Hz SubViewport refresh. Walk / attack / FX: full frame.
+	## When halo blits through _blit_vp, it shares this cadence (P3 mobile fill-rate).
+	if _layer_busy():
+		_idle_accum = 0.0
+		_set_vp_mode(SubViewport.UPDATE_ALWAYS)
+		return
+	_idle_accum += delta
+	if _idle_accum >= (1.0 / IDLE_HZ):
+		_idle_accum = 0.0
+		_set_vp_mode(SubViewport.UPDATE_ONCE)
+	else:
+		_set_vp_mode(SubViewport.UPDATE_DISABLED)
 
 ## P1 formal kit uses board_figure.gdshader (no board_compact / farm flatten).
 func _solidify_board(_n: Node) -> void:
@@ -106,6 +190,7 @@ func has_unit(c) -> bool:
 
 ## Per frame: entries = [{u, px (container-local feet point), cell_px, visible}]
 func sync(entries: Array, delta: float) -> void:
+	_refresh_update_mode(delta)
 	_update_cam()
 	var seen := {}
 	for e in entries:

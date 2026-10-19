@@ -290,17 +290,17 @@
 
 | 档 | 条件 | 表现 |
 |---|---|---|
-| 实时 3D | 桌面；中高端安卓（P3 性能门禁通过后默认开） | 本节全部规格。空闲时单位层 12–15Hz 刷新，与 [#289](https://github.com/wuyongjia666-droid/CenturyKnights/pull/289) 已合入的约 12Hz 战斗脉冲重绘对齐；行走、攻击和特效存活期间满帧 |
-| 烘焙替身 | `DeviceProfile.is_low_end()`；单位数 > `MAX_UNITS`；用户关闭 3D | 开局时用一个离屏 SubViewport 把每个棋子渲染成 2D 精灵（待机 1 帧，朝右），朝左时水平翻转；主光随朝向镜像，所以翻转后光向正好正确。按外观哈希缓存到内存和 `user://`。替换所有胶囊棋子，包括棋盘回退、触控确认的虚影和名册 |
+| 实时 3D | 桌面；中高端安卓（**P3 已落地**：默认开） | 本节全部规格。空闲时单位层 **14Hz**（12–15 带）刷新，与 [#289](https://github.com/wuyongjia666-droid/CenturyKnights/pull/289) 约 12Hz 战斗脉冲对齐；行走、攻击和特效存活期间满帧。实现：`CKUnitLayer3D._refresh_update_mode` |
+| 烘焙替身 | `DeviceProfile.is_low_end()` 默认；单位数 > `max_units()`（手机 24 / 桌面 32）；用户关闭 `board_units_3d` | 开局时用离屏 SubViewport 把每个棋子渲染成 2D 精灵（待机 1 帧，朝右），朝左水平翻转；主光随朝向镜像。按外观哈希缓存到内存和 `user://`。替换胶囊棋子（棋盘回退、触控虚影、名册）。用户开关可覆盖低端默认 |
 
 16 个单位时的估算：
 
 - 三角面 6.4–9.6 万（上限 11.2 万）；现状约 65 万（每人约 2 万面，再加一遍描边 pass）。
 - 单位层 draw call 约 17（每人 1 个，加 1 次合成）；现状每人 6–10 个。
 - 贴图显存为 0；现状 16 张 1024²。
-- 光晕是对单位层纹理的 9 次取样，代价在 P3 实机测量。如果手机上超过 0.3ms，就把光晕挪进 SubViewport 内部做，跟着单位层 12–15Hz 的刷新走，而不是每帧都做。
+- 光晕是对单位层纹理的 9 次取样。**P3**：手机把光晕挪进独立 blit SubViewport，与单位层 12–15Hz 刷新同频（`prefer_halo_in_viewport()`）；桌面仍走显示 TextureRect 材质。实机若 blit 路径仍 >0.3ms，再测并记入 §7.3（CI/llvmpipe 测不出 GPU ms）。
 - 替身档显存约 16 × 160×200 × 4B，约 2MB。
-- `MAX_UNITS` 可从 16 提到 24（手机）和 32（桌面），P3 验证后再定。
+- **`max_units()` P3 已上调**：手机 24、桌面 32（绝对值天花板 `MAX_UNITS := 32`）。超限强制替身/2D token。
 
 ### 3.9 动作
 
@@ -481,7 +481,7 @@
 | P0 规格与数据 | 风格锁登记 `board_figure`；`plate_palette.py` 跑完 1,595 张图版，人工复核发型；`try_texture` 带出图版 stem；`board_figure_gate.py` 先给现状建立基线 | 文档、工具、数据；`portrait_bank.gd` 小改 | 基线与 §4.2 一致；调色表抽检 | 图版标注的工作量 |
 | P1 套件和静态接入 | Blender 生成器；身体、头部、8 款发型 LOD、8 个 t1 职业的服装和武器、山贼套；`CKBoardFigure`；着色器和光晕；单位层替换；烘焙替身取代胶囊；`export_base_budget_bytes` 上调约 3MB | 新文件为主；`unit_layer_3d.gd`、`unit_art.gd` 少量 | 门禁；桌面和手机 A/B 截图；`unit_layer_check`、`board_pawn_check` 更新 | 正式件品质；包体 |
 | P2 动作 | 骨架按新比例重摆；`board` 姿态覆盖；`axe`、`banner`、`dagger`、`book`；`dim`、`flash`、选中 | 工具、动作库、着色器参数 | `pawn_shots --seq` 逐帧检查；命中帧误差 ≤ 1 帧 | 头部放大后的举臂穿插 |
-| P3 手机 | 空闲 12–15Hz 刷新；中高端安卓默认开实时 3D，低端默认替身；光晕实机测量；`MAX_UNITS` 上调；手机门禁 | `unit_layer_3d.gd`、`device_profile.gd`、设置项 | §7.3 实机帧率；`CK_FORCE_MOBILE` 截图门禁 | 透明 SubViewport 合成和光晕的填充率 |
+| P3 手机 | **已合**：空闲 14Hz 刷新；中高端安卓默认实时 3D，低端默认替身（设置可覆盖）；光晕随刷新 blit；`max_units` 24/32；`mobile_unit_layer_check` | `unit_layer_3d.gd`、`device_profile.gd`、设置 `board_units_3d` | CI：`unit_layer_check` + `mobile_unit_layer_check`；§7.3 实机帧率仍要用户机/AVD | 透明合成填充率（实机） |
 | P4 覆盖 | 32 个职业的 t2/t3 标志件；22 个敌人主题的标志件；首领；主角团专属件；退出 P3 职业部件和 `board_compact` 的棋盘路径 | 数据和部件为主 | 全职业样张；剪影两两 IoU | 工作量膨胀（靠数据驱动控制） |
 
 P1 就要包含烘焙替身，这样安卓用户在第一期就告别胶囊棋子，不必等到 P3。P1 先做 3 个单位（团长、猎手、山贼）给用户过目，通过后再铺开。
@@ -525,7 +525,8 @@ P1 就要包含烘焙替身，这样安卓用户在第一期就告别胶囊棋�
 | 中端安卓（骁龙 7 系或天玑 8000 级） | 实时 3D，16 单位 | 空闲 ≥ 58fps；行走和攻击时 ≥ 55fps，1% low ≥ 45fps |
 | 低端安卓（≤ 4GB，例如 Helio G85） | 烘焙替身 | ≥ 58fps；内存增量 ≤ 20MB；开局烘焙 ≤ 300ms |
 | 桌面 | 实时 3D，16 单位 | 单位层 GPU ≤ 1.0ms@1080p |
-| CI 代理指标 | `board_figure_check`、`tools/ci/pathc_ship_gate.py` | **方案 A（2026-10-17）**：每件航运档（`pathc_ship`、`pathc_weapons`）≤ 15k 三角、≤ 1.0MB、1 个材质、≤ 1 张贴图（边长 ≤ 512，JPG/WebP）；每人 draw call ≤ 2（身体 + 武器），CI 测不出，发版前实机核对。原稿：每人三角 ≤ 7k，每人 draw call 1 个，贴图 0 张 |
+| CI 代理指标 | `board_figure_check`、`tools/ci/pathc_ship_gate.py`、`unit_layer_check`、`mobile_unit_layer_check` | **方案 A（2026-10-17）**：每件航运档（`pathc_ship`、`pathc_weapons`）≤ 15k 三角、≤ 1.0MB、1 个材质、≤ 1 张贴图（边长 ≤ 512，JPG/WebP）；每人 draw call ≤ 2（身体 + 武器），CI 测不出，发版前实机核对。原稿：每人三角 ≤ 7k，每人 draw call 1 个，贴图 0 张。**P3 CI**：档位/上限/空闲刷新/光晕 blit 源契约（`CK_FORCE_MOBILE`）；**不**卡实机 fps |
+| P3 实机（待用户机） | 中端实时 3D 16 人；低端替身 | 空闲 ≥58fps；行走/攻击 ≥55fps（1% low ≥45）；低端 ≥58fps、烘焙 ≤300ms、内存增量 ≤20MB。**本 PR 未在真机测量** |
 
 CI 跑在 llvmpipe 上，测不出真实帧率。发版前沿用 `mobile-landscape.md` 的做法，在 AVD 和实机上冒烟。
 

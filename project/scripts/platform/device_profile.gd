@@ -15,6 +15,24 @@ static func is_mobile() -> bool:
 		return true
 	return OS.get_name() in ["Android", "iOS"]
 
+static func max_board_units_3d() -> int:
+	## P3 (pawn-redesign-opus §3.8): live 3D cap before falling back to baked stand-ins.
+	## Mobile 24 / desktop 32 (was a flat 16).
+	if is_mobile():
+		return 24
+	return 32
+
+static func board_3d_default() -> bool:
+	## Mid/high Android + desktop: realtime 3D. Low-end: baked 2D stand-ins.
+	## User toggle (settings.board_units_3d) still overrides when the key is set.
+	return not is_low_end()
+
+static func prefer_halo_in_viewport() -> bool:
+	## P3: on mobile, run the 1px silhouette halo with the unit-layer refresh
+	## (12–15Hz idle) instead of every canvas frame. Desktop keeps TextureRect + halo material (every frame; cheap on PC). Mobile uses
+	## a blit SubViewport so the 9-tap rides idle refresh. Real-device ms still needs a phone.
+	return is_mobile()
+
 static func is_low_end() -> bool:
 	var force := OS.get_environment("CK_FORCE_LOW_END")
 	if force == "1":

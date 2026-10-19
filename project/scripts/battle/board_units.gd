@@ -23,7 +23,7 @@ static func feet_px(b, cell: Vector2i) -> Vector2:
 
 static func sync(b, delta: float) -> void:
 	b._fx_delay = 0.0
-	if b.units.size() > CKUnitLayer3D.MAX_UNITS:  # P4 perf cap: big battles drop to 2D tokens
+	if b.units.size() > CKUnitLayer3D.max_units():  # P3: over cap → baked stand-ins / 2D tokens
 		b._unit_layer.queue_free()
 		b._unit_layer = null
 		return
