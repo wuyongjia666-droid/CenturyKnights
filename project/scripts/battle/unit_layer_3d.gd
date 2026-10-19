@@ -16,6 +16,7 @@ var _world: Node3D
 var _nodes: Dictionary = {}   # char id -> {node, anim, face, yaw, cell, path, dead_t, cur}
 const WALK_CELLS_S := 5.0     # walk speed (cells / s)
 const HIT_STOP := 0.075       # freeze both rigs on the impact frame
+const FLASH_S := 0.08  # P2 hit white flash 80ms
 var path_fn: Callable         # (u, from: Vector2i, to: Vector2i) -> Array[Vector2i]
 var cell_px_fn: Callable      # (cell) -> container-local feet point
 var _sparks: Array = []
@@ -184,7 +185,21 @@ func sync(entries: Array, delta: float) -> void:
 		var want: float = float(st.get("yaw", 35.0 * float(st.face)))
 		n2.rotation_degrees.y = rad_to_deg(lerp_angle(deg_to_rad(n2.rotation_degrees.y), deg_to_rad(want), minf(1.0, delta * 14.0)))
 		_tick_pending(st, delta)
-		n2.set_meta("ck_dim", bool(u.done))
+		var dimmed := bool(u.done)
+		n2.set_meta("ck_dim", dimmed)
+		var flash_left := float(st.get("flash_t", 0.0))
+		if flash_left > 0.0:
+			flash_left = maxf(0.0, flash_left - delta)
+			st.flash_t = flash_left
+		var flash_amt := (flash_left / FLASH_S) if FLASH_S > 0.0 else 0.0
+		# Only push shader params when dim/flash bucket changes (avoid per-frame mat walk).
+		var flash_bucket := int(ceil(flash_amt * 8.0))
+		var prev_d = st.get("fb_dim", null)
+		var prev_b = st.get("fb_flash_b", null)
+		if prev_d != dimmed or prev_b != flash_bucket:
+			st.fb_dim = dimmed
+			st.fb_flash_b = flash_bucket
+			CKBoardFigure.apply_feedback(n2, dimmed, flash_amt)
 	for id in _nodes.keys():
 		if not seen.has(id):
 			(_nodes[id].node as Node3D).queue_free()
@@ -198,6 +213,11 @@ func _play(st: Dictionary, anim: String, once: bool = false) -> void:
 	ap.play(anim, 0.12)
 	if anim in ["attack", "hit", "skill", "crit", "dodge"]:
 		st.lock_t = ap.get_animation(anim).length
+	# P2 §3.9: white flash 80ms on hit / crit receive
+	if anim in ["hit", "crit"]:
+		st.flash_t = FLASH_S
+		if st.get("node") != null:
+			CKBoardFigure.apply_feedback(st.node, bool((st.node as Node).get_meta("ck_dim", false)), 1.0)
 
 ## Seconds from swing start to the impact frame (UnitModel.IMPACT), for syncing 2D fx.
 func impact_delay(u, anim: String = "attack") -> float:
