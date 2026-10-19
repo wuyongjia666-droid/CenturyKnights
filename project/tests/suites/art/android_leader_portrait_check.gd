@@ -75,12 +75,22 @@ func _run() -> String:
 	var l2: CKCharacter = GameState.get_leader()
 	if UnitArt.portrait(l2, 280, CKArtPaths.TIER_MEDIUM) == null:
 		return "leader has no fallback face without the bank"
-	var cand2: CKCharacter = GameState.marriage_candidates[0]
-	# Accept whatever rites this candidate's line requires (从母居 / 入牒礼 …), as the vow
-	# panel lets the player do; candidates are random, so an empty list made this flaky.
+	# Accept the rites the vow panel would tick. Skip frostcrown matches neither side
+	# can carry — 携霜契 stays listed but rite_block refuses without a 霜因 carrier.
+	var cand2: CKCharacter = null
 	var rites: Array = []
-	for rt in CKCourt.required_rites(l2, cand2):
-		rites.append(str(rt.get("id", "")))
+	for c0 in GameState.marriage_candidates:
+		var c: CKCharacter = c0
+		var try_rites: Array = []
+		for rt in CKCourt.required_rites(l2, c):
+			try_rites.append(str(rt.get("id", "")))
+		if CKCourt.rite_block(l2, c, try_rites) != "":
+			continue
+		cand2 = c
+		rites = try_rites
+		break
+	if cand2 == null:
+		return "no candidate whose required rites can be sealed without art"
 	var r = Lineage.marry(l2, cand2, 40, rites, true)
 	if not bool(r.get("ok", false)) or str(l2.spouse_id) != str(cand2.id):
 		return "marriage blocked without art: %s" % str(r.get("msg", ""))
