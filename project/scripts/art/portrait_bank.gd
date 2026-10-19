@@ -22,6 +22,17 @@ static var _exact: Dictionary = {}
 static var _by_stage: Dictionary = {}
 static var _disk_by_stage: Dictionary = {}
 static var _disk_indexed := false
+## #321: plated manifest rows packed in res:// (tools/art/write_bank_index.py). Exports have no
+## farm manifest, so best_match falls back to this index; try_texture always matches against it so
+## the nearest bucket is one that actually has a plate.
+const BANK_INDEX := "res://data/art/genome_bank_index.json"
+## Tests: behave like an export build (ignore the farm manifest on disk).
+static var force_export_index := false
+static var _p_indexed := false
+static var _p_exact: Dictionary = {}
+static var _p_by_stage: Dictionary = {}
+## bucket_key -> "m"/"f" from installed manifest/index rows (human labels still win).
+static var _row_sex: Dictionary = {}
 ## bucket_key -> "m"/"f". Packed in res:// so the device (no farm manifest) still filters by sex.
 const SEX_INDEX := "res://data/art/genome_bank_sex.json"
 static var _sex_by_key: Dictionary = {}
@@ -66,6 +77,10 @@ static func clear_cache() -> void:
 	_by_stage.clear()
 	_sex_ready = false
 	_sex_by_key.clear()
+	_p_indexed = false
+	_p_exact.clear()
+	_p_by_stage.clear()
+	_row_sex.clear()
 
 static func has_plates() -> bool:
 	if _plates_known:
@@ -92,7 +107,7 @@ static func try_texture(c: Object, tier: String = "large") -> Dictionary:
 	if not has_plates():
 		return miss
 	var stage := CKGenomePortrait.age_stage_of(c)
-	var m := best_match(c)
+	var m := plated_match(c)
 	if bool(m.get("hit", false)):
 		var key := str(m.get("bucket_key", ""))
 		var tex := _load_plate(key, tier)
@@ -114,8 +129,19 @@ static func best_match(c: Object) -> Dictionary:
 		blood = str(c.call("primary_bloodline"))
 	return match_identity(identity_list(c), CKGenomePortrait.age_stage_of(c), blood)
 
+## Nearest bucket among the plated rows (index). Same stage; plates of the other sex never stand in.
+static func plated_match(c: Object) -> Dictionary:
+	_ensure_plated()
+	var blood := ""
+	if c != null and c.has_method("primary_bloodline"):
+		blood = str(c.call("primary_bloodline"))
+	return _match_in(_p_exact, _p_by_stage, identity_list(c), CKGenomePortrait.age_stage_of(c), blood)
+
 static func match_identity(ident: Array, stage: String, blood: String = "") -> Dictionary:
 	_ensure_index()
+	return _match_in(_exact, _by_stage, ident, stage, blood)
+
+static func _match_in(exact: Dictionary, by_stage: Dictionary, ident: Array, stage: String, blood: String) -> Dictionary:
 	var empty := {"hit": false, "overlap": 0.0, "bucket_key": "", "stage": stage, "bloodline": ""}
 	var sig := _sig(ident)
 	var want_sex := ""
@@ -123,7 +149,7 @@ static func match_identity(ident: Array, stage: String, blood: String = "") -> D
 		var ts := str(t)
 		if ts.begins_with("gender:") or ts.begins_with("sex:"):
 			want_sex = ts.get_slice(":", 1)
-	var cands: Array = _exact.get("%s|%s" % [stage, sig], [])
+	var cands: Array = exact.get("%s|%s" % [stage, sig], [])
 	if not cands.is_empty():
 		var chosen: Dictionary = cands[0]
 		if blood != "":
@@ -141,8 +167,10 @@ static func match_identity(ident: Array, stage: String, blood: String = "") -> D
 		}
 	var best_ov := -1.0
 	var best: Dictionary = {}
-	for row in _by_stage.get(stage, []):
-		var rsex := plate_sex(str(row.get("bucket_key", "")))
+	for row in by_stage.get(stage, []):
+		var rsex := _label_sex(str(row.get("bucket_key", "")))
+		if rsex == "":
+			rsex = str(row.get("sex", ""))
 		if want_sex != "" and rsex != "" and rsex != want_sex:
 			continue
 		var ov2 := token_overlap(ident, row.get("identity", []))
@@ -264,23 +292,64 @@ static func load_manifest() -> Dictionary:
 	return data
 
 static func install_rows(rows: Array) -> void:
-	_exact.clear()
-	_by_stage.clear()
+	_install_into(rows, _exact, _by_stage)
+	_indexed = true
+
+static func _install_into(rows: Array, exact: Dictionary, by_stage: Dictionary) -> void:
+	exact.clear()
+	by_stage.clear()
 	for row in rows:
 		if typeof(row) != TYPE_DICTIONARY:
 			continue
 		var stage := str(row.get("stage", ""))
 		var sig := _sig(row.get("identity", []))
 		var k := "%s|%s" % [stage, sig]
-		if not _exact.has(k):
-			_exact[k] = []
-		(_exact[k] as Array).append(row)
-		if not _by_stage.has(stage):
-			_by_stage[stage] = []
-		(_by_stage[stage] as Array).append(row)
-	for k2 in _exact.keys():
-		(_exact[k2] as Array).sort_custom(func(a, b): return str(a.get("bucket_key", "")) < str(b.get("bucket_key", "")))
-	_indexed = true
+		if not exact.has(k):
+			exact[k] = []
+		(exact[k] as Array).append(row)
+		if not by_stage.has(stage):
+			by_stage[stage] = []
+		(by_stage[stage] as Array).append(row)
+		var rs := str(row.get("sex", ""))
+		if rs == "m" or rs == "f":
+			_row_sex[str(row.get("bucket_key", ""))] = rs
+	for k2 in exact.keys():
+		(exact[k2] as Array).sort_custom(func(a, b): return str(a.get("bucket_key", "")) < str(b.get("bucket_key", "")))
+
+## Expanded rows of res://data/art/genome_bank_index.json (empty when the file is missing).
+static func load_bank_index() -> Array:
+	var out: Array = []
+	if not FileAccess.file_exists(BANK_INDEX):
+		return out
+	var data = JSON.parse_string(FileAccess.get_file_as_string(BANK_INDEX))
+	if typeof(data) != TYPE_DICTIONARY:
+		return out
+	var vocab: Array = data.get("vocab", [])
+	var bloods: Array = data.get("bloodlines", [])
+	for r in data.get("rows", []):
+		if typeof(r) != TYPE_ARRAY or (r as Array).size() < 4:
+			continue
+		var key := str(r[0])
+		var us := key.rfind("_")
+		if us <= 0:
+			continue
+		var ident: Array = []
+		for ti in r[3]:
+			ident.append(str(vocab[int(ti)]))
+		out.append({
+			"bucket_key": key,
+			"stage": key.substr(0, us),
+			"sex": str(r[1]),
+			"bloodline": str(bloods[int(r[2])]) if int(r[2]) < bloods.size() else "",
+			"identity": ident,
+		})
+	return out
+
+static func _ensure_plated() -> void:
+	if _p_indexed:
+		return
+	_install_into(load_bank_index(), _p_exact, _p_by_stage)
+	_p_indexed = true
 
 static func coverage(observed: Array) -> Dictionary:
 	var n := observed.size()
@@ -327,7 +396,8 @@ static func validate_payload(payload: Dictionary) -> String:
 		var pos := str(row.get("positive", ""))
 		if not pos.begins_with(prefix):
 			return "prefix missing on " + str(row.get("bucket_key", ""))
-		if str(row.get("negative", "")) != negative:
+		var neg := str(row.get("negative", ""))
+		if neg != negative and neg != negative + ", " + CKGenomePortrait.FEM_YOUNG_NEGATIVE:
 			return "negative mismatch on " + str(row.get("bucket_key", ""))
 		if int(row.get("seed", 0)) <= 0:
 			return "seed missing on " + str(row.get("bucket_key", ""))
@@ -403,9 +473,11 @@ static func _is_birth(c: Object) -> bool:
 static func _ensure_index() -> void:
 	if _indexed:
 		return
-	var data := load_manifest()
-	if data.is_empty():
-		_indexed = true
+	if not force_export_index and FileAccess.file_exists(manifest_path()):
+		if not load_manifest().is_empty():
+			return
+	## Export (or no manifest): the packed index of plated rows stands in for the farm manifest.
+	install_rows(load_bank_index())
 
 static func _sig(ident: Array) -> String:
 	var parts: PackedStringArray = []
@@ -503,7 +575,15 @@ static func _load_stems_index() -> bool:
 	_disk_indexed = true
 	return not _disk_by_stage.is_empty()
 
+## Human-labelled sex first (genome_bank_sex.json), then the manifest/index row sex.
 static func plate_sex(bucket_key: String) -> String:
+	var lab := _label_sex(bucket_key)
+	if lab != "":
+		return lab
+	_ensure_plated()
+	return str(_row_sex.get(bucket_key, ""))
+
+static func _label_sex(bucket_key: String) -> String:
 	if not _sex_ready:
 		_sex_ready = true
 		var parsed = JSON.parse_string(FileAccess.get_file_as_string(SEX_INDEX)) if FileAccess.file_exists(SEX_INDEX) else null

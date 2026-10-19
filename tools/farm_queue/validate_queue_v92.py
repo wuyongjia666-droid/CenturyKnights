@@ -181,7 +181,11 @@ def check() -> list[str]:
         pos = str(row.get("positive", ""))
         if not pos.startswith(prefix):
             errors.append(f"{label}: positive missing style-lock prefix")
-        if str(row.get("negative", "")) != negative:
+        # #321: female youth/YA genome plates append CKGenomePortrait.FEM_YOUNG_NEGATIVE
+        # (same allowlist as CKPortraitBank.validate_payload).
+        fem_young_neg = "male, boy, man, masculine face, masculine jaw, beard, stubble, moustache"
+        row_neg = str(row.get("negative", ""))
+        if row_neg != negative and row_neg != negative + ", " + fem_young_neg:
             errors.append(f"{label}: negative mismatch")
         try:
             seed = int(row.get("seed", 0))
