@@ -1,22 +1,17 @@
 #!/usr/bin/env python3
 """Estimate Godot export size from export_presets.cfg exclude filters.
 
+Reports Windows and Android separately (their exclude_filter lines differ).
 Sums source bytes under project/ (not .godot, not *.import). A file is excluded
-when any preset pattern matches its relative path. Godot's String.match treats
-'*' as any run of characters, including slashes. Fails when the total is above
-tools/ci/ratchet.json export_budget_bytes.
+when any pattern for that platform matches its relative path. Godot's String.match
+treats '*' as any run of characters, including slashes.
 
-Shipping photographs are WebP quality 92 at native resolution. Doll parts
-are lossless WebP. The gene-portrait bank ships inside the base Windows
-and Android exports, with small and medium siblings beside each large
-plate. The active budget sits just above the measured total. If
-docs/art/retired-assets-v92.json grows an exclude_globs list, those
-patterns are applied on top.
+Fails when either platform total is above tools/ci/ratchet.json export_budget_bytes
+(derived: export_base_budget_bytes + plates * export_bank_bytes_per_plate).
 
-The budget is derived, not a literal: export_base_budget_bytes covers everything
-outside the gene bank, and each bank plate (large + medium + small) earns
-export_bank_bytes_per_plate. Adding plates grows the budget by itself; a plate
-over export_bank_plate_max_bytes fails on its own.
+The hard CAP (400 MiB) is advisory in the note; Android is the packing target.
+Shipping photographs are WebP quality 92. The gene-portrait bank ships large+
+medium+small on Windows; Android packs medium only (large and small excluded).
 """
 from __future__ import annotations
 
@@ -47,18 +42,21 @@ def _glob_to_re(pattern: str) -> re.Pattern[str]:
     return re.compile("^" + "".join(out) + "$")
 
 
-def _patterns_from_presets() -> list[str]:
+def _preset_filters() -> dict[str, list[str]]:
     text = PRESETS.read_text(encoding="utf-8")
-    found = re.findall(r'^exclude_filter="([^"]*)"', text, re.M)
-    if len(found) < 2:
-        raise SystemExit(f"expected 2 exclude_filter lines, found {len(found)}")
-    patterns: list[str] = []
-    for raw in found:
-        for piece in raw.split(","):
-            piece = piece.strip()
-            if piece and piece not in patterns:
-                patterns.append(piece)
-    return patterns
+    # Split on preset headers so each exclude_filter stays with its platform.
+    blocks = re.split(r"(?=^\[preset\.\d+\]\s*$)", text, flags=re.M)
+    out: dict[str, list[str]] = {}
+    for block in blocks:
+        m_plat = re.search(r'^platform="([^"]*)"', block, re.M)
+        m_ex = re.search(r'^exclude_filter="([^"]*)"', block, re.M)
+        if not m_plat or not m_ex:
+            continue
+        patterns = [p.strip() for p in m_ex.group(1).split(",") if p.strip()]
+        out[m_plat.group(1)] = patterns
+    if "Windows Desktop" not in out or "Android" not in out:
+        raise SystemExit(f"expected Windows Desktop + Android presets, found {sorted(out)}")
+    return out
 
 
 def _retired_patterns() -> list[str]:
@@ -75,11 +73,12 @@ def _matches(rel: str, compiled: list[re.Pattern[str]]) -> bool:
     return any(pattern.match(rel) for pattern in compiled)
 
 
-def _scan(compiled: list[re.Pattern[str]]) -> tuple[int, dict[str, int], int, dict[str, int]]:
+def _scan(compiled: list[re.Pattern[str]]) -> tuple[int, dict[str, int], int, dict[str, int], dict[str, int]]:
     included = 0
     excluded = 0
     by_dir: dict[str, int] = {}
     plates: dict[str, int] = {}
+    bank_tiers: dict[str, int] = {"master": 0, "medium": 0, "small": 0, "other": 0}
     for path in PROJECT.rglob("*"):
         if not path.is_file():
             continue
@@ -92,30 +91,43 @@ def _scan(compiled: list[re.Pattern[str]]) -> tuple[int, dict[str, int], int, di
             continue
         included += size
         if rel.startswith(BANK_PREFIX):
-            stem = rel[len(BANK_PREFIX):].split(".", 1)[0]
+            name = Path(rel).name
+            stem = name.split(".", 1)[0]
             plates[stem] = plates.get(stem, 0) + size
+            if ".medium." in name:
+                bank_tiers["medium"] += size
+            elif ".small." in name:
+                bank_tiers["small"] += size
+            elif re.search(r"_[0-9a-f]{16}\.webp$", name):
+                bank_tiers["master"] += size
+            else:
+                bank_tiers["other"] += size
         parts = rel.split("/")
         if parts[0] == "assets" and len(parts) >= 3:
             key = "/".join(parts[:3])
         else:
             key = parts[0]
         by_dir[key] = by_dir.get(key, 0) + size
-    return included, by_dir, excluded, plates
+    return included, by_dir, excluded, plates, bank_tiers
 
 
-def main() -> int:
-    patterns = _patterns_from_presets() + _retired_patterns()
-    compiled = [_glob_to_re(pattern) for pattern in patterns]
-    included, by_dir, excluded, plates = _scan(compiled)
-    data = json.loads(RATCHET.read_text(encoding="utf-8")) if RATCHET.is_file() else {}
+def _report_platform(label: str, patterns: list[str], retired: list[str], data: dict) -> int:
+    compiled = [_glob_to_re(p) for p in patterns + retired]
+    included, by_dir, excluded, plates, bank_tiers = _scan(compiled)
     base = int(data.get("export_base_budget_bytes", 0))
     per_plate = int(data.get("export_bank_bytes_per_plate", 0))
     plate_max = int(data.get("export_bank_plate_max_bytes", 0))
     bank_bytes = sum(plates.values())
     budget = base + per_plate * len(plates)
+    print(f"EXPORT PLATFORM {label}")
     print(f"EXPORT EXCLUDED {excluded}")
-    for key, size in sorted(by_dir.items(), key=lambda item: (-item[1], item[0])):
+    for key, size in sorted(by_dir.items(), key=lambda item: (-item[1], item[0]))[:25]:
         print(f"EXPORT DIR {key} {size}")
+    print(
+        "EXPORT BANK_TIERS "
+        f"master={bank_tiers['master']} medium={bank_tiers['medium']} "
+        f"small={bank_tiers['small']} other={bank_tiers['other']}"
+    )
     print(f"EXPORT SIZE {included}")
     print(f"EXPORT BANK plates={len(plates)} bytes={bank_bytes} per_plate={per_plate} plate_max={plate_max}")
     print(f"EXPORT NONBANK {included - bank_bytes} base={base}")
@@ -123,22 +135,45 @@ def main() -> int:
     print(f"EXPORT CAP {CAP_BYTES}")
     print(f"EXPORT TARGET {TARGET_BYTES}")
     if base <= 0 or per_plate <= 0 or plate_max <= 0:
-        print("EXPORT SIZE FAIL ratchet.json needs export_base_budget_bytes, export_bank_bytes_per_plate, export_bank_plate_max_bytes")
+        print(
+            "EXPORT SIZE FAIL ratchet.json needs export_base_budget_bytes, "
+            "export_bank_bytes_per_plate, export_bank_plate_max_bytes"
+        )
         return 1
     fat = sorted((size, stem) for stem, size in plates.items() if size > plate_max)
     if fat:
-        print(f"EXPORT SIZE FAIL {len(fat)} bank plates over {plate_max} bytes, largest {fat[-1][1]} {fat[-1][0]}")
+        print(
+            f"EXPORT SIZE FAIL {len(fat)} bank plates over {plate_max} bytes, "
+            f"largest {fat[-1][1]} {fat[-1][0]}"
+        )
         return 1
     if included > budget:
         print(f"EXPORT SIZE FAIL {included} > {budget}")
         return 1
-    if budget > CAP_BYTES:
+    if label == "Android" and included > CAP_BYTES:
         print(
-            "EXPORT NOTE active budget is above the 400MiB cap; "
-            "ART-02 moved zero-reference files, ART-04 added city fallbacks and glyphs, and doll/portraits/backdrops are still referenced."
+            "EXPORT NOTE Android source estimate is above the 400MiB hard cap; "
+            "see docs/art/export-cap-400.md for measured APK breakdown and next levers."
         )
-    print("EXPORT SIZE PASS")
+    elif budget > CAP_BYTES and label == "Windows Desktop":
+        print(
+            "EXPORT NOTE Windows active budget is above the 400MiB cap "
+            "(ships large bank masters); Android is the packing target."
+        )
     return 0
+
+
+def main() -> int:
+    filters = _preset_filters()
+    retired = _retired_patterns()
+    data = json.loads(RATCHET.read_text(encoding="utf-8")) if RATCHET.is_file() else {}
+    rc = 0
+    for label in ("Windows Desktop", "Android"):
+        rc |= _report_platform(label, filters[label], retired, data)
+        print("")
+    if rc == 0:
+        print("EXPORT SIZE PASS")
+    return rc
 
 
 if __name__ == "__main__":
