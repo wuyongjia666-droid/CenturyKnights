@@ -110,12 +110,17 @@ func _check_p4_coverage() -> String:
 			leader.is_leader = saved_lead
 			return "P4 job %s tris %s" % [jid, spec.get("tris_est")]
 		var sg: Array = parts.get("signs", [])
-		var fp := "%s|%s|%s" % [str(parts.get("compose", parts.get("outfit", ""))), w, str(sg)]
+		var shell := str(parts.get("compose", parts.get("outfit", "")))
+		var fp := "%s|%s|%s" % [shell, w, str(sg)]
 		fingerprints[str(jid)] = fp
 	leader.job_id = saved_job
 	leader.is_leader = saved_lead
 	# Silhouette fingerprint pairwise: t1 vs its t3 line peers should differ when design gives signs/weapons
-	var pairs := [["squire", "outrider"], ["light_inf", "veteran"], ["hunter", "marksman"], ["apprentice", "warlock"], ["militia", "pathfinder"], ["banner", "captain"], ["acolyte", "chorister"]]
+	var pairs := [
+		["squire", "outrider"], ["light_inf", "veteran"], ["hunter", "marksman"],
+		["apprentice", "warlock"], ["militia", "pathfinder"],
+		["banner", "captain"], ["acolyte", "chorister"],
+	]
 	for pair in pairs:
 		var a := str(pair[0])
 		var b := str(pair[1])
