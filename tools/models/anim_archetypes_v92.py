@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """CUT-02 weapon-archetype actions.
 
-Procedural keyframes for six weapon prototypes. Times are seconds.
+Procedural keyframes for ten weapon prototypes (P2 adds axe/banner/dagger/book). Times are seconds.
 attack / skill / crit impact times match CutsceneTimeline.ACTION_IMPACT
 (0.458 / 0.792 / 0.5). Writes archetypes_v92.json for the Godot library builder.
 """
@@ -19,7 +19,8 @@ READY = {
     "forearm.R": (45, 0, 0),
     "upper_arm.L": (12, 0, 8),
     "forearm.L": (30, 0, 0),
-    "chest": (4, 0, 0),
+    # Board pose override (§3.9): READY chest lean 0° (was 4°).
+    "chest": (0, 0, 0),
 }
 
 # Per-archetype rest pose, then attack / skill / crit triples: wind, hit, follow.
@@ -59,6 +60,35 @@ ARCH = {
         "attack": ((165, 0, -40), (22, 0, 28), (10, 0, 16)),
         "skill": ((172, 0, -16), (18, 0, -8), (8, 0, 4)),
         "crit": ((150, 0, -55), (12, 0, 44), (6, 0, 18)),
+    },
+    # P2 (#299 §3.9): axe / banner / dagger / book — distinct from sword/staff/heavy.
+    "axe": {
+        # One-hand axe: elbow higher than sword, chop arc (not thrust).
+        "ready": {"upper_arm.R": (32, 0, -18), "forearm.R": (58, 0, 0), "upper_arm.L": (14, 0, 10)},
+        "attack": ((155, 0, -36), (28, 0, 30), (16, 0, 18)),
+        "skill": ((168, 0, -12), (24, 0, -10), (12, 0, 6)),
+        "crit": ((145, 0, -52), (18, 0, 42), (8, 0, 16)),
+    },
+    "banner": {
+        # Two-hand pole upright; left steadies shaft, right drives.
+        "ready": {"upper_arm.R": (48, 0, -10), "forearm.R": (80, 0, 0), "upper_arm.L": (52, 0, 14), "forearm.L": (72, 0, 0)},
+        "attack": ((20, 0, -18), (88, 0, 6), (70, 0, 2)),
+        "skill": ((14, 0, -26), (96, 0, 10), (64, 0, 0)),
+        "crit": ((28, 0, -34), (104, 0, 14), (74, 0, 4)),
+    },
+    "dagger": {
+        # Short blade, close guard; quick slash, low wind-up.
+        "ready": {"upper_arm.R": (14, 0, -22), "forearm.R": (28, 0, 0), "upper_arm.L": (10, 0, 18), "forearm.L": (22, 0, 0)},
+        "attack": ((110, 0, -40), (42, 0, 28), (18, 0, 14)),
+        "skill": ((130, 0, -28), (50, 0, -18), (22, 0, 8)),
+        "crit": ((100, 0, -55), (36, 0, 48), (14, 0, 20)),
+    },
+    "book": {
+        # Held open at chest height (left), right hand turns / gestures.
+        "ready": {"upper_arm.L": (42, 0, 22), "forearm.L": (70, 0, 0), "upper_arm.R": (24, 0, -8), "forearm.R": (36, 0, 0)},
+        "attack": ((60, 0, -12), (48, 0, 16), (28, 0, 6)),
+        "skill": ((90, 0, -6), (70, 0, 8), (40, 0, 0)),
+        "crit": ((100, 0, -20), (80, 0, 18), (36, 0, 4)),
     },
 }
 

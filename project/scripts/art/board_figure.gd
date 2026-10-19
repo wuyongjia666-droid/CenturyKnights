@@ -529,6 +529,35 @@ static func find_anim(n: Node) -> AnimationPlayer:
 	return null
 
 
+## P2 §3.9: acted = desaturate 60% + darken 25%; hit = white flash (flash_amt 0–1).
+static func apply_feedback(n: Node, dim: bool, flash: float = 0.0) -> void:
+	if n == null:
+		return
+	var d := 1.0 if dim else 0.0
+	var f := clampf(flash, 0.0, 1.0)
+	_apply_feedback_mats(n, d, f)
+
+
+static func _apply_feedback_mats(n: Node, dim_amt: float, flash_amt: float) -> void:
+	if n is GeometryInstance3D:
+		var gi := n as GeometryInstance3D
+		var mats: Array = []
+		if gi.material_override is ShaderMaterial:
+			mats.append(gi.material_override)
+		if gi is MeshInstance3D and (gi as MeshInstance3D).mesh != null:
+			var mi := gi as MeshInstance3D
+			for si in mi.mesh.get_surface_count():
+				var m = mi.get_surface_override_material(si)
+				if m is ShaderMaterial:
+					mats.append(m)
+		for m2 in mats:
+			var sm := m2 as ShaderMaterial
+			sm.set_shader_parameter("dim_amt", dim_amt)
+			sm.set_shader_parameter("flash_amt", flash_amt)
+	for ch in n.get_children():
+		_apply_feedback_mats(ch, dim_amt, flash_amt)
+
+
 static func _parts_for(c, team: String, tmpl: String, pal: Dictionary) -> Dictionary:
 	_ensure_map()
 	var enemy := str(team) == "enemy"
@@ -1098,7 +1127,7 @@ static func _lru_put(h: String, _built: bool) -> void:
 		_lru.erase(old)
 
 
-# ----- Anim (lightweight P1; P2 re-poses skeleton) -----
+# ----- Anim (board lightweight bob; cutscene bone libs = axe/banner/dagger/book P2) -----
 
 static func _make_anim(_root: Node3D) -> AnimationPlayer:
 	var ap := AnimationPlayer.new()

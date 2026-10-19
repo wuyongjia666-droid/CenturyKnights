@@ -12,6 +12,7 @@ uniform vec3 shadow_mul = vec3(0.42, 0.45, 0.56);
 uniform float key_gain = 1.05;
 uniform float top_fill = 0.08;
 uniform float dim_amt = 0.0;
+uniform float flash_amt = 0.0;
 
 uniform sampler2D albedo_tex : source_color, filter_linear_mipmap_anisotropic, repeat_disable;
 uniform float use_albedo = 0.0;
@@ -241,5 +242,6 @@ void fragment() {
 		float g = dot(col, vec3(0.2126, 0.7152, 0.0722));
 		col = mix(col, vec3(g), 0.60 * dim_amt) * (1.0 - 0.25 * dim_amt);
 	}
+	col = mix(col, vec3(1.0), clamp(flash_amt, 0.0, 1.0));
 	ALBEDO = col * exposure;
 }
