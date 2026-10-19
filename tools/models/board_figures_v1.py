@@ -993,6 +993,20 @@ def build_weapon(kind: str):
         parts.append(taper_box(f"{name}_flag", 0.02, 0.30, 0.02, 0.34, 0.38,
                                1.38, x=hx + 0.15, y=hy, bevel_w=0.0))
         paint_slots(parts[-1], "house", glow=True)
+    elif kind == "book":
+        parts.append(taper_box(f"{name}_tome", 0.14, 0.04, 0.14, 0.04, 0.20,
+                               hz - 0.02, x=hx, y=hy, bevel_w=0.002))
+        paint_slots(parts[-1], "leather")
+        parts.append(taper_box(f"{name}_pages", 0.12, 0.02, 0.12, 0.02, 0.18,
+                               hz - 0.01, x=hx, y=hy - 0.03, bevel_w=0.0))
+        paint_slots(parts[-1], "coat")
+    elif kind == "hammer":
+        parts.append(taper_box(f"{name}_haft", 0.030, 0.030, 0.028, 0.028, 0.55,
+                               hz - 0.10, x=hx, y=hy, bevel_w=0.0))
+        paint_slots(parts[-1], "wood")
+        parts.append(taper_box(f"{name}_head", 0.18, 0.10, 0.18, 0.10, 0.14,
+                               hz + 0.42, x=hx, y=hy, bevel_w=0.006))
+        paint_slots(parts[-1], "metal", metal=True)
     else:
         parts.append(taper_box(f"{name}_blade", 0.032, 0.012, 0.008, 0.004, 0.34,
                                hz, x=hx, y=hy, bevel_w=0.002))
@@ -1016,6 +1030,231 @@ def build_pauldron(side: str = "both"):
     ob = join_objects(name, parts)
     register_part(ob, "sign", ["pauldron", side])
     return ob
+
+
+def _sign_cape(name: str, length: float, slot: str = "cape"):
+    """Billboard-ish cape behind shoulders; length ~0.45 short / 0.72 long."""
+    parts = []
+    bm = bmesh.new()
+    rows, cols = 4, 3
+    grid = []
+    for i in range(rows):
+        row = []
+        t = i / (rows - 1)
+        z = SHOULDER_Y - 0.02 - t * length
+        w = 0.22 + t * 0.10
+        y = 0.10 + t * 0.06
+        for j in range(cols):
+            u = (j / (cols - 1)) * 2 - 1
+            row.append(bm.verts.new((u * w, y, z)))
+        grid.append(row)
+    bm.verts.ensure_lookup_table()
+    for i in range(rows - 1):
+        for j in range(cols - 1):
+            bm.faces.new((grid[i][j], grid[i][j + 1], grid[i + 1][j + 1], grid[i + 1][j]))
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces[:])
+    cp = _obj_from_bmesh(f"{name}_sheet", bm)
+    solidify(cp, 0.028)
+    paint_slots(cp, slot)
+    parts.append(cp)
+    ob = join_objects(name, parts)
+    register_part(ob, "sign", ["cape"])
+    return ob
+
+
+def _sign_scarf(name: str, long_: bool = False):
+    parts = []
+    # Neck wrap
+    parts.append(cyl(f"{name}_wrap", 0.085, 0.078, (0, -0.02, NECK_Y - 0.02),
+                     (0, -0.04, NECK_Y + 0.06), 10))
+    paint_slots(parts[-1], "sash")
+    # Trailing end (camera-side)
+    h = 0.34 if long_ else 0.18
+    parts.append(taper_box(f"{name}_tail", 0.06, 0.03, 0.05, 0.02, h,
+                           NECK_Y - 0.08 - h * 0.5, x=0.12, y=-0.10, bevel_w=0.0))
+    paint_slots(parts[-1], "sash")
+    ob = join_objects(name, parts)
+    register_part(ob, "sign", ["scarf"])
+    return ob
+
+
+def _sign_goggles():
+    """Pushed-up forehead goggles — never covers face (附录 A)."""
+    name = "sign_goggles"
+    parts = []
+    parts.append(cyl(f"{name}_band", 0.095, 0.095, (-0.09, -0.06, CROWN_Y - 0.10),
+                     (0.09, -0.06, CROWN_Y - 0.10), 8))
+    paint_slots(parts[-1], "leather")
+    for sx in (-1, 1):
+        parts.append(cyl(f"{name}_lens_{sx}", 0.032, 0.032,
+                         (sx * 0.05, -0.10, CROWN_Y - 0.08),
+                         (sx * 0.05, -0.14, CROWN_Y - 0.08), 8))
+        paint_slots(parts[-1], "metal", metal=True)
+    ob = join_objects(name, parts)
+    register_part(ob, "sign", ["goggles"])
+    return ob
+
+
+def _sign_box(name: str, tags: list, w, d, h, z0, x=0.16, y=0.10, slot="leather"):
+    parts = [taper_box(f"{name}_box", w, d, w, d, h, z0, x=x, y=y, bevel_w=0.004)]
+    paint_slots(parts[-1], slot)
+    strap = taper_box(f"{name}_strap", 0.04, 0.02, 0.04, 0.02, 0.28,
+                      HIP_Y + 0.10, x=x * 0.4, y=y, bevel_w=0.0)
+    paint_slots(strap, "leather")
+    parts.append(strap)
+    ob = join_objects(name, parts)
+    register_part(ob, "sign", tags)
+    return ob
+
+
+def _sign_back_hat():
+    """斗笠 carried on the back — not on the head."""
+    name = "sign_back_hat"
+    parts = []
+    parts.append(cyl(f"{name}_brim", 0.18, 0.04, (0.0, 0.16, HIP_Y + 0.22),
+                     (0.0, 0.16, HIP_Y + 0.28), 12))
+    paint_slots(parts[-1], "wood")
+    parts.append(cyl(f"{name}_crown", 0.07, 0.05, (0.0, 0.16, HIP_Y + 0.28),
+                     (0.0, 0.16, HIP_Y + 0.40), 10))
+    paint_slots(parts[-1], "wood")
+    ob = join_objects(name, parts)
+    register_part(ob, "sign", ["hat", "back"])
+    return ob
+
+
+def _sign_waist_badge():
+    name = "sign_waist_badge"
+    parts = [taper_box(f"{name}_plate", 0.08, 0.03, 0.08, 0.03, 0.10,
+                       HIP_Y + 0.02, x=0.14, y=-0.12, bevel_w=0.002)]
+    paint_slots(parts[-1], "house", glow=True)
+    ob = join_objects(name, parts)
+    register_part(ob, "sign", ["badge"])
+    return ob
+
+
+def _sign_waist_cape():
+    name = "sign_waist_cape"
+    parts = [taper_box(f"{name}_drape", 0.22, 0.04, 0.26, 0.05, 0.28,
+                       HIP_Y - 0.20, y=0.12, bevel_w=0.0)]
+    paint_slots(parts[-1], "cape")
+    ob = join_objects(name, parts)
+    register_part(ob, "sign", ["waist_cape"])
+    return ob
+
+
+def _sign_shoulder_strap():
+    name = "sign_shoulder_strap"
+    parts = [cyl(f"{name}_band", 0.02, 0.02, (-0.18, -0.02, SHOULDER_Y),
+                 (0.10, 0.06, HIP_Y + 0.05), 6)]
+    paint_slots(parts[-1], "leather")
+    ob = join_objects(name, parts)
+    register_part(ob, "sign", ["strap"])
+    return ob
+
+
+def _sign_theme_mask(name: str, slot: str = "accent"):
+    """Mask / cloth hung at hip — never on face."""
+    parts = [taper_box(f"{name}_mask", 0.10, 0.04, 0.09, 0.03, 0.12,
+                       HIP_Y + 0.05, x=-0.18, y=-0.08, bevel_w=0.002)]
+    paint_slots(parts[-1], slot)
+    ob = join_objects(name, parts)
+    register_part(ob, "sign", ["theme", "mask"])
+    return ob
+
+
+def _sign_theme_lantern():
+    name = "sign_theme_lamp"
+    parts = []
+    parts.append(cyl(f"{name}_pole", 0.012, 0.012, (0.22, 0.02, HIP_Y),
+                     (0.22, 0.02, HIP_Y + 0.28), 6))
+    paint_slots(parts[-1], "wood")
+    parts.append(sph(f"{name}_glass", 0.055, (0.22, 0.02, HIP_Y + 0.34), seg=8))
+    paint_slots(parts[-1], "accent", glow=True)
+    ob = join_objects(name, parts)
+    register_part(ob, "sign", ["theme", "lamp"])
+    return ob
+
+
+def _sign_theme_fur():
+    name = "sign_theme_snow"
+    parts = [taper_box(f"{name}_collar", 0.28, 0.12, 0.30, 0.14, 0.10,
+                       SHOULDER_Y - 0.02, y=0.02, bevel_w=0.01)]
+    paint_slots(parts[-1], "coat")
+    ob = join_objects(name, parts)
+    register_part(ob, "sign", ["theme", "fur"])
+    return ob
+
+
+def _sign_theme_drum():
+    name = "sign_theme_drum"
+    parts = [cyl(f"{name}_body", 0.10, 0.10, (0.0, 0.18, HIP_Y + 0.05),
+                 (0.0, 0.18, HIP_Y + 0.28), 10)]
+    paint_slots(parts[-1], "leather")
+    ob = join_objects(name, parts)
+    register_part(ob, "sign", ["theme", "drum"])
+    return ob
+
+
+def _sign_theme_bag(name: str = "sign_theme_salt"):
+    return _sign_box(name, ["theme", "bag"], 0.12, 0.08, 0.14, HIP_Y + 0.02, x=-0.18, y=0.08)
+
+
+def _sign_theme_bell():
+    name = "sign_theme_bell"
+    parts = []
+    parts.append(cyl(f"{name}_bell", 0.04, 0.055, (0.16, -0.10, HIP_Y),
+                     (0.16, -0.10, HIP_Y + 0.08), 8))
+    paint_slots(parts[-1], "metal", metal=True)
+    ob = join_objects(name, parts)
+    register_part(ob, "sign", ["theme", "bell"])
+    return ob
+
+
+def _sign_theme_fisher():
+    name = "sign_theme_fisher"
+    parts = []
+    # Back hat
+    parts.append(cyl(f"{name}_hat", 0.14, 0.05, (0.0, 0.16, HIP_Y + 0.22),
+                     (0.0, 0.16, HIP_Y + 0.30), 10))
+    paint_slots(parts[-1], "wood")
+    # Hip fork tip
+    parts.append(taper_box(f"{name}_fork", 0.03, 0.03, 0.01, 0.01, 0.22,
+                           HIP_Y + 0.05, x=-0.20, y=-0.05, bevel_w=0.0))
+    paint_slots(parts[-1], "metal", metal=True)
+    ob = join_objects(name, parts)
+    register_part(ob, "sign", ["theme", "fisher"])
+    return ob
+
+
+def build_all_signs():
+    """P4 signature parts (附录 A + theme examples). Lightweight; chest-skinned."""
+    out = [
+        build_pauldron("both"), build_pauldron("L"), build_pauldron("R"),
+        _sign_cape("sign_cape_short", 0.45),
+        _sign_cape("sign_cape_long", 0.72),
+        _sign_cape("sign_cloak", 0.60, slot="coat_dark"),
+        _sign_scarf("sign_scarf", False),
+        _sign_scarf("sign_scarf_long", True),
+        _sign_goggles(),
+        _sign_waist_cape(),
+        _sign_waist_badge(),
+        _sign_box("sign_satchel", ["satchel"], 0.14, 0.08, 0.16, HIP_Y + 0.02),
+        _sign_box("sign_medkit", ["medkit"], 0.12, 0.07, 0.12, HIP_Y + 0.02, slot="accent"),
+        _sign_box("sign_bookcase", ["bookcase"], 0.14, 0.10, 0.18, HIP_Y + 0.04, slot="leather"),
+        _sign_back_hat(),
+        _sign_shoulder_strap(),
+        _sign_theme_fisher(),
+        _sign_theme_mask("sign_theme_paper", "coat"),
+        _sign_theme_lantern(),
+        _sign_theme_fur(),
+        _sign_theme_mask("sign_theme_bamboo", "wood"),
+        _sign_theme_bell(),
+        _sign_theme_mask("sign_theme_shadow", "coat_dark"),
+        _sign_theme_bag("sign_theme_salt"),
+        _sign_theme_mask("sign_theme_porcelain", "metal"),
+        _sign_theme_drum(),
+    ]
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -1132,8 +1371,9 @@ def main() -> int:
         build_bandit_outfit("chief"),
     ]
     weapons = [build_weapon(k) for k in
-               ("sword", "greatsword", "axe", "bow", "staff", "spear", "club", "banner", "dagger")]
-    signs = [build_pauldron("both"), build_pauldron("L"), build_pauldron("R")]
+               ("sword", "greatsword", "axe", "bow", "staff", "spear", "club", "banner", "dagger",
+                "book", "hammer")]
+    signs = build_all_signs()
 
     for ob in bodies + outfits:
         skin_rigid(ob, "hips", arm)

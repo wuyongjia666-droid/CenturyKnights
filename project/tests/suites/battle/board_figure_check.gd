@@ -1,5 +1,5 @@
 extends Node
-## Board figure P1: kit mapping, palette guards, assemble smoke (no farm_cast formal path).
+## Board figure P1+P4: kit mapping, palette guards, assemble smoke, full job/theme coverage.
 
 ## pawn-redesign-opus.md §7.3, option A (2026-10-17).
 const TRIS_MAX := 15000
@@ -28,6 +28,9 @@ func _run() -> String:
 	err = _check_themes_and_banner_swatches()
 	if err != "":
 		return err
+	err = _check_p4_coverage()
+	if err != "":
+		return err
 	return _check_build()
 
 func _check_house_and_fill() -> String:
@@ -54,15 +57,84 @@ func _check_map() -> String:
 		return "board_figures.json invalid"
 	var root: Dictionary = parsed
 	var jobs: Dictionary = root.get("jobs", {})
-	for jid in ["captain", "hunter", "squire", "light_inf", "apprentice"]:
+	if jobs.size() < 32:
+		return "jobs count %d < 32" % jobs.size()
+	for jid in ["captain", "hunter", "squire", "light_inf", "apprentice", "forge_brow", "cantor", "bulwark"]:
 		if not jobs.has(jid):
 			return "jobs missing %s" % jid
 	var et: Dictionary = root.get("enemy_templates", {})
 	for t in ["bandit_weak", "bandit", "bandit_archer", "bandit_chief"]:
 		if not et.has(t):
 			return "enemy_templates missing %s" % t
+	var ts: Dictionary = root.get("theme_signs", {})
+	if ts.size() < 22:
+		return "theme_signs count %d < 22" % ts.size()
 	if not ResourceLoader.exists(str(root.get("kit_glb", ""))):
 		return "kit glb missing"
+	return ""
+
+
+func _check_p4_coverage() -> String:
+	var rep: Dictionary = CKBoardFigure.coverage_report()
+	if int(rep.get("jobs", 0)) < 32:
+		return "P4 jobs wired %s < 32" % rep.get("jobs")
+	if int(rep.get("themes", 0)) < 22:
+		return "P4 themes wired %s < 22" % rep.get("themes")
+	var miss_j: Array = rep.get("missing_jobs", [])
+	if not miss_j.is_empty():
+		return "P4 missing kit parts: %s" % str(miss_j.slice(0, mini(6, miss_j.size())))
+	var miss_s: Array = rep.get("missing_signs", [])
+	if not miss_s.is_empty():
+		return "P4 missing signs: %s" % str(miss_s.slice(0, mini(6, miss_s.size())))
+	# Spec every job resolves with weapon + readable figure under tris budget
+	var leader = GameState.get_leader()
+	var saved_job := str(leader.job_id)
+	var saved_lead := bool(leader.is_leader)
+	leader.is_leader = false
+	var f := FileAccess.open("res://data/board_figures.json", FileAccess.READ)
+	var root: Dictionary = JSON.parse_string(f.get_as_text())
+	var jobs: Dictionary = root.get("jobs", {})
+	var fingerprints: Dictionary = {}
+	for jid in jobs.keys():
+		leader.job_id = str(jid)
+		CKBoardFigure._pal_cache.clear()
+		var spec: Dictionary = CKBoardFigure.spec_for(leader, "player")
+		var parts: Dictionary = spec.get("parts", {})
+		var w := str(parts.get("weapon", ""))
+		if w == "":
+			leader.job_id = saved_job
+			leader.is_leader = saved_lead
+			return "P4 job %s has empty weapon" % jid
+		if int(spec.get("tris_est", 99999)) > TRIS_MAX:
+			leader.job_id = saved_job
+			leader.is_leader = saved_lead
+			return "P4 job %s tris %s" % [jid, spec.get("tris_est")]
+		var sg: Array = parts.get("signs", [])
+		var fp := "%s|%s|%s" % [str(parts.get("compose", parts.get("outfit", ""))), w, str(sg)]
+		fingerprints[str(jid)] = fp
+	leader.job_id = saved_job
+	leader.is_leader = saved_lead
+	# Silhouette fingerprint pairwise: t1 vs its t3 line peers should differ when design gives signs/weapons
+	var pairs := [["squire", "outrider"], ["light_inf", "veteran"], ["hunter", "marksman"], ["apprentice", "warlock"], ["militia", "pathfinder"], ["banner", "captain"], ["acolyte", "chorister"]]
+	for pair in pairs:
+		var a := str(pair[0])
+		var b := str(pair[1])
+		if fingerprints.get(a, "") == fingerprints.get(b, ""):
+			return "P4 silhouette fingerprint collide %s == %s (%s)" % [a, b, fingerprints.get(a, "")]
+	# Every theme × template role resolves
+	var themes: Dictionary = root.get("theme_signs", {})
+	for tid in themes.keys():
+		for role_suf in ["thug", "archer", "boss", "weak"]:
+			var tmpl := "%s_%s" % [tid, role_suf]
+			var es: Dictionary = CKBoardFigure.spec_for(leader, "enemy", tmpl)
+			var ep: Dictionary = es.get("parts", {})
+			if str(ep.get("weapon", "")) == "" and str(ep.get("compose", "")) == "":
+				return "P4 theme %s tmpl %s empty parts" % [tid, tmpl]
+			if int(es.get("tris_est", 99999)) > TRIS_MAX:
+				return "P4 theme %s tris" % tid
+	print("P4 COVERAGE jobs=%d themes=%d deferred_pathc=%d fingerprints=%d" % [
+		int(rep.get("jobs", 0)), int(rep.get("themes", 0)), int(rep.get("deferred_pathc", 0)), fingerprints.size()
+	])
 	return ""
 
 func _check_palettes() -> String:

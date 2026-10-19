@@ -197,6 +197,58 @@ BOARD_FIG_GD = ROOT / "project/scripts/art/board_figure.gd"
 SHADER = ROOT / "project/shaders/board_figure.gdshader"
 
 
+
+
+def check_p4_coverage() -> str | None:
+    """P4: 32 jobs + 22 theme_signs wired; kit hosts signature parts; budget note."""
+    if not MAP.is_file():
+        return f"missing {MAP.relative_to(ROOT)}"
+    mp = json.loads(MAP.read_text(encoding="utf-8"))
+    jobs = mp.get("jobs") or {}
+    if len(jobs) < 32:
+        return f"P4 jobs {len(jobs)} < 32"
+    themes = mp.get("theme_signs") or {}
+    if len(themes) < 22:
+        return f"P4 theme_signs {len(themes)} < 22"
+    if not isinstance(mp.get("deferred_pathc_meshes"), list):
+        return "P4 missing deferred_pathc_meshes list"
+    if not KIT_MAN.is_file():
+        return f"missing {KIT_MAN.relative_to(ROOT)}"
+    man = json.loads(KIT_MAN.read_text(encoding="utf-8"))
+    parts = man.get("parts") or {}
+    need_signs = [
+        "sign_cape_short", "sign_cape_long", "sign_scarf", "sign_goggles",
+        "sign_theme_fisher", "sign_theme_lamp", "sign_theme_snow", "weapon_book", "weapon_hammer",
+    ]
+    for s in need_signs:
+        if s not in parts:
+            return f"P4 kit missing {s}"
+    # Every job weapon/outfit/compose/sign resolves in kit
+    for jid, row in jobs.items():
+        if not isinstance(row, dict):
+            return f"P4 job {jid} not object"
+        for key in ("weapon", "outfit", "compose"):
+            val = str(row.get(key, "") or "")
+            if val and val not in parts:
+                return f"P4 job {jid} {key}={val} not in kit"
+        for s in row.get("signs") or []:
+            if str(s) not in parts:
+                return f"P4 job {jid} sign {s} not in kit"
+    for tid, signs in themes.items():
+        for s in signs or []:
+            if str(s) and str(s) not in parts:
+                return f"P4 theme {tid} sign {s} not in kit"
+    # board_compact retired from board/roster path
+    tt = (ROOT / "project/scripts/ui/figure_turntable.gd").read_text(encoding="utf-8")
+    if 'set_shader_parameter("board_compact"' in tt:
+        return "figure_turntable still sets board_compact"
+    if "CKBoardFigure.build" not in tt:
+        return "figure_turntable should use CKBoardFigure.build"
+    deferred_doc = ROOT / "docs/art/review/board_figure_p4_deferred.md"
+    if not deferred_doc.is_file():
+        return "missing docs/art/review/board_figure_p4_deferred.md"
+    return None
+
 def check_p1_kit() -> str | None:
     if not KIT_GLB.is_file():
         return f"missing {KIT_GLB.relative_to(ROOT)}"
@@ -247,7 +299,7 @@ def main() -> int:
     if not DESIGN.is_file():
         return _fail(f"missing {DESIGN.relative_to(ROOT)}")
 
-    for checker in (check_style_lock, check_baseline, check_palettes, check_try_texture_stem, check_p1_kit):
+    for checker in (check_style_lock, check_baseline, check_palettes, check_try_texture_stem, check_p1_kit, check_p4_coverage):
         err = checker()
         if err:
             return _fail(err)
@@ -263,7 +315,7 @@ def main() -> int:
     print(
         "BOARD FIGURE GATE PASS "
         f"style_lock=ok baseline=§4.2 palettes={n_plat} gap={gap} needs_review={needs} "
-        f"themes={n_themes} trim_would_be_allyish={allyish} try_texture_stem=ok p1_kit=ok"
+        f"themes={n_themes} trim_would_be_allyish={allyish} try_texture_stem=ok p1_kit=ok p4_coverage=ok"
     )
     return 0
 

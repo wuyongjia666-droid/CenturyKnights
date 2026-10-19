@@ -573,17 +573,34 @@ static func _parts_for(c, team: String, tmpl: String, pal: Dictionary) -> Dictio
 	var signs: Array = []
 	var scale := 1.0
 	var compose := ""
+	var theme_id := ""
 	if enemy:
 		var et: Dictionary = _map.get("enemy_templates", {})
-		var key := tmpl if tmpl != "" else "bandit"
+		var parsed: Dictionary = UnitModel.parse_enemy_template(tmpl)
+		theme_id = str(parsed.get("theme", "bandit"))
+		var role := str(parsed.get("role", "melee"))
+		var role_map: Dictionary = _map.get("role_templates", {
+			"light": "bandit_weak", "melee": "bandit", "ranged": "bandit_archer", "elite": "bandit_chief",
+		})
+		var key := str(role_map.get(role, "bandit"))
+		# Legacy / dedicated keys still win when present (bandit_weak, bandit_chief, …).
+		if tmpl != "" and et.has(tmpl):
+			key = tmpl
 		if not et.has(key):
 			key = "bandit"
 		var row: Dictionary = et.get(key, {})
 		outfit = str(row.get("outfit", "outfit_bandit_bandit"))
 		weapon = str(row.get("weapon", "weapon_axe"))
-		signs = row.get("signs", []) if typeof(row.get("signs")) == TYPE_ARRAY else []
+		signs = (row.get("signs", []) as Array).duplicate() if typeof(row.get("signs")) == TYPE_ARRAY else []
 		scale = float(row.get("scale", 1.0))
 		compose = str(row.get("compose", ""))
+		# P4: append theme signature parts (腰挂/背后，不遮脸).
+		var ts: Dictionary = _map.get("theme_signs", {})
+		if ts.has(theme_id) and typeof(ts[theme_id]) == TYPE_ARRAY:
+			for s in ts[theme_id]:
+				var sn := str(s)
+				if sn != "" and not signs.has(sn):
+					signs.append(sn)
 	else:
 		var jid := str(c.job_id) if c != null else "light_inf"
 		var jobs: Dictionary = _map.get("jobs", {})
@@ -593,11 +610,13 @@ static func _parts_for(c, team: String, tmpl: String, pal: Dictionary) -> Dictio
 		if not row2.is_empty():
 			outfit = str(row2.get("outfit", outfit))
 			weapon = str(row2.get("weapon", weapon))
-			signs = row2.get("signs", []) if typeof(row2.get("signs")) == TYPE_ARRAY else []
+			signs = (row2.get("signs", []) as Array).duplicate() if typeof(row2.get("signs")) == TYPE_ARRAY else []
 			scale = float(row2.get("scale", 1.0))
 			compose = str(row2.get("compose", ""))
 			if str(row2.get("body", "")) == "heavy":
 				body = "body_heavy"
+		# cast_unique: pathc stem_map / UnitModel.board_load_path (整件替换，不焊).
+	signs = _filter_known_signs(signs)
 	# Organic compose_* = full figure (head+hair+body). No extra head/hair modules —
 	# source silhouette already carries hair; layering hair_* caused flat-hat float.
 	if compose != "":
@@ -611,6 +630,7 @@ static func _parts_for(c, team: String, tmpl: String, pal: Dictionary) -> Dictio
 			"signs": signs,
 			"scale": scale,
 			"gender": gender,
+			"theme_id": theme_id,
 		}
 	return {
 		"body": body,
@@ -621,6 +641,62 @@ static func _parts_for(c, team: String, tmpl: String, pal: Dictionary) -> Dictio
 		"signs": signs,
 		"scale": scale,
 		"gender": gender,
+		"theme_id": theme_id,
+	}
+
+
+## Drop unknown sign ids so missing Path C / kit pieces never break assemble.
+static func _filter_known_signs(signs: Array) -> Array:
+	_ensure_map()
+	_ensure_kit()
+	var out: Array = []
+	var man_path := str(_map.get("kit_manifest", "res://assets/models/board/board_figures_v1.json"))
+	var man = _load_json(man_path) if ResourceLoader.exists(man_path) else {}
+	var plist: Dictionary = man.get("parts", {}) if typeof(man) == TYPE_DICTIONARY else {}
+	for s in signs:
+		var sn := str(s)
+		if sn == "":
+			continue
+		if plist.has(sn) or _kit_meshes.has(sn):
+			out.append(sn)
+		# else: deferred / placeholder — skip silently
+	return out
+
+
+## P4 coverage helper: every job / theme resolves to a readable part set.
+static func coverage_report() -> Dictionary:
+	_ensure_map()
+	var jobs: Dictionary = _map.get("jobs", {})
+	var themes: Dictionary = _map.get("theme_signs", {})
+	var missing_jobs: Array = []
+	var missing_signs: Array = []
+	var man_path := str(_map.get("kit_manifest", "res://assets/models/board/board_figures_v1.json"))
+	var man = _load_json(man_path) if ResourceLoader.exists(man_path) else {}
+	var plist: Dictionary = man.get("parts", {}) if typeof(man) == TYPE_DICTIONARY else {}
+	for jid in jobs.keys():
+		var row: Dictionary = jobs[jid]
+		var w := str(row.get("weapon", ""))
+		var o := str(row.get("outfit", ""))
+		var co := str(row.get("compose", ""))
+		if w != "" and not plist.has(w) and not _kit_meshes.has(w):
+			missing_jobs.append("%s:weapon:%s" % [jid, w])
+		if o != "" and not plist.has(o) and not _kit_meshes.has(o):
+			missing_jobs.append("%s:outfit:%s" % [jid, o])
+		if co != "" and not plist.has(co) and not _kit_meshes.has(co):
+			missing_jobs.append("%s:compose:%s" % [jid, co])
+		for s in row.get("signs", []):
+			if not plist.has(str(s)):
+				missing_signs.append("%s:%s" % [jid, s])
+	for tid in themes.keys():
+		for s in themes[tid]:
+			if str(s) != "" and not plist.has(str(s)):
+				missing_signs.append("theme_%s:%s" % [tid, s])
+	return {
+		"jobs": jobs.size(),
+		"themes": themes.size(),
+		"missing_jobs": missing_jobs,
+		"missing_signs": missing_signs,
+		"deferred_pathc": (_map.get("deferred_pathc_meshes", []) as Array).size(),
 	}
 
 

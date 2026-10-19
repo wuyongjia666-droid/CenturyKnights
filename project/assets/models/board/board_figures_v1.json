@@ -257,6 +257,20 @@
         "dagger"
       ]
     },
+    "weapon_book": {
+      "category": "weapon",
+      "tris": 120,
+      "tags": [
+        "book"
+      ]
+    },
+    "weapon_hammer": {
+      "category": "weapon",
+      "tris": 120,
+      "tags": [
+        "hammer"
+      ]
+    },
     "sign_pauldron_both": {
       "category": "sign",
       "tris": 336,
@@ -279,6 +293,178 @@
       "tags": [
         "pauldron",
         "R"
+      ]
+    },
+    "sign_cape_short": {
+      "category": "sign",
+      "tris": 44,
+      "tags": [
+        "cape"
+      ]
+    },
+    "sign_cape_long": {
+      "category": "sign",
+      "tris": 44,
+      "tags": [
+        "cape"
+      ]
+    },
+    "sign_cloak": {
+      "category": "sign",
+      "tris": 44,
+      "tags": [
+        "cape"
+      ]
+    },
+    "sign_scarf": {
+      "category": "sign",
+      "tris": 48,
+      "tags": [
+        "scarf"
+      ]
+    },
+    "sign_scarf_long": {
+      "category": "sign",
+      "tris": 48,
+      "tags": [
+        "scarf"
+      ]
+    },
+    "sign_goggles": {
+      "category": "sign",
+      "tris": 84,
+      "tags": [
+        "goggles"
+      ]
+    },
+    "sign_waist_cape": {
+      "category": "sign",
+      "tris": 12,
+      "tags": [
+        "waist_cape"
+      ]
+    },
+    "sign_waist_badge": {
+      "category": "sign",
+      "tris": 108,
+      "tags": [
+        "badge"
+      ]
+    },
+    "sign_satchel": {
+      "category": "sign",
+      "tris": 120,
+      "tags": [
+        "satchel"
+      ]
+    },
+    "sign_medkit": {
+      "category": "sign",
+      "tris": 120,
+      "tags": [
+        "medkit"
+      ]
+    },
+    "sign_bookcase": {
+      "category": "sign",
+      "tris": 120,
+      "tags": [
+        "bookcase"
+      ]
+    },
+    "sign_back_hat": {
+      "category": "sign",
+      "tris": 80,
+      "tags": [
+        "hat",
+        "back"
+      ]
+    },
+    "sign_shoulder_strap": {
+      "category": "sign",
+      "tris": 20,
+      "tags": [
+        "strap"
+      ]
+    },
+    "sign_theme_fisher": {
+      "category": "sign",
+      "tris": 48,
+      "tags": [
+        "theme",
+        "fisher"
+      ]
+    },
+    "sign_theme_paper": {
+      "category": "sign",
+      "tris": 108,
+      "tags": [
+        "theme",
+        "mask"
+      ]
+    },
+    "sign_theme_lamp": {
+      "category": "sign",
+      "tris": 132,
+      "tags": [
+        "theme",
+        "lamp"
+      ]
+    },
+    "sign_theme_snow": {
+      "category": "sign",
+      "tris": 108,
+      "tags": [
+        "theme",
+        "fur"
+      ]
+    },
+    "sign_theme_bamboo": {
+      "category": "sign",
+      "tris": 108,
+      "tags": [
+        "theme",
+        "mask"
+      ]
+    },
+    "sign_theme_bell": {
+      "category": "sign",
+      "tris": 28,
+      "tags": [
+        "theme",
+        "bell"
+      ]
+    },
+    "sign_theme_shadow": {
+      "category": "sign",
+      "tris": 108,
+      "tags": [
+        "theme",
+        "mask"
+      ]
+    },
+    "sign_theme_salt": {
+      "category": "sign",
+      "tris": 120,
+      "tags": [
+        "theme",
+        "bag"
+      ]
+    },
+    "sign_theme_porcelain": {
+      "category": "sign",
+      "tris": 108,
+      "tags": [
+        "theme",
+        "mask"
+      ]
+    },
+    "sign_theme_drum": {
+      "category": "sign",
+      "tris": 36,
+      "tags": [
+        "theme",
+        "drum"
       ]
     },
     "compose_bandit": {
@@ -371,6 +557,6 @@
   },
   "quality": "organic_compose_v3",
   "glb": "board_figures_v1.glb",
-  "total_tris": 66606,
-  "part_count": 43
+  "total_tris": 68642,
+  "part_count": 68
 }

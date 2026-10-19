@@ -482,7 +482,7 @@
 | P1 套件和静态接入 | Blender 生成器；身体、头部、8 款发型 LOD、8 个 t1 职业的服装和武器、山贼套；`CKBoardFigure`；着色器和光晕；单位层替换；烘焙替身取代胶囊；`export_base_budget_bytes` 上调约 3MB | 新文件为主；`unit_layer_3d.gd`、`unit_art.gd` 少量 | 门禁；桌面和手机 A/B 截图；`unit_layer_check`、`board_pawn_check` 更新 | 正式件品质；包体 |
 | P2 动作 | 骨架按新比例重摆；`board` 姿态覆盖；`axe`、`banner`、`dagger`、`book`；`dim`、`flash`、选中 | 工具、动作库、着色器参数 | `pawn_shots --seq` 逐帧检查；命中帧误差 ≤ 1 帧 | 头部放大后的举臂穿插 |
 | P3 手机 | **已合**：空闲 14Hz 刷新；中高端安卓默认实时 3D，低端默认替身（设置可覆盖）；光晕随刷新 blit；`max_units` 24/32；`mobile_unit_layer_check` | `unit_layer_3d.gd`、`device_profile.gd`、设置 `board_units_3d` | CI：`unit_layer_check` + `mobile_unit_layer_check`；§7.3 实机帧率仍要用户机/AVD | 透明合成填充率（实机） |
-| P4 覆盖 | 32 个职业的 t2/t3 标志件；22 个敌人主题的标志件；首领；主角团专属件；退出 P3 职业部件和 `board_compact` 的棋盘路径 | 数据和部件为主 | 全职业样张；剪影两两 IoU | 工作量膨胀（靠数据驱动控制） |
+| P4 覆盖 | **已合路线**：32 职 t2/t3 标志件 + 22 主题标志件（套件 `sign_*`）；首领/主角团走 `cast_unique`+pathc stem；退出 turntable/`board_compact` 棋盘路径；Path C 航运仍仅现有件，其余见 `docs/art/review/board_figure_p4_deferred.md` | 数据 + 套件标志件 + `board_figure.gd` / gate | `board_figure_check` 全职指纹 + theme×role；`board_figure_gate` p4_coverage；剪影指纹 pairwise | 工作量膨胀（靠数据驱动；重 Path C 烘焙延后） |
 
 P1 就要包含烘焙替身，这样安卓用户在第一期就告别胶囊棋子，不必等到 P3。P1 先做 3 个单位（团长、猎手、山贼）给用户过目，通过后再铺开。
 
