@@ -100,7 +100,7 @@ func _halo_material() -> ShaderMaterial:
 	return halo
 
 func _setup_display_and_halo() -> void:
-	## 1px #0A0E14 silhouette (board_halo.gdshader).
+	## 1px dark silhouette (board_halo default) (board_halo.gdshader).
 	## Desktop: TextureRect + halo material (composites every frame; cheap on PC).
 	## Mobile P3: 3D VP → blit SubViewport (halo material, updates with idle/busy refresh)
 	## → display TextureRect with no material. Halo 9-tap only runs when the blit updates.
