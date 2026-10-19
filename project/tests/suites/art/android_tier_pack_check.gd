@@ -1,7 +1,7 @@
 extends Node
-## Review 2026-10-17 P1: Android packs only the .medium/.small bank tiers. The preset filter
-## must drop every large plate and keep both small tiers, and a bank without large plates must
-## still list its stems and serve a "large" request from .medium.
+## Android packs bank medium only (large + small excluded), and drops expression/
+## speaker large masters (medium kept; CKArtPaths falls back). A medium-only bank
+## must still list stems and serve large/small asks from .medium.
 
 const BANK := "res://assets/art/portraits/genome/bank"
 
@@ -16,6 +16,7 @@ func _ready() -> void:
 		print("ANDROID TIER PACK PASS")
 		get_tree().quit(0)
 
+
 func _android_filters() -> PackedStringArray:
 	var cf := ConfigFile.new()
 	if cf.load("res://export_presets.cfg") != OK:
@@ -25,6 +26,7 @@ func _android_filters() -> PackedStringArray:
 			return str(cf.get_value(sec, "exclude_filter", "")).split(",", false)
 	return PackedStringArray()
 
+
 ## Same rule as Godot's EditorExportPlatform::_match_filter (with and without res://).
 static func _excluded(rel: String, filters: PackedStringArray) -> bool:
 	for f in filters:
@@ -33,35 +35,109 @@ static func _excluded(rel: String, filters: PackedStringArray) -> bool:
 			return true
 	return false
 
+
 func _run() -> String:
 	var filters := _android_filters()
 	if filters.is_empty():
 		return "no Android preset exclude_filter"
+	var joined := ",".join(filters)
+	if not joined.contains("genome/bank/*.small.webp") and not joined.contains("bank/*.small.webp"):
+		return "Android filter missing bank *.small.webp exclude"
 	var da := DirAccess.open(BANK)
 	if da == null:
 		return "bank dir missing"
 	var large := 0
-	var kept := 0
+	var medium := 0
+	var small := 0
 	for fn in da.get_files():
 		var name := str(fn)
 		if not name.ends_with(".webp"):
 			continue
 		var rel := BANK.trim_prefix("res://") + "/" + name
-		var is_tier := name.ends_with(".medium.webp") or name.ends_with(".small.webp")
 		var out := _excluded(rel, filters)
-		if is_tier and out:
-			return "tier plate excluded: " + name
-		if not is_tier and not out:
-			return "large plate still packed: " + name
-		if is_tier:
-			kept += 1
+		if name.ends_with(".medium.webp"):
+			medium += 1
+			if out:
+				return "medium plate excluded: " + name
+		elif name.ends_with(".small.webp"):
+			small += 1
+			if not out:
+				return "small plate still packed: " + name
 		else:
 			large += 1
-	if large == 0 or kept != large * 2:
-		return "unexpected tier counts large=%d kept=%d" % [large, kept]
+			if not out:
+				return "large plate still packed: " + name
+	if large == 0 or medium == 0 or small == 0:
+		return "unexpected tier counts large=%d medium=%d small=%d" % [large, medium, small]
+	if medium != large or small != large:
+		return "tier count mismatch large=%d medium=%d small=%d" % [large, medium, small]
+	var expr_err := _assert_dir_large_excluded("res://assets/art/portraits/expressions", true)
+	if expr_err != "":
+		return expr_err
+	var spk_err := _assert_dir_large_excluded("res://assets/art/portraits/speakers", false)
+	if spk_err != "":
+		return spk_err
 	return _fallback()
 
-## A medium/small-only copy of one plate: stems still list, large asks resolve to medium.
+
+
+## Expressions use emotion-suffix globs; speakers list each large stem. keep_small
+## true also requires small plates stay packed (expressions keep small; speakers too).
+func _assert_dir_large_excluded(dir_res: String, _keep_small: bool) -> String:
+	var filters := _android_filters()
+	var da := DirAccess.open(dir_res)
+	if da == null:
+		return dir_res + " missing"
+	var large := 0
+	var medium := 0
+	var small := 0
+	for fn in da.get_files():
+		var name := str(fn)
+		if not name.ends_with(".webp"):
+			continue
+		var rel := dir_res.trim_prefix("res://") + "/" + name
+		var out := _excluded(rel, filters)
+		if name.ends_with(".medium.webp"):
+			medium += 1
+			if out:
+				return "medium excluded in %s: %s" % [dir_res, name]
+		elif name.ends_with(".small.webp"):
+			small += 1
+			if out:
+				return "small excluded in %s: %s" % [dir_res, name]
+		else:
+			large += 1
+			if not out:
+				return "large still packed in %s: %s" % [dir_res, name]
+	if large == 0 or medium == 0:
+		return "%s unexpected tiers large=%d medium=%d small=%d" % [dir_res, large, medium, small]
+	# large ask with only medium on disk must resolve to medium
+	var stem := ""
+	for fn2 in da.get_files():
+		var n2 := str(fn2)
+		if n2.ends_with(".medium.webp"):
+			stem = n2.trim_suffix(".medium.webp")
+			break
+	var abs_med := ProjectSettings.globalize_path(dir_res).path_join(stem + ".medium.webp")
+	var got := CKArtPaths.resolve_portrait(ProjectSettings.globalize_path(dir_res).path_join(stem + ".png"), "large")
+	# resolve_portrait probes siblings next to the path; with large present on disk it
+	# would pick large. Exclude check already proved large is filtered; probe a temp
+	# medium-only copy so fallback is exercised the same way as the bank test.
+	var tmp := OS.get_user_data_dir().path_join("android_tier_pack_expr")
+	DirAccess.make_dir_recursive_absolute(tmp)
+	var dt := DirAccess.open(tmp)
+	for old in dt.get_files():
+		dt.remove(str(old))
+	if DirAccess.copy_absolute(abs_med, tmp.path_join(stem + ".medium.webp")) != OK:
+		return "copy medium for fallback " + stem
+	var want := tmp.path_join(stem + ".medium.webp")
+	got = CKArtPaths.resolve_portrait(tmp.path_join(stem + ".png"), "large")
+	if got != want:
+		return "%s large fallback got %s want %s" % [dir_res, got, want]
+	return ""
+
+
+## A medium-only copy of one plate: stems still list; large/small asks resolve to medium.
 func _fallback() -> String:
 	var tmp := OS.get_user_data_dir().path_join("android_tier_pack")
 	DirAccess.make_dir_recursive_absolute(tmp)
@@ -78,10 +154,9 @@ func _fallback() -> String:
 	if picked == "":
 		return "no medium plate to copy"
 	var stem := picked
-	for tier in ["medium", "small"]:
-		var n2 := "%s.%s.webp" % [stem, tier]
-		if DirAccess.copy_absolute(src_dir.path_join(n2), tmp.path_join(n2)) != OK:
-			return "copy " + n2
+	var n2 := "%s.medium.webp" % stem
+	if DirAccess.copy_absolute(src_dir.path_join(n2), tmp.path_join(n2)) != OK:
+		return "copy " + n2
 	CKPortraitBank.dir_override = tmp
 	CKPortraitBank.clear_cache()
 	if not CKPortraitBank.has_plates():
@@ -94,9 +169,12 @@ func _fallback() -> String:
 	if not listed:
 		return "stem %s not listed without its large plate: %s" % [stem, str(CKPortraitBank._disk_by_stage)]
 	var want := tmp.path_join(stem + ".medium.webp")
-	var got := CKArtPaths.resolve_portrait(tmp.path_join(stem + ".png"), "large")
-	if got != want:
-		return "large ask resolved to %s, want %s" % [got, want]
+	for ask in ["large", "small", "medium"]:
+		var got := CKArtPaths.resolve_portrait(tmp.path_join(stem + ".png"), ask)
+		if got != want:
+			return "%s ask resolved to %s, want %s" % [ask, got, want]
 	if CKPortraitBank._load_plate(stem, "large") == null:
 		return "large ask loaded no texture"
+	if CKPortraitBank._load_plate(stem, "small") == null:
+		return "small ask loaded no texture"
 	return ""

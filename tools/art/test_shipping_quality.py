@@ -41,8 +41,14 @@ class ShippingQualityTest(unittest.TestCase):
 
     def test_gene_bank_ships_in_base_export(self) -> None:
         presets = (ROOT / "project" / "export_presets.cfg").read_text(encoding="utf-8")
-        self.assertEqual(presets.count('exclude_filter="tests/*,*.md,*farm_inbox/*,*stitch_exports/*,*_src_*/*"'), 2)
-        self.assertNotIn("genome/bank", presets)
+        # Windows keeps the full bank (large+medium+small). Android drops large masters
+        # (#316) and small siblings (export-cap-400): medium only, with tier fallback.
+        self.assertEqual(
+            presets.count('exclude_filter="tests/*,*.md,*farm_inbox/*,*stitch_exports/*,*_src_*/*"'),
+            1,
+        )
+        self.assertIn("genome/bank/*_????????????????.webp", presets)
+        self.assertIn("genome/bank/*.small.webp", presets)
         self.assertNotIn("gene-bank", presets)
         self.assertFalse((ROOT / "project" / "scripts" / "art" / "art_packs.gd").exists())
 
