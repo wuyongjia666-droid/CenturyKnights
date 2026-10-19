@@ -16,6 +16,9 @@ THEMES = ROOT / "project/data/enemy_themes.json"
 DESIGN = ROOT / "docs/design/pawn-redesign-opus.md"
 STYLE = ROOT / "docs/art/style-lock-v89.json"
 BASELINE = ROOT / "project/data/board_figure_baseline.json"
+S7_ACCEPTANCE = ROOT / "project/data/board_figure_s7_acceptance.json"
+DEFERRED_DOC = ROOT / "docs/art/review/board_figure_p4_deferred.md"
+S7_NOTE = ROOT / "docs/design/pawn-s7-acceptance-20261019.md"
 PALETTES = ROOT / "project/data/plate_palettes.json"
 OVERRIDES = ROOT / "project/data/plate_palette_overrides.json"
 PORTRAIT_BANK = ROOT / "project/scripts/art/portrait_bank.gd"
@@ -295,11 +298,95 @@ def check_p1_kit() -> str | None:
     return None
 
 
+
+def check_s7_acceptance() -> str | None:
+    """§7 close-out: acceptance JSON + note + mobile head ≥24 recorded; no fake pixel scores."""
+    if not S7_ACCEPTANCE.is_file():
+        return f"missing {S7_ACCEPTANCE.relative_to(ROOT)}"
+    data = json.loads(S7_ACCEPTANCE.read_text(encoding="utf-8"))
+    if str(data.get("scheme", "")).upper() != "A":
+        return "s7 acceptance scheme must be A"
+    mob = data.get("mobile_head_h_px") or {}
+    thr = float(mob.get("threshold_min", 0))
+    rec = float(mob.get("recorded_min", 0))
+    if thr < 24:
+        return "mobile_head_h_px.threshold_min must be ≥ 24"
+    if rec < thr:
+        return f"mobile_head_h_px.recorded_min {rec} < threshold {thr}"
+    if str(mob.get("ci_status", "")) not in ("RECORDED_NOT_REMEASURED", "MEASURED"):
+        return "mobile_head_h_px.ci_status missing/unknown"
+    desk = data.get("desktop_s7_1_pixel_metrics") or {}
+    if str(desk.get("ci_status", "")) not in (
+        "PROTOTYPE_RECORDED_NOT_GATED",
+        "MEASURED_GATED",
+    ):
+        return "desktop_s7_1_pixel_metrics must honestly mark not-gated or measured"
+    items = data.get("items") or {}
+    for key in (
+        "7.1_pathc_ship_budget",
+        "7.1_board_figure_kit_coverage",
+        "7.1_enemy_theme_x_template_palette",
+        "7.1_mobile_head_h_ge_24",
+        "7.2_human_blind_test",
+        "7.3_ci_proxy_scheme_a",
+        "7.4_pawn_asset_total_le_45mb",
+    ):
+        if key not in items:
+            return f"s7 acceptance items missing {key}"
+    # Soft split: pixel id/contour must not pretend DONE without MEASURED_GATED
+    soft = items.get("7.1_desktop_pixel_contour_separation_de") or {}
+    if str(soft.get("status")) == "DONE" and str(desk.get("ci_status")) != "MEASURED_GATED":
+        return "cannot mark desktop pixel §7.1 DONE without MEASURED_GATED"
+    for need in ("7.2_human_blind_test", "7.3_mid_android_fps"):
+        st = str((items.get(need) or {}).get("status", ""))
+        if st not in ("NEED_USER", "DONE"):
+            return f"{need} status must be NEED_USER or DONE"
+    if not DEFERRED_DOC.is_file():
+        return f"missing {DEFERRED_DOC.relative_to(ROOT)}"
+    if not S7_NOTE.is_file():
+        return f"missing {S7_NOTE.relative_to(ROOT)}"
+    # Theme palette static: 22 themes × cloth/armor/leather not in ally gamut (chroma>0.15 & hue 150–220)
+    if not THEMES.is_file():
+        return f"missing {THEMES.relative_to(ROOT)}"
+    themes = json.loads(THEMES.read_text(encoding="utf-8")).get("themes") or {}
+    if len(themes) < 22:
+        return f"enemy themes {len(themes)} < 22"
+    bad = 0
+    for tid, row in themes.items():
+        if not isinstance(row, dict):
+            bad += 1
+            continue
+        pal = row.get("palette") if isinstance(row.get("palette"), dict) else {}
+        for slot in ("cloth", "armor", "leather"):
+            hx = str(pal.get(slot, "") or "")
+            if not hx.startswith("#") or len(hx) < 7:
+                bad += 1
+                continue
+            r = int(hx[1:3], 16) / 255.0
+            g = int(hx[3:5], 16) / 255.0
+            b = int(hx[5:7], 16) / 255.0
+            chroma = max(r, g, b) - min(r, g, b)
+            if chroma <= 0.15:
+                continue
+            mx, mn = max(r, g, b), min(r, g, b)
+            if mx == r:
+                h = (60.0 * ((g - b) / chroma) + 360.0) % 360.0
+            elif mx == g:
+                h = 60.0 * ((b - r) / chroma) + 120.0
+            else:
+                h = 60.0 * ((r - g) / chroma) + 240.0
+            if 150.0 <= h <= 220.0:
+                bad += 1
+    if bad:
+        return f"{bad} enemy theme palette slot(s) in ally gamut"
+    return None
+
+
 def main() -> int:
     if not DESIGN.is_file():
         return _fail(f"missing {DESIGN.relative_to(ROOT)}")
 
-    for checker in (check_style_lock, check_baseline, check_palettes, check_try_texture_stem, check_p1_kit, check_p4_coverage):
+    for checker in (check_style_lock, check_baseline, check_palettes, check_try_texture_stem, check_p1_kit, check_p4_coverage, check_s7_acceptance):
         err = checker()
         if err:
             return _fail(err)
@@ -315,7 +402,7 @@ def main() -> int:
     print(
         "BOARD FIGURE GATE PASS "
         f"style_lock=ok baseline=§4.2 palettes={n_plat} gap={gap} needs_review={needs} "
-        f"themes={n_themes} trim_would_be_allyish={allyish} try_texture_stem=ok p1_kit=ok p4_coverage=ok"
+        f"themes={n_themes} trim_would_be_allyish={allyish} try_texture_stem=ok p1_kit=ok p4_coverage=ok s7_acceptance=ok"
     )
     return 0
 

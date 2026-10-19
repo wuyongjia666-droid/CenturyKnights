@@ -160,16 +160,34 @@ func _check_themes_and_banner_swatches() -> String:
 	var themes := _load_themes()
 	if themes.is_empty():
 		return "no enemy themes loaded"
+	if themes.size() < 22:
+		return "enemy themes %d < 22" % themes.size()
 	var leader = GameState.get_leader()
-	var bad := 0
+	# §7.1 static: every theme's cloth/armor/leather must stay out of ally gamut
+	# (same chroma/hue rule as CKBoardFigure._in_ally_gamut). Trim may be coral.
+	var slot_bad := 0
 	for tid in themes.keys():
-		for tmpl in ["bandit_weak", "bandit", "bandit_archer", "bandit_chief"]:
-			var pal: Dictionary = CKBoardFigure.palette_for(leader, "enemy", tmpl)
-			var err := CKBoardFigure.assert_palette_rules(pal, true)
-			if err != "":
-				bad += 1
+		var row: Dictionary = themes[tid]
+		var tpal: Dictionary = row.get("palette", {}) if typeof(row.get("palette", null)) == TYPE_DICTIONARY else {}
+		for slot in ["cloth", "armor", "leather"]:
+			var hx := str(tpal.get(slot, ""))
+			if not hx.begins_with("#") or hx.length() < 7:
+				slot_bad += 1
+				continue
+			var col := Color.html(hx)
+			if CKBoardFigure._in_ally_gamut(col):
+				slot_bad += 1
+	if slot_bad > 0:
+		return "%d enemy theme palette slots in ally gamut" % slot_bad
+	# Assembled board-figure palettes for the 4 bandit role templates (once each).
+	var bad := 0
+	for tmpl in ["bandit_weak", "bandit", "bandit_archer", "bandit_chief"]:
+		var pal: Dictionary = CKBoardFigure.palette_for(leader, "enemy", tmpl)
+		var err := CKBoardFigure.assert_palette_rules(pal, true)
+		if err != "":
+			bad += 1
 	if bad > 0:
-		return "%d enemy theme×template palette violations" % bad
+		return "%d bandit-template palette violations" % bad
 	# Banner swatches (24): house must not enter enemy gamut after protect
 	# Built from Color8 so style_lint hex ratchet stays zero on this file.
 	var swatches: Array[Color] = [
