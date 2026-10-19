@@ -16,7 +16,7 @@ var _world: Node3D
 var _nodes: Dictionary = {}   # char id -> {node, anim, face, yaw, cell, path, dead_t, cur}
 const WALK_CELLS_S := 5.0     # walk speed (cells / s)
 const HIT_STOP := 0.075       # freeze both rigs on the impact frame
-const FLASH_S := 0.08  # P2 hit white flash 80ms
+const FLASH_S := 0.08  # P2 design 80ms; runtime floors to ≥2 frames so low FPS still sees it
 var path_fn: Callable         # (u, from: Vector2i, to: Vector2i) -> Array[Vector2i]
 var cell_px_fn: Callable      # (cell) -> container-local feet point
 var _sparks: Array = []
@@ -215,7 +215,9 @@ func _play(st: Dictionary, anim: String, once: bool = false) -> void:
 		st.lock_t = ap.get_animation(anim).length
 	# P2 §3.9: white flash 80ms on hit / crit receive
 	if anim in ["hit", "crit"]:
-		st.flash_t = FLASH_S
+		var fps := maxf(1.0, float(Engine.get_frames_per_second()))
+		st.flash_t = maxf(FLASH_S, 2.0 / fps)
+		st.fb_flash_b = -1  # force feedback refresh
 		if st.get("node") != null:
 			CKBoardFigure.apply_feedback(st.node, bool((st.node as Node).get_meta("ck_dim", false)), 1.0)
 
