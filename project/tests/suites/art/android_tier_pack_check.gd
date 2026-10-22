@@ -84,7 +84,33 @@ func _run() -> String:
 	var au_err := _assert_legacy_music_wav_excluded()
 	if au_err != "":
 		return au_err
+	var dlg_err := _assert_dialogue_portrait_no_large_gate()
+	if dlg_err != "":
+		return dlg_err
 	return _fallback()
+
+
+## Y1-A: dialogue_portrait must not gate on CKArtPaths.exists (large-only).
+## Android packs speaker/expression .medium.webp but excludes larges; a large-only
+## exists() gate forces silhouettes on phone while Windows still shows plates.
+func _assert_dialogue_portrait_no_large_gate() -> String:
+	var src := FileAccess.get_file_as_string("res://scripts/art/unit_art.gd")
+	var start := src.find("static func dialogue_portrait")
+	if start < 0:
+		return "dialogue_portrait missing"
+	var body := src.substr(start, 900)
+	var end := body.find("\nstatic func ", 1)
+	if end > 0:
+		body = body.substr(0, end)
+	if body.find("if _art_exists(path)") >= 0:
+		return "dialogue_portrait still gates expressions on large-only exists()"
+	if body.find("_art_exists(sp_path)") >= 0:
+		return "dialogue_portrait still gates speakers on large-only exists()"
+	if body.find("_try_load(path, CKArtPaths.TIER_MEDIUM)") < 0:
+		return "dialogue_portrait missing medium try_load for expressions"
+	if body.find("_try_load(sp_path, CKArtPaths.TIER_MEDIUM)") < 0:
+		return "dialogue_portrait missing medium try_load for speakers"
+	return ""
 
 
 
