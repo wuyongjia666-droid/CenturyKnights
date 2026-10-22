@@ -77,6 +77,7 @@ ux_confirm_move,确认移动,Confirm move
 ux_confirm_attack,确认攻击,Confirm attack
 ux_more_cmds,更多,More
 ux_touch_confirm,触控确认移动/攻击,Touch confirm move/attack
+ux_touch_drag_commit,拖到格松手确认,Drag-to-cell release confirms
 ux_banner_diy,旗饰,Banner
 ux_name_title,写下这个姓,Write the surname
 ux_name_blurb,你还没有爵。先写下你要别人不得不念的姓，再雕一枚能远看辨清的旗。,No title yet. Write the surname others must speak, then cut a banner that reads at a distance.

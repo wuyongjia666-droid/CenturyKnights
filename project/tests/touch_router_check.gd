@@ -86,6 +86,32 @@ func _router(errors: Array) -> void:
 	var pan_up: Array = r.push(_touch(0, false, Vector2(48, 6)), 4200)
 	if not pan_up.is_empty() and str(pan_up[0].get("kind", "")) == "tap":
 		errors.append("pan release must not tap")
+	var kinds := []
+	for g in pan_up:
+		kinds.append(str(g.get("kind", "")))
+	if "drag_end" not in kinds:
+		errors.append("pan release must emit drag_end")
+	if "swallow" not in kinds:
+		errors.append("pan release must still swallow")
+
+	# Y1-A: sticky origin resists micro-wobble even when CK_FORCE_MOBILE raises base slop.
+	OS.set_environment("CK_FORCE_MOBILE", "1")
+	r = InputRouter.new()
+	r.sticky_fn = func(_o: Vector2) -> bool: return true
+	var base_slop: float = r._slop()
+	r.push(_touch(0, true, Vector2(10, 10)), 6000)
+	var micro := InputEventScreenDrag.new()
+	micro.index = 0
+	micro.position = Vector2(10 + base_slop * 0.8, 10)
+	micro.relative = Vector2(base_slop * 0.8, 0)
+	var micro_g: Array = r.push(micro, 6050)
+	for g2 in micro_g:
+		if str(g2.get("kind", "")) == "pan":
+			errors.append("sticky micro drag must not pan yet")
+	var micro_up: Array = r.push(_touch(0, false, micro.position), 6100)
+	if micro_up.is_empty() or str(micro_up[0].get("kind", "")) != "tap":
+		errors.append("sticky micro release must tap")
+	OS.set_environment("CK_FORCE_MOBILE", "0")
 
 	r = InputRouter.new()
 	r.push(_touch(0, true, Vector2(0, 0)), 5000)

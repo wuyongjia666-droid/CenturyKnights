@@ -170,6 +170,9 @@ func _ready() -> void:
 		move_child(bbg, 0)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_build_ui()
+	# Y1-A T-P0-1: presses that start on/near a unit get a stickier slop so micro-wobble stays a tap.
+	_board_router.sticky_fn = func(origin: Vector2) -> bool:
+		return BattlePick.near_living_unit(self, origin)
 	_init_map()
 	Sfx.play_ambience(AtlasArt.biome_for_map(map_id))
 	_deploy()
@@ -1484,6 +1487,10 @@ func _apply_board_gesture(g: Dictionary) -> void:
 			_clamp_board_pan()
 			_apply_board_xform()
 			_hover_at(pos)
+			BattleTouchConfirm.on_drag(self, pos)
+		"drag_end":
+			# Y1-A T-P0-3: drag-to-cell release commits when touch_drag_commit is on.
+			BattleTouchConfirm.on_drag_end(self, pos)
 		"pinch", "wheel":
 			_zoom_board_at(_screen_to_local(pos), float(g.get("factor", 1.0)))
 			_hover_at(pos)

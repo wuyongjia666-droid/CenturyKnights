@@ -1,8 +1,19 @@
 # Y1-A 手游审计清单（2026-10）
 
-> 分支：`fix/y1a-mobile-audit` · 基线 `main` @ `ffd2b365`  
-> 范围：**只审计**（+ 一处立绘门闩小修）。未真机验收。不合 main，等你说合。  
+> 分支：`fix/y1a-mobile-audit` · 基线 `main` @ `ffd2b365` · PR #331  
+> 范围：审计 + **触控 T-P0-1/2/3 已落地** + 立绘机制 A 小修。未真机验收。不合 main，等你说合。  
 > 用户口径：端游/Windows **有图**，手游缺或不一致；战棋难选中、操作不便。
+>
+> ### 落地状态（2026-10-22）
+> | 项 | 状态 |
+> |---|---|
+> | 立绘机制 A（`dialogue_portrait` large 门闩） | **DONE** |
+> | T-P0-1 更大 slop + sticky 近单位 | **DONE**（`input_router.gd`） |
+> | T-P0-2 `SOFT_R=0.90` + 偏心测试 | **DONE**（`battle_pick.gd` / `battle_feel_check`） |
+> | T-P0-3 预览加粗 + 拇指确认区 + 拖到格松手确认（默认开） | **DONE**（`battle_touch_confirm` / `battle_mobile_bar`；设置项 `touch_drag_commit`） |
+> | T-P1 长按 / transform / 3D 视觉 | **NEXT** |
+> | 枢纽安全区 / 对话板布局（机制 C） | **NEXT** |
+> | 真机签收「不难选中」 | **NEXT（需用户）** |
 
 ---
 
@@ -36,8 +47,8 @@
 | 角色 | 路径 |
 |---|---|
 | 输入 FSM / 点格 | `project/scripts/battle/battle_controller.gd`（`_gui_input` → `_apply_board_gesture` → `_click_cell`） |
-| 触控手势路由 | `project/scripts/platform/input_router.gd`（`InputRouter`：`LONG_MS=480`，`_slop()`≈0.5×`hit_px`） |
-| 胖指软命中 | `project/scripts/battle/battle_pick.gd`（`SOFT_R=0.62` 格） |
+| 触控手势路由 | `project/scripts/platform/input_router.gd`（`LONG_MS=480`，mobile `_slop()`≈0.75×`hit_px` + `sticky_fn`） |
+| 胖指软命中 | `project/scripts/battle/battle_pick.gd`（`SOFT_R=0.90` 格） |
 | 移动/攻击二次确认 | `project/scripts/battle/battle_touch_confirm.gd` + `project/scripts/battle/ui/battle_mobile_bar.gd` |
 | 命中尺寸 | `project/scripts/platform/device_profile.gd`（`hit_px`，48dp） |
 | 契约测试 | `project/tests/suites/battle/battle_feel_check.gd`（软点选几何 + 源码契约） |
@@ -47,21 +58,21 @@
 
 | ID | 优先级 | 现象（用户） | 假设根因 | 依据 |
 |---|---|---|---|---|
-| T-P0-1 | **P0** | 难选中棋子 | **tap 被当成 pan**：手指微动超过 `_slop()`（手机上可达 ~22–56px）则 `moved=true`，松手只 `swallow` 不发 `tap` | `input_router.gd` `_screen_drag` / `_screen_touch` |
-| T-P0-2 | **P0** | 点边格选不中 | **软命中半径偏紧**：`SOFT_R=0.62`×格边；胖指落在格缝时仍可能 miss；与 T-P0-1 叠加更糟 | `battle_pick.gd`；`battle_feel_check` 只验理想几何 |
-| T-P0-3 | **P0** | 操作不便 | **二次确认 + 底栏换页**：移动/攻击先 preview，须再点「确认」；横屏时命令栏在右侧轨，与「点棋盘」视线分裂 | `battle_touch_confirm.gd`、`battle_mobile_bar.gd`、`BattlePick.focus_cell` 偏左 |
+| T-P0-1 | **P0 · DONE** | 难选中棋子 | ~~tap→pan~~：mobile slop 0.75×hit（36–72）+ 近单位 sticky×1.55；微动仍发 tap | `input_router.gd` |
+| T-P0-2 | **P0 · DONE** | 点边格选不中 | ~~SOFT_R=0.62~~ → **0.90**；`battle_feel_check` 覆盖偏心 0.88 格 | `battle_pick.gd` |
+| T-P0-3 | **P0 · DONE** | 操作不便 | 预览描边加粗；确认键落拇指区；**拖到格松手确认**（`touch_drag_commit`，手游默认开） | `battle_touch_confirm.gd` / `battle_mobile_bar.gd` |
 | T-P1-1 | P1 | 误触长按 | 按住 ≥480ms 变「长按看情报 / 危险区」，本意防误触结束回合，但会吞掉慢速点选 | `InputRouter.LONG_MS` |
 | T-P1-2 | P1 | 缩放/平移后点偏 | `_pointer_to_cell` / `BattlePick._board_local` 依赖 `_board_pan`/`_board_zoom`；若某机型 `get_global_transform` 与安全区 inset 不一致会偏一格（**假设，需真机**） | `battle_controller.gd` `_screen_to_local` |
 | T-P1-3 | P1 | 棋子「看起来」难点 | 3D/stand-in 视觉比格子小，命中仍按整格；玩家按「模型」点会偏（**假设**） | `unit_layer_3d.gd` 不参与 pick |
 | T-P2-1 | P2 | 信息不够 | 血量/射程/敌我差依赖右侧信息条 + Forecast；手机横屏阶段区被压缩时可读性下降 | `forecast_panel` / `_unit_panel` 布局 |
 
-### 1.3 建议修复顺序（触控，仅建议）
+### 1.3 修复顺序
 
-1. **P0** 调 `InputRouter`：选中单位优先时提高 tap 容忍（更大 slop，或「落点近单位则禁止升格为 pan」）。  
-2. **P0** 调 `BattlePick.SOFT_R`（例如 0.85–1.0）并扩展 `battle_feel_check` 覆盖胖指偏心。  
-3. **P0** 确认流：保留防误触，但预览格加大描边 + 确认键始终在拇指区；评估「拖到格松手即确认」作为可选项。  
-4. **P1** 长按阈值与选中态互斥；镜头 `focus_cell` 真机标定。  
-5. **P1** 安全区 / transform 对拍脚本（CI 用 `CK_FORCE_MOBILE` + 多种 viewport）。
+1. ~~**P0** InputRouter slop / sticky~~ → **DONE**  
+2. ~~**P0** SOFT_R + battle_feel_check~~ → **DONE**  
+3. ~~**P0** 确认流预览 / 拇指区 / 拖松手确认~~ → **DONE**  
+4. **NEXT P1** 长按阈值与选中态互斥；镜头 `focus_cell` 真机标定。  
+5. **NEXT P1** 安全区 / transform 对拍脚本（CI 用 `CK_FORCE_MOBILE` + 多种 viewport）。
 
 ---
 
@@ -144,12 +155,12 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 
 | 周 | 主题 | 产出 |
 |---|---|---|
-| 1–2 | 审计收口 + 立绘机制 A 合入（本 PR 或 follow-up） | 同节点 Android/Windows 截图对比清单 |
-| 3–4 | T-P0-1 / T-P0-2（slop + SOFT_R） | 每周手感包；扩展 `battle_feel_check` |
-| 5–6 | T-P0-3 确认流与拇指区 | 横屏轨 + 预览描边；你真机签「不难选中」 |
-| 7–8 | 剧情立绘扫尾（机制 A 后仍剪影的节点） | 按章缺图表（只列数据能证明的 speaker） |
-| 9–10 | 枢纽安全区 / 对话板布局（机制 C） | 截图闸 |
-| 11–13 | Y1-A 签收包 | 你签字后才开内容季 #1 |
+| 1–2 | 审计 + 机制 A + 触控 P0（本 PR #331） | **DONE（代码）**；真机对比仍 **NEXT** |
+| 3–4 | 每周手感包给你验 T-P0 | **NEXT（需用户真机）** |
+| 5–6 | T-P1 长按 / 镜头标定 | **NEXT** |
+| 7–8 | 剧情立绘扫尾（机制 A 后仍剪影的节点） | **NEXT** |
+| 9–10 | 枢纽安全区 / 对话板布局（机制 C） | **NEXT** |
+| 11–13 | Y1-A 签收包 | **NEXT**；你签字后才开内容季 #1 |
 
 **不做（本阶段）**：H/I 砍库压画质；29 职 Path C 全量；Steam；合 main 未经你点头。
 
@@ -157,15 +168,13 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 
 ## 4. P0 条目汇总
 
-触控 P0：`T-P0-1`、`T-P0-2`、`T-P0-3`（3）  
-立绘 P0：机制 A（1）  
+触控 P0：`T-P0-1`、`T-P0-2`、`T-P0-3` → **全部 DONE（本 PR）**  
+立绘 P0：机制 A → **DONE**  
 
-**合计 P0 = 4**
+**合计 P0 = 4 / 4 代码侧完成**；真机签收仍开放。
 
-优先改的三个文件（建议下一刀）：
+下一刀（P1 / 真机）：
 
-1. `project/scripts/platform/input_router.gd` — tap/pan 升格  
-2. `project/scripts/battle/battle_pick.gd` — `SOFT_R` / 软命中  
-3. `project/scripts/art/unit_art.gd` — `dialogue_portrait`（本 PR 已动）
-
-（确认流则跟 `battle_touch_confirm.gd` / `battle_mobile_bar.gd`。）
+1. 真机验选中率与拖松手确认是否顺手  
+2. 长按与 tap 互斥（T-P1-1）  
+3. 对话板手机布局（机制 C）
