@@ -1358,7 +1358,11 @@ func _unhandled_key_input(event: InputEvent) -> void:
 func _gui_input(event: InputEvent) -> void:
 	if battle_over:
 		return
-	for g in CKPauseMenu.board_events(_board_router, event, Time.get_ticks_msec()):
+	# Y1-A T-P1-2: _gui_input hands us control-local coords; the router (slop) and
+	# _screen_to_local expect viewport px. Without this, a safe-area inset / root scale
+	# was applied twice and taps landed one inset away from the finger.
+	var ev: InputEvent = event.xformed_by(get_global_transform()) if is_inside_tree() else event
+	for g in CKPauseMenu.board_events(_board_router, ev, Time.get_ticks_msec()):
 		_apply_board_gesture(g)
 
 func apply_mobile_layout() -> void:
@@ -1386,21 +1390,14 @@ func _apply_board_xform() -> void:
 	_board_xform.scale = Vector2(_board_zoom, _board_zoom)
 
 func _clamp_board_pan() -> void:
-	var z := _board_zoom
-	var board := Vector2(MAP_W, MAP_H) * float(CELL) * z
-	var origin := ORIGIN * z
-	var min_keep := 64.0
-	var stage: Rect2 = get_meta("m_board_area", BOARD_AREA)
-	_board_pan.x = clampf(_board_pan.x, stage.position.x + min_keep - origin.x - board.x, stage.end.x - min_keep - origin.x)
-	_board_pan.y = clampf(_board_pan.y, stage.position.y + min_keep - origin.y - board.y, stage.end.y - min_keep - origin.y)
+	_board_pan = BattlePick.clamp_pan(_board_pan, _board_zoom, ORIGIN, Vector2(MAP_W, MAP_H) * float(CELL), get_meta("m_board_area", BOARD_AREA))
 
 func _zoom_board_at(focal: Vector2, factor: float) -> void:
-	var old := _board_zoom
-	var next := clampf(old * factor, 0.65, 2.4)
-	if is_equal_approx(next, old) or old <= 0.001:
+	var z: Dictionary = BattlePick.zoom_about(_board_pan, _board_zoom, factor, focal)
+	if is_equal_approx(float(z.zoom), _board_zoom) or _board_zoom <= 0.001:
 		return
-	_board_zoom = next
-	_board_pan = focal - (focal - _board_pan) * (next / old)
+	_board_zoom = float(z.zoom)
+	_board_pan = z.pan
 	_clamp_board_pan()
 	_apply_board_xform()
 
@@ -1488,14 +1485,20 @@ func _apply_board_gesture(g: Dictionary) -> void:
 		"cancel":
 			_cancel_selection()
 		"pan":
+			# Y1-A T-P1-2: a drag that starts on the selected unit moves the unit ghost; any other drag pans.
+			if BattleTouchConfirm.is_unit_drag(self, g):
+				_hover_at(pos)
+				BattleTouchConfirm.on_drag(self, pos)
+				return
 			_board_pan += _screen_delta_to_local(g.get("delta", Vector2.ZERO))
 			_clamp_board_pan()
 			_apply_board_xform()
 			_hover_at(pos)
-			BattleTouchConfirm.on_drag(self, pos)
 		"drag_end":
 			# Y1-A T-P0-3: drag-to-cell release commits when touch_drag_commit is on.
-			BattleTouchConfirm.on_drag_end(self, pos)
+			if BattleTouchConfirm.is_unit_drag(self, g):
+				BattleTouchConfirm.on_drag_end(self, pos)
+			BattleTouchConfirm.end_gesture(self)
 		"pinch", "wheel":
 			_zoom_board_at(_screen_to_local(pos), float(g.get("factor", 1.0)))
 			_hover_at(pos)

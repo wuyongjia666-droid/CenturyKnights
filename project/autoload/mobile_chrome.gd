@@ -80,6 +80,29 @@ func _refloor() -> void:
 func _on_resize() -> void:
 	_schedule_apply()
 
+## Y1-A T-P1-2: sensor-landscape 180° flips move the notch to the other edge without
+## a viewport size change, so size_changed never fires. Poll the safe area at 2 Hz.
+var _last_safe := Rect2()
+var _safe_poll := 0.0
+const SAFE_POLL_S := 0.5
+
+func _process(delta: float) -> void:
+	if not DeviceProfile.is_mobile():
+		set_process(false)
+		return
+	_safe_poll += delta
+	if _safe_poll < SAFE_POLL_S:
+		return
+	_safe_poll = 0.0
+	var win := Vector2(DisplayServer.window_get_size())
+	if win.x < 2.0:
+		win = get_viewport().get_visible_rect().size
+	if safe_changed(_last_safe, DeviceProfile.safe_area(win)):
+		_schedule_apply()
+
+static func safe_changed(prev: Rect2, now: Rect2) -> bool:
+	return not prev.position.is_equal_approx(now.position) or not prev.size.is_equal_approx(now.size)
+
 func _apply() -> void:
 	_apply_pending = false
 	if not DeviceProfile.is_mobile():
@@ -99,7 +122,8 @@ func _apply() -> void:
 	var win := Vector2(DisplayServer.window_get_size())
 	if win.x < 2.0:
 		win = vp
-	var safe := Rect2(DisplayServer.get_display_safe_area())
+	var safe := DeviceProfile.safe_area(win)
+	_last_safe = safe
 	var insets := DeviceProfile.insets_from_safe(vp, win, safe)
 	var fitted := MobileLayout.fit(vp, insets)
 	var key := "%s|%s|%s|%s" % [vp, insets, fitted.get("scale", 1.0), fitted.get("position", Vector2.ZERO)]

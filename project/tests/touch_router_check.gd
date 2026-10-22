@@ -158,6 +158,36 @@ func _router(errors: Array) -> void:
 		errors.append("two-finger drag must pinch")
 	elif float(pinch[0].get("factor", 1.0)) < 1.4:
 		errors.append("pinch factor expected to grow, got %s" % str(pinch[0].get("factor", "?")))
+	# Y1-A T-P1-2: lifting after a pinch only swallows — never drag_end (no accidental commit),
+	# and the surviving finger's pan is flagged multi.
+	var lift1: Array = r.push(_touch(1, false, Vector2(180, 0)), 5200)
+	for g in lift1:
+		if str(g.get("kind", "")) == "drag_end":
+			errors.append("pinch finger release must not emit drag_end")
+	var tail := InputEventScreenDrag.new()
+	tail.index = 0
+	tail.position = Vector2(-60, 0)
+	tail.relative = Vector2(-60, 0)
+	var tail_pan: Array = r.push(tail, 5300)
+	if tail_pan.is_empty() or str(tail_pan[0].get("kind", "")) != "pan" or not bool(tail_pan[0].get("multi", false)):
+		errors.append("post-pinch pan must be flagged multi, got %s" % str(tail_pan))
+	var lift0: Array = r.push(_touch(0, false, Vector2(-60, 0)), 5400)
+	for g in lift0:
+		if str(g.get("kind", "")) == "drag_end":
+			errors.append("post-pinch release must not emit drag_end")
+	# A plain one-finger pan carries its press origin on pan + drag_end.
+	r = InputRouter.new()
+	r.push(_touch(0, true, Vector2(10, 10)), 6000)
+	var far := InputEventScreenDrag.new()
+	far.index = 0
+	far.position = Vector2(210, 10)
+	far.relative = Vector2(200, 0)
+	var pan1: Array = r.push(far, 6050)
+	if pan1.is_empty() or pan1[0].get("origin", Vector2(-1, -1)) != Vector2(10, 10):
+		errors.append("pan must carry press origin, got %s" % str(pan1))
+	var end1: Array = r.push(_touch(0, false, Vector2(210, 10)), 6100)
+	if end1.is_empty() or str(end1[0].get("kind", "")) != "drag_end" or end1[0].get("origin", Vector2(-1, -1)) != Vector2(10, 10):
+		errors.append("drag_end must carry press origin, got %s" % str(end1))
 
 func _touch(index: int, pressed: bool, pos: Vector2) -> InputEventScreenTouch:
 	var e := InputEventScreenTouch.new()

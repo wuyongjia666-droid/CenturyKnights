@@ -139,8 +139,8 @@ ux_color_lake,湖青,Lake cyan
 ux_color_shallow_tide,浅潮,Shallow tide
 ux_color_cloud,云灰,Cloud gray
 ux_color_plain,素白,Plain white
-ux_preview_move_log,%s 预览移动 (%d,%d) — 确认后落子,%s preview move (%d,%d) — confirm to commit
-ux_moved_to_log,%s 移动至 (%d,%d),%s moved to (%d,%d)
+ux_preview_move_log,"%s 预览移动 (%d,%d) — 确认后落子","%s preview move (%d,%d) — confirm to commit"
+ux_moved_to_log,"%s 移动至 (%d,%d)","%s moved to (%d,%d)"
 ux_mark_none,无此习痕,No such mark
 ux_mark_has,已有「%s」,Already has "%s"
 ux_mark_full,习痕已满,Marks full
