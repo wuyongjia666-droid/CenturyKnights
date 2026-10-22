@@ -173,6 +173,11 @@ func _ready() -> void:
 	# Y1-A T-P0-1: presses that start on/near a unit get a stickier slop so micro-wobble stays a tap.
 	_board_router.sticky_fn = func(origin: Vector2) -> bool:
 		return BattlePick.near_living_unit(self, origin)
+	# Y1-A T-P1-1: with a unit selected, raise long-press so slow move/confirm taps are not swallowed as intel.
+	_board_router.long_ms_fn = func() -> int:
+		if selected >= 0:
+			return InputRouter.LONG_MS_SELECTED
+		return InputRouter.LONG_MS
 	_init_map()
 	Sfx.play_ambience(AtlasArt.biome_for_map(map_id))
 	_deploy()

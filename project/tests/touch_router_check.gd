@@ -113,6 +113,39 @@ func _router(errors: Array) -> void:
 		errors.append("sticky micro release must tap")
 	OS.set_environment("CK_FORCE_MOBILE", "0")
 
+	# Y1-A T-P1-1: raised long_ms keeps a slow release as tap (no long_press / swallow).
+	r = InputRouter.new()
+	r.long_ms_fn = func() -> int: return InputRouter.LONG_MS_SELECTED
+	r.push(_touch(0, true, Vector2(5, 5)), 7000)
+	var mid_hold: Array = r.poll(7000 + InputRouter.LONG_MS + 20)
+	if not mid_hold.is_empty():
+		errors.append("selected long_ms must not fire at default LONG_MS")
+	var still: Array = r.poll(7000 + InputRouter.LONG_MS_SELECTED - 20)
+	if not still.is_empty():
+		errors.append("selected long_ms must not fire before LONG_MS_SELECTED")
+	var slow_up: Array = r.push(_touch(0, false, Vector2(6, 6)), 7000 + InputRouter.LONG_MS + 40)
+	if slow_up.is_empty() or str(slow_up[0].get("kind", "")) != "tap":
+		errors.append("slow release under raised long_ms must tap, got %s" % str(slow_up))
+
+	# Raised threshold still allows intentional long-press after LONG_MS_SELECTED.
+	r = InputRouter.new()
+	r.long_ms_fn = func() -> int: return InputRouter.LONG_MS_SELECTED
+	r.push(_touch(0, true, Vector2(5, 5)), 8000)
+	var late: Array = r.poll(8000 + InputRouter.LONG_MS_SELECTED + 10)
+	if late.is_empty() or str(late[0].get("kind", "")) != "long_press":
+		errors.append("hold past LONG_MS_SELECTED must long-press")
+
+	# Disable long-press entirely when long_ms_fn returns <= 0.
+	r = InputRouter.new()
+	r.long_ms_fn = func() -> int: return 0
+	r.push(_touch(0, true, Vector2(5, 5)), 9000)
+	var never: Array = r.poll(9000 + 5000)
+	if not never.is_empty():
+		errors.append("long_ms_fn<=0 must disable long-press")
+	var never_up: Array = r.push(_touch(0, false, Vector2(5, 5)), 14000)
+	if never_up.is_empty() or str(never_up[0].get("kind", "")) != "tap":
+		errors.append("disabled long-press release must tap")
+
 	r = InputRouter.new()
 	r.push(_touch(0, true, Vector2(0, 0)), 5000)
 	r.push(_touch(1, true, Vector2(100, 0)), 5010)

@@ -1,19 +1,23 @@
 # Y1-A 手游审计清单（2026-10）
 
-> 分支：`fix/y1a-mobile-audit` · 基线 `main` @ `ffd2b365` · PR #331  
-> 范围：审计 + **触控 T-P0-1/2/3 已落地** + 立绘机制 A 小修。未真机验收。不合 main，等你说合。  
-> 用户口径：端游/Windows **有图**，手游缺或不一致；战棋难选中、操作不便。
+> 分支：`fix/y1a-touch-p1` · 基线 `main`（含 #331 / #332）  
+> 范围：T-P1-1 选中时长按门槛提高；T-P1-2 纯 pan/zoom→格契约测试。不合 main，等你说合。  
+> 用户口径：端游/Windows **有图**，手游缺或不一致；战棋难选中、操作不便。全权推进，但 **不要让用户上手玩**。
 >
 > ### 落地状态（2026-10-22）
 > | 项 | 状态 |
 > |---|---|
-> | 立绘机制 A（`dialogue_portrait` large 门闩） | **DONE** |
-> | T-P0-1 更大 slop + sticky 近单位 | **DONE**（`input_router.gd`） |
-> | T-P0-2 `SOFT_R=0.90` + 偏心测试 | **DONE**（`battle_pick.gd` / `battle_feel_check`） |
-> | T-P0-3 预览加粗 + 拇指确认区 + 拖到格松手确认（默认开） | **DONE**（`battle_touch_confirm` / `battle_mobile_bar`；设置项 `touch_drag_commit`） |
-> | T-P1 长按 / transform / 3D 视觉 | **NEXT** |
+> | 立绘机制 A（`dialogue_portrait` large 门闩） | **DONE**（#331） |
+> | T-P0-1 更大 slop + sticky 近单位 | **DONE**（#331） |
+> | T-P0-2 `SOFT_R=0.90` + 偏心测试 | **DONE**（#331） |
+> | T-P0-3 预览加粗 + 拇指确认区 + 拖到格松手确认（默认开） | **DONE**（#331） |
+> | 立绘运行时 medium 加载测试 | **DONE**（#332） |
+> | T-P1-1 选中时提高长按门槛（`LONG_MS_SELECTED=900`） | **DONE**（本分支） |
+> | T-P1-2 pan/zoom→格纯数学契约 | **DONE**（本分支；`get_global_transform`/安全区仍 **NEXT**） |
+> | T-P1-3 3D 视觉命中说明 | **DOC ONLY**（见 §1.2；不改 pick） |
 > | 枢纽安全区 / 对话板布局（机制 C） | **NEXT** |
-> | 真机签收「不难选中」 | **NEXT（需用户）** |
+> | 正式 APK 加速冒烟 | **BLOCKED** — box / m173 均无 KVM；**待有 KVM 或真机代理**后再跑。禁止再开无加速长跑 emulator。 |
+> | 真机签收「不难选中」 | **NEXT（需用户或真机代理）** |
 
 ---
 
@@ -38,6 +42,12 @@
 
 本审计 **未**在用户手机上跑；下列「根因」凡未跑发行包验证的，标为 **假设**。
 
+### APK 冒烟环境缺口
+
+- box 与用户机 m173 **均无 KVM / 硬件加速**；无加速 emulator 会 ANR，**禁止再开长跑**。  
+- 自动化套件（触控 / 立绘门闩 / `battle_feel` / mobile shots）在 CI/本机 Godot 侧有效，**不能替代**发行 APK 手指手感。  
+- **待有**：带 KVM 的 CI runner，或真机/代理设备，再跑正式 APK 冒烟。
+
 ---
 
 ## 1. 战棋触控
@@ -61,9 +71,9 @@
 | T-P0-1 | **P0 · DONE** | 难选中棋子 | ~~tap→pan~~：mobile slop 0.75×hit（36–72）+ 近单位 sticky×1.55；微动仍发 tap | `input_router.gd` |
 | T-P0-2 | **P0 · DONE** | 点边格选不中 | ~~SOFT_R=0.62~~ → **0.90**；`battle_feel_check` 覆盖偏心 0.88 格 | `battle_pick.gd` |
 | T-P0-3 | **P0 · DONE** | 操作不便 | 预览描边加粗；确认键落拇指区；**拖到格松手确认**（`touch_drag_commit`，手游默认开） | `battle_touch_confirm.gd` / `battle_mobile_bar.gd` |
-| T-P1-1 | P1 | 误触长按 | 按住 ≥480ms 变「长按看情报 / 危险区」，本意防误触结束回合，但会吞掉慢速点选 | `InputRouter.LONG_MS` |
-| T-P1-2 | P1 | 缩放/平移后点偏 | `_pointer_to_cell` / `BattlePick._board_local` 依赖 `_board_pan`/`_board_zoom`；若某机型 `get_global_transform` 与安全区 inset 不一致会偏一格（**假设，需真机**） | `battle_controller.gd` `_screen_to_local` |
-| T-P1-3 | P1 | 棋子「看起来」难点 | 3D/stand-in 视觉比格子小，命中仍按整格；玩家按「模型」点会偏（**假设**） | `unit_layer_3d.gd` 不参与 pick |
+| T-P1-1 | **P1 · DONE** | 误触长按 | 选中单位时 `long_ms_fn` → `LONG_MS_SELECTED=900`；慢速点选仍为 tap；故意长按仍可情报 | `input_router.gd` / `battle_controller.gd` |
+| T-P1-2 | **P1 · PARTIAL** | 缩放/平移后点偏 | 纯 pan/zoom→格代数已契约测试（`local_after_pan_zoom` / `cell_at_local` / `focus_pan_delta`）。**假设仍在**：`get_global_transform` 与安全区 inset 机型差 → 需有 KVM/真机代理再对拍 | `battle_pick.gd` + `battle_feel_check` |
+| T-P1-3 | P1 · **DOC** | 棋子「看起来」难点 | 3D/stand-in 视觉比格子小，命中仍按整格（`SOFT_R`）；玩家按「模型」点会偏（**假设**）。本阶段不改 pick 几何，只记文档 | `unit_layer_3d.gd` 不参与 pick |
 | T-P2-1 | P2 | 信息不够 | 血量/射程/敌我差依赖右侧信息条 + Forecast；手机横屏阶段区被压缩时可读性下降 | `forecast_panel` / `_unit_panel` 布局 |
 
 ### 1.3 修复顺序
@@ -71,8 +81,9 @@
 1. ~~**P0** InputRouter slop / sticky~~ → **DONE**  
 2. ~~**P0** SOFT_R + battle_feel_check~~ → **DONE**  
 3. ~~**P0** 确认流预览 / 拇指区 / 拖松手确认~~ → **DONE**  
-4. **NEXT P1** 长按阈值与选中态互斥；镜头 `focus_cell` 真机标定。  
-5. **NEXT P1** 安全区 / transform 对拍脚本（CI 用 `CK_FORCE_MOBILE` + 多种 viewport）。
+4. ~~**P1** 长按阈值与选中态互斥~~ → **DONE**（`LONG_MS_SELECTED`）  
+5. ~~**P1** pan/zoom→格纯契约~~ → **DONE**；**NEXT** 安全区 / `get_global_transform` 真机或 KVM 对拍。  
+6. **NEXT** 正式 APK 冒烟（**待有 KVM / 真机代理**；box/m173 无加速勿再长跑）。
 
 ---
 
@@ -157,7 +168,7 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 |---|---|---|
 | 1–2 | 审计 + 机制 A + 触控 P0（本 PR #331） | **DONE（代码）**；真机对比仍 **NEXT** |
 | 3–4 | 每周手感包给你验 T-P0 | **NEXT（需用户真机）** |
-| 5–6 | T-P1 长按 / 镜头标定 | **NEXT** |
+| 5–6 | T-P1 长按 / pan-zoom 契约 | **DONE（代码）**；安全区真机仍 **NEXT** |
 | 7–8 | 剧情立绘扫尾（机制 A 后仍剪影的节点） | **NEXT** |
 | 9–10 | 枢纽安全区 / 对话板布局（机制 C） | **NEXT** |
 | 11–13 | Y1-A 签收包 | **NEXT**；你签字后才开内容季 #1 |
@@ -173,8 +184,9 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 
 **合计 P0 = 4 / 4 代码侧完成**；真机签收仍开放。
 
-下一刀（P1 / 真机）：
+下一刀：
 
-1. 真机验选中率与拖松手确认是否顺手  
-2. 长按与 tap 互斥（T-P1-1）  
-3. 对话板手机布局（机制 C）
+1. **APK 冒烟**：待有 KVM 或真机代理（本环境勿再开无加速 emulator）  
+2. 安全区 / `get_global_transform` 对拍（T-P1-2 剩余）  
+3. 对话板手机布局（机制 C）  
+4. 真机或代理签收「不难选中」后才开内容季
