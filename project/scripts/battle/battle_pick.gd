@@ -2,9 +2,12 @@ class_name BattlePick
 extends RefCounted
 ## Soft hit-test for fat-finger taps. Prefer the nearest living unit when the
 ## finger lands near a cell edge or slightly off the token.
+##
+## Y1-A T-P0-2: SOFT_R raised from 0.62 → 0.90 so eccentric fat-finger taps on
+## a neighbouring empty cell still resolve to the unit.
 
 ## Fraction of a cell: anything closer than this counts as that unit.
-const SOFT_R := 0.62
+const SOFT_R := 0.90
 
 
 static func nearest_unit_pos(origin: Vector2, cell_px: float, units: Array, local: Vector2, soft_r: float = SOFT_R) -> Vector2i:
@@ -35,6 +38,14 @@ static func resolve(host, screen_pos: Vector2) -> Vector2i:
 	if hit.x >= 0:
 		return hit
 	return exact
+
+
+## True when a soft-pick would land on a living unit (used by InputRouter sticky_fn).
+static func near_living_unit(host, screen_pos: Vector2) -> bool:
+	var cell: Vector2i = resolve(host, screen_pos)
+	if cell.x < 0:
+		return false
+	return host._unit_at(cell) >= 0
 
 
 static func _board_local(host, screen_pos: Vector2) -> Vector2:

@@ -5,16 +5,23 @@ extends RefCounted
 ## wheel = zoom, middle-drag = pan. Touch: release = tap, hold = long-press,
 ## one-finger drag = pan, two-finger = pinch.
 ## Emulated mouse events (device -1) are ignored so a touch is not also a click.
+##
+## Y1-A T-P0-1: mobile slop is ~0.75× hit target (was 0.5×). Optional sticky_fn:
+## when the press origin is "sticky" (e.g. near a unit), slop grows further so a
+## fat-finger micro-wobble cannot promote the gesture to pan and swallow the tap.
 
 const LONG_MS := 480
 const SLOP := 22.0
+## Mobile floor/ceiling for the base (non-sticky) slop in viewport px.
+const MOBILE_SLOP_MIN := 36.0
+const MOBILE_SLOP_MAX := 72.0
+## Extra multiplier when sticky_fn(origin) is true.
+const STICKY_SLOP_MUL := 1.55
 
-func _slop() -> float:
-	## ~0.5× hit target on phones; keep a desktop floor of 22.
-	if DeviceProfile.is_mobile():
-		return clampf(DeviceProfile.hit_px() * 0.5, 22.0, 56.0)
-	return SLOP
 const WHEEL_FACTOR := 1.12
+
+## Optional (Vector2) -> bool. Battle sets this so presses near units stay taps longer.
+var sticky_fn: Callable = Callable()
 
 var _pts: Dictionary = {}
 var _pinch_dist := -1.0
@@ -33,6 +40,18 @@ func gesture_locked() -> bool:
 		if bool(p.get("moved", false)) or bool(p.get("long", false)):
 			return true
 	return false
+
+func _slop() -> float:
+	## ~0.75× hit target on phones; keep a desktop floor of 22.
+	if DeviceProfile.is_mobile():
+		return clampf(DeviceProfile.hit_px() * 0.75, MOBILE_SLOP_MIN, MOBILE_SLOP_MAX)
+	return SLOP
+
+func _slop_for(origin: Vector2) -> float:
+	var lim := _slop()
+	if sticky_fn.is_valid() and bool(sticky_fn.call(origin)):
+		return lim * STICKY_SLOP_MUL
+	return lim
 
 func push(event: InputEvent, now_ms: int) -> Array:
 	if event is InputEventMouse and int(event.device) == InputEvent.DEVICE_ID_EMULATION:
@@ -82,7 +101,11 @@ func _screen_touch(e: InputEventScreenTouch, now_ms: int) -> Array:
 	_pts.erase(e.index)
 	if _pts.size() < 2:
 		_pinch_dist = -1.0
-	if moved or held:
+	if moved:
+		# drag_end lets the board commit a drag-to-cell; swallow keeps atlas behaviour.
+		out.append({"kind": "drag_end", "pos": e.position})
+		out.append({"kind": "swallow", "pos": e.position})
+	elif held:
 		out.append({"kind": "swallow", "pos": e.position})
 	elif _pts.is_empty():
 		out.append({"kind": "tap", "pos": p.get("pos", e.position)})
@@ -95,7 +118,7 @@ func _screen_drag(e: InputEventScreenDrag, now_ms: int) -> Array:
 	var prev: Vector2 = p.get("pos", e.position)
 	p["pos"] = e.position
 	var origin: Vector2 = p.get("origin", e.position)
-	if origin.distance_to(e.position) > _slop():
+	if origin.distance_to(e.position) > _slop_for(origin):
 		p["moved"] = true
 	_pts[e.index] = p
 	if _pts.size() >= 2:

@@ -519,14 +519,16 @@ static func dialogue_portrait(speaker: String, emotion: String, who: CKCharacter
 		return portrait(who, size, CKArtPaths.TIER_MEDIUM)
 	if slot != "":
 		var path := expression_plate_path(slot, emotion)
-		if _art_exists(path):
-			var tex = _try_load(path, CKArtPaths.TIER_MEDIUM)
-			if tex is Texture2D:
-				return tex
+		# Do not gate on _art_exists(path): exists() only probes the large .webp sibling.
+		# Android excludes expression/speaker larges (#324) while packing .medium.webp;
+		# a large-only gate false-negatives and forces silhouettes / wrong faces on phone.
+		var tex = _try_load(path, CKArtPaths.TIER_MEDIUM)
+		if tex is Texture2D:
+			return tex
 	if who != null:
 		return portrait(who, size, CKArtPaths.TIER_MEDIUM)
 	var sp_path := speaker_plate_path(speaker)
-	if sp_path != "" and _art_exists(sp_path):
+	if sp_path != "":
 		var sp_tex = _try_load(sp_path, CKArtPaths.TIER_MEDIUM)
 		if sp_tex is Texture2D:
 			return sp_tex

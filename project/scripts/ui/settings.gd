@@ -162,6 +162,9 @@ func _ready() -> void:
 	battle.add_child(_check(Locale.t("ux_touch_confirm"), bool(GameState.settings.get("touch_confirm", DeviceProfile.is_mobile())), func(on):
 		GameState.settings["touch_confirm"] = on
 	))
+	battle.add_child(_check(Locale.t("ux_touch_drag_commit"), bool(GameState.settings.get("touch_drag_commit", DeviceProfile.is_mobile())), func(on):
+		GameState.settings["touch_drag_commit"] = on
+	))
 
 	var help := _group(right, "a1_set_help")
 	if not DeviceProfile.is_mobile():
