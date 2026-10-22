@@ -9,7 +9,6 @@ extends Node
 var _battle: Control
 var _p := -1
 var _e := -1
-var _t := 1000
 
 func _ready() -> void:
 	await get_tree().process_frame
@@ -26,8 +25,19 @@ func _run() -> String:
 	if not DeviceProfile.is_mobile():
 		return "CK_FORCE_MOBILE did not flip DeviceProfile"
 	var err := _pure()
-	if err != "":
-		return err
+	if err == "":
+		err = await _setup()
+	if err == "":
+		err = await _stage_tap_zoom()
+	if err == "":
+		err = await _stage_pan_drag()
+	if err == "":
+		err = await _stage_flip()
+	if _battle != null and is_instance_valid(_battle):
+		_battle.queue_free()
+	return err
+
+func _setup() -> String:
 	GameState.new_game("烬行", "灰旗", "#%02x%02x%02x" % [110, 212, 255])
 	GameState.settings.erase("touch_confirm")
 	GameState.settings.erase("touch_drag_commit")
@@ -46,6 +56,9 @@ func _run() -> String:
 	if not _arrange():
 		return "deploy missing player/enemy"
 	await _settle()
+	return ""
+
+func _stage_tap_zoom() -> String:
 	# 1) Tap the player unit at its on-screen position → selected.
 	await _tap(_screen_of(_battle.units[_p].pos))
 	if _battle.selected != _p:
@@ -78,7 +91,11 @@ func _run() -> String:
 	await _tap(_screen_of(_battle.units[_p].pos))
 	if _battle.selected != _p:
 		return "tap after pan/zoom missed unit: selected=%s" % _battle.selected
+	return ""
+
+func _stage_pan_drag() -> String:
 	# 5) Map pan that ends on a legal move cell must NOT move the unit (pan ≠ drag-commit).
+	var before: Vector2i = _battle.units[_p].pos
 	var dest := _legal_dest()
 	if dest.x < 0:
 		return "no legal move cell"
@@ -109,18 +126,14 @@ func _run() -> String:
 		return "unit drag did not commit: pos=%s want=%s" % [_battle.units[_p].pos, dest]
 	# 7) Pan bounds: a huge fling keeps PAN_KEEP_PX of board inside the stage.
 	await _drag(Vector2(300, 300), Vector2(300, 300) + Vector2(5000, 4000))
-	var err2 := _bounds()
-	if err2 != "":
-		return err2
+	return _bounds()
+
+func _stage_flip() -> String:
 	# 8) 180° flip: notch moves to the right without a size change → poll re-applies.
 	OS.set_environment("CK_SAFE_INSETS", "0,0,120,24")
-	for _i in 50:
-		await get_tree().process_frame
-		if float((_battle.get_meta("mobile_insets", {}) as Dictionary).get("right", 0.0)) > 100.0:
-			break
-	await get_tree().create_timer(0.7).timeout
+	await get_tree().create_timer(MobileChrome.SAFE_POLL_S + 0.3).timeout
 	await _settle()
-	ins = _battle.get_meta("mobile_insets", {})
+	var ins: Dictionary = _battle.get_meta("mobile_insets", {})
 	if float(ins.get("right", 0.0)) < 100.0 or float(ins.get("left", 0.0)) > 0.5:
 		return "rotation flip did not re-apply insets: %s" % str(ins)
 	var vp: Vector2 = get_viewport().get_visible_rect().size
@@ -135,9 +148,7 @@ func _run() -> String:
 		return "unit not on-screen after focus: %s" % flip_px
 	await _tap(flip_px)
 	if _battle.selected != _p:
-		var sp := _screen_of(_battle.units[_p].pos)
-		return "tap after notch flip missed unit: sel=%s done=%s pos=%s ptc=%s xform=%s stories=%s" % [_battle.selected, _battle.units[_p].done, _battle.units[_p].pos, _battle._pointer_to_cell(sp), _battle.get_global_transform(), _battle.get_node_or_null("BattleStoryLayer") != null]
-	_battle.queue_free()
+		return "tap after notch flip missed unit: sel=%s ptc=%s" % [_battle.selected, _battle._pointer_to_cell(flip_px)]
 	return ""
 
 func _pure() -> String:
