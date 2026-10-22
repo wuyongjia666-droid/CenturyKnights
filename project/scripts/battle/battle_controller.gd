@@ -1361,8 +1361,9 @@ func _gui_input(event: InputEvent) -> void:
 	# Y1-A T-P1-2: _gui_input hands us control-local coords; the router (slop) and
 	# _screen_to_local expect viewport px. Without this, a safe-area inset / root scale
 	# was applied twice and taps landed one inset away from the finger.
-	var ev: InputEvent = event.xformed_by(get_global_transform()) if is_inside_tree() else event
-	for g in CKPauseMenu.board_events(_board_router, ev, Time.get_ticks_msec()):
+	if is_inside_tree():
+		event = event.xformed_by(get_global_transform())
+	for g in CKPauseMenu.board_events(_board_router, event, Time.get_ticks_msec()):
 		_apply_board_gesture(g)
 
 func apply_mobile_layout() -> void:

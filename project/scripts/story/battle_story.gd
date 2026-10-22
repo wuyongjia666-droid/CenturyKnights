@@ -116,7 +116,7 @@ static func _dist(a: Vector2i, b: Vector2i) -> int:
 
 ## Y1-A T-P1-2: the bark layer is a CanvasLayer (viewport px), so it does not inherit the
 ## battle root's safe-area offset. Inset it by the same mobile_insets so 跳过 / the bar
-## never sit under a notch (re-run on reuse so a 180° flip follows).
+## never sit under a notch (re-run on reuse so a 180-degree flip follows).
 static func _inset_root(host: Node, root) -> void:
 	if not (root is Control) or not host.has_meta("mobile_insets"):
 		return

@@ -80,7 +80,7 @@ func _refloor() -> void:
 func _on_resize() -> void:
 	_schedule_apply()
 
-## Y1-A T-P1-2: sensor-landscape 180° flips move the notch to the other edge without
+## Y1-A T-P1-2: sensor-landscape 180-degree flips move the notch to the other edge without
 ## a viewport size change, so size_changed never fires. Poll the safe area at 2 Hz.
 var _last_safe := Rect2()
 var _safe_poll := 0.0

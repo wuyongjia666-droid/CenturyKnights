@@ -129,7 +129,7 @@ func _stage_pan_drag() -> String:
 	return _bounds()
 
 func _stage_flip() -> String:
-	# 8) 180° flip: notch moves to the right without a size change → poll re-applies.
+	# 8) 180-degree flip: notch moves to the right without a size change → poll re-applies.
 	OS.set_environment("CK_SAFE_INSETS", "0,0,120,24")
 	await get_tree().create_timer(MobileChrome.SAFE_POLL_S + 0.3).timeout
 	await _settle()
@@ -158,7 +158,7 @@ func _pure() -> String:
 	if not MobileChrome.safe_changed(r, Rect2(0, 0, 2280, 1080)):
 		return "safe_changed missed width change"
 	if not MobileChrome.safe_changed(Rect2(120, 0, 2280, 1080), Rect2(0, 0, 2280, 1080)):
-		return "safe_changed missed 180° flip"
+		return "safe_changed missed 180-degree flip"
 	OS.set_environment("CK_SAFE_INSETS", "100,10,30,40")
 	var s := DeviceProfile.safe_area(Vector2(2400, 1080))
 	OS.set_environment("CK_SAFE_INSETS", "")
