@@ -114,9 +114,23 @@ static func _cell(v) -> Vector2i:
 static func _dist(a: Vector2i, b: Vector2i) -> int:
 	return absi(a.x - b.x) + absi(a.y - b.y)
 
+## Y1-A T-P1-2: the bark layer is a CanvasLayer (viewport px), so it does not inherit the
+## battle root's safe-area offset. Inset it by the same mobile_insets so 跳过 / the bar
+## never sit under a notch (re-run on reuse so a 180° flip follows).
+static func _inset_root(host: Node, root) -> void:
+	if not (root is Control) or not host.has_meta("mobile_insets"):
+		return
+	var ins: Dictionary = host.get_meta("mobile_insets")
+	var c := root as Control
+	c.offset_left = float(ins.get("left", 0.0))
+	c.offset_top = float(ins.get("top", 0.0))
+	c.offset_right = -float(ins.get("right", 0.0))
+	c.offset_bottom = -float(ins.get("bottom", 0.0))
+
 static func _layer(host: Node) -> CanvasLayer:
 	var existing := host.get_node_or_null(LAYER_NAME)
 	if existing is CanvasLayer:
+		_inset_root(host, existing.get_node_or_null("Root"))
 		return existing
 	var layer := CanvasLayer.new()
 	layer.name = LAYER_NAME
@@ -128,6 +142,7 @@ static func _layer(host: Node) -> CanvasLayer:
 	root.mouse_filter = Control.MOUSE_FILTER_STOP
 	root.visible = false
 	layer.add_child(root)
+	_inset_root(host, root)
 	var dim := ColorRect.new()
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
 	dim.color = Color(0, 0, 0, 0.18)
@@ -144,7 +159,9 @@ static func _layer(host: Node) -> CanvasLayer:
 	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if host.has_method("_mobile_landscape") and host._mobile_landscape():
 		# Landscape phone: the bark sits over the side panel, right of the board, never over it.
-		var vpw: float = maxf(1.0, host.get_viewport().get_visible_rect().size.x)
+		# Root is inset to the safe rect, so anchors are fractions of the safe width.
+		var ins: Dictionary = host.get_meta("mobile_insets", {})
+		var vpw: float = maxf(1.0, host.get_viewport().get_visible_rect().size.x - float(ins.get("left", 0.0)) - float(ins.get("right", 0.0)))
 		var board_end: float = (12.0 + 856.0 + 12.0 + host._root_w() - host.MOBILE_RAIL_W - 1280.0 + 8.0 + 12.0) * host.scale.x
 		bar.anchor_left = clampf(board_end / vpw, 0.4, 0.8)
 		bar.anchor_right = 1.0 - (host.MOBILE_RAIL_W + 6.0) * host.scale.x / vpw
