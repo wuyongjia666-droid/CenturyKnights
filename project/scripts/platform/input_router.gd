@@ -9,8 +9,12 @@ extends RefCounted
 ## Y1-A T-P0-1: mobile slop is ~0.75× hit target (was 0.5×). Optional sticky_fn:
 ## when the press origin is "sticky" (e.g. near a unit), slop grows further so a
 ## fat-finger micro-wobble cannot promote the gesture to pan and swallow the tap.
+## Y1-A T-P1-1: optional long_ms_fn raises/disables the long-press timer (selection).
 
 const LONG_MS := 480
+## Y1-A T-P1-1: when a unit is selected, slow move/confirm taps must not become
+## intel long-press. Battle wires long_ms_fn to return this larger threshold.
+const LONG_MS_SELECTED := 900
 const SLOP := 22.0
 ## Mobile floor/ceiling for the base (non-sticky) slop in viewport px.
 const MOBILE_SLOP_MIN := 36.0
@@ -22,6 +26,9 @@ const WHEEL_FACTOR := 1.12
 
 ## Optional (Vector2) -> bool. Battle sets this so presses near units stay taps longer.
 var sticky_fn: Callable = Callable()
+## Optional () -> int. Long-press threshold in ms. Return <= 0 to disable long-press.
+## Battle raises this to LONG_MS_SELECTED while a unit is selected (T-P1-1).
+var long_ms_fn: Callable = Callable()
 
 var _pts: Dictionary = {}
 var _pinch_dist := -1.0
@@ -53,6 +60,14 @@ func _slop_for(origin: Vector2) -> float:
 		return lim * STICKY_SLOP_MUL
 	return lim
 
+func _long_ms() -> int:
+	if long_ms_fn.is_valid():
+		var v := int(long_ms_fn.call())
+		if v <= 0:
+			return 1_000_000_000
+		return v
+	return LONG_MS
+
 func push(event: InputEvent, now_ms: int) -> Array:
 	if event is InputEventMouse and int(event.device) == InputEvent.DEVICE_ID_EMULATION:
 		return []
@@ -76,7 +91,7 @@ func poll(now_ms: int) -> Array:
 		var p: Dictionary = _pts[k]
 		if bool(p.get("moved", false)) or bool(p.get("long", false)):
 			continue
-		if now_ms - int(p.get("time", now_ms)) >= LONG_MS:
+		if now_ms - int(p.get("time", now_ms)) >= _long_ms():
 			p["long"] = true
 			_pts[k] = p
 			out.append({"kind": "long_press", "pos": p.get("pos", Vector2.ZERO)})
