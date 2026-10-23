@@ -62,29 +62,56 @@ func _frost_panel() -> Panel:
 	p.add_child(fill)
 	return p
 
-## Phone: fill height, grow list/detail, one-column actions when narrow. No whole-page shrink.
+## Desktop: fixed 1280×720 columns + optional whole-page scale (narrow_layout_check).
+## Phone (CK_FORCE_MOBILE / device): fill height, grow list/detail, FONT_FLOOR — no shrink.
 func apply_mobile_layout() -> void:
 	if _left == null or _right == null:
 		return
 	set_meta("m_center_ok", true)
+	if DeviceProfile.is_mobile() or has_meta("mobile_fit_key"):
+		_apply_phone_layout()
+		return
+	_apply_desktop_layout()
+
+func _apply_desktop_layout() -> void:
+	scale = Vector2.ONE
+	_left.position = Vector2(42, CKPageKit.TOP + 8)
+	_left.size = Vector2(340, 500)
+	_right.position = Vector2(394, CKPageKit.TOP + 8)
+	_right.size = Vector2(844, 500)
+	_sync_frost_fills()
+	var inner := _right.get_node_or_null("DetailInner") as Control
+	if inner:
+		inner.position = Vector2(16, 14)
+		inner.size = Vector2(812, 472)
+	_grid.columns = 2
+	var vp := get_viewport_rect().size
+	var k := minf(vp.x / 1280.0, vp.y / 720.0)
+	if k < 0.999:
+		scale = Vector2(k, k)
+		size = Vector2(1280, 720)
+	else:
+		scale = Vector2.ONE
+
+func _apply_phone_layout() -> void:
+	scale = Vector2.ONE
 	MobileLayout.pin_footer(get_node_or_null("StitchFooter"))
 	var top := CKPageKit.TOP + 8.0
 	var foot := get_node_or_null("StitchFooter") as Control
-	var bottom := (foot.position.y - 8.0) if foot != null else size.y - 48.0
+	var bottom := size.y - 48.0
+	if foot != null:
+		foot.position.y = minf(foot.position.y, size.y - maxf(foot.size.y, 28.0))
+		bottom = minf(foot.position.y - 8.0, size.y - 8.0)
 	var h := maxf(240.0, bottom - top)
 	var w := size.x
 	var pad := 16.0
 	var gap := 12.0
-	var lw := clampf(w * 0.28, 300.0, 400.0)
+	var lw := clampf(w * 0.28, 280.0, 400.0)
 	_left.position = Vector2(pad, top)
 	_left.size = Vector2(lw, h)
 	_right.position = Vector2(pad + lw + gap, top)
-	_right.size = Vector2(maxf(320.0, w - pad * 2.0 - lw - gap), h)
-	for p in [_left, _right]:
-		var fill := (p as Control).get_node_or_null("FrostFill") as Control
-		if fill:
-			fill.position = Vector2.ZERO
-			fill.size = (p as Control).size
+	_right.size = Vector2(maxf(280.0, w - pad * 2.0 - lw - gap), h)
+	_sync_frost_fills()
 	var list_scroll := _left.get_node_or_null("HousesScroll") as ScrollContainer
 	if list_scroll != null:
 		list_scroll.position = Vector2(12, 12)
@@ -98,15 +125,15 @@ func apply_mobile_layout() -> void:
 		inner.offset_top = 14.0
 		inner.offset_right = -16.0
 		inner.offset_bottom = -14.0
-		# Prefer absolute fill when anchors not yet applied in tests:
 		inner.position = Vector2(16, 14)
 		inner.size = Vector2(maxf(280.0, _right.size.x - 32.0), maxf(160.0, _right.size.y - 28.0))
 	_grid.columns = 1 if _right.size.x < 720.0 else 2
-	for b in _list.get_children():
-		if b is Button:
-			var btn := b as Button
-			btn.add_theme_font_size_override("font_size", maxi(btn.get_theme_font_size("font_size"), MobileLayout.FONT_FLOOR))
-			btn.custom_minimum_size.y = maxf(btn.custom_minimum_size.y, MobilePage.HIT * 0.9)
+	if _list != null:
+		for b in _list.get_children():
+			if b is Button:
+				var btn := b as Button
+				btn.add_theme_font_size_override("font_size", maxi(btn.get_theme_font_size("font_size"), MobileLayout.FONT_FLOOR))
+				btn.custom_minimum_size.y = maxf(btn.custom_minimum_size.y, MobilePage.HIT * 0.9)
 	for card in _grid.get_children():
 		if card is Control:
 			var pc := card as Control
@@ -125,13 +152,19 @@ func apply_mobile_layout() -> void:
 				lab.set_meta("m_kicker_hidden", true)
 			elif fs < MobileLayout.FONT_FLOOR:
 				lab.add_theme_font_size_override("font_size", MobileLayout.FONT_FLOOR)
-	# After floor: grow action card text widths so wrap does not squash.
 	for card in _grid.get_children():
 		for lab in card.find_children("*", "Label", true, false):
 			var l := lab as Label
 			l.clip_text = false
 			if l.custom_minimum_size.x > 0.0:
 				l.custom_minimum_size.x = maxf(l.custom_minimum_size.x, minf(360.0, _right.size.x - 80.0))
+
+func _sync_frost_fills() -> void:
+	for p in [_left, _right]:
+		var fill := (p as Control).get_node_or_null("FrostFill") as Control
+		if fill:
+			fill.position = Vector2.ZERO
+			fill.size = (p as Control).size
 
 func _refresh() -> void:
 	CKPageKit.clear(_list)
