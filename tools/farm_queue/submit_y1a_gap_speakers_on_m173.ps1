@@ -17,6 +17,8 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+$env:PYTHONUTF8 = "1"
+$env:PYTHONIOENCODING = "utf-8"
 $Scripts = "D:\cursor-userdata\dot-cursor\skills\aic-farm\scripts"
 if (-not (Test-Path $Scripts)) { $Scripts = "C:\Users\m1736\.cursor\skills\aic-farm\scripts" }
 $Py = "C:\Users\m1736\AppData\Local\Programs\Python\Python312\python.exe"

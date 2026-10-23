@@ -72,7 +72,7 @@ def forbidden_hits(text: str, words: list[str]) -> list[str]:
 
 
 def _load(path: Path) -> dict:
-    return json.loads(path.read_text())
+    return json.loads(path.read_text(encoding='utf-8'))
 
 
 def _jobs_from(doc: dict, default_kind: str) -> list[dict]:
