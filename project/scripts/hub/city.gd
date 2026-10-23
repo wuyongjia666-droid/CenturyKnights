@@ -263,6 +263,12 @@ func _m_reflow_body() -> void:
 		if lab.text.length() <= 6 and not lab.text.contains("\n") and not (lab.get_parent() is HBoxContainer):
 			lab.autowrap_mode = TextServer.AUTOWRAP_OFF
 			lab.custom_minimum_size.x = 0
+		elif lab.autowrap_mode != TextServer.AUTOWRAP_OFF and lab.text.strip_edges().length() >= 8:
+			# Wrap copy in a row must keep a readable column (gate: rw < font*1.6 squashed).
+			var par := lab.get_parent()
+			if par is HBoxContainer or par is FlowContainer:
+				lab.custom_minimum_size.x = maxf(lab.custom_minimum_size.x, 200.0)
+				lab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
 
 ## List rows: text spans the row; the left badge column stacks glyph over tier.
@@ -630,52 +636,91 @@ func _tab_overview() -> void:
 	var rep := World.rep_of(city)
 	var v := VBoxContainer.new()
 	v.position = Vector2(18, 56)
-	v.add_theme_constant_override("separation", 6)
+	v.add_theme_constant_override("separation", 6 if not _mob else 10)
+	if _mob:
+		# One column so MobileReflow does not pack this tall stack into an HFlow with
+		# the nation / honour / affair siblings (that crush unlock lines to ~14px).
+		v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	p.add_child(v)
 	for i in tiers.size():
 		var reached := rep >= int(tiers[i])
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 8)
+		if _mob:
+			row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var chip := UIKit.tag_chip("%s %d" % [names[i] if i < names.size() else "", int(tiers[i])], UIKit.ACCENT if reached else UIKit.TEXT_FAINT, reached)
 		chip.custom_minimum_size = Vector2(76, 0)
 		row.add_child(chip)
-		row.add_child(_para(str(unlocks[i]) if i < unlocks.size() else "", UIKit.TEXT if reached else UIKit.TEXT_FAINT, 12, 300))
+		var unlock := _para(str(unlocks[i]) if i < unlocks.size() else "", UIKit.TEXT if reached else UIKit.TEXT_FAINT, 12 if not _mob else MobilePage.FONT, 300 if not _mob else 0)
+		if _mob:
+			unlock.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			# Floor so a leftover HBox cannot collapse the wrap column to a glyph strip.
+			unlock.custom_minimum_size = Vector2(200, 0)
+		row.add_child(unlock)
 		v.add_child(row)
 	var nid := str(n.get("nation", ""))
 	var nrep := World.nation_rep(nid)
 	var nt := World.rep_tier_index(nrep)
-	var nl := UIKit.mono("NATION %s · %d · %s" % [str(World.nations.get(nid, {}).get("en", "")), nrep, World.rep_tier_name(nrep)], 9, UIKit.ACCENT)
-	nl.position = Vector2(18, 232)
-	p.add_child(nl)
-	var nx := _para("当前：%s\n下一阶：%s" % [World.NATION_UNLOCKS[nt], World.NATION_UNLOCKS[mini(nt + 1, 4)] if nt < 4 else "已达最高"], UIKit.TEXT_DIM, 11, 384)
-	nx.position = Vector2(18, 250)
-	p.add_child(nx)
+	if not _mob:
+		var nl := UIKit.mono("NATION %s · %d · %s" % [str(World.nations.get(nid, {}).get("en", "")), nrep, World.rep_tier_name(nrep)], 9, UIKit.ACCENT)
+		nl.position = Vector2(18, 232)
+		p.add_child(nl)
+	var next_u := World.NATION_UNLOCKS[mini(nt + 1, 4)] if nt < 4 else "已达最高"
+	var nx := _para("当前：%s\n下一阶：%s" % [World.NATION_UNLOCKS[nt], next_u], UIKit.TEXT_DIM, 11 if not _mob else MobilePage.FONT, 384 if not _mob else 0)
+	if _mob:
+		nx.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		nx.custom_minimum_size = Vector2(0, 0)
+		v.add_child(nx)
+	else:
+		nx.position = Vector2(18, 250)
+		p.add_child(nx)
 	var sq: Dictionary = n.get("sig_quest", {})
 	if sq.is_empty():
-		_rumor_box(p, Rect2(18, 330, 384, 230))
+		if _mob:
+			v.add_child(UIKit.title_label(Locale.t("wsc_c_rumor_title"), MobilePage.FONT + 2, UIKit.TEXT))
+			for line in rumors(city).slice(0, 6):
+				var rl := _para("· " + str(line), UIKit.TEXT_DIM, MobilePage.FONT, 0)
+				rl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+				v.add_child(rl)
+		else:
+			_rumor_box(p, Rect2(18, 330, 384, 230))
 	if not sq.is_empty():
-		var sl := UIKit.mono("HONOUR COMMISSION", 9, UIKit.EMBER)
-		sl.position = Vector2(18, 330)
-		p.add_child(sl)
-		var st := UIKit.title_label("「%s」" % sq.get("title", ""), 15, UIKit.TEXT)
-		st.position = Vector2(18, 346)
-		p.add_child(st)
-		var sb := _para(str(sq.get("brief", "")), UIKit.TEXT_DIM, 12, 384)
-		sb.position = Vector2(18, 372)
-		p.add_child(sb)
+		if not _mob:
+			var sl := UIKit.mono("HONOUR COMMISSION", 9, UIKit.EMBER)
+			sl.position = Vector2(18, 330)
+			p.add_child(sl)
+		var st := UIKit.title_label("「%s」" % sq.get("title", ""), 15 if not _mob else MobilePage.FONT + 2, UIKit.TEXT)
+		var sb := _para(str(sq.get("brief", "")), UIKit.TEXT_DIM, 12 if not _mob else MobilePage.FONT, 384 if not _mob else 0)
 		var done := World.done_sig.has(str(sq.get("id", "")))
 		var running := not World.quest_by_id(str(sq.get("id", ""))).is_empty()
 		var stxt := "已完成 · 传奇兵器已解锁" if done else ("进行中 · 完成后解锁传奇兵器" if running else "声望「友善」(30) 后出现在委托榜")
 		var sst := UIKit.tag_chip(stxt, UIKit.OK if done else (UIKit.ACCENT if running else UIKit.TEXT_DIM), done)
-		sst.position = Vector2(18, 440)
-		p.add_child(sst)
+		if _mob:
+			st.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			sb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			sb.custom_minimum_size = Vector2(0, 0)
+			v.add_child(st)
+			v.add_child(sb)
+			v.add_child(sst)
+		else:
+			st.position = Vector2(18, 346)
+			p.add_child(st)
+			sb.position = Vector2(18, 372)
+			p.add_child(sb)
+			sst.position = Vector2(18, 440)
+			p.add_child(sst)
 	## v9.2 本城之事 / 职印：一个 48 高的按钮，点开浮层
-	var aff := UIKit.ghost_button(CKCityAffairs.label(city), 384, 48)
+	var aff := UIKit.ghost_button(CKCityAffairs.label(city), 384 if not _mob else 0, 48 if not _mob else MobilePage.HIT)
 	aff.name = "AffairBtn"
 	aff.clip_text = true
-	aff.position = Vector2(18, 510)
 	aff.pressed.connect(open_affairs)
-	p.add_child(aff)
+	if _mob:
+		aff.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		aff.custom_minimum_size = Vector2(0, MobilePage.HIT)
+		v.add_child(aff)
+	else:
+		aff.position = Vector2(18, 510)
+		p.add_child(aff)
 	var p2 := _panel(Rect2(432, 0, 416, 576))
 	_head(p2, Vector2(18, 14), "可在此交付", "TURN IN HERE")
 	var v2 := _scroll(p2, Rect2(18, 56, 384, 236))
