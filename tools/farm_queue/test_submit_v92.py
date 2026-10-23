@@ -251,5 +251,18 @@ class SubmitV92Test(unittest.TestCase):
             self.assertTrue(Path(shots).is_file())
 
 
+    def test_missing_disk_and_jobs_from(self) -> None:
+        gap = QUEUE / "v92_y1a_gap_speakers.json"
+        self.assertTrue(gap.exists(), "y1a gap speaker queue missing")
+        want = {row["id"] for row in json.loads(gap.read_text(encoding="utf-8"))["jobs"]}
+        self.assertEqual(len(want), 9)
+        filtered = submit.filter_jobs_by_kind(self.jobs, {"speaker"})
+        from_gap = [job for job in filtered if str(job.get("id", "")) in want]
+        self.assertEqual(len(from_gap), 9)
+        missing = submit.filter_jobs_missing_disk(from_gap)
+        self.assertEqual(len(missing), 9)
+        self.assertTrue(all(not submit.job_on_disk(job) for job in missing))
+
+
 if __name__ == "__main__":
     unittest.main()

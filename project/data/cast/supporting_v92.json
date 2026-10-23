@@ -9,7 +9,11 @@
       "cast_key": "xinyu",
       "role": "沉斑的学徒。终章举起香盏的人。不是第十三名同伴。",
       "nation": "southzephyr",
-      "line": "sz_fogwood"
+      "line": "sz_fogwood",
+      "age": 24,
+      "sex": "f",
+      "look": "a young woman rain-test apprentice around 24, oval face, dark unmarked nose bridge with no firefly freckles, straight black hair damp at the fringe and tied low, calm clear eyes, ink-stained fingertips, slate rain-cloak over a soft woven apprentice robe, a small clear glass incense censer held carefully in both hands, quiet rain-wet posture",
+      "portrait": "res://assets/art/portraits/speakers/xinyu.png"
     },
     {
       "id": "shilei_wantan",
@@ -111,19 +115,31 @@
       "id": "dukou_ahe",
       "name": "渡口·阿禾",
       "cast_key": "ahe",
-      "role": "灯影临时雇来引开视线的孩子。不是初啼。"
+      "role": "灯影临时雇来引开视线的孩子。不是初啼。",
+      "age": 11,
+      "sex": "m",
+      "look": "an 11-year-old ferry boy with child proportions, short messy black hair, thin neck with only sweat marks and no glowing river-map, oversized patched slate work vest, rolled sleeves, a grain-sack strap on one shoulder, bare calloused hands, wide cautious eyes, a half-eaten steamed bun in one hand",
+      "portrait": "res://assets/art/portraits/speakers/ahe.png"
     },
     {
       "id": "jinghu_hutie",
       "name": "镜湖·护帖",
       "cast_key": "hutie",
-      "role": "霜冕护送队长。聘书上没有他的姓被写成继承人。"
+      "role": "霜冕护送队长。聘书上没有他的姓被写成继承人。",
+      "age": 36,
+      "sex": "m",
+      "look": "a frost-court escort captain around 36, lean disciplined face, short neat black hair with a small silver frost pin, pale cool complexion, high-collared frost-white and slate formal escort coat with thin crystal-frost trim, a sealed betrothal letter packet at the breast and a small glass blood-sample vial pouch at the belt, upright formal posture, reserved eyes",
+      "portrait": "res://assets/art/portraits/speakers/hutie.png"
     },
     {
       "id": "lengyao_shouhuo",
       "name": "冷窑·收火",
       "cast_key": "shouhuo",
-      "role": "循烟灰来要人的窑债主。"
+      "role": "循烟灰来要人的窑债主。",
+      "age": 48,
+      "sex": "m",
+      "look": "a middle-aged kiln debt-collector around 48, ash-smudged lined face, greying short hair, soot under the nails, heavy slate work coat singed at the hem, a cold iron fire-hook at the belt, ember kiln-cloth sash, patient stern eyes that wait at doorways rather than grab sleeves",
+      "portrait": "res://assets/art/portraits/speakers/shouhuo.png"
     },
     {
       "id": "huaili_jingbo",
