@@ -10,9 +10,6 @@ const SKIP := ["CommandRow", "CommandRow2", "ControlsTip", "BoardXform"]
 
 static func attach(host: Control, x: float, w: float) -> void:
 	var sc := host.get_node_or_null(COL) as ScrollContainer
-	var top := 60.0
-	var host_h := maxf(720.0, host.size.y if host.size.y > 1.0 else 720.0)
-	var h := maxf(280.0, host_h - top - 10.0)
 	if sc == null:
 		sc = ScrollContainer.new()
 		sc.name = COL
@@ -24,13 +21,13 @@ static func attach(host: Control, x: float, w: float) -> void:
 		vb.add_theme_constant_override("separation", 10)
 		vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		sc.add_child(vb)
-		sc.position = Vector2(x, top)
-		sc.size = Vector2(w, h)
+		sc.position = Vector2(x, 60)
+		sc.size = Vector2(w, 720.0 - 60.0 - 10.0)
 		for c in host.get_children():
 			_adopt(host, c)
 		host.child_entered_tree.connect(_defer_adopt.bind(host))
-	sc.position = Vector2(x, top)
-	sc.size = Vector2(w, h)
+	sc.position = Vector2(x, 60)
+	sc.size = Vector2(w, 720.0 - 60.0 - 10.0)
 
 
 static func _defer_adopt(n: Node, host: Control) -> void:
@@ -71,16 +68,13 @@ static func grow(n: Node, w: float) -> void:
 			l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		l.clip_text = false
 		l.max_lines_visible = -1
-		# Y1-A T-P2-1: never let a floored label collapse below one line of glyphs.
-		var fs: float = float(l.get_theme_font_size("font_size"))
-		l.custom_minimum_size = Vector2(0, maxf(l.custom_minimum_size.y, fs + 4.0))
+		l.custom_minimum_size = Vector2(0, 0)
 		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	elif n is RichTextLabel:
 		var r := n as RichTextLabel
 		for k in ["normal_font_size", "bold_font_size", "mono_font_size"]:
-			r.add_theme_font_size_override(k, maxi(FONT, r.get_theme_font_size(k)))
-		var rfs: float = float(r.get_theme_font_size("normal_font_size"))
-		r.custom_minimum_size = Vector2(0, maxf(r.custom_minimum_size.y, rfs + 4.0))
+			r.add_theme_font_size_override(k, FONT)
+		r.custom_minimum_size = Vector2(0, 0)
 		r.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	elif n is Button:
 		var b := n as Button

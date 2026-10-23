@@ -1183,38 +1183,19 @@ static func portrait_plate(parent: Control, rect: Rect2, c, caption: String = ""
 	return p
 
 ## Wide screens: stretch the transcript box to the scene width (portrait plate stays left).
-## Y1-A 机制 C: also pin SpeakerPlate name caption so font-floor / empty text cannot collapse it to ~1px.
 static func widen_dialogue(scene: Control) -> void:
 	var panel = scene.get_meta("dlg_panel", null)
-	if panel is Control and is_instance_valid(panel):
-		var w := maxf(scene.size.x, 1280.0)
-		var pw := w - 180.0 - 180.0
-		(panel as Control).custom_minimum_size = Vector2(pw, 176)
-		(panel as Control).size = Vector2(pw, 176)
-		scene.set_meta("dlg_size", Vector2(pw, 176))
-		scene.set_meta("dlg_narr_size", Vector2(w - 56.0 - 56.0, 176))
-		var tag = scene.get_meta("dlg_tag", null)
-		if tag is Control and is_instance_valid(tag):
-			(tag as Control).position.x = 180.0 + pw - 120.0
-	layout_speaker_caption(scene)
-
-## Keep the plate name tag inside SpeakerPlate with a readable width (audit: was ~1px + clipped).
-static func layout_speaker_caption(scene: Control) -> void:
-	var plate := scene.find_child("SpeakerPlate", true, false) as Control
-	if plate == null or not is_instance_valid(plate):
+	if not (panel is Control) or not is_instance_valid(panel):
 		return
-	var cap := plate.get_node_or_null("SpeakerCaption") as Label
-	if cap == null or not is_instance_valid(cap):
-		return
-	var margin := 14.0
-	var font_px := maxi(cap.get_theme_font_size("font_size"), 12)
-	var cap_h := maxf(28.0, float(font_px) + 10.0)
-	var cap_w := maxf(80.0, plate.size.x - margin * 2.0)
-	cap.position = Vector2(margin, maxf(margin, plate.size.y - cap_h - 6.0))
-	cap.size = Vector2(cap_w, cap_h)
-	cap.custom_minimum_size = Vector2(80.0, cap_h)
-	cap.clip_text = true
-	cap.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	var w := maxf(scene.size.x, 1280.0)
+	var pw := w - 180.0 - 180.0
+	(panel as Control).custom_minimum_size = Vector2(pw, 176)
+	(panel as Control).size = Vector2(pw, 176)
+	scene.set_meta("dlg_size", Vector2(pw, 176))
+	scene.set_meta("dlg_narr_size", Vector2(w - 56.0 - 56.0, 176))
+	var tag = scene.get_meta("dlg_tag", null)
+	if tag is Control and is_instance_valid(tag):
+		(tag as Control).position.x = 180.0 + pw - 120.0
 
 static func stitch_dialogue(scene: Control) -> void:
 	## v8.6 — Stitch 21_dialogue skin for every story chapter (scripts share _banner/_title/_portrait/_speaker/
@@ -1287,15 +1268,8 @@ static func stitch_dialogue(scene: Control) -> void:
 	sh.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	plate.add_child(sh)
 	var cap := mono("", 9, TEXT_DIM, false)
-	cap.name = "SpeakerCaption"
-	# Explicit size: empty Label would otherwise stay ~1px wide; leave room for FONT_FLOOR=22.
-	cap.position = Vector2(14, 386)
-	cap.size = Vector2(272, 28)
-	cap.custom_minimum_size = Vector2(80, 28)
-	cap.clip_text = true
-	cap.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	cap.position = Vector2(14, 392)
 	plate.add_child(cap)
-	scene.set_meta("dlg_speaker_caption", cap)
 	# transcript box (bottom)
 	if panel:
 		panel.position = Vector2(180, 486)
@@ -1417,7 +1391,6 @@ static func stitch_dialogue(scene: Control) -> void:
 			(tag as CanvasItem).visible = not narr
 		# P0: narration shows the captain; no "SPEAKER // 旁白" caption on top of the name tag.
 		cap.text = "" if hide_plate or bool(pr.get_meta("story_narrator_lead", false)) or sp.text == "" else ("SPEAKER // " + sp.text)
-		UIKit.layout_speaker_caption(scene)
 	tm.timeout.connect(sync)
 	sync.call()
 	# chapter-level buttons (存档 / 返回灰旗堡) sit in the brand bar, right-aligned

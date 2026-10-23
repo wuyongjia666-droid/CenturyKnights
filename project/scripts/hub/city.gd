@@ -99,24 +99,13 @@ func _mobile_frame() -> void:
 	var w := maxf(1280.0, vp.x * 720.0 / maxf(1.0, vp.y))
 	_m_w = w
 	var top := MobilePage.TOP + 4.0
-	# Eight tabs at 22px often need horizontal scroll on 16:9 phones.
-	var tab_host := get_node_or_null("TabScroll") as ScrollContainer
-	if tab_host == null:
-		tab_host = ScrollContainer.new()
-		tab_host.name = "TabScroll"
-		tab_host.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-		tab_host.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
-		remove_child(_tabbar)
-		add_child(tab_host)
-		tab_host.add_child(_tabbar)
-	tab_host.position = Vector2(16, top)
-	tab_host.size = Vector2(w - 32.0, MobilePage.HIT)
-	_tabbar.position = Vector2.ZERO
+	_tabbar.position = Vector2(16, top)
+	_tabbar.size = Vector2(w - 32.0, MobilePage.HIT)
 	_tabbar.add_theme_constant_override("separation", 8)
 	for b in _tabbar.get_children():
 		var bc := b as Button
-		bc.custom_minimum_size = Vector2(148.0, MobilePage.HIT)
-		bc.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+		bc.custom_minimum_size = Vector2(0, MobilePage.HIT)
+		bc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		bc.add_theme_font_size_override("font_size", MobilePage.FONT)
 		bc.clip_text = false
 	_m_top = top + MobilePage.HIT + 12.0
@@ -137,37 +126,6 @@ func _mobile_frame() -> void:
 	body_stack.add_child(row)
 	_body = row
 	row.child_entered_tree.connect(func(_n): _queue_reflow(row))
-
-
-## Chrome calls this on fit/resize. First landscape pass frames the page; later
-## passes only retarget width so TabScroll / columns stay inside the safe area.
-func apply_mobile_layout() -> void:
-	if not MobilePage.active(self):
-		return
-	if not _mob:
-		_mobile_frame()
-		if _mob:
-			_toast.position = Vector2(32.0, 720.0 - 72.0)
-			_toast.z_index = 20
-			_toast.add_theme_font_size_override("font_size", MobilePage.FONT)
-			var foot := find_child("StitchFooter", true, false) as CanvasItem
-			if foot:
-				foot.visible = false
-			_refresh_all()
-		return
-	var vp := get_viewport().get_visible_rect().size
-	var w := maxf(1280.0, vp.x * 720.0 / maxf(1.0, vp.y))
-	if absf(w - _m_w) < 1.0:
-		_m_layout()
-		return
-	_m_w = w
-	var tab_host := get_node_or_null("TabScroll") as Control
-	if tab_host:
-		tab_host.size = Vector2(w - 32.0, MobilePage.HIT)
-	else:
-		_tabbar.size = Vector2(w - 32.0, MobilePage.HIT)
-	_m_layout()
-	_refresh_top()
 
 
 ## 概览 keeps the city card on the left; other tabs use the full width.
@@ -263,12 +221,6 @@ func _m_reflow_body() -> void:
 		if lab.text.length() <= 6 and not lab.text.contains("\n") and not (lab.get_parent() is HBoxContainer):
 			lab.autowrap_mode = TextServer.AUTOWRAP_OFF
 			lab.custom_minimum_size.x = 0
-		elif lab.autowrap_mode != TextServer.AUTOWRAP_OFF and lab.text.strip_edges().length() >= 8:
-			# Wrap copy in a row must keep a readable column (gate: rw < font*1.6 squashed).
-			var par := lab.get_parent()
-			if par is HBoxContainer or par is FlowContainer:
-				lab.custom_minimum_size.x = maxf(lab.custom_minimum_size.x, 200.0)
-				lab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 
 
 ## List rows: text spans the row; the left badge column stacks glyph over tier.
@@ -362,14 +314,11 @@ func _render_side() -> void:
 	fade.stretch_mode = TextureRect.STRETCH_SCALE
 	fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	th.add_child(fade)
-	if not _mob:
-		var eb := UIKit.mono("%s // %s" % [str(nat.get("en", "")), World.kind_zh(city)], 9, UIKit.ACCENT)
-		eb.position = Vector2(18, 150)
-		p.add_child(eb)
-	var t := UIKit.title_label(str(n.get("name", city)), 26 if not _mob else 28)
-	t.position = Vector2(18, 166 if not _mob else 150)
-	if _mob:
-		t.add_theme_font_size_override("font_size", 28)
+	var eb := UIKit.mono("%s // %s" % [str(nat.get("en", "")), World.kind_zh(city)], 9, UIKit.ACCENT)
+	eb.position = Vector2(18, 150)
+	p.add_child(eb)
+	var t := UIKit.title_label(str(n.get("name", city)), 26)
+	t.position = Vector2(18, 166)
 	p.add_child(t)
 	var chips := HBoxContainer.new()
 	chips.position = Vector2(18, 222)
@@ -498,17 +447,14 @@ func _panel(r: Rect2) -> Panel:
 	return p
 
 func _head(p: Control, pos: Vector2, zh: String, en: String) -> void:
-	if not _mob:
-		var e := UIKit.mono(en, 9, UIKit.ACCENT, false)
-		e.clip_text = true
-		e.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		e.position = pos
-		e.size = Vector2(220, 14)
-		p.add_child(e)
-	var t := UIKit.title_label(zh, MobilePage.FONT + 4 if _mob else 17)
-	t.position = pos + Vector2(0, 0 if _mob else 18)
-	if _mob:
-		t.add_theme_font_size_override("font_size", MobilePage.FONT + 4)
+	var e := UIKit.mono(en, 9, UIKit.ACCENT, false)
+	e.clip_text = true
+	e.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	e.position = pos
+	e.size = Vector2(220, 14)
+	p.add_child(e)
+	var t := UIKit.title_label(zh, 17)
+	t.position = pos + Vector2(0, 18 if not DeviceProfile.is_mobile() else 14)
 	p.add_child(t)
 
 func _para(text: String, col: Color, size: int, w: float) -> Label:
@@ -636,91 +582,52 @@ func _tab_overview() -> void:
 	var rep := World.rep_of(city)
 	var v := VBoxContainer.new()
 	v.position = Vector2(18, 56)
-	v.add_theme_constant_override("separation", 6 if not _mob else 10)
-	if _mob:
-		# One column so MobileReflow does not pack this tall stack into an HFlow with
-		# the nation / honour / affair siblings (that crush unlock lines to ~14px).
-		v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	v.add_theme_constant_override("separation", 6)
 	p.add_child(v)
 	for i in tiers.size():
 		var reached := rep >= int(tiers[i])
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 8)
-		if _mob:
-			row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		var chip := UIKit.tag_chip("%s %d" % [names[i] if i < names.size() else "", int(tiers[i])], UIKit.ACCENT if reached else UIKit.TEXT_FAINT, reached)
 		chip.custom_minimum_size = Vector2(76, 0)
 		row.add_child(chip)
-		var unlock := _para(str(unlocks[i]) if i < unlocks.size() else "", UIKit.TEXT if reached else UIKit.TEXT_FAINT, 12 if not _mob else MobilePage.FONT, 300 if not _mob else 0)
-		if _mob:
-			unlock.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			# Floor so a leftover HBox cannot collapse the wrap column to a glyph strip.
-			unlock.custom_minimum_size = Vector2(200, 0)
-		row.add_child(unlock)
+		row.add_child(_para(str(unlocks[i]) if i < unlocks.size() else "", UIKit.TEXT if reached else UIKit.TEXT_FAINT, 12, 300))
 		v.add_child(row)
 	var nid := str(n.get("nation", ""))
 	var nrep := World.nation_rep(nid)
 	var nt := World.rep_tier_index(nrep)
-	if not _mob:
-		var nl := UIKit.mono("NATION %s · %d · %s" % [str(World.nations.get(nid, {}).get("en", "")), nrep, World.rep_tier_name(nrep)], 9, UIKit.ACCENT)
-		nl.position = Vector2(18, 232)
-		p.add_child(nl)
-	var next_u: String = str(World.NATION_UNLOCKS[mini(nt + 1, 4)]) if nt < 4 else "已达最高"
-	var nx := _para("当前：%s\n下一阶：%s" % [World.NATION_UNLOCKS[nt], next_u], UIKit.TEXT_DIM, 11 if not _mob else MobilePage.FONT, 384 if not _mob else 0)
-	if _mob:
-		nx.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		nx.custom_minimum_size = Vector2(0, 0)
-		v.add_child(nx)
-	else:
-		nx.position = Vector2(18, 250)
-		p.add_child(nx)
+	var nl := UIKit.mono("NATION %s · %d · %s" % [str(World.nations.get(nid, {}).get("en", "")), nrep, World.rep_tier_name(nrep)], 9, UIKit.ACCENT)
+	nl.position = Vector2(18, 232)
+	p.add_child(nl)
+	var nx := _para("当前：%s\n下一阶：%s" % [World.NATION_UNLOCKS[nt], World.NATION_UNLOCKS[mini(nt + 1, 4)] if nt < 4 else "已达最高"], UIKit.TEXT_DIM, 11, 384)
+	nx.position = Vector2(18, 250)
+	p.add_child(nx)
 	var sq: Dictionary = n.get("sig_quest", {})
 	if sq.is_empty():
-		if _mob:
-			v.add_child(UIKit.title_label(Locale.t("wsc_c_rumor_title"), MobilePage.FONT + 2, UIKit.TEXT))
-			for line in rumors(city).slice(0, 6):
-				var rl := _para("· " + str(line), UIKit.TEXT_DIM, MobilePage.FONT, 0)
-				rl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-				v.add_child(rl)
-		else:
-			_rumor_box(p, Rect2(18, 330, 384, 230))
+		_rumor_box(p, Rect2(18, 330, 384, 230))
 	if not sq.is_empty():
-		if not _mob:
-			var sl := UIKit.mono("HONOUR COMMISSION", 9, UIKit.EMBER)
-			sl.position = Vector2(18, 330)
-			p.add_child(sl)
-		var st := UIKit.title_label("「%s」" % sq.get("title", ""), 15 if not _mob else MobilePage.FONT + 2, UIKit.TEXT)
-		var sb := _para(str(sq.get("brief", "")), UIKit.TEXT_DIM, 12 if not _mob else MobilePage.FONT, 384 if not _mob else 0)
+		var sl := UIKit.mono("HONOUR COMMISSION", 9, UIKit.EMBER)
+		sl.position = Vector2(18, 330)
+		p.add_child(sl)
+		var st := UIKit.title_label("「%s」" % sq.get("title", ""), 15, UIKit.TEXT)
+		st.position = Vector2(18, 346)
+		p.add_child(st)
+		var sb := _para(str(sq.get("brief", "")), UIKit.TEXT_DIM, 12, 384)
+		sb.position = Vector2(18, 372)
+		p.add_child(sb)
 		var done := World.done_sig.has(str(sq.get("id", "")))
 		var running := not World.quest_by_id(str(sq.get("id", ""))).is_empty()
 		var stxt := "已完成 · 传奇兵器已解锁" if done else ("进行中 · 完成后解锁传奇兵器" if running else "声望「友善」(30) 后出现在委托榜")
 		var sst := UIKit.tag_chip(stxt, UIKit.OK if done else (UIKit.ACCENT if running else UIKit.TEXT_DIM), done)
-		if _mob:
-			st.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			sb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			sb.custom_minimum_size = Vector2(0, 0)
-			v.add_child(st)
-			v.add_child(sb)
-			v.add_child(sst)
-		else:
-			st.position = Vector2(18, 346)
-			p.add_child(st)
-			sb.position = Vector2(18, 372)
-			p.add_child(sb)
-			sst.position = Vector2(18, 440)
-			p.add_child(sst)
+		sst.position = Vector2(18, 440)
+		p.add_child(sst)
 	## v9.2 本城之事 / 职印：一个 48 高的按钮，点开浮层
-	var aff := UIKit.ghost_button(CKCityAffairs.label(city), 384 if not _mob else 0, 48 if not _mob else MobilePage.HIT)
+	var aff := UIKit.ghost_button(CKCityAffairs.label(city), 384, 48)
 	aff.name = "AffairBtn"
 	aff.clip_text = true
+	aff.position = Vector2(18, 510)
 	aff.pressed.connect(open_affairs)
-	if _mob:
-		aff.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		aff.custom_minimum_size = Vector2(0, MobilePage.HIT)
-		v.add_child(aff)
-	else:
-		aff.position = Vector2(18, 510)
-		p.add_child(aff)
+	p.add_child(aff)
 	var p2 := _panel(Rect2(432, 0, 416, 576))
 	_head(p2, Vector2(18, 14), "可在此交付", "TURN IN HERE")
 	var v2 := _scroll(p2, Rect2(18, 56, 384, 236))

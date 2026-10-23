@@ -1370,8 +1370,6 @@ func apply_mobile_layout() -> void:
 	_place_mobile_bar()
 	if terrain.size() > 0:
 		_layout_board()
-	# Y1-A T-P2-1: re-place Forecast against the new board stage / side column.
-	ForecastPanel.refresh(self)
 
 func _screen_to_local(screen_pos: Vector2) -> Vector2:
 	## Viewport pixels → this control. Identity on the desktop 1280×720 root.
