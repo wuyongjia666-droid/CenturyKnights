@@ -30,8 +30,8 @@ jobs = doc.get('jobs') or []
 assert len(jobs) == 9, f'expected 9 jobs, got {len(jobs)}'
 for j in jobs:
     assert j.get('kind') == 'speaker', j
-    assert j.get('prompt_zh'), j.get('id')
-    assert j.get('out_rel'), j.get('id')
+    assert j.get('positive'), j.get('id')
+    assert j.get('out_path'), j.get('id')
 print(f'GAP QUEUE OK jobs={len(jobs)} ids={[j[\"id\"] for j in jobs]}')
 "@
 if ($LASTEXITCODE -ne 0) { throw "gap self-check failed" }
