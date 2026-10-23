@@ -534,30 +534,36 @@ static func dialogue_portrait(speaker: String, emotion: String, who: CKCharacter
 			return sp_tex
 	return null
 
-## Story voices outside the roster (mother, midwife, steward...): supporting_v92.json "portrait".
-## Empty when the speaker has no row or no plate path; the caller keeps its silhouette.
+## Story voices outside the roster (mother, midwife, steward, villains...):
+## supporting_v92.json + antagonists_v92.json "portrait". Empty when no row/plate; silhouette stays.
 const SUPPORTING_TABLE := "res://data/cast/supporting_v92.json"
+const ANTAGONIST_TABLE := "res://data/cast/antagonists_v92.json"
 static var _speaker_plates: Dictionary = {}
 static var _speaker_plates_ready := false
+
+static func _ingest_speaker_table(path: String) -> void:
+	var f := FileAccess.open(path, FileAccess.READ)
+	var parsed = JSON.parse_string(f.get_as_text()) if f != null else null
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return
+	for row in parsed.get("people", []):
+		if typeof(row) != TYPE_DICTIONARY:
+			continue
+		var plate := str(row.get("portrait", ""))
+		if plate == "":
+			continue
+		for k in ["name", "cast_key", "id"]:
+			_speaker_plates[str(row.get(k, ""))] = plate
+		var aliases = row.get("aliases", [])
+		if typeof(aliases) == TYPE_ARRAY:
+			for alias in aliases:
+				_speaker_plates[str(alias)] = plate
 
 static func speaker_plate_path(speaker: String) -> String:
 	if not _speaker_plates_ready:
 		_speaker_plates_ready = true
-		var f := FileAccess.open(SUPPORTING_TABLE, FileAccess.READ)
-		var parsed = JSON.parse_string(f.get_as_text()) if f != null else null
-		if typeof(parsed) == TYPE_DICTIONARY:
-			for row in parsed.get("people", []):
-				if typeof(row) != TYPE_DICTIONARY:
-					continue
-				var plate := str(row.get("portrait", ""))
-				if plate == "":
-					continue
-				for k in ["name", "cast_key", "id"]:
-					_speaker_plates[str(row.get(k, ""))] = plate
-				var aliases = row.get("aliases", [])
-				if typeof(aliases) == TYPE_ARRAY:
-					for alias in aliases:
-						_speaker_plates[str(alias)] = plate
+		_ingest_speaker_table(SUPPORTING_TABLE)
+		_ingest_speaker_table(ANTAGONIST_TABLE)
 	return str(_speaker_plates.get(speaker, ""))
 
 ## Age-band display rule (playtest fix): everyone under 12 shares fixed plates so a newborn can

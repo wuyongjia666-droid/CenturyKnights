@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Gate and ingest story-speaker plates (tools/farm_queue/v92_story_speakers.json).
+"""Gate and ingest story-speaker plates (tools/farm_queue/v92_story_speakers.json + v92_y1a_gap_speakers.json).
 
 Colour gate = style-lock metrics from ingest_status_overlays (whole plate, no alpha
 keying). PASS plates land as <out_path stem>.webp (q92) + .import under
@@ -23,9 +23,24 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import ingest_status_overlays as iso  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
-QUEUE = ROOT / "tools" / "farm_queue" / "v92_story_speakers.json"
+QUEUE_DIR = ROOT / "tools" / "farm_queue"
+QUEUE_FILES = (
+    QUEUE_DIR / "v92_story_speakers.json",
+    QUEUE_DIR / "v92_y1a_gap_speakers.json",
+)
 REPORT = ROOT / "docs" / "art" / "review" / "story_speakers_v92.json"
 SIZE = (768, 1024)
+
+
+def load_jobs() -> list[dict]:
+    jobs: list[dict] = []
+    for path in QUEUE_FILES:
+        if not path.exists():
+            continue
+        doc = json.loads(path.read_text(encoding="utf-8"))
+        jobs.extend(doc.get("jobs", []))
+    return jobs
+
 
 
 def find_source(inbox: Path, job: dict) -> Path | None:
@@ -59,7 +74,7 @@ def main(argv: list[str] | None = None) -> int:
     a = ap.parse_args(argv)
     inbox = Path(a.inbox)
     style = iso.lock_check()
-    jobs = json.loads(QUEUE.read_text(encoding="utf-8"))["jobs"]
+    jobs = load_jobs()
     report = []
     passed = 0
     for job in jobs:

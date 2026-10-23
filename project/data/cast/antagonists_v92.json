@@ -11,7 +11,11 @@
       "line": "sy_night",
       "law": "dose",
       "role": "第一纪元反派",
-      "motive": "他是被更年轻的全朔比下去的弦朔。他收过路银，是为了让半张脸继续没有资格被晋升。"
+      "motive": "他是被更年轻的全朔比下去的弦朔。他收过路银，是为了让半张脸继续没有资格被晋升。",
+      "age": 38,
+      "sex": "m",
+      "look": "a middle-aged night-shadow exile around 38, sharp lean face, one eye rimmed by a broken half-circle of thin silver string along the pupil edge, cold grey-black hair tied back, dark slate night coat with frosted-silver clasps, a coiled thin silver measuring string in one hand, bitter controlled expression of someone outranked by a younger full-shadow",
+      "portrait": "res://assets/art/portraits/speakers/zhexian.png"
     },
     {
       "id": "bitan_lanzhi",
@@ -23,7 +27,11 @@
       "line": "qh_delta",
       "law": "threshold",
       "role": "第二纪元反派",
-      "motive": "她是染缕。她给继承人一页干净的玉缕，因为不能涂改的牒会暴露她，也因为她真的怕阈值崩掉。"
+      "motive": "她是染缕。她给继承人一页干净的玉缕，因为不能涂改的牒会暴露她，也因为她真的怕阈值崩掉。",
+      "age": 32,
+      "sex": "f",
+      "look": "a qinghe archive clerk around 32, neat scholar bun, hair dyed to a false jade-strand green-black sheen at the tips, pale precise face, ink-navy scholar robe with a frosted-silver seal-case sash, a rolled clean jade-register page in one hand, careful calculating eyes",
+      "portrait": "res://assets/art/portraits/speakers/lanzhi.png"
     },
     {
       "id": "baiyuan_jixun",
@@ -35,7 +43,11 @@
       "line": "banner_marshal",
       "law": "awakened",
       "role": "第三纪元反派",
-      "motive": "折杆的旧同事。他要分数仍然有效。授旗若传给没有点亮的孩子，他会抢走分数更高的那个。"
+      "motive": "折杆的旧同事。他要分数仍然有效。授旗若传给没有点亮的孩子，他会抢走分数更高的那个。",
+      "age": 46,
+      "sex": "m",
+      "look": "a middle-aged ashbanner marshal around 46, square jaw, short greying black hair, formal marshal coat in slate and frost white with a small ashbanner crest clasp, holding a scored merit tablet and a folded nomination roster, stern scorekeeping eyes, posture of a career officer who trusts numbers over blood",
+      "portrait": "res://assets/art/portraits/speakers/jixun.png"
     },
     {
       "id": "nandeng_qianzhan",
@@ -48,7 +60,11 @@
       "pool": "lamp_out",
       "law": "dominant",
       "role": "第四纪元反派",
-      "motive": "真灯丝，空钱袋。她要把香盏收成特许验具，让照不见的人改由收据说明。她不伪造自己的脸。"
+      "motive": "真灯丝，空钱袋。她要把香盏收成特许验具，让照不见的人改由收据说明。她不伪造自己的脸。",
+      "age": 40,
+      "sex": "f",
+      "look": "a lantern merchant around 40, true faint luminous filament strands in the hair tips, tired elegant face of a bankrupt former lamp-throne holder, ink-navy merchant coat with empty purse straps, a clear glass incense censer offered like merchandise, wry practical eyes that sell readability not forged faces",
+      "portrait": "res://assets/art/portraits/speakers/qianzhan.png"
     },
     {
       "id": "guanxiang_guheng",
@@ -60,7 +76,11 @@
       "line": "sr_ford",
       "law": "complement",
       "role": "第五纪元反派",
-      "motive": "星津没有七星，她就摄政。她可以承认灰旗的继承人，条件是桥外与测距不要有孩子。"
+      "motive": "星津没有七星，她就摄政。她可以承认灰旗的继承人，条件是桥外与测距不要有孩子。",
+      "age": 52,
+      "sex": "f",
+      "look": "a middle-aged starriver regent-astronomer around 52, silver-streaked black hair in a high observatory pin, cool angular face, ink-navy and frost-white star-chart robe with thin cyan constellation trim, an open star-chart tablet in one hand, composed absolute eyes of someone guarding an empty throne",
+      "portrait": "res://assets/art/portraits/speakers/guheng.png"
     }
   ]
 }

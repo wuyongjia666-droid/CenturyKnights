@@ -108,6 +108,20 @@ powershell -File tools\farm_queue\submit_v92_on_m173.ps1
 
 这才会执行 `--spread --sn-backend local --only both`。此时 SenseNova `:8329` 不通就退出（码 3），不会悄悄退回只投 Qwen。没有命令行 `--only` 开关。
 
+
+## Y1-A 缺口说话人（FARM-04 speaker × 9）
+
+#335 对账：两端都无板的 9 人（配角 4 + 反派 5）。队列 `v92_y1a_gap_speakers.json`，look 在 cast 表。
+
+```powershell
+python tools\farm_queue\make_y1a_gap_speakers.py --check
+powershell -File tools\farm_queue\submit_y1a_gap_speakers_on_m173.ps1 -DryRun
+powershell -File tools\farm_queue\submit_y1a_gap_speakers_on_m173.ps1
+python tools\farm_queue\ingest_story_speakers.py --inbox <farm-out>
+```
+
+详见 `docs/art/review/y1a_gap_speakers_checklist.md`。
+
 ## 状态叠层（FARM-04 status_overlay）
 
 六张共享透明叠层，不是「脸 × 状态」矩阵。专用入口：

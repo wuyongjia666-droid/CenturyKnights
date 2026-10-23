@@ -295,6 +295,27 @@ def filter_jobs_by_kind(jobs: list[dict], kinds: set[str] | None) -> list[dict]:
     return [job for job in jobs if str(job.get("kind", "")) in kinds]
 
 
+
+def job_on_disk(job: dict, root: Path | None = None) -> bool:
+    """True when the plate already exists in-repo as png/webp/medium.webp."""
+    base = root or Path(__file__).resolve().parents[2]
+    rel = str(job.get("out_path", ""))
+    if not rel:
+        return False
+    path = (base / rel).resolve()
+    if path.exists():
+        return True
+    stem = path.with_suffix("")
+    for cand in (path.with_suffix(".webp"), Path(str(stem) + ".webp"), Path(str(stem) + ".medium.webp")):
+        if cand.exists():
+            return True
+    return False
+
+
+def filter_jobs_missing_disk(jobs: list[dict], root: Path | None = None) -> list[dict]:
+    return [job for job in jobs if not job_on_disk(job, root)]
+
+
 def parse_farms(text: str) -> set[str]:
     farms = {part.strip() for part in text.split(",") if part.strip()}
     if not farms:
@@ -322,6 +343,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--shots-out", default="", help="where to write the shots JSON (submit default: <root>/shots_v92_farm.json)")
     parser.add_argument("--farms", default=",".join(FARM_ORDER), help="comma list, default FARM-01..05")
     parser.add_argument("--kinds", default="", help="optional comma list of job kinds (e.g. status_overlay)")
+    parser.add_argument("--missing-disk", action="store_true",
+                        help="skip jobs whose out_path png/webp already exists in the repo")
+    parser.add_argument("--jobs-from", default="",
+                        help="only submit jobs whose id appears in this queue JSON")
     parser.add_argument("--qwen", default=os.environ.get("COMFYUI_QWEN", QWEN_DEFAULT))
     parser.add_argument("--sn", default=os.environ.get("COMFYUI_SN", SN_DEFAULT))
     parser.add_argument("--dual", action="store_true", help="also submit SenseNova local and spread across both hosts")
@@ -354,6 +379,19 @@ def main(argv: list[str] | None = None) -> int:
     jobs = filter_jobs_by_kind(jobs, kinds)
     if kinds is not None:
         print(f"[v92-farm] kind filter={','.join(sorted(kinds))} remaining_jobs={len(jobs)}")
+    if args.jobs_from:
+        src = Path(args.jobs_from)
+        if not src.is_absolute():
+            src = Path(__file__).resolve().parent / src
+        doc = json.loads(src.read_text(encoding="utf-8"))
+        want = {str(row.get("id", "")) for row in doc.get("jobs", []) if str(row.get("id", ""))}
+        before = len(jobs)
+        jobs = [job for job in jobs if str(job.get("id", "")) in want]
+        print(f"[v92-farm] jobs-from={src.name} kept={len(jobs)} skipped={before - len(jobs)}")
+    if args.missing_disk:
+        before = len(jobs)
+        jobs = filter_jobs_missing_disk(jobs)
+        print(f"[v92-farm] missing-disk kept={len(jobs)} skipped_on_disk={before - len(jobs)}")
     try:
         shots = build_shots(jobs, farms)
     except (ValueError, KeyError, TypeError) as exc:
