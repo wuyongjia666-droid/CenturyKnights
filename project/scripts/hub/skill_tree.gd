@@ -48,15 +48,7 @@ func _ready() -> void:
 	_unlock.pressed.connect(_do_unlock)
 	right.add_child(_unlock)
 	if DeviceProfile.is_mobile():
-		# Phone: the 22px points line would sit on the page description; it heads the detail card.
-		remove_child(_pts)
-		_pts.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
-		right.add_child(_pts)
-		_pts.position = Vector2(16, 12)
-		_pts.size = Vector2(280, 34)
-		_detail.position.y = 52.0
-		_detail.size.y = 350.0
-		_unlock.position.y = 512 - 16 - MobilePage.HIT
+		_mobile_detail_chrome(right)
 	_msg = CKPageKit.feedback(self)
 	var roster: Array = GameState.roster()
 	if not roster.is_empty():
@@ -64,6 +56,37 @@ func _ready() -> void:
 	_refresh()
 	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "SKILL TREE · FROST")
 	UIFX.page_enter(self)
+
+
+## Phone: stretch the three kit cards, then park points + unlock inside the detail card so the
+## 22px floor cannot land the points line on the page description.
+func apply_mobile_layout() -> void:
+	if not MobilePage.active(self):
+		return
+	CKPageKit.phone_fill(self)
+	var right := find_child("DetailCard", true, false) as Control
+	if right != null:
+		_mobile_detail_chrome(right)
+
+func _mobile_detail_chrome(right: Control) -> void:
+	if _pts == null or right == null:
+		return
+	if _pts.get_parent() != right:
+		if _pts.get_parent():
+			_pts.get_parent().remove_child(_pts)
+		right.add_child(_pts)
+	_pts.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	_pts.position = Vector2(16, 12)
+	_pts.size = Vector2(maxf(200.0, right.size.x - 32.0), 34)
+	_pts.add_theme_font_size_override("font_size", MobilePage.FONT)
+	if _detail:
+		_detail.position = Vector2(16, 52)
+		_detail.size = Vector2(maxf(200.0, right.size.x - 32.0), maxf(120.0, right.size.y - 52.0 - MobilePage.HIT - 28.0))
+	if _unlock:
+		_unlock.position = Vector2(16, right.size.y - 16.0 - MobilePage.HIT)
+		_unlock.size = Vector2(maxf(160.0, right.size.x - 32.0), MobilePage.HIT)
+		_unlock.custom_minimum_size = Vector2(160, MobilePage.HIT)
+		_unlock.add_theme_font_size_override("font_size", MobilePage.FONT)
 
 func _refresh() -> void:
 	_pts.text = Locale.t("lb_sk_points", [GameState.skill_points])

@@ -67,3 +67,7 @@ func _ghost_stone() -> Control:
 	v.add_child(UIKit.title_label(Locale.t("lb_anc_ghost_name"), 16, UIKit.TEXT_FAINT))
 	v.add_child(CKPageKit.text(Locale.t("lb_anc_ghost_line"), UIKit.TEXT_FAINT, 13, 740))
 	return r[0]
+
+func apply_mobile_layout() -> void:
+	CKPageKit.phone_fill(self)
+

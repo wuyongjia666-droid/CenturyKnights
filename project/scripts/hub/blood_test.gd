@@ -69,6 +69,23 @@ func _ready() -> void:
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 
+
+func apply_mobile_layout() -> void:
+	if not MobilePage.active(self):
+		return
+	CKPageKit.phone_fill(self)
+	var left := find_child("AssayQueue", true, false) as Control
+	if left and _begin_btn:
+		_begin_btn.position = Vector2(18, 118)
+		_begin_btn.size = Vector2(maxf(200.0, left.size.x - 36.0), MobilePage.HIT)
+		_begin_btn.custom_minimum_size = Vector2(200, MobilePage.HIT)
+		_begin_btn.add_theme_font_size_override("font_size", MobilePage.FONT)
+		var list_scroll := left.find_child("QueueListScroll", true, false) as Control
+		if list_scroll:
+			var list_y := 118.0 + MobilePage.HIT + 14.0
+			list_scroll.position = Vector2(14, list_y)
+			list_scroll.size = Vector2(maxf(160.0, left.size.x - 28.0), maxf(120.0, left.size.y - list_y - 14.0))
+
 func _queue() -> Array:
 	var out: Array = []
 	for c in GameState.characters.values():
