@@ -1692,6 +1692,11 @@ var _aff_overlay: Control
 func open_affairs(msg: String = "", ok: bool = true) -> void:
 	if _aff_overlay != null and is_instance_valid(_aff_overlay):
 		_aff_overlay.queue_free()
+		_aff_overlay = null
+	# city_affairs.gd is RefCounted data only; phone chrome lives here (caller), like lineage_info.
+	if _mob:
+		_open_affairs_mobile(msg, ok)
+		return
 	var o := ColorRect.new()
 	o.name = "AffairOverlay"
 	o.color = Color(0.04, 0.06, 0.1, 0.92)
@@ -1707,61 +1712,125 @@ func open_affairs(msg: String = "", ok: bool = true) -> void:
 	var v := VBoxContainer.new()
 	v.add_theme_constant_override("separation", 10)
 	m.add_child(v)
-	var head := HBoxContainer.new()
-	v.add_child(head)
-	var t := UIKit.title_label(Locale.t("js_76d637f6") % str(World.node(city).get("name", city)), 18)
-	t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	head.add_child(t)
-	var close := UIKit.ghost_button(Locale.t("js_4782a703"), 120, 48)
-	close.pressed.connect(func():
+	_fill_affairs_body(v, msg, ok, false, func():
 		o.queue_free()
 		_aff_overlay = null
 		_refresh_all())
-	head.add_child(close)
+
+
+## Phone: MobilePage sheet + scroll so FONT_FLOOR / 76px hits do not crush the affair list.
+func _open_affairs_mobile(msg: String, ok: bool) -> void:
+	var title := Locale.t("js_76d637f6") % str(World.node(city).get("name", city))
+	var sh: Array = MobilePage.sheet(self, "AffairOverlay", title, 40, UIKit.ACCENT)
+	var o := sh[0] as Control
+	var card := sh[1] as VBoxContainer
+	_aff_overlay = o
+	var list := MobilePage.sheet_scroll(card, MobilePage.HIT + 36.0)
+	_fill_affairs_body(list, msg, ok, true, func(): pass)
+	var close := MobilePage.button(Locale.t("js_4782a703"), false, func():
+		o.queue_free()
+		_aff_overlay = null
+		_refresh_all())
+	close.name = "AffairClose"
+	card.add_child(close)
+
+
+func _fill_affairs_body(v: VBoxContainer, msg: String, ok: bool, mobile: bool, on_close: Callable) -> void:
+	var fs := MobilePage.FONT if mobile else 15
+	var fs_dim := MobilePage.FONT if mobile else 13
+	var hit := int(MobilePage.HIT) if mobile else 48
+	if not mobile:
+		var head := HBoxContainer.new()
+		v.add_child(head)
+		var t := UIKit.title_label(Locale.t("js_76d637f6") % str(World.node(city).get("name", city)), 18)
+		t.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		head.add_child(t)
+		var close := UIKit.ghost_button(Locale.t("js_4782a703"), 120, hit)
+		close.pressed.connect(on_close)
+		head.add_child(close)
 	if msg != "":
-		var ml := UIKit.body_label(msg, UIKit.OK if ok else UIKit.DANGER, 14)
+		var ml := UIKit.body_label(msg, UIKit.OK if ok else UIKit.DANGER, fs if mobile else 14)
 		ml.name = "AffairMsg"
 		ml.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		if mobile:
+			ml.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		v.add_child(ml)
-	var lab := UIKit.body_label(CKCityAffairs.label(city), UIKit.TEXT, 15)
+	var lab := UIKit.body_label(CKCityAffairs.label(city), UIKit.TEXT, fs)
+	lab.name = "AffairLabel"
 	lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	if mobile:
+		lab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	v.add_child(lab)
 	var chk: Dictionary = CKCityAffairs.can_do(city)
-	var go := UIKit.ghost_button(Locale.t("js_f05ab037"), 160, 48)
+	var go: Button
+	if mobile:
+		go = MobilePage.button(Locale.t("js_f05ab037"), true, func():
+			var r := CKCityAffairs.do_affair(city)
+			open_affairs(str(r.get("msg", "")), bool(r.get("ok", false))))
+		go.disabled = not bool(chk.get("ok", false))
+	else:
+		go = UIKit.ghost_button(Locale.t("js_f05ab037"), 160, hit)
+		go.disabled = not bool(chk.get("ok", false))
+		go.pressed.connect(func():
+			var r := CKCityAffairs.do_affair(city)
+			open_affairs(str(r.get("msg", "")), bool(r.get("ok", false))))
 	go.name = "AffairDo"
-	go.disabled = not bool(chk.get("ok", false))
 	v.add_child(go)
 	if not bool(chk.get("ok", false)):
-		v.add_child(UIKit.body_label(str(chk.get("msg", "")), UIKit.TEXT_DIM, 13))
-	go.pressed.connect(func():
-		var r := CKCityAffairs.do_affair(city)
-		open_affairs(str(r.get("msg", "")), bool(r.get("ok", false))))
+		var why := UIKit.body_label(str(chk.get("msg", "")), UIKit.TEXT_DIM, fs_dim)
+		why.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		if mobile:
+			why.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		v.add_child(why)
 	var rows: Array = CKJobSeals.rows_for_city(city)
 	if rows.is_empty():
-		v.add_child(UIKit.body_label(Locale.t("js_76942d49"), UIKit.TEXT_DIM, 13))
+		var empty := UIKit.body_label(Locale.t("js_76942d49"), UIKit.TEXT_DIM, fs_dim)
+		empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		if mobile:
+			empty.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		v.add_child(empty)
 	for r in rows:
 		var jid := str(r.get("job", ""))
 		var seal_nm := str(r.get("name", jid))
 		var from_nm := str(GameState.get_job(str(r.get("from", ""))).get("name", ""))
-		v.add_child(UIKit.body_label(Locale.t("js_76fd6d83") % [seal_nm, from_nm, seal_nm], UIKit.ACCENT, 14))
+		var seal_lab := UIKit.body_label(Locale.t("js_76fd6d83") % [seal_nm, from_nm, seal_nm], UIKit.ACCENT, fs if mobile else 14)
+		seal_lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		if mobile:
+			seal_lab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		v.add_child(seal_lab)
 		var any := false
 		for c in GameState.roster():
 			if c == null or not c.alive or c.job_id != str(r.get("from", "")):
 				continue
 			any = true
-			var row := HBoxContainer.new()
-			row.add_theme_constant_override("separation", 8)
 			var g: Dictionary = CKJobSeals.can_stamp(c, jid, city)
-			var b := UIKit.ghost_button(Locale.t("js_f6db50d5") % c.name, 200, 48)
-			b.disabled = not bool(g.get("ok", false))
 			var cid := str(c.id)
-			b.pressed.connect(func():
-				var rr := CKJobSeals.stamp(GameState.characters[cid], jid, city)
-				open_affairs(str(rr.get("msg", "")), bool(rr.get("ok", false))))
-			row.add_child(b)
-			if not bool(g.get("ok", false)):
-				row.add_child(UIKit.body_label(str(g.get("msg", "")), UIKit.TEXT_DIM, 13))
-			v.add_child(row)
+			if mobile:
+				var b := MobilePage.button(Locale.t("js_f6db50d5") % c.name, false, func():
+					var rr := CKJobSeals.stamp(GameState.characters[cid], jid, city)
+					open_affairs(str(rr.get("msg", "")), bool(rr.get("ok", false))))
+				b.disabled = not bool(g.get("ok", false))
+				v.add_child(b)
+				if not bool(g.get("ok", false)):
+					var gm := UIKit.body_label(str(g.get("msg", "")), UIKit.TEXT_DIM, fs_dim)
+					gm.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+					gm.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+					v.add_child(gm)
+			else:
+				var row := HBoxContainer.new()
+				row.add_theme_constant_override("separation", 8)
+				var b2 := UIKit.ghost_button(Locale.t("js_f6db50d5") % c.name, 200, hit)
+				b2.disabled = not bool(g.get("ok", false))
+				b2.pressed.connect(func():
+					var rr := CKJobSeals.stamp(GameState.characters[cid], jid, city)
+					open_affairs(str(rr.get("msg", "")), bool(rr.get("ok", false))))
+				row.add_child(b2)
+				if not bool(g.get("ok", false)):
+					row.add_child(UIKit.body_label(str(g.get("msg", "")), UIKit.TEXT_DIM, fs_dim))
+				v.add_child(row)
 		if not any:
-			v.add_child(UIKit.body_label(Locale.t("js_7a4485ae") % str(GameState.get_job(str(r.get("from", ""))).get("name", "")), UIKit.TEXT_DIM, 13))
-
+			var none := UIKit.body_label(Locale.t("js_7a4485ae") % str(GameState.get_job(str(r.get("from", ""))).get("name", "")), UIKit.TEXT_DIM, fs_dim)
+			none.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			if mobile:
+				none.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			v.add_child(none)

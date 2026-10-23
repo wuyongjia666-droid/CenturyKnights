@@ -34,12 +34,14 @@
 | #336 | T-P1-3 3D visual-hit 说明（不改 pick） | 已合 | [x] |
 | #337 | 9 缺口说话人 cast + 农场队列 | 已合 | [x] |
 | #338 | 9 缺口剧情立绘入库 | 已合 | [x] |
-| #339 | 机制 C：对话板 SpeakerPlate 名签 + 枢纽「同袍」/NavRail | **待合** → PR 绿且合入后勾 | [ ] |
-| #340 | 枢纽 FONT_FLOOR：city 落地 + market/estates/works/forge 出 pending | **待合** → 同上 | [ ] |
-| #341 | T-P2-1 Forecast / 单位信息条横屏可读 | **待合** → 同上 | [ ] |
-| #342 | Y1-A 真机签收勾选清单（本文） | **待合** → PR 绿且合入后勾 | [ ] |
+| #339 | 机制 C：对话板 SpeakerPlate 名签 + 枢纽「同袍」/NavRail | 已合 | [x] |
+| #340 | 枢纽 FONT_FLOOR：city 落地 + market/estates/works/forge 出 pending | 已合 | [x] |
+| #341 | T-P2-1 Forecast / 单位信息条横屏可读 | 已合 | [x] |
+| #342 | Y1-A 真机签收勾选清单（本文） | 已合 | [x] |
+| #343 | 枢纽缺页手机排版：skill/quests/shrine/title+ | 已合 | [x] |
+| #344 | 本城之事浮层 + atlas `apply_mobile_layout` / 领地模态 | **本 PR** → 绿且你说合后再勾 | [ ] |
 
-建议：说「合 #339 #340 #341 #342」；合入顺序 `#339` → `#340` → `#341` → `#342`（审计文档有重叠，此序本地已预检）。合完再打真机签收包（同 commit 的 Windows + Android）。
+建议：说「合 #344」。合完再打真机签收包（同 commit 的 Windows + Android）。
 
 ---
 

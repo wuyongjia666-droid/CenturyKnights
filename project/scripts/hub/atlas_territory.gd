@@ -87,8 +87,12 @@ static func region_badge(nation: String) -> String:
 			k += 1
 	return "" if k == 0 else " · " + Locale.t("terr_ui_flag") + "%d" % k
 
-## Fills a modal panel (500 wide) with every site hung on the anchor. act(kind, site_id) runs an action.
+## Fills a modal panel with every site hung on the anchor. act(kind, site_id) runs an action.
+## Desktop keeps the absolute 500-wide layout; phone uses a Scroll+VBox so FONT_FLOOR cannot crush rows.
 static func fill_modal(p: Panel, anchor: String, act: Callable) -> void:
+	if DeviceProfile.is_mobile():
+		_fill_modal_mobile(p, anchor, act)
+		return
 	var el := UIKit.mono("TERRITORY // %s" % str(World.node(anchor).get("name", anchor)), 9, UIKit.ACCENT)
 	el.position = Vector2(24, 18)
 	p.add_child(el)
@@ -127,7 +131,51 @@ static func fill_modal(p: Panel, anchor: String, act: Callable) -> void:
 	p.add_child(close)
 	close.call_deferred("grab_focus")
 
+
+static func _fill_modal_mobile(p: Panel, anchor: String, act: Callable) -> void:
+	var margin := MarginContainer.new()
+	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	for side in ["left", "right"]:
+		margin.add_theme_constant_override("margin_" + side, 18)
+	for side in ["top", "bottom"]:
+		margin.add_theme_constant_override("margin_" + side, 14)
+	p.add_child(margin)
+	var root := VBoxContainer.new()
+	root.add_theme_constant_override("separation", 10)
+	margin.add_child(root)
+	root.add_child(MobilePage.label("TERRITORY // %s" % str(World.node(anchor).get("name", anchor)), UIKit.ACCENT, MobilePage.FONT, false))
+	root.add_child(MobilePage.label(Locale.t("terr_ui_title"), UIKit.TEXT, MobilePage.FONT + 6, false))
+	var sc := ScrollContainer.new()
+	sc.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	sc.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	root.add_child(sc)
+	var list := VBoxContainer.new()
+	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	list.add_theme_constant_override("separation", 12)
+	sc.add_child(list)
+	for id in CKTerritory.sites_at(anchor):
+		var s := CKTerritory.site(id)
+		var lab := MobilePage.label(CKTerritory.summary(id), UIKit.TEXT, MobilePage.FONT, true)
+		lab.name = "TerrSummary_%s" % id
+		list.add_child(lab)
+		var lore := MobilePage.label(str(s.get("lore", "")), UIKit.TEXT_DIM, MobilePage.FONT, true)
+		list.add_child(lore)
+		for spec in _actions(id):
+			var b := MobilePage.button(str(spec.label), false, func(): act.call(str(spec.kind), id))
+			b.name = "Terr_%s_%s" % [spec.kind, id]
+			b.disabled = str(spec.why) != ""
+			b.tooltip_text = str(spec.why)
+			list.add_child(b)
+	var close := MobilePage.button(Locale.t("terr_ui_close"), true, func(): act.call("close", ""))
+	close.name = "TerrClose"
+	root.add_child(close)
+	close.call_deferred("grab_focus")
+
+
 static func modal_height(anchor: String) -> float:
+	if DeviceProfile.is_mobile():
+		# Phone modal is sized by atlas _modal_panel; give enough room for scroll + close.
+		return 520.0 + 40.0 * float(CKTerritory.sites_at(anchor).size())
 	return 150.0 + 150.0 * CKTerritory.sites_at(anchor).size()
 
 static func _actions(id: String) -> Array:
