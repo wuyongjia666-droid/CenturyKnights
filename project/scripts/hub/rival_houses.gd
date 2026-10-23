@@ -62,34 +62,76 @@ func _frost_panel() -> Panel:
 	p.add_child(fill)
 	return p
 
-## Fixed 1280x720 design. On a bare small window (no CKMobileChrome fit) scale the page down.
+## Phone: fill height, grow list/detail, one-column actions when narrow. No whole-page shrink.
 func apply_mobile_layout() -> void:
 	if _left == null or _right == null:
 		return
-	_left.position = Vector2(42, CKPageKit.TOP + 8)
-	_left.size = Vector2(340, 500)
-	_right.position = Vector2(394, CKPageKit.TOP + 8)
-	# 20:9 phones: the detail column takes the extra width instead of leaving a dead strip.
-	var extra := maxf(0.0, size.x - 1280.0) if has_meta("mobile_fit_key") else 0.0
-	_right.size = Vector2(844 + extra, 500)
+	set_meta("m_center_ok", true)
+	MobileLayout.pin_footer(get_node_or_null("StitchFooter"))
+	var top := CKPageKit.TOP + 8.0
+	var foot := get_node_or_null("StitchFooter") as Control
+	var bottom := (foot.position.y - 8.0) if foot != null else size.y - 48.0
+	var h := maxf(240.0, bottom - top)
+	var w := size.x
+	var pad := 16.0
+	var gap := 12.0
+	var lw := clampf(w * 0.28, 300.0, 400.0)
+	_left.position = Vector2(pad, top)
+	_left.size = Vector2(lw, h)
+	_right.position = Vector2(pad + lw + gap, top)
+	_right.size = Vector2(maxf(320.0, w - pad * 2.0 - lw - gap), h)
 	for p in [_left, _right]:
 		var fill := (p as Control).get_node_or_null("FrostFill") as Control
 		if fill:
 			fill.position = Vector2.ZERO
 			fill.size = (p as Control).size
+	var list_scroll := _left.get_node_or_null("HousesScroll") as ScrollContainer
+	if list_scroll != null:
+		list_scroll.position = Vector2(12, 12)
+		list_scroll.size = Vector2(maxf(200.0, _left.size.x - 24.0), maxf(120.0, _left.size.y - 24.0))
+		if _list != null:
+			_list.custom_minimum_size.x = maxf(180.0, list_scroll.size.x - 14.0)
 	var inner := _right.get_node_or_null("DetailInner") as Control
 	if inner:
+		inner.set_anchors_preset(Control.PRESET_FULL_RECT)
+		inner.offset_left = 16.0
+		inner.offset_top = 14.0
+		inner.offset_right = -16.0
+		inner.offset_bottom = -14.0
+		# Prefer absolute fill when anchors not yet applied in tests:
 		inner.position = Vector2(16, 14)
-		inner.size = Vector2(812 + extra, 472)
-	if has_meta("mobile_fit_key"):
-		return
-	var vp := get_viewport_rect().size
-	var k := minf(vp.x / 1280.0, vp.y / 720.0)
-	if k < 0.999:
-		scale = Vector2(k, k)
-		size = Vector2(1280, 720)
-	else:
-		scale = Vector2.ONE
+		inner.size = Vector2(maxf(280.0, _right.size.x - 32.0), maxf(160.0, _right.size.y - 28.0))
+	_grid.columns = 1 if _right.size.x < 720.0 else 2
+	for b in _list.get_children():
+		if b is Button:
+			var btn := b as Button
+			btn.add_theme_font_size_override("font_size", maxi(btn.get_theme_font_size("font_size"), MobileLayout.FONT_FLOOR))
+			btn.custom_minimum_size.y = maxf(btn.custom_minimum_size.y, MobilePage.HIT * 0.9)
+	for card in _grid.get_children():
+		if card is Control:
+			var pc := card as Control
+			pc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			pc.custom_minimum_size.x = 0.0
+			pc.custom_minimum_size.y = maxf(pc.custom_minimum_size.y, 180.0)
+	MobileLayout.ensure_min_fonts(self)
+	# PageHead is font_floor_exempt — hide Latin kickers / raise title+desc.
+	var head := find_child("PageHead", true, false) as Control
+	if head != null:
+		for n in head.find_children("*", "Label", true, false):
+			var lab := n as Label
+			var fs := lab.get_theme_font_size("font_size")
+			if fs <= 12 and MobileLayout.is_decor_kicker(lab.text):
+				lab.visible = false
+				lab.set_meta("m_kicker_hidden", true)
+			elif fs < MobileLayout.FONT_FLOOR:
+				lab.add_theme_font_size_override("font_size", MobileLayout.FONT_FLOOR)
+	# After floor: grow action card text widths so wrap does not squash.
+	for card in _grid.get_children():
+		for lab in card.find_children("*", "Label", true, false):
+			var l := lab as Label
+			l.clip_text = false
+			if l.custom_minimum_size.x > 0.0:
+				l.custom_minimum_size.x = maxf(l.custom_minimum_size.x, minf(360.0, _right.size.x - 80.0))
 
 func _refresh() -> void:
 	CKPageKit.clear(_list)
@@ -108,7 +150,7 @@ func _refresh() -> void:
 		b.button_pressed = str(_selected.get("id", "")) == hid
 		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		b.text = "  %s　·　%s %d" % [str(h.get("name")), CKSchemes.band_zh(band), rel]
-		b.add_theme_font_size_override("font_size", 15)
+		b.add_theme_font_size_override("font_size", MobileLayout.FONT_FLOOR if DeviceProfile.is_mobile() else 15)
 		if int(GameState.rival_deals.get(hid, {}).get("turns_left", 0)) > 0:
 			b.text += "　" + Locale.t("lb_rv_dealing")
 		b.pressed.connect(func(): Sfx.click(); _select(h); _refresh_marks())
@@ -183,7 +225,7 @@ class Func:
 func _card(key: String, cost: String, f: Func, why: String) -> void:
 	var r := CKPageKit.row(UIKit.ACCENT, 150)
 	var p: PanelContainer = r[0]
-	p.custom_minimum_size = Vector2(396, 150)
+	p.custom_minimum_size = Vector2(396, 180 if DeviceProfile.is_mobile() else 150)
 	p.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	p.name = "Act_" + key.trim_prefix("lb_rv_a_")
 	var v: VBoxContainer = r[1]

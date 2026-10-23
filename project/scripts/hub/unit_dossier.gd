@@ -13,27 +13,179 @@ func _ready() -> void:
 	UIFX.wire_tree(self)
 
 func apply_mobile_layout() -> void:
+	## Phone: real reflow (not just m_center_ok). Fixed desktop slots squash after FONT_FLOOR.
 	MobileLayout.pin_footer(get_node_or_null("StitchFooter"))
-	var w := get_viewport_rect().size.x
-	if w >= 1000.0:
-		set_meta("m_center_ok", true)  # landscape keeps the 1280 grid; MobileLayout centres it
+	set_meta("m_center_ok", true)
+	if not DeviceProfile.is_mobile():
 		return
 	var left := get_node_or_null("PortraitColumn") as Control
 	var mid := get_node_or_null("TraitList") as Control
 	var right := get_node_or_null("FamilyTree") as Control
-	if left != null:
-		left.position = Vector2(8, 160)
-		left.size = Vector2(w - 16.0, 400)
-		left.clip_contents = true
-	if mid != null:
-		mid.visible = false
-	if right != null:
-		right.position = Vector2(8, 572)
-		right.size = Vector2(w - 16.0, 176)
-		right.clip_contents = true
-		var codex := right.get_node_or_null("OpenCodex") as Control
-		if codex != null:
-			codex.visible = false
+	var foot := get_node_or_null("StitchFooter") as Control
+	var top := 136.0
+	var bottom := (foot.position.y - 8.0) if foot != null else size.y - 40.0
+	var h := maxf(280.0, bottom - top)
+	var w := size.x
+	var gap := 10.0
+	var pad := 16.0
+	# Landscape logical root (~1600×720): three columns share width/height, no clip squash.
+	# Narrow / portrait: stack portrait + traits, hide tree chrome that would crush.
+	var narrow := w < 1100.0
+	if narrow:
+		if left != null:
+			left.position = Vector2(pad, top)
+			left.size = Vector2(w - pad * 2.0, minf(360.0, h * 0.48))
+			left.clip_contents = false
+		if mid != null:
+			mid.visible = true
+			mid.position = Vector2(pad, top + (left.size.y if left else 0.0) + gap)
+			mid.size = Vector2(w - pad * 2.0, maxf(160.0, bottom - mid.position.y))
+			mid.clip_contents = false
+		if right != null:
+			right.visible = false
+	else:
+		var lw := clampf(w * 0.24, 260.0, 340.0)
+		var rw := clampf(w * 0.30, 300.0, 440.0)
+		var mw := maxf(280.0, w - lw - rw - pad * 2.0 - gap * 2.0)
+		if left != null:
+			left.visible = true
+			left.position = Vector2(pad, top)
+			left.size = Vector2(lw, h)
+			left.clip_contents = false
+		if mid != null:
+			mid.visible = true
+			mid.position = Vector2(pad + lw + gap, top)
+			mid.size = Vector2(mw, h)
+			mid.clip_contents = false
+		if right != null:
+			right.visible = true
+			right.position = Vector2(pad + lw + gap + mw + gap, top)
+			right.size = Vector2(rw, h)
+			right.clip_contents = false
+	_mobile_relax_portrait(left)
+	_mobile_relax_traits(mid)
+	_mobile_relax_tree(right)
+	MobileLayout.ensure_min_fonts(self)
+	_mobile_floor_page_head()
+	_mobile_reflow_life(mid)
+
+
+func _mobile_floor_page_head() -> void:
+	## PageHead is font_floor_exempt (fixed title row); ensure_min_fonts skips it.
+	## Hide Latin kickers; raise Chinese title / desc to FONT_FLOOR (same as MobilePage.upsize).
+	var head := find_child("PageHead", true, false) as Control
+	if head == null:
+		return
+	for n in head.find_children("*", "Label", true, false):
+		var lab := n as Label
+		var fs := lab.get_theme_font_size("font_size")
+		if fs <= 12 and MobileLayout.is_decor_kicker(lab.text):
+			lab.visible = false
+			lab.set_meta("m_kicker_hidden", true)
+			continue
+		if fs < MobileLayout.FONT_FLOOR:
+			lab.add_theme_font_size_override("font_size", MobileLayout.FONT_FLOOR)
+
+
+func _mobile_relax_portrait(left: Control) -> void:
+	if left == null:
+		return
+	var iw := maxf(200.0, left.size.x - 36.0)
+	for n in ["AgeStage", "TitleChip"]:
+		var chip := left.find_child(n, true, false) as Control
+		if chip != null:
+			chip.custom_minimum_size.y = maxf(chip.custom_minimum_size.y, 28.0)
+	for c in left.get_children():
+		if c is Label:
+			var lab := c as Label
+			if lab.size.x > 10.0 and lab.size.x < iw:
+				lab.size.x = iw
+			lab.clip_text = false
+			if lab.size.y > 0.0 and lab.size.y < float(MobileLayout.FONT_FLOOR):
+				lab.size.y = 0.0
+				lab.custom_minimum_size.y = 0.0
+		elif c is Button:
+			var b := c as Button
+			b.custom_minimum_size = Vector2(iw, maxf(b.custom_minimum_size.y, MobilePage.HIT))
+			b.size.x = iw
+
+
+func _mobile_relax_traits(mid: Control) -> void:
+	if mid == null or not mid.visible:
+		return
+	var box := mid.get_node_or_null("LifePanel") as Control
+	if box != null:
+		box.size.x = maxf(200.0, mid.size.x - 32.0)
+		box.custom_minimum_size.x = box.size.x
+		# Drop fixed 206px height so FONT_FLOOR can grow the VBox.
+		box.custom_minimum_size.y = 0.0
+		box.size.y = maxf(box.size.y, box.get_combined_minimum_size().y)
+	for c in mid.get_children():
+		if c is ScrollContainer:
+			var sc := c as ScrollContainer
+			sc.size.x = maxf(160.0, mid.size.x - 24.0)
+			var col := sc.get_child(0) as Control if sc.get_child_count() > 0 else null
+			if col != null:
+				col.custom_minimum_size.x = maxf(140.0, sc.size.x - 16.0)
+		elif c is Label and (c as Label).autowrap_mode != TextServer.AUTOWRAP_OFF:
+			var lab := c as Label
+			lab.size.x = maxf(160.0, mid.size.x - 32.0)
+			lab.clip_text = false
+
+
+func _mobile_relax_tree(right: Control) -> void:
+	if right == null or not right.visible:
+		return
+	var tree_scroll: ScrollContainer = null
+	for c in right.get_children():
+		if c is ScrollContainer:
+			tree_scroll = c as ScrollContainer
+			break
+	if tree_scroll != null:
+		tree_scroll.position = Vector2(12, 40)
+		var crest := right.get_node_or_null("CrestPreview") as Control
+		var bot := (crest.position.y - 8.0) if crest != null else right.size.y - 56.0
+		tree_scroll.size = Vector2(maxf(160.0, right.size.x - 24.0), maxf(120.0, bot - tree_scroll.position.y))
+		var tree := tree_scroll.get_child(0) as Control if tree_scroll.get_child_count() > 0 else null
+		if tree != null:
+			tree.custom_minimum_size.x = maxf(140.0, tree_scroll.size.x - 16.0)
+	# Person chips: font floor makes 12px/64h squash — grow hit + allow wrap height.
+	for b in right.find_children("*", "Button", true, false):
+		var btn := b as Button
+		if btn.name in ["CrestPreview", "OpenCodex"]:
+			btn.custom_minimum_size.y = maxf(btn.custom_minimum_size.y, MobilePage.HIT)
+			continue
+		btn.add_theme_font_size_override("font_size", maxi(btn.get_theme_font_size("font_size"), MobileLayout.FONT_FLOOR))
+		btn.custom_minimum_size = Vector2(maxf(btn.custom_minimum_size.x, 140.0), maxf(btn.custom_minimum_size.y, 88.0))
+		btn.clip_text = false
+	for lab in right.find_children("*", "Label", true, false):
+		var l := lab as Label
+		l.clip_text = false
+		if l.custom_minimum_size.y > 0.0 and l.custom_minimum_size.y < float(MobileLayout.FONT_FLOOR):
+			l.custom_minimum_size.y = 0.0
+
+
+func _mobile_reflow_life(mid: Control) -> void:
+	if mid == null or not mid.visible:
+		return
+	var box := mid.get_node_or_null("LifePanel") as Control
+	if box == null:
+		return
+	box.size.x = maxf(200.0, mid.size.x - 32.0)
+	box.size.y = maxf(box.get_combined_minimum_size().y, box.size.y)
+	var life_bottom := box.position.y + box.size.y + 8.0
+	for c in mid.get_children():
+		if c == box or not (c is Control):
+			continue
+		var cn := c as Control
+		if cn.position.y < 240.0:  # LIFE header stays
+			continue
+		if cn.position.y < life_bottom:
+			cn.position.y = life_bottom
+		if c is ScrollContainer:
+			cn.size = Vector2(maxf(160.0, mid.size.x - 24.0), maxf(80.0, mid.size.y - cn.position.y - 12.0))
+		elif c is Label and (c as Label).autowrap_mode != TextServer.AUTOWRAP_OFF:
+			cn.size = Vector2(maxf(160.0, mid.size.x - 32.0), maxf(cn.get_minimum_size().y, mid.size.y - cn.position.y - 12.0))
 
 func _resolve() -> CKCharacter:
 	var want := ""
@@ -287,6 +439,9 @@ func _life(mid: Control, c: CKCharacter) -> void:
 	box.name = "LifePanel"
 	box.position = Vector2(16, 34)
 	box.size = Vector2(408, 206)
+	if DeviceProfile.is_mobile():
+		box.custom_minimum_size = Vector2(408, 0)
+		box.size = Vector2(408, 0)  # grow with FONT_FLOOR; apply_mobile_layout sizes width
 	box.add_theme_constant_override("separation", 6)
 	mid.add_child(box)
 	if c == null:
@@ -301,7 +456,7 @@ func _life(mid: Control, c: CKCharacter) -> void:
 	box.add_child(grid)
 	for k in CKCharacter.STAT_KEYS:
 		var cell := PanelContainer.new()
-		cell.custom_minimum_size = Vector2(128, 40)
+		cell.custom_minimum_size = Vector2(128, 56 if DeviceProfile.is_mobile() else 40)
 		var sb := UIKit.flat_box(Color(1, 1, 1, 0.03), Color(1, 1, 1, 0.12), 8)
 		sb.content_margin_left = 10
 		cell.add_theme_stylebox_override("panel", sb)

@@ -8,7 +8,7 @@ const CHOICES := ["steel", "soft", "delay"]
 
 var _heir: CKCharacter
 var _body: Label
-var _cards: HBoxContainer
+var _cards: BoxContainer
 var _msg: Label
 
 func _ready() -> void:
@@ -19,6 +19,9 @@ func _ready() -> void:
 	_body.name = "InheritText"
 	_body.position = Vector2(22, 18)
 	_body.size = Vector2(1150, 150)
+	if DeviceProfile.is_mobile():
+		_body.custom_minimum_size = Vector2(1150, 0)
+		_body.size.y = 0
 	board.add_child(_body)
 	_cards = HBoxContainer.new()
 	_cards.name = "Answers"
@@ -62,7 +65,7 @@ func _show() -> void:
 	for k in CHOICES:
 		var r := CKPageKit.row(UIKit.ACCENT, 300)
 		var p: PanelContainer = r[0]
-		p.custom_minimum_size = Vector2(372, 300)
+		p.custom_minimum_size = Vector2(372, 320 if DeviceProfile.is_mobile() else 300)
 		p.name = "Answer_" + k
 		var v: VBoxContainer = r[1]
 		v.add_child(UIKit.title_label(Locale.t("lb_inh_%s" % k), 18))
@@ -90,7 +93,7 @@ func _show_offer(leader: CKCharacter) -> void:
 		var sid := str(id)
 		var r := CKPageKit.row(UIKit.ACCENT, 260)
 		var p: PanelContainer = r[0]
-		p.custom_minimum_size = Vector2(372, 260)
+		p.custom_minimum_size = Vector2(372, 280 if DeviceProfile.is_mobile() else 260)
 		var v: VBoxContainer = r[1]
 		v.add_child(UIKit.title_label(Locale.t("amb_" + sid + "_name"), 17))
 		v.add_child(CKPageKit.text(Locale.t("amb_" + sid + "_blurb"), UIKit.TEXT_DIM, 13, 340))
@@ -131,5 +134,73 @@ func _resolve(k: String) -> void:
 	_show()
 
 func apply_mobile_layout() -> void:
+	## Unlock fixed body/card heights; stack answers in a scroll so FONT_FLOOR does not squash.
+	set_meta("m_center_ok", true)
 	CKPageKit.phone_fill(self)
+	if not DeviceProfile.is_mobile():
+		return
+	var board := find_child("InheritBoard", true, false) as Control
+	if board == null:
+		return
+	board.clip_contents = false
+	var foot := get_node_or_null("StitchFooter") as Control
+	var bottom := (foot.position.y - 8.0) if foot != null else size.y - 48.0
+	board.size.y = maxf(board.size.y, bottom - board.position.y)
+	if _body != null:
+		_body.size.x = maxf(280.0, board.size.x - 44.0)
+		_body.custom_minimum_size = Vector2(_body.size.x, 0)
+		_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_body.clip_text = false
+	MobileLayout.ensure_min_fonts(self)
+	if _body != null:
+		_body.size.y = maxf(_body.get_minimum_size().y + 8.0, 80.0)
+	_mobile_stack_answers(board)
 
+
+func _mobile_stack_answers(board: Control) -> void:
+	if _cards == null:
+		return
+	var body_h := _body.size.y if _body != null else 80.0
+	var host := board.get_node_or_null("AnswerScroll") as ScrollContainer
+	if host == null:
+		host = ScrollContainer.new()
+		host.name = "AnswerScroll"
+		host.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		host.scroll_deadzone = 10
+		board.add_child(host)
+	host.position = Vector2(16, 18.0 + body_h + 12.0)
+	host.size = Vector2(maxf(240.0, board.size.x - 32.0), maxf(160.0, board.size.y - host.position.y - 16.0))
+	# Ensure answers live under scroll as a VBox.
+	if _cards.get_parent() != host:
+		_cards.reparent(host, false)
+	if _cards is HBoxContainer:
+		var v := VBoxContainer.new()
+		v.name = "Answers"
+		v.add_theme_constant_override("separation", 12)
+		v.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		for k in _cards.get_children():
+			_cards.remove_child(k)
+			v.add_child(k)
+		var old := _cards
+		host.remove_child(old)
+		old.queue_free()
+		host.add_child(v)
+		_cards = v
+	_cards.position = Vector2.ZERO
+	var col_w := maxf(260.0, host.size.x - 24.0)
+	_cards.custom_minimum_size.x = col_w
+	for c in _cards.get_children():
+		if not (c is Control):
+			continue
+		var pc := c as Control
+		pc.custom_minimum_size = Vector2(col_w, maxf(pc.custom_minimum_size.y, 200.0))
+		pc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		for lab in pc.find_children("*", "Label", true, false):
+			var l := lab as Label
+			l.clip_text = false
+			if l.custom_minimum_size.x > 0.0:
+				l.custom_minimum_size.x = minf(l.custom_minimum_size.x, col_w - 40.0)
+		for b in pc.find_children("*", "BaseButton", true, false):
+			var btn := b as BaseButton
+			btn.custom_minimum_size.y = maxf(btn.custom_minimum_size.y, MobilePage.HIT)
+			btn.custom_minimum_size.x = minf(col_w - 40.0, maxf(btn.custom_minimum_size.x, 200.0))
