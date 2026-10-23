@@ -666,10 +666,14 @@ func apply_mobile_layout() -> void:
 	var w := maxf(size.x, 1280.0)
 	var h := size.y if size.y > 400.0 else 720.0
 	# Keep the live nav buttons (signals, lock metas, "new" dots) and rebuild everything around them.
+	_m_tabs.clear()
+	_m_grids.clear()
+	_m_summaries.clear()
 	var groups: Array = []
 	var rail := find_child("NavRail", true, false)
 	if rail:
-		for box in rail.find_children("NavGroup_*", "VBoxContainer", true, false):
+		# Desktop uses VBoxContainer; after one mobile pass groups are GridContainer.
+		for box in rail.find_children("NavGroup_*", "", true, false):
 			var btns: Array = []
 			for b in box.get_children():
 				if b is Button:
@@ -786,12 +790,14 @@ func _m_entry_grid(groups: Array, rect: Rect2) -> void:
 	stack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(stack)
 	var inner_w := rect.size.x - 28.0
-	var cols := clampi(int(floor((inner_w + M_GAP) / (320.0 + M_GAP))), 2, 3)
+	# Y1-A 机制 C: 272 min so 1600×720 phone roots get 3 cols (family「同袍」不再卡在第 4 行半裁).
+	var cols := clampi(int(floor((inner_w + M_GAP) / (272.0 + M_GAP))), 2, 3)
 	var tile_w := floorf((inner_w - M_GAP * (cols - 1)) / cols) - 2.0
 	var avail := rect.size.y - 28.0 - 48.0
 	for g in groups:
 		var rows := int(ceil(float(g.btns.size()) / cols))
-		var th := clampf(floorf((avail - M_GAP * 3.0) / 4.0) - 1.0, M_TILE_H, 140.0)
+		# Leave ≥6px slack vs scroll clip so the last row is fully enclosed (audit Locked_bonds).
+		var th := clampf(floorf((avail - M_GAP * 3.0) / 4.0) - 6.0, 110.0, 140.0)
 		var grid := GridContainer.new()
 		grid.name = "NavGroup_" + str(g.id)
 		grid.columns = cols
