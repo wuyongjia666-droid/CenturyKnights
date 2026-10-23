@@ -12,8 +12,7 @@ const CHAPTER_DIR := "res://data/story/chapters"
 const REPORT := "user://dialogue_portrait_parity.json"
 ## Antagonists / supporting rows with no plate anywhere (audit §2.3 机制 D + v92 villains).
 ## Desktop shows the same silhouette; adding art here is a farm job, not an export fix.
-const NO_ART := ["藤桥·新雨", "渡口·阿禾", "镜湖·护帖", "冷窑·收火",
-	"观象·孤衡", "碧潭·澜芷", "白垣·计勋", "南灯·欠盏", "冷湾·折弦"]
+const NO_ART := []  ## Y1-A gap speakers ingested — was 9 silhouettes
 const RECRUIT_SPEAKERS := ["新来的人"]
 
 var _rows: Array = []

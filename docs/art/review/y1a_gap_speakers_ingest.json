@@ -1,0 +1,191 @@
+[
+ {
+  "id": "v92_speaker_xinyu",
+  "speaker": "藤桥·新雨",
+  "status": "pass",
+  "metrics": {
+   "opaque_ratio": 1.0,
+   "mean_alpha_opaque": 1.0,
+   "size": [
+    768,
+    1024
+   ],
+   "gold_ratio": 0.0,
+   "parchment_ratio": 3.1789143880208336e-05,
+   "warm_ratio": 6.4849853515625e-05,
+   "mean_saturation": 0.217258021235466,
+   "cool_bias": 0.0682377889752388,
+   "pass": true,
+   "fails": []
+  },
+  "src": "v92_speaker_xinyu.png"
+ },
+ {
+  "id": "v92_speaker_ahe",
+  "speaker": "渡口·阿禾",
+  "status": "pass",
+  "metrics": {
+   "opaque_ratio": 1.0,
+   "mean_alpha_opaque": 1.0,
+   "size": [
+    768,
+    1024
+   ],
+   "gold_ratio": 1.2715657552083333e-06,
+   "parchment_ratio": 0.0038210550944010415,
+   "warm_ratio": 0.000743865966796875,
+   "mean_saturation": 0.15129418671131134,
+   "cool_bias": 0.041194215416908264,
+   "pass": true,
+   "fails": []
+  },
+  "src": "v92_speaker_ahe.png"
+ },
+ {
+  "id": "v92_speaker_hutie",
+  "speaker": "镜湖·护帖",
+  "status": "pass",
+  "metrics": {
+   "opaque_ratio": 1.0,
+   "mean_alpha_opaque": 1.0,
+   "size": [
+    768,
+    1024
+   ],
+   "gold_ratio": 0.0,
+   "parchment_ratio": 2.5431315104166665e-06,
+   "warm_ratio": 0.0023740132649739585,
+   "mean_saturation": 0.15081097185611725,
+   "cool_bias": 0.062400806695222855,
+   "pass": true,
+   "fails": []
+  },
+  "src": "v92_speaker_hutie.png"
+ },
+ {
+  "id": "v92_speaker_shouhuo",
+  "speaker": "冷窑·收火",
+  "status": "pass",
+  "metrics": {
+   "opaque_ratio": 1.0,
+   "mean_alpha_opaque": 1.0,
+   "size": [
+    768,
+    1024
+   ],
+   "gold_ratio": 0.0,
+   "parchment_ratio": 2.0345052083333332e-05,
+   "warm_ratio": 6.739298502604167e-05,
+   "mean_saturation": 0.15651293098926544,
+   "cool_bias": 0.040008071810007095,
+   "pass": true,
+   "fails": []
+  },
+  "src": "v92_speaker_shouhuo.png"
+ },
+ {
+  "id": "v92_speaker_zhexian",
+  "speaker": "冷湾·折弦",
+  "status": "pass",
+  "metrics": {
+   "opaque_ratio": 1.0,
+   "mean_alpha_opaque": 1.0,
+   "size": [
+    768,
+    1024
+   ],
+   "gold_ratio": 0.0,
+   "parchment_ratio": 0.0,
+   "warm_ratio": 0.0,
+   "mean_saturation": 0.3023931384086609,
+   "cool_bias": 0.061980534344911575,
+   "pass": true,
+   "fails": []
+  },
+  "src": "v92_speaker_zhexian.png"
+ },
+ {
+  "id": "v92_speaker_lanzhi",
+  "speaker": "碧潭·澜芷",
+  "status": "pass",
+  "metrics": {
+   "opaque_ratio": 1.0,
+   "mean_alpha_opaque": 1.0,
+   "size": [
+    768,
+    1024
+   ],
+   "gold_ratio": 0.0,
+   "parchment_ratio": 2.7974446614583332e-05,
+   "warm_ratio": 5.0862630208333336e-05,
+   "mean_saturation": 0.2558024823665619,
+   "cool_bias": 0.07261449843645096,
+   "pass": true,
+   "fails": []
+  },
+  "src": "v92_speaker_lanzhi.png"
+ },
+ {
+  "id": "v92_speaker_jixun",
+  "speaker": "白垣·计勋",
+  "status": "pass",
+  "metrics": {
+   "opaque_ratio": 1.0,
+   "mean_alpha_opaque": 1.0,
+   "size": [
+    768,
+    1024
+   ],
+   "gold_ratio": 0.0,
+   "parchment_ratio": 8.900960286458334e-06,
+   "warm_ratio": 0.0,
+   "mean_saturation": 0.1785276085138321,
+   "cool_bias": 0.05948132649064064,
+   "pass": true,
+   "fails": []
+  },
+  "src": "v92_speaker_jixun.png"
+ },
+ {
+  "id": "v92_speaker_qianzhan",
+  "speaker": "南灯·欠盏",
+  "status": "pass",
+  "metrics": {
+   "opaque_ratio": 1.0,
+   "mean_alpha_opaque": 1.0,
+   "size": [
+    768,
+    1024
+   ],
+   "gold_ratio": 0.0,
+   "parchment_ratio": 5.086263020833333e-06,
+   "warm_ratio": 1.2715657552083333e-06,
+   "mean_saturation": 0.2302272915840149,
+   "cool_bias": 0.06895539909601212,
+   "pass": true,
+   "fails": []
+  },
+  "src": "v92_speaker_qianzhan.png"
+ },
+ {
+  "id": "v92_speaker_guheng",
+  "speaker": "观象·孤衡",
+  "status": "pass",
+  "metrics": {
+   "opaque_ratio": 1.0,
+   "mean_alpha_opaque": 1.0,
+   "size": [
+    768,
+    1024
+   ],
+   "gold_ratio": 0.0,
+   "parchment_ratio": 2.0345052083333332e-05,
+   "warm_ratio": 0.00021107991536458334,
+   "mean_saturation": 0.2659982740879059,
+   "cool_bias": 0.0862177386879921,
+   "pass": true,
+   "fails": []
+  },
+  "src": "v92_speaker_guheng.png"
+ }
+]
