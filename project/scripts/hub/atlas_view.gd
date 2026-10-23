@@ -302,6 +302,77 @@ func _mobile_frame(mp: Control) -> void:
 		(func(): _set_sheet_tab(st); _show_side(true)).call_deferred()
 
 
+## mobile_chrome fit/safe-area hook. First call builds phone chrome; later calls only reflow
+## map + sheet geometry so we never duplicate MobileSheet.
+func apply_mobile_layout() -> void:
+	if not MobilePage.active(self):
+		return
+	var mp := _map_frame
+	if mp == null:
+		mp = find_child("MapFrame", true, false) as Control
+	if mp == null:
+		return
+	if not _mob:
+		_mobile_frame(mp)
+		_build_nodes()
+		_render_left()
+		_render_right()
+		_render_hud()
+		return
+	_reflow_mobile(mp)
+
+
+func _reflow_mobile(mp: Control) -> void:
+	var vp := get_viewport().get_visible_rect().size
+	var w := maxf(1280.0, vp.x * 720.0 / maxf(1.0, vp.y))
+	var top := MobilePage.TOP + 4.0
+	var h := 720.0 - top - 12.0
+	var map_w := floorf(h * MAP.size.x / MAP.size.y)
+	_col_w = w - map_w - 48.0
+	_drawer = _col_w < M_SHEET_MIN
+	if _drawer:
+		_col_w = minf(M_SHEET_W, w - 64.0)
+		map_w = minf(map_w, w - 32.0)
+	var area := Rect2(16, top, map_w, h) if not _drawer else Rect2((w - map_w) * 0.5, top, map_w, h)
+	_mbase = minf(area.size.x / MAP.size.x, area.size.y / MAP.size.y)
+	var shown := MAP.size * _mbase
+	_clip.position = (area.position + (area.size - shown) * 0.5).floor()
+	_clip.size = shown
+	mp.position = _clip.position - Vector2(2, 2)
+	mp.size = shown + Vector2(4, 4)
+	_map_frame = mp
+	_map_full = Rect2(_clip.position, shown)
+	_toast.position = _clip.position + Vector2(16, shown.y - 60)
+	_toast.add_theme_font_size_override("font_size", MobilePage.FONT)
+	var col_rect := Rect2(w - _col_w - 16.0, top, _col_w, h)
+	var left_w := col_rect.position.x - 32.0
+	_map_side = Rect2(Vector2(16, _clip.position.y), Vector2(minf(left_w, shown.x), shown.y))
+	var sheet := find_child("MobileSheet", true, false) as Control
+	if sheet:
+		sheet.position = col_rect.position
+		sheet.size = col_rect.size
+		if _drawer:
+			sheet.z_index = 10
+			_side = sheet
+		else:
+			sheet.visible = true
+			_side = null
+	var ts := ceilf(40.0 / _mbase)
+	_token.size = Vector2(ts, ts)
+	_token.pivot_offset = _token.size * 0.5
+	var tg := _token.get_child(0) as Label
+	if tg:
+		tg.size = _token.size
+		tg.add_theme_font_size_override("font_size", ceili(MobilePage.FONT / _mbase))
+	_lift = ceilf(MobilePage.HIT / _mbase) * 0.5 + ts * 0.5 + 10.0
+	_refresh_top()
+	_mobile_nodes()
+	_apply_map_xform()
+	if _drawer and _side and _side.visible:
+		_show_side(true)
+
+
+
 func _set_sheet_tab(key: String) -> void:
 	_sheet_tab = key
 	for k in _sheet_btn.keys():
@@ -1463,7 +1534,13 @@ func _modal_panel(h: float) -> Panel:
 	dim.color = Color(0.01, 0.015, 0.025, 0.66)
 	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_modal.add_child(dim)
-	var p := UIKit.panel_at(_modal, Rect2(390, 360 - h * 0.5, 500, h), 14, true)
+	var rect := Rect2(390, 360 - h * 0.5, 500, h)
+	if _mob:
+		var w := MobilePage.width(self)
+		var pw := minf(560.0, w - 48.0)
+		var ph := minf(maxf(h, 220.0), 720.0 - MobilePage.TOP - 24.0)
+		rect = Rect2((w - pw) * 0.5, maxf(MobilePage.TOP, (720.0 - ph) * 0.5), pw, ph)
+	var p := UIKit.panel_at(_modal, rect, 14, true)
 	p.add_theme_stylebox_override("panel", UIKit.glass(14, 0.92, true))
 	UIFX.pop_in(p)
 	return p
