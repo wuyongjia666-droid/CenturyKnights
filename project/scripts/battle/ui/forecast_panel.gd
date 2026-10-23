@@ -1,8 +1,23 @@
 class_name ForecastPanel
 extends RefCounted
 ## Two columns, attacker and counter. Every number is BattleRules.preview.
+## Y1-A T-P2-1: on phone, floor type and grow the box so floored labels are not
+## clipped/squashed inside the old fixed 340×132 desktop chrome.
 
-static func sides(attacker: CKCharacter, defender: CKCharacter, terrain_id: String, extras: Dictionary, atk_pos: Vector2i, def_pos: Vector2i, counter_terrain: String = "") -> Dictionary:
+const DESK_SIZE := Vector2(340, 132)
+const MOBILE_COL_MIN_W := 168.0
+const MOBILE_PANEL_MIN := Vector2(400, 196)
+const MOBILE_PAD := Vector2(28, 24)  ## stylebox margins + breathing room
+
+static func sides(
+	attacker: CKCharacter,
+	defender: CKCharacter,
+	terrain_id: String,
+	extras: Dictionary,
+	atk_pos: Vector2i,
+	def_pos: Vector2i,
+	counter_terrain: String = "",
+) -> Dictionary:
 	var ours: Dictionary = BattleRules.preview(attacker, defender, terrain_id, extras)
 	var counter := BattleRules.can_counter(attacker, defender, atk_pos, def_pos)
 	var back_tid: String = counter_terrain if counter_terrain != "" else terrain_id
@@ -53,6 +68,8 @@ static func attach(host: Node) -> void:
 	row.add_child(_column("Ours"))
 	row.add_child(_column("Theirs"))
 	host.add_child(panel)
+	if DeviceProfile.is_mobile():
+		_style_mobile(panel)
 
 
 static func _column(name: String) -> VBoxContainer:
@@ -100,6 +117,9 @@ static func refresh(host) -> void:
 	var info := sides(atk.char, def.char, tid, host._combat_extras(atk_i, def_i), atk.pos, def.pos, atk_tid)
 	_fill(panel.get_node("Cols/Ours"), BattleObjectives.text("forecast_ours"), info, false)
 	_fill(panel.get_node("Cols/Theirs"), BattleObjectives.text("forecast_theirs"), info, true)
+	# Refit after text lands so floored fonts are not clipped.
+	if DeviceProfile.is_mobile():
+		_place(host, panel)
 
 
 static func _fill(box: Node, title: String, info: Dictionary, counter_side: bool) -> void:
@@ -128,14 +148,89 @@ static func _fill(box: Node, title: String, info: Dictionary, counter_side: bool
 		body.text += "\n" + (BattleObjectives.text("link_with") % str(links[0]))
 
 
+static func _style_mobile(panel: Control) -> void:
+	## Match MobileLayout.FONT_FLOOR / MobileSide.FONT; keep key lines unclipped.
+	panel.clip_contents = false
+	var floor_px: int = MobileLayout.FONT_FLOOR
+	var style: StyleBox = panel.get_theme_stylebox("panel")
+	if style is StyleBoxFlat:
+		var s := (style as StyleBoxFlat).duplicate() as StyleBoxFlat
+		s.content_margin_left = 12
+		s.content_margin_right = 12
+		s.content_margin_top = 10
+		s.content_margin_bottom = 10
+		panel.add_theme_stylebox_override("panel", s)
+	var cols := panel.get_node_or_null("Cols") as HBoxContainer
+	if cols:
+		cols.add_theme_constant_override("separation", 20)
+	for nm in ["Ours", "Theirs"]:
+		var box := panel.get_node_or_null("Cols/%s" % nm) as VBoxContainer
+		if box == null:
+			continue
+		box.custom_minimum_size = Vector2(MOBILE_COL_MIN_W, 0)
+		box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		var title := box.get_node_or_null("Title") as Label
+		var body := box.get_node_or_null("Body") as Label
+		if title:
+			title.add_theme_font_size_override("font_size", floor_px)
+			title.clip_text = false
+			title.autowrap_mode = TextServer.AUTOWRAP_OFF
+			title.custom_minimum_size = Vector2(MOBILE_COL_MIN_W, float(floor_px) + 6.0)
+		if body:
+			body.add_theme_font_size_override("font_size", floor_px)
+			body.clip_text = false
+			body.autowrap_mode = TextServer.AUTOWRAP_OFF
+			# 5 forecast lines (+ optional link); keep a floor so VBox cannot squash glyphs.
+			body.custom_minimum_size = Vector2(MOBILE_COL_MIN_W, float(floor_px) * 5.5 + 8.0)
+
+
+static func _mobile_panel_size(panel: Control) -> Vector2:
+	var cols := panel.get_node_or_null("Cols") as Control
+	var want := MOBILE_PANEL_MIN
+	if cols != null:
+		var combined: Vector2 = cols.get_combined_minimum_size()
+		want = Vector2(
+			maxf(MOBILE_PANEL_MIN.x, combined.x + MOBILE_PAD.x),
+			maxf(MOBILE_PANEL_MIN.y, combined.y + MOBILE_PAD.y),
+		)
+	return want
+
+
 static func _place(host, panel: Control) -> void:
-	panel.size = Vector2(340, 132)
-	panel.position = Vector2(24, 560)
 	if DeviceProfile.is_mobile():
-		var top := 8.0
-		if host.has_meta("mobile_insets"):
-			top = float(host.get_meta("mobile_insets").get("top", 0.0)) + 8.0
+		_style_mobile(panel)
+		_place_mobile(host, panel)
+		return
+	panel.clip_contents = true
+	panel.custom_minimum_size = Vector2.ZERO
+	panel.size = DESK_SIZE
+	panel.position = Vector2(24, 560)
+
+
+static func _place_mobile(host, panel: Control) -> void:
+	var sz := _mobile_panel_size(panel)
+	panel.custom_minimum_size = sz
+	panel.size = sz
+	var pad_l := 12.0
+	var pad_t := 8.0
+	var x := pad_l
+	var y := 56.0
+	# Board stage (set by battle_controller._layout_board) is the safe paint rect in local px.
+	if host.has_meta("m_board_area"):
+		var area: Rect2 = host.get_meta("m_board_area")
+		x = area.position.x + pad_l
+		y = area.position.y + pad_t
+		# Keep the box inside the stage; prefer left edge (thumb rail owns the right).
+		if x + sz.x > area.end.x - 8.0:
+			x = maxf(area.position.x + 4.0, area.end.x - sz.x - 8.0)
+		if y + sz.y > area.end.y - 8.0:
+			y = maxf(area.position.y + 4.0, area.end.y - sz.y - 8.0)
+	elif host.has_meta("mobile_insets"):
+		# Fallback before first board layout: pad past notch chrome inside the fitted root.
+		var top := float(host.get_meta("mobile_insets").get("top", 0.0))
+		# Root is already shifted by MobileLayout.fit; local y=0 is below the notch.
+		# Still lift past the round/phase pill (~48).
+		y = pad_t + 48.0
 		if host.position.y + 0.5 < top:
-			panel.position = Vector2(16, top + 48)
-		else:
-			panel.position = Vector2(24, 96)
+			y = top + 48.0 - host.position.y
+	panel.position = Vector2(x, y)
