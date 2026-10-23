@@ -665,7 +665,7 @@ func _tab_overview() -> void:
 		var nl := UIKit.mono("NATION %s · %d · %s" % [str(World.nations.get(nid, {}).get("en", "")), nrep, World.rep_tier_name(nrep)], 9, UIKit.ACCENT)
 		nl.position = Vector2(18, 232)
 		p.add_child(nl)
-	var next_u := World.NATION_UNLOCKS[mini(nt + 1, 4)] if nt < 4 else "已达最高"
+	var next_u: String = str(World.NATION_UNLOCKS[mini(nt + 1, 4)]) if nt < 4 else "已达最高"
 	var nx := _para("当前：%s\n下一阶：%s" % [World.NATION_UNLOCKS[nt], next_u], UIKit.TEXT_DIM, 11 if not _mob else MobilePage.FONT, 384 if not _mob else 0)
 	if _mob:
 		nx.size_flags_horizontal = Control.SIZE_EXPAND_FILL
