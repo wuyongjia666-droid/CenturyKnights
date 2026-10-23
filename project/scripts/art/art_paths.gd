@@ -10,6 +10,12 @@ const TIER_SMALL := "small"
 const TIER_MEDIUM := "medium"
 const TIER_LARGE := "large"
 
+## Test seam (Y1-A portrait parity): (res_path: String) -> bool, true when that file is NOT
+## in the simulated export (e.g. the Android preset exclude_filter). Unset in the game.
+static var pack_excluded: Callable = Callable()
+## Last file a portrait/texture load actually decoded (parity reports; cheap string).
+static var last_loaded: String = ""
+
 
 static func tier_for_display(size: int) -> String:
 	if size <= 180:
@@ -47,16 +53,20 @@ static func load_portrait(path: String, tier: String) -> Texture2D:
 
 
 static func _load_resolved(use: String) -> Texture2D:
+	if _packed_out(use):
+		return null
 	var abs := use
 	if use.begins_with("res://"):
 		abs = ProjectSettings.globalize_path(use)
 	if FileAccess.file_exists(abs):
 		var img := Image.load_from_file(abs)
 		if img != null:
+			last_loaded = use
 			return ImageTexture.create_from_image(img)
 	if use.begins_with("res://") and ResourceLoader.exists(use):
 		var tex = load(use)
 		if tex is Texture2D:
+			last_loaded = use
 			return tex
 	return null
 
@@ -99,7 +109,13 @@ static func _webp_sibling(path: String) -> String:
 	return ""
 
 
+static func _packed_out(path: String) -> bool:
+	return pack_excluded.is_valid() and bool(pack_excluded.call(path))
+
+
 static func _exists_any(path: String) -> bool:
+	if _packed_out(path):
+		return false
 	if path.begins_with("res://"):
 		if ResourceLoader.exists(path):
 			return true
