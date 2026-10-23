@@ -259,9 +259,11 @@ class SubmitV92Test(unittest.TestCase):
         filtered = submit.filter_jobs_by_kind(self.jobs, {"speaker"})
         from_gap = [job for job in filtered if str(job.get("id", "")) in want]
         self.assertEqual(len(from_gap), 9)
+        # After art/y1a-gap-speakers-ingest, plates are on disk — queue stays for audit,
+        # but filter_jobs_missing_disk must return empty so submit skips re-farm.
         missing = submit.filter_jobs_missing_disk(from_gap)
-        self.assertEqual(len(missing), 9)
-        self.assertTrue(all(not submit.job_on_disk(job) for job in missing))
+        self.assertEqual(len(missing), 0)
+        self.assertTrue(all(submit.job_on_disk(job) for job in from_gap))
 
 
 if __name__ == "__main__":

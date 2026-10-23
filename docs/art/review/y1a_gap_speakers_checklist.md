@@ -30,3 +30,9 @@
 - `UnitArt.speaker_plate_path` 读 supporting + **antagonists**。
 - Android `exclude_filter` 已预挂 9 个 `speakers/<stem>.webp` large，只留 medium/small。
 - 路由测试：`y1a_gap_speaker_route_check`（有 path、不要求纹理已存在）。
+
+## 入库状态（本 art PR）
+
+- 色闸 PASS ×9 → `portraits/speakers/<stem>.webp` + `.medium` / `.small`
+- 报告：`docs/art/review/y1a_gap_speakers_ingest.json`
+- `dialogue_portrait_parity_check` 的 `NO_ART` 已清空；两端应同 stem `.medium.webp`
