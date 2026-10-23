@@ -69,6 +69,22 @@ static func insets_from_safe(viewport: Vector2, window: Vector2, safe: Rect2) ->
 		"bottom": maxf(0.0, (window.y - safe.end.y) * sy),
 	}
 
+## Y1-A T-P1-2: the display safe area in window px. CK_SAFE_INSETS="l,t,r,b" (window px)
+## simulates a notch / cutout on desktop + CI so screenshots and tests can exercise the
+## real inset path; on device this is DisplayServer.get_display_safe_area().
+static func safe_area(window: Vector2) -> Rect2:
+	var sim := OS.get_environment("CK_SAFE_INSETS")
+	if sim != "":
+		var v := sim.split(",")
+		if v.size() == 4:
+			var l := float(v[0])
+			var t := float(v[1])
+			return Rect2(l, t, maxf(1.0, window.x - l - float(v[2])), maxf(1.0, window.y - t - float(v[3])))
+	var safe := Rect2(DisplayServer.get_display_safe_area())
+	if safe.size.x < 1.0 or safe.size.y < 1.0:
+		return Rect2(Vector2.ZERO, window)
+	return safe
+
 static func hit_px_for(dpi: float, viewport_w: float, window_w: float) -> float:
 	## 48dp converted into viewport pixels. Floor at 48 so a low reported dpi still taps.
 	var phys := HIT_DP * maxf(dpi, 1.0) / 160.0

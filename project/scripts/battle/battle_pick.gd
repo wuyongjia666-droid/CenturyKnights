@@ -9,6 +9,29 @@ extends RefCounted
 
 ## Fraction of a cell: anything closer than this counts as that unit.
 const SOFT_R := 0.90
+## Y1-A T-P1-2: camera limits shared by pinch / wheel / pan (real transform, not just contracts).
+const ZOOM_MIN := 0.65
+const ZOOM_MAX := 2.4
+## Board pixels that must stay inside the stage on every side after a pan.
+const PAN_KEEP_PX := 64.0
+
+
+## Clamp a board pan so at least PAN_KEEP_PX of the (zoomed) board stays inside stage.
+static func clamp_pan(pan: Vector2, zoom: float, origin: Vector2, map_px: Vector2, stage: Rect2) -> Vector2:
+	var z: float = zoom if zoom > 0.001 else 1.0
+	var board: Vector2 = map_px * z
+	var o: Vector2 = origin * z
+	return Vector2(
+		clampf(pan.x, stage.position.x + PAN_KEEP_PX - o.x - board.x, stage.end.x - PAN_KEEP_PX - o.x),
+		clampf(pan.y, stage.position.y + PAN_KEEP_PX - o.y - board.y, stage.end.y - PAN_KEEP_PX - o.y))
+
+
+## Zoom about focal (battle-local px): the board point under focal stays under it.
+## Returns {"zoom", "pan"}; zoom is clamped to [ZOOM_MIN, ZOOM_MAX]. Pan is not clamped here.
+static func zoom_about(pan: Vector2, zoom: float, factor: float, focal: Vector2) -> Dictionary:
+	var old: float = zoom if zoom > 0.001 else 1.0
+	var next: float = clampf(old * factor, ZOOM_MIN, ZOOM_MAX)
+	return {"zoom": next, "pan": focal - (focal - pan) * (next / old)}
 
 
 ## Y1-A T-P1-2: pure pan/zoom invert (no Control / safe-area). screen_in_control is

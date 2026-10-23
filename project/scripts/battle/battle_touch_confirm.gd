@@ -125,6 +125,43 @@ static func commit_move(host, cell: Vector2i) -> void:
 		BattleMobileBar.rebuild(host)
 
 
+## Y1-A T-P1-2: decide once per gesture (keyed by the press origin) whether a drag is
+## "move the selected unit" or "pan the map". Only a drag whose press landed on the
+## selected player unit (soft pick, SOFT_R) is a unit drag; everything else pans and
+## never commits on release. Pinch fingers ("multi") are always pans.
+static func is_unit_drag(host, g: Dictionary) -> bool:
+	if bool(g.get("multi", false)) or not g.has("origin"):
+		return false
+	var origin: Vector2 = g.get("origin", Vector2.ZERO)
+	if host.has_meta("drag_origin") and host.get_meta("drag_origin") == origin:
+		return bool(host.get_meta("drag_unit", false))
+	var unit := _press_on_selected(host, origin)
+	host.set_meta("drag_origin", origin)
+	host.set_meta("drag_unit", unit)
+	return unit
+
+
+static func end_gesture(host) -> void:
+	for k in ["drag_origin", "drag_unit"]:
+		if host.has_meta(k):
+			host.remove_meta(k)
+
+
+static func _press_on_selected(host, origin: Vector2) -> bool:
+	if not drag_commit_enabled() or not enabled():
+		return false
+	if host.turn_team != "player" or host.battle_over or host._cut_playing:
+		return false
+	if host.selected < 0 or host.selected >= host.units.size():
+		return false
+	var su = host.units[host.selected]
+	if su.team != "player" or su.done:
+		return false
+	if host.moved_this_select and not host.attack_mode:
+		return false
+	return BattlePick.resolve(host, origin) == su.pos
+
+
 ## While dragging with a selected unit, ghost the legal landing cell under the finger.
 static func on_drag(host, screen_pos: Vector2) -> void:
 	if not drag_commit_enabled() or not enabled():

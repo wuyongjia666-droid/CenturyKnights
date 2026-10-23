@@ -92,6 +92,13 @@ func _source_contracts() -> String:
 		return "battle_controller missing long_ms_fn wire for selection"
 	if pick.find("local_after_pan_zoom") < 0 or pick.find("cell_at_local") < 0:
 		return "battle_pick missing T-P1-2 pure transform helpers"
+	# T-P1-2 real transform: the live camera must use the same helpers the contracts test.
+	if ctrl.find("BattlePick.clamp_pan(") < 0 or ctrl.find("BattlePick.zoom_about(") < 0:
+		return "battle_controller camera not on BattlePick.clamp_pan/zoom_about"
+	if ctrl.find("event.xformed_by(get_global_transform())") < 0:
+		return "battle _gui_input must lift control-local events to viewport px (safe-area double transform)"
+	if ctrl.find("BattleTouchConfirm.is_unit_drag(self, g)") < 0:
+		return "pan/drag_end not gated by unit-drag vs map-pan"
 	return ""
 
 func _soft_pick() -> String:

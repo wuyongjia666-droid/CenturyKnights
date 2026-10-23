@@ -10,6 +10,9 @@ extends RefCounted
 ## when the press origin is "sticky" (e.g. near a unit), slop grows further so a
 ## fat-finger micro-wobble cannot promote the gesture to pan and swallow the tap.
 ## Y1-A T-P1-1: optional long_ms_fn raises/disables the long-press timer (selection).
+## Y1-A T-P1-2: pan / drag_end carry the press "origin" so the board can tell a unit
+## drag from a map pan. Fingers that took part in a pinch are flagged "multi": their
+## release only swallows (no drag_end), so lifting after a pinch can never commit a move.
 
 const LONG_MS := 480
 ## Y1-A T-P1-1: when a unit is selected, slow move/confirm taps must not become
@@ -105,6 +108,7 @@ func _screen_touch(e: InputEventScreenTouch, now_ms: int) -> Array:
 			for k in _pts.keys():
 				var p: Dictionary = _pts[k]
 				p["moved"] = true
+				p["multi"] = true
 				_pts[k] = p
 			_pinch_dist = _span()
 		return out
@@ -118,7 +122,9 @@ func _screen_touch(e: InputEventScreenTouch, now_ms: int) -> Array:
 		_pinch_dist = -1.0
 	if moved:
 		# drag_end lets the board commit a drag-to-cell; swallow keeps atlas behaviour.
-		out.append({"kind": "drag_end", "pos": e.position})
+		# A finger that was part of a pinch never commits (T-P1-2).
+		if not bool(p.get("multi", false)):
+			out.append({"kind": "drag_end", "pos": e.position, "origin": p.get("origin", e.position)})
 		out.append({"kind": "swallow", "pos": e.position})
 	elif held:
 		out.append({"kind": "swallow", "pos": e.position})
@@ -146,7 +152,8 @@ func _screen_drag(e: InputEventScreenDrag, now_ms: int) -> Array:
 		_pinch_dist = dist
 		return out
 	if bool(p.get("moved", false)):
-		return [{"kind": "pan", "delta": e.position - prev, "pos": e.position}]
+		return [{"kind": "pan", "delta": e.position - prev, "pos": e.position, "origin": origin,
+			"multi": bool(p.get("multi", false))}]
 	return []
 
 func _mouse_button(e: InputEventMouseButton, now_ms: int) -> Array:
@@ -172,7 +179,8 @@ func _mouse_motion(e: InputEventMouseMotion) -> Array:
 		var prev: Vector2 = p.get("pos", e.position)
 		p["pos"] = e.position
 		_pts[-100] = p
-		return [{"kind": "pan", "delta": e.position - prev, "pos": e.position}]
+		return [{"kind": "pan", "delta": e.position - prev, "pos": e.position, "origin": p.get("origin", e.position),
+			"multi": false}]
 	return [{"kind": "hover", "pos": e.position}]
 
 func _span() -> float:
