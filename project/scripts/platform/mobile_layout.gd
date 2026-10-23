@@ -102,11 +102,9 @@ const HIT_FLOOR := 76.0
 ## Hand-placed pages whose phone redesign is owned by another line (or not done yet). The floor
 ## would push their absolute rows into each other, so they keep desktop sizes until their own
 ## apply_mobile_layout lands; that change removes the page from this list.
+## Y1-A hub floor: city / market / estates / works / forge all ship apply_mobile_layout +
+## MobilePage / MobileReflow paths, so the pending list is empty.
 const FONT_FLOOR_PENDING := [
-	"res://scenes/hub/city.tscn",
-	"res://scenes/hub/market.tscn",
-	"res://scenes/hub/estates.tscn", "res://scenes/hub/works.tscn",
-	"res://scenes/hub/forge.tscn",
 ]
 
 static func font_floor_applies(root: Node) -> bool:
