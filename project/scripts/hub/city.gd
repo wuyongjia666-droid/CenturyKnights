@@ -99,13 +99,24 @@ func _mobile_frame() -> void:
 	var w := maxf(1280.0, vp.x * 720.0 / maxf(1.0, vp.y))
 	_m_w = w
 	var top := MobilePage.TOP + 4.0
-	_tabbar.position = Vector2(16, top)
-	_tabbar.size = Vector2(w - 32.0, MobilePage.HIT)
+	# Eight tabs at 22px often need horizontal scroll on 16:9 phones.
+	var tab_host := get_node_or_null("TabScroll") as ScrollContainer
+	if tab_host == null:
+		tab_host = ScrollContainer.new()
+		tab_host.name = "TabScroll"
+		tab_host.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		tab_host.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+		remove_child(_tabbar)
+		add_child(tab_host)
+		tab_host.add_child(_tabbar)
+	tab_host.position = Vector2(16, top)
+	tab_host.size = Vector2(w - 32.0, MobilePage.HIT)
+	_tabbar.position = Vector2.ZERO
 	_tabbar.add_theme_constant_override("separation", 8)
 	for b in _tabbar.get_children():
 		var bc := b as Button
-		bc.custom_minimum_size = Vector2(0, MobilePage.HIT)
-		bc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		bc.custom_minimum_size = Vector2(148.0, MobilePage.HIT)
+		bc.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 		bc.add_theme_font_size_override("font_size", MobilePage.FONT)
 		bc.clip_text = false
 	_m_top = top + MobilePage.HIT + 12.0
@@ -126,6 +137,37 @@ func _mobile_frame() -> void:
 	body_stack.add_child(row)
 	_body = row
 	row.child_entered_tree.connect(func(_n): _queue_reflow(row))
+
+
+## Chrome calls this on fit/resize. First landscape pass frames the page; later
+## passes only retarget width so TabScroll / columns stay inside the safe area.
+func apply_mobile_layout() -> void:
+	if not MobilePage.active(self):
+		return
+	if not _mob:
+		_mobile_frame()
+		if _mob:
+			_toast.position = Vector2(32.0, 720.0 - 72.0)
+			_toast.z_index = 20
+			_toast.add_theme_font_size_override("font_size", MobilePage.FONT)
+			var foot := find_child("StitchFooter", true, false) as CanvasItem
+			if foot:
+				foot.visible = false
+			_refresh_all()
+		return
+	var vp := get_viewport().get_visible_rect().size
+	var w := maxf(1280.0, vp.x * 720.0 / maxf(1.0, vp.y))
+	if absf(w - _m_w) < 1.0:
+		_m_layout()
+		return
+	_m_w = w
+	var tab_host := get_node_or_null("TabScroll") as Control
+	if tab_host:
+		tab_host.size = Vector2(w - 32.0, MobilePage.HIT)
+	else:
+		_tabbar.size = Vector2(w - 32.0, MobilePage.HIT)
+	_m_layout()
+	_refresh_top()
 
 
 ## 概览 keeps the city card on the left; other tabs use the full width.
@@ -314,11 +356,14 @@ func _render_side() -> void:
 	fade.stretch_mode = TextureRect.STRETCH_SCALE
 	fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	th.add_child(fade)
-	var eb := UIKit.mono("%s // %s" % [str(nat.get("en", "")), World.kind_zh(city)], 9, UIKit.ACCENT)
-	eb.position = Vector2(18, 150)
-	p.add_child(eb)
-	var t := UIKit.title_label(str(n.get("name", city)), 26)
-	t.position = Vector2(18, 166)
+	if not _mob:
+		var eb := UIKit.mono("%s // %s" % [str(nat.get("en", "")), World.kind_zh(city)], 9, UIKit.ACCENT)
+		eb.position = Vector2(18, 150)
+		p.add_child(eb)
+	var t := UIKit.title_label(str(n.get("name", city)), 26 if not _mob else 28)
+	t.position = Vector2(18, 166 if not _mob else 150)
+	if _mob:
+		t.add_theme_font_size_override("font_size", 28)
 	p.add_child(t)
 	var chips := HBoxContainer.new()
 	chips.position = Vector2(18, 222)
@@ -447,14 +492,17 @@ func _panel(r: Rect2) -> Panel:
 	return p
 
 func _head(p: Control, pos: Vector2, zh: String, en: String) -> void:
-	var e := UIKit.mono(en, 9, UIKit.ACCENT, false)
-	e.clip_text = true
-	e.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-	e.position = pos
-	e.size = Vector2(220, 14)
-	p.add_child(e)
-	var t := UIKit.title_label(zh, 17)
-	t.position = pos + Vector2(0, 18 if not DeviceProfile.is_mobile() else 14)
+	if not _mob:
+		var e := UIKit.mono(en, 9, UIKit.ACCENT, false)
+		e.clip_text = true
+		e.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		e.position = pos
+		e.size = Vector2(220, 14)
+		p.add_child(e)
+	var t := UIKit.title_label(zh, MobilePage.FONT + 4 if _mob else 17)
+	t.position = pos + Vector2(0, 0 if _mob else 18)
+	if _mob:
+		t.add_theme_font_size_override("font_size", MobilePage.FONT + 4)
 	p.add_child(t)
 
 func _para(text: String, col: Color, size: int, w: float) -> Label:

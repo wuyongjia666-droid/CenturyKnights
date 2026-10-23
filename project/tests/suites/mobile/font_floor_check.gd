@@ -1,6 +1,6 @@
 extends Node
 ## Mobile type floor: MobileLayout.ensure_min_fonts lifts text to 22px (≈12dp), hides Latin
-## spaced-caps kickers, and leaves pages in FONT_FLOOR_PENDING alone.
+## spaced-caps kickers. Hub pages graduated from FONT_FLOOR_PENDING (city/market/estates/works/forge).
 
 var _fails: Array = []
 
@@ -42,14 +42,24 @@ func _ready() -> void:
 	_ok(r.get_theme_font_size("normal_font_size") >= MobileLayout.FONT_FLOOR, "rich floored")
 	_ok(big.get_theme_font_size("font_size") == 30, "big untouched")
 	_ok(skip.get_theme_font_size("font_size") == 10, "exempt untouched")
-	var pend := Control.new()
-	pend.scene_file_path = "res://scenes/hub/forge.tscn"
-	var pl := Label.new()
-	pl.add_theme_font_size_override("font_size", 10)
-	pend.add_child(pl)
-	add_child(pend)
-	MobileLayout.ensure_min_fonts(pend)
-	_ok(pl.get_theme_font_size("font_size") == 10, "pending page untouched")
+	# Graduated hub pages must accept the floor (no longer pending).
+	for path in [
+		"res://scenes/hub/city.tscn",
+		"res://scenes/hub/market.tscn",
+		"res://scenes/hub/estates.tscn",
+		"res://scenes/hub/works.tscn",
+		"res://scenes/hub/forge.tscn",
+	]:
+		var page := Control.new()
+		page.scene_file_path = path
+		_ok(MobileLayout.font_floor_applies(page), "applies %s" % path.get_file())
+		var pl := Label.new()
+		pl.add_theme_font_size_override("font_size", 10)
+		page.add_child(pl)
+		add_child(page)
+		MobileLayout.ensure_min_fonts(page)
+		_ok(pl.get_theme_font_size("font_size") == MobileLayout.FONT_FLOOR, "floored %s" % path.get_file())
+	_ok(MobileLayout.FONT_FLOOR_PENDING.is_empty(), "FONT_FLOOR_PENDING empty")
 	if _fails.is_empty():
 		print("FONT FLOOR PASS")
 		get_tree().quit(0)
