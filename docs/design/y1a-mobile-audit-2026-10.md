@@ -1,10 +1,10 @@
 # Y1-A 手游审计清单（2026-10）
 
-> 分支：`fix/y1a-touch-p1` · 基线 `main`（含 #331 / #332）  
-> 范围：T-P1-1 选中时长按门槛提高；T-P1-2 纯 pan/zoom→格契约测试。不合 main，等你说合。  
+> 分支：`fix/y1a-mech-c-dialogue-hub-layout` · 基线 `main`（含 #331–#338）  
+> 范围：机制 C 枢纽安全区 / 对话板布局。不合 main，等你说合。  
 > 用户口径：端游/Windows **有图**，手游缺或不一致；战棋难选中、操作不便。全权推进，但 **不要让用户上手玩**。
 >
-> ### 落地状态（2026-10-22）
+> ### 落地状态（2026-10-23）
 > | 项 | 状态 |
 > |---|---|
 > | 立绘机制 A（`dialogue_portrait` large 门闩） | **DONE**（#331） |
@@ -12,14 +12,15 @@
 > | T-P0-2 `SOFT_R=0.90` + 偏心测试 | **DONE**（#331） |
 > | T-P0-3 预览加粗 + 拇指确认区 + 拖到格松手确认（默认开） | **DONE**（#331） |
 > | 立绘运行时 medium 加载测试 | **DONE**（#332） |
-> | T-P1-1 选中时提高长按门槛（`LONG_MS_SELECTED=900`） | **DONE**（本分支） |
+> | T-P1-1 选中时提高长按门槛（`LONG_MS_SELECTED=900`） | **DONE**（#333 线） |
 > | T-P1-2 pan/zoom→格纯数学契约 | **DONE**（#333） |
-> | T-P1-2 真实安全区 + 镜头变换 | **PR #334**：修安全区坐标被算两次（刘海侧点偏一个内缩）、180° 翻转重排、捏合松手不落子、拖棋 vs 拖地图分开；设备上的 `get_display_safe_area` 实际返回仍需真机 |
+> | T-P1-2 真实安全区 + 镜头变换 | **DONE**（#334）：修安全区坐标被算两次；设备 `get_display_safe_area` 真机仍待签收 |
 > | T-P1-3 3D 视觉命中说明 | **DOC DONE**（见 §1.4；不改 pick） |
-> | 剧情立绘端游↔手游对齐核查 | **DONE**（#335）：无头模拟两套导出过滤，0 处未对齐；9 人两端都无图 → 见下一行 |
-> | 9 人无图农场回填（配角 4 + 反派 5） | **IN FLIGHT**：cast look/portrait 已接线；`v92_y1a_gap_speakers.json` + m173 `submit_y1a_gap_speakers_on_m173.ps1`；出图后 ingest，本阶段 PR 不含假图 |
-> | 枢纽安全区 / 对话板布局（机制 C） | **NEXT**（低置信 / 待真机；`MobileLayout.fit` 已把根节点收进安全区） |
+> | 剧情立绘端游↔手游对齐核查 | **DONE**（#335） |
+> | 9 人无图农场回填（配角 4 + 反派 5） | **DONE**（#337 cast/farm 接线；#338 入库真立绘） |
+> | 枢纽安全区 / 对话板布局（机制 C） | **本 PR**：`SpeakerCaption` 显式宽高（钉死 ≥80px）；CastleHub 手机入口改 3 列门槛 + 瓷砖高度留白，家族「同袍」不再被 NavRail 半裁；`mobile_dialogue_hub_layout_check` |
 > | 正式 APK 加速冒烟 | **BLOCKED** — box / m173 均无 KVM；**待有 KVM 或真机代理**后再跑。禁止再开无加速长跑 emulator。 |
+> | T-P2-1 Forecast / 单位信息条横屏可读 | **本 PR**（`fix/y1a-tp2-1-forecast-panel`）：字号地板 + 防挤扁契约 |
 > | 真机签收「不难选中」 | **NEXT（需用户或真机代理）** |
 > | Y1-A 签收包（可勾选） | **清单** → [`y1a-acceptance-checklist-2026-10.md`](./y1a-acceptance-checklist-2026-10.md) |
 
@@ -78,7 +79,7 @@
 | T-P1-1 | **P1 · DONE** | 误触长按 | 选中单位时 `long_ms_fn` → `LONG_MS_SELECTED=900`；慢速点选仍为 tap；故意长按仍可情报 | `input_router.gd` / `battle_controller.gd` |
 | T-P1-2 | **P1 · PR #334** | 缩放/平移后点偏 | ~~假设~~ **已证实并修复**：`_gui_input` 收到的是控件本地坐标，旧代码又做一次 `get_global_transform()` 逆变换；有安全区内缩时点偏一个内缩距离。现先抬回视口坐标；镜头上下限走 `BattlePick.clamp_pan / zoom_about`。`mobile_safe_area_touch_check` 真实 push_input 覆盖 | `battle_controller.gd` / `battle_pick.gd` / `mobile_chrome.gd` |
 | T-P1-3 | P1 · **DOC DONE** | 棋子「看起来」难点 | 原假设「模型比格子小」**不对**：3D 立像高约 1.3 格、脚踩在本格 62% 处，头部伸进**上方一格**；点头部会落到上方格。量化与后续方案见 §1.4，本阶段不改 pick | `unit_layer_3d.gd`（`FIG_CELLS`）/ `board_units.gd`（`feet_px`） |
-| T-P2-1 | P2 | 信息不够 | 血量/射程/敌我差依赖右侧信息条 + Forecast；手机横屏阶段区被压缩时可读性下降 | `forecast_panel` / `_unit_panel` 布局 |
+| T-P2-1 | **P2 · 本 PR** | 信息不够 | Forecast 桌面固定 340×132 + clip，字号被 `ensure_min_fonts` 抬到 22 后竖向挤扁；现手机：字号地板、列/面板最小尺寸、关 clip、按 `m_board_area` 安全区放置；`MobileSide` 标签最小行高；`mobile_forecast_layout_check` | `forecast_panel` / `battle_mobile_side` / `_unit_panel` |
 
 ### 1.4 T-P1-3：3D 立像的「视觉命中」说明（仅文档，不改 pick）
 
@@ -181,9 +182,11 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 - bank / 表情在 Android 最高只到 medium：半身仍应清晰，但比 Windows large 略软（**质量差一档，不是空白**）。  
 - `hireface` 排除 **不是** 缺图原因（`UnitArt.portrait` 已强制 `ft = null`）。
 
-#### 机制 C（低置信 / 待真机）— 布局
+#### 机制 C（本 PR 落地）— 布局
 
-- `UIKit.stitch_dialogue` 按 1280×720 摆 `SpeakerPlate`；手机靠 `MobileLayout` / `widen_dialogue` 适配。若某机型裁切或缩放异常，可能「像没图」（**假设**）。优先用机制 A 解释「桌面有脸、手机剪影」。
+- 证据（headless `layout.json`）：`phone_20x9_nonotch` / `tablet_4x3` 下 `SpeakerPlate` 内 Label **width≈1px + clipped**；`castle_family` 下 `Locked_bonds`「同袍」被 NavRail 半裁。
+- 修复：`SpeakerCaption` 显式 `size`/`custom_minimum_size`（≥80），`widen_dialogue` / sync 调用 `layout_speaker_caption`；CastleHub `_m_entry_grid` 列宽门槛 320→272（1600 根宽走 3 列）+ 瓷砖高度多留 6px，末行不再贴齐裁切。
+- 真机观感仍 **待签收**；自动化见 `mobile_dialogue_hub_layout_check`。
 
 #### 机制 D（数据缺口，两端一致）
 
@@ -211,8 +214,8 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 | 1–2 | 审计 + 机制 A + 触控 P0（本 PR #331） | **DONE（代码）**；真机对比仍 **NEXT** |
 | 3–4 | 每周手感包给你验 T-P0 | **NEXT（需用户真机）** |
 | 5–6 | T-P1 长按 / pan-zoom 契约 + 真实安全区 | **DONE（代码）**：#333 + PR #334；真机签收仍 **NEXT** |
-| 7–8 | 剧情立绘扫尾（机制 A 后仍剪影的节点） | **核查 DONE**（#335）；**9 人农场 IN FLIGHT**（gap queue + cast wire，无假图） |
-| 9–10 | 枢纽安全区 / 对话板布局（机制 C） | **NEXT** |
+| 7–8 | 剧情立绘扫尾（机制 A 后仍剪影的节点） | **DONE**（#335 核查；#337/#338 九人入库） |
+| 9–10 | 枢纽安全区 / 对话板布局（机制 C） | **本 PR（代码）**；真机签收仍 NEXT |
 | 11–13 | Y1-A 签收包 | **清单已写** → [`y1a-acceptance-checklist-2026-10.md`](./y1a-acceptance-checklist-2026-10.md)；真机勾完才开内容季 #1 |
 
 **不做（本阶段）**：H/I 砍库压画质；29 职 Path C 全量；Steam；合 main 未经你点头。
@@ -229,6 +232,6 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 下一刀：
 
 1. **APK 冒烟**：待有 KVM 或真机代理（本环境勿再开无加速 emulator）  
-2. ~~安全区 / `get_global_transform` 对拍~~ → PR #334（真机只需确认设备返回的安全区）  
-3. 对话板手机布局（机制 C）  
+2. ~~安全区 / `get_global_transform` 对拍~~ → **DONE** #334（真机只需确认设备返回的安全区）  
+3. ~~对话板手机布局（机制 C）~~ → **本 PR**  
 4. 真机按 [`y1a-acceptance-checklist-2026-10.md`](./y1a-acceptance-checklist-2026-10.md) 勾完后才开内容季
