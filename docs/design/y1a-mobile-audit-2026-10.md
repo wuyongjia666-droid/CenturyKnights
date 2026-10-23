@@ -20,7 +20,9 @@
 > | 9 人无图农场回填（配角 4 + 反派 5） | **DONE**（#337 cast/farm 接线；#338 入库真立绘） |
 > | 枢纽安全区 / 对话板布局（机制 C） | **本 PR**：`SpeakerCaption` 显式宽高（钉死 ≥80px）；CastleHub 手机入口改 3 列门槛 + 瓷砖高度留白，家族「同袍」不再被 NavRail 半裁；`mobile_dialogue_hub_layout_check` |
 > | 正式 APK 加速冒烟 | **BLOCKED** — box / m173 均无 KVM；**待有 KVM 或真机代理**后再跑。禁止再开无加速长跑 emulator。 |
+> | T-P2-1 Forecast / 单位信息条横屏可读 | **本 PR**（`fix/y1a-tp2-1-forecast-panel`）：字号地板 + 防挤扁契约 |
 > | 真机签收「不难选中」 | **NEXT（需用户或真机代理）** |
+> | Y1-A 签收包（可勾选） | **清单** → [`y1a-acceptance-checklist-2026-10.md`](./y1a-acceptance-checklist-2026-10.md) |
 
 ---
 
@@ -77,7 +79,7 @@
 | T-P1-1 | **P1 · DONE** | 误触长按 | 选中单位时 `long_ms_fn` → `LONG_MS_SELECTED=900`；慢速点选仍为 tap；故意长按仍可情报 | `input_router.gd` / `battle_controller.gd` |
 | T-P1-2 | **P1 · PR #334** | 缩放/平移后点偏 | ~~假设~~ **已证实并修复**：`_gui_input` 收到的是控件本地坐标，旧代码又做一次 `get_global_transform()` 逆变换；有安全区内缩时点偏一个内缩距离。现先抬回视口坐标；镜头上下限走 `BattlePick.clamp_pan / zoom_about`。`mobile_safe_area_touch_check` 真实 push_input 覆盖 | `battle_controller.gd` / `battle_pick.gd` / `mobile_chrome.gd` |
 | T-P1-3 | P1 · **DOC DONE** | 棋子「看起来」难点 | 原假设「模型比格子小」**不对**：3D 立像高约 1.3 格、脚踩在本格 62% 处，头部伸进**上方一格**；点头部会落到上方格。量化与后续方案见 §1.4，本阶段不改 pick | `unit_layer_3d.gd`（`FIG_CELLS`）/ `board_units.gd`（`feet_px`） |
-| T-P2-1 | P2 | 信息不够 | 血量/射程/敌我差依赖右侧信息条 + Forecast；手机横屏阶段区被压缩时可读性下降 | `forecast_panel` / `_unit_panel` 布局 |
+| T-P2-1 | **P2 · 本 PR** | 信息不够 | Forecast 桌面固定 340×132 + clip，字号被 `ensure_min_fonts` 抬到 22 后竖向挤扁；现手机：字号地板、列/面板最小尺寸、关 clip、按 `m_board_area` 安全区放置；`MobileSide` 标签最小行高；`mobile_forecast_layout_check` | `forecast_panel` / `battle_mobile_side` / `_unit_panel` |
 
 ### 1.4 T-P1-3：3D 立像的「视觉命中」说明（仅文档，不改 pick）
 
@@ -214,7 +216,7 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 | 5–6 | T-P1 长按 / pan-zoom 契约 + 真实安全区 | **DONE（代码）**：#333 + PR #334；真机签收仍 **NEXT** |
 | 7–8 | 剧情立绘扫尾（机制 A 后仍剪影的节点） | **DONE**（#335 核查；#337/#338 九人入库） |
 | 9–10 | 枢纽安全区 / 对话板布局（机制 C） | **本 PR（代码）**；真机签收仍 NEXT |
-| 11–13 | Y1-A 签收包 | **NEXT**；你签字后才开内容季 #1 |
+| 11–13 | Y1-A 签收包 | **清单已写** → [`y1a-acceptance-checklist-2026-10.md`](./y1a-acceptance-checklist-2026-10.md)；真机勾完才开内容季 #1 |
 
 **不做（本阶段）**：H/I 砍库压画质；29 职 Path C 全量；Steam；合 main 未经你点头。
 
@@ -232,4 +234,4 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 1. **APK 冒烟**：待有 KVM 或真机代理（本环境勿再开无加速 emulator）  
 2. ~~安全区 / `get_global_transform` 对拍~~ → **DONE** #334（真机只需确认设备返回的安全区）  
 3. ~~对话板手机布局（机制 C）~~ → **本 PR**  
-4. 真机或代理签收「不难选中」后才开内容季
+4. 真机按 [`y1a-acceptance-checklist-2026-10.md`](./y1a-acceptance-checklist-2026-10.md) 勾完后才开内容季
