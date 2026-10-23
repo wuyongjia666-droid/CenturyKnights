@@ -1,28 +1,45 @@
 # Submit the 9 Y1-A gap speakers on m173 (Qwen stills via dual_submit_stills).
 # Farm mirror D:\CenturyKnights_farm\repo may be stale (broken .git / incomplete
-# status_overlays), so this path validates ONLY the gap jobs file, then dry-runs
+# status_overlays), so this path self-checks the 9-job file only, then dry-runs
 # and submits with --jobs-from.
+#
+# Dry-run:
+#   powershell -File tools\farm_queue\submit_y1a_gap_speakers_on_m173.ps1 -DryRun
+#
+# Submit:
+#   powershell -File tools\farm_queue\submit_y1a_gap_speakers_on_m173.ps1
+param(
+    [switch]$DryRun,
+    [switch]$Dual
+)
+
 $ErrorActionPreference = "Stop"
 $env:PYTHONUTF8 = "1"
 $env:PYTHONIOENCODING = "utf-8"
 
-$Repo = if ($env:CK_FARM_REPO) { $env:CK_FARM_REPO } else { "D:\CenturyKnights_farm\repo" }
-$FarmRoot = if ($env:CK_FARM_ROOT) { $env:CK_FARM_ROOT } else { "D:\AIComics\CenturyKnights_farm" }
-$Dual = if ($env:CK_DUAL_SUBMIT) {
-  $env:CK_DUAL_SUBMIT
-} else {
-  "D:\cursor-userdata\dot-cursor\skills\aic-farm\scripts\dual_submit_stills.py"
+$Scripts = "D:\cursor-userdata\dot-cursor\skills\aic-farm\scripts"
+if (-not (Test-Path $Scripts)) { $Scripts = "C:\Users\m1736\.cursor\skills\aic-farm\scripts" }
+$Py = "C:\Users\m1736\AppData\Local\Programs\Python\Python312\python.exe"
+if (-not (Test-Path $Py)) { $Py = "python" }
+$Root = "D:\AIComics\CenturyKnights_farm"
+if (-not (Test-Path $Root)) {
+    $Alt = "D:\CenturyKnights_farm"
+    if (Test-Path $Alt) { $Root = $Alt }
 }
-$Py = if ($env:CK_PYTHON) { $env:CK_PYTHON } else { "python" }
-$Queue = Join-Path $Repo "tools\farm_queue"
-$Jobs = Join-Path $Queue "v92_y1a_gap_speakers.json"
+New-Item -ItemType Directory -Force -Path $Root | Out-Null
 
+$Queue = $PSScriptRoot
+$Jobs = Join-Path $Queue "v92_y1a_gap_speakers.json"
+$Submit = Join-Path $Queue "submit_v92_stills.py"
 if (-not (Test-Path $Jobs)) { throw "missing $Jobs — sync feat/y1a-nine-speaker-farm first" }
-if (-not (Test-Path $Dual)) { throw "missing dual_submit at $Dual" }
+if (-not (Test-Path $Submit)) { throw "missing $Submit" }
+if (-not (Test-Path (Join-Path $Scripts "dual_submit_stills.py"))) {
+    throw "missing dual_submit_stills.py under $Scripts"
+}
 
 Write-Host "=== GAP QUEUE SELF-CHECK ==="
 & $Py -c @"
-import json, sys
+import json
 from pathlib import Path
 p = Path(r'$Jobs')
 doc = json.loads(p.read_text(encoding='utf-8'))
@@ -36,21 +53,25 @@ print(f'GAP QUEUE OK jobs={len(jobs)} ids={[j[\"id\"] for j in jobs]}')
 "@
 if ($LASTEXITCODE -ne 0) { throw "gap self-check failed" }
 
-Write-Host "=== DRY-RUN ==="
-& $Py (Join-Path $Queue "submit_v92_stills.py") `
-  --farms FARM-04 `
-  --jobs-from $Jobs `
-  --farm-root $FarmRoot `
-  --dual-submit $Dual `
-  --dry-run
-if ($LASTEXITCODE -ne 0) { throw "dry-run failed" }
+$SubmitArgs = @(
+    $Submit,
+    "--root", $Root,
+    "--scripts", $Scripts,
+    "--farms", "FARM-04",
+    "--jobs-from", $Jobs,
+    "--shots-out", (Join-Path $Root "shots_v92_y1a_gap_speakers.json")
+)
+if ($DryRun) { $SubmitArgs += "--dry-run" }
+if ($Dual) { $SubmitArgs += "--dual" }
 
-Write-Host "=== SUBMIT ==="
-& $Py (Join-Path $Queue "submit_v92_stills.py") `
-  --farms FARM-04 `
-  --jobs-from $Jobs `
-  --farm-root $FarmRoot `
-  --dual-submit $Dual
-if ($LASTEXITCODE -ne 0) { throw "submit failed" }
+if ($DryRun) {
+    Write-Host "=== DRY-RUN ==="
+} else {
+    Write-Host "=== SUBMIT (Qwen-only) ==="
+}
+& $Py @SubmitArgs
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-Write-Host "=== DONE — poll with: python tools/farm_queue/poll_v92_stills.py --farms FARM-04 --kinds speaker ==="
+if (-not $DryRun) {
+    Write-Host "=== DONE — poll: python tools\farm_queue\submit_v92_stills.py --poll ==="
+}
