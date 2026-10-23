@@ -6,6 +6,8 @@ const DANGER_COL := [Color(0.55, 0.8, 0.6), Color(0.85, 0.8, 0.45), Color(0.95, 
 
 var _msg: Label
 var _list: VBoxContainer
+var _scroll: ScrollContainer
+var _tip: Label
 var _busy := false
 
 
@@ -18,20 +20,24 @@ func _ready() -> void:
 		Locale.t("wsc_q_5f411223"),
 		_back
 	)
-	var tip := UIKit.make_dim_label(Locale.t("wsc_q_b35bb92a"))
-	tip.position = Vector2(32, 64)
-	add_child(tip)
-	var scroll := ScrollContainer.new()
-	scroll.name = "QuestScroll"
-	scroll.position = Vector2(32, 94)
-	scroll.size = Vector2(1216, 560)
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	add_child(scroll)
+	_tip = UIKit.make_dim_label(Locale.t("wsc_q_b35bb92a"))
+	_tip.name = "QuestTip"
+	_tip.position = Vector2(32, 64)
+	add_child(_tip)
+	_scroll = ScrollContainer.new()
+	_scroll.name = "QuestScroll"
+	_scroll.position = Vector2(32, 94)
+	_scroll.size = Vector2(1216, 560)
+	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	add_child(_scroll)
 	_list = VBoxContainer.new()
+	_list.name = "QuestList"
 	_list.custom_minimum_size = Vector2(1200, 0)
+	_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_list.add_theme_constant_override("separation", 10)
-	scroll.add_child(_list)
+	_scroll.add_child(_list)
 	_msg = UIKit.make_label("")
+	_msg.name = "QuestMsg"
 	_msg.position = Vector2(32, 664)
 	_msg.size = Vector2(1216, 40)
 	_msg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -39,6 +45,36 @@ func _ready() -> void:
 	_render()
 	UIFX.page_enter(self)
 
+
+
+## Phone: fill the wide landscape root — tip / scroll / msg sit under the top bar; cards
+## rebuild at the live width so the desktop 1200px row cannot clip.
+func apply_mobile_layout() -> void:
+	if not MobilePage.active(self):
+		return
+	set_meta("m_center_ok", true)
+	var w := MobilePage.width(self)
+	var h := maxf(size.y, 720.0)
+	var pad := 24.0
+	var top := 64.0
+	if _tip:
+		_tip.position = Vector2(pad, top)
+		_tip.size = Vector2(w - pad * 2.0, 28)
+		_tip.add_theme_font_size_override("font_size", MobilePage.FONT)
+		_tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	var msg_h := 48.0
+	var scroll_top := top + 34.0
+	var scroll_h := maxf(200.0, h - scroll_top - msg_h - 16.0)
+	if _scroll:
+		_scroll.position = Vector2(pad, scroll_top)
+		_scroll.size = Vector2(w - pad * 2.0, scroll_h)
+	if _list:
+		_list.custom_minimum_size = Vector2(maxf(320.0, w - pad * 2.0 - 16.0), 0)
+	if _msg:
+		_msg.position = Vector2(pad, scroll_top + scroll_h + 6.0)
+		_msg.size = Vector2(w - pad * 2.0, msg_h)
+		_msg.add_theme_font_size_override("font_size", MobilePage.FONT)
+	_render()
 
 func _unhandled_input(e: InputEvent) -> void:
 	if e.is_action_pressed("ui_cancel"):
@@ -69,21 +105,26 @@ static func castle_place(q: Dictionary) -> String:
 func _section(text: String) -> void:
 	var l := UIKit.make_label(text)
 	l.add_theme_color_override("font_color", UIKit.ACCENT)
+	if DeviceProfile.is_mobile():
+		l.add_theme_font_size_override("font_size", MobilePage.FONT)
 	_list.add_child(l)
 
 
 func _card(
 	title: String, stars: int, place: String, reward: String, left: String, desc: String, btn_text: String, cb: Callable, btn_enabled: bool = true
 ) -> PanelContainer:
+	var mob := DeviceProfile.is_mobile()
+	var card_w := maxf(360.0, MobilePage.width(self) - 64.0) if mob else 1200.0
 	var card := UIKit.make_glass(10, 0.72)
-	card.custom_minimum_size = Vector2(1200, 96)
+	card.custom_minimum_size = Vector2(card_w, 96 if not mob else 120)
 	var hb := HBoxContainer.new()
 	hb.add_theme_constant_override("separation", 16)
+	hb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	card.add_child(hb)
 	var star := Label.new()
 	star.text = "★".repeat(clampi(stars, 1, 4)) + "☆".repeat(4 - clampi(stars, 1, 4))
-	star.custom_minimum_size = Vector2(92, 0)
-	star.add_theme_font_size_override("font_size", 20)
+	star.custom_minimum_size = Vector2(92 if not mob else 72, 0)
+	star.add_theme_font_size_override("font_size", MobilePage.FONT if mob else 20)
 	star.add_theme_color_override("font_color", DANGER_COL[clampi(stars, 1, 4) - 1])
 	star.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	hb.add_child(star)
@@ -91,7 +132,11 @@ func _card(
 	vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	vb.add_theme_constant_override("separation", 4)
 	hb.add_child(vb)
-	vb.add_child(UIKit.make_label(title))
+	var title_l := UIKit.make_label(title)
+	if mob:
+		title_l.add_theme_font_size_override("font_size", MobilePage.FONT)
+		title_l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	vb.add_child(title_l)
 	var meta := HBoxContainer.new()
 	meta.add_theme_constant_override("separation", 10)
 	meta.add_child(UIKit.tag_chip("@ " + place, UIKit.TEXT))
@@ -100,9 +145,13 @@ func _card(
 	vb.add_child(meta)
 	var d := UIKit.make_dim_label(desc)
 	d.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	if mob:
+		d.add_theme_font_size_override("font_size", MobilePage.FONT)
 	vb.add_child(d)
 	var b := UIKit.make_accent_button(btn_text, 150) if btn_enabled else UIKit.make_button(btn_text, 150)
-	b.custom_minimum_size = Vector2(150, 56)
+	b.custom_minimum_size = Vector2(150, MobilePage.HIT if mob else 56)
+	if mob:
+		b.add_theme_font_size_override("font_size", MobilePage.FONT)
 	b.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	b.disabled = not btn_enabled
 	if cb.is_valid():

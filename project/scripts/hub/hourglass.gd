@@ -56,6 +56,27 @@ func _ready() -> void:
 	UIFX.wire_tree(self)
 
 ## Story screens opened from a chapter go back to it once (StoryCatalog).
+
+func apply_mobile_layout() -> void:
+	if not MobilePage.active(self):
+		return
+	CKPageKit.phone_fill(self)
+	var w := MobilePage.width(self)
+	if _kpi:
+		_kpi.position = Vector2(24, CKPageKit.TOP + 8)
+		_kpi.size = Vector2(w - 48.0, 80)
+		for ch in _kpi.get_children():
+			if ch is Control:
+				(ch as Control).custom_minimum_size = Vector2(maxf(140.0, (w - 48.0 - 48.0) / 5.0), 76)
+	var row := find_child("AdvanceRow", true, false) as Control
+	if row:
+		row.position = Vector2(24, CKPageKit.BOTTOM - MobilePage.HIT - 8.0)
+		row.size = Vector2(w - 48.0, MobilePage.HIT)
+		for b in row.get_children():
+			if b is BaseButton:
+				(b as BaseButton).custom_minimum_size = Vector2(220, MobilePage.HIT)
+				(b as BaseButton).add_theme_font_size_override("font_size", MobilePage.FONT)
+
 func _back() -> void:
 	var ret := StoryCatalog.take_story_return("")
 	if ret != "":
