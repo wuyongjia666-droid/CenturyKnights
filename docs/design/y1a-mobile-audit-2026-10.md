@@ -21,6 +21,7 @@
 > | 枢纽安全区 / 对话板布局（机制 C） | **NEXT**（低置信 / 待真机；`MobileLayout.fit` 已把根节点收进安全区） |
 > | 正式 APK 加速冒烟 | **BLOCKED** — box / m173 均无 KVM；**待有 KVM 或真机代理**后再跑。禁止再开无加速长跑 emulator。 |
 > | 真机签收「不难选中」 | **NEXT（需用户或真机代理）** |
+> | Y1-A 签收包（可勾选） | **清单** → [`y1a-acceptance-checklist-2026-10.md`](./y1a-acceptance-checklist-2026-10.md) |
 
 ---
 
@@ -212,7 +213,7 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 | 5–6 | T-P1 长按 / pan-zoom 契约 + 真实安全区 | **DONE（代码）**：#333 + PR #334；真机签收仍 **NEXT** |
 | 7–8 | 剧情立绘扫尾（机制 A 后仍剪影的节点） | **核查 DONE**（#335）；**9 人农场 IN FLIGHT**（gap queue + cast wire，无假图） |
 | 9–10 | 枢纽安全区 / 对话板布局（机制 C） | **NEXT** |
-| 11–13 | Y1-A 签收包 | **NEXT**；你签字后才开内容季 #1 |
+| 11–13 | Y1-A 签收包 | **清单已写** → [`y1a-acceptance-checklist-2026-10.md`](./y1a-acceptance-checklist-2026-10.md)；真机勾完才开内容季 #1 |
 
 **不做（本阶段）**：H/I 砍库压画质；29 职 Path C 全量；Steam；合 main 未经你点头。
 
@@ -230,4 +231,4 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 1. **APK 冒烟**：待有 KVM 或真机代理（本环境勿再开无加速 emulator）  
 2. ~~安全区 / `get_global_transform` 对拍~~ → PR #334（真机只需确认设备返回的安全区）  
 3. 对话板手机布局（机制 C）  
-4. 真机或代理签收「不难选中」后才开内容季
+4. 真机按 [`y1a-acceptance-checklist-2026-10.md`](./y1a-acceptance-checklist-2026-10.md) 勾完后才开内容季
