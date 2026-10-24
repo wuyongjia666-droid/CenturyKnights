@@ -356,6 +356,10 @@ lb_dos_tutor_master,专师 · 现带学生 %d 人,Tutor · %d pupils
 lb_dos_tutor_line,专师：%s · 本年 %d/%d 次,Tutor: %s · %d/%d lessons this year
 lb_dos_tutor_head,专师,Tutor
 lb_dos_tutor_empty,还没拜专师。去旗塾配对后，这里会记下老师和本年课时。,No tutor yet. Pair at the banner school to see tutor and lessons here.
+lb_dos_missing,谱上还没有这个人,This person is not on the pedigree
+lb_dos_missing_why,档案打不开：花名册或族谱里没有这个人。先回编制挑一位现成的人。,Dossier has no one: they are not on the roster or pedigree. Pick someone who is.
+lb_dos_missing_how,点下方去花名册选人。,Tap below to open the roster and pick someone.
+lb_dos_to_roster,去花名册,To the roster
 lb_est_echo_head,上月回响,Last month echo
 lb_est_echo_empty,还没有领地月回响,No estate month echo yet
 lb_est_echo_why,在岁月沙漏度过一月后，属地/领地/委托/诞育/联姻与辞世/退役/继承月结会记在这里。,After you advance a month at the hourglass, estate/territory/commission/birth/marriage and death/retire/succession settles appear here.
