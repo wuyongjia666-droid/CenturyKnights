@@ -117,6 +117,7 @@ func _build() -> void:
 	_list.visible = false
 	add_child(_list)
 	_tabs = HBoxContainer.new()
+	_tabs.name = "CandidateTabs"
 	_tabs.position = Vector2(300, 200)
 	_tabs.add_theme_constant_override("separation", 8)
 	add_child(_tabs)
@@ -275,13 +276,36 @@ func _refresh() -> void:
 		_select(sp)
 		return
 	if GameState.marriage_candidates.is_empty():
-		var empty_msg := "春令无人应帖。再议或提高声望。"
+		## Y1-B / heir #30: empty posts get why/how + named forward CTAs (tavern / roster).
+		var title := Locale.t("lb_marriage_empty")
+		var why := Locale.t("lb_marriage_empty_why")
+		var how := Locale.t("lb_marriage_empty_how")
 		var su0 := _get_suitor()
 		if su0 != null and CKFamilyState.is_hero_party(su0) and not CKFamilyState.uses_court_posts(su0):
-			empty_msg = Locale.t("ux_empty_hero_fixed")
+			title = Locale.t("ux_empty_hero_fixed")
+			why = Locale.t("lb_marriage_empty_hero_why")
+			how = Locale.t("lb_marriage_empty_hero_how")
 		elif su0 != null and CKFamilyState.is_hero_party(su0):
-			empty_msg = Locale.t("ux_empty_hero_no_reroll")
-		_tabs.add_child(UIKit.empty_state(empty_msg))
+			title = Locale.t("ux_empty_hero_no_reroll")
+		var host := VBoxContainer.new()
+		host.name = "EmptyHost"
+		host.add_theme_constant_override("separation", 12)
+		host.add_child(CKPageKit.empty(title, why, how, 900))
+		var acts := HBoxContainer.new()
+		acts.name = "EmptyActions"
+		acts.add_theme_constant_override("separation", 12)
+		var to_t := CKPageKit.button(Locale.t("lb_marriage_to_tavern"), true, 260)
+		to_t.name = "ToTavern"
+		to_t.pressed.connect(func(): CKNav.go("res://scenes/hub/tavern.tscn"))
+		acts.add_child(to_t)
+		UIFX.wire_button(to_t)
+		var to_r := CKPageKit.button(Locale.t("lb_marriage_to_roster"), false, 260)
+		to_r.name = "ToRoster"
+		to_r.pressed.connect(func(): CKNav.go("res://scenes/hub/roster.tscn"))
+		acts.add_child(to_r)
+		UIFX.wire_button(to_r)
+		host.add_child(acts)
+		_tabs.add_child(host)
 		return
 	var suitor = _get_suitor()
 	var k := 0
