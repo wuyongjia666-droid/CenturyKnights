@@ -229,6 +229,7 @@ func _rebuild() -> void:
 	for c in _list.get_children():
 		_list.remove_child(c)
 		c.queue_free()
+	_month_echo_feel(_list)
 	var focused_done := false
 	for hid in GameState.HOLDING_DEFS.keys():
 		var def: Dictionary = GameState.HOLDING_DEFS[hid]
@@ -441,6 +442,31 @@ func _do_assign(cid: String) -> void:
 		Sfx.miss()
 
 ## WS-C #37: the first holding is open from day one (new games and old saves with none), so the page is never all grey.
+func _month_echo_feel(parent: Node) -> void:
+	## Y1-B 月循环加深：属地页回读上月领地/属地收成；尚无则 CTA 去沙漏。
+	var panel := VBoxContainer.new()
+	panel.name = "MonthEchoPanel"
+	panel.add_theme_constant_override("separation", 6)
+	panel.custom_minimum_size = Vector2(1190, 0)
+	parent.add_child(panel)
+	panel.add_child(UIKit.mono(Locale.t("lb_est_echo_head"), 9, UIKit.ACCENT, false))
+	var rows := CKEconomyState.month_echo_lines()
+	if rows.is_empty():
+		panel.add_child(CKPageKit.empty(Locale.t("lb_est_echo_empty"), Locale.t("lb_est_echo_why"), "", 1100))
+		var to_h := CKPageKit.button(Locale.t("lb_est_to_hourglass"), true, 280)
+		to_h.name = "ToHourglass"
+		to_h.pressed.connect(func(): CKNav.go("res://scenes/hub/hourglass.tscn"))
+		panel.add_child(to_h)
+		UIFX.wire_button(to_h)
+		return
+	var snap := CKEconomyState.month_echo_snapshot()
+	panel.add_child(CKPageKit.text(Locale.t("lb_est_echo_when", [str(snap.get("label", ""))]), UIKit.TEXT_DIM, 12, 1100))
+	for row in rows:
+		var line := CKPageKit.text(str(row.get("text", "")), UIKit.OK, 14, 1100)
+		line.name = "EchoLine_%s" % str(row.get("kind", "x"))
+		panel.add_child(line)
+
+
 static func grant_first_holding() -> String:
 	if not GameState.holdings.is_empty():
 		return ""

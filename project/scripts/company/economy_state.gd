@@ -1050,3 +1050,37 @@ static func market_sell(host, item: String, qty: int = 1) -> Dictionary:
 	host.mark_dirty()
 	return {"ok": true, "msg": "卖出 %s x%d" % [Locale.t(item), qty]}
 
+## Y1-B: persist last holdings/territory settle lines for hub re-read (estates / hourglass).
+static func month_echo_note(kind: String, text: String) -> void:
+	if text == "":
+		return
+	var cur: Variant = GameState.house_mods.get("month_echo", {})
+	if typeof(cur) != TYPE_DICTIONARY:
+		cur = {}
+	var d: Dictionary = cur
+	d["label"] = Calendar.label()
+	d["at"] = int(Calendar.year) * 12 + int(Calendar.month)
+	d[kind] = text
+	GameState.house_mods["month_echo"] = d
+
+
+static func month_echo_snapshot() -> Dictionary:
+	var cur: Variant = GameState.house_mods.get("month_echo", {})
+	if typeof(cur) != TYPE_DICTIONARY:
+		return {}
+	return cur
+
+
+static func month_echo_lines() -> Array:
+	var d := month_echo_snapshot()
+	var out: Array = []
+	for k in ["holdings", "territory", "commission"]:
+		var tx := str(d.get(k, ""))
+		if tx != "":
+			out.append({"kind": k, "text": tx})
+	return out
+
+
+static func month_echo_has_any() -> bool:
+	return not month_echo_lines().is_empty()
+

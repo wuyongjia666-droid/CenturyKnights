@@ -625,6 +625,7 @@ func _territory_month(ctx: Dictionary) -> void:
 	var line := CKTerritory.apply_month()
 	if line != "":
 		ctx["events"].append({"type": "territory", "text": line})
+		CKEconomyState.month_echo_note("territory", line)
 
 # ── days / calendar ───────────────────────────────────
 func advance_days(n: int) -> Array:
@@ -655,6 +656,9 @@ func advance_days(n: int) -> Array:
 func _on_month(_y: int, _m: int, _evs: Array) -> void:
 	if not _in_travel_month:
 		day = 1  # castle-side month advance resets the road calendar
+		month_reports.append({"label": Calendar.label(), "events": _evs})
+		if month_reports.size() > 6:
+			month_reports = month_reports.slice(month_reports.size() - 6)
 	for id in market.keys():
 		_regen_market(id)
 	if rivals_enabled:
