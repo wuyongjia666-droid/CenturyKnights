@@ -90,6 +90,12 @@ func _fill_tutors() -> void:
 		_tutors.add_child(_pick_row(t, Locale.t("ux_qi_shu_bow") % t.name, sub, tid == cur, func(): _assign(tid)))
 	if not any:
 		_tutors.add_child(CKPageKit.empty(Locale.t("lb_train_no_tutor_title"), Locale.t("lb_train_no_tutor_why"), "", 320))
+		## Empty tutors already says need 16+ unhurt roster; named tap CTA.
+		var to_t := CKPageKit.button(Locale.t("lb_train_to_tavern"), true, 320)
+		to_t.name = "ToTavern"
+		to_t.pressed.connect(func(): CKNav.go("res://scenes/hub/tavern.tscn"))
+		_tutors.add_child(to_t)
+		UIFX.wire_button(to_t)
 	CKPageKit.drag_through(_tutors)
 	var prev: Dictionary = CKTutor.preview(_pupil)
 	_plan.text = str(prev.get("msg", ""))

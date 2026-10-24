@@ -44,6 +44,7 @@ lb_train_tutor_wait,在左边点一个孩子，这里会列出能教他的人。
 lb_train_tutor_line,最强：%s · 学生 %d/%d,Best: %s · pupils %d/%d
 lb_train_no_tutor_title,现在没人能当老师,No one can teach
 lb_train_no_tutor_why,老师要是在团里、16 岁以上、没受伤的人。等伤好了再来。,"Tutors must be 16+, in the company and unhurt."
+lb_train_to_tavern,去酒馆招人,To the tavern
 lb_train_promo_none,暂时没人能转职,No one can change class
 lb_train_promo_none_why,团里现在的职业都还没有下一阶。打仗练级、换了基础职业以后再来看。,No current class has a next tier yet.
 lb_train_to_title_promote,去请爵转职,To title promote
