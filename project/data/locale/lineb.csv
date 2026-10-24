@@ -88,6 +88,8 @@ lb_title_done,已得,Held
 lb_title_next,下一阶,Next
 lb_title_top,已经是侯爵了,Already a marquis
 lb_title_top_why,爵位到顶了，不用再请。,The ladder ends here.
+lb_title_top_how,爵位已满；去本城办差盖印，或回旗塾带专师。,Ladder full; stamp city affairs or return to the academy.
+lb_title_to_city,去本城盖印,Go stamp in the city
 lb_title_miss_head,还差这些,Still missing
 lb_title_ready_head,条件都够了,All set
 lb_title_ready,四项都达标，可以去请下一阶爵位。,All four met; request the next title.

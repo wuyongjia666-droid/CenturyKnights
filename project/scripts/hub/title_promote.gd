@@ -53,7 +53,7 @@ func _paint_desktop() -> void:
 	grid.add_theme_constant_override("separation", 12)
 	_host.add_child(grid)
 	if rows.is_empty():
-		grid.add_child(CKPageKit.empty(Locale.t("lb_title_top"), Locale.t("lb_title_top_why"), "", 1100))
+		_add_top_empty(grid, 1100.0)
 	for row in rows:
 		grid.add_child(_req_card(row, 0.0))
 	var miss: Array = _miss_list(rows)
@@ -117,7 +117,7 @@ func _paint_mobile() -> void:
 	grid.custom_minimum_size = Vector2(content_w, 0)
 	inner.add_child(grid)
 	if rows.is_empty():
-		grid.add_child(CKPageKit.empty(Locale.t("lb_title_top"), Locale.t("lb_title_top_why"), "", content_w - 40.0))
+		_add_top_empty(grid, content_w - 40.0)
 	for row in rows:
 		grid.add_child(_req_card(row, content_w))
 	var miss: Array = _miss_list(rows)
@@ -139,6 +139,24 @@ func _paint_mobile() -> void:
 	inner.add_child(go)
 	UIFX.wire_tree(_host)
 	UIFX.stagger_children(step, 0.05, 0.2)
+
+
+func _add_top_empty(parent: Control, width: float) -> void:
+	## Y1-B / heir #30: top-of-ladder empty gets how + named ToCity (职印 / 本城之事).
+	var host := VBoxContainer.new()
+	host.name = "EmptyHost"
+	host.add_theme_constant_override("separation", 12)
+	host.add_child(CKPageKit.empty(Locale.t("lb_title_top"), Locale.t("lb_title_top_why"), Locale.t("lb_title_top_how"), width))
+	var acts := HBoxContainer.new()
+	acts.name = "EmptyActions"
+	acts.add_theme_constant_override("separation", 12)
+	var to_c := CKPageKit.button(Locale.t("lb_title_to_city"), true, mini(360, int(width)))
+	to_c.name = "ToCity"
+	to_c.pressed.connect(func(): CKNav.go("res://scenes/hub/city.tscn"))
+	acts.add_child(to_c)
+	UIFX.wire_button(to_c)
+	host.add_child(acts)
+	parent.add_child(host)
 
 func _ladder_chip(id: String, i: int, ni: int, mob: bool, step_w: float) -> Control:
 	var col: Color = UIKit.ACCENT if i == ni else (UIKit.OK if i < ni else (UIKit.TEXT if i == ni + 1 else UIKit.TEXT_FAINT))
