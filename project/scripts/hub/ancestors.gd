@@ -35,6 +35,12 @@ func _fill() -> void:
 	_honor.tooltip_text = note
 	if rows.is_empty():
 		_list.add_child(CKPageKit.empty(Locale.t("ancestor_empty"), Locale.t("lb_anc_empty_why"), Locale.t("lb_anc_empty_how"), 740))
+		## Empty stele already says deaths fill it; named tap CTA to age/battle time.
+		var to_h := CKPageKit.button(Locale.t("lb_anc_to_hourglass"), true, 740)
+		to_h.name = "ToHourglass"
+		to_h.pressed.connect(func(): CKNav.go("res://scenes/hub/hourglass.tscn"))
+		_list.add_child(to_h)
+		UIFX.wire_button(to_h)
 		for i in 2:
 			_list.add_child(_ghost_stone())
 		return

@@ -10,6 +10,7 @@ lb_anc_count,已立 %d 块碑，荣誉最多算 %d 块,"%d stones, honor counts 
 lb_anc_wall_head,碑林,Stele wall
 lb_anc_empty_why,家里还没有人去世。族人战死或者老死以后，会在这里立碑。,No one in the family has died yet.
 lb_anc_empty_how,下面是碑的样子：名字、生卒年、死因、遗言和这辈子的功绩。,Below is what a stone looks like.
+lb_anc_to_hourglass,去沙漏过月,To the hourglass
 lb_anc_years,第 %d 年生 · 第 %d 年卒,Born year %d · died year %d
 lb_anc_words,「%s」,"""%s"""
 lb_anc_deeds,功绩：%s　称号：%s,Deeds: %s  Titles: %s
