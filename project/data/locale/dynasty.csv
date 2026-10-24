@@ -216,3 +216,10 @@ lineage_regency_begin,%s 身后团中已无成年人；最年长的孩子 %s（%
 lineage_regency_status,族老代管中：%s %d 岁，满 %d 岁亲掌灰旗,Regency: %s is %d; takes the banner in person at %d
 lineage_regency_end,%s 已成年，族老交还旗务，亲掌灰旗。,%s has come of age; the elders hand back the banner.
 lb_hub_to_sui,去岁课回执,Open year-card inbox
+lb_marriage_empty,春令无人应帖,No court posts this spring
+lb_marriage_empty_why,廷上还没有可议的对象。再议抽帖，或去酒馆招人、攒声望后再来。,No one answered the court posts. Redraw, recruit at the tavern, or raise standing and return.
+lb_marriage_empty_how,点下方去酒馆扩人；花名册可换提亲方。,Tap below for the tavern; the roster can switch who proposes.
+lb_marriage_empty_hero_why,主角团姻缘走主线，不在此刷随机廷帖。,Hero-party marriages follow the story; no random court posts here.
+lb_marriage_empty_hero_how,回城堡跟主线，或换提亲方后再开廷。,Return to the hub for the main line, or switch who proposes.
+lb_marriage_to_tavern,去烽火酒馆,To the tavern
+lb_marriage_to_roster,去花名册,To the roster
