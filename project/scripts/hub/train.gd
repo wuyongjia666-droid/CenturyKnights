@@ -101,6 +101,12 @@ func _fill_promo() -> void:
 	var people: Array = GameState.roster().filter(func(ch): return not CKTutor.promote_list(ch).is_empty())
 	if people.is_empty():
 		_promo.add_child(CKPageKit.empty(Locale.t("lb_train_promo_none"), Locale.t("lb_train_promo_none_why"), "", 320))
+		## Empty promo already says reclass elsewhere; named tap CTA.
+		var to_tp := CKPageKit.button(Locale.t("lb_train_to_title_promote"), true, 320)
+		to_tp.name = "ToTitlePromote"
+		to_tp.pressed.connect(func(): CKNav.go("res://scenes/hub/title_promote.tscn"))
+		_promo.add_child(to_tp)
+		UIFX.wire_button(to_tp)
 		return
 	if _promo_id == "" or not people.any(func(ch): return ch.id == _promo_id):
 		_promo_id = str(people[0].id)
