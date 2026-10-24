@@ -23,9 +23,6 @@ func _run() -> String:
 			continue
 		if ch.is_child or GameState.lineage_path.has(ch.id):
 			ch.alive = false
-		## Adults on roster must not count as heirs for the trial filter.
-		if int(ch.age) >= 8 and (ch.is_child or GameState.lineage_path.has(ch.id)):
-			ch.alive = false
 
 	var page: Control = load("res://scenes/hub/heir_rivalry.tscn").instantiate()
 	get_tree().root.add_child(page)
@@ -41,61 +38,72 @@ func _run() -> String:
 
 
 func _audit(page: Control) -> String:
+	var err := _audit_empty(page)
+	if err != "":
+		return err
+	err = _audit_ctas(page)
+	if err != "":
+		return err
+	err = _audit_no_quarrel(page)
+	if err != "":
+		return err
+	print("heir-empty ok EmptyHost ToMarriage+ToTavern")
+	return ""
+
+
+func _audit_empty(page: Control) -> String:
 	var host := page.find_child("EmptyHost", true, false)
 	if host == null:
 		return "EmptyHost missing"
-	var none_zh := Locale.t("lb_heir_none")
-	var why_zh := Locale.t("lb_heir_none_why")
-	var how_zh := Locale.t("lb_heir_none_how")
+	var bits := {
+		"title": Locale.t("lb_heir_none"),
+		"why": Locale.t("lb_heir_none_why"),
+		"how": Locale.t("lb_heir_none_how"),
+	}
 	var seen := {"title": false, "why": false, "how": false}
 	for n in host.find_children("*", "Label", true, false):
 		var tx := str((n as Label).text)
-		if tx.find(none_zh) >= 0:
-			seen["title"] = true
-		if tx.find(why_zh) >= 0:
-			seen["why"] = true
-		if tx.find(how_zh) >= 0:
-			seen["how"] = true
+		for k in bits:
+			if tx.find(str(bits[k])) >= 0:
+				seen[k] = true
 	for k in seen:
 		if not seen[k]:
 			return "empty feel missing %s" % k
-
 	var acts := page.find_child("EmptyActions", true, false)
 	if acts == null:
 		return "EmptyActions missing"
 	if not host.is_ancestor_of(acts):
 		return "EmptyActions not under EmptyHost"
+	return ""
 
-	var to_m: Button = page.find_child("ToMarriage", true, false) as Button
-	if to_m == null:
-		return "ToMarriage missing"
-	if not to_m.visible or to_m.disabled:
-		return "ToMarriage not usable"
-	if not acts.is_ancestor_of(to_m):
-		return "ToMarriage not under EmptyActions"
-	var want_m := Locale.t("lb_heir_to_marriage")
-	if to_m.text != want_m:
-		return "ToMarriage text want=%s got=%s" % [want_m, to_m.text]
 
-	var to_t: Button = page.find_child("ToTavern", true, false) as Button
-	if to_t == null:
-		return "ToTavern missing"
-	if not to_t.visible or to_t.disabled:
-		return "ToTavern not usable"
-	if not acts.is_ancestor_of(to_t):
-		return "ToTavern not under EmptyActions"
-	var want_t := Locale.t("lb_heir_to_tavern")
-	if to_t.text != want_t:
-		return "ToTavern text want=%s got=%s" % [want_t, to_t.text]
+func _audit_ctas(page: Control) -> String:
+	var acts := page.find_child("EmptyActions", true, false)
+	if acts == null:
+		return "EmptyActions missing"
+	var pairs := [
+		["ToMarriage", "lb_heir_to_marriage"],
+		["ToTavern", "lb_heir_to_tavern"],
+	]
+	for pair in pairs:
+		var cta: Button = page.find_child(str(pair[0]), true, false) as Button
+		if cta == null:
+			return "%s missing" % pair[0]
+		if not cta.visible or cta.disabled:
+			return "%s not usable" % pair[0]
+		if not acts.is_ancestor_of(cta):
+			return "%s not under EmptyActions" % pair[0]
+		var want := Locale.t(str(pair[1]))
+		if cta.text != want:
+			return "%s text want=%s got=%s" % [pair[0], want, cta.text]
+		cta.pressed.emit()
+	return ""
 
-	## Quarrel / settle moves must stay off when there is nobody to trial.
+
+func _audit_no_quarrel(page: Control) -> String:
 	for k in ["mediate", "a", "b", "duel"]:
 		if page.find_child("Move_" + k, true, false) != null:
 			return "Move_%s present in empty state" % k
 	if page.find_child("ToInheritance", true, false) != null:
 		return "ToInheritance should not show on empty"
-
-	to_m.pressed.emit()
-	to_t.pressed.emit()
-	print("heir-empty ok EmptyHost ToMarriage+ToTavern")
 	return ""
