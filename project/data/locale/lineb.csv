@@ -344,3 +344,6 @@ lb_dos_line,%s · %d 岁 · 生命 %d/%d,%s · age %d · HP %d/%d
 lb_dos_ok,状态正常，可以出战。,Fit to deploy.
 lb_dos_blocked,现在不能出战：%s,Cannot deploy: %s
 lb_dos_home,不在团里，留在家中。,Not in the company; at home.
+lb_dos_to_city,去本城盖印,Go stamp in city
+lb_dos_seals_line,「%s」· %s,「%s」· %s
+lb_dos_seals_empty,还没有职印。特殊职要先去指定城盖印才能转。,No job seals yet. Special jobs need a city stamp first.

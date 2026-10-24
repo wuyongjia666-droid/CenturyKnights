@@ -77,3 +77,30 @@ static func promote_gate(c: CKCharacter, job_id: String) -> Dictionary:
 	if r.is_empty() or has_seal(c, job_id):
 		return {"ok": true, "msg": ""}
 	return {"ok": false, "msg": Locale.t("js_e4c54013") % [str(r.get("name", job_id)), str(World.node(str(r.get("city", ""))).get("name", r.get("city", "")))]}
+
+
+## Hub-visible: seals already on this character (id + display name + city id).
+static func stamped_rows(c: CKCharacter) -> Array:
+	var out: Array = []
+	if c == null:
+		return out
+	var seals = c.blood_meta.get("job_seals", [])
+	if typeof(seals) != TYPE_ARRAY:
+		return out
+	for jid in seals:
+		var r := seal_row(str(jid))
+		if r.is_empty():
+			out.append({"job": str(jid), "name": str(jid), "city": ""})
+		else:
+			out.append({"job": str(r.get("job", jid)), "name": str(r.get("name", jid)), "city": str(r.get("city", ""))})
+	return out
+
+
+## Best city to send a "go stamp" CTA: seal city for current from-job, else World.pos.
+static func stamp_city_hint(c: CKCharacter) -> String:
+	if c == null:
+		return str(World.pos)
+	for r in _load().get("special", []):
+		if str(r.get("from", "")) == c.job_id:
+			return str(r.get("city", World.pos))
+	return str(World.pos)
