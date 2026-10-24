@@ -231,3 +231,11 @@ lb_tavern_empty,今夜柜上无人,No one at the bar tonight
 lb_tavern_empty_why,今晚没有可招的人。点上方刷新再碰运气；本月次数用尽就等下月。,No recruits tonight. Refresh above, or wait until next month if you are out of draws.
 lb_tavern_empty_how,也可先回花名册看看现有编制。,Or open the roster and review who already enlisted.
 lb_tavern_to_roster,去花名册,To the roster
+lb_quests_active_empty,手上还没接城里的委托,No city commissions in hand
+lb_quests_active_empty_why,去舆图上任意一座城，在「委托」页签里挑一份。,Open the atlas, pick a city, and take a commission from its board.
+lb_quests_active_empty_how,点下方去舆图接城委。,Tap below to open the atlas and pick up a city job.
+lb_quests_to_atlas,去舆图,To the atlas
+lb_quests_board_empty,木板上暂时空着,The castle board is empty
+lb_quests_board_empty_why,本堡委托下个月再刷。先把在途的办完，或过月后再来看木板。,Castle jobs refresh next month. Finish active ones, or advance a month and check again.
+lb_quests_board_empty_how,点下方去沙漏过月。,Tap below to open the hourglass and advance a month.
+lb_quests_to_hourglass,去沙漏过月,To the hourglass
