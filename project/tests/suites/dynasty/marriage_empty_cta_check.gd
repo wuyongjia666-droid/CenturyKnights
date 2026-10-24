@@ -39,59 +39,67 @@ func _run() -> String:
 
 
 func _audit(page: Control) -> String:
+	var err := _audit_host(page)
+	if err != "":
+		return err
+	err = _audit_ctas(page)
+	if err != "":
+		return err
+	print("marriage-empty ok ToTavern+ToRoster under_EmptyHost=1")
+	return ""
+
+
+func _audit_host(page: Control) -> String:
 	var tabs := page.find_child("CandidateTabs", true, false)
 	if tabs == null:
 		return "CandidateTabs missing"
-
 	var host := page.find_child("EmptyHost", true, false)
 	if host == null:
 		return "EmptyHost missing"
 	if not tabs.is_ancestor_of(host):
 		return "EmptyHost not under CandidateTabs"
-
-	var none_zh := Locale.t("lb_marriage_empty")
+	var titles := [
+		Locale.t("lb_marriage_empty"),
+		Locale.t("ux_empty_hero_fixed"),
+		Locale.t("ux_empty_hero_no_reroll"),
+	]
 	var found_empty := false
 	for n in host.find_children("*", "Label", true, false):
 		var tx := str((n as Label).text)
-		if tx.find(none_zh) >= 0 or tx.find(Locale.t("ux_empty_hero_fixed")) >= 0 or tx.find(Locale.t("ux_empty_hero_no_reroll")) >= 0:
-			found_empty = true
+		for t in titles:
+			if tx.find(str(t)) >= 0:
+				found_empty = true
+				break
+		if found_empty:
 			break
 	if not found_empty:
 		return "empty title label missing"
-
-	var to_t: Button = page.find_child("ToTavern", true, false) as Button
-	if to_t == null:
-		return "ToTavern missing"
-	if not to_t.visible or not to_t.is_visible_in_tree():
-		return "ToTavern not visible"
-	if to_t.disabled:
-		return "ToTavern disabled"
-	var want_t := Locale.t("lb_marriage_to_tavern")
-	if to_t.text != want_t:
-		return "ToTavern text want=%s got=%s" % [want_t, to_t.text]
-	if not host.is_ancestor_of(to_t):
-		return "ToTavern not under EmptyHost"
-
-	var to_r: Button = page.find_child("ToRoster", true, false) as Button
-	if to_r == null:
-		return "ToRoster missing"
-	if not to_r.visible or not to_r.is_visible_in_tree():
-		return "ToRoster not visible"
-	if to_r.disabled:
-		return "ToRoster disabled"
-	var want_r := Locale.t("lb_marriage_to_roster")
-	if to_r.text != want_r:
-		return "ToRoster text want=%s got=%s" % [want_r, to_r.text]
-	if not host.is_ancestor_of(to_r):
-		return "ToRoster not under EmptyHost"
-
 	var acts := page.find_child("EmptyActions", true, false)
 	if acts == null:
 		return "EmptyActions missing"
-	if not acts.is_ancestor_of(to_t) or not acts.is_ancestor_of(to_r):
-		return "CTAs not under EmptyActions"
+	if not host.is_ancestor_of(acts):
+		return "EmptyActions not under EmptyHost"
+	return ""
 
-	to_t.pressed.emit()
-	to_r.pressed.emit()
-	print("marriage-empty ok ToTavern+ToRoster under_EmptyHost=1")
+
+func _audit_ctas(page: Control) -> String:
+	var acts := page.find_child("EmptyActions", true, false)
+	if acts == null:
+		return "EmptyActions missing"
+	var pairs := [
+		["ToTavern", "lb_marriage_to_tavern"],
+		["ToRoster", "lb_marriage_to_roster"],
+	]
+	for pair in pairs:
+		var cta: Button = page.find_child(str(pair[0]), true, false) as Button
+		if cta == null:
+			return "%s missing" % pair[0]
+		if not cta.visible or not cta.is_visible_in_tree() or cta.disabled:
+			return "%s not usable" % pair[0]
+		if not acts.is_ancestor_of(cta):
+			return "%s not under EmptyActions" % pair[0]
+		var want := Locale.t(str(pair[1]))
+		if cta.text != want:
+			return "%s text want=%s got=%s" % [pair[0], want, cta.text]
+		cta.pressed.emit()
 	return ""
