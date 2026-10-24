@@ -631,8 +631,11 @@ func attach_dynasty_end_feel(parent: Node, width: float = 520.0) -> Control:
 	parent.add_child(panel)
 	panel.add_child(UIKit.mono(Locale.t("lb_dynasty_end_head"), 11, UIKit.DANGER, false))
 	var why := Locale.t("lb_dynasty_end_why_no_heir")
-	if str(snap.get("reason", "")) == "no_leader":
+	var reason := str(snap.get("reason", ""))
+	if reason == "no_leader":
 		why = Locale.t("lb_dynasty_end_why_no_leader")
+	elif reason == "wipeout":
+		why = Locale.t("lb_dynasty_end_why_wipeout")
 	panel.add_child(CKPageKit.empty(Locale.t("lb_dynasty_end_title"), why, str(snap.get("msg", "")), maxf(280.0, width - 24.0)))
 	var to_t := CKPageKit.button(Locale.t("lb_dynasty_end_to_title"), true, mini(280.0, width))
 	to_t.name = "ToTitle"
@@ -640,6 +643,26 @@ func attach_dynasty_end_feel(parent: Node, width: float = 520.0) -> Control:
 	panel.add_child(to_t)
 	UIFX.wire_button(to_t)
 	return panel
+
+
+## After battle casualties: if no living captain remains, try succession once;
+## on fail stamp wipeout (battle flavour of the same dynasty_end stub).
+func close_after_battle() -> Dictionary:
+	if is_dynasty_ended():
+		return dynasty_end_snapshot()
+	var leader := GameState.get_leader()
+	if leader != null and leader.alive:
+		return {"ok": true, "leader": leader.id}
+	## Dead or missing captain — hand off if anyone can still take the banner.
+	if leader != null:
+		var heir := pick_heir(leader, false)
+		if heir == null:
+			heir = pick_minor_heir(leader)
+		if heir != null:
+			return transfer_banner("death")
+	var msg := Locale.t("lineage_wipeout")
+	note_dynasty_end("wipeout", msg)
+	return {"ok": false, "msg": msg, "dynasty_end": true, "reason": "wipeout"}
 
 
 func transfer_banner(reason: String) -> Dictionary:

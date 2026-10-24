@@ -83,7 +83,7 @@ static func label(c: CKCharacter) -> String:
 	return name
 
 
-static func resolve(c: CKCharacter, difficulty: int, overflow: int, seed_i: int, killer: String = "") -> Dictionary:
+static func resolve(c: CKCharacter, difficulty: int, overflow: int, seed_i: int, killer: String = "", defer_banner: bool = false) -> Dictionary:
 	if c == null or not c.alive:
 		return {"ok": false, "outcome": "skip"}
 	if str(c.faction) == "enemy":
@@ -92,7 +92,7 @@ static func resolve(c: CKCharacter, difficulty: int, overflow: int, seed_i: int,
 	rng.seed = seed_i
 	var ticket := rng.randf()
 	if mode() == MODE_CLASSIC and ticket < death_chance(difficulty, overflow):
-		_kill(c, rng, killer)
+		_kill(c, rng, killer, defer_banner)
 		return {"ok": true, "outcome": "death", "seed": seed_i}
 	var wound := _wound(c, difficulty, rng)
 	wound["seed"] = seed_i
@@ -206,12 +206,15 @@ static func _note(battle: Node, who, info: Dictionary) -> void:
 static func _settle(battle: Node) -> void:
 	var downs: Array = battle.get_meta("_ck_downs", [])
 	battle.set_meta("_ck_downs", [])
+	## Defer banner transfer until every death is applied, so mid-settle
+	## succession cannot resurrect someone still in the downs list.
 	for row in downs:
 		var c: CKCharacter = GameState.characters.get(str(row.get("id", "")))
 		if c == null:
 			continue
 		var map_id := str(row.get("map_id", ""))
-		resolve(c, GameState.battle_difficulty_from_map(map_id), int(row.get("overflow", 0)), int(row.get("seed", 1)), str(row.get("killer", "")))
+		resolve(c, GameState.battle_difficulty_from_map(map_id), int(row.get("overflow", 0)), int(row.get("seed", 1)), str(row.get("killer", "")), true)
+	Lineage.close_after_battle()
 
 
 static func _overflow(battle: Node) -> int:
@@ -273,7 +276,7 @@ static func _replace_weaker(c: CKCharacter) -> void:
 		c.stats["skl"] = int(c.stats.get("skl", 0)) + int(prev.get("skl_applied", 0))
 
 
-static func _kill(c: CKCharacter, rng: RandomNumberGenerator, killer: String) -> void:
+static func _kill(c: CKCharacter, rng: RandomNumberGenerator, killer: String, defer_banner: bool = false) -> void:
 	_replace_weaker(c)
 	_clear(c)
 	c.alive = false
@@ -301,7 +304,9 @@ static func _kill(c: CKCharacter, rng: RandomNumberGenerator, killer: String) ->
 		if str(id) != c.id:
 			kept.append(id)
 	GameState.deploy_ids = kept
-	if c.is_leader:
+	## Battle settle defers to Lineage.close_after_battle so wipeout can stamp
+	## after the full downs list; direct _kill (purse etc.) still hands off now.
+	if c.is_leader and not defer_banner:
 		Lineage.transfer_banner("death")
 
 

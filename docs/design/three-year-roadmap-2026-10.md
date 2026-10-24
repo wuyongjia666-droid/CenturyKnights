@@ -121,7 +121,7 @@
 
 ## 7. 附录 · 仍待拍板（不堵 Y1-A）
 
-- 空团/团灭是否中途「王朝终结」→ **已 stub**：无可承旗时 `house_mods.dynasty_end` + 枢纽/沙漏/属地 `DynastyEndPanel`/`ToTitle`（#382 预期；细规则仍可迭代）
+- 空团/团灭是否中途「王朝终结」→ **已 stub**：无可承旗 / 战场团灭无存活可承旗名册 → `house_mods.dynasty_end` + 枢纽/沙漏/属地 `DynastyEndPanel`/`ToTitle`（#382 + 团灭边角；细规则仍可迭代）
 - 买断定价数字
 - 安卓按需方案具体选型（如 Play Asset Delivery）
 
@@ -142,6 +142,7 @@
 
 | 日期 | 变更 |
 |------|------|
+| 2026-10-25 | Y1-B 战场团灭 → 同一 `dynasty_end`（reason=`wipeout`；战后 defer 承旗 + `close_after_battle`）+ `dynasty_wipeout_check` |
 | 2026-10-25 | Y1-B 空团结局 stub：无可承旗 → `house_mods.dynasty_end` + 枢纽/沙漏/属地可感 + `dynasty_end_stub_check` |
 | 2026-10-25 | Y1-B 诞育/联姻月回响：birth/marriage → `house_mods.month_echo` + estates 回读 + suite |
 | 2026-10-25 | Y1-B 委托月回响：交付/逾期记入 `house_mods.month_echo.commission` + estates/hourglass 回读 + suite |
