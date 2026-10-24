@@ -365,3 +365,9 @@ lb_echo_retire,%s 退役任顾问（%s 偏向）,%s retires as advisor (%s lean)
 lb_echo_death,%s 辞世，入族谱碑,%s passes; name on the stele
 lb_hg_echo_head,上月回响（离开后仍在）,Last month echo (kept)
 lb_hg_to_estates,去领地营建,To estates
+lb_dynasty_end_head,王朝终结,Dynasty ended
+lb_dynasty_end_title,灰旗无承,Banner without an heir
+lb_dynasty_end_why_no_heir,团长身后无人可承旗。本局以中途王朝终结收束；可回主菜单读档或新开一旗。,No one could take the banner after the captain. This run ends mid-way; return to the title to load or start anew.
+lb_dynasty_end_why_no_leader,名册上已无团长。本局以中途王朝终结收束；可回主菜单读档或新开一旗。,No captain remains on the roster. This run ends mid-way; return to the title to load or start anew.
+lb_dynasty_end_to_title,回主菜单,Back to title
+lb_dynasty_end_blocked,王朝已终结，岁月不再推进。,The dynasty has ended; time no longer advances.

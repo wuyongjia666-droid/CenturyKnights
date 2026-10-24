@@ -444,6 +444,8 @@ func _do_assign(cid: String) -> void:
 ## WS-C #37: the first holding is open from day one (new games and old saves with none), so the page is never all grey.
 func _month_echo_feel(parent: Node) -> void:
 	## Y1-B 月循环加深：属地页回读上月领地/属地收成；尚无则 CTA 去沙漏。
+	if Lineage.is_dynasty_ended():
+		Lineage.attach_dynasty_end_feel(parent, 1190.0)
 	var panel := VBoxContainer.new()
 	panel.name = "MonthEchoPanel"
 	panel.add_theme_constant_override("separation", 6)

@@ -51,6 +51,7 @@ func _ready() -> void:
 	_msg = CKPageKit.feedback(self)
 	_paint_kpis()
 	_show_forecast(1)
+	_feel_dynasty_end()
 	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "HOURGLASS · FROST")
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
@@ -141,8 +142,22 @@ func _line(t: String, col: Color) -> Control:
 	(r[1] as VBoxContainer).add_child(CKPageKit.text(t, col, 14, 520))
 	return r[0]
 
+func _feel_dynasty_end() -> void:
+	## Y1-B stub: empty-company / no-heir mid-run end — panel + freeze advance.
+	if not Lineage.is_dynasty_ended():
+		return
+	Lineage.attach_dynasty_end_feel(_log, 520.0)
+	for n in ["AdvanceMonth", "AdvanceSeason"]:
+		var b := find_child(n, true, false) as BaseButton
+		if b != null:
+			b.disabled = true
+
+
 func _advance(months: int, btn: Control) -> void:
 	if _busy:
+		return
+	if Lineage.is_dynasty_ended():
+		CKPageKit.say(_msg, Locale.t("lb_dynasty_end_blocked"), false)
 		return
 	_busy = true
 	var evs: Array = Calendar.advance(months)
