@@ -8,6 +8,8 @@ extends RefCounted
 ## Y1-A T-P1-2: pure pan/zoom → cell helpers for device-free contract tests.
 ## Y1-A T-P1-3: 3D figure visual bias — tap on empty cell above a unit's face/head
 ## snaps to that unit (FIG_CELLS=1.30, feet at 0.62 → y ∈ [FIG_TOP, FIG_FEET]).
+## Y1-A T-P1-4: move/place drag lands on the exact finger cell (soft-pick must not
+## steal empty legal landings beside living units).
 
 ## Fraction of a cell: anything closer than this counts as that unit.
 const SOFT_R := 0.90
@@ -84,6 +86,20 @@ static func nearest_unit_pos(origin: Vector2, cell_px: float, units: Array, loca
 	if best_i >= 0:
 		return units[best_i].pos
 	return Vector2i(-1, -1)
+
+
+
+## Pure T-P1-4 policy: move/place drag always uses the exact finger cell.
+## `soft` / `soft_has_living` document the failure mode tests prove — when soft-pick
+## would have snapped onto a neighbouring unit, we still keep `exact`.
+static func drag_move_cell(exact: Vector2i, soft: Vector2i, soft_has_living: bool) -> Vector2i:
+	if exact.x < 0:
+		return Vector2i(-1, -1)
+	# soft_has_living + soft unused on purpose: callers pass them so suites can
+	# assert soft would steal while exact remains the landing.
+	if soft_has_living and soft.x >= 0 and soft != exact:
+		return exact
+	return exact
 
 
 ## Pure math T-P1-3: when finger_cell is empty and the cell below has a living

@@ -3,6 +3,7 @@ extends Node
 ## Y1-A: SOFT_R ≥ 0.85, eccentric fat-finger cases, drag-commit + louder preview contracts.
 ## Y1-A T-P1-1/2: selected long-press raise + pure pan/zoom cell contracts.
 ## Y1-A T-P1-3: 3D figure visual-bias (face/head → unit below).
+## Y1-A T-P1-4: move-drag lands on exact finger cell (soft must not steal).
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -34,6 +35,8 @@ func _check() -> String:
 		err = _pan_zoom_cell()
 	if err == "":
 		err = _visual_bias()
+	if err == "":
+		err = _drag_land_exact()
 	OS.set_environment("CK_FORCE_MOBILE", "0")
 	return err
 
@@ -97,6 +100,12 @@ func _source_contracts() -> String:
 		return "battle_pick missing T-P1-2 pure transform helpers"
 	if pick.find("visual_bias_unit_pos") < 0 or pick.find("const FIG_TOP") < 0:
 		return "battle_pick missing T-P1-3 visual bias"
+	if pick.find("drag_move_cell") < 0:
+		return "battle_pick missing T-P1-4 drag_move_cell"
+	if conf.find("drag_land_cell") < 0 or conf.find("_clear_stale_preview") < 0:
+		return "battle_touch_confirm missing T-P1-4 drag land / stale clear"
+	if conf.find("var cell: Vector2i = BattlePick.resolve(host, screen_pos)") >= 0:
+		return "on_drag/on_drag_end still soft-resolve for land (must use drag_land_cell)"
 	# T-P1-2 real transform: the live camera must use the same helpers the contracts test.
 	if ctrl.find("BattlePick.clamp_pan(") < 0 or ctrl.find("BattlePick.zoom_about(") < 0:
 		return "battle_controller camera not on BattlePick.clamp_pan/zoom_about"
@@ -267,6 +276,30 @@ func _visual_bias() -> String:
 	var soft_stack: Vector2i = BattlePick.nearest_unit_pos(origin, cell_px, stacked, face_local)
 	if soft_stack != Vector2i(2, 1) and soft_stack != Vector2i(2, 2):
 		return "stacked case soft pick unexpected: %s" % str(soft_stack)
+	return ""
+
+
+
+func _drag_land_exact() -> String:
+	## T-P1-4: move/place drag keeps the exact finger cell even when soft would steal.
+	var exact := Vector2i(3, 4)
+	var soft := Vector2i(4, 4)  # neighbour living unit soft would prefer
+	var got: Vector2i = BattlePick.drag_move_cell(exact, soft, true)
+	if got != exact:
+		return "drag_move_cell stole empty land to soft neighbour: %s" % str(got)
+	# Soft agreeing / no living neighbour still returns exact.
+	got = BattlePick.drag_move_cell(exact, exact, false)
+	if got != exact:
+		return "drag_move_cell drifted when soft==exact: %s" % str(got)
+	got = BattlePick.drag_move_cell(exact, soft, false)
+	if got != exact:
+		return "drag_move_cell drifted with soft_has_living=false: %s" % str(got)
+	# Off-board exact stays invalid.
+	got = BattlePick.drag_move_cell(Vector2i(-1, -1), soft, true)
+	if got.x >= 0:
+		return "drag_move_cell accepted off-board exact: %s" % str(got)
+	# Source contracts already require on_drag/on_drag_end use drag_land_cell
+	# (exact for move) and clear stale preview — covered in _source_contracts.
 	return ""
 
 

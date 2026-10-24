@@ -5,6 +5,8 @@ extends RefCounted
 ## Y1-A T-P0-3: louder preview rings; drag-to-cell release can commit when
 ## settings.touch_drag_commit is on (default true on mobile). Confirm buttons
 ## stay on the thumb rail via BattleMobileBar.
+## Y1-A T-P1-4: move/place drag uses exact finger cell; attack still soft-resolves.
+## Leaving a legal cell clears the stale ghost; illegal release clears preview.
 
 static func enabled() -> bool:
 	if not (GameState.settings is Dictionary):
@@ -162,6 +164,29 @@ static func _press_on_selected(host, origin: Vector2) -> bool:
 	return BattlePick.resolve(host, origin) == su.pos
 
 
+
+## T-P1-4: land cell under a unit-drag finger.
+## Move/place → exact cell (soft-pick must not steal empty landings beside units).
+## Attack → soft resolve so fat-finger can latch onto an enemy.
+static func drag_land_cell(host, screen_pos: Vector2) -> Vector2i:
+	if host.attack_mode or int(host.preview_attack_ui) >= 0:
+		return BattlePick.resolve(host, screen_pos)
+	return host._pointer_to_cell(screen_pos)
+
+
+## Drop a stale move/attack ghost when the finger leaves a legal landing.
+static func _clear_stale_preview(host) -> void:
+	if host.preview_move_cell.x < 0 and int(host.preview_attack_ui) < 0:
+		return
+	host.preview_move_cell = Vector2i(-1, -1)
+	host.preview_attack_ui = -1
+	if DeviceProfile.is_mobile():
+		BattleMobileBar.rebuild(host)
+	if host.overlay:
+		host.overlay.queue_redraw()
+	ForecastPanel.refresh(host)
+
+
 ## While dragging with a selected unit, ghost the legal landing cell under the finger.
 static func on_drag(host, screen_pos: Vector2) -> void:
 	if not drag_commit_enabled() or not enabled():
@@ -171,8 +196,9 @@ static func on_drag(host, screen_pos: Vector2) -> void:
 	var su = host.units[host.selected]
 	if su.team != "player" or su.done:
 		return
-	var cell: Vector2i = BattlePick.resolve(host, screen_pos)
+	var cell: Vector2i = drag_land_cell(host, screen_pos)
 	if cell.x < 0:
+		_clear_stale_preview(host)
 		return
 	var ui: int = host._unit_at(cell)
 	if host.attack_mode and ui >= 0 and str(host.units[ui].team) == "enemy" and host.units[ui].char.hp > 0:
@@ -184,6 +210,8 @@ static func on_drag(host, screen_pos: Vector2) -> void:
 			if host.overlay:
 				host.overlay.queue_redraw()
 			ForecastPanel.refresh(host)
+		else:
+			_clear_stale_preview(host)
 		return
 	if ui < 0 and not host.attack_mode and not host.moved_this_select and host.move_cells.has(cell):
 		if host.preview_move_cell == cell:
@@ -194,6 +222,9 @@ static func on_drag(host, screen_pos: Vector2) -> void:
 			BattleMobileBar.rebuild(host)
 		if host.overlay:
 			host.overlay.queue_redraw()
+		return
+	# Finger left a legal landing — drop the ghost so release cannot surprise-commit.
+	_clear_stale_preview(host)
 
 
 ## Finger-up after a pan: commit preview / legal cell under the finger when drag-commit is on.
@@ -207,8 +238,9 @@ static func on_drag_end(host, screen_pos: Vector2) -> bool:
 	var su = host.units[host.selected]
 	if su.team != "player" or su.done:
 		return false
-	var cell: Vector2i = BattlePick.resolve(host, screen_pos)
+	var cell: Vector2i = drag_land_cell(host, screen_pos)
 	if cell.x < 0:
+		_clear_stale_preview(host)
 		return false
 	var ui: int = host._unit_at(cell)
 	if host.attack_mode or int(host.preview_attack_ui) >= 0:
@@ -216,10 +248,14 @@ static func on_drag_end(host, screen_pos: Vector2) -> bool:
 			host.preview_attack_ui = ui
 			confirm_attack(host)
 			return true
+		_clear_stale_preview(host)
+		return false
 	if ui < 0 and not host.moved_this_select and host.move_cells.has(cell):
 		host.preview_move_cell = cell
 		confirm_move(host)
 		return true
+	# Illegal release: clear ghost so the bar does not keep a dead Confirm.
+	_clear_stale_preview(host)
 	return false
 
 
