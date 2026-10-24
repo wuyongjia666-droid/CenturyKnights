@@ -1,5 +1,5 @@
 extends Node
-## Y1-B 专师可感：档案 LifePanel·TutorPanel — 未拜 → ToTrain/ToTavern；已拜 → 专师·课时。
+## Y1-B 专师可感：档案 TutorPanel — 未拜 → ToTrain/ToTavern；已拜 → 专师·课时。
 
 func _ready() -> void:
 	var err := await _run()
@@ -65,17 +65,17 @@ func _await_frames(n: int = 8) -> void:
 func _assert_empty(cid: String) -> String:
 	var page := _open_dossier(cid)
 	await _await_frames()
-	var life := page.find_child("LifePanel", true, false)
-	if life == null:
+	var tree := page.find_child("FamilyTree", true, false)
+	if tree == null:
 		page.queue_free()
-		return "LifePanel missing"
+		return "FamilyTree missing"
 	var panel := page.find_child("TutorPanel", true, false)
 	if panel == null:
 		page.queue_free()
 		return "TutorPanel missing (empty)"
-	if not life.is_ancestor_of(panel):
+	if not tree.is_ancestor_of(panel):
 		page.queue_free()
-		return "TutorPanel not under LifePanel"
+		return "TutorPanel not under FamilyTree"
 	var empty := page.find_child("TutorEmpty", true, false) as Label
 	if empty == null:
 		page.queue_free()
@@ -102,7 +102,7 @@ func _assert_empty(cid: String) -> String:
 	if page.find_child("ToTavern", true, false) != null:
 		page.queue_free()
 		return "ToTavern should not show when tutors exist"
-	print("dossier-tutor empty ok ToTrain under_life=1")
+	print("dossier-tutor empty ok ToTrain under_tree=1")
 	page.queue_free()
 	await get_tree().process_frame
 	return ""

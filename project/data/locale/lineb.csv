@@ -351,4 +351,5 @@ lb_dos_to_train,去旗塾拜师,To banner school
 lb_dos_tutor_na,不在学龄（1–15 岁家中子嗣才拜师）。,Not school age (house children 1–15 take tutors).
 lb_dos_tutor_master,专师 · 现带学生 %d 人,Tutor · %d pupils
 lb_dos_tutor_line,专师：%s · 本年 %d/%d 次,Tutor: %s · %d/%d lessons this year
+lb_dos_tutor_head,专师,Tutor
 lb_dos_tutor_empty,还没拜专师。去旗塾配对后，这里会记下老师和本年课时。,No tutor yet. Pair at the banner school to see tutor and lessons here.
