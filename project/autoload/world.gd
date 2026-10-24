@@ -1457,7 +1457,7 @@ func turn_in(qid: String) -> Dictionary:
 	if quest_log.size() > 20:
 		quest_log.resize(20)
 	GameState.log_event("交付委托「%s」+%d 银%s" % [q.title, silver, extra])
-	CKEconomyState.month_echo_note("commission", "交付「%s」·+%d 银" % [q.title, silver])
+	CKEconomyState.month_echo_note("commission", Locale.t("lb_echo_commission_deliver", [q.title, silver]))
 	GameState.mark_dirty()
 	world_changed.emit()
 	return {"ok": true, "msg": "交付「%s」：+%d 银，声望 +%d%s" % [q.title, silver, int(q.reward_rep), extra]}
@@ -1718,7 +1718,7 @@ func _expire_quests() -> void:
 			add_city_rep(str(q.issuer), -5)
 			_tlog("委托「%s」逾期失败（声望 -5）" % q.title)
 			quest_log.push_front("%s · 失败：%s" % [date_label(), q.title])
-			CKEconomyState.month_echo_note("commission", "逾期「%s」·声望 -5" % q.title)
+			CKEconomyState.month_echo_note("commission", Locale.t("lb_echo_commission_expire", [q.title]))
 
 ## Fight an objective at the party's current location (hunt / defend target reached earlier, or retry after a defeat)
 func quest_engage(qid: String) -> Dictionary:
