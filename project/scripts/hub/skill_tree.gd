@@ -139,6 +139,12 @@ func _fill_columns() -> void:
 			col.add_child(_node(sk))
 	if _cols.get_child_count() == 0:
 		_cols.add_child(CKPageKit.empty(Locale.t("lb_sk_no_tree"), Locale.t("lb_sk_no_tree_why"), "", 560))
+		## Empty tree already says reclass; named tap CTA to title promote.
+		var to_tp := CKPageKit.button(Locale.t("lb_sk_to_title_promote"), true, 560)
+		to_tp.name = "ToTitlePromote"
+		to_tp.pressed.connect(func(): CKNav.go("res://scenes/hub/title_promote.tscn"))
+		_cols.add_child(to_tp)
+		UIFX.wire_button(to_tp)
 	CKPageKit.drag_through(_cols)
 
 func _node(sk: Dictionary) -> Button:
