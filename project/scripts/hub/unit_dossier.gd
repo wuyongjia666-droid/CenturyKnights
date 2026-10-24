@@ -300,6 +300,7 @@ func _build() -> void:
 	tree.add_theme_constant_override("separation", 8)
 	tree_scroll.add_child(tree)
 	_archive(tree, c)
+	_yeartrace(tree, c)
 	_tree(tree, c, sheet)
 	var crest := CKPageKit.button(Locale.t("lb_dos_crest"), false, 188)
 	crest.name = "CrestPreview"
@@ -348,6 +349,45 @@ func _trait_block(parent: Node, title: String, rows: Array, col: Color) -> void:
 		sub.autowrap_mode = TextServer.AUTOWRAP_OFF
 		sub.clip_text = true
 		v.add_child(sub)
+
+
+func _yeartrace(parent: Node, focus: CKCharacter) -> void:
+	## Season-01 deepen: durable 岁课年迹 (read-only), survives inbox ack.
+	var panel := VBoxContainer.new()
+	panel.name = "YeartracePanel"
+	panel.add_theme_constant_override("separation", 4)
+	parent.add_child(panel)
+	panel.add_child(UIKit.mono("SUI · YEARTRACE", 9, UIKit.ACCENT, false))
+	if focus == null:
+		panel.add_child(UIKit.body_label("—", UIKit.TEXT_FAINT, 12))
+		return
+	var rows: Array = CKSuiKe.yeartrace_for(focus.id)
+	if rows.is_empty():
+		var empty := UIKit.body_label("尚无岁课年迹。", UIKit.TEXT_FAINT, 12)
+		empty.name = "YeartraceEmpty"
+		panel.add_child(empty)
+		return
+	# Newest last in store; show latest first, cap 6.
+	var shown := 0
+	for i in range(rows.size() - 1, -1, -1):
+		if shown >= 6:
+			break
+		var item: Dictionary = rows[i]
+		var line := "%d年%d月 · %s · %s" % [
+			int(item.get("year", 0)),
+			int(item.get("month", 0)),
+			str(item.get("title", "")),
+			str(item.get("outcome", "")),
+		]
+		var lab := UIKit.body_label(line, UIKit.TEXT, 12)
+		lab.name = "Yeartrace_%d" % shown
+		lab.autowrap_mode = TextServer.AUTOWRAP_OFF
+		lab.clip_text = true
+		lab.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+		lab.custom_minimum_size = Vector2(360, maxi(18, MobileLayout.FONT_FLOOR))
+		panel.add_child(lab)
+		shown += 1
+
 
 func _archive(parent: Node, focus: CKCharacter) -> void:
 	var arch: Dictionary = CKFamilyState.child_archive(GameState, focus)

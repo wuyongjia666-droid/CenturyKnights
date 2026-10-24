@@ -1140,6 +1140,7 @@ static func fire_and_resolve_card(card: Dictionary, year: int = -1) -> Dictionar
 		"hint": hint,
 	}
 	_inbox_rows().append(row)
+	_yeartrace_append(row, c)
 	if GameState.has_method("add_lineage_event"):
 		GameState.add_lineage_event(Locale.t("sui_auto_log", [str(card.get("title", card_id)), c.name, outcome]))
 	return row
@@ -1170,6 +1171,55 @@ static func ack(cid: String, card_id: String) -> void:
 			continue
 		kept.append(item)
 	GameState.house_mods["sui_inbox"] = kept
+
+
+
+## Durable 岁课年迹：resolve 时写入，ack 清 inbox 后仍保留，供族谱/档案只读展示。
+static func yeartrace() -> Array:
+	return _yeartrace_rows().duplicate()
+
+
+static func yeartrace_for(cid: String) -> Array:
+	var out: Array = []
+	for item in _yeartrace_rows():
+		if str(item.get("cid", "")) == cid:
+			out.append(item)
+	return out
+
+
+static func yeartrace_count() -> int:
+	return _yeartrace_rows().size()
+
+
+static func _yeartrace_rows() -> Array:
+	var raw = GameState.house_mods.get("sui_yeartrace", null)
+	if typeof(raw) != TYPE_ARRAY:
+		raw = []
+		GameState.house_mods["sui_yeartrace"] = raw
+	return raw
+
+
+static func _yeartrace_append(row: Dictionary, c: CKCharacter) -> void:
+	var entry := {
+		"cid": str(row.get("cid", "")),
+		"id": str(row.get("id", "")),
+		"title": str(row.get("title", "")),
+		"outcome": str(row.get("outcome", "")),
+		"side": str(row.get("side", "")),
+		"band": str(row.get("band", "")),
+		"year": int(row.get("year", 0)),
+		"month": int(row.get("month", 0)),
+		"who": c.name if c != null else str(row.get("cid", "")),
+		"age": int(c.age) if c != null else 0,
+	}
+	# Idempotent on same cid+id+year (re-fire / migrate).
+	var rows := _yeartrace_rows()
+	for i in range(rows.size()):
+		var r: Dictionary = rows[i]
+		if str(r.get("cid", "")) == entry["cid"] and str(r.get("id", "")) == entry["id"] and int(r.get("year", -1)) == entry["year"]:
+			rows[i] = entry
+			return
+	rows.append(entry)
 
 
 static func _inbox_rows() -> Array:
