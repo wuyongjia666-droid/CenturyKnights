@@ -219,6 +219,7 @@ func _tick_holdings(ctx: Dictionary) -> void:
 	if hy != "":
 		_events(ctx).append({"type": "holdings", "text": hy})
 		GameState.log_event(hy)
+		CKEconomyState.month_echo_note("holdings", hy)
 
 func _tick_doctrine(ctx: Dictionary) -> void:
 	var dm = GameState.tick_doctrine_and_marriage_month()

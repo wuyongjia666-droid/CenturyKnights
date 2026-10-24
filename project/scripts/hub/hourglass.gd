@@ -23,7 +23,7 @@ func _ready() -> void:
 	var lc := CKPageKit.card(self, Rect2(648, CKPageKit.TOP + 92, 590, 360), "ResultCard")
 	CKPageKit.card_head(lc, Locale.t("lb_hg_last"), "RESULT")
 	_log = CKPageKit.list(lc, Rect2(14, 58, 562, 290), "Result")
-	_log.add_child(CKPageKit.empty(Locale.t("lb_hg_empty"), Locale.t("lb_hg_empty_why"), "", 520))
+	_paint_result_initial()
 	var row := HBoxContainer.new()
 	row.name = "AdvanceRow"
 	row.position = Vector2(42, CKPageKit.TOP + 466)
@@ -76,6 +76,26 @@ func apply_mobile_layout() -> void:
 			if b is BaseButton:
 				(b as BaseButton).custom_minimum_size = Vector2(220, MobilePage.HIT)
 				(b as BaseButton).add_theme_font_size_override("font_size", MobilePage.FONT)
+
+
+func _paint_result_initial() -> void:
+	## Re-read last holdings/territory echo after leave; empty still nudges advance.
+	if CKEconomyState.month_echo_has_any():
+		_log.add_child(UIKit.mono(Locale.t("lb_hg_echo_head"), 11, UIKit.ACCENT, false))
+		var snap := CKEconomyState.month_echo_snapshot()
+		_log.add_child(CKPageKit.text(Locale.t("lb_est_echo_when", [str(snap.get("label", ""))]), UIKit.TEXT_DIM, 12, 520))
+		for row in CKEconomyState.month_echo_lines():
+			var line := _line(str(row.get("text", "")), UIKit.OK)
+			line.name = "EchoLine_%s" % str(row.get("kind", "x"))
+			_log.add_child(line)
+		var to_e := CKPageKit.button(Locale.t("lb_hg_to_estates"), false, 220)
+		to_e.name = "ToEstates"
+		to_e.pressed.connect(func(): CKNav.go("res://scenes/hub/estates.tscn"))
+		_log.add_child(to_e)
+		UIFX.wire_button(to_e)
+	else:
+		_log.add_child(CKPageKit.empty(Locale.t("lb_hg_empty"), Locale.t("lb_hg_empty_why"), "", 520))
+
 
 func _back() -> void:
 	var ret := StoryCatalog.take_story_return("")
