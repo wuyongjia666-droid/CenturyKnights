@@ -139,24 +139,10 @@ func _resolve(k: String) -> void:
 	_show()
 
 func _mobile_after_show() -> void:
-	## _resolve / ambition pick rebuild Answers; re-stack so Pick_* / ToRivals stay tappable.
-	if DeviceProfile.is_mobile():
-		call_deferred("_mobile_relayout_answers")
-
-func _mobile_relayout_answers() -> void:
-	if not DeviceProfile.is_mobile() or not is_inside_tree():
-		return
-	var board := find_child("InheritBoard", true, false) as Control
-	if board == null:
-		return
-	if _body != null:
-		_body.size.x = maxf(280.0, board.size.x - 44.0)
-		_body.custom_minimum_size = Vector2(_body.size.x, 0)
-		_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		_body.clip_text = false
-		_body.size.y = maxf(_body.get_minimum_size().y + 8.0, 80.0)
-	_mobile_stack_answers(board)
-	MobileLayout.ensure_min_fonts(self)
+	## _resolve / ambition pick rebuild Answers; full mobile layout so AnswerScroll /
+	## FONT_FLOOR / HIT / phone_fill stick on the done-year re-show (not a partial restack).
+	if DeviceProfile.is_mobile() and is_inside_tree():
+		call_deferred("apply_mobile_layout")
 
 func apply_mobile_layout() -> void:
 	## Unlock fixed body/card heights; stack answers in a scroll so FONT_FLOOR does not squash.
