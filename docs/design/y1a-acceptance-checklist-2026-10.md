@@ -22,7 +22,7 @@
 
 ## 2. 代码侧已合 / 待合对照
 
-相对表述：待合项勾「PR 绿 + 你说合」后再勾体验项。
+相对表述：Y1-A / hub-mobile 类 PR **CI 全绿后由 playforge 自合**（`--merge --delete-branch`）；体验项仍待真机勾，不因 CI 绿自动算过关。
 
 | PR | 主题 | 状态（相对 main） | 勾 |
 |----|------|-------------------|----|
@@ -40,9 +40,9 @@
 | #342 | Y1-A 真机签收勾选清单（本文） | 已合 | [x] |
 | #343 | 枢纽缺页手机排版：skill/quests/shrine/title+ | 已合 | [x] |
 | #344 | 本城之事浮层 + atlas `apply_mobile_layout` / 领地模态 | 已合 | [x] |
-| （本刀） | 枢纽残留挤扁：dossier / rival / inheritance + 签收清单 | **本 PR** → 绿且你说合后再勾 | [ ] |
+| #345 | 枢纽残留挤扁：dossier / rival / inheritance + 签收清单 | 已合 | [x] |
 
-建议：本刀 CI 绿后说「合 #<本PR>」。枢纽 `apply_mobile_layout` 代码侧扫尾完成后，下一门是真机签收（同 commit 的 Windows + Android）。
+纪律（2026-10-24）：Y1-A / hub-mobile **CI 全绿**的 PR 由 playforge 自行 merge，不再开「合不集合」确认。仍禁止花钱 / force-push。枢纽 `apply_mobile_layout` 代码侧扫尾（至 #345）已完成后，**下一门是真机签收**（同 commit 的 Windows + Android）。
 
 ---
 
@@ -105,7 +105,7 @@
 | T-P1-3 改 pick 几何（视觉偏置 / 轮廓矩形 / 3D 射线） | 等 §3.1 手感签收后再议，避免叠变量 |
 | 压包砍画质（H/I） | 保画质；包体另线按需下载 |
 | 29 职 Path C 全量 / 纹章大改 / Steam | 不进 Y1-A |
-| 未经你点头合 main / force-push | 纪律不变 |
+| 花钱 / force-push；非 Y1-A·hub-mobile 范围擅自合 main | 自合仅限 Y1-A / hub-mobile 且 CI 全绿；体验过关仍靠真机勾 |
 
 ---
 

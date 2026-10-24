@@ -1,7 +1,7 @@
 # Y1-A 手游审计清单（2026-10）
 
 > 分支：`fix/y1a-mech-c-dialogue-hub-layout` · 基线 `main`（含 #331–#338）  
-> 范围：机制 C 枢纽安全区 / 对话板布局。不合 main，等你说合。  
+> 范围：机制 C 枢纽安全区 / 对话板布局。合入纪律（2026-10-24）：Y1-A / hub-mobile CI 全绿由 playforge 自合；体验项仍待真机签收。  
 > 用户口径：端游/Windows **有图**，手游缺或不一致；战棋难选中、操作不便。全权推进，但 **不要让用户上手玩**。
 >
 > ### 落地状态（2026-10-23）
@@ -18,10 +18,10 @@
 > | T-P1-3 3D 视觉命中说明 | **DOC DONE**（见 §1.4；不改 pick） |
 > | 剧情立绘端游↔手游对齐核查 | **DONE**（#335） |
 > | 9 人无图农场回填（配角 4 + 反派 5） | **DONE**（#337 cast/farm 接线；#338 入库真立绘） |
-> | 枢纽安全区 / 对话板布局（机制 C） | **本 PR**：`SpeakerCaption` 显式宽高（钉死 ≥80px）；CastleHub 手机入口改 3 列门槛 + 瓷砖高度留白，家族「同袍」不再被 NavRail 半裁；`mobile_dialogue_hub_layout_check` |
+> | 枢纽安全区 / 对话板布局（机制 C） | **DONE（#339）**：`SpeakerCaption` 显式宽高（钉死 ≥80px）；CastleHub 手机入口改 3 列门槛 + 瓷砖高度留白，家族「同袍」不再被 NavRail 半裁；`mobile_dialogue_hub_layout_check` |
 > | 正式 APK 加速冒烟 | **BLOCKED** — box / m173 均无 KVM；**待有 KVM 或真机代理**后再跑。禁止再开无加速长跑 emulator。 |
-> | T-P2-1 Forecast / 单位信息条横屏可读 | **本 PR**（`fix/y1a-tp2-1-forecast-panel`）：字号地板 + 防挤扁契约 |
-> | 枢纽 apply_mobile 扫尾（dossier/rival/inheritance 挤扁硬修） | **本 PR（代码）**；真机签收仍 NEXT |
+> | T-P2-1 Forecast / 单位信息条横屏可读 | **DONE（#341）**：字号地板 + 防挤扁契约 |
+> | 枢纽 apply_mobile 扫尾（dossier/rival/inheritance 挤扁硬修） | **DONE（#345）**；真机签收仍 NEXT |
 > | 真机签收「不难选中」 | **NEXT（需用户或真机代理）** |
 > | Y1-A 签收包（可勾选） | **清单** → [`y1a-acceptance-checklist-2026-10.md`](./y1a-acceptance-checklist-2026-10.md) |
 
@@ -216,10 +216,10 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 | 3–4 | 每周手感包给你验 T-P0 | **NEXT（需用户真机）** |
 | 5–6 | T-P1 长按 / pan-zoom 契约 + 真实安全区 | **DONE（代码）**：#333 + PR #334；真机签收仍 **NEXT** |
 | 7–8 | 剧情立绘扫尾（机制 A 后仍剪影的节点） | **DONE**（#335 核查；#337/#338 九人入库） |
-| 9–10 | 枢纽安全区 / 对话板布局（机制 C） | **本 PR（代码）**；真机签收仍 NEXT |
+| 9–10 | 枢纽安全区 / 对话板布局（机制 C） | **DONE（#339+#345 等）**；真机签收仍 NEXT |
 | 11–13 | Y1-A 签收包 | **清单已写** → [`y1a-acceptance-checklist-2026-10.md`](./y1a-acceptance-checklist-2026-10.md)；真机勾完才开内容季 #1 |
 
-**不做（本阶段）**：H/I 砍库压画质；29 职 Path C 全量；Steam；合 main 未经你点头。
+**不做（本阶段）**：H/I 砍库压画质；29 职 Path C 全量；Steam；花钱 / force-push。Y1-A·hub-mobile CI 绿由 playforge 自合。
 
 ---
 
