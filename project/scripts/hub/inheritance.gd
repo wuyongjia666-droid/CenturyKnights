@@ -57,9 +57,12 @@ func _show() -> void:
 	var pz := Locale.t("lb_path_" + path) if path != "" else Locale.t("lb_path_none")
 	if _done_this_year():
 		_body.text = Locale.t("lb_inh_done", [str(GameState.house_mods.get("inherit_answer_zh", "")), Calendar.year + 1])
-		_cards.add_child(CKPageKit.button(Locale.t("lb_inh_to_rivals"), false, 260))
-		(_cards.get_child(0) as Button).pressed.connect(func(): CKNav.go("res://scenes/hub/rival_houses.tscn"))
+		var to_rivals := CKPageKit.button(Locale.t("lb_inh_to_rivals"), false, 260)
+		to_rivals.name = "ToRivals"
+		to_rivals.pressed.connect(func(): CKNav.go("res://scenes/hub/rival_houses.tscn"))
+		_cards.add_child(to_rivals)
 		UIFX.wire_tree(_cards)
+		_mobile_after_show()
 		return
 	_body.text = Locale.t("lb_inh_envoy", [hname, pz])
 	for k in CHOICES:
@@ -82,6 +85,7 @@ func _show() -> void:
 		v.add_child(b)
 		_cards.add_child(p)
 	UIFX.wire_tree(_cards)
+	_mobile_after_show()
 
 func _show_offer(leader: CKCharacter) -> void:
 	var lines: PackedStringArray = PackedStringArray()
@@ -106,6 +110,7 @@ func _show_offer(leader: CKCharacter) -> void:
 		v.add_child(b)
 		_cards.add_child(p)
 	UIFX.wire_tree(_cards)
+	_mobile_after_show()
 
 func _pick_ambition(id: String) -> void:
 	if not _AMB.choose(id):
@@ -132,6 +137,26 @@ func _resolve(k: String) -> void:
 	GameState.save_game()
 	CKPageKit.say(_msg, Locale.t("lb_inh_%s_ok" % k), true)
 	_show()
+
+func _mobile_after_show() -> void:
+	## _resolve / ambition pick rebuild Answers; re-stack so Pick_* / ToRivals stay tappable.
+	if DeviceProfile.is_mobile():
+		call_deferred("_mobile_relayout_answers")
+
+func _mobile_relayout_answers() -> void:
+	if not DeviceProfile.is_mobile() or not is_inside_tree():
+		return
+	var board := find_child("InheritBoard", true, false) as Control
+	if board == null:
+		return
+	if _body != null:
+		_body.size.x = maxf(280.0, board.size.x - 44.0)
+		_body.custom_minimum_size = Vector2(_body.size.x, 0)
+		_body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_body.clip_text = false
+		_body.size.y = maxf(_body.get_minimum_size().y + 8.0, 80.0)
+	_mobile_stack_answers(board)
+	MobileLayout.ensure_min_fonts(self)
 
 func apply_mobile_layout() -> void:
 	## Unlock fixed body/card heights; stack answers in a scroll so FONT_FLOOR does not squash.
@@ -193,6 +218,11 @@ func _mobile_stack_answers(board: Control) -> void:
 		if not (c is Control):
 			continue
 		var pc := c as Control
+		if pc is BaseButton:
+			## Done-year ToRivals is a bare button (no Answer_* card).
+			pc.custom_minimum_size = Vector2(minf(col_w, maxf(pc.custom_minimum_size.x, 200.0)), maxf(pc.custom_minimum_size.y, MobilePage.HIT))
+			pc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			continue
 		pc.custom_minimum_size = Vector2(col_w, maxf(pc.custom_minimum_size.y, 200.0))
 		pc.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		for lab in pc.find_children("*", "Label", true, false):
