@@ -410,7 +410,28 @@ func _archive(parent: Node, focus: CKCharacter) -> void:
 
 func _tree(parent: Node, focus: CKCharacter, sheet: Dictionary) -> void:
 	if focus == null:
-		parent.add_child(UIKit.empty_state("谱上还没有这个人。"))
+		## Y1-B / heir #30: missing person → why/how + named ToRoster (matches _back default).
+		var host := VBoxContainer.new()
+		host.name = "EmptyHost"
+		host.add_theme_constant_override("separation", 12)
+		host.add_child(CKPageKit.empty(
+			Locale.t("lb_dos_missing"),
+			Locale.t("lb_dos_missing_why"),
+			Locale.t("lb_dos_missing_how"),
+			360
+		))
+		var acts := HBoxContainer.new()
+		acts.name = "EmptyActions"
+		acts.add_theme_constant_override("separation", 12)
+		var to_r := CKPageKit.button(Locale.t("lb_dos_to_roster"), true, 300)
+		to_r.name = "ToRoster"
+		to_r.pressed.connect(func():
+			Sfx.click()
+			CKNav.go("res://scenes/hub/roster.tscn"))
+		acts.add_child(to_r)
+		UIFX.wire_button(to_r)
+		host.add_child(acts)
+		parent.add_child(host)
 		return
 	var focus_states := {}
 	for e in sheet.get("shown", []):
