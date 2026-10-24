@@ -1,6 +1,5 @@
 extends Node
-## Y1-B: skill_tree empty roster exposes named ToTavern under People
-## (empty box already has why-text; this knife adds the tap CTA).
+## Y1-B: skill_tree empty roster → EmptyHost + how + ToTavern under People.
 
 func _ready() -> void:
 	var err := await _run()
@@ -17,7 +16,6 @@ func _run() -> String:
 	GameState.new_game("烬行", "灰旗", GameState.crest_color)
 	GameState.chapter0_flags["chapter0_done"] = true
 	GameState.chapter0_flags["ch0_playing"] = false
-	## Force empty roster path.
 	for ch in GameState.characters.values():
 		ch.in_roster = false
 
@@ -38,27 +36,37 @@ func _audit(page: Control) -> String:
 	var people := page.find_child("People", true, false)
 	if people == null:
 		return "People list missing"
+	var host := people.find_child("EmptyHost", true, false)
+	if host == null:
+		return "EmptyHost missing under People"
 	var none_zh := Locale.t("lb_sk_nobody")
 	var found_empty := false
-	for n in people.find_children("*", "Label", true, false):
+	for n in host.find_children("*", "Label", true, false):
 		if str((n as Label).text).find(none_zh) >= 0:
 			found_empty = true
 			break
 	if not found_empty:
 		return "empty box (lb_sk_nobody) missing"
-
-	var cta: Button = page.find_child("ToTavern", true, false) as Button
+	var how_zh := Locale.t("lb_sk_nobody_how")
+	var how_ok := false
+	for n in host.find_children("*", "Label", true, false):
+		if str((n as Label).text).find(how_zh) >= 0:
+			how_ok = true
+			break
+	if not how_ok:
+		return "how (lb_sk_nobody_how) missing"
+	var acts := host.find_child("EmptyActions", true, false)
+	if acts == null:
+		return "EmptyActions missing"
+	var cta: Button = host.find_child("ToTavern", true, false) as Button
 	if cta == null:
-		return "ToTavern missing"
-	if not cta.visible or not cta.is_visible_in_tree():
-		return "ToTavern not visible"
-	if cta.disabled:
-		return "ToTavern disabled"
+		return "ToTavern missing under EmptyHost"
+	if not cta.visible or not cta.is_visible_in_tree() or cta.disabled:
+		return "ToTavern not usable"
+	if not acts.is_ancestor_of(cta):
+		return "ToTavern not under EmptyActions"
 	var want := Locale.t("lb_sk_to_tavern")
 	if cta.text != want:
 		return "ToTavern text want=%s got=%s" % [want, cta.text]
-	if not people.is_ancestor_of(cta):
-		return "ToTavern not under People"
-	cta.pressed.emit()
-	print("skill-empty ok ToTavern under_people=1")
+	print("skill-empty ok ToTavern how=1 under_EmptyHost=1")
 	return ""

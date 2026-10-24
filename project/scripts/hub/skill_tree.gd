@@ -98,13 +98,26 @@ func _refresh() -> void:
 		b.pressed.connect(func(): _sel = ch; _sid = ""; Sfx.click(); _refresh())
 		_people.add_child(b)
 	if _people.get_child_count() == 0:
-		_people.add_child(CKPageKit.empty(Locale.t("lb_sk_nobody"), Locale.t("lb_sk_nobody_why"), "", 170))
-		## Empty roster already says recruit at tavern; named tap CTA.
+		## Y1-B: empty roster → EmptyHost why/how + ToTavern.
+		var host := VBoxContainer.new()
+		host.name = "EmptyHost"
+		host.add_theme_constant_override("separation", 12)
+		host.add_child(CKPageKit.empty(
+			Locale.t("lb_sk_nobody"),
+			Locale.t("lb_sk_nobody_why"),
+			Locale.t("lb_sk_nobody_how"),
+			170
+		))
+		var acts := HBoxContainer.new()
+		acts.name = "EmptyActions"
+		acts.add_theme_constant_override("separation", 12)
 		var to_t := CKPageKit.button(Locale.t("lb_sk_to_tavern"), true, 170)
 		to_t.name = "ToTavern"
 		to_t.pressed.connect(func(): CKNav.go("res://scenes/hub/tavern.tscn"))
-		_people.add_child(to_t)
+		acts.add_child(to_t)
 		UIFX.wire_button(to_t)
+		host.add_child(acts)
+		_people.add_child(host)
 	CKPageKit.drag_through(_people)
 	_fill_columns()
 	_fill_detail()
@@ -138,13 +151,26 @@ func _fill_columns() -> void:
 		for sk in skills:
 			col.add_child(_node(sk))
 	if _cols.get_child_count() == 0:
-		_cols.add_child(CKPageKit.empty(Locale.t("lb_sk_no_tree"), Locale.t("lb_sk_no_tree_why"), "", 560))
-		## Empty tree already says reclass; named tap CTA to title promote.
-		var to_tp := CKPageKit.button(Locale.t("lb_sk_to_title_promote"), true, 560)
+		## Y1-B: no skills for job → EmptyHost why/how + ToTitlePromote.
+		var host := VBoxContainer.new()
+		host.name = "EmptyHost"
+		host.add_theme_constant_override("separation", 12)
+		host.add_child(CKPageKit.empty(
+			Locale.t("lb_sk_no_tree"),
+			Locale.t("lb_sk_no_tree_why"),
+			Locale.t("lb_sk_no_tree_how"),
+			560
+		))
+		var acts := HBoxContainer.new()
+		acts.name = "EmptyActions"
+		acts.add_theme_constant_override("separation", 12)
+		var to_tp := CKPageKit.button(Locale.t("lb_sk_to_title_promote"), true, 280)
 		to_tp.name = "ToTitlePromote"
 		to_tp.pressed.connect(func(): CKNav.go("res://scenes/hub/title_promote.tscn"))
-		_cols.add_child(to_tp)
+		acts.add_child(to_tp)
 		UIFX.wire_button(to_tp)
+		host.add_child(acts)
+		_cols.add_child(host)
 	CKPageKit.drag_through(_cols)
 
 func _node(sk: Dictionary) -> Button:
