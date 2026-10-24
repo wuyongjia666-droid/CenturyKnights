@@ -135,6 +135,8 @@ lb_rv_title,敌宅交涉,Rival houses
 lb_rv_desc,十国各有一家对头。他们的图谋写在朝堂年历上，你可以立约、送礼、施压，建了使馆还能反制。,"Ten rival houses. Deal, gift, press, or counter with an embassy."
 lb_rv_none,还没有对头,No rivals
 lb_rv_none_why,这一局还没生成敌宅。,No rival houses this run.
+lb_rv_none_how,点下方去朝堂看看年历与图谋。,Tap below to open the court gazette for schemes.
+lb_rv_to_court_news,去朝堂年历,To the court gazette
 lb_rv_dealing,· 有约,· deal
 lb_rv_rel,%s %d,%s %d
 lb_rv_creed,家风：%s。%s,Creed: %s. %s

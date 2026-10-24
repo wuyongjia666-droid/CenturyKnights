@@ -170,7 +170,26 @@ func _refresh() -> void:
 	CKPageKit.clear(_list)
 	var houses: Array = GameState.data_rivals.get("houses", [])
 	if houses.is_empty():
-		_list.add_child(CKPageKit.empty(Locale.t("lb_rv_none"), Locale.t("lb_rv_none_why"), "", 280))
+		## Y1-B / heir #30: no rivals → why/how + named ToCourtNews (schemes live on the gazette).
+		var host := VBoxContainer.new()
+		host.name = "EmptyHost"
+		host.add_theme_constant_override("separation", 12)
+		host.add_child(CKPageKit.empty(
+			Locale.t("lb_rv_none"),
+			Locale.t("lb_rv_none_why"),
+			Locale.t("lb_rv_none_how"),
+			280
+		))
+		var acts := HBoxContainer.new()
+		acts.name = "EmptyActions"
+		acts.add_theme_constant_override("separation", 12)
+		var to_n := CKPageKit.button(Locale.t("lb_rv_to_court_news"), true, 260)
+		to_n.name = "ToCourtNews"
+		to_n.pressed.connect(func(): CKNav.go("res://scenes/hub/court_news.tscn"))
+		acts.add_child(to_n)
+		UIFX.wire_button(to_n)
+		host.add_child(acts)
+		_list.add_child(host)
 		return
 	for h in houses:
 		var hid := str(h.get("id"))
