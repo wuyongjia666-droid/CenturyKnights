@@ -347,3 +347,8 @@ lb_dos_home,不在团里，留在家中。,Not in the company; at home.
 lb_dos_to_city,去本城盖印,Go stamp in city
 lb_dos_seals_line,「%s」· %s,「%s」· %s
 lb_dos_seals_empty,还没有职印。特殊职要先去指定城盖印才能转。,No job seals yet. Special jobs need a city stamp first.
+lb_dos_to_train,去旗塾拜师,To banner school
+lb_dos_tutor_na,不在学龄（1–15 岁家中子嗣才拜师）。,Not school age (house children 1–15 take tutors).
+lb_dos_tutor_master,专师 · 现带学生 %d 人,Tutor · %d pupils
+lb_dos_tutor_line,专师：%s · 本年 %d/%d 次,Tutor: %s · %d/%d lessons this year
+lb_dos_tutor_empty,还没拜专师。去旗塾配对后，这里会记下老师和本年课时。,No tutor yet. Pair at the banner school to see tutor and lessons here.
