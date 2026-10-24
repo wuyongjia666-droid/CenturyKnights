@@ -363,7 +363,7 @@ func _yeartrace(parent: Node, focus: CKCharacter) -> void:
 		return
 	var rows: Array = CKSuiKe.yeartrace_for(focus.id)
 	if rows.is_empty():
-		var empty := UIKit.body_label("尚无岁课年迹。", UIKit.TEXT_FAINT, 12)
+		var empty := UIKit.body_label(Locale.t("sui_yeartrace_empty"), UIKit.TEXT_FAINT, 12)
 		empty.name = "YeartraceEmpty"
 		panel.add_child(empty)
 		return
@@ -373,12 +373,12 @@ func _yeartrace(parent: Node, focus: CKCharacter) -> void:
 		if shown >= 6:
 			break
 		var item: Dictionary = rows[i]
-		var line := "%d年%d月 · %s · %s" % [
+		var line := Locale.t("sui_yeartrace_line", [
 			int(item.get("year", 0)),
 			int(item.get("month", 0)),
 			str(item.get("title", "")),
 			str(item.get("outcome", "")),
-		]
+		])
 		var lab := UIKit.body_label(line, UIKit.TEXT, 12)
 		lab.name = "Yeartrace_%d" % shown
 		lab.autowrap_mode = TextServer.AUTOWRAP_OFF
