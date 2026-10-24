@@ -193,6 +193,7 @@ sui_year_desc,生日卡已按孩子的性格自动落下，这里只读结果。
 sui_year_ctx,族谱 · 岁课,Lineage · year-card
 sui_year_empty,没有未读的岁课,No unread year-cards
 sui_year_empty_why,孩子们过生日时会自动落下结果。,Results appear when a house child has a birthday.
+sui_year_empty_how,点下方去沙漏过月；孩子生日后结果会出现在这里。,Tap below to advance at the hourglass; birthday results appear here.
 sui_year_ack,知道了,Got it
 sui_year_side_left,稳妥一侧,Careful side
 sui_year_side_right,大胆一侧,Bold side

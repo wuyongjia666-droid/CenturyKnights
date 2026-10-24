@@ -21,13 +21,26 @@ func _fill() -> void:
 	CKPageKit.clear(_list)
 	var rows: Array = CKSuiKe.inbox()
 	if rows.is_empty():
-		_list.add_child(CKPageKit.empty(Locale.t("sui_year_empty"), Locale.t("sui_year_empty_why"), "", 1100))
-		## Empty inbox already says birthdays fill it; named tap CTA to age time.
-		var to_h := CKPageKit.button(Locale.t("lb_sui_to_hourglass"), true, 1100)
+		## Y1-B: empty inbox → EmptyHost why/how + ToHourglass (age time for birthdays).
+		var host := VBoxContainer.new()
+		host.name = "EmptyHost"
+		host.add_theme_constant_override("separation", 12)
+		host.add_child(CKPageKit.empty(
+			Locale.t("sui_year_empty"),
+			Locale.t("sui_year_empty_why"),
+			Locale.t("sui_year_empty_how"),
+			1100
+		))
+		var acts := HBoxContainer.new()
+		acts.name = "EmptyActions"
+		acts.add_theme_constant_override("separation", 12)
+		var to_h := CKPageKit.button(Locale.t("lb_sui_to_hourglass"), true, 320)
 		to_h.name = "ToHourglass"
 		to_h.pressed.connect(func(): CKNav.go("res://scenes/hub/hourglass.tscn"))
-		_list.add_child(to_h)
+		acts.add_child(to_h)
 		UIFX.wire_button(to_h)
+		host.add_child(acts)
+		_list.add_child(host)
 		return
 	for item in rows:
 		if typeof(item) != TYPE_DICTIONARY:
