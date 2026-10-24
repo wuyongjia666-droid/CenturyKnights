@@ -302,6 +302,7 @@ func _build() -> void:
 	tree_scroll.add_child(tree)
 	_archive(tree, c)
 	_yeartrace(tree, c)
+	_job_seals(tree, c)
 	_tree(tree, c, sheet)
 	var crest := CKPageKit.button(Locale.t("lb_dos_crest"), false, 188)
 	crest.name = "CrestPreview"
@@ -356,6 +357,42 @@ func _yeartrace(parent: Node, focus: CKCharacter) -> void:
 	## Season-01 deepen: durable 岁课年迹 via shared CKSuiYeartraceUi.
 	GameState.set_meta("yeartrace_back", "res://scenes/hub/unit_dossier.tscn")
 	YeartraceUi.mount_for(parent, focus, 360.0)
+
+
+
+func _job_seals(parent: Node, focus: CKCharacter) -> void:
+	## Y1-B 职印可感：档案侧列出已盖印；空则 named ToCity 回城盖印。
+	var panel := VBoxContainer.new()
+	panel.name = "JobSealsPanel"
+	panel.add_theme_constant_override("separation", 4)
+	parent.add_child(panel)
+	panel.add_child(UIKit.mono("JOB · SEALS", 9, UIKit.ACCENT, false))
+	var rows: Array = CKJobSeals.stamped_rows(focus)
+	if rows.is_empty():
+		var empty := UIKit.body_label(Locale.t("lb_dos_seals_empty"), UIKit.TEXT_FAINT, 12)
+		empty.name = "JobSealsEmpty"
+		empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		empty.custom_minimum_size = Vector2(360, 0)
+		panel.add_child(empty)
+		var to_city := CKPageKit.button(Locale.t("lb_dos_to_city"), true, 360)
+		to_city.name = "ToCity"
+		to_city.pressed.connect(func():
+			Sfx.click()
+			var dest := CKJobSeals.stamp_city_hint(focus)
+			GameState.set_meta("city_id", dest)
+			CKNav.go("res://scenes/hub/city.tscn"))
+		panel.add_child(to_city)
+		UIFX.wire_button(to_city)
+		return
+	for i in rows.size():
+		var r: Dictionary = rows[i]
+		var city_nm := str(World.node(str(r.get("city", ""))).get("name", r.get("city", "")))
+		var lab := UIKit.body_label(Locale.t("lb_dos_seals_line", [str(r.get("name", "")), city_nm]), UIKit.OK, 12)
+		lab.name = "JobSeal_%d" % i
+		lab.autowrap_mode = TextServer.AUTOWRAP_OFF
+		lab.clip_text = true
+		lab.custom_minimum_size = Vector2(360, 16)
+		panel.add_child(lab)
 
 
 func _archive(parent: Node, focus: CKCharacter) -> void:
