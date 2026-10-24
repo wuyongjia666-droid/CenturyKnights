@@ -6,9 +6,15 @@ extends RefCounted
 ## Y1-A T-P0-2: SOFT_R raised from 0.62 → 0.90 so eccentric fat-finger taps on
 ## a neighbouring empty cell still resolve to the unit.
 ## Y1-A T-P1-2: pure pan/zoom → cell helpers for device-free contract tests.
+## Y1-A T-P1-3: 3D figure visual bias — tap on empty cell above a unit's face/head
+## snaps to that unit (FIG_CELLS=1.30, feet at 0.62 → y ∈ [FIG_TOP, FIG_FEET]).
 
 ## Fraction of a cell: anything closer than this counts as that unit.
 const SOFT_R := 0.90
+## 3D figure vertical span in cell units relative to the unit cell's top edge.
+## Matches unit_layer_3d.FIG_CELLS (1.30) and board_units.feet_px (0.62).
+const FIG_TOP := -0.68
+const FIG_FEET := 0.62
 ## Y1-A T-P1-2: camera limits shared by pinch / wheel / pan (real transform, not just contracts).
 const ZOOM_MIN := 0.65
 const ZOOM_MAX := 2.4
@@ -80,11 +86,39 @@ static func nearest_unit_pos(origin: Vector2, cell_px: float, units: Array, loca
 	return Vector2i(-1, -1)
 
 
+## Pure math T-P1-3: when finger_cell is empty and the cell below has a living
+## unit whose 3D figure spans into finger_cell, return that unit's cell.
+## Does not steal when finger_cell already has a unit (caller checks that).
+static func visual_bias_unit_pos(origin: Vector2, cell_px: float, units: Array, local: Vector2, finger_cell: Vector2i) -> Vector2i:
+	if cell_px < 1.0 or finger_cell.x < 0:
+		return Vector2i(-1, -1)
+	var below := Vector2i(finger_cell.x, finger_cell.y + 1)
+	var living := false
+	for u in units:
+		if u.pos == below and u.char.hp > 0:
+			living = true
+			break
+	if not living:
+		return Vector2i(-1, -1)
+	var rel_y: float = (local.y - origin.y) / cell_px - float(below.y)
+	if rel_y < FIG_TOP or rel_y > FIG_FEET:
+		return Vector2i(-1, -1)
+	# Stay in the unit's column (finger already on the cell above).
+	var rel_x: float = (local.x - origin.x) / cell_px - float(below.x)
+	if rel_x < 0.0 or rel_x > 1.0:
+		return Vector2i(-1, -1)
+	return below
+
+
 static func resolve(host, screen_pos: Vector2) -> Vector2i:
 	var exact: Vector2i = host._pointer_to_cell(screen_pos)
 	if exact.x >= 0 and host._unit_at(exact) >= 0:
 		return exact
 	var local: Vector2 = _board_local(host, screen_pos)
+	# T-P1-3 before soft-R: face/head taps land in the empty cell above the figure.
+	var bias: Vector2i = visual_bias_unit_pos(host.ORIGIN, float(host.CELL), host.units, local, exact)
+	if bias.x >= 0:
+		return bias
 	var hit: Vector2i = nearest_unit_pos(host.ORIGIN, float(host.CELL), host.units, local)
 	if hit.x >= 0:
 		return hit
