@@ -146,6 +146,7 @@
 | 2026-10-25 | Y1-B 联姻无对象空态：EmptyHost why/how + ToTavern/ToRoster + `marriage_empty_cta_check` |
 | 2026-10-25 | Y1-B 花名册空编制：EmptyHost why/how + ToTavern + `roster_empty_cta_check` |
 | 2026-10-25 | Y1-B 请爵顶阶空态：EmptyHost how + ToCity（职印）+ `title_promote_top_cta_check` |
+| 2026-10-25 | Y1-B 酒馆柜上无人：EmptyHost why/how + ToRoster + `tavern_empty_cta_check` |
 | 2026-10-25 | Y1-B 嗣位校场无继承人空态（#30）：EmptyHost why + ToMarriage/ToTavern + `heir_rivalry_empty_cta_check` |
 | 2026-10-25 | Y1-B 战场团灭 → 同一 `dynasty_end`（reason=`wipeout`；战后 defer 承旗 + `close_after_battle`）+ `dynasty_wipeout_check` |
 | 2026-10-25 | Y1-B 空团结局 stub：无可承旗 → `house_mods.dynasty_end` + 枢纽/沙漏/属地可感 + `dynasty_end_stub_check` |

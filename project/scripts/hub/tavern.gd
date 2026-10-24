@@ -64,6 +64,7 @@ func _build() -> void:
 	_portrait.visible = false
 	add_child(_portrait)
 	_cards = Control.new()
+	_cards.name = "TavernCards"
 	_cards.mouse_filter = Control.MOUSE_FILTER_PASS
 	# Landscape phones get the side-by-side row (all candidates + hire buttons visible);
 	# only portrait falls back to the vertical scroll.
@@ -128,6 +129,26 @@ func _unhandled_input(e: InputEvent) -> void:
 func _fee(c: CKCharacter) -> int:
 	return CKEconomyState.recruit_price(GameState, c)
 
+
+func _add_empty_host(parent: Control, width: float, pos: Vector2 = Vector2.ZERO) -> void:
+	## Y1-B / heir #30: empty bar gets why/how + named ToRoster (refresh stays on page chrome).
+	var host := VBoxContainer.new()
+	host.name = "EmptyHost"
+	host.position = pos
+	host.add_theme_constant_override("separation", 12)
+	host.add_child(CKPageKit.empty(Locale.t("lb_tavern_empty"), Locale.t("lb_tavern_empty_why"), Locale.t("lb_tavern_empty_how"), width))
+	var acts := HBoxContainer.new()
+	acts.name = "EmptyActions"
+	acts.add_theme_constant_override("separation", 12)
+	var to_r := CKPageKit.button(Locale.t("lb_tavern_to_roster"), true, mini(320, int(width)))
+	to_r.name = "ToRoster"
+	to_r.pressed.connect(func(): CKNav.go("res://scenes/hub/roster.tscn"))
+	acts.add_child(to_r)
+	UIFX.wire_button(to_r)
+	host.add_child(acts)
+	parent.add_child(host)
+
+
 func _refresh() -> void:
 	if _mob:
 		if GameState.tavern_candidates.is_empty():
@@ -140,9 +161,7 @@ func _refresh() -> void:
 		_cards.remove_child(n)
 		n.queue_free()
 	if GameState.tavern_candidates.is_empty():
-		var e := UIKit.empty_state("今夜柜上无人。点刷新再碰运气。")
-		e.position = Vector2(42, 300)
-		_cards.add_child(e)
+		_add_empty_host(_cards, 900.0, Vector2(42, 280))
 		_selected = null
 		return
 	if _selected == null or not GameState.tavern_candidates.has(_selected):
@@ -360,6 +379,7 @@ func _mobile_build() -> void:
 	_msg.position = Vector2(26, 720 - 40)
 	_msg.add_theme_font_size_override("font_size", MobilePage.FONT)
 	_m_row = HBoxContainer.new()
+	_m_row.name = "TavernMobileRow"
 	_m_row.position = Vector2(26, MobilePage.TOP)
 	_m_row.size = Vector2(MobilePage.width(self) - 50, 720 - MobilePage.TOP - 48)
 	_m_row.add_theme_constant_override("separation", 12)
@@ -369,6 +389,9 @@ func _refresh_mobile() -> void:
 	for n in _m_row.get_children():
 		_m_row.remove_child(n)
 		n.queue_free()
+	if GameState.tavern_candidates.is_empty():
+		_add_empty_host(_m_row, maxf(280.0, MobilePage.width(self) - 80.0))
+		return
 	for cand in GameState.tavern_candidates.slice(0, 3):
 		_card_mobile(cand, cand == _selected)
 
