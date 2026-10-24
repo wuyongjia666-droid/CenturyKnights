@@ -1050,7 +1050,8 @@ static func market_sell(host, item: String, qty: int = 1) -> Dictionary:
 	host.mark_dirty()
 	return {"ok": true, "msg": "卖出 %s x%d" % [Locale.t(item), qty]}
 
-## Y1-B: persist last holdings/territory settle lines for hub re-read (estates / hourglass).
+## Y1-B: persist last holdings/territory/commission settle lines for hub re-read (estates / hourglass).
+## Same-month notes of one kind append (；); a new calendar month replaces that kind.
 static func month_echo_note(kind: String, text: String) -> void:
 	if text == "":
 		return
@@ -1058,9 +1059,15 @@ static func month_echo_note(kind: String, text: String) -> void:
 	if typeof(cur) != TYPE_DICTIONARY:
 		cur = {}
 	var d: Dictionary = cur
+	var at_now := int(Calendar.year) * 12 + int(Calendar.month)
+	var prev_at := int(d.get("at", -1))
+	var prev := str(d.get(kind, ""))
+	if prev != "" and prev_at == at_now and prev.find(text) < 0:
+		d[kind] = prev + "；" + text
+	else:
+		d[kind] = text
 	d["label"] = Calendar.label()
-	d["at"] = int(Calendar.year) * 12 + int(Calendar.month)
-	d[kind] = text
+	d["at"] = at_now
 	GameState.house_mods["month_echo"] = d
 
 
