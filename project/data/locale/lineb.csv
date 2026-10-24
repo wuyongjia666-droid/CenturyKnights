@@ -282,6 +282,7 @@ lb_bt_covers,银子够验,Affordable
 lb_bt_go,开始验血,Start
 lb_bt_all_done,大家都验过了,Everyone is verified
 lb_bt_all_done_why,家里和团里的人都已经验过血。以后有新生的孩子、新成亲的人，会出现在这里。,New births and spouses will appear here.
+lb_bt_to_marriage,去联姻,To marriage
 lb_bt_row,%s · %s · %d 岁,%s · %s · %d
 lb_bt_wait_money,（银子不够，下次再验）, (not enough silver)
 lb_bt_result,验血结果,Results
