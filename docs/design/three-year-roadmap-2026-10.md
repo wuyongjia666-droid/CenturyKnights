@@ -3,7 +3,7 @@
 > 状态：已按用户拍板落地（路线 A · 纪元流水线；全权推进 Y1-A）  
 > 基线仓库：`main` @ `ffd2b365`（#329 §7 收口）  
 > 试玩包：`main-ffd2b365` — Android ≈482 MiB / Windows ≈838 MiB  
-> 约束：不合 main 不经用户确认；不花钱；不 force-push；默认禁用 CloudAgent；保画质不做 H/I
+> 约束：Y1-A / hub-mobile CI 全绿由 playforge 自合；非该范围合 main 仍请示；不花钱；不 force-push；默认禁用 CloudAgent；保画质不做 H/I
 
 ---
 
@@ -25,7 +25,7 @@
 | Year1 门禁 | **先手游手感 + 立绘对齐**，你真机签收前不开内容季扩写 |
 | 售卖（推荐已采纳） | 一次性买断，无内购；可用商店试玩分钟或独立 Demo |
 | 包体（推荐已采纳） | 安装包压到商店友好区间；大立绘/语音走按需下载 / Asset Pack；禁 H/I |
-| 推进授权 | 2026-10-22：playforge 全权持续推进本路线与 Y1-A；**合 main / 花钱 / force-push 仍需请示** |
+| 推进授权 | 2026-10-22：playforge 全权持续推进本路线与 Y1-A；**2026-10-24 更新**：Y1-A / hub-mobile CI 全绿可自合；**花钱 / force-push 仍禁**；非该范围合 main 仍请示 |
 
 ### 立绘问题口径（2026-10-22 澄清）
 
@@ -88,7 +88,7 @@
 4. 可玩章：大白话，单行 ≤60 字  
 5. 系统加深：写进月循环 + PR 验收标准  
 6. 立绘/资源：本季出场角色安卓/Windows 对齐；清单归零才算季完工  
-7. 试玩包：用户确认合 main → Release → 真机签收  
+7. 试玩包：Y1-A/hub-mobile CI 绿自合进 main → Release → 真机签收  
 
 产能假设：正常年份约 1～1.5 条内容季；Year1 因 Y1-A 门禁偏少是预期。
 
@@ -100,7 +100,7 @@
 - 主控：playforge；实现纪律：poteto（可验证、少 slop）；BMGD 管阶段
 - 反方：本地 Qwen challenge/review（`100.127.28.107:8003` 恢复后例行）；接受/驳回写入 PR
 - 裁判：仓库测试 / CI；**体验过关以真机签收为准**
-- 合 main：squash；必须用户确认
+- 合 main：Y1-A / hub-mobile 用 `--merge --delete-branch`，CI 全绿由 playforge 自合；其余范围仍请示；禁止 force-push / 花钱
 - 发布：push main → `main-<sha8>` 自动出 Windows zip + Android APK
 - 立绘/3D：`tools/farm_queue`；优先修打包/路径不一致，再考虑补生成
 
