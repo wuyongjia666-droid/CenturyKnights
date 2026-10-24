@@ -51,37 +51,40 @@ func _show() -> void:
 	var leader := GameState.get_leader()
 	if leader != null and _AMB.needs_choice():
 		_show_offer(leader)
-		return
-	var hname := _heir.name if _heir else Locale.t("lb_inh_noheir")
-	var path := str(GameState.lineage_path.get(_heir.id, "")) if _heir else ""
-	var pz := Locale.t("lb_path_" + path) if path != "" else Locale.t("lb_path_none")
-	if _done_this_year():
-		_body.text = Locale.t("lb_inh_done", [str(GameState.house_mods.get("inherit_answer_zh", "")), Calendar.year + 1])
-		_cards.add_child(CKPageKit.button(Locale.t("lb_inh_to_rivals"), false, 260))
-		(_cards.get_child(0) as Button).pressed.connect(func(): CKNav.go("res://scenes/hub/rival_houses.tscn"))
-		UIFX.wire_tree(_cards)
-		return
-	_body.text = Locale.t("lb_inh_envoy", [hname, pz])
-	for k in CHOICES:
-		var r := CKPageKit.row(UIKit.ACCENT, 300)
-		var p: PanelContainer = r[0]
-		p.custom_minimum_size = Vector2(372, 320 if DeviceProfile.is_mobile() else 300)
-		p.name = "Answer_" + k
-		var v: VBoxContainer = r[1]
-		v.add_child(UIKit.title_label(Locale.t("lb_inh_%s" % k), 18))
-		v.add_child(CKPageKit.text(Locale.t("lb_inh_%s_story" % k), UIKit.TEXT_DIM, 13, 340))
-		v.add_child(CKPageKit.text(Locale.t("lb_inh_%s_fx" % k), UIKit.OK, 13, 340))
-		var sp := Control.new()
-		sp.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		v.add_child(sp)
-		var b := CKPageKit.button(Locale.t("lb_inh_pick"), k == "steel", 340)
-		b.name = "Pick_" + k
-		if k == "soft" and GameState.silver < 20:
-			CKPageKit.lock(b, Locale.t("lb_short_silver", [20 - GameState.silver]))
-		b.pressed.connect(func(): _resolve(k))
-		v.add_child(b)
-		_cards.add_child(p)
-	UIFX.wire_tree(_cards)
+	else:
+		var hname := _heir.name if _heir else Locale.t("lb_inh_noheir")
+		var path := str(GameState.lineage_path.get(_heir.id, "")) if _heir else ""
+		var pz := Locale.t("lb_path_" + path) if path != "" else Locale.t("lb_path_none")
+		if _done_this_year():
+			_body.text = Locale.t("lb_inh_done", [str(GameState.house_mods.get("inherit_answer_zh", "")), Calendar.year + 1])
+			_cards.add_child(CKPageKit.button(Locale.t("lb_inh_to_rivals"), false, 260))
+			(_cards.get_child(0) as Button).pressed.connect(func(): CKNav.go("res://scenes/hub/rival_houses.tscn"))
+			UIFX.wire_tree(_cards)
+		else:
+			_body.text = Locale.t("lb_inh_envoy", [hname, pz])
+			for k in CHOICES:
+				var r := CKPageKit.row(UIKit.ACCENT, 300)
+				var p: PanelContainer = r[0]
+				p.custom_minimum_size = Vector2(372, 320 if DeviceProfile.is_mobile() else 300)
+				p.name = "Answer_" + k
+				var v: VBoxContainer = r[1]
+				v.add_child(UIKit.title_label(Locale.t("lb_inh_%s" % k), 18))
+				v.add_child(CKPageKit.text(Locale.t("lb_inh_%s_story" % k), UIKit.TEXT_DIM, 13, 340))
+				v.add_child(CKPageKit.text(Locale.t("lb_inh_%s_fx" % k), UIKit.OK, 13, 340))
+				var sp := Control.new()
+				sp.size_flags_vertical = Control.SIZE_EXPAND_FILL
+				v.add_child(sp)
+				var b := CKPageKit.button(Locale.t("lb_inh_pick"), k == "steel", 340)
+				b.name = "Pick_" + k
+				if k == "soft" and GameState.silver < 20:
+					CKPageKit.lock(b, Locale.t("lb_short_silver", [20 - GameState.silver]))
+				b.pressed.connect(func(): _resolve(k))
+				v.add_child(b)
+				_cards.add_child(p)
+			UIFX.wire_tree(_cards)
+	# Re-apply after answer / ambition re-show so AnswerScroll + FONT_FLOOR / HIT stick.
+	if DeviceProfile.is_mobile() and is_inside_tree():
+		apply_mobile_layout()
 
 func _show_offer(leader: CKCharacter) -> void:
 	var lines: PackedStringArray = PackedStringArray()
