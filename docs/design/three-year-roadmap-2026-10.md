@@ -155,6 +155,7 @@
 | 2026-10-25 | Y1-B 沙漏空 log：EmptyHost why/how + ToCourtNews + `hourglass_empty_cta_check` |
 | 2026-10-25 | Y1-B 岁课空 inbox how：EmptyHost + `sui_year_empty_how`（ToHourglass 既有）+ suite 断言 |
 | 2026-10-25 | Y1-B 战技树无人/无树 how：EmptyHost + ToTavern/ToTitlePromote + suite 断言 |
+| 2026-10-25 | Y1-B 属地月回响空 how：EmptyHost + ToHourglass + `month_echo_estates_check` 断言 |
 | 2026-10-25 | Y1-B 嗣位校场无继承人空态（#30）：EmptyHost why + ToMarriage/ToTavern + `heir_rivalry_empty_cta_check` |
 | 2026-10-25 | Y1-B 战场团灭 → 同一 `dynasty_end`（reason=`wipeout`；战后 defer 承旗 + `close_after_battle`）+ `dynasty_wipeout_check` |
 | 2026-10-25 | Y1-B 空团结局 stub：无可承旗 → `house_mods.dynasty_end` + 枢纽/沙漏/属地可感 + `dynasty_end_stub_check` |
