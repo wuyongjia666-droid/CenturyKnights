@@ -138,14 +138,18 @@ func _tick_life(ctx: Dictionary) -> void:
 						best_v = int(c.stats.get(k, 0))
 						best_k = k
 				GameState.advisor_bonus[best_k] = maxi(int(GameState.advisor_bonus.get(best_k, 0)), 1)
-				GameState.add_lineage_event("%s 退役任顾问：偏向 %s" % [c.name, Locale.t("stat_" + best_k)])
-				evs.append({"type": "retire", "text": "%s 退役任顾问（%s 偏向）" % [c.name, Locale.t("stat_" + best_k)], "cid": c.id})
+				var rtxt := Locale.t("lb_echo_retire", [c.name, Locale.t("stat_" + best_k)])
+				GameState.add_lineage_event(rtxt)
+				evs.append({"type": "retire", "text": rtxt, "cid": c.id})
+				CKEconomyState.month_echo_note("retire", rtxt)
 			if c.age >= DEATH_AGE:
 				c.alive = false
 				c.in_roster = false
 				CKPurse.on_death(c)
 				Lineage.widow_partner(c)
-				evs.append({"type": "death", "text": "%s 辞世，入族谱碑" % c.name, "cid": c.id})
+				var dtxt := Locale.t("lb_echo_death", [c.name])
+				evs.append({"type": "death", "text": dtxt, "cid": c.id})
+				CKEconomyState.month_echo_note("death", dtxt)
 			if c.is_child and c.age >= ADULT_AGE:
 				# Adults leave the child ration. They can still be enlisted; they no longer eat as infants for life.
 				c.is_child = false
@@ -159,7 +163,9 @@ func _tick_life(ctx: Dictionary) -> void:
 			if c.is_leader and (not c.alive or c.retired):
 				var handed: Dictionary = Lineage.transfer_banner("death" if not c.alive else "retire")
 				if bool(handed.get("ok", false)):
-					evs.append({"type": "succession", "text": str(handed.get("msg", "")), "cid": str(handed.get("heir_id", ""))})
+					var stxt := str(handed.get("msg", ""))
+					evs.append({"type": "succession", "text": stxt, "cid": str(handed.get("heir_id", ""))})
+					CKEconomyState.month_echo_note("succession", stxt)
 				else:
 					push_warning("succession failed: %s" % str(handed.get("msg", "")))
 

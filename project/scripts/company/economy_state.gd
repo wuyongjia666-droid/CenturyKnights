@@ -1050,7 +1050,7 @@ static func market_sell(host, item: String, qty: int = 1) -> Dictionary:
 	host.mark_dirty()
 	return {"ok": true, "msg": "卖出 %s x%d" % [Locale.t(item), qty]}
 
-## Y1-B: persist last holdings/territory/commission/birth/marriage settle lines for hub re-read.
+## Y1-B: persist last month-settle lines (holdings…succession) for hub re-read.
 ## Same-month notes of one kind append (；); a new calendar month replaces that kind.
 static func month_echo_note(kind: String, text: String) -> void:
 	if text == "":
@@ -1081,7 +1081,7 @@ static func month_echo_snapshot() -> Dictionary:
 static func month_echo_lines() -> Array:
 	var d := month_echo_snapshot()
 	var out: Array = []
-	for k in ["holdings", "territory", "commission", "birth", "marriage"]:
+	for k in ["holdings", "territory", "commission", "birth", "marriage", "retire", "death", "succession"]:
 		var tx := str(d.get(k, ""))
 		if tx != "":
 			out.append({"kind": k, "text": tx})
