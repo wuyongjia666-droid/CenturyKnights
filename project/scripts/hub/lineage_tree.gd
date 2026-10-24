@@ -76,7 +76,31 @@ func _build() -> void:
 	UIFX.page_enter(self)
 
 func apply_mobile_layout() -> void:
-	MobileLayout.pin_footer(get_node_or_null("StitchFooter"))
+	var foot := get_node_or_null("StitchFooter") as Control
+	MobileLayout.pin_footer(foot)
+	if not DeviceProfile.is_mobile():
+		return
+	var w := maxf(size.x, 1280.0)
+	var bottom := (foot.position.y if foot else size.y) - 8.0
+	if _view != null:
+		_view.position = Vector2(12.0, 72.0)
+		_view.size = Vector2(minf(820.0, w * 0.55), maxf(400.0, bottom - 80.0))
+	if _title != null:
+		_title.add_theme_font_size_override("font_size", MobileLayout.FONT_FLOOR)
+		_title.size = Vector2(maxf(_title.size.x, 200.0), maxf(_title.size.y, float(MobileLayout.FONT_FLOOR) + 6.0))
+	if _canvas != null:
+		for n in _canvas.get_children():
+			if n is Label and str(n.name) == "GapLabel":
+				var g := n as Label
+				g.add_theme_font_size_override("font_size", MobileLayout.FONT_FLOOR)
+				g.size.y = maxf(g.size.y, float(MobileLayout.FONT_FLOOR) + 8.0)
+			elif n is Button:
+				for ch in n.get_children():
+					if ch is Label:
+						var lab := ch as Label
+						lab.add_theme_font_size_override("font_size", MobileLayout.FONT_FLOOR)
+						lab.size.y = maxf(lab.size.y, float(MobileLayout.FONT_FLOOR) + 6.0)
+	_render_info()
 
 func selected() -> CKCharacter:
 	return _selected
