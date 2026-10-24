@@ -88,6 +88,7 @@ func _build() -> void:
 		]},
 		{"id": "family", "title": Locale.t("ux_hub_family"), "items": [
 			[Locale.t("btn_lineage"), Locale.t("ux_hub_lineage_sub"), "res://scenes/hub/lineage_view.tscn", Locale.t("btn_lineage"), "lineage"],
+			[Locale.t("btn_sui_year"), Locale.t("ux_hub_sui_sub"), "res://scenes/hub/sui_yearcard.tscn", Locale.t("btn_sui_year"), "sui_ke"],
 			[Locale.t("btn_marriage"), Locale.t("shell_f075f209"), "res://scenes/hub/marriage.tscn", Locale.t("btn_marriage"), "marriage"],
 			[Locale.t("shell_dcb83d03"), Locale.t("shell_92bb4d72"), "res://scenes/hub/lineage_rite.tscn", Locale.t("shell_dcb83d03"), "rite"],
 			[Locale.t("ux_entry_titles"), Locale.t("ux_entry_titles"), "res://scenes/hub/title_promote.tscn", "", "titles"],
@@ -123,11 +124,19 @@ func _build() -> void:
 			n += 1
 			var path: String = item[2]
 			if bool(st.open):
-				var b := _nav_item("%02d" % n, str(item[0]), str(item[1]), first, false, true)
+				var title_t := str(item[0])
+				## Y1-B hub-feel: unread 岁课角标 on the family nav entry itself.
+				if entry == "sui_ke":
+					var unread := CKSuiKe.inbox_count()
+					if unread > 0:
+						title_t = "%s %d" % [title_t, unread]
+				var b := _nav_item("%02d" % n, title_t, str(item[1]), first, false, true)
 				first = false
 				var legacy := str(item[3]) if str(item[3]) != "" else str(item[0])
 				b.set_meta("legacy_label", legacy)
 				b.set_meta("hub_entry", entry)
+				if entry == "sui_ke":
+					b.name = "ToSuiYear"
 				b.pressed.connect(_go_nav.bind(b, path))
 				box.add_child(b)
 			else:
@@ -656,7 +665,7 @@ const M_ICONS := {
 	"deploy": _IE + "stone_slope.png", "roster": _IC + "kpi_fortify.png", "tavern": _IC + "mk_herb.png",
 	"train": _IC + "mk_iron.png", "skills": _IE + "stone_slope.png",
 	"atlas": _IE + "tide_bridge.png", "quests": _IE + "stone_slope.png", "court_news": _IE + "reed_ford.png",
-	"lineage": _IE + "fog_vale.png", "marriage": _IE + "fog_vale.png", "rite": _IC + "kpi_fortify.png",
+	"lineage": _IE + "fog_vale.png", "sui_ke": _IC + "kpi_grain.png", "marriage": _IE + "fog_vale.png", "rite": _IC + "kpi_fortify.png",
 	"titles": _IC + "kpi_cash.png", "rivals": _IE + "stone_slope.png", "ancestors": _IE + "fog_vale.png", "bonds": _IE + "reed_ford.png",
 	"works": _IC + "kpi_fortify.png", "forge": _IC + "mk_iron.png", "market": _IC + "kpi_cash.png", "shrine": _IC + "mk_herb.png", "estates": _IC + "kpi_grain.png",
 }
