@@ -36,6 +36,7 @@ lb_train_promo,转职,Class change
 lb_train_no_kids,家里还没有能上学的孩子,No children to teach
 lb_train_no_kids_why,1 到 15 岁、还没入团的家族孩子才能来旗塾。,Children aged 1-15 who have not joined the company.
 lb_train_no_kids_how,成家生子以后，孩子满一岁就能来拜师。,Marry and have children; they can start at one.
+lb_train_to_marriage,去联姻,To marriage
 lb_train_has_tutor,老师：%s · 今年已教 %d/%d 次,Tutor: %s · %d/%d lessons this year
 lb_train_no_tutor,还没拜师,No tutor yet
 lb_train_tutor_wait,在左边点一个孩子，这里会列出能教他的人。,Pick a child on the left.

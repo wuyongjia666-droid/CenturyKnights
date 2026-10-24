@@ -53,6 +53,12 @@ func _fill_kids() -> void:
 	kids.sort_custom(func(x, y): return str(x.id) < str(y.id))
 	if kids.is_empty():
 		_kids.add_child(CKPageKit.empty(Locale.t("lb_train_no_kids"), Locale.t("lb_train_no_kids_why"), Locale.t("lb_train_no_kids_how"), 300))
+		## Empty list already has how-text; named tap CTA (rite/heir #30 pattern).
+		var to_m := CKPageKit.button(Locale.t("lb_train_to_marriage"), true, 300)
+		to_m.name = "ToMarriage"
+		to_m.pressed.connect(func(): CKNav.go("res://scenes/hub/marriage.tscn"))
+		_kids.add_child(to_m)
+		UIFX.wire_button(to_m)
 		return
 	if _pupil == "" or not kids.any(func(ch): return ch.id == _pupil):
 		_pupil = str(kids[0].id)
