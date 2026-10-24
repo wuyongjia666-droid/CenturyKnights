@@ -17,9 +17,7 @@ func _run() -> String:
 	GameState.new_game("烬行", "灰旗", GameState.crest_color)
 	GameState.chapter0_flags["chapter0_done"] = true
 	GameState.chapter0_flags["ch0_playing"] = false
-	## new_game inbox should be empty; belt-and-suspenders clear if API allows.
-	if CKSuiKe.has_method("inbox"):
-		pass
+	## new_game inbox is empty (no unread year-cards yet).
 
 	var page: Control = load("res://scenes/hub/sui_yearcard.tscn").instantiate()
 	get_tree().root.add_child(page)
@@ -54,7 +52,7 @@ func _audit(page: Control) -> String:
 		return "ToHourglass not visible"
 	if cta.disabled:
 		return "ToHourglass disabled"
-	var want := Locale.t("sui_year_to_hourglass")
+	var want := Locale.t("lb_sui_to_hourglass")
 	if cta.text != want:
 		return "ToHourglass text want=%s got=%s" % [want, cta.text]
 	if not rows.is_ancestor_of(cta):

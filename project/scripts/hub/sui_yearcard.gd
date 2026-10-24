@@ -23,7 +23,7 @@ func _fill() -> void:
 	if rows.is_empty():
 		_list.add_child(CKPageKit.empty(Locale.t("sui_year_empty"), Locale.t("sui_year_empty_why"), "", 1100))
 		## Empty inbox already says birthdays fill it; named tap CTA to age time.
-		var to_h := CKPageKit.button(Locale.t("lb_sui_to_hourglass"), true, 300)
+		var to_h := CKPageKit.button(Locale.t("lb_sui_to_hourglass"), true, 1100)
 		to_h.name = "ToHourglass"
 		to_h.pressed.connect(func(): CKNav.go("res://scenes/hub/hourglass.tscn"))
 		_list.add_child(to_h)
