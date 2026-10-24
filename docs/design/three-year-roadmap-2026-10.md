@@ -142,6 +142,7 @@
 
 | 日期 | 变更 |
 |------|------|
+| 2026-10-25 | Y1-B 诞育/联姻月回响：birth/marriage → `house_mods.month_echo` + estates 回读 + suite |
 | 2026-10-25 | Y1-B 委托月回响：交付/逾期记入 `house_mods.month_echo.commission` + estates/hourglass 回读 + suite |
 | 2026-10-25 | Y1-B 内容季流水脚手架加深：topic_checklist / acceptance[] / pipeline_stages + suite v2（仍不扩小说） |
 | 2026-10-25 | Y1-B 月循环加深：属地 MonthEchoPanel 回读上月收成/领地月结 + `month_echo_estates_check` |

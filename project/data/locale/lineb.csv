@@ -355,10 +355,11 @@ lb_dos_tutor_head,专师,Tutor
 lb_dos_tutor_empty,还没拜专师。去旗塾配对后，这里会记下老师和本年课时。,No tutor yet. Pair at the banner school to see tutor and lessons here.
 lb_est_echo_head,上月回响,Last month echo
 lb_est_echo_empty,还没有领地月回响,No estate month echo yet
-lb_est_echo_why,在岁月沙漏度过一月后，属地收成、领地月结与委托交付/逾期会记在这里。,After you advance a month at the hourglass, estate yield, territory settle, and commission deliver/expire appear here.
+lb_est_echo_why,在岁月沙漏度过一月后，属地收成、领地月结、委托交付/逾期与诞育/联姻月结会记在这里。,After you advance a month at the hourglass, estate yield, territory settle, commission deliver/expire, and birth/marriage month settle appear here.
 lb_est_to_hourglass,去岁月沙漏,To hourglass
 lb_est_echo_when,记于 %s,Logged %s
 lb_echo_commission_deliver,交付「%s」·+%d 银,Deliver "%s" · +%d silver
 lb_echo_commission_expire,逾期「%s」·声望 -5,Overdue "%s" · rep -5
+lb_echo_birth,%s 诞下 %s,%s bore %s
 lb_hg_echo_head,上月回响（离开后仍在）,Last month echo (kept)
 lb_hg_to_estates,去领地营建,To estates

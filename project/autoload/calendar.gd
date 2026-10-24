@@ -204,10 +204,16 @@ func _deliver(mother: CKCharacter, evs: Array) -> void:
 		names.append(child.name)
 		evs.append({"type": "birth", "text": "%s 诞下 %s" % [mother.name, child.name], "cid": child.id})
 	mother.blood_meta["children_born"] = before + litter
+	var echo := ""
 	if litter > 1:
 		var line := Locale.t("birth_multi", [mother.name, litter, "、".join(names)])
 		evs.append({"type": "birth", "text": line})
 		GameState.add_lineage_event(line)
+		echo = line
+	elif not names.is_empty():
+		echo = Locale.t("lb_echo_birth", [mother.name, str(names[0])])
+	if echo != "":
+		CKEconomyState.month_echo_note("birth", echo)
 	GameState.chapter0_flags["child_born"] = true
 
 func _tick_conception(ctx: Dictionary) -> void:

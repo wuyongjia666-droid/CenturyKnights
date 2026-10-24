@@ -321,6 +321,7 @@ static func tick_doctrine_and_marriage_month(host) -> Array:
 			line += Locale.t("ux_marriage_month_silver", [silver_gain])
 		msgs.append(line)
 		host.add_lineage_event(line)
+		CKEconomyState.month_echo_note("marriage", line)
 	# 血胤月泽：子嗣/配偶血胤浓度带来永久感的微收益
 	var blood_bonus = 0
 	for c in host.characters.values():
