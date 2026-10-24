@@ -143,6 +143,7 @@
 | 日期 | 变更 |
 |------|------|
 | 2026-10-24 | Y1-A 清单 §4：ae109ae1 模拟器冒烟 #348–#350 PASS（真机仍待自玩签收） |
+| 2026-10-24 | Y1-B 岁课年迹：`sui_yeartrace_check`（resolve→持久年迹→ack 不抹；档案 YeartracePanel） |
 | 2026-10-24 | Y1-B 内容季选题脚手架：`docs/content-seasons/season-01` + `content_season_scaffold_check`（签收前不扩写小说） |
 | 2026-10-24 | Y1-B 职印六门端到端：`job_seal_six_check`（本城之事→盖印→转职×6）；族谱 mobile 见 #353 |
 | 2026-10-24 | Y1-B 开刀：岁课月循环端到端冒烟 `sui_month_loop_check`（生日→inbox→yearcard→ack→todo 清零）；枢纽族谱契约见 #353 |
