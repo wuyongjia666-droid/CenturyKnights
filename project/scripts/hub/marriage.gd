@@ -1014,7 +1014,12 @@ func _consequence_line(a: CKCharacter, b: CKCharacter) -> void:
 		var id := str(r.get("id", ""))
 		bits.append(str(r.get("desc", "")) if bool(_rite_on.get(id, false)) else str(r.get("block", "")))
 	_full_terms = " ".join(bits) if not bits.is_empty() else "无特殊婚仪。子女按常例入谱。"
-	_msg.text = _full_terms if _full_terms.length() <= 40 else _full_terms.substr(0, 38) + Locale.t("wsc_mr_more")
+	## Mobile: never ellipsize — phone board scrolls; a 22px one-liner + "……" looked cut.
+	## Desktop keeps the short strip then _desk_msg_layout restores full into RiteLogScroll.
+	if _mob or _full_terms.length() <= 40:
+		_msg.text = _full_terms
+	else:
+		_msg.text = _full_terms.substr(0, 38) + Locale.t("wsc_mr_more")
 	_msg.tooltip_text = _full_terms
 	_msg.mouse_filter = Control.MOUSE_FILTER_STOP
 	if not _msg.gui_input.is_connected(_on_msg_input):
@@ -1509,9 +1514,14 @@ func _m_fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 	_msg.reparent(rv, false)
 	_msg.add_theme_font_size_override("font_size", MobilePage.FONT)
 	_msg.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_msg.clip_text = false
+	_msg.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 	_msg.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_msg.custom_minimum_size = Vector2(0, 0)
 	_consequence_line(a, b)
+	## Width from the rites card so wrap height is real (not a 22px single-line clip).
+	var msg_w := maxf(200.0, float(_m_card_w) - 24.0)
+	_msg.custom_minimum_size = Vector2(msg_w, _label_text_h(_msg, msg_w))
 	var fp := _m_card_box(UIKit.TEXT_DIM)
 	(fp[0] as Control).name = "MForecast"
 	(fp[0] as Control).custom_minimum_size.x = 0
