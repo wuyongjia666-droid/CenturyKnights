@@ -26,6 +26,7 @@ func _ready() -> void:
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	add_child(scroll)
 	_list = VBoxContainer.new()
+	_list.name = "BondList"
 	_list.custom_minimum_size = Vector2(420, 0)
 	_list.add_theme_constant_override("separation", 8)
 	scroll.add_child(_list)
@@ -124,7 +125,26 @@ func _refresh_list() -> void:
 	var rows: Array = Bonds.available()
 	var shut: Array = Bonds.locked()
 	if rows.is_empty():
-		_list.add_child(CKPageKit.empty(Locale.t("nar04_empty"), Locale.t("a1_bond_why"), "", 420))
+		## Y1-B / heir #30: no unlocked talks → EmptyHost + ToRoster (fight side by side).
+		var host := VBoxContainer.new()
+		host.name = "EmptyHost"
+		host.add_theme_constant_override("separation", 12)
+		host.add_child(CKPageKit.empty(
+			Locale.t("nar04_empty"),
+			Locale.t("a1_bond_why"),
+			Locale.t("nar04_empty_how"),
+			420
+		))
+		var acts := HBoxContainer.new()
+		acts.name = "EmptyActions"
+		acts.add_theme_constant_override("separation", 12)
+		var to_r := CKPageKit.button(Locale.t("nar04_to_roster"), true, 300)
+		to_r.name = "ToRoster"
+		to_r.pressed.connect(func(): CKNav.go("res://scenes/hub/roster.tscn"))
+		acts.add_child(to_r)
+		UIFX.wire_button(to_r)
+		host.add_child(acts)
+		_list.add_child(host)
 	for convo in rows:
 		var label := "%s  %s" % [Bonds.pair_names(convo), str(convo.get("title", ""))]
 		var button := UIKit.make_accent_button(label, 460)
