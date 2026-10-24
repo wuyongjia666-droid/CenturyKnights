@@ -68,6 +68,12 @@ func _fill() -> void:
 		if all.is_empty():
 			_list.add_child(CKPageKit.empty(Locale.t("lb_news_empty_title"), Locale.t("lb_news_empty_why", [Calendar.year + 1]), Locale.t("lb_news_empty_how"), 1100))
 			_list.add_child(_own_entry())
+			## Empty gazette already has how-text (advance months); named tap CTA.
+			var to_h := CKPageKit.button(Locale.t("lb_news_to_hourglass"), true, 300)
+			to_h.name = "ToHourglass"
+			to_h.pressed.connect(func(): CKNav.go("res://scenes/hub/hourglass.tscn"))
+			_list.add_child(to_h)
+			UIFX.wire_button(to_h)
 		else:
 			var zh := str(CKCourtChrome.KIND_ZH.get(_filter, _filter))
 			_list.add_child(CKPageKit.empty(Locale.t("lb_news_kind_empty", [zh]), Locale.t("lb_news_kind_why"), "", 1100))
