@@ -57,7 +57,7 @@ static func snapshot() -> Array:
 		rows.append(_row("quests", "civil", Locale.t("ux_todo_quests"), _quest_count()))
 	rows.append(_row("injured", "military", Locale.t("ux_todo_injured"), _injured_count()))
 	rows.append(_row("festival", "home", Locale.t("ux_todo_festival"), _festival_count()))
-	rows.append(_row("sui_ke", "home", Locale.t("ux_todo_sui_ke"), CKSuiKe.inbox_count()))
+	rows.append(_row("sui_ke", "family", Locale.t("ux_todo_sui_ke"), CKSuiKe.inbox_count()))
 	var birth := _birth_todo()
 	if not birth.is_empty():
 		rows.append(birth)

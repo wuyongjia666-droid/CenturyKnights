@@ -502,3 +502,4 @@ ux_reroll_hero_btn,再议 · 主线,Redraw · story
 ux_reroll_month_cap_tip,本月再议已用尽（每月 %d 次，下月刷新）,No redraws left (%d / month; resets next month)
 ux_reroll_cost_left,（%d 银，本月剩 %d/%d）,(%d silver, %d/%d left this month)
 ux_dossier_propose,议亲,Propose
+ux_hub_sui_sub,打开岁课 · 未读回执与年迹入口,Open year-cards · unread inbox
