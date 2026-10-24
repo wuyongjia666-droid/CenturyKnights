@@ -108,11 +108,13 @@ func _assert_dossier(kid_id: String) -> String:
 	for _i in 8:
 		await get_tree().process_frame
 	var panel := page.find_child("YeartracePanel", true, false)
+	if panel == null:
+		page.queue_free()
+		return "YeartracePanel missing"
 	var line := page.find_child("Yeartrace_0", true, false)
+	if line == null:
+		page.queue_free()
+		return "Yeartrace_0 missing"
 	page.queue_free()
 	await get_tree().process_frame
-	if panel == null:
-		return "YeartracePanel missing"
-	if line == null:
-		return "Yeartrace_0 missing"
 	return ""
