@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/suites/dynasty/heir_rivalry_settled_cta_check.gd" id="1"]
+
+[node name="HeirRivalrySettledCtaCheck" type="Node"]
+script = ExtResource("1")
