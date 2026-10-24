@@ -75,8 +75,12 @@ func _back() -> void:
 
 func _show(nid: String) -> void:
 	_nation = nid
+	# Free immediately so a same-frame rebuild can reuse names (LineScroll).
+	# queue_free leaves the old node in-tree until idle, and Godot then renames
+	# the replacement to @ScrollContainer@N — court_ui looks up "LineScroll".
 	for ch in _body.get_children():
-		ch.queue_free()
+		_body.remove_child(ch)
+		ch.free()
 	var nat: Dictionary = CKBloodline.nation(nid)
 	var known := CKCourtChrome.known_states()
 	var bw := _body.size.x
@@ -223,21 +227,34 @@ func _royal_skill(nid: String) -> Dictionary:
 	return {"line": "此邦没有单独的王技。", "tip": CKBloodPayoff.legend_zh()}
 
 func apply_mobile_layout() -> void:
-	var vp := get_viewport_rect().size
+	# Prefer the fitted design root when present so suite / phone-fit paths are
+	# deterministic; fall back to the physical viewport only when the root has
+	# not been sized yet (court_ui headless load).
+	var vp := size
+	if vp.x < 64.0 or vp.y < 64.0:
+		vp = get_viewport_rect().size
 	_fit_chrome(vp)
 	if _body == null:
 		return
+	# Wide root keeps the desktop side rail (court_ui @ 1280×720/1280). Compact
+	# nation strip is for portrait / narrow roots only.
 	if vp.x >= 1100.0 and vp.y >= 680.0:
 		return
 	var rail := get_node_or_null("NationRailPanel") as Control
 	if rail == null:
 		return
 	var margin := 8.0
-	var top := 158.0
-	var rail_h := 52.0
+	# Sit below page_head legend so NATIONS / nation chips do not overlap it.
+	var top := 200.0
+	var rail_h := 56.0
 	rail.clip_contents = true
 	rail.position = Vector2(margin, top)
 	rail.size = Vector2(maxf(160.0, vp.x - margin * 2.0), rail_h)
+	# Hide the desktop "NATIONS" mono caption — no room in the strip, and it
+	# overlapped the page_head legend + nation name chips under court_ui.
+	for ch in rail.get_children():
+		if ch is Label:
+			(ch as Label).visible = false
 	var sc := _rail_scroll(rail)
 	if sc:
 		sc.position = Vector2(8, 4)
@@ -315,11 +332,11 @@ func _nation_row(sc: ScrollContainer) -> void:
 	for b in row.get_children():
 		if not (b is Button):
 			continue
-		(b as Button).custom_minimum_size = Vector2(128, 40)
+		(b as Button).custom_minimum_size = Vector2(128, 44)
 		var nm := b.get_node_or_null("NationName") as Label
 		if nm == null:
 			continue
-		nm.position = Vector2(40, 9)
+		nm.position = Vector2(40, 11)
 		nm.size = Vector2(82, 22)
 		nm.clip_text = true
 		nm.autowrap_mode = TextServer.AUTOWRAP_OFF
