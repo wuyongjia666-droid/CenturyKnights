@@ -39,9 +39,10 @@
 | #341 | T-P2-1 Forecast / 单位信息条横屏可读 | 已合 | [x] |
 | #342 | Y1-A 真机签收勾选清单（本文） | 已合 | [x] |
 | #343 | 枢纽缺页手机排版：skill/quests/shrine/title+ | 已合 | [x] |
-| #344 | 本城之事浮层 + atlas `apply_mobile_layout` / 领地模态 | **本 PR** → 绿且你说合后再勾 | [ ] |
+| #344 | 本城之事浮层 + atlas `apply_mobile_layout` / 领地模态 | 已合 | [x] |
+| （本刀） | 枢纽残留挤扁：dossier / rival / inheritance + 签收清单 | **本 PR** → 绿且你说合后再勾 | [ ] |
 
-建议：说「合 #344」。合完再打真机签收包（同 commit 的 Windows + Android）。
+建议：本刀 CI 绿后说「合 #<本PR>」。枢纽 `apply_mobile_layout` 代码侧扫尾完成后，下一门是真机签收（同 commit 的 Windows + Android）。
 
 ---
 

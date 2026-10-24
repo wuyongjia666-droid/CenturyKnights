@@ -21,6 +21,7 @@
 > | 枢纽安全区 / 对话板布局（机制 C） | **本 PR**：`SpeakerCaption` 显式宽高（钉死 ≥80px）；CastleHub 手机入口改 3 列门槛 + 瓷砖高度留白，家族「同袍」不再被 NavRail 半裁；`mobile_dialogue_hub_layout_check` |
 > | 正式 APK 加速冒烟 | **BLOCKED** — box / m173 均无 KVM；**待有 KVM 或真机代理**后再跑。禁止再开无加速长跑 emulator。 |
 > | T-P2-1 Forecast / 单位信息条横屏可读 | **本 PR**（`fix/y1a-tp2-1-forecast-panel`）：字号地板 + 防挤扁契约 |
+> | 枢纽 apply_mobile 扫尾（dossier/rival/inheritance 挤扁硬修） | **本 PR（代码）**；真机签收仍 NEXT |
 > | 真机签收「不难选中」 | **NEXT（需用户或真机代理）** |
 > | Y1-A 签收包（可勾选） | **清单** → [`y1a-acceptance-checklist-2026-10.md`](./y1a-acceptance-checklist-2026-10.md) |
 
@@ -234,4 +235,4 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 1. **APK 冒烟**：待有 KVM 或真机代理（本环境勿再开无加速 emulator）  
 2. ~~安全区 / `get_global_transform` 对拍~~ → **DONE** #334（真机只需确认设备返回的安全区）  
 3. ~~对话板手机布局（机制 C）~~ → **本 PR**  
-4. 真机按 [`y1a-acceptance-checklist-2026-10.md`](./y1a-acceptance-checklist-2026-10.md) 勾完后才开内容季
+4. 枢纽 apply_mobile 代码侧扫尾完成后，下一门是真机签收：按 [`y1a-acceptance-checklist-2026-10.md`](./y1a-acceptance-checklist-2026-10.md) 勾完后才开内容季
