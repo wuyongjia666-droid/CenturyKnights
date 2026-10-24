@@ -1,0 +1,26 @@
+{
+  "id": "season_01",
+  "version": 1,
+  "title_zh": "回执上的灯",
+  "status": "topic_scaffold",
+  "pipeline": ["topic", "novel", "bible", "playable", "systems", "art", "playtest"],
+  "stage": "topic",
+  "flag_lamp": {
+    "flag": "灰旗名册与联姻声称",
+    "lamp": "岁课回执与孩童征兆对不上名册"
+  },
+  "system_deepen": "sui_ke_yeartrace",
+  "system_deepen_zh": "岁课回执写入族谱年迹（只读）",
+  "gates": {
+    "y1a_device_signoff": false,
+    "topic_user_ack": false,
+    "novel_allowed": false
+  },
+  "docs_rel": [
+    "docs/content-seasons/season-01/TOPIC.md",
+    "docs/content-seasons/season-01/NOVEL.md",
+    "docs/content-seasons/season-01/BIBLE.md",
+    "docs/content-seasons/season-01/PLAYABLE.md",
+    "docs/content-seasons/season-01/ACCEPTANCE.md"
+  ]
+}
