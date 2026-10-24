@@ -151,6 +151,7 @@
 | 2026-10-25 | Y1-B 档案缺人空态：EmptyHost why/how + ToRoster + `dossier_missing_empty_cta_check` |
 | 2026-10-25 | Y1-B 敌宅空列表：EmptyHost why/how + ToCourtNews + `rival_houses_empty_cta_check` |
 | 2026-10-25 | Y1-B 同袍空羁绊：EmptyHost why/how + ToRoster + `support_empty_cta_check` |
+| 2026-10-25 | Y1-B 验血 idle 右栏：EmptyHost why/how + ToMarriage（全验完对齐 #369）+ `blood_test_idle_cta_check` |
 | 2026-10-25 | Y1-B 嗣位校场无继承人空态（#30）：EmptyHost why + ToMarriage/ToTavern + `heir_rivalry_empty_cta_check` |
 | 2026-10-25 | Y1-B 战场团灭 → 同一 `dynasty_end`（reason=`wipeout`；战后 defer 承旗 + `close_after_battle`）+ `dynasty_wipeout_check` |
 | 2026-10-25 | Y1-B 空团结局 stub：无可承旗 → `house_mods.dynasty_end` + 枢纽/沙漏/属地可感 + `dynasty_end_stub_check` |

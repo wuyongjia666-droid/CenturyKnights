@@ -66,11 +66,26 @@ func _ready() -> void:
 	_status.size = Vector2(720, 40)
 	right.add_child(_status)
 	_stage = CKPageKit.list(right, Rect2(14, 104, 732, 394), "RevealCards")
-	# Idle right pane was a blank card (audit P2). One empty-state is enough; drop the status echo.
+	# Idle right pane was a blank card (audit P2). EmptyHost + how; all-done → ToMarriage (align #369 queue).
 	if _lines.is_empty():
 		var idle_why := Locale.t("lb_bt_idle") if not _pending.is_empty() else Locale.t("lb_bt_idle_done")
+		var idle_how := Locale.t("lb_bt_idle_how") if not _pending.is_empty() else Locale.t("lb_bt_idle_done_how")
 		_status.text = ""
-		_stage.add_child(CKPageKit.empty(Locale.t("lb_bt_result"), idle_why, "", 690))
+		var host := VBoxContainer.new()
+		host.name = "EmptyHost"
+		host.add_theme_constant_override("separation", 12)
+		host.add_child(CKPageKit.empty(Locale.t("lb_bt_result"), idle_why, idle_how, 690))
+		if _pending.is_empty():
+			var acts := HBoxContainer.new()
+			acts.name = "EmptyActions"
+			acts.add_theme_constant_override("separation", 12)
+			var to_m := CKPageKit.button(Locale.t("lb_bt_to_marriage"), true, 300)
+			to_m.name = "ToMarriage"
+			to_m.pressed.connect(func(): CKNav.go("res://scenes/hub/marriage.tscn"))
+			acts.add_child(to_m)
+			UIFX.wire_button(to_m)
+			host.add_child(acts)
+		_stage.add_child(host)
 	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "SANCTUARY ASSAY · FROST")
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)

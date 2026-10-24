@@ -297,6 +297,8 @@ lb_bt_wait_money,（银子不够，下次再验）, (not enough silver)
 lb_bt_result,验血结果,Results
 lb_bt_idle,灯还没点。按左边「开始验血」，结果会一张一张翻出来。,Press start; results appear one by one.
 lb_bt_idle_done,这次没有要验的人。,Nobody to test.
+lb_bt_idle_how,点左边「开始验血」，结果会一张一张翻出来。,Tap Start on the left; results flip out one by one.
+lb_bt_idle_done_how,点下方去联姻；新生与新婚会回到验血队列。,Tap below to marriage; new births and spouses refill the queue.
 lb_bt_running,正在验，等结果出来,Testing...
 lb_bt_done,验完了。冒充的已经改回真实血脉，详档里可以看到携带的血脉了。,Done. Dossiers now show carried traits.
 lb_bt_fake_mark,伪,false
