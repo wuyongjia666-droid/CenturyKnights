@@ -87,6 +87,9 @@ func _run() -> String:
 	var dlg_err := _assert_dialogue_portrait_no_large_gate()
 	if dlg_err != "":
 		return dlg_err
+	var ex_err := _assert_exists_falls_to_medium_under_android()
+	if ex_err != "":
+		return ex_err
 	return _fallback()
 
 
@@ -110,6 +113,50 @@ func _assert_dialogue_portrait_no_large_gate() -> String:
 		return "dialogue_portrait missing medium try_load for expressions"
 	if body.find("_try_load(sp_path, CKArtPaths.TIER_MEDIUM)") < 0:
 		return "dialogue_portrait missing medium try_load for speakers"
+	return ""
+
+
+## Y1-A root harden: CKArtPaths.exists/resolve must see .medium.webp when Android
+## exclude_filter drops the large sibling. dialogue_portrait already bypasses the
+## gate; this closes the same class of bug for any remaining exists()/load_texture()
+## callers on speaker/expression paths.
+func _assert_exists_falls_to_medium_under_android() -> String:
+	var filters := _android_filters()
+	if filters.is_empty():
+		return "no Android filters for exists-tier assert"
+	var probe := "res://assets/art/portraits/speakers/barkeep.png"
+	var large := "res://assets/art/portraits/speakers/barkeep.webp"
+	var medium := "res://assets/art/portraits/speakers/barkeep.medium.webp"
+	if not FileAccess.file_exists(ProjectSettings.globalize_path(medium)):
+		return "fixture medium missing: " + medium
+	CKArtPaths.pack_excluded = func(path: String) -> bool:
+		var rel := path.trim_prefix("res://")
+		return _excluded(rel, filters)
+	# Large master is filtered out of the Android pack (filter match, not exists()).
+	if not _excluded(large.trim_prefix("res://"), filters):
+		CKArtPaths.pack_excluded = Callable()
+		return "Android filter does not exclude large speaker webp"
+	if not CKArtPaths.exists(probe):
+		CKArtPaths.pack_excluded = Callable()
+		return "exists(speaker.png) false under Android exclude (medium packed)"
+	var got := CKArtPaths.resolve(probe)
+	# Asking for the large path itself must also fall through to medium once packed out.
+	var got_large := CKArtPaths.resolve(large)
+	CKArtPaths.pack_excluded = Callable()
+	if got != medium:
+		return "resolve(png) under Android exclude got %s want %s" % [got, medium]
+	if got_large != medium:
+		return "resolve(large.webp) under Android exclude got %s want %s" % [got_large, medium]
+	var src := FileAccess.get_file_as_string("res://scripts/art/art_paths.gd")
+	var start := src.find("static func resolve(path")
+	if start < 0:
+		return "resolve missing"
+	var body := src.substr(start, 700)
+	var end := body.find("\nstatic func ", 1)
+	if end > 0:
+		body = body.substr(0, end)
+	if body.find("_is_portrait_path") < 0 or body.find("_tier_candidates") < 0:
+		return "resolve missing portrait tier fallback"
 	return ""
 
 
