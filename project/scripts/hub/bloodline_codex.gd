@@ -223,11 +223,17 @@ func _royal_skill(nid: String) -> Dictionary:
 	return {"line": "此邦没有单独的王技。", "tip": CKBloodPayoff.legend_zh()}
 
 func apply_mobile_layout() -> void:
-	var vp := get_viewport_rect().size
+	# Prefer the fitted design root over the physical viewport so landscape phones
+	# (e.g. 2400×1080) still get the compact nation-rail layout instead of the
+	# desktop side-rail early-out.
+	var vp := size
+	if vp.x < 64.0 or vp.y < 64.0:
+		vp = get_viewport_rect().size
 	_fit_chrome(vp)
 	if _body == null:
 		return
-	if vp.x >= 1100.0 and vp.y >= 680.0:
+	# Desktop keeps the side rail when the root is truly wide; phones always compact.
+	if not DeviceProfile.is_mobile() and vp.x >= 1100.0 and vp.y >= 680.0:
 		return
 	var rail := get_node_or_null("NationRailPanel") as Control
 	if rail == null:
