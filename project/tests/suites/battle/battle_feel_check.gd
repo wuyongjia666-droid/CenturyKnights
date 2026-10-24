@@ -2,6 +2,7 @@ extends Node
 ## Mobile battle feel: soft pick, skill chip labels, end-turn confirm, camera focus hooks.
 ## Y1-A: SOFT_R ≥ 0.85, eccentric fat-finger cases, drag-commit + louder preview contracts.
 ## Y1-A T-P1-1/2: selected long-press raise + pure pan/zoom cell contracts.
+## Y1-A T-P1-3: 3D figure visual-bias (face/head → unit below).
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -31,6 +32,8 @@ func _check() -> String:
 		err = _long_ms_selected()
 	if err == "":
 		err = _pan_zoom_cell()
+	if err == "":
+		err = _visual_bias()
 	OS.set_environment("CK_FORCE_MOBILE", "0")
 	return err
 
@@ -92,6 +95,8 @@ func _source_contracts() -> String:
 		return "battle_controller missing long_ms_fn wire for selection"
 	if pick.find("local_after_pan_zoom") < 0 or pick.find("cell_at_local") < 0:
 		return "battle_pick missing T-P1-2 pure transform helpers"
+	if pick.find("visual_bias_unit_pos") < 0 or pick.find("const FIG_TOP") < 0:
+		return "battle_pick missing T-P1-3 visual bias"
 	# T-P1-2 real transform: the live camera must use the same helpers the contracts test.
 	if ctrl.find("BattlePick.clamp_pan(") < 0 or ctrl.find("BattlePick.zoom_about(") < 0:
 		return "battle_controller camera not on BattlePick.clamp_pan/zoom_about"
@@ -215,6 +220,53 @@ func _pan_zoom_cell() -> String:
 	var target: Vector2 = stage.get_center() + Vector2(-stage.size.x * 0.08, 0.0)
 	if placed.distance_to(target) > 0.5:
 		return "focus_pan_delta miss: placed=%s target=%s" % [placed, target]
+	return ""
+
+
+func _visual_bias() -> String:
+	## T-P1-3: face/head in empty cell above a unit snaps to that unit; soft-R alone misses.
+	var origin := Vector2(40, 80)
+	var cell_px := 56.0
+	var units: Array = [
+		{"char": {"hp": 10}, "pos": Vector2i(2, 2)},
+		{"char": {"hp": 10}, "pos": Vector2i(5, 3)},
+	]
+	# Face ≈ model 88% height → rel_y ≈ -0.52 from unit cell top (within [FIG_TOP, FIG_FEET]).
+	var face_local: Vector2 = origin + Vector2(2.5, 2.0 - 0.52) * cell_px
+	var face_cell := Vector2i(2, 1)  # empty cell above unit (2,2)
+	var got_face: Vector2i = BattlePick.visual_bias_unit_pos(origin, cell_px, units, face_local, face_cell)
+	if got_face != Vector2i(2, 2):
+		return "visual bias missed face tap: %s" % str(got_face)
+	# Soft-R alone must still miss the face (proves bias is needed).
+	var soft_face: Vector2i = BattlePick.nearest_unit_pos(origin, cell_px, units, face_local)
+	if soft_face == Vector2i(2, 2):
+		return "soft-R unexpectedly hit face (bias gate useless)"
+	# Crown / above FIG_TOP must not bias.
+	var crown_local: Vector2 = origin + Vector2(2.5, 2.0 - 0.75) * cell_px
+	var got_crown: Vector2i = BattlePick.visual_bias_unit_pos(origin, cell_px, units, crown_local, face_cell)
+	if got_crown == Vector2i(2, 2):
+		return "visual bias falsely hit above FIG_TOP"
+	# Occupied finger cell: resolve path keeps occupancy priority (bias helper still
+	# pure — caller skips bias when exact has a unit). Bias with wrong below empty.
+	var no_below: Vector2i = BattlePick.visual_bias_unit_pos(origin, cell_px, units, face_local, Vector2i(7, 1))
+	if no_below.x >= 0:
+		return "visual bias fired with empty cell below"
+	# Dead unit below must not bias.
+	var dead_units: Array = [{"char": {"hp": 0}, "pos": Vector2i(2, 2)}]
+	var got_dead: Vector2i = BattlePick.visual_bias_unit_pos(origin, cell_px, dead_units, face_local, face_cell)
+	if got_dead.x >= 0:
+		return "visual bias hit dead unit"
+	# Occupied cell above: when neighbour sits in the face cell, soft/exact wins — bias
+	# helper is only consulted for empty finger cells; still verify helper with below.
+	var stacked: Array = [
+		{"char": {"hp": 10}, "pos": Vector2i(2, 2)},
+		{"char": {"hp": 10}, "pos": Vector2i(2, 1)},
+	]
+	# Helper still returns below when asked with finger_cell=(2,1); resolve() skips it
+	# because exact has a unit. Contract that stacked above exists so resolve prefers it:
+	var soft_stack: Vector2i = BattlePick.nearest_unit_pos(origin, cell_px, stacked, face_local)
+	if soft_stack != Vector2i(2, 1) and soft_stack != Vector2i(2, 2):
+		return "stacked case soft pick unexpected: %s" % str(soft_stack)
 	return ""
 
 
