@@ -1,6 +1,7 @@
 extends Control
 ## One unit: expressed and carried traits, parent source, purity, age stage, title, family tree.
 
+const YeartraceUi := preload("res://scripts/hub/sui_yeartrace_ui.gd")
 var _focus: CKCharacter
 
 func _ready() -> void:
@@ -352,41 +353,9 @@ func _trait_block(parent: Node, title: String, rows: Array, col: Color) -> void:
 
 
 func _yeartrace(parent: Node, focus: CKCharacter) -> void:
-	## Season-01 deepen: durable 岁课年迹 (read-only), survives inbox ack.
-	var panel := VBoxContainer.new()
-	panel.name = "YeartracePanel"
-	panel.add_theme_constant_override("separation", 4)
-	parent.add_child(panel)
-	panel.add_child(UIKit.mono("SUI · YEARTRACE", 9, UIKit.ACCENT, false))
-	if focus == null:
-		panel.add_child(UIKit.body_label("—", UIKit.TEXT_FAINT, 12))
-		return
-	var rows: Array = CKSuiKe.yeartrace_for(focus.id)
-	if rows.is_empty():
-		var empty := UIKit.body_label(Locale.t("sui_yeartrace_empty"), UIKit.TEXT_FAINT, 12)
-		empty.name = "YeartraceEmpty"
-		panel.add_child(empty)
-		return
-	# Newest last in store; show latest first, cap 6.
-	var shown := 0
-	for i in range(rows.size() - 1, -1, -1):
-		if shown >= 6:
-			break
-		var item: Dictionary = rows[i]
-		var line := Locale.t("sui_yeartrace_line", [
-			int(item.get("year", 0)),
-			int(item.get("month", 0)),
-			str(item.get("title", "")),
-			str(item.get("outcome", "")),
-		])
-		var lab := UIKit.body_label(line, UIKit.TEXT, 12)
-		lab.name = "Yeartrace_%d" % shown
-		lab.autowrap_mode = TextServer.AUTOWRAP_OFF
-		lab.clip_text = true
-		lab.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		lab.custom_minimum_size = Vector2(360, maxi(18, MobileLayout.FONT_FLOOR))
-		panel.add_child(lab)
-		shown += 1
+	## Season-01 deepen: durable 岁课年迹 via shared CKSuiYeartraceUi.
+	GameState.set_meta("yeartrace_back", "res://scenes/hub/unit_dossier.tscn")
+	YeartraceUi.mount_for(parent, focus, 360.0)
 
 
 func _archive(parent: Node, focus: CKCharacter) -> void:

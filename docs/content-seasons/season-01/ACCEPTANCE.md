@@ -6,4 +6,5 @@
 
 - [x] `CKSuiKe.yeartrace*`：resolve 写入 `house_mods.sui_yeartrace`，ack 清 inbox 后仍在
 - [x] 档案 `YeartracePanel` 只读展示
-- [x] CI：`suite_sui_yeartrace_check`
+- [x] 族谱 `lineage_view` 信息栏 + `bloodline_codex` 本宅年迹可点开（进档案）
+- [x] CI：`suite_sui_yeartrace_check` + `suite_sui_yeartrace_lineage_check`

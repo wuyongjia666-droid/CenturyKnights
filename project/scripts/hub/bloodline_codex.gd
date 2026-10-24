@@ -1,6 +1,7 @@
 extends Control
 ## 血脉图鉴 — ten nations, royal / noble / folk lines, law icons, discovered traits, royal skills.
 
+const YeartraceUi := preload("res://scripts/hub/sui_yeartrace_ui.gd")
 var _body: Control
 var _nation := ""
 var _panel_w := 920.0
@@ -145,6 +146,8 @@ func _show(nid: String) -> void:
 	col.custom_minimum_size = Vector2(_panel_w, 0)
 	col.add_theme_constant_override("separation", 10)
 	scroll.add_child(col)
+	GameState.set_meta("yeartrace_back", "res://scenes/hub/bloodline_codex.tscn")
+	YeartraceUi.mount_house(col, maxf(200.0, _panel_w - 16.0), 6)
 	_line_card(col, str(nat.get("royal", "")), "王胤", known)
 	for noble in nat.get("noble", []):
 		_line_card(col, str(noble), "贵胤", known)

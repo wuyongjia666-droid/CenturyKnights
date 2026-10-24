@@ -3,6 +3,7 @@ extends RefCounted
 ## Genealogy v2 right-hand info panel (docs/design/genealogy-v2.md).
 ## Portrait, name, age, family arms, rank badge, job, traits, and one action button.
 
+const YeartraceUi := preload("res://scripts/hub/sui_yeartrace_ui.gd")
 const RECT := Rect2(862, 72, 394, 600)
 
 static func family_of(chars: Dictionary, leader) -> Array:
@@ -187,7 +188,7 @@ static func render(host: Control, c, action_text: String, action_cb: Callable) -
 	var y := 246.0
 	var shown := 0
 	for tr in c.traits:
-		if shown >= 5:
+		if shown >= 3:
 			break
 		var td: Dictionary = GameState.get_trait(str(tr))
 		var ic := UIKit.trait_icon_rect(str(tr), 22.0)
@@ -203,10 +204,19 @@ static func render(host: Control, c, action_text: String, action_cb: Callable) -
 		var nt := UIKit.body_label(Locale.t("gen2_09"), UIKit.TEXT_FAINT, 12)
 		nt.position = Vector2(20, y)
 		p.add_child(nt)
+	var yt_y := mini(y + 10.0, 360.0)
+	var yt_host := Control.new()
+	yt_host.name = "YeartraceHost"
+	yt_host.position = Vector2(20, yt_y)
+	yt_host.size = Vector2(354, 110)
+	yt_host.clip_contents = true
+	p.add_child(yt_host)
+	GameState.set_meta("yeartrace_back", "res://scenes/hub/lineage_view.tscn")
+	YeartraceUi.mount_for(yt_host, c, 354.0, 3)
 	var pb := str(c.primary_bloodline())
 	var bl := UIKit.body_label(Locale.t("gen2_10") % [GameState.get_bloodline(pb).get("name", pb), int(round(float(c.blood_mix.get(pb, 1.0)) * 100))], UIKit.TEXT_DIM, 12)
 	bl.autowrap_mode = TextServer.AUTOWRAP_OFF
-	bl.position = Vector2(20, 452)
+	bl.position = Vector2(20, yt_y + 114.0)
 	p.add_child(bl)
 	if action_text != "":
 		var btn := UIKit.cta_button(action_text, "" if DeviceProfile.is_mobile() else "A", 354, 52)
@@ -273,7 +283,7 @@ static func render_mobile(host: Control, c, action_text: String, action_cb: Call
 	v.add_child(flow)
 	var shown := 0
 	for tr in c.traits:
-		if shown >= 5:
+		if shown >= 3:
 			break
 		var td: Dictionary = GameState.get_trait(str(tr))
 		var row := HBoxContainer.new()
@@ -287,6 +297,8 @@ static func render_mobile(host: Control, c, action_text: String, action_cb: Call
 	var pb := str(c.primary_bloodline())
 	var mix := int(round(float(c.blood_mix.get(pb, 1.0)) * 100))
 	v.add_child(MobilePage.label(Locale.t("gen2_10") % [GameState.get_bloodline(pb).get("name", pb), mix], UIKit.TEXT_DIM))
+	GameState.set_meta("yeartrace_back", "res://scenes/hub/lineage_view.tscn")
+	YeartraceUi.mount_for(v, c, 420.0, 4)
 	MobilePage.spacer(v)
 	if action_text != "":
 		var btn := MobilePage.button(action_text, true, func(): action_cb.call())
