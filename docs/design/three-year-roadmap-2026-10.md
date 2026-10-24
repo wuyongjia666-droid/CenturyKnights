@@ -142,6 +142,7 @@
 
 | 日期 | 变更 |
 |------|------|
+| 2026-10-25 | Y1-B 内容季流水脚手架加深：topic_checklist / acceptance[] / pipeline_stages + suite v2（仍不扩小说） |
 | 2026-10-25 | Y1-B 月循环加深：属地 MonthEchoPanel 回读上月收成/领地月结 + `month_echo_estates_check` |
 | 2026-10-25 | Y1-B 开刀：继承页答完后 mobile 重跑 `apply_mobile_layout`（AnswerScroll / FONT / HIT）+ `mobile_inheritance_reshow_check` |
 | 2026-10-24 | Y1-A 清单 §4：ae109ae1 模拟器冒烟 #348–#350 PASS（真机仍待自玩签收） |

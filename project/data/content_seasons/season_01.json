@@ -1,9 +1,17 @@
 {
   "id": "season_01",
-  "version": 1,
+  "version": 2,
   "title_zh": "回执上的灯",
   "status": "topic_scaffold",
-  "pipeline": ["topic", "novel", "bible", "playable", "systems", "art", "playtest"],
+  "pipeline": [
+    "topic",
+    "novel",
+    "bible",
+    "playable",
+    "systems",
+    "art",
+    "playtest"
+  ],
   "stage": "topic",
   "flag_lamp": {
     "flag": "灰旗名册与联姻声称",
@@ -16,8 +24,99 @@
     "topic_user_ack": false,
     "novel_allowed": false
   },
+  "topic_checklist": [
+    {
+      "id": "one_liner",
+      "label_zh": "一句",
+      "required": true
+    },
+    {
+      "id": "flag_lamp",
+      "label_zh": "旗 / 灯冲突",
+      "required": true
+    },
+    {
+      "id": "system_pick",
+      "label_zh": "本季加深的系统",
+      "required": true
+    },
+    {
+      "id": "wont_do",
+      "label_zh": "不做（本季）",
+      "required": true
+    },
+    {
+      "id": "downstream_gates",
+      "label_zh": "下游闸门",
+      "required": true
+    }
+  ],
+  "acceptance": [
+    {
+      "id": "yeartrace_persist",
+      "label_zh": "岁课年迹 resolve 持久、ack 不抹",
+      "suite": "res://tests/suites/dynasty/sui_yeartrace_check.tscn",
+      "done": true
+    },
+    {
+      "id": "yeartrace_lineage",
+      "label_zh": "族谱 / 血脉图鉴可点开年迹",
+      "suite": "res://tests/suites/dynasty/sui_yeartrace_lineage_check.tscn",
+      "done": true
+    },
+    {
+      "id": "month_loop_smoke",
+      "label_zh": "岁课月循环端到端冒烟",
+      "suite": "res://tests/suites/dynasty/sui_month_loop_check.tscn",
+      "done": true
+    },
+    {
+      "id": "scaffold_gate",
+      "label_zh": "内容季脚手架门禁（签收前不开小说）",
+      "suite": "res://tests/suites/narrative/content_season_scaffold_check.tscn",
+      "done": true
+    }
+  ],
+  "pipeline_stages": {
+    "topic": {
+      "doc": "docs/content-seasons/season-01/TOPIC.md",
+      "gate": "",
+      "open": true
+    },
+    "novel": {
+      "doc": "docs/content-seasons/season-01/NOVEL.md",
+      "gate": "novel_allowed",
+      "open": false
+    },
+    "bible": {
+      "doc": "docs/content-seasons/season-01/BIBLE.md",
+      "gate": "novel_allowed",
+      "open": false
+    },
+    "playable": {
+      "doc": "docs/content-seasons/season-01/PLAYABLE.md",
+      "gate": "novel_allowed",
+      "open": false
+    },
+    "systems": {
+      "doc": "docs/content-seasons/season-01/ACCEPTANCE.md",
+      "gate": "",
+      "open": true
+    },
+    "art": {
+      "doc": "",
+      "gate": "novel_allowed",
+      "open": false
+    },
+    "playtest": {
+      "doc": "",
+      "gate": "y1a_device_signoff",
+      "open": false
+    }
+  },
   "docs_rel": [
     "docs/content-seasons/season-01/TOPIC.md",
+    "docs/content-seasons/season-01/CHECKLIST.md",
     "docs/content-seasons/season-01/NOVEL.md",
     "docs/content-seasons/season-01/BIBLE.md",
     "docs/content-seasons/season-01/PLAYABLE.md",
