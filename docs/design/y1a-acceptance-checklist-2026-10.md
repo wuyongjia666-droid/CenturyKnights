@@ -98,7 +98,8 @@
 
 ## 4. APK 冒烟
 
-- [x] **m173 Hyper-V / WHPX** emulator-5554：安装 + 启动到主菜单 PASS（2026-10-24；报告 `ck-e2e-apk-smoke-m173-2026-10-24.md`；APK sha `779ca1b49`）  
+- [x] **m173 Hyper-V / WHPX** emulator-5554：安装 + 启动到主菜单 PASS（2026-10-24；报告 `ck-e2e-apk-smoke-m173-2026-10-24.md`；APK sha `779ca1b49`）— 历史冒烟（#348–#350 合入前）  
+- [x] **m173 Hyper-V / WHPX** emulator-5554：`CenturyKnights-android-ae109ae1.apk`（试玩包 tag `main-ae109ae1`；路径 `D:\tools\ck-apk-parts\…`；506426519 bytes；sha256 `D10BEF4765701037EDA7035D4B36B8C8D32798F8B53DF6BC00EA199D272A221E`）`install -r` PASS（先 uninstall 因签名冲突）；**versionName=9.1.0 / versionCode=910**；**#348 点脸吸选 PASS**；**#349 拖移落格 PASS**（邻敌旁空地不 soft 吸）；**#350 立绘 medium 回落 PASS**（2026-10-24 Asia/Shanghai；报告 `ck-e2e-apk-smoke-m173-ae109ae1-2026-10-24.md`）  
 - [ ] **真机 / 真机代理**再跑一遍：进枢纽、进一战、进一段对白、退出无 ANR（**待用户自玩签收**；2026-10-24 用户说不装、后面自己玩；playforge 不代装）  
 - [ ] 记录完整路径与截图/录屏
 
