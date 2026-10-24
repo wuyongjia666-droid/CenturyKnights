@@ -74,6 +74,13 @@ func _refresh_list() -> void:
 		_body.clip_text = false
 		_body.max_lines_visible = -1
 		CKPageKit.clear(_actions)
+		if kids.is_empty():
+			## Empty list already has how-text; named tap CTA (heir #30 pattern).
+			var to_m := CKPageKit.button(Locale.t("lb_rite_to_marriage"), true, 260)
+			to_m.name = "ToMarriage"
+			to_m.pressed.connect(func(): CKNav.go("res://scenes/hub/marriage.tscn"))
+			_actions.add_child(to_m)
+			UIFX.wire_button(to_m)
 
 func _paint_steps(cur: int) -> void:
 	CKPageKit.clear(_steps)
