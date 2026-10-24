@@ -39,6 +39,12 @@ func _ready() -> void:
 	var list := CKPageKit.list(left, Rect2(14, list_y, 392, list_h), "QueueList")
 	if _pending.is_empty():
 		list.add_child(CKPageKit.empty(Locale.t("lb_bt_all_done"), Locale.t("lb_bt_all_done_why"), "", 360))
+		## Empty queue already says births/spouses refill it; named tap CTA.
+		var to_m := CKPageKit.button(Locale.t("lb_bt_to_marriage"), true, 360)
+		to_m.name = "ToMarriage"
+		to_m.pressed.connect(func(): CKNav.go("res://scenes/hub/marriage.tscn"))
+		list.add_child(to_m)
+		UIFX.wire_button(to_m)
 	for i in _pending.size():
 		var c: CKCharacter = _pending[i]
 		var r := CKPageKit.row(UIKit.OK if i < can else UIKit.TEXT_FAINT, 52)
