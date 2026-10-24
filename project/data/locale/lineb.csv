@@ -46,6 +46,7 @@ lb_train_no_tutor_title,现在没人能当老师,No one can teach
 lb_train_no_tutor_why,老师要是在团里、16 岁以上、没受伤的人。等伤好了再来。,"Tutors must be 16+, in the company and unhurt."
 lb_train_promo_none,暂时没人能转职,No one can change class
 lb_train_promo_none_why,团里现在的职业都还没有下一阶。打仗练级、换了基础职业以后再来看。,No current class has a next tier yet.
+lb_train_to_title_promote,去请爵转职,To title promote
 lb_train_promo_go,确认转职,Change class
 lb_train_req_none,没有额外条件,No requirement
 lb_train_req_item,%s %d/%d,%s %d/%d
