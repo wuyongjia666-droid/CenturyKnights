@@ -44,9 +44,10 @@
 | #346 | 勾 #345 + playforge 自合纪律 | 已合 | [x] |
 | #347 | hub coverage suite 扩到 9 页 | 已合 | [x] |
 | #348 | T-P1-3 视觉偏置：点脸/头吸回下方单位 | 已合 | [x] |
-| （本 PR） | T-P1-4 拖移落格：移动用精确指格，邻单位 soft 不抢空地 | 待合 | [ ] |
+| #349 | T-P1-4 拖移落格：移动用精确指格，邻单位 soft 不抢空地 | 已合 | [x] |
+| （本 PR） | 立绘 `CKArtPaths.exists`/`resolve` 对 medium 回落（机制 A 根因加固） | 待合 | [ ] |
 
-纪律（2026-10-24）：Y1-A / hub-mobile **CI 全绿**的 PR 由 playforge 自行 merge，不再开「合不集合」确认。仍禁止花钱 / force-push。枢纽扫尾（#345–#347）+ T-P1-3/#348 + T-P1-4 拖移落格落地后，**下一门仍是真机签收**（同 commit 的 Windows + Android；§3 全勾）。
+纪律（2026-10-24）：Y1-A / hub-mobile **CI 全绿**的 PR 由 playforge 自行 merge，不再开「合不集合」确认。仍禁止花钱 / force-push。T-P1 代码侧已齐（#348/#349）+ 立绘 exists 档位回落后，**下一门仍是真机签收**（同 commit 的 Windows + Android；§3 全勾）。
 
 ---
 

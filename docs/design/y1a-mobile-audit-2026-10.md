@@ -16,7 +16,8 @@
 > | T-P1-2 pan/zoom→格纯数学契约 | **DONE**（#333） |
 > | T-P1-2 真实安全区 + 镜头变换 | **DONE**（#334）：修安全区坐标被算两次；设备 `get_display_safe_area` 真机仍待签收 |
 > | T-P1-3 3D 视觉命中（视觉偏置） | **DONE**（#348）：空格点脸/头 → 吸回下方单位；`visual_bias_unit_pos` + `battle_feel_check` |
-> | T-P1-4 拖移落格精确指格 | **DONE**（本 PR）：移动/落子用 `_pointer_to_cell`；攻击仍 soft；离合法格清幽灵；`drag_move_cell` / `drag_land_cell` |
+> | T-P1-4 拖移落格精确指格 | **DONE**（#349）：移动/落子用 `_pointer_to_cell`；攻击仍 soft；离合法格清幽灵；`drag_move_cell` / `drag_land_cell` |
+> | 立绘 exists/resolve medium 回落（机制 A 根因） | **DONE**（本 PR）：`CKArtPaths.resolve` 在 portraits 路径上 large 被 exclude 时落到 `.medium.webp`；`android_tier_pack_check` |
 > | 剧情立绘端游↔手游对齐核查 | **DONE**（#335） |
 > | 9 人无图农场回填（配角 4 + 反派 5） | **DONE**（#337 cast/farm 接线；#338 入库真立绘） |
 > | 枢纽安全区 / 对话板布局（机制 C） | **DONE（#339）**：`SpeakerCaption` 显式宽高（钉死 ≥80px）；CastleHub 手机入口改 3 列门槛 + 瓷砖高度留白，家族「同袍」不再被 NavRail 半裁；`mobile_dialogue_hub_layout_check` |
@@ -130,7 +131,8 @@
 4. ~~**P1** 长按阈值与选中态互斥~~ → **DONE**（`LONG_MS_SELECTED`）  
 5. ~~**P1** pan/zoom→格纯契约~~ → **DONE**（#334）；真机安全区对拍仍 NEXT。  
 6. ~~**P1** T-P1-3 视觉偏置~~ → **DONE**（#348）。  
-7. ~~**P1** T-P1-4 拖移落格精确指格~~ → **DONE**（本 PR）。  
+7. ~~**P1** T-P1-4 拖移落格精确指格~~ → **DONE**（#349）。
+7b. ~~立绘 exists/resolve medium 回落~~ → **DONE**（本 PR）。  
 8. ~~正式 APK 冒烟~~ → **PARTIAL**（m173 Hyper-V 主菜单 PASS）；**NEXT** 真机（小米）手感/立绘勾选。
 
 ---
@@ -209,6 +211,7 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 - 文件：`project/scripts/art/unit_art.gd` · `dialogue_portrait`  
 - 改动：去掉对 `_art_exists(path)` / `_art_exists(sp_path)` 的 large 门闩，直接 `_try_load(..., TIER_MEDIUM)`（内部已 `resolve_portrait`）。  
 - 回归：`android_tier_pack_check.gd` 增加源码契约，防止门闩回潮。
+- **根因加固（本 PR）**：`CKArtPaths.resolve`/`exists`/`load_texture` 对 `/portraits/` 路径在 large 缺失或被 `pack_excluded` 时回落到 medium/small，避免其它仍走 `exists()` 门闩的调用点在 Android 上假阴性。
 
 ---
 

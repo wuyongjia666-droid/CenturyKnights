@@ -29,6 +29,16 @@ static func resolve(path: String) -> String:
 	var webp := _webp_sibling(path)
 	if webp != "" and _exists_any(webp):
 		return webp
+	if _exists_any(path):
+		return path
+	# Y1-A: Android exclude_filter drops portrait larges while packing .medium.webp.
+	# Call sites that still go through exists()/load_texture()/resolve() (not
+	# resolve_portrait) must see the medium sibling, or gates false-negative into
+	# silhouettes on phone while Windows still shows plates (mech A class bug).
+	if _is_portrait_path(path):
+		for candidate in _tier_candidates(path, TIER_MEDIUM):
+			if _exists_any(candidate):
+				return candidate
 	return path
 
 
@@ -97,6 +107,11 @@ static func _tier_candidates(path: String, tier: String) -> PackedStringArray:
 			out.append("%s.%s.webp" % [stem, name])
 			out.append("%s.%s.png" % [stem, name])
 	return out
+
+
+static func _is_portrait_path(path: String) -> bool:
+	var p := path.replace("\\", "/")
+	return p.contains("/portraits/")
 
 
 static func _webp_sibling(path: String) -> String:
