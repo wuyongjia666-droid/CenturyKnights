@@ -15,7 +15,8 @@
 > | T-P1-1 选中时提高长按门槛（`LONG_MS_SELECTED=900`） | **DONE**（#333 线） |
 > | T-P1-2 pan/zoom→格纯数学契约 | **DONE**（#333） |
 > | T-P1-2 真实安全区 + 镜头变换 | **DONE**（#334）：修安全区坐标被算两次；设备 `get_display_safe_area` 真机仍待签收 |
-> | T-P1-3 3D 视觉命中（视觉偏置） | **DONE**（本 PR）：空格点脸/头 → 吸回下方单位；`visual_bias_unit_pos` + `battle_feel_check` |
+> | T-P1-3 3D 视觉命中（视觉偏置） | **DONE**（#348）：空格点脸/头 → 吸回下方单位；`visual_bias_unit_pos` + `battle_feel_check` |
+> | T-P1-4 拖移落格精确指格 | **DONE**（本 PR）：移动/落子用 `_pointer_to_cell`；攻击仍 soft；离合法格清幽灵；`drag_move_cell` / `drag_land_cell` |
 > | 剧情立绘端游↔手游对齐核查 | **DONE**（#335） |
 > | 9 人无图农场回填（配角 4 + 反派 5） | **DONE**（#337 cast/farm 接线；#338 入库真立绘） |
 > | 枢纽安全区 / 对话板布局（机制 C） | **DONE（#339）**：`SpeakerCaption` 显式宽高（钉死 ≥80px）；CastleHub 手机入口改 3 列门槛 + 瓷砖高度留白，家族「同袍」不再被 NavRail 半裁；`mobile_dialogue_hub_layout_check` |
@@ -80,6 +81,7 @@
 | T-P1-1 | **P1 · DONE** | 误触长按 | 选中单位时 `long_ms_fn` → `LONG_MS_SELECTED=900`；慢速点选仍为 tap；故意长按仍可情报 | `input_router.gd` / `battle_controller.gd` |
 | T-P1-2 | **P1 · PR #334** | 缩放/平移后点偏 | ~~假设~~ **已证实并修复**：`_gui_input` 收到的是控件本地坐标，旧代码又做一次 `get_global_transform()` 逆变换；有安全区内缩时点偏一个内缩距离。现先抬回视口坐标；镜头上下限走 `BattlePick.clamp_pan / zoom_about`。`mobile_safe_area_touch_check` 真实 push_input 覆盖 | `battle_controller.gd` / `battle_pick.gd` / `mobile_chrome.gd` |
 | T-P1-3 | **P1 · DONE** | 棋子「看起来」难点 | 3D 立像伸进上方一格；**视觉偏置**：手指空格 + 下方格有活单位 + 落点在立像竖向范围 → 选中下方单位（方案 1）。轮廓矩形 / 3D 射线仍不进本阶段 | `battle_pick.gd`（`visual_bias_unit_pos`） |
+| T-P1-4 | **P1 · DONE** | 拖到格松手卡手 | 移动预览/松手曾走 `BattlePick.resolve`，邻单位 soft 吸走空地 → 幽灵不跟手。现 **move=精确指格**、attack=soft；离合法格/`非法松手`清幽灵 | `battle_touch_confirm.gd`（`drag_land_cell`） / `battle_pick.gd`（`drag_move_cell`） |
 | T-P2-1 | **P2 · 本 PR** | 信息不够 | Forecast 桌面固定 340×132 + clip，字号被 `ensure_min_fonts` 抬到 22 后竖向挤扁；现手机：字号地板、列/面板最小尺寸、关 clip、按 `m_board_area` 安全区放置；`MobileSide` 标签最小行高；`mobile_forecast_layout_check` | `forecast_panel` / `battle_mobile_side` / `_unit_panel` |
 
 ### 1.4 T-P1-3：3D 立像的「视觉命中」（视觉偏置已落地）
@@ -127,8 +129,9 @@
 3. ~~**P0** 确认流预览 / 拇指区 / 拖松手确认~~ → **DONE**  
 4. ~~**P1** 长按阈值与选中态互斥~~ → **DONE**（`LONG_MS_SELECTED`）  
 5. ~~**P1** pan/zoom→格纯契约~~ → **DONE**（#334）；真机安全区对拍仍 NEXT。  
-6. ~~**P1** T-P1-3 视觉偏置~~ → **DONE**（本 PR）。  
-7. ~~正式 APK 冒烟~~ → **PARTIAL**（m173 Hyper-V 主菜单 PASS）；**NEXT** 真机（小米）手感/立绘勾选。
+6. ~~**P1** T-P1-3 视觉偏置~~ → **DONE**（#348）。  
+7. ~~**P1** T-P1-4 拖移落格精确指格~~ → **DONE**（本 PR）。  
+8. ~~正式 APK 冒烟~~ → **PARTIAL**（m173 Hyper-V 主菜单 PASS）；**NEXT** 真机（小米）手感/立绘勾选。
 
 ---
 
