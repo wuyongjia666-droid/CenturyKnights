@@ -303,6 +303,7 @@ func _build() -> void:
 	_archive(tree, c)
 	_yeartrace(tree, c)
 	_job_seals(tree, c)
+	_tutor_feel(tree, c)
 	_tree(tree, c, sheet)
 	var crest := CKPageKit.button(Locale.t("lb_dos_crest"), false, 188)
 	crest.name = "CrestPreview"
@@ -515,6 +516,70 @@ func _life(mid: Control, c: CKCharacter) -> void:
 	if not c.in_roster:
 		status = Locale.t("lb_dos_home")
 	box.add_child(CKPageKit.text(status, UIKit.OK if why == "" else UIKit.DANGER, 13, 400))
+
+
+func _tutor_feel(parent: Node, focus: CKCharacter) -> void:
+	## Y1-B 专师可感：档案右侧回读配对专师·本年课时；学龄未拜则 CTA 去旗塾/酒馆。
+	var panel := VBoxContainer.new()
+	panel.name = "TutorPanel"
+	panel.add_theme_constant_override("separation", 4)
+	parent.add_child(panel)
+	panel.add_child(UIKit.mono(Locale.t("lb_dos_tutor_head"), 9, UIKit.ACCENT, false))
+	if focus == null:
+		return
+	if CKTutor.can_be_pupil(focus):
+		var tid := CKTutor.tutor_of(focus.id)
+		if tid != "" and GameState.characters.has(tid):
+			var tutor: CKCharacter = GameState.characters[tid]
+			var used := CKTutor.year_used(focus.id, tid)
+			var lim := CKTutor.year_limit()
+			var line := UIKit.body_label(Locale.t("lb_dos_tutor_line", [tutor.name, used, lim]), UIKit.OK, 12)
+			line.name = "TutorLine"
+			line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			line.custom_minimum_size = Vector2(360, 0)
+			panel.add_child(line)
+			return
+		var empty := UIKit.body_label(Locale.t("lb_dos_tutor_empty"), UIKit.TEXT_FAINT, 12)
+		empty.name = "TutorEmpty"
+		empty.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		empty.custom_minimum_size = Vector2(360, 0)
+		panel.add_child(empty)
+		var has_tutor := false
+		for ch in GameState.roster():
+			if CKTutor.can_be_tutor(ch):
+				has_tutor = true
+				break
+		if has_tutor:
+			var to_tr := CKPageKit.button(Locale.t("lb_dos_to_train"), true, 360)
+			to_tr.name = "ToTrain"
+			to_tr.pressed.connect(func():
+				Sfx.click()
+				CKNav.go("res://scenes/hub/train.tscn"))
+			panel.add_child(to_tr)
+			UIFX.wire_button(to_tr)
+		else:
+			var to_tv := CKPageKit.button(Locale.t("lb_train_to_tavern"), true, 360)
+			to_tv.name = "ToTavern"
+			to_tv.pressed.connect(func():
+				Sfx.click()
+				CKNav.go("res://scenes/hub/tavern.tscn"))
+			panel.add_child(to_tv)
+			UIFX.wire_button(to_tv)
+		return
+	var pupils: Array = CKTutor.pupils_of(focus.id)
+	if not pupils.is_empty():
+		var master := UIKit.body_label(Locale.t("lb_dos_tutor_master", [pupils.size()]), UIKit.OK, 12)
+		master.name = "TutorMaster"
+		master.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		master.custom_minimum_size = Vector2(360, 0)
+		panel.add_child(master)
+		return
+	var na := UIKit.body_label(Locale.t("lb_dos_tutor_na"), UIKit.TEXT_FAINT, 12)
+	na.name = "TutorNA"
+	na.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	na.custom_minimum_size = Vector2(360, 0)
+	panel.add_child(na)
+
 
 ## Mobile only: the 22px font floor makes LifePanel taller than its 206px slot, so the
 ## EXPRESSED header, bloodline lock and trait scroll move down to sit under it.
