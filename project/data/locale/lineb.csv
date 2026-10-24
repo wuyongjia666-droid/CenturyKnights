@@ -310,6 +310,7 @@ lb_heir_none,家里还没有能争的孩子,No heirs old enough
 lb_heir_none_why,要有两个 8 岁以上的孩子，校场才会热闹起来。,Needs two children aged 8 or older.
 lb_heir_none_how,先去联姻成家，孩子会在岁月里长大。,Marry; children grow over the years.
 lb_heir_to_marriage,去联姻,To marriage
+lb_heir_to_tavern,去酒馆招人,To the tavern
 lb_heir_one,现在只有 %s 一个孩子够大，没人跟他争。可以先给他定一条路，或者等弟弟妹妹长大。,Only %s is old enough.
 lb_heir_to_rite,去授旗礼定路,To the banner rite
 lb_heir_quarrel,%s 和 %s 在校场吵起来了，都说自己更该排在前面。你怎么处理？,%s and %s quarrel. Your call?

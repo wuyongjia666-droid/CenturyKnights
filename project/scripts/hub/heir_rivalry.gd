@@ -78,9 +78,27 @@ func _show() -> void:
 		_show_life()
 		return
 	if _a == null:
+		## Audit #30 empty: why/how + named forward CTAs (marriage / tavern), not a bare dismiss.
 		_body.text = ""
-		_duel.add_child(CKPageKit.empty(Locale.t("lb_heir_none"), Locale.t("lb_heir_none_why"), Locale.t("lb_heir_none_how"), 1100))
-		_move_btn(Locale.t("lb_heir_to_marriage"), false, func(): CKNav.go("res://scenes/hub/marriage.tscn"), "ToMarriage")
+		var host := VBoxContainer.new()
+		host.name = "EmptyHost"
+		host.add_theme_constant_override("separation", 12)
+		host.add_child(CKPageKit.empty(Locale.t("lb_heir_none"), Locale.t("lb_heir_none_why"), Locale.t("lb_heir_none_how"), 1100))
+		var acts := HBoxContainer.new()
+		acts.name = "EmptyActions"
+		acts.add_theme_constant_override("separation", 12)
+		var to_m := CKPageKit.button(Locale.t("lb_heir_to_marriage"), true, 260)
+		to_m.name = "ToMarriage"
+		to_m.pressed.connect(func(): CKNav.go("res://scenes/hub/marriage.tscn"))
+		acts.add_child(to_m)
+		UIFX.wire_button(to_m)
+		var to_t := CKPageKit.button(Locale.t("lb_heir_to_tavern"), false, 260)
+		to_t.name = "ToTavern"
+		to_t.pressed.connect(func(): CKNav.go("res://scenes/hub/tavern.tscn"))
+		acts.add_child(to_t)
+		UIFX.wire_button(to_t)
+		host.add_child(acts)
+		_duel.add_child(host)
 		return
 	_duel.add_child(_heir_card(_a, Locale.t("lb_heir_elder")))
 	if _b == null:
