@@ -41,6 +41,15 @@ func _build() -> void:
 	right_box.add_child(save_b)
 	right_box.move_child(save_b, right_box.get_child_count() - 2)
 
+	## Y1-B stub: mid-run dynasty end banner over the seasonal dossier.
+	if Lineage.is_dynasty_ended():
+		var host := Control.new()
+		host.name = "DynastyEndHost"
+		host.position = Vector2(190, 72)
+		host.size = Vector2(700, 140)
+		add_child(host)
+		Lineage.attach_dynasty_end_feel(host, 680.0)
+
 	# ── NAVIGATION ─────────────────────────────────────────
 	var nav_panel := UIKit.panel_at(self, Rect2(26, 72, 150, 612), 10)
 	nav_panel.name = "NavPanel"

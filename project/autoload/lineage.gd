@@ -583,10 +583,71 @@ func _generation_depth(c: CKCharacter, seen: Dictionary, guard: int) -> int:
 ## Pass the banner. Abdication requires an adult descendant. Death or retirement follows the
 ## in-house order in pick_heir; with no adult left, the eldest child inherits under a regency.
 ## A roster with no living person at all (not even a child) still returns ok=false.
+
+## Y1-B stub: mid-run「王朝终结」when succession finds no heir (roadmap §7).
+## Persists in house_mods.dynasty_end; hub/hourglass/estates re-read + ToTitle CTA.
+func is_dynasty_ended() -> bool:
+	var d: Variant = GameState.house_mods.get("dynasty_end", {})
+	if typeof(d) != TYPE_DICTIONARY:
+		return false
+	return str((d as Dictionary).get("reason", "")) != ""
+
+
+func dynasty_end_snapshot() -> Dictionary:
+	var d: Variant = GameState.house_mods.get("dynasty_end", {})
+	if typeof(d) != TYPE_DICTIONARY:
+		return {}
+	return d
+
+
+func note_dynasty_end(reason: String, msg: String = "") -> Dictionary:
+	if reason == "":
+		return dynasty_end_snapshot()
+	## First stamp wins; later fails keep the original closing.
+	if is_dynasty_ended():
+		return dynasty_end_snapshot()
+	var text := msg if msg != "" else Locale.t("lineage_no_heir")
+	var d := {
+		"reason": reason,
+		"msg": text,
+		"label": Calendar.label(),
+		"at": int(Calendar.year) * 12 + int(Calendar.month),
+	}
+	GameState.house_mods["dynasty_end"] = d
+	GameState.add_lineage_event(text)
+	GameState.mark_dirty()
+	return d
+
+
+## Hub feel: DynastyEndPanel + named ToTitle → main menu (replace, clears stack).
+func attach_dynasty_end_feel(parent: Node, width: float = 520.0) -> Control:
+	if parent == null or not is_dynasty_ended():
+		return null
+	var snap := dynasty_end_snapshot()
+	var panel := VBoxContainer.new()
+	panel.name = "DynastyEndPanel"
+	panel.add_theme_constant_override("separation", 8)
+	panel.custom_minimum_size = Vector2(width, 0)
+	parent.add_child(panel)
+	panel.add_child(UIKit.mono(Locale.t("lb_dynasty_end_head"), 11, UIKit.DANGER, false))
+	var why := Locale.t("lb_dynasty_end_why_no_heir")
+	if str(snap.get("reason", "")) == "no_leader":
+		why = Locale.t("lb_dynasty_end_why_no_leader")
+	panel.add_child(CKPageKit.empty(Locale.t("lb_dynasty_end_title"), why, str(snap.get("msg", "")), maxf(280.0, width - 24.0)))
+	var to_t := CKPageKit.button(Locale.t("lb_dynasty_end_to_title"), true, mini(280.0, width))
+	to_t.name = "ToTitle"
+	to_t.pressed.connect(func(): CKNav.replace(CKNav.TITLE))
+	panel.add_child(to_t)
+	UIFX.wire_button(to_t)
+	return panel
+
+
 func transfer_banner(reason: String) -> Dictionary:
 	var leader := GameState.get_leader()
 	if leader == null:
-		return {"ok": false, "msg": "无团长"}
+		var nl := Locale.t("lineage_no_leader")
+		note_dynasty_end("no_leader", nl)
+		return {"ok": false, "msg": nl, "dynasty_end": true}
 	var descendants_only := reason == "abdicate"
 	var heir := pick_heir(leader, descendants_only)
 	var via := "descendant"
@@ -598,7 +659,9 @@ func transfer_banner(reason: String) -> Dictionary:
 		minor = heir != null
 		via = "minor"
 	if heir == null:
-		return {"ok": false, "msg": "无可承旗之人"}
+		var nh := Locale.t("lineage_no_heir")
+		note_dynasty_end("no_heir", nh)
+		return {"ok": false, "msg": nh, "dynasty_end": true}
 	leader.is_leader = false
 	if reason == "abdicate" or reason == "retire":
 		leader.retired = true
