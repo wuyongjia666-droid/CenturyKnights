@@ -99,6 +99,12 @@ func _refresh() -> void:
 		_people.add_child(b)
 	if _people.get_child_count() == 0:
 		_people.add_child(CKPageKit.empty(Locale.t("lb_sk_nobody"), Locale.t("lb_sk_nobody_why"), "", 170))
+		## Empty roster already says recruit at tavern; named tap CTA.
+		var to_t := CKPageKit.button(Locale.t("lb_sk_to_tavern"), true, 170)
+		to_t.name = "ToTavern"
+		to_t.pressed.connect(func(): CKNav.go("res://scenes/hub/tavern.tscn"))
+		_people.add_child(to_t)
+		UIFX.wire_button(to_t)
 	CKPageKit.drag_through(_people)
 	_fill_columns()
 	_fill_detail()
