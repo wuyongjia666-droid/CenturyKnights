@@ -304,6 +304,7 @@ lb_heir_one,现在只有 %s 一个孩子够大，没人跟他争。可以先给�
 lb_heir_to_rite,去授旗礼定路,To the banner rite
 lb_heir_quarrel,%s 和 %s 在校场吵起来了，都说自己更该排在前面。你怎么处理？,%s and %s quarrel. Your call?
 lb_heir_settled,今年这事已经定了（%s）。第 %d 年他们可能又会吵。,Settled this year (%s). Maybe again in year %d.
+lb_heir_to_inheritance,去嗣位冲突,To succession clash
 lb_heir_m_mediate,调解,Mediate
 lb_heir_m_mediate_fx,两边各退一步，灰旗声望 +1。谁都不偏。,Both back down; reputation +1.
 lb_heir_m_a,挺 %s,Back %s

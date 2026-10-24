@@ -80,12 +80,12 @@ func _show() -> void:
 	if _a == null:
 		_body.text = ""
 		_duel.add_child(CKPageKit.empty(Locale.t("lb_heir_none"), Locale.t("lb_heir_none_why"), Locale.t("lb_heir_none_how"), 1100))
-		_move_btn(Locale.t("lb_heir_to_marriage"), false, func(): CKNav.go("res://scenes/hub/marriage.tscn"))
+		_move_btn(Locale.t("lb_heir_to_marriage"), false, func(): CKNav.go("res://scenes/hub/marriage.tscn"), "ToMarriage")
 		return
 	_duel.add_child(_heir_card(_a, Locale.t("lb_heir_elder")))
 	if _b == null:
 		_body.text = Locale.t("lb_heir_one", [_a.name])
-		_move_btn(Locale.t("lb_heir_to_rite"), true, func(): CKNav.go("res://scenes/hub/lineage_rite.tscn"))
+		_move_btn(Locale.t("lb_heir_to_rite"), true, func(): CKNav.go("res://scenes/hub/lineage_rite.tscn"), "ToRite")
 		return
 	var vs := UIKit.title_label(Locale.t("lb_heir_vs"), 28, UIKit.ACCENT)
 	vs.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -93,6 +93,8 @@ func _show() -> void:
 	_duel.add_child(_heir_card(_b, Locale.t("lb_heir_younger")))
 	if _settled():
 		_body.text = Locale.t("lb_heir_settled", [str(GameState.house_mods.get("heir_rivalry_zh", "")), Calendar.year + 1])
+		## Clear next step: succession clash with Shuoying (pair page to this trial).
+		_move_btn(Locale.t("lb_heir_to_inheritance"), true, func(): CKNav.go("res://scenes/hub/inheritance.tscn"), "ToInheritance")
 		return
 	_body.text = Locale.t("lb_heir_quarrel", [_a.name, _b.name])
 	var s := GameState.silver
@@ -126,8 +128,10 @@ func _move(key: String, cost: String, cb: Callable, why: String, args: Array = [
 	_moves.add_child(p)
 	UIFX.wire_tree(p)
 
-func _move_btn(t: String, primary: bool, cb: Callable) -> void:
+func _move_btn(t: String, primary: bool, cb: Callable, node_name: String = "") -> void:
 	var b := CKPageKit.button(t, primary, 260)
+	if node_name != "":
+		b.name = node_name
 	b.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	b.pressed.connect(cb)
 	_moves.add_child(b)
