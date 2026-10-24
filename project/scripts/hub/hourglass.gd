@@ -95,7 +95,26 @@ func _paint_result_initial() -> void:
 		_log.add_child(to_e)
 		UIFX.wire_button(to_e)
 	else:
-		_log.add_child(CKPageKit.empty(Locale.t("lb_hg_empty"), Locale.t("lb_hg_empty_why"), "", 520))
+		## Y1-B: no month echo yet → EmptyHost + how + ToCourtNews (advance stays on-page).
+		var host := VBoxContainer.new()
+		host.name = "EmptyHost"
+		host.add_theme_constant_override("separation", 12)
+		host.add_child(CKPageKit.empty(
+			Locale.t("lb_hg_empty"),
+			Locale.t("lb_hg_empty_why"),
+			Locale.t("lb_hg_empty_how"),
+			520
+		))
+		var acts := HBoxContainer.new()
+		acts.name = "EmptyActions"
+		acts.add_theme_constant_override("separation", 12)
+		var to_n := CKPageKit.button(Locale.t("lb_hg_to_court_news"), true, 260)
+		to_n.name = "ToCourtNews"
+		to_n.pressed.connect(func(): CKNav.go("res://scenes/hub/court_news.tscn"))
+		acts.add_child(to_n)
+		UIFX.wire_button(to_n)
+		host.add_child(acts)
+		_log.add_child(host)
 
 
 func _back() -> void:

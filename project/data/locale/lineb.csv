@@ -210,6 +210,8 @@ lb_hg_next,下个月会发生,Next month
 lb_hg_last,上次推进的结果,Last result
 lb_hg_empty,还没推进过,Nothing yet
 lb_hg_empty_why,点下面的「度过一月」，这段时间发生的事会一条条列在这里。,Advance a month and the results appear here.
+lb_hg_empty_how,点下方「度过一月」或「过一季」；结果列在这里。也可先去看朝堂纪事。,Tap Advance below; results list here. Or open court news first.
+lb_hg_to_court_news,去朝堂纪事,To court news
 lb_hg_quiet,没有特别的事，照常发军饷、扣口粮。,Nothing special: wages and rations as usual.
 lb_hg_after,到了 %s（过了 %d 个月）,Now %s (%d months)
 lb_hg_after_quiet,这段时间风平浪静。,A quiet stretch.
