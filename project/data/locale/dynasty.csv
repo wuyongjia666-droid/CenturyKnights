@@ -200,6 +200,8 @@ sui_year_who,%s · %d 岁,%s · age %d
 sui_year_outcome,这一年：%s,This year: %s
 sui_yeartrace_empty,尚无岁课年迹。,No year-trace yet.
 sui_yeartrace_line,%d年%d月 · %s · %s,Y%d M%d · %s · %s
+sui_yeartrace_house,本宅岁课年迹（点开看档案）,House year-trace (tap for dossier)
+sui_yeartrace_who_line,%s · %d年%d月 · %s · %s,%s · Y%d M%d · %s · %s
 life_ack,知道了,Understood
 life_outcome_prefix,结果：%s,Outcome: %s
 life_auto_log,%s · %s：%s,%s · %s: %s
