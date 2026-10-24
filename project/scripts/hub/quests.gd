@@ -161,13 +161,48 @@ func _card(
 	return card
 
 
+
+func _add_empty_host(
+	host_name: String,
+	title: String,
+	why: String,
+	how: String,
+	cta_name: String,
+	cta_text: String,
+	go: Callable
+) -> void:
+	## Y1-B / heir #30: empty quest section gets why/how + named forward CTA.
+	var host := VBoxContainer.new()
+	host.name = host_name
+	host.add_theme_constant_override("separation", 12)
+	host.add_child(CKPageKit.empty(title, why, how, 1100))
+	var acts := HBoxContainer.new()
+	acts.name = "EmptyActions"
+	acts.add_theme_constant_override("separation", 12)
+	var btn := CKPageKit.button(cta_text, true, 300)
+	btn.name = cta_name
+	btn.pressed.connect(go)
+	acts.add_child(btn)
+	UIFX.wire_button(btn)
+	host.add_child(acts)
+	_list.add_child(host)
+
+
 func _render() -> void:
 	for ch in _list.get_children():
 		_list.remove_child(ch)
 		ch.queue_free()
 	_section(Locale.t("wsc_q_237f513f"))
 	if World.active.is_empty():
-		_list.add_child(UIKit.empty_state(Locale.t("wsc_q_6af2d7f3")))
+		_add_empty_host(
+			"EmptyHostActive",
+			Locale.t("lb_quests_active_empty"),
+			Locale.t("lb_quests_active_empty_why"),
+			Locale.t("lb_quests_active_empty_how"),
+			"ToAtlas",
+			Locale.t("lb_quests_to_atlas"),
+			_goto_atlas
+		)
 	for q in World.active:
 		var turn := str(World.node(World.turn_in_city(q)).get("name", "?"))
 		var ml := months_left(q)
@@ -187,7 +222,15 @@ func _render() -> void:
 		)
 	_section(Locale.t("wsc_q_657f636f"))
 	if GameState.quests.is_empty():
-		_list.add_child(UIKit.empty_state(Locale.t("wsc_q_928374db")))
+		_add_empty_host(
+			"EmptyHostBoard",
+			Locale.t("lb_quests_board_empty"),
+			Locale.t("lb_quests_board_empty_why"),
+			Locale.t("lb_quests_board_empty_how"),
+			"ToHourglass",
+			Locale.t("lb_quests_to_hourglass"),
+			func(): CKNav.go("res://scenes/hub/hourglass.tscn")
+		)
 	for q in GameState.quests:
 		var done := bool(GameState.quest_done.get(q.id, false))
 		var rw2 := Locale.t("wsc_q_59f56eb6") % [int(q.silver), int(q.rep), "" if done else Locale.t("wsc_q_6072033e")]
