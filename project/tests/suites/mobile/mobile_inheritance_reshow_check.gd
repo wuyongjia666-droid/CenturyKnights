@@ -87,26 +87,18 @@ func _audit_done(page: Control) -> String:
 	var scroll := board.find_child("AnswerScroll", true, false) as ScrollContainer
 	if scroll == null:
 		return "AnswerScroll missing under InheritBoard after resolve"
-	var rivals: Button = null
-	for c in page.find_children("*", "Button", true, false):
-		var b := c as Button
-		if not b.is_visible_in_tree():
-			continue
-		if b.text.strip_edges() == "":
-			continue
-		## Done-year path: single rivals / continue button under Answers.
-		rivals = b
-		break
-	## Prefer the card under Answers if present.
-	var answers := page.find_child("Answers", true, false)
-	if answers != null:
-		for c in answers.find_children("*", "Button", true, false):
-			var b2 := c as Button
-			if b2.is_visible_in_tree() and b2.text.strip_edges() != "":
-				rivals = b2
-				break
+	var rivals: Button = page.find_child("ToRivals", true, false) as Button
 	if rivals == null:
-		return "rivals/done button missing after resolve"
+		## Fallback: any visible button under Answers (pre-#360 name).
+		var answers := page.find_child("Answers", true, false)
+		if answers != null:
+			for c in answers.find_children("*", "Button", true, false):
+				var b2 := c as Button
+				if b2.is_visible_in_tree() and b2.text.strip_edges() != "":
+					rivals = b2
+					break
+	if rivals == null or not rivals.is_visible_in_tree():
+		return "ToRivals/done button missing after resolve"
 	var hit_ok := rivals.custom_minimum_size.y + 0.01 >= MobilePage.HIT or rivals.size.y + 0.01 >= MobilePage.HIT
 	if not hit_ok:
 		return "rivals HIT weak min=%.1f size.y=%.1f need >= %.0f" % [rivals.custom_minimum_size.y, rivals.size.y, MobilePage.HIT]
