@@ -54,17 +54,10 @@ func _run() -> String:
 	await get_tree().process_frame
 	if Calendar.month != target_m or Calendar.year != target_y:
 		return "calendar landed %d-%d want %d-%d" % [Calendar.year, Calendar.month, target_y, target_m]
-	if CKSuiKe.inbox_count() < 1:
-		return "inbox empty after birthday"
-	if CKSuiKe.yeartrace_count() < 1:
-		return "yeartrace empty after resolve"
-	var for_kid: Array = CKSuiKe.yeartrace_for(kid.id)
-	if for_kid.is_empty():
-		return "yeartrace_for kid empty"
-	var entry: Dictionary = for_kid[0]
-	if str(entry.get("title", "")) == "":
-		return "yeartrace title empty"
-	var card_id := str(entry.get("id", ""))
+	var seed_err := _assert_seeded(kid.id)
+	if seed_err != "":
+		return seed_err
+	var card_id := str(CKSuiKe.yeartrace_for(kid.id)[0].get("id", ""))
 
 	# Ack clears inbox; yeartrace must remain.
 	var rows: Array = CKSuiKe.inbox().duplicate()
@@ -72,21 +65,38 @@ func _run() -> String:
 		if typeof(item) != TYPE_DICTIONARY:
 			continue
 		CKSuiKe.ack(str(item.get("cid", "")), str(item.get("id", "")))
+	var persist_err := _assert_persists(kid.id, card_id)
+	if persist_err != "":
+		return persist_err
+	return await _assert_dossier(kid.id)
+
+
+func _assert_seeded(kid_id: String) -> String:
+	if CKSuiKe.inbox_count() < 1:
+		return "inbox empty after birthday"
+	if CKSuiKe.yeartrace_count() < 1:
+		return "yeartrace empty after resolve"
+	var for_kid: Array = CKSuiKe.yeartrace_for(kid_id)
+	if for_kid.is_empty():
+		return "yeartrace_for kid empty"
+	if str(for_kid[0].get("title", "")) == "":
+		return "yeartrace title empty"
+	return ""
+
+
+func _assert_persists(kid_id: String, card_id: String) -> String:
 	if CKSuiKe.inbox_count() != 0:
 		return "inbox not cleared after ack (%d)" % CKSuiKe.inbox_count()
-	if CKSuiKe.yeartrace_for(kid.id).is_empty():
+	if CKSuiKe.yeartrace_for(kid_id).is_empty():
 		return "yeartrace wiped by ack"
-	# Same card id still present.
-	var still := false
-	for it in CKSuiKe.yeartrace_for(kid.id):
+	for it in CKSuiKe.yeartrace_for(kid_id):
 		if str(it.get("id", "")) == card_id:
-			still = true
-			break
-	if not still:
-		return "yeartrace lost card_id %s" % card_id
+			return ""
+	return "yeartrace lost card_id %s" % card_id
 
-	# Dossier UI: YeartracePanel + Yeartrace_0
-	GameState.set_meta("dossier_id", kid.id)
+
+func _assert_dossier(kid_id: String) -> String:
+	GameState.set_meta("dossier_id", kid_id)
 	var packed: PackedScene = load("res://scenes/hub/unit_dossier.tscn")
 	if packed == null:
 		return "dossier load failed"
@@ -98,13 +108,11 @@ func _run() -> String:
 	for _i in 8:
 		await get_tree().process_frame
 	var panel := page.find_child("YeartracePanel", true, false)
-	if panel == null:
-		page.queue_free()
-		return "YeartracePanel missing"
 	var line := page.find_child("Yeartrace_0", true, false)
-	if line == null:
-		page.queue_free()
-		return "Yeartrace_0 missing"
 	page.queue_free()
 	await get_tree().process_frame
+	if panel == null:
+		return "YeartracePanel missing"
+	if line == null:
+		return "Yeartrace_0 missing"
 	return ""
