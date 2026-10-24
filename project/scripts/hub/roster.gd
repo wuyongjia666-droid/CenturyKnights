@@ -27,10 +27,25 @@ func _ready() -> void:
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	add_child(scroll)
 	_list = VBoxContainer.new()
+	_list.name = "RosterList"
 	_list.add_theme_constant_override("separation", 8)
 	scroll.add_child(_list)
 	if roster.is_empty():
-		_list.add_child(UIKit.empty_state("花名册空空如也。去烽火酒馆看看。"))
+		## Y1-B / heir #30: empty cadre gets why/how + named forward CTA (tavern).
+		var host := VBoxContainer.new()
+		host.name = "EmptyHost"
+		host.add_theme_constant_override("separation", 12)
+		host.add_child(CKPageKit.empty(Locale.t("lb_roster_empty"), Locale.t("lb_roster_empty_why"), Locale.t("lb_roster_empty_how"), 340))
+		var acts := HBoxContainer.new()
+		acts.name = "EmptyActions"
+		acts.add_theme_constant_override("separation", 12)
+		var to_t := CKPageKit.button(Locale.t("lb_roster_to_tavern"), true, 300)
+		to_t.name = "ToTavern"
+		to_t.pressed.connect(func(): CKNav.go("res://scenes/hub/tavern.tscn"))
+		acts.add_child(to_t)
+		UIFX.wire_button(to_t)
+		host.add_child(acts)
+		_list.add_child(host)
 	var i := 0
 	for c in roster:
 		i += 1

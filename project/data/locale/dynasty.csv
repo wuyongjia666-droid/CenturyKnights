@@ -223,3 +223,7 @@ lb_marriage_empty_hero_why,主角团姻缘走主线，不在此刷随机廷帖�
 lb_marriage_empty_hero_how,回城堡跟主线，或换提亲方后再开廷。,Return to the hub for the main line, or switch who proposes.
 lb_marriage_to_tavern,去烽火酒馆,To the tavern
 lb_marriage_to_roster,去花名册,To the roster
+lb_roster_empty,花名册空空如也,The roster is empty
+lb_roster_empty_why,编制里还没有骑士。去烽火酒馆碰碰运气，招人入队。,No knights on the books. Try the tavern and enlist someone.
+lb_roster_empty_how,点下方去酒馆；招到人后再回花名册。,Tap below for the tavern; return once someone has enlisted.
+lb_roster_to_tavern,去烽火酒馆,To the tavern
