@@ -142,6 +142,7 @@
 
 | 日期 | 变更 |
 |------|------|
+| 2026-10-25 | Y1-B 堡志月回响：ambition 达成 → `month_echo.ambition` + estates/hourglass 回读 + `month_echo_ambition_check` |
 | 2026-10-25 | Y1-B 家训月回响：doctrine 月结 → `month_echo.doctrine` + estates/hourglass 回读 + `month_echo_doctrine_check` |
 | 2026-10-25 | Y1-B 月回响 hourglass 回读补全：birth/marriage/life/commission suites 加沙漏 EchoLine 断言 |
 | 2026-10-25 | 内容季枢纽入口：`ContentSeasonRow` 串 cs01/02/03（空则跳过，禁 EmptyHost）；`content_season_hub_entry_check` |
