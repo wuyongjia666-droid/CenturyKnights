@@ -248,6 +248,11 @@ func _tick_spring(ctx: Dictionary) -> void:
 	festival.emit("春令节")
 	evs.append({"type": "festival", "text": "春令节到来"})
 	GameState.refresh_marriage_candidates()
+	## Y1-B: 春令联姻池刷新 → month_echo.spring；属地/沙漏回读（耐玩联姻闭环可感）.
+	var pool_n := GameState.marriage_candidates.size() if typeof(GameState.marriage_candidates) == TYPE_ARRAY else 0
+	var sline := Locale.t("lb_echo_spring", [pool_n])
+	evs.append({"type": "spring", "text": sline})
+	CKEconomyState.month_echo_note("spring", sline)
 	# deeper lineage: spring matchmaking gossip + spouse affinity
 	var leader = GameState.get_leader()
 	if leader and leader.spouse_id != "":
