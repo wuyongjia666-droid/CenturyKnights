@@ -714,21 +714,6 @@
           }
         },
         {
-          "speaker": "旁白",
-          "text": "锋收回来。副页纸还钉着。空格旁那拨，没散。",
-          "when": {
-            "all": [
-              {
-                "flag": "cs01_02_mid_lost"
-              },
-              {
-                "not_flag": "cs01_02_mid_fought"
-              }
-            ]
-          },
-          "id": "cs01b_br_lost"
-        },
-        {
           "id": "cs01_02_bridge_2",
           "speaker": "leader",
           "text": "先试一锋。赢了再谈挂板。",
@@ -940,6 +925,21 @@
             "music": "battle_prep",
             "camera": "wide"
           }
+        },
+        {
+          "speaker": "旁白",
+          "text": "锋收回来。副页纸还钉着。空格旁那拨，没散。",
+          "when": {
+            "all": [
+              {
+                "flag": "cs01_02_mid_lost"
+              },
+              {
+                "not_flag": "cs01_02_mid_fought"
+              }
+            ]
+          },
+          "id": "cs01b_br_lost"
         }
       ],
       "next": "tavern",

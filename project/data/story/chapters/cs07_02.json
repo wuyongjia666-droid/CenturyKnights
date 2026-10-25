@@ -396,21 +396,6 @@
           "text": "谁还认？先看牌，再看脚。"
         },
         {
-          "id": "cs07b_br_lost",
-          "speaker": "旁白",
-          "text": "锋收回来。宗谱纸还钉着。仪典那拨，没散。",
-          "when": {
-            "all": [
-              {
-                "flag": "cs07_02_mid_lost"
-              },
-              {
-                "not_flag": "cs07_02_mid_fought"
-              }
-            ]
-          }
-        },
-        {
           "id": "cs07b_br_2",
           "speaker": "苇原·灯影",
           "text": "巡防交更。路名还在名单上。"
@@ -509,6 +494,21 @@
           "id": "cs07b_br_18",
           "speaker": "岁吏",
           "text": "催条可以撕。宗谱第二页撕不得。"
+        },
+        {
+          "id": "cs07b_br_lost",
+          "speaker": "旁白",
+          "text": "锋收回来。宗谱纸还钉着。仪典那拨，没散。",
+          "when": {
+            "all": [
+              {
+                "flag": "cs07_02_mid_lost"
+              },
+              {
+                "not_flag": "cs07_02_mid_fought"
+              }
+            ]
+          }
         }
       ],
       "next": "tavern",

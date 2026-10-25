@@ -714,21 +714,6 @@
           }
         },
         {
-          "speaker": "旁白",
-          "text": "锋收回来。副笺纸还钉着。偏格旁那拨，没散。",
-          "when": {
-            "all": [
-              {
-                "flag": "cs02_02_mid_lost"
-              },
-              {
-                "not_flag": "cs02_02_mid_fought"
-              }
-            ]
-          },
-          "id": "cs02b_br_lost"
-        },
-        {
           "id": "cs02_02_bridge_2",
           "speaker": "leader",
           "text": "先试一锋。赢了再谈催嗣。",
@@ -940,6 +925,21 @@
             "music": "battle_prep",
             "camera": "wide"
           }
+        },
+        {
+          "speaker": "旁白",
+          "text": "锋收回来。副笺纸还钉着。偏格旁那拨，没散。",
+          "when": {
+            "all": [
+              {
+                "flag": "cs02_02_mid_lost"
+              },
+              {
+                "not_flag": "cs02_02_mid_fought"
+              }
+            ]
+          },
+          "id": "cs02b_br_lost"
         }
       ],
       "next": "tavern",

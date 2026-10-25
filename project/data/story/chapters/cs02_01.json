@@ -243,21 +243,6 @@
           "text": "拓片空格旁朱点，像催。催不买。"
         },
         {
-          "id": "cs02_mid_lost",
-          "speaker": "旁白",
-          "text": "锋收回来。院墙外的影子还在。婚约灯还没点。",
-          "when": {
-            "all": [
-              {
-                "flag": "cs02_mid_lost"
-              },
-              {
-                "not_flag": "cs02_mid_fought"
-              }
-            ]
-          }
-        },
-        {
           "id": "cs02_estate_y21",
           "speaker": "旁白",
           "text": "验盏水清。清里照得出假。"
@@ -276,6 +261,21 @@
           "id": "cs02_estate_x9",
           "speaker": "leader",
           "text": "记了不等于认了。等回执。"
+        },
+        {
+          "id": "cs02_mid_lost",
+          "speaker": "旁白",
+          "text": "锋收回来。院墙外的影子还在。婚约灯还没点。",
+          "when": {
+            "all": [
+              {
+                "flag": "cs02_mid_lost"
+              },
+              {
+                "not_flag": "cs02_mid_fought"
+              }
+            ]
+          }
         }
       ],
       "actions": [

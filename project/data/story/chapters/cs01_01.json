@@ -258,21 +258,6 @@
           "text": "厅外脚步乱了一阵，又齐。齐的是巡夜，不是催条。"
         },
         {
-          "id": "cs01_mid_lost",
-          "speaker": "旁白",
-          "text": "锋收回来。衣里还热。厅外那拨路匪，灯下没散。",
-          "when": {
-            "all": [
-              {
-                "flag": "cs01_mid_lost"
-              },
-              {
-                "not_flag": "cs01_mid_fought"
-              }
-            ]
-          }
-        },
-        {
           "id": "cs01_hall_y22",
           "speaker": "旁白",
           "text": "册边起毛。毛边比印鉴老实。"
@@ -291,6 +276,21 @@
           "id": "cs01_hall_9",
           "speaker": "老旗手",
           "text": "匣子留给验盏。咱们别先替它填字。"
+        },
+        {
+          "id": "cs01_mid_lost",
+          "speaker": "旁白",
+          "text": "锋收回来。衣里还热。厅外那拨路匪，灯下没散。",
+          "when": {
+            "all": [
+              {
+                "flag": "cs01_mid_lost"
+              },
+              {
+                "not_flag": "cs01_mid_fought"
+              }
+            ]
+          }
         }
       ],
       "actions": [

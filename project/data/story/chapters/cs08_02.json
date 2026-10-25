@@ -424,21 +424,6 @@
           "text": "旗角在桥头给人核。核完再谈催碑。"
         },
         {
-          "id": "cs08b_br_lost",
-          "speaker": "旁白",
-          "text": "锋收回来。碑阴纸还钉着。祠旁那拨，没散。",
-          "when": {
-            "all": [
-              {
-                "flag": "cs08_02_mid_lost"
-              },
-              {
-                "not_flag": "cs08_02_mid_fought"
-              }
-            ]
-          }
-        },
-        {
           "id": "cs08b_br_3",
           "speaker": "岁吏",
           "text": "急字在桥风里会褪。碑阴空行过夜更清楚。"
@@ -547,6 +532,21 @@
           "id": "cs08b_br_18",
           "speaker": "旁白",
           "text": "桥灯一盏。碑酒门开。"
+        },
+        {
+          "id": "cs08b_br_lost",
+          "speaker": "旁白",
+          "text": "锋收回来。碑阴纸还钉着。祠旁那拨，没散。",
+          "when": {
+            "all": [
+              {
+                "flag": "cs08_02_mid_lost"
+              },
+              {
+                "not_flag": "cs08_02_mid_fought"
+              }
+            ]
+          }
         }
       ],
       "next": "tavern",

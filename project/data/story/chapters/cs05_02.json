@@ -396,21 +396,6 @@
           "text": "谁坐？先看牌，再看脚。"
         },
         {
-          "id": "cs05b_br_lost",
-          "speaker": "旁白",
-          "text": "锋收回来。回读纸还钉着。椅旁那拨，没散。",
-          "when": {
-            "all": [
-              {
-                "flag": "cs05_02_mid_lost"
-              },
-              {
-                "not_flag": "cs05_02_mid_fought"
-              }
-            ]
-          }
-        },
-        {
           "id": "cs05b_br_2",
           "speaker": "苇原·灯影",
           "text": "巡防交更。空椅还在名单上。"
@@ -509,6 +494,21 @@
           "id": "cs05b_br_18",
           "speaker": "岁吏",
           "text": "催条可以撕。回读本撕不得。"
+        },
+        {
+          "id": "cs05b_br_lost",
+          "speaker": "旁白",
+          "text": "锋收回来。回读纸还钉着。椅旁那拨，没散。",
+          "when": {
+            "all": [
+              {
+                "flag": "cs05_02_mid_lost"
+              },
+              {
+                "not_flag": "cs05_02_mid_fought"
+              }
+            ]
+          }
         }
       ],
       "next": "tavern",

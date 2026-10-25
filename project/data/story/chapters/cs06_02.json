@@ -396,21 +396,6 @@
           "text": "谁还站？先看牌，再看脚。"
         },
         {
-          "id": "cs06b_br_lost",
-          "speaker": "旁白",
-          "text": "锋收回来。胜册纸还钉着。校场那拨，没散。",
-          "when": {
-            "all": [
-              {
-                "flag": "cs06_02_mid_lost"
-              },
-              {
-                "not_flag": "cs06_02_mid_fought"
-              }
-            ]
-          }
-        },
-        {
           "id": "cs06b_br_2",
           "speaker": "苇原·灯影",
           "text": "巡防交更。胜名还在名单上。"
@@ -509,6 +494,21 @@
           "id": "cs06b_br_18",
           "speaker": "岁吏",
           "text": "催条可以撕。胜册第二页撕不得。"
+        },
+        {
+          "id": "cs06b_br_lost",
+          "speaker": "旁白",
+          "text": "锋收回来。胜册纸还钉着。校场那拨，没散。",
+          "when": {
+            "all": [
+              {
+                "flag": "cs06_02_mid_lost"
+              },
+              {
+                "not_flag": "cs06_02_mid_fought"
+              }
+            ]
+          }
         }
       ],
       "next": "tavern",
