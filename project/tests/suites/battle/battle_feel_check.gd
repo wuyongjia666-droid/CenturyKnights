@@ -4,6 +4,7 @@ extends Node
 ## Y1-A T-P1-1/2: selected long-press raise + pure pan/zoom cell contracts.
 ## Y1-A T-P1-3: 3D figure visual-bias (face/head → unit below).
 ## Y1-A T-P1-4: move-drag lands on exact finger cell (soft must not steal).
+## Y1-A T-P1-5: contour rect hit + tap-again confirm + mobile selection chrome.
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -37,6 +38,10 @@ func _check() -> String:
 		err = _visual_bias()
 	if err == "":
 		err = _drag_land_exact()
+	if err == "":
+		err = _contour_hit()
+	if err == "":
+		err = _tap_again_contracts()
 	OS.set_environment("CK_FORCE_MOBILE", "0")
 	return err
 
@@ -113,6 +118,19 @@ func _source_contracts() -> String:
 		return "battle _gui_input must lift control-local events to viewport px (safe-area double transform)"
 	if ctrl.find("BattleTouchConfirm.is_unit_drag(self, g)") < 0:
 		return "pan/drag_end not gated by unit-drag vs map-pan"
+	# Y1-A T-P1-5
+	if pick.find("contour_unit_pos") < 0 or pick.find("const CONTOUR_HALF_W") < 0:
+		return "battle_pick missing T-P1-5 contour_unit_pos"
+	if pick.find("var contour: Vector2i = contour_unit_pos(") < 0:
+		return "BattlePick.resolve missing contour fallback after soft miss"
+	if ctrl.find("preview_move_cell == cell") < 0 or ctrl.find("BattleTouchConfirm.confirm_move(self)") < 0:
+		return "tap-again confirm_move missing"
+	if ctrl.find("int(preview_attack_ui) == ui") < 0 or ctrl.find("BattleTouchConfirm.confirm_attack(self)") < 0:
+		return "tap-again confirm_attack missing"
+	if ctrl.find("mobile_sel") < 0 or ctrl.find("BattlePick.CONTOUR_HALF_W") < 0:
+		return "mobile selection chrome missing contour halo"
+	if ctrl.find("lp_cell := BattlePick.resolve(self, pos)") < 0:
+		return "long_press must soft/contour resolve like taps"
 	return ""
 
 func _soft_pick() -> String:
@@ -301,6 +319,84 @@ func _drag_land_exact() -> String:
 	# Source contracts already require on_drag/on_drag_end use drag_land_cell
 	# (exact for move) and clear stale preview — covered in _source_contracts.
 	return ""
+
+
+func _contour_hit() -> String:
+	## T-P1-5: side torso / shoulder inside figure AABB hits when soft-R + bias miss.
+	var origin := Vector2(40, 80)
+	var cell_px := 56.0
+	var units: Array = [
+		{"char": {"hp": 10}, "pos": Vector2i(2, 2)},
+		{"char": {"hp": 10}, "pos": Vector2i(5, 3)},
+	]
+	# Mid-figure, offset right of centre (shoulder) — soft radius from feet centre often misses.
+	# feet at (2.5, 2.62); mid torso ~ y=2+(FIG_TOP+FIG_FEET)/2 ≈ 1.97; x=2.5+0.35.
+	var shoulder: Vector2 = origin + Vector2(2.5 + 0.35, 2.0 + (BattlePick.FIG_TOP + BattlePick.FIG_FEET) * 0.5) * cell_px
+	var soft: Vector2i = BattlePick.nearest_unit_pos(origin, cell_px, units, shoulder)
+	# Soft may or may not hit; contour MUST hit.
+	var got: Vector2i = BattlePick.contour_unit_pos(origin, cell_px, units, shoulder)
+	if got != Vector2i(2, 2):
+		return "contour missed shoulder tap: %s (soft=%s)" % [str(got), str(soft)]
+	# Outside half-width must miss.
+	var far_side: Vector2 = origin + Vector2(2.5 + 0.55, 2.0 + (BattlePick.FIG_TOP + BattlePick.FIG_FEET) * 0.5) * cell_px
+	var miss: Vector2i = BattlePick.contour_unit_pos(origin, cell_px, units, far_side)
+	if miss == Vector2i(2, 2):
+		return "contour falsely hit outside CONTOUR_HALF_W"
+	# Above crown (above FIG_TOP) must miss.
+	var crown: Vector2 = origin + Vector2(2.5, 2.0 + BattlePick.FIG_TOP - 0.05) * cell_px
+	var miss_crown: Vector2i = BattlePick.contour_unit_pos(origin, cell_px, units, crown)
+	if miss_crown.x >= 0:
+		return "contour falsely hit above FIG_TOP"
+	# Dead unit must miss.
+	var dead: Array = [{"char": {"hp": 0}, "pos": Vector2i(2, 2)}]
+	var miss_dead: Vector2i = BattlePick.contour_unit_pos(origin, cell_px, dead, shoulder)
+	if miss_dead.x >= 0:
+		return "contour hit dead unit"
+	# Overlap: two stacked contours — pick nearer feet.
+	var stacked: Array = [
+		{"char": {"hp": 10}, "pos": Vector2i(2, 2)},
+		{"char": {"hp": 10}, "pos": Vector2i(2, 1)},  # above; feet closer to a tap near y=1.5
+	]
+	var between: Vector2 = origin + Vector2(2.5, 1.55) * cell_px
+	var prefer: Vector2i = BattlePick.contour_unit_pos(origin, cell_px, stacked, between)
+	if prefer != Vector2i(2, 1) and prefer != Vector2i(2, 2):
+		return "contour overlap unexpected: %s" % str(prefer)
+	# Prefer should be the one whose feet are closer.
+	var feet_upper: Vector2 = origin + Vector2(2.5, 1.0 + BattlePick.FIG_FEET) * cell_px
+	var feet_lower: Vector2 = origin + Vector2(2.5, 2.0 + BattlePick.FIG_FEET) * cell_px
+	var expect := Vector2i(2, 1) if between.distance_squared_to(feet_upper) <= between.distance_squared_to(feet_lower) else Vector2i(2, 2)
+	if prefer != expect:
+		return "contour overlap did not prefer nearer feet: got=%s expect=%s" % [str(prefer), str(expect)]
+	if BattlePick.CONTOUR_HALF_W < 0.30 or BattlePick.CONTOUR_HALF_W > 0.50:
+		return "CONTOUR_HALF_W out of fat-finger range: %s" % BattlePick.CONTOUR_HALF_W
+	return ""
+
+
+func _tap_again_contracts() -> String:
+	## Pure policy mirror for tap-again confirm (no live battle host).
+	## First tap sets preview; second tap on same cell/enemy must call confirm_*.
+	var preview := Vector2i(3, 4)
+	var other := Vector2i(4, 4)
+	# Same cell → confirm
+	if not _tap_again_move_should_confirm(preview, preview):
+		return "tap-again move same cell must confirm"
+	# Different cell → re-preview, not confirm
+	if _tap_again_move_should_confirm(preview, other):
+		return "tap-again move different cell must not confirm"
+	# Attack same ui
+	if not _tap_again_attack_should_confirm(2, 2):
+		return "tap-again attack same ui must confirm"
+	if _tap_again_attack_should_confirm(2, 5):
+		return "tap-again attack different ui must not confirm"
+	return ""
+
+
+func _tap_again_move_should_confirm(preview: Vector2i, tapped: Vector2i) -> bool:
+	return preview == tapped
+
+
+func _tap_again_attack_should_confirm(preview_ui: int, tapped_ui: int) -> bool:
+	return preview_ui == tapped_ui
 
 
 func _touch(index: int, pressed: bool, pos: Vector2) -> InputEventScreenTouch:
