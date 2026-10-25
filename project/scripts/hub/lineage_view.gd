@@ -38,15 +38,7 @@ func _build() -> void:
 			alive_n += 1
 	var chips := [[Locale.t("gen2_25"), "%d" % alive_n, UIKit.OK], [Locale.t("gen2_26"), Calendar.label(), UIKit.TEXT_DIM]]
 	UIKit.top_bar(self, Locale.t("gen2_24") % GameState.surname, chips, Locale.t("gen2_27"), _back)
-	var castle_arms := TextureRect.new()
-	castle_arms.name = "CastleArms"
-	castle_arms.texture = UnitArt.shield_arms(GameState.banner_spec if typeof(GameState.banner_spec) == TYPE_DICTIONARY else {}, 44, 52)
-	castle_arms.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	castle_arms.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	castle_arms.position = Vector2(800, 2)
-	castle_arms.size = Vector2(44, 52)
-	castle_arms.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(castle_arms)
+	CKHeraldryChrome.place_company_header(self, Vector2(800, 2), Vector2(44, 52))
 	_scroll = ScrollContainer.new()
 	_scroll.name = "LineageGridScroll"
 	_scroll.position = GRID.position
@@ -112,7 +104,12 @@ func apply_mobile_layout() -> void:
 			alive_n += 1
 	var info := "%s %d · %s" % [Locale.t("gen2_25"), alive_n, Calendar.label()]
 	MobilePage.top_bar(self, Locale.t("gen2_24") % GameState.surname, info, [[Locale.t("gen2_27"), _back]])
-	(get_node("CastleArms") as Control).visible = false
+	var ca := get_node_or_null("CastleArms") as Control
+	if ca:
+		ca.visible = true
+		ca.position = Vector2(w - 64.0, 6.0)
+		ca.size = Vector2(52, 60)
+		ca.custom_minimum_size = Vector2(52, 60)
 	var iw := 470.0
 	_info_rect = Rect2(w - iw - 24.0, MobilePage.TOP + 4.0, iw, 720.0 - MobilePage.TOP - 16.0)
 	var gw := _info_rect.position.x - 48.0
@@ -206,6 +203,7 @@ func _cell(c: CKCharacter) -> Button:
 		tc.position = Vector2(4, 4)
 		tc.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		b.add_child(tc)
+	CKHeraldryChrome.attach_cell_chrome(b, c, CELL if not _mob else CELL_M, 6.0 if not _mob else 8.0)
 	b.pressed.connect(func():
 		UIFX.press_feedback(b)
 		select(c))

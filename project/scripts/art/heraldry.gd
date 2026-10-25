@@ -1,7 +1,8 @@
 class_name CKHeraldry
 extends RefCounted
 ## Castle heraldry API: tinctures, nation styles, rank-tiered achievement, v1 migrate.
-## Arms belong to the castle (shared by all families it hosts); no per-person or marriage marks.
+## Company banner (团徽) is permanent; family arms (族徽) are per-family with a canton echo.
+## No marriage marshalling / per-person cadency — genealogy shows 爵位徽记 separately.
 ## Colors live in heraldry_v2.json (style ratchet: no hex in this file).
 
 const DATA_PATH := "res://assets/art/heraldry_v2.json"

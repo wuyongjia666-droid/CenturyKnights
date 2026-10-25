@@ -49,17 +49,21 @@ func _family(kids: int) -> Dictionary:
 			GameState.characters.erase(id)
 	if kids < 0:
 		return {"leader": leader}
+	var fid := str(leader.family_id)
 	var sp := _person("t_spouse", "林素", 30, "f")
+	sp.family_id = fid  # married into the house; shows 族徽
 	leader.spouse_id = sp.id
 	sp.spouse_id = leader.id
 	var dad := _person("t_father", "老家主", 60)
 	dad.alive = false
+	dad.family_id = fid
 	leader.parent_ids = [dad.id, ""]
 	dad.children_ids = [leader.id]
 	var out := {"leader": leader, "spouse": sp, "father": dad, "kids": []}
 	for i in kids:
 		var k := _person("t_kid_%02d" % i, "嗣%02d" % i, i % 17, "m" if i % 2 == 0 else "f")
 		k.is_child = true
+		k.family_id = fid  # birth inherits paternal family → 族徽
 		k.parent_ids = [leader.id, sp.id]
 		leader.children_ids.append(k.id)
 		sp.children_ids.append(k.id)
@@ -126,10 +130,32 @@ func _run() -> void:
 	var ag := v.find_child("InfoAge", true, false) as Label
 	_ok(nm != null and nm.text == dk.name, "select: info name not updated")
 	_ok(ag != null and ag.text.begins_with("已故"), "select: deceased not marked")
-	for need in ["PersonArms", "RankBadge", "InfoJob", "InfoRank", "InfoAction"]:
+	for need in ["PersonArms", "RankBadge", "ArmsKind", "InfoJob", "InfoRank", "InfoAction"]:
 		_ok(v.find_child(need, true, false) != null, "info panel missing %s" % need)
+	_ok(v.find_child("CastleArms", true, false) != null, "overview missing company CastleArms")
+	var leader_cell := v.find_child("Avatar_%s" % fam.leader.id, true, false) as Control
+	_ok(leader_cell != null and leader_cell.find_child("CellArms", true, false) != null, "avatar wall missing CellArms")
+	_ok(leader_cell != null and leader_cell.find_child("CellBadge", true, false) != null, "avatar wall missing CellBadge")
+	# Leader is family → 族徽; add a familyless recruit and confirm info shows 旗徽.
+	var loner := CKCharacter.new()
+	loner.id = "t_loner"
+	loner.name = "散丁"
+	loner.age = 28
+	loner.gender = "m"
+	loner.family_id = ""
+	loner.rank = "knight"
+	GameState.characters[loner.id] = loner
+	# Arms kind on selected deceased kid (same family as leader) must be 族徽.
+	var kind_lbl := v.find_child("ArmsKind", true, false) as Label
+	_ok(kind_lbl != null and kind_lbl.text == Locale.t("gen2_06"), "family member ArmsKind not 族徽")
+	var fam_core := CKHeraldry.core_key(GameState.arms_for_character(fam.leader))
+	var ban_core := CKHeraldry.core_key(GameState.banner_spec)
+	_ok(fam_core != ban_core, "family arms core should differ from company banner")
+	_ok(CKHeraldry.core_key(GameState.arms_for_character(loner)) == ban_core, "familyless should resolve to company banner")
 	if DeviceProfile.is_mobile():
 		_ok(v.find_child("StitchFooter", true, false) == null, "key hints on touch")
+		var ca := v.find_child("CastleArms", true, false) as Control
+		_ok(ca != null and ca.visible, "mobile must keep company CastleArms visible")
 	# ── details focus ──
 	(v.find_child("Avatar_%s" % fam.leader.id, true, false) as Button).pressed.emit()
 	await _settle(2)
@@ -141,6 +167,12 @@ func _run() -> void:
 	var cv: Control = t.canvas()
 	_ok(cv.find_child("Node_%s" % fam.spouse.id, false, false) != null, "tree: spouse missing")
 	_ok(cv.find_child("Node_%s" % fam.father.id, false, false) != null, "tree: parent missing")
+	_ok(t.find_child("CastleArms", true, false) != null, "tree missing company CastleArms")
+	var focus_node := cv.find_child("Node_%s" % fam.leader.id, false, false) as Control
+	_ok(focus_node != null and focus_node.find_child("NodeArms", true, false) != null, "tree node missing NodeArms")
+	_ok(focus_node != null and focus_node.find_child("NodeBadge", true, false) != null, "tree node missing NodeBadge")
+	for need in ["PersonArms", "RankBadge", "ArmsKind"]:
+		_ok(t.find_child(need, true, false) != null, "tree info missing %s" % need)
 	for k in fam.kids:
 		_ok(cv.find_child("Node_%s" % k.id, false, false) != null, "tree: child %s missing" % k.id)
 	_ok(t.find_child("InfoAction", true, false) == null, "tree: re-focus offered on the focus itself")
