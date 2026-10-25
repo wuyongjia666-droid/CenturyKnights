@@ -267,10 +267,13 @@ func _source_confirm() -> String:
 func _source_controller_locale() -> String:
 	var pick := FileAccess.get_file_as_string("res://scripts/battle/battle_pick.gd")
 	var ctrl := FileAccess.get_file_as_string("res://scripts/battle/battle_controller.gd")
-	if ctrl.find("select_burst_scale") < 0:
-		return "controller draw missing select_burst_scale"
-	if ctrl.find("FIG_FEET") < 0 or ctrl.find("contour_half_w") < 0:
-		return "controller missing foot disc / body rect chrome"
+	var chrome := FileAccess.get_file_as_string("res://scripts/battle/battle_select_chrome.gd")
+	if ctrl.find("BattleSelectChrome.draw_selected") < 0:
+		return "controller draw missing BattleSelectChrome.draw_selected"
+	if chrome.find("select_burst_scale") < 0:
+		return "chrome draw missing select_burst_scale"
+	if chrome.find("FIG_FEET") < 0 or chrome.find("contour_half_w") < 0:
+		return "chrome missing foot disc / body rect"
 	if ctrl.find("draw_reject_flash") < 0 or ctrl.find("reject_invalid_tap") < 0:
 		return "controller missing reject wire"
 	# Ban thin residual-only knife: must touch pick resolve/contour, not only bar/info.
