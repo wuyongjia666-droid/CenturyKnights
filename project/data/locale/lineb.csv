@@ -411,3 +411,7 @@ lb_rv_arms,敌徽,Rival arms
 lb_city_arms,邦徽,City nation arms
 lb_board_arms,委托徽,Commission crest
 lb_territory_arms,领地徽,Territory arms
+lb_field_arms,属事徽,Field-book arms
+lb_yeartrace_arms,岁课徽,Yeartrace arms
+lb_purse_arms,私囊徽,Purse arms
+lb_dos_purse,私囊 %d 银,Purse %d silver
