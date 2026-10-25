@@ -123,3 +123,10 @@ sj_4f76b088,对手,对手
 sj_76cd2baf,【锻眉】%s 硬吃一下，反震 %s 2 点，之后防御 +2,【锻眉】%s 硬吃一下，反震 %s 2 点，之后防御 +2
 sj_c07cf476,【桥税骑】%s 拦下 %s 收过桥税：它下回合少走 2 格，%s 这回合多走 1 格,【桥税骑】%s 拦下 %s 收过桥税：它下回合少走 2 格，%s 这回合多走 1 格
 sj_d46a3984,【盐引】粮不够今天吃，盐引的光环没开,【盐引】粮不够今天吃，盐引的光环没开
+a1_rest,休养疗伤（%d 银）,Rest & heal (%d silver)
+a1_rest_ok,%s 已休养痊愈,%s rested and healed
+a1_rest_none,无人需要休养,Nobody needs rest
+a1_rest_need,先建造医所,Build the infirmary first
+a1_rest_broke,银币不足（需要 %d）,Need %d silver
+a1_rest_lasting,永久伤请用药材缓解,Lasting wounds need clinic herbs
+a1_rest_pick,点选伤员后休养,Select a wounded knight to rest
