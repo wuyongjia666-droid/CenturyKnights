@@ -8,7 +8,7 @@
 - [ ] `python3 tools/ci/store_prep_check.py` 绿  
 - [ ] `python3 tools/ci/store_packaging_dry_check.py` 绿  
 - [ ] `python3 tools/ci/store_verify_records_check.py` 绿  
-- [ ] 隐私/分级/导出**验证记录**过目（`*-verification-record.md`）  
+- [ ] 隐私/分级/导出/数据安全/支持**验证记录**过目（`*-verification-record.md`）  
 - [ ] `python3 tools/ci/export_size_report.py` 绿  
 
 ## B. 崩溃 / 性能
@@ -24,8 +24,8 @@
 - [ ] Play / MS 完整字段稿过目（`play-listing-full.md` / `ms-store-listing-full.md`）  
 - [ ] 隐私政策草稿 + 分级意图（`privacy-policy-draft.md` / `age-rating-draft.md`）  
 - [ ] 五张截图按清单拍齐（`screenshots-checklist.md`）  
-- [ ] 数据安全表预填过目（`data-safety-draft.md`；默认不收集）  
-- [ ] 支持联系方式草稿过目（`support-contact-draft.md`）  
+- [ ] 数据安全表预填过目（`data-safety-draft.md`；默认不收集）+ `data-safety-verification-record.md`  
+- [ ] 支持联系方式草稿过目（`support-contact-draft.md`）+ `support-contact-verification-record.md`  
 - [ ] 隐私政策 URL（若收崩溃日志）  
 - [ ] 分级问卷草稿  
 
