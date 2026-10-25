@@ -122,6 +122,18 @@ func _fit_chrome() -> void:
 			elif ch is Label and ch.position.x > 800.0:
 				ch.position.x = v.x - right - ch.get_minimum_size().x
 
+func _reserve_who():
+	var rid := CKDeployReserve.appointed_id()
+	if rid == "":
+		return null
+	return GameState.characters.get(rid, null)
+
+
+func _sync_reserve_strip(parent: Node, at: Vector2) -> void:
+	var shield := Vector2(32, 38) if DeviceProfile.is_mobile() else Vector2(36, 44)
+	CKHeraldryField.place_reserve_crest_strip(parent, _reserve_who(), at, shield)
+
+
 func _back() -> void:
 	var back := "res://scenes/hub/castle_hub.tscn"
 	if GameState.has_meta("deploy_return"):
@@ -434,10 +446,13 @@ func _render_metrics() -> void:
 	rb.name = "ReserveBtn"
 	rb.clip_text = true
 	rb.position = Vector2(x, R.end.y - 132)
+	var reserve_at := Vector2(x, R.end.y - 188)
+	_sync_reserve_strip(_metrics, reserve_at)
 	rb.pressed.connect(func():
 		var rr := CKDeployReserve.cycle()
 		rb.text = CKDeployReserve.button_text()
-		rb.tooltip_text = str(rr.get("msg", "")))
+		rb.tooltip_text = str(rr.get("msg", ""))
+		_sync_reserve_strip(_metrics, reserve_at))
 	_metrics.add_child(rb)
 	var go := UIKit.cta_button("出战 · 练习战（清匪）", "ENTER", int(w), 52)
 	go.name = "Fight"
@@ -632,12 +647,19 @@ func _phone_metrics(r: Rect2) -> void:
 		tr += str(GameState.get_trait(str(t)).get("name", t)) + " · "
 	v.add_child(MobilePage.label(Locale.t("ux_dep_traits") + (tr.trim_suffix(" · ") if tr != "" else Locale.t("ux_dep_none")), UIKit.TEXT_DIM))
 	MobilePage.spacer(v)
+	var slot := Control.new()
+	slot.name = "ReserveCrestSlot"
+	slot.custom_minimum_size = Vector2(180, 48)
+	slot.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	v.add_child(slot)
+	_sync_reserve_strip(slot, Vector2.ZERO)
 	var rb := MobilePage.button(CKDeployReserve.button_text(), false, func(): pass)
 	rb.name = "ReserveBtn"
 	rb.pressed.connect(func():
 		var rr := CKDeployReserve.cycle()
 		rb.text = CKDeployReserve.button_text()
-		rb.tooltip_text = str(rr.get("msg", "")))
+		rb.tooltip_text = str(rr.get("msg", ""))
+		_sync_reserve_strip(slot, Vector2.ZERO))
 	v.add_child(rb)
 	var go := MobilePage.button(Locale.t("ux_dep_go"), true, _fight)
 	go.name = "Fight"

@@ -29,6 +29,7 @@ func _build() -> void:
 	right_box.add_child(rb)
 	right_box.move_child(rb, right_box.get_child_count() - 2)
 	var hh := HBoxContainer.new()
+	hh.name = "TavernHead"
 	hh.position = Vector2(42, 74)
 	hh.add_theme_constant_override("separation", 10)
 	add_child(hh)
@@ -149,23 +150,49 @@ func _add_empty_host(parent: Control, width: float, pos: Vector2 = Vector2.ZERO)
 	parent.add_child(host)
 
 
+func _drop_named(n: Node, node_name: String) -> void:
+	for c in n.get_children():
+		_drop_named(c, node_name)
+	if n != self and n.name == node_name:
+		n.name = "_DyingStrip"
+		n.queue_free()
+
+
+func _place_tavern_strip() -> void:
+	## Page strip is separate from per-card HireArms. Empty bar keeps 团徽 only.
+	_drop_named(self, "TavernCrestStrip")
+	var shield := Vector2(32, 38) if DeviceProfile.is_mobile() else Vector2(36, 44)
+	if _mob:
+		var bar := get_node_or_null("MobileTopBar")
+		if bar:
+			CKHeraldryField.place_tavern_crest_strip(bar, _selected, Vector2.ZERO, shield)
+		return
+	var head := get_node_or_null("TavernHead")
+	var parent: Node = head if head != null else self
+	var at := Vector2.ZERO if head != null else Vector2(1040, 70)
+	CKHeraldryField.place_tavern_crest_strip(parent, _selected, at, shield)
+
+
 func _refresh() -> void:
 	if _mob:
 		if GameState.tavern_candidates.is_empty():
 			_selected = null
 		elif _selected == null or not GameState.tavern_candidates.has(_selected):
 			_selected = GameState.tavern_candidates[0]
+		_place_tavern_strip()
 		_refresh_mobile()
 		return
 	for n in _cards.get_children():
 		_cards.remove_child(n)
 		n.queue_free()
 	if GameState.tavern_candidates.is_empty():
-		_add_empty_host(_cards, 900.0, Vector2(42, 280))
 		_selected = null
+		_place_tavern_strip()
+		_add_empty_host(_cards, 900.0, Vector2(42, 280))
 		return
 	if _selected == null or not GameState.tavern_candidates.has(_selected):
 		_selected = GameState.tavern_candidates[0]
+	_place_tavern_strip()
 	var i := 0
 	var mobile := DeviceProfile.is_mobile() and _card_scroll != null
 	var card_h := 540.0 + DeviceProfile.hit_px() if mobile else 570.0
