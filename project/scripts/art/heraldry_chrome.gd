@@ -1,8 +1,8 @@
 class_name CKHeraldryChrome
 extends RefCounted
-## Shared player-facing heraldry chrome: 团徽 / 旗徽 / 族徽 + 爵位徽记 + 敌徽.
+## Shared player-facing heraldry chrome: 团徽 / 旗徽 / 族徽 + 爵位徽记 + 敌徽 + 邦徽.
 ## One design system everywhere (castle header/banner strip, genealogy, dossier,
-## board unit shields, rival houses, tavern/hire cards).
+## board unit shields, rival houses, tavern/hire cards, city/smith/market chrome).
 ## No marriage marshalling / per-person cadency — only company vs family vs nation arms + rank badge.
 
 static func is_family_member(c) -> bool:
@@ -248,3 +248,66 @@ static func blit_token_shield(img: Image, c, team: String = "player") -> void:
 	var ox := 2
 	var oy := img.get_height() - sh - 2
 	img.blit_rect(simg, Rect2i(0, 0, sw, sh), Vector2i(ox, oy))
+
+## Nation / foe shield (敌徽). Shared plate; city chrome uses make_city_nation_arms for 邦徽.
+static func nation_shield(nid: String, w: int = 40, h: int = 48) -> Texture2D:
+	return UnitArt.shield_arms(nation_spec(nid), w, h)
+
+static func make_nation_arms(nid: String, size: Vector2 = Vector2(40, 48)) -> TextureRect:
+	var tr := TextureRect.new()
+	tr.name = "FoeArms"
+	tr.texture = nation_shield(str(nid), int(size.x), int(size.y))
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	tr.custom_minimum_size = size
+	tr.size = size
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tr.tooltip_text = rival_label()
+	tr.set_meta("arms_kind", "lb_rv_arms")
+	tr.set_meta("arms_core", CKHeraldry.core_key(nation_spec(str(nid))))
+	tr.set_meta("nation_id", str(nid))
+	return tr
+
+static func make_city_nation_arms(nid: String, size: Vector2 = Vector2(40, 48)) -> TextureRect:
+	var tr := TextureRect.new()
+	tr.name = "CityNationArms"
+	tr.texture = nation_shield(str(nid), int(size.x), int(size.y))
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	tr.custom_minimum_size = size
+	tr.size = size
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tr.tooltip_text = Locale.t("lb_city_arms")
+	tr.set_meta("arms_kind", "lb_city_arms")
+	tr.set_meta("arms_core", CKHeraldry.core_key(nation_spec(str(nid))))
+	tr.set_meta("nation_id", str(nid))
+	return tr
+
+## City hub crest strip: 团徽 + host-nation 邦徽 (side card / smith / market).
+static func place_city_crest_strip(parent: Node, city_id: String, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("CityCrestStrip")
+	if old:
+		old.queue_free()
+	var nid := World.nation_of(str(city_id))
+	if nid == "":
+		nid = str(World.node(str(city_id)).get("nation", ""))
+	var host := Control.new()
+	host.name = "CityCrestStrip"
+	host.position = at
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var arms := make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var w := shield.x
+	if nid != "":
+		var nat := make_city_nation_arms(nid, shield)
+		nat.position = Vector2(shield.x + 8.0, 0)
+		host.add_child(nat)
+		w = shield.x * 2.0 + 8.0
+	host.size = Vector2(w, shield.y)
+	host.set_meta("nation_id", nid)
+	host.set_meta("city_id", str(city_id))
+	parent.add_child(host)
+	return host
