@@ -44,6 +44,7 @@ const PAN_KEEP_PX := 64.0
 const FOCUS_SMOOTH_SEC := 0.22
 const FOCUS_MARGIN_FRAC := 0.18
 ## Y1-A T-P5: select-burst window (seconds) + deselect lock (msec) after a fresh select.
+## Y1-A T-P6: focus_cell(force) for enemy-turn / phase-lead follow on desktop+mobile.
 const SELECT_BURST_SEC := 0.38
 const SELECT_LOCK_MSEC := 280
 
@@ -321,8 +322,9 @@ static func _board_local(host, screen_pos: Vector2) -> Vector2:
 	return local_after_pan_zoom(host._screen_to_local(screen_pos), host._board_pan, host._board_zoom)
 
 
-static func focus_cell(host, cell: Vector2i, smooth: bool = true) -> void:
-	if not DeviceProfile.is_mobile():
+static func focus_cell(host, cell: Vector2i, smooth: bool = true, force: bool = false) -> void:
+	# T-P6: `force` lets enemy-turn / phase-lead follow work on desktop too.
+	if not force and not DeviceProfile.is_mobile():
 		return
 	if host.has_method("_in_bounds") and not host._in_bounds(cell):
 		return
