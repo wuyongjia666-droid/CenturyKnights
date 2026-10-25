@@ -8,6 +8,7 @@
 | #1 | [`season-01/`](./season-01/) | `project/data/content_seasons/season_01.json` | 小说+圣经+可玩章草稿（`cs01_01`） |
 | #2 | [`season-02/`](./season-02/) | `project/data/content_seasons/season_02.json` | **小说初稿已开写**（婚约上的灯；诞育/联姻月回响） |
 | #3 | [`season-03/`](./season-03/) | `project/data/content_seasons/season_03.json` | **中篇+可玩章 `cs03_01`**（榜上的收成；委托/属地月回响） |
+| #4 | [`season-04/`](./season-04/) | `project/data/content_seasons/season_04.json` | **中篇+可玩章 `cs04_01`**（家训上的灯；家训月回响） |
 
 每季目录约定：
 

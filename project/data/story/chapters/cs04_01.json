@@ -1,0 +1,349 @@
+{
+  "id": "cs04_01",
+  "title": "家训上的灯",
+  "legacy_index": 404,
+  "return_scene": "res://scenes/story/chapter_player.tscn",
+  "source": "docs/content-seasons/season-04/NOVEL.md",
+  "beats": [
+    {
+      "id": "preach",
+      "title": "挂训",
+      "next": "echo",
+      "lines": [
+        {
+          "id": "cs04_pr_0",
+          "speaker": "旁白",
+          "text": "旗角内侧铺平。绣针停在「仁恤」两字上。",
+          "stage": {
+            "card": "一　挂训",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_pr_1",
+          "speaker": "书记官",
+          "text": "议会要听念。旗册正文只留这两个字。"
+        },
+        {
+          "id": "cs04_pr_2",
+          "speaker": "leader",
+          "text": "绣。"
+        },
+        {
+          "id": "cs04_pr_3",
+          "speaker": "旁白",
+          "text": "针脚细，字却大。绣词贴着旗骨，像藏进骨头里。"
+        },
+        {
+          "id": "cs04_pr_4",
+          "speaker": "老旗手",
+          "text": "展开才看得见。卷紧时贴杆——别拿去卖嘴。"
+        },
+        {
+          "id": "cs04_pr_5",
+          "speaker": "石垒·晚担",
+          "text": "绣词管看。粮管吃。两样别混。"
+        },
+        {
+          "id": "cs04_pr_6",
+          "speaker": "苇原·灯影",
+          "text": "先挂上。月结会不会认，月底再说。"
+        },
+        {
+          "id": "cs04_pr_7",
+          "speaker": "leader",
+          "text": "挂上了。去对月结。"
+        }
+      ]
+    },
+    {
+      "id": "echo",
+      "title": "月结",
+      "next": "hourglass",
+      "lines": [
+        {
+          "id": "cs04_ec_0",
+          "speaker": "旁白",
+          "text": "属地厢房。沙漏多出一行家训回响，数比绣词刺眼。",
+          "stage": {
+            "bg": "hall",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_ec_1",
+          "speaker": "老管事",
+          "text": "家训·仁恤。粮加零，士气加一。第一月。"
+        },
+        {
+          "id": "cs04_ec_2",
+          "speaker": "leader",
+          "text": "绣的是仁恤。粮呢？"
+        },
+        {
+          "id": "cs04_ec_3",
+          "speaker": "老管事",
+          "text": "被劫后补丁挤掉了。绣词不知道。沙漏知道。"
+        },
+        {
+          "id": "cs04_ec_4",
+          "speaker": "槐里·青禾",
+          "text": "绣给人看，还是给人吃？这句别只在嘴里转。"
+        },
+        {
+          "id": "cs04_ec_5",
+          "speaker": "老管事",
+          "text": "沙漏厅有两行空木条。上行等名，下行等数。"
+        },
+        {
+          "id": "cs04_ec_6",
+          "speaker": "石垒·晚担",
+          "text": "并排才算数。单行是骗人。"
+        },
+        {
+          "id": "cs04_ec_7",
+          "speaker": "leader",
+          "text": "去沙漏。两行都刻。"
+        }
+      ]
+    },
+    {
+      "id": "hourglass",
+      "title": "两行",
+      "next": "bridge",
+      "lines": [
+        {
+          "id": "cs04_hg_0",
+          "speaker": "旁白",
+          "text": "沙漏厅里，上行刻仁恤，下行刻粮加零。凹槽深浅不同。",
+          "stage": {
+            "bg": "hall",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_hg_1",
+          "speaker": "老旗手",
+          "text": "一行是名，一行是事。您看哪一行？"
+        },
+        {
+          "id": "cs04_hg_2",
+          "speaker": "leader",
+          "text": "都看。并排。"
+        },
+        {
+          "id": "cs04_hg_3",
+          "speaker": "老管事",
+          "text": "每月来摸。跳行的人，不配谈家训。"
+        },
+        {
+          "id": "cs04_hg_4",
+          "speaker": "槐里·青禾",
+          "text": "摸过加零的人，才配念绣词。"
+        },
+        {
+          "id": "cs04_hg_5",
+          "speaker": "苇原·灯影",
+          "text": "门廊有人问粮。把牌带去。"
+        },
+        {
+          "id": "cs04_hg_6",
+          "speaker": "leader",
+          "text": "带。谁用绣词定粮，先念下行。"
+        }
+      ]
+    },
+    {
+      "id": "bridge",
+      "title": "门廊",
+      "next": "tavern",
+      "lines": [
+        {
+          "id": "cs04_br_0",
+          "speaker": "旁白",
+          "text": "门廊柱下围着人。墙上的牌抄着本月家训行。",
+          "stage": {
+            "bg": "tavern",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_br_1",
+          "speaker": "掌柜",
+          "text": "旗上写仁恤，牌上粮加零。酒馆也在问。"
+        },
+        {
+          "id": "cs04_br_2",
+          "speaker": "leader",
+          "text": "零在执行被挤掉。名还在。先把下行念完。"
+        },
+        {
+          "id": "cs04_br_3",
+          "speaker": "石垒·晚担",
+          "text": "有人只爱听名。听完就来要勺。"
+        },
+        {
+          "id": "cs04_br_4",
+          "speaker": "苇原·灯影",
+          "text": "勺在库里。库不认绣词，认月结。"
+        },
+        {
+          "id": "cs04_br_5",
+          "speaker": "老旗手",
+          "text": "雨打湿纸也要换新。字在，对照就还活着。"
+        },
+        {
+          "id": "cs04_br_6",
+          "speaker": "旁白",
+          "text": "牌被摸亮。你得选：训与行并排，还是先只留训条。"
+        }
+      ]
+    },
+    {
+      "id": "tavern",
+      "title": "选题",
+      "lines": [
+        {
+          "id": "cs04_tav_0",
+          "speaker": "旁白",
+          "text": "烽火酒馆桌上，碗沿画了两个圈：并排，只留训条。",
+          "stage": {
+            "bg": "tavern",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs04_tav_1",
+          "speaker": "掌柜",
+          "text": "篇幅不够就钉墙。墙比旗册宽。"
+        },
+        {
+          "id": "cs04_tav_2",
+          "speaker": "槐里·青禾",
+          "text": "裁执行的人，先把剪刀放下。"
+        },
+        {
+          "id": "cs04_tav_3",
+          "speaker": "老管事",
+          "text": "并排钉。谁撕月结抄本，谁结账。"
+        },
+        {
+          "id": "cs04_tav_4",
+          "speaker": "石垒·晚担",
+          "text": "名是念的，粮是吃的。两样都要。"
+        },
+        {
+          "id": "cs04_tav_5",
+          "speaker": "苇原·灯影",
+          "text": "沙漏还亮。谁买一行结论，带他去摸木条。"
+        },
+        {
+          "id": "cs04_tav_6",
+          "speaker": "旁白",
+          "text": "两张纸在风里响。你选怎么收这一季。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "keep_parallel",
+          "label": "训与行并排",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs04_kept_parallel",
+              "value": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        },
+        {
+          "id": "doctrine_only",
+          "label": "先只留训条",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs04_doctrine_only",
+              "value": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ledger",
+      "title": "入册",
+      "lines": [
+        {
+          "id": "cs04_led_0",
+          "speaker": "旁白",
+          "text": "旗册封面四个字：家训上的灯。末页已厚。柜上两把钥匙。",
+          "stage": {
+            "bg": "hall",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs04_led_par",
+          "speaker": "旁白",
+          "text": "你留下两行。议会仍爱一行。柜子认灯。",
+          "when": {
+            "flag": "cs04_kept_parallel"
+          }
+        },
+        {
+          "id": "cs04_led_only",
+          "speaker": "旁白",
+          "text": "你先只留训条。沙漏仍在亮——月会替你写下行。",
+          "when": {
+            "flag": "cs04_doctrine_only"
+          }
+        },
+        {
+          "id": "cs04_led_1",
+          "speaker": "老管事",
+          "text": "存档不刊也行。不丢，就是缝。"
+        },
+        {
+          "id": "cs04_led_2",
+          "speaker": "槐里·青禾",
+          "text": "孩子抄过加零，才配以后念绣词。"
+        },
+        {
+          "id": "cs04_led_3",
+          "speaker": "老旗手",
+          "text": "并排。不要裁。缝在旗角内侧。"
+        },
+        {
+          "id": "cs04_led_4",
+          "speaker": "石垒·晚担",
+          "text": "粮还在库。勺空了也能记。"
+        },
+        {
+          "id": "cs04_led_5",
+          "speaker": "苇原·灯影",
+          "text": "更还在交。下次挂训，下行先响。"
+        },
+        {
+          "id": "cs04_led_6",
+          "speaker": "leader",
+          "text": "训与行，并排。谁来认家训，先念完。"
+        },
+        {
+          "id": "cs04_led_7",
+          "speaker": "旁白",
+          "text": "风动旗角时，绣词还在。两行之间的空，给人脸红。"
+        }
+      ],
+      "actions": []
+    }
+  ]
+}
