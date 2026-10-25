@@ -79,6 +79,7 @@ var last_chain_follow: Dictionary = {}  # follow-up / next scripted-chain step a
 var last_chain_fail: Dictionary = {}  # scripted-chain expire/abandon payload for ChainFailModal
 var last_supply_halt: Dictionary = {}  # mid-march food=0 payload for SupplyHaltModal
 var last_territory_month: Dictionary = {}  # month yield/drain/lost for TerritoryMonthModal
+var last_siege_alert: Dictionary = {}  # rival siege/threat for SiegeAlertModal
 var market: Dictionary = {}     # city -> {good: stock}
 var fairs: Dictionary = {}      # city -> days_total expiry
 var intel: Dictionary = {}      # city -> days_total when prices were last seen
@@ -188,6 +189,7 @@ func reset() -> void:
 	last_chain_fail = {}
 	last_supply_halt = {}
 	last_territory_month = {}
+	last_siege_alert = {}
 	market = {}
 	for id in nodes.keys():
 		_init_market(id)
@@ -268,6 +270,7 @@ func from_save(d: Dictionary) -> void:
 	last_chain_fail = {}
 	last_supply_halt = {}
 	last_territory_month = {}
+	last_siege_alert = {}
 	market = {}
 	var m: Dictionary = d.get("market", {})
 	for id in nodes.keys():
@@ -2322,6 +2325,22 @@ func take_territory_month() -> Dictionary:
 
 func dismiss_territory_month() -> void:
 	last_territory_month = {}
+
+## Rival siege/threat interrupt — keep first unread; refresh if same site.
+func mark_siege_alert(payload: Dictionary) -> void:
+	if payload.is_empty():
+		return
+	if last_siege_alert.is_empty() or str(last_siege_alert.get("id", "")) == str(payload.get("id", "")):
+		last_siege_alert = payload.duplicate(true)
+
+func take_siege_alert() -> Dictionary:
+	var d: Dictionary = last_siege_alert.duplicate(true)
+	last_siege_alert = {}
+	return d
+
+func dismiss_siege_alert() -> void:
+	last_siege_alert = {}
+
 
 ## Scavenge roadside rations; clears halt so the march can resume.
 func forage_supply() -> Dictionary:
