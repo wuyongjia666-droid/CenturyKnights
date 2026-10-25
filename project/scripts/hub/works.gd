@@ -23,6 +23,15 @@ func _ready() -> void:
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 
+
+func _place_works_crests() -> void:
+	## Castle works chrome: 团徽 header + castle banner strip.
+	var mob := DeviceProfile.is_mobile()
+	var hdr := Vector2(44, 52) if not mob else Vector2(40, 48)
+	var host: Node = _body if _body != null else self
+	CKHeraldryChrome.place_company_header(host, Vector2(1180, 8) if not mob else Vector2(1180, 4), hdr)
+	CKHeraldryChrome.place_castle_banner_strip(host, Vector2(1120, 8) if not mob else Vector2(1120, 4), hdr, Vector2(28, 38))
+
 func apply_mobile_layout() -> void:
 	if MobilePage.active(self):
 		_m_render()
@@ -44,6 +53,7 @@ func _render() -> void:
 	for n in _body.get_children():
 		_body.remove_child(n)
 		n.queue_free()
+	_place_works_crests()
 	UIKit.page_head(_body, 42, 70, "FORTIFICATION // CASTLE WORKS", "城堡工事", "FORTIFICATION MATRIX", "工事至 Lv%d；升级扩编、降价、增产。全部工事 Lv3 / Lv5 达成堡志。" % GameState.BUILDING_MAX)
 	var view_b := UIKit.ghost_button(Locale.t("castle_view_open"), 160, 48)
 	view_b.position = Vector2(560, 92)
@@ -261,6 +271,7 @@ func _m_render() -> void:
 		total += GameState.building_level(id)
 	var info := Locale.t("mw_dbf7fc40") % [GameState.silver, GameState.iron, GameState.food, total, 5 * GameState.BUILDING_MAX, GameState.max_deploy()]
 	MobilePage.top_bar(self, Locale.t("mw_aee11ebd"), info, [[Locale.t("castle_view_open"), func(): CKNav.go("res://scenes/hub/castle_view.tscn")], [Locale.t("btn_back"), _back]])
+	_place_works_crests()
 	var right_w := clampf(w * 0.30, 380.0, 470.0)
 	var lw := w - 40.0 - right_w - 12.0
 	var lv := MobilePage.panel(_body, Rect2(20, MobilePage.TOP, lw, h - MobilePage.TOP - 16), 12)

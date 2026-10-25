@@ -15,6 +15,7 @@ func _ready() -> void:
 	UIFX.fade_in(self, 0.28)
 	Music.play_castle()
 	UIKit.top_bar(self, "领地营建 · 四野属地", UIKit.std_resource_chips(), "返回城堡", func(): CKNav.up())
+	_place_estates_crests()
 	UIKit.page_head(self, 42, 70, "ESTATE SANCTUARY INFRASTRUCTURE // SECTOR 01", "领地营建", "TERRITORIAL PROSPERITY")
 	var sum := UIKit.body_label(_sum_text(), UIKit.TEXT_DIM, 12)
 	sum.name = "Sum"
@@ -195,6 +196,14 @@ func _focus_tile(fk: String, current: bool, hid: String) -> Button:
 			UIFX.soft_deny(b)
 	)
 	return b
+
+
+func _place_estates_crests() -> void:
+	## Estates chrome: 团徽 header + castle banner strip.
+	var mob := DeviceProfile.is_mobile()
+	var hdr := Vector2(44, 52) if not mob else Vector2(40, 48)
+	CKHeraldryChrome.place_company_header(self, Vector2(1180, 8) if not mob else Vector2(1180, 4), hdr)
+	CKHeraldryChrome.place_castle_banner_strip(self, Vector2(1120, 8) if not mob else Vector2(1120, 4), hdr, Vector2(28, 38))
 
 func apply_mobile_layout() -> void:
 	if MobilePage.active(self):
@@ -779,6 +788,7 @@ func _m_build() -> void:
 	var bar := MobilePage.top_bar(self, Locale.t("mw_39662991"), Locale.t("mw_41e31e6c") % [GameState.silver, GameState.food, GameState.iron, Calendar.label()],
 			[[Locale.t("btn_back"), func(): CKNav.up()]])
 	bar.visible = true
+	_place_estates_crests()
 	var rw := clampf(w * 0.27, 340.0, 420.0)
 	var lw := w - 40.0 - rw - 12.0
 	var lv := MobilePage.panel(_m_root, Rect2(20, top, lw, bh), 12)
