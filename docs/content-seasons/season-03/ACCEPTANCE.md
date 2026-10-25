@@ -14,3 +14,4 @@
 ## 可玩章
 
 - [x] `playable_dialogue` — `suite_content_season_playable_s03_check`：`cs03_01` schema+lint；chapter_player 走进对白；选「功与粮并排」
+| playable_dialogue_02 | 可玩章 cs03_02 对白可走 | `res://tests/suites/narrative/content_season_playable_s03_02_check.tscn` | 本 PR |
