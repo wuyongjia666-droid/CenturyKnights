@@ -1213,12 +1213,14 @@ func _draw_overlay() -> void:
 		var scol = Color(1, 1, 1, 0.95) if units[selected].team == "player" else Color(1.0, 0.62, 0.62, 0.95)
 		if mobile_sel:
 			# Foot disc + mid-figure ring (matches BattlePick FIG span) — readable without the FX sheet.
+			# T-P5: select_burst_scale widens rings briefly after a fresh select.
+			var burst: float = BattlePick.select_burst_scale(self)
 			var feet: Vector2 = ORIGIN + Vector2(sel_pos) * float(CELL) + Vector2(float(CELL) * 0.5, float(CELL) * BattlePick.FIG_FEET)
 			var mid: Vector2 = ORIGIN + Vector2(sel_pos) * float(CELL) + Vector2(float(CELL) * 0.5, float(CELL) * ((BattlePick.FIG_TOP + BattlePick.FIG_FEET) * 0.5))
 			var pulse_a := 0.55 + 0.25 * sin(_sel_pulse * 6.0)
-			overlay.draw_circle(feet, float(CELL) * 0.38, Color(UIKit.ACCENT if units[selected].team == "player" else UIKit.DANGER, 0.28 * pulse_a))
-			overlay.draw_arc(feet, float(CELL) * 0.42, 0.0, TAU, 40, Color(scol, 0.95), 3.0)
-			overlay.draw_arc(mid, float(CELL) * 0.36, 0.0, TAU, 40, Color(scol, 0.75), 2.5)
+			overlay.draw_circle(feet, float(CELL) * 0.38 * burst, Color(UIKit.ACCENT if units[selected].team == "player" else UIKit.DANGER, 0.28 * pulse_a))
+			overlay.draw_arc(feet, float(CELL) * 0.42 * burst, 0.0, TAU, 40, Color(scol, 0.95), 3.0)
+			overlay.draw_arc(mid, float(CELL) * 0.36 * burst, 0.0, TAU, 40, Color(scol, 0.75), 2.5)
 			var hw: float = BattlePick.contour_half_w()
 			var body := Rect2(
 				ORIGIN + Vector2(sel_pos) * float(CELL) + Vector2(float(CELL) * (0.5 - hw), float(CELL) * BattlePick.FIG_TOP),

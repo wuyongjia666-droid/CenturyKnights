@@ -15,6 +15,8 @@ extends RefCounted
 ## Y1-A T-P3: strict unit-drag origin (exact/bias/contour, not soft-empty) + selected-only sticky.
 ## Y1-A T-P4: smooth camera focus + margin follow for unit/preview; attack juice lives
 ## in BattleTouchConfirm (keeps battle_controller under the 3000-line gate).
+## Y1-A T-P5: war-chess select feel — team-prefer soft resolve in scrums; select-burst
+## juice; post-select deselect lock so fat-finger double-tap does not undo select.
 
 ## Fraction of a cell: anything closer than this counts as that unit.
 const SOFT_R := 0.90
@@ -39,6 +41,10 @@ const PAN_KEEP_PX := 64.0
 ## T-P4: smooth focus duration + stage inset fraction for soft follow nudges.
 const FOCUS_SMOOTH_SEC := 0.22
 const FOCUS_MARGIN_FRAC := 0.18
+## Y1-A T-P5: select-burst window (seconds) + deselect lock (msec) after a fresh select.
+const SELECT_BURST_SEC := 0.38
+const SELECT_LOCK_MSEC := 280
+
 
 
 ## Clamp a board pan so at least PAN_KEEP_PX of the (zoomed) board stays inside stage.
@@ -123,19 +129,30 @@ static func _stage_rect(host) -> Rect2:
 	return Rect2()
 
 
-static func nearest_unit_pos(origin: Vector2, cell_px: float, units: Array, local: Vector2, soft_r: float = SOFT_R) -> Vector2i:
+static func nearest_unit_pos(origin: Vector2, cell_px: float, units: Array, local: Vector2, soft_r: float = SOFT_R, prefer_team: String = "") -> Vector2i:
 	if cell_px < 1.0:
 		return Vector2i(-1, -1)
+	var radius2 := (soft_r * cell_px) * (soft_r * cell_px)
 	var best_i := -1
-	var best_d2 := (soft_r * cell_px) * (soft_r * cell_px)
+	var best_d2 := radius2
+	var best_rank := 99
 	for i in units.size():
 		var u = units[i]
 		if u.char.hp <= 0:
 			continue
 		var center: Vector2 = origin + Vector2(u.pos) * cell_px + Vector2(cell_px, cell_px) * 0.5
 		var d2: float = center.distance_squared_to(local)
-		if d2 <= best_d2:
+		if d2 > radius2:
+			continue
+		var rank := 1
+		if prefer_team == "player":
+			rank = 0 if str(u.team) == "player" else 1
+		elif prefer_team == "foe":
+			rank = 0 if str(u.team) != "player" else 1
+		# Prefer team first, then closer centre (scrum soft-pick).
+		if best_i < 0 or rank < best_rank or (rank == best_rank and d2 < best_d2):
 			best_d2 = d2
+			best_rank = rank
 			best_i = i
 	if best_i >= 0:
 		return units[best_i].pos
@@ -260,7 +277,10 @@ static func resolve(host, screen_pos: Vector2) -> Vector2i:
 	var bias: Vector2i = visual_bias_unit_pos(host.ORIGIN, float(host.CELL), host.units, local, exact)
 	if bias.x >= 0:
 		return bias
-	var hit: Vector2i = nearest_unit_pos(host.ORIGIN, float(host.CELL), host.units, local)
+	# T-P5: in a soft scrum, prefer the team the gesture cares about (player select /
+	# enemy attack) so an overlapping foe does not steal the ally pick.
+	var prefer := _resolve_prefer_team(host)
+	var hit: Vector2i = nearest_unit_pos(host.ORIGIN, float(host.CELL), host.units, local, SOFT_R, prefer)
 	if hit.x >= 0:
 		return hit
 	# T-P1-5: figure body AABB (side torso / shoulder that soft-R + bias both miss).
@@ -268,6 +288,15 @@ static func resolve(host, screen_pos: Vector2) -> Vector2i:
 	if contour.x >= 0:
 		return contour
 	return exact
+
+
+## Mobile soft-resolve team preference. "" | "player" | "foe".
+static func _resolve_prefer_team(host) -> String:
+	if not DeviceProfile.is_mobile():
+		return ""
+	if bool(host.attack_mode):
+		return "foe"
+	return "player"
 
 
 ## True when a soft-pick would land on a living unit (used by InputRouter sticky_fn).
@@ -351,7 +380,35 @@ static func _tween_board_pan(host, target: Vector2) -> void:
 	, from, target, FOCUS_SMOOTH_SEC)
 
 
+## Stamp select-burst + deselect-lock clock (T-P5). Safe on duck hosts.
+static func note_select_burst(host) -> void:
+	host.set_meta("m_select_burst_msec", Time.get_ticks_msec())
+
+
+## 1.0 → ~1.4 decaying over SELECT_BURST_SEC (pure; device-free).
+static func select_burst_scale(host, now_msec: int = -1) -> float:
+	if not host.has_meta("m_select_burst_msec"):
+		return 1.0
+	var t0: int = int(host.get_meta("m_select_burst_msec"))
+	var now: int = Time.get_ticks_msec() if now_msec < 0 else now_msec
+	var elapsed: float = float(now - t0) / 1000.0
+	if elapsed < 0.0 or elapsed >= SELECT_BURST_SEC:
+		return 1.0
+	var u: float = 1.0 - (elapsed / SELECT_BURST_SEC)
+	return 1.0 + 0.40 * u * u
+
+
+## True while fat-finger double-tap should NOT undo a fresh select (T-P5).
+static func select_lock_active(host, now_msec: int = -1) -> bool:
+	if not host.has_meta("m_select_burst_msec"):
+		return false
+	var t0: int = int(host.get_meta("m_select_burst_msec"))
+	var now: int = Time.get_ticks_msec() if now_msec < 0 else now_msec
+	return (now - t0) < SELECT_LOCK_MSEC
+
+
 static func focus_selected(host) -> void:
 	if host.selected < 0 or host.selected >= host.units.size():
 		return
+	note_select_burst(host)
 	focus_cell(host, host.units[host.selected].pos)

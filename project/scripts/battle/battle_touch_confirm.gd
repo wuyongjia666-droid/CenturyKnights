@@ -11,6 +11,7 @@ extends RefCounted
 ## Y1-A T-P3: unit-drag origin is strict figure hit (exact/bias/contour); soft-empty
 ## beside the selected piece pans the map instead of stealing the gesture.
 ## Y1-A T-P4: preview drag soft-follows camera; attack ghost gets aim line + pulse juice.
+## Y1-A T-P5: select-lock on try_deselect; clear() re-focuses selection after cancel.
 
 static func enabled() -> bool:
 	if not (GameState.settings is Dictionary):
@@ -27,6 +28,10 @@ static func try_deselect(host, ui: int) -> bool:
 	if not enabled():
 		return false
 	if host.selected < 0 or host.selected >= host.units.size():
+		return false
+	# T-P5: ignore re-tap / empty deselect during the post-select lock window so a
+	# fat-finger double-tap does not undo the select that just landed.
+	if BattlePick.select_lock_active(host):
 		return false
 	if ui == host.selected:
 		host._cancel_selection()
@@ -52,6 +57,9 @@ static func clear(host) -> void:
 	host.preview_attack_ui = -1
 	if DeviceProfile.is_mobile():
 		BattleMobileBar.rebuild(host)
+		# T-P5: cancelling a preview keeps the piece selected — settle camera on it.
+		if host.selected >= 0:
+			BattlePick.focus_selected(host)
 	if host.overlay:
 		host.overlay.queue_redraw()
 	ForecastPanel.refresh(host)

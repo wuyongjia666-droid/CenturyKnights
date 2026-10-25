@@ -58,6 +58,8 @@ func _check() -> String:
 		err = _landscape_confirm_stack()
 	if err == "":
 		err = _tp4_focus_follow_juice()
+	if err == "":
+		err = _tp5_select_feel()
 	OS.set_environment("CK_FORCE_MOBILE", "0")
 	return err
 
@@ -570,6 +572,38 @@ class _FakeBattle:
 	func _cancel_selection() -> void:
 		cancelled = true
 		selected = -1
+
+func _tp5_select_feel() -> String:
+	## T-P5 contracts: team-prefer soft, select lock, burst stamp via focus_selected.
+	OS.set_environment("CK_FORCE_MOBILE", "1")
+	var origin := Vector2(0, 0)
+	var cell := 40.0
+	var units: Array = [
+		{"char": {"hp": 8}, "pos": Vector2i(1, 1), "team": "player"},
+		{"char": {"hp": 8}, "pos": Vector2i(2, 1), "team": "bandit"},
+	]
+	var a: Vector2 = origin + Vector2(1, 1) * cell + Vector2(cell, cell) * 0.5
+	var b: Vector2 = origin + Vector2(2, 1) * cell + Vector2(cell, cell) * 0.5
+	var finger: Vector2 = a.lerp(b, 0.65)
+	var hit: Vector2i = BattlePick.nearest_unit_pos(origin, cell, units, finger, BattlePick.SOFT_R, "player")
+	if hit != Vector2i(1, 1):
+		return "T-P5 scrum prefer player failed"
+	var host_burst := {"selected": 0, "units": [{"pos": Vector2i(1, 1), "char": {"hp": 5}}]}
+	# Duck as Object via meta on a RefCounted stand-in
+	var rc := RefCounted.new()
+	rc.set_meta("m_select_burst_msec", Time.get_ticks_msec())
+	if not BattlePick.select_lock_active(rc):
+		return "T-P5 select_lock_active false at t0"
+	if BattlePick.select_burst_scale(rc) <= 1.0:
+		return "T-P5 select_burst_scale should exceed 1 at t0"
+	var pick_src := FileAccess.get_file_as_string("res://scripts/battle/battle_pick.gd")
+	if pick_src.find("SELECT_LOCK_MSEC") < 0:
+		return "T-P5 SELECT_LOCK_MSEC missing"
+	var conf_src := FileAccess.get_file_as_string("res://scripts/battle/battle_touch_confirm.gd")
+	if conf_src.find("select_lock_active") < 0:
+		return "T-P5 try_deselect lock missing"
+	return ""
+
 
 func _touch(index: int, pressed: bool, pos: Vector2) -> InputEventScreenTouch:
 	var e := InputEventScreenTouch.new()
