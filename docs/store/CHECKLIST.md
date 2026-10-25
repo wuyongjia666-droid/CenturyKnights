@@ -30,4 +30,18 @@
 - [x] 不付费正式提审  
 - [x] 不 force-push  
 - [x] 不提交 keystore / 密码  
-- [x] 不开 Steam 页（路线 Steam 延后）  
+- [x] 不开 Steam 页（路线 Steam 延后）
+
+## E. 内容体量（与字数闸对齐）
+
+- [ ] 季#1 NOVEL ≥12000 汉字（对标《那个字》/《回执上的灯》）  
+- [ ] 季#2 NOVEL ≥12000 汉字（`store_prep` / scaffold 硬闸，禁止削弱）  
+- [ ] 季#3 NOVEL ≥12000 汉字  
+- [ ] Play / MS / listing-copy / privacy 非提纲：过目可粘贴  
+- [ ] 统一试玩前自包 E2E（另刀）；本清单不代替玩
+
+## F. 合入纪律
+
+- [x] 禁止靠删掉 NOVEL too-thin 断言「变绿」  
+- [x] 字数闸只升不降；要绿就写满中篇  
+- [ ] CI `ci` 聚合绿后再自合  

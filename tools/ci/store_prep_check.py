@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Store-engineering prep gate (no paid store submission).
 
-Fails when required docs/scripts/budgets are missing or export_size_report
-cannot import. Does not upload anything or spend money.
+Fails when required docs/scripts/budgets are missing, listing drafts are thin,
+season 02/03 novels fall below mid-length (≥12000 汉字 / 对标季1), or packaging
+dry-run fails. Does not upload anything or spend money. Do not weaken the novel floor.
 """
 from __future__ import annotations
 
@@ -11,6 +12,20 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+
+MIN_NOVEL_HANZI = 12000  # 中篇级，对标季1；禁止削弱
+MIN_LISTING_BYTES = {
+    "docs/store/play-listing-full.md": 4500,
+    "docs/store/ms-store-listing-full.md": 3500,
+    "docs/store/listing-copy-zh.md": 2800,
+    "docs/store/privacy-policy-draft.md": 2800,
+    "docs/store/age-rating-draft.md": 1600,
+}
+
+
+def _hanzi_count(s: str) -> int:
+    return sum(1 for c in s if 0x4E00 <= ord(c) <= 0x9FFF)
+
 
 REQUIRED_DOCS = [
     "docs/store/README.md",
@@ -56,6 +71,9 @@ def main() -> int:
             continue
         if path.stat().st_size < 200 and rel.startswith("docs/store/"):
             fails.append(f"too thin {rel} ({path.stat().st_size} bytes)")
+        floor = MIN_LISTING_BYTES.get(rel)
+        if floor is not None and path.stat().st_size < floor:
+            fails.append(f"too thin {rel} ({path.stat().st_size} bytes < {floor})")
     for rel, phrases in REQUIRED_PHRASES.items():
         path = ROOT / rel
         if not path.is_file():
@@ -100,8 +118,14 @@ def main() -> int:
             novel = ROOT / f"docs/content-seasons/{sid.replace('_', '-')}/NOVEL.md"
             if not novel.is_file():
                 fails.append(f"missing {novel.relative_to(ROOT)}")
-            elif novel.stat().st_size < 5000:
-                fails.append(f"NOVEL too thin {novel.relative_to(ROOT)} ({novel.stat().st_size} bytes)")
+            else:
+                body = novel.read_text(encoding="utf-8")
+                hz = _hanzi_count(body)
+                if hz < MIN_NOVEL_HANZI:
+                    fails.append(
+                        f"NOVEL too thin {novel.relative_to(ROOT)} "
+                        f"({hz} hanzi < {MIN_NOVEL_HANZI}; 对标季1中篇)"
+                    )
     else:
         fails.append("missing content_seasons/index.json")
 

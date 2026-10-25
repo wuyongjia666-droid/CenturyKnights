@@ -125,21 +125,22 @@ def check_gitignore_secrets(fails: list[str]) -> None:
 
 
 def check_store_docs(fails: list[str]) -> None:
-    required = [
-        "docs/store/play-listing-full.md",
-        "docs/store/ms-store-listing-full.md",
-        "docs/store/privacy-policy-draft.md",
-        "docs/store/age-rating-draft.md",
-        "docs/store/listing-copy-zh.md",
-        "docs/store/export-paths.md",
-        "docs/store/CHECKLIST.md",
-    ]
-    for rel in required:
+    # 商店页实质门槛（字节）；主 listing 更高，工程对照页次之——禁止用「降门槛」偷工
+    floors = {
+        "docs/store/play-listing-full.md": 4500,
+        "docs/store/ms-store-listing-full.md": 3500,
+        "docs/store/privacy-policy-draft.md": 2800,
+        "docs/store/listing-copy-zh.md": 2800,
+        "docs/store/age-rating-draft.md": 1600,
+        "docs/store/export-paths.md": 1400,
+        "docs/store/CHECKLIST.md": 1200,
+    }
+    for rel, floor in floors.items():
         path = ROOT / rel
         if not path.is_file():
             _fail(fails, f"missing {rel}")
-        elif path.stat().st_size < 600:
-            _fail(fails, f"too thin {rel} ({path.stat().st_size} bytes)")
+        elif path.stat().st_size < floor:
+            _fail(fails, f"too thin {rel} ({path.stat().st_size} bytes < {floor})")
     play = ROOT / "docs/store/play-listing-full.md"
     if play.is_file():
         body = play.read_text(encoding="utf-8")
