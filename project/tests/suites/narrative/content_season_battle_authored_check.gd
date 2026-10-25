@@ -265,10 +265,8 @@ func _check_battle_cta(cid: String, a, mid_flag: String, lost_flag: String) -> S
 
 
 func _mid_prefix(cid: String) -> String:
-	# csNN_01 keep historic csNN_*; secondary chapters use full id.
-	if cid.length() >= 7 and cid.substr(5, 2) == "01":
-		return cid.substr(0, 4)
-	return cid
+	# Season-level mid flags (csNN_mid_*) shared by _01/_02; matches hub_chain.
+	return cid.substr(0, 4)
 
 
 func _fought(cid: String) -> String:
