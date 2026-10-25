@@ -96,6 +96,36 @@
           "text": "我站祠院外。站着也算见证。"
         },
         {
+          "id": "cs08b_ya_x17",
+          "speaker": "旁白",
+          "text": "碑院风干。干风刮字口。"
+        },
+        {
+          "id": "cs08b_ya_x18",
+          "speaker": "石垒·晚担",
+          "text": "字口深的，风刮不走。"
+        },
+        {
+          "id": "cs08b_ya_x19",
+          "speaker": "leader",
+          "text": "我认深的。"
+        },
+        {
+          "id": "cs08b_ya_y20",
+          "speaker": "旁白",
+          "text": "碑阴潮。潮处字口更深。"
+        },
+        {
+          "id": "cs08b_ya_y21",
+          "speaker": "石垒·晚担",
+          "text": "深的才经年。"
+        },
+        {
+          "id": "cs08b_ya_y22",
+          "speaker": "leader",
+          "text": "我认深刻。"
+        },
+        {
           "id": "cs08b_ya_16",
           "speaker": "槐里·青禾",
           "text": "诚实比能喊的碑名贵。"
@@ -191,6 +221,36 @@
           "id": "cs08b_st_17",
           "speaker": "石垒·晚担",
           "text": "骗不过抄碑阴的停顿。"
+        },
+        {
+          "id": "cs08b_st_x17",
+          "speaker": "旁白",
+          "text": "石碑侧有新刻痕。痕浅。"
+        },
+        {
+          "id": "cs08b_st_x18",
+          "speaker": "岁吏",
+          "text": "浅痕经不起年。"
+        },
+        {
+          "id": "cs08b_st_x19",
+          "speaker": "leader",
+          "text": "我不等浅的。"
+        },
+        {
+          "id": "cs08b_st_y20",
+          "speaker": "旁白",
+          "text": "香灰落在碑座。"
+        },
+        {
+          "id": "cs08b_st_y21",
+          "speaker": "石垒·晚担",
+          "text": "灰轻，碑重。"
+        },
+        {
+          "id": "cs08b_st_y22",
+          "speaker": "leader",
+          "text": "碑阴并排留。"
         },
         {
           "id": "cs08b_st_9",
@@ -290,9 +350,74 @@
           "text": "碑痕看见了。去门廊留痕。"
         },
         {
+          "id": "cs08b_ho_x17",
+          "speaker": "旁白",
+          "text": "沙漏底座刻着旧年号。"
+        },
+        {
+          "id": "cs08b_ho_x18",
+          "speaker": "苇原·灯影",
+          "text": "旧年号比新年号沉。"
+        },
+        {
+          "id": "cs08b_ho_x19",
+          "speaker": "leader",
+          "text": "去沙漏。沉着看。"
+        },
+        {
+          "id": "cs08b_ho_y20",
+          "speaker": "旁白",
+          "text": "碑阴潮。潮处字口更深。"
+        },
+        {
+          "id": "cs08b_ho_y21",
+          "speaker": "石垒·晚担",
+          "text": "深的才经年。"
+        },
+        {
+          "id": "cs08b_ho_y22",
+          "speaker": "leader",
+          "text": "我认深刻。"
+        },
+        {
           "id": "cs08b_ho_8",
           "speaker": "苇原·灯影",
           "text": "假坐一夜，碑阴就脏。"
+        },
+        {
+          "id": "cs0802_vis_mv1",
+          "speaker": "旁白",
+          "text": "碑阴拓旁，沙漏玻璃映出半张脸。"
+        },
+        {
+          "id": "cs0802_vis_mv2",
+          "speaker": "岁吏",
+          "text": "映脸的人，自己先站直。"
+        },
+        {
+          "id": "cs0802_vis_mv3",
+          "speaker": "苇原·灯影",
+          "text": "站直了再问月份。"
+        },
+        {
+          "id": "cs0802_vst1",
+          "speaker": "岁吏",
+          "text": "月份从碑阴拓纸边渗进一丝潮。潮干，月份才算拓过。"
+        },
+        {
+          "id": "cs0802_vst2",
+          "speaker": "书记官",
+          "text": "碑录复页，要等拓纸揭稳。"
+        },
+        {
+          "id": "cs0802_vst3",
+          "speaker": "leader",
+          "text": "月份渗过。碑，我拓。"
+        },
+        {
+          "id": "cs0802_vis_mv4",
+          "speaker": "leader",
+          "text": "站直。去看月份。"
         }
       ],
       "next": "bridge",
@@ -332,21 +457,6 @@
           "id": "cs08b_br_2",
           "speaker": "老旗手",
           "text": "旗角在桥头给人核。核完再谈催碑。"
-        },
-        {
-          "id": "cs08b_br_lost",
-          "speaker": "旁白",
-          "text": "锋收回来。碑阴纸还钉着。祠旁那拨，没散。",
-          "when": {
-            "all": [
-              {
-                "flag": "cs08_02_mid_lost"
-              },
-              {
-                "not_flag": "cs08_02_mid_fought"
-              }
-            ]
-          }
         },
         {
           "id": "cs08b_br_3",
@@ -424,9 +534,116 @@
           "text": "停一下好。不停着抄碑名最危险。"
         },
         {
+          "id": "cs08b_br_x18",
+          "speaker": "旁白",
+          "text": "门廊鼓皮松了半寸。"
+        },
+        {
+          "id": "cs08b_br_x19",
+          "speaker": "岁吏",
+          "text": "松的鼓，打假声。"
+        },
+        {
+          "id": "cs08b_br_x20",
+          "speaker": "leader",
+          "text": "试锋。不打假声。"
+        },
+        {
+          "id": "cs08b_br_y21",
+          "speaker": "旁白",
+          "text": "香灰落在碑座。"
+        },
+        {
+          "id": "cs08b_br_y22",
+          "speaker": "石垒·晚担",
+          "text": "灰轻，碑重。"
+        },
+        {
+          "id": "cs08b_br_y23",
+          "speaker": "leader",
+          "text": "碑阴并排留。"
+        },
+        {
           "id": "cs08b_br_18",
           "speaker": "旁白",
           "text": "桥灯一盏。碑酒门开。"
+        },
+        {
+          "id": "cs0802_mid_mv1",
+          "speaker": "旁白",
+          "text": "碑阴纸被香烟熏黄一线。黄线上有指甲划痕。"
+        },
+        {
+          "id": "cs0802_mid_mv2",
+          "speaker": "岁吏",
+          "text": "划痕不是祭。是有人试探能撕不。"
+        },
+        {
+          "id": "cs0802_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "能撕的纸，守不住碑。"
+        },
+        {
+          "id": "cs0802_mid_mv4",
+          "speaker": "苇原·灯影",
+          "text": "守碑靠人。人要先把锋亮开。"
+        },
+        {
+          "id": "cs0802_mid_mv5",
+          "speaker": "老旗手",
+          "text": "亮开不是吓人。是把门说清。"
+        },
+        {
+          "id": "cs0802_mid_mv6",
+          "speaker": "leader",
+          "text": "门说清。试锋不打假声。"
+        },
+        {
+          "id": "cs0802_win1",
+          "speaker": "旁白",
+          "text": "锋再定。碑阴拓完，抢拓那拨退到槐影外。",
+          "when": {
+            "flag": "cs08_mid_fought"
+          }
+        },
+        {
+          "id": "cs0802_win2",
+          "speaker": "掌柜",
+          "text": "拓要自己按。按实，才不像偷的。",
+          "when": {
+            "flag": "cs08_mid_fought"
+          }
+        },
+        {
+          "id": "cs0802_win3",
+          "speaker": "槐里·青禾",
+          "text": "碑凉还在手上。凉着，字更清。",
+          "when": {
+            "flag": "cs08_mid_fought"
+          }
+        },
+        {
+          "id": "cs0802_win4",
+          "speaker": "leader",
+          "text": "锋护过碑。拓，我按得。",
+          "when": {
+            "flag": "cs08_mid_fought"
+          }
+        },
+        {
+          "id": "cs08b_br_lost",
+          "speaker": "旁白",
+          "text": "锋收回来。碑阴纸还钉着。祠旁那拨，没散。",
+          "when": {
+            "all": [
+              {
+                "flag": "cs08_02_mid_lost"
+              },
+              {
+                "not_flag": "cs08_02_mid_fought"
+              }
+            ]
+          }
         }
       ],
       "next": "tavern",
@@ -637,9 +854,79 @@
           "text": "祖祠旗还在。旗不替你们选。"
         },
         {
+          "id": "cs08b_ta_x17",
+          "speaker": "旁白",
+          "text": "酒馆墙上贴着征碑告示。"
+        },
+        {
+          "id": "cs08b_ta_x18",
+          "speaker": "老管事",
+          "text": "告示密的地方，真碑少。"
+        },
+        {
+          "id": "cs08b_ta_x19",
+          "speaker": "leader",
+          "text": "我找真碑。"
+        },
+        {
+          "id": "cs08b_ta_y20",
+          "speaker": "旁白",
+          "text": "碑阴潮。潮处字口更深。"
+        },
+        {
+          "id": "cs08b_ta_y21",
+          "speaker": "石垒·晚担",
+          "text": "深的才经年。"
+        },
+        {
+          "id": "cs08b_ta_y22",
+          "speaker": "leader",
+          "text": "我认深刻。"
+        },
+        {
           "id": "cs08b_ta_18",
           "speaker": "旁白",
           "text": "两道碑题在板上。手按上去。"
+        },
+        {
+          "id": "cs0802_ret_mv1",
+          "speaker": "旁白",
+          "text": "碑阴酒过三巡，有人要把纸当菜单一卷。"
+        },
+        {
+          "id": "cs0802_ret_mv2",
+          "speaker": "掌柜",
+          "text": "菜单不是碑阴。"
+        },
+        {
+          "id": "cs0802_ret_mv3",
+          "speaker": "岁吏",
+          "text": "碑阴回堡。"
+        },
+        {
+          "id": "cs0802_tvn1",
+          "speaker": "掌柜",
+          "text": "护碑那一锋，酒要凉——凉着配石。"
+        },
+        {
+          "id": "cs0802_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "槐影外那拨退了。退了，拓纸才揭得。"
+        },
+        {
+          "id": "cs0802_tvn3",
+          "speaker": "老旗手",
+          "text": "旗在碑阶低过第二次。低过，更像拜。"
+        },
+        {
+          "id": "cs0802_tvn4",
+          "speaker": "leader",
+          "text": "拓实。石凉。酒，凉着。"
+        },
+        {
+          "id": "cs0802_ret_mv4",
+          "speaker": "leader",
+          "text": "回堡记碑阴。"
         }
       ],
       "next": "ledger",
@@ -780,6 +1067,36 @@
           "id": "cs08b_le_17",
           "speaker": "苇原·灯影",
           "text": "在就好。在才像碑阴回读。"
+        },
+        {
+          "id": "cs08b_le_x17",
+          "speaker": "旁白",
+          "text": "碑录末行：刻深，勿催。"
+        },
+        {
+          "id": "cs08b_le_x18",
+          "speaker": "槐里·青禾",
+          "text": "催出来的字会迸。"
+        },
+        {
+          "id": "cs08b_le_x19",
+          "speaker": "leader",
+          "text": "不催。"
+        },
+        {
+          "id": "cs08b_le_y20",
+          "speaker": "旁白",
+          "text": "香灰落在碑座。"
+        },
+        {
+          "id": "cs08b_le_y21",
+          "speaker": "石垒·晚担",
+          "text": "灰轻，碑重。"
+        },
+        {
+          "id": "cs08b_le_y22",
+          "speaker": "leader",
+          "text": "碑阴并排留。"
         },
         {
           "id": "cs08b_le_18",

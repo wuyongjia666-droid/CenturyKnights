@@ -102,6 +102,21 @@
           "text": "酒馆墙上有圈。圈等选题，不等人喊已经。"
         },
         {
+          "id": "cs08_yd_y17",
+          "speaker": "旁白",
+          "text": "碑阴潮。潮处字口更深。"
+        },
+        {
+          "id": "cs08_yd_y18",
+          "speaker": "石垒·晚担",
+          "text": "深的才经年。"
+        },
+        {
+          "id": "cs08_yd_y19",
+          "speaker": "leader",
+          "text": "我认深刻。"
+        },
+        {
           "id": "cs08_yd_7",
           "speaker": "leader",
           "text": "栏挂上了。去看祖祠。"
@@ -196,6 +211,21 @@
           "id": "cs08_stele_x9",
           "speaker": "老管事",
           "text": "旺晃眼。晃眼就看不清空格边齐不齐。"
+        },
+        {
+          "id": "cs08_st_y16",
+          "speaker": "旁白",
+          "text": "香灰落在碑座。"
+        },
+        {
+          "id": "cs08_st_y17",
+          "speaker": "石垒·晚担",
+          "text": "灰轻，碑重。"
+        },
+        {
+          "id": "cs08_st_y18",
+          "speaker": "leader",
+          "text": "碑阴并排留。"
         },
         {
           "id": "cs08_st_6",
@@ -294,9 +324,59 @@
           "text": "墙牌比纸硬。硬的东西，撕起来才有账。"
         },
         {
+          "id": "cs08_hg_y16",
+          "speaker": "旁白",
+          "text": "碑阴潮。潮处字口更深。"
+        },
+        {
+          "id": "cs08_hg_y17",
+          "speaker": "石垒·晚担",
+          "text": "深的才经年。"
+        },
+        {
+          "id": "cs08_hg_y18",
+          "speaker": "leader",
+          "text": "我认深刻。"
+        },
+        {
           "id": "cs08_hg_6",
           "speaker": "leader",
           "text": "两行都留。去门廊。"
+        },
+        {
+          "id": "cs0801_vis_mv1",
+          "speaker": "旁白",
+          "text": "香灰落进沙漏座缝。灰和沙混在一起。"
+        },
+        {
+          "id": "cs0801_vis_mv2",
+          "speaker": "书记官",
+          "text": "混了要拨开。碑事不跟灰混。"
+        },
+        {
+          "id": "cs0801_vis_mv3",
+          "speaker": "石垒·晚担",
+          "text": "拨开再看月份。"
+        },
+        {
+          "id": "cs0801_vst1",
+          "speaker": "岁吏",
+          "text": "月份从碑阴凉处挪到香案前。挪得轻，像怕惊祖。"
+        },
+        {
+          "id": "cs0801_vst2",
+          "speaker": "书记官",
+          "text": "碑录格要等香稳了再落笔。"
+        },
+        {
+          "id": "cs0801_vst3",
+          "speaker": "leader",
+          "text": "月份挪过。香，我添。"
+        },
+        {
+          "id": "cs0801_vis_mv4",
+          "speaker": "leader",
+          "text": "拨开。去看。"
         }
       ],
       "actions": [
@@ -420,6 +500,83 @@
           "id": "cs08_bridge_x9",
           "speaker": "掌柜",
           "text": "酒馆等着。圈还在。圈不等短笑。"
+        },
+        {
+          "id": "cs08_mid_y18",
+          "speaker": "旁白",
+          "text": "香灰落在碑座。"
+        },
+        {
+          "id": "cs08_mid_y19",
+          "speaker": "石垒·晚担",
+          "text": "灰轻，碑重。"
+        },
+        {
+          "id": "cs08_mid_y20",
+          "speaker": "leader",
+          "text": "碑阴并排留。"
+        },
+        {
+          "id": "cs0801_mid_mv1",
+          "speaker": "旁白",
+          "text": "祖祠香灰被过堂风掀起一缕，落在碑座新缝里。"
+        },
+        {
+          "id": "cs0801_mid_mv2",
+          "speaker": "书记官",
+          "text": "新缝要记。记完再问门外声。"
+        },
+        {
+          "id": "cs0801_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "门外声杂。杂里有刀鞘响。"
+        },
+        {
+          "id": "cs0801_mid_mv4",
+          "speaker": "槐里·青禾",
+          "text": "刀鞘响，香火也稳不住。"
+        },
+        {
+          "id": "cs0801_mid_mv5",
+          "speaker": "掌柜",
+          "text": "墙牌旁那拨，专等你们拜完再抢。"
+        },
+        {
+          "id": "cs0801_mid_mv6",
+          "speaker": "leader",
+          "text": "拜完不让抢。锋先拦。"
+        },
+        {
+          "id": "cs0801_win1",
+          "speaker": "旁白",
+          "text": "锋定。祖祠香火稳了，墙牌旁那拨抢不着。",
+          "when": {
+            "flag": "cs08_mid_fought"
+          }
+        },
+        {
+          "id": "cs0801_win2",
+          "speaker": "掌柜",
+          "text": "拜完的香，今晚没人敢吹。",
+          "when": {
+            "flag": "cs08_mid_fought"
+          }
+        },
+        {
+          "id": "cs0801_win3",
+          "speaker": "槐里·青禾",
+          "text": "刀鞘不响了。香火，自己稳。",
+          "when": {
+            "flag": "cs08_mid_fought"
+          }
+        },
+        {
+          "id": "cs0801_win4",
+          "speaker": "leader",
+          "text": "锋拦过抢。祖祠，我跪得。",
+          "when": {
+            "flag": "cs08_mid_fought"
+          }
         },
         {
           "id": "cs08_mid_lost",
@@ -643,9 +800,64 @@
           "text": "旗角听得到圈。圈选偏了，角会先响。"
         },
         {
+          "id": "cs08_tavern_y16",
+          "speaker": "旁白",
+          "text": "碑阴潮。潮处字口更深。"
+        },
+        {
+          "id": "cs08_tavern_y17",
+          "speaker": "石垒·晚担",
+          "text": "深的才经年。"
+        },
+        {
+          "id": "cs08_tavern_y18",
+          "speaker": "leader",
+          "text": "我认深刻。"
+        },
+        {
           "id": "cs08_tavern_x9",
           "speaker": "旁白",
           "text": "你还没开口。没开口的时候，空格最清楚。"
+        },
+        {
+          "id": "cs0801_ret_mv1",
+          "speaker": "旁白",
+          "text": "祖祠香火被说成酒馆熏香。说的人自己先笑岔。"
+        },
+        {
+          "id": "cs0801_ret_mv2",
+          "speaker": "掌柜",
+          "text": "笑岔的别碰碑。"
+        },
+        {
+          "id": "cs0801_ret_mv3",
+          "speaker": "书记官",
+          "text": "碑事回堡记。"
+        },
+        {
+          "id": "cs0801_tvn1",
+          "speaker": "掌柜",
+          "text": "祖祠那一锋，酒要冷——冷着敬祖。"
+        },
+        {
+          "id": "cs0801_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "抢香的人散了。散了，座才清。"
+        },
+        {
+          "id": "cs0801_tvn3",
+          "speaker": "老旗手",
+          "text": "旗在祠阶下低过。低过，再举不愧。"
+        },
+        {
+          "id": "cs0801_tvn4",
+          "speaker": "leader",
+          "text": "香稳。人齐。祖前，不抢。"
+        },
+        {
+          "id": "cs0801_ret_mv4",
+          "speaker": "leader",
+          "text": "回堡记碑。"
         }
       ],
       "actions": [
@@ -805,6 +1017,21 @@
           "id": "cs08_led_6",
           "speaker": "leader",
           "text": "栏与祠，并排。谁来认嗣位，先念完。"
+        },
+        {
+          "id": "cs08_led_y19",
+          "speaker": "旁白",
+          "text": "香灰落在碑座。"
+        },
+        {
+          "id": "cs08_led_y20",
+          "speaker": "石垒·晚担",
+          "text": "灰轻，碑重。"
+        },
+        {
+          "id": "cs08_led_y21",
+          "speaker": "leader",
+          "text": "碑阴并排留。"
         },
         {
           "id": "cs08_led_7",

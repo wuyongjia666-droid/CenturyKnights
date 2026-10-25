@@ -8,6 +8,7 @@ var _honor: Label
 func _ready() -> void:
 	UIKit.make_themed_bg(self, "castle")
 	CKPageKit.shell(self, Locale.t("ancestor_title"), "ANCESTOR STELE", Locale.t("ancestor_title"), Locale.t("lb_anc_desc"), "none")
+	_place_ancestor_crests()
 	var side := CKPageKit.card(self, Rect2(42, CKPageKit.TOP + 8, 360, 520), "HonorCard")
 	CKPageKit.card_head(side, Locale.t("lb_anc_honor_head"), "FAMILY HONOR")
 	_honor = UIKit.title_label("", 40, UIKit.ACCENT)
@@ -74,6 +75,24 @@ func _ghost_stone() -> Control:
 	v.add_child(CKPageKit.text(Locale.t("lb_anc_ghost_line"), UIKit.TEXT_FAINT, 13, 740))
 	return r[0]
 
+
+func _place_ancestor_crests(mobile: bool = false) -> void:
+	## Fat ancestor chrome: 团徽 header + 旗徽 strip.
+	for n in ["CastleArms", "CastleBannerStrip"]:
+		var oldn := get_node_or_null(n)
+		if oldn:
+			oldn.name = "_%sDying" % n
+			oldn.queue_free()
+	var mob := mobile or DeviceProfile.is_mobile()
+	var hdr := Vector2(52, 60) if mob else Vector2(44, 52)
+	var ban := Vector2(28, 38)
+	var w := size.x if size.x > 400.0 else 1280.0
+	var at_y := 6.0 if mob else 8.0
+	var arms_x := (w - 64.0) if mob else 1180.0
+	var strip_x := (w - 140.0) if mob else 1100.0
+	CKHeraldryChrome.place_company_header(self, Vector2(arms_x, at_y), hdr)
+	CKHeraldryChrome.place_castle_banner_strip(self, Vector2(strip_x, at_y), hdr, ban)
+
 func apply_mobile_layout() -> void:
 	CKPageKit.phone_fill(self)
-
+	_place_ancestor_crests(true)

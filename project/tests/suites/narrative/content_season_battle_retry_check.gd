@@ -14,9 +14,14 @@ const RETRY_LABEL := "再试锋镝"
 const MAP_ID := "quest_bandit"
 const LIVE := [
 	{"cid": "cs01_01", "beat": "hall", "after": "audit", "loss_needle": "锋收回来"},
+	{"cid": "cs02_01", "beat": "estate", "after": "birth", "loss_needle": "锋收回来"},
 	{"cid": "cs03_01", "beat": "bridge", "after": "tavern", "loss_needle": "锋收回来"},
+	{"cid": "cs04_01", "beat": "bridge", "after": "tavern", "loss_needle": "锋收回来"},
 	{"cid": "cs05_01", "beat": "bridge", "after": "tavern", "loss_needle": "锋收回来"},
+	{"cid": "cs06_01", "beat": "bridge", "after": "tavern", "loss_needle": "锋收回来"},
+	{"cid": "cs07_01", "beat": "bridge", "after": "tavern", "loss_needle": "锋收回来"},
 	{"cid": "cs08_01", "beat": "bridge", "after": "tavern", "loss_needle": "锋收回来"},
+	{"cid": "cs09_01", "beat": "bridge", "after": "tavern", "loss_needle": "锋收回来"},
 	{"cid": "cs10_01", "beat": "bridge", "after": "tavern", "loss_needle": "锋收回来"},
 ]
 

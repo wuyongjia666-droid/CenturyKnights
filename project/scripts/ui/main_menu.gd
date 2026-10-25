@@ -38,6 +38,7 @@ func _build() -> void:
 		add_child(art)
 	UIKit.side_veil(self, true, 0.68, 0.94)
 	add_child(UIKit._vignette())
+	_place_shell_crests()
 
 	var col := VBoxContainer.new()
 	col.name = "MenuColumn"
@@ -146,6 +147,16 @@ func _build() -> void:
 						maxf((child as BaseButton).custom_minimum_size.x, 200.0),
 						MobileLayout.HIT_FLOOR)
 					(child as BaseButton).add_theme_font_size_override("font_size", 22)
+
+
+func _place_shell_crests() -> void:
+	## Title chrome: 团徽+旗徽 strip (ShellCrestStrip) + company header.
+	var mob := DeviceProfile.is_mobile()
+	var hdr := Vector2(48, 56) if not mob else Vector2(40, 48)
+	var ban := Vector2(30, 40) if not mob else Vector2(24, 32)
+	var at := Vector2(1180, 18) if not mob else Vector2(1180, 8)
+	CKHeraldryChrome.place_shell_crest_strip(self, at, hdr, ban)
+	CKHeraldryChrome.place_company_header(self, Vector2(at.x - 56.0, at.y), hdr)
 
 func _on_new() -> void:
 	CKNav.replace("res://scenes/story/naming.tscn")
