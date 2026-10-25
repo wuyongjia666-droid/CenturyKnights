@@ -67,11 +67,20 @@ static func content_season_entries() -> Array:
 		out.append({
 			"season_id": str(data.get("id", sid)),
 			"title": str(data.get("title_zh", chapter_id)),
+			"title_en": str(data.get("title_en", chapter_id)),
 			"chapter_id": chapter_id,
 			"path": chapter_path,
 			"scene": PLAYER_SCENE,
 		})
 	return out
+
+## Hub chips: zh title by default; English shell uses title_en (l10n gate).
+static func content_season_label(entry: Dictionary) -> String:
+	if Locale != null and str(Locale.lang).begins_with("en"):
+		var en := str(entry.get("title_en", ""))
+		if en != "":
+			return en
+	return str(entry.get("title", entry.get("chapter_id", "")))
 
 ## JSON path of a chapter id ("e1_01" lives in era1_01.json). "" when the id is unknown.
 static func path_for(chapter_id: String) -> String:

@@ -1,6 +1,6 @@
 extends Node
 ## Y1-B: Calendar birth + marriage-month settle → house_mods.month_echo;
-## estates MonthEchoPanel shows EchoLine_birth / EchoLine_marriage.
+## estates + hourglass EchoLine_birth / EchoLine_marriage 回读.
 
 func _ready() -> void:
 	var err := await _run()
@@ -23,13 +23,19 @@ func _run() -> String:
 	var err := _audit_birth()
 	if err != "":
 		return err
-	err = await _audit_estates_kind("birth")
+	err = await _audit_panel("birth", "res://scenes/hub/estates.tscn", "MonthEchoPanel")
+	if err != "":
+		return err
+	err = await _audit_panel("birth", "res://scenes/hub/hourglass.tscn", "")
 	if err != "":
 		return err
 	err = _audit_marriage()
 	if err != "":
 		return err
-	err = await _audit_estates_kind("marriage")
+	err = await _audit_panel("marriage", "res://scenes/hub/estates.tscn", "MonthEchoPanel")
+	if err != "":
+		return err
+	err = await _audit_panel("marriage", "res://scenes/hub/hourglass.tscn", "")
 	if err != "":
 		return err
 	return ""
@@ -97,38 +103,41 @@ func _audit_marriage() -> String:
 	return ""
 
 
-func _audit_estates_kind(kind: String) -> String:
+func _audit_panel(kind: String, scene_path: String, panel_name: String) -> String:
 	var snap: Dictionary = CKEconomyState.month_echo_snapshot()
 	var want := str(snap.get(kind, ""))
 	if want == "":
-		return "no %s in snap before estates" % kind
-	var page: Control = load("res://scenes/hub/estates.tscn").instantiate()
+		return "no %s in snap before %s" % [kind, scene_path]
+	var page: Control = load(scene_path).instantiate()
 	get_tree().root.add_child(page)
 	page.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	page.position = Vector2.ZERO
 	page.size = Vector2(1280, 720)
 	for _i in 8:
 		await get_tree().process_frame
-	var panel := page.find_child("MonthEchoPanel", true, false)
-	if panel == null:
-		page.queue_free()
-		return "MonthEchoPanel missing"
+	var scope: Node = page
+	if panel_name != "":
+		var panel := page.find_child(panel_name, true, false)
+		if panel == null:
+			page.queue_free()
+			return "%s missing on %s" % [panel_name, scene_path]
+		scope = panel
 	var line_name := "EchoLine_%s" % kind
 	var line := page.find_child(line_name, true, false) as Label
 	var bit := want.substr(0, mini(6, want.length()))
 	if line == null:
 		var hit := false
-		for n in panel.find_children("*", "Label", true, false):
+		for n in scope.find_children("*", "Label", true, false):
 			if str((n as Label).text).find(bit) >= 0:
 				hit = true
 				break
 		if not hit:
 			page.queue_free()
-			return "%s missing bit=%s" % [line_name, bit]
+			return "%s missing bit=%s on %s" % [line_name, bit, scene_path]
 	elif str(line.text).find(bit) < 0:
 		page.queue_free()
-		return "%s text mismatch" % line_name
-	print("month-echo estates %s line ok" % kind)
+		return "%s text mismatch on %s" % [line_name, scene_path]
+	print("month-echo %s ok on %s" % [kind, scene_path.get_file()])
 	page.queue_free()
 	await get_tree().process_frame
 	return ""

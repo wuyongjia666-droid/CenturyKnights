@@ -593,7 +593,7 @@ func _add_content_season_row_desk(cp: Control, y: float) -> float:
 	row.add_child(UIKit.mono(Locale.t("ux_hub_content_season"), UIKit.desk_sz(10), UIKit.EMBER, false))
 	for entry in entries:
 		var chapter_id := str(entry.get("chapter_id", ""))
-		var title := str(entry.get("title", chapter_id))
+		var title := StoryCatalog.content_season_label(entry)
 		var chip := Button.new()
 		chip.name = "Season_%s" % chapter_id
 		chip.text = Locale.t("ux_hub_content_season_play") % title
@@ -617,7 +617,7 @@ func _add_content_season_row_mobile(v: Control) -> void:
 	v.add_child(row)
 	for entry in entries:
 		var chapter_id := str(entry.get("chapter_id", ""))
-		var title := str(entry.get("title", chapter_id))
+		var title := StoryCatalog.content_season_label(entry)
 		var chip := MobilePage.button(Locale.t("ux_hub_content_season_play") % title, false, _open_content_season.bind(chapter_id))
 		chip.name = "Season_%s" % chapter_id
 		chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL

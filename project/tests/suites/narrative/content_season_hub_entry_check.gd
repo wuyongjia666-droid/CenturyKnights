@@ -38,6 +38,7 @@ func _catalog() -> void:
 		_ok(StoryCatalog.is_content_season_id(cid), "not cs id %s" % cid)
 		_ok(FileAccess.file_exists(str(row.get("path", ""))), "missing path %s" % cid)
 		_ok(str(row.get("title", "")) != "", "empty title %s" % cid)
+		_ok(str(row.get("title_en", "")) != "" and not _has_cjk(str(row.get("title_en", ""))), "title_en %s" % cid)
 		_ok(str(row.get("scene", "")) == StoryCatalog.player_scene(), "scene %s" % cid)
 	for cid in EXPECTED:
 		_ok(bool(seen.get(cid, false)), "missing %s" % cid)
@@ -91,3 +92,11 @@ func _hub_row() -> void:
 	_ok(str(GameState.get_meta("story_chapter_id", "")) == "cs03_01", "meta cs03")
 	hub.queue_free()
 	await get_tree().process_frame
+
+
+func _has_cjk(s: String) -> bool:
+	for i in s.length():
+		var c := s.unicode_at(i)
+		if c >= 0x4E00 and c <= 0x9FFF:
+			return true
+	return false

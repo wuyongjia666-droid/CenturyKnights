@@ -130,5 +130,6 @@
     "docs/content-seasons/season-01/ACCEPTANCE.md"
   ],
   "playable_chapter": "cs01_01",
-  "playable_path": "res://data/story/chapters/cs01_01.json"
+  "playable_path": "res://data/story/chapters/cs01_01.json",
+  "title_en": "The Lamp on the Receipt"
 }

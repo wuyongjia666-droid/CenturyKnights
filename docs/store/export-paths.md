@@ -50,3 +50,12 @@ python3 tools/ci/store_prep_check.py
 - `store_prep_check.py`：文档齐全 + 季#2/#3 中篇 ≥12000 汉字 + 嵌套 packaging dry  
 - `store_packaging_dry_check.py`：脚本/预设/workflow/listing 实质体积  
 - 两者都绿才算「商店工程可重复」，**不等于**已提审
+
+## 验证记录
+
+干跑证据与复跑命令见 [`export-paths-verification-record.md`](./export-paths-verification-record.md)。
+
+```bash
+python3 tools/ci/store_verify_records_check.py
+```
+
