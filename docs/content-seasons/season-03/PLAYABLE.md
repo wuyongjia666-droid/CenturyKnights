@@ -33,3 +33,10 @@
 
 旁白、leader、书记官、老管事、槐里·青禾、石垒·晚担、苇原·灯影、老旗手、掌柜。  
 `supporting_v92` 登记 **书记官**（若尚无）。
+
+## 加深（本刀）
+
+- 原著 `NOVEL.md` 中篇加厚至 ≥14k 汉字；优先人物弧与专属场景（功与粮），少用公式补页。
+- 可玩章 `cs03_01.json` 对白加厚至 100+ 行；单行 ≤60 汉字。
+- **所有权不变**：visit「去看月份怎么往前走」；battle「先试一锋 / 再试锋镝 / 继续」。
+- 验收：`content_season_playable_s03_check` 行数闸 ≥70；另跑 visit_authored / battle_authored / hub_entry。
