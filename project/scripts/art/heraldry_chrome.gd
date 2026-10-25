@@ -853,6 +853,7 @@ static func attach_field_row_arms(row: Control, c, arms_sz: Vector2 = Vector2(28
 
 
 ## Yeartrace panel header: person YeartraceArms (岁课年迹). House mount uses company arms.
+## Shrink-only — never expand in the dossier FamilyTree scroll (court_ui overlap guard).
 static func attach_yeartrace_arms(panel: Control, c = null, arms_sz: Vector2 = Vector2(28, 34)) -> void:
 	if panel == null:
 		return
@@ -862,6 +863,8 @@ static func attach_yeartrace_arms(panel: Control, c = null, arms_sz: Vector2 = V
 		old.queue_free()
 	var head := HBoxContainer.new()
 	head.name = "YeartraceArmsHead"
+	head.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	head.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	head.add_theme_constant_override("separation", 8)
 	var arms: TextureRect
 	if c != null:
@@ -870,10 +873,26 @@ static func attach_yeartrace_arms(panel: Control, c = null, arms_sz: Vector2 = V
 		arms = make_company_arms(arms_sz)
 	arms.name = "YeartraceArms"
 	arms.tooltip_text = Locale.t("lb_yeartrace_arms")
+	arms.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	arms.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	## Keep person/company arms_kind; suites key off node name.
 	head.add_child(arms)
-	panel.add_child(head)
-	panel.move_child(head, 0)
+	## Prefer sitting beside the existing mono title if present.
+	var mono_i := -1
+	for i in panel.get_child_count():
+		var ch: Node = panel.get_child(i)
+		if ch is Label and str(ch.text).find("YEARTRACE") >= 0:
+			mono_i = i
+			break
+	if mono_i >= 0:
+		var mono: Node = panel.get_child(mono_i)
+		panel.remove_child(mono)
+		head.add_child(mono)
+		panel.add_child(head)
+		panel.move_child(head, mono_i)
+	else:
+		panel.add_child(head)
+		panel.move_child(head, 0)
 
 
 ## Dossier 私囊 plate: PurseArms (person) + silver readout host. Caller parents into LifePanel.
