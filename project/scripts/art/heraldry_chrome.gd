@@ -4,7 +4,7 @@ extends RefCounted
 ## One design system everywhere (castle header/banner strip, genealogy, dossier,
 ## board unit shields, rival houses, tavern/hire cards, city/smith/market chrome,
 ## marriage house cards + crest strip, bloodline codex / shrine / banner rite,
-## succession / heir-duel / annex, battle/danger aftermath).
+## succession / heir-duel / annex, battle HUD / aftermath, court gazette / year-card chronicle).
 ## No marriage marshalling / per-person cadency — only company vs family vs nation arms + rank badge.
 
 static func is_family_member(c) -> bool:
@@ -711,3 +711,78 @@ static func sync_battle_hud_crests(host) -> void:
 		host, battle_foe_nation_for(host), vp, insets, mobile, land
 	)
 
+## Gazette / court-news nation plate (朝徽). Same art as 邦徽; distinct node name for suites.
+static func make_gazette_nation_arms(nid: String, size: Vector2 = Vector2(40, 48)) -> TextureRect:
+	var tr := TextureRect.new()
+	tr.name = "GazetteNationArms"
+	tr.texture = nation_shield(str(nid), int(size.x), int(size.y))
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	tr.custom_minimum_size = size
+	tr.size = size
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tr.tooltip_text = Locale.t("lb_gazette_arms")
+	tr.set_meta("arms_kind", "lb_gazette_arms")
+	tr.set_meta("arms_core", CKHeraldry.core_key(nation_spec(str(nid))))
+	tr.set_meta("nation_id", str(nid))
+	return tr
+
+## Court gazette strip: 团徽 + nation 朝徽/邦徽 (GazetteCrestStrip). Empty nation → 团徽 only.
+static func place_gazette_crest_strip(parent: Node, nation_id: String, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("GazetteCrestStrip")
+	if old:
+		old.name = "_GazetteCrestStripDying"
+		old.queue_free()
+	var nid := str(nation_id)
+	if nid == "":
+		nid = World.nation_of(str(World.pos))
+	if nid == "":
+		nid = "ashbanner"
+	var host := Control.new()
+	host.name = "GazetteCrestStrip"
+	host.position = at
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var arms := make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var w := shield.x
+	if nid != "":
+		var nat := make_gazette_nation_arms(nid, shield)
+		nat.position = Vector2(shield.x + 8.0, 0)
+		host.add_child(nat)
+		w = shield.x * 2.0 + 8.0
+	host.size = Vector2(w, shield.y)
+	host.set_meta("nation_id", nid)
+	parent.add_child(host)
+	return host
+
+## Pin 朝徽 on a court-news row top bar (HBox). Replaces prior GazetteNationArms under host.
+static func attach_news_row_arms(host: Control, nation_id: String, arms_sz: Vector2 = Vector2(28, 34)) -> void:
+	if host == null or str(nation_id) == "":
+		return
+	var old := host.get_node_or_null("GazetteNationArms")
+	if old:
+		old.name = "_GazetteNationArmsDying"
+		old.queue_free()
+	var arms := make_gazette_nation_arms(str(nation_id), arms_sz)
+	host.add_child(arms)
+	host.move_child(arms, 0)
+
+## Year-card / chronicle person plate: prepend YearArms into a VBox row box via head HBox.
+static func attach_yearcard_row_arms(box: Control, c, arms_sz: Vector2 = Vector2(32, 38)) -> void:
+	if box == null or c == null:
+		return
+	var old := box.get_node_or_null("YearArmsHead")
+	if old:
+		old.name = "_YearArmsHeadDying"
+		old.queue_free()
+	var head := HBoxContainer.new()
+	head.name = "YearArmsHead"
+	head.add_theme_constant_override("separation", 10)
+	var arms := make_person_arms(c, arms_sz)
+	arms.name = "YearArms"
+	head.add_child(arms)
+	box.add_child(head)
+	box.move_child(head, 0)
