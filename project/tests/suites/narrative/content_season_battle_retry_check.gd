@@ -1,7 +1,8 @@
 extends Node
 ## Mid-cs under hub_open: loss stamps csXX_mid_lost → CTA morphs「再试锋镝」+ loss line;
 ## win stamps mid_fought + season_ledger/yeartrace for the skirmish itself;
-## bare「继续」stamps 未试锋 skip / 试锋未成 abort ledger when leaving without a win.
+## bare「继续」stamps 未试锋 skip / 试锋未成 abort ledger when leaving without a win;
+## win clears csXX_mid_lost residue so loss-state cannot resurrect after a retry win.
 
 const PLAYER := "res://scenes/story/chapter_player.tscn"
 const BATTLE := "res://scenes/battle/battle.tscn"
@@ -28,6 +29,9 @@ func _run() -> String:
 	var err := _protocol_loss_flags()
 	if err != "":
 		return err
+	err = _protocol_win_clears_lost()
+	if err != "":
+		return err
 	for row in LIVE:
 		err = await _live_win_ledger_and_hide(
 			str(row["cid"]), str(row["beat"]), str(row["after"]))
@@ -43,6 +47,10 @@ func _run() -> String:
 			return err
 		err = await _live_abort_ledger(
 			str(row["cid"]), str(row["beat"]), str(row["after"]))
+		if err != "":
+			return err
+		err = await _live_loss_then_win_clears_lost(
+			str(row["cid"]), str(row["beat"]))
 		if err != "":
 			return err
 	return ""
@@ -313,6 +321,105 @@ func _assert_choice_ledger(cid: String, choice: String, needle: String) -> Strin
 	if not yt:
 		return "%s: yeartrace %s missing" % [cid, choice]
 	return ""
+
+
+
+func _protocol_win_clears_lost() -> String:
+	GameState.new_game("烬行", "灰旗", GameState.crest_color)
+	GameState.set_flag("hub_open")
+	GameState.set_flag("cs03_mid_lost")
+	GameState.set_meta("battle_win_flags", ["cs03_mid_fought"])
+	GameState.set_meta("battle_lose_flags", ["cs03_mid_lost"])
+	GameState.set_meta("battle_win_ledger", {})
+	BattleVictory.apply(MAP_ID)
+	if not GameState.flag("cs03_mid_fought"):
+		return "protocol win: mid_fought missing"
+	if GameState.flag("cs03_mid_lost"):
+		return "protocol win: mid_lost residue still set"
+	if GameState.get_meta("battle_lose_flags", ["x"]).size() != 0:
+		return "protocol win: battle_lose_flags meta not consumed"
+	print("OK protocol win clears csXX_mid_lost residue")
+	return ""
+
+
+func _live_loss_then_win_clears_lost(cid: String, beat: String) -> String:
+	var lost := _lost(cid)
+	var fought := _fought(cid)
+	var pair = await _ready_at_cta(cid, beat, FIRST_LABEL)
+	if typeof(pair) == TYPE_STRING:
+		return str(pair)
+	var packed: PackedScene = pair[0]
+	var player = pair[1]
+	if not player.simulate_press_action_containing(FIRST_LABEL):
+		player.queue_free()
+		return "%s clear: first press failed" % cid
+	await get_tree().process_frame
+	BattleDefeat.back_path(false, false, StoryCatalog.player_scene())
+	var err := ""
+	if not GameState.flag(lost):
+		err = "%s clear: %s not set after loss" % [cid, lost]
+	player.queue_free()
+	await get_tree().process_frame
+	if err != "":
+		return err
+	GameState.set_meta("battle_return_chapter", cid)
+	var player2 = packed.instantiate()
+	player2.suppress_scene_change = true
+	player2.lock_path = false
+	player2.chapter_path = ""
+	add_child(player2)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	player2.simulate_finish_dialogue()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if player2.action_labels().find(RETRY_LABEL) < 0:
+		err = "%s clear: retry CTA missing labels=%s" % [cid, str(player2.action_labels())]
+	elif not player2.simulate_press_action_containing(RETRY_LABEL):
+		err = "%s clear: retry press failed" % cid
+	else:
+		await get_tree().process_frame
+		var lose_stamped: Array = player2.test_capture.get("battle_lose_flags", [])
+		if lose_stamped.size() != 1 or str(lose_stamped[0]) != lost:
+			err = "%s clear: retry stamp lose_flags %s" % [cid, str(lose_stamped)]
+		else:
+			BattleVictory.apply(MAP_ID)
+			if not GameState.flag(fought):
+				err = "%s clear: mid_fought missing after win" % cid
+			elif GameState.flag(lost):
+				err = "%s clear: mid_lost residue after win" % cid
+	player2.queue_free()
+	await get_tree().process_frame
+	if err != "":
+		return err
+	GameState.set_meta("battle_return_chapter", cid)
+	var player3 = packed.instantiate()
+	player3.suppress_scene_change = true
+	player3.lock_path = false
+	player3.chapter_path = ""
+	add_child(player3)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if player3.current_beat_id() != beat:
+		err = "%s clear reopen beat %s" % [cid, player3.current_beat_id()]
+	else:
+		player3.skip_lines()
+		await get_tree().process_frame
+		var body := str(player3._body.text)
+		if body.find("锋收回来") >= 0:
+			err = "%s clear: loss line still shown after win body=%s" % [cid, body]
+		else:
+			player3.simulate_finish_dialogue()
+			await get_tree().process_frame
+			await get_tree().process_frame
+			var labels: Array = player3.action_labels()
+			if labels.find(FIRST_LABEL) >= 0 or labels.find(RETRY_LABEL) >= 0:
+				err = "%s clear: fight CTA after win labels=%s" % [cid, str(labels)]
+	player3.queue_free()
+	await get_tree().process_frame
+	if err == "":
+		print("OK live loss→win clears mid_lost %s @%s" % [cid, beat])
+	return err
 
 
 func _ready_at_cta(cid: String, beat: String, want_label: String):
