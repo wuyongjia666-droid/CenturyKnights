@@ -21,6 +21,7 @@ func _ready() -> void:
 	_step_depth()
 	_step_save_load()
 	await _step_scenes()
+	await _step_layout_fit()
 	if errors.is_empty():
 		print("=== ATLAS E2E PASS ===")
 		get_tree().quit(0)
@@ -471,3 +472,14 @@ func _step_scenes() -> void:
 			_ok(bool(r.get("ok", false)), "%s selftest: %s" % [p.get_file(), r.get("msg", "")])
 		s.queue_free()
 		await get_tree().process_frame
+
+func _step_layout_fit() -> void:
+	print("--- STEP: produce / city / marriage viewport ---")
+	var probe = load("res://tests/suites/company/atlas_city_marriage_layout_check.gd").new()
+	probe.embedded = true
+	add_child(probe)
+	await probe.run_checks()
+	for f in probe.fails:
+		_err("layout: " + str(f))
+	probe.queue_free()
+	await get_tree().process_frame

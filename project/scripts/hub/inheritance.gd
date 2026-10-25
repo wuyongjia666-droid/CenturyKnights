@@ -30,9 +30,22 @@ func _ready() -> void:
 	board.add_child(_cards)
 	_msg = CKPageKit.feedback(self)
 	_pick_heir()
+	_place_succession_crests()
 	_show()
 	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "SUCCESSION · FROST")
 	UIFX.page_enter(self)
+
+
+func _place_succession_crests() -> void:
+	## 团徽 + heir on InheritBoard; company header on the shell.
+	var mob := DeviceProfile.is_mobile()
+	CKHeraldryChrome.place_company_header(self, Vector2(1180, 8) if not mob else Vector2(1180, 4), Vector2(44, 52) if not mob else Vector2(40, 48))
+	var board := get_node_or_null("InheritBoard") as Control
+	var host: Node = board if board != null else self
+	var at := Vector2(980, 12) if board != null else Vector2(980, 12)
+	if mob:
+		at = Vector2(900, 8)
+	CKHeraldryChrome.place_succession_crest_strip(host, _heir, at, Vector2(36, 44) if not mob else Vector2(32, 38))
 
 func _pick_heir() -> void:
 	_heir = null
@@ -47,6 +60,7 @@ func _done_this_year() -> bool:
 	return int(GameState.house_mods.get("inherit_answer_year", 0)) == Calendar.year
 
 func _show() -> void:
+	_place_succession_crests()
 	CKPageKit.clear(_cards)
 	var leader := GameState.get_leader()
 	if leader != null and _AMB.needs_choice():
