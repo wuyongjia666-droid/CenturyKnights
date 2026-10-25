@@ -65,9 +65,11 @@ func _ready() -> void:
 		deco.queue_free()
 	_build_story_chrome()
 	_add_portrait_vignette()
-	# Back from a side screen the story opened with "visit": the trip is over.
+	# Orphan visit stamps: take_story_return already consumed them on the way back.
 	if GameState.has_meta("story_return"):
 		GameState.set_meta("story_return", "")
+	if GameState.has_meta("story_return_chapter"):
+		GameState.set_meta("story_return_chapter", "")
 	_open(_resolve_path())
 
 func _resolve_path() -> String:
@@ -621,7 +623,15 @@ func _run_op(step) -> String:
 			_refresh_actions()
 			return "stop"
 		"visit":
-			GameState.set_meta("story_return", str(_chapter.get("return_scene", StoryCatalog.chapter0_scene())))
+			# Mid-trip return is the chapter player at the saved beat — never return_scene
+			# (hub end protocol after #437). Own story_return_chapter so take_story_return
+			# can request_chapter and resume season_beats / story beats.
+			var cid := str(_chapter.get("id", ""))
+			GameState.set_meta("story_return_chapter", cid)
+			if cid == "ch0":
+				GameState.set_meta("story_return", StoryCatalog.chapter0_scene())
+			else:
+				GameState.set_meta("story_return", StoryCatalog.player_scene())
 			_go_scene(str(row.get("path", "")))
 			return "stop"
 		"adjust":
@@ -926,6 +936,10 @@ func simulate_press_action_containing(substr: String) -> bool:
 
 func simulate_goto_beat(beat_id: String) -> void:
 	_load_beat(beat_id)
+
+
+func simulate_visit(path: String) -> void:
+	_run_op({"op": "visit", "path": path})
 
 
 # --- tutorial-story v2: backgrounds, title cards, tap-to-advance, skip -------------------------
