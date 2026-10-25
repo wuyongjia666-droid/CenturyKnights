@@ -637,10 +637,10 @@
           "when": {
             "all": [
               {
-                "flag": "cs10_02_mid_lost"
+                "flag": "cs10_mid_lost"
               },
               {
-                "not_flag": "cs10_02_mid_fought"
+                "not_flag": "cs10_mid_fought"
               }
             ]
           }
@@ -654,10 +654,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs10_02_mid_fought"
+                "not_flag": "cs10_mid_fought"
               },
               {
-                "not_flag": "cs10_02_mid_lost"
+                "not_flag": "cs10_mid_lost"
               }
             ]
           },
@@ -668,10 +668,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs10_02_mid_fought"
+                "cs10_mid_fought"
               ],
               "lose_flags": [
-                "cs10_02_mid_lost"
+                "cs10_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -688,10 +688,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs10_02_mid_fought"
+                "not_flag": "cs10_mid_fought"
               },
               {
-                "flag": "cs10_02_mid_lost"
+                "flag": "cs10_mid_lost"
               }
             ]
           },
@@ -702,10 +702,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs10_02_mid_fought"
+                "cs10_mid_fought"
               ],
               "lose_flags": [
-                "cs10_02_mid_lost"
+                "cs10_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -725,10 +725,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs10_02_mid_fought"
+                    "not_flag": "cs10_mid_fought"
                   },
                   {
-                    "not_flag": "cs10_02_mid_lost"
+                    "not_flag": "cs10_mid_lost"
                   }
                 ]
               },
@@ -743,10 +743,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs10_02_mid_fought"
+                    "not_flag": "cs10_mid_fought"
                   },
                   {
-                    "flag": "cs10_02_mid_lost"
+                    "flag": "cs10_mid_lost"
                   }
                 ]
               },
