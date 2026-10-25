@@ -1693,15 +1693,29 @@
           "text": "数要真。"
         },
         {
-          "id": "cs03_02_ledger_19",
+          "id": "cs0302_ldg1",
+          "speaker": "岁吏",
+          "text": "回粮与功阴并排，袋口扎紧才进册。"
+        },
+        {
+          "id": "cs0302_ldg2",
+          "speaker": "书记官",
+          "text": "抢粮的影，只记埂下不记正行。"
+        },
+        {
+          "id": "cs0302_ldg3",
+          "speaker": "石垒·晚担",
+          "text": "谷壳香还在袖里——香在，粮就在。"
+        },
+        {
+          "id": "cs0302_ldg4",
           "speaker": "leader",
-          "text": "灯不灭。榜阴本在柜里。",
-          "stage": {
-            "card": "六　入册",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
+          "text": "回粮并排。灯不灭，榜阴在柜。"
+        },
+        {
+          "id": "cs0302_ldg_end",
+          "speaker": "leader",
+          "text": "粮秤星旁，灰旗堡榜阴柜等回粮数。"
         }
       ],
       "actions": []

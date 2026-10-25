@@ -1693,15 +1693,29 @@
           "text": "并排留真。"
         },
         {
-          "id": "cs01_02_ledger_19",
+          "id": "cs0102_ldg1",
+          "speaker": "岁吏",
+          "text": "副页空格与泥印并排，补欠才像真的。"
+        },
+        {
+          "id": "cs0102_ldg2",
+          "speaker": "书记官",
+          "text": "滑步那拨的脚窝，只进旁注不进正格。"
+        },
+        {
+          "id": "cs0102_ldg3",
+          "speaker": "槐里·青禾",
+          "text": "薄页难装——装下的，才是补上的欠。"
+        },
+        {
+          "id": "cs0102_ldg4",
           "speaker": "leader",
-          "text": "灯不灭。副页本在柜里。",
-          "stage": {
-            "card": "六　入谱",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
+          "text": "空格并排留。灯不灭，副页在柜。"
+        },
+        {
+          "id": "cs0102_ldg_end",
+          "speaker": "leader",
+          "text": "桥泥干处，灰旗堡副页柜等补欠入谱。"
         }
       ],
       "actions": []

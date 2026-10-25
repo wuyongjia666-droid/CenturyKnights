@@ -1693,15 +1693,29 @@
           "text": "散的我不留。"
         },
         {
-          "id": "cs02_02_ledger_19",
+          "id": "cs0202_ldg1",
+          "speaker": "岁吏",
+          "text": "偏格与脉纸并排，嗣位才不抢笔。"
+        },
+        {
+          "id": "cs0202_ldg2",
+          "speaker": "书记官",
+          "text": "抢脉的手，不进婚约旁笺。"
+        },
+        {
+          "id": "cs0202_ldg3",
+          "speaker": "苇原·灯影",
+          "text": "纸上那跳听清了，偏格才敢留。"
+        },
+        {
+          "id": "cs0202_ldg4",
           "speaker": "leader",
-          "text": "灯不灭。副笺本在柜里。",
-          "stage": {
-            "card": "六　并排",
-            "bg": "hall",
-            "music": "castle",
-            "camera": "wide"
-          }
+          "text": "偏仍并排。灯不灭，副笺在柜。"
+        },
+        {
+          "id": "cs0202_ldg_end",
+          "speaker": "leader",
+          "text": "脉枕缝边，灰旗堡副笺柜等偏格真名。"
         }
       ],
       "actions": []

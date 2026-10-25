@@ -1048,9 +1048,29 @@
           "text": "我按边注走。"
         },
         {
-          "id": "cs06b_ld_19",
+          "id": "cs0602_ldg1",
+          "speaker": "岁吏",
+          "text": "第二圈靴印抬进胜册，笑不进格。"
+        },
+        {
+          "id": "cs0602_ldg2",
+          "speaker": "书记官",
+          "text": "复练问声落地，才落笔。"
+        },
+        {
+          "id": "cs0602_ldg3",
+          "speaker": "苇原·灯影",
+          "text": "汗厚了，胜册才沉。"
+        },
+        {
+          "id": "cs0602_ldg4",
           "speaker": "leader",
-          "text": "灯不灭。胜册在柜里。"
+          "text": "复练并排。灯不灭，胜册在柜。"
+        },
+        {
+          "id": "cs0602_ldg_end",
+          "speaker": "leader",
+          "text": "第二道靴印旁，灰旗堡胜册等圈数。"
         }
       ],
       "actions": []
