@@ -573,7 +573,12 @@ func _run_op(step) -> String:
 			GameState.story.set_beat(int(row.get("chapter", 0)), str(row.get("beat", "")))
 			GameState.mark_dirty()
 		"battle":
-			var ret := str(row.get("return", _chapter.get("return_scene", "res://scenes/story/chapter0.tscn")))
+			# Mid-cs chapters set return_scene=hub; stamping that as battle_return
+			# hub-leaks the same class of bug visit fixed in #440. Prefer authored
+			# return; else chapter player so battle_return_chapter can resume.
+			var ret := str(row.get("return", ""))
+			if ret == "" or ret == HUB_SCENE:
+				ret = StoryCatalog.player_scene()
 			GameState.set_meta("battle_return", ret)
 			# Opening review A-02: remember which chapter launched the fight so the way back
 			# reopens it instead of falling through to ch0.
