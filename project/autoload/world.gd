@@ -351,8 +351,63 @@ func road_between(a: String, b: String) -> Dictionary:
 func party_size() -> int:
 	return maxi(1, GameState.roster().size())
 
+## Season × biome march ration breakdown (readable UI + food_per_day).
+func food_ration_info(at: String = "") -> Dictionary:
+	var per_member := float(rules.get("food_per_member_day", 0.5))
+	var head := party_size()
+	var base_f := float(head) * per_member
+	var base := int(ceil(base_f))
+	var sid := Calendar.season_id()
+	var season_tbl: Dictionary = rules.get("march_season_mult", {
+		"spring": 1.0, "summer": 1.1, "autumn": 0.9, "winter": 1.35,
+	})
+	var season_mult := float(season_tbl.get(sid, 1.0))
+	var nid := at if at != "" else pos
+	var biome := str(node(nid).get("biome", "plain"))
+	var biome_tbl: Dictionary = rules.get("march_biome_mult", {
+		"snow": 1.35, "marsh": 1.2, "fog": 1.1, "pass": 1.25,
+		"forge": 1.15, "nightcamp": 1.3, "harbor": 1.05,
+	})
+	var biome_mult := float(biome_tbl.get(biome, 1.0))
+	var weather := str(rules.get("weather", {}).get(biome, ""))
+	var mult := season_mult * biome_mult
+	var per := maxi(1, int(ceil(base_f * mult))) if base_f > 0.0 else 0
+	var mod_pct := 0
+	if base > 0:
+		mod_pct = int(round((float(per) / float(base) - 1.0) * 100.0))
+	return {
+		"base": base,
+		"season_id": sid,
+		"season_mult": season_mult,
+		"biome": biome,
+		"biome_mult": biome_mult,
+		"weather": weather,
+		"mult": mult,
+		"per_day": per,
+		"mod_pct": mod_pct,
+	}
+
 func food_per_day() -> int:
-	return int(ceil(party_size() * float(rules.get("food_per_member_day", 0.5))))
+	return int(food_ration_info().get("per_day", 1))
+
+## HUD string: "3（冬·暴雪 +80%）" via Locale.
+func food_ration_text(at: String = "") -> String:
+	var info := food_ration_info(at)
+	var season_name := Locale.t("atlas_season_%s" % str(info.season_id))
+	var mod := int(info.mod_pct)
+	var mod_s := Locale.t("atlas_ration_mod_flat")
+	if mod > 0:
+		mod_s = Locale.t("atlas_ration_mod_up", [mod])
+	elif mod < 0:
+		mod_s = Locale.t("atlas_ration_mod_down", [absi(mod)])
+	var biome := str(info.biome)
+	var weather := ""
+	var weather_biomes := ["snow", "marsh", "fog", "harbor", "pass", "forge", "nightcamp"]
+	if biome in weather_biomes:
+		weather = Locale.t("atlas_weather_%s" % biome)
+	if weather != "":
+		return Locale.t("atlas_ration_value_weather", [int(info.per_day), season_name, weather, mod_s])
+	return Locale.t("atlas_ration_value", [int(info.per_day), season_name, mod_s])
 
 func cargo_cap() -> int:
 	return int(rules.get("cargo_base", 30)) + int(rules.get("cargo_per_member", 6)) * party_size()
