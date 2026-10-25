@@ -3,7 +3,8 @@ extends Node
 ## rival houses + tavern/hire + board unit shields + city/smith 邦徽 +
 ## codex/shrine/rite crests + battle/danger aftermath + commission-board 委托徽 +
 ## mobile genealogy/quests company header + succession / heir-duel strips +
-## court gazette / year-card chronicle + works/forge/estates castle chrome.
+## court gazette / year-card chronicle + title/settings/save/pause shell crests +
+## works/forge/estates castle chrome.
 ## 团徽 / 旗徽 / 族徽 / 敌徽 / 邦徽 / 委托徽 never mismatch outside their Chrome routes.
 
 const OVERVIEW := "res://scenes/hub/lineage_view.tscn"
@@ -492,6 +493,25 @@ func _run() -> void:
 	await _settle(2)
 	if _fail != "":
 		return
+
+	# ── Shell crest strip (title / settings / save / pause) ─────────
+	var shell_host := Control.new()
+	shell_host.name = "ShellCrestHost"
+	get_tree().root.add_child(shell_host)
+	var shell_strip := CKHeraldryChrome.place_shell_crest_strip(shell_host, Vector2(10, 10), Vector2(44, 52), Vector2(28, 38))
+	_ok(shell_strip != null and shell_strip.name == "ShellCrestStrip", "ShellCrestStrip missing")
+	if shell_strip != null:
+		var sca := shell_strip.find_child("CastleArms", true, false)
+		var scb := shell_strip.find_child("CastleBanner", true, false)
+		_ok(sca != null and str(sca.get_meta("arms_kind", "")) == "gen2_36", "shell strip 团徽")
+		_ok(scb != null and str(scb.get_meta("arms_kind", "")) == "gen2_36", "shell strip 旗徽")
+		_ok(sca != null and str(sca.get_meta("arms_core", "")) == CKHeraldry.core_key(ban_spec), "shell arms_core")
+	var shell_row := HBoxContainer.new()
+	shell_host.add_child(shell_row)
+	var slot_arms := CKHeraldryChrome.attach_save_row_arms(shell_row, Vector2(36, 44))
+	_ok(slot_arms != null and slot_arms.name == "SlotArms", "SlotArms attach")
+	_ok(shell_row.get_child_count() > 0 and shell_row.get_child(0).name == "SlotArms", "SlotArms prepended")
+	shell_host.queue_free()
 
 	# ── Mobile heraldry parity (company header reposition) ─────────
 	var mob_ov := _open_page(OVERVIEW, Vector2(390, 844))
