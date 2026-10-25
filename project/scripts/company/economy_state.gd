@@ -725,6 +725,11 @@ static func check_ambitions(host) -> Array:
 			host.add_lineage_event("堡志：精刃满匣")
 	if msgs:
 		host.mark_dirty()
+		## Y1-B: 堡志达成 → month_echo.ambition；属地/沙漏回读（耐玩中长期目标闭环）.
+		var parts: Array = []
+		for m in msgs:
+			parts.append(str(m))
+		month_echo_note("ambition", "；".join(parts))
 	return msgs
 
 static func upgrade_building(host, id: String) -> Dictionary:
@@ -1081,7 +1086,7 @@ static func month_echo_snapshot() -> Dictionary:
 static func month_echo_lines() -> Array:
 	var d := month_echo_snapshot()
 	var out: Array = []
-	for k in ["holdings", "territory", "commission", "battle", "recruit", "birth", "marriage", "doctrine", "tutor", "promo", "retire", "death", "succession"]:
+	for k in ["holdings", "territory", "commission", "battle", "recruit", "birth", "marriage", "doctrine", "ambition", "tutor", "promo", "retire", "death", "succession"]:
 		var tx := str(d.get(k, ""))
 		if tx != "":
 			out.append({"kind": k, "text": tx})

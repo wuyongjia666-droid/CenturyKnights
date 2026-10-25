@@ -47,10 +47,8 @@ func _audit_write(doctrine_id: String, bit: String) -> String:
 	GameState.house_mods["doctrine"] = doctrine_id
 	GameState.house_mods.erase("doctrine_mature")
 	GameState.doctrine_months = 0
-	var before_morale := int(GameState.morale)
-	var before_food := int(GameState.food)
-	var before_silver := int(GameState.silver)
 	## 真实 Calendar → _tick_doctrine → tick_doctrine_and_marriage_month 写入.
+	## 不比净粮/银/士气：同月俸饷/天候/征募会冲掉 +1，以 echo 文案锁定家训效果.
 	Calendar.advance(1)
 	var snap: Dictionary = CKEconomyState.month_echo_snapshot()
 	var tx := str(snap.get("doctrine", ""))
@@ -62,14 +60,14 @@ func _audit_write(doctrine_id: String, bit: String) -> String:
 		return "doctrine_months not advanced"
 	match doctrine_id:
 		"strict":
-			if int(GameState.morale) <= before_morale:
-				return "strict morale not up"
+			if tx.find("士气+") < 0:
+				return "strict echo missing morale bit: %s" % tx
 		"mercy":
-			if int(GameState.food) <= before_food:
-				return "mercy food not up"
+			if tx.find("粮+") < 0:
+				return "mercy echo missing food bit: %s" % tx
 		"trade", "commerce":
-			if int(GameState.silver) <= before_silver:
-				return "trade silver not up"
+			if tx.find("银+") < 0:
+				return "trade echo missing silver bit: %s" % tx
 	print("month-echo doctrine write ok id=%s line=%s" % [doctrine_id, tx])
 	return ""
 
