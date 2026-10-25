@@ -1,6 +1,6 @@
 extends Node
-## Y1-B: 属地月结 CKTerritory.apply_month → house_mods.month_echo.territory;
-## estates MonthEchoPanel + hourglass EchoLine_territory 回读（耐玩领地闭环可感）.
+## Y1-B: Calendar → World._territory_month → CKTerritory.apply_month → month_echo.territory;
+## estates MonthEchoPanel + hourglass EchoLine_territory 回读（真实月结路径，非手动注入）.
 
 func _ready() -> void:
 	var err := await _run()
@@ -37,7 +37,7 @@ func _run() -> String:
 
 
 func _audit_write() -> String:
-	## Capture a village so apply_month yields a non-empty line (mirrors World._territory_month).
+	## Capture a village so World._territory_month / apply_month yields a line.
 	var id := "t_ash_millrun"
 	var s := CKTerritory.site(id)
 	if s.is_empty():
@@ -48,24 +48,26 @@ func _audit_write() -> String:
 		return "capture failed: %s" % str(cap.get("msg", ""))
 	if not CKTerritory.owned(id):
 		return "not owned after capture"
-	GameState.house_mods.erase("month_echo")
-	var before_silver := int(GameState.silver)
-	## force_roll 0.99：跳过 contest 随机，专测月结写入（同 territory_check._month）.
-	var line := CKTerritory.apply_month(0.99)
-	if line == "":
-		return "apply_month empty with owned=%s" % str(CKTerritory.owned_ids())
-	## 与 World._territory_month 同一写入点.
-	CKEconomyState.month_echo_note("territory", line)
-	var snap: Dictionary = CKEconomyState.month_echo_snapshot()
-	var tx := str(snap.get("territory", ""))
-	if tx == "":
-		return "territory echo empty: %s" % str(snap)
-	if tx != line:
-		return "territory echo mismatch want=%s got=%s" % [line, tx]
-	## 至少应出现属地数量或银两变化痕迹（terr_30 形）.
+	## Real Calendar path (World registers _territory_month). Reseed until apply_month
+	## yields a non-empty line under default roll — no manual month_echo_note inject.
+	var ok := false
+	var tx := ""
+	var before_silver := 0
+	for seed in range(1, 120):
+		GameState.house_mods.erase("month_echo")
+		GameState.rng.seed = seed
+		before_silver = int(GameState.silver)
+		Calendar.advance(1)
+		var snap: Dictionary = CKEconomyState.month_echo_snapshot()
+		tx = str(snap.get("territory", ""))
+		if tx != "":
+			ok = true
+			break
+	if not ok:
+		return "territory echo empty after Calendar.advance×119 (owned=%s)" % str(CKTerritory.owned_ids())
 	if tx.find(str(CKTerritory.owned_ids().size())) < 0 and GameState.silver == before_silver and tx.length() < 4:
 		return "territory echo too thin: %s" % tx
-	print("month-echo territory write ok line=%s silver=%d→%d" % [tx, before_silver, int(GameState.silver)])
+	print("month-echo territory calendar-path ok line=%s silver=%d→%d" % [tx, before_silver, int(GameState.silver)])
 	return ""
 
 
