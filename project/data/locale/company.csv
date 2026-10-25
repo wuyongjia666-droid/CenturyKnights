@@ -468,6 +468,25 @@ atlas_weather_pass,山崩落石,Rockfall
 atlas_weather_forge,灰烬雨,Ash rain
 atlas_weather_nightcamp,冰雾,Ice fog
 atlas_ration_party_hint,%s · 编制 %d,%s · party %d
+atlas_sortie_en,CITY SORTIE // 出城,CITY SORTIE
+atlas_sortie_title,出城备战,Leaving the city
+atlas_sortie_sig,签名兵器「%s」已入军械,Signature arm "%s" is in the armory
+atlas_sortie_sig_none,这次没买签名兵器,No signature arm this visit
+atlas_sortie_produce,本城出产 %s ×%d · 货舱 %d/%d,Local produce %s ×%d · cargo %d/%d
+atlas_sortie_produce_none,这次没带出产,No local produce this visit
+atlas_sortie_quest,委托「%s」交付于「%s」· 余 %d 日,Commission "%s" turns in at "%s" · %d days left
+atlas_sortie_quest_none,这次没接委托,No commission this visit
+atlas_sortie_route,前往「%s」· %d 日 · 粮 %d · 险%s,March to "%s" · %d days · food %d · risk %s
+atlas_sortie_route_here,交付就在本城,Turn-in is in this city
+atlas_sortie_march,启程交付,March to turn-in
+atlas_sortie_later,稍后赶路,Later
+atlas_sortie_dismiss,收起备战,Dismiss sortie
+atlas_sortie_hud,%s · %s · 交付「%s」,%s · %s · turn in at "%s"
+atlas_sortie_done,已交付「%s」· +%d 银,Turned in "%s" · +%d silver
+atlas_sortie_note,此路交付「%s」于「%s」,This road turns in "%s" at "%s"
+atlas_sortie_go,按备战启程,March the sortie
+atlas_sortie_party,交付「%s」,Turn in at "%s"
+atlas_sortie_party_done,已交付,Turned in
 atlas_muster_en,MUSTER // 编入,MUSTER // JOIN
 atlas_muster_title,编入行军编制,Muster into the march
 atlas_muster_body,%s 入列。编制 %d→%d · 日耗粮 %d→%d。%s,%s joins. Party %d→%d · rations/day %d→%d. %s
