@@ -993,7 +993,9 @@ func _render_left() -> void:
 	kv.position = Vector2(10, 26)
 	kv.add_theme_constant_override("separation", 3)
 	pb.add_child(kv)
-	kv.add_child(UIKit.kv_row("编制", "%d 人" % World.party_size(), UIKit.TEXT, 140))
+	var party_row := UIKit.kv_row("编制", "%d 人" % World.party_size(), UIKit.TEXT, 140)
+	party_row.name = "PartyMusterRow"
+	kv.add_child(party_row)
 	var ration_row := UIKit.kv_row(Locale.t("atlas_ration_label"), World.food_ration_text(), UIKit.TEXT, 140)
 	ration_row.name = "MarchRationRow"
 	kv.add_child(ration_row)
@@ -1738,6 +1740,8 @@ func _after_arrival() -> void:
 		return
 	if _check_siege_alert():
 		return
+	if _check_march_muster():
+		return
 	if _check_losses():
 		return
 	if _check_chain_fail():
@@ -1759,6 +1763,8 @@ func _resume_state() -> void:
 	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_territory_month():
 		return
 	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_siege_alert():
+		return
+	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_march_muster():
 		return
 	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_losses():
 		return
@@ -2243,6 +2249,8 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 		_build_nodes()
 		if _check_siege_alert():
 			return
+		if _check_march_muster():
+			return
 		if World.is_traveling():
 			call_deferred("_resume_travel_after_territory_month"))
 	panel.add_child(ok)
@@ -2409,6 +2417,77 @@ func _show_siege_alert_modal(alert: Dictionary) -> void:
 func _resume_travel_after_siege() -> void:
 	if World.is_traveling() and World.pending_event.is_empty() and World.encounter.is_empty():
 		_run_travel()
+
+
+## Road merc hire → MarchMusterModal (编制 / 日耗粮 refresh).
+func _check_march_muster() -> bool:
+	if not _modal.get_children().is_empty():
+		return false
+	if World.last_march_muster.is_empty():
+		return false
+	var mm: Dictionary = World.take_march_muster()
+	if mm.is_empty():
+		return false
+	_show_march_muster_modal(mm)
+	return true
+
+
+func _show_march_muster_modal(mm: Dictionary) -> void:
+	var who := str(mm.get("name", ""))
+	var cost := int(mm.get("cost", 0))
+	var p0 := int(mm.get("party_before", 0))
+	var p1 := int(mm.get("party_after", World.party_size()))
+	var r0 := int(mm.get("ration_before", 0))
+	var r1 := int(mm.get("ration_after", World.food_per_day()))
+	var ration_txt := str(mm.get("ration_text", World.food_ration_text()))
+	var on_march := bool(mm.get("traveling", World.is_traveling()))
+	var note := Locale.t("atlas_muster_on_march") if on_march else Locale.t("atlas_muster_in_camp")
+	var h := 320.0
+	var panel := _modal_panel(h)
+	panel.name = "MarchMusterModal"
+	var el := UIKit.mono(Locale.t("atlas_muster_en"), 9, UIKit.OK)
+	el.position = Vector2(24, 16)
+	panel.add_child(el)
+	var tlabel := UIKit.title_label(Locale.t("atlas_muster_title"), 20, UIKit.OK)
+	tlabel.position = Vector2(24, 34)
+	tlabel.size = Vector2(452, 30)
+	panel.add_child(tlabel)
+	var body := UIKit.body_label(
+		Locale.t("atlas_muster_body") % [who, p0, p1, r0, r1, note],
+		UIKit.TEXT, 13)
+	body.name = "MarchMusterBody"
+	body.position = Vector2(24, 72)
+	body.size = Vector2(452, 72)
+	body.custom_minimum_size = Vector2(452, 0)
+	panel.add_child(body)
+	var cost_l := UIKit.body_label(Locale.t("atlas_muster_cost") % cost, UIKit.EMBER, 13)
+	cost_l.name = "MarchMusterCost"
+	cost_l.position = Vector2(24, 152)
+	cost_l.size = Vector2(452, 24)
+	panel.add_child(cost_l)
+	var ration_l := UIKit.body_label(Locale.t("atlas_muster_ration") % ration_txt, UIKit.ACCENT, 13)
+	ration_l.name = "MarchMusterRation"
+	ration_l.position = Vector2(24, 180)
+	ration_l.size = Vector2(452, 36)
+	panel.add_child(ration_l)
+	var ok := UIKit.cta_button(Locale.t("atlas_muster_continue"), "A", 220, 42)
+	ok.name = "MarchMusterOk"
+	ok.position = Vector2(24, h - 64)
+	ok.pressed.connect(func():
+		World.dismiss_march_muster()
+		_clear_modal()
+		_refresh_top()
+		_render_left())
+	panel.add_child(ok)
+	ok.call_deferred("grab_focus")
+
+
+func _await_march_muster_closed() -> void:
+	while true:
+		var panel: Node = _modal.get_node_or_null("MarchMusterModal")
+		if panel == null:
+			break
+		await get_tree().process_frame
 
 
 func _resume_travel_after_supply() -> void:
@@ -2605,6 +2684,11 @@ func _choose_event(idx: int) -> void:
 	else:
 		_show_toast(str(r.get("msg", "")), UIKit.ACCENT)
 	_refresh_top()
+	_render_left()
+	if _check_march_muster():
+		await _await_march_muster_closed()
+		_refresh_top()
+		_render_left()
 	if World.is_traveling() and World.encounter.is_empty():
 		_place_token(true)
 		await get_tree().create_timer(STEP_SEC).timeout
