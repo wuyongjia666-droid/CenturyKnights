@@ -102,6 +102,21 @@
           "text": "酒馆墙上有圈。圈等选题，不等人喊已经。"
         },
         {
+          "id": "cs08_yd_y17",
+          "speaker": "旁白",
+          "text": "碑阴潮。潮处字口更深。"
+        },
+        {
+          "id": "cs08_yd_y18",
+          "speaker": "石垒·晚担",
+          "text": "深的才经年。"
+        },
+        {
+          "id": "cs08_yd_y19",
+          "speaker": "leader",
+          "text": "我认深刻。"
+        },
+        {
           "id": "cs08_yd_7",
           "speaker": "leader",
           "text": "栏挂上了。去看祖祠。"
@@ -198,6 +213,21 @@
           "text": "旺晃眼。晃眼就看不清空格边齐不齐。"
         },
         {
+          "id": "cs08_st_y16",
+          "speaker": "旁白",
+          "text": "香灰落在碑座。"
+        },
+        {
+          "id": "cs08_st_y17",
+          "speaker": "石垒·晚担",
+          "text": "灰轻，碑重。"
+        },
+        {
+          "id": "cs08_st_y18",
+          "speaker": "leader",
+          "text": "碑阴并排留。"
+        },
+        {
           "id": "cs08_st_6",
           "speaker": "leader",
           "text": "记下。去看沙漏。"
@@ -292,6 +322,21 @@
           "id": "cs08_hourglass_x9",
           "speaker": "掌柜",
           "text": "墙牌比纸硬。硬的东西，撕起来才有账。"
+        },
+        {
+          "id": "cs08_hg_y16",
+          "speaker": "旁白",
+          "text": "碑阴潮。潮处字口更深。"
+        },
+        {
+          "id": "cs08_hg_y17",
+          "speaker": "石垒·晚担",
+          "text": "深的才经年。"
+        },
+        {
+          "id": "cs08_hg_y18",
+          "speaker": "leader",
+          "text": "我认深刻。"
         },
         {
           "id": "cs08_hg_6",
@@ -420,6 +465,21 @@
           "id": "cs08_bridge_x9",
           "speaker": "掌柜",
           "text": "酒馆等着。圈还在。圈不等短笑。"
+        },
+        {
+          "id": "cs08_mid_y18",
+          "speaker": "旁白",
+          "text": "香灰落在碑座。"
+        },
+        {
+          "id": "cs08_mid_y19",
+          "speaker": "石垒·晚担",
+          "text": "灰轻，碑重。"
+        },
+        {
+          "id": "cs08_mid_y20",
+          "speaker": "leader",
+          "text": "碑阴并排留。"
         },
         {
           "id": "cs08_mid_lost",
@@ -643,6 +703,21 @@
           "text": "旗角听得到圈。圈选偏了，角会先响。"
         },
         {
+          "id": "cs08_tavern_y16",
+          "speaker": "旁白",
+          "text": "碑阴潮。潮处字口更深。"
+        },
+        {
+          "id": "cs08_tavern_y17",
+          "speaker": "石垒·晚担",
+          "text": "深的才经年。"
+        },
+        {
+          "id": "cs08_tavern_y18",
+          "speaker": "leader",
+          "text": "我认深刻。"
+        },
+        {
           "id": "cs08_tavern_x9",
           "speaker": "旁白",
           "text": "你还没开口。没开口的时候，空格最清楚。"
@@ -805,6 +880,21 @@
           "id": "cs08_led_6",
           "speaker": "leader",
           "text": "栏与祠，并排。谁来认嗣位，先念完。"
+        },
+        {
+          "id": "cs08_led_y19",
+          "speaker": "旁白",
+          "text": "香灰落在碑座。"
+        },
+        {
+          "id": "cs08_led_y20",
+          "speaker": "石垒·晚担",
+          "text": "灰轻，碑重。"
+        },
+        {
+          "id": "cs08_led_y21",
+          "speaker": "leader",
+          "text": "碑阴并排留。"
         },
         {
           "id": "cs08_led_7",

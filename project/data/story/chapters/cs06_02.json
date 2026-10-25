@@ -101,6 +101,21 @@
           "text": "尘土里还有上回的脚印。脚印不会替人撒谎。"
         },
         {
+          "id": "cs06b_yd_x17",
+          "speaker": "旁白",
+          "text": "校场土硬。硬土不认花步。"
+        },
+        {
+          "id": "cs06b_yd_x18",
+          "speaker": "石垒·晚担",
+          "text": "花步赢不了册。"
+        },
+        {
+          "id": "cs06b_yd_x19",
+          "speaker": "leader",
+          "text": "我走实步。"
+        },
+        {
           "id": "cs06b_yd_17",
           "speaker": "槐里·青禾",
           "text": "脚印深的地方，人当时是真下力。"
@@ -200,6 +215,21 @@
           "id": "cs06b_sp_16",
           "speaker": "槐里·青禾",
           "text": "掀不动才像胜账。"
+        },
+        {
+          "id": "cs06b_sp_x17",
+          "speaker": "旁白",
+          "text": "对拆声短。短声里藏着收力。"
+        },
+        {
+          "id": "cs06b_sp_x18",
+          "speaker": "岁吏",
+          "text": "收力的人，册上才站得住。"
+        },
+        {
+          "id": "cs06b_sp_x19",
+          "speaker": "leader",
+          "text": "我记下这收。"
         },
         {
           "id": "cs06b_sp_17",
@@ -303,6 +333,21 @@
           "text": "我不糊。站不住就说站不住。"
         },
         {
+          "id": "cs06b_hg_x17",
+          "speaker": "旁白",
+          "text": "沙漏旁多了一枚胜签。签未启。"
+        },
+        {
+          "id": "cs06b_hg_x18",
+          "speaker": "苇原·灯影",
+          "text": "未启的签，比启了的重。"
+        },
+        {
+          "id": "cs06b_hg_x19",
+          "speaker": "leader",
+          "text": "去沙漏。看签而不催。"
+        },
+        {
           "id": "cs06b_hg_17",
           "speaker": "苇原·灯影",
           "text": "带牌去。牌上写胜册，不写急。"
@@ -349,21 +394,6 @@
           "id": "cs06b_br_1",
           "speaker": "石垒·晚担",
           "text": "谁还站？先看牌，再看脚。"
-        },
-        {
-          "id": "cs06b_br_lost",
-          "speaker": "旁白",
-          "text": "锋收回来。胜册纸还钉着。校场那拨，没散。",
-          "when": {
-            "all": [
-              {
-                "flag": "cs06_02_mid_lost"
-              },
-              {
-                "not_flag": "cs06_02_mid_fought"
-              }
-            ]
-          }
         },
         {
           "id": "cs06b_br_2",
@@ -446,9 +476,39 @@
           "text": "旗布没破。破的是封胜催条。"
         },
         {
+          "id": "cs06b_br_x19",
+          "speaker": "旁白",
+          "text": "门廊刀架空着一层。"
+        },
+        {
+          "id": "cs06b_br_x20",
+          "speaker": "岁吏",
+          "text": "空着，是给你试完再挂。"
+        },
+        {
+          "id": "cs06b_br_x21",
+          "speaker": "leader",
+          "text": "试锋。输赢都挂真名。"
+        },
+        {
           "id": "cs06b_br_18",
           "speaker": "岁吏",
           "text": "催条可以撕。胜册第二页撕不得。"
+        },
+        {
+          "id": "cs06b_br_lost",
+          "speaker": "旁白",
+          "text": "锋收回来。胜册纸还钉着。校场那拨，没散。",
+          "when": {
+            "all": [
+              {
+                "flag": "cs06_02_mid_lost"
+              },
+              {
+                "not_flag": "cs06_02_mid_fought"
+              }
+            ]
+          }
         }
       ],
       "next": "tavern",
@@ -663,6 +723,21 @@
           "text": "胜板前安静。安静里只剩两道选择题。"
         },
         {
+          "id": "cs06b_tv_x17",
+          "speaker": "旁白",
+          "text": "酒旗斜。斜旗不拦话。"
+        },
+        {
+          "id": "cs06b_tv_x18",
+          "speaker": "老管事",
+          "text": "胜册话题烫。烫的要凉着说。"
+        },
+        {
+          "id": "cs06b_tv_x19",
+          "speaker": "leader",
+          "text": "凉着说，才进得了册。"
+        },
+        {
           "id": "cs06b_tv_17",
           "speaker": "老管事",
           "text": "选完入柜。胜册柜门会响。"
@@ -819,6 +894,21 @@
           "id": "cs06b_ld_18",
           "speaker": "石垒·晚担",
           "text": "留下空，才有人站得住。"
+        },
+        {
+          "id": "cs06b_ld_x19",
+          "speaker": "旁白",
+          "text": "胜册边注一行：并排可，催假不可。"
+        },
+        {
+          "id": "cs06b_ld_x20",
+          "speaker": "槐里·青禾",
+          "text": "边注比正文硬。"
+        },
+        {
+          "id": "cs06b_ld_x21",
+          "speaker": "leader",
+          "text": "我按边注走。"
         },
         {
           "id": "cs06b_ld_19",

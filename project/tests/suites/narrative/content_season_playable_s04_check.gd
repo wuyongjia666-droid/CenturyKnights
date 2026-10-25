@@ -36,7 +36,7 @@ func _run() -> String:
 	add_child(player)
 	await get_tree().process_frame
 	await get_tree().process_frame
-	err = await _walk_to_choice(player, 140)
+	err = await _walk_to_choice(player, 220)
 	if err != "":
 		return err
 	err = await _choose_and_assert(player)

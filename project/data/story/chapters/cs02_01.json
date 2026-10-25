@@ -112,6 +112,21 @@
           "text": "重的印，风吹不改姓。"
         },
         {
+          "id": "cs02_seal_y19",
+          "speaker": "旁白",
+          "text": "婚约笺角卷着。卷着，说明有人反复看。"
+        },
+        {
+          "id": "cs02_seal_y20",
+          "speaker": "石垒·晚担",
+          "text": "反复看的，未必敢签。"
+        },
+        {
+          "id": "cs02_seal_y21",
+          "speaker": "leader",
+          "text": "我敢签真的。"
+        },
+        {
           "id": "cs02_seal_x9",
           "speaker": "leader",
           "text": "印落下了。我们去对条。"
@@ -226,6 +241,21 @@
           "id": "cs02_estate_y2",
           "speaker": "苇原·灯影",
           "text": "拓片空格旁朱点，像催。催不买。"
+        },
+        {
+          "id": "cs02_estate_y21",
+          "speaker": "旁白",
+          "text": "验盏水清。清里照得出假。"
+        },
+        {
+          "id": "cs02_estate_y22",
+          "speaker": "石垒·晚担",
+          "text": "假影一晃就散。"
+        },
+        {
+          "id": "cs02_estate_y23",
+          "speaker": "leader",
+          "text": "散的我不留。"
         },
         {
           "id": "cs02_estate_x9",
@@ -480,6 +510,21 @@
           "text": "掌心暖不进名册也没关系。"
         },
         {
+          "id": "cs02_birth_y21",
+          "speaker": "旁白",
+          "text": "婚约笺角卷着。卷着，说明有人反复看。"
+        },
+        {
+          "id": "cs02_birth_y22",
+          "speaker": "石垒·晚担",
+          "text": "反复看的，未必敢签。"
+        },
+        {
+          "id": "cs02_birth_y23",
+          "speaker": "leader",
+          "text": "我敢签真的。"
+        },
+        {
           "id": "cs02_birth_x9",
           "speaker": "leader",
           "text": "两版都记。沙漏并排。"
@@ -610,6 +655,21 @@
           "id": "cs02_tavern_y2",
           "speaker": "石垒·晚担",
           "text": "干净靴也留痕。痕留给对条的人。"
+        },
+        {
+          "id": "cs02_tavern_y19",
+          "speaker": "旁白",
+          "text": "验盏水清。清里照得出假。"
+        },
+        {
+          "id": "cs02_tavern_y20",
+          "speaker": "石垒·晚担",
+          "text": "假影一晃就散。"
+        },
+        {
+          "id": "cs02_tavern_y21",
+          "speaker": "leader",
+          "text": "散的我不留。"
         },
         {
           "id": "cs02_tavern_x9",
@@ -794,6 +854,21 @@
           "id": "cs02_ledger_y99",
           "speaker": "旁白",
           "text": "两行并排。偏的脉还偏，灯还亮。"
+        },
+        {
+          "id": "cs02_ledger_y23",
+          "speaker": "旁白",
+          "text": "婚约笺角卷着。卷着，说明有人反复看。"
+        },
+        {
+          "id": "cs02_ledger_y24",
+          "speaker": "石垒·晚担",
+          "text": "反复看的，未必敢签。"
+        },
+        {
+          "id": "cs02_ledger_y25",
+          "speaker": "leader",
+          "text": "我敢签真的。"
         },
         {
           "id": "cs02_ledger_x10",

@@ -102,6 +102,21 @@
           "text": "酒馆圈等着血验选题。选题公开，扯皮少。"
         },
         {
+          "id": "cs09_yd_y17",
+          "speaker": "旁白",
+          "text": "血验灯晃了一下。"
+        },
+        {
+          "id": "cs09_yd_y18",
+          "speaker": "石垒·晚担",
+          "text": "晃的是手，不是血。"
+        },
+        {
+          "id": "cs09_yd_y19",
+          "speaker": "leader",
+          "text": "血要稳。"
+        },
+        {
           "id": "cs09_yd_7",
           "speaker": "leader",
           "text": "栏挂上了。去看血验。"
@@ -198,6 +213,21 @@
           "text": "边毛是急。急点进册，以后当众脸红。"
         },
         {
+          "id": "cs09_bl_y16",
+          "speaker": "旁白",
+          "text": "册上旧渍沉底。"
+        },
+        {
+          "id": "cs09_bl_y17",
+          "speaker": "石垒·晚担",
+          "text": "沉底的不是新泼。"
+        },
+        {
+          "id": "cs09_bl_y18",
+          "speaker": "leader",
+          "text": "新泼的不认。"
+        },
+        {
           "id": "cs09_bl_6",
           "speaker": "leader",
           "text": "记下。去看沙漏。"
@@ -292,6 +322,21 @@
           "id": "cs09_hourglass_x9",
           "speaker": "掌柜",
           "text": "墙牌硬。硬牌撕起来，手会记得疼。"
+        },
+        {
+          "id": "cs09_hg_y16",
+          "speaker": "旁白",
+          "text": "血验灯晃了一下。"
+        },
+        {
+          "id": "cs09_hg_y17",
+          "speaker": "石垒·晚担",
+          "text": "晃的是手，不是血。"
+        },
+        {
+          "id": "cs09_hg_y18",
+          "speaker": "leader",
+          "text": "血要稳。"
         },
         {
           "id": "cs09_hg_6",
@@ -420,6 +465,21 @@
           "id": "cs09_bridge_x9",
           "speaker": "掌柜",
           "text": "圈还在墙上。圈不等短笑落地。"
+        },
+        {
+          "id": "cs09_mid_y18",
+          "speaker": "旁白",
+          "text": "册上旧渍沉底。"
+        },
+        {
+          "id": "cs09_mid_y19",
+          "speaker": "石垒·晚担",
+          "text": "沉底的不是新泼。"
+        },
+        {
+          "id": "cs09_mid_y20",
+          "speaker": "leader",
+          "text": "新泼的不认。"
         },
         {
           "id": "cs09_mid_lost",
@@ -643,6 +703,21 @@
           "text": "圈选偏，旗角先响。响了就停手。"
         },
         {
+          "id": "cs09_tavern_y16",
+          "speaker": "旁白",
+          "text": "血验灯晃了一下。"
+        },
+        {
+          "id": "cs09_tavern_y17",
+          "speaker": "石垒·晚担",
+          "text": "晃的是手，不是血。"
+        },
+        {
+          "id": "cs09_tavern_y18",
+          "speaker": "leader",
+          "text": "血要稳。"
+        },
+        {
           "id": "cs09_tavern_x9",
           "speaker": "旁白",
           "text": "你还没选。没选时，罩边最清楚。"
@@ -805,6 +880,21 @@
           "id": "cs09_led_6",
           "speaker": "leader",
           "text": "栏与验，并排。谁来认嗣位，先念完。"
+        },
+        {
+          "id": "cs09_led_y19",
+          "speaker": "旁白",
+          "text": "册上旧渍沉底。"
+        },
+        {
+          "id": "cs09_led_y20",
+          "speaker": "石垒·晚担",
+          "text": "沉底的不是新泼。"
+        },
+        {
+          "id": "cs09_led_y21",
+          "speaker": "leader",
+          "text": "新泼的不认。"
         },
         {
           "id": "cs09_led_7",
