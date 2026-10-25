@@ -690,7 +690,8 @@ func _tab_overview() -> void:
 				v.add_child(rl)
 		else:
 			_rumor_box(p, Rect2(18, 330, 384, 230))
-	if not sq.is_empty():
+	# HubDiscover strip shortens the panel; skip the tall honour block so AffairBtn fits.
+	if not sq.is_empty() and not ((not _mob) and y_off > 0.0):
 		if not _mob:
 			var sl := UIKit.mono("HONOUR COMMISSION", 9, UIKit.EMBER)
 			sl.position = Vector2(18, 330)
@@ -725,7 +726,9 @@ func _tab_overview() -> void:
 		aff.custom_minimum_size = Vector2(0, MobilePage.HIT)
 		v.add_child(aff)
 	else:
-		aff.position = Vector2(18, 510)
+		var panel_h := 576.0 - y_off
+		# Keep ≥8px gap above viewport bottom (body y=108 → screen) and below status chip.
+		aff.position = Vector2(18, minf(510.0, panel_h - 52.0))
 		p.add_child(aff)
 	var p2 := _panel(Rect2(432, y_off, 416, 576 - y_off))
 	_head(p2, Vector2(18, 14), "可在此交付", "TURN IN HERE")
@@ -761,11 +764,11 @@ func _tab_overview() -> void:
 	for g in n.get("produce", []):
 		var best: Dictionary = World.best_known_sell(str(g), city)
 		var here := World.price(city, str(g), "buy")
-		var txt := "%s：本地 %d 银买入" % [World.good_name(str(g)), here]
+		var txt := "%s 买 %d" % [World.good_name(str(g)), here]
 		if str(best.get("city", "")) != "":
 			txt += " → %s 卖 %d（%+d）" % [World.node(str(best.city)).get("name", ""), int(best.price), int(best.price) - here]
 		else:
-			txt += " → 暂无他处行情（到访或打听后可见）"
+			txt += " → 暂无卖价"
 		var ln := _line(txt, UIKit.TEXT_DIM, 12, 380)
 		ln.name = "TradeLoop_%d" % ti
 		v3.add_child(ln)
@@ -777,12 +780,14 @@ func _tab_overview() -> void:
 			go_mkt.custom_minimum_size = Vector2(0, MobilePage.HIT)
 		go_mkt.pressed.connect(func(): _set_tab("market"))
 		v3.add_child(go_mkt)
-	for t in World.tips.slice(0, 3):
+	var tip_n := 1 if y_off > 0.0 else 3
+	for t in World.tips.slice(0, tip_n):
 		v3.add_child(_line("情报：%s" % str(t), UIKit.ACCENT, 11, 380))
 	var mm: Dictionary = World.mainline_marker()
 	if str(mm.get("node", "")) == city:
 		var mb := UIKit.cta_button("★ %s" % mm.label, "", 380, 38)
-		mb.position = Vector2(18, 520)
+		var p2_h := 576.0 - y_off
+		mb.position = Vector2(18, minf(520.0, p2_h - 44.0))
 		mb.disabled = not bool(mm.get("exists", false))
 		mb.pressed.connect(func(): CKNav.go(str(mm.path)))
 		p2.add_child(mb)
@@ -1128,13 +1133,16 @@ func _tab_market() -> void:
 	if not known_loops.is_empty() or not loops.is_empty():
 		var strip := Panel.new()
 		strip.name = "TradeLoopStrip"
-		strip.position = Vector2(18, 48)
-		strip.size = Vector2(812, 44 if not _mob else float(MobilePage.HIT + 8))
+		# Below _head title so "市集" does not ink-overlap the EN mono label.
+		strip.position = Vector2(18, 56)
+		strip.size = Vector2(812, 40 if not _mob else float(MobilePage.HIT + 8))
 		var ss := UIKit.flat_box(Color(UIKit.EMBER.r, UIKit.EMBER.g, UIKit.EMBER.b, 0.12), Color(UIKit.EMBER, 0.35), 8)
 		strip.add_theme_stylebox_override("panel", ss)
 		p.add_child(strip)
 		var st := UIKit.mono(Locale.t("atlas_trade_loop_en"), 8, UIKit.EMBER, false)
-		st.position = Vector2(10, 4)
+		st.position = Vector2(740, 4)
+		st.size = Vector2(60, 14)
+		st.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 		strip.add_child(st)
 		var best: Dictionary = World.best_produce_trade(city)
 		var tip := ""
@@ -1144,12 +1152,12 @@ func _tab_market() -> void:
 			tip = Locale.t("atlas_trade_loop_unknown") % [str(loops[0].name), int(loops[0].buy)]
 		var sl := UIKit.body_label(tip, UIKit.TEXT, 12)
 		sl.name = "TradeLoopStripLine"
-		sl.position = Vector2(10, 18)
-		sl.size = Vector2(790, 20)
+		sl.position = Vector2(10, 12)
+		sl.size = Vector2(720, 20)
 		sl.autowrap_mode = TextServer.AUTOWRAP_OFF
 		sl.clip_text = true
 		strip.add_child(sl)
-		y0 = 100.0 if not _mob else float(48 + MobilePage.HIT + 16)
+		y0 = 104.0 if not _mob else float(56 + MobilePage.HIT + 16)
 	var hdr := HBoxContainer.new()
 	hdr.position = Vector2(18, y0)
 	hdr.add_theme_constant_override("separation", 0)

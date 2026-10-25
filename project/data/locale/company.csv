@@ -338,11 +338,11 @@ atlas_resupply_fail_silver,银币不足（需 %d）,Not enough silver (need %d)
 atlas_camp_readout,现有粮 %d · 日耗 %d · 余程 %d 日需 %d%s,Food %d · burn %d/day · %d days left need %d%s
 atlas_camp_short,（粮不足）, (short)
 atlas_camp_ok,（够走）, (enough)
-atlas_trade_loop_en,PRODUCE LOOP,PRODUCE LOOP
+atlas_trade_loop_en,产线,LOOP
 atlas_trade_loop_title,产地买卖,Produce trade
-atlas_trade_loop_line,%s 本地买 %d → %s 卖 %d（%+d）,"%s buy %d here → %s sells for %d (%+d)"
-atlas_trade_loop_unknown,%s 本地买 %d → 暂无他处行情（到访后可见）,%s buy %d here → no other price yet (visit to learn)
-atlas_trade_loop_goto,去市集贩运,Open market trade
+atlas_trade_loop_line,%s 买 %d → %s 卖 %d（%+d）,"%s buy %d → %s sell %d (%+d)"
+atlas_trade_loop_unknown,%s 买 %d → 暂无卖价（到访可见）,%s buy %d → no sell price yet (visit)
+atlas_trade_loop_goto,去市集,Open market
 atlas_trade_loop_best,最佳：%s → %s（%+d 银）,Best: %s → %s (%+d silver)
 atlas_aftermath_en,AFTERMATH,AFTERMATH
 atlas_aftermath_danger_en,DANGER AFTERMATH,DANGER AFTERMATH
