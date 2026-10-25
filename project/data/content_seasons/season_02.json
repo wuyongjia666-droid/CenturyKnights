@@ -1,0 +1,125 @@
+{
+  "id": "season_02",
+  "version": 2,
+  "title_zh": "婚约上的灯",
+  "status": "novel_draft",
+  "pipeline": [
+    "topic",
+    "novel",
+    "bible",
+    "playable",
+    "systems",
+    "art",
+    "playtest"
+  ],
+  "stage": "novel",
+  "flag_lamp": {
+    "flag": "联姻名册与婚约声称的新姓",
+    "lamp": "验血/诞育回执与婚约血脉对不上"
+  },
+  "system_deepen": "month_echo_birth_marriage",
+  "system_deepen_zh": "诞育/联姻月回响写入属地与沙漏可感",
+  "gates": {
+    "y1a_device_signoff": true,
+    "topic_user_ack": true,
+    "novel_allowed": true
+  },
+  "topic_checklist": [
+    {
+      "id": "one_liner",
+      "label_zh": "一句",
+      "required": true
+    },
+    {
+      "id": "flag_lamp",
+      "label_zh": "旗 / 灯冲突",
+      "required": true
+    },
+    {
+      "id": "system_pick",
+      "label_zh": "本季加深的系统",
+      "required": true
+    },
+    {
+      "id": "wont_do",
+      "label_zh": "不做（本季）",
+      "required": true
+    },
+    {
+      "id": "downstream_gates",
+      "label_zh": "下游闸门",
+      "required": true
+    }
+  ],
+  "acceptance": [
+    {
+      "id": "birth_marriage_echo",
+      "label_zh": "诞育/联姻月回响可感",
+      "suite": "res://tests/suites/dynasty/month_echo_birth_marriage_check.tscn",
+      "done": true
+    },
+    {
+      "id": "marriage_empty_cta",
+      "label_zh": "联姻空态导流",
+      "suite": "res://tests/suites/dynasty/marriage_empty_cta_check.tscn",
+      "done": true
+    },
+    {
+      "id": "mobile_marriage_rite",
+      "label_zh": "婚仪手机文案可读",
+      "suite": "res://tests/suites/mobile/mobile_marriage_rite_log_check.tscn",
+      "done": true
+    },
+    {
+      "id": "scaffold_gate",
+      "label_zh": "内容季脚手架门禁（多季）",
+      "suite": "res://tests/suites/narrative/content_season_scaffold_check.tscn",
+      "done": true
+    }
+  ],
+  "pipeline_stages": {
+    "topic": {
+      "doc": "docs/content-seasons/season-02/TOPIC.md",
+      "gate": "",
+      "open": true
+    },
+    "novel": {
+      "doc": "docs/content-seasons/season-02/NOVEL.md",
+      "gate": "novel_allowed",
+      "open": true
+    },
+    "bible": {
+      "doc": "docs/content-seasons/season-02/BIBLE.md",
+      "gate": "novel_allowed",
+      "open": true
+    },
+    "playable": {
+      "doc": "docs/content-seasons/season-02/PLAYABLE.md",
+      "gate": "novel_allowed",
+      "open": true
+    },
+    "systems": {
+      "doc": "docs/content-seasons/season-02/ACCEPTANCE.md",
+      "gate": "",
+      "open": true
+    },
+    "art": {
+      "doc": "",
+      "gate": "novel_allowed",
+      "open": true
+    },
+    "playtest": {
+      "doc": "",
+      "gate": "y1a_device_signoff",
+      "open": true
+    }
+  },
+  "docs_rel": [
+    "docs/content-seasons/season-02/TOPIC.md",
+    "docs/content-seasons/season-02/CHECKLIST.md",
+    "docs/content-seasons/season-02/NOVEL.md",
+    "docs/content-seasons/season-02/BIBLE.md",
+    "docs/content-seasons/season-02/PLAYABLE.md",
+    "docs/content-seasons/season-02/ACCEPTANCE.md"
+  ]
+}
