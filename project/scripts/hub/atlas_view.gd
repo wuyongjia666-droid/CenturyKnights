@@ -551,7 +551,7 @@ func _show_view(v: String) -> void:
 	_view = v
 	var path := _Atlas.world_plate() if v == "" else str(_Atlas.plate_path(str(World.nations.get(v, {}).get("plate", "v8_atlas_nation_" + v))))
 	if path != "":
-		_plate.texture = load(path)
+		_plate.texture = CKArtPaths.load_texture(path)
 	_plate.modulate = Color(0.78, 0.84, 0.94) if v == "" else Color(0.86, 0.9, 0.98)
 	_build_nodes()
 	_render_left()

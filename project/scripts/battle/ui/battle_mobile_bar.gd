@@ -6,6 +6,7 @@ extends RefCounted
 ## Y1-A T-P0-3: while confirming, park the bar in the thumb zone (bottom of the
 ## right rail in landscape; bottom edge in portrait) and make Confirm the large
 ## accent control.
+## Y1-A T-P2: landscape confirm sits lower (0.55) with a taller primary hit.
 
 static func build(host) -> void:
 	if not DeviceProfile.is_mobile():
@@ -69,7 +70,7 @@ static func command(row: BoxContainer, text: String, h: int, accent: bool, cb: C
 	var b := UIKit.make_accent_button(text, 120) if accent else UIKit.make_button(text, 96)
 	var min_h := maxi(h, 76) if row is VBoxContainer else h
 	if thumb_primary:
-		min_h = maxi(min_h, 88)
+		min_h = maxi(min_h, 96)
 		b.add_theme_font_size_override("font_size", 24 if row is VBoxContainer else 18)
 	else:
 		b.add_theme_font_size_override("font_size", 22 if row is VBoxContainer else 15)
@@ -102,7 +103,7 @@ static func place(host) -> void:
 		var sx: float = host.scale.x if host.scale.x > 0.01 else 1.0
 		var w: float = (host.MOBILE_RAIL_W - 4.0) * sx
 		var confirming := _confirming(host)
-		var y0: float = (top + vp.y * 0.48) if confirming else (top + vp.y * 0.22)
+		var y0: float = (top + vp.y * 0.55) if confirming else (top + vp.y * 0.22)
 		var bar_h: float = (vp.y - y0 - bottom) if confirming else (vp.y * 0.78 - top - bottom)
 		host._mobile_bar.position = Vector2(vp.x - right - w - 4.0, y0)
 		host._mobile_bar.size = Vector2(w, maxf(160.0, bar_h))

@@ -476,7 +476,7 @@ func _command_bar_px() -> float:
 		return 0.0
 	return maxf(DeviceProfile.hit_px(), 48.0) + 20.0
 
-const MOBILE_RAIL_W := 176.0  ## landscape phone: command rail right, side panels beside it, board fills the rest
+const MOBILE_RAIL_W := 196.0  ## landscape phone: wider thumb rail (T-P2) so Confirm/Cancel hit cleanly
 const MobileSide := preload("res://scripts/battle/ui/battle_mobile_side.gd")
 
 func _mobile_landscape() -> bool:
@@ -1215,9 +1215,10 @@ func _draw_overlay() -> void:
 			overlay.draw_circle(feet, float(CELL) * 0.38, Color(UIKit.ACCENT if units[selected].team == "player" else UIKit.DANGER, 0.28 * pulse_a))
 			overlay.draw_arc(feet, float(CELL) * 0.42, 0.0, TAU, 40, Color(scol, 0.95), 3.0)
 			overlay.draw_arc(mid, float(CELL) * 0.36, 0.0, TAU, 40, Color(scol, 0.75), 2.5)
+			var hw: float = BattlePick.contour_half_w()
 			var body := Rect2(
-				ORIGIN + Vector2(sel_pos) * float(CELL) + Vector2(float(CELL) * (0.5 - BattlePick.CONTOUR_HALF_W), float(CELL) * BattlePick.FIG_TOP),
-				Vector2(float(CELL) * BattlePick.CONTOUR_HALF_W * 2.0, float(CELL) * (BattlePick.FIG_FEET - BattlePick.FIG_TOP)))
+				ORIGIN + Vector2(sel_pos) * float(CELL) + Vector2(float(CELL) * (0.5 - hw), float(CELL) * BattlePick.FIG_TOP),
+				Vector2(float(CELL) * hw * 2.0, float(CELL) * (BattlePick.FIG_FEET - BattlePick.FIG_TOP)))
 			overlay.draw_rect(body, Color(scol, 0.10))
 			overlay.draw_rect(body, Color(scol, 0.55), false, 2.0)
 		if ResourceLoader.exists(sp):
@@ -1596,6 +1597,7 @@ func _select_player(ui: int) -> void:
 	_update_skill_hint()
 	BattlePick.focus_selected(self)
 	if DeviceProfile.is_mobile():
+		UIFX.haptic(12)
 		BattleMobileBar.rebuild(self)
 	overlay.queue_redraw()
 	map_draw.queue_redraw()
@@ -1663,6 +1665,9 @@ func _click_cell(cell: Vector2i) -> void:
 				return
 			if ui >= 0 and units[ui].team == "player" and not units[ui].done and ui != selected:
 				_select_player(ui)
+				return
+			# T-P2: re-tap selected / empty board deselects (phones have no right-click).
+			if BattleTouchConfirm.try_deselect(self, ui):
 				return
 			if attack_mode and ui < 0:
 				_log("攻击模式中：请点击敌人或右键取消")

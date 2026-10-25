@@ -40,8 +40,8 @@ func _run() -> String:
 		var err := _static_chapter(cid)
 		if err != "":
 			return err
-	# Deep walk: cs01 + cs10 (first/last) cover return + portrait smoke.
-	for cid in ["cs01_01", "cs10_01"]:
+	# Deep walk: every season chapter return + portrait smoke (not sample-only).
+	for cid in CHAPTERS:
 		var err2 := await _walk_return_and_portraits(cid)
 		if err2 != "":
 			return err2

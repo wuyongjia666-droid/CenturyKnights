@@ -5,6 +5,7 @@ extends Node
 ## Y1-A T-P1-3: 3D figure visual-bias (face/head → unit below).
 ## Y1-A T-P1-4: move-drag lands on exact finger cell (soft must not steal).
 ## Y1-A T-P1-5: contour rect hit + tap-again confirm + mobile selection chrome.
+## Y1-A T-P2: re-tap/empty deselect + mobile-wider contour + select haptic + rail.
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -42,6 +43,10 @@ func _check() -> String:
 		err = _contour_hit()
 	if err == "":
 		err = _tap_again_contracts()
+	if err == "":
+		err = _deselect_contracts()
+	if err == "":
+		err = _mobile_contour_widen()
 	OS.set_environment("CK_FORCE_MOBILE", "0")
 	return err
 
@@ -127,10 +132,25 @@ func _source_contracts() -> String:
 		return "tap-again confirm_move missing"
 	if ctrl.find("int(preview_attack_ui) == ui") < 0 or ctrl.find("BattleTouchConfirm.confirm_attack(self)") < 0:
 		return "tap-again confirm_attack missing"
-	if ctrl.find("mobile_sel") < 0 or ctrl.find("BattlePick.CONTOUR_HALF_W") < 0:
+	if ctrl.find("mobile_sel") < 0 or ctrl.find("BattlePick.contour_half_w()") < 0:
 		return "mobile selection chrome missing contour halo"
 	if ctrl.find("lp_cell := BattlePick.resolve(self, pos)") < 0:
 		return "long_press must soft/contour resolve like taps"
+	# Y1-A T-P2
+	if conf.find("try_deselect") < 0:
+		return "BattleTouchConfirm.try_deselect missing"
+	if ctrl.find("BattleTouchConfirm.try_deselect(self, ui)") < 0:
+		return "click_cell missing try_deselect wire"
+	if ctrl.find("UIFX.haptic(12)") < 0:
+		return "select missing mobile haptic"
+	if pick.find("contour_half_w") < 0 or pick.find("CONTOUR_HALF_W_MOBILE") < 0:
+		return "battle_pick missing mobile contour widen"
+	if ctrl.find("BattlePick.contour_half_w()") < 0:
+		return "selection chrome not using contour_half_w"
+	if ctrl.find("MOBILE_RAIL_W := 196") < 0:
+		return "landscape rail not widened for T-P2"
+	if bar.find("0.55") < 0:
+		return "landscape confirm thumb zone not lowered"
 	return ""
 
 func _soft_pick() -> String:
@@ -369,6 +389,10 @@ func _contour_hit() -> String:
 		return "contour overlap did not prefer nearer feet: got=%s expect=%s" % [str(prefer), str(expect)]
 	if BattlePick.CONTOUR_HALF_W < 0.30 or BattlePick.CONTOUR_HALF_W > 0.50:
 		return "CONTOUR_HALF_W out of fat-finger range: %s" % BattlePick.CONTOUR_HALF_W
+	if BattlePick.CONTOUR_HALF_W_MOBILE < BattlePick.CONTOUR_HALF_W:
+		return "mobile contour must be >= desktop"
+	if BattlePick.CONTOUR_HALF_W_MOBILE > 0.55:
+		return "mobile contour too wide (steals neighbour): %s" % BattlePick.CONTOUR_HALF_W_MOBILE
 	return ""
 
 
@@ -398,6 +422,80 @@ func _tap_again_move_should_confirm(preview: Vector2i, tapped: Vector2i) -> bool
 func _tap_again_attack_should_confirm(preview_ui: int, tapped_ui: int) -> bool:
 	return preview_ui == tapped_ui
 
+
+
+func _deselect_contracts() -> String:
+	## Pure policy mirror: re-tap selected OR empty (no preview) must deselect on mobile.
+	## Hosts cancel via _cancel_selection; we only assert the boolean gate shape.
+	OS.set_environment("CK_FORCE_MOBILE", "1")
+	if not BattleTouchConfirm.enabled():
+		return "touch confirm must enable under CK_FORCE_MOBILE"
+	# Fake host with the fields try_deselect reads.
+	var host := _FakeBattle.new()
+	host.selected = 2
+	host.units = [{"team": "player"}, {"team": "player"}, {"team": "player"}]
+	host.attack_mode = false
+	host.preview_move_cell = Vector2i(-1, -1)
+	host.preview_attack_ui = -1
+	host.cancelled = false
+	if not BattleTouchConfirm.try_deselect(host, 2):
+		return "re-tap selected must deselect"
+	if not host.cancelled:
+		return "re-tap did not call cancel"
+	host.cancelled = false
+	host.selected = 1
+	if not BattleTouchConfirm.try_deselect(host, -1):
+		return "empty tap must deselect when no preview"
+	if not host.cancelled:
+		return "empty deselect did not call cancel"
+	host.cancelled = false
+	host.selected = 1
+	host.preview_move_cell = Vector2i(3, 4)
+	if BattleTouchConfirm.try_deselect(host, -1):
+		return "empty tap must NOT deselect while preview lives (clear handles it)"
+	host.preview_move_cell = Vector2i(-1, -1)
+	host.attack_mode = true
+	if BattleTouchConfirm.try_deselect(host, -1):
+		return "empty tap must NOT deselect in attack mode"
+	# Other ally tap is not deselect (caller selects instead).
+	host.attack_mode = false
+	if BattleTouchConfirm.try_deselect(host, 0):
+		return "other-ally tap must not deselect via try_deselect"
+	return ""
+
+
+func _mobile_contour_widen() -> String:
+	## Under CK_FORCE_MOBILE, shoulder that misses desktop half-w still hits.
+	OS.set_environment("CK_FORCE_MOBILE", "1")
+	if abs(BattlePick.contour_half_w() - BattlePick.CONTOUR_HALF_W_MOBILE) > 0.001:
+		return "mobile contour_half_w wrong: %s" % BattlePick.contour_half_w()
+	var origin := Vector2(40, 80)
+	var cell_px := 56.0
+	var units: Array = [{"char": {"hp": 10}, "pos": Vector2i(2, 2)}]
+	# Just outside desktop 0.42, inside mobile 0.48.
+	var mid_y: float = 2.0 + (BattlePick.FIG_TOP + BattlePick.FIG_FEET) * 0.5
+	var edge: Vector2 = origin + Vector2(2.5 + 0.45, mid_y) * cell_px
+	OS.set_environment("CK_FORCE_MOBILE", "0")
+	var desk_hit: Vector2i = BattlePick.contour_unit_pos(origin, cell_px, units, edge)
+	OS.set_environment("CK_FORCE_MOBILE", "1")
+	var mob_hit: Vector2i = BattlePick.contour_unit_pos(origin, cell_px, units, edge)
+	if desk_hit == Vector2i(2, 2):
+		return "desktop contour unexpectedly hit 0.45 offset (half_w drifted?)"
+	if mob_hit != Vector2i(2, 2):
+		return "mobile contour missed 0.45 shoulder: %s" % str(mob_hit)
+	return ""
+
+
+class _FakeBattle:
+	var selected: int = -1
+	var units: Array = []
+	var attack_mode: bool = false
+	var preview_move_cell: Vector2i = Vector2i(-1, -1)
+	var preview_attack_ui: int = -1
+	var cancelled: bool = false
+	func _cancel_selection() -> void:
+		cancelled = true
+		selected = -1
 
 func _touch(index: int, pressed: bool, pos: Vector2) -> InputEventScreenTouch:
 	var e := InputEventScreenTouch.new()
