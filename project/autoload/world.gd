@@ -68,6 +68,7 @@ var pos: String = "hq"
 var day: int = 1                # day within the current month (1..30)
 var days_total: int = 0
 var visited: Dictionary = {}
+var hub_tour: Dictionary = {}  # city -> {smith|market|tavern: true} first-visit hub opens
 var rep_city: Dictionary = {}
 var rep_nation: Dictionary = {}
 var cargo: Dictionary = {}      # non-store goods
@@ -158,6 +159,7 @@ func reset() -> void:
 	day = 1
 	days_total = 0
 	visited = {pos: true}
+	hub_tour = {}
 	rep_city = {}
 	rep_nation = {}
 	for nid in nations.keys():
@@ -203,8 +205,16 @@ func to_save() -> Dictionary:
 	var rc := {}
 	for k in recruits.keys():
 		rc[k] = recruits[k]
+	var ht := {}
+	for cid in hub_tour.keys():
+		var seen = hub_tour[cid]
+		if typeof(seen) == TYPE_DICTIONARY:
+			var copy := {}
+			for hk in seen.keys():
+				copy[str(hk)] = bool(seen[hk])
+			ht[str(cid)] = copy
 	return {
-		"v": 1, "pos": pos, "day": day, "days_total": days_total, "visited": visited, "rep_city": rep_city, "rep_nation": rep_nation,
+		"v": 1, "pos": pos, "day": day, "days_total": days_total, "visited": visited, "hub_tour": ht, "rep_city": rep_city, "rep_nation": rep_nation,
 		"cargo": cargo, "market": market, "fairs": fairs, "intel": intel, "tips": tips, "boards": boards, "active": active,
 		"done_sig": done_sig, "quest_log": quest_log, "stats_done": stats_done, "armory": armory, "gear": gear, "recruits": rc,
 		"travel": travel, "pending_event": pending_event, "road_flags": road_flags, "encounter": encounter, "travel_log": travel_log, "qseq": _qseq, "enc_seq": _enc_seq,
@@ -222,6 +232,17 @@ func from_save(d: Dictionary) -> void:
 	day = int(d.get("day", 1))
 	days_total = int(d.get("days_total", 0))
 	visited = d.get("visited", {pos: true})
+	hub_tour = {}
+	var raw_ht = d.get("hub_tour", {})
+	if typeof(raw_ht) == TYPE_DICTIONARY:
+		for cid in raw_ht.keys():
+			var seen = raw_ht[cid]
+			if typeof(seen) != TYPE_DICTIONARY:
+				continue
+			var copy := {}
+			for hk in seen.keys():
+				copy[str(hk)] = bool(seen[hk])
+			hub_tour[str(cid)] = copy
 	rep_city = _int_dict(d.get("rep_city", {}))
 	rep_nation = _int_dict(d.get("rep_nation", {}))
 	cargo = _int_dict(d.get("cargo", {}))
@@ -460,18 +481,103 @@ func travel_preview(to_id: String) -> Dictionary:
 	var fare := 0
 	var danger := 0
 	var borders: Array = []
+	var leg_readouts: Array = []
 	for i in r.legs.size():
 		var leg: Dictionary = r.legs[i]
-		danger = maxi(danger, int(leg.danger))
-		if str(leg.kind) == "border":
-			var into := nation_of(r.path[i + 1])
-			tolls += toll_for(into)
+		var from_id := str(r.path[i])
+		var to_leg := str(r.path[i + 1])
+		var dng := int(leg.get("danger", 1))
+		danger = maxi(danger, dng)
+		var cost := 0
+		var kind := str(leg.get("kind", "road"))
+		if kind == "border":
+			var into := nation_of(to_leg)
+			cost = toll_for(into)
+			tolls += cost
 			borders.append(str(nations.get(into, {}).get("name", into)))
-		if str(leg.kind) == "sea":
-			fare += int(leg.get("fare", 30))
+		elif kind == "sea":
+			cost = int(leg.get("fare", 30))
+			fare += cost
+		leg_readouts.append({
+			"from": from_id,
+			"to": to_leg,
+			"from_name": str(node(from_id).get("name", from_id)),
+			"to_name": str(node(to_leg).get("name", to_leg)),
+			"days": int(leg.get("days", 1)),
+			"danger": dng,
+			"kind": kind,
+			"kind_zh": road_kind_zh(kind),
+			"cost": cost,
+			"hot": dng >= 3,
+		})
 	var food := food_per_day() * int(r.days)
-	return {"ok": true, "path": r.path, "legs": r.legs, "days": r.days, "food": food, "tolls": tolls, "fare": fare,
-			"danger": danger, "borders": borders, "short_food": GameState.food < food}
+	return {"ok": true, "path": r.path, "legs": r.legs, "leg_readouts": leg_readouts, "days": r.days, "food": food, "tolls": tolls, "fare": fare,
+			"danger": danger, "borders": borders, "short_food": GameState.food < food, "hot_legs": _count_hot_legs(leg_readouts)}
+
+
+func road_kind_zh(kind: String) -> String:
+	match kind:
+		"sea":
+			return Locale.t("atlas_road_kind_sea")
+		"border":
+			return Locale.t("atlas_road_kind_border")
+		_:
+			return Locale.t("atlas_road_kind_road")
+
+func danger_bars(d: int) -> String:
+	var n := clampi(d, 0, 4)
+	return "▮".repeat(n) + "▯".repeat(maxi(0, 4 - n))
+
+func _count_hot_legs(legs: Array) -> int:
+	var n := 0
+	for leg in legs:
+		if bool(leg.get("hot", false)) or int(leg.get("danger", 0)) >= 3:
+			n += 1
+	return n
+
+## First-visit hub discoverability: smith / market / tavern still unseen here.
+func needs_hub_discover(city: String = "") -> bool:
+	var id := city if city != "" else pos
+	if not nodes.has(id):
+		return false
+	var seen: Dictionary = hub_tour.get(id, {})
+	if typeof(seen) != TYPE_DICTIONARY:
+		seen = {}
+	var n: Dictionary = node(id)
+	var want: Array = []
+	if smith_tier(id) > 0:
+		want.append("smith")
+	want.append("market")
+	if int(n.get("tavern_slots", 0)) > 0:
+		want.append("tavern")
+	if want.is_empty():
+		return false
+	for hub in want:
+		if not bool(seen.get(hub, false)):
+			return true
+	return false
+
+func hub_discover_list(city: String = "") -> Array:
+	var id := city if city != "" else pos
+	var seen: Dictionary = hub_tour.get(id, {})
+	if typeof(seen) != TYPE_DICTIONARY:
+		seen = {}
+	var n: Dictionary = node(id)
+	var out: Array = []
+	if smith_tier(id) > 0 and not bool(seen.get("smith", false)):
+		out.append({"id": "smith", "label": Locale.t("hub_discover_smith")})
+	if not bool(seen.get("market", false)):
+		out.append({"id": "market", "label": Locale.t("hub_discover_market")})
+	if int(n.get("tavern_slots", 0)) > 0 and not bool(seen.get("tavern", false)):
+		out.append({"id": "tavern", "label": Locale.t("hub_discover_tavern")})
+	return out
+
+func mark_hub_seen(city: String, hub: String) -> void:
+	if city == "" or hub == "":
+		return
+	if not hub_tour.has(city) or typeof(hub_tour[city]) != TYPE_DICTIONARY:
+		hub_tour[city] = {}
+	hub_tour[city][hub] = true
 
 func is_traveling() -> bool:
 	return not travel.is_empty()

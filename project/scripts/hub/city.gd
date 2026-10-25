@@ -454,6 +454,8 @@ func _fill_vignette(th: Control) -> void:
 # ── tabs ──────────────────────────────────────────────
 func _set_tab(t: String) -> void:
 	tab = t
+	if t in ["smith", "market", "tavern"]:
+		World.mark_hub_seen(city, t)
 	_render_tab()
 
 func _render_tab() -> void:
@@ -628,7 +630,10 @@ func _icon(it: Dictionary, sz: float) -> Control:
 # ── 概览 ──────────────────────────────────────────────
 func _tab_overview() -> void:
 	var n: Dictionary = World.node(city)
-	var p := _panel(Rect2(0, 0, 420, 576))
+	var y_off := 0.0
+	if World.needs_hub_discover(city):
+		y_off = _hub_discover_strip()
+	var p := _panel(Rect2(0, y_off, 420, 576 - y_off))
 	_head(p, Vector2(18, 14), "声望阶梯", "REPUTATION LADDER")
 	var tiers: Array = World.rules.get("rep_tiers", [0, 10, 30, 55, 80])
 	var names: Array = World.REP_TIER_ZH
@@ -721,7 +726,7 @@ func _tab_overview() -> void:
 	else:
 		aff.position = Vector2(18, 510)
 		p.add_child(aff)
-	var p2 := _panel(Rect2(432, 0, 416, 576))
+	var p2 := _panel(Rect2(432, y_off, 416, 576 - y_off))
 	_head(p2, Vector2(18, 14), "可在此交付", "TURN IN HERE")
 	var v2 := _scroll(p2, Rect2(18, 56, 384, 236))
 	var any := false
@@ -768,6 +773,56 @@ func _tab_overview() -> void:
 		mb.disabled = not bool(mm.get("exists", false))
 		mb.pressed.connect(func(): CKNav.go(str(mm.path)))
 		p2.add_child(mb)
+
+
+## First-visit strip: push player to open smith / market / tavern once.
+func _hub_discover_strip() -> float:
+	var hubs: Array = World.hub_discover_list(city)
+	if hubs.is_empty():
+		return 0.0
+	var h := 78.0 if not _mob else float(MobilePage.HIT + 56)
+	var band := _panel(Rect2(0, 0, 848 if not _mob else 0, h if not _mob else 0))
+	band.name = "HubDiscover"
+	if _mob:
+		band.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		band.custom_minimum_size = Vector2(0, h)
+	var title := UIKit.mono(Locale.t("hub_discover_en"), 9, UIKit.EMBER)
+	title.position = Vector2(18, 8)
+	band.add_child(title)
+	var zh := UIKit.title_label(Locale.t("hub_discover_title"), 14 if not _mob else MobilePage.FONT, UIKit.TEXT)
+	zh.position = Vector2(18, 22)
+	if _mob:
+		zh.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	band.add_child(zh)
+	var row := HBoxContainer.new()
+	row.name = "HubDiscoverRow"
+	row.position = Vector2(18, 44 if not _mob else 50)
+	row.add_theme_constant_override("separation", 8)
+	if _mob:
+		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	band.add_child(row)
+	for hub in hubs:
+		var hid := str(hub.get("id", ""))
+		var b := UIKit.ghost_button(str(hub.get("label", hid)), 120 if not _mob else 0, 28 if not _mob else MobilePage.HIT)
+		b.name = "GotoHub_" + hid
+		if _mob:
+			b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			b.custom_minimum_size = Vector2(0, MobilePage.HIT)
+		var tab_id := hid
+		b.pressed.connect(func(): _set_tab(tab_id))
+		row.add_child(b)
+	var dismiss := UIKit.ghost_button(Locale.t("hub_discover_later"), 72 if not _mob else 0, 28 if not _mob else MobilePage.HIT)
+	dismiss.name = "HubDiscoverLater"
+	if _mob:
+		dismiss.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		dismiss.custom_minimum_size = Vector2(0, MobilePage.HIT)
+	dismiss.pressed.connect(func():
+		for hub2 in World.hub_discover_list(city):
+			World.mark_hub_seen(city, str(hub2.get("id", "")))
+		_set_tab("overview"))
+	row.add_child(dismiss)
+	return h if not _mob else 0.0  # mobile reflow stacks; no y shift needed
+
 
 ## WS-C #43: 城内传闻 / 街上的人——拿现有的城市数据拼几句口语，填满概览页的空栏。
 static func rumors(cid: String) -> Array:
