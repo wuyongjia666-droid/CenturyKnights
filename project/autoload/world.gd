@@ -76,6 +76,7 @@ var cargo_basis: Dictionary = {}  # good -> {unit, city, qty} cost basis for mar
 var last_aftermath: Dictionary = {}  # structured road-event aftermath for UI
 var last_battle_aftermath: Dictionary = {}  # structured encounter win/lose aftermath
 var last_chain_follow: Dictionary = {}  # follow-up / next scripted-chain step after turn_in
+var last_chain_fail: Dictionary = {}  # scripted-chain expire/abandon payload for ChainFailModal
 var market: Dictionary = {}     # city -> {good: stock}
 var fairs: Dictionary = {}      # city -> days_total expiry
 var intel: Dictionary = {}      # city -> days_total when prices were last seen
@@ -182,6 +183,7 @@ func reset() -> void:
 	last_aftermath = {}
 	last_battle_aftermath = {}
 	last_chain_follow = {}
+	last_chain_fail = {}
 	market = {}
 	for id in nodes.keys():
 		_init_market(id)
@@ -259,6 +261,7 @@ func from_save(d: Dictionary) -> void:
 	last_aftermath = {}
 	last_battle_aftermath = {}
 	last_chain_follow = {}
+	last_chain_fail = {}
 	market = {}
 	var m: Dictionary = d.get("market", {})
 	for id in nodes.keys():
@@ -2131,6 +2134,8 @@ func start_scripted_chain(chain_id: String) -> Dictionary:
 	var steps: Array = chain.get("steps", [])
 	if steps.is_empty():
 		return {"ok": false, "msg": "委托链没有步骤"}
+	_purge_chain_board(chain_id)
+	last_chain_fail = {}
 	chain_progress[chain_id] = {"step": 0, "status": "active"}
 	var q := _quest_from_chain_step(chain, 0)
 	_post_chain_offer(q)
@@ -2139,7 +2144,7 @@ func start_scripted_chain(chain_id: String) -> Dictionary:
 func chain_status(chain_id: String) -> Dictionary:
 	var prog: Dictionary = chain_progress.get(chain_id, {})
 	var status := str(prog.get("status", "idle"))
-	var out := {"id": chain_id, "status": status, "step": int(prog.get("step", 0))}
+	var out := {"id": chain_id, "status": status, "step": int(prog.get("step", 0)), "reason": str(prog.get("reason", ""))}
 	if status != "active":
 		return out
 	var live := _chain_quest(chain_id)
@@ -2226,6 +2231,8 @@ func abandon(qid: String) -> Dictionary:
 		return {"ok": false, "msg": "无此委托"}
 	active.erase(q)
 	add_city_rep(str(q.issuer), -4)
+	if str(q.get("scripted_chain", "")) != "":
+		_fail_scripted_chain(q, "abandon")
 	world_changed.emit()
 	return {"ok": true, "msg": "放弃委托「%s」（声望 -4）" % q.title}
 
@@ -2237,6 +2244,70 @@ func _expire_quests() -> void:
 			_tlog("委托「%s」逾期失败（声望 -5）" % q.title)
 			quest_log.push_front("%s · 失败：%s" % [date_label(), q.title])
 			CKEconomyState.month_echo_note("commission", Locale.t("lb_echo_commission_expire", [q.title]))
+			if str(q.get("scripted_chain", "")) != "":
+				_fail_scripted_chain(q, "expire")
+
+## Mark a scripted chain failed and stash UI payload (expire / abandon).
+func _fail_scripted_chain(q: Dictionary, reason: String) -> void:
+	var cid := str(q.get("scripted_chain", ""))
+	if cid == "":
+		return
+	var step := int(q.get("scripted_step", 0))
+	var chain := _scripted_chain(cid)
+	chain_progress[cid] = {"step": step, "status": "failed", "reason": reason}
+	last_chain_fail = {
+		"chain_id": cid,
+		"step": step,
+		"quest_id": str(q.get("id", "")),
+		"title": str(q.get("title", "")),
+		"issuer": str(q.get("issuer", "")),
+		"target": str(q.get("target", "")),
+		"reason": reason,
+		"chain_title": str(chain.get("title", cid)),
+	}
+	var why := Locale.t("atlas_chain_fail_reason_expire") if reason == "expire" else Locale.t("atlas_chain_fail_reason_abandon")
+	_tlog("委托链「%s」失败：%s" % [str(chain.get("title", cid)), why])
+
+## Peek+clear fail payload for atlas ChainFailModal.
+func take_chain_fail() -> Dictionary:
+	var d: Dictionary = last_chain_fail.duplicate(true)
+	last_chain_fail = {}
+	return d
+
+func dismiss_chain_fail() -> void:
+	last_chain_fail = {}
+
+## 改道：from failed status, re-post the same step as a fresh offer at its issuer.
+func reroute_failed_chain(chain_id: String) -> Dictionary:
+	var prog: Dictionary = chain_progress.get(chain_id, {})
+	if str(prog.get("status", "")) != "failed":
+		return {"ok": false, "msg": Locale.t("atlas_chain_reroute_not_failed")}
+	var chain := _scripted_chain(chain_id)
+	if chain.is_empty():
+		return {"ok": false, "msg": Locale.t("atlas_chain_reroute_missing")}
+	var step := int(prog.get("step", 0))
+	var steps: Array = chain.get("steps", [])
+	if step < 0 or step >= steps.size():
+		return {"ok": false, "msg": Locale.t("atlas_chain_reroute_missing")}
+	_purge_chain_board(chain_id)
+	chain_progress[chain_id] = {"step": step, "status": "active"}
+	var nq := _quest_from_chain_step(chain, step)
+	# 改道：略紧的时限，逼玩家立刻重走这一程
+	nq["days_budget"] = mini(int(nq.get("days_budget", 40)), 28)
+	_post_chain_offer(nq)
+	last_chain_fail = {}
+	_tlog("委托链「%s」改道重接第 %d 程" % [str(chain.get("title", chain_id)), step + 1])
+	world_changed.emit()
+	return {"ok": true, "msg": Locale.t("atlas_chain_reroute_ok") % str(chain.get("title", chain_id)), "quest": nq}
+
+func _purge_chain_board(chain_id: String) -> void:
+	for city in boards.keys():
+		var offers: Array = boards[city].get("offers", [])
+		var kept: Array = []
+		for q in offers:
+			if str(q.get("scripted_chain", "")) != chain_id:
+				kept.append(q)
+		boards[city].offers = kept
 
 ## Fight an objective at the party's current location (hunt / defend target reached earlier, or retry after a defeat)
 func quest_engage(qid: String) -> Dictionary:
