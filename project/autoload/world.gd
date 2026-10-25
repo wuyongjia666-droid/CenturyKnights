@@ -102,6 +102,7 @@ var events_enabled := true       # tests may disable random road events
 var rivals_enabled := true       # CMP-04: rival companies move, steal offers, raise prices. Century sim turns this off.
 var rivals: Array = []           # {id, name, pos, home, stolen, price_mul}
 var rival_thefts: Array = []
+var arbitrage: Dictionary = {}  ## {good,qty,buy_city,sell_city,cost}
 var chain_progress: Dictionary = {}  # chain id -> {step, status}
 var territory: Dictionary = {}  # v9.3 CKTerritory state (docs/design/territory.md)
 var rng := RandomNumberGenerator.new()
@@ -224,7 +225,7 @@ func to_save() -> Dictionary:
 		"cargo": cargo, "cargo_basis": cargo_basis, "market": market, "fairs": fairs, "intel": intel, "tips": tips, "boards": boards, "active": active,
 		"done_sig": done_sig, "quest_log": quest_log, "stats_done": stats_done, "armory": armory, "gear": gear, "recruits": rc,
 		"travel": travel, "pending_event": pending_event, "road_flags": road_flags, "encounter": encounter, "travel_log": travel_log, "qseq": _qseq, "enc_seq": _enc_seq,
-		"royal_courts": royal_courts, "rivals": rivals, "rival_thefts": rival_thefts, "chain_progress": chain_progress,
+		"royal_courts": royal_courts, "rivals": rivals, "rival_thefts": rival_thefts, "arbitrage": arbitrage, "chain_progress": chain_progress,
 		"territory": CKTerritory.to_save(),
 	}
 
@@ -289,6 +290,7 @@ func from_save(d: Dictionary) -> void:
 	territory = CKTerritory.from_save(d.get("territory", {}))
 	_restore_rivals(d.get("rivals", []))
 	rival_thefts = d.get("rival_thefts", []) if typeof(d.get("rival_thefts", [])) == TYPE_ARRAY else []
+	arbitrage = d.get("arbitrage", {}) if typeof(d.get("arbitrage", {})) == TYPE_DICTIONARY else {}
 	world_changed.emit()
 
 func _int_dict(src) -> Dictionary:
@@ -1921,6 +1923,76 @@ func rival_clash() -> Dictionary:
 	if rv.is_empty():
 		return {}
 	return start_encounter("road", {"node": pos, "from": pos, "event": "rival_%s" % str(rv.id)})
+
+## Drain pending rival theft notices for atlas RivalTheftModal (empty after take).
+func take_rival_thefts() -> Array:
+	var out: Array = rival_thefts.duplicate(true)
+	rival_thefts = []
+	return out
+
+func peek_rival_thefts() -> Array:
+	return rival_thefts.duplicate(true)
+
+## Buy local produce and arm a sell-at destination for atlas arbitrage E2E.
+func begin_arbitrage(good: String, qty: int = 1, sell_city: String = "") -> Dictionary:
+	if not arbitrage.is_empty():
+		return {"ok": false, "msg": Locale.t("atlas_arb_busy")}
+	var g := str(good)
+	if g == "" or not goods.has(g):
+		return {"ok": false, "msg": Locale.t("atlas_arb_bad_good")}
+	var dest := str(sell_city)
+	if dest == "":
+		var best: Dictionary = best_known_sell(g, pos)
+		dest = str(best.get("city", ""))
+	if dest == "" or dest == pos:
+		return {"ok": false, "msg": Locale.t("atlas_arb_no_dest")}
+	var bought: Dictionary = market_buy(pos, g, qty)
+	if not bool(bought.get("ok", false)):
+		return bought
+	arbitrage = {
+		"good": g,
+		"qty": qty,
+		"buy_city": pos,
+		"sell_city": dest,
+		"cost": int(bought.get("cost", 0)),
+	}
+	world_changed.emit()
+	return {"ok": true, "msg": Locale.t("atlas_arb_bought") % [good_name(g), qty, int(bought.get("cost", 0)), str(node(dest).get("name", dest))], "plan": arbitrage.duplicate(true)}
+
+func clear_arbitrage() -> void:
+	arbitrage = {}
+	world_changed.emit()
+
+## Sell the armed arbitrage lot at the current city when it matches sell_city.
+func complete_arbitrage() -> Dictionary:
+	if arbitrage.is_empty():
+		return {"ok": false, "msg": Locale.t("atlas_arb_none")}
+	var dest := str(arbitrage.get("sell_city", ""))
+	if pos != dest:
+		return {"ok": false, "msg": Locale.t("atlas_arb_wrong_city") % str(node(dest).get("name", dest))}
+	var g := str(arbitrage.get("good", ""))
+	var qty := int(arbitrage.get("qty", 1))
+	var cost := int(arbitrage.get("cost", 0))
+	var sold: Dictionary = market_sell(pos, g, qty)
+	if not bool(sold.get("ok", false)):
+		return sold
+	var gain := int(sold.get("gain", 0))
+	var margin := gain - cost
+	var summary := {
+		"ok": true,
+		"good": g,
+		"name": good_name(g),
+		"qty": qty,
+		"cost": cost,
+		"gain": gain,
+		"margin": margin,
+		"buy_city": str(arbitrage.get("buy_city", "")),
+		"sell_city": dest,
+		"msg": Locale.t("atlas_arb_done") % [good_name(g), qty, gain, margin],
+	}
+	arbitrage = {}
+	world_changed.emit()
+	return summary
 
 func scripted_chains() -> Array:
 	return data.get("contract_chains", [])

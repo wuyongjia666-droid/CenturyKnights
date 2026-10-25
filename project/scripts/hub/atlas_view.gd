@@ -1127,6 +1127,31 @@ func _render_right() -> void:
 			GameState.set_meta("city_tab", "market")
 			_enter_here())
 		loop_box.add_child(tb)
+		var best_row: Dictionary = World.best_produce_trade(_sel)
+		if not best_row.is_empty() and bool(best_row.get("known", false)) and World.arbitrage.is_empty():
+			var arb := UIKit.ghost_button(Locale.t("atlas_arb_run"), int(col_w), 26)
+			arb.name = "ArbitrageRun"
+			arb.pressed.connect(_start_arbitrage_from_profile.bind(str(best_row.get("good", "")), str(best_row.get("sell_city", ""))))
+			loop_box.add_child(arb)
+	elif _sel == World.pos and not World.arbitrage.is_empty():
+		var plan: Dictionary = World.arbitrage
+		var pending := UIKit.body_label(Locale.t("atlas_arb_pending") % [World.good_name(str(plan.get("good", ""))), int(plan.get("qty", 1)), str(World.node(str(plan.get("sell_city", ""))).get("name", plan.get("sell_city", "")))], UIKit.EMBER, 12)
+		pending.name = "ArbitragePending"
+		pending.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		pending.custom_minimum_size = Vector2(col_w, 0)
+		loop_box.add_child(pending)
+		if str(plan.get("sell_city", "")) == World.pos:
+			var sellb := UIKit.ghost_button(Locale.t("atlas_arb_sell_now"), int(col_w), 26)
+			sellb.name = "ArbitrageSell"
+			sellb.pressed.connect(_complete_arbitrage_ui)
+			loop_box.add_child(sellb)
+		else:
+			var march := UIKit.ghost_button(Locale.t("atlas_arb_march"), int(col_w), 26)
+			march.name = "ArbitrageMarch"
+			march.pressed.connect(func():
+				_select_node(str(plan.get("sell_city", "")))
+				_start_travel())
+			loop_box.add_child(march)
 	var lore := UIKit.body_label(str(n.get("lore", "")), UIKit.TEXT_DIM, 12)
 	lore.name = "ProfileLore"
 	lore.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -1631,6 +1656,10 @@ func _after_arrival() -> void:
 	var readies := World.ready_turn_ins_here().size()
 	if _check_losses():
 		return
+	if _check_rival_thefts():
+		return
+	if _check_arbitrage_arrival():
+		return
 	if readies > 0:
 		_show_toast(Locale.t("atlas_arrive_turnin") % [n.get("name", ""), readies], UIKit.OK)
 		_show_turnin_modal(readies)
@@ -1640,6 +1669,10 @@ func _after_arrival() -> void:
 func _resume_state() -> void:
 	## returning from a battle / load: re-open pending modal or continue a journey
 	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_losses():
+		return
+	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_rival_thefts():
+		return
+	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_arbitrage_arrival():
 		return
 	if not World.pending_event.is_empty():
 		_show_event_modal(World.pending_event)
@@ -2242,6 +2275,109 @@ func _check_losses() -> bool:
 	go.call_deferred("grab_focus")
 	return true
 
+func _rival_display_name(rid: String) -> String:
+	for rv in World.rivals:
+		if str(rv.get("id", "")) == rid:
+			return str(rv.get("name", rid))
+	return rid
+
+## Drain rival_thefts into RivalTheftModal (atlas surface for CMP-04 thefts).
+func _check_rival_thefts() -> bool:
+	if not _modal.get_children().is_empty():
+		return false
+	var news: Array = World.take_rival_thefts()
+	if news.is_empty():
+		return false
+	var lines: Array = []
+	var first_city := ""
+	for e in news:
+		var by := _rival_display_name(str(e.get("by", "")))
+		var city := str(e.get("city", ""))
+		var cname := str(World.node(city).get("name", city))
+		var title := str(e.get("title", ""))
+		lines.append(Locale.t("atlas_rival_theft_line") % [by, cname, title])
+		if first_city == "" and city != "":
+			first_city = city
+	var p := _modal_panel(220 + 24 * lines.size())
+	p.name = "RivalTheftModal"
+	var t := UIKit.title_label(Locale.t("atlas_rival_theft_title"), 24, UIKit.DANGER)
+	t.position = Vector2(24, 24)
+	p.add_child(t)
+	var body := UIKit.body_label("\n".join(lines) + "\n" + Locale.t("atlas_rival_theft_hint"), UIKit.TEXT, 14)
+	body.position = Vector2(24, 70)
+	body.size = Vector2(452, 60 + 24 * lines.size())
+	p.add_child(body)
+	var ok := UIKit.ghost_button(Locale.t("atlas_rival_theft_ok"), 200, 44)
+	ok.name = "RivalTheftOk"
+	ok.position = Vector2(24, p.size.y - 64)
+	ok.pressed.connect(_clear_modal)
+	p.add_child(ok)
+	if first_city != "":
+		var go := UIKit.ghost_button(Locale.t("atlas_rival_theft_go"), 200, 44)
+		go.name = "RivalTheftGo"
+		go.position = Vector2(276, p.size.y - 64)
+		go.pressed.connect(func():
+			_clear_modal()
+			_select_node(first_city)
+			if first_city != World.pos:
+				_start_travel())
+		p.add_child(go)
+	ok.call_deferred("grab_focus")
+	return true
+
+func _check_arbitrage_arrival() -> bool:
+	if not _modal.get_children().is_empty():
+		return false
+	if World.arbitrage.is_empty():
+		return false
+	if str(World.arbitrage.get("sell_city", "")) != World.pos:
+		return false
+	_show_arbitrage_sell_modal()
+	return true
+
+func _start_arbitrage_from_profile(good: String, sell_city: String) -> void:
+	var r: Dictionary = World.begin_arbitrage(good, 1, sell_city)
+	_show_toast(str(r.get("msg", "")), UIKit.OK if bool(r.get("ok", false)) else UIKit.DANGER)
+	if not bool(r.get("ok", false)):
+		return
+	## Defer rebuild so the ArbitrageRun pressed signal can finish (avoids free-during-emit).
+	call_deferred("_after_arbitrage_armed")
+
+func _after_arbitrage_armed() -> void:
+	_render_left()
+	var dest := str(World.arbitrage.get("sell_city", ""))
+	if dest != "" and dest != World.pos:
+		_select_node(dest)
+
+func _complete_arbitrage_ui() -> void:
+	var r: Dictionary = World.complete_arbitrage()
+	_clear_modal()
+	_show_toast(str(r.get("msg", "")), UIKit.OK if bool(r.get("ok", false)) else UIKit.DANGER)
+	call_deferred("_render_left")
+
+func _show_arbitrage_sell_modal() -> void:
+	var plan: Dictionary = World.arbitrage
+	var p := _modal_panel(240)
+	p.name = "ArbitrageSellModal"
+	var t := UIKit.title_label(Locale.t("atlas_arb_sell_title"), 24, UIKit.OK)
+	t.position = Vector2(24, 24)
+	p.add_child(t)
+	var body := UIKit.body_label(Locale.t("atlas_arb_pending") % [World.good_name(str(plan.get("good", ""))), int(plan.get("qty", 1)), str(World.node(str(plan.get("sell_city", ""))).get("name", plan.get("sell_city", "")))], UIKit.TEXT, 14)
+	body.position = Vector2(24, 70)
+	body.size = Vector2(452, 80)
+	p.add_child(body)
+	var sell := UIKit.ghost_button(Locale.t("atlas_arb_sell_now"), 200, 44)
+	sell.name = "ArbitrageSell"
+	sell.position = Vector2(24, p.size.y - 64)
+	sell.pressed.connect(_complete_arbitrage_ui)
+	p.add_child(sell)
+	var later := UIKit.ghost_button(Locale.t("atlas_rival_theft_ok"), 200, 44)
+	later.name = "ArbitrageLater"
+	later.position = Vector2(276, p.size.y - 64)
+	later.pressed.connect(_clear_modal)
+	p.add_child(later)
+	sell.call_deferred("grab_focus")
+
 func _retake(site_id: String) -> void:
 	_clear_modal()
 	var nat := str(CKTerritory.site(site_id).get("nation", ""))
@@ -2560,6 +2696,25 @@ func _m_place() -> void:
 				_enter_here())
 			tbg.name = "TradeLoopGoto"
 			loop_sec.add_child(tbg)
+			var best_m: Dictionary = World.best_produce_trade(_sel)
+			if not best_m.is_empty() and bool(best_m.get("known", false)) and World.arbitrage.is_empty():
+				var arbm := MobilePage.button(Locale.t("atlas_arb_run"), false, func():
+					_start_arbitrage_from_profile(str(best_m.get("good", "")), str(best_m.get("sell_city", ""))))
+				arbm.name = "ArbitrageRun"
+				loop_sec.add_child(arbm)
+			elif not World.arbitrage.is_empty():
+				var plan_m: Dictionary = World.arbitrage
+				loop_sec.add_child(_m_label(Locale.t("atlas_arb_pending") % [World.good_name(str(plan_m.get("good", ""))), int(plan_m.get("qty", 1)), str(World.node(str(plan_m.get("sell_city", ""))).get("name", plan_m.get("sell_city", "")))], UIKit.EMBER))
+				if str(plan_m.get("sell_city", "")) == World.pos:
+					var sellm := MobilePage.button(Locale.t("atlas_arb_sell_now"), true, func(): _complete_arbitrage_ui())
+					sellm.name = "ArbitrageSell"
+					loop_sec.add_child(sellm)
+				else:
+					var marchm := MobilePage.button(Locale.t("atlas_arb_march"), false, func():
+						_select_node(str(plan_m.get("sell_city", "")))
+						_start_travel())
+					marchm.name = "ArbitrageMarch"
+					loop_sec.add_child(marchm)
 	_m_picture(box, "", _sel)
 	var lore := str(n.get("lore", ""))
 	if lore != "":
