@@ -468,3 +468,11 @@ atlas_weather_pass,山崩落石,Rockfall
 atlas_weather_forge,灰烬雨,Ash rain
 atlas_weather_nightcamp,冰雾,Ice fog
 atlas_ration_party_hint,%s · 编制 %d,%s · party %d
+atlas_muster_en,MUSTER // 编入,MUSTER // JOIN
+atlas_muster_title,编入行军编制,Muster into the march
+atlas_muster_body,%s 入列。编制 %d→%d · 日耗粮 %d→%d。%s,%s joins. Party %d→%d · rations/day %d→%d. %s
+atlas_muster_cost,花费 %d 银,Cost %d silver
+atlas_muster_ration,口粮：%s,Rations: %s
+atlas_muster_on_march,行军中已并入编制，确认后继续赶路。,Joined on the march — continue after confirm.
+atlas_muster_in_camp,已并入灰旗编制。,Joined the Ash Banner muster.
+atlas_muster_continue,确认编成,Confirm muster
