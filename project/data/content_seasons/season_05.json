@@ -1,6 +1,6 @@
 {
   "id": "season_05",
-  "version": 3,
+  "version": 4,
   "title_zh": "空椅上的灯",
   "title_en": "The Lamp on the Empty Chair",
   "status": "playable_draft",
@@ -70,6 +70,12 @@
       "label_zh": "可玩章 cs05_01 对白可走",
       "suite": "res://tests/suites/narrative/content_season_playable_s05_check.tscn",
       "done": true
+    },
+    {
+      "id": "playable_dialogue_02",
+      "label_zh": "可玩章 cs05_02 对白可走",
+      "suite": "res://tests/suites/narrative/content_season_playable_s05_02_check.tscn",
+      "done": true
     }
   ],
   "pipeline_stages": {
@@ -118,5 +124,8 @@
     "docs/content-seasons/season-05/ACCEPTANCE.md"
   ],
   "playable_chapter": "cs05_01",
-  "playable_path": "res://data/story/chapters/cs05_01.json"
+  "playable_path": "res://data/story/chapters/cs05_01.json",
+  "playable_chapters": [
+    "cs05_02"
+  ]
 }
