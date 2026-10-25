@@ -579,6 +579,7 @@ func _open_content_season(chapter_id: String) -> void:
 
 ## Desk ContentSeasonRow. Returns the Y used for the next hairline.
 ## Empty entries → skip entirely (禁 EmptyHost / 空态 CTA).
+## 季数增多后桌面不再横排 Season_*（会与 Banner 叠字）；改开 sheet，与手机一致。
 func _add_content_season_row_desk(cp: Control, y: float) -> float:
 	var entries: Array = StoryCatalog.content_season_entries()
 	if entries.is_empty():
@@ -591,17 +592,14 @@ func _add_content_season_row_desk(cp: Control, y: float) -> float:
 	row.add_theme_constant_override("separation", 6)
 	cp.add_child(row)
 	row.add_child(UIKit.mono(Locale.t("ux_hub_content_season"), UIKit.desk_sz(10), UIKit.EMBER, false))
-	for entry in entries:
-		var chapter_id := str(entry.get("chapter_id", ""))
-		var title := StoryCatalog.content_season_label(entry)
-		var chip := Button.new()
-		chip.name = "Season_%s" % chapter_id
-		chip.text = Locale.t("ux_hub_content_season_play") % title
-		chip.flat = true
-		chip.add_theme_font_size_override("font_size", UIKit.desk_sz(11))
-		chip.add_theme_color_override("font_color", UIKit.EMBER)
-		chip.pressed.connect(_open_content_season.bind(chapter_id))
-		row.add_child(chip)
+	var open_b := Button.new()
+	open_b.name = "ContentSeasonOpen"
+	open_b.text = Locale.t("ux_hub_content_season_play") % Locale.t("ux_hub_content_season")
+	open_b.flat = true
+	open_b.add_theme_font_size_override("font_size", UIKit.desk_sz(11))
+	open_b.add_theme_color_override("font_color", UIKit.EMBER)
+	open_b.pressed.connect(_open_content_season_sheet)
+	row.add_child(open_b)
 	return y + 28.0
 
 ## Mobile ContentSeasonRow. Skip when empty — never paint EmptyHost.
