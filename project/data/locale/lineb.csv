@@ -385,6 +385,7 @@ lb_echo_commission_expire,逾期「%s」·声望 -5,Overdue "%s" · rep -5
 lb_echo_spring,春令联姻池刷新·%d 帖,Spring court posts refreshed · %d
 lb_echo_pregnancy,%s 有了身孕,%s is with child
 lb_echo_birth,%s 诞下 %s,%s bore %s
+lb_echo_adult,%s 达授旗年龄·可入花名册,%s came of age · may enlist
 lb_echo_retire,%s 退役任顾问（%s 偏向）,%s retires as advisor (%s lean)
 lb_echo_death,%s 辞世，入族谱碑,%s passes; name on the stele
 lb_echo_tutor,%s 受 %s 传习·%s+%d,%s taught by %s · %s +%d

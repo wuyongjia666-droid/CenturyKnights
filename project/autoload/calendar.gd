@@ -157,6 +157,8 @@ func _tick_life(ctx: Dictionary) -> void:
 				evs.append({"type": "adult", "text": am, "cid": c.id})
 				GameState.add_lineage_event(am)
 				GameState.add_skill_point(1)
+				## Y1-B: 授旗年龄 → month_echo.adult；属地/沙漏回读（耐玩传代可感）.
+				CKEconomyState.month_echo_note("adult", Locale.t("lb_echo_adult", [c.name]))
 				var back := Lineage.end_regency_if_ward(c)
 				if back != "":
 					evs.append({"type": "regency_end", "text": back, "cid": c.id})
