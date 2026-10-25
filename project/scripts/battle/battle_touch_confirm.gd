@@ -10,7 +10,7 @@ extends RefCounted
 ## Y1-A T-P2: re-tap selected / empty-board deselect (no right-click on phone).
 ## Y1-A T-P3: unit-drag origin is strict figure hit (exact/bias/contour); soft-empty
 ## beside the selected piece pans the map instead of stealing the gesture.
-## Y1-A T-P4: soft-follow settles on confirm/select (not mid unit-drag — keeps pan≠drag);
+## Y1-A T-P4: soft-follow settles on confirm/select (not mid unit-drag — keeps pan!=drag);
 ## attack ghost gets aim line + pulse juice.
 ## Y1-A T-P5: select-lock on try_deselect; clear() re-focuses selection after cancel.
 
@@ -71,7 +71,7 @@ static func confirm_move(host) -> void:
 		clear(host)
 		return
 	var cell: Vector2i = host.preview_move_cell
-	# T-P4 soft-follow settles on confirm (never mid unit-drag — pan≠drag contract).
+	# T-P4 soft-follow settles on confirm (never mid unit-drag — pan!=drag contract).
 	BattlePick.focus_follow_preview(host)
 	clear(host)
 	commit_move(host, cell)
@@ -80,7 +80,7 @@ static func confirm_move(host) -> void:
 
 static func confirm_attack(host) -> void:
 	var ui: int = int(host.preview_attack_ui)
-	# T-P4 soft-follow settles on confirm (never mid unit-drag — pan≠drag contract).
+	# T-P4 soft-follow settles on confirm (never mid unit-drag — pan!=drag contract).
 	if ui >= 0:
 		BattlePick.focus_follow_preview(host)
 	clear(host)
