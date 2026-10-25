@@ -30,7 +30,6 @@ func _ready() -> void:
 	UIKit.footer_bar(self, [["A", "确认买入"], ["S", "卖出"], ["←→", "调整数量"], ["ESC", "返回城堡"]], "MARKET // LV %d · v8.6" % GameState.building_level("market"))
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
-	_place_market_crests()
 
 func _back() -> void:
 	CKNav.up()
@@ -55,16 +54,26 @@ func _clear(n: Control) -> void:
 		n.remove_child(ch)
 		ch.queue_free()
 
-
-func _place_market_crests() -> void:
-	var mob := DeviceProfile.is_mobile()
-	var at := Vector2(1120, 8) if not mob else Vector2(maxf(20.0, MobilePage.width(self) - 120.0), 4)
-	var sh := Vector2(36, 44) if not mob else Vector2(32, 40)
-	CKHeraldryChrome.place_market_crest_strip(self, at, sh, Vector2(24, 34) if not mob else Vector2(22, 30))
-
 func apply_mobile_layout() -> void:
 	if MobilePage.active(self):
 		_render()
+
+
+func _place_market_crests(at_y: float = 8.0) -> void:
+	for n in ["CastleArms", "CastleBannerStrip", "CityCrestStrip", "MarketCrestStrip"]:
+		var oldn := get_node_or_null(n)
+		if oldn:
+			oldn.name = "_%sDying" % n
+			oldn.queue_free()
+	var hdr := Vector2(44, 52)
+	CKHeraldryChrome.place_company_header(self, Vector2(1180, at_y), hdr)
+	CKHeraldryChrome.place_castle_banner_strip(self, Vector2(1100, at_y), hdr, Vector2(28, 38))
+	var city := str(World.pos)
+	if city != "":
+		CKHeraldryChrome.place_city_crest_strip(self, city, Vector2(42, at_y), Vector2(36, 44))
+	var mob := DeviceProfile.is_mobile()
+	var mat := Vector2(1020, at_y) if not mob else Vector2(maxf(20.0, MobilePage.width(self) - 220.0), at_y)
+	CKHeraldryChrome.place_market_crest_strip(self, mat, Vector2(36, 44) if not mob else Vector2(32, 40), Vector2(24, 34))
 
 func _render() -> void:
 	if MobilePage.active(self):
@@ -74,13 +83,13 @@ func _render() -> void:
 		_bar.queue_free()
 	_bar = UIKit.top_bar(self, "陆桥商路 · MARKET", [["银币", str(GameState.silver), UIKit.ACCENT], ["粮", str(GameState.food), UIKit.TEXT], ["铁", str(GameState.iron),
 			UIKit.TEXT], ["药", str(GameState.herb), UIKit.TEXT], ["市集", "LV %d" % GameState.building_level("market"), UIKit.OK]], "返回城堡", _back)
+	_place_market_crests(8.0)
 	_clear(_left)
 	_clear(_mid)
 	_clear(_right)
 	_render_left()
 	_render_mid()
 	_render_right()
-	_place_market_crests()
 
 func _icon(item: String, sz: int) -> TextureRect:
 	var t := TextureRect.new()
@@ -398,7 +407,7 @@ func _m_render() -> void:
 	var bh := h - top - 16.0
 	MobilePage.top_bar(self, Locale.t("mw_f8f18ffd"), Locale.t("mw_72393112") % [GameState.silver, GameState.food, GameState.iron, GameState.herb,
 			GameState.building_level("market")], [[Locale.t("btn_back"), _back]])
-	_place_market_crests()
+	_place_market_crests(4.0)
 	var lw := clampf(w * 0.27, 330.0, 420.0)
 	var rw := clampf(w * 0.27, 330.0, 420.0)
 	var mw := w - 40.0 - lw - rw - 24.0

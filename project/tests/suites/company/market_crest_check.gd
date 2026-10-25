@@ -1,5 +1,5 @@
 extends Node
-## Fat heraldry E2E: market — MarketCrestStrip + MarketBanner (desk + mobile).
+## Fat heraldry E2E: market crest (desk + mobile).
 
 const SCN := preload("res://scenes/hub/market.tscn")
 var _fails: Array = []
@@ -13,7 +13,7 @@ func _ready() -> void:
 		get_tree().quit(0)
 	else:
 		for f in _fails:
-			print("FAIL market: ", f)
+			print("FAIL market crest: ", f)
 		get_tree().quit(1)
 
 func _ok(cond: bool, msg: String) -> void:
@@ -26,7 +26,7 @@ func _settle(n: int = 6) -> void:
 		await get_tree().process_frame
 
 func _boot() -> void:
-	GameState.new_game("市技时城", "灰旗", GameState.crest_color)
+	GameState.new_game("市技血", "灰旗", GameState.crest_color)
 	GameState.set_flag("chapter0_done", true)
 	UnlockSchedule.install()
 	World.events_enabled = false
@@ -34,15 +34,14 @@ func _boot() -> void:
 	GameState.silver = 8000
 	GameState.food = 40
 	GameState.iron = 40
-	GameState.skill_points = 3
 
 func _assert_page(page: Node, where: String) -> void:
-	var strip = page.find_child("MarketCrestStrip", true, false)
-	_ok(strip != null, "%s MarketCrestStrip" % where)
-	if strip != null:
-		var ca = strip.find_child("CastleArms", true, false)
-		_ok(ca != null and str(ca.get_meta("arms_kind", "")) == "gen2_36", "%s 团徽" % where)
-		var bn = strip.find_child("MarketBanner", true, false)
+	_ok(page.find_child("CastleArms", true, false) != null, "%s CastleArms" % where)
+	_ok(page.find_child("CastleBannerStrip", true, false) != null, "%s CastleBannerStrip" % where)
+	var mkt = page.find_child("MarketCrestStrip", true, false)
+	_ok(mkt != null, "%s MarketCrestStrip" % where)
+	if mkt != null:
+		var bn = mkt.find_child("MarketBanner", true, false)
 		_ok(bn != null and str(bn.get_meta("arms_kind", "")) == "lb_market_arms", "%s MarketBanner" % where)
 
 

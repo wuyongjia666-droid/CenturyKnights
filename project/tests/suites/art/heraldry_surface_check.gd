@@ -3,7 +3,7 @@ extends Node
 ## rival houses + tavern/hire + board unit shields + city/smith 邦徽 +
 ## codex/shrine/rite crests + battle/danger aftermath + commission-board 委托徽 +
 ## mobile genealogy/quests company header + succession / heir-duel strips +
-## works/forge/estates castle chrome.
+## court gazette / year-card chronicle + works/forge/estates castle chrome.
 ## 团徽 / 旗徽 / 族徽 / 敌徽 / 邦徽 / 委托徽 never mismatch outside their Chrome routes.
 
 const OVERVIEW := "res://scenes/hub/lineage_view.tscn"
@@ -521,6 +521,58 @@ func _run() -> void:
 	mob_q.queue_free()
 	await _settle(2)
 	## (no early-return here — keeps _run under gdlint max-returns=12)
+
+
+	# ── Court gazette crest strip (团徽 + 朝徽) ────────────────────
+	var gaz_host := Control.new()
+	gaz_host.name = "GazetteCrestHost"
+	get_tree().root.add_child(gaz_host)
+	var nid := World.nation_of(str(World.pos))
+	if nid == "":
+		nid = "ashbanner"
+	var gaz := CKHeraldryChrome.place_gazette_crest_strip(gaz_host, nid, Vector2(10, 10), Vector2(36, 44))
+	_ok(gaz != null and gaz.name == "GazetteCrestStrip", "GazetteCrestStrip missing")
+	if gaz != null:
+		_ok(gaz.find_child("CastleArms", true, false) != null, "gazette CastleArms")
+		var gna := gaz.find_child("GazetteNationArms", true, false)
+		_ok(gna != null, "gazette GazetteNationArms")
+		if gna != null:
+			_ok(str(gna.get_meta("arms_kind", "")) == "lb_gazette_arms", "gazette arms_kind")
+			_ok(str(gna.get_meta("nation_id", "")) == nid, "gazette nation_id")
+	gaz_host.queue_free()
+
+	# ── Year-card person arms helper ───────────────────────────────
+	var yc_host := VBoxContainer.new()
+	yc_host.name = "YearArmsHost"
+	get_tree().root.add_child(yc_host)
+	CKHeraldryChrome.attach_yearcard_row_arms(yc_host, leader, Vector2(32, 38))
+	_ok(yc_host.find_child("YearArms", true, false) != null, "YearArms missing")
+	yc_host.queue_free()
+
+	# ── Live court_news page chrome ────────────────────────────────
+	## Seed one gazette event so row arms mount.
+	if typeof(World.get("royal_courts")) != TYPE_DICTIONARY:
+		World.royal_courts = {"nations": {}}
+	var nations: Dictionary = World.royal_courts.get("nations", {})
+	if typeof(nations) != TYPE_DICTIONARY:
+		nations = {}
+	var house: Dictionary = nations.get(nid, {})
+	if typeof(house) != TYPE_DICTIONARY:
+		house = {}
+	var log: Array = house.get("log", [])
+	if typeof(log) != TYPE_ARRAY:
+		log = []
+	log.append({"year": int(Calendar.year), "kind": "birth", "text": "surface gazette seed"})
+	house["log"] = log
+	nations[nid] = house
+	World.royal_courts["nations"] = nations
+	var news_pg := _open_page("res://scenes/hub/court_news.tscn")
+	await _settle(10)
+	_ok(news_pg.find_child("GazetteCrestStrip", true, false) != null, "court_news GazetteCrestStrip")
+	_ok(news_pg.find_child("CastleBannerStrip", true, false) != null, "court_news CastleBannerStrip")
+	_ok(news_pg.find_child("GazetteNationArms", true, false) != null, "court_news GazetteNationArms")
+	news_pg.queue_free()
+	await _settle(2)
 
 	# ── Field / yeartrace / purse chrome ───────────────────────
 	var field_host := Control.new()
