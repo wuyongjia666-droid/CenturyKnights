@@ -332,6 +332,7 @@ func _render_right() -> void:
 			b.expand_icon = true
 			b.add_theme_constant_override("icon_max_width", 28)
 		var k: String = kind
+		b.name = "CaravanStart_" + k
 		b.pressed.connect(func():
 			var r: Dictionary = GameState.start_caravan(k)
 			_msg = str(r.get("msg"))
@@ -347,10 +348,11 @@ func _render_right() -> void:
 	st.autowrap_mode = TextServer.AUTOWRAP_OFF
 	st.position = Vector2(912, 556)
 	_right.add_child(st)
-	var esc := UIKit.ghost_button("⇄ 雇护运（12 银）", 328, 40)
+	var esc := UIKit.ghost_button(Locale.t("mw_76a53873"), 328, 40)
+	esc.name = "CaravanEscort"
 	esc.position = Vector2(912, 590)
 	esc.disabled = not busy
-	esc.tooltip_text = "" if busy else "暂无商队在途"
+	esc.tooltip_text = "" if busy else "no caravan en route"
 	esc.pressed.connect(func():
 		var r: Dictionary = GameState.escort_caravan()
 		_msg = str(r.get("msg"))
@@ -470,6 +472,7 @@ func _m_render() -> void:
 				Sfx.deal()
 				GameState.save_game()
 			_render())
+		cb.name = "CaravanStart_" + k
 		cb.custom_minimum_size = Vector2(0, 96)
 		cb.disabled = busy
 		cg.add_child(cb)
@@ -485,5 +488,6 @@ func _m_render() -> void:
 			Sfx.confirm()
 			GameState.save_game()
 		_render())
+	esc.name = "CaravanEscort"
 	esc.disabled = not busy
 	rv.add_child(esc)
