@@ -288,6 +288,7 @@ lb_inh_delay_ok,先拖着，战技点 +1。第十三章再见分晓。,Delayed; 
 lb_inh_pick,就这么回,Answer
 lb_inh_done,今年已经回过话了（%s）。朔影家第 %d 年会再派人来。,Answered this year (%s). They return in year %d.
 lb_inh_to_rivals,去敌宅交涉,To rival houses
+lb_inh_to_heir,去嗣位校场,To heir trials
 lb_inh_log,嗣位冲突：%s（%s）,Succession: %s (%s)
 lb_inh_amb_pick,立下这个志向,Take this ambition
 lb_bt_ctx,验血,Blood test

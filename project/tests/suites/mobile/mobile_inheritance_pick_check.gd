@@ -82,6 +82,13 @@ func _audit_open(page: Control) -> String:
 func _audit_done(page: Control) -> String:
 	if page.find_child("Pick_steel", true, false) != null:
 		return "Pick_steel still present after resolve"
+	var to_heir: Button = page.find_child("ToHeirRivalry", true, false) as Button
+	if to_heir == null:
+		return "ToHeirRivalry missing after resolve"
+	if not to_heir.visible:
+		return "ToHeirRivalry not visible"
+	if to_heir.custom_minimum_size.y + 0.01 < MobilePage.HIT:
+		return "ToHeirRivalry hit %.1f < %.1f" % [to_heir.custom_minimum_size.y, MobilePage.HIT]
 	var to_rivals: Button = page.find_child("ToRivals", true, false) as Button
 	if to_rivals == null:
 		return "ToRivals missing after resolve"
@@ -92,6 +99,8 @@ func _audit_done(page: Control) -> String:
 	var scroll := page.find_child("AnswerScroll", true, false) as Control
 	if scroll == null:
 		return "AnswerScroll missing after re-show"
+	if not scroll.is_ancestor_of(to_heir):
+		return "ToHeirRivalry not under AnswerScroll after re-show"
 	if not scroll.is_ancestor_of(to_rivals):
 		return "ToRivals not under AnswerScroll after re-show"
 	var body: Label = page.find_child("InheritText", true, false) as Label
@@ -99,7 +108,7 @@ func _audit_done(page: Control) -> String:
 		return "done body missing answer zh"
 	if int(GameState.house_mods.get("inherit_answer_year", -1)) != Calendar.year:
 		return "inherit_answer_year not set"
-	print("inherit-done ok ToRivals hit=%.1f under_scroll=1" % to_rivals.custom_minimum_size.y)
+	print("inherit-done ok ToHeir+ToRivals hit=%.1f under_scroll=1" % to_heir.custom_minimum_size.y)
 	return ""
 
 func _has_label(root: Node, want: String) -> bool:

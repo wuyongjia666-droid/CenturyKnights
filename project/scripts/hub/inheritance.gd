@@ -57,10 +57,17 @@ func _show() -> void:
 	var pz := Locale.t("lb_path_" + path) if path != "" else Locale.t("lb_path_none")
 	if _done_this_year():
 		_body.text = Locale.t("lb_inh_done", [str(GameState.house_mods.get("inherit_answer_zh", "")), Calendar.year + 1])
+		## Y1-B feel chain (#29↔#30): settled heir trials → here; done year → back to heir + rivals.
+		var to_heir := CKPageKit.button(Locale.t("lb_inh_to_heir"), true, 260)
+		to_heir.name = "ToHeirRivalry"
+		to_heir.pressed.connect(func(): CKNav.go("res://scenes/hub/heir_rivalry.tscn"))
+		_cards.add_child(to_heir)
+		UIFX.wire_button(to_heir)
 		var to_rivals := CKPageKit.button(Locale.t("lb_inh_to_rivals"), false, 260)
 		to_rivals.name = "ToRivals"
 		to_rivals.pressed.connect(func(): CKNav.go("res://scenes/hub/rival_houses.tscn"))
 		_cards.add_child(to_rivals)
+		UIFX.wire_button(to_rivals)
 		UIFX.wire_tree(_cards)
 		_mobile_after_show()
 		return
