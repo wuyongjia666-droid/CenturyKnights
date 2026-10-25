@@ -72,7 +72,7 @@ func _ui_battle_crests() -> void:
 		_ok(ca != null and str(ca.get_meta("arms_kind", "")) == "gen2_36", "battle 团徽")
 		_ok(foe != null and str(foe.get_meta("arms_kind", "")) == "lb_rv_arms", "battle 敌徽")
 		_ok(foe != null and str(foe.get_meta("nation_id", "")) == str(af.get("nation", "")), "battle foe nation_id")
-		_ok(foe != null and str(foe.get_meta("arms_core", "")) != str(ca.get_meta("arms_core", "")), "foe ≠ company core")
+		_ok(foe != null and str(foe.get_meta("arms_core", "")) != str(ca.get_meta("arms_core", "")), "foe != company core")
 	var cont := page.find_child("BattleAftermathContinue", true, false) as Button
 	if cont:
 		cont.emit_signal("pressed")
