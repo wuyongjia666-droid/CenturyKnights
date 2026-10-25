@@ -1786,7 +1786,7 @@ func _modal_panel(h: float) -> Panel:
 func _show_event_modal(ev: Dictionary) -> void:
 	var opts: Array = ev.get("options", [])
 	var is_camp := str(ev.get("kind", "")) == "camp" or str(ev.get("id", "")) == "camp_night"
-	var p := _modal_panel(210 + 46 * opts.size() + (28 if is_camp else 0))
+	var p := _modal_panel(210 + 58 * opts.size() + (28 if is_camp else 0))
 	p.name = "EventModal"
 	var kind := str(ev.get("kind", "road"))
 	var tag := "NIGHT CAMP" if kind == "camp" or str(ev.get("id", "")) == "camp_night" else "ROAD EVENT"
@@ -1819,42 +1819,43 @@ func _show_event_modal(ev: Dictionary) -> void:
 	v.add_theme_constant_override("separation", 8)
 	p.add_child(v)
 	var first: Button = null
+	var ctx: Dictionary = ev.get("ctx", {})
 	for i in opts.size():
 		var o: Dictionary = opts[i]
+		var fx: Dictionary = o.get("fx", {})
+		var hint := _fx_hint(fx, ctx, ev)
 		var b := UIKit.index_button("%d" % (i + 1), str(o.get("label", "")), 452)
 		b.custom_minimum_size = Vector2(452, 38)
 		b.add_theme_font_size_override("font_size", 14)
 		UIKit.compact(b, 38)
 		b.name = "EventOpt%d" % i
-		var fx: Dictionary = o.get("fx", {})
-		b.tooltip_text = _fx_hint(fx)
+		b.tooltip_text = hint
 		var idx := i
 		b.pressed.connect(func(): _choose_event(idx))
 		v.add_child(b)
+		if hint != "":
+			var hl := UIKit.body_label(hint, UIKit.TEXT_DIM, 11)
+			hl.name = "EventFx%d" % i
+			hl.custom_minimum_size = Vector2(452, 16)
+			hl.autowrap_mode = TextServer.AUTOWRAP_OFF
+			hl.clip_text = true
+			v.add_child(hl)
 		if first == null:
 			first = b
 	if first:
 		first.call_deferred("grab_focus")
 
-func _fx_hint(fx: Dictionary) -> String:
-	var bits: Array = []
-	if fx.has("battle"):
-		bits.append("触发战斗")
-	if fx.has("silver"):
-		bits.append("银两变动")
-	if fx.has("food"):
-		bits.append("粮 %+d" % int(fx.food))
-	if fx.has("heal"):
-		bits.append(Locale.t("camp_hint_heal"))
-	if fx.has("morale"):
-		bits.append(Locale.t("camp_hint_morale") % int(fx.morale))
-	if str(fx.get("flag", "")) == "camp_watch":
-		bits.append(Locale.t("camp_hint_watch"))
-	if fx.has("days"):
-		bits.append("耽搁 %d 日" % int(fx.days))
-	if fx.has("risk"):
-		bits.append("有风险")
-	return "，".join(bits)
+func _fx_hint(fx: Dictionary, ctx: Dictionary = {}, ev: Dictionary = {}) -> String:
+	var bits: Array = World.event_fx_preview(fx, ctx, ev)
+	if bits.is_empty():
+		# camp flags still surface via camp_* keys
+		if fx.has("heal"):
+			bits.append(Locale.t("camp_hint_heal"))
+		if fx.has("morale"):
+			bits.append(Locale.t("camp_hint_morale") % int(fx.morale))
+		if str(fx.get("flag", "")) == "camp_watch":
+			bits.append(Locale.t("camp_hint_watch"))
+	return " · ".join(bits)
 
 func _choose_event(idx: int) -> void:
 	var r: Dictionary = World.choose_event(idx)
@@ -1862,7 +1863,11 @@ func _choose_event(idx: int) -> void:
 	if not r.get("encounter", {}).is_empty():
 		_show_encounter_modal(r.encounter)
 		return
-	_show_toast(str(r.get("msg", "")), UIKit.ACCENT)
+	var af: Dictionary = r.get("aftermath", World.last_aftermath)
+	if typeof(af) == TYPE_DICTIONARY and not af.is_empty():
+		await _show_aftermath_modal(af)
+	else:
+		_show_toast(str(r.get("msg", "")), UIKit.ACCENT)
 	_refresh_top()
 	if World.is_traveling() and World.encounter.is_empty():
 		_place_token(true)
@@ -1872,6 +1877,62 @@ func _choose_event(idx: int) -> void:
 		_show_encounter_modal(World.encounter)
 	else:
 		_after_arrival()
+
+
+func _show_aftermath_modal(af: Dictionary) -> void:
+	var lines: Array = af.get("lines", [])
+	var body_bits: Array = []
+	for ln in lines:
+		body_bits.append(str(ln))
+	if str(af.get("route_note", "")) != "":
+		body_bits.append(str(af.route_note))
+	var food_d := int(af.get("food_delta", 0))
+	var silver_d := int(af.get("silver_delta", 0))
+	var summary := Locale.t("atlas_aftermath_summary") % [
+		int(af.get("food_now", GameState.food)),
+		int(af.get("silver_now", GameState.silver)),
+		food_d,
+		silver_d,
+	]
+	var h := 260.0 + 18.0 * mini(4, body_bits.size())
+	var p := _modal_panel(h)
+	p.name = "AftermathModal"
+	var tag := Locale.t("atlas_aftermath_en")
+	if bool(af.get("danger", false)):
+		tag = Locale.t("atlas_aftermath_danger_en")
+	var el := UIKit.mono("%s // %s" % [tag, str(af.get("title", ""))], 9, UIKit.DANGER if bool(af.get("danger", false)) else UIKit.ACCENT)
+	el.position = Vector2(24, 18)
+	p.add_child(el)
+	var t := UIKit.title_label(Locale.t("atlas_aftermath_title"), 22)
+	t.position = Vector2(24, 36)
+	p.add_child(t)
+	var choice := UIKit.body_label(Locale.t("atlas_aftermath_choice") % str(af.get("choice", "")), UIKit.EMBER, 13)
+	choice.name = "AftermathChoice"
+	choice.position = Vector2(24, 72)
+	choice.size = Vector2(452, 20)
+	p.add_child(choice)
+	var detail := UIKit.body_label(" · ".join(body_bits) if not body_bits.is_empty() else Locale.t("atlas_aftermath_none"), UIKit.TEXT, 13)
+	detail.name = "AftermathLines"
+	detail.position = Vector2(24, 98)
+	detail.size = Vector2(452, 56)
+	detail.custom_minimum_size = Vector2(452, 0)
+	p.add_child(detail)
+	var sum_l := UIKit.body_label(summary, UIKit.OK if food_d >= 0 and silver_d >= 0 else UIKit.DANGER, 13)
+	sum_l.name = "AftermathSummary"
+	sum_l.position = Vector2(24, 160)
+	sum_l.size = Vector2(452, 36)
+	p.add_child(sum_l)
+	var done := false
+	var cont := UIKit.cta_button(Locale.t("atlas_aftermath_continue"), "A", 220, 42)
+	cont.name = "AftermathContinue"
+	cont.position = Vector2(24, h - 64)
+	cont.pressed.connect(func():
+		done = true
+		_clear_modal())
+	p.add_child(cont)
+	cont.call_deferred("grab_focus")
+	while not done and is_instance_valid(p) and p.get_parent() != null:
+		await get_tree().process_frame
 
 func _show_encounter_modal(enc: Dictionary) -> void:
 	var p := _modal_panel(300)

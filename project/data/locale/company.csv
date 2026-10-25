@@ -311,3 +311,23 @@ atlas_trade_loop_line,%s 本地买 %d → %s 卖 %d（%+d）,"%s buy %d here →
 atlas_trade_loop_unknown,%s 本地买 %d → 暂无他处行情（到访后可见）,%s buy %d here → no other price yet (visit to learn)
 atlas_trade_loop_goto,去市集贩运,Open market trade
 atlas_trade_loop_best,最佳：%s → %s（%+d 银）,Best: %s → %s (%+d silver)
+atlas_aftermath_en,AFTERMATH,AFTERMATH
+atlas_aftermath_danger_en,DANGER AFTERMATH,DANGER AFTERMATH
+atlas_aftermath_title,遇险之后,After the danger
+atlas_aftermath_choice,你选择了：%s,You chose: %s
+atlas_aftermath_summary,现有粮 %d · 银 %d（粮 %+d · 银 %+d）,Food %d · silver %d (food %+d · silver %+d)
+atlas_aftermath_route,行程耽搁 %d 日,Route delayed %d days
+atlas_aftermath_none,无事发生,Nothing happened
+atlas_aftermath_continue,继续行程,Continue march
+atlas_fx_battle,触发战斗,Triggers battle
+atlas_fx_silver,银 %+d,Silver %+d
+atlas_fx_food,粮 %+d,Food %+d
+atlas_fx_days,耽搁 %d 日,Delay %d days
+atlas_fx_cargo,货损约 %d%%,Cargo loss ~%d%%
+atlas_fx_morale,士气 %+d,Morale %+d
+atlas_fx_heal,全员疗伤,Heal party
+atlas_fx_herb,药材 %+d,Herbs %+d
+atlas_fx_risk,有风险,Risky
+atlas_fx_other,有后果,Has consequences
+atlas_trade_margin_toast,卖出 %s ×%d（+%d 银 · 利润 %+d）,Sold %s ×%d (+%d silver · margin %+d)
+atlas_trade_first_buy,购入本地产 %s ×%d（-%d 银）· 可运往求购城出手,Bought local %s ×%d (-%d silver) · haul to a demand city

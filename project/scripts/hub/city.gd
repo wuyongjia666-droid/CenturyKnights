@@ -64,6 +64,7 @@ func _ready() -> void:
 	add_child(_body)
 	_mobile_frame()
 	_toast = UIKit.body_label("", UIKit.TEXT, 12)
+	_toast.name = "CityToast"
 	_toast.autowrap_mode = TextServer.AUTOWRAP_OFF
 	_toast.position = Vector2(416, 652)
 	var tst := UIKit.flat_box(Color(0.03, 0.04, 0.06, 0.92), Color(UIKit.ACCENT, 0.45), 6)
