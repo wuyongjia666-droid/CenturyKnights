@@ -73,6 +73,8 @@ var rep_city: Dictionary = {}
 var rep_nation: Dictionary = {}
 var cargo: Dictionary = {}      # non-store goods
 var cargo_basis: Dictionary = {}  # good -> {unit, city, qty} cost basis for margin toast
+var city_visit: Dictionary = {}  # snapshot taken on entering a settlement
+var last_city_sortie: Dictionary = {}  # leave-city card: signature / produce / turn-in city
 var last_aftermath: Dictionary = {}  # structured road-event aftermath for UI
 var last_battle_aftermath: Dictionary = {}  # structured encounter win/lose aftermath
 var last_chain_follow: Dictionary = {}  # follow-up / next scripted-chain step after turn_in
@@ -184,6 +186,8 @@ func reset() -> void:
 	rep_city[pos] = 40
 	cargo = {}
 	cargo_basis = {}
+	city_visit = {}
+	last_city_sortie = {}
 	last_aftermath = {}
 	last_battle_aftermath = {}
 	last_chain_follow = {}
@@ -266,6 +270,8 @@ func from_save(d: Dictionary) -> void:
 	rep_nation = _int_dict(d.get("rep_nation", {}))
 	cargo = _int_dict(d.get("cargo", {}))
 	cargo_basis = d.get("cargo_basis", {}) if typeof(d.get("cargo_basis", {})) == TYPE_DICTIONARY else {}
+	city_visit = {}
+	last_city_sortie = {}
 	last_aftermath = {}
 	last_battle_aftermath = {}
 	last_chain_follow = {}
@@ -742,6 +748,180 @@ func mark_hub_seen(city: String, hub: String) -> void:
 	if not hub_tour.has(city) or typeof(hub_tour[city]) != TYPE_DICTIONARY:
 		hub_tour[city] = {}
 	hub_tour[city][hub] = true
+
+
+## Entering a settlement. The atlas closes the visit on the way back and
+## builds last_city_sortie from what changed (signature arm, local produce, new commission).
+func begin_city_visit() -> void:
+	var goods_snap := {}
+	for g in node(pos).get("produce", []):
+		goods_snap[str(g)] = have_good(str(g))
+	var ids: Array = []
+	for q in active:
+		ids.append(str(q.get("id", "")))
+	city_visit = {
+		"city": pos,
+		"armory": armory.duplicate(),
+		"goods": goods_snap,
+		"quest_ids": ids,
+		"silver": GameState.silver,
+	}
+
+
+func close_city_visit() -> Dictionary:
+	var snap := city_visit.duplicate(true)
+	city_visit = {}
+	if snap.is_empty():
+		return {}
+	var city := str(snap.get("city", ""))
+	if city == "" or city != pos or not nodes.has(city):
+		return {}
+	var snap_arm: Dictionary = {}
+	var raw_arm = snap.get("armory", {})
+	if typeof(raw_arm) == TYPE_DICTIONARY:
+		snap_arm = raw_arm
+	var sig_id := ""
+	var sig_name := ""
+	for iid in armory.keys():
+		if int(armory.get(iid, 0)) <= int(snap_arm.get(iid, 0)):
+			continue
+		var it: Dictionary = item(str(iid))
+		if int(it.get("signature", 0)) < 1:
+			continue
+		var home := str(it.get("city", ""))
+		if home != "" and home != city:
+			continue
+		sig_id = str(iid)
+		sig_name = str(it.get("name", iid))
+		break
+	var snap_goods: Dictionary = {}
+	var raw_goods = snap.get("goods", {})
+	if typeof(raw_goods) == TYPE_DICTIONARY:
+		snap_goods = raw_goods
+	var prod_id := ""
+	var prod_name := ""
+	var prod_qty := 0
+	for g in node(city).get("produce", []):
+		var gs := str(g)
+		var delta := have_good(gs) - int(snap_goods.get(gs, 0))
+		if delta > prod_qty:
+			prod_qty = delta
+			prod_id = gs
+			prod_name = good_name(gs)
+	var snap_ids: Array = []
+	var raw_ids = snap.get("quest_ids", [])
+	if typeof(raw_ids) == TYPE_ARRAY:
+		snap_ids = raw_ids
+	var quest: Dictionary = {}
+	for q in active:
+		if snap_ids.has(str(q.get("id", ""))):
+			continue
+		quest = q
+		break
+	if sig_id == "" and prod_qty <= 0 and quest.is_empty():
+		return {}
+	var turn := ""
+	var guide := ""
+	if not quest.is_empty():
+		turn = turn_in_city(quest)
+		guide = quest_guide_node(quest)
+		if guide == "":
+			guide = turn
+	var pv := {}
+	if guide != "" and guide != pos and nodes.has(guide):
+		pv = travel_preview(guide)
+	var days_left := 0
+	if not quest.is_empty():
+		days_left = maxi(0, int(quest.get("deadline", 0)) - days_total)
+	var turn_name := ""
+	if turn != "" and nodes.has(turn):
+		turn_name = str(node(turn).get("name", turn))
+	var guide_name := ""
+	if guide != "" and nodes.has(guide):
+		guide_name = str(node(guide).get("name", guide))
+	last_city_sortie = {
+		"city": city,
+		"city_name": str(node(city).get("name", city)),
+		"signature_id": sig_id,
+		"signature_name": sig_name,
+		"produce_id": prod_id,
+		"produce_name": prod_name,
+		"produce_qty": prod_qty,
+		"cargo_used": cargo_used(),
+		"cargo_cap": cargo_cap(),
+		"quest_id": str(quest.get("id", "")),
+		"quest_title": str(quest.get("title", "")),
+		"turn_in": turn,
+		"turn_in_name": turn_name,
+		"guide": guide,
+		"guide_name": guide_name,
+		"days": int(pv.get("days", 0)),
+		"food": int(pv.get("food", 0)),
+		"danger": int(pv.get("danger", 0)),
+		"days_left": days_left,
+		"state": "open",
+		"reward_silver": 0,
+		"shown": false,
+	}
+	return last_city_sortie.duplicate(true)
+
+
+func dismiss_city_sortie() -> void:
+	last_city_sortie = {}
+
+
+func city_sortie_hud_text() -> String:
+	if last_city_sortie.is_empty():
+		return ""
+	if str(last_city_sortie.get("state", "")) == "turned_in":
+		return Locale.t("atlas_sortie_done", [
+			str(last_city_sortie.get("quest_title", "")),
+			int(last_city_sortie.get("reward_silver", 0)),
+		])
+	var sig := str(last_city_sortie.get("signature_name", ""))
+	if sig == "":
+		sig = Locale.t("atlas_sortie_sig_none")
+	var prod := Locale.t("atlas_sortie_produce_none")
+	if int(last_city_sortie.get("produce_qty", 0)) > 0:
+		prod = "%s ×%d" % [str(last_city_sortie.get("produce_name", "")), int(last_city_sortie.get("produce_qty", 0))]
+	var where := str(last_city_sortie.get("turn_in_name", ""))
+	if where == "":
+		where = str(last_city_sortie.get("city_name", ""))
+	return Locale.t("atlas_sortie_hud", [sig, prod, where])
+
+
+func city_sortie_party_text() -> String:
+	if last_city_sortie.is_empty():
+		return ""
+	if str(last_city_sortie.get("state", "")) == "turned_in":
+		return Locale.t("atlas_sortie_party_done")
+	var where := str(last_city_sortie.get("turn_in_name", ""))
+	if where == "":
+		return city_sortie_hud_text()
+	return Locale.t("atlas_sortie_party", [where])
+
+
+func city_sortie_route_note(dest: String) -> String:
+	if last_city_sortie.is_empty():
+		return ""
+	if str(last_city_sortie.get("state", "")) == "turned_in":
+		return ""
+	var guide := str(last_city_sortie.get("guide", ""))
+	if dest == "" or guide == "" or dest != guide:
+		return ""
+	return Locale.t("atlas_sortie_note", [
+		str(last_city_sortie.get("quest_title", "")),
+		str(last_city_sortie.get("turn_in_name", "")),
+	])
+
+
+func _note_sortie_turned_in(q: Dictionary, silver: int) -> void:
+	if str(last_city_sortie.get("quest_id", "")) == "" or str(last_city_sortie.get("quest_id", "")) != str(q.get("id", "")):
+		return
+	last_city_sortie["state"] = "turned_in"
+	last_city_sortie["reward_silver"] = silver
+	last_city_sortie["quest_title"] = str(q.get("title", ""))
+	last_city_sortie["guide"] = ""
 
 ## Days still owed on the active march (skips a leg already paid via pending_arrive).
 func remaining_route_days() -> int:
@@ -2051,6 +2231,7 @@ func turn_in(qid: String) -> Dictionary:
 	CKEconomyState.month_echo_note("commission", Locale.t("lb_echo_commission_deliver", [q.title, silver]))
 	GameState.mark_dirty()
 	world_changed.emit()
+	_note_sortie_turned_in(q, silver)
 	var out := {"ok": true, "msg": "交付「%s」：+%d 银，声望 +%d%s" % [q.title, silver, int(q.reward_rep), extra]}
 	if not follow.is_empty():
 		out["follow"] = follow
