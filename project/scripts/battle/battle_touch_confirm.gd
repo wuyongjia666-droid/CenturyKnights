@@ -12,6 +12,8 @@ extends RefCounted
 ## beside the selected piece pans the map instead of stealing the gesture.
 ## Y1-A T-P4: soft-follow settles on confirm/select (not mid unit-drag — keeps pan!=drag);
 ## attack ghost gets aim line + pulse juice.
+## Y1-A T-P5: select-lock on try_deselect; clear() re-focuses selection after cancel;
+## invalid-target reject pulse lives here (keeps battle_controller under the line gate).
 
 static func enabled() -> bool:
 	if not (GameState.settings is Dictionary):
@@ -29,6 +31,10 @@ static func try_deselect(host, ui: int) -> bool:
 		return false
 	if host.selected < 0 or host.selected >= host.units.size():
 		return false
+	# T-P5: ignore re-tap / empty deselect during the post-select lock window so a
+	# fat-finger double-tap does not undo the select that just landed.
+	if BattlePick.select_lock_active(host):
+		return false
 	if ui == host.selected:
 		host._cancel_selection()
 		return true
@@ -36,6 +42,77 @@ static func try_deselect(host, ui: int) -> bool:
 		host._cancel_selection()
 		return true
 	return false
+
+
+## T-P5: illegal empty / out-of-range tap while a player piece is selected.
+## Stamps a short reject flash + trauma nudge; keeps selection (does not deselect).
+## Returns true when the tap was handled as a reject.
+static func reject_invalid_tap(host, cell: Vector2i) -> bool:
+	if not enabled():
+		return false
+	if host.selected < 0 or host.selected >= host.units.size():
+		return false
+	var su = host.units[host.selected]
+	if str(su.team) != "player" or bool(su.done):
+		return false
+	# Preview already latched — clear path owns those taps.
+	if host.preview_move_cell.x >= 0 or int(host.preview_attack_ui) >= 0:
+		return false
+	if bool(host.attack_mode):
+		note_reject(host, cell, "attack")
+		return true
+	if host.move_cells.has(cell):
+		return false
+	note_reject(host, cell, "move")
+	return true
+
+
+static func note_reject(host, cell: Vector2i, reason: String = "move") -> void:
+	host.set_meta("m_reject_flash", {"cell": cell, "msec": Time.get_ticks_msec(), "reason": reason})
+	# Trauma nudge (BattleController / suite duck declare _shake).
+	host._shake = maxf(float(host._shake), 0.55)
+	var key := "ux_invalid_attack_tap" if reason == "attack" else "ux_invalid_move_tap"
+	if host.has_method("_log"):
+		host._log(Locale.t(key))
+	if host.overlay:
+		host.overlay.queue_redraw()
+
+
+static func reject_flash_alpha(host, now_msec: int = -1) -> float:
+	if not host.has_meta("m_reject_flash"):
+		return 0.0
+	var info = host.get_meta("m_reject_flash")
+	if not (info is Dictionary):
+		return 0.0
+	var t0: int = int(info.get("msec", 0))
+	var now: int = Time.get_ticks_msec() if now_msec < 0 else now_msec
+	var elapsed: float = float(now - t0) / 1000.0
+	if elapsed < 0.0 or elapsed >= 0.42:
+		return 0.0
+	return 1.0 - (elapsed / 0.42)
+
+
+static func reject_flash_cell(host) -> Vector2i:
+	if not host.has_meta("m_reject_flash"):
+		return Vector2i(-1, -1)
+	var info = host.get_meta("m_reject_flash")
+	if not (info is Dictionary):
+		return Vector2i(-1, -1)
+	return info.get("cell", Vector2i(-1, -1))
+
+
+static func draw_reject_flash(host, overlay) -> void:
+	var a: float = reject_flash_alpha(host)
+	if a <= 0.0 or overlay == null:
+		return
+	var cell: Vector2i = reject_flash_cell(host)
+	if cell.x < 0:
+		return
+	var origin: Vector2 = host.ORIGIN
+	var cell_px: float = float(host.CELL)
+	var r := Rect2(origin + Vector2(cell) * cell_px, Vector2(cell_px - 2.0, cell_px - 2.0))
+	overlay.draw_rect(r, Color(UIKit.DANGER, 0.22 * a))
+	overlay.draw_rect(r, Color(UIKit.DANGER, 0.85 * a), false, 2.5)
 
 
 ## Drag finger to a legal cell / enemy and release to commit (skips the extra bar tap).
@@ -53,6 +130,9 @@ static func clear(host) -> void:
 	host.preview_attack_ui = -1
 	if DeviceProfile.is_mobile():
 		BattleMobileBar.rebuild(host)
+		# T-P5: cancelling a preview keeps the piece selected — settle camera on it.
+		if host.selected >= 0:
+			BattlePick.focus_selected(host)
 	if host.overlay:
 		host.overlay.queue_redraw()
 	ForecastPanel.refresh(host)
