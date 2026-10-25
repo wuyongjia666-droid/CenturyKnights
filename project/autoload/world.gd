@@ -1449,6 +1449,11 @@ func quest_kind_label(kind: String) -> String:
 func _arrives_in_battle(kind: String) -> bool:
 	return kind == "hunt" or kind == "defend" or OBJECTIVE_KINDS.has(kind)
 
+func _battle_completes_quest(kind: String) -> bool:
+	## Win marks the commission ready (clear / hunt / defend / objective kinds).
+	## Escort stays active until arrival; deliver never fights for completion.
+	return kind == "clear" or kind == "hunt" or kind == "defend" or OBJECTIVE_KINDS.has(kind)
+
 func _append_objective_offer(city: String, offers: Array) -> void:
 	var r := RandomNumberGenerator.new()
 	r.seed = hash("objboard:%s#%d" % [city, _epoch()])
@@ -1685,6 +1690,118 @@ func seed_deliver_offer(city: String, target: String = "") -> Dictionary:
 		offers[0] = q
 	boards[city]["offers"] = offers
 	return q
+
+## Seed an escort commission (tests / atlas escort→ambush→arrive E2E).
+func seed_escort_offer(city: String, target: String = "") -> Dictionary:
+	_ensure_board(city)
+	var r := RandomNumberGenerator.new()
+	r.seed = absi(hash("%s|escort|%s" % [city, target])) + 11
+	var q := _make_quest(city, "escort", 1, r)
+	if q.is_empty():
+		return {}
+	if target != "" and nodes.has(target):
+		var old_name := str(node(str(q.get("target", ""))).get("name", str(q.get("target", ""))))
+		q.target = target
+		var tname := str(node(target).get("name", target))
+		if old_name != "" and old_name != tname:
+			q.title = str(q.title).replace(old_name, tname)
+			q.desc = str(q.desc).replace(old_name, tname)
+		var rt := route(city, target)
+		q.route_days = int(rt.get("days", q.get("route_days", 2)))
+		q.days_budget = int(q.route_days) * 2 + 8
+	q["req_rep"] = 0
+	var offers: Array = board(city)
+	if offers.is_empty():
+		offers.append(q)
+	else:
+		offers[0] = q
+	boards[city]["offers"] = offers
+	return q
+
+## Seed a clear (road-camp) commission with a forced edge when provided.
+func seed_clear_offer(city: String, edge_a: String = "", edge_b: String = "") -> Dictionary:
+	_ensure_board(city)
+	var r := RandomNumberGenerator.new()
+	r.seed = absi(hash("%s|clear|%s|%s" % [city, edge_a, edge_b])) + 13
+	var q := _make_quest(city, "clear", 1, r)
+	if q.is_empty():
+		return {}
+	if edge_a != "" and edge_b != "" and nodes.has(edge_a) and nodes.has(edge_b):
+		q.edge = [edge_a, edge_b]
+		q.target = edge_b if edge_a == city else (edge_a if edge_b == city else edge_b)
+		var road_name := Locale.t("atlas_clear_road_name") % [node(edge_a).get("name", ""), node(edge_b).get("name", "")]
+		q["road_name"] = road_name
+		var nat: Dictionary = nations.get(str(node(city).get("nation", "")), {})
+		q.title = Locale.t("atlas_clear_seed_title") % road_name
+		q.desc = Locale.t("atlas_clear_seed_desc") % [road_name, str(nat.get("name", "")), str(node(city).get("name", ""))]
+	q["req_rep"] = 0
+	var offers2: Array = board(city)
+	if offers2.is_empty():
+		offers2.append(q)
+	else:
+		offers2[0] = q
+	boards[city]["offers"] = offers2
+	return q
+
+## Mid-march escort ambush linked to the active escort (tests / forced leg).
+func trigger_escort_ambush(qid: String = "") -> Dictionary:
+	var q := {}
+	if qid != "":
+		q = quest_by_id(qid)
+	else:
+		for qq in active:
+			if str(qq.kind) == "escort" and str(qq.state) == "active":
+				q = qq
+				break
+	if q.is_empty() or str(q.kind) != "escort" or str(q.state) != "active":
+		return {}
+	if not encounter.is_empty():
+		return encounter
+	var from_id := pos
+	if is_traveling():
+		var path: Array = travel.get("route", [])
+		var li := int(travel.get("leg", 0))
+		if li < path.size():
+			from_id = str(path[li])
+		if not travel.has("pending_arrive") and li + 1 < path.size():
+			travel["pending_arrive"] = str(path[li + 1])
+	var at := pos if pos != "" else from_id
+	if travel.has("pending_arrive"):
+		at = str(travel.pending_arrive)
+	return start_encounter("quest", {"quest": str(q.id), "node": at, "from": from_id, "danger": maxi(1, int(q.get("danger", 1)))})
+
+## Start the clear fight for an active road-camp commission (at either edge end).
+func trigger_clear_fight(qid: String = "") -> Dictionary:
+	var q := {}
+	if qid != "":
+		q = quest_by_id(qid)
+	else:
+		for qq in active:
+			if str(qq.kind) == "clear" and str(qq.state) == "active":
+				q = qq
+				break
+	if q.is_empty():
+		return {}
+	return quest_engage(str(q.id))
+
+## Park a rival company on a node so rival_clash() can fire (tests / scripted atlas).
+func place_rival_here(node_id: String = "", rival_id: String = "") -> Dictionary:
+	var at := node_id if node_id != "" else pos
+	if not nodes.has(at):
+		return {}
+	if rivals.is_empty():
+		_init_rivals()
+	if rivals.is_empty():
+		return {}
+	var rv: Dictionary = rivals[0]
+	if rival_id != "":
+		for r in rivals:
+			if str(r.get("id", "")) == rival_id:
+				rv = r
+				break
+	rv.pos = at
+	world_changed.emit()
+	return rv
 
 func accept_quest(city: String, qid: String) -> Dictionary:
 	if city != pos:
@@ -2116,7 +2233,18 @@ func _expire_quests() -> void:
 ## Fight an objective at the party's current location (hunt / defend target reached earlier, or retry after a defeat)
 func quest_engage(qid: String) -> Dictionary:
 	var q := quest_by_id(qid)
-	if q.is_empty() or str(q.state) != "active" or not _arrives_in_battle(str(q.kind)) or str(q.target) != pos:
+	if q.is_empty() or str(q.state) != "active":
+		return {}
+	var kind := str(q.kind)
+	if kind == "clear" and q.has("edge"):
+		var e: Array = q.edge
+		if e.size() < 2:
+			return {}
+		if pos != str(e[0]) and pos != str(e[1]):
+			return {}
+		var other := str(e[1]) if pos == str(e[0]) else str(e[0])
+		return start_encounter("quest", {"quest": qid, "node": pos, "from": other})
+	if not _arrives_in_battle(kind) or str(q.target) != pos:
 		return {}
 	return start_encounter("quest", {"quest": qid, "node": pos, "from": pos})
 
@@ -2492,8 +2620,13 @@ func start_encounter(kind: String, ctx: Dictionary) -> Dictionary:
 	if not base.has("objective"):
 		_stamp_side_objective(base, kind, q, "%s|%s|%d" % [base_id, at, _enc_seq], spots)
 	var label := ""
+	var ev_ctx := str(ctx.get("event", ""))
 	if not q.is_empty():
 		label = str(q.title)
+	elif ev_ctx.begins_with("rival_"):
+		var rv := rival_here()
+		var rname := str(rv.get("name", "")) if not rv.is_empty() else ""
+		label = Locale.t("atlas_rival_clash_label") % rname if rname != "" else Locale.t("rival_clash")
 	elif str(ctx.get("site", "")) != "":
 		label = "%s·%s" % [CKTerritory.site(str(ctx.site)).get("name", ""), Locale.t("terr_45") if kind == "territory_defend" else Locale.t("terr_46")]
 	else:
@@ -2770,11 +2903,19 @@ func on_battle_end(win: bool) -> Dictionary:
 			add_nation_rep(str(enc.nation), rep_nation_d)
 			lines.append(Locale.t("atlas_battle_line_rep_nation") % [nations.get(str(enc.nation), {}).get("name", ""), rep_nation_d])
 		if not q.is_empty():
-			q.state = "ready"
 			q.battle_won = true
 			quest_note = str(q.title)
-			msg += "；委托「%s」目标达成" % q.title
-			lines.append(Locale.t("atlas_battle_line_quest_ready") % q.title)
+			var qk := str(q.kind)
+			if _battle_completes_quest(qk):
+				q.state = "ready"
+				msg += "；" + (Locale.t("atlas_battle_line_quest_ready") % q.title)
+				lines.append(Locale.t("atlas_battle_line_quest_ready") % q.title)
+			elif qk == "escort" or qk == "convoy":
+				msg += "；" + (Locale.t("atlas_battle_line_escort_ok") % q.title)
+				lines.append(Locale.t("atlas_battle_line_escort_ok") % q.title)
+			else:
+				msg += "；" + (Locale.t("atlas_battle_line_quest_ready") % q.title)
+				lines.append(Locale.t("atlas_battle_line_quest_ready") % q.title)
 		rep_city_d = 2
 		add_city_rep(str(enc.node), rep_city_d)
 		lines.append(Locale.t("atlas_battle_line_rep_city") % [node(str(enc.node)).get("name", ""), rep_city_d])
@@ -2820,6 +2961,7 @@ func on_battle_end(win: bool) -> Dictionary:
 		CKEconomyState.month_echo_note("battle", Locale.t("lb_echo_battle_lose", [place]))
 	var silver_d := GameState.silver - silver0
 	var resume := win and is_traveling() and encounter.is_empty()
+	var ev_id := str(enc.get("event", ""))
 	var aftermath := {
 		"win": win,
 		"title": str(enc.get("label", "")),
@@ -2832,9 +2974,11 @@ func on_battle_end(win: bool) -> Dictionary:
 		"rep_city": rep_city_d,
 		"rep_nation": rep_nation_d,
 		"quest_note": quest_note,
+		"quest_kind": str(q.get("kind", "")) if not q.is_empty() else "",
 		"pos": pos,
 		"resume_travel": resume,
-		"kind": "battle",
+		"kind": "rival" if ev_id.begins_with("rival_") else "battle",
+		"event": ev_id,
 		"msg": msg,
 	}
 	last_battle_aftermath = aftermath
