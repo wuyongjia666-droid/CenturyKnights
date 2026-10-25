@@ -1,6 +1,5 @@
 extends Node
-## Y1-B: train (旗塾) no-eligible-tutor exposes named ToTavern under DynTutors
-## (empty box already has why-text; this knife adds the tap CTA).
+## Y1-B: train no-eligible-tutor → EmptyHost + how + ToTavern under DynTutors.
 
 func _ready() -> void:
 	var err := await _run()
@@ -17,17 +16,17 @@ func _run() -> String:
 	GameState.new_game("烬行", "灰旗", GameState.crest_color)
 	GameState.chapter0_flags["chapter0_done"] = true
 	GameState.chapter0_flags["ch0_playing"] = false
-	## Need a pupil selected, but zero eligible tutors.
 	var pupils: Array = []
 	for ch in GameState.characters.values():
 		if CKTutor.can_be_pupil(ch):
 			pupils.append(ch)
 	if pupils.is_empty():
-		## Seed one eligible child if new_game has none.
-		var kid: CKCharacter = GameState.characters.values()[0]
+		var kid: CKCharacter = null
 		for ch in GameState.characters.values():
 			kid = ch
 			break
+		if kid == null:
+			return "no characters"
 		kid.alive = true
 		kid.in_roster = false
 		kid.is_child = true
@@ -54,27 +53,37 @@ func _audit(page: Control) -> String:
 	var tutors := page.find_child("DynTutors", true, false)
 	if tutors == null:
 		return "DynTutors missing"
+	var host := tutors.find_child("EmptyHost", true, false)
+	if host == null:
+		return "EmptyHost missing under DynTutors"
 	var none_zh := Locale.t("lb_train_no_tutor_title")
 	var found_empty := false
-	for n in tutors.find_children("*", "Label", true, false):
+	for n in host.find_children("*", "Label", true, false):
 		if str((n as Label).text).find(none_zh) >= 0:
 			found_empty = true
 			break
 	if not found_empty:
 		return "empty box (lb_train_no_tutor_title) missing"
-
-	var cta: Button = page.find_child("ToTavern", true, false) as Button
+	var how_zh := Locale.t("lb_train_no_tutor_how")
+	var how_ok := false
+	for n in host.find_children("*", "Label", true, false):
+		if str((n as Label).text).find(how_zh) >= 0:
+			how_ok = true
+			break
+	if not how_ok:
+		return "how (lb_train_no_tutor_how) missing"
+	var acts := host.find_child("EmptyActions", true, false)
+	if acts == null:
+		return "EmptyActions missing"
+	var cta: Button = host.find_child("ToTavern", true, false) as Button
 	if cta == null:
-		return "ToTavern missing"
-	if not cta.visible or not cta.is_visible_in_tree():
-		return "ToTavern not visible"
-	if cta.disabled:
-		return "ToTavern disabled"
+		return "ToTavern missing under EmptyHost"
+	if not cta.visible or not cta.is_visible_in_tree() or cta.disabled:
+		return "ToTavern not usable"
+	if not acts.is_ancestor_of(cta):
+		return "ToTavern not under EmptyActions"
 	var want := Locale.t("lb_train_to_tavern")
 	if cta.text != want:
 		return "ToTavern text want=%s got=%s" % [want, cta.text]
-	if not tutors.is_ancestor_of(cta):
-		return "ToTavern not under DynTutors"
-	cta.pressed.emit()
-	print("train-tutor-empty ok ToTavern under_tutors=1")
+	print("train-tutor-empty ok ToTavern how=1 under_EmptyHost=1")
 	return ""

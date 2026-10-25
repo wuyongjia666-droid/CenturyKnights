@@ -75,7 +75,17 @@ func _fill_tutors() -> void:
 	_teach.visible = _pupil != ""
 	if _pupil == "":
 		_plan.text = ""
-		_tutors.add_child(CKPageKit.empty(Locale.t("lb_train_tutor_none"), Locale.t("lb_train_tutor_wait"), "", 320))
+		## Y1-B: no pupil picked → EmptyHost why/how (pick on left; no nav CTA).
+		var host := VBoxContainer.new()
+		host.name = "EmptyHost"
+		host.add_theme_constant_override("separation", 12)
+		host.add_child(CKPageKit.empty(
+			Locale.t("lb_train_tutor_none"),
+			Locale.t("lb_train_tutor_wait"),
+			Locale.t("lb_train_tutor_wait_how"),
+			320
+		))
+		_tutors.add_child(host)
 		return
 	var cur := CKTutor.tutor_of(_pupil)
 	var any := false
@@ -89,13 +99,26 @@ func _fill_tutors() -> void:
 		var tid := str(t.id)
 		_tutors.add_child(_pick_row(t, Locale.t("ux_qi_shu_bow") % t.name, sub, tid == cur, func(): _assign(tid)))
 	if not any:
-		_tutors.add_child(CKPageKit.empty(Locale.t("lb_train_no_tutor_title"), Locale.t("lb_train_no_tutor_why"), "", 320))
-		## Empty tutors already says need 16+ unhurt roster; named tap CTA.
-		var to_t := CKPageKit.button(Locale.t("lb_train_to_tavern"), true, 320)
+		## Y1-B: no eligible tutor → EmptyHost why/how + ToTavern.
+		var host := VBoxContainer.new()
+		host.name = "EmptyHost"
+		host.add_theme_constant_override("separation", 12)
+		host.add_child(CKPageKit.empty(
+			Locale.t("lb_train_no_tutor_title"),
+			Locale.t("lb_train_no_tutor_why"),
+			Locale.t("lb_train_no_tutor_how"),
+			320
+		))
+		var acts := HBoxContainer.new()
+		acts.name = "EmptyActions"
+		acts.add_theme_constant_override("separation", 12)
+		var to_t := CKPageKit.button(Locale.t("lb_train_to_tavern"), true, 280)
 		to_t.name = "ToTavern"
 		to_t.pressed.connect(func(): CKNav.go("res://scenes/hub/tavern.tscn"))
-		_tutors.add_child(to_t)
+		acts.add_child(to_t)
 		UIFX.wire_button(to_t)
+		host.add_child(acts)
+		_tutors.add_child(host)
 	CKPageKit.drag_through(_tutors)
 	var prev: Dictionary = CKTutor.preview(_pupil)
 	_plan.text = str(prev.get("msg", ""))
@@ -106,13 +129,26 @@ func _fill_promo() -> void:
 	CKPageKit.clear(_promo)
 	var people: Array = GameState.roster().filter(func(ch): return not CKTutor.promote_list(ch).is_empty())
 	if people.is_empty():
-		_promo.add_child(CKPageKit.empty(Locale.t("lb_train_promo_none"), Locale.t("lb_train_promo_none_why"), "", 320))
-		## Empty promo already says reclass elsewhere; named tap CTA.
-		var to_tp := CKPageKit.button(Locale.t("lb_train_to_title_promote"), true, 320)
+		## Y1-B: no promo candidates → EmptyHost why/how + ToTitlePromote.
+		var host := VBoxContainer.new()
+		host.name = "EmptyHost"
+		host.add_theme_constant_override("separation", 12)
+		host.add_child(CKPageKit.empty(
+			Locale.t("lb_train_promo_none"),
+			Locale.t("lb_train_promo_none_why"),
+			Locale.t("lb_train_promo_none_how"),
+			320
+		))
+		var acts := HBoxContainer.new()
+		acts.name = "EmptyActions"
+		acts.add_theme_constant_override("separation", 12)
+		var to_tp := CKPageKit.button(Locale.t("lb_train_to_title_promote"), true, 280)
 		to_tp.name = "ToTitlePromote"
 		to_tp.pressed.connect(func(): CKNav.go("res://scenes/hub/title_promote.tscn"))
-		_promo.add_child(to_tp)
+		acts.add_child(to_tp)
 		UIFX.wire_button(to_tp)
+		host.add_child(acts)
+		_promo.add_child(host)
 		return
 	if _promo_id == "" or not people.any(func(ch): return ch.id == _promo_id):
 		_promo_id = str(people[0].id)
