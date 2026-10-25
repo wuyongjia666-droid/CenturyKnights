@@ -255,14 +255,14 @@ static func _wound(c: CKCharacter, difficulty: int, rng: RandomNumberGenerator) 
 		var span: Array = spec.get("grave_months", [3, 6])
 		var lo := int(span[0])
 		var hi := int(span[1]) if span.size() > 1 else lo
-		rec["months_left"] = lo + rng.randi_range(0, maxi(0, hi - lo))
+		rec["months_left"] = CKCastleServices.recovery_months(GameState, lo + rng.randi_range(0, maxi(0, hi - lo)))
 		rec["id"] = "fracture"
 		rec["name"] = Locale.t("重伤")
 	else:
 		var span2: Array = spec.get("light_months", [1, 2])
 		var lo2 := int(span2[0])
 		var hi2 := int(span2[1]) if span2.size() > 1 else lo2
-		rec["months_left"] = lo2 + rng.randi_range(0, maxi(0, hi2 - lo2))
+		rec["months_left"] = CKCastleServices.recovery_months(GameState, lo2 + rng.randi_range(0, maxi(0, hi2 - lo2)))
 		rec["id"] = "bruise"
 		rec["name"] = Locale.t("轻伤")
 	_write(c, rec)
