@@ -1,8 +1,8 @@
 {
   "id": "season_03",
-  "version": 2,
+  "version": 3,
   "title_zh": "榜上的收成",
-  "status": "novel_draft",
+  "status": "playable_draft",
   "pipeline": [
     "topic",
     "novel",
@@ -12,7 +12,7 @@
     "art",
     "playtest"
   ],
-  "stage": "novel",
+  "stage": "playable",
   "flag_lamp": {
     "flag": "委托军功写进朝报名册",
     "lamp": "属地月结收成对不上军功声称"
@@ -66,8 +66,14 @@
     },
     {
       "id": "scaffold_gate",
-      "label_zh": "内容季脚手架门禁（多季）",
+      "label_zh": "内容季流水门禁（含 #3）",
       "suite": "res://tests/suites/narrative/content_season_scaffold_check.tscn",
+      "done": true
+    },
+    {
+      "id": "playable_dialogue",
+      "label_zh": "可玩章 cs03_01 对白可走",
+      "suite": "res://tests/suites/narrative/content_season_playable_s03_check.tscn",
       "done": true
     }
   ],
@@ -115,5 +121,7 @@
     "docs/content-seasons/season-03/BIBLE.md",
     "docs/content-seasons/season-03/PLAYABLE.md",
     "docs/content-seasons/season-03/ACCEPTANCE.md"
-  ]
+  ],
+  "playable_chapter": "cs03_01",
+  "playable_path": "res://data/story/chapters/cs03_01.json"
 }

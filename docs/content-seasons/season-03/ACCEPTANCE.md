@@ -9,9 +9,8 @@
 
 ## 流水门禁（脚手架）
 
-- [x] `scaffold_gate` — `suite_content_season_scaffold_check`：多季字段与目录骨架
+- [x] `scaffold_gate` — `suite_content_season_scaffold_check`：多季字段与目录骨架；本季 playable 体量（NOVEL≥12000 汉字）
 
-## 本季仍要做
+## 可玩章
 
-- 小说扩写完整中篇 → 圣经定稿 → 可玩章全量
-- 本季立绘对齐清单归零
+- [x] `playable_dialogue` — `suite_content_season_playable_s03_check`：`cs03_01` schema+lint；chapter_player 走进对白；选「功与粮并排」
