@@ -382,6 +382,7 @@ lb_est_to_hourglass,去岁月沙漏,To hourglass
 lb_est_echo_when,记于 %s,Logged %s
 lb_echo_commission_deliver,交付「%s」·+%d 银,Deliver "%s" · +%d silver
 lb_echo_commission_expire,逾期「%s」·声望 -5,Overdue "%s" · rep -5
+lb_echo_spring,春令联姻池刷新·%d 帖,Spring court posts refreshed · %d
 lb_echo_pregnancy,%s 有了身孕,%s is with child
 lb_echo_birth,%s 诞下 %s,%s bore %s
 lb_echo_retire,%s 退役任顾问（%s 偏向）,%s retires as advisor (%s lean)
