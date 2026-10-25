@@ -112,6 +112,21 @@
           "text": "重的印，风吹不改姓。"
         },
         {
+          "id": "cs02_seal_y19",
+          "speaker": "旁白",
+          "text": "婚约笺角卷着。卷着，说明有人反复看。"
+        },
+        {
+          "id": "cs02_seal_y20",
+          "speaker": "石垒·晚担",
+          "text": "反复看的，未必敢签。"
+        },
+        {
+          "id": "cs02_seal_y21",
+          "speaker": "leader",
+          "text": "我敢签真的。"
+        },
+        {
           "id": "cs02_seal_x9",
           "speaker": "leader",
           "text": "印落下了。我们去对条。"
@@ -228,9 +243,86 @@
           "text": "拓片空格旁朱点，像催。催不买。"
         },
         {
+          "id": "cs02_estate_y21",
+          "speaker": "旁白",
+          "text": "验盏水清。清里照得出假。"
+        },
+        {
+          "id": "cs02_estate_y22",
+          "speaker": "石垒·晚担",
+          "text": "假影一晃就散。"
+        },
+        {
+          "id": "cs02_estate_y23",
+          "speaker": "leader",
+          "text": "散的我不留。"
+        },
+        {
           "id": "cs02_estate_x9",
           "speaker": "leader",
           "text": "记了不等于认了。等回执。"
+        },
+        {
+          "id": "cs0201_mid_mv1",
+          "speaker": "旁白",
+          "text": "院墙外有人低声念婚约上的字，念错一个，又重来。"
+        },
+        {
+          "id": "cs0201_mid_mv2",
+          "speaker": "听回",
+          "text": "念错了就重来。刀错了可不能重描。"
+        },
+        {
+          "id": "cs0201_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "婚灯还没点。外面先起了烟。"
+        },
+        {
+          "id": "cs0201_mid_mv4",
+          "speaker": "槐里·青禾",
+          "text": "烟往里灌，字会糊。糊了难认。"
+        },
+        {
+          "id": "cs0201_mid_mv5",
+          "speaker": "老旗手",
+          "text": "认字在灯下。认人在锋上。"
+        },
+        {
+          "id": "cs0201_mid_mv6",
+          "speaker": "leader",
+          "text": "灯下的字我认。锋上的人我验。"
+        },
+        {
+          "id": "cs0201_win1",
+          "speaker": "旁白",
+          "text": "锋收。院墙外的影子散了，婚约灯这才敢亮。",
+          "when": {
+            "flag": "cs02_mid_fought"
+          }
+        },
+        {
+          "id": "cs0201_win2",
+          "speaker": "老旗手",
+          "text": "院门清了。旗别卷——产房那边要看见。",
+          "when": {
+            "flag": "cs02_mid_fought"
+          }
+        },
+        {
+          "id": "cs0201_win3",
+          "speaker": "槐里·青禾",
+          "text": "烟不往里灌了。字，可以写了。",
+          "when": {
+            "flag": "cs02_mid_fought"
+          }
+        },
+        {
+          "id": "cs0201_win4",
+          "speaker": "leader",
+          "text": "锋验过。灯下写婚约，我签字。",
+          "when": {
+            "flag": "cs02_mid_fought"
+          }
         },
         {
           "id": "cs02_mid_lost",
@@ -480,9 +572,59 @@
           "text": "掌心暖不进名册也没关系。"
         },
         {
+          "id": "cs02_birth_y21",
+          "speaker": "旁白",
+          "text": "婚约笺角卷着。卷着，说明有人反复看。"
+        },
+        {
+          "id": "cs02_birth_y22",
+          "speaker": "石垒·晚担",
+          "text": "反复看的，未必敢签。"
+        },
+        {
+          "id": "cs02_birth_y23",
+          "speaker": "leader",
+          "text": "我敢签真的。"
+        },
+        {
           "id": "cs02_birth_x9",
           "speaker": "leader",
           "text": "两版都记。沙漏并排。"
+        },
+        {
+          "id": "cs0201_vis_mv1",
+          "speaker": "旁白",
+          "text": "产房门外的灯火跳了一下，又稳住。"
+        },
+        {
+          "id": "cs0201_vis_mv2",
+          "speaker": "听回",
+          "text": "灯稳了再进。慌进只扰月。"
+        },
+        {
+          "id": "cs0201_vis_mv3",
+          "speaker": "老管事",
+          "text": "月份不等人，等人把气放匀。"
+        },
+        {
+          "id": "cs0201_vst1",
+          "speaker": "岁吏",
+          "text": "月份从产房窗缝里挤进来。挤得紧，才是真月份。"
+        },
+        {
+          "id": "cs0201_vst2",
+          "speaker": "书记官",
+          "text": "生辰格要空着等。空着不是忘，是不敢先填。"
+        },
+        {
+          "id": "cs0201_vst3",
+          "speaker": "leader",
+          "text": "月份走，孩的名慢慢亮。我不催。"
+        },
+        {
+          "id": "cs0201_vis_mv4",
+          "speaker": "leader",
+          "text": "气匀了。去看月份。"
         }
       ],
       "actions": [
@@ -612,9 +754,64 @@
           "text": "干净靴也留痕。痕留给对条的人。"
         },
         {
+          "id": "cs02_tavern_y19",
+          "speaker": "旁白",
+          "text": "验盏水清。清里照得出假。"
+        },
+        {
+          "id": "cs02_tavern_y20",
+          "speaker": "石垒·晚担",
+          "text": "假影一晃就散。"
+        },
+        {
+          "id": "cs02_tavern_y21",
+          "speaker": "leader",
+          "text": "散的我不留。"
+        },
+        {
           "id": "cs02_tavern_x9",
           "speaker": "旁白",
           "text": "沙漏已有两行。并排留，还是先压下行。"
+        },
+        {
+          "id": "cs0201_ret_mv1",
+          "speaker": "旁白",
+          "text": "婚约闲话到第三巡，有人把杯子碰得太响。"
+        },
+        {
+          "id": "cs0201_ret_mv2",
+          "speaker": "掌柜",
+          "text": "响杯吓不走真事。"
+        },
+        {
+          "id": "cs0201_ret_mv3",
+          "speaker": "听回",
+          "text": "真事在回执。回执在灯下。"
+        },
+        {
+          "id": "cs0201_tvn1",
+          "speaker": "掌柜",
+          "text": "婚约灯的油味，比酒先到。"
+        },
+        {
+          "id": "cs0201_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "院墙清了才敢喝。喝完还要回去看灯。"
+        },
+        {
+          "id": "cs0201_tvn3",
+          "speaker": "苇原·灯影",
+          "text": "产房那边若哭一声，酒杯先放下。"
+        },
+        {
+          "id": "cs0201_tvn4",
+          "speaker": "leader",
+          "text": "灯亮着。人在。名，等月份填。"
+        },
+        {
+          "id": "cs0201_ret_mv4",
+          "speaker": "leader",
+          "text": "灯下入谱。回。"
         }
       ],
       "actions": [
@@ -794,6 +991,21 @@
           "id": "cs02_ledger_y99",
           "speaker": "旁白",
           "text": "两行并排。偏的脉还偏，灯还亮。"
+        },
+        {
+          "id": "cs02_ledger_y23",
+          "speaker": "旁白",
+          "text": "婚约笺角卷着。卷着，说明有人反复看。"
+        },
+        {
+          "id": "cs02_ledger_y24",
+          "speaker": "石垒·晚担",
+          "text": "反复看的，未必敢签。"
+        },
+        {
+          "id": "cs02_ledger_y25",
+          "speaker": "leader",
+          "text": "我敢签真的。"
         },
         {
           "id": "cs02_ledger_x10",
