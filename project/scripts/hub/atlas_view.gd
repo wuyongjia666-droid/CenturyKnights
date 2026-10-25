@@ -1202,6 +1202,30 @@ func _render_right() -> void:
 	enter.disabled = _busy or _sel != World.pos or not World.encounter.is_empty()
 	enter.pressed.connect(_enter_here)
 	p.add_child(enter)
+	var start_cid := _startable_chain_here()
+	if start_cid != "":
+		var chain_row := {}
+		for row in World.scripted_chains():
+			if str(row.get("id", "")) == start_cid:
+				chain_row = row
+				break
+		var cname := str(chain_row.get("title", start_cid))
+		var cs := UIKit.ghost_button(Locale.t("atlas_chain_start") % cname, 220, 28)
+		cs.name = "ChainStart"
+		cs.position = Vector2(250, 518)
+		cs.disabled = _busy
+		cs.pressed.connect(func():
+			var sr: Dictionary = World.start_scripted_chain(start_cid)
+			if not bool(sr.get("ok", false)):
+				_show_toast(str(sr.get("msg", "")), UIKit.DANGER)
+				return
+			var q0: Dictionary = sr.get("quest", {})
+			var acc: Dictionary = World.accept_quest(str(q0.get("issuer", World.pos)), str(q0.get("id", "")))
+			_show_toast(str(acc.get("msg", sr.get("msg", ""))), UIKit.OK if bool(acc.get("ok", false)) else UIKit.DANGER)
+			var dest := str(q0.get("target", ""))
+			# Defer rebuild — ChainStart lives in the right panel we are about to free.
+			call_deferred("_after_chain_start", dest))
+		p.add_child(cs)
 	var ch := UIKit.ghost_button("主线章节", 108, 32)
 	ch.name = "ChapterButton"
 	ch.position = Vector2(132, 518)
@@ -1870,11 +1894,14 @@ func _show_turnin_modal(readies: int) -> void:
 	now.pressed.connect(func():
 		var gained := 0
 		var titles: Array = []
+		var follow: Dictionary = {}
 		for q2 in World.ready_turn_ins_here().duplicate():
 			var tr: Dictionary = World.turn_in(str(q2.get("id", "")))
 			if bool(tr.get("ok", false)):
 				gained += int(q2.get("reward_silver", 0))
 				titles.append(str(q2.get("title", "")))
+				if typeof(tr.get("follow", {})) == TYPE_DICTIONARY and not tr.follow.is_empty():
+					follow = tr.follow
 		_clear_modal()
 		_refresh_top()
 		_build_nodes()
@@ -1882,7 +1909,9 @@ func _show_turnin_modal(readies: int) -> void:
 		if not titles.is_empty():
 			_show_toast(Locale.t("atlas_turnin_now_toast") % [titles.size(), gained], UIKit.OK)
 		else:
-			_show_toast(Locale.t("atlas_turnin_now_none"), UIKit.DANGER))
+			_show_toast(Locale.t("atlas_turnin_now_none"), UIKit.DANGER)
+		if not follow.is_empty():
+			await _show_chain_advance_modal(follow))
 	p.add_child(now)
 	var go := UIKit.ghost_button(Locale.t("atlas_turnin_modal_go"), 220, 36)
 	go.name = "TurnInEnter"
@@ -1897,6 +1926,115 @@ func _show_turnin_modal(readies: int) -> void:
 	later.position = Vector2(256, y + 48)
 	later.pressed.connect(_clear_modal)
 	p.add_child(later)
+
+func _after_chain_start(dest: String) -> void:
+	_refresh_top()
+	_build_nodes()
+	_render_right()
+	if dest != "" and World.nodes.has(dest):
+		_select_node(dest)
+
+func _startable_chain_here() -> String:
+	## First idle scripted chain whose step-0 issuer is the selected (current) city.
+	if _sel == "" or _sel != World.pos:
+		return ""
+	for row in World.scripted_chains():
+		var cid := str(row.get("id", ""))
+		if cid == "":
+			continue
+		var st: Dictionary = World.chain_status(cid)
+		var sst := str(st.get("status", "idle"))
+		if sst != "idle" and sst != "":
+			continue
+		var steps: Array = row.get("steps", [])
+		if steps.is_empty():
+			continue
+		if str(steps[0].get("issuer", "")) == World.pos:
+			return cid
+	return ""
+
+func _show_chain_advance_modal(follow: Dictionary) -> void:
+	## After turn-in: next multi-city chain step — accept / march / later.
+	if follow.is_empty():
+		return
+	var chain_id := str(follow.get("scripted_chain", ""))
+	var chain: Dictionary = {}
+	if chain_id != "":
+		for row in World.scripted_chains():
+			if str(row.get("id", "")) == chain_id:
+				chain = row
+				break
+	var step_i := int(follow.get("scripted_step", 0))
+	var steps_n := int(chain.get("steps", []).size()) if not chain.is_empty() else 0
+	var issuer := str(follow.get("issuer", ""))
+	var target := str(follow.get("target", ""))
+	var title_q := str(follow.get("title", ""))
+	var chain_title := str(chain.get("title", chain_id)) if not chain.is_empty() else Locale.t("atlas_chain_follow_fallback")
+	var h := 320.0
+	var p := _modal_panel(h)
+	p.name = "ChainAdvanceModal"
+	var el := UIKit.mono(Locale.t("atlas_chain_en"), 9, UIKit.OK)
+	el.position = Vector2(24, 16)
+	p.add_child(el)
+	var tlabel := UIKit.title_label(Locale.t("atlas_chain_title") % chain_title, 20)
+	tlabel.position = Vector2(24, 34)
+	tlabel.size = Vector2(452, 30)
+	p.add_child(tlabel)
+	var prog := ""
+	if steps_n > 0:
+		prog = Locale.t("atlas_chain_step") % [step_i + 1, steps_n]
+	var body := UIKit.body_label(
+		Locale.t("atlas_chain_body") % [title_q, World.node(issuer).get("name", issuer), World.node(target).get("name", target), prog],
+		UIKit.TEXT, 13)
+	body.name = "ChainAdvanceBody"
+	body.position = Vector2(24, 72)
+	body.size = Vector2(452, 64)
+	body.custom_minimum_size = Vector2(452, 0)
+	p.add_child(body)
+	var done := false
+	var y := 150.0
+	var acc := UIKit.cta_button(Locale.t("atlas_chain_accept"), "A", 300, 42)
+	acc.name = "ChainAccept"
+	acc.position = Vector2(24, y)
+	acc.pressed.connect(func():
+		var ar: Dictionary = World.accept_quest(issuer, str(follow.get("id", "")))
+		_show_toast(str(ar.get("msg", "")), UIKit.OK if bool(ar.get("ok", false)) else UIKit.DANGER)
+		var dest2 := target if bool(ar.get("ok", false)) else ""
+		done = true
+		_clear_modal()
+		call_deferred("_after_chain_start", dest2))
+	p.add_child(acc)
+	y += 50.0
+	var march := UIKit.cta_button(Locale.t("atlas_chain_march"), "B", 300, 42)
+	march.name = "ChainMarch"
+	march.position = Vector2(24, y)
+	march.pressed.connect(func():
+		var st2: Dictionary = World.chain_status(chain_id) if chain_id != "" else {}
+		if bool(st2.get("on_board", false)) or str(follow.get("state", "")) == "offer":
+			World.accept_quest(issuer, str(follow.get("id", "")))
+		var qlive := World.quest_by_id(str(follow.get("id", "")))
+		var dest := str(qlive.get("target", target))
+		if dest == "":
+			dest = target
+		done = true
+		_clear_modal()
+		_refresh_top()
+		_build_nodes()
+		if dest != "":
+			_select_node(dest)
+			_start_travel())
+	p.add_child(march)
+	var later := UIKit.ghost_button(Locale.t("atlas_chain_later"), 140, 42)
+	later.name = "ChainLater"
+	later.position = Vector2(24, h - 64)
+	later.pressed.connect(func():
+		done = true
+		_clear_modal())
+	p.add_child(later)
+	acc.call_deferred("grab_focus")
+	World.last_chain_follow = {}
+	while not done and is_instance_valid(p) and p.get_parent() != null:
+		await get_tree().process_frame
 
 func _clear_modal() -> void:
 	for c in _modal.get_children():
@@ -2971,6 +3109,27 @@ func _m_actions() -> void:
 			if not e4.is_empty():
 				_show_encounter_modal(e4))
 		b.name = "RivalClash"
+	elif _sel != "" and _sel == World.pos and World.nodes.has(_sel) and _startable_chain_here() != "" and World.ready_turn_ins_here().is_empty():
+		var cid_m := _startable_chain_here()
+		var crow := {}
+		for row in World.scripted_chains():
+			if str(row.get("id", "")) == cid_m:
+				crow = row
+				break
+		b = MobilePage.button(Locale.t("atlas_chain_start") % str(crow.get("title", cid_m)), true, func():
+			var sr: Dictionary = World.start_scripted_chain(cid_m)
+			if not bool(sr.get("ok", false)):
+				_show_toast(str(sr.get("msg", "")), UIKit.DANGER)
+				return
+			var q0: Dictionary = sr.get("quest", {})
+			World.accept_quest(str(q0.get("issuer", World.pos)), str(q0.get("id", "")))
+			_refresh_top()
+			_build_nodes()
+			var dest := str(q0.get("target", ""))
+			if dest != "":
+				_select_node(dest)
+				_m_actions())
+		b.name = "ChainStart"
 	elif _sel != "" and _sel == World.pos and World.nodes.has(_sel):
 		var n: Dictionary = World.node(_sel)
 		var ready_n := World.ready_turn_ins_here().size()
