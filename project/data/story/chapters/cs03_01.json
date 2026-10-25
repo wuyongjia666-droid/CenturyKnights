@@ -2,7 +2,7 @@
   "id": "cs03_01",
   "title": "榜上的收成",
   "legacy_index": 403,
-  "return_scene": "res://scenes/story/chapter_player.tscn",
+  "return_scene": "res://scenes/hub/castle_hub.tscn",
   "source": "docs/content-seasons/season-03/NOVEL.md",
   "beats": [
     {

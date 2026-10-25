@@ -608,7 +608,7 @@ func _add_content_season_row_mobile(host: Control) -> void:
 	if entries.is_empty():
 		return
 	# Sit in the todo HFlow (same row as 本月无待办) so the dossier stays within 296px
-	# on 1280×720; the sheet carries the three Season_* playable chips.
+	# on 1280×720; the sheet carries every Season_* playable chip (scrollable).
 	var row := HBoxContainer.new()
 	row.name = "ContentSeasonRow"
 	row.add_theme_constant_override("separation", 8)
@@ -625,7 +625,8 @@ func _add_content_season_row_mobile(host: Control) -> void:
 	row.add_child(open_b)
 
 
-## Phone sheet listing each playable content-season chapter (Season_* chips).
+## Sheet listing every playable content-season chapter (Season_* chips).
+## Ten seasons overflow a 720p / portrait phone — chips live in ContentSeasonScroll.
 func _open_content_season_sheet() -> void:
 	var entries: Array = StoryCatalog.content_season_entries()
 	if entries.is_empty():
@@ -654,9 +655,14 @@ func _open_content_season_sheet() -> void:
 	center.size = Vector2(w, h)
 	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	sheet.add_child(center)
+	var pw := clampf(w * 0.5, 680.0, 820.0)
+	# Cap chip viewport so ten Season_* rows stay reachable on 720p / portrait phones.
+	# (PanelContainer has no custom_maximum_size in 4.3 — fix scroll height instead.)
+	var chrome := 220.0  # title + body + close + panel margins
+	var scroll_h := clampf(h * 0.88 - chrome, 220.0, h * 0.62)
 	var card := PanelContainer.new()
 	card.name = "SheetCard"
-	card.custom_minimum_size = Vector2(clampf(w * 0.5, 680.0, 820.0), 0)
+	card.custom_minimum_size = Vector2(pw, 0)
 	var sb := UIKit.flat_box(Color(0.06, 0.075, 0.10, 0.98), Color(UIKit.ACCENT, 0.55), 14, 2)
 	for side in ["left", "right"]:
 		sb.set("content_margin_" + side, 32)
@@ -664,14 +670,26 @@ func _open_content_season_sheet() -> void:
 		sb.set("content_margin_" + side, 26)
 	card.add_theme_stylebox_override("panel", sb)
 	center.add_child(card)
+	var outer := VBoxContainer.new()
+	outer.name = "ContentSeasonOuter"
+	outer.add_theme_constant_override("separation", 12)
+	card.add_child(outer)
+	var title := MobilePage.label(Locale.t("ux_hub_content_season"), UIKit.TEXT, 30, true)
+	title.add_theme_font_override("font", UIKit.font("bold"))
+	outer.add_child(title)
+	outer.add_child(MobilePage.label(Locale.t("ux_hub_content_season_sheet_body"), UIKit.TEXT_DIM, 24, true))
+	var scroll := ScrollContainer.new()
+	scroll.name = "ContentSeasonScroll"
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
+	scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.custom_minimum_size = Vector2(0, scroll_h)
+	outer.add_child(scroll)
 	var box := VBoxContainer.new()
 	box.name = "ContentSeasonList"
 	box.add_theme_constant_override("separation", 12)
-	card.add_child(box)
-	var title := MobilePage.label(Locale.t("ux_hub_content_season"), UIKit.TEXT, 30, true)
-	title.add_theme_font_override("font", UIKit.font("bold"))
-	box.add_child(title)
-	box.add_child(MobilePage.label(Locale.t("ux_hub_content_season_sheet_body"), UIKit.TEXT_DIM, 24, true))
+	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(box)
 	for entry in entries:
 		var chapter_id := str(entry.get("chapter_id", ""))
 		var label := StoryCatalog.content_season_label(entry)
@@ -680,6 +698,7 @@ func _open_content_season_sheet() -> void:
 			_open_content_season(chapter_id))
 		chip.name = "Season_%s" % chapter_id
 		chip.custom_minimum_size = Vector2(0, 80)
+		chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		chip.add_theme_font_size_override("font_size", 24)
 		chip.add_theme_color_override("font_color", UIKit.EMBER)
 		box.add_child(chip)
@@ -687,8 +706,9 @@ func _open_content_season_sheet() -> void:
 	close_b.name = "ContentSeasonClose"
 	close_b.custom_minimum_size = Vector2(0, 80)
 	close_b.add_theme_font_size_override("font_size", 24)
-	box.add_child(close_b)
-	(box.get_child(2) as BaseButton).call_deferred("grab_focus")
+	outer.add_child(close_b)
+	if box.get_child_count() > 0:
+		(box.get_child(0) as BaseButton).call_deferred("grab_focus")
 
 ## Lock sheet (§4.4): what it is, when it opens, and "take me there" when the main line opens it.
 func open_lock_sheet(title: String, st: Dictionary) -> void:

@@ -2,7 +2,7 @@
   "id": "cs01_01",
   "title": "回执上的灯",
   "legacy_index": 401,
-  "return_scene": "res://scenes/story/chapter_player.tscn",
+  "return_scene": "res://scenes/hub/castle_hub.tscn",
   "source": "docs/content-seasons/season-01/NOVEL.md",
   "beats": [
     {

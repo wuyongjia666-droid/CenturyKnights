@@ -2,7 +2,7 @@
   "id": "cs05_01",
   "title": "空椅上的灯",
   "legacy_index": 405,
-  "return_scene": "res://scenes/story/chapter_player.tscn",
+  "return_scene": "res://scenes/hub/castle_hub.tscn",
   "source": "docs/content-seasons/season-05/NOVEL.md",
   "beats": [
     {

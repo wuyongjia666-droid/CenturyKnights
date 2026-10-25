@@ -2,7 +2,7 @@
   "id": "cs08_01",
   "title": "祖祠上的灯",
   "legacy_index": 408,
-  "return_scene": "res://scenes/story/chapter_player.tscn",
+  "return_scene": "res://scenes/hub/castle_hub.tscn",
   "source": "docs/content-seasons/season-08/NOVEL.md",
   "beats": [
     {

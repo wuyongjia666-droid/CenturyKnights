@@ -2,7 +2,7 @@
   "id": "cs02_01",
   "title": "婚约上的灯",
   "legacy_index": 402,
-  "return_scene": "res://scenes/story/chapter_player.tscn",
+  "return_scene": "res://scenes/hub/castle_hub.tscn",
   "source": "docs/content-seasons/season-02/NOVEL.md",
   "beats": [
     {
