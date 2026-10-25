@@ -819,7 +819,7 @@ func build_save_data() -> Dictionary:
 		"silver": silver, "food": food, "iron": iron, "herb": herb, "morale": morale,
 		"year": Calendar.year, "month": Calendar.month,
 		"play_seconds": play_seconds,
-		"story": {"beats": story.export_beats()},
+		"story": {"beats": story.export_beats(), "season_beats": story.export_season_beats()},
 		"rival_stances": rival_stances.duplicate(true),
 		"rival_deals": rival_deals.duplicate(true),
 		"skill_points": skill_points,

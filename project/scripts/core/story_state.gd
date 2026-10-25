@@ -3,13 +3,16 @@ extends RefCounted
 ## Chapter beats and chapter JSON. Beats live in one dictionary; chapter files load on demand.
 
 ## legacy_index space: 0 = ch0, 1–234 retired chapters, 101–399 volume chapters (eN_MM -> N*100+MM).
-## Content-season cs* chapters use 401+ markers outside CHAPTER_COUNT; not stored here.
+## Content-season cs* chapters keep a string cursor in season_beats (keyed by chapter id).
+## Their JSON still carries legacy_index 401+ as a marker; those ints are NOT stored in beats[].
 ## Saves written before v9.2.1 only carry 0–234; missing keys load as the default beat.
 const CHAPTER_COUNT := 400
 const LEGACY_COUNT := 235
 static var load_count: int = 0
 
 var beats: Dictionary = {}
+## chapter_id (e.g. "cs08_01") -> last beat id. Owned resume for content seasons.
+var season_beats: Dictionary = {}
 var flags: Dictionary = {}
 var _cache: Dictionary = {}
 
@@ -20,6 +23,7 @@ func reset() -> void:
 	beats = {}
 	for i in CHAPTER_COUNT:
 		beats[str(i)] = default_beat(i)
+	season_beats = {}
 	flags = {}
 
 func default_beat(id: int) -> String:
@@ -32,6 +36,20 @@ func set_beat(id: int, value: String) -> void:
 	if id < 0 or id >= CHAPTER_COUNT:
 		return
 	beats[str(id)] = value
+
+func season_beat(chapter_id: String) -> String:
+	return str(season_beats.get(chapter_id, ""))
+
+func set_season_beat(chapter_id: String, value: String) -> void:
+	if chapter_id == "":
+		return
+	if value == "":
+		season_beats.erase(chapter_id)
+		return
+	season_beats[chapter_id] = value
+
+func export_season_beats() -> Dictionary:
+	return season_beats.duplicate(true)
 
 func export_beats() -> Dictionary:
 	var out := {}
@@ -71,13 +89,25 @@ func import_save(data: Dictionary) -> void:
 	var block = data.get("story", null)
 	if typeof(block) == TYPE_DICTIONARY and typeof((block as Dictionary).get("beats", null)) == TYPE_DICTIONARY:
 		_import_beats(block["beats"])
+		_import_season_beats(block.get("season_beats", {}))
 	else:
 		_import_legacy_beats(data)
+		_import_season_beats({})
 	var raw_flags = data.get("chapter0_flags", {})
 	if typeof(raw_flags) == TYPE_DICTIONARY:
 		flags = (raw_flags as Dictionary).duplicate(true)
 	else:
 		flags = {}
+
+func _import_season_beats(raw) -> void:
+	season_beats = {}
+	if typeof(raw) != TYPE_DICTIONARY:
+		return
+	for k in (raw as Dictionary).keys():
+		var cid := str(k)
+		var bid := str((raw as Dictionary).get(k, ""))
+		if cid != "" and bid != "":
+			season_beats[cid] = bid
 
 func _import_beats(raw: Dictionary) -> void:
 	beats = {}
