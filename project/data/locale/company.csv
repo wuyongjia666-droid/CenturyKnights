@@ -410,3 +410,17 @@ atlas_chain_reroute_not_failed,这条委托链并未失败,This chain is not fai
 atlas_chain_reroute_missing,找不到可改道的委托链步骤,No chain step to reroute
 atlas_chain_fail_log,委托链「%s」失败：%s,Chain "%s" failed: %s
 atlas_chain_reroute_log,委托链「%s」改道重接第 %d 程,Chain "%s" rerouted to leg %d
+atlas_supply_halt_en,SUPPLY // 断粮,SUPPLY // EMPTY
+atlas_supply_halt_title,行军断粮 · 强制停靠,Rations gone · forced halt
+atlas_supply_halt_body,抵达 %s 时粮尽（目标 %s）。断粮 %d 日，士气 %d。觅食、硬闯或强制停靠补给。,At %s, rations empty (bound for %s). Starved %d day(s), morale %d. Forage, press on, or halt to resupply.
+atlas_supply_forage,路边觅食,Forage roadside
+atlas_supply_press,硬闯续行,Press on starving
+atlas_supply_forced_stop,强制停靠补给,Forced halt & resupply
+atlas_supply_halt_later,稍后,Later
+atlas_supply_halt_log,断粮强制停靠于「%s」（%d 日）,Forced supply halt at "%s" (%d day(s))
+atlas_supply_forage_log,觅食得粮 +%d,Foraged +%d food
+atlas_supply_forage_ok,觅食得粮 +%d，可续行,Foraged +%d food; march can resume
+atlas_supply_press_log,硬闯续行，士气再挫,Pressed on; morale sank further
+atlas_supply_press_ok,硬闯续行（粮仍空，士气再挫）,Pressed on (still empty; morale hit)
+atlas_supply_stop_log,强制停靠于「%s」,Forced halt at "%s"
+atlas_supply_stop_ok,已在「%s」强制停靠，可补给后续行,Halted at "%s"; resupply then resume
