@@ -282,6 +282,17 @@ atlas_battle_line_retreat,败退至%s,Retreated to %s
 atlas_battle_line_morale,士气 %+d,Morale %+d
 atlas_battle_line_cargo_loss,货物折损 %d 单位,Cargo loss %d units
 atlas_battle_line_escort_fail,护送委托失败,Escort commission failed
+atlas_rival_aftermath_lose_en,RIVAL DEFEAT,RIVAL DEFEAT
+atlas_rival_aftermath_en,RIVAL CLASH,RIVAL CLASH
+atlas_rival_clash_label,%s·路遇战,%s · road clash
+atlas_rival_clash_tip_none,此处没有对手佣兵团,No rival company here
+atlas_rival_clash_tip,对手「%s」在此——开战,Rival "%s" is here — fight
+atlas_rival_clash_cta,路遇对决,Rival clash
+atlas_engage_cta,进剿目标,Engage objective
+atlas_clear_seed_desc,%s上盘踞着%s营地。行经此道即触发清剿战，得胜后回%s复命。,%s harbors a %s camp. Cross the road to fight; report back to %s after victory.
+atlas_clear_road_name,%s—%s道,%s—%s road
+atlas_clear_seed_title,清剿%s,Clear %s
+atlas_battle_line_escort_ok,护送「%s」击退伏击，继续护送,Escort "%s": ambush cleared — keep marching
 wq_tab_active,在手委托,In hand
 wq_tab_board,本堡委托榜,Castle board
 wq_tab_done,已完成,Completed
@@ -353,6 +364,66 @@ atlas_fx_risk,有风险,Risky
 atlas_fx_other,有后果,Has consequences
 atlas_trade_margin_toast,卖出 %s ×%d（+%d 银 · 利润 %+d）,Sold %s ×%d (+%d silver · margin %+d)
 atlas_trade_first_buy,购入本地产 %s ×%d（-%d 银）· 可运往求购城出手,Bought local %s ×%d (-%d silver) · haul to a demand city
+atlas_rival_theft_title,商路截夺,Rival theft
+atlas_rival_theft_line,%s 在 %s 截走了「%s」,%s stole an offer at %s: "%s"
+atlas_rival_theft_hint,委托牌被同行截走。可前往该城补发或正面对峙。,A board offer was stolen. Travel there to re-post or clash.
+atlas_rival_theft_ok,知道了,Got it
+atlas_rival_theft_go,去该城,Go there
+atlas_arb_run,跑单收购,Run arbitrage
+atlas_arb_busy,已有一笔跑单在途,Arbitrage already armed
+atlas_arb_bad_good,无效货物,Bad good
+atlas_arb_no_dest,尚无已知卖价城,No known sell city
+atlas_arb_bought,购入 %s ×%d（-%d 银）· 目标 %s,Bought %s ×%d (-%d silver) · bound for %s
+atlas_arb_none,没有待出手的跑单,No pending arbitrage
+atlas_arb_wrong_city,须先抵达 %s,Reach %s first
+atlas_arb_done,卖出 %s ×%d（+%d 银 · 利润 %+d）,Sold %s ×%d (+%d silver · margin %+d)
+atlas_arb_title,产地跑单,Produce arbitrage
+atlas_arb_pending,跑单中：%s ×%d → %s,Armed: %s ×%d → %s
+atlas_arb_sell_now,出手,Sell now
+atlas_arb_sell_title,跑单到手,Arbitrage landed
+atlas_arb_march,启程出手,March to sell
+atlas_occupy_en,OCCUPY // GARRISON,OCCUPY // GARRISON
+atlas_occupy_title,占领 · %s,Occupy · %s
+atlas_occupy_body,驻军 %d / %d。增派人手或立屯营，守住刚夺下的中立领地。,Garrison %d / %d. Reinforce or raise a stockade to hold the seat you just took.
+atlas_occupy_reinforce,增派驻军（%d 银）,Reinforce (%d silver)
+atlas_occupy_stockade,立屯营（%d 银）,Raise stockade (%d silver)
+atlas_occupy_later,稍后再说,Later
+atlas_chain_en,CHAIN // 多城,CHAIN // MULTICITY
+atlas_chain_title,委托链 · %s,Chain · %s
+atlas_chain_body,下一程「%s」：在 %s 接下，送往 %s。%s,Next leg "%s": accept at %s, deliver to %s. %s
+atlas_chain_step,进度 %d / %d,Step %d / %d
+atlas_chain_accept,接下续程,Accept next leg
+atlas_chain_march,启程续送,March to deliver
+atlas_chain_later,稍后再说,Later
+atlas_chain_start,接下「%s」,Start "%s"
+atlas_chain_follow_fallback,后续委托,Follow-up
+atlas_chain_fail_en,CHAIN // 失败,CHAIN // FAILED
+atlas_chain_fail_title,委托链中断 · %s,Chain broken · %s
+atlas_chain_fail_body,「%s」%s（第 %d 程）。签发城 %s → 目标 %s。可改道重接这一程，或确认失败。,Leg [%s] %s (step %d). From %s to %s. Reroute or confirm failure.
+atlas_chain_fail_reason_expire,逾期未交,missed the deadline
+atlas_chain_fail_reason_abandon,中途放弃,abandoned mid-chain
+atlas_chain_reroute,改道重接,Reroute leg
+atlas_chain_fail_confirm,确认失败,Confirm failure
+atlas_chain_fail_done,委托链「%s」已记失败,Chain "%s" marked failed
+atlas_chain_reroute_ok,已改道重接「%s」,Rerouted "%s"
+atlas_chain_reroute_not_failed,这条委托链并未失败,This chain is not failed
+atlas_chain_reroute_missing,找不到可改道的委托链步骤,No chain step to reroute
+atlas_chain_fail_log,委托链「%s」失败：%s,Chain "%s" failed: %s
+atlas_chain_reroute_log,委托链「%s」改道重接第 %d 程,Chain "%s" rerouted to leg %d
+atlas_supply_halt_en,SUPPLY // 断粮,SUPPLY // EMPTY
+atlas_supply_halt_title,行军断粮 · 强制停靠,Rations gone · forced halt
+atlas_supply_halt_body,抵达 %s 时粮尽（目标 %s）。断粮 %d 日，士气 %d。觅食、硬闯或强制停靠补给。,At %s, rations empty (bound for %s). Starved %d day(s), morale %d. Forage, press on, or halt to resupply.
+atlas_supply_forage,路边觅食,Forage roadside
+atlas_supply_press,硬闯续行,Press on starving
+atlas_supply_forced_stop,强制停靠补给,Forced halt & resupply
+atlas_supply_halt_later,稍后,Later
+atlas_supply_halt_log,断粮强制停靠于「%s」（%d 日）,Forced supply halt at "%s" (%d day(s))
+atlas_supply_forage_log,觅食得粮 +%d,Foraged +%d food
+atlas_supply_forage_ok,觅食得粮 +%d，可续行,Foraged +%d food; march can resume
+atlas_supply_press_log,硬闯续行，士气再挫,Pressed on; morale sank further
+atlas_supply_press_ok,硬闯续行（粮仍空，士气再挫）,Pressed on (still empty; morale hit)
+atlas_supply_stop_log,强制停靠于「%s」,Forced halt at "%s"
+atlas_supply_stop_ok,已在「%s」强制停靠，可补给后续行,Halted at "%s"; resupply then resume
 city_market_refresh_btn,补货刷新 ↻,Restock shelves
 city_market_refresh_ok,市集补货（-%d 银）,Market restocked (-%d silver)
 city_market_refresh_full,本地存货已足，无需补货,Shelves already full

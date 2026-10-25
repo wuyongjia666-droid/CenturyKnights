@@ -72,6 +72,8 @@ func _api_battle_aftermath_win_lose() -> void:
 	_ok(af.has("silver_delta") and int(af.get("silver_delta", 0)) > 0, "loot silver_delta > 0")
 	_ok(GameState.silver > silver0, "silver increased on win")
 	_ok(bool(af.get("resume_travel", false)) or bool(r.get("resume_travel", false)), "resume_travel on win mid-march")
+	_ok(str(af.get("nation", "")) != "", "win aftermath nation for 敌徽")
+	_ok(str(af.get("nation", "")) == str(enc.get("nation", "")), "win aftermath nation matches enc")
 	_ok(World.is_traveling() and World.encounter.is_empty(), "still traveling, encounter cleared")
 	# Lose → retreat + cargo/morale + no resume
 	World.cancel_travel()
@@ -153,6 +155,16 @@ func _ui_battle_aftermath_modal_win_resume() -> void:
 	_ok(modal != null, "BattleAftermathModal win shown")
 	_ok(page.find_child("BattleAftermathLines", true, false) != null, "BattleAftermathLines")
 	_ok(page.find_child("BattleAftermathSummary", true, false) != null, "BattleAftermathSummary")
+	var strip := page.find_child("AftermathCrestStrip", true, false)
+	_ok(strip != null, "win AftermathCrestStrip")
+	if strip != null:
+		var ca := strip.find_child("CastleArms", true, false)
+		var foe := strip.find_child("FoeArms", true, false)
+		_ok(ca != null and str(ca.get_meta("arms_kind", "")) == "gen2_36", "win 团徽")
+		_ok(foe != null and str(foe.get_meta("arms_kind", "")) == "lb_rv_arms", "win 敌徽")
+		_ok(str(af.get("nation", "")) != "", "aftermath carries nation")
+		if foe != null and str(af.get("nation", "")) != "":
+			_ok(str(foe.get_meta("nation_id", "")) == str(af.get("nation", "")), "win foe nation match")
 	var cont := page.find_child("BattleAftermathContinue", true, false) as Button
 	_ok(cont != null, "BattleAftermathContinue CTA")
 	if cont != null:
@@ -181,6 +193,8 @@ func _ui_battle_aftermath_modal_lose() -> void:
 	page.call("_show_encounter_modal", World.encounter)
 	for _j in 4:
 		await get_tree().process_frame
+	var enc_strip := page.find_child("EncounterCrestStrip", true, false)
+	_ok(enc_strip != null and enc_strip.find_child("FoeArms", true, false) != null, "EncounterModal crest strip")
 	var retreat := page.find_child("EncounterRetreat", true, false) as Button
 	_ok(retreat != null, "EncounterRetreat present")
 	if retreat != null:
@@ -191,6 +205,9 @@ func _ui_battle_aftermath_modal_lose() -> void:
 				break
 		var am := page.find_child("BattleAftermathModal", true, false)
 		_ok(am != null, "BattleAftermathModal after retreat")
+		var rstrip := page.find_child("AftermathCrestStrip", true, false)
+		_ok(rstrip != null and rstrip.find_child("CastleArms", true, false) != null, "retreat AftermathCrestStrip")
+		_ok(rstrip != null and rstrip.find_child("FoeArms", true, false) != null, "retreat FoeArms")
 		var cont := page.find_child("BattleAftermathContinue", true, false) as Button
 		_ok(cont != null, "BattleAftermathContinue on lose")
 		if cont != null:

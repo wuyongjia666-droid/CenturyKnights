@@ -514,6 +514,12 @@ func _head(p: Control, pos: Vector2, zh: String, en: String) -> void:
 	t.position = pos + Vector2(0, 0 if _mob else 18)
 	if _mob:
 		t.add_theme_font_size_override("font_size", MobilePage.FONT + 4)
+	else:
+		# Fixed line box under the EN kicker. A wide size would share ink with
+		# the board filters; width stays the text's own minimum.
+		var tw := t.get_combined_minimum_size()
+		t.size = Vector2(maxf(tw.x, 24.0), 28)
+		t.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	p.add_child(t)
 
 func _para(text: String, col: Color, size: int, w: float) -> Label:
@@ -683,6 +689,10 @@ func _tab_overview() -> void:
 	else:
 		nx.position = Vector2(18, 250)
 		p.add_child(nx)
+	# Discover strip shrinks the panel from the top. Pin the action to the panel
+	# bottom so it stays inside the 720 viewport instead of at absolute y=510.
+	var aff_h := 48.0 if not _mob else 0.0
+	var aff_y := p.size.y - aff_h - 12.0
 	var sq: Dictionary = n.get("sig_quest", {})
 	if sq.is_empty():
 		if _mob:
@@ -692,18 +702,11 @@ func _tab_overview() -> void:
 				rl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 				v.add_child(rl)
 		else:
-			_rumor_box(p, Rect2(18, 330, 384, 230))
-	var honour_en: Label = null
-	var st: Label = null
-	var sb: Label = null
-	var sst: Label = null
+			_rumor_box(p, Rect2(18, 318, 384, maxf(72.0, aff_y - 326.0)))
+	var sst: Control = null
 	if not sq.is_empty():
-		if not _mob:
-			honour_en = UIKit.mono("HONOUR COMMISSION", 9, UIKit.EMBER)
-			honour_en.position = Vector2(18, 330)
-			p.add_child(honour_en)
-		st = UIKit.title_label("「%s」" % sq.get("title", ""), 15 if not _mob else MobilePage.FONT + 2, UIKit.TEXT)
-		sb = _para(str(sq.get("brief", "")), UIKit.TEXT_DIM, 12 if not _mob else MobilePage.FONT, 384 if not _mob else 0)
+		var st := UIKit.title_label("「%s」" % sq.get("title", ""), 15 if not _mob else MobilePage.FONT + 2, UIKit.TEXT)
+		var sb := _para(str(sq.get("brief", "")), UIKit.TEXT_DIM, 12 if not _mob else MobilePage.FONT, 384 if not _mob else 0)
 		var done := World.done_sig.has(str(sq.get("id", "")))
 		var running := not World.quest_by_id(str(sq.get("id", ""))).is_empty()
 		var stxt := "已完成 · 传奇兵器已解锁" if done else ("进行中 · 完成后解锁传奇兵器" if running else "声望「友善」(30) 后出现在委托榜")
@@ -716,9 +719,24 @@ func _tab_overview() -> void:
 			v.add_child(sb)
 			v.add_child(sst)
 		else:
-			p.add_child(st)
-			p.add_child(sb)
-			p.add_child(sst)
+			var mid := ScrollContainer.new()
+			mid.name = "HonourScroll"
+			mid.position = Vector2(12, 318)
+			mid.size = Vector2(396, maxf(72.0, aff_y - 326.0))
+			mid.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+			p.add_child(mid)
+			var hv := VBoxContainer.new()
+			hv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			hv.custom_minimum_size = Vector2(372, 0)
+			hv.add_theme_constant_override("separation", 4)
+			mid.add_child(hv)
+			hv.add_child(UIKit.mono("HONOUR COMMISSION", 9, UIKit.EMBER))
+			st.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			st.custom_minimum_size = Vector2(372, 0)
+			sb.custom_minimum_size = Vector2(372, 0)
+			hv.add_child(st)
+			hv.add_child(sb)
+			hv.add_child(sst)
 	## v9.2 本城之事 / 职印：一个 48 高的按钮，点开浮层
 	var aff := UIKit.ghost_button(CKCityAffairs.label(city), 384 if not _mob else 0, 48 if not _mob else MobilePage.HIT)
 	aff.name = "AffairBtn"
@@ -729,19 +747,8 @@ func _tab_overview() -> void:
 		aff.custom_minimum_size = Vector2(0, MobilePage.HIT)
 		v.add_child(aff)
 	else:
-		# HubDiscover shortens the panel — stack honour + status above the affair CTA.
-		var panel_h := 576.0 - y_off
-		var aff_y := minf(510.0, panel_h - 56.0)
-		if sst != null:
-			var sst_y := minf(440.0, aff_y - 28.0)
-			var sb_y := minf(372.0, sst_y - 68.0)
-			var st_y := minf(346.0, sb_y - 26.0)
-			if honour_en != null:
-				honour_en.position = Vector2(18, st_y - 16.0)
-			st.position = Vector2(18, st_y)
-			sb.position = Vector2(18, sb_y)
-			sst.position = Vector2(18, sst_y)
-		aff.position = Vector2(18, aff_y)
+		var aff_need := maxf(aff_h, aff.get_combined_minimum_size().y)
+		aff.position = Vector2(18, p.size.y - aff_need - 8.0)
 		p.add_child(aff)
 	var p2 := _panel(Rect2(432, y_off, 416, 576 - y_off))
 	_head(p2, Vector2(18, 14), "可在此交付", "TURN IN HERE")
@@ -765,23 +772,45 @@ func _tab_overview() -> void:
 		v2.add_child(_line(Locale.t("wsc_c_rumor_title"), UIKit.ACCENT, 12, 370))
 		for line in rumors(city).slice(0, 5):
 			v2.add_child(_para("· " + str(line), UIKit.TEXT_DIM, 12, 370))
-	var il := UIKit.mono("TRADE INTEL", 9, UIKit.ACCENT)
-	il.position = Vector2(18, 304)
-	p2.add_child(il)
+	var show_main := str(World.mainline_marker().get("node", "")) == city
+	# cta chrome is taller than the requested 38px; reserve the real slot above the footer.
+	var main_h := 64.0
+	var main_y := p2.size.y - main_h - 8.0
 	var v3 := VBoxContainer.new()
-	v3.position = Vector2(18, 322)
-	v3.add_theme_constant_override("separation", 4)
-	p2.add_child(v3)
 	v3.name = "TradeLoop"
+	v3.add_theme_constant_override("separation", 4)
+	if _mob:
+		# Phone reflow owns this column; keep the pre-strip absolute stack.
+		var il_m := UIKit.mono("TRADE INTEL", 9, UIKit.ACCENT)
+		il_m.position = Vector2(18, 304)
+		p2.add_child(il_m)
+		v3.position = Vector2(18, 322)
+		p2.add_child(v3)
+	else:
+		var intel := ScrollContainer.new()
+		intel.name = "TradeIntelScroll"
+		intel.position = Vector2(12, 300)
+		var intel_bottom := main_y - 6.0 if show_main else p2.size.y - 8.0
+		intel.size = Vector2(392, maxf(80.0, intel_bottom - 300.0))
+		intel.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		p2.add_child(intel)
+		var intel_box := VBoxContainer.new()
+		intel_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		intel_box.custom_minimum_size = Vector2(372, 0)
+		intel_box.add_theme_constant_override("separation", 4)
+		intel.add_child(intel_box)
+		intel_box.add_child(UIKit.mono("TRADE INTEL", 9, UIKit.ACCENT))
+		intel_box.add_child(v3)
 	var ti := 0
 	for g in n.get("produce", []):
 		var best: Dictionary = World.best_known_sell(str(g), city)
 		var here := World.price(city, str(g), "buy")
-		var txt := "%s 买 %d" % [World.good_name(str(g)), here]
+		var gname := World.good_name(str(g))
+		var txt := ""
 		if str(best.get("city", "")) != "":
-			txt += " → %s 卖 %d（%+d）" % [World.node(str(best.city)).get("name", ""), int(best.price), int(best.price) - here]
+			txt = Locale.t("atlas_trade_loop_line") % [gname, here, str(World.node(str(best.city)).get("name", "")), int(best.price), int(best.price) - here]
 		else:
-			txt += " → 暂无卖价"
+			txt = Locale.t("atlas_trade_loop_unknown") % [gname, here]
 		var ln := _line(txt, UIKit.TEXT_DIM, 12, 380)
 		ln.name = "TradeLoop_%d" % ti
 		v3.add_child(ln)
@@ -793,15 +822,13 @@ func _tab_overview() -> void:
 			go_mkt.custom_minimum_size = Vector2(0, MobilePage.HIT)
 		go_mkt.pressed.connect(func(): _set_tab("market"))
 		v3.add_child(go_mkt)
-	var tip_n := 1 if y_off > 0.0 else 3
-	for t in World.tips.slice(0, tip_n):
+	for t in World.tips.slice(0, 3):
 		v3.add_child(_line("情报：%s" % str(t), UIKit.ACCENT, 11, 380))
 	var mm: Dictionary = World.mainline_marker()
 	if str(mm.get("node", "")) == city:
 		var mb := UIKit.cta_button("★ %s" % mm.label, "", 380, 38)
-		# HubDiscover shortens p2 — keep the chapter CTA inside the panel (desktop gate).
-		var mb_y := minf(520.0, (576.0 - y_off) - 46.0)
-		mb.position = Vector2(18, mb_y)
+		mb.name = "MainlineBtn"
+		mb.position = Vector2(18, 520 if _mob else main_y)
 		mb.disabled = not bool(mm.get("exists", false))
 		mb.pressed.connect(func(): CKNav.go(str(mm.path)))
 		p2.add_child(mb)
@@ -1168,13 +1195,20 @@ func _tab_market() -> void:
 	if not known_loops.is_empty() or not loops.is_empty():
 		var strip := Panel.new()
 		strip.name = "TradeLoopStrip"
-		# Below _head 「市集」; tip only — no EN mono on the shot surface.
-		strip.position = Vector2(18, 56)
-		strip.size = Vector2(812, 44 if not _mob else float(MobilePage.HIT + 8))
+		# 「市集」 title sits at y=32; live Label min-height ~66 → end ~98.
+		# Keep ≥8px air before 产线 EN chrome (gate-0). Do NOT drop the EN (suite asserts it).
+		var strip_y := 108.0 if not _mob else 48.0
+		strip.position = Vector2(18, strip_y)
+		strip.size = Vector2(812, 40 if not _mob else float(MobilePage.HIT + 8))
 		var ss := UIKit.flat_box(Color(UIKit.EMBER.r, UIKit.EMBER.g, UIKit.EMBER.b, 0.12), Color(UIKit.EMBER, 0.35), 8)
 		strip.add_theme_stylebox_override("panel", ss)
 		p.add_child(strip)
-		# Tip only — EN mono sat under 「市集」 and failed the desktop gate.
+		var st := UIKit.mono(Locale.t("atlas_trade_loop_en"), 8, UIKit.EMBER, false)
+		st.name = "TradeLoopStripEn"
+		st.position = Vector2(10, 4)
+		st.custom_minimum_size = Vector2(48, 12)
+		st.size = Vector2(80, 14)
+		strip.add_child(st)
 		var best: Dictionary = World.best_produce_trade(city)
 		var tip := ""
 		if not best.is_empty():
@@ -1183,12 +1217,12 @@ func _tab_market() -> void:
 			tip = Locale.t("atlas_trade_loop_unknown") % [str(loops[0].name), int(loops[0].buy)]
 		var sl := UIKit.body_label(tip, UIKit.TEXT, 12)
 		sl.name = "TradeLoopStripLine"
-		sl.position = Vector2(10, 10)
+		sl.position = Vector2(10, 20)
 		sl.size = Vector2(790, 20)
 		sl.autowrap_mode = TextServer.AUTOWRAP_OFF
 		sl.clip_text = true
 		strip.add_child(sl)
-		y0 = 104.0 if not _mob else float(56 + MobilePage.HIT + 16)
+		y0 = 156.0 if not _mob else float(48 + MobilePage.HIT + 16)
 	var hdr := HBoxContainer.new()
 	hdr.position = Vector2(18, y0)
 	hdr.add_theme_constant_override("separation", 0)
@@ -1328,6 +1362,10 @@ func _tab_board() -> void:
 		badge.position = Vector2(14, 10)
 		badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		b.add_child(badge)
+		# Issuer crest (团徽 for hq, nation plate otherwise) — right edge of the offer row.
+		var crest := CKHeraldryChrome.make_issuer_arms(str(q.get("issuer", city)), Vector2(28, 34))
+		crest.position = Vector2(388.0 - 28.0 - 8.0, 6.0)
+		b.add_child(crest)
 		var qid := str(q.id)
 		b.pressed.connect(func(): _sel_quest = qid; _render_tab())
 		v.add_child(b)
@@ -1372,7 +1410,8 @@ func _tab_board() -> void:
 	var e := UIKit.mono("%s // %s" % ["ACTIVE" if is_active else "OFFER", str(sel.kind).to_upper()], 9, UIKit.EMBER if bool(sel.get("sig", false)) else UIKit.ACCENT)
 	e.position = Vector2(18, 16)
 	d.add_child(e)
-	var t := _para(str(sel.title), UIKit.TEXT, 19, 380)
+	CKHeraldryChrome.place_board_crest(d, str(sel.get("issuer", city)), Vector2(352, 14), Vector2(44, 52))
+	var t := _para(str(sel.title), UIKit.TEXT, 19, 320)
 	t.position = Vector2(18, 32)
 	d.add_child(t)
 	var desc := _para(str(sel.get("desc", "")), UIKit.TEXT_DIM, 12, 380)
