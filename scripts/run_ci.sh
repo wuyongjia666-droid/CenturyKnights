@@ -36,6 +36,7 @@ run_lint() {
 	check i18n_ratchet "I18N RATCHET PASS" python3 "$ROOT/tools/ci/i18n_ratchet.py"
 	check gdlint "GDLINT PASS" python3 "$ROOT/tools/ci/gdlint_changed.py"
 	check export_size "EXPORT SIZE PASS" python3 "$ROOT/tools/ci/export_size_report.py"
+	check store_prep "STORE PREP PASS" python3 "$ROOT/tools/ci/store_prep_check.py"
 	check board_figure_gate "BOARD FIGURE GATE PASS" python3 "$ROOT/tools/ci/board_figure_gate.py"
 	check pathc_ship_gate "PATHC SHIP GATE PASS" python3 "$ROOT/tools/ci/pathc_ship_gate.py"
 	check bank_index_sync "BANK INDEX SYNC PASS" python3 "$ROOT/tools/art/write_bank_index.py" --check
