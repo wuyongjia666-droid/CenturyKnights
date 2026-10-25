@@ -3,7 +3,7 @@ extends Node
 ## 主线梯子仍跳过 cs*；开章走 StoryCatalog.request_chapter。
 
 const Todo := preload("res://scripts/ui/widgets/todo_center.gd")
-const EXPECTED := ["cs01_01", "cs02_01", "cs03_01", "cs04_01", "cs05_01", "cs06_01"]
+const EXPECTED := ["cs01_01", "cs02_01", "cs03_01", "cs04_01", "cs05_01", "cs06_01", "cs07_01"]
 
 var _fails: Array = []
 
@@ -105,6 +105,8 @@ func _hub_row() -> void:
 	_ok(str(GameState.get_meta("story_chapter_id", "")) == "cs05_01", "meta cs05")
 	_ok(StoryCatalog.request_chapter("cs06_01") == StoryCatalog.player_scene(), "player for cs06")
 	_ok(str(GameState.get_meta("story_chapter_id", "")) == "cs06_01", "meta cs06")
+	_ok(StoryCatalog.request_chapter("cs07_01") == StoryCatalog.player_scene(), "player for cs07")
+	_ok(str(GameState.get_meta("story_chapter_id", "")) == "cs07_01", "meta cs07")
 	hub.queue_free()
 	await get_tree().process_frame
 
