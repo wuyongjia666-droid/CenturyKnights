@@ -12,6 +12,7 @@ static func refresh_for(host, ui: int) -> void:
 	host._portrait.texture = UnitArt.portrait(c, 96, CKArtPaths.TIER_MEDIUM)
 	_sync_status(host, c)
 	_sync_card(host, c, str(u.team))
+	fill_traits(host, c)
 	var _nm := str(c.name)
 	if (u.team == "enemy" or c.faction == "enemy") and (_nm.find("匪首") >= 0 or _nm.find("头目") >= 0 or _nm.find("Boss") >= 0):
 		if host._portrait:
@@ -53,6 +54,7 @@ static func refresh(host) -> void:
 			_sync_status(host, null)
 			_sync_card(host, null, "player")
 			fill_traits(host, null)
+		BattleSelectChrome.reveal_landscape(host)
 		return
 	var u = host.units[host.selected]
 	var c: CKCharacter = u.char
@@ -64,7 +66,14 @@ static func refresh(host) -> void:
 	var tinfo = BattleRules.terrain_info(tid)
 	var mode := ""
 	if u.team == "player" and not u.done:
-		if host.attack_mode:
+		var atk_ui := int(host.preview_attack_ui)
+		var move_cell: Vector2i = host.preview_move_cell
+		if atk_ui >= 0 and atk_ui < host.units.size():
+			var foe_name := str(host.units[atk_ui].char.name)
+			mode = BattleRules._rich(Frost.swatch("enemy"), Locale.t("ux_confirm_dest_attack") % foe_name)
+		elif move_cell.x >= 0:
+			mode = BattleRules._rich(Frost.swatch("ally"), Locale.t("ux_confirm_dest_move") % [move_cell.x, move_cell.y])
+		elif host.attack_mode:
 			mode = BattleRules._rich(Frost.swatch("enemy"), Locale.t("shell_64295185"))
 		elif host.moved_this_select:
 			mode = BattleRules._rich(Frost.swatch("ally"), Locale.t("shell_8736b101"))
@@ -92,6 +101,7 @@ static func refresh(host) -> void:
 					(" 〔" + tagjoin + "〕") if tagjoin else "",
 				]
 	host.info_label.text = txt
+	BattleSelectChrome.reveal_landscape(host)
 
 
 

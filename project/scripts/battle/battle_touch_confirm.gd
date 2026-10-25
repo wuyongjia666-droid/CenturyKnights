@@ -70,11 +70,16 @@ static func reject_invalid_tap(host, cell: Vector2i) -> bool:
 
 static func note_reject(host, cell: Vector2i, reason: String = "move") -> void:
 	host.set_meta("m_reject_flash", {"cell": cell, "msec": Time.get_ticks_msec(), "reason": reason})
-	# Trauma nudge (BattleController / suite duck declare _shake).
-	host._shake = maxf(float(host._shake), 0.55)
+	# Trauma nudge (BattleController / suite duck declare _shake). Strong enough to feel.
+	host._shake = maxf(float(host._shake), 1.15)
 	var key := "ux_invalid_attack_tap" if reason == "attack" else "ux_invalid_move_tap"
 	if host.has_method("_log"):
 		host._log(Locale.t(key))
+	# Keep the landscape/desktop card on the selected unit — a reject must not swap the panel.
+	if host.has_method("_refresh_info"):
+		host._refresh_info()
+	if DeviceProfile.is_mobile():
+		UIFX.haptic(20)
 	if host.overlay:
 		host.overlay.queue_redraw()
 
@@ -111,9 +116,12 @@ static func draw_reject_flash(host, overlay) -> void:
 		return
 	var origin: Vector2 = host.ORIGIN
 	var cell_px: float = float(host.CELL)
-	var r := Rect2(origin + Vector2(cell) * cell_px, Vector2(cell_px - 2.0, cell_px - 2.0))
-	overlay.draw_rect(r, Color(UIKit.DANGER, 0.22 * a))
-	overlay.draw_rect(r, Color(UIKit.DANGER, 0.85 * a), false, 2.5)
+	var r := Rect2(origin + Vector2(cell) * cell_px, Vector2(cell_px - 2.0, cell_px - 2.0)).grow(6.0)
+	overlay.draw_rect(r, Color(UIKit.DANGER, 0.40 * a))
+	overlay.draw_rect(r, Color(UIKit.DANGER, 0.95 * a), false, 4.5)
+	var cross := Color(UIKit.DANGER, 0.95 * a)
+	overlay.draw_line(r.position, r.position + r.size, cross, 3.5)
+	overlay.draw_line(r.position + Vector2(r.size.x, 0), r.position + Vector2(0, r.size.y), cross, 3.5)
 
 
 ## Drag finger to a legal cell / enemy and release to commit (skips the extra bar tap).
