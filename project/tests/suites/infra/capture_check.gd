@@ -15,6 +15,7 @@ const SCREENS := [
 	["city", "res://scenes/hub/city.tscn"],
 	["battle", "res://scenes/battle/battle.tscn"],
 	["settings", "res://scenes/ui/settings.tscn"],
+	["save_slots", "res://scenes/ui/save_slots.tscn"],
 	["codex", "res://scenes/hub/bloodline_codex.tscn"],
 	["court_news", "res://scenes/hub/court_news.tscn"],
 	["sui_yearcard", "res://scenes/hub/sui_yearcard.tscn"],
