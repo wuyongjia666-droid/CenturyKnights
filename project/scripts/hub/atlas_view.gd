@@ -534,9 +534,12 @@ func _refresh_top() -> void:
 	var fpd := World.food_per_day()
 	var food_days := GameState.food / maxi(1, fpd)
 	var title := "世界舆图 · 跑图"
+	var ration := World.food_ration_info()
+	var season_chip := Locale.t("atlas_season_%s" % str(ration.season_id))
 	var chips := [
 		["位置", str(here.get("name", "—"))],
 		["历", World.date_label(), UIKit.TEXT_DIM],
+		[Locale.t("atlas_chip_season"), season_chip, UIKit.ACCENT],
 		["银", str(GameState.silver), UIKit.ACCENT],
 		["粮", "%d（%d 日）" % [GameState.food, food_days], UIKit.OK if food_days >= 6 else UIKit.DANGER],
 		["士气", str(GameState.morale), UIKit.OK if GameState.morale >= 50 else UIKit.DANGER],
@@ -991,7 +994,9 @@ func _render_left() -> void:
 	kv.add_theme_constant_override("separation", 3)
 	pb.add_child(kv)
 	kv.add_child(UIKit.kv_row("编制", "%d 人" % World.party_size(), UIKit.TEXT, 140))
-	kv.add_child(UIKit.kv_row("日耗粮", "%d" % World.food_per_day(), UIKit.TEXT, 140))
+	var ration_row := UIKit.kv_row(Locale.t("atlas_ration_label"), World.food_ration_text(), UIKit.TEXT, 140)
+	ration_row.name = "MarchRationRow"
+	kv.add_child(ration_row)
 	kv.add_child(UIKit.kv_row("货舱", "%d / %d" % [World.cargo_used(), World.cargo_cap()], UIKit.TEXT, 140))
 	kv.add_child(UIKit.kv_row("委托", "%d / %d" % [World.active.size(), int(World.rules.get("active_limit", 5))], UIKit.ACCENT, 140))
 	kv.add_child(UIKit.kv_row("战力层级", "T%d" % World.world_tier(), UIKit.TEXT, 140))
@@ -1437,6 +1442,16 @@ func _render_hud() -> void:
 	p.add_child(stats)
 	stats.add_child(UIKit.res_chip(Locale.t("atlas_chip_days"), Locale.t("atlas_chip_days_v") % int(pv.days), UIKit.TEXT))
 	stats.add_child(UIKit.res_chip(Locale.t("atlas_chip_food"), str(pv.food), UIKit.DANGER if bool(pv.short_food) else UIKit.TEXT))
+	var march_info: Dictionary = World.food_ration_info()
+	var march_col := UIKit.TEXT
+	if int(march_info.mod_pct) > 0:
+		march_col = UIKit.DANGER
+	elif int(march_info.mod_pct) < 0:
+		march_col = UIKit.OK
+	var march_lbl := UIKit.res_chip(
+		Locale.t("atlas_chip_ration_mod"), World.food_ration_text(), march_col)
+	march_lbl.name = "MarchRationChip"
+	stats.add_child(march_lbl)
 	var cost := int(pv.tolls) + int(pv.fare)
 	stats.add_child(UIKit.res_chip(Locale.t("atlas_chip_toll"), Locale.t("atlas_chip_silver") % cost, UIKit.DANGER if GameState.silver < cost else UIKit.TEXT))
 	var dang := int(pv.danger)
