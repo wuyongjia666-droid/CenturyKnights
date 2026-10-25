@@ -97,6 +97,10 @@ static func apply(map_id: String) -> Dictionary:
 		var ls := str(lf)
 		if ls != "":
 			GameState.set_flag(ls, false)
+	# Same residue class for the shared-map flag Defeat stamps (quest_bandit_lost).
+	# Mid-cs loss→retry→win left map_id+"_lost" lit forever; clear it on win.
+	if map_id != "":
+		GameState.set_flag(map_id + "_lost", false)
 	# Chapter-authored season_ledger on mid-cs skirmish win (not month_echo).
 	var led = GameState.get_meta("battle_win_ledger", {})
 	if typeof(led) == TYPE_DICTIONARY and not led.is_empty():
