@@ -1519,6 +1519,8 @@ func _apply_board_gesture(g: Dictionary) -> void:
 			_cancel_selection()
 		"pan":
 			# Y1-A T-P1-2 / T-P3: drag starting on the selected figure (strict) moves the ghost; else pan.
+			# T-P4: stop smooth focus so the gesture owns `_board_pan` (unit-drag must not pan).
+			BattlePick.cancel_focus_tween(self)
 			if BattleTouchConfirm.is_unit_drag(self, g):
 				_hover_at(pos)
 				BattleTouchConfirm.on_drag(self, pos)
@@ -1533,6 +1535,7 @@ func _apply_board_gesture(g: Dictionary) -> void:
 				BattleTouchConfirm.on_drag_end(self, pos)
 			BattleTouchConfirm.end_gesture(self)
 		"pinch", "wheel":
+			BattlePick.cancel_focus_tween(self)
 			_zoom_board_at(_screen_to_local(pos), float(g.get("factor", 1.0)))
 			_hover_at(pos)
 
