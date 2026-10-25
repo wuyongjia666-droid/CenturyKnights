@@ -29,11 +29,26 @@ python3 tools/ci/store_packaging_dry_check.py
 python3 tools/ci/export_size_report.py
 ```
 
+CI：`store_prep_check` 由 `scripts/run_ci.sh` / lint 路径外的显式步骤可调用；PR 改 `docs/store/**` 或 `tools/ci/store_prep_check.py` 时应本地先跑绿。
+
 ## 分工边界
 
 | 线 | 做 | 不做 |
 |---|---|---|
-| 商店深刀（本目录） | 完整稿、出包干跑、抬高字数闸 | 不缴费提审；不写季#3 正文（内容专线） |
+| 商店深刀（本目录） | 完整稿、出包干跑、抬高字数闸、验证记录 | 不缴费提审；不写季#3 正文（内容专线） |
 | 内容季专线 | 中篇正文 / 可玩章 / playable suite | 不削弱字数闸换绿 |
 
-季#3 正文未满 12000 时 `store_prep` 会红——这是预期，等内容专线 #409，**禁止**降门槛。
+季#3 已合 #409；`store_prep` 中篇门禁 ≥12000，**禁止**降门槛。
+
+## 验证记录
+
+| 文件 | 用途 |
+|---|---|
+| [`privacy-verification-record.md`](./privacy-verification-record.md) | 隐私主张静态核对 |
+| [`age-rating-verification-record.md`](./age-rating-verification-record.md) | 分级问卷意图核对 |
+| [`export-paths-verification-record.md`](./export-paths-verification-record.md) | 出包路径干跑证据 |
+
+```bash
+python3 tools/ci/store_verify_records_check.py
+```
+
