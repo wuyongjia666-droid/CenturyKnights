@@ -311,50 +311,57 @@ func _static_oral() -> String:
 		return "catalog entries %d want %d" % [StoryCatalog.content_season_entries().size(), CHAINS.size()]
 	var seen := {}
 	for row in CHAINS:
-		var cid := str(row["cid"])
-		var data = _chapter(cid)
-		if typeof(data) == TYPE_STRING:
-			return str(data)
-		if str(data.get("return_scene", "")) != HUB:
-			return "%s return_scene" % cid
-		var body := FileAccess.get_file_as_string("res://data/story/chapters/%s.json" % cid)
-		if body.find("EmptyHost") >= 0:
-			return "%s EmptyHost" % cid
-		if body.find("month_echo") >= 0:
-			return "%s month_echo residue" % cid
-		var plate_n := 0
-		for beat in data.get("beats", []):
-			var bid := str(beat.get("id", ""))
-			if bid == "ledger":
-				continue
-			var vis: Array = []
-			for line in beat.get("lines", []):
-				var text := str(line.get("text", ""))
-				for banned in BANNED:
-					if text == str(banned):
-						return "%s banned %s" % [cid, banned]
-				var key := text
-				if seen.has(key):
-					return "echo %s == %s (%s)" % [seen[key], "%s:%s:%s" % [cid, bid, str(line.get("id", ""))], text]
-				seen[key] = "%s:%s:%s" % [cid, bid, str(line.get("id", ""))]
-				if not line.has("when"):
-					vis.append(line)
-			if plate_n < 3:
-				if vis.is_empty():
-					return "%s %s empty plate" % [cid, bid]
-				if str(vis.back().get("speaker", "")) == "旁白":
-					return "%s %s plate-final narrator" % [cid, bid]
-				plate_n += 1
-		for key in ["battle_line", "visit_line", "tavern_line"]:
-			var lid := str(row[key])
-			if _line_text(data, lid) == "":
-				return "%s missing line %s" % [cid, lid]
-		var stamp := _battle_stamp(data)
-		if str(stamp["fought"]) == "" or str(stamp["lost"]) == "":
-			return "%s battle flags" % cid
-		if _win_oral(data, str(stamp["fought"])) == "":
-			return "%s win oral ungated on %s" % [cid, str(stamp["fought"])]
+		var err := _static_one(row, seen)
+		if err != "":
+			return err
 	print("OK static oral unique ×%d banned=%d" % [CHAINS.size(), BANNED.size()])
+	return ""
+
+
+func _static_one(row: Dictionary, seen: Dictionary) -> String:
+	var cid := str(row["cid"])
+	var data = _chapter(cid)
+	if typeof(data) == TYPE_STRING:
+		return str(data)
+	if str(data.get("return_scene", "")) != HUB:
+		return "%s return_scene" % cid
+	var body := FileAccess.get_file_as_string("res://data/story/chapters/%s.json" % cid)
+	if body.find("EmptyHost") >= 0:
+		return "%s EmptyHost" % cid
+	if body.find("month_echo") >= 0:
+		return "%s month_echo residue" % cid
+	var plate_n := 0
+	for beat in data.get("beats", []):
+		var bid := str(beat.get("id", ""))
+		if bid == "ledger":
+			continue
+		var vis: Array = []
+		for line in beat.get("lines", []):
+			var text := str(line.get("text", ""))
+			for banned in BANNED:
+				if text == str(banned):
+					return "%s banned %s" % [cid, banned]
+			var key := text
+			if seen.has(key):
+				return "echo %s == %s (%s)" % [seen[key], "%s:%s:%s" % [cid, bid, str(line.get("id", ""))], text]
+			seen[key] = "%s:%s:%s" % [cid, bid, str(line.get("id", ""))]
+			if not line.has("when"):
+				vis.append(line)
+		if plate_n < 3:
+			if vis.is_empty():
+				return "%s %s empty plate" % [cid, bid]
+			if str(vis.back().get("speaker", "")) == "旁白":
+				return "%s %s plate-final narrator" % [cid, bid]
+			plate_n += 1
+	for key in ["battle_line", "visit_line", "tavern_line"]:
+		var lid := str(row[key])
+		if _line_text(data, lid) == "":
+			return "%s missing line %s" % [cid, lid]
+	var stamp := _battle_stamp(data)
+	if str(stamp["fought"]) == "" or str(stamp["lost"]) == "":
+		return "%s battle flags" % cid
+	if _win_oral(data, str(stamp["fought"])) == "":
+		return "%s win oral ungated on %s" % [cid, str(stamp["fought"])]
 	return ""
 
 
@@ -425,7 +432,15 @@ func _chain_one(row: Dictionary) -> String:
 	var stamp := _battle_stamp(data)
 	var err := ""
 	if str(row["order"]) == "battle_then_visit":
-		err = await _battle_leg(cid, str(row["battle"]), str(row["after_battle"]), _line_text(data, str(row["battle_line"])), str(stamp["fought"]), str(stamp["lost"]), _win_oral(data, str(stamp["fought"])))
+		err = await _battle_leg(
+			cid,
+			str(row["battle"]),
+			str(row["after_battle"]),
+			_line_text(data, str(row["battle_line"])),
+			str(stamp["fought"]),
+			str(stamp["lost"]),
+			_win_oral(data, str(stamp["fought"])),
+		)
 		if err != "":
 			return err
 		err = await _visit_leg(cid, str(row["visit"]), str(row["after_visit"]), _line_text(data, str(row["visit_line"])))
@@ -435,7 +450,15 @@ func _chain_one(row: Dictionary) -> String:
 		err = await _visit_leg(cid, str(row["visit"]), str(row["after_visit"]), _line_text(data, str(row["visit_line"])))
 		if err != "":
 			return err
-		err = await _battle_leg(cid, str(row["battle"]), str(row["after_battle"]), _line_text(data, str(row["battle_line"])), str(stamp["fought"]), str(stamp["lost"]), _win_oral(data, str(stamp["fought"])))
+		err = await _battle_leg(
+			cid,
+			str(row["battle"]),
+			str(row["after_battle"]),
+			_line_text(data, str(row["battle_line"])),
+			str(stamp["fought"]),
+			str(stamp["lost"]),
+			_win_oral(data, str(stamp["fought"])),
+		)
 		if err != "":
 			return err
 	err = await _tavern_needle(cid, _line_text(data, str(row["tavern_line"])))
