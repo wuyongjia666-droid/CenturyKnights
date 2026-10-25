@@ -114,14 +114,23 @@ func _has_beat(beat_id: String) -> bool:
 	return false
 
 func _stored_beat() -> String:
+	var cid := str(_chapter.get("id", ""))
+	# Content seasons live outside CKStoryState int slots (401+ markers); cursor is by id.
+	if StoryCatalog.is_content_season_id(cid):
+		return GameState.story.season_beat(cid)
 	var idx := int(_chapter.get("legacy_index", 0))
-	if idx == 0 and str(_chapter.get("id", "")) == "ch0":
+	if idx == 0 and cid == "ch0":
 		return str(GameState.chapter0_beat)
 	return str(GameState.story.beat(idx))
 
 func _remember_beat(beat_id: String) -> void:
+	var cid := str(_chapter.get("id", ""))
+	if StoryCatalog.is_content_season_id(cid):
+		GameState.story.set_season_beat(cid, beat_id)
+		GameState.mark_dirty()
+		return
 	var idx := int(_chapter.get("legacy_index", 0))
-	if idx == 0 and str(_chapter.get("id", "")) == "ch0":
+	if idx == 0 and cid == "ch0":
 		GameState.set_beat(beat_id)
 	else:
 		GameState.story.set_beat(idx, beat_id)
@@ -217,7 +226,7 @@ func _load_beat(beat_id: String) -> void:
 		_set_body("")
 		for c in _actions.get_children():
 			c.queue_free()
-		_add_action(Locale.t("story_back_to_hub"), func(): _go_scene(HUB_SCENE))
+		_add_action(Locale.t("story_back_to_hub"), func(): _return_to_hub())
 		return
 	if not StoryConditions.met(_beat.get("when", {})):
 		var skipped = _beat.get("next")
@@ -506,8 +515,8 @@ func _refresh_actions() -> void:
 		_add_action("继续", func(): _goto_next(), false, true)
 	elif shown == 0:
 		# Chapter end protocol: a last beat with no actions still has a way out.
-		# The beat is already remembered, so the mainline cursor moves on.
-		_add_action(Locale.t("story_back_to_hub"), func(): _go_scene(HUB_SCENE))
+		# The beat is already remembered, so the mainline / season cursor stays put.
+		_add_action(Locale.t("story_back_to_hub"), func(): _return_to_hub())
 
 func _add_action(text: String, cb: Callable, disabled: bool = false, compact: bool = false, cost_hint: String = "") -> void:
 	var w := 148 if compact else 320
@@ -735,9 +744,20 @@ func _ensure_reputation(row: Dictionary) -> void:
 func _goto_next() -> void:
 	var n = _beat.get("next")
 	if n == null or str(n) == "":
-		_go_scene("res://scenes/hub/castle_hub.tscn")
+		_return_to_hub()
 		return
 	_load_beat(str(n))
+
+func _return_to_hub() -> void:
+	## Owned post-dialogue land: stamp last chapter id, keep GameState cursor, open castle.
+	var cid := str(_chapter.get("id", ""))
+	if cid != "":
+		GameState.set_meta("last_story_chapter", cid)
+	# Prefer chapter JSON return_scene when it points at the hub; else HUB_SCENE.
+	var ret := str(_chapter.get("return_scene", HUB_SCENE))
+	if ret == "" or not ret.ends_with(".tscn"):
+		ret = HUB_SCENE
+	_go_scene(ret)
 
 func _go_scene(path: String) -> void:
 	# A replay never lands in the castle: leaving the prologue ends it.
