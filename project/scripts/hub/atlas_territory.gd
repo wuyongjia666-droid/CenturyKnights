@@ -21,13 +21,9 @@ static func add_markers(layer: Control, nation: String, map_size: Vector2, busy:
 		b.tooltip_text = CKTerritory.summary(str(mk.id))
 		var own := str(mk.owner)
 		if own == CKTerritory.OWN:
-			var tr := TextureRect.new()
-			tr.texture = CKTerritory.banner_texture(int(FLAG.x), int(FLAG.y))
-			tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-			tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			var tr := CKHeraldryChrome.make_company_banner(FLAG)
+			tr.name = "SiteBanner"
 			tr.position = Vector2(4, 4)
-			tr.size = FLAG
-			tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			b.add_child(tr)
 		else:
 			var col: Color = UIKit.DANGER if own.begins_with("rival:") else UIKit.TEXT_DIM
