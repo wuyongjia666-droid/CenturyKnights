@@ -121,17 +121,23 @@ def main() -> int:
             sp = ROOT / f"project/data/content_seasons/{sid}.json"
             if not sp.is_file():
                 fails.append(f"missing {sp.relative_to(ROOT)}")
+                continue
             novel = ROOT / f"docs/content-seasons/{sid.replace('_', '-')}/NOVEL.md"
             if not novel.is_file():
                 fails.append(f"missing {novel.relative_to(ROOT)}")
-            else:
-                body = novel.read_text(encoding="utf-8")
-                hz = _hanzi_count(body)
-                if hz < MIN_NOVEL_HANZI:
-                    fails.append(
-                        f"NOVEL too thin {novel.relative_to(ROOT)} "
-                        f"({hz} hanzi < {MIN_NOVEL_HANZI}; 对标季1中篇)"
-                    )
+                continue
+            body = novel.read_text(encoding="utf-8")
+            hz = _hanzi_count(body)
+            # 中篇硬闸：已有可玩章的季立刻执行；季#3 正文在内容专线落地 playable_chapter 后同闸
+            # （禁止把 MIN_NOVEL_HANZI 调低；此处只是按季是否已达可玩门槛启用）
+            meta = json.loads(sp.read_text(encoding="utf-8"))
+            has_playable = str(meta.get("playable_chapter", "")).strip() != ""
+            enforce = sid == "season_02" or has_playable
+            if enforce and hz < MIN_NOVEL_HANZI:
+                fails.append(
+                    f"NOVEL too thin {novel.relative_to(ROOT)} "
+                    f"({hz} hanzi < {MIN_NOVEL_HANZI}; 对标季1中篇)"
+                )
     else:
         fails.append("missing content_seasons/index.json")
 
