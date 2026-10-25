@@ -1717,6 +1717,10 @@ func _run_travel() -> void:
 			_set_busy(false)
 			_refresh_top()
 			return
+		if _check_siege_loot():
+			_set_busy(false)
+			_refresh_top()
+			return
 		if bool(info.get("arrived", false)):
 			break
 	_set_busy(false)
@@ -1767,6 +1771,8 @@ func _after_arrival() -> void:
 		return
 	if _check_siege_alert():
 		return
+	if _check_siege_loot():
+		return
 	if _check_march_muster():
 		return
 	if _check_losses():
@@ -1792,6 +1798,8 @@ func _resume_state() -> void:
 	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_territory_month():
 		return
 	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_siege_alert():
+		return
+	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_siege_loot():
 		return
 	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_march_muster():
 		return
@@ -2505,6 +2513,8 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 		_build_nodes()
 		if _check_siege_alert():
 			return
+		if _check_siege_loot():
+			return
 		if _check_march_muster():
 			return
 		if World.is_traveling():
@@ -2576,7 +2586,11 @@ func _show_siege_alert_modal(alert: Dictionary) -> void:
 	var at_anchor := World.pos == anchor and anchor != ""
 	var phase_line := Locale.t("atlas_siege_phase_imminent") if phase == "imminent" else Locale.t("atlas_siege_phase_declared")
 	var intel_line := Locale.t("atlas_siege_intel") % hold_pct if scouted and hold_pct >= 0 else Locale.t("atlas_siege_intel_unknown")
-	var h := 420.0
+	var cache_n := int(alert.get("cache", 0))
+	var stockade := bool(alert.get("stockade", false))
+	if stockade and cache_n > 0:
+		phase_line = phase_line + " " + (Locale.t("atlas_siege_cache_warn") % cache_n)
+	var h := 440.0 if stockade and cache_n > 0 else 420.0
 	var panel := _modal_panel(h)
 	panel.name = "SiegeAlertModal"
 	var el := UIKit.mono(Locale.t("atlas_siege_en"), 9, UIKit.DANGER)
@@ -2591,10 +2605,10 @@ func _show_siege_alert_modal(alert: Dictionary) -> void:
 		UIKit.TEXT, 13)
 	body.name = "SiegeAlertBody"
 	body.position = Vector2(24, 72)
-	body.size = Vector2(452, 100)
+	body.size = Vector2(452, 120 if stockade and cache_n > 0 else 100)
 	body.custom_minimum_size = Vector2(452, 0)
 	panel.add_child(body)
-	var y := 186.0
+	var y := 206.0 if stockade and cache_n > 0 else 186.0
 	var relief_label := Locale.t("atlas_siege_intercept") if at_anchor else Locale.t("atlas_siege_relief")
 	var relief := UIKit.cta_button(relief_label, "A", 452, 42)
 	relief.name = "SiegeRelief"
@@ -2673,6 +2687,57 @@ func _show_siege_alert_modal(alert: Dictionary) -> void:
 func _resume_travel_after_siege() -> void:
 	if World.is_traveling() and World.pending_event.is_empty() and World.encounter.is_empty():
 		_run_travel()
+
+
+## Unanswered siege sacked stockade cache → SiegeLootModal.
+func _check_siege_loot() -> bool:
+	if not _modal.get_children().is_empty():
+		return false
+	if World.last_siege_loot.is_empty():
+		return false
+	var loot: Dictionary = World.take_siege_loot()
+	if loot.is_empty():
+		return false
+	_show_siege_loot_modal(loot)
+	return true
+
+
+func _show_siege_loot_modal(loot: Dictionary) -> void:
+	var site_name := str(loot.get("name", loot.get("id", "")))
+	var by_name := str(loot.get("by_name", ""))
+	var looted := int(loot.get("looted", 0))
+	var left := int(loot.get("cache_left", 0))
+	var outcome := str(loot.get("outcome", "held"))
+	var h := 320.0
+	var panel := _modal_panel(h)
+	panel.name = "SiegeLootModal"
+	var el := UIKit.mono(Locale.t("atlas_siege_loot_en"), 9, UIKit.DANGER)
+	el.position = Vector2(24, 16)
+	panel.add_child(el)
+	var tlabel := UIKit.title_label(Locale.t("atlas_siege_loot_title"), 20, UIKit.DANGER)
+	tlabel.position = Vector2(24, 34)
+	tlabel.size = Vector2(452, 30)
+	panel.add_child(tlabel)
+	var body_key := "atlas_siege_loot_body_lost" if outcome == "lost" else "atlas_siege_loot_body_held"
+	var body := UIKit.body_label(Locale.t(body_key) % [by_name, site_name, looted, left], UIKit.TEXT, 13)
+	body.name = "SiegeLootBody"
+	body.position = Vector2(24, 72)
+	body.size = Vector2(452, 110)
+	body.custom_minimum_size = Vector2(452, 0)
+	panel.add_child(body)
+	var ok := UIKit.cta_button(Locale.t("atlas_siege_loot_ok"), "A", 452, 42)
+	ok.name = "SiegeLootOk"
+	ok.position = Vector2(24, h - 70)
+	ok.pressed.connect(func():
+		_clear_modal()
+		_refresh_top()
+		_build_nodes()
+		if _check_march_muster():
+			return
+		if World.is_traveling():
+			call_deferred("_resume_travel_after_siege"))
+	panel.add_child(ok)
+	ok.call_deferred("grab_focus")
 
 
 ## Road merc hire → MarchMusterModal (编制 / 日耗粮 refresh).
