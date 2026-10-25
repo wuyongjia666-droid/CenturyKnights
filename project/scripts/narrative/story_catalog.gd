@@ -18,13 +18,22 @@ static func player_scene() -> String:
 static func chapter0_scene() -> String:
 	return CHAPTER0_SCENE
 
-## Side screens the story opened with "visit" (quests, atlas, hourglass) go back to the chapter once.
+## Side screens opened by chapter "visit" reopen the SAME chapter once.
+## Prefer story_return_chapter (owned reopen via request_chapter) over a bare scene path.
+## Chapter JSON return_scene is the END-of-chapter hub land — never used for mid-visit.
 static func take_story_return(fallback: String) -> String:
+	var chapter_id := ""
+	if GameState.has_meta("story_return_chapter"):
+		chapter_id = str(GameState.get_meta("story_return_chapter", ""))
+		GameState.set_meta("story_return_chapter", "")
+	var scene_ret := ""
 	if GameState.has_meta("story_return"):
-		var ret := str(GameState.get_meta("story_return", ""))
+		scene_ret = str(GameState.get_meta("story_return", ""))
 		GameState.set_meta("story_return", "")
-		if ret != "":
-			return ret
+	if chapter_id != "":
+		return request_chapter(chapter_id)
+	if scene_ret != "":
+		return scene_ret
 	return fallback
 
 static func archive_replay_enabled() -> bool:

@@ -52,7 +52,8 @@ func _mainline_skips() -> void:
 
 
 func _return_scenes() -> void:
-	## visit / battle return must land in hub — never re-open chapter_player (loop).
+	## End-of-chapter return_scene must land in hub — never re-open chapter_player (loop).
+	## Mid-chapter visit uses story_return_chapter (content_season_visit_return_check).
 	for cid in EXPECTED:
 		var path := "res://data/story/chapters/%s.json" % cid
 		var data = JSON.parse_string(FileAccess.get_file_as_string(path))
