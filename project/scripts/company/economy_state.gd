@@ -1086,7 +1086,11 @@ static func month_echo_snapshot() -> Dictionary:
 static func month_echo_lines() -> Array:
 	var d := month_echo_snapshot()
 	var out: Array = []
-	for k in ["holdings", "harvest", "territory", "commission", "battle", "recruit", "birth", "marriage", "doctrine", "ambition", "tutor", "promo", "retire", "death", "succession", "rival"]:
+	for k in [
+		"holdings", "harvest", "territory", "commission", "battle", "recruit",
+		"birth", "marriage", "doctrine", "ambition", "tutor", "promo", "retire",
+		"death", "succession", "rival",
+	]:
 		var tx := str(d.get(k, ""))
 		if tx != "":
 			out.append({"kind": k, "text": tx})
