@@ -9,7 +9,7 @@ static func refresh_for(host, ui: int) -> void:
 		return
 	var u = host.units[ui]
 	var c: CKCharacter = u.char
-	host._portrait.texture = UnitArt.portrait(c, 96, CKArtPaths.TIER_MEDIUM)
+	host._portrait.texture = UnitArt.unit_portrait(c)
 	_sync_status(host, c)
 	if host._unit_card:
 		host._unit_card.set_unit(c, u.team)
@@ -45,7 +45,7 @@ static func refresh(host) -> void:
 	if host.selected < 0 or host.selected >= host.units.size():
 		host.info_label.text = _idle_objective(host)
 		if GameState.get_leader():
-			host._portrait.texture = UnitArt.portrait(GameState.get_leader(), 96, CKArtPaths.TIER_MEDIUM)
+			host._portrait.texture = UnitArt.unit_portrait(GameState.get_leader())
 			_sync_status(host, GameState.get_leader())
 			if host._unit_card:
 				host._unit_card.set_unit(GameState.get_leader(), "player")
@@ -59,7 +59,7 @@ static func refresh(host) -> void:
 		return
 	var u = host.units[host.selected]
 	var c: CKCharacter = u.char
-	host._portrait.texture = UnitArt.portrait(c, 96, CKArtPaths.TIER_MEDIUM)
+	host._portrait.texture = UnitArt.unit_portrait(c)
 	_sync_status(host, c)
 	if host._unit_card:
 		host._unit_card.set_unit(c, u.team)

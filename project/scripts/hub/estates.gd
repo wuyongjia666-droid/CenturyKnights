@@ -404,7 +404,7 @@ func _open_picker(hid: String) -> void:
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 10)
 		vb.add_child(row)
-		var tex = UnitArt.portrait(c, 48)
+		var tex = UnitArt.unit_portrait(c)
 		var tr = TextureRect.new()
 		tr.custom_minimum_size = Vector2(48, 48)
 		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
@@ -900,7 +900,7 @@ func _m_picker(hid: String) -> void:
 		tr.custom_minimum_size = Vector2(72, 72)
 		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		var tex = UnitArt.portrait(c, 72)
+		var tex = UnitArt.unit_portrait(c)
 		if tex != null:
 			tr.texture = tex
 		row.add_child(tr)

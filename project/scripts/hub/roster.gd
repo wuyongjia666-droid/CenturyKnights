@@ -181,7 +181,7 @@ func _render() -> void:
 	st.size = Vector2(180, 16)
 	st.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	p.add_child(st)
-	UIKit.portrait_plate(p, Rect2(22, 52, 238, 330), c, "HALF-BODY PORTRAIT // SPEC 01", false, CKArtPaths.TIER_MEDIUM)
+	UIKit.portrait_plate(p, Rect2(22, 52, 238, 330), c, "HALF-BODY PORTRAIT // SPEC 01", false)
 	CKHeraldryChrome.attach_hire_chrome(p, c, Rect2(22, 52, 238, 330), Vector2(44, 52))
 	var bio := UIKit.panel_at(p, Rect2(22, 394, 238, 120), 8)
 	var bl := UIKit.mono("CHRONICLE BIO", 9, UIKit.TEXT_FAINT)
@@ -403,7 +403,7 @@ func _render_mobile() -> void:
 	var holder := Control.new()
 	holder.custom_minimum_size = Vector2(220, 300)
 	top.add_child(holder)
-	UIKit.portrait_plate(holder, Rect2(0, 0, 220, 300), c, "", false, CKArtPaths.TIER_MEDIUM)
+	UIKit.portrait_plate(holder, Rect2(0, 0, 220, 300), c, "", false)
 	CKHeraldryChrome.attach_hire_chrome(holder, c, Rect2(0, 0, 220, 300), Vector2(40, 48))
 	var info := VBoxContainer.new()
 	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL

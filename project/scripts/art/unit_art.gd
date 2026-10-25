@@ -3,6 +3,7 @@ extends RefCounted
 ## 优先加载预绘 PNG 图集；缺失时回退程序绘制
 
 static var _cache: Dictionary = {}
+static var _plate_path: Dictionary = {}
 static var _banner_frame: int = 0
 static var _token_phase: float = 0.0
 static var _face_owner: Dictionary = {}  # slot -> character id
@@ -61,6 +62,7 @@ const FARM_FACE_BY_TAG := {
 
 static func clear_cache() -> void:
 	_cache.clear()
+	_plate_path.clear()
 	# 保留脸槽指派，避免同局内跳脸；新开档可另清
 
 static func terrain_tile(tid: String) -> Texture2D:
@@ -195,7 +197,7 @@ static func _portrait_key(c: CKCharacter) -> String:
 	elif _cast(c) == "militia_b":
 		v8n = "v8_bust_%s_guard" % g8
 	if v8n != "":
-		for cand in ["res://assets/art/portraits/thumb_%s.png" % v8n, "res://assets/art/portraits/%s.png" % v8n]:
+		for cand in ["res://assets/art/portraits/%s.png" % v8n, "res://assets/art/portraits/thumb_%s.png" % v8n]:
 			if _art_exists(cand):
 				return cand
 	# 具名角色优先 face_plate（美术升档）
@@ -393,10 +395,12 @@ static func _v83_elite_for(path: String) -> String:
 	return ep if _art_exists(ep) else ""
 
 ## "genome" when a farmed unit_id plate exists; otherwise the legacy named / hireuniq / bust chain.
-static func portrait_kind(c: CKCharacter, size: int = 96) -> String:
-	if display_band(int(c.age)) in ["infant", "child"]:
-		return display_band(int(c.age))
-	if CKGenomePortrait.texture(c) != null:
+static func portrait_kind(c: CKCharacter, _size: int = 96) -> String:
+	var band := display_band(int(c.age))
+	var rec: Dictionary = CKGenomePortrait.plate_record(c, CKArtPaths.UNIT_TIER)
+	if rec.get("texture") != null and band != "adult":
+		return band
+	if rec.get("texture") != null:
 		return "genome"
 	var path := _portrait_key(c)
 	var elite := _v83_elite_for(path)
@@ -412,7 +416,7 @@ static func portrait_kind(c: CKCharacter, size: int = 96) -> String:
 	if Engine.get_main_loop():
 		role = BattleRules.job_role(c.job_id)
 	var v8b: String = str({"skirmisher": "spear", "tank": "guard", "ranger": "archer", "mage": "scholar", "cavalry": "cavalry", "healer": "medic", "support": "medic"}.get(role, "duelist"))
-	if _art_exists("res://assets/art/portraits/thumb_v8_bust_%s_%s.png" % [g, v8b]):
+	if _art_exists("res://assets/art/portraits/v8_bust_%s_%s.png" % [g, v8b]) or _art_exists("res://assets/art/portraits/thumb_v8_bust_%s_%s.png" % [g, v8b]):
 		return "bust"
 	var age := int(c.age)
 	var geno := ""
@@ -427,8 +431,6 @@ static func portrait_kind(c: CKCharacter, size: int = 96) -> String:
 	else:
 		geno = "v84_geno_mid_%s_house" % g
 	var gp := "res://assets/art/portraits/%s.png" % geno
-	if size <= 240 and _art_exists("res://assets/art/portraits/thumb_%s.png" % geno):
-		gp = "res://assets/art/portraits/thumb_%s.png" % geno
 	if _art_exists(gp):
 		return "geno"
 	return "proc"
@@ -566,107 +568,99 @@ static func speaker_plate_path(speaker: String) -> String:
 		_ingest_speaker_table(ANTAGONIST_TABLE)
 	return str(_speaker_plates.get(speaker, ""))
 
-## Age-band display rule (playtest fix): everyone under 12 shares fixed plates so a newborn can
-## never pick up a teen/adult face. 0–2 → one infant plate; 3–11 → one child plate per sex;
-## 12–15 → teen (youth bank band); 16+ → the adult chain. Resolved from c.age on every call,
-## so it re-resolves on each birthday and after save/load (age is the only input).
-const INFANT_PLATE := "res://assets/art/portraits/genome/bank/infant_00647ff1b34ec210.png"
-const CHILD_PLATE := {"f": "res://assets/art/portraits/band/child_f.png", "m": "res://assets/art/portraits/band/child_m.png"}
-
+## Play band for UI. 0–2 infant, 3–11 child, 12–15 teen, 16+ adult.
+## The plate itself comes from CKGenomePortrait.plate_record (genome seed), not a shared collage.
 static func display_band(age_i: int) -> String:
-	if age_i <= 2:
-		return "infant"
-	if age_i <= 11:
-		return "child"
-	if age_i <= 15:
-		return "teen"
-	return "adult"
+	return CKGenomePortrait.play_band(age_i)
 
-static func band_plate_path(c: CKCharacter) -> String:
-	match display_band(int(c.age)):
-		"infant":
-			return INFANT_PLATE
-		"child":
-			return str(CHILD_PLATE.get("f" if str(c.gender) == "f" else "m"))
-	return ""
+static func unit_portrait(c: CKCharacter) -> Texture2D:
+	return portrait(c, 96, CKArtPaths.UNIT_TIER)
 
-static func _band_portrait(c: CKCharacter, use_tier: String) -> Texture2D:
-	var band := display_band(int(c.age))
-	var bp := band_plate_path(c)
-	if bp != "":
-		var ck := "band|%s|%s" % [use_tier, bp]
-		if _cache.has(ck):
-			return _cache[ck]
-		var t := CKArtPaths.load_portrait(bp, use_tier)
-		if t != null:
-			_cache[ck] = t
-		return t
-	if band == "teen" and CKGenomePortrait.age_stage_of(c) != "youth":
-		## Age 15 is young_adult in the bank's five stages; still show a youth plate on screen.
-		return CKPortraitBank.stage_texture(c, "youth", use_tier)
-	return null
+
+## Path the last unit_portrait/portrait call resolved for this character.
+static func resolved_portrait(c: CKCharacter) -> Dictionary:
+	var tex := unit_portrait(c)
+	var path := ""
+	var band := display_band(int(c.age)) if c != null else ""
+	if c != null and c.has_meta("ck_portrait_path"):
+		path = str(c.get_meta("ck_portrait_path"))
+	if c != null and c.has_meta("ck_portrait_band"):
+		band = str(c.get_meta("ck_portrait_band"))
+	return {
+		"texture": tex,
+		"path": path,
+		"band": band,
+		"tier": CKArtPaths.UNIT_TIER,
+		"stem": CKArtPaths._portrait_stem(path),
+	}
+
+
+static func _remember_plate(c: CKCharacter, band: String, ck: String, tex: Texture2D, path: String) -> void:
+	_cache[ck] = tex
+	_plate_path[ck] = path
+	if c != null:
+		c.set_meta("ck_portrait_path", path)
+		c.set_meta("ck_portrait_band", band)
+
 
 static func portrait(c: CKCharacter, size: int = 96, tier: String = "") -> Texture2D:
-	# v8.9: paper-doll is retired. One Qwen plate per unit_id when the farm has ingested it.
-	# Checked before the legacy cache so a late ingest still wins. Missing plates fall through
-	# to named cast art, then hireuniq, then the bust/geno chain.
-	# small: lists and chess tokens. medium: dialogue and half-body. large: detail.
-	var use_tier := tier if tier != "" else CKArtPaths.tier_for_display(size)
-	var btex := _band_portrait(c, use_tier)
-	if btex != null:
-		return btex
-	var gtex: Texture2D = CKGenomePortrait.texture(c, use_tier)
-	if gtex != null:
-		## Bank/disk plates paint the face; still reserve a hireuniq slot so tavern walk-aways free it.
-		_face_uid(c)
-		return gtex
+	# v8.9: paper-doll is retired. One full Qwen plate per unit, seeded by genome
+	# and play band. Tier is the shared unit tier (medium): desktop widget size and
+	# the Android exclude list must not pick a different sibling.
+	var use_tier := CKArtPaths.canonical_unit_tier(tier)
+	var band := display_band(int(c.age))
+	var stage := CKGenomePortrait.stage_for_play_band(band, int(c.age))
+	var ck_up := "up|%s|%s|%s|%s" % [str(c.id), band, stage, use_tier]
+	if _cache.has(ck_up):
+		if c != null:
+			c.set_meta("ck_portrait_path", str(_plate_path.get(ck_up, "")))
+			c.set_meta("ck_portrait_band", band)
+		return _cache[ck_up]
+	var rec: Dictionary = CKGenomePortrait.plate_record(c, use_tier)
+	if rec.get("texture") is Texture2D:
+		var plated: Texture2D = rec["texture"]
+		_remember_plate(c, band, ck_up, plated, str(rec.get("path", "")))
+		if band == "adult":
+			## Reserve a hireuniq slot so tavern walk-aways still free it.
+			_face_uid(c)
+		return plated
 	var path = _portrait_key(c)
 	var _elite := _v83_elite_for(path)
 	if _elite != "":
 		path = _elite
 	var ck = "p|" + use_tier + "|" + path + "|" + str(c.id)
 	if _cache.has(ck):
+		_remember_plate(c, band, ck_up, _cache[ck], str(_plate_path.get(ck, "")))
 		return _cache[ck]
 	# v8.5: pre-v8 cartoon keys (allele-combo plates, hire_/role plates, old *_face_plate) must not
 	# shadow the 781 farmed hireuniq faces — renders showed every recruit/candidate as a cartoon.
 	var tex2 = null if _is_cartoon_key(path) else _try_load(path, use_tier)
 	if tex2 != null:
+		_remember_plate(c, band, ck_up, tex2, CKArtPaths.last_loaded)
 		_cache[ck] = tex2
+		_plate_path[ck] = CKArtPaths.last_loaded
 		return tex2
 	# hireuniq：个人脸底（Android 仍打包；缺 bank 命中时比 bust 更清晰）。
-	# hireface / hire_*_plate 已在代码里跳过，Android 导出排除。儿童板在 portraits/band/。
+	# hireface collage is retired: Android excludes those plates, so a blend
+	# made desktop and phone paint different faces for the same unit.
 	var uid = _face_uid(c)
 	var uniq_p = "res://assets/art/portraits/hireuniq_%03d.png" % uid
 	var utex = _try_load(uniq_p, use_tier)
 	if utex != null:
-		return _fingerprint_portrait(utex, c)
-	# 回退：等位组合板
+		_remember_plate(c, band, ck_up, utex, CKArtPaths.last_loaded)
+		return utex
 	var g = "f" if str(c.gender) == "f" else "m"
-	var hair = str(c.appearance.get("hair", "ash_brown"))
-	var eyes = str(c.appearance.get("eyes", "slate"))
-	var scar = str(c.appearance.get("scar", "none"))
-	var brow = str(c.appearance.get("brow", "straight"))
-	if scar == "":
-		scar = "none"
-	if brow == "":
-		brow = "straight"
-	var face_p = "res://assets/art/portraits/hireface_%s_%s_%s_%s_%s.png" % [hair, eyes, g, scar, brow]
-	var ft = null  # v8.5: hireface_* are cartoon allele plates — skipped
-	if ft != null:
-		return _fingerprint_portrait(ft, c)
-	# 雇佣/花名册：角色×性别板（回退）
+	# v8.5: role-matched full v8 bust before geno/procedural. Thumb siblings are
+	# not a second identity — the full plate's unit tier is the only file.
 	var role = BattleRules.job_role(c.job_id) if Engine.get_main_loop() else "skirmisher"
-	var hire_p = "res://assets/art/portraits/hire_%s_%s_plate.png" % [role, g]
-	var ht = null  # v8.5: hire_*_plate cartoon — skipped
-	# v8.5: role-matched v8 bust before geno/procedural
 	var v8b = {"skirmisher": "spear", "tank": "guard", "ranger": "archer", "mage": "scholar", "cavalry": "cavalry", "healer": "medic", "support": "medic"}.get(role, "duelist")
-	var v8bp = "res://assets/art/portraits/thumb_v8_bust_%s_%s.png" % [g, v8b]
+	var v8bp = "res://assets/art/portraits/v8_bust_%s_%s.png" % [g, v8b]
 	var v8bt = _try_load(v8bp, use_tier)
+	if v8bt == null:
+		v8bt = _try_load("res://assets/art/portraits/thumb_v8_bust_%s_%s.png" % [g, v8b], use_tier)
 	if v8bt != null:
-		return _fingerprint_portrait(v8bt, c)
-	if ht != null:
-		_cache["hire|" + role + "|" + g + "|" + str(size)] = ht
-		return ht
+		_remember_plate(c, band, ck_up, v8bt, CKArtPaths.last_loaded)
+		return v8bt
 	# 兵种板绘（回退）
 	var plate = {
 		"heavy_inf": "tank_plate", "warrior": "tank_plate",
@@ -699,16 +693,14 @@ static func portrait(c: CKCharacter, size: int = 96, tier: String = "") -> Textu
 		_geno = "v84_geno_mid_%s_house" % _g
 	if _geno != "":
 		var _gp := "res://assets/art/portraits/%s.png" % _geno
-		# v8.5: card/list sizes use the pre-downscaled 220x270 thumb (crisper, lighter)
-		var _thumb := "res://assets/art/portraits/thumb_%s.png" % _geno
-		if size <= 240 and _art_exists(_thumb):
-			_gp = _thumb
 		if _art_exists(_gp):
 			var _gt = _try_load(_gp, use_tier)
 			if _gt != null:
-				_cache["geno|" + use_tier + "|" + _geno + "|" + str(size)] = _gt
+				_remember_plate(c, band, ck_up, _gt, CKArtPaths.last_loaded)
 				return _gt
-	return _proc_portrait(c, size)
+	var proc := _proc_portrait(c, 512)
+	_remember_plate(c, band, ck_up, proc, "proc://%s/%s" % [str(c.id), band])
+	return proc
 
 static func _token_key(c: CKCharacter, team: String, frame: int) -> String:
 	if c.is_leader:
@@ -1225,76 +1217,6 @@ static func _face_uid(c: CKCharacter) -> int:
 			return slot2
 	_face_assign[cid] = start
 	return start
-
-static func _fingerprint_portrait(tex: Texture2D, c: CKCharacter) -> Texture2D:
-	## 个人板为底；hireface 等位图作下半身/衣饰次级细节；轻染发瞳
-	var g = "f" if str(c.gender) == "f" else "m"
-	var hair = str(c.appearance.get("hair", "ash_brown"))
-	var eyes = str(c.appearance.get("eyes", "slate"))
-	var scar = str(c.appearance.get("scar", "none"))
-	var brow = str(c.appearance.get("brow", "straight"))
-	if scar == "":
-		scar = "none"
-	if brow == "":
-		brow = "straight"
-	var ck = "fp4|" + str(c.id) + "|" + hair + "|" + eyes + "|" + brow + "|" + scar
-	if _cache.has(ck):
-		return _cache[ck]
-	var img: Image = tex.get_image()
-	if img == null:
-		_cache[ck] = tex
-		return tex
-	img = img.duplicate()
-	var w = img.get_width()
-	var h = img.get_height()
-	var uid = _face_uid(c)
-	# 次级：等位 hireface 衣饰/下半融合
-	var face_p = "res://assets/art/portraits/hireface_%s_%s_%s_%s_%s.png" % [hair, eyes, g, scar, brow]
-	var allele = _try_load(face_p)
-	if allele != null:
-		var aimg: Image = allele.get_image()
-		if aimg != null:
-			if aimg.get_width() != w or aimg.get_height() != h:
-				aimg = aimg.duplicate()
-				aimg.resize(w, h, Image.INTERPOLATE_LANCZOS)
-			for y in range(h):
-				for x in range(w):
-					var p = img.get_pixel(x, y)
-					var q = aimg.get_pixel(x, y)
-					if p.a < 0.05 or q.a < 0.05:
-						continue
-					# 下半身/衣领区多用等位细节；上半脸保留个人构图
-					var amt = 0.0
-					if y > int(h * 0.58):
-						amt = 0.48
-					elif y > int(h * 0.48):
-						amt = 0.28
-					if amt > 0.0:
-						img.set_pixel(x, y, p.lerp(q, amt))
-	var hc = hair_color(c.appearance)
-	var ec = eye_color(c.appearance)
-	for y in range(h):
-		for x in range(w):
-			var p = img.get_pixel(x, y)
-			if p.a < 0.05:
-				continue
-			var outc = p
-			if y < int(h * 0.36):
-				outc = p.lerp(Color(hc.r, hc.g, hc.b, p.a), 0.12)
-			elif y < int(h * 0.50) and x > int(w * 0.28) and x < int(w * 0.72):
-				outc = p.lerp(Color(ec.r, ec.g, ec.b, p.a), 0.10)
-			var shift = Color(1.0 + (uid % 5) * 0.006, 1.0 + ((uid / 3) % 4) * 0.005, 1.0 - (uid % 3) * 0.006, 1.0)
-			img.set_pixel(x, y, Color(clampf(outc.r * shift.r, 0, 1), clampf(outc.g * shift.g, 0, 1), clampf(outc.b * shift.b, 0, 1), p.a))
-	var marks = [
-		Vector2i(int(w * (0.58 + (uid % 6) * 0.015)), int(h * (0.40 + ((uid / 4) % 5) * 0.015))),
-		Vector2i(int(w * (0.36 + ((uid / 2) % 5) * 0.012)), int(h * (0.48 + (uid % 4) * 0.012))),
-	]
-	for mpos in marks:
-		if mpos.x > 1 and mpos.y > 1 and mpos.x < w - 2 and mpos.y < h - 2:
-			img.set_pixel(mpos.x, mpos.y, Color(0.28, 0.16, 0.12, 0.9))
-	var out := ImageTexture.create_from_image(img)
-	_cache[ck] = out
-	return out
 
 static func _proc_portrait(c: CKCharacter, size: int) -> Texture2D:
 	var role = BattleRules.job_role(c.job_id)
