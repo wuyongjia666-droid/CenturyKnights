@@ -1,12 +1,8 @@
 extends Node
 ## Player-visible heraldry consistency across genealogy + castle banner strip +
-<<<<<<< HEAD
-## rival houses + tavern/hire + board unit shields + city/smith 邦徽.
+## rival houses + tavern/hire + board unit shields + city/smith 邦徽 +
+## battle/danger aftermath crests.
 ## 团徽 / 旗徽 / 族徽 / 敌徽 / 邦徽 never mismatch outside their Chrome routes.
-=======
-## rival houses + tavern/hire + board unit shields + battle/danger aftermath crests.
-## 团徽 / 旗徽 / 族徽 / 敌徽 never mismatch outside their Chrome routes.
->>>>>>> 5896793a0 (feat(heraldry): battle/danger aftermath crest strip — 团徽+敌徽)
 
 const OVERVIEW := "res://scenes/hub/lineage_view.tscn"
 const TREE := "res://scenes/hub/lineage_tree.tscn"
@@ -295,7 +291,6 @@ func _run() -> void:
 	if _fail != "":
 		return
 
-<<<<<<< HEAD
 	# ── City crest strip (团徽 + 邦徽) ─────────────────────────────
 	var city_host := Control.new()
 	city_host.name = "CityCrestHost"
@@ -312,7 +307,8 @@ func _run() -> void:
 		_ok(cn != null and str(cn.get_meta("arms_core", "")) == CKHeraldry.core_key(CKHeraldryChrome.nation_spec(expect_nid)), "city strip nation core")
 		_ok(cn != null and str(cn.get_meta("arms_core", "")) != CKHeraldry.core_key(ban_spec), "邦徽 != 团徽")
 	city_host.queue_free()
-=======
+
+
 	# ── Aftermath crest strip (团徽 + 敌徽) ────────────────────────
 	var host := Control.new()
 	host.name = "AftermathHost"
@@ -339,7 +335,7 @@ func _run() -> void:
 		_ok(af_halt.find_child("CastleArms", true, false) != null, "halt CastleArms missing")
 		_ok(af_halt.find_child("FoeArms", true, false) == null, "halt must not show FoeArms")
 	host.queue_free()
->>>>>>> 5896793a0 (feat(heraldry): battle/danger aftermath crest strip — 团徽+敌徽)
+
 	await _settle(2)
 	if _fail != "":
 		return
