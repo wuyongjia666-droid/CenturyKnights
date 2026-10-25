@@ -13,6 +13,8 @@ extends RefCounted
 ## Y1-A T-P1-5: contour rect hit — fat finger on the figure body (not just cell centre /
 ## cell-above bias) still selects; tap-again confirm is in battle_controller.
 ## Y1-A T-P3: strict unit-drag origin (exact/bias/contour, not soft-empty) + selected-only sticky.
+## Y1-A T-P4: smooth camera focus + margin follow for unit/preview; attack juice lives
+## in BattleTouchConfirm (keeps battle_controller under the 3000-line gate).
 
 ## Fraction of a cell: anything closer than this counts as that unit.
 const SOFT_R := 0.90
@@ -34,6 +36,9 @@ const ZOOM_MIN := 0.65
 const ZOOM_MAX := 2.4
 ## Board pixels that must stay inside the stage on every side after a pan.
 const PAN_KEEP_PX := 64.0
+## T-P4: smooth focus duration + stage inset fraction for soft follow nudges.
+const FOCUS_SMOOTH_SEC := 0.22
+const FOCUS_MARGIN_FRAC := 0.18
 
 
 ## Clamp a board pan so at least PAN_KEEP_PX of the (zoomed) board stays inside stage.
@@ -79,6 +84,43 @@ static func focus_pan_delta(origin: Vector2, cell_px_unscaled: float, cell: Vect
 	var center: Vector2 = origin_z + Vector2(cell) * cell_px + Vector2(cell_px, cell_px) * 0.5
 	var target: Vector2 = stage.get_center() + Vector2(-stage.size.x * 0.08, 0.0)
 	return target - (center + pan)
+
+
+## T-P4 soft follow: pan delta that pulls cell centre onto the stage inset edge when
+## it sits outside; ZERO when already inside. Does not full-re-centre (unlike focus_pan_delta).
+static func focus_nudge_delta(origin: Vector2, cell_px_unscaled: float, cell: Vector2i, pan: Vector2, zoom: float, stage: Rect2, margin_frac: float = FOCUS_MARGIN_FRAC) -> Vector2:
+	var z: float = zoom if zoom > 0.001 else 1.0
+	var cell_px: float = cell_px_unscaled * z
+	var origin_z: Vector2 = origin * z
+	var center: Vector2 = origin_z + Vector2(cell) * cell_px + Vector2(cell_px, cell_px) * 0.5
+	var shown: Vector2 = center + pan
+	var mx: float = stage.size.x * margin_frac
+	var my: float = stage.size.y * margin_frac
+	var inset := Rect2(stage.position + Vector2(mx, my), stage.size - Vector2(mx, my) * 2.0)
+	if inset.size.x < cell_px or inset.size.y < cell_px:
+		return focus_pan_delta(origin, cell_px_unscaled, cell, pan, zoom, stage)
+	if inset.has_point(shown):
+		return Vector2.ZERO
+	var clamped_pt := Vector2(
+		clampf(shown.x, inset.position.x, inset.end.x),
+		clampf(shown.y, inset.position.y, inset.end.y))
+	return clamped_pt - shown
+
+
+## Pure lerp used by the focus tween (and by device-free contracts).
+static func focus_pan_lerp(from: Vector2, to: Vector2, t: float) -> Vector2:
+	return from.lerp(to, clampf(t, 0.0, 1.0))
+
+
+## Prefer m_board_area meta; fall back to BOARD_AREA via duck get().
+## Empty Rect2 when neither is present (device-free FakeHosts that skip focus).
+static func _stage_rect(host) -> Rect2:
+	if host.has_meta("m_board_area"):
+		return host.get_meta("m_board_area")
+	var stage = host.get("BOARD_AREA")
+	if stage is Rect2:
+		return stage
+	return Rect2()
 
 
 static func nearest_unit_pos(origin: Vector2, cell_px: float, units: Array, local: Vector2, soft_r: float = SOFT_R) -> Vector2i:
@@ -240,21 +282,81 @@ static func _board_local(host, screen_pos: Vector2) -> Vector2:
 	return local_after_pan_zoom(host._screen_to_local(screen_pos), host._board_pan, host._board_zoom)
 
 
-static func focus_cell(host, cell: Vector2i) -> void:
+static func focus_cell(host, cell: Vector2i, smooth: bool = true) -> void:
 	if not DeviceProfile.is_mobile():
 		return
-	if not host._in_bounds(cell):
+	if host.has_method("_in_bounds") and not host._in_bounds(cell):
 		return
-	var stage: Rect2 = host.get_meta("m_board_area", host.BOARD_AREA)
-	var z: float = host._board_zoom if host._board_zoom > 0.001 else 1.0
-	var cell_px: float = float(host.CELL) * z
-	var origin: Vector2 = host.ORIGIN * z
-	var center: Vector2 = origin + Vector2(cell) * cell_px + Vector2(cell_px, cell_px) * 0.5
-	# Bias slightly left so the unit sits clear of the right command rail.
-	var target: Vector2 = stage.get_center() + Vector2(-stage.size.x * 0.08, 0.0)
-	host._board_pan += target - (center + host._board_pan)
-	host._clamp_board_pan()
-	host._apply_board_xform()
+	var stage: Rect2 = _stage_rect(host)
+	if stage.size.x < 1.0 or stage.size.y < 1.0:
+		return
+	var delta: Vector2 = focus_pan_delta(host.ORIGIN, float(host.CELL), cell, host._board_pan, host._board_zoom, stage)
+	if delta.length_squared() < 0.25:
+		return
+	_apply_focus_pan(host, host._board_pan + delta, smooth)
+
+
+## Soft-follow a cell so it stays inside the stage inset (preview drag / attack latch).
+static func focus_follow_cell(host, cell: Vector2i) -> void:
+	if not DeviceProfile.is_mobile():
+		return
+	if host.has_method("_in_bounds") and not host._in_bounds(cell):
+		return
+	var stage: Rect2 = _stage_rect(host)
+	if stage.size.x < 1.0 or stage.size.y < 1.0:
+		return
+	var delta: Vector2 = focus_nudge_delta(host.ORIGIN, float(host.CELL), cell, host._board_pan, host._board_zoom, stage)
+	if delta.length_squared() < 0.25:
+		return
+	_apply_focus_pan(host, host._board_pan + delta, true)
+
+
+## Follow move-preview cell or attack-preview unit when either is latched.
+static func focus_follow_preview(host) -> void:
+	if host.preview_move_cell.x >= 0:
+		focus_follow_cell(host, host.preview_move_cell)
+		return
+	var ui: int = int(host.preview_attack_ui)
+	if ui >= 0 and ui < host.units.size():
+		focus_follow_cell(host, host.units[ui].pos)
+
+
+static func _apply_focus_pan(host, target_pan: Vector2, smooth: bool) -> void:
+	var saved: Vector2 = host._board_pan
+	host._board_pan = target_pan
+	if host.has_method("_clamp_board_pan"):
+		host._clamp_board_pan()
+	var clamped: Vector2 = host._board_pan
+	host._board_pan = saved
+	if smooth and host is CanvasItem and (host as CanvasItem).is_inside_tree():
+		_tween_board_pan(host, clamped)
+		return
+	cancel_focus_tween(host)
+	host._board_pan = clamped
+	if host.has_method("_apply_board_xform"):
+		host._apply_board_xform()
+
+
+## Kill an in-flight focus tween so a finger pan / unit-drag owns `_board_pan`.
+static func cancel_focus_tween(host) -> void:
+	if not host.has_meta("_ck_focus_tw"):
+		return
+	var prev = host.get_meta("_ck_focus_tw")
+	if prev is Tween and is_instance_valid(prev):
+		prev.kill()
+	host.remove_meta("_ck_focus_tw")
+
+
+static func _tween_board_pan(host, target: Vector2) -> void:
+	cancel_focus_tween(host)
+	var from: Vector2 = host._board_pan
+	var tw: Tween = host.create_tween()
+	host.set_meta("_ck_focus_tw", tw)
+	tw.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tw.tween_method(func(p: Vector2) -> void:
+		host._board_pan = p
+		host._apply_board_xform()
+	, from, target, FOCUS_SMOOTH_SEC)
 
 
 static func focus_selected(host) -> void:
