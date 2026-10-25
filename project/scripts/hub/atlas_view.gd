@@ -1148,7 +1148,7 @@ func _render_right() -> void:
 			loop_box.add_child(arb)
 	elif _sel == World.pos and not World.arbitrage.is_empty():
 		var plan: Dictionary = World.arbitrage
-		var pending := UIKit.body_label(Locale.t("atlas_arb_pending") % [World.good_name(str(plan.get("good", ""))), int(plan.get("qty", 1)), str(World.node(str(plan.get("sell_city", ""))).get("name", plan.get("sell_city", "")))], UIKit.EMBER, 12)
+		var pending := UIKit.body_label(_arb_pending_text(plan), UIKit.EMBER, 12)
 		pending.name = "ArbitragePending"
 		pending.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		pending.custom_minimum_size = Vector2(col_w, 0)
@@ -2361,6 +2361,12 @@ func _check_arbitrage_arrival() -> bool:
 	_show_arbitrage_sell_modal()
 	return true
 
+func _arb_pending_text(plan: Dictionary) -> String:
+	var g := str(plan.get("good", ""))
+	var dest := str(plan.get("sell_city", ""))
+	var dname := str(World.node(dest).get("name", dest))
+	return Locale.t("atlas_arb_pending") % [World.good_name(g), int(plan.get("qty", 1)), dname]
+
 func _start_arbitrage_from_profile(good: String, sell_city: String) -> void:
 	var r: Dictionary = World.begin_arbitrage(good, 1, sell_city)
 	_show_toast(str(r.get("msg", "")), UIKit.OK if bool(r.get("ok", false)) else UIKit.DANGER)
@@ -2388,7 +2394,7 @@ func _show_arbitrage_sell_modal() -> void:
 	var t := UIKit.title_label(Locale.t("atlas_arb_sell_title"), 24, UIKit.OK)
 	t.position = Vector2(24, 24)
 	p.add_child(t)
-	var body := UIKit.body_label(Locale.t("atlas_arb_pending") % [World.good_name(str(plan.get("good", ""))), int(plan.get("qty", 1)), str(World.node(str(plan.get("sell_city", ""))).get("name", plan.get("sell_city", "")))], UIKit.TEXT, 14)
+	var body := UIKit.body_label(_arb_pending_text(plan), UIKit.TEXT, 14)
 	body.position = Vector2(24, 70)
 	body.size = Vector2(452, 80)
 	p.add_child(body)
@@ -2730,7 +2736,7 @@ func _m_place() -> void:
 				loop_sec.add_child(arbm)
 			elif not World.arbitrage.is_empty():
 				var plan_m: Dictionary = World.arbitrage
-				loop_sec.add_child(_m_label(Locale.t("atlas_arb_pending") % [World.good_name(str(plan_m.get("good", ""))), int(plan_m.get("qty", 1)), str(World.node(str(plan_m.get("sell_city", ""))).get("name", plan_m.get("sell_city", "")))], UIKit.EMBER))
+				loop_sec.add_child(_m_label(_arb_pending_text(plan_m), UIKit.EMBER))
 				if str(plan_m.get("sell_city", "")) == World.pos:
 					var sellm := MobilePage.button(Locale.t("atlas_arb_sell_now"), true, func(): _complete_arbitrage_ui())
 					sellm.name = "ArbitrageSell"
