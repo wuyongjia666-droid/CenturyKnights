@@ -33,3 +33,5 @@
 - [ ] 与 `privacy-policy-draft.md` 无矛盾  
 - [ ] listing 仍写「无内购 / 不付费提审」  
 - [ ] 本草稿仅预填；**不**代替正式提交
+
+工程侧核对见 [`data-safety-verification-record.md`](./data-safety-verification-record.md)。本草稿仍**不**代替 Play Console 正式提交。

@@ -26,3 +26,5 @@ Century Knights is a premium offline title (no IAP, no mandatory account). Saves
 - [ ] listing「无内购 / 买断」未改口  
 - [ ] **不付费**开通 Zendesk 等；本页仅草稿  
 - [ ] 正式提审前再填真实邮箱与 URL（密钥/别名不进仓库）
+
+工程侧核对见 [`support-contact-verification-record.md`](./support-contact-verification-record.md)。真实邮箱/URL 上架前再填；本轨**不付费**开通客服平台。
