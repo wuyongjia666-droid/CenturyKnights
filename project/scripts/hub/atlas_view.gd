@@ -1709,6 +1709,8 @@ func _after_arrival() -> void:
 	var readies := World.ready_turn_ins_here().size()
 	if _check_losses():
 		return
+	if _check_chain_fail():
+		return
 	if _check_rival_thefts():
 		return
 	if _check_arbitrage_arrival():
@@ -1722,6 +1724,8 @@ func _after_arrival() -> void:
 func _resume_state() -> void:
 	## returning from a battle / load: re-open pending modal or continue a journey
 	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_losses():
+		return
+	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_chain_fail():
 		return
 	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_rival_thefts():
 		return
@@ -2041,6 +2045,79 @@ func _show_chain_advance_modal(follow: Dictionary) -> void:
 	World.last_chain_follow = {}
 	while not done and is_instance_valid(p) and p.get_parent() != null:
 		await get_tree().process_frame
+
+## Scripted-chain expire/abandon → ChainFailModal (改道 / 确认失败 / 稍后).
+func _check_chain_fail() -> bool:
+	if not _modal.get_children().is_empty():
+		return false
+	if World.last_chain_fail.is_empty():
+		return false
+	var fail: Dictionary = World.take_chain_fail()
+	if fail.is_empty():
+		return false
+	_show_chain_fail_modal(fail)
+	return true
+
+func _show_chain_fail_modal(fail: Dictionary) -> void:
+	var chain_id := str(fail.get("chain_id", ""))
+	var chain_title := str(fail.get("chain_title", chain_id))
+	var reason := str(fail.get("reason", "expire"))
+	var why := Locale.t("atlas_chain_fail_reason_expire") if reason == "expire" else Locale.t("atlas_chain_fail_reason_abandon")
+	var step_i := int(fail.get("step", 0))
+	var issuer := str(fail.get("issuer", ""))
+	var target := str(fail.get("target", ""))
+	var title_q := str(fail.get("title", ""))
+	var h := 340.0
+	var p := _modal_panel(h)
+	p.name = "ChainFailModal"
+	var el := UIKit.mono(Locale.t("atlas_chain_fail_en"), 9, UIKit.DANGER)
+	el.position = Vector2(24, 16)
+	p.add_child(el)
+	var tlabel := UIKit.title_label(Locale.t("atlas_chain_fail_title") % chain_title, 20, UIKit.DANGER)
+	tlabel.position = Vector2(24, 34)
+	tlabel.size = Vector2(452, 30)
+	p.add_child(tlabel)
+	var body := UIKit.body_label(
+		Locale.t("atlas_chain_fail_body") % [title_q, why, step_i + 1, World.node(issuer).get("name", issuer), World.node(target).get("name", target)],
+		UIKit.TEXT, 13)
+	body.name = "ChainFailBody"
+	body.position = Vector2(24, 72)
+	body.size = Vector2(452, 72)
+	body.custom_minimum_size = Vector2(452, 0)
+	p.add_child(body)
+	var y := 160.0
+	var reroute := UIKit.cta_button(Locale.t("atlas_chain_reroute"), "A", 300, 42)
+	reroute.name = "ChainReroute"
+	reroute.position = Vector2(24, y)
+	reroute.pressed.connect(func():
+		var rr: Dictionary = World.reroute_failed_chain(chain_id)
+		_show_toast(str(rr.get("msg", "")), UIKit.OK if bool(rr.get("ok", false)) else UIKit.DANGER)
+		_clear_modal()
+		if bool(rr.get("ok", false)):
+			var q: Dictionary = rr.get("quest", {})
+			var dest := str(q.get("issuer", issuer))
+			call_deferred("_after_chain_start", dest))
+	p.add_child(reroute)
+	y += 50.0
+	var drop := UIKit.ghost_button(Locale.t("atlas_chain_fail_confirm"), 300, 42)
+	drop.name = "ChainFailConfirm"
+	drop.position = Vector2(24, y)
+	drop.pressed.connect(func():
+		World.dismiss_chain_fail()
+		_show_toast(Locale.t("atlas_chain_fail_done") % chain_title, UIKit.EMBER)
+		_clear_modal()
+		_refresh_top()
+		_build_nodes())
+	p.add_child(drop)
+	var later := UIKit.ghost_button(Locale.t("atlas_chain_later"), 140, 42)
+	later.name = "ChainFailLater"
+	later.position = Vector2(24, h - 64)
+	later.pressed.connect(func():
+		# Keep fail status; restore payload so modal can reopen next arrival/resume.
+		World.last_chain_fail = fail.duplicate(true)
+		_clear_modal())
+	p.add_child(later)
+	reroute.call_deferred("grab_focus")
 
 func _clear_modal() -> void:
 	for c in _modal.get_children():
