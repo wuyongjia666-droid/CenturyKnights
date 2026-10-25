@@ -37,9 +37,22 @@ func _ready() -> void:
 	if GameState.flag("ch_heir_clash_done"):
 		CKPageKit.say(_msg, Locale.t("lb_heir_back_from_battle"), true)
 		GameState.set_flag("ch_heir_clash_done", false)
+	_place_duel_crests()
 	_show()
 	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "HEIR TRIALS · FROST")
 	UIFX.page_enter(self)
+
+
+func _place_duel_crests() -> void:
+	## 团徽 + two heir shields on HeirBoard. EmptyHost path untouched — strip still shows 团徽.
+	var mob := DeviceProfile.is_mobile()
+	CKHeraldryChrome.place_company_header(self, Vector2(1180, 8) if not mob else Vector2(1180, 4), Vector2(44, 52) if not mob else Vector2(40, 48))
+	var board := get_node_or_null("HeirBoard") as Control
+	var host: Node = board if board != null else self
+	var at := Vector2(980, 12) if board != null else Vector2(980, 12)
+	if mob:
+		at = Vector2(900, 8)
+	CKHeraldryChrome.place_duel_crest_strip(host, _a, _b, at, Vector2(36, 44) if not mob else Vector2(32, 38))
 
 func _path_zh(c: CKCharacter) -> String:
 	var p := str(GameState.lineage_path.get(c.id, "")) if c else ""
@@ -72,6 +85,7 @@ func _heir_card(c: CKCharacter, tag: String) -> Control:
 	return p
 
 func _show() -> void:
+	_place_duel_crests()
 	CKPageKit.clear(_duel)
 	CKPageKit.clear(_moves)
 	if not _life.is_empty():
