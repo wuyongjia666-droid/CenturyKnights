@@ -1,5 +1,5 @@
 extends Node
-## Fat heraldry E2E: battle/danger aftermath + travel-halt crest strips (团徽 + 敌徽).
+## Fat heraldry E2E: battle/danger aftermath crest strips (团徽 + 敌徽); halt handoff to TravelCrestStrip.
 
 const ATLAS_SCN := preload("res://scenes/hub/atlas_view.tscn")
 var _fails: Array = []
@@ -133,6 +133,7 @@ func _ui_danger_aftermath_crests() -> void:
 	await _settle(2)
 
 func _ui_halt_company_crest() -> void:
+	## Halt now uses TravelCrestStrip (see atlas_travel_camp_encounter_crest_check).
 	var page: Control = ATLAS_SCN.instantiate()
 	get_tree().root.add_child(page)
 	await _settle()
@@ -140,11 +141,10 @@ func _ui_halt_company_crest() -> void:
 	await _settle(8)
 	var modal := page.find_child("TravelHaltModal", true, false)
 	_ok(modal != null, "TravelHaltModal")
-	var strip := page.find_child("AftermathCrestStrip", true, false)
-	_ok(strip != null, "halt AftermathCrestStrip")
+	var strip := page.find_child("TravelCrestStrip", true, false)
+	_ok(strip != null, "halt TravelCrestStrip handoff")
 	if strip != null:
 		var ca := strip.find_child("CastleArms", true, false)
 		_ok(ca != null and str(ca.get_meta("arms_kind", "")) == "gen2_36", "halt 团徽")
-		_ok(strip.find_child("FoeArms", true, false) == null, "halt no 敌徽")
 	page.queue_free()
 	await _settle(2)

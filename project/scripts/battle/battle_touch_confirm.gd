@@ -12,6 +12,7 @@ extends RefCounted
 ## beside the selected piece pans the map instead of stealing the gesture.
 ## Y1-A T-P4: soft-follow settles on confirm/select (not mid unit-drag — keeps pan!=drag);
 ## attack ghost gets aim line + pulse juice.
+## Y1-A T-P6: confirm_attack stamps m_attack_confirm_msec for settle juice path.
 ## Y1-A T-P5: select-lock on try_deselect; clear() re-focuses selection after cancel;
 ## invalid-target reject pulse lives here (keeps battle_controller under the line gate).
 
@@ -158,6 +159,8 @@ static func confirm_attack(host) -> void:
 	clear(host)
 	if host.selected < 0 or ui < 0 or ui >= host.units.size():
 		return
+	# T-P6: confirm→hit settle path — stamp confirm; resolve refreshes hit/miss/kill juice.
+	host.set_meta("m_attack_confirm_msec", Time.get_ticks_msec())
 	host._do_attack(host.selected, ui)
 	if ui < host.units.size() and host.units[ui].char.hp > 0:
 		BattlePick.focus_cell(host, host.units[ui].pos)
