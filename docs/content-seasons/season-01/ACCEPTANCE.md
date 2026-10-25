@@ -12,3 +12,4 @@
 
 - [x] `scaffold_gate` — `suite_content_season_scaffold_check`：机器表、清单、验收 suite；`novel_allowed`；正文与可玩章体量
 - [x] `playable_dialogue` — `suite_content_season_playable_check`：`cs01_01` schema+lint；chapter_player 走进对白；可选「把无写进谱」
+- [x] `playable_dialogue_02` — `suite_content_season_playable_s01_02_check`：`cs01_02` schema+lint；走进对白；可选「空格并排留」
