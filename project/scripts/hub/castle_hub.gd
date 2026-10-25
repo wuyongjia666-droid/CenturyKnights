@@ -283,12 +283,13 @@ func _build() -> void:
 		todo_row.add_child(chip)
 	if not HubTodo.any_due():
 		todo_row.add_child(UIKit.mono(Locale.t("ux_todo_none"), UIKit.desk_sz(10), UIKit.TEXT_FAINT, false))
+	var season_y := _add_content_season_row_desk(cp, 508.0)
 	var ih := UIKit.hairline(Color(1, 1, 1, 0.07))
-	ih.position = Vector2(26, 512)
+	ih.position = Vector2(26, season_y)
 	ih.size = Vector2(768, 1)
 	cp.add_child(ih)
 	_hint = UIKit.body_label("", UIKit.OK, UIKit.desk_sz(11))
-	_hint.position = Vector2(494, 528)
+	_hint.position = Vector2(494, season_y + 16.0)
 	_hint.size = Vector2(300, 18)
 	_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	cp.add_child(_hint)
@@ -571,6 +572,58 @@ func _continue_mainline() -> void:
 	var cursor := _cursor()
 	var scene := StoryCatalog.request_chapter(str(cursor.get("id", "ch0")))
 	CKNav.replace(scene)
+
+func _open_content_season(chapter_id: String) -> void:
+	var scene := StoryCatalog.request_chapter(chapter_id)
+	CKNav.replace(scene)
+
+## Desk ContentSeasonRow. Returns the Y used for the next hairline.
+## Empty entries → skip entirely (禁 EmptyHost / 空态 CTA).
+func _add_content_season_row_desk(cp: Control, y: float) -> float:
+	var entries: Array = StoryCatalog.content_season_entries()
+	if entries.is_empty():
+		return y
+	var row := HBoxContainer.new()
+	row.name = "ContentSeasonRow"
+	row.position = Vector2(26, y)
+	row.size = Vector2(740, 28)
+	row.clip_contents = true
+	row.add_theme_constant_override("separation", 6)
+	cp.add_child(row)
+	row.add_child(UIKit.mono(Locale.t("ux_hub_content_season"), UIKit.desk_sz(10), UIKit.EMBER, false))
+	for entry in entries:
+		var chapter_id := str(entry.get("chapter_id", ""))
+		var title := str(entry.get("title", chapter_id))
+		var chip := Button.new()
+		chip.name = "Season_%s" % chapter_id
+		chip.text = Locale.t("ux_hub_content_season_play") % title
+		chip.flat = true
+		chip.add_theme_font_size_override("font_size", UIKit.desk_sz(11))
+		chip.add_theme_color_override("font_color", UIKit.EMBER)
+		chip.pressed.connect(_open_content_season.bind(chapter_id))
+		row.add_child(chip)
+	return y + 28.0
+
+## Mobile ContentSeasonRow. Skip when empty — never paint EmptyHost.
+func _add_content_season_row_mobile(v: Control) -> void:
+	var entries: Array = StoryCatalog.content_season_entries()
+	if entries.is_empty():
+		return
+	v.add_child(MobilePage.label(Locale.t("ux_hub_content_season"), UIKit.EMBER, M_FONT, false))
+	var row := HFlowContainer.new()
+	row.name = "ContentSeasonRow"
+	row.add_theme_constant_override("h_separation", 8)
+	row.add_theme_constant_override("v_separation", 8)
+	v.add_child(row)
+	for entry in entries:
+		var chapter_id := str(entry.get("chapter_id", ""))
+		var title := str(entry.get("title", chapter_id))
+		var chip := MobilePage.button(Locale.t("ux_hub_content_season_play") % title, false, _open_content_season.bind(chapter_id))
+		chip.name = "Season_%s" % chapter_id
+		chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		chip.custom_minimum_size = Vector2(150, M_HIT)
+		chip.add_theme_color_override("font_color", UIKit.EMBER)
+		row.add_child(chip)
 
 ## Lock sheet (§4.4): what it is, when it opens, and "take me there" when the main line opens it.
 func open_lock_sheet(title: String, st: Dictionary) -> void:
@@ -926,7 +979,10 @@ func _m_select(id: String) -> void:
 
 func _m_right_column(rect: Rect2) -> void:
 	# Main line first: it is the one thing the player should do next.
+	# Content-season chips need room only when playable entries exist (no EmptyHost).
 	var main_h := 296.0
+	if not StoryCatalog.content_season_entries().is_empty():
+		main_h = 380.0
 	var v := _m_box(Rect2(rect.position, Vector2(rect.size.x, main_h)), "DossierPanel", 14)
 	v.add_theme_constant_override("separation", 8)
 	v.add_child(MobilePage.label(Locale.t("ux_hub_mainline_cap"), UIKit.TEXT_FAINT, M_FONT, false))
@@ -941,6 +997,7 @@ func _m_right_column(rect: Rect2) -> void:
 	cont_b.add_theme_font_size_override("font_size", 26)
 	v.add_child(cont_b)
 	cont_b.call_deferred("grab_focus")
+	_add_content_season_row_mobile(v)
 	var todo_row := HFlowContainer.new()
 	todo_row.name = "TodoRow"
 	todo_row.add_theme_constant_override("h_separation", 8)

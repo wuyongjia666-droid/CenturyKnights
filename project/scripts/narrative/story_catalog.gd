@@ -31,9 +31,47 @@ static func archive_replay_enabled() -> bool:
 	return false
 
 ## Content-season chapters (csNN_MM) live beside volume JSON but are not
-## CKStoryState / hub mainline progression — they open via season playable entry.
+## CKStoryState / hub mainline progression — they open via hub ContentSeasonRow
+## (StoryCatalog.content_season_entries), never via EmptyHost CTA.
+const SEASONS_INDEX := "res://data/content_seasons/index.json"
+const SEASONS_DIR := "res://data/content_seasons"
+
 static func is_content_season_id(chapter_id: String) -> bool:
 	return chapter_id.begins_with("cs")
+
+## Playable content-season chapters for the castle hub entry. Empty when none
+## are playable — callers must skip the row (no EmptyHost / empty CTA).
+static func content_season_entries() -> Array:
+	var out: Array = []
+	if not FileAccess.file_exists(SEASONS_INDEX):
+		return out
+	var idx = JSON.parse_string(FileAccess.get_file_as_string(SEASONS_INDEX))
+	if typeof(idx) != TYPE_DICTIONARY:
+		return out
+	for sid in idx.get("seasons", []):
+		var season_path := SEASONS_DIR.path_join("%s.json" % str(sid))
+		if not FileAccess.file_exists(season_path):
+			continue
+		var data = JSON.parse_string(FileAccess.get_file_as_string(season_path))
+		if typeof(data) != TYPE_DICTIONARY:
+			continue
+		var status := str(data.get("status", ""))
+		if not status.begins_with("playable"):
+			continue
+		var chapter_id := str(data.get("playable_chapter", ""))
+		if chapter_id == "" or not is_content_season_id(chapter_id):
+			continue
+		var chapter_path := CHAPTERS_DIR.path_join("%s.json" % chapter_id)
+		if not FileAccess.file_exists(chapter_path):
+			continue
+		out.append({
+			"season_id": str(data.get("id", sid)),
+			"title": str(data.get("title_zh", chapter_id)),
+			"chapter_id": chapter_id,
+			"path": chapter_path,
+			"scene": PLAYER_SCENE,
+		})
+	return out
 
 ## JSON path of a chapter id ("e1_01" lives in era1_01.json). "" when the id is unknown.
 static func path_for(chapter_id: String) -> String:
