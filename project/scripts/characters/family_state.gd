@@ -283,9 +283,10 @@ static func tick_doctrine_and_marriage_month(host) -> Array:
 			msgs.append(dline)
 			## Y1-B: 家训月结 → month_echo.doctrine；属地/沙漏回读.
 			CKEconomyState.month_echo_note("doctrine", dline)
-		var amb = host.check_ambitions()
-		for a in amb:
-			msgs.append(a)
+	## Y1-B: 堡志月结不再门闩家训——无家训时库银/属地/花名册目标仍可月结达成并写入 month_echo.ambition.
+	var amb = host.check_ambitions()
+	for a in amb:
+		msgs.append(a)
 	# 联姻月结：全员成婚对涨士气（封顶）；银仍只跟团长配偶同席，保住战役经济锁
 	var seen_pairs: Dictionary = {}
 	var morale_gain := 0
