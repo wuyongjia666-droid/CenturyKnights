@@ -424,3 +424,27 @@ atlas_supply_press_log,硬闯续行，士气再挫,Pressed on; morale sank furth
 atlas_supply_press_ok,硬闯续行（粮仍空，士气再挫）,Pressed on (still empty; morale hit)
 atlas_supply_stop_log,强制停靠于「%s」,Forced halt at "%s"
 atlas_supply_stop_ok,已在「%s」强制停靠，可补给后续行,Halted at "%s"; resupply then resume
+atlas_terr_month_en,TERRITORY // 月结,TERRITORY // MONTH
+atlas_terr_month_title,领地月结,Territory month
+atlas_terr_month_body,净银 %+d · 粮 %+d · 现领 %d 处。%s,Net %+d silver · %+d food · %d holdings. %s
+atlas_terr_month_drain,欠饷驻军折损：%s,Unpaid garrison drain: %s
+atlas_terr_month_lost,失守：%s（反夺委托已贴榜）,Lost: %s (retake posted)
+atlas_terr_month_held,驻军独力守住：%s,Garrison held alone: %s
+atlas_terr_month_threat,新威胁：%s,New threat: %s
+atlas_terr_month_ok,已知晓,Acknowledged
+atlas_terr_month_reclaim,查看反夺委托,View retake commission
+atlas_terr_month_later,稍后,Later
+atlas_terr_month_none,—,—
+atlas_siege_en,SIEGE // 围城,SIEGE // ALERT
+atlas_siege_title,敌对围城 · 来犯告急,Rival siege · alert
+atlas_siege_body,%s 进逼「%s」（锚地 %s）。驻军 %d。%s %s,%s presses "%s" (anchor %s). Garrison %d. %s %s
+atlas_siege_phase_declared,威胁初起，尚有一月可应。,Threat declared — about one month to answer.
+atlas_siege_phase_imminent,围城在即，再不驰援将由驻军独力硬扛。,Siege imminent — garrison stands alone if unanswered.
+atlas_siege_intel,斥候回报守成约 %d%%。,Scout: hold chance ~%d%%.
+atlas_siege_intel_unknown,虚实未明（可派斥候）。,Unknown (scout to reveal).
+atlas_siege_relief,驰援截击,March to intercept
+atlas_siege_intercept,就地截击,Intercept now
+atlas_siege_relief_go,启程驰援「%s」,Marching to relieve "%s"
+atlas_siege_bribe,收买缓兵 %d 银,Bribe delay %d silver
+atlas_siege_scout,斥候探明 %d 银,Scout %d silver
+atlas_siege_later,稍后,Later
