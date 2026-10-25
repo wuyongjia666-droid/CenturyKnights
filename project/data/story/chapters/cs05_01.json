@@ -256,6 +256,14 @@
               "value": true
             },
             {
+              "op": "season_ledger",
+              "chapter": "cs05_01",
+              "choice": "keep_chain",
+              "title": "空椅上的灯",
+              "outcome": "空椅并排链记入谱",
+              "yeartrace": true
+            },
+            {
               "op": "goto",
               "beat": "ledger"
             }
@@ -269,6 +277,14 @@
               "op": "set_flag",
               "flag": "cs05_name_first",
               "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs05_01",
+              "choice": "name_first",
+              "title": "空椅上的灯",
+              "outcome": "先钉名上椅",
+              "yeartrace": true
             },
             {
               "op": "goto",

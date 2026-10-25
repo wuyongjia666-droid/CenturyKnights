@@ -256,6 +256,14 @@
               "value": true
             },
             {
+              "op": "season_ledger",
+              "chapter": "cs09_01",
+              "choice": "keep_blood",
+              "title": "血验上的灯",
+              "outcome": "血验并排记入谱",
+              "yeartrace": true
+            },
+            {
               "op": "goto",
               "beat": "ledger"
             }
@@ -269,6 +277,14 @@
               "op": "set_flag",
               "flag": "cs09_name_blood",
               "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs09_01",
+              "choice": "name_blood",
+              "title": "血验上的灯",
+              "outcome": "先钉血名",
+              "yeartrace": true
             },
             {
               "op": "goto",
