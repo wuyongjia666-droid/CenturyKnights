@@ -272,12 +272,18 @@
         {
           "id": "open_skirmish",
           "label": "先试一锋",
+          "when": {
+            "not_flag": "cs10_mid_fought"
+          },
           "do": [
             {
               "op": "battle",
               "map": "quest_bandit",
               "objective": "rout",
-              "return": "res://scenes/story/chapter_player.tscn"
+              "return": "res://scenes/story/chapter_player.tscn",
+              "win_flags": [
+                "cs10_mid_fought"
+              ]
             }
           ]
         },

@@ -15,6 +15,12 @@ static func spec(map_id: String) -> Dictionary:
 		var s := str(f)
 		if s != "" and not flags.has(s):
 			flags.append(s)
+	# Chapter-authored win_flags (mid-cs skirmish) stamped on battle leave — shared maps
+	# like quest_bandit stay clean; each season owns csXX_mid_fought.
+	for f in GameState.get_meta("battle_win_flags", []):
+		var s2 := str(f)
+		if s2 != "" and not flags.has(s2):
+			flags.append(s2)
 	# Pre-BTL-01 also forced battle_done for quest-prefixed ids after the ladder.
 	if map_id.begins_with("quest") and not flags.has("battle_done"):
 		flags.append("battle_done")
@@ -84,6 +90,9 @@ static func apply(map_id: String) -> Dictionary:
 	for act in sp.actions:
 		if str(act) == "heir_clash_restore":
 			restore_heir_clash()
+	# Consume chapter stamps so a later hub fight on the same map does not re-apply.
+	if GameState.has_meta("battle_win_flags"):
+		GameState.set_meta("battle_win_flags", [])
 	return sp
 
 

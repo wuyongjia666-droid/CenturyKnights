@@ -585,8 +585,16 @@ func _run_op(step) -> String:
 			GameState.set_meta("battle_return_chapter", str(_chapter.get("id", "")))
 			GameState.set_meta("battle_map", str(row.get("map", "")))
 			GameState.set_meta("battle_objective", str(row.get("objective", "")))
+			# Authored win_flags (cs mid-skirmish) — merged by BattleVictory.apply; not on shared maps.
+			var win_flags: Array = []
+			for f in row.get("win_flags", []):
+				var fs := str(f)
+				if fs != "" and not win_flags.has(fs):
+					win_flags.append(fs)
+			GameState.set_meta("battle_win_flags", win_flags)
 			test_capture["battle_map"] = str(row.get("map", ""))
 			test_capture["battle_objective"] = str(row.get("objective", ""))
+			test_capture["battle_win_flags"] = win_flags.duplicate()
 			_go_scene(BATTLE_SCENE)
 			return "stop"
 		"scene":
