@@ -1665,6 +1665,14 @@ func _run_travel() -> void:
 			_set_busy(false)
 			_refresh_top()
 			return
+		if _check_territory_month():
+			_set_busy(false)
+			_refresh_top()
+			return
+		if _check_siege_alert():
+			_set_busy(false)
+			_refresh_top()
+			return
 		if bool(info.get("arrived", false)):
 			break
 	_set_busy(false)
@@ -1711,6 +1719,10 @@ func _after_arrival() -> void:
 	_select_node(World.pos)
 	var n: Dictionary = World.node(World.pos)
 	var readies := World.ready_turn_ins_here().size()
+	if _check_territory_month():
+		return
+	if _check_siege_alert():
+		return
 	if _check_losses():
 		return
 	if _check_chain_fail():
@@ -1729,6 +1741,10 @@ func _after_arrival() -> void:
 
 func _resume_state() -> void:
 	## returning from a battle / load: re-open pending modal or continue a journey
+	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_territory_month():
+		return
+	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_siege_alert():
+		return
 	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_losses():
 		return
 	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_chain_fail():
@@ -2136,6 +2152,249 @@ func _show_supply_halt_modal(halt: Dictionary) -> void:
 		_clear_modal())
 	panel.add_child(later)
 	forage.call_deferred("grab_focus")
+
+## Month crossed with owned holdings → TerritoryMonthModal (yield / drain / lost / reclaim).
+func _check_territory_month() -> bool:
+	if not _modal.get_children().is_empty():
+		return false
+	if World.last_territory_month.is_empty():
+		return false
+	var rep: Dictionary = World.take_territory_month()
+	if rep.is_empty():
+		return false
+	_show_territory_month_modal(rep)
+	return true
+
+
+func _show_territory_month_modal(rep: Dictionary) -> void:
+	var silver := int(rep.get("silver", 0))
+	var food := int(rep.get("food", 0))
+	var owned := int(rep.get("owned", 0))
+	var drains: Array = rep.get("drains", [])
+	var lost: Array = rep.get("lost", [])
+	var held: Array = rep.get("held", [])
+	var threats: Array = rep.get("threats", [])
+	var reclaims: Array = rep.get("reclaims", [])
+	# Month modal already surfaces lost+reclaim — consume contest news so LossModal does not stack.
+	if not lost.is_empty():
+		CKTerritory.take_news()
+	var bits: Array = []
+	if not drains.is_empty():
+		var names: Array = []
+		for d in drains:
+			names.append("%s→%d" % [str(d.get("name", "")), int(d.get("garrison", 0))])
+		bits.append(Locale.t("atlas_terr_month_drain") % "、".join(names))
+	if not lost.is_empty():
+		var ln: Array = []
+		for row in lost:
+			ln.append(str(row.get("name", "")))
+		bits.append(Locale.t("atlas_terr_month_lost") % "、".join(ln))
+	if not held.is_empty():
+		var hn: Array = []
+		for row in held:
+			hn.append("%s(%d→%d)" % [str(row.get("name", "")), int(row.get("garrison_before", 0)), int(row.get("garrison", 0))])
+		bits.append(Locale.t("atlas_terr_month_held") % "、".join(hn))
+	if not threats.is_empty():
+		var tn: Array = []
+		for row in threats:
+			tn.append("%s·%s" % [str(row.get("name", "")), str(row.get("by", ""))])
+		bits.append(Locale.t("atlas_terr_month_threat") % "、".join(tn))
+	var extra := " ".join(bits) if not bits.is_empty() else Locale.t("atlas_terr_month_none")
+	var h := 340.0 if reclaims.is_empty() else 390.0
+	var panel := _modal_panel(h)
+	panel.name = "TerritoryMonthModal"
+	var el := UIKit.mono(Locale.t("atlas_terr_month_en"), 9, UIKit.ACCENT)
+	el.position = Vector2(24, 16)
+	panel.add_child(el)
+	var tlabel := UIKit.title_label(Locale.t("atlas_terr_month_title"), 20, UIKit.ACCENT)
+	tlabel.position = Vector2(24, 34)
+	tlabel.size = Vector2(452, 30)
+	panel.add_child(tlabel)
+	var body := UIKit.body_label(
+		Locale.t("atlas_terr_month_body") % [silver, food, owned, extra],
+		UIKit.TEXT, 13)
+	body.name = "TerritoryMonthBody"
+	body.position = Vector2(24, 72)
+	body.size = Vector2(452, 120)
+	body.custom_minimum_size = Vector2(452, 0)
+	panel.add_child(body)
+	var y := 210.0
+	var ok := UIKit.cta_button(Locale.t("atlas_terr_month_ok"), "A", 452, 42)
+	ok.name = "TerritoryMonthOk"
+	ok.position = Vector2(24, y)
+	ok.pressed.connect(func():
+		_clear_modal()
+		_refresh_top()
+		_build_nodes()
+		if _check_siege_alert():
+			return
+		if World.is_traveling():
+			call_deferred("_resume_travel_after_territory_month"))
+	panel.add_child(ok)
+	y += 50.0
+	if not reclaims.is_empty():
+		var rid := str(reclaims[0])
+		var anchor := str(CKTerritory.site(rid).get("anchor", ""))
+		var reclaim_btn := UIKit.ghost_button(Locale.t("atlas_terr_month_reclaim"), 452, 36)
+		reclaim_btn.name = "TerritoryMonthReclaim"
+		reclaim_btn.position = Vector2(24, y)
+		reclaim_btn.pressed.connect(func():
+			_clear_modal()
+			_refresh_top()
+			_build_nodes()
+			_render_left()
+			if anchor != "" and World.nodes.has(anchor):
+				_select_node(anchor)
+			_show_toast(Locale.t("terr_54"), UIKit.EMBER)
+			if World.is_traveling():
+				World.cancel_travel())
+		panel.add_child(reclaim_btn)
+		y += 44.0
+	var later := UIKit.ghost_button(Locale.t("atlas_terr_month_later"), 140, 36)
+	later.name = "TerritoryMonthLater"
+	later.position = Vector2(24, h - 56)
+	later.pressed.connect(func():
+		World.last_territory_month = rep.duplicate(true)
+		_clear_modal())
+	panel.add_child(later)
+	ok.call_deferred("grab_focus")
+
+
+func _resume_travel_after_territory_month() -> void:
+	if World.is_traveling() and World.pending_event.is_empty() and World.encounter.is_empty():
+		_run_travel()
+
+
+## Rival siege / threat → SiegeAlertModal (relief / bribe / scout / later).
+func _check_siege_alert() -> bool:
+	if not _modal.get_children().is_empty():
+		return false
+	if World.last_siege_alert.is_empty():
+		return false
+	var alert: Dictionary = World.take_siege_alert()
+	if alert.is_empty():
+		return false
+	_show_siege_alert_modal(alert)
+	return true
+
+
+func _show_siege_alert_modal(alert: Dictionary) -> void:
+	var site_id := str(alert.get("id", ""))
+	var site_name := str(alert.get("name", site_id))
+	var by_name := str(alert.get("by_name", ""))
+	var anchor := str(alert.get("anchor", ""))
+	var anchor_name := str(alert.get("anchor_name", World.node(anchor).get("name", anchor)))
+	var garrison := int(alert.get("garrison", 0))
+	var phase := str(alert.get("phase", "declared"))
+	var scouted := bool(alert.get("scouted", false))
+	var hold_pct := int(alert.get("hold_pct", -1))
+	var bribe_c := int(alert.get("bribe_cost", 50))
+	if site_id != "":
+		bribe_c = int(alert.get("bribe_cost", CKTerritory.bribe_cost(site_id)))
+	var scout_c := int(alert.get("scout_cost", 20))
+	if site_id != "":
+		scout_c = int(alert.get("scout_cost", CKTerritory.scout_cost(site_id)))
+	var at_anchor := World.pos == anchor and anchor != ""
+	var phase_line := Locale.t("atlas_siege_phase_imminent") if phase == "imminent" else Locale.t("atlas_siege_phase_declared")
+	var intel_line := Locale.t("atlas_siege_intel") % hold_pct if scouted and hold_pct >= 0 else Locale.t("atlas_siege_intel_unknown")
+	var h := 420.0
+	var panel := _modal_panel(h)
+	panel.name = "SiegeAlertModal"
+	var el := UIKit.mono(Locale.t("atlas_siege_en"), 9, UIKit.DANGER)
+	el.position = Vector2(24, 16)
+	panel.add_child(el)
+	var tlabel := UIKit.title_label(Locale.t("atlas_siege_title"), 20, UIKit.DANGER)
+	tlabel.position = Vector2(24, 34)
+	tlabel.size = Vector2(452, 30)
+	panel.add_child(tlabel)
+	var body := UIKit.body_label(
+		Locale.t("atlas_siege_body") % [by_name, site_name, anchor_name, garrison, phase_line, intel_line],
+		UIKit.TEXT, 13)
+	body.name = "SiegeAlertBody"
+	body.position = Vector2(24, 72)
+	body.size = Vector2(452, 100)
+	body.custom_minimum_size = Vector2(452, 0)
+	panel.add_child(body)
+	var y := 186.0
+	var relief_label := Locale.t("atlas_siege_intercept") if at_anchor else Locale.t("atlas_siege_relief")
+	var relief := UIKit.cta_button(relief_label, "A", 452, 42)
+	relief.name = "SiegeRelief"
+	relief.position = Vector2(24, y)
+	relief.pressed.connect(func():
+		if site_id == "":
+			_clear_modal()
+			return
+		if World.pos == anchor:
+			var r: Dictionary = CKTerritory.intercept(site_id)
+			_show_toast(str(r.get("msg", "")), UIKit.OK if bool(r.get("ok", false)) else UIKit.DANGER)
+			_clear_modal()
+			_refresh_top()
+			_build_nodes()
+			if bool(r.get("ok", false)) and not World.encounter.is_empty():
+				_show_encounter_modal(World.encounter)
+			return
+		var st: Dictionary = World.begin_travel(anchor)
+		if bool(st.get("ok", false)):
+			_show_toast(Locale.t("atlas_siege_relief_go") % anchor_name, UIKit.ACCENT)
+			_clear_modal()
+			_refresh_top()
+			call_deferred("_run_travel")
+		else:
+			_show_toast(str(st.get("msg", "")), UIKit.DANGER)
+			World.last_siege_alert = alert.duplicate(true)
+			_clear_modal()
+			_show_siege_alert_modal(alert))
+	panel.add_child(relief)
+	y += 50.0
+	var bribe := UIKit.ghost_button(Locale.t("atlas_siege_bribe") % bribe_c, 452, 36)
+	bribe.name = "SiegeBribe"
+	bribe.position = Vector2(24, y)
+	bribe.pressed.connect(func():
+		var r2: Dictionary = CKTerritory.bribe_threat(site_id)
+		_show_toast(str(r2.get("msg", "")), UIKit.OK if bool(r2.get("ok", false)) else UIKit.DANGER)
+		_clear_modal()
+		_refresh_top()
+		_build_nodes()
+		if World.is_traveling():
+			call_deferred("_resume_travel_after_siege"))
+	panel.add_child(bribe)
+	y += 44.0
+	var scout := UIKit.ghost_button(Locale.t("atlas_siege_scout") % scout_c, 452, 36)
+	scout.name = "SiegeScout"
+	scout.position = Vector2(24, y)
+	scout.pressed.connect(func():
+		var r3: Dictionary = CKTerritory.scout_threat(site_id)
+		_show_toast(str(r3.get("msg", "")), UIKit.OK if bool(r3.get("ok", false)) else UIKit.DANGER)
+		if bool(r3.get("ok", false)):
+			var intel: Dictionary = r3.get("intel", {})
+			alert["scouted"] = true
+			alert["hold_pct"] = int(intel.get("hold_pct", int(round(CKTerritory.hold_chance(site_id) * 100.0))))
+			alert["garrison"] = int(intel.get("garrison", garrison))
+			var bl: Label = panel.get_node_or_null("SiegeAlertBody") as Label
+			if bl != null:
+				var pl := Locale.t("atlas_siege_phase_imminent") if str(alert.get("phase", "")) == "imminent" else Locale.t("atlas_siege_phase_declared")
+				var il := Locale.t("atlas_siege_intel") % int(alert["hold_pct"])
+				bl.text = Locale.t("atlas_siege_body") % [by_name, site_name, anchor_name, int(alert["garrison"]), pl, il]
+			scout.disabled = true
+		else:
+			pass)
+	panel.add_child(scout)
+	var later := UIKit.ghost_button(Locale.t("atlas_siege_later"), 140, 36)
+	later.name = "SiegeLater"
+	later.position = Vector2(24, h - 56)
+	later.pressed.connect(func():
+		World.last_siege_alert = alert.duplicate(true)
+		_clear_modal()
+		if World.is_traveling():
+			call_deferred("_resume_travel_after_siege"))
+	panel.add_child(later)
+	relief.call_deferred("grab_focus")
+
+
+func _resume_travel_after_siege() -> void:
+	if World.is_traveling() and World.pending_event.is_empty() and World.encounter.is_empty():
+		_run_travel()
+
 
 func _resume_travel_after_supply() -> void:
 	if World.is_traveling() and World.pending_event.is_empty() and World.encounter.is_empty():
