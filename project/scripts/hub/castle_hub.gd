@@ -283,12 +283,13 @@ func _build() -> void:
 		todo_row.add_child(chip)
 	if not HubTodo.any_due():
 		todo_row.add_child(UIKit.mono(Locale.t("ux_todo_none"), UIKit.desk_sz(10), UIKit.TEXT_FAINT, false))
+	var season_y := _add_content_season_row_desk(cp, 508.0)
 	var ih := UIKit.hairline(Color(1, 1, 1, 0.07))
-	ih.position = Vector2(26, 512)
+	ih.position = Vector2(26, season_y)
 	ih.size = Vector2(768, 1)
 	cp.add_child(ih)
 	_hint = UIKit.body_label("", UIKit.OK, UIKit.desk_sz(11))
-	_hint.position = Vector2(494, 528)
+	_hint.position = Vector2(494, season_y + 16.0)
 	_hint.size = Vector2(300, 18)
 	_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	cp.add_child(_hint)
@@ -571,6 +572,125 @@ func _continue_mainline() -> void:
 	var cursor := _cursor()
 	var scene := StoryCatalog.request_chapter(str(cursor.get("id", "ch0")))
 	CKNav.replace(scene)
+
+func _open_content_season(chapter_id: String) -> void:
+	var scene := StoryCatalog.request_chapter(chapter_id)
+	CKNav.replace(scene)
+
+## Desk ContentSeasonRow. Returns the Y used for the next hairline.
+## Empty entries → skip entirely (禁 EmptyHost / 空态 CTA).
+func _add_content_season_row_desk(cp: Control, y: float) -> float:
+	var entries: Array = StoryCatalog.content_season_entries()
+	if entries.is_empty():
+		return y
+	var row := HBoxContainer.new()
+	row.name = "ContentSeasonRow"
+	row.position = Vector2(26, y)
+	row.size = Vector2(740, 28)
+	row.clip_contents = true
+	row.add_theme_constant_override("separation", 6)
+	cp.add_child(row)
+	row.add_child(UIKit.mono(Locale.t("ux_hub_content_season"), UIKit.desk_sz(10), UIKit.EMBER, false))
+	for entry in entries:
+		var chapter_id := str(entry.get("chapter_id", ""))
+		var title := StoryCatalog.content_season_label(entry)
+		var chip := Button.new()
+		chip.name = "Season_%s" % chapter_id
+		chip.text = Locale.t("ux_hub_content_season_play") % title
+		chip.flat = true
+		chip.add_theme_font_size_override("font_size", UIKit.desk_sz(11))
+		chip.add_theme_color_override("font_color", UIKit.EMBER)
+		chip.pressed.connect(_open_content_season.bind(chapter_id))
+		row.add_child(chip)
+	return y + 28.0
+
+## Mobile ContentSeasonRow. Skip when empty — never paint EmptyHost.
+func _add_content_season_row_mobile(host: Control) -> void:
+	var entries: Array = StoryCatalog.content_season_entries()
+	if entries.is_empty():
+		return
+	# Sit in the todo HFlow (same row as 本月无待办) so the dossier stays within 296px
+	# on 1280×720; the sheet carries the three Season_* playable chips.
+	var row := HBoxContainer.new()
+	row.name = "ContentSeasonRow"
+	row.add_theme_constant_override("separation", 8)
+	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	host.add_child(row)
+	var open_b := MobilePage.button(
+		Locale.t("ux_hub_content_season_play") % Locale.t("ux_hub_content_season"),
+		false,
+		_open_content_season_sheet)
+	open_b.name = "ContentSeasonOpen"
+	open_b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	open_b.custom_minimum_size = Vector2(150, M_HIT)
+	open_b.add_theme_color_override("font_color", UIKit.EMBER)
+	row.add_child(open_b)
+
+
+## Phone sheet listing each playable content-season chapter (Season_* chips).
+func _open_content_season_sheet() -> void:
+	var entries: Array = StoryCatalog.content_season_entries()
+	if entries.is_empty():
+		return
+	var old := get_node_or_null("ContentSeasonSheet")
+	if old:
+		old.queue_free()
+	var sheet := Control.new()
+	sheet.name = "ContentSeasonSheet"
+	sheet.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	sheet.z_index = 40
+	add_child(sheet)
+	CKNav.push_overlay(sheet)
+	sheet.tree_exited.connect(func(): CKNav.pop_overlay(sheet))
+	var dim := ColorRect.new()
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	dim.color = Color(0.02, 0.03, 0.05, 0.6)
+	dim.gui_input.connect(func(e: InputEvent):
+		if e is InputEventMouseButton and e.pressed:
+			sheet.queue_free())
+	sheet.add_child(dim)
+	var w := maxf(size.x, 1280.0)
+	var h := size.y if size.y > 400.0 else 720.0
+	var center := CenterContainer.new()
+	center.position = Vector2.ZERO
+	center.size = Vector2(w, h)
+	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	sheet.add_child(center)
+	var card := PanelContainer.new()
+	card.name = "SheetCard"
+	card.custom_minimum_size = Vector2(clampf(w * 0.5, 680.0, 820.0), 0)
+	var sb := UIKit.flat_box(Color(0.06, 0.075, 0.10, 0.98), Color(UIKit.ACCENT, 0.55), 14, 2)
+	for side in ["left", "right"]:
+		sb.set("content_margin_" + side, 32)
+	for side in ["top", "bottom"]:
+		sb.set("content_margin_" + side, 26)
+	card.add_theme_stylebox_override("panel", sb)
+	center.add_child(card)
+	var box := VBoxContainer.new()
+	box.name = "ContentSeasonList"
+	box.add_theme_constant_override("separation", 12)
+	card.add_child(box)
+	var title := MobilePage.label(Locale.t("ux_hub_content_season"), UIKit.TEXT, 30, true)
+	title.add_theme_font_override("font", UIKit.font("bold"))
+	box.add_child(title)
+	box.add_child(MobilePage.label(Locale.t("ux_hub_content_season_sheet_body"), UIKit.TEXT_DIM, 24, true))
+	for entry in entries:
+		var chapter_id := str(entry.get("chapter_id", ""))
+		var label := StoryCatalog.content_season_label(entry)
+		var chip := MobilePage.button(Locale.t("ux_hub_content_season_play") % label, true, func():
+			sheet.queue_free()
+			_open_content_season(chapter_id))
+		chip.name = "Season_%s" % chapter_id
+		chip.custom_minimum_size = Vector2(0, 80)
+		chip.add_theme_font_size_override("font_size", 24)
+		chip.add_theme_color_override("font_color", UIKit.EMBER)
+		box.add_child(chip)
+	var close_b := MobilePage.button(Locale.t("ux_codex_close"), false, func(): sheet.queue_free())
+	close_b.name = "ContentSeasonClose"
+	close_b.custom_minimum_size = Vector2(0, 80)
+	close_b.add_theme_font_size_override("font_size", 24)
+	box.add_child(close_b)
+	(box.get_child(2) as BaseButton).call_deferred("grab_focus")
 
 ## Lock sheet (§4.4): what it is, when it opens, and "take me there" when the main line opens it.
 func open_lock_sheet(title: String, st: Dictionary) -> void:
@@ -926,8 +1046,12 @@ func _m_select(id: String) -> void:
 
 func _m_right_column(rect: Rect2) -> void:
 	# Main line first: it is the one thing the player should do next.
+	# Content seasons: one dossier chip → sheet (roster must stay on 1280×720).
 	var main_h := 296.0
 	var v := _m_box(Rect2(rect.position, Vector2(rect.size.x, main_h)), "DossierPanel", 14)
+	var dossier := v.get_parent() as Control
+	if dossier:
+		dossier.clip_contents = true
 	v.add_theme_constant_override("separation", 8)
 	v.add_child(MobilePage.label(Locale.t("ux_hub_mainline_cap"), UIKit.TEXT_FAINT, M_FONT, false))
 	var now := MobilePage.label(_mainline_caption(), UIKit.TEXT, 24, true)
@@ -962,6 +1086,7 @@ func _m_right_column(rect: Rect2) -> void:
 		todo_row.add_child(chip)
 	if due == 0:
 		todo_row.add_child(MobilePage.label(Locale.t("ux_todo_none"), UIKit.TEXT_FAINT, M_FONT, false))
+	_add_content_season_row_mobile(todo_row)
 	MobilePage.spacer(v)
 	_hint = MobilePage.label((Locale.t("shell_216a69b5") % GameState.morale).replace("  ●", ""), UIKit.OK, M_FONT, false)
 	_hint.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS

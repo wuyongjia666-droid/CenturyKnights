@@ -123,5 +123,6 @@
     "docs/content-seasons/season-03/ACCEPTANCE.md"
   ],
   "playable_chapter": "cs03_01",
-  "playable_path": "res://data/story/chapters/cs03_01.json"
+  "playable_path": "res://data/story/chapters/cs03_01.json",
+  "title_en": "The Harvest on the Board"
 }
