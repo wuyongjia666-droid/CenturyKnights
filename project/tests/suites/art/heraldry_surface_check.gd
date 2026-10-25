@@ -422,6 +422,37 @@ func _run() -> void:
 		_ok(af_halt.find_child("FoeArms", true, false) == null, "halt must not show FoeArms")
 	host.queue_free()
 
+	# ── Atlas travel / camp / encounter crest strips ────────────────
+	var atlas_host := Control.new()
+	atlas_host.name = "AtlasTravelCrestHost"
+	get_tree().root.add_child(atlas_host)
+	var travel_strip := CKHeraldryChrome.place_travel_crest_strip(atlas_host, Vector2(10, 10), "ashbanner", Vector2(36, 44))
+	_ok(travel_strip != null and travel_strip.name == "TravelCrestStrip", "TravelCrestStrip missing")
+	if travel_strip != null:
+		var tca := travel_strip.find_child("CastleArms", true, false)
+		var tterr := travel_strip.find_child("TerritoryArms", true, false)
+		_ok(tca != null and str(tca.get_meta("arms_kind", "")) == "gen2_36", "travel 团徽")
+		_ok(tterr != null and str(tterr.get_meta("arms_kind", "")) == "lb_territory_arms", "travel 领地徽")
+		_ok(tterr != null and str(tterr.get_meta("nation_id", "")) == "ashbanner", "travel territory nation")
+		_ok(str(travel_strip.get_meta("nation_id", "")) == "ashbanner", "travel strip meta")
+	var travel_solo := CKHeraldryChrome.place_travel_crest_strip(atlas_host, Vector2(10, 80), "", Vector2(36, 44))
+	_ok(travel_solo != null and travel_solo.find_child("TerritoryArms", true, false) == null, "travel solo no TerritoryArms")
+	var camp_strip := CKHeraldryChrome.place_camp_crest_strip(atlas_host, Vector2(10, 150), "ashbanner", Vector2(36, 44))
+	_ok(camp_strip != null and camp_strip.name == "CampCrestStrip", "CampCrestStrip missing")
+	if camp_strip != null:
+		_ok(camp_strip.find_child("CastleArms", true, false) != null, "camp CastleArms")
+		var cterr := camp_strip.find_child("TerritoryArms", true, false)
+		_ok(cterr != null and str(cterr.get_meta("arms_kind", "")) == "lb_territory_arms", "camp 领地徽")
+	var enc_strip := CKHeraldryChrome.place_encounter_crest_strip(atlas_host, Vector2(10, 220), "ashbanner", Vector2(36, 44))
+	_ok(enc_strip != null and enc_strip.name == "EncounterCrestStrip", "EncounterCrestStrip missing")
+	if enc_strip != null:
+		var eca := enc_strip.find_child("CastleArms", true, false)
+		var efoe := enc_strip.find_child("FoeArms", true, false)
+		_ok(eca != null and str(eca.get_meta("arms_kind", "")) == "gen2_36", "encounter 团徽")
+		_ok(efoe != null and str(efoe.get_meta("arms_kind", "")) == "lb_rv_arms", "encounter 敌徽")
+		_ok(efoe != null and str(efoe.get_meta("nation_id", "")) == "ashbanner", "encounter foe nation")
+	atlas_host.queue_free()
+
 # ── Succession crest strip (团徽 + heir) ───────────────────────
 	var succ_host := Control.new()
 	succ_host.name = "SuccessionCrestHost"
