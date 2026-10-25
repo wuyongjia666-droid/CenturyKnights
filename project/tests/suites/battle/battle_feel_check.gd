@@ -6,6 +6,7 @@ extends Node
 ## Y1-A T-P1-4: move-drag lands on exact finger cell (soft must not steal).
 ## Y1-A T-P1-5: contour rect hit + tap-again confirm + mobile selection chrome.
 ## Y1-A T-P2: re-tap/empty deselect + mobile-wider contour + select haptic + rail.
+## Y1-A T-P3: strict unit-drag vs map-pan + selected sticky + landscape confirm stack.
 
 func _ready() -> void:
 	call_deferred("_run")
@@ -47,6 +48,12 @@ func _check() -> String:
 		err = _deselect_contracts()
 	if err == "":
 		err = _mobile_contour_widen()
+	if err == "":
+		err = _strict_drag_origin()
+	if err == "":
+		err = _selected_sticky_policy()
+	if err == "":
+		err = _landscape_confirm_stack()
 	OS.set_environment("CK_FORCE_MOBILE", "0")
 	return err
 
@@ -149,8 +156,20 @@ func _source_contracts() -> String:
 		return "selection chrome not using contour_half_w"
 	if ctrl.find("MOBILE_RAIL_W := 196") < 0:
 		return "landscape rail not widened for T-P2"
-	if bar.find("0.55") < 0:
-		return "landscape confirm thumb zone not lowered"
+	if bar.find("0.58") < 0:
+		return "landscape confirm thumb zone not sunk (T-P3 0.58)"
+	if bar.find("landscape_confirm_stack") < 0 or bar.find("ConfirmPrimary") < 0:
+		return "landscape confirm stack / named primary missing"
+	if bar.find("ConfirmHint") < 0 or bar.find("ux_confirm_dest_move") < 0:
+		return "confirm dest hint missing"
+	if pick.find("strict_unit_pos") < 0 or pick.find("strict_hits_selected") < 0:
+		return "battle_pick missing T-P3 strict unit-drag helpers"
+	if pick.find("near_selected_unit") < 0:
+		return "battle_pick missing near_selected_unit"
+	if ctrl.find("near_selected_unit") < 0:
+		return "sticky_fn not narrowed to selected unit (T-P3)"
+	if conf.find("strict_hits_selected") < 0:
+		return "unit-drag origin not on strict_hits_selected"
 	return ""
 
 func _soft_pick() -> String:
@@ -503,3 +522,114 @@ func _touch(index: int, pressed: bool, pos: Vector2) -> InputEventScreenTouch:
 	e.pressed = pressed
 	e.position = pos
 	return e
+
+
+func _strict_drag_origin() -> String:
+	## Soft-empty neighbour of selected must NOT arm unit-drag; exact/contour must.
+	OS.set_environment("CK_FORCE_MOBILE", "1")
+	var host := _FakePickHost.new()
+	host.setup_selected_at(Vector2i(2, 2))
+	var soft_empty := host.ORIGIN + Vector2(2.5 + 0.85, 2.5) * float(host.CELL)
+	if not BattlePick.near_living_unit(host, soft_empty):
+		return "soft-empty fixture must soft-hit selected"
+	if BattlePick.strict_hits_selected(host, soft_empty, 0):
+		return "soft-empty must not strict-hit selected"
+	var g_soft := {"kind": "pan", "origin": soft_empty, "pos": soft_empty + Vector2(40, 0),
+		"delta": Vector2(40, 0), "multi": false}
+	if BattleTouchConfirm.is_unit_drag(host, g_soft):
+		return "soft-empty press must not classify as unit-drag"
+	BattleTouchConfirm.end_gesture(host)
+	var exact := host.screen_at_cell(Vector2i(2, 2))
+	if not BattlePick.strict_hits_selected(host, exact, 0):
+		return "exact selected must strict-hit"
+	var g_exact := {"kind": "pan", "origin": exact, "pos": exact + Vector2(30, 0),
+		"delta": Vector2(30, 0), "multi": false}
+	if not BattleTouchConfirm.is_unit_drag(host, g_exact):
+		return "exact selected press must be unit-drag"
+	BattleTouchConfirm.end_gesture(host)
+	# Contour shoulder still strict-hits.
+	var mid_y: float = 2.0 + (BattlePick.FIG_TOP + BattlePick.FIG_FEET) * 0.5
+	var shoulder := host.ORIGIN + Vector2(2.5 + 0.35, mid_y) * float(host.CELL)
+	if not BattlePick.strict_hits_selected(host, shoulder, 0):
+		return "contour shoulder must strict-hit selected"
+	return ""
+
+
+func _selected_sticky_policy() -> String:
+	## While selected, sticky only on selected — other living unit keeps base slop.
+	OS.set_environment("CK_FORCE_MOBILE", "1")
+	var host := _FakePickHost.new()
+	host.setup_selected_at(Vector2i(2, 2))
+	host.units.append({"char": {"hp": 10}, "pos": Vector2i(5, 3), "team": "enemy", "done": false})
+	var r := InputRouter.new()
+	r.sticky_fn = func(o: Vector2) -> bool:
+		if host.selected >= 0:
+			return BattlePick.near_selected_unit(host, o, host.selected)
+		return BattlePick.near_living_unit(host, o)
+	var base: float = r._slop()
+	var on_sel := host.screen_at_cell(Vector2i(2, 2))
+	if r._slop_for(on_sel) < base * InputRouter.STICKY_SLOP_MUL - 0.01:
+		return "selected origin must get sticky slop"
+	var on_other := host.screen_at_cell(Vector2i(5, 3))
+	if r._slop_for(on_other) > base + 0.01:
+		return "other-unit press must not sticky while selected"
+	if BattlePick.near_selected_unit(host, on_other, 0):
+		return "near_selected_unit falsely hit other unit"
+	if not BattlePick.near_living_unit(host, on_other):
+		return "near_living_unit must still see other unit"
+	return ""
+
+
+func _landscape_confirm_stack() -> String:
+	var stack: PackedStringArray = BattleMobileBar.landscape_confirm_stack()
+	if stack.size() < 3:
+		return "landscape stack too short: %s" % str(stack)
+	if str(stack[0]) != "cancel":
+		return "landscape Cancel must be top (away from thumb): %s" % str(stack)
+	if str(stack[stack.size() - 1]) != "confirm":
+		return "landscape Confirm must be thumb-bottom: %s" % str(stack)
+	if str(stack[1]) != "hint":
+		return "landscape dest hint missing mid-stack: %s" % str(stack)
+	var bar := FileAccess.get_file_as_string("res://scripts/battle/ui/battle_mobile_bar.gd")
+	if bar.find("maxi(108") < 0 and bar.find("maxi(108,") < 0:
+		return "Confirm primary min height ≥108 missing"
+	return ""
+
+
+class _FakePickHost:
+	var ORIGIN: Vector2 = Vector2(40, 80)
+	var CELL: int = 56
+	var units: Array = []
+	var selected: int = -1
+	var turn_team: String = "player"
+	var battle_over: bool = false
+	var _cut_playing: bool = false
+	var moved_this_select: bool = false
+	var attack_mode: bool = false
+	var preview_move_cell: Vector2i = Vector2i(-1, -1)
+	var preview_attack_ui: int = -1
+	var move_cells: Dictionary = {}
+	var overlay = null
+	var _mobile_bar = null
+	var _board_pan: Vector2 = Vector2.ZERO
+	var _board_zoom: float = 1.0
+
+	func setup_selected_at(pos: Vector2i) -> void:
+		units = [{"char": {"hp": 10, "name": "Hero"}, "pos": pos, "team": "player", "done": false}]
+		selected = 0
+
+	func screen_at_cell(cell: Vector2i) -> Vector2:
+		return ORIGIN + Vector2(cell) * float(CELL) + Vector2(CELL, CELL) * 0.5
+
+	func _screen_to_local(p: Vector2) -> Vector2:
+		return p
+
+	func _pointer_to_cell(screen_pos: Vector2) -> Vector2i:
+		var local: Vector2 = BattlePick.local_after_pan_zoom(_screen_to_local(screen_pos), _board_pan, _board_zoom)
+		return BattlePick.cell_at_local(ORIGIN, float(CELL), local, 12, 10)
+
+	func _unit_at(pos: Vector2i) -> int:
+		for i in units.size():
+			if units[i].char.hp > 0 and units[i].pos == pos:
+				return i
+		return -1

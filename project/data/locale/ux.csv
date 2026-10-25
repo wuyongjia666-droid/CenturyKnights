@@ -75,6 +75,8 @@ ux_marriage_posts,%s · 应帖,%s · posts
 ux_marriage_reroll_tip,后招每月最多再议两次（每次15银）；主角团不可再议,Mercs: up to 2 paid redraws/month; hero party cannot
 ux_confirm_move,确认移动,Confirm move
 ux_confirm_attack,确认攻击,Confirm attack
+ux_confirm_dest_move,"移至 (%d,%d)","Move to (%d,%d)"
+ux_confirm_dest_attack,"攻击 · %s","Attack · %s"
 ux_more_cmds,更多,More
 ux_touch_confirm,触控确认移动/攻击,Touch confirm move/attack
 ux_touch_drag_commit,拖到格松手确认,Drag-to-cell release confirms
