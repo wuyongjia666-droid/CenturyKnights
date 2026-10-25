@@ -1,4 +1,6 @@
 {
- "overlap": 12,
+ "clipped_text": 6,
+ "offscreen": 5,
+ "overlap": 27,
  "small_font": 1803
 }
