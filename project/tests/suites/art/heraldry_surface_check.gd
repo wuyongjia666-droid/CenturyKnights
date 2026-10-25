@@ -1,7 +1,8 @@
 extends Node
 ## Player-visible heraldry consistency across genealogy + castle banner strip +
-## rival houses + tavern/hire + board unit shields + city/smith 邦徽.
-## 团徽 / 旗徽 / 族徽 / 敌徽 / 邦徽 never mismatch outside their Chrome routes.
+## rival houses + tavern/hire + board unit shields + city/smith 邦徽 +
+## commission-board 委托徽 + mobile genealogy/quests company header.
+## 团徽 / 旗徽 / 族徽 / 敌徽 / 邦徽 / 委托徽 never mismatch outside their Chrome routes.
 
 const OVERVIEW := "res://scenes/hub/lineage_view.tscn"
 const TREE := "res://scenes/hub/lineage_tree.tscn"
@@ -10,6 +11,8 @@ const CASTLE := "res://scenes/hub/castle_hub.tscn"
 const RIVALS := "res://scenes/hub/rival_houses.tscn"
 const TAVERN := "res://scenes/hub/tavern.tscn"
 const ROSTER := "res://scenes/hub/roster.tscn"
+const QUESTS := "res://scenes/hub/quests.tscn"
+const CITY := "res://scenes/hub/city.tscn"
 
 var _fail := ""
 
@@ -306,6 +309,85 @@ func _run() -> void:
 		_ok(cn != null and str(cn.get_meta("arms_core", "")) == CKHeraldry.core_key(CKHeraldryChrome.nation_spec(expect_nid)), "city strip nation core")
 		_ok(cn != null and str(cn.get_meta("arms_core", "")) != CKHeraldry.core_key(ban_spec), "邦徽 != 团徽")
 	city_host.queue_free()
+	# ── Commission board crests (委托徽) ───────────────────────────
+	_ok(CKHeraldryChrome.issuer_is_home("hq"), "hq should be home issuer")
+	_ok(not CKHeraldryChrome.issuer_is_home("ash_capital"), "ash_capital not home")
+	_ok(CKHeraldry.core_key(CKHeraldryChrome.issuer_spec("hq")) == CKHeraldry.core_key(ban_spec), "hq issuer not 团徽")
+	var ash_nid := World.nation_of("ash_capital")
+	_ok(ash_nid != "", "ash_capital nation missing")
+	if ash_nid != "":
+		_ok(CKHeraldry.core_key(CKHeraldryChrome.issuer_spec("ash_capital")) == CKHeraldry.core_key(CKHeraldryChrome.nation_spec(ash_nid)), "ash issuer not nation plate")
+		_ok(CKHeraldryChrome.issuer_arms_kind("ash_capital") == "lb_board_arms", "ash issuer kind")
+	_ok(CKHeraldryChrome.issuer_arms_kind("hq") == "gen2_36", "hq issuer kind")
+	## Quests hub shows CastleArms + BoardCrest on cards
+	var quests := _open_page(QUESTS)
+	await _settle(8)
+	var q_arms := quests.find_child("CastleArms", true, false)
+	_ok(q_arms != null, "quests CastleArms missing")
+	if q_arms != null:
+		_ok(str(q_arms.get_meta("arms_kind", "")) == "gen2_36", "quests CastleArms kind")
+		_ok(str(q_arms.get_meta("arms_core", "")) == CKHeraldry.core_key(ban_spec), "quests CastleArms core")
+	var board_crests := []
+	_collect_named(quests, "BoardCrest", board_crests)
+	## Castle board posts (GameState.quests) always carry hq 团徽 when present
+	for bc in board_crests:
+		var bkind := str(bc.get_meta("arms_kind", ""))
+		var bcore := str(bc.get_meta("arms_core", ""))
+		if bkind == "gen2_36":
+			_ok(bcore == CKHeraldry.core_key(ban_spec), "quests BoardCrest hq core drift")
+		elif bkind == "lb_board_arms":
+			_ok(bcore != CKHeraldry.core_key(ban_spec), "nation BoardCrest collided with 团徽")
+		else:
+			_ok(false, "quests BoardCrest unknown kind " + bkind)
+	quests.queue_free()
+	await _settle(2)
+	## City commission board detail crest
+	World.pos = "ash_capital"
+	GameState.set_meta("city_tab", "board")
+	var city_pg := _open_page(CITY)
+	await _settle(10)
+	var qdetail := city_pg.find_child("QuestDetail", true, false)
+	if qdetail != null:
+		var dc := qdetail.find_child("BoardCrest", true, false)
+		_ok(dc != null, "city board detail BoardCrest missing")
+		if dc != null:
+			_ok(str(dc.get_meta("arms_kind", "")) in ["gen2_36", "lb_board_arms"], "city BoardCrest kind")
+			## Issuer must not silently fall back to a random family 族徽
+			_ok(str(dc.get_meta("arms_kind", "")) != "gen2_06", "city BoardCrest must not be 族徽")
+	var offer_crests := []
+	_collect_named(city_pg, "BoardCrest", offer_crests)
+	_ok(offer_crests.size() >= 1, "city board BoardCrest none")
+	city_pg.queue_free()
+	await _settle(2)
+	if _fail != "":
+		return
+
+	# ── Mobile heraldry parity (company header reposition) ─────────
+	var mob_ov := _open_page(OVERVIEW, Vector2(390, 844))
+	await _settle(6)
+	if mob_ov.has_method("apply_mobile_layout"):
+		mob_ov.apply_mobile_layout()
+		await _settle(4)
+	var mob_ca := mob_ov.find_child("CastleArms", true, false) as Control
+	_ok(mob_ca != null, "mobile overview CastleArms missing")
+	if mob_ca != null:
+		_ok(str(mob_ca.get_meta("arms_kind", "")) == "gen2_36", "mobile overview CastleArms kind")
+		_ok(str(mob_ca.get_meta("arms_core", "")) == CKHeraldry.core_key(ban_spec), "mobile overview CastleArms core")
+		## Right-edge placement from apply_mobile_layout (w - 64)
+		_ok(mob_ca.position.x >= 280.0, "mobile overview CastleArms not right-anchored")
+	mob_ov.queue_free()
+	await _settle(2)
+	var mob_q := _open_page(QUESTS, Vector2(390, 844))
+	await _settle(6)
+	if mob_q.has_method("apply_mobile_layout"):
+		mob_q.apply_mobile_layout()
+		await _settle(4)
+	var mq_ca := mob_q.find_child("CastleArms", true, false) as Control
+	_ok(mq_ca != null, "mobile quests CastleArms missing")
+	if mq_ca != null:
+		_ok(str(mq_ca.get_meta("arms_kind", "")) == "gen2_36", "mobile quests CastleArms kind")
+		_ok(mq_ca.position.x >= 280.0, "mobile quests CastleArms not right-anchored")
+	mob_q.queue_free()
 	await _settle(2)
 	if _fail != "":
 		return
