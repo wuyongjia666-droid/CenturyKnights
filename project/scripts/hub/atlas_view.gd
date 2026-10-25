@@ -2590,7 +2590,7 @@ func _show_siege_alert_modal(alert: Dictionary) -> void:
 	var stockade := bool(alert.get("stockade", false))
 	if stockade and cache_n > 0:
 		phase_line = phase_line + " " + (Locale.t("atlas_siege_cache_warn") % cache_n)
-	var h := 440.0 if stockade and cache_n > 0 else 420.0
+	var h := 490.0 if stockade and cache_n > 0 else 420.0
 	var panel := _modal_panel(h)
 	panel.name = "SiegeAlertModal"
 	var el := UIKit.mono(Locale.t("atlas_siege_en"), 9, UIKit.DANGER)
@@ -2672,6 +2672,28 @@ func _show_siege_alert_modal(alert: Dictionary) -> void:
 		else:
 			pass)
 	panel.add_child(scout)
+	if stockade and cache_n > 0:
+		y += 44.0
+		var evac := UIKit.ghost_button(Locale.t("atlas_siege_evacuate"), 452, 36)
+		evac.name = "SiegeEvacuate"
+		evac.position = Vector2(24, y)
+		evac.pressed.connect(func():
+			var r4: Dictionary = CKTerritory.evacuate_cache(site_id)
+			_show_toast(str(r4.get("msg", "")), UIKit.OK if bool(r4.get("ok", false)) else UIKit.DANGER)
+			if bool(r4.get("ok", false)):
+				alert["cache"] = 0
+				cache_n = 0
+				evac.disabled = true
+				var bl2: Label = panel.get_node_or_null("SiegeAlertBody") as Label
+				if bl2 != null:
+					var pl2 := Locale.t("atlas_siege_phase_imminent") if str(alert.get("phase", "")) == "imminent" else Locale.t("atlas_siege_phase_declared")
+					var hp2 := int(alert.get("hold_pct", -1))
+					var il2 := Locale.t("atlas_siege_intel") % hp2 if bool(alert.get("scouted", false)) and hp2 >= 0 else Locale.t("atlas_siege_intel_unknown")
+					var gar2 := int(alert.get("garrison", garrison))
+					bl2.text = Locale.t("atlas_siege_body") % [by_name, site_name, anchor_name, gar2, pl2, il2]
+			_refresh_top()
+			_build_nodes())
+		panel.add_child(evac)
 	var later := UIKit.ghost_button(Locale.t("atlas_siege_later"), 140, 36)
 	later.name = "SiegeLater"
 	later.position = Vector2(24, h - 56)
