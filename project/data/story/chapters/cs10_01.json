@@ -52,6 +52,56 @@
           "text": "挂好看不难。盖得住才难。"
         },
         {
+          "id": "cs10_yard_x0",
+          "speaker": "旁白",
+          "text": "盖印厅门上纸条卷边。卷边的人知道事未完。"
+        },
+        {
+          "id": "cs10_yard_x1",
+          "speaker": "书记官",
+          "text": "催条爱写「城印已盖」。盖在纸上，不在事上。"
+        },
+        {
+          "id": "cs10_yard_x2",
+          "speaker": "老管事",
+          "text": "纸暖，档案冷。冷的红脸才是真账。"
+        },
+        {
+          "id": "cs10_yard_x3",
+          "speaker": "槐里·青禾",
+          "text": "孩子先看空。空着，才像还在办事。"
+        },
+        {
+          "id": "cs10_yard_x4",
+          "speaker": "苇原·灯影",
+          "text": "巡问今夜谁还没交件，不问谁喊已盖。"
+        },
+        {
+          "id": "cs10_yard_x5",
+          "speaker": "老旗手",
+          "text": "旗角不卖名。印也不给人跳门。"
+        },
+        {
+          "id": "cs10_yard_x6",
+          "speaker": "岁吏",
+          "text": "谱进栏可以。职印另本账。对不上就红脸。"
+        },
+        {
+          "id": "cs10_yard_x7",
+          "speaker": "石垒·晚担",
+          "text": "写好看不难。办得住才难。"
+        },
+        {
+          "id": "cs10_yard_x8",
+          "speaker": "旁白",
+          "text": "印泥是红的。红得像催，也像警告。"
+        },
+        {
+          "id": "cs10_yard_x9",
+          "speaker": "掌柜",
+          "text": "酒馆圈等职印选题。公开选，少扯皮。"
+        },
+        {
           "id": "cs10_yd_7",
           "speaker": "leader",
           "text": "栏挂上了。去看本城之事。"
@@ -96,6 +146,56 @@
           "id": "cs10_af_5",
           "speaker": "老管事",
           "text": "声望不够。跳格的栏，印泥会裂。"
+        },
+        {
+          "id": "cs10_affairs_x0",
+          "speaker": "旁白",
+          "text": "本城之事摊开：桥、仓、更次，件件未结。"
+        },
+        {
+          "id": "cs10_affairs_x1",
+          "speaker": "老管事",
+          "text": "事已交办，盖印待对。印泥栏仍空。"
+        },
+        {
+          "id": "cs10_affairs_x2",
+          "speaker": "石垒·晚担",
+          "text": "件不齐就别盖。盖了是糊。"
+        },
+        {
+          "id": "cs10_affairs_x3",
+          "speaker": "书记官",
+          "text": "旁注「印未结」。旁注是缝。"
+        },
+        {
+          "id": "cs10_affairs_x4",
+          "speaker": "岁吏",
+          "text": "假绿进年迹，比红脸难看。"
+        },
+        {
+          "id": "cs10_affairs_x5",
+          "speaker": "苇原·灯影",
+          "text": "摸过印泥的手沾红。沾红别卖已了。"
+        },
+        {
+          "id": "cs10_affairs_x6",
+          "speaker": "槐里·青禾",
+          "text": "空着诚实。写满却办不成，才是骗人。"
+        },
+        {
+          "id": "cs10_affairs_x7",
+          "speaker": "老旗手",
+          "text": "跳门的栏，桩会裂。"
+        },
+        {
+          "id": "cs10_affairs_x8",
+          "speaker": "旁白",
+          "text": "六扇门都在。门在，就不能假装只剩一扇。"
+        },
+        {
+          "id": "cs10_affairs_x9",
+          "speaker": "老管事",
+          "text": "一扇一扇办。办完再谈盖。"
         },
         {
           "id": "cs10_af_6",
@@ -144,6 +244,56 @@
           "text": "更还在交。下行先响。"
         },
         {
+          "id": "cs10_seal_x0",
+          "speaker": "旁白",
+          "text": "印泥盒打开。皮齐是备，皮皱是急。"
+        },
+        {
+          "id": "cs10_seal_x1",
+          "speaker": "老管事",
+          "text": "急盖进册，沙漏会多写一行难堪。"
+        },
+        {
+          "id": "cs10_seal_x2",
+          "speaker": "苇原·灯影",
+          "text": "指不清皮，就别喊已盖。"
+        },
+        {
+          "id": "cs10_seal_x3",
+          "speaker": "槐里·青禾",
+          "text": "手抖会糊印。睡够了再按。"
+        },
+        {
+          "id": "cs10_seal_x4",
+          "speaker": "岁吏",
+          "text": "档案红脸不是骂人，是状态。"
+        },
+        {
+          "id": "cs10_seal_x5",
+          "speaker": "书记官",
+          "text": "红脸抄进小字。小字像缝。"
+        },
+        {
+          "id": "cs10_seal_x6",
+          "speaker": "石垒·晚担",
+          "text": "影正再按。影偏就等。"
+        },
+        {
+          "id": "cs10_seal_x7",
+          "speaker": "老旗手",
+          "text": "脏手不按泥。按了，角也会脏。"
+        },
+        {
+          "id": "cs10_seal_x8",
+          "speaker": "旁白",
+          "text": "印纽凉。凉着提醒：印不是玩具。"
+        },
+        {
+          "id": "cs10_seal_x9",
+          "speaker": "掌柜",
+          "text": "圈在酒馆等。等的是办事，不是喊盖。"
+        },
+        {
           "id": "cs10_sl_6",
           "speaker": "leader",
           "text": "六门都记。去看沙漏。"
@@ -188,6 +338,56 @@
           "id": "cs10_hg_5",
           "speaker": "槐里·青禾",
           "text": "孩子要抄未盖，不要只抄名。"
+        },
+        {
+          "id": "cs10_hourglass_x0",
+          "speaker": "旁白",
+          "text": "上行城印已盖，下行本城未结。细线钉住。"
+        },
+        {
+          "id": "cs10_hourglass_x1",
+          "speaker": "老管事",
+          "text": "撕下行的人，先去摸印泥结账。"
+        },
+        {
+          "id": "cs10_hourglass_x2",
+          "speaker": "书记官",
+          "text": "一行好念。两行好活。"
+        },
+        {
+          "id": "cs10_hourglass_x3",
+          "speaker": "岁吏",
+          "text": "回执认并排。并排认事。事不认抢盖。"
+        },
+        {
+          "id": "cs10_hourglass_x4",
+          "speaker": "苇原·灯影",
+          "text": "更还在交。下行先响。"
+        },
+        {
+          "id": "cs10_hourglass_x5",
+          "speaker": "槐里·青禾",
+          "text": "孩子抄未结。抄印的时候，空要在。"
+        },
+        {
+          "id": "cs10_hourglass_x6",
+          "speaker": "石垒·晚担",
+          "text": "间距够脸红。红完再谈盖印。"
+        },
+        {
+          "id": "cs10_hourglass_x7",
+          "speaker": "老旗手",
+          "text": "核时两行都在。少一行角先裂。"
+        },
+        {
+          "id": "cs10_hourglass_x8",
+          "speaker": "旁白",
+          "text": "沙子慢。慢着办，才像职印该有的速度。"
+        },
+        {
+          "id": "cs10_hourglass_x9",
+          "speaker": "掌柜",
+          "text": "墙牌硬。撕牌的手会记得疼。"
         },
         {
           "id": "cs10_hg_6",
@@ -266,6 +466,56 @@
           "id": "cs10_br_7",
           "speaker": "leader",
           "text": "带牌。去酒馆。"
+        },
+        {
+          "id": "cs10_bridge_x0",
+          "speaker": "旁白",
+          "text": "门廊问谁盖印。墙牌两行一起响。"
+        },
+        {
+          "id": "cs10_bridge_x1",
+          "speaker": "石垒·晚担",
+          "text": "牌比纸硬。绕牌先撞桩。"
+        },
+        {
+          "id": "cs10_bridge_x2",
+          "speaker": "老旗手",
+          "text": "旗角给人核。印给人办。"
+        },
+        {
+          "id": "cs10_bridge_x3",
+          "speaker": "苇原·灯影",
+          "text": "事不清，印先别谈。"
+        },
+        {
+          "id": "cs10_bridge_x4",
+          "speaker": "槐里·青禾",
+          "text": "谎抄不住。孩子会指空。"
+        },
+        {
+          "id": "cs10_bridge_x5",
+          "speaker": "老管事",
+          "text": "闲话快。办事慢。慢的留下。"
+        },
+        {
+          "id": "cs10_bridge_x6",
+          "speaker": "岁吏",
+          "text": "谱很长。职印很静。静着办。"
+        },
+        {
+          "id": "cs10_bridge_x7",
+          "speaker": "书记官",
+          "text": "记谁摸泥、谁短笑、谁催已盖。"
+        },
+        {
+          "id": "cs10_bridge_x8",
+          "speaker": "旁白",
+          "text": "短笑散开。散开不是结案。"
+        },
+        {
+          "id": "cs10_bridge_x9",
+          "speaker": "掌柜",
+          "text": "圈还在。圈不等短笑。"
         },
         {
           "id": "cs10_mid_lost",
@@ -442,6 +692,56 @@
           "id": "cs10_tav_6",
           "speaker": "旁白",
           "text": "两张纸在风里响。你选怎么收这一季。"
+        },
+        {
+          "id": "cs10_tavern_x0",
+          "speaker": "旁白",
+          "text": "碗沿两圈：并排记，先钉城印。"
+        },
+        {
+          "id": "cs10_tavern_x1",
+          "speaker": "掌柜",
+          "text": "选完再喝。空喊已了，酒钱加倍。"
+        },
+        {
+          "id": "cs10_tavern_x2",
+          "speaker": "槐里·青禾",
+          "text": "裁职印的人，先放下剪刀。"
+        },
+        {
+          "id": "cs10_tavern_x3",
+          "speaker": "老管事",
+          "text": "并排让事可见。可见才逼人去办。"
+        },
+        {
+          "id": "cs10_tavern_x4",
+          "speaker": "石垒·晚担",
+          "text": "栏能念，事能办。少一样厅晃。"
+        },
+        {
+          "id": "cs10_tavern_x5",
+          "speaker": "苇原·灯影",
+          "text": "买一行结论，先看档案红脸。"
+        },
+        {
+          "id": "cs10_tavern_x6",
+          "speaker": "岁吏",
+          "text": "回执不认吆喝。认事，认手，认皮。"
+        },
+        {
+          "id": "cs10_tavern_x7",
+          "speaker": "书记官",
+          "text": "两张纸响。风不替你选。"
+        },
+        {
+          "id": "cs10_tavern_x8",
+          "speaker": "老旗手",
+          "text": "圈选偏，旗角先响。"
+        },
+        {
+          "id": "cs10_tavern_x9",
+          "speaker": "旁白",
+          "text": "你还没选。没选时，六门最清楚。"
         }
       ],
       "actions": [
@@ -546,6 +846,56 @@
           "id": "cs10_led_5",
           "speaker": "苇原·灯影",
           "text": "更还在交。下次挂印，下行先响。"
+        },
+        {
+          "id": "cs10_ledger_x0",
+          "speaker": "旁白",
+          "text": "旗册封面：印上的灯。钥匙两把。"
+        },
+        {
+          "id": "cs10_ledger_x1",
+          "speaker": "老管事",
+          "text": "缝在名册与职印之间。缝要留。"
+        },
+        {
+          "id": "cs10_ledger_x2",
+          "speaker": "槐里·青禾",
+          "text": "抄过未结，才配以后念栏。"
+        },
+        {
+          "id": "cs10_ledger_x3",
+          "speaker": "老旗手",
+          "text": "并排入柜。裁半本的，我不收。"
+        },
+        {
+          "id": "cs10_ledger_x4",
+          "speaker": "岁吏",
+          "text": "侧室回执还在。红脸还诚实。"
+        },
+        {
+          "id": "cs10_ledger_x5",
+          "speaker": "苇原·灯影",
+          "text": "下次挂嗣，下行先响。"
+        },
+        {
+          "id": "cs10_ledger_x6",
+          "speaker": "书记官",
+          "text": "催条再来，封面压得住。"
+        },
+        {
+          "id": "cs10_ledger_x7",
+          "speaker": "石垒·晚担",
+          "text": "桩在，城印才有地方站。"
+        },
+        {
+          "id": "cs10_ledger_x8",
+          "speaker": "掌柜",
+          "text": "擦过急圈的墙，更值钱。"
+        },
+        {
+          "id": "cs10_ledger_x9",
+          "speaker": "旁白",
+          "text": "灯还在。灯在，这一季就还没骗完。"
         },
         {
           "id": "cs10_led_6",

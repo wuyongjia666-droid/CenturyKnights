@@ -52,6 +52,56 @@
           "text": "写好看不难。站得住才难。"
         },
         {
+          "id": "cs08_yard_x0",
+          "speaker": "旁白",
+          "text": "笔搁在边上。墨还没干，催条已经又来一张。"
+        },
+        {
+          "id": "cs08_yard_x1",
+          "speaker": "书记官",
+          "text": "催条爱写「已」。已字一多，空格就难受。"
+        },
+        {
+          "id": "cs08_yard_x2",
+          "speaker": "老管事",
+          "text": "难受就对。难受说明栏还没骗过人。"
+        },
+        {
+          "id": "cs08_yard_x3",
+          "speaker": "槐里·青禾",
+          "text": "孩子以后抄名册，先抄空，再抄满。"
+        },
+        {
+          "id": "cs08_yard_x4",
+          "speaker": "苇原·灯影",
+          "text": "巡防夜里走过，看见空格，才肯信这灯。"
+        },
+        {
+          "id": "cs08_yard_x5",
+          "speaker": "老旗手",
+          "text": "旗角给人核。核的时候，空比满更像真。"
+        },
+        {
+          "id": "cs08_yard_x6",
+          "speaker": "岁吏",
+          "text": "年迹匣认空。空着，红脸少记一笔。"
+        },
+        {
+          "id": "cs08_yard_x7",
+          "speaker": "石垒·晚担",
+          "text": "桩要站。站之前，别先把名字钉死。"
+        },
+        {
+          "id": "cs08_yard_x8",
+          "speaker": "旁白",
+          "text": "厅里风小。风小的时候，人更容易听见自己的急。"
+        },
+        {
+          "id": "cs08_yard_x9",
+          "speaker": "掌柜",
+          "text": "酒馆墙上有圈。圈等选题，不等人喊已经。"
+        },
+        {
           "id": "cs08_yd_7",
           "speaker": "leader",
           "text": "栏挂上了。去看祖祠。"
@@ -98,6 +148,56 @@
           "text": "还差两格。跳格的栏，桩会裂。"
         },
         {
+          "id": "cs08_stele_x0",
+          "speaker": "旁白",
+          "text": "香灰白一层。白得像还没人敢踩上去。"
+        },
+        {
+          "id": "cs08_stele_x1",
+          "speaker": "老管事",
+          "text": "对碑是手活。手活不能靠嘴快。"
+        },
+        {
+          "id": "cs08_stele_x2",
+          "speaker": "石垒·晚担",
+          "text": "影正了再动手。影偏就等。"
+        },
+        {
+          "id": "cs08_stele_x3",
+          "speaker": "书记官",
+          "text": "小字写「未结」。小字不抢正文，正文才站得住。"
+        },
+        {
+          "id": "cs08_stele_x4",
+          "speaker": "岁吏",
+          "text": "回执在侧室。侧室不闹，闹的是正厅。"
+        },
+        {
+          "id": "cs08_stele_x5",
+          "speaker": "苇原·灯影",
+          "text": "谁摸过灰，手会黑。黑着手别卖「已点」。"
+        },
+        {
+          "id": "cs08_stele_x6",
+          "speaker": "槐里·青禾",
+          "text": "空格问人。问得出口，姓才像能传。"
+        },
+        {
+          "id": "cs08_stele_x7",
+          "speaker": "老旗手",
+          "text": "旗断口还在。断口提醒：未完不是丢人。"
+        },
+        {
+          "id": "cs08_stele_x8",
+          "speaker": "旁白",
+          "text": "灯芯跳一下。跳完又稳。稳比旺好。"
+        },
+        {
+          "id": "cs08_stele_x9",
+          "speaker": "老管事",
+          "text": "旺晃眼。晃眼就看不清空格边齐不齐。"
+        },
+        {
           "id": "cs08_st_6",
           "speaker": "leader",
           "text": "记下。去看沙漏。"
@@ -142,6 +242,56 @@
           "id": "cs08_hg_5",
           "speaker": "槐里·青禾",
           "text": "孩子要抄未结，不要只抄名。"
+        },
+        {
+          "id": "cs08_hourglass_x0",
+          "speaker": "旁白",
+          "text": "细线钉住两行。拔线要带木茬，扎手。"
+        },
+        {
+          "id": "cs08_hourglass_x1",
+          "speaker": "老管事",
+          "text": "扎手正好。不疼的「已」，多半是假的。"
+        },
+        {
+          "id": "cs08_hourglass_x2",
+          "speaker": "书记官",
+          "text": "议会摘要爱一行。我们给两行。给完不改。"
+        },
+        {
+          "id": "cs08_hourglass_x3",
+          "speaker": "岁吏",
+          "text": "红脸可以过夜。假绿进匣，我半夜也醒。"
+        },
+        {
+          "id": "cs08_hourglass_x4",
+          "speaker": "苇原·灯影",
+          "text": "更次还在交。交更的人先看下行。"
+        },
+        {
+          "id": "cs08_hourglass_x5",
+          "speaker": "槐里·青禾",
+          "text": "抄未结的孩子，长大才敢问空。"
+        },
+        {
+          "id": "cs08_hourglass_x6",
+          "speaker": "石垒·晚担",
+          "text": "两行间距够一张脸红。红完再谈钉。"
+        },
+        {
+          "id": "cs08_hourglass_x7",
+          "speaker": "老旗手",
+          "text": "核旗的时候，两行都要在。少一行，角先裂。"
+        },
+        {
+          "id": "cs08_hourglass_x8",
+          "speaker": "旁白",
+          "text": "沙漏沙子慢。慢不是停。慢是还在走。"
+        },
+        {
+          "id": "cs08_hourglass_x9",
+          "speaker": "掌柜",
+          "text": "墙牌比纸硬。硬的东西，撕起来才有账。"
         },
         {
           "id": "cs08_hg_6",
@@ -220,6 +370,56 @@
           "id": "cs08_br_7",
           "speaker": "leader",
           "text": "带牌。去酒馆。"
+        },
+        {
+          "id": "cs08_bridge_x0",
+          "speaker": "旁白",
+          "text": "门廊风大。风把闲话吹薄，把牌沿吹响。"
+        },
+        {
+          "id": "cs08_bridge_x1",
+          "speaker": "石垒·晚担",
+          "text": "有人想绕牌。绕得过纸，绕不过桩。"
+        },
+        {
+          "id": "cs08_bridge_x2",
+          "speaker": "老旗手",
+          "text": "卖名的人爱绕。核角的人站着不让。"
+        },
+        {
+          "id": "cs08_bridge_x3",
+          "speaker": "苇原·灯影",
+          "text": "下落不清，名先别谈。谈了也是吵。"
+        },
+        {
+          "id": "cs08_bridge_x4",
+          "speaker": "槐里·青禾",
+          "text": "孩子问空，比大人喊满更难挡。"
+        },
+        {
+          "id": "cs08_bridge_x5",
+          "speaker": "老管事",
+          "text": "慢的对照留下。快的闲话过夜就散。"
+        },
+        {
+          "id": "cs08_bridge_x6",
+          "speaker": "岁吏",
+          "text": "谱很长。长的东西，更要静着对。"
+        },
+        {
+          "id": "cs08_bridge_x7",
+          "speaker": "书记官",
+          "text": "门廊记事：谁来问，谁摸过灰，谁短笑。"
+        },
+        {
+          "id": "cs08_bridge_x8",
+          "speaker": "旁白",
+          "text": "墙牌旁有人短笑。短笑像试探，不像结论。"
+        },
+        {
+          "id": "cs08_bridge_x9",
+          "speaker": "掌柜",
+          "text": "酒馆等着。圈还在。圈不等短笑。"
         },
         {
           "id": "cs08_mid_lost",
@@ -396,6 +596,56 @@
           "id": "cs08_tav_6",
           "speaker": "旁白",
           "text": "两张纸在风里响。你选怎么收这一季。"
+        },
+        {
+          "id": "cs08_tavern_x0",
+          "speaker": "旁白",
+          "text": "花生壳轻了。轻的时候，人反而听得见自己的选。"
+        },
+        {
+          "id": "cs08_tavern_x1",
+          "speaker": "掌柜",
+          "text": "圈是选题。选完再喝。空喊的，酒钱加倍。"
+        },
+        {
+          "id": "cs08_tavern_x2",
+          "speaker": "槐里·青禾",
+          "text": "裁祖祠像裁布。布裁错了，鞋也穿不成。"
+        },
+        {
+          "id": "cs08_tavern_x3",
+          "speaker": "老管事",
+          "text": "并排不是怕事。并排是让事看得见。"
+        },
+        {
+          "id": "cs08_tavern_x4",
+          "speaker": "石垒·晚担",
+          "text": "栏能念，桩能站。少一样，厅会晃。"
+        },
+        {
+          "id": "cs08_tavern_x5",
+          "speaker": "苇原·灯影",
+          "text": "买一行结论的人，先去摸灰。摸完再出价。"
+        },
+        {
+          "id": "cs08_tavern_x6",
+          "speaker": "岁吏",
+          "text": "回执不认吆喝。认并排，认灯，认手。"
+        },
+        {
+          "id": "cs08_tavern_x7",
+          "speaker": "书记官",
+          "text": "两张纸都在风里。风不会替你选。"
+        },
+        {
+          "id": "cs08_tavern_x8",
+          "speaker": "老旗手",
+          "text": "旗角听得到圈。圈选偏了，角会先响。"
+        },
+        {
+          "id": "cs08_tavern_x9",
+          "speaker": "旁白",
+          "text": "你还没开口。没开口的时候，空格最清楚。"
         }
       ],
       "actions": [
@@ -500,6 +750,56 @@
           "id": "cs08_led_5",
           "speaker": "苇原·灯影",
           "text": "更还在交。下次挂嗣，下行先响。"
+        },
+        {
+          "id": "cs08_ledger_x0",
+          "speaker": "旁白",
+          "text": "钥匙冰手。冰手提醒：柜不是广告栏。"
+        },
+        {
+          "id": "cs08_ledger_x1",
+          "speaker": "老管事",
+          "text": "缝留着。缝不是裂。缝是还能补的地方。"
+        },
+        {
+          "id": "cs08_ledger_x2",
+          "speaker": "槐里·青禾",
+          "text": "抄过未结，才配念栏。这句留给以后。"
+        },
+        {
+          "id": "cs08_ledger_x3",
+          "speaker": "老旗手",
+          "text": "并排入柜。裁掉的半本，我不收。"
+        },
+        {
+          "id": "cs08_ledger_x4",
+          "speaker": "岁吏",
+          "text": "侧室回执还在。还在，红脸就还诚实。"
+        },
+        {
+          "id": "cs08_ledger_x5",
+          "speaker": "苇原·灯影",
+          "text": "下次挂嗣，下行先响。响了再谈名。"
+        },
+        {
+          "id": "cs08_ledger_x6",
+          "speaker": "书记官",
+          "text": "封面四个字压住催条。催条再来，也压得住。"
+        },
+        {
+          "id": "cs08_ledger_x7",
+          "speaker": "石垒·晚担",
+          "text": "桩还在。桩在，名才有地方站。"
+        },
+        {
+          "id": "cs08_ledger_x8",
+          "speaker": "掌柜",
+          "text": "圈可以擦。擦过的墙，比从没画过更值钱。"
+        },
+        {
+          "id": "cs08_ledger_x9",
+          "speaker": "旁白",
+          "text": "灯还在。灯在，这一季就还没把人骗完。"
         },
         {
           "id": "cs08_led_6",

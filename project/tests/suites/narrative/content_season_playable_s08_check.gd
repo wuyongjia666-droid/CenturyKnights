@@ -77,7 +77,7 @@ func _assert_catalog_and_counts(data, line_count: int) -> String:
 		return "chapter not dict"
 	if str(data.get("id", "")) != "cs08_01":
 		return "id"
-	if line_count < 30:
+	if line_count < 70:
 		return "too few lines %d" % line_count
 	for row in StoryCatalog.mainline_entries():
 		if str(row.get("id", "")) == "cs08_01":

@@ -81,3 +81,7 @@
 
 - 选「城印并排记」→ `cs10_kept_seal`，进 `ledger`。
 - 系统加深：盖印成功 → `month_echo.job_seal`（姓名 + 印名）进属地/沙漏。
+
+## 加深备忘
+
+本刀加厚原著与章内对白，不改选题与系统钩子，不新开 season_11，不新增 month_echo 种类。visit@hourglass、battle@bridge 所有权保持。

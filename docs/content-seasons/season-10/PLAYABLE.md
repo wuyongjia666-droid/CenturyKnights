@@ -37,3 +37,10 @@
 ## 对白规则
 
 单行 ≤60 汉字；大白话；机制点名：职印、盖印、本城之事、声望、沙漏两行、六门印。
+
+## 加深（本刀）
+
+- 原著 `NOVEL.md` 中篇汉字 ≥12000，场景与对照册加厚，口吻口语化。
+- 可玩章 `cs10_01.json` 对白加厚至 100+ 行；单行仍 ≤60 汉字。
+- **所有权不变**：`hourglass` 拍挂 visit「去看月份怎么往前走」；`bridge` 拍挂 battle「先试一锋 / 再试锋镝 / 继续」。
+- 验收：`content_season_playable_s10_check` 行数闸提高到 ≥70；另跑 visit_authored / battle_authored / hub_entry。
