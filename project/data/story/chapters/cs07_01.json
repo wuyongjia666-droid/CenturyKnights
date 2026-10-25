@@ -1,0 +1,349 @@
+{
+  "id": "cs07_01",
+  "title": "仪典上的灯",
+  "legacy_index": 407,
+  "return_scene": "res://scenes/story/chapter_player.tscn",
+  "source": "docs/content-seasons/season-07/NOVEL.md",
+  "beats": [
+    {
+      "id": "yard",
+      "title": "挂栏",
+      "next": "rite",
+      "lines": [
+        {
+          "id": "cs07_yd_0",
+          "speaker": "旁白",
+          "text": "认宗仪典。名册末行空着。仪典上的灯还亮。",
+          "stage": {
+            "card": "一　挂栏",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs07_yd_1",
+          "speaker": "书记官",
+          "text": "议会要听念。栏要写得正，写得能念。"
+        },
+        {
+          "id": "cs07_yd_2",
+          "speaker": "leader",
+          "text": "写路已选。"
+        },
+        {
+          "id": "cs07_yd_3",
+          "speaker": "旁白",
+          "text": "笔尖停一下。末行落下「路已选」三字。"
+        },
+        {
+          "id": "cs07_yd_4",
+          "speaker": "老旗手",
+          "text": "旗册誊栏。旗角不给人卖名。"
+        },
+        {
+          "id": "cs07_yd_5",
+          "speaker": "岁吏",
+          "text": "谱可以进栏。仪典是另一本账。"
+        },
+        {
+          "id": "cs07_yd_6",
+          "speaker": "石垒·晚担",
+          "text": "写好看不难。站得住才难。"
+        },
+        {
+          "id": "cs07_yd_7",
+          "speaker": "leader",
+          "text": "栏挂上了。去看仪典。"
+        }
+      ]
+    },
+    {
+      "id": "rite",
+      "title": "仪典",
+      "next": "hourglass",
+      "lines": [
+        {
+          "id": "cs07_rt_0",
+          "speaker": "旁白",
+          "text": "仪典未结。灯照着印泥上的红。",
+          "stage": {
+            "bg": "hall",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs07_rt_1",
+          "speaker": "老管事",
+          "text": "仪典：选路已记，盖印待对。路名栏仍空。"
+        },
+        {
+          "id": "cs07_rt_2",
+          "speaker": "旁白",
+          "text": "名册说路已选。仪典说还在选。两行字第一次吵架。"
+        },
+        {
+          "id": "cs07_rt_3",
+          "speaker": "苇原·灯影",
+          "text": "巡防不问谁入谱。问今夜谁还没选路。"
+        },
+        {
+          "id": "cs07_rt_4",
+          "speaker": "槐里·青禾",
+          "text": "空着才诚实。写满却站不上去，才是骗人。"
+        },
+        {
+          "id": "cs07_rt_5",
+          "speaker": "老管事",
+          "text": "还差两步。跳步的栏，桩会裂。"
+        },
+        {
+          "id": "cs07_rt_6",
+          "speaker": "leader",
+          "text": "记下。去看沙漏。"
+        }
+      ]
+    },
+    {
+      "id": "hourglass",
+      "title": "两行",
+      "next": "bridge",
+      "lines": [
+        {
+          "id": "cs07_hg_0",
+          "speaker": "旁白",
+          "text": "沙漏多出两行：上行路已选，下行仪典未结。",
+          "stage": {
+            "bg": "hall",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs07_hg_1",
+          "speaker": "老管事",
+          "text": "并排钉。谁撕下行，谁结账。"
+        },
+        {
+          "id": "cs07_hg_2",
+          "speaker": "岁吏",
+          "text": "回执在侧室。谱与仪，两本账。"
+        },
+        {
+          "id": "cs07_hg_3",
+          "speaker": "书记官",
+          "text": "议会爱一行。两行最好活。"
+        },
+        {
+          "id": "cs07_hg_4",
+          "speaker": "苇原·灯影",
+          "text": "更还在交。下行先响。"
+        },
+        {
+          "id": "cs07_hg_5",
+          "speaker": "槐里·青禾",
+          "text": "孩子要抄未结，不要只抄名。"
+        },
+        {
+          "id": "cs07_hg_6",
+          "speaker": "leader",
+          "text": "两行都留。去门廊。"
+        }
+      ]
+    },
+    {
+      "id": "bridge",
+      "title": "门廊",
+      "next": "tavern",
+      "lines": [
+        {
+          "id": "cs07_br_0",
+          "speaker": "旁白",
+          "text": "门廊问谁入。墙牌两行一起响。",
+          "stage": {
+            "bg": "hall",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs07_br_1",
+          "speaker": "石垒·晚担",
+          "text": "牌比纸硬。纸比嘴硬。"
+        },
+        {
+          "id": "cs07_br_2",
+          "speaker": "老旗手",
+          "text": "旗角给人核，不给人卖名。"
+        },
+        {
+          "id": "cs07_br_3",
+          "speaker": "苇原·灯影",
+          "text": "桩空有下落，再谈名。"
+        },
+        {
+          "id": "cs07_br_4",
+          "speaker": "槐里·青禾",
+          "text": "谎抄不住。孩子会问为什么空。"
+        },
+        {
+          "id": "cs07_br_5",
+          "speaker": "老管事",
+          "text": "闲话快。对照慢。慢的留下。"
+        },
+        {
+          "id": "cs07_br_6",
+          "speaker": "岁吏",
+          "text": "谱很长。仪典很吵。吵是还在选。"
+        },
+        {
+          "id": "cs07_br_7",
+          "speaker": "leader",
+          "text": "带牌。去酒馆。"
+        }
+      ]
+    },
+    {
+      "id": "tavern",
+      "title": "选题",
+      "lines": [
+        {
+          "id": "cs07_tav_0",
+          "speaker": "旁白",
+          "text": "烽火酒馆。碗沿两个圈：并排记，先钉名。",
+          "stage": {
+            "bg": "tavern",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs07_tav_1",
+          "speaker": "掌柜",
+          "text": "篇幅不够就钉墙。墙比名册宽。"
+        },
+        {
+          "id": "cs07_tav_2",
+          "speaker": "槐里·青禾",
+          "text": "裁仪典的人，先把剪刀放下。"
+        },
+        {
+          "id": "cs07_tav_3",
+          "speaker": "老管事",
+          "text": "并排钉。谁撕仪典抄本，谁结账。"
+        },
+        {
+          "id": "cs07_tav_4",
+          "speaker": "石垒·晚担",
+          "text": "栏是念的，桩是站的。两样都要。"
+        },
+        {
+          "id": "cs07_tav_5",
+          "speaker": "苇原·灯影",
+          "text": "沙漏还亮。谁买一行结论，带他去摸印。"
+        },
+        {
+          "id": "cs07_tav_6",
+          "speaker": "旁白",
+          "text": "两张纸在风里响。你选怎么收这一季。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "keep_rite",
+          "label": "仪典并排记",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs07_kept_rite",
+              "value": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        },
+        {
+          "id": "name_path",
+          "label": "先钉路名",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs07_name_path",
+              "value": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ledger",
+      "title": "入册",
+      "lines": [
+        {
+          "id": "cs07_led_0",
+          "speaker": "旁白",
+          "text": "旗册封面四个字：仪典上的灯。末页已厚。柜上两把钥匙。",
+          "stage": {
+            "bg": "hall",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs07_led_par",
+          "speaker": "旁白",
+          "text": "你留下两行。议会仍爱一行。柜子认灯。",
+          "when": {
+            "flag": "cs07_kept_rite"
+          }
+        },
+        {
+          "id": "cs07_led_name",
+          "speaker": "旁白",
+          "text": "你先钉路名。沙漏仍在亮——月会替你写下行。",
+          "when": {
+            "flag": "cs07_name_path"
+          }
+        },
+        {
+          "id": "cs07_led_1",
+          "speaker": "老管事",
+          "text": "存档不刊也行。不丢，就是缝。"
+        },
+        {
+          "id": "cs07_led_2",
+          "speaker": "槐里·青禾",
+          "text": "孩子抄过仪典，才配以后念栏。"
+        },
+        {
+          "id": "cs07_led_3",
+          "speaker": "老旗手",
+          "text": "并排。不要裁。缝在名册与仪典之间。"
+        },
+        {
+          "id": "cs07_led_4",
+          "speaker": "岁吏",
+          "text": "回执在侧室。谱与仪，两本账。"
+        },
+        {
+          "id": "cs07_led_5",
+          "speaker": "苇原·灯影",
+          "text": "更还在交。下次挂嗣，下行先响。"
+        },
+        {
+          "id": "cs07_led_6",
+          "speaker": "leader",
+          "text": "栏与仪，并排。谁来认嗣位，先念完。"
+        },
+        {
+          "id": "cs07_led_7",
+          "speaker": "旁白",
+          "text": "风动旗角时，路已选还在。两行之间的空，给人脸红。"
+        }
+      ],
+      "actions": []
+    }
+  ]
+}
