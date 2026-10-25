@@ -67,20 +67,45 @@ static func content_season_entries() -> Array:
 		var status := str(data.get("status", ""))
 		if not status.begins_with("playable"):
 			continue
-		var chapter_id := str(data.get("playable_chapter", ""))
-		if chapter_id == "" or not is_content_season_id(chapter_id):
+		var chapter_ids: Array = []
+		var primary := str(data.get("playable_chapter", ""))
+		if primary != "" and is_content_season_id(primary):
+			chapter_ids.append(primary)
+		var more = data.get("playable_chapters", [])
+		if typeof(more) == TYPE_ARRAY:
+			for mid in more:
+				var extra := str(mid)
+				if extra == "" or not is_content_season_id(extra):
+					continue
+				if chapter_ids.has(extra):
+					continue
+				chapter_ids.append(extra)
+		if chapter_ids.is_empty():
 			continue
-		var chapter_path := CHAPTERS_DIR.path_join("%s.json" % chapter_id)
-		if not FileAccess.file_exists(chapter_path):
-			continue
-		out.append({
-			"season_id": str(data.get("id", sid)),
-			"title": str(data.get("title_zh", chapter_id)),
-			"title_en": str(data.get("title_en", chapter_id)),
-			"chapter_id": chapter_id,
-			"path": chapter_path,
-			"scene": PLAYER_SCENE,
-		})
+		for chapter_id in chapter_ids:
+			var chapter_path := CHAPTERS_DIR.path_join("%s.json" % str(chapter_id))
+			if not FileAccess.file_exists(chapter_path):
+				continue
+			var ch_title := str(data.get("title_zh", chapter_id))
+			var ch_title_en := str(data.get("title_en", chapter_id))
+			# Secondary chapters prefer their own JSON title / title_en.
+			if str(chapter_id) != primary:
+				var ch_data = JSON.parse_string(FileAccess.get_file_as_string(chapter_path))
+				if typeof(ch_data) == TYPE_DICTIONARY:
+					var own := str(ch_data.get("title", ""))
+					var own_en := str(ch_data.get("title_en", ""))
+					if own != "":
+						ch_title = own
+					if own_en != "":
+						ch_title_en = own_en
+			out.append({
+				"season_id": str(data.get("id", sid)),
+				"title": ch_title,
+				"title_en": ch_title_en,
+				"chapter_id": str(chapter_id),
+				"path": chapter_path,
+				"scene": PLAYER_SCENE,
+			})
 	return out
 
 ## Hub chips: zh title by default; English shell uses title_en (l10n gate).

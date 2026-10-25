@@ -14,8 +14,11 @@ const VISIT_BEAT := {
 	"cs03_01": "hourglass",
 	"cs04_01": "hourglass",
 	"cs05_01": "hourglass",
+	"cs05_02": "hourglass",
 	"cs06_01": "hourglass",
+	"cs06_02": "hourglass",
 	"cs07_01": "hourglass",
+	"cs07_02": "hourglass",
 	"cs08_01": "hourglass",
 	"cs09_01": "hourglass",
 	"cs10_01": "hourglass",
@@ -27,16 +30,19 @@ const AFTER := {
 	"cs03_01": "bridge",
 	"cs04_01": "bridge",
 	"cs05_01": "bridge",
+	"cs05_02": "bridge",
 	"cs06_01": "bridge",
+	"cs06_02": "bridge",
 	"cs07_01": "bridge",
+	"cs07_02": "bridge",
 	"cs08_01": "bridge",
 	"cs09_01": "bridge",
 	"cs10_01": "bridge",
 }
 ## Live press path on a spread of seasons (static gate covers all ten).
 const LIVE := [
-	"cs01_01", "cs02_01", "cs03_01", "cs04_01", "cs05_01",
-	"cs06_01", "cs07_01", "cs08_01", "cs09_01", "cs10_01",
+	"cs01_01", "cs02_01", "cs03_01", "cs04_01", "cs05_01", "cs05_02",
+	"cs06_01", "cs06_02", "cs07_01", "cs07_02", "cs08_01", "cs09_01", "cs10_01",
 ]
 
 
