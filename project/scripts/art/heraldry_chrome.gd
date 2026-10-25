@@ -650,3 +650,113 @@ static func place_board_crest(parent: Node, issuer_id: String, at: Vector2, size
 	tr.position = at
 	parent.add_child(tr)
 	return tr
+
+## Resolve foe nation for an in-battle HUD: meta → World.encounter → map.nation/foe_nation.
+static func battle_foe_nation_for(host) -> String:
+	var n := str(GameState.get_meta("battle_foe_nation", ""))
+	if n != "":
+		return n
+	if typeof(World.encounter) == TYPE_DICTIONARY:
+		n = str(World.encounter.get("nation", ""))
+		if n != "":
+			return n
+	if host == null:
+		return ""
+	var mid := str(host.get("map_id") if host.get("map_id") != null else "")
+	if mid == "":
+		return ""
+	var m: Dictionary = BattleMaps.get_map(mid)
+	n = str(m.get("nation", m.get("foe_nation", "")))
+	return n
+
+
+## Pure layout for 双方纹章条 — player left, enemy right; inset-aware.
+## Returns {player_at, enemy_at, shield, gap}.
+static func battle_hud_crest_layout(
+	vp: Vector2,
+	insets: Dictionary = {},
+	mobile: bool = false,
+	landscape: bool = false,
+	shield: Vector2 = Vector2.ZERO,
+) -> Dictionary:
+	var sh: Vector2 = shield
+	if sh == Vector2.ZERO:
+		if mobile and landscape:
+			sh = Vector2(40, 48)
+		elif mobile:
+			sh = Vector2(36, 44)
+		else:
+			sh = Vector2(36, 44)
+	var top := float(insets.get("top", 0.0))
+	var left := float(insets.get("left", 0.0))
+	var right := float(insets.get("right", 0.0))
+	var y := top + (10.0 if mobile else 8.0)
+	var pad := 12.0 if mobile else 16.0
+	var p_at := Vector2(left + pad, y)
+	var e_at := Vector2(maxf(p_at.x + sh.x + 24.0, vp.x - right - pad - sh.x), y)
+	return {"player_at": p_at, "enemy_at": e_at, "shield": sh, "gap": 8.0}
+
+
+## In-battle HUD 双方纹章条: PlayerArms (团徽) left + EnemyArms (敌徽) right.
+## Host name BattleHudCrestStrip. MOUSE_FILTER_IGNORE — never steals InputRouter taps.
+static func place_battle_hud_crest_strips(
+	parent: Node,
+	foe_nation: String = "",
+	vp: Vector2 = Vector2.ZERO,
+	insets: Dictionary = {},
+	mobile: bool = false,
+	landscape: bool = false,
+	shield: Vector2 = Vector2.ZERO,
+) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("BattleHudCrestStrip")
+	if old:
+		old.name = "_BattleHudCrestStripDying"
+		old.queue_free()
+	var size_vp := vp
+	if size_vp == Vector2.ZERO and parent is Control and (parent as Control).is_inside_tree():
+		size_vp = (parent as Control).get_viewport().get_visible_rect().size
+	if size_vp == Vector2.ZERO:
+		size_vp = Vector2(1280, 720)
+	var lay: Dictionary = battle_hud_crest_layout(size_vp, insets, mobile, landscape, shield)
+	var sh: Vector2 = lay["shield"]
+	var host := Control.new()
+	host.name = "BattleHudCrestStrip"
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var player := make_company_arms(sh)
+	player.name = "PlayerArms"
+	player.position = lay["player_at"]
+	host.add_child(player)
+	var nid := str(foe_nation)
+	if nid != "":
+		var foe := make_nation_arms(nid, sh)
+		foe.name = "EnemyArms"
+		foe.position = lay["enemy_at"]
+		host.add_child(foe)
+	host.set_meta("foe_nation", nid)
+	host.set_meta("has_enemy", nid != "")
+	parent.add_child(host)
+	return host
+
+
+## Battle host sync: resolve foe + device/insets and (re)place the strip.
+static func sync_battle_hud_crests(host) -> void:
+	if host == null:
+		return
+	var mobile := DeviceProfile.is_mobile()
+	var land := false
+	var insets: Dictionary = {}
+	var vp := Vector2(1280, 720)
+	if host is Control and (host as Control).is_inside_tree():
+		vp = (host as Control).get_viewport().get_visible_rect().size
+		land = mobile and vp.x > vp.y * 1.2
+		if host.has_method("_safe_insets"):
+			insets = host._safe_insets()
+		elif host.has_meta("m_safe_insets"):
+			insets = host.get_meta("m_safe_insets")
+	place_battle_hud_crest_strips(
+		host, battle_foe_nation_for(host), vp, insets, mobile, land
+	)
+
