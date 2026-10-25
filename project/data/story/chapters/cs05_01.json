@@ -1,0 +1,349 @@
+{
+  "id": "cs05_01",
+  "title": "空椅上的灯",
+  "legacy_index": 405,
+  "return_scene": "res://scenes/story/chapter_player.tscn",
+  "source": "docs/content-seasons/season-05/NOVEL.md",
+  "beats": [
+    {
+      "id": "court",
+      "title": "挂栏",
+      "next": "chair",
+      "lines": [
+        {
+          "id": "cs05_ct_0",
+          "speaker": "旁白",
+          "text": "嗣位庭。名册末行空着。空椅上的灯还亮。",
+          "stage": {
+            "card": "一　挂栏",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs05_ct_1",
+          "speaker": "书记官",
+          "text": "议会要听念。栏要写得正，写得能念。"
+        },
+        {
+          "id": "cs05_ct_2",
+          "speaker": "leader",
+          "text": "写待定。"
+        },
+        {
+          "id": "cs05_ct_3",
+          "speaker": "旁白",
+          "text": "笔尖停一下。末行落下「待定嗣」三字。"
+        },
+        {
+          "id": "cs05_ct_4",
+          "speaker": "老旗手",
+          "text": "旗册誊栏。旗角不给人卖名。"
+        },
+        {
+          "id": "cs05_ct_5",
+          "speaker": "岁吏",
+          "text": "谱可以进栏。椅是另一本账。"
+        },
+        {
+          "id": "cs05_ct_6",
+          "speaker": "石垒·晚担",
+          "text": "写好看不难。坐得住才难。"
+        },
+        {
+          "id": "cs05_ct_7",
+          "speaker": "leader",
+          "text": "栏挂上了。去看空椅。"
+        }
+      ]
+    },
+    {
+      "id": "chair",
+      "title": "空椅",
+      "next": "hourglass",
+      "lines": [
+        {
+          "id": "cs05_ch_0",
+          "speaker": "旁白",
+          "text": "空椅仍空。灯照着椅腿上的灰。",
+          "stage": {
+            "bg": "hall",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs05_ch_1",
+          "speaker": "老管事",
+          "text": "联姻链：婚仪已记，诞育待对。继承人栏仍空。"
+        },
+        {
+          "id": "cs05_ch_2",
+          "speaker": "旁白",
+          "text": "名册说待定。空椅说空。两行字第一次吵架。"
+        },
+        {
+          "id": "cs05_ch_3",
+          "speaker": "苇原·灯影",
+          "text": "巡防不问谁坐。问今夜谁还空着。"
+        },
+        {
+          "id": "cs05_ch_4",
+          "speaker": "槐里·青禾",
+          "text": "空着才诚实。写满却坐不上去，才是骗人。"
+        },
+        {
+          "id": "cs05_ch_5",
+          "speaker": "老管事",
+          "text": "链差两步。跳步的栏，椅会裂。"
+        },
+        {
+          "id": "cs05_ch_6",
+          "speaker": "leader",
+          "text": "空就空着。去沙漏。"
+        }
+      ]
+    },
+    {
+      "id": "hourglass",
+      "title": "两行",
+      "next": "bridge",
+      "lines": [
+        {
+          "id": "cs05_hg_0",
+          "speaker": "旁白",
+          "text": "沙漏厅。上行待定嗣，下行椅空·链未到。",
+          "stage": {
+            "bg": "hall",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs05_hg_1",
+          "speaker": "老管事",
+          "text": "每月来摸。跳行的人，不配谈嗣位。"
+        },
+        {
+          "id": "cs05_hg_2",
+          "speaker": "石垒·晚担",
+          "text": "名，事。名是栏，事是椅。"
+        },
+        {
+          "id": "cs05_hg_3",
+          "speaker": "苇原·灯影",
+          "text": "木条敲两下。谁只敲一下，谁在偷懒。"
+        },
+        {
+          "id": "cs05_hg_4",
+          "speaker": "岁吏",
+          "text": "年迹进谱，不等于落座。纸比嘴硬，椅比纸硬。"
+        },
+        {
+          "id": "cs05_hg_5",
+          "speaker": "旁白",
+          "text": "两行凹槽深浅不同。灯照着空的那一行。"
+        },
+        {
+          "id": "cs05_hg_6",
+          "speaker": "leader",
+          "text": "并排。带牌去门廊。"
+        }
+      ]
+    },
+    {
+      "id": "bridge",
+      "title": "门廊",
+      "next": "tavern",
+      "lines": [
+        {
+          "id": "cs05_br_0",
+          "speaker": "旁白",
+          "text": "门廊柱上钉着并排纸：左待定，右椅空。",
+          "stage": {
+            "bg": "hall",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs05_br_1",
+          "speaker": "旁白",
+          "text": "有人问：写的是给人念的，还是给人坐的？"
+        },
+        {
+          "id": "cs05_br_2",
+          "speaker": "书记官",
+          "text": "议会只爱听念。椅是灯盏的事。"
+        },
+        {
+          "id": "cs05_br_3",
+          "speaker": "老旗手",
+          "text": "旗布完整，不等于椅上有人。"
+        },
+        {
+          "id": "cs05_br_4",
+          "speaker": "槐里·青禾",
+          "text": "糊了的名，抄不住。空椅抄得住。"
+        },
+        {
+          "id": "cs05_br_5",
+          "speaker": "石垒·晚担",
+          "text": "不全就不全。别用假名定椅。"
+        },
+        {
+          "id": "cs05_br_6",
+          "speaker": "苇原·灯影",
+          "text": "门廊有人问谁坐。把牌带去。"
+        },
+        {
+          "id": "cs05_br_7",
+          "speaker": "旁白",
+          "text": "牌被摸亮。你得选：空椅并排链，还是先钉名上椅。"
+        }
+      ]
+    },
+    {
+      "id": "tavern",
+      "title": "选题",
+      "lines": [
+        {
+          "id": "cs05_tav_0",
+          "speaker": "旁白",
+          "text": "烽火酒馆。碗沿两个圈：并排链，先钉名。",
+          "stage": {
+            "bg": "tavern",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs05_tav_1",
+          "speaker": "掌柜",
+          "text": "篇幅不够就钉墙。墙比名册宽。"
+        },
+        {
+          "id": "cs05_tav_2",
+          "speaker": "槐里·青禾",
+          "text": "裁空椅的人，先把剪刀放下。"
+        },
+        {
+          "id": "cs05_tav_3",
+          "speaker": "老管事",
+          "text": "并排钉。谁撕空椅抄本，谁结账。"
+        },
+        {
+          "id": "cs05_tav_4",
+          "speaker": "石垒·晚担",
+          "text": "栏是念的，椅是坐的。两样都要。"
+        },
+        {
+          "id": "cs05_tav_5",
+          "speaker": "苇原·灯影",
+          "text": "沙漏还亮。谁买一行结论，带他去摸椅。"
+        },
+        {
+          "id": "cs05_tav_6",
+          "speaker": "旁白",
+          "text": "两张纸在风里响。你选怎么收这一季。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "keep_chain",
+          "label": "空椅并排链",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs05_kept_chain",
+              "value": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        },
+        {
+          "id": "name_first",
+          "label": "先钉名上椅",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs05_name_first",
+              "value": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ledger",
+      "title": "入册",
+      "lines": [
+        {
+          "id": "cs05_led_0",
+          "speaker": "旁白",
+          "text": "旗册封面四个字：空椅上的灯。末页已厚。柜上两把钥匙。",
+          "stage": {
+            "bg": "hall",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs05_led_par",
+          "speaker": "旁白",
+          "text": "你留下两行。议会仍爱一行。柜子认灯。",
+          "when": {
+            "flag": "cs05_kept_chain"
+          }
+        },
+        {
+          "id": "cs05_led_name",
+          "speaker": "旁白",
+          "text": "你先钉名上椅。沙漏仍在亮——月会替你写下行。",
+          "when": {
+            "flag": "cs05_name_first"
+          }
+        },
+        {
+          "id": "cs05_led_1",
+          "speaker": "老管事",
+          "text": "存档不刊也行。不丢，就是缝。"
+        },
+        {
+          "id": "cs05_led_2",
+          "speaker": "槐里·青禾",
+          "text": "孩子抄过椅空，才配以后念栏。"
+        },
+        {
+          "id": "cs05_led_3",
+          "speaker": "老旗手",
+          "text": "并排。不要裁。缝在名册与空椅之间。"
+        },
+        {
+          "id": "cs05_led_4",
+          "speaker": "岁吏",
+          "text": "回执在侧室。谱与椅，两本账。"
+        },
+        {
+          "id": "cs05_led_5",
+          "speaker": "苇原·灯影",
+          "text": "更还在交。下次挂嗣，下行先响。"
+        },
+        {
+          "id": "cs05_led_6",
+          "speaker": "leader",
+          "text": "栏与椅，并排。谁来认嗣位，先念完。"
+        },
+        {
+          "id": "cs05_led_7",
+          "speaker": "旁白",
+          "text": "风动旗角时，待定还在。两行之间的空，给人脸红。"
+        }
+      ],
+      "actions": []
+    }
+  ]
+}
