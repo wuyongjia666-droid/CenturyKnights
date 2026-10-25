@@ -199,17 +199,17 @@
         {
           "id": "cs01_02_slip_y17",
           "speaker": "旁白",
-          "text": "灯花爆了一下。爆完，字才肯站住。"
+          "text": "副页灯花爆在空格外，爆完纸上多了一粒烫点。"
         },
         {
           "id": "cs01_02_slip_y18",
           "speaker": "石垒·晚担",
-          "text": "假亮捂不热。这格只留真。"
+          "text": "烫点不在字上。字还没写，别捂。"
         },
         {
           "id": "cs01_02_slip_y19",
           "speaker": "leader",
-          "text": "记下。不催假名。"
+          "text": "副页先留烫点。假名不往上凑。"
         },
         {
           "id": "cs01_02_slip_17",
@@ -419,17 +419,17 @@
         {
           "id": "cs01_02_wu_y17",
           "speaker": "旁白",
-          "text": "册边起毛。毛边比印鉴老实。"
+          "text": "空格四边都起毛，毛比副页上的泥印老实。"
         },
         {
           "id": "cs01_02_wu_y18",
           "speaker": "石垒·晚担",
-          "text": "老实的才并排。"
+          "text": "泥印会干。毛边干了还扎手，才算数。"
         },
         {
           "id": "cs01_02_wu_y19",
           "speaker": "leader",
-          "text": "并排留真。"
+          "text": "空格留着扎手的。催出来的不留。"
         },
         {
           "id": "cs01_02_wu_17",
@@ -639,17 +639,17 @@
         {
           "id": "cs01_02_hourglass_y17",
           "speaker": "旁白",
-          "text": "灯花爆了一下。爆完，字才肯站住。"
+          "text": "沙漏座边灯花又爆，爆完上行的无还在。"
         },
         {
           "id": "cs01_02_hourglass_y18",
           "speaker": "石垒·晚担",
-          "text": "假亮捂不热。这格只留真。"
+          "text": "沙盖住假亮。盖不住的，才是这格的字。"
         },
         {
           "id": "cs01_02_hourglass_y19",
           "speaker": "leader",
-          "text": "记下。不催假名。"
+          "text": "两行里只留盖不住的。"
         },
         {
           "id": "cs01_02_hourglass_17",
@@ -938,17 +938,17 @@
         {
           "id": "cs01_02_bridge_y20",
           "speaker": "旁白",
-          "text": "册边起毛。毛边比印鉴老实。"
+          "text": "门廊风把副页毛边吹立起来，立着比印清楚。"
         },
         {
           "id": "cs01_02_bridge_y21",
           "speaker": "石垒·晚担",
-          "text": "老实的才并排。"
+          "text": "立起来的毛，刀风吹不倒。倒的是假页。"
         },
         {
           "id": "cs01_02_bridge_y22",
           "speaker": "leader",
-          "text": "并排留真。"
+          "text": "毛边还立着。真的，并排带去。"
         },
         {
           "id": "cs01_02_bridge_19",
@@ -996,7 +996,7 @@
           "speaker": "旁白",
           "text": "锋再定。桥侧泥印浅了，滑步那拨退到芦里。",
           "when": {
-            "flag": "cs01_mid_fought"
+            "flag": "cs01_02_mid_fought"
           }
         },
         {
@@ -1004,7 +1004,7 @@
           "speaker": "老旗手",
           "text": "泥里的脚窝，比刀痕好认。",
           "when": {
-            "flag": "cs01_mid_fought"
+            "flag": "cs01_02_mid_fought"
           }
         },
         {
@@ -1012,7 +1012,7 @@
           "speaker": "苇原·灯影",
           "text": "吴钩的影短了。短了，才敢回头。",
           "when": {
-            "flag": "cs01_mid_fought"
+            "flag": "cs01_02_mid_fought"
           }
         },
         {
@@ -1020,7 +1020,7 @@
           "speaker": "leader",
           "text": "这一锋补上月的欠。桥，我还过。",
           "when": {
-            "flag": "cs01_mid_fought"
+            "flag": "cs01_02_mid_fought"
           }
         },
         {
@@ -1351,17 +1351,17 @@
         {
           "id": "cs01_02_tavern_y17",
           "speaker": "旁白",
-          "text": "灯花爆了一下。爆完，字才肯站住。"
+          "text": "酒馆灯花爆在副页夹缝，缝里有一点没干的油。"
         },
         {
           "id": "cs01_02_tavern_y18",
           "speaker": "石垒·晚担",
-          "text": "假亮捂不热。这格只留真。"
+          "text": "油还黏。黏的不是假名，是刚核对过。"
         },
         {
           "id": "cs01_02_tavern_y19",
           "speaker": "leader",
-          "text": "记下。不催假名。"
+          "text": "黏着的副页带回。假名留在柜外。"
         },
         {
           "id": "cs01_02_tavern_17",

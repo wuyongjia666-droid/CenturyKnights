@@ -199,17 +199,17 @@
         {
           "id": "cs03_02_back_y17",
           "speaker": "旁白",
-          "text": "功簿墨干得慢。慢干的字沉。"
+          "text": "榜阴功行的墨干得比正面慢，慢在夹页里。"
         },
         {
           "id": "cs03_02_back_y18",
           "speaker": "石垒·晚担",
-          "text": "沉字扛得住粮。"
+          "text": "夹页里的沉字，才配回头去对粮。"
         },
         {
           "id": "cs03_02_back_y19",
           "speaker": "leader",
-          "text": "功与粮并排。"
+          "text": "榜阴功粮并排。正面的空喊不抄。"
         },
         {
           "id": "cs03_02_back_17",
@@ -419,17 +419,17 @@
         {
           "id": "cs03_02_grain_y17",
           "speaker": "旁白",
-          "text": "仓门风从缝里进。"
+          "text": "粮行仓门的风比功栏大，大风专门找假数。"
         },
         {
           "id": "cs03_02_grain_y18",
           "speaker": "石垒·晚担",
-          "text": "风进得去，假数进不去。"
+          "text": "假数一进风缝就漏。漏掉的，别再写回来。"
         },
         {
           "id": "cs03_02_grain_y19",
           "speaker": "leader",
-          "text": "数要真。"
+          "text": "粮数过风。过了的才入榜阴。"
         },
         {
           "id": "cs03_02_grain_17",
@@ -639,17 +639,17 @@
         {
           "id": "cs03_02_hourglass_y17",
           "speaker": "旁白",
-          "text": "功簿墨干得慢。慢干的字沉。"
+          "text": "沙漏下行贴着榜阴功簿，墨还在慢慢沉。"
         },
         {
           "id": "cs03_02_hourglass_y18",
           "speaker": "石垒·晚担",
-          "text": "沉字扛得住粮。"
+          "text": "沉到沙里的功，才许跟粮并排。"
         },
         {
           "id": "cs03_02_hourglass_y19",
           "speaker": "leader",
-          "text": "功与粮并排。"
+          "text": "月份走之前，功粮先并稳。"
         },
         {
           "id": "cs03_02_hourglass_17",
@@ -938,17 +938,17 @@
         {
           "id": "cs03_02_bridge_y20",
           "speaker": "旁白",
-          "text": "仓门风从缝里进。"
+          "text": "门廊风钻进榜阴仓缝，缝里没有假数的位置。"
         },
         {
           "id": "cs03_02_bridge_y21",
           "speaker": "石垒·晚担",
-          "text": "风进得去，假数进不去。"
+          "text": "钻得进的是风。钻不进的假数，别硬塞。"
         },
         {
           "id": "cs03_02_bridge_y22",
           "speaker": "leader",
-          "text": "数要真。"
+          "text": "门廊上只认钻不进去的真数。"
         },
         {
           "id": "cs03_02_bridge_19",
@@ -996,7 +996,7 @@
           "speaker": "旁白",
           "text": "锋再定。粮袋口扎紧，抢粮那拨退到埂下。",
           "when": {
-            "flag": "cs03_mid_fought"
+            "flag": "cs03_02_mid_fought"
           }
         },
         {
@@ -1004,7 +1004,7 @@
           "speaker": "掌柜",
           "text": "空袋吓人。满袋，今晚不怕。",
           "when": {
-            "flag": "cs03_mid_fought"
+            "flag": "cs03_02_mid_fought"
           }
         },
         {
@@ -1012,7 +1012,7 @@
           "speaker": "槐里·青禾",
           "text": "粮沉肩，心反而轻。",
           "when": {
-            "flag": "cs03_mid_fought"
+            "flag": "cs03_02_mid_fought"
           }
         },
         {
@@ -1020,7 +1020,7 @@
           "speaker": "leader",
           "text": "锋护过粮。袋，我背得。",
           "when": {
-            "flag": "cs03_mid_fought"
+            "flag": "cs03_02_mid_fought"
           }
         },
         {
@@ -1351,17 +1351,17 @@
         {
           "id": "cs03_02_tavern_y17",
           "speaker": "旁白",
-          "text": "功簿墨干得慢。慢干的字沉。"
+          "text": "酒气熏不干榜阴那行慢墨，熏干的是空话。"
         },
         {
           "id": "cs03_02_tavern_y18",
           "speaker": "石垒·晚担",
-          "text": "沉字扛得住粮。"
+          "text": "空话干得快。扛粮的字，还黏在纸上。"
         },
         {
           "id": "cs03_02_tavern_y19",
           "speaker": "leader",
-          "text": "功与粮并排。"
+          "text": "黏着的功粮带回堡。酒账另算。"
         },
         {
           "id": "cs03_02_tavern_17",

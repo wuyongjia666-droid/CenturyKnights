@@ -113,17 +113,17 @@
         {
           "id": "cs09b_ya_y20",
           "speaker": "旁白",
-          "text": "血验灯晃了一下。"
+          "text": "回读验册时灯在册脊上晃了一下，晃完空格还空。"
         },
         {
           "id": "cs09b_ya_y21",
           "speaker": "石垒·晚担",
-          "text": "晃的是手，不是血。"
+          "text": "晃的是翻页的手。空格里没有新血，才算稳。"
         },
         {
           "id": "cs09b_ya_y22",
           "speaker": "leader",
-          "text": "血要稳。"
+          "text": "空格稳住再回读。手抖填上的血不要。"
         },
         {
           "id": "cs09b_ya_16",
@@ -240,17 +240,17 @@
         {
           "id": "cs09b_bl_y20",
           "speaker": "旁白",
-          "text": "册上旧渍沉底。"
+          "text": "验册脊上的旧渍沉进线缝，缝里没有今夜的红。"
         },
         {
           "id": "cs09b_bl_y21",
           "speaker": "石垒·晚担",
-          "text": "沉底的不是新泼。"
+          "text": "线缝里的不是新泼。新泼停在纸面，还反光。"
         },
         {
           "id": "cs09b_bl_y22",
           "speaker": "leader",
-          "text": "新泼的不认。"
+          "text": "反光的新泼不认。线缝里的旧渍认。"
         },
         {
           "id": "cs09b_bl_9",
@@ -367,17 +367,17 @@
         {
           "id": "cs09b_ho_y20",
           "speaker": "旁白",
-          "text": "血验灯晃了一下。"
+          "text": "月份格边的血验灯晃进沙里，沙把晃影滤掉了。"
         },
         {
           "id": "cs09b_ho_y21",
           "speaker": "石垒·晚担",
-          "text": "晃的是手，不是血。"
+          "text": "滤掉的是手抖。滤不掉的血，才许跟月份并排。"
         },
         {
           "id": "cs09b_ho_y22",
           "speaker": "leader",
-          "text": "血要稳。"
+          "text": "滤不掉的我留下。抖出来的不进月。"
         },
         {
           "id": "cs09b_ho_8",
@@ -551,17 +551,17 @@
         {
           "id": "cs09b_br_y21",
           "speaker": "旁白",
-          "text": "册上旧渍沉底。"
+          "text": "门廊木纹吃进一块旧渍，吃进去的边已经发暗。"
         },
         {
           "id": "cs09b_br_y22",
           "speaker": "石垒·晚担",
-          "text": "沉底的不是新泼。"
+          "text": "发暗的不是新泼。新泼的边还亮，像刚抹的。"
         },
         {
           "id": "cs09b_br_y23",
           "speaker": "leader",
-          "text": "新泼的不认。"
+          "text": "发暗的旧渍认。刚抹亮的不认。"
         },
         {
           "id": "cs09b_br_18",
@@ -603,7 +603,7 @@
           "speaker": "旁白",
           "text": "锋再定。血巾二次验干，卖泼的连声都没了。",
           "when": {
-            "flag": "cs09_mid_fought"
+            "flag": "cs09_02_mid_fought"
           }
         },
         {
@@ -611,7 +611,7 @@
           "speaker": "掌柜",
           "text": "二次验比一次验短。短，是因为已经清。",
           "when": {
-            "flag": "cs09_mid_fought"
+            "flag": "cs09_02_mid_fought"
           }
         },
         {
@@ -619,7 +619,7 @@
           "speaker": "槐里·青禾",
           "text": "巾角旧星旁又干一星。两星，才像足验。",
           "when": {
-            "flag": "cs09_mid_fought"
+            "flag": "cs09_02_mid_fought"
           }
         },
         {
@@ -627,7 +627,7 @@
           "speaker": "leader",
           "text": "锋再问一次。血，仍我的。",
           "when": {
-            "flag": "cs09_mid_fought"
+            "flag": "cs09_02_mid_fought"
           }
         },
         {
@@ -871,17 +871,17 @@
         {
           "id": "cs09b_ta_y20",
           "speaker": "旁白",
-          "text": "血验灯晃了一下。"
+          "text": "回堡前灯在酒碗沿又晃一下，晃完血星没散。"
         },
         {
           "id": "cs09b_ta_y21",
           "speaker": "石垒·晚担",
-          "text": "晃的是手，不是血。"
+          "text": "星不散，说明不是手在抖。手抖的星会碎。"
         },
         {
           "id": "cs09b_ta_y22",
           "speaker": "leader",
-          "text": "血要稳。"
+          "text": "不碎的血星带回。碎在碗里的不认。"
         },
         {
           "id": "cs09b_ta_18",

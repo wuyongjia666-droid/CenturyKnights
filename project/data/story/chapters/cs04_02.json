@@ -199,17 +199,17 @@
         {
           "id": "cs04_02_back_y17",
           "speaker": "旁白",
-          "text": "训条贴墙上。墙皮起壳。"
+          "text": "训阴页贴着墙，墙皮壳落在「行」字上。"
         },
         {
           "id": "cs04_02_back_y18",
           "speaker": "石垒·晚担",
-          "text": "壳掉了，训还在才算。"
+          "text": "壳落在行上。行还在，训才算没白贴。"
         },
         {
           "id": "cs04_02_back_y19",
           "speaker": "leader",
-          "text": "训与行并排。"
+          "text": "训阴与行并排。壳掉了也并着。"
         },
         {
           "id": "cs04_02_back_17",
@@ -419,17 +419,17 @@
         {
           "id": "cs04_02_deed_y17",
           "speaker": "旁白",
-          "text": "脚步声比口号响。"
+          "text": "行迹页上脚步声压过绣出来的口号。"
         },
         {
           "id": "cs04_02_deed_y18",
           "speaker": "石垒·晚担",
-          "text": "响的是走出来的。"
+          "text": "压过去的是走出来的。绣出来的，针脚会谎。"
         },
         {
           "id": "cs04_02_deed_y19",
           "speaker": "leader",
-          "text": "我走实步。"
+          "text": "我按走出来的步填行迹。绣词靠后。"
         },
         {
           "id": "cs04_02_deed_17",
@@ -639,17 +639,17 @@
         {
           "id": "cs04_02_hourglass_y17",
           "speaker": "旁白",
-          "text": "训条贴墙上。墙皮起壳。"
+          "text": "沙漏旁边训阴起壳，壳里夹着一条没干的针脚。"
         },
         {
           "id": "cs04_02_hourglass_y18",
           "speaker": "石垒·晚担",
-          "text": "壳掉了，训还在才算。"
+          "text": "针脚没干，说明训还在被走过，不是被念过。"
         },
         {
           "id": "cs04_02_hourglass_y19",
           "speaker": "leader",
-          "text": "训与行并排。"
+          "text": "走过的训与行并着。念过的放下。"
         },
         {
           "id": "cs04_02_hourglass_17",
@@ -938,17 +938,17 @@
         {
           "id": "cs04_02_bridge_y20",
           "speaker": "旁白",
-          "text": "脚步声比口号响。"
+          "text": "门廊石上脚步比训阴里的口号更清楚。"
         },
         {
           "id": "cs04_02_bridge_y21",
           "speaker": "石垒·晚担",
-          "text": "响的是走出来的。"
+          "text": "清楚的是鞋底。口号在风里，站不住。"
         },
         {
           "id": "cs04_02_bridge_y22",
           "speaker": "leader",
-          "text": "我走实步。"
+          "text": "鞋底算数。门廊不收口号。"
         },
         {
           "id": "cs04_02_bridge_19",
@@ -996,7 +996,7 @@
           "speaker": "旁白",
           "text": "锋再定。契纸角压住，抢契那拨退到廊外。",
           "when": {
-            "flag": "cs04_mid_fought"
+            "flag": "cs04_02_mid_fought"
           }
         },
         {
@@ -1004,7 +1004,7 @@
           "speaker": "掌柜",
           "text": "契要压。压住，才不像飞的。",
           "when": {
-            "flag": "cs04_mid_fought"
+            "flag": "cs04_02_mid_fought"
           }
         },
         {
@@ -1012,7 +1012,7 @@
           "speaker": "槐里·青禾",
           "text": "墨干了。干了，字才是自己的。",
           "when": {
-            "flag": "cs04_mid_fought"
+            "flag": "cs04_02_mid_fought"
           }
         },
         {
@@ -1020,7 +1020,7 @@
           "speaker": "leader",
           "text": "锋护过契。字，我签得。",
           "when": {
-            "flag": "cs04_mid_fought"
+            "flag": "cs04_02_mid_fought"
           }
         },
         {
@@ -1351,17 +1351,17 @@
         {
           "id": "cs04_02_tavern_y17",
           "speaker": "旁白",
-          "text": "训条贴墙上。墙皮起壳。"
+          "text": "酒旗后训阴墙皮又壳了一块，块下字还全。"
         },
         {
           "id": "cs04_02_tavern_y18",
           "speaker": "石垒·晚担",
-          "text": "壳掉了，训还在才算。"
+          "text": "字全，壳掉也没关系。字缺了，酒也不配喝。"
         },
         {
           "id": "cs04_02_tavern_y19",
           "speaker": "leader",
-          "text": "训与行并排。"
+          "text": "字全的训阴带回。缺的留下补走。"
         },
         {
           "id": "cs04_02_tavern_17",

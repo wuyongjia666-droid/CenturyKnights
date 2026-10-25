@@ -565,7 +565,7 @@
           "speaker": "旁白",
           "text": "锋再定。仪典第二问落地，催的人连影都没了。",
           "when": {
-            "flag": "cs07_mid_fought"
+            "flag": "cs07_02_mid_fought"
           }
         },
         {
@@ -573,7 +573,7 @@
           "speaker": "掌柜",
           "text": "第二问比第一问短。短，是因为已经试清。",
           "when": {
-            "flag": "cs07_mid_fought"
+            "flag": "cs07_02_mid_fought"
           }
         },
         {
@@ -581,7 +581,7 @@
           "speaker": "苇原·灯影",
           "text": "台上的人自己应了，台下就插不上嘴。",
           "when": {
-            "flag": "cs07_mid_fought"
+            "flag": "cs07_02_mid_fought"
           }
         },
         {
@@ -589,7 +589,7 @@
           "speaker": "leader",
           "text": "锋再清一次。仪典，仍我应。",
           "when": {
-            "flag": "cs07_mid_fought"
+            "flag": "cs07_02_mid_fought"
           }
         },
         {
