@@ -1,9 +1,9 @@
 extends Node
-## 内容季枢纽入口：三季可玩章挂进 ContentSeasonRow（非 EmptyHost / 非空态 CTA）；
+## 内容季枢纽入口：四季可玩章挂进 ContentSeasonRow（非 EmptyHost / 非空态 CTA）；
 ## 主线梯子仍跳过 cs*；开章走 StoryCatalog.request_chapter。
 
 const Todo := preload("res://scripts/ui/widgets/todo_center.gd")
-const EXPECTED := ["cs01_01", "cs02_01", "cs03_01"]
+const EXPECTED := ["cs01_01", "cs02_01", "cs03_01", "cs04_01"]
 
 var _fails: Array = []
 
@@ -99,6 +99,8 @@ func _hub_row() -> void:
 	_ok(str(GameState.get_meta("story_chapter_id", "")) == "cs01_01", "meta cs01")
 	_ok(StoryCatalog.request_chapter("cs03_01") == StoryCatalog.player_scene(), "player for cs03")
 	_ok(str(GameState.get_meta("story_chapter_id", "")) == "cs03_01", "meta cs03")
+	_ok(StoryCatalog.request_chapter("cs04_01") == StoryCatalog.player_scene(), "player for cs04")
+	_ok(str(GameState.get_meta("story_chapter_id", "")) == "cs04_01", "meta cs04")
 	hub.queue_free()
 	await get_tree().process_frame
 
