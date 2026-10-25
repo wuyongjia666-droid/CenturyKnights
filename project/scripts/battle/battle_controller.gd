@@ -245,6 +245,8 @@ func _process(delta: float) -> void:
 		not _dmg_fx.is_empty() or not _slash_fx.is_empty()
 		or not _lock_burst_fx.is_empty() or not _move_dust_fx.is_empty()
 		or _trauma > 0.0 or _turn_flash > 0.0
+		or BattlePhaseFeel.settle_alpha(self) > 0.0
+		or BattlePhaseFeel.enemy_actor_alpha(self) > 0.0
 	)
 	_redraw_accum += delta
 	var pulse := fx_live or _redraw_accum >= (1.0 / _REDRAW_HZ)
@@ -1270,24 +1272,10 @@ func _draw_overlay() -> void:
 		if ResourceLoader.exists(pop):
 			overlay.draw_texture_rect(_tex(pop), Rect2(fx.pos + Vector2(-24, yoff - 32) * _k(), Vector2(48, 48) * _k()), false, Color(1, 1, 1, a * 0.9))
 		CKBoardUnits.draw_dmg_text(self, fx, yoff, col, a)
-	# 回合横幅
-	if _turn_flash > 0.0:
-		var a2 = clampf(_turn_flash / 0.9, 0.0, 1.0)
-		var txt = Locale.t("shell_turn_player") if turn_team == "player" else Locale.t("shell_turn_enemy")
-		var tfi = mini(5, int((0.9 - _turn_flash) / 0.15))
-		var tfp = "res://assets/art/fx/turn_flash_dense_%d.png" % tfi
-		if not ResourceLoader.exists(tfp):
-			tfp = "res://assets/art/fx/turn_flash_%d.png" % tfi
-		var bc := ORIGIN + Vector2(MAP_W, MAP_H) * CELL * 0.5
-		var bandc: Color = UIKit.ACCENT if turn_team == "player" else UIKit.DANGER
-		overlay.draw_rect(Rect2(Vector2(ORIGIN.x, bc.y - 34), Vector2(MAP_W * CELL, 68)), Color(0.03, 0.04, 0.06, 0.72 * a2))
-		overlay.draw_rect(Rect2(Vector2(ORIGIN.x, bc.y - 34), Vector2(MAP_W * CELL, 1)), Color(bandc, 0.6 * a2))
-		overlay.draw_rect(Rect2(Vector2(ORIGIN.x, bc.y + 33), Vector2(MAP_W * CELL, 1)), Color(bandc, 0.6 * a2))
-		if ResourceLoader.exists(tfp):
-			overlay.draw_texture_rect(_tex(tfp), Rect2(bc - Vector2(150, 48), Vector2(96, 96)), false, Color(1, 1, 1, a2 * 0.9))
-		var tf := UIKit.font("regular")
-		var tsz := tf.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 26)
-		overlay.draw_string(tf, bc + Vector2(-tsz.x * 0.5, 9), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 26, Color(UIKit.TEXT, a2))
+	# T-P6: phase banner + enemy-actor ring + attack settle flash (overlay only — no input steal)
+	BattlePhaseFeel.draw_turn_banner(self, overlay)
+	BattlePhaseFeel.draw_enemy_actor_ring(self, overlay)
+	BattlePhaseFeel.draw_settle_flash(self, overlay)
 	# 地形悬停提示
 	if _in_bounds(_hover_cell):
 		var sw = "res://assets/art/fx/attack_wash.png" if attack_mode else ("res://assets/art/fx/move_wash.png" if ResourceLoader.exists("res://assets/art/fx/move_wash.png") else "res://assets/art/fx/select_wash.png")
@@ -2085,6 +2073,9 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 		Sfx.miss()
 		msg += "未命中（命中率 %d%%）" % result.hit_chance
 		_spawn_dmg(def.pos, "未中", Color(0.7, 0.75, 0.85))
+	# T-P6: confirm→hit settle flash/shake (miss/kill/crit readable)
+	var settle_kind := BattlePhaseFeel.settle_kind_from_result(bool(result.hit), bool(result.get("crit", false)), def.char.hp <= 0)
+	BattlePhaseFeel.note_attack_settle(self, settle_kind, def.pos)
 	_combat_rec.append({"a": ai, "d": di, "hit": bool(result.hit), "crit": bool(result.get("crit", false)), "dmg": int(result.get("damage", 0)),
 		"killed": def.char.hp <= 0, "skill": str(sk.get("name", skill_id)) if skill_id != "" else "", "hp_before": _hp_before,
 		"hp_after": int(def.char.hp), "hit_chance": int(result.get("hit_chance", 0))})
@@ -2173,12 +2164,8 @@ func _start_player_turn() -> void:
 	_round_no += 1; CKSpecialJobs.on_player_turn(self)
 	if _round_label:
 		_round_label.text = Locale.t("shell_4b1b8d2e") % _round_no
-	if _phase_chip:
-		_phase_chip.text = "PHASE 01"
-		_phase_chip.add_theme_color_override("font_color", UIKit.ACCENT)
 	phase_label.text = Locale.t("shell_742d7d53") % map_name
-	phase_label.add_theme_color_override("font_color", UIKit.TEXT)
-	_turn_flash = 0.9
+	BattlePhaseFeel.note_phase_switch(self, "player")
 	Sfx.turn()
 	_sync_battle_music()
 	var pcs: Array = []
@@ -2221,11 +2208,7 @@ func _end_player_turn() -> void:
 		return
 	turn_team = "enemy"
 	phase_label.text = Locale.t("shell_2a6d5eac") % map_name
-	if _phase_chip:
-		_phase_chip.text = "PHASE 02"
-		_phase_chip.add_theme_color_override("font_color", UIKit.DANGER)
-	phase_label.add_theme_color_override("font_color", UIKit.DANGER)
-	_turn_flash = 0.9
+	BattlePhaseFeel.note_phase_switch(self, "enemy")
 	_pulse_heal("enemy")
 	_sync_battle_music()
 	for u in units:
@@ -2648,6 +2631,7 @@ func _enemy_ai() -> void:
 		if units[i].char.hp <= 0:
 			continue
 		u = units[i]
+		BattlePhaseFeel.note_enemy_acting(self, i)
 		var planned: Dictionary = ai_plan.get(str(u.char.id), {})
 		if str(planned.get("action", "")) == "summon" and not has_meta("ai_summoned"):
 			set_meta("ai_summoned", true)
