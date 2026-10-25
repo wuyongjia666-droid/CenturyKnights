@@ -20,6 +20,7 @@ func _ready() -> void:
 		Locale.t("wsc_q_5f411223"),
 		_back
 	)
+	CKHeraldryChrome.place_company_header(self, Vector2(800, 2), Vector2(44, 52))
 	_tip = UIKit.make_dim_label(Locale.t("wsc_q_b35bb92a"))
 	_tip.name = "QuestTip"
 	_tip.position = Vector2(32, 64)
@@ -57,6 +58,7 @@ func apply_mobile_layout() -> void:
 	var h := maxf(size.y, 720.0)
 	var pad := 24.0
 	var top := 64.0
+	CKHeraldryChrome.place_company_header(self, Vector2(w - 64.0, 6.0), Vector2(52, 60))
 	if _tip:
 		_tip.position = Vector2(pad, top)
 		_tip.size = Vector2(w - pad * 2.0, 28)
@@ -111,7 +113,7 @@ func _section(text: String) -> void:
 
 
 func _card(
-	title: String, stars: int, place: String, reward: String, left: String, desc: String, btn_text: String, cb: Callable, btn_enabled: bool = true
+	title: String, stars: int, place: String, reward: String, left: String, desc: String, btn_text: String, cb: Callable, btn_enabled: bool = true, issuer_id: String = ""
 ) -> PanelContainer:
 	var mob := DeviceProfile.is_mobile()
 	var card_w := maxf(360.0, MobilePage.width(self) - 64.0) if mob else 1200.0
@@ -121,6 +123,10 @@ func _card(
 	hb.add_theme_constant_override("separation", 16)
 	hb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	card.add_child(hb)
+	if issuer_id != "":
+		var crest := CKHeraldryChrome.make_issuer_arms(issuer_id, Vector2(36, 44) if not mob else Vector2(40, 48))
+		crest.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		hb.add_child(crest)
 	var star := Label.new()
 	star.text = "★".repeat(clampi(stars, 1, 4)) + "☆".repeat(4 - clampi(stars, 1, 4))
 	star.custom_minimum_size = Vector2(92 if not mob else 72, 0)
@@ -231,7 +237,9 @@ func _render() -> void:
 			lt,
 			str(q.get("desc", "")),
 			btn,
-			cb
+			cb,
+			true,
+			str(q.get("issuer", ""))
 		)
 	_section(Locale.t("wsc_q_657f636f"))
 	if GameState.quests.is_empty():
@@ -257,7 +265,9 @@ func _render() -> void:
 			Locale.t("wsc_q_7ec42c54") % int(q.months),
 			"%s。%s" % [kind, str(q.desc)],
 			Locale.t("wsc_q_145290c3") if done else Locale.t("wsc_q_5a9e3347"),
-			func(): _accept(qid)
+			func(): _accept(qid),
+			true,
+			"hq"
 		)
 
 
