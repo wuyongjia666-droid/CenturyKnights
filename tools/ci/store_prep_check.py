@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Store-engineering prep gate (no paid store submission).
 
-Fails when required docs/scripts/budgets are missing or export_size_report
-cannot import. Does not upload anything or spend money.
+Fails when required docs/scripts/budgets are missing, listing drafts are thin,
+season 02/03 novels fall below mid-length (≥12000 汉字 / 对标季1), or packaging
+dry-run fails. Does not upload anything or spend money. Do not weaken the novel floor.
 """
 from __future__ import annotations
 
@@ -11,6 +12,24 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+
+MIN_NOVEL_HANZI = 12000  # 中篇级，对标季1；禁止削弱
+MIN_LISTING_BYTES = {
+    "docs/store/play-listing-full.md": 4500,
+    "docs/store/ms-store-listing-full.md": 3500,
+    "docs/store/listing-copy-zh.md": 2800,
+    "docs/store/privacy-policy-draft.md": 2800,
+    "docs/store/age-rating-draft.md": 1600,
+    "docs/store/screenshots-checklist.md": 1400,
+    "docs/store/data-safety-draft.md": 1400,
+    "docs/store/support-contact-draft.md": 1200,
+    "docs/store/listing-copy-en.md": 1400,
+}
+
+
+def _hanzi_count(s: str) -> int:
+    return sum(1 for c in s if 0x4E00 <= ord(c) <= 0x9FFF)
+
 
 REQUIRED_DOCS = [
     "docs/store/README.md",
@@ -23,6 +42,10 @@ REQUIRED_DOCS = [
     "docs/store/ms-store-listing-full.md",
     "docs/store/privacy-policy-draft.md",
     "docs/store/age-rating-draft.md",
+    "docs/store/screenshots-checklist.md",
+    "docs/store/data-safety-draft.md",
+    "docs/store/support-contact-draft.md",
+    "docs/store/listing-copy-en.md",
 ]
 
 REQUIRED_SCRIPTS = [
@@ -44,6 +67,10 @@ REQUIRED_PHRASES = {
     "docs/store/ms-store-listing-full.md": ["Partner Center", "买断", "不缴费"],
     "docs/store/privacy-policy-draft.md": ["不收集", "不出售", "崩溃"],
     "docs/store/age-rating-draft.md": ["12+", "内购", "暴力"],
+    "docs/store/screenshots-checklist.md": ["1080", "横屏", "五张", "不付费"],
+    "docs/store/data-safety-draft.md": ["不收集", "数据安全", "崩溃", "不出售"],
+    "docs/store/support-contact-draft.md": ["支持", "联系", "不付费", "单机"],
+    "docs/store/listing-copy-en.md": ["Short description", "Full description", "Century Knights", "no IAP"],
 }
 
 
@@ -56,6 +83,9 @@ def main() -> int:
             continue
         if path.stat().st_size < 200 and rel.startswith("docs/store/"):
             fails.append(f"too thin {rel} ({path.stat().st_size} bytes)")
+        floor = MIN_LISTING_BYTES.get(rel)
+        if floor is not None and path.stat().st_size < floor:
+            fails.append(f"too thin {rel} ({path.stat().st_size} bytes < {floor})")
     for rel, phrases in REQUIRED_PHRASES.items():
         path = ROOT / rel
         if not path.is_file():
@@ -97,11 +127,19 @@ def main() -> int:
             sp = ROOT / f"project/data/content_seasons/{sid}.json"
             if not sp.is_file():
                 fails.append(f"missing {sp.relative_to(ROOT)}")
+                continue
             novel = ROOT / f"docs/content-seasons/{sid.replace('_', '-')}/NOVEL.md"
             if not novel.is_file():
                 fails.append(f"missing {novel.relative_to(ROOT)}")
-            elif novel.stat().st_size < 5000:
-                fails.append(f"NOVEL too thin {novel.relative_to(ROOT)} ({novel.stat().st_size} bytes)")
+                continue
+            body = novel.read_text(encoding="utf-8")
+            hz = _hanzi_count(body)
+            # 中篇硬闸：季#2/#3 一律 ≥ MIN_NOVEL_HANZI；禁止按 playable 推迟/削弱
+            if hz < MIN_NOVEL_HANZI:
+                fails.append(
+                    f"NOVEL too thin {novel.relative_to(ROOT)} "
+                    f"({hz} hanzi < {MIN_NOVEL_HANZI}; 对标季1中篇)"
+                )
     else:
         fails.append("missing content_seasons/index.json")
 
