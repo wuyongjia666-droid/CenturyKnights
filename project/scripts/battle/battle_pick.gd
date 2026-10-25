@@ -12,6 +12,7 @@ extends RefCounted
 ## steal empty legal landings beside living units).
 ## Y1-A T-P1-5: contour rect hit — fat finger on the figure body (not just cell centre /
 ## cell-above bias) still selects; tap-again confirm is in battle_controller.
+## Y1-A T-P3: strict unit-drag origin (exact/bias/contour, not soft-empty) + selected-only sticky.
 ## Y1-A T-P4: smooth camera focus + margin follow for unit/preview; attack juice lives
 ## in BattleTouchConfirm (keeps battle_controller under the 3000-line gate).
 
@@ -111,12 +112,15 @@ static func focus_pan_lerp(from: Vector2, to: Vector2, t: float) -> Vector2:
 	return from.lerp(to, clampf(t, 0.0, 1.0))
 
 
-## Prefer m_board_area meta; only touch host.BOARD_AREA when meta is absent (avoids
-## eagerly evaluating a missing BOARD_AREA on duck hosts).
+## Prefer m_board_area meta; fall back to BOARD_AREA via duck get().
+## Empty Rect2 when neither is present (device-free FakeHosts that skip focus).
 static func _stage_rect(host) -> Rect2:
 	if host.has_meta("m_board_area"):
 		return host.get_meta("m_board_area")
-	return host.BOARD_AREA
+	var stage = host.get("BOARD_AREA")
+	if stage is Rect2:
+		return stage
+	return Rect2()
 
 
 static func nearest_unit_pos(origin: Vector2, cell_px: float, units: Array, local: Vector2, soft_r: float = SOFT_R) -> Vector2i:
@@ -208,6 +212,45 @@ static func contour_unit_pos(origin: Vector2, cell_px: float, units: Array, loca
 	return Vector2i(-1, -1)
 
 
+## Y1-A T-P3: strict figure hit for unit-drag / selected sticky.
+## Exact cell, face bias, or contour — NOT soft-nearest on an empty neighbour.
+## Soft-empty beside the selected piece must remain map-pan (drag/pan conflict).
+static func strict_unit_pos(origin: Vector2, cell_px: float, units: Array, local: Vector2, finger_cell: Vector2i) -> Vector2i:
+	if cell_px < 1.0:
+		return Vector2i(-1, -1)
+	if finger_cell.x >= 0:
+		for u in units:
+			if u.pos == finger_cell and u.char.hp > 0:
+				return finger_cell
+	var bias: Vector2i = visual_bias_unit_pos(origin, cell_px, units, local, finger_cell)
+	if bias.x >= 0:
+		return bias
+	return contour_unit_pos(origin, cell_px, units, local)
+
+
+## True when finger strictly hits the selected living unit (T-P3 unit-drag origin).
+static func strict_hits_selected(host, screen_pos: Vector2, selected_idx: int) -> bool:
+	if selected_idx < 0 or selected_idx >= host.units.size():
+		return false
+	var su = host.units[selected_idx]
+	if su.char.hp <= 0:
+		return false
+	var exact: Vector2i = host._pointer_to_cell(screen_pos)
+	var local: Vector2 = _board_local(host, screen_pos)
+	return strict_unit_pos(host.ORIGIN, float(host.CELL), host.units, local, exact) == su.pos
+
+
+## Soft/contour near the selected unit only — sticky slop while a piece is armed.
+## When selected, presses near other units keep normal pan slop (T-P3).
+static func near_selected_unit(host, screen_pos: Vector2, selected_idx: int) -> bool:
+	if selected_idx < 0 or selected_idx >= host.units.size():
+		return false
+	var cell: Vector2i = resolve(host, screen_pos)
+	if cell.x < 0:
+		return false
+	return cell == host.units[selected_idx].pos
+
+
 static func resolve(host, screen_pos: Vector2) -> Vector2i:
 	var exact: Vector2i = host._pointer_to_cell(screen_pos)
 	if exact.x >= 0 and host._unit_at(exact) >= 0:
@@ -245,6 +288,8 @@ static func focus_cell(host, cell: Vector2i, smooth: bool = true) -> void:
 	if host.has_method("_in_bounds") and not host._in_bounds(cell):
 		return
 	var stage: Rect2 = _stage_rect(host)
+	if stage.size.x < 1.0 or stage.size.y < 1.0:
+		return
 	var delta: Vector2 = focus_pan_delta(host.ORIGIN, float(host.CELL), cell, host._board_pan, host._board_zoom, stage)
 	if delta.length_squared() < 0.25:
 		return
@@ -258,6 +303,8 @@ static func focus_follow_cell(host, cell: Vector2i) -> void:
 	if host.has_method("_in_bounds") and not host._in_bounds(cell):
 		return
 	var stage: Rect2 = _stage_rect(host)
+	if stage.size.x < 1.0 or stage.size.y < 1.0:
+		return
 	var delta: Vector2 = focus_nudge_delta(host.ORIGIN, float(host.CELL), cell, host._board_pan, host._board_zoom, stage)
 	if delta.length_squared() < 0.25:
 		return
@@ -277,14 +324,16 @@ static func focus_follow_preview(host) -> void:
 static func _apply_focus_pan(host, target_pan: Vector2, smooth: bool) -> void:
 	var saved: Vector2 = host._board_pan
 	host._board_pan = target_pan
-	host._clamp_board_pan()
+	if host.has_method("_clamp_board_pan"):
+		host._clamp_board_pan()
 	var clamped: Vector2 = host._board_pan
 	host._board_pan = saved
 	if smooth and host is CanvasItem and (host as CanvasItem).is_inside_tree():
 		_tween_board_pan(host, clamped)
 		return
 	host._board_pan = clamped
-	host._apply_board_xform()
+	if host.has_method("_apply_board_xform"):
+		host._apply_board_xform()
 
 
 static func _tween_board_pan(host, target: Vector2) -> void:
