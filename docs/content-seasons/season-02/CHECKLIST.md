@@ -1,13 +1,18 @@
-# 内容季 #2 · 选题清单
+# 内容季 #2 · 清单
 
-> 与 `project/data/content_seasons/season_02.json` → `topic_checklist` 对齐。
+## topic_checklist
 
-| id | 项 | 落点 |
-|---|---|---|
-| one_liner | 一句 | `TOPIC.md` §一句 |
-| flag_lamp | 旗 / 灯冲突 | `TOPIC.md` §旗 / 灯冲突 |
-| system_pick | 本季加深的系统 | `TOPIC.md` §本季加深的系统 |
-| wont_do | 不做（本季） | `TOPIC.md` §不做（本季） |
-| downstream_gates | 下游闸门 | `TOPIC.md` §下游闸门 |
+- [x] one_liner 一句
+- [x] flag_lamp 旗 / 灯冲突
+- [x] system_pick 本季加深的系统
+- [x] wont_do 不做（本季）
+- [x] downstream_gates 下游闸门
 
-闸门：`gates.novel_allowed == true`（2026-10-25 时间压缩·全权开写）。
+## 流水
+
+- [x] TOPIC 定稿
+- [x] NOVEL 中篇 ≥1.2 万汉字
+- [x] BIBLE
+- [x] PLAYABLE + cs02_01.json
+- [x] novel_allowed 打开
+- [x] scaffold + playable suites

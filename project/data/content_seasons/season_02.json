@@ -1,8 +1,8 @@
 {
   "id": "season_02",
-  "version": 2,
+  "version": 3,
   "title_zh": "婚约上的灯",
-  "status": "novel_draft",
+  "status": "playable_draft",
   "pipeline": [
     "topic",
     "novel",
@@ -12,17 +12,18 @@
     "art",
     "playtest"
   ],
-  "stage": "novel",
+  "stage": "playable",
   "flag_lamp": {
-    "flag": "联姻名册与婚约声称的新姓",
-    "lamp": "验血/诞育回执与婚约血脉对不上"
+    "flag": "联姻婚约把姓钉进议会名册",
+    "lamp": "诞育回执与婚约血脉栏对不上；月回响两行并排"
   },
   "system_deepen": "month_echo_birth_marriage",
-  "system_deepen_zh": "诞育/联姻月回响写入属地与沙漏可感",
+  "system_deepen_zh": "诞育 / 联姻月回响可感（属地与沙漏回读）",
   "gates": {
     "y1a_device_signoff": true,
     "topic_user_ack": true,
-    "novel_allowed": true
+    "novel_allowed": true,
+    "owner_auth_note": "2026-10-25 owner full authority incl. content; S02 full pipeline after #403 close for volume"
   },
   "topic_checklist": [
     {
@@ -53,27 +54,21 @@
   ],
   "acceptance": [
     {
-      "id": "birth_marriage_echo",
-      "label_zh": "诞育/联姻月回响可感",
-      "suite": "res://tests/suites/dynasty/month_echo_birth_marriage_check.tscn",
-      "done": true
-    },
-    {
-      "id": "marriage_empty_cta",
-      "label_zh": "联姻空态导流",
-      "suite": "res://tests/suites/dynasty/marriage_empty_cta_check.tscn",
-      "done": true
-    },
-    {
-      "id": "mobile_marriage_rite",
-      "label_zh": "婚仪手机文案可读",
-      "suite": "res://tests/suites/mobile/mobile_marriage_rite_log_check.tscn",
-      "done": true
-    },
-    {
       "id": "scaffold_gate",
-      "label_zh": "内容季脚手架门禁（多季）",
+      "label_zh": "内容季流水门禁（含 #2）",
       "suite": "res://tests/suites/narrative/content_season_scaffold_check.tscn",
+      "done": true
+    },
+    {
+      "id": "playable_dialogue",
+      "label_zh": "可玩章 cs02_01 对白可走",
+      "suite": "res://tests/suites/narrative/content_season_playable_s02_check.tscn",
+      "done": true
+    },
+    {
+      "id": "month_echo_birth_marriage",
+      "label_zh": "诞育/联姻月回响系统（已有）",
+      "suite": "res://tests/suites/dynasty/month_echo_birth_marriage_check.tscn",
       "done": true
     }
   ],
@@ -106,12 +101,12 @@
     "art": {
       "doc": "",
       "gate": "novel_allowed",
-      "open": true
+      "open": false
     },
     "playtest": {
       "doc": "",
       "gate": "y1a_device_signoff",
-      "open": true
+      "open": false
     }
   },
   "docs_rel": [
@@ -121,5 +116,7 @@
     "docs/content-seasons/season-02/BIBLE.md",
     "docs/content-seasons/season-02/PLAYABLE.md",
     "docs/content-seasons/season-02/ACCEPTANCE.md"
-  ]
+  ],
+  "playable_chapter": "cs02_01",
+  "playable_path": "res://data/story/chapters/cs02_01.json"
 }

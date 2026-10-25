@@ -1,7 +1,7 @@
 extends Node
 ## 内容季流水脚手架（多季）：index 内每季机器表 + 选题清单 + 验收 suite + 闸门。
-## season_01 / season_03（有 playable_chapter）：完整流水门禁（正文体量+可玩章）。
-## season_02+：novel_allowed；NOVEL 须有正文（非纯「待写」stub）。若他线已开 season_02 playable，门禁并行不互踩。
+## season_01 / season_02 / season_03（有 playable_chapter）：完整流水门禁（正文体量+可玩章）。
+## season_04+：novel_allowed；NOVEL 须有正文（非纯「待写」stub）。
 
 func _ready() -> void:
 	await get_tree().process_frame
@@ -90,6 +90,18 @@ func _check_one_season(sid: String) -> Array:
 		if stage not in ["novel", "bible", "playable", "systems", "art", "playtest"]:
 			fails.append("season_01 stage want post-topic got %s" % stage)
 		fails.append_array(_check_playable_chapter(d, sid))
+	elif sid == "season_02" and str(d.get("playable_chapter", "")).strip_edges() != "":
+		if not novel_allowed:
+			fails.append("season_02 novel_allowed must be true")
+		if not bool(gates.get("topic_user_ack", false)):
+			fails.append("season_02 topic_user_ack must be true")
+		if int(d.get("version", 0)) < 3:
+			fails.append("season_02 version want >= 3")
+		if status not in ["playable_draft", "novel_draft", "in_pipeline"]:
+			fails.append("season_02 status want playable_draft/novel_draft/in_pipeline got %s" % status)
+		if stage not in ["novel", "bible", "playable", "systems", "art", "playtest"]:
+			fails.append("season_02 stage want post-topic got %s" % stage)
+		fails.append_array(_check_playable_chapter(d, sid))
 	elif sid == "season_03" and str(d.get("playable_chapter", "")).strip_edges() != "":
 		if not novel_allowed:
 			fails.append("season_03 novel_allowed must be true")
@@ -128,6 +140,11 @@ func _check_playable_chapter(d: Dictionary, sid: String) -> Array:
 			fails.append("season_01 playable_chapter want cs01_01")
 		if p != "res://data/story/chapters/cs01_01.json":
 			fails.append("season_01 playable_path")
+	elif sid == "season_02":
+		if ch != "cs02_01":
+			fails.append("season_02 playable_chapter want cs02_01")
+		if p != "res://data/story/chapters/cs02_01.json":
+			fails.append("season_02 playable_path")
 	elif sid == "season_03":
 		if ch != "cs03_01":
 			fails.append("season_03 playable_chapter want cs03_01")
@@ -197,6 +214,8 @@ func _check_acceptance(d: Dictionary, folder: String, sid: String) -> Array:
 			saw_playable = true
 	if sid == "season_01" and not saw_playable:
 		fails.append("season_01 acceptance missing playable_dialogue")
+	if sid == "season_02" and str(d.get("playable_chapter", "")).strip_edges() != "" and not saw_playable:
+		fails.append("season_02 acceptance missing playable_dialogue")
 	if sid == "season_03" and str(d.get("playable_chapter", "")).strip_edges() != "" and not saw_playable:
 		fails.append("season_03 acceptance missing playable_dialogue")
 	return fails
@@ -261,8 +280,15 @@ func _check_docs(d: Dictionary, folder: String, sid: String, novel_allowed: bool
 			else:
 				if str(rel).ends_with("NOVEL.md"):
 					var min_len := 8000 if sid == "season_01" else 1200
+					var s02_playable := sid == "season_02" and str(d.get("playable_chapter", "")).strip_edges() != ""
 					var s03_playable := sid == "season_03" and str(d.get("playable_chapter", "")).strip_edges() != ""
-					if s03_playable:
+					if s02_playable:
+						var hanzi := _hanzi_count(body)
+						if hanzi < 10000:
+							fails.append("season_02 NOVEL hanzi %d < 10000" % hanzi)
+						if body.find("回执") < 0:
+							fails.append("season_02 NOVEL missing 回执")
+					elif s03_playable:
 						var hanzi := _hanzi_count(body)
 						if hanzi < 12000:
 							fails.append("season_03 NOVEL hanzi %d < 12000" % hanzi)
@@ -280,6 +306,11 @@ func _check_docs(d: Dictionary, folder: String, sid: String, novel_allowed: bool
 						fails.append("%s empty %s" % [sid, rel])
 					if sid == "season_01" and body.strip_edges().length() < 800:
 						fails.append("season_01 BIBLE too short")
+					if sid == "season_02" and str(d.get("playable_chapter", "")).strip_edges() != "":
+						if body.strip_edges().length() < 800:
+							fails.append("season_02 BIBLE too short")
+						if body.find("一句话") < 0 and body.find("主题") < 0:
+							fails.append("season_02 BIBLE missing 一句话/主题")
 					if sid == "season_03" and str(d.get("playable_chapter", "")).strip_edges() != "":
 						if body.strip_edges().length() < 800:
 							fails.append("season_03 BIBLE too short")
@@ -293,6 +324,11 @@ func _check_docs(d: Dictionary, folder: String, sid: String, novel_allowed: bool
 							fails.append("season_01 PLAYABLE missing cs01_01")
 						if body.find("60") < 0:
 							fails.append("season_01 PLAYABLE missing 60-hanzi rule")
+					if sid == "season_02" and str(d.get("playable_chapter", "")).strip_edges() != "":
+						if body.find("cs02_01") < 0:
+							fails.append("season_02 PLAYABLE missing cs02_01")
+						if body.find("60") < 0:
+							fails.append("season_02 PLAYABLE missing 60-hanzi rule")
 					if sid == "season_03" and str(d.get("playable_chapter", "")).strip_edges() != "":
 						if body.find("cs03_01") < 0:
 							fails.append("season_03 PLAYABLE missing cs03_01")
