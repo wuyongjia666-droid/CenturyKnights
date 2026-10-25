@@ -142,6 +142,7 @@
 
 | 日期 | 变更 |
 |------|------|
+| 2026-10-25 | Y1-B 时代开销月回响：spring_purse / epoch_dues → `month_echo.dues` + estates/hourglass；`month_echo_dues_check` |
 | 2026-10-25 | Y1-B 授旗成年月回响：child→adult → `month_echo.adult` + estates/hourglass 回读；`month_echo_life_check` 补齐 adult |
 | 2026-10-25 | Y1-B 属地月回响加深：suite 改走 Calendar→World._territory_month 真路径（禁手动 inject） |
 | 2026-10-25 | Y1-B 联姻→身孕→诞下交叉链：paced marry → pregnancy echo → deliver → birth echo + heir links + estates/hourglass；`month_echo_marry_preg_birth_check` |
