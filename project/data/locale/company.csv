@@ -465,6 +465,14 @@ atlas_siege_relief_go,启程驰援「%s」,Marching to relieve "%s"
 atlas_siege_bribe,收买缓兵 %d 银,Bribe delay %d silver
 atlas_siege_scout,斥候探明 %d 银,Scout %d silver
 atlas_siege_later,稍后,Later
+atlas_siege_cache_warn,屯营粮仓尚存 %d 粮——不应则劫仓。,Stockade cache holds %d food — unanswered raids loot it.
+atlas_siege_loot_en,SIEGE // 劫仓,SIEGE // LOOT
+atlas_siege_loot_title,围城劫仓,Siege loots the cache
+atlas_siege_loot_body_held,%s 袭扰「%s」：驻军守住据点，粮仓仍被劫走 %d（余 %d）。,%s raided "%s": site held, but %d food looted (left %d).
+atlas_siege_loot_body_lost,%s 攻陷「%s」：粮仓被洗劫 %d（仓空）。,%s took "%s": granary emptied of %d food (cache empty).
+atlas_siege_loot_ok,已知晓,Understood
+atlas_siege_loot_hold_log,「%s」守住了据点，粮仓仍失 %d。,"%s" held — cache still lost %d.
+atlas_siege_loot_lost_log,「%s」失守，粮仓被劫 %d。,"%s" fell — cache looted %d.
 atlas_season_spring,春,Spring
 atlas_season_summer,夏,Summer
 atlas_season_autumn,秋,Autumn
