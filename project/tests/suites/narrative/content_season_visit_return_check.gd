@@ -16,9 +16,13 @@ const SIDES := [
 ## LIVE covers all ten so a hub-return regression cannot hide in an untested season.
 const CASES := [
 	{"cid": "cs01_01", "mid": "audit"},
+	{"cid": "cs01_02", "mid": "hourglass"},
 	{"cid": "cs02_01", "mid": "birth"},
+	{"cid": "cs02_02", "mid": "hourglass"},
 	{"cid": "cs03_01", "mid": "hourglass"},
+	{"cid": "cs03_02", "mid": "hourglass"},
 	{"cid": "cs04_01", "mid": "hourglass"},
+	{"cid": "cs04_02", "mid": "hourglass"},
 	{"cid": "cs05_01", "mid": "hourglass"},
 	{"cid": "cs05_02", "mid": "hourglass"},
 	{"cid": "cs06_01", "mid": "hourglass"},
@@ -26,8 +30,11 @@ const CASES := [
 	{"cid": "cs07_01", "mid": "hourglass"},
 	{"cid": "cs07_02", "mid": "hourglass"},
 	{"cid": "cs08_01", "mid": "hourglass"},
+	{"cid": "cs08_02", "mid": "hourglass"},
 	{"cid": "cs09_01", "mid": "hourglass"},
+	{"cid": "cs09_02", "mid": "hourglass"},
 	{"cid": "cs10_01", "mid": "hourglass"},
+	{"cid": "cs10_02", "mid": "hourglass"},
 ]
 
 
