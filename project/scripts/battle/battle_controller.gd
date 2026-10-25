@@ -1519,7 +1519,6 @@ func _apply_board_gesture(g: Dictionary) -> void:
 			_cancel_selection()
 		"pan":
 			# Y1-A T-P1-2 / T-P3: drag starting on the selected figure (strict) moves the ghost; else pan.
-			# T-P4: stop smooth focus so the gesture owns `_board_pan` (unit-drag must not pan).
 			BattlePick.cancel_focus_tween(self)
 			if BattleTouchConfirm.is_unit_drag(self, g):
 				_hover_at(pos)
@@ -1928,7 +1927,6 @@ func _pulse_heal(team: String) -> void:
 
 func _sync_faction_marks() -> void:
 	_marks_sig = FactionMarksSync.sync(self, units, ORIGIN, float(CELL), _marks_sig)
-
 
 func _apply_combat_lock(ai: int, di: int) -> void:
 	# 双方进入交战锁定（再交战刷新至 2）
