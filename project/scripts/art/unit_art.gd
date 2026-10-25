@@ -936,7 +936,8 @@ static func token(c: CKCharacter, team: String, size: int = 48, done: bool = fal
 	return _proc_token(c, team, size, done)
 
 static func _bust_token(c: CKCharacter, team: String, done: bool = false) -> Texture2D:
-	var key = "bust|%s|%s|%s" % [str(c.id) if c.id != "" else c.name, team, str(done)]
+	var arms_k := CKHeraldryChrome.token_shield_core(c, team)
+	var key = "bust|%s|%s|%s|%s" % [str(c.id) if c.id != "" else c.name, team, str(done), arms_k]
 	if _cache.has(key):
 		return _cache[key]
 	var pt = portrait(c, 128, CKArtPaths.TIER_SMALL)
@@ -980,15 +981,14 @@ static func _bust_token(c: CKCharacter, team: String, done: bool = false) -> Tex
 			col = col.lerp(rim, inner_glow)
 			col.a = clampf((0.985 - r) * S * 0.25, 0.0, 1.0)
 			out.set_pixel(x, y, col)
+	CKHeraldryChrome.blit_token_shield(out, c, team)
 	var tex := ImageTexture.create_from_image(out)
 	_cache[key] = tex
 	return tex
 
 static func banner_spec_current() -> Dictionary:
-	var raw = GameState.get("banner_spec")
-	if typeof(raw) == TYPE_DICTIONARY and not (raw as Dictionary).is_empty():
-		return BannerSpec.normalize(raw)
-	return BannerSpec.from_crest(str(GameState.crest_color))
+	## Delegate to Chrome so 团徽 never drifts from castle/atlas/genealogy.
+	return BannerSpec.normalize(CKHeraldryChrome.company_spec())
 
 static func banner_layers(spec: Dictionary = {}, w: int = 160, h: int = 220) -> Texture2D:
 	var s := BannerSpec.normalize(spec if not spec.is_empty() else banner_spec_current())
@@ -1061,6 +1061,12 @@ static func draw_token_on(ci: CanvasItem, center: Vector2, c: CKCharacter, team:
 	var tex = token(c, team, int(radius * 2.4), done)
 	var sz = Vector2(radius * 2.2, radius * 2.2)
 	ci.draw_texture_rect(tex, Rect2(center - sz * 0.5, sz), false)
+	## Board unit shield: player tokens carry 旗徽|族徽 via Chrome (never mismatched).
+	if str(team) == "player" and c != null:
+		var sh_w := maxi(10, int(radius * 0.85))
+		var sh_h := maxi(12, int(radius * 1.0))
+		var sh := CKHeraldryChrome.person_shield(c, sh_w, sh_h)
+		ci.draw_texture_rect(sh, Rect2(center + Vector2(-radius * 1.05, radius * 0.22), Vector2(sh_w, sh_h)), false)
 
 # ---- procedural fallbacks (simplified) ----
 static func _fill_ellipse(img: Image, cx: float, cy: float, rx: float, ry: float, col: Color) -> void:
@@ -1377,8 +1383,9 @@ static func board_pawn_texture(c: CKCharacter, team: String, size: int = 64, don
 	var tmpl := ""
 	if c != null and c.has_meta("ck_enemy_template"):
 		tmpl = str(c.get_meta("ck_enemy_template"))
-	var key := "standin|%s|%s|%d|%s|%s" % [
-		str(c.id) if c else "?", team, size, str(done), tmpl,
+	var arms_k := CKHeraldryChrome.token_shield_core(c, team) if c != null else ""
+	var key := "standin|%s|%s|%d|%s|%s|%s" % [
+		str(c.id) if c else "?", team, size, str(done), tmpl, arms_k,
 	]
 	if _cache.has(key):
 		return _cache[key]
@@ -1403,6 +1410,7 @@ static func board_pawn_texture(c: CKCharacter, team: String, size: int = 64, don
 				img.set_pixel(x, y, Color(g, g, g).lerp(px, 0.25).darkened(0.25))
 	if size > 0 and (img.get_width() != size or img.get_height() != size):
 		img.resize(size, size, Image.INTERPOLATE_LANCZOS)
+	CKHeraldryChrome.blit_token_shield(img, c, team)
 	var tex := ImageTexture.create_from_image(img)
 	_cache[key] = tex
 	return tex

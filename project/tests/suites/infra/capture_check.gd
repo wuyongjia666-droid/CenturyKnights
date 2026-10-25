@@ -9,6 +9,8 @@ const SCREENS := [
 	["tavern", "res://scenes/hub/tavern.tscn"],
 	["marriage", "res://scenes/hub/marriage.tscn"],
 	["lineage", "res://scenes/hub/lineage_view.tscn"],
+	["lineage_tree", "res://scenes/hub/lineage_tree.tscn"],
+	["rivals", "res://scenes/hub/rival_houses.tscn"],
 	["atlas", "res://scenes/hub/atlas_view.tscn"],
 	["city", "res://scenes/hub/city.tscn"],
 	["battle", "res://scenes/battle/battle.tscn"],
