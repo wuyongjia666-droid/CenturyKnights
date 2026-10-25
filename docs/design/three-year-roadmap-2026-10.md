@@ -142,6 +142,7 @@
 
 | 日期 | 变更 |
 |------|------|
+| 2026-10-25 | Y1-B 敌宅月回响：rival rumor/deal → `month_echo.rival` + estates/hourglass 回读 + `month_echo_rival_check` |
 | 2026-10-25 | Y1-B 丰收月回响：harvest 月结 → `month_echo.harvest` + estates/hourglass 回读 + `month_echo_harvest_check` |
 | 2026-10-25 | Y1-B 堡志月结去门闩：无家训时 Calendar 仍 check_ambitions → `month_echo.ambition` + `month_echo_ambition_ungate_check` |
 | 2026-10-25 | Y1-B 堡志月回响：ambition 达成 → `month_echo.ambition` + estates/hourglass 回读 + `month_echo_ambition_check` |
