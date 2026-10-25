@@ -669,7 +669,7 @@
 					}
 				},
 				{
-					"speaker": "",
+					"speaker": "旁白",
 					"text": "锋收回来。副笺纸还钉着。偏格旁那拨，没散。",
 					"when": {
 						"all": [
@@ -680,7 +680,8 @@
 								"not_flag": "cs02_02_mid_fought"
 							}
 						]
-					}
+					},
+					"id": "cs02b_br_lost"
 				},
 				{
 					"id": "cs02_02_bridge_2",
