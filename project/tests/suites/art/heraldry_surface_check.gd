@@ -1,7 +1,7 @@
 extends Node
 ## Player-visible heraldry consistency across genealogy + castle banner strip +
-## rival houses + tavern/hire + board unit shields.
-## 团徽 / 旗徽 / 族徽 / 敌徽 never mismatch outside their Chrome routes.
+## rival houses + tavern/hire + board unit shields + city/smith 邦徽.
+## 团徽 / 旗徽 / 族徽 / 敌徽 / 邦徽 never mismatch outside their Chrome routes.
 
 const OVERVIEW := "res://scenes/hub/lineage_view.tscn"
 const TREE := "res://scenes/hub/lineage_tree.tscn"
@@ -283,10 +283,30 @@ func _run() -> void:
 		if painted:
 			break
 	_ok(painted, "blit_token_shield left image empty")
-	## board_pawn_texture cache key includes arms core (family ≠ loner)
+	## board_pawn_texture cache key includes arms core (family != loner)
 	var pawn_l := UnitArt.board_pawn_texture(leader, "player", 64, false)
 	var pawn_n := UnitArt.board_pawn_texture(loner, "player", 64, false)
 	_ok(pawn_l != null and pawn_n != null, "board pawn null")
+	if _fail != "":
+		return
+
+	# ── City crest strip (团徽 + 邦徽) ─────────────────────────────
+	var city_host := Control.new()
+	city_host.name = "CityCrestHost"
+	get_tree().root.add_child(city_host)
+	var city_strip := CKHeraldryChrome.place_city_crest_strip(city_host, "ash_capital", Vector2(8, 8), Vector2(36, 44))
+	_ok(city_strip != null and city_strip.name == "CityCrestStrip", "CityCrestStrip missing")
+	if city_strip != null:
+		var ca2 := city_strip.find_child("CastleArms", true, false)
+		var cn := city_strip.find_child("CityNationArms", true, false)
+		_ok(ca2 != null and str(ca2.get_meta("arms_kind", "")) == "gen2_36", "city strip 团徽")
+		_ok(cn != null and str(cn.get_meta("arms_kind", "")) == "lb_city_arms", "city strip 邦徽")
+		var expect_nid := World.nation_of("ash_capital")
+		_ok(cn != null and str(cn.get_meta("nation_id", "")) == expect_nid, "city strip nation_id")
+		_ok(cn != null and str(cn.get_meta("arms_core", "")) == CKHeraldry.core_key(CKHeraldryChrome.nation_spec(expect_nid)), "city strip nation core")
+		_ok(cn != null and str(cn.get_meta("arms_core", "")) != CKHeraldry.core_key(ban_spec), "邦徽 != 团徽")
+	city_host.queue_free()
+	await _settle(2)
 	if _fail != "":
 		return
 
