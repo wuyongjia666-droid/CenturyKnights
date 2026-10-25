@@ -1609,12 +1609,22 @@ func _resume_state() -> void:
 	elif not World.encounter.is_empty():
 		_render_hud()
 		_show_encounter_modal(World.encounter)
+	elif GameState.has_meta("atlas_after_battle"):
+		GameState.remove_meta("atlas_after_battle")
+		var af: Dictionary = World.last_battle_aftermath
+		if typeof(af) == TYPE_DICTIONARY and not af.is_empty():
+			await _show_battle_aftermath_modal(af)
+			if bool(af.get("resume_travel", false)) and World.is_traveling() and World.encounter.is_empty():
+				_run_travel()
+			elif not World.encounter.is_empty():
+				_show_encounter_modal(World.encounter)
+			elif not World.is_traveling():
+				_after_arrival()
+		elif not World.travel_log.is_empty():
+			_show_toast(str(World.travel_log[0]), UIKit.ACCENT)
 	elif World.is_traveling():
 		_show_toast("继续行军……", UIKit.ACCENT)
 		_run_travel()
-	elif not World.travel_log.is_empty() and GameState.has_meta("atlas_after_battle"):
-		GameState.remove_meta("atlas_after_battle")
-		_show_toast(str(World.travel_log[0]), UIKit.ACCENT)
 
 # ── modals ────────────────────────────────────────────
 func _show_travel_halt_modal() -> void:
@@ -1736,27 +1746,60 @@ func _show_stopover_modal() -> void:
 	v.add_child(later)
 
 func _show_turnin_modal(readies: int) -> void:
-	var p := _modal_panel(220)
+	var ready: Array = World.ready_turn_ins_here()
+	var list_bits: Array = []
+	for q in ready:
+		list_bits.append(Locale.t("atlas_turnin_list_row") % [str(q.get("title", "")), int(q.get("reward_silver", 0))])
+	var list_txt := "\n".join(list_bits) if not list_bits.is_empty() else Locale.t("atlas_turnin_modal_body") % readies
+	var h := 260.0 + 18.0 * mini(4, list_bits.size())
+	var p := _modal_panel(h)
 	p.name = "TurnInReadyModal"
 	var t := UIKit.title_label(Locale.t("atlas_turnin_modal_title"), 22)
-	t.position = Vector2(24, 24)
+	t.position = Vector2(24, 20)
 	p.add_child(t)
-	var body := UIKit.body_label(Locale.t("atlas_turnin_modal_body") % readies, UIKit.TEXT, 14)
-	body.position = Vector2(24, 70)
-	body.size = Vector2(452, 60)
-	body.custom_minimum_size = Vector2(452, 0)
+	var body := UIKit.body_label(Locale.t("atlas_turnin_modal_body") % maxi(readies, ready.size()), UIKit.TEXT, 13)
+	body.name = "TurnInBody"
+	body.position = Vector2(24, 58)
+	body.size = Vector2(452, 28)
 	p.add_child(body)
-	var go := UIKit.cta_button(Locale.t("atlas_turnin_modal_go"), "A", 220, 42)
+	var lst := UIKit.body_label(list_txt, UIKit.OK, 12)
+	lst.name = "TurnInList"
+	lst.position = Vector2(24, 90)
+	lst.size = Vector2(452, 18.0 * mini(4, maxi(1, list_bits.size())) + 8.0)
+	lst.custom_minimum_size = Vector2(452, 0)
+	p.add_child(lst)
+	var y := h - 100.0
+	var now := UIKit.cta_button(Locale.t("atlas_turnin_modal_now"), "A", 452, 40)
+	now.name = "TurnInNow"
+	now.position = Vector2(24, y)
+	now.pressed.connect(func():
+		var gained := 0
+		var titles: Array = []
+		for q2 in World.ready_turn_ins_here().duplicate():
+			var tr: Dictionary = World.turn_in(str(q2.get("id", "")))
+			if bool(tr.get("ok", false)):
+				gained += int(q2.get("reward_silver", 0))
+				titles.append(str(q2.get("title", "")))
+		_clear_modal()
+		_refresh_top()
+		_build_nodes()
+		_render_right()
+		if not titles.is_empty():
+			_show_toast(Locale.t("atlas_turnin_now_toast") % [titles.size(), gained], UIKit.OK)
+		else:
+			_show_toast(Locale.t("atlas_turnin_now_none"), UIKit.DANGER))
+	p.add_child(now)
+	var go := UIKit.ghost_button(Locale.t("atlas_turnin_modal_go"), 220, 36)
 	go.name = "TurnInEnter"
-	go.position = Vector2(24, 150)
+	go.position = Vector2(24, y + 48)
 	go.pressed.connect(func():
 		_clear_modal()
 		GameState.set_meta("city_tab", "board")
 		_enter_here())
 	p.add_child(go)
-	var later := UIKit.ghost_button(Locale.t("atlas_turnin_modal_later"), 200, 42)
+	var later := UIKit.ghost_button(Locale.t("atlas_turnin_modal_later"), 200, 36)
 	later.name = "TurnInLater"
-	later.position = Vector2(256, 150)
+	later.position = Vector2(256, y + 48)
 	later.pressed.connect(_clear_modal)
 	p.add_child(later)
 
@@ -1786,7 +1829,7 @@ func _modal_panel(h: float) -> Panel:
 func _show_event_modal(ev: Dictionary) -> void:
 	var opts: Array = ev.get("options", [])
 	var is_camp := str(ev.get("kind", "")) == "camp" or str(ev.get("id", "")) == "camp_night"
-	var p := _modal_panel(210 + 46 * opts.size() + (28 if is_camp else 0))
+	var p := _modal_panel(210 + 58 * opts.size() + (28 if is_camp else 0))
 	p.name = "EventModal"
 	var kind := str(ev.get("kind", "road"))
 	var tag := "NIGHT CAMP" if kind == "camp" or str(ev.get("id", "")) == "camp_night" else "ROAD EVENT"
@@ -1819,42 +1862,43 @@ func _show_event_modal(ev: Dictionary) -> void:
 	v.add_theme_constant_override("separation", 8)
 	p.add_child(v)
 	var first: Button = null
+	var ctx: Dictionary = ev.get("ctx", {})
 	for i in opts.size():
 		var o: Dictionary = opts[i]
+		var fx: Dictionary = o.get("fx", {})
+		var hint := _fx_hint(fx, ctx, ev)
 		var b := UIKit.index_button("%d" % (i + 1), str(o.get("label", "")), 452)
 		b.custom_minimum_size = Vector2(452, 38)
 		b.add_theme_font_size_override("font_size", 14)
 		UIKit.compact(b, 38)
 		b.name = "EventOpt%d" % i
-		var fx: Dictionary = o.get("fx", {})
-		b.tooltip_text = _fx_hint(fx)
+		b.tooltip_text = hint
 		var idx := i
 		b.pressed.connect(func(): _choose_event(idx))
 		v.add_child(b)
+		if hint != "":
+			var hl := UIKit.body_label(hint, UIKit.TEXT_DIM, 11)
+			hl.name = "EventFx%d" % i
+			hl.custom_minimum_size = Vector2(452, 16)
+			hl.autowrap_mode = TextServer.AUTOWRAP_OFF
+			hl.clip_text = true
+			v.add_child(hl)
 		if first == null:
 			first = b
 	if first:
 		first.call_deferred("grab_focus")
 
-func _fx_hint(fx: Dictionary) -> String:
-	var bits: Array = []
-	if fx.has("battle"):
-		bits.append("触发战斗")
-	if fx.has("silver"):
-		bits.append("银两变动")
-	if fx.has("food"):
-		bits.append("粮 %+d" % int(fx.food))
-	if fx.has("heal"):
-		bits.append(Locale.t("camp_hint_heal"))
-	if fx.has("morale"):
-		bits.append(Locale.t("camp_hint_morale") % int(fx.morale))
-	if str(fx.get("flag", "")) == "camp_watch":
-		bits.append(Locale.t("camp_hint_watch"))
-	if fx.has("days"):
-		bits.append("耽搁 %d 日" % int(fx.days))
-	if fx.has("risk"):
-		bits.append("有风险")
-	return "，".join(bits)
+func _fx_hint(fx: Dictionary, ctx: Dictionary = {}, ev: Dictionary = {}) -> String:
+	var bits: Array = World.event_fx_preview(fx, ctx, ev)
+	if bits.is_empty():
+		# camp flags still surface via camp_* keys
+		if fx.has("heal"):
+			bits.append(Locale.t("camp_hint_heal"))
+		if fx.has("morale"):
+			bits.append(Locale.t("camp_hint_morale") % int(fx.morale))
+		if str(fx.get("flag", "")) == "camp_watch":
+			bits.append(Locale.t("camp_hint_watch"))
+	return " · ".join(bits)
 
 func _choose_event(idx: int) -> void:
 	var r: Dictionary = World.choose_event(idx)
@@ -1862,7 +1906,11 @@ func _choose_event(idx: int) -> void:
 	if not r.get("encounter", {}).is_empty():
 		_show_encounter_modal(r.encounter)
 		return
-	_show_toast(str(r.get("msg", "")), UIKit.ACCENT)
+	var af: Dictionary = r.get("aftermath", World.last_aftermath)
+	if typeof(af) == TYPE_DICTIONARY and not af.is_empty():
+		await _show_aftermath_modal(af)
+	else:
+		_show_toast(str(r.get("msg", "")), UIKit.ACCENT)
 	_refresh_top()
 	if World.is_traveling() and World.encounter.is_empty():
 		_place_token(true)
@@ -1872,6 +1920,105 @@ func _choose_event(idx: int) -> void:
 		_show_encounter_modal(World.encounter)
 	else:
 		_after_arrival()
+
+
+
+func _show_battle_aftermath_modal(af: Dictionary) -> void:
+	var win := bool(af.get("win", false))
+	var lines: Array = af.get("lines", [])
+	var detail := " · ".join(lines) if not lines.is_empty() else str(af.get("msg", ""))
+	var h := 280.0 + 16.0 * mini(3, lines.size())
+	var p := _modal_panel(h)
+	p.name = "BattleAftermathModal"
+	var tag := Locale.t("atlas_battle_aftermath_win_en") if win else Locale.t("atlas_battle_aftermath_lose_en")
+	var el := UIKit.mono("%s // %s" % [tag, str(af.get("title", ""))], 9, UIKit.OK if win else UIKit.DANGER)
+	el.position = Vector2(24, 18)
+	p.add_child(el)
+	var t := UIKit.title_label(Locale.t("atlas_battle_aftermath_title_win") if win else Locale.t("atlas_battle_aftermath_title_lose"), 22)
+	t.position = Vector2(24, 36)
+	p.add_child(t)
+	var dl := UIKit.body_label(detail, UIKit.TEXT, 13)
+	dl.name = "BattleAftermathLines"
+	dl.position = Vector2(24, 78)
+	dl.size = Vector2(452, 72)
+	dl.custom_minimum_size = Vector2(452, 0)
+	p.add_child(dl)
+	var sum := Locale.t("atlas_battle_aftermath_summary") % [int(af.get("silver_now", GameState.silver)), int(af.get("silver_delta", 0))]
+	if str(af.get("quest_note", "")) != "":
+		sum += " · " + Locale.t("atlas_battle_aftermath_quest") % str(af.quest_note)
+	var sl := UIKit.body_label(sum, UIKit.OK if win else UIKit.DANGER, 13)
+	sl.name = "BattleAftermathSummary"
+	sl.position = Vector2(24, 158)
+	sl.size = Vector2(452, 36)
+	p.add_child(sl)
+	var resume := bool(af.get("resume_travel", false)) and World.is_traveling()
+	var cta_label := Locale.t("atlas_battle_aftermath_resume") if resume else Locale.t("atlas_battle_aftermath_continue")
+	var done := false
+	var cont := UIKit.cta_button(cta_label, "A", 280, 42)
+	cont.name = "BattleAftermathContinue"
+	cont.position = Vector2(24, h - 64)
+	cont.pressed.connect(func():
+		done = true
+		_clear_modal())
+	p.add_child(cont)
+	cont.call_deferred("grab_focus")
+	while not done and is_instance_valid(p) and p.get_parent() != null:
+		await get_tree().process_frame
+
+func _show_aftermath_modal(af: Dictionary) -> void:
+	var lines: Array = af.get("lines", [])
+	var body_bits: Array = []
+	for ln in lines:
+		body_bits.append(str(ln))
+	if str(af.get("route_note", "")) != "":
+		body_bits.append(str(af.route_note))
+	var food_d := int(af.get("food_delta", 0))
+	var silver_d := int(af.get("silver_delta", 0))
+	var summary := Locale.t("atlas_aftermath_summary") % [
+		int(af.get("food_now", GameState.food)),
+		int(af.get("silver_now", GameState.silver)),
+		food_d,
+		silver_d,
+	]
+	var h := 260.0 + 18.0 * mini(4, body_bits.size())
+	var p := _modal_panel(h)
+	p.name = "AftermathModal"
+	var tag := Locale.t("atlas_aftermath_en")
+	if bool(af.get("danger", false)):
+		tag = Locale.t("atlas_aftermath_danger_en")
+	var el := UIKit.mono("%s // %s" % [tag, str(af.get("title", ""))], 9, UIKit.DANGER if bool(af.get("danger", false)) else UIKit.ACCENT)
+	el.position = Vector2(24, 18)
+	p.add_child(el)
+	var t := UIKit.title_label(Locale.t("atlas_aftermath_title"), 22)
+	t.position = Vector2(24, 36)
+	p.add_child(t)
+	var choice := UIKit.body_label(Locale.t("atlas_aftermath_choice") % str(af.get("choice", "")), UIKit.EMBER, 13)
+	choice.name = "AftermathChoice"
+	choice.position = Vector2(24, 72)
+	choice.size = Vector2(452, 20)
+	p.add_child(choice)
+	var detail := UIKit.body_label(" · ".join(body_bits) if not body_bits.is_empty() else Locale.t("atlas_aftermath_none"), UIKit.TEXT, 13)
+	detail.name = "AftermathLines"
+	detail.position = Vector2(24, 98)
+	detail.size = Vector2(452, 56)
+	detail.custom_minimum_size = Vector2(452, 0)
+	p.add_child(detail)
+	var sum_l := UIKit.body_label(summary, UIKit.OK if food_d >= 0 and silver_d >= 0 else UIKit.DANGER, 13)
+	sum_l.name = "AftermathSummary"
+	sum_l.position = Vector2(24, 160)
+	sum_l.size = Vector2(452, 36)
+	p.add_child(sum_l)
+	var done := false
+	var cont := UIKit.cta_button(Locale.t("atlas_aftermath_continue"), "A", 220, 42)
+	cont.name = "AftermathContinue"
+	cont.position = Vector2(24, h - 64)
+	cont.pressed.connect(func():
+		done = true
+		_clear_modal())
+	p.add_child(cont)
+	cont.call_deferred("grab_focus")
+	while not done and is_instance_valid(p) and p.get_parent() != null:
+		await get_tree().process_frame
 
 func _show_encounter_modal(enc: Dictionary) -> void:
 	var p := _modal_panel(300)
@@ -1913,7 +2060,11 @@ func _show_encounter_modal(enc: Dictionary) -> void:
 		_show_view(World.nation_of(World.pos))
 		_select_node(World.pos)
 		_refresh_top()
-		_show_toast(str(r.get("msg", "")), UIKit.DANGER))
+		var af: Dictionary = r.get("aftermath", World.last_battle_aftermath)
+		if typeof(af) == TYPE_DICTIONARY and not af.is_empty():
+			await _show_battle_aftermath_modal(af)
+		else:
+			_show_toast(str(r.get("msg", "")), UIKit.DANGER))
 	p.add_child(rb)
 	fb.call_deferred("grab_focus")
 

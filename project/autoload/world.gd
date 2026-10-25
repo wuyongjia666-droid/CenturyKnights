@@ -72,6 +72,9 @@ var hub_tour: Dictionary = {}  # city -> {smith|market|tavern: true} first-visit
 var rep_city: Dictionary = {}
 var rep_nation: Dictionary = {}
 var cargo: Dictionary = {}      # non-store goods
+var cargo_basis: Dictionary = {}  # good -> {unit, city, qty} cost basis for margin toast
+var last_aftermath: Dictionary = {}  # structured road-event aftermath for UI
+var last_battle_aftermath: Dictionary = {}  # structured encounter win/lose aftermath
 var market: Dictionary = {}     # city -> {good: stock}
 var fairs: Dictionary = {}      # city -> days_total expiry
 var intel: Dictionary = {}      # city -> days_total when prices were last seen
@@ -173,6 +176,9 @@ func reset() -> void:
 			rep_city[id] = 10
 	rep_city[pos] = 40
 	cargo = {}
+	cargo_basis = {}
+	last_aftermath = {}
+	last_battle_aftermath = {}
 	market = {}
 	for id in nodes.keys():
 		_init_market(id)
@@ -215,7 +221,7 @@ func to_save() -> Dictionary:
 			ht[str(cid)] = copy
 	return {
 		"v": 1, "pos": pos, "day": day, "days_total": days_total, "visited": visited, "hub_tour": ht, "rep_city": rep_city, "rep_nation": rep_nation,
-		"cargo": cargo, "market": market, "fairs": fairs, "intel": intel, "tips": tips, "boards": boards, "active": active,
+		"cargo": cargo, "cargo_basis": cargo_basis, "market": market, "fairs": fairs, "intel": intel, "tips": tips, "boards": boards, "active": active,
 		"done_sig": done_sig, "quest_log": quest_log, "stats_done": stats_done, "armory": armory, "gear": gear, "recruits": rc,
 		"travel": travel, "pending_event": pending_event, "road_flags": road_flags, "encounter": encounter, "travel_log": travel_log, "qseq": _qseq, "enc_seq": _enc_seq,
 		"royal_courts": royal_courts, "rivals": rivals, "rival_thefts": rival_thefts, "chain_progress": chain_progress,
@@ -246,6 +252,9 @@ func from_save(d: Dictionary) -> void:
 	rep_city = _int_dict(d.get("rep_city", {}))
 	rep_nation = _int_dict(d.get("rep_nation", {}))
 	cargo = _int_dict(d.get("cargo", {}))
+	cargo_basis = d.get("cargo_basis", {}) if typeof(d.get("cargo_basis", {})) == TYPE_DICTIONARY else {}
+	last_aftermath = {}
+	last_battle_aftermath = {}
 	market = {}
 	var m: Dictionary = d.get("market", {})
 	for id in nodes.keys():
@@ -357,6 +366,61 @@ func _add_good(g: String, q: int) -> void:
 		cargo[g] = maxi(0, int(cargo.get(g, 0)) + q)
 		if int(cargo[g]) == 0:
 			cargo.erase(g)
+
+
+func _record_cargo_basis(g: String, qty: int, cost: int, city: String) -> void:
+	if qty <= 0 or cost < 0:
+		return
+	var prev: Dictionary = cargo_basis.get(g, {})
+	var pq := int(prev.get("qty", 0))
+	var pc := int(prev.get("unit", 0)) * pq
+	var nq := pq + qty
+	var unit := int(round(float(pc + cost) / float(maxi(1, nq))))
+	cargo_basis[g] = {"unit": unit, "qty": nq, "city": city}
+
+func _take_cargo_basis(g: String, qty: int) -> int:
+	var prev: Dictionary = cargo_basis.get(g, {})
+	if prev.is_empty():
+		return 0
+	var have := int(prev.get("qty", 0))
+	var take := mini(qty, have)
+	var cost := int(prev.get("unit", 0)) * take
+	var left := have - take
+	if left <= 0:
+		cargo_basis.erase(g)
+	else:
+		prev["qty"] = left
+		cargo_basis[g] = prev
+	return cost
+
+## Readable foreshadow for a road-event option (food / silver / route days / battle).
+func event_fx_preview(fx: Dictionary, ctx: Dictionary = {}, _ev: Dictionary = {}) -> Array:
+	var bits: Array = []
+	if fx.has("battle"):
+		bits.append(Locale.t("atlas_fx_battle"))
+	if fx.has("silver"):
+		var raw = fx.silver
+		var amt := -int(ctx.get("toll", 0)) if str(raw) == "-toll" else int(raw)
+		bits.append(Locale.t("atlas_fx_silver") % amt)
+	if fx.has("food"):
+		bits.append(Locale.t("atlas_fx_food") % int(fx.food))
+	if fx.has("days"):
+		bits.append(Locale.t("atlas_fx_days") % int(fx.days))
+	if fx.has("lose_cargo"):
+		bits.append(Locale.t("atlas_fx_cargo") % int(round(float(fx.lose_cargo) * 100.0)))
+	if fx.has("morale"):
+		bits.append(Locale.t("atlas_fx_morale") % int(fx.morale))
+	if fx.has("heal"):
+		bits.append(Locale.t("atlas_fx_heal"))
+	if fx.has("herb"):
+		bits.append(Locale.t("atlas_fx_herb") % int(fx.herb))
+	if fx.has("risk"):
+		bits.append(Locale.t("atlas_fx_risk"))
+	if fx.has("flag") and str(fx.flag).begins_with("camp_"):
+		pass
+	elif bits.is_empty() and not fx.is_empty():
+		bits.append(Locale.t("atlas_fx_other"))
+	return bits
 
 func world_tier() -> int:
 	var n := 0
@@ -950,9 +1014,13 @@ func market_buy(city: String, g: String, qty: int = 1) -> Dictionary:
 	market[city][g] = stock(city, g) - qty
 	GameState.silver -= cost
 	_add_good(g, qty)
+	_record_cargo_basis(g, qty, cost, city)
 	GameState.mark_dirty()
 	world_changed.emit()
-	return {"ok": true, "msg": "购入 %s ×%d（-%d 银）" % [good_name(g), qty, cost], "cost": cost}
+	var buy_msg := "购入 %s ×%d（-%d 银）" % [good_name(g), qty, cost]
+	if g in node(city).get("produce", []) and str(goods.get(g, {}).get("store", "")) == "":
+		buy_msg = Locale.t("atlas_trade_first_buy") % [good_name(g), qty, cost]
+	return {"ok": true, "msg": buy_msg, "cost": cost, "unit": cost / maxi(1, qty), "produce": g in node(city).get("produce", [])}
 
 ## price walks with supply: every unit bought raises the next unit's price
 func quote_buy(city: String, g: String, qty: int) -> int:
@@ -980,14 +1048,19 @@ func market_sell(city: String, g: String, qty: int = 1) -> Dictionary:
 		return {"ok": false, "msg": "持有不足"}
 	var gain := quote_sell(city, g, qty)
 	market[city][g] = stock(city, g) + qty
+	var basis_cost := _take_cargo_basis(g, qty)
 	_add_good(g, -qty)
 	GameState.silver += gain
+	var margin := gain - basis_cost
 	if g in node(city).get("demand", []) and qty >= 5:
 		add_city_rep(city, qty / 5)  # 供货解困：每 5 份求购货 +1 城声望
 	_check_gather_ready()
 	GameState.mark_dirty()
 	world_changed.emit()
-	return {"ok": true, "msg": "卖出 %s ×%d（+%d 银）" % [good_name(g), qty, gain], "gain": gain}
+	var msg := "卖出 %s ×%d（+%d 银）" % [good_name(g), qty, gain]
+	if basis_cost > 0:
+		msg = Locale.t("atlas_trade_margin_toast") % [good_name(g), qty, gain, margin]
+	return {"ok": true, "msg": msg, "gain": gain, "basis": basis_cost, "margin": margin, "demand": g in node(city).get("demand", [])}
 
 ## Best known sell price elsewhere (only cities visited/tipped count — 情报即利润)
 func best_known_sell(g: String, exclude: String = "") -> Dictionary:
@@ -1588,6 +1661,29 @@ func accept_opening_herb_escort() -> Dictionary:
 		return {"ok": true, "msg": Locale.t("opening_herb_escort_active"), "quest": q}
 	return GameState.accept_quest("q_opening_herb_escort")
 
+
+## Seed a deliver commission on the city board (tests / scripted atlas E2E).
+func seed_deliver_offer(city: String, target: String = "") -> Dictionary:
+	_ensure_board(city)
+	var r := RandomNumberGenerator.new()
+	r.seed = absi(hash("%s|deliver|%s" % [city, target])) + 7
+	var q := _make_quest(city, "deliver", 1, r)
+	if target != "" and nodes.has(target):
+		var old_name := str(node(str(q.get("target", ""))).get("name", str(q.get("target", ""))))
+		q.target = target
+		var tname := str(node(target).get("name", target))
+		if old_name != "" and old_name != tname:
+			q.title = str(q.title).replace(old_name, tname)
+			q.desc = str(q.desc).replace(old_name, tname)
+	q["req_rep"] = 0
+	var offers: Array = board(city)
+	if offers.is_empty():
+		offers.append(q)
+	else:
+		offers[0] = q
+	boards[city]["offers"] = offers
+	return q
+
 func accept_quest(city: String, qid: String) -> Dictionary:
 	if city != pos:
 		return {"ok": false, "msg": "须在发布委托的城中接取"}
@@ -2139,6 +2235,10 @@ func choose_event(idx: int) -> Dictionary:
 	var fx: Dictionary = opts[idx].fx
 	var ctx: Dictionary = ev.ctx
 	var lines: Array = []
+	var food0 := GameState.food
+	var silver0 := GameState.silver
+	var days0 := days_total
+	var choice_label := str(opts[idx].get("label", ""))
 	pending_event = {}
 	for k in fx.keys():
 		var v = fx[k]
@@ -2175,6 +2275,7 @@ func choose_event(idx: int) -> Dictionary:
 				for g in cargo.keys():
 					var q := int(ceil(int(cargo[g]) * float(v)))
 					cargo[g] = int(cargo[g]) - q
+					_take_cargo_basis(str(g), q)
 					lost += q
 				for g2 in cargo.keys().duplicate():
 					if int(cargo[g2]) <= 0:
@@ -2193,6 +2294,7 @@ func choose_event(idx: int) -> Dictionary:
 				if qn > 0:
 					GameState.silver -= p * qn
 					_add_good(g3, qn)
+					_record_cargo_basis(g3, qn, p * qn, str(ev.a))
 					lines.append("以 %d 银/份购入%s ×%d" % [p, good_name(g3), qn])
 				else:
 					lines.append("钱或货舱不够，只能作罢")
@@ -2241,10 +2343,32 @@ func choose_event(idx: int) -> Dictionary:
 						lines.append(Locale.t("camp_fx_meal"))
 					_:
 						lines.append("记下了旗标")
+	var food_d := GameState.food - food0
+	var silver_d := GameState.silver - silver0
+	var days_d := days_total - days0
+	var route_note := ""
+	if days_d > 0:
+		route_note = Locale.t("atlas_aftermath_route") % days_d
+	var is_danger := int(ctx.get("danger", 0)) >= 2 or str(ev.get("id", "")) in ["ambush", "toll", "storm", "bridge"]
+	var aftermath := {
+		"title": str(ev.get("title", "")),
+		"choice": choice_label,
+		"lines": lines.duplicate(),
+		"food_delta": food_d,
+		"silver_delta": silver_d,
+		"days_delta": days_d,
+		"food_now": GameState.food,
+		"silver_now": GameState.silver,
+		"route_note": route_note,
+		"danger": is_danger,
+		"id": str(ev.get("id", "")),
+		"kind": str(ev.get("kind", "road")),
+	}
+	last_aftermath = aftermath
 	if fx.has("battle"):
 		var enc := start_encounter("road", {"node": str(ev.b), "from": str(ev.a), "event": str(ev.id), "rep_win": int(fx.get("rep_nation_win", 0))})
-		return {"ok": true, "msg": "，".join(lines), "encounter": enc}
-	var out := {"ok": true, "msg": "，".join(lines) if not lines.is_empty() else "无事发生"}
+		return {"ok": true, "msg": "，".join(lines), "encounter": enc, "aftermath": aftermath}
+	var out := {"ok": true, "msg": "，".join(lines) if not lines.is_empty() else Locale.t("atlas_aftermath_none"), "aftermath": aftermath}
 	if travel.has("pending_arrive"):
 		var info := _arrive_leg(str(travel.pending_arrive))
 		out.merge(info)
@@ -2546,44 +2670,74 @@ func on_battle_end(win: bool) -> Dictionary:
 	var enc := encounter
 	encounter = {}
 	var msg := ""
+	var lines: Array = []
+	var silver0 := GameState.silver
+	var morale0 := GameState.morale
+	var loot := 0
+	var mat := ""
+	var mq := 0
+	var rep_city_d := 0
+	var rep_nation_d := 0
+	var quest_note := ""
 	var q := quest_by_id(str(enc.quest))
 	if win:
-		var loot := 10 + 8 * int(enc.danger)
+		loot = 10 + 8 * int(enc.danger)
 		GameState.silver += loot
 		var nat: Dictionary = nations.get(str(enc.nation), {})
-		var mat := str(nat.get("mat", "iron"))
-		var mq := 1 + int(enc.danger) / 2
+		mat = str(nat.get("mat", "iron"))
+		mq = 1 + int(enc.danger) / 2
 		if str(goods.get(mat, {}).get("store", "")) != "" or cargo_used() + mq <= cargo_cap():
 			_add_good(mat, mq)
-		msg = "得胜：缴获 %d 银、%s ×%d" % [loot, good_name(mat), mq]
+			lines.append(Locale.t("atlas_battle_line_loot") % [loot, good_name(mat), mq])
+		else:
+			lines.append(Locale.t("atlas_battle_line_loot_silver") % loot)
+			mq = 0
+		msg = ("得胜：缴获 %d 银、%s ×%d" % [loot, good_name(mat), mq]) if mq > 0 else (Locale.t("atlas_battle_line_loot_silver") % loot)
 		if int(enc.get("rep_win", 0)) > 0:
-			add_nation_rep(str(enc.nation), int(enc.rep_win))
+			rep_nation_d = int(enc.rep_win)
+			add_nation_rep(str(enc.nation), rep_nation_d)
+			lines.append(Locale.t("atlas_battle_line_rep_nation") % [nations.get(str(enc.nation), {}).get("name", ""), rep_nation_d])
 		if not q.is_empty():
 			q.state = "ready"
 			q.battle_won = true
+			quest_note = str(q.title)
 			msg += "；委托「%s」目标达成" % q.title
-		add_city_rep(str(enc.node), 2)
+			lines.append(Locale.t("atlas_battle_line_quest_ready") % q.title)
+		rep_city_d = 2
+		add_city_rep(str(enc.node), rep_city_d)
+		lines.append(Locale.t("atlas_battle_line_rep_city") % [node(str(enc.node)).get("name", ""), rep_city_d])
 		if travel.has("pending_arrive"):
 			var info := _arrive_leg(str(travel.pending_arrive))
 			if not info.get("encounter", {}).is_empty():
 				msg += "；前方又有战事"
+				lines.append(Locale.t("atlas_battle_line_more_fight"))
 	else:
 		# retreat to where the fight started; lose some cargo and morale
 		pos = str(enc.get("from", pos)) if nodes.has(str(enc.get("from", ""))) else pos
 		travel = {}
 		GameState.morale = maxi(0, GameState.morale - 5)
+		var lost_units := 0
 		for g in cargo.keys().duplicate():
-			cargo[g] = int(cargo[g]) * 3 / 4
+			var before := int(cargo[g])
+			cargo[g] = before * 3 / 4
+			lost_units += before - int(cargo[g])
+			_take_cargo_basis(str(g), before - int(cargo[g]))
 			if int(cargo[g]) <= 0:
 				cargo.erase(g)
 		msg = "败退至%s：士气 -5，货物折损四分之一" % node(pos).get("name", "")
+		lines.append(Locale.t("atlas_battle_line_retreat") % node(pos).get("name", ""))
+		lines.append(Locale.t("atlas_battle_line_morale") % (GameState.morale - morale0))
+		if lost_units > 0:
+			lines.append(Locale.t("atlas_battle_line_cargo_loss") % lost_units)
 		if not q.is_empty() and (str(q.kind) == "escort" or str(q.kind) == "rescue" or str(q.kind) == "convoy"):
 			active.erase(q)
 			add_city_rep(str(q.issuer), -6)
 			if str(q.kind) == "escort":
 				msg += "；护送委托失败"
+				lines.append(Locale.t("atlas_battle_line_escort_fail"))
 			else:
 				msg += Locale.t("quest_objective_failed")
+				lines.append(Locale.t("quest_objective_failed"))
 	msg += CKTerritory.on_battle(enc, win)
 	## Y1-B: 战棋遭遇 → month_echo.battle；属地/沙漏回读.
 	var place := str(node(str(enc.get("node", pos))).get("name", node(pos).get("name", "")))
@@ -2592,10 +2746,30 @@ func on_battle_end(win: bool) -> Dictionary:
 		CKEconomyState.month_echo_note("battle", Locale.t("lb_echo_battle_win", [loot_n, place]))
 	else:
 		CKEconomyState.month_echo_note("battle", Locale.t("lb_echo_battle_lose", [place]))
+	var silver_d := GameState.silver - silver0
+	var resume := win and is_traveling() and encounter.is_empty()
+	var aftermath := {
+		"win": win,
+		"title": str(enc.get("label", "")),
+		"lines": lines.duplicate(),
+		"silver_delta": silver_d,
+		"silver_now": GameState.silver,
+		"loot_good": mat,
+		"loot_qty": mq,
+		"loot_silver": loot if win else 0,
+		"rep_city": rep_city_d,
+		"rep_nation": rep_nation_d,
+		"quest_note": quest_note,
+		"pos": pos,
+		"resume_travel": resume,
+		"kind": "battle",
+		"msg": msg,
+	}
+	last_battle_aftermath = aftermath
 	_tlog(msg)
 	GameState.mark_dirty()
 	world_changed.emit()
-	return {"ok": true, "msg": msg, "win": win}
+	return {"ok": true, "msg": msg, "win": win, "aftermath": aftermath, "resume_travel": resume}
 
 # ── campaign integration ──────────────────────────────
 func mainline_chapter() -> int:

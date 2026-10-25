@@ -260,6 +260,28 @@ atlas_turnin_modal_title,可交付委托,Ready to turn in
 atlas_turnin_modal_body,此地有 %d 件委托可以交付。进城交还，还是稍后再说？,%d commission(s) can be turned in here. Enter the city, or later?
 atlas_turnin_modal_go,进城交付,Enter to turn in
 atlas_turnin_modal_later,稍后再说,Later
+atlas_turnin_list_row,· %s（+%d 银）,· %s (+%d silver)
+atlas_turnin_modal_now,一键交付,Turn in now
+atlas_turnin_now_toast,已交付 %d 件委托 · +%d 银,Turned in %d · +%d silver
+atlas_turnin_now_none,暂无可交付委托,Nothing ready to turn in
+atlas_battle_aftermath_title_win,遭遇战 · 胜,Encounter · Victory
+atlas_battle_aftermath_title_lose,遭遇战 · 败,Encounter · Defeat
+atlas_battle_aftermath_win_en,VICTORY,VICTORY
+atlas_battle_aftermath_lose_en,DEFEAT,DEFEAT
+atlas_battle_aftermath_summary,银两 %d（Δ %+d）,Silver %d (Δ %+d)
+atlas_battle_aftermath_quest,任务：%s,Quest: %s
+atlas_battle_aftermath_resume,继续行军,Resume march
+atlas_battle_aftermath_continue,知道了,Got it
+atlas_battle_line_loot,缴获 %d 银 · %s ×%d,Loot %d silver · %s ×%d
+atlas_battle_line_loot_silver,缴获 %d 银,Loot %d silver
+atlas_battle_line_rep_nation,%s 国誉 %+d,%s nation rep %+d
+atlas_battle_line_quest_ready,委托「%s」目标达成,Commission "%s" ready
+atlas_battle_line_rep_city,%s 城誉 %+d,%s city rep %+d
+atlas_battle_line_more_fight,前方又有战事,Another fight ahead
+atlas_battle_line_retreat,败退至%s,Retreated to %s
+atlas_battle_line_morale,士气 %+d,Morale %+d
+atlas_battle_line_cargo_loss,货物折损 %d 单位,Cargo loss %d units
+atlas_battle_line_escort_fail,护送委托失败,Escort commission failed
 wq_tab_active,在手委托,In hand
 wq_tab_board,本堡委托榜,Castle board
 wq_tab_done,已完成,Completed
@@ -311,3 +333,23 @@ atlas_trade_loop_line,%s 本地买 %d → %s 卖 %d（%+d）,"%s buy %d here →
 atlas_trade_loop_unknown,%s 本地买 %d → 暂无他处行情（到访后可见）,%s buy %d here → no other price yet (visit to learn)
 atlas_trade_loop_goto,去市集贩运,Open market trade
 atlas_trade_loop_best,最佳：%s → %s（%+d 银）,Best: %s → %s (%+d silver)
+atlas_aftermath_en,AFTERMATH,AFTERMATH
+atlas_aftermath_danger_en,DANGER AFTERMATH,DANGER AFTERMATH
+atlas_aftermath_title,遇险之后,After the danger
+atlas_aftermath_choice,你选择了：%s,You chose: %s
+atlas_aftermath_summary,现有粮 %d · 银 %d（粮 %+d · 银 %+d）,Food %d · silver %d (food %+d · silver %+d)
+atlas_aftermath_route,行程耽搁 %d 日,Route delayed %d days
+atlas_aftermath_none,无事发生,Nothing happened
+atlas_aftermath_continue,继续行程,Continue march
+atlas_fx_battle,触发战斗,Triggers battle
+atlas_fx_silver,银 %+d,Silver %+d
+atlas_fx_food,粮 %+d,Food %+d
+atlas_fx_days,耽搁 %d 日,Delay %d days
+atlas_fx_cargo,货损约 %d%%,Cargo loss ~%d%%
+atlas_fx_morale,士气 %+d,Morale %+d
+atlas_fx_heal,全员疗伤,Heal party
+atlas_fx_herb,药材 %+d,Herbs %+d
+atlas_fx_risk,有风险,Risky
+atlas_fx_other,有后果,Has consequences
+atlas_trade_margin_toast,卖出 %s ×%d（+%d 银 · 利润 %+d）,Sold %s ×%d (+%d silver · margin %+d)
+atlas_trade_first_buy,购入本地产 %s ×%d（-%d 银）· 可运往求购城出手,Bought local %s ×%d (-%d silver) · haul to a demand city
