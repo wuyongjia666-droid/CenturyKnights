@@ -40,3 +40,16 @@
 - 可玩章 `cs03_01.json` 对白加厚至 100+ 行；单行 ≤60 汉字。
 - **所有权不变**：visit「去看月份怎么往前走」；battle「先试一锋 / 再试锋镝 / 继续」。
 - 验收：`content_season_playable_s03_check` 行数闸 ≥70；另跑 visit_authored / battle_authored / hub_entry。
+## 第二可玩章 · 榜阴上的灯
+
+| 项 | 值 |
+|---|---|
+| id | `cs03_02` |
+| 标题 | 榜阴上的灯 |
+| legacy_index | 413 |
+| 文件 | `project/data/story/chapters/cs03_02.json` |
+
+回读章：正面已记，副面/阴面空行要能念。拍：主题开场 → 加深 → 沙漏 visit → 门廊试锋 → 酒馆选题 → 入谱。
+
+- **功粮仍并** → flag `cs03_back_parallel`，进 `ledger`。
+- 验收：`content_season_playable_s03_02_check`。
