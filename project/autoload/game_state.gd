@@ -877,6 +877,8 @@ func save_meta(slot: String) -> Dictionary:
 		"play_seconds": play_seconds,
 		"version": str(ProjectSettings.get_setting("application/config/version", "")),
 		"schema": SAVE_SCHEMA,
+		"crest_color": str(crest_color),
+		"surname": str(surname),
 	}
 
 func save_game() -> bool:

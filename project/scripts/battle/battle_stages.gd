@@ -48,6 +48,7 @@ static func advance(host) -> bool:
 	host._log(BattleObjectives.text("stage_next") % host.map_name)
 	host._refresh_info()
 	ObjectiveHud.refresh(host)
+	BattleDualLedger.refresh(host)
 	if host.map_draw:
 		host.map_draw.queue_redraw()
 	return true

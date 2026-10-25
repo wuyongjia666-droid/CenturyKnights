@@ -87,3 +87,7 @@ escort_wait,%s 不敢走：先清路,"%s won't move: clear the road first"
 escort_walk,%s 推着粮车往桥灯走,%s pushes the grain cart toward the bridge lamp
 side_npc_protect,落难行商,Stranded peddler
 side_npc_escort,随行粮车,Supply cart
+dual_ledger_eyebrow,双账,Dual ledger
+dual_ledger_injured,伤兵 %d,Injured %d
+dual_ledger_lamp,旗灯 %d/%d,Lamp %d/%d
+dual_ledger_line,伤兵 %d · 旗灯 %d/%d,Injured %d · Lamp %d/%d
