@@ -42,7 +42,7 @@ func _source() -> String:
 	if conf.find("BattlePick.focus_follow_preview(host)") < 0:
 		return "confirm missing focus_follow_preview settle wire"
 	if conf.find("never mid unit-drag") < 0 and conf.find("do not soft-follow mid unit-drag") < 0:
-		return "missing pan≠drag guard comment on soft-follow"
+		return "missing pan!=drag guard comment on soft-follow"
 	if conf.find("attack_preview_juice") < 0 or conf.find("draw_line") < 0:
 		return "attack preview juice / aim line missing"
 	if conf.find("attack_preview_pulse") < 0:
