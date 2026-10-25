@@ -27,3 +27,7 @@
 - Play：IARC 问卷生成分级 → 存档截图进提审包资料夹（人工）  
 - Microsoft：年龄分级模块勾选同上 → 保存草稿  
 - 今日：**不点击提交**
+
+## 验证
+
+逐项意图核对见 [`age-rating-verification-record.md`](./age-rating-verification-record.md)。本页仍**不提交** IARC / Partner Center。

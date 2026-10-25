@@ -37,3 +37,7 @@
 ## 变更
 
 政策更新将同步商店「隐私政策 URL」指向的页面，并在页面注明修订日期（Asia/Shanghai）。
+
+## 验证
+
+工程侧核对见 [`privacy-verification-record.md`](./privacy-verification-record.md)（静态 SDK 扫描口径、数据流表、上架前人工项）。本草稿仍非正式法务文本。

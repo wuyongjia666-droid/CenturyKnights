@@ -7,6 +7,8 @@
 - [ ] `main-<sha8>` Release 双平台附件齐全  
 - [ ] `python3 tools/ci/store_prep_check.py` 绿  
 - [ ] `python3 tools/ci/store_packaging_dry_check.py` 绿  
+- [ ] `python3 tools/ci/store_verify_records_check.py` 绿  
+- [ ] 隐私/分级/导出**验证记录**过目（`*-verification-record.md`）  
 - [ ] `python3 tools/ci/export_size_report.py` 绿  
 
 ## B. 崩溃 / 性能

@@ -151,6 +151,7 @@
 | 2026-10-25 | 内容季 #2/#3 脚手架 v2 + 开写：`season-02`《婚约上的灯》初稿、`season-03`《榜上的收成》§1–§8；多季 `content_season_scaffold_check` |
 | 2026-10-25 | 商店工程准备（不缴费）：`docs/store/*` + `tools/ci/store_prep_check.py`（导出路径/文案/崩溃性能/包体口径） |
 | 2026-10-25 | 商店工程深刀（不缴费）：Play/MS 完整字段稿 + 隐私/分级草稿 + `store_packaging_dry_check`（出包脚本/预设/release 干跑） |
+| 2026-10-25 | 商店验证记录：隐私/年龄分级/导出路径干跑证据 + `store_verify_records_check`（不削弱字数闸） |
 | 2026-10-25 | 联姻→继承→嗣位端到端可玩链 + `marriage_heir_chain_check`（多场景回读） |
 | 2026-10-25 | Y1-B 岁课 UI 落点加深：城堡家庭导航常驻 ToSuiYear + 未读角标（todo→family）+ `sui_hub_entry_check` |
 | 2026-10-25 | Y1-B 联姻无对象空态：EmptyHost why/how + ToTavern/ToRoster + `marriage_empty_cta_check` |

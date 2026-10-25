@@ -34,3 +34,11 @@ test -f scripts/build_windows.sh
 test -f .github/workflows/release.yml
 python3 tools/ci/store_prep_check.py
 ```
+
+## 验证记录
+
+干跑证据与复跑命令见 [`export-paths-verification-record.md`](./export-paths-verification-record.md)。
+
+```bash
+python3 tools/ci/store_verify_records_check.py
+```
