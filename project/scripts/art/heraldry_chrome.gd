@@ -2,7 +2,8 @@ class_name CKHeraldryChrome
 extends RefCounted
 ## Shared player-facing heraldry chrome: 团徽 / 旗徽 / 族徽 + 爵位徽记 + 敌徽 + 邦徽.
 ## One design system everywhere (castle header/banner strip, genealogy, dossier,
-## board unit shields, rival houses, tavern/hire cards, city/smith/market chrome).
+## board unit shields, rival houses, tavern/hire cards, city/smith/market chrome,
+## marriage house cards + crest strip).
 ## No marriage marshalling / per-person cadency — only company vs family vs nation arms + rank badge.
 
 static func is_family_member(c) -> bool:
@@ -311,3 +312,55 @@ static func place_city_crest_strip(parent: Node, city_id: String, at: Vector2, s
 	host.set_meta("city_id", str(city_id))
 	parent.add_child(host)
 	return host
+
+## Marriage house-card plate: 族徽|旗徽 as HouseArms (lower-left of portrait plate).
+static func attach_house_card_chrome(parent: Control, c, plate: Rect2, arms_sz: Vector2 = Vector2(32, 38)) -> void:
+	if parent == null or c == null:
+		return
+	var old := parent.get_node_or_null("HouseArms")
+	if old:
+		old.queue_free()
+	var arms := make_person_arms(c, arms_sz)
+	arms.name = "HouseArms"
+	arms.position = Vector2(plate.position.x + 4.0, plate.position.y + plate.size.y - arms_sz.y - 4.0)
+	parent.add_child(arms)
+
+## Marriage protocol strip: 团徽 + left (suitor) + right (candidate/spouse) 族徽|旗徽.
+## Never marshalls/impales — three separate shields. Re-place renames dying node.
+static func place_marriage_crest_strip(parent: Node, left_c, right_c, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("MarriageCrestStrip")
+	if old:
+		old.name = "_MarriageCrestStripDying"
+		old.queue_free()
+	var host := Control.new()
+	host.name = "MarriageCrestStrip"
+	host.position = at
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var gap := 8.0
+	var x := 0.0
+	var co := make_company_arms(shield)
+	co.position = Vector2(x, 0)
+	host.add_child(co)
+	x += shield.x + gap
+	if left_c != null:
+		var la := make_person_arms(left_c, shield)
+		la.name = "LeftArms"
+		la.position = Vector2(x, 0)
+		host.add_child(la)
+		x += shield.x + gap
+	if right_c != null:
+		var ra := make_person_arms(right_c, shield)
+		ra.name = "RightArms"
+		ra.position = Vector2(x, 0)
+		host.add_child(ra)
+		x += shield.x
+	else:
+		x -= gap
+	host.size = Vector2(maxf(shield.x, x), shield.y)
+	host.set_meta("has_left", left_c != null)
+	host.set_meta("has_right", right_c != null)
+	parent.add_child(host)
+	return host
+
