@@ -15,6 +15,7 @@ var id := "infirmary"
 var _body: Control
 var _msg := ""
 var _msg_ok := true
+var _sel: CKCharacter
 
 func _ready() -> void:
 	var p: Dictionary = CKNav.params()
@@ -171,18 +172,46 @@ func render() -> void:
 	vb.add_theme_constant_override("separation", 8)
 	vb.custom_minimum_size = Vector2(548, 0)
 	sc.add_child(vb)
+	_ensure_sel()
 	var rs := rows()
-	if rs.is_empty():
-		var e := UIKit.body_label(Locale.t("a1_empty_%s" % id), UIKit.TEXT_FAINT, 14)
-		e.name = "Empty"
-		e.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		e.custom_minimum_size = Vector2(548, 0)
-		vb.add_child(e)
-	for r in rs:
-		var row := UIKit.body_label(str(r), UIKit.TEXT, 15)
-		row.custom_minimum_size = Vector2(548, 40)
-		row.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		vb.add_child(row)
+	if id == "infirmary":
+		var cands := _rest_candidates()
+		if cands.is_empty():
+			var e := UIKit.body_label(Locale.t("a1_empty_%s" % id), UIKit.TEXT_FAINT, 14)
+			e.name = "Empty"
+			e.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			e.custom_minimum_size = Vector2(548, 0)
+			vb.add_child(e)
+		for c in cands:
+			var on: bool = _sel == c
+			var lab := Locale.t("a1_hp_row") % [c.name, c.hp, c.max_hp]
+			var rec: Dictionary = CKInjury.record(c)
+			if not rec.is_empty():
+				lab += " · " + CKInjury.label(c)
+			var kb := UIKit.make_accent_button(lab, 548) if on else UIKit.ghost_button(lab, 548, 44)
+			kb.name = "InnKnight_" + str(c.id)
+			kb.custom_minimum_size = Vector2(548, 44)
+			kb.alignment = HORIZONTAL_ALIGNMENT_LEFT
+			var cid := str(c.id)
+			kb.pressed.connect(func():
+				for x in GameState.roster():
+					if str(x.id) == cid:
+						_sel = x
+						break
+				render())
+			vb.add_child(kb)
+	elif rs.is_empty():
+		var e2 := UIKit.body_label(Locale.t("a1_empty_%s" % id), UIKit.TEXT_FAINT, 14)
+		e2.name = "Empty"
+		e2.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		e2.custom_minimum_size = Vector2(548, 0)
+		vb.add_child(e2)
+	else:
+		for r in rs:
+			var row := UIKit.body_label(str(r), UIKit.TEXT, 15)
+			row.custom_minimum_size = Vector2(548, 40)
+			row.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+			vb.add_child(row)
 	var link: Array = LINK[id]
 	var go := UIKit.ghost_button(Locale.t(str(link[0])), 200, 48)
 	go.name = "Link"
@@ -191,6 +220,63 @@ func render() -> void:
 	var dest := str(link[1])
 	go.pressed.connect(func(): CKNav.go(dest))
 	_body.add_child(go)
+	if id == "infirmary":
+		var cost := CKCastleServices.rest_cost(GameState)
+		var rest := UIKit.make_accent_button(Locale.t("a1_rest") % cost, 220)
+		rest.name = "InnRest"
+		rest.position = Vector2(900, 632)
+		rest.custom_minimum_size = Vector2(220, 48)
+		rest.disabled = lv <= 0 or _sel == null
+		rest.pressed.connect(_do_rest)
+		_body.add_child(rest)
+
+
+func _needs_rest(c: CKCharacter) -> bool:
+	if c == null or not c.alive:
+		return false
+	var rec: Dictionary = CKInjury.record(c)
+	if str(rec.get("tier", "")) == "lasting":
+		return false
+	return c.injured or c.hp < c.max_hp or not rec.is_empty()
+
+
+func _rest_candidates() -> Array:
+	var out: Array = []
+	for c in GameState.roster():
+		if _needs_rest(c):
+			out.append(c)
+	return out
+
+
+func _ensure_sel() -> void:
+	if id != "infirmary":
+		_sel = null
+		return
+	var cands := _rest_candidates()
+	if _sel != null and _needs_rest(_sel):
+		return
+	_sel = cands[0] if not cands.is_empty() else null
+
+
+func _do_rest() -> void:
+	_ensure_sel()
+	if _sel == null:
+		_msg = Locale.t("a1_rest_pick")
+		_msg_ok = false
+		Sfx.miss()
+		render()
+		return
+	var r: Dictionary = CKCastleServices.rest_heal(GameState, _sel.id)
+	_msg = str(r.get("msg", ""))
+	_msg_ok = bool(r.get("ok", false))
+	if _msg_ok:
+		Sfx.confirm()
+		GameState.save_game()
+		_sel = null
+	else:
+		Sfx.miss()
+	render()
+
 
 func _upgrade() -> void:
 	var r: Dictionary = CKCastleServices.upgrade_annex(GameState, id)
@@ -282,16 +368,45 @@ func _m_render() -> void:
 	vb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	vb.add_theme_constant_override("separation", 10)
 	sc.add_child(vb)
+	_ensure_sel()
 	var rs := rows()
-	if rs.is_empty():
-		var e := MobilePage.label(Locale.t("a1_empty_%s" % id), UIKit.TEXT_FAINT, MobilePage.FONT, true)
-		e.name = "Empty"
-		vb.add_child(e)
-	for r in rs:
-		vb.add_child(MobilePage.label(str(r), UIKit.TEXT, MobilePage.FONT, true))
+	if id == "infirmary":
+		var cands := _rest_candidates()
+		if cands.is_empty():
+			var e := MobilePage.label(Locale.t("a1_empty_%s" % id), UIKit.TEXT_FAINT, MobilePage.FONT, true)
+			e.name = "Empty"
+			vb.add_child(e)
+		for c in cands:
+			var on: bool = _sel == c
+			var lab := Locale.t("a1_hp_row") % [c.name, c.hp, c.max_hp]
+			var rec: Dictionary = CKInjury.record(c)
+			if not rec.is_empty():
+				lab += " · " + CKInjury.label(c)
+			var cid := str(c.id)
+			var kb := MobilePage.button(lab, on, func():
+				for x in GameState.roster():
+					if str(x.id) == cid:
+						_sel = x
+						break
+				render())
+			kb.name = "InnKnight_" + cid
+			vb.add_child(kb)
+	elif rs.is_empty():
+		var e2 := MobilePage.label(Locale.t("a1_empty_%s" % id), UIKit.TEXT_FAINT, MobilePage.FONT, true)
+		e2.name = "Empty"
+		vb.add_child(e2)
+	else:
+		for r in rs:
+			vb.add_child(MobilePage.label(str(r), UIKit.TEXT, MobilePage.FONT, true))
 	var link: Array = LINK[id]
 	var dest := str(link[1])
 	var go := MobilePage.button(Locale.t(str(link[0])), false, func(): CKNav.go(dest))
 	go.name = "Link"
 	go.disabled = lv <= 0
 	rv.add_child(go)
+	if id == "infirmary":
+		var cost := CKCastleServices.rest_cost(GameState)
+		var rest := MobilePage.button(Locale.t("a1_rest") % cost, true, _do_rest)
+		rest.name = "InnRest"
+		rest.disabled = lv <= 0 or _sel == null
+		rv.add_child(rest)
