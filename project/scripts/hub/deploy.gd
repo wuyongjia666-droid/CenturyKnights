@@ -12,7 +12,8 @@ var _matrix: Control
 
 func _ready() -> void:
 	UIKit.void_bg(self)
-	UIKit.top_bar(self, "出战编成 · DEPLOYMENT", [["编制上限", "%d 人" % GameState.max_deploy(), UIKit.ACCENT], ["厅堂", "LV %d" % GameState.building_level("hall"), UIKit.TEXT], ["历", Calendar.label(), UIKit.TEXT_DIM]], "返回城堡", _back)
+	var dchips := [["编制上限", "%d 人" % GameState.max_deploy(), UIKit.ACCENT], ["厅堂", "LV %d" % GameState.building_level("hall"), UIKit.TEXT], ["历", Calendar.label(), UIKit.TEXT_DIM]]
+	UIKit.top_bar(self, "出战编成 · DEPLOYMENT", dchips, "返回城堡", _back)
 	_head = UIKit.page_head(self, 42, 70, "TACTICAL DEPLOYMENT // PROT.07", "出战编成", "CENTURY KNIGHTS : THE FROST MARCH", "点选卡片切换出战；棋盘上以立绘棋子示人。")
 	_matrix = UIKit.mono("BATTLE VANGUARD MATRIX", 9, UIKit.ACCENT, false)
 	_matrix.position = Vector2(42, 168)
@@ -415,7 +416,18 @@ func _render_metrics() -> void:
 	for s in stats:
 		var best := 1
 		for o in GameState.roster():
-			var v: int = int(o.max_hp) if s[2] == "max_hp" else (o.derived_atk() if s[2] == "atk" else (o.derived_def() if s[2] == "def" else (o.derived_hit() if s[2] == "hit" else o.derived_avo())))
+			var v: int
+			match str(s[2]):
+				"max_hp":
+					v = int(o.max_hp)
+				"atk":
+					v = o.derived_atk()
+				"def":
+					v = o.derived_def()
+				"hit":
+					v = o.derived_hit()
+				_:
+					v = o.derived_avo()
 			best = maxi(best, v)
 		var row := Panel.new()
 		row.position = Vector2(x, y)

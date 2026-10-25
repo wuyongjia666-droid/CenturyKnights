@@ -19,7 +19,8 @@ func _ready() -> void:
 
 func _build() -> void:
 	UIKit.void_bg(self)
-	var tb := UIKit.top_bar(self, "烽火酒馆 · 本旬候选人", [["银币", str(GameState.silver), UIKit.ACCENT], ["月薪支出", "%d" % _payroll(), UIKit.DANGER], ["历", Calendar.label(), UIKit.TEXT_DIM]], "返回城堡", _back)
+	var chips := [["银币", str(GameState.silver), UIKit.ACCENT], ["月薪支出", "%d" % _payroll(), UIKit.DANGER], ["历", Calendar.label(), UIKit.TEXT_DIM]]
+	var tb := UIKit.top_bar(self, "烽火酒馆 · 本旬候选人", chips, "返回城堡", _back)
 	var right_box: HBoxContainer = tb.get_child(tb.get_child_count() - 1)
 	var rb := UIKit.ghost_button(_refresh_label(), 150, 32)
 	rb.name = "TavernRefresh"
