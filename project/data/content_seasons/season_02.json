@@ -1,0 +1,107 @@
+{
+  "id": "season_02",
+  "version": 1,
+  "title_zh": "笑柄上的功勋",
+  "status": "topic_scaffold",
+  "pipeline": [
+    "topic",
+    "novel",
+    "bible",
+    "playable",
+    "systems",
+    "art",
+    "playtest"
+  ],
+  "stage": "topic",
+  "flag_lamp": {
+    "flag": "功勋册与敌宅帖逼问空征兆",
+    "lamp": "第二张岁课与补灯私术压力"
+  },
+  "system_deepen": "rival_wu_court_news",
+  "system_deepen_zh": "敌宅笑柄进朝报（只读）",
+  "gates": {
+    "y1a_device_signoff": true,
+    "topic_user_ack": false,
+    "novel_allowed": false
+  },
+  "topic_checklist": [
+    {
+      "id": "one_liner",
+      "label_zh": "一句",
+      "required": true
+    },
+    {
+      "id": "flag_lamp",
+      "label_zh": "旗 / 灯冲突",
+      "required": true
+    },
+    {
+      "id": "system_pick",
+      "label_zh": "本季加深的系统",
+      "required": true
+    },
+    {
+      "id": "wont_do",
+      "label_zh": "不做（本季）",
+      "required": true
+    },
+    {
+      "id": "downstream_gates",
+      "label_zh": "下游闸门",
+      "required": true
+    }
+  ],
+  "acceptance": [
+    {
+      "id": "scaffold_gate",
+      "label_zh": "内容季 #2 选题脚手架",
+      "suite": "res://tests/suites/narrative/content_season_scaffold_check.tscn",
+      "done": false
+    }
+  ],
+  "pipeline_stages": {
+    "topic": {
+      "doc": "docs/content-seasons/season-02/TOPIC.md",
+      "gate": "",
+      "open": true
+    },
+    "novel": {
+      "doc": "docs/content-seasons/season-02/NOVEL.md",
+      "gate": "novel_allowed",
+      "open": false
+    },
+    "bible": {
+      "doc": "docs/content-seasons/season-02/BIBLE.md",
+      "gate": "novel_allowed",
+      "open": false
+    },
+    "playable": {
+      "doc": "docs/content-seasons/season-02/PLAYABLE.md",
+      "gate": "novel_allowed",
+      "open": false
+    },
+    "systems": {
+      "doc": "docs/content-seasons/season-02/ACCEPTANCE.md",
+      "gate": "",
+      "open": true
+    },
+    "art": {
+      "doc": "",
+      "gate": "novel_allowed",
+      "open": false
+    },
+    "playtest": {
+      "doc": "",
+      "gate": "topic_user_ack",
+      "open": false
+    }
+  },
+  "docs_rel": [
+    "docs/content-seasons/season-02/TOPIC.md",
+    "docs/content-seasons/season-02/CHECKLIST.md",
+    "docs/content-seasons/season-02/NOVEL.md",
+    "docs/content-seasons/season-02/BIBLE.md",
+    "docs/content-seasons/season-02/PLAYABLE.md",
+    "docs/content-seasons/season-02/ACCEPTANCE.md"
+  ]
+}

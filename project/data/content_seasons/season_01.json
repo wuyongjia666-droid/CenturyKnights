@@ -1,8 +1,8 @@
 {
   "id": "season_01",
-  "version": 2,
+  "version": 3,
   "title_zh": "回执上的灯",
-  "status": "topic_scaffold",
+  "status": "playable_draft",
   "pipeline": [
     "topic",
     "novel",
@@ -12,7 +12,7 @@
     "art",
     "playtest"
   ],
-  "stage": "topic",
+  "stage": "playable",
   "flag_lamp": {
     "flag": "灰旗名册与联姻声称",
     "lamp": "岁课回执与孩童征兆对不上名册"
@@ -20,9 +20,10 @@
   "system_deepen": "sui_ke_yeartrace",
   "system_deepen_zh": "岁课回执写入族谱年迹（只读）",
   "gates": {
-    "y1a_device_signoff": false,
-    "topic_user_ack": false,
-    "novel_allowed": false
+    "y1a_device_signoff": true,
+    "topic_user_ack": true,
+    "novel_allowed": true,
+    "owner_auth_note": "2026-10-25 owner full authority incl. content; Y1-A self-play deferred; open novel pipeline"
   },
   "topic_checklist": [
     {
@@ -72,8 +73,14 @@
     },
     {
       "id": "scaffold_gate",
-      "label_zh": "内容季脚手架门禁（签收前不开小说）",
+      "label_zh": "内容季流水门禁（正文+可玩章）",
       "suite": "res://tests/suites/narrative/content_season_scaffold_check.tscn",
+      "done": true
+    },
+    {
+      "id": "playable_dialogue",
+      "label_zh": "可玩章进游戏并对白可走",
+      "suite": "res://tests/suites/narrative/content_season_playable_check.tscn",
       "done": true
     }
   ],
@@ -86,17 +93,17 @@
     "novel": {
       "doc": "docs/content-seasons/season-01/NOVEL.md",
       "gate": "novel_allowed",
-      "open": false
+      "open": true
     },
     "bible": {
       "doc": "docs/content-seasons/season-01/BIBLE.md",
       "gate": "novel_allowed",
-      "open": false
+      "open": true
     },
     "playable": {
       "doc": "docs/content-seasons/season-01/PLAYABLE.md",
       "gate": "novel_allowed",
-      "open": false
+      "open": true
     },
     "systems": {
       "doc": "docs/content-seasons/season-01/ACCEPTANCE.md",
@@ -121,5 +128,7 @@
     "docs/content-seasons/season-01/BIBLE.md",
     "docs/content-seasons/season-01/PLAYABLE.md",
     "docs/content-seasons/season-01/ACCEPTANCE.md"
-  ]
+  ],
+  "playable_chapter": "cs01_01",
+  "playable_path": "res://data/story/chapters/cs01_01.json"
 }
