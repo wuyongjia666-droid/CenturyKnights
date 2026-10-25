@@ -56,6 +56,10 @@ func _check() -> String:
 		err = _selected_sticky_policy()
 	if err == "":
 		err = _landscape_confirm_stack()
+	if err == "":
+		err = _tp4_focus_follow_juice()
+	if err == "":
+		err = _tp5_select_feel()
 	OS.set_environment("CK_FORCE_MOBILE", "0")
 	return err
 
@@ -421,8 +425,11 @@ func _contour_hit() -> String:
 		return "CONTOUR_HALF_W out of fat-finger range: %s" % BattlePick.CONTOUR_HALF_W
 	if BattlePick.CONTOUR_HALF_W_MOBILE < BattlePick.CONTOUR_HALF_W:
 		return "mobile contour must be >= desktop"
+	# T-P5: allow ≤0.55 so adjacent figure AABBs overlap; prefer_team stops steal.
 	if BattlePick.CONTOUR_HALF_W_MOBILE > 0.55:
 		return "mobile contour too wide (steals neighbour): %s" % BattlePick.CONTOUR_HALF_W_MOBILE
+	if BattlePick.CONTOUR_HALF_W_MOBILE < 0.50:
+		return "mobile contour must be >0.5 so adjacent bodies overlap: %s" % BattlePick.CONTOUR_HALF_W_MOBILE
 	return ""
 
 
@@ -502,7 +509,7 @@ func _mobile_contour_widen() -> String:
 	var origin := Vector2(40, 80)
 	var cell_px := 56.0
 	var units: Array = [{"char": {"hp": 10}, "pos": Vector2i(2, 2)}]
-	# Just outside desktop 0.42, inside mobile 0.48.
+	# Just outside desktop 0.42, inside mobile half_w.
 	var mid_y: float = 2.0 + (BattlePick.FIG_TOP + BattlePick.FIG_FEET) * 0.5
 	var edge: Vector2 = origin + Vector2(2.5 + 0.45, mid_y) * cell_px
 	OS.set_environment("CK_FORCE_MOBILE", "0")
@@ -516,6 +523,48 @@ func _mobile_contour_widen() -> String:
 	return ""
 
 
+func _tp4_focus_follow_juice() -> String:
+	## Y1-A T-P4: smooth focus algebra + margin nudge + attack preview juice contracts.
+	var pick := FileAccess.get_file_as_string("res://scripts/battle/battle_pick.gd")
+	var conf := FileAccess.get_file_as_string("res://scripts/battle/battle_touch_confirm.gd")
+	if pick.find("focus_nudge_delta") < 0 or pick.find("focus_follow_preview") < 0:
+		return "battle_pick missing T-P4 focus follow helpers"
+	if pick.find("FOCUS_SMOOTH_SEC") < 0 or pick.find("_tween_board_pan") < 0:
+		return "battle_pick missing T-P4 smooth focus tween"
+	if conf.find("attack_preview_juice") < 0 or conf.find("focus_follow_preview") < 0:
+		return "battle_touch_confirm missing T-P4 attack juice / follow wire"
+	var origin := Vector2(40, 80)
+	var cell_px := 56.0
+	var stage := Rect2(24, 76, 400, 300)
+	var cell := Vector2i(2, 2)
+	# Inside inset → nudge ZERO.
+	var mid_pan := BattlePick.focus_pan_delta(origin, cell_px, cell, Vector2.ZERO, 1.0, stage)
+	# After full focus, cell is centred; nudge from that pan must be ~0.
+	var zero_nudge: Vector2 = BattlePick.focus_nudge_delta(origin, cell_px, cell, mid_pan, 1.0, stage)
+	if zero_nudge.length() > 0.5:
+		return "nudge after centre focus should be ~0: %s" % zero_nudge
+	# Far pan leaves cell off-stage → nudge non-zero and shorter than full re-centre.
+	var far_pan := Vector2(800, 0)
+	var nudge: Vector2 = BattlePick.focus_nudge_delta(origin, cell_px, cell, far_pan, 1.0, stage)
+	var full: Vector2 = BattlePick.focus_pan_delta(origin, cell_px, cell, far_pan, 1.0, stage)
+	if nudge.length_squared() < 1.0:
+		return "off-stage cell must nudge"
+	if nudge.length() > full.length() + 0.01:
+		return "nudge must not exceed full focus delta"
+	var lerped: Vector2 = BattlePick.focus_pan_lerp(Vector2.ZERO, Vector2(10, 0), 0.5)
+	if absf(lerped.x - 5.0) > 0.01:
+		return "focus_pan_lerp mid failed: %s" % lerped
+	var juice0: Dictionary = BattleTouchConfirm.attack_preview_juice(56.0, 0.0)
+	var juice1: Dictionary = BattleTouchConfirm.attack_preview_juice(56.0, 1.0)
+	if float(juice1.ring_r) <= float(juice0.ring_r):
+		return "attack juice ring must grow with pulse"
+	if float(juice1.halo_a) <= float(juice0.halo_a):
+		return "attack juice halo alpha must rise with pulse"
+	if float(juice0.chev_len) < 1.0 or float(juice0.aim_w) < 1.0:
+		return "attack juice missing chevron / aim width"
+	return ""
+
+
 class _FakeBattle:
 	var selected: int = -1
 	var units: Array = []
@@ -526,6 +575,42 @@ class _FakeBattle:
 	func _cancel_selection() -> void:
 		cancelled = true
 		selected = -1
+
+func _tp5_select_feel() -> String:
+	## T-P5 contracts: team-prefer soft, select lock, burst stamp via focus_selected.
+	OS.set_environment("CK_FORCE_MOBILE", "1")
+	var origin := Vector2(0, 0)
+	var cell := 40.0
+	var units: Array = [
+		{"char": {"hp": 8}, "pos": Vector2i(1, 1), "team": "player"},
+		{"char": {"hp": 8}, "pos": Vector2i(2, 1), "team": "bandit"},
+	]
+	var a: Vector2 = origin + Vector2(1, 1) * cell + Vector2(cell, cell) * 0.5
+	var b: Vector2 = origin + Vector2(2, 1) * cell + Vector2(cell, cell) * 0.5
+	var finger: Vector2 = a.lerp(b, 0.65)
+	var hit: Vector2i = BattlePick.nearest_unit_pos(origin, cell, units, finger, BattlePick.SOFT_R, "player")
+	if hit != Vector2i(1, 1):
+		return "T-P5 scrum prefer player failed"
+	var host_burst := {"selected": 0, "units": [{"pos": Vector2i(1, 1), "char": {"hp": 5}}]}
+	# Duck as Object via meta on a RefCounted stand-in
+	var rc := RefCounted.new()
+	rc.set_meta("m_select_burst_msec", Time.get_ticks_msec())
+	if not BattlePick.select_lock_active(rc):
+		return "T-P5 select_lock_active false at t0"
+	if BattlePick.select_burst_scale(rc) <= 1.0:
+		return "T-P5 select_burst_scale should exceed 1 at t0"
+	var pick_src := FileAccess.get_file_as_string("res://scripts/battle/battle_pick.gd")
+	if pick_src.find("SELECT_LOCK_MSEC") < 0:
+		return "T-P5 SELECT_LOCK_MSEC missing"
+	var conf_src := FileAccess.get_file_as_string("res://scripts/battle/battle_touch_confirm.gd")
+	if conf_src.find("select_lock_active") < 0:
+		return "T-P5 try_deselect lock missing"
+	if conf_src.find("reject_invalid_tap") < 0:
+		return "T-P5 invalid-target reject missing"
+	if pick_src.find("contour_unit_pos(origin: Vector2, cell_px: float, units: Array, local: Vector2, prefer_team") < 0:
+		return "T-P5 contour prefer_team missing"
+	return ""
+
 
 func _touch(index: int, pressed: bool, pos: Vector2) -> InputEventScreenTouch:
 	var e := InputEventScreenTouch.new()
