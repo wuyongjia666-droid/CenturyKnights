@@ -12,6 +12,7 @@ extends RefCounted
 ## steal empty legal landings beside living units).
 ## Y1-A T-P1-5: contour rect hit — fat finger on the figure body (not just cell centre /
 ## cell-above bias) still selects; tap-again confirm is in battle_controller.
+## Y1-A T-P3: strict unit-drag origin (exact/bias/contour, not soft-empty) + selected-only sticky.
 
 ## Fraction of a cell: anything closer than this counts as that unit.
 const SOFT_R := 0.90
@@ -167,6 +168,45 @@ static func contour_unit_pos(origin: Vector2, cell_px: float, units: Array, loca
 	if best_i >= 0:
 		return units[best_i].pos
 	return Vector2i(-1, -1)
+
+
+## Y1-A T-P3: strict figure hit for unit-drag / selected sticky.
+## Exact cell, face bias, or contour — NOT soft-nearest on an empty neighbour.
+## Soft-empty beside the selected piece must remain map-pan (drag/pan conflict).
+static func strict_unit_pos(origin: Vector2, cell_px: float, units: Array, local: Vector2, finger_cell: Vector2i) -> Vector2i:
+	if cell_px < 1.0:
+		return Vector2i(-1, -1)
+	if finger_cell.x >= 0:
+		for u in units:
+			if u.pos == finger_cell and u.char.hp > 0:
+				return finger_cell
+	var bias: Vector2i = visual_bias_unit_pos(origin, cell_px, units, local, finger_cell)
+	if bias.x >= 0:
+		return bias
+	return contour_unit_pos(origin, cell_px, units, local)
+
+
+## True when finger strictly hits the selected living unit (T-P3 unit-drag origin).
+static func strict_hits_selected(host, screen_pos: Vector2, selected_idx: int) -> bool:
+	if selected_idx < 0 or selected_idx >= host.units.size():
+		return false
+	var su = host.units[selected_idx]
+	if su.char.hp <= 0:
+		return false
+	var exact: Vector2i = host._pointer_to_cell(screen_pos)
+	var local: Vector2 = _board_local(host, screen_pos)
+	return strict_unit_pos(host.ORIGIN, float(host.CELL), host.units, local, exact) == su.pos
+
+
+## Soft/contour near the selected unit only — sticky slop while a piece is armed.
+## When selected, presses near other units keep normal pan slop (T-P3).
+static func near_selected_unit(host, screen_pos: Vector2, selected_idx: int) -> bool:
+	if selected_idx < 0 or selected_idx >= host.units.size():
+		return false
+	var cell: Vector2i = resolve(host, screen_pos)
+	if cell.x < 0:
+		return false
+	return cell == host.units[selected_idx].pos
 
 
 static func resolve(host, screen_pos: Vector2) -> Vector2i:
