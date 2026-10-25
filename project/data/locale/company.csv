@@ -260,6 +260,7 @@ atlas_turnin_modal_title,可交付委托,Ready to turn in
 atlas_turnin_modal_body,此地有 %d 件委托可以交付。进城交还，还是稍后再说？,%d commission(s) can be turned in here. Enter the city, or later?
 atlas_turnin_modal_go,进城交付,Enter to turn in
 atlas_turnin_modal_later,稍后再说,Later
+atlas_turnin_list_row,· %s（+%d 银）,· %s (+%d silver)
 atlas_turnin_modal_now,一键交付,Turn in now
 atlas_turnin_now_toast,已交付 %d 件委托 · +%d 银,Turned in %d · +%d silver
 atlas_turnin_now_none,暂无可交付委托,Nothing ready to turn in

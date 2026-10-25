@@ -1749,7 +1749,7 @@ func _show_turnin_modal(readies: int) -> void:
 	var ready: Array = World.ready_turn_ins_here()
 	var list_bits: Array = []
 	for q in ready:
-		list_bits.append("· %s（+%d 银）" % [str(q.get("title", "")), int(q.get("reward_silver", 0))])
+		list_bits.append(Locale.t("atlas_turnin_list_row") % [str(q.get("title", "")), int(q.get("reward_silver", 0))])
 	var list_txt := "\n".join(list_bits) if not list_bits.is_empty() else Locale.t("atlas_turnin_modal_body") % readies
 	var h := 260.0 + 18.0 * mini(4, list_bits.size())
 	var p := _modal_panel(h)

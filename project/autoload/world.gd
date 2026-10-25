@@ -2692,7 +2692,7 @@ func on_battle_end(win: bool) -> Dictionary:
 		else:
 			lines.append(Locale.t("atlas_battle_line_loot_silver") % loot)
 			mq = 0
-		msg = "得胜：缴获 %d 银、%s ×%d" % [loot, good_name(mat), mq] if mq > 0 else "得胜：缴获 %d 银" % loot
+		msg = ("得胜：缴获 %d 银、%s ×%d" % [loot, good_name(mat), mq]) if mq > 0 else (Locale.t("atlas_battle_line_loot_silver") % loot)
 		if int(enc.get("rep_win", 0)) > 0:
 			rep_nation_d = int(enc.rep_win)
 			add_nation_rep(str(enc.nation), rep_nation_d)
