@@ -1,7 +1,7 @@
 extends Node
-## 内容季流水脚手架（v2 多季）：index 内每季机器表 + 选题清单 + 验收 suite + 闸门。
-## season_01：签收前 novel_allowed 必须 false，小说 stub 宜短。
-## season_02+：允许 novel_allowed true；NOVEL 须有正文（非纯「待写」stub）。
+## 内容季流水脚手架（多季）：index 内每季机器表 + 选题清单 + 验收 suite + 闸门。
+## season_01：流水已开（novel_allowed）；校验可玩章字段（若有）。
+## season_02+：novel_allowed；NOVEL 须有正文（非纯「待写」stub）。
 
 func _ready() -> void:
 	await get_tree().process_frame
@@ -61,8 +61,9 @@ func _check_one_season(sid: String) -> Array:
 	]:
 		if not d.has(k):
 			fails.append("%s missing field %s" % [sid, k])
-	if int(d.get("version", 0)) < 2:
-		fails.append("%s version want >= 2" % sid)
+	var min_ver := 3 if sid == "season_01" else 2
+	if int(d.get("version", 0)) < min_ver:
+		fails.append("%s version want >= %d" % [sid, min_ver])
 	if str(d.get("id", "")) != sid:
 		fails.append("%s id" % sid)
 	var pipe: Array = d.get("pipeline", [])
@@ -77,23 +78,23 @@ func _check_one_season(sid: String) -> Array:
 	var gates: Dictionary = d.get("gates", {})
 	var novel_allowed := bool(gates.get("novel_allowed", false))
 	var folder := sid.replace("_", "-")
-	# season_01 keeps pre-signoff lock unless explicitly opened later by its own knife.
+	var status := str(d.get("status", ""))
+	var stage := str(d.get("stage", ""))
 	if sid == "season_01":
-		if novel_allowed:
-			fails.append("season_01 novel_allowed must stay false pre-signoff")
-		if bool(gates.get("y1a_device_signoff", true)):
-			fails.append("season_01 y1a_device_signoff must be false until user signs")
-		if str(d.get("status", "")) != "topic_scaffold":
-			fails.append("season_01 status want topic_scaffold")
-		if str(d.get("stage", "")) != "topic":
-			fails.append("season_01 stage want topic")
+		if not novel_allowed:
+			fails.append("season_01 novel_allowed must be true (pipeline opened)")
+		if not bool(gates.get("topic_user_ack", false)):
+			fails.append("season_01 topic_user_ack must be true")
+		if status not in ["playable_draft", "novel_draft", "in_pipeline"]:
+			fails.append("season_01 status want playable_draft/novel_draft/in_pipeline got %s" % status)
+		if stage not in ["novel", "bible", "playable", "systems", "art", "playtest"]:
+			fails.append("season_01 stage want post-topic got %s" % stage)
+		fails.append_array(_check_playable_chapter(d, sid))
 	else:
 		if not novel_allowed:
 			fails.append("%s novel_allowed should be true (time-compress full content)" % sid)
-		var st := str(d.get("status", ""))
-		if st == "":
+		if status == "":
 			fails.append("%s empty status" % sid)
-		var stage := str(d.get("stage", ""))
 		if stage == "" or not (stage in pipe):
 			fails.append("%s bad stage %s" % [sid, stage])
 
@@ -101,6 +102,22 @@ func _check_one_season(sid: String) -> Array:
 	fails.append_array(_check_acceptance(d, folder, sid))
 	fails.append_array(_check_pipeline_stages(d, gates, sid, novel_allowed))
 	fails.append_array(_check_docs(d, folder, sid, novel_allowed))
+	return fails
+
+
+func _check_playable_chapter(d: Dictionary, sid: String) -> Array:
+	var fails: Array = []
+	if not d.has("playable_chapter") and not d.has("playable_path"):
+		return fails
+	var ch := str(d.get("playable_chapter", "")).strip_edges()
+	var p := str(d.get("playable_path", "")).strip_edges()
+	if sid == "season_01":
+		if ch != "cs01_01":
+			fails.append("season_01 playable_chapter want cs01_01")
+		if p != "res://data/story/chapters/cs01_01.json":
+			fails.append("season_01 playable_path")
+	if p != "" and not FileAccess.file_exists(p):
+		fails.append("%s missing playable chapter file" % sid)
 	return fails
 
 
@@ -141,6 +158,7 @@ func _check_acceptance(d: Dictionary, folder: String, sid: String) -> Array:
 	var acc_body := _repo_doc_text("docs/content-seasons/%s/ACCEPTANCE.md" % folder)
 	if acc_body == "":
 		fails.append("%s ACCEPTANCE.md unreadable" % sid)
+	var saw_playable := false
 	for it in items:
 		if typeof(it) != TYPE_DICTIONARY:
 			fails.append("%s acceptance item not dict" % sid)
@@ -158,6 +176,10 @@ func _check_acceptance(d: Dictionary, folder: String, sid: String) -> Array:
 			fails.append("%s missing suite %s" % [sid, suite])
 		if acc_body.find(id) < 0:
 			fails.append("%s ACCEPTANCE missing id %s" % [sid, id])
+		if id == "playable_dialogue":
+			saw_playable = true
+	if sid == "season_01" and not saw_playable:
+		fails.append("season_01 acceptance missing playable_dialogue")
 	return fails
 
 
@@ -185,9 +207,12 @@ func _check_pipeline_stages(d: Dictionary, gates: Dictionary, sid: String, novel
 		if gate != "" and bool(gates.get(gate, false)) == false and open:
 			fails.append("%s stage %s open while gate %s false" % [sid, key, gate])
 		if not novel_allowed and key in ["novel", "bible", "playable"] and open:
-			fails.append("%s stage %s must stay closed pre-signoff" % [sid, key])
-		if novel_allowed and key == "novel" and not open:
-			fails.append("%s novel stage should be open when novel_allowed" % sid)
+			fails.append("%s stage %s must stay closed when novel_allowed false" % [sid, key])
+		if novel_allowed and key in ["novel", "bible", "playable"]:
+			if not open:
+				fails.append("%s stage %s must be open when novel_allowed" % [sid, key])
+			if gate != "novel_allowed":
+				fails.append("%s stage %s gate want novel_allowed" % [sid, key])
 	return fails
 
 
@@ -206,7 +231,6 @@ func _check_docs(d: Dictionary, folder: String, sid: String, novel_allowed: bool
 				fails.append("%s TOPIC missing 旗/灯" % sid)
 			var deepen_zh := str(d.get("system_deepen_zh", ""))
 			if deepen_zh != "" and body.find(deepen_zh) < 0:
-				# soft: also accept system_deepen id fragment in topic
 				if body.find(str(d.get("system_deepen", ""))) < 0 and body.find("本季加深的系统") < 0:
 					fails.append("%s TOPIC missing system deepen" % sid)
 		elif str(rel).ends_with("NOVEL.md") or str(rel).ends_with("BIBLE.md") or str(rel).ends_with("PLAYABLE.md"):
@@ -217,12 +241,26 @@ func _check_docs(d: Dictionary, folder: String, sid: String, novel_allowed: bool
 					fails.append("%s stub %s too long (novel body not allowed yet)" % [sid, rel])
 			else:
 				if str(rel).ends_with("NOVEL.md"):
-					if body.strip_edges().length() < 1200:
+					var min_len := 8000 if sid == "season_01" else 1200
+					if body.strip_edges().length() < min_len:
 						fails.append("%s NOVEL too short" % sid)
 					if body.find("待写") >= 0 and body.strip_edges().length() < 400:
 						fails.append("%s NOVEL still stub" % sid)
-				elif body.strip_edges() == "":
-					fails.append("%s empty %s" % [sid, rel])
+					if sid == "season_01" and body.find("回执") < 0:
+						fails.append("season_01 NOVEL missing 回执")
+				elif str(rel).ends_with("BIBLE.md"):
+					if body.strip_edges() == "":
+						fails.append("%s empty %s" % [sid, rel])
+					if sid == "season_01" and body.strip_edges().length() < 800:
+						fails.append("season_01 BIBLE too short")
+				elif str(rel).ends_with("PLAYABLE.md"):
+					if body.strip_edges() == "":
+						fails.append("%s empty %s" % [sid, rel])
+					if sid == "season_01":
+						if body.find("cs01_01") < 0:
+							fails.append("season_01 PLAYABLE missing cs01_01")
+						if body.find("60") < 0:
+							fails.append("season_01 PLAYABLE missing 60-hanzi rule")
 		elif body.strip_edges() == "":
 			fails.append("%s empty stub %s" % [sid, rel])
 	return fails

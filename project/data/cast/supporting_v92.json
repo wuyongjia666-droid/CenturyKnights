@@ -218,6 +218,26 @@
       "sex": "m",
       "look": "a hunchbacked man in his seventies, thin white hair, kind tired eyes, patched slate coat and fingerless knitted gloves, a small frost lantern in one hand and a thick moth-eaten cloth-bound roster book under the arm",
       "portrait": "res://assets/art/portraits/speakers/steward.png"
+    },
+    {
+      "id": "voice_sui_clerk",
+      "name": "岁吏",
+      "cast_key": "sui_clerk",
+      "role": "议会岁课送纸人。回执与验盏匣的驿路收据嘴。",
+      "age": 34,
+      "sex": "m",
+      "look": "a thin courier in a frost-dusted slate coat, ink-stained fingers, a folded year-receipt and a sealed wooden case, tired eyes that do not smile",
+      "portrait": "res://assets/art/portraits/speakers/steward.webp"
+    },
+    {
+      "id": "voice_tinghui",
+      "name": "听回",
+      "cast_key": "tinghui",
+      "role": "验盏人。白圆印。按规程写征兆栏，不替人发明灯。",
+      "age": 41,
+      "sex": "m",
+      "look": "a spare auditor with a pale round seal case, grey gloves, clipped speech, eyes that look at faces not banners",
+      "portrait": "res://assets/art/portraits/speakers/jixun.webp"
     }
   ]
 }
