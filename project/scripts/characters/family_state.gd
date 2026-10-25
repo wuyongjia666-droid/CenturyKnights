@@ -265,19 +265,24 @@ static func tick_doctrine_and_marriage_month(host) -> Array:
 	if doctrine != "":
 		host.doctrine_months += 1
 		var mul = 2 if bool(host.house_mods.get("doctrine_mature", false)) else 1
+		var dline := ""
 		match doctrine:
 			"strict":
 				host.morale = mini(100, host.morale + 1 * mul)
-				msgs.append("家训·严教：士气+%d（第 %d 月）" % [1 * mul, host.doctrine_months])
+				dline = "家训·严教：士气+%d（第 %d 月）" % [1 * mul, host.doctrine_months]
 			"mercy":
 				host.food += 1 * mul
 				host.morale = mini(100, host.morale + 1 * mul)
-				msgs.append("家训·仁恤：粮+%d 士气+%d（第 %d 月）" % [1 * mul, 1 * mul, host.doctrine_months])
+				dline = "家训·仁恤：粮+%d 士气+%d（第 %d 月）" % [1 * mul, 1 * mul, host.doctrine_months]
 			"trade", "commerce":
 				host.silver += 2 * mul
-				msgs.append("家训·商本：银+%d（第 %d 月）" % [2 * mul, host.doctrine_months])
+				dline = "家训·商本：银+%d（第 %d 月）" % [2 * mul, host.doctrine_months]
 			_:
-				msgs.append("家训仍在：第 %d 月" % host.doctrine_months)
+				dline = "家训仍在：第 %d 月" % host.doctrine_months
+		if dline != "":
+			msgs.append(dline)
+			## Y1-B: 家训月结 → month_echo.doctrine；属地/沙漏回读.
+			CKEconomyState.month_echo_note("doctrine", dline)
 		var amb = host.check_ambitions()
 		for a in amb:
 			msgs.append(a)
