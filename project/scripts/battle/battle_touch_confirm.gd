@@ -8,6 +8,7 @@ extends RefCounted
 ## Y1-A T-P1-4: move/place drag uses exact finger cell; attack still soft-resolves.
 ## Leaving a legal cell clears the stale ghost; illegal release clears preview.
 ## Y1-A T-P2: re-tap selected / empty-board deselect (no right-click on phone).
+## Y1-A T-P4: preview drag soft-follows camera; attack ghost gets aim line + pulse juice.
 
 static func enabled() -> bool:
 	if not (GameState.settings is Dictionary):
@@ -221,6 +222,7 @@ static func on_drag(host, screen_pos: Vector2) -> void:
 	var ui: int = host._unit_at(cell)
 	if host.attack_mode and ui >= 0 and str(host.units[ui].team) == "enemy" and host.units[ui].char.hp > 0:
 		if host._can_attack_from(su, cell):
+			var atk_changed: bool = int(host.preview_attack_ui) != ui
 			host.preview_attack_ui = ui
 			host.preview_move_cell = Vector2i(-1, -1)
 			if DeviceProfile.is_mobile():
@@ -228,6 +230,8 @@ static func on_drag(host, screen_pos: Vector2) -> void:
 			if host.overlay:
 				host.overlay.queue_redraw()
 			ForecastPanel.refresh(host)
+			if atk_changed:
+				BattlePick.focus_follow_preview(host)
 		else:
 			_clear_stale_preview(host)
 		return
@@ -240,6 +244,7 @@ static func on_drag(host, screen_pos: Vector2) -> void:
 			BattleMobileBar.rebuild(host)
 		if host.overlay:
 			host.overlay.queue_redraw()
+		BattlePick.focus_follow_preview(host)
 		return
 	# Finger left a legal landing — drop the ghost so release cannot surprise-commit.
 	_clear_stale_preview(host)
@@ -277,6 +282,25 @@ static func on_drag_end(host, screen_pos: Vector2) -> bool:
 	return false
 
 
+## T-P4 attack ghost chrome. `pulse` in [0,1] (typically 0.55+0.45*sin).
+static func attack_preview_juice(cell_px: float, pulse: float) -> Dictionary:
+	var p: float = clampf(pulse, 0.0, 1.0)
+	return {
+		"fill_a": 0.36,
+		"ring_r": cell_px * (0.50 + 0.04 * p),
+		"ring_w": 3.0,
+		"halo_r": cell_px * 0.30,
+		"halo_a": 0.55 + 0.35 * p,
+		"aim_a": 0.50 + 0.30 * p,
+		"aim_w": 2.5,
+		"chev_len": cell_px * 0.22,
+	}
+
+
+static func attack_preview_pulse() -> float:
+	return 0.55 + 0.45 * sin(float(Time.get_ticks_msec()) * 0.006)
+
+
 static func draw_preview(host) -> void:
 	var overlay = host.overlay
 	var origin: Vector2 = host.ORIGIN
@@ -294,8 +318,29 @@ static func draw_preview(host) -> void:
 		overlay.draw_circle(gcenter, float(cell) * 0.44, Color(UIKit.ACCENT, 0.22))
 		overlay.draw_arc(gcenter, float(cell) * 0.46, 0.0, TAU, 48, Color(UIKit.ACCENT, 0.95), 2.5)
 	if int(host.preview_attack_ui) >= 0 and int(host.preview_attack_ui) < host.units.size():
-		var ap: Vector2i = host.units[host.preview_attack_ui].pos
+		var aui: int = int(host.preview_attack_ui)
+		var ap: Vector2i = host.units[aui].pos
 		var ar := Rect2(origin + Vector2(ap) * cell, Vector2(cell - 2, cell - 2))
-		overlay.draw_rect(ar, Color(UIKit.DANGER, 0.36))
+		var juice: Dictionary = attack_preview_juice(float(cell), attack_preview_pulse())
+		overlay.draw_rect(ar, Color(UIKit.DANGER, float(juice.fill_a)))
 		overlay.draw_rect(ar, Color(UIKit.DANGER, 1.0), false, 5.0)
 		overlay.draw_rect(ar.grow(-3.0), Color(1, 1, 1, 0.45), false, 2.0)
+		var acenter: Vector2 = origin + Vector2(ap) * float(cell) + Vector2(cell, cell) * 0.5
+		# Mid-figure halo + pulsing ring (mirrors selection chrome on the defender).
+		var chest: Vector2 = acenter + Vector2(0.0, float(cell) * BattlePick.FIG_TOP * 0.5)
+		overlay.draw_circle(acenter, float(juice.ring_r), Color(UIKit.DANGER, 0.16))
+		overlay.draw_arc(acenter, float(juice.ring_r), 0.0, TAU, 48, Color(UIKit.DANGER, 0.95), float(juice.ring_w))
+		overlay.draw_arc(chest, float(juice.halo_r), 0.0, TAU, 32, Color(UIKit.DANGER, float(juice.halo_a)), 2.0)
+		# Aim line + chevron from attacker feet toward the target.
+		if host.selected >= 0 and host.selected < host.units.size():
+			var from: Vector2 = origin + Vector2(host.units[host.selected].pos) * float(cell) + Vector2(cell, cell) * 0.5
+			var col := Color(UIKit.DANGER, float(juice.aim_a))
+			overlay.draw_line(from, acenter, col, float(juice.aim_w), true)
+			var dir: Vector2 = acenter - from
+			if dir.length_squared() > 1.0:
+				dir = dir.normalized()
+				var tip: Vector2 = acenter - dir * float(cell) * 0.32
+				var ortho := Vector2(-dir.y, dir.x) * float(juice.chev_len) * 0.55
+				var back: Vector2 = tip - dir * float(juice.chev_len)
+				overlay.draw_line(tip, back + ortho, col, float(juice.aim_w), true)
+				overlay.draw_line(tip, back - ortho, col, float(juice.aim_w), true)

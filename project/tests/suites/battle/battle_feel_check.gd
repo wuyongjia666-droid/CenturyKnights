@@ -47,6 +47,8 @@ func _check() -> String:
 		err = _deselect_contracts()
 	if err == "":
 		err = _mobile_contour_widen()
+	if err == "":
+		err = _tp4_focus_follow_juice()
 	OS.set_environment("CK_FORCE_MOBILE", "0")
 	return err
 
@@ -483,6 +485,48 @@ func _mobile_contour_widen() -> String:
 		return "desktop contour unexpectedly hit 0.45 offset (half_w drifted?)"
 	if mob_hit != Vector2i(2, 2):
 		return "mobile contour missed 0.45 shoulder: %s" % str(mob_hit)
+	return ""
+
+
+func _tp4_focus_follow_juice() -> String:
+	## Y1-A T-P4: smooth focus algebra + margin nudge + attack preview juice contracts.
+	var pick := FileAccess.get_file_as_string("res://scripts/battle/battle_pick.gd")
+	var conf := FileAccess.get_file_as_string("res://scripts/battle/battle_touch_confirm.gd")
+	if pick.find("focus_nudge_delta") < 0 or pick.find("focus_follow_preview") < 0:
+		return "battle_pick missing T-P4 focus follow helpers"
+	if pick.find("FOCUS_SMOOTH_SEC") < 0 or pick.find("_tween_board_pan") < 0:
+		return "battle_pick missing T-P4 smooth focus tween"
+	if conf.find("attack_preview_juice") < 0 or conf.find("focus_follow_preview") < 0:
+		return "battle_touch_confirm missing T-P4 attack juice / follow wire"
+	var origin := Vector2(40, 80)
+	var cell_px := 56.0
+	var stage := Rect2(24, 76, 400, 300)
+	var cell := Vector2i(2, 2)
+	# Inside inset → nudge ZERO.
+	var mid_pan := BattlePick.focus_pan_delta(origin, cell_px, cell, Vector2.ZERO, 1.0, stage)
+	# After full focus, cell is centred; nudge from that pan must be ~0.
+	var zero_nudge: Vector2 = BattlePick.focus_nudge_delta(origin, cell_px, cell, mid_pan, 1.0, stage)
+	if zero_nudge.length() > 0.5:
+		return "nudge after centre focus should be ~0: %s" % zero_nudge
+	# Far pan leaves cell off-stage → nudge non-zero and shorter than full re-centre.
+	var far_pan := Vector2(800, 0)
+	var nudge: Vector2 = BattlePick.focus_nudge_delta(origin, cell_px, cell, far_pan, 1.0, stage)
+	var full: Vector2 = BattlePick.focus_pan_delta(origin, cell_px, cell, far_pan, 1.0, stage)
+	if nudge.length_squared() < 1.0:
+		return "off-stage cell must nudge"
+	if nudge.length() > full.length() + 0.01:
+		return "nudge must not exceed full focus delta"
+	var lerped: Vector2 = BattlePick.focus_pan_lerp(Vector2.ZERO, Vector2(10, 0), 0.5)
+	if absf(lerped.x - 5.0) > 0.01:
+		return "focus_pan_lerp mid failed: %s" % lerped
+	var juice0: Dictionary = BattleTouchConfirm.attack_preview_juice(56.0, 0.0)
+	var juice1: Dictionary = BattleTouchConfirm.attack_preview_juice(56.0, 1.0)
+	if float(juice1.ring_r) <= float(juice0.ring_r):
+		return "attack juice ring must grow with pulse"
+	if float(juice1.halo_a) <= float(juice0.halo_a):
+		return "attack juice halo alpha must rise with pulse"
+	if float(juice0.chev_len) < 1.0 or float(juice0.aim_w) < 1.0:
+		return "attack juice missing chevron / aim width"
 	return ""
 
 
