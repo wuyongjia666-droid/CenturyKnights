@@ -238,6 +238,16 @@
       "sex": "m",
       "look": "a spare auditor with a pale round seal case, grey gloves, clipped speech, eyes that look at faces not banners",
       "portrait": "res://assets/art/portraits/speakers/jixun.webp"
+    },
+    {
+      "id": "voice_clerk_seal",
+      "name": "书记官",
+      "cast_key": "clerk_seal",
+      "role": "议会侧厅落印人。婚约姓栏与匣锁。",
+      "age": 38,
+      "sex": "m",
+      "look": "a pale clerk in a side-hall coat, copper seal case, wax-stained cuff, eyes on the register column not faces",
+      "portrait": "res://assets/art/portraits/speakers/steward.webp"
     }
   ]
 }

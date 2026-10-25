@@ -152,6 +152,8 @@
 | 2026-10-25 | Y1-B 岁课 UI 落点加深：城堡家庭导航常驻 ToSuiYear + 未读角标（todo→family）+ `sui_hub_entry_check` |
 | 2026-10-25 | Y1-B 联姻无对象空态：EmptyHost why/how + ToTavern/ToRoster + `marriage_empty_cta_check` |
 | 2026-10-25 | Y1-B 花名册空编制：EmptyHost why/how + ToTavern + `roster_empty_cta_check` |
+| 2026-10-25 | Y1-B 内容季 #2：中篇《婚约上的灯》（≥1.2万汉字）+ 圣经 + 可玩章 `cs02_01` + playable_s02 suite；scaffold 多季；#403 体量不足关闭 |
+| 2026-10-25 | Y1-B 内容季 #1：中篇《回执上的灯》+ 圣经 + 可玩章 `cs01_01` + playable suite；业主全权开 `novel_allowed`；#2 选题起步 |
 | 2026-10-25 | Y1-B 季#2/#3 开写加深（《婚约上的灯》《榜上的收成》）+ 商店工程门禁 `store_prep_check`；合 #405 后 rebase |
 | 2026-10-25 | Y1-B 内容季 #1：中篇《回执上的灯》+ 圣经 + 可玩章 `cs01_01` + playable suite；业主全权开 `novel_allowed` |
 | 2026-10-25 | Y1-B 请爵顶阶空态：EmptyHost how + ToCity（职印）+ `title_promote_top_cta_check` |
@@ -185,3 +187,4 @@
 | 2026-10-24 | Y1-B 开刀：岁课月循环端到端冒烟 `sui_month_loop_check`（生日→inbox→yearcard→ack→todo 清零）；枢纽族谱契约见 #353 |
 | 2026-10-24 | Y1-A 代码门闩收口（#331–#350）；可自主代码刀空；**待用户自玩签收**（用户不装、后面自己玩）；内容季仍等签收后 |
 | 2026-10-22 | 初版：路线 A；无限沙盒；Y1-A 手游门禁；立绘=端游/手游对齐；全权推进 |
+
