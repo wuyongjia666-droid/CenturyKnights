@@ -5,7 +5,8 @@ extends Node
 ## win clears csXX_mid_lost + map_id+_lost residue so loss-state cannot resurrect after a retry win;
 ## chapter-owned mid-cs suppresses month_echo.battle (season_ledger/yeartrace own the trail);
 ## chapter-owned mid-cs suppresses BattleDefeat.record (no castle event_log「败北」);
-## chapter-owned mid-cs suppresses CKEnemyLoadout.apply_defeat sticky injury.
+## chapter-owned mid-cs suppresses CKEnemyLoadout.apply_defeat sticky injury;
+## chapter-owned mid-cs suppresses CKInjury downs settle (no blood_meta injury/death).
 
 const PLAYER := "res://scenes/story/chapter_player.tscn"
 const BATTLE := "res://scenes/battle/battle.tscn"
@@ -42,6 +43,9 @@ func _run() -> String:
 	if err != "":
 		return err
 	err = _protocol_defeat_injury_suppressed()
+	if err != "":
+		return err
+	err = _protocol_ckinjury_settle_suppressed()
 	if err != "":
 		return err
 	for row in LIVE:
@@ -482,6 +486,77 @@ func _protocol_defeat_injury_suppressed() -> String:
 	if not c.injured or c.hp != maxi(1, int(c.max_hp * 0.3)):
 		return "protocol injury: hub injury missing"
 	print("OK protocol mid-cs suppresses defeat injury")
+	return ""
+
+
+
+func _protocol_ckinjury_settle_suppressed() -> String:
+	GameState.new_game("烬行", "灰旗", GameState.crest_color)
+	GameState.set_flag("hub_open")
+	GameState.set_meta("battle_return_chapter", "cs03_01")
+	CKInjury.set_mode("classic")
+	if not CKInjury.suppresses_settle():
+		return "protocol settle: suppresses_settle false"
+	var ally: CKCharacter = null
+	for c in GameState.roster():
+		if not c.is_leader:
+			ally = c
+			break
+	if ally == null:
+		return "protocol settle: no ally"
+	var battle := Node.new()
+	battle.add_user_signal("unit_downed", [
+		{"name": "who", "type": TYPE_OBJECT},
+		{"name": "info", "type": TYPE_DICTIONARY},
+	])
+	battle.add_user_signal("battle_finished", [
+		{"name": "result", "type": TYPE_DICTIONARY},
+	])
+	add_child(battle)
+	CKInjury.attach(battle)
+	battle.emit_signal("unit_downed", ally, {
+		"team": "player", "map_id": "quest_bandit", "killer": "山匪",
+		"overflow": 24, "seed": 1,
+	})
+	battle.emit_signal("battle_finished", {"win": false, "map_id": "quest_bandit"})
+	if not ally.alive:
+		return "protocol settle: chapter killed ally"
+	if not CKInjury.record(ally).is_empty():
+		return "protocol settle: chapter wrote injury"
+	var stele0 = ally.blood_meta.get("stele", {}) if typeof(ally.blood_meta) == TYPE_DICTIONARY else {}
+	if typeof(stele0) == TYPE_DICTIONARY and str(stele0.get("cause", "")) == "battle":
+		return "protocol settle: chapter wrote stele"
+	battle.queue_free()
+	GameState.set_meta("battle_return_chapter", "")
+	if CKInjury.suppresses_settle():
+		return "protocol settle: hub suppresses_settle true"
+	GameState.new_game("烬行", "灰旗", GameState.crest_color)
+	GameState.set_flag("hub_open")
+	CKInjury.set_mode("classic")
+	ally = null
+	for c in GameState.roster():
+		if not c.is_leader:
+			ally = c
+			break
+	battle = Node.new()
+	battle.add_user_signal("unit_downed", [
+		{"name": "who", "type": TYPE_OBJECT},
+		{"name": "info", "type": TYPE_DICTIONARY},
+	])
+	battle.add_user_signal("battle_finished", [
+		{"name": "result", "type": TYPE_DICTIONARY},
+	])
+	add_child(battle)
+	CKInjury.attach(battle)
+	battle.emit_signal("unit_downed", ally, {
+		"team": "player", "map_id": "quest_bandit", "killer": "山匪",
+		"overflow": 24, "seed": 1,
+	})
+	battle.emit_signal("battle_finished", {"win": false, "map_id": "quest_bandit"})
+	if ally.alive:
+		return "protocol settle: hub should kill on classic seed"
+	print("OK protocol mid-cs suppresses ckinjury settle")
+	battle.queue_free()
 	return ""
 
 

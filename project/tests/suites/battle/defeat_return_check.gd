@@ -1,7 +1,8 @@
 extends Node
 ## WS-D #50/#5: defeat and retreat go back to the castle (never chapter 0) with an injury settlement;
 ## chapter-owned mid-cs suppresses BattleDefeat.record (no castle event_log「败北」);
-## chapter-owned mid-cs suppresses CKEnemyLoadout.apply_defeat sticky injury.
+## chapter-owned mid-cs suppresses CKEnemyLoadout.apply_defeat sticky injury;
+## chapter-owned mid-cs suppresses CKInjury downs settle (no blood_meta injury/death).
 
 var _battle
 
@@ -27,6 +28,9 @@ func _run() -> String:
 	if err != "":
 		return err
 	err = _protocol_defeat_injury_gate()
+	if err != "":
+		return err
+	err = _protocol_ckinjury_settle_gate()
 	if err != "":
 		return err
 	if BattleDefeat.back_path(true, false, "res://scenes/story/chapter0.tscn") != "res://scenes/story/chapter0.tscn":
@@ -110,6 +114,81 @@ func _protocol_defeat_injury_gate() -> String:
 	if not c.injured or c.hp != maxi(1, int(c.max_hp * 0.3)):
 		return "hub maybe_apply_defeat injury missing"
 	print("OK protocol hub still applies defeat injury")
+	return ""
+
+
+
+func _protocol_ckinjury_settle_gate() -> String:
+	# Chapter-owned: CKInjury._settle must not write blood_meta injury / stele.
+	GameState.set_meta("battle_return_chapter", "cs01_01")
+	if not CKInjury.suppresses_settle():
+		return "chapter suppresses_settle false"
+	GameState.new_game("探针", "灰旗", "#" + "6ED4FF")
+	GameState.set_flag("hub_open")
+	GameState.set_meta("battle_return_chapter", "cs01_01")
+	CKInjury.set_mode("classic")
+	var ally: CKCharacter = null
+	for c in GameState.roster():
+		if not c.is_leader:
+			ally = c
+			break
+	if ally == null:
+		return "no ally for ckinjury settle"
+	var battle := Node.new()
+	battle.add_user_signal("unit_downed", [
+		{"name": "who", "type": TYPE_OBJECT},
+		{"name": "info", "type": TYPE_DICTIONARY},
+	])
+	battle.add_user_signal("battle_finished", [
+		{"name": "result", "type": TYPE_DICTIONARY},
+	])
+	add_child(battle)
+	CKInjury.attach(battle)
+	battle.emit_signal("unit_downed", ally, {
+		"team": "player", "map_id": "ch12_yard", "killer": "探针",
+		"overflow": 24, "seed": 1,
+	})
+	battle.emit_signal("battle_finished", {"win": false, "map_id": "ch12_yard"})
+	if not ally.alive:
+		return "chapter ckinjury settle killed ally"
+	if not CKInjury.record(ally).is_empty():
+		return "chapter ckinjury settle wrote injury"
+	var stele0 = ally.blood_meta.get("stele", {}) if typeof(ally.blood_meta) == TYPE_DICTIONARY else {}
+	if typeof(stele0) == TYPE_DICTIONARY and str(stele0.get("cause", "")) == "battle":
+		return "chapter ckinjury settle wrote stele"
+	print("OK protocol chapter suppresses ckinjury settle")
+	battle.queue_free()
+	GameState.set_meta("battle_return_chapter", "")
+	if CKInjury.suppresses_settle():
+		return "hub suppresses_settle true"
+	# Hub still settles (classic lethal seed).
+	GameState.new_game("探针", "灰旗", "#" + "6ED4FF")
+	GameState.set_flag("hub_open")
+	CKInjury.set_mode("classic")
+	ally = null
+	for c in GameState.roster():
+		if not c.is_leader:
+			ally = c
+			break
+	battle = Node.new()
+	battle.add_user_signal("unit_downed", [
+		{"name": "who", "type": TYPE_OBJECT},
+		{"name": "info", "type": TYPE_DICTIONARY},
+	])
+	battle.add_user_signal("battle_finished", [
+		{"name": "result", "type": TYPE_DICTIONARY},
+	])
+	add_child(battle)
+	CKInjury.attach(battle)
+	battle.emit_signal("unit_downed", ally, {
+		"team": "player", "map_id": "ch12_yard", "killer": "探针",
+		"overflow": 24, "seed": 1,
+	})
+	battle.emit_signal("battle_finished", {"win": false, "map_id": "ch12_yard"})
+	if ally.alive:
+		return "hub ckinjury settle did not kill"
+	print("OK protocol hub still runs ckinjury settle")
+	battle.queue_free()
 	return ""
 
 

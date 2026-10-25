@@ -174,6 +174,13 @@ static func mitigate(c: CKCharacter, source: String) -> Dictionary:
 	return {"ok": true, "msg": Locale.t("永久伤缓解了")}
 
 
+## Chapter-owned mid-cs / era: mid_lost CTA owns the loss trail.
+## Sticky blood_meta injury / stele death from downs settle must not land in
+## save_game / CKAutosave for a retryable fight.
+static func suppresses_settle() -> bool:
+	return str(GameState.get_meta("battle_return_chapter", "")) != ""
+
+
 static func attach(battle: Node) -> void:
 	if battle == null or not is_instance_valid(battle):
 		return
@@ -206,6 +213,10 @@ static func _note(battle: Node, who, info: Dictionary) -> void:
 static func _settle(battle: Node) -> void:
 	var downs: Array = battle.get_meta("_ck_downs", [])
 	battle.set_meta("_ck_downs", [])
+	## Chapter owns the fight — drop noted downs without blood_meta / death write.
+	## Hub / sortie / world-enc still resolve below.
+	if suppresses_settle():
+		return
 	## Defer banner transfer until every death is applied, so mid-settle
 	## succession cannot resurrect someone still in the downs list.
 	for row in downs:

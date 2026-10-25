@@ -1,5 +1,6 @@
 extends Node
 ## CMP-01: classic deaths reach the stele, casual never kills, grave wounds cannot deploy.
+## Chapter-owned mid-cs (battle_return_chapter) suppresses downs settle → no sticky blood_meta.
 
 const DEATH_SEED := 1
 const GRAVE_SEED := 1
@@ -29,6 +30,9 @@ func _run() -> String:
 	if err != "":
 		return err
 	err = _signal_settle()
+	if err != "":
+		return err
+	err = _chapter_settle_suppressed()
 	if err != "":
 		return err
 	return ""
@@ -183,5 +187,73 @@ func _signal_settle() -> String:
 	var stele: Dictionary = ally.blood_meta.get("stele", {})
 	if str(stele.get("killer", "")) != "探针":
 		return "signal stele %s" % stele
+	battle.queue_free()
+	return ""
+
+func _chapter_settle_suppressed() -> String:
+	# Chapter owns the fight — noted downs must not write blood_meta injury / stele.
+	GameState.new_game("伤病", "灰旗", GameState.crest_color)
+	CKInjury.set_mode("classic")
+	GameState.set_meta("battle_return_chapter", "cs03_01")
+	if not CKInjury.suppresses_settle():
+		return "chapter suppresses_settle false"
+	var ally := _ally()
+	if ally == null:
+		return "no ally for chapter settle"
+	var name := ally.name
+	var battle := Node.new()
+	battle.add_user_signal("unit_downed", [
+		{"name": "who", "type": TYPE_OBJECT},
+		{"name": "info", "type": TYPE_DICTIONARY},
+	])
+	battle.add_user_signal("battle_finished", [
+		{"name": "result", "type": TYPE_DICTIONARY},
+	])
+	add_child(battle)
+	CKInjury.attach(battle)
+	battle.emit_signal("unit_downed", ally, {
+		"team": "player", "map_id": "ch12_yard", "killer": "探针",
+		"overflow": 24, "seed": DEATH_SEED,
+	})
+	battle.emit_signal("battle_finished", {"win": false, "map_id": "ch12_yard"})
+	if not ally.alive or not ally.in_roster:
+		return "chapter settle killed ally"
+	if not CKInjury.record(ally).is_empty():
+		return "chapter settle wrote injury %s" % CKInjury.record(ally)
+	var stele0 = ally.blood_meta.get("stele", {}) if typeof(ally.blood_meta) == TYPE_DICTIONARY else {}
+	if typeof(stele0) == TYPE_DICTIONARY and str(stele0.get("cause", "")) == "battle":
+		return "chapter settle wrote stele"
+	for row in GameState.lineage_log:
+		var text := str(row.get("text", ""))
+		if text.find(name) >= 0 and text.find("阵亡") >= 0:
+			return "chapter settle logged death"
+	battle.queue_free()
+	# Hub path still settles when chapter meta is cleared.
+	GameState.set_meta("battle_return_chapter", "")
+	if CKInjury.suppresses_settle():
+		return "hub suppresses_settle true"
+	GameState.new_game("伤病", "灰旗", GameState.crest_color)
+	CKInjury.set_mode("classic")
+	ally = _ally()
+	battle = Node.new()
+	battle.add_user_signal("unit_downed", [
+		{"name": "who", "type": TYPE_OBJECT},
+		{"name": "info", "type": TYPE_DICTIONARY},
+	])
+	battle.add_user_signal("battle_finished", [
+		{"name": "result", "type": TYPE_DICTIONARY},
+	])
+	add_child(battle)
+	CKInjury.attach(battle)
+	battle.emit_signal("unit_downed", ally, {
+		"team": "player", "map_id": "ch12_yard", "killer": "探针",
+		"overflow": 24, "seed": DEATH_SEED,
+	})
+	battle.emit_signal("battle_finished", {"win": false, "map_id": "ch12_yard"})
+	if ally.alive:
+		return "hub signal path did not kill on classic seed"
+	var stele: Dictionary = ally.blood_meta.get("stele", {})
+	if str(stele.get("killer", "")) != "探针":
+		return "hub signal stele %s" % stele
 	battle.queue_free()
 	return ""
