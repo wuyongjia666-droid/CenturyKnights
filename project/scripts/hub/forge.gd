@@ -26,6 +26,14 @@ func _ready() -> void:
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 
+
+func _place_forge_crests() -> void:
+	## Forge chrome: 团徽 header + castle banner strip on the page root.
+	var mob := DeviceProfile.is_mobile()
+	var hdr := Vector2(44, 52) if not mob else Vector2(40, 48)
+	CKHeraldryChrome.place_company_header(self, Vector2(1180, 8) if not mob else Vector2(1180, 4), hdr)
+	CKHeraldryChrome.place_castle_banner_strip(self, Vector2(1120, 8) if not mob else Vector2(1120, 4), hdr, Vector2(28, 38))
+
 func apply_mobile_layout() -> void:
 	if MobilePage.active(self):
 		_m_render_all()
@@ -56,6 +64,7 @@ func _render_all() -> void:
 		_chips.queue_free()
 	_chips = UIKit.top_bar(self, "炉火工坊 · FORGE", [["银币", str(GameState.silver), UIKit.ACCENT], ["铁", str(GameState.iron), UIKit.TEXT], ["工坊",
 			"LV %d" % GameState.building_level("forge"), UIKit.OK], ["历", Calendar.label(), UIKit.TEXT_DIM]], "返回城堡", _back)
+	_place_forge_crests()
 	_render_left()
 	_render_mid()
 	_render_right()
@@ -384,6 +393,7 @@ func _m_render_all() -> void:
 	var h := size.y if size.y > 400.0 else 720.0
 	var flv := GameState.building_level("forge")
 	MobilePage.top_bar(self, Locale.t("mw_897be971"), Locale.t("mw_ac33f494") % [GameState.silver, GameState.iron, flv, Calendar.label()], [[Locale.t("btn_back"), _back]])
+	_place_forge_crests()
 	var top := MobilePage.TOP
 	var bh := h - top - 16.0
 	var lw := clampf(w * 0.24, 300.0, 380.0)

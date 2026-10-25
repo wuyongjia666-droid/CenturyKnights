@@ -2,7 +2,8 @@ extends Node
 ## Player-visible heraldry consistency across genealogy + castle banner strip +
 ## rival houses + tavern/hire + board unit shields + city/smith 邦徽 +
 ## codex/shrine/rite crests + battle/danger aftermath + commission-board 委托徽 +
-## mobile genealogy/quests company header + succession / heir-duel strips.
+## mobile genealogy/quests company header + succession / heir-duel strips +
+## works/forge/estates castle chrome.
 ## 团徽 / 旗徽 / 族徽 / 敌徽 / 邦徽 / 委托徽 never mismatch outside their Chrome routes.
 
 const OVERVIEW := "res://scenes/hub/lineage_view.tscn"
@@ -478,6 +479,15 @@ func _run() -> void:
 		_ok(duel.find_child("LeftArms", true, false) != null, "duel LeftArms")
 		_ok(duel.find_child("RightArms", true, false) != null, "duel RightArms")
 	duel_host.queue_free()
+	# ── Works / forge / estates castle chrome (团徽 + banner) ───────
+	for scn_path in ["res://scenes/hub/works.tscn", "res://scenes/hub/forge.tscn", "res://scenes/hub/estates.tscn"]:
+		var pg: Control = load(scn_path).instantiate()
+		get_tree().root.add_child(pg)
+		await _settle(8)
+		_ok(pg.find_child("CastleArms", true, false) != null, "%s CastleArms" % scn_path.get_file())
+		_ok(pg.find_child("CastleBannerStrip", true, false) != null or pg.find_child("CastleBanner", true, false) != null, "%s banner" % scn_path.get_file())
+		pg.queue_free()
+		await _settle(2)
 
 	await _settle(2)
 	if _fail != "":
@@ -511,6 +521,43 @@ func _run() -> void:
 	mob_q.queue_free()
 	await _settle(2)
 	## (no early-return here — keeps _run under gdlint max-returns=12)
+
+	# ── Field / yeartrace / purse chrome ───────────────────────
+	var field_host := Control.new()
+	field_host.name = "FieldCrestHost"
+	get_tree().root.add_child(field_host)
+	var field_strip := CKHeraldryChrome.place_field_crest_strip(field_host, Vector2(10, 10), Vector2(36, 44), Vector2(24, 34))
+	_ok(field_strip != null and field_strip.name == "FieldCrestStrip", "FieldCrestStrip missing")
+	if field_strip != null:
+		_ok(field_strip.find_child("CastleArms", true, false) != null, "field CastleArms")
+		var fbn := field_strip.find_child("FieldBanner", true, false)
+		_ok(fbn != null and str(fbn.get_meta("arms_kind", "")) == "lb_field_arms", "field FieldBanner kind")
+	var frow := HBoxContainer.new()
+	frow.name = "FieldRowProbe"
+	field_host.add_child(frow)
+	CKHeraldryChrome.attach_field_row_arms(frow, leader, Vector2(28, 34))
+	_ok(frow.find_child("FieldRowArms", true, false) != null, "FieldRowArms attached")
+	field_host.queue_free()
+
+	var yt_panel := VBoxContainer.new()
+	yt_panel.name = "YeartraceProbe"
+	get_tree().root.add_child(yt_panel)
+	CKHeraldryChrome.attach_yeartrace_arms(yt_panel, leader, Vector2(28, 34))
+	_ok(yt_panel.find_child("YeartraceArms", true, false) != null, "YeartraceArms person")
+	CKHeraldryChrome.attach_yeartrace_arms(yt_panel, null, Vector2(28, 34))
+	var yta := yt_panel.find_child("YeartraceArms", true, false)
+	_ok(yta != null and yta.name == "YeartraceArms", "YeartraceArms house/company")
+	yt_panel.queue_free()
+
+	var purse_host := VBoxContainer.new()
+	purse_host.name = "PurseProbe"
+	get_tree().root.add_child(purse_host)
+	var plate := CKHeraldryChrome.place_purse_plate(purse_host, leader, 7, Vector2(28, 34))
+	_ok(plate != null and plate.name == "PursePlate", "PursePlate missing")
+	if plate != null:
+		_ok(plate.find_child("PurseArms", true, false) != null, "PurseArms")
+		_ok(int(plate.get_meta("purse_silver", -1)) == 7, "PursePlate silver meta")
+	purse_host.queue_free()
 
 	# Rank badges distinct
 	var sigs: Dictionary = {}
