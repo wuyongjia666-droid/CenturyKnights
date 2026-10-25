@@ -1658,46 +1658,50 @@ func selftest() -> Dictionary:
 		if _body.get_child_count() == 0:
 			return {"ok": false, "msg": "tab %s empty" % t[0]}
 	msgs.append("tabs ok")
-	# smith: buy the first available item through the detail button
+	# smith: buy an item the leader can equip (atlas e2e may already hold a stronger
+	# signature sword; first-available stock is often a job-gated bow).
 	_set_tab("smith")
 	await get_tree().process_frame
 	var reveal := find_child("SmithRevealSkip", true, false) as Button
 	if reveal:
 		reveal.pressed.emit()
 		await get_tree().process_frame
-	var buy := _body.find_child("BuyItem", true, false) as Button
-	if buy == null:
-		return {"ok": false, "msg": "no BuyItem"}
+	var leader: CKCharacter = GameState.get_leader()
+	if leader == null:
+		return {"ok": false, "msg": "no leader"}
+	_sel_item = ""
+	for e in World.smith_stock(city):
+		if not bool(e.available):
+			continue
+		var cand: Dictionary = e.item
+		if World.can_equip(leader, cand) != "":
+			continue
+		_sel_item = str(cand.id)
+		# prefer a weapon so the atk assertion is meaningful
+		if str(cand.get("slot", "")) == "weapon":
+			break
+	if _sel_item == "":
+		return {"ok": false, "msg": "no smith stock the leader can equip"}
 	var arm0 := _armory_count()
 	GameState.silver += 2000
 	_render_tab()
 	await get_tree().process_frame
-	buy = _body.find_child("BuyItem", true, false) as Button
-	if buy.disabled:
-		for e in World.smith_stock(city):
-			if bool(e.available):
-				_sel_item = str(e.item.id)
-				break
-		_render_tab()
-		await get_tree().process_frame
-		buy = _body.find_child("BuyItem", true, false) as Button
+	var buy := _body.find_child("BuyItem", true, false) as Button
+	if buy == null or buy.disabled:
+		return {"ok": false, "msg": "no BuyItem"}
 	buy.pressed.emit()
 	await get_tree().process_frame
 	if _armory_count() != arm0 + 1:
 		return {"ok": false, "msg": "smith buy via UI failed"}
 	msgs.append("smith buy")
-	# armory: equip the just-bought piece onto the leader via named row
-	var bought_id := ""
-	for k in World.armory.keys():
-		bought_id = str(k)
-		break
-	if bought_id == "":
-		return {"ok": false, "msg": "armory empty after smith buy"}
+	# armory: equip the just-bought piece (unequip slot first so atk can't drop)
+	var bought_id := str(_sel_item)
+	if bought_id == "" or int(World.armory.get(bought_id, 0)) <= 0:
+		return {"ok": false, "msg": "bought item missing from armory"}
+	var slot := str(World.item(bought_id).get("slot", "weapon"))
+	World.unequip(leader.id, slot)
 	_set_tab("armory")
 	await get_tree().process_frame
-	var leader: CKCharacter = GameState.get_leader()
-	if leader == null:
-		return {"ok": false, "msg": "no leader"}
 	_sel_char = leader.id
 	_render_tab()
 	await get_tree().process_frame
@@ -1707,9 +1711,9 @@ func selftest() -> Dictionary:
 		return {"ok": false, "msg": "Equip_%s missing/disabled" % bought_id}
 	eq.pressed.emit()
 	await get_tree().process_frame
-	if World.equipped(leader, str(World.item(bought_id).slot)) != bought_id:
+	if World.equipped(leader, slot) != bought_id:
 		return {"ok": false, "msg": "equip via UI failed"}
-	if leader.derived_atk() < atk0:
+	if slot == "weapon" and leader.derived_atk() <= atk0:
 		return {"ok": false, "msg": "equip did not raise atk"}
 	msgs.append("smith equip")
 	# market: buy 1 of the first produced good
@@ -1747,7 +1751,6 @@ func selftest() -> Dictionary:
 
 
 
-# ── 杂货铺（v9.2 §4.2）：本国日用品只在本国卖，陆桥卖两侧过路货 ──────────
 func _tab_sundry() -> void:
 	var p := _panel(Rect2(0, 0, 848, 576))
 	_head(p, Vector2(18, 14), Locale.t("sundry_title"), "SUNDRIES · LOCAL GOODS")
