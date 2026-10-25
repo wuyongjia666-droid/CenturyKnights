@@ -515,6 +515,8 @@ static func apply_month(force_roll: float = -1.0) -> String:
 					held.append({"id": id, "name": str(s.name), "garrison_before": g_before, "garrison": g_after})
 			else:
 				st.threat["months"] = 1
+				_put(id, st)
+				_emit_siege_alert(id, "imminent")
 		var half := int(st.unrest) > 0 or not (st.threat as Dictionary).is_empty()
 		var ys := int(s.yield_silver)
 		var yq := int(s.yield_qty)
@@ -599,6 +601,7 @@ static func start_threat(id: String) -> Dictionary:
 	_put(id, st)
 	_log(Locale.t("terr_32") % [by_name, s.name, World.node(str(s.anchor)).get("name", "")])
 	World.world_changed.emit()
+	_emit_siege_alert(id, "declared")
 	return st.threat
 
 static func _resolve_unanswered(id: String, force_roll: float) -> void:
@@ -621,6 +624,34 @@ static func threatened_at(anchor: String) -> Array:
 		if owned(id) and not (state(id).threat as Dictionary).is_empty():
 			out.append(id)
 	return out
+
+## Push a SiegeAlertModal payload onto World (declared / imminent).
+static func _emit_siege_alert(id: String, phase: String) -> void:
+	var s := site(id)
+	var st := state(id)
+	var th: Dictionary = st.threat if typeof(st.threat) == TYPE_DICTIONARY else {}
+	if th.is_empty():
+		return
+	var anchor_id := str(s.anchor)
+	var scouted := bool(th.get("scouted", false))
+	var payload := {
+		"id": id,
+		"name": str(s.name),
+		"by": str(th.get("by", "")),
+		"by_name": str(th.get("name", "")),
+		"anchor": anchor_id,
+		"anchor_name": str(World.node(anchor_id).get("name", anchor_id)),
+		"garrison": int(st.garrison),
+		"months": int(th.get("months", 0)),
+		"phase": phase,
+		"scouted": scouted,
+		"bribed": bool(th.get("bribed", false)),
+		"bribe_cost": bribe_cost(id),
+		"scout_cost": scout_cost(id),
+		"hold_pct": int(round(hold_chance(id) * 100.0)) if scouted else -1,
+	}
+	World.mark_siege_alert(payload)
+
 
 ## Improve-plan #1 countermeasures while a threat hangs over an owned site.
 static func bribe_cost(id: String) -> int:
