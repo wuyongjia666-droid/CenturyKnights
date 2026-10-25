@@ -132,6 +132,15 @@ func _accumulate_beat(cid: String, want_beat: String, b, acc: Dictionary) -> voi
 			if str(a.get("id", "")) != "open_skirmish":
 				acc["err"] = "%s battle action id" % cid
 				return
+			var want_flag := cid.substr(0, 4) + "_mid_fought"
+			var when_row = a.get("when", {})
+			if typeof(when_row) != TYPE_DICTIONARY or str(when_row.get("not_flag", "")) != want_flag:
+				acc["err"] = "%s when.not_flag want %s got %s" % [cid, want_flag, str(when_row)]
+				return
+			var wf: Array = step.get("win_flags", [])
+			if wf.size() != 1 or str(wf[0]) != want_flag:
+				acc["err"] = "%s win_flags want [%s] got %s" % [cid, want_flag, str(wf)]
+				return
 			acc["battle"] = int(acc["battle"]) + 1
 
 

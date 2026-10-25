@@ -10,9 +10,12 @@ const META := "defeat_settlement"
 static func back_path(win: bool, world_enc: bool, battle_return: String) -> String:
 	if win or world_enc:
 		return battle_return if battle_return != "" else CASTLE
-	# Opening review A-04: before the castle opens (story beat 0.25), a lost story fight goes
-	# back into the story; the map writes <map>_lost so the beat can say "this fight can be retried".
-	if battle_return.begins_with("res://scenes/story/") and not GameState.flag("hub_open"):
+	# Story-launched fight retry: prologue before hub (A-04), OR mid-cs / era with
+	# battle_return_chapter stamped (#442+). Bare story return after hub_open still
+	# CASTLE — hub quests and leftover ch0 returns must not bounce into chapter.
+	var story := battle_return.begins_with("res://scenes/story/")
+	var chapter_back := str(GameState.get_meta("battle_return_chapter", "")) != ""
+	if story and (not GameState.flag("hub_open") or chapter_back):
 		var map_id := str(GameState.get_meta("battle_map", ""))
 		if map_id != "":
 			GameState.set_flag(map_id + "_lost")

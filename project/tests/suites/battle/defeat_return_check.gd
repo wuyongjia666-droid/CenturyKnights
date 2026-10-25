@@ -20,6 +20,16 @@ func _run() -> String:
 	GameState.set_flag("hub_open")
 	if BattleDefeat.back_path(false, false, "res://scenes/story/chapter0.tscn") != BattleDefeat.CASTLE:
 		return "story defeat after hub_open still returns to chapter"
+	# Mid-cs / era: battle_return_chapter means the chapter owns the fight — retry on loss
+	# even after hub_open (content seasons run with hub already open).
+	GameState.set_meta("battle_return_chapter", "cs01_01")
+	GameState.set_meta("battle_map", "quest_bandit")
+	var player := "res://scenes/story/chapter_player.tscn"
+	if BattleDefeat.back_path(false, false, player) != player:
+		return "hub_open + battle_return_chapter loss must retry chapter"
+	if not GameState.flag("quest_bandit_lost"):
+		return "quest_bandit_lost not written on chapter retry"
+	GameState.set_meta("battle_return_chapter", "")
 	if BattleDefeat.back_path(true, false, "res://scenes/story/chapter0.tscn") != "res://scenes/story/chapter0.tscn":
 		return "story win lost its return"
 	if BattleDefeat.back_path(true, false, "") != BattleDefeat.CASTLE:
