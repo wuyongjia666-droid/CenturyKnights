@@ -42,6 +42,7 @@ func _ready() -> void:
 	right.add_child(_actions)
 	_msg = CKPageKit.feedback(self)
 	_refresh_list()
+	_place_rite_crests()
 	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "BANNER RITE · FROST")
 	UIFX.page_enter(self)
 
