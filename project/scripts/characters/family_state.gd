@@ -679,6 +679,8 @@ static func begin_pregnancy(host, mother) -> bool:
 		mother.pregnant_months = -1
 		return false
 	_start_term(host, mother)
+	## Y1-B: 婚仪/验血起孕 → month_echo.pregnancy（与 Calendar tick_conception 同槽）.
+	CKEconomyState.month_echo_note("pregnancy", Locale.t("lb_echo_pregnancy", [mother.name]))
 	return true
 
 

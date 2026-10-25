@@ -224,7 +224,10 @@ func _deliver(mother: CKCharacter, evs: Array) -> void:
 
 func _tick_conception(ctx: Dictionary) -> void:
 	for mother in CKFamilyState.tick_conception(GameState, year * 12 + month):
-		_events(ctx).append({"type": "pregnancy", "text": Locale.t("conceived_again", [mother.name]), "cid": mother.id})
+		var line := Locale.t("conceived_again", [mother.name])
+		_events(ctx).append({"type": "pregnancy", "text": line, "cid": mother.id})
+		## Y1-B: 月结有喜 → month_echo.pregnancy；属地/沙漏回读（诞育已有 birth 回响）.
+		CKEconomyState.month_echo_note("pregnancy", Locale.t("lb_echo_pregnancy", [mother.name]))
 
 func _tick_holdings(ctx: Dictionary) -> void:
 	var hy = GameState.holdings_monthly_yield()

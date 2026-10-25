@@ -1088,7 +1088,7 @@ static func month_echo_lines() -> Array:
 	var out: Array = []
 	for k in [
 		"holdings", "harvest", "territory", "commission", "battle", "recruit",
-		"birth", "marriage", "doctrine", "ambition", "tutor", "promo", "retire",
+		"birth", "pregnancy", "marriage", "doctrine", "ambition", "tutor", "promo", "retire",
 		"death", "succession", "rival",
 	]:
 		var tx := str(d.get(k, ""))
