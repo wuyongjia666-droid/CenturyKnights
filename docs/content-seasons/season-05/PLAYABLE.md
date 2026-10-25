@@ -39,3 +39,17 @@
 - 可玩章 `cs05_01.json` 对白加厚至 100+ 行；单行 ≤60 汉字。
 - **所有权不变**：`hourglass` visit「去看月份怎么往前走」；`bridge` battle「先试一锋 / 再试锋镝 / 继续」。
 - 验收：`content_season_playable_s05_check` 行数闸 ≥70；另跑 visit_authored / battle_authored / hub_entry。
+
+
+## 第二可玩章（本刀）
+
+| 项 | 值 |
+|---|---|
+| id | `cs05_02` |
+| 标题 | 见章 JSON |
+| 文件 | `project/data/story/chapters/cs05_02.json` |
+| 验收 | `content_season_playable_s05_02_check` |
+
+- 选题：**链仍并排** → flag `cs05_reread_parallel`；备选 **栏优先催坐**。
+- 所有权不变：`hourglass` visit「去看月份怎么往前走」；`bridge` battle「先试一锋 / 再试锋镝 / 继续」。
+- 枢纽：`playable_chapters` 挂进 `StoryCatalog.content_season_entries`（主 `playable_chapter` 仍为 `_01`）。
