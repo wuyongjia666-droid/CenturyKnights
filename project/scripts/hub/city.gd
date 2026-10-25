@@ -1304,6 +1304,10 @@ func _tab_board() -> void:
 		badge.position = Vector2(14, 10)
 		badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		b.add_child(badge)
+		# Issuer crest (团徽 for hq, nation plate otherwise) — right edge of the offer row.
+		var crest := CKHeraldryChrome.make_issuer_arms(str(q.get("issuer", city)), Vector2(28, 34))
+		crest.position = Vector2(388.0 - 28.0 - 8.0, 6.0)
+		b.add_child(crest)
 		var qid := str(q.id)
 		b.pressed.connect(func(): _sel_quest = qid; _render_tab())
 		v.add_child(b)
@@ -1348,7 +1352,8 @@ func _tab_board() -> void:
 	var e := UIKit.mono("%s // %s" % ["ACTIVE" if is_active else "OFFER", str(sel.kind).to_upper()], 9, UIKit.EMBER if bool(sel.get("sig", false)) else UIKit.ACCENT)
 	e.position = Vector2(18, 16)
 	d.add_child(e)
-	var t := _para(str(sel.title), UIKit.TEXT, 19, 380)
+	CKHeraldryChrome.place_board_crest(d, str(sel.get("issuer", city)), Vector2(352, 14), Vector2(44, 52))
+	var t := _para(str(sel.title), UIKit.TEXT, 19, 320)
 	t.position = Vector2(18, 32)
 	d.add_child(t)
 	var desc := _para(str(sel.get("desc", "")), UIKit.TEXT_DIM, 12, 380)
