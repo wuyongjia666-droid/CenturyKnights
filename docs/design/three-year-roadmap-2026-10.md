@@ -142,6 +142,7 @@
 
 | 日期 | 变更 |
 |------|------|
+| 2026-10-25 | 商店工程深刀（不缴费）：`docs/store/*` 完整 Play/MS 字段稿 + 隐私/分级草稿；`store_prep_check` + `store_packaging_dry_check`（出包脚本/预设/release 干跑） |
 | 2026-10-25 | **时间压缩冲刺，内容全量**：日程压缩、三年内容不砍；联姻→继承→嗣位端到端可玩链 + `marriage_heir_chain_check`（多场景回读） |
 | 2026-10-25 | Y1-B 岁课 UI 落点加深：城堡家庭导航常驻 ToSuiYear + 未读角标（todo→family）+ `sui_hub_entry_check` |
 | 2026-10-25 | Y1-B 联姻无对象空态：EmptyHost why/how + ToTavern/ToRoster + `marriage_empty_cta_check` |
