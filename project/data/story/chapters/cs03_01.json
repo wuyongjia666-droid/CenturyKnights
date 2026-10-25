@@ -1,0 +1,349 @@
+{
+  "id": "cs03_01",
+  "title": "榜上的收成",
+  "legacy_index": 403,
+  "return_scene": "res://scenes/story/chapter_player.tscn",
+  "source": "docs/content-seasons/season-03/NOVEL.md",
+  "beats": [
+    {
+      "id": "merit",
+      "title": "记功",
+      "next": "estate",
+      "lines": [
+        {
+          "id": "cs03_merit_0",
+          "speaker": "旁白",
+          "text": "议会侧厅灯短。朝报军功栏摊开，印泥还新。",
+          "stage": {
+            "card": "一　记功",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_merit_1",
+          "speaker": "书记官",
+          "text": "委托交差了。朝报这一栏，写你们的功。"
+        },
+        {
+          "id": "cs03_merit_2",
+          "speaker": "leader",
+          "text": "写。"
+        },
+        {
+          "id": "cs03_merit_3",
+          "speaker": "旁白",
+          "text": "印章按下。摘要只留交付两字，像刚擦过的刀。"
+        },
+        {
+          "id": "cs03_merit_4",
+          "speaker": "书记官",
+          "text": "重大军功月份才抄附录。平常只留摘要。"
+        },
+        {
+          "id": "cs03_merit_5",
+          "speaker": "石垒·晚担",
+          "text": "摘要里没有田。田在不在，谁管？"
+        },
+        {
+          "id": "cs03_merit_6",
+          "speaker": "苇原·灯影",
+          "text": "管的人在属地。先去对月结。"
+        },
+        {
+          "id": "cs03_merit_7",
+          "speaker": "leader",
+          "text": "功写上了。我们去对粮。"
+        }
+      ]
+    },
+    {
+      "id": "estate",
+      "title": "月结",
+      "next": "hourglass",
+      "lines": [
+        {
+          "id": "cs03_est_0",
+          "speaker": "旁白",
+          "text": "属地厢房桌上，月结黄纸压着泥印。数比摘要刺眼。",
+          "stage": {
+            "bg": "hall",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_est_1",
+          "speaker": "老管事",
+          "text": "属地月结出来了。炭笔点过三下。"
+        },
+        {
+          "id": "cs03_est_2",
+          "speaker": "leader",
+          "text": "和朝报对过吗？"
+        },
+        {
+          "id": "cs03_est_3",
+          "speaker": "老管事",
+          "text": "对过。对不上。工被抽去护粮，穗少了。"
+        },
+        {
+          "id": "cs03_est_4",
+          "speaker": "槐里·青禾",
+          "text": "功很大，田很小。这句别只在嘴里转。"
+        },
+        {
+          "id": "cs03_est_5",
+          "speaker": "老管事",
+          "text": "沙漏厅有两行空木条。上行等功，下行等粮。"
+        },
+        {
+          "id": "cs03_est_6",
+          "speaker": "石垒·晚担",
+          "text": "并排才算数。单行是骗人。"
+        },
+        {
+          "id": "cs03_est_7",
+          "speaker": "leader",
+          "text": "去沙漏。两行都刻。"
+        }
+      ]
+    },
+    {
+      "id": "hourglass",
+      "title": "两行",
+      "next": "bridge",
+      "lines": [
+        {
+          "id": "cs03_hg_0",
+          "speaker": "旁白",
+          "text": "沙漏厅里，上行刻交付，下行刻不足。凹槽深浅不同。",
+          "stage": {
+            "bg": "hall",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_hg_1",
+          "speaker": "老旗手",
+          "text": "一行是功，一行是粮。您看哪一行？"
+        },
+        {
+          "id": "cs03_hg_2",
+          "speaker": "leader",
+          "text": "都看。并排。"
+        },
+        {
+          "id": "cs03_hg_3",
+          "speaker": "老管事",
+          "text": "每月来摸。跳行的人，不配谈收成。"
+        },
+        {
+          "id": "cs03_hg_4",
+          "speaker": "槐里·青禾",
+          "text": "摸过亏的人，才配夸功。"
+        },
+        {
+          "id": "cs03_hg_5",
+          "speaker": "苇原·灯影",
+          "text": "陆桥有人问粮价。带拓片去。"
+        },
+        {
+          "id": "cs03_hg_6",
+          "speaker": "leader",
+          "text": "带。谁用功定粮价，先念下行。"
+        }
+      ]
+    },
+    {
+      "id": "bridge",
+      "title": "桥上",
+      "next": "tavern",
+      "lines": [
+        {
+          "id": "cs03_br_0",
+          "speaker": "旁白",
+          "text": "朔澜陆桥铃响。商队围着拓片，有人伸手摸凹槽。",
+          "stage": {
+            "bg": "tavern",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_br_1",
+          "speaker": "掌柜",
+          "text": "北隘粮怎么贵了？酒馆也在问。"
+        },
+        {
+          "id": "cs03_br_2",
+          "speaker": "leader",
+          "text": "贵在工被功抽走了。榜上的功，先把下行念完。"
+        },
+        {
+          "id": "cs03_br_3",
+          "speaker": "石垒·晚担",
+          "text": "有人只爱听上行。听完就去借我们的功。"
+        },
+        {
+          "id": "cs03_br_4",
+          "speaker": "苇原·灯影",
+          "text": "借得了功，借不走泥。泥还在南田。"
+        },
+        {
+          "id": "cs03_br_5",
+          "speaker": "老旗手",
+          "text": "铃停了也要留字。字在，对照就还活着。"
+        },
+        {
+          "id": "cs03_br_6",
+          "speaker": "旁白",
+          "text": "拓片被摸黑。你得选：功与粮并排，还是先只留功。"
+        }
+      ]
+    },
+    {
+      "id": "tavern",
+      "title": "钉墙",
+      "lines": [
+        {
+          "id": "cs03_tav_0",
+          "speaker": "旁白",
+          "text": "烽火酒馆墙上，白纸摘要旁钉着黄纸月结。",
+          "stage": {
+            "bg": "tavern",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs03_tav_1",
+          "speaker": "掌柜",
+          "text": "篇幅不够就钉墙。墙比朝报宽。"
+        },
+        {
+          "id": "cs03_tav_2",
+          "speaker": "槐里·青禾",
+          "text": "裁亏的人，先把剪刀放下。"
+        },
+        {
+          "id": "cs03_tav_3",
+          "speaker": "老管事",
+          "text": "并排钉。谁撕黄纸，谁结账。"
+        },
+        {
+          "id": "cs03_tav_4",
+          "speaker": "石垒·晚担",
+          "text": "功是看的，粮是吃的。两样都要。"
+        },
+        {
+          "id": "cs03_tav_5",
+          "speaker": "苇原·灯影",
+          "text": "路还通。谁买一行结论，带他去摸木条。"
+        },
+        {
+          "id": "cs03_tav_6",
+          "speaker": "旁白",
+          "text": "两张纸在风里响。你选怎么收这一季。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "keep_parallel",
+          "label": "功与粮并排",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs03_kept_parallel",
+              "value": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        },
+        {
+          "id": "merit_only",
+          "label": "先只留功",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs03_merit_only",
+              "value": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ledger",
+      "title": "入册",
+      "lines": [
+        {
+          "id": "cs03_led_0",
+          "speaker": "旁白",
+          "text": "对照册封面四个字：榜上的收成。柜上两把钥匙。",
+          "stage": {
+            "bg": "hall",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs03_led_par",
+          "speaker": "旁白",
+          "text": "你留下两行。朝报仍爱一行。柜子认灯。",
+          "when": {
+            "flag": "cs03_kept_parallel"
+          }
+        },
+        {
+          "id": "cs03_led_merit",
+          "speaker": "旁白",
+          "text": "你先只留功。黄纸仍在墙上——风会替你念下行。",
+          "when": {
+            "flag": "cs03_merit_only"
+          }
+        },
+        {
+          "id": "cs03_led_1",
+          "speaker": "老管事",
+          "text": "存档不刊也行。不丢，就是缝。"
+        },
+        {
+          "id": "cs03_led_2",
+          "speaker": "槐里·青禾",
+          "text": "孩子摸过亏，才配以后夸功。"
+        },
+        {
+          "id": "cs03_led_3",
+          "speaker": "老旗手",
+          "text": "并排。不要裁。缝在旗角内侧。"
+        },
+        {
+          "id": "cs03_led_4",
+          "speaker": "石垒·晚担",
+          "text": "田还在。泥洗了也能吃。"
+        },
+        {
+          "id": "cs03_led_5",
+          "speaker": "苇原·灯影",
+          "text": "弓还在。下次抽工，下行先响。"
+        },
+        {
+          "id": "cs03_led_6",
+          "speaker": "leader",
+          "text": "功与粮，并排。谁来认收成，先念完。"
+        },
+        {
+          "id": "cs03_led_7",
+          "speaker": "旁白",
+          "text": "雪盖陆桥时，拓片还在。两行之间的空，给人脸红。"
+        }
+      ],
+      "actions": []
+    }
+  ]
+}

@@ -147,6 +147,7 @@
 | 2026-10-25 | Y1-B 酒馆招募月回响：recruit → `house_mods.month_echo.recruit` + estates/hourglass 回读 + `month_echo_recruit_check` |
 | 2026-10-25 | **时间压缩冲刺，内容全量**：日程压缩、三年内容不砍；联姻→继承→嗣位端到端可玩链 + `marriage_heir_chain_check`（多场景回读） |
 | 2026-10-25 | **时间压缩冲刺·内容全量**：文首状态改；今日目标季#1–#3 + 商店工程；内容不等签收 |
+| 2026-10-25 | 内容季 #3《榜上的收成》中篇≥12000汉字 + `cs03_01` 可玩章 + `content_season_playable_s03_check`；专线避撞 #408 season-02 |
 | 2026-10-25 | 内容季 #2/#3 脚手架 v2 + 开写：`season-02`《婚约上的灯》初稿、`season-03`《榜上的收成》§1–§8；多季 `content_season_scaffold_check` |
 | 2026-10-25 | 商店工程准备（不缴费）：`docs/store/*` + `tools/ci/store_prep_check.py`（导出路径/文案/崩溃性能/包体口径） |
 | 2026-10-25 | 商店工程深刀（不缴费）：Play/MS 完整字段稿 + 隐私/分级草稿 + `store_packaging_dry_check`（出包脚本/预设/release 干跑） |
