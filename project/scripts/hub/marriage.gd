@@ -739,12 +739,10 @@ func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 	cast.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 	cast.position = Vector2(12, holder.position.y + holder.size.y + 2.0)
 	cast.size = Vector2(hold_w, maxf(16.0, _punnett.size.y - cast.position.y - 4.0))
-	## Wrap; if the panel still can't hold it, step the font down, then let the
-	## punnett rows above give way so the forecast is never cut off.
-	var fs := 12
-	while fs > 10 and _label_text_h(cast, hold_w) > cast.size.y:
-		fs -= 1
-		cast.add_theme_font_size_override("font_size", fs)
+	## Keep ≥12px for the desktop gate; if it still overflows, clip + tooltip.
+	if _label_text_h(cast, hold_w) > cast.size.y:
+		cast.clip_text = true
+		cast.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	_punnett.add_child(cast)
 	UIFX.wire_tree(_rite_board)
 	_mobile_after_render.call_deferred()
