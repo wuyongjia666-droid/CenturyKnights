@@ -53,3 +53,10 @@
 
 - **功粮仍并** → flag `cs03_back_parallel`，进 `ledger`。
 - 验收：`content_season_playable_s03_02_check`。
+
+## 中途战 / 据点 / 回程加厚（hub-chain）
+
+- 中途战拍：试锋前口语加厚；`mid_lost` 仍为拍末可见行（needle「锋收回来」）。
+- 据点 visit 拍：时漏/验盏前口语加厚；CTA「去看月份怎么往前走」不变。
+- 酒馆回程：挂板前口语加厚，收束回堡入谱。
+- 真 E2E：`content_season_hub_chain_check`（hub→章→战/访→回抽样）；`battle_retry` LIVE 扩至 S01–S10 `_01`；playable walk_to_choice→220。

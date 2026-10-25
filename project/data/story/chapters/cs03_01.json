@@ -362,6 +362,26 @@
           "id": "cs03_hourglass_x9",
           "speaker": "leader",
           "text": "两行都亮。去门廊。"
+        },
+        {
+          "id": "cs0301_vis_mv1",
+          "speaker": "旁白",
+          "text": "沙漏旁搁着半截拓片卷。卷口有灰。"
+        },
+        {
+          "id": "cs0301_vis_mv2",
+          "speaker": "书记官",
+          "text": "灰说明有人刚翻过。翻过要登记。"
+        },
+        {
+          "id": "cs0301_vis_mv3",
+          "speaker": "老管事",
+          "text": "登记完，再看沙怎么落。"
+        },
+        {
+          "id": "cs0301_vis_mv4",
+          "speaker": "leader",
+          "text": "先看月份。数要跟沙走。"
         }
       ],
       "actions": [
@@ -500,6 +520,36 @@
           "id": "cs03_mid_y20",
           "speaker": "leader",
           "text": "数要真。"
+        },
+        {
+          "id": "cs0301_mid_mv1",
+          "speaker": "旁白",
+          "text": "桥铃一声接一声。对岸有人故意把铃绳拉满再松。"
+        },
+        {
+          "id": "cs0301_mid_mv2",
+          "speaker": "书记官",
+          "text": "铃绳松紧，写进簿也只是一声。真假在粮。"
+        },
+        {
+          "id": "cs0301_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "粮假了，铃声再好听也是空。"
+        },
+        {
+          "id": "cs0301_mid_mv4",
+          "speaker": "槐里·青禾",
+          "text": "空铃吓人。空粮更吓。"
+        },
+        {
+          "id": "cs0301_mid_mv5",
+          "speaker": "掌柜",
+          "text": "拓片旁那拨，专等你们心软。"
+        },
+        {
+          "id": "cs0301_mid_mv6",
+          "speaker": "leader",
+          "text": "心软不试锋。试锋才说话。"
         },
         {
           "id": "cs03_mid_lost",
@@ -746,6 +796,26 @@
           "id": "cs03_tavern_x9",
           "speaker": "旁白",
           "text": "你得选。选完进对照册。"
+        },
+        {
+          "id": "cs0301_ret_mv1",
+          "speaker": "旁白",
+          "text": "粮行来的人把袖口拍了拍，灰落在板上。"
+        },
+        {
+          "id": "cs0301_ret_mv2",
+          "speaker": "掌柜",
+          "text": "灰我擦。数我验。"
+        },
+        {
+          "id": "cs0301_ret_mv3",
+          "speaker": "书记官",
+          "text": "验完才许笑。"
+        },
+        {
+          "id": "cs0301_ret_mv4",
+          "speaker": "leader",
+          "text": "验完回堡入谱。"
         }
       ],
       "actions": [

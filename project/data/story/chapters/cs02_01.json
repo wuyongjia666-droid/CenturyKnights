@@ -263,6 +263,36 @@
           "text": "记了不等于认了。等回执。"
         },
         {
+          "id": "cs0201_mid_mv1",
+          "speaker": "旁白",
+          "text": "院墙外有人低声念婚约上的字，念错一个，又重来。"
+        },
+        {
+          "id": "cs0201_mid_mv2",
+          "speaker": "听回",
+          "text": "念错了就重来。刀错了可不能重描。"
+        },
+        {
+          "id": "cs0201_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "婚灯还没点。外面先起了烟。"
+        },
+        {
+          "id": "cs0201_mid_mv4",
+          "speaker": "槐里·青禾",
+          "text": "烟往里灌，字会糊。糊了难认。"
+        },
+        {
+          "id": "cs0201_mid_mv5",
+          "speaker": "老旗手",
+          "text": "认字在灯下。认人在锋上。"
+        },
+        {
+          "id": "cs0201_mid_mv6",
+          "speaker": "leader",
+          "text": "灯下的字我认。锋上的人我验。"
+        },
+        {
           "id": "cs02_mid_lost",
           "speaker": "旁白",
           "text": "锋收回来。院墙外的影子还在。婚约灯还没点。",
@@ -528,6 +558,26 @@
           "id": "cs02_birth_x9",
           "speaker": "leader",
           "text": "两版都记。沙漏并排。"
+        },
+        {
+          "id": "cs0201_vis_mv1",
+          "speaker": "旁白",
+          "text": "产房门外的灯火跳了一下，又稳住。"
+        },
+        {
+          "id": "cs0201_vis_mv2",
+          "speaker": "听回",
+          "text": "灯稳了再进。慌进只扰月。"
+        },
+        {
+          "id": "cs0201_vis_mv3",
+          "speaker": "老管事",
+          "text": "月份不等人，等人把气放匀。"
+        },
+        {
+          "id": "cs0201_vis_mv4",
+          "speaker": "leader",
+          "text": "气匀了。去看月份。"
         }
       ],
       "actions": [
@@ -675,6 +725,26 @@
           "id": "cs02_tavern_x9",
           "speaker": "旁白",
           "text": "沙漏已有两行。并排留，还是先压下行。"
+        },
+        {
+          "id": "cs0201_ret_mv1",
+          "speaker": "旁白",
+          "text": "婚约闲话到第三巡，有人把杯子碰得太响。"
+        },
+        {
+          "id": "cs0201_ret_mv2",
+          "speaker": "掌柜",
+          "text": "响杯吓不走真事。"
+        },
+        {
+          "id": "cs0201_ret_mv3",
+          "speaker": "听回",
+          "text": "真事在回执。回执在灯下。"
+        },
+        {
+          "id": "cs0201_ret_mv4",
+          "speaker": "leader",
+          "text": "灯下入谱。回。"
         }
       ],
       "actions": [

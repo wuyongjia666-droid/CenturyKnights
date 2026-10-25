@@ -661,6 +661,26 @@
             "music": "castle",
             "camera": "wide"
           }
+        },
+        {
+          "id": "cs0302_vis_mv1",
+          "speaker": "旁白",
+          "text": "时漏玻璃上有道指纹，从下往上抹。"
+        },
+        {
+          "id": "cs0302_vis_mv2",
+          "speaker": "岁吏",
+          "text": "往上抹的，多半想让沙快。"
+        },
+        {
+          "id": "cs0302_vis_mv3",
+          "speaker": "石垒·晚担",
+          "text": "沙不快。人急。"
+        },
+        {
+          "id": "cs0302_vis_mv4",
+          "speaker": "leader",
+          "text": "人不跟急走。去看月份。"
         }
       ],
       "next": "bridge",
@@ -925,6 +945,36 @@
             "music": "battle_prep",
             "camera": "wide"
           }
+        },
+        {
+          "id": "cs0302_mid_mv1",
+          "speaker": "旁白",
+          "text": "榜阴纸角卷着。有人用指甲把卷边摁平，又弹开。"
+        },
+        {
+          "id": "cs0302_mid_mv2",
+          "speaker": "岁吏",
+          "text": "弹开不是风。是手痒。"
+        },
+        {
+          "id": "cs0302_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "手痒的人，粮行门口最爱站。"
+        },
+        {
+          "id": "cs0302_mid_mv4",
+          "speaker": "苇原·灯影",
+          "text": "站着看榜，不如上场把话说完。"
+        },
+        {
+          "id": "cs0302_mid_mv5",
+          "speaker": "老旗手",
+          "text": "话说完要带锋。不然榜上只剩笑。"
+        },
+        {
+          "id": "cs0302_mid_mv6",
+          "speaker": "leader",
+          "text": "笑我不怕。假功我怕。"
         },
         {
           "speaker": "旁白",
@@ -1276,6 +1326,26 @@
             "music": "tavern",
             "camera": "close"
           }
+        },
+        {
+          "id": "cs0302_ret_mv1",
+          "speaker": "旁白",
+          "text": "榜阴话题被劝酒按下去，又浮上来。"
+        },
+        {
+          "id": "cs0302_ret_mv2",
+          "speaker": "掌柜",
+          "text": "浮上来就钉。钉不住别喝。"
+        },
+        {
+          "id": "cs0302_ret_mv3",
+          "speaker": "岁吏",
+          "text": "钉住回堡。"
+        },
+        {
+          "id": "cs0302_ret_mv4",
+          "speaker": "leader",
+          "text": "回堡入榜阴。"
         }
       ],
       "actions": [

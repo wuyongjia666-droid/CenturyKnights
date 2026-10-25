@@ -342,6 +342,26 @@
           "id": "cs09_hg_6",
           "speaker": "leader",
           "text": "两行都留。去门廊。"
+        },
+        {
+          "id": "cs0901_vis_mv1",
+          "speaker": "旁白",
+          "text": "血验灯下，沙漏沙粒像细血珠——其实是影。"
+        },
+        {
+          "id": "cs0901_vis_mv2",
+          "speaker": "书记官",
+          "text": "影不是血。血要另验。"
+        },
+        {
+          "id": "cs0901_vis_mv3",
+          "speaker": "槐里·青禾",
+          "text": "另验前，月份先走一遭。"
+        },
+        {
+          "id": "cs0901_vis_mv4",
+          "speaker": "leader",
+          "text": "走一遭。去看。"
         }
       ],
       "actions": [
@@ -480,6 +500,36 @@
           "id": "cs09_mid_y20",
           "speaker": "leader",
           "text": "新泼的不认。"
+        },
+        {
+          "id": "cs0901_mid_mv1",
+          "speaker": "旁白",
+          "text": "血验册翻开，旧渍在灯下发暗，像沉在水底。"
+        },
+        {
+          "id": "cs0901_mid_mv2",
+          "speaker": "书记官",
+          "text": "沉底的旧，比新泼的老实。"
+        },
+        {
+          "id": "cs0901_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "新泼爱冒充旧。冒充最要打。"
+        },
+        {
+          "id": "cs0901_mid_mv4",
+          "speaker": "槐里·青禾",
+          "text": "打之前先问清：谁的血，谁的名。"
+        },
+        {
+          "id": "cs0901_mid_mv5",
+          "speaker": "掌柜",
+          "text": "墙牌旁那拨，专卖新泼当旧。"
+        },
+        {
+          "id": "cs0901_mid_mv6",
+          "speaker": "leader",
+          "text": "新泼不认。锋问明白。"
         },
         {
           "id": "cs09_mid_lost",
@@ -721,6 +771,26 @@
           "id": "cs09_tavern_x9",
           "speaker": "旁白",
           "text": "你还没选。没选时，罩边最清楚。"
+        },
+        {
+          "id": "cs0901_ret_mv1",
+          "speaker": "旁白",
+          "text": "血验被说成验酒。酒桌上一阵起哄。"
+        },
+        {
+          "id": "cs0901_ret_mv2",
+          "speaker": "掌柜",
+          "text": "起哄验不了血。"
+        },
+        {
+          "id": "cs0901_ret_mv3",
+          "speaker": "书记官",
+          "text": "血名回堡钉。"
+        },
+        {
+          "id": "cs0901_ret_mv4",
+          "speaker": "leader",
+          "text": "回堡钉名。"
         }
       ],
       "actions": [
