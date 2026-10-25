@@ -126,6 +126,21 @@
           "id": "cs01_hall_9",
           "speaker": "老旗手",
           "text": "匣子留给验盏。咱们别先替它填字。"
+        },
+        {
+          "id": "cs01_mid_lost",
+          "speaker": "旁白",
+          "text": "锋收回来。衣里还热。厅外那拨路匪，灯下没散。",
+          "when": {
+            "all": [
+              {
+                "flag": "cs01_mid_lost"
+              },
+              {
+                "not_flag": "cs01_mid_fought"
+              }
+            ]
+          }
         }
       ],
       "actions": [
@@ -133,7 +148,14 @@
           "id": "open_skirmish",
           "label": "先试一锋",
           "when": {
-            "not_flag": "cs01_mid_fought"
+            "all": [
+              {
+                "not_flag": "cs01_mid_fought"
+              },
+              {
+                "not_flag": "cs01_mid_lost"
+              }
+            ]
           },
           "do": [
             {
@@ -143,7 +165,50 @@
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
                 "cs01_mid_fought"
-              ]
+              ],
+              "lose_flags": [
+                "cs01_mid_lost"
+              ],
+              "win_ledger": {
+                "choice": "mid_skirmish",
+                "title": "回执上的灯",
+                "outcome": "厅前试锋得手——路匪压下，验盏前锋先亮",
+                "yeartrace": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "retry_skirmish",
+          "label": "再试锋镝",
+          "when": {
+            "all": [
+              {
+                "not_flag": "cs01_mid_fought"
+              },
+              {
+                "flag": "cs01_mid_lost"
+              }
+            ]
+          },
+          "do": [
+            {
+              "op": "battle",
+              "map": "quest_bandit",
+              "objective": "rout",
+              "return": "res://scenes/story/chapter_player.tscn",
+              "win_flags": [
+                "cs01_mid_fought"
+              ],
+              "lose_flags": [
+                "cs01_mid_lost"
+              ],
+              "win_ledger": {
+                "choice": "mid_skirmish",
+                "title": "回执上的灯",
+                "outcome": "厅前试锋得手——路匪压下，验盏前锋先亮",
+                "yeartrace": true
+              }
             }
           ]
         },
@@ -241,7 +306,7 @@
           ]
         }
       ]
-},
+    },
     {
       "id": "tavern",
       "title": "挂板",

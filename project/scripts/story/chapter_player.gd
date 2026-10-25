@@ -592,9 +592,25 @@ func _run_op(step) -> String:
 				if fs != "" and not win_flags.has(fs):
 					win_flags.append(fs)
 			GameState.set_meta("battle_win_flags", win_flags)
+			var lose_flags: Array = []
+			for lf in row.get("lose_flags", []):
+				var ls := str(lf)
+				if ls != "" and not lose_flags.has(ls):
+					lose_flags.append(ls)
+			GameState.set_meta("battle_lose_flags", lose_flags)
+			# Chapter-owned season_ledger on win (shared maps stay clean).
+			var led: Dictionary = {}
+			var raw_led = row.get("win_ledger", {})
+			if typeof(raw_led) == TYPE_DICTIONARY:
+				led = raw_led.duplicate(true)
+			if not led.is_empty() and str(led.get("chapter", "")) == "":
+				led["chapter"] = str(_chapter.get("id", ""))
+			GameState.set_meta("battle_win_ledger", led)
 			test_capture["battle_map"] = str(row.get("map", ""))
 			test_capture["battle_objective"] = str(row.get("objective", ""))
 			test_capture["battle_win_flags"] = win_flags.duplicate()
+			test_capture["battle_lose_flags"] = lose_flags.duplicate()
+			test_capture["battle_win_ledger"] = led.duplicate(true)
 			_go_scene(BATTLE_SCENE)
 			return "stop"
 		"scene":

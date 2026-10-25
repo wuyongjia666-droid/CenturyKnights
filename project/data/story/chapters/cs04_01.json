@@ -176,7 +176,7 @@
           ]
         }
       ]
-},
+    },
     {
       "id": "bridge",
       "title": "门廊",
@@ -220,6 +220,21 @@
           "id": "cs04_br_6",
           "speaker": "旁白",
           "text": "牌被摸亮。你得选：训与行并排，还是先只留训条。"
+        },
+        {
+          "id": "cs04_mid_lost",
+          "speaker": "旁白",
+          "text": "锋收回来。门廊牌还亮。训条旁那拨，没散。",
+          "when": {
+            "all": [
+              {
+                "flag": "cs04_mid_lost"
+              },
+              {
+                "not_flag": "cs04_mid_fought"
+              }
+            ]
+          }
         }
       ],
       "actions": [
@@ -227,7 +242,14 @@
           "id": "open_skirmish",
           "label": "先试一锋",
           "when": {
-            "not_flag": "cs04_mid_fought"
+            "all": [
+              {
+                "not_flag": "cs04_mid_fought"
+              },
+              {
+                "not_flag": "cs04_mid_lost"
+              }
+            ]
           },
           "do": [
             {
@@ -237,7 +259,50 @@
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
                 "cs04_mid_fought"
-              ]
+              ],
+              "lose_flags": [
+                "cs04_mid_lost"
+              ],
+              "win_ledger": {
+                "choice": "mid_skirmish",
+                "title": "家训上的灯",
+                "outcome": "门廊试锋得手——训条旁锋镝先亮",
+                "yeartrace": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "retry_skirmish",
+          "label": "再试锋镝",
+          "when": {
+            "all": [
+              {
+                "not_flag": "cs04_mid_fought"
+              },
+              {
+                "flag": "cs04_mid_lost"
+              }
+            ]
+          },
+          "do": [
+            {
+              "op": "battle",
+              "map": "quest_bandit",
+              "objective": "rout",
+              "return": "res://scenes/story/chapter_player.tscn",
+              "win_flags": [
+                "cs04_mid_fought"
+              ],
+              "lose_flags": [
+                "cs04_mid_lost"
+              ],
+              "win_ledger": {
+                "choice": "mid_skirmish",
+                "title": "家训上的灯",
+                "outcome": "门廊试锋得手——训条旁锋镝先亮",
+                "yeartrace": true
+              }
             }
           ]
         },

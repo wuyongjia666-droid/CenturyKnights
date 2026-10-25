@@ -171,7 +171,7 @@
           ]
         }
       ]
-},
+    },
     {
       "id": "bridge",
       "title": "门廊",
@@ -220,6 +220,21 @@
           "id": "cs07_br_7",
           "speaker": "leader",
           "text": "带牌。去酒馆。"
+        },
+        {
+          "id": "cs07_mid_lost",
+          "speaker": "旁白",
+          "text": "锋收回来。仪典问声还在。墙牌旁那拨，没散。",
+          "when": {
+            "all": [
+              {
+                "flag": "cs07_mid_lost"
+              },
+              {
+                "not_flag": "cs07_mid_fought"
+              }
+            ]
+          }
         }
       ],
       "actions": [
@@ -227,7 +242,14 @@
           "id": "open_skirmish",
           "label": "先试一锋",
           "when": {
-            "not_flag": "cs07_mid_fought"
+            "all": [
+              {
+                "not_flag": "cs07_mid_fought"
+              },
+              {
+                "not_flag": "cs07_mid_lost"
+              }
+            ]
           },
           "do": [
             {
@@ -237,7 +259,50 @@
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
                 "cs07_mid_fought"
-              ]
+              ],
+              "lose_flags": [
+                "cs07_mid_lost"
+              ],
+              "win_ledger": {
+                "choice": "mid_skirmish",
+                "title": "仪典上的灯",
+                "outcome": "仪典口试锋得手——问声旁锋镝先亮",
+                "yeartrace": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "retry_skirmish",
+          "label": "再试锋镝",
+          "when": {
+            "all": [
+              {
+                "not_flag": "cs07_mid_fought"
+              },
+              {
+                "flag": "cs07_mid_lost"
+              }
+            ]
+          },
+          "do": [
+            {
+              "op": "battle",
+              "map": "quest_bandit",
+              "objective": "rout",
+              "return": "res://scenes/story/chapter_player.tscn",
+              "win_flags": [
+                "cs07_mid_fought"
+              ],
+              "lose_flags": [
+                "cs07_mid_lost"
+              ],
+              "win_ledger": {
+                "choice": "mid_skirmish",
+                "title": "仪典上的灯",
+                "outcome": "仪典口试锋得手——问声旁锋镝先亮",
+                "yeartrace": true
+              }
             }
           ]
         },

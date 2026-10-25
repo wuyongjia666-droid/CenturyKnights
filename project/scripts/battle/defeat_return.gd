@@ -19,6 +19,13 @@ static func back_path(win: bool, world_enc: bool, battle_return: String) -> Stri
 		var map_id := str(GameState.get_meta("battle_map", ""))
 		if map_id != "":
 			GameState.set_flag(map_id + "_lost")
+		# Chapter-authored lose_flags (csXX_mid_lost) — season owns the retry CTA morph.
+		for f in GameState.get_meta("battle_lose_flags", []):
+			var fs := str(f)
+			if fs != "":
+				GameState.set_flag(fs)
+		if GameState.has_meta("battle_lose_flags"):
+			GameState.set_meta("battle_lose_flags", [])
 		return battle_return
 	return CASTLE
 
