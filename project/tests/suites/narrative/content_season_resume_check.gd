@@ -8,8 +8,8 @@ const PLAYER := "res://scenes/story/chapter_player.tscn"
 const HUB := "res://scenes/hub/castle_hub.tscn"
 const CHAPTERS := [
 	"cs01_01", "cs02_01", "cs03_01", "cs04_01", "cs05_01", "cs05_02",
-	"cs06_01", "cs06_02", "cs07_01", "cs07_02", "cs08_01", "cs08_02",
-	"cs09_01", "cs09_02", "cs10_01", "cs10_02",
+	"cs06_01", "cs06_02", "cs07_01", "cs07_02",
+	"cs08_01", "cs08_02", "cs09_01", "cs09_02", "cs10_01", "cs10_02",
 ]
 const CHOICE := {
 	"cs01_01": "把无写进谱",
