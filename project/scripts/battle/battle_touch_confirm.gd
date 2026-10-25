@@ -10,7 +10,8 @@ extends RefCounted
 ## Y1-A T-P2: re-tap selected / empty-board deselect (no right-click on phone).
 ## Y1-A T-P3: unit-drag origin is strict figure hit (exact/bias/contour); soft-empty
 ## beside the selected piece pans the map instead of stealing the gesture.
-## Y1-A T-P4: preview drag soft-follows camera; attack ghost gets aim line + pulse juice.
+## Y1-A T-P4: soft-follow settles on confirm/select (not mid unit-drag — keeps pan≠drag);
+## attack ghost gets aim line + pulse juice.
 
 static func enabled() -> bool:
 	if not (GameState.settings is Dictionary):
@@ -62,6 +63,8 @@ static func confirm_move(host) -> void:
 		clear(host)
 		return
 	var cell: Vector2i = host.preview_move_cell
+	# T-P4 soft-follow settles on confirm (never mid unit-drag — pan≠drag contract).
+	BattlePick.focus_follow_preview(host)
 	clear(host)
 	commit_move(host, cell)
 	BattlePick.focus_cell(host, cell)
@@ -69,6 +72,9 @@ static func confirm_move(host) -> void:
 
 static func confirm_attack(host) -> void:
 	var ui: int = int(host.preview_attack_ui)
+	# T-P4 soft-follow settles on confirm (never mid unit-drag — pan≠drag contract).
+	if ui >= 0:
+		BattlePick.focus_follow_preview(host)
 	clear(host)
 	if host.selected < 0 or ui < 0 or ui >= host.units.size():
 		return
@@ -226,7 +232,6 @@ static func on_drag(host, screen_pos: Vector2) -> void:
 	var ui: int = host._unit_at(cell)
 	if host.attack_mode and ui >= 0 and str(host.units[ui].team) == "enemy" and host.units[ui].char.hp > 0:
 		if host._can_attack_from(su, cell):
-			var atk_changed: bool = int(host.preview_attack_ui) != ui
 			host.preview_attack_ui = ui
 			host.preview_move_cell = Vector2i(-1, -1)
 			if DeviceProfile.is_mobile():
@@ -234,8 +239,8 @@ static func on_drag(host, screen_pos: Vector2) -> void:
 			if host.overlay:
 				host.overlay.queue_redraw()
 			ForecastPanel.refresh(host)
-			if atk_changed:
-				BattlePick.focus_follow_preview(host)
+			# T-P4: do not soft-follow mid unit-drag (mobile_safe_area: unit drag must not pan).
+			# Camera settles on confirm_attack / focus_selected instead.
 		else:
 			_clear_stale_preview(host)
 		return
@@ -248,7 +253,7 @@ static func on_drag(host, screen_pos: Vector2) -> void:
 			BattleMobileBar.rebuild(host)
 		if host.overlay:
 			host.overlay.queue_redraw()
-		BattlePick.focus_follow_preview(host)
+		# T-P4: soft-follow deferred to confirm_move (unit drag must not pan the board).
 		return
 	# Finger left a legal landing — drop the ghost so release cannot surprise-commit.
 	_clear_stale_preview(host)

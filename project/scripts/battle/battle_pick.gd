@@ -331,16 +331,24 @@ static func _apply_focus_pan(host, target_pan: Vector2, smooth: bool) -> void:
 	if smooth and host is CanvasItem and (host as CanvasItem).is_inside_tree():
 		_tween_board_pan(host, clamped)
 		return
+	cancel_focus_tween(host)
 	host._board_pan = clamped
 	if host.has_method("_apply_board_xform"):
 		host._apply_board_xform()
 
 
+## Kill an in-flight focus tween so a finger pan / unit-drag owns `_board_pan`.
+static func cancel_focus_tween(host) -> void:
+	if not host.has_meta("_ck_focus_tw"):
+		return
+	var prev = host.get_meta("_ck_focus_tw")
+	if prev is Tween and is_instance_valid(prev):
+		prev.kill()
+	host.remove_meta("_ck_focus_tw")
+
+
 static func _tween_board_pan(host, target: Vector2) -> void:
-	if host.has_meta("_ck_focus_tw"):
-		var prev = host.get_meta("_ck_focus_tw")
-		if prev is Tween and is_instance_valid(prev):
-			prev.kill()
+	cancel_focus_tween(host)
 	var from: Vector2 = host._board_pan
 	var tw: Tween = host.create_tween()
 	host.set_meta("_ck_focus_tw", tw)
