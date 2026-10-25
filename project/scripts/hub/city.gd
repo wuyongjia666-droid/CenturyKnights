@@ -524,6 +524,7 @@ func _line(text: String, col: Color, size: int, w: float) -> Label:
 	var l := UIKit.body_label(text, col, size)
 	l.autowrap_mode = TextServer.AUTOWRAP_OFF
 	l.clip_text = true
+	l.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	l.custom_minimum_size = Vector2(w, 0)
 	return l
 
@@ -690,18 +691,21 @@ func _tab_overview() -> void:
 				v.add_child(rl)
 		else:
 			_rumor_box(p, Rect2(18, 330, 384, 230))
-	# HubDiscover strip shortens the panel; skip the tall honour block so AffairBtn fits.
-	if not sq.is_empty() and not ((not _mob) and y_off > 0.0):
+	var honour_en: Label = null
+	var st: Label = null
+	var sb: Label = null
+	var sst: Label = null
+	if not sq.is_empty():
 		if not _mob:
-			var sl := UIKit.mono("HONOUR COMMISSION", 9, UIKit.EMBER)
-			sl.position = Vector2(18, 330)
-			p.add_child(sl)
-		var st := UIKit.title_label("「%s」" % sq.get("title", ""), 15 if not _mob else MobilePage.FONT + 2, UIKit.TEXT)
-		var sb := _para(str(sq.get("brief", "")), UIKit.TEXT_DIM, 12 if not _mob else MobilePage.FONT, 384 if not _mob else 0)
+			honour_en = UIKit.mono("HONOUR COMMISSION", 9, UIKit.EMBER)
+			honour_en.position = Vector2(18, 330)
+			p.add_child(honour_en)
+		st = UIKit.title_label("「%s」" % sq.get("title", ""), 15 if not _mob else MobilePage.FONT + 2, UIKit.TEXT)
+		sb = _para(str(sq.get("brief", "")), UIKit.TEXT_DIM, 12 if not _mob else MobilePage.FONT, 384 if not _mob else 0)
 		var done := World.done_sig.has(str(sq.get("id", "")))
 		var running := not World.quest_by_id(str(sq.get("id", ""))).is_empty()
 		var stxt := "已完成 · 传奇兵器已解锁" if done else ("进行中 · 完成后解锁传奇兵器" if running else "声望「友善」(30) 后出现在委托榜")
-		var sst := UIKit.tag_chip(stxt, UIKit.OK if done else (UIKit.ACCENT if running else UIKit.TEXT_DIM), done)
+		sst = UIKit.tag_chip(stxt, UIKit.OK if done else (UIKit.ACCENT if running else UIKit.TEXT_DIM), done)
 		if _mob:
 			st.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			sb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -710,11 +714,8 @@ func _tab_overview() -> void:
 			v.add_child(sb)
 			v.add_child(sst)
 		else:
-			st.position = Vector2(18, 346)
 			p.add_child(st)
-			sb.position = Vector2(18, 372)
 			p.add_child(sb)
-			sst.position = Vector2(18, 440)
 			p.add_child(sst)
 	## v9.2 本城之事 / 职印：一个 48 高的按钮，点开浮层
 	var aff := UIKit.ghost_button(CKCityAffairs.label(city), 384 if not _mob else 0, 48 if not _mob else MobilePage.HIT)
@@ -726,9 +727,19 @@ func _tab_overview() -> void:
 		aff.custom_minimum_size = Vector2(0, MobilePage.HIT)
 		v.add_child(aff)
 	else:
+		# HubDiscover shortens the panel — stack honour + status above the affair CTA.
 		var panel_h := 576.0 - y_off
-		# Keep ≥8px gap above viewport bottom (body y=108 → screen) and below status chip.
-		aff.position = Vector2(18, minf(510.0, panel_h - 52.0))
+		var aff_y := minf(510.0, panel_h - 56.0)
+		if sst != null:
+			var sst_y := minf(440.0, aff_y - 28.0)
+			var sb_y := minf(372.0, sst_y - 68.0)
+			var st_y := minf(346.0, sb_y - 26.0)
+			if honour_en != null:
+				honour_en.position = Vector2(18, st_y - 16.0)
+			st.position = Vector2(18, st_y)
+			sb.position = Vector2(18, sb_y)
+			sst.position = Vector2(18, sst_y)
+		aff.position = Vector2(18, aff_y)
 		p.add_child(aff)
 	var p2 := _panel(Rect2(432, y_off, 416, 576 - y_off))
 	_head(p2, Vector2(18, 14), "可在此交付", "TURN IN HERE")
@@ -786,8 +797,9 @@ func _tab_overview() -> void:
 	var mm: Dictionary = World.mainline_marker()
 	if str(mm.get("node", "")) == city:
 		var mb := UIKit.cta_button("★ %s" % mm.label, "", 380, 38)
-		var p2_h := 576.0 - y_off
-		mb.position = Vector2(18, minf(520.0, p2_h - 44.0))
+		# HubDiscover shortens p2 — keep the chapter CTA inside the panel (desktop gate).
+		var mb_y := minf(520.0, (576.0 - y_off) - 46.0)
+		mb.position = Vector2(18, mb_y)
 		mb.disabled = not bool(mm.get("exists", false))
 		mb.pressed.connect(func(): CKNav.go(str(mm.path)))
 		p2.add_child(mb)
@@ -1133,12 +1145,13 @@ func _tab_market() -> void:
 	if not known_loops.is_empty() or not loops.is_empty():
 		var strip := Panel.new()
 		strip.name = "TradeLoopStrip"
+		# Below _head 「市集」; tip only — no EN mono on the shot surface.
 		strip.position = Vector2(18, 56)
 		strip.size = Vector2(812, 44 if not _mob else float(MobilePage.HIT + 8))
 		var ss := UIKit.flat_box(Color(UIKit.EMBER.r, UIKit.EMBER.g, UIKit.EMBER.b, 0.12), Color(UIKit.EMBER, 0.35), 8)
 		strip.add_theme_stylebox_override("panel", ss)
 		p.add_child(strip)
-		# Tip only — English PRODUCE LOOP mono sat under 「市集」 and failed the desktop gate.
+		# Tip only — EN mono sat under 「市集」 and failed the desktop gate.
 		var best: Dictionary = World.best_produce_trade(city)
 		var tip := ""
 		if not best.is_empty():
@@ -1147,7 +1160,7 @@ func _tab_market() -> void:
 			tip = Locale.t("atlas_trade_loop_unknown") % [str(loops[0].name), int(loops[0].buy)]
 		var sl := UIKit.body_label(tip, UIKit.TEXT, 12)
 		sl.name = "TradeLoopStripLine"
-		sl.position = Vector2(10, 12)
+		sl.position = Vector2(10, 10)
 		sl.size = Vector2(790, 20)
 		sl.autowrap_mode = TextServer.AUTOWRAP_OFF
 		sl.clip_text = true
