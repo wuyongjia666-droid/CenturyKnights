@@ -17,6 +17,36 @@ func _ready() -> void:
 
 
 func _run() -> String:
+	var err := _validate_chapter()
+	if err != "":
+		return err
+	var data = JSON.parse_string(FileAccess.get_file_as_string(CHAPTER))
+	var line_count := _count_lines(data)
+	err = _assert_catalog_and_counts(data, line_count)
+	if err != "":
+		return err
+	GameState.new_game("烬行", "灰旗", GameState.crest_color)
+	var packed: PackedScene = load(PLAYER)
+	if packed == null:
+		return "player scene missing"
+	var player = packed.instantiate()
+	player.chapter_path = CHAPTER
+	player.lock_path = true
+	player.suppress_scene_change = true
+	add_child(player)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	err = await _walk_to_choice(player, 40)
+	if err != "":
+		return err
+	err = await _choose_and_assert(player)
+	if err != "":
+		return err
+	print("OK cs01_01 lines=%d beat=ledger flag=cs01_wrote_wu" % line_count)
+	return ""
+
+
+func _validate_chapter() -> String:
 	if not FileAccess.file_exists(CHAPTER):
 		return "missing " + CHAPTER
 	var schema := Schema.validate_file(CHAPTER)
@@ -30,38 +60,32 @@ func _run() -> String:
 	var violations: Array = report.get("violations", [])
 	if not violations.is_empty():
 		return "lint %s" % str(violations[0])
-	var data = JSON.parse_string(FileAccess.get_file_as_string(CHAPTER))
+	return ""
+
+
+func _count_lines(data) -> int:
+	var line_count := 0
+	if typeof(data) != TYPE_DICTIONARY:
+		return 0
+	for beat in data.get("beats", []):
+		line_count += (beat.get("lines", []) as Array).size()
+	return line_count
+
+
+func _assert_catalog_and_counts(data, line_count: int) -> String:
 	if typeof(data) != TYPE_DICTIONARY:
 		return "chapter not dict"
 	if str(data.get("id", "")) != "cs01_01":
 		return "id"
-	var line_count := 0
-	for beat in data.get("beats", []):
-		line_count += (beat.get("lines", []) as Array).size()
 	if line_count < 30:
 		return "too few lines %d" % line_count
-	var found := false
 	for row in StoryCatalog.mainline_entries():
 		if str(row.get("id", "")) == "cs01_01":
-			found = true
-			break
-	if not found:
-		return "StoryCatalog missing cs01_01"
-	GameState.new_game("烬行", "灰旗", GameState.crest_color)
-	var packed: PackedScene = load(PLAYER)
-	if packed == null:
-		return "player scene missing"
-	var player = packed.instantiate()
-	player.chapter_path = CHAPTER
-	player.lock_path = true
-	player.suppress_scene_change = true
-	add_child(player)
-	await get_tree().process_frame
-	await get_tree().process_frame
-	# Walk open → hall → audit → tavern via 继续, then choose 把无写进谱.
-	var err := await _walk_to_choice(player, 40)
-	if err != "":
-		return err
+			return ""
+	return "StoryCatalog missing cs01_01"
+
+
+func _choose_and_assert(player) -> String:
 	if not player.simulate_press_action_containing("把无写进谱"):
 		return "could not press write_wu labels=%s" % str(player.action_labels())
 	await get_tree().process_frame
@@ -72,7 +96,6 @@ func _run() -> String:
 		return "expected ledger beat, at %s" % player.current_beat_id()
 	player.simulate_finish_dialogue()
 	await get_tree().process_frame
-	print("OK cs01_01 lines=%d beat=ledger flag=cs01_wrote_wu" % line_count)
 	return ""
 
 
