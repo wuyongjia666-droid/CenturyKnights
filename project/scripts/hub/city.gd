@@ -690,12 +690,12 @@ func _tab_overview() -> void:
 				v.add_child(rl)
 		else:
 			_rumor_box(p, Rect2(18, 330, 384, 230))
-	if not sq.is_empty():
-		var honour_en: Label = null
+	# HubDiscover strip shortens the panel; skip the tall honour block so AffairBtn fits.
+	if not sq.is_empty() and not ((not _mob) and y_off > 0.0):
 		if not _mob:
-			honour_en = UIKit.mono("HONOUR COMMISSION", 9, UIKit.EMBER)
-			honour_en.position = Vector2(18, 330)
-			p.add_child(honour_en)
+			var sl := UIKit.mono("HONOUR COMMISSION", 9, UIKit.EMBER)
+			sl.position = Vector2(18, 330)
+			p.add_child(sl)
 		var st := UIKit.title_label("「%s」" % sq.get("title", ""), 15 if not _mob else MobilePage.FONT + 2, UIKit.TEXT)
 		var sb := _para(str(sq.get("brief", "")), UIKit.TEXT_DIM, 12 if not _mob else MobilePage.FONT, 384 if not _mob else 0)
 		var done := World.done_sig.has(str(sq.get("id", "")))
@@ -710,19 +710,11 @@ func _tab_overview() -> void:
 			v.add_child(sb)
 			v.add_child(sst)
 		else:
-			# Discover strip shrinks panel — stack honour + status above affair CTA.
-			var panel_h := 576.0 - y_off
-			var aff_y := minf(510.0, panel_h - 56.0)
-			var sst_y := minf(440.0, aff_y - 28.0)
-			var sb_y := minf(372.0, sst_y - 68.0)
-			var st_y := minf(346.0, sb_y - 26.0)
-			if honour_en != null:
-				honour_en.position = Vector2(18, st_y - 16.0)
-			st.position = Vector2(18, st_y)
+			st.position = Vector2(18, 346)
 			p.add_child(st)
-			sb.position = Vector2(18, sb_y)
+			sb.position = Vector2(18, 372)
 			p.add_child(sb)
-			sst.position = Vector2(18, sst_y)
+			sst.position = Vector2(18, 440)
 			p.add_child(sst)
 	## v9.2 本城之事 / 职印：一个 48 高的按钮，点开浮层
 	var aff := UIKit.ghost_button(CKCityAffairs.label(city), 384 if not _mob else 0, 48 if not _mob else MobilePage.HIT)
@@ -735,7 +727,8 @@ func _tab_overview() -> void:
 		v.add_child(aff)
 	else:
 		var panel_h := 576.0 - y_off
-		aff.position = Vector2(18, minf(510.0, panel_h - 56.0))
+		# Keep ≥8px gap above viewport bottom (body y=108 → screen) and below status chip.
+		aff.position = Vector2(18, minf(510.0, panel_h - 52.0))
 		p.add_child(aff)
 	var p2 := _panel(Rect2(432, y_off, 416, 576 - y_off))
 	_head(p2, Vector2(18, 14), "可在此交付", "TURN IN HERE")
@@ -771,11 +764,11 @@ func _tab_overview() -> void:
 	for g in n.get("produce", []):
 		var best: Dictionary = World.best_known_sell(str(g), city)
 		var here := World.price(city, str(g), "buy")
-		var txt := "%s：本地 %d 银买入" % [World.good_name(str(g)), here]
+		var txt := "%s 买 %d" % [World.good_name(str(g)), here]
 		if str(best.get("city", "")) != "":
 			txt += " → %s 卖 %d（%+d）" % [World.node(str(best.city)).get("name", ""), int(best.price), int(best.price) - here]
 		else:
-			txt += " → 暂无他处行情（到访或打听后可见）"
+			txt += " → 暂无卖价"
 		var ln := _line(txt, UIKit.TEXT_DIM, 12, 380)
 		ln.name = "TradeLoop_%d" % ti
 		v3.add_child(ln)
@@ -787,12 +780,14 @@ func _tab_overview() -> void:
 			go_mkt.custom_minimum_size = Vector2(0, MobilePage.HIT)
 		go_mkt.pressed.connect(func(): _set_tab("market"))
 		v3.add_child(go_mkt)
-	for t in World.tips.slice(0, 3):
+	var tip_n := 1 if y_off > 0.0 else 3
+	for t in World.tips.slice(0, tip_n):
 		v3.add_child(_line("情报：%s" % str(t), UIKit.ACCENT, 11, 380))
 	var mm: Dictionary = World.mainline_marker()
 	if str(mm.get("node", "")) == city:
 		var mb := UIKit.cta_button("★ %s" % mm.label, "", 380, 38)
-		mb.position = Vector2(18, minf(520.0, (576.0 - y_off) - 48.0))
+		var p2_h := 576.0 - y_off
+		mb.position = Vector2(18, minf(520.0, p2_h - 44.0))
 		mb.disabled = not bool(mm.get("exists", false))
 		mb.pressed.connect(func(): CKNav.go(str(mm.path)))
 		p2.add_child(mb)
@@ -1157,7 +1152,7 @@ func _tab_market() -> void:
 		sl.autowrap_mode = TextServer.AUTOWRAP_OFF
 		sl.clip_text = true
 		strip.add_child(sl)
-		y0 = 100.0 if not _mob else float(48 + MobilePage.HIT + 16)
+		y0 = 104.0 if not _mob else float(56 + MobilePage.HIT + 16)
 	var hdr := HBoxContainer.new()
 	hdr.position = Vector2(18, y0)
 	hdr.add_theme_constant_override("separation", 0)

@@ -1064,11 +1064,12 @@ func _render_right() -> void:
 	loop_box.name = "TradeLoop"
 	loop_box.add_theme_constant_override("separation", 2)
 	kv.add_child(loop_box)
-	loop_box.add_child(UIKit.mono(Locale.t("atlas_trade_loop_en"), 8, UIKit.EMBER, false))
 	var loops: Array = World.produce_trade_loop(_sel)
 	var shown := 0
+	if not loops.is_empty():
+		loop_box.add_child(UIKit.mono(Locale.t("atlas_trade_loop_en"), 8, UIKit.EMBER, false))
 	for row in loops:
-		if shown >= 2:
+		if shown >= 1:
 			break
 		var line := ""
 		if bool(row.get("known", false)):
@@ -1080,31 +1081,28 @@ func _render_right() -> void:
 		ll.autowrap_mode = TextServer.AUTOWRAP_OFF
 		ll.clip_text = true
 		ll.custom_minimum_size = Vector2(224, 0)
+		ll.size = Vector2(224, 14)
 		loop_box.add_child(ll)
 		shown += 1
-	var loop_extra := 0.0
-	if shown > 0:
-		loop_extra = 12.0 + float(shown) * 14.0  # PRODUCE LOOP header + lines
+	# Lore sits below kv (which may include one trade-loop line). Fixed y=296 overlapped the CTA.
+	var lore_y := 308.0 if loops.is_empty() else 324.0
+	var lore := UIKit.body_label(str(n.get("lore", "")), UIKit.TEXT_DIM, 11)
+	lore.position = Vector2(16, lore_y)
+	lore.size = Vector2(224, 56 if not loops.is_empty() else 72)
+	lore.custom_minimum_size = Vector2(224, 0)
+	lore.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lore.clip_text = true
+	p.add_child(lore)
 	if _sel == World.pos and not loops.is_empty():
 		var tb := UIKit.ghost_button(Locale.t("atlas_trade_loop_goto"), 224, 26)
 		tb.name = "TradeLoopGoto"
+		tb.position = Vector2(16, 438)
 		tb.pressed.connect(func():
 			GameState.set_meta("city_tab", "market")
 			_enter_here())
-		loop_box.add_child(tb)
-		loop_extra += 28.0
-	# lore sits below kv+TradeLoop so produce lines / 去市集 never cover the blurb
-	var lore_y := 296.0 + loop_extra
-	var lore_h := maxf(48.0, 84.0 - loop_extra * 0.35)
-	var lore := UIKit.body_label(str(n.get("lore", "")), UIKit.TEXT_DIM, 11)
-	lore.position = Vector2(16, lore_y)
-	lore.size = Vector2(224, lore_h)
-	lore.custom_minimum_size = Vector2(224, 0)
-	lore.clip_text = true
-	lore.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	p.add_child(lore)
+		p.add_child(tb)
 	# quests here
-	var qy := lore_y + lore_h + 4.0
+	var qy := lore_y + (60.0 if not loops.is_empty() else 76.0)
 	for mk in World.quest_markers().get(_sel, []):
 		var q: Dictionary = mk.quest
 		var ql := UIKit.body_label("%s %s" % ["✓ 交付" if str(mk.kind) == "turnin" else "◆ 目标", q.title], UIKit.OK if str(mk.kind) == "turnin" else UIKit.DANGER, 11)
