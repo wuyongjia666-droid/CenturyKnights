@@ -6,6 +6,7 @@
 - [ ] `bash scripts/build_android.sh` 本机或 CI 成功  
 - [ ] `main-<sha8>` Release 双平台附件齐全  
 - [ ] `python3 tools/ci/store_prep_check.py` 绿  
+- [ ] `python3 tools/ci/store_packaging_dry_check.py` 绿  
 - [ ] `python3 tools/ci/export_size_report.py` 绿  
 
 ## B. 崩溃 / 性能
@@ -18,6 +19,8 @@
 ## C. 商店页（文案已有草稿）
 
 - [ ] 短描述 / 完整描述定稿（见 `listing-copy-zh.md`）  
+- [ ] Play / MS 完整字段稿过目（`play-listing-full.md` / `ms-store-listing-full.md`）  
+- [ ] 隐私政策草稿 + 分级意图（`privacy-policy-draft.md` / `age-rating-draft.md`）  
 - [ ] 五张截图按清单拍齐  
 - [ ] 隐私政策 URL（若收崩溃日志）  
 - [ ] 分级问卷草稿  
