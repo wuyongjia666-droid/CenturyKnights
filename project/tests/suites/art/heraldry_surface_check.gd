@@ -389,8 +389,7 @@ func _run() -> void:
 		_ok(mq_ca.position.x >= 280.0, "mobile quests CastleArms not right-anchored")
 	mob_q.queue_free()
 	await _settle(2)
-	if _fail != "":
-		return
+	## (no early-return here — keeps _run under gdlint max-returns=12)
 
 	# Rank badges distinct
 	var sigs: Dictionary = {}
