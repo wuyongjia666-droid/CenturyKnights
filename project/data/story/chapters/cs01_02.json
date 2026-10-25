@@ -678,6 +678,21 @@
           "text": "沙漏不问空格急不急。"
         },
         {
+          "id": "cs0102_vst1",
+          "speaker": "岁吏",
+          "text": "月份从泥印边沿挪开。挪开，才看见真沙漏。"
+        },
+        {
+          "id": "cs0102_vst2",
+          "speaker": "书记官",
+          "text": "补欠那格，要等桥泥干。"
+        },
+        {
+          "id": "cs0102_vst3",
+          "speaker": "leader",
+          "text": "月份挪过。欠，我补。"
+        },
+        {
           "id": "cs0102_vis_mv4",
           "speaker": "leader",
           "text": "不急。去看月份怎么走。"
@@ -975,6 +990,38 @@
           "id": "cs0102_mid_mv6",
           "speaker": "leader",
           "text": "空格我守。锋先问清楚。"
+        },
+        {
+          "id": "cs0102_win1",
+          "speaker": "旁白",
+          "text": "锋再定。桥侧泥印浅了，滑步那拨退到芦里。",
+          "when": {
+            "flag": "cs01_mid_fought"
+          }
+        },
+        {
+          "id": "cs0102_win2",
+          "speaker": "老旗手",
+          "text": "泥里的脚窝，比刀痕好认。",
+          "when": {
+            "flag": "cs01_mid_fought"
+          }
+        },
+        {
+          "id": "cs0102_win3",
+          "speaker": "苇原·灯影",
+          "text": "吴钩的影短了。短了，才敢回头。",
+          "when": {
+            "flag": "cs01_mid_fought"
+          }
+        },
+        {
+          "id": "cs0102_win4",
+          "speaker": "leader",
+          "text": "这一锋补上月的欠。桥，我还过。",
+          "when": {
+            "flag": "cs01_mid_fought"
+          }
         },
         {
           "speaker": "旁白",
@@ -1341,6 +1388,26 @@
           "id": "cs0102_ret_mv3",
           "speaker": "岁吏",
           "text": "过板的才配回读。"
+        },
+        {
+          "id": "cs0102_tvn1",
+          "speaker": "掌柜",
+          "text": "桥泥那一锋，靴底还潮。"
+        },
+        {
+          "id": "cs0102_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "芦里那拨退了。退了才配要酒。"
+        },
+        {
+          "id": "cs0102_tvn3",
+          "speaker": "听回",
+          "text": "吴钩影短的事，桌上有人传。"
+        },
+        {
+          "id": "cs0102_tvn4",
+          "speaker": "leader",
+          "text": "泥干。人在。补欠，算数。"
         },
         {
           "id": "cs0102_ret_mv4",

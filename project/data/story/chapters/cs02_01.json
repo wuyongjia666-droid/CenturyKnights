@@ -293,6 +293,38 @@
           "text": "灯下的字我认。锋上的人我验。"
         },
         {
+          "id": "cs0201_win1",
+          "speaker": "旁白",
+          "text": "锋收。院墙外的影子散了，婚约灯这才敢亮。",
+          "when": {
+            "flag": "cs02_mid_fought"
+          }
+        },
+        {
+          "id": "cs0201_win2",
+          "speaker": "老旗手",
+          "text": "院门清了。旗别卷——产房那边要看见。",
+          "when": {
+            "flag": "cs02_mid_fought"
+          }
+        },
+        {
+          "id": "cs0201_win3",
+          "speaker": "槐里·青禾",
+          "text": "烟不往里灌了。字，可以写了。",
+          "when": {
+            "flag": "cs02_mid_fought"
+          }
+        },
+        {
+          "id": "cs0201_win4",
+          "speaker": "leader",
+          "text": "锋验过。灯下写婚约，我签字。",
+          "when": {
+            "flag": "cs02_mid_fought"
+          }
+        },
+        {
           "id": "cs02_mid_lost",
           "speaker": "旁白",
           "text": "锋收回来。院墙外的影子还在。婚约灯还没点。",
@@ -575,6 +607,21 @@
           "text": "月份不等人，等人把气放匀。"
         },
         {
+          "id": "cs0201_vst1",
+          "speaker": "岁吏",
+          "text": "月份从产房窗缝里挤进来。挤得紧，才是真月份。"
+        },
+        {
+          "id": "cs0201_vst2",
+          "speaker": "书记官",
+          "text": "生辰格要空着等。空着不是忘，是不敢先填。"
+        },
+        {
+          "id": "cs0201_vst3",
+          "speaker": "leader",
+          "text": "月份走，孩的名慢慢亮。我不催。"
+        },
+        {
           "id": "cs0201_vis_mv4",
           "speaker": "leader",
           "text": "气匀了。去看月份。"
@@ -740,6 +787,26 @@
           "id": "cs0201_ret_mv3",
           "speaker": "听回",
           "text": "真事在回执。回执在灯下。"
+        },
+        {
+          "id": "cs0201_tvn1",
+          "speaker": "掌柜",
+          "text": "婚约灯的油味，比酒先到。"
+        },
+        {
+          "id": "cs0201_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "院墙清了才敢喝。喝完还要回去看灯。"
+        },
+        {
+          "id": "cs0201_tvn3",
+          "speaker": "苇原·灯影",
+          "text": "产房那边若哭一声，酒杯先放下。"
+        },
+        {
+          "id": "cs0201_tvn4",
+          "speaker": "leader",
+          "text": "灯亮着。人在。名，等月份填。"
         },
         {
           "id": "cs0201_ret_mv4",

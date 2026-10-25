@@ -1,6 +1,6 @@
 extends Node
 ## Hub → 内容季章 → 中途战/据点 visit → 回章：抽样真链路 E2E（禁 EmptyHost）。
-## cs01_01 厅前试锋→验盏 visit；cs06_01 时漏 visit→门廊试锋。全季静态度交 hub_entry /
+## S01–S10 _01 全链路：hub chip→章→中途战 loss→win / 据点 visit→回章（交替换序）。静态度交 hub_entry /
 ## battle_retry / visit_authored。
 
 const PLAYER := "res://scenes/story/chapter_player.tscn"
@@ -23,7 +23,71 @@ const CHAINS := [
 		"after_visit": "tavern",
 	},
 	{
+		"cid": "cs02_01",
+		"order": "visit_then_battle",
+		"mid": "estate",
+		"after_mid": "birth",
+		"visit": "birth",
+		"after_visit": "tavern",
+	},
+	{
+		"cid": "cs03_01",
+		"order": "battle_then_visit",
+		"mid": "bridge",
+		"after_mid": "tavern",
+		"visit": "hourglass",
+		"after_visit": "bridge",
+	},
+	{
+		"cid": "cs04_01",
+		"order": "visit_then_battle",
+		"mid": "bridge",
+		"after_mid": "tavern",
+		"visit": "hourglass",
+		"after_visit": "bridge",
+	},
+	{
+		"cid": "cs05_01",
+		"order": "battle_then_visit",
+		"mid": "bridge",
+		"after_mid": "tavern",
+		"visit": "hourglass",
+		"after_visit": "bridge",
+	},
+	{
 		"cid": "cs06_01",
+		"order": "visit_then_battle",
+		"mid": "bridge",
+		"after_mid": "tavern",
+		"visit": "hourglass",
+		"after_visit": "bridge",
+	},
+	{
+		"cid": "cs07_01",
+		"order": "battle_then_visit",
+		"mid": "bridge",
+		"after_mid": "tavern",
+		"visit": "hourglass",
+		"after_visit": "bridge",
+	},
+	{
+		"cid": "cs08_01",
+		"order": "visit_then_battle",
+		"mid": "bridge",
+		"after_mid": "tavern",
+		"visit": "hourglass",
+		"after_visit": "bridge",
+	},
+	{
+		"cid": "cs09_01",
+		"order": "battle_then_visit",
+		"mid": "bridge",
+		"after_mid": "tavern",
+		"visit": "hourglass",
+		"after_visit": "bridge",
+	},
+	{
+		"cid": "cs10_01",
 		"order": "visit_then_battle",
 		"mid": "bridge",
 		"after_mid": "tavern",

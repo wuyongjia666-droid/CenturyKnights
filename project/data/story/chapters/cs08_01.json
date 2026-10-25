@@ -359,6 +359,21 @@
           "text": "拨开再看月份。"
         },
         {
+          "id": "cs0801_vst1",
+          "speaker": "岁吏",
+          "text": "月份从碑阴凉处挪到香案前。挪得轻，像怕惊祖。"
+        },
+        {
+          "id": "cs0801_vst2",
+          "speaker": "书记官",
+          "text": "碑录格要等香稳了再落笔。"
+        },
+        {
+          "id": "cs0801_vst3",
+          "speaker": "leader",
+          "text": "月份挪过。香，我添。"
+        },
+        {
           "id": "cs0801_vis_mv4",
           "speaker": "leader",
           "text": "拨开。去看。"
@@ -530,6 +545,38 @@
           "id": "cs0801_mid_mv6",
           "speaker": "leader",
           "text": "拜完不让抢。锋先拦。"
+        },
+        {
+          "id": "cs0801_win1",
+          "speaker": "旁白",
+          "text": "锋定。祖祠香火稳了，墙牌旁那拨抢不着。",
+          "when": {
+            "flag": "cs08_mid_fought"
+          }
+        },
+        {
+          "id": "cs0801_win2",
+          "speaker": "掌柜",
+          "text": "拜完的香，今晚没人敢吹。",
+          "when": {
+            "flag": "cs08_mid_fought"
+          }
+        },
+        {
+          "id": "cs0801_win3",
+          "speaker": "槐里·青禾",
+          "text": "刀鞘不响了。香火，自己稳。",
+          "when": {
+            "flag": "cs08_mid_fought"
+          }
+        },
+        {
+          "id": "cs0801_win4",
+          "speaker": "leader",
+          "text": "锋拦过抢。祖祠，我跪得。",
+          "when": {
+            "flag": "cs08_mid_fought"
+          }
         },
         {
           "id": "cs08_mid_lost",
@@ -786,6 +833,26 @@
           "id": "cs0801_ret_mv3",
           "speaker": "书记官",
           "text": "碑事回堡记。"
+        },
+        {
+          "id": "cs0801_tvn1",
+          "speaker": "掌柜",
+          "text": "祖祠那一锋，酒要冷——冷着敬祖。"
+        },
+        {
+          "id": "cs0801_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "抢香的人散了。散了，座才清。"
+        },
+        {
+          "id": "cs0801_tvn3",
+          "speaker": "老旗手",
+          "text": "旗在祠阶下低过。低过，再举不愧。"
+        },
+        {
+          "id": "cs0801_tvn4",
+          "speaker": "leader",
+          "text": "香稳。人齐。祖前，不抢。"
         },
         {
           "id": "cs0801_ret_mv4",

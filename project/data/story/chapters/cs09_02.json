@@ -400,6 +400,21 @@
           "text": "靠近过就要把月份看完。"
         },
         {
+          "id": "cs0902_vst1",
+          "speaker": "岁吏",
+          "text": "月份从第二道巾印上滚过。滚过，名册才敢合。"
+        },
+        {
+          "id": "cs0902_vst2",
+          "speaker": "书记官",
+          "text": "复验格最怕湿着合册。"
+        },
+        {
+          "id": "cs0902_vst3",
+          "speaker": "leader",
+          "text": "月份滚过。验，合得。"
+        },
+        {
           "id": "cs0902_vis_mv4",
           "speaker": "leader",
           "text": "看完。去。"
@@ -582,6 +597,38 @@
           "id": "cs0902_mid_mv6",
           "speaker": "leader",
           "text": "当场试锋。假血不进册。"
+        },
+        {
+          "id": "cs0902_win1",
+          "speaker": "旁白",
+          "text": "锋再定。血巾二次验干，卖泼的连声都没了。",
+          "when": {
+            "flag": "cs09_mid_fought"
+          }
+        },
+        {
+          "id": "cs0902_win2",
+          "speaker": "掌柜",
+          "text": "二次验比一次验短。短，是因为已经清。",
+          "when": {
+            "flag": "cs09_mid_fought"
+          }
+        },
+        {
+          "id": "cs0902_win3",
+          "speaker": "槐里·青禾",
+          "text": "巾角旧星旁又干一星。两星，才像足验。",
+          "when": {
+            "flag": "cs09_mid_fought"
+          }
+        },
+        {
+          "id": "cs0902_win4",
+          "speaker": "leader",
+          "text": "锋再问一次。血，仍我的。",
+          "when": {
+            "flag": "cs09_mid_fought"
+          }
         },
         {
           "id": "cs09b_br_lost",
@@ -855,6 +902,26 @@
           "id": "cs0902_ret_mv3",
           "speaker": "岁吏",
           "text": "真事回堡。"
+        },
+        {
+          "id": "cs0902_tvn1",
+          "speaker": "掌柜",
+          "text": "二次验那一锋，杯更净。"
+        },
+        {
+          "id": "cs0902_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "卖泼的声没了。没了，才敢碰边。"
+        },
+        {
+          "id": "cs0902_tvn3",
+          "speaker": "听回",
+          "text": "两星干并排，酒桌有人比划。"
+        },
+        {
+          "id": "cs0902_tvn4",
+          "speaker": "leader",
+          "text": "再清。名在。酒，净着。"
         },
         {
           "id": "cs0902_ret_mv4",
