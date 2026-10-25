@@ -577,13 +577,16 @@ static func apply_month(force_roll: float = -1.0) -> String:
 			if int(st.threat.get("months", 0)) >= 1:
 				var g_before := int(st.garrison)
 				_resolve_unanswered(id, force_roll)
+				var loot_qty := 0
+				if not World.last_siege_loot.is_empty() and str(World.last_siege_loot.get("id", "")) == id:
+					loot_qty = int(World.last_siege_loot.get("looted", 0))
 				if not owned(id):
-					lost.append({"id": id, "name": str(s.name), "garrison_before": g_before})
+					lost.append({"id": id, "name": str(s.name), "garrison_before": g_before, "cache_looted": loot_qty})
 					continue
 				st = state(id)
 				var g_after := int(st.garrison)
-				if g_after < g_before:
-					held.append({"id": id, "name": str(s.name), "garrison_before": g_before, "garrison": g_after})
+				if g_after < g_before or loot_qty > 0:
+					held.append({"id": id, "name": str(s.name), "garrison_before": g_before, "garrison": g_after, "cache_looted": loot_qty})
 			else:
 				st.threat["months"] = 1
 				_put(id, st)
@@ -677,18 +680,62 @@ static func start_threat(id: String) -> Dictionary:
 	_emit_siege_alert(id, "declared")
 	return st.threat
 
+
+## Raid the stockade granary. Returns food taken (0 if none). fraction 1.0 = empty the cache.
+static func loot_cache(id: String, fraction: float = 1.0) -> int:
+	var st := state(id)
+	if not bool(st.stockade):
+		return 0
+	var cache := maxi(0, int(st.get("cache_food", 0)))
+	if cache <= 0:
+		return 0
+	var taken := cache if fraction >= 1.0 else maxi(1, int(ceili(float(cache) * fraction)))
+	taken = mini(taken, cache)
+	st.cache_food = cache - taken
+	_put(id, st)
+	return taken
+
+
 static func _resolve_unanswered(id: String, force_roll: float) -> void:
 	var st := state(id)
 	var by := str(st.threat.get("by", NEUTRAL))
+	var by_name := str(st.threat.get("name", ""))
 	var roll := rng.randf() if force_roll < 0.0 else force_roll
 	var hold_pct := int(round(hold_chance(id) * 100.0))
 	if roll < hold_chance(id):
+		# Held the site — raiders still sack half the granary if any.
+		var looted := loot_cache(id, 0.5)
+		st = state(id)
 		var before := int(st.garrison)
 		st.threat = {}
 		st.garrison = maxi(0, before - 1)
 		_put(id, st)
 		_log(Locale.t("terr_53") % [site(id).name, before, int(st.garrison), hold_pct])
+		if looted > 0:
+			_log(Locale.t("atlas_siege_loot_hold_log") % [site(id).name, looted])
+			World.mark_siege_loot({
+				"id": id,
+				"name": str(site(id).name),
+				"by_name": by_name,
+				"looted": looted,
+				"cache_left": int(state(id).get("cache_food", 0)),
+				"outcome": "held",
+				"anchor": str(site(id).get("anchor", "")),
+			})
 	else:
+		# Lost — empty the granary into the attackers before ownership flips.
+		var looted2 := loot_cache(id, 1.0)
+		if looted2 > 0:
+			_log(Locale.t("atlas_siege_loot_lost_log") % [site(id).name, looted2])
+			World.mark_siege_loot({
+				"id": id,
+				"name": str(site(id).name),
+				"by_name": by_name,
+				"looted": looted2,
+				"cache_left": 0,
+				"outcome": "lost",
+				"anchor": str(site(id).get("anchor", "")),
+			})
 		lose(id, by)
 
 static func threatened_at(anchor: String) -> Array:
@@ -722,6 +769,8 @@ static func _emit_siege_alert(id: String, phase: String) -> void:
 		"bribe_cost": bribe_cost(id),
 		"scout_cost": scout_cost(id),
 		"hold_pct": int(round(hold_chance(id) * 100.0)) if scouted else -1,
+		"stockade": bool(st.stockade),
+		"cache": int(st.get("cache_food", 0)),
 	}
 	World.mark_siege_alert(payload)
 

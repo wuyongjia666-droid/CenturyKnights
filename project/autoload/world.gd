@@ -84,6 +84,7 @@ var last_stockade_cache: Dictionary = {}  # arrived at owned stockade with cache
 var pending_cache_site: String = ""  # site id to open when we arrive at its anchor
 var last_territory_month: Dictionary = {}  # month yield/drain/lost for TerritoryMonthModal
 var last_siege_alert: Dictionary = {}  # rival siege/threat for SiegeAlertModal
+var last_siege_loot: Dictionary = {}  # unanswered siege sacked stockade cache
 var last_march_muster: Dictionary = {}  # road merc hire → march roster modal
 var market: Dictionary = {}     # city -> {good: stock}
 var fairs: Dictionary = {}      # city -> days_total expiry
@@ -199,6 +200,7 @@ func reset() -> void:
 	pending_cache_site = ""
 	last_territory_month = {}
 	last_siege_alert = {}
+	last_siege_loot = {}
 	last_march_muster = {}
 	market = {}
 	for id in nodes.keys():
@@ -285,6 +287,7 @@ func from_save(d: Dictionary) -> void:
 	pending_cache_site = ""
 	last_territory_month = {}
 	last_siege_alert = {}
+	last_siege_loot = {}
 	last_march_muster = {}
 	market = {}
 	var m: Dictionary = d.get("market", {})
@@ -2631,6 +2634,24 @@ func take_siege_alert() -> Dictionary:
 
 func dismiss_siege_alert() -> void:
 	last_siege_alert = {}
+
+
+## Unanswered siege sacked the stockade granary (held half / lost all).
+func mark_siege_loot(payload: Dictionary) -> void:
+	if payload.is_empty():
+		return
+	# Keep the latest raid report (one modal).
+	last_siege_loot = payload.duplicate(true)
+
+
+func take_siege_loot() -> Dictionary:
+	var d: Dictionary = last_siege_loot.duplicate(true)
+	last_siege_loot = {}
+	return d
+
+
+func dismiss_siege_loot() -> void:
+	last_siege_loot = {}
 
 
 
