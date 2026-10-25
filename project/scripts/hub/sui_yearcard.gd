@@ -8,6 +8,7 @@ var _msg: Label
 
 func _ready() -> void:
 	CKPageKit.shell(self, Locale.t("sui_year_ctx"), "YEAR CARD", Locale.t("sui_year_title"), Locale.t("sui_year_desc"))
+	_place_yearcard_crests()
 	var panel := CKPageKit.card(self, Rect2(42, CKPageKit.TOP + 8, 1196, 512), "SuiInbox")
 	_list = CKPageKit.list(panel, Rect2(16, 16, 1164, 480), "SuiRows")
 	_msg = CKPageKit.feedback(self)
@@ -58,6 +59,8 @@ func _row(item: Dictionary) -> void:
 		age = int(c.age)
 	var r := CKPageKit.row(UIKit.ACCENT, 0)
 	var box: VBoxContainer = r[1]
+	if c != null:
+		CKHeraldryChrome.attach_yearcard_row_arms(box, c, Vector2(30, 36) if DeviceProfile.is_mobile() else Vector2(32, 38))
 	box.add_child(UIKit.tag_chip(str(item.get("band", "sui")), UIKit.ACCENT))
 	box.add_child(UIKit.title_label(str(item.get("title", "")), 18))
 	box.add_child(CKPageKit.text(Locale.t("sui_year_who", [who, age]), UIKit.TEXT_DIM, 13, 1000))
@@ -87,6 +90,24 @@ func _ack(cid: String, eid: String) -> void:
 func nav_back() -> void:
 	CKNav.up()
 
+
+func _place_yearcard_crests(mobile: bool = false) -> void:
+	## Fat year-card chrome: 团徽 header + 旗徽 strip (YearArms land on rows).
+	for n in ["CastleArms", "CastleBannerStrip"]:
+		var oldn := get_node_or_null(n)
+		if oldn:
+			oldn.name = "_%sDying" % n
+			oldn.queue_free()
+	var mob := mobile or DeviceProfile.is_mobile()
+	var hdr := Vector2(52, 60) if mob else Vector2(44, 52)
+	var ban := Vector2(28, 38)
+	var w := size.x if size.x > 400.0 else 1280.0
+	var at_y := 6.0 if mob else 8.0
+	var arms_x := (w - 64.0) if mob else 1180.0
+	var strip_x := (w - 140.0) if mob else 1100.0
+	CKHeraldryChrome.place_company_header(self, Vector2(arms_x, at_y), hdr)
+	CKHeraldryChrome.place_castle_banner_strip(self, Vector2(strip_x, at_y), hdr, ban)
+
 func apply_mobile_layout() -> void:
 	CKPageKit.phone_fill(self)
-
+	_place_yearcard_crests(true)
