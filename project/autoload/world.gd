@@ -75,6 +75,9 @@ var cargo: Dictionary = {}      # non-store goods
 var cargo_basis: Dictionary = {}  # good -> {unit, city, qty} cost basis for margin toast
 var last_aftermath: Dictionary = {}  # structured road-event aftermath for UI
 var last_battle_aftermath: Dictionary = {}  # structured encounter win/lose aftermath
+var last_chain_follow: Dictionary = {}  # follow-up / next scripted-chain step after turn_in
+var last_chain_fail: Dictionary = {}  # scripted-chain expire/abandon payload for ChainFailModal
+var last_supply_halt: Dictionary = {}  # mid-march food=0 payload for SupplyHaltModal
 var market: Dictionary = {}     # city -> {good: stock}
 var fairs: Dictionary = {}      # city -> days_total expiry
 var intel: Dictionary = {}      # city -> days_total when prices were last seen
@@ -180,6 +183,9 @@ func reset() -> void:
 	cargo_basis = {}
 	last_aftermath = {}
 	last_battle_aftermath = {}
+	last_chain_follow = {}
+	last_chain_fail = {}
+	last_supply_halt = {}
 	market = {}
 	for id in nodes.keys():
 		_init_market(id)
@@ -256,6 +262,9 @@ func from_save(d: Dictionary) -> void:
 	cargo_basis = d.get("cargo_basis", {}) if typeof(d.get("cargo_basis", {})) == TYPE_DICTIONARY else {}
 	last_aftermath = {}
 	last_battle_aftermath = {}
+	last_chain_follow = {}
+	last_chain_fail = {}
+	last_supply_halt = {}
 	market = {}
 	var m: Dictionary = d.get("market", {})
 	for id in nodes.keys():
@@ -824,6 +833,8 @@ func step_travel() -> Dictionary:
 	return _emit_step(_arrive_leg(b))
 
 func _emit_step(info: Dictionary) -> Dictionary:
+	if not last_supply_halt.is_empty():
+		info["supply_halt"] = last_supply_halt.duplicate(true)
 	world_changed.emit()
 	travel_step.emit(info)
 	return info
@@ -866,6 +877,9 @@ func travel_to(to_id: String) -> Dictionary:
 			if not info.get("event", {}).is_empty() or not info.get("encounter", {}).is_empty() or bool(info.get("arrived", false)) or travel.is_empty():
 				break
 			info = step_travel()
+		# Headless: scavenge when mid-march rations hit 0 so travel_to still completes.
+		if not last_supply_halt.is_empty():
+			forage_supply()
 		if not info.get("event", {}).is_empty() or not info.get("encounter", {}).is_empty() or bool(info.get("arrived", false)):
 			break
 	info["ok"] = true
@@ -912,6 +926,7 @@ func _territory_month(ctx: Dictionary) -> void:
 # ── days / calendar ───────────────────────────────────
 func advance_days(n: int) -> Array:
 	var reports: Array = []
+	var starved_days := 0
 	for _d in n:
 		days_total += 1
 		day += 1
@@ -923,6 +938,7 @@ func advance_days(n: int) -> Array:
 			GameState.food = 0
 			GameState.morale = maxi(0, GameState.morale - int(rules.get("starve_morale_per_day", 4)))
 			_tlog("断粮！士气下降")
+			starved_days += 1
 		if day > int(rules.get("days_per_month", 30)):
 			day = 1
 			_in_travel_month = true
@@ -932,6 +948,8 @@ func advance_days(n: int) -> Array:
 			month_reports.append({"label": Calendar.label(), "events": evs})
 			if month_reports.size() > 6:
 				month_reports = month_reports.slice(month_reports.size() - 6)
+	if starved_days > 0 and is_traveling():
+		_mark_supply_halt(starved_days)
 	_expire_quests()
 	return reports
 
@@ -1892,6 +1910,7 @@ func turn_in(qid: String) -> Dictionary:
 	active.erase(q)
 	extra += CKTerritory.on_quest_done(q)
 	var follow := {} if q.has("territory") else _spawn_follow_up(q)
+	last_chain_follow = follow.duplicate(true) if not follow.is_empty() else {}
 	if not follow.is_empty():
 		extra += "；%s 有后续委托「%s」" % [node(str(follow.issuer)).get("name", ""), follow.title]
 	stats_done[str(q.kind)] = int(stats_done.get(str(q.kind), 0)) + 1
@@ -1902,7 +1921,11 @@ func turn_in(qid: String) -> Dictionary:
 	CKEconomyState.month_echo_note("commission", Locale.t("lb_echo_commission_deliver", [q.title, silver]))
 	GameState.mark_dirty()
 	world_changed.emit()
-	return {"ok": true, "msg": "交付「%s」：+%d 银，声望 +%d%s" % [q.title, silver, int(q.reward_rep), extra]}
+	var out := {"ok": true, "msg": "交付「%s」：+%d 银，声望 +%d%s" % [q.title, silver, int(q.reward_rep), extra]}
+	if not follow.is_empty():
+		out["follow"] = follow
+		out["chain_id"] = str(follow.get("scripted_chain", follow.get("chain_from", "")))
+	return out
 
 ## 委托链：二阶以下普通委托完成后，交付城可能递来更难的后续（报酬 +25%，跨刷新保留）
 func _spawn_follow_up(q: Dictionary) -> Dictionary:
@@ -2125,6 +2148,8 @@ func start_scripted_chain(chain_id: String) -> Dictionary:
 	var steps: Array = chain.get("steps", [])
 	if steps.is_empty():
 		return {"ok": false, "msg": "委托链没有步骤"}
+	_purge_chain_board(chain_id)
+	last_chain_fail = {}
 	chain_progress[chain_id] = {"step": 0, "status": "active"}
 	var q := _quest_from_chain_step(chain, 0)
 	_post_chain_offer(q)
@@ -2133,7 +2158,7 @@ func start_scripted_chain(chain_id: String) -> Dictionary:
 func chain_status(chain_id: String) -> Dictionary:
 	var prog: Dictionary = chain_progress.get(chain_id, {})
 	var status := str(prog.get("status", "idle"))
-	var out := {"id": chain_id, "status": status, "step": int(prog.get("step", 0))}
+	var out := {"id": chain_id, "status": status, "step": int(prog.get("step", 0)), "reason": str(prog.get("reason", ""))}
 	if status != "active":
 		return out
 	var live := _chain_quest(chain_id)
@@ -2220,6 +2245,8 @@ func abandon(qid: String) -> Dictionary:
 		return {"ok": false, "msg": "无此委托"}
 	active.erase(q)
 	add_city_rep(str(q.issuer), -4)
+	if str(q.get("scripted_chain", "")) != "":
+		_fail_scripted_chain(q, "abandon")
 	world_changed.emit()
 	return {"ok": true, "msg": "放弃委托「%s」（声望 -4）" % q.title}
 
@@ -2231,6 +2258,118 @@ func _expire_quests() -> void:
 			_tlog("委托「%s」逾期失败（声望 -5）" % q.title)
 			quest_log.push_front("%s · 失败：%s" % [date_label(), q.title])
 			CKEconomyState.month_echo_note("commission", Locale.t("lb_echo_commission_expire", [q.title]))
+			if str(q.get("scripted_chain", "")) != "":
+				_fail_scripted_chain(q, "expire")
+
+## Mark a scripted chain failed and stash UI payload (expire / abandon).
+func _fail_scripted_chain(q: Dictionary, reason: String) -> void:
+	var cid := str(q.get("scripted_chain", ""))
+	if cid == "":
+		return
+	var step := int(q.get("scripted_step", 0))
+	var chain := _scripted_chain(cid)
+	chain_progress[cid] = {"step": step, "status": "failed", "reason": reason}
+	last_chain_fail = {
+		"chain_id": cid,
+		"step": step,
+		"quest_id": str(q.get("id", "")),
+		"title": str(q.get("title", "")),
+		"issuer": str(q.get("issuer", "")),
+		"target": str(q.get("target", "")),
+		"reason": reason,
+		"chain_title": str(chain.get("title", cid)),
+	}
+	var why := Locale.t("atlas_chain_fail_reason_expire") if reason == "expire" else Locale.t("atlas_chain_fail_reason_abandon")
+	_tlog(Locale.t("atlas_chain_fail_log") % [str(chain.get("title", cid)), why])
+
+## Peek+clear fail payload for atlas ChainFailModal.
+func take_chain_fail() -> Dictionary:
+	var d: Dictionary = last_chain_fail.duplicate(true)
+	last_chain_fail = {}
+	return d
+
+func dismiss_chain_fail() -> void:
+	last_chain_fail = {}
+
+## Mid-march rations hit 0 → SupplyHaltModal payload (forage / press on / forced stop).
+func _mark_supply_halt(starved_days: int) -> void:
+	if not last_supply_halt.is_empty():
+		return
+	last_supply_halt = {
+		"pos": pos,
+		"dest": str(travel.get("dest", "")),
+		"morale": GameState.morale,
+		"starved_days": starved_days,
+		"food": GameState.food,
+	}
+	_tlog(Locale.t("atlas_supply_halt_log") % [node(pos).get("name", pos), starved_days])
+
+func take_supply_halt() -> Dictionary:
+	var d: Dictionary = last_supply_halt.duplicate(true)
+	last_supply_halt = {}
+	return d
+
+func dismiss_supply_halt() -> void:
+	last_supply_halt = {}
+
+## Scavenge roadside rations; clears halt so the march can resume.
+func forage_supply() -> Dictionary:
+	var gain := maxi(food_per_day() * 2, 2)
+	GameState.food += gain
+	GameState.morale = maxi(0, GameState.morale - 1)
+	last_supply_halt = {}
+	_tlog(Locale.t("atlas_supply_forage_log") % gain)
+	world_changed.emit()
+	return {"ok": true, "food_gained": gain, "msg": Locale.t("atlas_supply_forage_ok") % gain}
+
+## Accept another morale hit and clear halt; next leg may halt again if still empty.
+func press_on_starving() -> Dictionary:
+	GameState.morale = maxi(0, GameState.morale - int(rules.get("starve_morale_per_day", 4)))
+	last_supply_halt = {}
+	_tlog(Locale.t("atlas_supply_press_log"))
+	world_changed.emit()
+	return {"ok": true, "msg": Locale.t("atlas_supply_press_ok"), "morale": GameState.morale}
+
+## Cancel the march at the current node; caller may open stopover with saved dest.
+func forced_halt_march() -> Dictionary:
+	var dest := str(travel.get("dest", ""))
+	var here := pos
+	cancel_travel()
+	last_supply_halt = {}
+	_tlog(Locale.t("atlas_supply_stop_log") % node(here).get("name", here))
+	return {"ok": true, "dest": dest, "pos": here, "msg": Locale.t("atlas_supply_stop_ok") % node(here).get("name", here)}
+
+## 改道：from failed status, re-post the same step as a fresh offer at its issuer.
+func reroute_failed_chain(chain_id: String) -> Dictionary:
+	var prog: Dictionary = chain_progress.get(chain_id, {})
+	if str(prog.get("status", "")) != "failed":
+		return {"ok": false, "msg": Locale.t("atlas_chain_reroute_not_failed")}
+	var chain := _scripted_chain(chain_id)
+	if chain.is_empty():
+		return {"ok": false, "msg": Locale.t("atlas_chain_reroute_missing")}
+	var step := int(prog.get("step", 0))
+	var steps: Array = chain.get("steps", [])
+	if step < 0 or step >= steps.size():
+		return {"ok": false, "msg": Locale.t("atlas_chain_reroute_missing")}
+	_purge_chain_board(chain_id)
+	chain_progress[chain_id] = {"step": step, "status": "active"}
+	var nq := _quest_from_chain_step(chain, step)
+	# 改道：略紧的时限，逼玩家立刻重走这一程
+	nq["days_budget"] = mini(int(nq.get("days_budget", 40)), 28)
+	_post_chain_offer(nq)
+	last_chain_fail = {}
+	_tlog(Locale.t("atlas_chain_reroute_log") % [str(chain.get("title", chain_id)), step + 1])
+	world_changed.emit()
+	return {"ok": true, "msg": Locale.t("atlas_chain_reroute_ok") % str(chain.get("title", chain_id)), "quest": nq}
+
+func _purge_chain_board(chain_id: String) -> void:
+	for city in boards.keys():
+		var offers: Array = boards[city].get("offers", [])
+		var kept: Array = []
+		for q in offers:
+			if str(q.get("scripted_chain", "")) != chain_id:
+				kept.append(q)
+		boards[city].offers = kept
 
 ## Fight an objective at the party's current location (hunt / defend target reached earlier, or retry after a defeat)
 func quest_engage(qid: String) -> Dictionary:
@@ -2988,6 +3127,15 @@ func on_battle_end(win: bool) -> Dictionary:
 		"nation": str(enc.get("nation", "")),
 		"node": str(enc.get("node", pos)),
 	}
+	var site_id := str(enc.get("site", ""))
+	if site_id != "":
+		aftermath["site"] = site_id
+		aftermath["site_kind"] = str(enc.get("kind", ""))
+		var captured := win and str(enc.get("kind", "")) == "territory_assault" and CKTerritory.owned(site_id)
+		aftermath["site_captured"] = captured
+		if captured:
+			aftermath["site_name"] = str(CKTerritory.site(site_id).get("name", ""))
+			aftermath["garrison"] = int(CKTerritory.state(site_id).garrison)
 	last_battle_aftermath = aftermath
 	_tlog(msg)
 	GameState.mark_dirty()
