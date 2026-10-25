@@ -2,7 +2,7 @@ extends Node
 ## Mid-cs under hub_open: loss stamps csXX_mid_lost → CTA morphs「再试锋镝」+ loss line;
 ## win stamps mid_fought + season_ledger/yeartrace for the skirmish itself;
 ## bare「继续」stamps 未试锋 skip / 试锋未成 abort ledger when leaving without a win;
-## win clears csXX_mid_lost residue so loss-state cannot resurrect after a retry win.
+## win clears csXX_mid_lost + map_id+_lost residue so loss-state cannot resurrect after a retry win.
 
 const PLAYER := "res://scenes/story/chapter_player.tscn"
 const BATTLE := "res://scenes/battle/battle.tscn"
@@ -328,6 +328,7 @@ func _protocol_win_clears_lost() -> String:
 	GameState.new_game("烬行", "灰旗", GameState.crest_color)
 	GameState.set_flag("hub_open")
 	GameState.set_flag("cs03_mid_lost")
+	GameState.set_flag(MAP_ID + "_lost")
 	GameState.set_meta("battle_win_flags", ["cs03_mid_fought"])
 	GameState.set_meta("battle_lose_flags", ["cs03_mid_lost"])
 	GameState.set_meta("battle_win_ledger", {})
@@ -336,9 +337,11 @@ func _protocol_win_clears_lost() -> String:
 		return "protocol win: mid_fought missing"
 	if GameState.flag("cs03_mid_lost"):
 		return "protocol win: mid_lost residue still set"
+	if GameState.flag(MAP_ID + "_lost"):
+		return "protocol win: map_lost residue still set"
 	if GameState.get_meta("battle_lose_flags", ["x"]).size() != 0:
 		return "protocol win: battle_lose_flags meta not consumed"
-	print("OK protocol win clears csXX_mid_lost residue")
+	print("OK protocol win clears mid_lost + map_lost residue")
 	return ""
 
 
@@ -358,6 +361,8 @@ func _live_loss_then_win_clears_lost(cid: String, beat: String) -> String:
 	var err := ""
 	if not GameState.flag(lost):
 		err = "%s clear: %s not set after loss" % [cid, lost]
+	elif not GameState.flag(MAP_ID + "_lost"):
+		err = "%s clear: map_lost not set after loss" % cid
 	player.queue_free()
 	await get_tree().process_frame
 	if err != "":
@@ -388,6 +393,8 @@ func _live_loss_then_win_clears_lost(cid: String, beat: String) -> String:
 				err = "%s clear: mid_fought missing after win" % cid
 			elif GameState.flag(lost):
 				err = "%s clear: mid_lost residue after win" % cid
+			elif GameState.flag(MAP_ID + "_lost"):
+				err = "%s clear: map_lost residue after win" % cid
 	player2.queue_free()
 	await get_tree().process_frame
 	if err != "":
@@ -418,7 +425,7 @@ func _live_loss_then_win_clears_lost(cid: String, beat: String) -> String:
 	player3.queue_free()
 	await get_tree().process_frame
 	if err == "":
-		print("OK live loss→win clears mid_lost %s @%s" % [cid, beat])
+		print("OK live loss→win clears mid_lost+map_lost %s @%s" % [cid, beat])
 	return err
 
 
