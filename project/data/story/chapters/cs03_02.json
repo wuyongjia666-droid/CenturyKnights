@@ -1,0 +1,1484 @@
+{
+	"id": "cs03_02",
+	"title": "榜阴上的灯",
+	"legacy_index": 413,
+	"return_scene": "res://scenes/hub/castle_hub.tscn",
+	"source": "docs/content-seasons/season-03/NOVEL.md",
+	"beats": [
+		{
+			"id": "back",
+			"title": "榜阴",
+			"lines": [
+				{
+					"id": "cs03_02_back_0",
+					"speaker": "旁白",
+					"text": "功厅。上回榜文已入柜。榜阴还空着粮行。",
+					"stage": {
+						"card": "一　榜阴",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_back_1",
+					"speaker": "书记官",
+					"text": "正面功写过了。榜阴要能念，不能只剩朱印。",
+					"stage": {
+						"card": "一　榜阴",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_back_2",
+					"speaker": "leader",
+					"text": "我要听粮行。空着也得说得出。",
+					"stage": {
+						"card": "一　榜阴",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_back_3",
+					"speaker": "旁白",
+					"text": "柜门一响。功榜与榜阴并排放上长桌。",
+					"stage": {
+						"card": "一　榜阴",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_back_4",
+					"speaker": "老管事",
+					"text": "催功的人嗓门大。粮行的人说再等等。",
+					"stage": {
+						"card": "一　榜阴",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_back_5",
+					"speaker": "岁吏",
+					"text": "年迹旁多了一行「榜阴夜」。",
+					"stage": {
+						"card": "一　榜阴",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_back_6",
+					"speaker": "苇原·灯影",
+					"text": "巡防不问谁记功。问今夜谁还空着粮。",
+					"stage": {
+						"card": "一　榜阴",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_back_7",
+					"speaker": "旁白",
+					"text": "两行字第一次对视。功面亮，榜阴暗。",
+					"stage": {
+						"card": "一　榜阴",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_back_8",
+					"speaker": "书记官",
+					"text": "能念的字在功面。坐得住的粮在榜阴等。",
+					"stage": {
+						"card": "一　榜阴",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_back_9",
+					"speaker": "leader",
+					"text": "把粮行念给我听。别念催功。",
+					"stage": {
+						"card": "一　榜阴",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_back_10",
+					"speaker": "老管事",
+					"text": "催功可以喊。榜阴撕不得。",
+					"stage": {
+						"card": "一　榜阴",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_back_11",
+					"speaker": "旁白",
+					"text": "灯矮了一寸。粮行反而更清楚。",
+					"stage": {
+						"card": "一　榜阴",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_back_12",
+					"speaker": "岁吏",
+					"text": "功榜已记账。榜阴记账才算整张。",
+					"stage": {
+						"card": "一　榜阴",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_back_13",
+					"speaker": "书记官",
+					"text": "并排不是拖。是让粮行也有灯。",
+					"stage": {
+						"card": "一　榜阴",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_back_14",
+					"speaker": "leader",
+					"text": "我听懂了。空着，也要并排·朝报。",
+					"stage": {
+						"card": "一　榜阴",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_back_15",
+					"speaker": "旁白",
+					"text": "风从窗缝进来。榜角动，字不动。",
+					"stage": {
+						"card": "一　榜阴",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_back_16",
+					"speaker": "老管事",
+					"text": "催功的锣在门外。锣响不进功厅。",
+					"stage": {
+						"card": "一　榜阴",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_back_17",
+					"speaker": "槐里·青禾",
+					"text": "榜阴比功面薄。薄的反而难装。",
+					"stage": {
+						"card": "一　榜阴",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				}
+			],
+			"next": "grain"
+		},
+		{
+			"id": "grain",
+			"title": "粮行",
+			"lines": [
+				{
+					"id": "cs03_02_grain_0",
+					"speaker": "旁白",
+					"text": "粮行摊开。收成那格亮着，旁格还空。",
+					"stage": {
+						"card": "二　粮行",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_grain_1",
+					"speaker": "老管事",
+					"text": "上回留并排的，粮行亮着空。只留功的，栏上有字、粮仍空。",
+					"stage": {
+						"card": "二　粮行",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_grain_2",
+					"speaker": "旁白",
+					"text": "两行字第二次吵架。回读逼它们对视·朝报。",
+					"stage": {
+						"card": "二　粮行",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_grain_3",
+					"speaker": "苇原·灯影",
+					"text": "巡防不问谁收成。问今夜谁还空着粮。",
+					"stage": {
+						"card": "二　粮行",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_grain_4",
+					"speaker": "书记官",
+					"text": "有字的格能念。粮行要人敢看。",
+					"stage": {
+						"card": "二　粮行",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_grain_5",
+					"speaker": "leader",
+					"text": "粮空不是错。催满才是错。",
+					"stage": {
+						"card": "二　粮行",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_grain_6",
+					"speaker": "岁吏",
+					"text": "年迹不改粮。只记你敢不敢对空。",
+					"stage": {
+						"card": "二　粮行",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_grain_7",
+					"speaker": "旁白",
+					"text": "朱印干了。粮行的边还潮。",
+					"stage": {
+						"card": "二　粮行",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_grain_8",
+					"speaker": "老管事",
+					"text": "催功锣又响。响在门外，进不了粮。",
+					"stage": {
+						"card": "二　粮行",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_grain_9",
+					"speaker": "书记官",
+					"text": "并排留粮，比硬填假功干净。",
+					"stage": {
+						"card": "二　粮行",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_grain_10",
+					"speaker": "leader",
+					"text": "假功我不要。粮行我要听。",
+					"stage": {
+						"card": "二　粮行",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_grain_11",
+					"speaker": "旁白",
+					"text": "灯把粮行照成浅坑。坑里没有字。",
+					"stage": {
+						"card": "二　粮行",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_grain_12",
+					"speaker": "岁吏",
+					"text": "功榜上的字还在。榜阴上的空也在。",
+					"stage": {
+						"card": "二　粮行",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_grain_13",
+					"speaker": "苇原·灯影",
+					"text": "带牌去。牌上写榜阴，不写催。",
+					"stage": {
+						"card": "二　粮行",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_grain_14",
+					"speaker": "老管事",
+					"text": "催功条叠得高。粮行叠不住。",
+					"stage": {
+						"card": "二　粮行",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_grain_15",
+					"speaker": "书记官",
+					"text": "能念的在功面。敢留的在榜阴。",
+					"stage": {
+						"card": "二　粮行",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_grain_16",
+					"speaker": "旁白",
+					"text": "榜角又动。粮行仍空。",
+					"stage": {
+						"card": "二　粮行",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_grain_17",
+					"speaker": "老旗手",
+					"text": "粮行灯还亮。亮着，才敢回读。",
+					"stage": {
+						"card": "二　粮行",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "close"
+					}
+				}
+			],
+			"next": "hourglass"
+		},
+		{
+			"id": "hourglass",
+			"title": "两行",
+			"lines": [
+				{
+					"id": "cs03_02_hourglass_0",
+					"speaker": "旁白",
+					"text": "沙漏厅。上行功榜、下行榜阴。回读把两行按住。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_hourglass_1",
+					"speaker": "老管事",
+					"text": "月份往前走。回读不改月份，只改你敢不敢对粮。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_hourglass_2",
+					"speaker": "岁吏",
+					"text": "年迹旁多了一行「榜阴回读」。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_hourglass_3",
+					"speaker": "书记官",
+					"text": "能念的字在上行。空得住的粮还在下行等。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_hourglass_4",
+					"speaker": "leader",
+					"text": "两行都打开。我要听对看·朝报。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_hourglass_5",
+					"speaker": "旁白",
+					"text": "沙响。上行亮，下行仍暗·朝报。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_hourglass_6",
+					"speaker": "苇原·灯影",
+					"text": "巡防牌上写榜阴。不写急锣。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_hourglass_7",
+					"speaker": "老管事",
+					"text": "催功的人在门外跺脚。跺不进沙漏。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_hourglass_8",
+					"speaker": "书记官",
+					"text": "并排不是拖月。是让粮行跟月份并排走。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_hourglass_9",
+					"speaker": "岁吏",
+					"text": "月结不抹粮。粮也要入迹。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_hourglass_10",
+					"speaker": "leader",
+					"text": "我听粮行。不听跺脚。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_hourglass_11",
+					"speaker": "旁白",
+					"text": "沙又落一层。下行多了一点亮·朝报。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_hourglass_12",
+					"speaker": "老管事",
+					"text": "锣停了。粮行还在。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_hourglass_13",
+					"speaker": "书记官",
+					"text": "回读夜的字，比催功长命。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_hourglass_14",
+					"speaker": "岁吏",
+					"text": "带牌出去。沙漏还转·朝报。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_hourglass_15",
+					"speaker": "旁白",
+					"text": "两行终于对上。一对，就不敢假填·朝报。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_hourglass_16",
+					"speaker": "老管事",
+					"text": "假功进不了沙漏。粮行能。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_hourglass_17",
+					"speaker": "苇原·灯影",
+					"text": "带牌去。牌上写榜阴，不写急。",
+					"stage": {
+						"card": "三　两行",
+						"bg": "hourglass",
+						"music": "castle",
+						"camera": "wide"
+					}
+				}
+			],
+			"next": "bridge",
+			"actions": [
+				{
+					"id": "open_hourglass",
+					"label": "去看月份怎么往前走",
+					"do": [
+						{
+							"op": "visit",
+							"path": "res://scenes/hub/hourglass.tscn"
+						}
+					]
+				},
+				{
+					"id": "continue_after_visit",
+					"label": "继续，去门廊",
+					"do": [
+						{
+							"op": "goto",
+							"beat": "next"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "bridge",
+			"title": "门廊",
+			"lines": [
+				{
+					"id": "cs03_02_bridge_0",
+					"speaker": "旁白",
+					"text": "门廊。榜阴灯还在身后。锋镝在桥上试。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_bridge_1",
+					"speaker": "岁吏",
+					"text": "试锋不改粮行。只问你手稳不稳。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"speaker": "旁白",
+					"text": "锋收回来。榜阴纸还钉着。粮行旁那拨，没散。",
+					"when": {
+						"all": [
+							{
+								"flag": "cs03_02_mid_lost"
+							},
+							{
+								"not_flag": "cs03_02_mid_fought"
+							}
+						]
+					},
+					"id": "cs03b_br_lost"
+				},
+				{
+					"id": "cs03_02_bridge_2",
+					"speaker": "leader",
+					"text": "先试一锋。赢了再谈催功。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_bridge_3",
+					"speaker": "老旗手",
+					"text": "锋收回来也行。粮行不靠锋填。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_bridge_4",
+					"speaker": "旁白",
+					"text": "桥风大。灯小。字还在·朝报。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_bridge_5",
+					"speaker": "书记官",
+					"text": "催功可以喊。榜阴本撕不得。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_bridge_6",
+					"speaker": "苇原·灯影",
+					"text": "巡防站桥侧。不问胜负，问你还回不回读·朝报。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_bridge_7",
+					"speaker": "老管事",
+					"text": "锣在城门。桥上只听见水·朝报。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_bridge_8",
+					"speaker": "leader",
+					"text": "锋出不出，粮行都在。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_bridge_9",
+					"speaker": "岁吏",
+					"text": "试锋得手，锋镝压下，并排榜可续。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_bridge_10",
+					"speaker": "旁白",
+					"text": "水声盖过远处锣·朝报。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_bridge_11",
+					"speaker": "老旗手",
+					"text": "伤还在也行。先去酒馆选题·朝报。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_bridge_12",
+					"speaker": "书记官",
+					"text": "选题在前。假功在后——后的不要。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_bridge_13",
+					"speaker": "苇原·灯影",
+					"text": "牌还在手里。牌上仍是榜阴。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_bridge_14",
+					"speaker": "老管事",
+					"text": "催功的人等不及。你等得及。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_bridge_15",
+					"speaker": "leader",
+					"text": "我等粮行。不等锣。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_bridge_16",
+					"speaker": "旁白",
+					"text": "桥板一颤。灯不灭·朝报。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_bridge_17",
+					"speaker": "岁吏",
+					"text": "未试锋——锋未出鞘，也可去酒馆·朝报。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_bridge_18",
+					"speaker": "老旗手",
+					"text": "试锋未成——伤还在，先去酒馆·朝报。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_bridge_19",
+					"speaker": "岁吏",
+					"text": "催功可以喊。榜阴本撕不得·朝报。",
+					"stage": {
+						"card": "四　门廊",
+						"bg": "bridge",
+						"music": "battle_prep",
+						"camera": "wide"
+					}
+				}
+			],
+			"next": "tavern",
+			"actions": [
+				{
+					"id": "open_skirmish",
+					"label": "先试一锋",
+					"when": {
+						"all": [
+							{
+								"not_flag": "cs03_02_mid_fought"
+							},
+							{
+								"not_flag": "cs03_02_mid_lost"
+							}
+						]
+					},
+					"do": [
+						{
+							"op": "battle",
+							"map": "quest_bandit",
+							"objective": "rout",
+							"return": "res://scenes/story/chapter_player.tscn",
+							"win_flags": [
+								"cs03_02_mid_fought"
+							],
+							"lose_flags": [
+								"cs03_02_mid_lost"
+							],
+							"win_ledger": {
+								"choice": "mid_skirmish",
+								"title": "榜阴上的灯",
+								"outcome": "榜阴旁试锋得手——锋镝压下，并排纸可续",
+								"yeartrace": true
+							}
+						}
+					]
+				},
+				{
+					"id": "retry_skirmish",
+					"label": "再试锋镝",
+					"when": {
+						"all": [
+							{
+								"not_flag": "cs03_02_mid_fought"
+							},
+							{
+								"flag": "cs03_02_mid_lost"
+							}
+						]
+					},
+					"do": [
+						{
+							"op": "battle",
+							"map": "quest_bandit",
+							"objective": "rout",
+							"return": "res://scenes/story/chapter_player.tscn",
+							"win_flags": [
+								"cs03_02_mid_fought"
+							],
+							"lose_flags": [
+								"cs03_02_mid_lost"
+							],
+							"win_ledger": {
+								"choice": "mid_skirmish",
+								"title": "榜阴上的灯",
+								"outcome": "榜阴旁试锋得手——锋镝压下，并排纸可续",
+								"yeartrace": true
+							}
+						}
+					]
+				},
+				{
+					"id": "continue_after_battle",
+					"label": "继续，去酒馆",
+					"do": [
+						{
+							"op": "season_ledger",
+							"when": {
+								"all": [
+									{
+										"not_flag": "cs03_02_mid_fought"
+									},
+									{
+										"not_flag": "cs03_02_mid_lost"
+									}
+								]
+							},
+							"chapter": "cs03_02",
+							"choice": "mid_skirmish_skip",
+							"title": "榜阴上的灯",
+							"outcome": "未试锋——锋未出鞘，径去酒馆",
+							"yeartrace": true
+						},
+						{
+							"op": "season_ledger",
+							"when": {
+								"all": [
+									{
+										"not_flag": "cs03_02_mid_fought"
+									},
+									{
+										"flag": "cs03_02_mid_lost"
+									}
+								]
+							},
+							"chapter": "cs03_02",
+							"choice": "mid_skirmish_abort",
+							"title": "榜阴上的灯",
+							"outcome": "试锋未成——伤还在，先去酒馆",
+							"yeartrace": true
+						},
+						{
+							"op": "goto",
+							"beat": "next"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "tavern",
+			"title": "选题",
+			"lines": [
+				{
+					"id": "cs03_02_tavern_0",
+					"speaker": "旁白",
+					"text": "酒馆。板上两道题。手按上去·朝报。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_tavern_1",
+					"speaker": "掌柜",
+					"text": "一道功粮仍并。一道先催功栏。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_tavern_2",
+					"speaker": "leader",
+					"text": "我看题。不看谁嗓门大·朝报。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_tavern_3",
+					"speaker": "老管事",
+					"text": "并排留真。催功快。快的未必真。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_tavern_4",
+					"speaker": "书记官",
+					"text": "粮行进谱，才算整张功榜。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_tavern_5",
+					"speaker": "岁吏",
+					"text": "年迹听选择。不听锣·朝报。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_tavern_6",
+					"speaker": "旁白",
+					"text": "酒气里榜更白。白得能看见粮。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_tavern_7",
+					"speaker": "掌柜",
+					"text": "选完入柜。榜阴柜门会响。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_tavern_8",
+					"speaker": "苇原·灯影",
+					"text": "巡防在门外。门内只选题·朝报。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_tavern_9",
+					"speaker": "leader",
+					"text": "功粮仍并——我手按这道。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_tavern_10",
+					"speaker": "老管事",
+					"text": "按实了。别悬着·朝报。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_tavern_11",
+					"speaker": "书记官",
+					"text": "假功那道我划掉。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_tavern_12",
+					"speaker": "旁白",
+					"text": "板面一热。字进手心·朝报。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_tavern_13",
+					"speaker": "岁吏",
+					"text": "选择入账。榜阴夜可结。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_tavern_14",
+					"speaker": "掌柜",
+					"text": "另一道也在。你不选它·朝报。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_tavern_15",
+					"speaker": "老管事",
+					"text": "催功的锣远了。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_tavern_16",
+					"speaker": "旁白",
+					"text": "两道题还在板上。只一道进柜·朝报。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				},
+				{
+					"id": "cs03_02_tavern_17",
+					"speaker": "老管事",
+					"text": "选完入柜。榜阴柜门会响·朝报。",
+					"stage": {
+						"card": "五　选题",
+						"bg": "tavern",
+						"music": "tavern",
+						"camera": "close"
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "keep_back",
+					"label": "功粮仍并",
+					"do": [
+						{
+							"op": "set_flag",
+							"flag": "cs03_back_parallel",
+							"value": true
+						},
+						{
+							"op": "season_ledger",
+							"chapter": "cs03_02",
+							"choice": "keep_back",
+							"title": "榜阴上的灯",
+							"outcome": "榜阴回读后功粮仍并排记入谱",
+							"yeartrace": true
+						},
+						{
+							"op": "goto",
+							"beat": "ledger"
+						}
+					]
+				},
+				{
+					"id": "push_merit",
+					"label": "先催功栏",
+					"do": [
+						{
+							"op": "set_flag",
+							"flag": "cs03_back_push",
+							"value": true
+						},
+						{
+							"op": "season_ledger",
+							"chapter": "cs03_02",
+							"choice": "push_merit",
+							"title": "榜阴上的灯",
+							"outcome": "榜阴回读后先催功栏",
+							"yeartrace": true
+						},
+						{
+							"op": "goto",
+							"beat": "ledger"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": "ledger",
+			"title": "入册",
+			"lines": [
+				{
+					"id": "cs03_02_ledger_0",
+					"speaker": "旁白",
+					"text": "入册。榜阴与功榜并排进柜。",
+					"stage": {
+						"card": "六　入册",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_ledger_1",
+					"speaker": "书记官",
+					"text": "粮行有灯。灯不灭。",
+					"stage": {
+						"card": "六　入册",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_ledger_2",
+					"speaker": "leader",
+					"text": "我看见空了。空也在谱里·朝报。",
+					"stage": {
+						"card": "六　入册",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_ledger_3",
+					"speaker": "岁吏",
+					"text": "年迹末行写：榜阴并排留。",
+					"stage": {
+						"card": "六　入册",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_ledger_4",
+					"speaker": "老管事",
+					"text": "催功锣再响，也撕不开柜门。",
+					"stage": {
+						"card": "六　入册",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_ledger_5",
+					"speaker": "旁白",
+					"text": "柜门一合。灯还在缝里·朝报。",
+					"stage": {
+						"card": "六　入册",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_ledger_6",
+					"speaker": "苇原·灯影",
+					"text": "巡防收牌。牌上榜阴两字还热。",
+					"stage": {
+						"card": "六　入册",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_ledger_7",
+					"speaker": "书记官",
+					"text": "整张功榜，才算功。",
+					"stage": {
+						"card": "六　入册",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_ledger_8",
+					"speaker": "leader",
+					"text": "假功没进来。好。",
+					"stage": {
+						"card": "六　入册",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_ledger_9",
+					"speaker": "岁吏",
+					"text": "月结旁多一笔粮行。",
+					"stage": {
+						"card": "六　入册",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_ledger_10",
+					"speaker": "老管事",
+					"text": "催条叠在门外。谱在门内·朝报。",
+					"stage": {
+						"card": "六　入册",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_ledger_11",
+					"speaker": "旁白",
+					"text": "朱印干。粮行的边也干了。",
+					"stage": {
+						"card": "六　入册",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_ledger_12",
+					"speaker": "书记官",
+					"text": "下次打开，粮行还在——带着灯。",
+					"stage": {
+						"card": "六　入册",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_ledger_13",
+					"speaker": "leader",
+					"text": "够了。去灰旗堡·朝报。",
+					"stage": {
+						"card": "六　入册",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_ledger_14",
+					"speaker": "苇原·灯影",
+					"text": "堡门亮着。榜阴灯跟着。",
+					"stage": {
+						"card": "六　入册",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_ledger_15",
+					"speaker": "岁吏",
+					"text": "年迹合上。字还在·朝报。",
+					"stage": {
+						"card": "六　入册",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_ledger_16",
+					"speaker": "老管事",
+					"text": "功厅可歇。谱不可假。",
+					"stage": {
+						"card": "六　入册",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_ledger_17",
+					"speaker": "旁白",
+					"text": "风停。榜平。",
+					"stage": {
+						"card": "六　入册",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_ledger_18",
+					"speaker": "书记官",
+					"text": "并排不是拖。是完整·朝报。",
+					"stage": {
+						"card": "六　入册",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				},
+				{
+					"id": "cs03_02_ledger_19",
+					"speaker": "leader",
+					"text": "灯不灭。榜阴本在柜里。",
+					"stage": {
+						"card": "六　入册",
+						"bg": "hall",
+						"music": "castle",
+						"camera": "wide"
+					}
+				}
+			],
+			"actions": []
+		}
+	],
+	"title_en": "Lamp on the Merit Back"
+}
