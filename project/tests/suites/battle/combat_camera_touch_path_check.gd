@@ -168,6 +168,7 @@ func _touch(index: int, pressed: bool, pos: Vector2) -> InputEventScreenTouch:
 	return e
 
 class _FakeBattleHost:
+	var _stage: Rect2 = Rect2(0, 0, 720, 1280)
 	var _board_origin: Vector2 = Vector2(40, 80)
 	var _board_cell: int = 56
 	var units: Array = []
@@ -186,13 +187,26 @@ class _FakeBattleHost:
 	var _board_zoom: float = 1.0
 	var move_committed: bool = false
 
+
+	func _init() -> void:
+		set_meta("m_board_area", _stage)
+
 	func _get(property: StringName) -> Variant:
-		# Duck-type battle_controller ORIGIN/CELL for BattlePick without gdlint class-variable-name.
+		# Duck-type battle_controller ORIGIN/CELL/BOARD_AREA for BattlePick without gdlint class-variable-name.
 		if property == &"ORIGIN":
 			return _board_origin
 		if property == &"CELL":
 			return _board_cell
+		if property == &"BOARD_AREA":
+			return _stage
 		return null
+
+	func _clamp_board_pan() -> void:
+		pass
+
+	func _apply_board_xform() -> void:
+		pass
+
 
 	func setup_selected_at(pos: Vector2i) -> void:
 		units = [{"char": {"hp": 10, "name": "Hero"}, "pos": pos, "team": "player", "done": false}]
