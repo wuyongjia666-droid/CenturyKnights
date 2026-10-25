@@ -11,8 +11,7 @@ static func refresh_for(host, ui: int) -> void:
 	var c: CKCharacter = u.char
 	host._portrait.texture = UnitArt.unit_portrait(c)
 	_sync_status(host, c)
-	if host._unit_card:
-		host._unit_card.set_unit(c, u.team)
+	_sync_card(host, c, str(u.team))
 	fill_traits(host, c)
 	var _nm := str(c.name)
 	if (u.team == "enemy" or c.faction == "enemy") and (_nm.find("匪首") >= 0 or _nm.find("头目") >= 0 or _nm.find("Boss") >= 0):
@@ -48,14 +47,12 @@ static func refresh(host) -> void:
 		if GameState.get_leader():
 			host._portrait.texture = UnitArt.unit_portrait(GameState.get_leader())
 			_sync_status(host, GameState.get_leader())
-			if host._unit_card:
-				host._unit_card.set_unit(GameState.get_leader(), "player")
+			_sync_card(host, GameState.get_leader(), "player")
 			fill_traits(host, GameState.get_leader())
 		else:
 			host._portrait.texture = CKHeraldryChrome.company_banner(96, 96)
 			_sync_status(host, null)
-			if host._unit_card:
-				host._unit_card.set_unit(null)
+			_sync_card(host, null, "player")
 			fill_traits(host, null)
 		BattleSelectChrome.reveal_landscape(host)
 		return
@@ -63,8 +60,7 @@ static func refresh(host) -> void:
 	var c: CKCharacter = u.char
 	host._portrait.texture = UnitArt.unit_portrait(c)
 	_sync_status(host, c)
-	if host._unit_card:
-		host._unit_card.set_unit(c, u.team)
+	_sync_card(host, c, str(u.team))
 	fill_traits(host, c)
 	var tid = host.terrain[u.pos.y][u.pos.x]
 	var tinfo = BattleRules.terrain_info(tid)
@@ -121,6 +117,16 @@ static func _idle_objective(host) -> String:
 	if remain != "":
 		body += "\n" + remain
 	return body
+
+
+static func _sync_card(host, c, team: String) -> void:
+	if host._unit_card == null:
+		return
+	host._unit_card.set_meta("foe_nation", CKHeraldryChrome.battle_foe_nation_for(host))
+	if c == null:
+		host._unit_card.set_unit(null, team)
+	else:
+		host._unit_card.set_unit(c, team)
 
 
 static func _sync_status(host, c) -> void:
