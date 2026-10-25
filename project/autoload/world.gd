@@ -1414,6 +1414,15 @@ func turn_in_city(q: Dictionary) -> String:
 func can_turn_in(q: Dictionary, city: String) -> bool:
 	return str(q.get("state", "")) == "ready" and turn_in_city(q) == city
 
+func ready_turn_ins_here() -> Array:
+	## Active commissions that can be turned in at the party's current node.
+	var out: Array = []
+	for q in active:
+		if can_turn_in(q, pos):
+			out.append(q)
+	return out
+
+
 func _check_gather_ready() -> void:
 	for q in active:
 		if str(q.kind) == "gather" and str(q.state) in ["active", "ready"]:

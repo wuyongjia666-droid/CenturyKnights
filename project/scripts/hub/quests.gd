@@ -210,6 +210,19 @@ func _render() -> void:
 		var rw := Locale.t("wsc_q_698e1de6") % [int(q.get("reward_silver", 0)), int(q.get("reward_rep", 0))]
 		var lt := Locale.t("wsc_q_ea883343") if ready else (Locale.t("wsc_q_8a110754") if ml <= 1 else Locale.t("wsc_q_2a74a2d2") % ml)
 		var qid_w := str(q.get("id", ""))
+		var btn := Locale.t("wsc_q_40f0ff09")
+		var cb := func(): _goto_atlas_for(World.quest_by_id(qid_w))
+		if ready:
+			var at := World.turn_in_city(q)
+			if at == World.pos:
+				btn = Locale.t("wq_cta_turnin_here")
+				cb = func(): _goto_city_turnin()
+			else:
+				btn = Locale.t("wq_cta_goto_turnin")
+				cb = func(): _goto_atlas_for(World.quest_by_id(qid_w))
+		else:
+			btn = Locale.t("wq_cta_goto_objective")
+			cb = func(): _goto_atlas_for(World.quest_by_id(qid_w))
 		_card(
 			str(q.get("title", Locale.t("wsc_q_f6b0bbbb"))),
 			int(q.get("danger", 1)),
@@ -217,8 +230,8 @@ func _render() -> void:
 			rw,
 			lt,
 			str(q.get("desc", "")),
-			Locale.t("wsc_q_40f0ff09"),
-			func(): _goto_atlas_for(World.quest_by_id(qid_w))
+			btn,
+			cb
 		)
 	_section(Locale.t("wsc_q_657f636f"))
 	if GameState.quests.is_empty():
@@ -246,6 +259,28 @@ func _render() -> void:
 			Locale.t("wsc_q_145290c3") if done else Locale.t("wsc_q_5a9e3347"),
 			func(): _accept(qid)
 		)
+
+
+	_section(Locale.t("wq_tab_done"))
+	if World.quest_log.is_empty():
+		var tip := UIKit.make_dim_label(Locale.t("wq_done_empty"))
+		tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_list.add_child(tip)
+	else:
+		for i in mini(8, World.quest_log.size()):
+			var row := UIKit.make_dim_label(str(World.quest_log[i]))
+			row.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+			_list.add_child(row)
+
+
+func _goto_city_turnin() -> void:
+	GameState.set_meta("city_tab", "board")
+	var here := World.pos
+	if here != "" and World.nodes.has(here) and str(World.node(here).get("kind", "")) != "castle":
+		GameState.set_meta("city_id", here)
+		CKNav.go("res://scenes/hub/city.tscn")
+		return
+	_goto_atlas()
 
 
 func _goto_atlas() -> void:

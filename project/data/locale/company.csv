@@ -246,3 +246,25 @@ wq_atlas_focus,委托「%s」目标：%s —— 选中后点「启程前往」,C
 wq_atlas_focus_plain,已为你定位到「%s」——选中后点「启程前往」,Focused on 「%s」— select it, then Travel
 pressure_month_report,正月开销：%s -%d 银（库银余 %d）,January dues: %s -%d silver (%d left)
 pressure_forecast,正月开销（预计）：%s 约 %d 银,January dues (estimate): %s about %d silver
+atlas_enter_kind,进入%s,Enter %s
+atlas_enter_turnin,进城交付（%d）,Enter to turn in (%d)
+atlas_arrive_turnin,抵达 %s · %d 件委托可交付,Arrived %s · %d ready to turn in
+atlas_arrive_plain,抵达 %s,Arrived %s
+atlas_travel_halt_title,行军途中,On the road
+atlas_travel_halt_body,部队还在路上。要在下一站停下，还是继续行军？,The company is still marching. Stop at the next settlement, or keep going?
+atlas_travel_halt_stop,停在下一站,Stop at next stop
+atlas_travel_halt_continue,继续行军,Keep marching
+atlas_travel_halt_leave,放弃行程回堡,Abort and return to castle
+atlas_travel_halted,已停在 %s,Stopped at %s
+atlas_turnin_modal_title,可交付委托,Ready to turn in
+atlas_turnin_modal_body,此地有 %d 件委托可以交付。进城交还，还是稍后再说？,%d commission(s) can be turned in here. Enter the city, or later?
+atlas_turnin_modal_go,进城交付,Enter to turn in
+atlas_turnin_modal_later,稍后再说,Later
+wq_tab_active,在手委托,In hand
+wq_tab_board,本堡委托榜,Castle board
+wq_tab_done,已完成,Completed
+wq_cta_turnin_here,进城交付,Enter to turn in
+wq_cta_goto_turnin,去交付城,Go to turn-in city
+wq_cta_goto_objective,去目标,Go to objective
+wq_done_empty,还没有办完的舆图委托,No finished atlas commissions yet
+wq_done_empty_why,办完城里的委托后，会记在这里。,Finished city commissions show up here.
