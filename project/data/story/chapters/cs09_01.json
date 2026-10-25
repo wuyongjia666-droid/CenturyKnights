@@ -52,6 +52,56 @@
           "text": "写好看不难。站得住才难。"
         },
         {
+          "id": "cs09_yard_x0",
+          "speaker": "旁白",
+          "text": "验条右栏空着。空得像故意留给人问。"
+        },
+        {
+          "id": "cs09_yard_x1",
+          "speaker": "书记官",
+          "text": "催条写「血验已记」。记在纸上，不在灯上。"
+        },
+        {
+          "id": "cs09_yard_x2",
+          "speaker": "老管事",
+          "text": "纸暖，灯冷。冷的才是要你亲手对的。"
+        },
+        {
+          "id": "cs09_yard_x3",
+          "speaker": "槐里·青禾",
+          "text": "孩子先看空栏。空栏比满栏更像家规。"
+        },
+        {
+          "id": "cs09_yard_x4",
+          "speaker": "苇原·灯影",
+          "text": "巡走过东厢，先问今夜谁还没对条。"
+        },
+        {
+          "id": "cs09_yard_x5",
+          "speaker": "老旗手",
+          "text": "旗角不卖名。验条也不给人跳格。"
+        },
+        {
+          "id": "cs09_yard_x6",
+          "speaker": "岁吏",
+          "text": "谱进栏可以。血验另本账。账对不上就红脸。"
+        },
+        {
+          "id": "cs09_yard_x7",
+          "speaker": "石垒·晚担",
+          "text": "写好看不难。验得住才难。"
+        },
+        {
+          "id": "cs09_yard_x8",
+          "speaker": "旁白",
+          "text": "窗纸新，桌却旧。旧桌认手，不认催。"
+        },
+        {
+          "id": "cs09_yard_x9",
+          "speaker": "掌柜",
+          "text": "酒馆圈等着血验选题。选题公开，扯皮少。"
+        },
+        {
           "id": "cs09_yd_7",
           "speaker": "leader",
           "text": "栏挂上了。去看血验。"
@@ -98,6 +148,56 @@
           "text": "还差两格。跳格的栏，桩会裂。"
         },
         {
+          "id": "cs09_blood_x0",
+          "speaker": "旁白",
+          "text": "验灯白得像旧伤。白光里，空格最清楚。"
+        },
+        {
+          "id": "cs09_blood_x1",
+          "speaker": "老管事",
+          "text": "对条已记，点验待对。血名栏仍空。"
+        },
+        {
+          "id": "cs09_blood_x2",
+          "speaker": "石垒·晚担",
+          "text": "影正再对。影偏就停手。"
+        },
+        {
+          "id": "cs09_blood_x3",
+          "speaker": "书记官",
+          "text": "旁注写「血验未结」。旁注是缝，不是丢人。"
+        },
+        {
+          "id": "cs09_blood_x4",
+          "speaker": "岁吏",
+          "text": "两本账。谱很长，血验很静。静是还在对。"
+        },
+        {
+          "id": "cs09_blood_x5",
+          "speaker": "苇原·灯影",
+          "text": "摸过罩的手会黑。黑着手别喊已点。"
+        },
+        {
+          "id": "cs09_blood_x6",
+          "speaker": "槐里·青禾",
+          "text": "空着诚实。写满却验不上，才是骗人。"
+        },
+        {
+          "id": "cs09_blood_x7",
+          "speaker": "老旗手",
+          "text": "跳格的栏，桩会裂。裂了再补，更疼。"
+        },
+        {
+          "id": "cs09_blood_x8",
+          "speaker": "旁白",
+          "text": "灯罩边毛还是齐，一眼能看出来。"
+        },
+        {
+          "id": "cs09_blood_x9",
+          "speaker": "老管事",
+          "text": "边毛是急。急点进册，以后当众脸红。"
+        },
+        {
           "id": "cs09_bl_6",
           "speaker": "leader",
           "text": "记下。去看沙漏。"
@@ -142,6 +242,56 @@
           "id": "cs09_hg_5",
           "speaker": "槐里·青禾",
           "text": "孩子要抄未结，不要只抄名。"
+        },
+        {
+          "id": "cs09_hourglass_x0",
+          "speaker": "旁白",
+          "text": "上行血验已记，下行血验未结。细线钉死。"
+        },
+        {
+          "id": "cs09_hourglass_x1",
+          "speaker": "老管事",
+          "text": "谁撕下行，谁去摸罩结账。"
+        },
+        {
+          "id": "cs09_hourglass_x2",
+          "speaker": "书记官",
+          "text": "一行好念。两行好活。我们选活。"
+        },
+        {
+          "id": "cs09_hourglass_x3",
+          "speaker": "岁吏",
+          "text": "回执认并排。并排认灯。灯不认抢跑。"
+        },
+        {
+          "id": "cs09_hourglass_x4",
+          "speaker": "苇原·灯影",
+          "text": "更还在交。下行先响，上行后听。"
+        },
+        {
+          "id": "cs09_hourglass_x5",
+          "speaker": "槐里·青禾",
+          "text": "孩子抄未结。抄名的时候，空要在。"
+        },
+        {
+          "id": "cs09_hourglass_x6",
+          "speaker": "石垒·晚担",
+          "text": "间距够脸红。红完再谈点验。"
+        },
+        {
+          "id": "cs09_hourglass_x7",
+          "speaker": "老旗手",
+          "text": "核的时候两行都在。少一行，角先裂。"
+        },
+        {
+          "id": "cs09_hourglass_x8",
+          "speaker": "旁白",
+          "text": "沙子慢。慢着走，才像血验该有的速度。"
+        },
+        {
+          "id": "cs09_hourglass_x9",
+          "speaker": "掌柜",
+          "text": "墙牌硬。硬牌撕起来，手会记得疼。"
         },
         {
           "id": "cs09_hg_6",
@@ -220,6 +370,56 @@
           "id": "cs09_br_7",
           "speaker": "leader",
           "text": "带牌。去酒馆。"
+        },
+        {
+          "id": "cs09_bridge_x0",
+          "speaker": "旁白",
+          "text": "门廊问谁入验。墙牌两行一起响。"
+        },
+        {
+          "id": "cs09_bridge_x1",
+          "speaker": "石垒·晚担",
+          "text": "牌比纸硬。绕牌的人，先撞桩。"
+        },
+        {
+          "id": "cs09_bridge_x2",
+          "speaker": "老旗手",
+          "text": "旗角给人核。验给人站。两样并排。"
+        },
+        {
+          "id": "cs09_bridge_x3",
+          "speaker": "苇原·灯影",
+          "text": "下落不清，验先别谈。谈了是吵。"
+        },
+        {
+          "id": "cs09_bridge_x4",
+          "speaker": "槐里·青禾",
+          "text": "谎抄不住。孩子会指着空栏问。"
+        },
+        {
+          "id": "cs09_bridge_x5",
+          "speaker": "老管事",
+          "text": "闲话快。对照慢。慢的留下。"
+        },
+        {
+          "id": "cs09_bridge_x6",
+          "speaker": "岁吏",
+          "text": "谱很长。血验很静。静着对，才像真。"
+        },
+        {
+          "id": "cs09_bridge_x7",
+          "speaker": "书记官",
+          "text": "记谁摸罩、谁短笑、谁催已点。"
+        },
+        {
+          "id": "cs09_bridge_x8",
+          "speaker": "旁白",
+          "text": "短笑在牌旁散开。散开不像结论。"
+        },
+        {
+          "id": "cs09_bridge_x9",
+          "speaker": "掌柜",
+          "text": "圈还在墙上。圈不等短笑落地。"
         },
         {
           "id": "cs09_mid_lost",
@@ -396,6 +596,56 @@
           "id": "cs09_tav_6",
           "speaker": "旁白",
           "text": "两张纸在风里响。你选怎么收这一季。"
+        },
+        {
+          "id": "cs09_tavern_x0",
+          "speaker": "旁白",
+          "text": "碗沿两圈：并排记，先钉血名。"
+        },
+        {
+          "id": "cs09_tavern_x1",
+          "speaker": "掌柜",
+          "text": "选完再喝。空喊嗣的，酒钱加倍。"
+        },
+        {
+          "id": "cs09_tavern_x2",
+          "speaker": "槐里·青禾",
+          "text": "裁血验的人，先把剪刀放下。"
+        },
+        {
+          "id": "cs09_tavern_x3",
+          "speaker": "老管事",
+          "text": "并排让空可见。可见才逼人来对。"
+        },
+        {
+          "id": "cs09_tavern_x4",
+          "speaker": "石垒·晚担",
+          "text": "栏能念，验能对。少一样厅会晃。"
+        },
+        {
+          "id": "cs09_tavern_x5",
+          "speaker": "苇原·灯影",
+          "text": "买一行结论，先摸罩。摸完再出价。"
+        },
+        {
+          "id": "cs09_tavern_x6",
+          "speaker": "岁吏",
+          "text": "回执不认吆喝。认灯，认手，认边。"
+        },
+        {
+          "id": "cs09_tavern_x7",
+          "speaker": "书记官",
+          "text": "两张纸响。风不替你选。"
+        },
+        {
+          "id": "cs09_tavern_x8",
+          "speaker": "老旗手",
+          "text": "圈选偏，旗角先响。响了就停手。"
+        },
+        {
+          "id": "cs09_tavern_x9",
+          "speaker": "旁白",
+          "text": "你还没选。没选时，罩边最清楚。"
         }
       ],
       "actions": [
@@ -500,6 +750,56 @@
           "id": "cs09_led_5",
           "speaker": "苇原·灯影",
           "text": "更还在交。下次挂嗣，下行先响。"
+        },
+        {
+          "id": "cs09_ledger_x0",
+          "speaker": "旁白",
+          "text": "旗册封面：血验上的灯。钥匙两把。"
+        },
+        {
+          "id": "cs09_ledger_x1",
+          "speaker": "老管事",
+          "text": "缝在名册与血验之间。缝要留。"
+        },
+        {
+          "id": "cs09_ledger_x2",
+          "speaker": "槐里·青禾",
+          "text": "抄过空格，才配以后念栏。"
+        },
+        {
+          "id": "cs09_ledger_x3",
+          "speaker": "老旗手",
+          "text": "并排入柜。裁半本的，我不收。"
+        },
+        {
+          "id": "cs09_ledger_x4",
+          "speaker": "岁吏",
+          "text": "侧室回执还在。红脸还诚实。"
+        },
+        {
+          "id": "cs09_ledger_x5",
+          "speaker": "苇原·灯影",
+          "text": "下次挂嗣，下行先响。"
+        },
+        {
+          "id": "cs09_ledger_x6",
+          "speaker": "书记官",
+          "text": "催条再来，封面四个字压得住。"
+        },
+        {
+          "id": "cs09_ledger_x7",
+          "speaker": "石垒·晚担",
+          "text": "桩在，血名才有地方站。"
+        },
+        {
+          "id": "cs09_ledger_x8",
+          "speaker": "掌柜",
+          "text": "擦过急圈的墙，更值钱。"
+        },
+        {
+          "id": "cs09_ledger_x9",
+          "speaker": "旁白",
+          "text": "灯还在。灯在，就还没骗完这一季。"
         },
         {
           "id": "cs09_led_6",

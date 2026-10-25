@@ -84,3 +84,7 @@
 
 - 不碰月回响 / pregnancy 专线代码与路线文冲突段。
 - 不 EmptyHost；不削弱 MIN_NOVEL_HANZI。
+
+## 加深备忘
+
+本刀加厚原著与章内对白，不改选题与系统钩子，不新开 season_11，不新增 month_echo 种类。visit@hourglass、battle@bridge 所有权保持。
