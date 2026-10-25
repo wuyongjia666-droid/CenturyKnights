@@ -52,6 +52,56 @@
           "text": "写好看不难。站得住才难。"
         },
         {
+          "id": "cs06_yard_x0",
+          "speaker": "旁白",
+          "text": "校场门开。沙味先进来，催条后到。"
+        },
+        {
+          "id": "cs06_yard_x1",
+          "speaker": "书记官",
+          "text": "栏上「可比试」三个字，比沙圈更急。"
+        },
+        {
+          "id": "cs06_yard_x2",
+          "speaker": "老管事",
+          "text": "急可以写在纸上。不能写进未结的疤。"
+        },
+        {
+          "id": "cs06_yard_x3",
+          "speaker": "槐里·青禾",
+          "text": "我在场边纳鞋。看得懂急，看不懂装胜。"
+        },
+        {
+          "id": "cs06_yard_x4",
+          "speaker": "苇原·灯影",
+          "text": "巡问今夜谁还没对疤，不问谁喊已胜。"
+        },
+        {
+          "id": "cs06_yard_x5",
+          "speaker": "老旗手",
+          "text": "旗角不卖名。疤未对，针先停。"
+        },
+        {
+          "id": "cs06_yard_x6",
+          "speaker": "岁吏",
+          "text": "胜可感。疤未对。红脸过夜。"
+        },
+        {
+          "id": "cs06_yard_x7",
+          "speaker": "石垒·晚担",
+          "text": "沙圈歪半指，我重画了。歪胜不收。"
+        },
+        {
+          "id": "cs06_yard_x8",
+          "speaker": "旁白",
+          "text": "木尺靠在门边。尺比嘴硬。"
+        },
+        {
+          "id": "cs06_yard_x9",
+          "speaker": "掌柜",
+          "text": "酒馆圈等校场选题。公开选，少扯皮。"
+        },
+        {
           "id": "cs06_yd_7",
           "speaker": "leader",
           "text": "栏挂上了。去看校场。"
@@ -98,6 +148,56 @@
           "text": "还差两场。跳步的栏，桩会裂。"
         },
         {
+          "id": "cs06_spar_x0",
+          "speaker": "旁白",
+          "text": "沙圈湿痕还在。湿痕是雨写的，比催条诚实。"
+        },
+        {
+          "id": "cs06_spar_x1",
+          "speaker": "老管事",
+          "text": "可比试已挂。疤待对，站位未核。"
+        },
+        {
+          "id": "cs06_spar_x2",
+          "speaker": "石垒·晚担",
+          "text": "脚在圈外一掌，别谈胜。先站。"
+        },
+        {
+          "id": "cs06_spar_x3",
+          "speaker": "书记官",
+          "text": "旁注「疤待对」。旁注是缝。"
+        },
+        {
+          "id": "cs06_spar_x4",
+          "speaker": "岁吏",
+          "text": "假绿进年迹，比红脸难看。"
+        },
+        {
+          "id": "cs06_spar_x5",
+          "speaker": "苇原·灯影",
+          "text": "装胜的人，带到圈里重来。"
+        },
+        {
+          "id": "cs06_spar_x6",
+          "speaker": "槐里·青禾",
+          "text": "急的人手会结。手结了，刀也会结。"
+        },
+        {
+          "id": "cs06_spar_x7",
+          "speaker": "老旗手",
+          "text": "跳格绣胜，角会裂。裂了再补更疼。"
+        },
+        {
+          "id": "cs06_spar_x8",
+          "speaker": "旁白",
+          "text": "刀还在架上。架上的刀，比嘴里的胜干净。"
+        },
+        {
+          "id": "cs06_spar_x9",
+          "speaker": "老管事",
+          "text": "对完疤，再谈名。名在过程里，不在吆喝里。"
+        },
+        {
           "id": "cs06_sp_6",
           "speaker": "leader",
           "text": "记下。去看沙漏。"
@@ -142,6 +242,56 @@
           "id": "cs06_hg_5",
           "speaker": "槐里·青禾",
           "text": "孩子要抄未结，不要只抄名。"
+        },
+        {
+          "id": "cs06_hourglass_x0",
+          "speaker": "旁白",
+          "text": "上行可比试，下行疤待对。细线钉死。"
+        },
+        {
+          "id": "cs06_hourglass_x1",
+          "speaker": "老管事",
+          "text": "撕下行的人，先去沙圈重站。"
+        },
+        {
+          "id": "cs06_hourglass_x2",
+          "speaker": "书记官",
+          "text": "一行好念。两行好活。我们选活。"
+        },
+        {
+          "id": "cs06_hourglass_x3",
+          "speaker": "岁吏",
+          "text": "回执认并排。并排认疤。疤不认抢跑。"
+        },
+        {
+          "id": "cs06_hourglass_x4",
+          "speaker": "苇原·灯影",
+          "text": "更还在交。下行先响。"
+        },
+        {
+          "id": "cs06_hourglass_x5",
+          "speaker": "槐里·青禾",
+          "text": "孩子抄未结。抄胜的时候，疤要在。"
+        },
+        {
+          "id": "cs06_hourglass_x6",
+          "speaker": "石垒·晚担",
+          "text": "间距够脸红。红完再谈钉胜。"
+        },
+        {
+          "id": "cs06_hourglass_x7",
+          "speaker": "老旗手",
+          "text": "核时两行都在。少一行角先裂。"
+        },
+        {
+          "id": "cs06_hourglass_x8",
+          "speaker": "旁白",
+          "text": "沙子慢。慢着对，才像校场该有的速度。"
+        },
+        {
+          "id": "cs06_hourglass_x9",
+          "speaker": "掌柜",
+          "text": "墙牌硬。撕牌的手会记得疼。"
         },
         {
           "id": "cs06_hg_6",
@@ -220,6 +370,56 @@
           "id": "cs06_br_7",
           "speaker": "leader",
           "text": "带牌。去酒馆。"
+        },
+        {
+          "id": "cs06_bridge_x0",
+          "speaker": "旁白",
+          "text": "门廊问谁入圈。墙牌两行一起响。"
+        },
+        {
+          "id": "cs06_bridge_x1",
+          "speaker": "石垒·晚担",
+          "text": "牌比纸硬。绕牌先撞桩。"
+        },
+        {
+          "id": "cs06_bridge_x2",
+          "speaker": "老旗手",
+          "text": "旗角给人核。疤给人对。"
+        },
+        {
+          "id": "cs06_bridge_x3",
+          "speaker": "苇原·灯影",
+          "text": "站位不清，胜先别谈。"
+        },
+        {
+          "id": "cs06_bridge_x4",
+          "speaker": "槐里·青禾",
+          "text": "谎抄不住。孩子会指着湿沙问。"
+        },
+        {
+          "id": "cs06_bridge_x5",
+          "speaker": "老管事",
+          "text": "闲话快。对照慢。慢的留下。"
+        },
+        {
+          "id": "cs06_bridge_x6",
+          "speaker": "岁吏",
+          "text": "谱很长。校场很静。静着对疤。"
+        },
+        {
+          "id": "cs06_bridge_x7",
+          "speaker": "书记官",
+          "text": "记谁圈外站、谁短笑、谁催已胜。"
+        },
+        {
+          "id": "cs06_bridge_x8",
+          "speaker": "旁白",
+          "text": "短笑散开。散开不是结案。"
+        },
+        {
+          "id": "cs06_bridge_x9",
+          "speaker": "掌柜",
+          "text": "圈还在墙上。圈不等短笑。"
         },
         {
           "id": "cs06_mid_lost",
@@ -396,6 +596,56 @@
           "id": "cs06_tav_6",
           "speaker": "旁白",
           "text": "两张纸在风里响。你选怎么收这一季。"
+        },
+        {
+          "id": "cs06_tavern_x0",
+          "speaker": "旁白",
+          "text": "碗沿两圈：校场并排记，先钉胜者名。"
+        },
+        {
+          "id": "cs06_tavern_x1",
+          "speaker": "掌柜",
+          "text": "选完再喝。空喊已胜，酒钱加倍。"
+        },
+        {
+          "id": "cs06_tavern_x2",
+          "speaker": "槐里·青禾",
+          "text": "裁校场的人，先把剪刀放下。"
+        },
+        {
+          "id": "cs06_tavern_x3",
+          "speaker": "老管事",
+          "text": "并排让疤可见。可见才逼人来对。"
+        },
+        {
+          "id": "cs06_tavern_x4",
+          "speaker": "石垒·晚担",
+          "text": "栏能念，站能核。少一样厅晃。"
+        },
+        {
+          "id": "cs06_tavern_x5",
+          "speaker": "苇原·灯影",
+          "text": "买一行结论，先去量站位。"
+        },
+        {
+          "id": "cs06_tavern_x6",
+          "speaker": "岁吏",
+          "text": "回执不认吆喝。认疤，认影，认圈。"
+        },
+        {
+          "id": "cs06_tavern_x7",
+          "speaker": "书记官",
+          "text": "两张纸响。风不替你选。"
+        },
+        {
+          "id": "cs06_tavern_x8",
+          "speaker": "老旗手",
+          "text": "圈选偏，旗角先响。响了就停针。"
+        },
+        {
+          "id": "cs06_tavern_x9",
+          "speaker": "旁白",
+          "text": "你还没选。没选时，沙圈最清楚。"
         }
       ],
       "actions": [
@@ -500,6 +750,56 @@
           "id": "cs06_led_5",
           "speaker": "苇原·灯影",
           "text": "更还在交。下次挂嗣，下行先响。"
+        },
+        {
+          "id": "cs06_ledger_x0",
+          "speaker": "旁白",
+          "text": "旗册封面：校场上的灯。钥匙两把。"
+        },
+        {
+          "id": "cs06_ledger_x1",
+          "speaker": "老管事",
+          "text": "缝在名册与疤之间。缝要留。"
+        },
+        {
+          "id": "cs06_ledger_x2",
+          "speaker": "槐里·青禾",
+          "text": "抄过未结，才配以后念栏。"
+        },
+        {
+          "id": "cs06_ledger_x3",
+          "speaker": "老旗手",
+          "text": "并排入柜。裁半本的，我不收。"
+        },
+        {
+          "id": "cs06_ledger_x4",
+          "speaker": "岁吏",
+          "text": "侧室回执还在。红脸还诚实。"
+        },
+        {
+          "id": "cs06_ledger_x5",
+          "speaker": "苇原·灯影",
+          "text": "下次挂嗣，下行先响。"
+        },
+        {
+          "id": "cs06_ledger_x6",
+          "speaker": "书记官",
+          "text": "催条再来，封面压得住。"
+        },
+        {
+          "id": "cs06_ledger_x7",
+          "speaker": "石垒·晚担",
+          "text": "桩在，胜名才有地方站。"
+        },
+        {
+          "id": "cs06_ledger_x8",
+          "speaker": "掌柜",
+          "text": "擦过急圈的墙，更值钱。"
+        },
+        {
+          "id": "cs06_ledger_x9",
+          "speaker": "旁白",
+          "text": "灯还在。灯在，就还没骗完这一季。"
         },
         {
           "id": "cs06_led_6",

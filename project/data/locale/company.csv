@@ -260,6 +260,28 @@ atlas_turnin_modal_title,可交付委托,Ready to turn in
 atlas_turnin_modal_body,此地有 %d 件委托可以交付。进城交还，还是稍后再说？,%d commission(s) can be turned in here. Enter the city, or later?
 atlas_turnin_modal_go,进城交付,Enter to turn in
 atlas_turnin_modal_later,稍后再说,Later
+atlas_turnin_list_row,· %s（+%d 银）,· %s (+%d silver)
+atlas_turnin_modal_now,一键交付,Turn in now
+atlas_turnin_now_toast,已交付 %d 件委托 · +%d 银,Turned in %d · +%d silver
+atlas_turnin_now_none,暂无可交付委托,Nothing ready to turn in
+atlas_battle_aftermath_title_win,遭遇战 · 胜,Encounter · Victory
+atlas_battle_aftermath_title_lose,遭遇战 · 败,Encounter · Defeat
+atlas_battle_aftermath_win_en,VICTORY,VICTORY
+atlas_battle_aftermath_lose_en,DEFEAT,DEFEAT
+atlas_battle_aftermath_summary,银两 %d（Δ %+d）,Silver %d (Δ %+d)
+atlas_battle_aftermath_quest,任务：%s,Quest: %s
+atlas_battle_aftermath_resume,继续行军,Resume march
+atlas_battle_aftermath_continue,知道了,Got it
+atlas_battle_line_loot,缴获 %d 银 · %s ×%d,Loot %d silver · %s ×%d
+atlas_battle_line_loot_silver,缴获 %d 银,Loot %d silver
+atlas_battle_line_rep_nation,%s 国誉 %+d,%s nation rep %+d
+atlas_battle_line_quest_ready,委托「%s」目标达成,Commission "%s" ready
+atlas_battle_line_rep_city,%s 城誉 %+d,%s city rep %+d
+atlas_battle_line_more_fight,前方又有战事,Another fight ahead
+atlas_battle_line_retreat,败退至%s,Retreated to %s
+atlas_battle_line_morale,士气 %+d,Morale %+d
+atlas_battle_line_cargo_loss,货物折损 %d 单位,Cargo loss %d units
+atlas_battle_line_escort_fail,护送委托失败,Escort commission failed
 wq_tab_active,在手委托,In hand
 wq_tab_board,本堡委托榜,Castle board
 wq_tab_done,已完成,Completed
@@ -305,11 +327,11 @@ atlas_resupply_fail_silver,银币不足（需 %d）,Not enough silver (need %d)
 atlas_camp_readout,现有粮 %d · 日耗 %d · 余程 %d 日需 %d%s,Food %d · burn %d/day · %d days left need %d%s
 atlas_camp_short,（粮不足）, (short)
 atlas_camp_ok,（够走）, (enough)
-atlas_trade_loop_en,PRODUCE LOOP,PRODUCE LOOP
+atlas_trade_loop_en,产线,LOOP
 atlas_trade_loop_title,产地买卖,Produce trade
-atlas_trade_loop_line,%s 本地买 %d → %s 卖 %d（%+d）,"%s buy %d here → %s sells for %d (%+d)"
-atlas_trade_loop_unknown,%s 本地买 %d → 暂无他处行情（到访后可见）,%s buy %d here → no other price yet (visit to learn)
-atlas_trade_loop_goto,去市集贩运,Open market trade
+atlas_trade_loop_line,%s 买 %d → %s 卖 %d（%+d）,"%s buy %d → %s sell %d (%+d)"
+atlas_trade_loop_unknown,%s 买 %d → 暂无卖价（到访可见）,%s buy %d → no sell price yet (visit)
+atlas_trade_loop_goto,去市集,Open market
 atlas_trade_loop_best,最佳：%s → %s（%+d 银）,Best: %s → %s (%+d silver)
 atlas_aftermath_en,AFTERMATH,AFTERMATH
 atlas_aftermath_danger_en,DANGER AFTERMATH,DANGER AFTERMATH
