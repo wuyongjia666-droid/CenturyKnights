@@ -39,6 +39,7 @@ func _ready() -> void:
 	if MobilePage.active(self):
 		_m_build()
 		resized.connect(_m_relayout)
+		_place_castle_view_crests()
 		refresh()
 		return
 	UIKit.top_bar(self, Locale.t("a1_view_title"), UIKit.std_resource_chips(), Locale.t("a1_view_back"), _back)
@@ -49,7 +50,15 @@ func _ready() -> void:
 	add_child(_msg)
 	for i in SLOTS.size():
 		_card(str(SLOTS[i]), i)
+	_place_castle_view_crests()
 	refresh()
+
+
+func _place_castle_view_crests() -> void:
+	var mob := DeviceProfile.is_mobile()
+	var at := Vector2(1120, 8) if not mob else Vector2(maxf(20.0, MobilePage.width(self) - 120.0), 4)
+	var sh := Vector2(36, 44) if not mob else Vector2(32, 40)
+	CKHeraldryChrome.place_castle_view_crest_strip(self, at, sh, Vector2(24, 34) if not mob else Vector2(22, 30))
 
 func _back() -> void:
 	CKNav.up()
@@ -205,6 +214,7 @@ var _m_grid: GridContainer
 
 func apply_mobile_layout() -> void:
 	if MobilePage.active(self):
+		_place_castle_view_crests()
 		_m_relayout()
 
 func _m_build() -> void:
