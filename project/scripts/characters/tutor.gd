@@ -227,6 +227,8 @@ static func teach(child_id: String) -> Dictionary:
 		msg += "; " + str(mark_res.get("msg", ""))
 		if str(mark_res.get("evicted", "")) != "":
 			msg += Locale.t("ux_tutor_evict") % CKLifeMarks.zh(str(mark_res.get("evicted", "")))
+	## Y1-B: 旗塾结业（传习一月）→ month_echo；属地/沙漏回读.
+	CKEconomyState.month_echo_note("tutor", Locale.t("lb_echo_tutor", [child.name, tutor.name, Locale.t("stat_" + key), gain]))
 	return {"ok": true, "msg": msg}
 
 

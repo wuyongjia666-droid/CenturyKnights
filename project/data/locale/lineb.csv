@@ -376,7 +376,7 @@ lb_dos_missing_how,点下方去花名册选人。,Tap below to open the roster a
 lb_dos_to_roster,去花名册,To the roster
 lb_est_echo_head,上月回响,Last month echo
 lb_est_echo_empty,还没有领地月回响,No estate month echo yet
-lb_est_echo_why,在岁月沙漏度过一月后，属地/领地/委托/诞育/联姻与辞世/退役/继承月结会记在这里。,After you advance a month at the hourglass, estate/territory/commission/birth/marriage and death/retire/succession settles appear here.
+lb_est_echo_why,在岁月沙漏度过一月后，属地/领地/委托/诞育/联姻/旗塾传习与晋升、辞世/退役/继承月结会记在这里。,After you advance a month at the hourglass, estate/territory/commission/birth/marriage/tutor/promo and death/retire/succession settles appear here.
 lb_est_echo_empty_how,点下方去岁月沙漏过月；月结回响会出现在这里。,Tap below to advance at the hourglass; month settles appear here.
 lb_est_to_hourglass,去岁月沙漏,To hourglass
 lb_est_echo_when,记于 %s,Logged %s
@@ -385,6 +385,8 @@ lb_echo_commission_expire,逾期「%s」·声望 -5,Overdue "%s" · rep -5
 lb_echo_birth,%s 诞下 %s,%s bore %s
 lb_echo_retire,%s 退役任顾问（%s 偏向）,%s retires as advisor (%s lean)
 lb_echo_death,%s 辞世，入族谱碑,%s passes; name on the stele
+lb_echo_tutor,%s 受 %s 传习·%s+%d,%s taught by %s · %s +%d
+lb_echo_promo,%s 转职为 %s,%s promoted to %s
 lb_hg_echo_head,上月回响（离开后仍在）,Last month echo (kept)
 lb_hg_to_estates,去领地营建,To estates
 lb_dynasty_end_head,王朝终结,Dynasty ended
