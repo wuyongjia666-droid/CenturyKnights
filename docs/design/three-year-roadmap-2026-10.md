@@ -142,6 +142,7 @@
 
 | 日期 | 变更 |
 |------|------|
+| 2026-10-25 | Y1-B 月回响 hourglass 回读补全：birth/marriage/life/commission suites 加沙漏 EchoLine 断言 |
 | 2026-10-25 | Y1-B 属地/产业月回响 suite：territory+holdings 写入 + estates/hourglass 回读（promo 已有 train_check） |
 | 2026-10-25 | Y1-B 战棋月回响：battle win/lose → `house_mods.month_echo.battle` + estates/hourglass 回读 + `month_echo_battle_check` |
 | 2026-10-25 | Y1-B 酒馆招募月回响：recruit → `house_mods.month_echo.recruit` + estates/hourglass 回读 + `month_echo_recruit_check` |
