@@ -2,7 +2,7 @@ extends Node
 ## Player-visible heraldry consistency across genealogy + castle banner strip +
 ## rival houses + tavern/hire + board unit shields + city/smith 邦徽 +
 ## codex/shrine/rite crests + commission-board 委托徽 +
-## mobile genealogy/quests company header.
+## mobile genealogy/quests company header + succession / heir-duel strips.
 ## 团徽 / 旗徽 / 族徽 / 敌徽 / 邦徽 / 委托徽 never mismatch outside their Chrome routes.
 
 const OVERVIEW := "res://scenes/hub/lineage_view.tscn"
@@ -393,6 +393,34 @@ func _run() -> void:
 	_collect_named(city_pg, "BoardCrest", offer_crests)
 	_ok(offer_crests.size() >= 1, "city board BoardCrest none")
 	city_pg.queue_free()
+
+
+	# ── Succession crest strip (团徽 + heir) ───────────────────────
+	var succ_host := Control.new()
+	succ_host.name = "SuccessionCrestHost"
+	get_tree().root.add_child(succ_host)
+	var succ := CKHeraldryChrome.place_succession_crest_strip(succ_host, leader, Vector2(10, 10), Vector2(36, 44))
+	_ok(succ != null and succ.name == "SuccessionCrestStrip", "SuccessionCrestStrip missing")
+	if succ != null:
+		_ok(succ.find_child("CastleArms", true, false) != null, "succession CastleArms")
+		_ok(succ.find_child("LeaderArms", true, false) != null, "succession LeaderArms")
+		_ok(bool(succ.get_meta("has_heir", false)), "succession has_heir")
+	var succ_empty := CKHeraldryChrome.place_succession_crest_strip(succ_host, null, Vector2(10, 80), Vector2(36, 44))
+	_ok(succ_empty != null and succ_empty.find_child("LeaderArms", true, false) == null, "succession empty no LeaderArms")
+	succ_host.queue_free()
+
+	# ── Heir duel crest strip (团徽 + A + B) ───────────────────────
+	var duel_host := Control.new()
+	duel_host.name = "DuelCrestHost"
+	get_tree().root.add_child(duel_host)
+	var duel := CKHeraldryChrome.place_duel_crest_strip(duel_host, leader, loner, Vector2(10, 10), Vector2(36, 44))
+	_ok(duel != null and duel.name == "DuelCrestStrip", "DuelCrestStrip missing")
+	if duel != null:
+		_ok(duel.find_child("CastleArms", true, false) != null, "duel CastleArms")
+		_ok(duel.find_child("LeftArms", true, false) != null, "duel LeftArms")
+		_ok(duel.find_child("RightArms", true, false) != null, "duel RightArms")
+	duel_host.queue_free()
+
 	await _settle(2)
 	if _fail != "":
 		return
