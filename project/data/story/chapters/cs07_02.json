@@ -1,0 +1,833 @@
+{
+  "id": "cs07_02",
+  "title": "宗谱上的灯",
+  "legacy_index": 417,
+  "return_scene": "res://scenes/hub/castle_hub.tscn",
+  "source": "docs/content-seasons/season-07/NOVEL.md",
+  "beats": [
+    {
+      "id": "yard",
+      "title": "宗谱",
+      "lines": [
+        {
+          "id": "cs07b_yd_0",
+          "speaker": "旁白",
+          "text": "仪典庭。宗谱匣开着。灯照着未写满的页。",
+          "stage": {
+            "card": "一　宗谱",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs07b_yd_1",
+          "speaker": "书记官",
+          "text": "上回的并排记与路名都在。今天要回读宗谱。"
+        },
+        {
+          "id": "cs07b_yd_2",
+          "speaker": "leader",
+          "text": "打开。路名与空页一起念。"
+        },
+        {
+          "id": "cs07b_yd_3",
+          "speaker": "旁白",
+          "text": "匣盖放下半寸。木香混着墨味。"
+        },
+        {
+          "id": "cs07b_yd_4",
+          "speaker": "老管事",
+          "text": "宗谱不是奖状。是谁还认得出的账。"
+        },
+        {
+          "id": "cs07b_yd_5",
+          "speaker": "岁吏",
+          "text": "年迹旁写「再认」。再认不等于改宗。"
+        },
+        {
+          "id": "cs07b_yd_6",
+          "speaker": "槐里·青禾",
+          "text": "孩子问认了是不是就能坐。我说坐另算。"
+        },
+        {
+          "id": "cs07b_yd_7",
+          "speaker": "石垒·晚担",
+          "text": "认得出口不等于坐得住。"
+        },
+        {
+          "id": "cs07b_yd_8",
+          "speaker": "苇原·灯影",
+          "text": "仪典灯还亮。亮着才敢再对路。"
+        },
+        {
+          "id": "cs07b_yd_9",
+          "speaker": "老旗手",
+          "text": "旗角给人核。核时把宗谱也递过去。"
+        },
+        {
+          "id": "cs07b_yd_10",
+          "speaker": "掌柜",
+          "text": "酒馆墙上有圈。圈等宗谱回读。"
+        },
+        {
+          "id": "cs07b_yd_11",
+          "speaker": "旁白",
+          "text": "案上多了一根空条。空条对路名。"
+        },
+        {
+          "id": "cs07b_yd_12",
+          "speaker": "书记官",
+          "text": "能念的路名在左。空条在右。"
+        },
+        {
+          "id": "cs07b_yd_13",
+          "speaker": "老管事",
+          "text": "并排记的人留空条。钉路名的人左栏更满。"
+        },
+        {
+          "id": "cs07b_yd_14",
+          "speaker": "岁吏",
+          "text": "满不等于真。真要再走一次仪。"
+        },
+        {
+          "id": "cs07b_yd_15",
+          "speaker": "leader",
+          "text": "宗谱开了。去看仪轨痕。"
+        },
+        {
+          "id": "cs07b_yd_16",
+          "speaker": "旁白",
+          "text": "地面上还有上回的香灰。香灰不会替人撒谎。"
+        },
+        {
+          "id": "cs07b_yd_17",
+          "speaker": "槐里·青禾",
+          "text": "香灰厚的地方，人当时是真低头。"
+        }
+      ],
+      "next": "rite"
+    },
+    {
+      "id": "rite",
+      "title": "再认",
+      "lines": [
+        {
+          "id": "cs07b_rt_0",
+          "speaker": "旁白",
+          "text": "仪轨中心。香案上绑着旧布。布上有灰痕。",
+          "stage": {
+            "bg": "hall",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs07b_rt_1",
+          "speaker": "苇原·灯影",
+          "text": "再认不是重演。是问路名还站不站得住。"
+        },
+        {
+          "id": "cs07b_rt_2",
+          "speaker": "石垒·晚担",
+          "text": "站得住才写进宗谱第二页。"
+        },
+        {
+          "id": "cs07b_rt_3",
+          "speaker": "旁白",
+          "text": "有人把路名喊得很响。喊响的人却不敢近香。"
+        },
+        {
+          "id": "cs07b_rt_4",
+          "speaker": "leader",
+          "text": "喊不算。近香算。"
+        },
+        {
+          "id": "cs07b_rt_5",
+          "speaker": "老旗手",
+          "text": "旗布完整。旗角不绣喊出来的路名。"
+        },
+        {
+          "id": "cs07b_rt_6",
+          "speaker": "槐里·青禾",
+          "text": "孩子在边上看。看谁先躲烟。"
+        },
+        {
+          "id": "cs07b_rt_7",
+          "speaker": "岁吏",
+          "text": "躲烟可以。改谱要另走手续。"
+        },
+        {
+          "id": "cs07b_rt_8",
+          "speaker": "书记官",
+          "text": "手续在宗谱第二页。页还空着。"
+        },
+        {
+          "id": "cs07b_rt_9",
+          "speaker": "老管事",
+          "text": "空页比满页的宗谱诚实。"
+        },
+        {
+          "id": "cs07b_rt_10",
+          "speaker": "掌柜",
+          "text": "酒馆有人赌再认。赌票我没收。"
+        },
+        {
+          "id": "cs07b_rt_11",
+          "speaker": "旁白",
+          "text": "灰痕旁多了一道新痕。新痕浅，人却静。"
+        },
+        {
+          "id": "cs07b_rt_12",
+          "speaker": "苇原·灯影",
+          "text": "静说明真认。假认爱吵。"
+        },
+        {
+          "id": "cs07b_rt_13",
+          "speaker": "石垒·晚担",
+          "text": "真认完再谈名。"
+        },
+        {
+          "id": "cs07b_rt_14",
+          "speaker": "leader",
+          "text": "痕看见了。去沙漏对路名两行。"
+        },
+        {
+          "id": "cs07b_rt_15",
+          "speaker": "旁白",
+          "text": "宗谱合上半寸。风想掀它，掀不动。"
+        },
+        {
+          "id": "cs07b_rt_16",
+          "speaker": "槐里·青禾",
+          "text": "掀不动才像宗账。"
+        },
+        {
+          "id": "cs07b_rt_17",
+          "speaker": "老旗手",
+          "text": "宗账比风沉。"
+        }
+      ],
+      "next": "hourglass"
+    },
+    {
+      "id": "hourglass",
+      "title": "两行",
+      "lines": [
+        {
+          "id": "cs07b_hg_0",
+          "speaker": "旁白",
+          "text": "沙漏厅。上行路名、下行空条。",
+          "stage": {
+            "bg": "hall",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs07b_hg_1",
+          "speaker": "老管事",
+          "text": "月份往前走。宗谱回读不改月份。"
+        },
+        {
+          "id": "cs07b_hg_2",
+          "speaker": "岁吏",
+          "text": "年迹旁多了一行「宗谱夜」。"
+        },
+        {
+          "id": "cs07b_hg_3",
+          "speaker": "书记官",
+          "text": "能念的路名在上行。站得住的人还在下行等。"
+        },
+        {
+          "id": "cs07b_hg_4",
+          "speaker": "苇原·灯影",
+          "text": "沙漏不催封路。沙漏只记谁还静。"
+        },
+        {
+          "id": "cs07b_hg_5",
+          "speaker": "槐里·青禾",
+          "text": "孩子问：认了为什么还空。我说空是考题。"
+        },
+        {
+          "id": "cs07b_hg_6",
+          "speaker": "石垒·晚担",
+          "text": "考题比匾狠。匾能挂，题挂不住。"
+        },
+        {
+          "id": "cs07b_hg_7",
+          "speaker": "老旗手",
+          "text": "旗角在风里响。响的是宗核。"
+        },
+        {
+          "id": "cs07b_hg_8",
+          "speaker": "掌柜",
+          "text": "酒馆圈旁写了「宗谱后再选」。"
+        },
+        {
+          "id": "cs07b_hg_9",
+          "speaker": "旁白",
+          "text": "两根木条并排。你按住路名与空页。"
+        },
+        {
+          "id": "cs07b_hg_10",
+          "speaker": "leader",
+          "text": "两行都在。去门廊问谁还认。"
+        },
+        {
+          "id": "cs07b_hg_11",
+          "speaker": "老管事",
+          "text": "门廊不问你认过谁。问你今晚还认谁。"
+        },
+        {
+          "id": "cs07b_hg_12",
+          "speaker": "岁吏",
+          "text": "认名单短，喊声反而大。"
+        },
+        {
+          "id": "cs07b_hg_13",
+          "speaker": "书记官",
+          "text": "喊声爱写「已封路」。回读爱写「仍空」。"
+        },
+        {
+          "id": "cs07b_hg_14",
+          "speaker": "旁白",
+          "text": "厅灯照着沙漏腰。路字最清楚。"
+        },
+        {
+          "id": "cs07b_hg_15",
+          "speaker": "槐里·青禾",
+          "text": "清楚才像香。糊了就像没低头。"
+        },
+        {
+          "id": "cs07b_hg_16",
+          "speaker": "石垒·晚担",
+          "text": "我不糊。认不住就说认不住。"
+        },
+        {
+          "id": "cs07b_hg_17",
+          "speaker": "苇原·灯影",
+          "text": "带牌去。牌上写宗谱，不写急。"
+        }
+      ],
+      "next": "bridge",
+      "actions": [
+        {
+          "id": "open_hourglass",
+          "label": "去看月份怎么往前走",
+          "do": [
+            {
+              "op": "visit",
+              "path": "res://scenes/hub/hourglass.tscn"
+            }
+          ]
+        },
+        {
+          "id": "continue_after_visit",
+          "label": "继续，去门廊",
+          "do": [
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bridge",
+      "title": "门廊",
+      "lines": [
+        {
+          "id": "cs07b_br_0",
+          "speaker": "旁白",
+          "text": "门廊风大。牌上「宗谱」两字发白。",
+          "stage": {
+            "bg": "hall",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs07b_br_1",
+          "speaker": "石垒·晚担",
+          "text": "谁还认？先看牌，再看脚。"
+        },
+        {
+          "id": "cs07b_br_lost",
+          "speaker": "旁白",
+          "text": "锋收回来。宗谱纸还钉着。仪典那拨，没散。",
+          "when": {
+            "all": [
+              {
+                "flag": "cs07_02_mid_lost"
+              },
+              {
+                "not_flag": "cs07_02_mid_fought"
+              }
+            ]
+          }
+        },
+        {
+          "id": "cs07b_br_2",
+          "speaker": "苇原·灯影",
+          "text": "巡防交更。路名还在名单上。"
+        },
+        {
+          "id": "cs07b_br_3",
+          "speaker": "旁白",
+          "text": "有人来劝：认了何必再对。"
+        },
+        {
+          "id": "cs07b_br_4",
+          "speaker": "leader",
+          "text": "认了也要回读。回读就是再问认。"
+        },
+        {
+          "id": "cs07b_br_5",
+          "speaker": "老旗手",
+          "text": "旗角给人核。核完再谈封路。"
+        },
+        {
+          "id": "cs07b_br_6",
+          "speaker": "槐里·青禾",
+          "text": "劝封路的札又来了。札比人急。"
+        },
+        {
+          "id": "cs07b_br_7",
+          "speaker": "岁吏",
+          "text": "急字过夜会褪。空页过夜更清楚。"
+        },
+        {
+          "id": "cs07b_br_8",
+          "speaker": "书记官",
+          "text": "议会廊外有人等听路名。我们先听空。"
+        },
+        {
+          "id": "cs07b_br_9",
+          "speaker": "老管事",
+          "text": "带牌去酒馆。宗谱圈还在墙上。"
+        },
+        {
+          "id": "cs07b_br_10",
+          "speaker": "掌柜",
+          "text": "圈等选题。宗谱后的题更沉。"
+        },
+        {
+          "id": "cs07b_br_11",
+          "speaker": "旁白",
+          "text": "桥木响。响的是鞋，不是喊路名。"
+        },
+        {
+          "id": "cs07b_br_12",
+          "speaker": "石垒·晚担",
+          "text": "干净靴也留痕。痕留给宗谱的人。"
+        },
+        {
+          "id": "cs07b_br_13",
+          "speaker": "苇原·灯影",
+          "text": "锋镝先试一试。试完再去宗谱圈前。"
+        },
+        {
+          "id": "cs07b_br_14",
+          "speaker": "leader",
+          "text": "门廊问过了。去酒馆看宗谱。"
+        },
+        {
+          "id": "cs07b_br_15",
+          "speaker": "旁白",
+          "text": "牌收回来。宗谱两字没有被风吹掉。"
+        },
+        {
+          "id": "cs07b_br_16",
+          "speaker": "槐里·青禾",
+          "text": "吹不掉才像路名。"
+        },
+        {
+          "id": "cs07b_br_17",
+          "speaker": "老旗手",
+          "text": "旗布没破。破的是封路催条。"
+        },
+        {
+          "id": "cs07b_br_18",
+          "speaker": "岁吏",
+          "text": "催条可以撕。宗谱第二页撕不得。"
+        }
+      ],
+      "next": "tavern",
+      "actions": [
+        {
+          "id": "open_skirmish",
+          "label": "先试一锋",
+          "when": {
+            "all": [
+              {
+                "not_flag": "cs07_02_mid_fought"
+              },
+              {
+                "not_flag": "cs07_02_mid_lost"
+              }
+            ]
+          },
+          "do": [
+            {
+              "op": "battle",
+              "map": "quest_bandit",
+              "objective": "rout",
+              "return": "res://scenes/story/chapter_player.tscn",
+              "win_flags": [
+                "cs07_02_mid_fought"
+              ],
+              "lose_flags": [
+                "cs07_02_mid_lost"
+              ],
+              "win_ledger": {
+                "choice": "mid_skirmish",
+                "title": "宗谱上的灯",
+                "outcome": "宗谱旁试锋得手——锋镝压下，空条可续",
+                "yeartrace": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "retry_skirmish",
+          "label": "再试锋镝",
+          "when": {
+            "all": [
+              {
+                "not_flag": "cs07_02_mid_fought"
+              },
+              {
+                "flag": "cs07_02_mid_lost"
+              }
+            ]
+          },
+          "do": [
+            {
+              "op": "battle",
+              "map": "quest_bandit",
+              "objective": "rout",
+              "return": "res://scenes/story/chapter_player.tscn",
+              "win_flags": [
+                "cs07_02_mid_fought"
+              ],
+              "lose_flags": [
+                "cs07_02_mid_lost"
+              ],
+              "win_ledger": {
+                "choice": "mid_skirmish",
+                "title": "宗谱上的灯",
+                "outcome": "宗谱旁试锋得手——锋镝压下，空条可续",
+                "yeartrace": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "continue_after_battle",
+          "label": "继续，去酒馆",
+          "do": [
+            {
+              "op": "season_ledger",
+              "when": {
+                "all": [
+                  {
+                    "not_flag": "cs07_02_mid_fought"
+                  },
+                  {
+                    "not_flag": "cs07_02_mid_lost"
+                  }
+                ]
+              },
+              "chapter": "cs07_02",
+              "choice": "mid_skirmish_skip",
+              "title": "宗谱上的灯",
+              "outcome": "未试锋——锋未出鞘，径去酒馆",
+              "yeartrace": true
+            },
+            {
+              "op": "season_ledger",
+              "when": {
+                "all": [
+                  {
+                    "not_flag": "cs07_02_mid_fought"
+                  },
+                  {
+                    "flag": "cs07_02_mid_lost"
+                  }
+                ]
+              },
+              "chapter": "cs07_02",
+              "choice": "mid_skirmish_abort",
+              "title": "宗谱上的灯",
+              "outcome": "试锋未成——伤还在，先去酒馆",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tavern",
+      "title": "选题",
+      "lines": [
+        {
+          "id": "cs07b_tv_0",
+          "speaker": "旁白",
+          "text": "酒馆板上钉着宗谱摘抄。路名与空条并排。",
+          "stage": {
+            "bg": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs07b_tv_1",
+          "speaker": "掌柜",
+          "text": "不是我要钉宗谱。有人出酒钱。挂不挂你们裁。"
+        },
+        {
+          "id": "cs07b_tv_2",
+          "speaker": "leader",
+          "text": "挂宗谱。挂三天。谁加字，我认指甲。"
+        },
+        {
+          "id": "cs07b_tv_3",
+          "speaker": "石垒·晚担",
+          "text": "挂着才像宗账。藏起来才像骗。"
+        },
+        {
+          "id": "cs07b_tv_4",
+          "speaker": "槐里·青禾",
+          "text": "孩子来抄宗板。抄到空页会停一下。"
+        },
+        {
+          "id": "cs07b_tv_5",
+          "speaker": "苇原·灯影",
+          "text": "停一下好。不停着抄路名最危险。"
+        },
+        {
+          "id": "cs07b_tv_6",
+          "speaker": "老管事",
+          "text": "宗谱后的选择：空条并排，或封路催坐。"
+        },
+        {
+          "id": "cs07b_tv_7",
+          "speaker": "岁吏",
+          "text": "并排是认静。催坐是认急。"
+        },
+        {
+          "id": "cs07b_tv_8",
+          "speaker": "书记官",
+          "text": "急好念。空页难受。难受就对。"
+        },
+        {
+          "id": "cs07b_tv_9",
+          "speaker": "老旗手",
+          "text": "旗角在门外。核的人能看见宗板。"
+        },
+        {
+          "id": "cs07b_tv_10",
+          "speaker": "旁白",
+          "text": "花生壳圈还在。圈心写「宗谱选题」。"
+        },
+        {
+          "id": "cs07b_tv_11",
+          "speaker": "掌柜",
+          "text": "宗谱圈心比酒醒。醒着才选得动。"
+        },
+        {
+          "id": "cs07b_tv_12",
+          "speaker": "leader",
+          "text": "路名与空页都看见了。选。"
+        },
+        {
+          "id": "cs07b_tv_13",
+          "speaker": "石垒·晚担",
+          "text": "我站宗圈外。站着也算见证。"
+        },
+        {
+          "id": "cs07b_tv_14",
+          "speaker": "槐里·青禾",
+          "text": "见证要写进宗谱第二页。"
+        },
+        {
+          "id": "cs07b_tv_15",
+          "speaker": "苇原·灯影",
+          "text": "宗谱第二页比嘴硬。嘴会改口。"
+        },
+        {
+          "id": "cs07b_tv_16",
+          "speaker": "旁白",
+          "text": "宗板前安静。安静里只剩两道选择题。"
+        },
+        {
+          "id": "cs07b_tv_17",
+          "speaker": "老管事",
+          "text": "选完入柜。宗谱柜门会响。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "keep_blank",
+          "label": "空条并排",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs07_gene_parallel",
+              "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs07_02",
+              "choice": "keep_blank",
+              "title": "宗谱上的灯",
+              "outcome": "宗谱回读后空条并排记入谱",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        },
+        {
+          "id": "seal_path",
+          "label": "封路催坐",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs07_gene_seal",
+              "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs07_02",
+              "choice": "seal_path",
+              "title": "宗谱上的灯",
+              "outcome": "宗谱回读后封路催坐",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ledger",
+      "title": "入册",
+      "lines": [
+        {
+          "id": "cs07b_ld_0",
+          "speaker": "旁白",
+          "text": "西阁。宗谱第二页与空条并排入柜。",
+          "stage": {
+            "bg": "hall",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs07b_ld_1",
+          "speaker": "旁白",
+          "text": "你留空条并排。路名仍在，认得出另算。"
+        },
+        {
+          "id": "cs07b_ld_2",
+          "speaker": "旁白",
+          "text": "你封路催坐。字能念，沙漏下行仍亮着空。"
+        },
+        {
+          "id": "cs07b_ld_3",
+          "speaker": "老管事",
+          "text": "柜门一响。四字落款：宗谱已记。"
+        },
+        {
+          "id": "cs07b_ld_4",
+          "speaker": "岁吏",
+          "text": "年迹旁补宗谱一行。不改前季。"
+        },
+        {
+          "id": "cs07b_ld_5",
+          "speaker": "书记官",
+          "text": "议会要听路名，就连空条一起念。"
+        },
+        {
+          "id": "cs07b_ld_6",
+          "speaker": "槐里·青禾",
+          "text": "孩子抄完空页。说手不抖了。"
+        },
+        {
+          "id": "cs07b_ld_7",
+          "speaker": "石垒·晚担",
+          "text": "不抖说明没装认。"
+        },
+        {
+          "id": "cs07b_ld_8",
+          "speaker": "苇原·灯影",
+          "text": "巡夜名单还短。短着也好过假认。"
+        },
+        {
+          "id": "cs07b_ld_9",
+          "speaker": "老旗手",
+          "text": "旗角给人核。核完仪典旗还在。"
+        },
+        {
+          "id": "cs07b_ld_10",
+          "speaker": "掌柜",
+          "text": "宗圈可以擦。柜里宗谱擦不掉。"
+        },
+        {
+          "id": "cs07b_ld_11",
+          "speaker": "leader",
+          "text": "宗谱记了。灯还亮。"
+        },
+        {
+          "id": "cs07b_ld_12",
+          "speaker": "旁白",
+          "text": "仪典灯照着香案灰痕。痕还在，人还诚实。"
+        },
+        {
+          "id": "cs07b_ld_13",
+          "speaker": "老管事",
+          "text": "诚实比能念的路名贵。"
+        },
+        {
+          "id": "cs07b_ld_14",
+          "speaker": "岁吏",
+          "text": "贵的账才值得再认。"
+        },
+        {
+          "id": "cs07b_ld_15",
+          "speaker": "书记官",
+          "text": "嗓子轻一点。轻着念宗谱，字更真。"
+        },
+        {
+          "id": "cs07b_ld_16",
+          "speaker": "旁白",
+          "text": "柜锁落下。宗谱第二可玩章收束。"
+        },
+        {
+          "id": "cs07b_ld_17",
+          "speaker": "槐里·青禾",
+          "text": "收束不是结束。是敢把空页留下。"
+        },
+        {
+          "id": "cs07b_ld_18",
+          "speaker": "石垒·晚担",
+          "text": "留下空，才有人认得住。"
+        },
+        {
+          "id": "cs07b_ld_19",
+          "speaker": "leader",
+          "text": "灯不灭。宗谱在柜里。"
+        }
+      ],
+      "actions": []
+    }
+  ],
+  "title_en": "The Lamp on the Clan Register"
+}
