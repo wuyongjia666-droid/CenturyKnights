@@ -200,6 +200,7 @@ static func attach_hire_chrome(parent: Control, c, plate: Rect2, arms_sz: Vector
 static func place_company_header(parent: Node, at: Vector2, size: Vector2 = Vector2(44, 52)) -> TextureRect:
 	var old := parent.get_node_or_null("CastleArms")
 	if old:
+		old.name = "_CastleArmsDying"
 		old.queue_free()
 	var tr := make_company_arms(size)
 	tr.position = at
@@ -567,6 +568,48 @@ static func issuer_is_home(issuer_id: String) -> bool:
 	var id := str(issuer_id)
 	return id == "" or id == "hq"
 
+## Deploy / muster card plate: 族徽|旗徽 as DeployArms (lower-left of portrait plate).
+static func attach_deploy_chrome(parent: Control, c, plate: Rect2, arms_sz: Vector2 = Vector2(36, 44)) -> void:
+	if parent == null or c == null:
+		return
+	var old := parent.get_node_or_null("DeployArms")
+	if old:
+		old.queue_free()
+	var arms := make_person_arms(c, arms_sz)
+	arms.name = "DeployArms"
+	arms.position = Vector2(plate.position.x + 4.0, plate.position.y + plate.size.y - arms_sz.y - 4.0)
+	parent.add_child(arms)
+
+## Train / pick-row inline arms (HBox-friendly). Caller parents the returned TextureRect.
+static func make_row_arms(c, size: Vector2 = Vector2(28, 34)) -> TextureRect:
+	var arms := make_person_arms(c, size)
+	arms.name = "RowArms"
+	return arms
+
+## Muster strip: 团徽 + focused leader 族徽|旗徽 — deploy / title ladder header.
+static func place_muster_crest_strip(parent: Node, leader, at: Vector2, shield: Vector2 = Vector2(40, 48)) -> Control:
+	var old := parent.get_node_or_null("MusterCrestStrip")
+	if old:
+		old.name = "_MusterCrestStripDying"
+		old.queue_free()
+	var host := Control.new()
+	host.name = "MusterCrestStrip"
+	host.position = at
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var co := make_company_arms(shield)
+	co.position = Vector2.ZERO
+	host.add_child(co)
+	var gap := 8.0
+	if leader != null:
+		var la := make_person_arms(leader, shield)
+		la.name = "LeaderArms"
+		la.position = Vector2(shield.x + gap, 0)
+		host.add_child(la)
+		host.size = Vector2(shield.x * 2.0 + gap, shield.y)
+	else:
+		host.size = Vector2(shield.x, shield.y)
+	parent.add_child(host)
+	return host
 static func issuer_spec(issuer_id: String) -> Dictionary:
 	if issuer_is_home(issuer_id):
 		return company_spec()
