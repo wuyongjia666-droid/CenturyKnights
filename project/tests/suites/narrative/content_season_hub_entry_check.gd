@@ -81,6 +81,15 @@ func _hub_row() -> void:
 		hub.queue_free()
 		await get_tree().process_frame
 		return
+	var missing := false
+	for cid in EXPECTED:
+		if hub.find_child("Season_%s" % cid, true, false) == null:
+			missing = true
+			break
+	if missing and hub.has_method("_open_content_season_sheet"):
+		hub.call("_open_content_season_sheet")
+		await get_tree().process_frame
+		await get_tree().process_frame
 	for cid in EXPECTED:
 		var chip := hub.find_child("Season_%s" % cid, true, false) as BaseButton
 		_ok(chip != null, "chip %s missing" % cid)
