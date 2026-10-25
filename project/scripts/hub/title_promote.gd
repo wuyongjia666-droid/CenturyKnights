@@ -12,6 +12,7 @@ var _msg: Label
 func _ready() -> void:
 	_leader = GameState.get_leader()
 	CKPageKit.shell(self, Locale.t("lb_title_ctx"), "TITLE LADDER", Locale.t("lb_title_title"), Locale.t("lb_title_desc"))
+	CKHeraldryChrome.place_muster_crest_strip(self, _leader, Vector2(980, 8), Vector2(40, 48))
 	_msg = CKPageKit.feedback(self)
 	_paint()
 	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "TITLE LADDER · FROST")
@@ -21,6 +22,9 @@ func apply_mobile_layout() -> void:
 	if not MobilePage.active(self):
 		return
 	set_meta("m_center_ok", true)
+	var vp := get_viewport().get_visible_rect().size
+	var strip_w := 40.0 * 2.0 + 8.0
+	CKHeraldryChrome.place_muster_crest_strip(self, _leader, Vector2(maxf(8.0, vp.x - strip_w - 12.0), 6.0), Vector2(40, 48))
 	_paint()
 	MobilePage.upsize(self)
 
@@ -67,6 +71,11 @@ func _paint_desktop() -> void:
 	var go := _promote_btn(false, 1196.0)
 	go.position = Vector2(42, CKPageKit.TOP + 418)
 	_host.add_child(go)
+	if _leader != null:
+		var la := CKHeraldryChrome.make_person_arms(_leader, Vector2(44, 52))
+		la.name = "LeaderArms"
+		la.position = Vector2(go.position.x + go.custom_minimum_size.x + 16.0, go.position.y)
+		_host.add_child(la)
 	UIFX.wire_tree(_host)
 	UIFX.stagger_children(step, 0.05, 0.2)
 
@@ -137,6 +146,11 @@ func _paint_mobile() -> void:
 	iv.add_child(body)
 	var go := _promote_btn(true, content_w)
 	inner.add_child(go)
+	if _leader != null:
+		var la := CKHeraldryChrome.make_person_arms(_leader, Vector2(40, 48))
+		la.name = "LeaderArms"
+		la.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		inner.add_child(la)
 	UIFX.wire_tree(_host)
 	UIFX.stagger_children(step, 0.05, 0.2)
 
@@ -161,11 +175,15 @@ func _add_top_empty(parent: Control, width: float) -> void:
 func _ladder_chip(id: String, i: int, ni: int, mob: bool, step_w: float) -> Control:
 	var col: Color = UIKit.ACCENT if i == ni else (UIKit.OK if i < ni else (UIKit.TEXT if i == ni + 1 else UIKit.TEXT_FAINT))
 	var p := PanelContainer.new()
-	p.custom_minimum_size = Vector2(step_w, 76 if mob else 64)
+	p.custom_minimum_size = Vector2(step_w, 96 if mob else 88)
 	p.add_theme_stylebox_override("panel", UIKit.flat_box(Color(col, 0.12), col, 10, 2 if i == ni else 1))
 	var v := VBoxContainer.new()
 	v.alignment = BoxContainer.ALIGNMENT_CENTER
 	p.add_child(v)
+	var badge := CKHeraldryChrome.make_rank_badge(id, 22 if mob else 26)
+	badge.name = "LadderBadge"
+	badge.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	v.add_child(badge)
 	var fs := MobilePage.FONT if mob else 18
 	var t := UIKit.title_label(CKCourt.ladder_zh(id, CKCourt._sex(_leader)), fs, UIKit.TEXT)
 	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
