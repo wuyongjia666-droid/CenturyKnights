@@ -111,6 +111,14 @@ static func focus_pan_lerp(from: Vector2, to: Vector2, t: float) -> Vector2:
 	return from.lerp(to, clampf(t, 0.0, 1.0))
 
 
+## Prefer m_board_area meta; only touch host.BOARD_AREA when meta is absent (avoids
+## eagerly evaluating a missing BOARD_AREA on duck hosts).
+static func _stage_rect(host) -> Rect2:
+	if host.has_meta("m_board_area"):
+		return host.get_meta("m_board_area")
+	return host.BOARD_AREA
+
+
 static func nearest_unit_pos(origin: Vector2, cell_px: float, units: Array, local: Vector2, soft_r: float = SOFT_R) -> Vector2i:
 	if cell_px < 1.0:
 		return Vector2i(-1, -1)
@@ -236,7 +244,7 @@ static func focus_cell(host, cell: Vector2i, smooth: bool = true) -> void:
 		return
 	if host.has_method("_in_bounds") and not host._in_bounds(cell):
 		return
-	var stage: Rect2 = host.get_meta("m_board_area", host.BOARD_AREA)
+	var stage: Rect2 = _stage_rect(host)
 	var delta: Vector2 = focus_pan_delta(host.ORIGIN, float(host.CELL), cell, host._board_pan, host._board_zoom, stage)
 	if delta.length_squared() < 0.25:
 		return
@@ -249,7 +257,7 @@ static func focus_follow_cell(host, cell: Vector2i) -> void:
 		return
 	if host.has_method("_in_bounds") and not host._in_bounds(cell):
 		return
-	var stage: Rect2 = host.get_meta("m_board_area", host.BOARD_AREA)
+	var stage: Rect2 = _stage_rect(host)
 	var delta: Vector2 = focus_nudge_delta(host.ORIGIN, float(host.CELL), cell, host._board_pan, host._board_zoom, stage)
 	if delta.length_squared() < 0.25:
 		return

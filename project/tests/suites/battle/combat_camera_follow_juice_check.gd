@@ -143,6 +143,8 @@ class _FakeBattleHost:
 			return _board_origin
 		if property == &"CELL":
 			return _board_cell
+		if property == &"BOARD_AREA":
+			return _stage
 		return null
 
 	func setup_selected_at(pos: Vector2i) -> void:
