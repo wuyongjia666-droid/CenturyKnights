@@ -96,6 +96,36 @@
           "text": "我站印院外。站着也算见证。"
         },
         {
+          "id": "cs10b_ya_x17",
+          "speaker": "旁白",
+          "text": "封院静。静里听见印泥盖子轻响。"
+        },
+        {
+          "id": "cs10b_ya_x18",
+          "speaker": "石垒·晚担",
+          "text": "印泥响，说明有人刚用过。"
+        },
+        {
+          "id": "cs10b_ya_x19",
+          "speaker": "leader",
+          "text": "刚用过的印，我验。"
+        },
+        {
+          "id": "cs10b_ya_y20",
+          "speaker": "旁白",
+          "text": "印泥盖子轻响。"
+        },
+        {
+          "id": "cs10b_ya_y21",
+          "speaker": "石垒·晚担",
+          "text": "响说明刚用过。"
+        },
+        {
+          "id": "cs10b_ya_y22",
+          "speaker": "leader",
+          "text": "刚用过的我验边。"
+        },
+        {
           "id": "cs10b_ya_16",
           "speaker": "槐里·青禾",
           "text": "诚实比能喊的城印贵。"
@@ -191,6 +221,36 @@
           "id": "cs10b_se_17",
           "speaker": "石垒·晚担",
           "text": "骗不过抄印底的停顿。"
+        },
+        {
+          "id": "cs10b_se_x17",
+          "speaker": "旁白",
+          "text": "印匣锁着。锁孔有新擦痕。"
+        },
+        {
+          "id": "cs10b_se_x18",
+          "speaker": "岁吏",
+          "text": "擦痕浅，说明心虚。"
+        },
+        {
+          "id": "cs10b_se_x19",
+          "speaker": "leader",
+          "text": "心虚的印不盖。"
+        },
+        {
+          "id": "cs10b_se_y20",
+          "speaker": "旁白",
+          "text": "封泥边沿有毛刺。"
+        },
+        {
+          "id": "cs10b_se_y21",
+          "speaker": "石垒·晚担",
+          "text": "毛刺多半是仿的。"
+        },
+        {
+          "id": "cs10b_se_y22",
+          "speaker": "leader",
+          "text": "仿印不盖。"
         },
         {
           "id": "cs10b_se_9",
@@ -290,9 +350,74 @@
           "text": "印痕看见了。去门廊留痕。"
         },
         {
+          "id": "cs10b_ho_x17",
+          "speaker": "旁白",
+          "text": "沙漏旁放着封泥样。"
+        },
+        {
+          "id": "cs10b_ho_x18",
+          "speaker": "苇原·灯影",
+          "text": "样和真，差在边沿。"
+        },
+        {
+          "id": "cs10b_ho_x19",
+          "speaker": "leader",
+          "text": "去沙漏。看边沿。"
+        },
+        {
+          "id": "cs10b_ho_y20",
+          "speaker": "旁白",
+          "text": "印泥盖子轻响。"
+        },
+        {
+          "id": "cs10b_ho_y21",
+          "speaker": "石垒·晚担",
+          "text": "响说明刚用过。"
+        },
+        {
+          "id": "cs10b_ho_y22",
+          "speaker": "leader",
+          "text": "刚用过的我验边。"
+        },
+        {
           "id": "cs10b_ho_8",
           "speaker": "苇原·灯影",
           "text": "假印一夜，印底就脏。"
+        },
+        {
+          "id": "cs1002_vis_mv1",
+          "speaker": "旁白",
+          "text": "印底纸旁沙漏沙面有一指宽凹痕。"
+        },
+        {
+          "id": "cs1002_vis_mv2",
+          "speaker": "岁吏",
+          "text": "凹痕像被印钮压过。要问。"
+        },
+        {
+          "id": "cs1002_vis_mv3",
+          "speaker": "苇原·灯影",
+          "text": "问清再走月份。"
+        },
+        {
+          "id": "cs1002_vst1",
+          "speaker": "岁吏",
+          "text": "月份从复页印谱骑缝走过。走过，才算足印。"
+        },
+        {
+          "id": "cs1002_vst2",
+          "speaker": "书记官",
+          "text": "复印格最怕快——快了就糊成初盖的脏。"
+        },
+        {
+          "id": "cs1002_vst3",
+          "speaker": "leader",
+          "text": "月份走过。印，慢着复。"
+        },
+        {
+          "id": "cs1002_vis_mv4",
+          "speaker": "leader",
+          "text": "问清。去看。"
         }
       ],
       "next": "bridge",
@@ -332,21 +457,6 @@
           "id": "cs10b_br_2",
           "speaker": "老旗手",
           "text": "旗角在桥头给人核。核完再谈催印。"
-        },
-        {
-          "id": "cs10b_br_lost",
-          "speaker": "旁白",
-          "text": "锋收回来。印底纸还钉着。印旁那拨，没散。",
-          "when": {
-            "all": [
-              {
-                "flag": "cs10_02_mid_lost"
-              },
-              {
-                "not_flag": "cs10_02_mid_fought"
-              }
-            ]
-          }
         },
         {
           "id": "cs10b_br_3",
@@ -424,9 +534,116 @@
           "text": "停一下好。不停着抄城印最危险。"
         },
         {
+          "id": "cs10b_br_x18",
+          "speaker": "旁白",
+          "text": "门廊旗绳新换。"
+        },
+        {
+          "id": "cs10b_br_x19",
+          "speaker": "岁吏",
+          "text": "新绳绑旧旗，也算交代。"
+        },
+        {
+          "id": "cs10b_br_x20",
+          "speaker": "leader",
+          "text": "试锋。交代清楚。"
+        },
+        {
+          "id": "cs10b_br_y21",
+          "speaker": "旁白",
+          "text": "封泥边沿有毛刺。"
+        },
+        {
+          "id": "cs10b_br_y22",
+          "speaker": "石垒·晚担",
+          "text": "毛刺多半是仿的。"
+        },
+        {
+          "id": "cs10b_br_y23",
+          "speaker": "leader",
+          "text": "仿印不盖。"
+        },
+        {
           "id": "cs10b_br_18",
           "speaker": "旁白",
           "text": "桥灯一盏。印酒门开。"
+        },
+        {
+          "id": "cs1002_mid_mv1",
+          "speaker": "旁白",
+          "text": "印底纸纤维起毛。毛刺在灯下像细刺。"
+        },
+        {
+          "id": "cs1002_mid_mv2",
+          "speaker": "岁吏",
+          "text": "细刺多，仿印常见。真印边是沉的。"
+        },
+        {
+          "id": "cs1002_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "沉边怕仿。仿的人就在印旁转。"
+        },
+        {
+          "id": "cs1002_mid_mv4",
+          "speaker": "苇原·灯影",
+          "text": "转够了该停。不停就锋见。"
+        },
+        {
+          "id": "cs1002_mid_mv5",
+          "speaker": "老旗手",
+          "text": "锋见一次，仿手会记。"
+        },
+        {
+          "id": "cs1002_mid_mv6",
+          "speaker": "leader",
+          "text": "记也好。仿印不盖。"
+        },
+        {
+          "id": "cs1002_win1",
+          "speaker": "旁白",
+          "text": "锋再定。印谱复页翻开，催脏印的人退到槛外。",
+          "when": {
+            "flag": "cs10_mid_fought"
+          }
+        },
+        {
+          "id": "cs1002_win2",
+          "speaker": "掌柜",
+          "text": "复盖比初盖慢。慢，是因为要净。",
+          "when": {
+            "flag": "cs10_mid_fought"
+          }
+        },
+        {
+          "id": "cs1002_win3",
+          "speaker": "槐里·青禾",
+          "text": "印泥第二圈更红。红得干净，才像官印。",
+          "when": {
+            "flag": "cs10_mid_fought"
+          }
+        },
+        {
+          "id": "cs1002_win4",
+          "speaker": "leader",
+          "text": "锋再验场。印，我复盖。",
+          "when": {
+            "flag": "cs10_mid_fought"
+          }
+        },
+        {
+          "id": "cs10b_br_lost",
+          "speaker": "旁白",
+          "text": "锋收回来。印底纸还钉着。印旁那拨，没散。",
+          "when": {
+            "all": [
+              {
+                "flag": "cs10_02_mid_lost"
+              },
+              {
+                "not_flag": "cs10_02_mid_fought"
+              }
+            ]
+          }
         }
       ],
       "next": "tavern",
@@ -637,9 +854,79 @@
           "text": "城印旗还在。旗不替你们选。"
         },
         {
+          "id": "cs10b_ta_x17",
+          "speaker": "旁白",
+          "text": "酒馆议封授。声大的多。"
+        },
+        {
+          "id": "cs10b_ta_x18",
+          "speaker": "老管事",
+          "text": "声大压不住印。"
+        },
+        {
+          "id": "cs10b_ta_x19",
+          "speaker": "leader",
+          "text": "我听印，不听声。"
+        },
+        {
+          "id": "cs10b_ta_y20",
+          "speaker": "旁白",
+          "text": "印泥盖子轻响。"
+        },
+        {
+          "id": "cs10b_ta_y21",
+          "speaker": "石垒·晚担",
+          "text": "响说明刚用过。"
+        },
+        {
+          "id": "cs10b_ta_y22",
+          "speaker": "leader",
+          "text": "刚用过的我验边。"
+        },
+        {
           "id": "cs10b_ta_18",
           "speaker": "旁白",
           "text": "两道印题在板上。手按上去。"
+        },
+        {
+          "id": "cs1002_ret_mv1",
+          "speaker": "旁白",
+          "text": "仿印段子讲完，没人敢再碰杯。"
+        },
+        {
+          "id": "cs1002_ret_mv2",
+          "speaker": "掌柜",
+          "text": "不敢碰杯正好。"
+        },
+        {
+          "id": "cs1002_ret_mv3",
+          "speaker": "岁吏",
+          "text": "正好回堡。"
+        },
+        {
+          "id": "cs1002_tvn1",
+          "speaker": "掌柜",
+          "text": "复盖那一锋，酒更慢。"
+        },
+        {
+          "id": "cs1002_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "槛外催的退了。退了，腕才听使。"
+        },
+        {
+          "id": "cs1002_tvn3",
+          "speaker": "老旗手",
+          "text": "旗在印案旁第二次立直。直了，印才像根。"
+        },
+        {
+          "id": "cs1002_tvn4",
+          "speaker": "leader",
+          "text": "复净。场清。酒，慢着。"
+        },
+        {
+          "id": "cs1002_ret_mv4",
+          "speaker": "leader",
+          "text": "回堡。季10入谱。"
         }
       ],
       "next": "ledger",
@@ -780,6 +1067,36 @@
           "id": "cs10b_le_17",
           "speaker": "苇原·灯影",
           "text": "在就好。在才像印底回读。"
+        },
+        {
+          "id": "cs10b_le_x17",
+          "speaker": "旁白",
+          "text": "封录末行：印真则名立。"
+        },
+        {
+          "id": "cs10b_le_x18",
+          "speaker": "槐里·青禾",
+          "text": "名立了，才许并排。"
+        },
+        {
+          "id": "cs10b_le_x19",
+          "speaker": "leader",
+          "text": "今日验真。"
+        },
+        {
+          "id": "cs10b_le_y20",
+          "speaker": "旁白",
+          "text": "封泥边沿有毛刺。"
+        },
+        {
+          "id": "cs10b_le_y21",
+          "speaker": "石垒·晚担",
+          "text": "毛刺多半是仿的。"
+        },
+        {
+          "id": "cs10b_le_y22",
+          "speaker": "leader",
+          "text": "仿印不盖。"
         },
         {
           "id": "cs10b_le_18",

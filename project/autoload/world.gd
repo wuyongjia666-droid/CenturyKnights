@@ -80,6 +80,7 @@ var last_chain_fail: Dictionary = {}  # scripted-chain expire/abandon payload fo
 var last_supply_halt: Dictionary = {}  # mid-march food=0 payload for SupplyHaltModal
 var last_territory_month: Dictionary = {}  # month yield/drain/lost for TerritoryMonthModal
 var last_siege_alert: Dictionary = {}  # rival siege/threat for SiegeAlertModal
+var last_march_muster: Dictionary = {}  # road merc hire → march roster modal
 var market: Dictionary = {}     # city -> {good: stock}
 var fairs: Dictionary = {}      # city -> days_total expiry
 var intel: Dictionary = {}      # city -> days_total when prices were last seen
@@ -190,6 +191,7 @@ func reset() -> void:
 	last_supply_halt = {}
 	last_territory_month = {}
 	last_siege_alert = {}
+	last_march_muster = {}
 	market = {}
 	for id in nodes.keys():
 		_init_market(id)
@@ -271,6 +273,7 @@ func from_save(d: Dictionary) -> void:
 	last_supply_halt = {}
 	last_territory_month = {}
 	last_siege_alert = {}
+	last_march_muster = {}
 	market = {}
 	var m: Dictionary = d.get("market", {})
 	for id in nodes.keys():
@@ -351,8 +354,88 @@ func road_between(a: String, b: String) -> Dictionary:
 func party_size() -> int:
 	return maxi(1, GameState.roster().size())
 
+## Season × biome march ration breakdown (readable UI + food_per_day).
+func food_ration_info(at: String = "") -> Dictionary:
+	var per_member := float(rules.get("food_per_member_day", 0.5))
+	var head := party_size()
+	var base_f := float(head) * per_member
+	var base := int(ceil(base_f))
+	var sid := Calendar.season_id()
+	var season_tbl: Dictionary = rules.get("march_season_mult", {
+		"spring": 1.0, "summer": 1.1, "autumn": 0.9, "winter": 1.35,
+	})
+	var season_mult := float(season_tbl.get(sid, 1.0))
+	var nid := at if at != "" else pos
+	var biome := str(node(nid).get("biome", "plain"))
+	var biome_tbl: Dictionary = rules.get("march_biome_mult", {
+		"snow": 1.35, "marsh": 1.2, "fog": 1.1, "pass": 1.25,
+		"forge": 1.15, "nightcamp": 1.3, "harbor": 1.05,
+	})
+	var biome_mult := float(biome_tbl.get(biome, 1.0))
+	var weather := str(rules.get("weather", {}).get(biome, ""))
+	var mult := season_mult * biome_mult
+	var per := maxi(1, int(ceil(base_f * mult))) if base_f > 0.0 else 0
+	var mod_pct := 0
+	if base > 0:
+		mod_pct = int(round((float(per) / float(base) - 1.0) * 100.0))
+	return {
+		"base": base,
+		"season_id": sid,
+		"season_mult": season_mult,
+		"biome": biome,
+		"biome_mult": biome_mult,
+		"weather": weather,
+		"mult": mult,
+		"per_day": per,
+		"mod_pct": mod_pct,
+	}
+
 func food_per_day() -> int:
-	return int(ceil(party_size() * float(rules.get("food_per_member_day", 0.5))))
+	return int(food_ration_info().get("per_day", 1))
+
+## HUD string: "3（冬·暴雪 +80%）" via Locale.
+func food_ration_text(at: String = "") -> String:
+	var info := food_ration_info(at)
+	var season_name := Locale.t("atlas_season_%s" % str(info.season_id))
+	var mod := int(info.mod_pct)
+	var mod_s := Locale.t("atlas_ration_mod_flat")
+	if mod > 0:
+		mod_s = Locale.t("atlas_ration_mod_up", [mod])
+	elif mod < 0:
+		mod_s = Locale.t("atlas_ration_mod_down", [absi(mod)])
+	var biome := str(info.biome)
+	var weather := ""
+	var weather_biomes := ["snow", "marsh", "fog", "harbor", "pass", "forge", "nightcamp"]
+	if biome in weather_biomes:
+		weather = Locale.t("atlas_weather_%s" % biome)
+	if weather != "":
+		return Locale.t("atlas_ration_value_weather", [int(info.per_day), season_name, weather, mod_s])
+	return Locale.t("atlas_ration_value", [int(info.per_day), season_name, mod_s])
+
+## Road merc hire closed into march roster (party_size / rations bump).
+func _mark_march_muster(who: CKCharacter, cost: int, party_before: int, ration_before: int) -> void:
+	if who == null:
+		return
+	last_march_muster = {
+		"cid": who.id,
+		"name": who.name,
+		"cost": cost,
+		"party_before": party_before,
+		"party_after": party_size(),
+		"ration_before": ration_before,
+		"ration_after": food_per_day(),
+		"ration_text": food_ration_text(),
+		"traveling": is_traveling(),
+	}
+
+func take_march_muster() -> Dictionary:
+	var d: Dictionary = last_march_muster.duplicate(true)
+	last_march_muster = {}
+	return d
+
+func dismiss_march_muster() -> void:
+	last_march_muster = {}
+
 
 func cargo_cap() -> int:
 	return int(rules.get("cargo_base", 30)) + int(rules.get("cargo_per_member", 6)) * party_size()
@@ -698,6 +781,23 @@ func camp_readout(ev: Dictionary = {}) -> Dictionary:
 	}
 
 ## Quote buying grain (store→food) for N march days at city market.
+## Halt/stopover bulk grain: top market toward target so a winter ration
+## order is not wiped by one prior buy before month regen.
+func _top_up_grain_for_resupply(city: String, need: int) -> void:
+	if need <= 0 or not nodes.has(city):
+		return
+	if not market.has(city):
+		_init_market(city)
+	var m: Dictionary = market[city]
+	if typeof(m) != TYPE_DICTIONARY:
+		_init_market(city)
+		m = market[city]
+	var cur := int(m.get("grain", 0))
+	var target := maxi(need, _target_stock(city, "grain"))
+	if cur < target:
+		m["grain"] = target
+		market[city] = m
+
 func resupply_quote(city: String, days: int = 7) -> Dictionary:
 	var id := city if city != "" else pos
 	var d := maxi(1, days)
@@ -705,6 +805,7 @@ func resupply_quote(city: String, days: int = 7) -> Dictionary:
 	var qty := maxi(1, per * d)
 	if not nodes.has(id):
 		return {"ok": false, "msg": "无此地", "qty": qty, "days": d}
+	_top_up_grain_for_resupply(id, qty)
 	var st := stock(id, "grain")
 	var cost := quote_buy(id, "grain", qty) if st >= qty else quote_buy(id, "grain", maxi(1, mini(qty, st)))
 	var buy_qty := qty if st >= qty else maxi(0, mini(qty, st))
@@ -2711,10 +2812,16 @@ func choose_event(idx: int) -> Dictionary:
 			"recruit":
 				var cost := int(ctx.hire)
 				if GameState.silver >= cost:
+					var party0 := party_size()
+					var ration0 := food_per_day()
 					var road_roll := CKBloodline.roll_recruit(nation_of(str(ev.b)), "road", rng, {"folk_only": true})
 					var c2 := CharacterFactory.make_tavern_candidate(rng, road_roll)
 					var rr := GameState.recruit(c2, cost)
-					lines.append("%s 加入灰旗（-%d 银）" % [c2.name, cost] if rr.ok else str(rr.msg))
+					if bool(rr.get("ok", false)):
+						lines.append("%s 加入灰旗（-%d 银）" % [c2.name, cost])
+						_mark_march_muster(c2, cost, party0, ration0)
+					else:
+						lines.append(str(rr.get("msg", "")))
 				else:
 					lines.append("银两不够，佣兵摇头离去")
 			"tip":
@@ -2774,6 +2881,8 @@ func choose_event(idx: int) -> Dictionary:
 		var enc := start_encounter("road", {"node": str(ev.b), "from": str(ev.a), "event": str(ev.id), "rep_win": int(fx.get("rep_nation_win", 0))})
 		return {"ok": true, "msg": "，".join(lines), "encounter": enc, "aftermath": aftermath}
 	var out := {"ok": true, "msg": "，".join(lines) if not lines.is_empty() else Locale.t("atlas_aftermath_none"), "aftermath": aftermath}
+	if not last_march_muster.is_empty():
+		out["march_muster"] = last_march_muster.duplicate(true)
 	if travel.has("pending_arrive"):
 		var info := _arrive_leg(str(travel.pending_arrive))
 		out.merge(info)

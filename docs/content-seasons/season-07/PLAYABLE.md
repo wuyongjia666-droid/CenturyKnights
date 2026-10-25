@@ -53,3 +53,25 @@
 - 选题：**空条并排** → flag `cs07_gene_parallel`；备选 **封路催坐**。
 - 所有权不变：`hourglass` visit「去看月份怎么往前走」；`bridge` battle「先试一锋 / 再试锋镝 / 继续」。
 - 枢纽：`playable_chapters` 挂进 `StoryCatalog.content_season_entries`（主 `playable_chapter` 仍为 `_01`）。
+
+## 加深（人物弧硬化 · 本刀）
+
+- 小说去重：夜抄/校场重复段改为独有人物弧（青禾/晚担/灯影/岁吏等），汉字仍约 14k+。
+- `cs07_01` 对白加厚至约 130 行；保留 visit@hourglass 与 battle@bridge CTA 原文。
+- 前三拍收束不为旁白（plate-final），保证 return_portrait 走得到板面。
+- suite 行数闸保持 ≥70；walk_to_choice 提到 200，兜住加厚对白。
+- 主题：仪典/宗谱——并排留真，不催假胜/假入谱。
+
+## 第二可玩章加深（本刀）
+
+- `cs07_02` 口语加厚至约 124–130 行；保留 visit@hourglass / battle@bridge CTA 与 mid_lost 门闸。
+- 前三拍收束不为旁白；suite walk_to_choice 提到 220。
+
+## 中途战 / 据点 / 回程加厚（hub-chain）
+
+- 中途战拍：试锋前口语加厚；`mid_lost` 仍为拍末可见行（needle「锋收回来」）。
+- 据点 visit 拍：时漏/验盏前口语加厚；CTA「去看月份怎么往前走」不变。
+- 酒馆回程：挂板前口语加厚，收束回堡入谱。
+- 真 E2E：`content_season_hub_chain_check`（hub→章→战/访→回抽样）；`battle_retry` LIVE 扩至 S01–S10 `_01`；playable walk_to_choice→220。
+
+- mid_fought 胜后口语 + 据点 visit/酒馆回程加厚（全十季 _01/_02）；`hub_chain` LIVE 扩至 cs01–cs10 _01。
