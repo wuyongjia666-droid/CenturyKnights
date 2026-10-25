@@ -29,7 +29,7 @@ func _run() -> String:
 	var droid := _filters("Android")
 	if droid.is_empty():
 		return "Android exclude_filter empty"
-	GameState.new_game("烬行", "灰旗", "#6ed4ff")
+	GameState.new_game("烬行", "灰旗", GameState.crest_color)
 	var leader: CKCharacter = GameState.get_leader()
 	if leader == null:
 		return "no leader"
