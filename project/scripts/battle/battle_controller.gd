@@ -363,6 +363,7 @@ func _build_ui() -> void:
 	_board_xform.add_child(overlay)
 	_unit_layer = CKBoardUnits.attach(self)
 	_unit_panel = UIKit.make_panel()  # --- right rail
+	_unit_panel.name = "UnitInfoPanel"
 	_unit_panel.position = Vector2(RAIL_X, 76)
 	_unit_panel.custom_minimum_size = Vector2(RAIL_W, 0)
 	_unit_panel.size = Vector2(RAIL_W, 0)
@@ -1204,33 +1205,8 @@ func _draw_overlay() -> void:
 						var a = 0.45 if attack_mode else 0.25
 						overlay.draw_rect(r2, Color(0.95, 0.2, 0.2, a))
 						overlay.draw_rect(r2, Color(1.0, 0.4, 0.3, 0.8), false, 2.0)
-	# v8.5 选中准星（authored select_dense 8帧循环）
-	# Y1-A T-P1-5 mobile: larger ring + figure-body halo so selection reads under a fat finger.
-	if selected >= 0 and selected < units.size() and units[selected].char.hp > 0:
-		var sfi = int(_sel_pulse * 12.0) % 8
-		var sp = "res://assets/art/fx/select_dense_%d.png" % sfi
-		var sel_pos: Vector2i = units[selected].pos
-		var cell_c: Vector2 = ORIGIN + Vector2(sel_pos) * CELL + Vector2(CELL, CELL) * 0.5 - Vector2(1, 1)
-		var mobile_sel := DeviceProfile.is_mobile()
-		var rs := float(CELL) * (1.55 if mobile_sel else 1.32)
-		var scol = Color(1, 1, 1, 0.95) if units[selected].team == "player" else Color(1.0, 0.62, 0.62, 0.95)
-		if mobile_sel:
-			# Foot disc + mid-figure ring (matches BattlePick FIG span) — readable without the FX sheet.
-			var burst: float = BattlePick.select_burst_scale(self)
-			var feet: Vector2 = ORIGIN + Vector2(sel_pos) * float(CELL) + Vector2(float(CELL) * 0.5, float(CELL) * BattlePick.FIG_FEET)
-			var mid: Vector2 = ORIGIN + Vector2(sel_pos) * float(CELL) + Vector2(float(CELL) * 0.5, float(CELL) * ((BattlePick.FIG_TOP + BattlePick.FIG_FEET) * 0.5))
-			var pulse_a := 0.55 + 0.25 * sin(_sel_pulse * 6.0)
-			overlay.draw_circle(feet, float(CELL) * 0.38 * burst, Color(UIKit.ACCENT if units[selected].team == "player" else UIKit.DANGER, 0.28 * pulse_a))
-			overlay.draw_arc(feet, float(CELL) * 0.42 * burst, 0.0, TAU, 40, Color(scol, 0.95), 3.0)
-			overlay.draw_arc(mid, float(CELL) * 0.36 * burst, 0.0, TAU, 40, Color(scol, 0.75), 2.5)
-			var hw: float = BattlePick.contour_half_w()
-			var body := Rect2(
-				ORIGIN + Vector2(sel_pos) * float(CELL) + Vector2(float(CELL) * (0.5 - hw), float(CELL) * BattlePick.FIG_TOP),
-				Vector2(float(CELL) * hw * 2.0, float(CELL) * (BattlePick.FIG_FEET - BattlePick.FIG_TOP)))
-			overlay.draw_rect(body, Color(scol, 0.10 * burst))
-			overlay.draw_rect(body, Color(scol, 0.55 + 0.25 * (burst - 1.0)), false, 2.0 * burst)
-		if ResourceLoader.exists(sp):
-			overlay.draw_texture_rect(_tex(sp), Rect2(cell_c - Vector2(rs, rs) * 0.5, Vector2(rs, rs)), false, scol)
+	# v8.5 / T-P11 selected chrome: foot disc + mid ring + body rect (mobile) and dense reticle.
+	BattleSelectChrome.draw_selected(self, overlay)
 	BattleTouchConfirm.draw_reject_flash(self, overlay)
 	# slash + hit_spark 分层（game-feel）
 	for s in _slash_fx:
@@ -1619,7 +1595,10 @@ func _click_cell(cell: Vector2i) -> void:
 		var su = units[selected]
 		if su.team == "player" and not su.done:
 			if ui >= 0 and units[ui].team == "enemy" and units[ui].char.hp > 0:
-				if attack_mode:
+				# T-P11: phone in-range foe tap previews the attack; out of range rejects.
+				# Desktop not-in-attack-mode still inspects (mouse path).
+				var direct_atk := BattleSelectChrome.mobile_direct_attack(self, su, cell)
+				if attack_mode or direct_atk:
 					if _can_attack_from(su, cell):
 						var extras = _combat_extras(selected, ui)
 						var pv = BattleRules.preview(su.char, units[ui].char, terrain[cell.y][cell.x], extras)
@@ -1636,10 +1615,14 @@ func _click_cell(cell: Vector2i) -> void:
 							if DeviceProfile.is_mobile():
 								BattleMobileBar.rebuild(self)
 							overlay.queue_redraw()
+							_refresh_info()
 							return
 						_do_attack(selected, ui)
 						return
 					_log("目标超出攻击范围")
+					BattleTouchConfirm.note_reject(self, cell, "attack")
+					return
+				if DeviceProfile.is_mobile():
 					BattleTouchConfirm.note_reject(self, cell, "attack")
 					return
 				_refresh_info_for(ui)
@@ -1658,6 +1641,7 @@ func _click_cell(cell: Vector2i) -> void:
 						BattleMobileBar.rebuild(self)
 					overlay.queue_redraw()
 					_log(Locale.t("ux_preview_move_log") % [su.char.name, cell.x, cell.y])
+					_refresh_info()
 					return
 				BattleTouchConfirm.commit_move(self, cell)
 				return
