@@ -61,6 +61,8 @@ var _map_side := Rect2()
 func _ready() -> void:
 	UIKit.void_bg(self)
 	_build_frame()
+	if not World.city_visit.is_empty():
+		World.close_city_visit()
 	World.world_changed.connect(_on_world_changed)
 	var start_view := World.nation_of(World.pos)
 	if GameState.has_meta("atlas_view"):
@@ -1017,10 +1019,17 @@ func _render_left() -> void:
 		l.clip_text = true
 		l.custom_minimum_size = Vector2(140, 0)
 		ql.add_child(l)
-	if World.active.is_empty():
+	if World.active.is_empty() and World.last_city_sortie.is_empty():
 		var el := UIKit.body_label("暂无委托 · 进城看委托榜", UIKit.TEXT_FAINT, 10)
 		el.autowrap_mode = TextServer.AUTOWRAP_OFF
 		ql.add_child(el)
+	if not World.last_city_sortie.is_empty():
+		var sp := UIKit.body_label(World.city_sortie_party_text(), UIKit.EMBER, 10)
+		sp.name = "CitySortieParty"
+		sp.autowrap_mode = TextServer.AUTOWRAP_OFF
+		sp.clip_text = true
+		sp.custom_minimum_size = Vector2(140, 0)
+		ql.add_child(sp)
 	var ab := UIKit.ghost_button("出战编成", 140, 26)
 	ab.position = Vector2(10, 196)
 	ab.name = "AtlasDeploy"
@@ -1413,6 +1422,9 @@ func _render_hud() -> void:
 		d2.size = Vector2(476, 40)
 		d2.custom_minimum_size = Vector2(476, 0)
 		p.add_child(d2)
+		if not World.last_city_sortie.is_empty():
+			_paint_sortie_garrison(p)
+			return
 		var tipy := 96.0
 		for tp in World.tips.slice(0, 2):
 			var tl := UIKit.body_label("情报：%s" % str(tp), UIKit.ACCENT, 11)
@@ -1467,8 +1479,17 @@ func _render_hud() -> void:
 	legs_box.position = Vector2(16, 92)
 	legs_box.add_theme_constant_override("separation", 1)
 	p.add_child(legs_box)
+	var sortie_note := World.city_sortie_route_note(_sel)
+	if sortie_note != "":
+		var sn := UIKit.body_label(sortie_note, UIKit.EMBER, 10)
+		sn.name = "CommissionMarchNote"
+		sn.autowrap_mode = TextServer.AUTOWRAP_OFF
+		sn.clip_text = true
+		sn.custom_minimum_size = Vector2(340, 0)
+		sn.size = Vector2(340, 14)
+		legs_box.add_child(sn)
 	var readouts: Array = pv.get("leg_readouts", [])
-	var show_n := mini(4, readouts.size())
+	var show_n := mini(3 if sortie_note != "" else 4, readouts.size())
 	for i in show_n:
 		var leg: Dictionary = readouts[i]
 		var dng := int(leg.get("danger", 1))
@@ -1490,7 +1511,8 @@ func _render_hud() -> void:
 		var more := UIKit.body_label(Locale.t("atlas_leg_more") % (readouts.size() - show_n), UIKit.TEXT_FAINT, 10)
 		more.name = "LegMore"
 		legs_box.add_child(more)
-	var warn_y := 92.0 + float(show_n + (1 if readouts.size() > show_n else 0)) * 15.0 + 4.0
+	var note_rows := 1 if sortie_note != "" else 0
+	var warn_y := 92.0 + float(show_n + note_rows + (1 if readouts.size() > show_n else 0)) * 15.0 + 4.0
 	var warn := ""
 	if bool(pv.short_food):
 		warn = Locale.t("atlas_warn_food")
@@ -1609,6 +1631,7 @@ func _enter_here() -> void:
 	if str(World.node(World.pos).get("kind", "")) == "castle":
 		_goto(CASTLE_SCENE)
 		return
+	World.begin_city_visit()
 	GameState.set_meta("city_id", World.pos)
 	_goto(CITY_SCENE)
 
@@ -1797,6 +1820,146 @@ func _resume_state() -> void:
 	elif World.is_traveling():
 		_show_toast("继续行军……", UIKit.ACCENT)
 		_run_travel()
+	elif _check_city_sortie():
+		return
+
+
+func _check_city_sortie() -> bool:
+	if not _modal.get_children().is_empty():
+		return false
+	if World.last_city_sortie.is_empty():
+		return false
+	if bool(World.last_city_sortie.get("shown", false)):
+		return false
+	if str(World.last_city_sortie.get("state", "")) == "turned_in":
+		return false
+	World.last_city_sortie["shown"] = true
+	_show_city_sortie_modal(World.last_city_sortie)
+	return true
+
+
+func _sortie_line(text: String, node_name: String, y: float, col: Color) -> void:
+	var host: Node = _modal.get_child(_modal.get_child_count() - 1)
+	var lab := UIKit.body_label(text, col, 13)
+	lab.name = node_name
+	lab.position = Vector2(24, y)
+	lab.size = Vector2(452, 28)
+	lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lab.clip_text = true
+	host.add_child(lab)
+
+
+func _show_city_sortie_modal(card: Dictionary) -> void:
+	var h := 430.0
+	var panel := _modal_panel(h)
+	panel.name = "CitySortieModal"
+	var el := UIKit.mono(Locale.t("atlas_sortie_en"), 9, UIKit.ACCENT)
+	el.position = Vector2(24, 16)
+	panel.add_child(el)
+	var title := UIKit.title_label(Locale.t("atlas_sortie_title"), 22)
+	title.position = Vector2(24, 34)
+	title.size = Vector2(452, 28)
+	panel.add_child(title)
+	var sig := str(card.get("signature_name", ""))
+	var sig_txt := Locale.t("atlas_sortie_sig", [sig]) if sig != "" else Locale.t("atlas_sortie_sig_none")
+	_sortie_line(sig_txt, "CitySortieSig", 78, UIKit.OK if sig != "" else UIKit.TEXT_DIM)
+	var prod_qty := int(card.get("produce_qty", 0))
+	var prod_txt := Locale.t("atlas_sortie_produce_none")
+	if prod_qty > 0:
+		prod_txt = Locale.t("atlas_sortie_produce", [
+			str(card.get("produce_name", "")), prod_qty,
+			int(card.get("cargo_used", 0)), int(card.get("cargo_cap", 0)),
+		])
+	_sortie_line(prod_txt, "CitySortieProduce", 112, UIKit.OK if prod_qty > 0 else UIKit.TEXT_DIM)
+	var qtitle := str(card.get("quest_title", ""))
+	var quest_txt := Locale.t("atlas_sortie_quest_none")
+	if qtitle != "":
+		quest_txt = Locale.t("atlas_sortie_quest", [
+			qtitle, str(card.get("turn_in_name", "")), int(card.get("days_left", 0)),
+		])
+	_sortie_line(quest_txt, "CitySortieQuest", 146, UIKit.EMBER if qtitle != "" else UIKit.TEXT_DIM)
+	var guide := str(card.get("guide", ""))
+	var route_txt := Locale.t("atlas_sortie_route_here")
+	if guide != "" and guide != World.pos and int(card.get("days", 0)) > 0:
+		route_txt = Locale.t("atlas_sortie_route", [
+			str(card.get("guide_name", "")), int(card.get("days", 0)),
+			int(card.get("food", 0)), World.danger_bars(int(card.get("danger", 0))),
+		])
+	_sortie_line(route_txt, "CitySortieRoute", 188, UIKit.TEXT)
+	var summary := UIKit.body_label(World.city_sortie_hud_text(), UIKit.ACCENT, 12)
+	summary.name = "CitySortieBody"
+	summary.position = Vector2(24, 228)
+	summary.size = Vector2(452, 40)
+	summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	panel.add_child(summary)
+	var march := UIKit.cta_button(Locale.t("atlas_sortie_march"), "A", 452, 40)
+	march.name = "CitySortieMarch"
+	march.position = Vector2(24, 278)
+	var can_march := guide != "" and guide != World.pos and World.nodes.has(guide)
+	var can_turn := guide == World.pos and World.ready_turn_ins_here().size() > 0
+	march.disabled = not can_march and not can_turn
+	march.pressed.connect(_march_city_sortie)
+	panel.add_child(march)
+	var later := UIKit.ghost_button(Locale.t("atlas_sortie_later"), 220, 36)
+	later.name = "CitySortieLater"
+	later.position = Vector2(24, 328)
+	later.pressed.connect(func():
+		_clear_modal()
+		_render_left()
+		_render_hud())
+	panel.add_child(later)
+	var dismiss := UIKit.ghost_button(Locale.t("atlas_sortie_dismiss"), 200, 36)
+	dismiss.name = "CitySortieDismiss"
+	dismiss.position = Vector2(256, 328)
+	dismiss.pressed.connect(func():
+		World.dismiss_city_sortie()
+		_clear_modal()
+		_render_left()
+		_render_hud())
+	panel.add_child(dismiss)
+	if not march.disabled:
+		march.call_deferred("grab_focus")
+	else:
+		later.call_deferred("grab_focus")
+
+
+func _march_city_sortie() -> void:
+	var card := World.last_city_sortie
+	if card.is_empty() or str(card.get("state", "")) == "turned_in":
+		return
+	var guide := str(card.get("guide", ""))
+	_clear_modal()
+	if guide != "" and guide != World.pos and World.nodes.has(guide):
+		_select_node(guide)
+		_start_travel()
+		return
+	if World.ready_turn_ins_here().size() > 0:
+		_show_turnin_modal(World.ready_turn_ins_here().size())
+
+
+func _paint_sortie_garrison(p: Control) -> void:
+	var sortie_l := UIKit.body_label(World.city_sortie_hud_text(), UIKit.EMBER, 12)
+	sortie_l.name = "CitySortieHud"
+	sortie_l.position = Vector2(16, 96)
+	sortie_l.size = Vector2(470, 32)
+	sortie_l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	sortie_l.clip_text = true
+	p.add_child(sortie_l)
+	var turned := str(World.last_city_sortie.get("state", "")) == "turned_in"
+	var go_s := UIKit.ghost_button(
+		Locale.t("atlas_sortie_dismiss") if turned else Locale.t("atlas_sortie_go"), 160, 28)
+	go_s.name = "CitySortieDismiss" if turned else "CitySortieGo"
+	go_s.position = Vector2(16, 128)
+	go_s.disabled = _busy
+	if turned:
+		go_s.pressed.connect(func():
+			World.dismiss_city_sortie()
+			_render_left()
+			_render_hud())
+	else:
+		go_s.pressed.connect(_march_city_sortie)
+	p.add_child(go_s)
+
 
 # ── modals ────────────────────────────────────────────
 func _show_travel_halt_modal() -> void:
@@ -1955,12 +2118,15 @@ func _show_turnin_modal(readies: int) -> void:
 			if bool(tr.get("ok", false)):
 				gained += int(q2.get("reward_silver", 0))
 				titles.append(str(q2.get("title", "")))
-				if typeof(tr.get("follow", {})) == TYPE_DICTIONARY and not tr.follow.is_empty():
-					follow = tr.follow
+				var nxt = tr.get("follow", {})
+				if typeof(nxt) == TYPE_DICTIONARY and not (nxt as Dictionary).is_empty():
+					follow = nxt
 		_clear_modal()
 		_refresh_top()
 		_build_nodes()
 		_render_right()
+		_render_left()
+		_render_hud()
 		if not titles.is_empty():
 			_show_toast(Locale.t("atlas_turnin_now_toast") % [titles.size(), gained], UIKit.OK)
 		else:
@@ -3563,6 +3729,11 @@ func _m_route(box: Control) -> void:
 	for id in pth:
 		names.append(str(World.node(str(id)).get("name", id)))
 	box.add_child(_m_label("→ " + " › ".join(names) if not names.is_empty() else "→ %s" % dest.get("name", ""), UIKit.TEXT))
+	var sortie_note := World.city_sortie_route_note(_sel)
+	if sortie_note != "":
+		var sn := _m_label(sortie_note, UIKit.EMBER)
+		sn.name = "CommissionMarchNote"
+		box.add_child(sn)
 	var g := _m_grid(box, 4)
 	var cost := int(pv.tolls) + int(pv.fare)
 	for kv in [[Locale.t("mob_ui_022"), Locale.t("mob_ui_023") % int(pv.days), UIKit.TEXT],
@@ -3705,6 +3876,24 @@ func _m_log() -> void:
 	box.add_child(crest_row)
 	CKHeraldryChrome.place_travel_crest_strip(crest_row, Vector2(0, 2), World.nation_of(World.pos), Vector2(36, 44))
 	box.add_child(UIKit.title_label(Locale.t("mob_ui_041") % here.get("name", ""), 28))
+	if not World.last_city_sortie.is_empty():
+		var sh := _m_label(World.city_sortie_hud_text(), UIKit.EMBER)
+		sh.name = "CitySortieHud"
+		sh.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		box.add_child(sh)
+		var turned := str(World.last_city_sortie.get("state", "")) == "turned_in"
+		var sb := MobilePage.button(
+			Locale.t("atlas_sortie_dismiss") if turned else Locale.t("atlas_sortie_go"),
+			false,
+			func():
+				if turned:
+					World.dismiss_city_sortie()
+					_render_left()
+					_render_hud()
+				else:
+					_march_city_sortie())
+		sb.name = "CitySortieDismiss" if turned else "CitySortieGo"
+		box.add_child(sb)
 	box.add_child(_m_label(Locale.t("mob_ui_042"), UIKit.TEXT_DIM))
 	for tp in World.tips.slice(0, 3):
 		box.add_child(_m_label(Locale.t("mob_ui_043") % str(tp), UIKit.ACCENT))
