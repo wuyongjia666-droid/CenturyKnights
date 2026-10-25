@@ -1216,7 +1216,7 @@ static func season_ledger_append(chapter_id: String, choice_id: String, title: S
 	var leader = GameState.get_leader() if GameState != null else null
 	var who_name := who
 	if who_name == "":
-		who_name = leader.name if leader != null else "灰旗"
+		who_name = leader.name if leader != null else "house"
 	var cid := str(leader.id) if leader != null else "house"
 	var y := int(Calendar.year)
 	var m := int(Calendar.month)
