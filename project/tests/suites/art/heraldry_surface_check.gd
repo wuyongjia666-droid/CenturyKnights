@@ -3,6 +3,7 @@ extends Node
 ## rival houses + tavern/hire + board unit shields + city/smith 邦徽 +
 ## codex/shrine/rite crests + battle/danger aftermath + commission-board 委托徽 +
 ## mobile genealogy/quests company header + succession / heir-duel strips +
+## court gazette / year-card chronicle + title/settings/save/pause shell crests +
 ## works/forge/estates castle chrome.
 ## 团徽 / 旗徽 / 族徽 / 敌徽 / 邦徽 / 委托徽 never mismatch outside their Chrome routes.
 
@@ -493,6 +494,25 @@ func _run() -> void:
 	if _fail != "":
 		return
 
+	# ── Shell crest strip (title / settings / save / pause) ─────────
+	var shell_host := Control.new()
+	shell_host.name = "ShellCrestHost"
+	get_tree().root.add_child(shell_host)
+	var shell_strip := CKHeraldryChrome.place_shell_crest_strip(shell_host, Vector2(10, 10), Vector2(44, 52), Vector2(28, 38))
+	_ok(shell_strip != null and shell_strip.name == "ShellCrestStrip", "ShellCrestStrip missing")
+	if shell_strip != null:
+		var sca := shell_strip.find_child("CastleArms", true, false)
+		var scb := shell_strip.find_child("CastleBanner", true, false)
+		_ok(sca != null and str(sca.get_meta("arms_kind", "")) == "gen2_36", "shell strip 团徽")
+		_ok(scb != null and str(scb.get_meta("arms_kind", "")) == "gen2_36", "shell strip 旗徽")
+		_ok(sca != null and str(sca.get_meta("arms_core", "")) == CKHeraldry.core_key(ban_spec), "shell arms_core")
+	var shell_row := HBoxContainer.new()
+	shell_host.add_child(shell_row)
+	var slot_arms := CKHeraldryChrome.attach_save_row_arms(shell_row, Vector2(36, 44))
+	_ok(slot_arms != null and slot_arms.name == "SlotArms", "SlotArms attach")
+	_ok(shell_row.get_child_count() > 0 and shell_row.get_child(0).name == "SlotArms", "SlotArms prepended")
+	shell_host.queue_free()
+
 	# ── Mobile heraldry parity (company header reposition) ─────────
 	var mob_ov := _open_page(OVERVIEW, Vector2(390, 844))
 	await _settle(6)
@@ -521,6 +541,58 @@ func _run() -> void:
 	mob_q.queue_free()
 	await _settle(2)
 	## (no early-return here — keeps _run under gdlint max-returns=12)
+
+
+	# ── Court gazette crest strip (团徽 + 朝徽) ────────────────────
+	var gaz_host := Control.new()
+	gaz_host.name = "GazetteCrestHost"
+	get_tree().root.add_child(gaz_host)
+	var nid := World.nation_of(str(World.pos))
+	if nid == "":
+		nid = "ashbanner"
+	var gaz := CKHeraldryChrome.place_gazette_crest_strip(gaz_host, nid, Vector2(10, 10), Vector2(36, 44))
+	_ok(gaz != null and gaz.name == "GazetteCrestStrip", "GazetteCrestStrip missing")
+	if gaz != null:
+		_ok(gaz.find_child("CastleArms", true, false) != null, "gazette CastleArms")
+		var gna := gaz.find_child("GazetteNationArms", true, false)
+		_ok(gna != null, "gazette GazetteNationArms")
+		if gna != null:
+			_ok(str(gna.get_meta("arms_kind", "")) == "lb_gazette_arms", "gazette arms_kind")
+			_ok(str(gna.get_meta("nation_id", "")) == nid, "gazette nation_id")
+	gaz_host.queue_free()
+
+	# ── Year-card person arms helper ───────────────────────────────
+	var yc_host := VBoxContainer.new()
+	yc_host.name = "YearArmsHost"
+	get_tree().root.add_child(yc_host)
+	CKHeraldryChrome.attach_yearcard_row_arms(yc_host, leader, Vector2(32, 38))
+	_ok(yc_host.find_child("YearArms", true, false) != null, "YearArms missing")
+	yc_host.queue_free()
+
+	# ── Live court_news page chrome ────────────────────────────────
+	## Seed one gazette event so row arms mount.
+	if typeof(World.get("royal_courts")) != TYPE_DICTIONARY:
+		World.royal_courts = {"nations": {}}
+	var nations: Dictionary = World.royal_courts.get("nations", {})
+	if typeof(nations) != TYPE_DICTIONARY:
+		nations = {}
+	var house: Dictionary = nations.get(nid, {})
+	if typeof(house) != TYPE_DICTIONARY:
+		house = {}
+	var log: Array = house.get("log", [])
+	if typeof(log) != TYPE_ARRAY:
+		log = []
+	log.append({"year": int(Calendar.year), "kind": "birth", "text": "surface gazette seed"})
+	house["log"] = log
+	nations[nid] = house
+	World.royal_courts["nations"] = nations
+	var news_pg := _open_page("res://scenes/hub/court_news.tscn")
+	await _settle(10)
+	_ok(news_pg.find_child("GazetteCrestStrip", true, false) != null, "court_news GazetteCrestStrip")
+	_ok(news_pg.find_child("CastleBannerStrip", true, false) != null, "court_news CastleBannerStrip")
+	_ok(news_pg.find_child("GazetteNationArms", true, false) != null, "court_news GazetteNationArms")
+	news_pg.queue_free()
+	await _settle(2)
 
 	# ── Field / yeartrace / purse chrome ───────────────────────
 	var field_host := Control.new()
@@ -558,6 +630,67 @@ func _run() -> void:
 		_ok(plate.find_child("PurseArms", true, false) != null, "PurseArms")
 		_ok(int(plate.get_meta("purse_silver", -1)) == 7, "PursePlate silver meta")
 	purse_host.queue_free()
+
+
+	# ── Market / skill / hourglass / castle-view / blood chrome ─
+	var mkt_host := Control.new()
+	mkt_host.name = "MarketCrestHost"
+	get_tree().root.add_child(mkt_host)
+	var mkt := CKHeraldryChrome.place_market_crest_strip(mkt_host, Vector2(10, 10), Vector2(36, 44), Vector2(24, 34))
+	_ok(mkt != null and mkt.name == "MarketCrestStrip", "MarketCrestStrip missing")
+	if mkt != null:
+		_ok(mkt.find_child("CastleArms", true, false) != null, "market CastleArms")
+		var mbn := mkt.find_child("MarketBanner", true, false)
+		_ok(mbn != null and str(mbn.get_meta("arms_kind", "")) == "lb_market_arms", "market MarketBanner kind")
+	mkt_host.queue_free()
+
+	var sk_host := Control.new()
+	sk_host.name = "SkillCrestHost"
+	get_tree().root.add_child(sk_host)
+	var sk := CKHeraldryChrome.place_skill_crest_strip(sk_host, Vector2(10, 10), Vector2(36, 44), Vector2(24, 34))
+	_ok(sk != null and sk.name == "SkillCrestStrip", "SkillCrestStrip missing")
+	if sk != null:
+		var sbn := sk.find_child("SkillBanner", true, false)
+		_ok(sbn != null and str(sbn.get_meta("arms_kind", "")) == "lb_skill_arms", "skill SkillBanner kind")
+	var sk_row := HBoxContainer.new()
+	sk_host.add_child(sk_row)
+	CKHeraldryChrome.attach_skill_person_arms(sk_row, leader, Vector2(28, 34))
+	_ok(sk_row.find_child("SkillPersonArms", true, false) != null, "SkillPersonArms attached")
+	sk_host.queue_free()
+
+	var hg_host := Control.new()
+	hg_host.name = "HourglassCrestHost"
+	get_tree().root.add_child(hg_host)
+	var hg := CKHeraldryChrome.place_hourglass_crest_strip(hg_host, Vector2(10, 10), Vector2(36, 44), Vector2(24, 34))
+	_ok(hg != null and hg.name == "HourglassCrestStrip", "HourglassCrestStrip missing")
+	if hg != null:
+		var hbn := hg.find_child("HourglassBanner", true, false)
+		_ok(hbn != null and str(hbn.get_meta("arms_kind", "")) == "lb_hourglass_arms", "hourglass banner kind")
+	hg_host.queue_free()
+
+	var cv_host := Control.new()
+	cv_host.name = "CastleViewCrestHost"
+	get_tree().root.add_child(cv_host)
+	var cv := CKHeraldryChrome.place_castle_view_crest_strip(cv_host, Vector2(10, 10), Vector2(36, 44), Vector2(24, 34))
+	_ok(cv != null and cv.name == "CastleViewCrestStrip", "CastleViewCrestStrip missing")
+	if cv != null:
+		var cbn := cv.find_child("CastleViewBanner", true, false)
+		_ok(cbn != null and str(cbn.get_meta("arms_kind", "")) == "lb_castle_view_arms", "castle_view banner kind")
+	cv_host.queue_free()
+
+	var bd_host := Control.new()
+	bd_host.name = "BloodCrestHost"
+	get_tree().root.add_child(bd_host)
+	var bd := CKHeraldryChrome.place_blood_crest_strip(bd_host, Vector2(10, 10), Vector2(36, 44), Vector2(24, 34))
+	_ok(bd != null and bd.name == "BloodCrestStrip", "BloodCrestStrip missing")
+	if bd != null:
+		var bbn := bd.find_child("BloodBanner", true, false)
+		_ok(bbn != null and str(bbn.get_meta("arms_kind", "")) == "lb_blood_arms", "blood banner kind")
+	var bd_row := HBoxContainer.new()
+	bd_host.add_child(bd_row)
+	CKHeraldryChrome.attach_blood_queue_arms(bd_row, leader, Vector2(26, 32))
+	_ok(bd_row.find_child("BloodQueueArms", true, false) != null, "BloodQueueArms attached")
+	bd_host.queue_free()
 
 	# Rank badges distinct
 	var sigs: Dictionary = {}

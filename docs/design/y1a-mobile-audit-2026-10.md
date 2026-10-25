@@ -23,7 +23,8 @@
 > | T-P5 战棋选中手感硬化（resolve/contour + chrome + invalid + E2E） | **DONE（#489）**：soft/contour `prefer_team`；select_lock/burst；foot/mid/body chrome；`reject_invalid_tap` 闪拒；`combat_warchess_select_feel_check` |
 > | T-P6 敌方回合可读 + 攻击结算 juice + 阶段条手感 | **DONE（#493）**：`BattlePhaseFeel` 阶段横幅（桌面+手机横屏）；敌方行动跟焦 `focus_cell(force)`；确认→命中 settle flash/shake；`combat_phase_feel_check` E2E |
 > | T-P7 FE 风 3D 交战演出挂钩 + 棋盘交战桥 | **DONE（#498）**：`BattleEngageCutscene` FE 右我左敌；攻击后棋盘 atk↔def bridge；cutscene record builder；headless/settings gate；`combat_engage_cutscene_check` E2E |
-> | T-P8 战棋 HUD 双方纹章条 | **DONE（本 PR）**：`CKHeraldryChrome.place_battle_hud_crest_strips` PlayerArms←团徽 / EnemyArms→敌徽；inset 布局；不抢 InputRouter；`combat_hud_crest_check` E2E |
+> | T-P8 战棋 HUD 双方纹章条 | **DONE（#500）**：`CKHeraldryChrome.place_battle_hud_crest_strips` PlayerArms←团徽 / EnemyArms→敌徽；inset 布局；不抢 InputRouter；`combat_hud_crest_check` E2E |
+> | T-P9 胜负结算横幅 + 双方纹章脉冲 | **DONE（本 PR）**：`BattlePhaseFeel.note_battle_end` / `draw_end_banner`；胜方亮/败方暗 crest pulse；不抢触控；`combat_end_feel_check` E2E |
 > | 立绘 exists/resolve medium 回落（机制 A 根因） | **DONE（#350）**：`CKArtPaths.resolve` 在 portraits 路径上 large 被 exclude 时落到 `.medium.webp`；`android_tier_pack_check` |
 > | 剧情立绘端游↔手游对齐核查 | **DONE**（#335） |
 > | 9 人无图农场回填（配角 4 + 反派 5） | **DONE**（#337 cast/farm 接线；#338 入库真立绘） |
@@ -96,7 +97,8 @@
 | T-P5 | **P1 · DONE（#489）** | 混战难点己方 / 轮廓误点 / 选中态弱 / 非法目标无反馈 / 无选中确认回归 | soft+contour prefer_team；select_lock/burst；foot/mid/body；reject；`combat_warchess_select_feel_check` | `battle_pick` / `battle_touch_confirm` / `battle_controller` |
 | T-P6 | **P1 · DONE（#493）** | 敌方回合难跟 / 阶段横幅弱读 / 攻击确认→结算反馈薄 / 阶段切换与选中 chrome 打架 | `BattlePhaseFeel` 横幅+actor ring+settle；`focus_cell(force)` 敌方跟焦；phase switch 清敌环；非法攻击仍 reject；`combat_phase_feel_check` | `battle_phase_feel` / `battle_pick` / `battle_touch_confirm` / `battle_controller` |
 | T-P7 | **P1 · DONE（#498）** | 交战→3D 演出脱节 / FE 站位约定散落 / 关闭演出时棋盘无交战桥 / headless 误播 | `BattleEngageCutscene` FE sides+build_record；board bridge；should_play gate；drain 清桥；`combat_engage_cutscene_check` | `battle_engage_cutscene` / `battle_controller` / `combat_cutscene` |
-| T-P8 | **P1 · 本 PR** | 战棋 HUD 无双方纹章 / 敌徽缺失 / 条抢触控 | `place_battle_hud_crest_strips` + layout/sync；PlayerArms+EnemyArms；MOUSE_FILTER_IGNORE；`combat_hud_crest_check` | `heraldry_chrome` / `battle_controller` |
+| T-P8 | **P1 · DONE（#500）** | 战棋 HUD 无双方纹章 / 敌徽缺失 / 条抢触控 | `place_battle_hud_crest_strips` + layout/sync；PlayerArms+EnemyArms；MOUSE_FILTER_IGNORE；`combat_hud_crest_check` | `heraldry_chrome` / `battle_controller` |
+| T-P9 | **P1 · 本 PR** | 胜负无阶段横幅 / 纹章条不随胜负变 / 结算瞬间可读性弱 | `note_battle_end`+`draw_end_banner`；`apply_end_crest_pulse`；`combat_end_feel_check` | `battle_phase_feel` / `battle_controller` |
 | T-P2-1 | **P2 · 本 PR** | 信息不够 | Forecast 桌面固定 340×132 + clip，字号被 `ensure_min_fonts` 抬到 22 后竖向挤扁；现手机：字号地板、列/面板最小尺寸、关 clip、按 `m_board_area` 安全区放置；`MobileSide` 标签最小行高；`mobile_forecast_layout_check` | `forecast_panel` / `battle_mobile_side` / `_unit_panel` |
 
 ### 1.4 T-P1-3：3D 立像的「视觉命中」（视觉偏置已落地）
