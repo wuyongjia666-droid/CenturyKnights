@@ -4,7 +4,7 @@ extends RefCounted
 ## One design system everywhere (castle header/banner strip, genealogy, dossier,
 ## board unit shields, rival houses, tavern/hire cards, city/smith/market chrome,
 ## marriage house cards + crest strip, bloodline codex / shrine / banner rite,
-## succession / heir-duel / annex).
+## succession / heir-duel / annex, battle/danger aftermath).
 ## No marriage marshalling / per-person cadency — only company vs family vs nation arms + rank badge.
 
 static func is_family_member(c) -> bool:
@@ -312,6 +312,32 @@ static func place_city_crest_strip(parent: Node, city_id: String, at: Vector2, s
 	host.size = Vector2(w, shield.y)
 	host.set_meta("nation_id", nid)
 	host.set_meta("city_id", str(city_id))
+	parent.add_child(host)
+	return host
+
+## Battle / danger aftermath crest strip: 团徽 + optional foe 敌徽 (nation of the fight).
+## Host name AftermathCrestStrip so suites can assert both arms without walking siblings.
+static func place_aftermath_crest_strip(parent: Node, at: Vector2, foe_nation: String = "", shield: Vector2 = Vector2(36, 44)) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("AftermathCrestStrip")
+	if old:
+		old.queue_free()
+	var host := Control.new()
+	host.name = "AftermathCrestStrip"
+	host.position = at
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var arms := make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var w := shield.x
+	var nid := str(foe_nation)
+	if nid != "":
+		var foe := make_nation_arms(nid, shield)
+		foe.position = Vector2(shield.x + 8.0, 0)
+		host.add_child(foe)
+		w = shield.x * 2.0 + 8.0
+	host.size = Vector2(w, shield.y)
 	parent.add_child(host)
 	return host
 
