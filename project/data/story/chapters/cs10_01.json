@@ -2,7 +2,7 @@
   "id": "cs10_01",
   "title": "印上的灯",
   "legacy_index": 410,
-  "return_scene": "res://scenes/story/chapter_player.tscn",
+  "return_scene": "res://scenes/hub/castle_hub.tscn",
   "source": "docs/content-seasons/season-10/NOVEL.md",
   "beats": [
     {

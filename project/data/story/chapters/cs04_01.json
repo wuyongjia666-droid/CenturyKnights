@@ -2,7 +2,7 @@
   "id": "cs04_01",
   "title": "家训上的灯",
   "legacy_index": 404,
-  "return_scene": "res://scenes/story/chapter_player.tscn",
+  "return_scene": "res://scenes/hub/castle_hub.tscn",
   "source": "docs/content-seasons/season-04/NOVEL.md",
   "beats": [
     {

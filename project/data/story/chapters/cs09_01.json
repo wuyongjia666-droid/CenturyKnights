@@ -2,7 +2,7 @@
   "id": "cs09_01",
   "title": "血验上的灯",
   "legacy_index": 409,
-  "return_scene": "res://scenes/story/chapter_player.tscn",
+  "return_scene": "res://scenes/hub/castle_hub.tscn",
   "source": "docs/content-seasons/season-09/NOVEL.md",
   "beats": [
     {

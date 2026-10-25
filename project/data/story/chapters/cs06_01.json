@@ -2,7 +2,7 @@
   "id": "cs06_01",
   "title": "校场上的灯",
   "legacy_index": 406,
-  "return_scene": "res://scenes/story/chapter_player.tscn",
+  "return_scene": "res://scenes/hub/castle_hub.tscn",
   "source": "docs/content-seasons/season-06/NOVEL.md",
   "beats": [
     {

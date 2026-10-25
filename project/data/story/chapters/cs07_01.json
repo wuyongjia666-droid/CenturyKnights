@@ -2,7 +2,7 @@
   "id": "cs07_01",
   "title": "仪典上的灯",
   "legacy_index": 407,
-  "return_scene": "res://scenes/story/chapter_player.tscn",
+  "return_scene": "res://scenes/hub/castle_hub.tscn",
   "source": "docs/content-seasons/season-07/NOVEL.md",
   "beats": [
     {
