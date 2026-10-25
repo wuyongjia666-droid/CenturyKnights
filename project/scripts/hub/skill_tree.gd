@@ -15,6 +15,7 @@ var _msg: Label
 func _ready() -> void:
 	UIKit.make_themed_bg(self, "skill")
 	CKPageKit.shell(self, Locale.t("lb_sk_ctx"), "SKILL TREE", Locale.t("lb_sk_title"), Locale.t("lb_sk_desc"), "none")
+	_place_skill_crests()
 	_pts = UIKit.title_label("", 16, UIKit.ACCENT)
 	_pts.name = "SkillPoints"
 	_pts.position = Vector2(938, 96)
@@ -60,10 +61,33 @@ func _ready() -> void:
 
 ## Phone: stretch the three kit cards, then park points + unlock inside the detail card so the
 ## 22px floor cannot land the points line on the page description.
+
+func _place_skill_crests(mobile: bool = false) -> void:
+	## Fat skill-tree chrome: 团徽 header + 旗徽 strip + SkillCrestStrip/PersonArms.
+	for n in ["CastleArms", "CastleBannerStrip", "SkillCrestStrip"]:
+		var oldn := get_node_or_null(n)
+		if oldn:
+			oldn.name = "_%sDying" % n
+			oldn.queue_free()
+	var mob := mobile or DeviceProfile.is_mobile()
+	var hdr := Vector2(52, 60) if mob else Vector2(44, 52)
+	var ban := Vector2(28, 38)
+	var w := size.x if size.x > 400.0 else 1280.0
+	var at_y := 6.0 if mob else 8.0
+	var arms_x := (w - 64.0) if mob else 1180.0
+	var strip_x := (w - 140.0) if mob else 1100.0
+	CKHeraldryChrome.place_company_header(self, Vector2(arms_x, at_y), hdr)
+	CKHeraldryChrome.place_castle_banner_strip(self, Vector2(strip_x, at_y), hdr, ban)
+	var sat := Vector2(1020, at_y) if not mob else Vector2(maxf(20.0, w - 240.0), at_y)
+	CKHeraldryChrome.place_skill_crest_strip(self, sat, Vector2(36, 44) if not mob else Vector2(32, 40), Vector2(24, 34))
+	if _sel != null and _detail != null:
+		CKHeraldryChrome.attach_skill_person_arms(_detail, _sel, Vector2(28, 34) if not mob else Vector2(26, 32))
+
 func apply_mobile_layout() -> void:
 	if not MobilePage.active(self):
 		return
 	CKPageKit.phone_fill(self)
+	_place_skill_crests(true)
 	var right := find_child("DetailCard", true, false) as Control
 	if right != null:
 		_mobile_detail_chrome(right)
@@ -121,6 +145,7 @@ func _refresh() -> void:
 	CKPageKit.drag_through(_people)
 	_fill_columns()
 	_fill_detail()
+	_place_skill_crests()
 	UIFX.wire_tree(self)
 
 func _fill_columns() -> void:
@@ -198,7 +223,7 @@ func _node(sk: Dictionary) -> Button:
 	var col: Color = UIKit.OK if owned else (UIKit.ACCENT if ok else UIKit.TEXT_FAINT)
 	b.add_theme_stylebox_override("normal", UIKit.flat_box(Color(col, 0.10), Color(col, 0.55), 8))
 	b.add_theme_color_override("font_color", UIKit.TEXT if owned or ok else UIKit.TEXT_DIM)
-	b.pressed.connect(func(): _sid = sid; Sfx.click(); _fill_columns(); _fill_detail(); UIFX.wire_tree(self))
+	b.pressed.connect(func(): _sid = sid; Sfx.click(); _fill_columns(); _fill_detail(); _place_skill_crests(); UIFX.wire_tree(self))
 	return b
 
 func _fill_detail() -> void:

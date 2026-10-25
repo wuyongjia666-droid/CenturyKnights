@@ -5506,6 +5506,21 @@
  ],
  "rules": {
   "food_per_member_day": 0.5,
+    "march_season_mult": {
+      "spring": 1.0,
+      "summer": 1.1,
+      "autumn": 0.9,
+      "winter": 1.35
+    },
+    "march_biome_mult": {
+      "snow": 1.35,
+      "marsh": 1.2,
+      "fog": 1.1,
+      "pass": 1.25,
+      "forge": 1.15,
+      "nightcamp": 1.3,
+      "harbor": 1.05
+    },
   "starve_morale_per_day": 4,
   "days_per_month": 30,
   "cargo_base": 30,

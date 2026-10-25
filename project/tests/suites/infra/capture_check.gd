@@ -15,7 +15,14 @@ const SCREENS := [
 	["city", "res://scenes/hub/city.tscn"],
 	["battle", "res://scenes/battle/battle.tscn"],
 	["settings", "res://scenes/ui/settings.tscn"],
+	["save_slots", "res://scenes/ui/save_slots.tscn"],
 	["codex", "res://scenes/hub/bloodline_codex.tscn"],
+	["court_news", "res://scenes/hub/court_news.tscn"],
+	["sui_yearcard", "res://scenes/hub/sui_yearcard.tscn"],
+	["ancestors", "res://scenes/hub/ancestors.tscn"],
+	["market", "res://scenes/hub/market.tscn"],
+	["blood_test", "res://scenes/hub/blood_test.tscn"],
+	["skill_tree", "res://scenes/hub/skill_tree.tscn"],
 ]
 const RATIOS := [Vector2i(1280, 720), Vector2i(1080, 2400)]
 

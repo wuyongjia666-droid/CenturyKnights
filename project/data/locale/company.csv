@@ -454,3 +454,31 @@ atlas_siege_relief_go,启程驰援「%s」,Marching to relieve "%s"
 atlas_siege_bribe,收买缓兵 %d 银,Bribe delay %d silver
 atlas_siege_scout,斥候探明 %d 银,Scout %d silver
 atlas_siege_later,稍后,Later
+atlas_season_spring,春,Spring
+atlas_season_summer,夏,Summer
+atlas_season_autumn,秋,Autumn
+atlas_season_winter,冬,Winter
+atlas_chip_season,季,Season
+atlas_ration_label,日耗粮,Rations/day
+atlas_ration_value,%d（%s %s）,%d (%s %s)
+atlas_ration_value_weather,%d（%s·%s %s）,%d (%s·%s %s)
+atlas_ration_mod_up,+%d%%,+%d%%
+atlas_ration_mod_down,-%d%%,-%d%%
+atlas_ration_mod_flat,平季,flat
+atlas_chip_ration_mod,行军耗粮,March rations
+atlas_weather_snow,暴雪,Blizzard
+atlas_weather_marsh,潮雾,Marsh fog
+atlas_weather_fog,浓雾,Heavy fog
+atlas_weather_harbor,海风,Sea wind
+atlas_weather_pass,山崩落石,Rockfall
+atlas_weather_forge,灰烬雨,Ash rain
+atlas_weather_nightcamp,冰雾,Ice fog
+atlas_ration_party_hint,%s · 编制 %d,%s · party %d
+atlas_muster_en,MUSTER // 编入,MUSTER // JOIN
+atlas_muster_title,编入行军编制,Muster into the march
+atlas_muster_body,%s 入列。编制 %d→%d · 日耗粮 %d→%d。%s,%s joins. Party %d→%d · rations/day %d→%d. %s
+atlas_muster_cost,花费 %d 银,Cost %d silver
+atlas_muster_ration,口粮：%s,Rations: %s
+atlas_muster_on_march,行军中已并入编制，确认后继续赶路。,Joined on the march — continue after confirm.
+atlas_muster_in_camp,已并入灰旗编制。,Joined the Ash Banner muster.
+atlas_muster_continue,确认编成,Confirm muster

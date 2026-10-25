@@ -4,7 +4,8 @@ extends RefCounted
 ## One design system everywhere (castle header/banner strip, genealogy, dossier,
 ## board unit shields, rival houses, tavern/hire cards, city/smith/market chrome,
 ## marriage house cards + crest strip, bloodline codex / shrine / banner rite,
-## succession / heir-duel / annex, battle/danger aftermath).
+## succession / heir-duel / annex, battle HUD / aftermath, court gazette / year-card chronicle,
+## title/settings/save/pause shell).
 ## No marriage marshalling / per-person cadency — only company vs family vs nation arms + rank badge.
 
 static func is_family_member(c) -> bool:
@@ -205,6 +206,55 @@ static func place_company_header(parent: Node, at: Vector2, size: Vector2 = Vect
 	var tr := make_company_arms(size)
 	tr.position = at
 	parent.add_child(tr)
+	return tr
+
+## Title / settings / save / pause shell crest strip: 团徽 + 旗徽 cloth.
+## Host name ShellCrestStrip — distinct from CastleBannerStrip so shell suites do not collide with hub asserts.
+static func place_shell_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(44, 52), banner: Vector2 = Vector2(28, 38)) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("ShellCrestStrip")
+	if old:
+		old.name = "_ShellCrestStripDying"
+		old.queue_free()
+	var host := Control.new()
+	host.name = "ShellCrestStrip"
+	host.position = at
+	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var arms := make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var bn := make_company_banner(banner)
+	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
+	host.add_child(bn)
+	parent.add_child(host)
+	return host
+
+## Save-slot / load-card row arms: prepend 团徽 so every slot row carries company chrome.
+## Empty slots still get the plate (disabled load button already signals emptiness).
+static func attach_save_row_arms(row: Control, size: Vector2 = Vector2(36, 44)) -> TextureRect:
+	if row == null:
+		return null
+	var old := row.get_node_or_null("SlotArms")
+	if old:
+		old.name = "_SlotArmsDying"
+		old.queue_free()
+	var tr := make_company_arms(size)
+	tr.name = "SlotArms"
+	# Prefer HBox prepend when the row lays out horizontally.
+	if row is HBoxContainer:
+		row.add_child(tr)
+		row.move_child(tr, 0)
+	elif row is PanelContainer:
+		var inner = row.get_child(0) if row.get_child_count() > 0 else null
+		if inner is HBoxContainer:
+			inner.add_child(tr)
+			inner.move_child(tr, 0)
+		else:
+			row.add_child(tr)
+	else:
+		row.add_child(tr)
 	return tr
 
 ## Castle hub banner strip: 团徽 shield + cloth banner side by side under the top bar.
@@ -811,7 +861,6 @@ static func place_encounter_crest_strip(parent: Node, at: Vector2, foe_nation: S
 	parent.add_child(host)
 	return host
 
-
 ## Field-book / 属事处 header strip: 团徽 + 旗布 (FieldCrestStrip). Distinct from CastleBannerStrip.
 static func place_field_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
 	if parent == null:
@@ -919,3 +968,239 @@ static func place_purse_plate(parent: Node, c, purse_silver: int = 0, arms_sz: V
 	host.set_meta("arms_core", str(arms.get_meta("arms_core", "")))
 	parent.add_child(host)
 	return host
+
+## Gazette / court-news nation plate (朝徽). Same art as 邦徽; distinct node name for suites.
+static func make_gazette_nation_arms(nid: String, size: Vector2 = Vector2(40, 48)) -> TextureRect:
+	var tr := TextureRect.new()
+	tr.name = "GazetteNationArms"
+	tr.texture = nation_shield(str(nid), int(size.x), int(size.y))
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	tr.custom_minimum_size = size
+	tr.size = size
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tr.tooltip_text = Locale.t("lb_gazette_arms")
+	tr.set_meta("arms_kind", "lb_gazette_arms")
+	tr.set_meta("arms_core", CKHeraldry.core_key(nation_spec(str(nid))))
+	tr.set_meta("nation_id", str(nid))
+	return tr
+
+## Court gazette strip: 团徽 + nation 朝徽/邦徽 (GazetteCrestStrip). Empty nation → 团徽 only.
+static func place_gazette_crest_strip(parent: Node, nation_id: String, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("GazetteCrestStrip")
+	if old:
+		old.name = "_GazetteCrestStripDying"
+		old.queue_free()
+	var nid := str(nation_id)
+	if nid == "":
+		nid = World.nation_of(str(World.pos))
+	if nid == "":
+		nid = "ashbanner"
+	var host := Control.new()
+	host.name = "GazetteCrestStrip"
+	host.position = at
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var arms := make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var w := shield.x
+	if nid != "":
+		var nat := make_gazette_nation_arms(nid, shield)
+		nat.position = Vector2(shield.x + 8.0, 0)
+		host.add_child(nat)
+		w = shield.x * 2.0 + 8.0
+	host.size = Vector2(w, shield.y)
+	host.set_meta("nation_id", nid)
+	parent.add_child(host)
+	return host
+
+## Pin 朝徽 on a court-news row top bar (HBox). Replaces prior GazetteNationArms under host.
+static func attach_news_row_arms(host: Control, nation_id: String, arms_sz: Vector2 = Vector2(28, 34)) -> void:
+	if host == null or str(nation_id) == "":
+		return
+	var old := host.get_node_or_null("GazetteNationArms")
+	if old:
+		old.name = "_GazetteNationArmsDying"
+		old.queue_free()
+	var arms := make_gazette_nation_arms(str(nation_id), arms_sz)
+	host.add_child(arms)
+	host.move_child(arms, 0)
+
+## Year-card / chronicle person plate: prepend YearArms into a VBox row box via head HBox.
+static func attach_yearcard_row_arms(box: Control, c, arms_sz: Vector2 = Vector2(32, 38)) -> void:
+	if box == null or c == null:
+		return
+	var old := box.get_node_or_null("YearArmsHead")
+	if old:
+		old.name = "_YearArmsHeadDying"
+		old.queue_free()
+	var head := HBoxContainer.new()
+	head.name = "YearArmsHead"
+	head.add_theme_constant_override("separation", 10)
+	var arms := make_person_arms(c, arms_sz)
+	arms.name = "YearArms"
+	head.add_child(arms)
+	box.add_child(head)
+	box.move_child(head, 0)
+
+## Market desk strip: 团徽 + 市集旗布 (MarketCrestStrip). Distinct from CityCrestStrip.
+static func place_market_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("MarketCrestStrip")
+	if old:
+		old.name = "_MarketCrestStripDying"
+		old.queue_free()
+	var host := Control.new()
+	host.name = "MarketCrestStrip"
+	host.position = at
+	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var arms := make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var bn := make_company_banner(banner)
+	bn.name = "MarketBanner"
+	bn.tooltip_text = Locale.t("lb_market_arms")
+	bn.set_meta("arms_kind", "lb_market_arms")
+	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
+	host.add_child(bn)
+	parent.add_child(host)
+	return host
+
+
+## Skill-tree header: 团徽 + 技徽旗布 (SkillCrestStrip).
+static func place_skill_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("SkillCrestStrip")
+	if old:
+		old.name = "_SkillCrestStripDying"
+		old.queue_free()
+	var host := Control.new()
+	host.name = "SkillCrestStrip"
+	host.position = at
+	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var arms := make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var bn := make_company_banner(banner)
+	bn.name = "SkillBanner"
+	bn.tooltip_text = Locale.t("lb_skill_arms")
+	bn.set_meta("arms_kind", "lb_skill_arms")
+	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
+	host.add_child(bn)
+	parent.add_child(host)
+	return host
+
+
+## Prepend SkillPersonArms into a detail/head host for the selected roster member.
+static func attach_skill_person_arms(host: Control, c, arms_sz: Vector2 = Vector2(28, 34)) -> void:
+	if host == null or c == null:
+		return
+	var old := host.get_node_or_null("SkillPersonArms")
+	if old:
+		old.name = "_SkillPersonArmsDying"
+		old.queue_free()
+	var arms := make_person_arms(c, arms_sz)
+	arms.name = "SkillPersonArms"
+	arms.tooltip_text = Locale.t("lb_skill_arms")
+	host.add_child(arms)
+	host.move_child(arms, 0)
+
+
+## Hourglass / 时漏 strip: 团徽 + 时漏旗布 (HourglassCrestStrip).
+static func place_hourglass_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("HourglassCrestStrip")
+	if old:
+		old.name = "_HourglassCrestStripDying"
+		old.queue_free()
+	var host := Control.new()
+	host.name = "HourglassCrestStrip"
+	host.position = at
+	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var arms := make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var bn := make_company_banner(banner)
+	bn.name = "HourglassBanner"
+	bn.tooltip_text = Locale.t("lb_hourglass_arms")
+	bn.set_meta("arms_kind", "lb_hourglass_arms")
+	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
+	host.add_child(bn)
+	parent.add_child(host)
+	return host
+
+
+## Castle overview strip: 团徽 + 城堡旗布 (CastleViewCrestStrip). Distinct from CastleBannerStrip.
+static func place_castle_view_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("CastleViewCrestStrip")
+	if old:
+		old.name = "_CastleViewCrestStripDying"
+		old.queue_free()
+	var host := Control.new()
+	host.name = "CastleViewCrestStrip"
+	host.position = at
+	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var arms := make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var bn := make_company_banner(banner)
+	bn.name = "CastleViewBanner"
+	bn.tooltip_text = Locale.t("lb_castle_view_arms")
+	bn.set_meta("arms_kind", "lb_castle_view_arms")
+	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
+	host.add_child(bn)
+	parent.add_child(host)
+	return host
+
+
+## Blood-assay strip: 团徽 + 血验旗布 (BloodCrestStrip).
+static func place_blood_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("BloodCrestStrip")
+	if old:
+		old.name = "_BloodCrestStripDying"
+		old.queue_free()
+	var host := Control.new()
+	host.name = "BloodCrestStrip"
+	host.position = at
+	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var arms := make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var bn := make_company_banner(banner)
+	bn.name = "BloodBanner"
+	bn.tooltip_text = Locale.t("lb_blood_arms")
+	bn.set_meta("arms_kind", "lb_blood_arms")
+	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
+	host.add_child(bn)
+	parent.add_child(host)
+	return host
+
+
+## Pin BloodQueueArms on a queue row (person awaiting assay).
+static func attach_blood_queue_arms(row: Control, c, arms_sz: Vector2 = Vector2(26, 32)) -> void:
+	if row == null or c == null:
+		return
+	var old := row.get_node_or_null("BloodQueueArms")
+	if old:
+		old.name = "_BloodQueueArmsDying"
+		old.queue_free()
+	var arms := make_person_arms(c, arms_sz)
+	arms.name = "BloodQueueArms"
+	arms.tooltip_text = Locale.t("lb_blood_arms")
+	row.add_child(arms)
+	row.move_child(arms, 0)
+
