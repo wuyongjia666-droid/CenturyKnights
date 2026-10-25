@@ -279,12 +279,17 @@ func _tick_rival_rumor(ctx: Dictionary) -> void:
 	var rum = "朔影家流言：立场仍为「%s」。可去敌宅交涉或推进余波战役。" % st
 	_events(ctx).append({"type": "rival_rumor", "text": rum})
 	GameState.add_lineage_event(rum)
+	## Y1-B: 敌宅流言月结 → month_echo.rival；属地/沙漏回读（耐玩敌宅闭环可感）.
+	CKEconomyState.month_echo_note("rival", rum)
 
 func _tick_rival_deals(ctx: Dictionary) -> void:
 	if not GameState.has_method("tick_rival_deals"):
 		return
 	for msg in GameState.tick_rival_deals():
 		_events(ctx).append({"type": "rival_deal", "text": msg})
+		## Y1-B: 敌约到期/中段 → 同槽 month_echo.rival（同月；追加）.
+		if str(msg) != "":
+			CKEconomyState.month_echo_note("rival", str(msg))
 
 func _tick_court(ctx: Dictionary) -> void:
 	# NPC royal houses age once each January after the opening year, so the first month of a new game stays quiet.
