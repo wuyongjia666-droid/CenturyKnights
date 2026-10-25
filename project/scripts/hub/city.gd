@@ -1133,17 +1133,12 @@ func _tab_market() -> void:
 	if not known_loops.is_empty() or not loops.is_empty():
 		var strip := Panel.new()
 		strip.name = "TradeLoopStrip"
-		# Below _head title so "市集" does not ink-overlap the EN mono label.
 		strip.position = Vector2(18, 56)
-		strip.size = Vector2(812, 40 if not _mob else float(MobilePage.HIT + 8))
+		strip.size = Vector2(812, 44 if not _mob else float(MobilePage.HIT + 8))
 		var ss := UIKit.flat_box(Color(UIKit.EMBER.r, UIKit.EMBER.g, UIKit.EMBER.b, 0.12), Color(UIKit.EMBER, 0.35), 8)
 		strip.add_theme_stylebox_override("panel", ss)
 		p.add_child(strip)
-		var st := UIKit.mono(Locale.t("atlas_trade_loop_en"), 8, UIKit.EMBER, false)
-		st.position = Vector2(740, 4)
-		st.size = Vector2(60, 14)
-		st.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-		strip.add_child(st)
+		# Tip only — English PRODUCE LOOP mono sat under 「市集」 and failed the desktop gate.
 		var best: Dictionary = World.best_produce_trade(city)
 		var tip := ""
 		if not best.is_empty():
@@ -1153,7 +1148,7 @@ func _tab_market() -> void:
 		var sl := UIKit.body_label(tip, UIKit.TEXT, 12)
 		sl.name = "TradeLoopStripLine"
 		sl.position = Vector2(10, 12)
-		sl.size = Vector2(720, 20)
+		sl.size = Vector2(790, 20)
 		sl.autowrap_mode = TextServer.AUTOWRAP_OFF
 		sl.clip_text = true
 		strip.add_child(sl)

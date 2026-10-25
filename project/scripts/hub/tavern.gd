@@ -223,6 +223,8 @@ func _card(c: CKCharacter, r: Rect2, focus: bool, idx: int) -> void:
 	fee.add_child(fu)
 	var job: Dictionary = GameState.get_job(c.job_id)
 	UIKit.portrait_plate(p, Rect2(18, 54, 120, 150), c, str(job.get("name", "")).substr(0, 6))
+	## Hire card 旗徽|族徽 — same Chrome as genealogy/dossier (familyless tavern = 旗徽).
+	CKHeraldryChrome.attach_hire_chrome(p, c, Rect2(18, 54, 120, 150), Vector2(32, 38))
 	var en := UIKit.mono(str(job.get("role", "recruit")).to_upper() + " · " + c.rank_name(), 9, UIKit.TEXT_DIM, false)
 	en.position = Vector2(154, 58)
 	p.add_child(en)
@@ -414,6 +416,7 @@ func _card_mobile(c: CKCharacter, focus: bool) -> void:
 	head.add_child(holder)
 	var job: Dictionary = GameState.get_job(c.job_id)
 	UIKit.portrait_plate(holder, Rect2(0, 0, 120, 150), c, "")
+	CKHeraldryChrome.attach_hire_chrome(holder, c, Rect2(0, 0, 120, 150), Vector2(32, 38))
 	var hv := VBoxContainer.new()
 	hv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	head.add_child(hv)
