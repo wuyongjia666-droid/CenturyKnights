@@ -1,8 +1,8 @@
 {
   "id": "season_02",
-  "version": 1,
-  "title_zh": "笑柄上的功勋",
-  "status": "topic_scaffold",
+  "version": 2,
+  "title_zh": "婚约上的灯",
+  "status": "novel_draft",
   "pipeline": [
     "topic",
     "novel",
@@ -12,17 +12,17 @@
     "art",
     "playtest"
   ],
-  "stage": "topic",
+  "stage": "novel",
   "flag_lamp": {
-    "flag": "功勋册与敌宅帖逼问空征兆",
-    "lamp": "第二张岁课与补灯私术压力"
+    "flag": "联姻名册与婚约声称的新姓",
+    "lamp": "验血/诞育回执与婚约血脉对不上"
   },
-  "system_deepen": "rival_wu_court_news",
-  "system_deepen_zh": "敌宅笑柄进朝报（只读）",
+  "system_deepen": "month_echo_birth_marriage",
+  "system_deepen_zh": "诞育/联姻月回响写入属地与沙漏可感",
   "gates": {
     "y1a_device_signoff": true,
-    "topic_user_ack": false,
-    "novel_allowed": false
+    "topic_user_ack": true,
+    "novel_allowed": true
   },
   "topic_checklist": [
     {
@@ -53,10 +53,28 @@
   ],
   "acceptance": [
     {
+      "id": "birth_marriage_echo",
+      "label_zh": "诞育/联姻月回响可感",
+      "suite": "res://tests/suites/dynasty/month_echo_birth_marriage_check.tscn",
+      "done": true
+    },
+    {
+      "id": "marriage_empty_cta",
+      "label_zh": "联姻空态导流",
+      "suite": "res://tests/suites/dynasty/marriage_empty_cta_check.tscn",
+      "done": true
+    },
+    {
+      "id": "mobile_marriage_rite",
+      "label_zh": "婚仪手机文案可读",
+      "suite": "res://tests/suites/mobile/mobile_marriage_rite_log_check.tscn",
+      "done": true
+    },
+    {
       "id": "scaffold_gate",
-      "label_zh": "内容季 #2 选题脚手架",
+      "label_zh": "内容季脚手架门禁（多季）",
       "suite": "res://tests/suites/narrative/content_season_scaffold_check.tscn",
-      "done": false
+      "done": true
     }
   ],
   "pipeline_stages": {
@@ -68,17 +86,17 @@
     "novel": {
       "doc": "docs/content-seasons/season-02/NOVEL.md",
       "gate": "novel_allowed",
-      "open": false
+      "open": true
     },
     "bible": {
       "doc": "docs/content-seasons/season-02/BIBLE.md",
       "gate": "novel_allowed",
-      "open": false
+      "open": true
     },
     "playable": {
       "doc": "docs/content-seasons/season-02/PLAYABLE.md",
       "gate": "novel_allowed",
-      "open": false
+      "open": true
     },
     "systems": {
       "doc": "docs/content-seasons/season-02/ACCEPTANCE.md",
@@ -88,12 +106,12 @@
     "art": {
       "doc": "",
       "gate": "novel_allowed",
-      "open": false
+      "open": true
     },
     "playtest": {
       "doc": "",
-      "gate": "topic_user_ack",
-      "open": false
+      "gate": "y1a_device_signoff",
+      "open": true
     }
   },
   "docs_rel": [

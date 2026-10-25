@@ -1,0 +1,119 @@
+{
+  "id": "season_03",
+  "version": 2,
+  "title_zh": "榜上的收成",
+  "status": "novel_draft",
+  "pipeline": [
+    "topic",
+    "novel",
+    "bible",
+    "playable",
+    "systems",
+    "art",
+    "playtest"
+  ],
+  "stage": "novel",
+  "flag_lamp": {
+    "flag": "委托军功写进朝报名册",
+    "lamp": "属地月结收成对不上军功声称"
+  },
+  "system_deepen": "month_echo_commission_estates",
+  "system_deepen_zh": "委托/属地月回响对照可感",
+  "gates": {
+    "y1a_device_signoff": true,
+    "topic_user_ack": true,
+    "novel_allowed": true
+  },
+  "topic_checklist": [
+    {
+      "id": "one_liner",
+      "label_zh": "一句",
+      "required": true
+    },
+    {
+      "id": "flag_lamp",
+      "label_zh": "旗 / 灯冲突",
+      "required": true
+    },
+    {
+      "id": "system_pick",
+      "label_zh": "本季加深的系统",
+      "required": true
+    },
+    {
+      "id": "wont_do",
+      "label_zh": "不做（本季）",
+      "required": true
+    },
+    {
+      "id": "downstream_gates",
+      "label_zh": "下游闸门",
+      "required": true
+    }
+  ],
+  "acceptance": [
+    {
+      "id": "commission_echo",
+      "label_zh": "委托月回响可感",
+      "suite": "res://tests/suites/dynasty/month_echo_commission_check.tscn",
+      "done": true
+    },
+    {
+      "id": "estates_echo",
+      "label_zh": "属地月回响可感",
+      "suite": "res://tests/suites/dynasty/month_echo_estates_check.tscn",
+      "done": true
+    },
+    {
+      "id": "scaffold_gate",
+      "label_zh": "内容季脚手架门禁（多季）",
+      "suite": "res://tests/suites/narrative/content_season_scaffold_check.tscn",
+      "done": true
+    }
+  ],
+  "pipeline_stages": {
+    "topic": {
+      "doc": "docs/content-seasons/season-03/TOPIC.md",
+      "gate": "",
+      "open": true
+    },
+    "novel": {
+      "doc": "docs/content-seasons/season-03/NOVEL.md",
+      "gate": "novel_allowed",
+      "open": true
+    },
+    "bible": {
+      "doc": "docs/content-seasons/season-03/BIBLE.md",
+      "gate": "novel_allowed",
+      "open": true
+    },
+    "playable": {
+      "doc": "docs/content-seasons/season-03/PLAYABLE.md",
+      "gate": "novel_allowed",
+      "open": true
+    },
+    "systems": {
+      "doc": "docs/content-seasons/season-03/ACCEPTANCE.md",
+      "gate": "",
+      "open": true
+    },
+    "art": {
+      "doc": "",
+      "gate": "novel_allowed",
+      "open": true
+    },
+    "playtest": {
+      "doc": "",
+      "gate": "y1a_device_signoff",
+      "open": true
+    }
+  },
+  "docs_rel": [
+    "docs/content-seasons/season-03/TOPIC.md",
+    "docs/content-seasons/season-03/CHECKLIST.md",
+    "docs/content-seasons/season-03/NOVEL.md",
+    "docs/content-seasons/season-03/BIBLE.md",
+    "docs/content-seasons/season-03/PLAYABLE.md",
+    "docs/content-seasons/season-03/ACCEPTANCE.md"
+  ]
+}
