@@ -691,10 +691,11 @@ func _tab_overview() -> void:
 		else:
 			_rumor_box(p, Rect2(18, 330, 384, 230))
 	if not sq.is_empty():
+		var honour_en: Label = null
 		if not _mob:
-			var sl := UIKit.mono("HONOUR COMMISSION", 9, UIKit.EMBER)
-			sl.position = Vector2(18, 330)
-			p.add_child(sl)
+			honour_en = UIKit.mono("HONOUR COMMISSION", 9, UIKit.EMBER)
+			honour_en.position = Vector2(18, 330)
+			p.add_child(honour_en)
 		var st := UIKit.title_label("「%s」" % sq.get("title", ""), 15 if not _mob else MobilePage.FONT + 2, UIKit.TEXT)
 		var sb := _para(str(sq.get("brief", "")), UIKit.TEXT_DIM, 12 if not _mob else MobilePage.FONT, 384 if not _mob else 0)
 		var done := World.done_sig.has(str(sq.get("id", "")))
@@ -709,11 +710,19 @@ func _tab_overview() -> void:
 			v.add_child(sb)
 			v.add_child(sst)
 		else:
-			st.position = Vector2(18, 346)
+			# Discover strip shrinks panel — stack honour + status above affair CTA.
+			var panel_h := 576.0 - y_off
+			var aff_y := minf(510.0, panel_h - 56.0)
+			var sst_y := minf(440.0, aff_y - 28.0)
+			var sb_y := minf(372.0, sst_y - 68.0)
+			var st_y := minf(346.0, sb_y - 26.0)
+			if honour_en != null:
+				honour_en.position = Vector2(18, st_y - 16.0)
+			st.position = Vector2(18, st_y)
 			p.add_child(st)
-			sb.position = Vector2(18, 372)
+			sb.position = Vector2(18, sb_y)
 			p.add_child(sb)
-			sst.position = Vector2(18, 440)
+			sst.position = Vector2(18, sst_y)
 			p.add_child(sst)
 	## v9.2 本城之事 / 职印：一个 48 高的按钮，点开浮层
 	var aff := UIKit.ghost_button(CKCityAffairs.label(city), 384 if not _mob else 0, 48 if not _mob else MobilePage.HIT)
@@ -1129,14 +1138,12 @@ func _tab_market() -> void:
 	if not known_loops.is_empty() or not loops.is_empty():
 		var strip := Panel.new()
 		strip.name = "TradeLoopStrip"
-		strip.position = Vector2(18, 48)
+		strip.position = Vector2(18, 56)
 		strip.size = Vector2(812, 44 if not _mob else float(MobilePage.HIT + 8))
 		var ss := UIKit.flat_box(Color(UIKit.EMBER.r, UIKit.EMBER.g, UIKit.EMBER.b, 0.12), Color(UIKit.EMBER, 0.35), 8)
 		strip.add_theme_stylebox_override("panel", ss)
 		p.add_child(strip)
-		var st := UIKit.mono(Locale.t("atlas_trade_loop_en"), 8, UIKit.EMBER, false)
-		st.position = Vector2(10, 4)
-		strip.add_child(st)
+		# Tip only — English PRODUCE LOOP mono sat under 「市集」 and failed the desktop gate.
 		var best: Dictionary = World.best_produce_trade(city)
 		var tip := ""
 		if not best.is_empty():
@@ -1145,7 +1152,7 @@ func _tab_market() -> void:
 			tip = Locale.t("atlas_trade_loop_unknown") % [str(loops[0].name), int(loops[0].buy)]
 		var sl := UIKit.body_label(tip, UIKit.TEXT, 12)
 		sl.name = "TradeLoopStripLine"
-		sl.position = Vector2(10, 18)
+		sl.position = Vector2(10, 12)
 		sl.size = Vector2(790, 20)
 		sl.autowrap_mode = TextServer.AUTOWRAP_OFF
 		sl.clip_text = true

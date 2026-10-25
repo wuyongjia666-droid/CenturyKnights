@@ -1082,6 +1082,9 @@ func _render_right() -> void:
 		ll.custom_minimum_size = Vector2(224, 0)
 		loop_box.add_child(ll)
 		shown += 1
+	var loop_extra := 0.0
+	if shown > 0:
+		loop_extra = 12.0 + float(shown) * 14.0  # PRODUCE LOOP header + lines
 	if _sel == World.pos and not loops.is_empty():
 		var tb := UIKit.ghost_button(Locale.t("atlas_trade_loop_goto"), 224, 26)
 		tb.name = "TradeLoopGoto"
@@ -1089,14 +1092,19 @@ func _render_right() -> void:
 			GameState.set_meta("city_tab", "market")
 			_enter_here())
 		loop_box.add_child(tb)
+		loop_extra += 28.0
+	# lore sits below kv+TradeLoop so produce lines / 去市集 never cover the blurb
+	var lore_y := 296.0 + loop_extra
+	var lore_h := maxf(48.0, 84.0 - loop_extra * 0.35)
 	var lore := UIKit.body_label(str(n.get("lore", "")), UIKit.TEXT_DIM, 11)
-	lore.position = Vector2(16, 296)
-	lore.size = Vector2(224, 84)
+	lore.position = Vector2(16, lore_y)
+	lore.size = Vector2(224, lore_h)
 	lore.custom_minimum_size = Vector2(224, 0)
 	lore.clip_text = true
+	lore.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	p.add_child(lore)
 	# quests here
-	var qy := 384.0
+	var qy := lore_y + lore_h + 4.0
 	for mk in World.quest_markers().get(_sel, []):
 		var q: Dictionary = mk.quest
 		var ql := UIKit.body_label("%s %s" % ["✓ 交付" if str(mk.kind) == "turnin" else "◆ 目标", q.title], UIKit.OK if str(mk.kind) == "turnin" else UIKit.DANGER, 11)
