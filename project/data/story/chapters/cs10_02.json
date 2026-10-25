@@ -400,6 +400,21 @@
           "text": "问清再走月份。"
         },
         {
+          "id": "cs1002_vst1",
+          "speaker": "岁吏",
+          "text": "月份从复页印谱骑缝走过。走过，才算足印。"
+        },
+        {
+          "id": "cs1002_vst2",
+          "speaker": "书记官",
+          "text": "复印格最怕快——快了就糊成初盖的脏。"
+        },
+        {
+          "id": "cs1002_vst3",
+          "speaker": "leader",
+          "text": "月份走过。印，慢着复。"
+        },
+        {
           "id": "cs1002_vis_mv4",
           "speaker": "leader",
           "text": "问清。去看。"
@@ -582,6 +597,38 @@
           "id": "cs1002_mid_mv6",
           "speaker": "leader",
           "text": "记也好。仿印不盖。"
+        },
+        {
+          "id": "cs1002_win1",
+          "speaker": "旁白",
+          "text": "锋再定。印谱复页翻开，催脏印的人退到槛外。",
+          "when": {
+            "flag": "cs10_mid_fought"
+          }
+        },
+        {
+          "id": "cs1002_win2",
+          "speaker": "掌柜",
+          "text": "复盖比初盖慢。慢，是因为要净。",
+          "when": {
+            "flag": "cs10_mid_fought"
+          }
+        },
+        {
+          "id": "cs1002_win3",
+          "speaker": "槐里·青禾",
+          "text": "印泥第二圈更红。红得干净，才像官印。",
+          "when": {
+            "flag": "cs10_mid_fought"
+          }
+        },
+        {
+          "id": "cs1002_win4",
+          "speaker": "leader",
+          "text": "锋再验场。印，我复盖。",
+          "when": {
+            "flag": "cs10_mid_fought"
+          }
         },
         {
           "id": "cs10b_br_lost",
@@ -855,6 +902,26 @@
           "id": "cs1002_ret_mv3",
           "speaker": "岁吏",
           "text": "正好回堡。"
+        },
+        {
+          "id": "cs1002_tvn1",
+          "speaker": "掌柜",
+          "text": "复盖那一锋，酒更慢。"
+        },
+        {
+          "id": "cs1002_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "槛外催的退了。退了，腕才听使。"
+        },
+        {
+          "id": "cs1002_tvn3",
+          "speaker": "老旗手",
+          "text": "旗在印案旁第二次立直。直了，印才像根。"
+        },
+        {
+          "id": "cs1002_tvn4",
+          "speaker": "leader",
+          "text": "复净。场清。酒，慢着。"
         },
         {
           "id": "cs1002_ret_mv4",

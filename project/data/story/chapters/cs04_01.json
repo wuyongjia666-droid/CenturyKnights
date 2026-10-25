@@ -379,6 +379,21 @@
           "text": "口号不顶月份。"
         },
         {
+          "id": "cs0401_vst1",
+          "speaker": "岁吏",
+          "text": "月份从家训夹页里翻出来。翻得慢，才不撕。"
+        },
+        {
+          "id": "cs0401_vst2",
+          "speaker": "书记官",
+          "text": "训条旁的沙漏，比门廊牌更不敢催。"
+        },
+        {
+          "id": "cs0401_vst3",
+          "speaker": "leader",
+          "text": "月份翻过。步，还按训条走。"
+        },
+        {
           "id": "cs0401_vis_mv4",
           "speaker": "leader",
           "text": "月份为证。去看。"
@@ -550,6 +565,38 @@
           "id": "cs0401_mid_mv6",
           "speaker": "leader",
           "text": "我会走。锋跟步走。"
+        },
+        {
+          "id": "cs0401_win1",
+          "speaker": "旁白",
+          "text": "锋定。门廊牌稳了，训条旁那拨退到影里。",
+          "when": {
+            "flag": "cs04_mid_fought"
+          }
+        },
+        {
+          "id": "cs0401_win2",
+          "speaker": "掌柜",
+          "text": "假步走远了。真步，留在门廊。",
+          "when": {
+            "flag": "cs04_mid_fought"
+          }
+        },
+        {
+          "id": "cs0401_win3",
+          "speaker": "槐里·青禾",
+          "text": "训条不羞了。羞的是刚才那拨。",
+          "when": {
+            "flag": "cs04_mid_fought"
+          }
+        },
+        {
+          "id": "cs0401_win4",
+          "speaker": "leader",
+          "text": "锋跟步走完。训条，我背得。",
+          "when": {
+            "flag": "cs04_mid_fought"
+          }
         },
         {
           "id": "cs04_mid_lost",
@@ -811,6 +858,26 @@
           "id": "cs0401_ret_mv3",
           "speaker": "石垒·晚担",
           "text": "错的刮掉。对的挂上。"
+        },
+        {
+          "id": "cs0401_tvn1",
+          "speaker": "掌柜",
+          "text": "门廊那一锋，靴底还带着牌影。"
+        },
+        {
+          "id": "cs0401_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "训条别当酒令。令乱了，家也乱。"
+        },
+        {
+          "id": "cs0401_tvn3",
+          "speaker": "老旗手",
+          "text": "影里那拨退了。旗可以靠墙歇一刻。"
+        },
+        {
+          "id": "cs0401_tvn4",
+          "speaker": "leader",
+          "text": "步还在。酒可以。训，不卖。"
         },
         {
           "id": "cs0401_ret_mv4",

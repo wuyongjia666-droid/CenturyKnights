@@ -389,6 +389,21 @@
           "text": "代选前先看月份说话。"
         },
         {
+          "id": "cs0701_vst1",
+          "speaker": "岁吏",
+          "text": "月份从仪典香灰里漏出一粒。粒小，却是真月份。"
+        },
+        {
+          "id": "cs0701_vst2",
+          "speaker": "书记官",
+          "text": "仪典册页边，沙漏不敢走快。"
+        },
+        {
+          "id": "cs0701_vst3",
+          "speaker": "leader",
+          "text": "月份漏过。台阶，我一步步上。"
+        },
+        {
           "id": "cs0701_vis_mv4",
           "speaker": "leader",
           "text": "听月份。去。"
@@ -550,6 +565,38 @@
           "id": "cs0701_mid_mv7",
           "speaker": "leader",
           "text": "试清再定。锋不问代嘴。"
+        },
+        {
+          "id": "cs0701_win1",
+          "speaker": "旁白",
+          "text": "锋定。仪典问声沉了，墙牌旁催的人退了。",
+          "when": {
+            "flag": "cs07_mid_fought"
+          }
+        },
+        {
+          "id": "cs0701_win2",
+          "speaker": "掌柜",
+          "text": "催不停的，今晚停了。",
+          "when": {
+            "flag": "cs07_mid_fought"
+          }
+        },
+        {
+          "id": "cs0701_win3",
+          "speaker": "苇原·灯影",
+          "text": "定之前试清了。清了，才配上台阶。",
+          "when": {
+            "flag": "cs07_mid_fought"
+          }
+        },
+        {
+          "id": "cs0701_win4",
+          "speaker": "leader",
+          "text": "锋不问代嘴。仪典，我自己应。",
+          "when": {
+            "flag": "cs07_mid_fought"
+          }
         },
         {
           "id": "cs07_mid_lost",
@@ -811,6 +858,26 @@
           "id": "cs0701_ret_mv3",
           "speaker": "书记官",
           "text": "谱回堡钉。"
+        },
+        {
+          "id": "cs0701_tvn1",
+          "speaker": "掌柜",
+          "text": "仪典那一锋，酒要浅——浅着敬。"
+        },
+        {
+          "id": "cs0701_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "催的人退了。退了才有座位。"
+        },
+        {
+          "id": "cs0701_tvn3",
+          "speaker": "听回",
+          "text": "香灰里那粒月份，有人看见了。"
+        },
+        {
+          "id": "cs0701_tvn4",
+          "speaker": "leader",
+          "text": "应过了。酒浅着。名，不代。"
         },
         {
           "id": "cs0701_ret_mv4",

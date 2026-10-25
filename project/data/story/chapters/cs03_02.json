@@ -678,6 +678,21 @@
           "text": "沙不快。人急。"
         },
         {
+          "id": "cs0302_vst1",
+          "speaker": "岁吏",
+          "text": "月份从粮秤星上滑过。滑过，才记进册。"
+        },
+        {
+          "id": "cs0302_vst2",
+          "speaker": "书记官",
+          "text": "回粮格要等袋口扎紧。"
+        },
+        {
+          "id": "cs0302_vst3",
+          "speaker": "leader",
+          "text": "月份滑过。粮，我秤。"
+        },
+        {
           "id": "cs0302_vis_mv4",
           "speaker": "leader",
           "text": "人不跟急走。去看月份。"
@@ -975,6 +990,38 @@
           "id": "cs0302_mid_mv6",
           "speaker": "leader",
           "text": "笑我不怕。假功我怕。"
+        },
+        {
+          "id": "cs0302_win1",
+          "speaker": "旁白",
+          "text": "锋再定。粮袋口扎紧，抢粮那拨退到埂下。",
+          "when": {
+            "flag": "cs03_mid_fought"
+          }
+        },
+        {
+          "id": "cs0302_win2",
+          "speaker": "掌柜",
+          "text": "空袋吓人。满袋，今晚不怕。",
+          "when": {
+            "flag": "cs03_mid_fought"
+          }
+        },
+        {
+          "id": "cs0302_win3",
+          "speaker": "槐里·青禾",
+          "text": "粮沉肩，心反而轻。",
+          "when": {
+            "flag": "cs03_mid_fought"
+          }
+        },
+        {
+          "id": "cs0302_win4",
+          "speaker": "leader",
+          "text": "锋护过粮。袋，我背得。",
+          "when": {
+            "flag": "cs03_mid_fought"
+          }
         },
         {
           "speaker": "旁白",
@@ -1341,6 +1388,26 @@
           "id": "cs0302_ret_mv3",
           "speaker": "岁吏",
           "text": "钉住回堡。"
+        },
+        {
+          "id": "cs0302_tvn1",
+          "speaker": "掌柜",
+          "text": "护粮那一锋，酒里有谷壳香。"
+        },
+        {
+          "id": "cs0302_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "埂下那拨退了。退了才敢开坛。"
+        },
+        {
+          "id": "cs0302_tvn3",
+          "speaker": "听回",
+          "text": "袋口扎紧的事，传得比酒快。"
+        },
+        {
+          "id": "cs0302_tvn4",
+          "speaker": "leader",
+          "text": "粮在。人在。谷香，我认。"
         },
         {
           "id": "cs0302_ret_mv4",
