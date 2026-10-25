@@ -65,6 +65,14 @@ static func load_portrait(path: String, tier: String) -> Texture2D:
 static func _load_resolved(use: String) -> Texture2D:
 	if _packed_out(use):
 		return null
+	# Android APK ships .ctex + .import (no raw .webp). Prefer ResourceLoader so
+	# desktop and device share one decode path; FileAccess+Image.load_from_file is
+	# editor/farm-only and was masking ResourceLoader misses until the phone build.
+	if use.begins_with("res://") and ResourceLoader.exists(use):
+		var tex = load(use)
+		if tex is Texture2D:
+			last_loaded = use
+			return tex
 	var abs := use
 	if use.begins_with("res://"):
 		abs = ProjectSettings.globalize_path(use)
@@ -73,11 +81,6 @@ static func _load_resolved(use: String) -> Texture2D:
 		if img != null:
 			last_loaded = use
 			return ImageTexture.create_from_image(img)
-	if use.begins_with("res://") and ResourceLoader.exists(use):
-		var tex = load(use)
-		if tex is Texture2D:
-			last_loaded = use
-			return tex
 	return null
 
 

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://ck_dlg_portrait_resloader"]
+
+[ext_resource type="Script" path="res://tests/suites/art/dialogue_portrait_resloader_check.gd" id="1"]
+
+[node name="DialoguePortraitResloaderCheck" type="Node"]
+script = ExtResource("1")

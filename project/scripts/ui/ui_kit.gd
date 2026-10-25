@@ -1393,7 +1393,22 @@ static func stitch_dialogue(scene: Control) -> void:
 			return
 		var narr := bool(pr.get_meta("story_narrator", false))
 		var tex: Texture2D = pr.texture
-		var is_banner := (not narr) and (tex == null or (tex.resource_path.find("/banners/") >= 0) or (tex.get_width() < 200 and tex.get_height() > tex.get_width() * 1.2))
+		# Banner heuristic must not false-hide real dialogue plates:
+		# - null texture: chapter_player sets silhouette before sync; treat null as "no plate"
+		#   only when not narrator-lead (already covered by narr meta).
+		# - width==0: texture not ready (GPU/import); never classify as banner.
+		var is_banner := false
+		if not narr and tex != null:
+			var rp := str(tex.resource_path)
+			if rp.find("/banners/") >= 0:
+				is_banner = true
+			else:
+				var w := tex.get_width()
+				var h := tex.get_height()
+				if w > 0 and w < 200 and h > int(w * 1.2):
+					is_banner = true
+		elif not narr and tex == null:
+			is_banner = true
 		var hide_plate := narr or is_banner
 		plate.visible = not hide_plate
 		if panel and is_instance_valid(panel):

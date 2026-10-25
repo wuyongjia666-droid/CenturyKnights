@@ -164,17 +164,17 @@ static func _art_exists(path: String) -> bool:
 
 
 static func _try_load(path: String, tier: String = "") -> Texture2D:
-	if tier == "":
-		path = CKArtPaths.resolve(path)
-	else:
-		path = CKArtPaths.resolve_portrait(path, tier)
-	if _cache.has(path):
-		return _cache[path]
-	if _art_exists(path):
-		var tex = CKArtPaths.load_texture(path)
-		if tex != null:
-			_cache[path] = tex
-			return tex
+	var resolved := CKArtPaths.resolve(path) if tier == "" else CKArtPaths.resolve_portrait(path, tier)
+	if _cache.has(resolved):
+		return _cache[resolved]
+	# Honor the requested tier end-to-end (load_portrait), not load_texture→resolve()
+	# which re-enters medium fallback and diverged from resolve_portrait on some stems.
+	var tex: Texture2D = (
+		CKArtPaths.load_texture(path) if tier == "" else CKArtPaths.load_portrait(path, tier)
+	)
+	if tex != null:
+		_cache[resolved] = tex
+		return tex
 	return null
 
 static func _cast(c) -> String:
