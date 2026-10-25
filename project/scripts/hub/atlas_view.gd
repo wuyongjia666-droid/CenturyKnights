@@ -2065,6 +2065,83 @@ func _show_battle_aftermath_modal(af: Dictionary) -> void:
 	cont.call_deferred("grab_focus")
 	while not done and is_instance_valid(p) and p.get_parent() != null:
 		await get_tree().process_frame
+	if bool(af.get("site_captured", false)):
+		await _show_occupy_garrison_modal(af)
+
+func _show_occupy_garrison_modal(af: Dictionary) -> void:
+	## Post-assault occupy: reinforce / stockade before the player leaves the captured seat.
+	var sid := str(af.get("site", ""))
+	if sid == "" or not CKTerritory.owned(sid):
+		return
+	var st0: Dictionary = CKTerritory.state(sid)
+	var sname := str(af.get("site_name", CKTerritory.site(sid).get("name", "")))
+	var h := 310.0
+	var p := _modal_panel(h)
+	p.name = "OccupyGarrisonModal"
+	var el := UIKit.mono(Locale.t("atlas_occupy_en"), 9, UIKit.OK)
+	el.position = Vector2(24, 18)
+	p.add_child(el)
+	var t := UIKit.title_label(Locale.t("atlas_occupy_title") % sname, 22)
+	t.position = Vector2(24, 36)
+	t.size = Vector2(452, 32)
+	p.add_child(t)
+	var body := UIKit.body_label(
+		Locale.t("atlas_occupy_body") % [int(st0.get("garrison", 0)), CKTerritory.garrison_max(sid)],
+		UIKit.TEXT, 13)
+	body.name = "OccupyBody"
+	body.position = Vector2(24, 78)
+	body.size = Vector2(452, 48)
+	body.custom_minimum_size = Vector2(452, 0)
+	p.add_child(body)
+	var done := false
+	var y := 140.0
+	if int(st0.get("garrison", 0)) < CKTerritory.garrison_max(sid):
+		var rf := UIKit.cta_button(Locale.t("atlas_occupy_reinforce") % CKTerritory.garrison_cost(sid), "A", 300, 42)
+		rf.name = "OccupyReinforce"
+		rf.position = Vector2(24, y)
+		rf.pressed.connect(func():
+			var rr: Dictionary = CKTerritory.reinforce(sid)
+			_show_toast(str(rr.get("msg", "")), UIKit.OK if bool(rr.get("ok", false)) else UIKit.DANGER)
+			_refresh_top()
+			_build_nodes()
+			af["garrison"] = int(CKTerritory.state(sid).garrison)
+			var b2: Label = p.get_node_or_null("OccupyBody") as Label
+			if b2:
+				b2.text = Locale.t("atlas_occupy_body") % [
+					int(CKTerritory.state(sid).garrison), CKTerritory.garrison_max(sid)]
+			rf.disabled = int(CKTerritory.state(sid).garrison) >= CKTerritory.garrison_max(sid)
+			if rf.disabled:
+				rf.text = Locale.t("atlas_occupy_reinforce") % 0)
+		p.add_child(rf)
+		y += 50.0
+	if not bool(st0.get("stockade", false)):
+		var sk := UIKit.cta_button(Locale.t("atlas_occupy_stockade") % CKTerritory.stockade_cost(), "B", 300, 42)
+		sk.name = "OccupyStockade"
+		sk.position = Vector2(24, y)
+		sk.pressed.connect(func():
+			var sr: Dictionary = CKTerritory.build_stockade(sid)
+			_show_toast(str(sr.get("msg", "")), UIKit.OK if bool(sr.get("ok", false)) else UIKit.DANGER)
+			_refresh_top()
+			_build_nodes()
+			done = true
+			_clear_modal())
+		p.add_child(sk)
+	var later := UIKit.ghost_button(Locale.t("atlas_occupy_later"), 140, 42)
+	later.name = "OccupyLater"
+	later.position = Vector2(24, h - 64)
+	later.pressed.connect(func():
+		done = true
+		_clear_modal())
+	p.add_child(later)
+	var focus_n: Control = p.get_node_or_null("OccupyReinforce")
+	if focus_n == null:
+		focus_n = p.get_node_or_null("OccupyStockade")
+	if focus_n == null:
+		focus_n = later
+	if focus_n:
+		focus_n.call_deferred("grab_focus")
+	while not done and is_instance_valid(p) and p.get_parent() != null:
+		await get_tree().process_frame
 
 func _show_aftermath_modal(af: Dictionary) -> void:
 	var lines: Array = af.get("lines", [])

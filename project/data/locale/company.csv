@@ -382,3 +382,9 @@ atlas_arb_pending,跑单中：%s ×%d → %s,Armed: %s ×%d → %s
 atlas_arb_sell_now,出手,Sell now
 atlas_arb_sell_title,跑单到手,Arbitrage landed
 atlas_arb_march,启程出手,March to sell
+atlas_occupy_en,OCCUPY // GARRISON,OCCUPY // GARRISON
+atlas_occupy_title,占领 · %s,Occupy · %s
+atlas_occupy_body,驻军 %d / %d。增派人手或立屯营，守住刚夺下的中立领地。,Garrison %d / %d. Reinforce or raise a stockade to hold the seat you just took.
+atlas_occupy_reinforce,增派驻军（%d 银）,Reinforce (%d silver)
+atlas_occupy_stockade,立屯营（%d 银）,Raise stockade (%d silver)
+atlas_occupy_later,稍后再说,Later

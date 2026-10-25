@@ -2986,6 +2986,15 @@ func on_battle_end(win: bool) -> Dictionary:
 		"nation": str(enc.get("nation", "")),
 		"node": str(enc.get("node", pos)),
 	}
+	var site_id := str(enc.get("site", ""))
+	if site_id != "":
+		aftermath["site"] = site_id
+		aftermath["site_kind"] = str(enc.get("kind", ""))
+		var captured := win and str(enc.get("kind", "")) == "territory_assault" and CKTerritory.owned(site_id)
+		aftermath["site_captured"] = captured
+		if captured:
+			aftermath["site_name"] = str(CKTerritory.site(site_id).get("name", ""))
+			aftermath["garrison"] = int(CKTerritory.state(site_id).garrison)
 	last_battle_aftermath = aftermath
 	_tlog(msg)
 	GameState.mark_dirty()
