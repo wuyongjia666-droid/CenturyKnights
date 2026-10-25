@@ -48,7 +48,7 @@ func _assert_muster(page: Node, where: String) -> void:
 	_ok(ca != null and str(ca.get_meta("arms_kind", "")) == "gen2_36", "%s 团徽" % where)
 	_ok(la != null and str(la.get_meta("arms_kind", "")) in ["gen2_06", "gen2_35"], "%s LeaderArms kind" % where)
 	if ca != null and la != null:
-		_ok(str(ca.get_meta("arms_core", "")) != str(la.get_meta("arms_core", "")), "%s 团徽≠族徽" % where)
+		_ok(str(ca.get_meta("arms_core", "")) != str(la.get_meta("arms_core", "")), "%s 团徽!=族徽" % where)
 
 func _collect(n: Node, name: String, out: Array) -> void:
 	if n.name == name:
@@ -104,7 +104,7 @@ func _run_desktop() -> void:
 	_ok(badges.size() >= 4, "desk-title LadderBadge count")
 	var tla := title.find_child("LeaderArms", true, false)
 	_ok(tla != null and str(tla.get_meta("arms_core", "")) == fam, "desk-title LeaderArms")
-	_ok(str(tla.get_meta("arms_core", "")) != ban if tla else false, "desk-title LeaderArms ≠ 团徽")
+	_ok(str(tla.get_meta("arms_core", "")) != ban if tla else false, "desk-title LeaderArms != 团徽")
 	title.queue_free()
 	await _settle(2)
 
