@@ -22,6 +22,7 @@ MIN_LISTING_BYTES = {
     "docs/store/age-rating-draft.md": 1600,
     "docs/store/screenshots-checklist.md": 1400,
     "docs/store/data-safety-draft.md": 1400,
+    "docs/store/support-contact-draft.md": 1200,
 }
 
 
@@ -42,6 +43,7 @@ REQUIRED_DOCS = [
     "docs/store/age-rating-draft.md",
     "docs/store/screenshots-checklist.md",
     "docs/store/data-safety-draft.md",
+    "docs/store/support-contact-draft.md",
 ]
 
 REQUIRED_SCRIPTS = [
@@ -65,6 +67,7 @@ REQUIRED_PHRASES = {
     "docs/store/age-rating-draft.md": ["12+", "内购", "暴力"],
     "docs/store/screenshots-checklist.md": ["1080", "横屏", "五张", "不付费"],
     "docs/store/data-safety-draft.md": ["不收集", "数据安全", "崩溃", "不出售"],
+    "docs/store/support-contact-draft.md": ["支持", "联系", "不付费", "单机"],
 }
 
 
@@ -128,12 +131,8 @@ def main() -> int:
                 continue
             body = novel.read_text(encoding="utf-8")
             hz = _hanzi_count(body)
-            # 中篇硬闸：已有可玩章的季立刻执行；季#3 正文在内容专线落地 playable_chapter 后同闸
-            # （禁止把 MIN_NOVEL_HANZI 调低；此处只是按季是否已达可玩门槛启用）
-            meta = json.loads(sp.read_text(encoding="utf-8"))
-            has_playable = str(meta.get("playable_chapter", "")).strip() != ""
-            enforce = sid == "season_02" or has_playable
-            if enforce and hz < MIN_NOVEL_HANZI:
+            # 中篇硬闸：季#2/#3 一律 ≥ MIN_NOVEL_HANZI；禁止按 playable 推迟/削弱
+            if hz < MIN_NOVEL_HANZI:
                 fails.append(
                     f"NOVEL too thin {novel.relative_to(ROOT)} "
                     f"({hz} hanzi < {MIN_NOVEL_HANZI}; 对标季1中篇)"

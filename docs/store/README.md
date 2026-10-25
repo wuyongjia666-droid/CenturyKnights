@@ -18,6 +18,7 @@
 
 | [`screenshots-checklist.md`](./screenshots-checklist.md) | 五张横屏截图必拍帧与禁止项 |
 | [`data-safety-draft.md`](./data-safety-draft.md) | Play 数据安全表预填（不收集） |
+| [`support-contact-draft.md`](./support-contact-draft.md) | 支持邮箱/网址预填（不付费客服） |
 
 ## 一键门禁
 

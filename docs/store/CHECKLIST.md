@@ -23,6 +23,7 @@
 - [ ] 隐私政策草稿 + 分级意图（`privacy-policy-draft.md` / `age-rating-draft.md`）  
 - [ ] 五张截图按清单拍齐（`screenshots-checklist.md`）  
 - [ ] 数据安全表预填过目（`data-safety-draft.md`；默认不收集）  
+- [ ] 支持联系方式草稿过目（`support-contact-draft.md`）  
 - [ ] 隐私政策 URL（若收崩溃日志）  
 - [ ] 分级问卷草稿  
 
