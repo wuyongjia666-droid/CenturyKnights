@@ -1002,6 +1002,19 @@ func _render_left() -> void:
 	pb.add_child(ab)
 
 # ── right column: profile ─────────────────────────────
+func _engage_quest_id_here() -> String:
+	for q2 in World.active:
+		if str(q2.state) != "active":
+			continue
+		var k := str(q2.kind)
+		if k in ["hunt", "defend"] and str(q2.target) == _sel:
+			return str(q2.id)
+		if k == "clear" and q2.has("edge"):
+			var e: Array = q2.edge
+			if e.size() >= 2 and (str(e[0]) == _sel or str(e[1]) == _sel):
+				return str(q2.id)
+	return ""
+
 func _render_right() -> void:
 	for c in _right.get_children():
 		_right.remove_child(c)
@@ -1010,7 +1023,7 @@ func _render_right() -> void:
 		_m_place()
 		_m_actions()
 		return
-	var p := UIKit.panel_at(_right, Rect2(1008, 64, 256, 620), 10)
+	var p := UIKit.panel_at(_right, Rect2(1008, 64, 256, 648), 10)
 	var top := ColorRect.new()
 	top.color = UIKit.ACCENT
 	top.size = Vector2(256, 2)
@@ -1134,28 +1147,36 @@ func _render_right() -> void:
 	ch.tooltip_text = "主线在 ★ 标记处展开"
 	ch.pressed.connect(func(): _goto(str(mm.path)))
 	p.add_child(ch)
-	var eng := UIKit.ghost_button("进剿目标", 108, 28)
+	var eng := UIKit.ghost_button(Locale.t("atlas_engage_cta"), 108, 28)
 	eng.name = "EngageButton"
 	eng.position = Vector2(16, 556)
-	var engage_q := ""
-	for q2 in World.active:
-		if str(q2.state) == "active" and str(q2.kind) in ["hunt", "defend"] and str(q2.target) == _sel:
-			engage_q = str(q2.id)
+	var engage_q := _engage_quest_id_here()
 	eng.disabled = _busy or engage_q == "" or _sel != World.pos
 	eng.pressed.connect(func():
 		var e: Dictionary = World.quest_engage(engage_q)
 		if not e.is_empty():
 			_show_encounter_modal(e))
 	p.add_child(eng)
+	var rival_btn := UIKit.ghost_button(Locale.t("atlas_rival_clash_cta"), 108, 28)
+	rival_btn.name = "RivalClash"
+	rival_btn.position = Vector2(132, 556)
+	var rv_here: Dictionary = World.rival_here() if _sel == World.pos else {}
+	rival_btn.disabled = _busy or rv_here.is_empty() or _sel != World.pos or not World.encounter.is_empty()
+	rival_btn.tooltip_text = Locale.t("atlas_rival_clash_tip") % str(rv_here.get("name", "")) if not rv_here.is_empty() else Locale.t("atlas_rival_clash_tip_none")
+	rival_btn.pressed.connect(func():
+		var e2: Dictionary = World.rival_clash()
+		if not e2.is_empty():
+			_show_encounter_modal(e2))
+	p.add_child(rival_btn)
 	var terr := UIKit.ghost_button(Locale.t("terr_ui_button") + " %d" % CKTerritory.sites_at(_sel).size(), 108, 28)
 	terr.name = "TerritoryButton"
-	terr.position = Vector2(132, 556)
+	terr.position = Vector2(132, 588)
 	terr.disabled = _busy or CKTerritory.sites_at(_sel).is_empty()
 	var anchor_id := _sel
 	terr.pressed.connect(func(): _open_territory(anchor_id))
 	p.add_child(terr)
 	var ap := UIKit.mono("关税 %d 银 · %s" % [World.toll_for(str(n.nation)), str(nat.get("smith", ""))], 8, UIKit.TEXT_FAINT, false)
-	ap.position = Vector2(16, 596)
+	ap.position = Vector2(16, 622)
 	p.add_child(ap)
 
 func _render_region_profile(p: Panel, nid: String) -> void:
@@ -1931,6 +1952,8 @@ func _show_battle_aftermath_modal(af: Dictionary) -> void:
 	var p := _modal_panel(h)
 	p.name = "BattleAftermathModal"
 	var tag := Locale.t("atlas_battle_aftermath_win_en") if win else Locale.t("atlas_battle_aftermath_lose_en")
+	if str(af.get("kind", "")) == "rival":
+		tag = Locale.t("atlas_rival_aftermath_en") if win else Locale.t("atlas_rival_aftermath_lose_en")
 	var el := UIKit.mono("%s // %s" % [tag, str(af.get("title", ""))], 9, UIKit.OK if win else UIKit.DANGER)
 	el.position = Vector2(24, 18)
 	p.add_child(el)
@@ -2540,15 +2563,17 @@ func _m_place() -> void:
 	var here := _sel == World.pos
 	if here and str(mm.get("node", "")) == _sel and bool(mm.get("exists", false)):
 		specs.append(["ChapterButton", Locale.t("mob_ui_019"), func(): _goto(str(mm.path))])
-	var engage_q := ""
-	for q2 in World.active:
-		if str(q2.state) == "active" and str(q2.kind) in ["hunt", "defend"] and str(q2.target) == _sel:
-			engage_q = str(q2.id)
+	var engage_q := _engage_quest_id_here()
 	if here and engage_q != "":
 		specs.append(["EngageButton", Locale.t("mob_ui_020"), func():
 			var e: Dictionary = World.quest_engage(engage_q)
 			if not e.is_empty():
 				_show_encounter_modal(e)])
+	if here and not World.rival_here().is_empty() and World.encounter.is_empty():
+		specs.append(["RivalClash", Locale.t("atlas_rival_clash_cta"), func():
+			var e3: Dictionary = World.rival_clash()
+			if not e3.is_empty():
+				_show_encounter_modal(e3)])
 	var sites := CKTerritory.sites_at(_sel).size()
 	if sites > 0:
 		var anchor_id := _sel
@@ -2648,6 +2673,12 @@ func _m_actions() -> void:
 		var dest := str(nat.get("capital", "")) if World.nation_of(World.pos) != nid else World.pos
 		b = MobilePage.button(Locale.t("mob_ui_036") % str(nat.get("name", nid)), true, func(): _show_view(nid); _select_node(dest))
 		b.name = "EnterRegion"
+	elif _sel != "" and _sel == World.pos and World.nodes.has(_sel) and not World.rival_here().is_empty() and World.encounter.is_empty() and World.ready_turn_ins_here().is_empty():
+		b = MobilePage.button(Locale.t("atlas_rival_clash_cta"), true, func():
+			var e4: Dictionary = World.rival_clash()
+			if not e4.is_empty():
+				_show_encounter_modal(e4))
+		b.name = "RivalClash"
 	elif _sel != "" and _sel == World.pos and World.nodes.has(_sel):
 		var n: Dictionary = World.node(_sel)
 		var ready_n := World.ready_turn_ins_here().size()

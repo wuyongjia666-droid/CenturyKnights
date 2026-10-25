@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://tests/suites/company/atlas_escort_clear_rival_check.gd" id="1"]
+
+[node name="AtlasEscortClearRivalCheck" type="Node"]
+script = ExtResource("1")
