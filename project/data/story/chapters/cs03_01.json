@@ -107,6 +107,21 @@
           "text": "过分的齐，称起来轻。"
         },
         {
+          "id": "cs03_merit_y18",
+          "speaker": "旁白",
+          "text": "功簿墨干得慢。慢干的字沉。"
+        },
+        {
+          "id": "cs03_merit_y19",
+          "speaker": "石垒·晚担",
+          "text": "沉字扛得住粮。"
+        },
+        {
+          "id": "cs03_merit_y20",
+          "speaker": "leader",
+          "text": "功与粮并排。"
+        },
+        {
           "id": "cs03_merit_x9",
           "speaker": "leader",
           "text": "先记功。记下，去对月结。"
@@ -213,6 +228,21 @@
           "text": "深的是地。"
         },
         {
+          "id": "cs03_estate_y18",
+          "speaker": "旁白",
+          "text": "仓门风从缝里进。"
+        },
+        {
+          "id": "cs03_estate_y19",
+          "speaker": "石垒·晚担",
+          "text": "风进得去，假数进不去。"
+        },
+        {
+          "id": "cs03_estate_y20",
+          "speaker": "leader",
+          "text": "数要真。"
+        },
+        {
           "id": "cs03_estate_x9",
           "speaker": "leader",
           "text": "月结收下。去沙漏看两行。"
@@ -314,9 +344,59 @@
           "text": "躲的摘要，我拒抄。"
         },
         {
+          "id": "cs03_hourglass_y17",
+          "speaker": "旁白",
+          "text": "功簿墨干得慢。慢干的字沉。"
+        },
+        {
+          "id": "cs03_hourglass_y18",
+          "speaker": "石垒·晚担",
+          "text": "沉字扛得住粮。"
+        },
+        {
+          "id": "cs03_hourglass_y19",
+          "speaker": "leader",
+          "text": "功与粮并排。"
+        },
+        {
           "id": "cs03_hourglass_x9",
           "speaker": "leader",
           "text": "两行都亮。去门廊。"
+        },
+        {
+          "id": "cs0301_vis_mv1",
+          "speaker": "旁白",
+          "text": "沙漏旁搁着半截拓片卷。卷口有灰。"
+        },
+        {
+          "id": "cs0301_vis_mv2",
+          "speaker": "书记官",
+          "text": "灰说明有人刚翻过。翻过要登记。"
+        },
+        {
+          "id": "cs0301_vis_mv3",
+          "speaker": "老管事",
+          "text": "登记完，再看沙怎么落。"
+        },
+        {
+          "id": "cs0301_vst1",
+          "speaker": "岁吏",
+          "text": "沙漏旁拓片的边，被风掀了一角。角掀了，月份露出来。"
+        },
+        {
+          "id": "cs0301_vst2",
+          "speaker": "书记官",
+          "text": "榜上收成那格，要等桥铃实了再填。"
+        },
+        {
+          "id": "cs0301_vst3",
+          "speaker": "leader",
+          "text": "月份我看过。铃实，字才实。"
+        },
+        {
+          "id": "cs0301_vis_mv4",
+          "speaker": "leader",
+          "text": "先看月份。数要跟沙走。"
         }
       ],
       "actions": [
@@ -440,6 +520,83 @@
           "id": "cs03_bridge_x9",
           "speaker": "leader",
           "text": "看完拓片。去酒馆选题。"
+        },
+        {
+          "id": "cs03_mid_y18",
+          "speaker": "旁白",
+          "text": "仓门风从缝里进。"
+        },
+        {
+          "id": "cs03_mid_y19",
+          "speaker": "石垒·晚担",
+          "text": "风进得去，假数进不去。"
+        },
+        {
+          "id": "cs03_mid_y20",
+          "speaker": "leader",
+          "text": "数要真。"
+        },
+        {
+          "id": "cs0301_mid_mv1",
+          "speaker": "旁白",
+          "text": "桥铃一声接一声。对岸有人故意把铃绳拉满再松。"
+        },
+        {
+          "id": "cs0301_mid_mv2",
+          "speaker": "书记官",
+          "text": "铃绳松紧，写进簿也只是一声。真假在粮。"
+        },
+        {
+          "id": "cs0301_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "粮假了，铃声再好听也是空。"
+        },
+        {
+          "id": "cs0301_mid_mv4",
+          "speaker": "槐里·青禾",
+          "text": "空铃吓人。空粮更吓。"
+        },
+        {
+          "id": "cs0301_mid_mv5",
+          "speaker": "掌柜",
+          "text": "拓片旁那拨，专等你们心软。"
+        },
+        {
+          "id": "cs0301_mid_mv6",
+          "speaker": "leader",
+          "text": "心软不试锋。试锋才说话。"
+        },
+        {
+          "id": "cs0301_win1",
+          "speaker": "旁白",
+          "text": "锋定。桥铃一声实，拓片旁那拨退到坡下。",
+          "when": {
+            "flag": "cs03_mid_fought"
+          }
+        },
+        {
+          "id": "cs0301_win2",
+          "speaker": "掌柜",
+          "text": "铃实了。空铃吓人的日子，过了。",
+          "when": {
+            "flag": "cs03_mid_fought"
+          }
+        },
+        {
+          "id": "cs0301_win3",
+          "speaker": "槐里·青禾",
+          "text": "粮袋肩上还沉。沉着走，比空着跑强。",
+          "when": {
+            "flag": "cs03_mid_fought"
+          }
+        },
+        {
+          "id": "cs0301_win4",
+          "speaker": "leader",
+          "text": "锋问过话。拓片归拓片，人归桥。",
+          "when": {
+            "flag": "cs03_mid_fought"
+          }
         },
         {
           "id": "cs03_mid_lost",
@@ -668,9 +825,64 @@
           "text": "泥指印是投票。"
         },
         {
+          "id": "cs03_tavern_y17",
+          "speaker": "旁白",
+          "text": "功簿墨干得慢。慢干的字沉。"
+        },
+        {
+          "id": "cs03_tavern_y18",
+          "speaker": "石垒·晚担",
+          "text": "沉字扛得住粮。"
+        },
+        {
+          "id": "cs03_tavern_y19",
+          "speaker": "leader",
+          "text": "功与粮并排。"
+        },
+        {
           "id": "cs03_tavern_x9",
           "speaker": "旁白",
           "text": "你得选。选完进对照册。"
+        },
+        {
+          "id": "cs0301_ret_mv1",
+          "speaker": "旁白",
+          "text": "粮行来的人把袖口拍了拍，灰落在板上。"
+        },
+        {
+          "id": "cs0301_ret_mv2",
+          "speaker": "掌柜",
+          "text": "灰我擦。数我验。"
+        },
+        {
+          "id": "cs0301_ret_mv3",
+          "speaker": "书记官",
+          "text": "验完才许笑。"
+        },
+        {
+          "id": "cs0301_tvn1",
+          "speaker": "掌柜",
+          "text": "桥上那一锋，酒里都有铁锈味。"
+        },
+        {
+          "id": "cs0301_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "拓片别泡酒。泡了，功名糊。"
+        },
+        {
+          "id": "cs0301_tvn3",
+          "speaker": "听回",
+          "text": "坡下那拨散了。散了才配坐。"
+        },
+        {
+          "id": "cs0301_tvn4",
+          "speaker": "leader",
+          "text": "铃还在耳。酒过喉。收成，我认。"
+        },
+        {
+          "id": "cs0301_ret_mv4",
+          "speaker": "leader",
+          "text": "验完回堡入谱。"
         }
       ],
       "actions": [
@@ -835,6 +1047,21 @@
           "id": "cs03_ledger_y1",
           "speaker": "槐里·青禾",
           "text": "空白位子还在，就还诚实。"
+        },
+        {
+          "id": "cs03_ledger_y20",
+          "speaker": "旁白",
+          "text": "仓门风从缝里进。"
+        },
+        {
+          "id": "cs03_ledger_y21",
+          "speaker": "石垒·晚担",
+          "text": "风进得去，假数进不去。"
+        },
+        {
+          "id": "cs03_ledger_y22",
+          "speaker": "leader",
+          "text": "数要真。"
         },
         {
           "id": "cs03_ledger_x9",

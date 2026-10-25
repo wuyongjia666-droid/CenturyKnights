@@ -107,6 +107,21 @@
           "text": "齿匀，字才不飘。"
         },
         {
+          "id": "cs04_preach_y18",
+          "speaker": "旁白",
+          "text": "训条贴墙上。墙皮起壳。"
+        },
+        {
+          "id": "cs04_preach_y19",
+          "speaker": "石垒·晚担",
+          "text": "壳掉了，训还在才算。"
+        },
+        {
+          "id": "cs04_preach_y20",
+          "speaker": "leader",
+          "text": "训与行并排。"
+        },
+        {
           "id": "cs04_preach_x9",
           "speaker": "leader",
           "text": "绣上了。去看月结。"
@@ -213,6 +228,21 @@
           "text": "缝不是裂。裂了只剩口号。"
         },
         {
+          "id": "cs04_echo_y18",
+          "speaker": "旁白",
+          "text": "脚步声比口号响。"
+        },
+        {
+          "id": "cs04_echo_y19",
+          "speaker": "石垒·晚担",
+          "text": "响的是走出来的。"
+        },
+        {
+          "id": "cs04_echo_y20",
+          "speaker": "leader",
+          "text": "我走实步。"
+        },
+        {
           "id": "cs04_echo_x9",
           "speaker": "leader",
           "text": "回响收下。去沙漏看两行。"
@@ -314,9 +344,59 @@
           "text": "裁下行的摘要，拒收。"
         },
         {
+          "id": "cs04_hourglass_y17",
+          "speaker": "旁白",
+          "text": "训条贴墙上。墙皮起壳。"
+        },
+        {
+          "id": "cs04_hourglass_y18",
+          "speaker": "石垒·晚担",
+          "text": "壳掉了，训还在才算。"
+        },
+        {
+          "id": "cs04_hourglass_y19",
+          "speaker": "leader",
+          "text": "训与行并排。"
+        },
+        {
           "id": "cs04_hourglass_x9",
           "speaker": "leader",
           "text": "两行都亮。去门廊。"
+        },
+        {
+          "id": "cs0401_vis_mv1",
+          "speaker": "旁白",
+          "text": "沙漏底座刻着一行浅训：步实则月实。"
+        },
+        {
+          "id": "cs0401_vis_mv2",
+          "speaker": "书记官",
+          "text": "浅训怕磨。磨掉就只剩口号。"
+        },
+        {
+          "id": "cs0401_vis_mv3",
+          "speaker": "槐里·青禾",
+          "text": "口号不顶月份。"
+        },
+        {
+          "id": "cs0401_vst1",
+          "speaker": "岁吏",
+          "text": "月份从家训夹页里翻出来。翻得慢，才不撕。"
+        },
+        {
+          "id": "cs0401_vst2",
+          "speaker": "书记官",
+          "text": "训条旁的沙漏，比门廊牌更不敢催。"
+        },
+        {
+          "id": "cs0401_vst3",
+          "speaker": "leader",
+          "text": "月份翻过。步，还按训条走。"
+        },
+        {
+          "id": "cs0401_vis_mv4",
+          "speaker": "leader",
+          "text": "月份为证。去看。"
         }
       ],
       "actions": [
@@ -440,6 +520,83 @@
           "id": "cs04_bridge_x9",
           "speaker": "leader",
           "text": "看完牌。去酒馆选题。"
+        },
+        {
+          "id": "cs04_mid_y18",
+          "speaker": "旁白",
+          "text": "脚步声比口号响。"
+        },
+        {
+          "id": "cs04_mid_y19",
+          "speaker": "石垒·晚担",
+          "text": "响的是走出来的。"
+        },
+        {
+          "id": "cs04_mid_y20",
+          "speaker": "leader",
+          "text": "我走实步。"
+        },
+        {
+          "id": "cs0401_mid_mv1",
+          "speaker": "旁白",
+          "text": "门廊训条在风里拍墙。有人跟着拍，拍错节奏。"
+        },
+        {
+          "id": "cs0401_mid_mv2",
+          "speaker": "书记官",
+          "text": "节奏错了，口号就成了戏。"
+        },
+        {
+          "id": "cs0401_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "戏能演。步不能假。"
+        },
+        {
+          "id": "cs0401_mid_mv4",
+          "speaker": "槐里·青禾",
+          "text": "假步走远，训条自己羞。"
+        },
+        {
+          "id": "cs0401_mid_mv5",
+          "speaker": "掌柜",
+          "text": "训条旁那拨，专挑不会走的人。"
+        },
+        {
+          "id": "cs0401_mid_mv6",
+          "speaker": "leader",
+          "text": "我会走。锋跟步走。"
+        },
+        {
+          "id": "cs0401_win1",
+          "speaker": "旁白",
+          "text": "锋定。门廊牌稳了，训条旁那拨退到影里。",
+          "when": {
+            "flag": "cs04_mid_fought"
+          }
+        },
+        {
+          "id": "cs0401_win2",
+          "speaker": "掌柜",
+          "text": "假步走远了。真步，留在门廊。",
+          "when": {
+            "flag": "cs04_mid_fought"
+          }
+        },
+        {
+          "id": "cs0401_win3",
+          "speaker": "槐里·青禾",
+          "text": "训条不羞了。羞的是刚才那拨。",
+          "when": {
+            "flag": "cs04_mid_fought"
+          }
+        },
+        {
+          "id": "cs0401_win4",
+          "speaker": "leader",
+          "text": "锋跟步走完。训条，我背得。",
+          "when": {
+            "flag": "cs04_mid_fought"
+          }
         },
         {
           "id": "cs04_mid_lost",
@@ -668,9 +825,64 @@
           "text": "歪的是学。学比绣好看要紧。"
         },
         {
+          "id": "cs04_tavern_y17",
+          "speaker": "旁白",
+          "text": "训条贴墙上。墙皮起壳。"
+        },
+        {
+          "id": "cs04_tavern_y18",
+          "speaker": "石垒·晚担",
+          "text": "壳掉了，训还在才算。"
+        },
+        {
+          "id": "cs04_tavern_y19",
+          "speaker": "leader",
+          "text": "训与行并排。"
+        },
+        {
           "id": "cs04_tavern_x9",
           "speaker": "旁白",
           "text": "你得选。选完进账本。"
+        },
+        {
+          "id": "cs0401_ret_mv1",
+          "speaker": "旁白",
+          "text": "有人把训条念成酒令。念错两个字。"
+        },
+        {
+          "id": "cs0401_ret_mv2",
+          "speaker": "掌柜",
+          "text": "酒令可以错。训条不行。"
+        },
+        {
+          "id": "cs0401_ret_mv3",
+          "speaker": "石垒·晚担",
+          "text": "错的刮掉。对的挂上。"
+        },
+        {
+          "id": "cs0401_tvn1",
+          "speaker": "掌柜",
+          "text": "门廊那一锋，靴底还带着牌影。"
+        },
+        {
+          "id": "cs0401_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "训条别当酒令。令乱了，家也乱。"
+        },
+        {
+          "id": "cs0401_tvn3",
+          "speaker": "老旗手",
+          "text": "影里那拨退了。旗可以靠墙歇一刻。"
+        },
+        {
+          "id": "cs0401_tvn4",
+          "speaker": "leader",
+          "text": "步还在。酒可以。训，不卖。"
+        },
+        {
+          "id": "cs0401_ret_mv4",
+          "speaker": "leader",
+          "text": "挂上。回堡。"
         }
       ],
       "actions": [
@@ -835,6 +1047,21 @@
           "id": "cs04_ledger_y1",
           "speaker": "槐里·青禾",
           "text": "敢露的缝，才像能住的家。"
+        },
+        {
+          "id": "cs04_ledger_y20",
+          "speaker": "旁白",
+          "text": "脚步声比口号响。"
+        },
+        {
+          "id": "cs04_ledger_y21",
+          "speaker": "石垒·晚担",
+          "text": "响的是走出来的。"
+        },
+        {
+          "id": "cs04_ledger_y22",
+          "speaker": "leader",
+          "text": "我走实步。"
         },
         {
           "id": "cs04_ledger_x9",
