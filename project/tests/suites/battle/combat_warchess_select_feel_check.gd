@@ -228,6 +228,15 @@ func _e2e_select_confirm_path() -> String:
 
 
 func _source_contracts() -> String:
+	var err := _source_pick()
+	if err == "":
+		err = _source_confirm()
+	if err == "":
+		err = _source_controller_locale()
+	return err
+
+
+func _source_pick() -> String:
 	var pick := FileAccess.get_file_as_string("res://scripts/battle/battle_pick.gd")
 	if pick.find("SELECT_LOCK_MSEC") < 0:
 		return "pick missing SELECT_LOCK_MSEC"
@@ -237,9 +246,12 @@ func _source_contracts() -> String:
 		return "pick missing note_select_burst"
 	if pick.find("prefer_team") < 0:
 		return "pick missing prefer_team on soft/contour"
-	# contour signature must accept prefer_team
 	if pick.find("contour_unit_pos(origin: Vector2, cell_px: float, units: Array, local: Vector2, prefer_team") < 0:
 		return "contour_unit_pos missing prefer_team arg"
+	return ""
+
+
+func _source_confirm() -> String:
 	var conf := FileAccess.get_file_as_string("res://scripts/battle/battle_touch_confirm.gd")
 	if conf.find("select_lock_active") < 0:
 		return "touch_confirm missing select_lock_active gate"
@@ -249,6 +261,11 @@ func _source_contracts() -> String:
 		return "touch_confirm missing invalid-target reject"
 	if conf.find("focus_follow_preview(host)") < 0 or conf.find("commit_move(host, cell)") < 0:
 		return "confirm_move must soft-follow then commit (real select/confirm path)"
+	return ""
+
+
+func _source_controller_locale() -> String:
+	var pick := FileAccess.get_file_as_string("res://scripts/battle/battle_pick.gd")
 	var ctrl := FileAccess.get_file_as_string("res://scripts/battle/battle_controller.gd")
 	if ctrl.find("select_burst_scale") < 0:
 		return "controller draw missing select_burst_scale"
