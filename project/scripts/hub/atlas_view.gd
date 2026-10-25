@@ -19,6 +19,7 @@ var _sel := ""                  # selected node id (nation view) / region id (wo
 var _preview: Dictionary = {}
 var _busy := false
 var _halt_after_leg := false
+var _halted_dest := ""
 var _travel_abort := false
 var _clip: Control
 var _plate: TextureRect
@@ -1059,6 +1060,35 @@ func _render_right() -> void:
 		dem.append(World.good_name(str(g)))
 	kv.add_child(UIKit.kv_row("出产", "、".join(prod) if not prod.is_empty() else "—", UIKit.OK, 224))
 	kv.add_child(UIKit.kv_row("求购", "、".join(dem) if not dem.is_empty() else "—", UIKit.EMBER, 224))
+	var loop_box := VBoxContainer.new()
+	loop_box.name = "TradeLoop"
+	loop_box.add_theme_constant_override("separation", 2)
+	kv.add_child(loop_box)
+	loop_box.add_child(UIKit.mono(Locale.t("atlas_trade_loop_en"), 8, UIKit.EMBER, false))
+	var loops: Array = World.produce_trade_loop(_sel)
+	var shown := 0
+	for row in loops:
+		if shown >= 2:
+			break
+		var line := ""
+		if bool(row.get("known", false)):
+			line = Locale.t("atlas_trade_loop_line") % [str(row.name), int(row.buy), str(row.sell_name), int(row.sell), int(row.margin)]
+		else:
+			line = Locale.t("atlas_trade_loop_unknown") % [str(row.name), int(row.buy)]
+		var ll := UIKit.body_label(line, UIKit.OK if int(row.get("margin", 0)) > 0 else UIKit.TEXT_DIM, 10)
+		ll.name = "TradeLoop_%d" % shown
+		ll.autowrap_mode = TextServer.AUTOWRAP_OFF
+		ll.clip_text = true
+		ll.custom_minimum_size = Vector2(224, 0)
+		loop_box.add_child(ll)
+		shown += 1
+	if _sel == World.pos and not loops.is_empty():
+		var tb := UIKit.ghost_button(Locale.t("atlas_trade_loop_goto"), 224, 26)
+		tb.name = "TradeLoopGoto"
+		tb.pressed.connect(func():
+			GameState.set_meta("city_tab", "market")
+			_enter_here())
+		loop_box.add_child(tb)
 	var lore := UIKit.body_label(str(n.get("lore", "")), UIKit.TEXT_DIM, 11)
 	lore.position = Vector2(16, 296)
 	lore.size = Vector2(224, 84)
@@ -1508,7 +1538,14 @@ func _run_travel() -> void:
 			World.cancel_travel()
 			_halt_after_leg = false
 			_show_toast(Locale.t("atlas_travel_halted") % World.node(World.pos).get("name", ""), UIKit.ACCENT)
-			break
+			_set_busy(false)
+			_refresh_top()
+			_build_nodes()
+			_render_left()
+			_place_token(false)
+			_select_node(World.pos)
+			_show_stopover_modal()
+			return
 		if bool(info.get("arrived", false)):
 			break
 	_set_busy(false)
@@ -1599,6 +1636,7 @@ func _show_travel_halt_modal() -> void:
 	b1.name = "HaltStop"
 	b1.pressed.connect(func():
 		_halt_after_leg = true
+		_halted_dest = str(World.travel.get("dest", "")) if World.is_traveling() else _halted_dest
 		_clear_modal()
 		if not _busy and World.is_traveling():
 			_run_travel())
@@ -1617,6 +1655,85 @@ func _show_travel_halt_modal() -> void:
 		_clear_modal()
 		_goto(StoryCatalog.take_story_return(CASTLE_SCENE)))
 	v.add_child(b3)
+
+func _show_stopover_modal() -> void:
+	var here := World.pos
+	var n: Dictionary = World.node(here)
+	var per := World.food_per_day()
+	var cover := 0 if per <= 0 else int(GameState.food / per)
+	var days := 7
+	var q: Dictionary = World.resupply_quote(here, days)
+	var h := 320.0
+	if _halted_dest != "" and _halted_dest != here:
+		h = 360.0
+	var p := _modal_panel(h)
+	p.name = "StopoverModal"
+	var t := UIKit.title_label(Locale.t("atlas_stopover_title"), 22)
+	t.position = Vector2(24, 20)
+	p.add_child(t)
+	var body := UIKit.body_label(Locale.t("atlas_stopover_body") % [n.get("name", here), GameState.food, per], UIKit.TEXT, 13)
+	body.position = Vector2(24, 58)
+	body.size = Vector2(452, 52)
+	body.custom_minimum_size = Vector2(452, 0)
+	p.add_child(body)
+	var food_l := UIKit.body_label(Locale.t("atlas_stopover_food") % [GameState.food, cover], UIKit.OK if cover >= days else UIKit.DANGER, 13)
+	food_l.name = "StopoverFood"
+	food_l.position = Vector2(24, 112)
+	p.add_child(food_l)
+	# Produce loop teaser at stopover
+	var best: Dictionary = World.best_produce_trade(here)
+	if not best.is_empty():
+		var tip := UIKit.body_label(Locale.t("atlas_trade_loop_best") % [str(best.name), str(best.sell_name), int(best.margin)], UIKit.EMBER, 12)
+		tip.name = "StopoverTradeTip"
+		tip.position = Vector2(24, 134)
+		tip.size = Vector2(452, 18)
+		tip.autowrap_mode = TextServer.AUTOWRAP_OFF
+		tip.clip_text = true
+		p.add_child(tip)
+	var v := VBoxContainer.new()
+	v.name = "StopoverActions"
+	v.position = Vector2(24, 160)
+	v.add_theme_constant_override("separation", 8)
+	p.add_child(v)
+	var buy := UIKit.cta_button(Locale.t("atlas_stopover_buy") % [int(q.get("days", days)), int(q.get("qty", 0)), int(q.get("cost", 0))], "A", 452, 40)
+	buy.name = "StopoverBuy"
+	buy.disabled = not bool(q.get("ok", false)) or bool(q.get("short_silver", false))
+	buy.pressed.connect(func():
+		var r: Dictionary = World.resupply_food(here, days)
+		if bool(r.get("ok", false)):
+			_show_toast(Locale.t("atlas_resupply_ok") % [int(r.get("qty", 0)), int(r.get("cost", 0)), GameState.food], UIKit.OK)
+			_refresh_top()
+			_show_stopover_modal()
+		else:
+			_show_toast(str(r.get("msg", "")), UIKit.DANGER))
+	v.add_child(buy)
+	var mkt := UIKit.ghost_button(Locale.t("atlas_stopover_market"), 452, 36)
+	mkt.name = "StopoverMarket"
+	mkt.pressed.connect(func():
+		_clear_modal()
+		GameState.set_meta("city_tab", "market")
+		_enter_here())
+	v.add_child(mkt)
+	if _halted_dest != "" and _halted_dest != here:
+		var dest_n := str(World.node(_halted_dest).get("name", _halted_dest))
+		var resume := UIKit.ghost_button(Locale.t("atlas_stopover_resume") % dest_n, 452, 36)
+		resume.name = "StopoverResume"
+		resume.pressed.connect(func():
+			var dest := _halted_dest
+			_halted_dest = ""
+			_clear_modal()
+			_select_node(dest)
+			var st: Dictionary = World.begin_travel(dest)
+			if bool(st.get("ok", false)):
+				_run_travel()
+			else:
+				_show_toast(str(st.get("msg", "")), UIKit.DANGER))
+		v.add_child(resume)
+	var later := UIKit.ghost_button(Locale.t("atlas_stopover_dismiss"), 452, 32)
+	later.name = "StopoverDismiss"
+	later.pressed.connect(func():
+		_clear_modal())
+	v.add_child(later)
 
 func _show_turnin_modal(readies: int) -> void:
 	var p := _modal_panel(220)
@@ -1668,7 +1785,8 @@ func _modal_panel(h: float) -> Panel:
 
 func _show_event_modal(ev: Dictionary) -> void:
 	var opts: Array = ev.get("options", [])
-	var p := _modal_panel(210 + 46 * opts.size())
+	var is_camp := str(ev.get("kind", "")) == "camp" or str(ev.get("id", "")) == "camp_night"
+	var p := _modal_panel(210 + 46 * opts.size() + (28 if is_camp else 0))
 	p.name = "EventModal"
 	var kind := str(ev.get("kind", "road"))
 	var tag := "NIGHT CAMP" if kind == "camp" or str(ev.get("id", "")) == "camp_night" else "ROAD EVENT"
@@ -1683,8 +1801,21 @@ func _show_event_modal(ev: Dictionary) -> void:
 	body.size = Vector2(452, 90)
 	body.custom_minimum_size = Vector2(452, 0)
 	p.add_child(body)
+	var camp_y := 182.0
+	if kind == "camp" or str(ev.get("id", "")) == "camp_night":
+		var cr: Dictionary = World.camp_readout(ev)
+		var short_s := Locale.t("atlas_camp_short") if bool(cr.get("short", false)) else Locale.t("atlas_camp_ok")
+		var ctxt := Locale.t("atlas_camp_readout") % [int(cr.food), int(cr.per_day), int(cr.remain_days), int(cr.remain_food), short_s]
+		var cl := UIKit.body_label(ctxt, UIKit.DANGER if bool(cr.get("short", false)) else UIKit.OK, 12)
+		cl.name = "CampReadout"
+		cl.position = Vector2(24, 168)
+		cl.size = Vector2(452, 20)
+		cl.autowrap_mode = TextServer.AUTOWRAP_OFF
+		cl.clip_text = true
+		p.add_child(cl)
+		camp_y = 196.0
 	var v := VBoxContainer.new()
-	v.position = Vector2(24, 182)
+	v.position = Vector2(24, camp_y)
 	v.add_theme_constant_override("separation", 8)
 	p.add_child(v)
 	var first: Button = null
@@ -2215,6 +2346,32 @@ func _m_place() -> void:
 	_m_kv(g, Locale.t("mob_ui_012"), "、".join(prod) if not prod.is_empty() else "—", UIKit.OK)
 	_m_kv(g, Locale.t("mob_ui_013"), "、".join(dem) if not dem.is_empty() else "—", UIKit.EMBER)
 	_m_kv(g, Locale.t("mob_ui_014"), Locale.t("mob_ui_015") % World.toll_for(str(n.nation)), UIKit.TEXT)
+	var loops_m: Array = World.produce_trade_loop(_sel)
+	if not loops_m.is_empty():
+		_m_section(box, Locale.t("atlas_trade_loop_title"))
+		var loop_sec := VBoxContainer.new()
+		loop_sec.name = "TradeLoop"
+		loop_sec.add_theme_constant_override("separation", 4)
+		box.add_child(loop_sec)
+		var shown_m := 0
+		for row2 in loops_m:
+			if shown_m >= 3:
+				break
+			var line2 := ""
+			if bool(row2.get("known", false)):
+				line2 = Locale.t("atlas_trade_loop_line") % [str(row2.name), int(row2.buy), str(row2.sell_name), int(row2.sell), int(row2.margin)]
+			else:
+				line2 = Locale.t("atlas_trade_loop_unknown") % [str(row2.name), int(row2.buy)]
+			var ll2 := _m_label(line2, UIKit.OK if int(row2.get("margin", 0)) > 0 else UIKit.TEXT_DIM)
+			ll2.name = "TradeLoop_%d" % shown_m
+			loop_sec.add_child(ll2)
+			shown_m += 1
+		if _sel == World.pos:
+			var tbg := MobilePage.button(Locale.t("atlas_trade_loop_goto"), false, func():
+				GameState.set_meta("city_tab", "market")
+				_enter_here())
+			tbg.name = "TradeLoopGoto"
+			loop_sec.add_child(tbg)
 	_m_picture(box, "", _sel)
 	var lore := str(n.get("lore", ""))
 	if lore != "":

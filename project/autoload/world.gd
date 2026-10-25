@@ -579,6 +579,116 @@ func mark_hub_seen(city: String, hub: String) -> void:
 		hub_tour[city] = {}
 	hub_tour[city][hub] = true
 
+## Days still owed on the active march (skips a leg already paid via pending_arrive).
+func remaining_route_days() -> int:
+	if travel.is_empty():
+		return 0
+	var path: Array = travel.get("route", [])
+	var li := int(travel.get("leg", 0))
+	var start := li + 1 if travel.has("pending_arrive") else li
+	var days := 0
+	for i in range(start, path.size() - 1):
+		var r := road_between(str(path[i]), str(path[i + 1]))
+		days += int(r.get("days", 1))
+	return days
+
+func remaining_route_food() -> int:
+	return food_per_day() * remaining_route_days()
+
+## Readable camp strip: food on hand vs rest of the march.
+func camp_readout(ev: Dictionary = {}) -> Dictionary:
+	var e: Dictionary = ev if not ev.is_empty() else pending_event
+	var ctx: Dictionary = e.get("ctx", {}) if typeof(e.get("ctx", {})) == TYPE_DICTIONARY else {}
+	var nights := int(ctx.get("nights", 1))
+	var rem_d := remaining_route_days()
+	var rem_f := remaining_route_food()
+	var per := food_per_day()
+	var cover := 0 if per <= 0 else int(GameState.food / per)
+	return {
+		"food": GameState.food,
+		"per_day": per,
+		"nights": nights,
+		"remain_days": rem_d,
+		"remain_food": rem_f,
+		"cover_days": cover,
+		"short": GameState.food < rem_f,
+		"a": str(e.get("a", "")),
+		"b": str(e.get("b", "")),
+	}
+
+## Quote buying grain (store→food) for N march days at city market.
+func resupply_quote(city: String, days: int = 7) -> Dictionary:
+	var id := city if city != "" else pos
+	var d := maxi(1, days)
+	var per := food_per_day()
+	var qty := maxi(1, per * d)
+	if not nodes.has(id):
+		return {"ok": false, "msg": "无此地", "qty": qty, "days": d}
+	var st := stock(id, "grain")
+	var cost := quote_buy(id, "grain", qty) if st >= qty else quote_buy(id, "grain", maxi(1, mini(qty, st)))
+	var buy_qty := qty if st >= qty else maxi(0, mini(qty, st))
+	return {
+		"ok": buy_qty > 0,
+		"city": id,
+		"qty": buy_qty,
+		"want": qty,
+		"days": d if buy_qty == qty else (buy_qty / maxi(1, per)),
+		"per_day": per,
+		"unit": price(id, "grain", "buy"),
+		"cost": quote_buy(id, "grain", buy_qty) if buy_qty > 0 else 0,
+		"food_now": GameState.food,
+		"food_after": GameState.food + buy_qty,
+		"stock": st,
+		"short_silver": GameState.silver < (quote_buy(id, "grain", buy_qty) if buy_qty > 0 else 0),
+		"short_stock": st < qty,
+	}
+
+func resupply_food(city: String, days: int = 7) -> Dictionary:
+	var q: Dictionary = resupply_quote(city, days)
+	if not bool(q.get("ok", false)) or int(q.get("qty", 0)) <= 0:
+		return {"ok": false, "msg": Locale.t("atlas_resupply_fail_stock")}
+	if bool(q.get("short_silver", false)):
+		return {"ok": false, "msg": Locale.t("atlas_resupply_fail_silver") % int(q.get("cost", 0))}
+	var r: Dictionary = market_buy(str(q.city), "grain", int(q.qty))
+	if bool(r.get("ok", false)):
+		r["days"] = int(q.get("days", days))
+		r["qty"] = int(q.qty)
+		r["food_after"] = GameState.food
+	return r
+
+## Regional produce → best known sell elsewhere (intel-gated).
+func produce_trade_loop(city: String = "") -> Array:
+	var id := city if city != "" else pos
+	var out: Array = []
+	if not nodes.has(id):
+		return out
+	for g in node(id).get("produce", []):
+		var gs := str(g)
+		var buy := price(id, gs, "buy")
+		var best: Dictionary = best_known_sell(gs, id)
+		var sell_city := str(best.get("city", ""))
+		var sell_p := int(best.get("price", 0))
+		out.append({
+			"good": gs,
+			"name": good_name(gs),
+			"buy": buy,
+			"sell_city": sell_city,
+			"sell_name": str(node(sell_city).get("name", "")) if sell_city != "" else "",
+			"sell": sell_p,
+			"margin": sell_p - buy if sell_city != "" else 0,
+			"known": sell_city != "",
+		})
+	return out
+
+func best_produce_trade(city: String = "") -> Dictionary:
+	var best := {}
+	for row in produce_trade_loop(city):
+		if not bool(row.get("known", false)):
+			continue
+		if best.is_empty() or int(row.get("margin", 0)) > int(best.get("margin", 0)):
+			best = row
+	return best
+
 func is_traveling() -> bool:
 	return not travel.is_empty()
 
