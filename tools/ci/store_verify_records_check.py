@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Store verification-record gate (privacy / age / export). Does not touch novel floors."""
+"""Store verification-record gate (privacy / age / export / data-safety / support). Does not touch novel floors."""
 from __future__ import annotations
 
 import sys
@@ -19,6 +19,14 @@ RECORDS = {
     "docs/store/export-paths-verification-record.md": {
         "min_bytes": 1600,
         "phrases": ["build_android.sh", "build_windows.sh", "release.yml", "验证记录"],
+    },
+    "docs/store/data-safety-verification-record.md": {
+        "min_bytes": 1600,
+        "phrases": ["不收集", "数据安全", "不出售", "验证记录"],
+    },
+    "docs/store/support-contact-verification-record.md": {
+        "min_bytes": 1600,
+        "phrases": ["支持", "联系", "不付费", "验证记录"],
     },
 }
 

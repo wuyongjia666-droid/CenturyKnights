@@ -14,6 +14,7 @@
 | save_roundtrip | 存档往返 | `project/tests/save_roundtrip_check` |
 | store_prep | 商店文档 + 中篇字数闸 + 出包干跑 | `python3 tools/ci/store_prep_check.py` |
 | store_pack_dry | 脚本/预设/listing 实质体积 | `python3 tools/ci/store_packaging_dry_check.py` |
+| store_verify | 隐私/分级/导出/数据安全/支持验证记录 | `python3 tools/ci/store_verify_records_check.py` |
 
 发版前额外：2400×1080 横屏 AVD 冒烟（见 `docs/design/mobile-landscape.md`）。
 
@@ -40,6 +41,7 @@
 
 - [ ] `python3 tools/ci/store_prep_check.py` 退出码 0  
 - [ ] `python3 tools/ci/store_packaging_dry_check.py` 退出码 0  
+- [ ] `python3 tools/ci/store_verify_records_check.py` 退出码 0  
 - [ ] `python3 tools/ci/export_size_report.py` 退出码 0 或 1  
 - [ ] 最近一次 `main-<sha8>` Release 含 APK + zip + SHA256  
 - [ ] 无 keystore / 密码进库  
