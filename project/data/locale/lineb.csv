@@ -388,6 +388,10 @@ lb_echo_death,%s 辞世，入族谱碑,%s passes; name on the stele
 lb_echo_tutor,%s 受 %s 传习·%s+%d,%s taught by %s · %s +%d
 lb_echo_promo,%s 转职为 %s,%s promoted to %s
 lb_echo_recruit,酒馆招募 %s（-%d 银）,Tavern hire %s (−%d silver)
+lb_echo_battle_map_lose,战棋败北「%s」,Defeated at "%s"
+lb_echo_battle_map_win,战棋肃清「%s」·+%d 银,Cleared "%s" · +%d silver
+lb_echo_battle_lose,战棋败退至%s·士气 -5,Battle lost · retreat to %s · morale −5
+lb_echo_battle_win,战棋得胜·缴获 %d 银（%s）,Battle won · +%d silver (%s)
 lb_hg_echo_head,上月回响（离开后仍在）,Last month echo (kept)
 lb_hg_to_estates,去领地营建,To estates
 lb_dynasty_end_head,王朝终结,Dynasty ended
