@@ -36,6 +36,7 @@ func _ready() -> void:
 	_promo = CKPageKit.list(c, Rect2(14, 58, 364, 440), "DynPromoList")
 	_msg = CKPageKit.feedback(self)
 	_msg.name = "DynMsg"
+	CKHeraldryChrome.place_muster_crest_strip(self, GameState.get_leader(), Vector2(980, 8), Vector2(40, 48))
 	_rebuild()
 	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "BANNER SCHOOL · FROST")
 	UIFX.page_enter(self)
@@ -216,6 +217,10 @@ func _pick_row(ch: CKCharacter, title: String, sub: String, on: bool, cb: Callab
 	pr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	pr.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	h.add_child(pr)
+	var arms := CKHeraldryChrome.make_row_arms(ch, Vector2(28, 34))
+	arms.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	arms.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	h.add_child(arms)
 	var v := VBoxContainer.new()
 	v.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -242,4 +247,7 @@ func _do_teach() -> void:
 
 func apply_mobile_layout() -> void:
 	CKPageKit.phone_fill(self)
+	var vp := get_viewport().get_visible_rect().size
+	var strip_w := 40.0 * 2.0 + 8.0
+	CKHeraldryChrome.place_muster_crest_strip(self, GameState.get_leader(), Vector2(maxf(8.0, vp.x - strip_w - 12.0), 6.0), Vector2(40, 48))
 
