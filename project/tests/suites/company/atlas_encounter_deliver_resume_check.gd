@@ -193,7 +193,7 @@ func _ui_battle_aftermath_modal_lose() -> void:
 	page.call("_show_encounter_modal", World.encounter)
 	for _j in 4:
 		await get_tree().process_frame
-	var enc_strip := page.find_child("AftermathCrestStrip", true, false)
+	var enc_strip := page.find_child("EncounterCrestStrip", true, false)
 	_ok(enc_strip != null and enc_strip.find_child("FoeArms", true, false) != null, "EncounterModal crest strip")
 	var retreat := page.find_child("EncounterRetreat", true, false) as Button
 	_ok(retreat != null, "EncounterRetreat present")
