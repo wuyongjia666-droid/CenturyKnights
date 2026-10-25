@@ -1023,7 +1023,7 @@ func _render_right() -> void:
 		_m_place()
 		_m_actions()
 		return
-	var p := UIKit.panel_at(_right, Rect2(1008, 64, 256, 648), 10)
+	var p := UIKit.panel_at(_right, Rect2(1008, 64, 256, 620), 10)
 	var top := ColorRect.new()
 	top.color = UIKit.ACCENT
 	top.size = Vector2(256, 2)
@@ -1157,26 +1157,29 @@ func _render_right() -> void:
 		if not e.is_empty():
 			_show_encounter_modal(e))
 	p.add_child(eng)
-	var rival_btn := UIKit.ghost_button(Locale.t("atlas_rival_clash_cta"), 108, 28)
-	rival_btn.name = "RivalClash"
-	rival_btn.position = Vector2(132, 556)
 	var rv_here: Dictionary = World.rival_here() if _sel == World.pos else {}
-	rival_btn.disabled = _busy or rv_here.is_empty() or _sel != World.pos or not World.encounter.is_empty()
-	rival_btn.tooltip_text = Locale.t("atlas_rival_clash_tip") % str(rv_here.get("name", "")) if not rv_here.is_empty() else Locale.t("atlas_rival_clash_tip_none")
-	rival_btn.pressed.connect(func():
-		var e2: Dictionary = World.rival_clash()
-		if not e2.is_empty():
-			_show_encounter_modal(e2))
-	p.add_child(rival_btn)
-	var terr := UIKit.ghost_button(Locale.t("terr_ui_button") + " %d" % CKTerritory.sites_at(_sel).size(), 108, 28)
-	terr.name = "TerritoryButton"
-	terr.position = Vector2(132, 588)
-	terr.disabled = _busy or CKTerritory.sites_at(_sel).is_empty()
-	var anchor_id := _sel
-	terr.pressed.connect(func(): _open_territory(anchor_id))
-	p.add_child(terr)
+	var show_rival := not rv_here.is_empty() and World.encounter.is_empty()
+	if show_rival:
+		var rival_btn := UIKit.ghost_button(Locale.t("atlas_rival_clash_cta"), 108, 28)
+		rival_btn.name = "RivalClash"
+		rival_btn.position = Vector2(132, 556)
+		rival_btn.disabled = _busy or _sel != World.pos
+		rival_btn.tooltip_text = Locale.t("atlas_rival_clash_tip") % str(rv_here.get("name", ""))
+		rival_btn.pressed.connect(func():
+			var e2: Dictionary = World.rival_clash()
+			if not e2.is_empty():
+				_show_encounter_modal(e2))
+		p.add_child(rival_btn)
+	else:
+		var terr := UIKit.ghost_button(Locale.t("terr_ui_button") + " %d" % CKTerritory.sites_at(_sel).size(), 108, 28)
+		terr.name = "TerritoryButton"
+		terr.position = Vector2(132, 556)
+		terr.disabled = _busy or CKTerritory.sites_at(_sel).is_empty()
+		var anchor_id := _sel
+		terr.pressed.connect(func(): _open_territory(anchor_id))
+		p.add_child(terr)
 	var ap := UIKit.mono("关税 %d 银 · %s" % [World.toll_for(str(n.nation)), str(nat.get("smith", ""))], 8, UIKit.TEXT_FAINT, false)
-	ap.position = Vector2(16, 622)
+	ap.position = Vector2(16, 596)
 	p.add_child(ap)
 
 func _render_region_profile(p: Panel, nid: String) -> void:
