@@ -428,7 +428,7 @@ func _mainline_routing() -> String:
 	var count := 0
 	for row in Catalog.mainline_entries():
 		var id := str(row.get("id", ""))
-		if id == "ch0":
+		if id == "ch0" or Catalog.is_content_season_id(id):
 			continue
 		count += 1
 		var data = JSON.parse_string(FileAccess.get_file_as_string(str(row["path"])))

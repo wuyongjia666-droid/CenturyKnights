@@ -3,6 +3,7 @@ extends RefCounted
 ## Chapter beats and chapter JSON. Beats live in one dictionary; chapter files load on demand.
 
 ## legacy_index space: 0 = ch0, 1–234 retired chapters, 101–399 volume chapters (eN_MM -> N*100+MM).
+## Content-season cs* chapters use 401+ markers outside CHAPTER_COUNT; not stored here.
 ## Saves written before v9.2.1 only carry 0–234; missing keys load as the default beat.
 const CHAPTER_COUNT := 400
 const LEGACY_COUNT := 235

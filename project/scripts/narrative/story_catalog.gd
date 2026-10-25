@@ -30,6 +30,11 @@ static func take_story_return(fallback: String) -> String:
 static func archive_replay_enabled() -> bool:
 	return false
 
+## Content-season chapters (csNN_MM) live beside volume JSON but are not
+## CKStoryState / hub mainline progression — they open via season playable entry.
+static func is_content_season_id(chapter_id: String) -> bool:
+	return chapter_id.begins_with("cs")
+
 ## JSON path of a chapter id ("e1_01" lives in era1_01.json). "" when the id is unknown.
 static func path_for(chapter_id: String) -> String:
 	if chapter_id == "":
