@@ -23,6 +23,7 @@ func _ready() -> void:
 	## Audit #11: two columns of groups (画面 / 动效 / 声音 / 战斗 / 操作与帮助) instead of one narrow strip.
 	UIKit.void_bg(self)
 	UIKit.top_bar(self, Locale.t("shell_57ea9dbf"), [], Locale.t("shell_11d02415"), _back)
+	_place_shell_crests()
 	var scroll := ScrollContainer.new()
 	scroll.name = "SettingsScroll"
 	scroll.position = Vector2(32, 68)
@@ -211,6 +212,7 @@ func _mobile_layout(scroll: ScrollContainer, cols: HBoxContainer) -> void:
 	var vp := get_viewport().get_visible_rect().size
 	var w := maxf(1280.0, vp.x * 720.0 / maxf(1.0, vp.y))
 	MobilePage.top_bar(self, Locale.t("shell_57ea9dbf"), "", [[Locale.t("shell_11d02415"), _back]])
+	_place_shell_crests()
 	scroll.position = Vector2(24, MobilePage.TOP + 4.0)
 	scroll.size = Vector2(w - 48.0, 720.0 - MobilePage.TOP - 16.0)
 	var cw := (w - 48.0 - 32.0 - 16.0) * 0.5
@@ -219,6 +221,14 @@ func _mobile_layout(scroll: ScrollContainer, cols: HBoxContainer) -> void:
 		MobileReflow.grow(c, cw - 32.0)
 	for sl in cols.find_children("*", "HSlider", true, false):
 		(sl as Control).custom_minimum_size.y = MobilePage.HIT
+
+func _place_shell_crests() -> void:
+	## Settings chrome: ShellCrestStrip (团徽+旗徽) under the top bar.
+	var mob := DeviceProfile.is_mobile()
+	var hdr := Vector2(40, 48) if not mob else Vector2(36, 44)
+	var ban := Vector2(26, 36) if not mob else Vector2(22, 30)
+	CKHeraldryChrome.place_shell_crest_strip(self, Vector2(1120, 8) if not mob else Vector2(1120, 4), hdr, ban)
+	CKHeraldryChrome.place_company_header(self, Vector2(1180, 8) if not mob else Vector2(1180, 4), hdr)
 
 static func anim_mode() -> String:
 	var m := str(GameState.settings.get("cutscene_mode", ""))

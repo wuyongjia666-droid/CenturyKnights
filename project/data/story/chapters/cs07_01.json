@@ -102,6 +102,31 @@
           "text": "酒馆圈等仪典选题。公开选，少扯皮。"
         },
         {
+          "id": "cs0701_ya_d1",
+          "speaker": "槐里·青禾",
+          "text": "空步先于假名。先停。"
+        },
+        {
+          "id": "cs0701_ya_d2",
+          "speaker": "石垒·晚担",
+          "text": "选路砖有泥才算走。"
+        },
+        {
+          "id": "cs0701_ya_d3",
+          "speaker": "苇原·灯影",
+          "text": "问空牌在。先空着。"
+        },
+        {
+          "id": "cs0701_ya_d4",
+          "speaker": "岁吏",
+          "text": "边注不擦。未稳就写未稳。"
+        },
+        {
+          "id": "cs0701_ya_d5",
+          "speaker": "书记官",
+          "text": "摘要两行。一行易谎。"
+        },
+        {
           "id": "cs07_yd_7",
           "speaker": "leader",
           "text": "栏挂上了。去看仪典。"
@@ -196,6 +221,31 @@
           "id": "cs07_rite_x9",
           "speaker": "老管事",
           "text": "灯可以偏。路不可以偏。"
+        },
+        {
+          "id": "cs0701_ri_d1",
+          "speaker": "老旗手",
+          "text": "不绣喊出来的仪典。"
+        },
+        {
+          "id": "cs0701_ri_d2",
+          "speaker": "老管事",
+          "text": "细线别，不裁。"
+        },
+        {
+          "id": "cs0701_ri_d3",
+          "speaker": "掌柜",
+          "text": "整句免费看步。半截不售。"
+        },
+        {
+          "id": "cs0701_ri_d4",
+          "speaker": "leader",
+          "text": "四步都亮，再谈入。"
+        },
+        {
+          "id": "cs0701_ri_d5",
+          "speaker": "旁白",
+          "text": "仪典棚灯小。步却大。"
         },
         {
           "id": "cs07_rt_6",
@@ -294,9 +344,69 @@
           "text": "墙牌硬。撕牌的手会记得疼。"
         },
         {
+          "id": "cs0701_ho_d1",
+          "speaker": "槐里·青禾",
+          "text": "双灯都亮才谈。灭一盏，停。"
+        },
+        {
+          "id": "cs0701_ho_d2",
+          "speaker": "石垒·晚担",
+          "text": "门槛四拍。拍齐进棚。"
+        },
+        {
+          "id": "cs0701_ho_d3",
+          "speaker": "苇原·灯影",
+          "text": "假入一夜，宗谱就脏。"
+        },
+        {
+          "id": "cs0701_ho_d4",
+          "speaker": "岁吏",
+          "text": "潮墨慢滤。急盖过不了。"
+        },
+        {
+          "id": "cs0701_ho_d5",
+          "speaker": "书记官",
+          "text": "乳名不进摘要。护到步稳。"
+        },
+        {
           "id": "cs07_hg_6",
           "speaker": "leader",
           "text": "两行都留。去门廊。"
+        },
+        {
+          "id": "cs0701_vis_mv1",
+          "speaker": "旁白",
+          "text": "仪典鼓槌靠在沙漏架上，槌头还热。"
+        },
+        {
+          "id": "cs0701_vis_mv2",
+          "speaker": "书记官",
+          "text": "热槌说明催过场。催场不怕，怕代选。"
+        },
+        {
+          "id": "cs0701_vis_mv3",
+          "speaker": "槐里·青禾",
+          "text": "代选前先看月份说话。"
+        },
+        {
+          "id": "cs0701_vst1",
+          "speaker": "岁吏",
+          "text": "月份从仪典香灰里漏出一粒。粒小，却是真月份。"
+        },
+        {
+          "id": "cs0701_vst2",
+          "speaker": "书记官",
+          "text": "仪典册页边，沙漏不敢走快。"
+        },
+        {
+          "id": "cs0701_vst3",
+          "speaker": "leader",
+          "text": "月份漏过。台阶，我一步步上。"
+        },
+        {
+          "id": "cs0701_vis_mv4",
+          "speaker": "leader",
+          "text": "听月份。去。"
         }
       ],
       "actions": [
@@ -420,6 +530,73 @@
           "id": "cs07_bridge_x9",
           "speaker": "掌柜",
           "text": "圈还在。圈不等短笑。"
+        },
+        {
+          "id": "cs0701_mid_mv1",
+          "speaker": "旁白",
+          "text": "仪典鼓皮松了半寸。有人用指节敲，敲出闷响。"
+        },
+        {
+          "id": "cs0701_mid_mv2",
+          "speaker": "书记官",
+          "text": "闷响提醒：礼未定，人先乱。"
+        },
+        {
+          "id": "cs0701_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "乱的人想代选。代选最脏。"
+        },
+        {
+          "id": "cs0701_mid_mv4",
+          "speaker": "槐里·青禾",
+          "text": "脏手碰绶，绶会淡。"
+        },
+        {
+          "id": "cs0701_mid_mv5",
+          "speaker": "掌柜",
+          "text": "墙牌旁那拨，专催你们快点定。"
+        },
+        {
+          "id": "cs0701_mid_mv6",
+          "speaker": "苇原·灯影",
+          "text": "快点定，不如先试清。"
+        },
+        {
+          "id": "cs0701_mid_mv7",
+          "speaker": "leader",
+          "text": "试清再定。锋不问代嘴。"
+        },
+        {
+          "id": "cs0701_win1",
+          "speaker": "旁白",
+          "text": "锋定。仪典问声沉了，墙牌旁催的人退了。",
+          "when": {
+            "flag": "cs07_mid_fought"
+          }
+        },
+        {
+          "id": "cs0701_win2",
+          "speaker": "掌柜",
+          "text": "催不停的，今晚停了。",
+          "when": {
+            "flag": "cs07_mid_fought"
+          }
+        },
+        {
+          "id": "cs0701_win3",
+          "speaker": "苇原·灯影",
+          "text": "定之前试清了。清了，才配上台阶。",
+          "when": {
+            "flag": "cs07_mid_fought"
+          }
+        },
+        {
+          "id": "cs0701_win4",
+          "speaker": "leader",
+          "text": "锋不问代嘴。仪典，我自己应。",
+          "when": {
+            "flag": "cs07_mid_fought"
+          }
         },
         {
           "id": "cs07_mid_lost",
@@ -643,9 +820,69 @@
           "text": "圈选偏，旗角先响。"
         },
         {
+          "id": "cs0701_ta_d1",
+          "speaker": "掌柜",
+          "text": "空壳席：先看四步。"
+        },
+        {
+          "id": "cs0701_ta_d2",
+          "speaker": "老管事",
+          "text": "死结下降，无锣也好。"
+        },
+        {
+          "id": "cs0701_ta_d3",
+          "speaker": "老旗手",
+          "text": "旁注钉活着。可拔才真。"
+        },
+        {
+          "id": "cs0701_ta_d4",
+          "speaker": "岁吏",
+          "text": "禁言解禁只准先问空。"
+        },
+        {
           "id": "cs07_tavern_x9",
           "speaker": "旁白",
           "text": "你还没选。没选时，空位最清楚。"
+        },
+        {
+          "id": "cs0701_ret_mv1",
+          "speaker": "旁白",
+          "text": "仪典人选被起哄成划拳。拳响谱不响。"
+        },
+        {
+          "id": "cs0701_ret_mv2",
+          "speaker": "掌柜",
+          "text": "拳不算数。谱才算。"
+        },
+        {
+          "id": "cs0701_ret_mv3",
+          "speaker": "书记官",
+          "text": "谱回堡钉。"
+        },
+        {
+          "id": "cs0701_tvn1",
+          "speaker": "掌柜",
+          "text": "仪典那一锋，酒要浅——浅着敬。"
+        },
+        {
+          "id": "cs0701_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "催的人退了。退了才有座位。"
+        },
+        {
+          "id": "cs0701_tvn3",
+          "speaker": "听回",
+          "text": "香灰里那粒月份，有人看见了。"
+        },
+        {
+          "id": "cs0701_tvn4",
+          "speaker": "leader",
+          "text": "应过了。酒浅着。名，不代。"
+        },
+        {
+          "id": "cs0701_ret_mv4",
+          "speaker": "leader",
+          "text": "回堡钉谱。"
         }
       ],
       "actions": [
@@ -805,6 +1042,26 @@
           "id": "cs07_led_6",
           "speaker": "leader",
           "text": "栏与仪，并排。谁来认嗣位，先念完。"
+        },
+        {
+          "id": "cs0701_le_d1",
+          "speaker": "旁白",
+          "text": "栏与仪并排。剪刀封柜。"
+        },
+        {
+          "id": "cs0701_le_d2",
+          "speaker": "书记官",
+          "text": "念完四步，再认嗣位。"
+        },
+        {
+          "id": "cs0701_le_d3",
+          "speaker": "槐里·青禾",
+          "text": "空步光荣。装满可耻。"
+        },
+        {
+          "id": "cs0701_le_d4",
+          "speaker": "leader",
+          "text": "并排。记下。"
         },
         {
           "id": "cs07_led_7",

@@ -61,6 +61,7 @@ func _build() -> void:
 	col.add_theme_constant_override("separation", 8)
 	add_child(col)
 	col.add_child(UIKit.title_label(Locale.t("menu_load"), 40))
+	_place_shell_crests()
 	for slot in CKSaveService.SLOTS:
 		col.add_child(_row(slot))
 	var back := UIKit.index_button("←", Locale.t("slot_back"), 360)
@@ -76,6 +77,7 @@ func _row(slot: String) -> HBoxContainer:
 	var label := UIKit.body_label(text, UIKit.TEXT, 16)
 	label.custom_minimum_size = Vector2(420, 48)
 	row.add_child(label)
+	CKHeraldryChrome.attach_save_row_arms(row, Vector2(36, 44))
 	var load := UIKit.make_button(Locale.t("menu_load"))
 	load.name = "Load_%s" % slot
 	load.custom_minimum_size = Vector2(160, maxi(44, int(DeviceProfile.hit_px())))
@@ -98,6 +100,7 @@ func _build_mobile() -> void:
 	back.name = "SlotBack"
 	back.size_flags_horizontal = Control.SIZE_SHRINK_END
 	head.add_child(back)
+	_place_shell_crests()
 	var scroll := ScrollContainer.new()
 	scroll.name = "SlotScroll"
 	scroll.position = Vector2(40, 108)
@@ -137,7 +140,17 @@ func _card(slot: String) -> PanelContainer:
 	load.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	load.disabled = not has
 	row.add_child(load)
+	CKHeraldryChrome.attach_save_row_arms(card, Vector2(40, 48))
 	return card
+
+
+func _place_shell_crests() -> void:
+	## Load-list chrome: ShellCrestStrip + company header on the page root.
+	var mob := DeviceProfile.is_mobile()
+	var hdr := Vector2(44, 52) if not mob else Vector2(40, 48)
+	var ban := Vector2(28, 38) if not mob else Vector2(24, 32)
+	CKHeraldryChrome.place_shell_crest_strip(self, Vector2(1120, 18) if not mob else Vector2(1120, 8), hdr, ban)
+	CKHeraldryChrome.place_company_header(self, Vector2(1180, 18) if not mob else Vector2(1180, 8), hdr)
 
 func _load(slot: String) -> void:
 	if GameState.load_from_slot(slot):

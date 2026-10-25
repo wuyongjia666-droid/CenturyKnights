@@ -122,6 +122,21 @@
           "text": "日子够硬。灯以后再说。"
         },
         {
+          "id": "cs01_open_y21",
+          "speaker": "旁白",
+          "text": "灯花爆了一下。爆完，字才肯站住。"
+        },
+        {
+          "id": "cs01_open_y22",
+          "speaker": "石垒·晚担",
+          "text": "假亮捂不热。这格只留真。"
+        },
+        {
+          "id": "cs01_open_y23",
+          "speaker": "leader",
+          "text": "记下。不催假名。"
+        },
+        {
           "id": "cs01_open_9",
           "speaker": "老旗手",
           "text": "纸比粮先到的时候，灯就不早了。"
@@ -243,9 +258,86 @@
           "text": "厅外脚步乱了一阵，又齐。齐的是巡夜，不是催条。"
         },
         {
+          "id": "cs01_hall_y22",
+          "speaker": "旁白",
+          "text": "册边起毛。毛边比印鉴老实。"
+        },
+        {
+          "id": "cs01_hall_y23",
+          "speaker": "石垒·晚担",
+          "text": "老实的才并排。"
+        },
+        {
+          "id": "cs01_hall_y24",
+          "speaker": "leader",
+          "text": "并排留真。"
+        },
+        {
           "id": "cs01_hall_9",
           "speaker": "老旗手",
           "text": "匣子留给验盏。咱们别先替它填字。"
+        },
+        {
+          "id": "cs0101_mid_mv1",
+          "speaker": "旁白",
+          "text": "厅外脚步乱。有人把刀柄敲在门框上，一下一下数。"
+        },
+        {
+          "id": "cs0101_mid_mv2",
+          "speaker": "石垒·晚担",
+          "text": "敲门框的，不是来喝茶的。"
+        },
+        {
+          "id": "cs0101_mid_mv3",
+          "speaker": "槐里·青禾",
+          "text": "验盏还没开匣。刀先响，纸会皱。"
+        },
+        {
+          "id": "cs0101_mid_mv4",
+          "speaker": "苇原·灯影",
+          "text": "皱了还能熨。血渍熨不平。"
+        },
+        {
+          "id": "cs0101_mid_mv5",
+          "speaker": "老旗手",
+          "text": "旗杆靠墙。先看清门外几个人影。"
+        },
+        {
+          "id": "cs0101_mid_mv6",
+          "speaker": "leader",
+          "text": "影数清了再出锋。乱劈不算试。"
+        },
+        {
+          "id": "cs0101_win1",
+          "speaker": "旁白",
+          "text": "锋落定。厅外灯影一矮，路匪的脚声退到巷口。",
+          "when": {
+            "flag": "cs01_mid_fought"
+          }
+        },
+        {
+          "id": "cs0101_win2",
+          "speaker": "老旗手",
+          "text": "这一锋够了。旗还在你手里，别松。",
+          "when": {
+            "flag": "cs01_mid_fought"
+          }
+        },
+        {
+          "id": "cs0101_win3",
+          "speaker": "苇原·灯影",
+          "text": "衣里的热散了。验盏的灯，该亮了。",
+          "when": {
+            "flag": "cs01_mid_fought"
+          }
+        },
+        {
+          "id": "cs0101_win4",
+          "speaker": "leader",
+          "text": "赢了不夸。去验盏——灯下才算数。",
+          "when": {
+            "flag": "cs01_mid_fought"
+          }
         },
         {
           "id": "cs01_mid_lost",
@@ -495,9 +587,59 @@
           "text": "铜盏收回匣。匣盖轻合，像同意这一笔。"
         },
         {
+          "id": "cs01_audit_y21",
+          "speaker": "旁白",
+          "text": "灯花爆了一下。爆完，字才肯站住。"
+        },
+        {
+          "id": "cs01_audit_y22",
+          "speaker": "石垒·晚担",
+          "text": "假亮捂不热。这格只留真。"
+        },
+        {
+          "id": "cs01_audit_y23",
+          "speaker": "leader",
+          "text": "记下。不催假名。"
+        },
+        {
           "id": "cs01_audit_9",
           "speaker": "leader",
           "text": "写无。我们认。"
+        },
+        {
+          "id": "cs0101_vis_mv1",
+          "speaker": "旁白",
+          "text": "匣盖边有一圈旧手印。新人叠上去，会错位。"
+        },
+        {
+          "id": "cs0101_vis_mv2",
+          "speaker": "听回",
+          "text": "错位我看得见。你靠近灯。"
+        },
+        {
+          "id": "cs0101_vis_mv3",
+          "speaker": "岁吏",
+          "text": "月份在沙上走。走慢的才清楚。"
+        },
+        {
+          "id": "cs0101_vst1",
+          "speaker": "岁吏",
+          "text": "沙漏腰细了一指。月份不是走给你看的，是走给你记的。"
+        },
+        {
+          "id": "cs0101_vst2",
+          "speaker": "书记官",
+          "text": "回执边上的墨还湿。湿着写，比干了改，更真。"
+        },
+        {
+          "id": "cs0101_vst3",
+          "speaker": "leader",
+          "text": "月份往前，我跟。灯不灭，字不糊。"
+        },
+        {
+          "id": "cs0101_vis_mv4",
+          "speaker": "leader",
+          "text": "看清楚再写。去看月份。"
         }
       ],
       "actions": [
@@ -622,9 +764,64 @@
           "text": "硬的字，我才肯送出门。"
         },
         {
+          "id": "cs01_tav_y18",
+          "speaker": "旁白",
+          "text": "册边起毛。毛边比印鉴老实。"
+        },
+        {
+          "id": "cs01_tav_y19",
+          "speaker": "石垒·晚担",
+          "text": "老实的才并排。"
+        },
+        {
+          "id": "cs01_tav_y20",
+          "speaker": "leader",
+          "text": "并排留真。"
+        },
+        {
           "id": "cs01_tav_6",
           "speaker": "旁白",
           "text": "陆桥风把闲话送进来。你得选：无进不进谱。"
+        },
+        {
+          "id": "cs0101_ret_mv1",
+          "speaker": "旁白",
+          "text": "挂板墨未干。风一过，字边起毛。"
+        },
+        {
+          "id": "cs0101_ret_mv2",
+          "speaker": "掌柜",
+          "text": "毛边我补。补不了的是假话。"
+        },
+        {
+          "id": "cs0101_ret_mv3",
+          "speaker": "老旗手",
+          "text": "假话上不了板。上了也刮得掉。"
+        },
+        {
+          "id": "cs0101_tvn1",
+          "speaker": "掌柜",
+          "text": "厅前那一锋的风，还挂在门帘上。"
+        },
+        {
+          "id": "cs0101_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "酒温着。温酒送赢的人，也送输过再来的人。"
+        },
+        {
+          "id": "cs0101_tvn3",
+          "speaker": "听回",
+          "text": "外头说厅灯亮了。亮了就不怕巷口那拨。"
+        },
+        {
+          "id": "cs0101_tvn4",
+          "speaker": "leader",
+          "text": "灯亮着。人齐了。回执，我认。"
+        },
+        {
+          "id": "cs0101_ret_mv4",
+          "speaker": "leader",
+          "text": "板上只留真。回堡再入谱。"
         }
       ],
       "actions": [
@@ -794,6 +991,21 @@
           "id": "cs01_ledger_y0",
           "speaker": "旁白",
           "text": "无在谱里。旗在门楣。人在旗下。"
+        },
+        {
+          "id": "cs01_led_y21",
+          "speaker": "旁白",
+          "text": "灯花爆了一下。爆完，字才肯站住。"
+        },
+        {
+          "id": "cs01_led_y22",
+          "speaker": "石垒·晚担",
+          "text": "假亮捂不热。这格只留真。"
+        },
+        {
+          "id": "cs01_led_y23",
+          "speaker": "leader",
+          "text": "记下。不催假名。"
         },
         {
           "id": "cs01_led_6",

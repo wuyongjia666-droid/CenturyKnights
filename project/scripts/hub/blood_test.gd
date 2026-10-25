@@ -15,6 +15,7 @@ func _ready() -> void:
 	_pending = _queue()
 	var cost := CKBloodline.verify_cost(GameState.building_level("shrine"))
 	CKPageKit.shell(self, Locale.t("lb_bt_ctx"), "BLOOD ASSAY", Locale.t("lb_bt_title"), Locale.t("lb_bt_desc"))
+	_place_blood_crests()
 	var left := CKPageKit.card(self, Rect2(42, CKPageKit.TOP + 8, 420, 512), "AssayQueue")
 	CKPageKit.card_head(left, Locale.t("lb_bt_queue", [_pending.size()]), "QUEUE")
 	var can := mini(_pending.size(), GameState.silver / maxi(1, cost))
@@ -62,6 +63,7 @@ func _ready() -> void:
 		var pr := UIKit.make_portrait_rect(c, 36)
 		pr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		h.add_child(pr)
+		CKHeraldryChrome.attach_blood_queue_arms(h, c, Vector2(26, 32))
 		var said := Locale.t("lb_bt_row", [c.name, c.rank_name(), c.age]) + ("" if i < can else Locale.t("lb_bt_wait_money"))
 		h.add_child(CKPageKit.text(said, UIKit.TEXT if i < can else UIKit.TEXT_DIM, 14, 300))
 		list.add_child(r[0])
@@ -99,10 +101,31 @@ func _ready() -> void:
 	UIFX.wire_tree(self)
 
 
+
+func _place_blood_crests(mobile: bool = false) -> void:
+	## Fat blood-test chrome: 团徽 header + 旗徽 strip + BloodCrestStrip.
+	for n in ["CastleArms", "CastleBannerStrip", "BloodCrestStrip"]:
+		var oldn := get_node_or_null(n)
+		if oldn:
+			oldn.name = "_%sDying" % n
+			oldn.queue_free()
+	var mob := mobile or DeviceProfile.is_mobile()
+	var hdr := Vector2(52, 60) if mob else Vector2(44, 52)
+	var ban := Vector2(28, 38)
+	var w := size.x if size.x > 400.0 else 1280.0
+	var at_y := 6.0 if mob else 8.0
+	var arms_x := (w - 64.0) if mob else 1180.0
+	var strip_x := (w - 140.0) if mob else 1100.0
+	CKHeraldryChrome.place_company_header(self, Vector2(arms_x, at_y), hdr)
+	CKHeraldryChrome.place_castle_banner_strip(self, Vector2(strip_x, at_y), hdr, ban)
+	var bat := Vector2(1020, at_y) if not mob else Vector2(maxf(20.0, w - 240.0), at_y)
+	CKHeraldryChrome.place_blood_crest_strip(self, bat, Vector2(36, 44) if not mob else Vector2(32, 40), Vector2(24, 34))
+
 func apply_mobile_layout() -> void:
 	if not MobilePage.active(self):
 		return
 	CKPageKit.phone_fill(self)
+	_place_blood_crests(true)
 	var left := find_child("AssayQueue", true, false) as Control
 	if left and _begin_btn:
 		_begin_btn.position = Vector2(18, 118)
