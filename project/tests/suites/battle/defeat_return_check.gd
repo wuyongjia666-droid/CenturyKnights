@@ -24,11 +24,14 @@ func _run() -> String:
 	# even after hub_open (content seasons run with hub already open).
 	GameState.set_meta("battle_return_chapter", "cs01_01")
 	GameState.set_meta("battle_map", "quest_bandit")
+	GameState.set_meta("battle_lose_flags", ["cs01_mid_lost"])
 	var player := "res://scenes/story/chapter_player.tscn"
 	if BattleDefeat.back_path(false, false, player) != player:
 		return "hub_open + battle_return_chapter loss must retry chapter"
 	if not GameState.flag("quest_bandit_lost"):
 		return "quest_bandit_lost not written on chapter retry"
+	if not GameState.flag("cs01_mid_lost"):
+		return "cs01_mid_lost not applied from battle_lose_flags"
 	GameState.set_meta("battle_return_chapter", "")
 	if BattleDefeat.back_path(true, false, "res://scenes/story/chapter0.tscn") != "res://scenes/story/chapter0.tscn":
 		return "story win lost its return"

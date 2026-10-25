@@ -90,9 +90,24 @@ static func apply(map_id: String) -> Dictionary:
 	for act in sp.actions:
 		if str(act) == "heir_clash_restore":
 			restore_heir_clash()
+	# Chapter-authored season_ledger on mid-cs skirmish win (not month_echo).
+	var led = GameState.get_meta("battle_win_ledger", {})
+	if typeof(led) == TYPE_DICTIONARY and not led.is_empty():
+		var chapter_id := str(led.get("chapter", ""))
+		var choice := str(led.get("choice", ""))
+		var title := str(led.get("title", ""))
+		var outcome := str(led.get("outcome", ""))
+		if chapter_id != "" and choice != "" and outcome != "":
+			CKSuiKe.season_ledger_append(
+				chapter_id, choice, title, outcome,
+				str(led.get("who", "")), bool(led.get("yeartrace", true)))
 	# Consume chapter stamps so a later hub fight on the same map does not re-apply.
 	if GameState.has_meta("battle_win_flags"):
 		GameState.set_meta("battle_win_flags", [])
+	if GameState.has_meta("battle_lose_flags"):
+		GameState.set_meta("battle_lose_flags", [])
+	if GameState.has_meta("battle_win_ledger"):
+		GameState.set_meta("battle_win_ledger", {})
 	return sp
 
 

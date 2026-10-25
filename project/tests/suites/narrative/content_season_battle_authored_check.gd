@@ -78,70 +78,144 @@ func _authored_one(cid: String) -> String:
 	if typeof(data) != TYPE_DICTIONARY:
 		return "%s not dict" % cid
 	var want_beat := str(BATTLE_BEAT[cid])
-	var acc := {"battle": 0, "cont": 0, "total": 0, "err": ""}
+	var acc := {"open": 0, "retry": 0, "cont": 0, "total": 0, "lost_line": 0, "err": ""}
 	for b in data.get("beats", []):
 		_accumulate_beat(cid, want_beat, b, acc)
 		if str(acc["err"]) != "":
 			return str(acc["err"])
-	if int(acc["battle"]) != 1:
-		return "%s authored battle count %d (want 1 on %s)" % [cid, int(acc["battle"]), want_beat]
+	if int(acc["open"]) != 1 or int(acc["retry"]) != 1:
+		return "%s open/retry want 1/1 got %d/%d" % [cid, int(acc["open"]), int(acc["retry"])]
 	if int(acc["cont"]) != 1:
 		return "%s continue_after_battle missing on %s" % [cid, want_beat]
-	if int(acc["total"]) != 1:
-		return "%s total battle ops %d want 1" % [cid, int(acc["total"])]
+	if int(acc["total"]) != 2:
+		return "%s total battle ops %d want 2" % [cid, int(acc["total"])]
+	if int(acc["lost_line"]) != 1:
+		return "%s mid_lost dialogue line missing on %s" % [cid, want_beat]
 	return ""
 
 
 func _accumulate_beat(cid: String, want_beat: String, b, acc: Dictionary) -> void:
 	if str(acc.get("err", "")) != "":
 		return
+	var mid_flag := cid.substr(0, 4) + "_mid_fought"
+	var lost_flag := cid.substr(0, 4) + "_mid_lost"
+	if str(b.get("id", "")) == want_beat:
+		_accumulate_lost_line(b, mid_flag, lost_flag, acc)
+		_accumulate_continue(cid, b, acc)
 	for a in b.get("actions", []):
 		if typeof(a) != TYPE_DICTIONARY:
 			continue
-		if str(b.get("id", "")) == want_beat and str(a.get("id", "")) == "continue_after_battle":
-			acc["cont"] = int(acc["cont"]) + 1
-			var lab := str(a.get("label", ""))
-			if lab.find("继续") < 0:
-				acc["err"] = "%s continue label missing 继续: %s" % [cid, lab]
-				return
-			var goto_ok := false
-			for step2 in a.get("do", []):
-				if typeof(step2) == TYPE_DICTIONARY and str(step2.get("op", "")) == "goto":
-					goto_ok = true
-			if not goto_ok:
-				acc["err"] = "%s continue_after_battle missing goto" % cid
-				return
 		for step in a.get("do", []):
-			if typeof(step) != TYPE_DICTIONARY:
-				continue
-			if str(step.get("op", "")) != "battle":
+			if typeof(step) != TYPE_DICTIONARY or str(step.get("op", "")) != "battle":
 				continue
 			acc["total"] = int(acc["total"]) + 1
-			if str(b.get("id", "")) != want_beat:
-				acc["err"] = "%s battle on wrong beat %s want %s" % [cid, b.get("id"), want_beat]
+			var err := _check_battle_action(cid, want_beat, str(b.get("id", "")), a, step, mid_flag, lost_flag)
+			if err != "":
+				acc["err"] = err
 				return
-			if str(step.get("map", "")) != MAP_ID:
-				acc["err"] = "%s battle map want %s got %s" % [cid, MAP_ID, step.get("map")]
-				return
-			if str(step.get("return", "")) != PLAYER:
-				acc["err"] = "%s battle return must be player got %s" % [cid, step.get("return")]
-				return
-			if str(a.get("label", "")) != BATTLE_LABEL:
-				acc["err"] = "%s battle label want %s got %s" % [cid, BATTLE_LABEL, a.get("label")]
-				return
-			if str(a.get("id", "")) != "open_skirmish":
-				acc["err"] = "%s battle action id" % cid
-				return
-			var want_flag := cid.substr(0, 4) + "_mid_fought"
-			var when_row = a.get("when", {})
-			if typeof(when_row) != TYPE_DICTIONARY or str(when_row.get("not_flag", "")) != want_flag:
-				acc["err"] = "%s when.not_flag want %s got %s" % [cid, want_flag, str(when_row)]
-				return
-			var wf: Array = step.get("win_flags", [])
-			if wf.size() != 1 or str(wf[0]) != want_flag:
-				acc["err"] = "%s win_flags want [%s] got %s" % [cid, want_flag, str(wf)]
-				return
-			acc["battle"] = int(acc["battle"]) + 1
+			var aid := str(a.get("id", ""))
+			if aid == "open_skirmish":
+				acc["open"] = int(acc["open"]) + 1
+			elif aid == "retry_skirmish":
+				acc["retry"] = int(acc["retry"]) + 1
+
+
+func _accumulate_lost_line(b, mid_flag: String, lost_flag: String, acc: Dictionary) -> void:
+	for line in b.get("lines", []):
+		if typeof(line) != TYPE_DICTIONARY:
+			continue
+		var when_line = line.get("when", {})
+		if typeof(when_line) != TYPE_DICTIONARY:
+			continue
+		var has_lost := false
+		var has_not_fought := false
+		for item in when_line.get("all", []):
+			if typeof(item) != TYPE_DICTIONARY:
+				continue
+			if str(item.get("flag", "")) == lost_flag:
+				has_lost = true
+			if str(item.get("not_flag", "")) == mid_flag:
+				has_not_fought = true
+		if has_lost and has_not_fought and str(line.get("text", "")) != "":
+			acc["lost_line"] = int(acc["lost_line"]) + 1
+
+
+func _accumulate_continue(cid: String, b, acc: Dictionary) -> void:
+	for a in b.get("actions", []):
+		if typeof(a) != TYPE_DICTIONARY or str(a.get("id", "")) != "continue_after_battle":
+			continue
+		acc["cont"] = int(acc["cont"]) + 1
+		if str(a.get("label", "")).find("继续") < 0:
+			acc["err"] = "%s continue label missing 继续: %s" % [cid, str(a.get("label", ""))]
+			return
+		var goto_ok := false
+		for step2 in a.get("do", []):
+			if typeof(step2) == TYPE_DICTIONARY and str(step2.get("op", "")) == "goto":
+				goto_ok = true
+		if not goto_ok:
+			acc["err"] = "%s continue_after_battle missing goto" % cid
+
+
+func _check_battle_action(cid: String, want_beat: String, beat_id: String, a, step, mid_flag: String, lost_flag: String) -> String:
+	var err := ""
+	if beat_id != want_beat:
+		err = "%s battle on wrong beat %s want %s" % [cid, beat_id, want_beat]
+	elif str(step.get("map", "")) != MAP_ID:
+		err = "%s battle map want %s got %s" % [cid, MAP_ID, step.get("map")]
+	elif str(step.get("return", "")) != PLAYER:
+		err = "%s battle return must be player got %s" % [cid, step.get("return")]
+	else:
+		err = _check_battle_payload(cid, step, mid_flag, lost_flag)
+	if err != "":
+		return err
+	return _check_battle_cta(cid, a, mid_flag, lost_flag)
+
+
+func _check_battle_payload(cid: String, step, mid_flag: String, lost_flag: String) -> String:
+	var wf: Array = step.get("win_flags", [])
+	if wf.size() != 1 or str(wf[0]) != mid_flag:
+		return "%s win_flags want [%s] got %s" % [cid, mid_flag, str(wf)]
+	var lf: Array = step.get("lose_flags", [])
+	if lf.size() != 1 or str(lf[0]) != lost_flag:
+		return "%s lose_flags want [%s] got %s" % [cid, lost_flag, str(lf)]
+	var led = step.get("win_ledger", {})
+	if typeof(led) != TYPE_DICTIONARY:
+		return "%s win_ledger missing" % cid
+	if str(led.get("choice", "")) != "mid_skirmish":
+		return "%s win_ledger.choice" % cid
+	if str(led.get("outcome", "")) == "":
+		return "%s win_ledger.outcome empty" % cid
+	if not bool(led.get("yeartrace", false)):
+		return "%s win_ledger.yeartrace" % cid
+	return ""
+
+
+func _check_battle_cta(cid: String, a, mid_flag: String, lost_flag: String) -> String:
+	var aid := str(a.get("id", ""))
+	var alab := str(a.get("label", ""))
+	var when_row = a.get("when", {})
+	if aid == "open_skirmish":
+		if alab != BATTLE_LABEL:
+			return "%s open label want %s got %s" % [cid, BATTLE_LABEL, alab]
+		if not _when_all_has(when_row, "not_flag", mid_flag) or not _when_all_has(when_row, "not_flag", lost_flag):
+			return "%s open when want not %s/%s got %s" % [cid, mid_flag, lost_flag, str(when_row)]
+		return ""
+	if aid == "retry_skirmish":
+		if alab != "再试锋镝":
+			return "%s retry label want 再试锋镝 got %s" % [cid, alab]
+		if not _when_all_has(when_row, "not_flag", mid_flag) or not _when_all_has(when_row, "flag", lost_flag):
+			return "%s retry when want not %s + flag %s got %s" % [cid, mid_flag, lost_flag, str(when_row)]
+		return ""
+	return "%s unexpected battle action id %s" % [cid, aid]
+
+
+func _when_all_has(when_row, key: String, want: String) -> bool:
+	if typeof(when_row) != TYPE_DICTIONARY:
+		return false
+	for item in when_row.get("all", []):
+		if typeof(item) == TYPE_DICTIONARY and str(item.get(key, "")) == want:
+			return true
+	return false
 
 
 func _live_press_battle_roundtrip(cid: String) -> String:
