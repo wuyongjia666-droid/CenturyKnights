@@ -1,6 +1,6 @@
 {
   "id": "season_03",
-  "version": 3,
+  "version": 4,
   "title_zh": "榜上的收成",
   "status": "playable_draft",
   "pipeline": [
@@ -75,6 +75,12 @@
       "label_zh": "可玩章 cs03_01 对白可走",
       "suite": "res://tests/suites/narrative/content_season_playable_s03_check.tscn",
       "done": true
+    },
+    {
+      "id": "playable_dialogue_02",
+      "label_zh": "可玩章 cs03_02 对白可走",
+      "suite": "res://tests/suites/narrative/content_season_playable_s03_02_check.tscn",
+      "done": true
     }
   ],
   "pipeline_stages": {
@@ -124,5 +130,8 @@
   ],
   "playable_chapter": "cs03_01",
   "playable_path": "res://data/story/chapters/cs03_01.json",
-  "title_en": "The Harvest on the Board"
+  "title_en": "The Harvest on the Board",
+  "playable_chapters": [
+    "cs03_02"
+  ]
 }
