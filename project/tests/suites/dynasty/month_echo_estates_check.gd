@@ -1,5 +1,5 @@
 extends Node
-## Y1-B month-loop deepen: estates MonthEchoPanel — empty → ToHourglass;
+## Y1-B month-loop deepen: estates MonthEchoPanel — empty → EmptyHost how + ToHourglass;
 ## after Calendar.advance with holdings → EchoLine_holdings re-read.
 
 func _ready() -> void:
@@ -46,22 +46,39 @@ func _audit_empty() -> String:
 	if panel == null:
 		page.queue_free()
 		return "MonthEchoPanel missing (empty)"
+	var host := panel.find_child("EmptyHost", true, false)
+	if host == null:
+		page.queue_free()
+		return "EmptyHost missing under MonthEchoPanel"
 	var empty_zh := Locale.t("lb_est_echo_empty")
 	var found := false
-	for n in panel.find_children("*", "Label", true, false):
+	for n in host.find_children("*", "Label", true, false):
 		if str((n as Label).text).find(empty_zh) >= 0:
 			found = true
 			break
 	if not found:
 		page.queue_free()
 		return "empty copy missing"
-	var cta: Button = page.find_child("ToHourglass", true, false) as Button
+	var how_zh := Locale.t("lb_est_echo_empty_how")
+	var how_ok := false
+	for n in host.find_children("*", "Label", true, false):
+		if str((n as Label).text).find(how_zh) >= 0:
+			how_ok = true
+			break
+	if not how_ok:
+		page.queue_free()
+		return "how (lb_est_echo_empty_how) missing"
+	var acts := host.find_child("EmptyActions", true, false)
+	if acts == null:
+		page.queue_free()
+		return "EmptyActions missing"
+	var cta: Button = host.find_child("ToHourglass", true, false) as Button
 	if cta == null:
 		page.queue_free()
-		return "ToHourglass missing"
-	if not panel.is_ancestor_of(cta):
+		return "ToHourglass missing under EmptyHost"
+	if not acts.is_ancestor_of(cta):
 		page.queue_free()
-		return "ToHourglass not under MonthEchoPanel"
+		return "ToHourglass not under EmptyActions"
 	var want := Locale.t("lb_est_to_hourglass")
 	if cta.text != want:
 		page.queue_free()
@@ -69,7 +86,7 @@ func _audit_empty() -> String:
 	if not cta.visible or cta.disabled:
 		page.queue_free()
 		return "ToHourglass not actionable"
-	print("month-echo empty ok ToHourglass under_panel=1")
+	print("month-echo empty ok ToHourglass how=1 under_EmptyHost=1")
 	page.queue_free()
 	await get_tree().process_frame
 	return ""
