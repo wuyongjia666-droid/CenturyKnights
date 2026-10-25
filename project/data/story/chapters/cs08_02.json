@@ -383,6 +383,26 @@
           "id": "cs08b_ho_8",
           "speaker": "苇原·灯影",
           "text": "假坐一夜，碑阴就脏。"
+        },
+        {
+          "id": "cs0802_vis_mv1",
+          "speaker": "旁白",
+          "text": "碑阴拓旁，沙漏玻璃映出半张脸。"
+        },
+        {
+          "id": "cs0802_vis_mv2",
+          "speaker": "岁吏",
+          "text": "映脸的人，自己先站直。"
+        },
+        {
+          "id": "cs0802_vis_mv3",
+          "speaker": "苇原·灯影",
+          "text": "站直了再问月份。"
+        },
+        {
+          "id": "cs0802_vis_mv4",
+          "speaker": "leader",
+          "text": "站直。去看月份。"
         }
       ],
       "next": "bridge",
@@ -532,6 +552,36 @@
           "id": "cs08b_br_18",
           "speaker": "旁白",
           "text": "桥灯一盏。碑酒门开。"
+        },
+        {
+          "id": "cs0802_mid_mv1",
+          "speaker": "旁白",
+          "text": "碑阴纸被香烟熏黄一线。黄线上有指甲划痕。"
+        },
+        {
+          "id": "cs0802_mid_mv2",
+          "speaker": "岁吏",
+          "text": "划痕不是祭。是有人试探能撕不。"
+        },
+        {
+          "id": "cs0802_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "能撕的纸，守不住碑。"
+        },
+        {
+          "id": "cs0802_mid_mv4",
+          "speaker": "苇原·灯影",
+          "text": "守碑靠人。人要先把锋亮开。"
+        },
+        {
+          "id": "cs0802_mid_mv5",
+          "speaker": "老旗手",
+          "text": "亮开不是吓人。是把门说清。"
+        },
+        {
+          "id": "cs0802_mid_mv6",
+          "speaker": "leader",
+          "text": "门说清。试锋不打假声。"
         },
         {
           "id": "cs08b_br_lost",
@@ -790,6 +840,26 @@
           "id": "cs08b_ta_18",
           "speaker": "旁白",
           "text": "两道碑题在板上。手按上去。"
+        },
+        {
+          "id": "cs0802_ret_mv1",
+          "speaker": "旁白",
+          "text": "碑阴酒过三巡，有人要把纸当菜单一卷。"
+        },
+        {
+          "id": "cs0802_ret_mv2",
+          "speaker": "掌柜",
+          "text": "菜单不是碑阴。"
+        },
+        {
+          "id": "cs0802_ret_mv3",
+          "speaker": "岁吏",
+          "text": "碑阴回堡。"
+        },
+        {
+          "id": "cs0802_ret_mv4",
+          "speaker": "leader",
+          "text": "回堡记碑阴。"
         }
       ],
       "next": "ledger",

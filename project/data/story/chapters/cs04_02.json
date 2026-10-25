@@ -661,6 +661,26 @@
             "music": "castle",
             "camera": "wide"
           }
+        },
+        {
+          "id": "cs0402_vis_mv1",
+          "speaker": "旁白",
+          "text": "时漏里沙色偏深。深沙走得更慢。"
+        },
+        {
+          "id": "cs0402_vis_mv2",
+          "speaker": "岁吏",
+          "text": "慢正好。训阴不怕慢。"
+        },
+        {
+          "id": "cs0402_vis_mv3",
+          "speaker": "苇原·灯影",
+          "text": "慢着看，折痕藏不住。"
+        },
+        {
+          "id": "cs0402_vis_mv4",
+          "speaker": "leader",
+          "text": "慢看。去月份。"
         }
       ],
       "next": "bridge",
@@ -925,6 +945,36 @@
             "music": "battle_prep",
             "camera": "wide"
           }
+        },
+        {
+          "id": "cs0402_mid_mv1",
+          "speaker": "旁白",
+          "text": "训阴纸上有新折痕。折痕像被人当枕头枕过。"
+        },
+        {
+          "id": "cs0402_mid_mv2",
+          "speaker": "岁吏",
+          "text": "枕过的纸，边毛。边毛要验。"
+        },
+        {
+          "id": "cs0402_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "边毛的人，行迹里爱插队。"
+        },
+        {
+          "id": "cs0402_mid_mv4",
+          "speaker": "苇原·灯影",
+          "text": "插队的，锋一横就老实。"
+        },
+        {
+          "id": "cs0402_mid_mv5",
+          "speaker": "老旗手",
+          "text": "老实不是吓出来的。是试出来的。"
+        },
+        {
+          "id": "cs0402_mid_mv6",
+          "speaker": "leader",
+          "text": "试。步实锋实。"
         },
         {
           "speaker": "旁白",
@@ -1276,6 +1326,26 @@
             "music": "tavern",
             "camera": "close"
           }
+        },
+        {
+          "id": "cs0402_ret_mv1",
+          "speaker": "旁白",
+          "text": "训阴笑话停在半句。半句比整句危险。"
+        },
+        {
+          "id": "cs0402_ret_mv2",
+          "speaker": "掌柜",
+          "text": "半句补全再挂。"
+        },
+        {
+          "id": "cs0402_ret_mv3",
+          "speaker": "岁吏",
+          "text": "挂完回。"
+        },
+        {
+          "id": "cs0402_ret_mv4",
+          "speaker": "leader",
+          "text": "回堡入训阴。"
         }
       ],
       "actions": [

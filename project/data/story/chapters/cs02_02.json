@@ -661,6 +661,26 @@
             "music": "castle",
             "camera": "wide"
           }
+        },
+        {
+          "id": "cs0202_vis_mv1",
+          "speaker": "旁白",
+          "text": "沙漏座下有一粒干梅核。不知谁垫的。"
+        },
+        {
+          "id": "cs0202_vis_mv2",
+          "speaker": "岁吏",
+          "text": "垫核的人心思细。细心思要见光。"
+        },
+        {
+          "id": "cs0202_vis_mv3",
+          "speaker": "石垒·晚担",
+          "text": "见光比藏着强。"
+        },
+        {
+          "id": "cs0202_vis_mv4",
+          "speaker": "leader",
+          "text": "见光。去看月份。"
         }
       ],
       "next": "bridge",
@@ -925,6 +945,36 @@
             "music": "battle_prep",
             "camera": "wide"
           }
+        },
+        {
+          "id": "cs0202_mid_mv1",
+          "speaker": "旁白",
+          "text": "偏格纸被夜露打潮。墨晕开一线，像有人偷改。"
+        },
+        {
+          "id": "cs0202_mid_mv2",
+          "speaker": "岁吏",
+          "text": "潮不是改。改是另一只手。"
+        },
+        {
+          "id": "cs0202_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "另一只手若在墙外，就该见面。"
+        },
+        {
+          "id": "cs0202_mid_mv4",
+          "speaker": "苇原·灯影",
+          "text": "见面带锋。不带锋，只算路过。"
+        },
+        {
+          "id": "cs0202_mid_mv5",
+          "speaker": "老旗手",
+          "text": "路过的不留名。试锋的要留名。"
+        },
+        {
+          "id": "cs0202_mid_mv6",
+          "speaker": "leader",
+          "text": "名我留真。锋也真。"
         },
         {
           "speaker": "旁白",
@@ -1276,6 +1326,26 @@
             "music": "tavern",
             "camera": "close"
           }
+        },
+        {
+          "id": "cs0202_ret_mv1",
+          "speaker": "旁白",
+          "text": "偏格笑话讲完，场子静了一息。"
+        },
+        {
+          "id": "cs0202_ret_mv2",
+          "speaker": "掌柜",
+          "text": "静一息好。静完再挂。"
+        },
+        {
+          "id": "cs0202_ret_mv3",
+          "speaker": "岁吏",
+          "text": "挂完回堡。堡里入谱。"
+        },
+        {
+          "id": "cs0202_ret_mv4",
+          "speaker": "leader",
+          "text": "回堡写偏格。"
         }
       ],
       "actions": [

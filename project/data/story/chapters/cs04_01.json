@@ -362,6 +362,26 @@
           "id": "cs04_hourglass_x9",
           "speaker": "leader",
           "text": "两行都亮。去门廊。"
+        },
+        {
+          "id": "cs0401_vis_mv1",
+          "speaker": "旁白",
+          "text": "沙漏底座刻着一行浅训：步实则月实。"
+        },
+        {
+          "id": "cs0401_vis_mv2",
+          "speaker": "书记官",
+          "text": "浅训怕磨。磨掉就只剩口号。"
+        },
+        {
+          "id": "cs0401_vis_mv3",
+          "speaker": "槐里·青禾",
+          "text": "口号不顶月份。"
+        },
+        {
+          "id": "cs0401_vis_mv4",
+          "speaker": "leader",
+          "text": "月份为证。去看。"
         }
       ],
       "actions": [
@@ -500,6 +520,36 @@
           "id": "cs04_mid_y20",
           "speaker": "leader",
           "text": "我走实步。"
+        },
+        {
+          "id": "cs0401_mid_mv1",
+          "speaker": "旁白",
+          "text": "门廊训条在风里拍墙。有人跟着拍，拍错节奏。"
+        },
+        {
+          "id": "cs0401_mid_mv2",
+          "speaker": "书记官",
+          "text": "节奏错了，口号就成了戏。"
+        },
+        {
+          "id": "cs0401_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "戏能演。步不能假。"
+        },
+        {
+          "id": "cs0401_mid_mv4",
+          "speaker": "槐里·青禾",
+          "text": "假步走远，训条自己羞。"
+        },
+        {
+          "id": "cs0401_mid_mv5",
+          "speaker": "掌柜",
+          "text": "训条旁那拨，专挑不会走的人。"
+        },
+        {
+          "id": "cs0401_mid_mv6",
+          "speaker": "leader",
+          "text": "我会走。锋跟步走。"
         },
         {
           "id": "cs04_mid_lost",
@@ -746,6 +796,26 @@
           "id": "cs04_tavern_x9",
           "speaker": "旁白",
           "text": "你得选。选完进账本。"
+        },
+        {
+          "id": "cs0401_ret_mv1",
+          "speaker": "旁白",
+          "text": "有人把训条念成酒令。念错两个字。"
+        },
+        {
+          "id": "cs0401_ret_mv2",
+          "speaker": "掌柜",
+          "text": "酒令可以错。训条不行。"
+        },
+        {
+          "id": "cs0401_ret_mv3",
+          "speaker": "石垒·晚担",
+          "text": "错的刮掉。对的挂上。"
+        },
+        {
+          "id": "cs0401_ret_mv4",
+          "speaker": "leader",
+          "text": "挂上。回堡。"
         }
       ],
       "actions": [
