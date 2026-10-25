@@ -76,7 +76,21 @@ func _fill() -> void:
 			UIFX.wire_button(to_h)
 		else:
 			var zh := str(CKCourtChrome.KIND_ZH.get(_filter, _filter))
-			_list.add_child(CKPageKit.empty(Locale.t("lb_news_kind_empty", [zh]), Locale.t("lb_news_kind_why"), "", 1100))
+			## Kind filter empty: how + EmptyHost; ToHourglass waits the next gazette.
+			var host := VBoxContainer.new()
+			host.name = "EmptyHost"
+			host.add_theme_constant_override("separation", 12)
+			host.add_child(CKPageKit.empty(Locale.t("lb_news_kind_empty", [zh]), Locale.t("lb_news_kind_why"), Locale.t("lb_news_kind_how"), 1100))
+			var acts := HBoxContainer.new()
+			acts.name = "EmptyActions"
+			acts.add_theme_constant_override("separation", 12)
+			var to_h := CKPageKit.button(Locale.t("lb_news_to_hourglass"), true, 300)
+			to_h.name = "ToHourglass"
+			to_h.pressed.connect(func(): CKNav.go("res://scenes/hub/hourglass.tscn"))
+			acts.add_child(to_h)
+			UIFX.wire_button(to_h)
+			host.add_child(acts)
+			_list.add_child(host)
 		return
 	var crisis := {}
 	for ev in rows:

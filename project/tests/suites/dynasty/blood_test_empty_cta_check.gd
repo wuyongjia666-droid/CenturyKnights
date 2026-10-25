@@ -1,6 +1,5 @@
 extends Node
-## Y1-B: blood_test all-verified queue exposes named ToMarriage under QueueList
-## (empty box already has why-text; this knife adds the tap CTA).
+## Y1-B: blood_test all-verified queue → EmptyHost + how + ToMarriage under QueueList.
 
 func _ready() -> void:
 	var err := await _run()
@@ -40,27 +39,37 @@ func _audit(page: Control) -> String:
 	var queue := page.find_child("QueueList", true, false)
 	if queue == null:
 		return "QueueList missing"
+	var host := queue.find_child("EmptyHost", true, false)
+	if host == null:
+		return "EmptyHost missing under QueueList"
 	var done_zh := Locale.t("lb_bt_all_done")
 	var found_empty := false
-	for n in queue.find_children("*", "Label", true, false):
+	for n in host.find_children("*", "Label", true, false):
 		if str((n as Label).text).find(done_zh) >= 0:
 			found_empty = true
 			break
 	if not found_empty:
 		return "empty box (lb_bt_all_done) missing"
-
-	var cta: Button = page.find_child("ToMarriage", true, false) as Button
+	var how_zh := Locale.t("lb_bt_all_done_how")
+	var how_ok := false
+	for n in host.find_children("*", "Label", true, false):
+		if str((n as Label).text).find(how_zh) >= 0:
+			how_ok = true
+			break
+	if not how_ok:
+		return "how (lb_bt_all_done_how) missing"
+	var acts := host.find_child("EmptyActions", true, false)
+	if acts == null:
+		return "EmptyActions missing"
+	var cta: Button = host.find_child("ToMarriage", true, false) as Button
 	if cta == null:
-		return "ToMarriage missing"
-	if not cta.visible or not cta.is_visible_in_tree():
-		return "ToMarriage not visible"
-	if cta.disabled:
-		return "ToMarriage disabled"
+		return "ToMarriage missing under EmptyHost"
+	if not cta.visible or not cta.is_visible_in_tree() or cta.disabled:
+		return "ToMarriage not usable"
+	if not acts.is_ancestor_of(cta):
+		return "ToMarriage not under EmptyActions"
 	var want := Locale.t("lb_bt_to_marriage")
 	if cta.text != want:
 		return "ToMarriage text want=%s got=%s" % [want, cta.text]
-	if not queue.is_ancestor_of(cta):
-		return "ToMarriage not under QueueList"
-	cta.pressed.emit()
-	print("blood-empty ok ToMarriage under_queue=1")
+	print("blood-empty ok ToMarriage how=1 under_EmptyHost=1")
 	return ""
