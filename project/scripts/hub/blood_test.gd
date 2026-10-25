@@ -62,6 +62,7 @@ func _ready() -> void:
 		var pr := UIKit.make_portrait_rect(c, 36)
 		pr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		h.add_child(pr)
+		CKHeraldryChrome.attach_blood_queue_arms(h, c, Vector2(26, 32))
 		var said := Locale.t("lb_bt_row", [c.name, c.rank_name(), c.age]) + ("" if i < can else Locale.t("lb_bt_wait_money"))
 		h.add_child(CKPageKit.text(said, UIKit.TEXT if i < can else UIKit.TEXT_DIM, 14, 300))
 		list.add_child(r[0])
@@ -94,14 +95,23 @@ func _ready() -> void:
 			UIFX.wire_button(to_m)
 			host.add_child(acts)
 		_stage.add_child(host)
+	_place_blood_crests()
 	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "SANCTUARY ASSAY · FROST")
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 
 
+
+func _place_blood_crests() -> void:
+	var mob := DeviceProfile.is_mobile()
+	var at := Vector2(1120, 8) if not mob else Vector2(maxf(20.0, MobilePage.width(self) - 120.0), 4)
+	var sh := Vector2(36, 44) if not mob else Vector2(32, 40)
+	CKHeraldryChrome.place_blood_crest_strip(self, at, sh, Vector2(24, 34) if not mob else Vector2(22, 30))
+
 func apply_mobile_layout() -> void:
 	if not MobilePage.active(self):
 		return
+	_place_blood_crests()
 	CKPageKit.phone_fill(self)
 	var left := find_child("AssayQueue", true, false) as Control
 	if left and _begin_btn:

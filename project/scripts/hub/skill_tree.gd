@@ -54,12 +54,22 @@ func _ready() -> void:
 	if not roster.is_empty():
 		_sel = roster[0]
 	_refresh()
+	_place_skill_crests()
 	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "SKILL TREE · FROST")
 	UIFX.page_enter(self)
 
 
 ## Phone: stretch the three kit cards, then park points + unlock inside the detail card so the
 ## 22px floor cannot land the points line on the page description.
+
+func _place_skill_crests() -> void:
+	var mob := DeviceProfile.is_mobile()
+	var at := Vector2(1120, 8) if not mob else Vector2(maxf(20.0, MobilePage.width(self) - 120.0), 4)
+	var sh := Vector2(36, 44) if not mob else Vector2(32, 40)
+	CKHeraldryChrome.place_skill_crest_strip(self, at, sh, Vector2(24, 34) if not mob else Vector2(22, 30))
+	if _sel != null and _detail != null:
+		CKHeraldryChrome.attach_skill_person_arms(_detail, _sel, Vector2(28, 34) if not mob else Vector2(26, 32))
+
 func apply_mobile_layout() -> void:
 	if not MobilePage.active(self):
 		return
@@ -67,6 +77,7 @@ func apply_mobile_layout() -> void:
 	var right := find_child("DetailCard", true, false) as Control
 	if right != null:
 		_mobile_detail_chrome(right)
+	_place_skill_crests()
 
 func _mobile_detail_chrome(right: Control) -> void:
 	if _pts == null or right == null:
@@ -121,6 +132,7 @@ func _refresh() -> void:
 	CKPageKit.drag_through(_people)
 	_fill_columns()
 	_fill_detail()
+	_place_skill_crests()
 	UIFX.wire_tree(self)
 
 func _fill_columns() -> void:

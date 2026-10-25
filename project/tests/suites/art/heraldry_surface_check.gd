@@ -559,6 +559,67 @@ func _run() -> void:
 		_ok(int(plate.get_meta("purse_silver", -1)) == 7, "PursePlate silver meta")
 	purse_host.queue_free()
 
+
+	# ── Market / skill / hourglass / castle-view / blood chrome ─
+	var mkt_host := Control.new()
+	mkt_host.name = "MarketCrestHost"
+	get_tree().root.add_child(mkt_host)
+	var mkt := CKHeraldryChrome.place_market_crest_strip(mkt_host, Vector2(10, 10), Vector2(36, 44), Vector2(24, 34))
+	_ok(mkt != null and mkt.name == "MarketCrestStrip", "MarketCrestStrip missing")
+	if mkt != null:
+		_ok(mkt.find_child("CastleArms", true, false) != null, "market CastleArms")
+		var mbn := mkt.find_child("MarketBanner", true, false)
+		_ok(mbn != null and str(mbn.get_meta("arms_kind", "")) == "lb_market_arms", "market MarketBanner kind")
+	mkt_host.queue_free()
+
+	var sk_host := Control.new()
+	sk_host.name = "SkillCrestHost"
+	get_tree().root.add_child(sk_host)
+	var sk := CKHeraldryChrome.place_skill_crest_strip(sk_host, Vector2(10, 10), Vector2(36, 44), Vector2(24, 34))
+	_ok(sk != null and sk.name == "SkillCrestStrip", "SkillCrestStrip missing")
+	if sk != null:
+		var sbn := sk.find_child("SkillBanner", true, false)
+		_ok(sbn != null and str(sbn.get_meta("arms_kind", "")) == "lb_skill_arms", "skill SkillBanner kind")
+	var sk_row := HBoxContainer.new()
+	sk_host.add_child(sk_row)
+	CKHeraldryChrome.attach_skill_person_arms(sk_row, leader, Vector2(28, 34))
+	_ok(sk_row.find_child("SkillPersonArms", true, false) != null, "SkillPersonArms attached")
+	sk_host.queue_free()
+
+	var hg_host := Control.new()
+	hg_host.name = "HourglassCrestHost"
+	get_tree().root.add_child(hg_host)
+	var hg := CKHeraldryChrome.place_hourglass_crest_strip(hg_host, Vector2(10, 10), Vector2(36, 44), Vector2(24, 34))
+	_ok(hg != null and hg.name == "HourglassCrestStrip", "HourglassCrestStrip missing")
+	if hg != null:
+		var hbn := hg.find_child("HourglassBanner", true, false)
+		_ok(hbn != null and str(hbn.get_meta("arms_kind", "")) == "lb_hourglass_arms", "hourglass banner kind")
+	hg_host.queue_free()
+
+	var cv_host := Control.new()
+	cv_host.name = "CastleViewCrestHost"
+	get_tree().root.add_child(cv_host)
+	var cv := CKHeraldryChrome.place_castle_view_crest_strip(cv_host, Vector2(10, 10), Vector2(36, 44), Vector2(24, 34))
+	_ok(cv != null and cv.name == "CastleViewCrestStrip", "CastleViewCrestStrip missing")
+	if cv != null:
+		var cbn := cv.find_child("CastleViewBanner", true, false)
+		_ok(cbn != null and str(cbn.get_meta("arms_kind", "")) == "lb_castle_view_arms", "castle_view banner kind")
+	cv_host.queue_free()
+
+	var bd_host := Control.new()
+	bd_host.name = "BloodCrestHost"
+	get_tree().root.add_child(bd_host)
+	var bd := CKHeraldryChrome.place_blood_crest_strip(bd_host, Vector2(10, 10), Vector2(36, 44), Vector2(24, 34))
+	_ok(bd != null and bd.name == "BloodCrestStrip", "BloodCrestStrip missing")
+	if bd != null:
+		var bbn := bd.find_child("BloodBanner", true, false)
+		_ok(bbn != null and str(bbn.get_meta("arms_kind", "")) == "lb_blood_arms", "blood banner kind")
+	var bd_row := HBoxContainer.new()
+	bd_host.add_child(bd_row)
+	CKHeraldryChrome.attach_blood_queue_arms(bd_row, leader, Vector2(26, 32))
+	_ok(bd_row.find_child("BloodQueueArms", true, false) != null, "BloodQueueArms attached")
+	bd_host.queue_free()
+
 	# Rank badges distinct
 	var sigs: Dictionary = {}
 	for rk in ["knight", "baron", "viscount", "count", "duke", "royal"]:

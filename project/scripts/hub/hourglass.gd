@@ -52,16 +52,25 @@ func _ready() -> void:
 	_paint_kpis()
 	_show_forecast(1)
 	_feel_dynasty_end()
+	_place_hourglass_crests()
 	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "HOURGLASS · FROST")
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 
 ## Story screens opened from a chapter go back to it once (StoryCatalog).
 
+
+func _place_hourglass_crests() -> void:
+	var mob := DeviceProfile.is_mobile()
+	var at := Vector2(1120, 8) if not mob else Vector2(maxf(20.0, MobilePage.width(self) - 120.0), 4)
+	var sh := Vector2(36, 44) if not mob else Vector2(32, 40)
+	CKHeraldryChrome.place_hourglass_crest_strip(self, at, sh, Vector2(24, 34) if not mob else Vector2(22, 30))
+
 func apply_mobile_layout() -> void:
 	if not MobilePage.active(self):
 		return
 	CKPageKit.phone_fill(self)
+	_place_hourglass_crests()
 	var w := MobilePage.width(self)
 	if _kpi:
 		_kpi.position = Vector2(24, CKPageKit.TOP + 8)

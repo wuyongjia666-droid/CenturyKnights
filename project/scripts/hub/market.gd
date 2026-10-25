@@ -30,6 +30,7 @@ func _ready() -> void:
 	UIKit.footer_bar(self, [["A", "确认买入"], ["S", "卖出"], ["←→", "调整数量"], ["ESC", "返回城堡"]], "MARKET // LV %d · v8.6" % GameState.building_level("market"))
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
+	_place_market_crests()
 
 func _back() -> void:
 	CKNav.up()
@@ -54,6 +55,13 @@ func _clear(n: Control) -> void:
 		n.remove_child(ch)
 		ch.queue_free()
 
+
+func _place_market_crests() -> void:
+	var mob := DeviceProfile.is_mobile()
+	var at := Vector2(1120, 8) if not mob else Vector2(maxf(20.0, MobilePage.width(self) - 120.0), 4)
+	var sh := Vector2(36, 44) if not mob else Vector2(32, 40)
+	CKHeraldryChrome.place_market_crest_strip(self, at, sh, Vector2(24, 34) if not mob else Vector2(22, 30))
+
 func apply_mobile_layout() -> void:
 	if MobilePage.active(self):
 		_render()
@@ -72,6 +80,7 @@ func _render() -> void:
 	_render_left()
 	_render_mid()
 	_render_right()
+	_place_market_crests()
 
 func _icon(item: String, sz: int) -> TextureRect:
 	var t := TextureRect.new()
@@ -389,6 +398,7 @@ func _m_render() -> void:
 	var bh := h - top - 16.0
 	MobilePage.top_bar(self, Locale.t("mw_f8f18ffd"), Locale.t("mw_72393112") % [GameState.silver, GameState.food, GameState.iron, GameState.herb,
 			GameState.building_level("market")], [[Locale.t("btn_back"), _back]])
+	_place_market_crests()
 	var lw := clampf(w * 0.27, 330.0, 420.0)
 	var rw := clampf(w * 0.27, 330.0, 420.0)
 	var mw := w - 40.0 - lw - rw - 24.0
