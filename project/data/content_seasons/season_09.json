@@ -1,6 +1,6 @@
 {
   "id": "season_09",
-  "version": 3,
+  "version": 4,
   "title_zh": "血验上的灯",
   "title_en": "The Lamp of the Blood Test",
   "status": "playable_draft",
@@ -70,6 +70,12 @@
       "label_zh": "可玩章 cs09_01 对白可走",
       "suite": "res://tests/suites/narrative/content_season_playable_s09_check.tscn",
       "done": true
+    },
+    {
+      "id": "playable_dialogue_02",
+      "label_zh": "可玩章 cs09_02 对白可走",
+      "suite": "res://tests/suites/narrative/content_season_playable_s09_02_check.tscn",
+      "done": true
     }
   ],
   "pipeline_stages": {
@@ -118,5 +124,8 @@
     "docs/content-seasons/season-09/ACCEPTANCE.md"
   ],
   "playable_chapter": "cs09_01",
-  "playable_path": "res://data/story/chapters/cs09_01.json"
+  "playable_path": "res://data/story/chapters/cs09_01.json",
+  "playable_chapters": [
+    "cs09_02"
+  ]
 }

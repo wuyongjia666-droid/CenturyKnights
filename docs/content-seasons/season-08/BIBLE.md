@@ -88,3 +88,7 @@
 ## 加深备忘
 
 本刀加厚原著与章内对白，不改选题与系统钩子，不新开 season_11，不新增 month_echo 种类。visit@hourglass、battle@bridge 所有权保持。
+
+## 第二可玩章
+
+本季增补第二可玩章 `cs08_02`（见 `PLAYABLE.md`）；旗/灯冲突与系统加深不变，回读加深人物弧。
