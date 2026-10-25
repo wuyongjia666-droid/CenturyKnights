@@ -53,7 +53,8 @@ func _paint_desktop() -> void:
 	var rows: Array = CKCourt.requirement_rows(_leader, {})
 	var grid := HBoxContainer.new()
 	grid.name = "ReqGrid"
-	grid.position = Vector2(42, CKPageKit.TOP + 92)
+	## Ladder chips grew for LadderBadge (64→88); keep ~20px gap under step row.
+	grid.position = Vector2(42, CKPageKit.TOP + 116)
 	grid.add_theme_constant_override("separation", 12)
 	_host.add_child(grid)
 	if rows.is_empty():
@@ -61,7 +62,7 @@ func _paint_desktop() -> void:
 	for row in rows:
 		grid.add_child(_req_card(row, 0.0))
 	var miss: Array = _miss_list(rows)
-	var info := CKPageKit.card(_host, Rect2(42, CKPageKit.TOP + 260, 1196, 150), "Missing")
+	var info := CKPageKit.card(_host, Rect2(42, CKPageKit.TOP + 284, 1196, 150), "Missing")
 	CKPageKit.card_head(info, Locale.t("lb_title_miss_head") if not miss.is_empty() else Locale.t("lb_title_ready_head"), "")
 	var said := "\n".join(miss) if not miss.is_empty() else (Locale.t("lb_title_ready") if not rows.is_empty() else "")
 	var body := CKPageKit.text(said, UIKit.DANGER if not miss.is_empty() else UIKit.OK, 15, 1150)
@@ -69,7 +70,7 @@ func _paint_desktop() -> void:
 	body.size = Vector2(1150, 90)
 	info.add_child(body)
 	var go := _promote_btn(false, 1196.0)
-	go.position = Vector2(42, CKPageKit.TOP + 418)
+	go.position = Vector2(42, CKPageKit.TOP + 442)
 	_host.add_child(go)
 	if _leader != null:
 		var la := CKHeraldryChrome.make_person_arms(_leader, Vector2(44, 52))
