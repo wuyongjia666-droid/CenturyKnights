@@ -3,8 +3,8 @@ extends RefCounted
 ## Shared player-facing heraldry chrome: 团徽 / 旗徽 / 族徽 + 爵位徽记 + 敌徽 + 邦徽.
 ## One design system everywhere (castle header/banner strip, genealogy, dossier,
 ## board unit shields, rival houses, tavern/hire cards, city/smith/market chrome,
-## marriage house cards + crest strip, battle/danger aftermath,
-## succession / heir-duel / annex).
+## marriage house cards + crest strip, bloodline codex / shrine / banner rite,
+## succession / heir-duel / annex, battle/danger aftermath).
 ## No marriage marshalling / per-person cadency — only company vs family vs nation arms + rank badge.
 
 static func is_family_member(c) -> bool:
@@ -251,8 +251,7 @@ static func blit_token_shield(img: Image, c, team: String = "player") -> void:
 	var oy := img.get_height() - sh - 2
 	img.blit_rect(simg, Rect2i(0, 0, sw, sh), Vector2i(ox, oy))
 
-## Nation / foe shield (敌徽). Shared plate; city chrome uses make_city_nation_arms for 邦徽;
-## battle/danger aftermath uses place_aftermath_crest_strip.
+## Nation / foe shield (敌徽). Shared plate; city chrome uses make_city_nation_arms for 邦徽.
 static func nation_shield(nid: String, w: int = 40, h: int = 48) -> Texture2D:
 	return UnitArt.shield_arms(nation_spec(nid), w, h)
 
@@ -315,7 +314,6 @@ static func place_city_crest_strip(parent: Node, city_id: String, at: Vector2, s
 	parent.add_child(host)
 	return host
 
-
 ## Battle / danger aftermath crest strip: 团徽 + optional foe 敌徽 (nation of the fight).
 ## Host name AftermathCrestStrip so suites can assert both arms without walking siblings.
 static func place_aftermath_crest_strip(parent: Node, at: Vector2, foe_nation: String = "", shield: Vector2 = Vector2(36, 44)) -> Control:
@@ -339,6 +337,62 @@ static func place_aftermath_crest_strip(parent: Node, at: Vector2, foe_nation: S
 		host.add_child(foe)
 		w = shield.x * 2.0 + 8.0
 	host.size = Vector2(w, shield.y)
+	parent.add_child(host)
+	return host
+
+## Bloodline-codex / shrine nation crest strip: 团徽 + 邦徽 for the focused nation.
+## Host name NationCrestStrip. Distinct from CityCrestStrip (city_id meta) — this one keys on nation_id only.
+static func place_nation_crest_strip(parent: Node, nation_id: String, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("NationCrestStrip")
+	if old:
+		old.name = "_NationCrestStripDying"
+		old.queue_free()
+	var host := Control.new()
+	host.name = "NationCrestStrip"
+	host.position = at
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var arms := make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var w := shield.x
+	var nid := str(nation_id)
+	if nid != "":
+		var nat := make_city_nation_arms(nid, shield)
+		nat.position = Vector2(shield.x + 8.0, 0)
+		host.add_child(nat)
+		w = shield.x * 2.0 + 8.0
+	host.size = Vector2(w, shield.y)
+	host.set_meta("nation_id", nid)
+	parent.add_child(host)
+	return host
+
+## Banner-rite crest strip: 团徽 + selected heir 族徽|旗徽 (LeaderArms). Empty selection → 团徽 only.
+static func place_rite_crest_strip(parent: Node, heir, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("RiteCrestStrip")
+	if old:
+		old.name = "_RiteCrestStripDying"
+		old.queue_free()
+	var host := Control.new()
+	host.name = "RiteCrestStrip"
+	host.position = at
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var co := make_company_arms(shield)
+	co.position = Vector2.ZERO
+	host.add_child(co)
+	var gap := 8.0
+	if heir != null:
+		var la := make_person_arms(heir, shield)
+		la.name = "LeaderArms"
+		la.position = Vector2(shield.x + gap, 0)
+		host.add_child(la)
+		host.size = Vector2(shield.x * 2.0 + gap, shield.y)
+	else:
+		host.size = Vector2(shield.x, shield.y)
+	host.set_meta("has_heir", heir != null)
 	parent.add_child(host)
 	return host
 
@@ -405,7 +459,6 @@ static func place_duel_crest_strip(parent: Node, left_c, right_c, at: Vector2, s
 	host.size = Vector2(maxf(shield.x, x), shield.y)
 	host.set_meta("has_left", left_c != null)
 	host.set_meta("has_right", right_c != null)
-
 	parent.add_child(host)
 	return host
 

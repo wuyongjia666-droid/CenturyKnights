@@ -1,7 +1,7 @@
 extends Node
 ## Player-visible heraldry consistency across genealogy + castle banner strip +
 ## rival houses + tavern/hire + board unit shields + city/smith 邦徽 +
-## battle/danger aftermath crests + commission-board 委托徽 +
+## codex/shrine/rite crests + battle/danger aftermath + commission-board 委托徽 +
 ## mobile genealogy/quests company header + succession / heir-duel strips.
 ## 团徽 / 旗徽 / 族徽 / 敌徽 / 邦徽 / 委托徽 never mismatch outside their Chrome routes.
 
@@ -312,32 +312,37 @@ func _run() -> void:
 	city_host.queue_free()
 
 
-	# ── Aftermath crest strip (团徽 + 敌徽) ────────────────────────
-	var host := Control.new()
-	host.name = "AftermathHost"
-	get_tree().root.add_child(host)
-	var af_strip := CKHeraldryChrome.place_aftermath_crest_strip(host, Vector2(10, 10), "ashbanner", Vector2(36, 44))
-	_ok(af_strip != null and af_strip.name == "AftermathCrestStrip", "AftermathCrestStrip missing")
-	if af_strip != null:
-		var ca := af_strip.find_child("CastleArms", true, false)
-		var foe := af_strip.find_child("FoeArms", true, false)
-		_ok(ca != null, "aftermath CastleArms missing")
-		_ok(foe != null, "aftermath FoeArms missing")
-		if ca != null:
-			_ok(str(ca.get_meta("arms_kind", "")) == "gen2_36", "aftermath company not 团徽")
-			_ok(str(ca.get_meta("arms_core", "")) == CKHeraldry.core_key(ban_spec), "aftermath company core drift")
-		if foe != null:
-			_ok(str(foe.get_meta("arms_kind", "")) == "lb_rv_arms", "aftermath foe not 敌徽")
-			_ok(str(foe.get_meta("nation_id", "")) == "ashbanner", "aftermath foe nation_id")
-			_ok(str(foe.get_meta("arms_core", "")) == CKHeraldry.core_key(CKHeraldryChrome.nation_spec("ashbanner")), "aftermath foe core")
-			_ok(str(foe.get_meta("arms_core", "")) != CKHeraldry.core_key(ban_spec), "foe must not equal company")
-	## Company-only strip (halt / calm road) has no FoeArms
-	var af_halt := CKHeraldryChrome.place_aftermath_crest_strip(host, Vector2(10, 80), "", Vector2(36, 44))
-	_ok(af_halt != null, "company-only strip missing")
-	if af_halt != null:
-		_ok(af_halt.find_child("CastleArms", true, false) != null, "halt CastleArms missing")
-		_ok(af_halt.find_child("FoeArms", true, false) == null, "halt must not show FoeArms")
-	host.queue_free()
+	# ── Nation crest strip (团徽 + 邦徽) ───────────────────────────
+	var nat_host := Control.new()
+	nat_host.name = "NationCrestHost"
+	get_tree().root.add_child(nat_host)
+	var nat_ids: Array = CKBloodline.nation_ids()
+	var sample_nid := str(nat_ids[0]) if not nat_ids.is_empty() else "ashbanner"
+	var nat_strip := CKHeraldryChrome.place_nation_crest_strip(nat_host, sample_nid, Vector2(10, 10), Vector2(36, 44))
+	_ok(nat_strip != null and nat_strip.name == "NationCrestStrip", "NationCrestStrip missing")
+	if nat_strip != null:
+		var nca := nat_strip.find_child("CastleArms", true, false)
+		var ncn := nat_strip.find_child("CityNationArms", true, false)
+		_ok(nca != null and str(nca.get_meta("arms_kind", "")) == "gen2_36", "nation strip 团徽")
+		_ok(ncn != null and str(ncn.get_meta("arms_kind", "")) == "lb_city_arms", "nation strip 邦徽")
+		_ok(ncn != null and str(ncn.get_meta("nation_id", "")) == sample_nid, "nation strip nation_id")
+		_ok(ncn != null and str(ncn.get_meta("arms_core", "")) != CKHeraldry.core_key(ban_spec), "邦徽 != 团徽 on nation strip")
+	nat_host.queue_free()
+
+	# ── Banner-rite crest strip (团徽 + heir) ──────────────────────
+	var rite_host := Control.new()
+	rite_host.name = "RiteCrestHost"
+	get_tree().root.add_child(rite_host)
+	var rite_strip := CKHeraldryChrome.place_rite_crest_strip(rite_host, leader, Vector2(10, 10), Vector2(36, 44))
+	_ok(rite_strip != null and rite_strip.name == "RiteCrestStrip", "RiteCrestStrip missing")
+	if rite_strip != null:
+		_ok(rite_strip.find_child("CastleArms", true, false) != null, "rite CastleArms")
+		var rla := rite_strip.find_child("LeaderArms", true, false)
+		_ok(rla != null, "rite LeaderArms")
+		_ok(bool(rite_strip.get_meta("has_heir", false)), "rite has_heir meta")
+	var rite_empty := CKHeraldryChrome.place_rite_crest_strip(rite_host, null, Vector2(10, 80), Vector2(36, 44))
+	_ok(rite_empty != null and rite_empty.find_child("LeaderArms", true, false) == null, "rite empty no LeaderArms")
+	rite_host.queue_free()
 
 	# ── Commission board crests (委托徽) ───────────────────────────
 	_ok(CKHeraldryChrome.issuer_is_home("hq"), "hq should be home issuer")
@@ -390,7 +395,34 @@ func _run() -> void:
 	city_pg.queue_free()
 
 
-	# ── Succession crest strip (团徽 + heir) ───────────────────────
+	# ── Aftermath crest strip (团徽 + 敌徽) ────────────────────────
+	var host := Control.new()
+	host.name = "AftermathHost"
+	get_tree().root.add_child(host)
+	var af_strip := CKHeraldryChrome.place_aftermath_crest_strip(host, Vector2(10, 10), "ashbanner", Vector2(36, 44))
+	_ok(af_strip != null and af_strip.name == "AftermathCrestStrip", "AftermathCrestStrip missing")
+	if af_strip != null:
+		var ca := af_strip.find_child("CastleArms", true, false)
+		var foe := af_strip.find_child("FoeArms", true, false)
+		_ok(ca != null, "aftermath CastleArms missing")
+		_ok(foe != null, "aftermath FoeArms missing")
+		if ca != null:
+			_ok(str(ca.get_meta("arms_kind", "")) == "gen2_36", "aftermath company not 团徽")
+			_ok(str(ca.get_meta("arms_core", "")) == CKHeraldry.core_key(ban_spec), "aftermath company core drift")
+		if foe != null:
+			_ok(str(foe.get_meta("arms_kind", "")) == "lb_rv_arms", "aftermath foe not 敌徽")
+			_ok(str(foe.get_meta("nation_id", "")) == "ashbanner", "aftermath foe nation_id")
+			_ok(str(foe.get_meta("arms_core", "")) == CKHeraldry.core_key(CKHeraldryChrome.nation_spec("ashbanner")), "aftermath foe core")
+			_ok(str(foe.get_meta("arms_core", "")) != CKHeraldry.core_key(ban_spec), "foe must not equal company")
+	## Company-only strip (halt / calm road) has no FoeArms
+	var af_halt := CKHeraldryChrome.place_aftermath_crest_strip(host, Vector2(10, 80), "", Vector2(36, 44))
+	_ok(af_halt != null, "company-only strip missing")
+	if af_halt != null:
+		_ok(af_halt.find_child("CastleArms", true, false) != null, "halt CastleArms missing")
+		_ok(af_halt.find_child("FoeArms", true, false) == null, "halt must not show FoeArms")
+	host.queue_free()
+
+# ── Succession crest strip (团徽 + heir) ───────────────────────
 	var succ_host := Control.new()
 	succ_host.name = "SuccessionCrestHost"
 	get_tree().root.add_child(succ_host)
