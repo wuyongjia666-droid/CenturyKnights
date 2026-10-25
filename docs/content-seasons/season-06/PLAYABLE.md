@@ -61,3 +61,8 @@
 - 前三拍收束不为旁白（plate-final），保证 return_portrait 走得到板面。
 - suite 行数闸保持 ≥70；walk_to_choice 提到 200，兜住加厚对白。
 - 主题：校场/胜册——并排留真，不催假胜/假入谱。
+
+## 第二可玩章加深（本刀）
+
+- `cs06_02` 口语加厚至约 124–130 行；保留 visit@hourglass / battle@bridge CTA 与 mid_lost 门闸。
+- 前三拍收束不为旁白；suite walk_to_choice 提到 220。

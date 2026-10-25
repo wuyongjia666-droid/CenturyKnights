@@ -96,6 +96,21 @@
           "text": "我站印院外。站着也算见证。"
         },
         {
+          "id": "cs10b_ya_x17",
+          "speaker": "旁白",
+          "text": "封院静。静里听见印泥盖子轻响。"
+        },
+        {
+          "id": "cs10b_ya_x18",
+          "speaker": "石垒·晚担",
+          "text": "印泥响，说明有人刚用过。"
+        },
+        {
+          "id": "cs10b_ya_x19",
+          "speaker": "leader",
+          "text": "刚用过的印，我验。"
+        },
+        {
           "id": "cs10b_ya_16",
           "speaker": "槐里·青禾",
           "text": "诚实比能喊的城印贵。"
@@ -193,6 +208,21 @@
           "text": "骗不过抄印底的停顿。"
         },
         {
+          "id": "cs10b_se_x17",
+          "speaker": "旁白",
+          "text": "印匣锁着。锁孔有新擦痕。"
+        },
+        {
+          "id": "cs10b_se_x18",
+          "speaker": "岁吏",
+          "text": "擦痕浅，说明心虚。"
+        },
+        {
+          "id": "cs10b_se_x19",
+          "speaker": "leader",
+          "text": "心虚的印不盖。"
+        },
+        {
           "id": "cs10b_se_9",
           "speaker": "老旗手",
           "text": "旗布完整。旗角不绣喊出来的城印。"
@@ -288,6 +318,21 @@
           "id": "cs10b_ho_17",
           "speaker": "石垒·晚担",
           "text": "印痕看见了。去门廊留痕。"
+        },
+        {
+          "id": "cs10b_ho_x17",
+          "speaker": "旁白",
+          "text": "沙漏旁放着封泥样。"
+        },
+        {
+          "id": "cs10b_ho_x18",
+          "speaker": "苇原·灯影",
+          "text": "样和真，差在边沿。"
+        },
+        {
+          "id": "cs10b_ho_x19",
+          "speaker": "leader",
+          "text": "去沙漏。看边沿。"
         },
         {
           "id": "cs10b_ho_8",
@@ -422,6 +467,21 @@
           "id": "cs10b_br_17",
           "speaker": "石垒·晚担",
           "text": "停一下好。不停着抄城印最危险。"
+        },
+        {
+          "id": "cs10b_br_x18",
+          "speaker": "旁白",
+          "text": "门廊旗绳新换。"
+        },
+        {
+          "id": "cs10b_br_x19",
+          "speaker": "岁吏",
+          "text": "新绳绑旧旗，也算交代。"
+        },
+        {
+          "id": "cs10b_br_x20",
+          "speaker": "leader",
+          "text": "试锋。交代清楚。"
         },
         {
           "id": "cs10b_br_18",
@@ -637,6 +697,21 @@
           "text": "城印旗还在。旗不替你们选。"
         },
         {
+          "id": "cs10b_ta_x17",
+          "speaker": "旁白",
+          "text": "酒馆议封授。声大的多。"
+        },
+        {
+          "id": "cs10b_ta_x18",
+          "speaker": "老管事",
+          "text": "声大压不住印。"
+        },
+        {
+          "id": "cs10b_ta_x19",
+          "speaker": "leader",
+          "text": "我听印，不听声。"
+        },
+        {
           "id": "cs10b_ta_18",
           "speaker": "旁白",
           "text": "两道印题在板上。手按上去。"
@@ -780,6 +855,21 @@
           "id": "cs10b_le_17",
           "speaker": "苇原·灯影",
           "text": "在就好。在才像印底回读。"
+        },
+        {
+          "id": "cs10b_le_x17",
+          "speaker": "旁白",
+          "text": "封录末行：印真则名立。"
+        },
+        {
+          "id": "cs10b_le_x18",
+          "speaker": "槐里·青禾",
+          "text": "名立了，才许并排。"
+        },
+        {
+          "id": "cs10b_le_x19",
+          "speaker": "leader",
+          "text": "今日验真。"
         },
         {
           "id": "cs10b_le_18",

@@ -57,3 +57,8 @@
 ## plate-final
 
 前三拍收束不为旁白，保证 return_portrait 走得到具名板面。
+
+## 第二可玩章加深（本刀）
+
+- `cs05_02` 口语加厚至约 124–130 行；保留 visit@hourglass / battle@bridge CTA 与 mid_lost 门闸。
+- 前三拍收束不为旁白；suite walk_to_choice 提到 220。
