@@ -32,6 +32,55 @@ static func tier_of(level: int) -> int:
 static func recovery_months(host, base_months: int) -> int:
 	return maxi(1, base_months - annex_level(host, "infirmary"))
 
+
+## Paid rest at the infirmary: silver sink that clears light wounds, shortens grave,
+## restores HP. Lasting wounds stay (clinic/herb via CKInjury.mitigate). Unbuilt → refuse.
+static func rest_cost(host) -> int:
+	var lv := annex_level(host, "infirmary")
+	return maxi(8, 28 - lv * 6)
+
+
+static func rest_heal(host, cid: String) -> Dictionary:
+	var lv := annex_level(host, "infirmary")
+	if lv < 1:
+		return {"ok": false, "msg": Locale.t("a1_rest_need")}
+	var c: CKCharacter = host.characters.get(cid)
+	if c == null or not c.alive:
+		return {"ok": false, "msg": Locale.t("a1_rest_none")}
+	var rec: Dictionary = CKInjury.record(c)
+	var tier := str(rec.get("tier", ""))
+	var needs: bool = c.injured or c.hp < c.max_hp or not rec.is_empty()
+	if not needs:
+		return {"ok": false, "msg": Locale.t("a1_rest_none")}
+	if tier == "lasting":
+		return {"ok": false, "msg": Locale.t("a1_rest_lasting")}
+	var cost := rest_cost(host)
+	if host.silver < cost:
+		return {"ok": false, "msg": Locale.t("a1_rest_broke") % cost}
+	host.silver -= cost
+	if tier == "grave":
+		var left := maxi(0, int(rec.get("months_left", 0)) - maxi(1, lv))
+		if left <= 0:
+			if typeof(c.blood_meta) == TYPE_DICTIONARY:
+				c.blood_meta.erase("injury")
+			c.injured = false
+		else:
+			rec["months_left"] = left
+			if typeof(c.blood_meta) != TYPE_DICTIONARY:
+				c.blood_meta = {}
+			c.blood_meta["injury"] = rec
+			c.injured = true
+	else:
+		## light / legacy injured flag / HP-only
+		if typeof(c.blood_meta) == TYPE_DICTIONARY:
+			c.blood_meta.erase("injury")
+		c.injured = false
+	c.hp = c.max_hp
+	host.log_event(Locale.t("a1_rest_ok") % c.name)
+	host.mark_dirty()
+	return {"ok": true, "msg": Locale.t("a1_rest_ok") % c.name, "cost": cost}
+
+
 static func educate(host, child) -> int:
 	## v9.2：学舍不再直接加意。返回学舍提供的专师名额增量（Lv → +pairs）；未建为 0。
 	## 兼容旧测试：child 为 null 或不合法时返回 0；合法时返回 annex 等级（名额增量）。
