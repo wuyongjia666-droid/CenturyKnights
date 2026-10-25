@@ -397,3 +397,16 @@ atlas_chain_march,启程续送,March to deliver
 atlas_chain_later,稍后再说,Later
 atlas_chain_start,接下「%s」,Start "%s"
 atlas_chain_follow_fallback,后续委托,Follow-up
+atlas_chain_fail_en,CHAIN // 失败,CHAIN // FAILED
+atlas_chain_fail_title,委托链中断 · %s,Chain broken · %s
+atlas_chain_fail_body,「%s」%s（第 %d 程）。签发城 %s → 目标 %s。可改道重接这一程，或确认失败。,Leg [%s] %s (step %d). From %s to %s. Reroute or confirm failure.
+atlas_chain_fail_reason_expire,逾期未交,missed the deadline
+atlas_chain_fail_reason_abandon,中途放弃,abandoned mid-chain
+atlas_chain_reroute,改道重接,Reroute leg
+atlas_chain_fail_confirm,确认失败,Confirm failure
+atlas_chain_fail_done,委托链「%s」已记失败,Chain "%s" marked failed
+atlas_chain_reroute_ok,已改道重接「%s」,Rerouted "%s"
+atlas_chain_reroute_not_failed,这条委托链并未失败,This chain is not failed
+atlas_chain_reroute_missing,找不到可改道的委托链步骤,No chain step to reroute
+atlas_chain_fail_log,委托链「%s」失败：%s,Chain "%s" failed: %s
+atlas_chain_reroute_log,委托链「%s」改道重接第 %d 程,Chain "%s" rerouted to leg %d
