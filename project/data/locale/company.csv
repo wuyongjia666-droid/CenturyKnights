@@ -282,6 +282,17 @@ atlas_battle_line_retreat,败退至%s,Retreated to %s
 atlas_battle_line_morale,士气 %+d,Morale %+d
 atlas_battle_line_cargo_loss,货物折损 %d 单位,Cargo loss %d units
 atlas_battle_line_escort_fail,护送委托失败,Escort commission failed
+atlas_rival_aftermath_lose_en,RIVAL DEFEAT,RIVAL DEFEAT
+atlas_rival_aftermath_en,RIVAL CLASH,RIVAL CLASH
+atlas_rival_clash_label,%s·路遇战,%s · road clash
+atlas_rival_clash_tip_none,此处没有对手佣兵团,No rival company here
+atlas_rival_clash_tip,对手「%s」在此——开战,Rival "%s" is here — fight
+atlas_rival_clash_cta,路遇对决,Rival clash
+atlas_engage_cta,进剿目标,Engage objective
+atlas_clear_seed_desc,%s上盘踞着%s营地。行经此道即触发清剿战，得胜后回%s复命。,%s harbors a %s camp. Cross the road to fight; report back to %s after victory.
+atlas_clear_road_name,%s—%s道,%s—%s road
+atlas_clear_seed_title,清剿%s,Clear %s
+atlas_battle_line_escort_ok,护送「%s」击退伏击，继续护送,Escort "%s": ambush cleared — keep marching
 wq_tab_active,在手委托,In hand
 wq_tab_board,本堡委托榜,Castle board
 wq_tab_done,已完成,Completed
