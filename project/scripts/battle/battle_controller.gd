@@ -2,7 +2,6 @@ extends Control
 signal unit_downed(char, info)
 signal battle_finished(result)
 ## 灰旗战棋：8x6 教程图，移动/攻击/待命，敌 AI，规则透视 输入 FSM：IDLE → SELECTED → (MOVE) → ATTACK_AIM → 单位 done
-
 var CELL: int = 56
 var ORIGIN: Vector2 = Vector2(40, 80)
 const BOARD_AREA := Rect2(24, 76, 856, 620)  ## v8.6: the board is the hero — cell size fits the map into the left stage (max 104px)
@@ -92,13 +91,10 @@ var _lamps_armed := false
 var _lamp_stack: Array = []
 var _turn_snap: Dictionary = {}
 var _move_undo: Dictionary = {}
-
 func _map_theme() -> String:
 	return str(BattleMaps.get_map(map_id).get("theme", ""))
-
 func _is_escort_map() -> bool:
 	return _map_theme() == "escort"
-
 func _is_harbor_map() -> bool:
 	return _map_theme() == "harbor"
 
@@ -1213,20 +1209,22 @@ func _draw_overlay() -> void:
 		var scol = Color(1, 1, 1, 0.95) if units[selected].team == "player" else Color(1.0, 0.62, 0.62, 0.95)
 		if mobile_sel:
 			# Foot disc + mid-figure ring (matches BattlePick FIG span) — readable without the FX sheet.
+			var burst: float = BattlePick.select_burst_scale(self)
 			var feet: Vector2 = ORIGIN + Vector2(sel_pos) * float(CELL) + Vector2(float(CELL) * 0.5, float(CELL) * BattlePick.FIG_FEET)
 			var mid: Vector2 = ORIGIN + Vector2(sel_pos) * float(CELL) + Vector2(float(CELL) * 0.5, float(CELL) * ((BattlePick.FIG_TOP + BattlePick.FIG_FEET) * 0.5))
 			var pulse_a := 0.55 + 0.25 * sin(_sel_pulse * 6.0)
-			overlay.draw_circle(feet, float(CELL) * 0.38, Color(UIKit.ACCENT if units[selected].team == "player" else UIKit.DANGER, 0.28 * pulse_a))
-			overlay.draw_arc(feet, float(CELL) * 0.42, 0.0, TAU, 40, Color(scol, 0.95), 3.0)
-			overlay.draw_arc(mid, float(CELL) * 0.36, 0.0, TAU, 40, Color(scol, 0.75), 2.5)
+			overlay.draw_circle(feet, float(CELL) * 0.38 * burst, Color(UIKit.ACCENT if units[selected].team == "player" else UIKit.DANGER, 0.28 * pulse_a))
+			overlay.draw_arc(feet, float(CELL) * 0.42 * burst, 0.0, TAU, 40, Color(scol, 0.95), 3.0)
+			overlay.draw_arc(mid, float(CELL) * 0.36 * burst, 0.0, TAU, 40, Color(scol, 0.75), 2.5)
 			var hw: float = BattlePick.contour_half_w()
 			var body := Rect2(
 				ORIGIN + Vector2(sel_pos) * float(CELL) + Vector2(float(CELL) * (0.5 - hw), float(CELL) * BattlePick.FIG_TOP),
 				Vector2(float(CELL) * hw * 2.0, float(CELL) * (BattlePick.FIG_FEET - BattlePick.FIG_TOP)))
-			overlay.draw_rect(body, Color(scol, 0.10))
-			overlay.draw_rect(body, Color(scol, 0.55), false, 2.0)
+			overlay.draw_rect(body, Color(scol, 0.10 * burst))
+			overlay.draw_rect(body, Color(scol, 0.55 + 0.25 * (burst - 1.0)), false, 2.0 * burst)
 		if ResourceLoader.exists(sp):
 			overlay.draw_texture_rect(_tex(sp), Rect2(cell_c - Vector2(rs, rs) * 0.5, Vector2(rs, rs)), false, scol)
+	BattleTouchConfirm.draw_reject_flash(self, overlay)
 	# slash + hit_spark 分层（game-feel）
 	for s in _slash_fx:
 		if s.age < 0.0: continue
@@ -1645,6 +1643,7 @@ func _click_cell(cell: Vector2i) -> void:
 						_do_attack(selected, ui)
 						return
 					_log("目标超出攻击范围")
+					BattleTouchConfirm.note_reject(self, cell, "attack")
 					return
 				_refresh_info_for(ui)
 				return
@@ -1672,6 +1671,8 @@ func _click_cell(cell: Vector2i) -> void:
 				return
 			if ui >= 0 and units[ui].team == "player" and not units[ui].done and ui != selected:
 				_select_player(ui)
+				return
+			if ui < 0 and BattleTouchConfirm.reject_invalid_tap(self, cell):
 				return
 			# T-P2: re-tap selected / empty board deselects (phones have no right-click).
 			if BattleTouchConfirm.try_deselect(self, ui):
@@ -1926,7 +1927,6 @@ func _pulse_heal(team: String) -> void:
 
 func _sync_faction_marks() -> void:
 	_marks_sig = FactionMarksSync.sync(self, units, ORIGIN, float(CELL), _marks_sig)
-
 
 func _apply_combat_lock(ai: int, di: int) -> void:
 	# 双方进入交战锁定（再交战刷新至 2）
