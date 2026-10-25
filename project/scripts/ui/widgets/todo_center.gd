@@ -131,6 +131,8 @@ static func mainline_rows() -> Array:
 		if not beats.is_empty() and typeof(beats[beats.size() - 1]) == TYPE_DICTIONARY:
 			last = str((beats[beats.size() - 1] as Dictionary).get("id", ""))
 		var id := str(entry.get("id", ""))
+		if StoryCatalog.is_content_season_id(id):
+			continue
 		built.append({
 			"id": id,
 			"title": str(entry.get("title", id)),

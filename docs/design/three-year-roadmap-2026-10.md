@@ -146,6 +146,7 @@
 | 2026-10-25 | Y1-B 岁课 UI 落点加深：城堡家庭导航常驻 ToSuiYear + 未读角标（todo→family）+ `sui_hub_entry_check` |
 | 2026-10-25 | Y1-B 联姻无对象空态：EmptyHost why/how + ToTavern/ToRoster + `marriage_empty_cta_check` |
 | 2026-10-25 | Y1-B 花名册空编制：EmptyHost why/how + ToTavern + `roster_empty_cta_check` |
+| 2026-10-25 | Y1-B 内容季 #1：中篇《回执上的灯》+ 圣经 + 可玩章 `cs01_01` + playable suite；业主全权开 `novel_allowed`；#2 选题起步 |
 | 2026-10-25 | Y1-B 请爵顶阶空态：EmptyHost how + ToCity（职印）+ `title_promote_top_cta_check` |
 | 2026-10-25 | Y1-B 酒馆柜上无人：EmptyHost why/how + ToRoster + `tavern_empty_cta_check` |
 | 2026-10-25 | Y1-B 委托榜空态：EmptyHostActive→ToAtlas / EmptyHostBoard→ToHourglass + `quests_empty_cta_check` |
