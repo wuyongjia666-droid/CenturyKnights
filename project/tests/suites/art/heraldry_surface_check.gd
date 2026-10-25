@@ -692,6 +692,44 @@ func _run() -> void:
 	_ok(bd_row.find_child("BloodQueueArms", true, false) != null, "BloodQueueArms attached")
 	bd_host.queue_free()
 
+	# ── Dialogue / roster crest chrome ───────────────────────────
+	var dlg_host := Control.new()
+	dlg_host.name = "DialogueCrestHost"
+	get_tree().root.add_child(dlg_host)
+	var dlg := CKHeraldryChrome.place_dialogue_crest_strip(dlg_host, Vector2(10, 10), Vector2(36, 44), Vector2(24, 34))
+	_ok(dlg != null and dlg.name == "DialogueCrestStrip", "DialogueCrestStrip missing")
+	if dlg != null:
+		var dbn := dlg.find_child("DialogueBanner", true, false)
+		_ok(dbn != null and str(dbn.get_meta("arms_kind", "")) == "lb_dialogue_arms", "dialogue DialogueBanner kind")
+	var dlg_por := TextureRect.new()
+	dlg_por.custom_minimum_size = Vector2(120, 120)
+	dlg_host.add_child(dlg_por)
+	CKHeraldryChrome.attach_dialogue_speaker_arms(dlg_por, leader, Vector2(28, 34))
+	_ok(dlg_por.find_child("DialogueSpeakerArms", true, false) != null, "DialogueSpeakerArms attached")
+	dlg_host.queue_free()
+
+	var rost_host := Control.new()
+	rost_host.name = "RosterCrestHost"
+	get_tree().root.add_child(rost_host)
+	var rost := CKHeraldryChrome.place_roster_crest_strip(rost_host, Vector2(10, 10), Vector2(36, 44), Vector2(24, 34))
+	_ok(rost != null and rost.name == "RosterCrestStrip", "RosterCrestStrip missing")
+	if rost != null:
+		var rbn := rost.find_child("RosterBanner", true, false)
+		_ok(rbn != null and str(rbn.get_meta("arms_kind", "")) == "lb_roster_arms", "roster RosterBanner kind")
+	var rost_row := Control.new()
+	rost_row.custom_minimum_size = Vector2(364, 66)
+	rost_host.add_child(rost_row)
+	CKHeraldryChrome.attach_roster_row_arms(rost_row, leader, Vector2(26, 32))
+	_ok(rost_row.find_child("RosterRowArms", true, false) != null, "RosterRowArms attached")
+	# SlotArms from crest meta
+	var meta_row := HBoxContainer.new()
+	rost_host.add_child(meta_row)
+	var meta_arms := CKHeraldryChrome.attach_save_row_arms(meta_row, Vector2(36, 44), "#c45c26")
+	_ok(meta_arms != null and str(meta_arms.get_meta("arms_kind", "")) == "lb_slot_arms", "SlotArms from crest_hex")
+	if meta_arms != null:
+		_ok(str(meta_arms.get_meta("arms_core", "")) == CKHeraldry.core_key(CKHeraldry.from_crest("#c45c26")), "SlotArms crest core")
+	rost_host.queue_free()
+
 	# Rank badges distinct
 	var sigs: Dictionary = {}
 	for rk in ["knight", "baron", "viscount", "count", "duke", "royal"]:
