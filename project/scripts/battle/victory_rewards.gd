@@ -122,7 +122,35 @@ static func apply(map_id: String) -> Dictionary:
 	return sp
 
 
+## Chapter-owned mid-cs / era skirmish: season_ledger + yeartrace own the trail.
+## month_echo.battle would phantom-pollute with shared-map rows (quest_bandit).
+static func suppresses_month_echo_battle() -> bool:
+	if str(GameState.get_meta("battle_return_chapter", "")) != "":
+		return true
+	var led = GameState.get_meta("battle_win_ledger", {})
+	return typeof(led) == TYPE_DICTIONARY and not led.is_empty()
+
+
+## Map-fight month_echo.battle note (hub/sortie). Skips chapter-owned mid-cs.
+## Returns true when a line was written.
+static func maybe_note_month_echo_battle(
+		win: bool, map_name: String, purse: int = 0,
+		drill: bool = false, tutorial: bool = false) -> bool:
+	if suppresses_month_echo_battle():
+		return false
+	if win:
+		if drill or tutorial:
+			return false
+		CKEconomyState.month_echo_note(
+			"battle", Locale.t("lb_echo_battle_map_win", [map_name, purse]))
+	else:
+		CKEconomyState.month_echo_note(
+			"battle", Locale.t("lb_echo_battle_map_lose", [map_name]))
+	return true
+
+
 static func restore_heir_clash() -> void:
+
 	for key in ["heir_clash_a", "heir_clash_b"]:
 		var cid := str(GameState.get_meta(key, ""))
 		if cid == "":

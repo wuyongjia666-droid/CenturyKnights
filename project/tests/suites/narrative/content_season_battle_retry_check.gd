@@ -2,7 +2,8 @@ extends Node
 ## Mid-cs under hub_open: loss stamps csXX_mid_lost → CTA morphs「再试锋镝」+ loss line;
 ## win stamps mid_fought + season_ledger/yeartrace for the skirmish itself;
 ## bare「继续」stamps 未试锋 skip / 试锋未成 abort ledger when leaving without a win;
-## win clears csXX_mid_lost + map_id+_lost residue so loss-state cannot resurrect after a retry win.
+## win clears csXX_mid_lost + map_id+_lost residue so loss-state cannot resurrect after a retry win;
+## chapter-owned mid-cs suppresses month_echo.battle (season_ledger/yeartrace own the trail).
 
 const PLAYER := "res://scenes/story/chapter_player.tscn"
 const BATTLE := "res://scenes/battle/battle.tscn"
@@ -30,6 +31,9 @@ func _run() -> String:
 	if err != "":
 		return err
 	err = _protocol_win_clears_lost()
+	if err != "":
+		return err
+	err = _protocol_month_echo_suppressed()
 	if err != "":
 		return err
 	for row in LIVE:
@@ -126,6 +130,13 @@ func _live_win_ledger_and_hide(cid: String, beat: String, after: String) -> Stri
 							err = "%s win: yeartrace mid_skirmish missing" % cid
 						elif GameState.get_meta("battle_win_ledger", {"x": 1}).size() != 0:
 							err = "%s win: battle_win_ledger not consumed" % cid
+						else:
+							GameState.house_mods.erase("month_echo")
+							# Chapter leave still owns battle_return_chapter — must not phantom month_echo.
+							if BattleVictory.maybe_note_month_echo_battle(true, "山匪", 40, false, false):
+								err = "%s win: month_echo.battle written under chapter" % cid
+							elif str(CKEconomyState.month_echo_snapshot().get("battle", "")) != "":
+								err = "%s win: month_echo.battle residue" % cid
 	player.queue_free()
 	await get_tree().process_frame
 	if err != "":
@@ -161,7 +172,7 @@ func _live_win_ledger_and_hide(cid: String, beat: String, after: String) -> Stri
 	player2.queue_free()
 	await get_tree().process_frame
 	if err == "":
-		print("OK live win ledger+hide %s @%s → %s" % [cid, beat, after])
+		print("OK live win ledger+hide+no-month_echo %s @%s → %s" % [cid, beat, after])
 	return err
 
 
@@ -342,6 +353,48 @@ func _protocol_win_clears_lost() -> String:
 	if GameState.get_meta("battle_lose_flags", ["x"]).size() != 0:
 		return "protocol win: battle_lose_flags meta not consumed"
 	print("OK protocol win clears mid_lost + map_lost residue")
+	return ""
+
+
+
+func _protocol_month_echo_suppressed() -> String:
+	GameState.new_game("烬行", "灰旗", GameState.crest_color)
+	GameState.set_flag("hub_open")
+	GameState.house_mods.erase("month_echo")
+	GameState.set_meta("battle_return_chapter", "")
+	GameState.set_meta("battle_win_ledger", {})
+	# Hub / bare map fight still writes month_echo.battle.
+	if not BattleVictory.maybe_note_month_echo_battle(true, "山匪", 40, false, false):
+		return "protocol echo: hub win should write"
+	var snap: Dictionary = CKEconomyState.month_echo_snapshot()
+	if str(snap.get("battle", "")) == "":
+		return "protocol echo: hub win line missing %s" % str(snap)
+	GameState.house_mods.erase("month_echo")
+	# Chapter-owned via battle_return_chapter — suppress.
+	GameState.set_meta("battle_return_chapter", "cs03_01")
+	if BattleVictory.maybe_note_month_echo_battle(true, "山匪", 40, false, false):
+		return "protocol echo: chapter win should suppress"
+	if BattleVictory.maybe_note_month_echo_battle(false, "山匪", 0, false, false):
+		return "protocol echo: chapter lose should suppress"
+	snap = CKEconomyState.month_echo_snapshot()
+	if str(snap.get("battle", "")) != "":
+		return "protocol echo: chapter left battle residue %s" % str(snap)
+	GameState.set_meta("battle_return_chapter", "")
+	GameState.house_mods.erase("month_echo")
+	# Chapter-owned via non-empty battle_win_ledger alone — suppress.
+	GameState.set_meta("battle_win_ledger", {
+		"chapter": "cs03_01", "choice": "mid_skirmish",
+		"title": "试锋", "outcome": "试锋得手",
+	})
+	if BattleVictory.maybe_note_month_echo_battle(true, "山匪", 40, false, false):
+		return "protocol echo: ledger win should suppress"
+	if BattleVictory.maybe_note_month_echo_battle(false, "山匪", 0, false, false):
+		return "protocol echo: ledger lose should suppress"
+	snap = CKEconomyState.month_echo_snapshot()
+	if str(snap.get("battle", "")) != "":
+		return "protocol echo: ledger left battle residue %s" % str(snap)
+	GameState.set_meta("battle_win_ledger", {})
+	print("OK protocol mid-cs suppresses month_echo.battle")
 	return ""
 
 
