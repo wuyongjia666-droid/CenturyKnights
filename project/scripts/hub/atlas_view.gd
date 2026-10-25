@@ -18,6 +18,8 @@ var _view := ""                 # "" = world, else nation id
 var _sel := ""                  # selected node id (nation view) / region id (world view)
 var _preview: Dictionary = {}
 var _busy := false
+var _halt_after_leg := false
+var _travel_abort := false
 var _clip: Control
 var _plate: TextureRect
 var _roads: Control
@@ -1086,7 +1088,9 @@ func _render_right() -> void:
 	go.disabled = _busy or _sel == World.pos or _preview.is_empty() or not bool(_preview.get("ok", false))
 	go.pressed.connect(_start_travel)
 	p.add_child(go)
-	var enter := UIKit.ghost_button("进入%s" % ("城堡" if str(n.kind) == "castle" else World.kind_zh(_sel)), 108, 32)
+	var readies := World.ready_turn_ins_here().size() if _sel == World.pos else 0
+	var enter_label := Locale.t("atlas_enter_turnin") % readies if readies > 0 else Locale.t("atlas_enter_kind") % World.kind_zh(_sel)
+	var enter := UIKit.ghost_button(enter_label, 148 if readies > 0 else 108, 32)
 	enter.name = "EnterButton"
 	enter.position = Vector2(16, 518)
 	enter.disabled = _busy or _sel != World.pos or not World.encounter.is_empty()
@@ -1433,7 +1437,11 @@ func _set_busy(v: bool) -> void:
 
 func _run_travel() -> void:
 	_set_busy(true)
+	_halt_after_leg = false
+	_travel_abort = false
 	for _i in 64:
+		if _travel_abort:
+			break
 		if not World.is_traveling():
 			break
 		var path: Array = World.travel.get("route", [])
@@ -1457,9 +1465,19 @@ func _run_travel() -> void:
 			return
 		_animate_leg(arrived_at)
 		await get_tree().create_timer(STEP_SEC + 0.05).timeout
+		if _halt_after_leg:
+			World.cancel_travel()
+			_halt_after_leg = false
+			_show_toast(Locale.t("atlas_travel_halted") % World.node(World.pos).get("name", ""), UIKit.ACCENT)
+			break
 		if bool(info.get("arrived", false)):
 			break
 	_set_busy(false)
+	if _travel_abort:
+		_travel_abort = false
+		_halt_after_leg = false
+		World.cancel_travel()
+		return
 	_after_arrival()
 
 ## WS-C #42: crossing a month on the road says so (date, rations, territory income) instead of passing silently.
@@ -1497,13 +1515,14 @@ func _after_arrival() -> void:
 	_place_token(false)
 	_select_node(World.pos)
 	var n: Dictionary = World.node(World.pos)
-	var readies := 0
-	for q in World.active:
-		if str(q.state) == "ready" and World.can_turn_in(q, World.pos):
-			readies += 1
+	var readies := World.ready_turn_ins_here().size()
 	if _check_losses():
 		return
-	_show_toast("抵达 %s%s" % [n.get("name", ""), "  ·  %d 件委托可交付" % readies if readies > 0 else ""], UIKit.OK)
+	if readies > 0:
+		_show_toast(Locale.t("atlas_arrive_turnin") % [n.get("name", ""), readies], UIKit.OK)
+		_show_turnin_modal(readies)
+	else:
+		_show_toast(Locale.t("atlas_arrive_plain") % n.get("name", ""), UIKit.OK)
 
 func _resume_state() -> void:
 	## returning from a battle / load: re-open pending modal or continue a journey
@@ -1522,6 +1541,69 @@ func _resume_state() -> void:
 		_show_toast(str(World.travel_log[0]), UIKit.ACCENT)
 
 # ── modals ────────────────────────────────────────────
+func _show_travel_halt_modal() -> void:
+	var p := _modal_panel(260)
+	p.name = "TravelHaltModal"
+	var t := UIKit.title_label(Locale.t("atlas_travel_halt_title"), 22)
+	t.position = Vector2(24, 24)
+	p.add_child(t)
+	var body := UIKit.body_label(Locale.t("atlas_travel_halt_body"), UIKit.TEXT, 14)
+	body.position = Vector2(24, 70)
+	body.size = Vector2(452, 70)
+	body.custom_minimum_size = Vector2(452, 0)
+	p.add_child(body)
+	var v := VBoxContainer.new()
+	v.position = Vector2(24, 150)
+	v.add_theme_constant_override("separation", 8)
+	p.add_child(v)
+	var b1 := UIKit.cta_button(Locale.t("atlas_travel_halt_stop"), "A", 452, 40)
+	b1.name = "HaltStop"
+	b1.pressed.connect(func():
+		_halt_after_leg = true
+		_clear_modal()
+		if not _busy and World.is_traveling():
+			_run_travel())
+	v.add_child(b1)
+	var b2 := UIKit.ghost_button(Locale.t("atlas_travel_halt_continue"), 452, 36)
+	b2.name = "HaltContinue"
+	b2.pressed.connect(_clear_modal)
+	v.add_child(b2)
+	var b3 := UIKit.ghost_button(Locale.t("atlas_travel_halt_leave"), 452, 36)
+	b3.name = "HaltLeave"
+	b3.pressed.connect(func():
+		_travel_abort = true
+		_halt_after_leg = false
+		World.cancel_travel()
+		_set_busy(false)
+		_clear_modal()
+		_goto(StoryCatalog.take_story_return(CASTLE_SCENE)))
+	v.add_child(b3)
+
+func _show_turnin_modal(readies: int) -> void:
+	var p := _modal_panel(220)
+	p.name = "TurnInReadyModal"
+	var t := UIKit.title_label(Locale.t("atlas_turnin_modal_title"), 22)
+	t.position = Vector2(24, 24)
+	p.add_child(t)
+	var body := UIKit.body_label(Locale.t("atlas_turnin_modal_body") % readies, UIKit.TEXT, 14)
+	body.position = Vector2(24, 70)
+	body.size = Vector2(452, 60)
+	body.custom_minimum_size = Vector2(452, 0)
+	p.add_child(body)
+	var go := UIKit.cta_button(Locale.t("atlas_turnin_modal_go"), "A", 220, 42)
+	go.name = "TurnInEnter"
+	go.position = Vector2(24, 150)
+	go.pressed.connect(func():
+		_clear_modal()
+		GameState.set_meta("city_tab", "board")
+		_enter_here())
+	p.add_child(go)
+	var later := UIKit.ghost_button(Locale.t("atlas_turnin_modal_later"), 200, 42)
+	later.name = "TurnInLater"
+	later.position = Vector2(256, 150)
+	later.pressed.connect(_clear_modal)
+	p.add_child(later)
+
 func _clear_modal() -> void:
 	for c in _modal.get_children():
 		c.queue_free()
@@ -1815,6 +1897,9 @@ func _goto(path: String) -> void:
 
 func _back() -> void:
 	if not _modal.get_children().is_empty() and not World.pending_event.is_empty():
+		return
+	if _busy or World.is_traveling():
+		_show_travel_halt_modal()
 		return
 	_goto(StoryCatalog.take_story_return(CASTLE_SCENE))
 
@@ -2189,7 +2274,13 @@ func _m_actions() -> void:
 		b.name = "EnterRegion"
 	elif _sel != "" and _sel == World.pos and World.nodes.has(_sel):
 		var n: Dictionary = World.node(_sel)
-		b = MobilePage.button(Locale.t("mob_ui_037") % [Locale.t("mob_ui_038") if str(n.kind) == "castle" else World.kind_zh(_sel), str(n.get("name", ""))], true, _enter_here)
+		var ready_n := World.ready_turn_ins_here().size()
+		if ready_n > 0:
+			b = MobilePage.button(Locale.t("atlas_enter_turnin") % ready_n, true, func():
+				GameState.set_meta("city_tab", "board")
+				_enter_here())
+		else:
+			b = MobilePage.button(Locale.t("mob_ui_037") % [Locale.t("mob_ui_038") if str(n.kind) == "castle" else World.kind_zh(_sel), str(n.get("name", ""))], true, _enter_here)
 		b.name = "EnterButton"
 	elif not _preview.is_empty() and bool(_preview.get("ok", false)):
 		b = MobilePage.button(Locale.t("mob_ui_039") % int(_preview.days), true, _start_travel)
