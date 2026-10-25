@@ -530,6 +530,7 @@ func _line(text: String, col: Color, size: int, w: float) -> Label:
 	var l := UIKit.body_label(text, col, size)
 	l.autowrap_mode = TextServer.AUTOWRAP_OFF
 	l.clip_text = true
+	l.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	l.custom_minimum_size = Vector2(w, 0)
 	return l
 
@@ -700,13 +701,14 @@ func _tab_overview() -> void:
 				v.add_child(rl)
 		else:
 			_rumor_box(p, Rect2(18, 318, 384, maxf(72.0, aff_y - 326.0)))
+	var sst: Control = null
 	if not sq.is_empty():
 		var st := UIKit.title_label("「%s」" % sq.get("title", ""), 15 if not _mob else MobilePage.FONT + 2, UIKit.TEXT)
 		var sb := _para(str(sq.get("brief", "")), UIKit.TEXT_DIM, 12 if not _mob else MobilePage.FONT, 384 if not _mob else 0)
 		var done := World.done_sig.has(str(sq.get("id", "")))
 		var running := not World.quest_by_id(str(sq.get("id", ""))).is_empty()
 		var stxt := "已完成 · 传奇兵器已解锁" if done else ("进行中 · 完成后解锁传奇兵器" if running else "声望「友善」(30) 后出现在委托榜")
-		var sst := UIKit.tag_chip(stxt, UIKit.OK if done else (UIKit.ACCENT if running else UIKit.TEXT_DIM), done)
+		sst = UIKit.tag_chip(stxt, UIKit.OK if done else (UIKit.ACCENT if running else UIKit.TEXT_DIM), done)
 		if _mob:
 			st.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			sb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -1170,15 +1172,19 @@ func _tab_market() -> void:
 	if not known_loops.is_empty() or not loops.is_empty():
 		var strip := Panel.new()
 		strip.name = "TradeLoopStrip"
-		# Header title sits at y=32 (~26px). y=48 used to collide with 市集.
-		var strip_y := 92.0 if not _mob else 48.0
+		# 「市集」 title sits at y=32; live Label min-height ~66 → end ~98.
+		# Keep ≥8px air before 产线 EN chrome (gate-0). Do NOT drop the EN (suite asserts it).
+		var strip_y := 108.0 if not _mob else 48.0
 		strip.position = Vector2(18, strip_y)
-		strip.size = Vector2(812, 44 if not _mob else float(MobilePage.HIT + 8))
+		strip.size = Vector2(812, 40 if not _mob else float(MobilePage.HIT + 8))
 		var ss := UIKit.flat_box(Color(UIKit.EMBER.r, UIKit.EMBER.g, UIKit.EMBER.b, 0.12), Color(UIKit.EMBER, 0.35), 8)
 		strip.add_theme_stylebox_override("panel", ss)
 		p.add_child(strip)
 		var st := UIKit.mono(Locale.t("atlas_trade_loop_en"), 8, UIKit.EMBER, false)
+		st.name = "TradeLoopStripEn"
 		st.position = Vector2(10, 4)
+		st.custom_minimum_size = Vector2(48, 12)
+		st.size = Vector2(80, 14)
 		strip.add_child(st)
 		var best: Dictionary = World.best_produce_trade(city)
 		var tip := ""
@@ -1188,12 +1194,12 @@ func _tab_market() -> void:
 			tip = Locale.t("atlas_trade_loop_unknown") % [str(loops[0].name), int(loops[0].buy)]
 		var sl := UIKit.body_label(tip, UIKit.TEXT, 12)
 		sl.name = "TradeLoopStripLine"
-		sl.position = Vector2(10, 18)
+		sl.position = Vector2(10, 20)
 		sl.size = Vector2(790, 20)
 		sl.autowrap_mode = TextServer.AUTOWRAP_OFF
 		sl.clip_text = true
 		strip.add_child(sl)
-		y0 = 148.0 if not _mob else float(48 + MobilePage.HIT + 16)
+		y0 = 156.0 if not _mob else float(48 + MobilePage.HIT + 16)
 	var hdr := HBoxContainer.new()
 	hdr.position = Vector2(18, y0)
 	hdr.add_theme_constant_override("separation", 0)

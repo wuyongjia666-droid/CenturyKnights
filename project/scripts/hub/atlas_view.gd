@@ -469,6 +469,8 @@ func _mobile_nodes() -> void:
 		if not (c is Label) or c.is_queued_for_deletion():
 			continue
 		var l := c as Label
+		if bool(l.get_meta("ck_node_badge", false)):
+			continue
 		l.size = l.get_minimum_size()
 		var own: Control = null
 		var best := 1e9
@@ -486,7 +488,17 @@ func _mobile_nodes() -> void:
 			continue
 		var br := Rect2(own.position, own.size)
 		if l.text.length() <= 1:
-			l.position = Vector2(br.end.x + br.size.x * 0.09 - 2.0, br.position.y - br.size.y * 0.09 - l.size.y + 2.0)  # clear of the 1.18x selected scale
+			# Node badges (★/◆/✓) are placed in _add_node_button; do not drag them
+			# back onto the disc. Other single-char marks stay above-right past 1.18×.
+			if bool(l.get_meta("ck_node_badge", false)):
+				continue
+			var bh := 22.0
+			l.custom_minimum_size = Vector2(maxi(18, int(l.size.x)), int(bh))
+			l.size = Vector2(maxi(18, int(l.size.x)), int(bh))
+			l.position = Vector2(
+				br.end.x + br.size.x * 0.18 + 4.0,
+				br.position.y - bh - 6.0
+			)
 			continue
 		var cands := [
 			Vector2(br.get_center().x - l.size.x * 0.5, br.end.y + 1.0),
@@ -742,29 +754,23 @@ func _add_node_button(n: Dictionary, markers: Dictionary, mm: Dictionary) -> voi
 		var marker := CKCourt.latest_marker(_view)
 		if not marker.is_empty():
 			badges.append([_court_glyph(str(marker.get("kind", ""))), _court_color(str(marker.get("kind", "")))])
-	# Badges sit outside the disc. A 16px offset on an unsized label used to cover 都.
-	var node_r := Rect2(b.position, b.size)
-	var bi := 0
+	# Outside the node ink box so ★ / ◆ never overlap the kind glyph (都/堡/…).
+	# Theme/font-floor inflates a 16px title_label to ~66px tall; gate-0 _ink centers
+	# in that box, so the badge must sit fully above the disc (+ past 1.18× select).
+	var badge_box := 68.0
+	var bx := _np(id).x + px * 0.5 * 1.18 + 8.0
+	var by := _np(id).y - px * 0.5 * 1.18 - badge_box - 8.0
+	by = maxf(2.0, by)
 	for bd in badges:
 		var bl := UIKit.title_label(str(bd[0]), 16, bd[1])
-		bl.add_theme_color_override("font_outline_color", Color(0.02, 0.03, 0.05, 1))
-		bl.add_theme_constant_override("outline_size", 5)
+		bl.add_theme_color_override("font_outline_color", Color(0.02, 0.03, 0.05, 0.95))
+		bl.add_theme_constant_override("outline_size", 2)
+		bl.position = Vector2(bx, by)
 		bl.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		var badge_sz := bl.get_combined_minimum_size()
-		# Right of the disc. Above the disc sits the party token (旗), which the old
-		# top-right offset covered together with the 都 glyph.
-		var pos := Vector2(node_r.end.x + 3.0, node_r.position.y + float(bi) * (badge_sz.y + 2.0))
-		if pos.x + badge_sz.x > MAP.size.x - 2.0:
-			pos.x = node_r.position.x - badge_sz.x - 3.0
-		pos.x = clampf(pos.x, 2.0, MAP.size.x - badge_sz.x - 2.0)
-		pos.y = clampf(pos.y, 2.0, MAP.size.y - badge_sz.y - 2.0)
-		if Rect2(pos, badge_sz).intersects(node_r.grow(1.0)):
-			pos.y = clampf(node_r.end.y + 2.0, 2.0, MAP.size.y - badge_sz.y - 2.0)
-		bl.position = pos
-		bl.size = badge_sz
+		bl.set_meta("ck_node_badge", true)
 		_layer.add_child(bl)
 		UIFX.breathe(bl, 0.1, 1.2)
-		bi += 1
+		bx += 16.0
 
 func _gate_dir(from_id: String, to_id: String) -> Vector2:
 	var a := _region_pos(World.nation_of(from_id))
