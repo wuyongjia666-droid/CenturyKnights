@@ -221,6 +221,30 @@
           "speaker": "旁白",
           "text": "牌被摸亮。你得选：空椅并排链，还是先钉名上椅。"
         }
+      ],
+      "actions": [
+        {
+          "id": "open_skirmish",
+          "label": "先试一锋",
+          "do": [
+            {
+              "op": "battle",
+              "map": "quest_bandit",
+              "objective": "rout",
+              "return": "res://scenes/story/chapter_player.tscn"
+            }
+          ]
+        },
+        {
+          "id": "continue_after_battle",
+          "label": "继续，去酒馆",
+          "do": [
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
       ]
     },
     {
