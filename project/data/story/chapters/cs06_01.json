@@ -389,6 +389,21 @@
           "text": "未试就别催满。"
         },
         {
+          "id": "cs0601_vst1",
+          "speaker": "岁吏",
+          "text": "月份从校场沙坑里爬出来，靴印旁多了一道细痕。"
+        },
+        {
+          "id": "cs0601_vst2",
+          "speaker": "书记官",
+          "text": "挂牌格要等问声落地再填。落地的，才算。"
+        },
+        {
+          "id": "cs0601_vst3",
+          "speaker": "leader",
+          "text": "月份爬过。圈，我还走。"
+        },
+        {
           "id": "cs0601_vis_mv4",
           "speaker": "leader",
           "text": "先看月份怎么往前。"
@@ -550,6 +565,38 @@
           "id": "cs0601_mid_mv7",
           "speaker": "leader",
           "text": "上场。锋跟圈走，不跟笑走。"
+        },
+        {
+          "id": "cs0601_win1",
+          "speaker": "旁白",
+          "text": "锋定。校场问声落地，墙牌旁那拨不笑了。",
+          "when": {
+            "flag": "cs06_mid_fought"
+          }
+        },
+        {
+          "id": "cs0601_win2",
+          "speaker": "掌柜",
+          "text": "笑收了。赢的人，不用再听笑。",
+          "when": {
+            "flag": "cs06_mid_fought"
+          }
+        },
+        {
+          "id": "cs0601_win3",
+          "speaker": "苇原·灯影",
+          "text": "上场过了。下场的汗，比笑真。",
+          "when": {
+            "flag": "cs06_mid_fought"
+          }
+        },
+        {
+          "id": "cs0601_win4",
+          "speaker": "leader",
+          "text": "锋跟圈走完。墙牌，我挂得。",
+          "when": {
+            "flag": "cs06_mid_fought"
+          }
         },
         {
           "id": "cs06_mid_lost",
@@ -811,6 +858,26 @@
           "id": "cs0601_ret_mv3",
           "speaker": "书记官",
           "text": "真名回堡挂。"
+        },
+        {
+          "id": "cs0601_tvn1",
+          "speaker": "掌柜",
+          "text": "校场土味，酒冲不掉——冲掉就不像练过。"
+        },
+        {
+          "id": "cs0601_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "墙牌旁那笑，今夜没人买。"
+        },
+        {
+          "id": "cs0601_tvn3",
+          "speaker": "老旗手",
+          "text": "旗在校场边歇过。歇完，还能举。"
+        },
+        {
+          "id": "cs0601_tvn4",
+          "speaker": "leader",
+          "text": "汗还在。酒可以。牌，不摘。"
         },
         {
           "id": "cs0601_ret_mv4",

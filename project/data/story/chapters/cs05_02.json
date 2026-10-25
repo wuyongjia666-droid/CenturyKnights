@@ -368,6 +368,21 @@
           "text": "问清楚，椅才不冤。"
         },
         {
+          "id": "cs0502_vst1",
+          "speaker": "岁吏",
+          "text": "月份从链环缝里转过一圈。圈满，月份才算走完。"
+        },
+        {
+          "id": "cs0502_vst2",
+          "speaker": "书记官",
+          "text": "链录格要等扣死再写。"
+        },
+        {
+          "id": "cs0502_vst3",
+          "speaker": "leader",
+          "text": "月份转过。链，我扣。"
+        },
+        {
           "id": "cs0502_vis_mv4",
           "speaker": "leader",
           "text": "问月份。去。"
@@ -544,6 +559,38 @@
           "id": "cs0502_mid_mv6",
           "speaker": "leader",
           "text": "真劲试锋。回读才站得住。"
+        },
+        {
+          "id": "cs0502_win1",
+          "speaker": "旁白",
+          "text": "锋再定。链环扣死，夺链那拨退到阶下。",
+          "when": {
+            "flag": "cs05_mid_fought"
+          }
+        },
+        {
+          "id": "cs0502_win2",
+          "speaker": "掌柜",
+          "text": "链要扣。扣死，才不像挂着玩的。",
+          "when": {
+            "flag": "cs05_mid_fought"
+          }
+        },
+        {
+          "id": "cs0502_win3",
+          "speaker": "槐里·青禾",
+          "text": "环声一下实，假环就响不起来。",
+          "when": {
+            "flag": "cs05_mid_fought"
+          }
+        },
+        {
+          "id": "cs0502_win4",
+          "speaker": "leader",
+          "text": "锋护过链。扣，我锁得。",
+          "when": {
+            "flag": "cs05_mid_fought"
+          }
         },
         {
           "id": "cs05b_br_lost",
@@ -806,6 +853,26 @@
           "id": "cs0502_ret_mv3",
           "speaker": "岁吏",
           "text": "板挂完回堡。"
+        },
+        {
+          "id": "cs0502_tvn1",
+          "speaker": "掌柜",
+          "text": "护链那一锋，酒里有铁味。"
+        },
+        {
+          "id": "cs0502_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "阶下那拨退了。退了才碰杯。"
+        },
+        {
+          "id": "cs0502_tvn3",
+          "speaker": "听回",
+          "text": "环声实的事，酒桌上传开了。"
+        },
+        {
+          "id": "cs0502_tvn4",
+          "speaker": "leader",
+          "text": "链死。人齐。铁味，我认。"
         },
         {
           "id": "cs0502_ret_mv4",

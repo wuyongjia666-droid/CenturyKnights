@@ -308,6 +308,38 @@
           "text": "影数清了再出锋。乱劈不算试。"
         },
         {
+          "id": "cs0101_win1",
+          "speaker": "旁白",
+          "text": "锋落定。厅外灯影一矮，路匪的脚声退到巷口。",
+          "when": {
+            "flag": "cs01_mid_fought"
+          }
+        },
+        {
+          "id": "cs0101_win2",
+          "speaker": "老旗手",
+          "text": "这一锋够了。旗还在你手里，别松。",
+          "when": {
+            "flag": "cs01_mid_fought"
+          }
+        },
+        {
+          "id": "cs0101_win3",
+          "speaker": "苇原·灯影",
+          "text": "衣里的热散了。验盏的灯，该亮了。",
+          "when": {
+            "flag": "cs01_mid_fought"
+          }
+        },
+        {
+          "id": "cs0101_win4",
+          "speaker": "leader",
+          "text": "赢了不夸。去验盏——灯下才算数。",
+          "when": {
+            "flag": "cs01_mid_fought"
+          }
+        },
+        {
           "id": "cs01_mid_lost",
           "speaker": "旁白",
           "text": "锋收回来。衣里还热。厅外那拨路匪，灯下没散。",
@@ -590,6 +622,21 @@
           "text": "月份在沙上走。走慢的才清楚。"
         },
         {
+          "id": "cs0101_vst1",
+          "speaker": "岁吏",
+          "text": "沙漏腰细了一指。月份不是走给你看的，是走给你记的。"
+        },
+        {
+          "id": "cs0101_vst2",
+          "speaker": "书记官",
+          "text": "回执边上的墨还湿。湿着写，比干了改，更真。"
+        },
+        {
+          "id": "cs0101_vst3",
+          "speaker": "leader",
+          "text": "月份往前，我跟。灯不灭，字不糊。"
+        },
+        {
           "id": "cs0101_vis_mv4",
           "speaker": "leader",
           "text": "看清楚再写。去看月份。"
@@ -750,6 +797,26 @@
           "id": "cs0101_ret_mv3",
           "speaker": "老旗手",
           "text": "假话上不了板。上了也刮得掉。"
+        },
+        {
+          "id": "cs0101_tvn1",
+          "speaker": "掌柜",
+          "text": "厅前那一锋的风，还挂在门帘上。"
+        },
+        {
+          "id": "cs0101_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "酒温着。温酒送赢的人，也送输过再来的人。"
+        },
+        {
+          "id": "cs0101_tvn3",
+          "speaker": "听回",
+          "text": "外头说厅灯亮了。亮了就不怕巷口那拨。"
+        },
+        {
+          "id": "cs0101_tvn4",
+          "speaker": "leader",
+          "text": "灯亮着。人齐了。回执，我认。"
         },
         {
           "id": "cs0101_ret_mv4",

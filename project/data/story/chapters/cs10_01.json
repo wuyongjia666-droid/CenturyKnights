@@ -470,6 +470,21 @@
           "text": "手稳了再看月份。"
         },
         {
+          "id": "cs1001_vst1",
+          "speaker": "岁吏",
+          "text": "月份从印泥盒沿爬过一圈。圈红，月份才算盖过。"
+        },
+        {
+          "id": "cs1001_vst2",
+          "speaker": "书记官",
+          "text": "印谱旁沙漏，最怕快——快了就脏。"
+        },
+        {
+          "id": "cs1001_vst3",
+          "speaker": "leader",
+          "text": "月份爬过。印，我不快盖。"
+        },
+        {
           "id": "cs1001_vis_mv4",
           "speaker": "leader",
           "text": "手稳。去看月份。"
@@ -641,6 +656,38 @@
           "id": "cs1001_mid_mv6",
           "speaker": "leader",
           "text": "不快盖。锋先验场。"
+        },
+        {
+          "id": "cs1001_win1",
+          "speaker": "旁白",
+          "text": "锋定。盖印问声落了，墙牌旁催快印的散了。",
+          "when": {
+            "flag": "cs10_mid_fought"
+          }
+        },
+        {
+          "id": "cs1001_win2",
+          "speaker": "掌柜",
+          "text": "脏印不如不盖——今晚盖的，是净的。",
+          "when": {
+            "flag": "cs10_mid_fought"
+          }
+        },
+        {
+          "id": "cs1001_win3",
+          "speaker": "槐里·青禾",
+          "text": "手不软了。场清了，印才敢下去。",
+          "when": {
+            "flag": "cs10_mid_fought"
+          }
+        },
+        {
+          "id": "cs1001_win4",
+          "speaker": "leader",
+          "text": "锋验过场。印，我盖得。",
+          "when": {
+            "flag": "cs10_mid_fought"
+          }
         },
         {
           "id": "cs10_mid_lost",
@@ -897,6 +944,26 @@
           "id": "cs1001_ret_mv3",
           "speaker": "书记官",
           "text": "印事回堡验边。"
+        },
+        {
+          "id": "cs1001_tvn1",
+          "speaker": "掌柜",
+          "text": "盖印那一锋，酒要慢——慢着配印。"
+        },
+        {
+          "id": "cs1001_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "催快印的散了。散了，腕才稳。"
+        },
+        {
+          "id": "cs1001_tvn3",
+          "speaker": "老旗手",
+          "text": "旗在印案旁立过。立过，印才像有根。"
+        },
+        {
+          "id": "cs1001_tvn4",
+          "speaker": "leader",
+          "text": "场清。印净。酒，慢着。"
         },
         {
           "id": "cs1001_ret_mv4",

@@ -678,6 +678,21 @@
           "text": "慢着看，折痕藏不住。"
         },
         {
+          "id": "cs0402_vst1",
+          "speaker": "岁吏",
+          "text": "月份从契缝里挤进一丝。丝细，却把年月钉住。"
+        },
+        {
+          "id": "cs0402_vst2",
+          "speaker": "书记官",
+          "text": "契录旁沙漏，最怕风掀。"
+        },
+        {
+          "id": "cs0402_vst3",
+          "speaker": "leader",
+          "text": "月份钉过。契，我压。"
+        },
+        {
           "id": "cs0402_vis_mv4",
           "speaker": "leader",
           "text": "慢看。去月份。"
@@ -975,6 +990,38 @@
           "id": "cs0402_mid_mv6",
           "speaker": "leader",
           "text": "试。步实锋实。"
+        },
+        {
+          "id": "cs0402_win1",
+          "speaker": "旁白",
+          "text": "锋再定。契纸角压住，抢契那拨退到廊外。",
+          "when": {
+            "flag": "cs04_mid_fought"
+          }
+        },
+        {
+          "id": "cs0402_win2",
+          "speaker": "掌柜",
+          "text": "契要压。压住，才不像飞的。",
+          "when": {
+            "flag": "cs04_mid_fought"
+          }
+        },
+        {
+          "id": "cs0402_win3",
+          "speaker": "槐里·青禾",
+          "text": "墨干了。干了，字才是自己的。",
+          "when": {
+            "flag": "cs04_mid_fought"
+          }
+        },
+        {
+          "id": "cs0402_win4",
+          "speaker": "leader",
+          "text": "锋护过契。字，我签得。",
+          "when": {
+            "flag": "cs04_mid_fought"
+          }
         },
         {
           "speaker": "旁白",
@@ -1341,6 +1388,26 @@
           "id": "cs0402_ret_mv3",
           "speaker": "岁吏",
           "text": "挂完回。"
+        },
+        {
+          "id": "cs0402_tvn1",
+          "speaker": "掌柜",
+          "text": "护契那一锋，酒要稳——稳着配字。"
+        },
+        {
+          "id": "cs0402_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "廊外那拨退了。退了，墨才干得成。"
+        },
+        {
+          "id": "cs0402_tvn3",
+          "speaker": "老旗手",
+          "text": "旗在契案旁立过。立过，字有根。"
+        },
+        {
+          "id": "cs0402_tvn4",
+          "speaker": "leader",
+          "text": "契在。墨干。酒，稳着。"
         },
         {
           "id": "cs0402_ret_mv4",

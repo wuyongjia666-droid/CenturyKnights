@@ -70,3 +70,5 @@
 - 据点 visit 拍：时漏/验盏前口语加厚；CTA「去看月份怎么往前走」不变。
 - 酒馆回程：挂板前口语加厚，收束回堡入谱。
 - 真 E2E：`content_season_hub_chain_check`（hub→章→战/访→回抽样）；`battle_retry` LIVE 扩至 S01–S10 `_01`；playable walk_to_choice→220。
+
+- mid_fought 胜后口语 + 据点 visit/酒馆回程加厚（全十季 _01/_02）；`hub_chain` LIVE 扩至 cs01–cs10 _01。

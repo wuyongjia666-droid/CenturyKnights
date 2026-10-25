@@ -359,6 +359,21 @@
           "text": "沙走名空，更要盯。"
         },
         {
+          "id": "cs0501_vst1",
+          "speaker": "岁吏",
+          "text": "月份在空椅扶手上停了一息。停过，才往前。"
+        },
+        {
+          "id": "cs0501_vst2",
+          "speaker": "书记官",
+          "text": "椅旁沙漏怕脏纸。纸净，月份才敢写。"
+        },
+        {
+          "id": "cs0501_vst3",
+          "speaker": "leader",
+          "text": "月份停过。椅空着，我不让。"
+        },
+        {
           "id": "cs0501_vis_mv4",
           "speaker": "leader",
           "text": "盯着看月份。"
@@ -530,6 +545,38 @@
           "id": "cs0501_mid_mv6",
           "speaker": "leader",
           "text": "座不让。锋先问。"
+        },
+        {
+          "id": "cs0501_win1",
+          "speaker": "旁白",
+          "text": "锋定。空椅纸角压平，椅旁那拨散了。",
+          "when": {
+            "flag": "cs05_mid_fought"
+          }
+        },
+        {
+          "id": "cs0501_win2",
+          "speaker": "掌柜",
+          "text": "座还在。让座的人，今晚没有。",
+          "when": {
+            "flag": "cs05_mid_fought"
+          }
+        },
+        {
+          "id": "cs0501_win3",
+          "speaker": "槐里·青禾",
+          "text": "旁人不敢坐了。椅，仍是空的——空得干净。",
+          "when": {
+            "flag": "cs05_mid_fought"
+          }
+        },
+        {
+          "id": "cs0501_win4",
+          "speaker": "leader",
+          "text": "锋问过座。空椅，我守。",
+          "when": {
+            "flag": "cs05_mid_fought"
+          }
         },
         {
           "id": "cs05_mid_lost",
@@ -786,6 +833,26 @@
           "id": "cs0501_ret_mv3",
           "speaker": "书记官",
           "text": "名在链上。链要回堡续。"
+        },
+        {
+          "id": "cs0501_tvn1",
+          "speaker": "掌柜",
+          "text": "空椅那一锋，比满座的吵更吓人。"
+        },
+        {
+          "id": "cs0501_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "酒杯别放椅上。椅是位，不是案。"
+        },
+        {
+          "id": "cs0501_tvn3",
+          "speaker": "听回",
+          "text": "纸角压平了。平了才像有主。"
+        },
+        {
+          "id": "cs0501_tvn4",
+          "speaker": "leader",
+          "text": "座在。人在。空，是留给该坐的。"
         },
         {
           "id": "cs0501_ret_mv4",
