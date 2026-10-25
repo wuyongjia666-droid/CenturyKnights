@@ -2,7 +2,7 @@ extends Node
 ## Player-visible heraldry consistency across genealogy + castle banner strip +
 ## rival houses + tavern/hire + board unit shields + city/smith 邦徽 +
 ## commission-board 委托徽 + mobile genealogy/quests company header +
-## succession / heir-duel strips.
+## succession / heir-duel strips + works/forge/estates castle chrome.
 ## 团徽 / 旗徽 / 族徽 / 敌徽 / 邦徽 / 委托徽 never mismatch outside their Chrome routes.
 
 const OVERVIEW := "res://scenes/hub/lineage_view.tscn"
@@ -386,6 +386,15 @@ func _run() -> void:
 		_ok(duel.find_child("LeftArms", true, false) != null, "duel LeftArms")
 		_ok(duel.find_child("RightArms", true, false) != null, "duel RightArms")
 	duel_host.queue_free()
+	# ── Works / forge / estates castle chrome (团徽 + banner) ───────
+	for scn_path in ["res://scenes/hub/works.tscn", "res://scenes/hub/forge.tscn", "res://scenes/hub/estates.tscn"]:
+		var pg: Control = load(scn_path).instantiate()
+		get_tree().root.add_child(pg)
+		await _settle(8)
+		_ok(pg.find_child("CastleArms", true, false) != null, "%s CastleArms" % scn_path.get_file())
+		_ok(pg.find_child("CastleBannerStrip", true, false) != null or pg.find_child("CastleBanner", true, false) != null, "%s banner" % scn_path.get_file())
+		pg.queue_free()
+		await _settle(2)
 
 	await _settle(2)
 	if _fail != "":
