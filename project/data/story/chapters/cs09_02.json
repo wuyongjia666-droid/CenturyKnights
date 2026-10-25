@@ -96,6 +96,36 @@
           "text": "我站血院外。站着也算见证。"
         },
         {
+          "id": "cs09b_ya_x17",
+          "speaker": "旁白",
+          "text": "驿场泥新。新泥易滑。"
+        },
+        {
+          "id": "cs09b_ya_x18",
+          "speaker": "石垒·晚担",
+          "text": "滑的路，信使最怕。"
+        },
+        {
+          "id": "cs09b_ya_x19",
+          "speaker": "leader",
+          "text": "我走稳处。"
+        },
+        {
+          "id": "cs09b_ya_y20",
+          "speaker": "旁白",
+          "text": "血验灯晃了一下。"
+        },
+        {
+          "id": "cs09b_ya_y21",
+          "speaker": "石垒·晚担",
+          "text": "晃的是手，不是血。"
+        },
+        {
+          "id": "cs09b_ya_y22",
+          "speaker": "leader",
+          "text": "血要稳。"
+        },
+        {
           "id": "cs09b_ya_16",
           "speaker": "槐里·青禾",
           "text": "诚实比能喊的血名贵。"
@@ -191,6 +221,36 @@
           "id": "cs09b_bl_17",
           "speaker": "石垒·晚担",
           "text": "骗不过抄验册的停顿。"
+        },
+        {
+          "id": "cs09b_bl_x17",
+          "speaker": "旁白",
+          "text": "血册边角有旧渍。渍色沉。"
+        },
+        {
+          "id": "cs09b_bl_x18",
+          "speaker": "岁吏",
+          "text": "沉渍说明不是新泼的。"
+        },
+        {
+          "id": "cs09b_bl_x19",
+          "speaker": "leader",
+          "text": "新泼的我不认。"
+        },
+        {
+          "id": "cs09b_bl_y20",
+          "speaker": "旁白",
+          "text": "册上旧渍沉底。"
+        },
+        {
+          "id": "cs09b_bl_y21",
+          "speaker": "石垒·晚担",
+          "text": "沉底的不是新泼。"
+        },
+        {
+          "id": "cs09b_bl_y22",
+          "speaker": "leader",
+          "text": "新泼的不认。"
         },
         {
           "id": "cs09b_bl_9",
@@ -290,6 +350,36 @@
           "text": "验痕看见了。去门廊留痕。"
         },
         {
+          "id": "cs09b_ho_x17",
+          "speaker": "旁白",
+          "text": "沙漏旁搁着未启的通函。"
+        },
+        {
+          "id": "cs09b_ho_x18",
+          "speaker": "苇原·灯影",
+          "text": "未启，是给到手的人。"
+        },
+        {
+          "id": "cs09b_ho_x19",
+          "speaker": "leader",
+          "text": "去沙漏。亲手启。"
+        },
+        {
+          "id": "cs09b_ho_y20",
+          "speaker": "旁白",
+          "text": "血验灯晃了一下。"
+        },
+        {
+          "id": "cs09b_ho_y21",
+          "speaker": "石垒·晚担",
+          "text": "晃的是手，不是血。"
+        },
+        {
+          "id": "cs09b_ho_y22",
+          "speaker": "leader",
+          "text": "血要稳。"
+        },
+        {
           "id": "cs09b_ho_8",
           "speaker": "苇原·灯影",
           "text": "假血一夜，验册就脏。"
@@ -332,21 +422,6 @@
           "id": "cs09b_br_2",
           "speaker": "老旗手",
           "text": "旗角在桥头给人核。核完再谈催血。"
-        },
-        {
-          "id": "cs09b_br_lost",
-          "speaker": "旁白",
-          "text": "锋收回来。验册纸还钉着。血旁那拨，没散。",
-          "when": {
-            "all": [
-              {
-                "flag": "cs09_02_mid_lost"
-              },
-              {
-                "not_flag": "cs09_02_mid_fought"
-              }
-            ]
-          }
         },
         {
           "id": "cs09b_br_3",
@@ -424,9 +499,54 @@
           "text": "停一下好。不停着抄血名最危险。"
         },
         {
+          "id": "cs09b_br_x18",
+          "speaker": "旁白",
+          "text": "门廊挂着驿铃。铃哑了一半。"
+        },
+        {
+          "id": "cs09b_br_x19",
+          "speaker": "岁吏",
+          "text": "哑铃也传得动真信。"
+        },
+        {
+          "id": "cs09b_br_x20",
+          "speaker": "leader",
+          "text": "试锋。真信优先。"
+        },
+        {
+          "id": "cs09b_br_y21",
+          "speaker": "旁白",
+          "text": "册上旧渍沉底。"
+        },
+        {
+          "id": "cs09b_br_y22",
+          "speaker": "石垒·晚担",
+          "text": "沉底的不是新泼。"
+        },
+        {
+          "id": "cs09b_br_y23",
+          "speaker": "leader",
+          "text": "新泼的不认。"
+        },
+        {
           "id": "cs09b_br_18",
           "speaker": "旁白",
           "text": "桥灯一盏。验酒门开。"
+        },
+        {
+          "id": "cs09b_br_lost",
+          "speaker": "旁白",
+          "text": "锋收回来。验册纸还钉着。血旁那拨，没散。",
+          "when": {
+            "all": [
+              {
+                "flag": "cs09_02_mid_lost"
+              },
+              {
+                "not_flag": "cs09_02_mid_fought"
+              }
+            ]
+          }
         }
       ],
       "next": "tavern",
@@ -637,6 +757,36 @@
           "text": "血验旗还在。旗不替你们选。"
         },
         {
+          "id": "cs09b_ta_x17",
+          "speaker": "旁白",
+          "text": "酒馆有人卖路条。"
+        },
+        {
+          "id": "cs09b_ta_x18",
+          "speaker": "老管事",
+          "text": "买来的路条，关卡不认。"
+        },
+        {
+          "id": "cs09b_ta_x19",
+          "speaker": "leader",
+          "text": "我不买。"
+        },
+        {
+          "id": "cs09b_ta_y20",
+          "speaker": "旁白",
+          "text": "血验灯晃了一下。"
+        },
+        {
+          "id": "cs09b_ta_y21",
+          "speaker": "石垒·晚担",
+          "text": "晃的是手，不是血。"
+        },
+        {
+          "id": "cs09b_ta_y22",
+          "speaker": "leader",
+          "text": "血要稳。"
+        },
+        {
           "id": "cs09b_ta_18",
           "speaker": "旁白",
           "text": "两道验题在板上。手按上去。"
@@ -780,6 +930,36 @@
           "id": "cs09b_le_17",
           "speaker": "苇原·灯影",
           "text": "在就好。在才像验册回读。"
+        },
+        {
+          "id": "cs09b_le_x17",
+          "speaker": "旁白",
+          "text": "驿录写：送达比早到贵。"
+        },
+        {
+          "id": "cs09b_le_x18",
+          "speaker": "槐里·青禾",
+          "text": "早到的假信最多。"
+        },
+        {
+          "id": "cs09b_le_x19",
+          "speaker": "leader",
+          "text": "我等送达。"
+        },
+        {
+          "id": "cs09b_le_y20",
+          "speaker": "旁白",
+          "text": "册上旧渍沉底。"
+        },
+        {
+          "id": "cs09b_le_y21",
+          "speaker": "石垒·晚担",
+          "text": "沉底的不是新泼。"
+        },
+        {
+          "id": "cs09b_le_y22",
+          "speaker": "leader",
+          "text": "新泼的不认。"
         },
         {
           "id": "cs09b_le_18",

@@ -122,6 +122,21 @@
           "text": "日子够硬。灯以后再说。"
         },
         {
+          "id": "cs01_open_y21",
+          "speaker": "旁白",
+          "text": "灯花爆了一下。爆完，字才肯站住。"
+        },
+        {
+          "id": "cs01_open_y22",
+          "speaker": "石垒·晚担",
+          "text": "假亮捂不热。这格只留真。"
+        },
+        {
+          "id": "cs01_open_y23",
+          "speaker": "leader",
+          "text": "记下。不催假名。"
+        },
+        {
           "id": "cs01_open_9",
           "speaker": "老旗手",
           "text": "纸比粮先到的时候，灯就不早了。"
@@ -241,6 +256,21 @@
           "id": "cs01_hall_x11",
           "speaker": "旁白",
           "text": "厅外脚步乱了一阵，又齐。齐的是巡夜，不是催条。"
+        },
+        {
+          "id": "cs01_hall_y22",
+          "speaker": "旁白",
+          "text": "册边起毛。毛边比印鉴老实。"
+        },
+        {
+          "id": "cs01_hall_y23",
+          "speaker": "石垒·晚担",
+          "text": "老实的才并排。"
+        },
+        {
+          "id": "cs01_hall_y24",
+          "speaker": "leader",
+          "text": "并排留真。"
         },
         {
           "id": "cs01_hall_9",
@@ -495,6 +525,21 @@
           "text": "铜盏收回匣。匣盖轻合，像同意这一笔。"
         },
         {
+          "id": "cs01_audit_y21",
+          "speaker": "旁白",
+          "text": "灯花爆了一下。爆完，字才肯站住。"
+        },
+        {
+          "id": "cs01_audit_y22",
+          "speaker": "石垒·晚担",
+          "text": "假亮捂不热。这格只留真。"
+        },
+        {
+          "id": "cs01_audit_y23",
+          "speaker": "leader",
+          "text": "记下。不催假名。"
+        },
+        {
           "id": "cs01_audit_9",
           "speaker": "leader",
           "text": "写无。我们认。"
@@ -620,6 +665,21 @@
           "id": "cs01_tavern_x11",
           "speaker": "掌柜",
           "text": "硬的字，我才肯送出门。"
+        },
+        {
+          "id": "cs01_tav_y18",
+          "speaker": "旁白",
+          "text": "册边起毛。毛边比印鉴老实。"
+        },
+        {
+          "id": "cs01_tav_y19",
+          "speaker": "石垒·晚担",
+          "text": "老实的才并排。"
+        },
+        {
+          "id": "cs01_tav_y20",
+          "speaker": "leader",
+          "text": "并排留真。"
         },
         {
           "id": "cs01_tav_6",
@@ -794,6 +854,21 @@
           "id": "cs01_ledger_y0",
           "speaker": "旁白",
           "text": "无在谱里。旗在门楣。人在旗下。"
+        },
+        {
+          "id": "cs01_led_y21",
+          "speaker": "旁白",
+          "text": "灯花爆了一下。爆完，字才肯站住。"
+        },
+        {
+          "id": "cs01_led_y22",
+          "speaker": "石垒·晚担",
+          "text": "假亮捂不热。这格只留真。"
+        },
+        {
+          "id": "cs01_led_y23",
+          "speaker": "leader",
+          "text": "记下。不催假名。"
         },
         {
           "id": "cs01_led_6",

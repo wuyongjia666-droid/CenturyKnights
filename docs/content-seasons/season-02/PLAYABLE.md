@@ -52,3 +52,7 @@
 
 - **偏仍并排** → flag `cs02_slip_parallel`，进 `ledger`。
 - 验收：`content_season_playable_s02_02_check`。
+
+## plate-final
+
+前三拍收束不为旁白，保证 return_portrait 走得到具名板面。

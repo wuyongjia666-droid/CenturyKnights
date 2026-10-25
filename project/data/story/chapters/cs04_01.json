@@ -107,6 +107,21 @@
           "text": "齿匀，字才不飘。"
         },
         {
+          "id": "cs04_preach_y18",
+          "speaker": "旁白",
+          "text": "训条贴墙上。墙皮起壳。"
+        },
+        {
+          "id": "cs04_preach_y19",
+          "speaker": "石垒·晚担",
+          "text": "壳掉了，训还在才算。"
+        },
+        {
+          "id": "cs04_preach_y20",
+          "speaker": "leader",
+          "text": "训与行并排。"
+        },
+        {
           "id": "cs04_preach_x9",
           "speaker": "leader",
           "text": "绣上了。去看月结。"
@@ -213,6 +228,21 @@
           "text": "缝不是裂。裂了只剩口号。"
         },
         {
+          "id": "cs04_echo_y18",
+          "speaker": "旁白",
+          "text": "脚步声比口号响。"
+        },
+        {
+          "id": "cs04_echo_y19",
+          "speaker": "石垒·晚担",
+          "text": "响的是走出来的。"
+        },
+        {
+          "id": "cs04_echo_y20",
+          "speaker": "leader",
+          "text": "我走实步。"
+        },
+        {
           "id": "cs04_echo_x9",
           "speaker": "leader",
           "text": "回响收下。去沙漏看两行。"
@@ -312,6 +342,21 @@
           "id": "cs04_hourglass_y1",
           "speaker": "书记官",
           "text": "裁下行的摘要，拒收。"
+        },
+        {
+          "id": "cs04_hourglass_y17",
+          "speaker": "旁白",
+          "text": "训条贴墙上。墙皮起壳。"
+        },
+        {
+          "id": "cs04_hourglass_y18",
+          "speaker": "石垒·晚担",
+          "text": "壳掉了，训还在才算。"
+        },
+        {
+          "id": "cs04_hourglass_y19",
+          "speaker": "leader",
+          "text": "训与行并排。"
         },
         {
           "id": "cs04_hourglass_x9",
@@ -440,6 +485,21 @@
           "id": "cs04_bridge_x9",
           "speaker": "leader",
           "text": "看完牌。去酒馆选题。"
+        },
+        {
+          "id": "cs04_mid_y18",
+          "speaker": "旁白",
+          "text": "脚步声比口号响。"
+        },
+        {
+          "id": "cs04_mid_y19",
+          "speaker": "石垒·晚担",
+          "text": "响的是走出来的。"
+        },
+        {
+          "id": "cs04_mid_y20",
+          "speaker": "leader",
+          "text": "我走实步。"
         },
         {
           "id": "cs04_mid_lost",
@@ -668,6 +728,21 @@
           "text": "歪的是学。学比绣好看要紧。"
         },
         {
+          "id": "cs04_tavern_y17",
+          "speaker": "旁白",
+          "text": "训条贴墙上。墙皮起壳。"
+        },
+        {
+          "id": "cs04_tavern_y18",
+          "speaker": "石垒·晚担",
+          "text": "壳掉了，训还在才算。"
+        },
+        {
+          "id": "cs04_tavern_y19",
+          "speaker": "leader",
+          "text": "训与行并排。"
+        },
+        {
           "id": "cs04_tavern_x9",
           "speaker": "旁白",
           "text": "你得选。选完进账本。"
@@ -835,6 +910,21 @@
           "id": "cs04_ledger_y1",
           "speaker": "槐里·青禾",
           "text": "敢露的缝，才像能住的家。"
+        },
+        {
+          "id": "cs04_ledger_y20",
+          "speaker": "旁白",
+          "text": "脚步声比口号响。"
+        },
+        {
+          "id": "cs04_ledger_y21",
+          "speaker": "石垒·晚担",
+          "text": "响的是走出来的。"
+        },
+        {
+          "id": "cs04_ledger_y22",
+          "speaker": "leader",
+          "text": "我走实步。"
         },
         {
           "id": "cs04_ledger_x9",

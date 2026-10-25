@@ -58,3 +58,8 @@
 - 选题：**印底并排留** → flag `cs10_base_parallel`；备选 **先催城印**。
 - 所有权不变：`hourglass` visit「去看月份怎么往前走」；`bridge` battle「先试一锋 / 再试锋镝 / 继续」。
 - 枢纽：`playable_chapters` 挂进 `StoryCatalog.content_season_entries`（主 `playable_chapter` 仍为 `_01`）。
+
+## 第二可玩章加深（本刀）
+
+- `cs10_02` 口语加厚至约 124–130 行；保留 visit@hourglass / battle@bridge CTA 与 mid_lost 门闸。
+- 前三拍收束不为旁白；suite walk_to_choice 提到 220。
