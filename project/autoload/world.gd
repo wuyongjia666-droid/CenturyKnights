@@ -2360,6 +2360,13 @@ func on_battle_end(win: bool) -> Dictionary:
 			else:
 				msg += Locale.t("quest_objective_failed")
 	msg += CKTerritory.on_battle(enc, win)
+	## Y1-B: 战棋遭遇 → month_echo.battle；属地/沙漏回读.
+	var place := str(node(str(enc.get("node", pos))).get("name", node(pos).get("name", "")))
+	if win:
+		var loot_n := 10 + 8 * int(enc.danger)
+		CKEconomyState.month_echo_note("battle", Locale.t("lb_echo_battle_win", [loot_n, place]))
+	else:
+		CKEconomyState.month_echo_note("battle", Locale.t("lb_echo_battle_lose", [place]))
 	_tlog(msg)
 	GameState.mark_dirty()
 	world_changed.emit()
