@@ -31,6 +31,7 @@ func _geo() -> void:
 func _ready() -> void:
 	var lv := GameState.building_level("shrine")
 	CKPageKit.shell(self, Locale.t("lb_shrine_ctx"), "SANCTUARY", Locale.t("lb_shrine_title"), Locale.t("lb_shrine_desc"))
+	_place_shrine_crests()
 	var hurt := _hurt()
 	_geo()
 	_heal_card = CKPageKit.card(self, Rect2(42, CKPageKit.TOP + 8, _cw, _ch), "HealCard", true)
@@ -86,11 +87,26 @@ func _ready() -> void:
 	UIFX.wire_tree(self)
 
 
+
+func _place_shrine_crests() -> void:
+	## 团徽 header + banner strip + NationCrestStrip (home/current nation 邦徽).
+	var mob := DeviceProfile.is_mobile()
+	var hdr := Vector2(44, 52) if not mob else Vector2(40, 48)
+	CKHeraldryChrome.place_company_header(self, Vector2(1180, 8) if not mob else Vector2(1180, 4), hdr)
+	CKHeraldryChrome.place_castle_banner_strip(self, Vector2(1120, 8) if not mob else Vector2(1120, 4), hdr, Vector2(28, 38))
+	var nid := str(World.nation_of(str(World.pos))) if str(World.pos) != "" else ""
+	if nid == "":
+		var ids: Array = CKBloodline.nation_ids()
+		if not ids.is_empty():
+			nid = str(ids[0])
+	CKHeraldryChrome.place_nation_crest_strip(self, nid, Vector2(980, 10) if not mob else Vector2(900, 8), Vector2(36, 44) if not mob else Vector2(32, 38))
+
 func apply_mobile_layout() -> void:
 	if not MobilePage.active(self):
 		return
 	set_meta("m_center_ok", true)
 	_geo()
+	_place_shrine_crests()
 	var top := CKPageKit.TOP + 8.0
 	var x0 := 42.0
 	var gap := 16.0
