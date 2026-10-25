@@ -2,6 +2,7 @@ class_name BattleDefeat
 extends RefCounted
 ## WS-D #50 / #5: a lost or abandoned battle always goes back to the castle (never chapter 0),
 ## and the company gets an injury settlement written to the castle log.
+## Chapter-owned mid-cs (`battle_return_chapter`): skip castle log_event — mid_lost owns the trail.
 
 const CASTLE := "res://scenes/hub/castle_hub.tscn"
 const META := "defeat_settlement"
@@ -48,6 +49,19 @@ static func settlement(units: Array) -> PackedStringArray:
 		if lab != "":
 			rows.append("%s · %s" % [c.name, lab])
 	return rows
+
+
+## Chapter-owned mid-cs / era: mid_lost CTA owns the loss trail.
+## Castle event_log must not keep permanent「败北」rows for fights later won on retry.
+static func suppresses_castle_record() -> bool:
+	return str(GameState.get_meta("battle_return_chapter", "")) != ""
+
+
+## Hub / sortie defeat settlement. Skips chapter-owned mid-cs (see suppresses_castle_record).
+static func maybe_record(units: Array, reason: String) -> String:
+	if suppresses_castle_record():
+		return ""
+	return record(units, reason)
 
 
 static func record(units: Array, reason: String) -> String:

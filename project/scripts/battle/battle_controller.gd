@@ -2918,7 +2918,8 @@ func _finish(win: bool) -> void:
 	}
 	battle_finished.emit(finished)
 	if not win and not _world_enc:
-		BattleDefeat.record(units, str(finished["reason"]))
+		# Chapter-owned mid-cs: skip castle log_event — mid_lost owns the trail.
+		BattleDefeat.maybe_record(units, str(finished["reason"]))
 	_show_report(win, purse, sp_gain, exp_before)
 
 func _show_report(win: bool, purse: int, sp_gain: int, exp_before: Dictionary) -> void:

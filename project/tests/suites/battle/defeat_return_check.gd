@@ -1,5 +1,6 @@
 extends Node
-## WS-D #50/#5: defeat and retreat go back to the castle (never chapter 0) with an injury settlement.
+## WS-D #50/#5: defeat and retreat go back to the castle (never chapter 0) with an injury settlement;
+## chapter-owned mid-cs suppresses BattleDefeat.record (no castle event_log「败北」).
 
 var _battle
 
@@ -18,6 +19,20 @@ func _ready() -> void:
 func _run() -> String:
 	GameState.new_game("探针", "灰旗", "#" + "6ED4FF")
 	GameState.set_flag("hub_open")
+	var err := _protocol_back_paths()
+	if err != "":
+		return err
+	err = _protocol_castle_record_gate()
+	if err != "":
+		return err
+	if BattleDefeat.back_path(true, false, "res://scenes/story/chapter0.tscn") != "res://scenes/story/chapter0.tscn":
+		return "story win lost its return"
+	if BattleDefeat.back_path(true, false, "") != BattleDefeat.CASTLE:
+		return "win with no return"
+	return await _live_retreat()
+
+
+func _protocol_back_paths() -> String:
 	if BattleDefeat.back_path(false, false, "res://scenes/story/chapter0.tscn") != BattleDefeat.CASTLE:
 		return "story defeat after hub_open still returns to chapter"
 	# Mid-cs / era: battle_return_chapter means the chapter owns the fight — retry on loss
@@ -32,11 +47,40 @@ func _run() -> String:
 		return "quest_bandit_lost not written on chapter retry"
 	if not GameState.flag("cs01_mid_lost"):
 		return "cs01_mid_lost not applied from battle_lose_flags"
+	return ""
+
+
+func _protocol_castle_record_gate() -> String:
+	# Chapter-owned: maybe_record must not write META / event_log.
+	var before_log := GameState.event_log.size()
+	var skipped := BattleDefeat.maybe_record([], "lose")
+	if skipped != "":
+		return "chapter maybe_record should return empty got %s" % skipped
+	if str(GameState.get_meta(BattleDefeat.META, "")) != "":
+		return "chapter maybe_record wrote META"
+	if GameState.event_log.size() != before_log:
+		return "chapter maybe_record grew event_log"
+	print("OK protocol chapter suppresses castle defeat record")
 	GameState.set_meta("battle_return_chapter", "")
-	if BattleDefeat.back_path(true, false, "res://scenes/story/chapter0.tscn") != "res://scenes/story/chapter0.tscn":
-		return "story win lost its return"
-	if BattleDefeat.back_path(true, false, "") != BattleDefeat.CASTLE:
-		return "win with no return"
+	if GameState.has_meta(BattleDefeat.META):
+		GameState.remove_meta(BattleDefeat.META)
+	var hub_text := BattleDefeat.maybe_record([], "lose")
+	if hub_text == "" or not hub_text.begins_with(Locale.t("defeat_head")):
+		return "hub maybe_record missing defeat_head got %s" % hub_text
+	if str(GameState.get_meta(BattleDefeat.META, "")) != hub_text:
+		return "hub maybe_record META mismatch"
+	var hit := false
+	for row in GameState.event_log:
+		if str(row).find(Locale.t("defeat_head")) >= 0:
+			hit = true
+			break
+	if not hit:
+		return "hub maybe_record missing from event_log"
+	print("OK protocol hub still records castle defeat")
+	return ""
+
+
+func _live_retreat() -> String:
 	GameState.new_game("探针", "灰旗", "#" + "6ED4FF")
 	GameState.set_flag("hub_open")
 	GameState.set_meta("cutscenes_on", false)
