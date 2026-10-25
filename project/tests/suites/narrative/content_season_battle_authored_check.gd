@@ -24,8 +24,11 @@ const BATTLE_BEAT := {
 	"cs07_01": "bridge",
 	"cs07_02": "bridge",
 	"cs08_01": "bridge",
+	"cs08_02": "bridge",
 	"cs09_01": "bridge",
+	"cs09_02": "bridge",
 	"cs10_01": "bridge",
+	"cs10_02": "bridge",
 }
 ## After return, continue must land here (beat.next of the battle beat).
 const AFTER := {
@@ -44,13 +47,17 @@ const AFTER := {
 	"cs07_01": "tavern",
 	"cs07_02": "tavern",
 	"cs08_01": "tavern",
+	"cs08_02": "tavern",
 	"cs09_01": "tavern",
+	"cs09_02": "tavern",
 	"cs10_01": "tavern",
+	"cs10_02": "tavern",
 }
 ## Live press path on every authored season (static gate already covers all ten).
 const LIVE := [
 	"cs01_01", "cs01_02", "cs02_01", "cs02_02", "cs03_01", "cs03_02", "cs04_01", "cs04_02",
-	"cs05_01", "cs05_02", "cs06_01", "cs06_02", "cs07_01", "cs07_02", "cs08_01", "cs09_01", "cs10_01",
+	"cs05_01", "cs05_02", "cs06_01", "cs06_02", "cs07_01", "cs07_02",
+	"cs08_01", "cs08_02", "cs09_01", "cs09_02", "cs10_01", "cs10_02",
 ]
 
 
