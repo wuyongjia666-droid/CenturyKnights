@@ -70,8 +70,11 @@ func _place_roster_crests(mobile: bool = false) -> void:
 	var mob := mobile or DeviceProfile.is_mobile()
 	var at := Vector2(1120, 8) if not mob else Vector2(maxf(20.0, MobilePage.width(self) - 140.0), 4)
 	var sh := Vector2(36, 44) if not mob else Vector2(32, 40)
-	CKHeraldryChrome.place_roster_crest_strip(self, at, sh, Vector2(24, 34) if not mob else Vector2(22, 30))
-	CKHeraldryChrome.place_company_header(self, Vector2(1180, 8) if not mob else Vector2(maxf(40.0, MobilePage.width(self) - 64.0), 4), Vector2(44, 52) if not mob else Vector2(40, 48))
+	var bn := Vector2(24, 34) if not mob else Vector2(22, 30)
+	CKHeraldryChrome.place_roster_crest_strip(self, at, sh, bn)
+	var hdr_at := Vector2(1180, 8) if not mob else Vector2(maxf(40.0, MobilePage.width(self) - 64.0), 4)
+	var hdr_sz := Vector2(44, 52) if not mob else Vector2(40, 48)
+	CKHeraldryChrome.place_company_header(self, hdr_at, hdr_sz)
 
 
 func apply_mobile_layout() -> void:
