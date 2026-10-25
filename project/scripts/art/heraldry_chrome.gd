@@ -859,3 +859,112 @@ static func place_encounter_crest_strip(parent: Node, at: Vector2, foe_nation: S
 	host.set_meta("nation_id", nid)
 	parent.add_child(host)
 	return host
+
+
+## Field-book / 属事处 header strip: 团徽 + 旗布 (FieldCrestStrip). Distinct from CastleBannerStrip.
+static func place_field_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("FieldCrestStrip")
+	if old:
+		old.name = "_FieldCrestStripDying"
+		old.queue_free()
+	var host := Control.new()
+	host.name = "FieldCrestStrip"
+	host.position = at
+	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var arms := make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var bn := make_company_banner(banner)
+	bn.name = "FieldBanner"
+	bn.tooltip_text = Locale.t("lb_field_arms")
+	bn.set_meta("arms_kind", "lb_field_arms")
+	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
+	host.add_child(bn)
+	parent.add_child(host)
+	return host
+
+
+## Prepend person FieldRowArms into a field-book HBox row (属事处名单).
+static func attach_field_row_arms(row: Control, c, arms_sz: Vector2 = Vector2(28, 34)) -> void:
+	if row == null or c == null:
+		return
+	var old := row.get_node_or_null("FieldRowArms")
+	if old:
+		old.name = "_FieldRowArmsDying"
+		old.queue_free()
+	var arms := make_person_arms(c, arms_sz)
+	arms.name = "FieldRowArms"
+	row.add_child(arms)
+	row.move_child(arms, 0)
+
+
+## Yeartrace panel header: person YeartraceArms (岁课年迹). House mount uses company arms.
+## Shrink-only — never expand in the dossier FamilyTree scroll (court_ui overlap guard).
+static func attach_yeartrace_arms(panel: Control, c = null, arms_sz: Vector2 = Vector2(28, 34)) -> void:
+	if panel == null:
+		return
+	var old := panel.get_node_or_null("YeartraceArmsHead")
+	if old:
+		old.name = "_YeartraceArmsHeadDying"
+		old.queue_free()
+	var head := HBoxContainer.new()
+	head.name = "YeartraceArmsHead"
+	head.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	head.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	head.add_theme_constant_override("separation", 8)
+	var arms: TextureRect
+	if c != null:
+		arms = make_person_arms(c, arms_sz)
+	else:
+		arms = make_company_arms(arms_sz)
+	arms.name = "YeartraceArms"
+	arms.tooltip_text = Locale.t("lb_yeartrace_arms")
+	arms.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	arms.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	## Keep person/company arms_kind; suites key off node name.
+	head.add_child(arms)
+	## Prefer sitting beside the existing mono title if present.
+	var mono_i := -1
+	for i in panel.get_child_count():
+		var ch: Node = panel.get_child(i)
+		if ch is Label and str(ch.text).find("YEARTRACE") >= 0:
+			mono_i = i
+			break
+	if mono_i >= 0:
+		var mono: Node = panel.get_child(mono_i)
+		panel.remove_child(mono)
+		head.add_child(mono)
+		panel.add_child(head)
+		panel.move_child(head, mono_i)
+	else:
+		panel.add_child(head)
+		panel.move_child(head, 0)
+
+
+## Dossier 私囊 plate: PurseArms (person) + silver readout host. Caller parents into LifePanel.
+static func place_purse_plate(parent: Node, c, purse_silver: int = 0, arms_sz: Vector2 = Vector2(28, 34)) -> Control:
+	if parent == null or c == null:
+		return null
+	var old := parent.get_node_or_null("PursePlate")
+	if old:
+		old.name = "_PursePlateDying"
+		old.queue_free()
+	var host := HBoxContainer.new()
+	host.name = "PursePlate"
+	host.add_theme_constant_override("separation", 8)
+	var arms := make_person_arms(c, arms_sz)
+	arms.name = "PurseArms"
+	arms.tooltip_text = Locale.t("lb_purse_arms")
+	host.add_child(arms)
+	var lab := UIKit.body_label(Locale.t("lb_dos_purse", [int(purse_silver)]), UIKit.TEXT, 13)
+	lab.name = "PurseSilver"
+	lab.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	host.add_child(lab)
+	host.set_meta("purse_silver", int(purse_silver))
+	host.set_meta("arms_kind", str(arms.get_meta("arms_kind", "")))
+	host.set_meta("arms_core", str(arms.get_meta("arms_core", "")))
+	parent.add_child(host)
+	return host
