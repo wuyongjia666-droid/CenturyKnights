@@ -78,6 +78,7 @@ var last_battle_aftermath: Dictionary = {}  # structured encounter win/lose afte
 var last_chain_follow: Dictionary = {}  # follow-up / next scripted-chain step after turn_in
 var last_chain_fail: Dictionary = {}  # scripted-chain expire/abandon payload for ChainFailModal
 var last_supply_halt: Dictionary = {}  # mid-march food=0 payload for SupplyHaltModal
+var last_territory_month: Dictionary = {}  # month yield/drain/lost for TerritoryMonthModal
 var market: Dictionary = {}     # city -> {good: stock}
 var fairs: Dictionary = {}      # city -> days_total expiry
 var intel: Dictionary = {}      # city -> days_total when prices were last seen
@@ -186,6 +187,7 @@ func reset() -> void:
 	last_chain_follow = {}
 	last_chain_fail = {}
 	last_supply_halt = {}
+	last_territory_month = {}
 	market = {}
 	for id in nodes.keys():
 		_init_market(id)
@@ -265,6 +267,7 @@ func from_save(d: Dictionary) -> void:
 	last_chain_follow = {}
 	last_chain_fail = {}
 	last_supply_halt = {}
+	last_territory_month = {}
 	market = {}
 	var m: Dictionary = d.get("market", {})
 	for id in nodes.keys():
@@ -922,6 +925,8 @@ func _territory_month(ctx: Dictionary) -> void:
 	if line != "":
 		ctx["events"].append({"type": "territory", "text": line})
 		CKEconomyState.month_echo_note("territory", line)
+		if not CKTerritory.last_month_report.is_empty():
+			last_territory_month = CKTerritory.last_month_report.duplicate(true)
 
 # ── days / calendar ───────────────────────────────────
 func advance_days(n: int) -> Array:
@@ -2309,6 +2314,14 @@ func take_supply_halt() -> Dictionary:
 
 func dismiss_supply_halt() -> void:
 	last_supply_halt = {}
+
+func take_territory_month() -> Dictionary:
+	var d: Dictionary = last_territory_month.duplicate(true)
+	last_territory_month = {}
+	return d
+
+func dismiss_territory_month() -> void:
+	last_territory_month = {}
 
 ## Scavenge roadside rations; clears halt so the march can resume.
 func forage_supply() -> Dictionary:
