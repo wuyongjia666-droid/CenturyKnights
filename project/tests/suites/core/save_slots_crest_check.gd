@@ -1,5 +1,5 @@
 extends Node
-## Fat heraldry E2E: save_slots ShellCrestStrip + CastleArms, desktop + mobile.
+## Fat heraldry E2E: save_slots ShellCrestStrip + SlotArms from save meta crest, desk + mobile.
 
 const SCN := "res://scenes/ui/save_slots.tscn"
 var _fails: Array = []
@@ -8,6 +8,7 @@ func _ready() -> void:
 	await get_tree().process_frame
 	await _run_desktop()
 	await _run_mobile()
+	await _run_meta_crest()
 	if _fails.is_empty():
 		print("SAVE SLOTS CREST CHROME PASS")
 		get_tree().quit(0)
@@ -25,8 +26,9 @@ func _settle(n: int = 6) -> void:
 	for i in n:
 		await get_tree().process_frame
 
-func _boot() -> void:
-	GameState.new_game("壳徽", "灰旗", GameState.crest_color)
+func _boot(crest: String = "") -> void:
+	var hx := crest if crest != "" else GameState.crest_color
+	GameState.new_game("壳徽", "灰旗", hx)
 	GameState.set_flag("chapter0_done", true)
 	UnlockSchedule.install()
 	World.events_enabled = false
@@ -70,3 +72,31 @@ func _run_mobile() -> void:
 	page.queue_free()
 	await _settle(2)
 	OS.set_environment("CK_FORCE_MOBILE", "")
+
+
+func _run_meta_crest() -> void:
+	## SlotArms must render the crest written into that slot's meta, not live GameState.
+	OS.set_environment("CK_FORCE_MOBILE", "0")
+	var slot := "manual_0"
+	var crest_a := CKHeraldry.tincture_hex("gules")
+	_boot(crest_a)
+	_ok(GameState.save_to_slot(slot), "meta save_to_slot")
+	var meta := CKSaveService.read_meta(slot)
+	_ok(str(meta.get("crest_color", "")) == crest_a, "meta crest_color persisted")
+	## Flip live crest so a live-only attach would diverge.
+	GameState.crest_color = CKHeraldry.tincture_hex("azure")
+	GameState.banner_spec = BannerSpec.from_crest(GameState.crest_color)
+	var page: Control = (load(SCN) as PackedScene).instantiate()
+	get_tree().root.add_child(page)
+	await _settle(12)
+	var row = page.find_child("SlotRow_%s" % slot, true, false)
+	_ok(row != null, "meta SlotRow")
+	if row != null:
+		var arms = row.find_child("SlotArms", true, false)
+		_ok(arms != null, "meta SlotArms")
+		if arms != null:
+			_ok(str(arms.get_meta("arms_kind", "")) == "lb_slot_arms", "meta SlotArms kind")
+			var want := CKHeraldry.core_key(CKHeraldry.from_crest(crest_a))
+			_ok(str(arms.get_meta("arms_core", "")) == want, "meta SlotArms core from slot crest")
+	page.queue_free()
+	await _settle(2)
