@@ -387,6 +387,7 @@ lb_echo_retire,%s 退役任顾问（%s 偏向）,%s retires as advisor (%s lean)
 lb_echo_death,%s 辞世，入族谱碑,%s passes; name on the stele
 lb_echo_tutor,%s 受 %s 传习·%s+%d,%s taught by %s · %s +%d
 lb_echo_promo,%s 转职为 %s,%s promoted to %s
+lb_echo_recruit,酒馆招募 %s（-%d 银）,Tavern hire %s (−%d silver)
 lb_hg_echo_head,上月回响（离开后仍在）,Last month echo (kept)
 lb_hg_to_estates,去领地营建,To estates
 lb_dynasty_end_head,王朝终结,Dynasty ended
