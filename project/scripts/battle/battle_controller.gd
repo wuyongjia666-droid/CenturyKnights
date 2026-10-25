@@ -247,6 +247,7 @@ func _process(delta: float) -> void:
 		or _trauma > 0.0 or _turn_flash > 0.0
 		or BattlePhaseFeel.settle_alpha(self) > 0.0
 		or BattlePhaseFeel.enemy_actor_alpha(self) > 0.0
+		or BattleEngageCutscene.bridge_alpha(self) > 0.0
 	)
 	_redraw_accum += delta
 	var pulse := fx_live or _redraw_accum >= (1.0 / _REDRAW_HZ)
@@ -1276,6 +1277,8 @@ func _draw_overlay() -> void:
 	BattlePhaseFeel.draw_turn_banner(self, overlay)
 	BattlePhaseFeel.draw_enemy_actor_ring(self, overlay)
 	BattlePhaseFeel.draw_settle_flash(self, overlay)
+	# T-P7: FE engage bridge (atk↔def) — overlay only, no input steal
+	BattleEngageCutscene.draw_engage_bridge(self, overlay)
 	# 地形悬停提示
 	if _in_bounds(_hover_cell):
 		var sw = "res://assets/art/fx/attack_wash.png" if attack_mode else ("res://assets/art/fx/move_wash.png" if ResourceLoader.exists("res://assets/art/fx/move_wash.png") else "res://assets/art/fx/select_wash.png")
@@ -1802,7 +1805,11 @@ func _do_attack(ai: int, di: int) -> void:
 	_check_end()
 
 func _cutscenes_enabled() -> bool:
-	return DisplayServer.get_name() != "headless" and bool(GameState.get_meta("cutscenes_on", true)) and bool(GameState.settings.get("cutscenes", true))
+	return BattleEngageCutscene.should_play(
+		DisplayServer.get_name(),
+		bool(GameState.get_meta("cutscenes_on", true)),
+		bool(GameState.settings.get("cutscenes", true)),
+	)
 
 func _cut_links() -> Array:
 	if _link_seg.is_empty():
@@ -1811,39 +1818,29 @@ func _cut_links() -> Array:
 
 func _queue_cutscene(ai: int, di: int, hp0a: int, hp0d: int) -> void:
 	set_meta("cut_links", _cut_links())
-	if not _cutscenes_enabled() or _combat_rec.is_empty():
-		_combat_rec = []
-		return
 	var atk = units[ai]
 	var def = units[di]
-	var a_side := "right" if atk.team == "player" else "left"   # FE convention: our side on the right
-	var d_side := "left" if a_side == "right" else "right"
-	var strikes: Array = []
-	var fc := {a_side: {}, d_side: {}}
-	for r in _combat_rec:
-		var from: String = a_side if int(r.a) == ai else d_side
-		strikes.append({"from": from, "hit": r.hit, "crit": r.crit, "dmg": r.dmg, "killed": r.killed, "skill": r.skill, "hp_after": r.hp_after})
-		if fc[from].is_empty():
-			fc[from] = {"hit": r.hit_chance, "dmg": r.dmg if r.hit else "—"}
+	# T-P7: board engage bridge always (even when cutscene off / headless).
+	BattleEngageCutscene.note_engage_bridge(self, atk.pos, def.pos)
+	if _combat_rec.is_empty():
+		return
 	var tid := str(terrain[def.pos.y][def.pos.x])
 	var bg: Array = _biome_ground()
 	var ground: String = tid if tid in ["forest", "hill", "fort", "bridge"] else str(bg[0])
 	var gv: Vector3 = bg[1]
-	var _AtlasArt = preload("res://scripts/art/atlas_art.gd")
-	var rec := {
-		a_side: {"char": atk.char, "team": atk.team, "template": str(atk.get("template", "")), "hp0": hp0a,
-			"hit": fc[a_side].get("hit", "—"), "dmg": fc[a_side].get("dmg", "—"), "crit": atk.char.derived_crit()},
-		d_side: {"char": def.char, "team": def.team, "template": str(def.get("template", "")), "hp0": hp0d,
-			"hit": fc[d_side].get("hit", "—"), "dmg": fc[d_side].get("dmg", "—"), "crit": def.char.derived_crit()},
-		"strikes": strikes, "ground": ground, "grade": Color(gv.x, gv.y, gv.z), "tile": tid,
-		"backdrop": str(_AtlasArt.battle_backdrop_for_map(map_id)),
-		"title": "%s · %s" % [map_name, str(BattleRules.terrain_info(tid).get("name", tid))],
-		"links": _cut_links(),
-	}
+	var rec: Dictionary = BattleEngageCutscene.build_record(
+		self, ai, di, hp0a, hp0d, _combat_rec, _cut_links(),
+		str(AtlasArt.battle_backdrop_for_map(map_id)),
+		ground, Color(gv.x, gv.y, gv.z), tid,
+		"%s · %s" % [map_name, str(BattleRules.terrain_info(tid).get("name", tid))],
+	)
 	_combat_rec = []
+	if not _cutscenes_enabled() or rec.is_empty():
+		return
 	_cut_queue.append(rec)
 	if not _cut_playing:
 		_drain_cutscenes()
+
 
 func play_cutscene_record(rec: Dictionary) -> void:
 	_cut_queue.append(rec)
@@ -1859,6 +1856,9 @@ func _drain_cutscenes() -> void:
 		add_child(cs)
 		await cs.finished
 	_cut_playing = false
+	BattleEngageCutscene.clear_bridge(self)
+	if overlay:
+		overlay.queue_redraw()
 
 func _combat_extras(ai: int, di: int) -> Dictionary:
 	var atk = units[ai]
