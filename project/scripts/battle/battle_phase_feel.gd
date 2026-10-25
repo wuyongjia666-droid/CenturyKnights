@@ -278,7 +278,7 @@ static func note_battle_end(host, win: bool) -> void:
 		host.remove_meta("m_enemy_actor_cell")
 	if host.has_meta("m_enemy_actor_msec"):
 		host.remove_meta("m_enemy_actor_msec")
-	CKHeraldryChrome.apply_battle_end_crest_pulse(host, win)
+	apply_end_crest_pulse(host, win)
 
 
 static func end_alpha(host, now_msec: int = -1) -> float:
@@ -328,3 +328,24 @@ static func draw_end_banner(host, overlay) -> void:
 	var tf := UIKit.font("regular")
 	var tsz := tf.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, font_px)
 	overlay.draw_string(tf, bc + Vector2(-tsz.x * 0.5, font_px * 0.35), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, font_px, Color(UIKit.TEXT, a))
+
+
+## Apply winner lift / loser dim on BattleHudCrestStrip. Lives here (not heraldry_chrome)
+## so heraldry hub PRs do not conflict with battle-end feel. Never steals taps.
+static func apply_end_crest_pulse(host, win: bool, alpha: float = 1.0) -> void:
+	if host == null:
+		return
+	var strip = host.get_node_or_null("BattleHudCrestStrip")
+	if strip == null:
+		return
+	var a: float = clampf(alpha, 0.05, 1.0)
+	var pa = strip.find_child("PlayerArms", true, false)
+	var ea = strip.find_child("EnemyArms", true, false)
+	if pa != null and pa is CanvasItem:
+		(pa as CanvasItem).modulate = crest_modulate_for_end(win, "player", a)
+	if ea != null and ea is CanvasItem:
+		(ea as CanvasItem).modulate = crest_modulate_for_end(win, "enemy", a)
+	strip.set_meta("end_pulse_win", win)
+	if strip is Control:
+		(strip as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE
+

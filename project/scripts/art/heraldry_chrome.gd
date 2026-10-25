@@ -994,20 +994,3 @@ static func attach_yearcard_row_arms(box: Control, c, arms_sz: Vector2 = Vector2
 	head.add_child(arms)
 	box.add_child(head)
 	box.move_child(head, 0)
-
-## Y1-A T-P9: on battle end, lift winner crest / dim loser. Never steals taps.
-static func apply_battle_end_crest_pulse(host, win: bool, alpha: float = 1.0) -> void:
-	if host == null:
-		return
-	var strip = host.get_node_or_null("BattleHudCrestStrip")
-	if strip == null:
-		return
-	var a: float = clampf(alpha, 0.05, 1.0)
-	var pa = strip.find_child("PlayerArms", true, false)
-	var ea = strip.find_child("EnemyArms", true, false)
-	if pa != null and pa is CanvasItem:
-		(pa as CanvasItem).modulate = BattlePhaseFeel.crest_modulate_for_end(win, "player", a)
-	if ea != null and ea is CanvasItem:
-		(ea as CanvasItem).modulate = BattlePhaseFeel.crest_modulate_for_end(win, "enemy", a)
-	strip.set_meta("end_pulse_win", win)
-	strip.mouse_filter = Control.MOUSE_FILTER_IGNORE

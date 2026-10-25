@@ -98,7 +98,7 @@
 | T-P6 | **P1 · DONE（#493）** | 敌方回合难跟 / 阶段横幅弱读 / 攻击确认→结算反馈薄 / 阶段切换与选中 chrome 打架 | `BattlePhaseFeel` 横幅+actor ring+settle；`focus_cell(force)` 敌方跟焦；phase switch 清敌环；非法攻击仍 reject；`combat_phase_feel_check` | `battle_phase_feel` / `battle_pick` / `battle_touch_confirm` / `battle_controller` |
 | T-P7 | **P1 · DONE（#498）** | 交战→3D 演出脱节 / FE 站位约定散落 / 关闭演出时棋盘无交战桥 / headless 误播 | `BattleEngageCutscene` FE sides+build_record；board bridge；should_play gate；drain 清桥；`combat_engage_cutscene_check` | `battle_engage_cutscene` / `battle_controller` / `combat_cutscene` |
 | T-P8 | **P1 · DONE（#500）** | 战棋 HUD 无双方纹章 / 敌徽缺失 / 条抢触控 | `place_battle_hud_crest_strips` + layout/sync；PlayerArms+EnemyArms；MOUSE_FILTER_IGNORE；`combat_hud_crest_check` | `heraldry_chrome` / `battle_controller` |
-| T-P9 | **P1 · 本 PR** | 胜负无阶段横幅 / 纹章条不随胜负变 / 结算瞬间可读性弱 | `note_battle_end`+`draw_end_banner`；`apply_battle_end_crest_pulse`；`combat_end_feel_check` | `battle_phase_feel` / `heraldry_chrome` / `battle_controller` |
+| T-P9 | **P1 · 本 PR** | 胜负无阶段横幅 / 纹章条不随胜负变 / 结算瞬间可读性弱 | `note_battle_end`+`draw_end_banner`；`apply_end_crest_pulse`；`combat_end_feel_check` | `battle_phase_feel` / `battle_controller` |
 | T-P2-1 | **P2 · 本 PR** | 信息不够 | Forecast 桌面固定 340×132 + clip，字号被 `ensure_min_fonts` 抬到 22 后竖向挤扁；现手机：字号地板、列/面板最小尺寸、关 clip、按 `m_board_area` 安全区放置；`MobileSide` 标签最小行高；`mobile_forecast_layout_check` | `forecast_panel` / `battle_mobile_side` / `_unit_panel` |
 
 ### 1.4 T-P1-3：3D 立像的「视觉命中」（视觉偏置已落地）

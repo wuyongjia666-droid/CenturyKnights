@@ -86,14 +86,14 @@ func _crest_pulse_place() -> void:
 		root, "ashbanner", Vector2(720, 1280), {"top": 40.0}, true, false
 	)
 	_ok(strip != null, "placed strip")
-	CKHeraldryChrome.apply_battle_end_crest_pulse(root, true, 1.0)
+	BattlePhaseFeel.apply_end_crest_pulse(root, true, 1.0)
 	var pa = strip.find_child("PlayerArms", true, false)
 	var ea = strip.find_child("EnemyArms", true, false)
 	_ok(pa != null and ea != null, "both arms present")
 	_ok(pa.modulate.g > ea.modulate.g, "pulse win: player brighter")
 	_ok(strip.mouse_filter == Control.MOUSE_FILTER_IGNORE, "strip still ignores mouse")
 	_ok(bool(strip.get_meta("end_pulse_win", false)) == true, "end_pulse_win meta")
-	CKHeraldryChrome.apply_battle_end_crest_pulse(root, false, 1.0)
+	BattlePhaseFeel.apply_end_crest_pulse(root, false, 1.0)
 	_ok(ea.modulate.g >= pa.modulate.g, "pulse lose: enemy brighter")
 	_ok(bool(strip.get_meta("end_pulse_win", true)) == false, "end_pulse lose meta")
 	root.queue_free()
@@ -105,14 +105,13 @@ func _crest_pulse_place() -> void:
 func _source_contracts() -> void:
 	var phase := FileAccess.get_file_as_string("res://scripts/battle/battle_phase_feel.gd")
 	var ctrl := FileAccess.get_file_as_string("res://scripts/battle/battle_controller.gd")
-	var her := FileAccess.get_file_as_string("res://scripts/art/heraldry_chrome.gd")
 	_ok(phase.find("note_battle_end") >= 0, "phase has note_battle_end")
 	_ok(phase.find("draw_end_banner") >= 0, "phase has draw_end_banner")
 	_ok(phase.find("crest_modulate_for_end") >= 0, "phase has crest_modulate_for_end")
 	_ok(ctrl.find("BattlePhaseFeel.note_battle_end") >= 0, "controller notes battle end")
 	_ok(ctrl.find("BattlePhaseFeel.draw_end_banner") >= 0, "controller draws end banner")
 	_ok(ctrl.find("BattlePhaseFeel.end_alpha") >= 0, "controller fx_live end_alpha")
-	_ok(her.find("apply_battle_end_crest_pulse") >= 0, "heraldry has end crest pulse")
+	_ok(phase.find("apply_end_crest_pulse") >= 0, "phase has apply_end_crest_pulse")
 	_ok(ctrl.find("EmptyHost") < 0, "no EmptyHost in controller patch surface")
 
 
