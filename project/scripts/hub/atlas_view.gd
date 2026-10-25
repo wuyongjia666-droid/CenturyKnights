@@ -1665,6 +1665,10 @@ func _run_travel() -> void:
 			_set_busy(false)
 			_refresh_top()
 			return
+		if _check_territory_month():
+			_set_busy(false)
+			_refresh_top()
+			return
 		if bool(info.get("arrived", false)):
 			break
 	_set_busy(false)
@@ -1711,6 +1715,8 @@ func _after_arrival() -> void:
 	_select_node(World.pos)
 	var n: Dictionary = World.node(World.pos)
 	var readies := World.ready_turn_ins_here().size()
+	if _check_territory_month():
+		return
 	if _check_losses():
 		return
 	if _check_chain_fail():
@@ -1729,6 +1735,8 @@ func _after_arrival() -> void:
 
 func _resume_state() -> void:
 	## returning from a battle / load: re-open pending modal or continue a journey
+	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_territory_month():
+		return
 	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_losses():
 		return
 	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_chain_fail():
@@ -2136,6 +2144,116 @@ func _show_supply_halt_modal(halt: Dictionary) -> void:
 		_clear_modal())
 	panel.add_child(later)
 	forage.call_deferred("grab_focus")
+
+## Month crossed with owned holdings → TerritoryMonthModal (yield / drain / lost / reclaim).
+func _check_territory_month() -> bool:
+	if not _modal.get_children().is_empty():
+		return false
+	if World.last_territory_month.is_empty():
+		return false
+	var rep: Dictionary = World.take_territory_month()
+	if rep.is_empty():
+		return false
+	_show_territory_month_modal(rep)
+	return true
+
+
+func _show_territory_month_modal(rep: Dictionary) -> void:
+	var silver := int(rep.get("silver", 0))
+	var food := int(rep.get("food", 0))
+	var owned := int(rep.get("owned", 0))
+	var drains: Array = rep.get("drains", [])
+	var lost: Array = rep.get("lost", [])
+	var held: Array = rep.get("held", [])
+	var threats: Array = rep.get("threats", [])
+	var reclaims: Array = rep.get("reclaims", [])
+	# Month modal already surfaces lost+reclaim — consume contest news so LossModal does not stack.
+	if not lost.is_empty():
+		CKTerritory.take_news()
+	var bits: Array = []
+	if not drains.is_empty():
+		var names: Array = []
+		for d in drains:
+			names.append("%s→%d" % [str(d.get("name", "")), int(d.get("garrison", 0))])
+		bits.append(Locale.t("atlas_terr_month_drain") % "、".join(names))
+	if not lost.is_empty():
+		var ln: Array = []
+		for row in lost:
+			ln.append(str(row.get("name", "")))
+		bits.append(Locale.t("atlas_terr_month_lost") % "、".join(ln))
+	if not held.is_empty():
+		var hn: Array = []
+		for row in held:
+			hn.append("%s(%d→%d)" % [str(row.get("name", "")), int(row.get("garrison_before", 0)), int(row.get("garrison", 0))])
+		bits.append(Locale.t("atlas_terr_month_held") % "、".join(hn))
+	if not threats.is_empty():
+		var tn: Array = []
+		for row in threats:
+			tn.append("%s·%s" % [str(row.get("name", "")), str(row.get("by", ""))])
+		bits.append(Locale.t("atlas_terr_month_threat") % "、".join(tn))
+	var extra := " ".join(bits) if not bits.is_empty() else Locale.t("atlas_terr_month_none")
+	var h := 340.0 if reclaims.is_empty() else 390.0
+	var panel := _modal_panel(h)
+	panel.name = "TerritoryMonthModal"
+	var el := UIKit.mono(Locale.t("atlas_terr_month_en"), 9, UIKit.ACCENT)
+	el.position = Vector2(24, 16)
+	panel.add_child(el)
+	var tlabel := UIKit.title_label(Locale.t("atlas_terr_month_title"), 20, UIKit.ACCENT)
+	tlabel.position = Vector2(24, 34)
+	tlabel.size = Vector2(452, 30)
+	panel.add_child(tlabel)
+	var body := UIKit.body_label(
+		Locale.t("atlas_terr_month_body") % [silver, food, owned, extra],
+		UIKit.TEXT, 13)
+	body.name = "TerritoryMonthBody"
+	body.position = Vector2(24, 72)
+	body.size = Vector2(452, 120)
+	body.custom_minimum_size = Vector2(452, 0)
+	panel.add_child(body)
+	var y := 210.0
+	var ok := UIKit.cta_button(Locale.t("atlas_terr_month_ok"), "A", 452, 42)
+	ok.name = "TerritoryMonthOk"
+	ok.position = Vector2(24, y)
+	ok.pressed.connect(func():
+		_clear_modal()
+		_refresh_top()
+		_build_nodes()
+		if World.is_traveling():
+			call_deferred("_resume_travel_after_territory_month"))
+	panel.add_child(ok)
+	y += 50.0
+	if not reclaims.is_empty():
+		var rid := str(reclaims[0])
+		var anchor := str(CKTerritory.site(rid).get("anchor", ""))
+		var reclaim_btn := UIKit.ghost_button(Locale.t("atlas_terr_month_reclaim"), 452, 36)
+		reclaim_btn.name = "TerritoryMonthReclaim"
+		reclaim_btn.position = Vector2(24, y)
+		reclaim_btn.pressed.connect(func():
+			_clear_modal()
+			_refresh_top()
+			_build_nodes()
+			_render_left()
+			if anchor != "" and World.nodes.has(anchor):
+				_select_node(anchor)
+			_show_toast(Locale.t("terr_54"), UIKit.EMBER)
+			if World.is_traveling():
+				World.cancel_travel())
+		panel.add_child(reclaim_btn)
+		y += 44.0
+	var later := UIKit.ghost_button(Locale.t("atlas_terr_month_later"), 140, 36)
+	later.name = "TerritoryMonthLater"
+	later.position = Vector2(24, h - 56)
+	later.pressed.connect(func():
+		World.last_territory_month = rep.duplicate(true)
+		_clear_modal())
+	panel.add_child(later)
+	ok.call_deferred("grab_focus")
+
+
+func _resume_travel_after_territory_month() -> void:
+	if World.is_traveling() and World.pending_event.is_empty() and World.encounter.is_empty():
+		_run_travel()
+
 
 func _resume_travel_after_supply() -> void:
 	if World.is_traveling() and World.pending_event.is_empty() and World.encounter.is_empty():
