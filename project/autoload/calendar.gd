@@ -267,6 +267,9 @@ func _tick_harvest(ctx: Dictionary) -> void:
 	festival.emit("丰收")
 	var h = GameState.apply_harvest()
 	_events(ctx).append({"type": "harvest", "text": h})
+	## Y1-B: 丰收月结 → month_echo.harvest；属地/沙漏回读（耐玩岁课闭环可感）.
+	if h != "":
+		CKEconomyState.month_echo_note("harvest", h)
 	GameState.chapter0_flags["harvest_done"] = true
 
 func _tick_rival_rumor(ctx: Dictionary) -> void:
