@@ -650,6 +650,18 @@ func _run_op(step) -> String:
 				if ar.get("ok", false):
 					_hint.text = str(ar.get("msg", ""))
 					GameState.log_event(str(ar.get("msg", Locale.t("opening_herb_escort_active"))))
+		"season_ledger":
+			# Content-season choice payoff → durable ledger (+ yeartrace for 族谱/年迹 UI).
+			var chapter_id := str(row.get("chapter", _chapter.get("id", "")))
+			var choice_id := str(row.get("choice", ""))
+			var title := str(row.get("title", _chapter.get("title", "")))
+			var outcome := str(row.get("outcome", ""))
+			var who := str(row.get("who", ""))
+			var into_yt := bool(row.get("yeartrace", true))
+			var written: Dictionary = CKSuiKe.season_ledger_append(chapter_id, choice_id, title, outcome, who, into_yt)
+			if not written.is_empty():
+				test_capture["season_ledger"] = written
+				GameState.log_event("%s · %s" % [title, outcome])
 	return ""
 
 func _adjust(row: Dictionary) -> void:
