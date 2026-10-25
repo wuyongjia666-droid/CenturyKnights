@@ -17,6 +17,9 @@ extends RefCounted
 ## in BattleTouchConfirm (keeps battle_controller under the 3000-line gate).
 ## Y1-A T-P5: war-chess select feel — team-prefer soft+contour resolve in scrums;
 ## select-burst chrome; deselect lock; invalid-target reject pulse (via TouchConfirm).
+## Y1-A T-P11: mobile chest/head of the unit below sticks past the occupant's feet.
+## That strip is not the occupant's body — body_over_occupant returns the south unit.
+## Desktop keeps the exact cell so mouse clicks do not move.
 
 ## Fraction of a cell: anything closer than this counts as that unit.
 const SOFT_R := 0.90
@@ -247,9 +250,16 @@ static func strict_unit_pos(origin: Vector2, cell_px: float, units: Array, local
 	if cell_px < 1.0:
 		return Vector2i(-1, -1)
 	if finger_cell.x >= 0:
+		var occupied := false
 		for u in units:
 			if u.pos == finger_cell and u.char.hp > 0:
-				return finger_cell
+				occupied = true
+				break
+		if occupied:
+			var body: Vector2i = body_over_occupant(origin, cell_px, units, local, finger_cell)
+			if body.x >= 0:
+				return body
+			return finger_cell
 	var bias: Vector2i = visual_bias_unit_pos(origin, cell_px, units, local, finger_cell)
 	if bias.x >= 0:
 		return bias
@@ -281,9 +291,13 @@ static func near_selected_unit(host, screen_pos: Vector2, selected_idx: int) -> 
 
 static func resolve(host, screen_pos: Vector2) -> Vector2i:
 	var exact: Vector2i = host._pointer_to_cell(screen_pos)
-	if exact.x >= 0 and host._unit_at(exact) >= 0:
-		return exact
 	var local: Vector2 = _board_local(host, screen_pos)
+	if exact.x >= 0 and host._unit_at(exact) >= 0:
+		# T-P11: mobile only — chest of the unit south of this cell, past the occupant's feet.
+		var body: Vector2i = body_over_occupant(host.ORIGIN, float(host.CELL), host.units, local, exact)
+		if body.x >= 0:
+			return body
+		return exact
 	# T-P1-3 before soft-R: face/head taps land in the empty cell above the figure.
 	var bias: Vector2i = visual_bias_unit_pos(host.ORIGIN, float(host.CELL), host.units, local, exact)
 	if bias.x >= 0:
@@ -299,6 +313,48 @@ static func resolve(host, screen_pos: Vector2) -> Vector2i:
 	if contour.x >= 0:
 		return contour
 	return exact
+
+
+## T-P11 pure: finger in an occupied cell but below that occupant's feet (outside
+## their figure AABB) and inside the living unit directly south. That band is the
+## south figure's chest/head (FIG span crosses the cell edge). Same column only —
+## a diagonal neighbour's fat contour must not steal. Desktop returns invalid so
+## the exact cell stays the mouse hit. Invalid Vector2i(-1,-1) means "keep exact".
+static func body_over_occupant(origin: Vector2, cell_px: float, units: Array, local: Vector2, finger_cell: Vector2i) -> Vector2i:
+	if not DeviceProfile.is_mobile():
+		return Vector2i(-1, -1)
+	if cell_px < 1.0 or finger_cell.x < 0:
+		return Vector2i(-1, -1)
+	var occupied := false
+	for u in units:
+		if u.pos == finger_cell and u.char.hp > 0:
+			occupied = true
+			break
+	if not occupied:
+		return Vector2i(-1, -1)
+	if _point_in_unit_contour(origin, cell_px, finger_cell, local):
+		return Vector2i(-1, -1)
+	var below := Vector2i(finger_cell.x, finger_cell.y + 1)
+	for u in units:
+		if u.pos != below or u.char.hp <= 0:
+			continue
+		if _point_in_unit_contour(origin, cell_px, below, local):
+			return below
+		return Vector2i(-1, -1)
+	return Vector2i(-1, -1)
+
+
+static func _point_in_unit_contour(origin: Vector2, cell_px: float, unit_pos: Vector2i, local: Vector2) -> bool:
+	var lx: float = (local.x - origin.x) / cell_px
+	var ly: float = (local.y - origin.y) / cell_px
+	var half_w: float = contour_half_w()
+	var ux := float(unit_pos.x)
+	var uy := float(unit_pos.y)
+	if lx < ux + 0.5 - half_w or lx > ux + 0.5 + half_w:
+		return false
+	if ly < uy + FIG_TOP or ly > uy + FIG_FEET:
+		return false
+	return true
 
 
 ## Mobile soft-resolve team preference. "" | "player" | "foe".
