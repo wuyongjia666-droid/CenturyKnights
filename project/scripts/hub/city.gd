@@ -724,7 +724,8 @@ func _tab_overview() -> void:
 		aff.custom_minimum_size = Vector2(0, MobilePage.HIT)
 		v.add_child(aff)
 	else:
-		aff.position = Vector2(18, 510)
+		var panel_h := 576.0 - y_off
+		aff.position = Vector2(18, minf(510.0, panel_h - 56.0))
 		p.add_child(aff)
 	var p2 := _panel(Rect2(432, y_off, 416, 576 - y_off))
 	_head(p2, Vector2(18, 14), "可在此交付", "TURN IN HERE")
@@ -769,7 +770,7 @@ func _tab_overview() -> void:
 	var mm: Dictionary = World.mainline_marker()
 	if str(mm.get("node", "")) == city:
 		var mb := UIKit.cta_button("★ %s" % mm.label, "", 380, 38)
-		mb.position = Vector2(18, 520)
+		mb.position = Vector2(18, minf(520.0, (576.0 - y_off) - 48.0))
 		mb.disabled = not bool(mm.get("exists", false))
 		mb.pressed.connect(func(): CKNav.go(str(mm.path)))
 		p2.add_child(mb)
