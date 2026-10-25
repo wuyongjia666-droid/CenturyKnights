@@ -12,7 +12,8 @@ var _matrix: Control
 
 func _ready() -> void:
 	UIKit.void_bg(self)
-	UIKit.top_bar(self, "出战编成 · DEPLOYMENT", [["编制上限", "%d 人" % GameState.max_deploy(), UIKit.ACCENT], ["厅堂", "LV %d" % GameState.building_level("hall"), UIKit.TEXT], ["历", Calendar.label(), UIKit.TEXT_DIM]], "返回城堡", _back)
+	var dchips := [["编制上限", "%d 人" % GameState.max_deploy(), UIKit.ACCENT], ["厅堂", "LV %d" % GameState.building_level("hall"), UIKit.TEXT], ["历", Calendar.label(), UIKit.TEXT_DIM]]
+	UIKit.top_bar(self, "出战编成 · DEPLOYMENT", dchips, "返回城堡", _back)
 	_head = UIKit.page_head(self, 42, 70, "TACTICAL DEPLOYMENT // PROT.07", "出战编成", "CENTURY KNIGHTS : THE FROST MARCH", "点选卡片切换出战；棋盘上以立绘棋子示人。")
 	_matrix = UIKit.mono("BATTLE VANGUARD MATRIX", 9, UIKit.ACCENT, false)
 	_matrix.position = Vector2(42, 168)
@@ -121,6 +122,18 @@ func _fit_chrome() -> void:
 				ch.size.x = v.x
 			elif ch is Label and ch.position.x > 800.0:
 				ch.position.x = v.x - right - ch.get_minimum_size().x
+
+func _reserve_who():
+	var rid := CKDeployReserve.appointed_id()
+	if rid == "":
+		return null
+	return GameState.characters.get(rid, null)
+
+
+func _sync_reserve_strip(parent: Node, at: Vector2) -> void:
+	var shield := Vector2(32, 38) if DeviceProfile.is_mobile() else Vector2(36, 44)
+	CKHeraldryField.place_reserve_crest_strip(parent, _reserve_who(), at, shield)
+
 
 func _back() -> void:
 	var back := "res://scenes/hub/castle_hub.tscn"
@@ -403,7 +416,18 @@ func _render_metrics() -> void:
 	for s in stats:
 		var best := 1
 		for o in GameState.roster():
-			var v: int = int(o.max_hp) if s[2] == "max_hp" else (o.derived_atk() if s[2] == "atk" else (o.derived_def() if s[2] == "def" else (o.derived_hit() if s[2] == "hit" else o.derived_avo())))
+			var v: int
+			match str(s[2]):
+				"max_hp":
+					v = int(o.max_hp)
+				"atk":
+					v = o.derived_atk()
+				"def":
+					v = o.derived_def()
+				"hit":
+					v = o.derived_hit()
+				_:
+					v = o.derived_avo()
 			best = maxi(best, v)
 		var row := Panel.new()
 		row.position = Vector2(x, y)
@@ -434,10 +458,13 @@ func _render_metrics() -> void:
 	rb.name = "ReserveBtn"
 	rb.clip_text = true
 	rb.position = Vector2(x, R.end.y - 132)
+	var reserve_at := Vector2(x, R.end.y - 188)
+	_sync_reserve_strip(_metrics, reserve_at)
 	rb.pressed.connect(func():
 		var rr := CKDeployReserve.cycle()
 		rb.text = CKDeployReserve.button_text()
-		rb.tooltip_text = str(rr.get("msg", "")))
+		rb.tooltip_text = str(rr.get("msg", ""))
+		_sync_reserve_strip(_metrics, reserve_at))
 	_metrics.add_child(rb)
 	var go := UIKit.cta_button("出战 · 练习战（清匪）", "ENTER", int(w), 52)
 	go.name = "Fight"
@@ -632,12 +659,19 @@ func _phone_metrics(r: Rect2) -> void:
 		tr += str(GameState.get_trait(str(t)).get("name", t)) + " · "
 	v.add_child(MobilePage.label(Locale.t("ux_dep_traits") + (tr.trim_suffix(" · ") if tr != "" else Locale.t("ux_dep_none")), UIKit.TEXT_DIM))
 	MobilePage.spacer(v)
+	var slot := Control.new()
+	slot.name = "ReserveCrestSlot"
+	slot.custom_minimum_size = Vector2(180, 48)
+	slot.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	v.add_child(slot)
+	_sync_reserve_strip(slot, Vector2.ZERO)
 	var rb := MobilePage.button(CKDeployReserve.button_text(), false, func(): pass)
 	rb.name = "ReserveBtn"
 	rb.pressed.connect(func():
 		var rr := CKDeployReserve.cycle()
 		rb.text = CKDeployReserve.button_text()
-		rb.tooltip_text = str(rr.get("msg", "")))
+		rb.tooltip_text = str(rr.get("msg", ""))
+		_sync_reserve_strip(slot, Vector2.ZERO))
 	v.add_child(rb)
 	var go := MobilePage.button(Locale.t("ux_dep_go"), true, _fight)
 	go.name = "Fight"

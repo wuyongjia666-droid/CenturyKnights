@@ -233,14 +233,31 @@ static func place_shell_crest_strip(parent: Node, at: Vector2, shield: Vector2 =
 
 ## Save-slot / load-card row arms: prepend 团徽 so every slot row carries company chrome.
 ## Empty slots still get the plate (disabled load button already signals emptiness).
-static func attach_save_row_arms(row: Control, size: Vector2 = Vector2(36, 44)) -> TextureRect:
+static func attach_save_row_arms(row: Control, size: Vector2 = Vector2(36, 44), crest_hex: String = "") -> TextureRect:
+	## Slot preview 团徽. When crest_hex is set (from save meta), render that crest so
+	## each slot shows the company that was saved — not live GameState.
 	if row == null:
 		return null
 	var old := row.get_node_or_null("SlotArms")
 	if old:
 		old.name = "_SlotArmsDying"
 		old.queue_free()
-	var tr := make_company_arms(size)
+	var tr: TextureRect
+	var hx := crest_hex.strip_edges()
+	if hx != "":
+		tr = TextureRect.new()
+		tr.texture = UnitArt.shield_arms(CKHeraldry.from_crest(hx), int(size.x), int(size.y))
+		tr.custom_minimum_size = size
+		tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		tr.set_meta("arms_kind", "lb_slot_arms")
+		tr.set_meta("arms_core", CKHeraldry.core_key(CKHeraldry.from_crest(hx)))
+		tr.tooltip_text = Locale.t("lb_slot_arms")
+	else:
+		tr = make_company_arms(size)
+		tr.set_meta("arms_kind", "lb_slot_arms")
+		tr.tooltip_text = Locale.t("lb_slot_arms")
 	tr.name = "SlotArms"
 	# Prefer HBox prepend when the row lays out horizontally.
 	if row is HBoxContainer:
@@ -1203,4 +1220,96 @@ static func attach_blood_queue_arms(row: Control, c, arms_sz: Vector2 = Vector2(
 	arms.tooltip_text = Locale.t("lb_blood_arms")
 	row.add_child(arms)
 	row.move_child(arms, 0)
+
+## Dialogue / chapter plate: 团徽 + 对话旗布 (DialogueCrestStrip) beside the story stage.
+static func place_dialogue_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("DialogueCrestStrip")
+	if old:
+		old.name = "_DialogueCrestStripDying"
+		old.queue_free()
+	var host := Control.new()
+	host.name = "DialogueCrestStrip"
+	host.position = at
+	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var arms := make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var bn := make_company_banner(banner)
+	bn.name = "DialogueBanner"
+	bn.tooltip_text = Locale.t("lb_dialogue_arms")
+	bn.set_meta("arms_kind", "lb_dialogue_arms")
+	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
+	host.add_child(bn)
+	parent.add_child(host)
+	return host
+
+
+## Pin speaker 族徽/旗徽 under the dialogue portrait (DialogueSpeakerArms).
+static func attach_dialogue_speaker_arms(portrait_host: Control, c, arms_sz: Vector2 = Vector2(28, 34)) -> void:
+	if portrait_host == null:
+		return
+	var old := portrait_host.get_node_or_null("DialogueSpeakerArms")
+	if old:
+		old.name = "_DialogueSpeakerArmsDying"
+		old.queue_free()
+	if c == null:
+		return
+	var arms := make_person_arms(c, arms_sz)
+	arms.name = "DialogueSpeakerArms"
+	arms.tooltip_text = Locale.t("lb_dialogue_arms")
+	## Keep person arms_kind (gen2_06/35); suites key off node name.
+	# Sit at bottom-right of the portrait plate.
+	var pw := portrait_host.custom_minimum_size.x
+	var ph := portrait_host.custom_minimum_size.y
+	if pw < 8.0:
+		pw = portrait_host.size.x
+	if ph < 8.0:
+		ph = portrait_host.size.y
+	arms.position = Vector2(maxf(0.0, pw - arms_sz.x - 2.0), maxf(0.0, ph - arms_sz.y - 2.0))
+	portrait_host.add_child(arms)
+
+
+## Mercenary roster page strip: 团徽 + 名册旗布 (RosterCrestStrip).
+static func place_roster_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("RosterCrestStrip")
+	if old:
+		old.name = "_RosterCrestStripDying"
+		old.queue_free()
+	var host := Control.new()
+	host.name = "RosterCrestStrip"
+	host.position = at
+	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var arms := make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var bn := make_company_banner(banner)
+	bn.name = "RosterBanner"
+	bn.tooltip_text = Locale.t("lb_roster_arms")
+	bn.set_meta("arms_kind", "lb_roster_arms")
+	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
+	host.add_child(bn)
+	parent.add_child(host)
+	return host
+
+
+## Roster list-row person arms (RosterRowArms) pinned on the numbered row button.
+static func attach_roster_row_arms(row: Control, c, arms_sz: Vector2 = Vector2(26, 32)) -> void:
+	if row == null or c == null:
+		return
+	var old := row.get_node_or_null("RosterRowArms")
+	if old:
+		old.name = "_RosterRowArmsDying"
+		old.queue_free()
+	var arms := make_person_arms(c, arms_sz)
+	arms.name = "RosterRowArms"
+	arms.tooltip_text = Locale.t("lb_roster_arms")
+	## Keep person arms_kind; pin left of CLASS column (row ~364 wide).
+	arms.position = Vector2(286.0, 16.0)
+	row.add_child(arms)
 

@@ -80,8 +80,12 @@ var last_battle_aftermath: Dictionary = {}  # structured encounter win/lose afte
 var last_chain_follow: Dictionary = {}  # follow-up / next scripted-chain step after turn_in
 var last_chain_fail: Dictionary = {}  # scripted-chain expire/abandon payload for ChainFailModal
 var last_supply_halt: Dictionary = {}  # mid-march food=0 payload for SupplyHaltModal
+var last_stockade_cache: Dictionary = {}  # arrived at owned stockade with cache → open-仓 modal
+var pending_cache_site: String = ""  # site id to open when we arrive at its anchor
 var last_territory_month: Dictionary = {}  # month yield/drain/lost for TerritoryMonthModal
 var last_siege_alert: Dictionary = {}  # rival siege/threat for SiegeAlertModal
+var last_siege_loot: Dictionary = {}  # unanswered siege sacked stockade cache
+var last_siege_convoy: Dictionary = {}  # evacuated granary under siege
 var last_march_muster: Dictionary = {}  # road merc hire → march roster modal
 var market: Dictionary = {}     # city -> {good: stock}
 var fairs: Dictionary = {}      # city -> days_total expiry
@@ -193,8 +197,12 @@ func reset() -> void:
 	last_chain_follow = {}
 	last_chain_fail = {}
 	last_supply_halt = {}
+	last_stockade_cache = {}
+	pending_cache_site = ""
 	last_territory_month = {}
 	last_siege_alert = {}
+	last_siege_loot = {}
+	last_siege_convoy = {}
 	last_march_muster = {}
 	market = {}
 	for id in nodes.keys():
@@ -277,8 +285,12 @@ func from_save(d: Dictionary) -> void:
 	last_chain_follow = {}
 	last_chain_fail = {}
 	last_supply_halt = {}
+	last_stockade_cache = {}
+	pending_cache_site = ""
 	last_territory_month = {}
 	last_siege_alert = {}
+	last_siege_loot = {}
+	last_siege_convoy = {}
 	last_march_muster = {}
 	market = {}
 	var m: Dictionary = d.get("market", {})
@@ -1182,6 +1194,7 @@ func arrive(id: String) -> Dictionary:
 		add_city_rep(id, 2)
 	_ensure_board(id)
 	var out := {"arrived_at": id, "first": first}
+	_maybe_mark_stockade_cache(id)
 	# arrival objectives
 	for q in active:
 		if str(q.state) != "active":
@@ -2583,12 +2596,14 @@ func dismiss_chain_fail() -> void:
 func _mark_supply_halt(starved_days: int) -> void:
 	if not last_supply_halt.is_empty():
 		return
+	var stock_opt: Dictionary = stockade_cache_option()
 	last_supply_halt = {
 		"pos": pos,
 		"dest": str(travel.get("dest", "")),
 		"morale": GameState.morale,
 		"starved_days": starved_days,
 		"food": GameState.food,
+		"stockade": stock_opt.duplicate(true) if not stock_opt.is_empty() else {},
 	}
 	_tlog(Locale.t("atlas_supply_halt_log") % [node(pos).get("name", pos), starved_days])
 
@@ -2622,6 +2637,158 @@ func take_siege_alert() -> Dictionary:
 
 func dismiss_siege_alert() -> void:
 	last_siege_alert = {}
+
+
+## Unanswered siege sacked the stockade granary (held half / lost all).
+func mark_siege_loot(payload: Dictionary) -> void:
+	if payload.is_empty():
+		return
+	# Keep the latest raid report (one modal).
+	last_siege_loot = payload.duplicate(true)
+
+
+func take_siege_loot() -> Dictionary:
+	var d: Dictionary = last_siege_loot.duplicate(true)
+	last_siege_loot = {}
+	return d
+
+
+func dismiss_siege_loot() -> void:
+	last_siege_loot = {}
+
+
+func mark_siege_convoy(payload: Dictionary) -> void:
+	if payload.is_empty():
+		return
+	last_siege_convoy = payload.duplicate(true)
+
+
+func take_siege_convoy() -> Dictionary:
+	var d: Dictionary = last_siege_convoy.duplicate(true)
+	last_siege_convoy = {}
+	return d
+
+
+func dismiss_siege_convoy() -> void:
+	last_siege_convoy = {}
+
+
+
+## If pending divert landed on a stockade anchor with food in the cache, surface open-仓 modal.
+func _maybe_mark_stockade_cache(at_id: String) -> void:
+	if pending_cache_site == "":
+		# Passive arrive: only nudge open-仓 when the company is already starving.
+		if GameState.food > 0:
+			return
+		for sid in CKTerritory.owned_ids():
+			var st0 := CKTerritory.state(sid)
+			if not bool(st0.stockade):
+				continue
+			if int(st0.get("cache_food", 0)) <= 0:
+				continue
+			if str(CKTerritory.site(sid).get("anchor", "")) != at_id:
+				continue
+			last_stockade_cache = {
+				"id": sid,
+				"name": str(CKTerritory.site(sid).get("name", sid)),
+				"anchor": at_id,
+				"cache": int(st0.get("cache_food", 0)),
+				"auto": false,
+			}
+			return
+		return
+	var sid2 := pending_cache_site
+	pending_cache_site = ""
+	var st := CKTerritory.state(sid2)
+	var anch := str(CKTerritory.site(sid2).get("anchor", ""))
+	if anch != at_id:
+		return
+	if not bool(st.stockade) or int(st.get("cache_food", 0)) <= 0:
+		return
+	last_stockade_cache = {
+		"id": sid2,
+		"name": str(CKTerritory.site(sid2).get("name", sid2)),
+		"anchor": anch,
+		"cache": int(st.get("cache_food", 0)),
+		"auto": true,
+	}
+
+
+func take_stockade_cache() -> Dictionary:
+	var d: Dictionary = last_stockade_cache.duplicate(true)
+	last_stockade_cache = {}
+	return d
+
+
+func dismiss_stockade_cache() -> void:
+	last_stockade_cache = {}
+
+
+## Snapshot of nearest owned stockade for SupplyHalt / HUD.
+func stockade_cache_option() -> Dictionary:
+	return CKTerritory.nearest_stockade(pos)
+
+
+## Open the granary at the company's current node (must be stockade anchor).
+func open_stockade_cache_here(site_id: String = "") -> Dictionary:
+	var sid := site_id
+	if sid == "":
+		var opt := stockade_cache_option()
+		if opt.is_empty():
+			return {"ok": false, "msg": Locale.t("atlas_cache_none")}
+		# Prefer stockade whose anchor is here.
+		for oid in CKTerritory.owned_ids():
+			var st := CKTerritory.state(oid)
+			if bool(st.stockade) and str(CKTerritory.site(oid).get("anchor", "")) == pos:
+				sid = oid
+				break
+		if sid == "":
+			sid = str(opt.get("id", ""))
+	var r: Dictionary = CKTerritory.open_cache(sid)
+	if bool(r.get("ok", false)):
+		last_stockade_cache = {}
+		last_supply_halt = {}
+		pending_cache_site = ""
+	return r
+
+
+## Mid-halt divert: cancel current march, ride for the nearest stockade cache, open on arrive.
+## If already standing on that anchor, open immediately.
+func divert_to_stockade_cache() -> Dictionary:
+	var opt: Dictionary = stockade_cache_option()
+	if opt.is_empty():
+		return {"ok": false, "msg": Locale.t("atlas_cache_none")}
+	var sid := str(opt.get("id", ""))
+	var anch := str(opt.get("anchor", ""))
+	var cache := int(opt.get("cache", 0))
+	if cache <= 0:
+		return {"ok": false, "msg": Locale.t("atlas_cache_empty") % str(opt.get("name", sid))}
+	# Already at the granary — open now.
+	if pos == anch:
+		cancel_travel()
+		last_supply_halt = {}
+		var opened: Dictionary = CKTerritory.open_cache(sid)
+		return opened
+	# Abort current march and ride for the stockade.
+	var saved_dest := str(travel.get("dest", ""))
+	cancel_travel()
+	last_supply_halt = {}
+	pending_cache_site = sid
+	var st: Dictionary = begin_travel(anch)
+	if not bool(st.get("ok", false)):
+		pending_cache_site = ""
+		return {"ok": false, "msg": str(st.get("msg", Locale.t("atlas_cache_travel_fail")))}
+	_tlog(Locale.t("atlas_cache_divert_log") % [str(opt.get("name", sid)), str(opt.get("anchor_name", anch)), cache])
+	world_changed.emit()
+	return {
+		"ok": true,
+		"traveling": true,
+		"site": sid,
+		"anchor": anch,
+		"cache": cache,
+		"saved_dest": saved_dest,
+		"msg": Locale.t("atlas_cache_divert_ok") % [str(opt.get("name", sid)), str(opt.get("anchor_name", anch)), cache],
+	}
 
 
 ## Scavenge roadside rations; clears halt so the march can resume.

@@ -113,17 +113,17 @@
         {
           "id": "cs08b_ya_y20",
           "speaker": "旁白",
-          "text": "碑阴潮。潮处字口更深。"
+          "text": "回读时碑阴第二行还潮，潮口比正面拓纸深。"
         },
         {
           "id": "cs08b_ya_y21",
           "speaker": "石垒·晚担",
-          "text": "深的才经年。"
+          "text": "第二行的深才经年。正面喊出来的碑名，风一吹就浅。"
         },
         {
           "id": "cs08b_ya_y22",
           "speaker": "leader",
-          "text": "我认深刻。"
+          "text": "我认阴面这一行。正面的喊声不抄。"
         },
         {
           "id": "cs08b_ya_16",
@@ -240,17 +240,17 @@
         {
           "id": "cs08b_st_y20",
           "speaker": "旁白",
-          "text": "香灰落在碑座。"
+          "text": "复页拓纸上沾着碑座新灰，灰没进字口。"
         },
         {
           "id": "cs08b_st_y21",
           "speaker": "石垒·晚担",
-          "text": "灰轻，碑重。"
+          "text": "灰沾在纸上就轻。字口里的灰，揭不下来。"
         },
         {
           "id": "cs08b_st_y22",
           "speaker": "leader",
-          "text": "碑阴并排留。"
+          "text": "揭不下来的并排留。沾在纸面的空名揭走。"
         },
         {
           "id": "cs08b_st_9",
@@ -367,17 +367,17 @@
         {
           "id": "cs08b_ho_y20",
           "speaker": "旁白",
-          "text": "碑阴潮。潮处字口更深。"
+          "text": "月份格旁边渗着碑阴潮，潮只浸未填的那一格。"
         },
         {
           "id": "cs08b_ho_y21",
           "speaker": "石垒·晚担",
-          "text": "深的才经年。"
+          "text": "浸到空格里的深，才配经年。填满的喊声不浸。"
         },
         {
           "id": "cs08b_ho_y22",
           "speaker": "leader",
-          "text": "我认深刻。"
+          "text": "我认空格里的潮。喊满的月份不走。"
         },
         {
           "id": "cs08b_ho_8",
@@ -551,17 +551,17 @@
         {
           "id": "cs08b_br_y21",
           "speaker": "旁白",
-          "text": "香灰落在碑座。"
+          "text": "刀鞘旁落了一点祠里带出的香灰，鞘还凉。"
         },
         {
           "id": "cs08b_br_y22",
           "speaker": "石垒·晚担",
-          "text": "灰轻，碑重。"
+          "text": "鞘上的灰轻。碑座里的灰重。轻的别当行礼。"
         },
         {
           "id": "cs08b_br_y23",
           "speaker": "leader",
-          "text": "碑阴并排留。"
+          "text": "重的灰并排留在碑阴。鞘上的不刻名。"
         },
         {
           "id": "cs08b_br_18",
@@ -603,7 +603,7 @@
           "speaker": "旁白",
           "text": "锋再定。碑阴拓完，抢拓那拨退到槐影外。",
           "when": {
-            "flag": "cs08_mid_fought"
+            "flag": "cs08_02_mid_fought"
           }
         },
         {
@@ -611,7 +611,7 @@
           "speaker": "掌柜",
           "text": "拓要自己按。按实，才不像偷的。",
           "when": {
-            "flag": "cs08_mid_fought"
+            "flag": "cs08_02_mid_fought"
           }
         },
         {
@@ -619,7 +619,7 @@
           "speaker": "槐里·青禾",
           "text": "碑凉还在手上。凉着，字更清。",
           "when": {
-            "flag": "cs08_mid_fought"
+            "flag": "cs08_02_mid_fought"
           }
         },
         {
@@ -627,7 +627,7 @@
           "speaker": "leader",
           "text": "锋护过碑。拓，我按得。",
           "when": {
-            "flag": "cs08_mid_fought"
+            "flag": "cs08_02_mid_fought"
           }
         },
         {
@@ -871,17 +871,17 @@
         {
           "id": "cs08b_ta_y20",
           "speaker": "旁白",
-          "text": "碑阴潮。潮处字口更深。"
+          "text": "回堡前巾角还潮，潮是碑阴第二行印上来的。"
         },
         {
           "id": "cs08b_ta_y21",
           "speaker": "石垒·晚担",
-          "text": "深的才经年。"
+          "text": "印上巾的深才经年。擦掉的是酒，不是字口。"
         },
         {
           "id": "cs08b_ta_y22",
           "speaker": "leader",
-          "text": "我认深刻。"
+          "text": "巾上的深我认。擦亮的空名不认。"
         },
         {
           "id": "cs08b_ta_18",

@@ -25,7 +25,8 @@
 > | T-P7 FE 风 3D 交战演出挂钩 + 棋盘交战桥 | **DONE（#498）**：`BattleEngageCutscene` FE 右我左敌；攻击后棋盘 atk↔def bridge；cutscene record builder；headless/settings gate；`combat_engage_cutscene_check` E2E |
 > | T-P8 战棋 HUD 双方纹章条 | **DONE（#500）**：`CKHeraldryChrome.place_battle_hud_crest_strips` PlayerArms←团徽 / EnemyArms→敌徽；inset 布局；不抢 InputRouter；`combat_hud_crest_check` E2E |
 > | T-P9 胜负结算横幅 + 双方纹章脉冲 | **DONE（#501）**：`BattlePhaseFeel.note_battle_end` / `draw_end_banner`；胜方亮/败方暗 crest pulse；不抢触控；`combat_end_feel_check` E2E |
-> | T-P10 伤兵/旗灯双账战斗内可读 | **DONE（本 PR）**：`BattleDualLedger` 伤兵计数+旗灯 charges/max；ObjectiveHud 下只读条；不抢触控；`combat_dual_ledger_check` E2E |
+> | T-P10 伤兵/旗灯双账战斗内可读 | **DONE（#515）**：`BattleDualLedger` 伤兵计数+旗灯 charges/max；ObjectiveHud 下只读条；不抢触控；`combat_dual_ledger_check` E2E |
+> | T-P11 选中手感 v2（身框命中 + 非法可感 + 横屏信息栏） | **DONE（本 PR）**：`body_over_occupant` 胸口过脚底吸回下方单位（桌面仍精确格）；脚底盘/中段环/身框同一几何；非法落点/超距闪拒并钉回选中卡；射程内手机点敌进确认；`combat_select_feel_v2_check` 真战斗 E2E |
 > | 立绘 exists/resolve medium 回落（机制 A 根因） | **DONE（#350）**：`CKArtPaths.resolve` 在 portraits 路径上 large 被 exclude 时落到 `.medium.webp`；`android_tier_pack_check` |
 > | 剧情立绘端游↔手游对齐核查 | **DONE**（#335） |
 > | 9 人无图农场回填（配角 4 + 反派 5） | **DONE**（#337 cast/farm 接线；#338 入库真立绘） |
@@ -100,7 +101,8 @@
 | T-P7 | **P1 · DONE（#498）** | 交战→3D 演出脱节 / FE 站位约定散落 / 关闭演出时棋盘无交战桥 / headless 误播 | `BattleEngageCutscene` FE sides+build_record；board bridge；should_play gate；drain 清桥；`combat_engage_cutscene_check` | `battle_engage_cutscene` / `battle_controller` / `combat_cutscene` |
 | T-P8 | **P1 · DONE（#500）** | 战棋 HUD 无双方纹章 / 敌徽缺失 / 条抢触控 | `place_battle_hud_crest_strips` + layout/sync；PlayerArms+EnemyArms；MOUSE_FILTER_IGNORE；`combat_hud_crest_check` | `heraldry_chrome` / `battle_controller` |
 | T-P9 | **P1 · DONE（#501）** | 胜负无阶段横幅 / 纹章条不随胜负变 / 结算瞬间可读性弱 | `note_battle_end`+`draw_end_banner`；`apply_end_crest_pulse`；`combat_end_feel_check` | `battle_phase_feel` / `battle_controller` |
-| T-P10 | **P1 · 本 PR** | 伤兵账与旗灯账战斗内不可并读 / 仅 RewindBar 灯芯按钮 | `BattleDualLedger.attach/refresh`；伤兵计数+旗灯 pair；`combat_dual_ledger_check` | `battle_dual_ledger` / `battle_controller` / `battle_snapshot` |
+| T-P10 | **P1 · DONE（#515）** | 伤兵账与旗灯账战斗内不可并读 / 仅 RewindBar 灯芯按钮 | `BattleDualLedger.attach/refresh`；伤兵计数+旗灯 pair；`combat_dual_ledger_check` | `battle_dual_ledger` / `battle_controller` / `battle_snapshot` |
+| T-P11 | **P1 · 本 PR** | 上方格有人时点胸口选中上面那个 / 非法点敌只换信息卡 / 横屏栏与选中脱节 | `body_over_occupant` 同列过脚底；`BattleSelectChrome` 脚底/中段/身框；`note_reject` 叉闪+面板回选中；手机射程内直接预览攻击；桌面精确格与检视保留；确认栈仍 Cancel→hint→Confirm | `battle_pick` / `battle_select_chrome` / `battle_touch_confirm` / `battle_info_panel` / `combat_select_feel_v2_check` |
 | T-P2-1 | **P2 · 本 PR** | 信息不够 | Forecast 桌面固定 340×132 + clip，字号被 `ensure_min_fonts` 抬到 22 后竖向挤扁；现手机：字号地板、列/面板最小尺寸、关 clip、按 `m_board_area` 安全区放置；`MobileSide` 标签最小行高；`mobile_forecast_layout_check` | `forecast_panel` / `battle_mobile_side` / `_unit_panel` |
 
 ### 1.4 T-P1-3：3D 立像的「视觉命中」（视觉偏置已落地）

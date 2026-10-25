@@ -199,17 +199,17 @@
         {
           "id": "cs02_02_slip_y17",
           "speaker": "旁白",
-          "text": "婚约笺角卷着。卷着，说明有人反复看。"
+          "text": "副笺角卷进脉纸缝，缝里那点蜡还软。"
         },
         {
           "id": "cs02_02_slip_y18",
           "speaker": "石垒·晚担",
-          "text": "反复看的，未必敢签。"
+          "text": "软蜡说明有人捏过。捏过不等于敢认嗣。"
         },
         {
           "id": "cs02_02_slip_y19",
           "speaker": "leader",
-          "text": "我敢签真的。"
+          "text": "软的我按实。假嗣不按。"
         },
         {
           "id": "cs02_02_slip_17",
@@ -419,17 +419,17 @@
         {
           "id": "cs02_02_pulse_y17",
           "speaker": "旁白",
-          "text": "验盏水清。清里照得出假。"
+          "text": "脉枕边验盏清得能数出偏格上的纤维。"
         },
         {
           "id": "cs02_02_pulse_y18",
           "speaker": "石垒·晚担",
-          "text": "假影一晃就散。"
+          "text": "纤维影一晃就散。散的是灯，不是脉。"
         },
         {
           "id": "cs02_02_pulse_y19",
           "speaker": "leader",
-          "text": "散的我不留。"
+          "text": "脉在的留下。散影倒掉。"
         },
         {
           "id": "cs02_02_pulse_17",
@@ -639,17 +639,17 @@
         {
           "id": "cs02_02_hourglass_y17",
           "speaker": "旁白",
-          "text": "婚约笺角卷着。卷着，说明有人反复看。"
+          "text": "沙漏两行之间，婚约卷角卡住了一粒沙。"
         },
         {
           "id": "cs02_02_hourglass_y18",
           "speaker": "石垒·晚担",
-          "text": "反复看的，未必敢签。"
+          "text": "卡住的沙比催条诚实。不敢签的，让它卡着。"
         },
         {
           "id": "cs02_02_hourglass_y19",
           "speaker": "leader",
-          "text": "我敢签真的。"
+          "text": "沙卡住的地方，我签真名。"
         },
         {
           "id": "cs02_02_hourglass_17",
@@ -938,17 +938,17 @@
         {
           "id": "cs02_02_bridge_y20",
           "speaker": "旁白",
-          "text": "验盏水清。清里照得出假。"
+          "text": "门廊风吹皱验盏，皱纹里偏格的字还直。"
         },
         {
           "id": "cs02_02_bridge_y21",
           "speaker": "石垒·晚担",
-          "text": "假影一晃就散。"
+          "text": "皱的是水。字要是跟着皱，就是假影。"
         },
         {
           "id": "cs02_02_bridge_y22",
           "speaker": "leader",
-          "text": "散的我不留。"
+          "text": "直的偏格我带走。皱影不带。"
         },
         {
           "id": "cs02_02_bridge_19",
@@ -996,7 +996,7 @@
           "speaker": "旁白",
           "text": "锋再定。脉纸边的手稳了，抢脉那拨散了。",
           "when": {
-            "flag": "cs02_mid_fought"
+            "flag": "cs02_02_mid_fought"
           }
         },
         {
@@ -1004,7 +1004,7 @@
           "speaker": "老旗手",
           "text": "脉要静。静了，旗也不抖。",
           "when": {
-            "flag": "cs02_mid_fought"
+            "flag": "cs02_02_mid_fought"
           }
         },
         {
@@ -1012,7 +1012,7 @@
           "speaker": "槐里·青禾",
           "text": "纸上那道跳，终于听得清。",
           "when": {
-            "flag": "cs02_mid_fought"
+            "flag": "cs02_02_mid_fought"
           }
         },
         {
@@ -1020,7 +1020,7 @@
           "speaker": "leader",
           "text": "锋护过脉。纸，我按得。",
           "when": {
-            "flag": "cs02_mid_fought"
+            "flag": "cs02_02_mid_fought"
           }
         },
         {
@@ -1351,17 +1351,17 @@
         {
           "id": "cs02_02_tavern_y17",
           "speaker": "旁白",
-          "text": "婚约笺角卷着。卷着，说明有人反复看。"
+          "text": "酒馆灯把副笺卷角烤得更翘，翘处没有新签名。"
         },
         {
           "id": "cs02_02_tavern_y18",
           "speaker": "石垒·晚担",
-          "text": "反复看的，未必敢签。"
+          "text": "烤翘了还没签，就是还在怕。怕可以，假签不行。"
         },
         {
           "id": "cs02_02_tavern_y19",
           "speaker": "leader",
-          "text": "我敢签真的。"
+          "text": "怕留下。真名今晚签在偏格上。"
         },
         {
           "id": "cs02_02_tavern_17",

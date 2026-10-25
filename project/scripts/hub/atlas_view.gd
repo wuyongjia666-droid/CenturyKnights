@@ -1705,11 +1705,19 @@ func _run_travel() -> void:
 			_set_busy(false)
 			_refresh_top()
 			return
+		if _check_stockade_cache():
+			_set_busy(false)
+			_refresh_top()
+			return
 		if _check_territory_month():
 			_set_busy(false)
 			_refresh_top()
 			return
 		if _check_siege_alert():
+			_set_busy(false)
+			_refresh_top()
+			return
+		if _check_siege_loot():
 			_set_busy(false)
 			_refresh_top()
 			return
@@ -1763,6 +1771,8 @@ func _after_arrival() -> void:
 		return
 	if _check_siege_alert():
 		return
+	if _check_siege_loot():
+		return
 	if _check_march_muster():
 		return
 	if _check_losses():
@@ -1770,6 +1780,8 @@ func _after_arrival() -> void:
 	if _check_chain_fail():
 		return
 	if _check_supply_halt():
+		return
+	if _check_stockade_cache():
 		return
 	if _check_rival_thefts():
 		return
@@ -1787,6 +1799,8 @@ func _resume_state() -> void:
 		return
 	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_siege_alert():
 		return
+	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_siege_loot():
+		return
 	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_march_muster():
 		return
 	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_losses():
@@ -1794,6 +1808,8 @@ func _resume_state() -> void:
 	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_chain_fail():
 		return
 	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_supply_halt():
+		return
+	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_stockade_cache():
 		return
 	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_rival_thefts():
 		return
@@ -1820,6 +1836,8 @@ func _resume_state() -> void:
 	elif World.is_traveling():
 		_show_toast("继续行军……", UIKit.ACCENT)
 		_run_travel()
+	elif _check_stockade_cache():
+		return
 	elif _check_city_sortie():
 		return
 
@@ -2272,7 +2290,11 @@ func _check_supply_halt() -> bool:
 func _show_supply_halt_modal(halt: Dictionary) -> void:
 	var dest := str(halt.get("dest", ""))
 	var starved := int(halt.get("starved_days", 1))
-	var h := 360.0
+	var stock: Dictionary = halt.get("stockade", {}) if typeof(halt.get("stockade", {})) == TYPE_DICTIONARY else {}
+	if stock.is_empty():
+		stock = World.stockade_cache_option()
+	var has_cache := not stock.is_empty() and int(stock.get("cache", 0)) > 0
+	var h := 420.0 if has_cache else 360.0
 	var panel := _modal_panel(h)
 	panel.name = "SupplyHaltModal"
 	var el := UIKit.mono(Locale.t("atlas_supply_halt_en"), 9, UIKit.DANGER)
@@ -2331,6 +2353,28 @@ func _show_supply_halt_modal(halt: Dictionary) -> void:
 		_select_node(World.pos)
 		_show_stopover_modal())
 	panel.add_child(stop)
+	y += 44.0
+	if has_cache:
+		var at_here := str(stock.get("anchor", "")) == World.pos
+		var lbl := Locale.t("atlas_cache_open_here") if at_here else Locale.t("atlas_cache_divert")
+		var cache_btn := UIKit.cta_button(
+			"%s · %s ×%d" % [lbl, str(stock.get("name", "")), int(stock.get("cache", 0))], "C", 452, 42)
+		cache_btn.name = "SupplyStockadeCache"
+		cache_btn.position = Vector2(24, y)
+		cache_btn.pressed.connect(func():
+			var r4: Dictionary = World.divert_to_stockade_cache()
+			_show_toast(str(r4.get("msg", "")), UIKit.OK if bool(r4.get("ok", false)) else UIKit.DANGER)
+			_clear_modal()
+			_refresh_top()
+			_build_nodes()
+			_render_left()
+			_place_token(false)
+			if bool(r4.get("traveling", false)) and World.is_traveling():
+				call_deferred("_resume_travel_after_supply")
+			elif bool(r4.get("ok", false)):
+				_select_node(World.pos))
+		panel.add_child(cache_btn)
+		y += 50.0
 	var later := UIKit.ghost_button(Locale.t("atlas_supply_halt_later"), 140, 36)
 	later.name = "SupplyHaltLater"
 	later.position = Vector2(24, h - 56)
@@ -2339,6 +2383,60 @@ func _show_supply_halt_modal(halt: Dictionary) -> void:
 		_clear_modal())
 	panel.add_child(later)
 	forage.call_deferred("grab_focus")
+
+
+## Arrive at owned stockade with cache (or divert land) → StockadeCacheModal.
+func _check_stockade_cache() -> bool:
+	if not _modal.get_children().is_empty():
+		return false
+	if World.last_stockade_cache.is_empty():
+		return false
+	var payload: Dictionary = World.take_stockade_cache()
+	if payload.is_empty():
+		return false
+	_show_stockade_cache_modal(payload)
+	return true
+
+
+func _show_stockade_cache_modal(payload: Dictionary) -> void:
+	var sid := str(payload.get("id", ""))
+	var cache := int(payload.get("cache", 0))
+	var h := 280.0
+	var panel := _modal_panel(h)
+	panel.name = "StockadeCacheModal"
+	var el := UIKit.mono(Locale.t("atlas_cache_en"), 9, UIKit.OK)
+	el.position = Vector2(24, 16)
+	panel.add_child(el)
+	var tlabel := UIKit.title_label(Locale.t("atlas_cache_title"), 20, UIKit.OK)
+	tlabel.position = Vector2(24, 34)
+	tlabel.size = Vector2(452, 30)
+	panel.add_child(tlabel)
+	var body := UIKit.body_label(
+		Locale.t("atlas_cache_body") % [str(payload.get("name", sid)), cache, World.node(World.pos).get("name", World.pos)],
+		UIKit.TEXT, 13)
+	body.name = "StockadeCacheBody"
+	body.position = Vector2(24, 72)
+	body.size = Vector2(452, 78)
+	body.custom_minimum_size = Vector2(452, 0)
+	panel.add_child(body)
+	var open_b := UIKit.cta_button(Locale.t("atlas_cache_open_btn") % cache, "A", 452, 42)
+	open_b.name = "StockadeCacheOpen"
+	open_b.position = Vector2(24, 164)
+	open_b.pressed.connect(func():
+		var r: Dictionary = World.open_stockade_cache_here(sid)
+		_show_toast(str(r.get("msg", "")), UIKit.OK if bool(r.get("ok", false)) else UIKit.DANGER)
+		_clear_modal()
+		_refresh_top())
+	panel.add_child(open_b)
+	var later := UIKit.ghost_button(Locale.t("atlas_cache_later"), 140, 36)
+	later.name = "StockadeCacheLater"
+	later.position = Vector2(24, h - 56)
+	later.pressed.connect(func():
+		World.last_stockade_cache = payload.duplicate(true)
+		_clear_modal())
+	panel.add_child(later)
+	open_b.call_deferred("grab_focus")
+
 
 ## Month crossed with owned holdings → TerritoryMonthModal (yield / drain / lost / reclaim).
 func _check_territory_month() -> bool:
@@ -2415,6 +2513,8 @@ func _show_territory_month_modal(rep: Dictionary) -> void:
 		_build_nodes()
 		if _check_siege_alert():
 			return
+		if _check_siege_loot():
+			return
 		if _check_march_muster():
 			return
 		if World.is_traveling():
@@ -2486,7 +2586,11 @@ func _show_siege_alert_modal(alert: Dictionary) -> void:
 	var at_anchor := World.pos == anchor and anchor != ""
 	var phase_line := Locale.t("atlas_siege_phase_imminent") if phase == "imminent" else Locale.t("atlas_siege_phase_declared")
 	var intel_line := Locale.t("atlas_siege_intel") % hold_pct if scouted and hold_pct >= 0 else Locale.t("atlas_siege_intel_unknown")
-	var h := 420.0
+	var cache_n := int(alert.get("cache", 0))
+	var stockade := bool(alert.get("stockade", false))
+	if stockade and cache_n > 0:
+		phase_line = phase_line + " " + (Locale.t("atlas_siege_cache_warn") % cache_n)
+	var h := 490.0 if stockade and cache_n > 0 else 420.0
 	var panel := _modal_panel(h)
 	panel.name = "SiegeAlertModal"
 	var el := UIKit.mono(Locale.t("atlas_siege_en"), 9, UIKit.DANGER)
@@ -2501,10 +2605,10 @@ func _show_siege_alert_modal(alert: Dictionary) -> void:
 		UIKit.TEXT, 13)
 	body.name = "SiegeAlertBody"
 	body.position = Vector2(24, 72)
-	body.size = Vector2(452, 100)
+	body.size = Vector2(452, 120 if stockade and cache_n > 0 else 100)
 	body.custom_minimum_size = Vector2(452, 0)
 	panel.add_child(body)
-	var y := 186.0
+	var y := 206.0 if stockade and cache_n > 0 else 186.0
 	var relief_label := Locale.t("atlas_siege_intercept") if at_anchor else Locale.t("atlas_siege_relief")
 	var relief := UIKit.cta_button(relief_label, "A", 452, 42)
 	relief.name = "SiegeRelief"
@@ -2568,6 +2672,28 @@ func _show_siege_alert_modal(alert: Dictionary) -> void:
 		else:
 			pass)
 	panel.add_child(scout)
+	if stockade and cache_n > 0:
+		y += 44.0
+		var evac := UIKit.ghost_button(Locale.t("atlas_siege_evacuate"), 452, 36)
+		evac.name = "SiegeEvacuate"
+		evac.position = Vector2(24, y)
+		evac.pressed.connect(func():
+			var r4: Dictionary = CKTerritory.evacuate_cache(site_id)
+			_show_toast(str(r4.get("msg", "")), UIKit.OK if bool(r4.get("ok", false)) else UIKit.DANGER)
+			if bool(r4.get("ok", false)):
+				alert["cache"] = 0
+				cache_n = 0
+				evac.disabled = true
+				var bl2: Label = panel.get_node_or_null("SiegeAlertBody") as Label
+				if bl2 != null:
+					var pl2 := Locale.t("atlas_siege_phase_imminent") if str(alert.get("phase", "")) == "imminent" else Locale.t("atlas_siege_phase_declared")
+					var hp2 := int(alert.get("hold_pct", -1))
+					var il2 := Locale.t("atlas_siege_intel") % hp2 if bool(alert.get("scouted", false)) and hp2 >= 0 else Locale.t("atlas_siege_intel_unknown")
+					var gar2 := int(alert.get("garrison", garrison))
+					bl2.text = Locale.t("atlas_siege_body") % [by_name, site_name, anchor_name, gar2, pl2, il2]
+			_refresh_top()
+			_build_nodes())
+		panel.add_child(evac)
 	var later := UIKit.ghost_button(Locale.t("atlas_siege_later"), 140, 36)
 	later.name = "SiegeLater"
 	later.position = Vector2(24, h - 56)
@@ -2583,6 +2709,57 @@ func _show_siege_alert_modal(alert: Dictionary) -> void:
 func _resume_travel_after_siege() -> void:
 	if World.is_traveling() and World.pending_event.is_empty() and World.encounter.is_empty():
 		_run_travel()
+
+
+## Unanswered siege sacked stockade cache → SiegeLootModal.
+func _check_siege_loot() -> bool:
+	if not _modal.get_children().is_empty():
+		return false
+	if World.last_siege_loot.is_empty():
+		return false
+	var loot: Dictionary = World.take_siege_loot()
+	if loot.is_empty():
+		return false
+	_show_siege_loot_modal(loot)
+	return true
+
+
+func _show_siege_loot_modal(loot: Dictionary) -> void:
+	var site_name := str(loot.get("name", loot.get("id", "")))
+	var by_name := str(loot.get("by_name", ""))
+	var looted := int(loot.get("looted", 0))
+	var left := int(loot.get("cache_left", 0))
+	var outcome := str(loot.get("outcome", "held"))
+	var h := 320.0
+	var panel := _modal_panel(h)
+	panel.name = "SiegeLootModal"
+	var el := UIKit.mono(Locale.t("atlas_siege_loot_en"), 9, UIKit.DANGER)
+	el.position = Vector2(24, 16)
+	panel.add_child(el)
+	var tlabel := UIKit.title_label(Locale.t("atlas_siege_loot_title"), 20, UIKit.DANGER)
+	tlabel.position = Vector2(24, 34)
+	tlabel.size = Vector2(452, 30)
+	panel.add_child(tlabel)
+	var body_key := "atlas_siege_loot_body_lost" if outcome == "lost" else "atlas_siege_loot_body_held"
+	var body := UIKit.body_label(Locale.t(body_key) % [by_name, site_name, looted, left], UIKit.TEXT, 13)
+	body.name = "SiegeLootBody"
+	body.position = Vector2(24, 72)
+	body.size = Vector2(452, 110)
+	body.custom_minimum_size = Vector2(452, 0)
+	panel.add_child(body)
+	var ok := UIKit.cta_button(Locale.t("atlas_siege_loot_ok"), "A", 452, 42)
+	ok.name = "SiegeLootOk"
+	ok.position = Vector2(24, h - 70)
+	ok.pressed.connect(func():
+		_clear_modal()
+		_refresh_top()
+		_build_nodes()
+		if _check_march_muster():
+			return
+		if World.is_traveling():
+			call_deferred("_resume_travel_after_siege"))
+	panel.add_child(ok)
+	ok.call_deferred("grab_focus")
 
 
 ## Road merc hire → MarchMusterModal (编制 / 日耗粮 refresh).

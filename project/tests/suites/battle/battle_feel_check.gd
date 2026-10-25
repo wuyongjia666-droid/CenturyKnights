@@ -145,8 +145,11 @@ func _source_contracts() -> String:
 		return "tap-again confirm_move missing"
 	if ctrl.find("int(preview_attack_ui) == ui") < 0 or ctrl.find("BattleTouchConfirm.confirm_attack(self)") < 0:
 		return "tap-again confirm_attack missing"
-	if ctrl.find("mobile_sel") < 0 or ctrl.find("BattlePick.contour_half_w()") < 0:
-		return "mobile selection chrome missing contour halo"
+	var chrome := FileAccess.get_file_as_string("res://scripts/battle/battle_select_chrome.gd")
+	if ctrl.find("BattleSelectChrome.draw_selected(self, overlay)") < 0:
+		return "selection chrome not drawn"
+	if chrome.find("chrome_marks") < 0 or chrome.find("FIG_FEET") < 0 or chrome.find("contour_half_w") < 0:
+		return "mobile selection chrome missing foot/mid/body"
 	if ctrl.find("lp_cell := BattlePick.resolve(self, pos)") < 0:
 		return "long_press must soft/contour resolve like taps"
 	# Y1-A T-P2
@@ -158,8 +161,8 @@ func _source_contracts() -> String:
 		return "select missing mobile haptic"
 	if pick.find("contour_half_w") < 0 or pick.find("CONTOUR_HALF_W_MOBILE") < 0:
 		return "battle_pick missing mobile contour widen"
-	if ctrl.find("BattlePick.contour_half_w()") < 0:
-		return "selection chrome not using contour_half_w"
+	if chrome.find("FOOT_R_CELLS") < 0 or chrome.find("draw_circle") < 0:
+		return "selection chrome missing readable foot disc"
 	if ctrl.find("MOBILE_RAIL_W := 196") < 0:
 		return "landscape rail not widened for T-P2"
 	if bar.find("0.55") < 0:
