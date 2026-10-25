@@ -148,12 +148,43 @@ func _accumulate_continue(cid: String, b, acc: Dictionary) -> void:
 		if str(a.get("label", "")).find("继续") < 0:
 			acc["err"] = "%s continue label missing 继续: %s" % [cid, str(a.get("label", ""))]
 			return
+		var mid_flag := cid.substr(0, 4) + "_mid_fought"
+		var lost_flag := cid.substr(0, 4) + "_mid_lost"
 		var goto_ok := false
+		var skip_ok := false
+		var abort_ok := false
 		for step2 in a.get("do", []):
-			if typeof(step2) == TYPE_DICTIONARY and str(step2.get("op", "")) == "goto":
+			if typeof(step2) != TYPE_DICTIONARY:
+				continue
+			var op := str(step2.get("op", ""))
+			if op == "goto":
 				goto_ok = true
+			elif op == "season_ledger":
+				var choice := str(step2.get("choice", ""))
+				var outcome := str(step2.get("outcome", ""))
+				var when_row = step2.get("when", {})
+				if choice == "mid_skirmish_skip":
+					if (
+						_when_all_has(when_row, "not_flag", mid_flag)
+						and _when_all_has(when_row, "not_flag", lost_flag)
+						and outcome.find("未试锋") >= 0
+						and bool(step2.get("yeartrace", false))
+					):
+						skip_ok = true
+				elif choice == "mid_skirmish_abort":
+					if (
+						_when_all_has(when_row, "not_flag", mid_flag)
+						and _when_all_has(when_row, "flag", lost_flag)
+						and outcome.find("试锋未成") >= 0
+						and bool(step2.get("yeartrace", false))
+					):
+						abort_ok = true
 		if not goto_ok:
 			acc["err"] = "%s continue_after_battle missing goto" % cid
+		elif not skip_ok:
+			acc["err"] = "%s continue missing 未试锋 skip ledger" % cid
+		elif not abort_ok:
+			acc["err"] = "%s continue missing 试锋未成 abort ledger" % cid
 
 
 func _check_battle_action(cid: String, want_beat: String, beat_id: String, a, step, mid_flag: String, lost_flag: String) -> String:

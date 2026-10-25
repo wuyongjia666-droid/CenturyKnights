@@ -1,6 +1,7 @@
 extends Node
 ## Mid-cs under hub_open: loss stamps csXX_mid_lost → CTA morphs「再试锋镝」+ loss line;
-## win stamps mid_fought + season_ledger/yeartrace for the skirmish itself.
+## win stamps mid_fought + season_ledger/yeartrace for the skirmish itself;
+## bare「继续」stamps 未试锋 skip / 试锋未成 abort ledger when leaving without a win.
 
 const PLAYER := "res://scenes/story/chapter_player.tscn"
 const BATTLE := "res://scenes/battle/battle.tscn"
@@ -34,6 +35,14 @@ func _run() -> String:
 			return err
 		err = await _live_loss_morph(
 			str(row["cid"]), str(row["beat"]), str(row["loss_needle"]))
+		if err != "":
+			return err
+		err = await _live_skip_ledger(
+			str(row["cid"]), str(row["beat"]), str(row["after"]))
+		if err != "":
+			return err
+		err = await _live_abort_ledger(
+			str(row["cid"]), str(row["beat"]), str(row["after"]))
 		if err != "":
 			return err
 	return ""
@@ -137,6 +146,10 @@ func _live_win_ledger_and_hide(cid: String, beat: String, after: String) -> Stri
 			await get_tree().process_frame
 			if player2.current_beat_id() != after:
 				err = "%s win: after continue want %s got %s" % [cid, after, player2.current_beat_id()]
+			elif not CKSuiKe.season_ledger_find(cid, "mid_skirmish_skip").is_empty():
+				err = "%s win: continue wrote skip ledger after fight" % cid
+			elif not CKSuiKe.season_ledger_find(cid, "mid_skirmish_abort").is_empty():
+				err = "%s win: continue wrote abort ledger after fight" % cid
 	player2.queue_free()
 	await get_tree().process_frame
 	if err == "":
@@ -202,6 +215,104 @@ func _live_loss_morph(cid: String, beat: String, needle: String) -> String:
 	if err == "":
 		print("OK live loss morph %s @%s → %s + line" % [cid, beat, RETRY_LABEL])
 	return err
+
+
+
+func _live_skip_ledger(cid: String, beat: String, after: String) -> String:
+	var fought := _fought(cid)
+	var pair = await _ready_at_cta(cid, beat, FIRST_LABEL)
+	if typeof(pair) == TYPE_STRING:
+		return str(pair)
+	var player = pair[1]
+	var err := ""
+	if not player.simulate_press_action_containing("继续"):
+		err = "%s skip: continue missing labels=%s" % [cid, str(player.action_labels())]
+	else:
+		await get_tree().process_frame
+		await get_tree().process_frame
+		if player.current_beat_id() != after:
+			err = "%s skip: want %s got %s" % [cid, after, player.current_beat_id()]
+		elif GameState.flag(fought):
+			err = "%s skip: mid_fought set without fight" % cid
+		else:
+			err = _assert_choice_ledger(cid, "mid_skirmish_skip", "未试锋")
+			if err == "" and not CKSuiKe.season_ledger_find(cid, "mid_skirmish_abort").is_empty():
+				err = "%s skip: abort ledger also written" % cid
+	player.queue_free()
+	await get_tree().process_frame
+	if err == "":
+		print("OK live skip 未试锋 %s @%s → %s" % [cid, beat, after])
+	return err
+
+
+func _live_abort_ledger(cid: String, beat: String, after: String) -> String:
+	var lost := _lost(cid)
+	var fought := _fought(cid)
+	var pair = await _ready_at_cta(cid, beat, FIRST_LABEL)
+	if typeof(pair) == TYPE_STRING:
+		return str(pair)
+	var packed: PackedScene = pair[0]
+	var player = pair[1]
+	if not player.simulate_press_action_containing(FIRST_LABEL):
+		player.queue_free()
+		return "%s abort: press fight failed" % cid
+	await get_tree().process_frame
+	var err := ""
+	BattleDefeat.back_path(false, false, StoryCatalog.player_scene())
+	if not GameState.flag(lost):
+		err = "%s abort: %s not set" % [cid, lost]
+	player.queue_free()
+	await get_tree().process_frame
+	if err != "":
+		return err
+	GameState.set_meta("battle_return_chapter", cid)
+	var player2 = packed.instantiate()
+	player2.suppress_scene_change = true
+	player2.lock_path = false
+	player2.chapter_path = ""
+	add_child(player2)
+	await get_tree().process_frame
+	await get_tree().process_frame
+	player2.simulate_finish_dialogue()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	if player2.action_labels().find(RETRY_LABEL) < 0:
+		err = "%s abort: retry CTA missing labels=%s" % [cid, str(player2.action_labels())]
+	elif not player2.simulate_press_action_containing("继续"):
+		err = "%s abort: continue missing labels=%s" % [cid, str(player2.action_labels())]
+	else:
+		await get_tree().process_frame
+		await get_tree().process_frame
+		if player2.current_beat_id() != after:
+			err = "%s abort: want %s got %s" % [cid, after, player2.current_beat_id()]
+		elif GameState.flag(fought):
+			err = "%s abort: mid_fought set on loss leave" % cid
+		else:
+			err = _assert_choice_ledger(cid, "mid_skirmish_abort", "试锋未成")
+			if err == "" and not CKSuiKe.season_ledger_find(cid, "mid_skirmish_skip").is_empty():
+				err = "%s abort: skip ledger also written" % cid
+	player2.queue_free()
+	await get_tree().process_frame
+	if err == "":
+		print("OK live abort 试锋未成 %s @%s → %s" % [cid, beat, after])
+	return err
+
+
+func _assert_choice_ledger(cid: String, choice: String, needle: String) -> String:
+	var found: Dictionary = CKSuiKe.season_ledger_find(cid, choice)
+	if found.is_empty():
+		return "%s: season_ledger %s missing" % [cid, choice]
+	if str(found.get("outcome", "")).find(needle) < 0:
+		return "%s: ledger %s outcome %s" % [cid, choice, str(found.get("outcome", ""))]
+	var yt := false
+	var want_id := "%s:%s" % [cid, choice]
+	for row in CKSuiKe.yeartrace():
+		if str(row.get("id", "")) == want_id:
+			yt = true
+			break
+	if not yt:
+		return "%s: yeartrace %s missing" % [cid, choice]
+	return ""
 
 
 func _ready_at_cta(cid: String, beat: String, want_label: String):
