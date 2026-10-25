@@ -15,6 +15,7 @@ const SCREENS := [
 	["city", "res://scenes/hub/city.tscn"],
 	["battle", "res://scenes/battle/battle.tscn"],
 	["settings", "res://scenes/ui/settings.tscn"],
+	["save_slots", "res://scenes/ui/save_slots.tscn"],
 	["codex", "res://scenes/hub/bloodline_codex.tscn"],
 ]
 const RATIOS := [Vector2i(1280, 720), Vector2i(1080, 2400)]

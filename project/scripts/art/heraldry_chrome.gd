@@ -4,7 +4,7 @@ extends RefCounted
 ## One design system everywhere (castle header/banner strip, genealogy, dossier,
 ## board unit shields, rival houses, tavern/hire cards, city/smith/market chrome,
 ## marriage house cards + crest strip, bloodline codex / shrine / banner rite,
-## succession / heir-duel / annex).
+## succession / heir-duel / annex, title/settings/save/pause shell).
 ## No marriage marshalling / per-person cadency — only company vs family vs nation arms + rank badge.
 
 static func is_family_member(c) -> bool:
@@ -204,6 +204,55 @@ static func place_company_header(parent: Node, at: Vector2, size: Vector2 = Vect
 	var tr := make_company_arms(size)
 	tr.position = at
 	parent.add_child(tr)
+	return tr
+
+## Title / settings / save / pause shell crest strip: 团徽 + 旗徽 cloth.
+## Host name ShellCrestStrip — distinct from CastleBannerStrip so shell suites do not collide with hub asserts.
+static func place_shell_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(44, 52), banner: Vector2 = Vector2(28, 38)) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("ShellCrestStrip")
+	if old:
+		old.name = "_ShellCrestStripDying"
+		old.queue_free()
+	var host := Control.new()
+	host.name = "ShellCrestStrip"
+	host.position = at
+	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var arms := make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var bn := make_company_banner(banner)
+	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
+	host.add_child(bn)
+	parent.add_child(host)
+	return host
+
+## Save-slot / load-card row arms: prepend 团徽 so every slot row carries company chrome.
+## Empty slots still get the plate (disabled load button already signals emptiness).
+static func attach_save_row_arms(row: Control, size: Vector2 = Vector2(36, 44)) -> TextureRect:
+	if row == null:
+		return null
+	var old := row.get_node_or_null("SlotArms")
+	if old:
+		old.name = "_SlotArmsDying"
+		old.queue_free()
+	var tr := make_company_arms(size)
+	tr.name = "SlotArms"
+	# Prefer HBox prepend when the row lays out horizontally.
+	if row is HBoxContainer:
+		row.add_child(tr)
+		row.move_child(tr, 0)
+	elif row is PanelContainer:
+		var inner = row.get_child(0) if row.get_child_count() > 0 else null
+		if inner is HBoxContainer:
+			inner.add_child(tr)
+			inner.move_child(tr, 0)
+		else:
+			row.add_child(tr)
+	else:
+		row.add_child(tr)
 	return tr
 
 ## Castle hub banner strip: 团徽 shield + cloth banner side by side under the top bar.
