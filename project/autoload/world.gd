@@ -753,6 +753,23 @@ func camp_readout(ev: Dictionary = {}) -> Dictionary:
 	}
 
 ## Quote buying grain (store→food) for N march days at city market.
+## Halt/stopover bulk grain: top market toward target so a winter ration
+## order is not wiped by one prior buy before month regen.
+func _top_up_grain_for_resupply(city: String, need: int) -> void:
+	if need <= 0 or not nodes.has(city):
+		return
+	if not market.has(city):
+		_init_market(city)
+	var m: Dictionary = market[city]
+	if typeof(m) != TYPE_DICTIONARY:
+		_init_market(city)
+		m = market[city]
+	var cur := int(m.get("grain", 0))
+	var target := maxi(need, _target_stock(city, "grain"))
+	if cur < target:
+		m["grain"] = target
+		market[city] = m
+
 func resupply_quote(city: String, days: int = 7) -> Dictionary:
 	var id := city if city != "" else pos
 	var d := maxi(1, days)
@@ -760,6 +777,7 @@ func resupply_quote(city: String, days: int = 7) -> Dictionary:
 	var qty := maxi(1, per * d)
 	if not nodes.has(id):
 		return {"ok": false, "msg": "无此地", "qty": qty, "days": d}
+	_top_up_grain_for_resupply(id, qty)
 	var st := stock(id, "grain")
 	var cost := quote_buy(id, "grain", qty) if st >= qty else quote_buy(id, "grain", maxi(1, mini(qty, st)))
 	var buy_qty := qty if st >= qty else maxi(0, mini(qty, st))
