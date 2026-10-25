@@ -540,7 +540,7 @@ func _strict_drag_origin() -> String:
 	OS.set_environment("CK_FORCE_MOBILE", "1")
 	var host := _FakePickHost.new()
 	host.setup_selected_at(Vector2i(2, 2))
-	var soft_empty := host.ORIGIN + Vector2(2.5 + 0.85, 2.5) * float(host.CELL)
+	var soft_empty: Vector2 = (host.ORIGIN as Vector2) + Vector2(2.5 + 0.85, 2.5) * float(host.CELL as int)
 	if not BattlePick.near_living_unit(host, soft_empty):
 		return "soft-empty fixture must soft-hit selected"
 	if BattlePick.strict_hits_selected(host, soft_empty, 0):
@@ -560,7 +560,7 @@ func _strict_drag_origin() -> String:
 	BattleTouchConfirm.end_gesture(host)
 	# Contour shoulder still strict-hits.
 	var mid_y: float = 2.0 + (BattlePick.FIG_TOP + BattlePick.FIG_FEET) * 0.5
-	var shoulder := host.ORIGIN + Vector2(2.5 + 0.35, mid_y) * float(host.CELL)
+	var shoulder: Vector2 = (host.ORIGIN as Vector2) + Vector2(2.5 + 0.35, mid_y) * float(host.CELL as int)
 	if not BattlePick.strict_hits_selected(host, shoulder, 0):
 		return "contour shoulder must strict-hit selected"
 	return ""

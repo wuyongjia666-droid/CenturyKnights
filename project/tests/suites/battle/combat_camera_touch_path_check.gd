@@ -64,7 +64,7 @@ func _path_soft_empty_pans() -> String:
 	if not BattlePick.near_selected_unit(host, origin_screen, 0):
 		# soft may or may not depending on distance; centre of (3,2) is 1.0 cell away
 		# from (2,2) centre — SOFT_R=0.90 may miss. Use eccentric closer point.
-		origin_screen = host.ORIGIN + Vector2(2.5 + 0.85, 2.5) * float(host.CELL)
+		origin_screen = (host.ORIGIN as Vector2) + Vector2(2.5 + 0.85, 2.5) * float(host.CELL as int)
 		if not BattlePick.near_living_unit(host, origin_screen):
 			return "could not place soft-near empty press"
 	var g_pan := {"kind": "pan", "origin": origin_screen, "pos": origin_screen + Vector2(40, 0),
