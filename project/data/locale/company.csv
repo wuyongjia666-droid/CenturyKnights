@@ -473,6 +473,11 @@ atlas_siege_loot_body_lost,%s 攻陷「%s」：粮仓被洗劫 %d（仓空）。
 atlas_siege_loot_ok,已知晓,Understood
 atlas_siege_loot_hold_log,「%s」守住了据点，粮仓仍失 %d。,"%s" held — cache still lost %d.
 atlas_siege_loot_lost_log,「%s」失守，粮仓被劫 %d。,"%s" fell — cache looted %d.
+atlas_convoy_need_threat,无围城威胁，不必撤仓。,No siege threat — no need to evacuate.
+atlas_convoy_ok_stockade,「%s」粮仓撤运 %d 至「%s」（途损 %d）。,"%s" evacuated %d food to "%s" (spoilage %d).
+atlas_convoy_ok_company,「%s」粮仓撤入行囊 %d（途损 %d）。,"%s" evacuated %d food into the company (spoilage %d).
+atlas_siege_evacuate,撤仓护粮,Evacuate cache
+atlas_siege_evacuate_done,粮仓已撤：%s,Cache evacuated: %s
 atlas_season_spring,春,Spring
 atlas_season_summer,夏,Summer
 atlas_season_autumn,秋,Autumn
