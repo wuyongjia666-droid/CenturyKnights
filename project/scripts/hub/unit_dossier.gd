@@ -305,8 +305,9 @@ func _build() -> void:
 	_job_seals(tree, c)
 	_tutor_feel(tree, c)
 	_tree(tree, c, sheet)
-	var crest := CKPageKit.button(Locale.t("lb_dos_crest"), false, 188)
+	var crest := CKPageKit.button(CKHeraldryChrome.dossier_crest_label(c), false, 188)
 	crest.name = "CrestPreview"
+	crest.set_meta("arms_kind", CKHeraldryChrome.arms_kind_key(c))
 	crest.position = Vector2(16, 448)
 	crest.pressed.connect(_show_crest)
 	right.add_child(crest)
@@ -624,7 +625,7 @@ func _follow_life(mid: Control, sh: Control) -> void:
 				cn.size.y = maxf(cn.get_minimum_size().y, mid.size.y - cn.position.y - 12.0)
 	)
 
-## Company crest at full size (audit #56). Back / tap outside closes it.
+## Person crest at full size: 族徽 for family members, 旗徽/团徽 for familyless (audit #56).
 func _show_crest() -> void:
 	Sfx.click()
 	var layer := Control.new()
@@ -638,13 +639,22 @@ func _show_crest() -> void:
 	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	layer.add_child(dim)
 	var tr := TextureRect.new()
-	tr.texture = CKHeraldryRender.compose_texture(GameState.banner_spec, 320, 440)
+	tr.name = "CrestTexture"
+	tr.texture = CKHeraldryChrome.person_banner(_focus, 320, 440)
+	tr.set_meta("arms_kind", CKHeraldryChrome.arms_kind_key(_focus))
+	tr.set_meta("arms_core", CKHeraldry.core_key(CKHeraldryChrome.person_spec(_focus)))
 	tr.position = Vector2(480, 96)
 	tr.size = Vector2(320, 440)
 	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	layer.add_child(tr)
+	var cap := UIKit.body_label(CKHeraldryChrome.arms_kind_label(_focus), UIKit.TEXT, 16)
+	cap.name = "CrestCaption"
+	cap.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	cap.position = Vector2(480, 70)
+	cap.size = Vector2(320, 24)
+	layer.add_child(cap)
 	var close := CKPageKit.button(Locale.t("lb_close"), true, 200)
 	close.position = Vector2(540, 560)
 	close.pressed.connect(func(): CKNav.pop_overlay(layer); layer.queue_free())

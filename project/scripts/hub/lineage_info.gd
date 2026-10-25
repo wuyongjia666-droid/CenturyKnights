@@ -162,27 +162,21 @@ static func render(host: Control, c, action_text: String, action_cb: Callable) -
 	jb.size = Vector2(218, 20)
 	jb.position = Vector2(156, 110)
 	p.add_child(jb)
-	var arms := TextureRect.new()
-	arms.name = "PersonArms"
-	arms.texture = UnitArt.shield_arms(GameState.arms_for_character(c), 40, 48)
-	arms.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	arms.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	arms.position = Vector2(156, 140)
-	arms.size = Vector2(40, 48)
-	arms.tooltip_text = Locale.t("gen2_06")
+	var arms := CKHeraldryChrome.make_person_arms(c, Vector2(48, 58))
+	arms.position = Vector2(156, 132)
 	p.add_child(arms)
-	var badge := TextureRect.new()
-	badge.name = "RankBadge"
-	badge.texture = CKHeraldryRender.rank_badge(str(c.rank), 32)
-	badge.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	badge.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	badge.position = Vector2(206, 148)
-	badge.size = Vector2(32, 32)
+	var kind := UIKit.body_label(CKHeraldryChrome.arms_kind_label(c), UIKit.TEXT_DIM, 11)
+	kind.name = "ArmsKind"
+	kind.autowrap_mode = TextServer.AUTOWRAP_OFF
+	kind.position = Vector2(156, 192)
+	p.add_child(kind)
+	var badge := CKHeraldryChrome.make_rank_badge(str(c.rank), 32)
+	badge.position = Vector2(214, 140)
 	p.add_child(badge)
 	var rk := UIKit.body_label(c.rank_name(), UIKit.ACCENT, 13)
 	rk.name = "InfoRank"
 	rk.autowrap_mode = TextServer.AUTOWRAP_OFF
-	rk.position = Vector2(246, 155)
+	rk.position = Vector2(254, 148)
 	p.add_child(rk)
 	UIKit.section_head(p, Vector2(20, 220), Locale.t("gen2_07"), "TRAITS", 354, Locale.t("gen2_08") % c.traits.size())
 	var y := 246.0
@@ -258,19 +252,15 @@ static func render_mobile(host: Control, c, action_text: String, action_cb: Call
 	var rr := HBoxContainer.new()
 	rr.add_theme_constant_override("separation", 8)
 	col.add_child(rr)
-	var arms := TextureRect.new()
-	arms.name = "PersonArms"
-	arms.texture = UnitArt.shield_arms(GameState.arms_for_character(c), 40, 48)
-	arms.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	arms.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	arms.custom_minimum_size = Vector2(40, 48)
+	var arms := CKHeraldryChrome.make_person_arms(c, Vector2(48, 58))
 	rr.add_child(arms)
-	var badge := TextureRect.new()
-	badge.texture = CKHeraldryRender.rank_badge(str(c.rank), 32)
-	badge.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	badge.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	var badge := CKHeraldryChrome.make_rank_badge(str(c.rank), 36)
 	badge.custom_minimum_size = Vector2(36, 48)
 	rr.add_child(badge)
+	var kind := MobilePage.label(CKHeraldryChrome.arms_kind_label(c), UIKit.TEXT_DIM, MobilePage.FONT, false)
+	kind.name = "ArmsKind"
+	kind.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	rr.add_child(kind)
 	var rk := MobilePage.label(c.rank_name(), UIKit.ACCENT)
 	rk.name = "InfoRank"
 	rk.size_flags_vertical = Control.SIZE_SHRINK_CENTER

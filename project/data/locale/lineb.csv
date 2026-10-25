@@ -356,6 +356,8 @@ lb_dos_ctx,骑士档案 · %s,Dossier · %s
 lb_dos_desc,生平、属性、血脉和家人。血脉要祠堂验过才看得到携带的部分。,"Life, stats, bloodline and family."
 lb_dos_lock,血脉这一栏还没开放：%s,Bloodline locked: %s
 lb_dos_crest,看团徽大图,View crest
+lb_dos_crest_banner,看旗徽大图,View company banner
+lb_dos_crest_family,看族徽大图,View family arms
 lb_dos_codex,打开血脉图鉴,Open codex
 lb_dos_line,%s · %d 岁 · 生命 %d/%d,%s · age %d · HP %d/%d
 lb_dos_ok,状态正常，可以出战。,Fit to deploy.

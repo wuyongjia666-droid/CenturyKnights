@@ -50,6 +50,7 @@ func _unhandled_input(e: InputEvent) -> void:
 func _build() -> void:
 	UIKit.void_bg(self)
 	UIKit.top_bar(self, Locale.t("gen2_11") % GameState.surname, [], Locale.t("gen2_12"), nav_back)
+	CKHeraldryChrome.place_company_header(self, Vector2(800, 2), Vector2(44, 52))
 	_view = Panel.new()
 	_view.name = "TreeViewport"
 	_view.position = VIEW.position
@@ -81,6 +82,12 @@ func apply_mobile_layout() -> void:
 	if not DeviceProfile.is_mobile():
 		return
 	var w := maxf(size.x, 1280.0)
+	var ca := get_node_or_null("CastleArms") as Control
+	if ca:
+		ca.visible = true
+		ca.position = Vector2(w - 64.0, 6.0)
+		ca.size = Vector2(52, 60)
+		ca.custom_minimum_size = Vector2(52, 60)
 	var bottom := (foot.position.y if foot else size.y) - 8.0
 	if _view != null:
 		_view.position = Vector2(12.0, 72.0)
@@ -213,6 +220,7 @@ func _node(c: CKCharacter, at: Vector2, is_focus: bool) -> Button:
 	sub.size = Vector2(NODE.x - 8, 30 if mob else 16)
 	sub.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	b.add_child(sub)
+	CKHeraldryChrome.attach_node_chrome(b, c, NODE)
 	b.pressed.connect(func():
 		if _drag_dist > DRAG_SLOP:
 			return
