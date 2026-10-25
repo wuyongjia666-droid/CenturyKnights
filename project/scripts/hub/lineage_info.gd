@@ -108,7 +108,7 @@ static func portrait_rect(c, sz: Vector2) -> Control:
 	box.custom_minimum_size = sz
 	box.clip_contents = true
 	box.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var pt = UnitArt.portrait(c, 128) if c != null else null
+	var pt = UnitArt.portrait(c, 128, CKArtPaths.TIER_MEDIUM) if c != null else null
 	if pt:
 		var tr := TextureRect.new()
 		tr.texture = pt

@@ -34,7 +34,10 @@ const AFTER := {
 	"cs10_01": "bridge",
 }
 ## Live press path on a spread of seasons (static gate covers all ten).
-const LIVE := ["cs01_01", "cs03_01", "cs08_01", "cs10_01"]
+const LIVE := [
+	"cs01_01", "cs02_01", "cs03_01", "cs04_01", "cs05_01",
+	"cs06_01", "cs07_01", "cs08_01", "cs09_01", "cs10_01",
+]
 
 
 func _ready() -> void:

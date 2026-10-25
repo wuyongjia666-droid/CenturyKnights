@@ -21,7 +21,13 @@ const FIG_TOP := -0.68
 const FIG_FEET := 0.62
 ## Y1-A T-P1-5: figure screen AABB in cell units (centred on the token column).
 ## Half-width 0.42 ≈ fat-finger on torso/arms without stealing the neighbour column.
+## T-P2: mobile widens to 0.48 (desktop stays 0.42) via contour_half_w().
 const CONTOUR_HALF_W := 0.42
+const CONTOUR_HALF_W_MOBILE := 0.48
+
+
+static func contour_half_w() -> float:
+	return CONTOUR_HALF_W_MOBILE if DeviceProfile.is_mobile() else CONTOUR_HALF_W
 ## Y1-A T-P1-2: camera limits shared by pinch / wheel / pan (real transform, not just contracts).
 const ZOOM_MIN := 0.65
 const ZOOM_MAX := 2.4
@@ -148,7 +154,8 @@ static func contour_unit_pos(origin: Vector2, cell_px: float, units: Array, loca
 			continue
 		var ux := float(u.pos.x)
 		var uy := float(u.pos.y)
-		if lx < ux + 0.5 - CONTOUR_HALF_W or lx > ux + 0.5 + CONTOUR_HALF_W:
+		var half_w: float = contour_half_w()
+		if lx < ux + 0.5 - half_w or lx > ux + 0.5 + half_w:
 			continue
 		if ly < uy + FIG_TOP or ly > uy + FIG_FEET:
 			continue

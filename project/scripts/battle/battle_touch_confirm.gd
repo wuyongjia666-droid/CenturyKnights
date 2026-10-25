@@ -7,6 +7,7 @@ extends RefCounted
 ## stay on the thumb rail via BattleMobileBar.
 ## Y1-A T-P1-4: move/place drag uses exact finger cell; attack still soft-resolves.
 ## Leaving a legal cell clears the stale ghost; illegal release clears preview.
+## Y1-A T-P2: re-tap selected / empty-board deselect (no right-click on phone).
 
 static func enabled() -> bool:
 	if not (GameState.settings is Dictionary):
@@ -14,6 +15,23 @@ static func enabled() -> bool:
 	if GameState.settings.has("touch_confirm"):
 		return bool(GameState.settings["touch_confirm"])
 	return DeviceProfile.is_mobile()
+
+
+
+## T-P2 mobile: re-tap the selected ally OR tap empty board (no preview / not attack)
+## deselects — phones have no right-click cancel. Pure policy + host cancel.
+static func try_deselect(host, ui: int) -> bool:
+	if not enabled():
+		return false
+	if host.selected < 0 or host.selected >= host.units.size():
+		return false
+	if ui == host.selected:
+		host._cancel_selection()
+		return true
+	if ui < 0 and not host.attack_mode and host.preview_move_cell.x < 0 and int(host.preview_attack_ui) < 0:
+		host._cancel_selection()
+		return true
+	return false
 
 
 ## Drag finger to a legal cell / enemy and release to commit (skips the extra bar tap).

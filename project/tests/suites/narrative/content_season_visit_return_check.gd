@@ -12,10 +12,19 @@ const SIDES := [
 	"res://scenes/hub/quests.tscn",
 	"res://scenes/hub/atlas_view.tscn",
 ]
+## One mid beat per season (visit-owning beat when present; else a mid story beat).
+## LIVE covers all ten so a hub-return regression cannot hide in an untested season.
 const CASES := [
-	{"cid": "cs01_01", "mid": "hall"},
-	{"cid": "cs08_01", "mid": "stele"},
-	{"cid": "cs10_01", "mid": "seal"},
+	{"cid": "cs01_01", "mid": "audit"},
+	{"cid": "cs02_01", "mid": "birth"},
+	{"cid": "cs03_01", "mid": "hourglass"},
+	{"cid": "cs04_01", "mid": "hourglass"},
+	{"cid": "cs05_01", "mid": "hourglass"},
+	{"cid": "cs06_01", "mid": "hourglass"},
+	{"cid": "cs07_01", "mid": "hourglass"},
+	{"cid": "cs08_01", "mid": "hourglass"},
+	{"cid": "cs09_01", "mid": "hourglass"},
+	{"cid": "cs10_01", "mid": "hourglass"},
 ]
 
 
