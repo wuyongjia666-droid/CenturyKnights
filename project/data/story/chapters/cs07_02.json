@@ -101,6 +101,21 @@
           "text": "地面上还有上回的香灰。香灰不会替人撒谎。"
         },
         {
+          "id": "cs07b_yd_x17",
+          "speaker": "旁白",
+          "text": "仪典场扫过。灰里还有昨夜烛油。"
+        },
+        {
+          "id": "cs07b_yd_x18",
+          "speaker": "石垒·晚担",
+          "text": "油渍提醒：礼不是擦掉的。"
+        },
+        {
+          "id": "cs07b_yd_x19",
+          "speaker": "leader",
+          "text": "礼留下，名才留。"
+        },
+        {
           "id": "cs07b_yd_17",
           "speaker": "槐里·青禾",
           "text": "香灰厚的地方，人当时是真低头。"
@@ -200,6 +215,21 @@
           "id": "cs07b_rt_16",
           "speaker": "槐里·青禾",
           "text": "掀不动才像宗账。"
+        },
+        {
+          "id": "cs07b_rt_x17",
+          "speaker": "旁白",
+          "text": "宗谱案上压着镇纸。镇纸凉。"
+        },
+        {
+          "id": "cs07b_rt_x18",
+          "speaker": "岁吏",
+          "text": "凉的镇得住热名。"
+        },
+        {
+          "id": "cs07b_rt_x19",
+          "speaker": "leader",
+          "text": "我不抢热名。"
         },
         {
           "id": "cs07b_rt_17",
@@ -303,9 +333,59 @@
           "text": "我不糊。认不住就说认不住。"
         },
         {
+          "id": "cs07b_hg_x17",
+          "speaker": "旁白",
+          "text": "沙漏旁放着谱夹。夹口未合。"
+        },
+        {
+          "id": "cs07b_hg_x18",
+          "speaker": "苇原·灯影",
+          "text": "未合，是等人自己决定合不合。"
+        },
+        {
+          "id": "cs07b_hg_x19",
+          "speaker": "leader",
+          "text": "去沙漏。看谱夹，不硬合。"
+        },
+        {
           "id": "cs07b_hg_17",
           "speaker": "苇原·灯影",
           "text": "带牌去。牌上写宗谱，不写急。"
+        },
+        {
+          "id": "cs0702_vis_mv1",
+          "speaker": "旁白",
+          "text": "宗谱案角压着沙漏说明书，边角卷了。"
+        },
+        {
+          "id": "cs0702_vis_mv2",
+          "speaker": "岁吏",
+          "text": "说明书卷了，人更要眼尖。"
+        },
+        {
+          "id": "cs0702_vis_mv3",
+          "speaker": "老旗手",
+          "text": "眼尖看沙，不看热闹。"
+        },
+        {
+          "id": "cs0702_vst1",
+          "speaker": "岁吏",
+          "text": "月份从第二炷香灰里又漏一粒。两粒并排，才像足月。"
+        },
+        {
+          "id": "cs0702_vst2",
+          "speaker": "书记官",
+          "text": "复仪格最怕代填。"
+        },
+        {
+          "id": "cs0702_vst3",
+          "speaker": "leader",
+          "text": "月份并过。应，不代。"
+        },
+        {
+          "id": "cs0702_vis_mv4",
+          "speaker": "leader",
+          "text": "看沙。去月份。"
         }
       ],
       "next": "bridge",
@@ -349,21 +429,6 @@
           "id": "cs07b_br_1",
           "speaker": "石垒·晚担",
           "text": "谁还认？先看牌，再看脚。"
-        },
-        {
-          "id": "cs07b_br_lost",
-          "speaker": "旁白",
-          "text": "锋收回来。宗谱纸还钉着。仪典那拨，没散。",
-          "when": {
-            "all": [
-              {
-                "flag": "cs07_02_mid_lost"
-              },
-              {
-                "not_flag": "cs07_02_mid_fought"
-              }
-            ]
-          }
         },
         {
           "id": "cs07b_br_2",
@@ -446,9 +511,101 @@
           "text": "旗布没破。破的是封路催条。"
         },
         {
+          "id": "cs07b_br_x19",
+          "speaker": "旁白",
+          "text": "门廊挂着旧绶。绶色淡了。"
+        },
+        {
+          "id": "cs07b_br_x20",
+          "speaker": "岁吏",
+          "text": "淡的绶，比新的老实。"
+        },
+        {
+          "id": "cs07b_br_x21",
+          "speaker": "leader",
+          "text": "试锋。用老实的劲。"
+        },
+        {
           "id": "cs07b_br_18",
           "speaker": "岁吏",
           "text": "催条可以撕。宗谱第二页撕不得。"
+        },
+        {
+          "id": "cs0702_mid_mv1",
+          "speaker": "旁白",
+          "text": "宗谱第二页边角有指印。指印新，谱旧。"
+        },
+        {
+          "id": "cs0702_mid_mv2",
+          "speaker": "岁吏",
+          "text": "新印压旧谱，要问是谁的手。"
+        },
+        {
+          "id": "cs0702_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "手不干净，仪典再齐也虚。"
+        },
+        {
+          "id": "cs0702_mid_mv4",
+          "speaker": "苇原·灯影",
+          "text": "虚礼怕真锋。真锋一出，虚的散。"
+        },
+        {
+          "id": "cs0702_mid_mv5",
+          "speaker": "老旗手",
+          "text": "散了再钉名。钉名不赶场。"
+        },
+        {
+          "id": "cs0702_mid_mv6",
+          "speaker": "leader",
+          "text": "不赶场。试锋用老实劲。"
+        },
+        {
+          "id": "cs0702_win1",
+          "speaker": "旁白",
+          "text": "锋再定。仪典第二问落地，催的人连影都没了。",
+          "when": {
+            "flag": "cs07_mid_fought"
+          }
+        },
+        {
+          "id": "cs0702_win2",
+          "speaker": "掌柜",
+          "text": "第二问比第一问短。短，是因为已经试清。",
+          "when": {
+            "flag": "cs07_mid_fought"
+          }
+        },
+        {
+          "id": "cs0702_win3",
+          "speaker": "苇原·灯影",
+          "text": "台上的人自己应了，台下就插不上嘴。",
+          "when": {
+            "flag": "cs07_mid_fought"
+          }
+        },
+        {
+          "id": "cs0702_win4",
+          "speaker": "leader",
+          "text": "锋再清一次。仪典，仍我应。",
+          "when": {
+            "flag": "cs07_mid_fought"
+          }
+        },
+        {
+          "id": "cs07b_br_lost",
+          "speaker": "旁白",
+          "text": "锋收回来。宗谱纸还钉着。仪典那拨，没散。",
+          "when": {
+            "all": [
+              {
+                "flag": "cs07_02_mid_lost"
+              },
+              {
+                "not_flag": "cs07_02_mid_fought"
+              }
+            ]
+          }
         }
       ],
       "next": "tavern",
@@ -663,9 +820,64 @@
           "text": "宗板前安静。安静里只剩两道选择题。"
         },
         {
+          "id": "cs07b_tv_x17",
+          "speaker": "旁白",
+          "text": "酒馆有人议入谱。议声忽高忽低。"
+        },
+        {
+          "id": "cs07b_tv_x18",
+          "speaker": "老管事",
+          "text": "高声的多半进不去。"
+        },
+        {
+          "id": "cs07b_tv_x19",
+          "speaker": "leader",
+          "text": "我听低声的。"
+        },
+        {
           "id": "cs07b_tv_17",
           "speaker": "老管事",
           "text": "选完入柜。宗谱柜门会响。"
+        },
+        {
+          "id": "cs0702_ret_mv1",
+          "speaker": "旁白",
+          "text": "宗谱笑话讲到绶带，有人把带子比成裤腰。"
+        },
+        {
+          "id": "cs0702_ret_mv2",
+          "speaker": "掌柜",
+          "text": "裤腰笑话到此为止。"
+        },
+        {
+          "id": "cs0702_ret_mv3",
+          "speaker": "岁吏",
+          "text": "止住。回堡。"
+        },
+        {
+          "id": "cs0702_tvn1",
+          "speaker": "掌柜",
+          "text": "第二问那一锋，酒更浅——浅着再敬。"
+        },
+        {
+          "id": "cs0702_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "催影没了。没了，才有空位。"
+        },
+        {
+          "id": "cs0702_tvn3",
+          "speaker": "听回",
+          "text": "两粒月份并排的事，有人记进袖里。"
+        },
+        {
+          "id": "cs0702_tvn4",
+          "speaker": "leader",
+          "text": "再应过。酒浅。名，仍自己的。"
+        },
+        {
+          "id": "cs0702_ret_mv4",
+          "speaker": "leader",
+          "text": "回堡钉宗谱。"
         }
       ],
       "actions": [
@@ -819,6 +1031,21 @@
           "id": "cs07b_ld_18",
           "speaker": "石垒·晚担",
           "text": "留下空，才有人认得住。"
+        },
+        {
+          "id": "cs07b_ld_x19",
+          "speaker": "旁白",
+          "text": "谱末留白。白比墨金贵。"
+        },
+        {
+          "id": "cs07b_ld_x20",
+          "speaker": "槐里·青禾",
+          "text": "留白是给真名的。"
+        },
+        {
+          "id": "cs07b_ld_x21",
+          "speaker": "leader",
+          "text": "今日不填假。"
         },
         {
           "id": "cs07b_ld_19",

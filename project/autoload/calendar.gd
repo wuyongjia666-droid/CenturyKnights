@@ -50,6 +50,16 @@ func _install_month_bus() -> void:
 func label() -> String:
 	return Locale.t("year_month", [year, month])
 
+## March season band from month (spring 3–5 … winter 12/1/2).
+func season_id() -> String:
+	if month >= 3 and month <= 5:
+		return "spring"
+	if month >= 6 and month <= 8:
+		return "summer"
+	if month >= 9 and month <= 11:
+		return "autumn"
+	return "winter"
+
 ## 推进前预告（X5）
 func forecast(months: int = 1) -> Array:
 	var events: Array = []

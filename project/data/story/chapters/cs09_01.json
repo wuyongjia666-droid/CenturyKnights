@@ -102,6 +102,21 @@
           "text": "酒馆圈等着血验选题。选题公开，扯皮少。"
         },
         {
+          "id": "cs09_yd_y17",
+          "speaker": "旁白",
+          "text": "血验灯晃了一下。"
+        },
+        {
+          "id": "cs09_yd_y18",
+          "speaker": "石垒·晚担",
+          "text": "晃的是手，不是血。"
+        },
+        {
+          "id": "cs09_yd_y19",
+          "speaker": "leader",
+          "text": "血要稳。"
+        },
+        {
           "id": "cs09_yd_7",
           "speaker": "leader",
           "text": "栏挂上了。去看血验。"
@@ -196,6 +211,21 @@
           "id": "cs09_blood_x9",
           "speaker": "老管事",
           "text": "边毛是急。急点进册，以后当众脸红。"
+        },
+        {
+          "id": "cs09_bl_y16",
+          "speaker": "旁白",
+          "text": "册上旧渍沉底。"
+        },
+        {
+          "id": "cs09_bl_y17",
+          "speaker": "石垒·晚担",
+          "text": "沉底的不是新泼。"
+        },
+        {
+          "id": "cs09_bl_y18",
+          "speaker": "leader",
+          "text": "新泼的不认。"
         },
         {
           "id": "cs09_bl_6",
@@ -294,9 +324,59 @@
           "text": "墙牌硬。硬牌撕起来，手会记得疼。"
         },
         {
+          "id": "cs09_hg_y16",
+          "speaker": "旁白",
+          "text": "血验灯晃了一下。"
+        },
+        {
+          "id": "cs09_hg_y17",
+          "speaker": "石垒·晚担",
+          "text": "晃的是手，不是血。"
+        },
+        {
+          "id": "cs09_hg_y18",
+          "speaker": "leader",
+          "text": "血要稳。"
+        },
+        {
           "id": "cs09_hg_6",
           "speaker": "leader",
           "text": "两行都留。去门廊。"
+        },
+        {
+          "id": "cs0901_vis_mv1",
+          "speaker": "旁白",
+          "text": "血验灯下，沙漏沙粒像细血珠——其实是影。"
+        },
+        {
+          "id": "cs0901_vis_mv2",
+          "speaker": "书记官",
+          "text": "影不是血。血要另验。"
+        },
+        {
+          "id": "cs0901_vis_mv3",
+          "speaker": "槐里·青禾",
+          "text": "另验前，月份先走一遭。"
+        },
+        {
+          "id": "cs0901_vst1",
+          "speaker": "岁吏",
+          "text": "月份从血验巾角滴过一星。星干了，月份才算走完。"
+        },
+        {
+          "id": "cs0901_vst2",
+          "speaker": "书记官",
+          "text": "名册边上沙漏，最怕湿墨。"
+        },
+        {
+          "id": "cs0901_vst3",
+          "speaker": "leader",
+          "text": "月份干过。名，我自己签。"
+        },
+        {
+          "id": "cs0901_vis_mv4",
+          "speaker": "leader",
+          "text": "走一遭。去看。"
         }
       ],
       "actions": [
@@ -420,6 +500,83 @@
           "id": "cs09_bridge_x9",
           "speaker": "掌柜",
           "text": "圈还在墙上。圈不等短笑落地。"
+        },
+        {
+          "id": "cs09_mid_y18",
+          "speaker": "旁白",
+          "text": "册上旧渍沉底。"
+        },
+        {
+          "id": "cs09_mid_y19",
+          "speaker": "石垒·晚担",
+          "text": "沉底的不是新泼。"
+        },
+        {
+          "id": "cs09_mid_y20",
+          "speaker": "leader",
+          "text": "新泼的不认。"
+        },
+        {
+          "id": "cs0901_mid_mv1",
+          "speaker": "旁白",
+          "text": "血验册翻开，旧渍在灯下发暗，像沉在水底。"
+        },
+        {
+          "id": "cs0901_mid_mv2",
+          "speaker": "书记官",
+          "text": "沉底的旧，比新泼的老实。"
+        },
+        {
+          "id": "cs0901_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "新泼爱冒充旧。冒充最要打。"
+        },
+        {
+          "id": "cs0901_mid_mv4",
+          "speaker": "槐里·青禾",
+          "text": "打之前先问清：谁的血，谁的名。"
+        },
+        {
+          "id": "cs0901_mid_mv5",
+          "speaker": "掌柜",
+          "text": "墙牌旁那拨，专卖新泼当旧。"
+        },
+        {
+          "id": "cs0901_mid_mv6",
+          "speaker": "leader",
+          "text": "新泼不认。锋问明白。"
+        },
+        {
+          "id": "cs0901_win1",
+          "speaker": "旁白",
+          "text": "锋定。血验问声清了，墙牌旁卖新泼的退了。",
+          "when": {
+            "flag": "cs09_mid_fought"
+          }
+        },
+        {
+          "id": "cs0901_win2",
+          "speaker": "掌柜",
+          "text": "新泼当旧的，今晚卖不出去。",
+          "when": {
+            "flag": "cs09_mid_fought"
+          }
+        },
+        {
+          "id": "cs0901_win3",
+          "speaker": "槐里·青禾",
+          "text": "谁的血，谁的名——问清了。",
+          "when": {
+            "flag": "cs09_mid_fought"
+          }
+        },
+        {
+          "id": "cs0901_win4",
+          "speaker": "leader",
+          "text": "锋问明白。血，我认自己的。",
+          "when": {
+            "flag": "cs09_mid_fought"
+          }
         },
         {
           "id": "cs09_mid_lost",
@@ -643,9 +800,64 @@
           "text": "圈选偏，旗角先响。响了就停手。"
         },
         {
+          "id": "cs09_tavern_y16",
+          "speaker": "旁白",
+          "text": "血验灯晃了一下。"
+        },
+        {
+          "id": "cs09_tavern_y17",
+          "speaker": "石垒·晚担",
+          "text": "晃的是手，不是血。"
+        },
+        {
+          "id": "cs09_tavern_y18",
+          "speaker": "leader",
+          "text": "血要稳。"
+        },
+        {
           "id": "cs09_tavern_x9",
           "speaker": "旁白",
           "text": "你还没选。没选时，罩边最清楚。"
+        },
+        {
+          "id": "cs0901_ret_mv1",
+          "speaker": "旁白",
+          "text": "血验被说成验酒。酒桌上一阵起哄。"
+        },
+        {
+          "id": "cs0901_ret_mv2",
+          "speaker": "掌柜",
+          "text": "起哄验不了血。"
+        },
+        {
+          "id": "cs0901_ret_mv3",
+          "speaker": "书记官",
+          "text": "血名回堡钉。"
+        },
+        {
+          "id": "cs0901_tvn1",
+          "speaker": "掌柜",
+          "text": "血验那一锋，酒要干净——杯也要净。"
+        },
+        {
+          "id": "cs0901_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "卖泼的退了。退了，才敢碰杯。"
+        },
+        {
+          "id": "cs0901_tvn3",
+          "speaker": "听回",
+          "text": "巾角那星干了。干了才像真验过。"
+        },
+        {
+          "id": "cs0901_tvn4",
+          "speaker": "leader",
+          "text": "血清。名清。酒，可以。"
+        },
+        {
+          "id": "cs0901_ret_mv4",
+          "speaker": "leader",
+          "text": "回堡钉名。"
         }
       ],
       "actions": [
@@ -805,6 +1017,21 @@
           "id": "cs09_led_6",
           "speaker": "leader",
           "text": "栏与验，并排。谁来认嗣位，先念完。"
+        },
+        {
+          "id": "cs09_led_y19",
+          "speaker": "旁白",
+          "text": "册上旧渍沉底。"
+        },
+        {
+          "id": "cs09_led_y20",
+          "speaker": "石垒·晚担",
+          "text": "沉底的不是新泼。"
+        },
+        {
+          "id": "cs09_led_y21",
+          "speaker": "leader",
+          "text": "新泼的不认。"
         },
         {
           "id": "cs09_led_7",

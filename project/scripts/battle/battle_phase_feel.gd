@@ -240,3 +240,112 @@ static func draw_settle_flash(host, overlay) -> void:
 	var rect := Rect2(host.ORIGIN + Vector2(cell) * float(host.CELL), Vector2(float(host.CELL) - 2.0, float(host.CELL) - 2.0))
 	overlay.draw_rect(rect, Color(col, 0.18 * a))
 	overlay.draw_rect(rect, Color(col, 0.85 * a), false, 2.5)
+
+
+## ---- Y1-A T-P9: battle-end win/lose banner + crest pulse ----
+const END_FLASH_SEC := 1.65
+const END_FLASH_MSEC := 1650
+
+
+## Pure: locale key for end banner.
+static func end_locale_key(win: bool) -> String:
+	return "battle_win" if win else "battle_lose"
+
+
+## Pure: crest modulate for winner/loser side during end flash.
+## side: "player" | "enemy". Winner stays bright; loser dims.
+static func crest_modulate_for_end(win: bool, side: String, alpha: float = 1.0) -> Color:
+	var a: float = clampf(alpha, 0.0, 1.0)
+	var player_won: bool = win
+	var is_player: bool = side == "player"
+	var winner: bool = (player_won and is_player) or (not player_won and not is_player)
+	if winner:
+		# Gold lift on winner crest
+		return Color(1.0, 0.92 + 0.08 * a, 0.55 + 0.20 * a, 1.0)
+	# Loser crest dims toward gray
+	var g: float = 0.45 + 0.20 * (1.0 - a)
+	return Color(g, g, g * 1.05, 0.55 + 0.25 * (1.0 - a))
+
+
+## Stamp end flash; clear settle/enemy actor chrome so the banner owns the stage.
+static func note_battle_end(host, win: bool) -> void:
+	host.set_meta("m_end_flash", {"win": win, "msec": Time.get_ticks_msec()})
+	host._turn_flash = maxf(float(host._turn_flash), END_FLASH_SEC * 0.35)
+	host._shake = maxf(float(host._shake), 0.55 if win else 0.40)
+	if host.has_meta("m_settle_flash"):
+		host.remove_meta("m_settle_flash")
+	if host.has_meta("m_enemy_actor_cell"):
+		host.remove_meta("m_enemy_actor_cell")
+	if host.has_meta("m_enemy_actor_msec"):
+		host.remove_meta("m_enemy_actor_msec")
+	apply_end_crest_pulse(host, win)
+
+
+static func end_alpha(host, now_msec: int = -1) -> float:
+	if not host.has_meta("m_end_flash"):
+		return 0.0
+	var flash: Dictionary = host.get_meta("m_end_flash")
+	var t0: int = int(flash.get("msec", 0))
+	var now: int = Time.get_ticks_msec() if now_msec < 0 else now_msec
+	var u: float = float(now - t0) / float(END_FLASH_MSEC)
+	if u < 0.0 or u >= 1.0:
+		return 0.0
+	# Hold bright then ease out
+	if u < 0.35:
+		return 1.0
+	return 1.0 - ((u - 0.35) / 0.65)
+
+
+static func draw_end_banner(host, overlay) -> void:
+	var a: float = end_alpha(host)
+	if a <= 0.0 or overlay == null or not host.has_meta("m_end_flash"):
+		return
+	var flash: Dictionary = host.get_meta("m_end_flash")
+	var win: bool = bool(flash.get("win", false))
+	var txt: String = Locale.t(end_locale_key(win))
+	if win:
+		txt = "★ " + txt + " ★"
+	var mobile: bool = DeviceProfile.is_mobile()
+	var land: bool = mobile and host.has_method("_mobile_landscape") and bool(host._mobile_landscape())
+	var stage: Rect2 = host.get_meta("m_board_area", host.BOARD_AREA) if host.has_meta("m_board_area") else host.BOARD_AREA
+	var z: float = float(host._board_zoom) if float(host._board_zoom) > 0.001 else 1.0
+	var band: Rect2 = banner_rect_local(stage, host._board_pan, z, mobile, land)
+	# Slightly taller end band
+	band.size.y *= 1.12
+	band.position.y -= band.size.y * 0.06
+	var bandc: Color = UIKit.ACCENT if win else UIKit.DANGER
+	overlay.draw_rect(band, Color(0.02, 0.03, 0.05, 0.82 * a))
+	var edge: float = maxf(1.5, 2.5 / z)
+	overlay.draw_rect(Rect2(band.position, Vector2(band.size.x, edge)), Color(bandc, 0.90 * a))
+	overlay.draw_rect(Rect2(band.position + Vector2(0.0, band.size.y - edge), Vector2(band.size.x, edge)), Color(bandc, 0.90 * a))
+	# Soft fill pulse
+	overlay.draw_rect(
+		Rect2(band.position + Vector2(0.0, edge), Vector2(band.size.x, band.size.y - edge * 2.0)),
+		Color(bandc, 0.10 * a)
+	)
+	var bc: Vector2 = band.position + band.size * 0.5
+	var font_px: int = maxi(16, int(round(float(banner_font_px(mobile, land) + 2) / z)))
+	var tf := UIKit.font("regular")
+	var tsz := tf.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, font_px)
+	overlay.draw_string(tf, bc + Vector2(-tsz.x * 0.5, font_px * 0.35), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, font_px, Color(UIKit.TEXT, a))
+
+
+## Apply winner lift / loser dim on BattleHudCrestStrip. Lives here (not heraldry_chrome)
+## so heraldry hub PRs do not conflict with battle-end feel. Never steals taps.
+static func apply_end_crest_pulse(host, win: bool, alpha: float = 1.0) -> void:
+	if host == null:
+		return
+	var strip = host.get_node_or_null("BattleHudCrestStrip")
+	if strip == null:
+		return
+	var a: float = clampf(alpha, 0.05, 1.0)
+	var pa = strip.find_child("PlayerArms", true, false)
+	var ea = strip.find_child("EnemyArms", true, false)
+	if pa != null and pa is CanvasItem:
+		(pa as CanvasItem).modulate = crest_modulate_for_end(win, "player", a)
+	if ea != null and ea is CanvasItem:
+		(ea as CanvasItem).modulate = crest_modulate_for_end(win, "enemy", a)
+	strip.set_meta("end_pulse_win", win)
+	if strip is Control:
+		(strip as Control).mouse_filter = Control.MOUSE_FILTER_IGNORE
+
