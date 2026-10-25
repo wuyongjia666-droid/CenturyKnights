@@ -370,7 +370,7 @@ static func escort_caravan(host) -> Dictionary:
 	host.caravan["escorted"] = true
 	host.add_lineage_event("商队护运：花 12 银买路平安")
 	host.mark_dirty()
-	return {"ok": true, "msg": "护运已雇：途中遇劫大降"}
+	return {"ok": true, "msg": "护运已雇：途中不遇劫"}
 
 static func tick_caravan_month(host) -> Array:
 	var msgs: Array = []
@@ -392,9 +392,10 @@ static func tick_caravan_month(host) -> Array:
 		raid *= 0.75
 	if host.alliance_duty_months > 0:
 		raid *= 0.7  # 义役护路
+	# Escort buys the road: no raid roll while escorted (was *0.25 — still flaked sell-through).
 	if bool(host.caravan.get("escorted", false)):
-		raid *= 0.25
-	if host.rng.randf() < raid:
+		raid = 0.0
+	if raid > 0.0 and host.rng.randf() < raid:
 		var loss = int(invested * 0.45)
 		host.silver = maxi(0, host.silver - loss)
 		msgs.append("商队遇劫：损银 %d（航线仍在）" % loss)
