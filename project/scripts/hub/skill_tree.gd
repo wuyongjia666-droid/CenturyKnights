@@ -63,8 +63,8 @@ func _ready() -> void:
 ## 22px floor cannot land the points line on the page description.
 
 func _place_skill_crests(mobile: bool = false) -> void:
-	## Fat skill-tree chrome: 团徽 header + 旗徽 strip.
-	for n in ["CastleArms", "CastleBannerStrip"]:
+	## Fat skill-tree chrome: 团徽 header + 旗徽 strip + SkillCrestStrip/PersonArms.
+	for n in ["CastleArms", "CastleBannerStrip", "SkillCrestStrip"]:
 		var oldn := get_node_or_null(n)
 		if oldn:
 			oldn.name = "_%sDying" % n
@@ -78,6 +78,10 @@ func _place_skill_crests(mobile: bool = false) -> void:
 	var strip_x := (w - 140.0) if mob else 1100.0
 	CKHeraldryChrome.place_company_header(self, Vector2(arms_x, at_y), hdr)
 	CKHeraldryChrome.place_castle_banner_strip(self, Vector2(strip_x, at_y), hdr, ban)
+	var sat := Vector2(1020, at_y) if not mob else Vector2(maxf(20.0, w - 240.0), at_y)
+	CKHeraldryChrome.place_skill_crest_strip(self, sat, Vector2(36, 44) if not mob else Vector2(32, 40), Vector2(24, 34))
+	if _sel != null and _detail != null:
+		CKHeraldryChrome.attach_skill_person_arms(_detail, _sel, Vector2(28, 34) if not mob else Vector2(26, 32))
 
 func apply_mobile_layout() -> void:
 	if not MobilePage.active(self):
@@ -141,6 +145,7 @@ func _refresh() -> void:
 	CKPageKit.drag_through(_people)
 	_fill_columns()
 	_fill_detail()
+	_place_skill_crests()
 	UIFX.wire_tree(self)
 
 func _fill_columns() -> void:
@@ -218,7 +223,7 @@ func _node(sk: Dictionary) -> Button:
 	var col: Color = UIKit.OK if owned else (UIKit.ACCENT if ok else UIKit.TEXT_FAINT)
 	b.add_theme_stylebox_override("normal", UIKit.flat_box(Color(col, 0.10), Color(col, 0.55), 8))
 	b.add_theme_color_override("font_color", UIKit.TEXT if owned or ok else UIKit.TEXT_DIM)
-	b.pressed.connect(func(): _sid = sid; Sfx.click(); _fill_columns(); _fill_detail(); UIFX.wire_tree(self))
+	b.pressed.connect(func(): _sid = sid; Sfx.click(); _fill_columns(); _fill_detail(); _place_skill_crests(); UIFX.wire_tree(self))
 	return b
 
 func _fill_detail() -> void:

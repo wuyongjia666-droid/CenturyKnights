@@ -63,6 +63,7 @@ func _ready() -> void:
 		var pr := UIKit.make_portrait_rect(c, 36)
 		pr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		h.add_child(pr)
+		CKHeraldryChrome.attach_blood_queue_arms(h, c, Vector2(26, 32))
 		var said := Locale.t("lb_bt_row", [c.name, c.rank_name(), c.age]) + ("" if i < can else Locale.t("lb_bt_wait_money"))
 		h.add_child(CKPageKit.text(said, UIKit.TEXT if i < can else UIKit.TEXT_DIM, 14, 300))
 		list.add_child(r[0])
@@ -102,8 +103,8 @@ func _ready() -> void:
 
 
 func _place_blood_crests(mobile: bool = false) -> void:
-	## Fat blood-test chrome: 团徽 header + 旗徽 strip.
-	for n in ["CastleArms", "CastleBannerStrip"]:
+	## Fat blood-test chrome: 团徽 header + 旗徽 strip + BloodCrestStrip.
+	for n in ["CastleArms", "CastleBannerStrip", "BloodCrestStrip"]:
 		var oldn := get_node_or_null(n)
 		if oldn:
 			oldn.name = "_%sDying" % n
@@ -117,6 +118,8 @@ func _place_blood_crests(mobile: bool = false) -> void:
 	var strip_x := (w - 140.0) if mob else 1100.0
 	CKHeraldryChrome.place_company_header(self, Vector2(arms_x, at_y), hdr)
 	CKHeraldryChrome.place_castle_banner_strip(self, Vector2(strip_x, at_y), hdr, ban)
+	var bat := Vector2(1020, at_y) if not mob else Vector2(maxf(20.0, w - 240.0), at_y)
+	CKHeraldryChrome.place_blood_crest_strip(self, bat, Vector2(36, 44) if not mob else Vector2(32, 40), Vector2(24, 34))
 
 func apply_mobile_layout() -> void:
 	if not MobilePage.active(self):

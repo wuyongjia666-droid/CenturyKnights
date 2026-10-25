@@ -1,5 +1,5 @@
 extends Node
-## Fat heraldry E2E: CastleArms + CastleBannerStrip. Desktop + mobile.
+## Fat heraldry E2E: skill tree crest (desk + mobile).
 
 const SCN := preload("res://scenes/hub/skill_tree.tscn")
 var _fails: Array = []
@@ -9,11 +9,11 @@ func _ready() -> void:
 	await _run_desktop()
 	await _run_mobile()
 	if _fails.is_empty():
-		print("SKILL TREE CREST CHROME PASS")
+		print("SKILL TREE CREST PASS")
 		get_tree().quit(0)
 	else:
 		for f in _fails:
-			print("FAIL skill_tree_crest_check: ", f)
+			print("FAIL skill tree crest: ", f)
 		get_tree().quit(1)
 
 func _ok(cond: bool, msg: String) -> void:
@@ -26,18 +26,26 @@ func _settle(n: int = 6) -> void:
 		await get_tree().process_frame
 
 func _boot() -> void:
-	GameState.new_game("纪事徽", "灰旗", GameState.crest_color)
+	GameState.new_game("市技血", "灰旗", GameState.crest_color)
 	GameState.set_flag("chapter0_done", true)
 	UnlockSchedule.install()
 	World.events_enabled = false
 	World.rivals_enabled = false
 	GameState.silver = 8000
-	GameState.iron = 40
 	GameState.food = 40
+	GameState.iron = 40
+	GameState.skill_points = 3
 
 func _assert_page(page: Node, where: String) -> void:
 	_ok(page.find_child("CastleArms", true, false) != null, "%s CastleArms" % where)
 	_ok(page.find_child("CastleBannerStrip", true, false) != null, "%s CastleBannerStrip" % where)
+	var sk = page.find_child("SkillCrestStrip", true, false)
+	_ok(sk != null, "%s SkillCrestStrip" % where)
+	if sk != null:
+		var bn = sk.find_child("SkillBanner", true, false)
+		_ok(bn != null and str(bn.get_meta("arms_kind", "")) == "lb_skill_arms", "%s SkillBanner" % where)
+	_ok(page.find_child("SkillPersonArms", true, false) != null, "%s SkillPersonArms" % where)
+
 
 func _run_desktop() -> void:
 	OS.set_environment("CK_FORCE_MOBILE", "0")
