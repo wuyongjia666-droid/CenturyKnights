@@ -760,3 +760,102 @@ static func sync_battle_hud_crests(host) -> void:
 		host, battle_foe_nation_for(host), vp, insets, mobile, land
 	)
 
+## Territory / domain shield (领地徽). Same plate as city nation arms; distinct node name for atlas travel/camp.
+static func make_territory_arms(nid: String, size: Vector2 = Vector2(40, 48)) -> TextureRect:
+	var tr := TextureRect.new()
+	tr.name = "TerritoryArms"
+	tr.texture = nation_shield(str(nid), int(size.x), int(size.y))
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	tr.custom_minimum_size = size
+	tr.size = size
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tr.tooltip_text = Locale.t("lb_territory_arms")
+	tr.set_meta("arms_kind", "lb_territory_arms")
+	tr.set_meta("arms_core", CKHeraldry.core_key(nation_spec(str(nid))))
+	tr.set_meta("nation_id", str(nid))
+	return tr
+
+## Atlas travel HUD / halt / stopover: 团徽 + 领地徽 (nation underfoot or along the route).
+## Host name TravelCrestStrip.
+static func place_travel_crest_strip(parent: Node, at: Vector2, territory_nation: String = "", shield: Vector2 = Vector2(36, 44)) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("TravelCrestStrip")
+	if old:
+		old.name = "_TravelCrestStripDying"
+		old.queue_free()
+	var host := Control.new()
+	host.name = "TravelCrestStrip"
+	host.position = at
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var arms := make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var w := shield.x
+	var nid := str(territory_nation)
+	if nid != "":
+		var terr := make_territory_arms(nid, shield)
+		terr.position = Vector2(shield.x + 8.0, 0)
+		host.add_child(terr)
+		w = shield.x * 2.0 + 8.0
+	host.size = Vector2(w, shield.y)
+	host.set_meta("nation_id", nid)
+	parent.add_child(host)
+	return host
+
+## Night-camp / road-event crest strip: 团徽 + 营地所在邦的领地徽.
+## Host name CampCrestStrip.
+static func place_camp_crest_strip(parent: Node, at: Vector2, territory_nation: String = "", shield: Vector2 = Vector2(36, 44)) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("CampCrestStrip")
+	if old:
+		old.name = "_CampCrestStripDying"
+		old.queue_free()
+	var host := Control.new()
+	host.name = "CampCrestStrip"
+	host.position = at
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var arms := make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var w := shield.x
+	var nid := str(territory_nation)
+	if nid != "":
+		var terr := make_territory_arms(nid, shield)
+		terr.position = Vector2(shield.x + 8.0, 0)
+		host.add_child(terr)
+		w = shield.x * 2.0 + 8.0
+	host.size = Vector2(w, shield.y)
+	host.set_meta("nation_id", nid)
+	parent.add_child(host)
+	return host
+
+## Road encounter crest strip: 团徽 + 敌徽 (foe nation of the clash). Distinct from AftermathCrestStrip.
+## Host name EncounterCrestStrip.
+static func place_encounter_crest_strip(parent: Node, at: Vector2, foe_nation: String = "", shield: Vector2 = Vector2(36, 44)) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("EncounterCrestStrip")
+	if old:
+		old.name = "_EncounterCrestStripDying"
+		old.queue_free()
+	var host := Control.new()
+	host.name = "EncounterCrestStrip"
+	host.position = at
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var arms := make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var w := shield.x
+	var nid := str(foe_nation)
+	if nid != "":
+		var foe := make_nation_arms(nid, shield)
+		foe.position = Vector2(shield.x + 8.0, 0)
+		host.add_child(foe)
+		w = shield.x * 2.0 + 8.0
+	host.size = Vector2(w, shield.y)
+	host.set_meta("nation_id", nid)
+	parent.add_child(host)
+	return host
