@@ -68,7 +68,9 @@ static func stamp(c: CKCharacter, job_id: String, city: String) -> Dictionary:
 	seals.append(job_id)
 	c.blood_meta["job_seals"] = seals
 	GameState.mark_dirty()
-	return {"ok": true, "msg": Locale.t("js_820fde2c") % [c.name, str(seal_row(job_id).get("name", job_id))]}
+	var seal_nm := str(seal_row(job_id).get("name", job_id))
+	CKEconomyState.month_echo_note("job_seal", Locale.t("lb_echo_job_seal", [c.name, seal_nm]))
+	return {"ok": true, "msg": Locale.t("js_820fde2c") % [c.name, seal_nm]}
 
 
 ## try_promote 用：特殊职业没印不让转；其它职业不管。

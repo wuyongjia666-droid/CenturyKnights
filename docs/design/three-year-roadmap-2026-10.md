@@ -147,6 +147,7 @@
 | 2026-10-25 | Y1-B 属地月回响加深：suite 改走 Calendar→World._territory_month 真路径（禁手动 inject） |
 | 2026-10-25 | Y1-B 联姻→身孕→诞下交叉链：paced marry → pregnancy echo → deliver → birth echo + heir links + estates/hourglass；`month_echo_marry_preg_birth_check` |
 | 2026-10-25 | Y1-B 春令联姻池月回响：SPRING_MONTH refresh → `month_echo.spring` + estates/hourglass 回读 + `month_echo_spring_check` |
+| 2026-10-25 | 内容季 #10：中篇《印上的灯》（≥1.2万汉字）+ 圣经 + 可玩章 `cs10_01` + playable_s10；`CKJobSeals.stamp` → `month_echo.job_seal` + estates/hourglass 回读 + `month_echo_job_seal_check` |
 | 2026-10-25 | Y1-B 有喜月回响：conception/begin_pregnancy → `month_echo.pregnancy` + estates/hourglass 回读 + `month_echo_pregnancy_check` |
 | 2026-10-25 | Y1-B 敌宅月回响：rival rumor/deal → `month_echo.rival` + estates/hourglass 回读 + `month_echo_rival_check` |
 | 2026-10-25 | Y1-B 丰收月回响：harvest 月结 → `month_echo.harvest` + estates/hourglass 回读 + `month_echo_harvest_check` |

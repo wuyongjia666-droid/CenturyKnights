@@ -14,6 +14,7 @@
 | #7 | [`season-07/`](./season-07/) | `project/data/content_seasons/season_07.json` | **中篇+可玩章 `cs07_01`**（仪典上的灯；认宗仪典） |
 | #8 | [`season-08/`](./season-08/) | `project/data/content_seasons/season_08.json` | **中篇+可玩章 `cs08_01`**（祖祠上的灯；祖祠） |
 | #9 | [`season-09/`](./season-09/) | `project/data/content_seasons/season_09.json` | **中篇+可玩章 `cs09_01`**（血验上的灯；血验） |
+| #10 | [`season-10/`](./season-10/) | `project/data/content_seasons/season_10.json` | **中篇+可玩章 `cs10_01`**（印上的灯；职印） |
 
 每季目录约定：
 
