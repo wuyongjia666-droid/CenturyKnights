@@ -1,6 +1,6 @@
 extends Node
-## Y1-B: Calendar retire / death / succession → house_mods.month_echo;
-## estates + hourglass EchoLine_retire / EchoLine_death / EchoLine_succession 回读.
+## Y1-B: Calendar adult / retire / death / succession → house_mods.month_echo;
+## estates + hourglass EchoLine_adult / EchoLine_retire / EchoLine_death / EchoLine_succession 回读.
 
 func _ready() -> void:
 	var err := await _run()
@@ -20,7 +20,16 @@ func _run() -> String:
 	GameState.house_mods.erase("month_echo")
 	GameState.add_rep("ashland", 80)
 
-	var err := _audit_retire()
+	var err := _audit_adult()
+	if err != "":
+		return err
+	err = await _audit_panel("adult", "res://scenes/hub/estates.tscn", "MonthEchoPanel")
+	if err != "":
+		return err
+	err = await _audit_panel("adult", "res://scenes/hub/hourglass.tscn", "")
+	if err != "":
+		return err
+	err = _audit_retire()
 	if err != "":
 		return err
 	err = await _audit_panel("retire", "res://scenes/hub/estates.tscn", "MonthEchoPanel")
@@ -55,6 +64,32 @@ func _next_bday_month() -> int:
 	if m > 12:
 		m = 1
 	return m
+
+
+func _audit_adult() -> String:
+	GameState.house_mods.erase("month_echo")
+	var c := _roster("echo_adult", Calendar.ADULT_AGE - 1)
+	c.is_child = true
+	c.in_roster = false
+	c.birthday_month = _next_bday_month()
+	c.retired = false
+	c.is_leader = false
+	c.alive = true
+	Calendar.advance(1)
+	if c.is_child:
+		return "adult did not fire age=%d" % c.age
+	if c.age != Calendar.ADULT_AGE:
+		return "adult age expected %d got %d" % [Calendar.ADULT_AGE, c.age]
+	var snap: Dictionary = CKEconomyState.month_echo_snapshot()
+	var tx := str(snap.get("adult", ""))
+	if tx == "":
+		return "adult echo empty: %s" % str(snap)
+	if tx.find(c.name) < 0:
+		return "adult echo missing name: %s" % tx
+	if tx.find("授旗") < 0 and tx.find("came of age") < 0:
+		return "adult echo wording: %s" % tx
+	print("month-echo adult ok line=%s" % tx)
+	return ""
 
 
 func _audit_retire() -> String:

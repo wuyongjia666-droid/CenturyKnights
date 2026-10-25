@@ -142,6 +142,7 @@
 
 | 日期 | 变更 |
 |------|------|
+| 2026-10-25 | Y1-B 授旗成年月回响：child→adult → `month_echo.adult` + estates/hourglass 回读；`month_echo_life_check` 补齐 adult |
 | 2026-10-25 | Y1-B 春令联姻池月回响：SPRING_MONTH refresh → `month_echo.spring` + estates/hourglass 回读 + `month_echo_spring_check` |
 | 2026-10-25 | Y1-B 有喜月回响：conception/begin_pregnancy → `month_echo.pregnancy` + estates/hourglass 回读 + `month_echo_pregnancy_check` |
 | 2026-10-25 | Y1-B 敌宅月回响：rival rumor/deal → `month_echo.rival` + estates/hourglass 回读 + `month_echo_rival_check` |
