@@ -111,6 +111,21 @@
           "text": "我走稳处。"
         },
         {
+          "id": "cs09b_ya_y20",
+          "speaker": "旁白",
+          "text": "血验灯晃了一下。"
+        },
+        {
+          "id": "cs09b_ya_y21",
+          "speaker": "石垒·晚担",
+          "text": "晃的是手，不是血。"
+        },
+        {
+          "id": "cs09b_ya_y22",
+          "speaker": "leader",
+          "text": "血要稳。"
+        },
+        {
           "id": "cs09b_ya_16",
           "speaker": "槐里·青禾",
           "text": "诚实比能喊的血名贵。"
@@ -223,6 +238,21 @@
           "text": "新泼的我不认。"
         },
         {
+          "id": "cs09b_bl_y20",
+          "speaker": "旁白",
+          "text": "册上旧渍沉底。"
+        },
+        {
+          "id": "cs09b_bl_y21",
+          "speaker": "石垒·晚担",
+          "text": "沉底的不是新泼。"
+        },
+        {
+          "id": "cs09b_bl_y22",
+          "speaker": "leader",
+          "text": "新泼的不认。"
+        },
+        {
           "id": "cs09b_bl_9",
           "speaker": "老旗手",
           "text": "旗布完整。旗角不绣喊出来的血名。"
@@ -333,6 +363,21 @@
           "id": "cs09b_ho_x19",
           "speaker": "leader",
           "text": "去沙漏。亲手启。"
+        },
+        {
+          "id": "cs09b_ho_y20",
+          "speaker": "旁白",
+          "text": "血验灯晃了一下。"
+        },
+        {
+          "id": "cs09b_ho_y21",
+          "speaker": "石垒·晚担",
+          "text": "晃的是手，不是血。"
+        },
+        {
+          "id": "cs09b_ho_y22",
+          "speaker": "leader",
+          "text": "血要稳。"
         },
         {
           "id": "cs09b_ho_8",
@@ -482,6 +527,21 @@
           "id": "cs09b_br_x20",
           "speaker": "leader",
           "text": "试锋。真信优先。"
+        },
+        {
+          "id": "cs09b_br_y21",
+          "speaker": "旁白",
+          "text": "册上旧渍沉底。"
+        },
+        {
+          "id": "cs09b_br_y22",
+          "speaker": "石垒·晚担",
+          "text": "沉底的不是新泼。"
+        },
+        {
+          "id": "cs09b_br_y23",
+          "speaker": "leader",
+          "text": "新泼的不认。"
         },
         {
           "id": "cs09b_br_18",
@@ -712,6 +772,21 @@
           "text": "我不买。"
         },
         {
+          "id": "cs09b_ta_y20",
+          "speaker": "旁白",
+          "text": "血验灯晃了一下。"
+        },
+        {
+          "id": "cs09b_ta_y21",
+          "speaker": "石垒·晚担",
+          "text": "晃的是手，不是血。"
+        },
+        {
+          "id": "cs09b_ta_y22",
+          "speaker": "leader",
+          "text": "血要稳。"
+        },
+        {
           "id": "cs09b_ta_18",
           "speaker": "旁白",
           "text": "两道验题在板上。手按上去。"
@@ -870,6 +945,21 @@
           "id": "cs09b_le_x19",
           "speaker": "leader",
           "text": "我等送达。"
+        },
+        {
+          "id": "cs09b_le_y20",
+          "speaker": "旁白",
+          "text": "册上旧渍沉底。"
+        },
+        {
+          "id": "cs09b_le_y21",
+          "speaker": "石垒·晚担",
+          "text": "沉底的不是新泼。"
+        },
+        {
+          "id": "cs09b_le_y22",
+          "speaker": "leader",
+          "text": "新泼的不认。"
         },
         {
           "id": "cs09b_le_18",

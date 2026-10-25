@@ -102,6 +102,21 @@
           "text": "酒馆墙上有圈。圈等选题，不等人喊已坐。"
         },
         {
+          "id": "cs05_ct_y17",
+          "speaker": "旁白",
+          "text": "空椅还温。温着，说明刚有人起身。"
+        },
+        {
+          "id": "cs05_ct_y18",
+          "speaker": "石垒·晚担",
+          "text": "起身的人把链子留给后来。"
+        },
+        {
+          "id": "cs05_ct_y19",
+          "speaker": "leader",
+          "text": "链仍并排。"
+        },
+        {
           "id": "cs05_ct_7",
           "speaker": "leader",
           "text": "栏挂上了。去看空椅。"
@@ -198,6 +213,21 @@
           "text": "晃眼就看不清椅边齐不齐。"
         },
         {
+          "id": "cs05_ch_y16",
+          "speaker": "旁白",
+          "text": "灯影斜过椅背。"
+        },
+        {
+          "id": "cs05_ch_y17",
+          "speaker": "石垒·晚担",
+          "text": "斜影不吓人，空名才吓。"
+        },
+        {
+          "id": "cs05_ch_y18",
+          "speaker": "leader",
+          "text": "空名不挂。"
+        },
+        {
           "id": "cs05_ch_6",
           "speaker": "leader",
           "text": "空就空着。去沙漏。"
@@ -292,6 +322,21 @@
           "id": "cs05_hourglass_x9",
           "speaker": "掌柜",
           "text": "墙牌比纸硬。硬的撕起来才有账。"
+        },
+        {
+          "id": "cs05_hg_y16",
+          "speaker": "旁白",
+          "text": "空椅还温。温着，说明刚有人起身。"
+        },
+        {
+          "id": "cs05_hg_y17",
+          "speaker": "石垒·晚担",
+          "text": "起身的人把链子留给后来。"
+        },
+        {
+          "id": "cs05_hg_y18",
+          "speaker": "leader",
+          "text": "链仍并排。"
         },
         {
           "id": "cs05_hg_6",
@@ -420,6 +465,21 @@
           "id": "cs05_bridge_x9",
           "speaker": "掌柜",
           "text": "酒馆等着。圈还在。圈不等短笑。"
+        },
+        {
+          "id": "cs05_mid_y18",
+          "speaker": "旁白",
+          "text": "灯影斜过椅背。"
+        },
+        {
+          "id": "cs05_mid_y19",
+          "speaker": "石垒·晚担",
+          "text": "斜影不吓人，空名才吓。"
+        },
+        {
+          "id": "cs05_mid_y20",
+          "speaker": "leader",
+          "text": "空名不挂。"
         },
         {
           "id": "cs05_mid_lost",
@@ -643,6 +703,21 @@
           "text": "圈选偏了，旗角会先响。"
         },
         {
+          "id": "cs05_tavern_y16",
+          "speaker": "旁白",
+          "text": "空椅还温。温着，说明刚有人起身。"
+        },
+        {
+          "id": "cs05_tavern_y17",
+          "speaker": "石垒·晚担",
+          "text": "起身的人把链子留给后来。"
+        },
+        {
+          "id": "cs05_tavern_y18",
+          "speaker": "leader",
+          "text": "链仍并排。"
+        },
+        {
           "id": "cs05_tavern_x9",
           "speaker": "旁白",
           "text": "你还没开口。没开口时，空椅最清楚。"
@@ -805,6 +880,21 @@
           "id": "cs05_led_6",
           "speaker": "leader",
           "text": "栏与椅，并排。谁来认嗣位，先念完。"
+        },
+        {
+          "id": "cs05_led_y19",
+          "speaker": "旁白",
+          "text": "灯影斜过椅背。"
+        },
+        {
+          "id": "cs05_led_y20",
+          "speaker": "石垒·晚担",
+          "text": "斜影不吓人，空名才吓。"
+        },
+        {
+          "id": "cs05_led_y21",
+          "speaker": "leader",
+          "text": "空名不挂。"
         },
         {
           "id": "cs05_led_7",

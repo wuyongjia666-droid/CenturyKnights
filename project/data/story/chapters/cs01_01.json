@@ -1,807 +1,882 @@
 {
-	"id": "cs01_01",
-	"title": "回执上的灯",
-	"legacy_index": 401,
-	"return_scene": "res://scenes/hub/castle_hub.tscn",
-	"source": "docs/content-seasons/season-01/NOVEL.md",
-	"beats": [
-		{
-			"id": "open",
-			"title": "纸先到",
-			"next": "hall",
-			"lines": [
-				{
-					"id": "cs01_open_0",
-					"speaker": "旁白",
-					"text": "灰旗堡的风往门缝里钻。院子里有人喊你旗上的那个字。",
-					"stage": {
-						"card": "一　纸先到",
-						"bg": "hall",
-						"music": "castle",
-						"camera": "wide"
-					}
-				},
-				{
-					"id": "cs01_open_1",
-					"speaker": "岁吏",
-					"text": "岁课回执。议会印，灰旗名下第一张。签收。"
-				},
-				{
-					"id": "cs01_open_2",
-					"speaker": "石垒·晚担",
-					"text": "我们交粮交饷，还交这个？"
-				},
-				{
-					"id": "cs01_open_3",
-					"speaker": "岁吏",
-					"text": "粮给陆桥。岁课给人。孩子到岁了，纸上记一笔。"
-				},
-				{
-					"id": "cs01_open_4",
-					"speaker": "岁吏",
-					"text": "不签也行。不签，这张纸会在酒馆挂七天。谁都能念。"
-				},
-				{
-					"id": "cs01_open_5",
-					"speaker": "旁白",
-					"text": "你接过纸。正面写着孩子的月日，和灰旗后面那个字。"
-				},
-				{
-					"id": "cs01_open_6",
-					"speaker": "旁白",
-					"text": "征兆那一格是空的。空得很干净。"
-				},
-				{
-					"id": "cs01_open_7",
-					"speaker": "leader",
-					"text": "空着？"
-				},
-				{
-					"id": "cs01_open_8",
-					"speaker": "岁吏",
-					"text": "验盏的人还没来。我只送纸。匣子留下，今晚驿站到人。"
-				},
-				{
-					"id": "cs01_open_x0",
-					"speaker": "旁白",
-					"text": "匣角还沾着驿路的灰。灰不丢人，丢人的是拿灰去冒灯。"
-				},
-				{
-					"id": "cs01_open_x1",
-					"speaker": "岁吏",
-					"text": "我送纸。字归验盏。印泥在后。"
-				},
-				{
-					"id": "cs01_open_x2",
-					"speaker": "石垒·晚担",
-					"text": "纸比粮先到，我就把门楣擦干净。"
-				},
-				{
-					"id": "cs01_open_x3",
-					"speaker": "leader",
-					"text": "空格先放着。别借字。"
-				},
-				{
-					"id": "cs01_open_x4",
-					"speaker": "老旗手",
-					"text": "空着的格，比填错的格干净。"
-				},
-				{
-					"id": "cs01_open_x5",
-					"speaker": "旁白",
-					"text": "风从门缝进来，把纸角掀起一指，又落下。"
-				},
-				{
-					"id": "cs01_open_x6",
-					"speaker": "岁吏",
-					"text": "落下就好。纸要平，才配进匣。"
-				},
-				{
-					"id": "cs01_open_x7",
-					"speaker": "槐里·青禾",
-					"text": "鞋还没纳完。纸可以先在桌上等。"
-				},
-				{
-					"id": "cs01_open_x8",
-					"speaker": "旁白",
-					"text": "孩子在东厢里咳嗽一声，又睡着了。"
-				},
-				{
-					"id": "cs01_open_x9",
-					"speaker": "苇原·灯影",
-					"text": "睡着比声称强。声称会醒。"
-				},
-				{
-					"id": "cs01_open_x10",
-					"speaker": "旁白",
-					"text": "回执正面的月日很清楚。清楚的是日子，不是灯。"
-				},
-				{
-					"id": "cs01_open_x11",
-					"speaker": "leader",
-					"text": "日子够硬。灯以后再说。"
-				},
-				{
-					"id": "cs01_open_9",
-					"speaker": "老旗手",
-					"text": "纸比粮先到的时候，灯就不早了。"
-				}
-			]
-		},
-		{
-			"id": "hall",
-			"title": "空格子",
-			"next": "audit",
-			"lines": [
-				{
-					"id": "cs01_hall_0",
-					"speaker": "旁白",
-					"text": "东厢里，青禾正纳一只极小的鞋面。",
-					"stage": {
-						"bg": "hall",
-						"camera": "close"
-					}
-				},
-				{
-					"id": "cs01_hall_1",
-					"speaker": "槐里·青禾",
-					"text": "岁课。"
-				},
-				{
-					"id": "cs01_hall_2",
-					"speaker": "leader",
-					"text": "验盏今晚来。往空格子里写字。"
-				},
-				{
-					"id": "cs01_hall_3",
-					"speaker": "槐里·青禾",
-					"text": "你怕空，还是怕写满？"
-				},
-				{
-					"id": "cs01_hall_4",
-					"speaker": "leader",
-					"text": "怕写错。错给以后打开谱的人看。"
-				},
-				{
-					"id": "cs01_hall_5",
-					"speaker": "石垒·晚担",
-					"text": "脸上什么都没有，凭什么写成有？"
-				},
-				{
-					"id": "cs01_hall_6",
-					"speaker": "苇原·灯影",
-					"text": "路能走人，不代表路上的纸都干净。"
-				},
-				{
-					"id": "cs01_hall_7",
-					"speaker": "槐里·青禾",
-					"text": "议会认纸。名册认婚约。孩子脸上，从来没人问过我。"
-				},
-				{
-					"id": "cs01_hall_8",
-					"speaker": "leader",
-					"text": "现在问了。"
-				},
-				{
-					"id": "cs01_hall_x0",
-					"speaker": "旁白",
-					"text": "厅里灯影斜。空格在桌上像一张还没开口的嘴。"
-				},
-				{
-					"id": "cs01_hall_x1",
-					"speaker": "槐里·青禾",
-					"text": "嘴可以空。别借别人的声音填。"
-				},
-				{
-					"id": "cs01_hall_x2",
-					"speaker": "石垒·晚担",
-					"text": "路匪若来，先试锋。锋亮了，再谈验盏。"
-				},
-				{
-					"id": "cs01_hall_x3",
-					"speaker": "苇原·灯影",
-					"text": "锋是路。路通了，纸才走得稳。"
-				},
-				{
-					"id": "cs01_hall_x4",
-					"speaker": "老旗手",
-					"text": "旗在门楣。纸在桌上。各看各的，别混。"
-				},
-				{
-					"id": "cs01_hall_x5",
-					"speaker": "旁白",
-					"text": "有人想递细红颜料。匣盖没有开。"
-				},
-				{
-					"id": "cs01_hall_x6",
-					"speaker": "leader",
-					"text": "颜料留下。盏不收。"
-				},
-				{
-					"id": "cs01_hall_x7",
-					"speaker": "岁吏",
-					"text": "我在门外等。等验过的字，不等画。"
-				},
-				{
-					"id": "cs01_hall_x8",
-					"speaker": "旁白",
-					"text": "青禾把小鞋放到回执旁，鞋面针脚匀得像格。"
-				},
-				{
-					"id": "cs01_hall_x9",
-					"speaker": "槐里·青禾",
-					"text": "鞋要穿，纸要写。写之前别夸好看。"
-				},
-				{
-					"id": "cs01_hall_x10",
-					"speaker": "石垒·晚担",
-					"text": "好看的字，风一吹就改姓。"
-				},
-				{
-					"id": "cs01_hall_x11",
-					"speaker": "旁白",
-					"text": "厅外脚步乱了一阵，又齐。齐的是巡夜，不是催条。"
-				},
-				{
-					"id": "cs01_mid_lost",
-					"speaker": "旁白",
-					"text": "锋收回来。衣里还热。厅外那拨路匪，灯下没散。",
-					"when": {
-						"all": [
-							{
-								"flag": "cs01_mid_lost"
-							},
-							{
-								"not_flag": "cs01_mid_fought"
-							}
-						]
-					}
-				},
-				{
-					"id": "cs01_hall_9",
-					"speaker": "老旗手",
-					"text": "匣子留给验盏。咱们别先替它填字。"
-				}
-			],
-			"actions": [
-				{
-					"id": "open_skirmish",
-					"label": "先试一锋",
-					"when": {
-						"all": [
-							{
-								"not_flag": "cs01_mid_fought"
-							},
-							{
-								"not_flag": "cs01_mid_lost"
-							}
-						]
-					},
-					"do": [
-						{
-							"op": "battle",
-							"map": "quest_bandit",
-							"objective": "rout",
-							"return": "res://scenes/story/chapter_player.tscn",
-							"win_flags": [
-								"cs01_mid_fought"
-							],
-							"lose_flags": [
-								"cs01_mid_lost"
-							],
-							"win_ledger": {
-								"choice": "mid_skirmish",
-								"title": "回执上的灯",
-								"outcome": "厅前试锋得手——路匪压下，验盏前锋先亮",
-								"yeartrace": true
-							}
-						}
-					]
-				},
-				{
-					"id": "retry_skirmish",
-					"label": "再试锋镝",
-					"when": {
-						"all": [
-							{
-								"not_flag": "cs01_mid_fought"
-							},
-							{
-								"flag": "cs01_mid_lost"
-							}
-						]
-					},
-					"do": [
-						{
-							"op": "battle",
-							"map": "quest_bandit",
-							"objective": "rout",
-							"return": "res://scenes/story/chapter_player.tscn",
-							"win_flags": [
-								"cs01_mid_fought"
-							],
-							"lose_flags": [
-								"cs01_mid_lost"
-							],
-							"win_ledger": {
-								"choice": "mid_skirmish",
-								"title": "回执上的灯",
-								"outcome": "厅前试锋得手——路匪压下，验盏前锋先亮",
-								"yeartrace": true
-							}
-						}
-					]
-				},
-				{
-					"id": "continue_after_battle",
-					"label": "继续，去验盏",
-					"do": [
-						{
-							"op": "season_ledger",
-							"when": {
-								"all": [
-									{
-										"not_flag": "cs01_mid_fought"
-									},
-									{
-										"not_flag": "cs01_mid_lost"
-									}
-								]
-							},
-							"chapter": "cs01_01",
-							"choice": "mid_skirmish_skip",
-							"title": "回执上的灯",
-							"outcome": "未试锋——锋未出鞘，径去验盏",
-							"yeartrace": true
-						},
-						{
-							"op": "season_ledger",
-							"when": {
-								"all": [
-									{
-										"not_flag": "cs01_mid_fought"
-									},
-									{
-										"flag": "cs01_mid_lost"
-									}
-								]
-							},
-							"chapter": "cs01_01",
-							"choice": "mid_skirmish_abort",
-							"title": "回执上的灯",
-							"outcome": "试锋未成——伤还在，先去验盏",
-							"yeartrace": true
-						},
-						{
-							"op": "goto",
-							"beat": "next"
-						}
-					]
-				}
-			]
-		},
-		{
-			"id": "audit",
-			"title": "验盏",
-			"next": "tavern",
-			"lines": [
-				{
-					"id": "cs01_audit_0",
-					"speaker": "旁白",
-					"text": "听回进厅。木匣打开，里面是一只白圆印。",
-					"stage": {
-						"bg": "hall",
-						"camera": "close"
-					}
-				},
-				{
-					"id": "cs01_audit_1",
-					"speaker": "听回",
-					"text": "验盏。看脸，不看旗。旗上的字今晚用不上。"
-				},
-				{
-					"id": "cs01_audit_2",
-					"speaker": "听回",
-					"text": "靠近灯。额、颊、颈。有图说图，没有就写无。"
-				},
-				{
-					"id": "cs01_audit_3",
-					"speaker": "旁白",
-					"text": "孩子额角只有一点睡出来的浅痕。不是河图。"
-				},
-				{
-					"id": "cs01_audit_4",
-					"speaker": "听回",
-					"text": "无征兆。征兆栏写无。"
-				},
-				{
-					"id": "cs01_audit_5",
-					"speaker": "石垒·晚担",
-					"text": "无？就这一笔？"
-				},
-				{
-					"id": "cs01_audit_6",
-					"speaker": "听回",
-					"text": "无是验过的字。不是骂人。也不是请你去借灯。"
-				},
-				{
-					"id": "cs01_audit_7",
-					"speaker": "槐里·青禾",
-					"text": "不要借来的灯。无，就写无。"
-				},
-				{
-					"id": "cs01_audit_8",
-					"speaker": "听回",
-					"text": "回执移送。明日酒馆见板。七天后，谱上见。"
-				},
-				{
-					"id": "cs01_audit_x0",
-					"speaker": "旁白",
-					"text": "听回只带铜盏。匣里没有颜料。"
-				},
-				{
-					"id": "cs01_audit_x1",
-					"speaker": "听回",
-					"text": "不涂。涂了就不是验，是画。"
-				},
-				{
-					"id": "cs01_audit_x2",
-					"speaker": "旁白",
-					"text": "盏举到额前。一息。再一息。偏不藏。"
-				},
-				{
-					"id": "cs01_audit_x3",
-					"speaker": "听回",
-					"text": "无。验过的无。"
-				},
-				{
-					"id": "cs01_audit_x4",
-					"speaker": "槐里·青禾",
-					"text": "无进谱，我才睡得着。"
-				},
-				{
-					"id": "cs01_audit_x5",
-					"speaker": "leader",
-					"text": "无进谱。旗仍在门楣。"
-				},
-				{
-					"id": "cs01_audit_x6",
-					"speaker": "听回",
-					"text": "旗归门楣。谱归西阁。别互相冒充。"
-				},
-				{
-					"id": "cs01_audit_x7",
-					"speaker": "老旗手",
-					"text": "冒充的灯，比空格更烫手。"
-				},
-				{
-					"id": "cs01_audit_x8",
-					"speaker": "旁白",
-					"text": "岁吏在门外听见「无」，才把印泥盒打开一线。"
-				},
-				{
-					"id": "cs01_audit_x9",
-					"speaker": "岁吏",
-					"text": "先字后印。印在字前，像声称。"
-				},
-				{
-					"id": "cs01_audit_x10",
-					"speaker": "苇原·灯影",
-					"text": "声称归旗。这一笔归纸。"
-				},
-				{
-					"id": "cs01_audit_x11",
-					"speaker": "旁白",
-					"text": "铜盏收回匣。匣盖轻合，像同意这一笔。"
-				},
-				{
-					"id": "cs01_audit_9",
-					"speaker": "leader",
-					"text": "写无。我们认。"
-				}
-			],
-			"actions": [
-				{
-					"id": "open_hourglass",
-					"label": "去看月份怎么往前走",
-					"do": [
-						{
-							"op": "visit",
-							"path": "res://scenes/hub/hourglass.tscn"
-						}
-					]
-				},
-				{
-					"id": "continue_after_visit",
-					"label": "继续，去酒馆",
-					"do": [
-						{
-							"op": "goto",
-							"beat": "next"
-						}
-					]
-				}
-			]
-		},
-		{
-			"id": "tavern",
-			"title": "挂板",
-			"lines": [
-				{
-					"id": "cs01_tav_0",
-					"speaker": "旁白",
-					"text": "烽火酒馆里，掌柜把挂板钉得高了一点。",
-					"stage": {
-						"bg": "tavern",
-						"camera": "wide"
-					}
-				},
-				{
-					"id": "cs01_tav_1",
-					"speaker": "掌柜",
-					"text": "七天。撕板赔银。陆桥上的人算得清。"
-				},
-				{
-					"id": "cs01_tav_2",
-					"speaker": "旁白",
-					"text": "板上是灰旗岁课回执抄件。征兆栏那个无，墨还新。"
-				},
-				{
-					"id": "cs01_tav_3",
-					"speaker": "石垒·晚担",
-					"text": "他们会念。念完就说报应。"
-				},
-				{
-					"id": "cs01_tav_4",
-					"speaker": "苇原·灯影",
-					"text": "让他们念。弓在这儿。"
-				},
-				{
-					"id": "cs01_tav_5",
-					"speaker": "掌柜",
-					"text": "酒照卖。板照挂。你们决定谱怎么收。"
-				},
-				{
-					"id": "cs01_tavern_x0",
-					"speaker": "旁白",
-					"text": "掌柜钉板只钉四角。风过，字还在。"
-				},
-				{
-					"id": "cs01_tavern_x1",
-					"speaker": "掌柜",
-					"text": "钉心像盖棺。四角是让人看完再走。"
-				},
-				{
-					"id": "cs01_tavern_x2",
-					"speaker": "旁白",
-					"text": "有人来涂「无」。掌柜不拦涂，拦撕。"
-				},
-				{
-					"id": "cs01_tavern_x3",
-					"speaker": "掌柜",
-					"text": "涂是嘴。撕是怕。怕的，酒馆不收。"
-				},
-				{
-					"id": "cs01_tavern_x4",
-					"speaker": "石垒·晚担",
-					"text": "七天够长。长过半截闲话。"
-				},
-				{
-					"id": "cs01_tavern_x5",
-					"speaker": "苇原·灯影",
-					"text": "闲话软半寸，就够用。"
-				},
-				{
-					"id": "cs01_tavern_x6",
-					"speaker": "旁白",
-					"text": "板下花生壳围成一圈。圈住的是整句，不是半截。"
-				},
-				{
-					"id": "cs01_tavern_x7",
-					"speaker": "掌柜",
-					"text": "整句在，板就挂。半截来，我卸钉。"
-				},
-				{
-					"id": "cs01_tavern_x8",
-					"speaker": "leader",
-					"text": "挂完送到西阁门槛。谱里有地方，就请进。"
-				},
-				{
-					"id": "cs01_tavern_x9",
-					"speaker": "旁白",
-					"text": "第七天黄昏，抄件叠好，墨迹已干。"
-				},
-				{
-					"id": "cs01_tavern_x10",
-					"speaker": "老旗手",
-					"text": "干了的无，比湿的声称硬。"
-				},
-				{
-					"id": "cs01_tavern_x11",
-					"speaker": "掌柜",
-					"text": "硬的字，我才肯送出门。"
-				},
-				{
-					"id": "cs01_tav_6",
-					"speaker": "旁白",
-					"text": "陆桥风把闲话送进来。你得选：无进不进谱。"
-				}
-			],
-			"actions": [
-				{
-					"id": "write_wu",
-					"label": "把无写进谱",
-					"do": [
-						{
-							"op": "set_flag",
-							"flag": "cs01_wrote_wu",
-							"value": true
-						},
-						{
-							"op": "season_ledger",
-							"chapter": "cs01_01",
-							"choice": "write_wu",
-							"title": "回执上的灯",
-							"outcome": "征兆栏写入「无」——验过的字进谱",
-							"yeartrace": true
-						},
-						{
-							"op": "goto",
-							"beat": "ledger"
-						}
-					]
-				},
-				{
-					"id": "hold_back",
-					"label": "先压下不挂谱",
-					"do": [
-						{
-							"op": "set_flag",
-							"flag": "cs01_held_back",
-							"value": true
-						},
-						{
-							"op": "season_ledger",
-							"chapter": "cs01_01",
-							"choice": "hold_back",
-							"title": "回执上的灯",
-							"outcome": "征兆「无」先压下，酒馆七天照挂",
-							"yeartrace": true
-						},
-						{
-							"op": "goto",
-							"beat": "ledger"
-						}
-					]
-				}
-			]
-		},
-		{
-			"id": "ledger",
-			"title": "入谱",
-			"lines": [
-				{
-					"id": "cs01_led_0",
-					"speaker": "旁白",
-					"text": "西阁里，族谱新页摊开。年迹栏等着这一笔。",
-					"stage": {
-						"bg": "hall",
-						"camera": "close"
-					}
-				},
-				{
-					"id": "cs01_led_wu",
-					"speaker": "旁白",
-					"text": "你把无按进格子。推不开。旗还在门楣上。",
-					"when": {
-						"flag": "cs01_wrote_wu"
-					}
-				},
-				{
-					"id": "cs01_led_hold",
-					"speaker": "旁白",
-					"text": "你先压着。纸会自己找路——酒馆那七天不会少。",
-					"when": {
-						"flag": "cs01_held_back"
-					}
-				},
-				{
-					"id": "cs01_led_1",
-					"speaker": "老旗手",
-					"text": "字进谱，人还在旗下。这就够过冬天。"
-				},
-				{
-					"id": "cs01_led_2",
-					"speaker": "槐里·青禾",
-					"text": "以后打开谱的人，会看见我们没找颜料。"
-				},
-				{
-					"id": "cs01_led_3",
-					"speaker": "石垒·晚担",
-					"text": "跟的人还在。石头也还在。"
-				},
-				{
-					"id": "cs01_led_4",
-					"speaker": "苇原·灯影",
-					"text": "路还通。纸脏不脏，西阁说了算。"
-				},
-				{
-					"id": "cs01_led_5",
-					"speaker": "leader",
-					"text": "回执上的灯，这一年写的是无。"
-				},
-				{
-					"id": "cs01_ledger_x0",
-					"speaker": "旁白",
-					"text": "西阁两盏灯。一盏照谱，一盏照窗向外。"
-				},
-				{
-					"id": "cs01_ledger_x1",
-					"speaker": "槐里·青禾",
-					"text": "像无与旗对视。一个在纸上，一个在风里。"
-				},
-				{
-					"id": "cs01_ledger_x2",
-					"speaker": "leader",
-					"text": "纸上要真。风里要稳。"
-				},
-				{
-					"id": "cs01_ledger_x3",
-					"speaker": "老旗手",
-					"text": "真和稳对上，孩子才能睡。"
-				},
-				{
-					"id": "cs01_ledger_x4",
-					"speaker": "旁白",
-					"text": "谱格写下「无」。笔尖停住一息，又抬起。"
-				},
-				{
-					"id": "cs01_ledger_x5",
-					"speaker": "听回",
-					"text": "我写过的不改。改名册去找议会。"
-				},
-				{
-					"id": "cs01_ledger_x6",
-					"speaker": "岁吏",
-					"text": "印盖在字后。字在，印才有地方落。"
-				},
-				{
-					"id": "cs01_ledger_x7",
-					"speaker": "石垒·晚担",
-					"text": "桥上无事。无半截。"
-				},
-				{
-					"id": "cs01_ledger_x8",
-					"speaker": "苇原·灯影",
-					"text": "无半截才是福。"
-				},
-				{
-					"id": "cs01_ledger_x9",
-					"speaker": "旁白",
-					"text": "匣盖合上。门楣旗微动。陆桥铃远。"
-				},
-				{
-					"id": "cs01_ledger_x10",
-					"speaker": "槐里·青禾",
-					"text": "明年还写。写整句。整句里可以有无。"
-				},
-				{
-					"id": "cs01_ledger_x11",
-					"speaker": "leader",
-					"text": "照旧。照旧就是胜利的一种。"
-				},
-				{
-					"id": "cs01_ledger_y0",
-					"speaker": "旁白",
-					"text": "无在谱里。旗在门楣。人在旗下。"
-				},
-				{
-					"id": "cs01_led_6",
-					"speaker": "旁白",
-					"text": "雪还没化尽。名册翻开，淡墨的无停在岁课栏。一天开始。"
-				}
-			],
-			"actions": []
-		}
-	]
+  "id": "cs01_01",
+  "title": "回执上的灯",
+  "legacy_index": 401,
+  "return_scene": "res://scenes/hub/castle_hub.tscn",
+  "source": "docs/content-seasons/season-01/NOVEL.md",
+  "beats": [
+    {
+      "id": "open",
+      "title": "纸先到",
+      "next": "hall",
+      "lines": [
+        {
+          "id": "cs01_open_0",
+          "speaker": "旁白",
+          "text": "灰旗堡的风往门缝里钻。院子里有人喊你旗上的那个字。",
+          "stage": {
+            "card": "一　纸先到",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs01_open_1",
+          "speaker": "岁吏",
+          "text": "岁课回执。议会印，灰旗名下第一张。签收。"
+        },
+        {
+          "id": "cs01_open_2",
+          "speaker": "石垒·晚担",
+          "text": "我们交粮交饷，还交这个？"
+        },
+        {
+          "id": "cs01_open_3",
+          "speaker": "岁吏",
+          "text": "粮给陆桥。岁课给人。孩子到岁了，纸上记一笔。"
+        },
+        {
+          "id": "cs01_open_4",
+          "speaker": "岁吏",
+          "text": "不签也行。不签，这张纸会在酒馆挂七天。谁都能念。"
+        },
+        {
+          "id": "cs01_open_5",
+          "speaker": "旁白",
+          "text": "你接过纸。正面写着孩子的月日，和灰旗后面那个字。"
+        },
+        {
+          "id": "cs01_open_6",
+          "speaker": "旁白",
+          "text": "征兆那一格是空的。空得很干净。"
+        },
+        {
+          "id": "cs01_open_7",
+          "speaker": "leader",
+          "text": "空着？"
+        },
+        {
+          "id": "cs01_open_8",
+          "speaker": "岁吏",
+          "text": "验盏的人还没来。我只送纸。匣子留下，今晚驿站到人。"
+        },
+        {
+          "id": "cs01_open_x0",
+          "speaker": "旁白",
+          "text": "匣角还沾着驿路的灰。灰不丢人，丢人的是拿灰去冒灯。"
+        },
+        {
+          "id": "cs01_open_x1",
+          "speaker": "岁吏",
+          "text": "我送纸。字归验盏。印泥在后。"
+        },
+        {
+          "id": "cs01_open_x2",
+          "speaker": "石垒·晚担",
+          "text": "纸比粮先到，我就把门楣擦干净。"
+        },
+        {
+          "id": "cs01_open_x3",
+          "speaker": "leader",
+          "text": "空格先放着。别借字。"
+        },
+        {
+          "id": "cs01_open_x4",
+          "speaker": "老旗手",
+          "text": "空着的格，比填错的格干净。"
+        },
+        {
+          "id": "cs01_open_x5",
+          "speaker": "旁白",
+          "text": "风从门缝进来，把纸角掀起一指，又落下。"
+        },
+        {
+          "id": "cs01_open_x6",
+          "speaker": "岁吏",
+          "text": "落下就好。纸要平，才配进匣。"
+        },
+        {
+          "id": "cs01_open_x7",
+          "speaker": "槐里·青禾",
+          "text": "鞋还没纳完。纸可以先在桌上等。"
+        },
+        {
+          "id": "cs01_open_x8",
+          "speaker": "旁白",
+          "text": "孩子在东厢里咳嗽一声，又睡着了。"
+        },
+        {
+          "id": "cs01_open_x9",
+          "speaker": "苇原·灯影",
+          "text": "睡着比声称强。声称会醒。"
+        },
+        {
+          "id": "cs01_open_x10",
+          "speaker": "旁白",
+          "text": "回执正面的月日很清楚。清楚的是日子，不是灯。"
+        },
+        {
+          "id": "cs01_open_x11",
+          "speaker": "leader",
+          "text": "日子够硬。灯以后再说。"
+        },
+        {
+          "id": "cs01_open_y21",
+          "speaker": "旁白",
+          "text": "灯花爆了一下。爆完，字才肯站住。"
+        },
+        {
+          "id": "cs01_open_y22",
+          "speaker": "石垒·晚担",
+          "text": "假亮捂不热。这格只留真。"
+        },
+        {
+          "id": "cs01_open_y23",
+          "speaker": "leader",
+          "text": "记下。不催假名。"
+        },
+        {
+          "id": "cs01_open_9",
+          "speaker": "老旗手",
+          "text": "纸比粮先到的时候，灯就不早了。"
+        }
+      ]
+    },
+    {
+      "id": "hall",
+      "title": "空格子",
+      "next": "audit",
+      "lines": [
+        {
+          "id": "cs01_hall_0",
+          "speaker": "旁白",
+          "text": "东厢里，青禾正纳一只极小的鞋面。",
+          "stage": {
+            "bg": "hall",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs01_hall_1",
+          "speaker": "槐里·青禾",
+          "text": "岁课。"
+        },
+        {
+          "id": "cs01_hall_2",
+          "speaker": "leader",
+          "text": "验盏今晚来。往空格子里写字。"
+        },
+        {
+          "id": "cs01_hall_3",
+          "speaker": "槐里·青禾",
+          "text": "你怕空，还是怕写满？"
+        },
+        {
+          "id": "cs01_hall_4",
+          "speaker": "leader",
+          "text": "怕写错。错给以后打开谱的人看。"
+        },
+        {
+          "id": "cs01_hall_5",
+          "speaker": "石垒·晚担",
+          "text": "脸上什么都没有，凭什么写成有？"
+        },
+        {
+          "id": "cs01_hall_6",
+          "speaker": "苇原·灯影",
+          "text": "路能走人，不代表路上的纸都干净。"
+        },
+        {
+          "id": "cs01_hall_7",
+          "speaker": "槐里·青禾",
+          "text": "议会认纸。名册认婚约。孩子脸上，从来没人问过我。"
+        },
+        {
+          "id": "cs01_hall_8",
+          "speaker": "leader",
+          "text": "现在问了。"
+        },
+        {
+          "id": "cs01_hall_x0",
+          "speaker": "旁白",
+          "text": "厅里灯影斜。空格在桌上像一张还没开口的嘴。"
+        },
+        {
+          "id": "cs01_hall_x1",
+          "speaker": "槐里·青禾",
+          "text": "嘴可以空。别借别人的声音填。"
+        },
+        {
+          "id": "cs01_hall_x2",
+          "speaker": "石垒·晚担",
+          "text": "路匪若来，先试锋。锋亮了，再谈验盏。"
+        },
+        {
+          "id": "cs01_hall_x3",
+          "speaker": "苇原·灯影",
+          "text": "锋是路。路通了，纸才走得稳。"
+        },
+        {
+          "id": "cs01_hall_x4",
+          "speaker": "老旗手",
+          "text": "旗在门楣。纸在桌上。各看各的，别混。"
+        },
+        {
+          "id": "cs01_hall_x5",
+          "speaker": "旁白",
+          "text": "有人想递细红颜料。匣盖没有开。"
+        },
+        {
+          "id": "cs01_hall_x6",
+          "speaker": "leader",
+          "text": "颜料留下。盏不收。"
+        },
+        {
+          "id": "cs01_hall_x7",
+          "speaker": "岁吏",
+          "text": "我在门外等。等验过的字，不等画。"
+        },
+        {
+          "id": "cs01_hall_x8",
+          "speaker": "旁白",
+          "text": "青禾把小鞋放到回执旁，鞋面针脚匀得像格。"
+        },
+        {
+          "id": "cs01_hall_x9",
+          "speaker": "槐里·青禾",
+          "text": "鞋要穿，纸要写。写之前别夸好看。"
+        },
+        {
+          "id": "cs01_hall_x10",
+          "speaker": "石垒·晚担",
+          "text": "好看的字，风一吹就改姓。"
+        },
+        {
+          "id": "cs01_hall_x11",
+          "speaker": "旁白",
+          "text": "厅外脚步乱了一阵，又齐。齐的是巡夜，不是催条。"
+        },
+        {
+          "id": "cs01_mid_lost",
+          "speaker": "旁白",
+          "text": "锋收回来。衣里还热。厅外那拨路匪，灯下没散。",
+          "when": {
+            "all": [
+              {
+                "flag": "cs01_mid_lost"
+              },
+              {
+                "not_flag": "cs01_mid_fought"
+              }
+            ]
+          }
+        },
+        {
+          "id": "cs01_hall_y22",
+          "speaker": "旁白",
+          "text": "册边起毛。毛边比印鉴老实。"
+        },
+        {
+          "id": "cs01_hall_y23",
+          "speaker": "石垒·晚担",
+          "text": "老实的才并排。"
+        },
+        {
+          "id": "cs01_hall_y24",
+          "speaker": "leader",
+          "text": "并排留真。"
+        },
+        {
+          "id": "cs01_hall_9",
+          "speaker": "老旗手",
+          "text": "匣子留给验盏。咱们别先替它填字。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "open_skirmish",
+          "label": "先试一锋",
+          "when": {
+            "all": [
+              {
+                "not_flag": "cs01_mid_fought"
+              },
+              {
+                "not_flag": "cs01_mid_lost"
+              }
+            ]
+          },
+          "do": [
+            {
+              "op": "battle",
+              "map": "quest_bandit",
+              "objective": "rout",
+              "return": "res://scenes/story/chapter_player.tscn",
+              "win_flags": [
+                "cs01_mid_fought"
+              ],
+              "lose_flags": [
+                "cs01_mid_lost"
+              ],
+              "win_ledger": {
+                "choice": "mid_skirmish",
+                "title": "回执上的灯",
+                "outcome": "厅前试锋得手——路匪压下，验盏前锋先亮",
+                "yeartrace": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "retry_skirmish",
+          "label": "再试锋镝",
+          "when": {
+            "all": [
+              {
+                "not_flag": "cs01_mid_fought"
+              },
+              {
+                "flag": "cs01_mid_lost"
+              }
+            ]
+          },
+          "do": [
+            {
+              "op": "battle",
+              "map": "quest_bandit",
+              "objective": "rout",
+              "return": "res://scenes/story/chapter_player.tscn",
+              "win_flags": [
+                "cs01_mid_fought"
+              ],
+              "lose_flags": [
+                "cs01_mid_lost"
+              ],
+              "win_ledger": {
+                "choice": "mid_skirmish",
+                "title": "回执上的灯",
+                "outcome": "厅前试锋得手——路匪压下，验盏前锋先亮",
+                "yeartrace": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "continue_after_battle",
+          "label": "继续，去验盏",
+          "do": [
+            {
+              "op": "season_ledger",
+              "when": {
+                "all": [
+                  {
+                    "not_flag": "cs01_mid_fought"
+                  },
+                  {
+                    "not_flag": "cs01_mid_lost"
+                  }
+                ]
+              },
+              "chapter": "cs01_01",
+              "choice": "mid_skirmish_skip",
+              "title": "回执上的灯",
+              "outcome": "未试锋——锋未出鞘，径去验盏",
+              "yeartrace": true
+            },
+            {
+              "op": "season_ledger",
+              "when": {
+                "all": [
+                  {
+                    "not_flag": "cs01_mid_fought"
+                  },
+                  {
+                    "flag": "cs01_mid_lost"
+                  }
+                ]
+              },
+              "chapter": "cs01_01",
+              "choice": "mid_skirmish_abort",
+              "title": "回执上的灯",
+              "outcome": "试锋未成——伤还在，先去验盏",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "audit",
+      "title": "验盏",
+      "next": "tavern",
+      "lines": [
+        {
+          "id": "cs01_audit_0",
+          "speaker": "旁白",
+          "text": "听回进厅。木匣打开，里面是一只白圆印。",
+          "stage": {
+            "bg": "hall",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs01_audit_1",
+          "speaker": "听回",
+          "text": "验盏。看脸，不看旗。旗上的字今晚用不上。"
+        },
+        {
+          "id": "cs01_audit_2",
+          "speaker": "听回",
+          "text": "靠近灯。额、颊、颈。有图说图，没有就写无。"
+        },
+        {
+          "id": "cs01_audit_3",
+          "speaker": "旁白",
+          "text": "孩子额角只有一点睡出来的浅痕。不是河图。"
+        },
+        {
+          "id": "cs01_audit_4",
+          "speaker": "听回",
+          "text": "无征兆。征兆栏写无。"
+        },
+        {
+          "id": "cs01_audit_5",
+          "speaker": "石垒·晚担",
+          "text": "无？就这一笔？"
+        },
+        {
+          "id": "cs01_audit_6",
+          "speaker": "听回",
+          "text": "无是验过的字。不是骂人。也不是请你去借灯。"
+        },
+        {
+          "id": "cs01_audit_7",
+          "speaker": "槐里·青禾",
+          "text": "不要借来的灯。无，就写无。"
+        },
+        {
+          "id": "cs01_audit_8",
+          "speaker": "听回",
+          "text": "回执移送。明日酒馆见板。七天后，谱上见。"
+        },
+        {
+          "id": "cs01_audit_x0",
+          "speaker": "旁白",
+          "text": "听回只带铜盏。匣里没有颜料。"
+        },
+        {
+          "id": "cs01_audit_x1",
+          "speaker": "听回",
+          "text": "不涂。涂了就不是验，是画。"
+        },
+        {
+          "id": "cs01_audit_x2",
+          "speaker": "旁白",
+          "text": "盏举到额前。一息。再一息。偏不藏。"
+        },
+        {
+          "id": "cs01_audit_x3",
+          "speaker": "听回",
+          "text": "无。验过的无。"
+        },
+        {
+          "id": "cs01_audit_x4",
+          "speaker": "槐里·青禾",
+          "text": "无进谱，我才睡得着。"
+        },
+        {
+          "id": "cs01_audit_x5",
+          "speaker": "leader",
+          "text": "无进谱。旗仍在门楣。"
+        },
+        {
+          "id": "cs01_audit_x6",
+          "speaker": "听回",
+          "text": "旗归门楣。谱归西阁。别互相冒充。"
+        },
+        {
+          "id": "cs01_audit_x7",
+          "speaker": "老旗手",
+          "text": "冒充的灯，比空格更烫手。"
+        },
+        {
+          "id": "cs01_audit_x8",
+          "speaker": "旁白",
+          "text": "岁吏在门外听见「无」，才把印泥盒打开一线。"
+        },
+        {
+          "id": "cs01_audit_x9",
+          "speaker": "岁吏",
+          "text": "先字后印。印在字前，像声称。"
+        },
+        {
+          "id": "cs01_audit_x10",
+          "speaker": "苇原·灯影",
+          "text": "声称归旗。这一笔归纸。"
+        },
+        {
+          "id": "cs01_audit_x11",
+          "speaker": "旁白",
+          "text": "铜盏收回匣。匣盖轻合，像同意这一笔。"
+        },
+        {
+          "id": "cs01_audit_y21",
+          "speaker": "旁白",
+          "text": "灯花爆了一下。爆完，字才肯站住。"
+        },
+        {
+          "id": "cs01_audit_y22",
+          "speaker": "石垒·晚担",
+          "text": "假亮捂不热。这格只留真。"
+        },
+        {
+          "id": "cs01_audit_y23",
+          "speaker": "leader",
+          "text": "记下。不催假名。"
+        },
+        {
+          "id": "cs01_audit_9",
+          "speaker": "leader",
+          "text": "写无。我们认。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "open_hourglass",
+          "label": "去看月份怎么往前走",
+          "do": [
+            {
+              "op": "visit",
+              "path": "res://scenes/hub/hourglass.tscn"
+            }
+          ]
+        },
+        {
+          "id": "continue_after_visit",
+          "label": "继续，去酒馆",
+          "do": [
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tavern",
+      "title": "挂板",
+      "lines": [
+        {
+          "id": "cs01_tav_0",
+          "speaker": "旁白",
+          "text": "烽火酒馆里，掌柜把挂板钉得高了一点。",
+          "stage": {
+            "bg": "tavern",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs01_tav_1",
+          "speaker": "掌柜",
+          "text": "七天。撕板赔银。陆桥上的人算得清。"
+        },
+        {
+          "id": "cs01_tav_2",
+          "speaker": "旁白",
+          "text": "板上是灰旗岁课回执抄件。征兆栏那个无，墨还新。"
+        },
+        {
+          "id": "cs01_tav_3",
+          "speaker": "石垒·晚担",
+          "text": "他们会念。念完就说报应。"
+        },
+        {
+          "id": "cs01_tav_4",
+          "speaker": "苇原·灯影",
+          "text": "让他们念。弓在这儿。"
+        },
+        {
+          "id": "cs01_tav_5",
+          "speaker": "掌柜",
+          "text": "酒照卖。板照挂。你们决定谱怎么收。"
+        },
+        {
+          "id": "cs01_tavern_x0",
+          "speaker": "旁白",
+          "text": "掌柜钉板只钉四角。风过，字还在。"
+        },
+        {
+          "id": "cs01_tavern_x1",
+          "speaker": "掌柜",
+          "text": "钉心像盖棺。四角是让人看完再走。"
+        },
+        {
+          "id": "cs01_tavern_x2",
+          "speaker": "旁白",
+          "text": "有人来涂「无」。掌柜不拦涂，拦撕。"
+        },
+        {
+          "id": "cs01_tavern_x3",
+          "speaker": "掌柜",
+          "text": "涂是嘴。撕是怕。怕的，酒馆不收。"
+        },
+        {
+          "id": "cs01_tavern_x4",
+          "speaker": "石垒·晚担",
+          "text": "七天够长。长过半截闲话。"
+        },
+        {
+          "id": "cs01_tavern_x5",
+          "speaker": "苇原·灯影",
+          "text": "闲话软半寸，就够用。"
+        },
+        {
+          "id": "cs01_tavern_x6",
+          "speaker": "旁白",
+          "text": "板下花生壳围成一圈。圈住的是整句，不是半截。"
+        },
+        {
+          "id": "cs01_tavern_x7",
+          "speaker": "掌柜",
+          "text": "整句在，板就挂。半截来，我卸钉。"
+        },
+        {
+          "id": "cs01_tavern_x8",
+          "speaker": "leader",
+          "text": "挂完送到西阁门槛。谱里有地方，就请进。"
+        },
+        {
+          "id": "cs01_tavern_x9",
+          "speaker": "旁白",
+          "text": "第七天黄昏，抄件叠好，墨迹已干。"
+        },
+        {
+          "id": "cs01_tavern_x10",
+          "speaker": "老旗手",
+          "text": "干了的无，比湿的声称硬。"
+        },
+        {
+          "id": "cs01_tavern_x11",
+          "speaker": "掌柜",
+          "text": "硬的字，我才肯送出门。"
+        },
+        {
+          "id": "cs01_tav_y18",
+          "speaker": "旁白",
+          "text": "册边起毛。毛边比印鉴老实。"
+        },
+        {
+          "id": "cs01_tav_y19",
+          "speaker": "石垒·晚担",
+          "text": "老实的才并排。"
+        },
+        {
+          "id": "cs01_tav_y20",
+          "speaker": "leader",
+          "text": "并排留真。"
+        },
+        {
+          "id": "cs01_tav_6",
+          "speaker": "旁白",
+          "text": "陆桥风把闲话送进来。你得选：无进不进谱。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "write_wu",
+          "label": "把无写进谱",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs01_wrote_wu",
+              "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs01_01",
+              "choice": "write_wu",
+              "title": "回执上的灯",
+              "outcome": "征兆栏写入「无」——验过的字进谱",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        },
+        {
+          "id": "hold_back",
+          "label": "先压下不挂谱",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs01_held_back",
+              "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs01_01",
+              "choice": "hold_back",
+              "title": "回执上的灯",
+              "outcome": "征兆「无」先压下，酒馆七天照挂",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ledger",
+      "title": "入谱",
+      "lines": [
+        {
+          "id": "cs01_led_0",
+          "speaker": "旁白",
+          "text": "西阁里，族谱新页摊开。年迹栏等着这一笔。",
+          "stage": {
+            "bg": "hall",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs01_led_wu",
+          "speaker": "旁白",
+          "text": "你把无按进格子。推不开。旗还在门楣上。",
+          "when": {
+            "flag": "cs01_wrote_wu"
+          }
+        },
+        {
+          "id": "cs01_led_hold",
+          "speaker": "旁白",
+          "text": "你先压着。纸会自己找路——酒馆那七天不会少。",
+          "when": {
+            "flag": "cs01_held_back"
+          }
+        },
+        {
+          "id": "cs01_led_1",
+          "speaker": "老旗手",
+          "text": "字进谱，人还在旗下。这就够过冬天。"
+        },
+        {
+          "id": "cs01_led_2",
+          "speaker": "槐里·青禾",
+          "text": "以后打开谱的人，会看见我们没找颜料。"
+        },
+        {
+          "id": "cs01_led_3",
+          "speaker": "石垒·晚担",
+          "text": "跟的人还在。石头也还在。"
+        },
+        {
+          "id": "cs01_led_4",
+          "speaker": "苇原·灯影",
+          "text": "路还通。纸脏不脏，西阁说了算。"
+        },
+        {
+          "id": "cs01_led_5",
+          "speaker": "leader",
+          "text": "回执上的灯，这一年写的是无。"
+        },
+        {
+          "id": "cs01_ledger_x0",
+          "speaker": "旁白",
+          "text": "西阁两盏灯。一盏照谱，一盏照窗向外。"
+        },
+        {
+          "id": "cs01_ledger_x1",
+          "speaker": "槐里·青禾",
+          "text": "像无与旗对视。一个在纸上，一个在风里。"
+        },
+        {
+          "id": "cs01_ledger_x2",
+          "speaker": "leader",
+          "text": "纸上要真。风里要稳。"
+        },
+        {
+          "id": "cs01_ledger_x3",
+          "speaker": "老旗手",
+          "text": "真和稳对上，孩子才能睡。"
+        },
+        {
+          "id": "cs01_ledger_x4",
+          "speaker": "旁白",
+          "text": "谱格写下「无」。笔尖停住一息，又抬起。"
+        },
+        {
+          "id": "cs01_ledger_x5",
+          "speaker": "听回",
+          "text": "我写过的不改。改名册去找议会。"
+        },
+        {
+          "id": "cs01_ledger_x6",
+          "speaker": "岁吏",
+          "text": "印盖在字后。字在，印才有地方落。"
+        },
+        {
+          "id": "cs01_ledger_x7",
+          "speaker": "石垒·晚担",
+          "text": "桥上无事。无半截。"
+        },
+        {
+          "id": "cs01_ledger_x8",
+          "speaker": "苇原·灯影",
+          "text": "无半截才是福。"
+        },
+        {
+          "id": "cs01_ledger_x9",
+          "speaker": "旁白",
+          "text": "匣盖合上。门楣旗微动。陆桥铃远。"
+        },
+        {
+          "id": "cs01_ledger_x10",
+          "speaker": "槐里·青禾",
+          "text": "明年还写。写整句。整句里可以有无。"
+        },
+        {
+          "id": "cs01_ledger_x11",
+          "speaker": "leader",
+          "text": "照旧。照旧就是胜利的一种。"
+        },
+        {
+          "id": "cs01_ledger_y0",
+          "speaker": "旁白",
+          "text": "无在谱里。旗在门楣。人在旗下。"
+        },
+        {
+          "id": "cs01_led_y21",
+          "speaker": "旁白",
+          "text": "灯花爆了一下。爆完，字才肯站住。"
+        },
+        {
+          "id": "cs01_led_y22",
+          "speaker": "石垒·晚担",
+          "text": "假亮捂不热。这格只留真。"
+        },
+        {
+          "id": "cs01_led_y23",
+          "speaker": "leader",
+          "text": "记下。不催假名。"
+        },
+        {
+          "id": "cs01_led_6",
+          "speaker": "旁白",
+          "text": "雪还没化尽。名册翻开，淡墨的无停在岁课栏。一天开始。"
+        }
+      ],
+      "actions": []
+    }
+  ]
 }

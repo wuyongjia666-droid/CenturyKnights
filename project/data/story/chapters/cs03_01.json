@@ -107,6 +107,21 @@
           "text": "过分的齐，称起来轻。"
         },
         {
+          "id": "cs03_merit_y18",
+          "speaker": "旁白",
+          "text": "功簿墨干得慢。慢干的字沉。"
+        },
+        {
+          "id": "cs03_merit_y19",
+          "speaker": "石垒·晚担",
+          "text": "沉字扛得住粮。"
+        },
+        {
+          "id": "cs03_merit_y20",
+          "speaker": "leader",
+          "text": "功与粮并排。"
+        },
+        {
           "id": "cs03_merit_x9",
           "speaker": "leader",
           "text": "先记功。记下，去对月结。"
@@ -213,6 +228,21 @@
           "text": "深的是地。"
         },
         {
+          "id": "cs03_estate_y18",
+          "speaker": "旁白",
+          "text": "仓门风从缝里进。"
+        },
+        {
+          "id": "cs03_estate_y19",
+          "speaker": "石垒·晚担",
+          "text": "风进得去，假数进不去。"
+        },
+        {
+          "id": "cs03_estate_y20",
+          "speaker": "leader",
+          "text": "数要真。"
+        },
+        {
           "id": "cs03_estate_x9",
           "speaker": "leader",
           "text": "月结收下。去沙漏看两行。"
@@ -312,6 +342,21 @@
           "id": "cs03_hourglass_y1",
           "speaker": "书记官",
           "text": "躲的摘要，我拒抄。"
+        },
+        {
+          "id": "cs03_hourglass_y17",
+          "speaker": "旁白",
+          "text": "功簿墨干得慢。慢干的字沉。"
+        },
+        {
+          "id": "cs03_hourglass_y18",
+          "speaker": "石垒·晚担",
+          "text": "沉字扛得住粮。"
+        },
+        {
+          "id": "cs03_hourglass_y19",
+          "speaker": "leader",
+          "text": "功与粮并排。"
         },
         {
           "id": "cs03_hourglass_x9",
@@ -440,6 +485,21 @@
           "id": "cs03_bridge_x9",
           "speaker": "leader",
           "text": "看完拓片。去酒馆选题。"
+        },
+        {
+          "id": "cs03_mid_y18",
+          "speaker": "旁白",
+          "text": "仓门风从缝里进。"
+        },
+        {
+          "id": "cs03_mid_y19",
+          "speaker": "石垒·晚担",
+          "text": "风进得去，假数进不去。"
+        },
+        {
+          "id": "cs03_mid_y20",
+          "speaker": "leader",
+          "text": "数要真。"
         },
         {
           "id": "cs03_mid_lost",
@@ -668,6 +728,21 @@
           "text": "泥指印是投票。"
         },
         {
+          "id": "cs03_tavern_y17",
+          "speaker": "旁白",
+          "text": "功簿墨干得慢。慢干的字沉。"
+        },
+        {
+          "id": "cs03_tavern_y18",
+          "speaker": "石垒·晚担",
+          "text": "沉字扛得住粮。"
+        },
+        {
+          "id": "cs03_tavern_y19",
+          "speaker": "leader",
+          "text": "功与粮并排。"
+        },
+        {
           "id": "cs03_tavern_x9",
           "speaker": "旁白",
           "text": "你得选。选完进对照册。"
@@ -835,6 +910,21 @@
           "id": "cs03_ledger_y1",
           "speaker": "槐里·青禾",
           "text": "空白位子还在，就还诚实。"
+        },
+        {
+          "id": "cs03_ledger_y20",
+          "speaker": "旁白",
+          "text": "仓门风从缝里进。"
+        },
+        {
+          "id": "cs03_ledger_y21",
+          "speaker": "石垒·晚担",
+          "text": "风进得去，假数进不去。"
+        },
+        {
+          "id": "cs03_ledger_y22",
+          "speaker": "leader",
+          "text": "数要真。"
         },
         {
           "id": "cs03_ledger_x9",

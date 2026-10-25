@@ -111,6 +111,21 @@
           "text": "刚用过的印，我验。"
         },
         {
+          "id": "cs10b_ya_y20",
+          "speaker": "旁白",
+          "text": "印泥盖子轻响。"
+        },
+        {
+          "id": "cs10b_ya_y21",
+          "speaker": "石垒·晚担",
+          "text": "响说明刚用过。"
+        },
+        {
+          "id": "cs10b_ya_y22",
+          "speaker": "leader",
+          "text": "刚用过的我验边。"
+        },
+        {
           "id": "cs10b_ya_16",
           "speaker": "槐里·青禾",
           "text": "诚实比能喊的城印贵。"
@@ -223,6 +238,21 @@
           "text": "心虚的印不盖。"
         },
         {
+          "id": "cs10b_se_y20",
+          "speaker": "旁白",
+          "text": "封泥边沿有毛刺。"
+        },
+        {
+          "id": "cs10b_se_y21",
+          "speaker": "石垒·晚担",
+          "text": "毛刺多半是仿的。"
+        },
+        {
+          "id": "cs10b_se_y22",
+          "speaker": "leader",
+          "text": "仿印不盖。"
+        },
+        {
           "id": "cs10b_se_9",
           "speaker": "老旗手",
           "text": "旗布完整。旗角不绣喊出来的城印。"
@@ -333,6 +363,21 @@
           "id": "cs10b_ho_x19",
           "speaker": "leader",
           "text": "去沙漏。看边沿。"
+        },
+        {
+          "id": "cs10b_ho_y20",
+          "speaker": "旁白",
+          "text": "印泥盖子轻响。"
+        },
+        {
+          "id": "cs10b_ho_y21",
+          "speaker": "石垒·晚担",
+          "text": "响说明刚用过。"
+        },
+        {
+          "id": "cs10b_ho_y22",
+          "speaker": "leader",
+          "text": "刚用过的我验边。"
         },
         {
           "id": "cs10b_ho_8",
@@ -482,6 +527,21 @@
           "id": "cs10b_br_x20",
           "speaker": "leader",
           "text": "试锋。交代清楚。"
+        },
+        {
+          "id": "cs10b_br_y21",
+          "speaker": "旁白",
+          "text": "封泥边沿有毛刺。"
+        },
+        {
+          "id": "cs10b_br_y22",
+          "speaker": "石垒·晚担",
+          "text": "毛刺多半是仿的。"
+        },
+        {
+          "id": "cs10b_br_y23",
+          "speaker": "leader",
+          "text": "仿印不盖。"
         },
         {
           "id": "cs10b_br_18",
@@ -712,6 +772,21 @@
           "text": "我听印，不听声。"
         },
         {
+          "id": "cs10b_ta_y20",
+          "speaker": "旁白",
+          "text": "印泥盖子轻响。"
+        },
+        {
+          "id": "cs10b_ta_y21",
+          "speaker": "石垒·晚担",
+          "text": "响说明刚用过。"
+        },
+        {
+          "id": "cs10b_ta_y22",
+          "speaker": "leader",
+          "text": "刚用过的我验边。"
+        },
+        {
           "id": "cs10b_ta_18",
           "speaker": "旁白",
           "text": "两道印题在板上。手按上去。"
@@ -870,6 +945,21 @@
           "id": "cs10b_le_x19",
           "speaker": "leader",
           "text": "今日验真。"
+        },
+        {
+          "id": "cs10b_le_y20",
+          "speaker": "旁白",
+          "text": "封泥边沿有毛刺。"
+        },
+        {
+          "id": "cs10b_le_y21",
+          "speaker": "石垒·晚担",
+          "text": "毛刺多半是仿的。"
+        },
+        {
+          "id": "cs10b_le_y22",
+          "speaker": "leader",
+          "text": "仿印不盖。"
         },
         {
           "id": "cs10b_le_18",
