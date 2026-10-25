@@ -1459,6 +1459,13 @@ func _draw_danger() -> void:
 			overlay.draw_line(r.position, r.position + r.size, Color(UIKit.DANGER, 0.9), 1.5)
 			overlay.draw_line(r.position + Vector2(0, r.size.y), r.position + Vector2(r.size.x, 0), Color(UIKit.DANGER, 0.9), 1.5)
 
+func _resolve_intel_cell(pos: Vector2) -> Vector2i:
+	# Y1-A T-P1-5: intel long-press uses the same soft/contour resolve as taps.
+	var lp_cell := BattlePick.resolve(self, pos)
+	if lp_cell.x < 0:
+		lp_cell = _pointer_to_cell(pos)
+	return lp_cell
+
 func _on_long_press_cell(cell: Vector2i) -> void:
 	if not _in_bounds(cell):
 		return
@@ -1500,11 +1507,7 @@ func _apply_board_gesture(g: Dictionary) -> void:
 				return
 			_click_cell(cell)
 		"long_press":
-			# Y1-A T-P1-5: intel long-press uses the same soft/contour resolve as taps.
-			var lp_cell := BattlePick.resolve(self, pos)
-			if lp_cell.x < 0:
-				lp_cell = _pointer_to_cell(pos)
-			_on_long_press_cell(lp_cell)
+			_on_long_press_cell(_resolve_intel_cell(pos))
 		"cancel":
 			_cancel_selection()
 		"pan":
