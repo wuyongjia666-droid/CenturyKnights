@@ -77,6 +77,7 @@ var last_aftermath: Dictionary = {}  # structured road-event aftermath for UI
 var last_battle_aftermath: Dictionary = {}  # structured encounter win/lose aftermath
 var last_chain_follow: Dictionary = {}  # follow-up / next scripted-chain step after turn_in
 var last_chain_fail: Dictionary = {}  # scripted-chain expire/abandon payload for ChainFailModal
+var last_supply_halt: Dictionary = {}  # mid-march food=0 payload for SupplyHaltModal
 var market: Dictionary = {}     # city -> {good: stock}
 var fairs: Dictionary = {}      # city -> days_total expiry
 var intel: Dictionary = {}      # city -> days_total when prices were last seen
@@ -184,6 +185,7 @@ func reset() -> void:
 	last_battle_aftermath = {}
 	last_chain_follow = {}
 	last_chain_fail = {}
+	last_supply_halt = {}
 	market = {}
 	for id in nodes.keys():
 		_init_market(id)
@@ -262,6 +264,7 @@ func from_save(d: Dictionary) -> void:
 	last_battle_aftermath = {}
 	last_chain_follow = {}
 	last_chain_fail = {}
+	last_supply_halt = {}
 	market = {}
 	var m: Dictionary = d.get("market", {})
 	for id in nodes.keys():
@@ -830,6 +833,8 @@ func step_travel() -> Dictionary:
 	return _emit_step(_arrive_leg(b))
 
 func _emit_step(info: Dictionary) -> Dictionary:
+	if not last_supply_halt.is_empty():
+		info["supply_halt"] = last_supply_halt.duplicate(true)
 	world_changed.emit()
 	travel_step.emit(info)
 	return info
@@ -872,6 +877,9 @@ func travel_to(to_id: String) -> Dictionary:
 			if not info.get("event", {}).is_empty() or not info.get("encounter", {}).is_empty() or bool(info.get("arrived", false)) or travel.is_empty():
 				break
 			info = step_travel()
+		# Headless: scavenge when mid-march rations hit 0 so travel_to still completes.
+		if not last_supply_halt.is_empty():
+			forage_supply()
 		if not info.get("event", {}).is_empty() or not info.get("encounter", {}).is_empty() or bool(info.get("arrived", false)):
 			break
 	info["ok"] = true
@@ -918,6 +926,7 @@ func _territory_month(ctx: Dictionary) -> void:
 # ── days / calendar ───────────────────────────────────
 func advance_days(n: int) -> Array:
 	var reports: Array = []
+	var starved_days := 0
 	for _d in n:
 		days_total += 1
 		day += 1
@@ -929,6 +938,7 @@ func advance_days(n: int) -> Array:
 			GameState.food = 0
 			GameState.morale = maxi(0, GameState.morale - int(rules.get("starve_morale_per_day", 4)))
 			_tlog("断粮！士气下降")
+			starved_days += 1
 		if day > int(rules.get("days_per_month", 30)):
 			day = 1
 			_in_travel_month = true
@@ -938,6 +948,8 @@ func advance_days(n: int) -> Array:
 			month_reports.append({"label": Calendar.label(), "events": evs})
 			if month_reports.size() > 6:
 				month_reports = month_reports.slice(month_reports.size() - 6)
+	if starved_days > 0 and is_traveling():
+		_mark_supply_halt(starved_days)
 	_expire_quests()
 	return reports
 
@@ -2276,6 +2288,54 @@ func take_chain_fail() -> Dictionary:
 
 func dismiss_chain_fail() -> void:
 	last_chain_fail = {}
+
+## Mid-march rations hit 0 → SupplyHaltModal payload (forage / press on / forced stop).
+func _mark_supply_halt(starved_days: int) -> void:
+	if not last_supply_halt.is_empty():
+		return
+	last_supply_halt = {
+		"pos": pos,
+		"dest": str(travel.get("dest", "")),
+		"morale": GameState.morale,
+		"starved_days": starved_days,
+		"food": GameState.food,
+	}
+	_tlog(Locale.t("atlas_supply_halt_log") % [node(pos).get("name", pos), starved_days])
+
+func take_supply_halt() -> Dictionary:
+	var d: Dictionary = last_supply_halt.duplicate(true)
+	last_supply_halt = {}
+	return d
+
+func dismiss_supply_halt() -> void:
+	last_supply_halt = {}
+
+## Scavenge roadside rations; clears halt so the march can resume.
+func forage_supply() -> Dictionary:
+	var gain := maxi(food_per_day() * 2, 2)
+	GameState.food += gain
+	GameState.morale = maxi(0, GameState.morale - 1)
+	last_supply_halt = {}
+	_tlog(Locale.t("atlas_supply_forage_log") % gain)
+	world_changed.emit()
+	return {"ok": true, "food_gained": gain, "msg": Locale.t("atlas_supply_forage_ok") % gain}
+
+## Accept another morale hit and clear halt; next leg may halt again if still empty.
+func press_on_starving() -> Dictionary:
+	GameState.morale = maxi(0, GameState.morale - int(rules.get("starve_morale_per_day", 4)))
+	last_supply_halt = {}
+	_tlog(Locale.t("atlas_supply_press_log"))
+	world_changed.emit()
+	return {"ok": true, "msg": Locale.t("atlas_supply_press_ok"), "morale": GameState.morale}
+
+## Cancel the march at the current node; caller may open stopover with saved dest.
+func forced_halt_march() -> Dictionary:
+	var dest := str(travel.get("dest", ""))
+	var here := pos
+	cancel_travel()
+	last_supply_halt = {}
+	_tlog(Locale.t("atlas_supply_stop_log") % node(here).get("name", here))
+	return {"ok": true, "dest": dest, "pos": here, "msg": Locale.t("atlas_supply_stop_ok") % node(here).get("name", here)}
 
 ## 改道：from failed status, re-post the same step as a fresh offer at its issuer.
 func reroute_failed_chain(chain_id: String) -> Dictionary:

@@ -1661,6 +1661,10 @@ func _run_travel() -> void:
 			_select_node(World.pos)
 			_show_stopover_modal()
 			return
+		if _check_supply_halt():
+			_set_busy(false)
+			_refresh_top()
+			return
 		if bool(info.get("arrived", false)):
 			break
 	_set_busy(false)
@@ -1711,6 +1715,8 @@ func _after_arrival() -> void:
 		return
 	if _check_chain_fail():
 		return
+	if _check_supply_halt():
+		return
 	if _check_rival_thefts():
 		return
 	if _check_arbitrage_arrival():
@@ -1726,6 +1732,8 @@ func _resume_state() -> void:
 	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_losses():
 		return
 	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_chain_fail():
+		return
+	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_supply_halt():
 		return
 	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_rival_thefts():
 		return
@@ -2045,6 +2053,93 @@ func _show_chain_advance_modal(follow: Dictionary) -> void:
 	World.last_chain_follow = {}
 	while not done and is_instance_valid(p) and p.get_parent() != null:
 		await get_tree().process_frame
+
+## Mid-march food=0 → SupplyHaltModal (觅食 / 硬闯 / 强制停靠).
+func _check_supply_halt() -> bool:
+	if not _modal.get_children().is_empty():
+		return false
+	if World.last_supply_halt.is_empty():
+		return false
+	var halt: Dictionary = World.take_supply_halt()
+	if halt.is_empty():
+		return false
+	_show_supply_halt_modal(halt)
+	return true
+
+func _show_supply_halt_modal(halt: Dictionary) -> void:
+	var dest := str(halt.get("dest", ""))
+	var starved := int(halt.get("starved_days", 1))
+	var h := 360.0
+	var panel := _modal_panel(h)
+	panel.name = "SupplyHaltModal"
+	var el := UIKit.mono(Locale.t("atlas_supply_halt_en"), 9, UIKit.DANGER)
+	el.position = Vector2(24, 16)
+	panel.add_child(el)
+	var tlabel := UIKit.title_label(Locale.t("atlas_supply_halt_title"), 20, UIKit.DANGER)
+	tlabel.position = Vector2(24, 34)
+	tlabel.size = Vector2(452, 30)
+	panel.add_child(tlabel)
+	var dest_n := str(World.node(dest).get("name", dest)) if dest != "" else "—"
+	var body := UIKit.body_label(
+		Locale.t("atlas_supply_halt_body") % [World.node(World.pos).get("name", World.pos), dest_n, starved, GameState.morale],
+		UIKit.TEXT, 13)
+	body.name = "SupplyHaltBody"
+	body.position = Vector2(24, 72)
+	body.size = Vector2(452, 78)
+	body.custom_minimum_size = Vector2(452, 0)
+	panel.add_child(body)
+	var y := 164.0
+	var forage := UIKit.cta_button(Locale.t("atlas_supply_forage"), "A", 452, 42)
+	forage.name = "SupplyForage"
+	forage.position = Vector2(24, y)
+	forage.pressed.connect(func():
+		var r: Dictionary = World.forage_supply()
+		_show_toast(str(r.get("msg", "")), UIKit.OK if bool(r.get("ok", false)) else UIKit.DANGER)
+		_clear_modal()
+		_refresh_top()
+		if World.is_traveling():
+			call_deferred("_resume_travel_after_supply"))
+	panel.add_child(forage)
+	y += 50.0
+	var press := UIKit.ghost_button(Locale.t("atlas_supply_press"), 452, 36)
+	press.name = "SupplyPressOn"
+	press.position = Vector2(24, y)
+	press.pressed.connect(func():
+		var r2: Dictionary = World.press_on_starving()
+		_show_toast(str(r2.get("msg", "")), UIKit.EMBER)
+		_clear_modal()
+		_refresh_top()
+		if World.is_traveling():
+			call_deferred("_resume_travel_after_supply"))
+	panel.add_child(press)
+	y += 44.0
+	var stop := UIKit.ghost_button(Locale.t("atlas_supply_forced_stop"), 452, 36)
+	stop.name = "SupplyForcedStop"
+	stop.position = Vector2(24, y)
+	stop.pressed.connect(func():
+		var r3: Dictionary = World.forced_halt_march()
+		_halted_dest = str(r3.get("dest", dest))
+		_show_toast(str(r3.get("msg", "")), UIKit.ACCENT)
+		_clear_modal()
+		_refresh_top()
+		_build_nodes()
+		_render_left()
+		_place_token(false)
+		_select_node(World.pos)
+		_show_stopover_modal())
+	panel.add_child(stop)
+	var later := UIKit.ghost_button(Locale.t("atlas_supply_halt_later"), 140, 36)
+	later.name = "SupplyHaltLater"
+	later.position = Vector2(24, h - 56)
+	later.pressed.connect(func():
+		World.last_supply_halt = halt.duplicate(true)
+		_clear_modal())
+	panel.add_child(later)
+	forage.call_deferred("grab_focus")
+
+func _resume_travel_after_supply() -> void:
+	if World.is_traveling() and World.pending_event.is_empty() and World.encounter.is_empty():
+		_run_travel()
 
 ## Scripted-chain expire/abandon → ChainFailModal (改道 / 确认失败 / 稍后).
 func _check_chain_fail() -> bool:
