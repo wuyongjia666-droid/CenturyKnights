@@ -146,6 +146,7 @@
 | 2026-10-25 | Y1-B 家训月回响：doctrine 月结 → `month_echo.doctrine` + estates/hourglass 回读 + `month_echo_doctrine_check` |
 | 2026-10-25 | Y1-B 月回响 hourglass 回读补全：birth/marriage/life/commission suites 加沙漏 EchoLine 断言 |
 | 2026-10-25 | 内容季枢纽入口：`ContentSeasonRow` 串 cs01/02/03（空则跳过，禁 EmptyHost）；`content_season_hub_entry_check` |
+| 2026-10-25 | 内容季 #4：中篇《家训上的灯》（≥1.2万汉字）+ 圣经 + 可玩章 `cs04_01` + playable_s04；枢纽 EXPECTED 挂 cs04；scaffold 四季完整门禁 |
 | 2026-10-25 | Y1-B 属地/产业月回响 suite：territory+holdings 写入 + estates/hourglass 回读（promo 已有 train_check） |
 | 2026-10-25 | Y1-B 战棋月回响：battle win/lose → `house_mods.month_echo.battle` + estates/hourglass 回读 + `month_echo_battle_check` |
 | 2026-10-25 | Y1-B 酒馆招募月回响：recruit → `house_mods.month_echo.recruit` + estates/hourglass 回读 + `month_echo_recruit_check` |
