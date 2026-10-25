@@ -7,7 +7,7 @@
 |---|---|---|---|
 | #1 | [`season-01/`](./season-01/) | `project/data/content_seasons/season_01.json` | 小说+圣经+可玩章草稿（`cs01_01`） |
 | #2 | [`season-02/`](./season-02/) | `project/data/content_seasons/season_02.json` | **小说初稿已开写**（婚约上的灯；诞育/联姻月回响） |
-| #3 | [`season-03/`](./season-03/) | `project/data/content_seasons/season_03.json` | **小说开写至 §8**（榜上的收成；委托/属地月回响） |
+| #3 | [`season-03/`](./season-03/) | `project/data/content_seasons/season_03.json` | **中篇+可玩章 `cs03_01`**（榜上的收成；委托/属地月回响） |
 
 每季目录约定：
 
@@ -25,7 +25,7 @@
 - `pipeline_stages` — 每步 `doc` / `gate` / `open`
 - `playable_chapter` / `playable_path` — 可玩章 id 与资源路径（季 #1 已开）
 
-CI：`suite_content_season_scaffold_check` 校验 **index 内全部季**；`suite_content_season_playable_check` 走季#1 `cs01_01`。  
+CI：`suite_content_season_scaffold_check` 校验 **index 内全部季**；`suite_content_season_playable_check` 走季#1 `cs01_01`；`content_season_playable_s03_check` 走季#3 `cs03_01`。  
 季#2/#3 要求正文开写。商店工程并行见 [`docs/store/`](../store/)。
 
 ## 分工边界
