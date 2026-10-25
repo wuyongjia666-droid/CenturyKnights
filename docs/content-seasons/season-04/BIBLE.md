@@ -78,3 +78,7 @@
 
 - 选「训与行并排」→ `cs04_kept_parallel`，进 `ledger`。
 - 选「先只留训条」→ `cs04_doctrine_only`，旁白点明沙漏仍在亮。
+
+## 加深备忘
+
+本刀加厚原著与章内对白，不改选题与系统钩子，不新开 season_11，不新增 month_echo 种类。visit@hourglass、battle@bridge 所有权保持。优先人物弧，少公式补页。
