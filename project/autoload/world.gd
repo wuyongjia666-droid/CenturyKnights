@@ -75,6 +75,7 @@ var cargo: Dictionary = {}      # non-store goods
 var cargo_basis: Dictionary = {}  # good -> {unit, city, qty} cost basis for margin toast
 var last_aftermath: Dictionary = {}  # structured road-event aftermath for UI
 var last_battle_aftermath: Dictionary = {}  # structured encounter win/lose aftermath
+var last_chain_follow: Dictionary = {}  # follow-up / next scripted-chain step after turn_in
 var market: Dictionary = {}     # city -> {good: stock}
 var fairs: Dictionary = {}      # city -> days_total expiry
 var intel: Dictionary = {}      # city -> days_total when prices were last seen
@@ -180,6 +181,7 @@ func reset() -> void:
 	cargo_basis = {}
 	last_aftermath = {}
 	last_battle_aftermath = {}
+	last_chain_follow = {}
 	market = {}
 	for id in nodes.keys():
 		_init_market(id)
@@ -256,6 +258,7 @@ func from_save(d: Dictionary) -> void:
 	cargo_basis = d.get("cargo_basis", {}) if typeof(d.get("cargo_basis", {})) == TYPE_DICTIONARY else {}
 	last_aftermath = {}
 	last_battle_aftermath = {}
+	last_chain_follow = {}
 	market = {}
 	var m: Dictionary = d.get("market", {})
 	for id in nodes.keys():
@@ -1890,6 +1893,7 @@ func turn_in(qid: String) -> Dictionary:
 	active.erase(q)
 	extra += CKTerritory.on_quest_done(q)
 	var follow := {} if q.has("territory") else _spawn_follow_up(q)
+	last_chain_follow = follow.duplicate(true) if not follow.is_empty() else {}
 	if not follow.is_empty():
 		extra += "；%s 有后续委托「%s」" % [node(str(follow.issuer)).get("name", ""), follow.title]
 	stats_done[str(q.kind)] = int(stats_done.get(str(q.kind), 0)) + 1
@@ -1900,7 +1904,11 @@ func turn_in(qid: String) -> Dictionary:
 	CKEconomyState.month_echo_note("commission", Locale.t("lb_echo_commission_deliver", [q.title, silver]))
 	GameState.mark_dirty()
 	world_changed.emit()
-	return {"ok": true, "msg": "交付「%s」：+%d 银，声望 +%d%s" % [q.title, silver, int(q.reward_rep), extra]}
+	var out := {"ok": true, "msg": "交付「%s」：+%d 银，声望 +%d%s" % [q.title, silver, int(q.reward_rep), extra]}
+	if not follow.is_empty():
+		out["follow"] = follow
+		out["chain_id"] = str(follow.get("scripted_chain", follow.get("chain_from", "")))
+	return out
 
 ## 委托链：二阶以下普通委托完成后，交付城可能递来更难的后续（报酬 +25%，跨刷新保留）
 func _spawn_follow_up(q: Dictionary) -> Dictionary:
