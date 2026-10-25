@@ -4,6 +4,7 @@
 |---|---|---|---|
 | scaffold_gate | 内容季流水门禁（含 #2） | `res://tests/suites/narrative/content_season_scaffold_check.tscn` | 本 PR |
 | playable_dialogue | 可玩章 cs02_01 对白可走 | `res://tests/suites/narrative/content_season_playable_s02_check.tscn` | 本 PR |
+| playable_dialogue_02 | 可玩章 cs02_02 对白可走 | `res://tests/suites/narrative/content_season_playable_s02_02_check.tscn` | 本 PR |
 | month_echo_birth_marriage | 诞育/联姻月回响系统（已有） | `res://tests/suites/dynasty/month_echo_birth_marriage_check.tscn` | 前置已合 |
 
 ## 正文门槛
