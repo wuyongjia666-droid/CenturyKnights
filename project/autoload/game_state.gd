@@ -412,6 +412,8 @@ func recruit(candidate: CKCharacter, cost: int = -1) -> Dictionary:
 	tavern_candidates.erase(candidate)
 	set_flag("recruited")
 	log_event("招募 %s（-%d 银）" % [candidate.name, cost])
+	## Y1-B: 酒馆招募 → month_echo；属地/沙漏回读（耐玩招募闭环可感）.
+	CKEconomyState.month_echo_note("recruit", Locale.t("lb_echo_recruit", [candidate.name, cost]))
 	mark_dirty()
 	check_ambitions()
 	return {"ok": true, "msg": "招募成功", "cost": cost}
