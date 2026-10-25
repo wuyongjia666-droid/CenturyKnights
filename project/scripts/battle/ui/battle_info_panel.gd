@@ -51,7 +51,7 @@ static func refresh(host) -> void:
 				host._unit_card.set_unit(GameState.get_leader(), "player")
 			fill_traits(host, GameState.get_leader())
 		else:
-			host._portrait.texture = UnitArt.banner(96, 96, false)
+			host._portrait.texture = CKHeraldryChrome.company_banner(96, 96)
 			_sync_status(host, null)
 			if host._unit_card:
 				host._unit_card.set_unit(null)
