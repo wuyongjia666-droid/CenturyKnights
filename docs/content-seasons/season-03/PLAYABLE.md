@@ -33,3 +33,17 @@
 
 旁白、leader、书记官、老管事、槐里·青禾、石垒·晚担、苇原·灯影、老旗手、掌柜。  
 `supporting_v92` 登记 **书记官**（若尚无）。
+
+## 第二可玩章 · 榜阴上的灯
+
+| 项 | 值 |
+|---|---|
+| id | `cs03_02` |
+| 标题 | 榜阴上的灯 |
+| legacy_index | 413 |
+| 文件 | `project/data/story/chapters/cs03_02.json` |
+
+回读章：正面已记，副面/阴面空行要能念。拍：主题开场 → 加深 → 沙漏 visit → 门廊试锋 → 酒馆选题 → 入谱。
+
+- **功粮仍并** → flag `cs03_back_parallel`，进 `ledger`。
+- 验收：`content_season_playable_s03_02_check`。

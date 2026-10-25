@@ -32,3 +32,17 @@
 ## 说话人
 
 旁白、leader、书记官、老管事、槐里·青禾、石垒·晚担、苇原·灯影、老旗手、掌柜。
+
+## 第二可玩章 · 训阴上的灯
+
+| 项 | 值 |
+|---|---|
+| id | `cs04_02` |
+| 标题 | 训阴上的灯 |
+| legacy_index | 414 |
+| 文件 | `project/data/story/chapters/cs04_02.json` |
+
+回读章：正面已记，副面/阴面空行要能念。拍：主题开场 → 加深 → 沙漏 visit → 门廊试锋 → 酒馆选题 → 入谱。
+
+- **训行仍并** → flag `cs04_back_parallel`，进 `ledger`。
+- 验收：`content_season_playable_s04_02_check`。

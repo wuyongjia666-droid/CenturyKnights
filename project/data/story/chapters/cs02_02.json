@@ -1,0 +1,1469 @@
+{
+  "id": "cs02_02",
+  "title": "副笺上的灯",
+  "legacy_index": 412,
+  "return_scene": "res://scenes/hub/castle_hub.tscn",
+  "source": "docs/content-seasons/season-02/NOVEL.md",
+  "beats": [
+    {
+      "id": "slip",
+      "title": "副笺",
+      "lines": [
+        {
+          "id": "cs02_02_slip_0",
+          "speaker": "旁白",
+          "text": "婚厅。上回婚约已入柜。副笺还空着偏格。",
+          "stage": {
+            "card": "一　副笺",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_slip_1",
+          "speaker": "书记官",
+          "text": "正约写过了。副笺要能念，不能只剩印泥。",
+          "stage": {
+            "card": "一　副笺",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_slip_2",
+          "speaker": "leader",
+          "text": "我要听偏格。空着也得说得出。",
+          "stage": {
+            "card": "一　副笺",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_slip_3",
+          "speaker": "旁白",
+          "text": "柜门一响。婚约与副笺并排放上长桌。",
+          "stage": {
+            "card": "一　副笺",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_slip_4",
+          "speaker": "老管事",
+          "text": "催嗣的人嗓门大。偏格的人说再等等。",
+          "stage": {
+            "card": "一　副笺",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_slip_5",
+          "speaker": "岁吏",
+          "text": "年迹旁多了一行「副笺夜」。",
+          "stage": {
+            "card": "一　副笺",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_slip_6",
+          "speaker": "苇原·灯影",
+          "text": "巡防不问谁嗣位。问今夜谁还空着偏。",
+          "stage": {
+            "card": "一　副笺",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_slip_7",
+          "speaker": "旁白",
+          "text": "两行字第一次对视。正约亮，副笺暗。",
+          "stage": {
+            "card": "一　副笺",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_slip_8",
+          "speaker": "书记官",
+          "text": "能念的字在正约。坐得住的偏在副笺等。",
+          "stage": {
+            "card": "一　副笺",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_slip_9",
+          "speaker": "leader",
+          "text": "把偏格念给我听。别念催嗣。",
+          "stage": {
+            "card": "一　副笺",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_slip_10",
+          "speaker": "老管事",
+          "text": "催嗣可以喊。副笺撕不得。",
+          "stage": {
+            "card": "一　副笺",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_slip_11",
+          "speaker": "旁白",
+          "text": "灯矮了一寸。偏格反而更清楚。",
+          "stage": {
+            "card": "一　副笺",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_slip_12",
+          "speaker": "岁吏",
+          "text": "婚约已记账。副笺记账才算整盏。",
+          "stage": {
+            "card": "一　副笺",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_slip_13",
+          "speaker": "书记官",
+          "text": "并排不是拖。是让偏格也有灯。",
+          "stage": {
+            "card": "一　副笺",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_slip_14",
+          "speaker": "leader",
+          "text": "我听懂了。偏着，也要并排。",
+          "stage": {
+            "card": "一　副笺",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_slip_15",
+          "speaker": "旁白",
+          "text": "风从窗缝进来。笺角动，字不动。",
+          "stage": {
+            "card": "一　副笺",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_slip_16",
+          "speaker": "老管事",
+          "text": "催嗣的锣在门外。锣响不进婚厅。",
+          "stage": {
+            "card": "一　副笺",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_slip_17",
+          "speaker": "槐里·青禾",
+          "text": "副笺比婚约薄。薄的反而难装。",
+          "stage": {
+            "card": "一　副笺",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        }
+      ],
+      "next": "pulse"
+    },
+    {
+      "id": "pulse",
+      "title": "偏格",
+      "lines": [
+        {
+          "id": "cs02_02_pulse_0",
+          "speaker": "旁白",
+          "text": "偏格摊开。脉上那格亮着，旁格还空。",
+          "stage": {
+            "card": "二　偏格",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_pulse_1",
+          "speaker": "老管事",
+          "text": "上回留并排的，偏格亮着空。催嗣的，栏上有字、偏仍空。",
+          "stage": {
+            "card": "二　偏格",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_pulse_2",
+          "speaker": "旁白",
+          "text": "两行字第二次吵架。回读逼它们对视·婚盏。",
+          "stage": {
+            "card": "二　偏格",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_pulse_3",
+          "speaker": "苇原·灯影",
+          "text": "巡防不问谁脉动。问今夜谁还空着偏。",
+          "stage": {
+            "card": "二　偏格",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_pulse_4",
+          "speaker": "书记官",
+          "text": "有字的格能念。偏格要人敢看。",
+          "stage": {
+            "card": "二　偏格",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_pulse_5",
+          "speaker": "leader",
+          "text": "偏格不是错。催满才是错。",
+          "stage": {
+            "card": "二　偏格",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_pulse_6",
+          "speaker": "岁吏",
+          "text": "年迹不改脉。只记你敢不敢对偏。",
+          "stage": {
+            "card": "二　偏格",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_pulse_7",
+          "speaker": "旁白",
+          "text": "印泥干了。偏格的边还潮。",
+          "stage": {
+            "card": "二　偏格",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_pulse_8",
+          "speaker": "老管事",
+          "text": "催嗣锣又响。响在门外，进不了偏。",
+          "stage": {
+            "card": "二　偏格",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_pulse_9",
+          "speaker": "书记官",
+          "text": "并排留偏，比硬填假嗣干净。",
+          "stage": {
+            "card": "二　偏格",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_pulse_10",
+          "speaker": "leader",
+          "text": "假嗣我不要。偏格我要听。",
+          "stage": {
+            "card": "二　偏格",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_pulse_11",
+          "speaker": "旁白",
+          "text": "灯把偏格照成浅坑。坑里没有字。",
+          "stage": {
+            "card": "二　偏格",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_pulse_12",
+          "speaker": "岁吏",
+          "text": "婚约上的印还在。副笺上的偏也在。",
+          "stage": {
+            "card": "二　偏格",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_pulse_13",
+          "speaker": "苇原·灯影",
+          "text": "带牌去。牌上写副笺，不写催。",
+          "stage": {
+            "card": "二　偏格",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_pulse_14",
+          "speaker": "老管事",
+          "text": "催嗣条叠得高。偏格叠不住。",
+          "stage": {
+            "card": "二　偏格",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_pulse_15",
+          "speaker": "书记官",
+          "text": "能念的在正约。敢留的在副笺。",
+          "stage": {
+            "card": "二　偏格",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_pulse_16",
+          "speaker": "旁白",
+          "text": "笺角又动。偏格仍空。",
+          "stage": {
+            "card": "二　偏格",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_pulse_17",
+          "speaker": "老旗手",
+          "text": "偏格灯还亮。亮着，才敢回读。",
+          "stage": {
+            "card": "二　偏格",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "close"
+          }
+        }
+      ],
+      "next": "hourglass"
+    },
+    {
+      "id": "hourglass",
+      "title": "两行",
+      "lines": [
+        {
+          "id": "cs02_02_hourglass_0",
+          "speaker": "旁白",
+          "text": "沙漏厅。上行婚约、下行副笺。回读把两行按住。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_hourglass_1",
+          "speaker": "老管事",
+          "text": "月份往前走。回读不改月份，只改你敢不敢对偏。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_hourglass_2",
+          "speaker": "岁吏",
+          "text": "年迹旁多了一行「副笺回读」。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_hourglass_3",
+          "speaker": "书记官",
+          "text": "能念的字在上行。偏得住的格还在下行等。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_hourglass_4",
+          "speaker": "leader",
+          "text": "两行都打开。我要听对看·婚盏。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_hourglass_5",
+          "speaker": "旁白",
+          "text": "沙响。上行亮，下行仍暗·婚盏。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_hourglass_6",
+          "speaker": "苇原·灯影",
+          "text": "巡防牌上写副笺。不写急锣。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_hourglass_7",
+          "speaker": "老管事",
+          "text": "催嗣的人在门外跺脚。跺不进沙漏。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_hourglass_8",
+          "speaker": "书记官",
+          "text": "并排不是拖月。是让偏格跟月份并排走。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_hourglass_9",
+          "speaker": "岁吏",
+          "text": "月结不抹偏。偏也要入迹。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_hourglass_10",
+          "speaker": "leader",
+          "text": "我听偏格。不听跺脚。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_hourglass_11",
+          "speaker": "旁白",
+          "text": "沙又落一层。下行多了一点亮·婚盏。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_hourglass_12",
+          "speaker": "老管事",
+          "text": "锣停了。偏格还在。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_hourglass_13",
+          "speaker": "书记官",
+          "text": "回读夜的字，比催嗣长命。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_hourglass_14",
+          "speaker": "岁吏",
+          "text": "带牌出去。沙漏还转·婚盏。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_hourglass_15",
+          "speaker": "旁白",
+          "text": "两行终于对上。一对，就不敢假填·婚盏。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_hourglass_16",
+          "speaker": "老管事",
+          "text": "假嗣进不了沙漏。偏格能。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_hourglass_17",
+          "speaker": "苇原·灯影",
+          "text": "带牌去。牌上写副笺，不写急。",
+          "stage": {
+            "card": "三　两行",
+            "bg": "hourglass",
+            "music": "castle",
+            "camera": "wide"
+          }
+        }
+      ],
+      "next": "bridge",
+      "actions": [
+        {
+          "id": "open_hourglass",
+          "label": "去看月份怎么往前走",
+          "do": [
+            {
+              "op": "visit",
+              "path": "res://scenes/hub/hourglass.tscn"
+            }
+          ]
+        },
+        {
+          "id": "continue_after_visit",
+          "label": "继续，去门廊",
+          "do": [
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bridge",
+      "title": "门廊",
+      "lines": [
+        {
+          "id": "cs02_02_bridge_0",
+          "speaker": "旁白",
+          "text": "门廊。副笺灯还在身后。锋镝在桥上试。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_bridge_1",
+          "speaker": "岁吏",
+          "text": "试锋不改偏格。只问你手稳不稳。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_bridge_2",
+          "speaker": "leader",
+          "text": "先试一锋。赢了再谈催嗣。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_bridge_3",
+          "speaker": "老旗手",
+          "text": "锋收回来也行。偏格不靠锋填。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_bridge_4",
+          "speaker": "旁白",
+          "text": "桥风大。灯小。字还在·婚盏。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_bridge_5",
+          "speaker": "书记官",
+          "text": "催嗣可以喊。副笺本撕不得。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_bridge_6",
+          "speaker": "苇原·灯影",
+          "text": "巡防站桥侧。不问胜负，问你还回不回读·婚盏。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_bridge_7",
+          "speaker": "老管事",
+          "text": "锣在城门。桥上只听见水·婚盏。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_bridge_8",
+          "speaker": "leader",
+          "text": "锋出不出，偏格都在。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_bridge_9",
+          "speaker": "岁吏",
+          "text": "试锋得手，锋镝压下，并排笺可续。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_bridge_10",
+          "speaker": "旁白",
+          "text": "水声盖过远处锣·婚盏。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_bridge_11",
+          "speaker": "老旗手",
+          "text": "伤还在也行。先去酒馆选题·婚盏。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_bridge_12",
+          "speaker": "书记官",
+          "text": "选题在前。假嗣在后——后的不要。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_bridge_13",
+          "speaker": "苇原·灯影",
+          "text": "牌还在手里。牌上仍是副笺。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_bridge_14",
+          "speaker": "老管事",
+          "text": "催嗣的人等不及。你等得及。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_bridge_15",
+          "speaker": "leader",
+          "text": "我等偏格。不等锣。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_bridge_16",
+          "speaker": "旁白",
+          "text": "桥板一颤。灯不灭·婚盏。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_bridge_17",
+          "speaker": "岁吏",
+          "text": "未试锋——锋未出鞘，也可去酒馆·婚盏。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_bridge_18",
+          "speaker": "老旗手",
+          "text": "试锋未成——伤还在，先去酒馆·婚盏。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_bridge_19",
+          "speaker": "岁吏",
+          "text": "催嗣可以喊。副笺本撕不得·婚盏。",
+          "stage": {
+            "card": "四　门廊",
+            "bg": "bridge",
+            "music": "battle_prep",
+            "camera": "wide"
+          }
+        }
+      ],
+      "next": "tavern",
+      "actions": [
+        {
+          "id": "open_skirmish",
+          "label": "先试一锋",
+          "when": {
+            "all": [
+              {
+                "not_flag": "cs02_02_mid_fought"
+              },
+              {
+                "not_flag": "cs02_02_mid_lost"
+              }
+            ]
+          },
+          "do": [
+            {
+              "op": "battle",
+              "map": "quest_bandit",
+              "objective": "rout",
+              "return": "res://scenes/story/chapter_player.tscn",
+              "win_flags": [
+                "cs02_02_mid_fought"
+              ],
+              "lose_flags": [
+                "cs02_02_mid_lost"
+              ],
+              "win_ledger": {
+                "choice": "mid_skirmish",
+                "title": "副笺上的灯",
+                "outcome": "副笺旁试锋得手——锋镝压下，并排纸可续",
+                "yeartrace": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "retry_skirmish",
+          "label": "再试锋镝",
+          "when": {
+            "all": [
+              {
+                "not_flag": "cs02_02_mid_fought"
+              },
+              {
+                "flag": "cs02_02_mid_lost"
+              }
+            ]
+          },
+          "do": [
+            {
+              "op": "battle",
+              "map": "quest_bandit",
+              "objective": "rout",
+              "return": "res://scenes/story/chapter_player.tscn",
+              "win_flags": [
+                "cs02_02_mid_fought"
+              ],
+              "lose_flags": [
+                "cs02_02_mid_lost"
+              ],
+              "win_ledger": {
+                "choice": "mid_skirmish",
+                "title": "副笺上的灯",
+                "outcome": "副笺旁试锋得手——锋镝压下，并排纸可续",
+                "yeartrace": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "continue_after_battle",
+          "label": "继续，去酒馆",
+          "do": [
+            {
+              "op": "season_ledger",
+              "when": {
+                "all": [
+                  {
+                    "not_flag": "cs02_02_mid_fought"
+                  },
+                  {
+                    "not_flag": "cs02_02_mid_lost"
+                  }
+                ]
+              },
+              "chapter": "cs02_02",
+              "choice": "mid_skirmish_skip",
+              "title": "副笺上的灯",
+              "outcome": "未试锋——锋未出鞘，径去酒馆",
+              "yeartrace": true
+            },
+            {
+              "op": "season_ledger",
+              "when": {
+                "all": [
+                  {
+                    "not_flag": "cs02_02_mid_fought"
+                  },
+                  {
+                    "flag": "cs02_02_mid_lost"
+                  }
+                ]
+              },
+              "chapter": "cs02_02",
+              "choice": "mid_skirmish_abort",
+              "title": "副笺上的灯",
+              "outcome": "试锋未成——伤还在，先去酒馆",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tavern",
+      "title": "选题",
+      "lines": [
+        {
+          "id": "cs02_02_tavern_0",
+          "speaker": "旁白",
+          "text": "酒馆。板上两道题。手按上去·婚盏。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_tavern_1",
+          "speaker": "掌柜",
+          "text": "一道偏仍并排。一道先催嗣位。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_tavern_2",
+          "speaker": "leader",
+          "text": "我看题。不看谁嗓门大·婚盏。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_tavern_3",
+          "speaker": "老管事",
+          "text": "并排留真。催嗣快。快的未必真。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_tavern_4",
+          "speaker": "书记官",
+          "text": "偏格进谱，才算整盏婚约。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_tavern_5",
+          "speaker": "岁吏",
+          "text": "年迹听选择。不听锣·婚盏。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_tavern_6",
+          "speaker": "旁白",
+          "text": "酒气里笺更白。白得能看见偏。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_tavern_7",
+          "speaker": "掌柜",
+          "text": "选完入柜。副笺柜门会响。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_tavern_8",
+          "speaker": "苇原·灯影",
+          "text": "巡防在门外。门内只选题·婚盏。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_tavern_9",
+          "speaker": "leader",
+          "text": "偏仍并排——我手按这道。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_tavern_10",
+          "speaker": "老管事",
+          "text": "按实了。别悬着·婚盏。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_tavern_11",
+          "speaker": "书记官",
+          "text": "假嗣那道我划掉。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_tavern_12",
+          "speaker": "旁白",
+          "text": "板面一热。字进手心·婚盏。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_tavern_13",
+          "speaker": "岁吏",
+          "text": "选择入账。副笺夜可结。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_tavern_14",
+          "speaker": "掌柜",
+          "text": "另一道也在。你不选它·婚盏。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_tavern_15",
+          "speaker": "老管事",
+          "text": "催嗣的锣远了。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_tavern_16",
+          "speaker": "旁白",
+          "text": "两道题还在板上。只一道进柜·婚盏。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs02_02_tavern_17",
+          "speaker": "老管事",
+          "text": "选完入柜。副笺柜门会响·婚盏。",
+          "stage": {
+            "card": "五　选题",
+            "bg": "tavern",
+            "music": "tavern",
+            "camera": "close"
+          }
+        }
+      ],
+      "actions": [
+        {
+          "id": "keep_slip",
+          "label": "偏仍并排",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs02_slip_parallel",
+              "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs02_02",
+              "choice": "keep_slip",
+              "title": "副笺上的灯",
+              "outcome": "副笺回读后偏仍并排记入谱",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        },
+        {
+          "id": "push_heir",
+          "label": "先催嗣位",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs02_slip_push",
+              "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs02_02",
+              "choice": "push_heir",
+              "title": "副笺上的灯",
+              "outcome": "副笺回读后先催嗣位",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ledger",
+      "title": "并排",
+      "lines": [
+        {
+          "id": "cs02_02_ledger_0",
+          "speaker": "旁白",
+          "text": "入谱。副笺与婚约并排进柜。",
+          "stage": {
+            "card": "六　并排",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_ledger_1",
+          "speaker": "书记官",
+          "text": "偏格有灯。灯不灭。",
+          "stage": {
+            "card": "六　并排",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_ledger_2",
+          "speaker": "leader",
+          "text": "我看见偏了。偏也在谱里。",
+          "stage": {
+            "card": "六　并排",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_ledger_3",
+          "speaker": "岁吏",
+          "text": "年迹末行写：副笺并排留。",
+          "stage": {
+            "card": "六　并排",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_ledger_4",
+          "speaker": "老管事",
+          "text": "催嗣锣再响，也撕不开柜门。",
+          "stage": {
+            "card": "六　并排",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_ledger_5",
+          "speaker": "旁白",
+          "text": "柜门一合。灯还在缝里·婚盏。",
+          "stage": {
+            "card": "六　并排",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_ledger_6",
+          "speaker": "苇原·灯影",
+          "text": "巡防收牌。牌上副笺两字还热。",
+          "stage": {
+            "card": "六　并排",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_ledger_7",
+          "speaker": "书记官",
+          "text": "整盏婚约，才算约。",
+          "stage": {
+            "card": "六　并排",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_ledger_8",
+          "speaker": "leader",
+          "text": "假嗣没进来。好。",
+          "stage": {
+            "card": "六　并排",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_ledger_9",
+          "speaker": "岁吏",
+          "text": "月结旁多一笔偏格。",
+          "stage": {
+            "card": "六　并排",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_ledger_10",
+          "speaker": "老管事",
+          "text": "催条叠在门外。谱在门内·婚盏。",
+          "stage": {
+            "card": "六　并排",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_ledger_11",
+          "speaker": "旁白",
+          "text": "印泥干。偏格的边也干了。",
+          "stage": {
+            "card": "六　并排",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_ledger_12",
+          "speaker": "书记官",
+          "text": "下次打开，偏格还在——带着灯。",
+          "stage": {
+            "card": "六　并排",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_ledger_13",
+          "speaker": "leader",
+          "text": "够了。去灰旗堡·婚盏。",
+          "stage": {
+            "card": "六　并排",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_ledger_14",
+          "speaker": "苇原·灯影",
+          "text": "堡门亮着。副笺灯跟着。",
+          "stage": {
+            "card": "六　并排",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_ledger_15",
+          "speaker": "岁吏",
+          "text": "年迹合上。字还在·婚盏。",
+          "stage": {
+            "card": "六　并排",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_ledger_16",
+          "speaker": "老管事",
+          "text": "婚厅可歇。谱不可假。",
+          "stage": {
+            "card": "六　并排",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_ledger_17",
+          "speaker": "旁白",
+          "text": "风停。笺平。",
+          "stage": {
+            "card": "六　并排",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_ledger_18",
+          "speaker": "书记官",
+          "text": "并排不是拖。是完整·婚盏。",
+          "stage": {
+            "card": "六　并排",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs02_02_ledger_19",
+          "speaker": "leader",
+          "text": "灯不灭。副笺本在柜里。",
+          "stage": {
+            "card": "六　并排",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        }
+      ],
+      "actions": []
+    }
+  ],
+  "title_en": "Lamp on the Side Note"
+}

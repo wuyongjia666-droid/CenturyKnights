@@ -32,3 +32,17 @@
 
 旁白、leader、书记官、老管事、听回、槐里·青禾、石垒·晚担、苇原·灯影、老旗手、掌柜。  
 新增：`supporting_v92` 登记 **书记官**、**老管事**（若尚无）；**庭吏** 可玩章可不登场。
+
+## 第二可玩章 · 副笺上的灯
+
+| 项 | 值 |
+|---|---|
+| id | `cs02_02` |
+| 标题 | 副笺上的灯 |
+| legacy_index | 412 |
+| 文件 | `project/data/story/chapters/cs02_02.json` |
+
+回读章：正面已记，副面/阴面空行要能念。拍：主题开场 → 加深 → 沙漏 visit → 门廊试锋 → 酒馆选题 → 入谱。
+
+- **偏仍并排** → flag `cs02_slip_parallel`，进 `ledger`。
+- 验收：`content_season_playable_s02_02_check`。

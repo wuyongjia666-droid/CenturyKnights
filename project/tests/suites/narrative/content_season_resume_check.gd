@@ -7,8 +7,8 @@ const Schema = preload("res://scripts/narrative/chapter_schema.gd")
 const PLAYER := "res://scenes/story/chapter_player.tscn"
 const HUB := "res://scenes/hub/castle_hub.tscn"
 const CHAPTERS := [
-	"cs01_01", "cs02_01", "cs03_01", "cs04_01", "cs05_01", "cs05_02",
-	"cs06_01", "cs06_02", "cs07_01", "cs07_02", "cs08_01", "cs09_01", "cs10_01",
+	"cs01_01", "cs01_02", "cs02_01", "cs02_02", "cs03_01", "cs03_02", "cs04_01", "cs04_02",
+	"cs05_01", "cs05_02", "cs06_01", "cs06_02", "cs07_01", "cs07_02", "cs08_01", "cs09_01", "cs10_01",
 ]
 const CHOICE := {
 	"cs01_01": "把无写进谱",
