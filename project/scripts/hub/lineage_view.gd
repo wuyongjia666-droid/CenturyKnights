@@ -104,12 +104,8 @@ func apply_mobile_layout() -> void:
 			alive_n += 1
 	var info := "%s %d · %s" % [Locale.t("gen2_25"), alive_n, Calendar.label()]
 	MobilePage.top_bar(self, Locale.t("gen2_24") % GameState.surname, info, [[Locale.t("gen2_27"), _back]])
-	var ca := get_node_or_null("CastleArms") as Control
-	if ca:
-		ca.visible = true
-		ca.position = Vector2(w - 64.0, 6.0)
-		ca.size = Vector2(52, 60)
-		ca.custom_minimum_size = Vector2(52, 60)
+	# Mobile parity: refresh 团徽 header via Chrome (same core as desktop genealogy).
+	CKHeraldryChrome.place_company_header(self, Vector2(w - 64.0, 6.0), Vector2(52, 60))
 	var iw := 470.0
 	_info_rect = Rect2(w - iw - 24.0, MobilePage.TOP + 4.0, iw, 720.0 - MobilePage.TOP - 16.0)
 	var gw := _info_rect.position.x - 48.0

@@ -762,10 +762,27 @@ func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 	cast.vertical_alignment = VERTICAL_ALIGNMENT_TOP
 	cast.position = Vector2(12, holder.position.y + holder.size.y + 2.0)
 	cast.size = Vector2(hold_w, maxf(16.0, _punnett.size.y - cast.position.y - 4.0))
-	## Keep ≥12px for the desktop gate; if it still overflows, clip + tooltip.
-	if _label_text_h(cast, hold_w) > cast.size.y:
-		cast.clip_text = true
-		cast.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	## Desktop floor is 12. The punnett rows give up height so the forecast
+	## wraps at that size instead of stepping the font down to 10.
+	var fs := UIKit.desk_sz(12)
+	cast.add_theme_font_size_override("font_size", fs)
+	var need_h := _label_text_h(cast, hold_w)
+	var bottom_pad := 4.0
+	var avail := _punnett.size.y - holder.position.y - bottom_pad
+	var forecast_h := maxf(18.0, need_h)
+	var holder_h := avail - forecast_h - 2.0
+	if holder_h < 36.0:
+		var room := 638.0 - (_punnett.position.y + _punnett.size.y)
+		var take := minf(36.0 - holder_h, maxf(0.0, room))
+		_punnett.size.y += take
+		avail += take
+		holder_h = avail - forecast_h - 2.0
+		if holder_h < 36.0:
+			holder_h = 36.0
+			forecast_h = maxf(18.0, avail - holder_h - 2.0)
+	holder.size = Vector2(hold_w, holder_h)
+	cast.position = Vector2(12, holder.position.y + holder.size.y + 2.0)
+	cast.size = Vector2(hold_w, maxf(forecast_h, _punnett.size.y - cast.position.y - bottom_pad))
 	_punnett.add_child(cast)
 	UIFX.wire_tree(_rite_board)
 	_mobile_after_render.call_deferred()

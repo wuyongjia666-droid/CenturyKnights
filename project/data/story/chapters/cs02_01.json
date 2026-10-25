@@ -52,7 +52,67 @@
           "text": "落下就重。别指望风帮你吹轻。"
         },
         {
-          "id": "cs02_seal_7",
+          "id": "cs02_seal_x0",
+          "speaker": "旁白",
+          "text": "侧厅潮气贴墙。蜡油干得慢，慢才像真印。"
+        },
+        {
+          "id": "cs02_seal_x1",
+          "speaker": "书记官",
+          "text": "急干的印，多半是给人看的。"
+        },
+        {
+          "id": "cs02_seal_x2",
+          "speaker": "老旗手",
+          "text": "看的印轻。核的印重。"
+        },
+        {
+          "id": "cs02_seal_x3",
+          "speaker": "槐里·青禾",
+          "text": "盖之前问价。盖之后，问灯。"
+        },
+        {
+          "id": "cs02_seal_x4",
+          "speaker": "石垒·晚担",
+          "text": "印泥沾手别急擦。沾着，记得重。"
+        },
+        {
+          "id": "cs02_seal_x5",
+          "speaker": "苇原·灯影",
+          "text": "门外有人等摘要。摘要越短越危险。"
+        },
+        {
+          "id": "cs02_seal_x6",
+          "speaker": "掌柜",
+          "text": "酒馆今晚不卖半截。整句才挂。"
+        },
+        {
+          "id": "cs02_seal_x7",
+          "speaker": "旁白",
+          "text": "铜印边沿一道旧痕。旧痕比新蜡老实。"
+        },
+        {
+          "id": "cs02_seal_x8",
+          "speaker": "书记官",
+          "text": "姓写入栏。栏认印，不认催。"
+        },
+        {
+          "id": "cs02_seal_y0",
+          "speaker": "旁白",
+          "text": "蜡油边缘一圈指纹。指纹比签名难赖。"
+        },
+        {
+          "id": "cs02_seal_y1",
+          "speaker": "书记官",
+          "text": "赖不掉的栏，才配谈嗣。"
+        },
+        {
+          "id": "cs02_seal_y2",
+          "speaker": "老旗手",
+          "text": "重的印，风吹不改姓。"
+        },
+        {
+          "id": "cs02_seal_x9",
           "speaker": "leader",
           "text": "印落下了。我们去对条。"
         }
@@ -108,7 +168,67 @@
           "text": "沙漏厅里，铜珠滚过婚仪那一格，轻轻一响。"
         },
         {
-          "id": "cs02_est_8",
+          "id": "cs02_estate_x0",
+          "speaker": "旁白",
+          "text": "厢房抽屉有潮味。潮味里夹着月条。"
+        },
+        {
+          "id": "cs02_estate_x1",
+          "speaker": "老管事",
+          "text": "待诞育三个字，比已完好看。好看在诚实。"
+        },
+        {
+          "id": "cs02_estate_x2",
+          "speaker": "槐里·青禾",
+          "text": "待着就待着。别先替孩子填脉。"
+        },
+        {
+          "id": "cs02_estate_x3",
+          "speaker": "石垒·晚担",
+          "text": "空格可以看。急格不能买。"
+        },
+        {
+          "id": "cs02_estate_x4",
+          "speaker": "苇原·灯影",
+          "text": "敌宅拓片我带回来了。空着等我们慌。"
+        },
+        {
+          "id": "cs02_estate_x5",
+          "speaker": "老旗手",
+          "text": "慌的人会改盏。改盏的人，旗先裂。"
+        },
+        {
+          "id": "cs02_estate_x6",
+          "speaker": "旁白",
+          "text": "沙漏铜珠滚过婚仪格，轻响一声。"
+        },
+        {
+          "id": "cs02_estate_x7",
+          "speaker": "掌柜",
+          "text": "外面有人给半截开价。价单我贴反面了。"
+        },
+        {
+          "id": "cs02_estate_x8",
+          "speaker": "老管事",
+          "text": "细注只写联姻落定。落定不是认脉。"
+        },
+        {
+          "id": "cs02_estate_y0",
+          "speaker": "旁白",
+          "text": "月条边角卷起。卷起说明被人翻过。"
+        },
+        {
+          "id": "cs02_estate_y1",
+          "speaker": "老管事",
+          "text": "翻过比供着强。"
+        },
+        {
+          "id": "cs02_estate_y2",
+          "speaker": "苇原·灯影",
+          "text": "拓片空格旁朱点，像催。催不买。"
+        },
+        {
+          "id": "cs02_estate_x9",
           "speaker": "leader",
           "text": "记了不等于认了。等回执。"
         },
@@ -300,9 +420,69 @@
           "text": "两版都记。沙漏并排。谁来对，谁自己看。"
         },
         {
-          "id": "cs02_bir_9",
+          "id": "cs02_birth_x0",
+          "speaker": "旁白",
+          "text": "雨丝斜切窗纸。铜盏反光偏了一点。"
+        },
+        {
+          "id": "cs02_birth_x1",
+          "speaker": "听回",
+          "text": "偏就写偏。我不管议会爱听正。"
+        },
+        {
+          "id": "cs02_birth_x2",
+          "speaker": "槐里·青禾",
+          "text": "正字好卖。偏字好睡。"
+        },
+        {
+          "id": "cs02_birth_x3",
+          "speaker": "石垒·晚担",
+          "text": "半截已经上路。整句还在你手里。"
+        },
+        {
+          "id": "cs02_birth_x4",
           "speaker": "苇原·灯影",
-          "text": "半截话今晚过陆桥。不拦，就准备对。"
+          "text": "陆桥上我补过——并排。愣住的人会来看条。"
+        },
+        {
+          "id": "cs02_birth_x5",
+          "speaker": "老管事",
+          "text": "两版都进月回响。谁来对，谁自己看。"
+        },
+        {
+          "id": "cs02_birth_x6",
+          "speaker": "书记官",
+          "text": "我可以抄两行。一行我拒抄。"
+        },
+        {
+          "id": "cs02_birth_x7",
+          "speaker": "听回",
+          "text": "求改的人最后来求我笑。我不会笑。"
+        },
+        {
+          "id": "cs02_birth_x8",
+          "speaker": "旁白",
+          "text": "孩子掌心握着一点还没进名册的暖。"
+        },
+        {
+          "id": "cs02_birth_y0",
+          "speaker": "旁白",
+          "text": "雨停后檐水还在滴。滴声比催条慢。"
+        },
+        {
+          "id": "cs02_birth_y1",
+          "speaker": "听回",
+          "text": "慢的字，我才信。"
+        },
+        {
+          "id": "cs02_birth_y2",
+          "speaker": "槐里·青禾",
+          "text": "掌心暖不进名册也没关系。"
+        },
+        {
+          "id": "cs02_birth_x9",
+          "speaker": "leader",
+          "text": "两版都记。沙漏并排。"
         }
       ],
       "actions": [
@@ -372,9 +552,69 @@
           "text": "让他们挂。挂着，才有人对。"
         },
         {
-          "id": "cs02_tav_7",
+          "id": "cs02_tavern_x0",
           "speaker": "旁白",
-          "text": "沙漏里已有两行。你得选：并排留下，还是先压下行。"
+          "text": "板上钉子不齐。不齐才像日子。"
+        },
+        {
+          "id": "cs02_tavern_x1",
+          "speaker": "掌柜",
+          "text": "钱能买位，买不掉字。"
+        },
+        {
+          "id": "cs02_tavern_x2",
+          "speaker": "槐里·青禾",
+          "text": "挂着，才有人对。撕早了像心虚。"
+        },
+        {
+          "id": "cs02_tavern_x3",
+          "speaker": "石垒·晚担",
+          "text": "留指甲痕的人，至少肯签字。"
+        },
+        {
+          "id": "cs02_tavern_x4",
+          "speaker": "苇原·灯影",
+          "text": "三天满我来撕。撕进灶，火要亮。"
+        },
+        {
+          "id": "cs02_tavern_x5",
+          "speaker": "老旗手",
+          "text": "框窄，字才老实。"
+        },
+        {
+          "id": "cs02_tavern_x6",
+          "speaker": "旁白",
+          "text": "有人想盖住脉偏。盖不住潮味。"
+        },
+        {
+          "id": "cs02_tavern_x7",
+          "speaker": "掌柜",
+          "text": "先对条。对完再钉新的。"
+        },
+        {
+          "id": "cs02_tavern_x8",
+          "speaker": "书记官",
+          "text": "朝报要一行。我给两行。"
+        },
+        {
+          "id": "cs02_tavern_y0",
+          "speaker": "旁白",
+          "text": "花生壳圈住摘抄下角。圈住的是并排。"
+        },
+        {
+          "id": "cs02_tavern_y1",
+          "speaker": "掌柜",
+          "text": "圈脏，才像有人选过。"
+        },
+        {
+          "id": "cs02_tavern_y2",
+          "speaker": "石垒·晚担",
+          "text": "干净靴也留痕。痕留给对条的人。"
+        },
+        {
+          "id": "cs02_tavern_x9",
+          "speaker": "旁白",
+          "text": "沙漏已有两行。并排留，还是先压下行。"
         }
       ],
       "actions": [
@@ -486,9 +726,79 @@
           "text": "婚和盏，并排。谁来认嗣，先念完。"
         },
         {
-          "id": "cs02_led_7",
+          "id": "cs02_ledger_x0",
           "speaker": "旁白",
-          "text": "名册上的姓仍在。回执上的脉仍偏。一天开始。"
+          "text": "长桌凉。两根木条并排，像不肯握手却并排站。"
+        },
+        {
+          "id": "cs02_ledger_x1",
+          "speaker": "老管事",
+          "text": "每月来念。跳行的人，不配谈嗣。"
+        },
+        {
+          "id": "cs02_ledger_x2",
+          "speaker": "槐里·青禾",
+          "text": "偏也是字。字进条，人才能睡。"
+        },
+        {
+          "id": "cs02_ledger_x3",
+          "speaker": "老旗手",
+          "text": "门楣给人看。匣给人核。两样都做。"
+        },
+        {
+          "id": "cs02_ledger_x4",
+          "speaker": "石垒·晚担",
+          "text": "跟的人还在。泥洗了也能吃。"
+        },
+        {
+          "id": "cs02_ledger_x5",
+          "speaker": "苇原·灯影",
+          "text": "谁买结论，带他来看条。"
+        },
+        {
+          "id": "cs02_ledger_x6",
+          "speaker": "听回",
+          "text": "盏上的字不改。你们的并排，我认。"
+        },
+        {
+          "id": "cs02_ledger_x7",
+          "speaker": "掌柜",
+          "text": "半截市价跌了。跌得好。"
+        },
+        {
+          "id": "cs02_ledger_x8",
+          "speaker": "书记官",
+          "text": "反复抽核对的纸，比封死的纸更像活物。"
+        },
+        {
+          "id": "cs02_ledger_x9",
+          "speaker": "旁白",
+          "text": "名册姓仍在。回执脉仍偏。一天开始。"
+        },
+        {
+          "id": "cs02_ledger_y0",
+          "speaker": "旁白",
+          "text": "西阁两盏小灯对视。灭一盏，谈嗣就停。"
+        },
+        {
+          "id": "cs02_ledger_y1",
+          "speaker": "槐里·青禾",
+          "text": "软名枕边，硬姓名册。并排才像家。"
+        },
+        {
+          "id": "cs02_ledger_y2",
+          "speaker": "听回",
+          "text": "灯仍在。脉仍偏。我写过的不改。"
+        },
+        {
+          "id": "cs02_ledger_y99",
+          "speaker": "旁白",
+          "text": "两行并排。偏的脉还偏，灯还亮。"
+        },
+        {
+          "id": "cs02_ledger_x10",
+          "speaker": "leader",
+          "text": "婚和盏，并排。谁来认嗣，先念完。"
         }
       ],
       "actions": []

@@ -39,3 +39,17 @@
 - 可玩章 `cs08_01.json` 对白加厚至 100+ 行；单行仍 ≤60 汉字。
 - **所有权不变**：`hourglass` 拍挂 visit「去看月份怎么往前走」；`bridge` 拍挂 battle「先试一锋 / 再试锋镝 / 继续」。
 - 验收：`content_season_playable_s08_check` 行数闸提高到 ≥70；另跑 visit_authored / battle_authored / hub_entry。
+
+
+## 第二可玩章（本刀）
+
+| 项 | 值 |
+|---|---|
+| id | `cs08_02` |
+| 标题 | 碑阴上的灯 |
+| 文件 | `project/data/story/chapters/cs08_02.json` |
+| 验收 | `content_season_playable_s08_02_check` |
+
+- 选题：**碑阴并排留** → flag `cs08_back_parallel`；备选 **先催碑名**。
+- 所有权不变：`hourglass` visit「去看月份怎么往前走」；`bridge` battle「先试一锋 / 再试锋镝 / 继续」。
+- 枢纽：`playable_chapters` 挂进 `StoryCatalog.content_season_entries`（主 `playable_chapter` 仍为 `_01`）。
