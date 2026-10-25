@@ -372,6 +372,8 @@ func _render_side() -> void:
 	if _mob:
 		t.add_theme_font_size_override("font_size", 28)
 	p.add_child(t)
+	## 团徽 + 邦徽 on the side card (desktop + mobile).
+	CKHeraldryChrome.place_city_crest_strip(p, city, Vector2(292, 12) if not _mob else Vector2(280, 8), Vector2(36, 44) if not _mob else Vector2(40, 48))
 	var chips := HBoxContainer.new()
 	chips.position = Vector2(18, 222)
 	chips.add_theme_constant_override("separation", 5)
@@ -910,6 +912,7 @@ func _tab_smith() -> void:
 	var nat: Dictionary = World.nations.get(World.nation_of(city), {})
 	var p := _panel(Rect2(0, 0, 420, 576))
 	_head(p, Vector2(18, 14), str(nat.get("smith", "铁匠铺")), "SMITHY · TIER %d" % World.smith_tier(city))
+	CKHeraldryChrome.place_city_crest_strip(p, city, Vector2(328, 10), Vector2(36, 44))
 	var v := _scroll(p, Rect2(12, 58, 400, 508))
 	if _sel_item == "" or not World.items.has(_sel_item):
 		_sel_item = str(st[0].item.id) if not st.is_empty() else ""
@@ -980,6 +983,7 @@ func _show_smith_reveal(it: Dictionary) -> void:
 	var mono := UIKit.mono(Locale.t("smith_reveal_tag"), tag_sz, UIKit.ACCENT)
 	mono.position = Vector2(24, 18)
 	card.add_child(mono)
+	CKHeraldryChrome.place_city_crest_strip(card, city, Vector2(cw - 96, 12), Vector2(36, 44) if not phone else Vector2(40, 48))
 	var ic := _icon(it, 110.0 if not phone else 96.0)
 	ic.position = Vector2(24, 56)
 	card.add_child(ic)
@@ -1133,6 +1137,7 @@ func _item_detail(r: Rect2, iid: String, shop: bool) -> void:
 func _tab_market() -> void:
 	var p := _panel(Rect2(0, 0, 848, 576))
 	_head(p, Vector2(18, 14), "市集", "MARKET · SUPPLY-DRIVEN PRICES")
+	CKHeraldryChrome.place_city_crest_strip(p, city, Vector2(328, 10), Vector2(36, 44))
 	var cap := UIKit.mono("货舱 %d/%d   ·   粮/铁/药材直接入库，不占货舱" % [World.cargo_used(), World.cargo_cap()], 9, UIKit.TEXT_DIM, false)
 	cap.position = Vector2(420, 20)
 	p.add_child(cap)
