@@ -329,8 +329,13 @@ func _seat_migration() -> String:
 	var s0 := GameState.silver
 	var f0 := GameState.food
 	CKTerritory.apply_month(0.99)
-	if GameState.silver - s0 < 6 or GameState.food - f0 < 6:
-		return "migrated seat lost value: silver %+d food %+d" % [GameState.silver - s0, GameState.food - f0]
+	var cache_gain := 0
+	for sid in CKTerritory.owned_ids():
+		if bool(CKTerritory.state(sid).stockade):
+			cache_gain += CKTerritory.cache_food(sid)
+	if GameState.silver - s0 < 6 or cache_gain < 6:
+		return "migrated seat lost value: silver %+d cache %d (wagon food %+d)" % [
+			GameState.silver - s0, cache_gain, GameState.food - f0]
 	var blob := World.to_save()
 	World.from_save(blob)
 	if not bool(CKTerritory.state(ids[0]).contract):
@@ -362,8 +367,12 @@ func _stockade() -> String:
 	CKTerritory.state(id)  # sanity
 	var st := CKTerritory.state(id)
 	st.threat = {}
+	st.cache_food = 0
 	World.territory.sites[id] = st
 	CKTerritory.apply_month(0.99)
-	if GameState.food - f0 < 6:
-		return "stockade food missing"
+	# 屯营月粮入据点粮仓，不再直灌 GameState.food
+	if CKTerritory.cache_food(id) < 6:
+		return "stockade food missing (cache %d)" % CKTerritory.cache_food(id)
+	if GameState.food != f0:
+		return "stockade food leaked to wagon (%+d)" % (GameState.food - f0)
 	return ""
