@@ -424,6 +424,23 @@ atlas_supply_press_log,硬闯续行，士气再挫,Pressed on; morale sank furth
 atlas_supply_press_ok,硬闯续行（粮仍空，士气再挫）,Pressed on (still empty; morale hit)
 atlas_supply_stop_log,强制停靠于「%s」,Forced halt at "%s"
 atlas_supply_stop_ok,已在「%s」强制停靠，可补给后续行,Halted at "%s"; resupply then resume
+atlas_cache_en,GRANARY // 屯仓,GRANARY // CACHE
+atlas_cache_title,屯营开仓 · 城堡粮仓,Open stockade granary
+atlas_cache_body,「%s」粮仓存粮 %d。现于「%s」。开仓取粮入辎重，续行无忧。,"%s" holds %d food. You are at "%s". Draw the cache into the wagon.
+atlas_cache_open_btn,开仓取粮 +%d,Draw cache +%d
+atlas_cache_later,稍后,Later
+atlas_cache_divert,赶回屯营开仓,Ride for stockade cache
+atlas_cache_open_here,就地开仓,Open granary here
+atlas_cache_none,无可用屯营粮仓,No stockade granary available
+atlas_cache_empty,「%s」粮仓已空,"%s" granary is empty
+atlas_cache_not_ours,非我方据点,Not our holding
+atlas_cache_no_stockade,此地无屯营,No stockade here
+atlas_cache_need_travel,需先抵达「%s」屯营,Must reach stockade at "%s"
+atlas_cache_travel_fail,无法改道赴屯营,Cannot divert to stockade
+atlas_cache_open_log,开仓「%s」取粮 +%d,Opened "%s" cache +%d
+atlas_cache_open_ok,开仓「%s」取粮 +%d,Opened "%s" cache +%d
+atlas_cache_divert_log,断粮改道赴「%s」（%s）取仓粮 %d,Diverting to "%s" (%s) for cache %d
+atlas_cache_divert_ok,改道赴「%s·%s」开仓（存粮 %d）,Diverting to "%s · %s" (cache %d)
 atlas_terr_month_en,TERRITORY // 月结,TERRITORY // MONTH
 atlas_terr_month_title,领地月结,Territory month
 atlas_terr_month_body,净银 %+d · 粮 %+d · 现领 %d 处。%s,Net %+d silver · %+d food · %d holdings. %s
@@ -448,6 +465,19 @@ atlas_siege_relief_go,启程驰援「%s」,Marching to relieve "%s"
 atlas_siege_bribe,收买缓兵 %d 银,Bribe delay %d silver
 atlas_siege_scout,斥候探明 %d 银,Scout %d silver
 atlas_siege_later,稍后,Later
+atlas_siege_cache_warn,屯营粮仓尚存 %d 粮——不应则劫仓。,Stockade cache holds %d food — unanswered raids loot it.
+atlas_siege_loot_en,SIEGE // 劫仓,SIEGE // LOOT
+atlas_siege_loot_title,围城劫仓,Siege loots the cache
+atlas_siege_loot_body_held,%s 袭扰「%s」：驻军守住据点，粮仓仍被劫走 %d（余 %d）。,%s raided "%s": site held, but %d food looted (left %d).
+atlas_siege_loot_body_lost,%s 攻陷「%s」：粮仓被洗劫 %d（仓空）。,%s took "%s": granary emptied of %d food (cache empty).
+atlas_siege_loot_ok,已知晓,Understood
+atlas_siege_loot_hold_log,「%s」守住了据点，粮仓仍失 %d。,"%s" held — cache still lost %d.
+atlas_siege_loot_lost_log,「%s」失守，粮仓被劫 %d。,"%s" fell — cache looted %d.
+atlas_convoy_need_threat,无围城威胁，不必撤仓。,No siege threat — no need to evacuate.
+atlas_convoy_ok_stockade,「%s」粮仓撤运 %d 至「%s」（途损 %d）。,"%s" evacuated %d food to "%s" (spoilage %d).
+atlas_convoy_ok_company,「%s」粮仓撤入行囊 %d（途损 %d）。,"%s" evacuated %d food into the company (spoilage %d).
+atlas_siege_evacuate,撤仓护粮,Evacuate cache
+atlas_siege_evacuate_done,粮仓已撤：%s,Cache evacuated: %s
 atlas_season_spring,春,Spring
 atlas_season_summer,夏,Summer
 atlas_season_autumn,秋,Autumn

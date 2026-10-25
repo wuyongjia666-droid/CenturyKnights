@@ -47,23 +47,49 @@ static func effect_text(annex: String, lv: int) -> String:
 		_:
 			return Locale.t("a1_eff_embassy_on") if lv >= 1 else Locale.t("a1_eff_embassy_off")
 
-func rows() -> Array:
+func serve_entries() -> Array:
+	## Structured serve list so each row can wear its own arms. Labels stay on rows().
 	var out: Array = []
 	match id:
 		"infirmary":
 			for c in GameState.roster():
 				if c.injured or c.hp < c.max_hp:
-					out.append(Locale.t("a1_hp_row") % [c.name, c.hp, c.max_hp])
+					out.append({"label": Locale.t("a1_hp_row") % [c.name, c.hp, c.max_hp], "kind": "person", "who": c})
 		"academy":
 			for c in GameState.characters.values():
 				if c.alive and c.is_child:
-					out.append(Locale.t("a1_child_row") % [c.name, c.age])
+					out.append({"label": Locale.t("a1_child_row") % [c.name, c.age], "kind": "person", "who": c})
 		"treasury":
-			out.append(Locale.t("a1_treasury_row") % [GameState.silver, GameState.iron, GameState.food])
+			out.append({"label": Locale.t("a1_treasury_row") % [GameState.silver, GameState.iron, GameState.food], "kind": "company", "who": null})
 		"embassy":
 			for h in GameState.data_rivals.get("houses", []):
-				out.append(str(h.get("name", h.get("id", ""))))
+				out.append({"label": str(h.get("name", h.get("id", ""))), "kind": "rival", "who": h})
 	return out
+
+
+func rows() -> Array:
+	var out: Array = []
+	for entry in serve_entries():
+		out.append(str(entry.get("label", "")))
+	return out
+
+
+func _serve_row(entry: Dictionary, width: float, mobile: bool) -> HBoxContainer:
+	var row := HBoxContainer.new()
+	row.name = "AnnexServeRow"
+	row.add_theme_constant_override("separation", 8)
+	row.custom_minimum_size = Vector2(width, 56.0 if mobile else 44.0)
+	CKHeraldryField.attach_annex_row_arms(row, str(entry.get("kind", "")), entry.get("who"))
+	var lab: Label
+	if mobile:
+		lab = MobilePage.label(str(entry.get("label", "")), UIKit.TEXT, MobilePage.FONT, true)
+	else:
+		lab = UIKit.body_label(str(entry.get("label", "")), UIKit.TEXT, 15)
+		lab.custom_minimum_size = Vector2(maxf(80.0, width - 48.0), 40)
+		lab.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	lab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(lab)
+	return row
 
 
 func _place_annex_crests() -> void:
@@ -198,9 +224,15 @@ func render() -> void:
 			var rec: Dictionary = CKInjury.record(c)
 			if not rec.is_empty():
 				lab += " · " + CKInjury.label(c)
-			var kb := UIKit.make_accent_button(lab, 548) if on else UIKit.ghost_button(lab, 548, 44)
+			var wrap := HBoxContainer.new()
+			wrap.name = "AnnexServeRow"
+			wrap.add_theme_constant_override("separation", 8)
+			wrap.custom_minimum_size = Vector2(548, 44)
+			CKHeraldryField.attach_annex_row_arms(wrap, "person", c)
+			var kb := UIKit.make_accent_button(lab, 500) if on else UIKit.ghost_button(lab, 500, 44)
 			kb.name = "InnKnight_" + str(c.id)
-			kb.custom_minimum_size = Vector2(548, 44)
+			kb.custom_minimum_size = Vector2(500, 44)
+			kb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			kb.alignment = HORIZONTAL_ALIGNMENT_LEFT
 			var cid := str(c.id)
 			kb.pressed.connect(func():
@@ -209,7 +241,8 @@ func render() -> void:
 						_sel = x
 						break
 				render())
-			vb.add_child(kb)
+			wrap.add_child(kb)
+			vb.add_child(wrap)
 	elif rs.is_empty():
 		var e2 := UIKit.body_label(Locale.t("a1_empty_%s" % id), UIKit.TEXT_FAINT, 14)
 		e2.name = "Empty"
@@ -217,11 +250,8 @@ func render() -> void:
 		e2.custom_minimum_size = Vector2(548, 0)
 		vb.add_child(e2)
 	else:
-		for r in rs:
-			var row := UIKit.body_label(str(r), UIKit.TEXT, 15)
-			row.custom_minimum_size = Vector2(548, 40)
-			row.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-			vb.add_child(row)
+		for entry in serve_entries():
+			vb.add_child(_serve_row(entry, 548.0, false))
 	var link: Array = LINK[id]
 	var go := UIKit.ghost_button(Locale.t(str(link[0])), 200, 48)
 	go.name = "Link"
@@ -394,6 +424,11 @@ func _m_render() -> void:
 			if not rec.is_empty():
 				lab += " · " + CKInjury.label(c)
 			var cid := str(c.id)
+			var wrap := HBoxContainer.new()
+			wrap.name = "AnnexServeRow"
+			wrap.add_theme_constant_override("separation", 8)
+			wrap.custom_minimum_size = Vector2(0, 56)
+			CKHeraldryField.attach_annex_row_arms(wrap, "person", c)
 			var kb := MobilePage.button(lab, on, func():
 				for x in GameState.roster():
 					if str(x.id) == cid:
@@ -401,14 +436,16 @@ func _m_render() -> void:
 						break
 				render())
 			kb.name = "InnKnight_" + cid
-			vb.add_child(kb)
+			kb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			wrap.add_child(kb)
+			vb.add_child(wrap)
 	elif rs.is_empty():
 		var e2 := MobilePage.label(Locale.t("a1_empty_%s" % id), UIKit.TEXT_FAINT, MobilePage.FONT, true)
 		e2.name = "Empty"
 		vb.add_child(e2)
 	else:
-		for r in rs:
-			vb.add_child(MobilePage.label(str(r), UIKit.TEXT, MobilePage.FONT, true))
+		for entry in serve_entries():
+			vb.add_child(_serve_row(entry, rw - 24.0, true))
 	var link: Array = LINK[id]
 	var dest := str(link[1])
 	var go := MobilePage.button(Locale.t(str(link[0])), false, func(): CKNav.go(dest))
