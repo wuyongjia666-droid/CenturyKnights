@@ -122,41 +122,37 @@ func _season_cursor_api() -> String:
 
 
 func _resume_and_hub(cid: String) -> String:
-	var path := "res://data/story/chapters/%s.json" % cid
 	var mid := str(MID_BEAT[cid])
 	var choice := str(CHOICE[cid])
+	var err := ""
 	GameState.new_game("烬行", "灰旗", GameState.crest_color)
-	# Open via owned request_chapter path (meta story_chapter_id), not lock_path.
 	var scene := StoryCatalog.request_chapter(cid)
 	if scene != StoryCatalog.player_scene():
-		return "%s request_chapter scene %s" % [cid, scene]
-	if str(GameState.get_meta("story_chapter_id", "")) != cid:
-		return "%s meta not set" % cid
+		err = "%s request_chapter scene %s" % [cid, scene]
+	elif str(GameState.get_meta("story_chapter_id", "")) != cid:
+		err = "%s meta not set" % cid
+	if err != "":
+		return err
 	var packed: PackedScene = load(PLAYER)
 	var player = packed.instantiate()
 	player.suppress_scene_change = true
-	# lock_path false so _resolve_path consumes story_chapter_id
 	player.lock_path = false
 	player.chapter_path = ""
 	add_child(player)
 	await get_tree().process_frame
 	await get_tree().process_frame
-	if player.get("_chapter") == null or str(player.get("_chapter").get("id", "")) != cid:
-		# Access via current beat / title path: force open check through beat id
-		pass
-	# Jump to mid beat and remember via player API.
 	player.simulate_goto_beat(mid)
 	await get_tree().process_frame
 	if player.current_beat_id() != mid:
-		player.queue_free()
-		return "%s mid beat want %s got %s" % [cid, mid, player.current_beat_id()]
-	if GameState.story.season_beat(cid) != mid:
-		player.queue_free()
-		return "%s GameState cursor not remembered at %s (got %s)" % [
+		err = "%s mid beat want %s got %s" % [cid, mid, player.current_beat_id()]
+	elif GameState.story.season_beat(cid) != mid:
+		err = "%s GameState cursor not remembered at %s (got %s)" % [
 			cid, mid, GameState.story.season_beat(cid)]
 	player.queue_free()
 	await get_tree().process_frame
-	# Reopen: cursor must restore mid beat (owned resume).
+	if err != "":
+		return err
+	print("OK resume mid %s @ %s" % [cid, mid])
 	StoryCatalog.request_chapter(cid)
 	player = packed.instantiate()
 	player.suppress_scene_change = true
@@ -166,45 +162,39 @@ func _resume_and_hub(cid: String) -> String:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	if player.current_beat_id() != mid:
-		player.queue_free()
-		return "%s resume want %s got %s" % [cid, mid, player.current_beat_id()]
-	print("OK resume mid %s @ %s" % [cid, mid])
-	# Walk to choice → ledger → hub return.
-	var err := await _walk_to_label(player, choice, 80)
-	if err != "":
-		player.queue_free()
-		return "%s %s" % [cid, err]
-	if not player.simulate_press_action_containing(choice):
-		player.queue_free()
-		return "%s press choice failed labels=%s" % [cid, str(player.action_labels())]
-	await get_tree().process_frame
-	await get_tree().process_frame
-	if player.current_beat_id() != "ledger":
-		player.queue_free()
-		return "%s after choice want ledger got %s" % [cid, player.current_beat_id()]
-	if GameState.story.season_beat(cid) != "ledger":
-		player.queue_free()
-		return "%s cursor not ledger (got %s)" % [cid, GameState.story.season_beat(cid)]
-	player.simulate_finish_dialogue()
-	await get_tree().process_frame
-	await get_tree().process_frame
-	if not player.simulate_press_action_containing("灰旗堡"):
-		player.queue_free()
-		return "%s hub CTA missing labels=%s" % [cid, str(player.action_labels())]
-	await get_tree().process_frame
-	var landed := str(player.test_capture.get("scene", ""))
-	if landed != HUB:
-		player.queue_free()
-		return "%s hub land want %s got %s" % [cid, HUB, landed]
-	if str(GameState.get_meta("last_story_chapter", "")) != cid:
-		player.queue_free()
-		return "%s last_story_chapter meta missing" % cid
-	# Cursor survives hub land (reopen still at ledger, not first beat).
-	if GameState.story.season_beat(cid) != "ledger":
-		player.queue_free()
-		return "%s cursor cleared on hub return" % cid
+		err = "%s resume want %s got %s" % [cid, mid, player.current_beat_id()]
+	if err == "":
+		err = await _walk_to_label(player, choice, 80)
+		if err != "":
+			err = "%s %s" % [cid, err]
+	if err == "" and not player.simulate_press_action_containing(choice):
+		err = "%s press choice failed labels=%s" % [cid, str(player.action_labels())]
+	if err == "":
+		await get_tree().process_frame
+		await get_tree().process_frame
+		if player.current_beat_id() != "ledger":
+			err = "%s after choice want ledger got %s" % [cid, player.current_beat_id()]
+		elif GameState.story.season_beat(cid) != "ledger":
+			err = "%s cursor not ledger (got %s)" % [cid, GameState.story.season_beat(cid)]
+	if err == "":
+		player.simulate_finish_dialogue()
+		await get_tree().process_frame
+		await get_tree().process_frame
+		if not player.simulate_press_action_containing("灰旗堡"):
+			err = "%s hub CTA missing labels=%s" % [cid, str(player.action_labels())]
+	if err == "":
+		await get_tree().process_frame
+		var landed := str(player.test_capture.get("scene", ""))
+		if landed != HUB:
+			err = "%s hub land want %s got %s" % [cid, HUB, landed]
+		elif str(GameState.get_meta("last_story_chapter", "")) != cid:
+			err = "%s last_story_chapter meta missing" % cid
+		elif GameState.story.season_beat(cid) != "ledger":
+			err = "%s cursor cleared on hub return" % cid
 	player.queue_free()
 	await get_tree().process_frame
+	if err != "":
+		return err
 	StoryCatalog.request_chapter(cid)
 	player = packed.instantiate()
 	player.suppress_scene_change = true
@@ -213,12 +203,12 @@ func _resume_and_hub(cid: String) -> String:
 	await get_tree().process_frame
 	await get_tree().process_frame
 	if player.current_beat_id() != "ledger":
-		player.queue_free()
-		return "%s post-hub reopen want ledger got %s" % [cid, player.current_beat_id()]
-	print("OK hub land+cursor %s" % cid)
+		err = "%s post-hub reopen want ledger got %s" % [cid, player.current_beat_id()]
+	else:
+		print("OK hub land+cursor %s" % cid)
 	player.queue_free()
 	await get_tree().process_frame
-	return ""
+	return err
 
 
 func _walk_to_label(player, needle: String, max_steps: int) -> String:
