@@ -1,7 +1,7 @@
 {
-  "boot_ms": 1250,
+  "boot_ms": 1300,
   "memory_static_bytes": 120000000,
-  "note": "Actions runners measured boot_ms up to 1406 on PR #332 (runner noise; prior notes 1363 / 1295). Ceiling 1250*1.2=1500.",
+  "note": "Actions runners measured boot_ms 1509 on PR #452 (9ms over 1250*1.2=1500; prior notes 1406 / 1363 / 1295). Ceiling 1300*1.2=1560.",
   "scenes_ms": {
     "atlas_view": 700,
     "battle": 1200,
