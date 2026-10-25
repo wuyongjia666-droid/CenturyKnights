@@ -2899,12 +2899,9 @@ func _finish(win: bool) -> void:
 			_log(str(wr.get("msg", "")))
 	else:
 		## Y1-B: 关卡战棋（非大地图遭遇）→ month_echo.battle；属地/沙漏回读.
-		if win and not drill:
-			var _tut2 := bool(BattleVictory.spec(map_id).get("tutorial", false))
-			if not _tut2:
-				CKEconomyState.month_echo_note("battle", Locale.t("lb_echo_battle_map_win", [map_name, purse]))
-		elif not win:
-			CKEconomyState.month_echo_note("battle", Locale.t("lb_echo_battle_map_lose", [map_name]))
+		## Chapter-owned mid-cs: season_ledger owns the trail — skip thin month_echo.
+		var _tut2 := bool(BattleVictory.spec(map_id).get("tutorial", false))
+		BattleVictory.maybe_note_month_echo_battle(win, map_name, purse, drill, _tut2)
 	for u in units:
 		CKEnemyLoadout.unstamp(u.char)
 	if BattleObjectives.is_arena(BattleMaps.get_map(map_id)):
