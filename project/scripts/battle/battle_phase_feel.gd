@@ -121,11 +121,13 @@ static func focus_phase_lead(host, team: String) -> void:
 
 
 ## Camera follow current actor. `mark_enemy` stamps the acting-enemy ring.
+## Desktop force-pan only for enemy follow — player phase lead must not move
+## `_board_pan` (tactics/full_chain e2e + desktop default framing).
 static func focus_actor(host, cell: Vector2i, mark_enemy: bool = true) -> void:
 	if mark_enemy:
 		host.set_meta("m_enemy_actor_cell", cell)
 		host.set_meta("m_enemy_actor_msec", Time.get_ticks_msec())
-	BattlePick.focus_cell(host, cell, true, true)
+	BattlePick.focus_cell(host, cell, true, mark_enemy)
 
 
 static func note_enemy_acting(host, unit_idx: int) -> void:

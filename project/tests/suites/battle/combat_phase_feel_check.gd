@@ -101,6 +101,14 @@ func _phase_switch_focus() -> String:
 	if host.has_meta("m_enemy_actor_cell") and host.get_meta("m_enemy_actor_cell") == enemy_cell \
 			and enemy_cell == Vector2i(3, 2):
 		return "player phase must not keep enemy actor cell"
+	# Desktop: player phase lead must NOT force-pan (tactics/full_chain e2e framing).
+	OS.set_environment("CK_FORCE_MOBILE", "0")
+	host._board_pan = Vector2(900, 400)
+	BattlePhaseFeel.note_phase_switch(host, "player")
+	var player_panned: bool = host._board_pan.distance_to(Vector2(900, 400)) > 0.5
+	OS.set_environment("CK_FORCE_MOBILE", "1")
+	if player_panned:
+		return "player phase lead must not force-pan desktop"
 	return ""
 
 
