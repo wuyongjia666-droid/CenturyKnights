@@ -388,3 +388,12 @@ atlas_occupy_body,驻军 %d / %d。增派人手或立屯营，守住刚夺下的
 atlas_occupy_reinforce,增派驻军（%d 银）,Reinforce (%d silver)
 atlas_occupy_stockade,立屯营（%d 银）,Raise stockade (%d silver)
 atlas_occupy_later,稍后再说,Later
+atlas_chain_en,CHAIN // 多城,CHAIN // MULTICITY
+atlas_chain_title,委托链 · %s,Chain · %s
+atlas_chain_body,下一程「%s」：在 %s 接下，送往 %s。%s,Next leg "%s": accept at %s, deliver to %s. %s
+atlas_chain_step,进度 %d / %d,Step %d / %d
+atlas_chain_accept,接下续程,Accept next leg
+atlas_chain_march,启程续送,March to deliver
+atlas_chain_later,稍后再说,Later
+atlas_chain_start,接下「%s」,Start "%s"
+atlas_chain_follow_fallback,后续委托,Follow-up
