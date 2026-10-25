@@ -641,20 +641,26 @@ static func conceiving_partner(host, mother, abs_month: int):
 static func tick_conception(host, abs_month: int) -> Array:
 	var out: Array = []
 	for c in host.characters.values():
-		if conceiving_partner(host, c, abs_month) == null:
+		var father = conceiving_partner(host, c, abs_month)
+		if father == null:
 			continue
 		var p := monthly_conception_chance(int(c.age), born_to(host, c))
 		if p <= 0.0 or host.rng.randf() >= p:
 			continue
-		_start_term(host, c)
+		_start_term(host, c, str(father.id))
 		out.append(c)
 	return out
 
 
-static func _start_term(host, mother) -> void:
+static func _start_term(host, mother, sire_id: String = "") -> void:
 	var term := term_months(host)
 	mother.pregnant_months = maxi(0, term - 1)
 	mother.blood_meta["gestation_term"] = term
+	if sire_id == "":
+		sire_id = str(mother.spouse_id)
+	## New term only. An in-progress pregnancy returns before this and keeps its sire.
+	if sire_id != "":
+		mother.blood_meta["sire_id"] = sire_id
 	var litter := roll_litter(host.rng if host != null else null)
 	if litter > 1:
 		mother.blood_meta["litter"] = litter
@@ -664,6 +670,12 @@ static func _start_term(host, mother) -> void:
 
 static func begin_pregnancy(host, mother) -> bool:
 	if mother == null:
+		return false
+	## A term already in progress is not restarted, and the sire is not replaced.
+	if int(mother.pregnant_months) >= 0:
+		return true
+	if str(mother.gender) != "f":
+		mother.pregnant_months = -1
 		return false
 	var rate := conception_rate(mother)
 	if rate <= 0.0:

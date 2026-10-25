@@ -164,6 +164,7 @@ purse_sui_open,孩子的岁课还没处理完，先别交钱,Year-card still ope
 purse_empty,口袋是空的,Purse is empty
 purse_remit_log,%s 把私囊里的 %d 银交回了旗库,%s remits %d silver to the treasury
 purse_remit_ok,交回旗库 %d 银,Remitted %d silver
+purse_one_way,旗库的钱不能划进私囊，只能从私囊交回旗库,The treasury cannot be drawn into a purse; silver only moves from purse to treasury
 purse_care_lock,这个月要照看人，抽不开身,Busy caring for someone this month
 purse_follow_block,已经跟着队伍出门了，不能下地,Marching with the banner; can't work fields
 purse_retinue_block,跟着队伍随行，不能下地,In the retinue; can't work fields

@@ -228,7 +228,7 @@ func _deliver(mother: CKCharacter, evs: Array) -> void:
 		echo = Locale.t("lb_echo_birth", [mother.name, str(names[0])])
 	if echo != "":
 		CKEconomyState.month_echo_note("birth", echo)
-	GameState.chapter0_flags["child_born"] = true
+
 
 func _tick_conception(ctx: Dictionary) -> void:
 	for mother in CKFamilyState.tick_conception(GameState, year * 12 + month):

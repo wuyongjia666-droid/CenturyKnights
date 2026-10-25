@@ -60,19 +60,21 @@ func _run() -> String:
 	return _details()
 
 
-## Snapshot of seed 91 after the 2026-10-18 isolated sim with cadet weddings (was 1701/256/19, 1102/247/15, 1095/250/14).
+## Snapshot of seed 91. Dynasty rule (birth stays knight; only the succession heir receives the office)
+## re-locked 2026-10-25 from CKCampaignSim.run(100, 91): was 1083/298/31 knight after cadet weddings
+## (earlier 1701/256/19, 1102/247/15, 1095/250/14).
 func _locked(report: Dictionary) -> String:
-	if int(report.get("silver_end", -1)) != 1083:
+	if int(report.get("silver_end", -1)) != 1562:
 		return "silver %s" % str(report.get("silver_end", ""))
-	if int(report.get("food_end", -1)) != 298:
+	if int(report.get("food_end", -1)) != 454:
 		return "food %s" % str(report.get("food_end", ""))
 	if int(report.get("generations", -1)) != 6:
 		return "generations %s" % str(report.get("generations", ""))
-	if int(report.get("births", -1)) != 31:
+	if int(report.get("births", -1)) != 54:
 		return "births %s" % str(report.get("births", ""))
 	if int(report.get("successions", -1)) != 5:
 		return "successions %s" % str(report.get("successions", ""))
-	if str(report.get("title_end", "")) != "knight":
+	if str(report.get("title_end", "")) != "count":
 		return "title %s" % str(report.get("title_end", ""))
 	return ""
 
@@ -91,13 +93,13 @@ func _seed(report: Dictionary, seed: Dictionary) -> String:
 		return "seed axes drifted %s" % str(axes)
 	if not bool(axes.get("prestige", false)) or not bool(axes.get("faith", false)):
 		return "seed prestige/faith %s" % str(axes)
-	if int(axes.get("holdings", -1)) != 4 or int(axes.get("silver", -1)) != 1083:
+	if int(axes.get("holdings", -1)) != 4 or int(axes.get("silver", -1)) != 1562:
 		return "seed ledger axes %s" % str(axes)
 	if int(axes.get("companions", -1)) != 0:
 		return "seed companions %s" % str(axes)
 	## Sui-ke personality auto can close the generation on seed 91; then accept either open or closed rite copy.
 	var text := _texts(seed)
-	if text.find("1083") < 0 or text.find("4处据点") < 0:
+	if text.find("1562") < 0 or text.find("4处据点") < 0:
 		return "rite ending hid the treasury"
 	if bool(axes.get("generation_closed", false)):
 		if text.find("已写下志向") < 0:
