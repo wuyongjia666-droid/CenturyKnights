@@ -140,6 +140,7 @@ def check_store_docs(fails: list[str]) -> None:
         "docs/store/crash-perf-gates.md": 1400,
         "docs/store/package-budget.md": 1200,
         "docs/store/support-contact-draft.md": 1200,
+        "docs/store/listing-copy-en.md": 1400,
     }
     for rel, floor in floors.items():
         path = ROOT / rel

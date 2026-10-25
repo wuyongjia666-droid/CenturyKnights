@@ -153,6 +153,7 @@
 | 2026-10-25 | **停削弱字数闸**：关 #406；`store_prep`/`scaffold` 中篇门禁 ≥12000 汉字对标季1 + 商店页实质加厚（不碰季#3 正文，内容专线 #409） |
 | 2026-10-25 | 商店深刀续：截图清单 + Play 数据安全预填纳入门禁；字数闸仍 ≥12000（禁削弱） |
 | 2026-10-25 | 商店深刀续：支持联系方式草稿纳入门禁（不付费客服）；撤销按 playable 推迟 S03 字数闸 |
+| 2026-10-25 | 商店深刀续：英文 listing 草稿纳入门禁；仍不碰 season-03 |
 | 2026-10-25 | 联姻→继承→嗣位端到端可玩链 + `marriage_heir_chain_check`（多场景回读） |
 | 2026-10-25 | Y1-B 岁课 UI 落点加深：城堡家庭导航常驻 ToSuiYear + 未读角标（todo→family）+ `sui_hub_entry_check` |
 | 2026-10-25 | Y1-B 联姻无对象空态：EmptyHost why/how + ToTavern/ToRoster + `marriage_empty_cta_check` |

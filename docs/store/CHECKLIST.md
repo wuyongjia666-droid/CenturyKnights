@@ -18,7 +18,7 @@
 
 ## C. 商店页（文案已有草稿）
 
-- [ ] 短描述 / 完整描述定稿（见 `listing-copy-zh.md`）  
+- [ ] 短描述 / 完整描述定稿（见 `listing-copy-zh.md` / `listing-copy-en.md`）  
 - [ ] Play / MS 完整字段稿过目（`play-listing-full.md` / `ms-store-listing-full.md`）  
 - [ ] 隐私政策草稿 + 分级意图（`privacy-policy-draft.md` / `age-rating-draft.md`）  
 - [ ] 五张截图按清单拍齐（`screenshots-checklist.md`）  

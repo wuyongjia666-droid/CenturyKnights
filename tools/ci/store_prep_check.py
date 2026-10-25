@@ -23,6 +23,7 @@ MIN_LISTING_BYTES = {
     "docs/store/screenshots-checklist.md": 1400,
     "docs/store/data-safety-draft.md": 1400,
     "docs/store/support-contact-draft.md": 1200,
+    "docs/store/listing-copy-en.md": 1400,
 }
 
 
@@ -44,6 +45,7 @@ REQUIRED_DOCS = [
     "docs/store/screenshots-checklist.md",
     "docs/store/data-safety-draft.md",
     "docs/store/support-contact-draft.md",
+    "docs/store/listing-copy-en.md",
 ]
 
 REQUIRED_SCRIPTS = [
@@ -68,6 +70,7 @@ REQUIRED_PHRASES = {
     "docs/store/screenshots-checklist.md": ["1080", "横屏", "五张", "不付费"],
     "docs/store/data-safety-draft.md": ["不收集", "数据安全", "崩溃", "不出售"],
     "docs/store/support-contact-draft.md": ["支持", "联系", "不付费", "单机"],
+    "docs/store/listing-copy-en.md": ["Short description", "Full description", "Century Knights", "no IAP"],
 }
 
 
