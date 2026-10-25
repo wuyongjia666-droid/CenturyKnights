@@ -603,7 +603,7 @@
           "speaker": "旁白",
           "text": "锋再定。血巾二次验干，卖泼的连声都没了。",
           "when": {
-            "flag": "cs09_02_mid_fought"
+            "flag": "cs09_mid_fought"
           }
         },
         {
@@ -611,7 +611,7 @@
           "speaker": "掌柜",
           "text": "二次验比一次验短。短，是因为已经清。",
           "when": {
-            "flag": "cs09_02_mid_fought"
+            "flag": "cs09_mid_fought"
           }
         },
         {
@@ -619,7 +619,7 @@
           "speaker": "槐里·青禾",
           "text": "巾角旧星旁又干一星。两星，才像足验。",
           "when": {
-            "flag": "cs09_02_mid_fought"
+            "flag": "cs09_mid_fought"
           }
         },
         {
@@ -627,7 +627,7 @@
           "speaker": "leader",
           "text": "锋再问一次。血，仍我的。",
           "when": {
-            "flag": "cs09_02_mid_fought"
+            "flag": "cs09_mid_fought"
           }
         },
         {

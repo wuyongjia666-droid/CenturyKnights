@@ -996,7 +996,7 @@
           "speaker": "旁白",
           "text": "锋再定。粮袋口扎紧，抢粮那拨退到埂下。",
           "when": {
-            "flag": "cs03_02_mid_fought"
+            "flag": "cs03_mid_fought"
           }
         },
         {
@@ -1004,7 +1004,7 @@
           "speaker": "掌柜",
           "text": "空袋吓人。满袋，今晚不怕。",
           "when": {
-            "flag": "cs03_02_mid_fought"
+            "flag": "cs03_mid_fought"
           }
         },
         {
@@ -1012,7 +1012,7 @@
           "speaker": "槐里·青禾",
           "text": "粮沉肩，心反而轻。",
           "when": {
-            "flag": "cs03_02_mid_fought"
+            "flag": "cs03_mid_fought"
           }
         },
         {
@@ -1020,7 +1020,7 @@
           "speaker": "leader",
           "text": "锋护过粮。袋，我背得。",
           "when": {
-            "flag": "cs03_02_mid_fought"
+            "flag": "cs03_mid_fought"
           }
         },
         {

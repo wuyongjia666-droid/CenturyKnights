@@ -603,7 +603,7 @@
           "speaker": "旁白",
           "text": "锋再定。碑阴拓完，抢拓那拨退到槐影外。",
           "when": {
-            "flag": "cs08_02_mid_fought"
+            "flag": "cs08_mid_fought"
           }
         },
         {
@@ -611,7 +611,7 @@
           "speaker": "掌柜",
           "text": "拓要自己按。按实，才不像偷的。",
           "when": {
-            "flag": "cs08_02_mid_fought"
+            "flag": "cs08_mid_fought"
           }
         },
         {
@@ -619,7 +619,7 @@
           "speaker": "槐里·青禾",
           "text": "碑凉还在手上。凉着，字更清。",
           "when": {
-            "flag": "cs08_02_mid_fought"
+            "flag": "cs08_mid_fought"
           }
         },
         {
@@ -627,7 +627,7 @@
           "speaker": "leader",
           "text": "锋护过碑。拓，我按得。",
           "when": {
-            "flag": "cs08_02_mid_fought"
+            "flag": "cs08_mid_fought"
           }
         },
         {

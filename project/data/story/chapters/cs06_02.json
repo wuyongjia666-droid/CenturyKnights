@@ -565,7 +565,7 @@
           "speaker": "旁白",
           "text": "锋再定。校场第二圈合上，墙牌旁笑的人哑了。",
           "when": {
-            "flag": "cs06_02_mid_fought"
+            "flag": "cs06_mid_fought"
           }
         },
         {
@@ -573,7 +573,7 @@
           "speaker": "掌柜",
           "text": "第二圈比第一圈沉。沉的，才像真练。",
           "when": {
-            "flag": "cs06_02_mid_fought"
+            "flag": "cs06_mid_fought"
           }
         },
         {
@@ -581,7 +581,7 @@
           "speaker": "苇原·灯影",
           "text": "汗第二次下来，笑就买不动了。",
           "when": {
-            "flag": "cs06_02_mid_fought"
+            "flag": "cs06_mid_fought"
           }
         },
         {
@@ -589,7 +589,7 @@
           "speaker": "leader",
           "text": "锋再走一圈。牌，还挂着。",
           "when": {
-            "flag": "cs06_02_mid_fought"
+            "flag": "cs06_mid_fought"
           }
         },
         {

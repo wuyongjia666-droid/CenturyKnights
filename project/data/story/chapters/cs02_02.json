@@ -996,7 +996,7 @@
           "speaker": "旁白",
           "text": "锋再定。脉纸边的手稳了，抢脉那拨散了。",
           "when": {
-            "flag": "cs02_02_mid_fought"
+            "flag": "cs02_mid_fought"
           }
         },
         {
@@ -1004,7 +1004,7 @@
           "speaker": "老旗手",
           "text": "脉要静。静了，旗也不抖。",
           "when": {
-            "flag": "cs02_02_mid_fought"
+            "flag": "cs02_mid_fought"
           }
         },
         {
@@ -1012,7 +1012,7 @@
           "speaker": "槐里·青禾",
           "text": "纸上那道跳，终于听得清。",
           "when": {
-            "flag": "cs02_02_mid_fought"
+            "flag": "cs02_mid_fought"
           }
         },
         {
@@ -1020,7 +1020,7 @@
           "speaker": "leader",
           "text": "锋护过脉。纸，我按得。",
           "when": {
-            "flag": "cs02_02_mid_fought"
+            "flag": "cs02_mid_fought"
           }
         },
         {

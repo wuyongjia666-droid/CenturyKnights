@@ -603,7 +603,7 @@
           "speaker": "旁白",
           "text": "锋再定。印谱复页翻开，催脏印的人退到槛外。",
           "when": {
-            "flag": "cs10_02_mid_fought"
+            "flag": "cs10_mid_fought"
           }
         },
         {
@@ -611,7 +611,7 @@
           "speaker": "掌柜",
           "text": "复盖比初盖慢。慢，是因为要净。",
           "when": {
-            "flag": "cs10_02_mid_fought"
+            "flag": "cs10_mid_fought"
           }
         },
         {
@@ -619,7 +619,7 @@
           "speaker": "槐里·青禾",
           "text": "印泥第二圈更红。红得干净，才像官印。",
           "when": {
-            "flag": "cs10_02_mid_fought"
+            "flag": "cs10_mid_fought"
           }
         },
         {
@@ -627,7 +627,7 @@
           "speaker": "leader",
           "text": "锋再验场。印，我复盖。",
           "when": {
-            "flag": "cs10_02_mid_fought"
+            "flag": "cs10_mid_fought"
           }
         },
         {

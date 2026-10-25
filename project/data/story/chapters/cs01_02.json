@@ -996,7 +996,7 @@
           "speaker": "旁白",
           "text": "锋再定。桥侧泥印浅了，滑步那拨退到芦里。",
           "when": {
-            "flag": "cs01_02_mid_fought"
+            "flag": "cs01_mid_fought"
           }
         },
         {
@@ -1004,7 +1004,7 @@
           "speaker": "老旗手",
           "text": "泥里的脚窝，比刀痕好认。",
           "when": {
-            "flag": "cs01_02_mid_fought"
+            "flag": "cs01_mid_fought"
           }
         },
         {
@@ -1012,7 +1012,7 @@
           "speaker": "苇原·灯影",
           "text": "吴钩的影短了。短了，才敢回头。",
           "when": {
-            "flag": "cs01_02_mid_fought"
+            "flag": "cs01_mid_fought"
           }
         },
         {
@@ -1020,7 +1020,7 @@
           "speaker": "leader",
           "text": "这一锋补上月的欠。桥，我还过。",
           "when": {
-            "flag": "cs01_02_mid_fought"
+            "flag": "cs01_mid_fought"
           }
         },
         {

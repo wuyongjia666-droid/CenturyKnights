@@ -996,7 +996,7 @@
           "speaker": "旁白",
           "text": "锋再定。契纸角压住，抢契那拨退到廊外。",
           "when": {
-            "flag": "cs04_02_mid_fought"
+            "flag": "cs04_mid_fought"
           }
         },
         {
@@ -1004,7 +1004,7 @@
           "speaker": "掌柜",
           "text": "契要压。压住，才不像飞的。",
           "when": {
-            "flag": "cs04_02_mid_fought"
+            "flag": "cs04_mid_fought"
           }
         },
         {
@@ -1012,7 +1012,7 @@
           "speaker": "槐里·青禾",
           "text": "墨干了。干了，字才是自己的。",
           "when": {
-            "flag": "cs04_02_mid_fought"
+            "flag": "cs04_mid_fought"
           }
         },
         {
@@ -1020,7 +1020,7 @@
           "speaker": "leader",
           "text": "锋护过契。字，我签得。",
           "when": {
-            "flag": "cs04_02_mid_fought"
+            "flag": "cs04_mid_fought"
           }
         },
         {

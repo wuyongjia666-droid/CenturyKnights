@@ -67,7 +67,7 @@
 
 - 访/战/酒馆回程里跨章复读的套话改成该拍自己的句子；入谱拍不动。
 - 前三拍无条件收束仍不是旁白。CTA、`锋收回来`、`mid_lost` 门闸不变。
-- `_02` 胜后口语的 `when` 改挂本章 `csNN_02_mid_fought`，试锋得手才念得出。
+- `_02` 胜后口语的 `when` 与战旗同挂季级 `csNN_mid_fought`（与 hub_chain / battle_authored 对齐），试锋得手才念得出。
 - 真 E2E：`content_season_mid_oral_chain_check`（hub→章→战/访→回，二十章；断链或中章复读即失败）。
 
 ## 中途战 / 据点 / 回程加厚（hub-chain）

@@ -565,7 +565,7 @@
           "speaker": "旁白",
           "text": "锋再定。链环扣死，夺链那拨退到阶下。",
           "when": {
-            "flag": "cs05_02_mid_fought"
+            "flag": "cs05_mid_fought"
           }
         },
         {
@@ -573,7 +573,7 @@
           "speaker": "掌柜",
           "text": "链要扣。扣死，才不像挂着玩的。",
           "when": {
-            "flag": "cs05_02_mid_fought"
+            "flag": "cs05_mid_fought"
           }
         },
         {
@@ -581,7 +581,7 @@
           "speaker": "槐里·青禾",
           "text": "环声一下实，假环就响不起来。",
           "when": {
-            "flag": "cs05_02_mid_fought"
+            "flag": "cs05_mid_fought"
           }
         },
         {
@@ -589,7 +589,7 @@
           "speaker": "leader",
           "text": "锋护过链。扣，我锁得。",
           "when": {
-            "flag": "cs05_02_mid_fought"
+            "flag": "cs05_mid_fought"
           }
         },
         {
