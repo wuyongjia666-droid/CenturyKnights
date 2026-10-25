@@ -351,6 +351,26 @@
           "id": "cs05b_hg_17",
           "speaker": "苇原·灯影",
           "text": "带牌去。牌上写回读，不写急。"
+        },
+        {
+          "id": "cs0502_vis_mv1",
+          "speaker": "旁白",
+          "text": "回读案边，沙漏沙少半指。有人偷过？"
+        },
+        {
+          "id": "cs0502_vis_mv2",
+          "speaker": "岁吏",
+          "text": "少半指也要问。问完再走。"
+        },
+        {
+          "id": "cs0502_vis_mv3",
+          "speaker": "老旗手",
+          "text": "问清楚，椅才不冤。"
+        },
+        {
+          "id": "cs0502_vis_mv4",
+          "speaker": "leader",
+          "text": "问月份。去。"
         }
       ],
       "next": "bridge",
@@ -494,6 +514,36 @@
           "id": "cs05b_br_18",
           "speaker": "岁吏",
           "text": "催条可以撕。回读本撕不得。"
+        },
+        {
+          "id": "cs0502_mid_mv1",
+          "speaker": "旁白",
+          "text": "回读纸被灯烤得发脆。一折就响，像干柴。"
+        },
+        {
+          "id": "cs0502_mid_mv2",
+          "speaker": "岁吏",
+          "text": "脆纸怕撕。更怕有人趁脆动手。"
+        },
+        {
+          "id": "cs0502_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "动手的在椅影里。影里还有刀尖。"
+        },
+        {
+          "id": "cs0502_mid_mv4",
+          "speaker": "苇原·灯影",
+          "text": "刀尖对纸，纸会哭。对锋，锋会答。"
+        },
+        {
+          "id": "cs0502_mid_mv5",
+          "speaker": "老旗手",
+          "text": "答要用真劲。假声回读听得见。"
+        },
+        {
+          "id": "cs0502_mid_mv6",
+          "speaker": "leader",
+          "text": "真劲试锋。回读才站得住。"
         },
         {
           "id": "cs05b_br_lost",
@@ -741,6 +791,26 @@
           "id": "cs05b_tv_17",
           "speaker": "老管事",
           "text": "选完入柜。回读柜门会响。"
+        },
+        {
+          "id": "cs0502_ret_mv1",
+          "speaker": "旁白",
+          "text": "回读段子讲到椅脚，有人假装去上茅房。"
+        },
+        {
+          "id": "cs0502_ret_mv2",
+          "speaker": "掌柜",
+          "text": "躲茅房躲不掉板。"
+        },
+        {
+          "id": "cs0502_ret_mv3",
+          "speaker": "岁吏",
+          "text": "板挂完回堡。"
+        },
+        {
+          "id": "cs0502_ret_mv4",
+          "speaker": "leader",
+          "text": "回堡续回读。"
         }
       ],
       "actions": [

@@ -342,6 +342,26 @@
           "id": "cs05_hg_6",
           "speaker": "leader",
           "text": "并排。带牌去门廊。"
+        },
+        {
+          "id": "cs0501_vis_mv1",
+          "speaker": "旁白",
+          "text": "沙漏影子投在空椅上，像有人坐着等。"
+        },
+        {
+          "id": "cs0501_vis_mv2",
+          "speaker": "书记官",
+          "text": "等的是名。名不来，沙也在走。"
+        },
+        {
+          "id": "cs0501_vis_mv3",
+          "speaker": "石垒·晚担",
+          "text": "沙走名空，更要盯。"
+        },
+        {
+          "id": "cs0501_vis_mv4",
+          "speaker": "leader",
+          "text": "盯着看月份。"
         }
       ],
       "actions": [
@@ -480,6 +500,36 @@
           "id": "cs05_mid_y20",
           "speaker": "leader",
           "text": "空名不挂。"
+        },
+        {
+          "id": "cs0501_mid_mv1",
+          "speaker": "旁白",
+          "text": "空椅腿在砖地上轻轻响。像有人刚从椅上起来。"
+        },
+        {
+          "id": "cs0501_mid_mv2",
+          "speaker": "书记官",
+          "text": "起来的人没留名。名空着更刺眼。"
+        },
+        {
+          "id": "cs0501_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "刺眼就盯着。别让旁人替你坐。"
+        },
+        {
+          "id": "cs0501_mid_mv4",
+          "speaker": "槐里·青禾",
+          "text": "旁人一坐，椅就成了别人的。"
+        },
+        {
+          "id": "cs0501_mid_mv5",
+          "speaker": "掌柜",
+          "text": "椅旁那拨，专等你们让座。"
+        },
+        {
+          "id": "cs0501_mid_mv6",
+          "speaker": "leader",
+          "text": "座不让。锋先问。"
         },
         {
           "id": "cs05_mid_lost",
@@ -721,6 +771,26 @@
           "id": "cs05_tavern_x9",
           "speaker": "旁白",
           "text": "你还没开口。没开口时，空椅最清楚。"
+        },
+        {
+          "id": "cs0501_ret_mv1",
+          "speaker": "旁白",
+          "text": "空椅话题一出，邻桌有人换了位子。"
+        },
+        {
+          "id": "cs0501_ret_mv2",
+          "speaker": "掌柜",
+          "text": "换位挡不住名。"
+        },
+        {
+          "id": "cs0501_ret_mv3",
+          "speaker": "书记官",
+          "text": "名在链上。链要回堡续。"
+        },
+        {
+          "id": "cs0501_ret_mv4",
+          "speaker": "leader",
+          "text": "回堡续链。"
         }
       ],
       "actions": [

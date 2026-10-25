@@ -66,3 +66,10 @@
 
 - `cs06_02` 口语加厚至约 124–130 行；保留 visit@hourglass / battle@bridge CTA 与 mid_lost 门闸。
 - 前三拍收束不为旁白；suite walk_to_choice 提到 220。
+
+## 中途战 / 据点 / 回程加厚（hub-chain）
+
+- 中途战拍：试锋前口语加厚；`mid_lost` 仍为拍末可见行（needle「锋收回来」）。
+- 据点 visit 拍：时漏/验盏前口语加厚；CTA「去看月份怎么往前走」不变。
+- 酒馆回程：挂板前口语加厚，收束回堡入谱。
+- 真 E2E：`content_season_hub_chain_check`（hub→章→战/访→回抽样）；`battle_retry` LIVE 扩至 S01–S10 `_01`；playable walk_to_choice→220。

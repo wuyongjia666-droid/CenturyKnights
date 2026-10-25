@@ -383,6 +383,26 @@
           "id": "cs10b_ho_8",
           "speaker": "苇原·灯影",
           "text": "假印一夜，印底就脏。"
+        },
+        {
+          "id": "cs1002_vis_mv1",
+          "speaker": "旁白",
+          "text": "印底纸旁沙漏沙面有一指宽凹痕。"
+        },
+        {
+          "id": "cs1002_vis_mv2",
+          "speaker": "岁吏",
+          "text": "凹痕像被印钮压过。要问。"
+        },
+        {
+          "id": "cs1002_vis_mv3",
+          "speaker": "苇原·灯影",
+          "text": "问清再走月份。"
+        },
+        {
+          "id": "cs1002_vis_mv4",
+          "speaker": "leader",
+          "text": "问清。去看。"
         }
       ],
       "next": "bridge",
@@ -532,6 +552,36 @@
           "id": "cs10b_br_18",
           "speaker": "旁白",
           "text": "桥灯一盏。印酒门开。"
+        },
+        {
+          "id": "cs1002_mid_mv1",
+          "speaker": "旁白",
+          "text": "印底纸纤维起毛。毛刺在灯下像细刺。"
+        },
+        {
+          "id": "cs1002_mid_mv2",
+          "speaker": "岁吏",
+          "text": "细刺多，仿印常见。真印边是沉的。"
+        },
+        {
+          "id": "cs1002_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "沉边怕仿。仿的人就在印旁转。"
+        },
+        {
+          "id": "cs1002_mid_mv4",
+          "speaker": "苇原·灯影",
+          "text": "转够了该停。不停就锋见。"
+        },
+        {
+          "id": "cs1002_mid_mv5",
+          "speaker": "老旗手",
+          "text": "锋见一次，仿手会记。"
+        },
+        {
+          "id": "cs1002_mid_mv6",
+          "speaker": "leader",
+          "text": "记也好。仿印不盖。"
         },
         {
           "id": "cs10b_br_lost",
@@ -790,6 +840,26 @@
           "id": "cs10b_ta_18",
           "speaker": "旁白",
           "text": "两道印题在板上。手按上去。"
+        },
+        {
+          "id": "cs1002_ret_mv1",
+          "speaker": "旁白",
+          "text": "仿印段子讲完，没人敢再碰杯。"
+        },
+        {
+          "id": "cs1002_ret_mv2",
+          "speaker": "掌柜",
+          "text": "不敢碰杯正好。"
+        },
+        {
+          "id": "cs1002_ret_mv3",
+          "speaker": "岁吏",
+          "text": "正好回堡。"
+        },
+        {
+          "id": "cs1002_ret_mv4",
+          "speaker": "leader",
+          "text": "回堡。季10入谱。"
         }
       ],
       "next": "ledger",

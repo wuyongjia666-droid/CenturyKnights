@@ -383,6 +383,26 @@
           "id": "cs09b_ho_8",
           "speaker": "苇原·灯影",
           "text": "假血一夜，验册就脏。"
+        },
+        {
+          "id": "cs0902_vis_mv1",
+          "speaker": "旁白",
+          "text": "验册夹缝里夹着一粒沙。不知谁带进来的。"
+        },
+        {
+          "id": "cs0902_vis_mv2",
+          "speaker": "岁吏",
+          "text": "沙进册，说明人靠近过漏。"
+        },
+        {
+          "id": "cs0902_vis_mv3",
+          "speaker": "老旗手",
+          "text": "靠近过就要把月份看完。"
+        },
+        {
+          "id": "cs0902_vis_mv4",
+          "speaker": "leader",
+          "text": "看完。去。"
         }
       ],
       "next": "bridge",
@@ -532,6 +552,36 @@
           "id": "cs09b_br_18",
           "speaker": "旁白",
           "text": "桥灯一盏。验酒门开。"
+        },
+        {
+          "id": "cs0902_mid_mv1",
+          "speaker": "旁白",
+          "text": "验册钉尖反光。有人伸手碰钉，又缩回去。"
+        },
+        {
+          "id": "cs0902_mid_mv2",
+          "speaker": "岁吏",
+          "text": "缩手说明心虚。心虚的纸边也毛。"
+        },
+        {
+          "id": "cs0902_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "毛边一搓就破。破了还想过验？"
+        },
+        {
+          "id": "cs0902_mid_mv4",
+          "speaker": "苇原·灯影",
+          "text": "过验靠真。真要当场试。"
+        },
+        {
+          "id": "cs0902_mid_mv5",
+          "speaker": "老旗手",
+          "text": "当场试，比事后补写强。"
+        },
+        {
+          "id": "cs0902_mid_mv6",
+          "speaker": "leader",
+          "text": "当场试锋。假血不进册。"
         },
         {
           "id": "cs09b_br_lost",
@@ -790,6 +840,26 @@
           "id": "cs09b_ta_18",
           "speaker": "旁白",
           "text": "两道验题在板上。手按上去。"
+        },
+        {
+          "id": "cs0902_ret_mv1",
+          "speaker": "旁白",
+          "text": "验册话题压过酒令。酒令自己熄了。"
+        },
+        {
+          "id": "cs0902_ret_mv2",
+          "speaker": "掌柜",
+          "text": "熄了好。真事先走。"
+        },
+        {
+          "id": "cs0902_ret_mv3",
+          "speaker": "岁吏",
+          "text": "真事回堡。"
+        },
+        {
+          "id": "cs0902_ret_mv4",
+          "speaker": "leader",
+          "text": "回堡钉血名。"
         }
       ],
       "next": "ledger",

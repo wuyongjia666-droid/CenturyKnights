@@ -661,6 +661,26 @@
             "music": "castle",
             "camera": "wide"
           }
+        },
+        {
+          "id": "cs0102_vis_mv1",
+          "speaker": "旁白",
+          "text": "时漏沙声细。细到能听见自己的呼吸。"
+        },
+        {
+          "id": "cs0102_vis_mv2",
+          "speaker": "岁吏",
+          "text": "呼吸稳，沙才听得进。"
+        },
+        {
+          "id": "cs0102_vis_mv3",
+          "speaker": "槐里·青禾",
+          "text": "沙漏不问空格急不急。"
+        },
+        {
+          "id": "cs0102_vis_mv4",
+          "speaker": "leader",
+          "text": "不急。去看月份怎么走。"
         }
       ],
       "next": "bridge",
@@ -925,6 +945,36 @@
             "music": "battle_prep",
             "camera": "wide"
           }
+        },
+        {
+          "id": "cs0102_mid_mv1",
+          "speaker": "旁白",
+          "text": "副页钉在门边。风一过，纸角翘起来像招手。"
+        },
+        {
+          "id": "cs0102_mid_mv2",
+          "speaker": "岁吏",
+          "text": "副页招手，不等于让你空着手出去。"
+        },
+        {
+          "id": "cs0102_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "空着手出去，回来只配写半行。"
+        },
+        {
+          "id": "cs0102_mid_mv4",
+          "speaker": "槐里·青禾",
+          "text": "半行也比假满强。假满见光就灰。"
+        },
+        {
+          "id": "cs0102_mid_mv5",
+          "speaker": "老旗手",
+          "text": "门外那拨盯着空格。空格不是给他们填的。"
+        },
+        {
+          "id": "cs0102_mid_mv6",
+          "speaker": "leader",
+          "text": "空格我守。锋先问清楚。"
         },
         {
           "speaker": "旁白",
@@ -1276,6 +1326,26 @@
             "music": "tavern",
             "camera": "close"
           }
+        },
+        {
+          "id": "cs0102_ret_mv1",
+          "speaker": "旁白",
+          "text": "副页话题在酒桌上滚了一圈，又滚回来。"
+        },
+        {
+          "id": "cs0102_ret_mv2",
+          "speaker": "掌柜",
+          "text": "滚回来的话，要过板。"
+        },
+        {
+          "id": "cs0102_ret_mv3",
+          "speaker": "岁吏",
+          "text": "过板的才配回读。"
+        },
+        {
+          "id": "cs0102_ret_mv4",
+          "speaker": "leader",
+          "text": "过板。回堡入谱。"
         }
       ],
       "actions": [

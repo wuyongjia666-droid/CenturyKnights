@@ -351,6 +351,26 @@
           "id": "cs06b_hg_17",
           "speaker": "苇原·灯影",
           "text": "带牌去。牌上写胜册，不写急。"
+        },
+        {
+          "id": "cs0602_vis_mv1",
+          "speaker": "旁白",
+          "text": "胜册旁沙漏沙面平整。平整说明刚被抹过。"
+        },
+        {
+          "id": "cs0602_vis_mv2",
+          "speaker": "岁吏",
+          "text": "抹平不是赢。赢要挂真名。"
+        },
+        {
+          "id": "cs0602_vis_mv3",
+          "speaker": "苇原·灯影",
+          "text": "真名前，先看月份。"
+        },
+        {
+          "id": "cs0602_vis_mv4",
+          "speaker": "leader",
+          "text": "看月份。"
         }
       ],
       "next": "bridge",
@@ -494,6 +514,36 @@
           "id": "cs06b_br_18",
           "speaker": "岁吏",
           "text": "催条可以撕。胜册第二页撕不得。"
+        },
+        {
+          "id": "cs0602_mid_mv1",
+          "speaker": "旁白",
+          "text": "胜册第二页空白反光。有人把反光当镜子照脸。"
+        },
+        {
+          "id": "cs0602_mid_mv2",
+          "speaker": "岁吏",
+          "text": "照脸不是挂名。挂名要试完。"
+        },
+        {
+          "id": "cs0602_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "试完才照得起。照不起的别占页。"
+        },
+        {
+          "id": "cs0602_mid_mv4",
+          "speaker": "苇原·灯影",
+          "text": "占页的人，校场边最爱起哄。"
+        },
+        {
+          "id": "cs0602_mid_mv5",
+          "speaker": "老旗手",
+          "text": "起哄不算胜。锋落才算。"
+        },
+        {
+          "id": "cs0602_mid_mv6",
+          "speaker": "leader",
+          "text": "锋落挂真名。空页不借人。"
         },
         {
           "id": "cs06b_br_lost",
@@ -741,6 +791,26 @@
           "id": "cs06b_tv_17",
           "speaker": "老管事",
           "text": "选完入柜。胜册柜门会响。"
+        },
+        {
+          "id": "cs0602_ret_mv1",
+          "speaker": "旁白",
+          "text": "胜册第二页的空白，被人用酒渍比划过。"
+        },
+        {
+          "id": "cs0602_ret_mv2",
+          "speaker": "掌柜",
+          "text": "酒渍不当名。"
+        },
+        {
+          "id": "cs0602_ret_mv3",
+          "speaker": "岁吏",
+          "text": "名回堡写。"
+        },
+        {
+          "id": "cs0602_ret_mv4",
+          "speaker": "leader",
+          "text": "回堡挂胜名。"
         }
       ],
       "actions": [

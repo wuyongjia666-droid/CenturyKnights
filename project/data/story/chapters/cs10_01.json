@@ -453,6 +453,26 @@
           "id": "cs10_hg_6",
           "speaker": "leader",
           "text": "两行都留。去门廊。"
+        },
+        {
+          "id": "cs1001_vis_mv1",
+          "speaker": "旁白",
+          "text": "印泥香混进沙漏热气。两种味道顶着。"
+        },
+        {
+          "id": "cs1001_vis_mv2",
+          "speaker": "书记官",
+          "text": "味道顶着，手别乱盖。"
+        },
+        {
+          "id": "cs1001_vis_mv3",
+          "speaker": "石垒·晚担",
+          "text": "手稳了再看月份。"
+        },
+        {
+          "id": "cs1001_vis_mv4",
+          "speaker": "leader",
+          "text": "手稳。去看月份。"
         }
       ],
       "actions": [
@@ -591,6 +611,36 @@
           "id": "cs10_mid_y20",
           "speaker": "leader",
           "text": "刚用过的我验边。"
+        },
+        {
+          "id": "cs1001_mid_mv1",
+          "speaker": "旁白",
+          "text": "印泥盒盖合上又打开。开合之间，有人偷瞄印边。"
+        },
+        {
+          "id": "cs1001_mid_mv2",
+          "speaker": "书记官",
+          "text": "偷瞄印边的，多半想仿一角。"
+        },
+        {
+          "id": "cs1001_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "仿一角也是假。假印盖下去，全盘脏。"
+        },
+        {
+          "id": "cs1001_mid_mv4",
+          "speaker": "槐里·青禾",
+          "text": "脏印不如不盖。不盖前先清场。"
+        },
+        {
+          "id": "cs1001_mid_mv5",
+          "speaker": "掌柜",
+          "text": "墙牌旁那拨，专等你们手软盖快印。"
+        },
+        {
+          "id": "cs1001_mid_mv6",
+          "speaker": "leader",
+          "text": "不快盖。锋先验场。"
         },
         {
           "id": "cs10_mid_lost",
@@ -832,6 +882,26 @@
           "id": "cs10_tavern_x9",
           "speaker": "旁白",
           "text": "你还没选。没选时，六门最清楚。"
+        },
+        {
+          "id": "cs1001_ret_mv1",
+          "speaker": "旁白",
+          "text": "印泥被说成辣酱。有人伸筷去戳空气。"
+        },
+        {
+          "id": "cs1001_ret_mv2",
+          "speaker": "掌柜",
+          "text": "空气盖不了印。"
+        },
+        {
+          "id": "cs1001_ret_mv3",
+          "speaker": "书记官",
+          "text": "印事回堡验边。"
+        },
+        {
+          "id": "cs1001_ret_mv4",
+          "speaker": "leader",
+          "text": "回堡验边。"
         }
       ],
       "actions": [

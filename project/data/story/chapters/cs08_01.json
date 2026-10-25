@@ -342,6 +342,26 @@
           "id": "cs08_hg_6",
           "speaker": "leader",
           "text": "两行都留。去门廊。"
+        },
+        {
+          "id": "cs0801_vis_mv1",
+          "speaker": "旁白",
+          "text": "香灰落进沙漏座缝。灰和沙混在一起。"
+        },
+        {
+          "id": "cs0801_vis_mv2",
+          "speaker": "书记官",
+          "text": "混了要拨开。碑事不跟灰混。"
+        },
+        {
+          "id": "cs0801_vis_mv3",
+          "speaker": "石垒·晚担",
+          "text": "拨开再看月份。"
+        },
+        {
+          "id": "cs0801_vis_mv4",
+          "speaker": "leader",
+          "text": "拨开。去看。"
         }
       ],
       "actions": [
@@ -480,6 +500,36 @@
           "id": "cs08_mid_y20",
           "speaker": "leader",
           "text": "碑阴并排留。"
+        },
+        {
+          "id": "cs0801_mid_mv1",
+          "speaker": "旁白",
+          "text": "祖祠香灰被过堂风掀起一缕，落在碑座新缝里。"
+        },
+        {
+          "id": "cs0801_mid_mv2",
+          "speaker": "书记官",
+          "text": "新缝要记。记完再问门外声。"
+        },
+        {
+          "id": "cs0801_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "门外声杂。杂里有刀鞘响。"
+        },
+        {
+          "id": "cs0801_mid_mv4",
+          "speaker": "槐里·青禾",
+          "text": "刀鞘响，香火也稳不住。"
+        },
+        {
+          "id": "cs0801_mid_mv5",
+          "speaker": "掌柜",
+          "text": "墙牌旁那拨，专等你们拜完再抢。"
+        },
+        {
+          "id": "cs0801_mid_mv6",
+          "speaker": "leader",
+          "text": "拜完不让抢。锋先拦。"
         },
         {
           "id": "cs08_mid_lost",
@@ -721,6 +771,26 @@
           "id": "cs08_tavern_x9",
           "speaker": "旁白",
           "text": "你还没开口。没开口的时候，空格最清楚。"
+        },
+        {
+          "id": "cs0801_ret_mv1",
+          "speaker": "旁白",
+          "text": "祖祠香火被说成酒馆熏香。说的人自己先笑岔。"
+        },
+        {
+          "id": "cs0801_ret_mv2",
+          "speaker": "掌柜",
+          "text": "笑岔的别碰碑。"
+        },
+        {
+          "id": "cs0801_ret_mv3",
+          "speaker": "书记官",
+          "text": "碑事回堡记。"
+        },
+        {
+          "id": "cs0801_ret_mv4",
+          "speaker": "leader",
+          "text": "回堡记碑。"
         }
       ],
       "actions": [
