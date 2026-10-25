@@ -29,6 +29,8 @@ func _check() -> String:
 	if err == "":
 		err = _source_contracts()
 	if err == "":
+		err = _source_contracts_tp3()
+	if err == "":
 		err = _soft_pick()
 	if err == "":
 		err = _router_slop()
@@ -156,6 +158,15 @@ func _source_contracts() -> String:
 		return "selection chrome not using contour_half_w"
 	if ctrl.find("MOBILE_RAIL_W := 196") < 0:
 		return "landscape rail not widened for T-P2"
+	if bar.find("0.55") < 0:
+		return "landscape confirm thumb zone not lowered"
+	return ""
+
+func _source_contracts_tp3() -> String:
+	var ctrl := FileAccess.get_file_as_string("res://scripts/battle/battle_controller.gd")
+	var bar := FileAccess.get_file_as_string("res://scripts/battle/ui/battle_mobile_bar.gd")
+	var pick := FileAccess.get_file_as_string("res://scripts/battle/battle_pick.gd")
+	var conf := FileAccess.get_file_as_string("res://scripts/battle/battle_touch_confirm.gd")
 	if bar.find("0.58") < 0:
 		return "landscape confirm thumb zone not sunk (T-P3 0.58)"
 	if bar.find("landscape_confirm_stack") < 0 or bar.find("ConfirmPrimary") < 0:
@@ -597,8 +608,8 @@ func _landscape_confirm_stack() -> String:
 
 
 class _FakePickHost:
-	var ORIGIN: Vector2 = Vector2(40, 80)
-	var CELL: int = 56
+	var _board_origin: Vector2 = Vector2(40, 80)
+	var _board_cell: int = 56
 	var units: Array = []
 	var selected: int = -1
 	var turn_team: String = "player"
@@ -614,19 +625,27 @@ class _FakePickHost:
 	var _board_pan: Vector2 = Vector2.ZERO
 	var _board_zoom: float = 1.0
 
+	func _get(property: StringName) -> Variant:
+		# Duck-type battle_controller ORIGIN/CELL for BattlePick without gdlint class-variable-name.
+		if property == &"ORIGIN":
+			return _board_origin
+		if property == &"CELL":
+			return _board_cell
+		return null
+
 	func setup_selected_at(pos: Vector2i) -> void:
 		units = [{"char": {"hp": 10, "name": "Hero"}, "pos": pos, "team": "player", "done": false}]
 		selected = 0
 
 	func screen_at_cell(cell: Vector2i) -> Vector2:
-		return ORIGIN + Vector2(cell) * float(CELL) + Vector2(CELL, CELL) * 0.5
+		return _board_origin + Vector2(cell) * float(_board_cell) + Vector2(_board_cell, _board_cell) * 0.5
 
 	func _screen_to_local(p: Vector2) -> Vector2:
 		return p
 
 	func _pointer_to_cell(screen_pos: Vector2) -> Vector2i:
 		var local: Vector2 = BattlePick.local_after_pan_zoom(_screen_to_local(screen_pos), _board_pan, _board_zoom)
-		return BattlePick.cell_at_local(ORIGIN, float(CELL), local, 12, 10)
+		return BattlePick.cell_at_local(_board_origin, float(_board_cell), local, 12, 10)
 
 	func _unit_at(pos: Vector2i) -> int:
 		for i in units.size():

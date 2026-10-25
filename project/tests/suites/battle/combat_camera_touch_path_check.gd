@@ -168,8 +168,8 @@ func _touch(index: int, pressed: bool, pos: Vector2) -> InputEventScreenTouch:
 	return e
 
 class _FakeBattleHost:
-	var ORIGIN: Vector2 = Vector2(40, 80)
-	var CELL: int = 56
+	var _board_origin: Vector2 = Vector2(40, 80)
+	var _board_cell: int = 56
 	var units: Array = []
 	var selected: int = -1
 	var turn_team: String = "player"
@@ -186,19 +186,27 @@ class _FakeBattleHost:
 	var _board_zoom: float = 1.0
 	var move_committed: bool = false
 
+	func _get(property: StringName) -> Variant:
+		# Duck-type battle_controller ORIGIN/CELL for BattlePick without gdlint class-variable-name.
+		if property == &"ORIGIN":
+			return _board_origin
+		if property == &"CELL":
+			return _board_cell
+		return null
+
 	func setup_selected_at(pos: Vector2i) -> void:
 		units = [{"char": {"hp": 10, "name": "Hero"}, "pos": pos, "team": "player", "done": false}]
 		selected = 0
 
 	func screen_at_cell(cell: Vector2i) -> Vector2:
-		return ORIGIN + Vector2(cell) * float(CELL) + Vector2(CELL, CELL) * 0.5
+		return _board_origin + Vector2(cell) * float(_board_cell) + Vector2(_board_cell, _board_cell) * 0.5
 
 	func _screen_to_local(p: Vector2) -> Vector2:
 		return p
 
 	func _pointer_to_cell(screen_pos: Vector2) -> Vector2i:
 		var local: Vector2 = BattlePick.local_after_pan_zoom(_screen_to_local(screen_pos), _board_pan, _board_zoom)
-		return BattlePick.cell_at_local(ORIGIN, float(CELL), local, 12, 10)
+		return BattlePick.cell_at_local(_board_origin, float(_board_cell), local, 12, 10)
 
 	func _unit_at(pos: Vector2i) -> int:
 		for i in units.size():
