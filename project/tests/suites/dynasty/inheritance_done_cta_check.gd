@@ -37,44 +37,41 @@ func _run() -> String:
 
 func _audit(page: Control) -> String:
 	var body: Label = page.find_child("InheritText", true, false) as Label
-	if body == null:
-		return "InheritText missing"
-	var zh := str(GameState.house_mods.get("inherit_answer_zh", ""))
-	if body.text.find(zh) < 0:
-		return "InheritText missing done zh (%s)" % zh
-
 	var answers := page.find_child("Answers", true, false)
-	if answers == null:
-		return "Answers missing"
-
 	var to_heir: Button = page.find_child("ToHeirRivalry", true, false) as Button
-	if to_heir == null:
-		return "ToHeirRivalry missing"
-	if not to_heir.visible or not to_heir.is_visible_in_tree() or to_heir.disabled:
-		return "ToHeirRivalry not usable"
-	if not answers.is_ancestor_of(to_heir):
-		return "ToHeirRivalry not under Answers"
-	var want_heir := Locale.t("lb_inh_to_heir")
-	if to_heir.text != want_heir:
-		return "ToHeirRivalry text want=%s got=%s" % [want_heir, to_heir.text]
-
 	var to_rivals: Button = page.find_child("ToRivals", true, false) as Button
-	if to_rivals == null:
-		return "ToRivals missing"
-	if not to_rivals.visible or not to_rivals.is_visible_in_tree() or to_rivals.disabled:
-		return "ToRivals not usable"
-	if not answers.is_ancestor_of(to_rivals):
-		return "ToRivals not under Answers"
-	var want_r := Locale.t("lb_inh_to_rivals")
-	if to_rivals.text != want_r:
-		return "ToRivals text want=%s got=%s" % [want_r, to_rivals.text]
-
-	## Open-year answer cards must stay off in done year.
-	for k in ["steel", "soft", "delay"]:
-		if page.find_child("Answer_" + k, true, false) != null:
-			return "Answer_%s present in done year" % k
-		if page.find_child("Pick_" + k, true, false) != null:
-			return "Pick_%s present in done year" % k
-
-	print("inherit-done ok ToHeirRivalry+ToRivals under_Answers=1")
-	return ""
+	var zh := str(GameState.house_mods.get("inherit_answer_zh", ""))
+	var err := ""
+	if body == null:
+		err = "InheritText missing"
+	elif body.text.find(zh) < 0:
+		err = "InheritText missing done zh (%s)" % zh
+	elif answers == null:
+		err = "Answers missing"
+	elif to_heir == null:
+		err = "ToHeirRivalry missing"
+	elif not to_heir.visible or not to_heir.is_visible_in_tree() or to_heir.disabled:
+		err = "ToHeirRivalry not usable"
+	elif not answers.is_ancestor_of(to_heir):
+		err = "ToHeirRivalry not under Answers"
+	elif to_heir.text != Locale.t("lb_inh_to_heir"):
+		err = "ToHeirRivalry text want=%s got=%s" % [Locale.t("lb_inh_to_heir"), to_heir.text]
+	elif to_rivals == null:
+		err = "ToRivals missing"
+	elif not to_rivals.visible or not to_rivals.is_visible_in_tree() or to_rivals.disabled:
+		err = "ToRivals not usable"
+	elif not answers.is_ancestor_of(to_rivals):
+		err = "ToRivals not under Answers"
+	elif to_rivals.text != Locale.t("lb_inh_to_rivals"):
+		err = "ToRivals text want=%s got=%s" % [Locale.t("lb_inh_to_rivals"), to_rivals.text]
+	else:
+		for k in ["steel", "soft", "delay"]:
+			if page.find_child("Answer_" + k, true, false) != null:
+				err = "Answer_%s present in done year" % k
+				break
+			if page.find_child("Pick_" + k, true, false) != null:
+				err = "Pick_%s present in done year" % k
+				break
+	if err == "":
+		print("inherit-done ok ToHeirRivalry+ToRivals under_Answers=1")
+	return err
