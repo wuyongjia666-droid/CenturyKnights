@@ -53,3 +53,7 @@
 - 选题：**链仍并排** → flag `cs05_reread_parallel`；备选 **栏优先催坐**。
 - 所有权不变：`hourglass` visit「去看月份怎么往前走」；`bridge` battle「先试一锋 / 再试锋镝 / 继续」。
 - 枢纽：`playable_chapters` 挂进 `StoryCatalog.content_season_entries`（主 `playable_chapter` 仍为 `_01`）。
+
+## plate-final
+
+前三拍收束不为旁白，保证 return_portrait 走得到具名板面。
