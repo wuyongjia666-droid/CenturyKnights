@@ -90,6 +90,13 @@ static func apply(map_id: String) -> Dictionary:
 	for act in sp.actions:
 		if str(act) == "heir_clash_restore":
 			restore_heir_clash()
+	# Win clears chapter-authored lose_flags residue (csXX_mid_lost). A prior
+	# defeat stamped them on GameState; emptying the meta alone left loss-state
+	# alive so when/payoffs keyed only on mid_lost could resurrect after a win.
+	for lf in GameState.get_meta("battle_lose_flags", []):
+		var ls := str(lf)
+		if ls != "":
+			GameState.set_flag(ls, false)
 	# Chapter-authored season_ledger on mid-cs skirmish win (not month_echo).
 	var led = GameState.get_meta("battle_win_ledger", {})
 	if typeof(led) == TYPE_DICTIONARY and not led.is_empty():
