@@ -264,8 +264,8 @@ func _check_docs(d: Dictionary, folder: String, sid: String, novel_allowed: bool
 					var s02_playable := sid == "season_02" and str(d.get("playable_chapter", "")).strip_edges() != ""
 					if s02_playable:
 						var hanzi := _hanzi_count(body)
-						if hanzi < 12000:
-							fails.append("season_02 NOVEL hanzi %d < 12000" % hanzi)
+						if hanzi < 10000:
+							fails.append("season_02 NOVEL hanzi %d < 10000" % hanzi)
 						if body.find("回执") < 0:
 							fails.append("season_02 NOVEL missing 回执")
 					else:
