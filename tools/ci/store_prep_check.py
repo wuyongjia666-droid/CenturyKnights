@@ -121,7 +121,7 @@ def main() -> int:
 
         data = json.loads(idx.read_text(encoding="utf-8"))
         seasons = data.get("seasons", [])
-        for sid in ("season_02", "season_03", "season_04", "season_05", "season_06", "season_07", "season_08"):
+        for sid in ("season_02", "season_03", "season_04", "season_05", "season_06", "season_07", "season_08", "season_09"):
             if sid not in seasons:
                 fails.append(f"index.json missing {sid}")
             sp = ROOT / f"project/data/content_seasons/{sid}.json"
@@ -134,7 +134,7 @@ def main() -> int:
                 continue
             body = novel.read_text(encoding="utf-8")
             hz = _hanzi_count(body)
-            # 中篇硬闸：季#2..#8 一律 ≥ MIN_NOVEL_HANZI；禁止按 playable 推迟/削弱
+            # 中篇硬闸：季#2..#9 一律 ≥ MIN_NOVEL_HANZI；禁止按 playable 推迟/削弱
             if hz < MIN_NOVEL_HANZI:
                 fails.append(
                     f"NOVEL too thin {novel.relative_to(ROOT)} "
