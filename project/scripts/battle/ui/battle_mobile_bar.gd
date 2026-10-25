@@ -6,7 +6,9 @@ extends RefCounted
 ## Y1-A T-P0-3: while confirming, park the bar in the thumb zone (bottom of the
 ## right rail in landscape; bottom edge in portrait) and make Confirm the large
 ## accent control.
-## Y1-A T-P2: landscape confirm sits lower (0.55) with a taller primary hit.
+## Y1-A T-P2/T-P3: landscape confirm sinks to lower thumb (0.58) with taller primary.
+## Y1-A T-P3: landscape Confirm sinks to the bottom thumb (Cancel above + dest
+## hint); primary hit ≥108px; clearer move/attack confirm flow beyond rail width.
 
 static func build(host) -> void:
 	if not DeviceProfile.is_mobile():
@@ -41,6 +43,11 @@ static func _confirming(host) -> bool:
 	return host.preview_move_cell.x >= 0 or int(host.preview_attack_ui) >= 0
 
 
+## T-P3 pure policy: landscape confirm stacks Cancel → hint → Confirm (thumb bottom).
+static func landscape_confirm_stack() -> PackedStringArray:
+	return PackedStringArray(["cancel", "hint", "confirm"])
+
+
 static func rebuild(host) -> void:
 	if host._mobile_bar == null:
 		return
@@ -51,12 +58,11 @@ static func rebuild(host) -> void:
 		row.remove_child(c)
 		c.queue_free()
 	var h := int(maxi(48, int(DeviceProfile.hit_px())))
+	var land: bool = bool(host._mobile_landscape()) and (row is VBoxContainer)
 	if host.preview_move_cell.x >= 0:
-		command(row, Locale.t("ux_confirm_move"), h, true, func(): BattleTouchConfirm.confirm_move(host), true)
-		command(row, Locale.t("shell_4d0b4688"), h, false, func(): BattleTouchConfirm.clear(host), false)
+		_rebuild_confirm(host, row, h, land, true)
 	elif int(host.preview_attack_ui) >= 0:
-		command(row, Locale.t("ux_confirm_attack"), h, true, func(): BattleTouchConfirm.confirm_attack(host), true)
-		command(row, Locale.t("shell_4d0b4688"), h, false, func(): BattleTouchConfirm.clear(host), false)
+		_rebuild_confirm(host, row, h, land, false)
 	else:
 		# Match desktop order: Attack / Art / Wait / End turn.
 		command(row, Locale.t("shell_8669d292"), h, false, host._enter_attack_mode, false)
@@ -64,6 +70,56 @@ static func rebuild(host) -> void:
 		command(row, Locale.t("shell_1a0db8dc"), h, false, host._wait_selected, false)
 		command(row, Locale.t("shell_4faa58f5"), h, true, func(): BattleTouchConfirm.request_end_turn(host), false)
 	place(host)
+
+
+static func _rebuild_confirm(host, row: BoxContainer, h: int, land: bool, is_move: bool) -> void:
+	var confirm_cb: Callable
+	if is_move:
+		confirm_cb = func(): BattleTouchConfirm.confirm_move(host)
+	else:
+		confirm_cb = func(): BattleTouchConfirm.confirm_attack(host)
+	var cancel_cb := func(): BattleTouchConfirm.clear(host)
+	var confirm_txt := Locale.t("ux_confirm_move") if is_move else Locale.t("ux_confirm_attack")
+	var hint := _dest_hint(host, is_move)
+	if land:
+		# Thumb bottom: Cancel (top) → dest hint → Confirm (bottom, large).
+		var cancel_btn := command(row, Locale.t("shell_4d0b4688"), h, false, cancel_cb, false)
+		cancel_btn.name = "ConfirmCancel"
+		cancel_btn.custom_minimum_size = Vector2(0, maxi(h, 56))
+		_add_dest_hint(row, hint)
+		var conf := command(row, confirm_txt, h, true, confirm_cb, true)
+		conf.name = "ConfirmPrimary"
+		conf.custom_minimum_size = Vector2(0, maxi(108, int(conf.custom_minimum_size.y)))
+	else:
+		# Portrait: Confirm primary left, Cancel right (existing flow).
+		var conf2 := command(row, confirm_txt, h, true, confirm_cb, true)
+		conf2.name = "ConfirmPrimary"
+		_add_dest_hint(row, hint)
+		var cancel2 := command(row, Locale.t("shell_4d0b4688"), h, false, cancel_cb, false)
+		cancel2.name = "ConfirmCancel"
+
+
+static func _dest_hint(host, is_move: bool) -> String:
+	if is_move:
+		var c: Vector2i = host.preview_move_cell
+		return Locale.t("ux_confirm_dest_move") % [c.x, c.y]
+	var ui: int = int(host.preview_attack_ui)
+	var name := "?"
+	if ui >= 0 and ui < host.units.size():
+		name = str(host.units[ui].char.name)
+	return Locale.t("ux_confirm_dest_attack") % name
+
+
+static func _add_dest_hint(row: BoxContainer, text: String) -> void:
+	var tip := Label.new()
+	tip.name = "ConfirmHint"
+	tip.text = text
+	tip.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	tip.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	tip.add_theme_font_size_override("font_size", 16 if row is VBoxContainer else 14)
+	tip.add_theme_color_override("font_color", Color(UIKit.TEXT, 0.92))
+	tip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(tip)
 
 
 static func command(row: BoxContainer, text: String, h: int, accent: bool, cb: Callable, thumb_primary: bool = false) -> Button:
@@ -98,17 +154,17 @@ static func place(host) -> void:
 	var bottom := maxf(float(insets.get("bottom", 0.0)), 8.0)
 	if host._mobile_landscape():
 		# Right-edge thumb column: board keeps the full height.
-		# Confirm mode: slide the bar down into the lower thumb zone.
+		# T-P3 confirm: sink deeper into the lower thumb zone (0.58).
 		var top := maxf(float(insets.get("top", 0.0)), 8.0)
 		var sx: float = host.scale.x if host.scale.x > 0.01 else 1.0
 		var w: float = (host.MOBILE_RAIL_W - 4.0) * sx
 		var confirming := _confirming(host)
-		var y0: float = (top + vp.y * 0.55) if confirming else (top + vp.y * 0.22)
+		var y0: float = (top + vp.y * 0.58) if confirming else (top + vp.y * 0.22)
 		var bar_h: float = (vp.y - y0 - bottom) if confirming else (vp.y * 0.78 - top - bottom)
 		host._mobile_bar.position = Vector2(vp.x - right - w - 4.0, y0)
-		host._mobile_bar.size = Vector2(w, maxf(160.0, bar_h))
+		host._mobile_bar.size = Vector2(w, maxf(180.0, bar_h))
 		return
 	# Portrait: confirm uses a taller bottom strip so the accent key is thumb-sized.
-	var bar_h2: float = h * 1.35 if _confirming(host) else h
+	var bar_h2: float = h * 1.45 if _confirming(host) else h
 	host._mobile_bar.position = Vector2(left, vp.y - bottom - bar_h2)
 	host._mobile_bar.size = Vector2(maxf(240.0, vp.x - left - right), bar_h2)
