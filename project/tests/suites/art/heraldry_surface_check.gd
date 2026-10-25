@@ -724,10 +724,11 @@ func _run() -> void:
 	# SlotArms from crest meta
 	var meta_row := HBoxContainer.new()
 	rost_host.add_child(meta_row)
-	var meta_arms := CKHeraldryChrome.attach_save_row_arms(meta_row, Vector2(36, 44), "#c45c26")
+	var slot_hx := CKHeraldry.tincture_hex("gules")
+	var meta_arms := CKHeraldryChrome.attach_save_row_arms(meta_row, Vector2(36, 44), slot_hx)
 	_ok(meta_arms != null and str(meta_arms.get_meta("arms_kind", "")) == "lb_slot_arms", "SlotArms from crest_hex")
 	if meta_arms != null:
-		_ok(str(meta_arms.get_meta("arms_core", "")) == CKHeraldry.core_key(CKHeraldry.from_crest("#c45c26")), "SlotArms crest core")
+		_ok(str(meta_arms.get_meta("arms_core", "")) == CKHeraldry.core_key(CKHeraldry.from_crest(slot_hx)), "SlotArms crest core")
 	rost_host.queue_free()
 
 	# Rank badges distinct

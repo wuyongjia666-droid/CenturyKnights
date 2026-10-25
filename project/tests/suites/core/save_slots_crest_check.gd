@@ -78,13 +78,13 @@ func _run_meta_crest() -> void:
 	## SlotArms must render the crest written into that slot's meta, not live GameState.
 	OS.set_environment("CK_FORCE_MOBILE", "0")
 	var slot := "manual_0"
-	var crest_a := "#c45c26"
+	var crest_a := CKHeraldry.tincture_hex("gules")
 	_boot(crest_a)
 	_ok(GameState.save_to_slot(slot), "meta save_to_slot")
 	var meta := CKSaveService.read_meta(slot)
 	_ok(str(meta.get("crest_color", "")) == crest_a, "meta crest_color persisted")
 	## Flip live crest so a live-only attach would diverge.
-	GameState.crest_color = "#6ed4ff"
+	GameState.crest_color = CKHeraldry.tincture_hex("azure")
 	GameState.banner_spec = BannerSpec.from_crest(GameState.crest_color)
 	var page: Control = (load(SCN) as PackedScene).instantiate()
 	get_tree().root.add_child(page)
