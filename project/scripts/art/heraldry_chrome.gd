@@ -2,8 +2,13 @@ class_name CKHeraldryChrome
 extends RefCounted
 ## Shared player-facing heraldry chrome: 团徽 / 旗徽 / 族徽 + 爵位徽记 + 敌徽 + 邦徽.
 ## One design system everywhere (castle header/banner strip, genealogy, dossier,
+<<<<<<< HEAD
 ## board unit shields, rival houses, tavern/hire cards, city/smith/market chrome,
 ## marriage house cards + crest strip).
+=======
+## board unit shields, rival houses, tavern/hire cards, battle/danger aftermath,
+## travel halt, encounter modal).
+>>>>>>> 5896793a0 (feat(heraldry): battle/danger aftermath crest strip — 团徽+敌徽)
 ## No marriage marshalling / per-person cadency — only company vs family vs nation arms + rank badge.
 
 static func is_family_member(c) -> bool:
@@ -250,7 +255,11 @@ static func blit_token_shield(img: Image, c, team: String = "player") -> void:
 	var oy := img.get_height() - sh - 2
 	img.blit_rect(simg, Rect2i(0, 0, sw, sh), Vector2i(ox, oy))
 
+<<<<<<< HEAD
 ## Nation / foe shield (敌徽). Shared plate; city chrome uses make_city_nation_arms for 邦徽.
+=======
+## Nation / foe shield (敌徽). Used on battle aftermath + encounter chrome.
+>>>>>>> 5896793a0 (feat(heraldry): battle/danger aftermath crest strip — 团徽+敌徽)
 static func nation_shield(nid: String, w: int = 40, h: int = 48) -> Texture2D:
 	return UnitArt.shield_arms(nation_spec(nid), w, h)
 
@@ -269,6 +278,7 @@ static func make_nation_arms(nid: String, size: Vector2 = Vector2(40, 48)) -> Te
 	tr.set_meta("nation_id", str(nid))
 	return tr
 
+<<<<<<< HEAD
 static func make_city_nation_arms(nid: String, size: Vector2 = Vector2(40, 48)) -> TextureRect:
 	var tr := TextureRect.new()
 	tr.name = "CityNationArms"
@@ -296,12 +306,25 @@ static func place_city_crest_strip(parent: Node, city_id: String, at: Vector2, s
 		nid = str(World.node(str(city_id)).get("nation", ""))
 	var host := Control.new()
 	host.name = "CityCrestStrip"
+=======
+## Battle / danger aftermath crest strip: 团徽 + optional foe 敌徽 (nation of the fight).
+## Host name AftermathCrestStrip so suites can assert both arms without walking siblings.
+static func place_aftermath_crest_strip(parent: Node, at: Vector2, foe_nation: String = "", shield: Vector2 = Vector2(36, 44)) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("AftermathCrestStrip")
+	if old:
+		old.queue_free()
+	var host := Control.new()
+	host.name = "AftermathCrestStrip"
+>>>>>>> 5896793a0 (feat(heraldry): battle/danger aftermath crest strip — 团徽+敌徽)
 	host.position = at
 	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var arms := make_company_arms(shield)
 	arms.position = Vector2.ZERO
 	host.add_child(arms)
 	var w := shield.x
+<<<<<<< HEAD
 	if nid != "":
 		var nat := make_city_nation_arms(nid, shield)
 		nat.position = Vector2(shield.x + 8.0, 0)
@@ -364,3 +387,14 @@ static func place_marriage_crest_strip(parent: Node, left_c, right_c, at: Vector
 	parent.add_child(host)
 	return host
 
+=======
+	var nid := str(foe_nation)
+	if nid != "":
+		var foe := make_nation_arms(nid, shield)
+		foe.position = Vector2(shield.x + 8.0, 0)
+		host.add_child(foe)
+		w = shield.x * 2.0 + 8.0
+	host.size = Vector2(w, shield.y)
+	parent.add_child(host)
+	return host
+>>>>>>> 5896793a0 (feat(heraldry): battle/danger aftermath crest strip — 团徽+敌徽)

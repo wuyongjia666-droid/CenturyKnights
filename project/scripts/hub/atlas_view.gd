@@ -1647,6 +1647,7 @@ func _resume_state() -> void:
 func _show_travel_halt_modal() -> void:
 	var p := _modal_panel(260)
 	p.name = "TravelHaltModal"
+	CKHeraldryChrome.place_aftermath_crest_strip(p, Vector2(420, 16), "", Vector2(36, 44))
 	var t := UIKit.title_label(Locale.t("atlas_travel_halt_title"), 22)
 	t.position = Vector2(24, 24)
 	p.add_child(t)
@@ -1947,6 +1948,10 @@ func _show_battle_aftermath_modal(af: Dictionary) -> void:
 	var h := 280.0 + 16.0 * mini(3, lines.size())
 	var p := _modal_panel(h)
 	p.name = "BattleAftermathModal"
+	var foe_nid := str(af.get("nation", ""))
+	if foe_nid == "":
+		foe_nid = str(World.encounter.get("nation", ""))
+	CKHeraldryChrome.place_aftermath_crest_strip(p, Vector2(400, 14), foe_nid, Vector2(36, 44))
 	var tag := Locale.t("atlas_battle_aftermath_win_en") if win else Locale.t("atlas_battle_aftermath_lose_en")
 	var el := UIKit.mono("%s // %s" % [tag, str(af.get("title", ""))], 9, UIKit.OK if win else UIKit.DANGER)
 	el.position = Vector2(24, 18)
@@ -2000,10 +2005,18 @@ func _show_aftermath_modal(af: Dictionary) -> void:
 	var h := 260.0 + 18.0 * mini(4, body_bits.size())
 	var p := _modal_panel(h)
 	p.name = "AftermathModal"
+	var is_danger := bool(af.get("danger", false))
+	if is_danger:
+		var road_nid := str(af.get("nation", ""))
+		if road_nid == "":
+			road_nid = World.nation_of(str(af.get("node", World.pos)))
+		CKHeraldryChrome.place_aftermath_crest_strip(p, Vector2(400, 14), road_nid, Vector2(36, 44))
+	else:
+		CKHeraldryChrome.place_aftermath_crest_strip(p, Vector2(436, 14), "", Vector2(36, 44))
 	var tag := Locale.t("atlas_aftermath_en")
-	if bool(af.get("danger", false)):
+	if is_danger:
 		tag = Locale.t("atlas_aftermath_danger_en")
-	var el := UIKit.mono("%s // %s" % [tag, str(af.get("title", ""))], 9, UIKit.DANGER if bool(af.get("danger", false)) else UIKit.ACCENT)
+	var el := UIKit.mono("%s // %s" % [tag, str(af.get("title", ""))], 9, UIKit.DANGER if is_danger else UIKit.ACCENT)
 	el.position = Vector2(24, 18)
 	p.add_child(el)
 	var t := UIKit.title_label(Locale.t("atlas_aftermath_title"), 22)
@@ -2040,6 +2053,7 @@ func _show_aftermath_modal(af: Dictionary) -> void:
 func _show_encounter_modal(enc: Dictionary) -> void:
 	var p := _modal_panel(300)
 	p.name = "EncounterModal"
+	CKHeraldryChrome.place_aftermath_crest_strip(p, Vector2(400, 14), str(enc.get("nation", "")), Vector2(36, 44))
 	var el := UIKit.mono("ENCOUNTER // %s" % str(World.data.get("biome_keyword", {}).get(str(World.node(str(enc.get("node", ""))).get("biome", "")), "")).to_upper(), 9, UIKit.DANGER)
 	el.position = Vector2(24, 18)
 	p.add_child(el)

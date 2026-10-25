@@ -1,7 +1,12 @@
 extends Node
 ## Player-visible heraldry consistency across genealogy + castle banner strip +
+<<<<<<< HEAD
 ## rival houses + tavern/hire + board unit shields + city/smith 邦徽.
 ## 团徽 / 旗徽 / 族徽 / 敌徽 / 邦徽 never mismatch outside their Chrome routes.
+=======
+## rival houses + tavern/hire + board unit shields + battle/danger aftermath crests.
+## 团徽 / 旗徽 / 族徽 / 敌徽 never mismatch outside their Chrome routes.
+>>>>>>> 5896793a0 (feat(heraldry): battle/danger aftermath crest strip — 团徽+敌徽)
 
 const OVERVIEW := "res://scenes/hub/lineage_view.tscn"
 const TREE := "res://scenes/hub/lineage_tree.tscn"
@@ -290,6 +295,7 @@ func _run() -> void:
 	if _fail != "":
 		return
 
+<<<<<<< HEAD
 	# ── City crest strip (团徽 + 邦徽) ─────────────────────────────
 	var city_host := Control.new()
 	city_host.name = "CityCrestHost"
@@ -306,6 +312,34 @@ func _run() -> void:
 		_ok(cn != null and str(cn.get_meta("arms_core", "")) == CKHeraldry.core_key(CKHeraldryChrome.nation_spec(expect_nid)), "city strip nation core")
 		_ok(cn != null and str(cn.get_meta("arms_core", "")) != CKHeraldry.core_key(ban_spec), "邦徽 != 团徽")
 	city_host.queue_free()
+=======
+	# ── Aftermath crest strip (团徽 + 敌徽) ────────────────────────
+	var host := Control.new()
+	host.name = "AftermathHost"
+	get_tree().root.add_child(host)
+	var af_strip := CKHeraldryChrome.place_aftermath_crest_strip(host, Vector2(10, 10), "ashbanner", Vector2(36, 44))
+	_ok(af_strip != null and af_strip.name == "AftermathCrestStrip", "AftermathCrestStrip missing")
+	if af_strip != null:
+		var ca := af_strip.find_child("CastleArms", true, false)
+		var foe := af_strip.find_child("FoeArms", true, false)
+		_ok(ca != null, "aftermath CastleArms missing")
+		_ok(foe != null, "aftermath FoeArms missing")
+		if ca != null:
+			_ok(str(ca.get_meta("arms_kind", "")) == "gen2_36", "aftermath company not 团徽")
+			_ok(str(ca.get_meta("arms_core", "")) == CKHeraldry.core_key(ban_spec), "aftermath company core drift")
+		if foe != null:
+			_ok(str(foe.get_meta("arms_kind", "")) == "lb_rv_arms", "aftermath foe not 敌徽")
+			_ok(str(foe.get_meta("nation_id", "")) == "ashbanner", "aftermath foe nation_id")
+			_ok(str(foe.get_meta("arms_core", "")) == CKHeraldry.core_key(CKHeraldryChrome.nation_spec("ashbanner")), "aftermath foe core")
+			_ok(str(foe.get_meta("arms_core", "")) != CKHeraldry.core_key(ban_spec), "foe must not equal company")
+	## Company-only strip (halt / calm road) has no FoeArms
+	var af_halt := CKHeraldryChrome.place_aftermath_crest_strip(host, Vector2(10, 80), "", Vector2(36, 44))
+	_ok(af_halt != null, "company-only strip missing")
+	if af_halt != null:
+		_ok(af_halt.find_child("CastleArms", true, false) != null, "halt CastleArms missing")
+		_ok(af_halt.find_child("FoeArms", true, false) == null, "halt must not show FoeArms")
+	host.queue_free()
+>>>>>>> 5896793a0 (feat(heraldry): battle/danger aftermath crest strip — 团徽+敌徽)
 	await _settle(2)
 	if _fail != "":
 		return

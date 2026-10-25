@@ -2350,6 +2350,7 @@ func choose_event(idx: int) -> Dictionary:
 	if days_d > 0:
 		route_note = Locale.t("atlas_aftermath_route") % days_d
 	var is_danger := int(ctx.get("danger", 0)) >= 2 or str(ev.get("id", "")) in ["ambush", "toll", "storm", "bridge"]
+	var road_nid := str(node(str(ev.get("b", pos))).get("nation", nation_of(pos)))
 	var aftermath := {
 		"title": str(ev.get("title", "")),
 		"choice": choice_label,
@@ -2363,6 +2364,8 @@ func choose_event(idx: int) -> Dictionary:
 		"danger": is_danger,
 		"id": str(ev.get("id", "")),
 		"kind": str(ev.get("kind", "road")),
+		"nation": road_nid,
+		"node": str(ev.get("b", pos)),
 	}
 	last_aftermath = aftermath
 	if fx.has("battle"):
@@ -2764,6 +2767,8 @@ func on_battle_end(win: bool) -> Dictionary:
 		"resume_travel": resume,
 		"kind": "battle",
 		"msg": msg,
+		"nation": str(enc.get("nation", "")),
+		"node": str(enc.get("node", pos)),
 	}
 	last_battle_aftermath = aftermath
 	_tlog(msg)
