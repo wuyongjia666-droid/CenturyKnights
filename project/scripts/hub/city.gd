@@ -1462,7 +1462,11 @@ func _tab_tavern() -> void:
 		hb.disabled = GameState.silver < cost
 		hb.tooltip_text = "银币不足" if GameState.silver < cost else ""
 		var idx := i
-		hb.pressed.connect(func(): _do(World.hire(city, idx)))
+		hb.pressed.connect(func():
+			var hr: Dictionary = World.hire(city, idx)
+			if bool(hr.get("ok", false)) and str(hr.get("id", "")) != "":
+				_sel_char = str(hr.id)  # armory opens on the fresh hire
+			_do(hr))
 		card.add_child(hb)
 		if _mob:
 			# phone: the card becomes a column so 22px rows stack instead of overlapping
@@ -1686,6 +1690,62 @@ func selftest() -> Dictionary:
 	if _armory_count() != arm0 + 1:
 		return {"ok": false, "msg": "smith buy via UI failed"}
 	msgs.append("smith buy")
+	# tavern: hire face 0, then equip the just-bought arm onto them
+	_set_tab("tavern")
+	await get_tree().process_frame
+	var hire_btn := _body.find_child("Hire0", true, false) as Button
+	if hire_btn == null:
+		return {"ok": false, "msg": "no Hire0"}
+	GameState.silver += 5000
+	_render_tab()
+	await get_tree().process_frame
+	hire_btn = _body.find_child("Hire0", true, false) as Button
+	var roster0 := GameState.roster().size()
+	hire_btn.pressed.emit()
+	await get_tree().process_frame
+	if GameState.roster().size() != roster0 + 1:
+		return {"ok": false, "msg": "tavern hire via UI failed"}
+	var hired_id := _sel_char
+	if hired_id == "" or hired_id == GameState.get_leader().id:
+		# fall back: newest non-leader
+		for c3 in GameState.roster():
+			if c3.id != GameState.get_leader().id:
+				hired_id = c3.id
+				break
+	msgs.append("tavern hire")
+	_set_tab("armory")
+	await get_tree().process_frame
+	_sel_char = hired_id
+	_render_tab()
+	await get_tree().process_frame
+	var char_row := _body.find_child("Char_" + hired_id, true, false) as Button
+	if char_row == null:
+		return {"ok": false, "msg": "Char_%s missing" % hired_id}
+	var hired: CKCharacter = GameState.characters.get(hired_id)
+	var eq_id := ""
+	for k in World.armory.keys():
+		if World.can_equip(hired, World.item(str(k))) == "":
+			eq_id = str(k)
+			break
+	if eq_id == "":
+		# force job so regional sword fits
+		hired.job_id = "squire"
+		for k2 in World.armory.keys():
+			eq_id = str(k2)
+			break
+		_render_tab()
+		await get_tree().process_frame
+	var eqh := _body.find_child("Equip_" + eq_id, true, false) as Button
+	if eqh == null or eqh.disabled:
+		return {"ok": false, "msg": "Equip_%s missing/disabled on hire" % eq_id}
+	var atk_h0 := hired.derived_atk()
+	eqh.pressed.emit()
+	await get_tree().process_frame
+	if World.equipped(hired, "weapon") != eq_id:
+		return {"ok": false, "msg": "equip hire via UI failed"}
+	if hired.derived_atk() < atk_h0:
+		return {"ok": false, "msg": "hire equip did not hold atk"}
+	msgs.append("hire equip")
 	# market: buy 1 of the first produced good
 	_set_tab("market")
 	await get_tree().process_frame
