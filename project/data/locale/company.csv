@@ -353,3 +353,9 @@ atlas_fx_risk,有风险,Risky
 atlas_fx_other,有后果,Has consequences
 atlas_trade_margin_toast,卖出 %s ×%d（+%d 银 · 利润 %+d）,Sold %s ×%d (+%d silver · margin %+d)
 atlas_trade_first_buy,购入本地产 %s ×%d（-%d 银）· 可运往求购城出手,Bought local %s ×%d (-%d silver) · haul to a demand city
+city_market_refresh_btn,补货刷新 ↻,Restock shelves
+city_market_refresh_ok,市集补货（-%d 银）,Market restocked (-%d silver)
+city_market_refresh_full,本地存货已足，无需补货,Shelves already full
+city_market_need_here,须身在此城,Must be in this city
+city_market_no_city,无此地,No such place
+city_market_silver_short,银币不足（需 %d）,Not enough silver (need %d)
