@@ -86,7 +86,7 @@ func _path_move_follow() -> String:
 	# Instant path (host not in tree) still applies nudge pan.
 	if host._board_pan == pan_before:
 		# If algebra says nudge is zero for this stage layout, fail with detail.
-		var stage: Rect2 = host.BOARD_AREA
+		var stage: Rect2 = host._stage
 		var expect: Vector2 = BattlePick.focus_nudge_delta(
 			host._board_origin, float(host._board_cell), Vector2i(8, 1), pan_before, 1.0, stage)
 		if expect.length_squared() < 1.0:
@@ -107,7 +107,7 @@ func _path_attack_juice_wire() -> String:
 		return "attack drag must latch enemy ui: %s" % str(host.preview_attack_ui)
 	if host._board_pan == pan_before:
 		var expect: Vector2 = BattlePick.focus_nudge_delta(
-			host._board_origin, float(host._board_cell), Vector2i(8, 2), pan_before, 1.0, host.BOARD_AREA)
+			host._board_origin, float(host._board_cell), Vector2i(8, 2), pan_before, 1.0, host._stage)
 		if expect.length_squared() < 1.0:
 			return "fixture stage too large for attack follow"
 		return "attack latch must soft-follow defender"
@@ -121,7 +121,7 @@ class _FakeBattleHost:
 	var _board_origin: Vector2 = Vector2(40, 80)
 	var _board_cell: int = 56
 	## Narrow stage so cell x=8 sits outside the 0.18 inset (forces a nudge).
-	var BOARD_AREA: Rect2 = Rect2(24, 76, 280, 220)
+	var _stage: Rect2 = Rect2(24, 76, 280, 220)
 	var units: Array = []
 	var selected: int = -1
 	var turn_team: String = "player"
@@ -148,6 +148,7 @@ class _FakeBattleHost:
 	func setup_selected_at(pos: Vector2i) -> void:
 		units = [{"char": {"hp": 10, "name": "Hero"}, "pos": pos, "team": "player", "done": false}]
 		selected = 0
+		set_meta("m_board_area", _stage)
 
 	func screen_at_cell(cell: Vector2i) -> Vector2:
 		return _board_origin + Vector2(cell) * float(_board_cell) + Vector2(_board_cell, _board_cell) * 0.5
@@ -172,7 +173,7 @@ class _FakeBattleHost:
 		return can_attack_cells.has(cell)
 
 	func _clamp_board_pan() -> void:
-		_board_pan = BattlePick.clamp_pan(_board_pan, _board_zoom, _board_origin, Vector2(16, 12) * float(_board_cell), BOARD_AREA)
+		_board_pan = BattlePick.clamp_pan(_board_pan, _board_zoom, _board_origin, Vector2(16, 12) * float(_board_cell), _stage)
 
 	func _apply_board_xform() -> void:
 		pass
