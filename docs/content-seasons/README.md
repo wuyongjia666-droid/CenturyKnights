@@ -11,6 +11,7 @@
 | #4 | [`season-04/`](./season-04/) | `project/data/content_seasons/season_04.json` | **中篇+可玩章 `cs04_01`**（家训上的灯；家训月回响） |
 | #5 | [`season-05/`](./season-05/) | `project/data/content_seasons/season_05.json` | **中篇+可玩章 `cs05_01`**（空椅上的灯；联姻→继承→嗣位链） |
 | #6 | [`season-06/`](./season-06/) | `project/data/content_seasons/season_06.json` | **中篇+可玩章 `cs06_01`**（校场上的灯；嗣位校场争锋） |
+| #7 | [`season-07/`](./season-07/) | `project/data/content_seasons/season_07.json` | **中篇+可玩章 `cs07_01`**（仪典上的灯；认宗仪典） |
 
 每季目录约定：
 
@@ -28,8 +29,8 @@
 - `pipeline_stages` — 每步 `doc` / `gate` / `open`
 - `playable_chapter` / `playable_path` — 可玩章 id 与资源路径（季 #1 已开）
 
-CI：`suite_content_season_scaffold_check` 校验 **index 内全部季**；`suite_content_season_playable_check` 走季#1 `cs01_01`；`content_season_playable_s03_check` / `s04` / `s05` / `s06` 走对应可玩章。  
-季#2..#6 要求正文开写（≥12000 汉字）。商店工程并行见 [`docs/store/`](../store/)。
+CI：`suite_content_season_scaffold_check` 校验 **index 内全部季**；`suite_content_season_playable_check` 走季#1 `cs01_01`；`content_season_playable_s03_check` / `s04` / `s05` / `s06` / `s07` 走对应可玩章。  
+季#2..#7 要求正文开写（≥12000 汉字）。商店工程并行见 [`docs/store/`](../store/)。
 
 ## 分工边界
 
