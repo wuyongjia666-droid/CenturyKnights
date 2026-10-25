@@ -217,6 +217,42 @@
           "label": "继续，去验盏",
           "do": [
             {
+              "op": "season_ledger",
+              "when": {
+                "all": [
+                  {
+                    "not_flag": "cs01_mid_fought"
+                  },
+                  {
+                    "not_flag": "cs01_mid_lost"
+                  }
+                ]
+              },
+              "chapter": "cs01_01",
+              "choice": "mid_skirmish_skip",
+              "title": "回执上的灯",
+              "outcome": "未试锋——锋未出鞘，径去验盏",
+              "yeartrace": true
+            },
+            {
+              "op": "season_ledger",
+              "when": {
+                "all": [
+                  {
+                    "not_flag": "cs01_mid_fought"
+                  },
+                  {
+                    "flag": "cs01_mid_lost"
+                  }
+                ]
+              },
+              "chapter": "cs01_01",
+              "choice": "mid_skirmish_abort",
+              "title": "回执上的灯",
+              "outcome": "试锋未成——伤还在，先去验盏",
+              "yeartrace": true
+            },
+            {
               "op": "goto",
               "beat": "next"
             }

@@ -311,6 +311,42 @@
           "label": "继续，去酒馆",
           "do": [
             {
+              "op": "season_ledger",
+              "when": {
+                "all": [
+                  {
+                    "not_flag": "cs09_mid_fought"
+                  },
+                  {
+                    "not_flag": "cs09_mid_lost"
+                  }
+                ]
+              },
+              "chapter": "cs09_01",
+              "choice": "mid_skirmish_skip",
+              "title": "血验上的灯",
+              "outcome": "未试锋——锋未出鞘，径去酒馆",
+              "yeartrace": true
+            },
+            {
+              "op": "season_ledger",
+              "when": {
+                "all": [
+                  {
+                    "not_flag": "cs09_mid_fought"
+                  },
+                  {
+                    "flag": "cs09_mid_lost"
+                  }
+                ]
+              },
+              "chapter": "cs09_01",
+              "choice": "mid_skirmish_abort",
+              "title": "血验上的灯",
+              "outcome": "试锋未成——伤还在，先去酒馆",
+              "yeartrace": true
+            },
+            {
               "op": "goto",
               "beat": "next"
             }
