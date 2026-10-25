@@ -10,6 +10,8 @@ extends RefCounted
 ## snaps to that unit (FIG_CELLS=1.30, feet at 0.62 → y ∈ [FIG_TOP, FIG_FEET]).
 ## Y1-A T-P1-4: move/place drag lands on the exact finger cell (soft-pick must not
 ## steal empty legal landings beside living units).
+## Y1-A T-P1-5: contour rect hit — fat finger on the figure body (not just cell centre /
+## cell-above bias) still selects; tap-again confirm is in battle_controller.
 
 ## Fraction of a cell: anything closer than this counts as that unit.
 const SOFT_R := 0.90
@@ -17,6 +19,9 @@ const SOFT_R := 0.90
 ## Matches unit_layer_3d.FIG_CELLS (1.30) and board_units.feet_px (0.62).
 const FIG_TOP := -0.68
 const FIG_FEET := 0.62
+## Y1-A T-P1-5: figure screen AABB in cell units (centred on the token column).
+## Half-width 0.42 ≈ fat-finger on torso/arms without stealing the neighbour column.
+const CONTOUR_HALF_W := 0.42
 ## Y1-A T-P1-2: camera limits shared by pinch / wheel / pan (real transform, not just contracts).
 const ZOOM_MIN := 0.65
 const ZOOM_MAX := 2.4
@@ -126,6 +131,37 @@ static func visual_bias_unit_pos(origin: Vector2, cell_px: float, units: Array, 
 	return below
 
 
+
+## Pure T-P1-5: finger inside a living unit's figure AABB (width 2*CONTOUR_HALF_W ×
+## [FIG_TOP, FIG_FEET] relative to that unit's cell). Overlaps pick nearest feet.
+## Does not steal when finger_cell already has a living unit (caller checks that).
+static func contour_unit_pos(origin: Vector2, cell_px: float, units: Array, local: Vector2) -> Vector2i:
+	if cell_px < 1.0:
+		return Vector2i(-1, -1)
+	var best_i := -1
+	var best_d2 := INF
+	var lx: float = (local.x - origin.x) / cell_px
+	var ly: float = (local.y - origin.y) / cell_px
+	for i in units.size():
+		var u = units[i]
+		if u.char.hp <= 0:
+			continue
+		var ux := float(u.pos.x)
+		var uy := float(u.pos.y)
+		if lx < ux + 0.5 - CONTOUR_HALF_W or lx > ux + 0.5 + CONTOUR_HALF_W:
+			continue
+		if ly < uy + FIG_TOP or ly > uy + FIG_FEET:
+			continue
+		var feet: Vector2 = origin + Vector2(u.pos) * cell_px + Vector2(cell_px * 0.5, cell_px * FIG_FEET)
+		var d2: float = feet.distance_squared_to(local)
+		if d2 < best_d2:
+			best_d2 = d2
+			best_i = i
+	if best_i >= 0:
+		return units[best_i].pos
+	return Vector2i(-1, -1)
+
+
 static func resolve(host, screen_pos: Vector2) -> Vector2i:
 	var exact: Vector2i = host._pointer_to_cell(screen_pos)
 	if exact.x >= 0 and host._unit_at(exact) >= 0:
@@ -138,6 +174,10 @@ static func resolve(host, screen_pos: Vector2) -> Vector2i:
 	var hit: Vector2i = nearest_unit_pos(host.ORIGIN, float(host.CELL), host.units, local)
 	if hit.x >= 0:
 		return hit
+	# T-P1-5: figure body AABB (side torso / shoulder that soft-R + bias both miss).
+	var contour: Vector2i = contour_unit_pos(host.ORIGIN, float(host.CELL), host.units, local)
+	if contour.x >= 0:
+		return contour
 	return exact
 
 

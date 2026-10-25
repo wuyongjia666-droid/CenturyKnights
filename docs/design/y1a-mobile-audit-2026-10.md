@@ -17,6 +17,7 @@
 > | T-P1-2 真实安全区 + 镜头变换 | **DONE**（#334）：修安全区坐标被算两次；设备 `get_display_safe_area` 真机仍待签收 |
 > | T-P1-3 3D 视觉命中（视觉偏置） | **DONE**（#348）：空格点脸/头 → 吸回下方单位；`visual_bias_unit_pos` + `battle_feel_check` |
 > | T-P1-4 拖移落格精确指格 | **DONE**（#349）：移动/落子用 `_pointer_to_cell`；攻击仍 soft；离合法格清幽灵；`drag_move_cell` / `drag_land_cell` |
+> | T-P1-5 轮廓矩形 + 二次点确认 + 选中态 | **DONE（本 PR）**：`contour_unit_pos`；预览格/敌二次点 `confirm_*`；空点清幽灵；手机脚底/身框光晕；长按同 soft/contour；`battle_feel_check` |
 > | 立绘 exists/resolve medium 回落（机制 A 根因） | **DONE（#350）**：`CKArtPaths.resolve` 在 portraits 路径上 large 被 exclude 时落到 `.medium.webp`；`android_tier_pack_check` |
 > | 剧情立绘端游↔手游对齐核查 | **DONE**（#335） |
 > | 9 人无图农场回填（配角 4 + 反派 5） | **DONE**（#337 cast/farm 接线；#338 入库真立绘） |
@@ -83,6 +84,7 @@
 | T-P1-2 | **P1 · PR #334** | 缩放/平移后点偏 | ~~假设~~ **已证实并修复**：`_gui_input` 收到的是控件本地坐标，旧代码又做一次 `get_global_transform()` 逆变换；有安全区内缩时点偏一个内缩距离。现先抬回视口坐标；镜头上下限走 `BattlePick.clamp_pan / zoom_about`。`mobile_safe_area_touch_check` 真实 push_input 覆盖 | `battle_controller.gd` / `battle_pick.gd` / `mobile_chrome.gd` |
 | T-P1-3 | **P1 · DONE** | 棋子「看起来」难点 | 3D 立像伸进上方一格；**视觉偏置**：手指空格 + 下方格有活单位 + 落点在立像竖向范围 → 选中下方单位（方案 1）。轮廓矩形 / 3D 射线仍不进本阶段 | `battle_pick.gd`（`visual_bias_unit_pos`） |
 | T-P1-4 | **P1 · DONE** | 拖到格松手卡手 | 移动预览/松手曾走 `BattlePick.resolve`，邻单位 soft 吸走空地 → 幽灵不跟手。现 **move=精确指格**、attack=soft；离合法格/`非法松手`清幽灵 | `battle_touch_confirm.gd`（`drag_land_cell`） / `battle_pick.gd`（`drag_move_cell`） |
+| T-P1-5 | **P1 · DONE（本 PR）** | 点身体仍难选 / 确认要找栏 | **轮廓矩形** `CONTOUR_HALF_W=0.42`×[`FIG_TOP`,`FIG_FEET`]；**二次点确认**同预览格/敌；空非法点清幽灵；手机选中脚底+身框光晕；长按走 `BattlePick.resolve` | `battle_pick.gd` / `battle_controller.gd` / `battle_feel_check` |
 | T-P2-1 | **P2 · 本 PR** | 信息不够 | Forecast 桌面固定 340×132 + clip，字号被 `ensure_min_fonts` 抬到 22 后竖向挤扁；现手机：字号地板、列/面板最小尺寸、关 clip、按 `m_board_area` 安全区放置；`MobileSide` 标签最小行高；`mobile_forecast_layout_check` | `forecast_panel` / `battle_mobile_side` / `_unit_panel` |
 
 ### 1.4 T-P1-3：3D 立像的「视觉命中」（视觉偏置已落地）
@@ -97,7 +99,7 @@
 | 脚底位置 | 本格自上而下 **0.62** 格处 | `board_units.gd · feet_px` |
 | 立像竖向范围（以本格左上为原点，单位：格） | y ∈ **[−0.68, 0.62]**；头顶比本格上沿高 0.68 格 | 由上两行推出 |
 | 立像宽度 | 约 0.4–0.5 格（人形） | 目测截图；横向不是问题 |
-| 命中规则 | 先看手指格有无活单位 → **空格则 `visual_bias_unit_pos`（下方立像）** → 再 `SOFT_R = 0.90` | `battle_pick.gd · resolve` |
+| 命中规则 | 指格有活单位 → `visual_bias` → `SOFT_R=0.90` → **`contour_unit_pos`（身框）** → 精确格 | `battle_pick.gd · resolve` |
 
 **按身体部位点下去会发生什么**（假设上方一格是空地）
 
@@ -114,11 +116,11 @@
 
 **落地（方案 1 · 视觉偏置）**
 - T-P0 已合、m173 APK 冒烟过主菜单后，落地最低风险方案：空指格 + 下方活单位 + 落点 y ∈ [`FIG_TOP`,`FIG_FEET`]（−0.68…0.62）→ 选中下方单位。
-- **不**再放大 `SOFT_R`（相邻抢点）；轮廓矩形 / 3D 射线仍搁置。
+- **不**再放大 `SOFT_R`（相邻抢点）。轮廓矩形 → **T-P1-5 DONE**；3D 射线仍搁置。
 - 契约：`battle_feel_check._visual_bias`（点脸命中、SOFT_R 独测仍 miss、冠上/死单位/无下方不误吸）。
 
 **仍可后续升级**
-1. **轮廓矩形命中**：宽 ≈0.5 格 × 高 1.3 格；重叠取更「前」脚底。
+1. ~~**轮廓矩形命中**~~ → **T-P1-5 DONE**（`CONTOUR_HALF_W=0.42`；重叠取近脚底）。
 2. **3D 射线拾取**：成本高，手机 15Hz 层不建议优先。
 
 **真机签收**：按 §0 第 4 步，底座与脸各点 10 次记成功率（清单 §3.1）。
@@ -133,8 +135,9 @@
 6. ~~**P1** T-P1-3 视觉偏置~~ → **DONE**（#348）。  
 7. ~~**P1** T-P1-4 拖移落格精确指格~~ → **DONE**（#349）。
 7b. ~~立绘 exists/resolve medium 回落~~ → **DONE（#350）**。  
+7c. ~~**P1** T-P1-5 轮廓矩形 + 二次点确认 + 选中态~~ → **DONE（本 PR）**。
 8. ~~正式 APK 冒烟~~ → **PARTIAL**（m173 Hyper-V 主菜单 PASS）；**待用户自玩签收**（不代装真机）。
-9. **代码刀空跑结论（2026-10-24）**：搁置项以外、不依赖真机装包的 Y1-A 可落地代码已无；下一动作只等用户自玩勾清单。
+9. **代码刀空跑结论（2026-10-25）**：T-P1-5 后，不依赖真机装包的战棋触控深刀已落地；真机/模拟器签收仍 NEXT。
 
 ---
 

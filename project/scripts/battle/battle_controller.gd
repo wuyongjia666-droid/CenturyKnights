@@ -1198,14 +1198,30 @@ func _draw_overlay() -> void:
 						overlay.draw_rect(r2, Color(0.95, 0.2, 0.2, a))
 						overlay.draw_rect(r2, Color(1.0, 0.4, 0.3, 0.8), false, 2.0)
 	# v8.5 选中准星（authored select_dense 8帧循环）
+	# Y1-A T-P1-5 mobile: larger ring + figure-body halo so selection reads under a fat finger.
 	if selected >= 0 and selected < units.size() and units[selected].char.hp > 0:
 		var sfi = int(_sel_pulse * 12.0) % 8
 		var sp = "res://assets/art/fx/select_dense_%d.png" % sfi
+		var sel_pos: Vector2i = units[selected].pos
+		var cell_c: Vector2 = ORIGIN + Vector2(sel_pos) * CELL + Vector2(CELL, CELL) * 0.5 - Vector2(1, 1)
+		var mobile_sel := DeviceProfile.is_mobile()
+		var rs := float(CELL) * (1.55 if mobile_sel else 1.32)
+		var scol = Color(1, 1, 1, 0.95) if units[selected].team == "player" else Color(1.0, 0.62, 0.62, 0.95)
+		if mobile_sel:
+			# Foot disc + mid-figure ring (matches BattlePick FIG span) — readable without the FX sheet.
+			var feet: Vector2 = ORIGIN + Vector2(sel_pos) * float(CELL) + Vector2(float(CELL) * 0.5, float(CELL) * BattlePick.FIG_FEET)
+			var mid: Vector2 = ORIGIN + Vector2(sel_pos) * float(CELL) + Vector2(float(CELL) * 0.5, float(CELL) * ((BattlePick.FIG_TOP + BattlePick.FIG_FEET) * 0.5))
+			var pulse_a := 0.55 + 0.25 * sin(_sel_pulse * 6.0)
+			overlay.draw_circle(feet, float(CELL) * 0.38, Color(UIKit.ACCENT if units[selected].team == "player" else UIKit.DANGER, 0.28 * pulse_a))
+			overlay.draw_arc(feet, float(CELL) * 0.42, 0.0, TAU, 40, Color(scol, 0.95), 3.0)
+			overlay.draw_arc(mid, float(CELL) * 0.36, 0.0, TAU, 40, Color(scol, 0.75), 2.5)
+			var body := Rect2(
+				ORIGIN + Vector2(sel_pos) * float(CELL) + Vector2(float(CELL) * (0.5 - BattlePick.CONTOUR_HALF_W), float(CELL) * BattlePick.FIG_TOP),
+				Vector2(float(CELL) * BattlePick.CONTOUR_HALF_W * 2.0, float(CELL) * (BattlePick.FIG_FEET - BattlePick.FIG_TOP)))
+			overlay.draw_rect(body, Color(scol, 0.10))
+			overlay.draw_rect(body, Color(scol, 0.55), false, 2.0)
 		if ResourceLoader.exists(sp):
-			var cpos = ORIGIN + Vector2(units[selected].pos) * CELL + Vector2(CELL, CELL) * 0.5 - Vector2(1, 1)
-			var rs := float(CELL) * 1.32
-			var scol = Color(1, 1, 1, 0.95) if units[selected].team == "player" else Color(1.0, 0.62, 0.62, 0.95)
-			overlay.draw_texture_rect(_tex(sp), Rect2(cpos - Vector2(rs, rs) * 0.5, Vector2(rs, rs)), false, scol)
+			overlay.draw_texture_rect(_tex(sp), Rect2(cell_c - Vector2(rs, rs) * 0.5, Vector2(rs, rs)), false, scol)
 	# slash + hit_spark 分层（game-feel）
 	for s in _slash_fx:
 		if s.age < 0.0: continue
@@ -1484,7 +1500,11 @@ func _apply_board_gesture(g: Dictionary) -> void:
 				return
 			_click_cell(cell)
 		"long_press":
-			_on_long_press_cell(_pointer_to_cell(pos))
+			# Y1-A T-P1-5: intel long-press uses the same soft/contour resolve as taps.
+			var lp_cell := BattlePick.resolve(self, pos)
+			if lp_cell.x < 0:
+				lp_cell = _pointer_to_cell(pos)
+			_on_long_press_cell(lp_cell)
 		"cancel":
 			_cancel_selection()
 		"pan":
@@ -1599,6 +1619,10 @@ func _click_cell(cell: Vector2i) -> void:
 						_spawn_dmg(cell, "命中%d%%" % int(pv.hit), Color(0.9, 0.92, 1.0))
 						_log("预判：命中 %d%%　伤 %d–%d%s" % [int(pv.hit), int(pv.dmg.x), int(pv.dmg.y), (" · " + "·".join(pv.tags)) if pv.tags else ""])
 						if BattleTouchConfirm.enabled():
+							# Y1-A T-P1-5: second tap on the same previewed enemy commits.
+							if int(preview_attack_ui) == ui:
+								BattleTouchConfirm.confirm_attack(self)
+								return
 							preview_attack_ui = ui
 							preview_move_cell = Vector2i(-1, -1)
 							ForecastPanel.refresh(self)
@@ -1616,6 +1640,10 @@ func _click_cell(cell: Vector2i) -> void:
 				return
 			if ui < 0 and not attack_mode and not moved_this_select and move_cells.has(cell):
 				if BattleTouchConfirm.enabled():
+					# Y1-A T-P1-5: second tap on the same previewed cell commits (no rail hunt).
+					if preview_move_cell == cell:
+						BattleTouchConfirm.confirm_move(self)
+						return
 					preview_move_cell = cell
 					preview_attack_ui = -1
 					if DeviceProfile.is_mobile():
@@ -1624,6 +1652,11 @@ func _click_cell(cell: Vector2i) -> void:
 					_log(Locale.t("ux_preview_move_log") % [su.char.name, cell.x, cell.y])
 					return
 				BattleTouchConfirm.commit_move(self, cell)
+				return
+			# Y1-A T-P1-5: empty illegal / off-preview tap clears the ghost (legal move cells returned above).
+			if ui < 0 and BattleTouchConfirm.enabled() and (preview_move_cell.x >= 0 or int(preview_attack_ui) >= 0):
+				BattleTouchConfirm.clear(self)
+				overlay.queue_redraw()
 				return
 			if ui >= 0 and units[ui].team == "player" and not units[ui].done and ui != selected:
 				_select_player(ui)
