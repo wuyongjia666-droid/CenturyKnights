@@ -1686,6 +1686,32 @@ func selftest() -> Dictionary:
 	if _armory_count() != arm0 + 1:
 		return {"ok": false, "msg": "smith buy via UI failed"}
 	msgs.append("smith buy")
+	# armory: equip the just-bought piece onto the leader via named row
+	var bought_id := ""
+	for k in World.armory.keys():
+		bought_id = str(k)
+		break
+	if bought_id == "":
+		return {"ok": false, "msg": "armory empty after smith buy"}
+	_set_tab("armory")
+	await get_tree().process_frame
+	var leader: CKCharacter = GameState.get_leader()
+	if leader == null:
+		return {"ok": false, "msg": "no leader"}
+	_sel_char = leader.id
+	_render_tab()
+	await get_tree().process_frame
+	var atk0 := leader.derived_atk()
+	var eq := _body.find_child("Equip_" + bought_id, true, false) as Button
+	if eq == null or eq.disabled:
+		return {"ok": false, "msg": "Equip_%s missing/disabled" % bought_id}
+	eq.pressed.emit()
+	await get_tree().process_frame
+	if World.equipped(leader, str(World.item(bought_id).slot)) != bought_id:
+		return {"ok": false, "msg": "equip via UI failed"}
+	if leader.derived_atk() < atk0:
+		return {"ok": false, "msg": "equip did not raise atk"}
+	msgs.append("smith equip")
 	# market: buy 1 of the first produced good
 	_set_tab("market")
 	await get_tree().process_frame
