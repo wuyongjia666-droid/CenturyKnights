@@ -1,0 +1,349 @@
+{
+  "id": "cs06_01",
+  "title": "校场上的灯",
+  "legacy_index": 406,
+  "return_scene": "res://scenes/story/chapter_player.tscn",
+  "source": "docs/content-seasons/season-06/NOVEL.md",
+  "beats": [
+    {
+      "id": "yard",
+      "title": "挂栏",
+      "next": "spar",
+      "lines": [
+        {
+          "id": "cs06_yd_0",
+          "speaker": "旁白",
+          "text": "嗣位校场。名册末行空着。校场上的灯还亮。",
+          "stage": {
+            "card": "一　挂栏",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs06_yd_1",
+          "speaker": "书记官",
+          "text": "议会要听念。栏要写得正，写得能念。"
+        },
+        {
+          "id": "cs06_yd_2",
+          "speaker": "leader",
+          "text": "写可比试。"
+        },
+        {
+          "id": "cs06_yd_3",
+          "speaker": "旁白",
+          "text": "笔尖停一下。末行落下「可比试」三字。"
+        },
+        {
+          "id": "cs06_yd_4",
+          "speaker": "老旗手",
+          "text": "旗册誊栏。旗角不给人卖名。"
+        },
+        {
+          "id": "cs06_yd_5",
+          "speaker": "岁吏",
+          "text": "谱可以进栏。校场是另一本账。"
+        },
+        {
+          "id": "cs06_yd_6",
+          "speaker": "石垒·晚担",
+          "text": "写好看不难。站得住才难。"
+        },
+        {
+          "id": "cs06_yd_7",
+          "speaker": "leader",
+          "text": "栏挂上了。去看校场。"
+        }
+      ]
+    },
+    {
+      "id": "spar",
+      "title": "校场",
+      "next": "hourglass",
+      "lines": [
+        {
+          "id": "cs06_sp_0",
+          "speaker": "旁白",
+          "text": "沙圈未结。灯照着护腕上的灰。",
+          "stage": {
+            "bg": "hall",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs06_sp_1",
+          "speaker": "老管事",
+          "text": "校场：对打已记，疤待对。胜者栏仍空。"
+        },
+        {
+          "id": "cs06_sp_2",
+          "speaker": "旁白",
+          "text": "名册说可比试。沙圈说还在打。两行字第一次吵架。"
+        },
+        {
+          "id": "cs06_sp_3",
+          "speaker": "苇原·灯影",
+          "text": "巡防不问谁胜。问今夜谁还站不稳。"
+        },
+        {
+          "id": "cs06_sp_4",
+          "speaker": "槐里·青禾",
+          "text": "空着才诚实。写满却站不上去，才是骗人。"
+        },
+        {
+          "id": "cs06_sp_5",
+          "speaker": "老管事",
+          "text": "还差两场。跳步的栏，桩会裂。"
+        },
+        {
+          "id": "cs06_sp_6",
+          "speaker": "leader",
+          "text": "记下。去看沙漏。"
+        }
+      ]
+    },
+    {
+      "id": "hourglass",
+      "title": "两行",
+      "next": "bridge",
+      "lines": [
+        {
+          "id": "cs06_hg_0",
+          "speaker": "旁白",
+          "text": "沙漏多出两行：上行可比试，下行校场未结。",
+          "stage": {
+            "bg": "hall",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs06_hg_1",
+          "speaker": "老管事",
+          "text": "并排钉。谁撕下行，谁结账。"
+        },
+        {
+          "id": "cs06_hg_2",
+          "speaker": "岁吏",
+          "text": "回执在侧室。谱与场，两本账。"
+        },
+        {
+          "id": "cs06_hg_3",
+          "speaker": "书记官",
+          "text": "议会爱一行。两行最好活。"
+        },
+        {
+          "id": "cs06_hg_4",
+          "speaker": "苇原·灯影",
+          "text": "更还在交。下行先响。"
+        },
+        {
+          "id": "cs06_hg_5",
+          "speaker": "槐里·青禾",
+          "text": "孩子要抄未结，不要只抄名。"
+        },
+        {
+          "id": "cs06_hg_6",
+          "speaker": "leader",
+          "text": "两行都留。去门廊。"
+        }
+      ]
+    },
+    {
+      "id": "bridge",
+      "title": "门廊",
+      "next": "tavern",
+      "lines": [
+        {
+          "id": "cs06_br_0",
+          "speaker": "旁白",
+          "text": "门廊问谁站。墙牌两行一起响。",
+          "stage": {
+            "bg": "hall",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs06_br_1",
+          "speaker": "石垒·晚担",
+          "text": "牌比纸硬。纸比嘴硬。"
+        },
+        {
+          "id": "cs06_br_2",
+          "speaker": "老旗手",
+          "text": "旗角给人核，不给人卖名。"
+        },
+        {
+          "id": "cs06_br_3",
+          "speaker": "苇原·灯影",
+          "text": "桩空有下落，再谈名。"
+        },
+        {
+          "id": "cs06_br_4",
+          "speaker": "槐里·青禾",
+          "text": "谎抄不住。孩子会问为什么空。"
+        },
+        {
+          "id": "cs06_br_5",
+          "speaker": "老管事",
+          "text": "闲话快。对照慢。慢的留下。"
+        },
+        {
+          "id": "cs06_br_6",
+          "speaker": "岁吏",
+          "text": "谱很长。校场很吵。吵是还在打。"
+        },
+        {
+          "id": "cs06_br_7",
+          "speaker": "leader",
+          "text": "带牌。去酒馆。"
+        }
+      ]
+    },
+    {
+      "id": "tavern",
+      "title": "选题",
+      "lines": [
+        {
+          "id": "cs06_tav_0",
+          "speaker": "旁白",
+          "text": "烽火酒馆。碗沿两个圈：并排记，先钉名。",
+          "stage": {
+            "bg": "tavern",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs06_tav_1",
+          "speaker": "掌柜",
+          "text": "篇幅不够就钉墙。墙比名册宽。"
+        },
+        {
+          "id": "cs06_tav_2",
+          "speaker": "槐里·青禾",
+          "text": "裁校场的人，先把剪刀放下。"
+        },
+        {
+          "id": "cs06_tav_3",
+          "speaker": "老管事",
+          "text": "并排钉。谁撕校场抄本，谁结账。"
+        },
+        {
+          "id": "cs06_tav_4",
+          "speaker": "石垒·晚担",
+          "text": "栏是念的，桩是站的。两样都要。"
+        },
+        {
+          "id": "cs06_tav_5",
+          "speaker": "苇原·灯影",
+          "text": "沙漏还亮。谁买一行结论，带他去摸桩。"
+        },
+        {
+          "id": "cs06_tav_6",
+          "speaker": "旁白",
+          "text": "两张纸在风里响。你选怎么收这一季。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "keep_yard",
+          "label": "校场并排记",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs06_kept_yard",
+              "value": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        },
+        {
+          "id": "name_victor",
+          "label": "先钉胜者名",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs06_name_victor",
+              "value": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ledger",
+      "title": "入册",
+      "lines": [
+        {
+          "id": "cs06_led_0",
+          "speaker": "旁白",
+          "text": "旗册封面四个字：校场上的灯。末页已厚。柜上两把钥匙。",
+          "stage": {
+            "bg": "hall",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs06_led_par",
+          "speaker": "旁白",
+          "text": "你留下两行。议会仍爱一行。柜子认灯。",
+          "when": {
+            "flag": "cs06_kept_yard"
+          }
+        },
+        {
+          "id": "cs06_led_name",
+          "speaker": "旁白",
+          "text": "你先钉胜者名。沙漏仍在亮——月会替你写下行。",
+          "when": {
+            "flag": "cs06_name_victor"
+          }
+        },
+        {
+          "id": "cs06_led_1",
+          "speaker": "老管事",
+          "text": "存档不刊也行。不丢，就是缝。"
+        },
+        {
+          "id": "cs06_led_2",
+          "speaker": "槐里·青禾",
+          "text": "孩子抄过校场，才配以后念栏。"
+        },
+        {
+          "id": "cs06_led_3",
+          "speaker": "老旗手",
+          "text": "并排。不要裁。缝在名册与校场之间。"
+        },
+        {
+          "id": "cs06_led_4",
+          "speaker": "岁吏",
+          "text": "回执在侧室。谱与场，两本账。"
+        },
+        {
+          "id": "cs06_led_5",
+          "speaker": "苇原·灯影",
+          "text": "更还在交。下次挂嗣，下行先响。"
+        },
+        {
+          "id": "cs06_led_6",
+          "speaker": "leader",
+          "text": "栏与场，并排。谁来认嗣位，先念完。"
+        },
+        {
+          "id": "cs06_led_7",
+          "speaker": "旁白",
+          "text": "风动旗角时，可比试还在。两行之间的空，给人脸红。"
+        }
+      ],
+      "actions": []
+    }
+  ]
+}
