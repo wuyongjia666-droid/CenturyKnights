@@ -1187,6 +1187,31 @@ func _render_right() -> void:
 		ml.custom_minimum_size = Vector2(col_w, 0)
 		ml.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		stack.add_child(ml)
+	# ChainStart lives in the scroll stack (panel is only 256 wide — footer x=250 overflowed desktop gate).
+	var start_cid := _startable_chain_here()
+	if start_cid != "" and _sel == World.pos:
+		var chain_row := {}
+		for row in World.scripted_chains():
+			if str(row.get("id", "")) == start_cid:
+				chain_row = row
+				break
+		var cname := str(chain_row.get("title", start_cid))
+		var cs := UIKit.ghost_button(Locale.t("atlas_chain_start") % cname, int(col_w), 28)
+		cs.name = "ChainStart"
+		cs.disabled = _busy
+		cs.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		cs.pressed.connect(func():
+			var sr: Dictionary = World.start_scripted_chain(start_cid)
+			if not bool(sr.get("ok", false)):
+				_show_toast(str(sr.get("msg", "")), UIKit.DANGER)
+				return
+			var q0: Dictionary = sr.get("quest", {})
+			var acc: Dictionary = World.accept_quest(str(q0.get("issuer", World.pos)), str(q0.get("id", "")))
+			_show_toast(str(acc.get("msg", sr.get("msg", ""))), UIKit.OK if bool(acc.get("ok", false)) else UIKit.DANGER)
+			var dest := str(q0.get("target", ""))
+			# Defer rebuild — ChainStart lives in the right panel we are about to free.
+			call_deferred("_after_chain_start", dest))
+		stack.add_child(cs)
 	# actions
 	var go := UIKit.cta_button("启程前往", "A", 224, 40)
 	go.name = "GoButton"
@@ -1202,30 +1227,6 @@ func _render_right() -> void:
 	enter.disabled = _busy or _sel != World.pos or not World.encounter.is_empty()
 	enter.pressed.connect(_enter_here)
 	p.add_child(enter)
-	var start_cid := _startable_chain_here()
-	if start_cid != "":
-		var chain_row := {}
-		for row in World.scripted_chains():
-			if str(row.get("id", "")) == start_cid:
-				chain_row = row
-				break
-		var cname := str(chain_row.get("title", start_cid))
-		var cs := UIKit.ghost_button(Locale.t("atlas_chain_start") % cname, 220, 28)
-		cs.name = "ChainStart"
-		cs.position = Vector2(250, 518)
-		cs.disabled = _busy
-		cs.pressed.connect(func():
-			var sr: Dictionary = World.start_scripted_chain(start_cid)
-			if not bool(sr.get("ok", false)):
-				_show_toast(str(sr.get("msg", "")), UIKit.DANGER)
-				return
-			var q0: Dictionary = sr.get("quest", {})
-			var acc: Dictionary = World.accept_quest(str(q0.get("issuer", World.pos)), str(q0.get("id", "")))
-			_show_toast(str(acc.get("msg", sr.get("msg", ""))), UIKit.OK if bool(acc.get("ok", false)) else UIKit.DANGER)
-			var dest := str(q0.get("target", ""))
-			# Defer rebuild — ChainStart lives in the right panel we are about to free.
-			call_deferred("_after_chain_start", dest))
-		p.add_child(cs)
 	var ch := UIKit.ghost_button("主线章节", 108, 32)
 	ch.name = "ChapterButton"
 	ch.position = Vector2(132, 518)
