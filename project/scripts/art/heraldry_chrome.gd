@@ -3,7 +3,7 @@ extends RefCounted
 ## Shared player-facing heraldry chrome: 团徽 / 旗徽 / 族徽 + 爵位徽记 + 敌徽 + 邦徽.
 ## One design system everywhere (castle header/banner strip, genealogy, dossier,
 ## board unit shields, rival houses, tavern/hire cards, city/smith/market chrome,
-## marriage house cards + crest strip).
+## marriage house cards + crest strip, succession / heir-duel / annex).
 ## No marriage marshalling / per-person cadency — only company vs family vs nation arms + rank badge.
 
 static func is_family_member(c) -> bool:
@@ -310,6 +310,72 @@ static func place_city_crest_strip(parent: Node, city_id: String, at: Vector2, s
 	host.size = Vector2(w, shield.y)
 	host.set_meta("nation_id", nid)
 	host.set_meta("city_id", str(city_id))
+	parent.add_child(host)
+	return host
+
+## Succession clash strip: 团徽 + named heir 族徽|旗徽 (SuccessionCrestStrip).
+static func place_succession_crest_strip(parent: Node, heir, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("SuccessionCrestStrip")
+	if old:
+		old.name = "_SuccessionCrestStripDying"
+		old.queue_free()
+	var host := Control.new()
+	host.name = "SuccessionCrestStrip"
+	host.position = at
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var co := make_company_arms(shield)
+	co.position = Vector2.ZERO
+	host.add_child(co)
+	var gap := 8.0
+	if heir != null:
+		var la := make_person_arms(heir, shield)
+		la.name = "LeaderArms"
+		la.position = Vector2(shield.x + gap, 0)
+		host.add_child(la)
+		host.size = Vector2(shield.x * 2.0 + gap, shield.y)
+	else:
+		host.size = Vector2(shield.x, shield.y)
+	host.set_meta("has_heir", heir != null)
+	parent.add_child(host)
+	return host
+
+## Heir-trial duel strip: 团徽 + heir A + heir B 族徽|旗徽 (DuelCrestStrip). Missing side omitted.
+static func place_duel_crest_strip(parent: Node, left_c, right_c, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("DuelCrestStrip")
+	if old:
+		old.name = "_DuelCrestStripDying"
+		old.queue_free()
+	var host := Control.new()
+	host.name = "DuelCrestStrip"
+	host.position = at
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var gap := 8.0
+	var x := 0.0
+	var co := make_company_arms(shield)
+	co.position = Vector2(x, 0)
+	host.add_child(co)
+	x += shield.x + gap
+	if left_c != null:
+		var la := make_person_arms(left_c, shield)
+		la.name = "LeftArms"
+		la.position = Vector2(x, 0)
+		host.add_child(la)
+		x += shield.x + gap
+	if right_c != null:
+		var ra := make_person_arms(right_c, shield)
+		ra.name = "RightArms"
+		ra.position = Vector2(x, 0)
+		host.add_child(ra)
+		x += shield.x
+	else:
+		x -= gap
+	host.size = Vector2(maxf(shield.x, x), shield.y)
+	host.set_meta("has_left", left_c != null)
+	host.set_meta("has_right", right_c != null)
 	parent.add_child(host)
 	return host
 

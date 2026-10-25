@@ -64,6 +64,15 @@ func rows() -> Array:
 				out.append(str(h.get("name", h.get("id", ""))))
 	return out
 
+
+func _place_annex_crests() -> void:
+	## Castle annex chrome: 团徽 header + castle banner strip on the page body.
+	var mob := DeviceProfile.is_mobile()
+	var hdr := Vector2(44, 52) if not mob else Vector2(40, 48)
+	var host: Node = _body if _body != null else self
+	CKHeraldryChrome.place_company_header(host, Vector2(1180, 8) if not mob else Vector2(1180, 4), hdr)
+	CKHeraldryChrome.place_castle_banner_strip(host, Vector2(1120, 8) if not mob else Vector2(1120, 4), hdr, Vector2(28, 38))
+
 func apply_mobile_layout() -> void:
 	if MobilePage.active(self):
 		render()
@@ -77,6 +86,7 @@ func render() -> void:
 		return
 	var nm := Locale.t(str(CKCastleServices.ANNEX[id]))
 	UIKit.top_bar(_body, nm, UIKit.std_resource_chips(), Locale.t("shell_0d711744"), nav_back)
+	_place_annex_crests()
 	var lv := level()
 	var tier := maxi(1, CKCastleServices.tier_of(lv))
 	# left: art
@@ -215,6 +225,7 @@ func _m_render() -> void:
 	_body.size = Vector2(w, h)
 	var nm := Locale.t(str(CKCastleServices.ANNEX[id]))
 	MobilePage.top_bar(self, nm, Locale.t("mw_41e31e6c") % [GameState.silver, GameState.food, GameState.iron, Calendar.label()], [[Locale.t("shell_0d711744"), nav_back]])
+	_place_annex_crests()
 	var lv := level()
 	var tier := maxi(1, CKCastleServices.tier_of(lv))
 	var top := MobilePage.TOP
