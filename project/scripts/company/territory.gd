@@ -77,10 +77,13 @@ static func state(id: String) -> Dictionary:
 		"owner": str(d.get("owner", NEUTRAL)), "garrison": int(d.get("garrison", 0)),
 		"unrest": int(d.get("unrest", 0)), "stockade": bool(d.get("stockade", false)), "contract": bool(d.get("contract", false)),
 		"threat": d.get("threat", {}) if typeof(d.get("threat", {})) == TYPE_DICTIONARY else {},
+		"cache_food": int(d.get("cache_food", 0)),
 	}
 
 static func _put(id: String, s: Dictionary) -> void:
-	if str(s.owner) == NEUTRAL and int(s.garrison) == 0 and int(s.unrest) == 0 and (s.threat as Dictionary).is_empty() and not bool(s.get("stockade", false)):
+	var empty_threat := (s.threat as Dictionary).is_empty()
+	var empty_cache := int(s.get("cache_food", 0)) <= 0
+	if str(s.owner) == NEUTRAL and int(s.garrison) == 0 and int(s.unrest) == 0 and empty_threat and empty_cache and not bool(s.get("stockade", false)):
 		_st().sites.erase(id)
 	else:
 		_st().sites[id] = s
@@ -122,6 +125,7 @@ static func from_save(raw) -> Dictionary:
 				"stockade": stockade, "contract": bool(r.get("contract", false)),
 				"unrest": maxi(0, int(r.get("unrest", 0))),
 				"threat": th if typeof(th) == TYPE_DICTIONARY else {},
+				"cache_food": maxi(0, int(r.get("cache_food", 0))),
 			}
 	out.stockade_credit = maxi(0, int(raw.get("stockade_credit", 0)))
 	var nw = raw.get("news", [])
@@ -485,6 +489,73 @@ static func _rival_name(rid: String) -> String:
 			return str(rv.get("name", rid))
 	return rid
 
+## Food stored at an owned stockade (屯营粮仓).
+static func cache_food(id: String) -> int:
+	return maxi(0, int(state(id).get("cache_food", 0)))
+
+
+## Nearest owned stockade with cache>0 (or any stockade). Empty if none.
+static func nearest_stockade(from_pos: String = "") -> Dictionary:
+	var here := from_pos if from_pos != "" else str(World.pos)
+	var best: Dictionary = {}
+	var best_score := 999999
+	for id in owned_ids():
+		var st := state(id)
+		if not bool(st.stockade):
+			continue
+		var s := site(id)
+		var anch := str(s.get("anchor", ""))
+		if anch == "" or not World.nodes.has(anch):
+			continue
+		var dist := 0
+		if here != anch:
+			# Prefer travel_preview when from current World.pos; else treat as far.
+			if here == str(World.pos):
+				var pv: Dictionary = World.travel_preview(anch)
+				if not bool(pv.get("ok", false)):
+					continue
+				dist = int(pv.get("days", 99))
+			else:
+				dist = 50
+		var cache := int(st.get("cache_food", 0))
+		var row := {
+			"id": id,
+			"name": str(s.get("name", id)),
+			"anchor": anch,
+			"anchor_name": str(World.node(anch).get("name", anch)),
+			"cache": cache,
+			"days": dist,
+		}
+		# Prefer stockades that hold food; among those, nearer.
+		var score := dist - (1000 if cache > 0 else 0)
+		if best.is_empty() or score < best_score:
+			best = row
+			best_score = score
+	return best
+
+
+static func open_cache(id: String) -> Dictionary:
+	if not owned(id):
+		return {"ok": false, "msg": Locale.t("atlas_cache_not_ours")}
+	var st := state(id)
+	if not bool(st.stockade):
+		return {"ok": false, "msg": Locale.t("atlas_cache_no_stockade")}
+	var anchor := str(site(id).get("anchor", ""))
+	if World.pos != anchor:
+		return {"ok": false, "need_travel": true, "anchor": anchor,
+			"msg": Locale.t("atlas_cache_need_travel") % World.node(anchor).get("name", "")}
+	var qty := maxi(0, int(st.get("cache_food", 0)))
+	if qty <= 0:
+		return {"ok": false, "msg": Locale.t("atlas_cache_empty") % str(site(id).get("name", id))}
+	st.cache_food = 0
+	_put(id, st)
+	GameState.food += qty
+	_log(Locale.t("atlas_cache_open_log") % [str(site(id).get("name", id)), qty])
+	World.world_changed.emit()
+	return {"ok": true, "qty": qty, "food": GameState.food,
+		"msg": Locale.t("atlas_cache_open_ok") % [str(site(id).get("name", id)), qty]}
+
+
 ## Month phase "world". Returns a summary line (empty when the company holds nothing).
 static func apply_month(force_roll: float = -1.0) -> String:
 	var ids := owned_ids()
@@ -537,7 +608,9 @@ static func apply_month(force_roll: float = -1.0) -> String:
 			yf = maxi(yf, int(rule("contract_food", 6)))
 		silver += net
 		food_gain += yf
-		GameState.food += yf
+		if yf > 0:
+			st.cache_food = int(st.get("cache_food", 0)) + yf
+			# 屯营月粮入据点粮仓，行军断粮时再开仓 — 不再直灌 GameState.food
 		if int(st.unrest) > 0:
 			st.unrest = int(st.unrest) - 1
 		_put(id, st)
