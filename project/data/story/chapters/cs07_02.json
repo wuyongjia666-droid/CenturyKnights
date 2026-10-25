@@ -368,6 +368,21 @@
           "text": "眼尖看沙，不看热闹。"
         },
         {
+          "id": "cs0702_vst1",
+          "speaker": "岁吏",
+          "text": "月份从第二炷香灰里又漏一粒。两粒并排，才像足月。"
+        },
+        {
+          "id": "cs0702_vst2",
+          "speaker": "书记官",
+          "text": "复仪格最怕代填。"
+        },
+        {
+          "id": "cs0702_vst3",
+          "speaker": "leader",
+          "text": "月份并过。应，不代。"
+        },
+        {
           "id": "cs0702_vis_mv4",
           "speaker": "leader",
           "text": "看沙。去月份。"
@@ -544,6 +559,38 @@
           "id": "cs0702_mid_mv6",
           "speaker": "leader",
           "text": "不赶场。试锋用老实劲。"
+        },
+        {
+          "id": "cs0702_win1",
+          "speaker": "旁白",
+          "text": "锋再定。仪典第二问落地，催的人连影都没了。",
+          "when": {
+            "flag": "cs07_mid_fought"
+          }
+        },
+        {
+          "id": "cs0702_win2",
+          "speaker": "掌柜",
+          "text": "第二问比第一问短。短，是因为已经试清。",
+          "when": {
+            "flag": "cs07_mid_fought"
+          }
+        },
+        {
+          "id": "cs0702_win3",
+          "speaker": "苇原·灯影",
+          "text": "台上的人自己应了，台下就插不上嘴。",
+          "when": {
+            "flag": "cs07_mid_fought"
+          }
+        },
+        {
+          "id": "cs0702_win4",
+          "speaker": "leader",
+          "text": "锋再清一次。仪典，仍我应。",
+          "when": {
+            "flag": "cs07_mid_fought"
+          }
         },
         {
           "id": "cs07b_br_lost",
@@ -806,6 +853,26 @@
           "id": "cs0702_ret_mv3",
           "speaker": "岁吏",
           "text": "止住。回堡。"
+        },
+        {
+          "id": "cs0702_tvn1",
+          "speaker": "掌柜",
+          "text": "第二问那一锋，酒更浅——浅着再敬。"
+        },
+        {
+          "id": "cs0702_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "催影没了。没了，才有空位。"
+        },
+        {
+          "id": "cs0702_tvn3",
+          "speaker": "听回",
+          "text": "两粒月份并排的事，有人记进袖里。"
+        },
+        {
+          "id": "cs0702_tvn4",
+          "speaker": "leader",
+          "text": "再应过。酒浅。名，仍自己的。"
         },
         {
           "id": "cs0702_ret_mv4",

@@ -359,6 +359,21 @@
           "text": "另验前，月份先走一遭。"
         },
         {
+          "id": "cs0901_vst1",
+          "speaker": "岁吏",
+          "text": "月份从血验巾角滴过一星。星干了，月份才算走完。"
+        },
+        {
+          "id": "cs0901_vst2",
+          "speaker": "书记官",
+          "text": "名册边上沙漏，最怕湿墨。"
+        },
+        {
+          "id": "cs0901_vst3",
+          "speaker": "leader",
+          "text": "月份干过。名，我自己签。"
+        },
+        {
           "id": "cs0901_vis_mv4",
           "speaker": "leader",
           "text": "走一遭。去看。"
@@ -530,6 +545,38 @@
           "id": "cs0901_mid_mv6",
           "speaker": "leader",
           "text": "新泼不认。锋问明白。"
+        },
+        {
+          "id": "cs0901_win1",
+          "speaker": "旁白",
+          "text": "锋定。血验问声清了，墙牌旁卖新泼的退了。",
+          "when": {
+            "flag": "cs09_mid_fought"
+          }
+        },
+        {
+          "id": "cs0901_win2",
+          "speaker": "掌柜",
+          "text": "新泼当旧的，今晚卖不出去。",
+          "when": {
+            "flag": "cs09_mid_fought"
+          }
+        },
+        {
+          "id": "cs0901_win3",
+          "speaker": "槐里·青禾",
+          "text": "谁的血，谁的名——问清了。",
+          "when": {
+            "flag": "cs09_mid_fought"
+          }
+        },
+        {
+          "id": "cs0901_win4",
+          "speaker": "leader",
+          "text": "锋问明白。血，我认自己的。",
+          "when": {
+            "flag": "cs09_mid_fought"
+          }
         },
         {
           "id": "cs09_mid_lost",
@@ -786,6 +833,26 @@
           "id": "cs0901_ret_mv3",
           "speaker": "书记官",
           "text": "血名回堡钉。"
+        },
+        {
+          "id": "cs0901_tvn1",
+          "speaker": "掌柜",
+          "text": "血验那一锋，酒要干净——杯也要净。"
+        },
+        {
+          "id": "cs0901_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "卖泼的退了。退了，才敢碰杯。"
+        },
+        {
+          "id": "cs0901_tvn3",
+          "speaker": "听回",
+          "text": "巾角那星干了。干了才像真验过。"
+        },
+        {
+          "id": "cs0901_tvn4",
+          "speaker": "leader",
+          "text": "血清。名清。酒，可以。"
         },
         {
           "id": "cs0901_ret_mv4",

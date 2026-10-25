@@ -678,6 +678,21 @@
           "text": "见光比藏着强。"
         },
         {
+          "id": "cs0202_vst1",
+          "speaker": "岁吏",
+          "text": "月份从脉枕缝里渗出一息。息匀，月份才往前。"
+        },
+        {
+          "id": "cs0202_vst2",
+          "speaker": "书记官",
+          "text": "脉录格最怕抢笔。"
+        },
+        {
+          "id": "cs0202_vst3",
+          "speaker": "leader",
+          "text": "月份匀过。脉，我守。"
+        },
+        {
           "id": "cs0202_vis_mv4",
           "speaker": "leader",
           "text": "见光。去看月份。"
@@ -975,6 +990,38 @@
           "id": "cs0202_mid_mv6",
           "speaker": "leader",
           "text": "名我留真。锋也真。"
+        },
+        {
+          "id": "cs0202_win1",
+          "speaker": "旁白",
+          "text": "锋再定。脉纸边的手稳了，抢脉那拨散了。",
+          "when": {
+            "flag": "cs02_mid_fought"
+          }
+        },
+        {
+          "id": "cs0202_win2",
+          "speaker": "老旗手",
+          "text": "脉要静。静了，旗也不抖。",
+          "when": {
+            "flag": "cs02_mid_fought"
+          }
+        },
+        {
+          "id": "cs0202_win3",
+          "speaker": "槐里·青禾",
+          "text": "纸上那道跳，终于听得清。",
+          "when": {
+            "flag": "cs02_mid_fought"
+          }
+        },
+        {
+          "id": "cs0202_win4",
+          "speaker": "leader",
+          "text": "锋护过脉。纸，我按得。",
+          "when": {
+            "flag": "cs02_mid_fought"
+          }
         },
         {
           "speaker": "旁白",
@@ -1341,6 +1388,26 @@
           "id": "cs0202_ret_mv3",
           "speaker": "岁吏",
           "text": "挂完回堡。堡里入谱。"
+        },
+        {
+          "id": "cs0202_tvn1",
+          "speaker": "掌柜",
+          "text": "护脉那一锋，酒要温——温着养。"
+        },
+        {
+          "id": "cs0202_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "抢脉的散了。散了，腕才听得见。"
+        },
+        {
+          "id": "cs0202_tvn3",
+          "speaker": "苇原·灯影",
+          "text": "纸上那跳，桌上有人学着数。"
+        },
+        {
+          "id": "cs0202_tvn4",
+          "speaker": "leader",
+          "text": "脉清。人齐。温酒，可以。"
         },
         {
           "id": "cs0202_ret_mv4",

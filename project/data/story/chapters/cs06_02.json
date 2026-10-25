@@ -368,6 +368,21 @@
           "text": "真名前，先看月份。"
         },
         {
+          "id": "cs0602_vst1",
+          "speaker": "岁吏",
+          "text": "月份从第二道靴印里抬起来。抬起来，才进册。"
+        },
+        {
+          "id": "cs0602_vst2",
+          "speaker": "书记官",
+          "text": "复练格要等问声再落。"
+        },
+        {
+          "id": "cs0602_vst3",
+          "speaker": "leader",
+          "text": "月份抬过。圈，我还走。"
+        },
+        {
           "id": "cs0602_vis_mv4",
           "speaker": "leader",
           "text": "看月份。"
@@ -544,6 +559,38 @@
           "id": "cs0602_mid_mv6",
           "speaker": "leader",
           "text": "锋落挂真名。空页不借人。"
+        },
+        {
+          "id": "cs0602_win1",
+          "speaker": "旁白",
+          "text": "锋再定。校场第二圈合上，墙牌旁笑的人哑了。",
+          "when": {
+            "flag": "cs06_mid_fought"
+          }
+        },
+        {
+          "id": "cs0602_win2",
+          "speaker": "掌柜",
+          "text": "第二圈比第一圈沉。沉的，才像真练。",
+          "when": {
+            "flag": "cs06_mid_fought"
+          }
+        },
+        {
+          "id": "cs0602_win3",
+          "speaker": "苇原·灯影",
+          "text": "汗第二次下来，笑就买不动了。",
+          "when": {
+            "flag": "cs06_mid_fought"
+          }
+        },
+        {
+          "id": "cs0602_win4",
+          "speaker": "leader",
+          "text": "锋再走一圈。牌，还挂着。",
+          "when": {
+            "flag": "cs06_mid_fought"
+          }
         },
         {
           "id": "cs06b_br_lost",
@@ -806,6 +853,26 @@
           "id": "cs0602_ret_mv3",
           "speaker": "岁吏",
           "text": "名回堡写。"
+        },
+        {
+          "id": "cs0602_tvn1",
+          "speaker": "掌柜",
+          "text": "第二圈那一锋，酒要厚——厚着补汗。"
+        },
+        {
+          "id": "cs0602_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "笑哑了。哑了，座才安静。"
+        },
+        {
+          "id": "cs0602_tvn3",
+          "speaker": "老旗手",
+          "text": "旗在第二圈边跟过。跟过，更沉。"
+        },
+        {
+          "id": "cs0602_tvn4",
+          "speaker": "leader",
+          "text": "汗厚。牌在。酒，厚着。"
         },
         {
           "id": "cs0602_ret_mv4",

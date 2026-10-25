@@ -400,6 +400,21 @@
           "text": "站直了再问月份。"
         },
         {
+          "id": "cs0802_vst1",
+          "speaker": "岁吏",
+          "text": "月份从碑阴拓纸边渗进一丝潮。潮干，月份才算拓过。"
+        },
+        {
+          "id": "cs0802_vst2",
+          "speaker": "书记官",
+          "text": "碑录复页，要等拓纸揭稳。"
+        },
+        {
+          "id": "cs0802_vst3",
+          "speaker": "leader",
+          "text": "月份渗过。碑，我拓。"
+        },
+        {
           "id": "cs0802_vis_mv4",
           "speaker": "leader",
           "text": "站直。去看月份。"
@@ -582,6 +597,38 @@
           "id": "cs0802_mid_mv6",
           "speaker": "leader",
           "text": "门说清。试锋不打假声。"
+        },
+        {
+          "id": "cs0802_win1",
+          "speaker": "旁白",
+          "text": "锋再定。碑阴拓完，抢拓那拨退到槐影外。",
+          "when": {
+            "flag": "cs08_mid_fought"
+          }
+        },
+        {
+          "id": "cs0802_win2",
+          "speaker": "掌柜",
+          "text": "拓要自己按。按实，才不像偷的。",
+          "when": {
+            "flag": "cs08_mid_fought"
+          }
+        },
+        {
+          "id": "cs0802_win3",
+          "speaker": "槐里·青禾",
+          "text": "碑凉还在手上。凉着，字更清。",
+          "when": {
+            "flag": "cs08_mid_fought"
+          }
+        },
+        {
+          "id": "cs0802_win4",
+          "speaker": "leader",
+          "text": "锋护过碑。拓，我按得。",
+          "when": {
+            "flag": "cs08_mid_fought"
+          }
         },
         {
           "id": "cs08b_br_lost",
@@ -855,6 +902,26 @@
           "id": "cs0802_ret_mv3",
           "speaker": "岁吏",
           "text": "碑阴回堡。"
+        },
+        {
+          "id": "cs0802_tvn1",
+          "speaker": "掌柜",
+          "text": "护碑那一锋，酒要凉——凉着配石。"
+        },
+        {
+          "id": "cs0802_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "槐影外那拨退了。退了，拓纸才揭得。"
+        },
+        {
+          "id": "cs0802_tvn3",
+          "speaker": "老旗手",
+          "text": "旗在碑阶低过第二次。低过，更像拜。"
+        },
+        {
+          "id": "cs0802_tvn4",
+          "speaker": "leader",
+          "text": "拓实。石凉。酒，凉着。"
         },
         {
           "id": "cs0802_ret_mv4",
