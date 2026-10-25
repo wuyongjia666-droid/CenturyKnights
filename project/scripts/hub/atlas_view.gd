@@ -742,12 +742,13 @@ func _add_node_button(n: Dictionary, markers: Dictionary, mm: Dictionary) -> voi
 		var marker := CKCourt.latest_marker(_view)
 		if not marker.is_empty():
 			badges.append([_court_glyph(str(marker.get("kind", ""))), _court_color(str(marker.get("kind", "")))])
-	var bx := _np(id).x + px * 0.5 - 4
+	# Outside the node ink box so ★ / ◆ never overlap the kind glyph (都/堡/…).
+	var bx := _np(id).x + px * 0.5 + 2
 	for bd in badges:
 		var bl := UIKit.title_label(str(bd[0]), 16, bd[1])
 		bl.add_theme_color_override("font_outline_color", Color(0.02, 0.03, 0.05, 1))
 		bl.add_theme_constant_override("outline_size", 5)
-		bl.position = Vector2(bx, _np(id).y - px * 0.5 - 16)
+		bl.position = Vector2(bx, _np(id).y - px * 0.5 - 22)
 		bl.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		_layer.add_child(bl)
 		UIFX.breathe(bl, 0.1, 1.2)
@@ -1079,6 +1080,7 @@ func _render_right() -> void:
 	kv.add_child(loop_box)
 	var loops: Array = World.produce_trade_loop(_sel)
 	var shown := 0
+	# One compact line fits the 224px sheet; EN chrome stays off the place blurb.
 	if not loops.is_empty():
 		loop_box.add_child(UIKit.mono(Locale.t("atlas_trade_loop_en"), 8, UIKit.EMBER, false))
 	for row in loops:
@@ -1089,33 +1091,42 @@ func _render_right() -> void:
 			line = Locale.t("atlas_trade_loop_line") % [str(row.name), int(row.buy), str(row.sell_name), int(row.sell), int(row.margin)]
 		else:
 			line = Locale.t("atlas_trade_loop_unknown") % [str(row.name), int(row.buy)]
-		var ll := UIKit.body_label(line, UIKit.OK if int(row.get("margin", 0)) > 0 else UIKit.TEXT_DIM, 10)
+		var ll := UIKit.body_label(line, UIKit.OK if int(row.get("margin", 0)) > 0 else UIKit.TEXT_DIM, 12)
 		ll.name = "TradeLoop_%d" % shown
 		ll.autowrap_mode = TextServer.AUTOWRAP_OFF
 		ll.clip_text = true
+		ll.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 		ll.custom_minimum_size = Vector2(224, 0)
 		ll.size = Vector2(224, 14)
 		loop_box.add_child(ll)
 		shown += 1
-	# Lore sits below kv (which may include one trade-loop line). Fixed y=296 overlapped the CTA.
-	var lore_y := 308.0 if loops.is_empty() else 324.0
-	var lore := UIKit.body_label(str(n.get("lore", "")), UIKit.TEXT_DIM, 11)
-	lore.position = Vector2(16, lore_y)
-	lore.size = Vector2(224, 56 if not loops.is_empty() else 72)
-	lore.custom_minimum_size = Vector2(224, 0)
-	lore.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	lore.clip_text = true
-	p.add_child(lore)
+	var loop_extra := 0.0
+	if shown > 0:
+		loop_extra = 14.0 + float(shown) * 16.0
+	var trade_cta: Button = null
 	if _sel == World.pos and not loops.is_empty():
-		var tb := UIKit.ghost_button(Locale.t("atlas_trade_loop_goto"), 224, 26)
-		tb.name = "TradeLoopGoto"
-		tb.position = Vector2(16, 438)
-		tb.pressed.connect(func():
+		trade_cta = UIKit.ghost_button(Locale.t("atlas_trade_loop_goto"), 224, 26)
+		trade_cta.name = "TradeLoopGoto"
+		trade_cta.pressed.connect(func():
 			GameState.set_meta("city_tab", "market")
 			_enter_here())
-		p.add_child(tb)
+		# Park CTA below lore so it never inks over the city blurb.
+	# lore sits below kv+TradeLoop so produce lines never cover the blurb
+	var lore_y := 296.0 + loop_extra
+	var lore_h := maxf(48.0, 72.0 - loop_extra * 0.25)
+	var lore := UIKit.body_label(str(n.get("lore", "")), UIKit.TEXT_DIM, 11)
+	lore.position = Vector2(16, lore_y)
+	lore.size = Vector2(224, lore_h)
+	lore.custom_minimum_size = Vector2(224, 0)
+	lore.clip_text = true
+	lore.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	p.add_child(lore)
+	if trade_cta != null:
+		trade_cta.position = Vector2(16, lore_y + lore_h + 4.0)
+		p.add_child(trade_cta)
+		loop_extra += 30.0
 	# quests here
-	var qy := lore_y + (60.0 if not loops.is_empty() else 76.0)
+	var qy := lore_y + lore_h + (34.0 if trade_cta != null else 4.0)
 	for mk in World.quest_markers().get(_sel, []):
 		var q: Dictionary = mk.quest
 		var ql := UIKit.body_label("%s %s" % ["✓ 交付" if str(mk.kind) == "turnin" else "◆ 目标", q.title], UIKit.OK if str(mk.kind) == "turnin" else UIKit.DANGER, 11)
