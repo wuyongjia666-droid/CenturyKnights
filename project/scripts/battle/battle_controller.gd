@@ -475,6 +475,7 @@ func _build_ui() -> void:
 	CKHeraldryChrome.sync_battle_hud_crests(self)
 	ForecastPanel.attach(self)
 	RewindBar.attach(self)
+	BattleDualLedger.attach(self)
 
 func _command_bar_px() -> float:
 	if not DeviceProfile.is_mobile():
@@ -2070,6 +2071,7 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 				BattleStory.fire(self, map_id, "first_kill")
 			if def.team == "player":
 				def.char.injured = true
+				BattleDualLedger.refresh(self)
 			_bark(def.char, "shout")
 			_note_unit_downed(def, atk.char)
 		elif int(def.char.hp) < _hp_before:
@@ -2805,6 +2807,7 @@ func _sync_objectives() -> void:
 	if not fresh.is_empty() and map_draw:
 		map_draw.queue_redraw()
 	ObjectiveHud.refresh(self)
+	BattleDualLedger.refresh(self)
 	BattleStory.scan_board(self, map_id, BattleMaps.get_map(map_id))
 	_check_end()
 
@@ -2823,6 +2826,7 @@ func _check_end() -> void:
 	if battle_over:
 		return
 	ObjectiveHud.refresh(self)
+	BattleDualLedger.refresh(self)
 	var verdict := BattleObjectives.outcome(BattleMaps.get_map(map_id), units, _round_no)
 	var result := str(verdict.get("result", "continue"))
 	if result == "continue":

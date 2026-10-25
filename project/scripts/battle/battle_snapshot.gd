@@ -47,6 +47,7 @@ static func seal_turn(host) -> void:
 		host._lamp_charges = host._lamp_max
 	host._turn_snap = capture(host)
 	RewindBar.refresh(host)
+	BattleDualLedger.refresh(host)
 
 
 static func push_lamp(host) -> void:
@@ -58,6 +59,7 @@ static func push_lamp(host) -> void:
 	})
 	host._move_undo = {}
 	RewindBar.refresh(host)
+	BattleDualLedger.refresh(host)
 
 
 static func undo_move(host) -> void:
@@ -104,6 +106,7 @@ static func after_restore(host) -> void:
 	ObjectiveHud.refresh(host)
 	ForecastPanel.refresh(host)
 	RewindBar.refresh(host)
+	BattleDualLedger.refresh(host)
 	if host.map_draw:
 		host.map_draw.queue_redraw()
 	if host.overlay:
