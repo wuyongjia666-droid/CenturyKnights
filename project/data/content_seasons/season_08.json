@@ -1,0 +1,122 @@
+{
+  "id": "season_08",
+  "version": 3,
+  "title_zh": "祖祠上的灯",
+  "title_en": "The Lamp in the Ancestor Hall",
+  "status": "playable_draft",
+  "pipeline": [
+    "topic",
+    "novel",
+    "bible",
+    "playable",
+    "systems",
+    "art",
+    "playtest"
+  ],
+  "stage": "playable",
+  "flag_lamp": {
+    "flag": "祖祠碑栏要能念的碑名，议会认碑写全了的姓",
+    "lamp": "祖祠记真进度，与栏对不上"
+  },
+  "system_deepen": "ancestors",
+  "system_deepen_zh": "祖祠可感",
+  "gates": {
+    "y1a_device_signoff": true,
+    "topic_user_ack": true,
+    "novel_allowed": true
+  },
+  "topic_checklist": [
+    {
+      "id": "one_liner",
+      "label_zh": "一句",
+      "required": true
+    },
+    {
+      "id": "flag_lamp",
+      "label_zh": "旗 / 灯冲突",
+      "required": true
+    },
+    {
+      "id": "system_pick",
+      "label_zh": "本季加深的系统",
+      "required": true
+    },
+    {
+      "id": "wont_do",
+      "label_zh": "不做（本季）",
+      "required": true
+    },
+    {
+      "id": "downstream_gates",
+      "label_zh": "下游闸门",
+      "required": true
+    }
+  ],
+  "acceptance": [
+    {
+      "id": "ancestors",
+      "label_zh": "祖祠可感",
+      "suite": "res://tests/suites/dynasty/ancestors_empty_cta_check.tscn",
+      "done": true
+    },
+    {
+      "id": "scaffold_gate",
+      "label_zh": "内容季流水门禁（含 #8）",
+      "suite": "res://tests/suites/narrative/content_season_scaffold_check.tscn",
+      "done": true
+    },
+    {
+      "id": "playable_dialogue",
+      "label_zh": "可玩章 cs08_01 对白可走",
+      "suite": "res://tests/suites/narrative/content_season_playable_s08_check.tscn",
+      "done": true
+    }
+  ],
+  "pipeline_stages": {
+    "topic": {
+      "doc": "docs/content-seasons/season-08/TOPIC.md",
+      "gate": "",
+      "open": true
+    },
+    "novel": {
+      "doc": "docs/content-seasons/season-08/NOVEL.md",
+      "gate": "novel_allowed",
+      "open": true
+    },
+    "bible": {
+      "doc": "docs/content-seasons/season-08/BIBLE.md",
+      "gate": "novel_allowed",
+      "open": true
+    },
+    "playable": {
+      "doc": "docs/content-seasons/season-08/PLAYABLE.md",
+      "gate": "novel_allowed",
+      "open": true
+    },
+    "systems": {
+      "doc": "docs/content-seasons/season-08/ACCEPTANCE.md",
+      "gate": "",
+      "open": true
+    },
+    "art": {
+      "doc": "",
+      "gate": "novel_allowed",
+      "open": true
+    },
+    "playtest": {
+      "doc": "",
+      "gate": "y1a_device_signoff",
+      "open": true
+    }
+  },
+  "docs_rel": [
+    "docs/content-seasons/season-08/TOPIC.md",
+    "docs/content-seasons/season-08/CHECKLIST.md",
+    "docs/content-seasons/season-08/NOVEL.md",
+    "docs/content-seasons/season-08/BIBLE.md",
+    "docs/content-seasons/season-08/PLAYABLE.md",
+    "docs/content-seasons/season-08/ACCEPTANCE.md"
+  ],
+  "playable_chapter": "cs08_01",
+  "playable_path": "res://data/story/chapters/cs08_01.json"
+}
