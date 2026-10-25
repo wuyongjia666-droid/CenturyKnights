@@ -64,6 +64,7 @@ func _ready() -> void:
 	add_child(_body)
 	_mobile_frame()
 	_toast = UIKit.body_label("", UIKit.TEXT, 12)
+	_toast.name = "CityToast"
 	_toast.autowrap_mode = TextServer.AUTOWRAP_OFF
 	_toast.position = Vector2(416, 652)
 	var tst := UIKit.flat_box(Color(0.03, 0.04, 0.06, 0.92), Color(UIKit.ACCENT, 0.45), 6)
@@ -756,6 +757,8 @@ func _tab_overview() -> void:
 	v3.position = Vector2(18, 322)
 	v3.add_theme_constant_override("separation", 4)
 	p2.add_child(v3)
+	v3.name = "TradeLoop"
+	var ti := 0
 	for g in n.get("produce", []):
 		var best: Dictionary = World.best_known_sell(str(g), city)
 		var here := World.price(city, str(g), "buy")
@@ -764,7 +767,17 @@ func _tab_overview() -> void:
 			txt += " → %s 卖 %d（%+d）" % [World.node(str(best.city)).get("name", ""), int(best.price), int(best.price) - here]
 		else:
 			txt += " → 暂无他处行情（到访或打听后可见）"
-		v3.add_child(_line(txt, UIKit.TEXT_DIM, 12, 380))
+		var ln := _line(txt, UIKit.TEXT_DIM, 12, 380)
+		ln.name = "TradeLoop_%d" % ti
+		v3.add_child(ln)
+		ti += 1
+	if not n.get("produce", []).is_empty():
+		var go_mkt := UIKit.ghost_button(Locale.t("atlas_trade_loop_goto"), 200, 28 if not _mob else MobilePage.HIT)
+		go_mkt.name = "TradeLoopGoto"
+		if _mob:
+			go_mkt.custom_minimum_size = Vector2(0, MobilePage.HIT)
+		go_mkt.pressed.connect(func(): _set_tab("market"))
+		v3.add_child(go_mkt)
 	for t in World.tips.slice(0, 3):
 		v3.add_child(_line("情报：%s" % str(t), UIKit.ACCENT, 11, 380))
 	var mm: Dictionary = World.mainline_marker()
@@ -1107,8 +1120,39 @@ func _tab_market() -> void:
 	var cap := UIKit.mono("货舱 %d/%d   ·   粮/铁/药材直接入库，不占货舱" % [World.cargo_used(), World.cargo_cap()], 9, UIKit.TEXT_DIM, false)
 	cap.position = Vector2(420, 20)
 	p.add_child(cap)
+	var y0 := 56.0
+	var loops: Array = World.produce_trade_loop(city)
+	var known_loops: Array = []
+	for row in loops:
+		if bool(row.get("known", false)) and int(row.get("margin", 0)) > 0:
+			known_loops.append(row)
+	if not known_loops.is_empty() or not loops.is_empty():
+		var strip := Panel.new()
+		strip.name = "TradeLoopStrip"
+		strip.position = Vector2(18, 48)
+		strip.size = Vector2(812, 44 if not _mob else float(MobilePage.HIT + 8))
+		var ss := UIKit.flat_box(Color(UIKit.EMBER.r, UIKit.EMBER.g, UIKit.EMBER.b, 0.12), Color(UIKit.EMBER, 0.35), 8)
+		strip.add_theme_stylebox_override("panel", ss)
+		p.add_child(strip)
+		var st := UIKit.mono(Locale.t("atlas_trade_loop_en"), 8, UIKit.EMBER, false)
+		st.position = Vector2(10, 4)
+		strip.add_child(st)
+		var best: Dictionary = World.best_produce_trade(city)
+		var tip := ""
+		if not best.is_empty():
+			tip = Locale.t("atlas_trade_loop_best") % [str(best.name), str(best.sell_name), int(best.margin)]
+		elif not loops.is_empty():
+			tip = Locale.t("atlas_trade_loop_unknown") % [str(loops[0].name), int(loops[0].buy)]
+		var sl := UIKit.body_label(tip, UIKit.TEXT, 12)
+		sl.name = "TradeLoopStripLine"
+		sl.position = Vector2(10, 18)
+		sl.size = Vector2(790, 20)
+		sl.autowrap_mode = TextServer.AUTOWRAP_OFF
+		sl.clip_text = true
+		strip.add_child(sl)
+		y0 = 100.0 if not _mob else float(48 + MobilePage.HIT + 16)
 	var hdr := HBoxContainer.new()
-	hdr.position = Vector2(18, 56)
+	hdr.position = Vector2(18, y0)
 	hdr.add_theme_constant_override("separation", 0)
 	p.add_child(hdr)
 	var k := 1.4 if _mob else 1.0  # phone: columns sized for 22px text
@@ -1116,7 +1160,8 @@ func _tab_market() -> void:
 		var l := UIKit.mono(str(h[0]), 9, UIKit.TEXT_FAINT, false)
 		l.custom_minimum_size = Vector2(int(h[1] * k), 0)
 		hdr.add_child(l)
-	var v := _scroll(p, Rect2(12, 76, 830, 490))
+	var scroll_y := y0 + 20.0
+	var v := _scroll(p, Rect2(12, scroll_y, 830, maxf(200.0, 566.0 - scroll_y)))
 	var n: Dictionary = World.node(city)
 	var keys: Array = World.goods.keys()
 	keys.sort_custom(func(a, b):
