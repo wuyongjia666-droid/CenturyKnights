@@ -233,6 +233,7 @@ static func commit_move(host, cell: Vector2i) -> void:
 	host._log(Locale.t("ux_moved_to_log") % [su.char.name, cell.x, cell.y])
 	host._sync_objectives()
 	RewindBar.refresh(host)
+	BattleDualLedger.refresh(host)
 	if DeviceProfile.is_mobile():
 		BattleMobileBar.rebuild(host)
 
