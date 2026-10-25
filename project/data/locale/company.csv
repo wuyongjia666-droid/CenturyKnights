@@ -364,3 +364,21 @@ atlas_fx_risk,有风险,Risky
 atlas_fx_other,有后果,Has consequences
 atlas_trade_margin_toast,卖出 %s ×%d（+%d 银 · 利润 %+d）,Sold %s ×%d (+%d silver · margin %+d)
 atlas_trade_first_buy,购入本地产 %s ×%d（-%d 银）· 可运往求购城出手,Bought local %s ×%d (-%d silver) · haul to a demand city
+atlas_rival_theft_title,商路截夺,Rival theft
+atlas_rival_theft_line,%s 在 %s 截走了「%s」,%s stole an offer at %s: "%s"
+atlas_rival_theft_hint,委托牌被同行截走。可前往该城补发或正面对峙。,A board offer was stolen. Travel there to re-post or clash.
+atlas_rival_theft_ok,知道了,Got it
+atlas_rival_theft_go,去该城,Go there
+atlas_arb_run,跑单收购,Run arbitrage
+atlas_arb_busy,已有一笔跑单在途,Arbitrage already armed
+atlas_arb_bad_good,无效货物,Bad good
+atlas_arb_no_dest,尚无已知卖价城,No known sell city
+atlas_arb_bought,购入 %s ×%d（-%d 银）· 目标 %s,Bought %s ×%d (-%d silver) · bound for %s
+atlas_arb_none,没有待出手的跑单,No pending arbitrage
+atlas_arb_wrong_city,须先抵达 %s,Reach %s first
+atlas_arb_done,卖出 %s ×%d（+%d 银 · 利润 %+d）,Sold %s ×%d (+%d silver · margin %+d)
+atlas_arb_title,产地跑单,Produce arbitrage
+atlas_arb_pending,跑单中：%s ×%d → %s,Armed: %s ×%d → %s
+atlas_arb_sell_now,出手,Sell now
+atlas_arb_sell_title,跑单到手,Arbitrage landed
+atlas_arb_march,启程出手,March to sell
