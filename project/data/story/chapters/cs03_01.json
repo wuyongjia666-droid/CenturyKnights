@@ -29,7 +29,7 @@
         {
           "id": "cs03_merit_2",
           "speaker": "leader",
-          "text": "写。"
+          "text": "功记在粮旁边，不记在空口上。"
         },
         {
           "id": "cs03_merit_3",
@@ -109,17 +109,17 @@
         {
           "id": "cs03_merit_y18",
           "speaker": "旁白",
-          "text": "功簿墨干得慢。慢干的字沉。"
+          "text": "功簿这一行墨干得比粮行慢，慢处字口发沉。"
         },
         {
           "id": "cs03_merit_y19",
           "speaker": "石垒·晚担",
-          "text": "沉字扛得住粮。"
+          "text": "沉下去的功，才扛得住仓里的粮。"
         },
         {
           "id": "cs03_merit_y20",
           "speaker": "leader",
-          "text": "功与粮并排。"
+          "text": "功行与粮行对着放。单放一边，我不认。"
         },
         {
           "id": "cs03_merit_x9",
@@ -170,7 +170,7 @@
         {
           "id": "cs03_est_6",
           "speaker": "石垒·晚担",
-          "text": "并排才算数。单行是骗人。"
+          "text": "功单行亮、粮单行暗，这种亮是骗人。"
         },
         {
           "id": "cs03_estate_x0",
@@ -230,17 +230,17 @@
         {
           "id": "cs03_estate_y18",
           "speaker": "旁白",
-          "text": "仓门风从缝里进。"
+          "text": "仓门缝里灌进夜风，风把假数吹得站不稳。"
         },
         {
           "id": "cs03_estate_y19",
           "speaker": "石垒·晚担",
-          "text": "风进得去，假数进不去。"
+          "text": "风进得去。写在纸上的假数，进了缝就漏。"
         },
         {
           "id": "cs03_estate_y20",
           "speaker": "leader",
-          "text": "数要真。"
+          "text": "仓里的数要能过风。过不去的划掉。"
         },
         {
           "id": "cs03_estate_x9",
@@ -271,7 +271,7 @@
         {
           "id": "cs03_hg_2",
           "speaker": "leader",
-          "text": "都看。并排。"
+          "text": "仓数和功行我都对过眼。缺一边，沙漏不准并。"
         },
         {
           "id": "cs03_hg_3",
@@ -346,22 +346,22 @@
         {
           "id": "cs03_hourglass_y17",
           "speaker": "旁白",
-          "text": "功簿墨干得慢。慢干的字沉。"
+          "text": "沙漏座上功簿的墨还黏，黏着才像没被催干。"
         },
         {
           "id": "cs03_hourglass_y18",
           "speaker": "石垒·晚担",
-          "text": "沉字扛得住粮。"
+          "text": "黏墨扛粮。干得发亮的功，我称着轻。"
         },
         {
           "id": "cs03_hourglass_y19",
           "speaker": "leader",
-          "text": "功与粮并排。"
+          "text": "沙漏前功粮并着。少一行，月份不准走。"
         },
         {
           "id": "cs03_hourglass_x9",
           "speaker": "leader",
-          "text": "两行都亮。去门廊。"
+          "text": "功粮两行还亮。门廊上对仓数。"
         },
         {
           "id": "cs0301_vis_mv1",
@@ -524,17 +524,17 @@
         {
           "id": "cs03_mid_y18",
           "speaker": "旁白",
-          "text": "仓门风从缝里进。"
+          "text": "桥上的风从仓门缝里拐过来，拐弯时假数先散。"
         },
         {
           "id": "cs03_mid_y19",
           "speaker": "石垒·晚担",
-          "text": "风进得去，假数进不去。"
+          "text": "拐弯的风只吹纸。真粮在仓里，吹不动。"
         },
         {
           "id": "cs03_mid_y20",
           "speaker": "leader",
-          "text": "数要真。"
+          "text": "桥上对的是仓数。嘴上的数不要。"
         },
         {
           "id": "cs0301_mid_mv1",
@@ -827,17 +827,17 @@
         {
           "id": "cs03_tavern_y17",
           "speaker": "旁白",
-          "text": "功簿墨干得慢。慢干的字沉。"
+          "text": "酒馆灯把功簿烤出一圈慢干的边，边比中心沉。"
         },
         {
           "id": "cs03_tavern_y18",
           "speaker": "石垒·晚担",
-          "text": "沉字扛得住粮。"
+          "text": "烤不透的字才扛粮。透亮的，是催出来的。"
         },
         {
           "id": "cs03_tavern_y19",
           "speaker": "leader",
-          "text": "功与粮并排。"
+          "text": "回堡前功粮还并着。酒不改行。"
         },
         {
           "id": "cs03_tavern_x9",
