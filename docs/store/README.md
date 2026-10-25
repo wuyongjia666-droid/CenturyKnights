@@ -26,6 +26,7 @@
 ```bash
 python3 tools/ci/store_prep_check.py
 python3 tools/ci/store_packaging_dry_check.py
+python3 tools/ci/store_verify_records_check.py
 python3 tools/ci/export_size_report.py
 ```
 
@@ -47,6 +48,8 @@ CI：`store_prep_check` 由 `scripts/run_ci.sh` / lint 路径外的显式步骤�
 | [`privacy-verification-record.md`](./privacy-verification-record.md) | 隐私主张静态核对 |
 | [`age-rating-verification-record.md`](./age-rating-verification-record.md) | 分级问卷意图核对 |
 | [`export-paths-verification-record.md`](./export-paths-verification-record.md) | 出包路径干跑证据 |
+| [`data-safety-verification-record.md`](./data-safety-verification-record.md) | Play 数据安全表核对 |
+| [`support-contact-verification-record.md`](./support-contact-verification-record.md) | 支持联系方式核对 |
 
 ```bash
 python3 tools/ci/store_verify_records_check.py
