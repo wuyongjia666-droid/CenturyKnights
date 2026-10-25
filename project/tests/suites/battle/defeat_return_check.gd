@@ -1,6 +1,7 @@
 extends Node
 ## WS-D #50/#5: defeat and retreat go back to the castle (never chapter 0) with an injury settlement;
-## chapter-owned mid-cs suppresses BattleDefeat.record (no castle event_log「败北」).
+## chapter-owned mid-cs suppresses BattleDefeat.record (no castle event_log「败北」);
+## chapter-owned mid-cs suppresses CKEnemyLoadout.apply_defeat sticky injury.
 
 var _battle
 
@@ -23,6 +24,9 @@ func _run() -> String:
 	if err != "":
 		return err
 	err = _protocol_castle_record_gate()
+	if err != "":
+		return err
+	err = _protocol_defeat_injury_gate()
 	if err != "":
 		return err
 	if BattleDefeat.back_path(true, false, "res://scenes/story/chapter0.tscn") != "res://scenes/story/chapter0.tscn":
@@ -77,6 +81,35 @@ func _protocol_castle_record_gate() -> String:
 	if not hit:
 		return "hub maybe_record missing from event_log"
 	print("OK protocol hub still records castle defeat")
+	return ""
+
+
+func _protocol_defeat_injury_gate() -> String:
+	# Chapter-owned: maybe_apply_defeat must not stamp injured / classic_down.
+	GameState.set_meta("battle_return_chapter", "cs01_01")
+	var c := CKCharacter.new()
+	c.job_id = "light_inf"
+	c.level = 1
+	c.stats = {"str": 10, "vit": 8, "skl": 8, "agi": 8, "per": 8, "wil": 8}
+	c.hp = 4
+	c.max_hp = 40
+	c.injured = false
+	var units := [{"char": c, "team": "player"}]
+	if CKEnemyLoadout.maybe_apply_defeat(units, "standard"):
+		return "chapter maybe_apply_defeat should skip"
+	if c.injured:
+		return "chapter maybe_apply_defeat stamped injured"
+	if c.hp != c.max_hp:
+		return "chapter maybe_apply_defeat hp %s" % c.hp
+	print("OK protocol chapter suppresses defeat injury")
+	GameState.set_meta("battle_return_chapter", "")
+	c.hp = 4
+	c.injured = false
+	if not CKEnemyLoadout.maybe_apply_defeat(units, "standard"):
+		return "hub maybe_apply_defeat should apply"
+	if not c.injured or c.hp != maxi(1, int(c.max_hp * 0.3)):
+		return "hub maybe_apply_defeat injury missing"
+	print("OK protocol hub still applies defeat injury")
 	return ""
 
 

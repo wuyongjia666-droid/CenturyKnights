@@ -1,5 +1,6 @@
 extends Node
-## BTL-05: three difficulty ranks, monotonic threat, save keeps the pick.
+## BTL-05: three difficulty ranks, monotonic threat, save keeps the pick;
+## chapter-owned mid-cs suppresses CKEnemyLoadout.apply_defeat sticky injury.
 
 var _picker_root: Control
 
@@ -12,6 +13,8 @@ func _ready() -> void:
 		err = _choose_and_save()
 	if err == "":
 		err = _defeat()
+	if err == "":
+		err = _defeat_injury_gate()
 	if err == "":
 		err = await _lamps()
 	if err == "":
@@ -138,6 +141,44 @@ func _defeat() -> String:
 	CKEnemyLoadout.apply_defeat(units, "classic")
 	if c.hp != 0 or not c.has_meta("classic_down"):
 		return "classic hook"
+	return ""
+
+
+func _defeat_injury_gate() -> String:
+	GameState.new_game("探针", "灰旗", "#" + "6ED4FF")
+	GameState.set_flag("hub_open")
+	GameState.set_meta("battle_return_chapter", "cs03_01")
+	var c := _player()
+	c.hp = 5
+	c.injured = false
+	if c.has_meta("classic_down"):
+		c.remove_meta("classic_down")
+	var units := [{"char": c, "team": "player"}]
+	if not CKEnemyLoadout.suppresses_defeat_injury():
+		return "chapter suppresses_defeat_injury false"
+	if CKEnemyLoadout.maybe_apply_defeat(units, "standard"):
+		return "chapter maybe_apply_defeat should skip"
+	if c.injured:
+		return "chapter stamped injured"
+	if c.has_meta("classic_down"):
+		return "chapter stamped classic_down"
+	if c.hp != c.max_hp:
+		return "chapter should restore hp got %s" % c.hp
+	# classic under chapter: still no sticky death/injury, just HP restore
+	c.hp = 3
+	if CKEnemyLoadout.maybe_apply_defeat(units, "classic"):
+		return "chapter classic maybe_apply_defeat should skip"
+	if c.injured or c.hp != c.max_hp or c.has_meta("classic_down"):
+		return "chapter classic left sticky residue"
+	print("OK protocol chapter suppresses defeat injury")
+	GameState.set_meta("battle_return_chapter", "")
+	c.hp = 5
+	c.injured = false
+	if not CKEnemyLoadout.maybe_apply_defeat(units, "standard"):
+		return "hub maybe_apply_defeat should apply"
+	if not c.injured or c.hp != maxi(1, int(c.max_hp * 0.3)):
+		return "hub standard injury missing"
+	print("OK protocol hub still applies defeat injury")
 	return ""
 
 

@@ -4,7 +4,8 @@ extends Node
 ## bare「继续」stamps 未试锋 skip / 试锋未成 abort ledger when leaving without a win;
 ## win clears csXX_mid_lost + map_id+_lost residue so loss-state cannot resurrect after a retry win;
 ## chapter-owned mid-cs suppresses month_echo.battle (season_ledger/yeartrace own the trail);
-## chapter-owned mid-cs suppresses BattleDefeat.record (no castle event_log「败北」).
+## chapter-owned mid-cs suppresses BattleDefeat.record (no castle event_log「败北」);
+## chapter-owned mid-cs suppresses CKEnemyLoadout.apply_defeat sticky injury.
 
 const PLAYER := "res://scenes/story/chapter_player.tscn"
 const BATTLE := "res://scenes/battle/battle.tscn"
@@ -38,6 +39,9 @@ func _run() -> String:
 	if err != "":
 		return err
 	err = _protocol_defeat_record_suppressed()
+	if err != "":
+		return err
+	err = _protocol_defeat_injury_suppressed()
 	if err != "":
 		return err
 	for row in LIVE:
@@ -214,6 +218,21 @@ func _live_loss_morph(cid: String, beat: String, needle: String) -> String:
 				err = "%s loss: defeat META written under chapter" % cid
 			elif GameState.event_log.size() != before_log:
 				err = "%s loss: event_log grew under chapter" % cid
+			else:
+				var probe := CKCharacter.new()
+				probe.job_id = "light_inf"
+				probe.level = 1
+				probe.stats = {"str": 10, "vit": 8, "skl": 8, "agi": 8, "per": 8, "wil": 8}
+				probe.hp = 5
+				probe.max_hp = 40
+				probe.injured = false
+				var units := [{"char": probe, "team": "player"}]
+				if CKEnemyLoadout.maybe_apply_defeat(units, "standard"):
+					err = "%s loss: defeat injury not suppressed" % cid
+				elif probe.injured:
+					err = "%s loss: injured stamped under chapter" % cid
+				elif probe.hp != probe.max_hp:
+					err = "%s loss: chapter injury gate hp %s" % [cid, probe.hp]
 	player.queue_free()
 	await get_tree().process_frame
 	if err != "":
@@ -247,7 +266,7 @@ func _live_loss_morph(cid: String, beat: String, needle: String) -> String:
 	player2.queue_free()
 	await get_tree().process_frame
 	if err == "":
-		print("OK live loss morph+no-castle-record %s @%s → %s + line" % [cid, beat, RETRY_LABEL])
+		print("OK live loss morph+no-castle-record+no-injury %s @%s → %s + line" % [cid, beat, RETRY_LABEL])
 	return err
 
 
@@ -432,6 +451,37 @@ func _protocol_defeat_record_suppressed() -> String:
 	if text == "" or not text.begins_with(Locale.t("defeat_head")):
 		return "protocol record: hub should write got %s" % text
 	print("OK protocol mid-cs suppresses castle defeat record")
+	return ""
+
+
+func _protocol_defeat_injury_suppressed() -> String:
+	GameState.new_game("烬行", "灰旗", GameState.crest_color)
+	GameState.set_flag("hub_open")
+	GameState.set_meta("battle_return_chapter", "cs03_01")
+	var c := CKCharacter.new()
+	c.job_id = "light_inf"
+	c.level = 1
+	c.stats = {"str": 10, "vit": 8, "skl": 8, "agi": 8, "per": 8, "wil": 8}
+	c.hp = 5
+	c.max_hp = 40
+	c.injured = false
+	var units := [{"char": c, "team": "player"}]
+	if not CKEnemyLoadout.suppresses_defeat_injury():
+		return "protocol injury: suppresses_defeat_injury false"
+	if CKEnemyLoadout.maybe_apply_defeat(units, "standard"):
+		return "protocol injury: chapter should suppress"
+	if c.injured:
+		return "protocol injury: chapter stamped injured"
+	if c.hp != c.max_hp:
+		return "protocol injury: chapter hp %s" % c.hp
+	GameState.set_meta("battle_return_chapter", "")
+	c.hp = 5
+	c.injured = false
+	if not CKEnemyLoadout.maybe_apply_defeat(units, "standard"):
+		return "protocol injury: hub should apply"
+	if not c.injured or c.hp != maxi(1, int(c.max_hp * 0.3)):
+		return "protocol injury: hub injury missing"
+	print("OK protocol mid-cs suppresses defeat injury")
 	return ""
 
 
