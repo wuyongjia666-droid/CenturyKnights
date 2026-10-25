@@ -1,7 +1,7 @@
 # 隐私政策验证记录（不缴费提审）
 
 > 对 `privacy-policy-draft.md` 的**可核对**验证，不是削弱字数闸、不代替正式法务审。  
-> 记录时点：2026-10-25 10:35 Asia/Shanghai · git `9a7c5990`（`main`）  
+> 记录时点：2026-10-25 10:36 Asia/Shanghai
 > 关键词：`不收集`、`不出售`、`验证记录`、`崩溃`。
 
 ## 结论摘要
@@ -52,4 +52,4 @@ rg -n -i 'firebase|admob|adjust|appsflyer|analytics|advertising.?id|play-service
 
 | 日期 (Asia/Shanghai) | 变更 |
 |---|---|
-| 2026-10-25 10:35 Asia/Shanghai | 首份验证记录；静态 SDK 扫描口径 + 与分级/导出记录交叉引用 |
+| 2026-10-25 10:36 Asia/Shanghai | 首份验证记录；静态 SDK 扫描口径 + 与分级/导出记录交叉引用 |

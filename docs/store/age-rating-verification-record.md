@@ -1,7 +1,7 @@
 # 年龄分级验证记录（IARC / 各店问卷意图）
 
 > 对 `age-rating-draft.md` 的**逐项核对**。今日**不提交** IARC / Partner Center。  
-> 记录时点：2026-10-25 10:35 Asia/Shanghai · git `9a7c5990`  
+> 记录时点：2026-10-25 10:36 Asia/Shanghai
 > 关键词：`12+`、`内购`、`暴力`、`验证记录`。
 
 ## 目标分级复核
@@ -42,4 +42,4 @@
 
 | 日期 (Asia/Shanghai) | 变更 |
 |---|---|
-| 2026-10-25 10:35 Asia/Shanghai | 首份分级验证记录；与隐私/listing 交叉引用 |
+| 2026-10-25 10:36 Asia/Shanghai | 首份分级验证记录；与隐私/listing 交叉引用 |

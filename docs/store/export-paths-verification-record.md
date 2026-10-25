@@ -1,7 +1,7 @@
 # 导出路径验证记录（不缴费 · 干跑）
 
 > 对 `export-paths.md` 的**可执行核对**。本记录**不出正式商店包、不上传、不花费**。  
-> 记录时点：2026-10-25 10:35 Asia/Shanghai · git `9a7c5990`  
+> 记录时点：2026-10-25 10:36 Asia/Shanghai
 > 关键词：`build_android.sh`、`build_windows.sh`、`release.yml`、`验证记录`。
 
 ## 结论摘要
@@ -97,4 +97,4 @@ python3 tools/ci/store_verify_records_check.py
 
 | 日期 (Asia/Shanghai) | 变更 |
 |---|---|
-| 2026-10-25 10:35 Asia/Shanghai | 首份导出验证记录；干跑 packaging + size report + 密钥未跟踪 |
+| 2026-10-25 10:36 Asia/Shanghai | 首份导出验证记录；干跑 packaging + size report + 密钥未跟踪 |
