@@ -95,6 +95,13 @@ func _check_win_aftermath_resume() -> String:
 	if page.find_child("BattleAftermathModal", true, false) == null:
 		page.queue_free()
 		return "BattleAftermathModal missing"
+	var strip := page.find_child("AftermathCrestStrip", true, false)
+	if strip == null or strip.find_child("CastleArms", true, false) == null:
+		page.queue_free()
+		return "AftermathCrestStrip/团徽 missing on win"
+	if strip.find_child("FoeArms", true, false) == null:
+		page.queue_free()
+		return "FoeArms/敌徽 missing on win"
 	if page.find_child("BattleAftermathSummary", true, false) == null:
 		page.queue_free()
 		return "BattleAftermathSummary missing"
@@ -135,6 +142,9 @@ func _check_retreat_aftermath() -> String:
 	if page.find_child("BattleAftermathModal", true, false) == null:
 		page.queue_free()
 		return "BattleAftermathModal after retreat missing"
+	if page.find_child("AftermathCrestStrip", true, false) == null:
+		page.queue_free()
+		return "AftermathCrestStrip missing on retreat"
 	var cont := page.find_child("BattleAftermathContinue", true, false) as Button
 	if cont == null:
 		page.queue_free()

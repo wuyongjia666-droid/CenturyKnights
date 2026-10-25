@@ -8,7 +8,8 @@ const PLAYER := "res://scenes/story/chapter_player.tscn"
 const HUB := "res://scenes/hub/castle_hub.tscn"
 const CHAPTERS := [
 	"cs01_01", "cs02_01", "cs03_01", "cs04_01", "cs05_01", "cs05_02",
-	"cs06_01", "cs06_02", "cs07_01", "cs07_02", "cs08_01", "cs09_01", "cs10_01",
+	"cs06_01", "cs06_02", "cs07_01", "cs07_02",
+	"cs08_01", "cs08_02", "cs09_01", "cs09_02", "cs10_01", "cs10_02",
 ]
 ## Choice label → expected flag (first option on tavern beat).
 const CHOICE := {
@@ -23,8 +24,11 @@ const CHOICE := {
 	"cs07_01": ["仪典并排记", "cs07_kept_rite"],
 	"cs07_02": ["空条并排", "cs07_gene_parallel"],
 	"cs08_01": ["祖祠并排记", "cs08_kept_stele"],
+	"cs08_02": ["碑阴并排留", "cs08_back_parallel"],
 	"cs09_01": ["血验并排记", "cs09_kept_blood"],
+	"cs09_02": ["验空并排", "cs09_book_parallel"],
 	"cs10_01": ["城印并排记", "cs10_kept_seal"],
+	"cs10_02": ["印底并排留", "cs10_base_parallel"],
 }
 const PLATE_SPEAKERS := ["掌柜", "岁吏", "书记官", "老旗手", "老管事"]
 

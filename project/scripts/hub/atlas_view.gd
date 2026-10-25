@@ -469,6 +469,8 @@ func _mobile_nodes() -> void:
 		if not (c is Label) or c.is_queued_for_deletion():
 			continue
 		var l := c as Label
+		if bool(l.get_meta("ck_node_badge", false)):
+			continue
 		l.size = l.get_minimum_size()
 		var own: Control = null
 		var best := 1e9
@@ -486,7 +488,17 @@ func _mobile_nodes() -> void:
 			continue
 		var br := Rect2(own.position, own.size)
 		if l.text.length() <= 1:
-			l.position = Vector2(br.end.x + br.size.x * 0.09 - 2.0, br.position.y - br.size.y * 0.09 - l.size.y + 2.0)  # clear of the 1.18x selected scale
+			# Node badges (★/◆/✓) are placed in _add_node_button; do not drag them
+			# back onto the disc. Other single-char marks stay above-right past 1.18×.
+			if bool(l.get_meta("ck_node_badge", false)):
+				continue
+			var bh := 22.0
+			l.custom_minimum_size = Vector2(maxi(18, int(l.size.x)), int(bh))
+			l.size = Vector2(maxi(18, int(l.size.x)), int(bh))
+			l.position = Vector2(
+				br.end.x + br.size.x * 0.18 + 4.0,
+				br.position.y - bh - 6.0
+			)
 			continue
 		var cands := [
 			Vector2(br.get_center().x - l.size.x * 0.5, br.end.y + 1.0),
@@ -743,16 +755,22 @@ func _add_node_button(n: Dictionary, markers: Dictionary, mm: Dictionary) -> voi
 		if not marker.is_empty():
 			badges.append([_court_glyph(str(marker.get("kind", ""))), _court_color(str(marker.get("kind", "")))])
 	# Outside the node ink box so ★ / ◆ never overlap the kind glyph (都/堡/…).
-	var bx := _np(id).x + px * 0.5 + 2
+	# Theme/font-floor inflates a 16px title_label to ~66px tall; gate-0 _ink centers
+	# in that box, so the badge must sit fully above the disc (+ past 1.18× select).
+	var badge_box := 68.0
+	var bx := _np(id).x + px * 0.5 * 1.18 + 8.0
+	var by := _np(id).y - px * 0.5 * 1.18 - badge_box - 8.0
+	by = maxf(2.0, by)
 	for bd in badges:
 		var bl := UIKit.title_label(str(bd[0]), 16, bd[1])
-		bl.add_theme_color_override("font_outline_color", Color(0.02, 0.03, 0.05, 1))
-		bl.add_theme_constant_override("outline_size", 5)
-		bl.position = Vector2(bx, _np(id).y - px * 0.5 - 22)
+		bl.add_theme_color_override("font_outline_color", Color(0.02, 0.03, 0.05, 0.95))
+		bl.add_theme_constant_override("outline_size", 2)
+		bl.position = Vector2(bx, by)
 		bl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		bl.set_meta("ck_node_badge", true)
 		_layer.add_child(bl)
 		UIFX.breathe(bl, 0.1, 1.2)
-		bx += 14
+		bx += 16.0
 
 func _gate_dir(from_id: String, to_id: String) -> Vector2:
 	var a := _region_pos(World.nation_of(from_id))
@@ -1003,6 +1021,19 @@ func _render_left() -> void:
 	pb.add_child(ab)
 
 # ── right column: profile ─────────────────────────────
+func _engage_quest_id_here() -> String:
+	for q2 in World.active:
+		if str(q2.state) != "active":
+			continue
+		var k := str(q2.kind)
+		if k in ["hunt", "defend"] and str(q2.target) == _sel:
+			return str(q2.id)
+		if k == "clear" and q2.has("edge"):
+			var e: Array = q2.edge
+			if e.size() >= 2 and (str(e[0]) == _sel or str(e[1]) == _sel):
+				return str(q2.id)
+	return ""
+
 func _render_right() -> void:
 	for c in _right.get_children():
 		_right.remove_child(c)
@@ -1042,36 +1073,52 @@ func _render_right() -> void:
 	# vignette (farm plate or nation-plate crop)
 	var th := Control.new()
 	th.position = Vector2(16, 88)
-	th.size = Vector2(224, 112)
+	th.size = Vector2(224, 88)
 	th.clip_contents = true
 	p.add_child(th)
 	_fill_vignette(th, _sel)
+	# Quotes, lore, and quests share one column that ends above the action row.
+	# Absolute y=296 lore used to sit on top of the produce block.
+	var col_w := 224.0
+	var stack_top := 184.0
+	var actions_top := 462.0
+	var scroll := ScrollContainer.new()
+	scroll.name = "ProfileScroll"
+	scroll.position = Vector2(16, stack_top)
+	scroll.size = Vector2(col_w, actions_top - stack_top)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	p.add_child(scroll)
+	var stack := VBoxContainer.new()
+	stack.name = "ProfileStack"
+	stack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	stack.custom_minimum_size = Vector2(col_w, 0)
+	stack.add_theme_constant_override("separation", 4)
+	scroll.add_child(stack)
 	var kv := VBoxContainer.new()
-	kv.position = Vector2(16, 208)
+	kv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	kv.add_theme_constant_override("separation", 3)
-	p.add_child(kv)
+	stack.add_child(kv)
 	var rep := World.rep_of(_sel)
-	kv.add_child(UIKit.kv_row("城声望", "%d · %s" % [rep, World.rep_tier_name(rep)], UIKit.ACCENT, 224))
-	kv.add_child(UIKit.kv_row("特产", str(n.get("specialty", "")), UIKit.TEXT, 224))
+	kv.add_child(UIKit.kv_row("城声望", "%d · %s" % [rep, World.rep_tier_name(rep)], UIKit.ACCENT, col_w))
+	kv.add_child(UIKit.kv_row("特产", str(n.get("specialty", "")), UIKit.TEXT, col_w))
 	var prod: Array = []
 	for g in n.get("produce", []):
 		prod.append(World.good_name(str(g)))
 	var dem: Array = []
 	for g in n.get("demand", []):
 		dem.append(World.good_name(str(g)))
-	kv.add_child(UIKit.kv_row("出产", "、".join(prod) if not prod.is_empty() else "—", UIKit.OK, 224))
-	kv.add_child(UIKit.kv_row("求购", "、".join(dem) if not dem.is_empty() else "—", UIKit.EMBER, 224))
+	kv.add_child(UIKit.kv_row("出产", "、".join(prod) if not prod.is_empty() else "—", UIKit.OK, col_w))
+	kv.add_child(UIKit.kv_row("求购", "、".join(dem) if not dem.is_empty() else "—", UIKit.EMBER, col_w))
 	var loop_box := VBoxContainer.new()
 	loop_box.name = "TradeLoop"
+	loop_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	loop_box.add_theme_constant_override("separation", 2)
-	kv.add_child(loop_box)
+	stack.add_child(loop_box)
+	loop_box.add_child(UIKit.mono(Locale.t("atlas_trade_loop_en"), 8, UIKit.EMBER, false))
 	var loops: Array = World.produce_trade_loop(_sel)
 	var shown := 0
-	# One compact line fits the 224px sheet; EN chrome stays off the place blurb.
-	if not loops.is_empty():
-		loop_box.add_child(UIKit.mono(Locale.t("atlas_trade_loop_en"), 8, UIKit.EMBER, false))
 	for row in loops:
-		if shown >= 1:
+		if shown >= 2:
 			break
 		var line := ""
 		if bool(row.get("known", false)):
@@ -1080,55 +1127,66 @@ func _render_right() -> void:
 			line = Locale.t("atlas_trade_loop_unknown") % [str(row.name), int(row.buy)]
 		var ll := UIKit.body_label(line, UIKit.OK if int(row.get("margin", 0)) > 0 else UIKit.TEXT_DIM, 12)
 		ll.name = "TradeLoop_%d" % shown
-		ll.autowrap_mode = TextServer.AUTOWRAP_OFF
-		ll.clip_text = true
-		ll.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
-		ll.custom_minimum_size = Vector2(224, 0)
-		ll.size = Vector2(224, 14)
+		ll.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		ll.clip_text = false
+		ll.custom_minimum_size = Vector2(col_w, 0)
+		ll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		loop_box.add_child(ll)
 		shown += 1
-	var loop_extra := 0.0
-	if shown > 0:
-		loop_extra = 14.0 + float(shown) * 16.0
-	var trade_cta: Button = null
 	if _sel == World.pos and not loops.is_empty():
-		trade_cta = UIKit.ghost_button(Locale.t("atlas_trade_loop_goto"), 224, 26)
-		trade_cta.name = "TradeLoopGoto"
-		trade_cta.pressed.connect(func():
+		var tb := UIKit.ghost_button(Locale.t("atlas_trade_loop_goto"), int(col_w), 26)
+		tb.name = "TradeLoopGoto"
+		tb.pressed.connect(func():
 			GameState.set_meta("city_tab", "market")
 			_enter_here())
-		# Park CTA below lore so it never inks over the city blurb.
-	# lore sits below kv+TradeLoop so produce lines never cover the blurb
-	var lore_y := 296.0 + loop_extra
-	var lore_h := maxf(48.0, 72.0 - loop_extra * 0.25)
-	var lore := UIKit.body_label(str(n.get("lore", "")), UIKit.TEXT_DIM, 11)
-	lore.position = Vector2(16, lore_y)
-	lore.size = Vector2(224, lore_h)
-	lore.custom_minimum_size = Vector2(224, 0)
-	lore.clip_text = true
+		loop_box.add_child(tb)
+		var best_row: Dictionary = World.best_produce_trade(_sel)
+		if not best_row.is_empty() and bool(best_row.get("known", false)) and World.arbitrage.is_empty():
+			var arb := UIKit.ghost_button(Locale.t("atlas_arb_run"), int(col_w), 26)
+			arb.name = "ArbitrageRun"
+			arb.pressed.connect(_start_arbitrage_from_profile.bind(str(best_row.get("good", "")), str(best_row.get("sell_city", ""))))
+			loop_box.add_child(arb)
+	elif _sel == World.pos and not World.arbitrage.is_empty():
+		var plan: Dictionary = World.arbitrage
+		var pending := UIKit.body_label(_arb_pending_text(plan), UIKit.EMBER, 12)
+		pending.name = "ArbitragePending"
+		pending.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		pending.custom_minimum_size = Vector2(col_w, 0)
+		loop_box.add_child(pending)
+		if str(plan.get("sell_city", "")) == World.pos:
+			var sellb := UIKit.ghost_button(Locale.t("atlas_arb_sell_now"), int(col_w), 26)
+			sellb.name = "ArbitrageSell"
+			sellb.pressed.connect(_complete_arbitrage_ui)
+			loop_box.add_child(sellb)
+		else:
+			var march := UIKit.ghost_button(Locale.t("atlas_arb_march"), int(col_w), 26)
+			march.name = "ArbitrageMarch"
+			march.pressed.connect(func():
+				_select_node(str(plan.get("sell_city", "")))
+				_start_travel())
+			loop_box.add_child(march)
+	var lore := UIKit.body_label(str(n.get("lore", "")), UIKit.TEXT_DIM, 12)
+	lore.name = "ProfileLore"
 	lore.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	p.add_child(lore)
-	if trade_cta != null:
-		trade_cta.position = Vector2(16, lore_y + lore_h + 4.0)
-		p.add_child(trade_cta)
-		loop_extra += 30.0
-	# quests here
-	var qy := lore_y + lore_h + (34.0 if trade_cta != null else 4.0)
+	lore.clip_text = false
+	lore.custom_minimum_size = Vector2(col_w, 0)
+	lore.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	stack.add_child(lore)
+	var mm: Dictionary = World.mainline_marker()
 	for mk in World.quest_markers().get(_sel, []):
 		var q: Dictionary = mk.quest
-		var ql := UIKit.body_label("%s %s" % ["✓ 交付" if str(mk.kind) == "turnin" else "◆ 目标", q.title], UIKit.OK if str(mk.kind) == "turnin" else UIKit.DANGER, 11)
-		ql.autowrap_mode = TextServer.AUTOWRAP_OFF
-		ql.clip_text = true
-		ql.size = Vector2(224, 16)
-		ql.position = Vector2(16, qy)
-		p.add_child(ql)
-		qy += 17
-	var mm: Dictionary = World.mainline_marker()
+		var ql := UIKit.body_label("%s %s" % ["✓ 交付" if str(mk.kind) == "turnin" else "◆ 目标", q.title], UIKit.OK if str(mk.kind) == "turnin" else UIKit.DANGER, 12)
+		ql.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		ql.clip_text = false
+		ql.custom_minimum_size = Vector2(col_w, 0)
+		ql.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		stack.add_child(ql)
 	if str(mm.get("node", "")) == _sel:
-		var ml := UIKit.body_label("★ %s（在此展开）" % mm.label, UIKit.EMBER, 11)
-		ml.autowrap_mode = TextServer.AUTOWRAP_OFF
-		ml.position = Vector2(16, qy)
-		p.add_child(ml)
+		var ml := UIKit.body_label("★ %s（在此展开）" % mm.label, UIKit.EMBER, 12)
+		ml.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		ml.custom_minimum_size = Vector2(col_w, 0)
+		ml.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		stack.add_child(ml)
 	# actions
 	var go := UIKit.cta_button("启程前往", "A", 224, 40)
 	go.name = "GoButton"
@@ -1151,26 +1209,37 @@ func _render_right() -> void:
 	ch.tooltip_text = "主线在 ★ 标记处展开"
 	ch.pressed.connect(func(): _goto(str(mm.path)))
 	p.add_child(ch)
-	var eng := UIKit.ghost_button("进剿目标", 108, 28)
+	var eng := UIKit.ghost_button(Locale.t("atlas_engage_cta"), 108, 28)
 	eng.name = "EngageButton"
 	eng.position = Vector2(16, 556)
-	var engage_q := ""
-	for q2 in World.active:
-		if str(q2.state) == "active" and str(q2.kind) in ["hunt", "defend"] and str(q2.target) == _sel:
-			engage_q = str(q2.id)
+	var engage_q := _engage_quest_id_here()
 	eng.disabled = _busy or engage_q == "" or _sel != World.pos
 	eng.pressed.connect(func():
 		var e: Dictionary = World.quest_engage(engage_q)
 		if not e.is_empty():
 			_show_encounter_modal(e))
 	p.add_child(eng)
-	var terr := UIKit.ghost_button(Locale.t("terr_ui_button") + " %d" % CKTerritory.sites_at(_sel).size(), 108, 28)
-	terr.name = "TerritoryButton"
-	terr.position = Vector2(132, 556)
-	terr.disabled = _busy or CKTerritory.sites_at(_sel).is_empty()
-	var anchor_id := _sel
-	terr.pressed.connect(func(): _open_territory(anchor_id))
-	p.add_child(terr)
+	var rv_here: Dictionary = World.rival_here() if _sel == World.pos else {}
+	var show_rival := not rv_here.is_empty() and World.encounter.is_empty()
+	if show_rival:
+		var rival_btn := UIKit.ghost_button(Locale.t("atlas_rival_clash_cta"), 108, 28)
+		rival_btn.name = "RivalClash"
+		rival_btn.position = Vector2(132, 556)
+		rival_btn.disabled = _busy or _sel != World.pos
+		rival_btn.tooltip_text = Locale.t("atlas_rival_clash_tip") % str(rv_here.get("name", ""))
+		rival_btn.pressed.connect(func():
+			var e2: Dictionary = World.rival_clash()
+			if not e2.is_empty():
+				_show_encounter_modal(e2))
+		p.add_child(rival_btn)
+	else:
+		var terr := UIKit.ghost_button(Locale.t("terr_ui_button") + " %d" % CKTerritory.sites_at(_sel).size(), 108, 28)
+		terr.name = "TerritoryButton"
+		terr.position = Vector2(132, 556)
+		terr.disabled = _busy or CKTerritory.sites_at(_sel).is_empty()
+		var anchor_id := _sel
+		terr.pressed.connect(func(): _open_territory(anchor_id))
+		p.add_child(terr)
 	var ap := UIKit.mono("关税 %d 银 · %s" % [World.toll_for(str(n.nation)), str(nat.get("smith", ""))], 8, UIKit.TEXT_FAINT, false)
 	ap.position = Vector2(16, 596)
 	p.add_child(ap)
@@ -1611,6 +1680,10 @@ func _after_arrival() -> void:
 	var readies := World.ready_turn_ins_here().size()
 	if _check_losses():
 		return
+	if _check_rival_thefts():
+		return
+	if _check_arbitrage_arrival():
+		return
 	if readies > 0:
 		_show_toast(Locale.t("atlas_arrive_turnin") % [n.get("name", ""), readies], UIKit.OK)
 		_show_turnin_modal(readies)
@@ -1620,6 +1693,10 @@ func _after_arrival() -> void:
 func _resume_state() -> void:
 	## returning from a battle / load: re-open pending modal or continue a journey
 	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_losses():
+		return
+	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_rival_thefts():
+		return
+	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_arbitrage_arrival():
 		return
 	if not World.pending_event.is_empty():
 		_show_event_modal(World.pending_event)
@@ -1647,6 +1724,7 @@ func _resume_state() -> void:
 func _show_travel_halt_modal() -> void:
 	var p := _modal_panel(260)
 	p.name = "TravelHaltModal"
+	CKHeraldryChrome.place_aftermath_crest_strip(p, Vector2(420, 16), "", Vector2(36, 44))
 	var t := UIKit.title_label(Locale.t("atlas_travel_halt_title"), 22)
 	t.position = Vector2(24, 24)
 	p.add_child(t)
@@ -1947,7 +2025,13 @@ func _show_battle_aftermath_modal(af: Dictionary) -> void:
 	var h := 280.0 + 16.0 * mini(3, lines.size())
 	var p := _modal_panel(h)
 	p.name = "BattleAftermathModal"
+	var foe_nid := str(af.get("nation", ""))
+	if foe_nid == "":
+		foe_nid = str(World.encounter.get("nation", ""))
+	CKHeraldryChrome.place_aftermath_crest_strip(p, Vector2(400, 14), foe_nid, Vector2(36, 44))
 	var tag := Locale.t("atlas_battle_aftermath_win_en") if win else Locale.t("atlas_battle_aftermath_lose_en")
+	if str(af.get("kind", "")) == "rival":
+		tag = Locale.t("atlas_rival_aftermath_en") if win else Locale.t("atlas_rival_aftermath_lose_en")
 	var el := UIKit.mono("%s // %s" % [tag, str(af.get("title", ""))], 9, UIKit.OK if win else UIKit.DANGER)
 	el.position = Vector2(24, 18)
 	p.add_child(el)
@@ -2000,10 +2084,18 @@ func _show_aftermath_modal(af: Dictionary) -> void:
 	var h := 260.0 + 18.0 * mini(4, body_bits.size())
 	var p := _modal_panel(h)
 	p.name = "AftermathModal"
+	var is_danger := bool(af.get("danger", false))
+	if is_danger:
+		var road_nid := str(af.get("nation", ""))
+		if road_nid == "":
+			road_nid = World.nation_of(str(af.get("node", World.pos)))
+		CKHeraldryChrome.place_aftermath_crest_strip(p, Vector2(400, 14), road_nid, Vector2(36, 44))
+	else:
+		CKHeraldryChrome.place_aftermath_crest_strip(p, Vector2(436, 14), "", Vector2(36, 44))
 	var tag := Locale.t("atlas_aftermath_en")
-	if bool(af.get("danger", false)):
+	if is_danger:
 		tag = Locale.t("atlas_aftermath_danger_en")
-	var el := UIKit.mono("%s // %s" % [tag, str(af.get("title", ""))], 9, UIKit.DANGER if bool(af.get("danger", false)) else UIKit.ACCENT)
+	var el := UIKit.mono("%s // %s" % [tag, str(af.get("title", ""))], 9, UIKit.DANGER if is_danger else UIKit.ACCENT)
 	el.position = Vector2(24, 18)
 	p.add_child(el)
 	var t := UIKit.title_label(Locale.t("atlas_aftermath_title"), 22)
@@ -2040,6 +2132,7 @@ func _show_aftermath_modal(af: Dictionary) -> void:
 func _show_encounter_modal(enc: Dictionary) -> void:
 	var p := _modal_panel(300)
 	p.name = "EncounterModal"
+	CKHeraldryChrome.place_aftermath_crest_strip(p, Vector2(400, 14), str(enc.get("nation", "")), Vector2(36, 44))
 	var el := UIKit.mono("ENCOUNTER // %s" % str(World.data.get("biome_keyword", {}).get(str(World.node(str(enc.get("node", ""))).get("biome", "")), "")).to_upper(), 9, UIKit.DANGER)
 	el.position = Vector2(24, 18)
 	p.add_child(el)
@@ -2221,6 +2314,115 @@ func _check_losses() -> bool:
 	p.add_child(ok)
 	go.call_deferred("grab_focus")
 	return true
+
+func _rival_display_name(rid: String) -> String:
+	for rv in World.rivals:
+		if str(rv.get("id", "")) == rid:
+			return str(rv.get("name", rid))
+	return rid
+
+## Drain rival_thefts into RivalTheftModal (atlas surface for CMP-04 thefts).
+func _check_rival_thefts() -> bool:
+	if not _modal.get_children().is_empty():
+		return false
+	var news: Array = World.take_rival_thefts()
+	if news.is_empty():
+		return false
+	var lines: Array = []
+	var first_city := ""
+	for e in news:
+		var by := _rival_display_name(str(e.get("by", "")))
+		var city := str(e.get("city", ""))
+		var cname := str(World.node(city).get("name", city))
+		var title := str(e.get("title", ""))
+		lines.append(Locale.t("atlas_rival_theft_line") % [by, cname, title])
+		if first_city == "" and city != "":
+			first_city = city
+	var p := _modal_panel(220 + 24 * lines.size())
+	p.name = "RivalTheftModal"
+	var t := UIKit.title_label(Locale.t("atlas_rival_theft_title"), 24, UIKit.DANGER)
+	t.position = Vector2(24, 24)
+	p.add_child(t)
+	var body := UIKit.body_label("\n".join(lines) + "\n" + Locale.t("atlas_rival_theft_hint"), UIKit.TEXT, 14)
+	body.position = Vector2(24, 70)
+	body.size = Vector2(452, 60 + 24 * lines.size())
+	p.add_child(body)
+	var ok := UIKit.ghost_button(Locale.t("atlas_rival_theft_ok"), 200, 44)
+	ok.name = "RivalTheftOk"
+	ok.position = Vector2(24, p.size.y - 64)
+	ok.pressed.connect(_clear_modal)
+	p.add_child(ok)
+	if first_city != "":
+		var go := UIKit.ghost_button(Locale.t("atlas_rival_theft_go"), 200, 44)
+		go.name = "RivalTheftGo"
+		go.position = Vector2(276, p.size.y - 64)
+		go.pressed.connect(func():
+			_clear_modal()
+			_select_node(first_city)
+			if first_city != World.pos:
+				_start_travel())
+		p.add_child(go)
+	ok.call_deferred("grab_focus")
+	return true
+
+func _check_arbitrage_arrival() -> bool:
+	if not _modal.get_children().is_empty():
+		return false
+	if World.arbitrage.is_empty():
+		return false
+	if str(World.arbitrage.get("sell_city", "")) != World.pos:
+		return false
+	_show_arbitrage_sell_modal()
+	return true
+
+func _arb_pending_text(plan: Dictionary) -> String:
+	var g := str(plan.get("good", ""))
+	var dest := str(plan.get("sell_city", ""))
+	var dname := str(World.node(dest).get("name", dest))
+	return Locale.t("atlas_arb_pending") % [World.good_name(g), int(plan.get("qty", 1)), dname]
+
+func _start_arbitrage_from_profile(good: String, sell_city: String) -> void:
+	var r: Dictionary = World.begin_arbitrage(good, 1, sell_city)
+	_show_toast(str(r.get("msg", "")), UIKit.OK if bool(r.get("ok", false)) else UIKit.DANGER)
+	if not bool(r.get("ok", false)):
+		return
+	## Defer rebuild so the ArbitrageRun pressed signal can finish (avoids free-during-emit).
+	call_deferred("_after_arbitrage_armed")
+
+func _after_arbitrage_armed() -> void:
+	_render_left()
+	var dest := str(World.arbitrage.get("sell_city", ""))
+	if dest != "" and dest != World.pos:
+		_select_node(dest)
+
+func _complete_arbitrage_ui() -> void:
+	var r: Dictionary = World.complete_arbitrage()
+	_clear_modal()
+	_show_toast(str(r.get("msg", "")), UIKit.OK if bool(r.get("ok", false)) else UIKit.DANGER)
+	call_deferred("_render_left")
+
+func _show_arbitrage_sell_modal() -> void:
+	var plan: Dictionary = World.arbitrage
+	var p := _modal_panel(240)
+	p.name = "ArbitrageSellModal"
+	var t := UIKit.title_label(Locale.t("atlas_arb_sell_title"), 24, UIKit.OK)
+	t.position = Vector2(24, 24)
+	p.add_child(t)
+	var body := UIKit.body_label(_arb_pending_text(plan), UIKit.TEXT, 14)
+	body.position = Vector2(24, 70)
+	body.size = Vector2(452, 80)
+	p.add_child(body)
+	var sell := UIKit.ghost_button(Locale.t("atlas_arb_sell_now"), 200, 44)
+	sell.name = "ArbitrageSell"
+	sell.position = Vector2(24, p.size.y - 64)
+	sell.pressed.connect(_complete_arbitrage_ui)
+	p.add_child(sell)
+	var later := UIKit.ghost_button(Locale.t("atlas_rival_theft_ok"), 200, 44)
+	later.name = "ArbitrageLater"
+	later.position = Vector2(276, p.size.y - 64)
+	later.pressed.connect(_clear_modal)
+	p.add_child(later)
+	sell.call_deferred("grab_focus")
 
 func _retake(site_id: String) -> void:
 	_clear_modal()
@@ -2540,6 +2742,25 @@ func _m_place() -> void:
 				_enter_here())
 			tbg.name = "TradeLoopGoto"
 			loop_sec.add_child(tbg)
+			var best_m: Dictionary = World.best_produce_trade(_sel)
+			if not best_m.is_empty() and bool(best_m.get("known", false)) and World.arbitrage.is_empty():
+				var arbm := MobilePage.button(Locale.t("atlas_arb_run"), false, func():
+					_start_arbitrage_from_profile(str(best_m.get("good", "")), str(best_m.get("sell_city", ""))))
+				arbm.name = "ArbitrageRun"
+				loop_sec.add_child(arbm)
+			elif not World.arbitrage.is_empty():
+				var plan_m: Dictionary = World.arbitrage
+				loop_sec.add_child(_m_label(_arb_pending_text(plan_m), UIKit.EMBER))
+				if str(plan_m.get("sell_city", "")) == World.pos:
+					var sellm := MobilePage.button(Locale.t("atlas_arb_sell_now"), true, func(): _complete_arbitrage_ui())
+					sellm.name = "ArbitrageSell"
+					loop_sec.add_child(sellm)
+				else:
+					var marchm := MobilePage.button(Locale.t("atlas_arb_march"), false, func():
+						_select_node(str(plan_m.get("sell_city", "")))
+						_start_travel())
+					marchm.name = "ArbitrageMarch"
+					loop_sec.add_child(marchm)
 	_m_picture(box, "", _sel)
 	var lore := str(n.get("lore", ""))
 	if lore != "":
@@ -2557,15 +2778,17 @@ func _m_place() -> void:
 	var here := _sel == World.pos
 	if here and str(mm.get("node", "")) == _sel and bool(mm.get("exists", false)):
 		specs.append(["ChapterButton", Locale.t("mob_ui_019"), func(): _goto(str(mm.path))])
-	var engage_q := ""
-	for q2 in World.active:
-		if str(q2.state) == "active" and str(q2.kind) in ["hunt", "defend"] and str(q2.target) == _sel:
-			engage_q = str(q2.id)
+	var engage_q := _engage_quest_id_here()
 	if here and engage_q != "":
 		specs.append(["EngageButton", Locale.t("mob_ui_020"), func():
 			var e: Dictionary = World.quest_engage(engage_q)
 			if not e.is_empty():
 				_show_encounter_modal(e)])
+	if here and not World.rival_here().is_empty() and World.encounter.is_empty():
+		specs.append(["RivalClash", Locale.t("atlas_rival_clash_cta"), func():
+			var e3: Dictionary = World.rival_clash()
+			if not e3.is_empty():
+				_show_encounter_modal(e3)])
 	var sites := CKTerritory.sites_at(_sel).size()
 	if sites > 0:
 		var anchor_id := _sel
@@ -2665,6 +2888,12 @@ func _m_actions() -> void:
 		var dest := str(nat.get("capital", "")) if World.nation_of(World.pos) != nid else World.pos
 		b = MobilePage.button(Locale.t("mob_ui_036") % str(nat.get("name", nid)), true, func(): _show_view(nid); _select_node(dest))
 		b.name = "EnterRegion"
+	elif _sel != "" and _sel == World.pos and World.nodes.has(_sel) and not World.rival_here().is_empty() and World.encounter.is_empty() and World.ready_turn_ins_here().is_empty():
+		b = MobilePage.button(Locale.t("atlas_rival_clash_cta"), true, func():
+			var e4: Dictionary = World.rival_clash()
+			if not e4.is_empty():
+				_show_encounter_modal(e4))
+		b.name = "RivalClash"
 	elif _sel != "" and _sel == World.pos and World.nodes.has(_sel):
 		var n: Dictionary = World.node(_sel)
 		var ready_n := World.ready_turn_ins_here().size()
