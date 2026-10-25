@@ -1443,7 +1443,13 @@ func _render_hud() -> void:
 	stats.add_child(UIKit.res_chip(Locale.t("atlas_chip_days"), Locale.t("atlas_chip_days_v") % int(pv.days), UIKit.TEXT))
 	stats.add_child(UIKit.res_chip(Locale.t("atlas_chip_food"), str(pv.food), UIKit.DANGER if bool(pv.short_food) else UIKit.TEXT))
 	var march_info: Dictionary = World.food_ration_info()
-	var march_lbl := UIKit.res_chip(Locale.t("atlas_chip_ration_mod"), World.food_ration_text(), UIKit.DANGER if int(march_info.mod_pct) > 0 else (UIKit.OK if int(march_info.mod_pct) < 0 else UIKit.TEXT))
+	var march_col := UIKit.TEXT
+	if int(march_info.mod_pct) > 0:
+		march_col = UIKit.DANGER
+	elif int(march_info.mod_pct) < 0:
+		march_col = UIKit.OK
+	var march_lbl := UIKit.res_chip(
+		Locale.t("atlas_chip_ration_mod"), World.food_ration_text(), march_col)
 	march_lbl.name = "MarchRationChip"
 	stats.add_child(march_lbl)
 	var cost := int(pv.tolls) + int(pv.fare)
