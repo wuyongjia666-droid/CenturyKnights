@@ -966,11 +966,11 @@ static func craft_weapon(host, cid: String) -> Dictionary:
 	var warn = ""
 	if burden > cap:
 		warn = "（负重超限警告）"
-	var wid := str(c.weapon_id)
-	var label := "灰刃·精 +3 攻" if wid == "ash_blade_fine" else "灰刃 +2 攻"
-	host.log_event("%s 装备%s%s" % [c.name, "灰刃·精" if wid == "ash_blade_fine" else "灰刃", warn])
+	var fine := str(c.weapon_id) == "ash_blade_fine"
+	var wname := Locale.t("forge_weapon_fine" if fine else "forge_weapon")
+	host.log_event(Locale.t("forge_craft_equipped") % [c.name, wname, warn])
 	host.mark_dirty()
-	return {"ok": true, "msg": "打造完成：" + label + warn}
+	return {"ok": true, "msg": Locale.t("forge_craft_done_fine" if fine else "forge_craft_done") + warn}
 
 static func market_buy(host, item: String, qty: int = 1) -> Dictionary:
 	var prices = CKEconomyState.market_buy_prices(host)
