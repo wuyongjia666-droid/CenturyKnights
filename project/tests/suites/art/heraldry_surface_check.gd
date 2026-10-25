@@ -283,7 +283,7 @@ func _run() -> void:
 		if painted:
 			break
 	_ok(painted, "blit_token_shield left image empty")
-	## board_pawn_texture cache key includes arms core (family ≠ loner)
+	## board_pawn_texture cache key includes arms core (family != loner)
 	var pawn_l := UnitArt.board_pawn_texture(leader, "player", 64, false)
 	var pawn_n := UnitArt.board_pawn_texture(loner, "player", 64, false)
 	_ok(pawn_l != null and pawn_n != null, "board pawn null")
@@ -304,7 +304,7 @@ func _run() -> void:
 		var expect_nid := World.nation_of("ash_capital")
 		_ok(cn != null and str(cn.get_meta("nation_id", "")) == expect_nid, "city strip nation_id")
 		_ok(cn != null and str(cn.get_meta("arms_core", "")) == CKHeraldry.core_key(CKHeraldryChrome.nation_spec(expect_nid)), "city strip nation core")
-		_ok(cn != null and str(cn.get_meta("arms_core", "")) != CKHeraldry.core_key(ban_spec), "邦徽 ≠ 团徽")
+		_ok(cn != null and str(cn.get_meta("arms_core", "")) != CKHeraldry.core_key(ban_spec), "邦徽 != 团徽")
 	city_host.queue_free()
 	await _settle(2)
 	if _fail != "":

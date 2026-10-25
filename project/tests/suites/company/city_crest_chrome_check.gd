@@ -50,7 +50,7 @@ func _assert_strip(page: Node, where: String, cid: String) -> void:
 	_ok(cn != null and str(cn.get_meta("arms_kind", "")) == "lb_city_arms", "%s 邦徽" % where)
 	var nid := World.nation_of(cid)
 	_ok(cn != null and str(cn.get_meta("nation_id", "")) == nid, "%s nation_id" % where)
-	_ok(cn != null and str(cn.get_meta("arms_core", "")) != str(ca.get_meta("arms_core", "")), "%s 邦徽≠团徽" % where)
+	_ok(cn != null and str(cn.get_meta("arms_core", "")) != str(ca.get_meta("arms_core", "")), "%s 邦徽!=团徽" % where)
 
 func _run_desktop() -> void:
 	OS.set_environment("CK_FORCE_MOBILE", "0")
