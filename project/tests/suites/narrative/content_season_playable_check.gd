@@ -42,7 +42,7 @@ func _run() -> String:
 	err = await _choose_and_assert(player)
 	if err != "":
 		return err
-	print("OK cs01_01 lines=%d beat=ledger flag=cs01_wrote_wu" % line_count)
+	print("OK cs01_01 lines=%d beat=ledger flag=cs01_wrote_wu ledger+yeartrace" % line_count)
 	return ""
 
 
@@ -94,6 +94,18 @@ func _choose_and_assert(player) -> String:
 		return "flag cs01_wrote_wu not set"
 	if player.current_beat_id() != "ledger":
 		return "expected ledger beat, at %s" % player.current_beat_id()
+	var led: Dictionary = CKSuiKe.season_ledger_find("cs01_01", "write_wu")
+	if led.is_empty():
+		return "content_season_ledger missing cs01_01/write_wu"
+	if str(led.get("outcome", "")).find("无") < 0:
+		return "ledger outcome missing 无: %s" % str(led.get("outcome", ""))
+	var yt_hit := false
+	for row in CKSuiKe.yeartrace():
+		if str(row.get("id", "")) == "cs01_01:write_wu" and str(row.get("outcome", "")).find("无") >= 0:
+			yt_hit = true
+			break
+	if not yt_hit:
+		return "yeartrace missing cs01_01:write_wu 无 pen"
 	player.simulate_finish_dialogue()
 	await get_tree().process_frame
 	return ""

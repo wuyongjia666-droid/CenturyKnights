@@ -1191,6 +1191,80 @@ static func yeartrace_count() -> int:
 	return _yeartrace_rows().size()
 
 
+## Durable content-season ledger: choice payoff that flags alone never consumed.
+## Idempotent on chapter + choice + year. Optionally mirrors into sui_yeartrace
+## so lineage / dossier / bloodline codex already show the pen.
+static func season_ledger() -> Array:
+	return _season_ledger_rows().duplicate()
+
+
+static func season_ledger_count() -> int:
+	return _season_ledger_rows().size()
+
+
+static func season_ledger_find(chapter_id: String, choice_id: String, year: int = -1) -> Dictionary:
+	var y := year if year >= 0 else int(Calendar.year)
+	for item in _season_ledger_rows():
+		if str(item.get("chapter", "")) == chapter_id and str(item.get("choice", "")) == choice_id and int(item.get("year", -1)) == y:
+			return item
+	return {}
+
+
+static func season_ledger_append(chapter_id: String, choice_id: String, title: String, outcome: String, who: String = "", into_yeartrace: bool = true) -> Dictionary:
+	if chapter_id == "" or choice_id == "":
+		return {}
+	var leader = GameState.get_leader() if GameState != null else null
+	var who_name := who
+	if who_name == "":
+		who_name = leader.name if leader != null else "house"
+	var cid := str(leader.id) if leader != null else "house"
+	var y := int(Calendar.year)
+	var m := int(Calendar.month)
+	var entry := {
+		"chapter": chapter_id,
+		"choice": choice_id,
+		"title": title,
+		"outcome": outcome,
+		"who": who_name,
+		"cid": cid,
+		"year": y,
+		"month": m,
+		"kind": "content_season",
+	}
+	var rows := _season_ledger_rows()
+	var replaced := false
+	for i in range(rows.size()):
+		var r: Dictionary = rows[i]
+		if str(r.get("chapter", "")) == chapter_id and str(r.get("choice", "")) == choice_id and int(r.get("year", -1)) == y:
+			rows[i] = entry
+			replaced = true
+			break
+	if not replaced:
+		rows.append(entry)
+	if into_yeartrace:
+		_yeartrace_append({
+			"cid": cid,
+			"id": "%s:%s" % [chapter_id, choice_id],
+			"title": title,
+			"outcome": outcome,
+			"side": choice_id,
+			"band": "content_season",
+			"year": y,
+			"month": m,
+			"who": who_name,
+		}, leader)
+	GameState.mark_dirty()
+	return entry
+
+
+static func _season_ledger_rows() -> Array:
+	var raw = GameState.house_mods.get("content_season_ledger", null)
+	if typeof(raw) != TYPE_ARRAY:
+		raw = []
+		GameState.house_mods["content_season_ledger"] = raw
+	return raw
+
+
 static func _yeartrace_rows() -> Array:
 	var raw = GameState.house_mods.get("sui_yeartrace", null)
 	if typeof(raw) != TYPE_ARRAY:
@@ -1209,7 +1283,7 @@ static func _yeartrace_append(row: Dictionary, c: CKCharacter) -> void:
 		"band": str(row.get("band", "")),
 		"year": int(row.get("year", 0)),
 		"month": int(row.get("month", 0)),
-		"who": c.name if c != null else str(row.get("cid", "")),
+		"who": c.name if c != null else str(row.get("who", row.get("cid", ""))),
 		"age": int(c.age) if c != null else 0,
 	}
 	# Idempotent on same cid+id+year (re-fire / migrate).

@@ -7,6 +7,7 @@ const OPS := [
 	"advance", "fast_harvest", "journal", "ensure_reputation", "archive_notice", "open_chapter",
 	"ensure_opening_herb_escort",
 	"visit", "adjust", "skip_battle", "auto_recruit", "auto_marry",
+	"season_ledger",
 ]
 
 static func validate(data) -> Array:
@@ -109,6 +110,9 @@ static func _op(bid: String, step, errors: Array) -> void:
 		errors.append(bid + " set_flag missing flag")
 	if op == "goto" and str(row.get("beat", "")) == "":
 		errors.append(bid + " goto missing beat")
+	if op == "season_ledger":
+		if str(row.get("choice", "")) == "" and str(row.get("outcome", "")) == "":
+			errors.append(bid + " season_ledger missing choice/outcome")
 
 static func _str(row: Dictionary, key: String, errors: Array) -> void:
 	if not row.has(key) or typeof(row[key]) != TYPE_STRING or str(row[key]) == "":

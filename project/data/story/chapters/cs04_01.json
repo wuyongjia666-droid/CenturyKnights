@@ -256,6 +256,14 @@
               "value": true
             },
             {
+              "op": "season_ledger",
+              "chapter": "cs04_01",
+              "choice": "keep_parallel",
+              "title": "家训上的灯",
+              "outcome": "训与行并排记入家训",
+              "yeartrace": true
+            },
+            {
               "op": "goto",
               "beat": "ledger"
             }
@@ -269,6 +277,14 @@
               "op": "set_flag",
               "flag": "cs04_doctrine_only",
               "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs04_01",
+              "choice": "doctrine_only",
+              "title": "家训上的灯",
+              "outcome": "先只留训条，行条暂空",
+              "yeartrace": true
             },
             {
               "op": "goto",

@@ -256,6 +256,14 @@
               "value": true
             },
             {
+              "op": "season_ledger",
+              "chapter": "cs07_01",
+              "choice": "keep_rite",
+              "title": "仪典上的灯",
+              "outcome": "仪典并排记入谱",
+              "yeartrace": true
+            },
+            {
               "op": "goto",
               "beat": "ledger"
             }
@@ -269,6 +277,14 @@
               "op": "set_flag",
               "flag": "cs07_name_path",
               "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs07_01",
+              "choice": "name_path",
+              "title": "仪典上的灯",
+              "outcome": "先钉路名",
+              "yeartrace": true
             },
             {
               "op": "goto",

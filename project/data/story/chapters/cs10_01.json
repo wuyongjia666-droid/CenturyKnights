@@ -302,6 +302,14 @@
               "value": true
             },
             {
+              "op": "season_ledger",
+              "chapter": "cs10_01",
+              "choice": "keep_seal",
+              "title": "印上的灯",
+              "outcome": "城印并排记入谱",
+              "yeartrace": true
+            },
+            {
               "op": "goto",
               "beat": "ledger"
             }
@@ -315,6 +323,14 @@
               "op": "set_flag",
               "flag": "cs10_name_seal",
               "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs10_01",
+              "choice": "name_seal",
+              "title": "印上的灯",
+              "outcome": "先钉城印",
+              "yeartrace": true
             },
             {
               "op": "goto",

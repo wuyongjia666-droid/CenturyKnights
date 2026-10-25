@@ -245,6 +245,14 @@
               "value": true
             },
             {
+              "op": "season_ledger",
+              "chapter": "cs01_01",
+              "choice": "write_wu",
+              "title": "回执上的灯",
+              "outcome": "征兆栏写入「无」——验过的字进谱",
+              "yeartrace": true
+            },
+            {
               "op": "goto",
               "beat": "ledger"
             }
@@ -258,6 +266,14 @@
               "op": "set_flag",
               "flag": "cs01_held_back",
               "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs01_01",
+              "choice": "hold_back",
+              "title": "回执上的灯",
+              "outcome": "征兆「无」先压下，酒馆七天照挂",
+              "yeartrace": true
             },
             {
               "op": "goto",

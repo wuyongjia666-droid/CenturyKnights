@@ -256,6 +256,14 @@
               "value": true
             },
             {
+              "op": "season_ledger",
+              "chapter": "cs06_01",
+              "choice": "keep_yard",
+              "title": "校场上的灯",
+              "outcome": "校场并排记入谱",
+              "yeartrace": true
+            },
+            {
               "op": "goto",
               "beat": "ledger"
             }
@@ -269,6 +277,14 @@
               "op": "set_flag",
               "flag": "cs06_name_victor",
               "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs06_01",
+              "choice": "name_victor",
+              "title": "校场上的灯",
+              "outcome": "先钉胜者名",
+              "yeartrace": true
             },
             {
               "op": "goto",

@@ -256,6 +256,14 @@
               "value": true
             },
             {
+              "op": "season_ledger",
+              "chapter": "cs03_01",
+              "choice": "keep_parallel",
+              "title": "榜上的收成",
+              "outcome": "功与粮并排记入榜册",
+              "yeartrace": true
+            },
+            {
               "op": "goto",
               "beat": "ledger"
             }
@@ -269,6 +277,14 @@
               "op": "set_flag",
               "flag": "cs03_merit_only",
               "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs03_01",
+              "choice": "merit_only",
+              "title": "榜上的收成",
+              "outcome": "先只留功，粮行暂空",
+              "yeartrace": true
             },
             {
               "op": "goto",

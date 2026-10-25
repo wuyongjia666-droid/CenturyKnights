@@ -256,6 +256,14 @@
               "value": true
             },
             {
+              "op": "season_ledger",
+              "chapter": "cs08_01",
+              "choice": "keep_stele",
+              "title": "祖祠上的灯",
+              "outcome": "祖祠并排记入谱",
+              "yeartrace": true
+            },
+            {
               "op": "goto",
               "beat": "ledger"
             }
@@ -269,6 +277,14 @@
               "op": "set_flag",
               "flag": "cs08_name_stele",
               "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs08_01",
+              "choice": "name_stele",
+              "title": "祖祠上的灯",
+              "outcome": "先钉碑名",
+              "yeartrace": true
             },
             {
               "op": "goto",

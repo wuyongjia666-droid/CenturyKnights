@@ -235,6 +235,14 @@
               "value": true
             },
             {
+              "op": "season_ledger",
+              "chapter": "cs02_01",
+              "choice": "keep_parallel",
+              "title": "婚约上的灯",
+              "outcome": "婚仪与诞育两行并排留谱",
+              "yeartrace": true
+            },
+            {
               "op": "goto",
               "beat": "ledger"
             }
@@ -248,6 +256,14 @@
               "op": "set_flag",
               "flag": "cs02_held_lamp",
               "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs02_01",
+              "choice": "hold_lamp",
+              "title": "婚约上的灯",
+              "outcome": "诞育下行先压下，半截话仍在条上",
+              "yeartrace": true
             },
             {
               "op": "goto",
