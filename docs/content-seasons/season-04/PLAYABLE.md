@@ -53,6 +53,13 @@
 - **训行仍并** → flag `cs04_back_parallel`，进 `ledger`。
 - 验收：`content_season_playable_s04_02_check`。
 
+## 中章口头去套话（mid-oral）
+
+- 访/战/酒馆回程里跨章复读的套话改成该拍自己的句子；入谱拍不动。
+- 前三拍无条件收束仍不是旁白。CTA、`锋收回来`、`mid_lost` 门闸不变。
+- `_02` 胜后口语的 `when` 改挂本章 `csNN_02_mid_fought`，试锋得手才念得出。
+- 真 E2E：`content_season_mid_oral_chain_check`（hub→章→战/访→回，二十章；断链或中章复读即失败）。
+
 ## 中途战 / 据点 / 回程加厚（hub-chain）
 
 - 中途战拍：试锋前口语加厚；`mid_lost` 仍为拍末可见行（needle「锋收回来」）。

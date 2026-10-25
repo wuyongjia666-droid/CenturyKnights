@@ -116,6 +116,7 @@ func set_unit(c, team: String = "player") -> void:
 			ch.queue_free()
 		if portrait != null and portrait.get_parent() is Control:
 			CKPortraitStatus.attach(portrait.get_parent(), null, portrait.size)
+		CKHeraldryField.attach_card_arms(self, null, team, "")
 		return
 	var tex = UnitArt.portrait(c, 128, CKArtPaths.TIER_MEDIUM)
 	if tex != null:
@@ -149,6 +150,10 @@ func set_unit(c, team: String = "player") -> void:
 			break
 		_chips.add_child(_make_chip(c, str(sid), enemy))
 		n += 1
+	var foe := str(get_meta("foe_nation", ""))
+	if foe == "" and str(team) != "player":
+		foe = CKHeraldryChrome.battle_foe_nation_for(null)
+	CKHeraldryField.attach_card_arms(self, c, team, foe)
 	if _mob:
 		_fit_mobile()
 
