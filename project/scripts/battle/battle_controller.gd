@@ -171,7 +171,11 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_build_ui()
 	# Y1-A T-P0-1: presses that start on/near a unit get a stickier slop so micro-wobble stays a tap.
+	# Y1-A T-P3: while a unit is selected, sticky only on that piece so pans near
+	# other tokens / empty soft-neighbours stay pans (not swallowed as taps).
 	_board_router.sticky_fn = func(origin: Vector2) -> bool:
+		if selected >= 0 and selected < units.size():
+			return BattlePick.near_selected_unit(self, origin, selected)
 		return BattlePick.near_living_unit(self, origin)
 	# Y1-A T-P1-1: with a unit selected, raise long-press so slow move/confirm taps are not swallowed as intel.
 	_board_router.long_ms_fn = func() -> int:
@@ -1512,7 +1516,7 @@ func _apply_board_gesture(g: Dictionary) -> void:
 		"cancel":
 			_cancel_selection()
 		"pan":
-			# Y1-A T-P1-2: a drag that starts on the selected unit moves the unit ghost; any other drag pans.
+			# Y1-A T-P1-2 / T-P3: drag starting on the selected figure (strict) moves the ghost; else pan.
 			if BattleTouchConfirm.is_unit_drag(self, g):
 				_hover_at(pos)
 				BattleTouchConfirm.on_drag(self, pos)
