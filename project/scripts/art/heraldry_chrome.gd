@@ -1,8 +1,9 @@
 class_name CKHeraldryChrome
 extends RefCounted
-## Shared player-facing heraldry chrome: 团徽 / 旗徽 / 族徽 + 爵位徽记.
-## One design system everywhere (castle header, genealogy wall/tree, dossier crest).
-## No marriage marshalling / per-person cadency — only company vs family arms + rank badge.
+## Shared player-facing heraldry chrome: 团徽 / 旗徽 / 族徽 + 爵位徽记 + 敌徽.
+## One design system everywhere (castle header/banner strip, genealogy, dossier,
+## board unit shields, rival houses, tavern/hire cards).
+## No marriage marshalling / per-person cadency — only company vs family vs nation arms + rank badge.
 
 static func is_family_member(c) -> bool:
 	if c == null:
@@ -20,6 +21,9 @@ static func arms_kind_label(c) -> String:
 static func company_label() -> String:
 	return Locale.t("gen2_36")
 
+static func rival_label() -> String:
+	return Locale.t("lb_rv_arms")
+
 static func dossier_crest_label(c) -> String:
 	return Locale.t("lb_dos_crest_family") if is_family_member(c) else Locale.t("lb_dos_crest_banner")
 
@@ -36,11 +40,36 @@ static func company_spec() -> Dictionary:
 		return raw
 	return CKHeraldry.from_crest(str(GameState.crest_color))
 
+static func nation_spec(nid: String, rank: String = "knight") -> Dictionary:
+	return CKHeraldry.from_nation(str(nid), rank)
+
+static func rival_spec(house) -> Dictionary:
+	## Rival house dict or id → nation arms (敌徽). Never company/family.
+	var nid := ""
+	if typeof(house) == TYPE_DICTIONARY:
+		nid = str(house.get("nation", house.get("id", "")))
+	else:
+		nid = str(house)
+		for h in GameState.data_rivals.get("houses", []):
+			if str(h.get("id", "")) == nid:
+				nid = str(h.get("nation", nid))
+				break
+	if nid == "":
+		nid = "ashbanner"
+	return nation_spec(nid)
+
 static func person_shield(c, w: int = 40, h: int = 48) -> Texture2D:
 	return UnitArt.shield_arms(person_spec(c), w, h)
 
 static func company_shield(w: int = 44, h: int = 52) -> Texture2D:
 	return UnitArt.shield_arms(company_spec(), w, h)
+
+static func company_banner(w: int = 28, h: int = 38) -> Texture2D:
+	## Castle / atlas banner strip — always 团徽 cloth.
+	return CKHeraldryRender.compose_texture(company_spec(), w, h, 0.0, "banner")
+
+static func rival_shield(house, w: int = 40, h: int = 48) -> Texture2D:
+	return UnitArt.shield_arms(rival_spec(house), w, h)
 
 static func person_banner(c, w: int = 320, h: int = 440) -> Texture2D:
 	## Full-size crest overlay (dossier). Family arms use shield mode so canton reads.
@@ -59,6 +88,22 @@ static func make_company_arms(size: Vector2 = Vector2(44, 52)) -> TextureRect:
 	tr.size = size
 	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	tr.tooltip_text = company_label()
+	tr.set_meta("arms_kind", "gen2_36")
+	tr.set_meta("arms_core", CKHeraldry.core_key(company_spec()))
+	return tr
+
+static func make_company_banner(size: Vector2 = Vector2(28, 38)) -> TextureRect:
+	var tr := TextureRect.new()
+	tr.name = "CastleBanner"
+	tr.texture = company_banner(int(size.x), int(size.y))
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	tr.custom_minimum_size = size
+	tr.size = size
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tr.tooltip_text = company_label()
+	tr.set_meta("arms_kind", "gen2_36")
+	tr.set_meta("arms_core", CKHeraldry.core_key(company_spec()))
 	return tr
 
 static func make_person_arms(c, size: Vector2 = Vector2(40, 48)) -> TextureRect:
@@ -71,6 +116,28 @@ static func make_person_arms(c, size: Vector2 = Vector2(40, 48)) -> TextureRect:
 	tr.size = size
 	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	tr.tooltip_text = arms_kind_label(c)
+	tr.set_meta("arms_kind", arms_kind_key(c))
+	tr.set_meta("arms_core", CKHeraldry.core_key(person_spec(c)))
+	return tr
+
+static func make_rival_arms(house, size: Vector2 = Vector2(40, 48)) -> TextureRect:
+	var tr := TextureRect.new()
+	tr.name = "RivalArms"
+	tr.texture = rival_shield(house, int(size.x), int(size.y))
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	tr.custom_minimum_size = size
+	tr.size = size
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tr.tooltip_text = rival_label()
+	tr.set_meta("arms_kind", "lb_rv_arms")
+	tr.set_meta("arms_core", CKHeraldry.core_key(rival_spec(house)))
+	var nid := ""
+	if typeof(house) == TYPE_DICTIONARY:
+		nid = str(house.get("nation", house.get("id", "")))
+	else:
+		nid = str(house)
+	tr.set_meta("nation_id", nid)
 	return tr
 
 static func make_rank_badge(rank: String, size: int = 28) -> TextureRect:
@@ -116,6 +183,18 @@ static func attach_node_chrome(host: Control, c, node: Vector2) -> void:
 	badge.position = Vector2(node.x - 26.0, 4)
 	host.add_child(badge)
 
+## Hire / tavern / roster portrait plate: 旗徽|族徽 on lower-left of the plate rect.
+static func attach_hire_chrome(parent: Control, c, plate: Rect2, arms_sz: Vector2 = Vector2(36, 44)) -> void:
+	if parent == null or c == null:
+		return
+	var old := parent.get_node_or_null("HireArms")
+	if old:
+		old.queue_free()
+	var arms := make_person_arms(c, arms_sz)
+	arms.name = "HireArms"
+	arms.position = Vector2(plate.position.x + 4.0, plate.position.y + plate.size.y - arms_sz.y - 4.0)
+	parent.add_child(arms)
+
 static func place_company_header(parent: Node, at: Vector2, size: Vector2 = Vector2(44, 52)) -> TextureRect:
 	var old := parent.get_node_or_null("CastleArms")
 	if old:
@@ -124,3 +203,48 @@ static func place_company_header(parent: Node, at: Vector2, size: Vector2 = Vect
 	tr.position = at
 	parent.add_child(tr)
 	return tr
+
+## Castle hub banner strip: 团徽 shield + cloth banner side by side under the top bar.
+static func place_castle_banner_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(44, 52), banner: Vector2 = Vector2(28, 38)) -> Control:
+	var old := parent.get_node_or_null("CastleBannerStrip")
+	if old:
+		old.queue_free()
+	var host := Control.new()
+	host.name = "CastleBannerStrip"
+	host.position = at
+	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var arms := make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var bn := make_company_banner(banner)
+	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
+	host.add_child(bn)
+	parent.add_child(host)
+	return host
+
+## Board / battle token: person (or company) shield core key — suite asserts never mismatch.
+static func token_shield_core(c, team: String = "player") -> String:
+	if str(team) != "player":
+		return ""
+	return CKHeraldry.core_key(person_spec(c))
+
+## Blit mini 旗徽|族徽 onto a board token image (lower-left). Player team only.
+static func blit_token_shield(img: Image, c, team: String = "player") -> void:
+	if img == null or c == null or str(team) != "player":
+		return
+	var S := mini(img.get_width(), img.get_height())
+	var sw := maxi(10, int(S * 0.34))
+	var sh := maxi(12, int(sw * 1.18))
+	var tex := person_shield(c, sw, sh)
+	if tex == null:
+		return
+	var simg: Image = tex.get_image()
+	if simg == null or simg.is_empty():
+		return
+	if simg.is_compressed():
+		simg.decompress()
+	simg.convert(Image.FORMAT_RGBA8)
+	var ox := 2
+	var oy := img.get_height() - sh - 2
+	img.blit_rect(simg, Rect2i(0, 0, sw, sh), Vector2i(ox, oy))

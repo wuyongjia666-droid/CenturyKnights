@@ -205,6 +205,11 @@ func _refresh() -> void:
 		b.add_theme_font_size_override("font_size", MobileLayout.FONT_FLOOR if DeviceProfile.is_mobile() else 15)
 		if int(GameState.rival_deals.get(hid, {}).get("turns_left", 0)) > 0:
 			b.text += "　" + Locale.t("lb_rv_dealing")
+		## 敌徽 — nation arms via Chrome (never company/family).
+		var ra := CKHeraldryChrome.make_rival_arms(h, Vector2(28, 34))
+		ra.position = Vector2(6, 11)
+		ra.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		b.add_child(ra)
 		b.pressed.connect(func(): Sfx.click(); _select(h); _refresh_marks())
 		_list.add_child(b)
 	CKPageKit.drag_through(_list)
@@ -232,6 +237,7 @@ func _select(h: Dictionary) -> void:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 10)
 	_head.add_child(row)
+	row.add_child(CKHeraldryChrome.make_rival_arms(h, Vector2(44, 52)))
 	row.add_child(UIKit.title_label(str(h.get("name")), 22))
 	row.add_child(UIKit.tag_chip(Locale.t("lb_rv_rel", [CKSchemes.band_zh(band), rel]), UIKit.OK if rel >= 0 else UIKit.DANGER))
 	_head.add_child(CKPageKit.text(Locale.t("lb_rv_creed", [str(h.get("creed", "")), str(h.get("desc", ""))]), UIKit.TEXT_DIM, 13, 800))

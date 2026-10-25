@@ -696,10 +696,11 @@ static func on_arrive(anchor: String) -> Dictionary:
 
 # ── map ───────────────────────────────────────────────
 static func banner_texture(w: int = 28, h: int = 38) -> Texture2D:
-	var spec: Dictionary = GameState.banner_spec if not GameState.banner_spec.is_empty() else CKHeraldry.from_crest(str(GameState.crest_color))
+	## Castle / atlas owned-site flags — always company 团徽 via CKHeraldryChrome.
+	var spec: Dictionary = CKHeraldryChrome.company_spec()
 	var key := "%s_%d_%d" % [CKHeraldry.cache_key(spec), w, h]
 	if not _banner_cache.has(key):
-		_banner_cache[key] = CKHeraldryRender.compose_texture(spec, w, h, 0.0, "banner")
+		_banner_cache[key] = CKHeraldryChrome.company_banner(w, h)
 	return _banner_cache[key]
 
 static func map_markers(nation: String) -> Array:
