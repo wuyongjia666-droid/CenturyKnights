@@ -77,10 +77,13 @@ static func state(id: String) -> Dictionary:
 		"owner": str(d.get("owner", NEUTRAL)), "garrison": int(d.get("garrison", 0)),
 		"unrest": int(d.get("unrest", 0)), "stockade": bool(d.get("stockade", false)), "contract": bool(d.get("contract", false)),
 		"threat": d.get("threat", {}) if typeof(d.get("threat", {})) == TYPE_DICTIONARY else {},
+		"cache_food": int(d.get("cache_food", 0)),
 	}
 
 static func _put(id: String, s: Dictionary) -> void:
-	if str(s.owner) == NEUTRAL and int(s.garrison) == 0 and int(s.unrest) == 0 and (s.threat as Dictionary).is_empty() and not bool(s.get("stockade", false)):
+	var empty_threat := (s.threat as Dictionary).is_empty()
+	var empty_cache := int(s.get("cache_food", 0)) <= 0
+	if str(s.owner) == NEUTRAL and int(s.garrison) == 0 and int(s.unrest) == 0 and empty_threat and empty_cache and not bool(s.get("stockade", false)):
 		_st().sites.erase(id)
 	else:
 		_st().sites[id] = s
@@ -122,6 +125,7 @@ static func from_save(raw) -> Dictionary:
 				"stockade": stockade, "contract": bool(r.get("contract", false)),
 				"unrest": maxi(0, int(r.get("unrest", 0))),
 				"threat": th if typeof(th) == TYPE_DICTIONARY else {},
+				"cache_food": maxi(0, int(r.get("cache_food", 0))),
 			}
 	out.stockade_credit = maxi(0, int(raw.get("stockade_credit", 0)))
 	var nw = raw.get("news", [])
@@ -485,6 +489,154 @@ static func _rival_name(rid: String) -> String:
 			return str(rv.get("name", rid))
 	return rid
 
+## Food stored at an owned stockade (屯营粮仓).
+static func cache_food(id: String) -> int:
+	return maxi(0, int(state(id).get("cache_food", 0)))
+
+
+## Nearest owned stockade with cache>0 (or any stockade). Empty if none.
+static func nearest_stockade(from_pos: String = "") -> Dictionary:
+	var here := from_pos if from_pos != "" else str(World.pos)
+	var best: Dictionary = {}
+	var best_score := 999999
+	for id in owned_ids():
+		var st := state(id)
+		if not bool(st.stockade):
+			continue
+		var s := site(id)
+		var anch := str(s.get("anchor", ""))
+		if anch == "" or not World.nodes.has(anch):
+			continue
+		var dist := 0
+		if here != anch:
+			# Prefer travel_preview when from current World.pos; else treat as far.
+			if here == str(World.pos):
+				var pv: Dictionary = World.travel_preview(anch)
+				if not bool(pv.get("ok", false)):
+					continue
+				dist = int(pv.get("days", 99))
+			else:
+				dist = 50
+		var cache := int(st.get("cache_food", 0))
+		var row := {
+			"id": id,
+			"name": str(s.get("name", id)),
+			"anchor": anch,
+			"anchor_name": str(World.node(anch).get("name", anch)),
+			"cache": cache,
+			"days": dist,
+		}
+		# Prefer stockades that hold food; among those, nearer.
+		var score := dist - (1000 if cache > 0 else 0)
+		if best.is_empty() or score < best_score:
+			best = row
+			best_score = score
+	return best
+
+
+static func open_cache(id: String) -> Dictionary:
+	if not owned(id):
+		return {"ok": false, "msg": Locale.t("atlas_cache_not_ours")}
+	var st := state(id)
+	if not bool(st.stockade):
+		return {"ok": false, "msg": Locale.t("atlas_cache_no_stockade")}
+	var anchor := str(site(id).get("anchor", ""))
+	if World.pos != anchor:
+		return {"ok": false, "need_travel": true, "anchor": anchor,
+			"msg": Locale.t("atlas_cache_need_travel") % World.node(anchor).get("name", "")}
+	var qty := maxi(0, int(st.get("cache_food", 0)))
+	if qty <= 0:
+		return {"ok": false, "msg": Locale.t("atlas_cache_empty") % str(site(id).get("name", id))}
+	st.cache_food = 0
+	_put(id, st)
+	GameState.food += qty
+	_log(Locale.t("atlas_cache_open_log") % [str(site(id).get("name", id)), qty])
+	World.world_changed.emit()
+	return {"ok": true, "qty": qty, "food": GameState.food,
+		"msg": Locale.t("atlas_cache_open_ok") % [str(site(id).get("name", id)), qty]}
+
+
+## Under siege: haul the granary out before the raid. Prefer another owned stockade; else company food.
+## Road spoilage: lose ~1 food per 2 travel-days (min 0). Clears cache on the threatened site.
+static func evacuate_cache(id: String) -> Dictionary:
+	if not owned(id):
+		return {"ok": false, "msg": Locale.t("atlas_cache_not_ours")}
+	var st := state(id)
+	if not bool(st.stockade):
+		return {"ok": false, "msg": Locale.t("atlas_cache_no_stockade")}
+	if (st.threat as Dictionary).is_empty():
+		return {"ok": false, "msg": Locale.t("atlas_convoy_need_threat")}
+	var qty := maxi(0, int(st.get("cache_food", 0)))
+	if qty <= 0:
+		return {"ok": false, "msg": Locale.t("atlas_cache_empty") % str(site(id).get("name", id))}
+	var from_name := str(site(id).get("name", id))
+	var from_anchor := str(site(id).get("anchor", ""))
+	# Destination: nearest other owned stockade (ignore empty-cache preference — any stockade).
+	var dest_id := ""
+	var dest_anchor := ""
+	var dest_name := ""
+	var days := 0
+	var best := 999999
+	for oid in owned_ids():
+		if oid == id:
+			continue
+		var ost := state(oid)
+		if not bool(ost.stockade):
+			continue
+		var oanch := str(site(oid).get("anchor", ""))
+		if oanch == "" or not World.nodes.has(oanch):
+			continue
+		var dist := 3
+		if from_anchor != "" and from_anchor == str(World.pos):
+			var pv: Dictionary = World.travel_preview(oanch)
+			if bool(pv.get("ok", false)):
+				dist = int(pv.get("days", 3))
+		elif from_anchor != "" and oanch != from_anchor:
+			dist = 4
+		else:
+			dist = 1
+		if dist < best:
+			best = dist
+			dest_id = oid
+			dest_anchor = oanch
+			dest_name = str(site(oid).get("name", oid))
+			days = dist
+	var spoilage := mini(qty - 1, int(days / 2)) if qty > 1 else 0
+	var delivered := qty - spoilage
+	st.cache_food = 0
+	_put(id, st)
+	var via := "company"
+	if dest_id != "":
+		var dst := state(dest_id)
+		dst.cache_food = int(dst.get("cache_food", 0)) + delivered
+		_put(dest_id, dst)
+		via = "stockade"
+	else:
+		GameState.food += delivered
+	var msg := ""
+	if via == "stockade":
+		msg = Locale.t("atlas_convoy_ok_stockade") % [from_name, delivered, dest_name, spoilage]
+	else:
+		msg = Locale.t("atlas_convoy_ok_company") % [from_name, delivered, spoilage]
+	_log(msg)
+	World.mark_siege_convoy({
+		"from_id": id,
+		"from_name": from_name,
+		"qty": qty,
+		"delivered": delivered,
+		"spoilage": spoilage,
+		"dest_id": dest_id,
+		"dest_name": dest_name,
+		"dest_anchor": dest_anchor,
+		"via": via,
+		"days": days,
+	})
+	GameState.mark_dirty()
+	World.world_changed.emit()
+	return {"ok": true, "qty": qty, "delivered": delivered, "spoilage": spoilage,
+		"dest_id": dest_id, "via": via, "msg": msg}
+
+
 ## Month phase "world". Returns a summary line (empty when the company holds nothing).
 static func apply_month(force_roll: float = -1.0) -> String:
 	var ids := owned_ids()
@@ -506,13 +658,16 @@ static func apply_month(force_roll: float = -1.0) -> String:
 			if int(st.threat.get("months", 0)) >= 1:
 				var g_before := int(st.garrison)
 				_resolve_unanswered(id, force_roll)
+				var loot_qty := 0
+				if not World.last_siege_loot.is_empty() and str(World.last_siege_loot.get("id", "")) == id:
+					loot_qty = int(World.last_siege_loot.get("looted", 0))
 				if not owned(id):
-					lost.append({"id": id, "name": str(s.name), "garrison_before": g_before})
+					lost.append({"id": id, "name": str(s.name), "garrison_before": g_before, "cache_looted": loot_qty})
 					continue
 				st = state(id)
 				var g_after := int(st.garrison)
-				if g_after < g_before:
-					held.append({"id": id, "name": str(s.name), "garrison_before": g_before, "garrison": g_after})
+				if g_after < g_before or loot_qty > 0:
+					held.append({"id": id, "name": str(s.name), "garrison_before": g_before, "garrison": g_after, "cache_looted": loot_qty})
 			else:
 				st.threat["months"] = 1
 				_put(id, st)
@@ -537,7 +692,9 @@ static func apply_month(force_roll: float = -1.0) -> String:
 			yf = maxi(yf, int(rule("contract_food", 6)))
 		silver += net
 		food_gain += yf
-		GameState.food += yf
+		if yf > 0:
+			st.cache_food = int(st.get("cache_food", 0)) + yf
+			# 屯营月粮入据点粮仓，行军断粮时再开仓 — 不再直灌 GameState.food
 		if int(st.unrest) > 0:
 			st.unrest = int(st.unrest) - 1
 		_put(id, st)
@@ -604,18 +761,62 @@ static func start_threat(id: String) -> Dictionary:
 	_emit_siege_alert(id, "declared")
 	return st.threat
 
+
+## Raid the stockade granary. Returns food taken (0 if none). fraction 1.0 = empty the cache.
+static func loot_cache(id: String, fraction: float = 1.0) -> int:
+	var st := state(id)
+	if not bool(st.stockade):
+		return 0
+	var cache := maxi(0, int(st.get("cache_food", 0)))
+	if cache <= 0:
+		return 0
+	var taken := cache if fraction >= 1.0 else maxi(1, int(ceili(float(cache) * fraction)))
+	taken = mini(taken, cache)
+	st.cache_food = cache - taken
+	_put(id, st)
+	return taken
+
+
 static func _resolve_unanswered(id: String, force_roll: float) -> void:
 	var st := state(id)
 	var by := str(st.threat.get("by", NEUTRAL))
+	var by_name := str(st.threat.get("name", ""))
 	var roll := rng.randf() if force_roll < 0.0 else force_roll
 	var hold_pct := int(round(hold_chance(id) * 100.0))
 	if roll < hold_chance(id):
+		# Held the site — raiders still sack half the granary if any.
+		var looted := loot_cache(id, 0.5)
+		st = state(id)
 		var before := int(st.garrison)
 		st.threat = {}
 		st.garrison = maxi(0, before - 1)
 		_put(id, st)
 		_log(Locale.t("terr_53") % [site(id).name, before, int(st.garrison), hold_pct])
+		if looted > 0:
+			_log(Locale.t("atlas_siege_loot_hold_log") % [site(id).name, looted])
+			World.mark_siege_loot({
+				"id": id,
+				"name": str(site(id).name),
+				"by_name": by_name,
+				"looted": looted,
+				"cache_left": int(state(id).get("cache_food", 0)),
+				"outcome": "held",
+				"anchor": str(site(id).get("anchor", "")),
+			})
 	else:
+		# Lost — empty the granary into the attackers before ownership flips.
+		var looted2 := loot_cache(id, 1.0)
+		if looted2 > 0:
+			_log(Locale.t("atlas_siege_loot_lost_log") % [site(id).name, looted2])
+			World.mark_siege_loot({
+				"id": id,
+				"name": str(site(id).name),
+				"by_name": by_name,
+				"looted": looted2,
+				"cache_left": 0,
+				"outcome": "lost",
+				"anchor": str(site(id).get("anchor", "")),
+			})
 		lose(id, by)
 
 static func threatened_at(anchor: String) -> Array:
@@ -649,6 +850,8 @@ static func _emit_siege_alert(id: String, phase: String) -> void:
 		"bribe_cost": bribe_cost(id),
 		"scout_cost": scout_cost(id),
 		"hold_pct": int(round(hold_chance(id) * 100.0)) if scouted else -1,
+		"stockade": bool(st.stockade),
+		"cache": int(st.get("cache_food", 0)),
 	}
 	World.mark_siege_alert(payload)
 

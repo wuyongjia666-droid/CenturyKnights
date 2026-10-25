@@ -77,7 +77,8 @@ func _row(slot: String) -> HBoxContainer:
 	var label := UIKit.body_label(text, UIKit.TEXT, 16)
 	label.custom_minimum_size = Vector2(420, 48)
 	row.add_child(label)
-	CKHeraldryChrome.attach_save_row_arms(row, Vector2(36, 44))
+	var meta := CKSaveService.read_meta(slot)
+	CKHeraldryChrome.attach_save_row_arms(row, Vector2(36, 44), str(meta.get("crest_color", "")))
 	var load := UIKit.make_button(Locale.t("menu_load"))
 	load.name = "Load_%s" % slot
 	load.custom_minimum_size = Vector2(160, maxi(44, int(DeviceProfile.hit_px())))
@@ -140,7 +141,8 @@ func _card(slot: String) -> PanelContainer:
 	load.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	load.disabled = not has
 	row.add_child(load)
-	CKHeraldryChrome.attach_save_row_arms(card, Vector2(40, 48))
+	var meta := CKSaveService.read_meta(slot)
+	CKHeraldryChrome.attach_save_row_arms(card, Vector2(40, 48), str(meta.get("crest_color", "")))
 	return card
 
 

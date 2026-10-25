@@ -15,6 +15,7 @@ func _ready() -> void:
 		pay += int(c.salary)
 	UIKit.top_bar(self, "驻编骑士名册", [["银币", str(GameState.silver), UIKit.ACCENT], ["编制", "%02d 名" % roster.size(), UIKit.TEXT], ["月薪合计", "%d" % pay, UIKit.TEXT_DIM], ["历", Calendar.label(), UIKit.TEXT_DIM]], "返回城堡", _back)
 	UIKit.page_head(self, 42, 70, "MERCENARY CADRE", "驻编骑士名册", "BATTALION ARCHIVE")
+	_place_roster_crests()
 	var cnt := UIKit.body_label("共 %d 名骑士待命 · 伤者标红" % roster.size(), UIKit.TEXT_DIM, 11)
 	cnt.autowrap_mode = TextServer.AUTOWRAP_OFF
 	cnt.position = Vector2(42, 128)
@@ -63,6 +64,18 @@ func _ready() -> void:
 	UIFX.stagger_children(_list, 0.04, 0.24)
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
+
+
+func _place_roster_crests(mobile: bool = false) -> void:
+	var mob := mobile or DeviceProfile.is_mobile()
+	var at := Vector2(1120, 8) if not mob else Vector2(maxf(20.0, MobilePage.width(self) - 140.0), 4)
+	var sh := Vector2(36, 44) if not mob else Vector2(32, 40)
+	var bn := Vector2(24, 34) if not mob else Vector2(22, 30)
+	CKHeraldryChrome.place_roster_crest_strip(self, at, sh, bn)
+	var hdr_at := Vector2(1180, 8) if not mob else Vector2(maxf(40.0, MobilePage.width(self) - 64.0), 4)
+	var hdr_sz := Vector2(44, 52) if not mob else Vector2(40, 48)
+	CKHeraldryChrome.place_company_header(self, hdr_at, hdr_sz)
+
 
 func apply_mobile_layout() -> void:
 	_mobile_build()
@@ -142,6 +155,7 @@ func _row(c: CKCharacter, idx: int) -> Button:
 	var ce := UIKit.mono(_role_en(c), 9, UIKit.TEXT_DIM, false)
 	ce.position = Vector2(352 - ce.get_minimum_size().x, 32)
 	b.add_child(ce)
+	CKHeraldryChrome.attach_roster_row_arms(b, c, Vector2(26, 32))
 	_rows.append(b)
 	return b
 
@@ -362,6 +376,7 @@ func _mobile_build() -> void:
 		pay += int(c.salary)
 	var info := "%s %d · %s" % [Locale.t("shell_946c7148"), GameState.silver, Locale.t("shell_445ffb2d") % roster.size()]
 	MobilePage.top_bar(self, Locale.t("btn_roster"), info, [[Locale.t("btn_back"), _back]])
+	_place_roster_crests(true)
 	var w := MobilePage.width(self)
 	var lv := MobilePage.panel(self, Rect2(26, MobilePage.TOP, 400, 720 - MobilePage.TOP - 8), 10)
 	var sc := ScrollContainer.new()
