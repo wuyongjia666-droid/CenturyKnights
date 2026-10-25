@@ -510,3 +510,7 @@ ux_hub_content_season_play,%s ›,%s ›
 ux_hub_content_season_sheet_body,三季可玩正文，点一季开章。,Three playable seasons — tap one to open.
 ux_invalid_move_tap,非法落点 — 点蓝格移动或取消选中,Illegal cell — tap a blue move tile or deselect
 ux_invalid_attack_tap,非法目标 — 点红格敌人或取消攻击,Illegal target — tap a red-tile foe or cancel attack
+ux_settle_hit,命中,Hit
+ux_settle_miss,未中,Miss
+ux_settle_kill,击破,Fell
+ux_settle_crit,暴击,Crit

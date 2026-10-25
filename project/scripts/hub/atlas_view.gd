@@ -1187,6 +1187,31 @@ func _render_right() -> void:
 		ml.custom_minimum_size = Vector2(col_w, 0)
 		ml.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		stack.add_child(ml)
+	# ChainStart lives in the scroll stack (panel is only 256 wide — footer x=250 overflowed desktop gate).
+	var start_cid := _startable_chain_here()
+	if start_cid != "" and _sel == World.pos:
+		var chain_row := {}
+		for row in World.scripted_chains():
+			if str(row.get("id", "")) == start_cid:
+				chain_row = row
+				break
+		var cname := str(chain_row.get("title", start_cid))
+		var cs := UIKit.ghost_button(Locale.t("atlas_chain_start") % cname, int(col_w), 28)
+		cs.name = "ChainStart"
+		cs.disabled = _busy
+		cs.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		cs.pressed.connect(func():
+			var sr: Dictionary = World.start_scripted_chain(start_cid)
+			if not bool(sr.get("ok", false)):
+				_show_toast(str(sr.get("msg", "")), UIKit.DANGER)
+				return
+			var q0: Dictionary = sr.get("quest", {})
+			var acc: Dictionary = World.accept_quest(str(q0.get("issuer", World.pos)), str(q0.get("id", "")))
+			_show_toast(str(acc.get("msg", sr.get("msg", ""))), UIKit.OK if bool(acc.get("ok", false)) else UIKit.DANGER)
+			var dest := str(q0.get("target", ""))
+			# Defer rebuild — ChainStart lives in the right panel we are about to free.
+			call_deferred("_after_chain_start", dest))
+		stack.add_child(cs)
 	# actions
 	var go := UIKit.cta_button("启程前往", "A", 224, 40)
 	go.name = "GoButton"
@@ -1327,6 +1352,10 @@ func _render_hud() -> void:
 		_m_actions()
 		return
 	var p := UIKit.panel_at(_hud, Rect2(200, 522, 800, 162), 10)
+	var terr_nid := World.nation_of(World.pos)
+	if terr_nid == "" and not World.encounter.is_empty():
+		terr_nid = str(World.encounter.get("nation", ""))
+	CKHeraldryChrome.place_travel_crest_strip(p, Vector2(700, 8), terr_nid, Vector2(32, 38))
 	var eh := UIKit.mono("TRAVEL // 行军推演", 9, UIKit.ACCENT)
 	eh.position = Vector2(16, 10)
 	p.add_child(eh)
@@ -1632,6 +1661,10 @@ func _run_travel() -> void:
 			_select_node(World.pos)
 			_show_stopover_modal()
 			return
+		if _check_supply_halt():
+			_set_busy(false)
+			_refresh_top()
+			return
 		if bool(info.get("arrived", false)):
 			break
 	_set_busy(false)
@@ -1680,6 +1713,10 @@ func _after_arrival() -> void:
 	var readies := World.ready_turn_ins_here().size()
 	if _check_losses():
 		return
+	if _check_chain_fail():
+		return
+	if _check_supply_halt():
+		return
 	if _check_rival_thefts():
 		return
 	if _check_arbitrage_arrival():
@@ -1693,6 +1730,10 @@ func _after_arrival() -> void:
 func _resume_state() -> void:
 	## returning from a battle / load: re-open pending modal or continue a journey
 	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_losses():
+		return
+	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_chain_fail():
+		return
+	if World.pending_event.is_empty() and World.encounter.is_empty() and _check_supply_halt():
 		return
 	if World.pending_event.is_empty() and World.encounter.is_empty() and not World.is_traveling() and _check_rival_thefts():
 		return
@@ -1724,7 +1765,7 @@ func _resume_state() -> void:
 func _show_travel_halt_modal() -> void:
 	var p := _modal_panel(260)
 	p.name = "TravelHaltModal"
-	CKHeraldryChrome.place_aftermath_crest_strip(p, Vector2(420, 16), "", Vector2(36, 44))
+	CKHeraldryChrome.place_travel_crest_strip(p, Vector2(400, 14), World.nation_of(World.pos), Vector2(36, 44))
 	var t := UIKit.title_label(Locale.t("atlas_travel_halt_title"), 22)
 	t.position = Vector2(24, 24)
 	p.add_child(t)
@@ -1773,6 +1814,7 @@ func _show_stopover_modal() -> void:
 		h = 360.0
 	var p := _modal_panel(h)
 	p.name = "StopoverModal"
+	CKHeraldryChrome.place_travel_crest_strip(p, Vector2(400, 14), World.nation_of(here), Vector2(36, 44))
 	var t := UIKit.title_label(Locale.t("atlas_stopover_title"), 22)
 	t.position = Vector2(24, 20)
 	p.add_child(t)
@@ -1870,11 +1912,14 @@ func _show_turnin_modal(readies: int) -> void:
 	now.pressed.connect(func():
 		var gained := 0
 		var titles: Array = []
+		var follow: Dictionary = {}
 		for q2 in World.ready_turn_ins_here().duplicate():
 			var tr: Dictionary = World.turn_in(str(q2.get("id", "")))
 			if bool(tr.get("ok", false)):
 				gained += int(q2.get("reward_silver", 0))
 				titles.append(str(q2.get("title", "")))
+				if typeof(tr.get("follow", {})) == TYPE_DICTIONARY and not tr.follow.is_empty():
+					follow = tr.follow
 		_clear_modal()
 		_refresh_top()
 		_build_nodes()
@@ -1882,7 +1927,9 @@ func _show_turnin_modal(readies: int) -> void:
 		if not titles.is_empty():
 			_show_toast(Locale.t("atlas_turnin_now_toast") % [titles.size(), gained], UIKit.OK)
 		else:
-			_show_toast(Locale.t("atlas_turnin_now_none"), UIKit.DANGER))
+			_show_toast(Locale.t("atlas_turnin_now_none"), UIKit.DANGER)
+		if not follow.is_empty():
+			await _show_chain_advance_modal(follow))
 	p.add_child(now)
 	var go := UIKit.ghost_button(Locale.t("atlas_turnin_modal_go"), 220, 36)
 	go.name = "TurnInEnter"
@@ -1897,6 +1944,275 @@ func _show_turnin_modal(readies: int) -> void:
 	later.position = Vector2(256, y + 48)
 	later.pressed.connect(_clear_modal)
 	p.add_child(later)
+
+func _after_chain_start(dest: String) -> void:
+	_refresh_top()
+	_build_nodes()
+	_render_right()
+	if dest != "" and World.nodes.has(dest):
+		_select_node(dest)
+
+func _startable_chain_here() -> String:
+	## First idle scripted chain whose step-0 issuer is the selected (current) city.
+	if _sel == "" or _sel != World.pos:
+		return ""
+	for row in World.scripted_chains():
+		var cid := str(row.get("id", ""))
+		if cid == "":
+			continue
+		var st: Dictionary = World.chain_status(cid)
+		var sst := str(st.get("status", "idle"))
+		if sst != "idle" and sst != "":
+			continue
+		var steps: Array = row.get("steps", [])
+		if steps.is_empty():
+			continue
+		if str(steps[0].get("issuer", "")) == World.pos:
+			return cid
+	return ""
+
+func _show_chain_advance_modal(follow: Dictionary) -> void:
+	## After turn-in: next multi-city chain step — accept / march / later.
+	if follow.is_empty():
+		return
+	var chain_id := str(follow.get("scripted_chain", ""))
+	var chain: Dictionary = {}
+	if chain_id != "":
+		for row in World.scripted_chains():
+			if str(row.get("id", "")) == chain_id:
+				chain = row
+				break
+	var step_i := int(follow.get("scripted_step", 0))
+	var steps_n := int(chain.get("steps", []).size()) if not chain.is_empty() else 0
+	var issuer := str(follow.get("issuer", ""))
+	var target := str(follow.get("target", ""))
+	var title_q := str(follow.get("title", ""))
+	var chain_title := str(chain.get("title", chain_id)) if not chain.is_empty() else Locale.t("atlas_chain_follow_fallback")
+	var h := 320.0
+	var p := _modal_panel(h)
+	p.name = "ChainAdvanceModal"
+	var el := UIKit.mono(Locale.t("atlas_chain_en"), 9, UIKit.OK)
+	el.position = Vector2(24, 16)
+	p.add_child(el)
+	var tlabel := UIKit.title_label(Locale.t("atlas_chain_title") % chain_title, 20)
+	tlabel.position = Vector2(24, 34)
+	tlabel.size = Vector2(452, 30)
+	p.add_child(tlabel)
+	var prog := ""
+	if steps_n > 0:
+		prog = Locale.t("atlas_chain_step") % [step_i + 1, steps_n]
+	var body := UIKit.body_label(
+		Locale.t("atlas_chain_body") % [title_q, World.node(issuer).get("name", issuer), World.node(target).get("name", target), prog],
+		UIKit.TEXT, 13)
+	body.name = "ChainAdvanceBody"
+	body.position = Vector2(24, 72)
+	body.size = Vector2(452, 64)
+	body.custom_minimum_size = Vector2(452, 0)
+	p.add_child(body)
+	var done := false
+	var y := 150.0
+	var acc := UIKit.cta_button(Locale.t("atlas_chain_accept"), "A", 300, 42)
+	acc.name = "ChainAccept"
+	acc.position = Vector2(24, y)
+	acc.pressed.connect(func():
+		var ar: Dictionary = World.accept_quest(issuer, str(follow.get("id", "")))
+		_show_toast(str(ar.get("msg", "")), UIKit.OK if bool(ar.get("ok", false)) else UIKit.DANGER)
+		var dest2 := target if bool(ar.get("ok", false)) else ""
+		done = true
+		_clear_modal()
+		call_deferred("_after_chain_start", dest2))
+	p.add_child(acc)
+	y += 50.0
+	var march := UIKit.cta_button(Locale.t("atlas_chain_march"), "B", 300, 42)
+	march.name = "ChainMarch"
+	march.position = Vector2(24, y)
+	march.pressed.connect(func():
+		var st2: Dictionary = World.chain_status(chain_id) if chain_id != "" else {}
+		if bool(st2.get("on_board", false)) or str(follow.get("state", "")) == "offer":
+			World.accept_quest(issuer, str(follow.get("id", "")))
+		var qlive := World.quest_by_id(str(follow.get("id", "")))
+		var dest := str(qlive.get("target", target))
+		if dest == "":
+			dest = target
+		done = true
+		_clear_modal()
+		_refresh_top()
+		_build_nodes()
+		if dest != "":
+			_select_node(dest)
+			_start_travel())
+	p.add_child(march)
+	var later := UIKit.ghost_button(Locale.t("atlas_chain_later"), 140, 42)
+	later.name = "ChainLater"
+	later.position = Vector2(24, h - 64)
+	later.pressed.connect(func():
+		done = true
+		_clear_modal())
+	p.add_child(later)
+	acc.call_deferred("grab_focus")
+	World.last_chain_follow = {}
+	while not done and is_instance_valid(p) and p.get_parent() != null:
+		await get_tree().process_frame
+
+## Mid-march food=0 → SupplyHaltModal (觅食 / 硬闯 / 强制停靠).
+func _check_supply_halt() -> bool:
+	if not _modal.get_children().is_empty():
+		return false
+	if World.last_supply_halt.is_empty():
+		return false
+	var halt: Dictionary = World.take_supply_halt()
+	if halt.is_empty():
+		return false
+	_show_supply_halt_modal(halt)
+	return true
+
+func _show_supply_halt_modal(halt: Dictionary) -> void:
+	var dest := str(halt.get("dest", ""))
+	var starved := int(halt.get("starved_days", 1))
+	var h := 360.0
+	var panel := _modal_panel(h)
+	panel.name = "SupplyHaltModal"
+	var el := UIKit.mono(Locale.t("atlas_supply_halt_en"), 9, UIKit.DANGER)
+	el.position = Vector2(24, 16)
+	panel.add_child(el)
+	var tlabel := UIKit.title_label(Locale.t("atlas_supply_halt_title"), 20, UIKit.DANGER)
+	tlabel.position = Vector2(24, 34)
+	tlabel.size = Vector2(452, 30)
+	panel.add_child(tlabel)
+	var dest_n := str(World.node(dest).get("name", dest)) if dest != "" else "—"
+	var body := UIKit.body_label(
+		Locale.t("atlas_supply_halt_body") % [World.node(World.pos).get("name", World.pos), dest_n, starved, GameState.morale],
+		UIKit.TEXT, 13)
+	body.name = "SupplyHaltBody"
+	body.position = Vector2(24, 72)
+	body.size = Vector2(452, 78)
+	body.custom_minimum_size = Vector2(452, 0)
+	panel.add_child(body)
+	var y := 164.0
+	var forage := UIKit.cta_button(Locale.t("atlas_supply_forage"), "A", 452, 42)
+	forage.name = "SupplyForage"
+	forage.position = Vector2(24, y)
+	forage.pressed.connect(func():
+		var r: Dictionary = World.forage_supply()
+		_show_toast(str(r.get("msg", "")), UIKit.OK if bool(r.get("ok", false)) else UIKit.DANGER)
+		_clear_modal()
+		_refresh_top()
+		if World.is_traveling():
+			call_deferred("_resume_travel_after_supply"))
+	panel.add_child(forage)
+	y += 50.0
+	var press := UIKit.ghost_button(Locale.t("atlas_supply_press"), 452, 36)
+	press.name = "SupplyPressOn"
+	press.position = Vector2(24, y)
+	press.pressed.connect(func():
+		var r2: Dictionary = World.press_on_starving()
+		_show_toast(str(r2.get("msg", "")), UIKit.EMBER)
+		_clear_modal()
+		_refresh_top()
+		if World.is_traveling():
+			call_deferred("_resume_travel_after_supply"))
+	panel.add_child(press)
+	y += 44.0
+	var stop := UIKit.ghost_button(Locale.t("atlas_supply_forced_stop"), 452, 36)
+	stop.name = "SupplyForcedStop"
+	stop.position = Vector2(24, y)
+	stop.pressed.connect(func():
+		var r3: Dictionary = World.forced_halt_march()
+		_halted_dest = str(r3.get("dest", dest))
+		_show_toast(str(r3.get("msg", "")), UIKit.ACCENT)
+		_clear_modal()
+		_refresh_top()
+		_build_nodes()
+		_render_left()
+		_place_token(false)
+		_select_node(World.pos)
+		_show_stopover_modal())
+	panel.add_child(stop)
+	var later := UIKit.ghost_button(Locale.t("atlas_supply_halt_later"), 140, 36)
+	later.name = "SupplyHaltLater"
+	later.position = Vector2(24, h - 56)
+	later.pressed.connect(func():
+		World.last_supply_halt = halt.duplicate(true)
+		_clear_modal())
+	panel.add_child(later)
+	forage.call_deferred("grab_focus")
+
+func _resume_travel_after_supply() -> void:
+	if World.is_traveling() and World.pending_event.is_empty() and World.encounter.is_empty():
+		_run_travel()
+
+## Scripted-chain expire/abandon → ChainFailModal (改道 / 确认失败 / 稍后).
+func _check_chain_fail() -> bool:
+	if not _modal.get_children().is_empty():
+		return false
+	if World.last_chain_fail.is_empty():
+		return false
+	var fail: Dictionary = World.take_chain_fail()
+	if fail.is_empty():
+		return false
+	_show_chain_fail_modal(fail)
+	return true
+
+func _show_chain_fail_modal(fail: Dictionary) -> void:
+	var chain_id := str(fail.get("chain_id", ""))
+	var chain_title := str(fail.get("chain_title", chain_id))
+	var reason := str(fail.get("reason", "expire"))
+	var why := Locale.t("atlas_chain_fail_reason_expire") if reason == "expire" else Locale.t("atlas_chain_fail_reason_abandon")
+	var step_i := int(fail.get("step", 0))
+	var issuer := str(fail.get("issuer", ""))
+	var target := str(fail.get("target", ""))
+	var title_q := str(fail.get("title", ""))
+	var h := 340.0
+	var p := _modal_panel(h)
+	p.name = "ChainFailModal"
+	var el := UIKit.mono(Locale.t("atlas_chain_fail_en"), 9, UIKit.DANGER)
+	el.position = Vector2(24, 16)
+	p.add_child(el)
+	var tlabel := UIKit.title_label(Locale.t("atlas_chain_fail_title") % chain_title, 20, UIKit.DANGER)
+	tlabel.position = Vector2(24, 34)
+	tlabel.size = Vector2(452, 30)
+	p.add_child(tlabel)
+	var body := UIKit.body_label(
+		Locale.t("atlas_chain_fail_body") % [title_q, why, step_i + 1, World.node(issuer).get("name", issuer), World.node(target).get("name", target)],
+		UIKit.TEXT, 13)
+	body.name = "ChainFailBody"
+	body.position = Vector2(24, 72)
+	body.size = Vector2(452, 72)
+	body.custom_minimum_size = Vector2(452, 0)
+	p.add_child(body)
+	var y := 160.0
+	var reroute := UIKit.cta_button(Locale.t("atlas_chain_reroute"), "A", 300, 42)
+	reroute.name = "ChainReroute"
+	reroute.position = Vector2(24, y)
+	reroute.pressed.connect(func():
+		var rr: Dictionary = World.reroute_failed_chain(chain_id)
+		_show_toast(str(rr.get("msg", "")), UIKit.OK if bool(rr.get("ok", false)) else UIKit.DANGER)
+		_clear_modal()
+		if bool(rr.get("ok", false)):
+			var q: Dictionary = rr.get("quest", {})
+			var dest := str(q.get("issuer", issuer))
+			call_deferred("_after_chain_start", dest))
+	p.add_child(reroute)
+	y += 50.0
+	var drop := UIKit.ghost_button(Locale.t("atlas_chain_fail_confirm"), 300, 42)
+	drop.name = "ChainFailConfirm"
+	drop.position = Vector2(24, y)
+	drop.pressed.connect(func():
+		World.dismiss_chain_fail()
+		_show_toast(Locale.t("atlas_chain_fail_done") % chain_title, UIKit.EMBER)
+		_clear_modal()
+		_refresh_top()
+		_build_nodes())
+	p.add_child(drop)
+	var later := UIKit.ghost_button(Locale.t("atlas_chain_later"), 140, 42)
+	later.name = "ChainFailLater"
+	later.position = Vector2(24, h - 64)
+	later.pressed.connect(func():
+		# Keep fail status; restore payload so modal can reopen next arrival/resume.
+		World.last_chain_fail = fail.duplicate(true)
+		_clear_modal())
+	p.add_child(later)
+	reroute.call_deferred("grab_focus")
 
 func _clear_modal() -> void:
 	for c in _modal.get_children():
@@ -1927,7 +2243,15 @@ func _show_event_modal(ev: Dictionary) -> void:
 	var p := _modal_panel(210 + 58 * opts.size() + (28 if is_camp else 0))
 	p.name = "EventModal"
 	var kind := str(ev.get("kind", "road"))
-	var tag := "NIGHT CAMP" if kind == "camp" or str(ev.get("id", "")) == "camp_night" else "ROAD EVENT"
+	var camp_like := kind == "camp" or str(ev.get("id", "")) == "camp_night"
+	var ev_nid := World.nation_of(str(ev.get("b", ev.get("node", World.pos))))
+	if ev_nid == "":
+		ev_nid = World.nation_of(World.pos)
+	if camp_like:
+		CKHeraldryChrome.place_camp_crest_strip(p, Vector2(400, 12), ev_nid, Vector2(36, 44))
+	else:
+		CKHeraldryChrome.place_travel_crest_strip(p, Vector2(400, 12), ev_nid, Vector2(36, 44))
+	var tag := "NIGHT CAMP" if camp_like else "ROAD EVENT"
 	var el := UIKit.mono("%s // %s" % [tag, World.node(str(ev.get("b", ""))).get("name", "")], 9, UIKit.ACCENT)
 	el.position = Vector2(24, 18)
 	p.add_child(el)
@@ -2065,6 +2389,83 @@ func _show_battle_aftermath_modal(af: Dictionary) -> void:
 	cont.call_deferred("grab_focus")
 	while not done and is_instance_valid(p) and p.get_parent() != null:
 		await get_tree().process_frame
+	if bool(af.get("site_captured", false)):
+		await _show_occupy_garrison_modal(af)
+
+func _show_occupy_garrison_modal(af: Dictionary) -> void:
+	## Post-assault occupy: reinforce / stockade before the player leaves the captured seat.
+	var sid := str(af.get("site", ""))
+	if sid == "" or not CKTerritory.owned(sid):
+		return
+	var st0: Dictionary = CKTerritory.state(sid)
+	var sname := str(af.get("site_name", CKTerritory.site(sid).get("name", "")))
+	var h := 310.0
+	var p := _modal_panel(h)
+	p.name = "OccupyGarrisonModal"
+	var el := UIKit.mono(Locale.t("atlas_occupy_en"), 9, UIKit.OK)
+	el.position = Vector2(24, 18)
+	p.add_child(el)
+	var t := UIKit.title_label(Locale.t("atlas_occupy_title") % sname, 22)
+	t.position = Vector2(24, 36)
+	t.size = Vector2(452, 32)
+	p.add_child(t)
+	var body := UIKit.body_label(
+		Locale.t("atlas_occupy_body") % [int(st0.get("garrison", 0)), CKTerritory.garrison_max(sid)],
+		UIKit.TEXT, 13)
+	body.name = "OccupyBody"
+	body.position = Vector2(24, 78)
+	body.size = Vector2(452, 48)
+	body.custom_minimum_size = Vector2(452, 0)
+	p.add_child(body)
+	var done := false
+	var y := 140.0
+	if int(st0.get("garrison", 0)) < CKTerritory.garrison_max(sid):
+		var rf := UIKit.cta_button(Locale.t("atlas_occupy_reinforce") % CKTerritory.garrison_cost(sid), "A", 300, 42)
+		rf.name = "OccupyReinforce"
+		rf.position = Vector2(24, y)
+		rf.pressed.connect(func():
+			var rr: Dictionary = CKTerritory.reinforce(sid)
+			_show_toast(str(rr.get("msg", "")), UIKit.OK if bool(rr.get("ok", false)) else UIKit.DANGER)
+			_refresh_top()
+			_build_nodes()
+			af["garrison"] = int(CKTerritory.state(sid).garrison)
+			var b2: Label = p.get_node_or_null("OccupyBody") as Label
+			if b2:
+				b2.text = Locale.t("atlas_occupy_body") % [
+					int(CKTerritory.state(sid).garrison), CKTerritory.garrison_max(sid)]
+			rf.disabled = int(CKTerritory.state(sid).garrison) >= CKTerritory.garrison_max(sid)
+			if rf.disabled:
+				rf.text = Locale.t("atlas_occupy_reinforce") % 0)
+		p.add_child(rf)
+		y += 50.0
+	if not bool(st0.get("stockade", false)):
+		var sk := UIKit.cta_button(Locale.t("atlas_occupy_stockade") % CKTerritory.stockade_cost(), "B", 300, 42)
+		sk.name = "OccupyStockade"
+		sk.position = Vector2(24, y)
+		sk.pressed.connect(func():
+			var sr: Dictionary = CKTerritory.build_stockade(sid)
+			_show_toast(str(sr.get("msg", "")), UIKit.OK if bool(sr.get("ok", false)) else UIKit.DANGER)
+			_refresh_top()
+			_build_nodes()
+			done = true
+			_clear_modal())
+		p.add_child(sk)
+	var later := UIKit.ghost_button(Locale.t("atlas_occupy_later"), 140, 42)
+	later.name = "OccupyLater"
+	later.position = Vector2(24, h - 64)
+	later.pressed.connect(func():
+		done = true
+		_clear_modal())
+	p.add_child(later)
+	var focus_n: Control = p.get_node_or_null("OccupyReinforce")
+	if focus_n == null:
+		focus_n = p.get_node_or_null("OccupyStockade")
+	if focus_n == null:
+		focus_n = later
+	if focus_n:
+		focus_n.call_deferred("grab_focus")
+	while not done and is_instance_valid(p) and p.get_parent() != null:
+		await get_tree().process_frame
 
 func _show_aftermath_modal(af: Dictionary) -> void:
 	var lines: Array = af.get("lines", [])
@@ -2132,7 +2533,7 @@ func _show_aftermath_modal(af: Dictionary) -> void:
 func _show_encounter_modal(enc: Dictionary) -> void:
 	var p := _modal_panel(300)
 	p.name = "EncounterModal"
-	CKHeraldryChrome.place_aftermath_crest_strip(p, Vector2(400, 14), str(enc.get("nation", "")), Vector2(36, 44))
+	CKHeraldryChrome.place_encounter_crest_strip(p, Vector2(400, 14), str(enc.get("nation", "")), Vector2(36, 44))
 	var el := UIKit.mono("ENCOUNTER // %s" % str(World.data.get("biome_keyword", {}).get(str(World.node(str(enc.get("node", ""))).get("biome", "")), "")).to_upper(), 9, UIKit.DANGER)
 	el.position = Vector2(24, 18)
 	p.add_child(el)
@@ -2894,6 +3295,27 @@ func _m_actions() -> void:
 			if not e4.is_empty():
 				_show_encounter_modal(e4))
 		b.name = "RivalClash"
+	elif _sel != "" and _sel == World.pos and World.nodes.has(_sel) and _startable_chain_here() != "" and World.ready_turn_ins_here().is_empty():
+		var cid_m := _startable_chain_here()
+		var crow := {}
+		for row in World.scripted_chains():
+			if str(row.get("id", "")) == cid_m:
+				crow = row
+				break
+		b = MobilePage.button(Locale.t("atlas_chain_start") % str(crow.get("title", cid_m)), true, func():
+			var sr: Dictionary = World.start_scripted_chain(cid_m)
+			if not bool(sr.get("ok", false)):
+				_show_toast(str(sr.get("msg", "")), UIKit.DANGER)
+				return
+			var q0: Dictionary = sr.get("quest", {})
+			World.accept_quest(str(q0.get("issuer", World.pos)), str(q0.get("id", "")))
+			_refresh_top()
+			_build_nodes()
+			var dest := str(q0.get("target", ""))
+			if dest != "":
+				_select_node(dest)
+				_m_actions())
+		b.name = "ChainStart"
 	elif _sel != "" and _sel == World.pos and World.nodes.has(_sel):
 		var n: Dictionary = World.node(_sel)
 		var ready_n := World.ready_turn_ins_here().size()
@@ -2919,6 +3341,11 @@ func _m_actions() -> void:
 func _m_log() -> void:
 	var box := _hud
 	var here: Dictionary = World.node(World.pos)
+	var crest_row := Control.new()
+	crest_row.name = "TravelCrestHost"
+	crest_row.custom_minimum_size = Vector2(0, 44)
+	box.add_child(crest_row)
+	CKHeraldryChrome.place_travel_crest_strip(crest_row, Vector2(0, 2), World.nation_of(World.pos), Vector2(36, 44))
 	box.add_child(UIKit.title_label(Locale.t("mob_ui_041") % here.get("name", ""), 28))
 	box.add_child(_m_label(Locale.t("mob_ui_042"), UIKit.TEXT_DIM))
 	for tp in World.tips.slice(0, 3):

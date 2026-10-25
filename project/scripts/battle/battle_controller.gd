@@ -245,6 +245,9 @@ func _process(delta: float) -> void:
 		not _dmg_fx.is_empty() or not _slash_fx.is_empty()
 		or not _lock_burst_fx.is_empty() or not _move_dust_fx.is_empty()
 		or _trauma > 0.0 or _turn_flash > 0.0
+		or BattlePhaseFeel.settle_alpha(self) > 0.0
+		or BattlePhaseFeel.enemy_actor_alpha(self) > 0.0
+		or BattleEngageCutscene.bridge_alpha(self) > 0.0
 	)
 	_redraw_accum += delta
 	var pulse := fx_live or _redraw_accum >= (1.0 / _REDRAW_HZ)
@@ -468,6 +471,7 @@ func _build_ui() -> void:
 	_build_mobile_bar()
 	_apply_board_xform()
 	ObjectiveHud.attach(self)
+	CKHeraldryChrome.sync_battle_hud_crests(self)
 	ForecastPanel.attach(self)
 	RewindBar.attach(self)
 
@@ -746,6 +750,7 @@ func _init_map() -> void:
 	_layout_board()
 	if phase_label:
 		phase_label.text = Locale.t("shell_a63e5b28") % map_name
+	CKHeraldryChrome.sync_battle_hud_crests(self)
 
 func _load_terrain_fx(m: Dictionary) -> void:
 	height_grid.clear()
@@ -1270,24 +1275,12 @@ func _draw_overlay() -> void:
 		if ResourceLoader.exists(pop):
 			overlay.draw_texture_rect(_tex(pop), Rect2(fx.pos + Vector2(-24, yoff - 32) * _k(), Vector2(48, 48) * _k()), false, Color(1, 1, 1, a * 0.9))
 		CKBoardUnits.draw_dmg_text(self, fx, yoff, col, a)
-	# 回合横幅
-	if _turn_flash > 0.0:
-		var a2 = clampf(_turn_flash / 0.9, 0.0, 1.0)
-		var txt = Locale.t("shell_turn_player") if turn_team == "player" else Locale.t("shell_turn_enemy")
-		var tfi = mini(5, int((0.9 - _turn_flash) / 0.15))
-		var tfp = "res://assets/art/fx/turn_flash_dense_%d.png" % tfi
-		if not ResourceLoader.exists(tfp):
-			tfp = "res://assets/art/fx/turn_flash_%d.png" % tfi
-		var bc := ORIGIN + Vector2(MAP_W, MAP_H) * CELL * 0.5
-		var bandc: Color = UIKit.ACCENT if turn_team == "player" else UIKit.DANGER
-		overlay.draw_rect(Rect2(Vector2(ORIGIN.x, bc.y - 34), Vector2(MAP_W * CELL, 68)), Color(0.03, 0.04, 0.06, 0.72 * a2))
-		overlay.draw_rect(Rect2(Vector2(ORIGIN.x, bc.y - 34), Vector2(MAP_W * CELL, 1)), Color(bandc, 0.6 * a2))
-		overlay.draw_rect(Rect2(Vector2(ORIGIN.x, bc.y + 33), Vector2(MAP_W * CELL, 1)), Color(bandc, 0.6 * a2))
-		if ResourceLoader.exists(tfp):
-			overlay.draw_texture_rect(_tex(tfp), Rect2(bc - Vector2(150, 48), Vector2(96, 96)), false, Color(1, 1, 1, a2 * 0.9))
-		var tf := UIKit.font("regular")
-		var tsz := tf.get_string_size(txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 26)
-		overlay.draw_string(tf, bc + Vector2(-tsz.x * 0.5, 9), txt, HORIZONTAL_ALIGNMENT_LEFT, -1, 26, Color(UIKit.TEXT, a2))
+	# T-P6: phase banner + enemy-actor ring + attack settle flash (overlay only — no input steal)
+	BattlePhaseFeel.draw_turn_banner(self, overlay)
+	BattlePhaseFeel.draw_enemy_actor_ring(self, overlay)
+	BattlePhaseFeel.draw_settle_flash(self, overlay)
+	# T-P7: FE engage bridge (atk↔def) — overlay only, no input steal
+	BattleEngageCutscene.draw_engage_bridge(self, overlay)
 	# 地形悬停提示
 	if _in_bounds(_hover_cell):
 		var sw = "res://assets/art/fx/attack_wash.png" if attack_mode else ("res://assets/art/fx/move_wash.png" if ResourceLoader.exists("res://assets/art/fx/move_wash.png") else "res://assets/art/fx/select_wash.png")
@@ -1391,6 +1384,7 @@ func apply_mobile_layout() -> void:
 		_layout_board()
 	# Y1-A T-P2-1: re-place Forecast against the new board stage / side column.
 	ForecastPanel.refresh(self)
+	CKHeraldryChrome.sync_battle_hud_crests(self)
 
 func _screen_to_local(screen_pos: Vector2) -> Vector2:
 	## Viewport pixels → this control. Identity on the desktop 1280×720 root.
@@ -1814,7 +1808,11 @@ func _do_attack(ai: int, di: int) -> void:
 	_check_end()
 
 func _cutscenes_enabled() -> bool:
-	return DisplayServer.get_name() != "headless" and bool(GameState.get_meta("cutscenes_on", true)) and bool(GameState.settings.get("cutscenes", true))
+	return BattleEngageCutscene.should_play(
+		DisplayServer.get_name(),
+		bool(GameState.get_meta("cutscenes_on", true)),
+		bool(GameState.settings.get("cutscenes", true)),
+	)
 
 func _cut_links() -> Array:
 	if _link_seg.is_empty():
@@ -1823,39 +1821,29 @@ func _cut_links() -> Array:
 
 func _queue_cutscene(ai: int, di: int, hp0a: int, hp0d: int) -> void:
 	set_meta("cut_links", _cut_links())
-	if not _cutscenes_enabled() or _combat_rec.is_empty():
-		_combat_rec = []
-		return
 	var atk = units[ai]
 	var def = units[di]
-	var a_side := "right" if atk.team == "player" else "left"   # FE convention: our side on the right
-	var d_side := "left" if a_side == "right" else "right"
-	var strikes: Array = []
-	var fc := {a_side: {}, d_side: {}}
-	for r in _combat_rec:
-		var from: String = a_side if int(r.a) == ai else d_side
-		strikes.append({"from": from, "hit": r.hit, "crit": r.crit, "dmg": r.dmg, "killed": r.killed, "skill": r.skill, "hp_after": r.hp_after})
-		if fc[from].is_empty():
-			fc[from] = {"hit": r.hit_chance, "dmg": r.dmg if r.hit else "—"}
+	# T-P7: board engage bridge always (even when cutscene off / headless).
+	BattleEngageCutscene.note_engage_bridge(self, atk.pos, def.pos)
+	if _combat_rec.is_empty():
+		return
 	var tid := str(terrain[def.pos.y][def.pos.x])
 	var bg: Array = _biome_ground()
 	var ground: String = tid if tid in ["forest", "hill", "fort", "bridge"] else str(bg[0])
 	var gv: Vector3 = bg[1]
-	var _AtlasArt = preload("res://scripts/art/atlas_art.gd")
-	var rec := {
-		a_side: {"char": atk.char, "team": atk.team, "template": str(atk.get("template", "")), "hp0": hp0a,
-			"hit": fc[a_side].get("hit", "—"), "dmg": fc[a_side].get("dmg", "—"), "crit": atk.char.derived_crit()},
-		d_side: {"char": def.char, "team": def.team, "template": str(def.get("template", "")), "hp0": hp0d,
-			"hit": fc[d_side].get("hit", "—"), "dmg": fc[d_side].get("dmg", "—"), "crit": def.char.derived_crit()},
-		"strikes": strikes, "ground": ground, "grade": Color(gv.x, gv.y, gv.z), "tile": tid,
-		"backdrop": str(_AtlasArt.battle_backdrop_for_map(map_id)),
-		"title": "%s · %s" % [map_name, str(BattleRules.terrain_info(tid).get("name", tid))],
-		"links": _cut_links(),
-	}
+	var rec: Dictionary = BattleEngageCutscene.build_record(
+		self, ai, di, hp0a, hp0d, _combat_rec, _cut_links(),
+		str(AtlasArt.battle_backdrop_for_map(map_id)),
+		ground, Color(gv.x, gv.y, gv.z), tid,
+		"%s · %s" % [map_name, str(BattleRules.terrain_info(tid).get("name", tid))],
+	)
 	_combat_rec = []
+	if not _cutscenes_enabled() or rec.is_empty():
+		return
 	_cut_queue.append(rec)
 	if not _cut_playing:
 		_drain_cutscenes()
+
 
 func play_cutscene_record(rec: Dictionary) -> void:
 	_cut_queue.append(rec)
@@ -1871,6 +1859,9 @@ func _drain_cutscenes() -> void:
 		add_child(cs)
 		await cs.finished
 	_cut_playing = false
+	BattleEngageCutscene.clear_bridge(self)
+	if overlay:
+		overlay.queue_redraw()
 
 func _combat_extras(ai: int, di: int) -> Dictionary:
 	var atk = units[ai]
@@ -2085,6 +2076,9 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 		Sfx.miss()
 		msg += "未命中（命中率 %d%%）" % result.hit_chance
 		_spawn_dmg(def.pos, "未中", Color(0.7, 0.75, 0.85))
+	# T-P6: confirm→hit settle flash/shake (miss/kill/crit readable)
+	var settle_kind := BattlePhaseFeel.settle_kind_from_result(bool(result.hit), bool(result.get("crit", false)), def.char.hp <= 0)
+	BattlePhaseFeel.note_attack_settle(self, settle_kind, def.pos)
 	_combat_rec.append({"a": ai, "d": di, "hit": bool(result.hit), "crit": bool(result.get("crit", false)), "dmg": int(result.get("damage", 0)),
 		"killed": def.char.hp <= 0, "skill": str(sk.get("name", skill_id)) if skill_id != "" else "", "hp_before": _hp_before,
 		"hp_after": int(def.char.hp), "hit_chance": int(result.get("hit_chance", 0))})
@@ -2173,12 +2167,8 @@ func _start_player_turn() -> void:
 	_round_no += 1; CKSpecialJobs.on_player_turn(self)
 	if _round_label:
 		_round_label.text = Locale.t("shell_4b1b8d2e") % _round_no
-	if _phase_chip:
-		_phase_chip.text = "PHASE 01"
-		_phase_chip.add_theme_color_override("font_color", UIKit.ACCENT)
 	phase_label.text = Locale.t("shell_742d7d53") % map_name
-	phase_label.add_theme_color_override("font_color", UIKit.TEXT)
-	_turn_flash = 0.9
+	BattlePhaseFeel.note_phase_switch(self, "player")
 	Sfx.turn()
 	_sync_battle_music()
 	var pcs: Array = []
@@ -2221,11 +2211,7 @@ func _end_player_turn() -> void:
 		return
 	turn_team = "enemy"
 	phase_label.text = Locale.t("shell_2a6d5eac") % map_name
-	if _phase_chip:
-		_phase_chip.text = "PHASE 02"
-		_phase_chip.add_theme_color_override("font_color", UIKit.DANGER)
-	phase_label.add_theme_color_override("font_color", UIKit.DANGER)
-	_turn_flash = 0.9
+	BattlePhaseFeel.note_phase_switch(self, "enemy")
 	_pulse_heal("enemy")
 	_sync_battle_music()
 	for u in units:
@@ -2648,6 +2634,7 @@ func _enemy_ai() -> void:
 		if units[i].char.hp <= 0:
 			continue
 		u = units[i]
+		BattlePhaseFeel.note_enemy_acting(self, i)
 		var planned: Dictionary = ai_plan.get(str(u.char.id), {})
 		if str(planned.get("action", "")) == "summon" and not has_meta("ai_summoned"):
 			set_meta("ai_summoned", true)
