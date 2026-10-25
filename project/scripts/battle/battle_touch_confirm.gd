@@ -8,6 +8,8 @@ extends RefCounted
 ## Y1-A T-P1-4: move/place drag uses exact finger cell; attack still soft-resolves.
 ## Leaving a legal cell clears the stale ghost; illegal release clears preview.
 ## Y1-A T-P2: re-tap selected / empty-board deselect (no right-click on phone).
+## Y1-A T-P3: unit-drag origin is strict figure hit (exact/bias/contour); soft-empty
+## beside the selected piece pans the map instead of stealing the gesture.
 
 static func enabled() -> bool:
 	if not (GameState.settings is Dictionary):
@@ -145,10 +147,11 @@ static func commit_move(host, cell: Vector2i) -> void:
 		BattleMobileBar.rebuild(host)
 
 
-## Y1-A T-P1-2: decide once per gesture (keyed by the press origin) whether a drag is
-## "move the selected unit" or "pan the map". Only a drag whose press landed on the
-## selected player unit (soft pick, SOFT_R) is a unit drag; everything else pans and
-## never commits on release. Pinch fingers ("multi") are always pans.
+## Y1-A T-P1-2 / T-P3: decide once per gesture (keyed by the press origin) whether a
+## drag is "move the selected unit" or "pan the map". Only a press that strictly hits
+## the selected player figure (exact / face bias / contour — not soft-empty neighbour)
+## is a unit drag; soft-empty beside the piece pans and never commits. Pinch ("multi")
+## is always a pan.
 static func is_unit_drag(host, g: Dictionary) -> bool:
 	if bool(g.get("multi", false)) or not g.has("origin"):
 		return false
@@ -179,7 +182,8 @@ static func _press_on_selected(host, origin: Vector2) -> bool:
 		return false
 	if host.moved_this_select and not host.attack_mode:
 		return false
-	return BattlePick.resolve(host, origin) == su.pos
+	# T-P3: soft-empty beside selected must pan — only exact/bias/contour arms unit-drag.
+	return BattlePick.strict_hits_selected(host, origin, host.selected)
 
 
 
