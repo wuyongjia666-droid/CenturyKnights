@@ -20,7 +20,7 @@ func _run() -> String:
 	var droid := _filters("Android")
 	if droid.is_empty():
 		return "Android exclude_filter missing"
-	GameState.new_game("烬行", "灰旗", "#6ED4FF")
+	GameState.new_game("烬行", "灰旗", GameState.crest_color)
 	var refs := _speaker_refs()
 	if refs.size() < 20:
 		return "too few refs (%d)" % refs.size()

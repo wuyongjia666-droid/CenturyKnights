@@ -25,7 +25,7 @@ func _run() -> String:
 		return "Android exclude_filter missing"
 	CKArtPaths.pack_excluded = func(p): return _ex(p, droid)
 	UnitArt._cache.clear()
-	GameState.new_game("烬行", "灰旗", "#6ED4FF")
+	GameState.new_game("烬行", "灰旗", GameState.crest_color)
 	var player: ChapterPlayer = PLAYER_SCENE.instantiate()
 	player.suppress_scene_change = true
 	player.lock_path = true
