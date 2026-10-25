@@ -16,6 +16,9 @@
 | [`privacy-policy-draft.md`](./privacy-policy-draft.md) | 隐私政策草稿（上架前静态页） |
 | [`age-rating-draft.md`](./age-rating-draft.md) | IARC / 年龄分级问卷预填意图 |
 
+| [`screenshots-checklist.md`](./screenshots-checklist.md) | 五张横屏截图必拍帧与禁止项 |
+| [`data-safety-draft.md`](./data-safety-draft.md) | Play 数据安全表预填（不收集） |
+
 ## 一键门禁
 
 ```bash

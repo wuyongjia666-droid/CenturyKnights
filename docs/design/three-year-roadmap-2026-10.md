@@ -148,7 +148,8 @@
 | 2026-10-25 | 内容季 #2/#3 脚手架 v2 + 开写：`season-02`《婚约上的灯》初稿、`season-03`《榜上的收成》§1–§8；多季 `content_season_scaffold_check` |
 | 2026-10-25 | 商店工程准备（不缴费）：`docs/store/*` + `tools/ci/store_prep_check.py`（导出路径/文案/崩溃性能/包体口径） |
 | 2026-10-25 | 商店工程深刀（不缴费）：Play/MS 完整字段稿 + 隐私/分级草稿 + `store_packaging_dry_check`（出包脚本/预设/release 干跑） |
-| 2026-10-25 | **停削弱字数闸**：关 #406；`store_prep`/`scaffold` 中篇门禁 ≥12000 汉字对标季1 + 商店页实质加厚（不碰季#3 正文，内容专线 #409） |
+| 2026-10-25 | **停削弱字数闸
+- 2026-10-25：商店深刀续——截图清单 + Play 数据安全预填；字数闸仍 ≥12000（禁削弱）**：关 #406；`store_prep`/`scaffold` 中篇门禁 ≥12000 汉字对标季1 + 商店页实质加厚（不碰季#3 正文，内容专线 #409） |
 | 2026-10-25 | 联姻→继承→嗣位端到端可玩链 + `marriage_heir_chain_check`（多场景回读） |
 | 2026-10-25 | Y1-B 岁课 UI 落点加深：城堡家庭导航常驻 ToSuiYear + 未读角标（todo→family）+ `sui_hub_entry_check` |
 | 2026-10-25 | Y1-B 联姻无对象空态：EmptyHost why/how + ToTavern/ToRoster + `marriage_empty_cta_check` |

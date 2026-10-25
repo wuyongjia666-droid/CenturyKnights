@@ -20,6 +20,8 @@ MIN_LISTING_BYTES = {
     "docs/store/listing-copy-zh.md": 2800,
     "docs/store/privacy-policy-draft.md": 2800,
     "docs/store/age-rating-draft.md": 1600,
+    "docs/store/screenshots-checklist.md": 1400,
+    "docs/store/data-safety-draft.md": 1400,
 }
 
 
@@ -38,6 +40,8 @@ REQUIRED_DOCS = [
     "docs/store/ms-store-listing-full.md",
     "docs/store/privacy-policy-draft.md",
     "docs/store/age-rating-draft.md",
+    "docs/store/screenshots-checklist.md",
+    "docs/store/data-safety-draft.md",
 ]
 
 REQUIRED_SCRIPTS = [
@@ -59,6 +63,8 @@ REQUIRED_PHRASES = {
     "docs/store/ms-store-listing-full.md": ["Partner Center", "买断", "不缴费"],
     "docs/store/privacy-policy-draft.md": ["不收集", "不出售", "崩溃"],
     "docs/store/age-rating-draft.md": ["12+", "内购", "暴力"],
+    "docs/store/screenshots-checklist.md": ["1080", "横屏", "五张", "不付费"],
+    "docs/store/data-safety-draft.md": ["不收集", "数据安全", "崩溃", "不出售"],
 }
 
 

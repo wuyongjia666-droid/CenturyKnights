@@ -134,6 +134,11 @@ def check_store_docs(fails: list[str]) -> None:
         "docs/store/age-rating-draft.md": 1600,
         "docs/store/export-paths.md": 1400,
         "docs/store/CHECKLIST.md": 1200,
+        "docs/store/screenshots-checklist.md": 1400,
+        "docs/store/data-safety-draft.md": 1400,
+        "docs/store/README.md": 1400,
+        "docs/store/crash-perf-gates.md": 1400,
+        "docs/store/package-budget.md": 1200,
     }
     for rel, floor in floors.items():
         path = ROOT / rel
