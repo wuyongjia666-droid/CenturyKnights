@@ -99,7 +99,7 @@ func _api_clear_fight_ready_turnin() -> void:
 	_ok(str(q.get("kind", "")) == "clear", "seed clear kind")
 	_ok(q.has("edge"), "seed clear has edge")
 	var edge: Array = q.get("edge", [])
-	_ok(edge.size() == 2 and "ash_capital" in edge and "hq" in edge, "clear edge ash↔hq")
+	_ok(edge.size() == 2 and "ash_capital" in edge and "hq" in edge, "clear edge ash-hq")
 	var acc: Dictionary = World.accept_quest("ash_capital", str(q.id))
 	_ok(bool(acc.get("ok", false)), "accept clear: %s" % acc.get("msg", ""))
 	# Fight at issuer end without marching
