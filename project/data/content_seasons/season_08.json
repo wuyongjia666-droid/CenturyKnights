@@ -1,6 +1,6 @@
 {
   "id": "season_08",
-  "version": 3,
+  "version": 4,
   "title_zh": "祖祠上的灯",
   "title_en": "The Lamp in the Ancestor Hall",
   "status": "playable_draft",
@@ -70,6 +70,12 @@
       "label_zh": "可玩章 cs08_01 对白可走",
       "suite": "res://tests/suites/narrative/content_season_playable_s08_check.tscn",
       "done": true
+    },
+    {
+      "id": "playable_dialogue_02",
+      "label_zh": "可玩章 cs08_02 对白可走",
+      "suite": "res://tests/suites/narrative/content_season_playable_s08_02_check.tscn",
+      "done": true
     }
   ],
   "pipeline_stages": {
@@ -118,5 +124,8 @@
     "docs/content-seasons/season-08/ACCEPTANCE.md"
   ],
   "playable_chapter": "cs08_01",
-  "playable_path": "res://data/story/chapters/cs08_01.json"
+  "playable_path": "res://data/story/chapters/cs08_01.json",
+  "playable_chapters": [
+    "cs08_02"
+  ]
 }

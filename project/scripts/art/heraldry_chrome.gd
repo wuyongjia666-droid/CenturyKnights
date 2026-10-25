@@ -363,4 +363,49 @@ static func place_marriage_crest_strip(parent: Node, left_c, right_c, at: Vector
 	host.set_meta("has_right", right_c != null)
 	parent.add_child(host)
 	return host
+## Commission-board issuer crest: 团徽 when the post is from home (hq), else nation 敌徽-style arms.
+static func issuer_is_home(issuer_id: String) -> bool:
+	## Company seat posts use 团徽; every other city uses its nation plate.
+	var id := str(issuer_id)
+	return id == "" or id == "hq"
 
+static func issuer_spec(issuer_id: String) -> Dictionary:
+	if issuer_is_home(issuer_id):
+		return company_spec()
+	var nid := World.nation_of(str(issuer_id))
+	if nid == "":
+		return company_spec()
+	return nation_spec(nid)
+
+static func issuer_arms_kind(issuer_id: String) -> String:
+	return "gen2_36" if issuer_is_home(issuer_id) else "lb_board_arms"
+
+static func issuer_arms_label(issuer_id: String) -> String:
+	return company_label() if issuer_is_home(issuer_id) else Locale.t("lb_board_arms")
+
+static func make_issuer_arms(issuer_id: String, size: Vector2 = Vector2(40, 48)) -> TextureRect:
+	var tr := TextureRect.new()
+	tr.name = "BoardCrest"
+	tr.texture = UnitArt.shield_arms(issuer_spec(issuer_id), int(size.x), int(size.y))
+	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	tr.custom_minimum_size = size
+	tr.size = size
+	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	tr.tooltip_text = issuer_arms_label(issuer_id)
+	tr.set_meta("arms_kind", issuer_arms_kind(issuer_id))
+	tr.set_meta("arms_core", CKHeraldry.core_key(issuer_spec(issuer_id)))
+	tr.set_meta("issuer_id", str(issuer_id))
+	return tr
+
+## Pin issuer crest on a commission-board detail / offer host (replaces prior BoardCrest).
+static func place_board_crest(parent: Node, issuer_id: String, at: Vector2, size: Vector2 = Vector2(44, 52)) -> TextureRect:
+	if parent == null:
+		return null
+	var old := parent.get_node_or_null("BoardCrest")
+	if old:
+		old.queue_free()
+	var tr := make_issuer_arms(issuer_id, size)
+	tr.position = at
+	parent.add_child(tr)
+	return tr
