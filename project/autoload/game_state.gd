@@ -500,9 +500,12 @@ func try_promote(cid: String, job_id: String) -> Dictionary:
 	c.job_id = job_id
 	c.recalc_hp()
 	grant_job_skills(c)
-	log_event("%s 转职为 %s，战技已更新" % [c.name, job.get("name", job_id)])
+	var jname := str(job.get("name", job_id))
+	log_event("%s 转职为 %s，战技已更新" % [c.name, jname])
+	## Y1-B: 旗塾晋升 → month_echo；属地/沙漏回读.
+	CKEconomyState.month_echo_note("promo", Locale.t("lb_echo_promo", [c.name, jname]))
 	mark_dirty()
-	return {"ok": true, "msg": "转职成功：" + job.get("name", job_id)}
+	return {"ok": true, "msg": "转职成功：" + jname}
 
 
 func reset_battle_skills(roster_chars: Array) -> void:
