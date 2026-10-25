@@ -650,6 +650,9 @@ func open_field_book() -> void:
 	close.custom_minimum_size.y = 48
 	close.pressed.connect(close_field_book)
 	head.add_child(close)
+	var mob := DeviceProfile.is_mobile() or has_meta("m_on")
+	var sh := Vector2(34, 42) if mob else Vector2(36, 44)
+	CKHeraldryChrome.place_field_crest_strip(overlay, Vector2(1180, 10) if not mob else Vector2(20, 8), sh, Vector2(22, 30) if mob else Vector2(24, 34))
 	var sub := UIKit.body_label(Locale.t("ux_estates_sub"), UIKit.TEXT_DIM, 14)
 	sub.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	root.add_child(sub)
@@ -714,8 +717,10 @@ func _fill_field_list() -> void:
 		shown += 1
 		var purse := CKPurse.get_purse(c)
 		var row := HBoxContainer.new()
+		row.name = "FieldRow_%s" % str(c.id)
 		row.add_theme_constant_override("separation", 8)
 		row.custom_minimum_size.y = 48
+		CKHeraldryChrome.attach_field_row_arms(row, c, Vector2(26, 32) if has_meta("m_on") else Vector2(28, 34))
 		var lab := UIKit.body_label(Locale.t("ux_field_row") % [c.name, c.age, purse, _field_status(c)], UIKit.TEXT, 14)
 		lab.custom_minimum_size.x = 340
 		lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
