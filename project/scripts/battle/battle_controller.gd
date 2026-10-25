@@ -2890,7 +2890,8 @@ func _finish(win: bool) -> void:
 			_log(why)
 		phase_label.text = Locale.t("battle_lose")
 		phase_label.add_theme_color_override("font_color", UIKit.DANGER)
-		CKEnemyLoadout.apply_defeat(units, CKEnemyLoadout.mode_of(GameState))
+		# Chapter-owned mid-cs: skip sticky injury — mid_lost owns the trail.
+		CKEnemyLoadout.maybe_apply_defeat(units, CKEnemyLoadout.mode_of(GameState))
 		if str(get_meta("battle_verdict", {}).get("reason", "")) == "retreat":
 			_log(Locale.t("defeat_retreat_head"))
 	if _world_enc:

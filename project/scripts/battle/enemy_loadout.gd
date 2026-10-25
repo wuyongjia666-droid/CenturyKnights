@@ -289,6 +289,30 @@ static func unstamp(c: CKCharacter) -> void:
 	c.remove_meta("btl_vit0")
 
 
+## Chapter-owned mid-cs / era: mid_lost CTA owns the loss trail.
+## Sticky apply_defeat injury must not land in save_game / CKAutosave for a retryable fight.
+static func suppresses_defeat_injury() -> bool:
+	return str(GameState.get_meta("battle_return_chapter", "")) != ""
+
+
+## Hub / sortie / world-enc defeat injury. Skips chapter-owned mid-cs.
+## When suppressed, restores player HP so a retry is not soft-locked at 0 HP
+## without stamping injured / classic_down.
+## Returns true when injury/retreat/permadeath rules were applied.
+static func maybe_apply_defeat(units: Array, mode: String) -> bool:
+	if suppresses_defeat_injury():
+		for u in units:
+			if str(u.get("team", "")) != "player":
+				continue
+			var c: CKCharacter = u.char
+			if c == null:
+				continue
+			c.hp = c.max_hp
+		return false
+	apply_defeat(units, mode)
+	return true
+
+
 static func apply_defeat(units: Array, mode: String) -> void:
 	var kind := str(profile(mode).get("defeat", "injury"))
 	for u in units:
