@@ -219,8 +219,12 @@ func _build() -> void:
 	dim.set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 	_vow_panel.add_child(dim)
 	var vp := UIKit.panel_at(_vow_panel, Rect2(220, 120, 840, 420), 12, true)
+	var vow_arms := CKHeraldryChrome.make_company_arms(Vector2(40, 48))
+	vow_arms.name = "VowCompanyArms"
+	vow_arms.position = Vector2(28, 16)
+	vp.add_child(vow_arms)
 	var ve := UIKit.mono("VOW RITUAL // 誓约仪式", 10, UIKit.ACCENT)
-	ve.position = Vector2(28, 22)
+	ve.position = Vector2(80, 22)
 	vp.add_child(ve)
 	_vow_body = RichTextLabel.new()
 	_vow_body.bbcode_enabled = true
@@ -437,6 +441,8 @@ func _house_card(rect: Rect2, c: CKCharacter, side_tag: String, side_en: String,
 	if compact:
 		plate = Rect2(10, 34, 72, maxf(56.0, footer_y - 42.0))
 	UIKit.portrait_plate(p, plate, c, "FROST")
+	var arms_sz := Vector2(24, 28) if compact else Vector2(32, 38)
+	CKHeraldryChrome.attach_house_card_chrome(p, c, plate, arms_sz)
 	if not compact:
 		var nm := UIKit.title_label(c.name, 15)
 		nm.name = "CardName"
@@ -652,6 +658,21 @@ func _harmony_card(rect: Rect2, a: CKCharacter, b: CKCharacter) -> void:
 		cp.position = Vector2(2, 4 + h1)
 		cp.size = Vector2(cw - 4, cp.get_minimum_size().y)
 		chip.add_child(cp)
+
+func _place_marriage_crests() -> void:
+	var vp := get_viewport_rect().size
+	var shield := Vector2(36, 44)
+	var gap := 8.0
+	var strip_w := shield.x * 3.0 + gap * 2.0
+	var at := Vector2(42.0, 168.0)
+	if _mob or _narrow or vp.x < 1100.0:
+		shield = Vector2(28, 34)
+		strip_w = shield.x * 3.0 + gap * 2.0
+		at = Vector2(maxf(8.0, vp.x - strip_w - 8.0), 8.0)
+	elif vp.x >= 1280.0:
+		at = Vector2(vp.x - strip_w - 42.0, 168.0)
+	CKHeraldryChrome.place_marriage_crest_strip(self, _get_suitor(), _selected, at, shield)
+
 func _render_cards() -> void:
 	for c in _cards.get_children():
 		_cards.remove_child(c)
@@ -663,11 +684,13 @@ func _render_cards() -> void:
 		_cards.add_child(_m_harmony(suitor, _selected))
 		_cards.add_child(_m_house_card(_selected, Locale.t("ux_spouse_side") if is_married_view() else Locale.t("mw_d382e424"), UIKit.OK))
 		_fill_forecast(suitor, _selected)
+		_place_marriage_crests()
 		return
 	_house_card(_rect_principal, suitor, left_tag, "CLAN PRINCIPAL", UIKit.ACCENT, "SERIES: VII-01")
 	_harmony_card(_rect_harmony, suitor, _selected)
 	_house_card(_rect_spouse, _selected, Locale.t("ux_spouse_side") if is_married_view() else "应帖一方", "SPOUSE" if is_married_view() else "ALLIED SPOUSE", UIKit.OK, "SERIES: IV-02")
 	_fill_forecast(suitor, _selected)
+	_place_marriage_crests()
 
 func _fill_forecast(a: CKCharacter, b: CKCharacter) -> void:
 	if _rite_board == null or _punnett == null:
@@ -872,6 +895,7 @@ func _mobile_after_render() -> void:
 
 func apply_mobile_layout() -> void:
 	if _mobile_relayout():
+		_place_marriage_crests()
 		return
 	var vp := get_viewport_rect().size
 	_fit_chrome(vp)
@@ -1453,10 +1477,16 @@ func _m_house_card(c: CKCharacter, side_tag: String, col: Color) -> Control:
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 10)
 	v.add_child(row)
+	var holder := Control.new()
+	holder.custom_minimum_size = Vector2(84, 112)
+	holder.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	row.add_child(holder)
 	var pr := UIKit.make_portrait_rect(c, 132)
+	pr.position = Vector2.ZERO
+	pr.size = Vector2(84, 112)
 	pr.custom_minimum_size = Vector2(84, 112)
-	pr.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
-	row.add_child(pr)
+	holder.add_child(pr)
+	CKHeraldryChrome.attach_house_card_chrome(holder, c, Rect2(0, 0, 84, 112), Vector2(28, 34))
 	var info := VBoxContainer.new()
 	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	info.add_theme_constant_override("separation", 2)
