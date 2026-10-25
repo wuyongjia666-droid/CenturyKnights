@@ -408,3 +408,5 @@ atlas_chain_fail_done,委托链「%s」已记失败,Chain "%s" marked failed
 atlas_chain_reroute_ok,已改道重接「%s」,Rerouted "%s"
 atlas_chain_reroute_not_failed,这条委托链并未失败,This chain is not failed
 atlas_chain_reroute_missing,找不到可改道的委托链步骤,No chain step to reroute
+atlas_chain_fail_log,委托链「%s」失败：%s,Chain "%s" failed: %s
+atlas_chain_reroute_log,委托链「%s」改道重接第 %d 程,Chain "%s" rerouted to leg %d

@@ -2266,7 +2266,7 @@ func _fail_scripted_chain(q: Dictionary, reason: String) -> void:
 		"chain_title": str(chain.get("title", cid)),
 	}
 	var why := Locale.t("atlas_chain_fail_reason_expire") if reason == "expire" else Locale.t("atlas_chain_fail_reason_abandon")
-	_tlog("委托链「%s」失败：%s" % [str(chain.get("title", cid)), why])
+	_tlog(Locale.t("atlas_chain_fail_log") % [str(chain.get("title", cid)), why])
 
 ## Peek+clear fail payload for atlas ChainFailModal.
 func take_chain_fail() -> Dictionary:
@@ -2296,7 +2296,7 @@ func reroute_failed_chain(chain_id: String) -> Dictionary:
 	nq["days_budget"] = mini(int(nq.get("days_budget", 40)), 28)
 	_post_chain_offer(nq)
 	last_chain_fail = {}
-	_tlog("委托链「%s」改道重接第 %d 程" % [str(chain.get("title", chain_id)), step + 1])
+	_tlog(Locale.t("atlas_chain_reroute_log") % [str(chain.get("title", chain_id)), step + 1])
 	world_changed.emit()
 	return {"ok": true, "msg": Locale.t("atlas_chain_reroute_ok") % str(chain.get("title", chain_id)), "quest": nq}
 
