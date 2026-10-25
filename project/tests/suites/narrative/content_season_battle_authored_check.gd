@@ -14,8 +14,11 @@ const BATTLE_BEAT := {
 	"cs03_01": "bridge",
 	"cs04_01": "bridge",
 	"cs05_01": "bridge",
+	"cs05_02": "bridge",
 	"cs06_01": "bridge",
+	"cs06_02": "bridge",
 	"cs07_01": "bridge",
+	"cs07_02": "bridge",
 	"cs08_01": "bridge",
 	"cs09_01": "bridge",
 	"cs10_01": "bridge",
@@ -27,16 +30,19 @@ const AFTER := {
 	"cs03_01": "tavern",
 	"cs04_01": "tavern",
 	"cs05_01": "tavern",
+	"cs05_02": "tavern",
 	"cs06_01": "tavern",
+	"cs06_02": "tavern",
 	"cs07_01": "tavern",
+	"cs07_02": "tavern",
 	"cs08_01": "tavern",
 	"cs09_01": "tavern",
 	"cs10_01": "tavern",
 }
 ## Live press path on every authored season (static gate already covers all ten).
 const LIVE := [
-	"cs01_01", "cs02_01", "cs03_01", "cs04_01", "cs05_01",
-	"cs06_01", "cs07_01", "cs08_01", "cs09_01", "cs10_01",
+	"cs01_01", "cs02_01", "cs03_01", "cs04_01", "cs05_01", "cs05_02",
+	"cs06_01", "cs06_02", "cs07_01", "cs07_02", "cs08_01", "cs09_01", "cs10_01",
 ]
 
 
@@ -100,8 +106,8 @@ func _authored_one(cid: String) -> String:
 func _accumulate_beat(cid: String, want_beat: String, b, acc: Dictionary) -> void:
 	if str(acc.get("err", "")) != "":
 		return
-	var mid_flag := cid.substr(0, 4) + "_mid_fought"
-	var lost_flag := cid.substr(0, 4) + "_mid_lost"
+	var mid_flag := _fought(cid)
+	var lost_flag := _lost(cid)
 	if str(b.get("id", "")) == want_beat:
 		_accumulate_lost_line(b, mid_flag, lost_flag, acc)
 		_accumulate_continue(cid, b, acc)
@@ -151,8 +157,8 @@ func _accumulate_continue(cid: String, b, acc: Dictionary) -> void:
 		if str(a.get("label", "")).find("继续") < 0:
 			acc["err"] = "%s continue label missing 继续: %s" % [cid, str(a.get("label", ""))]
 			return
-		var mid_flag := cid.substr(0, 4) + "_mid_fought"
-		var lost_flag := cid.substr(0, 4) + "_mid_lost"
+		var mid_flag := _fought(cid)
+		var lost_flag := _lost(cid)
 		var goto_ok := false
 		var skip_ok := false
 		var abort_ok := false
@@ -241,6 +247,21 @@ func _check_battle_cta(cid: String, a, mid_flag: String, lost_flag: String) -> S
 			return "%s retry when want not %s + flag %s got %s" % [cid, mid_flag, lost_flag, str(when_row)]
 		return ""
 	return "%s unexpected battle action id %s" % [cid, aid]
+
+
+func _mid_prefix(cid: String) -> String:
+	# csNN_01 keep historic csNN_*; secondary chapters use full id.
+	if cid.length() >= 7 and cid.substr(5, 2) == "01":
+		return cid.substr(0, 4)
+	return cid
+
+
+func _fought(cid: String) -> String:
+	return _mid_prefix(cid) + "_mid_fought"
+
+
+func _lost(cid: String) -> String:
+	return _mid_prefix(cid) + "_mid_lost"
 
 
 func _when_all_has(when_row, key: String, want: String) -> bool:

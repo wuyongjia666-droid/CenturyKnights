@@ -7,8 +7,8 @@ const LintScript = preload("res://scripts/narrative/dialogue_lint.gd")
 const PLAYER := "res://scenes/story/chapter_player.tscn"
 const HUB := "res://scenes/hub/castle_hub.tscn"
 const CHAPTERS := [
-	"cs01_01", "cs02_01", "cs03_01", "cs04_01", "cs05_01",
-	"cs06_01", "cs07_01", "cs08_01", "cs09_01", "cs10_01",
+	"cs01_01", "cs02_01", "cs03_01", "cs04_01", "cs05_01", "cs05_02",
+	"cs06_01", "cs06_02", "cs07_01", "cs07_02", "cs08_01", "cs09_01", "cs10_01",
 ]
 ## Choice label → expected flag (first option on tavern beat).
 const CHOICE := {
@@ -17,8 +17,11 @@ const CHOICE := {
 	"cs03_01": ["功与粮并排", "cs03_kept_parallel"],
 	"cs04_01": ["训与行并排", "cs04_kept_parallel"],
 	"cs05_01": ["空椅并排链", "cs05_kept_chain"],
+	"cs05_02": ["链仍并排", "cs05_reread_parallel"],
 	"cs06_01": ["校场并排记", "cs06_kept_yard"],
+	"cs06_02": ["空条并排", "cs06_book_parallel"],
 	"cs07_01": ["仪典并排记", "cs07_kept_rite"],
+	"cs07_02": ["空条并排", "cs07_gene_parallel"],
 	"cs08_01": ["祖祠并排记", "cs08_kept_stele"],
 	"cs09_01": ["血验并排记", "cs09_kept_blood"],
 	"cs10_01": ["城印并排记", "cs10_kept_seal"],
