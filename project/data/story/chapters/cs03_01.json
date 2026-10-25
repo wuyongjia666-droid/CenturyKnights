@@ -153,8 +153,30 @@
           "speaker": "leader",
           "text": "带。谁用功定粮价，先念下行。"
         }
+      ],
+      "actions": [
+        {
+          "id": "open_hourglass",
+          "label": "去看月份怎么往前走",
+          "do": [
+            {
+              "op": "visit",
+              "path": "res://scenes/hub/hourglass.tscn"
+            }
+          ]
+        },
+        {
+          "id": "continue_after_visit",
+          "label": "继续，去门廊",
+          "do": [
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
       ]
-    },
+},
     {
       "id": "bridge",
       "title": "桥上",

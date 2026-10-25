@@ -173,8 +173,30 @@
           "speaker": "苇原·灯影",
           "text": "半截话今晚过陆桥。不拦，就准备对。"
         }
+      ],
+      "actions": [
+        {
+          "id": "open_hourglass",
+          "label": "去看月份怎么往前走",
+          "do": [
+            {
+              "op": "visit",
+              "path": "res://scenes/hub/hourglass.tscn"
+            }
+          ]
+        },
+        {
+          "id": "continue_after_visit",
+          "label": "继续，去酒馆",
+          "do": [
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
       ]
-    },
+},
     {
       "id": "tavern",
       "title": "摘抄",
