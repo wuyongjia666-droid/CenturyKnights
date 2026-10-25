@@ -15,6 +15,7 @@ func _ready() -> void:
 	UIFX.fade_in(self, 0.28)
 	Music.play_castle()
 	UIKit.top_bar(self, "领地营建 · 四野属地", UIKit.std_resource_chips(), "返回城堡", func(): CKNav.up())
+	_place_estates_crests()
 	UIKit.page_head(self, 42, 70, "ESTATE SANCTUARY INFRASTRUCTURE // SECTOR 01", "领地营建", "TERRITORIAL PROSPERITY")
 	var sum := UIKit.body_label(_sum_text(), UIKit.TEXT_DIM, 12)
 	sum.name = "Sum"
@@ -195,6 +196,14 @@ func _focus_tile(fk: String, current: bool, hid: String) -> Button:
 			UIFX.soft_deny(b)
 	)
 	return b
+
+
+func _place_estates_crests() -> void:
+	## Estates chrome: 团徽 header + castle banner strip.
+	var mob := DeviceProfile.is_mobile()
+	var hdr := Vector2(44, 52) if not mob else Vector2(40, 48)
+	CKHeraldryChrome.place_company_header(self, Vector2(1180, 8) if not mob else Vector2(1180, 4), hdr)
+	CKHeraldryChrome.place_castle_banner_strip(self, Vector2(1120, 8) if not mob else Vector2(1120, 4), hdr, Vector2(28, 38))
 
 func apply_mobile_layout() -> void:
 	if MobilePage.active(self):
@@ -650,6 +659,9 @@ func open_field_book() -> void:
 	close.custom_minimum_size.y = 48
 	close.pressed.connect(close_field_book)
 	head.add_child(close)
+	var mob := DeviceProfile.is_mobile() or has_meta("m_on")
+	var sh := Vector2(34, 42) if mob else Vector2(36, 44)
+	CKHeraldryChrome.place_field_crest_strip(overlay, Vector2(1180, 10) if not mob else Vector2(20, 8), sh, Vector2(22, 30) if mob else Vector2(24, 34))
 	var sub := UIKit.body_label(Locale.t("ux_estates_sub"), UIKit.TEXT_DIM, 14)
 	sub.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	root.add_child(sub)
@@ -714,8 +726,10 @@ func _fill_field_list() -> void:
 		shown += 1
 		var purse := CKPurse.get_purse(c)
 		var row := HBoxContainer.new()
+		row.name = "FieldRow_%s" % str(c.id)
 		row.add_theme_constant_override("separation", 8)
 		row.custom_minimum_size.y = 48
+		CKHeraldryChrome.attach_field_row_arms(row, c, Vector2(26, 32) if has_meta("m_on") else Vector2(28, 34))
 		var lab := UIKit.body_label(Locale.t("ux_field_row") % [c.name, c.age, purse, _field_status(c)], UIKit.TEXT, 14)
 		lab.custom_minimum_size.x = 340
 		lab.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
@@ -779,6 +793,7 @@ func _m_build() -> void:
 	var bar := MobilePage.top_bar(self, Locale.t("mw_39662991"), Locale.t("mw_41e31e6c") % [GameState.silver, GameState.food, GameState.iron, Calendar.label()],
 			[[Locale.t("btn_back"), func(): CKNav.up()]])
 	bar.visible = true
+	_place_estates_crests()
 	var rw := clampf(w * 0.27, 340.0, 420.0)
 	var lw := w - 40.0 - rw - 12.0
 	var lv := MobilePage.panel(_m_root, Rect2(20, top, lw, bh), 12)

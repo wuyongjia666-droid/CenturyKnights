@@ -538,6 +538,9 @@ func _life(mid: Control, c: CKCharacter) -> void:
 	if not c.in_roster:
 		status = Locale.t("lb_dos_home")
 	box.add_child(CKPageKit.text(status, UIKit.OK if why == "" else UIKit.DANGER, 13, 400))
+	## 私囊 plate: person PurseArms + silver readout.
+	var purse_n := CKPurse.get_purse(c)
+	CKHeraldryChrome.place_purse_plate(box, c, purse_n, Vector2(26, 32) if DeviceProfile.is_mobile() else Vector2(28, 34))
 
 
 func _tutor_feel(parent: Node, focus: CKCharacter) -> void:
