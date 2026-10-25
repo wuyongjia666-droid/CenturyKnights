@@ -742,16 +742,29 @@ func _add_node_button(n: Dictionary, markers: Dictionary, mm: Dictionary) -> voi
 		var marker := CKCourt.latest_marker(_view)
 		if not marker.is_empty():
 			badges.append([_court_glyph(str(marker.get("kind", ""))), _court_color(str(marker.get("kind", "")))])
-	var bx := _np(id).x + px * 0.5 - 4
+	# Badges sit outside the disc. A 16px offset on an unsized label used to cover 都.
+	var node_r := Rect2(b.position, b.size)
+	var bi := 0
 	for bd in badges:
 		var bl := UIKit.title_label(str(bd[0]), 16, bd[1])
 		bl.add_theme_color_override("font_outline_color", Color(0.02, 0.03, 0.05, 1))
 		bl.add_theme_constant_override("outline_size", 5)
-		bl.position = Vector2(bx, _np(id).y - px * 0.5 - 16)
 		bl.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		var badge_sz := bl.get_combined_minimum_size()
+		# Right of the disc. Above the disc sits the party token (旗), which the old
+		# top-right offset covered together with the 都 glyph.
+		var pos := Vector2(node_r.end.x + 3.0, node_r.position.y + float(bi) * (badge_sz.y + 2.0))
+		if pos.x + badge_sz.x > MAP.size.x - 2.0:
+			pos.x = node_r.position.x - badge_sz.x - 3.0
+		pos.x = clampf(pos.x, 2.0, MAP.size.x - badge_sz.x - 2.0)
+		pos.y = clampf(pos.y, 2.0, MAP.size.y - badge_sz.y - 2.0)
+		if Rect2(pos, badge_sz).intersects(node_r.grow(1.0)):
+			pos.y = clampf(node_r.end.y + 2.0, 2.0, MAP.size.y - badge_sz.y - 2.0)
+		bl.position = pos
+		bl.size = badge_sz
 		_layer.add_child(bl)
 		UIFX.breathe(bl, 0.1, 1.2)
-		bx += 14
+		bi += 1
 
 func _gate_dir(from_id: String, to_id: String) -> Vector2:
 	var a := _region_pos(World.nation_of(from_id))
@@ -1041,83 +1054,95 @@ func _render_right() -> void:
 	# vignette (farm plate or nation-plate crop)
 	var th := Control.new()
 	th.position = Vector2(16, 88)
-	th.size = Vector2(224, 112)
+	th.size = Vector2(224, 88)
 	th.clip_contents = true
 	p.add_child(th)
 	_fill_vignette(th, _sel)
+	# Quotes, lore, and quests share one column that ends above the action row.
+	# Absolute y=296 lore used to sit on top of the produce block.
+	var col_w := 224.0
+	var stack_top := 184.0
+	var actions_top := 462.0
+	var scroll := ScrollContainer.new()
+	scroll.name = "ProfileScroll"
+	scroll.position = Vector2(16, stack_top)
+	scroll.size = Vector2(col_w, actions_top - stack_top)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	p.add_child(scroll)
+	var stack := VBoxContainer.new()
+	stack.name = "ProfileStack"
+	stack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	stack.custom_minimum_size = Vector2(col_w, 0)
+	stack.add_theme_constant_override("separation", 4)
+	scroll.add_child(stack)
 	var kv := VBoxContainer.new()
-	kv.position = Vector2(16, 208)
+	kv.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	kv.add_theme_constant_override("separation", 3)
-	p.add_child(kv)
+	stack.add_child(kv)
 	var rep := World.rep_of(_sel)
-	kv.add_child(UIKit.kv_row("城声望", "%d · %s" % [rep, World.rep_tier_name(rep)], UIKit.ACCENT, 224))
-	kv.add_child(UIKit.kv_row("特产", str(n.get("specialty", "")), UIKit.TEXT, 224))
+	kv.add_child(UIKit.kv_row("城声望", "%d · %s" % [rep, World.rep_tier_name(rep)], UIKit.ACCENT, col_w))
+	kv.add_child(UIKit.kv_row("特产", str(n.get("specialty", "")), UIKit.TEXT, col_w))
 	var prod: Array = []
 	for g in n.get("produce", []):
 		prod.append(World.good_name(str(g)))
 	var dem: Array = []
 	for g in n.get("demand", []):
 		dem.append(World.good_name(str(g)))
-	kv.add_child(UIKit.kv_row("出产", "、".join(prod) if not prod.is_empty() else "—", UIKit.OK, 224))
-	kv.add_child(UIKit.kv_row("求购", "、".join(dem) if not dem.is_empty() else "—", UIKit.EMBER, 224))
+	kv.add_child(UIKit.kv_row("出产", "、".join(prod) if not prod.is_empty() else "—", UIKit.OK, col_w))
+	kv.add_child(UIKit.kv_row("求购", "、".join(dem) if not dem.is_empty() else "—", UIKit.EMBER, col_w))
 	var loop_box := VBoxContainer.new()
 	loop_box.name = "TradeLoop"
+	loop_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	loop_box.add_theme_constant_override("separation", 2)
-	kv.add_child(loop_box)
+	stack.add_child(loop_box)
+	loop_box.add_child(UIKit.mono(Locale.t("atlas_trade_loop_en"), 8, UIKit.EMBER, false))
 	var loops: Array = World.produce_trade_loop(_sel)
 	var shown := 0
-	if not loops.is_empty():
-		loop_box.add_child(UIKit.mono(Locale.t("atlas_trade_loop_en"), 8, UIKit.EMBER, false))
 	for row in loops:
-		if shown >= 1:
+		if shown >= 2:
 			break
 		var line := ""
 		if bool(row.get("known", false)):
 			line = Locale.t("atlas_trade_loop_line") % [str(row.name), int(row.buy), str(row.sell_name), int(row.sell), int(row.margin)]
 		else:
 			line = Locale.t("atlas_trade_loop_unknown") % [str(row.name), int(row.buy)]
-		var ll := UIKit.body_label(line, UIKit.OK if int(row.get("margin", 0)) > 0 else UIKit.TEXT_DIM, 10)
+		var ll := UIKit.body_label(line, UIKit.OK if int(row.get("margin", 0)) > 0 else UIKit.TEXT_DIM, 12)
 		ll.name = "TradeLoop_%d" % shown
-		ll.autowrap_mode = TextServer.AUTOWRAP_OFF
-		ll.clip_text = true
-		ll.custom_minimum_size = Vector2(224, 0)
-		ll.size = Vector2(224, 14)
+		ll.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		ll.clip_text = false
+		ll.custom_minimum_size = Vector2(col_w, 0)
+		ll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		loop_box.add_child(ll)
 		shown += 1
-	# Lore sits below kv (which may include one trade-loop line). Fixed y=296 overlapped the CTA.
-	var lore_y := 308.0 if loops.is_empty() else 324.0
-	var lore := UIKit.body_label(str(n.get("lore", "")), UIKit.TEXT_DIM, 11)
-	lore.position = Vector2(16, lore_y)
-	lore.size = Vector2(224, 56 if not loops.is_empty() else 72)
-	lore.custom_minimum_size = Vector2(224, 0)
-	lore.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	lore.clip_text = true
-	p.add_child(lore)
 	if _sel == World.pos and not loops.is_empty():
-		var tb := UIKit.ghost_button(Locale.t("atlas_trade_loop_goto"), 224, 26)
+		var tb := UIKit.ghost_button(Locale.t("atlas_trade_loop_goto"), int(col_w), 26)
 		tb.name = "TradeLoopGoto"
-		tb.position = Vector2(16, 438)
 		tb.pressed.connect(func():
 			GameState.set_meta("city_tab", "market")
 			_enter_here())
-		p.add_child(tb)
-	# quests here
-	var qy := lore_y + (60.0 if not loops.is_empty() else 76.0)
+		loop_box.add_child(tb)
+	var lore := UIKit.body_label(str(n.get("lore", "")), UIKit.TEXT_DIM, 12)
+	lore.name = "ProfileLore"
+	lore.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lore.clip_text = false
+	lore.custom_minimum_size = Vector2(col_w, 0)
+	lore.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	stack.add_child(lore)
+	var mm: Dictionary = World.mainline_marker()
 	for mk in World.quest_markers().get(_sel, []):
 		var q: Dictionary = mk.quest
-		var ql := UIKit.body_label("%s %s" % ["✓ 交付" if str(mk.kind) == "turnin" else "◆ 目标", q.title], UIKit.OK if str(mk.kind) == "turnin" else UIKit.DANGER, 11)
-		ql.autowrap_mode = TextServer.AUTOWRAP_OFF
-		ql.clip_text = true
-		ql.size = Vector2(224, 16)
-		ql.position = Vector2(16, qy)
-		p.add_child(ql)
-		qy += 17
-	var mm: Dictionary = World.mainline_marker()
+		var ql := UIKit.body_label("%s %s" % ["✓ 交付" if str(mk.kind) == "turnin" else "◆ 目标", q.title], UIKit.OK if str(mk.kind) == "turnin" else UIKit.DANGER, 12)
+		ql.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		ql.clip_text = false
+		ql.custom_minimum_size = Vector2(col_w, 0)
+		ql.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		stack.add_child(ql)
 	if str(mm.get("node", "")) == _sel:
-		var ml := UIKit.body_label("★ %s（在此展开）" % mm.label, UIKit.EMBER, 11)
-		ml.autowrap_mode = TextServer.AUTOWRAP_OFF
-		ml.position = Vector2(16, qy)
-		p.add_child(ml)
+		var ml := UIKit.body_label("★ %s（在此展开）" % mm.label, UIKit.EMBER, 12)
+		ml.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		ml.custom_minimum_size = Vector2(col_w, 0)
+		ml.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		stack.add_child(ml)
 	# actions
 	var go := UIKit.cta_button("启程前往", "A", 224, 40)
 	go.name = "GoButton"
