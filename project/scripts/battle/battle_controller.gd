@@ -247,6 +247,7 @@ func _process(delta: float) -> void:
 		or _trauma > 0.0 or _turn_flash > 0.0
 		or BattlePhaseFeel.settle_alpha(self) > 0.0
 		or BattlePhaseFeel.enemy_actor_alpha(self) > 0.0
+		or BattlePhaseFeel.end_alpha(self) > 0.0
 		or BattleEngageCutscene.bridge_alpha(self) > 0.0
 	)
 	_redraw_accum += delta
@@ -1279,6 +1280,7 @@ func _draw_overlay() -> void:
 	BattlePhaseFeel.draw_turn_banner(self, overlay)
 	BattlePhaseFeel.draw_enemy_actor_ring(self, overlay)
 	BattlePhaseFeel.draw_settle_flash(self, overlay)
+	BattlePhaseFeel.draw_end_banner(self, overlay)
 	# T-P7: FE engage bridge (atk↔def) — overlay only, no input steal
 	BattleEngageCutscene.draw_engage_bridge(self, overlay)
 	# 地形悬停提示
@@ -2838,6 +2840,7 @@ func _finish(win: bool) -> void:
 	if battle_over:
 		return
 	battle_over = true
+	BattlePhaseFeel.note_battle_end(self, win)
 	_world_enc = GameState.has_meta("world_encounter")
 	var purse := 0
 	var sp_gain := 0
