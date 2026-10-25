@@ -35,6 +35,22 @@ test -f .github/workflows/release.yml
 python3 tools/ci/store_prep_check.py
 ```
 
+## 正式提审包（人工，不缴费自动化）
+
+| 目标 | 今日做法 | 备注 |
+|---|---|---|
+| Play AAB | 本机 Godot 导出 Android 正式预设 → AAB | CI 仍发 debug APK 试玩；AAB 不进自动缴费 |
+| Play 上传 | 业主 Play Console 人工 | **不缴费提审**则停在上传前 |
+| MS 商店包 | 需 MSIX/打包另刀 | 今日仅 zip 试玩 |
+| 签名 | Play App Signing / 本地 upload key | keystore **禁止**进 git |
+| 包体复核 | `python3 tools/ci/export_size_report.py` | 超预算先削按需资源，禁 H/I 砍画质 |
+
+## 与门禁的关系
+
+- `store_prep_check.py`：文档齐全 + 季#2/#3 中篇 ≥12000 汉字 + 嵌套 packaging dry  
+- `store_packaging_dry_check.py`：脚本/预设/workflow/listing 实质体积  
+- 两者都绿才算「商店工程可重复」，**不等于**已提审
+
 ## 验证记录
 
 干跑证据与复跑命令见 [`export-paths-verification-record.md`](./export-paths-verification-record.md)。
@@ -42,3 +58,4 @@ python3 tools/ci/store_prep_check.py
 ```bash
 python3 tools/ci/store_verify_records_check.py
 ```
+
