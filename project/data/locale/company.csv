@@ -268,3 +268,27 @@ wq_cta_goto_turnin,去交付城,Go to turn-in city
 wq_cta_goto_objective,去目标,Go to objective
 wq_done_empty,还没有办完的舆图委托,No finished atlas commissions yet
 wq_done_empty_why,办完城里的委托后，会记在这里。,Finished city commissions show up here.
+atlas_route_to,→ %s,→ %s
+atlas_chip_days,日程,Days
+atlas_chip_days_v,%d 日,%d days
+atlas_chip_food,耗粮,Rations
+atlas_chip_toll,关税/船资,Toll / fare
+atlas_chip_silver,%d 银,%d silver
+atlas_chip_danger,险,Risk
+atlas_chip_hot,险段,Hot legs
+atlas_chip_hot_v,%d 段,%d
+atlas_leg_line,%s › %s · %d日 · 险%s · %s%s,"%s › %s · %d d · risk %s · %s%s"
+atlas_leg_more,另有 %d 段…,+%d more legs…
+atlas_warn_food,粮草不足以走完全程——断粮会每日损失士气。,Not enough food for the whole march — starvation drains morale daily.
+atlas_warn_border,过境：%s,Crossing: %s
+atlas_warn_hot,途中有 %d 段高危路——伏击更密。,%d high-risk leg(s) ahead — ambushes more likely.
+atlas_hud_go,启程,March
+atlas_road_kind_road,陆路,Road
+atlas_road_kind_border,关隘,Border
+atlas_road_kind_sea,海路,Sea
+hub_discover_en,FIRST VISIT · HUBS,FIRST VISIT · HUBS
+hub_discover_title,初访此地：先去看看市集、铁匠与酒馆,"First visit: check the market, smith, and tavern"
+hub_discover_smith,去铁匠铺,Go to smith
+hub_discover_market,去市集,Go to market
+hub_discover_tavern,去酒馆,Go to tavern
+hub_discover_later,稍后再说,Later

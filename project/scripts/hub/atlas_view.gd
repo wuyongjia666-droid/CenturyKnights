@@ -1003,7 +1003,8 @@ func _render_left() -> void:
 # ── right column: profile ─────────────────────────────
 func _render_right() -> void:
 	for c in _right.get_children():
-		c.queue_free()
+		_right.remove_child(c)
+		c.free()
 	if _mob:
 		_m_place()
 		_m_actions()
@@ -1203,7 +1204,8 @@ func _fill_vignette(th: Control, id: String) -> void:
 # ── bottom travel HUD ─────────────────────────────────
 func _render_hud() -> void:
 	for c in _hud.get_children():
-		c.queue_free()
+		_hud.remove_child(c)
+		c.free()
 	if _mob:
 		_m_log()
 		_m_actions()
@@ -1272,42 +1274,79 @@ func _render_hud() -> void:
 	var pv := _preview
 	var pth: Array = pv.get("path", [])
 	var dest: Dictionary = World.node(str(pth[pth.size() - 1]) if not pth.is_empty() else _sel)
-	var t3 := UIKit.title_label("→ %s" % dest.get("name", ""), 16)
-	t3.position = Vector2(16, 26)
+	var t3 := UIKit.title_label(Locale.t("atlas_route_to") % dest.get("name", ""), 16)
+	t3.position = Vector2(16, 18)
 	p.add_child(t3)
 	var names: Array = []
 	for id in pv.path:
 		names.append(str(World.node(str(id)).get("name", id)))
 	var chain := UIKit.body_label(" › ".join(names), UIKit.TEXT_DIM, 11)
-	chain.position = Vector2(16, 52)
+	chain.position = Vector2(16, 42)
 	chain.autowrap_mode = TextServer.AUTOWRAP_OFF
 	chain.clip_text = true
 	chain.size = Vector2(476, 16)
 	p.add_child(chain)
 	var stats := HBoxContainer.new()
-	stats.position = Vector2(16, 74)
+	stats.position = Vector2(16, 62)
 	stats.add_theme_constant_override("separation", 6)
 	p.add_child(stats)
-	stats.add_child(UIKit.res_chip("日程", "%d 日" % int(pv.days), UIKit.TEXT))
-	stats.add_child(UIKit.res_chip("耗粮", str(pv.food), UIKit.DANGER if bool(pv.short_food) else UIKit.TEXT))
+	stats.add_child(UIKit.res_chip(Locale.t("atlas_chip_days"), Locale.t("atlas_chip_days_v") % int(pv.days), UIKit.TEXT))
+	stats.add_child(UIKit.res_chip(Locale.t("atlas_chip_food"), str(pv.food), UIKit.DANGER if bool(pv.short_food) else UIKit.TEXT))
 	var cost := int(pv.tolls) + int(pv.fare)
-	stats.add_child(UIKit.res_chip("关税/船资", "%d 银" % cost, UIKit.DANGER if GameState.silver < cost else UIKit.TEXT))
-	stats.add_child(UIKit.res_chip("险", "▮".repeat(int(pv.danger)) + "▯".repeat(maxi(0, 4 - int(pv.danger))), UIKit.DANGER if int(pv.danger) >= 3 else UIKit.ACCENT))
+	stats.add_child(UIKit.res_chip(Locale.t("atlas_chip_toll"), Locale.t("atlas_chip_silver") % cost, UIKit.DANGER if GameState.silver < cost else UIKit.TEXT))
+	var dang := int(pv.danger)
+	stats.add_child(UIKit.res_chip(Locale.t("atlas_chip_danger"), World.danger_bars(dang), UIKit.DANGER if dang >= 3 else UIKit.ACCENT))
+	var hot_n := int(pv.get("hot_legs", 0))
+	if hot_n > 0:
+		stats.add_child(UIKit.res_chip(Locale.t("atlas_chip_hot"), Locale.t("atlas_chip_hot_v") % hot_n, UIKit.DANGER))
+	# Per-leg danger readout (跑图手感)
+	var legs_box := VBoxContainer.new()
+	legs_box.name = "RouteLegs"
+	legs_box.position = Vector2(16, 92)
+	legs_box.add_theme_constant_override("separation", 1)
+	p.add_child(legs_box)
+	var readouts: Array = pv.get("leg_readouts", [])
+	var show_n := mini(4, readouts.size())
+	for i in show_n:
+		var leg: Dictionary = readouts[i]
+		var dng := int(leg.get("danger", 1))
+		var cost_s := ""
+		if int(leg.get("cost", 0)) > 0:
+			cost_s = " · " + Locale.t("atlas_chip_silver") % int(leg.cost)
+		var line := Locale.t("atlas_leg_line") % [
+			str(leg.get("from_name", "")), str(leg.get("to_name", "")),
+			int(leg.get("days", 1)), World.danger_bars(dng),
+			str(leg.get("kind_zh", "")), cost_s]
+		var ll := UIKit.body_label(line, UIKit.DANGER if dng >= 3 else UIKit.TEXT_DIM, 10)
+		ll.name = "Leg_%d" % i
+		ll.autowrap_mode = TextServer.AUTOWRAP_OFF
+		ll.clip_text = true
+		ll.custom_minimum_size = Vector2(340, 0)
+		ll.size = Vector2(340, 14)
+		legs_box.add_child(ll)
+	if readouts.size() > show_n:
+		var more := UIKit.body_label(Locale.t("atlas_leg_more") % (readouts.size() - show_n), UIKit.TEXT_FAINT, 10)
+		more.name = "LegMore"
+		legs_box.add_child(more)
+	var warn_y := 92.0 + float(show_n + (1 if readouts.size() > show_n else 0)) * 15.0 + 4.0
 	var warn := ""
 	if bool(pv.short_food):
-		warn = "粮草不足以走完全程——断粮会每日损失士气。"
+		warn = Locale.t("atlas_warn_food")
 	elif not (pv.borders as Array).is_empty():
-		warn = "过境：%s" % "、".join(pv.borders)
+		warn = Locale.t("atlas_warn_border") % "、".join(pv.borders)
+	elif hot_n > 0:
+		warn = Locale.t("atlas_warn_hot") % hot_n
 	if warn != "":
-		var wl := UIKit.body_label(warn, UIKit.EMBER if bool(pv.short_food) else UIKit.TEXT_DIM, 11)
+		var wl := UIKit.body_label(warn, UIKit.EMBER if bool(pv.short_food) or hot_n > 0 else UIKit.TEXT_DIM, 11)
+		wl.name = "RouteWarn"
 		wl.autowrap_mode = TextServer.AUTOWRAP_OFF
 		wl.clip_text = true
 		wl.size = Vector2(340, 16)
-		wl.position = Vector2(16, 120)
+		wl.position = Vector2(16, warn_y)
 		p.add_child(wl)
-	var go := UIKit.cta_button("启程", "A", 120, 34)
+	var go := UIKit.cta_button(Locale.t("atlas_hud_go"), "A", 120, 34)
 	go.name = "HudGo"
-	go.position = Vector2(376, 112)
+	go.position = Vector2(376, maxf(112.0, warn_y - 4.0))
 	go.disabled = _busy or GameState.silver < int(pv.fare)
 	go.pressed.connect(_start_travel)
 	p.add_child(go)
@@ -2233,10 +2272,38 @@ func _m_route(box: Control) -> void:
 		v.autowrap_mode = TextServer.AUTOWRAP_OFF
 		cell.add_child(v)
 		g.add_child(cell)
+	var legs_sec := VBoxContainer.new()
+	legs_sec.name = "RouteLegs"
+	legs_sec.add_theme_constant_override("separation", 2)
+	box.add_child(legs_sec)
+	var readouts: Array = pv.get("leg_readouts", [])
+	var show_n := mini(5, readouts.size())
+	for i in show_n:
+		var leg: Dictionary = readouts[i]
+		var dng := int(leg.get("danger", 1))
+		var cost_s := ""
+		if int(leg.get("cost", 0)) > 0:
+			cost_s = " · " + Locale.t("atlas_chip_silver") % int(leg.cost)
+		var line := Locale.t("atlas_leg_line") % [
+			str(leg.get("from_name", "")), str(leg.get("to_name", "")),
+			int(leg.get("days", 1)), World.danger_bars(dng),
+			str(leg.get("kind_zh", "")), cost_s]
+		var ll := _m_label(line, UIKit.DANGER if dng >= 3 else UIKit.TEXT_DIM)
+		ll.name = "Leg_%d" % i
+		legs_sec.add_child(ll)
+	if readouts.size() > show_n:
+		var more := _m_label(Locale.t("atlas_leg_more") % (readouts.size() - show_n), UIKit.TEXT_FAINT)
+		more.name = "LegMore"
+		legs_sec.add_child(more)
+	var hot_n := int(pv.get("hot_legs", 0))
 	if bool(pv.short_food):
 		box.add_child(_m_label(Locale.t("mob_ui_027"), UIKit.EMBER))
 	elif not (pv.borders as Array).is_empty():
 		box.add_child(_m_label(Locale.t("mob_ui_028") % "、".join(pv.borders), UIKit.TEXT_DIM))
+	elif hot_n > 0:
+		var hw := _m_label(Locale.t("atlas_warn_hot") % hot_n, UIKit.EMBER)
+		hw.name = "RouteWarn"
+		box.add_child(hw)
 
 func _m_region_profile(box: Control, nid: String) -> void:
 	var nat: Dictionary = World.nations.get(nid, {})
@@ -2261,7 +2328,8 @@ func _m_actions() -> void:
 	if _actions == null:
 		return
 	for c in _actions.get_children():
-		c.queue_free()
+		_actions.remove_child(c)
+		c.free()
 	var b: Button
 	if not World.encounter.is_empty():
 		b = MobilePage.button(Locale.t("mob_ui_035"), true, func(): _show_encounter_modal(World.encounter))
