@@ -2,11 +2,11 @@ extends Control
 ## Desktop and a portrait-phone viewport, under the Windows and Android export
 ## filters, resolve the same full Qwen plate for one unit id + genome.
 ## Surfaces: hub, genealogy, tavern, battle select, marriage board, content-season cast.
-## Age bands 0–2 / 3–11 / 12–15 / 16+ swap the plate and stay stable inside a band.
+## Age bands 0-2 / 3-11 / 12-15 / 16+ swap the plate and stay stable inside a band.
 
 const AGES := [0, 2, 3, 11, 12, 15, 16, 40]
 const SURFACES := ["resolver", "hub", "genealogy", "tavern", "battle_select", "marriage", "season_cast"]
-const SEASON_SPEAKERS := ["掌柜", "岁吏", "书记官"]
+const SEASON_SPEAKERS := ["barkeep", "sui_clerk", "clerk_seal"]
 
 
 func _ready() -> void:
@@ -29,7 +29,7 @@ func _run() -> String:
 	var droid := _filters("Android")
 	if droid.is_empty():
 		return "Android exclude_filter empty"
-	GameState.new_game("烬行", "灰旗", GameState.crest_color)
+	GameState.new_game("Ash", "Banner", GameState.crest_color)
 	var leader: CKCharacter = GameState.get_leader()
 	if leader == null:
 		return "no leader"
@@ -102,11 +102,11 @@ func _band_contract(rows: Dictionary) -> String:
 	if rows[12]["resolver"] != rows[15]["resolver"]:
 		return "12 and 15 diverged"
 	if rows[2]["resolver"] == rows[3]["resolver"]:
-		return "2→3 did not swap"
+		return "2->3 did not swap"
 	if rows[11]["resolver"] == rows[12]["resolver"]:
-		return "11→12 did not swap"
+		return "11->12 did not swap"
 	if rows[15]["resolver"] == rows[16]["resolver"]:
-		return "15→16 did not swap"
+		return "15->16 did not swap"
 	if rows[16]["resolver"] == rows[40]["resolver"]:
 		return "16 and 40 share a plate; adult life stage did not advance"
 	return ""
