@@ -183,7 +183,10 @@ func _tick_epoch_dues(ctx: Dictionary) -> void:
 	if year == 1 and month == 4:
 		var purse: Dictionary = CKEconomyState.apply_spring_purse(GameState)
 		GameState.house_mods["spring_purse"] = int(purse.get("silver", 0))
-		_events(ctx).append({"type": "spring_purse", "text": Locale.t("pressure_spring_paid") % int(purse.get("silver", 0))})
+		var purse_tx := Locale.t("pressure_spring_paid") % int(purse.get("silver", 0))
+		_events(ctx).append({"type": "spring_purse", "text": purse_tx})
+		## Y1-B: 春令预付 → month_echo.dues；属地/沙漏回读（时代压力可感）.
+		CKEconomyState.month_echo_note("dues", purse_tx)
 		return
 	if not _is_dues_month(year, month):
 		return
@@ -195,7 +198,10 @@ func _tick_epoch_dues(ctx: Dictionary) -> void:
 		"phase": str(paid.get("phase", "")), "note": str(paid.get("note", "")),
 	}
 	if due > 0:
-		_events(ctx).append({"type": "epoch_dues", "text": Locale.t("pressure_month_report", [str(paid.get("note", "")), due, int(GameState.silver)])})
+		var dues_tx := Locale.t("pressure_month_report", [str(paid.get("note", "")), due, int(GameState.silver)])
+		_events(ctx).append({"type": "epoch_dues", "text": dues_tx})
+		## Y1-B: 正月/点卯开销 → month_echo.dues；属地/沙漏回读.
+		CKEconomyState.month_echo_note("dues", dues_tx)
 
 static func _is_dues_month(y: int, m: int) -> bool:
 	return (y == 1 and m == MUSTER_MONTH_Y1) or (y >= 2 and m == 1)
