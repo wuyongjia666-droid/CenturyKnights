@@ -87,11 +87,12 @@ func _check_atlas(where: String) -> void:
 	var lore := _find_text(page, "议事厅" if where == "hq" else "浇筑")
 	_ok(lore != null, "atlas %s lore" % where)
 	if where == "hq":
-		var trade_btn := _find_button(page, "去市集贩运")
+		var goto_zh := Locale.t("atlas_trade_loop_goto")
+		var trade_btn := _find_button(page, goto_zh)
 		_ok(trade_btn != null, "atlas hq trade button")
 		if trade_btn != null and lore != null:
-			_ok(_below(trade_btn, lore), "atlas hq lore sits under 去市集贩运")
-			_ok(not _hits(trade_btn, lore), "atlas hq 去市集贩运 overlaps lore")
+			_ok(_below(trade_btn, lore), "atlas hq lore sits under %s" % goto_zh)
+			_ok(not _hits(trade_btn, lore), "atlas hq %s overlaps lore" % goto_zh)
 	else:
 		var quote := _find_text(page, "铁料")
 		_ok(quote != null, "atlas capital iron quote")
@@ -107,7 +108,7 @@ func _check_atlas(where: String) -> void:
 			if flag != null:
 				_ok(not _hits(star, flag), "atlas capital ★ overlaps party token")
 	for lab in _texts(page):
-		if lab is Label and str(lab.text).contains("本地买"):
+		if lab is Label and str(lab.name).begins_with("TradeLoop_"):
 			_ok(_text_fits(lab as Label), "atlas %s quote fits: %s" % [where, str(lab.text).left(24)])
 	page.queue_free()
 	await get_tree().process_frame
@@ -137,8 +138,9 @@ func _check_city(where: String) -> void:
 
 func _check_market() -> void:
 	var page := await _mount(CITY)
-	var loop := _find_text(page, "PRODUCE LOOP")
-	_ok(loop != null, "market PRODUCE LOOP")
+	var loop_zh := Locale.t("atlas_trade_loop_en")
+	var loop := _find_text(page, loop_zh)
+	_ok(loop != null, "market %s" % loop_zh)
 	var title: Label = null
 	for c in _texts(page):
 		if c is Label and str(c.text) == "市集":
@@ -147,7 +149,7 @@ func _check_market() -> void:
 	_ok(title != null, "market title label")
 	if title != null and loop != null:
 		var gap := loop.get_global_rect().position.y - title.get_global_rect().end.y
-		_ok(gap >= 8.0 and not _hits(title, loop), "market 市集 clears PRODUCE LOOP (gap %.0f)" % gap)
+		_ok(gap >= 8.0 and not _hits(title, loop), "market 市集 clears %s (gap %.0f)" % [loop_zh, gap])
 	page.queue_free()
 	await get_tree().process_frame
 

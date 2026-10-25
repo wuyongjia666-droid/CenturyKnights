@@ -801,11 +801,12 @@ func _tab_overview() -> void:
 	for g in n.get("produce", []):
 		var best: Dictionary = World.best_known_sell(str(g), city)
 		var here := World.price(city, str(g), "buy")
-		var txt := "%s：本地 %d 银买入" % [World.good_name(str(g)), here]
+		var gname := World.good_name(str(g))
+		var txt := ""
 		if str(best.get("city", "")) != "":
-			txt += " → %s 卖 %d（%+d）" % [World.node(str(best.city)).get("name", ""), int(best.price), int(best.price) - here]
+			txt = Locale.t("atlas_trade_loop_line") % [gname, here, str(World.node(str(best.city)).get("name", "")), int(best.price), int(best.price) - here]
 		else:
-			txt += " → 暂无他处行情（到访或打听后可见）"
+			txt = Locale.t("atlas_trade_loop_unknown") % [gname, here]
 		var ln := _line(txt, UIKit.TEXT_DIM, 12, 380)
 		ln.name = "TradeLoop_%d" % ti
 		v3.add_child(ln)
