@@ -1,6 +1,6 @@
 extends Node
 ## Y1-B: commission deliver/expire → house_mods.month_echo.commission;
-## estates MonthEchoPanel shows EchoLine_commission.
+## estates + hourglass EchoLine_commission 回读（交付后断言；逾期另测写入）.
 
 func _ready() -> void:
 	var err := await _run()
@@ -30,10 +30,17 @@ func _run() -> String:
 	var err := _audit_deliver()
 	if err != "":
 		return err
-	err = await _audit_estates_line()
+	err = await _audit_panel("commission", "res://scenes/hub/estates.tscn", "MonthEchoPanel")
+	if err != "":
+		return err
+	err = await _audit_panel("commission", "res://scenes/hub/hourglass.tscn", "")
 	if err != "":
 		return err
 	err = _audit_expire()
+	if err != "":
+		return err
+	## 逾期写入后再读沙漏（同槽覆盖为逾期文案）.
+	err = await _audit_panel("commission", "res://scenes/hub/hourglass.tscn", "")
 	if err != "":
 		return err
 	return ""
@@ -77,37 +84,41 @@ func _audit_deliver() -> String:
 	return ""
 
 
-func _audit_estates_line() -> String:
+func _audit_panel(kind: String, scene_path: String, panel_name: String) -> String:
 	var snap: Dictionary = CKEconomyState.month_echo_snapshot()
-	var want := str(snap.get("commission", ""))
+	var want := str(snap.get(kind, ""))
 	if want == "":
-		return "no commission in snap before estates"
-	var page: Control = load("res://scenes/hub/estates.tscn").instantiate()
+		return "no %s in snap before %s" % [kind, scene_path]
+	var page: Control = load(scene_path).instantiate()
 	get_tree().root.add_child(page)
 	page.set_anchors_preset(Control.PRESET_TOP_LEFT)
 	page.position = Vector2.ZERO
 	page.size = Vector2(1280, 720)
 	for _i in 8:
 		await get_tree().process_frame
-	var panel := page.find_child("MonthEchoPanel", true, false)
-	if panel == null:
-		page.queue_free()
-		return "MonthEchoPanel missing"
-	var line := page.find_child("EchoLine_commission", true, false) as Label
+	var scope: Node = page
+	if panel_name != "":
+		var panel := page.find_child(panel_name, true, false)
+		if panel == null:
+			page.queue_free()
+			return "%s missing on %s" % [panel_name, scene_path]
+		scope = panel
+	var line_name := "EchoLine_%s" % kind
+	var line := page.find_child(line_name, true, false) as Label
 	var bit := want.substr(0, mini(6, want.length()))
 	if line == null:
 		var hit := false
-		for n in panel.find_children("*", "Label", true, false):
+		for n in scope.find_children("*", "Label", true, false):
 			if str((n as Label).text).find(bit) >= 0:
 				hit = true
 				break
 		if not hit:
 			page.queue_free()
-			return "EchoLine_commission missing bit=%s" % bit
+			return "%s missing bit=%s on %s" % [line_name, bit, scene_path]
 	elif str(line.text).find(bit) < 0:
 		page.queue_free()
-		return "EchoLine_commission text mismatch"
-	print("month-echo commission estates line ok")
+		return "%s text mismatch on %s" % [line_name, scene_path]
+	print("month-echo %s ok on %s" % [kind, scene_path.get_file()])
 	page.queue_free()
 	await get_tree().process_frame
 	return ""
