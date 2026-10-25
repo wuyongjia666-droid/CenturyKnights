@@ -1089,7 +1089,7 @@ static func month_echo_lines() -> Array:
 	for k in [
 		"holdings", "harvest", "territory", "commission", "battle", "recruit",
 		"birth", "pregnancy", "marriage", "spring", "doctrine", "ambition", "tutor", "promo", "retire",
-		"death", "succession", "adult", "dues", "rival",
+		"death", "succession", "adult", "dues", "rival", "job_seal",
 	]:
 		var tx := str(d.get(k, ""))
 		if tx != "":

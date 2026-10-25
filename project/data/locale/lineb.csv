@@ -391,6 +391,7 @@ lb_echo_death,%s 辞世，入族谱碑,%s passes; name on the stele
 lb_echo_tutor,%s 受 %s 传习·%s+%d,%s taught by %s · %s +%d
 lb_echo_promo,%s 转职为 %s,%s promoted to %s
 lb_echo_recruit,酒馆招募 %s（-%d 银）,Tavern hire %s (−%d silver)
+lb_echo_job_seal,%s 盖下「%s」职印,%s stamped the "%s" job seal
 lb_echo_battle_map_lose,战棋败北「%s」,Defeated at "%s"
 lb_echo_battle_map_win,战棋肃清「%s」·+%d 银,Cleared "%s" · +%d silver
 lb_echo_battle_lose,战棋败退至%s·士气 -5,Battle lost · retreat to %s · morale −5

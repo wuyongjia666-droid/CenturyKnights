@@ -1,0 +1,122 @@
+{
+  "id": "season_10",
+  "version": 3,
+  "title_zh": "印上的灯",
+  "title_en": "The Lamp of the Seal",
+  "status": "playable_draft",
+  "pipeline": [
+    "topic",
+    "novel",
+    "bible",
+    "playable",
+    "systems",
+    "art",
+    "playtest"
+  ],
+  "stage": "playable",
+  "flag_lamp": {
+    "flag": "议会要绣「城印已盖」的姓进旗册",
+    "lamp": "灯只认真进度——本城之事未办 / 声望不够 / 印未盖时，档案与沙漏先红脸"
+  },
+  "system_deepen": "job_seal",
+  "system_deepen_zh": "职印可感",
+  "gates": {
+    "y1a_device_signoff": true,
+    "topic_user_ack": true,
+    "novel_allowed": true
+  },
+  "topic_checklist": [
+    {
+      "id": "one_liner",
+      "label_zh": "一句",
+      "required": true
+    },
+    {
+      "id": "flag_lamp",
+      "label_zh": "旗 / 灯冲突",
+      "required": true
+    },
+    {
+      "id": "system_pick",
+      "label_zh": "本季加深的系统",
+      "required": true
+    },
+    {
+      "id": "wont_do",
+      "label_zh": "不做（本季）",
+      "required": true
+    },
+    {
+      "id": "downstream_gates",
+      "label_zh": "下游闸门",
+      "required": true
+    }
+  ],
+  "acceptance": [
+    {
+      "id": "job_seal",
+      "label_zh": "职印可感",
+      "suite": "res://tests/suites/dynasty/month_echo_job_seal_check.tscn",
+      "done": true
+    },
+    {
+      "id": "scaffold_gate",
+      "label_zh": "内容季流水门禁（含 #10）",
+      "suite": "res://tests/suites/narrative/content_season_scaffold_check.tscn",
+      "done": true
+    },
+    {
+      "id": "playable_dialogue",
+      "label_zh": "可玩章 cs10_01 对白可走",
+      "suite": "res://tests/suites/narrative/content_season_playable_s10_check.tscn",
+      "done": true
+    }
+  ],
+  "pipeline_stages": {
+    "topic": {
+      "doc": "docs/content-seasons/season-10/TOPIC.md",
+      "gate": "",
+      "open": true
+    },
+    "novel": {
+      "doc": "docs/content-seasons/season-10/NOVEL.md",
+      "gate": "novel_allowed",
+      "open": true
+    },
+    "bible": {
+      "doc": "docs/content-seasons/season-10/BIBLE.md",
+      "gate": "novel_allowed",
+      "open": true
+    },
+    "playable": {
+      "doc": "docs/content-seasons/season-10/PLAYABLE.md",
+      "gate": "novel_allowed",
+      "open": true
+    },
+    "systems": {
+      "doc": "docs/content-seasons/season-10/ACCEPTANCE.md",
+      "gate": "",
+      "open": true
+    },
+    "art": {
+      "doc": "",
+      "gate": "novel_allowed",
+      "open": true
+    },
+    "playtest": {
+      "doc": "",
+      "gate": "y1a_device_signoff",
+      "open": true
+    }
+  },
+  "docs_rel": [
+    "docs/content-seasons/season-10/TOPIC.md",
+    "docs/content-seasons/season-10/CHECKLIST.md",
+    "docs/content-seasons/season-10/NOVEL.md",
+    "docs/content-seasons/season-10/BIBLE.md",
+    "docs/content-seasons/season-10/PLAYABLE.md",
+    "docs/content-seasons/season-10/ACCEPTANCE.md"
+  ],
+  "playable_chapter": "cs10_01",
+  "playable_path": "res://data/story/chapters/cs10_01.json"
+}
