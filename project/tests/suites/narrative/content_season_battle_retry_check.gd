@@ -3,7 +3,8 @@ extends Node
 ## win stamps mid_fought + season_ledger/yeartrace for the skirmish itself;
 ## bare「继续」stamps 未试锋 skip / 试锋未成 abort ledger when leaving without a win;
 ## win clears csXX_mid_lost + map_id+_lost residue so loss-state cannot resurrect after a retry win;
-## chapter-owned mid-cs suppresses month_echo.battle (season_ledger/yeartrace own the trail).
+## chapter-owned mid-cs suppresses month_echo.battle (season_ledger/yeartrace own the trail);
+## chapter-owned mid-cs suppresses BattleDefeat.record (no castle event_log「败北」).
 
 const PLAYER := "res://scenes/story/chapter_player.tscn"
 const BATTLE := "res://scenes/battle/battle.tscn"
@@ -34,6 +35,9 @@ func _run() -> String:
 	if err != "":
 		return err
 	err = _protocol_month_echo_suppressed()
+	if err != "":
+		return err
+	err = _protocol_defeat_record_suppressed()
 	if err != "":
 		return err
 	for row in LIVE:
@@ -199,6 +203,17 @@ func _live_loss_morph(cid: String, beat: String, needle: String) -> String:
 			err = "%s loss: %s not set" % [cid, lost]
 		elif not GameState.flag(MAP_ID + "_lost"):
 			err = "%s loss: quest_bandit_lost not set" % cid
+		else:
+			# Protocol hub write may leave META; clear so we only catch a fresh write.
+			if GameState.has_meta(BattleDefeat.META):
+				GameState.remove_meta(BattleDefeat.META)
+			var before_log := GameState.event_log.size()
+			if BattleDefeat.maybe_record([], "lose") != "":
+				err = "%s loss: castle record not suppressed" % cid
+			elif str(GameState.get_meta(BattleDefeat.META, "")) != "":
+				err = "%s loss: defeat META written under chapter" % cid
+			elif GameState.event_log.size() != before_log:
+				err = "%s loss: event_log grew under chapter" % cid
 	player.queue_free()
 	await get_tree().process_frame
 	if err != "":
@@ -232,7 +247,7 @@ func _live_loss_morph(cid: String, beat: String, needle: String) -> String:
 	player2.queue_free()
 	await get_tree().process_frame
 	if err == "":
-		print("OK live loss morph %s @%s → %s + line" % [cid, beat, RETRY_LABEL])
+		print("OK live loss morph+no-castle-record %s @%s → %s + line" % [cid, beat, RETRY_LABEL])
 	return err
 
 
@@ -395,6 +410,28 @@ func _protocol_month_echo_suppressed() -> String:
 		return "protocol echo: ledger left battle residue %s" % str(snap)
 	GameState.set_meta("battle_win_ledger", {})
 	print("OK protocol mid-cs suppresses month_echo.battle")
+	return ""
+
+
+
+func _protocol_defeat_record_suppressed() -> String:
+	GameState.new_game("烬行", "灰旗", GameState.crest_color)
+	GameState.set_flag("hub_open")
+	GameState.set_meta("battle_return_chapter", "cs03_01")
+	if GameState.has_meta(BattleDefeat.META):
+		GameState.remove_meta(BattleDefeat.META)
+	var before := GameState.event_log.size()
+	if BattleDefeat.maybe_record([], "lose") != "":
+		return "protocol record: chapter should suppress"
+	if str(GameState.get_meta(BattleDefeat.META, "")) != "":
+		return "protocol record: chapter wrote META"
+	if GameState.event_log.size() != before:
+		return "protocol record: chapter grew event_log"
+	GameState.set_meta("battle_return_chapter", "")
+	var text := BattleDefeat.maybe_record([], "lose")
+	if text == "" or not text.begins_with(Locale.t("defeat_head")):
+		return "protocol record: hub should write got %s" % text
+	print("OK protocol mid-cs suppresses castle defeat record")
 	return ""
 
 
