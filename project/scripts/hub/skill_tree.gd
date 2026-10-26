@@ -79,9 +79,9 @@ func _place_skill_crests(mobile: bool = false) -> void:
 	CKHeraldryChrome.place_company_header(self, Vector2(arms_x, at_y), hdr)
 	CKHeraldryChrome.place_castle_banner_strip(self, Vector2(strip_x, at_y), hdr, ban)
 	var sat := Vector2(1020, at_y) if not mob else Vector2(maxf(20.0, w - 240.0), at_y)
-	CKHeraldryChrome.place_skill_crest_strip(self, sat, Vector2(36, 44) if not mob else Vector2(32, 40), Vector2(24, 34))
+	CKHeraldryField.place_skill_crest_strip(self, sat, Vector2(36, 44) if not mob else Vector2(32, 40), Vector2(24, 34))
 	if _sel != null and _detail != null:
-		CKHeraldryChrome.attach_skill_person_arms(_detail, _sel, Vector2(28, 34) if not mob else Vector2(26, 32))
+		CKHeraldryField.attach_skill_person_arms(_detail, _sel, Vector2(28, 34) if not mob else Vector2(26, 32))
 
 func apply_mobile_layout() -> void:
 	if not MobilePage.active(self):
