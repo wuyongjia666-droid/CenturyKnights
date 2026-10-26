@@ -736,6 +736,8 @@ func _enter_attack_mode() -> void:
 		_log("当前选中单位无法攻击")
 		return
 	attack_mode = true
+	BattleAttackAim.after_enter(self)
+	BattleAttackCycle.apply_next(self)
 	move_cells.clear()
 	overlay.queue_redraw()
 	_refresh_info()
@@ -1218,6 +1220,8 @@ func _draw_overlay() -> void:
 						overlay.draw_rect(r2, Color(1.0, 0.4, 0.3, 0.8), false, 2.0)
 	# v8.5 / T-P11 selected chrome: foot disc + mid ring + body rect (mobile) and dense reticle.
 	BattleSelectChrome.draw_selected(self, overlay)
+	BattleGhostStrike.draw(self, overlay)
+	BattleAttackAim.draw(self, overlay)
 	BattleDualLedger.draw_injured_marks(self, overlay)
 	BattleLandStrike.draw(self, overlay)
 	BattleTouchConfirm.draw_reject_flash(self, overlay)
@@ -1363,8 +1367,13 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			KEY_E:
 				if _btn_wait and not _btn_wait.disabled: _wait_selected()
 			KEY_TAB:
-				# Y1-A T-P12: Tab / Shift+Tab cycle ready player units.
-				if event.shift_pressed:
+				# Y1-A T-P25: in attack mode cycle in-reach foes; else T-P12 formation.
+				if attack_mode:
+					if event.shift_pressed:
+						BattleAttackCycle.apply_prev(self)
+					else:
+						BattleAttackCycle.apply_next(self)
+				elif event.shift_pressed:
 					BattleFormationCycle.apply_prev(self)
 				else:
 					BattleFormationCycle.apply_next(self)
@@ -1449,20 +1458,13 @@ func _set_danger(on: bool, focus: int) -> void:
 	danger_focus = focus
 	if _btn_danger:
 		_btn_danger.set_pressed_no_signal(on)
+	BattleDangerFeel.after_set(self)
 	if overlay:
 		overlay.queue_redraw()
 
 func _draw_danger() -> void:
-	if not danger_on or overlay == null:
-		return
-	var cells := DangerZone.collect(self)
-	var hatch := bool(GameState.settings.get("colorblind", false))
-	for pos in cells.keys():
-		var r := Rect2(ORIGIN + Vector2(pos) * CELL, Vector2(CELL - 2, CELL - 2))
-		overlay.draw_rect(r, Color(UIKit.DANGER, 0.28))
-		if hatch:
-			overlay.draw_line(r.position, r.position + r.size, Color(UIKit.DANGER, 0.9), 1.5)
-			overlay.draw_line(r.position + Vector2(0, r.size.y), r.position + Vector2(r.size.x, 0), Color(UIKit.DANGER, 0.9), 1.5)
+	# Y1-A T-P19: layered stands/strike + focus settle live in BattleDangerFeel.
+	BattleDangerFeel.draw(self, overlay)
 
 func _resolve_intel_cell(pos: Vector2) -> Vector2i:
 	# Y1-A T-P1-5: intel long-press uses the same soft/contour resolve as taps.
@@ -1602,6 +1604,7 @@ func _select_player(ui: int) -> void:
 	active_skill_id = ""
 	moved_this_select = false
 	preview_move_cell = Vector2i(-1, -1)
+	BattleGhostStrike.after_preview(self)
 	preview_attack_ui = -1
 	move_cells = _compute_move_cells(ui)
 	BattleRangePreview.publish(self)
@@ -1645,6 +1648,7 @@ func _click_cell(cell: Vector2i) -> void:
 								return
 							preview_attack_ui = ui
 							preview_move_cell = Vector2i(-1, -1)
+							BattleGhostStrike.after_preview(self)
 							ForecastPanel.refresh(self)
 							BattleLinkTelegraph.refresh(self)
 							BattleFoeOpeningTelegraph.refresh(self)
@@ -1673,6 +1677,7 @@ func _click_cell(cell: Vector2i) -> void:
 						BattleTouchConfirm.confirm_move(self)
 						return
 					preview_move_cell = cell
+					BattleGhostStrike.after_preview(self)
 					preview_attack_ui = -1
 					BattleRangePreview.keep_selected(self)
 					if DeviceProfile.is_mobile():
