@@ -98,26 +98,33 @@ func _pace_label() -> String:
 
 func apply_mobile_layout() -> void:
 	MobileLayout.pin_footer(get_node_or_null("StitchFooter"))
-	if _mob or not MobilePage.active(self):
+	if not MobilePage.active(self):
 		return
+	var first := not _mob
 	_mob = true
 	var w := MobilePage.width(self)
+	var h := maxf(size.y, 720.0)
 	var alive_n := 0
 	for ch in GameState.characters.values():
 		if ch.alive:
 			alive_n += 1
 	var info := "%s %d · %s" % [Locale.t("gen2_25"), alive_n, Calendar.label()]
-	MobilePage.top_bar(self, Locale.t("gen2_24") % GameState.surname, info, [[Locale.t("gen2_27"), _back]])
+	if first:
+		MobilePage.top_bar(self, Locale.t("gen2_24") % GameState.surname, info, [[Locale.t("gen2_27"), _back]])
 	# Mobile parity: refresh 团徽 header via Chrome (same core as desktop genealogy).
 	CKHeraldryChrome.place_company_header(self, Vector2(w - 64.0, 6.0), Vector2(52, 60))
-	var iw := 470.0
-	_info_rect = Rect2(w - iw - 24.0, MobilePage.TOP + 4.0, iw, 720.0 - MobilePage.TOP - 16.0)
-	var gw := _info_rect.position.x - 48.0
-	var jy := 720.0 - MobilePage.HIT - 12.0
+	# Keep a hard gap so band titles / cells never paint under the kin panel (mobile gate overlap).
+	var iw := minf(470.0, maxf(360.0, w * 0.34))
+	var gap := 28.0
+	_info_rect = Rect2(w - iw - 24.0, MobilePage.TOP + 4.0, iw, h - MobilePage.TOP - 16.0)
+	var gw := maxf(280.0, _info_rect.position.x - 24.0 - gap)
+	var jy := h - MobilePage.HIT - 12.0
 	_scroll.position = Vector2(24, MobilePage.TOP + 4.0)
-	_scroll.size = Vector2(gw, jy - MobilePage.TOP - 16.0)
+	_scroll.size = Vector2(gw, maxf(160.0, jy - MobilePage.TOP - 16.0))
+	_scroll.clip_contents = true
 	_cols = maxi(1, int((gw + 10.0) / (CELL_M.x + 10.0)))
 	_grid.custom_minimum_size.x = gw
+	_grid.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	_grid.add_theme_constant_override("separation", 12)
 	var jumps := get_node("LineageJumps") as HBoxContainer
 	jumps.position = Vector2(24, jy)
@@ -187,17 +194,22 @@ func _band(band: Dictionary) -> Control:
 	var box := VBoxContainer.new()
 	box.name = "GenBand_%s" % str(band.get("id", ""))
 	box.mouse_filter = Control.MOUSE_FILTER_PASS
-	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	# Shrink: full-row band titles counted as overlap against the kin panel in mobile_gate.
+	box.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	box.add_theme_constant_override("separation", 6)
 	var title := UIKit.body_label(str(band.get("title", "")), UIKit.ACCENT, 15)
 	title.name = "GenBandTitle"
 	title.autowrap_mode = TextServer.AUTOWRAP_OFF
+	title.clip_text = true
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	title.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
 	var title_h := 32.0 if _mob else 22.0
 	if _mob:
 		title.add_theme_font_size_override("font_size", MobilePage.FONT)
-	title.custom_minimum_size = Vector2(200, title_h)
-	title.size = Vector2(maxf(_scroll.size.x - 8.0, 200.0), title_h)
+	# Ink-sized title only — never stretch under InfoHost.
+	var title_w := 220.0 if _mob else 160.0
+	title.custom_minimum_size = Vector2(title_w, title_h)
+	title.size = Vector2(title_w, title_h)
 	box.add_child(title)
 	var grid := GridContainer.new()
 	grid.name = "GenGrid_%s" % str(band.get("id", ""))
