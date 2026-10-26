@@ -809,6 +809,42 @@
           }
         },
         {
+          "id": "cs0501_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs05_mid_fought" },
+          "text": "空椅纸角压平。平处，椅旁那拨散尽。"
+        },
+        {
+          "id": "cs0501_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs05_mid_fought" },
+          "text": "座还在。让座的人今晚没有，抢座的也没有。"
+        },
+        {
+          "id": "cs0501_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs05_mid_fought" },
+          "text": "旁人不敢坐了。椅仍空——空得干净。"
+        },
+        {
+          "id": "cs0501_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs05_mid_fought" },
+          "text": "椅背的尘我掸落。落了，空才像守，不是弃。"
+        },
+        {
+          "id": "cs0501_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs05_mid_fought" },
+          "text": "旗立椅侧。立着，比坐着更像人。"
+        },
+        {
+          "id": "cs0501_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs05_mid_fought" },
+          "text": "锋问过座。空椅我守，纸角我压。"
+        },
+        {
           "id": "cs05_mid_lost",
           "speaker": "旁白",
           "text": "锋收回来。空椅纸还钉着。椅旁那拨，没散。",
