@@ -110,6 +110,12 @@ static func refresh(host) -> void:
 	if not show:
 		CKHeraldryField.pin_forecast_arms(panel, null, "player", "")
 		return
+	# T-P13: frame the pair before placing, unless a unit drag owns the camera.
+	if host.has_meta("ck_unit_drag"):
+		if host.has_meta("m_combat_frame"):
+			host.remove_meta("m_combat_frame")
+	else:
+		BattleCombatFrame.follow_attack(host)
 	_place(host, panel)
 	var atk = host.units[atk_i]
 	var def = host.units[def_i]
@@ -198,41 +204,33 @@ static func _mobile_panel_size(panel: Control) -> Vector2:
 	return want
 
 
+static func _stage_of(host) -> Rect2:
+	if host.has_meta("m_board_area"):
+		return host.get_meta("m_board_area")
+	var stage = host.get("BOARD_AREA")
+	if stage is Rect2:
+		return stage
+	return Rect2()
+
+
 static func _place(host, panel: Control) -> void:
+	var stage := _stage_of(host)
+	var pair := BattleCombatFrame.pair_mid_shown(host)
 	if DeviceProfile.is_mobile():
 		_style_mobile(panel)
-		_place_mobile(host, panel)
+		var sz := _mobile_panel_size(panel)
+		panel.custom_minimum_size = sz
+		panel.size = sz
+		if stage.size.x < 32.0:
+			panel.position = Vector2(12, 56)
+			return
+		# Opposite the pair so the forecast band does not cover the fight.
+		panel.position = BattleCombatFrame.forecast_slot(stage, sz, pair)
 		return
 	panel.clip_contents = true
 	panel.custom_minimum_size = Vector2.ZERO
 	panel.size = DESK_SIZE
-	panel.position = Vector2(24, 560)
-
-
-static func _place_mobile(host, panel: Control) -> void:
-	var sz := _mobile_panel_size(panel)
-	panel.custom_minimum_size = sz
-	panel.size = sz
-	var pad_l := 12.0
-	var pad_t := 8.0
-	var x := pad_l
-	var y := 56.0
-	# Board stage (set by battle_controller._layout_board) is the safe paint rect in local px.
-	if host.has_meta("m_board_area"):
-		var area: Rect2 = host.get_meta("m_board_area")
-		x = area.position.x + pad_l
-		y = area.position.y + pad_t
-		# Keep the box inside the stage; prefer left edge (thumb rail owns the right).
-		if x + sz.x > area.end.x - 8.0:
-			x = maxf(area.position.x + 4.0, area.end.x - sz.x - 8.0)
-		if y + sz.y > area.end.y - 8.0:
-			y = maxf(area.position.y + 4.0, area.end.y - sz.y - 8.0)
-	elif host.has_meta("mobile_insets"):
-		# Fallback before first board layout: pad past notch chrome inside the fitted root.
-		var top := float(host.get_meta("mobile_insets").get("top", 0.0))
-		# Root is already shifted by MobileLayout.fit; local y=0 is below the notch.
-		# Still lift past the round/phase pill (~48).
-		y = pad_t + 48.0
-		if host.position.y + 0.5 < top:
-			y = top + 48.0 - host.position.y
-	panel.position = Vector2(x, y)
+	if stage.size.x < 32.0:
+		panel.position = Vector2(24, 560)
+		return
+	panel.position = BattleCombatFrame.forecast_slot(stage, DESK_SIZE, pair)
