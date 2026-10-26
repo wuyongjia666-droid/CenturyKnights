@@ -2,6 +2,8 @@ class_name StoryConditions
 extends RefCounted
 ## NAR-02：旗标、血统、同伴在场。不挂 autoload。
 
+const StoryFlagScope = preload("res://scripts/narrative/story_flag_scope.gd")
+
 static func met(cond, roster: Array = []) -> bool:
 	if cond == null:
 		return true
@@ -20,21 +22,21 @@ static func met(cond, roster: Array = []) -> bool:
 		return false
 	if spec.has("not"):
 		return not met(spec["not"], roster)
-	if spec.has("flag") and not GameState.flag(str(spec["flag"])):
+	if spec.has("flag") and not _flag(str(spec["flag"])):
 		return false
-	if spec.has("not_flag") and GameState.flag(str(spec["not_flag"])):
+	if spec.has("not_flag") and _flag(str(spec["not_flag"])):
 		return false
 	if spec.has("any_flag"):
 		var hit := false
 		for key in spec["any_flag"]:
-			if GameState.flag(str(key)):
+			if _flag(str(key)):
 				hit = true
 				break
 		if not hit:
 			return false
 	if spec.has("not_any_flag"):
 		for key in spec["not_any_flag"]:
-			if GameState.flag(str(key)):
+			if _flag(str(key)):
 				return false
 	if spec.has("bloodline"):
 		if not _has_blood(str(spec["bloodline"]), str(spec.get("who", "leader")), roster):
@@ -43,6 +45,9 @@ static func met(cond, roster: Array = []) -> bool:
 		if not _has_companion(str(spec["companion"]), roster):
 			return false
 	return true
+
+static func _flag(key: String) -> bool:
+	return StoryFlagScope.seen(key)
 
 static func _roster(roster: Array) -> Array:
 	if not roster.is_empty():
