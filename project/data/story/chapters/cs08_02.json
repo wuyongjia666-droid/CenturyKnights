@@ -1,1159 +1,1159 @@
 {
-	"id": "cs08_02",
-	"title": "碑阴上的灯",
-	"title_en": "The Lamp on the Stele Back",
-	"legacy_index": 418,
-	"return_scene": "res://scenes/hub/castle_hub.tscn",
-	"source": "docs/content-seasons/season-08/NOVEL.md",
-	"beats": [
-		{
-			"id": "yard",
-			"title": "院门",
-			"lines": [
-				{
-					"id": "cs08b_ya_1",
-					"speaker": "旁白",
-					"text": "院门还开着。碑阴那面没人站。"
-				},
-				{
-					"id": "cs08b_ya_2",
-					"speaker": "老管事",
-					"text": "正面念过了。阴面还空着一行。"
-				},
-				{
-					"id": "cs08b_ya_3",
-					"speaker": "书记官",
-					"text": "空行不是忘。是等回读的人。"
-				},
-				{
-					"id": "cs08b_ya_4",
-					"speaker": "leader",
-					"text": "我来回读。碑阴也要能念。"
-				},
-				{
-					"id": "cs08b_ya_5",
-					"speaker": "岁吏",
-					"text": "年迹旁可以补碑阴。不改正面。"
-				},
-				{
-					"id": "cs08b_ya_6",
-					"speaker": "槐里·青禾",
-					"text": "孩子抄正面会快。抄碑阴会停。"
-				},
-				{
-					"id": "cs08b_ya_7",
-					"speaker": "石垒·晚担",
-					"text": "停一下好。不停着刻名最危险。"
-				},
-				{
-					"id": "cs08b_ya_8",
-					"speaker": "苇原·灯影",
-					"text": "灯照碑阴比照正面淡。淡着才看得清空。"
-				},
-				{
-					"id": "cs08b_ya_9",
-					"speaker": "老旗手",
-					"text": "旗角给人核。核完再谈催碑。"
-				},
-				{
-					"id": "cs08b_ya_10",
-					"speaker": "掌柜",
-					"text": "酒馆墙上也挂过碑名。挂三天就有人加字。"
-				},
-				{
-					"id": "cs08b_ya_11",
-					"speaker": "旁白",
-					"text": "院风从碑缝过来。缝里没有急。"
-				},
-				{
-					"id": "cs08b_ya_12",
-					"speaker": "老管事",
-					"text": "急字过夜会褪。碑阴空行过夜更清楚。"
-				},
-				{
-					"id": "cs08b_ya_13",
-					"speaker": "书记官",
-					"text": "清楚才像碑。糊了就像没回读。"
-				},
-				{
-					"id": "cs08b_ya_14",
-					"speaker": "leader",
-					"text": "带我去碑阴。先看空行。"
-				},
-				{
-					"id": "cs08b_ya_15",
-					"speaker": "岁吏",
-					"text": "空行比满碑诚实。"
-				},
-				{
-					"id": "cs08b_ya_18",
-					"speaker": "旁白",
-					"text": "院灯一盏。碑阴第二可玩章起。"
-				},
-				{
-					"id": "cs08b_ya_17",
-					"speaker": "石垒·晚担",
-					"text": "我站祠院外。站着也算见证。"
-				},
-				{
-					"id": "cs08b_ya_x17",
-					"speaker": "旁白",
-					"text": "碑院风干。干风刮字口。"
-				},
-				{
-					"id": "cs08b_ya_x18",
-					"speaker": "石垒·晚担",
-					"text": "字口深的，风刮不走。"
-				},
-				{
-					"id": "cs08b_ya_x19",
-					"speaker": "leader",
-					"text": "我认深的。"
-				},
-				{
-					"id": "cs08b_ya_y20",
-					"speaker": "旁白",
-					"text": "回读时碑阴第二行还潮，潮口比正面拓纸深。"
-				},
-				{
-					"id": "cs08b_ya_y21",
-					"speaker": "石垒·晚担",
-					"text": "第二行的深才经年。正面喊出来的碑名，风一吹就浅。"
-				},
-				{
-					"id": "cs08b_ya_y22",
-					"speaker": "leader",
-					"text": "我认阴面这一行。正面的喊声不抄。"
-				},
-				{
-					"id": "cs08b_ya_16",
-					"speaker": "槐里·青禾",
-					"text": "诚实比能喊的碑名贵。"
-				}
-			],
-			"next": "stele"
-		},
-		{
-			"id": "stele",
-			"title": "碑阴",
-			"lines": [
-				{
-					"id": "cs08b_st_1",
-					"speaker": "旁白",
-					"text": "碑阴凉。字的影子比正面短。"
-				},
-				{
-					"id": "cs08b_st_2",
-					"speaker": "老管事",
-					"text": "这一行空着。空着才像回读位。"
-				},
-				{
-					"id": "cs08b_st_3",
-					"speaker": "书记官",
-					"text": "正面写满的人，最怕看阴面。"
-				},
-				{
-					"id": "cs08b_st_4",
-					"speaker": "leader",
-					"text": "我不怕。空行写进今晚。"
-				},
-				{
-					"id": "cs08b_st_5",
-					"speaker": "岁吏",
-					"text": "写进今晚可以。改正面不行。"
-				},
-				{
-					"id": "cs08b_st_6",
-					"speaker": "槐里·青禾",
-					"text": "孩子伸手指空行。问谁的名。"
-				},
-				{
-					"id": "cs08b_st_7",
-					"speaker": "石垒·晚担",
-					"text": "还没有碑名。有名就不叫回读。"
-				},
-				{
-					"id": "cs08b_st_8",
-					"speaker": "苇原·灯影",
-					"text": "回读不是补喊。是敢把碑阴空留下。"
-				},
-				{
-					"id": "cs08b_st_18",
-					"speaker": "旁白",
-					"text": "碑阴灯一晃。去沙漏。"
-				},
-				{
-					"id": "cs08b_st_10",
-					"speaker": "掌柜",
-					"text": "酒钱能买挂板。买不了碑阴的空。"
-				},
-				{
-					"id": "cs08b_st_11",
-					"speaker": "旁白",
-					"text": "指腹按在空行上。石不烫。"
-				},
-				{
-					"id": "cs08b_st_12",
-					"speaker": "老管事",
-					"text": "烫的是催碑条。催条可以撕。"
-				},
-				{
-					"id": "cs08b_st_13",
-					"speaker": "书记官",
-					"text": "碑阴撕不得。撕了正面也假。"
-				},
-				{
-					"id": "cs08b_st_14",
-					"speaker": "leader",
-					"text": "空行看见了。去沙漏对两行。"
-				},
-				{
-					"id": "cs08b_st_15",
-					"speaker": "岁吏",
-					"text": "沙漏上行碑名、下行空。并排。"
-				},
-				{
-					"id": "cs08b_st_16",
-					"speaker": "槐里·青禾",
-					"text": "并排才像碑账。藏起来才像骗。"
-				},
-				{
-					"id": "cs08b_st_17",
-					"speaker": "石垒·晚担",
-					"text": "骗不过抄碑阴的停顿。"
-				},
-				{
-					"id": "cs08b_st_x17",
-					"speaker": "旁白",
-					"text": "石碑侧有新刻痕。痕浅。"
-				},
-				{
-					"id": "cs08b_st_x18",
-					"speaker": "岁吏",
-					"text": "浅痕经不起年。"
-				},
-				{
-					"id": "cs08b_st_x19",
-					"speaker": "leader",
-					"text": "我不等浅的。"
-				},
-				{
-					"id": "cs08b_st_y20",
-					"speaker": "旁白",
-					"text": "复页拓纸上沾着碑座新灰，灰没进字口。"
-				},
-				{
-					"id": "cs08b_st_y21",
-					"speaker": "石垒·晚担",
-					"text": "灰沾在纸上就轻。字口里的灰，揭不下来。"
-				},
-				{
-					"id": "cs08b_st_y22",
-					"speaker": "leader",
-					"text": "揭不下来的并排留。沾在纸面的空名揭走。"
-				},
-				{
-					"id": "cs08b_st_9",
-					"speaker": "老旗手",
-					"text": "旗布完整。旗角不绣喊出来的碑名。"
-				}
-			],
-			"next": "hourglass"
-		},
-		{
-			"id": "hourglass",
-			"title": "两行",
-			"lines": [
-				{
-					"id": "cs08b_ho_1",
-					"speaker": "旁白",
-					"text": "厅灯照着沙漏腰。碑字最清楚。"
-				},
-				{
-					"id": "cs08b_ho_2",
-					"speaker": "老管事",
-					"text": "两根木条并排。你按住碑名与空行。"
-				},
-				{
-					"id": "cs08b_ho_3",
-					"speaker": "书记官",
-					"text": "急字在上头跳。空行在下头稳。"
-				},
-				{
-					"id": "cs08b_ho_4",
-					"speaker": "leader",
-					"text": "我按住碑名。谁也别先催。"
-				},
-				{
-					"id": "cs08b_ho_5",
-					"speaker": "岁吏",
-					"text": "年迹旁已留位。位给碑阴第二页。"
-				},
-				{
-					"id": "cs08b_ho_6",
-					"speaker": "槐里·青禾",
-					"text": "孩子说空行像椅子。还没人坐。"
-				},
-				{
-					"id": "cs08b_ho_7",
-					"speaker": "石垒·晚担",
-					"text": "椅子空着也好过假坐。"
-				},
-				{
-					"id": "cs08b_ho_18",
-					"speaker": "旁白",
-					"text": "沙漏腰一亮。碑廊在外。"
-				},
-				{
-					"id": "cs08b_ho_9",
-					"speaker": "老旗手",
-					"text": "旗角在风里响。响的是碑核。"
-				},
-				{
-					"id": "cs08b_ho_10",
-					"speaker": "掌柜",
-					"text": "核完再谈碑酒。酒醒着才选得动。"
-				},
-				{
-					"id": "cs08b_ho_11",
-					"speaker": "旁白",
-					"text": "沙声很轻。轻着像不敢催碑。"
-				},
-				{
-					"id": "cs08b_ho_12",
-					"speaker": "老管事",
-					"text": "催碑条可以进酒馆。沙漏不进催条。"
-				},
-				{
-					"id": "cs08b_ho_13",
-					"speaker": "书记官",
-					"text": "嗓子轻一点。轻着念碑阴，字更真。"
-				},
-				{
-					"id": "cs08b_ho_14",
-					"speaker": "leader",
-					"text": "碑阴两行对过了。去门廊。"
-				},
-				{
-					"id": "cs08b_ho_15",
-					"speaker": "岁吏",
-					"text": "门廊问谁加碑字。加字要认指甲。"
-				},
-				{
-					"id": "cs08b_ho_16",
-					"speaker": "槐里·青禾",
-					"text": "吹不掉才像碑阴。"
-				},
-				{
-					"id": "cs08b_ho_17",
-					"speaker": "石垒·晚担",
-					"text": "碑痕看见了。去门廊留痕。"
-				},
-				{
-					"id": "cs08b_ho_x17",
-					"speaker": "旁白",
-					"text": "沙漏底座刻着旧年号。"
-				},
-				{
-					"id": "cs08b_ho_x18",
-					"speaker": "苇原·灯影",
-					"text": "旧年号比新年号沉。"
-				},
-				{
-					"id": "cs08b_ho_x19",
-					"speaker": "leader",
-					"text": "去沙漏。沉着看。"
-				},
-				{
-					"id": "cs08b_ho_y20",
-					"speaker": "旁白",
-					"text": "月份格旁边渗着碑阴潮，潮只浸未填的那一格。"
-				},
-				{
-					"id": "cs08b_ho_y21",
-					"speaker": "石垒·晚担",
-					"text": "浸到空格里的深，才配经年。填满的喊声不浸。"
-				},
-				{
-					"id": "cs08b_ho_y22",
-					"speaker": "leader",
-					"text": "我认空格里的潮。喊满的月份不走。"
-				},
-				{
-					"id": "cs08b_ho_8",
-					"speaker": "苇原·灯影",
-					"text": "假坐一夜，碑阴就脏。"
-				},
-				{
-					"id": "cs0802_vis_mv1",
-					"speaker": "旁白",
-					"text": "碑阴拓旁，沙漏玻璃映出半张脸。"
-				},
-				{
-					"id": "cs0802_vis_mv2",
-					"speaker": "岁吏",
-					"text": "映脸的人，自己先站直。"
-				},
-				{
-					"id": "cs0802_vis_mv3",
-					"speaker": "苇原·灯影",
-					"text": "站直了再问月份。"
-				},
-				{
-					"id": "cs0802_vst1",
-					"speaker": "岁吏",
-					"text": "月份从碑阴拓纸边渗进一丝潮。潮干，月份才算拓过。"
-				},
-				{
-					"id": "cs0802_vst2",
-					"speaker": "书记官",
-					"text": "碑录复页，要等拓纸揭稳。"
-				},
-				{
-					"id": "cs0802_vst3",
-					"speaker": "leader",
-					"text": "月份渗过。碑，我拓。"
-				},
-				{
-					"id": "cs0802_vis_mv4",
-					"speaker": "leader",
-					"text": "站直。去看月份。"
-				}
-			],
-			"next": "bridge",
-			"actions": [
-				{
-					"id": "open_hourglass",
-					"label": "去看月份怎么往前走",
-					"do": [
-						{
-							"op": "visit",
-							"path": "res://scenes/hub/hourglass.tscn"
-						}
-					]
-				},
-				{
-					"id": "continue_after_visit",
-					"label": "继续，去门廊",
-					"do": [
-						{
-							"op": "goto",
-							"beat": "next"
-						}
-					]
-				}
-			]
-		},
-		{
-			"id": "bridge",
-			"title": "门廊",
-			"lines": [
-				{
-					"id": "cs08b_br_1",
-					"speaker": "旁白",
-					"text": "桥木响。响的是鞋，不是喊碑名。"
-				},
-				{
-					"id": "cs08b_br_2",
-					"speaker": "老旗手",
-					"text": "旗角在桥头给人核。核完再谈催碑。"
-				},
-				{
-					"id": "cs08b_br_3",
-					"speaker": "岁吏",
-					"text": "急字在桥风里会褪。碑阴空行过夜更清楚。"
-				},
-				{
-					"id": "cs08b_br_4",
-					"speaker": "老管事",
-					"text": "带牌去酒馆。碑阴圈还在墙上。"
-				},
-				{
-					"id": "cs08b_br_5",
-					"speaker": "书记官",
-					"text": "碑圈心比酒醒。醒着才选得动。"
-				},
-				{
-					"id": "cs08b_br_6",
-					"speaker": "leader",
-					"text": "碑廊问过了。先试锋，再去酒馆。"
-				},
-				{
-					"id": "cs08b_br_7",
-					"speaker": "槐里·青禾",
-					"text": "锋镝先试一试。试完再去碑阴圈前。"
-				},
-				{
-					"id": "cs08b_br_8",
-					"speaker": "石垒·晚担",
-					"text": "干净靴也留痕。痕留给碑阴的人。"
-				},
-				{
-					"id": "cs08b_br_9",
-					"speaker": "苇原·灯影",
-					"text": "牌收回来。碑阴两字没有被风吹掉。"
-				},
-				{
-					"id": "cs08b_br_10",
-					"speaker": "掌柜",
-					"text": "挂碑阴。挂三天。谁加字，我认指甲。"
-				},
-				{
-					"id": "cs08b_br_11",
-					"speaker": "旁白",
-					"text": "风从桥下上来。催碑条在风里抖。"
-				},
-				{
-					"id": "cs08b_br_12",
-					"speaker": "老旗手",
-					"text": "旗布没破。破的是催碑条。"
-				},
-				{
-					"id": "cs08b_br_13",
-					"speaker": "岁吏",
-					"text": "催条可以撕。碑阴第二页撕不得。"
-				},
-				{
-					"id": "cs08b_br_14",
-					"speaker": "老管事",
-					"text": "选完入柜。碑阴柜门会响。"
-				},
-				{
-					"id": "cs08b_br_15",
-					"speaker": "leader",
-					"text": "锋试过或跳过都行。去酒馆看碑阴。"
-				},
-				{
-					"id": "cs08b_br_16",
-					"speaker": "槐里·青禾",
-					"text": "孩子来抄碑阴板。抄到空行会停一下。"
-				},
-				{
-					"id": "cs08b_br_17",
-					"speaker": "石垒·晚担",
-					"text": "停一下好。不停着抄碑名最危险。"
-				},
-				{
-					"id": "cs08b_br_x18",
-					"speaker": "旁白",
-					"text": "门廊鼓皮松了半寸。"
-				},
-				{
-					"id": "cs08b_br_x19",
-					"speaker": "岁吏",
-					"text": "松的鼓，打假声。"
-				},
-				{
-					"id": "cs08b_br_x20",
-					"speaker": "leader",
-					"text": "试锋。不打假声。"
-				},
-				{
-					"id": "cs08b_br_y21",
-					"speaker": "旁白",
-					"text": "刀鞘旁落了一点祠里带出的香灰，鞘还凉。"
-				},
-				{
-					"id": "cs08b_br_y22",
-					"speaker": "石垒·晚担",
-					"text": "鞘上的灰轻。碑座里的灰重。轻的别当行礼。"
-				},
-				{
-					"id": "cs08b_br_y23",
-					"speaker": "leader",
-					"text": "重的灰并排留在碑阴。鞘上的不刻名。"
-				},
-				{
-					"id": "cs08b_br_18",
-					"speaker": "旁白",
-					"text": "桥灯一盏。碑酒门开。"
-				},
-				{
-					"id": "cs0802_mid_mv1",
-					"speaker": "旁白",
-					"text": "碑阴纸被香烟熏黄一线。黄线上有指甲划痕。"
-				},
-				{
-					"id": "cs0802_mid_mv2",
-					"speaker": "岁吏",
-					"text": "划痕不是祭。是有人试探能撕不。"
-				},
-				{
-					"id": "cs0802_mid_mv3",
-					"speaker": "石垒·晚担",
-					"text": "能撕的纸，守不住碑。"
-				},
-				{
-					"id": "cs0802_mid_mv4",
-					"speaker": "苇原·灯影",
-					"text": "守碑靠人。人要先把锋亮开。"
-				},
-				{
-					"id": "cs0802_mid_mv5",
-					"speaker": "老旗手",
-					"text": "亮开不是吓人。是把门说清。"
-				},
-				{
-					"id": "cs0802_mid_mv6",
-					"speaker": "leader",
-					"text": "门说清。试锋不打假声。"
-				},
-				{
-					"id": "cs0802_win1",
-					"speaker": "旁白",
-					"text": "锋再定。碑阴拓完，抢拓那拨退到槐影外。",
-					"when": {
-						"flag": "cs08_mid_fought"
-					}
-				},
-				{
-					"id": "cs0802_win2",
-					"speaker": "掌柜",
-					"text": "拓要自己按。按实，才不像偷的。",
-					"when": {
-						"flag": "cs08_mid_fought"
-					}
-				},
-				{
-					"id": "cs0802_win3",
-					"speaker": "槐里·青禾",
-					"text": "碑凉还在手上。凉着，字更清。",
-					"when": {
-						"flag": "cs08_mid_fought"
-					}
-				},
-				{
-					"id": "cs0802_win4",
-					"speaker": "leader",
-					"text": "锋护过碑。拓，我按得。",
-					"when": {
-						"flag": "cs08_mid_fought"
-					}
-				},
-				{
-					"id": "cs08b_br_lost",
-					"speaker": "旁白",
-					"text": "锋收回来。碑阴纸还钉着。祠旁那拨，没散。",
-					"when": {
-						"all": [
-							{
-								"flag": "cs08_mid_lost"
-							},
-							{
-								"not_flag": "cs08_mid_fought"
-							}
-						]
-					}
-				}
-			],
-			"next": "tavern",
-			"actions": [
-				{
-					"id": "open_skirmish",
-					"label": "先试一锋",
-					"when": {
-						"all": [
-							{
-								"not_flag": "cs08_mid_fought"
-							},
-							{
-								"not_flag": "cs08_mid_lost"
-							}
-						]
-					},
-					"do": [
-						{
-							"op": "battle",
-							"map": "quest_bandit",
-							"objective": "rout",
-							"return": "res://scenes/story/chapter_player.tscn",
-							"win_flags": [
-								"cs08_mid_fought"
-							],
-							"lose_flags": [
-								"cs08_mid_lost"
-							],
-							"win_ledger": {
-								"choice": "mid_skirmish",
-								"title": "碑阴上的灯",
-								"outcome": "碑阴旁试锋得手——锋镝压下，并排纸可续",
-								"yeartrace": true
-							}
-						}
-					]
-				},
-				{
-					"id": "retry_skirmish",
-					"label": "再试锋镝",
-					"when": {
-						"all": [
-							{
-								"not_flag": "cs08_mid_fought"
-							},
-							{
-								"flag": "cs08_mid_lost"
-							}
-						]
-					},
-					"do": [
-						{
-							"op": "battle",
-							"map": "quest_bandit",
-							"objective": "rout",
-							"return": "res://scenes/story/chapter_player.tscn",
-							"win_flags": [
-								"cs08_mid_fought"
-							],
-							"lose_flags": [
-								"cs08_mid_lost"
-							],
-							"win_ledger": {
-								"choice": "mid_skirmish",
-								"title": "碑阴上的灯",
-								"outcome": "碑阴旁试锋得手——锋镝压下，并排纸可续",
-								"yeartrace": true
-							}
-						}
-					]
-				},
-				{
-					"id": "continue_after_battle",
-					"label": "继续，去酒馆",
-					"do": [
-						{
-							"op": "season_ledger",
-							"when": {
-								"all": [
-									{
-										"not_flag": "cs08_mid_fought"
-									},
-									{
-										"not_flag": "cs08_mid_lost"
-									}
-								]
-							},
-							"chapter": "cs08_02",
-							"choice": "mid_skirmish_skip",
-							"title": "碑阴上的灯",
-							"outcome": "未试锋——锋未出鞘，径去酒馆",
-							"yeartrace": true
-						},
-						{
-							"op": "season_ledger",
-							"when": {
-								"all": [
-									{
-										"not_flag": "cs08_mid_fought"
-									},
-									{
-										"flag": "cs08_mid_lost"
-									}
-								]
-							},
-							"chapter": "cs08_02",
-							"choice": "mid_skirmish_abort",
-							"title": "碑阴上的灯",
-							"outcome": "试锋未成——伤还在，先去酒馆",
-							"yeartrace": true
-						},
-						{
-							"op": "goto",
-							"beat": "next"
-						}
-					]
-				}
-			]
-		},
-		{
-			"id": "tavern",
-			"title": "选题",
-			"lines": [
-				{
-					"id": "cs08b_ta_1",
-					"speaker": "掌柜",
-					"text": "不是我要钉碑阴。有人出酒钱。挂不挂你们裁。"
-				},
-				{
-					"id": "cs08b_ta_2",
-					"speaker": "leader",
-					"text": "酒馆里先说挂碑阴。挂三天。谁加字，我认指甲。"
-				},
-				{
-					"id": "cs08b_ta_3",
-					"speaker": "石垒·晚担",
-					"text": "挂着才像碑账。藏起来才像骗。"
-				},
-				{
-					"id": "cs08b_ta_4",
-					"speaker": "槐里·青禾",
-					"text": "酒桌上孩子来抄碑阴板。抄到空行会停一下。"
-				},
-				{
-					"id": "cs08b_ta_5",
-					"speaker": "苇原·灯影",
-					"text": "酒边停一下好。不停着抄碑名最危险。"
-				},
-				{
-					"id": "cs08b_ta_6",
-					"speaker": "书记官",
-					"text": "急好念。空行难受。难受就对。"
-				},
-				{
-					"id": "cs08b_ta_7",
-					"speaker": "老旗手",
-					"text": "旗角在门外。核的人能看见碑阴板。"
-				},
-				{
-					"id": "cs08b_ta_8",
-					"speaker": "岁吏",
-					"text": "年迹旁补碑阴一行。不改正面。"
-				},
-				{
-					"id": "cs08b_ta_9",
-					"speaker": "老管事",
-					"text": "碑阴圈心比酒醒。醒着才选得动。"
-				},
-				{
-					"id": "cs08b_ta_10",
-					"speaker": "leader",
-					"text": "碑名与空行都看见了。选。"
-				},
-				{
-					"id": "cs08b_ta_11",
-					"speaker": "石垒·晚担",
-					"text": "我站碑阴圈外。站着也算见证。"
-				},
-				{
-					"id": "cs08b_ta_12",
-					"speaker": "旁白",
-					"text": "碑阴板前安静。安静里只剩两道选择题。"
-				},
-				{
-					"id": "cs08b_ta_13",
-					"speaker": "苇原·灯影",
-					"text": "碑阴第二页比嘴硬。嘴会改口。"
-				},
-				{
-					"id": "cs08b_ta_14",
-					"speaker": "掌柜",
-					"text": "选完入碑柜。柜门一响，酒也凉。"
-				},
-				{
-					"id": "cs08b_ta_15",
-					"speaker": "书记官",
-					"text": "凉着好。烫着容易假碑。"
-				},
-				{
-					"id": "cs08b_ta_16",
-					"speaker": "槐里·青禾",
-					"text": "假坐一夜，孩子明天还会停。"
-				},
-				{
-					"id": "cs08b_ta_17",
-					"speaker": "老旗手",
-					"text": "祖祠旗还在。旗不替你们选。"
-				},
-				{
-					"id": "cs08b_ta_x17",
-					"speaker": "旁白",
-					"text": "酒馆墙上贴着征碑告示。"
-				},
-				{
-					"id": "cs08b_ta_x18",
-					"speaker": "老管事",
-					"text": "告示密的地方，真碑少。"
-				},
-				{
-					"id": "cs08b_ta_x19",
-					"speaker": "leader",
-					"text": "我找真碑。"
-				},
-				{
-					"id": "cs08b_ta_y20",
-					"speaker": "旁白",
-					"text": "回堡前巾角还潮，潮是碑阴第二行印上来的。"
-				},
-				{
-					"id": "cs08b_ta_y21",
-					"speaker": "石垒·晚担",
-					"text": "印上巾的深才经年。擦掉的是酒，不是字口。"
-				},
-				{
-					"id": "cs08b_ta_y22",
-					"speaker": "leader",
-					"text": "巾上的深我认。擦亮的空名不认。"
-				},
-				{
-					"id": "cs08b_ta_18",
-					"speaker": "旁白",
-					"text": "两道碑题在板上。手按上去。"
-				},
-				{
-					"id": "cs0802_ret_mv1",
-					"speaker": "旁白",
-					"text": "碑阴酒过三巡，有人要把纸当菜单一卷。"
-				},
-				{
-					"id": "cs0802_ret_mv2",
-					"speaker": "掌柜",
-					"text": "菜单不是碑阴。"
-				},
-				{
-					"id": "cs0802_ret_mv3",
-					"speaker": "岁吏",
-					"text": "碑阴回堡。"
-				},
-				{
-					"id": "cs0802_tvp1",
-					"speaker": "旁白",
-					"text": "碑阴拓片反卷，卷心露出未拓全的一角。"
-				},
-				{
-					"id": "cs0802_tvp2",
-					"speaker": "掌柜",
-					"text": "未拓全也能挂——要写明缺角。缺角藏着，才是瞒。"
-				},
-				{
-					"id": "cs0802_tvp3",
-					"speaker": "石垒·晚担",
-					"text": "催碑名的最快。最快的名，阴面往往空。"
-				},
-				{
-					"id": "cs0802_tvp4",
-					"speaker": "岁吏",
-					"text": "阴面空着也可以。空着比偷补强。"
-				},
-				{
-					"id": "cs0802_tvp5",
-					"speaker": "老旗手",
-					"text": "旗在碑侧立过。立过，阴面也有影。"
-				},
-				{
-					"id": "cs0802_tvp6",
-					"speaker": "leader",
-					"text": "碑阴并排留。催名的，先看缺角。"
-				},
-				{
-					"id": "cs0802_tvn1",
-					"speaker": "掌柜",
-					"text": "护碑那一锋，酒要凉——凉着配石。"
-				},
-				{
-					"id": "cs0802_tvn2",
-					"speaker": "石垒·晚担",
-					"text": "槐影外那拨退了。退了，拓纸才揭得。"
-				},
-				{
-					"id": "cs0802_tvn3",
-					"speaker": "老旗手",
-					"text": "旗在碑阶低过第二次。低过，更像拜。"
-				},
-				{
-					"id": "cs0802_tvn4",
-					"speaker": "leader",
-					"text": "拓实。石凉。酒，凉着。"
-				},
-				{
-					"id": "cs0802_ret_mv4",
-					"speaker": "leader",
-					"text": "回堡记碑阴。"
-				}
-			],
-			"next": "ledger",
-			"actions": [
-				{
-					"id": "keep_back",
-					"label": "碑阴并排留",
-					"do": [
-						{
-							"op": "set_flag",
-							"flag": "cs08_back_parallel",
-							"value": true
-						},
-						{
-							"op": "season_ledger",
-							"chapter": "cs08_02",
-							"choice": "keep_back",
-							"title": "碑阴上的灯",
-							"outcome": "碑阴回读后并排记入谱",
-							"yeartrace": true
-						},
-						{
-							"op": "goto",
-							"beat": "ledger"
-						}
-					]
-				},
-				{
-					"id": "push_name",
-					"label": "先催碑名",
-					"do": [
-						{
-							"op": "set_flag",
-							"flag": "cs08_back_push",
-							"value": true
-						},
-						{
-							"op": "season_ledger",
-							"chapter": "cs08_02",
-							"choice": "push_name",
-							"title": "碑阴上的灯",
-							"outcome": "碑阴回读后先催碑名",
-							"yeartrace": true
-						},
-						{
-							"op": "goto",
-							"beat": "ledger"
-						}
-					]
-				}
-			]
-		},
-		{
-			"id": "ledger",
-			"title": "入册",
-			"lines": [
-				{
-					"id": "cs08b_le_1",
-					"speaker": "旁白",
-					"text": "柜锁落下。碑阴第二可玩章收束。"
-				},
-				{
-					"id": "cs08b_le_2",
-					"speaker": "老管事",
-					"text": "收束不是结束。是敢把空行留下。"
-				},
-				{
-					"id": "cs08b_le_3",
-					"speaker": "书记官",
-					"text": "空行进谱。正面一字不改。"
-				},
-				{
-					"id": "cs08b_le_4",
-					"speaker": "岁吏",
-					"text": "年迹旁已有碑阴一行。"
-				},
-				{
-					"id": "cs08b_le_5",
-					"speaker": "leader",
-					"text": "我认碑阴这行。认完出门。"
-				},
-				{
-					"id": "cs08b_le_6",
-					"speaker": "槐里·青禾",
-					"text": "孩子抄完空行。说手不抖了。"
-				},
-				{
-					"id": "cs08b_le_7",
-					"speaker": "石垒·晚担",
-					"text": "不抖说明没装刻。"
-				},
-				{
-					"id": "cs08b_le_8",
-					"speaker": "苇原·灯影",
-					"text": "巡夜名单还短。短着也好过假碑。"
-				},
-				{
-					"id": "cs08b_le_9",
-					"speaker": "老旗手",
-					"text": "旗角给人核。核完祖祠旗还在。"
-				},
-				{
-					"id": "cs08b_le_10",
-					"speaker": "掌柜",
-					"text": "碑阴圈可以擦。柜里碑阴本擦不掉。"
-				},
-				{
-					"id": "cs08b_le_11",
-					"speaker": "老管事",
-					"text": "诚实比能念的碑名贵。"
-				},
-				{
-					"id": "cs08b_le_12",
-					"speaker": "书记官",
-					"text": "入柜时嗓子轻一点。轻着念碑阴，字更真。"
-				},
-				{
-					"id": "cs08b_le_13",
-					"speaker": "岁吏",
-					"text": "入柜的碑阴第二页比嘴硬。嘴会改口。"
-				},
-				{
-					"id": "cs08b_le_14",
-					"speaker": "leader",
-					"text": "硬碑留下。软催撕掉。"
-				},
-				{
-					"id": "cs08b_le_15",
-					"speaker": "槐里·青禾",
-					"text": "撕掉的是催碑条。不是空行。"
-				},
-				{
-					"id": "cs08b_le_16",
-					"speaker": "石垒·晚担",
-					"text": "碑阴空行过夜。明天还在。"
-				},
-				{
-					"id": "cs08b_le_17",
-					"speaker": "苇原·灯影",
-					"text": "在就好。在才像碑阴回读。"
-				},
-				{
-					"id": "cs08b_le_x17",
-					"speaker": "旁白",
-					"text": "碑录末行：刻深，勿催。"
-				},
-				{
-					"id": "cs08b_le_x18",
-					"speaker": "槐里·青禾",
-					"text": "催出来的字会迸。"
-				},
-				{
-					"id": "cs08b_le_x19",
-					"speaker": "leader",
-					"text": "不催。"
-				},
-				{
-					"id": "cs08b_le_y20",
-					"speaker": "旁白",
-					"text": "香灰落在碑座。"
-				},
-				{
-					"id": "cs08b_le_y21",
-					"speaker": "石垒·晚担",
-					"text": "灰轻，碑重。"
-				},
-				{
-					"id": "cs08b_le_y22",
-					"speaker": "leader",
-					"text": "碑阴并排留。"
-				},
-				{
-					"id": "cs0802_ldg1",
-					"speaker": "岁吏",
-					"text": "碑阴拓纸揭稳，碑录复页才敢写。"
-				},
-				{
-					"id": "cs0802_ldg2",
-					"speaker": "书记官",
-					"text": "槐影外抢拓的，不进复页。"
-				},
-				{
-					"id": "cs0802_ldg3",
-					"speaker": "老旗手",
-					"text": "旗第二次低过祠阶——更像拜。"
-				},
-				{
-					"id": "cs0802_ldg4",
-					"speaker": "leader",
-					"text": "拓实并排。厅灯可灭一盏，碑阴小灯不灭。"
-				},
-				{
-					"id": "cs0802_ldg_end",
-					"speaker": "leader",
-					"text": "拓纸潮干处，灰旗堡碑阴柜等复页。"
-				}
-			]
-		}
-	]
+  "id": "cs08_02",
+  "title": "碑阴上的灯",
+  "title_en": "The Lamp on the Stele Back",
+  "legacy_index": 418,
+  "return_scene": "res://scenes/hub/castle_hub.tscn",
+  "source": "docs/content-seasons/season-08/NOVEL.md",
+  "beats": [
+    {
+      "id": "yard",
+      "title": "院门",
+      "lines": [
+        {
+          "id": "cs08b_ya_1",
+          "speaker": "旁白",
+          "text": "院门还开着。碑阴那面没人站。"
+        },
+        {
+          "id": "cs08b_ya_2",
+          "speaker": "老管事",
+          "text": "正面念过了。阴面还空着一行。"
+        },
+        {
+          "id": "cs08b_ya_3",
+          "speaker": "书记官",
+          "text": "空行不是忘。是等回读的人。"
+        },
+        {
+          "id": "cs08b_ya_4",
+          "speaker": "leader",
+          "text": "我来回读。碑阴也要能念。"
+        },
+        {
+          "id": "cs08b_ya_5",
+          "speaker": "岁吏",
+          "text": "年迹旁可以补碑阴。不改正面。"
+        },
+        {
+          "id": "cs08b_ya_6",
+          "speaker": "槐里·青禾",
+          "text": "孩子抄正面会快。抄碑阴会停。"
+        },
+        {
+          "id": "cs08b_ya_7",
+          "speaker": "石垒·晚担",
+          "text": "停一下好。不停着刻名最危险。"
+        },
+        {
+          "id": "cs08b_ya_8",
+          "speaker": "苇原·灯影",
+          "text": "灯照碑阴比照正面淡。淡着才看得清空。"
+        },
+        {
+          "id": "cs08b_ya_9",
+          "speaker": "老旗手",
+          "text": "旗角给人核。核完再谈催碑。"
+        },
+        {
+          "id": "cs08b_ya_10",
+          "speaker": "掌柜",
+          "text": "酒馆墙上也挂过碑名。挂三天就有人加字。"
+        },
+        {
+          "id": "cs08b_ya_11",
+          "speaker": "旁白",
+          "text": "院风从碑缝过来。缝里没有急。"
+        },
+        {
+          "id": "cs08b_ya_12",
+          "speaker": "老管事",
+          "text": "急字过夜会褪。碑阴空行过夜更清楚。"
+        },
+        {
+          "id": "cs08b_ya_13",
+          "speaker": "书记官",
+          "text": "清楚才像碑。糊了就像没回读。"
+        },
+        {
+          "id": "cs08b_ya_14",
+          "speaker": "leader",
+          "text": "带我去碑阴。先看空行。"
+        },
+        {
+          "id": "cs08b_ya_15",
+          "speaker": "岁吏",
+          "text": "空行比满碑诚实。"
+        },
+        {
+          "id": "cs08b_ya_18",
+          "speaker": "旁白",
+          "text": "院灯一盏。碑阴第二可玩章起。"
+        },
+        {
+          "id": "cs08b_ya_17",
+          "speaker": "石垒·晚担",
+          "text": "我站祠院外。站着也算见证。"
+        },
+        {
+          "id": "cs08b_ya_x17",
+          "speaker": "旁白",
+          "text": "碑院风干。干风刮字口。"
+        },
+        {
+          "id": "cs08b_ya_x18",
+          "speaker": "石垒·晚担",
+          "text": "字口深的，风刮不走。"
+        },
+        {
+          "id": "cs08b_ya_x19",
+          "speaker": "leader",
+          "text": "我认深的。"
+        },
+        {
+          "id": "cs08b_ya_y20",
+          "speaker": "旁白",
+          "text": "回读时碑阴第二行还潮，潮口比正面拓纸深。"
+        },
+        {
+          "id": "cs08b_ya_y21",
+          "speaker": "石垒·晚担",
+          "text": "第二行的深才经年。正面喊出来的碑名，风一吹就浅。"
+        },
+        {
+          "id": "cs08b_ya_y22",
+          "speaker": "leader",
+          "text": "我认阴面这一行。正面的喊声不抄。"
+        },
+        {
+          "id": "cs08b_ya_16",
+          "speaker": "槐里·青禾",
+          "text": "诚实比能喊的碑名贵。"
+        }
+      ],
+      "next": "stele"
+    },
+    {
+      "id": "stele",
+      "title": "碑阴",
+      "lines": [
+        {
+          "id": "cs08b_st_1",
+          "speaker": "旁白",
+          "text": "碑阴凉。字的影子比正面短。"
+        },
+        {
+          "id": "cs08b_st_2",
+          "speaker": "老管事",
+          "text": "这一行空着。空着才像回读位。"
+        },
+        {
+          "id": "cs08b_st_3",
+          "speaker": "书记官",
+          "text": "正面写满的人，最怕看阴面。"
+        },
+        {
+          "id": "cs08b_st_4",
+          "speaker": "leader",
+          "text": "我不怕。空行写进今晚。"
+        },
+        {
+          "id": "cs08b_st_5",
+          "speaker": "岁吏",
+          "text": "写进今晚可以。改正面不行。"
+        },
+        {
+          "id": "cs08b_st_6",
+          "speaker": "槐里·青禾",
+          "text": "孩子伸手指空行。问谁的名。"
+        },
+        {
+          "id": "cs08b_st_7",
+          "speaker": "石垒·晚担",
+          "text": "还没有碑名。有名就不叫回读。"
+        },
+        {
+          "id": "cs08b_st_8",
+          "speaker": "苇原·灯影",
+          "text": "回读不是补喊。是敢把碑阴空留下。"
+        },
+        {
+          "id": "cs08b_st_18",
+          "speaker": "旁白",
+          "text": "碑阴灯一晃。去沙漏。"
+        },
+        {
+          "id": "cs08b_st_10",
+          "speaker": "掌柜",
+          "text": "酒钱能买挂板。买不了碑阴的空。"
+        },
+        {
+          "id": "cs08b_st_11",
+          "speaker": "旁白",
+          "text": "指腹按在空行上。石不烫。"
+        },
+        {
+          "id": "cs08b_st_12",
+          "speaker": "老管事",
+          "text": "烫的是催碑条。催条可以撕。"
+        },
+        {
+          "id": "cs08b_st_13",
+          "speaker": "书记官",
+          "text": "碑阴撕不得。撕了正面也假。"
+        },
+        {
+          "id": "cs08b_st_14",
+          "speaker": "leader",
+          "text": "空行看见了。去沙漏对两行。"
+        },
+        {
+          "id": "cs08b_st_15",
+          "speaker": "岁吏",
+          "text": "沙漏上行碑名、下行空。并排。"
+        },
+        {
+          "id": "cs08b_st_16",
+          "speaker": "槐里·青禾",
+          "text": "并排才像碑账。藏起来才像骗。"
+        },
+        {
+          "id": "cs08b_st_17",
+          "speaker": "石垒·晚担",
+          "text": "骗不过抄碑阴的停顿。"
+        },
+        {
+          "id": "cs08b_st_x17",
+          "speaker": "旁白",
+          "text": "石碑侧有新刻痕。痕浅。"
+        },
+        {
+          "id": "cs08b_st_x18",
+          "speaker": "岁吏",
+          "text": "浅痕经不起年。"
+        },
+        {
+          "id": "cs08b_st_x19",
+          "speaker": "leader",
+          "text": "我不等浅的。"
+        },
+        {
+          "id": "cs08b_st_y20",
+          "speaker": "旁白",
+          "text": "复页拓纸上沾着碑座新灰，灰没进字口。"
+        },
+        {
+          "id": "cs08b_st_y21",
+          "speaker": "石垒·晚担",
+          "text": "灰沾在纸上就轻。字口里的灰，揭不下来。"
+        },
+        {
+          "id": "cs08b_st_y22",
+          "speaker": "leader",
+          "text": "揭不下来的并排留。沾在纸面的空名揭走。"
+        },
+        {
+          "id": "cs08b_st_9",
+          "speaker": "老旗手",
+          "text": "旗布完整。旗角不绣喊出来的碑名。"
+        }
+      ],
+      "next": "hourglass"
+    },
+    {
+      "id": "hourglass",
+      "title": "两行",
+      "lines": [
+        {
+          "id": "cs08b_ho_1",
+          "speaker": "旁白",
+          "text": "厅灯照着沙漏腰。碑字最清楚。"
+        },
+        {
+          "id": "cs08b_ho_2",
+          "speaker": "老管事",
+          "text": "两根木条并排。你按住碑名与空行。"
+        },
+        {
+          "id": "cs08b_ho_3",
+          "speaker": "书记官",
+          "text": "急字在上头跳。空行在下头稳。"
+        },
+        {
+          "id": "cs08b_ho_4",
+          "speaker": "leader",
+          "text": "我按住碑名。谁也别先催。"
+        },
+        {
+          "id": "cs08b_ho_5",
+          "speaker": "岁吏",
+          "text": "年迹旁已留位。位给碑阴第二页。"
+        },
+        {
+          "id": "cs08b_ho_6",
+          "speaker": "槐里·青禾",
+          "text": "孩子说空行像椅子。还没人坐。"
+        },
+        {
+          "id": "cs08b_ho_7",
+          "speaker": "石垒·晚担",
+          "text": "椅子空着也好过假坐。"
+        },
+        {
+          "id": "cs08b_ho_18",
+          "speaker": "旁白",
+          "text": "沙漏腰一亮。碑廊在外。"
+        },
+        {
+          "id": "cs08b_ho_9",
+          "speaker": "老旗手",
+          "text": "旗角在风里响。响的是碑核。"
+        },
+        {
+          "id": "cs08b_ho_10",
+          "speaker": "掌柜",
+          "text": "核完再谈碑酒。酒醒着才选得动。"
+        },
+        {
+          "id": "cs08b_ho_11",
+          "speaker": "旁白",
+          "text": "沙声很轻。轻着像不敢催碑。"
+        },
+        {
+          "id": "cs08b_ho_12",
+          "speaker": "老管事",
+          "text": "催碑条可以进酒馆。沙漏不进催条。"
+        },
+        {
+          "id": "cs08b_ho_13",
+          "speaker": "书记官",
+          "text": "嗓子轻一点。轻着念碑阴，字更真。"
+        },
+        {
+          "id": "cs08b_ho_14",
+          "speaker": "leader",
+          "text": "碑阴两行对过了。去门廊。"
+        },
+        {
+          "id": "cs08b_ho_15",
+          "speaker": "岁吏",
+          "text": "门廊问谁加碑字。加字要认指甲。"
+        },
+        {
+          "id": "cs08b_ho_16",
+          "speaker": "槐里·青禾",
+          "text": "吹不掉才像碑阴。"
+        },
+        {
+          "id": "cs08b_ho_17",
+          "speaker": "石垒·晚担",
+          "text": "碑痕看见了。去门廊留痕。"
+        },
+        {
+          "id": "cs08b_ho_x17",
+          "speaker": "旁白",
+          "text": "沙漏底座刻着旧年号。"
+        },
+        {
+          "id": "cs08b_ho_x18",
+          "speaker": "苇原·灯影",
+          "text": "旧年号比新年号沉。"
+        },
+        {
+          "id": "cs08b_ho_x19",
+          "speaker": "leader",
+          "text": "去沙漏。沉着看。"
+        },
+        {
+          "id": "cs08b_ho_y20",
+          "speaker": "旁白",
+          "text": "月份格旁边渗着碑阴潮，潮只浸未填的那一格。"
+        },
+        {
+          "id": "cs08b_ho_y21",
+          "speaker": "石垒·晚担",
+          "text": "浸到空格里的深，才配经年。填满的喊声不浸。"
+        },
+        {
+          "id": "cs08b_ho_y22",
+          "speaker": "leader",
+          "text": "我认空格里的潮。喊满的月份不走。"
+        },
+        {
+          "id": "cs08b_ho_8",
+          "speaker": "苇原·灯影",
+          "text": "假坐一夜，碑阴就脏。"
+        },
+        {
+          "id": "cs0802_vis_mv1",
+          "speaker": "旁白",
+          "text": "碑阴拓旁，沙漏玻璃映出半张脸。"
+        },
+        {
+          "id": "cs0802_vis_mv2",
+          "speaker": "岁吏",
+          "text": "映脸的人，自己先站直。"
+        },
+        {
+          "id": "cs0802_vis_mv3",
+          "speaker": "苇原·灯影",
+          "text": "站直了再问月份。"
+        },
+        {
+          "id": "cs0802_vst1",
+          "speaker": "岁吏",
+          "text": "月份从碑阴拓纸边渗进一丝潮。潮干，月份才算拓过。"
+        },
+        {
+          "id": "cs0802_vst2",
+          "speaker": "书记官",
+          "text": "碑录复页，要等拓纸揭稳。"
+        },
+        {
+          "id": "cs0802_vst3",
+          "speaker": "leader",
+          "text": "月份渗过。碑，我拓。"
+        },
+        {
+          "id": "cs0802_vis_mv4",
+          "speaker": "leader",
+          "text": "站直。去看月份。"
+        }
+      ],
+      "next": "bridge",
+      "actions": [
+        {
+          "id": "open_hourglass",
+          "label": "去看月份怎么往前走",
+          "do": [
+            {
+              "op": "visit",
+              "path": "res://scenes/hub/hourglass.tscn"
+            }
+          ]
+        },
+        {
+          "id": "continue_after_visit",
+          "label": "继续，去门廊",
+          "do": [
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bridge",
+      "title": "门廊",
+      "lines": [
+        {
+          "id": "cs08b_br_1",
+          "speaker": "旁白",
+          "text": "桥木响。响的是鞋，不是喊碑名。"
+        },
+        {
+          "id": "cs08b_br_2",
+          "speaker": "老旗手",
+          "text": "旗角在桥头给人核。核完再谈催碑。"
+        },
+        {
+          "id": "cs08b_br_3",
+          "speaker": "岁吏",
+          "text": "急字在桥风里会褪。碑阴空行过夜更清楚。"
+        },
+        {
+          "id": "cs08b_br_4",
+          "speaker": "老管事",
+          "text": "带牌去酒馆。碑阴圈还在墙上。"
+        },
+        {
+          "id": "cs08b_br_5",
+          "speaker": "书记官",
+          "text": "碑圈心比酒醒。醒着才选得动。"
+        },
+        {
+          "id": "cs08b_br_6",
+          "speaker": "leader",
+          "text": "碑廊问过了。先试锋，再去酒馆。"
+        },
+        {
+          "id": "cs08b_br_7",
+          "speaker": "槐里·青禾",
+          "text": "锋镝先试一试。试完再去碑阴圈前。"
+        },
+        {
+          "id": "cs08b_br_8",
+          "speaker": "石垒·晚担",
+          "text": "干净靴也留痕。痕留给碑阴的人。"
+        },
+        {
+          "id": "cs08b_br_9",
+          "speaker": "苇原·灯影",
+          "text": "牌收回来。碑阴两字没有被风吹掉。"
+        },
+        {
+          "id": "cs08b_br_10",
+          "speaker": "掌柜",
+          "text": "挂碑阴。挂三天。谁加字，我认指甲。"
+        },
+        {
+          "id": "cs08b_br_11",
+          "speaker": "旁白",
+          "text": "风从桥下上来。催碑条在风里抖。"
+        },
+        {
+          "id": "cs08b_br_12",
+          "speaker": "老旗手",
+          "text": "旗布没破。破的是催碑条。"
+        },
+        {
+          "id": "cs08b_br_13",
+          "speaker": "岁吏",
+          "text": "催条可以撕。碑阴第二页撕不得。"
+        },
+        {
+          "id": "cs08b_br_14",
+          "speaker": "老管事",
+          "text": "选完入柜。碑阴柜门会响。"
+        },
+        {
+          "id": "cs08b_br_15",
+          "speaker": "leader",
+          "text": "锋试过或跳过都行。去酒馆看碑阴。"
+        },
+        {
+          "id": "cs08b_br_16",
+          "speaker": "槐里·青禾",
+          "text": "孩子来抄碑阴板。抄到空行会停一下。"
+        },
+        {
+          "id": "cs08b_br_17",
+          "speaker": "石垒·晚担",
+          "text": "停一下好。不停着抄碑名最危险。"
+        },
+        {
+          "id": "cs08b_br_x18",
+          "speaker": "旁白",
+          "text": "门廊鼓皮松了半寸。"
+        },
+        {
+          "id": "cs08b_br_x19",
+          "speaker": "岁吏",
+          "text": "松的鼓，打假声。"
+        },
+        {
+          "id": "cs08b_br_x20",
+          "speaker": "leader",
+          "text": "试锋。不打假声。"
+        },
+        {
+          "id": "cs08b_br_y21",
+          "speaker": "旁白",
+          "text": "刀鞘旁落了一点祠里带出的香灰，鞘还凉。"
+        },
+        {
+          "id": "cs08b_br_y22",
+          "speaker": "石垒·晚担",
+          "text": "鞘上的灰轻。碑座里的灰重。轻的别当行礼。"
+        },
+        {
+          "id": "cs08b_br_y23",
+          "speaker": "leader",
+          "text": "重的灰并排留在碑阴。鞘上的不刻名。"
+        },
+        {
+          "id": "cs08b_br_18",
+          "speaker": "旁白",
+          "text": "桥灯一盏。碑酒门开。"
+        },
+        {
+          "id": "cs0802_mid_mv1",
+          "speaker": "旁白",
+          "text": "碑阴纸被香烟熏黄一线。黄线上有指甲划痕。"
+        },
+        {
+          "id": "cs0802_mid_mv2",
+          "speaker": "岁吏",
+          "text": "划痕不是祭。是有人试探能撕不。"
+        },
+        {
+          "id": "cs0802_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "能撕的纸，守不住碑。"
+        },
+        {
+          "id": "cs0802_mid_mv4",
+          "speaker": "苇原·灯影",
+          "text": "守碑靠人。人要先把锋亮开。"
+        },
+        {
+          "id": "cs0802_mid_mv5",
+          "speaker": "老旗手",
+          "text": "亮开不是吓人。是把门说清。"
+        },
+        {
+          "id": "cs0802_mid_mv6",
+          "speaker": "leader",
+          "text": "门说清。试锋不打假声。"
+        },
+        {
+          "id": "cs0802_win1",
+          "speaker": "旁白",
+          "text": "锋再定。碑阴拓完，抢拓那拨退到槐影外。",
+          "when": {
+            "flag": "cs08_mid_fought"
+          }
+        },
+        {
+          "id": "cs0802_win2",
+          "speaker": "掌柜",
+          "text": "拓要自己按。按实，才不像偷的。",
+          "when": {
+            "flag": "cs08_mid_fought"
+          }
+        },
+        {
+          "id": "cs0802_win3",
+          "speaker": "槐里·青禾",
+          "text": "碑凉还在手上。凉着，字更清。",
+          "when": {
+            "flag": "cs08_mid_fought"
+          }
+        },
+        {
+          "id": "cs0802_win4",
+          "speaker": "leader",
+          "text": "锋护过碑。拓，我按得。",
+          "when": {
+            "flag": "cs08_mid_fought"
+          }
+        },
+        {
+          "id": "cs08b_br_lost",
+          "speaker": "旁白",
+          "text": "锋收回来。碑阴纸还钉着。祠旁那拨，没散。",
+          "when": {
+            "all": [
+              {
+                "flag": "cs08_mid_lost"
+              },
+              {
+                "not_flag": "cs08_mid_fought"
+              }
+            ]
+          }
+        }
+      ],
+      "next": "tavern",
+      "actions": [
+        {
+          "id": "open_skirmish",
+          "label": "先试一锋",
+          "when": {
+            "all": [
+              {
+                "not_flag": "cs08_mid_fought"
+              },
+              {
+                "not_flag": "cs08_mid_lost"
+              }
+            ]
+          },
+          "do": [
+            {
+              "op": "battle",
+              "map": "quest_bandit",
+              "objective": "rout",
+              "return": "res://scenes/story/chapter_player.tscn",
+              "win_flags": [
+                "cs08_mid_fought"
+              ],
+              "lose_flags": [
+                "cs08_mid_lost"
+              ],
+              "win_ledger": {
+                "choice": "mid_skirmish",
+                "title": "碑阴上的灯",
+                "outcome": "碑阴旁试锋得手——锋镝压下，并排纸可续",
+                "yeartrace": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "retry_skirmish",
+          "label": "再试锋镝",
+          "when": {
+            "all": [
+              {
+                "not_flag": "cs08_mid_fought"
+              },
+              {
+                "flag": "cs08_mid_lost"
+              }
+            ]
+          },
+          "do": [
+            {
+              "op": "battle",
+              "map": "quest_bandit",
+              "objective": "rout",
+              "return": "res://scenes/story/chapter_player.tscn",
+              "win_flags": [
+                "cs08_mid_fought"
+              ],
+              "lose_flags": [
+                "cs08_mid_lost"
+              ],
+              "win_ledger": {
+                "choice": "mid_skirmish",
+                "title": "碑阴上的灯",
+                "outcome": "碑阴旁试锋得手——锋镝压下，并排纸可续",
+                "yeartrace": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "continue_after_battle",
+          "label": "继续，去酒馆",
+          "do": [
+            {
+              "op": "season_ledger",
+              "when": {
+                "all": [
+                  {
+                    "not_flag": "cs08_mid_fought"
+                  },
+                  {
+                    "not_flag": "cs08_mid_lost"
+                  }
+                ]
+              },
+              "chapter": "cs08_02",
+              "choice": "mid_skirmish_skip",
+              "title": "碑阴上的灯",
+              "outcome": "未试锋——锋未出鞘，径去酒馆",
+              "yeartrace": true
+            },
+            {
+              "op": "season_ledger",
+              "when": {
+                "all": [
+                  {
+                    "not_flag": "cs08_mid_fought"
+                  },
+                  {
+                    "flag": "cs08_mid_lost"
+                  }
+                ]
+              },
+              "chapter": "cs08_02",
+              "choice": "mid_skirmish_abort",
+              "title": "碑阴上的灯",
+              "outcome": "试锋未成——伤还在，先去酒馆",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tavern",
+      "title": "选题",
+      "lines": [
+        {
+          "id": "cs08b_ta_1",
+          "speaker": "掌柜",
+          "text": "不是我要钉碑阴。有人出酒钱。挂不挂你们裁。"
+        },
+        {
+          "id": "cs08b_ta_2",
+          "speaker": "leader",
+          "text": "酒馆里先说挂碑阴。挂三天。谁加字，我认指甲。"
+        },
+        {
+          "id": "cs08b_ta_3",
+          "speaker": "石垒·晚担",
+          "text": "挂着才像碑账。藏起来才像骗。"
+        },
+        {
+          "id": "cs08b_ta_4",
+          "speaker": "槐里·青禾",
+          "text": "酒桌上孩子来抄碑阴板。抄到空行会停一下。"
+        },
+        {
+          "id": "cs08b_ta_5",
+          "speaker": "苇原·灯影",
+          "text": "酒边停一下好。不停着抄碑名最危险。"
+        },
+        {
+          "id": "cs08b_ta_6",
+          "speaker": "书记官",
+          "text": "急好念。空行难受。难受就对。"
+        },
+        {
+          "id": "cs08b_ta_7",
+          "speaker": "老旗手",
+          "text": "旗角在门外。核的人能看见碑阴板。"
+        },
+        {
+          "id": "cs08b_ta_8",
+          "speaker": "岁吏",
+          "text": "年迹旁补碑阴一行。不改正面。"
+        },
+        {
+          "id": "cs08b_ta_9",
+          "speaker": "老管事",
+          "text": "碑阴圈心比酒醒。醒着才选得动。"
+        },
+        {
+          "id": "cs08b_ta_10",
+          "speaker": "leader",
+          "text": "碑名与空行都看见了。选。"
+        },
+        {
+          "id": "cs08b_ta_11",
+          "speaker": "石垒·晚担",
+          "text": "我站碑阴圈外。站着也算见证。"
+        },
+        {
+          "id": "cs08b_ta_12",
+          "speaker": "旁白",
+          "text": "碑阴板前安静。安静里只剩两道选择题。"
+        },
+        {
+          "id": "cs08b_ta_13",
+          "speaker": "苇原·灯影",
+          "text": "碑阴第二页比嘴硬。嘴会改口。"
+        },
+        {
+          "id": "cs08b_ta_14",
+          "speaker": "掌柜",
+          "text": "选完入碑柜。柜门一响，酒也凉。"
+        },
+        {
+          "id": "cs08b_ta_15",
+          "speaker": "书记官",
+          "text": "凉着好。烫着容易假碑。"
+        },
+        {
+          "id": "cs08b_ta_16",
+          "speaker": "槐里·青禾",
+          "text": "假坐一夜，孩子明天还会停。"
+        },
+        {
+          "id": "cs08b_ta_17",
+          "speaker": "老旗手",
+          "text": "祖祠旗还在。旗不替你们选。"
+        },
+        {
+          "id": "cs08b_ta_x17",
+          "speaker": "旁白",
+          "text": "酒馆墙上贴着征碑告示。"
+        },
+        {
+          "id": "cs08b_ta_x18",
+          "speaker": "老管事",
+          "text": "告示密的地方，真碑少。"
+        },
+        {
+          "id": "cs08b_ta_x19",
+          "speaker": "leader",
+          "text": "我找真碑。"
+        },
+        {
+          "id": "cs08b_ta_y20",
+          "speaker": "旁白",
+          "text": "回堡前巾角还潮，潮是碑阴第二行印上来的。"
+        },
+        {
+          "id": "cs08b_ta_y21",
+          "speaker": "石垒·晚担",
+          "text": "印上巾的深才经年。擦掉的是酒，不是字口。"
+        },
+        {
+          "id": "cs08b_ta_y22",
+          "speaker": "leader",
+          "text": "巾上的深我认。擦亮的空名不认。"
+        },
+        {
+          "id": "cs08b_ta_18",
+          "speaker": "旁白",
+          "text": "两道碑题在板上。手按上去。"
+        },
+        {
+          "id": "cs0802_ret_mv1",
+          "speaker": "旁白",
+          "text": "碑阴酒过三巡，有人要把纸当菜单一卷。"
+        },
+        {
+          "id": "cs0802_ret_mv2",
+          "speaker": "掌柜",
+          "text": "菜单不是碑阴。"
+        },
+        {
+          "id": "cs0802_ret_mv3",
+          "speaker": "岁吏",
+          "text": "碑阴回堡。"
+        },
+        {
+          "id": "cs0802_tvp1",
+          "speaker": "旁白",
+          "text": "碑阴拓片反卷，卷心露出未拓全的一角。"
+        },
+        {
+          "id": "cs0802_tvp2",
+          "speaker": "掌柜",
+          "text": "未拓全也能挂——要写明缺角。缺角藏着，才是瞒。"
+        },
+        {
+          "id": "cs0802_tvp3",
+          "speaker": "石垒·晚担",
+          "text": "催碑名的最快。最快的名，阴面往往空。"
+        },
+        {
+          "id": "cs0802_tvp4",
+          "speaker": "岁吏",
+          "text": "阴面空着也可以。空着比偷补强。"
+        },
+        {
+          "id": "cs0802_tvp5",
+          "speaker": "老旗手",
+          "text": "旗在碑侧立过。立过，阴面也有影。"
+        },
+        {
+          "id": "cs0802_tvp6",
+          "speaker": "leader",
+          "text": "碑阴并排留。催名的，先看缺角。"
+        },
+        {
+          "id": "cs0802_tvn1",
+          "speaker": "掌柜",
+          "text": "护碑那一锋，酒要凉——凉着配石。"
+        },
+        {
+          "id": "cs0802_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "槐影外那拨退了。退了，拓纸才揭得。"
+        },
+        {
+          "id": "cs0802_tvn3",
+          "speaker": "老旗手",
+          "text": "旗在碑阶低过第二次。低过，更像拜。"
+        },
+        {
+          "id": "cs0802_tvn4",
+          "speaker": "leader",
+          "text": "拓实。石凉。酒，凉着。"
+        },
+        {
+          "id": "cs0802_ret_mv4",
+          "speaker": "leader",
+          "text": "回堡记碑阴。"
+        }
+      ],
+      "next": "ledger",
+      "actions": [
+        {
+          "id": "keep_back",
+          "label": "碑阴并排留",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs08_back_parallel",
+              "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs08_02",
+              "choice": "keep_back",
+              "title": "碑阴上的灯",
+              "outcome": "碑阴回读后并排记入谱",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        },
+        {
+          "id": "push_name",
+          "label": "先催碑名",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs08_back_push",
+              "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs08_02",
+              "choice": "push_name",
+              "title": "碑阴上的灯",
+              "outcome": "碑阴回读后先催碑名",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ledger",
+      "title": "入册",
+      "lines": [
+        {
+          "id": "cs08b_le_1",
+          "speaker": "旁白",
+          "text": "柜锁落下。碑阴第二可玩章收束。"
+        },
+        {
+          "id": "cs08b_le_2",
+          "speaker": "老管事",
+          "text": "收束不是结束。是敢把空行留下。"
+        },
+        {
+          "id": "cs08b_le_3",
+          "speaker": "书记官",
+          "text": "空行进谱。正面一字不改。"
+        },
+        {
+          "id": "cs08b_le_4",
+          "speaker": "岁吏",
+          "text": "年迹旁已有碑阴一行。"
+        },
+        {
+          "id": "cs08b_le_5",
+          "speaker": "leader",
+          "text": "我认碑阴这行。认完出门。"
+        },
+        {
+          "id": "cs08b_le_6",
+          "speaker": "槐里·青禾",
+          "text": "孩子抄完空行。说手不抖了。"
+        },
+        {
+          "id": "cs08b_le_7",
+          "speaker": "石垒·晚担",
+          "text": "不抖说明没装刻。"
+        },
+        {
+          "id": "cs08b_le_8",
+          "speaker": "苇原·灯影",
+          "text": "巡夜名单还短。短着也好过假碑。"
+        },
+        {
+          "id": "cs08b_le_9",
+          "speaker": "老旗手",
+          "text": "旗角给人核。核完祖祠旗还在。"
+        },
+        {
+          "id": "cs08b_le_10",
+          "speaker": "掌柜",
+          "text": "碑阴圈可以擦。柜里碑阴本擦不掉。"
+        },
+        {
+          "id": "cs08b_le_11",
+          "speaker": "老管事",
+          "text": "诚实比能念的碑名贵。"
+        },
+        {
+          "id": "cs08b_le_12",
+          "speaker": "书记官",
+          "text": "入柜时嗓子轻一点。轻着念碑阴，字更真。"
+        },
+        {
+          "id": "cs08b_le_13",
+          "speaker": "岁吏",
+          "text": "入柜的碑阴第二页比嘴硬。嘴会改口。"
+        },
+        {
+          "id": "cs08b_le_14",
+          "speaker": "leader",
+          "text": "硬碑留下。软催撕掉。"
+        },
+        {
+          "id": "cs08b_le_15",
+          "speaker": "槐里·青禾",
+          "text": "撕掉的是催碑条。不是空行。"
+        },
+        {
+          "id": "cs08b_le_16",
+          "speaker": "石垒·晚担",
+          "text": "碑阴空行过夜。明天还在。"
+        },
+        {
+          "id": "cs08b_le_17",
+          "speaker": "苇原·灯影",
+          "text": "在就好。在才像碑阴回读。"
+        },
+        {
+          "id": "cs08b_le_x17",
+          "speaker": "旁白",
+          "text": "碑录末行：刻深，勿催。"
+        },
+        {
+          "id": "cs08b_le_x18",
+          "speaker": "槐里·青禾",
+          "text": "催出来的字会迸。"
+        },
+        {
+          "id": "cs08b_le_x19",
+          "speaker": "leader",
+          "text": "不催。"
+        },
+        {
+          "id": "cs08b_le_y20",
+          "speaker": "旁白",
+          "text": "香灰落在碑座。"
+        },
+        {
+          "id": "cs08b_le_y21",
+          "speaker": "石垒·晚担",
+          "text": "灰轻，碑重。"
+        },
+        {
+          "id": "cs08b_le_y22",
+          "speaker": "leader",
+          "text": "碑阴并排留。"
+        },
+        {
+          "id": "cs0802_ldg1",
+          "speaker": "岁吏",
+          "text": "碑阴拓纸揭稳，碑录复页才敢写。"
+        },
+        {
+          "id": "cs0802_ldg2",
+          "speaker": "书记官",
+          "text": "槐影外抢拓的，不进复页。"
+        },
+        {
+          "id": "cs0802_ldg3",
+          "speaker": "老旗手",
+          "text": "旗第二次低过祠阶——更像拜。"
+        },
+        {
+          "id": "cs0802_ldg4",
+          "speaker": "leader",
+          "text": "拓实并排。厅灯可灭一盏，碑阴小灯不灭。"
+        },
+        {
+          "id": "cs0802_ldg_end",
+          "speaker": "leader",
+          "text": "拓纸潮干处，灰旗堡碑阴柜等复页。"
+        }
+      ]
+    }
+  ]
 }

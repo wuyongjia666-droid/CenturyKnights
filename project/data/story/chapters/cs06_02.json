@@ -1,1110 +1,1110 @@
 {
-	"id": "cs06_02",
-	"title": "胜册上的灯",
-	"legacy_index": 416,
-	"return_scene": "res://scenes/hub/castle_hub.tscn",
-	"source": "docs/content-seasons/season-06/NOVEL.md",
-	"beats": [
-		{
-			"id": "yard",
-			"title": "胜册",
-			"lines": [
-				{
-					"id": "cs06b_yd_0",
-					"speaker": "旁白",
-					"text": "校场晨雾未散。胜册摊在木案上。",
-					"stage": {
-						"card": "一　胜册",
-						"bg": "hall",
-						"music": "castle",
-						"camera": "wide"
-					}
-				},
-				{
-					"id": "cs06b_yd_1",
-					"speaker": "书记官",
-					"text": "上回的胜者名与并排记都在。今天要回读胜册。"
-				},
-				{
-					"id": "cs06b_yd_2",
-					"speaker": "leader",
-					"text": "打开。胜名与空格一起念。"
-				},
-				{
-					"id": "cs06b_yd_3",
-					"speaker": "旁白",
-					"text": "册页翻开。墨新的地方最刺眼。"
-				},
-				{
-					"id": "cs06b_yd_4",
-					"speaker": "老管事",
-					"text": "胜册不是奖状。是谁还站得住的账。"
-				},
-				{
-					"id": "cs06b_yd_5",
-					"speaker": "岁吏",
-					"text": "年迹旁写「再锋」。再锋不等于改规则。"
-				},
-				{
-					"id": "cs06b_yd_6",
-					"speaker": "槐里·青禾",
-					"text": "孩子问胜了是不是就能坐。我说坐另算。"
-				},
-				{
-					"id": "cs06b_yd_7",
-					"speaker": "石垒·晚担",
-					"text": "打得过不等于坐得住。"
-				},
-				{
-					"id": "cs06b_yd_8",
-					"speaker": "苇原·灯影",
-					"text": "校场灯还亮。亮着才敢再对锋。"
-				},
-				{
-					"id": "cs06b_yd_9",
-					"speaker": "老旗手",
-					"text": "旗角给人核。核时把胜册也递过去。"
-				},
-				{
-					"id": "cs06b_yd_10",
-					"speaker": "掌柜",
-					"text": "酒馆墙上有圈。圈等胜册回读。"
-				},
-				{
-					"id": "cs06b_yd_11",
-					"speaker": "旁白",
-					"text": "木案上多了一根空条。空条对胜名。"
-				},
-				{
-					"id": "cs06b_yd_12",
-					"speaker": "书记官",
-					"text": "能念的胜名在左。空条在右。"
-				},
-				{
-					"id": "cs06b_yd_13",
-					"speaker": "老管事",
-					"text": "并排记的人留空条。钉胜名的人左栏更满。"
-				},
-				{
-					"id": "cs06b_yd_14",
-					"speaker": "岁吏",
-					"text": "满不等于真。真要再对一次锋。"
-				},
-				{
-					"id": "cs06b_yd_15",
-					"speaker": "leader",
-					"text": "胜册开了。去看校场痕。"
-				},
-				{
-					"id": "cs06b_yd_16",
-					"speaker": "旁白",
-					"text": "尘土里还有上回的脚印。脚印不会替人撒谎。"
-				},
-				{
-					"id": "cs06b_yd_x17",
-					"speaker": "旁白",
-					"text": "校场土硬。硬土不认花步。"
-				},
-				{
-					"id": "cs06b_yd_x18",
-					"speaker": "石垒·晚担",
-					"text": "花步赢不了册。"
-				},
-				{
-					"id": "cs06b_yd_x19",
-					"speaker": "leader",
-					"text": "胜册上回的脚印还在。我按那深度再走，不走花步。"
-				},
-				{
-					"id": "cs06b_yd_17",
-					"speaker": "槐里·青禾",
-					"text": "脚印深的地方，人当时是真下力。"
-				}
-			],
-			"next": "spar"
-		},
-		{
-			"id": "spar",
-			"title": "再锋",
-			"lines": [
-				{
-					"id": "cs06b_sp_0",
-					"speaker": "旁白",
-					"text": "校场中心。木桩上绑着旧布。布上有刃痕。",
-					"stage": {
-						"bg": "hall",
-						"camera": "close"
-					}
-				},
-				{
-					"id": "cs06b_sp_1",
-					"speaker": "苇原·灯影",
-					"text": "再锋不是报仇。是问胜名还站不站得住。"
-				},
-				{
-					"id": "cs06b_sp_2",
-					"speaker": "石垒·晚担",
-					"text": "站得住才写进胜册第二页。"
-				},
-				{
-					"id": "cs06b_sp_3",
-					"speaker": "旁白",
-					"text": "有人把胜名喊得很响。喊响的人脚却往后退。"
-				},
-				{
-					"id": "cs06b_sp_4",
-					"speaker": "leader",
-					"text": "喊不算。上场算。"
-				},
-				{
-					"id": "cs06b_sp_5",
-					"speaker": "老旗手",
-					"text": "旗布完整。旗角不绣喊出来的胜名。"
-				},
-				{
-					"id": "cs06b_sp_6",
-					"speaker": "槐里·青禾",
-					"text": "孩子在边上看。看谁先低头。"
-				},
-				{
-					"id": "cs06b_sp_7",
-					"speaker": "岁吏",
-					"text": "低头可以。改册要另走手续。"
-				},
-				{
-					"id": "cs06b_sp_8",
-					"speaker": "书记官",
-					"text": "手续在胜册第二页。页还空着。"
-				},
-				{
-					"id": "cs06b_sp_9",
-					"speaker": "老管事",
-					"text": "空页比满页的胜册诚实。"
-				},
-				{
-					"id": "cs06b_sp_10",
-					"speaker": "掌柜",
-					"text": "酒馆有人赌再锋。赌票我没收。"
-				},
-				{
-					"id": "cs06b_sp_11",
-					"speaker": "旁白",
-					"text": "刃痕旁多了一道新痕。新痕浅，人却喘。"
-				},
-				{
-					"id": "cs06b_sp_12",
-					"speaker": "苇原·灯影",
-					"text": "喘说明真打。假打不喘。"
-				},
-				{
-					"id": "cs06b_sp_13",
-					"speaker": "石垒·晚担",
-					"text": "真打完再谈名。"
-				},
-				{
-					"id": "cs06b_sp_14",
-					"speaker": "leader",
-					"text": "痕看见了。去沙漏对胜名两行。"
-				},
-				{
-					"id": "cs06b_sp_15",
-					"speaker": "旁白",
-					"text": "胜册合上半寸。风想掀它，掀不动。"
-				},
-				{
-					"id": "cs06b_sp_16",
-					"speaker": "槐里·青禾",
-					"text": "掀不动才像胜账。"
-				},
-				{
-					"id": "cs06b_sp_x17",
-					"speaker": "旁白",
-					"text": "对拆声短。短声里藏着收力。"
-				},
-				{
-					"id": "cs06b_sp_x18",
-					"speaker": "岁吏",
-					"text": "收力的人，册上才站得住。"
-				},
-				{
-					"id": "cs06b_sp_x19",
-					"speaker": "leader",
-					"text": "我记下这收。"
-				},
-				{
-					"id": "cs06b_sp_17",
-					"speaker": "老旗手",
-					"text": "胜账比风沉。"
-				}
-			],
-			"next": "hourglass"
-		},
-		{
-			"id": "hourglass",
-			"title": "两行",
-			"lines": [
-				{
-					"id": "cs06b_hg_0",
-					"speaker": "旁白",
-					"text": "沙漏厅。上行胜名、下行空条。",
-					"stage": {
-						"bg": "hall",
-						"camera": "wide"
-					}
-				},
-				{
-					"id": "cs06b_hg_1",
-					"speaker": "老管事",
-					"text": "月份往前走。胜册回读不改月份。"
-				},
-				{
-					"id": "cs06b_hg_2",
-					"speaker": "岁吏",
-					"text": "年迹旁多了一行「胜册夜」。"
-				},
-				{
-					"id": "cs06b_hg_3",
-					"speaker": "书记官",
-					"text": "能念的胜名在上行。站得住的人还在下行等。"
-				},
-				{
-					"id": "cs06b_hg_4",
-					"speaker": "苇原·灯影",
-					"text": "沙漏不催封胜。沙漏只记谁还喘。"
-				},
-				{
-					"id": "cs06b_hg_5",
-					"speaker": "槐里·青禾",
-					"text": "孩子问：胜了为什么还空。我说空是考题。"
-				},
-				{
-					"id": "cs06b_hg_6",
-					"speaker": "石垒·晚担",
-					"text": "考题比奖状狠。奖状能裱，题裱不住。"
-				},
-				{
-					"id": "cs06b_hg_7",
-					"speaker": "老旗手",
-					"text": "旗角在风里响。响的是胜核。"
-				},
-				{
-					"id": "cs06b_hg_8",
-					"speaker": "掌柜",
-					"text": "酒馆圈旁写了「胜册后再选」。"
-				},
-				{
-					"id": "cs06b_hg_9",
-					"speaker": "旁白",
-					"text": "两根木条并排。你按住胜名与空条。"
-				},
-				{
-					"id": "cs06b_hg_10",
-					"speaker": "leader",
-					"text": "两行都在。去门廊问谁还站。"
-				},
-				{
-					"id": "cs06b_hg_11",
-					"speaker": "老管事",
-					"text": "门廊不问你胜过谁。问你今晚还站谁。"
-				},
-				{
-					"id": "cs06b_hg_12",
-					"speaker": "岁吏",
-					"text": "站名单短，喊声反而大。"
-				},
-				{
-					"id": "cs06b_hg_13",
-					"speaker": "书记官",
-					"text": "喊声爱写「已封胜」。回读爱写「仍空」。"
-				},
-				{
-					"id": "cs06b_hg_14",
-					"speaker": "旁白",
-					"text": "厅灯照着沙漏腰。胜字最清楚。"
-				},
-				{
-					"id": "cs06b_hg_15",
-					"speaker": "槐里·青禾",
-					"text": "清楚才像刃。糊了就像没上场。"
-				},
-				{
-					"id": "cs06b_hg_16",
-					"speaker": "石垒·晚担",
-					"text": "我不糊。站不住就说站不住。"
-				},
-				{
-					"id": "cs06b_hg_x17",
-					"speaker": "旁白",
-					"text": "沙漏旁多了一枚胜签。签未启。"
-				},
-				{
-					"id": "cs06b_hg_x18",
-					"speaker": "苇原·灯影",
-					"text": "未启的签，比启了的重。"
-				},
-				{
-					"id": "cs06b_hg_x19",
-					"speaker": "leader",
-					"text": "去沙漏。看签而不催。"
-				},
-				{
-					"id": "cs06b_hg_17",
-					"speaker": "苇原·灯影",
-					"text": "带牌去。牌上写胜册，不写急。"
-				},
-				{
-					"id": "cs0602_vis_mv1",
-					"speaker": "旁白",
-					"text": "胜册旁沙漏沙面平整。平整说明刚被抹过。"
-				},
-				{
-					"id": "cs0602_vis_mv2",
-					"speaker": "岁吏",
-					"text": "抹平不是赢。赢要挂真名。"
-				},
-				{
-					"id": "cs0602_vis_mv3",
-					"speaker": "苇原·灯影",
-					"text": "真名前，先看月份。"
-				},
-				{
-					"id": "cs0602_vst1",
-					"speaker": "岁吏",
-					"text": "月份从第二道靴印里抬起来。抬起来，才进册。"
-				},
-				{
-					"id": "cs0602_vst2",
-					"speaker": "书记官",
-					"text": "复练格要等问声再落。"
-				},
-				{
-					"id": "cs0602_vst3",
-					"speaker": "leader",
-					"text": "月份抬过。圈，我还走。"
-				},
-				{
-					"id": "cs0602_vis_mv4",
-					"speaker": "leader",
-					"text": "看月份。"
-				}
-			],
-			"next": "bridge",
-			"actions": [
-				{
-					"id": "open_hourglass",
-					"label": "去看月份怎么往前走",
-					"do": [
-						{
-							"op": "visit",
-							"path": "res://scenes/hub/hourglass.tscn"
-						}
-					]
-				},
-				{
-					"id": "continue_after_visit",
-					"label": "继续，去门廊",
-					"do": [
-						{
-							"op": "goto",
-							"beat": "next"
-						}
-					]
-				}
-			]
-		},
-		{
-			"id": "bridge",
-			"title": "门廊",
-			"lines": [
-				{
-					"id": "cs06b_br_0",
-					"speaker": "旁白",
-					"text": "门廊风大。牌上「胜册」两字发白。",
-					"stage": {
-						"bg": "hall",
-						"camera": "wide"
-					}
-				},
-				{
-					"id": "cs06b_br_1",
-					"speaker": "石垒·晚担",
-					"text": "谁还站？先看牌，再看脚。"
-				},
-				{
-					"id": "cs06b_br_2",
-					"speaker": "苇原·灯影",
-					"text": "巡防交更。胜名还在名单上。"
-				},
-				{
-					"id": "cs06b_br_3",
-					"speaker": "旁白",
-					"text": "有人来劝：胜了何必再对。"
-				},
-				{
-					"id": "cs06b_br_4",
-					"speaker": "leader",
-					"text": "胜了也要回读。回读就是再问站。"
-				},
-				{
-					"id": "cs06b_br_5",
-					"speaker": "老旗手",
-					"text": "旗角给人核。核完再谈封胜。"
-				},
-				{
-					"id": "cs06b_br_6",
-					"speaker": "槐里·青禾",
-					"text": "劝封胜的札又来了。札比人急。"
-				},
-				{
-					"id": "cs06b_br_7",
-					"speaker": "岁吏",
-					"text": "急字过夜会褪。空条过夜更清楚。"
-				},
-				{
-					"id": "cs06b_br_8",
-					"speaker": "书记官",
-					"text": "议会廊外有人等听胜名。我们先听空。"
-				},
-				{
-					"id": "cs06b_br_9",
-					"speaker": "老管事",
-					"text": "带牌去酒馆。胜册圈还在墙上。"
-				},
-				{
-					"id": "cs06b_br_10",
-					"speaker": "掌柜",
-					"text": "圈等选题。胜册后的题更沉。"
-				},
-				{
-					"id": "cs06b_br_11",
-					"speaker": "旁白",
-					"text": "桥木响。响的是鞋，不是喊胜名。"
-				},
-				{
-					"id": "cs06b_br_12",
-					"speaker": "石垒·晚担",
-					"text": "干净靴也留痕。痕留给胜册的人。"
-				},
-				{
-					"id": "cs06b_br_13",
-					"speaker": "苇原·灯影",
-					"text": "锋镝先试一试。试完再去胜册圈前。"
-				},
-				{
-					"id": "cs06b_br_14",
-					"speaker": "leader",
-					"text": "门廊问过了。去酒馆看胜册。"
-				},
-				{
-					"id": "cs06b_br_15",
-					"speaker": "旁白",
-					"text": "牌收回来。胜册两字没有被风吹掉。"
-				},
-				{
-					"id": "cs06b_br_16",
-					"speaker": "槐里·青禾",
-					"text": "吹不掉才像胜名。"
-				},
-				{
-					"id": "cs06b_br_17",
-					"speaker": "老旗手",
-					"text": "旗布没破。破的是封胜催条。"
-				},
-				{
-					"id": "cs06b_br_x19",
-					"speaker": "旁白",
-					"text": "门廊刀架空着一层。"
-				},
-				{
-					"id": "cs06b_br_x20",
-					"speaker": "岁吏",
-					"text": "空着，是给你试完再挂。"
-				},
-				{
-					"id": "cs06b_br_x21",
-					"speaker": "leader",
-					"text": "试锋。输赢都挂真名。"
-				},
-				{
-					"id": "cs06b_br_18",
-					"speaker": "岁吏",
-					"text": "催条可以撕。胜册第二页撕不得。"
-				},
-				{
-					"id": "cs0602_mid_mv1",
-					"speaker": "旁白",
-					"text": "胜册第二页空白反光。有人把反光当镜子照脸。"
-				},
-				{
-					"id": "cs0602_mid_mv2",
-					"speaker": "岁吏",
-					"text": "照脸不是挂名。挂名要试完。"
-				},
-				{
-					"id": "cs0602_mid_mv3",
-					"speaker": "石垒·晚担",
-					"text": "试完才照得起。照不起的别占页。"
-				},
-				{
-					"id": "cs0602_mid_mv4",
-					"speaker": "苇原·灯影",
-					"text": "占页的人，校场边最爱起哄。"
-				},
-				{
-					"id": "cs0602_mid_mv5",
-					"speaker": "老旗手",
-					"text": "起哄不算胜。锋落才算。"
-				},
-				{
-					"id": "cs0602_mid_mv6",
-					"speaker": "leader",
-					"text": "锋落挂真名。空页不借人。"
-				},
-				{
-					"id": "cs0602_win1",
-					"speaker": "旁白",
-					"text": "锋再定。校场第二圈合上，墙牌旁笑的人哑了。",
-					"when": {
-						"flag": "cs06_mid_fought"
-					}
-				},
-				{
-					"id": "cs0602_win2",
-					"speaker": "掌柜",
-					"text": "第二圈比第一圈沉。沉的，才像真练。",
-					"when": {
-						"flag": "cs06_mid_fought"
-					}
-				},
-				{
-					"id": "cs0602_win3",
-					"speaker": "苇原·灯影",
-					"text": "汗第二次下来，笑就买不动了。",
-					"when": {
-						"flag": "cs06_mid_fought"
-					}
-				},
-				{
-					"id": "cs0602_win4",
-					"speaker": "leader",
-					"text": "锋再走一圈。牌，还挂着。",
-					"when": {
-						"flag": "cs06_mid_fought"
-					}
-				},
-				{
-					"id": "cs06b_br_lost",
-					"speaker": "旁白",
-					"text": "锋收回来。胜册纸还钉着。校场那拨，没散。",
-					"when": {
-						"all": [
-							{
-								"flag": "cs06_mid_lost"
-							},
-							{
-								"not_flag": "cs06_mid_fought"
-							}
-						]
-					}
-				}
-			],
-			"next": "tavern",
-			"actions": [
-				{
-					"id": "open_skirmish",
-					"label": "先试一锋",
-					"when": {
-						"all": [
-							{
-								"not_flag": "cs06_mid_fought"
-							},
-							{
-								"not_flag": "cs06_mid_lost"
-							}
-						]
-					},
-					"do": [
-						{
-							"op": "battle",
-							"map": "quest_bandit",
-							"objective": "rout",
-							"return": "res://scenes/story/chapter_player.tscn",
-							"win_flags": [
-								"cs06_mid_fought"
-							],
-							"lose_flags": [
-								"cs06_mid_lost"
-							],
-							"win_ledger": {
-								"choice": "mid_skirmish",
-								"title": "胜册上的灯",
-								"outcome": "胜册旁试锋得手——锋镝压下，空条可续",
-								"yeartrace": true
-							}
-						}
-					]
-				},
-				{
-					"id": "retry_skirmish",
-					"label": "再试锋镝",
-					"when": {
-						"all": [
-							{
-								"not_flag": "cs06_mid_fought"
-							},
-							{
-								"flag": "cs06_mid_lost"
-							}
-						]
-					},
-					"do": [
-						{
-							"op": "battle",
-							"map": "quest_bandit",
-							"objective": "rout",
-							"return": "res://scenes/story/chapter_player.tscn",
-							"win_flags": [
-								"cs06_mid_fought"
-							],
-							"lose_flags": [
-								"cs06_mid_lost"
-							],
-							"win_ledger": {
-								"choice": "mid_skirmish",
-								"title": "胜册上的灯",
-								"outcome": "胜册旁试锋得手——锋镝压下，空条可续",
-								"yeartrace": true
-							}
-						}
-					]
-				},
-				{
-					"id": "continue_after_battle",
-					"label": "继续，去酒馆",
-					"do": [
-						{
-							"op": "season_ledger",
-							"when": {
-								"all": [
-									{
-										"not_flag": "cs06_mid_fought"
-									},
-									{
-										"not_flag": "cs06_mid_lost"
-									}
-								]
-							},
-							"chapter": "cs06_02",
-							"choice": "mid_skirmish_skip",
-							"title": "胜册上的灯",
-							"outcome": "未试锋——锋未出鞘，径去酒馆",
-							"yeartrace": true
-						},
-						{
-							"op": "season_ledger",
-							"when": {
-								"all": [
-									{
-										"not_flag": "cs06_mid_fought"
-									},
-									{
-										"flag": "cs06_mid_lost"
-									}
-								]
-							},
-							"chapter": "cs06_02",
-							"choice": "mid_skirmish_abort",
-							"title": "胜册上的灯",
-							"outcome": "试锋未成——伤还在，先去酒馆",
-							"yeartrace": true
-						},
-						{
-							"op": "goto",
-							"beat": "next"
-						}
-					]
-				}
-			]
-		},
-		{
-			"id": "tavern",
-			"title": "选题",
-			"lines": [
-				{
-					"id": "cs06b_tv_0",
-					"speaker": "旁白",
-					"text": "酒馆板上钉着胜册摘抄。胜名与空条并排。",
-					"stage": {
-						"bg": "tavern",
-						"camera": "close"
-					}
-				},
-				{
-					"id": "cs06b_tv_1",
-					"speaker": "掌柜",
-					"text": "不是我要钉胜册。有人出酒钱。挂不挂你们裁。"
-				},
-				{
-					"id": "cs06b_tv_2",
-					"speaker": "leader",
-					"text": "挂胜册。挂三天。谁加字，我认指甲。"
-				},
-				{
-					"id": "cs06b_tv_3",
-					"speaker": "石垒·晚担",
-					"text": "挂着才像胜账。藏起来才像骗。"
-				},
-				{
-					"id": "cs06b_tv_4",
-					"speaker": "槐里·青禾",
-					"text": "孩子来抄胜板。抄到空条会停一下。"
-				},
-				{
-					"id": "cs06b_tv_5",
-					"speaker": "苇原·灯影",
-					"text": "停一下好。不停着抄胜名最危险。"
-				},
-				{
-					"id": "cs06b_tv_6",
-					"speaker": "老管事",
-					"text": "胜册后的选择：空条并排，或封胜催坐。"
-				},
-				{
-					"id": "cs06b_tv_7",
-					"speaker": "岁吏",
-					"text": "并排是认站。催坐是认急。"
-				},
-				{
-					"id": "cs06b_tv_8",
-					"speaker": "书记官",
-					"text": "急好念。空条难受。难受就对。"
-				},
-				{
-					"id": "cs06b_tv_9",
-					"speaker": "老旗手",
-					"text": "旗角在门外。核的人能看见胜板。"
-				},
-				{
-					"id": "cs06b_tv_10",
-					"speaker": "旁白",
-					"text": "花生壳圈还在。圈心写「胜册选题」。"
-				},
-				{
-					"id": "cs06b_tv_11",
-					"speaker": "掌柜",
-					"text": "胜册圈心比酒醒。醒着才选得动。"
-				},
-				{
-					"id": "cs06b_tv_12",
-					"speaker": "leader",
-					"text": "胜名与空条都看见了。选。"
-				},
-				{
-					"id": "cs06b_tv_13",
-					"speaker": "石垒·晚担",
-					"text": "我站胜圈外。站着也算见证。"
-				},
-				{
-					"id": "cs06b_tv_14",
-					"speaker": "槐里·青禾",
-					"text": "见证要写进胜册第二页。"
-				},
-				{
-					"id": "cs06b_tv_15",
-					"speaker": "苇原·灯影",
-					"text": "胜册第二页比嘴硬。嘴会改口。"
-				},
-				{
-					"id": "cs06b_tv_16",
-					"speaker": "旁白",
-					"text": "胜板前安静。安静里只剩两道选择题。"
-				},
-				{
-					"id": "cs06b_tv_x17",
-					"speaker": "旁白",
-					"text": "酒旗斜。斜旗不拦话。"
-				},
-				{
-					"id": "cs06b_tv_x18",
-					"speaker": "老管事",
-					"text": "胜册话题烫。烫的要凉着说。"
-				},
-				{
-					"id": "cs06b_tv_x19",
-					"speaker": "leader",
-					"text": "凉着说，才进得了册。"
-				},
-				{
-					"id": "cs06b_tv_17",
-					"speaker": "老管事",
-					"text": "选完入柜。胜册柜门会响。"
-				},
-				{
-					"id": "cs0602_ret_mv1",
-					"speaker": "旁白",
-					"text": "胜册第二页的空白，被人用酒渍比划过。"
-				},
-				{
-					"id": "cs0602_ret_mv2",
-					"speaker": "掌柜",
-					"text": "酒渍不当名。"
-				},
-				{
-					"id": "cs0602_ret_mv3",
-					"speaker": "岁吏",
-					"text": "名回堡写。"
-				},
-				{
-					"id": "cs0602_tvp1",
-					"speaker": "旁白",
-					"text": "胜册副页薄得透灯，空条像没打完的一鼓。"
-				},
-				{
-					"id": "cs0602_tvp2",
-					"speaker": "掌柜",
-					"text": "空条不是让你填爽。填爽的字，明天最假。"
-				},
-				{
-					"id": "cs0602_tvp3",
-					"speaker": "岁吏",
-					"text": "封胜催坐的人，常把空条当座位。"
-				},
-				{
-					"id": "cs0602_tvp4",
-					"speaker": "石垒·晚担",
-					"text": "座位在场上，不在板上。板上只记真打过的。"
-				},
-				{
-					"id": "cs0602_tvp5",
-					"speaker": "书记官",
-					"text": "空条并排可以。并排着空，也比假满强。"
-				},
-				{
-					"id": "cs0602_tvp6",
-					"speaker": "leader",
-					"text": "空条我留。封胜的催，先过鼓停那一息。"
-				},
-				{
-					"id": "cs0602_tvn1",
-					"speaker": "掌柜",
-					"text": "第二圈那一锋，酒要厚——厚着补汗。"
-				},
-				{
-					"id": "cs0602_tvn2",
-					"speaker": "石垒·晚担",
-					"text": "笑哑了。哑了，座才安静。"
-				},
-				{
-					"id": "cs0602_tvn3",
-					"speaker": "老旗手",
-					"text": "旗在第二圈边跟过。跟过，更沉。"
-				},
-				{
-					"id": "cs0602_tvn4",
-					"speaker": "leader",
-					"text": "汗厚。牌在。酒，厚着。"
-				},
-				{
-					"id": "cs0602_ret_mv4",
-					"speaker": "leader",
-					"text": "回堡挂胜名。"
-				}
-			],
-			"actions": [
-				{
-					"id": "keep_blank",
-					"label": "空条并排",
-					"do": [
-						{
-							"op": "set_flag",
-							"flag": "cs06_book_parallel",
-							"value": true
-						},
-						{
-							"op": "season_ledger",
-							"chapter": "cs06_02",
-							"choice": "keep_blank",
-							"title": "胜册上的灯",
-							"outcome": "胜册回读后空条并排记入谱",
-							"yeartrace": true
-						},
-						{
-							"op": "goto",
-							"beat": "ledger"
-						}
-					]
-				},
-				{
-					"id": "seal_win",
-					"label": "封胜催坐",
-					"do": [
-						{
-							"op": "set_flag",
-							"flag": "cs06_book_seal",
-							"value": true
-						},
-						{
-							"op": "season_ledger",
-							"chapter": "cs06_02",
-							"choice": "seal_win",
-							"title": "胜册上的灯",
-							"outcome": "胜册回读后封胜催坐",
-							"yeartrace": true
-						},
-						{
-							"op": "goto",
-							"beat": "ledger"
-						}
-					]
-				}
-			]
-		},
-		{
-			"id": "ledger",
-			"title": "入册",
-			"lines": [
-				{
-					"id": "cs06b_ld_0",
-					"speaker": "旁白",
-					"text": "西阁。胜册第二页与空条并排入柜。",
-					"stage": {
-						"bg": "hall",
-						"camera": "close"
-					}
-				},
-				{
-					"id": "cs06b_ld_1",
-					"speaker": "旁白",
-					"text": "你留空条并排。胜名仍在，站得住另算。"
-				},
-				{
-					"id": "cs06b_ld_2",
-					"speaker": "旁白",
-					"text": "你封胜催坐。字能念，沙漏下行仍亮着空。"
-				},
-				{
-					"id": "cs06b_ld_3",
-					"speaker": "老管事",
-					"text": "柜门一响。四字落款：胜册已记。"
-				},
-				{
-					"id": "cs06b_ld_4",
-					"speaker": "岁吏",
-					"text": "年迹旁补胜册一行。不改前季。"
-				},
-				{
-					"id": "cs06b_ld_5",
-					"speaker": "书记官",
-					"text": "议会要听胜名，就连空条一起念。"
-				},
-				{
-					"id": "cs06b_ld_6",
-					"speaker": "槐里·青禾",
-					"text": "孩子抄完空条。说手不抖了。"
-				},
-				{
-					"id": "cs06b_ld_7",
-					"speaker": "石垒·晚担",
-					"text": "不抖说明没装胜。"
-				},
-				{
-					"id": "cs06b_ld_8",
-					"speaker": "苇原·灯影",
-					"text": "巡夜名单还短。短着也好过假胜。"
-				},
-				{
-					"id": "cs06b_ld_9",
-					"speaker": "老旗手",
-					"text": "旗角给人核。核完校场旗还在。"
-				},
-				{
-					"id": "cs06b_ld_10",
-					"speaker": "掌柜",
-					"text": "胜圈可以擦。柜里胜册擦不掉。"
-				},
-				{
-					"id": "cs06b_ld_11",
-					"speaker": "leader",
-					"text": "胜册记了。灯还亮。"
-				},
-				{
-					"id": "cs06b_ld_12",
-					"speaker": "旁白",
-					"text": "校场灯照着木桩刃痕。痕还在，人还诚实。"
-				},
-				{
-					"id": "cs06b_ld_13",
-					"speaker": "老管事",
-					"text": "诚实比能念的胜名贵。"
-				},
-				{
-					"id": "cs06b_ld_14",
-					"speaker": "岁吏",
-					"text": "贵的账才值得再锋。"
-				},
-				{
-					"id": "cs06b_ld_15",
-					"speaker": "书记官",
-					"text": "嗓子轻一点。轻着念胜册，字更真。"
-				},
-				{
-					"id": "cs06b_ld_16",
-					"speaker": "旁白",
-					"text": "柜锁落下。胜册第二可玩章收束。"
-				},
-				{
-					"id": "cs06b_ld_17",
-					"speaker": "槐里·青禾",
-					"text": "收束不是结束。是敢把空条留下。"
-				},
-				{
-					"id": "cs06b_ld_18",
-					"speaker": "石垒·晚担",
-					"text": "留下空，才有人站得住。"
-				},
-				{
-					"id": "cs06b_ld_x19",
-					"speaker": "旁白",
-					"text": "胜册边注一行：并排可，催假不可。"
-				},
-				{
-					"id": "cs06b_ld_x20",
-					"speaker": "槐里·青禾",
-					"text": "边注比正文硬。"
-				},
-				{
-					"id": "cs06b_ld_x21",
-					"speaker": "leader",
-					"text": "我按边注走。"
-				},
-				{
-					"id": "cs0602_ldg1",
-					"speaker": "岁吏",
-					"text": "第二圈靴印抬进胜册，笑不进格。"
-				},
-				{
-					"id": "cs0602_ldg2",
-					"speaker": "书记官",
-					"text": "复练问声落地，才落笔。"
-				},
-				{
-					"id": "cs0602_ldg3",
-					"speaker": "苇原·灯影",
-					"text": "汗厚了，胜册才沉。"
-				},
-				{
-					"id": "cs0602_ldg4",
-					"speaker": "leader",
-					"text": "复练并排。灯不灭，胜册在柜。"
-				},
-				{
-					"id": "cs0602_ldg_end",
-					"speaker": "leader",
-					"text": "第二道靴印旁，灰旗堡胜册等圈数。"
-				}
-			],
-			"actions": []
-		}
-	],
-	"title_en": "The Lamp on the Victory Book"
+  "id": "cs06_02",
+  "title": "胜册上的灯",
+  "legacy_index": 416,
+  "return_scene": "res://scenes/hub/castle_hub.tscn",
+  "source": "docs/content-seasons/season-06/NOVEL.md",
+  "beats": [
+    {
+      "id": "yard",
+      "title": "胜册",
+      "lines": [
+        {
+          "id": "cs06b_yd_0",
+          "speaker": "旁白",
+          "text": "校场晨雾未散。胜册摊在木案上。",
+          "stage": {
+            "card": "一　胜册",
+            "bg": "hall",
+            "music": "castle",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs06b_yd_1",
+          "speaker": "书记官",
+          "text": "上回的胜者名与并排记都在。今天要回读胜册。"
+        },
+        {
+          "id": "cs06b_yd_2",
+          "speaker": "leader",
+          "text": "打开。胜名与空格一起念。"
+        },
+        {
+          "id": "cs06b_yd_3",
+          "speaker": "旁白",
+          "text": "册页翻开。墨新的地方最刺眼。"
+        },
+        {
+          "id": "cs06b_yd_4",
+          "speaker": "老管事",
+          "text": "胜册不是奖状。是谁还站得住的账。"
+        },
+        {
+          "id": "cs06b_yd_5",
+          "speaker": "岁吏",
+          "text": "年迹旁写「再锋」。再锋不等于改规则。"
+        },
+        {
+          "id": "cs06b_yd_6",
+          "speaker": "槐里·青禾",
+          "text": "孩子问胜了是不是就能坐。我说坐另算。"
+        },
+        {
+          "id": "cs06b_yd_7",
+          "speaker": "石垒·晚担",
+          "text": "打得过不等于坐得住。"
+        },
+        {
+          "id": "cs06b_yd_8",
+          "speaker": "苇原·灯影",
+          "text": "校场灯还亮。亮着才敢再对锋。"
+        },
+        {
+          "id": "cs06b_yd_9",
+          "speaker": "老旗手",
+          "text": "旗角给人核。核时把胜册也递过去。"
+        },
+        {
+          "id": "cs06b_yd_10",
+          "speaker": "掌柜",
+          "text": "酒馆墙上有圈。圈等胜册回读。"
+        },
+        {
+          "id": "cs06b_yd_11",
+          "speaker": "旁白",
+          "text": "木案上多了一根空条。空条对胜名。"
+        },
+        {
+          "id": "cs06b_yd_12",
+          "speaker": "书记官",
+          "text": "能念的胜名在左。空条在右。"
+        },
+        {
+          "id": "cs06b_yd_13",
+          "speaker": "老管事",
+          "text": "并排记的人留空条。钉胜名的人左栏更满。"
+        },
+        {
+          "id": "cs06b_yd_14",
+          "speaker": "岁吏",
+          "text": "满不等于真。真要再对一次锋。"
+        },
+        {
+          "id": "cs06b_yd_15",
+          "speaker": "leader",
+          "text": "胜册开了。去看校场痕。"
+        },
+        {
+          "id": "cs06b_yd_16",
+          "speaker": "旁白",
+          "text": "尘土里还有上回的脚印。脚印不会替人撒谎。"
+        },
+        {
+          "id": "cs06b_yd_x17",
+          "speaker": "旁白",
+          "text": "校场土硬。硬土不认花步。"
+        },
+        {
+          "id": "cs06b_yd_x18",
+          "speaker": "石垒·晚担",
+          "text": "花步赢不了册。"
+        },
+        {
+          "id": "cs06b_yd_x19",
+          "speaker": "leader",
+          "text": "胜册上回的脚印还在。我按那深度再走，不走花步。"
+        },
+        {
+          "id": "cs06b_yd_17",
+          "speaker": "槐里·青禾",
+          "text": "脚印深的地方，人当时是真下力。"
+        }
+      ],
+      "next": "spar"
+    },
+    {
+      "id": "spar",
+      "title": "再锋",
+      "lines": [
+        {
+          "id": "cs06b_sp_0",
+          "speaker": "旁白",
+          "text": "校场中心。木桩上绑着旧布。布上有刃痕。",
+          "stage": {
+            "bg": "hall",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs06b_sp_1",
+          "speaker": "苇原·灯影",
+          "text": "再锋不是报仇。是问胜名还站不站得住。"
+        },
+        {
+          "id": "cs06b_sp_2",
+          "speaker": "石垒·晚担",
+          "text": "站得住才写进胜册第二页。"
+        },
+        {
+          "id": "cs06b_sp_3",
+          "speaker": "旁白",
+          "text": "有人把胜名喊得很响。喊响的人脚却往后退。"
+        },
+        {
+          "id": "cs06b_sp_4",
+          "speaker": "leader",
+          "text": "喊不算。上场算。"
+        },
+        {
+          "id": "cs06b_sp_5",
+          "speaker": "老旗手",
+          "text": "旗布完整。旗角不绣喊出来的胜名。"
+        },
+        {
+          "id": "cs06b_sp_6",
+          "speaker": "槐里·青禾",
+          "text": "孩子在边上看。看谁先低头。"
+        },
+        {
+          "id": "cs06b_sp_7",
+          "speaker": "岁吏",
+          "text": "低头可以。改册要另走手续。"
+        },
+        {
+          "id": "cs06b_sp_8",
+          "speaker": "书记官",
+          "text": "手续在胜册第二页。页还空着。"
+        },
+        {
+          "id": "cs06b_sp_9",
+          "speaker": "老管事",
+          "text": "空页比满页的胜册诚实。"
+        },
+        {
+          "id": "cs06b_sp_10",
+          "speaker": "掌柜",
+          "text": "酒馆有人赌再锋。赌票我没收。"
+        },
+        {
+          "id": "cs06b_sp_11",
+          "speaker": "旁白",
+          "text": "刃痕旁多了一道新痕。新痕浅，人却喘。"
+        },
+        {
+          "id": "cs06b_sp_12",
+          "speaker": "苇原·灯影",
+          "text": "喘说明真打。假打不喘。"
+        },
+        {
+          "id": "cs06b_sp_13",
+          "speaker": "石垒·晚担",
+          "text": "真打完再谈名。"
+        },
+        {
+          "id": "cs06b_sp_14",
+          "speaker": "leader",
+          "text": "痕看见了。去沙漏对胜名两行。"
+        },
+        {
+          "id": "cs06b_sp_15",
+          "speaker": "旁白",
+          "text": "胜册合上半寸。风想掀它，掀不动。"
+        },
+        {
+          "id": "cs06b_sp_16",
+          "speaker": "槐里·青禾",
+          "text": "掀不动才像胜账。"
+        },
+        {
+          "id": "cs06b_sp_x17",
+          "speaker": "旁白",
+          "text": "对拆声短。短声里藏着收力。"
+        },
+        {
+          "id": "cs06b_sp_x18",
+          "speaker": "岁吏",
+          "text": "收力的人，册上才站得住。"
+        },
+        {
+          "id": "cs06b_sp_x19",
+          "speaker": "leader",
+          "text": "我记下这收。"
+        },
+        {
+          "id": "cs06b_sp_17",
+          "speaker": "老旗手",
+          "text": "胜账比风沉。"
+        }
+      ],
+      "next": "hourglass"
+    },
+    {
+      "id": "hourglass",
+      "title": "两行",
+      "lines": [
+        {
+          "id": "cs06b_hg_0",
+          "speaker": "旁白",
+          "text": "沙漏厅。上行胜名、下行空条。",
+          "stage": {
+            "bg": "hall",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs06b_hg_1",
+          "speaker": "老管事",
+          "text": "月份往前走。胜册回读不改月份。"
+        },
+        {
+          "id": "cs06b_hg_2",
+          "speaker": "岁吏",
+          "text": "年迹旁多了一行「胜册夜」。"
+        },
+        {
+          "id": "cs06b_hg_3",
+          "speaker": "书记官",
+          "text": "能念的胜名在上行。站得住的人还在下行等。"
+        },
+        {
+          "id": "cs06b_hg_4",
+          "speaker": "苇原·灯影",
+          "text": "沙漏不催封胜。沙漏只记谁还喘。"
+        },
+        {
+          "id": "cs06b_hg_5",
+          "speaker": "槐里·青禾",
+          "text": "孩子问：胜了为什么还空。我说空是考题。"
+        },
+        {
+          "id": "cs06b_hg_6",
+          "speaker": "石垒·晚担",
+          "text": "考题比奖状狠。奖状能裱，题裱不住。"
+        },
+        {
+          "id": "cs06b_hg_7",
+          "speaker": "老旗手",
+          "text": "旗角在风里响。响的是胜核。"
+        },
+        {
+          "id": "cs06b_hg_8",
+          "speaker": "掌柜",
+          "text": "酒馆圈旁写了「胜册后再选」。"
+        },
+        {
+          "id": "cs06b_hg_9",
+          "speaker": "旁白",
+          "text": "两根木条并排。你按住胜名与空条。"
+        },
+        {
+          "id": "cs06b_hg_10",
+          "speaker": "leader",
+          "text": "两行都在。去门廊问谁还站。"
+        },
+        {
+          "id": "cs06b_hg_11",
+          "speaker": "老管事",
+          "text": "门廊不问你胜过谁。问你今晚还站谁。"
+        },
+        {
+          "id": "cs06b_hg_12",
+          "speaker": "岁吏",
+          "text": "站名单短，喊声反而大。"
+        },
+        {
+          "id": "cs06b_hg_13",
+          "speaker": "书记官",
+          "text": "喊声爱写「已封胜」。回读爱写「仍空」。"
+        },
+        {
+          "id": "cs06b_hg_14",
+          "speaker": "旁白",
+          "text": "厅灯照着沙漏腰。胜字最清楚。"
+        },
+        {
+          "id": "cs06b_hg_15",
+          "speaker": "槐里·青禾",
+          "text": "清楚才像刃。糊了就像没上场。"
+        },
+        {
+          "id": "cs06b_hg_16",
+          "speaker": "石垒·晚担",
+          "text": "我不糊。站不住就说站不住。"
+        },
+        {
+          "id": "cs06b_hg_x17",
+          "speaker": "旁白",
+          "text": "沙漏旁多了一枚胜签。签未启。"
+        },
+        {
+          "id": "cs06b_hg_x18",
+          "speaker": "苇原·灯影",
+          "text": "未启的签，比启了的重。"
+        },
+        {
+          "id": "cs06b_hg_x19",
+          "speaker": "leader",
+          "text": "去沙漏。看签而不催。"
+        },
+        {
+          "id": "cs06b_hg_17",
+          "speaker": "苇原·灯影",
+          "text": "带牌去。牌上写胜册，不写急。"
+        },
+        {
+          "id": "cs0602_vis_mv1",
+          "speaker": "旁白",
+          "text": "胜册旁沙漏沙面平整。平整说明刚被抹过。"
+        },
+        {
+          "id": "cs0602_vis_mv2",
+          "speaker": "岁吏",
+          "text": "抹平不是赢。赢要挂真名。"
+        },
+        {
+          "id": "cs0602_vis_mv3",
+          "speaker": "苇原·灯影",
+          "text": "真名前，先看月份。"
+        },
+        {
+          "id": "cs0602_vst1",
+          "speaker": "岁吏",
+          "text": "月份从第二道靴印里抬起来。抬起来，才进册。"
+        },
+        {
+          "id": "cs0602_vst2",
+          "speaker": "书记官",
+          "text": "复练格要等问声再落。"
+        },
+        {
+          "id": "cs0602_vst3",
+          "speaker": "leader",
+          "text": "月份抬过。圈，我还走。"
+        },
+        {
+          "id": "cs0602_vis_mv4",
+          "speaker": "leader",
+          "text": "看月份。"
+        }
+      ],
+      "next": "bridge",
+      "actions": [
+        {
+          "id": "open_hourglass",
+          "label": "去看月份怎么往前走",
+          "do": [
+            {
+              "op": "visit",
+              "path": "res://scenes/hub/hourglass.tscn"
+            }
+          ]
+        },
+        {
+          "id": "continue_after_visit",
+          "label": "继续，去门廊",
+          "do": [
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bridge",
+      "title": "门廊",
+      "lines": [
+        {
+          "id": "cs06b_br_0",
+          "speaker": "旁白",
+          "text": "门廊风大。牌上「胜册」两字发白。",
+          "stage": {
+            "bg": "hall",
+            "camera": "wide"
+          }
+        },
+        {
+          "id": "cs06b_br_1",
+          "speaker": "石垒·晚担",
+          "text": "谁还站？先看牌，再看脚。"
+        },
+        {
+          "id": "cs06b_br_2",
+          "speaker": "苇原·灯影",
+          "text": "巡防交更。胜名还在名单上。"
+        },
+        {
+          "id": "cs06b_br_3",
+          "speaker": "旁白",
+          "text": "有人来劝：胜了何必再对。"
+        },
+        {
+          "id": "cs06b_br_4",
+          "speaker": "leader",
+          "text": "胜了也要回读。回读就是再问站。"
+        },
+        {
+          "id": "cs06b_br_5",
+          "speaker": "老旗手",
+          "text": "旗角给人核。核完再谈封胜。"
+        },
+        {
+          "id": "cs06b_br_6",
+          "speaker": "槐里·青禾",
+          "text": "劝封胜的札又来了。札比人急。"
+        },
+        {
+          "id": "cs06b_br_7",
+          "speaker": "岁吏",
+          "text": "急字过夜会褪。空条过夜更清楚。"
+        },
+        {
+          "id": "cs06b_br_8",
+          "speaker": "书记官",
+          "text": "议会廊外有人等听胜名。我们先听空。"
+        },
+        {
+          "id": "cs06b_br_9",
+          "speaker": "老管事",
+          "text": "带牌去酒馆。胜册圈还在墙上。"
+        },
+        {
+          "id": "cs06b_br_10",
+          "speaker": "掌柜",
+          "text": "圈等选题。胜册后的题更沉。"
+        },
+        {
+          "id": "cs06b_br_11",
+          "speaker": "旁白",
+          "text": "桥木响。响的是鞋，不是喊胜名。"
+        },
+        {
+          "id": "cs06b_br_12",
+          "speaker": "石垒·晚担",
+          "text": "干净靴也留痕。痕留给胜册的人。"
+        },
+        {
+          "id": "cs06b_br_13",
+          "speaker": "苇原·灯影",
+          "text": "锋镝先试一试。试完再去胜册圈前。"
+        },
+        {
+          "id": "cs06b_br_14",
+          "speaker": "leader",
+          "text": "门廊问过了。去酒馆看胜册。"
+        },
+        {
+          "id": "cs06b_br_15",
+          "speaker": "旁白",
+          "text": "牌收回来。胜册两字没有被风吹掉。"
+        },
+        {
+          "id": "cs06b_br_16",
+          "speaker": "槐里·青禾",
+          "text": "吹不掉才像胜名。"
+        },
+        {
+          "id": "cs06b_br_17",
+          "speaker": "老旗手",
+          "text": "旗布没破。破的是封胜催条。"
+        },
+        {
+          "id": "cs06b_br_x19",
+          "speaker": "旁白",
+          "text": "门廊刀架空着一层。"
+        },
+        {
+          "id": "cs06b_br_x20",
+          "speaker": "岁吏",
+          "text": "空着，是给你试完再挂。"
+        },
+        {
+          "id": "cs06b_br_x21",
+          "speaker": "leader",
+          "text": "试锋。输赢都挂真名。"
+        },
+        {
+          "id": "cs06b_br_18",
+          "speaker": "岁吏",
+          "text": "催条可以撕。胜册第二页撕不得。"
+        },
+        {
+          "id": "cs0602_mid_mv1",
+          "speaker": "旁白",
+          "text": "胜册第二页空白反光。有人把反光当镜子照脸。"
+        },
+        {
+          "id": "cs0602_mid_mv2",
+          "speaker": "岁吏",
+          "text": "照脸不是挂名。挂名要试完。"
+        },
+        {
+          "id": "cs0602_mid_mv3",
+          "speaker": "石垒·晚担",
+          "text": "试完才照得起。照不起的别占页。"
+        },
+        {
+          "id": "cs0602_mid_mv4",
+          "speaker": "苇原·灯影",
+          "text": "占页的人，校场边最爱起哄。"
+        },
+        {
+          "id": "cs0602_mid_mv5",
+          "speaker": "老旗手",
+          "text": "起哄不算胜。锋落才算。"
+        },
+        {
+          "id": "cs0602_mid_mv6",
+          "speaker": "leader",
+          "text": "锋落挂真名。空页不借人。"
+        },
+        {
+          "id": "cs0602_win1",
+          "speaker": "旁白",
+          "text": "锋再定。校场第二圈合上，墙牌旁笑的人哑了。",
+          "when": {
+            "flag": "cs06_mid_fought"
+          }
+        },
+        {
+          "id": "cs0602_win2",
+          "speaker": "掌柜",
+          "text": "第二圈比第一圈沉。沉的，才像真练。",
+          "when": {
+            "flag": "cs06_mid_fought"
+          }
+        },
+        {
+          "id": "cs0602_win3",
+          "speaker": "苇原·灯影",
+          "text": "汗第二次下来，笑就买不动了。",
+          "when": {
+            "flag": "cs06_mid_fought"
+          }
+        },
+        {
+          "id": "cs0602_win4",
+          "speaker": "leader",
+          "text": "锋再走一圈。牌，还挂着。",
+          "when": {
+            "flag": "cs06_mid_fought"
+          }
+        },
+        {
+          "id": "cs06b_br_lost",
+          "speaker": "旁白",
+          "text": "锋收回来。胜册纸还钉着。校场那拨，没散。",
+          "when": {
+            "all": [
+              {
+                "flag": "cs06_mid_lost"
+              },
+              {
+                "not_flag": "cs06_mid_fought"
+              }
+            ]
+          }
+        }
+      ],
+      "next": "tavern",
+      "actions": [
+        {
+          "id": "open_skirmish",
+          "label": "先试一锋",
+          "when": {
+            "all": [
+              {
+                "not_flag": "cs06_mid_fought"
+              },
+              {
+                "not_flag": "cs06_mid_lost"
+              }
+            ]
+          },
+          "do": [
+            {
+              "op": "battle",
+              "map": "quest_bandit",
+              "objective": "rout",
+              "return": "res://scenes/story/chapter_player.tscn",
+              "win_flags": [
+                "cs06_mid_fought"
+              ],
+              "lose_flags": [
+                "cs06_mid_lost"
+              ],
+              "win_ledger": {
+                "choice": "mid_skirmish",
+                "title": "胜册上的灯",
+                "outcome": "胜册旁试锋得手——锋镝压下，空条可续",
+                "yeartrace": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "retry_skirmish",
+          "label": "再试锋镝",
+          "when": {
+            "all": [
+              {
+                "not_flag": "cs06_mid_fought"
+              },
+              {
+                "flag": "cs06_mid_lost"
+              }
+            ]
+          },
+          "do": [
+            {
+              "op": "battle",
+              "map": "quest_bandit",
+              "objective": "rout",
+              "return": "res://scenes/story/chapter_player.tscn",
+              "win_flags": [
+                "cs06_mid_fought"
+              ],
+              "lose_flags": [
+                "cs06_mid_lost"
+              ],
+              "win_ledger": {
+                "choice": "mid_skirmish",
+                "title": "胜册上的灯",
+                "outcome": "胜册旁试锋得手——锋镝压下，空条可续",
+                "yeartrace": true
+              }
+            }
+          ]
+        },
+        {
+          "id": "continue_after_battle",
+          "label": "继续，去酒馆",
+          "do": [
+            {
+              "op": "season_ledger",
+              "when": {
+                "all": [
+                  {
+                    "not_flag": "cs06_mid_fought"
+                  },
+                  {
+                    "not_flag": "cs06_mid_lost"
+                  }
+                ]
+              },
+              "chapter": "cs06_02",
+              "choice": "mid_skirmish_skip",
+              "title": "胜册上的灯",
+              "outcome": "未试锋——锋未出鞘，径去酒馆",
+              "yeartrace": true
+            },
+            {
+              "op": "season_ledger",
+              "when": {
+                "all": [
+                  {
+                    "not_flag": "cs06_mid_fought"
+                  },
+                  {
+                    "flag": "cs06_mid_lost"
+                  }
+                ]
+              },
+              "chapter": "cs06_02",
+              "choice": "mid_skirmish_abort",
+              "title": "胜册上的灯",
+              "outcome": "试锋未成——伤还在，先去酒馆",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "next"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tavern",
+      "title": "选题",
+      "lines": [
+        {
+          "id": "cs06b_tv_0",
+          "speaker": "旁白",
+          "text": "酒馆板上钉着胜册摘抄。胜名与空条并排。",
+          "stage": {
+            "bg": "tavern",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs06b_tv_1",
+          "speaker": "掌柜",
+          "text": "不是我要钉胜册。有人出酒钱。挂不挂你们裁。"
+        },
+        {
+          "id": "cs06b_tv_2",
+          "speaker": "leader",
+          "text": "挂胜册。挂三天。谁加字，我认指甲。"
+        },
+        {
+          "id": "cs06b_tv_3",
+          "speaker": "石垒·晚担",
+          "text": "挂着才像胜账。藏起来才像骗。"
+        },
+        {
+          "id": "cs06b_tv_4",
+          "speaker": "槐里·青禾",
+          "text": "孩子来抄胜板。抄到空条会停一下。"
+        },
+        {
+          "id": "cs06b_tv_5",
+          "speaker": "苇原·灯影",
+          "text": "停一下好。不停着抄胜名最危险。"
+        },
+        {
+          "id": "cs06b_tv_6",
+          "speaker": "老管事",
+          "text": "胜册后的选择：空条并排，或封胜催坐。"
+        },
+        {
+          "id": "cs06b_tv_7",
+          "speaker": "岁吏",
+          "text": "并排是认站。催坐是认急。"
+        },
+        {
+          "id": "cs06b_tv_8",
+          "speaker": "书记官",
+          "text": "急好念。空条难受。难受就对。"
+        },
+        {
+          "id": "cs06b_tv_9",
+          "speaker": "老旗手",
+          "text": "旗角在门外。核的人能看见胜板。"
+        },
+        {
+          "id": "cs06b_tv_10",
+          "speaker": "旁白",
+          "text": "花生壳圈还在。圈心写「胜册选题」。"
+        },
+        {
+          "id": "cs06b_tv_11",
+          "speaker": "掌柜",
+          "text": "胜册圈心比酒醒。醒着才选得动。"
+        },
+        {
+          "id": "cs06b_tv_12",
+          "speaker": "leader",
+          "text": "胜名与空条都看见了。选。"
+        },
+        {
+          "id": "cs06b_tv_13",
+          "speaker": "石垒·晚担",
+          "text": "我站胜圈外。站着也算见证。"
+        },
+        {
+          "id": "cs06b_tv_14",
+          "speaker": "槐里·青禾",
+          "text": "见证要写进胜册第二页。"
+        },
+        {
+          "id": "cs06b_tv_15",
+          "speaker": "苇原·灯影",
+          "text": "胜册第二页比嘴硬。嘴会改口。"
+        },
+        {
+          "id": "cs06b_tv_16",
+          "speaker": "旁白",
+          "text": "胜板前安静。安静里只剩两道选择题。"
+        },
+        {
+          "id": "cs06b_tv_x17",
+          "speaker": "旁白",
+          "text": "酒旗斜。斜旗不拦话。"
+        },
+        {
+          "id": "cs06b_tv_x18",
+          "speaker": "老管事",
+          "text": "胜册话题烫。烫的要凉着说。"
+        },
+        {
+          "id": "cs06b_tv_x19",
+          "speaker": "leader",
+          "text": "凉着说，才进得了册。"
+        },
+        {
+          "id": "cs06b_tv_17",
+          "speaker": "老管事",
+          "text": "选完入柜。胜册柜门会响。"
+        },
+        {
+          "id": "cs0602_ret_mv1",
+          "speaker": "旁白",
+          "text": "胜册第二页的空白，被人用酒渍比划过。"
+        },
+        {
+          "id": "cs0602_ret_mv2",
+          "speaker": "掌柜",
+          "text": "酒渍不当名。"
+        },
+        {
+          "id": "cs0602_ret_mv3",
+          "speaker": "岁吏",
+          "text": "名回堡写。"
+        },
+        {
+          "id": "cs0602_tvp1",
+          "speaker": "旁白",
+          "text": "胜册副页薄得透灯，空条像没打完的一鼓。"
+        },
+        {
+          "id": "cs0602_tvp2",
+          "speaker": "掌柜",
+          "text": "空条不是让你填爽。填爽的字，明天最假。"
+        },
+        {
+          "id": "cs0602_tvp3",
+          "speaker": "岁吏",
+          "text": "封胜催坐的人，常把空条当座位。"
+        },
+        {
+          "id": "cs0602_tvp4",
+          "speaker": "石垒·晚担",
+          "text": "座位在场上，不在板上。板上只记真打过的。"
+        },
+        {
+          "id": "cs0602_tvp5",
+          "speaker": "书记官",
+          "text": "空条并排可以。并排着空，也比假满强。"
+        },
+        {
+          "id": "cs0602_tvp6",
+          "speaker": "leader",
+          "text": "空条我留。封胜的催，先过鼓停那一息。"
+        },
+        {
+          "id": "cs0602_tvn1",
+          "speaker": "掌柜",
+          "text": "第二圈那一锋，酒要厚——厚着补汗。"
+        },
+        {
+          "id": "cs0602_tvn2",
+          "speaker": "石垒·晚担",
+          "text": "笑哑了。哑了，座才安静。"
+        },
+        {
+          "id": "cs0602_tvn3",
+          "speaker": "老旗手",
+          "text": "旗在第二圈边跟过。跟过，更沉。"
+        },
+        {
+          "id": "cs0602_tvn4",
+          "speaker": "leader",
+          "text": "汗厚。牌在。酒，厚着。"
+        },
+        {
+          "id": "cs0602_ret_mv4",
+          "speaker": "leader",
+          "text": "回堡挂胜名。"
+        }
+      ],
+      "actions": [
+        {
+          "id": "keep_blank",
+          "label": "空条并排",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs06_book_parallel",
+              "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs06_02",
+              "choice": "keep_blank",
+              "title": "胜册上的灯",
+              "outcome": "胜册回读后空条并排记入谱",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        },
+        {
+          "id": "seal_win",
+          "label": "封胜催坐",
+          "do": [
+            {
+              "op": "set_flag",
+              "flag": "cs06_book_seal",
+              "value": true
+            },
+            {
+              "op": "season_ledger",
+              "chapter": "cs06_02",
+              "choice": "seal_win",
+              "title": "胜册上的灯",
+              "outcome": "胜册回读后封胜催坐",
+              "yeartrace": true
+            },
+            {
+              "op": "goto",
+              "beat": "ledger"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ledger",
+      "title": "入册",
+      "lines": [
+        {
+          "id": "cs06b_ld_0",
+          "speaker": "旁白",
+          "text": "西阁。胜册第二页与空条并排入柜。",
+          "stage": {
+            "bg": "hall",
+            "camera": "close"
+          }
+        },
+        {
+          "id": "cs06b_ld_1",
+          "speaker": "旁白",
+          "text": "你留空条并排。胜名仍在，站得住另算。"
+        },
+        {
+          "id": "cs06b_ld_2",
+          "speaker": "旁白",
+          "text": "你封胜催坐。字能念，沙漏下行仍亮着空。"
+        },
+        {
+          "id": "cs06b_ld_3",
+          "speaker": "老管事",
+          "text": "柜门一响。四字落款：胜册已记。"
+        },
+        {
+          "id": "cs06b_ld_4",
+          "speaker": "岁吏",
+          "text": "年迹旁补胜册一行。不改前季。"
+        },
+        {
+          "id": "cs06b_ld_5",
+          "speaker": "书记官",
+          "text": "议会要听胜名，就连空条一起念。"
+        },
+        {
+          "id": "cs06b_ld_6",
+          "speaker": "槐里·青禾",
+          "text": "孩子抄完空条。说手不抖了。"
+        },
+        {
+          "id": "cs06b_ld_7",
+          "speaker": "石垒·晚担",
+          "text": "不抖说明没装胜。"
+        },
+        {
+          "id": "cs06b_ld_8",
+          "speaker": "苇原·灯影",
+          "text": "巡夜名单还短。短着也好过假胜。"
+        },
+        {
+          "id": "cs06b_ld_9",
+          "speaker": "老旗手",
+          "text": "旗角给人核。核完校场旗还在。"
+        },
+        {
+          "id": "cs06b_ld_10",
+          "speaker": "掌柜",
+          "text": "胜圈可以擦。柜里胜册擦不掉。"
+        },
+        {
+          "id": "cs06b_ld_11",
+          "speaker": "leader",
+          "text": "胜册记了。灯还亮。"
+        },
+        {
+          "id": "cs06b_ld_12",
+          "speaker": "旁白",
+          "text": "校场灯照着木桩刃痕。痕还在，人还诚实。"
+        },
+        {
+          "id": "cs06b_ld_13",
+          "speaker": "老管事",
+          "text": "诚实比能念的胜名贵。"
+        },
+        {
+          "id": "cs06b_ld_14",
+          "speaker": "岁吏",
+          "text": "贵的账才值得再锋。"
+        },
+        {
+          "id": "cs06b_ld_15",
+          "speaker": "书记官",
+          "text": "嗓子轻一点。轻着念胜册，字更真。"
+        },
+        {
+          "id": "cs06b_ld_16",
+          "speaker": "旁白",
+          "text": "柜锁落下。胜册第二可玩章收束。"
+        },
+        {
+          "id": "cs06b_ld_17",
+          "speaker": "槐里·青禾",
+          "text": "收束不是结束。是敢把空条留下。"
+        },
+        {
+          "id": "cs06b_ld_18",
+          "speaker": "石垒·晚担",
+          "text": "留下空，才有人站得住。"
+        },
+        {
+          "id": "cs06b_ld_x19",
+          "speaker": "旁白",
+          "text": "胜册边注一行：并排可，催假不可。"
+        },
+        {
+          "id": "cs06b_ld_x20",
+          "speaker": "槐里·青禾",
+          "text": "边注比正文硬。"
+        },
+        {
+          "id": "cs06b_ld_x21",
+          "speaker": "leader",
+          "text": "我按边注走。"
+        },
+        {
+          "id": "cs0602_ldg1",
+          "speaker": "岁吏",
+          "text": "第二圈靴印抬进胜册，笑不进格。"
+        },
+        {
+          "id": "cs0602_ldg2",
+          "speaker": "书记官",
+          "text": "复练问声落地，才落笔。"
+        },
+        {
+          "id": "cs0602_ldg3",
+          "speaker": "苇原·灯影",
+          "text": "汗厚了，胜册才沉。"
+        },
+        {
+          "id": "cs0602_ldg4",
+          "speaker": "leader",
+          "text": "复练并排。灯不灭，胜册在柜。"
+        },
+        {
+          "id": "cs0602_ldg_end",
+          "speaker": "leader",
+          "text": "第二道靴印旁，灰旗堡胜册等圈数。"
+        }
+      ],
+      "actions": []
+    }
+  ],
+  "title_en": "The Lamp on the Victory Book"
 }
