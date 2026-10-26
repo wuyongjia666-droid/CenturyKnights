@@ -631,3 +631,13 @@ holding_steward_pick_tip,委任此人管此地,Assign this roster member
 holding_echo_steward_on,庄头·%s 就任 %s,Steward · %s takes %s
 holding_echo_steward_off,庄头·%s 卸任 %s,Steward · %s leaves %s
 holding_steward_locked,属地未开垦,Holding not unlocked
+holding_upgrade_locked,尚未拥有此属地,Holding not owned
+holding_upgrade_maxed,属地已满级,Holding already max level
+holding_upgrade_short,需 %d银/%d粮,Need %d silver / %d food
+holding_upgrade_log,属地升级：%s → Lv%d,Holding upgrade: %s → Lv%d
+holding_upgrade_ok,%s 升至 Lv%d,%s raised to Lv%d
+holding_echo_upgrade,升级·%s→Lv%d（-%d银/-%d粮）,Upgrade · %s→Lv%d (-%d silver / -%d food)
+holding_upgrade_btn,升级属地,Upgrade holding
+holding_upgrade_cost_tip,%d银/%d粮 → Lv%d,%d silver / %d food → Lv%d
+holding_upgrade_short_tip,缺料·%s,Short · %s
+holding_upgrade_max_tip,已满级,Already max
