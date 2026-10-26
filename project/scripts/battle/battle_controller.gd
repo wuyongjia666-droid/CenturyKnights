@@ -512,6 +512,7 @@ func _layout_board() -> void:
 		# Side column left of the thumb rail; board owns everything to its left.
 		var side_x := RAIL_X + dx - 8.0
 		MobileSide.attach.call_deferred(self, side_x, RAIL_W + 8.0)
+		BattleDualLedger.place.call_deferred(self)
 		# Audit P2: fill the left stage (no black letterbox). Top pill ~48, bottom margin 8.
 		var left := 8.0
 		var top := 52.0
@@ -1211,6 +1212,7 @@ func _draw_overlay() -> void:
 						overlay.draw_rect(r2, Color(1.0, 0.4, 0.3, 0.8), false, 2.0)
 	# v8.5 / T-P11 selected chrome: foot disc + mid ring + body rect (mobile) and dense reticle.
 	BattleSelectChrome.draw_selected(self, overlay)
+	BattleDualLedger.draw_injured_marks(self, overlay)
 	BattleTouchConfirm.draw_reject_flash(self, overlay)
 	BattleRangePreview.draw_illegal(self, overlay)
 	BattleLinkTelegraph.draw(self, overlay)

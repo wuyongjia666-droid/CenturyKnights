@@ -5,7 +5,7 @@ extends RefCounted
 const COL := "MobileSideCol"
 const FONT := 22
 const HIT := 76.0
-const SKIP := ["CommandRow", "CommandRow2", "ControlsTip", "BoardXform"]
+const SKIP := ["CommandRow", "CommandRow2", "ControlsTip", "BoardXform", "BattleDualLedger"]
 
 
 static func attach(host: Control, x: float, w: float) -> void:
