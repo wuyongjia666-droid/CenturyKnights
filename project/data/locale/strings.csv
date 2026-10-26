@@ -899,3 +899,4 @@ shell_skill_heal_cast_log,%s 释放「%s」，治疗 %d 人,%s casts 「%s」, h
 shell_skill_buff_cast_log,%s 释放「%s」%s,%s casts 「%s」%s
 shell_lock_aim_mark,缠,Bound
 shell_wounded_aim_mark,伤,Wounded
+shell_lethal_aim_mark,斩,Lethal
