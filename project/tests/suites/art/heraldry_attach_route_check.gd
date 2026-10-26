@@ -344,7 +344,7 @@ func _atlas_city_battle_strips(leader) -> void:
 	_ok(dbn != null and str(dbn.get_meta("field_route", "")) == "dialogue_banner", "dialogue_banner")
 
 	var shell := CKHeraldryField.place_shell_crest_strip(root, Vector2(400, 240))
-	var sbn2 := shell.find_child("ShellBanner", true, false) if shell != null else null
+	var sbn2 := shell.find_child("CastleBanner", true, false) if shell != null else null
 	_ok(sbn2 != null and str(sbn2.get_meta("field_route", "")) == "shell_banner", "shell_banner")
 
 	root.queue_free()

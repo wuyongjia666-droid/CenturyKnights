@@ -686,7 +686,6 @@ static func place_shell_crest_strip(parent: Node, at: Vector2, shield: Vector2 =
 	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
 	var bn := CKHeraldryChrome.make_company_banner(banner)
-	bn.name = "ShellBanner"
 	bn.set_meta("field_route", "shell_banner")
 	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
 	host.add_child(bn)
