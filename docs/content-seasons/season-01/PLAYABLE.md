@@ -87,5 +87,5 @@
 
 ## 第二主题拍口头加厚（second-beat）
 
-- 各章第二主题拍加 – 季题名著口头，全库去重；收束非旁白。
-- 验收： — hub chip → 二拍针口头 →（非中途战）继续。
+- 各章第二主题拍加 `_sec1`–`_sec6` 季题名著口头，全库去重；收束非旁白。
+- 验收：`content_season_second_beat_chain_check` — hub chip → 二拍针口头 →（非中途战）继续。
