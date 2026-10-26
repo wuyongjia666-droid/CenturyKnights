@@ -52,7 +52,7 @@ func _place_duel_crests() -> void:
 	var at := Vector2(980, 12) if board != null else Vector2(980, 12)
 	if mob:
 		at = Vector2(900, 8)
-	CKHeraldryChrome.place_duel_crest_strip(host, _a, _b, at, Vector2(36, 44) if not mob else Vector2(32, 38))
+	CKHeraldryField.place_duel_crest_strip(host, _a, _b, at, Vector2(36, 44) if not mob else Vector2(32, 38))
 
 func _path_zh(c: CKCharacter) -> String:
 	var p := str(GameState.lineage_path.get(c.id, "")) if c else ""
