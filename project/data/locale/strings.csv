@@ -885,3 +885,7 @@ tavern_refresh_paid,刷新 %d 银 ↻（余 %d）,Refresh %d silver ↻ (%d left
 figure_turntable_tip,战棋棋子预览（拖动旋转）,Board figure preview (drag to rotate)
 set_board_3d,战棋 3D 棋子（关=省电 2D 棋子）,3D board units (off = 2D tokens; saves battery)
 btn_sui_year,岁课回执,Year-card inbox
+shell_lock_tip_title,交战锁定,Engagement lock
+shell_lock_tip_body,跟人缠上以后，想走要多花 %d 步；被缠住的人反击更准。想脱身，用战技『抽身一步』。,"After you lock with someone, leaving costs +%d move; the locked foe counters more accurately. Break free with the art Step Out."
+shell_link_mark,连携,Link
+shell_foe_opening_mark,未刃,Unblooded
