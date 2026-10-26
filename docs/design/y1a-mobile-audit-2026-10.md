@@ -304,3 +304,8 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 
 > | 选中/手感/确认取消/镜头肥刀 | **DONE（本 PR）**：合入 T-P16 确认命中+落镜、T-P24 选中死区、T-P21 待命交接、T-P22 落子窥视、T-P28 分层取消；`combat_select_feel_confirm_camera_check` 双图真 E2E；禁瞄准预告碎刀复活 |
 > | 打击/危险/循环肥刀 | **DONE（本 PR）**：合入 T-P18 撤退确认、T-P19 危险手感、T-P20 幽灵可打、T-P23 攻击瞄准、T-P25 Tab 循环；`combat_strike_danger_cycle_fat_check` 双图真 E2E；禁瞄准预告碎刀复活 |
+
+### 5v · 战技/Buff 手感肥刀（chart_rally 双图 E2E）
+
+手游触控确认下，`type=buff`（如 `chart_rally`）不再一触即放：`BattleSkillBuffPreview` 闩预览（全队目标琥珀描边 + 镜头框），确认才 `_cast_buff_skill`，取消保留次数；Tab 循环焦点。双图 `ch0_pass` + `ch1_hill` 真 E2E：`combat_skill_buff_feel_fat_check`。
+
