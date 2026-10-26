@@ -30,6 +30,7 @@
 > | T-P12 编队切换（下一位/上一位） | **DONE（本 PR）**：`BattleFormationCycle` ready wrap；Tab/Shift+Tab；手机栏「下一位」；`_select_player` 清预览+跟焦；`combat_formation_cycle_check` E2E |
 > | T-P13 战中攻击预览 + 选中跟焦 | **DONE（#528）**：桌面选中不再无镜头；攻击预览把双方身框推进可玩区并躲开预报条；确认不再把镜头拽回攻击者；瞄准带/括号/命中芯片 + 确认冲击环；拖单位仍不平移；`combat_attack_camera_check` 真战斗 E2E（横屏 + 桌面） |
 > | T-P15 刘海身框 + 行动后落定 + 横屏信息栏 | **DONE（#543）**：刘海唇缘的冠上/身侧残片吸回身框，唇缘拇指滑动不再被当成平移；移动/攻击后优先把行动者身框留在可读区（装不下双方时不把行动者推出信息栏或刘海）；横屏信息栏不压棋盘、正文不裁切、空白处不抢点；`combat_notch_settle_check` 真战斗 E2E |
+> | T-P23 进攻击模式框最近可打敌 + 身框 | **DONE（本 PR）**：`BattleAttackAim.after_enter` 用规则射程标身框；最近敌加粗；`follow_cells`；`combat_attack_aim_check` 真战斗 E2E |
 > | 立绘 exists/resolve medium 回落（机制 A 根因） | **DONE（#350）**：`CKArtPaths.resolve` 在 portraits 路径上 large 被 exclude 时落到 `.medium.webp`；`android_tier_pack_check` |
 > | 剧情立绘端游↔手游对齐核查 | **DONE**（#335） |
 > | 9 人无图农场回填（配角 4 + 反派 5） | **DONE**（#337 cast/farm 接线；#338 入库真立绘） |
@@ -107,6 +108,7 @@
 | T-P10 | **P1 · DONE（#515）** | 伤兵账与旗灯账战斗内不可并读 / 仅 RewindBar 灯芯按钮 | `BattleDualLedger.attach/refresh`；伤兵计数+旗灯 pair；`combat_dual_ledger_check` | `battle_dual_ledger` / `battle_controller` / `battle_snapshot` |
 | T-P11 | **P1 · DONE（#516）** | 上方格有人时点胸口选中上面那个 / 非法点敌只换信息卡 / 横屏栏与选中脱节 | `body_over_occupant` 同列过脚底；`BattleSelectChrome` 脚底/中段/身框；`note_reject` 叉闪+面板回选中；手机射程内直接预览攻击；桌面精确格与检视保留；确认栈仍 Cancel→hint→Confirm | `battle_pick` / `battle_select_chrome` / `battle_touch_confirm` / `battle_info_panel` / `combat_select_feel_v2_check` |
 | T-P12 | **P1 · 本 PR** | 无下一位编队切换 / Tab 无绑定 / 手机栏无切人 | `BattleFormationCycle.ready/next/prev/apply_*`；KEY_TAB；mobile Next；`combat_formation_cycle_check` | `battle_formation_cycle` / `battle_controller` / `battle_mobile_bar` |
+| T-P23 | **P1 · 本 PR** | 进攻击模式无身框 / 镜头不框可打敌 | `after_enter`+最近敌加粗；`combat_attack_aim_check` | `battle_attack_aim` / `battle_controller` / `battle_touch_confirm` |
 | T-P13 | **P1 · DONE（#528）** | 桌面选中不跟焦 / 攻击预览不框双方 / 确认镜头自相矛盾 / 预报盖住交战 / 瞄准线太细 | `focus_cell` 桌面仍仅 `force`（敌方回合，不改 phase lead）；`BattleCombatFrame` 最小平移把身框送进可玩区；预报让出顶带并改到对侧；确认不 `refocus` 攻击者；`ck_unit_drag` 挡住拖拽跟焦；冲击环+丝带+芯片 | `battle_combat_frame` / `battle_pick` / `battle_touch_confirm` / `forecast_panel` / `combat_attack_camera_check` |
 | T-P2-1 | **P2 · 本 PR** | 信息不够 | Forecast 桌面固定 340×132 + clip，字号被 `ensure_min_fonts` 抬到 22 后竖向挤扁；现手机：字号地板、列/面板最小尺寸、关 clip、按 `m_board_area` 安全区放置；`MobileSide` 标签最小行高；`mobile_forecast_layout_check` | `forecast_panel` / `battle_mobile_side` / `_unit_panel` |
 
@@ -281,3 +283,9 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 现涂色格（移动格或攻击圈）在不压到活人身框时用瞄准格；攻击圈跟当前站位或移动幽灵，与蓝格重叠时只加红内描边。非法落点先闪再清幽灵，桌面同样闪，选中不丢。镜头用最小平移保住选中身框，目的地只有在选中仍然落在可玩区内时才一起框。`mobile_origin` 已经把根推进安全矩形时不再扣第二次；根还在原点、舞台伸进唇缘时才裁。单位拖拽不平移。`focus_cell` 的桌面 `force` 门闩不动。
 
 `combat_range_preview_check`：选中 → 范围 → 非法闪拒 → 合法移动确认，横屏刘海 + 桌面。
+
+---
+
+## 5a. BattleBanter 抽出（#564 线门禁）
+
+`battle_controller.gd` 的 `split("\n").size()` 顶到 3001，战棋 suites 全红。把主题台词表 / 去重 / SFX 抽到 `battle_banter.gd`（`BattleBanter.play`），controller 只留三处调用 + `_ready` 里 `reset()`。`combat_banter_check`：源契约 + `ch112_yard` 真开局开场台词。

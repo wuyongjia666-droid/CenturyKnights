@@ -69,10 +69,6 @@ var _trauma: float = 0.0  # game-feel trauma 0..1
 var _shake_t: float = 0.0
 var skill_mode: bool = false
 var active_skill_id: String = ""
-var _banter_idx: int = 0
-var _banter_pack: Dictionary = {}
-var _banter_kill: int = 0
-var _banter_played: Dictionary = {}
 var _btn_skill: Button
 var _skill_hint: Label
 var _board_router := InputRouter.new()
@@ -98,54 +94,10 @@ func _is_escort_map() -> bool:
 func _is_harbor_map() -> bool:
 	return _map_theme() == "harbor"
 
-func _banter_table() -> Dictionary:
-	if not _banter_pack.is_empty():
-		return _banter_pack
-	var f := FileAccess.open("res://data/battle_banter.json", FileAccess.READ)
-	if f == null:
-		return _banter_pack
-	var parsed = JSON.parse_string(f.get_as_text())
-	if typeof(parsed) == TYPE_DICTIONARY:
-		_banter_pack = parsed
-	return _banter_pack
-
-func _play_banter_sfx(method: String) -> void:
-	if method == "" or not Sfx.has_method(method):
-		return
-	Sfx.call(method)
-
-func _theme_banter(kind: String) -> void:
-	var theme := _map_theme()
-	var themes: Dictionary = _banter_table().get("themes", {})
-	if not themes.has(theme):
-		return
-	var key := theme + kind + str(_banter_idx if kind == "turn" else _banter_kill)
-	if _banter_played.has(key):
-		return
-	var pack: Dictionary = themes[theme]
-	var pool: Array = pack.get(kind, [])
-	if pool.is_empty():
-		return
-	var line := ""
-	if kind == "turn":
-		line = str(pool[_banter_idx % pool.size()])
-		_banter_idx += 1
-	elif kind == "kill":
-		line = str(pool[_banter_kill % pool.size()])
-		_banter_kill += 1
-		_play_banter_sfx(str(pack.get("kill_sfx", "")))
-	else:
-		line = str(pool[0] if _banter_idx == 0 else pool[mini(1, pool.size() - 1)])
-		_play_banter_sfx(str(pack.get("start_sfx", "")))
-	_banter_played[key] = true
-	_log(line)
-
-func _escort_banter(kind: String) -> void:
-	_theme_banter(kind)
-
 var _unit_layer: CKUnitLayer3D = null  # route C live 3D units (CKBoardUnits); null = 2D tokens
 var _fx_delay := 0.0  # P2: hit fx wait for the 3D impact frame
 func _ready() -> void:
+	BattleBanter.reset()
 	CKAutosave.before_battle()
 	rng.randomize()
 	Music.play_battle()
@@ -730,6 +682,7 @@ func _enter_attack_mode() -> void:
 		return
 	attack_mode = true
 	move_cells.clear()
+	BattleAttackAim.after_enter(self)
 	overlay.queue_redraw()
 	_refresh_info()
 	ForecastPanel.refresh(self)
@@ -989,7 +942,7 @@ func _deploy() -> void:
 			ei += 1
 	BattleObjectives.deploy_npcs(m, units)
 	_log(Locale.t("shell_battle_deploy") % [map_name, i, ei])
-	_theme_banter("start")
+	BattleBanter.play(self, "start")
 	BattleStory.fire(self, map_id, "start")
 	if _is_escort_map():
 		Sfx.cart_rattle()
@@ -1211,6 +1164,7 @@ func _draw_overlay() -> void:
 						overlay.draw_rect(r2, Color(1.0, 0.4, 0.3, 0.8), false, 2.0)
 	# v8.5 / T-P11 selected chrome: foot disc + mid ring + body rect (mobile) and dense reticle.
 	BattleSelectChrome.draw_selected(self, overlay)
+	BattleAttackAim.draw(self, overlay)
 	BattleTouchConfirm.draw_reject_flash(self, overlay)
 	BattleRangePreview.draw_illegal(self, overlay)
 	# slash + hit_spark 分层（game-feel）
@@ -2072,7 +2026,7 @@ func _resolve_strike(ai: int, di: int, allow_skill: bool, is_counter: bool = fal
 			msg += " · 击退！"
 			_spawn_dmg(def.pos, "击破", Color(1.0, 0.9, 0.5))
 			if def.team == "enemy":
-				_theme_banter("kill")
+				BattleBanter.play(self, "kill")
 				BattleStory.fire(self, map_id, "first_kill")
 			if def.team == "player":
 				def.char.injured = true
@@ -2202,7 +2156,7 @@ func _start_player_turn() -> void:
 	skill_mode = false
 	active_skill_id = ""
 	moved_this_select = false
-	_theme_banter("turn")
+	BattleBanter.play(self, "turn")
 	BattleStory.on_player_turn(self, map_id)
 	map_draw.queue_redraw()
 	overlay.queue_redraw()

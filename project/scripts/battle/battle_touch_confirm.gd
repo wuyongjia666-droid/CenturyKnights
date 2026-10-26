@@ -139,6 +139,7 @@ static func drag_commit_enabled() -> bool:
 
 static func clear(host, refocus_selection: bool = true) -> void:
 	host.preview_move_cell = Vector2i(-1, -1)
+	BattleAttackAim.clear(host)
 	host.preview_attack_ui = -1
 	if DeviceProfile.is_mobile():
 		BattleMobileBar.rebuild(host)
