@@ -154,37 +154,12 @@ static func make_rank_badge(rank: String, size: int = 28) -> TextureRect:
 	tr.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return tr
 
-## Corner chrome on genealogy avatar-wall / tree nodes: mini 族徽|旗徽 + 爵位徽记.
+## Corner chrome on genealogy avatar-wall / tree nodes. Field owns the shield and the live rank badge.
 static func attach_cell_chrome(host: Control, c, cell: Vector2, portrait_top: float = 6.0) -> void:
-	if c == null or host == null:
-		return
-	var arms_sz := Vector2(28, 34)
-	var badge_sz := 22
-	if cell.x >= 150.0:
-		arms_sz = Vector2(36, 44)
-		badge_sz = 28
-	## Arms sit on the portrait's lower-left; rank badge on the upper-right (clears 家主 chip).
-	var arms := make_person_arms(c, arms_sz)
-	arms.name = "CellArms"
-	var por_h := 88.0 if cell.x < 150.0 else 132.0
-	arms.position = Vector2(6.0, portrait_top + por_h - arms_sz.y - 2.0)
-	host.add_child(arms)
-	var badge := make_rank_badge(str(c.rank), badge_sz)
-	badge.name = "CellBadge"
-	badge.position = Vector2(cell.x - float(badge_sz) - 4.0, portrait_top + 2.0)
-	host.add_child(badge)
+	CKHeraldryField.attach_wall_tile_arms(host, c, cell, portrait_top)
 
 static func attach_node_chrome(host: Control, c, node: Vector2) -> void:
-	if c == null or host == null:
-		return
-	var arms := make_person_arms(c, Vector2(30, 36))
-	arms.name = "NodeArms"
-	arms.position = Vector2(4, 4)
-	host.add_child(arms)
-	var badge := make_rank_badge(str(c.rank), 22)
-	badge.name = "NodeBadge"
-	badge.position = Vector2(node.x - 26.0, 4)
-	host.add_child(badge)
+	CKHeraldryField.attach_tree_node_arms(host, c, node)
 
 ## Hire / tavern / roster portrait plate: 旗徽|族徽 on lower-left of the plate rect.
 static func attach_hire_chrome(parent: Control, c, plate: Rect2, arms_sz: Vector2 = Vector2(36, 44)) -> void:
