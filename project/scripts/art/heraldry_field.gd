@@ -592,3 +592,4 @@ static func attach_office_field_arms(row: Control, c, arms_sz: Vector2 = Vector2
 	row.add_child(arms)
 	if row is Container:
 		row.move_child(arms, 0)
+	return arms
