@@ -74,7 +74,7 @@ func _place_roster_crests(mobile: bool = false) -> void:
 	CKHeraldryField.place_roster_crest_strip(self, at, sh, bn)
 	var hdr_at := Vector2(1180, 8) if not mob else Vector2(maxf(40.0, MobilePage.width(self) - 64.0), 4)
 	var hdr_sz := Vector2(44, 52) if not mob else Vector2(40, 48)
-	CKHeraldryChrome.place_company_header(self, hdr_at, hdr_sz)
+	CKHeraldryField.place_company_header(self, hdr_at, hdr_sz)
 
 
 func apply_mobile_layout() -> void:

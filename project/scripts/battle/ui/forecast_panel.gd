@@ -127,7 +127,7 @@ static func refresh(host) -> void:
 	# Refit after text lands so floored fonts are not clipped.
 	if DeviceProfile.is_mobile():
 		_place(host, panel)
-	CKHeraldryField.pin_forecast_arms(panel, atk.char, str(atk.get("team", "player")), CKHeraldryChrome.battle_foe_nation_for(host))
+	CKHeraldryField.pin_forecast_arms(panel, atk.char, str(atk.get("team", "player")), CKHeraldryField.battle_foe_nation_for(host))
 
 
 static func _fill(box: Node, title: String, info: Dictionary, counter_side: bool) -> void:

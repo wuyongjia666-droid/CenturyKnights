@@ -11,7 +11,6 @@ const SCHEMA := 1
 
 static var _data: Dictionary = {}
 static var _sites: Dictionary = {}
-static var _banner_cache: Dictionary = {}
 static var rng := RandomNumberGenerator.new()
 ## Last apply_month structured report for Atlas TerritoryMonthModal.
 static var last_month_report: Dictionary = {}
@@ -1308,12 +1307,8 @@ static func on_arrive(anchor: String) -> Dictionary:
 
 # ── map ───────────────────────────────────────────────
 static func banner_texture(w: int = 28, h: int = 38) -> Texture2D:
-	## Castle / atlas owned-site flags — always company 团徽 via CKHeraldryChrome.
-	var spec: Dictionary = CKHeraldryChrome.company_spec()
-	var key := "%s_%d_%d" % [CKHeraldry.cache_key(spec), w, h]
-	if not _banner_cache.has(key):
-		_banner_cache[key] = CKHeraldryChrome.company_banner(w, h)
-	return _banner_cache[key]
+	## Castle / atlas owned-site flags — company 团徽 via Field cache.
+	return CKHeraldryField.company_banner_texture(w, h)
 
 static func map_markers(nation: String) -> Array:
 	var out: Array = []

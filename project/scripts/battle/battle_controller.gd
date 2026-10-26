@@ -480,7 +480,7 @@ func _build_ui() -> void:
 	_build_mobile_bar()
 	_apply_board_xform()
 	ObjectiveHud.attach(self)
-	CKHeraldryChrome.sync_battle_hud_crests(self)
+	CKHeraldryField.sync_battle_hud_crests(self)
 	ForecastPanel.attach(self)
 	RewindBar.attach(self)
 	BattleDualLedger.attach(self)
@@ -769,7 +769,7 @@ func _init_map() -> void:
 	_layout_board()
 	if phase_label:
 		phase_label.text = Locale.t("shell_a63e5b28") % map_name
-	CKHeraldryChrome.sync_battle_hud_crests(self)
+	CKHeraldryField.sync_battle_hud_crests(self)
 
 func _load_terrain_fx(m: Dictionary) -> void:
 	height_grid.clear()
@@ -1195,6 +1195,7 @@ func _draw_overlay() -> void:
 					overlay.draw_rect(Rect2(tp, Vector2(18, 14)), Color(0.05, 0.05, 0.08, 0.75))
 		BattleRangePreview.draw_ranges(self, overlay)
 		BattleTouchConfirm.draw_preview(self)
+		BattleSkillHealPreview.draw(self, overlay)
 		# 图例：纯图标芯片（无长文字）
 		if not move_cells.is_empty():
 			var lx = ORIGIN.x + 10.0
@@ -1226,6 +1227,7 @@ func _draw_overlay() -> void:
 	BattleSelectChrome.draw_selected(self, overlay)
 	BattleGhostStrike.draw(self, overlay)
 	BattleAttackAim.draw(self, overlay)
+	BattleSkillHealPreview.draw(self, overlay)
 	BattleDualLedger.draw_injured_marks(self, overlay)
 	BattleDualLedger.draw_done_marks(self, overlay)
 	BattleStanceReadable.draw_moved_chip(self, overlay)
@@ -1374,8 +1376,13 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			KEY_E:
 				if _btn_wait and not _btn_wait.disabled: _wait_selected()
 			KEY_TAB:
-				# Y1-A T-P25: in attack mode cycle in-reach foes; else T-P12 formation.
-				if attack_mode:
+				# Heal preview → attack cycle (T-P25) → formation (T-P12).
+				if BattleSkillHealPreview.latched(self):
+					if event.shift_pressed:
+						BattleSkillHealPreview.apply_prev(self)
+					else:
+						BattleSkillHealPreview.apply_next(self)
+				elif attack_mode:
 					if event.shift_pressed:
 						BattleAttackCycle.apply_prev(self)
 					else:
@@ -1408,7 +1415,7 @@ func apply_mobile_layout() -> void:
 	BattleEdgePick.note_layout(self)
 	# Y1-A T-P2-1: re-place Forecast against the new board stage / side column.
 	ForecastPanel.refresh(self)
-	CKHeraldryChrome.sync_battle_hud_crests(self)
+	CKHeraldryField.sync_battle_hud_crests(self)
 
 func _screen_to_local(screen_pos: Vector2) -> Vector2:
 	## Viewport pixels → this control. Identity on the desktop 1280×720 root.

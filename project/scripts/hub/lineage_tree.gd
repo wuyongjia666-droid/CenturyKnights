@@ -50,7 +50,7 @@ func _unhandled_input(e: InputEvent) -> void:
 func _build() -> void:
 	UIKit.void_bg(self)
 	UIKit.top_bar(self, Locale.t("gen2_11") % GameState.surname, [], Locale.t("gen2_12"), nav_back)
-	CKHeraldryChrome.place_company_header(self, Vector2(800, 2), Vector2(44, 52))
+	CKHeraldryField.place_company_header(self, Vector2(800, 2), Vector2(44, 52))
 	_view = Panel.new()
 	_view.name = "TreeViewport"
 	_view.position = VIEW.position
