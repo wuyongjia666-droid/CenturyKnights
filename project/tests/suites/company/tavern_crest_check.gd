@@ -85,7 +85,11 @@ func _assert_filled(page: Node, where: String) -> void:
 	_ok(hires.size() >= 2, "%s HireArms on cards" % where)
 	var saw_fam := false
 	var saw_flag := false
+	var src := FileAccess.get_file_as_string("res://scripts/hub/tavern.gd")
+	_ok(src.find("CKHeraldryField.attach_hire_plate_arms") >= 0, "%s tavern plate calls Field" % where)
+	_ok(src.find("attach_hire_chrome") < 0, "%s tavern plate left Chrome helper" % where)
 	for a in hires:
+		_ok(str(a.get_meta("field_route", "")) == "hire_plate", "%s HireArms field_route" % where)
 		var k := str(a.get_meta("arms_kind", ""))
 		if k == "gen2_06":
 			saw_fam = true
