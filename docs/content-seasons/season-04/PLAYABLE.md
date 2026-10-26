@@ -131,3 +131,9 @@
 - 各章 visit 拍（audit/birth/hourglass）拍首加 `_vop1`–`_vop6` 入厅整装口头（`_vhg`/`_msr` 前），全库去重；收束非旁白。
 - 验收：`content_season_visit_open_chain_check` — hub chip → 入厅针口头。
 - 不碰 `_bpl`/`_arr`/`_lop`/`_tvx`/`_cls`/`_sec`/`_tvp`。
+
+## 墨干合页口头加厚（ink-dry）
+
+- 各章 `ledger` 拍在 `_ldg_end` 后、`_cls1` 前加 `_ink1`–`_ink6` 墨干合页口头，全库去重；收束非旁白。
+- 验收：`content_season_ink_dry_chain_check` — hub chip → 墨干针口头。
+- 不碰 `_lop`/`_ldg`/`_cls`/`_bpl`/`_aud`/`_vex`/`_msr`/`_opn`。
