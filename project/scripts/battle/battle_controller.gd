@@ -1204,6 +1204,7 @@ func _draw_overlay() -> void:
 		BattleRangePreview.draw_ranges(self, overlay)
 		BattleTouchConfirm.draw_preview(self)
 		BattleSkillHealPreview.draw(self, overlay)
+		BattleSkillBuffPreview.draw(self, overlay)
 		# 图例：纯图标芯片（无长文字）
 		if not move_cells.is_empty():
 			var lx = ORIGIN.x + 10.0
@@ -1236,6 +1237,7 @@ func _draw_overlay() -> void:
 	BattleGhostStrike.draw(self, overlay)
 	BattleAttackAim.draw(self, overlay)
 	BattleSkillHealPreview.draw(self, overlay)
+	BattleSkillBuffPreview.draw(self, overlay)
 	BattleDualLedger.draw_injured_marks(self, overlay)
 	BattleDualLedger.draw_done_marks(self, overlay)
 	BattleStanceReadable.draw_moved_chip(self, overlay)
@@ -1384,12 +1386,17 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			KEY_E:
 				if _btn_wait and not _btn_wait.disabled: _wait_selected()
 			KEY_TAB:
-				# Heal preview → attack cycle (T-P25) → formation (T-P12).
+				# Heal/buff preview → attack cycle (T-P25) → formation (T-P12).
 				if BattleSkillHealPreview.latched(self):
 					if event.shift_pressed:
 						BattleSkillHealPreview.apply_prev(self)
 					else:
 						BattleSkillHealPreview.apply_next(self)
+				elif BattleSkillBuffPreview.latched(self):
+					if event.shift_pressed:
+						BattleSkillBuffPreview.apply_prev(self)
+					else:
+						BattleSkillBuffPreview.apply_next(self)
 				elif attack_mode:
 					if event.shift_pressed:
 						BattleAttackCycle.apply_prev(self)

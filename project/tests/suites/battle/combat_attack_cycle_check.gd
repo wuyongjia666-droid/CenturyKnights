@@ -56,7 +56,7 @@ func _source_contracts() -> String:
 	var tab_i := ctrl.find("KEY_TAB:")
 	if tab_i < 0:
 		return "KEY_TAB block missing"
-	var tab_chunk := ctrl.substr(tab_i, 420)
+	var tab_chunk := ctrl.substr(tab_i, 720)
 	if tab_chunk.find("if attack_mode") < 0:
 		return "KEY_TAB must gate on attack_mode"
 	if tab_chunk.find("BattleAttackCycle") < 0:

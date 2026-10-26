@@ -111,7 +111,7 @@ func _algebra_source_controller() -> String:
 	var tab_i := ctrl.find("KEY_TAB:")
 	if tab_i < 0:
 		return "controller missing KEY_TAB"
-	var tab_chunk := ctrl.substr(tab_i, 420)
+	var tab_chunk := ctrl.substr(tab_i, 720)
 	if tab_chunk.find("BattleAttackCycle") < 0:
 		return "KEY_TAB chunk missing AttackCycle"
 	if ctrl.find("EmptyHost") >= 0:

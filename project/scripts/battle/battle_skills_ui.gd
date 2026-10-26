@@ -56,6 +56,8 @@ static func arm(host, sid: String) -> void:
 		host._cast_support_skill(host.selected, sid)
 		return
 	if typ == "buff":
+		if BattleSkillBuffPreview.arm(host, sid):
+			return
 		host._cast_buff_skill(host.selected, sid)
 		return
 	host.skill_mode = true
