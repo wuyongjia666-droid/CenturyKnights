@@ -42,6 +42,15 @@ func _run() -> String:
 
 
 func _algebra() -> String:
+	var err := _algebra_counts()
+	if err == "":
+		err = _algebra_locale()
+	if err == "":
+		err = _algebra_source()
+	return err
+
+
+func _algebra_counts() -> String:
 	var units: Array = [
 		{"team": "player", "done": false, "alive": true, "pos": Vector2i(1, 2), "char": {"hp": 10, "injured": false}},
 		{"team": "player", "done": true, "alive": true, "pos": Vector2i(2, 2), "char": {"hp": 9, "injured": false}},
@@ -54,12 +63,20 @@ func _algebra() -> String:
 	var cells: Array[Vector2i] = BattleDualLedger.done_cells(units)
 	if cells.size() != 2:
 		return "algebra done_cells size %d" % cells.size()
+	return ""
+
+
+func _algebra_locale() -> String:
 	if BattleObjectives.text("dual_ledger_done") == "dual_ledger_done":
 		return "locale dual_ledger_done missing"
 	if BattleObjectives.text("stance_moved") == "stance_moved":
 		return "locale stance_moved missing"
 	if BattleStanceReadable.chip_text() == "stance_moved":
 		return "chip_text unresolved"
+	return ""
+
+
+func _algebra_source() -> String:
 	var led := FileAccess.get_file_as_string("res://scripts/battle/ui/battle_dual_ledger.gd")
 	var st := FileAccess.get_file_as_string("res://scripts/battle/battle_stance_readable.gd")
 	var ctrl := FileAccess.get_file_as_string("res://scripts/battle/battle_controller.gd")
