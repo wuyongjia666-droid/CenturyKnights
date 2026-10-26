@@ -106,52 +106,41 @@ func _cycle(cid: String, probe_leave: bool) -> String:
 			return err
 	var need_battle := true
 	var need_visit := true
-	var steps := 0
-	while steps < 30:
-		steps += 1
+	for _step in 30:
 		_player.simulate_finish_dialogue()
 		await get_tree().process_frame
 		await get_tree().process_frame
 		if str(_player._chapter.get("id", "")) != cid:
 			return "%s drifted to %s" % [cid, str(_player._chapter.get("id", ""))]
 		var labels: Array = _player.action_labels()
+		var acted := false
 		if need_battle and labels.find(FIRST) >= 0:
-			if cid == "cs01_02":
-				if not GameState.flag("cs01_mid_fought"):
-					return "cs01_02 expected raw fought still set"
-				if StoryFlagScope.seen("cs01_mid_fought"):
-					return "cs01_02 inherited cs01_01 fought"
+			err = _sibling_fought_ok(cid)
+			if err != "":
+				return err
 			err = await _battle(cid)
 			if err != "":
 				return err
 			need_battle = false
-			continue
-		if need_visit and labels.find(VISIT) >= 0:
+			acted = true
+		elif need_visit and labels.find(VISIT) >= 0:
 			err = await _visit(cid)
 			if err != "":
 				return err
 			need_visit = false
+			acted = true
+		elif not need_battle and not need_visit and labels.find(HUB_LABEL) >= 0:
+			return await _leave_via_action(cid, labels)
+		elif not need_battle and not need_visit:
+			err = await _press_real_choice(cid, labels)
+			if err == "skip":
+				pass
+			elif err != "":
+				return err
+			else:
+				acted = true
+		if acted:
 			continue
-		if not need_battle and not need_visit and labels.find(HUB_LABEL) >= 0:
-			if not _player.simulate_press_action_containing(HUB_LABEL):
-				return "%s could not press hub return %s" % [cid, str(labels)]
-			await get_tree().process_frame
-			if str(_player.test_capture.get("scene", "")) != HUB:
-				return "%s return scene %s" % [cid, str(_player.test_capture.get("scene", ""))]
-			if str(GameState.get_meta("last_story_chapter", "")) != cid:
-				return "%s last_story_chapter" % cid
-			_free_player()
-			await get_tree().process_frame
-			print("OK cycle %s battle+visit+hub" % cid)
-			return ""
-		if not need_battle and not need_visit:
-			var choice := _real_choice(labels)
-			if choice != "":
-				if not _player.simulate_press_action_containing(choice):
-					return "%s choice press %s" % [cid, choice]
-				await get_tree().process_frame
-				await get_tree().process_frame
-				continue
 		if _press_continue():
 			await get_tree().process_frame
 			await get_tree().process_frame
@@ -159,6 +148,41 @@ func _cycle(cid: String, probe_leave: bool) -> String:
 		return "%s stuck need_battle=%s need_visit=%s beat=%s labels=%s" % [
 			cid, need_battle, need_visit, _player.current_beat_id(), str(labels)]
 	return "%s cycle exceeded steps" % cid
+
+
+func _sibling_fought_ok(cid: String) -> String:
+	if cid != "cs01_02":
+		return ""
+	if not GameState.flag("cs01_mid_fought"):
+		return "cs01_02 expected raw fought still set"
+	if StoryFlagScope.seen("cs01_mid_fought"):
+		return "cs01_02 inherited cs01_01 fought"
+	return ""
+
+
+func _leave_via_action(cid: String, labels: Array) -> String:
+	if not _player.simulate_press_action_containing(HUB_LABEL):
+		return "%s could not press hub return %s" % [cid, str(labels)]
+	await get_tree().process_frame
+	if str(_player.test_capture.get("scene", "")) != HUB:
+		return "%s return scene %s" % [cid, str(_player.test_capture.get("scene", ""))]
+	if str(GameState.get_meta("last_story_chapter", "")) != cid:
+		return "%s last_story_chapter" % cid
+	_free_player()
+	await get_tree().process_frame
+	print("OK cycle %s battle+visit+hub" % cid)
+	return ""
+
+
+func _press_real_choice(cid: String, labels: Array) -> String:
+	var choice := _real_choice(labels)
+	if choice == "":
+		return "skip"
+	if not _player.simulate_press_action_containing(choice):
+		return "%s choice press %s" % [cid, choice]
+	await get_tree().process_frame
+	await get_tree().process_frame
+	return ""
 
 
 func _probe_leave(cid: String) -> String:
@@ -195,15 +219,33 @@ func _battle(cid: String) -> String:
 	var err := _assert_battle_launch(cid, fought)
 	if err != "":
 		return err
+	err = _assert_loss_stamp(cid, lost)
+	if err != "":
+		return err
+	err = await _reopen_loss_line(cid, beat)
+	if err != "":
+		return err
+	err = await _retry_and_win(cid, fought, lost, beat)
+	if err != "":
+		return err
+	print("OK %s battle loss→retry→win @%s" % [cid, beat])
+	return ""
+
+
+func _assert_loss_stamp(cid: String, lost: String) -> String:
 	if BattleDefeat.back_path(false, false, PLAYER) != PLAYER:
 		return "%s loss did not return to chapter" % cid
 	if not GameState.flag(lost):
 		return "%s loss raw flag" % cid
 	if not StoryFlagScope.seen(lost):
 		return "%s loss not scoped to this chapter" % cid
+	return ""
+
+
+func _reopen_loss_line(cid: String, beat: String) -> String:
 	_free_player()
 	await get_tree().process_frame
-	err = await _open_player(cid)
+	var err := await _open_player(cid)
 	if err != "":
 		return err
 	if _player.current_beat_id() != beat:
@@ -216,13 +258,24 @@ func _battle(cid: String) -> String:
 	var labels: Array = _player.action_labels()
 	if labels.find(RETRY) < 0 or labels.find(FIRST) >= 0:
 		return "%s loss CTA %s" % [cid, str(labels)]
+	return ""
+
+
+func _retry_and_win(cid: String, fought: String, lost: String, beat: String) -> String:
 	if not _player.simulate_press_action_containing(RETRY):
 		return "%s retry press" % cid
 	await get_tree().process_frame
-	err = _assert_battle_launch(cid, fought)
+	var err := _assert_battle_launch(cid, fought)
 	if err != "":
 		return err
 	BattleVictory.apply(MAP_ID)
+	err = _assert_win_bookkeeping(cid, fought, lost)
+	if err != "":
+		return err
+	return await _reopen_after_win(cid, beat)
+
+
+func _assert_win_bookkeeping(cid: String, fought: String, lost: String) -> String:
 	if not GameState.flag(fought) or GameState.flag(lost):
 		return "%s win flags fought=%s lost=%s" % [cid, GameState.flag(fought), GameState.flag(lost)]
 	if not StoryFlagScope.seen(fought) or StoryFlagScope.seen(lost):
@@ -230,26 +283,29 @@ func _battle(cid: String) -> String:
 	var led: Dictionary = CKSuiKe.season_ledger_find(cid, "mid_skirmish")
 	if led.is_empty() or str(led.get("outcome", "")) == "":
 		return "%s win ledger missing" % cid
+	return ""
+
+
+func _reopen_after_win(cid: String, beat: String) -> String:
 	_free_player()
 	await get_tree().process_frame
-	err = await _open_player(cid)
+	var err := await _open_player(cid)
 	if err != "":
 		return err
 	if _player.current_beat_id() != beat:
 		return "%s win resume beat %s" % [cid, _player.current_beat_id()]
 	_player.simulate_finish_dialogue()
 	await get_tree().process_frame
-	body = str(_player._body.text)
+	var body := str(_player._body.text)
 	if body.find(LOSS_NEEDLE) >= 0:
 		return "%s loss line survived win %s" % [cid, body]
-	labels = _player.action_labels()
+	var labels: Array = _player.action_labels()
 	if labels.find(FIRST) >= 0 or labels.find(RETRY) >= 0:
 		return "%s fight CTA still up after win %s" % [cid, str(labels)]
 	if not _press_continue():
 		return "%s no continue after win %s" % [cid, str(labels)]
 	await get_tree().process_frame
 	await get_tree().process_frame
-	print("OK %s battle loss→retry→win @%s" % [cid, beat])
 	return ""
 
 
