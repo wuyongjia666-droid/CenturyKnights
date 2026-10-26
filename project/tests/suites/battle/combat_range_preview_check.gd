@@ -100,7 +100,10 @@ func _algebra_source() -> String:
 	var pick := FileAccess.get_file_as_string("res://scripts/battle/battle_pick.gd")
 	if ctrl.split("\n").size() > 3000:
 		return "battle_controller over 3000 lines"
-	if ctrl.find("BattleRangePreview.tap_cell(self, pos, cell)") < 0 or ctrl.find("var cell := BattlePick.resolve(self, pos)") < 0:
+	var has_tap_cell := ctrl.find("BattleRangePreview.tap_cell(self, pos, cell)") >= 0
+	var has_board := ctrl.find("var cell := BattlePick.resolve_board_tap(self, pos)") >= 0
+	var has_raw := ctrl.find("var cell := BattlePick.resolve(self, pos)") >= 0
+	if not has_tap_cell or not (has_board or has_raw):
 		return "tap still uses raw resolve for destinations"
 	if ctrl.find("lp_cell := BattlePick.resolve(self, pos)") < 0:
 		return "long-press resolve was removed"
