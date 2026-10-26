@@ -483,6 +483,11 @@ atlas_convoy_ok_stockade,「%s」粮仓撤运 %d 至「%s」（途损 %d）。,"
 atlas_convoy_ok_company,「%s」粮仓撤入行囊 %d（途损 %d）。,"%s" evacuated %d food into the company (spoilage %d).
 atlas_siege_evacuate,撤仓护粮,Evacuate cache
 atlas_siege_evacuate_done,粮仓已撤：%s,Cache evacuated: %s
+atlas_muster_need_threat,无围城威胁，不必开仓募卒。,No siege threat — no need to muster from cache.
+atlas_muster_need_food,开仓募卒需粮 %d（现存 %d）。,Muster needs %d food (have %d).
+atlas_muster_full,守军已满（%d）。,Garrison already full (%d).
+atlas_muster_ok,「%s」开仓募卒 −%d 粮，守军 %d。,"%s" mustered from cache −%d food, garrison %d.
+atlas_siege_muster,开仓募卒 −%d 粮,Muster from cache −%d food
 atlas_sister_need_threat,无围城威胁，不必调防。,No siege threat — no sister call.
 atlas_sister_full,守军已满（%d），无法再调入。,Garrison full (%d) — cannot receive sister troops.
 atlas_sister_none,无姊妹屯营可抽调守军。,No sister stockade can spare garrison.

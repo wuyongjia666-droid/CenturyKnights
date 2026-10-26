@@ -1117,6 +1117,15 @@ func _render_right() -> void:
 	var rep := World.rep_of(_sel)
 	kv.add_child(UIKit.kv_row("城声望", "%d · %s" % [rep, World.rep_tier_name(rep)], UIKit.ACCENT, col_w))
 	kv.add_child(UIKit.kv_row("特产", str(n.get("specialty", "")), UIKit.TEXT, col_w))
+	var spec_line := CKCitySpecialty.hud_text()
+	if spec_line != "":
+		var spec_l := UIKit.body_label(spec_line, UIKit.EMBER, 13)
+		spec_l.name = "SpecialtyRunLine"
+		spec_l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		spec_l.clip_text = false
+		spec_l.custom_minimum_size = Vector2(col_w, 0)
+		spec_l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		kv.add_child(spec_l)
 	var prod: Array = []
 	for g in n.get("produce", []):
 		prod.append(World.good_name(str(g)))
@@ -2602,7 +2611,12 @@ func _show_siege_alert_modal(alert: Dictionary) -> void:
 		phase_line = phase_line + " " + (Locale.t("atlas_siege_cache_warn") % cache_n)
 	var sister_prev: Dictionary = CKTerritory.sister_relief_preview(site_id) if site_id != "" else {}
 	var can_sister := bool(sister_prev.get("ok", false))
-	var h := 490.0 if stockade and cache_n > 0 else 420.0
+	var can_muster := stockade and cache_n >= CKTerritory.muster_cache_cost(site_id) and garrison < CKTerritory.garrison_max(site_id)
+	var h := 420.0
+	if stockade and cache_n > 0:
+		h = 534.0
+	if can_muster and stockade and cache_n > 0:
+		h = 578.0
 	if can_sister:
 		h += 44.0
 	var panel := _modal_panel(h)
@@ -2686,6 +2700,37 @@ func _show_siege_alert_modal(alert: Dictionary) -> void:
 		else:
 			pass)
 	panel.add_child(scout)
+	if can_muster:
+		y += 44.0
+		var muster := UIKit.ghost_button(Locale.t("atlas_siege_muster") % CKTerritory.muster_cache_cost(site_id), 452, 36)
+		muster.name = "SiegeMuster"
+		muster.position = Vector2(24, y)
+		muster.pressed.connect(func():
+			var r5: Dictionary = CKTerritory.muster_from_cache(site_id)
+			_show_toast(str(r5.get("msg", "")), UIKit.OK if bool(r5.get("ok", false)) else UIKit.DANGER)
+			if bool(r5.get("ok", false)):
+				alert["cache"] = int(r5.get("cache_left", 0))
+				alert["garrison"] = int(r5.get("garrison", garrison))
+				cache_n = int(alert["cache"])
+				garrison = int(alert["garrison"])
+				muster.disabled = true
+				var bl3: Label = panel.get_node_or_null("SiegeAlertBody") as Label
+				if bl3 != null:
+					var pl3 := Locale.t("atlas_siege_phase_imminent") if str(alert.get("phase", "")) == "imminent" else Locale.t("atlas_siege_phase_declared")
+					if stockade and cache_n > 0:
+						pl3 = pl3 + " " + (Locale.t("atlas_siege_cache_warn") % cache_n)
+					var hp3 := int(alert.get("hold_pct", -1))
+					var il3 := Locale.t("atlas_siege_intel") % hp3 if bool(alert.get("scouted", false)) and hp3 >= 0 else Locale.t("atlas_siege_intel_unknown")
+					bl3.text = Locale.t("atlas_siege_body") % [by_name, site_name, anchor_name, garrison, pl3, il3]
+				# disable further muster if out of food or at cap
+				if cache_n < CKTerritory.muster_cache_cost(site_id) or garrison >= CKTerritory.garrison_max(site_id):
+					muster.disabled = true
+				var evac_btn = panel.get_node_or_null("SiegeEvacuate")
+				if evac_btn != null and cache_n <= 0:
+					evac_btn.disabled = true
+			_refresh_top()
+			_build_nodes())
+		panel.add_child(muster)
 	if can_sister:
 		y += 44.0
 		var sis_label := Locale.t("atlas_siege_sister") % str(sister_prev.get("from_name", ""))
@@ -3967,6 +4012,11 @@ func _m_place() -> void:
 	_m_kv(g, Locale.t("mob_ui_012"), "、".join(prod) if not prod.is_empty() else "—", UIKit.OK)
 	_m_kv(g, Locale.t("mob_ui_013"), "、".join(dem) if not dem.is_empty() else "—", UIKit.EMBER)
 	_m_kv(g, Locale.t("mob_ui_014"), Locale.t("mob_ui_015") % World.toll_for(str(n.nation)), UIKit.TEXT)
+	var spec_m := CKCitySpecialty.hud_text()
+	if spec_m != "":
+		var spec_ml := _m_label(spec_m, UIKit.EMBER)
+		spec_ml.name = "SpecialtyRunLine"
+		box.add_child(spec_ml)
 	var loops_m: Array = World.produce_trade_loop(_sel)
 	if not loops_m.is_empty():
 		_m_section(box, Locale.t("atlas_trade_loop_title"))

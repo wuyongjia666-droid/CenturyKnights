@@ -130,3 +130,28 @@ a1_rest_need,先建造医所,Build the infirmary first
 a1_rest_broke,银币不足（需要 %d）,Need %d silver
 a1_rest_lasting,永久伤请用药材缓解,Lasting wounds need clinic herbs
 a1_rest_pick,点选伤员后休养,Select a wounded knight to rest
+spec_head,本城特产,City specialty
+spec_need_affair,先把本城之事办完，才肯把特产交给你们。,Finish the city affair before they hand over the specialty.
+spec_take_body,特产「%s」。装箱「%s」×%d，送到%s。,Specialty %s. Crate %s x%d for %s.
+spec_take_cost,装箱花费 %d 银。,Crating costs %d silver.
+spec_take_btn,装箱带走,Pack the crate
+spec_locked_btn,还不能装箱,Cannot pack yet
+spec_carry_away,这箱「%s」要送到%s，不在这一城。,This crate of %s is for %s.
+spec_deliver_body,来自%s的「%s」可以在这里交货。,From %s: %s can be delivered here.
+spec_deliver_btn,交付特产,Deliver specialty
+spec_deliver_pay,交付后：+%d 银，%s声望 +%d，并得到%s ×%d。,On delivery: +%d silver %s rep +%d and %s x%d.
+spec_pay_plain,交付后：+%d 银，%s声望 +%d。,On delivery: +%d silver %s rep +%d.
+spec_done_body,这城的特产已经送过一趟。,This city's specialty run is already finished.
+spec_done_btn,已经送过,Already delivered
+spec_hold,行李：%s ×%d,Pack: %s x%d
+spec_hold_empty,行李里没有这箱特产。,That specialty crate is not in the pack.
+spec_no_silver,银币不够装箱（需 %d，现有 %d）。,Not enough silver to crate (need %d have %d).
+spec_cargo_full,货舱已满（%d/%d），装不下这箱特产。,Hold is full (%d/%d).
+spec_no_dest,这城的特产暂时没有收货的城。,No city is asking for this specialty.
+spec_not_here,人须在这座城里。,You have to be in this city.
+spec_took,装好了「%s」×%d，送到%s。花了 %d 银。,Packed %s x%d for %s. Spent %d silver.
+spec_delivered,送到了。%s收下「%s」，+%d 银，%s声望 +%d，得到%s ×%d。,Delivered. %s took %s +%d silver %s rep +%d and %s x%d.
+spec_delivered_nospace,送到了。%s收下「%s」，+%d 银，%s声望 +%d。货舱满了，谢礼没装上。,Delivered. %s took %s +%d silver %s rep +%d. Hold was full so the gift stayed behind.
+spec_hud,特产在路上：「%s」送往%s,Specialty on the road: %s for %s
+spec_repeat,这城的特产委托已经办完。,This city's specialty commission is finished.
+spec_busy,身上还有一箱要送到%s的特产。,You are already carrying a crate for %s.

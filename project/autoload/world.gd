@@ -86,6 +86,7 @@ var last_territory_month: Dictionary = {}  # month yield/drain/lost for Territor
 var last_siege_alert: Dictionary = {}  # rival siege/threat for SiegeAlertModal
 var last_siege_loot: Dictionary = {}  # unanswered siege sacked stockade cache
 var last_siege_convoy: Dictionary = {}  # evacuated granary under siege
+var last_siege_muster: Dictionary = {}  # cache→garrison under siege
 var last_siege_sister: Dictionary = {}  # sister stockade garrison relief
 var last_march_muster: Dictionary = {}  # road merc hire → march roster modal
 var last_neutral_contest: Dictionary = {}  # neutral multi-faction tug → ContestTugModal
@@ -205,6 +206,7 @@ func reset() -> void:
 	last_siege_alert = {}
 	last_siege_loot = {}
 	last_siege_convoy = {}
+	last_siege_muster = {}
 	last_siege_sister = {}
 	last_march_muster = {}
 	last_neutral_contest = {}
@@ -295,6 +297,7 @@ func from_save(d: Dictionary) -> void:
 	last_siege_alert = {}
 	last_siege_loot = {}
 	last_siege_convoy = {}
+	last_siege_muster = {}
 	last_siege_sister = {}
 	last_march_muster = {}
 	last_neutral_contest = {}
@@ -2697,6 +2700,22 @@ func dismiss_siege_convoy() -> void:
 	last_siege_convoy = {}
 
 
+func mark_siege_muster(payload: Dictionary) -> void:
+	if payload.is_empty():
+		return
+	last_siege_muster = payload.duplicate(true)
+
+
+func take_siege_muster() -> Dictionary:
+	var d: Dictionary = last_siege_muster.duplicate(true)
+	last_siege_muster = {}
+	return d
+
+
+func dismiss_siege_muster() -> void:
+	last_siege_muster = {}
+
+
 func mark_siege_sister(payload: Dictionary) -> void:
 	if payload.is_empty():
 		return
@@ -2711,8 +2730,6 @@ func take_siege_sister() -> Dictionary:
 
 func dismiss_siege_sister() -> void:
 	last_siege_sister = {}
-
-
 
 
 
