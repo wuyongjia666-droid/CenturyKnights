@@ -1011,6 +1011,12 @@ func _render_left() -> void:
 	var ration_row := UIKit.kv_row(Locale.t("atlas_ration_label"), World.food_ration_text(), UIKit.TEXT, 140)
 	ration_row.name = "MarchRationRow"
 	kv.add_child(ration_row)
+	var seal_chip: Dictionary = World.seal_bypass_chip()
+	if bool(seal_chip.get("show", false)):
+		var seal_col: Color = UIKit.DANGER if bool(seal_chip.get("short", false)) else UIKit.EMBER
+		var seal_row := UIKit.kv_row(Locale.t("atlas_chip_seal_bypass"), Locale.t("atlas_chip_seal_days") % int(seal_chip.get("seal_need", 0)), seal_col, 140)
+		seal_row.name = "PartySealBypassRow"
+		kv.add_child(seal_row)
 	kv.add_child(UIKit.kv_row("货舱", "%d / %d" % [World.cargo_used(), World.cargo_cap()], UIKit.TEXT, 140))
 	kv.add_child(UIKit.kv_row("委托", "%d / %d" % [World.active.size(), int(World.rules.get("active_limit", 5))], UIKit.ACCENT, 140))
 	kv.add_child(UIKit.kv_row("战力层级", "T%d" % World.world_tier(), UIKit.TEXT, 140))
