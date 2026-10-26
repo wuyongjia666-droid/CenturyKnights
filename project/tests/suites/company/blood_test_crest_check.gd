@@ -35,6 +35,9 @@ func _boot() -> void:
 	GameState.silver = 8000
 	GameState.food = 40
 	GameState.iron = 40
+	for c in GameState.characters.values():
+		if c.alive:
+			c.blood_meta["verified"] = false
 
 func _assert_page(page: Node, where: String) -> void:
 	_ok(page.find_child("CastleArms", true, false) != null, "%s CastleArms" % where)
@@ -48,6 +51,10 @@ func _assert_page(page: Node, where: String) -> void:
 	var src := FileAccess.get_file_as_string("res://scripts/hub/blood_test.gd")
 	_ok(src.find("CKHeraldryField.place_blood_crest_strip") >= 0, "%s hub calls Field strip" % where)
 	_ok(src.find("CKHeraldryField.attach_blood_queue_arms") >= 0, "%s hub calls Field queue" % where)
+	var qarms := page.find_child("BloodQueueArms", true, false)
+	_ok(qarms != null, "%s BloodQueueArms on pending row" % where)
+	if qarms != null:
+		_ok(str(qarms.get_meta("field_route", "")) == "blood_queue", "%s queue field_route" % where)
 
 
 func _run_desktop() -> void:
