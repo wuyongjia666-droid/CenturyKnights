@@ -138,3 +138,9 @@
 - 各章 visit 拍（audit/birth/hourglass）拍首加 `_vop1`–`_vop6` 入厅整装口头（`_vhg`/`_msr` 前），全库去重；收束非旁白。
 - 验收：`content_season_visit_open_chain_check` — hub chip → 入厅针口头。
 - 不碰 `_bpl`/`_arr`/`_lop`/`_tvx`/`_cls`/`_sec`/`_tvp`。
+
+## 访月落笔口头加厚（audit-pen）
+
+- 各章 visit 拍（audit/birth/hourglass）在 `_vhg` 前加 `_aud1`–`_aud6` 落笔口头，全库去重；收束非旁白。
+- 验收：`content_season_audit_pen_chain_check` — hub chip → 落笔针口头。
+- 不碰 `_vop`/`_vhg`/`_msr`/`_bpl`/`_lop`/`_cls`/`_sec`/`_tvp`/`_wex`/`_opn`/`_vex`。
