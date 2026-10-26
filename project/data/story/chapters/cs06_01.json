@@ -829,6 +829,42 @@
           }
         },
         {
+          "id": "cs0601_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "校场问声落地。落处，墙牌旁的笑哑了。"
+        },
+        {
+          "id": "cs0601_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "笑收了。赢的人不用再听那种笑。"
+        },
+        {
+          "id": "cs0601_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "上场过了。下场的汗，比笑真一寸。"
+        },
+        {
+          "id": "cs0601_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "沙我跺回坑。回坑，下一圈才平。"
+        },
+        {
+          "id": "cs0601_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "旗挂墙牌旁。挂正，笑就挂不上去。"
+        },
+        {
+          "id": "cs0601_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "锋跟圈走完。墙牌我挂得，场我认。"
+        },
+        {
           "id": "cs06_mid_lost",
           "speaker": "旁白",
           "text": "锋收回来。校场问声还在。墙牌旁那拨，没散。",

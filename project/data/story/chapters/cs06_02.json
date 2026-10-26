@@ -823,6 +823,42 @@
           }
         },
         {
+          "id": "cs0602_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "第二圈合上。合处，墙牌旁笑的人连嘴都懒得张。"
+        },
+        {
+          "id": "cs0602_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "第二圈比第一圈沉。沉的，才像真练，不像演。"
+        },
+        {
+          "id": "cs0602_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "汗第二次下来，笑就买不动场了。"
+        },
+        {
+          "id": "cs0602_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "靴底的沙我磕净。净了，牌下不留假步。"
+        },
+        {
+          "id": "cs0602_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "旗还挂着。挂着，就轮不到他们摘。"
+        },
+        {
+          "id": "cs0602_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "锋再走一圈。牌还挂着，我还在场。"
+        },
+        {
           "id": "cs06b_br_lost",
           "speaker": "旁白",
           "text": "锋收回来。胜册纸还钉着。校场那拨，没散。",
