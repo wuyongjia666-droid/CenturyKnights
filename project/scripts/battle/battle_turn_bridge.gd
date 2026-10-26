@@ -1,6 +1,7 @@
 class_name BattleTurnBridge
 extends RefCounted
 ## Y1-A turn-bridge fat: player-phase return → ready pulse + auto-select first ready.
+## After unit done / wait → handoff next ready. Steady ready feet + pulse.
 ## Ready HUD tap cycles FormationCycle. No telegraph / aim tips.
 
 const META_PULSE := "m_turn_bridge_pulse_msec"
@@ -52,17 +53,37 @@ static func tap_ready(host) -> int:
 	return BattleFormationCycle.apply_next(host)
 
 
+static func after_unit_done(host) -> void:
+	if host == null:
+		return
+	if bool(host.battle_over) or str(host.turn_team) != "player":
+		return
+	BattleDualLedger.refresh(host)
+	# selected already cleared by caller — pick next ready
+	if int(host.selected) >= 0:
+		return
+	var n: int = BattleFormationCycle.next_idx(host.units, -1, true)
+	if n < 0:
+		return
+	if host.has_method("_select_player"):
+		host._select_player(n)
+	else:
+		host.selected = n
+	host.set_meta(META_PULSE, Time.get_ticks_msec())
+	_queue_overlay(host)
+
+
 static func draw_ready_pulse(host, overlay: CanvasItem) -> void:
 	if host == null or overlay == null:
-		return
-	var a := pulse_alpha(host)
-	if a <= 0.001:
 		return
 	if str(host.turn_team) != "player":
 		return
 	var cells: Array[Vector2i] = _ready_cells(host.units)
 	if cells.is_empty():
 		return
+	var pulse := pulse_alpha(host)
+	var base := 0.35
+	var a := clampf(base + pulse * 0.65, 0.0, 1.0)
 	_paint_ready_feet(host, overlay, cells, a)
 
 

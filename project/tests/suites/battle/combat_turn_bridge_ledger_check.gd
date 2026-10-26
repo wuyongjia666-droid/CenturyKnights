@@ -85,7 +85,7 @@ func _algebra_source() -> String:
 	var bridge := FileAccess.get_file_as_string("res://scripts/battle/battle_turn_bridge.gd")
 	var led := FileAccess.get_file_as_string("res://scripts/battle/ui/battle_dual_ledger.gd")
 	var ctrl := FileAccess.get_file_as_string("res://scripts/battle/battle_controller.gd")
-	for needle in ["note_player_return", "draw_ready_pulse", "tap_ready", "pulse_alpha"]:
+	for needle in ["note_player_return", "draw_ready_pulse", "tap_ready", "pulse_alpha", "after_unit_done"]:
 		if bridge.find(needle) < 0:
 			return "bridge missing %s" % needle
 	if led.find("_on_ready_input") < 0:
@@ -96,6 +96,8 @@ func _algebra_source() -> String:
 		return "controller missing note_player_return"
 	if ctrl.find("BattleTurnBridge.draw_ready_pulse") < 0:
 		return "controller missing draw_ready_pulse"
+	if ctrl.find("BattleTurnBridge.after_unit_done") < 0:
+		return "controller missing after_unit_done"
 	for bad in ["telegraph", "Telegraph", "EmptyHost"]:
 		if bridge.find(bad) >= 0:
 			return "bridge dragged %s" % bad
@@ -188,6 +190,14 @@ func _scene_a_return_and_tap() -> String:
 		return "scene A: tap_ready failed"
 	if nxt == before:
 		return "scene A: tap_ready did not advance"
+	# Simulate wait handoff: mark current done, clear select, after_unit_done
+	_battle.units[nxt].done = true
+	_battle.selected = -1
+	BattleTurnBridge.after_unit_done(_battle)
+	await _settle(2)
+	var hand := int(_battle.selected)
+	if hand < 0 or bool(_battle.units[hand].done):
+		return "scene A: after_unit_done handoff failed got %d" % hand
 	var ov := _DrawProbe.new()
 	ov.host = _battle
 	_battle.add_child(ov)

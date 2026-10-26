@@ -675,6 +675,7 @@ func _cast_support_skill(ui: int, sid: String) -> void:
 	selected = -1
 	Sfx.confirm()
 	_log("%s 释放「%s」，治疗 %d 人" % [u.char.name, sk.get("name", ""), healed])
+	BattleTurnBridge.after_unit_done(self)
 	map_draw.queue_redraw()
 	_refresh_info()
 	_check_end()
@@ -1833,6 +1834,8 @@ func _do_attack(ai: int, di: int) -> void:
 	skill_mode = false
 	active_skill_id = ""
 	moved_this_select = false
+	if not canto and str(atk.team) == "player":
+		BattleTurnBridge.after_unit_done(self)
 	_refresh_info()
 	map_draw.queue_redraw()
 	overlay.queue_redraw()
@@ -2193,6 +2196,7 @@ func _wait_selected() -> void:
 	attack_mode = false
 	moved_this_select = false
 	_log("%s 待命" % u.char.name)
+	BattleTurnBridge.after_unit_done(self)
 	map_draw.queue_redraw()
 	overlay.queue_redraw()
 	_refresh_info()
