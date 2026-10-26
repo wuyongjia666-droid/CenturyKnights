@@ -488,37 +488,91 @@ static func set_holding_focus(host, hid: String, focus: String) -> Dictionary:
 	host.mark_dirty()
 	return {"ok": true, "msg": "%s 改为「%s」（月结结构变化；冷却2月）" % [HOLDING_DEFS[hid].name, cn]}
 
+static func caravan_start_preview(host, kind: String) -> Dictionary:
+	## Cost / busy / kind readout for start_caravan (UI + E2E). Avoids #473 surface.
+	var kinds := ["grain", "iron", "spice"]
+	var costs := {"grain": 35, "iron": 45, "spice": 55}
+	var busy: bool = int(host.caravan.get("turns_left", 0)) > 0
+	var known: bool = kind in kinds
+	var cost_s := int(costs.get(kind, 40)) if known else 0
+	var short: bool = known and (not busy) and int(host.silver) < cost_s
+	var reason := ""
+	if not known:
+		reason = "kind"
+	elif busy:
+		reason = "busy"
+	elif short:
+		reason = "short"
+	return {
+		"ok": known,
+		"kind": kind,
+		"busy": busy,
+		"cost_s": cost_s,
+		"short": short,
+		"startable": known and (not busy) and (not short),
+		"reason": reason,
+	}
+
+
+static func caravan_escort_preview(host) -> Dictionary:
+	var turns := int(host.caravan.get("turns_left", 0))
+	var escorted: bool = bool(host.caravan.get("escorted", false))
+	var cost_s := 12
+	var short: bool = turns > 0 and (not escorted) and int(host.silver) < cost_s
+	var reason := ""
+	if turns <= 0:
+		reason = "none"
+	elif escorted:
+		reason = "escorted"
+	elif short:
+		reason = "short"
+	return {
+		"ok": true,
+		"turns_left": turns,
+		"escorted": escorted,
+		"cost_s": cost_s,
+		"short": short,
+		"escortable": turns > 0 and (not escorted) and (not short),
+		"reason": reason,
+	}
+
+
 static func start_caravan(host, kind: String) -> Dictionary:
 	## 陆桥商队：投资上路，月结检定，到期交割
-	if int(host.caravan.get("turns_left", 0)) > 0:
-		return {"ok": false, "msg": "已有商队在途"}
-	if kind not in ["grain", "iron", "spice"]:
-		return {"ok": false, "msg": "航线：grain/iron/spice"}
-	var cost = {"grain": 35, "iron": 45, "spice": 55}.get(kind, 40)
-	if host.silver < cost:
-		return {"ok": false, "msg": "需 %d 银上路" % cost}
+	var prev: Dictionary = CKEconomyState.caravan_start_preview(host, kind)
+	if str(prev.get("reason", "")) == "kind":
+		return {"ok": false, "msg": Locale.t("caravan_start_kind"), "preview": prev}
+	if str(prev.get("reason", "")) == "busy":
+		return {"ok": false, "msg": Locale.t("caravan_start_busy"), "preview": prev}
+	var cost = int(prev.get("cost_s", 40))
+	if bool(prev.get("short", false)):
+		return {"ok": false, "msg": Locale.t("caravan_start_short", [cost]), "preview": prev}
 	host.silver -= cost
 	host.caravan = {"kind": kind, "turns_left": 3, "invested": cost}
 	host.house_mods["caravan_active"] = true
 	var cn = {"grain": "粮运", "iron": "铁运", "spice": "香料险运"}.get(kind, kind)
-	host.log_event("商队出发：%s（投资%d）" % [cn, cost])
-	host.add_lineage_event("陆桥商队：%s 上路" % cn)
+	host.log_event(Locale.t("caravan_start_log", [cn, cost]))
+	host.add_lineage_event(Locale.t("caravan_start_lineage", [cn]))
+	CKEconomyState.month_echo_note("caravan", Locale.t("caravan_echo_start", [cn, cost]))
 	host.mark_dirty()
-	return {"ok": true, "msg": "商队「%s」上路，约 3 月交割（途中有劫险）" % cn}
+	return {"ok": true, "msg": Locale.t("caravan_start_ok", [cn]), "preview": prev}
 
 static func escort_caravan(host) -> Dictionary:
 	## 商队护运：花银买平安——中长环真决策
-	if int(host.caravan.get("turns_left", 0)) <= 0:
-		return {"ok": false, "msg": "无在途商队"}
-	if bool(host.caravan.get("escorted", false)):
-		return {"ok": false, "msg": "已雇护运"}
-	if host.silver < 12:
-		return {"ok": false, "msg": "护运需 12 银"}
-	host.silver -= 12
+	var prev: Dictionary = CKEconomyState.caravan_escort_preview(host)
+	if str(prev.get("reason", "")) == "none":
+		return {"ok": false, "msg": Locale.t("caravan_escort_none"), "preview": prev}
+	if str(prev.get("reason", "")) == "escorted":
+		return {"ok": false, "msg": Locale.t("caravan_escort_done"), "preview": prev}
+	var cost = int(prev.get("cost_s", 12))
+	if bool(prev.get("short", false)):
+		return {"ok": false, "msg": Locale.t("caravan_escort_short", [cost]), "preview": prev}
+	host.silver -= cost
 	host.caravan["escorted"] = true
-	host.add_lineage_event("商队护运：花 12 银买路平安")
+	host.add_lineage_event(Locale.t("caravan_escort_lineage", [cost]))
+	CKEconomyState.month_echo_note("caravan", Locale.t("caravan_echo_escort", [cost]))
 	host.mark_dirty()
-	return {"ok": true, "msg": "护运已雇：途中不遇劫"}
+	return {"ok": true, "msg": Locale.t("caravan_escort_ok"), "preview": prev}
 
 static func tick_caravan_month(host) -> Array:
 	var msgs: Array = []
@@ -546,11 +600,12 @@ static func tick_caravan_month(host) -> Array:
 	if raid > 0.0 and host.rng.randf() < raid:
 		var loss = int(invested * 0.45)
 		host.silver = maxi(0, host.silver - loss)
-		msgs.append("商队遇劫：损银 %d（航线仍在）" % loss)
+		msgs.append(Locale.t("caravan_raid_msg", [loss]))
 		host.add_lineage_event(msgs[-1])
+		CKEconomyState.month_echo_note("caravan", Locale.t("caravan_echo_raid", [loss]))
 		host.morale = maxi(0, host.morale - 2)
 	else:
-		msgs.append("商队平安过月：余 %d 月" % int(host.caravan["turns_left"]))
+		msgs.append(Locale.t("caravan_safe_msg", [int(host.caravan["turns_left"])]))
 	if int(host.caravan["turns_left"]) <= 0:
 		var payout = int(invested * {"grain": 1.7, "iron": 1.9, "spice": 2.3}.get(kind, 1.8))
 		host.silver += payout
@@ -561,8 +616,10 @@ static func tick_caravan_month(host) -> Array:
 		elif kind == "spice":
 			host.herb += 3
 			host.add_rep("riverland", 1)
-		msgs.append("商队交割：收回约 %d 银并卸货" % payout)
+		var cn = {"grain": "粮运", "iron": "铁运", "spice": "香料险运"}.get(kind, kind)
+		msgs.append(Locale.t("caravan_settle_msg", [payout]))
 		host.add_lineage_event(msgs[-1])
+		CKEconomyState.month_echo_note("caravan", Locale.t("caravan_echo_settle", [cn, payout]))
 		host.caravan = {}
 		host.house_mods.erase("caravan_active")
 	host.mark_dirty()
@@ -1265,7 +1322,7 @@ static func month_echo_lines() -> Array:
 		"holdings", "harvest", "territory", "commission", "battle", "recruit",
 		"birth", "pregnancy", "marriage", "spring", "doctrine", "ambition", "tutor", "promo", "retire",
 		"death", "succession", "adult", "dues", "rival", "job_seal", "patrol", "steward", "upgrade", "unlock",
-		"works", "smith", "produce",
+		"works", "caravan", "smith", "produce",
 	]:
 		var tx := str(d.get(k, ""))
 		if tx != "":

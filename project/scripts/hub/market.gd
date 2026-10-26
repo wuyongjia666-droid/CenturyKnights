@@ -380,6 +380,34 @@ func _render_right() -> void:
 			GameState.save_game()
 		_render())
 	_right.add_child(esc)
+	_caravan_echo_strip(_right, Vector2(912, 636), 328)
+
+
+func _caravan_echo_strip(parent: Node, pos: Vector2, width: float) -> void:
+	## Shop fat: market caravan month echo (EchoLine_caravan) for E2E.
+	var rows := CKEconomyState.month_echo_lines()
+	var caravan_rows: Array = []
+	for row in rows:
+		if str(row.get("kind", "")) == "caravan":
+			caravan_rows.append(row)
+	if caravan_rows.is_empty():
+		return
+	var stacked := parent is BoxContainer or parent is ScrollContainer
+	var y := pos.y
+	var head := UIKit.mono(Locale.t("caravan_echo_head"), 9, UIKit.ACCENT, false)
+	if not stacked:
+		head.position = pos
+	parent.add_child(head)
+	y += 16.0
+	for row in caravan_rows:
+		var line := UIKit.body_label(str(row.get("text", "")), UIKit.OK, 12)
+		line.name = "EchoLine_%s" % str(row.get("kind", "x"))
+		if not stacked:
+			line.position = Vector2(pos.x, y)
+			line.size = Vector2(width, 20)
+		parent.add_child(line)
+		y += 18.0
+
 
 func _caravan_status() -> String:
 	if int(GameState.caravan.get("turns_left", 0)) > 0:
@@ -510,3 +538,5 @@ func _m_render() -> void:
 	esc.name = "CaravanEscort"
 	esc.disabled = not busy
 	rv.add_child(esc)
+	MobilePage.spacer(rv)
+	_caravan_echo_strip(rv, Vector2(0, 0), 320)
