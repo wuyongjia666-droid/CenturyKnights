@@ -67,7 +67,7 @@ func _place_market_crests(at_y: float = 8.0) -> void:
 			oldn.queue_free()
 	var hdr := Vector2(44, 52)
 	CKHeraldryField.place_company_header(self, Vector2(1180, at_y), hdr)
-	CKHeraldryChrome.place_castle_banner_strip(self, Vector2(1100, at_y), hdr, Vector2(28, 38))
+	CKHeraldryField.place_banner_plate(self, Vector2(1100, at_y), hdr, Vector2(28, 38))
 	var city := str(World.pos)
 	if city != "":
 		CKHeraldryField.place_city_crest_strip(self, city, Vector2(42, at_y), Vector2(36, 44))

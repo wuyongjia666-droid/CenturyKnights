@@ -91,7 +91,7 @@ func _place_ancestor_crests(mobile: bool = false) -> void:
 	var arms_x := (w - 64.0) if mob else 1180.0
 	var strip_x := (w - 140.0) if mob else 1100.0
 	CKHeraldryField.place_company_header(self, Vector2(arms_x, at_y), hdr)
-	CKHeraldryChrome.place_castle_banner_strip(self, Vector2(strip_x, at_y), hdr, ban)
+	CKHeraldryField.place_banner_plate(self, Vector2(strip_x, at_y), hdr, ban)
 
 func apply_mobile_layout() -> void:
 	CKPageKit.phone_fill(self)

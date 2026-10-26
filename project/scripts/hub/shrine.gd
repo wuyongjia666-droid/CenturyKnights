@@ -107,7 +107,7 @@ func _place_shrine_crests() -> void:
 	var mob := DeviceProfile.is_mobile()
 	var hdr := Vector2(44, 52) if not mob else Vector2(40, 48)
 	CKHeraldryField.place_company_header(self, Vector2(1180, 8) if not mob else Vector2(1180, 4), hdr)
-	CKHeraldryChrome.place_castle_banner_strip(self, Vector2(1120, 8) if not mob else Vector2(1120, 4), hdr, Vector2(28, 38))
+	CKHeraldryField.place_banner_plate(self, Vector2(1120, 8) if not mob else Vector2(1120, 4), hdr, Vector2(28, 38))
 	var nid := str(World.nation_of(str(World.pos))) if str(World.pos) != "" else ""
 	if nid == "":
 		var ids: Array = CKBloodline.nation_ids()
