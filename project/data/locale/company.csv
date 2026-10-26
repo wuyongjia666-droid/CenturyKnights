@@ -569,6 +569,7 @@ atlas_gate_leave,出城,Leave the gate
 atlas_gate_in,进城 · %s · %s · 余粮 %d 日,Entered %s · %s · %d days of food
 atlas_gate_out,出城 · %s · %s · 余粮 %d 日,Left %s · %s · %d days of food
 atlas_gate_warn,粮草见底，先补再走。,Rations are thin. Resupply before the next march.
+atlas_gate_seal_warn,冬封旁路尚余 %d 日，出城前先补够绕行粮。,Winter bypass still needs %d days — resupply for the detour before leaving.
 atlas_hold_line,停军 · 续行至 %s · %d 日 · 耗粮 %d · 余 %d 日,Halted · resume to %s · %d days · need %d · %d days of food left
 atlas_resume_chip,续行至 %s · %s · 还要 %d 日 · 粮 %d,Resuming to %s · %s · %d days left · food %d
 atlas_resume_go,续行,Resume march

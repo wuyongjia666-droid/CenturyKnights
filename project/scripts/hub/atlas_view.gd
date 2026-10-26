@@ -3228,9 +3228,7 @@ func _paint_march_readouts(p: Control, with_button: bool) -> void:
 	var y := 118.0
 	var show_gate := str(World.city_gate.get("dir", "")) == "out" and str(World.city_gate.get("city", "")) == World.pos and not World.is_traveling()
 	if show_gate:
-		var per_now := World.food_per_day()
-		var cover_now := 0 if per_now <= 0 else int(GameState.food / per_now)
-		var strip := UIKit.body_label(World.city_gate_text(), UIKit.EMBER if cover_now <= 2 else UIKit.ACCENT, 12)
+		var strip := UIKit.body_label(World.city_gate_text(), UIKit.EMBER if bool(World.city_gate.get("warn", false)) else UIKit.ACCENT, 12)
 		strip.name = "CityGateStrip"
 		strip.autowrap_mode = TextServer.AUTOWRAP_OFF
 		strip.clip_text = true

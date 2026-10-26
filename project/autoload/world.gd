@@ -490,6 +490,13 @@ func dismiss_march_muster() -> void:
 func note_city_gate(dir: String) -> Dictionary:
 	var per := food_per_day()
 	var cover := 0 if per <= 0 else int(GameState.food / per)
+	var held := str(march_hold.get("dest", ""))
+	if held == "":
+		held = str(seal_detour.get("dest", ""))
+	var seal_need := 0
+	if held != "" and held != pos:
+		seal_need = seal_aware_remain_days(held)
+	var seal_short := seal_need > 0 and cover < seal_need
 	var cname := str(node(pos).get("name", pos))
 	city_gate = {
 		"dir": dir,
@@ -500,7 +507,10 @@ func note_city_gate(dir: String) -> Dictionary:
 		"per_day": per,
 		"cover_days": cover,
 		"ration_text": food_ration_text(),
-		"warn": cover <= 2,
+		"held_dest": held,
+		"seal_need": seal_need,
+		"seal_short": seal_short,
+		"warn": cover <= 2 or seal_short,
 	}
 	return city_gate.duplicate(true)
 
@@ -514,7 +524,9 @@ func city_gate_text() -> String:
 	var cover := 0 if per <= 0 else int(GameState.food / per)
 	var key := "atlas_gate_out" if dir == "out" else "atlas_gate_in"
 	var line: String = Locale.t(key) % [str(node(city).get("name", city)), food_ration_text(), cover]
-	if cover <= 2:
+	if bool(city_gate.get("seal_short", false)):
+		line += " " + Locale.t("atlas_gate_seal_warn") % int(city_gate.get("seal_need", 0))
+	elif cover <= 2:
 		line += " " + Locale.t("atlas_gate_warn")
 	return line
 
