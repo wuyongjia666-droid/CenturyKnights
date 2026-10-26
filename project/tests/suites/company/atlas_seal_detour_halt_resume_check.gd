@@ -103,7 +103,7 @@ func _api_halt_resume() -> void:
 	# Remaining must match recorded rem; bare route is the unconstrained shortest.
 	_ok(route == rem, "resume route equals seal_detour_remaining")
 	var mattered := route != bare_route or _path_hits_seal(naive_path)
-	_ok(mattered or route == rem, "deepen engaged (via≠bare or bare would seal, or via==rem)")
+	_ok(mattered or route == rem, "deepen engaged (via!=bare or bare would seal, or via==rem)")
 	# Drop the probe travel and finish with the seal resume helper (hop-by-hop, camp-safe).
 	World.cancel_travel()
 	var fin: Dictionary = CKRoadSeal.resume_detour()
