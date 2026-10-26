@@ -1,7 +1,8 @@
 class_name CKHeraldryField
 extends RefCounted
 ## Field chrome for surfaces #511 does not own: tavern hire strip, deploy reserve,
-## battle card / forecast / report, annex serve rows, forge smith slots, shrine heal.
+## battle card / forecast / report, annex serve rows, forge smith slots, shrine heal,
+## and city 本城之事 affairs overlay (团徽 + 本城邦徽).
 ## 团徽 stays the company banner. A family id shows 族徽; no family id shows 旗徽.
 ## Enemy plates are 敌徽. No impale, quarter, or marriage marshalling.
 
@@ -213,4 +214,43 @@ static func place_shrine_heal_strip(parent: Node, focus_hurt, at: Vector2, shiel
 	_pair(host, shield, focus)
 	host.set_meta("has_hurt", focus_hurt != null)
 	return host
+
+## City 本城之事 overlay: 团徽 + 本城邦徽. Host AffairCrestStrip (not CityCrestStrip).
+static func place_affairs_crest_strip(parent: Node, city_id: String, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
+	if parent == null:
+		return null
+	_retire(parent, "AffairCrestStrip")
+	var nid := World.nation_of(str(city_id))
+	if nid == "":
+		nid = str(World.node(str(city_id)).get("nation", ""))
+	var w := shield.x
+	if nid != "":
+		w = shield.x * 2.0 + 8.0
+	var host := _host(parent, "AffairCrestStrip", at, Vector2(w, shield.y))
+	var co := CKHeraldryChrome.make_company_arms(shield)
+	co.position = Vector2.ZERO
+	host.add_child(co)
+	if nid != "":
+		var nat := CKHeraldryChrome.make_city_nation_arms(nid, shield)
+		nat.position = Vector2(shield.x + 8.0, 0)
+		host.add_child(nat)
+	host.set_meta("nation_id", nid)
+	host.set_meta("city_id", str(city_id))
+	return host
+
+
+## Seal-stamp candidate row: person 族徽|旗徽. No marshalling with company arms.
+static func attach_affairs_seal_arms(row: Control, c, arms_sz: Vector2 = Vector2(26, 32)) -> TextureRect:
+	if row == null or c == null:
+		return null
+	_retire(row, "AffairSealArms")
+	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
+	arms.name = "AffairSealArms"
+	arms.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(arms)
+	if row is Container:
+		row.move_child(arms, 0)
+	else:
+		arms.position = Vector2(4, 8)
+	return arms
 
