@@ -909,3 +909,4 @@ shell_hit_risk_aim_mark,险,Risk
 shell_terrain_def_aim_mark,防,Cover
 shell_height_aim_high_mark,高,High
 shell_height_aim_low_mark,低,Low
+shell_weather_aim_mark,雨,Rain
