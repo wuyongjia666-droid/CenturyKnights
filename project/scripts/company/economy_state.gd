@@ -823,19 +823,45 @@ static func check_ambitions(host) -> Array:
 		month_echo_note("ambition", "；".join(parts))
 	return msgs
 
-static func upgrade_building(host, id: String) -> Dictionary:
+static func building_upgrade_preview(host, id: String) -> Dictionary:
+	## Cost / gate readout for castle works upgrade (UI + E2E). Avoids #473 surface.
 	if id not in BUILDING_NAMES:
-		return {"ok": false, "msg": "无此工事"}
+		return {"ok": false, "id": id, "lv": 0, "next": 0, "cost_s": 0, "cost_i": 0, "cost_f": 0, "short": false, "maxed": false, "locked": true}
 	var lv = CKEconomyState.building_level(host, id)
 	if lv >= BUILDING_MAX:
-		return {"ok": false, "msg": "%s 已至满级" % BUILDING_NAMES[id]}
+		return {"ok": true, "id": id, "lv": lv, "next": lv, "cost_s": 0, "cost_i": 0, "cost_f": 0, "short": false, "maxed": true, "locked": false}
 	var next_lv = lv + 1
-	var cost: Dictionary = building_cost(host, id, next_lv)
-	var need_s = int(cost.get("silver", 0))
-	var need_i = int(cost.get("iron", 0))
-	var need_f = int(cost.get("food", 0))
-	if host.silver < need_s or host.iron < need_i or host.food < need_f:
-		return {"ok": false, "msg": "不足：需 %d银/%d铁/%d粮" % [need_s, need_i, need_f]}
+	var cost: Dictionary = CKEconomyState.building_cost(host, id, next_lv)
+	var cost_s = int(cost.get("silver", 0))
+	var cost_i = int(cost.get("iron", 0))
+	var cost_f = int(cost.get("food", 0))
+	var short: bool = int(host.silver) < cost_s or int(host.iron) < cost_i or int(host.food) < cost_f
+	return {
+		"ok": true,
+		"id": id,
+		"lv": lv,
+		"next": next_lv,
+		"cost_s": cost_s,
+		"cost_i": cost_i,
+		"cost_f": cost_f,
+		"short": short,
+		"maxed": false,
+		"locked": false,
+	}
+
+
+static func upgrade_building(host, id: String) -> Dictionary:
+	var prev: Dictionary = CKEconomyState.building_upgrade_preview(host, id)
+	if bool(prev.get("locked", false)):
+		return {"ok": false, "msg": Locale.t("works_upgrade_locked"), "preview": prev}
+	if bool(prev.get("maxed", false)):
+		return {"ok": false, "msg": Locale.t("works_upgrade_maxed", [BUILDING_NAMES[id]]), "preview": prev}
+	var need_s = int(prev.get("cost_s", 0))
+	var need_i = int(prev.get("cost_i", 0))
+	var need_f = int(prev.get("cost_f", 0))
+	if bool(prev.get("short", false)):
+		return {"ok": false, "msg": Locale.t("works_upgrade_short", [need_s, need_i, need_f]), "preview": prev}
+	var next_lv = int(prev.get("next", 0))
 	host.silver -= need_s
 	host.iron -= need_i
 	host.food -= need_f
@@ -846,30 +872,32 @@ static func upgrade_building(host, id: String) -> Dictionary:
 	match id:
 		"hall":
 			CKEconomyState.clamp_deploy(host)
-			fx = "出战编队上限 → %d" % CKEconomyState.max_deploy(host)
+			fx = Locale.t("works_fx_hall", [CKEconomyState.max_deploy(host)])
 			if next_lv >= 4:
-				fx += "；月结厅堂津贴"
+				fx += Locale.t("works_fx_hall_hi")
 		"barracks":
-			fx = "传习次数 → %d；月结士气" % CKTutor.year_limit(host)
+			fx = Locale.t("works_fx_barracks", [CKTutor.year_limit(host)])
 			if next_lv >= 4:
-				fx += "；课次提高"
+				fx += Locale.t("works_fx_barracks_hi")
 		"market":
-			fx = "市集买卖价改善"
+			fx = Locale.t("works_fx_market")
 			if next_lv >= 4:
-				fx += "；月结商税"
+				fx += Locale.t("works_fx_market_hi")
 		"forge":
-			fx = "打造更省料"
+			fx = Locale.t("works_fx_forge")
 			if next_lv >= 4:
-				fx += "；精灰刃"
+				fx += Locale.t("works_fx_forge_hi")
 		"shrine":
-			fx = "丰收与祈愈增强"
+			fx = Locale.t("works_fx_shrine")
 			if next_lv >= 4:
-				fx += "；月结微愈"
-	host.log_event("工事升级：%s → Lv%d（%s）" % [BUILDING_NAMES[id], next_lv, fx])
+				fx += Locale.t("works_fx_shrine_hi")
+	var nm = str(BUILDING_NAMES[id])
+	host.log_event(Locale.t("works_upgrade_log", [nm, next_lv, fx]))
+	CKEconomyState.month_echo_note("works", Locale.t("works_echo_upgrade", [nm, next_lv, need_s, need_i, need_f]))
 	var amb = CKEconomyState.check_ambitions(host)
 	var amb_s = ("；" + " / ".join(amb)) if amb else ""
 	host.mark_dirty()
-	return {"ok": true, "msg": "%s 升至 Lv%d。%s%s" % [BUILDING_NAMES[id], next_lv, fx, amb_s]}
+	return {"ok": true, "msg": Locale.t("works_upgrade_ok", [nm, next_lv, fx]) + amb_s, "preview": prev, "lv": next_lv}
 
 static func building_summary(host) -> String:
 	var parts: Array = []
@@ -1183,6 +1211,7 @@ static func month_echo_lines() -> Array:
 		"holdings", "harvest", "territory", "commission", "battle", "recruit",
 		"birth", "pregnancy", "marriage", "spring", "doctrine", "ambition", "tutor", "promo", "retire",
 		"death", "succession", "adult", "dues", "rival", "job_seal", "patrol", "steward", "upgrade",
+		"works",
 	]:
 		var tx := str(d.get(k, ""))
 		if tx != "":

@@ -1134,6 +1134,9 @@ func ambition_list() -> Array:
 func check_ambitions() -> Array:
 	return CKEconomyState.check_ambitions(self)
 
+func building_upgrade_preview(id: String) -> Dictionary:
+	return CKEconomyState.building_upgrade_preview(self, id)
+
 func upgrade_building(id: String) -> Dictionary:
 	return CKEconomyState.upgrade_building(self, id)
 
