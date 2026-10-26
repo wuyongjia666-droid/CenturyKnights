@@ -425,6 +425,7 @@ atlas_supply_forage,路边觅食,Forage roadside
 atlas_supply_press,硬闯续行,Press on starving
 atlas_supply_forced_stop,强制停靠补给,Forced halt & resupply
 atlas_supply_halt_later,稍后,Later
+atlas_supply_halt_seal,冬封旁路余程仍有 %d 日 — 续行仍走旁路。,Winter bypass still has %d days — resume stays on the detour.
 atlas_supply_halt_log,断粮强制停靠于「%s」（%d 日）,Forced supply halt at "%s" (%d day(s))
 atlas_supply_forage_log,觅食得粮 +%d,Foraged +%d food
 atlas_supply_forage_ok,觅食得粮 +%d，可续行,Foraged +%d food; march can resume
