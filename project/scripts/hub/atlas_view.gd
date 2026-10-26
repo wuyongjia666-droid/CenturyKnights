@@ -1117,6 +1117,15 @@ func _render_right() -> void:
 	var rep := World.rep_of(_sel)
 	kv.add_child(UIKit.kv_row("城声望", "%d · %s" % [rep, World.rep_tier_name(rep)], UIKit.ACCENT, col_w))
 	kv.add_child(UIKit.kv_row("特产", str(n.get("specialty", "")), UIKit.TEXT, col_w))
+	var spec_line := CKCitySpecialty.hud_text()
+	if spec_line != "":
+		var spec_l := UIKit.body_label(spec_line, UIKit.EMBER, 13)
+		spec_l.name = "SpecialtyRunLine"
+		spec_l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		spec_l.clip_text = false
+		spec_l.custom_minimum_size = Vector2(col_w, 0)
+		spec_l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		kv.add_child(spec_l)
 	var prod: Array = []
 	for g in n.get("produce", []):
 		prod.append(World.good_name(str(g)))
@@ -3973,6 +3982,11 @@ func _m_place() -> void:
 	_m_kv(g, Locale.t("mob_ui_012"), "、".join(prod) if not prod.is_empty() else "—", UIKit.OK)
 	_m_kv(g, Locale.t("mob_ui_013"), "、".join(dem) if not dem.is_empty() else "—", UIKit.EMBER)
 	_m_kv(g, Locale.t("mob_ui_014"), Locale.t("mob_ui_015") % World.toll_for(str(n.nation)), UIKit.TEXT)
+	var spec_m := CKCitySpecialty.hud_text()
+	if spec_m != "":
+		var spec_ml := _m_label(spec_m, UIKit.EMBER)
+		spec_ml.name = "SpecialtyRunLine"
+		box.add_child(spec_ml)
 	var loops_m: Array = World.produce_trade_loop(_sel)
 	if not loops_m.is_empty():
 		_m_section(box, Locale.t("atlas_trade_loop_title"))

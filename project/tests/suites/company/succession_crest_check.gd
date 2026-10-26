@@ -1,5 +1,5 @@
 extends Node
-## Fat heraldry E2E: succession SuccessionCrestStrip (团徽+heir) + company header, desktop + mobile.
+## Fat heraldry E2E: Field SuccessionCrestStrip (团徽+heir) + company header, desktop + mobile.
 
 const SCN := preload("res://scenes/hub/inheritance.tscn")
 var _fails: Array = []
@@ -10,11 +10,11 @@ func _ready() -> void:
 	await _run_mobile()
 	await _run_helpers()
 	if _fails.is_empty():
-		print("SUCCESSION CREST CHROME PASS")
+		print("SUCCESSION CREST PASS")
 		get_tree().quit(0)
 	else:
 		for f in _fails:
-			print("FAIL succession crest chrome: ", f)
+			print("FAIL succession crest: ", f)
 		get_tree().quit(1)
 
 func _ok(cond: bool, msg: String) -> void:
@@ -54,8 +54,12 @@ func _assert_page(page: Node, where: String) -> void:
 	var strip := page.find_child("SuccessionCrestStrip", true, false)
 	_ok(strip != null, "%s SuccessionCrestStrip" % where)
 	if strip != null:
-		_ok(strip.find_child("CastleArms", true, false) != null, "%s 团徽" % where)
-		_ok(strip.find_child("LeaderArms", true, false) != null, "%s LeaderArms" % where)
+		var ca := strip.find_child("CastleArms", true, false)
+		var la := strip.find_child("LeaderArms", true, false)
+		_ok(ca != null and str(ca.get_meta("arms_kind", "")) == "gen2_36", "%s 团徽" % where)
+		_ok(la != null and str(la.get_meta("arms_kind", "")) in ["gen2_06", "gen2_35"], "%s LeaderArms" % where)
+		if ca != null and la != null:
+			_ok(str(ca.get_meta("arms_core", "")) != str(la.get_meta("arms_core", "")), "%s 团徽!=嗣徽" % where)
 		_ok(bool(strip.get_meta("has_heir", false)), "%s has_heir" % where)
 	_ok(page.find_child("CastleArms", true, false) != null, "%s company header" % where)
 
@@ -85,7 +89,7 @@ func _run_helpers() -> void:
 	var kid := _boot_with_heir()
 	var host := Control.new()
 	add_child(host)
-	var strip := CKHeraldryChrome.place_succession_crest_strip(host, kid, Vector2(10, 10), Vector2(36, 44))
+	var strip := CKHeraldryField.place_succession_crest_strip(host, kid, Vector2(10, 10), Vector2(36, 44))
 	_ok(strip != null and strip.name == "SuccessionCrestStrip", "helper SuccessionCrestStrip")
 	_ok(strip.find_child("LeaderArms", true, false) != null, "helper LeaderArms")
 	host.queue_free()
