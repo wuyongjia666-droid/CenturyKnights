@@ -1786,6 +1786,7 @@ func market_buy(city: String, g: String, qty: int = 1) -> Dictionary:
 	GameState.silver -= cost
 	_add_good(g, qty)
 	_record_cargo_basis(g, qty, cost, city)
+	_check_gather_ready()
 	GameState.mark_dirty()
 	world_changed.emit()
 	var buy_msg := "购入 %s ×%d（-%d 银）" % [good_name(g), qty, cost]
@@ -2343,6 +2344,9 @@ func _make_quest(city: String, kind: String, tier: int, r: RandomNumberGenerator
 			q.good = str(dem[r.randi() % dem.size()])
 			q.qty = 8 + tier * 4 if q.good == "grain" else 3 + tier * 2
 			q.target = city
+			q.supply_city = nearest_produce_city(str(q.good), city)
+			if str(q.supply_city) == "":
+				q.supply_city = city
 	if q.has("target") and kind != "gather":
 		var rt := route(city, str(q.target))
 		hops = maxi(1, rt.get("path", [city, city]).size() - 1)
@@ -2371,7 +2375,9 @@ func _make_quest(city: String, kind: String, tier: int, r: RandomNumberGenerator
 		"hunt": desc = "%s藏身于%s一带。前往目标地点即触发战斗，得胜后回%s复命。" % [q.foe_name, tname, n.name]
 		"clear": desc = "%s上盘踞着%s营地。行经此道即触发清剿战，得胜后回%s复命。" % [road_name, nat.get("name", ""), n.name]
 		"defend": desc = "%s告急！在期限内赶到即开战，守住后在%s领赏。" % [tname, tname]
-		"gather": desc = "%s急需%s ×%d。备齐货物后回%s交付（交付即消耗）。" % [n.name, good_name(q.good), int(q.qty), n.name]
+		"gather":
+			var supply_n := str(node(str(q.get("supply_city", city))).get("name", n.name))
+			desc = "%s急需%s ×%d。前往%s市集购入后回%s交付（交付即消耗）。" % [n.name, good_name(q.good), int(q.qty), supply_n, n.name]
 		"scout": desc = "走一趟%s，探明当地虚实，回%s复命。抵达时同步当地市价情报。" % [tname, n.name]
 	if OBJECTIVE_KINDS.has(kind):
 		desc = _quest_brief(tpl, q, str(n.get("name", "")), tname, road_name)
@@ -2607,12 +2613,14 @@ func place_rival_here(node_id: String = "", rival_id: String = "") -> Dictionary
 
 func accept_quest(city: String, qid: String) -> Dictionary:
 	if city != pos:
-		return {"ok": false, "msg": "须在发布委托的城中接取"}
+		return {"ok": false, "msg": Locale.t("wq_accept_wrong_city")}
 	var offers: Array = board(city)
 	for i in offers.size():
 		var q: Dictionary = offers[i]
 		if str(q.id) != qid:
 			continue
+		if str(q.get("issuer", city)) != city:
+			return {"ok": false, "msg": Locale.t("wq_accept_wrong_city")}
 		var why := quest_locked_reason(q)
 		if why != "":
 			return {"ok": false, "msg": why}
@@ -2628,7 +2636,13 @@ func accept_quest(city: String, qid: String) -> Dictionary:
 		var hint := quest_next_hint(q)
 		var guide := quest_guide_node(q)
 		var msg := Locale.t("wq_accept_ok") % [q.title, int(q.days_budget), hint]
-		return {"ok": true, "msg": msg, "quest": q, "guide_node": guide, "hint": hint}
+		var out := {"ok": true, "msg": msg, "quest": q, "guide_node": guide, "hint": hint}
+		if str(q.get("kind", "")) == "gather":
+			var march: Dictionary = gather_supply_march_preview(q)
+			out["supply_march"] = march
+			if int(march.get("days", 0)) > 0:
+				out["msg"] = msg + " · " + (Locale.t("wq_accept_supply_days") % [str(march.get("supply_name", "")), int(march.get("days", 0)), int(march.get("food", 0))])
+		return out
 	return {"ok": false, "msg": "委托已不在榜上"}
 
 func quest_by_id(qid: String) -> Dictionary:
@@ -2858,8 +2872,32 @@ func take_rival_thefts() -> Array:
 func peek_rival_thefts() -> Array:
 	return rival_thefts.duplicate(true)
 
+## Seal-aware days/food for the armed (or proposed) arbitrage sell march.
+func arbitrage_march_preview(sell_city: String = "") -> Dictionary:
+	var dest := str(sell_city)
+	if dest == "" and not arbitrage.is_empty():
+		dest = str(arbitrage.get("sell_city", ""))
+	if dest == "" or dest == pos:
+		return {"days": 0, "food": 0, "short_food": false, "seal_bypass": false, "dest": dest, "here": dest == pos and dest != ""}
+	var pv: Dictionary = seal_aware_travel_preview(dest)
+	if not bool(pv.get("ok", false)):
+		var raw: Dictionary = route(pos, dest)
+		var days := int(raw.get("days", 0))
+		var food := food_per_day() * days
+		return {"days": days, "food": food, "short_food": GameState.food < food, "seal_bypass": false, "dest": dest, "here": false, "ok": not raw.is_empty()}
+	return {
+		"ok": true,
+		"dest": dest,
+		"days": int(pv.get("days", 0)),
+		"food": int(pv.get("food", 0)),
+		"short_food": bool(pv.get("short_food", false)),
+		"seal_bypass": bool(pv.get("seal_bypass", false)),
+		"here": false,
+	}
+
+
 ## Buy local produce and arm a sell-at destination for atlas arbitrage E2E.
-func begin_arbitrage(good: String, qty: int = 1, sell_city: String = "") -> Dictionary:
+func begin_arbitrage(good: String, qty: int = 1, sell_city: String = "", require_food: bool = false) -> Dictionary:
 	if not arbitrage.is_empty():
 		return {"ok": false, "msg": Locale.t("atlas_arb_busy")}
 	var g := str(good)
@@ -2871,6 +2909,16 @@ func begin_arbitrage(good: String, qty: int = 1, sell_city: String = "") -> Dict
 		dest = str(best.get("city", ""))
 	if dest == "" or dest == pos:
 		return {"ok": false, "msg": Locale.t("atlas_arb_no_dest")}
+	var march: Dictionary = arbitrage_march_preview(dest)
+	if require_food and bool(march.get("short_food", false)):
+		return {"ok": false, "msg": Locale.t("atlas_arb_short_food") % int(march.get("food", 0)), "march": march}
+	# Local produce soft-lock: top up market stock so one-tap run is not blocked by empty stall.
+	if g in node(pos).get("produce", []) and stock(pos, g) < qty:
+		if not market.has(pos):
+			_init_market(pos)
+		var m: Dictionary = market[pos]
+		m[g] = maxi(int(m.get(g, 0)), maxi(qty, _target_stock(pos, g)))
+		market[pos] = m
 	var bought: Dictionary = market_buy(pos, g, qty)
 	if not bool(bought.get("ok", false)):
 		return bought
@@ -2880,9 +2928,17 @@ func begin_arbitrage(good: String, qty: int = 1, sell_city: String = "") -> Dict
 		"buy_city": pos,
 		"sell_city": dest,
 		"cost": int(bought.get("cost", 0)),
+		"march_days": int(march.get("days", 0)),
+		"march_food": int(march.get("food", 0)),
+		"seal_bypass": bool(march.get("seal_bypass", false)),
 	}
 	world_changed.emit()
-	return {"ok": true, "msg": Locale.t("atlas_arb_bought") % [good_name(g), qty, int(bought.get("cost", 0)), str(node(dest).get("name", dest))], "plan": arbitrage.duplicate(true)}
+	return {
+		"ok": true,
+		"msg": Locale.t("atlas_arb_bought") % [good_name(g), qty, int(bought.get("cost", 0)), str(node(dest).get("name", dest))],
+		"plan": arbitrage.duplicate(true),
+		"march": march,
+	}
 
 func clear_arbitrage() -> void:
 	arbitrage = {}
@@ -3411,6 +3467,209 @@ func quest_engage(qid: String) -> Dictionary:
 	return start_encounter("quest", {"quest": qid, "node": pos, "from": pos})
 
 
+
+## Nearest settlement that lists `good` in produce (for gather 物产 pickup).
+func nearest_produce_city(good: String, from: String) -> String:
+	if good == "" or from == "" or not nodes.has(from):
+		return ""
+	var best := ""
+	var best_days := 1 << 30
+	for id in nodes.keys():
+		var nid := str(id)
+		if nid == from or str(node(nid).get("kind", "")) == "castle":
+			continue
+		if not (good in node(nid).get("produce", [])):
+			continue
+		var rt: Dictionary = route(from, nid)
+		if rt.is_empty():
+			continue
+		var days := int(rt.get("days", 1 << 30))
+		if days < best_days or (days == best_days and (best == "" or nid < best)):
+			best = nid
+			best_days = days
+	if best != "":
+		return best
+	# Local produce counts when the issuer also makes the demanded good.
+	if good in node(from).get("produce", []):
+		return from
+	return ""
+
+
+func gather_supply_city(q: Dictionary) -> String:
+	var tagged := str(q.get("supply_city", ""))
+	if tagged != "" and nodes.has(tagged):
+		return tagged
+	return nearest_produce_city(str(q.get("good", "")), str(q.get("issuer", pos)))
+
+
+## Active gather commissions whose 物产 can be bought at the party's current node.
+func gather_pickups_here() -> Array:
+	var out: Array = []
+	for q in active:
+		if str(q.get("kind", "")) != "gather":
+			continue
+		if str(q.get("state", "")) == "ready":
+			continue
+		if gather_supply_city(q) != pos:
+			continue
+		var need := int(q.get("qty", 0)) - have_good(str(q.get("good", "")))
+		if need <= 0:
+			continue
+		out.append(q)
+	return out
+
+
+## Top up market stock of a local produce good so commission buy is not soft-locked.
+func _top_up_produce_for_gather(city: String, good: String, need: int) -> void:
+	if need <= 0 or city == "" or good == "" or not nodes.has(city):
+		return
+	if not (good in node(city).get("produce", [])):
+		return
+	if not market.has(city):
+		_init_market(city)
+	var m: Dictionary = market[city]
+	if typeof(m) != TYPE_DICTIONARY:
+		_init_market(city)
+		m = market[city]
+	var cur := int(m.get(good, 0))
+	var target := maxi(need, _target_stock(city, good))
+	if cur < target:
+		m[good] = target
+		market[city] = m
+
+
+## Quote one-tap commission gather buy at the party's current city.
+func gather_buy_offer() -> Dictionary:
+	var pickups: Array = gather_pickups_here()
+	if pickups.is_empty():
+		return {"ok": false, "needed": false, "msg": Locale.t("wq_gather_buy_none")}
+	var q: Dictionary = pickups[0]
+	var good := str(q.get("good", ""))
+	var need := maxi(0, int(q.get("qty", 0)) - have_good(good))
+	if need <= 0 or good == "":
+		return {"ok": false, "needed": false, "msg": Locale.t("wq_gather_buy_none")}
+	if not market.has(pos):
+		_init_market(pos)
+	var produce_here: bool = good in node(pos).get("produce", [])
+	var st := stock(pos, good)
+	var projected := st
+	if st < need and produce_here:
+		projected = maxi(st, maxi(need, _target_stock(pos, good)))
+	var stock_short: bool = projected < need
+	var cost := 0
+	if not stock_short:
+		var saved := st
+		market[pos][good] = projected
+		cost = quote_buy(pos, good, need)
+		market[pos][good] = saved
+	var store_kind := str(goods.get(good, {}).get("store", "")) if goods.has(good) else ""
+	var cargo_short: bool = store_kind == "" and cargo_used() + need > cargo_cap()
+	var silver_short: bool = cost > 0 and GameState.silver < cost
+	var ok: bool = (not stock_short) and (not silver_short) and (not cargo_short)
+	var issuer := str(q.get("issuer", ""))
+	var march: Dictionary = {}
+	if issuer != "" and issuer != pos:
+		# seal-aware so winter bypass days/food match HUD / halt resume
+		march = seal_aware_travel_preview(issuer)
+	return {
+		"ok": ok,
+		"needed": true,
+		"quest_id": str(q.get("id", "")),
+		"title": str(q.get("title", "")),
+		"good": good,
+		"good_name": good_name(good),
+		"qty": need,
+		"cost": cost,
+		"stock": st,
+		"produce_here": produce_here,
+		"will_top_up": produce_here and st < need and not stock_short,
+		"stock_short": stock_short,
+		"silver_short": silver_short,
+		"cargo_short": cargo_short,
+		"issuer": issuer,
+		"turnin_days": int(march.get("days", 0)),
+		"turnin_food": int(march.get("food", 0)),
+		"turnin_seal_bypass": bool(march.get("seal_bypass", false)),
+	}
+
+
+## One-tap: top up local produce if needed, buy commission shortfall, flip gather ready.
+func gather_buy_here() -> Dictionary:
+	var offer: Dictionary = gather_buy_offer()
+	if not bool(offer.get("needed", false)):
+		return {"ok": false, "msg": str(offer.get("msg", Locale.t("wq_gather_buy_none")))}
+	var good := str(offer.get("good", ""))
+	var need := int(offer.get("qty", 0))
+	if bool(offer.get("will_top_up", false)) or (bool(offer.get("produce_here", false)) and stock(pos, good) < need):
+		_top_up_produce_for_gather(pos, good, need)
+		offer = gather_buy_offer()
+	if not bool(offer.get("ok", false)):
+		var why := Locale.t("wq_gather_buy_blocked")
+		if bool(offer.get("silver_short", false)):
+			why = Locale.t("wq_gather_buy_silver") % int(offer.get("cost", 0))
+		elif bool(offer.get("cargo_short", false)):
+			why = Locale.t("wq_gather_buy_cargo")
+		elif bool(offer.get("stock_short", false)):
+			why = Locale.t("wq_gather_buy_stock")
+		return {"ok": false, "msg": why, "offer": offer}
+	var buy: Dictionary = market_buy(pos, good, need)
+	if not bool(buy.get("ok", false)):
+		return buy
+	var live := quest_by_id(str(offer.get("quest_id", "")))
+	var guide := quest_guide_node(live)
+	var turnin_march: Dictionary = {}
+	if guide != "" and guide != pos:
+		turnin_march = seal_aware_travel_preview(guide)
+	return {
+		"ok": true,
+		"msg": Locale.t("wq_gather_buy_done") % [str(offer.get("good_name", good)), need, int(buy.get("cost", 0))],
+		"cost": int(buy.get("cost", 0)),
+		"qty": need,
+		"good": good,
+		"quest_id": str(offer.get("quest_id", "")),
+		"ready": str(live.get("state", "")) == "ready",
+		"guide_node": guide,
+		"hint": quest_next_hint(live),
+		"turnin_march": turnin_march,
+		"offer": offer,
+	}
+
+
+func gather_supply_march_preview(q: Dictionary) -> Dictionary:
+	if q.is_empty() or str(q.get("kind", "")) != "gather":
+		return {}
+	var supply := gather_supply_city(q)
+	if supply == "" or supply == pos:
+		return {
+			"supply": supply,
+			"supply_name": str(node(supply).get("name", supply)) if supply != "" else "",
+			"days": 0,
+			"food": 0,
+			"here": supply == pos and supply != "",
+			"seal_bypass": false,
+		}
+	# Prefer seal-aware preview so board/accept days·food match winter bypass HUD.
+	var pv: Dictionary = seal_aware_travel_preview(supply)
+	if not bool(pv.get("ok", false)):
+		var raw: Dictionary = route(pos, supply)
+		return {
+			"supply": supply,
+			"supply_name": str(node(supply).get("name", supply)),
+			"days": int(raw.get("days", 0)),
+			"food": food_per_day() * int(raw.get("days", 0)),
+			"here": false,
+			"seal_bypass": false,
+		}
+	return {
+		"supply": supply,
+		"supply_name": str(node(supply).get("name", supply)),
+		"days": int(pv.get("days", 0)),
+		"food": int(pv.get("food", 0)),
+		"here": false,
+		"seal_bypass": bool(pv.get("seal_bypass", false)),
+	}
+
+
 ## Atlas / todo guidance: where the player should look next for an accepted commission.
 func quest_guide_node(q: Dictionary) -> String:
 	if q.is_empty():
@@ -3419,7 +3678,8 @@ func quest_guide_node(q: Dictionary) -> String:
 		return turn_in_city(q)
 	var kind := str(q.get("kind", ""))
 	if kind == "gather":
-		return turn_in_city(q)
+		var supply := gather_supply_city(q)
+		return supply if supply != "" else turn_in_city(q)
 	if kind == "clear" and q.has("edge"):
 		var e: Array = q.edge
 		if e.is_empty():
@@ -3436,7 +3696,8 @@ func quest_next_hint(q: Dictionary) -> String:
 		return Locale.t("wq_hint_turnin") % place
 	match str(q.get("kind", "")):
 		"gather":
-			return Locale.t("wq_hint_gather") % [good_name(str(q.get("good", ""))), int(q.get("qty", 0)), place]
+			var need := maxi(0, int(q.get("qty", 0)) - have_good(str(q.get("good", ""))))
+			return Locale.t("wq_hint_gather_buy") % [place, good_name(str(q.get("good", ""))), need if need > 0 else int(q.get("qty", 0))]
 		"hunt", "defend", "siege_aid", "bounty", "rescue":
 			return Locale.t("wq_hint_fight") % place
 		"clear":
@@ -3454,7 +3715,10 @@ func quest_markers() -> Dictionary:
 			t = turn_in_city(q)
 			k = "turnin"
 		elif str(q.kind) == "gather":
-			continue
+			t = gather_supply_city(q)
+			k = "pickup"
+			if t == "":
+				continue
 		else:
 			t = str(q.target)
 		if not out.has(t):
