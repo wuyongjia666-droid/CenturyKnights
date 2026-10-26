@@ -43,8 +43,14 @@ func _boot(cid: String) -> void:
 	GameState.set_meta("city_id", cid)
 
 func _assert_strip(page: Node, where: String, cid: String) -> void:
-	var strip := page.find_child("CityCrestStrip", true, false)
-	_ok(strip != null and str(strip.get_meta("field_route", "")) == "city_strip", "city field_route")
+	var strip: Node = null
+	for n in page.find_children("CityCrestStrip", "", true, false):
+		if str(n.get_meta("field_route", "")) == "city_strip":
+			strip = n
+			break
+	if strip == null:
+		strip = page.find_child("CityCrestStrip", true, false)
+	_ok(strip != null and str(strip.get_meta("field_route", "")) == "city_strip", "%s city field_route" % where)
 	_ok(strip != null, "%s CityCrestStrip" % where)
 	if strip == null:
 		return

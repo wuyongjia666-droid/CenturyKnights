@@ -1291,9 +1291,7 @@ static func place_encounter_crest_strip(parent: Node, at: Vector2, foe_nation: S
 static func place_city_crest_strip(parent: Node, city_id: String, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
 	if parent == null:
 		return null
-	var old := parent.get_node_or_null("CityCrestStrip")
-	if old:
-		old.queue_free()
+	_retire(parent, "CityCrestStrip")
 	var nid := World.nation_of(str(city_id))
 	if nid == "":
 		nid = str(World.node(str(city_id)).get("nation", ""))
@@ -1322,9 +1320,7 @@ static func place_city_crest_strip(parent: Node, city_id: String, at: Vector2, s
 static func place_aftermath_crest_strip(parent: Node, at: Vector2, foe_nation: String = "", shield: Vector2 = Vector2(36, 44)) -> Control:
 	if parent == null:
 		return null
-	var old := parent.get_node_or_null("AftermathCrestStrip")
-	if old:
-		old.queue_free()
+	_retire(parent, "AftermathCrestStrip")
 	var host := Control.new()
 	host.name = "AftermathCrestStrip"
 	host.position = at
