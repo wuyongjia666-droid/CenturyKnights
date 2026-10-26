@@ -69,6 +69,16 @@ func _run_sources() -> void:
 	_ok(src.find("CKHeraldryChrome.make_company_banner") < 0, "atlas no direct Chrome.make_company_banner")
 	var dos := FileAccess.get_file_as_string("res://scripts/hub/unit_dossier.gd")
 	_ok(dos.find("CKHeraldryField.attach_dossier_crest_banner") >= 0, "dossier calls Field crest banner")
+	var terr := FileAccess.get_file_as_string("res://scripts/company/territory.gd")
+	_ok(terr.find("CKHeraldryField.company_banner_texture") >= 0, "Territory.banner_texture via Field")
+	_ok(terr.find("CKHeraldryChrome.company_banner") < 0, "Territory no direct Chrome.company_banner")
+	var info := FileAccess.get_file_as_string("res://scripts/battle/ui/battle_info_panel.gd")
+	_ok(info.find("CKHeraldryField.company_banner_texture") >= 0, "battle info idle portrait via Field")
+	_ok(info.find("CKHeraldryChrome.company_banner") < 0, "battle info no direct Chrome.company_banner")
+	var tex := CKTerritory.banner_texture(28, 38)
+	_ok(tex != null, "Territory.banner_texture returns cloth")
+	var tex2 := CKHeraldryField.company_banner_texture(28, 38)
+	_ok(tex2 == tex, "Field cache same instance as Territory")
 
 
 func _run_desktop() -> void:

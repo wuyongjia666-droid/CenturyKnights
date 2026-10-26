@@ -18,6 +18,8 @@ extends RefCounted
 ## Enemy plates are 敌徽. No impale, quarter, or marriage marshalling.
 
 
+static var _company_banner_cache: Dictionary = {}
+
 static func _retire(parent: Node, node_name: String) -> void:
 	if parent == null:
 		return
@@ -1747,4 +1749,13 @@ static func attach_dossier_crest_banner(parent: Node, c, at: Vector2 = Vector2.Z
 	tr.set_meta("arms_core", CKHeraldry.core_key(CKHeraldryChrome.person_spec(c)))
 	parent.add_child(tr)
 	return tr
+
+## Cached company 团徽 banner cloth — atlas map flags + idle battle portrait.
+## Callers (Territory, battle info) must not hit Chrome.company_banner directly.
+static func company_banner_texture(w: int = 28, h: int = 38) -> Texture2D:
+	var spec: Dictionary = CKHeraldryChrome.company_spec()
+	var key := "%s_%d_%d" % [CKHeraldry.cache_key(spec), w, h]
+	if not _company_banner_cache.has(key):
+		_company_banner_cache[key] = CKHeraldryChrome.company_banner(w, h)
+	return _company_banner_cache[key]
 

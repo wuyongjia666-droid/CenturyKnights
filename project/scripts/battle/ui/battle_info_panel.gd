@@ -50,7 +50,7 @@ static func refresh(host) -> void:
 			_sync_card(host, GameState.get_leader(), "player")
 			fill_traits(host, GameState.get_leader())
 		else:
-			host._portrait.texture = CKHeraldryChrome.company_banner(96, 96)
+			host._portrait.texture = CKHeraldryField.company_banner_texture(96, 96)
 			_sync_status(host, null)
 			_sync_card(host, null, "player")
 			fill_traits(host, null)

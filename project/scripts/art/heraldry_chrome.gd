@@ -71,6 +71,9 @@ static func company_banner(w: int = 28, h: int = 38) -> Texture2D:
 	## Castle / atlas banner strip — always 团徽 cloth.
 	return CKHeraldryRender.compose_texture(company_spec(), w, h, 0.0, "banner")
 
+static func company_banner_texture(w: int = 28, h: int = 38) -> Texture2D:
+	return CKHeraldryField.company_banner_texture(w, h)
+
 static func rival_shield(house, w: int = 40, h: int = 48) -> Texture2D:
 	return UnitArt.shield_arms(rival_spec(house), w, h)
 
