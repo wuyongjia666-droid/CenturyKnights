@@ -704,3 +704,6 @@ atlas_gate_forge_btn,城门购装 · %d 银,Gate buy · %d silver
 atlas_gate_forge_btn_mats,城门购料打造 · %d 银,Gate forge mats · %d silver
 atlas_gate_forge_btn_forge,城门打造 · %d 银,Gate forge · %d silver
 atlas_smith_echo_head,铁匠月回读 // SMITH ECHO,Smith month echo
+atlas_produce_echo_specialty_take,特产·%s装箱「%s」×%d（-%d银 →%s）,Specialty · %s packed "%s"×%d (-%d silver →%s)
+atlas_produce_echo_specialty_deliver,特产·%s上缴「%s」（+%d银 · 声望）·自%s,Specialty · %s delivered "%s" (+%d silver · rep) from %s
+atlas_specialty_echo_head,特产月回读 // SPECIALTY ECHO,Specialty month echo
