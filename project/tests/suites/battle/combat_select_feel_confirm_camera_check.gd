@@ -50,22 +50,29 @@ func _run() -> String:
 
 
 func _algebra_wiring() -> String:
+	var err := _algebra_wiring_controller()
+	if err == "":
+		err = _algebra_wiring_modules()
+	return err
+
+
+## Split for gdlint max-returns.
+func _algebra_wiring_controller() -> String:
 	var ctrl := FileAccess.get_file_as_string("res://scripts/battle/battle_controller.gd")
 	var touch := FileAccess.get_file_as_string("res://scripts/battle/battle_touch_confirm.gd")
 	var bar := FileAccess.get_file_as_string("res://scripts/battle/ui/battle_mobile_bar.gd")
 	var pick := FileAccess.get_file_as_string("res://scripts/battle/battle_pick.gd")
-	if ctrl.find("BattleConfirmAffordance.suppress_sticky") < 0:
-		return "controller missing preview sticky suppress"
-	if ctrl.find("BattleConfirmAffordance.consume_tap") < 0:
-		return "controller missing confirm chip consume"
-	if ctrl.find("resolve_board_tap") < 0:
-		return "controller missing board-tap deadzone path"
-	if ctrl.find("BattleAttackCancelDepth.step") < 0:
-		return "controller missing layered cancel"
-	if ctrl.find("BattleLandStrike.draw") < 0:
-		return "controller missing land-strike draw"
-	if ctrl.find("BattleWaitHandoff.after_unit_done") < 0:
-		return "controller missing wait handoff"
+	var need := {
+		"BattleConfirmAffordance.suppress_sticky": "controller missing preview sticky suppress",
+		"BattleConfirmAffordance.consume_tap": "controller missing confirm chip consume",
+		"resolve_board_tap": "controller missing board-tap deadzone path",
+		"BattleAttackCancelDepth.step": "controller missing layered cancel",
+		"BattleLandStrike.draw": "controller missing land-strike draw",
+		"BattleWaitHandoff.after_unit_done": "controller missing wait handoff",
+	}
+	for needle in need:
+		if ctrl.find(str(needle)) < 0:
+			return str(need[needle])
 	if touch.find("BattleConfirmAffordance.settle_camera") < 0:
 		return "touch confirm missing post-confirm settle"
 	if touch.find("BattleLandStrike.after_land") < 0:
@@ -78,6 +85,10 @@ func _algebra_wiring() -> String:
 		return "BattlePick missing strict_hits_selected"
 	if ctrl.find("EmptyHost") >= 0 or touch.find("EmptyHost") >= 0:
 		return "EmptyHost theater forbidden"
+	return ""
+
+
+func _algebra_wiring_modules() -> String:
 	# Ban telegraph residue in this fat knife's new modules.
 	for path in [
 		"res://scripts/battle/battle_confirm_affordance.gd",
@@ -94,8 +105,8 @@ func _algebra_wiring() -> String:
 func _algebra_deadzone() -> String:
 	var host := _TapHost.new()
 	host.setup_armed(Vector2i(2, 2))
-	var origin: Vector2 = host.ORIGIN
-	var cell := float(host.CELL)
+	var origin: Vector2 = host.get("ORIGIN")
+	var cell := float(host.get("CELL"))
 	var finger := origin + Vector2(2.5 + 0.70, 2.5) * cell
 	var tap: Vector2i = BattlePick.resolve_board_tap(host, finger)
 	if tap != Vector2i(3, 2):
@@ -358,12 +369,24 @@ func _free_battle() -> void:
 
 class _TapHost:
 	extends RefCounted
-	var ORIGIN := Vector2(40, 40)
-	var CELL := 64
 	var units: Array = []
 	var selected := 0
-	var MAP_W := 16
-	var MAP_H := 12
+	var _board_origin := Vector2(40, 40)
+	var _board_cell := 64
+	var _map_w := 16
+	var _map_h := 12
+
+	func _get(property: StringName) -> Variant:
+		# Duck-type battle_controller ORIGIN/CELL/MAP_* for BattlePick without gdlint class-variable-name.
+		if property == &"ORIGIN":
+			return _board_origin
+		if property == &"CELL":
+			return _board_cell
+		if property == &"MAP_W":
+			return _map_w
+		if property == &"MAP_H":
+			return _map_h
+		return null
 
 	func setup_armed(pos: Vector2i) -> void:
 		units = [{"char": {"hp": 10}, "pos": pos, "team": "player", "done": false}]

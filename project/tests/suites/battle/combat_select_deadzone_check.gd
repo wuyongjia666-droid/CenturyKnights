@@ -57,8 +57,8 @@ func _run() -> String:
 func _algebra_soft_steal() -> String:
 	var host := _TapHost.new()
 	host.setup_armed(Vector2i(2, 2))
-	var origin: Vector2 = host.ORIGIN
-	var cell := float(host.CELL)
+	var origin: Vector2 = host.get("ORIGIN")
+	var cell := float(host.get("CELL"))
 	# Finger in the east neighbour, 0.70 cells from selected centre (inside SOFT_R).
 	var finger := origin + Vector2(2.5 + 0.70, 2.5) * cell
 	var exact: Vector2i = BattlePick.cell_at_local(origin, cell, finger, 16, 12)
@@ -80,8 +80,8 @@ func _algebra_soft_steal() -> String:
 func _algebra_sticky_strict() -> String:
 	var host := _TapHost.new()
 	host.setup_armed(Vector2i(2, 2))
-	var origin: Vector2 = host.ORIGIN
-	var cell := float(host.CELL)
+	var origin: Vector2 = host.get("ORIGIN")
+	var cell := float(host.get("CELL"))
 	var halo := origin + Vector2(2.5 + 0.70, 2.5) * cell
 	if BattlePick.near_selected_unit(host, halo, 0):
 		return "soft halo must not count as sticky near_selected"
@@ -98,8 +98,8 @@ func _algebra_sticky_strict() -> String:
 func _algebra_face_kept() -> String:
 	var host := _TapHost.new()
 	host.setup_armed(Vector2i(2, 2))
-	var origin: Vector2 = host.ORIGIN
-	var cell := float(host.CELL)
+	var origin: Vector2 = host.get("ORIGIN")
+	var cell := float(host.get("CELL"))
 	# Empty cell above the unit, inside the figure face band (FIG_TOP..).
 	var face := origin + Vector2(2.5, 2.0 + BattlePick.FIG_TOP + 0.15) * cell
 	var exact: Vector2i = BattlePick.cell_at_local(origin, cell, face, 16, 12)
@@ -118,8 +118,8 @@ func _algebra_other_unit_soft() -> String:
 	var host := _TapHost.new()
 	host.setup_armed(Vector2i(2, 2))
 	host.units.append({"char": {"hp": 8}, "pos": Vector2i(4, 2), "team": "bandit"})
-	var origin: Vector2 = host.ORIGIN
-	var cell := float(host.CELL)
+	var origin: Vector2 = host.get("ORIGIN")
+	var cell := float(host.get("CELL"))
 	# Empty cell between selected (2,2) and foe (4,2), nearer the foe.
 	var finger := origin + Vector2(3.5 + 0.20, 2.5) * cell
 	var exact: Vector2i = BattlePick.cell_at_local(origin, cell, finger, 16, 12)
@@ -381,8 +381,16 @@ class _TapHost extends RefCounted:
 	var attack_mode: bool = false
 	var _board_pan: Vector2 = Vector2.ZERO
 	var _board_zoom: float = 1.0
-	var ORIGIN: Vector2 = Vector2(40, 80)
-	var CELL: int = 56
+	var _board_origin: Vector2 = Vector2(40, 80)
+	var _board_cell: int = 56
+
+	func _get(property: StringName) -> Variant:
+		# Duck-type battle_controller ORIGIN/CELL for BattlePick without gdlint class-variable-name.
+		if property == &"ORIGIN":
+			return _board_origin
+		if property == &"CELL":
+			return _board_cell
+		return null
 
 	func setup_armed(pos: Vector2i) -> void:
 		units = [{"char": {"hp": 10}, "pos": pos, "team": "player"}]
@@ -394,7 +402,7 @@ class _TapHost extends RefCounted:
 
 	func _pointer_to_cell(screen_pos: Vector2) -> Vector2i:
 		var local := BattlePick.local_after_pan_zoom(_screen_to_local(screen_pos), _board_pan, _board_zoom)
-		return BattlePick.cell_at_local(ORIGIN, float(CELL), local, 16, 12)
+		return BattlePick.cell_at_local(_board_origin, float(_board_cell), local, 16, 12)
 
 	func _unit_at(pos: Vector2i) -> int:
 		for i in units.size():
