@@ -2,7 +2,8 @@ class_name CKHeraldryField
 extends RefCounted
 ## Field chrome for surfaces #511 does not own: tavern hire strip, deploy reserve,
 ## battle card / forecast / report, annex serve rows, forge smith slots, shrine heal,
-## and city 本城之事 affairs overlay (团徽 + 本城邦徽).
+## city 本城之事 affairs overlay (团徽 + 本城邦徽), marriage protocol / succession /
+## heir-trial duel strips, and house-card person arms.
 ## 团徽 stays the company banner. A family id shows 族徽; no family id shows 旗徽.
 ## Enemy plates are 敌徽. No impale, quarter, or marriage marshalling.
 
@@ -254,3 +255,97 @@ static func attach_affairs_seal_arms(row: Control, c, arms_sz: Vector2 = Vector2
 		arms.position = Vector2(4, 8)
 	return arms
 
+
+## Marriage protocol strip: 团徽 + left (suitor) + right (candidate/spouse) 族徽|旗徽.
+## Never marshalls/impales — three separate shields.
+static func place_marriage_crest_strip(parent: Node, left_c, right_c, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
+	if parent == null:
+		return null
+	var gap := 8.0
+	var x := 0.0
+	var w := shield.x
+	if left_c != null:
+		w += gap + shield.x
+	if right_c != null:
+		w += gap + shield.x
+	var host := _host(parent, "MarriageCrestStrip", at, Vector2(w, shield.y))
+	var co := CKHeraldryChrome.make_company_arms(shield)
+	co.position = Vector2(x, 0)
+	host.add_child(co)
+	x += shield.x + gap
+	if left_c != null:
+		var la := CKHeraldryChrome.make_person_arms(left_c, shield)
+		la.name = "LeftArms"
+		la.position = Vector2(x, 0)
+		host.add_child(la)
+		x += shield.x + gap
+	if right_c != null:
+		var ra := CKHeraldryChrome.make_person_arms(right_c, shield)
+		ra.name = "RightArms"
+		ra.position = Vector2(x, 0)
+		host.add_child(ra)
+	host.set_meta("has_left", left_c != null)
+	host.set_meta("has_right", right_c != null)
+	return host
+
+
+## Marriage house-card plate: person 族徽|旗徽 as HouseArms (lower-left of portrait plate).
+static func attach_house_card_arms(parent: Control, c, plate: Rect2, arms_sz: Vector2 = Vector2(32, 38)) -> TextureRect:
+	if parent == null or c == null:
+		return null
+	_retire(parent, "HouseArms")
+	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
+	arms.name = "HouseArms"
+	arms.position = Vector2(plate.position.x + 4.0, plate.position.y + plate.size.y - arms_sz.y - 4.0)
+	arms.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(arms)
+	return arms
+
+
+## Succession clash strip: 团徽 + named heir 族徽|旗徽 (SuccessionCrestStrip).
+static func place_succession_crest_strip(parent: Node, heir, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
+	if parent == null:
+		return null
+	var w := shield.x
+	if heir != null:
+		w = shield.x * 2.0 + 8.0
+	var host := _host(parent, "SuccessionCrestStrip", at, Vector2(w, shield.y))
+	var focus: TextureRect = null
+	if heir != null:
+		focus = CKHeraldryChrome.make_person_arms(heir, shield)
+		focus.name = "LeaderArms"
+	_pair(host, shield, focus)
+	host.set_meta("has_heir", heir != null)
+	return host
+
+
+## Heir-trial duel strip: 团徽 + heir A + heir B 族徽|旗徽 (DuelCrestStrip). Missing side omitted.
+static func place_duel_crest_strip(parent: Node, left_c, right_c, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
+	if parent == null:
+		return null
+	var gap := 8.0
+	var x := 0.0
+	var w := shield.x
+	if left_c != null:
+		w += gap + shield.x
+	if right_c != null:
+		w += gap + shield.x
+	var host := _host(parent, "DuelCrestStrip", at, Vector2(w, shield.y))
+	var co := CKHeraldryChrome.make_company_arms(shield)
+	co.position = Vector2(x, 0)
+	host.add_child(co)
+	x += shield.x + gap
+	if left_c != null:
+		var la := CKHeraldryChrome.make_person_arms(left_c, shield)
+		la.name = "LeftArms"
+		la.position = Vector2(x, 0)
+		host.add_child(la)
+		x += shield.x + gap
+	if right_c != null:
+		var ra := CKHeraldryChrome.make_person_arms(right_c, shield)
+		ra.name = "RightArms"
+		ra.position = Vector2(x, 0)
+		host.add_child(ra)
+	host.set_meta("has_left", left_c != null)
+	host.set_meta("has_right", right_c != null)
+	return host
