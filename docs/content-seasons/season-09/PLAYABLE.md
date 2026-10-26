@@ -107,17 +107,23 @@
 - 验收：`content_season_muster_plate_chain_check` — hub chip → 整装针口头。
 - 不碰 `_bpl`/`_thm`/`_sec`/`_tvp`/`_ldg`。
 
+## 访月离厅口头加厚（visit-exit）
+
+- 各章 visit 拍（audit/birth/hourglass）在 `_vst` 后、`vis_mv4` 前加 `_vex1`–`_vex6` 离厅口头，全库去重；收束非旁白。
+- 验收：`content_season_visit_exit_chain_check` — hub chip → 离厅针口头。
+- 不碰 `_bpl`/`_vop`/`_arr`/`_lop`/`_tvx`/`_opn`/`_cls`/`_sec`。
+
 ## 西阁开柜口头加厚（ledger-open）
 
 - 各章 `ledger` 拍首加 `_lop1`–`_lop6` 进阁开柜口头（`_ldg`/`_cls` 前），全库去重；收束非旁白。
 - 验收：`content_season_ledger_open_chain_check` — hub chip → 开柜针口头。
 - 不碰 `_bpl`/`_sec`/`_arr`/`_cls`/`_msr`/`_tvp`。
-
 ## 酒馆离店口头加厚（tavern-exit）
 
 - 各章 `tavern` 在 `_tvn` 后、`ret_mv` 前加 `_tvx1`–`_tvx6` 离店口头，全库去重；收束非旁白。
 - 验收：`content_season_tavern_exit_chain_check` — hub chip → 离店针口头。
 - 不碰 `_bpl`/`_arr`/`_lop`/`_cls`/`_sec`/`_tvp`。
+
 
 ## 酒馆到店口头加厚（tavern-arrival）
 
