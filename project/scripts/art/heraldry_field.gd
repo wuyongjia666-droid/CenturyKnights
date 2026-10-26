@@ -152,7 +152,6 @@ static func place_report_crest_strip(parent: Node, at: Vector2, foe_nation: Stri
 	var extra: TextureRect = null
 	if nid != "":
 		extra = CKHeraldryChrome.make_nation_arms(nid, shield)
-		extra.name = "ReportFoeArms"
 		extra.set_meta("field_route", "report_foe")
 	_pair(host, shield, extra)
 	host.set_meta("has_foe", nid != "")
@@ -262,7 +261,6 @@ static func place_affairs_crest_strip(parent: Node, city_id: String, at: Vector2
 	host.add_child(co)
 	if nid != "":
 		var nat := CKHeraldryChrome.make_city_nation_arms(nid, shield)
-		nat.name = "AffairNationArms"
 		nat.set_meta("field_route", "affairs_nation")
 		nat.position = Vector2(shield.x + 8.0, 0)
 		host.add_child(nat)

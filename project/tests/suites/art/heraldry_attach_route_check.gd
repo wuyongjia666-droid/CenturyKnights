@@ -86,7 +86,7 @@ func _report_annex_forge(leader) -> void:
 	_ok(row != null and str(row.get_meta("field_route", "")) == "report_row", "report_row route")
 	var report := CKHeraldryField.place_report_crest_strip(root, Vector2(4, 40), "ashbanner")
 	_ok(report != null and str(report.get_meta("field_route", "")) == "report_strip", "report_strip route")
-	var rfoe := report.find_child("ReportFoeArms", true, false) if report != null else null
+	var rfoe := report.find_child("FoeArms", true, false) if report != null else null
 	_ok(rfoe != null and str(rfoe.get_meta("field_route", "")) == "report_foe", "report_foe route")
 	var annex := Control.new()
 	annex.name = "AnnexRow"
@@ -252,7 +252,7 @@ func _source_contracts() -> void:
 		["forecast_foe", "ForecastFoeArms"],
 		["report_row", "ReportRowArms"],
 		["report_strip", "ReportCrestStrip"],
-		["report_foe", "ReportFoeArms"],
+		["report_foe", "FoeArms"],
 		["annex_row", "AnnexRowArms"],
 		["forge_slot", "ForgeSlotArms"],
 		["forge_focus", "ForgeFocusStrip"],
