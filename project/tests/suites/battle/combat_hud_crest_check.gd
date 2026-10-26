@@ -8,6 +8,7 @@ func _ready() -> void:
 	await get_tree().process_frame
 	await _run()
 	if _fails.is_empty():
+		print("COMBAT HUD FIELD CREST PASS")
 		print("COMBAT HUD CREST PASS")
 		get_tree().quit(0)
 	else:
@@ -83,10 +84,11 @@ func _place_desktop() -> void:
 	root.size = Vector2(1280, 720)
 	add_child(root)
 	await _settle(2)
-	var strip: Control = CKHeraldryChrome.place_battle_hud_crest_strips(
+	var strip: Control = CKHeraldryField.place_battle_hud_crest_strips(
 		root, "ashbanner", Vector2(1280, 720), {}, false, false
 	)
 	_ok(strip != null and strip.name == "BattleHudCrestStrip", "desk BattleHudCrestStrip")
+	_ok(strip != null and str(strip.get_meta("field_route", "")) == "battle_hud_strip", "desk field_route")
 	var pa := strip.find_child("PlayerArms", true, false)
 	var ea := strip.find_child("EnemyArms", true, false)
 	_ok(pa != null and str(pa.get_meta("arms_kind", "")) == "gen2_36", "desk PlayerArms 团徽")
@@ -95,7 +97,7 @@ func _place_desktop() -> void:
 	_ok(strip.mouse_filter == Control.MOUSE_FILTER_IGNORE, "strip ignores mouse")
 	_ok(pa.mouse_filter == Control.MOUSE_FILTER_IGNORE, "PlayerArms ignores mouse")
 	# Re-place replaces
-	var strip2: Control = CKHeraldryChrome.place_battle_hud_crest_strips(
+	var strip2: Control = CKHeraldryField.place_battle_hud_crest_strips(
 		root, "ashbanner", Vector2(1280, 720), {}, false, false
 	)
 	await _settle(2)
@@ -117,7 +119,7 @@ func _place_mobile() -> void:
 	var host := _FakeBattleHost.new()
 	host.map_id = "ch0_pass"
 	# Attach strip onto root via sync using fake host fields — call place directly with insets
-	var strip: Control = CKHeraldryChrome.place_battle_hud_crest_strips(
+	var strip: Control = CKHeraldryField.place_battle_hud_crest_strips(
 		root, CKHeraldryChrome.battle_foe_nation_for(host), Vector2(720, 1280),
 		{"top": 48.0, "left": 0.0, "right": 0.0}, true, false
 	)
@@ -128,7 +130,7 @@ func _place_mobile() -> void:
 	_ok(pa.position.y >= 48.0, "mob top inset")
 	_ok(pa.position.x < ea.position.x, "mob player left of enemy")
 	# No foe → player only
-	var strip_solo: Control = CKHeraldryChrome.place_battle_hud_crest_strips(
+	var strip_solo: Control = CKHeraldryField.place_battle_hud_crest_strips(
 		root, "", Vector2(720, 1280), {"top": 48.0}, true, false
 	)
 	await _settle(2)

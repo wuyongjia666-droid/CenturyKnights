@@ -89,7 +89,7 @@ func _run_helpers() -> void:
 	add_child(host)
 	var ids: Array = CKBloodline.nation_ids()
 	var nid := str(ids[0]) if not ids.is_empty() else "ashbanner"
-	var strip := CKHeraldryChrome.place_nation_crest_strip(host, nid, Vector2(10, 10), Vector2(36, 44))
+	var strip := CKHeraldryField.place_nation_crest_strip(host, nid, Vector2(10, 10), Vector2(36, 44))
 	_ok(strip != null and strip.name == "NationCrestStrip", "helper NationCrestStrip")
 	_ok(strip.find_child("CastleArms", true, false) != null, "helper CastleArms")
 	_ok(strip.find_child("CityNationArms", true, false) != null, "helper CityNationArms")

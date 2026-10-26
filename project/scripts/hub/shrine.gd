@@ -113,7 +113,7 @@ func _place_shrine_crests() -> void:
 		var ids: Array = CKBloodline.nation_ids()
 		if not ids.is_empty():
 			nid = str(ids[0])
-	CKHeraldryChrome.place_nation_crest_strip(self, nid, Vector2(980, 10) if not mob else Vector2(900, 8), Vector2(36, 44) if not mob else Vector2(32, 38))
+	CKHeraldryField.place_nation_crest_strip(self, nid, Vector2(980, 10) if not mob else Vector2(900, 8), Vector2(36, 44) if not mob else Vector2(32, 38))
 
 func apply_mobile_layout() -> void:
 	if not MobilePage.active(self):

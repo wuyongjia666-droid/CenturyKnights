@@ -100,7 +100,7 @@ func _show(nid: String) -> void:
 	mark.position = Vector2(16, 28)
 	head.add_child(mark)
 	var strip_at := Vector2(bw - 96.0, 12.0) if not narrow else Vector2(maxf(12.0, bw - 100.0), 8.0)
-	CKHeraldryChrome.place_nation_crest_strip(head, nid, strip_at, Vector2(36, 44) if not narrow else Vector2(32, 38))
+	CKHeraldryField.place_nation_crest_strip(head, nid, strip_at, Vector2(36, 44) if not narrow else Vector2(32, 38))
 	var title := UIKit.title_label(str(nat.get("name", nid)), 26)
 	title.position = Vector2(64, 12)
 	title.size = Vector2(260.0 if not narrow else maxf(96.0, bw - 72.0), 34)

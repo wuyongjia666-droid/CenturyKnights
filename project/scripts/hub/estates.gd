@@ -661,7 +661,7 @@ func open_field_book() -> void:
 	head.add_child(close)
 	var mob := DeviceProfile.is_mobile() or has_meta("m_on")
 	var sh := Vector2(34, 42) if mob else Vector2(36, 44)
-	CKHeraldryChrome.place_field_crest_strip(overlay, Vector2(1180, 10) if not mob else Vector2(20, 8), sh, Vector2(22, 30) if mob else Vector2(24, 34))
+	CKHeraldryField.place_field_crest_strip(overlay, Vector2(1180, 10) if not mob else Vector2(20, 8), sh, Vector2(22, 30) if mob else Vector2(24, 34))
 	var sub := UIKit.body_label(Locale.t("ux_estates_sub"), UIKit.TEXT_DIM, 14)
 	sub.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	root.add_child(sub)

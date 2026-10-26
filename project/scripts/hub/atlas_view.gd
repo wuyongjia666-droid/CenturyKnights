@@ -3247,7 +3247,7 @@ func _show_battle_aftermath_modal(af: Dictionary) -> void:
 	var foe_nid := str(af.get("nation", ""))
 	if foe_nid == "":
 		foe_nid = str(World.encounter.get("nation", ""))
-	CKHeraldryChrome.place_aftermath_crest_strip(p, Vector2(400, 14), foe_nid, Vector2(36, 44))
+	CKHeraldryField.place_aftermath_crest_strip(p, Vector2(400, 14), foe_nid, Vector2(36, 44))
 	var tag := Locale.t("atlas_battle_aftermath_win_en") if win else Locale.t("atlas_battle_aftermath_lose_en")
 	if str(af.get("kind", "")) == "rival":
 		tag = Locale.t("atlas_rival_aftermath_en") if win else Locale.t("atlas_rival_aftermath_lose_en")
@@ -3385,9 +3385,9 @@ func _show_aftermath_modal(af: Dictionary) -> void:
 		var road_nid := str(af.get("nation", ""))
 		if road_nid == "":
 			road_nid = World.nation_of(str(af.get("node", World.pos)))
-		CKHeraldryChrome.place_aftermath_crest_strip(p, Vector2(400, 14), road_nid, Vector2(36, 44))
+		CKHeraldryField.place_aftermath_crest_strip(p, Vector2(400, 14), road_nid, Vector2(36, 44))
 	else:
-		CKHeraldryChrome.place_aftermath_crest_strip(p, Vector2(436, 14), "", Vector2(36, 44))
+		CKHeraldryField.place_aftermath_crest_strip(p, Vector2(436, 14), "", Vector2(36, 44))
 	var tag := Locale.t("atlas_aftermath_en")
 	if is_danger:
 		tag = Locale.t("atlas_aftermath_danger_en")

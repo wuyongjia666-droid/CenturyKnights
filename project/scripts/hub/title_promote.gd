@@ -12,7 +12,7 @@ var _msg: Label
 func _ready() -> void:
 	_leader = GameState.get_leader()
 	CKPageKit.shell(self, Locale.t("lb_title_ctx"), "TITLE LADDER", Locale.t("lb_title_title"), Locale.t("lb_title_desc"))
-	CKHeraldryChrome.place_muster_crest_strip(self, _leader, Vector2(980, 8), Vector2(40, 48))
+	CKHeraldryField.place_muster_crest_strip(self, _leader, Vector2(980, 8), Vector2(40, 48))
 	_msg = CKPageKit.feedback(self)
 	_paint()
 	CKPageKit.footer(self, [["ESC", Locale.t("btn_back")]], "TITLE LADDER · FROST")
@@ -24,7 +24,7 @@ func apply_mobile_layout() -> void:
 	set_meta("m_center_ok", true)
 	var vp := get_viewport().get_visible_rect().size
 	var strip_w := 40.0 * 2.0 + 8.0
-	CKHeraldryChrome.place_muster_crest_strip(self, _leader, Vector2(maxf(8.0, vp.x - strip_w - 12.0), 6.0), Vector2(40, 48))
+	CKHeraldryField.place_muster_crest_strip(self, _leader, Vector2(maxf(8.0, vp.x - strip_w - 12.0), 6.0), Vector2(40, 48))
 	_paint()
 	MobilePage.upsize(self)
 
