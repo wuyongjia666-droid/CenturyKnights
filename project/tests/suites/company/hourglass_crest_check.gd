@@ -1,5 +1,5 @@
 extends Node
-## Fat heraldry E2E: hourglass — HourglassCrestStrip + HourglassBanner (desk + mobile).
+## Fat heraldry E2E: hourglass via CKHeraldryField — HourglassCrestStrip + field_route (desk + mobile).
 
 const SCN := preload("res://scenes/hub/hourglass.tscn")
 var _fails: Array = []
@@ -9,6 +9,7 @@ func _ready() -> void:
 	await _run_desktop()
 	await _run_mobile()
 	if _fails.is_empty():
+		print("HOURGLASS FIELD CREST PASS")
 		print("HOURGLASS CREST PASS")
 		get_tree().quit(0)
 	else:
@@ -40,10 +41,13 @@ func _assert_page(page: Node, where: String) -> void:
 	var strip = page.find_child("HourglassCrestStrip", true, false)
 	_ok(strip != null, "%s HourglassCrestStrip" % where)
 	if strip != null:
+		_ok(str(strip.get_meta("field_route", "")) == "hourglass_strip", "%s field_route" % where)
 		var ca = strip.find_child("CastleArms", true, false)
 		_ok(ca != null and str(ca.get_meta("arms_kind", "")) == "gen2_36", "%s 团徽" % where)
 		var bn = strip.find_child("HourglassBanner", true, false)
 		_ok(bn != null and str(bn.get_meta("arms_kind", "")) == "lb_hourglass_arms", "%s HourglassBanner" % where)
+	var src := FileAccess.get_file_as_string("res://scripts/hub/hourglass.gd")
+	_ok(src.find("CKHeraldryField.place_hourglass_crest_strip") >= 0, "%s hub calls Field" % where)
 
 
 func _run_desktop() -> void:

@@ -936,7 +936,7 @@ static func token(c: CKCharacter, team: String, size: int = 48, done: bool = fal
 	return _proc_token(c, team, size, done)
 
 static func _bust_token(c: CKCharacter, team: String, done: bool = false) -> Texture2D:
-	var arms_k := CKHeraldryChrome.token_shield_core(c, team)
+	var arms_k := CKHeraldryField.token_shield_core(c, team)
 	var key = "bust|%s|%s|%s|%s" % [str(c.id) if c.id != "" else c.name, team, str(done), arms_k]
 	if _cache.has(key):
 		return _cache[key]
@@ -981,7 +981,7 @@ static func _bust_token(c: CKCharacter, team: String, done: bool = false) -> Tex
 			col = col.lerp(rim, inner_glow)
 			col.a = clampf((0.985 - r) * S * 0.25, 0.0, 1.0)
 			out.set_pixel(x, y, col)
-	CKHeraldryChrome.blit_token_shield(out, c, team)
+	CKHeraldryField.blit_token_shield(out, c, team)
 	var tex := ImageTexture.create_from_image(out)
 	_cache[key] = tex
 	return tex
@@ -1383,7 +1383,7 @@ static func board_pawn_texture(c: CKCharacter, team: String, size: int = 64, don
 	var tmpl := ""
 	if c != null and c.has_meta("ck_enemy_template"):
 		tmpl = str(c.get_meta("ck_enemy_template"))
-	var arms_k := CKHeraldryChrome.token_shield_core(c, team) if c != null else ""
+	var arms_k := CKHeraldryField.token_shield_core(c, team) if c != null else ""
 	var key := "standin|%s|%s|%d|%s|%s|%s" % [
 		str(c.id) if c else "?", team, size, str(done), tmpl, arms_k,
 	]
@@ -1410,7 +1410,7 @@ static func board_pawn_texture(c: CKCharacter, team: String, size: int = 64, don
 				img.set_pixel(x, y, Color(g, g, g).lerp(px, 0.25).darkened(0.25))
 	if size > 0 and (img.get_width() != size or img.get_height() != size):
 		img.resize(size, size, Image.INTERPOLATE_LANCZOS)
-	CKHeraldryChrome.blit_token_shield(img, c, team)
+	CKHeraldryField.blit_token_shield(img, c, team)
 	var tex := ImageTexture.create_from_image(img)
 	_cache[key] = tex
 	return tex

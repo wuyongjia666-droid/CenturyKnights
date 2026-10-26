@@ -42,7 +42,7 @@ func _build() -> void:
 	right_box.move_child(save_b, right_box.get_child_count() - 2)
 
 	## Heraldry: castle banner strip (团徽 shield + cloth) — shared Chrome, not a one-off crest.
-	CKHeraldryChrome.place_castle_banner_strip(self, Vector2(188, 14), Vector2(40, 48), Vector2(26, 36))
+	CKHeraldryField.place_banner_plate(self, Vector2(188, 14), Vector2(40, 48), Vector2(26, 36))
 
 	## Y1-B stub: mid-run dynasty end banner over the seasonal dossier.
 	if Lineage.is_dynasty_ended():
@@ -878,7 +878,7 @@ func _m_top_bar(w: float) -> void:
 	bar.size = Vector2(w - 2.0 * M_PAD, M_HIT)
 	bar.position = Vector2(M_PAD, 10)
 	## Heraldry: keep 团徽 visible on phone top strip (same Chrome as desktop).
-	CKHeraldryChrome.place_castle_banner_strip(self, Vector2(M_PAD, M_TOP - 4.0), Vector2(36, 44), Vector2(22, 30))
+	CKHeraldryField.place_banner_plate(self, Vector2(M_PAD, M_TOP - 4.0), Vector2(36, 44), Vector2(22, 30))
 	var info_l := bar.get_child(1) as Label
 	if info_l:
 		info_l.name = "MobileRes"
