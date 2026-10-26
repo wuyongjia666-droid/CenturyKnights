@@ -122,7 +122,7 @@ static func _idle_objective(host) -> String:
 static func _sync_card(host, c, team: String) -> void:
 	if host._unit_card == null:
 		return
-	host._unit_card.set_meta("foe_nation", CKHeraldryChrome.battle_foe_nation_for(host))
+	host._unit_card.set_meta("foe_nation", CKHeraldryField.battle_foe_nation_for(host))
 	if c == null:
 		host._unit_card.set_unit(null, team)
 	else:

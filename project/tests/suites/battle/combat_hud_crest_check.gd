@@ -1,6 +1,6 @@
 extends Node
 ## Y1-A T-P8: battle HUD 双方纹章条 — PlayerArms left + EnemyArms right.
-## Field owns place + sync; Chrome keeps layout/foe helpers + thin shims. Real sync E2E.
+## Field owns place + sync + foe resolve; Chrome keeps layout + thin shims. Real sync E2E.
 
 var _fails: Array = []
 
@@ -68,13 +68,27 @@ func _foe_nation_resolve() -> void:
 	World.encounter = {}
 	var host := _FakeBattleHost.new()
 	host.map_id = "ch0_pass"
-	_ok(CKHeraldryChrome.battle_foe_nation_for(host) == "", "empty foe when no meta/encounter/map nation")
+	_ok(CKHeraldryField.battle_foe_nation_for(host) == "", "empty foe when no meta/encounter/map nation")
+	_ok(CKHeraldryChrome.battle_foe_nation_for(host) == "", "chrome shim matches empty")
 	GameState.set_meta("battle_foe_nation", "ashbanner")
-	_ok(CKHeraldryChrome.battle_foe_nation_for(host) == "ashbanner", "meta battle_foe_nation wins")
+	_ok(CKHeraldryField.battle_foe_nation_for(host) == "ashbanner", "meta battle_foe_nation wins")
+	_ok(CKHeraldryChrome.battle_foe_nation_for(host) == "ashbanner", "chrome shim mirrors meta")
 	GameState.remove_meta("battle_foe_nation")
 	World.encounter = {"nation": "frostvale", "id": "enc1"}
-	_ok(CKHeraldryChrome.battle_foe_nation_for(host) == "frostvale", "World.encounter nation")
+	_ok(CKHeraldryField.battle_foe_nation_for(host) == "frostvale", "World.encounter nation")
 	World.encounter = {}
+	# Map nation / foe_nation path (ephemeral register; do not touch production maps.json)
+	BattleMaps.register_map("ck_foe_e2e_map", {"nation": "ironmarch", "w": 8, "h": 6})
+	host.map_id = "ck_foe_e2e_map"
+	_ok(CKHeraldryField.battle_foe_nation_for(host) == "ironmarch", "map.nation via Field")
+	BattleMaps.register_map("ck_foe_e2e_map2", {"foe_nation": "goldreach", "w": 8, "h": 6})
+	host.map_id = "ck_foe_e2e_map2"
+	_ok(CKHeraldryField.battle_foe_nation_for(host) == "goldreach", "map.foe_nation via Field")
+	# meta still wins over map
+	GameState.set_meta("battle_foe_nation", "ashbanner")
+	_ok(CKHeraldryField.battle_foe_nation_for(host) == "ashbanner", "meta beats map nation")
+	GameState.remove_meta("battle_foe_nation")
+	host.map_id = "ch0_pass"
 
 
 func _place_desktop() -> void:
@@ -121,7 +135,7 @@ func _place_mobile() -> void:
 	host.map_id = "ch0_pass"
 	# Attach strip onto root via sync using fake host fields — call place directly with insets
 	var strip: Control = CKHeraldryField.place_battle_hud_crest_strips(
-		root, CKHeraldryChrome.battle_foe_nation_for(host), Vector2(720, 1280),
+		root, CKHeraldryField.battle_foe_nation_for(host), Vector2(720, 1280),
 		{"top": 48.0, "left": 0.0, "right": 0.0}, true, false
 	)
 	_ok(strip != null, "mob BattleHudCrestStrip")
@@ -177,10 +191,27 @@ func _source_contracts() -> void:
 	_ok(field.find("static func place_battle_hud_crest_strips") >= 0, "field owns place_battle_hud")
 	_ok(field.find("static func sync_battle_hud_crests") >= 0, "field owns sync_battle_hud")
 	_ok(field.find("field_route") >= 0 and field.find("battle_hud_strip") >= 0, "field battle_hud_strip route")
+	_ok(field.find("static func battle_foe_nation_for") >= 0, "field owns battle_foe_nation_for")
+	_ok(field.find("CKHeraldryChrome.battle_foe_nation_for") < 0, "field no Chrome foe call")
 	var chrome := FileAccess.get_file_as_string("res://scripts/art/heraldry_chrome.gd")
 	_ok(chrome.find("battle_hud_crest_layout") >= 0, "chrome layout pure")
 	_ok(chrome.find("CKHeraldryField.sync_battle_hud_crests") >= 0, "chrome sync shim → Field")
 	_ok(chrome.find("CKHeraldryField.place_battle_hud_crest_strips") >= 0, "chrome place shim → Field")
+	_ok(chrome.find("CKHeraldryField.battle_foe_nation_for") >= 0, "chrome foe shim → Field")
+	# Chrome body must not re-own resolve (no GameState meta read in chrome foe)
+	var chrome_foe_idx := chrome.find("static func battle_foe_nation_for")
+	var chrome_next := chrome.find("\nstatic func ", chrome_foe_idx + 10) if chrome_foe_idx >= 0 else -1
+	var chrome_foe_body := chrome.substr(chrome_foe_idx, chrome_next - chrome_foe_idx) if chrome_foe_idx >= 0 and chrome_next > chrome_foe_idx else ""
+	_ok(chrome_foe_body.find("GameState.get_meta") < 0, "chrome foe shim has no GameState resolve")
+	var report := FileAccess.get_file_as_string("res://scripts/battle/ui/battle_report.gd")
+	_ok(report.find("CKHeraldryField.battle_foe_nation_for") >= 0, "report foe → Field")
+	_ok(report.find("CKHeraldryChrome.battle_foe_nation_for") < 0, "report no Chrome foe")
+	var info := FileAccess.get_file_as_string("res://scripts/battle/ui/battle_info_panel.gd")
+	_ok(info.find("CKHeraldryField.battle_foe_nation_for") >= 0, "info panel foe → Field")
+	var forecast := FileAccess.get_file_as_string("res://scripts/battle/ui/forecast_panel.gd")
+	_ok(forecast.find("CKHeraldryField.battle_foe_nation_for") >= 0, "forecast foe → Field")
+	var card := FileAccess.get_file_as_string("res://scripts/ui/unit_card.gd")
+	_ok(card.find("CKHeraldryField.battle_foe_nation_for") >= 0, "unit_card foe → Field")
 	var ctrl := FileAccess.get_file_as_string("res://scripts/battle/battle_controller.gd")
 	_ok(ctrl.find("CKHeraldryField.sync_battle_hud_crests") >= 0, "controller sync → Field")
 	_ok(ctrl.find("CKHeraldryChrome.sync_battle_hud_crests") < 0, "controller no Chrome sync")

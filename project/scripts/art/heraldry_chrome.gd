@@ -373,23 +373,9 @@ static func make_issuer_arms(issuer_id: String, size: Vector2 = Vector2(40, 48))
 static func place_board_crest(parent: Node, issuer_id: String, at: Vector2, size: Vector2 = Vector2(44, 52)) -> TextureRect:
 	return CKHeraldryField.place_board_crest(parent, issuer_id, at, size)
 
-## Resolve foe nation for an in-battle HUD: meta → World.encounter → map.nation/foe_nation.
+## Resolve foe nation — Field owns; Chrome thin shim.
 static func battle_foe_nation_for(host) -> String:
-	var n := str(GameState.get_meta("battle_foe_nation", ""))
-	if n != "":
-		return n
-	if typeof(World.encounter) == TYPE_DICTIONARY:
-		n = str(World.encounter.get("nation", ""))
-		if n != "":
-			return n
-	if host == null:
-		return ""
-	var mid := str(host.get("map_id") if host.get("map_id") != null else "")
-	if mid == "":
-		return ""
-	var m: Dictionary = BattleMaps.get_map(mid)
-	n = str(m.get("nation", m.get("foe_nation", "")))
-	return n
+	return CKHeraldryField.battle_foe_nation_for(host)
 
 
 ## Pure layout for 双方纹章条 — player left, enemy right; inset-aware.

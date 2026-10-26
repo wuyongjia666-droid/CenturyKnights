@@ -832,7 +832,7 @@ static func fill_battle_order(strip: Control, battle) -> void:
 static func _battle_order_sig(battle) -> String:
 	var parts := PackedStringArray()
 	parts.append(str(battle.get("turn_team")))
-	parts.append(CKHeraldryChrome.battle_foe_nation_for(battle))
+	parts.append(CKHeraldryField.battle_foe_nation_for(battle))
 	var units = battle.get("units")
 	if typeof(units) != TYPE_ARRAY:
 		return "|".join(parts)
@@ -858,7 +858,7 @@ static func _battle_order_entries(battle) -> Array:
 	if typeof(units) != TYPE_ARRAY:
 		return []
 	var turn := str(battle.get("turn_team"))
-	var foe := CKHeraldryChrome.battle_foe_nation_for(battle)
+	var foe := CKHeraldryField.battle_foe_nation_for(battle)
 	var rows: Array = []
 	var idx := 0
 	for u in units:
@@ -1526,8 +1526,32 @@ static func place_company_header(parent: Node, at: Vector2, size: Vector2 = Vect
 	parent.add_child(tr)
 	return tr
 
+
+## Resolve foe nation for an in-battle HUD: meta → World.encounter → map.nation/foe_nation.
+## Field owns foe resolution; Chrome keeps a thin shim for legacy callers.
+static func battle_foe_nation_for(host) -> String:
+	var n := str(GameState.get_meta("battle_foe_nation", ""))
+	if n != "":
+		return n
+	if typeof(World.encounter) == TYPE_DICTIONARY:
+		n = str(World.encounter.get("nation", ""))
+		if n != "":
+			return n
+	if host == null:
+		return ""
+	var mid := ""
+	if typeof(host) == TYPE_DICTIONARY:
+		mid = str(host.get("map_id", ""))
+	elif host.get("map_id") != null:
+		mid = str(host.get("map_id"))
+	if mid == "":
+		return ""
+	var m: Dictionary = BattleMaps.get_map(mid)
+	n = str(m.get("nation", m.get("foe_nation", "")))
+	return n
+
 ## Battle host sync: resolve foe + device/insets and (re)place the HUD strip + order crests.
-## Field owns BattleHudCrestStrip lifecycle; Chrome keeps battle_foe_nation_for / layout helpers.
+## Field owns BattleHudCrestStrip lifecycle + foe resolve; Chrome keeps layout helpers + thin shims.
 static func sync_battle_hud_crests(host) -> void:
 	if host == null:
 		return
@@ -1543,7 +1567,7 @@ static func sync_battle_hud_crests(host) -> void:
 		elif host.has_meta("m_safe_insets"):
 			insets = host.get_meta("m_safe_insets")
 	place_battle_hud_crest_strips(
-		host, CKHeraldryChrome.battle_foe_nation_for(host), vp, insets, mobile, land
+		host, CKHeraldryField.battle_foe_nation_for(host), vp, insets, mobile, land
 	)
 	if host.is_inside_tree():
 		sync_battle_order_crests.call_deferred(host)
