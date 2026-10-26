@@ -20,7 +20,7 @@ func _ready() -> void:
 		Locale.t("wsc_q_5f411223"),
 		_back
 	)
-	CKHeraldryChrome.place_company_header(self, Vector2(800, 2), Vector2(44, 52))
+	CKHeraldryField.place_company_header(self, Vector2(800, 2), Vector2(44, 52))
 	_tip = UIKit.make_dim_label(Locale.t("wsc_q_b35bb92a"))
 	_tip.name = "QuestTip"
 	_tip.position = Vector2(32, 64)
@@ -58,7 +58,7 @@ func apply_mobile_layout() -> void:
 	var h := maxf(size.y, 720.0)
 	var pad := 24.0
 	var top := 64.0
-	CKHeraldryChrome.place_company_header(self, Vector2(w - 64.0, 6.0), Vector2(52, 60))
+	CKHeraldryField.place_company_header(self, Vector2(w - 64.0, 6.0), Vector2(52, 60))
 	if _tip:
 		_tip.position = Vector2(pad, top)
 		_tip.size = Vector2(w - pad * 2.0, 28)

@@ -56,8 +56,8 @@ func _ready() -> void:
 	var title := UIKit.title_label(Locale.t("pause_heading"), 28)
 	box.add_child(title)
 	## Pause chrome: ShellCrestStrip on the glass panel (团徽+旗徽).
-	CKHeraldryChrome.place_shell_crest_strip(panel, Vector2(8, 8), Vector2(36, 44), Vector2(22, 30))
-	CKHeraldryChrome.place_company_header(panel, Vector2(300, 8), Vector2(36, 44))
+	CKHeraldryField.place_shell_crest_strip(panel, Vector2(8, 8), Vector2(36, 44), Vector2(22, 30))
+	CKHeraldryField.place_company_header(panel, Vector2(300, 8), Vector2(36, 44))
 	for spec in BUTTONS:
 		var b := UIKit.make_button(Locale.t(str(spec[1])), 280)
 		b.name = str(spec[0])

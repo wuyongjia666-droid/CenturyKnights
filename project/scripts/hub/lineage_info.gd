@@ -366,9 +366,7 @@ static func render(host: Control, c, action_text: String, action_cb: Callable, e
 	kind.autowrap_mode = TextServer.AUTOWRAP_OFF
 	kind.position = Vector2(156, 192)
 	p.add_child(kind)
-	var badge := CKHeraldryChrome.make_rank_badge(str(c.rank), 32)
-	badge.position = Vector2(214, 140)
-	p.add_child(badge)
+	CKHeraldryField.attach_lineage_rank_badge(p, str(c.rank), Vector2(214, 140), 32)
 	var rk := UIKit.body_label(c.rank_name(), UIKit.ACCENT, 13)
 	rk.name = "InfoRank"
 	rk.autowrap_mode = TextServer.AUTOWRAP_OFF
@@ -444,9 +442,9 @@ static func render_mobile(host: Control, c, action_text: String, action_cb: Call
 	rr.add_theme_constant_override("separation", 8)
 	col.add_child(rr)
 	var arms := CKHeraldryField.attach_lineage_info_arms(rr, c, Vector2(48, 58))
-	var badge := CKHeraldryChrome.make_rank_badge(str(c.rank), 36)
-	badge.custom_minimum_size = Vector2(36, 48)
-	rr.add_child(badge)
+	var badge := CKHeraldryField.attach_lineage_rank_badge(rr, str(c.rank), Vector2.ZERO, 36)
+	if badge != null:
+		badge.custom_minimum_size = Vector2(36, 48)
 	var kind := MobilePage.label(CKHeraldryChrome.arms_kind_label(c), UIKit.TEXT_DIM, MobilePage.FONT, false)
 	kind.name = "ArmsKind"
 	kind.size_flags_vertical = Control.SIZE_SHRINK_CENTER

@@ -50,7 +50,7 @@ static func refresh(host) -> void:
 			_sync_card(host, GameState.get_leader(), "player")
 			fill_traits(host, GameState.get_leader())
 		else:
-			host._portrait.texture = CKHeraldryChrome.company_banner(96, 96)
+			host._portrait.texture = CKHeraldryField.company_banner_texture(96, 96)
 			_sync_status(host, null)
 			_sync_card(host, null, "player")
 			fill_traits(host, null)
@@ -122,7 +122,7 @@ static func _idle_objective(host) -> String:
 static func _sync_card(host, c, team: String) -> void:
 	if host._unit_card == null:
 		return
-	host._unit_card.set_meta("foe_nation", CKHeraldryChrome.battle_foe_nation_for(host))
+	host._unit_card.set_meta("foe_nation", CKHeraldryField.battle_foe_nation_for(host))
 	if c == null:
 		host._unit_card.set_unit(null, team)
 	else:
