@@ -70,6 +70,14 @@ func _exit_tree() -> void:
 	if current == self:
 		current = null
 	GameState.board_input_blocked = false
+	# Y1-A T-P18: closing pause without confirming retreat clears the objective warn.
+	if bool(get_meta("retreat_confirmed", false)):
+		return
+	var tree := get_tree()
+	if tree != null:
+		var battle := BattleDefeat.find_battle(tree)
+		if battle != null and not bool(battle.get("battle_over")):
+			BattleRetreatObjective.disarm(battle)
 
 func _wire(box: VBoxContainer) -> void:
 	box.get_node("PauseContinue").pressed.connect(toggle)
@@ -84,6 +92,7 @@ func _wire(box: VBoxContainer) -> void:
 
 func _on_hub(hub: Button) -> void:
 	## In battle this is a retreat (a defeat with injury settlement) and needs a second tap to confirm.
+	## Y1-A T-P18: first tap arms ObjectiveHud retreat warn; second tap confirms defeat.
 	var battle := BattleDefeat.find_battle(get_tree())
 	if battle == null:
 		_go(BattleDefeat.CASTLE)
@@ -91,7 +100,10 @@ func _on_hub(hub: Button) -> void:
 	if not hub.has_meta("armed"):
 		hub.set_meta("armed", true)
 		hub.text = Locale.t("pause_retreat_confirm")
+		BattleRetreatObjective.arm(battle)
 		return
+	# Confirm: mark self so _exit_tree skips disarm; then retreat (sets battle_over).
+	set_meta("retreat_confirmed", true)
 	queue_free()
 	BattleDefeat.retreat(battle)
 
