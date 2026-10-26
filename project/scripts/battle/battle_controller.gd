@@ -1219,6 +1219,8 @@ func _draw_overlay() -> void:
 	# v8.5 / T-P11 selected chrome: foot disc + mid ring + body rect (mobile) and dense reticle.
 	BattleSelectChrome.draw_selected(self, overlay)
 	BattleDualLedger.draw_injured_marks(self, overlay)
+	BattleDualLedger.draw_done_marks(self, overlay)
+	BattleStanceReadable.draw_moved_chip(self, overlay)
 	BattleLandStrike.draw(self, overlay)
 	BattleTouchConfirm.draw_reject_flash(self, overlay)
 	BattleRangePreview.draw_illegal(self, overlay)
