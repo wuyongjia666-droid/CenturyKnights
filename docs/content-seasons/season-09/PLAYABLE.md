@@ -81,3 +81,8 @@
 
 - 各章 visit 拍（hourglass/audit/birth）加厚季题名著口头（`_vhg*`），全库去重。
 - 验收：`content_season_visit_oral_chain_check` — hub chip → 针口头 → 去看月份 → 同拍回 → 继续。
+
+## 开场主题口头加厚（theme-open）
+
+- 各章首拍加 `_thm1`–`_thm6` 季题名著口头，全库去重；收束非旁白。
+- 验收：`content_season_theme_open_chain_check` — hub chip → 首拍针口头 → 下一拍。
