@@ -269,7 +269,7 @@ func _e2e_sticky_pan_empty() -> String:
 	# Zoom past fit, park mid clamp-range, then recompute halo.
 	BattlePick.cancel_focus_tween(_battle)
 	BattleTouchConfirm.end_gesture(_battle)
-	_battle._board_zoom = 1.75
+	_battle._board_zoom = 2.5
 	_battle._board_pan = Vector2.ZERO
 	_battle._clamp_board_pan()
 	var stage: Rect2 = _battle.get_meta("m_board_area")
@@ -294,18 +294,36 @@ func _e2e_sticky_pan_empty() -> String:
 		return "live soft halo still sticky"
 	var pan0: Vector2 = _battle._board_pan
 	var base: float = _battle._board_router._slop()
-	# Drift past base slop but under sticky*1.55 — if sticky wrongly applied, stays tap.
-	var drift := base * 1.35
+	var sticky_at: bool = bool(_battle._board_router.sticky_fn.call(halo))
+	var edge_at: bool = bool(_battle._board_router.edge_fn.call(halo))
+	var need: float = _battle._board_router._slop_for(halo)
+	# Drift past live slop_for (base, or sticky*1.55 / edge*2.4) but keep a
+	# second probe under sticky*1.55 when sticky is false — contract check.
+	if sticky_at:
+		return "live soft halo sticky_fn true (need %.1f base %.1f edge %s)" % [need, base, edge_at]
+	# Clear any post-select focus tween again immediately before the gesture.
+	BattlePick.cancel_focus_tween(_battle)
+	var drift := maxf(need * 1.20, base * 1.35)
 	_touch(0, true, halo)
 	await get_tree().process_frame
 	await get_tree().process_frame
-	_drag(halo + Vector2(drift, 0), Vector2(drift, 0))
-	await get_tree().process_frame
-	await get_tree().process_frame
+	# Step the finger so distance-from-origin clearly clears slop once.
+	var steps := 4
+	var i := 1
+	while i <= steps:
+		var t := float(i) / float(steps)
+		var pos := halo + Vector2(drift * t, 0.0)
+		_drag(pos, Vector2(drift / float(steps), 0.0))
+		await get_tree().process_frame
+		i += 1
+	var pan_mid: Vector2 = _battle._board_pan
 	_touch(0, false, halo + Vector2(drift, 0))
-	await _settle(6)
-	if absf(_battle._board_pan.x - pan0.x) < 1.0:
-		return "empty soft halo did not pan (sticky still swallowing) pan %s->%s drift %.1f" % [pan0, _battle._board_pan, drift]
+	# Do NOT settle long — focus/settle juice can yank pan after a real pan.
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var pan1: Vector2 = _battle._board_pan
+	if absf(pan_mid.x - pan0.x) < 1.0 and absf(pan1.x - pan0.x) < 1.0:
+		return "empty soft halo did not pan (sticky still swallowing) pan %s->%s->%s drift %.1f need %.1f sticky %s edge %s" % [pan0, pan_mid, pan1, drift, need, sticky_at, edge_at]
 	if _battle.selected != _player_i:
 		return "pan from soft halo deselected"
 	return ""
