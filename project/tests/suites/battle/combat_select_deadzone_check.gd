@@ -44,7 +44,7 @@ func _run() -> String:
 	if err == "":
 		err = await _e2e_sticky_pan_empty()
 	if err == "":
-		err = _e2e_panel_ignore()
+		err = await _e2e_panel_ignore()
 	if err == "":
 		err = await _e2e_right_notch_select()
 	if _battle != null and is_instance_valid(_battle):
@@ -77,6 +77,7 @@ func _algebra_soft_steal() -> String:
 
 
 ## Sticky while selected must be strict figure — soft halo is not sticky.
+## Edge-lip EDGE_EXTRA must not widen sticky onto the soft-empty neighbour (T-P24).
 func _algebra_sticky_strict() -> String:
 	var host := _TapHost.new()
 	host.setup_armed(Vector2i(2, 2))
@@ -85,6 +86,12 @@ func _algebra_sticky_strict() -> String:
 	var halo := origin + Vector2(2.5 + 0.70, 2.5) * cell
 	if BattlePick.near_selected_unit(host, halo, 0):
 		return "soft halo must not count as sticky near_selected"
+	# Live boards stamp m_touch_safe; EDGE_EXTRA used to mark this soft-empty sticky.
+	host.set_meta("m_touch_safe", Rect2(0, 0, 900, 700))
+	host.set_meta("m_board_area", Rect2(0, 0, 900, 700))
+	host.set_meta("m_edge_band", 48.0)
+	if BattlePick.near_selected_unit(host, halo, 0):
+		return "soft halo sticky under edge metas (EDGE_EXTRA swallowing pan)"
 	var torso := origin + Vector2(2.5, 2.5) * cell
 	if not BattlePick.near_selected_unit(host, torso, 0):
 		return "figure centre must stay sticky"
@@ -138,8 +145,8 @@ func _algebra_source() -> String:
 	var edge := FileAccess.get_file_as_string("res://scripts/battle/battle_edge_pick.gd")
 	if pick.find("resolve_board_tap") < 0:
 		return "resolve_board_tap missing"
-	if pick.find("strict_hits_selected(host, screen_pos, selected_idx)") < 0:
-		return "near_selected must delegate to strict_hits_selected"
+	if pick.find("strict_hits_selected(host, screen_pos, selected_idx, false)") < 0:
+		return "near_selected must exclude edge (sticky must not swallow soft-empty pan)"
 	if ctrl.find("resolve_board_tap") < 0:
 		return "tap path not wired to resolve_board_tap"
 	if edge.find("T-P24") < 0:
@@ -257,25 +264,66 @@ func _e2e_sticky_pan_empty() -> String:
 		return "sticky setup select failed"
 	# Expire select-lock so a misclassified tap would deselect.
 	_battle.set_meta("m_select_burst_msec", Time.get_ticks_msec() - 1000)
+	# Select focus-pan / fit-to-stage can pin `_board_pan` (map fits landscape stage
+	# at zoom=1 → clamp has zero +x headroom, so a real pan looks like sticky swallow).
+	# Zoom past fit, park mid clamp-range, then recompute halo.
+	BattlePick.cancel_focus_tween(_battle)
+	BattleTouchConfirm.end_gesture(_battle)
+	_battle._board_zoom = 2.5
+	_battle._board_pan = Vector2.ZERO
+	_battle._clamp_board_pan()
+	var stage: Rect2 = _battle.get_meta("m_board_area")
+	var z: float = float(_battle._board_zoom)
+	var board: Vector2 = Vector2(float(_battle.MAP_W), float(_battle.MAP_H)) * float(_battle.CELL) * z
+	var o: Vector2 = _battle.ORIGIN * z
+	var keep := BattlePick.PAN_KEEP_PX
+	var lo := Vector2(stage.position.x + keep - o.x - board.x, stage.position.y + keep - o.y - board.y)
+	var hi := Vector2(stage.end.x - keep - o.x, stage.end.y - keep - o.y)
+	_battle._board_pan = (lo + hi) * 0.5
+	_battle._clamp_board_pan()
+	_battle._apply_board_xform()
+	await _settle(2)
+	# Prove +x headroom exists — otherwise the assert below is a clamp false-positive.
+	var probe: Vector2 = BattlePick.clamp_pan(
+		_battle._board_pan + Vector2(80.0, 0.0), _battle._board_zoom,
+		_battle.ORIGIN, Vector2(_battle.MAP_W, _battle.MAP_H) * float(_battle.CELL), stage)
+	if absf(probe.x - _battle._board_pan.x) < 1.0:
+		return "pan fixture lacks +x headroom (stage=%s zoom=%.2f pan=%s)" % [stage, z, _battle._board_pan]
 	var halo := _screen(_cell_local(Vector2i(4, 3), Vector2(0.18, 0.5)))
 	if BattlePick.near_selected_unit(_battle, halo, _player_i):
 		return "live soft halo still sticky"
-	# Stop any leftover focus tween so settle cannot yank the pan back mid-gesture.
-	BattlePick.cancel_focus_tween(_battle)
-	await _settle(2)
 	var pan0: Vector2 = _battle._board_pan
 	var base: float = _battle._board_router._slop()
-	# Drift past base slop but under sticky*1.55 — if sticky wrongly applied, stays tap.
-	# 1.35 (was 1.25): CI headless sometimes needs a hair more travel to clear slop noise.
-	var drift := base * 1.35
+	var sticky_at: bool = bool(_battle._board_router.sticky_fn.call(halo))
+	var edge_at: bool = bool(_battle._board_router.edge_fn.call(halo))
+	var need: float = _battle._board_router._slop_for(halo)
+	# Drift past live slop_for (base, or sticky*1.55 / edge*2.4) but keep a
+	# second probe under sticky*1.55 when sticky is false — contract check.
+	if sticky_at:
+		return "live soft halo sticky_fn true (need %.1f base %.1f edge %s)" % [need, base, edge_at]
+	# Clear any post-select focus tween again immediately before the gesture.
+	BattlePick.cancel_focus_tween(_battle)
+	var drift := maxf(need * 1.20, base * 1.35)
 	_touch(0, true, halo)
 	await get_tree().process_frame
-	_drag(halo + Vector2(drift, 0), Vector2(drift, 0))
 	await get_tree().process_frame
+	# Step the finger so distance-from-origin clearly clears slop once.
+	var steps := 4
+	var i := 1
+	while i <= steps:
+		var t := float(i) / float(steps)
+		var pos := halo + Vector2(drift * t, 0.0)
+		_drag(pos, Vector2(drift / float(steps), 0.0))
+		await get_tree().process_frame
+		i += 1
+	var pan_mid: Vector2 = _battle._board_pan
 	_touch(0, false, halo + Vector2(drift, 0))
-	await _settle(4)
-	if absf(_battle._board_pan.x - pan0.x) < 1.0:
-		return "empty soft halo did not pan (sticky still swallowing) pan %s->%s drift %.1f" % [pan0, _battle._board_pan, drift]
+	# Do NOT settle long — focus/settle juice can yank pan after a real pan.
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var pan1: Vector2 = _battle._board_pan
+	if absf(pan_mid.x - pan0.x) < 1.0 and absf(pan1.x - pan0.x) < 1.0:
+		return "empty soft halo did not pan (sticky still swallowing) pan %s->%s->%s drift %.1f need %.1f sticky %s edge %s" % [pan0, pan_mid, pan1, drift, need, sticky_at, edge_at]
 	if _battle.selected != _player_i:
 		return "pan from soft halo deselected"
 	return ""
@@ -284,6 +332,8 @@ func _e2e_sticky_pan_empty() -> String:
 func _e2e_panel_ignore() -> String:
 	if _battle.has_method("apply_mobile_layout"):
 		_battle.apply_mobile_layout()
+	# MobileSide.attach is deferred from _layout_board — settle before assert.
+	await _settle(3)
 	var col := _battle.get_node_or_null("MobileSideCol") as Control
 	if col == null:
 		return "side column missing for panel check"
@@ -348,19 +398,26 @@ func _tap(local_board: Vector2) -> void:
 	_battle._apply_board_gesture({"kind": "tap", "pos": _screen(local_board)})
 
 
+## _gui_input lifts control-local → viewport via xformed_by(global_transform).
+func _to_gui(screen: Vector2) -> Vector2:
+	return _battle.get_global_transform().affine_inverse() * screen
+
+
 func _touch(idx: int, pressed: bool, screen: Vector2) -> void:
 	var ev := InputEventScreenTouch.new()
 	ev.index = idx
 	ev.pressed = pressed
-	ev.position = screen
+	ev.position = _to_gui(screen)
 	_battle._gui_input(ev)
 
 
 func _drag(screen: Vector2, relative: Vector2) -> void:
 	var ev := InputEventScreenDrag.new()
 	ev.index = 0
-	ev.position = screen
-	ev.relative = relative
+	ev.position = _to_gui(screen)
+	# relative is a viewport delta; convert like battle_controller._screen_delta_to_local inverse.
+	var inv := _battle.get_global_transform().affine_inverse()
+	ev.relative = inv.basis_xform(relative)
 	_battle._gui_input(ev)
 
 

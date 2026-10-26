@@ -144,9 +144,11 @@ static func _flow_panel(p: Control) -> void:
 
 ## A story bark takes over the side column while it is up.
 static func yield_to(host: Node, bark: Control) -> void:
-	bark.visibility_changed.connect(_sync.bind(host, bark))
+	bark.visibility_changed.connect(func() -> void: _sync(host, bark))
 	_sync.call_deferred(host, bark)
-	host.child_entered_tree.connect(_on_child.bind(host, bark))
+	# Lambda (not .bind on a typed Control arg): Godot 4.3 child_entered_tree +
+	# bind(host, bark) intermittently raises "Cannot convert argument 3 from Object to Object".
+	host.child_entered_tree.connect(func(n: Node) -> void: _on_child(n, host, bark))
 
 
 static func _on_child(n: Node, host: Node, bark: Control) -> void:

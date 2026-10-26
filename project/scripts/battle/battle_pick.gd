@@ -272,7 +272,9 @@ static func strict_unit_pos(origin: Vector2, cell_px: float, units: Array, local
 
 
 ## True when finger strictly hits the selected living unit (T-P3 unit-drag origin).
-static func strict_hits_selected(host, screen_pos: Vector2, selected_idx: int) -> bool:
+## include_edge: notch-lip crown/sliver (T-P15). Sticky (T-P24) must pass false —
+## EDGE_EXTRA would otherwise mark soft-empty neighbours sticky and swallow map pans.
+static func strict_hits_selected(host, screen_pos: Vector2, selected_idx: int, include_edge: bool = true) -> bool:
 	if selected_idx < 0 or selected_idx >= host.units.size():
 		return false
 	var su = host.units[selected_idx]
@@ -282,14 +284,17 @@ static func strict_hits_selected(host, screen_pos: Vector2, selected_idx: int) -
 	var local: Vector2 = _board_local(host, screen_pos)
 	if strict_unit_pos(host.ORIGIN, float(host.CELL), host.units, local, exact) == su.pos:
 		return true
+	if not include_edge:
+		return false
 	# T-P15: pressing the notch-lip sliver of the selected figure is still a unit drag.
 	return BattleEdgePick.from_host(host, screen_pos, local) == su.pos
 
 
-## T-P3 + T-P24: sticky slop only on the selected figure (strict exact/bias/contour/edge).
-## Soft-empty beside the armed piece must stay a pan, not a fat sticky tap/deselect.
+## T-P3 + T-P24: sticky slop only on the selected figure (exact/bias/contour).
+## Soft-empty beside the armed piece — including notch-lip EDGE_EXTRA reach — must
+## stay a pan, not a fat sticky tap/deselect. Unit-drag keeps edge via the default.
 static func near_selected_unit(host, screen_pos: Vector2, selected_idx: int) -> bool:
-	return strict_hits_selected(host, screen_pos, selected_idx)
+	return strict_hits_selected(host, screen_pos, selected_idx, false)
 
 
 static func resolve(host, screen_pos: Vector2) -> Vector2i:
