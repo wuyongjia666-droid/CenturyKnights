@@ -283,3 +283,9 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 现涂色格（移动格或攻击圈）在不压到活人身框时用瞄准格；攻击圈跟当前站位或移动幽灵，与蓝格重叠时只加红内描边。非法落点先闪再清幽灵，桌面同样闪，选中不丢。镜头用最小平移保住选中身框，目的地只有在选中仍然落在可玩区内时才一起框。`mobile_origin` 已经把根推进安全矩形时不再扣第二次；根还在原点、舞台伸进唇缘时才裁。单位拖拽不平移。`focus_cell` 的桌面 `force` 门闩不动。
 
 `combat_range_preview_check`：选中 → 范围 → 非法闪拒 → 合法移动确认，横屏刘海 + 桌面。
+
+---
+
+## 5a. BattleBanter 抽出（#564 线门禁）
+
+`battle_controller.gd` 的 `split("\n").size()` 顶到 3001，战棋 suites 全红。把主题台词表 / 去重 / SFX 抽到 `battle_banter.gd`（`BattleBanter.play`），controller 只留三处调用 + `_ready` 里 `reset()`。`combat_banter_check`：源契约 + `ch112_yard` 真开局开场台词。

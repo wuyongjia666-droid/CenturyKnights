@@ -151,11 +151,9 @@ func _run_battle() -> String:
 	if heard.size() != 1 or str(heard[0].get("team", "")) != "enemy":
 		return "unit_downed %s" % heard
 	battle.map_id = "ch112_yard"
-	battle._banter_idx = 0
-	battle._banter_kill = 0
-	battle._banter_played = {}
-	battle._theme_banter("start")
-	battle._theme_banter("kill")
+	BattleBanter.reset()
+	BattleBanter.play(battle, "start")
+	BattleBanter.play(battle, "kill")
 	var banter_log := str(battle.log_label.text)
 	if banter_log.find("【镖行】") < 0:
 		return "banter json did not play: %s" % banter_log.substr(0, 80)

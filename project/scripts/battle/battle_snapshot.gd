@@ -20,7 +20,7 @@ static func capture(host) -> Dictionary:
 	var done = host.get_meta("reinf_done", {})
 	if typeof(done) != TYPE_DICTIONARY:
 		done = {}
-	return {
+	var out := {
 		"units": rows,
 		"turn_team": str(host.turn_team),
 		"round": int(host._round_no),
@@ -32,11 +32,10 @@ static func capture(host) -> Dictionary:
 		"battle_over": bool(host.battle_over),
 		"rng_seed": int(host.rng.seed),
 		"rng_state": int(host.rng.state),
-		"banter_idx": int(host._banter_idx),
-		"banter_kill": int(host._banter_kill),
-		"banter_played": host._banter_played.duplicate(true),
 		"reinf_done": done.duplicate(true),
 	}
+	out.merge(BattleBanter.capture())
+	return out
 
 
 static func seal_turn(host) -> void:
@@ -135,9 +134,7 @@ static func apply(host, snap: Dictionary) -> void:
 	host.skill_mode = bool(snap.get("skill_mode", false))
 	host.active_skill_id = str(snap.get("active_skill", ""))
 	host.battle_over = bool(snap.get("battle_over", false))
-	host._banter_idx = int(snap.get("banter_idx", 0))
-	host._banter_kill = int(snap.get("banter_kill", 0))
-	host._banter_played = (snap.get("banter_played", {}) as Dictionary).duplicate(true)
+	BattleBanter.restore(snap)
 	host.set_meta("reinf_done", (snap.get("reinf_done", {}) as Dictionary).duplicate(true))
 	if host._round_label:
 		host._round_label.text = BattleObjectives.text("obj_round") % int(host._round_no)
