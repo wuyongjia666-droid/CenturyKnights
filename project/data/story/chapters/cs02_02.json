@@ -1254,6 +1254,42 @@
           }
         },
         {
+          "id": "cs0202_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs02_mid_fought" },
+          "text": "脉纸边的手稳了。稳处，跳才听得真。"
+        },
+        {
+          "id": "cs0202_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs02_mid_fought" },
+          "text": "抢脉那拨散了。散了，纸才不像战场。"
+        },
+        {
+          "id": "cs0202_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs02_mid_fought" },
+          "text": "脉要静。静一寸，旗也不抖一寸。"
+        },
+        {
+          "id": "cs0202_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs02_mid_fought" },
+          "text": "指腹的热退了。退了，才敢按第二下。"
+        },
+        {
+          "id": "cs0202_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs02_mid_fought" },
+          "text": "旗杆点地一下。一下就够，别再吓脉。"
+        },
+        {
+          "id": "cs0202_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs02_mid_fought" },
+          "text": "锋护过脉。纸我按得，跳我认。"
+        },
+        {
           "speaker": "旁白",
           "text": "锋收回来。副笺纸还钉着。偏格旁那拨，没散。",
           "when": {

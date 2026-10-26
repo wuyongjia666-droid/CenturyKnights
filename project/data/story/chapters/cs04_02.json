@@ -1254,6 +1254,42 @@
           }
         },
         {
+          "id": "cs0402_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "契纸角压住。压处，抢契那拨退到廊外。"
+        },
+        {
+          "id": "cs0402_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "契要压。压住，才不像风里的叶子。"
+        },
+        {
+          "id": "cs0402_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "墨干了。干了，字才是自己的，不是借的。"
+        },
+        {
+          "id": "cs0402_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "印泥边我捺净。净了，签才不糊。"
+        },
+        {
+          "id": "cs0402_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "旗杆压纸角。一杆之力，胜过十句嚷。"
+        },
+        {
+          "id": "cs0402_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs04_mid_fought" },
+          "text": "锋护过契。字我签得，廊外不理。"
+        },
+        {
           "speaker": "旁白",
           "text": "锋收回来。训阴纸还钉着。行迹旁那拨，没散。",
           "when": {
