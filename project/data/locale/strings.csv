@@ -907,3 +907,5 @@ shell_sure_hit_aim_mark,稳,Sure
 shell_crit_aim_mark,暴,Crit
 shell_hit_risk_aim_mark,险,Risk
 shell_terrain_def_aim_mark,防,Cover
+shell_height_aim_high_mark,高,High
+shell_height_aim_low_mark,低,Low
