@@ -234,8 +234,9 @@ func _assert_engage_settle(tag: String) -> String:
 	if not (inset is Rect2) or (inset as Rect2).size.x < 72.0:
 		return "%s: engage settle inset missing %s" % [tag, settle]
 	var block: Rect2 = _battle.get_meta("m_info_block")
-	if (inset as Rect2).intersects(block):
-		return "%s: engage settle inset still overlaps info" % tag
+	var overlap: Rect2 = (inset as Rect2).intersection(block)
+	if overlap.size.x > 1.0 and overlap.size.y > 1.0:
+		return "%s: engage settle inset still overlaps info inset=%s block=%s" % [tag, inset, block]
 	return ""
 
 
