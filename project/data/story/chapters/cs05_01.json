@@ -809,6 +809,42 @@
           }
         },
         {
+          "id": "cs0501_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs05_mid_fought" },
+          "text": "空椅纸角压平。平处，椅旁那拨散尽。"
+        },
+        {
+          "id": "cs0501_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs05_mid_fought" },
+          "text": "座还在。让座的人今晚没有，抢座的也没有。"
+        },
+        {
+          "id": "cs0501_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs05_mid_fought" },
+          "text": "旁人不敢坐了。椅仍空——空得干净。"
+        },
+        {
+          "id": "cs0501_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs05_mid_fought" },
+          "text": "椅背的尘我掸落。落了，空才像守，不是弃。"
+        },
+        {
+          "id": "cs0501_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs05_mid_fought" },
+          "text": "旗立椅侧。立着，比坐着更像人。"
+        },
+        {
+          "id": "cs0501_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs05_mid_fought" },
+          "text": "锋问过座。空椅我守，纸角我压。"
+        },
+        {
           "id": "cs05_mid_lost",
           "speaker": "旁白",
           "text": "锋收回来。空椅纸还钉着。椅旁那拨，没散。",
@@ -1094,6 +1130,37 @@
           "speaker": "书记官",
           "text": "名在链上。链要回堡续。"
         },
+        {
+          "id": "cs0501_brd1",
+          "speaker": "旁白",
+          "text": "空椅图在板边站着。人到板前，先不敢靠那张椅。"
+        },
+        {
+          "id": "cs0501_brd2",
+          "speaker": "掌柜",
+          "text": "空椅吓人。吓人处，字要坐得比人稳。"
+        },
+        {
+          "id": "cs0501_brd3",
+          "speaker": "书记官",
+          "text": "链环那格先空着。空着，待定的人还有地方。"
+        },
+        {
+          "id": "cs0501_brd4",
+          "speaker": "旁白",
+          "text": "灯把椅影拉长。拉长了，反衬板面更直。"
+        },
+        {
+          "id": "cs0501_brd5",
+          "speaker": "岁吏",
+          "text": "空椅与链环之间留缝。缝在，名才接得上。"
+        },
+        {
+          "id": "cs0501_brd6",
+          "speaker": "leader",
+          "text": "空椅过了。我近板，把待定的格认清。"
+        },
+
         {
           "id": "cs0501_tvp1",
           "speaker": "旁白",

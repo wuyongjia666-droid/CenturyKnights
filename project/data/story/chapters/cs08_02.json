@@ -861,6 +861,42 @@
           }
         },
         {
+          "id": "cs0802_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs08_mid_fought" },
+          "text": "碑阴拓完。完处，抢拓那拨退到槐影外。"
+        },
+        {
+          "id": "cs0802_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs08_mid_fought" },
+          "text": "拓要自己按。按实，才不像偷来的影。"
+        },
+        {
+          "id": "cs0802_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs08_mid_fought" },
+          "text": "碑上的凉渡到腕。腕定了，字才不抖。"
+        },
+        {
+          "id": "cs0802_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs08_mid_fought" },
+          "text": "拓纸我卷齐。齐了，阴面不皱。"
+        },
+        {
+          "id": "cs0802_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs08_mid_fought" },
+          "text": "旗别扫碑座。座上的苔，比刀干净。"
+        },
+        {
+          "id": "cs0802_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs08_mid_fought" },
+          "text": "锋护过碑。拓我按得，阴面我收。"
+        },
+        {
           "id": "cs08b_br_lost",
           "speaker": "旁白",
           "text": "锋收回来。碑阴纸还钉着。祠旁那拨，没散。",
@@ -1163,6 +1199,37 @@
           "speaker": "岁吏",
           "text": "碑阴回堡。"
         },
+        {
+          "id": "cs0802_brd1",
+          "speaker": "旁白",
+          "text": "复页在臂弯里平着。平着近板，缺角才不自己说话。"
+        },
+        {
+          "id": "cs0802_brd2",
+          "speaker": "掌柜",
+          "text": "复页怕风。风一过，骑缝会偏。"
+        },
+        {
+          "id": "cs0802_brd3",
+          "speaker": "听回",
+          "text": "潮边用掌根按。指尖重，纸起浪。"
+        },
+        {
+          "id": "cs0802_brd4",
+          "speaker": "旁白",
+          "text": "槐影停在窗外。窗外影，贴不上复页。"
+        },
+        {
+          "id": "cs0802_brd5",
+          "speaker": "书记官",
+          "text": "碑录复页对空格。抢拓的手，不进这一面。"
+        },
+        {
+          "id": "cs0802_brd6",
+          "speaker": "leader",
+          "text": "复页按平了。我近板，把阴面交钉。"
+        },
+
         {
           "id": "cs0802_tvp1",
           "speaker": "旁白",

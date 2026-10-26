@@ -829,6 +829,42 @@
           }
         },
         {
+          "id": "cs0601_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "校场问声落地。落处，墙牌旁的笑哑了。"
+        },
+        {
+          "id": "cs0601_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "笑收了。赢的人不用再听那种笑。"
+        },
+        {
+          "id": "cs0601_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "上场过了。下场的汗，比笑真一寸。"
+        },
+        {
+          "id": "cs0601_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "沙我跺回坑。回坑，下一圈才平。"
+        },
+        {
+          "id": "cs0601_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "旗挂墙牌旁。挂正，笑就挂不上去。"
+        },
+        {
+          "id": "cs0601_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs06_mid_fought" },
+          "text": "锋跟圈走完。墙牌我挂得，场我认。"
+        },
+        {
           "id": "cs06_mid_lost",
           "speaker": "旁白",
           "text": "锋收回来。校场问声还在。墙牌旁那拨，没散。",
@@ -1119,6 +1155,37 @@
           "speaker": "书记官",
           "text": "真名回堡挂。"
         },
+        {
+          "id": "cs0601_brd1",
+          "speaker": "旁白",
+          "text": "场沙在门外磕尽。板前的地干净，像刚扫过。"
+        },
+        {
+          "id": "cs0601_brd2",
+          "speaker": "掌柜",
+          "text": "可比试那格怕沙。沙一进，圈数就糊。"
+        },
+        {
+          "id": "cs0601_brd3",
+          "speaker": "老旗手",
+          "text": "墙牌旁的笑留门外。门内只问声，不问笑。"
+        },
+        {
+          "id": "cs0601_brd4",
+          "speaker": "旁白",
+          "text": "空条在袖里卷着。卷着到板前，才肯一点点展开。"
+        },
+        {
+          "id": "cs0601_brd5",
+          "speaker": "岁吏",
+          "text": "圈数对齐空条。齐了，笑进不了谱。"
+        },
+        {
+          "id": "cs0601_brd6",
+          "speaker": "leader",
+          "text": "沙磕尽了。我近板，只把问声上板。"
+        },
+
         {
           "id": "cs0601_tvp1",
           "speaker": "旁白",

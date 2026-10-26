@@ -861,6 +861,42 @@
           }
         },
         {
+          "id": "cs1002_wex1",
+          "speaker": "旁白",
+          "when": { "flag": "cs10_mid_fought" },
+          "text": "印谱复页翻开。开处，催脏印的人退到槛外。"
+        },
+        {
+          "id": "cs1002_wex2",
+          "speaker": "石垒·晚担",
+          "when": { "flag": "cs10_mid_fought" },
+          "text": "催脏印的退了。退了，谱才肯亮。"
+        },
+        {
+          "id": "cs1002_wex3",
+          "speaker": "槐里·青禾",
+          "when": { "flag": "cs10_mid_fought" },
+          "text": "第二圈泥色沉下去。沉下去，才像官事。"
+        },
+        {
+          "id": "cs1002_wex4",
+          "speaker": "苇原·灯影",
+          "when": { "flag": "cs10_mid_fought" },
+          "text": "复页角我折齐。齐了，岁课才对得上。"
+        },
+        {
+          "id": "cs1002_wex5",
+          "speaker": "老旗手",
+          "when": { "flag": "cs10_mid_fought" },
+          "text": "旗立谱侧。立着看你盖，不替你盖。"
+        },
+        {
+          "id": "cs1002_wex6",
+          "speaker": "leader",
+          "when": { "flag": "cs10_mid_fought" },
+          "text": "锋再验场。印我复盖，谱我收。"
+        },
+        {
           "id": "cs10b_br_lost",
           "speaker": "旁白",
           "text": "锋收回来。印底纸还钉着。印旁那拨，没散。",
@@ -1163,6 +1199,37 @@
           "speaker": "岁吏",
           "text": "正好回堡。"
         },
+        {
+          "id": "cs1002_brd1",
+          "speaker": "旁白",
+          "text": "印底拓片在漆盘里。盘沿泥痕还在，人先站定再伸手。"
+        },
+        {
+          "id": "cs1002_brd2",
+          "speaker": "掌柜",
+          "text": "盘沿先擦。擦后仍在的边，才配上板。"
+        },
+        {
+          "id": "cs1002_brd3",
+          "speaker": "听回",
+          "text": "框在臂弯里稳着。稳了，骑缝才对得齐。"
+        },
+        {
+          "id": "cs1002_brd4",
+          "speaker": "旁白",
+          "text": "店里有人催快盖，被掌柜用抹布挡回去。"
+        },
+        {
+          "id": "cs1002_brd5",
+          "speaker": "书记官",
+          "text": "骑缝走过再近板。催脏印的快字，涂成戒。"
+        },
+        {
+          "id": "cs1002_brd6",
+          "speaker": "leader",
+          "text": "框收好了。我近板，把岁课按进格。"
+        },
+
         {
           "id": "cs1002_tvp1",
           "speaker": "旁白",
