@@ -181,6 +181,7 @@ static func holding_level(host, hid: String) -> int:
 	return int(host.holdings[hid].get("level", 1))
 
 static func unlock_holding(host, hid: String) -> String:
+	## Free seed path (tests / legacy grant). Player claim uses claim_holding.
 	if hid not in HOLDING_DEFS:
 		return ""
 	if host.holdings.has(hid):
@@ -190,6 +191,63 @@ static func unlock_holding(host, hid: String) -> String:
 	host.add_lineage_event("属地开垦：%s" % nm)
 	host.mark_dirty()
 	return "属地解锁：%s（月结产出）" % nm
+
+
+static func holding_unlock_preview(host, hid: String) -> Dictionary:
+	## Quest-gate + cost readout for claim_holding (UI + E2E). Avoids #473 surface.
+	if hid not in HOLDING_DEFS:
+		return {"ok": false, "hid": hid, "owned": false, "quest_id": "", "quest_ready": false, "claimable": false, "cost_s": 0, "cost_f": 0, "short": false, "reason": "unknown"}
+	var qid := str(HOLDING_DEFS[hid].get("quest", ""))
+	var owned: bool = bool(host.holdings.has(hid))
+	var quest_ready: bool = qid != "" and bool(host.quest_done.get(qid, false))
+	var cost_s := 25
+	var cost_f := 5
+	var short: bool = (not owned) and (int(host.silver) < cost_s or int(host.food) < cost_f)
+	var reason := ""
+	if owned:
+		reason = "owned"
+	elif not quest_ready:
+		reason = "quest"
+	elif short:
+		reason = "short"
+	return {
+		"ok": true,
+		"hid": hid,
+		"owned": owned,
+		"quest_id": qid,
+		"quest_ready": quest_ready,
+		"claimable": (not owned) and quest_ready and (not short),
+		"cost_s": cost_s,
+		"cost_f": cost_f,
+		"short": short,
+		"reason": reason,
+	}
+
+
+static func claim_holding(host, hid: String) -> Dictionary:
+	var prev: Dictionary = CKEconomyState.holding_unlock_preview(host, hid)
+	if str(prev.get("reason", "")) == "unknown":
+		return {"ok": false, "msg": Locale.t("holding_unlock_unknown"), "preview": prev}
+	if bool(prev.get("owned", false)):
+		return {"ok": false, "msg": Locale.t("holding_unlock_owned"), "preview": prev}
+	if not bool(prev.get("quest_ready", false)):
+		return {"ok": false, "msg": Locale.t("holding_unlock_quest"), "preview": prev}
+	var cost_s = int(prev.get("cost_s", 0))
+	var cost_f = int(prev.get("cost_f", 0))
+	if bool(prev.get("short", false)):
+		return {"ok": false, "msg": Locale.t("holding_unlock_short", [cost_s, cost_f]), "preview": prev}
+	var nm = str(HOLDING_DEFS[hid].get("name", hid))
+	host.silver -= cost_s
+	host.food -= cost_f
+	host.holdings[hid] = {"level": 1, "steward_id": ""}
+	host.add_lineage_event(Locale.t("holding_unlock_log", [nm]))
+	host.log_event(Locale.t("holding_unlock_log", [nm]))
+	CKEconomyState.month_echo_note("unlock", Locale.t("holding_echo_unlock", [nm, cost_s, cost_f]))
+	var amb = CKEconomyState.check_ambitions(host)
+	host.mark_dirty()
+	var extra = ("；" + " / ".join(amb)) if amb else ""
+	return {"ok": true, "msg": Locale.t("holding_unlock_ok", [nm]) + extra, "preview": prev}
+
 
 static func holding_upgrade_preview(host, hid: String) -> Dictionary:
 	## Cost / gate readout for holding upgrade (UI + E2E).
@@ -916,12 +974,10 @@ static func apply_quest_first_clear(host, qid: String) -> String:
 	match qid:
 		"q_escort":
 			host.house_mods["hall_discount"] = true
-			var uh = CKEconomyState.unlock_holding(host, "reed_ford")
-			msg = "首通：议事厅升级费用 -25%" + (("；" + uh) if uh else "")
+			msg = "首通：议事厅升级费用 -25%；可回庄园开垦苇原渡"
 		"q_bridge":
 			host.house_mods["trade_route"] = true
-			var uh2 = CKEconomyState.unlock_holding(host, "tide_bridge")
-			msg = "首通：开通河卫商路（市集更划算，丰收+银）" + (("；" + uh2) if uh2 else "")
+			msg = "首通：开通河卫商路（市集更划算，丰收+银）；可回庄园开垦断潮渡哨"
 		"q_drill":
 			host.house_mods["drill_discount"] = true
 			msg = "首通：校场演武再减价"
@@ -931,13 +987,11 @@ static func apply_quest_first_clear(host, qid: String) -> String:
 			msg = "首通：春令耳目 +1 战技点"
 		"q_herb":
 			host.house_mods["herb_garden"] = true
-			var uh3 = CKEconomyState.unlock_holding(host, "fog_vale")
-			msg = "首通：雾谷药圃（丰收+药）" + (("；" + uh3) if uh3 else "")
+			msg = "首通：雾谷药圃（丰收+药）；可回庄园开垦雾谷药田"
 		"q_bandit":
 			host.house_mods["war_memory"] = int(host.house_mods.get("war_memory", 0)) + 1
 			host.morale = mini(100, host.morale + 2)
-			var uh4 = CKEconomyState.unlock_holding(host, "stone_slope")
-			msg = "首通战勋：士气+2" + (("；" + uh4) if uh4 else "")
+			msg = "首通战勋：士气+2；可回庄园开垦石垒坡"
 		"q_hill_war", "q_ford_war", "q_fog_war", "q_forge_war", "q_shrine_war":
 			host.house_mods["war_memory"] = int(host.house_mods.get("war_memory", 0)) + 1
 			host.morale = mini(100, host.morale + 2)
@@ -1182,7 +1236,7 @@ static func month_echo_lines() -> Array:
 	for k in [
 		"holdings", "harvest", "territory", "commission", "battle", "recruit",
 		"birth", "pregnancy", "marriage", "spring", "doctrine", "ambition", "tutor", "promo", "retire",
-		"death", "succession", "adult", "dues", "rival", "job_seal", "patrol", "steward", "upgrade",
+		"death", "succession", "adult", "dues", "rival", "job_seal", "patrol", "steward", "upgrade", "unlock",
 	]:
 		var tx := str(d.get(k, ""))
 		if tx != "":

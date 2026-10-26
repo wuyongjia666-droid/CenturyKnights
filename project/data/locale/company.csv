@@ -641,3 +641,14 @@ holding_upgrade_btn,升级属地,Upgrade holding
 holding_upgrade_cost_tip,%d银/%d粮 → Lv%d,%d silver / %d food → Lv%d
 holding_upgrade_short_tip,缺料·%s,Short · %s
 holding_upgrade_max_tip,已满级,Already max
+holding_unlock_unknown,未知属地,Unknown holding
+holding_unlock_owned,属地已开垦,Holding already unlocked
+holding_unlock_quest,前置任务未完成,Quest gate not cleared
+holding_unlock_short,开垦需 %d银/%d粮,Need %d silver / %d food to claim
+holding_unlock_log,属地开垦：%s,Holding claimed: %s
+holding_unlock_ok,开垦 %s,Claimed %s
+holding_echo_unlock,开垦·%s（-%d银/-%d粮）,Claim · %s (-%d silver / -%d food)
+holding_unlock_btn,开垦属地,Claim holding
+holding_unlock_cost_tip,%d银/%d粮 开垦,%d silver / %d food to claim
+holding_unlock_short_tip,缺料·%s,Short · %s
+holding_unlock_gate_tip,前置未满足,Prerequisite unmet
