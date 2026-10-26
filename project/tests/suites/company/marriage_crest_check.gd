@@ -41,6 +41,7 @@ func _boot() -> void:
 
 func _assert_strip(page: Node, where: String) -> void:
 	var strip := page.find_child("MarriageCrestStrip", true, false)
+	_ok(strip != null and str(strip.get_meta("field_route", "")) == "marriage_strip", "marriage_strip")
 	_ok(strip != null, "%s MarriageCrestStrip" % where)
 	if strip == null:
 		return
