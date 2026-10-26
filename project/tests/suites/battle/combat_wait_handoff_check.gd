@@ -178,7 +178,9 @@ func _e2e_wait_handoff() -> String:
 	await _settle(3)
 	var before: Vector2 = _battle._board_pan
 	_battle._wait_selected()
-	await _settle(10)
+	# Focus pan is a 0.22s tween. A fixed frame count finishes early when
+	# headless frames are cheaper than wall time, so the figure is still outside.
+	await _await_focus_pan()
 	if int(_battle.selected) != _b:
 		# next after _a should be _b if indices ordered; if not, accept any other ready
 		if int(_battle.selected) == _a or int(_battle.selected) < 0:
@@ -232,6 +234,22 @@ func _set_window(size: Vector2i) -> void:
 func _settle(n: int) -> void:
 	for _i in n:
 		await get_tree().process_frame
+
+
+func _await_focus_pan() -> void:
+	var t0 := Time.get_ticks_msec()
+	while Time.get_ticks_msec() - t0 < 700:
+		await get_tree().process_frame
+		if not _focus_tween_running():
+			await get_tree().process_frame
+			return
+
+
+func _focus_tween_running() -> bool:
+	if _battle == null or not _battle.has_meta("_ck_focus_tw"):
+		return false
+	var tw = _battle.get_meta("_ck_focus_tw")
+	return tw is Tween and is_instance_valid(tw) and tw.is_running()
 
 
 func _free_battle() -> void:
