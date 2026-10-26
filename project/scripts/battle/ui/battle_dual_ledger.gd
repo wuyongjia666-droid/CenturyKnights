@@ -1,9 +1,8 @@
 class_name BattleDualLedger
 extends RefCounted
-## Y1-A T-P10 + T-P14: in-battle dual ledger — injured / lamp / ready.
-## T-P14 deepen: ready count on player turn + injured foot marks on map.
-## Stance fat: done count + done foot marks (complement ready).
-## Read-only chrome under ObjectiveHud. Never steals InputRouter taps.
+## Y1-A T-P10 + T-P14 + turn-bridge + stance: injured / lamp / ready / done.
+## Ready taps cycle formation (STOP only); Done count + gray foot marks.
+## Panel stays IGNORE; board InputRouter untouched.
 
 const NAME := "BattleDualLedger"
 const DESK_AT := Vector2(904, 58)
@@ -234,9 +233,12 @@ static func attach(host: Node) -> void:
 	row.add_child(injured)
 	var ready := Label.new()
 	ready.name = "Ready"
-	ready.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	ready.mouse_filter = Control.MOUSE_FILTER_STOP
+	ready.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	ready.add_theme_font_size_override("font_size", 13)
 	ready.add_theme_color_override("font_color", UIKit.ACCENT)
+	ready.gui_input.connect(func(ev: InputEvent) -> void: _on_ready_input(host, ev))
+	ready.tooltip_text = BattleObjectives.text("dual_ledger_ready_hint")
 	row.add_child(ready)
 	var done := Label.new()
 	done.name = "Done"
@@ -318,10 +320,15 @@ static func refresh(host: Node) -> void:
 		inj.text = BattleObjectives.text("dual_ledger_injured") % injured_n
 		inj.add_theme_color_override("font_color", UIKit.DANGER if injured_n > 0 else UIKit.TEXT)
 	if ready:
+		ready.mouse_filter = Control.MOUSE_FILTER_STOP
 		if turn == "player":
 			ready.visible = true
 			ready.text = BattleObjectives.text("dual_ledger_ready") % ready_n
-			ready.add_theme_color_override("font_color", UIKit.ACCENT if ready_n > 0 else UIKit.TEXT)
+			var pulse := _ready_pulse_alpha(host)
+			var col := UIKit.ACCENT if ready_n > 0 else UIKit.TEXT
+			if pulse > 0.0 and ready_n > 0:
+				col = Color(minf(1.0, col.r + 0.25 * pulse), minf(1.0, col.g + 0.2 * pulse), minf(1.0, col.b + 0.1 * pulse), 1.0)
+			ready.add_theme_color_override("font_color", col)
 		else:
 			ready.visible = false
 	if done:
@@ -387,6 +394,32 @@ static func draw_done_marks(host, overlay: CanvasItem) -> void:
 		var r := cpx * DONE_FOOT_R
 		overlay.draw_circle(foot, r, tone)
 		overlay.draw_arc(foot, r, 0.0, TAU, 24, Color(0.72, 0.74, 0.78, 0.80), 1.4)
+
+
+static func _ready_pulse_alpha(host) -> float:
+	# Same meta as turn-bridge pulse — avoid class_name cycle.
+	const META := "m_turn_bridge_pulse_msec"
+	const MS := 1400
+	if host == null or not host.has_meta(META):
+		return 0.0
+	var age_ms := Time.get_ticks_msec() - int(host.get_meta(META))
+	if age_ms < 0 or age_ms >= MS:
+		return 0.0
+	return clampf(1.0 - float(age_ms) / float(MS), 0.0, 1.0)
+
+
+static func _on_ready_input(host, ev: InputEvent) -> void:
+	if host == null or ev == null:
+		return
+	if not (ev is InputEventMouseButton):
+		return
+	var mb := ev as InputEventMouseButton
+	if not mb.pressed or mb.button_index != MOUSE_BUTTON_LEFT:
+		return
+	if str(host.turn_team) != "player":
+		return
+	BattleFormationCycle.apply_next(host)
+	refresh(host)
 
 
 static func _insets(host: Node) -> Dictionary:
