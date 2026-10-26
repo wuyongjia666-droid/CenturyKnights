@@ -150,6 +150,16 @@ func _scene_a_chips_clear_and_cancel() -> String:
 	var err := await _latch_move_preview()
 	if err != "":
 		return "A latch: %s" % err
+	err = _scene_a_assert_chips()
+	if err != "":
+		return err
+	err = _scene_a_assert_side_ignore()
+	if err != "":
+		return err
+	return await _scene_a_cancel_chip()
+
+
+func _scene_a_assert_chips() -> String:
 	if not _battle.has_meta("m_info_block"):
 		return "A: m_info_block missing after note_layout"
 	var block: Rect2 = _battle.get_meta("m_info_block")
@@ -157,14 +167,18 @@ func _scene_a_chips_clear_and_cancel() -> String:
 		return "A: info block too thin %s" % block
 	var pair := BattleConfirmAffordance.chips(_battle)
 	var confirm: Rect2 = pair.get("confirm", Rect2())
-	var cancel: Rect2 = pair.get("cancel", Rect2())
 	if confirm.size.x < 1.0:
 		return "A: no confirm chip"
 	if not BattleConfirmAffordance.chips_clear_of_info(_battle):
+		var cancel: Rect2 = pair.get("cancel", Rect2())
 		return "A: chips under info confirm=%s cancel=%s block=%s" % [confirm, cancel, block]
 	var bounds := BattleConfirmAffordance.chip_bounds(_battle)
 	if not bounds.encloses(confirm) and not bounds.grow(1.0).encloses(confirm):
 		return "A: confirm outside chip_bounds %s vs %s" % [confirm, bounds]
+	return ""
+
+
+func _scene_a_assert_side_ignore() -> String:
 	var col := _battle.get_node_or_null("MobileSideCol") as Control
 	if col == null:
 		return "A: MobileSideCol missing"
@@ -173,6 +187,12 @@ func _scene_a_chips_clear_and_cancel() -> String:
 	var card = _battle._unit_card
 	if card != null and card is Control and (card as Control).mouse_filter != Control.MOUSE_FILTER_IGNORE:
 		return "A: unit card steals taps"
+	return ""
+
+
+func _scene_a_cancel_chip() -> String:
+	var pair := BattleConfirmAffordance.chips(_battle)
+	var cancel: Rect2 = pair.get("cancel", Rect2())
 	BattlePick.cancel_focus_tween(_battle)
 	var pan0: Vector2 = _battle._board_pan
 	var pos0: Vector2i = _battle.units[_player_i].pos
