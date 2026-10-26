@@ -36,7 +36,12 @@ func _ready() -> void:
 
 func _process(_dt: float) -> void:
 	var sc := get_tree().current_scene
-	var path := sc.scene_file_path if sc != null else ""
+	# change_scene_to_file nulls current_scene for one frame. Counting that gap as a
+	# hop consumes _via_nav, then the real page looks external and _params is wiped,
+	# so back() reopens a pushed page with an empty focus.
+	if sc == null:
+		return
+	var path := sc.scene_file_path
 	if path == _cur:
 		return
 	_on_scene_changed(_cur, path)

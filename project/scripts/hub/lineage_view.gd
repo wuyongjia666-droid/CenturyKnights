@@ -1,19 +1,22 @@
 extends Control
-## Genealogy v2 overview (docs/design/genealogy-v2.md): avatar grid on the left, info panel on the right.
-## "详情" opens scenes/hub/lineage_tree.tscn focused on the selected person.
+## Genealogy overview: generation-banded portrait wall, info panel on the right.
+## "详情" opens the focused lineage tree. "血脉详档" opens unit_dossier for the same person.
+## Familyless roster stay on the banner band (旗徽); house members keep family arms (族徽).
 
 const TREE_SCENE := "res://scenes/hub/lineage_tree.tscn"
 const GRID := Rect2(24, 72, 820, 520)
-const CELL := Vector2(112, 132)
+const CELL := Vector2(136, 176)
 
 var _scroll: ScrollContainer
-var _grid: GridContainer
+var _grid: VBoxContainer
 var _info: Control
 var _selected: CKCharacter
 var _members: Array = []
 var _mob := false
 var _info_rect := Rect2()
-const CELL_M := Vector2(160, 204)
+var _cols := 5
+var _wall_people: Array = []
+const CELL_M := Vector2(168, 236)
 
 func _ready() -> void:
 	_build()
@@ -47,11 +50,12 @@ func _build() -> void:
 	_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_AUTO
 	_scroll.scroll_deadzone = 8
 	add_child(_scroll)
-	_grid = GridContainer.new()
+	_cols = maxi(1, int(GRID.size.x / (CELL.x + 8.0)))
+	_grid = VBoxContainer.new()
 	_grid.name = "LineageGrid"
-	_grid.columns = int(GRID.size.x / (CELL.x + 8))
-	_grid.add_theme_constant_override("h_separation", 8)
-	_grid.add_theme_constant_override("v_separation", 8)
+	_grid.add_theme_constant_override("separation", 12)
+	_grid.mouse_filter = Control.MOUSE_FILTER_PASS
+	_grid.custom_minimum_size.x = GRID.size.x
 	_scroll.add_child(_grid)
 	_info = Control.new()
 	_info.name = "InfoHost"
@@ -112,9 +116,9 @@ func apply_mobile_layout() -> void:
 	var jy := 720.0 - MobilePage.HIT - 12.0
 	_scroll.position = Vector2(24, MobilePage.TOP + 4.0)
 	_scroll.size = Vector2(gw, jy - MobilePage.TOP - 16.0)
-	_grid.columns = maxi(1, int((gw + 10.0) / (CELL_M.x + 10.0)))
-	_grid.add_theme_constant_override("h_separation", 10)
-	_grid.add_theme_constant_override("v_separation", 10)
+	_cols = maxi(1, int((gw + 10.0) / (CELL_M.x + 10.0)))
+	_grid.custom_minimum_size.x = gw
+	_grid.add_theme_constant_override("separation", 12)
 	var jumps := get_node("LineageJumps") as HBoxContainer
 	jumps.position = Vector2(24, jy)
 	jumps.size = Vector2(gw, MobilePage.HIT)
@@ -128,7 +132,7 @@ func apply_mobile_layout() -> void:
 
 ## Mobile audit v1: a one-person family left the whole tree area blank. Say what grows it.
 func _mobile_empty_hint(r: Rect2) -> void:
-	if _members.size() > 1 or r.size.y < 120.0:
+	if _wall_people.size() > 1 or r.size.y < 120.0:
 		return
 	var v := MobilePage.panel(self, r, 18)
 	(v.get_parent() as Control).name = "LineageEmptyHint"
@@ -153,18 +157,70 @@ func _refresh() -> void:
 	var old := get_node_or_null("LineageEmpty")
 	if old:
 		old.queue_free()
-	_members = CKLineageInfo.family_of(GameState.characters, GameState.get_leader())
-	if _members.is_empty():
+	var leader = GameState.get_leader()
+	_members = CKLineageInfo.family_of(GameState.characters, leader)
+	var bands: Array = CKLineageInfo.wall_bands(GameState.characters, leader)
+	_wall_people = []
+	if bands.is_empty():
 		var l := UIKit.body_label(Locale.t("gen2_32"), UIKit.TEXT_FAINT, 15)
 		l.name = "LineageEmpty"
 		l.position = GRID.position + Vector2(24, 40)
 		l.size = Vector2(GRID.size.x - 48, 80)
 		add_child(l)
-	for c in _members:
-		_grid.add_child(_cell(c))
-	if _selected == null or not _members.has(_selected):
-		_selected = _members[0] if not _members.is_empty() else null
+	else:
+		_grid.custom_minimum_size.x = maxf(_scroll.size.x, 200.0)
+		for band in bands:
+			_grid.add_child(_band(band))
+	var pick: CKCharacter = _selected if _wall_has(_selected) else null
+	if pick == null:
+		pick = _find_wall(str(CKNav.params().get("focus", "")))
+	if pick == null and GameState.has_meta("lineage_focus"):
+		pick = _find_wall(str(GameState.get_meta("lineage_focus")))
+	if pick == null and not _members.is_empty():
+		pick = _members[0]
+	if pick == null and not _wall_people.is_empty():
+		pick = _wall_people[0]
+	_selected = pick
 	_render_info()
+
+func _band(band: Dictionary) -> Control:
+	var box := VBoxContainer.new()
+	box.name = "GenBand_%s" % str(band.get("id", ""))
+	box.mouse_filter = Control.MOUSE_FILTER_PASS
+	box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	box.add_theme_constant_override("separation", 6)
+	var title := UIKit.body_label(str(band.get("title", "")), UIKit.ACCENT, 15)
+	title.name = "GenBandTitle"
+	title.autowrap_mode = TextServer.AUTOWRAP_OFF
+	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var title_h := 32.0 if _mob else 22.0
+	if _mob:
+		title.add_theme_font_size_override("font_size", MobilePage.FONT)
+	title.custom_minimum_size = Vector2(200, title_h)
+	title.size = Vector2(maxf(_scroll.size.x - 8.0, 200.0), title_h)
+	box.add_child(title)
+	var grid := GridContainer.new()
+	grid.name = "GenGrid_%s" % str(band.get("id", ""))
+	grid.columns = maxi(1, _cols)
+	grid.mouse_filter = Control.MOUSE_FILTER_PASS
+	grid.add_theme_constant_override("h_separation", 10 if _mob else 8)
+	grid.add_theme_constant_override("v_separation", 10 if _mob else 8)
+	box.add_child(grid)
+	for c in band.get("people", []):
+		_wall_people.append(c)
+		grid.add_child(_cell(c))
+	return box
+
+func _wall_has(c) -> bool:
+	return c != null and _wall_people.has(c)
+
+func _find_wall(id: String) -> CKCharacter:
+	if id == "":
+		return null
+	for c in _wall_people:
+		if str(c.id) == id:
+			return c
+	return null
 
 func _cell(c: CKCharacter) -> Button:
 	var b := Button.new()
@@ -178,55 +234,82 @@ func _cell(c: CKCharacter) -> Button:
 	b.add_theme_stylebox_override("pressed", UIKit.flat_box(Color(UIKit.ACCENT, 0.10), Color(UIKit.ACCENT, 0.8), 8, 2))
 	b.add_theme_stylebox_override("focus", UIKit._focus_ring(UIKit.FOCUS_RING, 10))
 	var por := CKLineageInfo.portrait_rect(c, Vector2(80, 88))
-	por.position = Vector2(16, 6)
+	por.position = Vector2(28, 6)
 	b.add_child(por)
-	var nm := UIKit.body_label(c.name, UIKit.TEXT if c.alive else UIKit.TEXT_FAINT, 13)
-	nm.autowrap_mode = TextServer.AUTOWRAP_OFF
-	nm.clip_text = true
-	nm.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	nm.position = Vector2(4, 96)
-	nm.size = Vector2(CELL.x - 8, 18)
-	nm.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var rel := _cell_label(CKLineageInfo.relation_label(GameState.characters, GameState.get_leader(), c), UIKit.ACCENT, 12)
+	rel.name = "CellRelation"
+	rel.position = Vector2(4, 98)
+	b.add_child(rel)
+	var nm := _cell_label(c.name, UIKit.TEXT if c.alive else UIKit.TEXT_FAINT, 13)
+	nm.position = Vector2(4, 118)
 	b.add_child(nm)
-	var sub := UIKit.body_label((Locale.t("gen2_21") % c.age) if c.alive else Locale.t("gen2_22"), UIKit.OK if c.alive else UIKit.TEXT_FAINT, 11)
-	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	sub.position = Vector2(4, 114)
-	sub.size = Vector2(CELL.x - 8, 14)
-	sub.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	b.add_child(sub)
+	var life := (Locale.t("gen2_21") % c.age) if c.alive else Locale.t("gen2_22")
+	var tail := Locale.t("lin_minor") if c.age < Calendar.ADULT_AGE else c.rank_name()
+	var meta := _cell_label("%s · %s" % [life, tail], UIKit.OK if c.alive else UIKit.TEXT_FAINT, 12)
+	meta.name = "CellRank"
+	meta.position = Vector2(4, 140)
+	b.add_child(meta)
 	if c.is_leader:
 		var tc := UIKit.tag_chip(Locale.t("gen2_33"), UIKit.ACCENT)
 		tc.position = Vector2(4, 4)
 		tc.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		b.add_child(tc)
 	CKHeraldryChrome.attach_cell_chrome(b, c, CELL if not _mob else CELL_M, 6.0 if not _mob else 8.0)
+	var badge := b.get_node_or_null("CellBadge")
+	if badge != null:
+		badge.set_meta("rank_id", str(c.rank))
 	b.pressed.connect(func():
 		UIFX.press_feedback(b)
 		select(c))
 	if _mob:
 		b.custom_minimum_size = CELL_M
-		por.position = Vector2(20, 8)
+		por.position = Vector2(24, 8)
 		por.scale = Vector2(1.5, 1.5)
-		for pair in [[nm, 142.0], [sub, 172.0]]:
-			var l := pair[0] as Label
-			l.add_theme_font_size_override("font_size", MobilePage.FONT)
-			l.position = Vector2(4, pair[1])
-			l.size = Vector2(CELL_M.x - 8, 30)
+		rel.position = Vector2(4, 148)
+		nm.position = Vector2(4, 178)
+		meta.position = Vector2(4, 208)
+		for lab in [rel, nm, meta]:
+			lab.add_theme_font_size_override("font_size", MobilePage.FONT)
+			lab.size = Vector2(CELL_M.x - 8, 28)
+			lab.custom_minimum_size = Vector2(CELL_M.x - 8, 28)
 		for l in b.find_children("*", "Label", true, false):
-			if (l as Label).get_theme_font_size("font_size") < MobilePage.FONT:
-				(l as Label).add_theme_font_size_override("font_size", MobilePage.FONT)
+			var lab2 := l as Label
+			if lab2.get_theme_font_size("font_size") < MobilePage.FONT:
+				lab2.add_theme_font_size_override("font_size", MobilePage.FONT)
+			if lab2.size.y < 28.0:
+				lab2.size.y = 28.0
+				lab2.custom_minimum_size.y = 28.0
 	return b
+
+func _cell_label(text: String, col: Color, size: int) -> Label:
+	var lab := UIKit.body_label(text, col, size)
+	lab.autowrap_mode = TextServer.AUTOWRAP_OFF
+	lab.clip_text = true
+	lab.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	lab.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	lab.size = Vector2(CELL.x - 8, 20)
+	lab.custom_minimum_size = Vector2(CELL.x - 8, 20)
+	return lab
 
 func select(c: CKCharacter) -> void:
 	_selected = c
+	if c != null:
+		GameState.set_meta("lineage_focus", str(c.id))
 	_render_info()
 
 func _render_info() -> void:
+	var dossier_text := ""
+	var dossier_cb := Callable()
+	if _selected != null:
+		dossier_text = Locale.t("gen2_29")
+		dossier_cb = Callable(self, "_open_dossier")
 	if _mob:
-		CKLineageInfo.render_mobile(_info, _selected, Locale.t("gen2_34"), open_details, _info_rect)
+		CKLineageInfo.render_mobile(_info, _selected, Locale.t("gen2_34"), open_details, _info_rect, dossier_text, dossier_cb)
 	else:
-		CKLineageInfo.render(_info, _selected, Locale.t("gen2_34"), open_details)
-	for n in _grid.get_children():
+		CKLineageInfo.render(_info, _selected, Locale.t("gen2_34"), open_details, dossier_text, dossier_cb)
+	for n in find_children("*", "Button", true, false):
+		if not str(n.name).begins_with("Avatar_"):
+			continue
 		var on: bool = _selected != null and str(n.get_meta("cid", "")) == str(_selected.id)
 		var bg := Color(UIKit.ACCENT, 0.08) if on else Color(0.055, 0.067, 0.090, 0.92)
 		var bd := UIKit.ACCENT if on else Color(1, 1, 1, 0.10)
@@ -236,12 +319,11 @@ func open_details() -> bool:
 	if _selected == null:
 		return false
 	Sfx.click()
+	GameState.set_meta("lineage_focus", str(_selected.id))
 	return CKNav.go(TREE_SCENE, {"focus": str(_selected.id)})
 
 func _open_dossier() -> void:
 	if _selected == null:
 		return
 	Sfx.click()
-	GameState.set_meta("dossier_id", _selected.id)
-	GameState.set_meta("dossier_back", "res://scenes/hub/lineage_view.tscn")
-	get_tree().change_scene_to_file("res://scenes/hub/unit_dossier.tscn")
+	CKLineageInfo.open_dossier(_selected, "res://scenes/hub/lineage_view.tscn")
