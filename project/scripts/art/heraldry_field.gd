@@ -1,7 +1,7 @@
 class_name CKHeraldryField
 extends RefCounted
 ## Field chrome for surfaces #511 does not own: tavern hire strip, deploy reserve,
-## battle card / forecast / report, annex serve rows.
+## battle card / forecast / report, annex serve rows, forge smith slots, shrine heal.
 ## 团徽 stays the company banner. A family id shows 族徽; no family id shows 旗徽.
 ## Enemy plates are 敌徽. No impale, quarter, or marriage marshalling.
 
@@ -166,3 +166,51 @@ static func attach_annex_row_arms(row: Control, kind: String, who, arms_sz: Vect
 	if row is Container:
 		row.move_child(arms, 0)
 	return arms
+
+
+## Forge focus strip: 团徽 + selected smith 族徽|旗徽. No selection → 团徽 only.
+static func place_forge_focus_strip(parent: Node, smith, at: Vector2, shield: Vector2 = Vector2(36, 44)) -> Control:
+	if parent == null:
+		return null
+	var w := shield.x
+	if smith != null:
+		w = shield.x * 2.0 + 8.0
+	var host := _host(parent, "ForgeFocusStrip", at, Vector2(w, shield.y))
+	var focus: TextureRect = null
+	if smith != null:
+		focus = CKHeraldryChrome.make_person_arms(smith, shield)
+		focus.name = "ForgeFocusArms"
+	_pair(host, shield, focus)
+	host.set_meta("has_smith", smith != null)
+	return host
+
+
+## Smith list row: person 族徽|旗徽. No marshalling with company arms.
+static func attach_forge_slot_arms(row: Control, c, arms_sz: Vector2 = Vector2(28, 34)) -> TextureRect:
+	if row == null or c == null:
+		return null
+	_retire(row, "ForgeSlotArms")
+	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
+	arms.name = "ForgeSlotArms"
+	arms.position = Vector2(maxf(4.0, row.size.x - arms_sz.x - 8.0) if row.size.x > 80.0 else 292.0, 12.0)
+	arms.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_child(arms)
+	return arms
+
+
+## Shrine HealCard strip: 团徽 + first hurt knight 族徽|旗徽. Empty hurt → 团徽 only.
+static func place_shrine_heal_strip(parent: Node, focus_hurt, at: Vector2, shield: Vector2 = Vector2(32, 40)) -> Control:
+	if parent == null:
+		return null
+	var w := shield.x
+	if focus_hurt != null:
+		w = shield.x * 2.0 + 8.0
+	var host := _host(parent, "ShrineHealStrip", at, Vector2(w, shield.y))
+	var focus: TextureRect = null
+	if focus_hurt != null:
+		focus = CKHeraldryChrome.make_person_arms(focus_hurt, shield)
+		focus.name = "HealFocusArms"
+	_pair(host, shield, focus)
+	host.set_meta("has_hurt", focus_hurt != null)
+	return host
+
