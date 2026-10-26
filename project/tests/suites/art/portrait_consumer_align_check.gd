@@ -1,9 +1,8 @@
 extends Node
 ## Desktop/mobile portrait path alignment for non-dialogue consumers.
-## Dialogue already forces TIER_MEDIUM. Combat HUD / genealogy / unit cards used
-## size→small, so Android (small excluded) fell to medium while desktop decoded
-## small — same stem, different plate. Force MEDIUM so both layouts resolve the
-## same tier for the same unit. Atlas world plates go through CKArtPaths.
+## Surfaces call UnitArt.unit_portrait, which canonicalizes to the unit tier.
+## Widget size must not pick a sibling the other platform does not ship.
+## Atlas world plates go through CKArtPaths.
 
 const DETAIL_SOURCES := [
 	"res://scripts/battle/ui/battle_info_panel.gd",
@@ -41,20 +40,10 @@ func _source_gate() -> String:
 		var src := FileAccess.get_file_as_string(path)
 		if src == "":
 			return "missing " + path
-		var i := 0
-		var hits := 0
-		while true:
-			var at := src.find("UnitArt.portrait(", i)
-			if at < 0:
-				break
-			hits += 1
-			var frag := src.substr(at, 140)
-			if frag.find("TIER_MEDIUM") < 0:
-				return "%s portrait call missing TIER_MEDIUM near: %s" % [
-					path.get_file(), frag.replace("\n", " ")]
-			i = at + 16
-		if hits < 1:
-			return "%s has no UnitArt.portrait calls" % path.get_file()
+		if src.find("UnitArt.unit_portrait(") < 0:
+			return "%s does not call UnitArt.unit_portrait" % path.get_file()
+		if src.find("tier_for_display") >= 0:
+			return "%s still maps portrait tier from widget size" % path.get_file()
 	var ua := FileAccess.get_file_as_string("res://scripts/art/unit_art.gd")
 	var block_at := ua.find("static func dialogue_portrait")
 	if block_at < 0:
@@ -67,8 +56,13 @@ func _source_gate() -> String:
 	if cp.find("_portrait.texture = load(") >= 0:
 		return "chapter_player raw-loads portrait texture"
 	var dossier := FileAccess.get_file_as_string("res://scripts/hub/unit_dossier.gd")
-	if dossier.find("CKArtPaths.TIER_LARGE") < 0 and dossier.find("TIER_LARGE") < 0:
-		return "dossier portrait_plate missing TIER_LARGE"
+	if dossier.find("TIER_LARGE") >= 0:
+		return "dossier still requests TIER_LARGE"
+	if dossier.find("portrait_plate(") < 0:
+		return "dossier missing portrait_plate"
+	var kit := FileAccess.get_file_as_string("res://scripts/ui/ui_kit.gd")
+	if kit.find("UnitArt.unit_portrait(") < 0:
+		return "ui_kit portrait rect left the shared resolver"
 	return ""
 
 
@@ -94,7 +88,7 @@ func _tier_parity_sample() -> String:
 	UnitArt.clear_cache()
 	CKGenomePortrait.clear_mem()
 	CKArtPaths.last_loaded = ""
-	var desk_tex: Texture2D = UnitArt.portrait(leader, 96, CKArtPaths.TIER_MEDIUM)
+	var desk_tex: Texture2D = UnitArt.unit_portrait(leader)
 	var desk_path := CKArtPaths.last_loaded
 	if desk_tex == null:
 		return "desktop MEDIUM portrait null for leader"
@@ -102,7 +96,7 @@ func _tier_parity_sample() -> String:
 	UnitArt.clear_cache()
 	CKGenomePortrait.clear_mem()
 	CKArtPaths.last_loaded = ""
-	var mob_tex: Texture2D = UnitArt.portrait(leader, 96, CKArtPaths.TIER_MEDIUM)
+	var mob_tex: Texture2D = UnitArt.unit_portrait(leader)
 	var mob_path := CKArtPaths.last_loaded
 	if mob_tex == null:
 		return "android MEDIUM portrait null for leader (path=%s)" % mob_path

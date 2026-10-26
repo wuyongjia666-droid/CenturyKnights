@@ -635,6 +635,43 @@ static func _strip_export_suffix(fn: String) -> String:
 			return fn.substr(0, fn.length() - suf.length())
 	return fn
 
+## Play-band plate. Infant uses the infant pool. Child and teen both use youth,
+## with different salts, so 3–11 and 12–15 are different Qwen plates of the same
+## genome. Adult is resolved by CKGenomePortrait.plate_record (authored file).
+const BAND_SALT := {"infant": 17, "child": 41, "teen": 73}
+
+static func plate_for_band(c: Object, band: String, tier: String = "") -> Dictionary:
+	var use := CKArtPaths.canonical_unit_tier(tier)
+	var age_i := int(c.get("age")) if c != null else 0
+	var stage := CKGenomePortrait.stage_for_play_band(band, age_i)
+	var salt := int(BAND_SALT.get(band, 1))
+	if band == "teen":
+		var child: Dictionary = _disk_stage_plate_salt(c, "youth", use, int(BAND_SALT["child"]))
+		var teen: Dictionary = _disk_stage_plate_salt(c, "youth", use, salt)
+		if str(teen.get("stem", "")) != "" and str(teen.get("stem", "")) == str(child.get("stem", "")):
+			teen = _disk_stage_plate_salt(c, "youth", use, salt + 997)
+		return teen
+	return _disk_stage_plate_salt(c, stage, use, salt)
+
+
+static func _disk_stage_plate_salt(c: Object, stage: String, tier: String, salt: int) -> Dictionary:
+	var miss := {"texture": null, "stem": "", "path": ""}
+	_ensure_disk_index()
+	var keys: Array = _same_sex(_disk_by_stage.get(stage, []), _sex_of(c))
+	if keys.is_empty():
+		return miss
+	var seed := 1
+	if c != null:
+		seed = CKGenomePortrait.identity_seed(c)
+	var idx: int = absi(int(seed) + salt) % keys.size()
+	for step in mini(keys.size(), 12):
+		var key := str(keys[(idx + step) % keys.size()])
+		var tex := _load_plate(key, tier)
+		if tex != null:
+			return {"texture": tex, "stem": key, "path": CKArtPaths.last_loaded}
+	return miss
+
+
 ## Same-stage plate by identity seed, ignoring the age-derived stage (UnitArt teen band at 15).
 static func stage_texture(c: Object, stage: String, tier: String = "large") -> Texture2D:
 	if not has_plates():

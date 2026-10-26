@@ -1,9 +1,9 @@
 extends Node
-## Playtest bug: a newborn showed a teen face. A real birth must show the shared infant plate at
-## 0–2, the shared child plate at 3–11, a non-infant/non-child plate at 12 and 16, at every
-## display size, and the same after save/load (portrait re-resolves from age only).
+## A real birth resolves a genome-seeded Qwen plate from age alone: 0–2 infant,
+## 3–11 child, 12–15 teen, 16+ adult. Display size must not change the file.
+## The plate is stable across save/load and swaps when a birthday crosses a band.
 
-const AGES := [0, 1, 2, 3, 5, 12, 16]
+const AGES := [0, 1, 2, 3, 5, 11, 12, 15, 16]
 const SIZES := [72, 128, 400, 640]
 
 
@@ -17,50 +17,73 @@ func _ready() -> void:
 	get_tree().quit(0)
 
 
-func _want(c: CKCharacter, size: int) -> Texture2D:
-	var p := UnitArt.band_plate_path(c)
-	if p == "":
-		return null
-	return CKArtPaths.load_portrait(p, CKArtPaths.tier_for_display(size))
-
-
-func _same(a: Texture2D, b: Texture2D) -> bool:
-	if a == null or b == null:
-		return false
-	if a == b:
-		return true
-	return a.get_size() == b.get_size() and a.get_image().get_data() == b.get_image().get_data()
+func _path_at(c: CKCharacter, age: int, size: int) -> String:
+	c.age = age
+	UnitArt.clear_cache()
+	CKGenomePortrait.clear_mem()
+	var _tex: Texture2D = UnitArt.portrait(c, size)
+	return str(c.get_meta("ck_portrait_path", ""))
 
 
 func _check(c: CKCharacter, tag: String) -> String:
-	var infant_ref: Texture2D = CKArtPaths.load_portrait(UnitArt.INFANT_PLATE, "small")
-	if infant_ref == null:
-		return "infant plate missing " + UnitArt.INFANT_PLATE
+	var by_age := {}
 	for age in AGES:
-		c.age = int(age)
-		for size in SIZES:
-			var tex: Texture2D = UnitArt.portrait(c, size)
-			if tex == null:
-				return "%s null portrait age %d size %d" % [tag, age, size]
-			var small: Texture2D = UnitArt.portrait(c, 72)
-			if age <= 11:
-				if not _same(tex, _want(c, size)):
-					return "%s age %d size %d not shared %s plate" % [tag, age, size, UnitArt.display_band(age)]
-				if age <= 2 and not _same(small, infant_ref):
-					return "%s age %d not infant" % [tag, age]
-				if age >= 3 and _same(small, infant_ref):
-					return "%s age %d still infant" % [tag, age]
-			else:
-				if _same(small, infant_ref):
-					return "%s age %d shows infant" % [tag, age]
-				for g in ["f", "m"]:
-					var kid: Texture2D = CKArtPaths.load_portrait(str(UnitArt.CHILD_PLATE[g]), "small")
-					if _same(small, kid):
-						return "%s age %d shows child plate" % [tag, age]
-		var kind := UnitArt.portrait_kind(c)
-		if age <= 2 and kind != "infant":
-			return "%s kind age %d = %s" % [tag, age, kind]
+		var got := _one_age(c, tag, int(age))
+		if str(got.get("err", "")) != "":
+			return str(got["err"])
+		by_age[int(age)] = str(got["path"])
 	c.age = 0
+	return _band_locks(tag, by_age)
+
+
+func _one_age(c: CKCharacter, tag: String, age: int) -> Dictionary:
+	var paths := {}
+	for size in SIZES:
+		var path := _path_at(c, age, int(size))
+		if path == "":
+			return {"err": "%s empty path age %d size %d" % [tag, age, size]}
+		if UnitArt.portrait(c, int(size)) == null:
+			return {"err": "%s null portrait age %d size %d" % [tag, age, size]}
+		paths[path] = true
+	if paths.size() != 1:
+		return {"err": "%s age %d size changed file %s" % [tag, age, str(paths.keys())]}
+	var chosen := str(paths.keys()[0])
+	var stem_err := _stem_for(tag, age, chosen)
+	if stem_err != "":
+		return {"err": stem_err}
+	var kind := UnitArt.portrait_kind(c)
+	if age <= 2 and kind != "infant":
+		return {"err": "%s kind age %d = %s" % [tag, age, kind]}
+	return {"err": "", "path": chosen}
+
+
+func _stem_for(tag: String, age: int, path: String) -> String:
+	var stem := CKArtPaths._portrait_stem(path).get_file()
+	var band := UnitArt.display_band(age)
+	if band == "infant" and not stem.begins_with("infant_"):
+		return "%s age %d stem %s" % [tag, age, stem]
+	if band == "child" and not stem.begins_with("youth_"):
+		return "%s age %d child stem %s" % [tag, age, stem]
+	if band == "teen" and not stem.begins_with("youth_"):
+		return "%s age %d teen stem %s" % [tag, age, stem]
+	if band == "adult" and (stem.begins_with("infant_") or stem.begins_with("youth_")):
+		return "%s age %d adult stem %s" % [tag, age, stem]
+	return ""
+
+
+func _band_locks(tag: String, by_age: Dictionary) -> String:
+	if by_age[0] != by_age[2]:
+		return "%s infant band split %s vs %s" % [tag, by_age[0], by_age[2]]
+	if by_age[3] != by_age[11]:
+		return "%s child band split" % tag
+	if by_age[12] != by_age[15]:
+		return "%s teen band split" % tag
+	if by_age[2] == by_age[3]:
+		return "%s 2→3 did not swap" % tag
+	if by_age[11] == by_age[12]:
+		return "%s 11→12 did not swap" % tag
+	if by_age[15] == by_age[16]:
+		return "%s 15→16 did not swap" % tag
 	return ""
 
 
@@ -107,8 +130,10 @@ func _run() -> String:
 		return "save/load 2 failed"
 	var b2: CKCharacter = GameState.characters.get(kid.id)
 	b2.age += 1
-	if _same(UnitArt.portrait(b2, 72), CKArtPaths.load_portrait(UnitArt.INFANT_PLATE, "small")):
-		return "birthday 2->3 kept infant plate"
+	var infant_path := _path_at(b2, 2, 72)
+	var child_path := _path_at(b2, 3, 72)
+	if infant_path == "" or infant_path == child_path:
+		return "birthday 2->3 kept infant plate %s" % infant_path
 	## Export-path bank discovery: listing must still find plates when only *.import names exist.
 	if CKPortraitBank._strip_export_suffix("infant_x.webp.import") != "infant_x.webp":
 		return "export suffix strip"

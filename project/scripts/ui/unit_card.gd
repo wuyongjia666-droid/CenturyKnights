@@ -118,7 +118,7 @@ func set_unit(c, team: String = "player") -> void:
 			CKPortraitStatus.attach(portrait.get_parent(), null, portrait.size)
 		CKHeraldryField.attach_card_arms(self, null, team, "")
 		return
-	var tex = UnitArt.portrait(c, 128, CKArtPaths.TIER_MEDIUM)
+	var tex = UnitArt.unit_portrait(c)
 	if tex != null:
 		portrait.texture = tex
 	if portrait != null and portrait.get_parent() is Control:

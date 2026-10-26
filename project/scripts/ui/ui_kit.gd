@@ -578,12 +578,14 @@ static func char_card_text(c: CKCharacter) -> String:
 		lines.append(Locale.t("shell_484a9984"))
 	return "\n".join(lines)
 
-static func make_portrait_rect(c: CKCharacter, size: int = 72, tier: String = "") -> TextureRect:
+static func make_portrait_rect(c: CKCharacter, size: int = 72, _tier: String = "") -> TextureRect:
 	var tr := TextureRect.new()
 	tr.custom_minimum_size = Vector2(size, size)
 	tr.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	tr.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	tr.texture = UnitArt.portrait(c, size, tier)
+	# Size and the legacy tier argument do not choose the file. Every plate
+	# goes through the shared unit resolver so desktop and phone match.
+	tr.texture = UnitArt.unit_portrait(c)
 	return tr
 
 static func make_banner_rect(w: int = 72, h: int = 100) -> TextureRect:
@@ -1115,7 +1117,7 @@ static func section_head(parent: Control, pos: Vector2, title_zh: String, en: St
 		r.position = pos + Vector2(w - r.get_minimum_size().x, 1)
 		parent.add_child(r)
 
-static func portrait_plate(parent: Control, rect: Rect2, c, caption: String = "", focus: bool = false, tier: String = "") -> Panel:
+static func portrait_plate(parent: Control, rect: Rect2, c, caption: String = "", focus: bool = false, _tier: String = "") -> Panel:
 	## blueprint plate: thin frame + corner ticks + clipped portrait + mono caption
 	var p := panel_at(parent, rect, 8, focus)
 	var inner := Control.new()
@@ -1126,7 +1128,7 @@ static func portrait_plate(parent: Control, rect: Rect2, c, caption: String = ""
 	p.add_child(inner)
 	if c != null:
 		var tex: Texture2D = null
-		var pr: TextureRect = make_portrait_rect(c, int(rect.size.y), tier)
+		var pr: TextureRect = make_portrait_rect(c, int(rect.size.y))
 		tex = pr.texture
 		pr.queue_free()
 		if tex:

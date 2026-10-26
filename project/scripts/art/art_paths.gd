@@ -9,6 +9,20 @@ extends RefCounted
 const TIER_SMALL := "small"
 const TIER_MEDIUM := "medium"
 const TIER_LARGE := "large"
+## Genome-bank small and large siblings are dropped from the Android pack
+## (*.small.webp and *_{16hex}.webp). Widget pixel size used to pick those
+## siblings on desktop and a different file on the phone. Unit UI always
+## asks for medium: the full Qwen plate both presets ship.
+const UNIT_TIER := TIER_MEDIUM
+
+
+static func canonical_unit_tier(_requested: String = "") -> String:
+	return UNIT_TIER
+
+
+## Logical portrait png/webp → the unit-tier file both platforms decode.
+static func resolve_unit_plate(path: String, requested_tier: String = "") -> String:
+	return resolve_portrait(path, canonical_unit_tier(requested_tier))
 
 ## Test seam (Y1-A portrait parity): (res_path: String) -> bool, true when that file is NOT
 ## in the simulated export (e.g. the Android preset exclude_filter). Unset in the game.

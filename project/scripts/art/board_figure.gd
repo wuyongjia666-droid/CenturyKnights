@@ -1438,18 +1438,12 @@ static func head_box(mi: MeshInstance3D, key: String) -> Dictionary:
 static func decal_portrait_image(c, team: String, tmpl: String) -> Image:
 	var tex: Texture2D = null
 	if str(team) == "enemy":
-		for p in ["res://assets/art/portraits/%s.webp" % tmpl, "res://assets/art/portraits/bandit.webp"]:
-			if ResourceLoader.exists(p):
-				tex = load(p) as Texture2D
+		for p in ["res://assets/art/portraits/%s.png" % tmpl, "res://assets/art/portraits/bandit.png"]:
+			tex = CKArtPaths.load_portrait(p, CKArtPaths.UNIT_TIER)
+			if tex != null:
 				break
-	elif c != null and not bool(c.is_leader) and str(c.cast_key) != "":
-		var g := "f" if str(c.gender) == "f" else "m"
-		var nm: String = {"dengying": "hunter", "militia_a": "spear", "militia_b": "guard"}.get(str(c.cast_key), "")
-		var pth := "res://assets/art/portraits/v8_bust_%s_%s.webp" % [g, nm]
-		if nm != "" and ResourceLoader.exists(pth):
-			tex = load(pth) as Texture2D
-	if tex == null and c != null:
-		tex = UnitArt.portrait(c, 256, "large")
+	elif c != null:
+		tex = UnitArt.unit_portrait(c)
 	if tex == null:
 		return null
 	var img := tex.get_image()
