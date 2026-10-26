@@ -589,3 +589,4 @@ smith_forge_mats_unstocked,市集缺打造材料,Market lacks forge mats
 smith_forge_short_silver,购料+工钱不足（需 %d 银）,Need %d silver for mats+labor
 smith_forge_bought_mats_done,打造完成：「%s」（工钱 %d · 购料 %d 银）,Forged "%s" (labor %d · mats %d silver)
 smith_forge_buy_mats_btn,购料打造 · %d,Buy mats & forge · %d
+smith_forge_why_buy_mats,缺料可市集购入再打造（购料 %d + 工钱 %d）。,Missing mats — buy at market then forge (mats %d + labor %d).

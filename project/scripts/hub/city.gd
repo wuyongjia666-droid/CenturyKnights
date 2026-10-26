@@ -1179,7 +1179,7 @@ func _item_detail(r: Rect2, iid: String, shop: bool) -> void:
 		why = "🔒 " + str(e2.get("reason", ""))
 	elif not miss.is_empty():
 		if bool(prev_m.get("can_buy", false)):
-			why = "缺料可市集购入再打造（购料 %d + 工钱 %d）。" % [int(prev_m.get("mat_silver", 0)), int(prev_m.get("forge_silver", 0))]
+			why = Locale.t("smith_forge_why_buy_mats") % [int(prev_m.get("mat_silver", 0)), int(prev_m.get("forge_silver", 0))]
 		else:
 			why = "打造需自备材料（市集可购）；直接购买无需材料。"
 	else:
