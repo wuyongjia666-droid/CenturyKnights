@@ -294,3 +294,4 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 瞄准时 `extras.foe_opening`：敌身框青绿「未刃」+ 双方跟焦。`combat_foe_opening_telegraph_check` 真战斗 E2E。顺带把 lock tip/practice 抽进 `BattleLockTutorial` 压线门禁。
 
 > | 选中/手感/确认取消/镜头肥刀 | **DONE（本 PR）**：合入 T-P16 确认命中+落镜、T-P24 选中死区、T-P21 待命交接、T-P22 落子窥视、T-P28 分层取消；`combat_select_feel_confirm_camera_check` 双图真 E2E；禁瞄准预告碎刀复活 |
+> | 打击/危险/循环肥刀 | **DONE（本 PR）**：合入 T-P18 撤退确认、T-P19 危险手感、T-P20 幽灵可打、T-P23 攻击瞄准、T-P25 Tab 循环；`combat_strike_danger_cycle_fat_check` 双图真 E2E；禁瞄准预告碎刀复活 |
