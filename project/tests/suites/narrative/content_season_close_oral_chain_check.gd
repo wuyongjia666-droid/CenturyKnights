@@ -156,6 +156,13 @@ func _static_one(row: Dictionary, seen: Dictionary) -> String:
 	var data = _chapter(cid)
 	if typeof(data) == TYPE_STRING:
 		return str(data)
+	var err := _static_chapter_shell(cid, data, seen)
+	if err != "":
+		return err
+	return _static_ledger_tail(cid, data, row)
+
+
+func _static_chapter_shell(cid: String, data: Dictionary, seen: Dictionary) -> String:
 	if str(data.get("return_scene", "")) != HUB:
 		return "%s return_scene" % cid
 	var body := FileAccess.get_file_as_string("res://data/story/chapters/%s.json" % cid)
@@ -174,6 +181,10 @@ func _static_one(row: Dictionary, seen: Dictionary) -> String:
 			seen[text] = "%s:%s" % [cid, str(line.get("id", ""))]
 	if not _reachable_ledger(data):
 		return "%s ledger unreachable" % cid
+	return ""
+
+
+func _static_ledger_tail(cid: String, data: Dictionary, row: Dictionary) -> String:
 	var beat = _ledger(data)
 	if beat == null:
 		return "%s no ledger" % cid
@@ -185,6 +196,21 @@ func _static_one(row: Dictionary, seen: Dictionary) -> String:
 	if lines.size() < 8:
 		return "%s ledger short" % cid
 	var tail: Array = lines.slice(lines.size() - 8, lines.size())
+	var err := _static_cls_rows(cid, tail)
+	if err != "":
+		return err
+	if str(tail[0].get("text", "")) != str(row["home"]):
+		return "%s home needle" % cid
+	if str(tail[7].get("text", "")) != str(row["close"]):
+		return "%s close needle" % cid
+	if str(tail[7].get("speaker", "")) == "旁白":
+		return "%s close narrator" % cid
+	if str(tail[6].get("text", "")).find("灯") < 0:
+		return "%s lamp line missing 灯" % cid
+	return ""
+
+
+func _static_cls_rows(cid: String, tail: Array) -> String:
 	for n in range(8):
 		var line = tail[n]
 		var lid := str(line.get("id", ""))
@@ -198,14 +224,6 @@ func _static_one(row: Dictionary, seen: Dictionary) -> String:
 			return "%s speaker %s" % [cid, lid]
 		if _hanzi(text) < 8 or _hanzi(text) > 60:
 			return "%s hanzi %s" % [cid, lid]
-	if str(tail[0].get("text", "")) != str(row["home"]):
-		return "%s home needle" % cid
-	if str(tail[7].get("text", "")) != str(row["close"]):
-		return "%s close needle" % cid
-	if str(tail[7].get("speaker", "")) == "旁白":
-		return "%s close narrator" % cid
-	if str(tail[6].get("text", "")).find("灯") < 0:
-		return "%s lamp line missing 灯" % cid
 	return ""
 
 
