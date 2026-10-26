@@ -913,3 +913,4 @@ shell_weather_aim_mark,雨,Rain
 shell_night_aim_mark,夜,Night
 shell_role_aim_mark,克,Match
 shell_opening_aim_mark,先,First
+shell_guard_aim_mark,卫,Guard

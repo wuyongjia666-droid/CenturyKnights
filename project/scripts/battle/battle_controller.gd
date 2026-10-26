@@ -1209,6 +1209,7 @@ func _draw_overlay() -> void:
 	BattleNightAimTelegraph.draw(self, overlay)
 	BattleRoleAimTelegraph.draw(self, overlay)
 	BattleOpeningAimTelegraph.draw(self, overlay)
+	BattleGuardAimTelegraph.draw(self, overlay)
 	# 地形悬停提示
 	if _in_bounds(_hover_cell):
 		var sw = "res://assets/art/fx/attack_wash.png" if attack_mode else ("res://assets/art/fx/move_wash.png" if ResourceLoader.exists("res://assets/art/fx/move_wash.png") else "res://assets/art/fx/select_wash.png")
@@ -1585,6 +1586,7 @@ func _click_cell(cell: Vector2i) -> void:
 							BattleNightAimTelegraph.refresh(self)
 							BattleRoleAimTelegraph.refresh(self)
 							BattleOpeningAimTelegraph.refresh(self)
+							BattleGuardAimTelegraph.refresh(self)
 							ForecastPanel.refresh(self)
 							BattleLinkTelegraph.refresh(self)
 							BattleFoeOpeningTelegraph.refresh(self)
