@@ -70,6 +70,14 @@ static func place_tavern_crest_strip(parent: Node, candidate, at: Vector2, shiel
 		focus.name = "HireFocusArms"
 		focus.set_meta("field_route", "tavern_focus")
 	_pair(host, shield, focus)
+	# Cloth plate beside the hire pair — castle-readable Field chrome on the tavern strip.
+	var bn := CKHeraldryChrome.make_company_banner(Vector2(maxf(18.0, shield.x * 0.7), maxf(24.0, shield.y * 0.85)))
+	bn.name = "TavernBanner"
+	bn.set_meta("field_route", "tavern_banner")
+	bn.tooltip_text = Locale.t("lb_castle_view_arms")
+	bn.position = Vector2(host.size.x + 8.0, (shield.y - bn.size.y) * 0.5)
+	host.add_child(bn)
+	host.size = Vector2(bn.position.x + bn.size.x, maxf(host.size.y, bn.size.y))
 	host.set_meta("has_candidate", candidate != null)
 	return host
 
@@ -734,6 +742,29 @@ static func attach_save_row_arms(row: Control, size: Vector2 = Vector2(36, 44), 
 	return tr
 
 
+## Atlas party token: small 团徽 on the map pin so the Field crest is readable
+## (replaces the bare glyph as the primary mark; label stays for layout callers).
+static func attach_party_token_arms(token: Control, pad: float = 2.0) -> TextureRect:
+	if token == null:
+		return null
+	_retire(token, "TokenArms")
+	var sz: Vector2 = token.size
+	if sz.x < 8.0 or sz.y < 8.0:
+		sz = Vector2(26, 26)
+	var arms_sz := Vector2(maxf(12.0, sz.x - pad * 2.0), maxf(14.0, sz.y - pad * 2.0))
+	var arms := CKHeraldryChrome.make_company_arms(arms_sz)
+	arms.name = "TokenArms"
+	arms.set_meta("field_route", "atlas_party")
+	arms.position = Vector2(pad, (sz.y - arms_sz.y) * 0.5)
+	arms.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	token.add_child(arms)
+	for c in token.get_children():
+		if c is Label:
+			(c as CanvasItem).visible = false
+	token.set_meta("field_route", "atlas_party_token")
+	return arms
+
+
 ## Castle / annex cloth plate beside the header shield (CastleBannerStrip).
 static func place_banner_plate(parent: Node, at: Vector2, shield: Vector2 = Vector2(44, 52), banner: Vector2 = Vector2(28, 38)) -> Control:
 	if parent == null:
@@ -750,8 +781,11 @@ static func place_banner_plate(parent: Node, at: Vector2, shield: Vector2 = Vect
 	host.set_meta("field_route", "banner_plate")
 	var arms := CKHeraldryChrome.make_company_arms(shield)
 	arms.position = Vector2.ZERO
+	arms.set_meta("field_route", "strip_company")
 	host.add_child(arms)
 	var bn := CKHeraldryChrome.make_company_banner(banner)
+	# Keep CastleBanner name — surface/shell crest E2E contract; route deepens ownership.
+	bn.set_meta("field_route", "castle_hub_banner")
 	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
 	host.add_child(bn)
 	parent.add_child(host)
@@ -835,6 +869,7 @@ static func fill_battle_order(strip: Control, battle) -> void:
 	var shield := Vector2(28, 34)
 	var co := CKHeraldryChrome.make_company_arms(shield)
 	co.position = Vector2.ZERO
+	co.set_meta("field_route", "strip_company")
 	strip.add_child(co)
 	var x := shield.x + 6.0
 	var added := 0
