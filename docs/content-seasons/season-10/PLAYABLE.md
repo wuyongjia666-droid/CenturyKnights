@@ -111,3 +111,9 @@
 - 各章 visit 拍（hourglass/audit/birth）在 `_vhg` 后加 `_msr1`–`_msr6` 季题整装口头，全库去重；收束非旁白。
 - 验收：`content_season_muster_plate_chain_check` — hub chip → 整装针口头。
 - 不碰 `_bpl`/`_thm`/`_sec`/`_tvp`/`_ldg`。
+
+## 酒馆到店口头加厚（tavern-arrival）
+
+- 各章 `tavern` 拍首加 `_arr1`–`_arr6` 到店整装口头（`_tvp` 前），全库去重；收束非旁白。
+- 验收：`content_season_tavern_arrival_chain_check` — hub chip → 到店针口头。
+- 不碰 `_bpl`/`_cls`/`_sec`/`_msr`/`_tvp`/`_ldg`。

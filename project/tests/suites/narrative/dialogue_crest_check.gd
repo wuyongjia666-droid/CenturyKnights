@@ -38,6 +38,7 @@ func _assert_page(page: Node, where: String) -> void:
 	var strip = page.find_child("DialogueCrestStrip", true, false)
 	_ok(strip != null, "%s DialogueCrestStrip" % where)
 	if strip != null:
+		_ok(str(strip.get_meta("field_route", "")) == "dialogue_strip", "%s strip field_route" % where)
 		_ok(strip.find_child("CastleArms", true, false) != null, "%s strip CastleArms" % where)
 		var bn = strip.find_child("DialogueBanner", true, false)
 		_ok(bn != null and str(bn.get_meta("arms_kind", "")) == "lb_dialogue_arms", "%s DialogueBanner" % where)
@@ -46,6 +47,7 @@ func _assert_page(page: Node, where: String) -> void:
 	_ok(speaker != null, "%s DialogueSpeakerArms" % where)
 	if speaker != null:
 		_ok(str(speaker.get_meta("arms_kind", "")) in ["gen2_06", "gen2_35"], "%s speaker kind" % where)
+		_ok(str(speaker.get_meta("field_route", "")) == "dialogue_speaker", "%s speaker field_route" % where)
 
 func _mount() -> Control:
 	var page: Control = (load(SCN) as PackedScene).instantiate()
@@ -82,18 +84,23 @@ func _run_api_probe() -> void:
 	var host := Control.new()
 	host.name = "DialogueCrestHost"
 	get_tree().root.add_child(host)
-	var strip := CKHeraldryChrome.place_dialogue_crest_strip(host, Vector2(10, 10), Vector2(36, 44), Vector2(24, 34))
+	var src := FileAccess.get_file_as_string("res://scripts/story/chapter_player.gd")
+	_ok(src.find("CKHeraldryField.place_dialogue_crest_strip") >= 0, "chapter_player strip calls Field")
+	_ok(src.find("CKHeraldryField.attach_dialogue_speaker_arms") >= 0, "chapter_player speaker calls Field")
+	_ok(src.find("CKHeraldryChrome.attach_dialogue_speaker_arms") < 0, "chapter_player speaker left Chrome")
+	var strip := CKHeraldryField.place_dialogue_crest_strip(host, Vector2(10, 10), Vector2(36, 44), Vector2(24, 34))
 	_ok(strip != null and strip.name == "DialogueCrestStrip", "api DialogueCrestStrip")
+	_ok(strip != null and str(strip.get_meta("field_route", "")) == "dialogue_strip", "api strip field_route")
 	var por := TextureRect.new()
 	por.name = "ProbePortrait"
 	por.custom_minimum_size = Vector2(120, 120)
 	host.add_child(por)
 	var lead = GameState.get_leader()
-	CKHeraldryChrome.attach_dialogue_speaker_arms(por, lead, Vector2(28, 34))
-	var arms = por.find_child("DialogueSpeakerArms", true, false)
+	var arms := CKHeraldryField.attach_dialogue_speaker_arms(por, lead, Vector2(28, 34))
 	_ok(arms != null, "api DialogueSpeakerArms")
 	if arms != null and lead != null:
+		_ok(str(arms.get_meta("field_route", "")) == "dialogue_speaker", "api speaker field_route")
 		_ok(str(arms.get_meta("arms_core", "")) == CKHeraldry.core_key(GameState.arms_for_character(lead)), "api speaker core")
-	CKHeraldryChrome.attach_dialogue_speaker_arms(por, null)
+	CKHeraldryField.attach_dialogue_speaker_arms(por, null)
 	_ok(por.find_child("DialogueSpeakerArms", true, false) == null, "api clear speaker arms")
 	host.queue_free()

@@ -1,6 +1,6 @@
 extends Node
-## Fat heraldry E2E: deploy muster strip + DeployArms/FocusArms; train RowArms;
-## title ladder MusterCrestStrip + LadderBadge + LeaderArms. Desktop + mobile.
+## Fat heraldry E2E: deploy muster strip + DeployArms/FocusArms; train Field
+## TrainFocusStrip/TrainRowArms; title ladder MusterCrestStrip + LadderBadge + LeaderArms.
 
 const DEPLOY_SCN := preload("res://scenes/hub/deploy.tscn")
 const TRAIN_SCN := preload("res://scenes/hub/train.tscn")
@@ -37,6 +37,19 @@ func _boot() -> void:
 	var leader = GameState.get_leader()
 	if leader != null and not (leader.id in GameState.deploy_ids):
 		GameState.deploy_ids = [leader.id]
+	## Seed a banner-school pupil (age 1–15, not roster) so TrainFocusStrip has person arms.
+	var lead: CKCharacter = GameState.get_leader()
+	var kid := CKCharacter.new()
+	kid.id = "train_crest_kid"
+	kid.name = "练童"
+	kid.age = 10
+	kid.alive = true
+	kid.in_roster = false
+	kid.is_child = true
+	kid.family_id = lead.family_id if lead else ""
+	kid.parent_ids = [lead.id] if lead else []
+	kid.hp = kid.max_hp
+	GameState.characters[kid.id] = kid
 
 func _assert_muster(page: Node, where: String) -> void:
 	var strip := page.find_child("MusterCrestStrip", true, false)
@@ -49,6 +62,26 @@ func _assert_muster(page: Node, where: String) -> void:
 	_ok(la != null and str(la.get_meta("arms_kind", "")) in ["gen2_06", "gen2_35"], "%s LeaderArms kind" % where)
 	if ca != null and la != null:
 		_ok(str(ca.get_meta("arms_core", "")) != str(la.get_meta("arms_core", "")), "%s 团徽!=族徽" % where)
+
+
+func _assert_train_field(page: Node, where: String) -> void:
+	var strip := page.find_child("TrainFocusStrip", true, false)
+	_ok(strip != null, "%s TrainFocusStrip" % where)
+	if strip != null:
+		var ca := strip.find_child("CastleArms", true, false)
+		var fa := strip.find_child("TrainFocusArms", true, false)
+		_ok(ca != null and str(ca.get_meta("arms_kind", "")) == "gen2_36", "%s strip 团徽" % where)
+		_ok(fa != null and str(fa.get_meta("arms_kind", "")) in ["gen2_06", "gen2_35"], "%s TrainFocusArms" % where)
+		if ca != null and fa != null:
+			_ok(str(ca.get_meta("arms_core", "")) != str(fa.get_meta("arms_core", "")), "%s 团徽!=瞳徽" % where)
+		_ok(bool(strip.get_meta("has_pupil", false)), "%s has_pupil" % where)
+	var rows: Array = []
+	_collect(page, "TrainRowArms", rows)
+	_ok(rows.size() >= 1, "%s TrainRowArms>=1" % where)
+	for a in rows:
+		var k := str(a.get_meta("arms_kind", ""))
+		_ok(k in ["gen2_06", "gen2_35"], "%s TrainRowArms kind" % where)
+		_ok(a.mouse_filter == Control.MOUSE_FILTER_IGNORE, "%s TrainRowArms mouse" % where)
 
 func _collect(n: Node, name: String, out: Array) -> void:
 	if n.name == name:
@@ -86,12 +119,7 @@ func _run_desktop() -> void:
 	var train: Control = TRAIN_SCN.instantiate()
 	get_tree().root.add_child(train)
 	await _settle(12)
-	_assert_muster(train, "desk-train")
-	var rows := []
-	_collect(train, "RowArms", rows)
-	## Pupils / tutors / promo rows — may be empty early-game; API strip still asserted.
-	for a in rows:
-		_ok(str(a.get_meta("arms_kind", "")) in ["gen2_06", "gen2_35"], "desk-train RowArms kind")
+	_assert_train_field(train, "desk-train")
 	train.queue_free()
 	await _settle(2)
 
@@ -136,7 +164,7 @@ func _run_mobile() -> void:
 	if train.has_method("apply_mobile_layout"):
 		train.apply_mobile_layout()
 		await _settle(8)
-	_assert_muster(train, "mob-train")
+	_assert_train_field(train, "mob-train")
 	train.queue_free()
 	await _settle(2)
 
