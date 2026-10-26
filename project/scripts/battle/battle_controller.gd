@@ -476,7 +476,7 @@ func _build_ui() -> void:
 	_build_mobile_bar()
 	_apply_board_xform()
 	ObjectiveHud.attach(self)
-	CKHeraldryChrome.sync_battle_hud_crests(self)
+	CKHeraldryField.sync_battle_hud_crests(self)
 	ForecastPanel.attach(self)
 	RewindBar.attach(self)
 	BattleDualLedger.attach(self)
@@ -756,7 +756,7 @@ func _init_map() -> void:
 	_layout_board()
 	if phase_label:
 		phase_label.text = Locale.t("shell_a63e5b28") % map_name
-	CKHeraldryChrome.sync_battle_hud_crests(self)
+	CKHeraldryField.sync_battle_hud_crests(self)
 
 func _load_terrain_fx(m: Dictionary) -> void:
 	height_grid.clear()
@@ -1367,7 +1367,7 @@ func apply_mobile_layout() -> void:
 	BattleEdgePick.note_layout(self)
 	# Y1-A T-P2-1: re-place Forecast against the new board stage / side column.
 	ForecastPanel.refresh(self)
-	CKHeraldryChrome.sync_battle_hud_crests(self)
+	CKHeraldryField.sync_battle_hud_crests(self)
 
 func _screen_to_local(screen_pos: Vector2) -> Vector2:
 	## Viewport pixels → this control. Identity on the desktop 1280×720 root.

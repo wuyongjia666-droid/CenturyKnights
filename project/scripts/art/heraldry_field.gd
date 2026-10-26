@@ -1526,3 +1526,28 @@ static func place_company_header(parent: Node, at: Vector2, size: Vector2 = Vect
 	tr.set_meta("field_route", "company_header")
 	parent.add_child(tr)
 	return tr
+
+## Battle host sync: resolve foe + device/insets and (re)place the HUD strip + order crests.
+## Field owns BattleHudCrestStrip lifecycle; Chrome keeps battle_foe_nation_for / layout helpers.
+static func sync_battle_hud_crests(host) -> void:
+	if host == null:
+		return
+	var mobile := DeviceProfile.is_mobile()
+	var land := false
+	var insets: Dictionary = {}
+	var vp := Vector2(1280, 720)
+	if host is Control and (host as Control).is_inside_tree():
+		vp = (host as Control).get_viewport().get_visible_rect().size
+		land = mobile and vp.x > vp.y * 1.2
+		if host.has_method("_safe_insets"):
+			insets = host._safe_insets()
+		elif host.has_meta("m_safe_insets"):
+			insets = host.get_meta("m_safe_insets")
+	place_battle_hud_crest_strips(
+		host, CKHeraldryChrome.battle_foe_nation_for(host), vp, insets, mobile, land
+	)
+	if host.is_inside_tree():
+		sync_battle_order_crests.call_deferred(host)
+	else:
+		sync_battle_order_crests(host)
+

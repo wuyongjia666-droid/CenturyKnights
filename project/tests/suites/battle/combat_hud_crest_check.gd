@@ -1,6 +1,6 @@
 extends Node
 ## Y1-A T-P8: battle HUD 双方纹章条 — PlayerArms left + EnemyArms right.
-## Algebra + place/sync E2E under CK_FORCE_MOBILE. Fail-suite (assertions red).
+## Field owns place + sync; Chrome keeps layout/foe helpers + thin shims. Real sync E2E.
 
 var _fails: Array = []
 
@@ -40,6 +40,7 @@ func _run() -> void:
 	_foe_nation_resolve()
 	await _place_desktop()
 	await _place_mobile()
+	await _sync_field_route()
 	_source_contracts()
 	OS.set_environment("CK_FORCE_MOBILE", "0")
 
@@ -142,15 +143,47 @@ func _place_mobile() -> void:
 	GameState.remove_meta("battle_foe_nation")
 
 
+func _sync_field_route() -> void:
+	OS.set_environment("CK_FORCE_MOBILE", "0")
+	GameState.set_meta("battle_foe_nation", "ashbanner")
+	var root := Control.new()
+	root.name = "BattleSyncRoot"
+	root.size = Vector2(1280, 720)
+	root.set_meta("m_safe_insets", {"top": 12.0, "left": 4.0, "right": 4.0})
+	add_child(root)
+	await _settle(2)
+	CKHeraldryField.sync_battle_hud_crests(root)
+	await _settle(4)
+	var strip := root.get_node_or_null("BattleHudCrestStrip")
+	_ok(strip != null, "sync places BattleHudCrestStrip")
+	_ok(strip != null and str(strip.get_meta("field_route", "")) == "battle_hud_strip", "sync field_route")
+	_ok(strip != null and str(strip.get_meta("foe_nation", "")) == "ashbanner", "sync foe_nation meta")
+	var pa := strip.find_child("PlayerArms", true, false) if strip else null
+	var ea := strip.find_child("EnemyArms", true, false) if strip else null
+	_ok(pa != null and ea != null, "sync both arms")
+	_ok(pa != null and pa.position.y >= 12.0, "sync respects m_safe_insets top")
+	_ok(pa != null and pa.position.x >= 4.0, "sync respects m_safe_insets left")
+	# Chrome shim still works
+	CKHeraldryChrome.sync_battle_hud_crests(root)
+	await _settle(4)
+	_ok(root.get_node_or_null("BattleHudCrestStrip") != null, "chrome shim re-sync live")
+	root.queue_free()
+	await _settle(2)
+	GameState.remove_meta("battle_foe_nation")
+
+
 func _source_contracts() -> void:
+	var field := FileAccess.get_file_as_string("res://scripts/art/heraldry_field.gd")
+	_ok(field.find("static func place_battle_hud_crest_strips") >= 0, "field owns place_battle_hud")
+	_ok(field.find("static func sync_battle_hud_crests") >= 0, "field owns sync_battle_hud")
+	_ok(field.find("field_route") >= 0 and field.find("battle_hud_strip") >= 0, "field battle_hud_strip route")
 	var chrome := FileAccess.get_file_as_string("res://scripts/art/heraldry_chrome.gd")
-	_ok(chrome.find("place_battle_hud_crest_strips") >= 0, "chrome place_battle_hud_crest_strips")
 	_ok(chrome.find("battle_hud_crest_layout") >= 0, "chrome layout pure")
-	_ok(chrome.find("sync_battle_hud_crests") >= 0, "chrome sync_battle_hud_crests")
-	_ok(chrome.find("BattleHudCrestStrip") >= 0, "chrome host name")
-	_ok(chrome.find("PlayerArms") >= 0 and chrome.find("EnemyArms") >= 0, "chrome both arm names")
+	_ok(chrome.find("CKHeraldryField.sync_battle_hud_crests") >= 0, "chrome sync shim → Field")
+	_ok(chrome.find("CKHeraldryField.place_battle_hud_crest_strips") >= 0, "chrome place shim → Field")
 	var ctrl := FileAccess.get_file_as_string("res://scripts/battle/battle_controller.gd")
-	_ok(ctrl.find("CKHeraldryChrome.sync_battle_hud_crests") >= 0, "controller sync wire")
+	_ok(ctrl.find("CKHeraldryField.sync_battle_hud_crests") >= 0, "controller sync → Field")
+	_ok(ctrl.find("CKHeraldryChrome.sync_battle_hud_crests") < 0, "controller no Chrome sync")
 	var n: int = ctrl.split("\n").size()
 	_ok(n <= 3000, "controller under 3000 (%d)" % n)
 

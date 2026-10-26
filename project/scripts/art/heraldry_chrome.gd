@@ -388,28 +388,9 @@ static func place_battle_hud_crest_strips(
 ) -> Control:
 	return CKHeraldryField.place_battle_hud_crest_strips(parent, foe_nation, vp, insets, mobile, landscape, shield)
 
-## Battle host sync: resolve foe + device/insets and (re)place the strip.
+## Battle host sync. Field owns BattleHudCrestStrip sync.
 static func sync_battle_hud_crests(host) -> void:
-	if host == null:
-		return
-	var mobile := DeviceProfile.is_mobile()
-	var land := false
-	var insets: Dictionary = {}
-	var vp := Vector2(1280, 720)
-	if host is Control and (host as Control).is_inside_tree():
-		vp = (host as Control).get_viewport().get_visible_rect().size
-		land = mobile and vp.x > vp.y * 1.2
-		if host.has_method("_safe_insets"):
-			insets = host._safe_insets()
-		elif host.has_meta("m_safe_insets"):
-			insets = host.get_meta("m_safe_insets")
-	place_battle_hud_crest_strips(
-		host, battle_foe_nation_for(host), vp, insets, mobile, land
-	)
-	if host.is_inside_tree():
-		CKHeraldryField.sync_battle_order_crests.call_deferred(host)
-	else:
-		CKHeraldryField.sync_battle_order_crests(host)
+	CKHeraldryField.sync_battle_hud_crests(host)
 
 ## Territory / domain shield (领地徽). Same plate as city nation arms; distinct node name for atlas travel/camp.
 static func make_territory_arms(nid: String, size: Vector2 = Vector2(40, 48)) -> TextureRect:
