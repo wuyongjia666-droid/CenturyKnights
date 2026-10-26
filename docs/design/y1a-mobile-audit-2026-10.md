@@ -290,3 +290,22 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 ## 5q. T-P41 敌未刃预告
 
 瞄准时 `extras.foe_opening`：敌身框青绿「未刃」+ 双方跟焦。`combat_foe_opening_telegraph_check` 真战斗 E2E。顺带把 lock tip/practice 抽进 `BattleLockTutorial` 压线门禁。
+## 5r. T-P42 战技命中偏置预告
+
+瞄准且已武装 offense 战技、`hit_mod != 0`：敌身框琥珀「加准」/ 紫「偏斜」+ 双方跟焦。`combat_art_hit_telegraph_check` 真战斗 E2E。顺带把 support/buff 施放抽进 `BattleSkillCast` 压线门禁。
+
+## 5s. T-P43 交战锁定瞄准预告
+
+瞄准时攻/守任一方 `temp_combat_lock > 0`：锁定身框品红菱「缠」+ 双方跟焦。`combat_lock_aim_telegraph_check` 真战斗 E2E。
+
+## 5t. T-P44 伤兵瞄准预告
+
+瞄准时敌方 `hp*2 <= max_hp`：敌身框赤红「伤」+ 脚底弧 + 双方跟焦。`combat_wounded_aim_telegraph_check` 真战斗 E2E。
+
+## 5u. T-P45 斩杀瞄准预告
+
+瞄准时 `BattleRules.expected_damage >= foe.hp`：敌身框血金「斩」+ 交叉斩痕 + 双方跟焦。`combat_lethal_aim_telegraph_check` 真战斗 E2E。
+
+## 5v. T-P46 夹击瞄准预告
+
+瞄准时 `BattleRules.has_flank`：敌身框青「夹」+ 双侧短刻 + 双方跟焦。`combat_flank_aim_telegraph_check` 真战斗 E2E。
