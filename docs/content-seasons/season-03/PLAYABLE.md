@@ -127,6 +127,12 @@
 - 验收：`content_season_tavern_arrival_chain_check` — hub chip → 到店针口头。
 - 不碰 `_bpl`/`_cls`/`_sec`/`_msr`/`_tvp`/`_ldg`。
 
+## 开场入门口头加厚（open-door）
+
+- 各章首拍拍首加 `_opn1`–`_opn6` 入门整装口头（`_thm` 前），全库去重；收束非旁白。
+- 验收：`content_season_open_door_chain_check` — hub chip → 入门针口头。
+- 不碰 `_bpl`/`_arr`/`_lop`/`_tvx`/`_vop`/`_cls`/`_sec`/`_tvp`。
+
 ## 访月入厅口头加厚（visit-open）
 
 - 各章 visit 拍（audit/birth/hourglass）拍首加 `_vop1`–`_vop6` 入厅整装口头（`_vhg`/`_msr` 前），全库去重；收束非旁白。
@@ -138,3 +144,4 @@
 - 各章 visit 拍（audit/birth/hourglass）在 `_vhg` 前加 `_aud1`–`_aud6` 落笔口头，全库去重；收束非旁白。
 - 验收：`content_season_audit_pen_chain_check` — hub chip → 落笔针口头。
 - 不碰 `_vop`/`_vhg`/`_msr`/`_bpl`/`_lop`/`_cls`/`_sec`/`_tvp`/`_wex`/`_opn`/`_vex`。
+- 不碰 `_bpl`/`_arr`/`_lop`/`_tvx`/`_opn`/`_cls`/`_sec`/`_tvp`。
