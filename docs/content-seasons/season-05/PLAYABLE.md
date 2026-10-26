@@ -111,6 +111,12 @@
 - 验收：`content_season_muster_plate_chain_check` — hub chip → 整装针口头。
 - 不碰 `_bpl`/`_thm`/`_sec`/`_tvp`/`_ldg`。
 
+## 西阁开柜口头加厚（ledger-open）
+
+- 各章 `ledger` 拍首加 `_lop1`–`_lop6` 进阁开柜口头（`_ldg`/`_cls` 前），全库去重；收束非旁白。
+- 验收：`content_season_ledger_open_chain_check` — hub chip → 开柜针口头。
+- 不碰 `_bpl`/`_sec`/`_arr`/`_cls`/`_msr`/`_tvp`。
+
 ## 酒馆离店口头加厚（tavern-exit）
 
 - 各章 `tavern` 在 `_tvn` 后、`ret_mv` 前加 `_tvx1`–`_tvx6` 离店口头，全库去重；收束非旁白。
