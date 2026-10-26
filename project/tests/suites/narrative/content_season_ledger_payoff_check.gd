@@ -1,5 +1,5 @@
 extends Node
-## 内容季选择账本：十季 JSON 均含 season_ledger；cs01/cs02/cs05 走进选择后断言 ledger+yeartrace。
+## 内容季选择账本：二十章 JSON 均含 season_ledger；_01/_02 抽样走进选择后断言 ledger+yeartrace。
 
 const Schema = preload("res://scripts/narrative/chapter_schema.gd")
 const LintScript = preload("res://scripts/narrative/dialogue_lint.gd")
@@ -10,6 +10,11 @@ const WALKS := [
 	["res://data/story/chapters/cs01_01.json", "把无写进谱", "cs01_01", "write_wu", "无"],
 	["res://data/story/chapters/cs02_01.json", "两行并排留", "cs02_01", "keep_parallel", "并排"],
 	["res://data/story/chapters/cs05_01.json", "空椅并排链", "cs05_01", "keep_chain", "空椅"],
+	["res://data/story/chapters/cs08_01.json", "祖祠并排记", "cs08_01", "keep_stele", "祖祠"],
+	["res://data/story/chapters/cs10_01.json", "城印并排记", "cs10_01", "keep_seal", "城印"],
+	["res://data/story/chapters/cs01_02.json", "空格并排留", "cs01_02", "keep_slip", "空格"],
+	["res://data/story/chapters/cs05_02.json", "链仍并排", "cs05_02", "keep_reread", "链"],
+	["res://data/story/chapters/cs10_02.json", "印底并排留", "cs10_02", "keep_base", "印底"],
 ]
 
 
@@ -34,34 +39,35 @@ func _run() -> String:
 		err = await _walk_one(row)
 		if err != "":
 			return err
-	print("OK ledger seasons=10 walks=%d" % WALKS.size())
+	print("OK ledger seasons=20 walks=%d" % WALKS.size())
 	return ""
 
 
 func _assert_all_ten_json() -> String:
 	for i in range(1, 11):
-		var cid := "cs%02d_01" % i
-		var path := "res://data/story/chapters/%s.json" % cid
-		if not FileAccess.file_exists(path):
-			return "missing " + path
-		var schema := Schema.validate_file(path)
-		if not schema.is_empty():
-			return str(schema[0])
-		var data = JSON.parse_string(FileAccess.get_file_as_string(path))
-		if typeof(data) != TYPE_DICTIONARY:
-			return cid + " not dict"
-		var ledger_ops := 0
-		for beat in data.get("beats", []):
-			for action in beat.get("actions", []):
-				for step in action.get("do", []):
-					if typeof(step) == TYPE_DICTIONARY and str(step.get("op", "")) == "season_ledger":
-						ledger_ops += 1
-						if str(step.get("choice", "")) == "":
-							return cid + " season_ledger missing choice"
-						if str(step.get("outcome", "")) == "":
-							return cid + " season_ledger missing outcome"
-		if ledger_ops < 2:
-			return cid + " expected ≥2 season_ledger ops, got %d" % ledger_ops
+		for suffix in ["_01", "_02"]:
+			var cid := "cs%02d%s" % [i, suffix]
+			var path := "res://data/story/chapters/%s.json" % cid
+			if not FileAccess.file_exists(path):
+				return "missing " + path
+			var schema := Schema.validate_file(path)
+			if not schema.is_empty():
+				return str(schema[0])
+			var data = JSON.parse_string(FileAccess.get_file_as_string(path))
+			if typeof(data) != TYPE_DICTIONARY:
+				return cid + " not dict"
+			var ledger_ops := 0
+			for beat in data.get("beats", []):
+				for action in beat.get("actions", []):
+					for step in action.get("do", []):
+						if typeof(step) == TYPE_DICTIONARY and str(step.get("op", "")) == "season_ledger":
+							ledger_ops += 1
+							if str(step.get("choice", "")) == "":
+								return cid + " season_ledger missing choice"
+							if str(step.get("outcome", "")) == "":
+								return cid + " season_ledger missing outcome"
+			if ledger_ops < 2:
+				return cid + " expected ≥2 season_ledger ops, got %d" % ledger_ops
 	return ""
 
 
@@ -103,7 +109,7 @@ func _walk_one(spec: Array) -> String:
 	add_child(player)
 	await get_tree().process_frame
 	await get_tree().process_frame
-	var err := await _walk_to_choice(player, label, 60)
+	var err := await _walk_to_choice(player, label, 120)
 	if err != "":
 		player.queue_free()
 		return "%s: %s" % [chapter_id, err]
