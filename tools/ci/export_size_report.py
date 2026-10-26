@@ -9,9 +9,12 @@ treats '*' as any run of characters, including slashes.
 Fails when either platform total is above tools/ci/ratchet.json export_budget_bytes
 (derived: export_base_budget_bytes + plates * export_bank_bytes_per_plate).
 
-The hard CAP (400 MiB) is advisory in the note; Android is the packing target.
-Shipping photographs are WebP quality 92. The gene-portrait bank ships large+
-medium+small on Windows; Android packs medium only (large and small excluded).
+Also fails when Android ships genome bank master or small tiers (medium-only contract).
+
+The hard CAP (400 MiB) is reported as EXPORT CAP_STATUS; Android OVER is advisory
+until user-approved levers in docs/art/export-cap-400.md land. Android is the
+packing target. Shipping photographs are WebP quality 92. The gene-portrait bank
+ships large+medium+small on Windows; Android packs medium only.
 """
 from __future__ import annotations
 
@@ -134,6 +137,9 @@ def _report_platform(label: str, patterns: list[str], retired: list[str], data: 
     print(f"EXPORT BUDGET {budget}")
     print(f"EXPORT CAP {CAP_BYTES}")
     print(f"EXPORT TARGET {TARGET_BYTES}")
+    cap_status = "UNDER" if included <= CAP_BYTES else "OVER"
+    print(f"EXPORT CAP_STATUS {label} {cap_status} {included}")
+    rc = 0
     if base <= 0 or per_plate <= 0 or plate_max <= 0:
         print(
             "EXPORT SIZE FAIL ratchet.json needs export_base_budget_bytes, "
@@ -150,17 +156,32 @@ def _report_platform(label: str, patterns: list[str], retired: list[str], data: 
     if included > budget:
         print(f"EXPORT SIZE FAIL {included} > {budget}")
         return 1
-    if label == "Android" and included > CAP_BYTES:
-        print(
-            "EXPORT NOTE Android source estimate is above the 400MiB hard cap; "
-            "see docs/art/export-cap-400.md for measured APK breakdown and next levers."
+    if label == "Android":
+        medium_only = (
+            bank_tiers["master"] == 0
+            and bank_tiers["small"] == 0
+            and bank_tiers["medium"] > 0
         )
+        flag = 1 if medium_only else 0
+        print(f"EXPORT ANDROID_BANK_CONTRACT medium_only={flag}")
+        if not medium_only:
+            print(
+                "EXPORT SIZE FAIL Android bank must be medium-only "
+                f"(master={bank_tiers['master']} small={bank_tiers['small']} "
+                f"medium={bank_tiers['medium']})"
+            )
+            rc = 1
+        if included > CAP_BYTES:
+            print(
+                "EXPORT NOTE Android source estimate is above the 400MiB hard cap; "
+                "see docs/art/export-cap-400.md for measured APK breakdown and next levers."
+            )
     elif budget > CAP_BYTES and label == "Windows Desktop":
         print(
             "EXPORT NOTE Windows active budget is above the 400MiB cap "
             "(ships large bank masters); Android is the packing target."
         )
-    return 0
+    return rc
 
 
 def main() -> int:

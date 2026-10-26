@@ -1,7 +1,7 @@
 # 隐私政策验证记录（不缴费提审）
 
 > 对 `privacy-policy-draft.md` 的**可核对**验证，不是削弱字数闸、不代替正式法务审。  
-> 记录时点：2026-10-25 10:36 Asia/Shanghai
+> 记录时点：2026-10-27 00:08 Asia/Shanghai
 > 关键词：`不收集`、`不出售`、`验证记录`、`崩溃`。
 
 ## 结论摘要
@@ -9,8 +9,8 @@
 | 草稿主张 | 验证结果 | 证据 |
 |---|---|---|
 | 默认不收集 PII / 无强制账号 | **通过（工程口径）** | 无登录强制路径进主循环；存档本机（见下） |
-| 不出售个人数据 | **通过（声明+无卖数 SDK）** | 工程无广告/归因 SDK 依赖声明；见 SDK 扫描 |
-| 无广告 ID | **通过** | Android 权限/导出未要广告 ID；问卷意图同步 |
+| 不出售个人数据 | **通过（声明+无卖数 SDK）** | 工程无广告/归因 SDK 依赖声明；见 SDK 静态扫描 |
+| 无广告 ID | **通过** | Android 权限/导出未要广告 ID；`permissions/internet=false` |
 | 崩溃通道默认关 | **通过（文档口径）** | 草稿写「可选」；未接线付费崩溃后端密钥 |
 | 儿童数据不主动收集 | **通过（与分级对齐）** | 见 `age-rating-verification-record.md` |
 
@@ -24,11 +24,12 @@ rg -n -i 'firebase|admob|adjust|appsflyer|analytics|advertising.?id|play-service
   project/android scripts tools docs/store || true
 ```
 
-| 检查项 | 结果 |
+| 检查项 | 结果（2026-10-27 00:08 Asia/Shanghai / git `33e28515`） |
 |---|---|
-| 上述关键词在 android/scripts/tools/store 文档 | 若仅出现在「禁止/不收集」叙述 → 可接受；若出现依赖坐标 → **须修订隐私稿** |
+| 上述关键词在 android/scripts/tools/store | 命中仅出现在「禁止/不收集」叙述与验证记录自身 → **可接受**；无依赖坐标 |
 | `signing.local.env` / keystore 未跟踪 | 见导出验证记录 |
 | 隐私草稿含「不收集」「不出售」「崩溃」 | 门禁短语（`store_prep` / 本记录自检） |
+| `permissions/internet` | `false`（export_presets.cfg） |
 
 ## 数据流核对（设计口径）
 
@@ -39,12 +40,12 @@ rg -n -i 'firebase|admob|adjust|appsflyer|analytics|advertising.?id|play-service
 | 崩溃堆栈 | 关 | 仅诊断 | 须更新隐私 URL + 开关 |
 | 广告 ID / 精准定位 | 永不 | 永不 | 否 |
 
-对齐草稿：`docs/store/privacy-policy-draft.md`；数据安全预填若在 #410 合入后见 `data-safety-draft.md`。
+对齐草稿：`docs/store/privacy-policy-draft.md`；数据安全见 `data-safety-draft.md` + `data-safety-verification-record.md`。
 
-## 上架前仍待人工
+## 上架前仍待人工（用户-only）
 
 - [ ] 主体法定名称 + 支持邮箱写入正式隐私页（**不进 git 明文若敏感**）  
-- [ ] 隐私政策托管 URL 可公网访问  
+- [ ] 隐私政策托管 URL 可公网访问（本轨无法代挂主机）  
 - [ ] 若开崩溃：开关 UI + 修订本文与数据安全表  
 - [ ] **不付费**提交本次验证所依赖的商店表单  
 
@@ -53,3 +54,4 @@ rg -n -i 'firebase|admob|adjust|appsflyer|analytics|advertising.?id|play-service
 | 日期 (Asia/Shanghai) | 变更 |
 |---|---|
 | 2026-10-25 10:36 Asia/Shanghai | 首份验证记录；静态 SDK 扫描口径 + 与分级/导出记录交叉引用 |
+| 2026-10-27 00:08 Asia/Shanghai | 刷新扫描；记入 `permissions/internet=false`；明确公网 URL 为用户 blocker |
