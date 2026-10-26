@@ -124,9 +124,7 @@ func _card(
 	hb.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	card.add_child(hb)
 	if issuer_id != "":
-		var crest := CKHeraldryChrome.make_issuer_arms(issuer_id, Vector2(36, 44) if not mob else Vector2(40, 48))
-		crest.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		hb.add_child(crest)
+		CKHeraldryField.attach_board_offer_arms(hb, issuer_id, Vector2(36, 44) if not mob else Vector2(40, 48))
 	var star := Label.new()
 	star.text = "★".repeat(clampi(stars, 1, 4)) + "☆".repeat(4 - clampi(stars, 1, 4))
 	star.custom_minimum_size = Vector2(92 if not mob else 72, 0)

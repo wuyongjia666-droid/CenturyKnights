@@ -78,7 +78,7 @@ func _row(slot: String) -> HBoxContainer:
 	label.custom_minimum_size = Vector2(420, 48)
 	row.add_child(label)
 	var meta := CKSaveService.read_meta(slot)
-	CKHeraldryChrome.attach_save_row_arms(row, Vector2(36, 44), str(meta.get("crest_color", "")))
+	CKHeraldryField.attach_save_row_arms(row, Vector2(36, 44), str(meta.get("crest_color", "")))
 	var load := UIKit.make_button(Locale.t("menu_load"))
 	load.name = "Load_%s" % slot
 	load.custom_minimum_size = Vector2(160, maxi(44, int(DeviceProfile.hit_px())))
@@ -142,7 +142,7 @@ func _card(slot: String) -> PanelContainer:
 	load.disabled = not has
 	row.add_child(load)
 	var meta := CKSaveService.read_meta(slot)
-	CKHeraldryChrome.attach_save_row_arms(card, Vector2(40, 48), str(meta.get("crest_color", "")))
+	CKHeraldryField.attach_save_row_arms(card, Vector2(40, 48), str(meta.get("crest_color", "")))
 	return card
 
 
@@ -151,7 +151,7 @@ func _place_shell_crests() -> void:
 	var mob := DeviceProfile.is_mobile()
 	var hdr := Vector2(44, 52) if not mob else Vector2(40, 48)
 	var ban := Vector2(28, 38) if not mob else Vector2(24, 32)
-	CKHeraldryChrome.place_shell_crest_strip(self, Vector2(1120, 18) if not mob else Vector2(1120, 8), hdr, ban)
+	CKHeraldryField.place_shell_crest_strip(self, Vector2(1120, 18) if not mob else Vector2(1120, 8), hdr, ban)
 	CKHeraldryChrome.place_company_header(self, Vector2(1180, 18) if not mob else Vector2(1180, 8), hdr)
 
 func _load(slot: String) -> void:
