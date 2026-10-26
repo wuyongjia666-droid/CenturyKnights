@@ -2071,11 +2071,17 @@ func _show_stopover_modal() -> void:
 	var n: Dictionary = World.node(here)
 	var per := World.food_per_day()
 	var cover := 0 if per <= 0 else int(GameState.food / per)
-	var days := 7
+	# Winter seal / held march: buy enough for the bypass remain, not a flat 7.
+	var held := _halted_dest if _halted_dest != "" else str(World.march_hold.get("dest", ""))
+	var days := World.stopover_resupply_days(held, 7)
 	var q: Dictionary = World.resupply_quote(here, days)
+	var seal_need := World.seal_aware_remain_days(held)
+	var show_seal_cover := seal_need > 0 and held != "" and held != here and str(World.seal_detour.get("dest", "")) == held
 	var h := 320.0
 	if _halted_dest != "" and _halted_dest != here:
 		h = 360.0
+	if show_seal_cover:
+		h = maxf(h, 400.0)
 	var p := _modal_panel(h)
 	p.name = "StopoverModal"
 	CKHeraldryChrome.place_travel_crest_strip(p, Vector2(400, 14), World.nation_of(here), Vector2(36, 44))
@@ -2091,19 +2097,34 @@ func _show_stopover_modal() -> void:
 	food_l.name = "StopoverFood"
 	food_l.position = Vector2(24, 112)
 	p.add_child(food_l)
+	var tip_y := 134.0
+	if show_seal_cover:
+		var seal_tip := UIKit.body_label(Locale.t("atlas_stopover_seal_cover") % seal_need, UIKit.EMBER, 12)
+		seal_tip.name = "StopoverSealCover"
+		seal_tip.position = Vector2(24, 132)
+		seal_tip.size = Vector2(452, 18)
+		seal_tip.autowrap_mode = TextServer.AUTOWRAP_OFF
+		seal_tip.clip_text = true
+		p.add_child(seal_tip)
+		tip_y = 152.0
 	# Produce loop teaser at stopover
 	var best: Dictionary = World.best_produce_trade(here)
 	if not best.is_empty():
 		var tip := UIKit.body_label(Locale.t("atlas_trade_loop_best") % [str(best.name), str(best.sell_name), int(best.margin)], UIKit.EMBER, 12)
 		tip.name = "StopoverTradeTip"
-		tip.position = Vector2(24, 134)
+		tip.position = Vector2(24, tip_y)
 		tip.size = Vector2(452, 18)
 		tip.autowrap_mode = TextServer.AUTOWRAP_OFF
 		tip.clip_text = true
 		p.add_child(tip)
+	var actions_y := 160.0
+	if show_seal_cover:
+		actions_y = 178.0
+	if not best.is_empty() and show_seal_cover:
+		actions_y = 198.0
 	var v := VBoxContainer.new()
 	v.name = "StopoverActions"
-	v.position = Vector2(24, 160)
+	v.position = Vector2(24, actions_y)
 	v.add_theme_constant_override("separation", 8)
 	p.add_child(v)
 	var buy := UIKit.cta_button(Locale.t("atlas_stopover_buy") % [int(q.get("days", days)), int(q.get("qty", 0)), int(q.get("cost", 0))], "A", 452, 40)

@@ -586,6 +586,52 @@ func seal_detour_remaining() -> Array:
 	return rem if rem.size() >= 2 else []
 
 
+## Road-days along a node path (sum of edge days), same metric advance_days burns.
+func _path_road_days(path: Array) -> int:
+	var days := 0
+	for i in range(maxi(0, path.size() - 1)):
+		var road := road_between(str(path[i]), str(path[i + 1]))
+		days += int(road.get("days", 1))
+	return days
+
+
+## Days still owed toward dest, preferring a recorded winter detour (or a live
+## route_around) so stopover grain buys cover the bypass, not the sealed shortpath.
+func seal_aware_remain_days(dest: String = "") -> int:
+	var d := dest
+	if d == "":
+		d = str(seal_detour.get("dest", ""))
+	if d == "":
+		d = str(march_hold.get("dest", ""))
+	if d == "":
+		if is_traveling():
+			return remaining_route_days()
+		return 0
+	if str(seal_detour.get("dest", "")) == d:
+		var rem: Array = seal_detour_remaining()
+		if rem.size() >= 2:
+			return _path_road_days(rem)
+	if is_traveling() and str(travel.get("dest", "")) == d:
+		return remaining_route_days()
+	if CKRoadSeal.seal_active():
+		var plan: Dictionary = CKRoadSeal.compare(d)
+		if bool(plan.get("sealed", false)):
+			var det: Dictionary = plan.get("detour", {})
+			if bool(det.get("ok", false)):
+				return int(det.get("days", 0))
+	var pv: Dictionary = route(pos, d)
+	return int(pv.get("days", 0))
+
+
+## Stopover buy default: at least floor_days, or seal-aware remain when held/sealed.
+func stopover_resupply_days(dest: String = "", floor_days: int = 7) -> int:
+	var floor_n := maxi(1, floor_days)
+	var need := seal_aware_remain_days(dest)
+	if need <= 0:
+		return floor_n
+	return maxi(floor_n, need)
+
+
 func _preview_along(path: Array) -> Dictionary:
 	if path.size() < 2:
 		return {"ok": false, "msg": Locale.t("atlas_no_route")}

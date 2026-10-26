@@ -337,6 +337,7 @@ atlas_stopover_buy,买 %d 日口粮（%d 粮 · %d 银）,Buy %d days (%d grain 
 atlas_stopover_market,进城市集,Enter market
 atlas_stopover_resume,补给后继续前往 %s,Resupply then resume to %s
 atlas_stopover_dismiss,稍后再说,Later
+atlas_stopover_seal_cover,冬封绕行尚余 %d 日，按旁路备粮。,Winter detour still has %d days — buying for the bypass.
 atlas_resupply_ok,补给 +%d 粮（-%d 银）· 现有 %d,Resupplied +%d food (-%d silver) · now %d
 atlas_resupply_fail_stock,此地粮货不足,Not enough grain in stock here
 atlas_resupply_fail_silver,银币不足（需 %d）,Not enough silver (need %d)
