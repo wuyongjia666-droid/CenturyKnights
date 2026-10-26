@@ -305,3 +305,7 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 ## 5u. T-P45 斩杀瞄准预告
 
 瞄准时 `BattleRules.expected_damage >= foe.hp`：敌身框血金「斩」+ 交叉斩痕 + 双方跟焦。`combat_lethal_aim_telegraph_check` 真战斗 E2E。
+
+## 5v. T-P46 夹击瞄准预告
+
+瞄准时 `BattleRules.has_flank`：敌身框青「夹」+ 双侧短刻 + 双方跟焦。`combat_flank_aim_telegraph_check` 真战斗 E2E。
