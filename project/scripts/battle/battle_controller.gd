@@ -1430,20 +1430,13 @@ func _set_danger(on: bool, focus: int) -> void:
 	danger_focus = focus
 	if _btn_danger:
 		_btn_danger.set_pressed_no_signal(on)
+	BattleDangerFeel.after_set(self)
 	if overlay:
 		overlay.queue_redraw()
 
 func _draw_danger() -> void:
-	if not danger_on or overlay == null:
-		return
-	var cells := DangerZone.collect(self)
-	var hatch := bool(GameState.settings.get("colorblind", false))
-	for pos in cells.keys():
-		var r := Rect2(ORIGIN + Vector2(pos) * CELL, Vector2(CELL - 2, CELL - 2))
-		overlay.draw_rect(r, Color(UIKit.DANGER, 0.28))
-		if hatch:
-			overlay.draw_line(r.position, r.position + r.size, Color(UIKit.DANGER, 0.9), 1.5)
-			overlay.draw_line(r.position + Vector2(0, r.size.y), r.position + Vector2(r.size.x, 0), Color(UIKit.DANGER, 0.9), 1.5)
+	# Y1-A T-P19: layered stands/strike + focus settle live in BattleDangerFeel.
+	BattleDangerFeel.draw(self, overlay)
 
 func _resolve_intel_cell(pos: Vector2) -> Vector2i:
 	# Y1-A T-P1-5: intel long-press uses the same soft/contour resolve as taps.

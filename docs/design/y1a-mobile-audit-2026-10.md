@@ -28,6 +28,8 @@
 > | T-P10 伤兵/旗灯双账战斗内可读 | **DONE（#515）**：`BattleDualLedger` 伤兵计数+旗灯 charges/max；ObjectiveHud 下只读条；不抢触控；`combat_dual_ledger_check` E2E |
 > | T-P11 选中手感 v2（身框命中 + 非法可感 + 横屏信息栏） | **DONE（#516）**：`body_over_occupant` 胸口过脚底吸回下方单位（桌面仍精确格）；脚底盘/中段环/身框同一几何；非法落点/超距闪拒并钉回选中卡；射程内手机点敌进确认；`combat_select_feel_v2_check` 真战斗 E2E |
 > | T-P12 编队切换（下一位/上一位） | **DONE（本 PR）**：`BattleFormationCycle` ready wrap；Tab/Shift+Tab；手机栏「下一位」；`_select_player` 清预览+跟焦；`combat_formation_cycle_check` E2E |
+| T-P19 | **P1 · 本 PR** | 危险区仍 melee1/ranged2 硬编码 / 洗成一块糊 / 长按对焦不落镜头 | `layers_for_unit`+`collect_layers`；`BattleDangerFeel` 分层画+`follow_cells` 对焦落定；controller `_set_danger`/`_draw_danger` 薄委托 | `danger_zone` / `battle_danger_feel` / `battle_controller` / `combat_danger_feel_check` |
+> | T-P19 危险区手感（选中/范围/镜头） | **DONE（本 PR）**：`DangerZone` 用 `attack_reach`/`min_range`/height；stands/strike 分层洗；长按对焦 `BattleDangerFeel.after_set`→`BattleCombatFrame.follow_cells`；`combat_danger_feel_check` 真战斗 E2E |
 > | T-P13 战中攻击预览 + 选中跟焦 | **DONE（#528）**：桌面选中不再无镜头；攻击预览把双方身框推进可玩区并躲开预报条；确认不再把镜头拽回攻击者；瞄准带/括号/命中芯片 + 确认冲击环；拖单位仍不平移；`combat_attack_camera_check` 真战斗 E2E（横屏 + 桌面） |
 > | T-P15 刘海身框 + 行动后落定 + 横屏信息栏 | **DONE（#543）**：刘海唇缘的冠上/身侧残片吸回身框，唇缘拇指滑动不再被当成平移；移动/攻击后优先把行动者身框留在可读区（装不下双方时不把行动者推出信息栏或刘海）；横屏信息栏不压棋盘、正文不裁切、空白处不抢点；`combat_notch_settle_check` 真战斗 E2E |
 > | 立绘 exists/resolve medium 回落（机制 A 根因） | **DONE（#350）**：`CKArtPaths.resolve` 在 portraits 路径上 large 被 exclude 时落到 `.medium.webp`；`android_tier_pack_check` |
