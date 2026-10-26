@@ -1299,6 +1299,37 @@ func _regen_market(city: String) -> void:
 		m[g] = s + int(round((t - s) * 0.35))
 	market[city] = m
 
+## Player-paid restock: pull depleted shelves toward target (same curve as monthly regen).
+func refresh_market(city: String) -> Dictionary:
+	if city != pos:
+		return {"ok": false, "msg": Locale.t("city_market_need_here")}
+	if not nodes.has(city):
+		return {"ok": false, "msg": Locale.t("city_market_no_city")}
+	var cost := int(rules.get("market_refresh_cost", 15))
+	if GameState.silver < cost:
+		return {"ok": false, "msg": Locale.t("city_market_silver_short", [cost])}
+	var before := 0
+	for g in goods.keys():
+		before += stock(city, str(g))
+	var had := market.has(city)
+	var saved: Dictionary = {}
+	if had:
+		saved = (market[city] as Dictionary).duplicate()
+	_regen_market(city)
+	var after := 0
+	for g2 in goods.keys():
+		after += stock(city, str(g2))
+	if after <= before:
+		if had:
+			market[city] = saved
+		else:
+			market.erase(city)
+		return {"ok": false, "msg": Locale.t("city_market_refresh_full")}
+	GameState.silver -= cost
+	GameState.mark_dirty()
+	world_changed.emit()
+	return {"ok": true, "msg": Locale.t("city_market_refresh_ok") % cost, "cost": cost}
+
 func price(city: String, g: String, side: String = "buy") -> int:
 	var gd: Dictionary = goods.get(g, {})
 	var base := float(gd.get("base", 5))

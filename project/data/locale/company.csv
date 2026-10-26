@@ -429,6 +429,12 @@ atlas_supply_press_log,硬闯续行，士气再挫,Pressed on; morale sank furth
 atlas_supply_press_ok,硬闯续行（粮仍空，士气再挫）,Pressed on (still empty; morale hit)
 atlas_supply_stop_log,强制停靠于「%s」,Forced halt at "%s"
 atlas_supply_stop_ok,已在「%s」强制停靠，可补给后续行,Halted at "%s"; resupply then resume
+city_market_refresh_btn,补货刷新 ↻,Restock shelves
+city_market_refresh_ok,市集补货（-%d 银）,Market restocked (-%d silver)
+city_market_refresh_full,本地存货已足，无需补货,Shelves already full
+city_market_need_here,须身在此城,Must be in this city
+city_market_no_city,无此地,No such place
+city_market_silver_short,银币不足（需 %d）,Not enough silver (need %d)
 atlas_cache_en,GRANARY // 屯仓,GRANARY // CACHE
 atlas_cache_title,屯营开仓 · 城堡粮仓,Open stockade granary
 atlas_cache_body,「%s」粮仓存粮 %d。现于「%s」。开仓取粮入辎重，续行无忧。,"%s" holds %d food. You are at "%s". Draw the cache into the wagon.
