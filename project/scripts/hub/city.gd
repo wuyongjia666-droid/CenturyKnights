@@ -35,6 +35,7 @@ func _ready() -> void:
 	city = str(GameState.get_meta("city_id", World.pos)) if GameState.has_meta("city_id") else World.pos
 	if not World.nodes.has(city) or city != World.pos:
 		city = World.pos
+	World.note_city_gate("in")
 	UIKit.void_bg(self)
 	_add_backdrop()
 	_top = Control.new()
@@ -84,7 +85,7 @@ func _ready() -> void:
 		_toast.z_index = 20
 		_toast.add_theme_font_size_override("font_size", MobilePage.FONT)
 	else:
-		UIKit.footer_bar(self, [["Q/E", "切换页签"], ["A", "选择 / 确认"], ["ESC", "返回舆图"]], "SETTLEMENT · FROST_TACTICAL v8.7")
+		UIKit.footer_bar(self, [["Q/E", "切换页签"], ["A", "选择 / 确认"], ["ESC", Locale.t("atlas_gate_leave")]], "SETTLEMENT · FROST_TACTICAL v8.7")
 	UIFX.page_enter(self)
 	UIFX.wire_tree(self)
 
@@ -325,7 +326,7 @@ func _refresh_top() -> void:
 		["货舱", "%d/%d" % [World.cargo_used(), World.cargo_cap()], UIKit.TEXT],
 		["历", World.date_label(), UIKit.TEXT_DIM],
 	]
-	var back_t := "返回舆图"
+	var back_t := Locale.t("atlas_gate_leave")
 	if _mob:
 		var parts := PackedStringArray()
 		for ch in chips:
@@ -404,7 +405,7 @@ func _render_side() -> void:
 	kv.add_child(UIKit.kv_row("求购（贵）", _goods_list(n.get("demand", [])), UIKit.EMBER, 348))
 	var lore := UIKit.body_label(str(n.get("lore", "")), UIKit.TEXT_DIM, 12)
 	lore.position = Vector2(18, 392)
-	lore.size = Vector2(348, 90)
+	lore.size = Vector2(348, 68)
 	lore.custom_minimum_size = Vector2(348, 0)
 	p.add_child(lore)
 	var hl := UIKit.hairline(Color(1, 1, 1, 0.07))
@@ -422,7 +423,14 @@ func _render_side() -> void:
 		if World.can_turn_in(q, city):
 			ready += 1
 	party.add_child(UIKit.kv_row("可在此交付", "%d" % ready, UIKit.OK if ready > 0 else UIKit.TEXT_DIM, 348))
-	var back := UIKit.cta_button("返回舆图", "ESC", 348, 40)
+	var gate := UIKit.body_label(World.city_gate_text(), UIKit.EMBER if bool(World.city_gate.get("warn", false)) else UIKit.ACCENT, 12)
+	gate.name = "CityGateBanner"
+	gate.position = Vector2(18, 462)
+	gate.size = Vector2(348, 28)
+	gate.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	gate.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	p.add_child(gate)
+	var back := UIKit.cta_button(Locale.t("atlas_gate_leave"), "ESC", 348, 40)
 	back.name = "BackToAtlas"
 	back.position = Vector2(18, 566)
 	back.pressed.connect(_back)
@@ -1687,6 +1695,7 @@ func _toast_msg(text: String, col: Color) -> void:
 	tw.tween_callback(func(): _toast.visible = false)
 
 func _back() -> void:
+	World.note_city_gate("out")
 	UIFX.page_exit(self)
 	CKNav.up(ATLAS)
 
