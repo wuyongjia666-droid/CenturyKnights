@@ -44,7 +44,7 @@ func _run() -> String:
 	if err == "":
 		err = await _e2e_sticky_pan_empty()
 	if err == "":
-		err = _e2e_panel_ignore()
+		err = await _e2e_panel_ignore()
 	if err == "":
 		err = await _e2e_right_notch_select()
 	if _battle != null and is_instance_valid(_battle):
@@ -77,6 +77,7 @@ func _algebra_soft_steal() -> String:
 
 
 ## Sticky while selected must be strict figure — soft halo is not sticky.
+## Edge-lip EDGE_EXTRA must not widen sticky onto the soft-empty neighbour (T-P24).
 func _algebra_sticky_strict() -> String:
 	var host := _TapHost.new()
 	host.setup_armed(Vector2i(2, 2))
@@ -85,6 +86,12 @@ func _algebra_sticky_strict() -> String:
 	var halo := origin + Vector2(2.5 + 0.70, 2.5) * cell
 	if BattlePick.near_selected_unit(host, halo, 0):
 		return "soft halo must not count as sticky near_selected"
+	# Live boards stamp m_touch_safe; EDGE_EXTRA used to mark this soft-empty sticky.
+	host.set_meta("m_touch_safe", Rect2(0, 0, 900, 700))
+	host.set_meta("m_board_area", Rect2(0, 0, 900, 700))
+	host.set_meta("m_edge_band", 48.0)
+	if BattlePick.near_selected_unit(host, halo, 0):
+		return "soft halo sticky under edge metas (EDGE_EXTRA swallowing pan)"
 	var torso := origin + Vector2(2.5, 2.5) * cell
 	if not BattlePick.near_selected_unit(host, torso, 0):
 		return "figure centre must stay sticky"
@@ -138,8 +145,8 @@ func _algebra_source() -> String:
 	var edge := FileAccess.get_file_as_string("res://scripts/battle/battle_edge_pick.gd")
 	if pick.find("resolve_board_tap") < 0:
 		return "resolve_board_tap missing"
-	if pick.find("strict_hits_selected(host, screen_pos, selected_idx)") < 0:
-		return "near_selected must delegate to strict_hits_selected"
+	if pick.find("strict_hits_selected(host, screen_pos, selected_idx, false)") < 0:
+		return "near_selected must exclude edge (sticky must not swallow soft-empty pan)"
 	if ctrl.find("resolve_board_tap") < 0:
 		return "tap path not wired to resolve_board_tap"
 	if edge.find("T-P24") < 0:
@@ -257,16 +264,19 @@ func _e2e_sticky_pan_empty() -> String:
 		return "sticky setup select failed"
 	# Expire select-lock so a misclassified tap would deselect.
 	_battle.set_meta("m_select_burst_msec", Time.get_ticks_msec() - 1000)
+	# Kill focus tween and park pan with +x headroom so clamp cannot mask sticky.
+	BattlePick.cancel_focus_tween(_battle)
+	_battle._board_pan = Vector2.ZERO
+	_battle._board_zoom = 1.0
+	_battle._clamp_board_pan()
+	_battle._apply_board_xform()
+	await _settle(2)
 	var halo := _screen(_cell_local(Vector2i(4, 3), Vector2(0.18, 0.5)))
 	if BattlePick.near_selected_unit(_battle, halo, _player_i):
 		return "live soft halo still sticky"
-	# Stop any leftover focus tween so settle cannot yank the pan back mid-gesture.
-	BattlePick.cancel_focus_tween(_battle)
-	await _settle(2)
 	var pan0: Vector2 = _battle._board_pan
 	var base: float = _battle._board_router._slop()
 	# Drift past base slop but under sticky*1.55 — if sticky wrongly applied, stays tap.
-	# 1.35 (was 1.25): CI headless sometimes needs a hair more travel to clear slop noise.
 	var drift := base * 1.35
 	_touch(0, true, halo)
 	await get_tree().process_frame
@@ -284,6 +294,8 @@ func _e2e_sticky_pan_empty() -> String:
 func _e2e_panel_ignore() -> String:
 	if _battle.has_method("apply_mobile_layout"):
 		_battle.apply_mobile_layout()
+	# MobileSide.attach is deferred from _layout_board — settle before assert.
+	await _settle(3)
 	var col := _battle.get_node_or_null("MobileSideCol") as Control
 	if col == null:
 		return "side column missing for panel check"
@@ -348,19 +360,26 @@ func _tap(local_board: Vector2) -> void:
 	_battle._apply_board_gesture({"kind": "tap", "pos": _screen(local_board)})
 
 
+## _gui_input lifts control-local → viewport via xformed_by(global_transform).
+func _to_gui(screen: Vector2) -> Vector2:
+	return _battle.get_global_transform().affine_inverse() * screen
+
+
 func _touch(idx: int, pressed: bool, screen: Vector2) -> void:
 	var ev := InputEventScreenTouch.new()
 	ev.index = idx
 	ev.pressed = pressed
-	ev.position = screen
+	ev.position = _to_gui(screen)
 	_battle._gui_input(ev)
 
 
 func _drag(screen: Vector2, relative: Vector2) -> void:
 	var ev := InputEventScreenDrag.new()
 	ev.index = 0
-	ev.position = screen
-	ev.relative = relative
+	ev.position = _to_gui(screen)
+	# relative is a viewport delta; convert like battle_controller._screen_delta_to_local inverse.
+	var inv := _battle.get_global_transform().affine_inverse()
+	ev.relative = inv.basis_xform(relative)
 	_battle._gui_input(ev)
 
 
