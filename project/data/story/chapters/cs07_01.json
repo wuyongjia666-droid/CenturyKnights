@@ -771,31 +771,37 @@
         {
           "id": "cs0701_wex1",
           "speaker": "旁白",
+          "when": { "flag": "cs07_mid_fought" },
           "text": "仪典问声沉进石阶。阶冷，催声就热不起来。"
         },
         {
           "id": "cs0701_wex2",
           "speaker": "石垒·晚担",
+          "when": { "flag": "cs07_mid_fought" },
           "text": "阶下影里空了。空了，台上才像仪典。"
         },
         {
           "id": "cs0701_wex3",
           "speaker": "槐里·青禾",
+          "when": { "flag": "cs07_mid_fought" },
           "text": "口气我收回半寸。半寸，刚好够上台。"
         },
         {
           "id": "cs0701_wex4",
           "speaker": "苇原·灯影",
+          "when": { "flag": "cs07_mid_fought" },
           "text": "袖口的礼我理平。平了，上台不绊。"
         },
         {
           "id": "cs0701_wex5",
           "speaker": "老旗手",
+          "when": { "flag": "cs07_mid_fought" },
           "text": "旗不过代嘴。嘴是你的，旗只站着。"
         },
         {
           "id": "cs0701_wex6",
           "speaker": "leader",
+          "when": { "flag": "cs07_mid_fought" },
           "text": "锋不问代嘴。仪典我自己应。"
         },
         {

@@ -803,31 +803,37 @@
         {
           "id": "cs0902_wex1",
           "speaker": "旁白",
+          "when": { "flag": "cs09_mid_fought" },
           "text": "血巾二次验干。干处，卖泼的连声都没了。"
         },
         {
           "id": "cs0902_wex2",
           "speaker": "石垒·晚担",
+          "when": { "flag": "cs09_mid_fought" },
           "text": "再卖泼的，连嗓子都先干了。"
         },
         {
           "id": "cs0902_wex3",
           "speaker": "槐里·青禾",
+          "when": { "flag": "cs09_mid_fought" },
           "text": "旧星旁那点新干，像把话又钉牢一寸。"
         },
         {
           "id": "cs0902_wex4",
           "speaker": "苇原·灯影",
+          "when": { "flag": "cs09_mid_fought" },
           "text": "第二星我认过。认过，才敢收巾。"
         },
         {
           "id": "cs0902_wex5",
           "speaker": "老旗手",
+          "when": { "flag": "cs09_mid_fought" },
           "text": "旗杆不点巾。点巾像审，今晚是认。"
         },
         {
           "id": "cs0902_wex6",
           "speaker": "leader",
+          "when": { "flag": "cs09_mid_fought" },
           "text": "锋再问一次。血仍我的，巾我收。"
         },
         {

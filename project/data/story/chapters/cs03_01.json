@@ -771,31 +771,37 @@
         {
           "id": "cs0301_wex1",
           "speaker": "旁白",
+          "when": { "flag": "cs03_mid_fought" },
           "text": "桥铃余音收进木梁。梁稳了，拓片才敢出袋。"
         },
         {
           "id": "cs0301_wex2",
           "speaker": "石垒·晚担",
+          "when": { "flag": "cs03_mid_fought" },
           "text": "坡下没人回望。回望的，只剩风。"
         },
         {
           "id": "cs0301_wex3",
           "speaker": "槐里·青禾",
+          "when": { "flag": "cs03_mid_fought" },
           "text": "肩上的沉还在。沉着，脚步才不飘。"
         },
         {
           "id": "cs0301_wex4",
           "speaker": "苇原·灯影",
+          "when": { "flag": "cs03_mid_fought" },
           "text": "拓纸角我抚平。平了，墨才不花。"
         },
         {
           "id": "cs0301_wex5",
           "speaker": "老旗手",
+          "when": { "flag": "cs03_mid_fought" },
           "text": "旗别扫铃绳。绳一晃，铃又假。"
         },
         {
           "id": "cs0301_wex6",
           "speaker": "leader",
+          "when": { "flag": "cs03_mid_fought" },
           "text": "锋问过话。拓片归袋，人归桥。"
         },
         {

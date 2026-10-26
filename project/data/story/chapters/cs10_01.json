@@ -862,31 +862,37 @@
         {
           "id": "cs1001_wex1",
           "speaker": "旁白",
+          "when": { "flag": "cs10_mid_fought" },
           "text": "盖印问声落了。落处，催快印的散到槛外。"
         },
         {
           "id": "cs1001_wex2",
           "speaker": "石垒·晚担",
+          "when": { "flag": "cs10_mid_fought" },
           "text": "槛外嚷快的，今晚嗓子用尽也没用。"
         },
         {
           "id": "cs1001_wex3",
           "speaker": "槐里·青禾",
+          "when": { "flag": "cs10_mid_fought" },
           "text": "腕力回来了。场清着，印才敢落。"
         },
         {
           "id": "cs1001_wex4",
           "speaker": "苇原·灯影",
+          "when": { "flag": "cs10_mid_fought" },
           "text": "印泥边我刮齐。齐了，框才不毛。"
         },
         {
           "id": "cs1001_wex5",
           "speaker": "老旗手",
+          "when": { "flag": "cs10_mid_fought" },
           "text": "旗不压印谱。压谱像抢，今晚是盖。"
         },
         {
           "id": "cs1001_wex6",
           "speaker": "leader",
+          "when": { "flag": "cs10_mid_fought" },
           "text": "锋验过场。印我盖得，框我认。"
         },
         {

@@ -115,17 +115,22 @@ func _static_one(row: Dictionary, seen: Dictionary) -> String:
 	return _static_unique(data, cid, seen)
 
 
+func _fought_flag(cid: String) -> String:
+	var season := cid.substr(2, 2)
+	return "cs%s_mid_fought" % season
+
+
 func _static_plate_lines(cid: String, beat, needle: String) -> String:
 	var want := {}
 	for n in range(1, 7):
 		want[_plate_id(cid, n)] = n
 	var found := 0
-	var saw_gate := false
 	var err := ""
 	var got_needle := false
 	var last_win := -1
 	var first_wex := -1
 	var idx := 0
+	var fought := _fought_flag(cid)
 	for line in beat.get("lines", []):
 		if err != "":
 			break
@@ -138,16 +143,15 @@ func _static_plate_lines(cid: String, beat, needle: String) -> String:
 		if want.has(lid):
 			if first_wex < 0:
 				first_wex = idx
-			if line.has("when") or saw_gate:
-				err = "%s plate gated %s" % [cid, lid]
+			var gate = line.get("when", null)
+			if typeof(gate) != TYPE_DICTIONARY or str(gate.get("flag", "")) != fought:
+				err = "%s plate missing fought when %s" % [cid, lid]
 			elif _hanzi(text) > 60 or _hanzi(text) < 8:
 				err = "%s plate hanzi %s" % [cid, lid]
 			elif int(want[lid]) == 6 and str(line.get("speaker", "")) == "旁白":
 				err = "%s plate-final narrator" % cid
 			else:
 				found += 1
-		if line.has("when"):
-			saw_gate = true
 		idx += 1
 	if err == "" and found != 6:
 		err = "%s plates %d" % [cid, found]
@@ -207,6 +211,7 @@ func _wex_leg(row: Dictionary) -> String:
 	var needle := str(row["needle"])
 	GameState.new_game("烬行", "灰旗", GameState.crest_color)
 	GameState.set_flag("hub_open")
+	GameState.set_flag(_fought_flag(cid))
 	var player = await _spawn(cid, beat)
 	var err := ""
 	if player.current_beat_id() != beat:
