@@ -1343,6 +1343,12 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				if _btn_skill and not _btn_skill.disabled: _cycle_skill()
 			KEY_E:
 				if _btn_wait and not _btn_wait.disabled: _wait_selected()
+			KEY_TAB:
+				# Y1-A T-P12: Tab / Shift+Tab cycle ready player units.
+				if event.shift_pressed:
+					BattleFormationCycle.apply_prev(self)
+				else:
+					BattleFormationCycle.apply_next(self)
 			KEY_ENTER, KEY_KP_ENTER:
 				if _btn_end and not _btn_end.disabled: _end_player_turn()
 			_:
