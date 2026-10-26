@@ -363,6 +363,9 @@ func _build() -> void:
 			Sfx.click()
 			CKNav.go("res://scenes/hub/title_promote.tscn"))
 		rp.add_child(pb)
+		var home_shield := Vector2(22, 28)
+		var row_y := 44.0 + 250.0 + float(dy) - home_shield.y - 4.0
+		CKHeraldryField.place_home_lineage_row(rp, CKHeraldryField.household_for_overview(5), Vector2(16, row_y), home_shield)
 
 	if not DeviceProfile.is_mobile():   # only keys that really do something (audit #6)
 		UIKit.footer_bar(self, [["A", Locale.t("shell_b56d9ac6")], ["ESC", Locale.t("a1_hub_esc")]], "CENTURYKNIGHTS · FROST_TACTICAL v8.6")
@@ -1137,6 +1140,7 @@ func _m_right_column(rect: Rect2) -> void:
 	info.add_theme_constant_override("separation", 2)
 	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(info)
+	CKHeraldryField.place_home_lineage_row(info, CKHeraldryField.household_for_overview(5), Vector2.ZERO, Vector2(22, 28))
 	var nm := MobilePage.label(Locale.latin(str(leader.name), str(leader.id)), UIKit.TEXT, 24, false)
 	nm.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	nm.add_theme_font_override("font", UIKit.font("bold"))
