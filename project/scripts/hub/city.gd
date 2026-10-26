@@ -1231,6 +1231,38 @@ func _tab_market() -> void:
 		sl.clip_text = true
 		strip.add_child(sl)
 		y0 = 156.0 if not _mob else float(48 + MobilePage.HIT + 16)
+	var pickups: Array = World.gather_pickups_here() if city == World.pos else []
+	if not pickups.is_empty():
+		var gq: Dictionary = pickups[0]
+		var need_g := str(gq.get("good", ""))
+		var need_q := maxi(0, int(gq.get("qty", 0)) - World.have_good(need_g))
+		var gb := Panel.new()
+		gb.name = "GatherSupplyStrip"
+		var gy := y0
+		gb.position = Vector2(18, gy)
+		gb.size = Vector2(812, 44 if not _mob else float(MobilePage.HIT + 12))
+		gb.add_theme_stylebox_override("panel", UIKit.flat_box(Color(UIKit.OK.r, UIKit.OK.g, UIKit.OK.b, 0.12), Color(UIKit.OK, 0.4), 8))
+		p.add_child(gb)
+		var gl := UIKit.body_label(Locale.t("wq_mkt_gather_banner") % [World.good_name(need_g), int(gq.get("qty", 0)), need_q], UIKit.OK, 12)
+		gl.name = "GatherSupplyLine"
+		gl.position = Vector2(10, 6)
+		gl.size = Vector2(560, 32)
+		gl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		gb.add_child(gl)
+		var buy_n := maxi(1, need_q)
+		var gbb := UIKit.cta_button(Locale.t("wq_mkt_gather_buy") % buy_n, "A", 200, 32 if not _mob else MobilePage.HIT)
+		gbb.name = "GatherBuy"
+		gbb.position = Vector2(590, 6 if not _mob else 4)
+		var stock_ok := World.stock(city, need_g) >= buy_n
+		var silver_ok := GameState.silver >= World.quote_buy(city, need_g, buy_n)
+		var store_kind := str(World.goods.get(need_g, {}).get("store", "")) if World.goods.has(need_g) else ""
+		var cargo_ok := store_kind != "" or World.cargo_used() + buy_n <= World.cargo_cap()
+		gbb.disabled = not (stock_ok and silver_ok and cargo_ok) or need_g == ""
+		var gid := need_g
+		var gqty := buy_n
+		gbb.pressed.connect(func(): _do(World.market_buy(city, gid, gqty)))
+		gb.add_child(gbb)
+		y0 = gy + gb.size.y + 10.0
 	var hdr := HBoxContainer.new()
 	hdr.position = Vector2(18, y0)
 	hdr.add_theme_constant_override("separation", 0)
@@ -1432,6 +1464,9 @@ func _tab_board() -> void:
 	kv.add_child(UIKit.kv_row("门槛", "城声望 %d%s" % [int(sel.get("req_rep", 0)), " · 邦交 %d" % need_n if need_n > 0 else ""], UIKit.TEXT_DIM, 380))
 	if str(sel.kind) == "gather":
 		kv.add_child(UIKit.kv_row("所需", "%s ×%d（持有 %d）" % [World.good_name(str(sel.good)), int(sel.qty), World.have_good(str(sel.good))], UIKit.TEXT, 380))
+		var supply := World.gather_supply_city(sel)
+		if supply != "":
+			kv.add_child(UIKit.kv_row(Locale.t("wq_board_supply"), str(World.node(supply).get("name", supply)), UIKit.ACCENT, 380))
 	elif str(sel.kind) == "clear":
 		kv.add_child(UIKit.kv_row("目标路段", "%s — %s" % [World.node(str(sel.edge[0])).get("name", ""), World.node(str(sel.edge[1])).get("name", "")], UIKit.DANGER, 380))
 	else:

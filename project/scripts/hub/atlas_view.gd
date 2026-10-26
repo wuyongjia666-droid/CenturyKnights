@@ -755,7 +755,13 @@ func _add_node_button(n: Dictionary, markers: Dictionary, mm: Dictionary) -> voi
 	# overlays: quest objective ◆ / turn-in ✓ / mainline ★
 	var badges: Array = []
 	for mk in markers.get(id, []):
-		badges.append(["✓", UIKit.OK] if str(mk.kind) == "turnin" else ["◆", UIKit.DANGER])
+		var mk_kind := str(mk.kind)
+		if mk_kind == "turnin":
+			badges.append(["✓", UIKit.OK])
+		elif mk_kind == "pickup":
+			badges.append(["◇", UIKit.ACCENT])
+		else:
+			badges.append(["◆", UIKit.DANGER])
 	if str(mm.get("node", "")) == id:
 		badges.append(["★", UIKit.EMBER])
 	if id == str(World.nations.get(_view, {}).get("capital", "")):
@@ -1203,7 +1209,10 @@ func _render_right() -> void:
 	var mm: Dictionary = World.mainline_marker()
 	for mk in World.quest_markers().get(_sel, []):
 		var q: Dictionary = mk.quest
-		var ql := UIKit.body_label("%s %s" % ["✓ 交付" if str(mk.kind) == "turnin" else "◆ 目标", q.title], UIKit.OK if str(mk.kind) == "turnin" else UIKit.DANGER, 12)
+		var mk_kind := str(mk.kind)
+		var mark_txt := Locale.t("atlas_mark_turnin") if mk_kind == "turnin" else (Locale.t("atlas_mark_pickup") if mk_kind == "pickup" else Locale.t("atlas_mark_objective"))
+		var mark_col := UIKit.OK if mk_kind == "turnin" else (UIKit.ACCENT if mk_kind == "pickup" else UIKit.DANGER)
+		var ql := UIKit.body_label("%s %s" % [mark_txt, q.title], mark_col, 12)
 		ql.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		ql.clip_text = false
 		ql.custom_minimum_size = Vector2(col_w, 0)
@@ -1248,12 +1257,25 @@ func _render_right() -> void:
 	go.pressed.connect(_start_travel)
 	p.add_child(go)
 	var readies := World.ready_turn_ins_here().size() if _sel == World.pos else 0
-	var enter_label := Locale.t("atlas_enter_turnin") % readies if readies > 0 else Locale.t("atlas_enter_kind") % World.kind_zh(_sel)
-	var enter := UIKit.ghost_button(enter_label, 148 if readies > 0 else 108, 32)
+	var pickups := World.gather_pickups_here().size() if _sel == World.pos else 0
+	var enter_label := Locale.t("atlas_enter_kind") % World.kind_zh(_sel)
+	var enter_w := 108
+	if readies > 0:
+		enter_label = Locale.t("atlas_enter_turnin") % readies
+		enter_w = 148
+	elif pickups > 0:
+		enter_label = Locale.t("atlas_enter_pickup") % pickups
+		enter_w = 148
+	var enter := UIKit.ghost_button(enter_label, enter_w, 32)
 	enter.name = "EnterButton"
 	enter.position = Vector2(16, 518)
 	enter.disabled = _busy or _sel != World.pos or not World.encounter.is_empty()
-	enter.pressed.connect(_enter_here)
+	enter.pressed.connect(func():
+		if readies > 0:
+			GameState.set_meta("city_tab", "board")
+		elif pickups > 0:
+			GameState.set_meta("city_tab", "market")
+		_enter_here())
 	p.add_child(enter)
 	var ch := UIKit.ghost_button("主线章节", 108, 32)
 	ch.name = "ChapterButton"
@@ -1829,9 +1851,12 @@ func _after_arrival() -> void:
 		return
 	if _check_arbitrage_arrival():
 		return
+	var pickups_n := World.gather_pickups_here().size()
 	if readies > 0:
 		_show_toast(Locale.t("atlas_arrive_turnin") % [n.get("name", ""), readies], UIKit.OK)
 		_show_turnin_modal(readies)
+	elif pickups_n > 0:
+		_show_toast(Locale.t("atlas_arrive_pickup") % [n.get("name", ""), pickups_n], UIKit.ACCENT)
 	else:
 		_show_toast(Locale.t("atlas_arrive_plain") % n.get("name", ""), UIKit.OK)
 
@@ -3648,10 +3673,11 @@ func _toast_quest_guide(nid: String) -> void:
 	var place := str(World.node(nid).get("name", nid))
 	for mk in World.quest_markers().get(nid, []):
 		var q: Dictionary = mk.quest
-		var col := UIKit.OK if str(mk.kind) == "turnin" else UIKit.DANGER
+		var mk_kind := str(mk.kind)
+		var col := UIKit.OK if mk_kind == "turnin" else (UIKit.ACCENT if mk_kind == "pickup" else UIKit.DANGER)
 		_show_toast(Locale.t("wq_atlas_focus") % [str(q.get("title", "")), place], col)
 		return
-	# gather (no map marker) or deep-link without an active marker
+	# deep-link without an active marker overlay
 	for q2 in World.active:
 		if World.quest_guide_node(q2) == nid:
 			_show_toast(Locale.t("wq_atlas_focus") % [str(q2.get("title", "")), place], UIKit.ACCENT)
@@ -4370,9 +4396,14 @@ func _m_actions() -> void:
 	elif _sel != "" and _sel == World.pos and World.nodes.has(_sel):
 		var n: Dictionary = World.node(_sel)
 		var ready_n := World.ready_turn_ins_here().size()
+		var pickup_n := World.gather_pickups_here().size()
 		if ready_n > 0:
 			b = MobilePage.button(Locale.t("atlas_enter_turnin") % ready_n, true, func():
 				GameState.set_meta("city_tab", "board")
+				_enter_here())
+		elif pickup_n > 0:
+			b = MobilePage.button(Locale.t("atlas_enter_pickup") % pickup_n, true, func():
+				GameState.set_meta("city_tab", "market")
 				_enter_here())
 		else:
 			b = MobilePage.button(Locale.t("mob_ui_037") % [Locale.t("mob_ui_038") if str(n.kind) == "castle" else World.kind_zh(_sel), str(n.get("name", ""))], true, _enter_here)
@@ -4393,8 +4424,11 @@ func _m_actions() -> void:
 		var gate_n: Dictionary = World.node(World.pos)
 		var gate_label := Locale.t("atlas_enter_kind") % World.kind_zh(World.pos)
 		var ready_n := World.ready_turn_ins_here().size()
+		var pickup_n := World.gather_pickups_here().size()
 		if ready_n > 0:
 			gate_label = Locale.t("atlas_enter_turnin") % ready_n
+		elif pickup_n > 0:
+			gate_label = Locale.t("atlas_enter_pickup") % pickup_n
 		elif str(gate_n.get("kind", "")) == "castle":
 			gate_label = Locale.t("mob_ui_037") % [Locale.t("mob_ui_038"), str(gate_n.get("name", ""))]
 		else:

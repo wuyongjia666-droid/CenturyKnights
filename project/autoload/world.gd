@@ -1517,6 +1517,7 @@ func market_buy(city: String, g: String, qty: int = 1) -> Dictionary:
 	GameState.silver -= cost
 	_add_good(g, qty)
 	_record_cargo_basis(g, qty, cost, city)
+	_check_gather_ready()
 	GameState.mark_dirty()
 	world_changed.emit()
 	var buy_msg := "购入 %s ×%d（-%d 银）" % [good_name(g), qty, cost]
@@ -2043,6 +2044,9 @@ func _make_quest(city: String, kind: String, tier: int, r: RandomNumberGenerator
 			q.good = str(dem[r.randi() % dem.size()])
 			q.qty = 8 + tier * 4 if q.good == "grain" else 3 + tier * 2
 			q.target = city
+			q.supply_city = nearest_produce_city(str(q.good), city)
+			if str(q.supply_city) == "":
+				q.supply_city = city
 	if q.has("target") and kind != "gather":
 		var rt := route(city, str(q.target))
 		hops = maxi(1, rt.get("path", [city, city]).size() - 1)
@@ -2071,7 +2075,9 @@ func _make_quest(city: String, kind: String, tier: int, r: RandomNumberGenerator
 		"hunt": desc = "%s藏身于%s一带。前往目标地点即触发战斗，得胜后回%s复命。" % [q.foe_name, tname, n.name]
 		"clear": desc = "%s上盘踞着%s营地。行经此道即触发清剿战，得胜后回%s复命。" % [road_name, nat.get("name", ""), n.name]
 		"defend": desc = "%s告急！在期限内赶到即开战，守住后在%s领赏。" % [tname, tname]
-		"gather": desc = "%s急需%s ×%d。备齐货物后回%s交付（交付即消耗）。" % [n.name, good_name(q.good), int(q.qty), n.name]
+		"gather":
+			var supply_n := str(node(str(q.get("supply_city", city))).get("name", n.name))
+			desc = "%s急需%s ×%d。前往%s市集购入后回%s交付（交付即消耗）。" % [n.name, good_name(q.good), int(q.qty), supply_n, n.name]
 		"scout": desc = "走一趟%s，探明当地虚实，回%s复命。抵达时同步当地市价情报。" % [tname, n.name]
 	if OBJECTIVE_KINDS.has(kind):
 		desc = _quest_brief(tpl, q, str(n.get("name", "")), tname, road_name)
@@ -2307,12 +2313,14 @@ func place_rival_here(node_id: String = "", rival_id: String = "") -> Dictionary
 
 func accept_quest(city: String, qid: String) -> Dictionary:
 	if city != pos:
-		return {"ok": false, "msg": "须在发布委托的城中接取"}
+		return {"ok": false, "msg": Locale.t("wq_accept_wrong_city")}
 	var offers: Array = board(city)
 	for i in offers.size():
 		var q: Dictionary = offers[i]
 		if str(q.id) != qid:
 			continue
+		if str(q.get("issuer", city)) != city:
+			return {"ok": false, "msg": Locale.t("wq_accept_wrong_city")}
 		var why := quest_locked_reason(q)
 		if why != "":
 			return {"ok": false, "msg": why}
@@ -3102,6 +3110,58 @@ func quest_engage(qid: String) -> Dictionary:
 	return start_encounter("quest", {"quest": qid, "node": pos, "from": pos})
 
 
+
+## Nearest settlement that lists `good` in produce (for gather 物产 pickup).
+func nearest_produce_city(good: String, from: String) -> String:
+	if good == "" or from == "" or not nodes.has(from):
+		return ""
+	var best := ""
+	var best_days := 1 << 30
+	for id in nodes.keys():
+		var nid := str(id)
+		if nid == from or str(node(nid).get("kind", "")) == "castle":
+			continue
+		if not (good in node(nid).get("produce", [])):
+			continue
+		var rt: Dictionary = route(from, nid)
+		if rt.is_empty():
+			continue
+		var days := int(rt.get("days", 1 << 30))
+		if days < best_days or (days == best_days and (best == "" or nid < best)):
+			best = nid
+			best_days = days
+	if best != "":
+		return best
+	# Local produce counts when the issuer also makes the demanded good.
+	if good in node(from).get("produce", []):
+		return from
+	return ""
+
+
+func gather_supply_city(q: Dictionary) -> String:
+	var tagged := str(q.get("supply_city", ""))
+	if tagged != "" and nodes.has(tagged):
+		return tagged
+	return nearest_produce_city(str(q.get("good", "")), str(q.get("issuer", pos)))
+
+
+## Active gather commissions whose 物产 can be bought at the party's current node.
+func gather_pickups_here() -> Array:
+	var out: Array = []
+	for q in active:
+		if str(q.get("kind", "")) != "gather":
+			continue
+		if str(q.get("state", "")) == "ready":
+			continue
+		if gather_supply_city(q) != pos:
+			continue
+		var need := int(q.get("qty", 0)) - have_good(str(q.get("good", "")))
+		if need <= 0:
+			continue
+		out.append(q)
+	return out
+
+
 ## Atlas / todo guidance: where the player should look next for an accepted commission.
 func quest_guide_node(q: Dictionary) -> String:
 	if q.is_empty():
@@ -3110,7 +3170,8 @@ func quest_guide_node(q: Dictionary) -> String:
 		return turn_in_city(q)
 	var kind := str(q.get("kind", ""))
 	if kind == "gather":
-		return turn_in_city(q)
+		var supply := gather_supply_city(q)
+		return supply if supply != "" else turn_in_city(q)
 	if kind == "clear" and q.has("edge"):
 		var e: Array = q.edge
 		if e.is_empty():
@@ -3127,7 +3188,8 @@ func quest_next_hint(q: Dictionary) -> String:
 		return Locale.t("wq_hint_turnin") % place
 	match str(q.get("kind", "")):
 		"gather":
-			return Locale.t("wq_hint_gather") % [good_name(str(q.get("good", ""))), int(q.get("qty", 0)), place]
+			var need := maxi(0, int(q.get("qty", 0)) - have_good(str(q.get("good", ""))))
+			return Locale.t("wq_hint_gather_buy") % [place, good_name(str(q.get("good", ""))), need if need > 0 else int(q.get("qty", 0))]
 		"hunt", "defend", "siege_aid", "bounty", "rescue":
 			return Locale.t("wq_hint_fight") % place
 		"clear":
@@ -3145,7 +3207,10 @@ func quest_markers() -> Dictionary:
 			t = turn_in_city(q)
 			k = "turnin"
 		elif str(q.kind) == "gather":
-			continue
+			t = gather_supply_city(q)
+			k = "pickup"
+			if t == "":
+				continue
 		else:
 			t = str(q.target)
 		if not out.has(t):
