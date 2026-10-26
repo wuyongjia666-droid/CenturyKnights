@@ -68,8 +68,9 @@ func _render() -> void:
 	var k2 := UIKit.stat_box("出战上限", "%d 人" % GameState.max_deploy(), UIKit.TEXT)
 	k2.position = Vector2(884, 82)
 	_body.add_child(k2)
-	UIKit.panel_at(_body, Rect2(24, 160, 828, 520), 10)
-	UIKit.section_head(_body, Vector2(42, 174), "工事矩阵", "BUILDINGS", 792, "LV MAX %d" % GameState.BUILDING_MAX)
+	_month_echo_strip(_body, Vector2(24, 148), 828)
+	UIKit.panel_at(_body, Rect2(24, 200, 828, 480), 10)
+	UIKit.section_head(_body, Vector2(42, 214), "工事矩阵", "BUILDINGS", 792, "LV MAX %d" % GameState.BUILDING_MAX)
 	var descs := {
 		"hall": "扩编队上限（现 %d 人）。Lv2→5人，Lv3+→6人。" % GameState.max_deploy(),
 		"barracks": "传习每年 %d 次；Lv2+ 月结士气。" % CKTutor.year_limit(),
@@ -77,10 +78,10 @@ func _render() -> void:
 		"forge": "打造更省铁银；Lv4 产出精灰刃（+3攻）。",
 		"shrine": "丰收粮产与祈愈强度随等级上升。",
 	}
-	var y := 204.0
+	var y := 244.0
 	var first: Button = null
 	for id in ["hall", "barracks", "market", "forge", "shrine"]:
-		var b := _row(id, Rect2(38, y, 800, 88), str(descs[id]))
+		var b := _row(id, Rect2(38, y, 800, 78), str(descs[id]))
 		if first == null and b != null and not b.disabled:
 			first = b
 		y += 94
@@ -204,12 +205,15 @@ func _row(id: String, r: Rect2, desc: String) -> Button:
 		nx.position = r.position + Vector2(470, 48)
 		nx.size = Vector2(212, 36)
 		_body.add_child(nx)
-		b = UIKit.make_accent_button(Locale.t("a1_upgrade"), 96)
+		var prev: Dictionary = GameState.building_upgrade_preview(id)
+		ok = not bool(prev.get("short", false))
+		b = UIKit.make_accent_button(Locale.t("works_upgrade_btn"), 96)
+		b.disabled = bool(prev.get("short", false)) or bool(prev.get("maxed", false))
 		b.tooltip_text = "" if ok else Locale.t("a1_works_short")
 	else:
 		b = UIKit.ghost_button(Locale.t("a1_maxed"), 96, 48)
 		b.disabled = true
-	b.name = "up_%s" % id
+	b.name = "WorksUpgrade_%s" % id
 	b.custom_minimum_size = Vector2(96, 48)
 	b.size = Vector2(96, 48)
 	b.position = r.position + Vector2(r.size.x - 108, (r.size.y - 48.0) / 2.0)
@@ -217,6 +221,36 @@ func _row(id: String, r: Rect2, desc: String) -> Button:
 	b.pressed.connect(func(): _upgrade(bid))
 	_body.add_child(b)
 	return b
+
+
+func _month_echo_strip(parent: Node, pos: Vector2, width: float) -> void:
+	## Shop fat: works page month echo for upgrade loop E2E (EchoLine_works).
+	var rows := CKEconomyState.month_echo_lines()
+	var panel := Panel.new()
+	panel.name = "MonthEchoPanel"
+	panel.position = pos
+	panel.size = Vector2(width, 44)
+	panel.add_theme_stylebox_override("panel", UIKit.flat_box(Color(1, 1, 1, 0.03), Color(1, 1, 1, 0.08), 6))
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(panel)
+	var head := UIKit.mono(Locale.t("works_echo_head"), 8, UIKit.ACCENT, false)
+	head.position = Vector2(12, 6)
+	panel.add_child(head)
+	if rows.is_empty():
+		var empty := UIKit.body_label("—", UIKit.TEXT_FAINT, 11)
+		empty.position = Vector2(12, 22)
+		panel.add_child(empty)
+		return
+	var x := 12.0
+	for row in rows:
+		var line := UIKit.body_label(str(row.get("text", "")), UIKit.OK, 11)
+		line.name = "EchoLine_%s" % str(row.get("kind", "x"))
+		line.autowrap_mode = TextServer.AUTOWRAP_OFF
+		line.position = Vector2(x, 22)
+		line.size = Vector2(width - 24, 16)
+		panel.add_child(line)
+		break
+
 
 func _house_mod_text() -> String:
 	var parts: Array = []
@@ -285,6 +319,12 @@ func _m_render() -> void:
 	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	list.add_theme_constant_override("separation", 10)
 	sc.add_child(list)
+	list.add_child(MobilePage.label(Locale.t("works_echo_head"), UIKit.ACCENT, MobilePage.FONT, false))
+	for row in CKEconomyState.month_echo_lines():
+		var el := MobilePage.label(str(row.get("text", "")), UIKit.OK, MobilePage.FONT, true)
+		el.name = "EchoLine_%s" % str(row.get("kind", "x"))
+		list.add_child(el)
+		break
 	var descs := {
 		"hall": Locale.t("mw_75b58bf9") % GameState.max_deploy(),
 		"barracks": Locale.t("mw_08a7e913") % CKTutor.year_limit(),
@@ -358,11 +398,14 @@ func _m_card(list: VBoxContainer, id: String, desc: String) -> Button:
 		var nf := int(cost.get("food", 0))
 		var ok := GameState.silver >= need_s and GameState.iron >= ni and GameState.food >= nf
 		v.add_child(MobilePage.label(Locale.t("mw_bc2f4fde") % [need_s, ni, nf, Locale.t("a1_works_next_%s" % id)], UIKit.ACCENT if ok else UIKit.DANGER, MobilePage.FONT, true))
-		b = MobilePage.button(Locale.t("a1_upgrade"), ok, func(): _upgrade(id), 150)
+		var prev_m: Dictionary = GameState.building_upgrade_preview(id)
+		ok = not bool(prev_m.get("short", false))
+		b = MobilePage.button(Locale.t("works_upgrade_btn"), ok, func(): _upgrade(id), 150)
+		b.disabled = bool(prev_m.get("short", false)) or bool(prev_m.get("maxed", false))
 	else:
 		b = MobilePage.button(Locale.t("a1_maxed"), false, func(): pass, 150)
 		b.disabled = true
-	b.name = "up_%s" % id
+	b.name = "WorksUpgrade_%s" % id
 	b.size_flags_horizontal = Control.SIZE_SHRINK_END
 	b.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	row.add_child(b)

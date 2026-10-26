@@ -1,8 +1,9 @@
 class_name BattlePhaseFeel
 extends RefCounted
-## Y1-A T-P6: enemy-turn readability + attack settle juice + phase banner feel.
-## Kept out of battle_controller to stay under the line gate. Does not steal input —
-## banners/rings are overlay draw only; player input stays gated on turn_team.
+## Y1-A T-P6 + phase/end/notch fat: enemy-turn readability + attack settle juice
+## + phase/end banners that clamp into the readable inset (info column + notch
+## lip cut out). Kept out of battle_controller (line gate). Overlay draw only —
+## never steals input; player input stays gated on turn_team.
 
 ## Longer than the old 0.9s flash so the phase band stays readable on phone landscape.
 const TURN_FLASH_SEC := 1.15
@@ -51,6 +52,59 @@ static func banner_rect_local(stage: Rect2, pan: Vector2, zoom: float, mobile: b
 	var w_l: float = maxf(80.0 / z, (stage.size.x - 16.0) / z)
 	var h_l: float = h_s / z
 	return Rect2(mid_l.x - w_l * 0.5, mid_l.y - h_l * 0.5, w_l, h_l)
+
+
+## Stage-space phase/end band clamped into the readable inset (info + notch).
+## Suites assert the band never intersects the info column or the lip band.
+static func banner_rect_readable(
+	stage: Rect2, blockers: Array, edge_band: float, mobile: bool, landscape: bool
+) -> Rect2:
+	var inset: Rect2 = BattleActionSettle.readable_inset(stage, blockers, edge_band)
+	var h: float = banner_band_h(mobile, landscape)
+	if inset.size.x < 72.0 or inset.size.y < h + 8.0:
+		return banner_rect(stage, Vector2.ZERO, stage.size, mobile, landscape)
+	var y: float = inset.position.y + inset.size.y * 0.42 - h * 0.5
+	y = clampf(y, inset.position.y + 4.0, maxf(inset.position.y + 4.0, inset.end.y - h - 4.0))
+	var x: float = inset.position.x + 8.0
+	var w: float = maxf(80.0, inset.size.x - 16.0)
+	return Rect2(x, y, w, h)
+
+
+## Board-local band whose stage projection sits inside the readable inset.
+static func banner_rect_local_readable(
+	stage: Rect2, pan: Vector2, zoom: float, blockers: Array, edge_band: float,
+	mobile: bool, landscape: bool
+) -> Rect2:
+	var z: float = zoom if zoom > 0.001 else 1.0
+	var band_s: Rect2 = banner_rect_readable(stage, blockers, edge_band, mobile, landscape)
+	var pos_l: Vector2 = (band_s.position - pan) / z
+	var size_l: Vector2 = band_s.size / z
+	return Rect2(pos_l, size_l)
+
+
+## True when a stage-space band stays clear of every info/notch blocker.
+static func banner_clear_of_info(band: Rect2, blockers: Array) -> bool:
+	if band.size.x < 1.0 or band.size.y < 1.0:
+		return false
+	for b in blockers:
+		if b is Rect2 and (b as Rect2).size.x > 1.0 and band.intersects(b):
+			return false
+	return true
+
+
+static func _host_blockers(host) -> Array:
+	var blockers: Array = []
+	if host != null and host.has_meta("m_info_block"):
+		var block = host.get_meta("m_info_block")
+		if block is Rect2 and (block as Rect2).size.x > 1.0:
+			blockers.append(block)
+	return blockers
+
+
+static func _host_edge_band(host) -> float:
+	if host != null and host.has_meta("m_edge_band"):
+		return float(host.get_meta("m_edge_band"))
+	return 0.0
 
 
 ## Pure: settle trauma nudge by outcome kind.
@@ -128,6 +182,9 @@ static func focus_actor(host, cell: Vector2i, mark_enemy: bool = true) -> void:
 		host.set_meta("m_enemy_actor_cell", cell)
 		host.set_meta("m_enemy_actor_msec", Time.get_ticks_msec())
 	BattlePick.focus_cell(host, cell, true, mark_enemy)
+	# Mobile: keep the lead body inside the readable inset (info + notch).
+	if DeviceProfile.is_mobile():
+		BattleActionSettle.apply(host, cell, [])
 
 
 static func note_enemy_acting(host, unit_idx: int) -> void:
@@ -188,7 +245,8 @@ static func draw_turn_banner(host, overlay) -> void:
 	var land: bool = mobile and host.has_method("_mobile_landscape") and bool(host._mobile_landscape())
 	var stage: Rect2 = host.get_meta("m_board_area", host.BOARD_AREA) if host.has_meta("m_board_area") else host.BOARD_AREA
 	var z: float = float(host._board_zoom) if float(host._board_zoom) > 0.001 else 1.0
-	var band: Rect2 = banner_rect_local(stage, host._board_pan, z, mobile, land)
+	var band: Rect2 = banner_rect_local_readable(
+		stage, host._board_pan, z, _host_blockers(host), _host_edge_band(host), mobile, land)
 	var bandc: Color = UIKit.ACCENT if team == "player" else UIKit.DANGER
 	overlay.draw_rect(band, Color(0.03, 0.04, 0.06, 0.78 * a2))
 	var edge: float = maxf(1.0, 2.0 / z)
@@ -309,8 +367,9 @@ static func draw_end_banner(host, overlay) -> void:
 	var land: bool = mobile and host.has_method("_mobile_landscape") and bool(host._mobile_landscape())
 	var stage: Rect2 = host.get_meta("m_board_area", host.BOARD_AREA) if host.has_meta("m_board_area") else host.BOARD_AREA
 	var z: float = float(host._board_zoom) if float(host._board_zoom) > 0.001 else 1.0
-	var band: Rect2 = banner_rect_local(stage, host._board_pan, z, mobile, land)
-	# Slightly taller end band
+	var band: Rect2 = banner_rect_local_readable(
+		stage, host._board_pan, z, _host_blockers(host), _host_edge_band(host), mobile, land)
+	# Slightly taller end band, still from the readable inset mid.
 	band.size.y *= 1.12
 	band.position.y -= band.size.y * 0.06
 	var bandc: Color = UIKit.ACCENT if win else UIKit.DANGER
