@@ -21,6 +21,7 @@ var _busy := false
 var _halt_after_leg := false
 var _halted_dest := ""
 var _travel_abort := false
+var _travel_gen := 0
 var _clip: Control
 var _plate: TextureRect
 var _roads: Control
@@ -63,6 +64,8 @@ func _ready() -> void:
 	_build_frame()
 	if not World.city_visit.is_empty():
 		World.close_city_visit()
+	if not World.march_hold.is_empty():
+		_halted_dest = str(World.march_hold.get("dest", ""))
 	World.world_changed.connect(_on_world_changed)
 	var start_view := World.nation_of(World.pos)
 	if GameState.has_meta("atlas_view"):
@@ -1431,6 +1434,7 @@ func _render_hud() -> void:
 		d2.size = Vector2(476, 40)
 		d2.custom_minimum_size = Vector2(476, 0)
 		p.add_child(d2)
+		_paint_march_readouts(p, true)
 		if not World.last_city_sortie.is_empty():
 			_paint_sortie_garrison(p)
 			return
@@ -1543,6 +1547,7 @@ func _render_hud() -> void:
 	go.disabled = _busy or GameState.silver < int(pv.fare)
 	go.pressed.connect(_start_travel)
 	p.add_child(go)
+	_paint_march_readouts(p, true)
 
 # ── interaction ───────────────────────────────────────
 func _fit_hit(visual: float) -> float:
@@ -1641,6 +1646,7 @@ func _enter_here() -> void:
 		_goto(CASTLE_SCENE)
 		return
 	World.begin_city_visit()
+	World.note_city_gate("in")
 	GameState.set_meta("city_id", World.pos)
 	_goto(CITY_SCENE)
 
@@ -1652,6 +1658,10 @@ func _start_travel() -> void:
 		target = str(World.nations.get(_sel, {}).get("capital", ""))
 	if _busy or target == "" or target == World.pos or not World.nodes.has(target):
 		return
+	_halt_after_leg = false
+	World.march_resume = {}
+	if str(World.city_gate.get("dir", "")) == "out":
+		World.city_gate = {}
 	var r: Dictionary = World.begin_travel(target)
 	if not bool(r.get("ok", false)):
 		_show_toast(str(r.get("msg", "无法启程")), UIKit.DANGER)
@@ -1669,10 +1679,13 @@ func _set_busy(v: bool) -> void:
 	_render_hud()
 
 func _run_travel() -> void:
+	_travel_gen += 1
+	var gen := _travel_gen
 	_set_busy(true)
-	_halt_after_leg = false
 	_travel_abort = false
 	for _i in 64:
+		if gen != _travel_gen:
+			return
 		if _travel_abort:
 			break
 		if not World.is_traveling():
@@ -1687,27 +1700,41 @@ func _run_travel() -> void:
 		if not info.get("event", {}).is_empty():
 			_animate_leg_half(nxt)
 			await get_tree().create_timer(STEP_SEC).timeout
+			if gen != _travel_gen:
+				return
 			_set_busy(false)
 			_show_event_modal(info.event)
 			return
 		if not info.get("encounter", {}).is_empty():
 			_animate_leg(arrived_at)
 			await get_tree().create_timer(STEP_SEC).timeout
+			if gen != _travel_gen:
+				return
 			_set_busy(false)
 			_show_encounter_modal(info.encounter)
 			return
 		_animate_leg(arrived_at)
 		await get_tree().create_timer(STEP_SEC + 0.05).timeout
+		if gen != _travel_gen:
+			return
 		if _halt_after_leg:
+			var held_dest := _halted_dest
+			if held_dest == "":
+				held_dest = str(World.travel.get("dest", ""))
 			World.cancel_travel()
 			_halt_after_leg = false
-			_show_toast(Locale.t("atlas_travel_halted") % World.node(World.pos).get("name", ""), UIKit.ACCENT)
 			_set_busy(false)
 			_refresh_top()
 			_build_nodes()
 			_render_left()
 			_place_token(false)
 			_select_node(World.pos)
+			_halted_dest = ""
+			if held_dest != "" and held_dest != World.pos:
+				World.hold_march(held_dest)
+				_halted_dest = held_dest
+			_show_toast(Locale.t("atlas_travel_halted") % World.node(World.pos).get("name", ""), UIKit.ACCENT)
+			_render_hud()
 			_show_stopover_modal()
 			return
 		if _check_supply_halt():
@@ -2031,6 +2058,8 @@ func _show_travel_halt_modal() -> void:
 	b3.pressed.connect(func():
 		_travel_abort = true
 		_halt_after_leg = false
+		_halted_dest = ""
+		World.march_hold = {}
 		World.cancel_travel()
 		_set_busy(false)
 		_clear_modal()
@@ -2102,14 +2131,10 @@ func _show_stopover_modal() -> void:
 		resume.name = "StopoverResume"
 		resume.pressed.connect(func():
 			var dest := _halted_dest
-			_halted_dest = ""
+			if dest == "":
+				dest = str(World.march_hold.get("dest", ""))
 			_clear_modal()
-			_select_node(dest)
-			var st: Dictionary = World.begin_travel(dest)
-			if bool(st.get("ok", false)):
-				_run_travel()
-			else:
-				_show_toast(str(st.get("msg", "")), UIKit.DANGER))
+			_resume_held_march(dest))
 		v.add_child(resume)
 	var later := UIKit.ghost_button(Locale.t("atlas_stopover_dismiss"), 452, 32)
 	later.name = "StopoverDismiss"
@@ -2609,10 +2634,16 @@ func _show_siege_alert_modal(alert: Dictionary) -> void:
 	var stockade := bool(alert.get("stockade", false))
 	if stockade and cache_n > 0:
 		phase_line = phase_line + " " + (Locale.t("atlas_siege_cache_warn") % cache_n)
+	var sister_prev: Dictionary = CKTerritory.sister_relief_preview(site_id) if site_id != "" else {}
+	var can_sister := bool(sister_prev.get("ok", false))
 	var can_muster := stockade and cache_n >= CKTerritory.muster_cache_cost(site_id) and garrison < CKTerritory.garrison_max(site_id)
-	var h := 534.0 if stockade and cache_n > 0 else 420.0
+	var h := 420.0
+	if stockade and cache_n > 0:
+		h = 534.0
 	if can_muster and stockade and cache_n > 0:
 		h = 578.0
+	if can_sister:
+		h += 44.0
 	var panel := _modal_panel(h)
 	panel.name = "SiegeAlertModal"
 	var el := UIKit.mono(Locale.t("atlas_siege_en"), 9, UIKit.DANGER)
@@ -2725,6 +2756,30 @@ func _show_siege_alert_modal(alert: Dictionary) -> void:
 			_refresh_top()
 			_build_nodes())
 		panel.add_child(muster)
+	if can_sister:
+		y += 44.0
+		var sis_label := Locale.t("atlas_siege_sister") % str(sister_prev.get("from_name", ""))
+		var sis := UIKit.ghost_button(sis_label, 452, 36)
+		sis.name = "SiegeSisterCall"
+		sis.position = Vector2(24, y)
+		sis.pressed.connect(func():
+			var r6: Dictionary = CKTerritory.call_sister_garrison(site_id)
+			_show_toast(str(r6.get("msg", "")), UIKit.OK if bool(r6.get("ok", false)) else UIKit.DANGER)
+			if bool(r6.get("ok", false)):
+				alert["garrison"] = int(r6.get("garrison", garrison))
+				garrison = int(alert["garrison"])
+				sis.disabled = true
+				var bl4: Label = panel.get_node_or_null("SiegeAlertBody") as Label
+				if bl4 != null:
+					var pl4 := Locale.t("atlas_siege_phase_imminent") if str(alert.get("phase", "")) == "imminent" else Locale.t("atlas_siege_phase_declared")
+					if stockade and cache_n > 0:
+						pl4 = pl4 + " " + (Locale.t("atlas_siege_cache_warn") % cache_n)
+					var hp4 := int(alert.get("hold_pct", -1))
+					var il4 := Locale.t("atlas_siege_intel") % hp4 if bool(alert.get("scouted", false)) and hp4 >= 0 else Locale.t("atlas_siege_intel_unknown")
+					bl4.text = Locale.t("atlas_siege_body") % [by_name, site_name, anchor_name, garrison, pl4, il4]
+			_refresh_top()
+			_build_nodes())
+		panel.add_child(sis)
 	if stockade and cache_n > 0:
 		y += 44.0
 		var evac := UIKit.ghost_button(Locale.t("atlas_siege_evacuate"), 452, 36)
@@ -3097,10 +3152,114 @@ func _modal_panel(h: float) -> Panel:
 	UIFX.pop_in(p)
 	return p
 
+func _halt_from_camp_ui() -> void:
+	var r: Dictionary = World.halt_from_camp()
+	_clear_modal()
+	_set_busy(false)
+	_halt_after_leg = false
+	_refresh_top()
+	_build_nodes()
+	_render_left()
+	_place_token(false)
+	_select_node(World.pos)
+	if not r.get("encounter", {}).is_empty():
+		_show_encounter_modal(r.encounter)
+		return
+	var dest := str(World.march_hold.get("dest", ""))
+	_halted_dest = dest
+	_render_hud()
+	if dest != "" and dest != World.pos:
+		_show_toast(Locale.t("atlas_camp_halted") % str(World.node(World.pos).get("name", "")), UIKit.ACCENT)
+		_show_stopover_modal()
+		return
+	_after_arrival()
+
+
+func _resume_held_march(dest: String) -> void:
+	if dest == "" or dest == World.pos or not World.nodes.has(dest):
+		return
+	# HaltStop already stepped a leg and is awaiting camp. Drop that night so
+	# begin_travel is not refused, and invalidate the in-flight loop.
+	_travel_gen += 1
+	_halt_after_leg = false
+	_halted_dest = ""
+	World.pending_event = {}
+	World.encounter = {}
+	if str(World.city_gate.get("dir", "")) == "out":
+		World.city_gate = {}
+	_select_node(dest)
+	var st: Dictionary = World.begin_travel(dest)
+	if not bool(st.get("ok", false)):
+		World.hold_march(dest)
+		_halted_dest = dest
+		_show_toast(str(st.get("msg", Locale.t("atlas_resume_fail"))), UIKit.DANGER)
+		_render_hud()
+		return
+	World.note_march_resume(dest)
+	_render_hud()
+	_run_travel()
+
+
+func _paint_march_readouts(p: Control, with_button: bool) -> void:
+	var flow := p is Container
+	var y := 118.0
+	var show_gate := str(World.city_gate.get("dir", "")) == "out" and str(World.city_gate.get("city", "")) == World.pos and not World.is_traveling()
+	if show_gate:
+		var per_now := World.food_per_day()
+		var cover_now := 0 if per_now <= 0 else int(GameState.food / per_now)
+		var strip := UIKit.body_label(World.city_gate_text(), UIKit.EMBER if cover_now <= 2 else UIKit.ACCENT, 12)
+		strip.name = "CityGateStrip"
+		strip.autowrap_mode = TextServer.AUTOWRAP_OFF
+		strip.clip_text = true
+		strip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		if flow:
+			strip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		else:
+			strip.position = Vector2(16, y)
+			strip.size = Vector2(470, 18)
+			y += 18.0
+		p.add_child(strip)
+	if World.is_traveling() and World.march_resume_text() != "":
+		var chip := UIKit.body_label(World.march_resume_text(), UIKit.ACCENT, 12)
+		chip.name = "ResumeMarchChip"
+		chip.autowrap_mode = TextServer.AUTOWRAP_OFF
+		chip.clip_text = true
+		chip.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		if flow:
+			chip.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		else:
+			chip.position = Vector2(16, y)
+			chip.size = Vector2(470, 18)
+		p.add_child(chip)
+		return
+	if World.march_hold.is_empty() or World.is_traveling():
+		return
+	var readout := UIKit.body_label(World.march_hold_text(), UIKit.EMBER if bool(World.march_hold.get("warn", false)) else UIKit.ACCENT, 12)
+	readout.name = "ResumeMarchReadout"
+	readout.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	readout.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if flow:
+		readout.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	else:
+		readout.position = Vector2(16, y)
+		readout.size = Vector2(300, 34)
+	p.add_child(readout)
+	if not with_button:
+		return
+	var dest := str(World.march_hold.get("dest", ""))
+	var go := UIKit.ghost_button(Locale.t("atlas_resume_go"), 120, 32)
+	go.name = "ResumeMarch"
+	go.disabled = _busy
+	go.position = Vector2(330, y)
+	go.pressed.connect(func(): _resume_held_march(dest))
+	p.add_child(go)
+
+
 func _show_event_modal(ev: Dictionary) -> void:
 	var opts: Array = ev.get("options", [])
 	var is_camp := str(ev.get("kind", "")) == "camp" or str(ev.get("id", "")) == "camp_night"
-	var p := _modal_panel(210 + 58 * opts.size() + (28 if is_camp else 0))
+	var camp_short := is_camp and bool(World.camp_readout(ev).get("short", false))
+	var p := _modal_panel(210 + 58 * opts.size() + (28 if is_camp else 0) + (52 if camp_short else 0))
 	p.name = "EventModal"
 	var kind := str(ev.get("kind", "road"))
 	var camp_like := kind == "camp" or str(ev.get("id", "")) == "camp_night"
@@ -3164,6 +3323,11 @@ func _show_event_modal(ev: Dictionary) -> void:
 			v.add_child(hl)
 		if first == null:
 			first = b
+	if camp_short:
+		var halt := UIKit.ghost_button(Locale.t("atlas_camp_halt"), 452, 40)
+		halt.name = "CampHalt"
+		halt.pressed.connect(_halt_from_camp_ui)
+		v.add_child(halt)
 	if first:
 		first.call_deferred("grab_focus")
 
@@ -3196,6 +3360,8 @@ func _choose_event(idx: int) -> void:
 		await _await_march_muster_closed()
 		_refresh_top()
 		_render_left()
+	if _check_supply_halt():
+		return
 	if World.is_traveling() and World.encounter.is_empty():
 		_place_token(true)
 		await get_tree().create_timer(STEP_SEC).timeout
@@ -3888,13 +4054,15 @@ func _m_section(parent: Control, en: String) -> void:
 	var hl := UIKit.mono(en, MobilePage.FONT, UIKit.ACCENT, true, false)
 	parent.add_child(hl)
 
-func _m_kv(grid: GridContainer, k: String, v: String, col: Color) -> void:
+func _m_kv(grid: GridContainer, k: String, v: String, col: Color, value_name: String = "") -> void:
 	var kl := _m_label(k, UIKit.TEXT_DIM)
 	kl.autowrap_mode = TextServer.AUTOWRAP_OFF
 	kl.size_flags_horizontal = Control.SIZE_FILL
 	grid.add_child(kl)
 	var vl := _m_label(v, col)
 	vl.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	if value_name != "":
+		vl.name = value_name
 	grid.add_child(vl)
 
 func _m_grid(parent: Control, cols: int = 2) -> GridContainer:
@@ -3956,6 +4124,7 @@ func _m_place() -> void:
 	var nat: Dictionary = World.nations.get(str(n.nation), {})
 	box.add_child(UIKit.mono("%s // %s" % [str(nat.get("en", "")), World.kind_zh(_sel)], MobilePage.FONT, UIKit.TEXT_FAINT, false, false))
 	box.add_child(UIKit.title_label(str(n.get("name", _sel)), 32))
+	_paint_march_readouts(box, false)
 	var chips := [[str(nat.get("name", "")), UIKit.ACCENT], [Locale.t("mob_ui_006") % "▮".repeat(int(n.get("size", 1))), UIKit.TEXT_DIM]]
 	if _sel == World.pos:
 		chips.append([Locale.t("mob_ui_007"), UIKit.OK, true])
@@ -4121,7 +4290,9 @@ func _m_route(box: Control) -> void:
 		legs_sec.add_child(more)
 	var hot_n := int(pv.get("hot_legs", 0))
 	if bool(pv.short_food):
-		box.add_child(_m_label(Locale.t("mob_ui_027"), UIKit.EMBER))
+		var food_warn := _m_label(Locale.t("atlas_warn_food"), UIKit.EMBER)
+		food_warn.name = "RouteWarn"
+		box.add_child(food_warn)
 	elif not (pv.borders as Array).is_empty():
 		box.add_child(_m_label(Locale.t("mob_ui_028") % "、".join(pv.borders), UIKit.TEXT_DIM))
 	elif hot_n > 0:
@@ -4155,7 +4326,12 @@ func _m_actions() -> void:
 		_actions.remove_child(c)
 		c.free()
 	var b: Button
-	if not World.encounter.is_empty():
+	if not World.march_hold.is_empty() and not World.is_traveling() and World.encounter.is_empty():
+		var held := str(World.march_hold.get("dest", ""))
+		var held_name := str(World.node(held).get("name", held))
+		b = MobilePage.button(Locale.t("atlas_resume_go_named") % held_name, true, func(): _resume_held_march(held))
+		b.name = "ResumeMarch"
+	elif not World.encounter.is_empty():
 		b = MobilePage.button(Locale.t("mob_ui_035"), true, func(): _show_encounter_modal(World.encounter))
 		b.name = "FightButton"
 	elif _view == "" and World.nations.has(_sel):
@@ -4212,9 +4388,25 @@ func _m_actions() -> void:
 	if _busy:
 		b.disabled = true
 	_actions.add_child(b)
+	var at_gate := _sel != "" and _sel == World.pos and World.nodes.has(_sel) and World.encounter.is_empty()
+	if at_gate and str(b.name) != "EnterButton":
+		var gate_n: Dictionary = World.node(World.pos)
+		var gate_label := Locale.t("atlas_enter_kind") % World.kind_zh(World.pos)
+		var ready_n := World.ready_turn_ins_here().size()
+		if ready_n > 0:
+			gate_label = Locale.t("atlas_enter_turnin") % ready_n
+		elif str(gate_n.get("kind", "")) == "castle":
+			gate_label = Locale.t("mob_ui_037") % [Locale.t("mob_ui_038"), str(gate_n.get("name", ""))]
+		else:
+			gate_label = Locale.t("mob_ui_037") % [World.kind_zh(World.pos), str(gate_n.get("name", ""))]
+		var gate := MobilePage.button(gate_label, false, _enter_here)
+		gate.name = "EnterButton"
+		gate.disabled = _busy
+		_actions.add_child(gate)
 
 func _m_log() -> void:
 	var box := _hud
+	_paint_march_readouts(box, false)
 	var here: Dictionary = World.node(World.pos)
 	var crest_row := Control.new()
 	crest_row.name = "TravelCrestHost"
@@ -4273,7 +4465,13 @@ func _m_regions() -> void:
 	_m_section(box, Locale.t("mob_ui_051"))
 	var kv := _m_grid(box)
 	_m_kv(kv, Locale.t("mob_ui_052"), Locale.t("mob_ui_053") % World.party_size(), UIKit.TEXT)
-	_m_kv(kv, Locale.t("mob_ui_054"), "%d" % World.food_per_day(), UIKit.TEXT)
+	var ration_info: Dictionary = World.food_ration_info()
+	var ration_col := UIKit.TEXT
+	if int(ration_info.get("mod_pct", 0)) > 0:
+		ration_col = UIKit.DANGER
+	elif int(ration_info.get("mod_pct", 0)) < 0:
+		ration_col = UIKit.OK
+	_m_kv(kv, Locale.t("atlas_ration_label"), World.food_ration_text(), ration_col, "MarchRationRow")
 	_m_kv(kv, Locale.t("mob_ui_055"), "%d / %d" % [World.cargo_used(), World.cargo_cap()], UIKit.TEXT)
 	_m_kv(kv, Locale.t("mob_ui_056"), "%d / %d" % [World.active.size(), int(World.rules.get("active_limit", 5))], UIKit.ACCENT)
 	_m_kv(kv, Locale.t("mob_ui_057"), "T%d" % World.world_tier(), UIKit.TEXT)

@@ -91,3 +91,5 @@ dual_ledger_eyebrow,双账,Dual ledger
 dual_ledger_injured,伤兵 %d,Injured %d
 dual_ledger_lamp,旗灯 %d/%d,Lamp %d/%d
 dual_ledger_line,伤兵 %d · 旗灯 %d/%d,Injured %d · Lamp %d/%d
+formation_next,下一位,Next unit
+formation_prev,上一位,Prev unit
