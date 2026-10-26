@@ -141,12 +141,14 @@ static func drag_commit_enabled() -> bool:
 
 
 static func clear(host, refocus_selection: bool = true) -> void:
-	BattleGhostStrike.after_preview(host)
-	BattleAttackAim.clear(host)
-	BattleAttackCycle.clear(host)
+	# Wipe ghosts first — GhostStrike.after_preview settles when a move cell remains
+	# (that yanked the camera on T-P16/T-P28 cancel). Aim/Cycle metas follow.
 	host.preview_move_cell = Vector2i(-1, -1)
 	BattleLandStrike.clear(host)
 	host.preview_attack_ui = -1
+	BattleGhostStrike.after_preview(host)
+	BattleAttackAim.clear(host)
+	BattleAttackCycle.clear(host)
 	if DeviceProfile.is_mobile():
 		BattleMobileBar.rebuild(host)
 		# T-P5: cancelling a preview keeps the piece selected — settle camera on it.

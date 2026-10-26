@@ -337,7 +337,7 @@ func _scene_b_aim_cycle() -> String:
 	_battle.units[_foe_far].pos = Vector2i(2, 3)
 	_park_offscreen(_battle.units[_foe_near].pos, 160.0)
 	_battle._enter_attack_mode()
-	await _settle(8)
+	await _settle(4)
 	if not BattleAttackAim.active(_battle):
 		return "scene B: attack aim not active"
 	var aim_idxs: Array[int] = BattleAttackAim.threatened_indices(_battle)
@@ -347,11 +347,14 @@ func _scene_b_aim_cycle() -> String:
 		return "scene B: aim meta missing"
 	if not BattleAttackCycle.active(_battle):
 		return "scene B: cycle not active after enter"
+	# First Tab seeds preview — enter must not auto-latch (touch_confirm second-tap).
+	BattleAttackCycle.apply_next(_battle)
+	await _settle(4)
 	var cidxs: Array[int] = BattleAttackCycle.threatened_indices(_battle)
 	if cidxs.size() < 1:
 		return "scene B: cycle threatened empty"
 	if int(_battle.preview_attack_ui) != cidxs[0]:
-		return "scene B: enter did not seed first foe"
+		return "scene B: first Tab did not seed first foe"
 	if cidxs.size() >= 2:
 		var second: int = BattleAttackCycle.apply_next(_battle)
 		if second != cidxs[1]:

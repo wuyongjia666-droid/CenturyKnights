@@ -149,7 +149,10 @@ func _e2e_cycle() -> String:
 	_battle.units[_player_i].char.recalc_hp()
 	_battle.units[_player_i].char.hp = _battle.units[_player_i].char.max_hp
 	_battle._enter_attack_mode()
-	await _settle(8)
+	await _settle(4)
+	# Enter frames via Aim only; first Tab seeds preview (keeps touch_confirm second-tap).
+	BattleAttackCycle.apply_next(_battle)
+	await _settle(4)
 	var err := _assert_seeded()
 	if err == "" and BattleAttackCycle.threatened_indices(_battle).size() >= 2:
 		err = _assert_tab_cycle()
@@ -168,9 +171,9 @@ func _assert_seeded() -> String:
 		return "foe_b not threatened: %s" % idxs
 	var first: int = idxs[0]
 	if int(_battle.preview_attack_ui) != first:
-		return "enter did not seed first foe want %s got %s" % [first, _battle.preview_attack_ui]
+		return "first Tab did not seed first foe want %s got %s" % [first, _battle.preview_attack_ui]
 	if not _battle.has_meta(BattleAttackCycle.META):
-		return "enter did not stamp cycle meta"
+		return "first Tab did not stamp cycle meta"
 	return ""
 
 

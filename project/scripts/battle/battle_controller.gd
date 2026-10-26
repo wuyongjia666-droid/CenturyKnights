@@ -736,8 +736,10 @@ func _enter_attack_mode() -> void:
 		_log("当前选中单位无法攻击")
 		return
 	attack_mode = true
+	# Frame nearest in-reach foe (T-P23). Do NOT latch preview_attack_ui here —
+	# that would make the first foe tap confirm under touch_confirm (T-P1-5).
+	# Tab / Shift+Tab still cycle via BattleAttackCycle (T-P25).
 	BattleAttackAim.after_enter(self)
-	BattleAttackCycle.apply_next(self)
 	move_cells.clear()
 	overlay.queue_redraw()
 	_refresh_info()
