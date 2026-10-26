@@ -430,9 +430,20 @@ func _render_side() -> void:
 	gate.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	gate.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	p.add_child(gate)
+	var seal_offer: Dictionary = World.city_seal_resupply_offer()
+	var back_y := 566.0
+	if bool(seal_offer.get("needed", false)):
+		var days := int(seal_offer.get("days", 7))
+		var seal_btn := UIKit.cta_button(Locale.t("atlas_city_seal_resupply_btn") % days, "R", 348, 36)
+		seal_btn.name = "CitySealResupply"
+		seal_btn.position = Vector2(18, 498)
+		seal_btn.disabled = not bool(seal_offer.get("ok", false))
+		seal_btn.pressed.connect(_on_city_seal_resupply)
+		p.add_child(seal_btn)
+		back_y = 548.0
 	var back := UIKit.cta_button(Locale.t("atlas_gate_leave"), "ESC", 348, 40)
 	back.name = "BackToAtlas"
-	back.position = Vector2(18, 566)
+	back.position = Vector2(18, back_y)
 	back.pressed.connect(_back)
 	p.add_child(back)
 
@@ -1760,6 +1771,15 @@ func _toast_msg(text: String, col: Color) -> void:
 	tw.tween_interval(2.4)
 	tw.tween_property(_toast, "modulate:a", 0.0, 0.4)
 	tw.tween_callback(func(): _toast.visible = false)
+
+
+func _on_city_seal_resupply() -> void:
+	var r: Dictionary = World.city_seal_resupply()
+	if bool(r.get("ok", false)):
+		_toast_msg(str(r.get("msg", "")), UIKit.OK)
+		_refresh_all()
+	else:
+		_toast_msg(str(r.get("msg", Locale.t("atlas_resupply_fail_stock"))), UIKit.DANGER)
 
 func _back() -> void:
 	World.note_city_gate("out")
