@@ -167,9 +167,12 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	_build_ui()
 	# Y1-A T-P0-1: presses that start on/near a unit get a stickier slop so micro-wobble stays a tap.
-	# Y1-A T-P3: while a unit is selected, sticky only on that piece so pans near
-	# other tokens / empty soft-neighbours stay pans (not swallowed as taps).
+	# Y1-A T-P3/T-P24: while selected, sticky only on the strict figure (not soft halo)
+	# so adjacent empty move cells pan / tap-preview instead of fat-deselect.
 	_board_router.sticky_fn = func(origin: Vector2) -> bool:
+		# T-P16: a latched preview backs out with a pan. Sticky slop would swallow it as a tap.
+		if BattleConfirmAffordance.suppress_sticky(self):
+			return false
 		if selected >= 0 and selected < units.size():
 			return BattlePick.near_selected_unit(self, origin, selected)
 		return BattlePick.near_living_unit(self, origin)
@@ -666,6 +669,7 @@ func _cast_support_skill(ui: int, sid: String) -> void:
 				ou.char.temp_def_buff = maxi(ou.char.temp_def_buff, add)
 		_spawn_dmg(u.pos, "圣域", Color(0.7, 0.85, 1.0))
 	_consume_skill(u.char, sid)
+	var from_i: int = ui
 	u.done = true
 	selected = -1
 	Sfx.confirm()
@@ -673,6 +677,8 @@ func _cast_support_skill(ui: int, sid: String) -> void:
 	map_draw.queue_redraw()
 	_refresh_info()
 	_check_end()
+	if not battle_over:
+		BattleWaitHandoff.after_unit_done(self, from_i)
 
 func _cast_buff_skill(ui: int, sid: String) -> void:
 	_push_lamp()
@@ -1213,6 +1219,7 @@ func _draw_overlay() -> void:
 	# v8.5 / T-P11 selected chrome: foot disc + mid ring + body rect (mobile) and dense reticle.
 	BattleSelectChrome.draw_selected(self, overlay)
 	BattleDualLedger.draw_injured_marks(self, overlay)
+	BattleLandStrike.draw(self, overlay)
 	BattleTouchConfirm.draw_reject_flash(self, overlay)
 	BattleRangePreview.draw_illegal(self, overlay)
 	BattleLinkTelegraph.draw(self, overlay)
@@ -1341,6 +1348,12 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		return
 	if battle_over or turn_team != "player" or _cut_playing:
 		return
+	# T-P16/T-P28: Esc / ui_cancel walks layered cancel (preview → mode → select).
+	if BattleConfirmAffordance.is_cancel_key(event):
+		var kind := BattleAttackCancelDepth.step(self)
+		if kind != "noop":
+			get_viewport().set_input_as_handled()
+			return
 	if event is InputEventKey and event.pressed and not event.echo:
 		match event.keycode:
 			KEY_Q:
@@ -1494,7 +1507,10 @@ func _apply_board_gesture(g: Dictionary) -> void:
 		"tap":
 			if turn_team != "player" or _cut_playing:
 				return
-			var cell := BattlePick.resolve(self, pos)
+			if BattleConfirmAffordance.consume_tap(self, pos):
+				return
+			# T-P24: board taps keep empty exact cells (soft must not steal move/deselect).
+			var cell := BattlePick.resolve_board_tap(self, pos)
 			cell = BattleRangePreview.tap_cell(self, pos, cell)
 			if cell.x < 0:
 				return
@@ -1502,7 +1518,7 @@ func _apply_board_gesture(g: Dictionary) -> void:
 		"long_press":
 			_on_long_press_cell(_resolve_intel_cell(pos))
 		"cancel":
-			_cancel_selection()
+			BattleAttackCancelDepth.step(self)
 		"pan":
 			# Y1-A T-P1-2 / T-P3: drag starting on the selected figure (strict) moves the ghost; else pan.
 			# T-P4: stop smooth focus so the gesture owns `_board_pan` (unit-drag must not pan).
@@ -1671,7 +1687,7 @@ func _click_cell(cell: Vector2i) -> void:
 				BattleRangePreview.flash_destination(self, cell, "move")
 			# Y1-A T-P1-5: empty illegal / off-preview tap clears the ghost (legal move cells returned above).
 			if ui < 0 and BattleTouchConfirm.enabled() and (preview_move_cell.x >= 0 or int(preview_attack_ui) >= 0):
-				BattleTouchConfirm.clear(self)
+				BattleAttackCancelDepth.step(self)
 				overlay.queue_redraw()
 				return
 			if ui >= 0 and units[ui].team == "player" and not units[ui].done and ui != selected:
@@ -1820,6 +1836,8 @@ func _do_attack(ai: int, di: int) -> void:
 	overlay.queue_redraw()
 	_queue_cutscene(ai, di, _hp0a, _hp0d)
 	_check_end()
+	if not canto and not battle_over:
+		BattleWaitHandoff.after_unit_done(self, ai)
 
 func _cutscenes_enabled() -> bool:
 	return BattleEngageCutscene.should_play(
@@ -2166,6 +2184,7 @@ func _wait_selected() -> void:
 	if u.team != "player" or u.done:
 		return
 	_push_lamp()
+	var from_i: int = selected
 	u.done = true
 	selected = -1
 	move_cells.clear()
@@ -2175,6 +2194,7 @@ func _wait_selected() -> void:
 	map_draw.queue_redraw()
 	overlay.queue_redraw()
 	_refresh_info()
+	BattleWaitHandoff.after_unit_done(self, from_i)
 
 func _start_player_turn() -> void:
 	_arm_lamps()
