@@ -730,6 +730,7 @@ func _enter_attack_mode() -> void:
 		return
 	attack_mode = true
 	move_cells.clear()
+	BattleAttackCycle.apply_next(self)
 	overlay.queue_redraw()
 	_refresh_info()
 	ForecastPanel.refresh(self)
@@ -1346,8 +1347,13 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			KEY_E:
 				if _btn_wait and not _btn_wait.disabled: _wait_selected()
 			KEY_TAB:
-				# Y1-A T-P12: Tab / Shift+Tab cycle ready player units.
-				if event.shift_pressed:
+				# Y1-A T-P25: in attack mode cycle in-reach foes; else T-P12 formation.
+				if attack_mode:
+					if event.shift_pressed:
+						BattleAttackCycle.apply_prev(self)
+					else:
+						BattleAttackCycle.apply_next(self)
+				elif event.shift_pressed:
 					BattleFormationCycle.apply_prev(self)
 				else:
 					BattleFormationCycle.apply_next(self)
