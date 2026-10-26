@@ -191,14 +191,17 @@ func _scene_a_return_and_tap() -> String:
 		return "scene A: tap_ready failed"
 	if nxt == before:
 		return "scene A: tap_ready did not advance"
-	# Simulate wait handoff: mark current done, clear select, after_unit_done
+	# Pulse after done + WaitHandoff selects next ready
+	var from_i := nxt
 	_battle.units[nxt].done = true
 	_battle.selected = -1
 	BattleTurnBridge.after_unit_done(_battle)
+	var hand := BattleWaitHandoff.after_unit_done(_battle, from_i)
 	await _settle(2)
-	var hand := int(_battle.selected)
 	if hand < 0 or bool(_battle.units[hand].done):
-		return "scene A: after_unit_done handoff failed got %d" % hand
+		return "scene A: wait handoff failed got %d" % hand
+	if BattleTurnBridge.pulse_alpha(_battle) <= 0.0:
+		return "scene A: pulse missing after after_unit_done"
 	var ov := _DrawProbe.new()
 	ov.host = _battle
 	_battle.add_child(ov)

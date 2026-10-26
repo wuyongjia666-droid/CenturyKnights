@@ -58,22 +58,13 @@ static func tap_ready(host) -> int:
 
 
 static func after_unit_done(host) -> void:
+	## Pulse + ledger refresh only. Selection handoff is BattleWaitHandoff.
 	if host == null:
 		return
 	if bool(host.battle_over) or str(host.turn_team) != "player":
 		return
-	BattleDualLedger.refresh(host)
-	# selected already cleared by caller — pick next ready
-	if int(host.selected) >= 0:
-		return
-	var n: int = BattleFormationCycle.next_idx(host.units, -1, true)
-	if n < 0:
-		return
-	if host.has_method("_select_player"):
-		host._select_player(n)
-	else:
-		host.selected = n
 	host.set_meta(META_PULSE, Time.get_ticks_msec())
+	BattleDualLedger.refresh(host)
 	_queue_overlay(host)
 
 
