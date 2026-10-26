@@ -95,3 +95,5 @@ dual_ledger_ready,待动 %d,Ready %d
 dual_ledger_ready_hint,点此切换下一位,Tap to cycle next
 formation_next,下一位,Next unit
 formation_prev,上一位,Prev unit
+obj_retreat_armed,再点确认撤退·计败,Tap again to retreat · counts as defeat
+obj_retreat_eyebrow,撤退确认,Retreat confirm
