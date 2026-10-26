@@ -271,3 +271,22 @@ ch0 / era1_01 对话里命中 supporting 路线的说话人（数据枚举，非
 2. ~~安全区 / `get_global_transform` 对拍~~ → **DONE** #334（真机只需确认设备返回的安全区）  
 3. ~~对话板手机布局（机制 C）~~ → **本 PR**  
 4. 枢纽 apply_mobile 代码侧扫尾 + T-P1 + 立绘 medium 回落均已合；**待用户自玩签收**：按 [`y1a-acceptance-checklist-2026-10.md`](./y1a-acceptance-checklist-2026-10.md) 勾完后才开内容季（playforge 不代装）
+
+---
+
+## 5. T-P17 移动/攻击范围预览
+
+**DONE（本 PR）**。高亮格按格子画，点选却走 `BattlePick.resolve`，软半径把蓝格吸到邻单位，闪拒也落在被吸走的格子上。攻击红格只画在当前站位已进入武器射程的敌人上，空射程和移动幽灵周围没有圈。预览锁住后，范围外的空点直接清幽灵，不经过 `note_reject`；桌面没开 touch-confirm 时非法移动完全不闪。预览跟焦追目的地，双方装不下时居中，选中身框滑出可玩区，横屏还会进刘海。
+
+现涂色格（移动格或攻击圈）在不压到活人身框时用瞄准格；攻击圈跟当前站位或移动幽灵，与蓝格重叠时只加红内描边。非法落点先闪再清幽灵，桌面同样闪，选中不丢。镜头用最小平移保住选中身框，目的地只有在选中仍然落在可玩区内时才一起框。`mobile_origin` 已经把根推进安全矩形时不再扣第二次；根还在原点、舞台伸进唇缘时才裁。单位拖拽不平移。`focus_cell` 的桌面 `force` 门闩不动。
+
+`combat_range_preview_check`：选中 → 范围 → 非法闪拒 → 合法移动确认，横屏刘海 + 桌面。
+
+## 5q. T-P40 连携预告
+
+瞄准时 `link_names` 非空：攻方身框双珠连线 +「连携 伙伴名」+ 双方跟焦。`combat_link_telegraph_check` 真战斗 E2E。
+---
+
+## 5q. T-P41 敌未刃预告
+
+瞄准时 `extras.foe_opening`：敌身框青绿「未刃」+ 双方跟焦。`combat_foe_opening_telegraph_check` 真战斗 E2E。顺带把 lock tip/practice 抽进 `BattleLockTutorial` 压线门禁。
