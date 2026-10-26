@@ -7,7 +7,8 @@ extends RefCounted
 ## heir-trial duel strips, house-card person arms, banner-school train
 ## (pupil focus strip + row person arms), roster crest/row/hire plate,
 ## dialogue / save / battle-order / board / tavern-annex Field plates,
-## and infirmary / deploy / office Field arms.
+## infirmary / deploy / office Field arms,
+## and skill-tree / lineage-info Field arms.
 ## 团徽 stays the company banner. A family id shows 族徽; no family id shows 旗徽.
 ## Enemy plates are 敌徽. No impale, quarter, or marriage marshalling.
 
@@ -959,4 +960,54 @@ static func attach_office_field_arms(row: Control, c, arms_sz: Vector2 = Vector2
 	row.add_child(arms)
 	if row is Container:
 		row.move_child(arms, 0)
+	return arms
+
+## Skill tree header: 团徽 + skill banner cloth (SkillCrestStrip / SkillBanner).
+static func place_skill_crest_strip(parent: Node, at: Vector2, shield: Vector2 = Vector2(36, 44), banner: Vector2 = Vector2(24, 34)) -> Control:
+	if parent == null:
+		return null
+	_retire(parent, "SkillCrestStrip")
+	var host := Control.new()
+	host.name = "SkillCrestStrip"
+	host.position = at
+	host.size = Vector2(shield.x + 8.0 + banner.x, maxf(shield.y, banner.y))
+	host.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	host.set_meta("field_route", "skill_strip")
+	var arms := CKHeraldryChrome.make_company_arms(shield)
+	arms.position = Vector2.ZERO
+	host.add_child(arms)
+	var bn := CKHeraldryChrome.make_company_banner(banner)
+	bn.name = "SkillBanner"
+	bn.tooltip_text = Locale.t("lb_skill_arms")
+	bn.set_meta("arms_kind", "lb_skill_arms")
+	bn.position = Vector2(shield.x + 8.0, (shield.y - banner.y) * 0.5)
+	host.add_child(bn)
+	parent.add_child(host)
+	return host
+
+
+## Skill detail/head host: selected roster member person arms (SkillPersonArms), prepended.
+static func attach_skill_person_arms(host: Control, c, arms_sz: Vector2 = Vector2(28, 34)) -> TextureRect:
+	if host == null or c == null:
+		return null
+	_retire(host, "SkillPersonArms")
+	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
+	arms.name = "SkillPersonArms"
+	arms.tooltip_text = Locale.t("lb_skill_arms")
+	arms.set_meta("field_route", "skill_person")
+	host.add_child(arms)
+	host.move_child(arms, 0)
+	return arms
+
+
+## Lineage-info dossier plate: person arms (PersonArms). field_route marks Field ownership.
+static func attach_lineage_info_arms(parent: Control, c, arms_sz: Vector2 = Vector2(48, 58)) -> TextureRect:
+	if parent == null or c == null:
+		return null
+	_retire(parent, "PersonArms")
+	_retire(parent, "LineageInfoArms")
+	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
+	arms.name = "PersonArms"
+	arms.set_meta("field_route", "lineage_info")
+	parent.add_child(arms)
 	return arms
