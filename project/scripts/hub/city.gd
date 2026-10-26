@@ -1216,15 +1216,30 @@ func _item_detail(r: Rect2, iid: String, shop: bool) -> void:
 	fg.tooltip_text = "材料不足" if not miss.is_empty() else ""
 	fg.pressed.connect(func(): _do(World.forge_item(city, iid)))
 	p.add_child(fg)
+	# Fat deepen: one-tap buy missing mats from local market then forge.
+	var prev_m: Dictionary = World.forge_mats_preview(city, iid)
+	if avail and not miss.is_empty() and bool(prev_m.get("can_buy", false)):
+		var total := int(prev_m.get("total", 0))
+		var bm := UIKit.ghost_button(Locale.t("smith_forge_buy_mats_btn") % total, 380, 36)
+		bm.name = "ForgeBuyMats"
+		bm.position = Vector2(18, 518)
+		bm.disabled = bool(prev_m.get("short_silver", false))
+		bm.tooltip_text = Locale.t("smith_forge_short_silver") % total if bm.disabled else ""
+		bm.pressed.connect(func(): _do(World.forge_item(city, iid, true)))
+		p.add_child(bm)
 	var why := ""
 	if not avail:
 		why = "🔒 " + str(e2.get("reason", ""))
 	elif not miss.is_empty():
-		why = "打造需自备材料（市集可购）；直接购买无需材料。"
+		if bool(prev_m.get("can_buy", false)):
+			why = Locale.t("smith_forge_why_buy_mats") % [int(prev_m.get("mat_silver", 0)), int(prev_m.get("forge_silver", 0))]
+		else:
+			why = "打造需自备材料（市集可购）；直接购买无需材料。"
 	else:
 		why = "材料齐备：打造只付工钱，比直接购买便宜 %d 银。" % maxi(0, price - int(it.get("forge_silver", 0)))
+	var why_y := 560.0 if (avail and not miss.is_empty() and bool(prev_m.get("can_buy", false))) else 522.0
 	var wl := _para(why, UIKit.EMBER if not avail else UIKit.TEXT_DIM, 11, 380)
-	wl.position = Vector2(18, 522)
+	wl.position = Vector2(18, why_y)
 	p.add_child(wl)
 	var own := int(World.armory.get(iid, 0))
 	if own > 0:
