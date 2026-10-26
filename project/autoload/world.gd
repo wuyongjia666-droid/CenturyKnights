@@ -644,6 +644,67 @@ func stopover_resupply_days(dest: String = "", floor_days: int = 7) -> int:
 	return maxi(floor_n, need)
 
 
+## Dest the company is still marching toward (seal detour preferred).
+func held_march_dest() -> String:
+	var d := str(seal_detour.get("dest", ""))
+	if d == "":
+		d = str(march_hold.get("dest", ""))
+	return d
+
+
+## City one-tap: buy grain for seal-aware remain when cover is short.
+func city_seal_resupply_offer() -> Dictionary:
+	var held := held_march_dest()
+	if held == "" or held == pos:
+		return {"ok": false, "needed": false, "held": held}
+	var need := seal_aware_remain_days(held)
+	var per := food_per_day()
+	var cover := 0 if per <= 0 else int(GameState.food / per)
+	if need <= 0 or cover >= need:
+		return {"ok": true, "needed": false, "seal_need": need, "cover": cover, "held": held}
+	var days := stopover_resupply_days(held, 7)
+	var q: Dictionary = resupply_quote(pos, days)
+	return {
+		"ok": bool(q.get("ok", false)),
+		"needed": true,
+		"held": held,
+		"seal_need": need,
+		"cover": cover,
+		"days": days,
+		"quote": q,
+	}
+
+
+## Buy grain for the bypass remain; refresh gate strip and march hold.
+func city_seal_resupply() -> Dictionary:
+	var offer: Dictionary = city_seal_resupply_offer()
+	if not bool(offer.get("needed", false)):
+		return {"ok": false, "msg": Locale.t("atlas_city_seal_resupply_none"), "needed": false}
+	if not bool(offer.get("ok", false)):
+		var q: Dictionary = offer.get("quote", {})
+		if bool(q.get("short_silver", false)):
+			return {"ok": false, "msg": Locale.t("atlas_resupply_fail_silver") % int(q.get("cost", 0)), "needed": true}
+		return {"ok": false, "msg": Locale.t("atlas_resupply_fail_stock"), "needed": true}
+	var days := int(offer.get("days", 7))
+	var r: Dictionary = resupply_food(pos, days)
+	if not bool(r.get("ok", false)):
+		r["needed"] = true
+		return r
+	var held := str(offer.get("held", ""))
+	if held != "":
+		hold_march(held)
+	var dir := str(city_gate.get("dir", "in"))
+	if dir == "":
+		dir = "in"
+	note_city_gate(dir)
+	r["needed"] = true
+	r["seal_need"] = int(offer.get("seal_need", 0))
+	r["days"] = days
+	r["gate"] = city_gate.duplicate(true)
+	r["msg"] = Locale.t("atlas_city_seal_resupply_done") % [days, GameState.food]
+	return r
+
+
 func _preview_along(path: Array) -> Dictionary:
 	if path.size() < 2:
 		return {"ok": false, "msg": Locale.t("atlas_no_route")}
