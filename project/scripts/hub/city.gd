@@ -1527,7 +1527,11 @@ func _tab_tavern() -> void:
 		hb.disabled = GameState.silver < cost
 		hb.tooltip_text = "银币不足" if GameState.silver < cost else ""
 		var idx := i
-		hb.pressed.connect(func(): _do(World.hire(city, idx)))
+		hb.pressed.connect(func():
+			var hr: Dictionary = World.hire(city, idx)
+			if bool(hr.get("ok", false)) and str(hr.get("id", "")) != "":
+				_sel_char = str(hr.id)  # armory opens on the fresh hire
+			_do(hr))
 		card.add_child(hb)
 		if _mob:
 			# phone: the card becomes a column so 22px rows stack instead of overlapping
@@ -1752,6 +1756,62 @@ func selftest() -> Dictionary:
 	if _armory_count() != arm0 + 1:
 		return {"ok": false, "msg": "smith buy via UI failed"}
 	msgs.append("smith buy")
+	# tavern: hire face 0, then equip the just-bought arm onto them
+	_set_tab("tavern")
+	await get_tree().process_frame
+	var hire_btn := _body.find_child("Hire0", true, false) as Button
+	if hire_btn == null:
+		return {"ok": false, "msg": "no Hire0"}
+	GameState.silver += 5000
+	_render_tab()
+	await get_tree().process_frame
+	hire_btn = _body.find_child("Hire0", true, false) as Button
+	var roster0 := GameState.roster().size()
+	hire_btn.pressed.emit()
+	await get_tree().process_frame
+	if GameState.roster().size() != roster0 + 1:
+		return {"ok": false, "msg": "tavern hire via UI failed"}
+	var hired_id := _sel_char
+	if hired_id == "" or hired_id == GameState.get_leader().id:
+		# fall back: newest non-leader
+		for c3 in GameState.roster():
+			if c3.id != GameState.get_leader().id:
+				hired_id = c3.id
+				break
+	msgs.append("tavern hire")
+	_set_tab("armory")
+	await get_tree().process_frame
+	_sel_char = hired_id
+	_render_tab()
+	await get_tree().process_frame
+	var char_row := _body.find_child("Char_" + hired_id, true, false) as Button
+	if char_row == null:
+		return {"ok": false, "msg": "Char_%s missing" % hired_id}
+	var hired: CKCharacter = GameState.characters.get(hired_id)
+	var eq_id := ""
+	for k in World.armory.keys():
+		if World.can_equip(hired, World.item(str(k))) == "":
+			eq_id = str(k)
+			break
+	if eq_id == "":
+		# force job so regional sword fits
+		hired.job_id = "squire"
+		for k2 in World.armory.keys():
+			eq_id = str(k2)
+			break
+		_render_tab()
+		await get_tree().process_frame
+	var eqh := _body.find_child("Equip_" + eq_id, true, false) as Button
+	if eqh == null or eqh.disabled:
+		return {"ok": false, "msg": "Equip_%s missing/disabled on hire" % eq_id}
+	var atk_h0 := hired.derived_atk()
+	eqh.pressed.emit()
+	await get_tree().process_frame
+	if World.equipped(hired, "weapon") != eq_id:
+		return {"ok": false, "msg": "equip hire via UI failed"}
+	if hired.derived_atk() < atk_h0:
+		return {"ok": false, "msg": "hire equip did not hold atk"}
+	msgs.append("hire equip")
 	# market: buy 1 of the first produced good
 	_set_tab("market")
 	await get_tree().process_frame
@@ -1955,6 +2015,7 @@ func _fill_affairs_body(v: VBoxContainer, msg: String, ok: bool, mobile: bool, o
 		if mobile:
 			why.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		v.add_child(why)
+	_fill_specialty(v, mobile)
 	var rows: Array = CKJobSeals.rows_for_city(city)
 	if rows.is_empty():
 		var empty := UIKit.body_label(Locale.t("js_76942d49"), UIKit.TEXT_DIM, fs_dim)
@@ -2011,3 +2072,68 @@ func _fill_affairs_body(v: VBoxContainer, msg: String, ok: bool, mobile: bool, o
 			if mobile:
 				none.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 			v.add_child(none)
+
+
+func _fill_specialty(v: VBoxContainer, mobile: bool) -> void:
+	var fs := MobilePage.FONT if mobile else 15
+	var fs_dim := MobilePage.FONT if mobile else 13
+	var hit := int(MobilePage.HIT) if mobile else 48
+	var card: Dictionary = CKCitySpecialty.card(city)
+	var head := UIKit.body_label(str(card.get("head", "")), UIKit.ACCENT, fs)
+	head.name = "SpecialtyHead"
+	head.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	if mobile:
+		head.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	v.add_child(head)
+	var body := UIKit.body_label(str(card.get("body", "")), UIKit.TEXT, fs_dim)
+	body.name = "SpecialtyBody"
+	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	if mobile:
+		body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	v.add_child(body)
+	var cost := str(card.get("cost", ""))
+	if cost != "":
+		var cl := UIKit.body_label(cost, UIKit.TEXT, fs_dim)
+		cl.name = "SpecialtyCost"
+		cl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		if mobile:
+			cl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		v.add_child(cl)
+	var pay := str(card.get("pay", ""))
+	if pay != "":
+		var pl := UIKit.body_label(pay, UIKit.OK, fs_dim)
+		pl.name = "SpecialtyPay"
+		pl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		if mobile:
+			pl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		v.add_child(pl)
+	var hold := str(card.get("hold", ""))
+	if hold != "":
+		var hl := UIKit.body_label(hold, UIKit.TEXT_DIM, fs_dim)
+		hl.name = "SpecialtyHold"
+		hl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		if mobile:
+			hl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		v.add_child(hl)
+	var go: Button
+	if mobile:
+		go = MobilePage.button(str(card.get("action", "")), true, _specialty_act)
+	else:
+		go = UIKit.ghost_button(str(card.get("action", "")), 220, hit)
+		go.pressed.connect(_specialty_act)
+	go.name = "SpecialtyDo"
+	go.disabled = not bool(card.get("enabled", false))
+	v.add_child(go)
+	var why_txt := str(card.get("why", ""))
+	if why_txt != "":
+		var wl := UIKit.body_label(why_txt, UIKit.TEXT_DIM, fs_dim)
+		wl.name = "SpecialtyWhy"
+		wl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		if mobile:
+			wl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		v.add_child(wl)
+
+
+func _specialty_act() -> void:
+	var r := CKCitySpecialty.act(city)
+	open_affairs(str(r.get("msg", "")), bool(r.get("ok", false)))

@@ -86,6 +86,7 @@ var last_territory_month: Dictionary = {}  # month yield/drain/lost for Territor
 var last_siege_alert: Dictionary = {}  # rival siege/threat for SiegeAlertModal
 var last_siege_loot: Dictionary = {}  # unanswered siege sacked stockade cache
 var last_siege_convoy: Dictionary = {}  # evacuated granary under siege
+var last_siege_muster: Dictionary = {}  # cache→garrison under siege
 var last_march_muster: Dictionary = {}  # road merc hire → march roster modal
 var last_neutral_contest: Dictionary = {}  # neutral multi-faction tug → ContestTugModal
 var march_hold: Dictionary = {}  # halted march dest; survives city enter/exit
@@ -207,6 +208,7 @@ func reset() -> void:
 	last_siege_alert = {}
 	last_siege_loot = {}
 	last_siege_convoy = {}
+	last_siege_muster = {}
 	last_march_muster = {}
 	last_neutral_contest = {}
 	march_hold = {}
@@ -300,6 +302,7 @@ func from_save(d: Dictionary) -> void:
 	last_siege_alert = {}
 	last_siege_loot = {}
 	last_siege_convoy = {}
+	last_siege_muster = {}
 	last_march_muster = {}
 	last_neutral_contest = {}
 	march_hold = _saved_dict(d.get("march_hold", {}))
@@ -1844,10 +1847,12 @@ func hire(city: String, idx: int) -> Dictionary:
 	if idx < 0 or idx >= lst.size():
 		return {"ok": false, "msg": "无此人"}
 	var c: CKCharacter = lst[idx]
+	var hid := str(c.id)
 	var r := GameState.recruit(c, hire_cost(c))
 	if r.ok:
 		recruits[city].list.remove_at(idx)
 		add_city_rep(city, 1)
+		r["id"] = hid
 		world_changed.emit()
 	return r
 
@@ -2830,6 +2835,22 @@ func take_siege_convoy() -> Dictionary:
 
 func dismiss_siege_convoy() -> void:
 	last_siege_convoy = {}
+
+
+func mark_siege_muster(payload: Dictionary) -> void:
+	if payload.is_empty():
+		return
+	last_siege_muster = payload.duplicate(true)
+
+
+func take_siege_muster() -> Dictionary:
+	var d: Dictionary = last_siege_muster.duplicate(true)
+	last_siege_muster = {}
+	return d
+
+
+func dismiss_siege_muster() -> void:
+	last_siege_muster = {}
 
 
 
