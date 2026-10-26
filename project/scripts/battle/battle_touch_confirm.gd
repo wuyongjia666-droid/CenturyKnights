@@ -150,6 +150,7 @@ static func clear(host, refocus_selection: bool = true) -> void:
 	BattleSureHitAimTelegraph.clear(host)
 	BattleCritAimTelegraph.clear(host)
 	BattleHitRiskAimTelegraph.clear(host)
+	BattleTerrainDefAimTelegraph.clear(host)
 	if DeviceProfile.is_mobile():
 		BattleMobileBar.rebuild(host)
 		# T-P5: cancelling a preview keeps the piece selected — settle camera on it.
@@ -389,6 +390,7 @@ static func on_drag(host, screen_pos: Vector2) -> void:
 			BattleSureHitAimTelegraph.refresh(host)
 			BattleCritAimTelegraph.refresh(host)
 			BattleHitRiskAimTelegraph.refresh(host)
+			BattleTerrainDefAimTelegraph.refresh(host)
 			if DeviceProfile.is_mobile():
 				BattleMobileBar.rebuild(host)
 			if host.overlay:
