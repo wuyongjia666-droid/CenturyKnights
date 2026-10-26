@@ -490,6 +490,13 @@ func dismiss_march_muster() -> void:
 func note_city_gate(dir: String) -> Dictionary:
 	var per := food_per_day()
 	var cover := 0 if per <= 0 else int(GameState.food / per)
+	var held := str(march_hold.get("dest", ""))
+	if held == "":
+		held = str(seal_detour.get("dest", ""))
+	var seal_need := 0
+	if held != "" and held != pos:
+		seal_need = seal_aware_remain_days(held)
+	var seal_short := seal_need > 0 and cover < seal_need
 	var cname := str(node(pos).get("name", pos))
 	city_gate = {
 		"dir": dir,
@@ -500,7 +507,10 @@ func note_city_gate(dir: String) -> Dictionary:
 		"per_day": per,
 		"cover_days": cover,
 		"ration_text": food_ration_text(),
-		"warn": cover <= 2,
+		"held_dest": held,
+		"seal_need": seal_need,
+		"seal_short": seal_short,
+		"warn": cover <= 2 or seal_short,
 	}
 	return city_gate.duplicate(true)
 
@@ -514,7 +524,9 @@ func city_gate_text() -> String:
 	var cover := 0 if per <= 0 else int(GameState.food / per)
 	var key := "atlas_gate_out" if dir == "out" else "atlas_gate_in"
 	var line: String = Locale.t(key) % [str(node(city).get("name", city)), food_ration_text(), cover]
-	if cover <= 2:
+	if bool(city_gate.get("seal_short", false)):
+		line += " " + Locale.t("atlas_gate_seal_warn") % int(city_gate.get("seal_need", 0))
+	elif cover <= 2:
 		line += " " + Locale.t("atlas_gate_warn")
 	return line
 
@@ -630,6 +642,86 @@ func stopover_resupply_days(dest: String = "", floor_days: int = 7) -> int:
 	if need <= 0:
 		return floor_n
 	return maxi(floor_n, need)
+
+
+## Dest the company is still marching toward (seal detour preferred).
+func held_march_dest() -> String:
+	var d := str(seal_detour.get("dest", ""))
+	if d == "":
+		d = str(march_hold.get("dest", ""))
+	return d
+
+
+## Top-bar / HUD chip: winter bypass remain while seal_detour is held.
+func seal_bypass_chip() -> Dictionary:
+	var held := held_march_dest()
+	if held == "" or str(seal_detour.get("dest", "")) != held:
+		return {"show": false, "held": held}
+	var need := seal_aware_remain_days(held)
+	if need <= 0:
+		return {"show": false, "held": held, "seal_need": 0}
+	var per := food_per_day()
+	var cover := 0 if per <= 0 else int(GameState.food / per)
+	return {
+		"show": true,
+		"held": held,
+		"seal_need": need,
+		"cover": cover,
+		"short": cover < need,
+	}
+
+
+## City one-tap: buy grain for seal-aware remain when cover is short.
+func city_seal_resupply_offer() -> Dictionary:
+	var held := held_march_dest()
+	if held == "" or held == pos:
+		return {"ok": false, "needed": false, "held": held}
+	var need := seal_aware_remain_days(held)
+	var per := food_per_day()
+	var cover := 0 if per <= 0 else int(GameState.food / per)
+	if need <= 0 or cover >= need:
+		return {"ok": true, "needed": false, "seal_need": need, "cover": cover, "held": held}
+	var days := stopover_resupply_days(held, 7)
+	var q: Dictionary = resupply_quote(pos, days)
+	return {
+		"ok": bool(q.get("ok", false)),
+		"needed": true,
+		"held": held,
+		"seal_need": need,
+		"cover": cover,
+		"days": days,
+		"quote": q,
+	}
+
+
+## Buy grain for the bypass remain; refresh gate strip and march hold.
+func city_seal_resupply() -> Dictionary:
+	var offer: Dictionary = city_seal_resupply_offer()
+	if not bool(offer.get("needed", false)):
+		return {"ok": false, "msg": Locale.t("atlas_city_seal_resupply_none"), "needed": false}
+	if not bool(offer.get("ok", false)):
+		var q: Dictionary = offer.get("quote", {})
+		if bool(q.get("short_silver", false)):
+			return {"ok": false, "msg": Locale.t("atlas_resupply_fail_silver") % int(q.get("cost", 0)), "needed": true}
+		return {"ok": false, "msg": Locale.t("atlas_resupply_fail_stock"), "needed": true}
+	var days := int(offer.get("days", 7))
+	var r: Dictionary = resupply_food(pos, days)
+	if not bool(r.get("ok", false)):
+		r["needed"] = true
+		return r
+	var held := str(offer.get("held", ""))
+	if held != "":
+		hold_march(held)
+	var dir := str(city_gate.get("dir", "in"))
+	if dir == "":
+		dir = "in"
+	note_city_gate(dir)
+	r["needed"] = true
+	r["seal_need"] = int(offer.get("seal_need", 0))
+	r["days"] = days
+	r["gate"] = city_gate.duplicate(true)
+	r["msg"] = Locale.t("atlas_city_seal_resupply_done") % [days, GameState.food]
+	return r
 
 
 func _preview_along(path: Array) -> Dictionary:
@@ -1264,6 +1356,18 @@ func camp_readout(ev: Dictionary = {}) -> Dictionary:
 	var rem_f := remaining_route_food()
 	var per := food_per_day()
 	var cover := 0 if per <= 0 else int(GameState.food / per)
+	# Winter bypass: camp strip prefers seal-aware remain so short-food warns match the detour.
+	var seal_bypass := false
+	var seal_need := 0
+	var held := held_march_dest()
+	var travel_dest := str(travel.get("dest", ""))
+	if held != "" and str(seal_detour.get("dest", "")) == held and (travel_dest == "" or travel_dest == held):
+		seal_need = seal_aware_remain_days(held)
+		if seal_need > 0:
+			seal_bypass = true
+			if seal_need > rem_d:
+				rem_d = seal_need
+				rem_f = per * rem_d
 	var thin := per > 0 and cover <= 1 and GameState.food > 0 and is_traveling()
 	var short := (rem_d > 0 and GameState.food < rem_f) or thin
 	return {
@@ -1274,6 +1378,8 @@ func camp_readout(ev: Dictionary = {}) -> Dictionary:
 		"remain_food": rem_f,
 		"cover_days": cover,
 		"short": short,
+		"seal_bypass": seal_bypass,
+		"seal_need": seal_need,
 		"a": str(e.get("a", "")),
 		"b": str(e.get("b", "")),
 	}
@@ -2942,13 +3048,22 @@ func _mark_supply_halt(starved_days: int) -> void:
 	if not last_supply_halt.is_empty():
 		return
 	var stock_opt: Dictionary = stockade_cache_option()
+	var held := held_march_dest()
+	var seal_need := 0
+	var seal_bypass := false
+	if held != "" and str(seal_detour.get("dest", "")) == held:
+		seal_need = seal_aware_remain_days(held)
+		seal_bypass = seal_need > 0
 	last_supply_halt = {
 		"pos": pos,
 		"dest": str(travel.get("dest", "")),
+		"held": held,
 		"morale": GameState.morale,
 		"starved_days": starved_days,
 		"food": GameState.food,
 		"stockade": stock_opt.duplicate(true) if not stock_opt.is_empty() else {},
+		"seal_bypass": seal_bypass,
+		"seal_need": seal_need,
 	}
 	_tlog(Locale.t("atlas_supply_halt_log") % [node(pos).get("name", pos), starved_days])
 

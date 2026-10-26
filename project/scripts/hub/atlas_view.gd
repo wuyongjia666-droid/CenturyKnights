@@ -549,6 +549,13 @@ func _refresh_top() -> void:
 		["粮", "%d（%d 日）" % [GameState.food, food_days], UIKit.OK if food_days >= 6 else UIKit.DANGER],
 		["士气", str(GameState.morale), UIKit.OK if GameState.morale >= 50 else UIKit.DANGER],
 	]
+	var seal_chip: Dictionary = World.seal_bypass_chip()
+	if bool(seal_chip.get("show", false)):
+		chips.append([
+			Locale.t("atlas_chip_seal_bypass"),
+			Locale.t("atlas_chip_seal_days") % int(seal_chip.get("seal_need", 0)),
+			UIKit.DANGER if bool(seal_chip.get("short", false)) else UIKit.EMBER,
+		])
 	var back_t := "返回城堡"
 	if _mob:
 		var parts := PackedStringArray()
@@ -1004,6 +1011,12 @@ func _render_left() -> void:
 	var ration_row := UIKit.kv_row(Locale.t("atlas_ration_label"), World.food_ration_text(), UIKit.TEXT, 140)
 	ration_row.name = "MarchRationRow"
 	kv.add_child(ration_row)
+	var seal_chip: Dictionary = World.seal_bypass_chip()
+	if bool(seal_chip.get("show", false)):
+		var seal_col: Color = UIKit.DANGER if bool(seal_chip.get("short", false)) else UIKit.EMBER
+		var seal_row := UIKit.kv_row(Locale.t("atlas_chip_seal_bypass"), Locale.t("atlas_chip_seal_days") % int(seal_chip.get("seal_need", 0)), seal_col, 140)
+		seal_row.name = "PartySealBypassRow"
+		kv.add_child(seal_row)
 	kv.add_child(UIKit.kv_row("货舱", "%d / %d" % [World.cargo_used(), World.cargo_cap()], UIKit.TEXT, 140))
 	kv.add_child(UIKit.kv_row("委托", "%d / %d" % [World.active.size(), int(World.rules.get("active_limit", 5))], UIKit.ACCENT, 140))
 	kv.add_child(UIKit.kv_row("战力层级", "T%d" % World.world_tier(), UIKit.TEXT, 140))
@@ -2359,7 +2372,10 @@ func _show_supply_halt_modal(halt: Dictionary) -> void:
 	if stock.is_empty():
 		stock = World.stockade_cache_option()
 	var has_cache := not stock.is_empty() and int(stock.get("cache", 0)) > 0
+	var seal_tip_on := bool(halt.get("seal_bypass", false))
 	var h := 420.0 if has_cache else 360.0
+	if seal_tip_on:
+		h += 24.0
 	var panel := _modal_panel(h)
 	panel.name = "SupplyHaltModal"
 	var el := UIKit.mono(Locale.t("atlas_supply_halt_en"), 9, UIKit.DANGER)
@@ -2379,6 +2395,15 @@ func _show_supply_halt_modal(halt: Dictionary) -> void:
 	body.custom_minimum_size = Vector2(452, 0)
 	panel.add_child(body)
 	var y := 164.0
+	if bool(halt.get("seal_bypass", false)):
+		var seal_tip := UIKit.body_label(Locale.t("atlas_supply_halt_seal") % int(halt.get("seal_need", 0)), UIKit.EMBER, 12)
+		seal_tip.name = "SupplyHaltSeal"
+		seal_tip.position = Vector2(24, 148)
+		seal_tip.size = Vector2(452, 18)
+		seal_tip.autowrap_mode = TextServer.AUTOWRAP_OFF
+		seal_tip.clip_text = true
+		panel.add_child(seal_tip)
+		y = 176.0
 	var forage := UIKit.cta_button(Locale.t("atlas_supply_forage"), "A", 452, 42)
 	forage.name = "SupplyForage"
 	forage.position = Vector2(24, y)
@@ -3228,9 +3253,7 @@ func _paint_march_readouts(p: Control, with_button: bool) -> void:
 	var y := 118.0
 	var show_gate := str(World.city_gate.get("dir", "")) == "out" and str(World.city_gate.get("city", "")) == World.pos and not World.is_traveling()
 	if show_gate:
-		var per_now := World.food_per_day()
-		var cover_now := 0 if per_now <= 0 else int(GameState.food / per_now)
-		var strip := UIKit.body_label(World.city_gate_text(), UIKit.EMBER if cover_now <= 2 else UIKit.ACCENT, 12)
+		var strip := UIKit.body_label(World.city_gate_text(), UIKit.EMBER if bool(World.city_gate.get("warn", false)) else UIKit.ACCENT, 12)
 		strip.name = "CityGateStrip"
 		strip.autowrap_mode = TextServer.AUTOWRAP_OFF
 		strip.clip_text = true
@@ -3318,6 +3341,15 @@ func _show_event_modal(ev: Dictionary) -> void:
 		cl.clip_text = true
 		p.add_child(cl)
 		camp_y = 196.0
+		if bool(cr.get("seal_bypass", false)):
+			var seal_tip := UIKit.body_label(Locale.t("atlas_camp_seal_bypass") % int(cr.get("seal_need", 0)), UIKit.EMBER, 12)
+			seal_tip.name = "CampSealBypass"
+			seal_tip.position = Vector2(24, 188)
+			seal_tip.size = Vector2(452, 18)
+			seal_tip.autowrap_mode = TextServer.AUTOWRAP_OFF
+			seal_tip.clip_text = true
+			p.add_child(seal_tip)
+			camp_y = 214.0
 	var v := VBoxContainer.new()
 	v.position = Vector2(24, camp_y)
 	v.add_theme_constant_override("separation", 8)
