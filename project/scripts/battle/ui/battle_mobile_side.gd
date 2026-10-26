@@ -8,7 +8,15 @@ const HIT := 76.0
 const SKIP := ["CommandRow", "CommandRow2", "ControlsTip", "BoardXform", "BattleDualLedger"]
 
 
-static func attach(host: Control, x: float, w: float) -> void:
+static func attach(host: Control, x: float = -1.0, w: float = -1.0) -> void:
+	# Prefer latest layout stamp so stale call_deferred(side_x) from a prior
+	# resize cannot yank the column back over a wider m_board_area.
+	if host.has_meta("m_mobile_side_x"):
+		x = float(host.get_meta("m_mobile_side_x"))
+	if host.has_meta("m_mobile_side_w"):
+		w = float(host.get_meta("m_mobile_side_w"))
+	if x < 0.0 or w < 1.0:
+		return
 	var sc := host.get_node_or_null(COL) as ScrollContainer
 	var top := 60.0
 	var host_h := maxf(720.0, host.size.y if host.size.y > 1.0 else 720.0)

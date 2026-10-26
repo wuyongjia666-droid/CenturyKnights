@@ -1,8 +1,9 @@
 class_name BattleEngageCutscene
 extends RefCounted
-## Y1-A T-P7: FE-style 3D engage cutscene hook + board engage bridge.
-## Pure record builder (player-right FE sides) + short board bridge juice that
-## does not steal input. Desktop never force-pans (tactics/full_chain framing).
+## Y1-A T-P7 + phase/end/notch fat: FE-style 3D engage cutscene hook + board
+## engage bridge. Pure record builder (player-right FE sides) + short board
+## bridge juice that does not steal input. Mobile settle keeps the attacker
+## inside the readable inset. Desktop never force-pans (tactics/full_chain).
 
 const BRIDGE_MSEC := 520
 
@@ -21,7 +22,9 @@ static func should_play(display_name: String, cutscenes_meta_on: bool, settings_
 	return bool(cutscenes_meta_on) and bool(settings_on)
 
 
-## Stamp board bridge (atk↔def line + rings). Mobile soft-focus mid cell only.
+## Stamp board bridge (atk↔def line + rings). Mobile soft-focus then settle
+## the attacker into the readable inset (info column + notch lip cut out),
+## framing the defender only when the attacker still fits.
 static func note_engage_bridge(host, atk_cell: Vector2i, def_cell: Vector2i) -> void:
 	host.set_meta("m_engage_bridge", {
 		"atk": atk_cell,
@@ -34,6 +37,7 @@ static func note_engage_bridge(host, atk_cell: Vector2i, def_cell: Vector2i) -> 
 			int(round(float(atk_cell.y + def_cell.y) * 0.5)),
 		)
 		BattlePick.focus_cell(host, mid, true, false)
+		BattleActionSettle.apply(host, atk_cell, [def_cell])
 
 
 static func clear_bridge(host) -> void:
