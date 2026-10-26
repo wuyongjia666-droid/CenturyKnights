@@ -292,32 +292,9 @@ func _arrange() -> String:
 func _e2e_card() -> String:
 	var board: Rect2 = _battle.get_meta("m_board_area")
 	var col := _battle.get_node_or_null("MobileSideCol") as Control
-	if col == null:
-		return "side column missing"
-	if col.position.x < board.end.x - 1.0:
-		return "info column covers the board: col %s board %s" % [Rect2(col.position, col.size), board]
-	var card = _battle._unit_card
-	if card == null:
-		return "unit card missing"
-	if card.mouse_filter != Control.MOUSE_FILTER_IGNORE:
-		return "unit card steals taps (mouse_filter %s)" % card.mouse_filter
-	if card._name.clip_text:
-		return "unit name is still clipped"
-	if card._name.autowrap_mode == TextServer.AUTOWRAP_OFF:
-		return "unit name does not wrap"
-	if card._name.custom_minimum_size.y < 22.0:
-		return "unit name has no line height"
-	if card._stats.clip_text:
-		return "unit stats are still clipped"
-	if _battle.info_label.mouse_filter != Control.MOUSE_FILTER_IGNORE:
-		return "info strip steals taps"
-	if _battle.info_label.clip_contents:
-		return "info strip clips its body"
-	var steal := _button_steals(card)
-	if steal != "":
-		return steal
-	if _count_buttons(card) < 1:
-		return "unit card has no skill chip to prove buttons still take taps"
+	var err := _card_chrome_ok(board, col)
+	if err != "":
+		return err
 	# A board point beside the column must not lie under the column.
 	var probe := _cell_local(_battle.units[_player_i].pos, Vector2(0.5, 0.55))
 	var screen := _screen(probe)
@@ -329,6 +306,44 @@ func _e2e_card() -> String:
 	await _settle(4)
 	if _battle.selected < 0:
 		return "tap beside the column did not reach the board"
+	return ""
+
+
+## Layout / mouse-filter contracts for the landscape info column (split for max-returns).
+func _card_chrome_ok(board: Rect2, col: Control) -> String:
+	if col == null:
+		return "side column missing"
+	if col.position.x < board.end.x - 1.0:
+		return "info column covers the board: col %s board %s" % [Rect2(col.position, col.size), board]
+	var card = _battle._unit_card
+	if card == null:
+		return "unit card missing"
+	if card.mouse_filter != Control.MOUSE_FILTER_IGNORE:
+		return "unit card steals taps (mouse_filter %s)" % card.mouse_filter
+	var name_err := _card_name_ok(card)
+	if name_err != "":
+		return name_err
+	if card._stats.clip_text:
+		return "unit stats are still clipped"
+	if _battle.info_label.mouse_filter != Control.MOUSE_FILTER_IGNORE:
+		return "info strip steals taps"
+	if _battle.info_label.clip_contents:
+		return "info strip clips its body"
+	var steal := _button_steals(card)
+	if steal != "":
+		return steal
+	if _count_buttons(card) < 1:
+		return "unit card has no skill chip to prove buttons still take taps"
+	return ""
+
+
+func _card_name_ok(card) -> String:
+	if card._name.clip_text:
+		return "unit name is still clipped"
+	if card._name.autowrap_mode == TextServer.AUTOWRAP_OFF:
+		return "unit name does not wrap"
+	if card._name.custom_minimum_size.y < 22.0:
+		return "unit name has no line height"
 	return ""
 
 
