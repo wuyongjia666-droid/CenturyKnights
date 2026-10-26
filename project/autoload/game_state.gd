@@ -1107,6 +1107,12 @@ func holding_focus(hid: String) -> String:
 func set_holding_focus(hid: String, focus: String) -> Dictionary:
 	return CKEconomyState.set_holding_focus(self, hid, focus)
 
+func caravan_start_preview(kind: String) -> Dictionary:
+	return CKEconomyState.caravan_start_preview(self, kind)
+
+func caravan_escort_preview() -> Dictionary:
+	return CKEconomyState.caravan_escort_preview(self)
+
 func start_caravan(kind: String) -> Dictionary:
 	return CKEconomyState.start_caravan(self, kind)
 

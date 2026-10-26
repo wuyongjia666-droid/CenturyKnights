@@ -652,3 +652,22 @@ holding_unlock_btn,开垦属地,Claim holding
 holding_unlock_cost_tip,%d银/%d粮 开垦,%d silver / %d food to claim
 holding_unlock_short_tip,缺料·%s,Short · %s
 holding_unlock_gate_tip,前置未满足,Prerequisite unmet
+caravan_start_kind,航线：grain/iron/spice,Routes: grain/iron/spice
+caravan_start_busy,已有商队在途,Caravan already en route
+caravan_start_short,需 %d 银上路,Need %d silver to depart
+caravan_start_log,商队出发：%s（投资%d）,Caravan departs: %s (invested %d)
+caravan_start_lineage,陆桥商队：%s 上路,Landbridge caravan: %s en route
+caravan_start_ok,商队「%s」上路，约 3 月交割（途中有劫险）,Caravan "%s" departed; ~3 months to settle (raid risk)
+caravan_escort_none,无在途商队,No caravan en route
+caravan_escort_done,已雇护运,Escort already hired
+caravan_escort_short,护运需 %d 银,Escort needs %d silver
+caravan_escort_lineage,商队护运：花 %d 银买路平安,Caravan escort: paid %d silver for safe road
+caravan_escort_ok,护运已雇：途中不遇劫,Escort hired: no raids en route
+caravan_raid_msg,商队遇劫：损银 %d（航线仍在）,Caravan raided: lost %d silver (route continues)
+caravan_safe_msg,商队平安过月：余 %d 月,Caravan safe month: %d left
+caravan_settle_msg,商队交割：收回约 %d 银并卸货,Caravan settled: recovered ~%d silver and unloaded
+caravan_echo_start,商队·%s上路（-%d银）,Caravan · %s departed (-%d silver)
+caravan_echo_escort,商队·护运（-%d银）,Caravan · escort (-%d silver)
+caravan_echo_raid,商队·遇劫（-%d银）,Caravan · raided (-%d silver)
+caravan_echo_settle,商队·%s交割（+%d银）,Caravan · %s settled (+%d silver)
+caravan_echo_head,商队月回读 // CARAVAN ECHO,Caravan month echo
