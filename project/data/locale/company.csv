@@ -611,9 +611,23 @@ atlas_resume_go_named,续行至 %s,Resume to %s
 atlas_resume_fail,还不能续行,Cannot resume yet
 atlas_camp_halt,粮草告急，在此停军,Rations low — halt here
 atlas_camp_halted,已在 %s 停军，补给后续行。,Halted at %s. Resupply then resume.
+holding_patrol_cost,%d银/%d粮,%d silver / %d food
+holding_patrol_short,缺料·%s,Short · %s
+holding_patrol_cd_tip,冷却%d,Cooldown %d
+holding_patrol_boost_tip,巡防中%d,Patrolling %d
+holding_echo_patrol_one,巡防·%s（-%d银/-%d粮）,Patrol · %s (-%d silver / -%d food)
+holding_echo_patrol_all,全堡巡防（-%d银/-%d粮）,Castle patrol (-%d silver / -%d food)
 smith_forge_short_mats,缺材料：%s,Missing mats: %s
 smith_forge_mats_unstocked,市集缺打造材料,Market lacks forge mats
 smith_forge_short_silver,购料+工钱不足（需 %d 银）,Need %d silver for mats+labor
 smith_forge_bought_mats_done,打造完成：「%s」（工钱 %d · 购料 %d 银）,Forged "%s" (labor %d · mats %d silver)
 smith_forge_buy_mats_btn,购料打造 · %d,Buy mats & forge · %d
 smith_forge_why_buy_mats,缺料可市集购入再打造（购料 %d + 工钱 %d）。,Missing mats — buy at market then forge (mats %d + labor %d).
+holding_steward_same,已是此地庄头,Already steward here
+holding_steward_none,此地无庄头可撤,No steward to clear
+holding_steward_cleared,已撤下 %s（%s）,Cleared %s from %s
+holding_steward_cleared_short,已撤下庄头,Steward cleared
+holding_steward_pick_tip,委任此人管此地,Assign this roster member
+holding_echo_steward_on,庄头·%s 就任 %s,Steward · %s takes %s
+holding_echo_steward_off,庄头·%s 卸任 %s,Steward · %s leaves %s
+holding_steward_locked,属地未开垦,Holding not unlocked
