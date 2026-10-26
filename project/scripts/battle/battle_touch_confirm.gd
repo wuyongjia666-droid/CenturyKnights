@@ -13,6 +13,9 @@ extends RefCounted
 ## Y1-A T-P4: soft-follow settles on confirm/select (not mid unit-drag — keeps pan!=drag);
 ## attack ghost gets aim line + pulse juice.
 ## Y1-A T-P6: confirm_attack stamps m_attack_confirm_msec for settle juice path.
+## Y1-A T-P13: confirm does not refocus the attacker (that yanked the preview
+## camera). Strike ring + ribbon/chip live here; pair framing is BattleCombatFrame.
+## ck_unit_drag is set before the hover refresh so a unit drag does not pan.
 ## Y1-A T-P5: select-lock on try_deselect; clear() re-focuses selection after cancel;
 ## invalid-target reject pulse lives here (keeps battle_controller under the line gate).
 
@@ -134,13 +137,14 @@ static func drag_commit_enabled() -> bool:
 	return DeviceProfile.is_mobile()
 
 
-static func clear(host) -> void:
+static func clear(host, refocus_selection: bool = true) -> void:
 	host.preview_move_cell = Vector2i(-1, -1)
 	host.preview_attack_ui = -1
 	if DeviceProfile.is_mobile():
 		BattleMobileBar.rebuild(host)
 		# T-P5: cancelling a preview keeps the piece selected — settle camera on it.
-		if host.selected >= 0:
+		# Confirm passes false so the strike camera is not yanked back to the attacker.
+		if refocus_selection and host.selected >= 0:
 			BattlePick.focus_selected(host)
 	if host.overlay:
 		host.overlay.queue_redraw()
@@ -154,9 +158,10 @@ static func confirm_move(host) -> void:
 	var cell: Vector2i = host.preview_move_cell
 	# T-P4 soft-follow settles on confirm (never mid unit-drag — pan!=drag contract).
 	BattlePick.focus_follow_preview(host)
-	clear(host)
+	clear(host, false)
 	commit_move(host, cell)
 	BattlePick.focus_cell(host, cell)
+	BattleCombatFrame.follow_cells(host, [cell], 0.0)
 
 
 static func confirm_attack(host) -> void:
@@ -164,14 +169,23 @@ static func confirm_attack(host) -> void:
 	# T-P4 soft-follow settles on confirm (never mid unit-drag — pan!=drag contract).
 	if ui >= 0:
 		BattlePick.focus_follow_preview(host)
-	clear(host)
+	var impact := Vector2i(-1, -1)
+	if ui >= 0 and ui < host.units.size():
+		impact = host.units[ui].pos
+		note_confirm_strike(host, impact)
+	# Do not refocus the attacker — that tween fought the defender frame.
+	clear(host, false)
 	if host.selected < 0 or ui < 0 or ui >= host.units.size():
 		return
 	# T-P6: confirm→hit settle path — stamp confirm; resolve refreshes hit/miss/kill juice.
 	host.set_meta("m_attack_confirm_msec", Time.get_ticks_msec())
 	host._do_attack(host.selected, ui)
+	var landed := impact
 	if ui < host.units.size() and host.units[ui].char.hp > 0:
-		BattlePick.focus_cell(host, host.units[ui].pos)
+		landed = host.units[ui].pos
+		BattlePick.focus_cell(host, landed)
+	if landed.x >= 0:
+		BattleCombatFrame.follow_cells(host, [landed], 0.0)
 
 
 static func overflow_menu(host) -> void:
@@ -253,18 +267,30 @@ static func commit_move(host, cell: Vector2i) -> void:
 ## is always a pan.
 static func is_unit_drag(host, g: Dictionary) -> bool:
 	if bool(g.get("multi", false)) or not g.has("origin"):
+		_mark_unit_drag(host, false)
 		return false
 	var origin: Vector2 = g.get("origin", Vector2.ZERO)
 	if host.has_meta("drag_origin") and host.get_meta("drag_origin") == origin:
-		return bool(host.get_meta("drag_unit", false))
+		var cached := bool(host.get_meta("drag_unit", false))
+		# Set before the controller's hover refresh so the drag cannot pan.
+		_mark_unit_drag(host, cached)
+		return cached
 	var unit := _press_on_selected(host, origin)
 	host.set_meta("drag_origin", origin)
 	host.set_meta("drag_unit", unit)
+	_mark_unit_drag(host, unit)
 	return unit
 
 
+static func _mark_unit_drag(host, active: bool) -> void:
+	if active:
+		host.set_meta("ck_unit_drag", true)
+	elif host.has_meta("ck_unit_drag"):
+		host.remove_meta("ck_unit_drag")
+
+
 static func end_gesture(host) -> void:
-	for k in ["drag_origin", "drag_unit"]:
+	for k in ["drag_origin", "drag_unit", "ck_unit_drag"]:
 		if host.has_meta(k):
 			host.remove_meta(k)
 
@@ -310,6 +336,8 @@ static func _clear_stale_preview(host) -> void:
 
 ## While dragging with a selected unit, ghost the legal landing cell under the finger.
 static func on_drag(host, screen_pos: Vector2) -> void:
+	# Direct callers (and the controller path) must not soft-follow mid unit-drag.
+	host.set_meta("ck_unit_drag", true)
 	if not drag_commit_enabled() or not enabled():
 		return
 	if host.selected < 0 or host.selected >= host.units.size():
@@ -383,23 +411,62 @@ static func on_drag_end(host, screen_pos: Vector2) -> bool:
 	return false
 
 
-## T-P4 attack ghost chrome. `pulse` in [0,1] (typically 0.55+0.45*sin).
+const CONFIRM_STRIKE_MSEC := 380
+## Confirm punch. Heavier than an illegal-tap reject (1.15) so the commit reads.
+const CONFIRM_STRIKE_SHAKE := 2.2
+
+
+## T-P4 / T-P13 attack ghost chrome. `pulse` in [0,1] (typically 0.55+0.45*sin).
+## Ring, halo, ribbon, and brackets all grow with the pulse. Chip height stays readable.
 static func attack_preview_juice(cell_px: float, pulse: float) -> Dictionary:
 	var p: float = clampf(pulse, 0.0, 1.0)
 	return {
-		"fill_a": 0.36,
-		"ring_r": cell_px * (0.50 + 0.04 * p),
-		"ring_w": 3.0,
-		"halo_r": cell_px * 0.30,
-		"halo_a": 0.55 + 0.35 * p,
-		"aim_a": 0.50 + 0.30 * p,
-		"aim_w": 2.5,
-		"chev_len": cell_px * 0.22,
+		"fill_a": 0.28 + 0.24 * p,
+		"ring_r": cell_px * (0.48 + 0.16 * p),
+		"ring_w": 3.0 + 2.5 * p,
+		"halo_r": cell_px * (0.28 + 0.10 * p),
+		"halo_a": 0.50 + 0.45 * p,
+		"aim_a": 0.62 + 0.34 * p,
+		"aim_w": 4.0 + 3.0 * p,
+		"chev_len": cell_px * (0.28 + 0.08 * p),
+		"ribbon_w": 8.0 + 6.0 * p,
+		"bracket": cell_px * (0.20 + 0.08 * p),
+		"chip_h": maxf(36.0, cell_px * 0.42),
 	}
 
 
 static func attack_preview_pulse() -> float:
 	return 0.55 + 0.45 * sin(float(Time.get_ticks_msec()) * 0.006)
+
+
+static func note_confirm_strike(host, cell: Vector2i) -> void:
+	host.set_meta("m_confirm_strike", {"cell": cell, "msec": Time.get_ticks_msec()})
+	var shake = host.get("_shake")
+	if shake != null:
+		host._shake = maxf(float(shake), CONFIRM_STRIKE_SHAKE)
+
+
+static func confirm_strike_alpha(host, now_msec: int = -1) -> float:
+	if not host.has_meta("m_confirm_strike"):
+		return 0.0
+	var info = host.get_meta("m_confirm_strike")
+	if not (info is Dictionary):
+		return 0.0
+	var t0 := int(info.get("msec", 0))
+	var now := Time.get_ticks_msec() if now_msec < 0 else now_msec
+	var elapsed := float(now - t0) / float(CONFIRM_STRIKE_MSEC)
+	if elapsed < 0.0 or elapsed >= 1.0:
+		return 0.0
+	return 1.0 - elapsed
+
+
+static func confirm_strike_cell(host) -> Vector2i:
+	if not host.has_meta("m_confirm_strike"):
+		return Vector2i(-1, -1)
+	var info = host.get_meta("m_confirm_strike")
+	if not (info is Dictionary):
+		return Vector2i(-1, -1)
+	return info.get("cell", Vector2i(-1, -1))
 
 
 static func draw_preview(host) -> void:
@@ -429,14 +496,19 @@ static func draw_preview(host) -> void:
 		var acenter: Vector2 = origin + Vector2(ap) * float(cell) + Vector2(cell, cell) * 0.5
 		# Mid-figure halo + pulsing ring (mirrors selection chrome on the defender).
 		var chest: Vector2 = acenter + Vector2(0.0, float(cell) * BattlePick.FIG_TOP * 0.5)
-		overlay.draw_circle(acenter, float(juice.ring_r), Color(UIKit.DANGER, 0.16))
+		overlay.draw_circle(acenter, float(juice.ring_r), Color(UIKit.DANGER, 0.18 + 0.12 * float(juice.fill_a)))
 		overlay.draw_arc(acenter, float(juice.ring_r), 0.0, TAU, 48, Color(UIKit.DANGER, 0.95), float(juice.ring_w))
-		overlay.draw_arc(chest, float(juice.halo_r), 0.0, TAU, 32, Color(UIKit.DANGER, float(juice.halo_a)), 2.0)
-		# Aim line + chevron from attacker feet toward the target.
+		overlay.draw_arc(chest, float(juice.halo_r), 0.0, TAU, 32, Color(UIKit.DANGER, float(juice.halo_a)), 2.5)
+		_draw_corner_brackets(overlay, ar.grow(4.0), float(juice.bracket), Color(UIKit.DANGER, 0.95), 3.5)
+		# Ribbon + aim + chevron from attacker feet toward the defender.
 		if host.selected >= 0 and host.selected < host.units.size():
-			var from: Vector2 = origin + Vector2(host.units[host.selected].pos) * float(cell) + Vector2(cell, cell) * 0.5
+			var from := origin + Vector2(host.units[host.selected].pos) * float(cell)
+			from += Vector2(float(cell) * 0.5, float(cell) * BattlePick.FIG_FEET)
 			var col := Color(UIKit.DANGER, float(juice.aim_a))
+			overlay.draw_line(from, acenter, Color(UIKit.DANGER, float(juice.aim_a) * 0.35), float(juice.ribbon_w), true)
 			overlay.draw_line(from, acenter, col, float(juice.aim_w), true)
+			var travel := from.lerp(acenter, 0.32 + 0.36 * attack_preview_pulse())
+			overlay.draw_circle(travel, maxf(4.0, float(cell) * 0.07), Color(UIKit.TEXT, float(juice.aim_a)))
 			var dir: Vector2 = acenter - from
 			if dir.length_squared() > 1.0:
 				dir = dir.normalized()
@@ -445,3 +517,78 @@ static func draw_preview(host) -> void:
 				var back: Vector2 = tip - dir * float(juice.chev_len)
 				overlay.draw_line(tip, back + ortho, col, float(juice.aim_w), true)
 				overlay.draw_line(tip, back - ortho, col, float(juice.aim_w), true)
+			_draw_attack_chip(overlay, from.lerp(acenter, 0.55), _attack_preview_info(host), float(cell), attack_preview_pulse())
+	_draw_confirm_strike(host, overlay)
+
+
+static func _attack_preview_info(host) -> Dictionary:
+	var atk_i := int(host.selected)
+	var def_i := int(host.preview_attack_ui)
+	if atk_i < 0 or def_i < 0 or atk_i >= host.units.size() or def_i >= host.units.size():
+		return {}
+	if not host.has_method("_combat_extras") or host.get("terrain") == null:
+		return {}
+	var atk = host.units[atk_i]
+	var def = host.units[def_i]
+	var row = host.terrain[def.pos.y] if def.pos.y >= 0 and def.pos.y < host.terrain.size() else []
+	if def.pos.x < 0 or def.pos.x >= row.size():
+		return {}
+	var tid := str(row[def.pos.x])
+	var atk_tid := tid
+	if atk.pos.y >= 0 and atk.pos.y < host.terrain.size():
+		var arow = host.terrain[atk.pos.y]
+		if atk.pos.x >= 0 and atk.pos.x < arow.size():
+			atk_tid = str(arow[atk.pos.x])
+	return ForecastPanel.sides(atk.char, def.char, tid, host._combat_extras(atk_i, def_i), atk.pos, def.pos, atk_tid)
+
+
+static func _draw_corner_brackets(overlay, rect: Rect2, length: float, color: Color, width: float) -> void:
+	var span := minf(length, minf(rect.size.x, rect.size.y) * 0.46)
+	var x0 := rect.position.x
+	var y0 := rect.position.y
+	var x1 := rect.end.x
+	var y1 := rect.end.y
+	overlay.draw_line(Vector2(x0, y0), Vector2(x0 + span, y0), color, width, true)
+	overlay.draw_line(Vector2(x0, y0), Vector2(x0, y0 + span), color, width, true)
+	overlay.draw_line(Vector2(x1, y0), Vector2(x1 - span, y0), color, width, true)
+	overlay.draw_line(Vector2(x1, y0), Vector2(x1, y0 + span), color, width, true)
+	overlay.draw_line(Vector2(x0, y1), Vector2(x0 + span, y1), color, width, true)
+	overlay.draw_line(Vector2(x0, y1), Vector2(x0, y1 - span), color, width, true)
+	overlay.draw_line(Vector2(x1, y1), Vector2(x1 - span, y1), color, width, true)
+	overlay.draw_line(Vector2(x1, y1), Vector2(x1, y1 - span), color, width, true)
+
+
+static func _draw_attack_chip(overlay, mid: Vector2, info: Dictionary, cell_px: float, pulse: float) -> void:
+	var lines := BattleCombatFrame.chip_lines(info)
+	if lines.is_empty():
+		return
+	var font := UIKit.font("bold")
+	var fs := int(clampf(cell_px * 0.22, 18.0, 28.0))
+	var widest := 48.0
+	for line in lines:
+		widest = maxf(widest, font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x)
+	var plate_h := float(lines.size()) * (float(fs) + 4.0) + 12.0
+	var plate_w := widest + 18.0
+	var plate := Rect2(mid - Vector2(plate_w * 0.5, plate_h * 0.5), Vector2(plate_w, plate_h))
+	overlay.draw_rect(plate, Color(0.05, 0.06, 0.09, 0.86))
+	overlay.draw_rect(plate, Color(UIKit.DANGER, 0.75 + 0.2 * pulse), false, 2.0)
+	var y := plate.position.y + float(fs) + 4.0
+	for line in lines:
+		overlay.draw_string(font, Vector2(plate.position.x + 8.0, y), line, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, UIKit.TEXT)
+		y += float(fs) + 4.0
+
+
+static func _draw_confirm_strike(host, overlay) -> void:
+	var alpha := confirm_strike_alpha(host)
+	if alpha <= 0.0 or overlay == null:
+		return
+	var cell := confirm_strike_cell(host)
+	if cell.x < 0:
+		return
+	var origin: Vector2 = host.ORIGIN
+	var cell_px := float(host.CELL)
+	var center := origin + Vector2(cell) * cell_px + Vector2(cell_px, cell_px) * 0.5
+	var radius := cell_px * lerpf(0.22, 1.2, 1.0 - alpha)
+	overlay.draw_arc(center, radius, 0.0, TAU, 40, Color(UIKit.ACCENT, 0.9 * alpha), 4.0 + 4.0 * alpha)
+	overlay.draw_circle(center, cell_px * 0.16, Color(1, 1, 1, 0.40 * alpha))
+	overlay.draw_arc(center, radius * 0.62, 0.0, TAU, 32, Color(UIKit.DANGER, 0.75 * alpha), 2.5)
