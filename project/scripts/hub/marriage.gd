@@ -338,7 +338,7 @@ func _refresh() -> void:
 			mark = Locale.t("ux_spouse_mark")
 		var price := CKFamilyState.bride_price_for(suitor, cand) if suitor != null else CKFamilyState.COURT_BRIDE_PRICE
 		var b := UIKit.ghost_button("%02d  %s · %s  %s" % [k, cand.name, cand.rank_name(), mark], 0, 32)
-		b.tooltip_text = ("%s · %d银" % [str(check.get("msg", "")), price]) if check.get("ok") else str(check.get("msg", "声望不足"))
+		b.tooltip_text = (Locale.t("ux_candidate_ok_price", [str(check.get("msg", "")), price]) if check.get("ok") else str(check.get("msg", "声望不足")))
 		b.toggle_mode = true
 		b.set_meta("cand", cand)
 		var captured = cand
@@ -1387,7 +1387,7 @@ func _sync_contract_price_label() -> void:
 		price = CKFamilyState.bride_price_for(suitor, _selected)
 	elif _source_mode == "comrade":
 		price = CKFamilyState.INTERNAL_BRIDE_PRICE
-	_marry_idle = "✓ 缔约 · %d 银" % price
+	_marry_idle = Locale.t("ux_contract_cta_price", [price])
 	_marry_btn.text = _marry_idle
 
 

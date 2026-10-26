@@ -347,11 +347,11 @@ static func can_internal_propose(suitor: CKCharacter, target: CKCharacter) -> Di
 	if not is_internal_pair(suitor, target):
 		return {"ok": false, "msg": Locale.t("ux_internal_not_roster")}
 	if not suitor.alive or not target.alive:
-		return {"ok": false, "msg": "当事人不在"}
+		return {"ok": false, "msg": Locale.t("ux_marry_party_gone")}
 	if int(suitor.age) < Calendar.ADULT_AGE or int(target.age) < Calendar.ADULT_AGE:
 		return {"ok": false, "msg": Locale.t("ux_marry_underage")}
 	if str(suitor.spouse_id) != "" or str(target.spouse_id) != "":
-		return {"ok": false, "msg": "已有配偶（MVP 不可重婚）"}
+		return {"ok": false, "msg": Locale.t("ux_marry_has_spouse")}
 	if str(suitor.gender) == str(target.gender):
 		return {"ok": false, "msg": Locale.t("ux_internal_same_sex")}
 	var pts := company_bond_points(suitor, target)
