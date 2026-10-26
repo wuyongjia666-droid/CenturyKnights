@@ -103,6 +103,7 @@ static func attach_card_arms(card: Control, c, team: String, foe_nation: String,
 	else:
 		arms = CKHeraldryChrome.make_person_arms(c, arms_sz)
 	arms.name = "CardArms"
+	arms.set_meta("field_route", "card_arms")
 	arms.position = Vector2(4.0, 108.0 - arms_sz.y - 4.0)
 	card.add_child(arms)
 
@@ -124,11 +125,13 @@ static func pin_forecast_arms(panel: Control, atk_char, atk_team: String, foe_na
 	else:
 		ours = CKHeraldryChrome.make_person_arms(atk_char, shield)
 	ours.name = "ForecastOursArms"
+	ours.set_meta("field_route", "forecast_ours")
 	ours.position = Vector2(6, 4)
 	panel.add_child(ours)
 	if str(foe_nation) != "" and str(atk_team) == "player":
 		var foe := CKHeraldryChrome.make_nation_arms(str(foe_nation), shield)
 		foe.name = "ForecastFoeArms"
+		foe.set_meta("field_route", "forecast_foe")
 		var x := maxf(160.0, panel.size.x * 0.5 + 6.0)
 		foe.position = Vector2(x, 4)
 		panel.add_child(foe)
@@ -155,6 +158,7 @@ static func attach_report_row_arms(parent: Node, c, at: Vector2, arms_sz: Vector
 		return null
 	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
 	arms.name = "ReportRowArms"
+	arms.set_meta("field_route", "report_row")
 	arms.position = at
 	parent.add_child(arms)
 	return arms
@@ -178,6 +182,7 @@ static func attach_annex_row_arms(row: Control, kind: String, who, arms_sz: Vect
 		_:
 			return null
 	arms.name = "AnnexRowArms"
+	arms.set_meta("field_route", "annex_row")
 	row.add_child(arms)
 	if row is Container:
 		row.move_child(arms, 0)
@@ -208,6 +213,7 @@ static func attach_forge_slot_arms(row: Control, c, arms_sz: Vector2 = Vector2(2
 	_retire(row, "ForgeSlotArms")
 	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
 	arms.name = "ForgeSlotArms"
+	arms.set_meta("field_route", "forge_slot")
 	arms.position = Vector2(maxf(4.0, row.size.x - arms_sz.x - 8.0) if row.size.x > 80.0 else 292.0, 12.0)
 	arms.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	row.add_child(arms)
@@ -261,6 +267,7 @@ static func attach_affairs_seal_arms(row: Control, c, arms_sz: Vector2 = Vector2
 	_retire(row, "AffairSealArms")
 	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
 	arms.name = "AffairSealArms"
+	arms.set_meta("field_route", "affairs_seal")
 	arms.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	row.add_child(arms)
 	if row is Container:
@@ -360,6 +367,7 @@ static func attach_wall_tile_arms(host: Control, c, cell: Vector2, portrait_top:
 		badge_sz = 28
 	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
 	arms.name = "CellArms"
+	arms.set_meta("field_route", "wall_tile")
 	var por_h := 88.0 if cell.x < 150.0 else 132.0
 	arms.position = Vector2(6.0, portrait_top + por_h - arms_sz.y - 2.0)
 	host.add_child(arms)
@@ -379,6 +387,7 @@ static func attach_tree_node_arms(host: Control, c, node: Vector2) -> void:
 	_retire(host, "NodeBadge")
 	var arms := CKHeraldryChrome.make_person_arms(c, Vector2(30, 36))
 	arms.name = "NodeArms"
+	arms.set_meta("field_route", "tree_node")
 	arms.position = Vector2(4, 4)
 	host.add_child(arms)
 	var badge := CKHeraldryChrome.make_rank_badge(str(c.rank), 22)
@@ -444,6 +453,7 @@ static func attach_house_card_arms(parent: Control, c, plate: Rect2, arms_sz: Ve
 	_retire(parent, "HouseArms")
 	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
 	arms.name = "HouseArms"
+	arms.set_meta("field_route", "house_card")
 	arms.position = Vector2(plate.position.x + 4.0, plate.position.y + plate.size.y - arms_sz.y - 4.0)
 	arms.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	parent.add_child(arms)
@@ -523,6 +533,7 @@ static func attach_train_row_arms(host: Control, c, arms_sz: Vector2 = Vector2(2
 	_retire(host, "TrainRowArms")
 	var arms := CKHeraldryChrome.make_person_arms(c, arms_sz)
 	arms.name = "TrainRowArms"
+	arms.set_meta("field_route", "train_row")
 	arms.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	arms.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	host.add_child(arms)
