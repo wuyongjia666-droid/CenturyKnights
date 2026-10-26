@@ -1,0 +1,41 @@
+keys,zh_CN,en
+seal_sheet_en,WINTER SEAL,WINTER SEAL
+seal_sheet_title,积雪封路,Snow has closed the road
+seal_reason,"冬月前 %d 日，危险达到 %d 的陆路不通。直路 %d 日、粮 %d。","For the first %d days of winter, land roads of danger %d are shut. Direct road: %d days and %d food."
+seal_direct,直路  %s,Direct  %s
+seal_detour,"绕行  %s（多 %d 日，约粮 %d）","Detour  %s (+%d days, about %d food)"
+seal_detour_none,这条封路没有绕行。,No detour around this closure.
+seal_food,"行囊 %d 粮 · 每日 %d · 直路 %d · 绕行 %d · 等候 %d","Stores %d · %d a day · direct %d · detour %d · wait %d"
+seal_short,粮不够全程，路上会断粮掉士气。,Food will not last. The company will starve and lose morale.
+seal_btn_detour,绕行,Detour
+seal_btn_wait,等雪化再上路,Wait out the snow
+seal_btn_force,强行刮雪,Force the road
+seal_wait_hint,"再等 %d 日（约粮 %d）雪化，然后走直路。","Wait %d days (about %d food), then take the direct road."
+seal_force_hint,"刮开积雪：士气 −%d，多耗 1 日粮，然后走直路。","Dig through: morale −%d, one extra day of food, then the direct road."
+seal_march,"行军中 · 下一站 %s · 已行 %d 日 · 粮 %d","On the road · next %s · %d days out · food %d"
+seal_arrive_en,ARRIVED,ARRIVED
+seal_arrive_title,抵达 %s,Arrived at %s
+seal_arrive_body,"%s。此行 %d 日，余粮 %d（出发 %d）。","%s. %d days, %d food left (started with %d)."
+seal_arrive_detour,绕开了冬封,You went around the winter seal
+seal_arrive_force,强行穿过了封路,You forced the sealed road
+seal_arrive_wait,等雪化后走了直路,You waited out the snow
+seal_arrive_enter,进城,Enter the city
+seal_arrive_market,进城 · 市集,Enter · market
+seal_arrive_smith,进城 · 铁匠,Enter · smith
+seal_arrive_tavern,进城 · 酒馆,Enter · tavern
+seal_arrive_board,进城 · 委托,Enter · board
+seal_legend,冬封 · 红叉为不通的陆路,Winter seal · red marks are shut roads
+seal_log_wait,雪封未化，就地等候 %d 日,Waited %d days for the snow seal to lift
+seal_log_force,强行刮开封路，士气 −%d,Forced the sealed road, morale −%d
+seal_log_detour,改走绕行前往 %s,Took the detour toward %s
+seal_wait_none,雪封已经化了。,The snow seal has already lifted.
+seal_force_none,这条路没有封口可刮。,This road has no seal to force.
+seal_hop_fail,绕行没能走到 %s,The detour did not reach %s
+seal_hop_sealed,绕行仍踩上封路 %s,The detour still uses the sealed road %s
+seal_march_fail,这程没有走成。,The march did not start.
+seal_resume_none,无绕路可续,No detour left to resume
+seal_resume_broken,绕路已断,The detour path is broken
+seal_resume_sealed,续行撞上封路,Resume hit a sealed road
+seal_resume_halted,中途停驻,Halted mid-detour
+seal_resume_miss,未抵达,Did not reach the destination
+atlas_no_route,无路可达,No route
