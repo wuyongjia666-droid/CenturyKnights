@@ -2634,10 +2634,16 @@ func _show_siege_alert_modal(alert: Dictionary) -> void:
 	var stockade := bool(alert.get("stockade", false))
 	if stockade and cache_n > 0:
 		phase_line = phase_line + " " + (Locale.t("atlas_siege_cache_warn") % cache_n)
+	var sister_prev: Dictionary = CKTerritory.sister_relief_preview(site_id) if site_id != "" else {}
+	var can_sister := bool(sister_prev.get("ok", false))
 	var can_muster := stockade and cache_n >= CKTerritory.muster_cache_cost(site_id) and garrison < CKTerritory.garrison_max(site_id)
-	var h := 534.0 if stockade and cache_n > 0 else 420.0
+	var h := 420.0
+	if stockade and cache_n > 0:
+		h = 534.0
 	if can_muster and stockade and cache_n > 0:
 		h = 578.0
+	if can_sister:
+		h += 44.0
 	var panel := _modal_panel(h)
 	panel.name = "SiegeAlertModal"
 	var el := UIKit.mono(Locale.t("atlas_siege_en"), 9, UIKit.DANGER)
@@ -2750,6 +2756,30 @@ func _show_siege_alert_modal(alert: Dictionary) -> void:
 			_refresh_top()
 			_build_nodes())
 		panel.add_child(muster)
+	if can_sister:
+		y += 44.0
+		var sis_label := Locale.t("atlas_siege_sister") % str(sister_prev.get("from_name", ""))
+		var sis := UIKit.ghost_button(sis_label, 452, 36)
+		sis.name = "SiegeSisterCall"
+		sis.position = Vector2(24, y)
+		sis.pressed.connect(func():
+			var r6: Dictionary = CKTerritory.call_sister_garrison(site_id)
+			_show_toast(str(r6.get("msg", "")), UIKit.OK if bool(r6.get("ok", false)) else UIKit.DANGER)
+			if bool(r6.get("ok", false)):
+				alert["garrison"] = int(r6.get("garrison", garrison))
+				garrison = int(alert["garrison"])
+				sis.disabled = true
+				var bl4: Label = panel.get_node_or_null("SiegeAlertBody") as Label
+				if bl4 != null:
+					var pl4 := Locale.t("atlas_siege_phase_imminent") if str(alert.get("phase", "")) == "imminent" else Locale.t("atlas_siege_phase_declared")
+					if stockade and cache_n > 0:
+						pl4 = pl4 + " " + (Locale.t("atlas_siege_cache_warn") % cache_n)
+					var hp4 := int(alert.get("hold_pct", -1))
+					var il4 := Locale.t("atlas_siege_intel") % hp4 if bool(alert.get("scouted", false)) and hp4 >= 0 else Locale.t("atlas_siege_intel_unknown")
+					bl4.text = Locale.t("atlas_siege_body") % [by_name, site_name, anchor_name, garrison, pl4, il4]
+			_refresh_top()
+			_build_nodes())
+		panel.add_child(sis)
 	if stockade and cache_n > 0:
 		y += 44.0
 		var evac := UIKit.ghost_button(Locale.t("atlas_siege_evacuate"), 452, 36)
