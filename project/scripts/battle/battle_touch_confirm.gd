@@ -140,6 +140,22 @@ static func drag_commit_enabled() -> bool:
 static func clear(host, refocus_selection: bool = true) -> void:
 	host.preview_move_cell = Vector2i(-1, -1)
 	host.preview_attack_ui = -1
+	BattleArtHitTelegraph.clear(host)
+	BattleLockAimTelegraph.clear(host)
+	BattleWoundedAimTelegraph.clear(host)
+	BattleLethalAimTelegraph.clear(host)
+	BattleFlankAimTelegraph.clear(host)
+	BattleCounterAimTelegraph.clear(host)
+	BattleFollowupAimTelegraph.clear(host)
+	BattleSureHitAimTelegraph.clear(host)
+	BattleCritAimTelegraph.clear(host)
+	BattleHitRiskAimTelegraph.clear(host)
+	BattleTerrainDefAimTelegraph.clear(host)
+	BattleHeightAimTelegraph.clear(host)
+	BattleWeatherAimTelegraph.clear(host)
+	BattleNightAimTelegraph.clear(host)
+	BattleRoleAimTelegraph.clear(host)
+	BattleOpeningAimTelegraph.clear(host)
 	if DeviceProfile.is_mobile():
 		BattleMobileBar.rebuild(host)
 		# T-P5: cancelling a preview keeps the piece selected — settle camera on it.
@@ -369,6 +385,22 @@ static func on_drag(host, screen_pos: Vector2) -> void:
 		if host._can_attack_from(su, cell):
 			host.preview_attack_ui = ui
 			host.preview_move_cell = Vector2i(-1, -1)
+			BattleArtHitTelegraph.refresh(host)
+			BattleLockAimTelegraph.refresh(host)
+			BattleWoundedAimTelegraph.refresh(host)
+			BattleLethalAimTelegraph.refresh(host)
+			BattleFlankAimTelegraph.refresh(host)
+			BattleCounterAimTelegraph.refresh(host)
+			BattleFollowupAimTelegraph.refresh(host)
+			BattleSureHitAimTelegraph.refresh(host)
+			BattleCritAimTelegraph.refresh(host)
+			BattleHitRiskAimTelegraph.refresh(host)
+			BattleTerrainDefAimTelegraph.refresh(host)
+			BattleHeightAimTelegraph.refresh(host)
+			BattleWeatherAimTelegraph.refresh(host)
+			BattleNightAimTelegraph.refresh(host)
+			BattleRoleAimTelegraph.refresh(host)
+			BattleOpeningAimTelegraph.refresh(host)
 			if DeviceProfile.is_mobile():
 				BattleMobileBar.rebuild(host)
 			if host.overlay:
