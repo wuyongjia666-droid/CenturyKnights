@@ -1491,7 +1491,6 @@ func _apply_board_gesture(g: Dictionary) -> void:
 			if turn_team != "player" or _cut_playing:
 				return
 			var cell := BattlePick.resolve(self, pos)
-			# Y1-A T-P17: painted range tiles keep the aimed cell; body hits still resolve.
 			cell = BattleRangePreview.tap_cell(self, pos, cell)
 			if cell.x < 0:
 				return
@@ -1662,7 +1661,6 @@ func _click_cell(cell: Vector2i) -> void:
 					return
 				BattleTouchConfirm.commit_move(self, cell)
 				return
-			# Y1-A T-P17: stamp the aimed tile before the ghost clear, which skips note_reject.
 			if ui < 0 and not attack_mode and not move_cells.has(cell) and (preview_move_cell.x >= 0 or int(preview_attack_ui) >= 0):
 				BattleRangePreview.flash_destination(self, cell, "move")
 			# Y1-A T-P1-5: empty illegal / off-preview tap clears the ghost (legal move cells returned above).
