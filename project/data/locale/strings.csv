@@ -900,3 +900,4 @@ shell_skill_buff_cast_log,%s 释放「%s」%s,%s casts 「%s」%s
 shell_lock_aim_mark,缠,Bound
 shell_wounded_aim_mark,伤,Wounded
 shell_lethal_aim_mark,斩,Lethal
+shell_flank_aim_mark,夹,Flank
