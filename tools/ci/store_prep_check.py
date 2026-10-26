@@ -2,8 +2,7 @@
 """Store-engineering prep gate (no paid store submission).
 
 Fails when required docs/scripts/budgets are missing, listing drafts are thin,
-season 02/03/04 novels fall below mid-length (≥12000 汉字 / 对标季1), or packaging
-dry-run fails. Does not upload anything or spend money. Do not weaken the novel floor.
+season 02/03/04 novels fall below mid-length (≥12000 汉字 / 对标季1), packaging dry-run fails, or verification records fail. Does not upload anything or spend money. Do not weaken the novel floor.
 """
 from __future__ import annotations
 
@@ -46,6 +45,11 @@ REQUIRED_DOCS = [
     "docs/store/data-safety-draft.md",
     "docs/store/support-contact-draft.md",
     "docs/store/listing-copy-en.md",
+    "docs/store/privacy-verification-record.md",
+    "docs/store/age-rating-verification-record.md",
+    "docs/store/export-paths-verification-record.md",
+    "docs/store/data-safety-verification-record.md",
+    "docs/store/support-contact-verification-record.md",
 ]
 
 REQUIRED_SCRIPTS = [
@@ -53,6 +57,7 @@ REQUIRED_SCRIPTS = [
     "scripts/build_windows.sh",
     "tools/ci/export_size_report.py",
     "tools/ci/store_packaging_dry_check.py",
+    "tools/ci/store_verify_records_check.py",
     "tools/ci/perf_budget.json",
     "tools/ci/ratchet.json",
     ".github/workflows/release.yml",
@@ -151,7 +156,7 @@ def main() -> int:
             cwd=str(ROOT),
             capture_output=True,
             text=True,
-            timeout=60,
+            timeout=240,
         )
         if proc.returncode != 0:
             fails.append(
@@ -160,6 +165,25 @@ def main() -> int:
             )
     except Exception as exc:  # noqa: BLE001
         fails.append(f"store_packaging_dry_check failed: {exc}")
+
+
+    # Nested verification-record gate (privacy / age / export / data-safety / support).
+    verify = ROOT / "tools/ci/store_verify_records_check.py"
+    try:
+        proc = subprocess.run(
+            [sys.executable, str(verify)],
+            cwd=str(ROOT),
+            capture_output=True,
+            text=True,
+            timeout=60,
+        )
+        if proc.returncode != 0:
+            fails.append(
+                "store_verify_records_check failed:\n"
+                + (proc.stdout or proc.stderr or "")[-800:]
+            )
+    except Exception as exc:  # noqa: BLE001
+        fails.append(f"store_verify_records_check failed: {exc}")
 
     if fails:
         print("FAIL store_prep_check:")
