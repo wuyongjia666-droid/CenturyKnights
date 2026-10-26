@@ -61,7 +61,7 @@ static func preview_latched(host) -> bool:
 	var atk = host.get("preview_attack_ui")
 	if atk != null and int(atk) >= 0:
 		return true
-	return BattleSkillHealPreview.latched(host)
+	return BattleSkillHealPreview.latched(host) or BattleSkillBuffPreview.latched(host)
 
 
 ## Latched preview: base slop only. Sticky ×1.55 was turning a back-out drag into a tap.
@@ -282,6 +282,8 @@ static func chip_center(host) -> Vector2:
 	var ui := int(host.preview_attack_ui)
 	if ui < 0:
 		ui = BattleSkillHealPreview.preview_ui(host)
+	if ui < 0:
+		ui = BattleSkillBuffPreview.preview_ui(host)
 	if ui < 0 or ui >= host.units.size():
 		return origin
 	var acenter := origin + Vector2(host.units[ui].pos) * cell_px + Vector2(cell_px, cell_px) * 0.5
@@ -323,6 +325,8 @@ static func consume_tap(host, screen: Vector2) -> bool:
 		return true
 	if BattleSkillHealPreview.latched(host):
 		return BattleSkillHealPreview.confirm(host)
+	if BattleSkillBuffPreview.latched(host):
+		return BattleSkillBuffPreview.confirm(host)
 	return false
 
 
@@ -344,7 +348,13 @@ static func draw(overlay, host, attack_info: Dictionary = {}) -> void:
 		return
 	var confirm: Rect2 = pair.get("confirm", Rect2())
 	var cancel: Rect2 = pair.get("cancel", Rect2())
-	var accent: Color = UIKit.DANGER if int(host.preview_attack_ui) >= 0 else (UIKit.OK if BattleSkillHealPreview.latched(host) else UIKit.ACCENT)
+	var accent: Color = UIKit.ACCENT
+	if int(host.preview_attack_ui) >= 0:
+		accent = UIKit.DANGER
+	elif BattleSkillHealPreview.latched(host):
+		accent = UIKit.OK
+	elif BattleSkillBuffPreview.latched(host):
+		accent = UIKit.ACCENT
 	_plate(overlay, confirm, _confirm_lines(host, attack_info), accent)
 	_plate(overlay, cancel, PackedStringArray([Locale.t("shell_4d0b4688")]), Color(0.62, 0.66, 0.72))
 
