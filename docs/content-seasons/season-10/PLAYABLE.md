@@ -117,3 +117,9 @@
 - 各章 `tavern` 拍首加 `_arr1`–`_arr6` 到店整装口头（`_tvp` 前），全库去重；收束非旁白。
 - 验收：`content_season_tavern_arrival_chain_check` — hub chip → 到店针口头。
 - 不碰 `_bpl`/`_cls`/`_sec`/`_msr`/`_tvp`/`_ldg`。
+
+## 开场入门口头加厚（open-door）
+
+- 各章首拍拍首加 `_opn1`–`_opn6` 入门整装口头（`_thm` 前），全库去重；收束非旁白。
+- 验收：`content_season_open_door_chain_check` — hub chip → 入门针口头。
+- 不碰 `_bpl`/`_arr`/`_lop`/`_tvx`/`_vop`/`_cls`/`_sec`/`_tvp`。
