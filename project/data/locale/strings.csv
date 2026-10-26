@@ -885,3 +885,4 @@ tavern_refresh_paid,刷新 %d 银 ↻（余 %d）,Refresh %d silver ↻ (%d left
 figure_turntable_tip,战棋棋子预览（拖动旋转）,Board figure preview (drag to rotate)
 set_board_3d,战棋 3D 棋子（关=省电 2D 棋子）,3D board units (off = 2D tokens; saves battery)
 btn_sui_year,岁课回执,Year-card inbox
+shell_lethal_mark,斩,Kill
