@@ -157,6 +157,20 @@ gen2_33,家主,Head
 gen2_34,详情,Details
 gen2_35,旗徽,Company banner
 gen2_36,团徽,Company arms
+gen2_band_elder,祖辈,Elders
+gen2_band_parents,父辈,Parents' generation
+gen2_band_peers,同辈,Same generation
+gen2_band_children,子女,Children
+gen2_band_later,后辈,Later generations
+gen2_band_banner,旗下未入族,Under the banner
+gen2_rel_spouse,配偶,Spouse
+gen2_rel_parent,父母,Parent
+gen2_rel_child,子女,Child
+gen2_rel_elder,祖辈,Elder
+gen2_rel_later,后辈,Descendant
+gen2_rel_peer,同辈,Peer
+gen2_rel_kin,族人,Kin
+gen2_rel_banner,旗下,Banner
 purse_absent_pay,人不在，钱在他身上，这会儿付不了。他口袋里有 %d，要 %d（旗库的钱不能拿来垫）,Away; the money is on them. Has %d, needs %d (treasury can't cover)
 purse_short,口袋里的钱不够：现在 %d，要 %d（旗库的钱不能拿来垫）,Not enough in the purse: %d of %d (treasury can't cover)
 purse_nobody,找不到这个人,No such person

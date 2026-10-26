@@ -126,6 +126,36 @@
           "text": "复盖之前我验空圈的边。满印的响不验。"
         },
         {
+          "id": "cs1002_thm1",
+          "speaker": "旁白",
+          "text": "拓片上只有空框。框在，印还没落。"
+        },
+        {
+          "id": "cs1002_thm2",
+          "speaker": "老管事",
+          "text": "空框不是漏。是等回读的人。"
+        },
+        {
+          "id": "cs1002_thm3",
+          "speaker": "石垒·晚担",
+          "text": "复盖之前先验空圈的边，再动手。"
+        },
+        {
+          "id": "cs1002_thm4",
+          "speaker": "槐里·青禾",
+          "text": "满印的响不验。验的是静处。"
+        },
+        {
+          "id": "cs1002_thm5",
+          "speaker": "老旗手",
+          "text": "旗穗别沾泥痕。沾了，拓会花。"
+        },
+        {
+          "id": "cs1002_thm6",
+          "speaker": "leader",
+          "text": "空框我留。边我验。验完再往下走。"
+        },
+        {
           "id": "cs10b_ya_16",
           "speaker": "槐里·青禾",
           "text": "诚实比能喊的城印贵。"
@@ -385,6 +415,26 @@
           "text": "假印一夜，印底就脏。"
         },
         {
+          "id": "cs1002_vhg1",
+          "speaker": "书记官",
+          "text": "印底拓着空框。框在，印未落。"
+        },
+        {
+          "id": "cs1002_vhg2",
+          "speaker": "书记官",
+          "text": "印底不改月份。改的是你敢不敢承认框还空。"
+        },
+        {
+          "id": "cs1002_vhg3",
+          "speaker": "leader",
+          "text": "印底空着。我对着框，不拿旧印去糊。"
+        },
+        {
+          "id": "cs1002_vhg4",
+          "speaker": "槐里·青禾",
+          "text": "拓纸微潮。潮着，假印更花。"
+        },
+        {
           "id": "cs1002_vis_mv1",
           "speaker": "旁白",
           "text": "印底纸旁沙漏沙面有一指宽凹痕。"
@@ -603,7 +653,7 @@
           "speaker": "旁白",
           "text": "锋再定。印谱复页翻开，催脏印的人退到槛外。",
           "when": {
-            "flag": "cs10_02_mid_fought"
+            "flag": "cs10_mid_fought"
           }
         },
         {
@@ -611,7 +661,7 @@
           "speaker": "掌柜",
           "text": "复盖比初盖慢。慢，是因为要净。",
           "when": {
-            "flag": "cs10_02_mid_fought"
+            "flag": "cs10_mid_fought"
           }
         },
         {
@@ -619,7 +669,7 @@
           "speaker": "槐里·青禾",
           "text": "印泥第二圈更红。红得干净，才像官印。",
           "when": {
-            "flag": "cs10_02_mid_fought"
+            "flag": "cs10_mid_fought"
           }
         },
         {
@@ -627,7 +677,7 @@
           "speaker": "leader",
           "text": "锋再验场。印，我复盖。",
           "when": {
-            "flag": "cs10_02_mid_fought"
+            "flag": "cs10_mid_fought"
           }
         },
         {
@@ -637,10 +687,10 @@
           "when": {
             "all": [
               {
-                "flag": "cs10_02_mid_lost"
+                "flag": "cs10_mid_lost"
               },
               {
-                "not_flag": "cs10_02_mid_fought"
+                "not_flag": "cs10_mid_fought"
               }
             ]
           }
@@ -654,10 +704,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs10_02_mid_fought"
+                "not_flag": "cs10_mid_fought"
               },
               {
-                "not_flag": "cs10_02_mid_lost"
+                "not_flag": "cs10_mid_lost"
               }
             ]
           },
@@ -668,10 +718,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs10_02_mid_fought"
+                "cs10_mid_fought"
               ],
               "lose_flags": [
-                "cs10_02_mid_lost"
+                "cs10_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -688,10 +738,10 @@
           "when": {
             "all": [
               {
-                "not_flag": "cs10_02_mid_fought"
+                "not_flag": "cs10_mid_fought"
               },
               {
-                "flag": "cs10_02_mid_lost"
+                "flag": "cs10_mid_lost"
               }
             ]
           },
@@ -702,10 +752,10 @@
               "objective": "rout",
               "return": "res://scenes/story/chapter_player.tscn",
               "win_flags": [
-                "cs10_02_mid_fought"
+                "cs10_mid_fought"
               ],
               "lose_flags": [
-                "cs10_02_mid_lost"
+                "cs10_mid_lost"
               ],
               "win_ledger": {
                 "choice": "mid_skirmish",
@@ -725,10 +775,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs10_02_mid_fought"
+                    "not_flag": "cs10_mid_fought"
                   },
                   {
-                    "not_flag": "cs10_02_mid_lost"
+                    "not_flag": "cs10_mid_lost"
                   }
                 ]
               },
@@ -743,10 +793,10 @@
               "when": {
                 "all": [
                   {
-                    "not_flag": "cs10_02_mid_fought"
+                    "not_flag": "cs10_mid_fought"
                   },
                   {
-                    "flag": "cs10_02_mid_lost"
+                    "flag": "cs10_mid_lost"
                   }
                 ]
               },
@@ -902,6 +952,36 @@
           "id": "cs1002_ret_mv3",
           "speaker": "岁吏",
           "text": "正好回堡。"
+        },
+        {
+          "id": "cs1002_tvp1",
+          "speaker": "旁白",
+          "text": "印底拓片托在漆盘里，盘沿还留着一道泥痕。"
+        },
+        {
+          "id": "cs1002_tvp2",
+          "speaker": "掌柜",
+          "text": "泥痕擦掉。擦不掉的边，才是真盖过的。"
+        },
+        {
+          "id": "cs1002_tvp3",
+          "speaker": "岁吏",
+          "text": "催城印的嘴快。嘴快的边，往往虚。"
+        },
+        {
+          "id": "cs1002_tvp4",
+          "speaker": "槐里·青禾",
+          "text": "印底并排留。留底，才见是不是同一颗印。"
+        },
+        {
+          "id": "cs1002_tvp5",
+          "speaker": "听回",
+          "text": "同一颗印，也要同一只手稳。"
+        },
+        {
+          "id": "cs1002_tvp6",
+          "speaker": "leader",
+          "text": "印底我留。催印的，先看泥痕。"
         },
         {
           "id": "cs1002_tvn1",
@@ -1099,9 +1179,29 @@
           "text": "仿印不盖。"
         },
         {
-          "id": "cs10b_le_18",
-          "speaker": "旁白",
-          "text": "厅灯灭一盏。印底小灯还亮。"
+          "id": "cs1002_ldg1",
+          "speaker": "岁吏",
+          "text": "复页印谱骑缝走过，足印才算。"
+        },
+        {
+          "id": "cs1002_ldg2",
+          "speaker": "书记官",
+          "text": "催脏印的快字，涂成初盖的戒。"
+        },
+        {
+          "id": "cs1002_ldg3",
+          "speaker": "老管事",
+          "text": "旗第二次在印案立直——印才像根。"
+        },
+        {
+          "id": "cs1002_ldg4",
+          "speaker": "leader",
+          "text": "复净并排。厅灯可灭一盏，印底小灯不灭。"
+        },
+        {
+          "id": "cs1002_ldg_end",
+          "speaker": "leader",
+          "text": "骑缝红圈旁，灰旗堡印底柜等复盖。"
         }
       ]
     }
