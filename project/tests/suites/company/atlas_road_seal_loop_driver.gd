@@ -127,14 +127,16 @@ func _ui_loop() -> void:
 		await get_tree().process_frame
 	if mobile and page.has_method("apply_mobile_layout"):
 		page.call("apply_mobile_layout")
-	if page.has_method("_show_view"):
-		page.call("_show_view", "shuoying")
-	if page.has_method("_select_node"):
-		page.call("_select_node", DEST)
+	if not page.has_method("_select_node"):
+		_ok(false, "atlas script did not load")
+		page.queue_free()
+		return
+	page.call("_show_view", "shuoying")
+	page.call("_select_node", DEST)
 	for _j in 6:
 		await get_tree().process_frame
 	if mobile:
-		_ok(bool(page.get("_mob")), "atlas took the phone layout")
+		_ok(page.get("_mob") == true, "atlas took the phone layout")
 	var legend := page.find_child("SealLegend", true, false) as Label
 	_ok(legend != null and legend.visible and legend.text.find("冬封") >= 0, "seal legend on the shuoying plate")
 	var marks := page.find_child("SealMarks", true, false)
