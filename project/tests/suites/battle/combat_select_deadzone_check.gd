@@ -264,8 +264,10 @@ func _e2e_sticky_pan_empty() -> String:
 		return "sticky setup select failed"
 	# Expire select-lock so a misclassified tap would deselect.
 	_battle.set_meta("m_select_burst_msec", Time.get_ticks_msec() - 1000)
-	# Kill focus tween and park pan with +x headroom so clamp cannot mask sticky.
+	# Select focus-pan can park `_board_pan` on a clamp edge; +x drift then looks
+	# like sticky swallow. Park mid-stage with headroom, then recompute halo.
 	BattlePick.cancel_focus_tween(_battle)
+	BattleTouchConfirm.end_gesture(_battle)
 	_battle._board_pan = Vector2.ZERO
 	_battle._board_zoom = 1.0
 	_battle._clamp_board_pan()
@@ -280,10 +282,12 @@ func _e2e_sticky_pan_empty() -> String:
 	var drift := base * 1.35
 	_touch(0, true, halo)
 	await get_tree().process_frame
+	await get_tree().process_frame
 	_drag(halo + Vector2(drift, 0), Vector2(drift, 0))
 	await get_tree().process_frame
+	await get_tree().process_frame
 	_touch(0, false, halo + Vector2(drift, 0))
-	await _settle(4)
+	await _settle(6)
 	if absf(_battle._board_pan.x - pan0.x) < 1.0:
 		return "empty soft halo did not pan (sticky still swallowing) pan %s->%s drift %.1f" % [pan0, _battle._board_pan, drift]
 	if _battle.selected != _player_i:
