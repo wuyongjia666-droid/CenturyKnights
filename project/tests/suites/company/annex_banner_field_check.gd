@@ -106,7 +106,7 @@ func _run_sources() -> void:
 	var chrome := FileAccess.get_file_as_string("res://scripts/art/heraldry_chrome.gd")
 	_ok(chrome.find("return CKHeraldryField.place_banner_plate") >= 0, "chrome banner shim")
 	var annex := FileAccess.get_file_as_string("res://scripts/hub/annex.gd")
-	_ok(annex.find("place_castle_banner_strip") >= 0, "annex still uses the banner helper")
+	_ok(annex.find("CKHeraldryField.place_banner_plate") >= 0, "annex places Field banner plate")
 	_ok(annex.find("CKHeraldryField.attach_annex_row_arms") >= 0, "annex rows stay on Field")
 	var train := FileAccess.get_file_as_string("res://scripts/hub/train.gd")
 	_ok(train.find("place_banner_plate") < 0, "train scene not retargeted")

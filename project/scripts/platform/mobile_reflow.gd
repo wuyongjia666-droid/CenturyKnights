@@ -55,6 +55,9 @@ static func reflow(p: Control, w: float) -> Control:
 	else:
 		out = MarginContainer.new()
 	out.name = p.name
+	# Keep heraldry Field ownership markers across panel replacement.
+	for mk in p.get_meta_list():
+		out.set_meta(mk, p.get_meta(mk))
 	out.set_meta("m_reflowed", true)
 	out.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	out.mouse_filter = p.mouse_filter
@@ -156,6 +159,13 @@ static func _settle(c: Control, w: float, alone: bool) -> void:
 	if c.clip_contents and c.get_class() == "Control" and _has_direct_art(c):
 		# a cropped picture window: keep its art as drawn
 		c.custom_minimum_size = c.size
+		return
+	# Heraldry Field hosts are already compact plates; reflowing them replaces the
+	# Control and drops field_route / arms metas (city crest suite mob-side).
+	if c.has_meta("field_route"):
+		c.custom_minimum_size = Vector2(
+			minf(maxf(c.custom_minimum_size.x, c.size.x), w),
+			maxf(c.custom_minimum_size.y, c.size.y))
 		return
 	if c is TextureRect or c is ProgressBar or c is ColorRect or c is TextureButton:
 		c.custom_minimum_size = Vector2(minf(maxf(c.custom_minimum_size.x, c.size.x), w), maxf(c.custom_minimum_size.y, c.size.y))
