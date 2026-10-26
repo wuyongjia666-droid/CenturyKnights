@@ -89,3 +89,7 @@
 
 - 各章第二主题拍加 `_sec1`–`_sec6` 季题名著口头，全库去重；收束非旁白。
 - 验收：`content_season_second_beat_chain_check` — hub chip → 二拍针口头 →（非中途战）继续。
+## 开场主题口头加厚（theme-open）
+
+- 各章首拍加 `_thm1`–`_thm6` 季题名著口头，全库去重；收束非旁白。
+- 验收：`content_season_theme_open_chain_check` — hub chip → 首拍针口头 → 下一拍。
