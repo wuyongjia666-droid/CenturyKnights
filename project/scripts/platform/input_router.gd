@@ -24,6 +24,9 @@ const MOBILE_SLOP_MIN := 36.0
 const MOBILE_SLOP_MAX := 72.0
 ## Extra multiplier when sticky_fn(origin) is true.
 const STICKY_SLOP_MUL := 1.55
+## Y1-A T-P15: a thumb on the notch lip cannot travel into the cutout, so it
+## slides inward past the normal sticky slop and the tap becomes a pan.
+const EDGE_SLOP_MUL := 2.4
 
 const WHEEL_FACTOR := 1.12
 
@@ -32,6 +35,8 @@ var sticky_fn: Callable = Callable()
 ## Optional () -> int. Long-press threshold in ms. Return <= 0 to disable long-press.
 ## Battle raises this to LONG_MS_SELECTED while a unit is selected (T-P1-1).
 var long_ms_fn: Callable = Callable()
+## Optional (Vector2) -> bool. True when the press is in the notch / gesture lip.
+var edge_fn: Callable = Callable()
 
 var _pts: Dictionary = {}
 var _pinch_dist := -1.0
@@ -59,7 +64,11 @@ func _slop() -> float:
 
 func _slop_for(origin: Vector2) -> float:
 	var lim := _slop()
-	if sticky_fn.is_valid() and bool(sticky_fn.call(origin)):
+	var sticky := sticky_fn.is_valid() and bool(sticky_fn.call(origin))
+	var edge := edge_fn.is_valid() and bool(edge_fn.call(origin))
+	if edge and sticky:
+		return lim * EDGE_SLOP_MUL
+	if sticky:
 		return lim * STICKY_SLOP_MUL
 	return lim
 
