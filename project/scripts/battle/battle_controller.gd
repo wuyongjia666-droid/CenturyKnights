@@ -1181,6 +1181,7 @@ func _draw_overlay() -> void:
 					overlay.draw_texture_rect(_tex(chip_path), Rect2(tp, Vector2(csz, csz)), false)
 				else:
 					overlay.draw_rect(Rect2(tp, Vector2(18, 14)), Color(0.05, 0.05, 0.08, 0.75))
+		BattleRangePreview.draw_ranges(self, overlay)
 		BattleTouchConfirm.draw_preview(self)
 		# 图例：纯图标芯片（无长文字）
 		if not move_cells.is_empty():
@@ -1213,6 +1214,7 @@ func _draw_overlay() -> void:
 	BattleSelectChrome.draw_selected(self, overlay)
 	BattleAttackAim.draw(self, overlay)
 	BattleTouchConfirm.draw_reject_flash(self, overlay)
+	BattleRangePreview.draw_illegal(self, overlay)
 	# slash + hit_spark 分层（game-feel）
 	for s in _slash_fx:
 		if s.age < 0.0: continue
@@ -1491,6 +1493,7 @@ func _apply_board_gesture(g: Dictionary) -> void:
 			if turn_team != "player" or _cut_playing:
 				return
 			var cell := BattlePick.resolve(self, pos)
+			cell = BattleRangePreview.tap_cell(self, pos, cell)
 			if cell.x < 0:
 				return
 			_click_cell(cell)
@@ -1583,6 +1586,7 @@ func _select_player(ui: int) -> void:
 	preview_move_cell = Vector2i(-1, -1)
 	preview_attack_ui = -1
 	move_cells = _compute_move_cells(ui)
+	BattleRangePreview.publish(self)
 	_refresh_info()
 	_update_skill_hint()
 	BattlePick.focus_selected(self)
@@ -1624,6 +1628,7 @@ func _click_cell(cell: Vector2i) -> void:
 							preview_attack_ui = ui
 							preview_move_cell = Vector2i(-1, -1)
 							ForecastPanel.refresh(self)
+							BattleRangePreview.keep_selected(self)
 							if DeviceProfile.is_mobile():
 								BattleMobileBar.rebuild(self)
 							overlay.queue_redraw()
@@ -1649,6 +1654,7 @@ func _click_cell(cell: Vector2i) -> void:
 						return
 					preview_move_cell = cell
 					preview_attack_ui = -1
+					BattleRangePreview.keep_selected(self)
 					if DeviceProfile.is_mobile():
 						BattleMobileBar.rebuild(self)
 					overlay.queue_redraw()
@@ -1657,6 +1663,8 @@ func _click_cell(cell: Vector2i) -> void:
 					return
 				BattleTouchConfirm.commit_move(self, cell)
 				return
+			if ui < 0 and not attack_mode and not move_cells.has(cell) and (preview_move_cell.x >= 0 or int(preview_attack_ui) >= 0):
+				BattleRangePreview.flash_destination(self, cell, "move")
 			# Y1-A T-P1-5: empty illegal / off-preview tap clears the ghost (legal move cells returned above).
 			if ui < 0 and BattleTouchConfirm.enabled() and (preview_move_cell.x >= 0 or int(preview_attack_ui) >= 0):
 				BattleTouchConfirm.clear(self)
@@ -1666,6 +1674,9 @@ func _click_cell(cell: Vector2i) -> void:
 				_select_player(ui)
 				return
 			if ui < 0 and BattleTouchConfirm.reject_invalid_tap(self, cell):
+				BattleRangePreview.keep_selected(self)
+				return
+			if ui < 0 and BattleRangePreview.reject_empty(self, cell):
 				return
 			# T-P2: re-tap selected / empty board deselects (phones have no right-click).
 			if BattleTouchConfirm.try_deselect(self, ui):
