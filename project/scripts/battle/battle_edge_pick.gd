@@ -111,10 +111,12 @@ static func note_layout(host) -> void:
 	host.set_meta("m_edge_band", EDGE_BAND_PX)
 	var stage: Rect2 = BattlePick._stage_rect(host)
 	var col := host.get_node_or_null("MobileSideCol") as Control
+	# Stamp blockers from live geometry only. Do not yank the column to
+	# stage.end — MobileSide.attach owns x, and a yank races deferred attach
+	# (settle stamps an uncut inset, then the column slides back over it).
 	if col != null and stage.size.x > 8.0 and col.position.x < stage.end.x - 1.0:
 		var gap := 6.0
 		var room := sz.x - stage.end.x - gap
-		col.position.x = stage.end.x + gap
 		if room > 120.0:
 			col.size.x = minf(col.size.x, room)
 	var block := Rect2()

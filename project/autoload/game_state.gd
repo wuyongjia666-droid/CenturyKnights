@@ -1059,6 +1059,12 @@ func holding_level(hid: String) -> int:
 func unlock_holding(hid: String) -> String:
 	return CKEconomyState.unlock_holding(self, hid)
 
+func holding_unlock_preview(hid: String) -> Dictionary:
+	return CKEconomyState.holding_unlock_preview(self, hid)
+
+func claim_holding(hid: String) -> Dictionary:
+	return CKEconomyState.claim_holding(self, hid)
+
 func holding_upgrade_preview(hid: String) -> Dictionary:
 	return CKEconomyState.holding_upgrade_preview(self, hid)
 
@@ -1133,6 +1139,9 @@ func ambition_list() -> Array:
 
 func check_ambitions() -> Array:
 	return CKEconomyState.check_ambitions(self)
+
+func building_upgrade_preview(id: String) -> Dictionary:
+	return CKEconomyState.building_upgrade_preview(self, id)
 
 func upgrade_building(id: String) -> Dictionary:
 	return CKEconomyState.upgrade_building(self, id)
